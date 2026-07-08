@@ -41,7 +41,7 @@
 
 ## 5. Em aberto 🔴
 - **Estrutura do aporte do Mauro** (empresa nova × divisão · mútuo × equity · Legalize contribuição × acordo comercial) — respostas dele definem o % dentro da faixa 15–35%. Ver §8.
-- 🟡 **Preço do MVP:** R$99 circulou nas conversas do dia 1 (Léo) — **suposição, NÃO decisão** (posição Pedro 2026-07-08). Hipótese de trabalho segue a faixa da base (R$139–195); quem decide é o termômetro do mês 2 + custos reais (multa mínima R$500 + API R$0,50–0,96/guia + CRC apertam margem de ticket baixo).
+- 🟡 **Preço do MVP:** R$99 circulou nas conversas do dia 1 (Léo) — **suposição, NÃO decisão** (posição Pedro 2026-07-08). Hipótese de trabalho segue a faixa da base (R$139–195); quem decide é o termômetro do mês 2 + custos reais (multa mínima R$500 + API R$0,50–0,96/guia + CRC apertam margem de ticket baixo). **Dado novo (08/07): líder EXTINGUIU o plano de R$139 — entrada agora R$195 (+40%).** Duas leituras: espaço aberto abaixo de 195 OU sinal de que ticket baixo não fecha conta (com a estrutura DELES — a nossa é mais barata via Legalize). Ver snapshot em pesquisa/concorrentes/contabilizei/pricing-snapshots/.
 - 🟡 **Canal parceria institucional (ex: Caixa dos Advogados/OAB):** ideia captada do histórico do Léo — **exemplo, não definição**. Candidata a braço B do termômetro (parceria × tráfego frio). Avaliar na S4.
 - **Recrutamento do pleno:** modelo pleno-core travado (§13 v2/§15) resolveu a banda salarial; risco restante = achar o "excelente" (variância alta). Canal: indicação via rede da noiva do Pedro; teste prático pago de 1 dia; avaliação do teste feita pelo sênior guardrail (1ª hora paga dele, antes do build).
 - **Duração da fase 0** (30 / 60 / 90 dias) — afinar com desk research leve + escopo.

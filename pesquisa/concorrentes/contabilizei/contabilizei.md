@@ -17,9 +17,10 @@ tags: [concorrente]
 - ~1.200 colaboradores (~R$115 mi/ano pessoal) → opera no zero/queimando
 
 ## 💰 Pricing & pacotes
-- Básico R$139 → teto R$762 (escala por faturamento) · Padrão R$195 (c/ certificado) · Experts R$369–869
-- Add-ons: reemissão guia R$15,90 · CND R$35,90 · alteração contratual R$1.199 · encerramento R$1.356–1.999
-- Padrão do setor: entrada barata + sangria em avulsos
+- **ATUAL (08/07/2026 → [[2026-07-08-planos-servico]]):** Padrão **R$195** · Multibenefícios **R$225** (novo) · Experts Essencial **R$395**. Básico R$139 EXTINTO — entrada subiu 40%. Certificado grátis em todos. Vitrine = piso (escala por faturamento). "Ideal até R$50k/mês" no self-service.
+- Histórico (jun/2026, §C pesquisa): Básico R$139 → teto R$762 · Padrão R$195 · Experts R$369–869
+- Add-ons: reemissão guia R$15,90 · CND R$35,90 · alteração contratual R$1.199 · encerramento R$1.356–1.999 · escritório virtual R$60/mês · NF extra R$8 (Experts >35/mês)
+- Padrão do setor: entrada barata + sangria em avulsos + âncora fake permanente (~30% "off")
 
 ## 🧭 CNAEs / filtro real (§J da pesquisa)
 - Atende: Simples + LP, Anexos I/III/V · NÃO faz: Lucro Real, indústria, Anexo IV, folha pesada

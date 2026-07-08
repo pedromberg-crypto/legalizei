@@ -44,10 +44,10 @@ Primeira conversa de imersão dentro da Legalize. Léo/Leonan = consultor/novo c
 - [ ] Mapear custos unitários de APIs (CEPRO e alternativas) até 22/07
 - [ ] Pricing inicial + tabela de avulsos até 19/07
 
-## ⚠️ CONFLITOS COM A BASE (decidir com Pedro)
-1. **Preço R$99** vs base R$139–195 (north star = plano R$195 da Contabilizei) — e a própria reunião admite que multa de R$500 inviabiliza ticket baixo
-2. **Nicho advogados + parceria OAB** vs base "ME serviço genérico, mercado frio via tráfego" — advogado é atividade REGULADA (alto LTV, base dizia "fase posterior")
-3. **Canal parceria institucional** vs funil de tráfego pago do mês 2
+## ⚠️ CONFLITOS COM A BASE — resolvidos com Pedro (2026-07-08)
+1. **Preço R$99:** 🟡 suposição em estudo, NÃO decisão. Hipótese de trabalho = faixa da base (R$139–195); termômetro do mês 2 decide. Registrado em [[BASE-ESTRATEGICA]] §5
+2. **Nicho advogados + parceria OAB:** exemplo do histórico do Léo, não definitivo. Virou 🟡 canal candidato (braço B do termômetro) em §5
+3. **MEI como alvo:** 🟢 resolvido — seguimos o líder: ICP = ME serviço/Simples; MEI fora do foco
 
 ## Relatório bruto (Plaud)
 > Ver arquivo original: `C:\Users\pedro\Downloads\Conversa com o Leo - 08_07_26-Summary.md` — resumo integral abaixo.

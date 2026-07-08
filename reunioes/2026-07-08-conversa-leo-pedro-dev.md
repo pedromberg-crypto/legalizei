@@ -42,7 +42,7 @@ Apresentações + descoberta do sistema interno + alinhamento de visão do app. 
 - [ ] Trocar telefone com Léo
 
 ## ⚠️ CONFLITOS/CORREÇÕES vs BASE
-1. **"Alvo inicial: autônomos e MEIs"** dito na reunião — base DESCARTOU MEI como foco (líder ignora MEI; nosso ICP = ME serviço/Simples). Alinhar discurso da equipe
+1. **"Alvo inicial: autônomos e MEIs"** dito na reunião — 🟢 RESOLVIDO com Pedro (08/07): seguimos o líder, ICP = ME serviço/Simples, MEI fora do foco. Alinhar discurso da equipe na sexta 10/07
 2. **Correção factual pro time:** falaram "Contabilizei vendeu 25% por R$230 milhões" — o dado verificado ([[PESQUISA-MERCADO]] §G) é **Warburg Pincus ~R$700 mi por fatia minoritária (out/2024)** + SoftBank R$320 mi (2021). Ninguém repete o número errado na frente do Mauro
 3. **Infra "500–600 mil clientes, Azure/AWS"** = superdimensionado pro MLP (base/mercado: infra inicial R$250–800/mês). Escala se compra depois
 4. **Marca:** reunião usou "Legalize Digital"; decisão do Pedro (07/07) = **Legalizei**. Comunicar

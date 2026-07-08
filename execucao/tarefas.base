@@ -1,0 +1,38 @@
+filters:
+  and:
+    - 'note.tipo == "tarefa"'
+properties:
+  file.name:
+    displayName: Tarefa
+  note.status:
+    displayName: Status
+  note.prazo:
+    displayName: Prazo
+  note.area:
+    displayName: Área
+  note.data:
+    displayName: Criada em
+  note.origem:
+    displayName: Origem
+views:
+  - type: table
+    name: Por status
+    groupBy:
+      property: note.status
+      direction: ASC
+    order:
+      - file.name
+      - note.prazo
+      - note.area
+      - note.data
+  - type: table
+    name: Ativas por prazo
+    filters:
+      and:
+        - 'note.status != "concluida"'
+    order:
+      - file.name
+      - note.prazo
+      - note.status
+      - note.area
+      - note.origem

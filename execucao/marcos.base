@@ -1,0 +1,35 @@
+filters:
+  and:
+    - 'note.tipo == "marco"'
+properties:
+  file.name:
+    displayName: Marco
+  note.data:
+    displayName: Data
+  note.area:
+    displayName: Área
+  note.impacto:
+    displayName: Impacto
+  note.tempo-gasto:
+    displayName: Horas
+views:
+  - type: table
+    name: Todos os marcos
+    order:
+      - file.name
+      - note.data
+      - note.area
+      - note.impacto
+      - note.tempo-gasto
+  - type: table
+    name: Por área
+    groupBy:
+      property: note.area
+      direction: ASC
+    order:
+      - file.name
+      - note.data
+      - note.impacto
+      - note.tempo-gasto
+    summaries:
+      note.tempo-gasto: Sum

@@ -5,7 +5,9 @@
 
 ## 📍 Agora (fase atual)
 - **Sprint:** Mês 1 / S1 — Raio-X da operação → [[CHECKLIST-IMERSAO-30-DIAS]]
-- Próximas ações: NDA + acesso · framework sociedade 1 página · júnior integrado · mapear fluxo de 1 cliente ME
+- **Quadro de tarefas:** [[kanban-legalizei]] (📥 Triagem = sugeridas aguardando sua aprovação)
+- **Log de progresso:** [[marcos.base]] (descobertas e entregas) · [[tarefas.base]] (tarefas por status/prazo)
+- Relatório pro sócio: pasta `execucao/relatorios/` — pedir ao Claude "gera o relatório do período"
 
 ## 🗺️ Mapa do vault
 - [[BASE-ESTRATEGICA]] — fonte da verdade (teses, custo travado, equity, roadmap)

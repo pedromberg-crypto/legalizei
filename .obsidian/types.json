@@ -34,6 +34,12 @@
     "perfil": "text",
     "icp": "text",
     "acesso": "text",
-    "participantes": "multitext"
+    "participantes": "multitext",
+    "prazo": "date",
+    "area": "text",
+    "impacto": "text",
+    "tempo-gasto": "number",
+    "origem": "text",
+    "status": "text"
   }
 }

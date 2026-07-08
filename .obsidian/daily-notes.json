@@ -1,0 +1,5 @@
+{
+  "folder": "diario",
+  "template": "_templates/diario-imersao",
+  "format": "YYYY-MM-DD"
+}

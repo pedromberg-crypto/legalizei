@@ -18,7 +18,7 @@ Apresentações + descoberta do sistema interno + alinhamento de visão do app. 
 - **Mês 1 do Pedro Maia = imersão**: mapa de PROCESSOS (Pedro Maia) × mapa de TECNOLOGIAS (Pedro Dev) → cruzamento vira o **primeiro PRD**
 - **Mobile first** (com desktop)
 - Independência de terceiros (Domínio/Omie) como princípio de arquitetura
-- Reuniões marcadas: **sexta 10/07** (debate de tecnologias) e **15/07** (definição de tarefas)
+- Reuniões: **sexta 10/07, 9h** (debate de tecnologias — ✅ na agenda Google "Legalizei") · ~~15/07 definição de tarefas~~ (cancelada em 08/07)
 - Contratação de novo membro no mês 2 (necessidade mapeada pelo Pedro Dev, alinhamento com Mauro)
 - Comunicação aberta sem restrição de horário; reuniões pontuais pra não sobrecarregar Pedro Dev
 

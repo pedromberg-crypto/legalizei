@@ -1,0 +1,12 @@
+# Obsidian — estado local/efêmero (não versionar)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache
+.trash/
+
+# SO
+.DS_Store
+Thumbs.db
+
+# Node (se algum script local instalar deps)
+node_modules/

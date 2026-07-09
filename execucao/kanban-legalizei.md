@@ -19,6 +19,25 @@ kanban-plugin: board
 
 ## 📚 Backlog
 
+### Da reunião Pedro Dev (2026-07-09) → [[2026-07-09-conversa-pedro-dev]]
+**Pedro Dev:**
+- [ ] V2 das stacks: comparar Cloud (Supabase × AWS × Azure) — custo, segurança, complexidade, conectividade IA/MCP → resentar
+- [ ] Esgotar busca por API da JUCEMG (gargalo crítico; se não achar, construir) 🔴
+- [ ] Mapear API×RPA por portal gov (JUCEMG, Redesim, ALF, DES-BH/BHISS, SISDRAM, SIARE)
+- [ ] Estruturar 2FA obrigatório (e-mail/SMS/WhatsApp)
+- [ ] Anti-robô + anti-print desde o início
+- [ ] Protótipo de back-end "feião" testando conexões de API
+- [ ] Consultar pastor (Banco do Brasil) sobre segurança bancária + arquitetura de guarda do A1
+**Pedro Maia:**
+- [ ] Design System (tokens) — até sexta ⏫
+- [ ] Mapear 4 concorrentes com a Jéssica (abrir empresa em cada, onboarding ponta a ponta)
+- [ ] Wireframe mobile-first (após os concorrentes)
+- [ ] Apresentar ao Mauro: build-vs-buy + foco BH + Pedro Dev full-time + novo dev React
+- [ ] Definir parceria de certificado digital (preço/comissão)
+- [ ] Resolver compartilhamento do vault com o Pedro Dev (Git + Obsidian ou plano básico)
+- [ ] Número exato de empresas/CNAEs em BH + publicar lista no app
+
+### Outros
 - [ ] Preencher overlay tributário (anexo/Fator R/alíquota) dos CNAEs do nosso nicho na matriz, cruzando contabilidade.com × Contabilizei — quando travar o ICP na imersão · [[cnae-matriz-governo]]
 - [ ] Mapear cobertura CNAE dos outros concorrentes (Agilize, Contaja...) = +1 coluna na matriz cada · [[cnae-matriz-governo]]
 

@@ -8,6 +8,7 @@ tags: [tech, produto, imersao]
 # 🎯 Playbook — Reunião Pedro Dev (condução PM)
 
 > Reunião conduzida como PM: fluxo cronológico onde cada decisão destrava a próxima, com árvore de "resposta → tarefa gerada". Fecha em decisão onde dá; em "investigar" onde não dá. Substitui a tabela plana da [[pauta-reuniao-pedro-dev]].
+> ✅ **EXECUTADA em 2026-07-09 — resultado em [[2026-07-09-conversa-pedro-dev]]** (stack + MLP + multi-tenant decididos; cloud e integrações em V2).
 
 ## 🎬 Resultado esperado (o que tem que SAIR da reunião)
 1. **Direção travada:** App reaproveita o Leghub OU é produto novo (a decisão-mãe).

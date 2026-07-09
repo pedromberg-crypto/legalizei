@@ -40,6 +40,11 @@ tags: [produto, spec]
 5. **Transparência radical** — preço claro (vs âncora fake ~30% "off" + "R$210,90 na conta vs R$195 na vitrine"); mostrar upfront o que atende/não atende.
 6. **Confiabilidade > velocidade de feature** — imposto tem prazo; a tela que o líder quebrou foi a de dinheiro.
 
+## 3.5. Stack técnica (decidida com Pedro Dev 2026-07-09 → [[2026-07-09-conversa-pedro-dev]])
+- **Linguagem:** TypeScript/JavaScript (front + back). **Front:** React Native + Expo (mobile-first; desktop = réplica). **Back:** TS/JS na Vercel. **Banco:** Supabase/Postgres (🟡 cloud sob revisão vs AWS/Azure). **Design:** Tailwind + Cloud Design. **Jobs:** Workers Node + Trigger.dev. **IA:** Fable (build) + Opus 4.8 (operação/OCR).
+- **Arquitetura:** multi-tenant (comercialização) · **Legalizei construído do zero** (não reaproveita o Leghub, que é single-tenant interno).
+- **Segurança:** 2FA obrigatório · anti-robô + anti-print · RLS + OWASP · certificado A1 no Supabase com dupla camada + rastreamento · backup em HD físico.
+
 ## 4. Build-vs-buy (não construir do zero)
 - **Comprar/integrar:** NFS-e (Focus NFe cobre BH, R$89,90–113,90/mês), certificado A1, gateway de assinatura, conta PJ (parceiro).
 - **Construir só o diferenciado:** UX, dashboard, camada de proatividade, e a camada de confiança/relacionamento Legalize.

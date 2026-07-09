@@ -25,7 +25,7 @@ tags: [tech, produto, imersao]
 ### Bloco 0 — Abertura + "o que já temos" (mostrar a evolução)
 Alinhar objetivo (MVP tipo Contabilizei, ICP ME serviço Simples BH) e mostrar o **chão já construído** — dá contexto e credibilidade (produto embasado em pesquisa, não achismo):
 
-**1. Mercado (desk research BR):** ~16 mi empresas no nosso perfil · líder <1% (não saturado) · 5 concorrentes mapeados · pricing do líder rastreado (Básico R$139 extinto, entrada agora R$195→R$210,90 real).
+**1. Mercado (desk research BR + regional):** ~16 mi empresas no perfil no Brasil · líder <1% (não saturado) · 5 concorrentes mapeados · pricing do líder rastreado (Básico R$139 extinto, entrada R$195→R$210,90 real). **BH (piloto): ~450–545 mil ativas, ~100–175 mil no nosso ICP** (ME serviço Simples) + abertura em 11h (3ª capital do país) — ver [[mercado-bh-regional]].
 
 **2. Inteligência do líder (Contabilizei) — fundo:** auditoria de **30 telas** (desktop + mobile) + wizard de emissão · playbook de CRM dos **82 emails** · jornada de onboarding (23 dias, D0→D+29) · ranking de oportunidades: **mobile fraco, cross-sell excessivo, contabilês, dados-empresa escondido**.
 
@@ -91,6 +91,7 @@ Recapitular decisões travadas · consolidar tarefas (baldes A+B) · combinar ca
 4. **Implementar filtro CNAE** por regime (matriz pronta).
 5. **Cruzar auditoria UX × teardown tech** da Contabilizei → base wireframes.
 6. **Analisar app Contabilizei** (tech) — tarefa herdada da 1ª reunião dele.
+7. **Puxar dado preciso de empresas em BH** (base aberta da Receita/CNPJ ou JUCEMG): município BH + CNAE do perfil + Simples + porte ME → número cravado do ICP regional (hoje é estimativa ~100–175k). Usa a expertise de dados dele. Origem: [[mercado-bh-regional]].
 
 ## 🌿 BALDE B — Tarefas CONDICIONAIS (nascem da decisão de cada bloco)
 - **Bloco 1:** [reusa] mapear Leghub base+gaps · [novo] definir integração app↔Leghub.
@@ -98,6 +99,29 @@ Recapitular decisões travadas · consolidar tarefas (baldes A+B) · combinar ca
 - **Bloco 3:** desenhar guarda do A1 · definir multi-tenant · checklist LGPD.
 - **Bloco 4:** avaliar certificadora parceira · avaliar gateways/conta PJ.
 - **Bloco 5:** [pós-Larissa] preencher overlay tributário na matriz.
+
+## 📦 O QUE SERIA O MLP (pra debater — âncora do Bloco 5/6)
+> **MLP = Minimum Lovable Product** (termo da 1ª reunião): não "o mínimo que funciona", mas "o mínimo que as pessoas AMAM". Separa o loop essencial (não cortar) dos diferenciais (a alma). Base: [[spec-mvp-v0]].
+
+**1. Núcleo mínimo — o loop que TEM que funcionar (o "viável"):**
+Abrir/migrar empresa → **emitir NFS-e** → pagar guia (**DAS**) → ver situação. = o core do plano R$195 do líder que mapeamos.
+
+**2. O que torna LOVABLE (as otimizações cruciais, cada uma com evidência):**
+- Emissão de NF em **1 toque** ← auditoria do wizard [[nf-emissao-2]]
+- Onboarding sem fricção + **filtro CNAE por regime** ← validado Izabela [[2026-07-09-conversa-izabela]]
+- Dashboard limpo, **zero cross-sell** ← auditoria da home [[_relatorio-auditoria]]
+- **Linguagem humana** (traduzir DARF/DEFIS/NBS) ← auditoria
+- **Proatividade** (lembrete configurável + recálculo — supera o D-3/D-1 do líder) ← [[playbook-crm-contabilizei]]
+- **Dados da empresa em 1ª classe** (CNPJ/contrato copiáveis) ← a brecha de ouro do líder
+- **Transparência de custo/prazo desde o início** ← dor confirmada pela Izabela (custos-surpresa)
+- **Mobile-first de verdade** ← o mobile fraco do líder (nossa maior cunha demonstrável)
+
+**3. O que fica de FORA do MLP (escopo negativo):**
+As 17 categorias CNAE recusadas ([[cnae-cobertura]]) · banco próprio · benefícios de terceiros · folha pesada · atividades regulamentadas (fase posterior) · Lucro Real/indústria.
+
+**4. Validar que é "lovable":** teste com os **25–30 clientes fundadores** (mês 3).
+
+> **Uso no debate:** o loop (camada 1) é o que o Pedro Dev NÃO pode cortar do escopo. Os diferenciais (camada 2) são o coração — priorizar sem matar a alma. O escopo negativo (camada 3) = o que economizar.
 
 ## ⏳ Pendências externas (NÃO fecham hoje)
 - **Larissa** (fiscal): acessórias reais → alimenta o **motor de compliance** (arquitetura futura).

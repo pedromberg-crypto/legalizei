@@ -109,5 +109,43 @@ Construção · indústria/fábricas · farmácia · gráfica · financeiras · 
 - **Regulamentadas** = mais passos na abertura (conselho + RT + às vezes endereço comercial obrigatório) → afeta o fluxo da Fase 1–4 acima.
 - **Endereço comercial obrigatório** em saúde/odonto → não pode ser residencial. 🟡
 
+---
+
+# 🔗 Matriz de responsabilidades (usuário × sistema × contador × órgão)
+
+> **Mapear com a Izabela (contadora).** Termo-chave: **obrigações acessórias** — declarações que o contador transmite a órgãos, mesmo sem imposto extra; boa parte é responsabilidade do **CRC**, roda no back-end e o **usuário nem sabe**. Isto define o que o app automatiza, o que coleta do usuário, e o que OBRIGATORIAMENTE passa pela Legalize (a "sala de máquinas" que de-risca).
+
+**Legenda responsável:** U = usuário · S = sistema/app · C = contador CRC · (Ó = órgão destino)
+
+| Obrigação / evento | Órgão | Periodicidade | Resp. | Usuário vê? |
+|---|---|---|---|---|
+| Emitir NFS-e | Prefeitura BH | por serviço | U + S | ✅ |
+| Apurar e gerar DAS | Receita | mensal | S + C | ✅ (paga) |
+| Pagar DAS | Receita | mensal | U | ✅ |
+| Pró-labore + INSS | Receita/Prev. | mensal | S + C | parcial |
+| **DES-BH** (Declaração Eletrônica de Serviços) | **Prefeitura BH** | mensal | **C** | ❌ 🟡 |
+| **DEFIS** (socioeconômica/fiscal do Simples) | Receita | anual | **C** | ❌ 🟡 |
+| **DCTFWeb** | Receita/Prev. | mensal | **C** | ❌ 🟡 |
+| **eSocial** (eventos, mesmo sem funcionário) | Gov. federal | conforme | **C** | ❌ 🟡 |
+| **EFD-Reinf** | Receita | mensal | **C** | ❌ 🟡 |
+| **SPED** (ECD/ECF conforme regime) | Receita | anual | **C** | ❌ 🟡 |
+| Escrituração contábil | (interno/CRC) | mensal | **C** | ❌ 🟡 |
+
+> As linhas 🟡 = **o back-end invisível do contador** (o exemplo do Mauro: "notificar outro órgão"). Izabela confirma quais se aplicam ao nosso ICP (ME serviço Simples, sem funcionário), prazos e órgão exato.
+
+## As 3 camadas (o que o Pedro pediu pra separar)
+1. **Usuário → Sistema:** dá dados, emite NF, aprova, paga guia.
+2. **Sistema → Usuário:** avisa (lembrete/prazo), calcula, entrega guia pronta, mostra pendência.
+3. **Contador → Sistema/Órgão:** transmite as acessórias, assina/se responsabiliza (CRC), fecha o que o software prepara. **É o elo que liga tudo aos órgãos** — e o que NÃO se terceiriza pra API.
+
+## ❓ Perguntas pra Izabela (sobre as acessórias)
+1. Pro nosso ICP (ME serviço Simples, sem funcionário), **quais acessórias realmente se aplicam** e quais não?
+2. **DES-BH** — periodicidade, prazo, o que trava?
+3. Quais têm **prazo crítico** (multa alta se atrasar)?
+4. O que o **software prepara** e o que **só o contador transmite/assina**?
+5. Alguma acessória **estadual (MG)** se aplica a serviço puro? (ou só se houver ICMS?)
+6. eSocial "sem movimento" — precisa transmitir mesmo sem funcionário?
+7. Onde mora o **maior risco de multa** por acessória esquecida?
+
 ## Links
 - [[onboarding-jornada-completa]] · [[cnae-matriz-governo]] · [[cnae-cobertura]] · [[spec-mvp-v0]] · [[CHECKLIST-IMERSAO-30-DIAS]] · [[HOME]]

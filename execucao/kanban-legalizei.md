@@ -19,6 +19,9 @@ kanban-plugin: board
 
 ## 📚 Backlog
 
+- [ ] Recapturar 3 telas da Contabilizei que caíram na Home (folha-de-pagamento, meus-beneficios, dados-da-empresa) — navegar por clique no menu · origem [[_relatorio-auditoria]]
+- [ ] Capturar fluxo de emissão de NF (wizard atrás de "Emitir nova nota") · [[_relatorio-auditoria]]
+
 
 ## 🗓️ Esta semana
 

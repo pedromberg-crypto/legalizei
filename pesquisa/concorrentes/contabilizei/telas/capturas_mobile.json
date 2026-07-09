@@ -1,0 +1,77 @@
+[
+ {
+  "nome": "Home",
+  "slug": "home",
+  "url": "https://app.contabilizei.com.br/painel-de-controle/#/home"
+ },
+ {
+  "nome": "Emitir NFS-e",
+  "slug": "emitir-nfs-e",
+  "url": "https://app.contabilizei.com.br/painel-de-controle/#/emissor/listagem"
+ },
+ {
+  "nome": "Socios e Pro-labore",
+  "slug": "socios-e-pro-labore",
+  "url": "https://app.contabilizei.com.br/painel-de-controle/#/socio"
+ },
+ {
+  "nome": "Rotinas Mensais",
+  "slug": "rotinas-mensais",
+  "url": "https://app.contabilizei.com.br/painel-de-controle/#/declaracoes-mensais"
+ },
+ {
+  "nome": "Rotinas Anuais",
+  "slug": "rotinas-anuais",
+  "url": "https://app.contabilizei.com.br/sistema/#/declaracoes-anuais"
+ },
+ {
+  "nome": "Conta Bancaria PJ",
+  "slug": "conta-bancaria-pj",
+  "url": "https://app.contabilizei.com.br/painel-de-controle/#/movimentacao-financeira/conta-bancaria"
+ },
+ {
+  "nome": "Contabilizei Bank",
+  "slug": "contabilizei-bank",
+  "url": "https://app.contabilizei.com.br/painel-de-controle/#/contabilizei-bank"
+ },
+ {
+  "nome": "Relatorios",
+  "slug": "relatorios",
+  "url": "https://app.contabilizei.com.br/painel-de-controle/#/relatorios"
+ },
+ {
+  "nome": "Mensalidade",
+  "slug": "mensalidade",
+  "url": "https://app.contabilizei.com.br/painel-de-controle/#/mensalidade"
+ },
+ {
+  "nome": "Faturas",
+  "slug": "faturas",
+  "url": "https://app.contabilizei.com.br/painel-de-controle/#/faturas"
+ },
+ {
+  "nome": "Folha de Pagamento",
+  "slug": "folha-de-pagamento",
+  "url": "https://app.contabilizei.com.br/painel-de-controle/#/folha-de-pagamento"
+ },
+ {
+  "nome": "Plano de Saude",
+  "slug": "plano-de-saude",
+  "url": "https://app.contabilizei.com.br/painel-de-controle/#/plano-de-saude"
+ },
+ {
+  "nome": "Meus Beneficios",
+  "slug": "meus-beneficios",
+  "url": "https://app.contabilizei.com.br/painel-de-controle/#/beneficios"
+ },
+ {
+  "nome": "Minhas Rotinas",
+  "slug": "minhas-rotinas",
+  "url": "https://app.contabilizei.com.br/painel-de-controle/#/minhas-rotinas"
+ },
+ {
+  "nome": "Dados da Empresa",
+  "slug": "dados-da-empresa",
+  "url": "https://app.contabilizei.com.br/painel-de-controle/#/dados-empresa"
+ }
+]

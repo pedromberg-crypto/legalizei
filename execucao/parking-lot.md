@@ -18,6 +18,14 @@ tags: [gestao]
 | C | **Fechar pendências da imersão** — diário diário, term sheet 1 pág, NDA/acessos | Maratona técnica consumiu os dias; §13 da base pede | 2026-07-09 | Dias correntes da imersão (S1) |
 | D | **Versão limpa do deck** (sem notas internas) — já existe flag SHOW_NOTES no build-deck.js | Deck já cumpriu com o Mauro; slide 5 desatualizado (preço R$195→210) | 2026-07-08 | Se houver reapresentação |
 
+## Pendências fiscais encaminhadas (pós-Izabela 09/07)
+| Frente | Com quem | O que perguntar |
+|---|---|---|
+| E | **Carla** (Depto Pessoal) | Sócio pode ser CLT? · eSocial sem movimento transmite sem funcionário? |
+| F | **Larissa** (Depto Fiscal) | Tributação por anexos diferentes (pela maior) · quais obrigações acessórias se aplicam (DES-BH, DCTFWeb, DEFIS, EFD-Reinf, SPED), prazos e risco de multa · acessória estadual MG p/ serviço |
+| G | **Leonão** | O que o software prepara × o que só o contador transmite/assina |
+| H | **Jessica** | Abrir empresa do Mauro em 4 concorrentes (mapear onboarding — só temos o da Contabilizei) |
+
 ## Como isto se conecta
 - Tarefas concretas dessas frentes → viram cards no [[kanban-legalizei]] quando a gente pega.
 - Dúvidas estratégicas travadas (preço, aporte do Mauro, banda do sênior) → [[BASE-ESTRATEGICA]] §5.

@@ -9,6 +9,20 @@ tags: [produto, compliance, imersao]
 
 > **Rascunho de mercado pra validar COM a contadora interna.** Baseado em conhecimento de mercado + o onboarding real da Contabilizei que mapeamos ([[onboarding-jornada-completa]], que documentou os passos de BH). Nível: **Belo Horizonte / MG**. ⚠️ Cada item marcado 🟡 = confirmar/refinar com ela. Vira o mapa de processo oficial (entregável S1/S2).
 
+## ✅ VALIDADO com a Izabela (2026-07-09) — correções que mandam
+> Ata completa: [[2026-07-09-conversa-izabela]] · sistema por passo: [[orgaos-sistemas-abertura-bh]]. Correções que sobrescrevem o rascunho abaixo:
+> - **Viabilidade JUCEMG + municipal BH = UNIFICADA** (1 passo, tudo na JUCEMG) — não são 2.
+> - **Contrato social em MG já vem PRONTO** da JUCEMG (não redige manual; só assinatura GOV.BR prata/ouro).
+> - **CRC assina só na FINALIZAÇÃO do CNPJ** (campo do regime), não no DBE.
+> - **Certificado digital é APÓS o CNPJ** (precisa do nº) — cobrado automático; parceira externa comissionada (R$209–229/ano).
+> - **Opção pelo Simples sai junto com a liberação do CNPJ** (automático, federal).
+> - **Inscrição estadual = só comércio** (serviço não tem); certidão no SIARE.
+> - **Credenciamento NFS-e BH = via DES-BH** (busca "DES PBH").
+> - **Custos (os 3 do cliente):** taxa JUCEMG R$288 · certificado R$209–229/ano · taxa fiscalização BH anual (gerada ~30 dias após).
+> - **Prazo BH serviço: 5 dias com segurança** (às vezes dia pro outro). **Gargalos:** pagamento da taxa pelo cliente + análise de viabilidade da prefeitura.
+> - **Feature-chave:** filtro de CNAE por regime (escolheu Simples → só CNAE que pode Simples). **Se casado: capturar o regime de casamento.** **+1 sócio: dados de todos.**
+> - **Pendências encaminhadas:** Carla (sócio CLT, eSocial sem movimento) · Larissa/fiscal (anexos diferentes, acessórias, multas) · Leonão (software prepara × contador transmite).
+
 ## Fase 0 — Coleta de informações do cliente
 - [ ] Dados pessoais do(s) sócio(s): nome, CPF, RG, estado civil, endereço, contato
 - [ ] Atividade que vai exercer (→ vira o CNAE)

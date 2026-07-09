@@ -19,6 +19,7 @@
 - `pesquisa/concorrentes/` — teardown profundo por concorrente. **Contabilizei = pasta-domínio** (`emails/` · `social/` · `funcionalidades/` · `pricing-snapshots/`) — cada email/post/tela vira nota datada via template `artefato-concorrente`
 - [[obsidian-estado-da-arte]] — stack do vault verificada contra doc oficial (Bases, não Dataview · CLI · backup)
 - `ux-ui/` — estudos de UX/UI pro desenvolvimento
+- `marca/` — construção da marca ([[marca]] hub): naming → conceito → referências → identidade. Etapa atual: **naming** ([[naming-defesa]])
 - `mkt/` — estratégias de marketing (ativa quando chegarmos lá)
 - `apresentacao/` — deck 9 slides + gerador + cola PDF
 - `_templates/` — modelos de nota (reunião, teardown, diário, shadowing)

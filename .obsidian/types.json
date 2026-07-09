@@ -40,6 +40,7 @@
     "impacto": "text",
     "tempo-gasto": "number",
     "origem": "text",
-    "status": "text"
+    "status": "text",
+    "etapa": "text"
   }
 }

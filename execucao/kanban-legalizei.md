@@ -19,8 +19,8 @@ kanban-plugin: board
 
 ## 📚 Backlog
 
-- [ ] Recapturar 3 telas da Contabilizei que caíram na Home (folha-de-pagamento, meus-beneficios, dados-da-empresa) — navegar por clique no menu · origem [[_relatorio-auditoria]]
-- [ ] Capturar fluxo de emissão de NF (wizard atrás de "Emitir nova nota") · [[_relatorio-auditoria]]
+- [ ] Preencher overlay tributário (anexo/Fator R/alíquota) dos CNAEs do nosso nicho na matriz, cruzando contabilidade.com × Contabilizei — quando travar o ICP na imersão · [[cnae-matriz-governo]]
+- [ ] Mapear cobertura CNAE dos outros concorrentes (Agilize, Contaja...) = +1 coluna na matriz cada · [[cnae-matriz-governo]]
 
 
 ## 🗓️ Esta semana

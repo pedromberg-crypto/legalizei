@@ -65,5 +65,12 @@ tags: [concorrente, insight]
 - **O sweet spot deles (= nosso nicho):** serviço + comércio leve no Simples, Anexos I/III/V, apuração quase determinística, folha mínima. Profissional liberal (médico/advogado) = alto LTV, mas exige RT/conselho (fase posterior pra nós).
 - **Oportunidade Legalizei:** (a) espelhar o recorte deles no MVP (não reinventar o filtro — 13 anos validaram); (b) a lista de 17 recusadas é o **mapa do que NÃO construir no V1** (economiza esforço); (c) transparência: mostrar upfront "atendemos X, não atendemos Y" (eles escondem no suporte) = confiança + qualificação de lead.
 
+## 📌 Distinção de fontes (de onde veio cada dado)
+Todos os dados desta nota são da **própria Contabilizei**, em 2 superfícies diferentes:
+- **Site de marketing** (`www.contabilizei.com.br`) — camada SEO/aquisição: tabela CNAE (`/contabilidade-online/cnae/`, = a imagem salva pelo Pedro em 23/06) + tabela Simples completa (`/contabilidade-online/tabela-simples-nacional-completa/`). Marca quase tudo "Atende".
+- **Subdomínio de suporte** (`suporte.contabilizei.com.br`) — camada operacional real: não-atendidas (art. 204678699) + regulamentadas (art. 360000231650). Filtro restrito.
+- **Não usados:** a busca também trouxe tabelas de TERCEIROS (contabilidade.com, buscaempresa.net, razonet, contabilivre) — NENHUM entrou aqui; só fontes Contabilizei + a imagem do Pedro.
+- **Fonte-verdade da lista CNAE em si** (não "o que a Contabilizei atende", mas o universo CNAE) = governo → ver [[cnae-matriz-governo]].
+
 ## Links
-- [[PESQUISA-MERCADO]] · [[contabilizei]] · [[_relatorio-auditoria]] · [[HOME]]
+- [[cnae-matriz-governo]] · [[PESQUISA-MERCADO]] · [[contabilizei]] · [[_relatorio-auditoria]] · [[HOME]]

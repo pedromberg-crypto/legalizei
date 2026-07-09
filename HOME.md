@@ -7,6 +7,7 @@
 - **Sprint:** Mês 1 / S1 — Raio-X da operação → [[CHECKLIST-IMERSAO-30-DIAS]]
 - **Quadro de tarefas:** [[kanban-legalizei]] (📥 Triagem = sugeridas aguardando sua aprovação)
 - **Log de progresso:** [[marcos.base]] (descobertas e entregas) · [[tarefas.base]] (tarefas por status/prazo)
+- **O que está ficando pra trás:** [[parking-lot]] (decisões e frentes adiadas — peça "o que está ficando pra trás?")
 - Relatório pro sócio: pasta `execucao/relatorios/` — pedir ao Claude "gera o relatório do período"
 
 ## 🗺️ Mapa do vault

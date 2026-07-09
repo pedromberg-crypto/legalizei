@@ -47,10 +47,15 @@ tags: [concorrente, ux, insight]
 - **Responsividade pontual boa:** Relatórios (5 botões → 1 dropdown no mobile), Conta Bancária (tabela → card).
 - **Bloco anti-fraude/segurança** do Bank.
 
+## Atualização 2026-07-09 (recaptura + wizard) 🟢
+- **Wizard de emissão de NF CAPTURADO** ([[nf-emissao-2]], média 6.5 · [[nf-emissao-1]] seleção de tomador, 5.2). Núcleo bom (auto-preenche NBS pela CNAE, alíquota visível, "cancele no mesmo mês") mas: descrição manual apesar de saberem o formato, sem preview, jargão, e **mobile quebra na tela mais crítica** (nav inferior corta o form). É onde o Legalizei mais ganha.
+- 🔴 **Dark pattern achado:** no passo de emissão, um **modal de cobrança por medo** bloqueia quando a mensalidade está atrasada ("Aqui está o que você perde", "riscos de ficar sem contador", "Multas federais…"). Pressiona no pior momento. Nossa contra: cobrança digna, não-bloqueante.
+- **Refino das 3 recapturas:** `dados-da-empresa` (4.8→6.0) é DROPDOWN, não tela — mas mais rico que supúnhamos (CNPJ, regime, IM, Copiar dados, certificado, Área de Documentos); faltam CNAE/nome fantasia/IE. `folha` = flyout com 2 sub-destinos reais. `meus-beneficios` = tela dedicada com rota `#/beneficios/landing-upsell` → **confirma "benefício = venda"**.
+- **Inconsistência de preço:** banner Home "plano Padrão R$210,90" vs landing "Avançado R$195" — mancha de transparência (munição pro nosso posicionamento).
+
 ## Pendências desta auditoria
-- ⚠️ **Recapturar 3 telas** que caíram na Home: `folha-de-pagamento`, `meus-beneficios`, `dados-da-empresa` (navegar via clique no menu, não só URL). Notas atuais delas = provisórias.
-- Capturar o FLUXO de emissão de NF (wizard atrás do botão "Emitir nova nota") — a joia da coroa não foi aberta.
 - Faltou o onboarding logado (já coberto por email em [[onboarding-jornada-completa]]).
+- Passos finais da emissão (após "Continuar") não percorridos — proposital, pra não emitir nota real.
 
 ## Uso
 Alimenta direto: spec do MVP (S4), wireframes do Legalizei, e a pauta técnica com o Pedro Dev (nossa auditoria UX + a análise tech dele = teardown completo). Prioridade de construção segue o ranking: as telas 1–4 (4.8–5.8) são as mais fáceis de superar.

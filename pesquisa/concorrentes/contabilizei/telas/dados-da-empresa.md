@@ -3,47 +3,55 @@ tipo: teardown-tela
 data: 2026-07-09
 concorrente: Contabilizei
 plataforma: [desktop, mobile]
-media: 4.8
+media: 6.0
 tags: [concorrente, ux]
 ---
 
 # Tela: Dados da Empresa — Contabilizei
 
-> **Alerta de captura + achado forte:** o print (desktop e mobile) NÃO abriu uma tela de "Dados da Empresa" — caiu no **dashboard Home** (mesma imagem de `folha-de-pagamento` e `meus-beneficios`). O único caminho visível para os dados cadastrais é o link discreto **"Dados da empresa e banco"** no canto superior direito (fora do menu principal), mais alguns itens em "Serviços Adicionais" (Alterar nome/endereço). **Isso valida diretamente a dor mapeada:** achar CNPJ / contrato social exige caçar — não é cidadão de primeira classe na navegação. Notas avaliam esse acesso.
+> **CAI NA HOME (fato observado) — dado mora num dropdown, não numa tela.** O log confirma: URL `#/home`. **Não há rota/tela dedicada** de "Dados da Empresa". Os dados aparecem num **painel dropdown** ancorado ao link discreto **"Dados da empresa e banco"** no canto superior direito, sobreposto à Home. **Correção honesta vs. leitura anterior:** o painel mostra MAIS do que se supunha — CNPJ, Regime tributário, Inscrição Municipal, dados bancários com "Copiar dados", Certificado Digital com status/validade, e abas "Dados de acesso / Contrato Contabilizei / Área de Documentos". Então o dado **não está enterrado**, está num dropdown de canto. A dor de fundo persiste: **não é cidadão de 1ª classe** (fora do menu, num popover apertado), e faltam campos-chave (CNAE, nome fantasia, IE, data de abertura). Por isso a nota sobe de 4.8 → 6.0, mas ainda longe do ideal.
 
 ## Notas (0–10)
 | Eixo | Nota | Justificativa |
 |------|------|---------------|
-| Clareza | 4 | Nenhum dado da empresa (CNPJ, razão social, contrato social) aparece na tela principal. A porta de entrada é um link pequeno no topo direito, fácil de não ver. |
-| Eficiência | 3 | **A dor confirmada**: dados cadastrais e documentos societários não estão no menu lateral nem na Home — estão atrás de um link secundário. Muitos cliques para uma informação que se consulta com frequência. |
-| Feedback | 5 | A Home dá bom feedback de rotina (pendências, calendário), mas nada sobre o cadastro em si. |
-| Linguagem | 6 | "Dados da empresa e banco" é claro como rótulo; o problema é a hierarquia, não a palavra. |
-| Confiança | 6 | Ponto positivo: "Conta Digital PJ" mostra Banco/Agência/Conta com botão de copiar — transparência bancária boa. Mas os documentos jurídicos (CNPJ, contrato, cartão CNPJ) ficam ocultos, o que frustra na hora do aperto. |
-| Mobile | 5 | O link "Dados da empresa e banco" vira ícone/rótulo minúsculo no topo — ainda mais difícil de achar no mobile do que no desktop. |
-| **Média** | **4.8** | A menor nota do conjunto — e de propósito: é aqui que a Contabilizei mais dói e onde temos a maior brecha. |
+| Clareza | 6 | O painel surface CNPJ (64.037.271/0001-02), Regime (Simples), Inscrição Municipal e Certificado Digital de forma legível. Mas o nome da empresa aparece truncado num campo, e falta CNAE/nome fantasia/IE/data de abertura. |
+| Eficiência | 5 | Melhor que se pensava: 1 clique no link de canto abre o painel com o essencial. Porém está **fora do menu principal** (tem que saber que o link existe) e "Copiar dados" copia só o **bloco bancário**, não campo a campo (CNPJ não tem copiar próprio). |
+| Feedback | 7 | **Certificado Digital "Ativo" + "Validade: 22/12/2026"** é feedback proativo excelente — o cliente sabe na hora se o certificado está OK. Ótimo padrão. |
+| Linguagem | 6 | "Dados de acesso", "Contrato Contabilizei", "Área de Documentos", "Regime tributário: Simples" são claros. O problema é hierarquia (dropdown), não a palavra. |
+| Confiança | 7 | Reunir CNPJ + regime + banco (com copiar) + certificado digital + área de documentos num painel único transmite controle. Bom para confiança — apesar do acesso escondido. |
+| Mobile | 5 | O painel renderiza empilhado no topo, sobreposto à Home, e só é alcançável pelo link minúsculo do topo — ainda mais difícil de achar no mobile. |
+| **Média** | **6.0** | Conteúdo decente (CNPJ, regime, cert digital, docs) num **dropdown de canto**, não numa tela. Presente, porém sem status de 1ª classe e faltando campos-chave. |
 
 ## O que vi (fatos)
-- Dashboard Home capturado no lugar da tela de dados.
-- Acesso a dados cadastrais só por: (1) link "Dados da empresa e banco" no topo direito; (2) "Serviços Adicionais" → "Alterar nome da empresa", "Alterar endereço da empresa", "Solicitar outros documentos".
-- Card "Conta Digital PJ" (Contabilizei.bank) mostra Banco 301 / Agência 0001 / Conta 311101883 com ícones de copiar e saldo ocultável — **estes** dados estão à mão.
-- **Não vi na tela**: CNPJ, razão social, nome fantasia, CNAE, regime tributário, data de abertura, contrato social, cartão CNPJ, certificado digital.
-- "Solicitar outros documentos" sugere que baixar documentos é um pedido/fluxo, não um download direto.
+- URL da captura: `#/home` (confirmado no `recaptura_log.json`) — sem rota dedicada.
+- Painel dropdown aberto pelo link "Dados da empresa e banco" (canto superior direito), sobre a Home. Conteúdo:
+  - Campo com o **nome da empresa** (truncado): "PEDRO MAIA BERG DE OLIVEIRA CONSULTORIA …".
+  - **CNPJ:** 64.037.271/0001-02 · **Regime tributário:** Simples · **Inscrição Municipal:** 17240640017.
+  - Abas: **"Dados de acesso" | "Contrato Contabilizei" | "Área de Documentos"**.
+  - **Contabilizei.bank**: Banco 301 / Agência 0001 / Conta 311101883 + botão **"Copiar dados"** (bloco inteiro).
+  - "Acesse sua conta" com QR + badges App Store/Google Play.
+  - **Certificado Digital** [Ativo] — Validade: 22/12/2026 | Visualizar.
+  - **Benefícios Contabilizei** — "0 ponto | Indique e acumule pontos".
+- **Não vi**: CNAE, nome fantasia, data de abertura, Inscrição Estadual; nem download direto de contrato social/cartão CNPJ (ficam atrás da aba "Área de Documentos", não confirmado como download imediato).
+- Mesmo painel aparece no mobile, empilhado no topo sobre a Home.
 
 ## 👍 Forças (o que copiar)
-- **Dados bancários com "copiar"**: Banco/Agência/Conta com botão de cópia é ótimo micro-UX (o dado que mais se copia no dia a dia).
-- Rótulo "Dados da empresa e banco" agrupa cadastro + banco num lugar (a ideia é boa; a colocação é que falha).
+- **Certificado Digital com status "Ativo" + validade visível** — proatividade real: o cliente vê o vencimento sem procurar. Copiar isso.
+- **"Copiar dados" bancários** num clique — o dado que mais se copia no dia a dia.
+- **Agrupar cadastro + banco + certificado + documentos** num só painel é boa ideia de "central da empresa" (a colocação é que falha).
+- **Abas "Contrato Contabilizei" / "Área de Documentos"** sinalizam que os documentos têm casa (mesmo que o acesso não seja de 1ª classe).
 
 ## 👎 Fraquezas (nossa oportunidade)
-- **Dado crítico enterrado** (dor nº1 confirmada): CNPJ e contrato social não têm atalho de primeira classe. Quem precisa passar o CNPJ num cadastro externo tem que caçar.
-- **Documentos por solicitação**: "Solicitar outros documentos" indica fricção — provavelmente não há download imediato do cartão CNPJ / contrato social.
-- **Sem os campos que o dono mais precisa colar**: CNAE, regime, IE, data de abertura — nada à mão.
-- Hierarquia trata "Indique um amigo" com mais destaque no menu do que os dados da própria empresa.
+- **Não é tela, é dropdown de canto**: cadastro da empresa não está no menu — depende de descobrir um link secundário no topo. Dado que se consulta com frequência merece 1ª classe.
+- **Faltam campos que o dono mais cola**: CNAE, nome fantasia, IE, data de abertura — nenhum à mão.
+- **Copiar só o bloco**: não dá pra copiar CNPJ isolado (o caso de uso nº1) — só o pacote bancário tem botão.
+- **Documentos atrás de aba**: contrato social / cartão CNPJ não têm download óbvio de 1 clique na superfície.
 
 ## 🎯 Contraproposta Legalizei
-- **"Minha Empresa" como item fixo do menu principal** (não link escondido no topo). Abre com um **cartão-resumo copiável**: CNPJ, razão social, nome fantasia, CNAE, regime, IE, data de abertura — cada campo com botão "copiar" (igual ao que a Contabilizei já faz bem com o banco).
-- **Documentos em 1 clique, sem "solicitar"**: contrato social, cartão CNPJ, certificado digital e comprovantes disponíveis para download imediato, sempre atualizados.
-- Busca global ("digite: CNPJ") que leva ao dado em 1 passo.
-- Este é um **diferencial barato e óbvio**: onde a líder faz o usuário caçar, a Legalizei entrega em 1 tela copiável. Ótimo ponto de demo e de posicionamento ("transparência sem cliques").
+- **"Minha Empresa" como item fixo do menu principal** (não link de canto). Abre num **cartão-resumo copiável campo a campo**: CNPJ, razão social, nome fantasia, CNAE, regime, IE, Inscrição Municipal, data de abertura — cada um com "copiar" (herdando o que a Contabilizei já faz bem no banco).
+- **Manter e ampliar o status do Certificado Digital** (Ativo + validade + alerta proativo "vence em 30 dias") — eles acertam aqui; a gente melhora com aviso antecipado.
+- **Documentos em 1 clique, sem "Área de Documentos" escondida**: contrato social, cartão CNPJ, certificado e comprovantes pra download imediato, sempre atualizados.
+- **Busca global** ("digite: CNPJ") que leva ao dado em 1 passo. Onde a líder faz caçar no canto, a Legalizei entrega no menu, copiável. Diferencial barato, óbvio e demonstrável.
 
 ## Links
-- [[contabilizei]] · [[playbook-crm-contabilizei]] · [[HOME]]
+- [[contabilizei]] · [[_relatorio-auditoria]] · [[HOME]]

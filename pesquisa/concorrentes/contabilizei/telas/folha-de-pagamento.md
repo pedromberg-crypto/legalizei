@@ -3,47 +3,47 @@ tipo: teardown-tela
 data: 2026-07-09
 concorrente: Contabilizei
 plataforma: [desktop, mobile]
-media: 6.5
+media: 5.8
 tags: [concorrente, ux]
 ---
 
 # Tela: Folha de Pagamento — Contabilizei
 
-> **Alerta de captura:** o print (desktop e mobile) NÃO abriu uma tela de folha de pagamento — caiu no **dashboard Home**. Ou o clique em "Folha de Pagamento" redireciona para a Home (provável, já que ME de serviço no Simples não costuma ter funcionários), ou a captura automática não navegou. Nenhuma superfície de folha/holerite/eSocial aparece. Notas abaixo avaliam o artefato que carregou (a Home) sob a ótica de quem procurava folha.
+> **CAI NA HOME (fato observado).** A recaptura confirma pelo log: a URL de "Folha de Pagamento" resolve para `#/home` — **não existe rota/tela dedicada**. Clicar no item do menu lateral **não navega**: abre um **flyout de submenu** sobreposto à Home, com ícone de pessoa e dois links: **"Gerenciar funcionários"** e **"Consultar folha mensal"**. No mobile o mesmo submenu aparece empilhado no topo, solto, antes do conteúdo da Home. Ou seja: folha é uma **categoria de menu** (grupo com 2 sub-destinos reais), não uma tela de 1ª classe — o líder NÃO dá superfície própria pra folha (coerente: ME de serviço solo raramente tem funcionários). Correção vs. leitura anterior: os sub-destinos **existem** ("Gerenciar funcionários"/"Consultar folha mensal") — não é beco sem saída total; é submenu sem contexto. As telas-filhas em si não foram capturadas.
 
 ## Notas (0–10)
 | Eixo | Nota | Justificativa |
 |------|------|---------------|
-| Clareza | 6 | Como Home é organizada (cards Notas fiscais, Impostos, Conta PJ, Pró-labore). Mas para o job "folha de pagamento" a clareza é zero: não há nada de folha nem um empty-state explicando "você não tem funcionários". |
-| Eficiência | 7 | Home coloca tudo a 1 clique e tem "Rotinas Mensais" no rodapé. Porém clicar num item de menu e cair na Home (sem sinal de onde está) é desorientador. |
-| Feedback | 7 | Bom uso de status: "Pendências críticas" em vermelho, calendário com pontos em dias-chave, banner de mensalidade. |
-| Linguagem | 6 | Mistura muito contabilês: "DARF UN..." (truncado), "Competência", "débito automático", "Pró-labore". |
-| Confiança | 7 | Contabilizei.bank com dados bancários, saldo ocultável, pendências à mostra. Mas muita propaganda do app e cross-sell rouba o foco. |
-| Mobile | 6 | Scroll gigante (~4195px de altura), cards reordenados, barra de navegação flutuante sobrepõe conteúdo e o botão "Fale conosco" tapa o botão "Importar". |
-| **Média** | **6.5** | Home competente, mas como "Folha de Pagamento" é um beco sem saída. |
+| Clareza | 6 | Os dois rótulos do flyout ("Gerenciar funcionários", "Consultar folha mensal") são autoexplicativos. Mas o pai cai na Home: não há landing de folha, nem contexto ("você tem X funcionários"), nem título de onde estou. |
+| Eficiência | 6 | 2 passos pra chegar a qualquer coisa (abrir o flyout → escolher sub-item). Sem hub de folha; o flyout some ao mover o mouse. |
+| Feedback | 5 | O submenu não mostra estado nenhum: tenho funcionários? há holerite pendente? competência aberta? Zero sinal — e nenhum empty-state pra quem não tem folha. |
+| Linguagem | 7 | Aqui acertam: "Gerenciar funcionários" / "Consultar folha mensal" é linguagem de dono, sem contabilês. Melhor que a média da plataforma. |
+| Confiança | 6 | Atrás do flyout está a Home (pendências, calendário) — nada específico de folha pra ancorar confiança na área. |
+| Mobile | 5 | O submenu vira uma listinha solta no topo de um scroll de ~4195px, desconectada de qualquer cabeçalho; a nav flutuante e o "Fale conosco" ainda disputam espaço. |
+| **Média** | **5.8** | Folha existe como **grupo de menu com flyout**, não como tela. Navegação clara nos rótulos, pobre em contexto e estado. |
 
 ## O que vi (fatos)
-- Dashboard Home (idêntico ao capturado em `meus-beneficios` e `dados-da-empresa`).
-- Cards: Central de Rotinas (calendário Julho 2026 + "Pendências críticas: Pagamento de imposto pendente"), Notas fiscais (Faturamento R$ 0,00, "Emitir nova nota"), Impostos (Competência Jun/2026, DARF R$ 178,31), Conta Digital PJ (Contabilizei.bank), Pró-labore (R$ 1.621,00).
-- Blocos inferiores: "Benefícios para você", "Serviços Adicionais", "Rotinas Mensais" (Notas Fiscais / Pró-labore / Movimentações Bancárias / Declarações Contábeis).
-- Grande bloco publicitário "App Contabilizei evoluiu" com QR e badges de loja.
-- **Nenhum elemento de folha de pagamento** (funcionários, holerite, eSocial, admissão).
+- URL da captura: `#/home` (confirmado no `recaptura_log.json`) — não há rota dedicada de folha.
+- Item "Folha de Pagamento" no menu lateral (ícone de pessoa) abre **flyout de submenu** sobre a Home com: **"Gerenciar funcionários"** e **"Consultar folha mensal"**.
+- Fundo do flyout = dashboard Home (banner "Sua mensalidade do plano Padrão no valor de R$ 210,90 chegou!", Central de Rotinas com "Pendências críticas: Pagamento de imposto pendente", cards Impostos/Conta Digital PJ/Pró-labore).
+- **Não vi**: nenhuma tela de folha propriamente (lista de funcionários, holerite, eSocial, admissão, competência) — só o submenu que aponta pra elas.
+- Mobile: submenu renderiza no topo, sem cabeçalho de seção, antes de todo o conteúdo da Home.
 
 ## 👍 Forças (o que copiar)
-- **Central de Rotinas com pendências críticas em vermelho** — o usuário vê na hora o que está atrasado. Excelente hierarquia de urgência.
-- Home resume o mês inteiro (faturamento, imposto, pró-labore, saldo) numa tela.
-- "Rotinas Mensais" mapeia o ciclo do mês de forma escaneável.
+- **Rótulos humanos no submenu**: "Gerenciar funcionários" e "Consultar folha mensal" são exatamente os 2 jobs, ditos sem jargão. Bom padrão de nomenclatura pra copiar.
+- Manter folha como **área existente porém discreta** faz sentido pro público (ME solo) — não infla o produto com uma tela cheia que 90% não usa.
 
 ## 👎 Fraquezas (nossa oportunidade)
-- **Item de menu que leva a lugar nenhum**: "Folha de Pagamento" no menu lateral sem destino próprio (ou sem empty-state) é ruído. ME solo não tem folha — então por que o item existe com o mesmo peso visual de "Notas fiscais"?
-- **Dashboard poluído por venda**: banner de mensalidade + anúncio do app + cross-sell competem com a informação operacional.
-- **Contabilês truncado**: "DARF UN..." cortado é o pior dos dois mundos (nem o termo técnico nem uma explicação).
+- **Submenu sem contexto nem estado**: o flyout não diz se você tem funcionários, se há folha pendente, ou o que acontece se clicar. Abre no vazio.
+- **Cai na Home ao clicar o pai**: item de menu que não leva a lugar próprio desorienta — o usuário clica esperando uma tela e recebe um popover.
+- **Zero empty-state educativo** pra quem nunca teve funcionário: perde-se a chance de educar + captar intenção de contratar.
+- **Mobile solta o submenu no limbo**: sem título, no topo de um scroll gigante.
 
 ## 🎯 Contraproposta Legalizei
-- **Menu adaptativo ao perfil**: ME de serviço sem funcionários NÃO vê "Folha de Pagamento" — ou vê como item secundário com estado "ative quando contratar seu 1º funcionário". Menu = espelho do negócio do usuário, não catálogo genérico.
-- Se houver folha, mostrar **empty-state útil**: "Você ainda não tem funcionários. Contratar alguém? A gente cuida de admissão, holerite e eSocial." (educar + captar intenção).
-- Home sem anúncio de app dentro do produto; foco 100% em "o que preciso fazer este mês".
-- Nunca truncar termo fiscal: "DARF (guia única de imposto) — R$ 178,31, vence dia 15".
+- **Menu adaptativo ao perfil**: ME de serviço sem funcionários vê "Folha" como item secundário com estado explícito — "Ative quando contratar seu 1º funcionário". Menu = espelho do negócio, não catálogo genérico.
+- Se clicar, **abrir uma tela de verdade** (não flyout sobre a Home) com **empty-state útil**: "Você ainda não tem funcionários. Contratar alguém? A gente cuida de admissão, holerite e eSocial." — educar + captar intenção.
+- **Manter os rótulos humanos** ("Gerenciar funcionários", "Consultar folha mensal") — nisso a Contabilizei acerta; herdar o tom.
+- Com folha ativa, mostrar **estado no próprio item** (nº de funcionários, folha do mês, pendências) — o que o submenu deles esconde.
 
 ## Links
-- [[contabilizei]] · [[playbook-crm-contabilizei]] · [[HOME]]
+- [[contabilizei]] · [[_relatorio-auditoria]] · [[HOME]]

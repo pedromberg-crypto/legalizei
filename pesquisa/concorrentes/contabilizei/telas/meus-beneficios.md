@@ -3,47 +3,52 @@ tipo: teardown-tela
 data: 2026-07-09
 concorrente: Contabilizei
 plataforma: [desktop, mobile]
-media: 6.2
+media: 6.3
 tags: [concorrente, ux]
 ---
 
 # Tela: Meus Benefícios — Contabilizei
 
-> **Alerta de captura:** o print (desktop e mobile) NÃO abriu uma tela dedicada de "Meus Benefícios" — caiu no **dashboard Home** (mesma imagem de `folha-de-pagamento` e `dados-da-empresa`; a versão mobile foi cortada mais cedo). O mais próximo de "benefícios" visível é o bloco **"Benefícios para você"** no rodapé da Home. Notas avaliam esse bloco + a Home sob a ótica de "meus benefícios".
+> **TELA DEDICADA (fato observado) — mas é um funil de upsell.** A recaptura acertou: existe rota própria, e o log entrega o nome dela cru: `#/beneficios/landing-upsell`. É uma **landing page de upsell** com título **"Plano Multibenefícios"**. Ou seja, "Meus Benefícios" no menu **não é um hub do que você já tem** — é uma **vitrine pra vender o upgrade** (+R$30/mês). Isso **confirma e reforça** a tese anterior ("benefício = venda"), agora com prova no próprio nome da rota: *landing-upsell*. Como página é bem-feita; como "Meus Benefícios" é propaganda dressed as benefício.
 
 ## Notas (0–10)
 | Eixo | Nota | Justificativa |
 |------|------|---------------|
-| Clareza | 6 | O bloco "Benefícios para você" tem 3 ícones (plano de saúde, "Receba de seus clientes", "Parcele suas contas") pouco autoexplicativos. "Receba de seus clientes" é ambíguo — é benefício ou produto? |
-| Eficiência | 7 | Tudo acessível da Home; benefícios ficam a 1 clique. Mas não há hub único "meus benefícios" — estão espalhados (rodapé + menu lateral). |
-| Feedback | 6 | Cards de benefício não mostram estado ("ativo", "contratado", "disponível"). O usuário não sabe o que já tem vs. o que é oferta. |
-| Linguagem | 6 | Razoável, mas "Receba de seus clientes" e "Parcele suas contas" são rótulos vagos que não dizem o benefício concreto. |
-| Confiança | 6 | Os "benefícios" leem como **cross-sell/upsell**, não como vantagens que o cliente já possui. Isso baixa a percepção de "benefício" para "vitrine de venda". |
-| Mobile | 6 | Bloco reflui, mas fica no fim de um scroll longuíssimo; barra de navegação flutuante sobrepõe conteúdo. |
-| **Média** | **6.2** | Sem hub real de benefícios; o que existe parece vitrine de venda mais do que valor entregue. |
+| Clareza | 7 | Oferta clara: "escolha 2 dos 7 benefícios", comparação de planos lado a lado, cards de parceiros (TotalPass/Starbem/Conexa). Mas quem busca "quais benefícios eu já tenho" não acha — só oferta. |
+| Eficiência | 7 | Comparativo "Avançado × Upgrade Multibenefícios" + CTA "Quero evoluir meu plano" tornam o upgrade eficiente. Nenhum caminho pro "o que já uso". |
+| Feedback | 5 | Nenhum estado do que o cliente possui/consome. Tudo é oferta futura. O comparativo de duas colunas ajuda, mas não há "você já tem X". |
+| Linguagem | 7 | "Só a Contabilizei tem o plano que completa sua empresa", "escolha 2 dos 7" — humana e orientada a benefício. Ainda com asteriscos ("nf**", "à parte"). |
+| Confiança | 5 | Chamar landing de upsell de "Meus Benefícios" corrói a palavra. E há **inconsistência de plano/preço**: o banner da Home diz "plano Padrão R$ 210,90"; aqui o plano atual é "Avançado R$ 195/mês". Nome e valor divergem — ruído de transparência. |
+| Mobile | 7 | Reflui bem: hero, carrossel de parceiros e comparativo empilham legíveis; longo mas coerente. Bem acima da Home no mobile. |
+| **Média** | **6.3** | Página real e polida — mas é funil de venda (rota literalmente `landing-upsell`), não o hub de benefícios que o rótulo promete. |
 
 ## O que vi (fatos)
-- Dashboard Home (capturado no lugar da tela dedicada).
-- Bloco "Benefícios para você" com 3 itens em ícones circulares: "Economize com plano de saúde", "Receba de seus clientes", "Parcele suas contas".
-- Menu lateral tem item "Meus Benefícios" (com ícone de presente) — mas o clique não levou a uma tela própria na captura.
-- Bloco "Serviços Adicionais" ao lado: Adicionar/remover sócios, Alterar nome/endereço, Solicitar documentos, etc.
-- Nenhum indicador de "benefícios ativos", saldo de vantagens, cashback ou histórico.
+- Rota: `#/beneficios/landing-upsell` (confirmado no `recaptura_log.json`).
+- **Hero "Plano Multibenefícios"** — "Só a Contabilizei tem o plano que completa sua empresa." CTAs "Quero evoluir meu plano" / "Conheça outros benefícios" + colagem de fotos lifestyle.
+- **"Conheça as vantagens do plano Multibenefícios"** — "Nessa oferta você escolhe **2 dos 7 benefícios**". Carrossel: **TotalPass** (+25.000 academias; Plano Free grátis / a partir de R$ 39,90), **Starbem** (4 consultas 30min/mês c/ psicólogos; 1/mês nutricionista; descontos farmácia), **Conexa** (pronto atendimento online 24h; teleconsultas ilimitadas c/ clínico geral).
+- **Comparativo de planos**:
+  - **Avançado (Plano atual) — R$ 195/mês**: certificado digital grátis; **folha de pagamento cobrada à parte**; pró-labore de sócios grátis até 2 sócios; atendimento por chat 9h–17h30 e WhatsApp/e-mail 9h–22h; conta digital PJ inclusa; faturamento até R$ 50 mil/mês; abertura grátis; compensação de boleto R$ 2,70; **atendimento por telefone NÃO incluso**; **contador exclusivo NÃO incluso**; emissor de NF grátis; contabilidade completa.
+  - **Upgrade Multibenefícios (Recomendado) — +R$ 30/mês (Total R$ 225,00)**: todos os serviços do plano anterior + escolher 2 de: seguro de vida, plano odontológico, TotalPass, atendimento psicológico e nutricional, atendimento médico.
+- **"+ Benefícios"**: Plano de saúde da Contabilizei ("preços até 30% menores"; parceiros Unimed, Alice, Amil, SulAmérica, Sami, Bradesco; "Fazer simulação") e Educação ("cursos 100% gratuitos"; "Me Poupe! Eu, Chefe de Mim"; "Acessar plataforma").
+- **Intel de preço**: plano base "Avançado" = **R$ 195/mês** (bate com o alvo do posicionamento Legalizei); upgrade → R$ 225/mês. Banner da Home diverge ("Padrão R$ 210,90").
 
 ## 👍 Forças (o que copiar)
-- Reunir vantagens num bloco visual com ícones é uma boa intenção de "clube de benefícios".
-- Alguns itens são genuinamente úteis para o público (plano de saúde, antecipação de recebíveis, parcelamento de contas).
+- **Comparativo de planos lado a lado** com o plano atual marcado é ótima UX de upgrade — claro o que ganho por +R$30.
+- **"Escolha 2 dos 7"** dá sensação de controle/personalização em vez de pacote empurrado.
+- Alguns benefícios têm **valor concreto** (nº de consultas, nº de academias, % de desconto) — bem melhor que rótulo vago.
+- Mobile reflui com qualidade — prova que a Contabilizei sabe fazer página responsiva quando quer (contraste com a Home).
 
 ## 👎 Fraquezas (nossa oportunidade)
-- **"Benefício" que é venda**: os três cards são ofertas para contratar, não vantagens já incluídas. Chamar upsell de "benefício" corrói confiança.
-- **Rótulos vagos**: "Receba de seus clientes" e "Parcele suas contas" não comunicam o quê nem o custo. Zero número.
-- **Sem estado**: não distingue "você já tem" de "disponível para contratar" — usuário não sabe o que possui.
-- **Sem hub**: benefícios pulverizados entre rodapé da Home e menu lateral, sem uma casa única.
+- **"Meus Benefícios" = upsell**: a rota é literalmente `landing-upsell`. Não existe visão do que o cliente **já tem/usa** — só o que pode comprar. Corrói a palavra "benefício".
+- **Inconsistência de plano/preço**: "Padrão R$ 210,90" (banner) vs "Avançado R$ 195" (aqui). Nome e valor não batem — mancha de transparência.
+- **Sem estado nem histórico**: nada de "você já economizou R$ X", "benefício ativo desde…", "consultas usadas".
+- **Asteriscos e "à parte"**: "folha à parte", "nf**" reintroduzem letrinha miúda numa página que se vende como generosa.
 
 ## 🎯 Contraproposta Legalizei
-- Criar um **hub "Meus Benefícios" de verdade** que separe claramente **incluídos no plano** (o que o cliente já ganha — ex.: emissão ilimitada de NF, suporte, relatórios) de **parcerias opcionais** (saúde, crédito) — rotuladas como parceria, não como "benefício".
-- Cada item com **valor concreto**: "Você já economizou R$ X este ano" / "Plano de saúde a partir de R$ Y/vida". Benefício se prova com número.
-- Mostrar **estado** (ativo / disponível / usado) e histórico.
-- Nunca vender vestido de "benefício" — transparência é o nosso diferencial de posicionamento.
+- **Hub "Meus Benefícios" de verdade**: separar **incluídos no plano** (o que já ganha — emissão ilimitada de NF, suporte, relatórios) de **parcerias opcionais** (saúde, TotalPass) — rotuladas como parceria, nunca como "benefício" genérico.
+- Cada item com **valor e estado concretos**: "Ativo desde 03/2026 · você já economizou R$ X" / "Plano de saúde a partir de R$ Y/vida".
+- **Herdar o comparativo lado-a-lado** e o "escolha 2 dos 7" — são bons; só que dentro de um hub honesto, não como a tela inteira.
+- **Preço e nome do plano únicos e coerentes** em toda a plataforma — o oposto da divergência Padrão/Avançado. Transparência é nosso posicionamento.
 
 ## Links
-- [[contabilizei]] · [[playbook-crm-contabilizei]] · [[HOME]]
+- [[contabilizei]] · [[_relatorio-auditoria]] · [[HOME]]

@@ -1,0 +1,26 @@
+[
+ {
+  "slug": "folha-de-pagamento",
+  "url": "https://app.contabilizei.com.br/painel-de-controle/#/home"
+ },
+ {
+  "slug": "meus-beneficios",
+  "url": "https://app.contabilizei.com.br/painel-de-controle/#/beneficios/landing-upsell"
+ },
+ {
+  "slug": "dados-da-empresa",
+  "url": "https://app.contabilizei.com.br/painel-de-controle/#/home"
+ },
+ {
+  "slug": "nf-listagem",
+  "url": "https://app.contabilizei.com.br/painel-de-controle/#/emissor/listagem"
+ },
+ {
+  "slug": "nf-wizard-passo1",
+  "url": "https://app.contabilizei.com.br/painel-de-controle/#/emissor/listagem"
+ },
+ {
+  "slug": "nf-wizard-passo2",
+  "url": "https://app.contabilizei.com.br/painel-de-controle/#/emissor/listagem"
+ }
+]

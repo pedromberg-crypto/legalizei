@@ -22,8 +22,21 @@ tags: [tech, produto, imersao]
 
 ## FLUXO DA REUNIÃO (na ordem)
 
-### Bloco 0 — Abertura (5 min)
-Alinhar objetivo: MVP tipo Contabilizei, ICP ME serviço Simples BH. Mostrar rápido o que já mapeamos (auditoria + fluxo Izabela + matriz).
+### Bloco 0 — Abertura + "o que já temos" (mostrar a evolução)
+Alinhar objetivo (MVP tipo Contabilizei, ICP ME serviço Simples BH) e mostrar o **chão já construído** — dá contexto e credibilidade (produto embasado em pesquisa, não achismo):
+
+**1. Mercado (desk research BR):** ~16 mi empresas no nosso perfil · líder <1% (não saturado) · 5 concorrentes mapeados · pricing do líder rastreado (Básico R$139 extinto, entrada agora R$195→R$210,90 real).
+
+**2. Inteligência do líder (Contabilizei) — fundo:** auditoria de **30 telas** (desktop + mobile) + wizard de emissão · playbook de CRM dos **82 emails** · jornada de onboarding (23 dias, D0→D+29) · ranking de oportunidades: **mobile fraco, cross-sell excessivo, contabilês, dados-empresa escondido**.
+
+**3. Regras do jogo (compliance/CNAE):** **matriz CNAE do governo (1332 IBGE)** + cobertura do líder · **fluxo de abertura BH validado com a contadora (Izabela)** passo a passo · mapa de portais (JUCEMG, Redesim, ALF, BHISS/DES-BH, SISDRAM, SIARE) · custos e prazos reais (R$288 junta, 5 dias BH).
+
+**4. Produto:** **spec-cunha do MVP v0** (núcleo + princípios + o que NÃO fazer).
+
+**5. Marca:** frente iniciada — defesa do naming **Legalizei**.
+
+**6. Infra:** vault Obsidian versionado no **git** — tudo rastreável, nada se perde.
+> Mensagem: "temos o mapa do líder, das regras e do produto. Agora precisamos do trilho técnico — é o que vim fechar com você."
 
 ### Bloco 1 — FUNDAÇÃO: App × Leghub 🔑 (a decisão-mãe, destrava tudo)
 **Decisão:** o app do cliente **reaproveita o Leghub** (que ele já construiu, ~50% automação) como back-office/motor, ou é **produto novo separado**?

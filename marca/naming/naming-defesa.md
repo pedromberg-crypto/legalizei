@@ -59,14 +59,14 @@ Existe o escritório **Legalize** (22 anos, Mauro) e o app **Legalizei**. O "-i"
 3. **Comprimento (4 sílabas):** acima do ideal de brevidade. Aceitável pela familiaridade, mas pesa em logo/app icon (pensar abreviação/símbolo: "L", "Lz", "l.").
 4. **Genérico em busca:** conjugação comum → SEO exige investimento de marca.
 
-## ✅ Validações pendentes (antes de travar 100%)
-- [ ] **INPI** — busca de marca "Legalizei" na classe de serviços contábeis (registrabilidade).
-- [ ] **Domínio** — legalizei.com.br disponível? (a matriz usa legalizedigital.com.br). Checar .com.br + variações.
-- [ ] **Redes sociais** — @legalizei disponível?
-- [ ] **Teste de percepção** rápido (5–10 pessoas): "o que esse nome te diz?" — pegar a associação cannabis vs empresa.
+## ✅ Validações (status 2026-07-09)
+- [~] **INPI** — 🟡 encaminhado internamente na contabilidade pra avaliar registrabilidade (classe serviços contábeis).
+- [x] **Domínio** — ✅ .com.br indisponível → **legalizei.app** (compra hoje). Escolha melhor: sinaliza "app", moderno, força HTTPS (casa c/ posicionamento de segurança).
+- [~] **Redes sociais** — @legalizei parece existir/suspenso; **@legalizei.app ou @legalizeiapp** são válidos e não bloqueiam. Confirma na criação.
+- [ ] **Teste de percepção** rápido (5–10 pessoas) — associação cannabis vs empresa. (opcional, baixo risco)
 
-## Veredito
-🟢 **Nome forte e recomendado** — o encaixe no padrão do líder (#1) + a voz do cliente (#2) + o diferenciador "-i" (#3) formam uma defesa sólida, não só "é auto-explicativo". Os riscos são gerenciáveis e as validações (INPI/domínio) são checagens, não bloqueios. **Recomendo travar "Legalizei" após as 4 validações acima.**
+## Veredito — ✅ APROVADO (nome de trabalho, 2026-07-09)
+Pedro validou a defesa. Encaixe no padrão do líder + voz do cliente + diferenciador "-i" = defesa sólida. Domínio resolvido (legalizei.app). INPI em avaliação (não-bloqueante). **Nome travado como nome de trabalho; seguimos pro conceito e identidade visual.**
 
 ## Links
 - [[marca]] · [[decisoes-marca]] · [[BASE-ESTRATEGICA]] · [[_relatorio-auditoria]]

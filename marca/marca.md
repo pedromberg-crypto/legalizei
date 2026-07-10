@@ -10,8 +10,8 @@ tags: [marca, design]
 
 > Frente de construção de marca do app. Vive aqui do naming até a identidade aprovada. Método: gates por etapa + log de decisões.
 
-## 📍 Etapa atual: **NAMING** (em debate)
-Gates: **naming** → conceito → referências → identidade visual → aplicação → aprovação final.
+## 📍 Etapa atual: **CONCEITO** (naming ✅ aprovado — Legalizei, domínio legalizei.app)
+Gates: naming ✅ → **conceito** → referências → identidade visual → aplicação → aprovação final.
 
 ## Índice
 - [[naming-defesa]] — defesa do nome "Legalizei" (base pesquisada) ← começamos aqui

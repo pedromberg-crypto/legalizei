@@ -59,10 +59,10 @@ O autônomo que virou PJ (marketing, TI, consultoria, beleza, saúde…). Não e
 - "Legalizei — e pronto."
 - "Contabilidade que fala a sua língua."
 
-## Aberto pra debate
-- Arquétipo: Aliado/Prestativo fecha, ou quer um tom mais "Herói do empreendedor"?
-- Cor: topa fugir do azul? Tem cor que o Mauro/Legalize já usa que a gente respeita ou rompe?
-- Nome do símbolo: "L", check, ou outro caminho?
+## Decisões (2026-07-10, armado com a pesquisa de concorrente)
+- **Arquétipo: Aliado leve/vitorioso — 🟢 TRAVADO.** O cliente é o herói; a marca é o aliado humano que carrega o chato. Responde direto à ferida da categoria ("vocês têm contador de verdade?") e ocupa a ponta quente-humana que está vazia no espectro de tom. Tom = alívio + conquista ("Legalizei!").
+- **Cor: CORAL lidera (Direção A) — 🟢 TRAVADO.** Sistema disciplinado de 2 cores: coral marca (≈#F2643C, tom em ajuste fino) + base ink (#1C1F26). Decidido vendo lockup materializado — coral é a única cor quente E vazia no setor azul-esverdeado; "leve na cara, séria no motor". Racional em [[referencias]] e [[_sintese-paginas-publicas]].
+- **Símbolo: 🟡 aberto** — direção "Legalizei = consegui" (check/selo de conquista ou "L"), explorado depois de travar a cor.
 
 ## Links
 - [[marca]] · [[naming-defesa]] · [[decisoes-marca]] · [[_relatorio-auditoria]] · [[spec-mvp-v0]] · [[HOME]]

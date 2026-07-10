@@ -13,10 +13,13 @@ tags: [marca, decisao]
 | Data | Decisão | Status | Racional / fonte |
 |---|---|---|---|
 | 2026-07-09 | **Nome do produto = "Legalizei"** | 🟢 aprovado (nome de trabalho) | Pedro validou a defesa. Espelha padrão do líder, voz do cliente, "-i" diferencia da matriz. Ver [[naming-defesa]] |
-| 2026-07-09 | **Domínio = legalizei.app** (compra hoje) | 🟢 travado | .com.br indisponível; .app é melhor: sinaliza "app", moderno, e força HTTPS (casa com o posicionamento de segurança). @ no IG: legalizei.app ou legalizeiapp (não bloqueia). |
+| 2026-07-09 | **Domínio principal = legalizei.app** | 🟢 travado | .com.br indisponível; .app sinaliza "app", moderno, força HTTPS. |
+| 2026-07-10 | **Domínios comprados** (legalizei.app + legalizeiapp.com + legalizeiapp.com.br na Hostinger; legalizei.app.br no registro.br) | 🟢 comprado | Titular dos .br = CNPJ da **Legalize Digital** (não CPF; registro.br não transfere PF→PJ). Email contato@legalizei.app. Ver memória `legalize-dominios-infra`. |
 | 2026-07-09 | INPI (registro de marca) | 🟡 em avaliação | Encaminhado internamente na contabilidade (Legalize) pra avaliar registrabilidade na classe de serviços contábeis |
 | 2026-07-09 | **Marca = digital pura** (não "braço do escritório tradicional") | 🟢 travado | Tese estratégica [[BASE-ESTRATEGICA]] §2 |
 | 2026-07-09 | **Tom: humano, transparente, anti-cross-sell** | 🟢 travado (princípio) | Oposto do líder ([[_relatorio-auditoria]], [[spec-mvp-v0]]) |
+| 2026-07-10 | **Arquétipo = Aliado leve/vitorioso** | 🟢 travado | Cliente é herói, marca é aliado que carrega o chato. Responde à ferida "tem contador de verdade?" e ocupa a ponta quente-humana vazia. Ver [[conceito-marca]] §4 |
+| 2026-07-10 | **Cor líder = CORAL (Direção A)** + sistema disciplinado de 2 cores (coral marca + base ink) | 🟢 travado | Decidido vendo lockup materializado. Coral quente = única cor vazia num setor azul-esverdeado frio; craft impecável neutraliza risco de "informal". Tom exato do coral (≈#F2643C) em ajuste fino. Ver [[referencias]], [[_sintese-paginas-publicas]] |
 
 ## Links
 - [[marca]] · [[naming-defesa]]

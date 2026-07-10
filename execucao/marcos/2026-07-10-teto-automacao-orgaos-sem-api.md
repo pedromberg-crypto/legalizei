@@ -17,11 +17,17 @@ Nem a Contabilizei (líder) é 100% digital/automatizada. Estimamos que **~15–
 - Além de não terem API, **exigem sessão logada** (login + navegação manual) pra executar tarefas → no máximo RPA assistido, não integração limpa.
 - É **estrutural do setor público**, não bug de concorrente — logo, vale pra qualquer player, inclusive nós.
 
+## Corroboração — os concorrentes também não são 100% digitais
+Passeando pelos 6 concorrentes: **todos**, ao clicar em "abrir empresa grátis", jogam o usuário num **formulário que termina em "um consultor entrará em contato"**. O funil deles tem humano/venda consultiva no meio — ninguém entrega abertura 100% self-service. Reforça: o teto de automação é do **setor**, não nosso.
+
 ## Implicações (o que isso muda)
 - **Produto:** a arquitetura precisa prever **etapas humanas assistidas** (human-in-the-loop), não prometer "100% automático". Meta realista de automação ≈ **80–85%**.
 - **Custo/ops:** existe um time de operação/validação embutido no modelo (não é SaaS puro sem gente). Alimenta o modelo de custo.
 - **Marca (vira vantagem):** casa direto com o arquétipo [[conceito-marca]] (aliado humano). Transformar a limitação em feature — "tem gente de verdade garantindo cada etapa" — responde à ferida da categoria ("tem contador de verdade?").
 - **Comunicação:** transparência sobre o que é automático x humano = diferenciação (o líder esconde isso).
+
+## Próximo passo
+- **Semana que vem: reavaliar a rota do produto** à luz dessas descobertas (quanto prometer de automático, onde entra o humano, qual o fluxo real de abertura). O dev (Pedro) **já está trabalhando na nova validação**.
 
 ## Links
 - [[orgaos-sistemas-abertura-bh]] · [[fluxo-abertura-portais-pedro-dev]] · [[spec-mvp-v0]] · [[_relatorio-auditoria]] · [[conceito-marca]] · [[evolucao-para-mauro]]

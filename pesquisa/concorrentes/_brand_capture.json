@@ -1,0 +1,466 @@
+{
+ "contabilizei": {
+  "landing": {
+   "cores_fundo": [
+    {
+     "hex": "#04f7f7",
+     "count": 6
+    },
+    {
+     "hex": "#002868",
+     "count": 5
+    },
+    {
+     "hex": "#0033b7",
+     "count": 4
+    },
+    {
+     "hex": "#d9e8f8",
+     "count": 1
+    },
+    {
+     "hex": "#30455c",
+     "count": 1
+    }
+   ],
+   "cores_texto": [
+    {
+     "hex": "#002868",
+     "count": 137
+    },
+    {
+     "hex": "#0d6efd",
+     "count": 76
+    },
+    {
+     "hex": "#0033b7",
+     "count": 66
+    },
+    {
+     "hex": "#04f7f7",
+     "count": 33
+    },
+    {
+     "hex": "#157ffb",
+     "count": 22
+    },
+    {
+     "hex": "#475667",
+     "count": 19
+    },
+    {
+     "hex": "#7c92ab",
+     "count": 16
+    },
+    {
+     "hex": "#30455c",
+     "count": 9
+    }
+   ],
+   "font_h1": "Lato, sans-serif",
+   "font_h2": "Lato, LatoFallback, sans-serif",
+   "font_body": "Lato, sans-serif",
+   "headline": "Economize até R$ 4 mil por ano na sua contabilidade completa",
+   "ctas": [
+    "Serviços",
+    "Abrir empresa grátis",
+    "Deixar de ser MEI",
+    "Trocar de contador",
+    "Contabilidade completa",
+    "Assessoria Contábil",
+    "Escritório Virtual",
+    "Emissor de Nota Fiscal",
+    "Certificado Digital",
+    "Banco PJ",
+    "Cobrança de Clientes",
+    "Plano de Saúde"
+   ],
+   "title": "Contabilizei: a maior contabilidade online do Brasil",
+   "meta_desc": "Abra seu CNPJ em BH e comece com contabilidade a partir de R$195/mês.",
+   "url": "https://www.contabilizei.com.br/belo-horizonte/"
+  }
+ },
+ "agilize": {
+  "landing": {
+   "cores_fundo": [
+    {
+     "hex": "#7537ae",
+     "count": 21
+    },
+    {
+     "hex": "#6b21a8",
+     "count": 18
+    },
+    {
+     "hex": "#eae1f3",
+     "count": 14
+    },
+    {
+     "hex": "#21e3a3",
+     "count": 8
+    },
+    {
+     "hex": "#efe3fb",
+     "count": 3
+    },
+    {
+     "hex": "#9644e3",
+     "count": 2
+    },
+    {
+     "hex": "#baf6e2",
+     "count": 1
+    },
+    {
+     "hex": "#22c55e",
+     "count": 1
+    }
+   ],
+   "cores_texto": [
+    {
+     "hex": "#9644e3",
+     "count": 40
+    },
+    {
+     "hex": "#7537ae",
+     "count": 39
+    },
+    {
+     "hex": "#6b7280",
+     "count": 36
+    },
+    {
+     "hex": "#462168",
+     "count": 8
+    },
+    {
+     "hex": "#744ab5",
+     "count": 2
+    },
+    {
+     "hex": "#0c4f39",
+     "count": 1
+    }
+   ],
+   "font_h1": "\"Museo Sans Rounded\"",
+   "font_h2": "Inter, \"Inter Fallback\", Inter, sans-serif",
+   "font_body": "Inter, \"Inter Fallback\", Inter, sans-serif",
+   "headline": "Você cuida da sua empresa. A gente cuida da sua contabilidade.",
+   "ctas": [
+    "Abrir empresa grátis",
+    "Trocar de contador",
+    "Migrar de MEI para ME",
+    "Agilize Multibenefícios",
+    "Agilize Unique",
+    "Desenvolvedores",
+    "Médicos",
+    "Engenheiros",
+    "Psicólogos",
+    "Consultores",
+    "Advogados",
+    "Planos"
+   ],
+   "title": "Agilize Contabilidade | A 1ª Contabilidade Online do Brasil",
+   "meta_desc": "O serviço de contabilidade online ideal para manter sua empresa em dia. Cuidamos de toda a sua rotina contábil com agilidade, segurança e sem burocracia.",
+   "url": "https://www.agilize.com.br/"
+  }
+ },
+ "contaja": {
+  "landing": {
+   "cores_fundo": [
+    {
+     "hex": "#b1ce0b",
+     "count": 18
+    },
+    {
+     "hex": "#92ac00",
+     "count": 7
+    },
+    {
+     "hex": "#bddb18",
+     "count": 4
+    },
+    {
+     "hex": "#a6c101",
+     "count": 1
+    },
+    {
+     "hex": "#396600",
+     "count": 1
+    }
+   ],
+   "cores_texto": [
+    {
+     "hex": "#0000ee",
+     "count": 41
+    },
+    {
+     "hex": "#92ac00",
+     "count": 8
+    },
+    {
+     "hex": "#bddb18",
+     "count": 6
+    },
+    {
+     "hex": "#b1ce0b",
+     "count": 1
+    }
+   ],
+   "font_h1": "effra, sans-serif",
+   "font_h2": "effra, sans-serif",
+   "font_body": "effra, sans-serif",
+   "headline": "Contabilidade Online: troque de contador e abra sua empresa de forma fácil",
+   "ctas": [
+    "ContaJÁ",
+    "COMEÇAR AGORA",
+    "LOGIN",
+    "SOBRE NÓS",
+    "SERVIÇOS",
+    "BLOG",
+    "TROCAR DE CONTADOR",
+    "ABRIR EMPRESA\nGRÁTIS*",
+    "ABRIR EMPRESA",
+    "VER PLANOS",
+    "ABRIR EMPRESA AGORA",
+    "Sobre Nós"
+   ],
+   "title": "Contajá Contabilidade Online | Abrir Empresa | Trocar de Contador",
+   "meta_desc": "Contabilidade Online Contajá Contabilidade Online | Abrir Empresa | Trocar de Contador",
+   "url": "https://contaja.com.br/"
+  }
+ },
+ "facilite": {
+  "landing": {
+   "cores_fundo": [
+    {
+     "hex": "#1371ec",
+     "count": 8
+    },
+    {
+     "hex": "#0d1b2e",
+     "count": 3
+    },
+    {
+     "hex": "#0080ff",
+     "count": 2
+    },
+    {
+     "hex": "#3b94ed",
+     "count": 2
+    },
+    {
+     "hex": "#25d366",
+     "count": 1
+    },
+    {
+     "hex": "#04172f",
+     "count": 1
+    },
+    {
+     "hex": "#29d981",
+     "count": 1
+    }
+   ],
+   "cores_texto": [
+    {
+     "hex": "#0000ee",
+     "count": 189
+    },
+    {
+     "hex": "#0d1b2e",
+     "count": 185
+    },
+    {
+     "hex": "#efcc4e",
+     "count": 60
+    },
+    {
+     "hex": "#1371ec",
+     "count": 40
+    },
+    {
+     "hex": "#6b7280",
+     "count": 25
+    },
+    {
+     "hex": "#6b7a8d",
+     "count": 7
+    },
+    {
+     "hex": "#aabbc0",
+     "count": 5
+    },
+    {
+     "hex": "#5a6475",
+     "count": 5
+    }
+   ],
+   "font_h1": "\"Raleway SemiBold\", \"Raleway SemiBold Placeholder\", sans-serif",
+   "font_h2": "\"Nunito Sans\", \"Nunito Sans Placeholder\", sans-serif",
+   "font_body": "\"Raleway Regular\", \"Raleway Regular Placeholder\", sans-serif",
+   "headline": "Da abertura de empresa à contabilidade online completa da sua operação",
+   "ctas": [
+    "Home",
+    "Sobre",
+    "Recursos",
+    "Serviços",
+    "Blog",
+    "Planos",
+    "Entrar",
+    "Abra seu CNPJ",
+    "Trocar de Contador",
+    "SAIBA MAIS",
+    "Abra sua empresa"
+   ],
+   "title": "Facilite: Contabilidade Online Descomplicada | Seu Contador Online",
+   "meta_desc": "Precisa de um contador online confiável? Nossa contabilidade online facilita a gestão financeira da sua empresa com eficiência e economia. Conheça nossos serviços!",
+   "url": "https://www.facilite.co/"
+  }
+ },
+ "marvee": {
+  "landing": {
+   "cores_fundo": [
+    {
+     "hex": "#5bc0be",
+     "count": 13
+    },
+    {
+     "hex": "#1c2541",
+     "count": 3
+    },
+    {
+     "hex": "#3a506b",
+     "count": 1
+    },
+    {
+     "hex": "#25d366",
+     "count": 1
+    }
+   ],
+   "cores_texto": [
+    {
+     "hex": "#3a506b",
+     "count": 207
+    },
+    {
+     "hex": "#5bc0be",
+     "count": 124
+    },
+    {
+     "hex": "#478dca",
+     "count": 16
+    },
+    {
+     "hex": "#5fd365",
+     "count": 7
+    },
+    {
+     "hex": "#db923b",
+     "count": 7
+    },
+    {
+     "hex": "#1c2541",
+     "count": 3
+    }
+   ],
+   "font_h1": "Palanquin, sans-serif",
+   "font_h2": "Palanquin, sans-serif",
+   "font_body": "Palanquin, sans-serif",
+   "headline": "Transforme a Gestão Financeira da sua empresa com BPO Financeiro.",
+   "ctas": [
+    "Quem somos",
+    "Para a sua empresa",
+    "Especialidades",
+    "Conteúdos",
+    "Junte se a nós",
+    "Fale com a gente",
+    "Entrar",
+    "Nossas soluções",
+    "Fale com um especialista",
+    "Fale com a Marvee",
+    "O que é BPO Financeiro?"
+   ],
+   "title": "BPO Financeiro da Marvee | aumente sua eficiência",
+   "meta_desc": "Com o BPO Financeiro da Marvee, sua empresa ganha agilidade, reduz erros e aumenta a produtividade. Experimente agora a solução completa para o seu negócio!",
+   "url": "https://marvee.com.br/"
+  }
+ },
+ "contabilivre": {
+  "landing": {
+   "cores_fundo": [
+    {
+     "hex": "#57d300",
+     "count": 8
+    },
+    {
+     "hex": "#13b5ea",
+     "count": 5
+    },
+    {
+     "hex": "#e7ffe7",
+     "count": 3
+    },
+    {
+     "hex": "#0b6156",
+     "count": 2
+    },
+    {
+     "hex": "#9ca3af",
+     "count": 1
+    }
+   ],
+   "cores_texto": [
+    {
+     "hex": "#57d300",
+     "count": 13
+    },
+    {
+     "hex": "#0d6efd",
+     "count": 12
+    },
+    {
+     "hex": "#ff0000",
+     "count": 6
+    },
+    {
+     "hex": "#13b5ea",
+     "count": 5
+    },
+    {
+     "hex": "#4a5565",
+     "count": 4
+    },
+    {
+     "hex": "#364153",
+     "count": 1
+    },
+    {
+     "hex": "#0f172b",
+     "count": 1
+    }
+   ],
+   "font_h1": "Poppins, sans-serif",
+   "font_h2": "Poppins, sans-serif",
+   "font_body": "Poppins, sans-serif",
+   "headline": "Contabilivre",
+   "ctas": [
+    "Aceitar",
+    "Recusar",
+    "Abrir empresa Grátis",
+    "Já tenho empresa",
+    "Endereço Fiscal",
+    "Conteúdo",
+    "Blog",
+    "Login",
+    "Abrir sua empresa",
+    "Política de Privacidade",
+    "Termos de Uso",
+    "Iniciar conversa"
+   ],
+   "title": "Contabilivre | Seu Escritório de Contabilidade Online",
+   "meta_desc": "Simplifique sua gestão contábil e fiscal com a Contabilivre. Escritório de contabilidade online completo para sua empresa e abertura de CNPJ grátis.",
+   "url": "https://www.contabilivre.com.br/"
+  }
+ }
+}

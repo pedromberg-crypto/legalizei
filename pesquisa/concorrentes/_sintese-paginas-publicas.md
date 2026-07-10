@@ -48,6 +48,29 @@ tags: [concorrente, pricing, posicionamento, marca]
 - **Facilite:** vende "IA/TouchTech/OpenFinance" com **1 dev + 1 CTO** no /sobre. Narrativa tech >> time tech. PM+dev de verdade supera. Wedge de **nicho** (Airbnb/temporada) é o modelo a imitar.
 - **Agilize:** "20% desconto" permanente = âncora falsa (nunca sai). 4º plano escondido pra não canibalizar o Basic.
 
+## 🗣️ Tom dos FAQs — a "linguagem" da categoria (2º passe: texto Q&A real)
+> Puxamos o Q&A via JSON-LD/acordeão de cada landing. O tom é a evidência direta pra nossa tese de "linguagem humana".
+
+**Achado nº1 — a FERIDA DE CONFIANÇA da categoria.** A pergunta que MAIS se repete entre concorrentes: **"Vocês têm contador DE VERDADE?"** (Contabilizei E Agilize, texto quase idêntico). O mercado tem medo de que "online = sem humano de verdade". → **Nossa maior munição:** "humano no plano de entrada" não é feature — é a resposta à ansiedade nº1 do cliente. A marca tem que gritar "tem gente de verdade aqui" (foto real, nome, CRC visível).
+
+**Achado nº2 — o FAQ deles é ativo de SEO, não ajuda.** As perguntas da Contabilizei são queries de Google ("Quanto custa um contador?", "Qual é o custo para abrir CNPJ?"), repetidas e recheadas de palavra-chave; toda resposta fecha com "Saiba mais / recomendamos a leitura" (link juice). Não existe pra ajudar o cliente — existe pra rankear. → **Brecha: um FAQ que de fato AJUDA (linguagem de gente, sem link de venda) é nossa "linguagem humana" tornada concreta.**
+
+**Achado nº3 — jargão é explicado, mas em contabilês frio.** Ex. Contabilizei sobre certificado digital: *"ferramenta que permite que empresas assinem documentos... total validade jurídica e é obrigatório"*. Ninguém traduz pro mundo do cliente ("é tipo sua assinatura digital — sem ela você não emite nota"). → **Nosso wedge de tom: traduzir de verdade, não explicar tecnicamente.**
+
+**Achado nº4 — as pegadinhas aparecem no FAQ, não na página de preço.** Contabilivre só no FAQ revela **taxa de antecipação R$99,90 + fidelidade de 12 meses** (não está na vitrine de planos). Contabilizei: o "grátis" ganha asterisco (taxas Junta/alvará) só no Q&A. → **Confirma de novo: transparência real (sem letra miúda escondida) é o fosso.**
+
+**Espectro de tom (do mais quente ao mais frio):**
+| Concorrente | Tom do FAQ | Tell |
+|---|---|---|
+| Contaja | + quente/populista | "Nós queremos ajudar o empreendedor brasileiro. Vamos juntos?" · explica "o que é contrato social?" |
+| Contabilivre | "cuido de tudo pra você" | mas embutido em formulários de captura; manifesto #livre sem substância |
+| Agilize | obcecado em migração | 8 de 20 perguntas são sobre "trocar de contador" (o wedge dela = roubar cliente de escritório) |
+| Facilite | buzzword de nicho | inventa jargão próprio ("Contabilidade TouchTech"); foco Airbnb |
+| Marvee | B2B consultivo | metade do FAQ é sobre a FRANQUIA, não o serviço; "valor após reunião" |
+| Contabilizei | autoridade fria | institucional 3ª pessoa, "somos a maior", SEO-first |
+
+**Fato BH (do FAQ Contabilizei):** faz desenquadramento de MEI só em **4 cidades — SP, Curitiba, BH e Brasília.** BH é mercado disputado pelo líder, não terra de ninguém. (E: Contabilizei **não atende MEI** — brecha de entrada.)
+
 ## 🎯 O que isso muda no conceito de marca
 Reforça com DADO os pilares do [[conceito-marca]] §4 e vira munição visual:
 1. **Transparência** deixa de ser adjetivo → vira **prova visível**: preço na cara, calculadora aberta, "sem asterisco", custo de saída declarado. A ID visual precisa DRAMATIZAR isso (nenhum concorrente faz).

@@ -1,7 +1,7 @@
 ---
 tipo: identidade-visual
 etapa: paleta
-status: v1-proposto
+status: validado-v1
 data: 2026-07-10
 tags: [marca, design, cor, tokens]
 ---

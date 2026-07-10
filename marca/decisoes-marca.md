@@ -19,7 +19,9 @@ tags: [marca, decisao]
 | 2026-07-09 | **Marca = digital pura** (não "braço do escritório tradicional") | 🟢 travado | Tese estratégica [[BASE-ESTRATEGICA]] §2 |
 | 2026-07-09 | **Tom: humano, transparente, anti-cross-sell** | 🟢 travado (princípio) | Oposto do líder ([[_relatorio-auditoria]], [[spec-mvp-v0]]) |
 | 2026-07-10 | **Arquétipo = Aliado leve/vitorioso** | 🟢 travado | Cliente é herói, marca é aliado que carrega o chato. Responde à ferida "tem contador de verdade?" e ocupa a ponta quente-humana vazia. Ver [[conceito-marca]] §4 |
-| 2026-07-10 | **Cor líder = CORAL (Direção A)** + sistema disciplinado de 2 cores (coral marca + base ink) | 🟢 travado | Decidido vendo lockup materializado. Coral quente = única cor vazia num setor azul-esverdeado frio; craft impecável neutraliza risco de "informal". Tom exato do coral (≈#F2643C) em ajuste fino. Ver [[referencias]], [[_sintese-paginas-publicas]] |
+| 2026-07-10 | **Cor líder = CORAL (Direção A)** + sistema disciplinado de 2 cores (coral marca + base ink) | 🟢 travado | Decidido vendo lockup materializado. Coral quente = única cor vazia num setor azul-esverdeado frio; craft impecável neutraliza risco de "informal". Ver [[referencias]], [[_sintese-paginas-publicas]] |
+| 2026-07-10 | **Tom exato do coral = #F2643C** (opção 2 de 4) | 🟢 travado | Escolhido vendo 4 tons aplicados (terracota→vivo). Equilíbrio otimismo/credibilidade; nem berrante nem wellness. |
+| 2026-07-10 | **Paleta de cor v1 validada** (coral 50-900, ink/neutros, semânticos) | 🟢 validado | [[paleta-cores]]. Regras: coral=marca+ação (600 fill AA), coral nunca é erro, fundo papel quente, azul banido como marca. |
 
 ## Links
 - [[marca]] · [[naming-defesa]]

@@ -4,7 +4,7 @@
 > Status: ✅ negócio fechado com Mauro (2026-07-07) · V0/imersão em curso.
 
 ## 📍 Agora (torre de controle — mantida via `/fechar`)
-> **Última atualização:** 2026-07-12 · Janela nova? rode `/boot`. **Fase:** imersão mês 1 + marca + **arranque do protótipo UI**.
+> **Última atualização:** 2026-07-12 · Janela nova? rode `/boot`. **Fase:** imersão mês 1 + marca + **protótipo UI (fluxo de entrada completo)**.
 
 **Régua:** é **MLP (mínimo LOVABLE), não MVP** — craft/encanto (animação, micro-interação) no escopo. Spec ainda diz "MVP" em vários lugares (corrigir) → [[legalize-mlp-nao-mvp]]
 
@@ -14,10 +14,11 @@
 - 🟢 **CNAE** — atendidos/não atendidos (460/68/804) pronto pro dev → [[cnae-atendidos-e-nao-atendidos]]
 - 🟢 **Marca** — nome+conceito+tom+paleta+logo travados; **fonte Sora = sistema inteiro (travado)**; falta teste de fogo + derivados (favicon/app-icon) → [[decisoes-marca]] · [[paleta-cores]]
 - 🟡 **Produto/tech** — stack+MLP+multi-tenant; **reavaliar rota** semana que vem. **Fluxo de entrada TRAVADO** (splash→fork abrir/migrar→gate CNAE concierge→login deferido→wizard; migrar puxa cartão CNPJ) → [[2026-07-12-fluxo-entrada-prototipo]]
-- 🟢 **Protótipo UI** — throwaway HTML+Tailwind em `ux-ui/prototipo/` (método página-primeiro, DS emerge). Feito: handoff cores+fonte pro dev; splash animada + fork; wizard Fase 0. Loop: server local + Chrome F5 → [[legalize-prototipo-ux]]
+- 🟢 **Protótipo UI** — throwaway HTML+Tailwind em `ux-ui/prototipo/` (método página-primeiro, DS emerge). **Fluxo de entrada inteiro montado:** `splash` (coral, logo negativa, handoff slide-up) → `welcome` (3 telas, 4 Lottie recoloridos coral) → `fluxo-entrada` (fork, logo estático) → `gate-cnae` (concierge validador CNAE + waitlist + "já sei meu CNAE" código direto) · `login` (gradiente ink+coral, social) · wizard `fase-0` (barra simples). Padrões travados: **altura sem scroll** (`100dvh`+`min-h-0` em toda cadeia flex) · **Lottie local** (`lottie.min.js` + `*-legalizei.json`, driver manual só p/ pane) → [[legalize-prototipo-ux]] · [[2026-07-12-fluxo-entrada-completo-prototipo]]
+- 🟢 **Landing page** — **prompt de LP de alta conversão gerado** (pra colar no Fable, janela limpa): validador CNAE interativo + diferenciais + download iOS/Android + tudo local. Ainda não construída.
 - ⏳ **Infra** — domínios **aguardando autorização de compra** (Mauro); titular CNPJ Legalize Digital
 
-**Decisões abertas:** autorização compra domínios (Mauro) · reavaliação rota produto (semana que vem) · **provider da API de cartão CNPJ** (confirmar c/ dev — InfoSimples/CNPJá) · derivados do logo + teste de fogo, depois Design System.
+**Decisões abertas:** autorização compra domínios (Mauro) · reavaliação rota produto (semana que vem) · **provider da API de cartão CNPJ** (confirmar c/ dev — InfoSimples/CNPJá) · **definir/nomear as 4 etapas do wizard Fase 0** (hoje só "Etapa 1 · Seus dados" travada) · derivados do logo + teste de fogo, depois Design System · construir a LP (Fable).
 
 **Atalhos:** [[kanban-legalizei]] · [[parking-lot]] · [[evolucao-para-mauro]] (reporte sócio) · [[CHECKLIST-IMERSAO-30-DIAS]]
 

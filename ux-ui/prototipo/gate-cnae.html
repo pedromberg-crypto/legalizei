@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Legalizei · O que você faz?</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      fontFamily: { sans: ['Sora','system-ui','sans-serif'] },
+      colors: {
+        coral: { 50:'#FEF3EE',100:'#FBDDD1',200:'#F8C3B0',300:'#F5A184',400:'#F47F58',500:'#F2643C',600:'#DD4E27',700:'#B83D1C',800:'#8C2F16',900:'#5C1F0F' },
+        ink:   { 50:'#FAF8F5',100:'#F1EEE9',200:'#E3DED7',300:'#CBC5BC',400:'#A19B92',500:'#736E67',600:'#524E48',700:'#34363C',800:'#24262C',900:'#1B1E24' },
+        success:{ 50:'#E7F6EF',500:'#17A06A',700:'#0B5E40' },
+        warn:  { 50:'#FDF3E1',500:'#F5A524',700:'#98600A' },
+        danger:{ 50:'#FCEBEB',500:'#E03E43',700:'#971F25' },
+      },
+    } } }
+  </script>
+
+  <style>
+    body { font-family:'Sora',system-ui,sans-serif; }
+    .field { transition:border-color .18s, box-shadow .18s; }
+    .field:focus-within { border-color:#F2643C; box-shadow:0 0 0 4px rgba(242,100,60,.12); }
+    textarea, input { outline:none; }
+    textarea::placeholder, input::placeholder { color:#A19B92; }
+    .chip { transition:background-color .16s, border-color .16s, transform .12s; }
+    .chip:active { transform:scale(.97); }
+    .btn { transition:transform .16s, box-shadow .16s, opacity .16s; }
+    .btn:active { transform:scale(.99); }
+    .btn:disabled { opacity:.45; }
+    .hidden { display:none !important; }
+
+    /* reveal card */
+    .reveal { animation:rise .5s cubic-bezier(.22,1,.36,1) both; }
+    @keyframes rise { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } }
+
+    /* dots "pensando" */
+    .dot { width:9px; height:9px; border-radius:9999px; background:#F2643C; display:inline-block; animation:bounce 1s infinite ease-in-out; }
+    .dot:nth-child(2){ animation-delay:.15s } .dot:nth-child(3){ animation-delay:.3s }
+    @keyframes bounce { 0%,80%,100%{ transform:translateY(0); opacity:.4 } 40%{ transform:translateY(-7px); opacity:1 } }
+
+    @media (prefers-reduced-motion: reduce) { *{ animation:none !important } }
+  </style>
+</head>
+
+<body class="bg-ink-50 text-ink-900 antialiased">
+  <div class="min-h-screen flex justify-center">
+    <div class="relative w-full max-w-[440px] h-[100dvh] overflow-hidden
+                md:h-auto md:my-8 md:min-h-[800px] md:rounded-[28px] md:shadow-[0_8px_50px_rgba(27,30,36,.10)] md:self-start bg-ink-50">
+
+      <div class="h-full md:min-h-[800px] flex flex-col">
+
+        <!-- ===== HEADER ===== -->
+        <div class="flex items-center gap-3 px-5 pt-12 pb-3 shrink-0">
+          <a href="fluxo-entrada.html" class="w-10 h-10 rounded-full border border-ink-200 grid place-items-center text-ink-600" aria-label="Voltar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          </a>
+          <div class="flex-1">
+            <div class="h-1.5 rounded-full bg-ink-200 overflow-hidden">
+              <div class="h-full w-1/4 bg-coral-500 rounded-full"></div>
+            </div>
+          </div>
+          <span class="text-[12px] text-ink-400 font-500">Passo 1</span>
+        </div>
+
+        <!-- ===== CORPO ===== -->
+        <div class="flex-1 min-h-0 overflow-y-auto px-6 pb-6 flex flex-col">
+
+          <!-- ---- ESTADO A: pergunta ---- -->
+          <section id="ask" class="flex-1 flex flex-col">
+            <h1 class="mt-4 text-[27px] leading-tight font-800 tracking-tight">O que você faz?</h1>
+            <p class="mt-2.5 text-[15px] text-ink-500 leading-relaxed">
+              Conta com as suas palavras. A gente acha o enquadramento certo — você não precisa decorar código nenhum.
+            </p>
+
+            <label class="field block mt-6 rounded-[16px] bg-white border border-ink-200 p-4">
+              <textarea id="q" rows="3" class="w-full bg-transparent resize-none text-[15.5px] text-ink-900 leading-relaxed"
+                placeholder="Ex: crio sites e logotipos pra pequenas empresas"></textarea>
+            </label>
+
+            <p class="mt-4 text-[12.5px] text-ink-400 font-500">Exemplos rápidos</p>
+            <div class="mt-2 flex flex-wrap gap-2">
+              <button class="chip ex rounded-full border border-ink-200 bg-white px-3.5 py-2 text-[13px] text-ink-700">Crio sites</button>
+              <button class="chip ex rounded-full border border-ink-200 bg-white px-3.5 py-2 text-[13px] text-ink-700">Sou fotógrafo</button>
+              <button class="chip ex rounded-full border border-ink-200 bg-white px-3.5 py-2 text-[13px] text-ink-700">Faço marketing</button>
+              <button class="chip ex rounded-full border border-ink-200 bg-white px-3.5 py-2 text-[13px] text-ink-700">Tenho um restaurante</button>
+              <button class="chip ex rounded-full border border-ink-200 bg-white px-3.5 py-2 text-[13px] text-ink-700">Sou médico</button>
+            </div>
+
+            <button id="go" class="btn w-full rounded-[16px] py-4 mt-auto bg-coral-500 text-white text-[16px] font-700 shadow-[0_8px_24px_rgba(242,100,60,.28)]" disabled>
+              Continuar
+            </button>
+            <button id="knowCnae" type="button" class="w-full text-center py-3 mt-1 text-[13.5px] text-coral-700 font-600">
+              Já sei o meu CNAE exato
+            </button>
+          </section>
+
+          <!-- ---- ESTADO E: código direto (power user) ---- -->
+          <section id="code" class="hidden flex-1 flex flex-col">
+            <h1 class="mt-4 text-[27px] leading-tight font-800 tracking-tight">Qual é o seu CNAE?</h1>
+            <p class="mt-2.5 text-[15px] text-ink-500 leading-relaxed">
+              Digita o código e a gente confirma o enquadramento na hora.
+            </p>
+
+            <label class="field flex items-center gap-3 mt-6 rounded-[16px] bg-white border border-ink-200 px-4 h-[58px]">
+              <svg class="text-ink-400" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h6"/></svg>
+              <input id="codeInput" inputmode="numeric" placeholder="0000-0/00" class="flex-1 bg-transparent text-[16px] tracking-wide text-ink-900">
+            </label>
+            <p id="codeErr" class="hidden mt-2.5 text-[13px] text-danger-500 font-500">Não reconhecemos esse código. Confere os números — ou descreve o que você faz.</p>
+
+            <button id="codeGo" class="btn w-full rounded-[16px] py-4 mt-6 bg-coral-500 text-white text-[16px] font-700 shadow-[0_8px_24px_rgba(242,100,60,.28)]" disabled>
+              Verificar
+            </button>
+            <button id="codeBack" type="button" class="w-full text-center py-3 mt-1 text-[13.5px] text-ink-500 font-500">
+              Prefiro descrever o que faço
+            </button>
+          </section>
+
+          <!-- ---- ESTADO B: pensando ---- -->
+          <section id="thinking" class="hidden flex-1 flex flex-col items-center justify-center text-center">
+            <div class="flex gap-1.5 mb-5"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+            <p class="text-[15px] text-ink-600 font-600">Analisando o que você faz…</p>
+            <p id="thinking-echo" class="mt-1 text-[13px] text-ink-400 max-w-[280px]"></p>
+          </section>
+
+          <!-- ---- ESTADO C: resultado ATENDIDO ---- -->
+          <section id="ok" class="hidden flex-1 flex flex-col">
+            <div class="reveal">
+              <div class="inline-flex items-center gap-1.5 text-[13px] font-600 text-success-700 bg-success-50 rounded-full px-3 py-1.5">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>
+                Boa notícia
+              </div>
+              <h2 class="mt-4 text-[24px] leading-tight font-800 tracking-tight">Achei o seu encaixe.</h2>
+              <p class="mt-2 text-[14.5px] text-ink-500 leading-relaxed">É disso que a gente cuida — do jeito certo, no Simples.</p>
+
+              <!-- card sugestão principal -->
+              <div class="mt-5 rounded-[18px] bg-white border border-ink-200 p-5 shadow-[0_6px_20px_rgba(27,30,36,.05)]">
+                <div class="flex items-start gap-3.5">
+                  <div id="ok-emoji" class="w-12 h-12 rounded-[14px] bg-coral-50 grid place-items-center text-[24px] shrink-0">💻</div>
+                  <div class="flex-1">
+                    <p id="ok-nome" class="text-[16.5px] font-700 leading-snug">Criação de sites e web design</p>
+                    <p id="ok-desc" class="mt-1 text-[13px] text-ink-500 leading-snug">Você entrega sites e presença digital pra outras empresas.</p>
+                  </div>
+                </div>
+                <div class="mt-4 flex items-center justify-between rounded-[12px] bg-ink-50 border border-ink-100 px-3.5 py-2.5">
+                  <span class="text-[12px] text-ink-400">Enquadramento</span>
+                  <span id="ok-cnae" class="text-[12.5px] font-600 text-ink-600">CNAE 6201-5/02 · Anexo III</span>
+                </div>
+                <div class="mt-3 flex items-center gap-2 text-[12.5px] text-success-700">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  Impostos, notas e prazos: por nossa conta.
+                </div>
+              </div>
+
+              <button class="btn w-full rounded-[16px] py-4 mt-6 bg-coral-500 text-white text-[16px] font-700 shadow-[0_8px_24px_rgba(242,100,60,.28)]">
+                É isso mesmo, continuar
+              </button>
+              <button id="ok-back" class="w-full text-center py-3 mt-1 text-[14px] text-ink-500 font-500">Não é bem isso — refazer</button>
+            </div>
+          </section>
+
+          <!-- ---- ESTADO D: waitlist (condicional / não atendido) ---- -->
+          <section id="wait" class="hidden flex-1 flex flex-col">
+            <div class="reveal">
+              <div class="inline-flex items-center gap-1.5 text-[13px] font-600 text-warn-700 bg-warn-50 rounded-full px-3 py-1.5">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg>
+                Ainda não — por enquanto
+              </div>
+              <h2 class="mt-4 text-[23px] leading-tight font-800 tracking-tight">
+                <span id="wait-area">Atividades médicas</span> ainda não entraram no app.
+              </h2>
+              <p id="wait-motivo" class="mt-2.5 text-[14.5px] text-ink-500 leading-relaxed">
+                É uma atividade regulamentada (precisa de registro no conselho), então a gente ainda não automatizou esse caso com a segurança que você merece. Estamos chegando lá.
+              </p>
+
+              <div class="mt-6 rounded-[18px] bg-white border border-ink-200 p-5 shadow-[0_6px_20px_rgba(27,30,36,.05)]">
+                <p class="text-[14.5px] font-700">Quer ser o primeiro a saber quando abrir?</p>
+                <p class="mt-1 text-[13px] text-ink-500">Sem spam. Só um toque quando a sua atividade entrar.</p>
+                <label class="field flex items-center gap-3 rounded-[14px] bg-white border border-ink-200 px-4 h-[52px] mt-4">
+                  <svg class="text-ink-400" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                  <input type="email" placeholder="Seu melhor e-mail" class="flex-1 bg-transparent text-[15px] text-ink-900">
+                </label>
+                <button class="btn w-full rounded-[14px] py-3.5 mt-3 bg-coral-500 text-white text-[15px] font-700 shadow-[0_8px_24px_rgba(242,100,60,.28)]">
+                  Me avisa
+                </button>
+              </div>
+
+              <button id="wait-back" class="w-full text-center py-3 mt-3 text-[14px] text-ink-500 font-500">Errei — refazer</button>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== "IA" simulada: mapa palavra-chave -> enquadramento (CNAEs reais da whitelist) =====
+    const OK = {
+      web:      { emoji:'💻', nome:'Criação de sites e web design', desc:'Você entrega sites e presença digital pra outras empresas.', cnae:'CNAE 6201-5/02 · Anexo III' },
+      software: { emoji:'⚙️', nome:'Desenvolvimento de software', desc:'Você cria sistemas e programas sob encomenda.', cnae:'CNAE 6201-5/01 · Anexo III' },
+      design:   { emoji:'🎨', nome:'Design e criação visual', desc:'Você cria identidade, layouts e peças pra marcas.', cnae:'CNAE 7410-2/99 · Anexo III' },
+      foto:     { emoji:'📸', nome:'Fotografia', desc:'Você produz fotos pra pessoas, marcas ou eventos.', cnae:'CNAE 7420-0/01 · Anexo III' },
+      mkt:      { emoji:'📣', nome:'Marketing e publicidade', desc:'Você cuida da divulgação e das vendas de outras empresas.', cnae:'CNAE 7319-0/03 · Anexo III' },
+      consult:  { emoji:'🧭', nome:'Consultoria empresarial', desc:'Você orienta a gestão e a estratégia de negócios.', cnae:'CNAE 7020-4/00 · Anexo III' },
+      restaurante:{ emoji:'🍽️', nome:'Restaurante e alimentação', desc:'Você serve comida no local ou pra viagem.', cnae:'CNAE 5611-2/01 · Anexo III' },
+    };
+    const WAIT = {
+      medico:  { area:'Atividades médicas', motivo:'É uma atividade regulamentada (precisa de registro no conselho), então a gente ainda não automatizou esse caso com a segurança que você merece. Estamos chegando lá.' },
+      advogado:{ area:'Advocacia', motivo:'Atividade regulamentada pela OAB — ainda não automatizamos esse enquadramento com a segurança necessária. Em breve.' },
+      transporte:{ area:'Transporte de cargas', motivo:'Esse tipo de operação sai do nosso foco atual (serviço e comércio leve no Simples). Ainda não é a nossa praia — por enquanto.' },
+    };
+
+    // dicionário de gatilhos -> chave
+    const MATCH = [
+      [/site|web|p[áa]gina|landing/i, ['web']],
+      [/software|sistema|programa|app|aplicativo|desenvolv|programa[çc]/i, ['software']],
+      [/design|logo|logotipo|identidade|marca|layout|ilustra/i, ['design']],
+      [/foto|fot[óo]graf/i, ['foto']],
+      [/marketing|publicidade|an[úu]ncio|tr[áa]fego|social media|divulga/i, ['mkt']],
+      [/consultor|consultoria|mentor|assessoria/i, ['consult']],
+      [/restaurante|lanche|comida|bar|pizzaria|hamburgu|food|aliment/i, ['restaurante']],
+      [/m[ée]dic|consult[óo]rio|cl[íi]nic|dentist|sa[úu]de/i, ['__wait','medico']],
+      [/advog|advocac|jur[íi]dic|direito/i, ['__wait','advogado']],
+      [/transporte|frete|carga|caminh[ãa]o|motoboy|entrega/i, ['__wait','transporte']],
+    ];
+
+    // CNAE exato -> resultado (só dígitos). Reusa OK/WAIT.
+    const CODES = {
+      '6201502': ['web'], '6201501': ['software'], '7410299': ['design'],
+      '7420001': ['foto'], '7319003': ['mkt'], '7020400': ['consult'], '5611201': ['restaurante'],
+      '8630503': ['__wait','medico'], '6911701': ['__wait','advogado'],
+    };
+    const digits = s => (s || '').replace(/\D/g, '');
+
+    const $ = id => document.getElementById(id);
+    const q = $('q'), go = $('go');
+    const secAsk = $('ask'), secThink = $('thinking'), secOk = $('ok'), secWait = $('wait'), secCode = $('code');
+
+    function show(sec) {
+      [secAsk, secThink, secOk, secWait, secCode].forEach(s => s.classList.add('hidden'));
+      sec.classList.remove('hidden');
+    }
+
+    q.addEventListener('input', () => { go.disabled = q.value.trim().length < 2; });
+
+    document.querySelectorAll('.ex').forEach(b => b.addEventListener('click', () => {
+      q.value = b.textContent.trim(); go.disabled = false; q.focus();
+    }));
+
+    function resolve(text) {
+      for (const [re, key] of MATCH) if (re.test(text)) return key;
+      return null;
+    }
+
+    function present(key) {
+      if (!key) { // não entendeu -> volta e pede detalhe
+        show(secAsk);
+        q.focus();
+        q.setAttribute('placeholder', 'Me conta com mais detalhe o que você entrega no dia a dia…');
+        return;
+      }
+      if (key[0] === '__wait') {
+        const w = WAIT[key[1]];
+        $('wait-area').textContent = w.area;
+        $('wait-motivo').textContent = w.motivo;
+        show(secWait);
+      } else {
+        const r = OK[key[0]];
+        $('ok-emoji').textContent = r.emoji;
+        $('ok-nome').textContent = r.nome;
+        $('ok-desc').textContent = r.desc;
+        $('ok-cnae').textContent = r.cnae;
+        show(secOk);
+      }
+    }
+
+    go.addEventListener('click', () => {
+      const text = q.value.trim();
+      if (text.length < 2) return;
+      $('thinking-echo').textContent = '“' + text + '”';
+      show(secThink);
+      const key = resolve(text);
+      setTimeout(() => present(key), 1400); // simula a IA
+    });
+
+    $('ok-back').addEventListener('click', () => show(secAsk));
+    $('wait-back').addEventListener('click', () => show(secAsk));
+
+    // ---- caminho "já sei meu CNAE" ----
+    const codeIn = $('codeInput'), codeGo = $('codeGo');
+    $('knowCnae').addEventListener('click', () => { show(secCode); codeIn.focus(); });
+    $('codeBack').addEventListener('click', () => show(secAsk));
+    codeIn.addEventListener('input', () => {
+      codeGo.disabled = digits(codeIn.value).length < 7;
+      $('codeErr').classList.add('hidden');
+    });
+    codeGo.addEventListener('click', () => {
+      const hit = CODES[digits(codeIn.value)];
+      if (!hit) { $('codeErr').classList.remove('hidden'); return; }
+      present(hit);
+    });
+  </script>
+</body>
+</html>

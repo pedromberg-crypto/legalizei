@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Legalizei · Bem-vindo</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="lottie.min.js"></script>
+  <script src="customer-need-data.js"></script>
+  <script src="content-mod-data.js"></script>
+  <script src="marketing-mgmt-data.js"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      fontFamily: { sans: ['Sora','system-ui','sans-serif'] },
+      colors: {
+        coral: { 50:'#FEF3EE',100:'#FBDDD1',200:'#F8C3B0',300:'#F5A184',400:'#F47F58',500:'#F2643C',600:'#DD4E27',700:'#B83D1C',800:'#8C2F16',900:'#5C1F0F' },
+        ink:   { 50:'#FAF8F5',100:'#F1EEE9',200:'#E3DED7',300:'#CBC5BC',400:'#A19B92',500:'#736E67',600:'#524E48',700:'#34363C',800:'#24262C',900:'#1B1E24' },
+        success:{ 50:'#E7F6EF',500:'#17A06A',700:'#0B5E40' },
+      },
+    } } }
+  </script>
+
+  <style>
+    body { font-family:'Sora',system-ui,sans-serif; }
+
+    /* trilho horizontal com snap por tela */
+    #track {
+      display:flex; overflow-x:auto; scroll-snap-type:x mandatory;
+      scroll-behavior:smooth; -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+    }
+    #track::-webkit-scrollbar { display:none; }
+    .slide { flex:0 0 100%; scroll-snap-align:center; }
+
+    /* medalhão do herói */
+    .medal { animation:pop .6s cubic-bezier(.22,1.4,.4,1) both; }
+    @keyframes pop { from { opacity:0; transform:scale(.7); } to { opacity:1; transform:scale(1); } }
+
+    .dot { transition:width .3s ease, background-color .3s ease; }
+
+    @media (prefers-reduced-motion: reduce) {
+      #track { scroll-behavior:auto; }
+      .medal { animation:none; }
+    }
+  </style>
+</head>
+
+<body class="bg-ink-50 text-ink-900 antialiased">
+  <div class="min-h-screen flex justify-center">
+    <div class="relative w-full max-w-[440px] min-h-screen overflow-hidden
+                md:my-8 md:min-h-[800px] md:rounded-[28px] md:shadow-[0_8px_50px_rgba(27,30,36,.10)] md:self-start bg-ink-50">
+
+      <div class="min-h-screen md:min-h-[800px] flex flex-col">
+
+        <!-- ===== HEADER: logo + pular ===== -->
+        <div class="flex items-center justify-between px-6 pt-12 pb-2">
+          <svg height="26" viewBox="0 0 1154.07 225.99" xmlns="http://www.w3.org/2000/svg" aria-label="Legalizei" role="img" style="width:auto">
+            <g fill="#1b1e24">
+              <path d="M438.21,71.99c-8.33-5.44-18.56-8.16-30.68-8.16-9.23,0-17.46,1.62-24.69,4.85-7.23,3.24-13.26,7.61-18.07,13.12-4.82,5.51-8.5,11.74-11.05,18.69-2.55,6.96-3.82,14.22-3.82,21.79v4.13c0,7.3,1.27,14.43,3.82,21.38,2.55,6.96,6.26,13.22,11.15,18.8,4.89,5.58,11.02,10.02,18.39,13.32,7.36,3.31,15.87,4.96,25.51,4.96s17.9-1.65,25.2-4.96c7.3-3.3,13.35-7.92,18.18-13.84,4.82-5.92,8.06-12.67,9.71-20.24h-7.5c-10.8,0-21.39,2.98-30.6,8.61l-.12.07c-3.86,2.34-8.81,3.51-14.87,3.51-6.61,0-11.98-1.38-16.11-4.13-4.13-2.75-7.16-6.64-9.09-11.67-1.07-2.79-1.81-5.87-2.29-9.19h82.65v-11.16c0-10.33-2.21-19.86-6.61-28.61-4.41-8.74-10.78-15.84-19.11-21.27ZM383.78,106.08c2.07-5.03,5.09-8.85,9.09-11.47,3.99-2.61,8.88-3.92,14.67-3.92s10.36,1.27,14.15,3.82c3.79,2.55,6.64,6.23,8.57,11.05,1.04,2.6,1.78,5.51,2.26,8.68h-51.01c.52-2.98,1.27-5.71,2.27-8.16Z"/>
+              <path d="M572.58,91.72c-.51-1.27-1.05-2.52-1.65-3.72-3.86-7.71-9.12-13.56-15.8-17.56-6.68-3.99-14.56-5.99-23.65-5.99-7.85,0-15.01,1.41-21.48,4.23-6.47,2.83-12.05,6.79-16.73,11.88-4.68,5.1-8.26,11.09-10.74,17.97-2.48,6.89-3.72,14.32-3.72,22.31v4.75c0,7.99,1.17,15.39,3.51,22.21,2.34,6.82,5.71,12.78,10.12,17.87,4.41,5.1,9.74,9.06,16.01,11.88,6.26,2.83,13.25,4.23,20.97,4.23,8.95,0,16.66-1.89,23.14-5.68,6.41-3.75,11.44-9.17,15.08-16.24v9.73c0,6.61-1.31,12.01-3.93,16.22-2.62,4.2-6.71,7.33-12.29,9.4-5.58,2.07-12.84,3.1-21.79,3.1-4.82,0-10.16-.24-16.01-.72h-.18c-8.52-.72-15.83,6.01-15.83,14.56v11.57c4.82.69,10.12,1.24,15.91,1.65,5.78.41,11.43.62,16.94.62,15.42,0,28.2-2,38.32-5.99,10.12-4,17.66-10.26,22.62-18.8,4.96-8.54,7.44-19.76,7.44-33.67v-73.54c0-14.49-11.75-26.24-26.24-26.24h0v23.97ZM567.01,125.18c0,6.06-1.21,11.23-3.62,15.49-2.41,4.27-5.68,7.54-9.81,9.81-4.13,2.27-8.75,3.41-13.84,3.41-5.37,0-10.16-1.2-14.36-3.61-4.2-2.41-7.51-5.92-9.91-10.54-2.41-4.61-3.61-10.15-3.61-16.63s1.17-11.84,3.51-16.53c2.34-4.68,5.64-8.33,9.91-10.95,4.27-2.61,9.16-3.93,14.67-3.93,4.68,0,9.09,1.07,13.22,3.2,4.13,2.14,7.47,5.23,10.02,9.3,2.55,4.06,3.82,9.06,3.82,14.98v5.99Z"/>
+              <path d="M697.87,70.85c-7.92-3.3-17.66-4.96-29.23-4.96-4,0-8.26.07-12.81.21-4.55.14-8.95.34-13.22.62-4.27.28-7.99.55-11.16.83v13.7c0,7.67,6.44,13.77,14.1,13.37h.16c5.23-.28,10.33-.49,15.29-.63,4.96-.14,8.95-.21,11.98-.21,6.06,0,10.46,1.45,13.22,4.34,2.75,2.89,4.13,7.23,4.13,13.01v.41h-20.45c-10.05,0-18.94,1.27-26.65,3.82-7.72,2.55-13.7,6.48-17.97,11.78-4.27,5.3-6.4,12.09-6.4,20.35,0,7.57,1.72,14.08,5.16,19.52,3.44,5.44,8.23,9.61,14.36,12.5,6.13,2.89,13.25,4.34,21.38,4.34s14.49-1.45,19.93-4.34c5.44-2.89,9.71-7.02,12.81-12.39,1.39-2.41,2.5-5.11,3.41-8.02h0c0,12.07,9.79,21.86,21.86,21.86h4.37s0-69.41,0-69.41c0-10.47-2.07-19.04-6.2-25.72-4.13-6.68-10.16-11.67-18.07-14.98ZM679.69,158.96c-2.96,1.31-6.3,1.96-10.02,1.96-5.79,0-10.23-1.41-13.32-4.23-3.1-2.82-4.65-6.51-4.65-11.05,0-4.82,1.55-8.64,4.65-11.47,3.1-2.82,7.54-4.23,13.32-4.23h20.66v9.09c-.28,5.65-1.38,10.05-3.3,13.22-1.93,3.17-4.37,5.41-7.33,6.72Z"/>
+              <path d="M738.25,30.16v24.37h13.43v93.16c0,18.37,14.89,33.26,33.26,33.26h0V30.16h-46.68Z"/>
+              <path d="M805.59,67.75v24.38h15.08v55.78c0,18.25,14.8,33.05,33.05,33.05h0v-88.83h0c0-13.46-10.91-24.38-24.38-24.38h-23.75Z"/>
+              <path d="M914.27,153l37-44.34c9.58-11.48,14.82-25.95,14.82-40.9h0s-63.62,0-63.62,0c-14.03,0-25.41,11.38-25.41,25.41h0s49.41,0,49.41,0l2.12,2.65-51.74,62h0c0,12.78,10.36,23.14,23.14,23.14h42.35c14.03,0,25.41-11.38,25.41-25.41h0s-51.44,0-51.44,0l-2.04-2.55Z"/>
+              <path d="M1068.04,71.99c-8.33-5.44-18.56-8.16-30.68-8.16-9.23,0-17.45,1.62-24.69,4.85-7.23,3.24-13.25,7.61-18.07,13.12-4.82,5.51-8.5,11.74-11.05,18.69-2.55,6.96-3.82,14.22-3.82,21.79v4.13c0,7.3,1.27,14.43,3.82,21.38,2.55,6.96,6.27,13.22,11.16,18.8,4.89,5.58,11.02,10.02,18.38,13.32,7.36,3.31,15.87,4.96,25.51,4.96s17.9-1.65,25.2-4.96c7.3-3.3,13.36-7.92,18.18-13.84,4.82-5.92,8.06-12.67,9.71-20.24h-7.5c-10.8,0-21.39,2.98-30.6,8.61l-.12.07c-3.86,2.34-8.81,3.51-14.87,3.51-6.61,0-11.98-1.38-16.11-4.13-4.13-2.75-7.16-6.64-9.09-11.67-1.07-2.79-1.81-5.87-2.29-9.19h82.65v-11.16c0-10.33-2.21-19.86-6.61-28.61-4.41-8.74-10.78-15.84-19.11-21.27ZM1013.6,106.08c2.07-5.03,5.09-8.85,9.09-11.47,3.99-2.61,8.88-3.92,14.67-3.92s10.36,1.27,14.15,3.82c3.79,2.55,6.64,6.23,8.57,11.05,1.04,2.6,1.78,5.51,2.26,8.68h-51.01c.52-2.98,1.27-5.71,2.27-8.16Z"/>
+              <path d="M1121.02,67.75h-15.08v24.38h15.08v55.77c0,18.25,14.8,33.05,33.05,33.05h0v-88.83h0c0-13.46-10.91-24.38-24.38-24.38h-8.68Z"/>
+              <path d="M278.81,147.11V30.16h0c-18.69,0-33.85,15.15-33.85,33.85v87.73c0,16.14,13.08,29.22,29.22,29.22h63.73c0-18.69-15.15-33.85-33.85-33.85h-25.26Z"/>
+            </g>
+            <circle fill="#f2643c" cx="833.47" cy="43.4" r="13.24"/>
+            <circle fill="#f2643c" cx="1133.83" cy="43.4" r="13.24"/>
+            <rect fill="#f2643c" width="211.09" height="211.09" rx="32.84" ry="32.84"/>
+            <path fill="#fff" d="M211.09,32.95l-105.47,105.47-33.6-33.6c-13.22-13.22-34.65-13.22-47.87,0h0s60.8,60.8,60.8,60.8c11.41,11.41,29.92,11.41,41.33,0l84.81-84.81v-47.87Z"/>
+          </svg>
+        </div>
+
+        <!-- ===== TRILHO DE TELAS ===== -->
+        <div id="track" class="flex-1">
+
+          <!-- Tela 1: humano (Lottie "customer need" recolorido) -->
+          <section class="slide flex flex-col items-center justify-center px-8 text-center">
+            <div id="lottie-need" class="medal w-[374px] h-[374px] max-w-full mb-6" aria-hidden="true"></div>
+            <h2 class="text-[28px] leading-[1.15] font-800 tracking-tight">Contador de verdade.<br>Não robô.</h2>
+            <p class="mt-4 text-[15.5px] text-ink-500 leading-relaxed max-w-[300px]">
+              Gente de BH que te atende de verdade e resolve. 22 anos de escritório por trás do app.
+            </p>
+          </section>
+
+          <!-- Tela 2: carrega o chato (Lottie "content moderation" recolorido) -->
+          <section class="slide flex flex-col items-center justify-center px-8 text-center">
+            <div id="lottie-chato" class="medal w-[374px] h-[374px] max-w-full mb-6" aria-hidden="true"></div>
+            <h2 class="text-[28px] leading-[1.15] font-800 tracking-tight">A parte chata<br>é com a gente.</h2>
+            <p class="mt-4 text-[15.5px] text-ink-500 leading-relaxed max-w-[300px]">
+              Impostos, guias, prazos, papelada do governo. Você toca o negócio. O resto voa pra cá.
+            </p>
+          </section>
+
+          <!-- Tela 3: transparência + língua (Lottie "marketing management" recolorido) -->
+          <section class="slide flex flex-col items-center justify-center px-8 text-center">
+            <div id="lottie-preco" class="medal w-[374px] h-[374px] max-w-full mb-6" aria-hidden="true"></div>
+            <h2 class="text-[28px] leading-[1.15] font-800 tracking-tight">Sem contabilês.<br>Sem susto no boleto.</h2>
+            <p class="mt-4 text-[15.5px] text-ink-500 leading-relaxed max-w-[300px]">
+              A gente fala a sua língua e o preço é um só, claro desde o primeiro dia.
+            </p>
+          </section>
+
+        </div>
+
+        <!-- ===== FOOTER: dots + botão ===== -->
+        <div class="px-6 pb-9 pt-4">
+          <div id="dots" class="flex items-center justify-center gap-2 mb-7">
+            <span class="dot h-2 w-6 rounded-full bg-coral-500"></span>
+            <span class="dot h-2 w-2 rounded-full bg-ink-300"></span>
+            <span class="dot h-2 w-2 rounded-full bg-ink-300"></span>
+          </div>
+          <button id="cta" class="w-full rounded-[16px] py-4 bg-coral-500 text-white text-[16px] font-700 shadow-[0_8px_24px_rgba(242,100,60,.28)] active:scale-[.99] transition-transform">
+            Próximo
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const track = document.getElementById('track');
+    const dots  = [...document.getElementById('dots').children];
+    const cta   = document.getElementById('cta');
+    const N      = document.querySelectorAll('.slide').length;
+    const NEXT   = 'fluxo-entrada.html';
+
+    function current() { return Math.round(track.scrollLeft / track.clientWidth); }
+
+    function sync() {
+      const i = current();
+      dots.forEach((d, k) => {
+        const on = k === i;
+        d.classList.toggle('w-6', on);
+        d.classList.toggle('bg-coral-500', on);
+        d.classList.toggle('w-2', !on);
+        d.classList.toggle('bg-ink-300', !on);
+      });
+      cta.textContent = i === N - 1 ? 'Começar' : 'Próximo';
+    }
+
+    track.addEventListener('scroll', () => window.requestAnimationFrame(sync), { passive:true });
+
+    cta.addEventListener('click', () => {
+      const i = current();
+      if (i < N - 1) track.scrollTo({ left: (i + 1) * track.clientWidth, behavior:'smooth' });
+      else window.location.href = NEXT;
+    });
+
+    sync();
+
+    // Lotties do welcome — driver manual de frame (a pane roda o tab offscreen e congela o rAF)
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function mountLottie(elId, data, fps) {
+      const el = document.getElementById(elId);
+      if (!window.lottie || !data || !el) return;
+      const anim = lottie.loadAnimation({
+        container: el, renderer: 'svg', loop: true, autoplay: false, animationData: data,
+      });
+      anim.addEventListener('DOMLoaded', () => {
+        const total = Math.floor(anim.totalFrames);
+        if (reduce) { anim.goToAndStop(Math.floor(total / 2), true); return; }
+        let f = 0;
+        setInterval(() => { f = (f + 1) % total; anim.goToAndStop(f, true); }, 1000 / fps);
+      });
+    }
+    mountLottie('lottie-need', window.CUSTOMER_NEED, 30);     // tela 1
+    mountLottie('lottie-chato', window.CONTENT_MOD, 30);      // tela 2
+    mountLottie('lottie-preco', window.MARKETING_MGMT, 25);   // tela 3 (fr 25)
+  </script>
+</body>
+</html>

@@ -32,15 +32,20 @@ tags: [reporte, evolucao, sociedade]
 | 1 | Marca | Fonte do sistema definida (Sora, pra tudo); **handoff de cores + fonte entregue pro dev** já iniciar as telas | 🟢 |
 | 2 | Produto/UX | **Fluxo de entrada do app desenhado**: abrir do zero × migrar de contador; ao migrar, puxar dados do CNPJ automaticamente; filtrar já na entrada se o CNAE é atendido; pedir cadastro só depois de qualificar o cliente | 🟢 |
 | 3 | Protótipo | Arrancamos o **protótipo visual das telas** já com a marca — abertura animada + primeiras telas do cadastro | 🟢 |
+| 4 | Protótipo (entrada) | **Fluxo de entrada inteiro montado e navegável**: abertura animada → boas-vindas (3 telas com animações) → escolha "abrir × migrar" → **validador de atividade (CNAE)** → login. Tudo com a nossa cara e sem travar em tela nenhuma | 🟢 |
+| 5 | Validador de CNAE | Uma caixa tipo chat onde o cliente **escreve o que faz** e descobre **na hora** se a gente atende (ou entra na fila de espera, se for atividade regulamentada) — transparência de cara. Mesma lógica vai pra dentro do app e pro site | 🟢 |
+| 6 | Site (landing) | **Roteiro completo do site de captação** pronto pra produzir — foco em transparência (o mesmo validador de CNAE já na home) e em levar a pessoa a **baixar o app** (iOS/Android) | 🟢 (produzir) |
 
-**Próximo (11–12):** confirmar com o dev a fonte de dados do cartão CNPJ (API); seguir prototipando as telas do wizard.
+**Próximo (11–12):** confirmar com o dev a fonte de dados do cartão CNPJ (API); produzir o site de captação; definir os passos do cadastro (wizard).
 
 ### 📱 WhatsApp (11–12/07)
 ```
 *Update Legalizei* 🎨
 - Definimos a fonte do app e passamos as cores prontas pro dev começar as telas
 - Desenhamos como o cliente entra no app: quem já tem empresa migra puxando os dados do CNPJ na hora; quem vai abrir do zero é guiado; e a gente já filtra logo na entrada se atende a atividade dele
-- Começamos o protótipo visual das telas com a nossa marca (abertura animada + início do cadastro)
+- Montamos o protótipo visual de TODO o fluxo de entrada (abertura → boas-vindas → abrir/migrar → validador de atividade → login), já com a nossa marca e animações
+- Criamos um "validador de CNAE": o cliente escreve o que faz e descobre na hora se a gente atende — transparência desde o primeiro contato
+- Roteiro do site de captação pronto pra produzir, focado em baixar o app
 ```
 
 ## 📱 Versão WhatsApp (copiar/colar — grupo ampliado, sem item de sociedade)

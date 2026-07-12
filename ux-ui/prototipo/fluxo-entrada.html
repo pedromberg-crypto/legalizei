@@ -10,6 +10,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="lottie.min.js"></script>
+  <script src="paperplane-data.js"></script>
   <script>
     tailwind.config = { theme: { extend: {
       fontFamily: { sans: ['Sora','system-ui','sans-serif'] },
@@ -24,41 +26,19 @@
   <style>
     body { font-family:'Sora',system-ui,sans-serif; }
 
-    /* palco do logo: começa grande e centralizado na vertical, depois sobe pro topo */
-    #logo-stage {
-      display:flex; justify-content:center;
-      transform:translate(0, 34vh) scale(1.9);
-      transform-origin:center center;
-      transition:transform .85s cubic-bezier(.22,1,.36,1);
-    }
-    /* sobe do centro pro topo, encolhe e desliza pro canto esq (header) — tudo num tween só */
-    #logo-stage.up { transform:translate(-28%, 0) scale(1); }
+    /* logo estático no topo — a marca já foi apresentada na splash coral */
+    #logo-stage { display:flex; justify-content:flex-start; }
+    #logo-wrap { width:164px; }
+    #logo-wrap svg { height:32px; width:164px; display:block; filter:drop-shadow(0 8px 18px rgba(242,100,60,.14)); }
 
-    /* container interno: mostra só o símbolo e depois expande a largura = nome se monta */
-    #logo-wrap {
-      overflow:hidden; width:34px; opacity:0;
-      animation:appear .5s ease .15s forwards;
-      transition:width .9s cubic-bezier(.22,1,.36,1);
-      filter:drop-shadow(0 8px 18px rgba(242,100,60,.20));
-    }
-    #logo-wrap.expand { width:164px; }
-    #logo-wrap svg { height:32px; width:164px; display:block; }
-    @keyframes appear { to { opacity:1; } }
-
-    /* check do símbolo se revela num wipe da esquerda p/ direita */
-    #chk { clip-path:inset(0 100% 0 0); animation:wipe .55s cubic-bezier(.65,0,.35,1) .7s forwards; }
-    @keyframes wipe { to { clip-path:inset(0 0 0 0); } }
-
-    /* conteúdo (headline + CTAs + login) revela em cascata depois do logo subir */
-    #content { opacity:0; pointer-events:none; }
-    #content.show { opacity:1; pointer-events:auto; }
-    #content > .rev { opacity:0; transform:translateY(16px); }
-    #content.show > .rev { animation:fadeUp .55s cubic-bezier(.22,1,.36,1) forwards; }
-    #content.show > .rev:nth-child(1){ animation-delay:.02s }
-    #content.show > .rev:nth-child(2){ animation-delay:.10s }
-    #content.show > .rev:nth-child(3){ animation-delay:.20s }
-    #content.show > .rev:nth-child(4){ animation-delay:.30s }
-    #content.show > .rev:nth-child(5){ animation-delay:.42s }
+    /* conteúdo entra em cascata suave ao abrir a tela */
+    #content > .rev { opacity:0; transform:translateY(16px); animation:fadeUp .55s cubic-bezier(.22,1,.36,1) forwards; }
+    #content > .rev:nth-child(1){ animation-delay:.04s }
+    #content > .rev:nth-child(2){ animation-delay:.12s }
+    #content > .rev:nth-child(3){ animation-delay:.20s }
+    #content > .rev:nth-child(4){ animation-delay:.30s }
+    #content > .rev:nth-child(5){ animation-delay:.40s }
+    #content > .rev:nth-child(6){ animation-delay:.50s }
     @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
 
     .choice { transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
@@ -74,10 +54,10 @@
 
 <body class="bg-ink-50 text-ink-900 antialiased">
   <div class="min-h-screen flex justify-center">
-    <div class="relative w-full max-w-[440px] min-h-screen overflow-hidden
-                md:my-8 md:min-h-[800px] md:rounded-[28px] md:shadow-[0_8px_50px_rgba(27,30,36,.10)] md:self-start bg-ink-50">
+    <div class="relative w-full max-w-[440px] h-[100dvh] overflow-hidden
+                md:h-auto md:my-8 md:min-h-[800px] md:rounded-[28px] md:shadow-[0_8px_50px_rgba(27,30,36,.10)] md:self-start bg-ink-50">
 
-      <div class="min-h-screen md:min-h-[800px] flex flex-col px-6 pt-14 pb-8">
+      <div class="h-full md:min-h-[800px] flex flex-col px-6 pt-14 pb-8">
 
         <!-- ===== LOGO (monta no centro, sobe pro topo) ===== -->
         <div id="logo-stage" class="mb-9">
@@ -103,15 +83,25 @@
         </div>
 
         <!-- ===== CONTEÚDO (entra depois do logo subir) ===== -->
-        <div id="content" class="flex-1 flex flex-col">
+        <div id="content" class="flex-1 min-h-0 flex flex-col">
 
-          <h2 class="rev text-[27px] leading-tight font-800 tracking-tight">Por onde a gente começa?</h2>
-          <p class="rev mt-2 text-[15px] text-ink-500 leading-relaxed">
-            Escolha o seu caso. Em qualquer um deles, a parte chata fica com a gente.
-          </p>
+          <!-- Paperplane loading (nuvens + avião, cores Legalizei) — absorve a sobra e encolhe se faltar espaço -->
+          <div class="rev flex-1 min-h-0 flex items-center justify-center">
+            <div id="paperplane" class="w-full max-w-[440px] h-full max-h-[340px]" aria-hidden="true"></div>
+          </div>
+
+          <h2 class="rev text-[27px] leading-tight font-800 tracking-tight">Como a gente pode te ajudar? <span class="text-ink-500 font-700">A parte chata fica com a gente.</span></h2>
+
+          <!-- Selo de confiança: contador de verdade (diferencial da categoria) -->
+          <div class="rev mt-4 flex items-center gap-2.5 rounded-[13px] bg-coral-50 border border-coral-100 px-3.5 py-2.5">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DD4E27" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+            <p class="text-[12.5px] text-ink-700 leading-snug font-600">
+              22 anos de escritório por trás do app.
+            </p>
+          </div>
 
           <!-- Abrir do zero -->
-          <button class="rev choice text-left rounded-[18px] p-5 mt-8 bg-coral-500 text-white shadow-[0_8px_24px_rgba(242,100,60,.28)] flex items-start gap-4">
+          <button onclick="location.href='gate-cnae.html'" class="rev choice text-left rounded-[18px] p-5 mt-6 bg-coral-500 text-white shadow-[0_8px_24px_rgba(242,100,60,.28)] flex items-start gap-4">
             <div class="w-11 h-11 rounded-[13px] bg-white/20 flex items-center justify-center shrink-0">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
             </div>
@@ -135,7 +125,7 @@
           </button>
 
           <!-- Login -->
-          <div class="rev mt-auto pt-6 text-center">
+          <div class="rev pt-6 text-center">
             <p class="text-[13.5px] text-ink-400">
               Já é cliente? <a href="#" class="text-coral-700 font-medium">Entrar na conta</a>
             </p>
@@ -147,21 +137,31 @@
   </div>
 
   <script>
-    const logo    = document.getElementById('logo-wrap');
-    const stage   = document.getElementById('logo-stage');
-    const content = document.getElementById('content');
+    // Logo estático + conteúdo em cascata suave (a marca já animou na splash coral).
 
-    // sequência: símbolo aparece → check → nome se monta → logo sobe → CTAs entram
-    const t1 = setTimeout(() => logo.classList.add('expand'), 1500);   // nome se monta
-    const t2 = setTimeout(() => stage.classList.add('up'), 2900);      // logo sobe pro topo
-    const t3 = setTimeout(() => content.classList.add('show'), 3400);  // conteúdo em cascata
+    // paperplane loading (respeita reduced-motion)
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (window.lottie && window.PAPERPLANE) {
+      const anim = lottie.loadAnimation({
+        container: document.getElementById('paperplane'),
+        renderer: 'svg',
+        loop: true,
+        autoplay: false,                 // driver manual (independe de requestAnimationFrame)
+        animationData: window.PAPERPLANE,
+      });
 
-    // toque em qualquer lugar pula direto pro estado final
-    document.body.addEventListener('click', (e) => {
-      if (e.target.closest('a')) return; // deixa links funcionarem
-      clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
-      logo.classList.add('expand'); stage.classList.add('up'); content.classList.add('show');
-    });
+      // Alguns visualizadores rodam o tab offscreen -> rAF congela o Lottie no frame 0.
+      // Driver manual via setInterval mantém o avião visível e em loop mesmo assim.
+      anim.addEventListener('DOMLoaded', () => {
+        const total = Math.floor(anim.totalFrames);
+        if (reduce) { anim.goToAndStop(Math.floor(total / 2), true); return; }
+        let f = 0;
+        setInterval(() => {
+          f = (f + 1) % total;
+          anim.goToAndStop(f, true);
+        }, 1000 / 50);                   // 50fps (fr do arquivo); degrada sozinho se o tab ocultar
+      });
+    }
   </script>
 </body>
 </html>

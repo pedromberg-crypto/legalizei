@@ -27,6 +27,7 @@ tags: [marca, decisao]
 | 2026-07-12 | **Specs do lockup** — ícone 1,4× H, centrado na faixa capitular, gap = 1× haste do L, raio ~0,27× lado | 🟢 travado | Verificadas no SVG (sub-pixel). Régua de proporção em [[2026-07-12-logo-fechado]]. |
 | 2026-07-12 | **Fonte Sora = todo o sistema** (display, títulos, corpo, UI) | 🟢 travado | Pedro cravou — não é só o wordmark. Outras sondadas e **descartadas**: Fraunces, Bricolage Grotesque, Space Grotesk, Schibsted Grotesk, Instrument Serif. Handoff pro dev: [[handoff-cores-fonte-dev]]. Ver [[legalize-fonte-sora-sistema]]. |
 | 2026-07-12 | **Logo p/ app = versão fundo composto** (quadrado coral sólido + check branco POR CIMA) | 🟢 travado | Sobre fundo claro, o check vazado do master original fica "oco". Quadrado sólido + check por cima = alto contraste, funciona em qualquer fundo. Uso em UI/app-icon. Arquivo `legalizei-logo-app-fundo-solido.svg`. |
+| 2026-07-12 | **Regra AA do coral-600 em botão**: branco sobre coral-600 = 4,04:1 → passa AA **só em texto grande** (≥18,66px bold / ≥24px). Botão primário sempre com fonte ≥1,2rem bold; botão pequeno usa **coral-700** de fill; **hover escurece** (coral-700), nunca clareia pra coral-500 | 🟢 travado | Auditoria AA da LP (review multi-agente). Corrige a premissa "600 = fill AA" da paleta: vale, mas condicionada ao tamanho. Aplica também a texto branco sobre coral-500 (3,15:1 — só decorativo/texto grande). Ver [[paleta-cores]] · [[2026-07-12-lp-construida]]. |
 
 ## Links
 - [[marca]] · [[naming-defesa]]

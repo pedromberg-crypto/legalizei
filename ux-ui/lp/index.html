@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Legalizei · Sua empresa em dia, sem dor de cabeça</title>
+  <meta name="description" content="Contabilidade digital que fala a sua língua. Contador de verdade, 22 anos em BH, no seu bolso. Baixe o app e deixe a burocracia com a gente.">
+
+  <!-- Sora — produção: bundle woff2 local. Fallback de sistema garante a página sem rede. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+  <noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
+</head>
+<body>
+
+<!-- ============================================================ HEADER -->
+<header class="site-header" id="topo">
+  <div class="container header-inner">
+    <a class="brand" href="#topo" aria-label="Legalizei — início">
+      <!-- logo horizontal (positiva) -->
+      <svg class="logo" viewBox="0 0 1154.07 225.99" role="img" aria-label="Legalizei">
+        <rect fill="var(--coral-500)" width="211.09" height="211.09" rx="32.84"/>
+        <path fill="#fff" d="M211.09,32.95l-105.47,105.47-33.6-33.6c-13.22-13.22-34.65-13.22-47.87,0h0s60.8,60.8,60.8,60.8c11.41,11.41,29.92,11.41,41.33,0l84.81-84.81v-47.87Z"/>
+        <g fill="var(--ink-900)">
+          <path d="M438.21,71.99c-8.33-5.44-18.56-8.16-30.68-8.16-9.23,0-17.46,1.62-24.69,4.85-7.23,3.24-13.26,7.61-18.07,13.12-4.82,5.51-8.5,11.74-11.05,18.69-2.55,6.96-3.82,14.22-3.82,21.79v4.13c0,7.3,1.27,14.43,3.82,21.38,2.55,6.96,6.26,13.22,11.15,18.8,4.89,5.58,11.02,10.02,18.39,13.32,7.36,3.31,15.87,4.96,25.51,4.96s17.9-1.65,25.2-4.96c7.3-3.3,13.35-7.92,18.18-13.84,4.82-5.92,8.06-12.67,9.71-20.24h-7.5c-10.8,0-21.39,2.98-30.6,8.61l-.12.07c-3.86,2.34-8.81,3.51-14.87,3.51-6.61,0-11.98-1.38-16.11-4.13-4.13-2.75-7.16-6.64-9.09-11.67-1.07-2.79-1.81-5.87-2.29-9.19h82.65v-11.16c0-10.33-2.21-19.86-6.61-28.61-4.41-8.74-10.78-15.84-19.11-21.27ZM383.78,106.08c2.07-5.03,5.09-8.85,9.09-11.47,3.99-2.61,8.88-3.92,14.67-3.92s10.36,1.27,14.15,3.82c3.79,2.55,6.64,6.23,8.57,11.05,1.04,2.6,1.78,5.51,2.26,8.68h-51.01c.52-2.98,1.27-5.71,2.27-8.16Z"/>
+          <path d="M572.58,91.72c-.51-1.27-1.05-2.52-1.65-3.72-3.86-7.71-9.12-13.56-15.8-17.56-6.68-3.99-14.56-5.99-23.65-5.99-7.85,0-15.01,1.41-21.48,4.23-6.47,2.83-12.05,6.79-16.73,11.88-4.68,5.1-8.26,11.09-10.74,17.97-2.48,6.89-3.72,14.32-3.72,22.31v4.75c0,7.99,1.17,15.39,3.51,22.21,2.34,6.82,5.71,12.78,10.12,17.87,4.41,5.1,9.74,9.06,16.01,11.88,6.26,2.83,13.25,4.23,20.97,4.23,8.95,0,16.66-1.89,23.14-5.68,6.41-3.75,11.44-9.17,15.08-16.24v9.73c0,6.61-1.31,12.01-3.93,16.22-2.62,4.2-6.71,7.33-12.29,9.4-5.58,2.07-12.84,3.1-21.79,3.1-4.82,0-10.16-.24-16.01-.72h-.18c-8.52-.72-15.83,6.01-15.83,14.56v11.57c4.82.69,10.12,1.24,15.91,1.65,5.78.41,11.43.62,16.94.62,15.42,0,28.2-2,38.32-5.99,10.12-4,17.66-10.26,22.62-18.8,4.96-8.54,7.44-19.76,7.44-33.67v-73.54c0-14.49-11.75-26.24-26.24-26.24h0v23.97ZM567.01,125.18c0,6.06-1.21,11.23-3.62,15.49-2.41,4.27-5.68,7.54-9.81,9.81-4.13,2.27-8.75,3.41-13.84,3.41-5.37,0-10.16-1.2-14.36-3.61-4.2-2.41-7.51-5.92-9.91-10.54-2.41-4.61-3.61-10.15-3.61-16.63s1.17-11.84,3.51-16.53c2.34-4.68,5.64-8.33,9.91-10.95,4.27-2.61,9.16-3.93,14.67-3.93,4.68,0,9.09,1.07,13.22,3.2,4.13,2.14,7.47,5.23,10.02,9.3,2.55,4.06,3.82,9.06,3.82,14.98v5.99Z"/>
+          <path d="M697.87,70.85c-7.92-3.3-17.66-4.96-29.23-4.96-4,0-8.26.07-12.81.21-4.55.14-8.95.34-13.22.62-4.27.28-7.99.55-11.16.83v13.7c0,7.67,6.44,13.77,14.1,13.37h.16c5.23-.28,10.33-.49,15.29-.63,4.96-.14,8.95-.21,11.98-.21,6.06,0,10.46,1.45,13.22,4.34,2.75,2.89,4.13,7.23,4.13,13.01v.41h-20.45c-10.05,0-18.94,1.27-26.65,3.82-7.72,2.55-13.7,6.48-17.97,11.78-4.27,5.3-6.4,12.09-6.4,20.35,0,7.57,1.72,14.08,5.16,19.52,3.44,5.44,8.23,9.61,14.36,12.5,6.13,2.89,13.25,4.34,21.38,4.34s14.49-1.45,19.93-4.34c5.44-2.89,9.71-7.02,12.81-12.39,1.39-2.41,2.5-5.11,3.41-8.02h0c0,12.07,9.79,21.86,21.86,21.86h4.37s0-69.41,0-69.41c0-10.47-2.07-19.04-6.2-25.72-4.13-6.68-10.16-11.67-18.07-14.98ZM679.69,158.96c-2.96,1.31-6.3,1.96-10.02,1.96-5.79,0-10.23-1.41-13.32-4.23-3.1-2.82-4.65-6.51-4.65-11.05,0-4.82,1.55-8.64,4.65-11.47,3.1-2.82,7.54-4.23,13.32-4.23h20.66v9.09c-.28,5.65-1.38,10.05-3.3,13.22-1.93,3.17-4.37,5.41-7.33,6.72Z"/>
+          <path d="M738.25,30.16v24.37h13.43v93.16c0,18.37,14.89,33.26,33.26,33.26h0V30.16h-46.68Z"/>
+          <path d="M805.59,67.75v24.38h15.08v55.78c0,18.25,14.8,33.05,33.05,33.05h0v-88.83h0c0-13.46-10.91-24.38-24.38-24.38h-23.75Z"/>
+          <path d="M914.27,153l37-44.34c9.58-11.48,14.82-25.95,14.82-40.9h0s-63.62,0-63.62,0c-14.03,0-25.41,11.38-25.41,25.41h0s49.41,0,49.41,0l2.12,2.65-51.74,62h0c0,12.78,10.36,23.14,23.14,23.14h42.35c14.03,0,25.41-11.38,25.41-25.41h0s-51.44,0-51.44,0l-2.04-2.55Z"/>
+          <path d="M1068.04,71.99c-8.33-5.44-18.56-8.16-30.68-8.16-9.23,0-17.45,1.62-24.69,4.85-7.23,3.24-13.25,7.61-18.07,13.12-4.82,5.51-8.5,11.74-11.05,18.69-2.55,6.96-3.82,14.22-3.82,21.79v4.13c0,7.3,1.27,14.43,3.82,21.38,2.55,6.96,6.27,13.22,11.16,18.8,4.89,5.58,11.02,10.02,18.38,13.32,7.36,3.31,15.87,4.96,25.51,4.96s17.9-1.65,25.2-4.96c7.3-3.3,13.36-7.92,18.18-13.84,4.82-5.92,8.06-12.67,9.71-20.24h-7.5c-10.8,0-21.39,2.98-30.6,8.61l-.12.07c-3.86,2.34-8.81,3.51-14.87,3.51-6.61,0-11.98-1.38-16.11-4.13-4.13-2.75-7.16-6.64-9.09-11.67-1.07-2.79-1.81-5.87-2.29-9.19h82.65v-11.16c0-10.33-2.21-19.86-6.61-28.61-4.41-8.74-10.78-15.84-19.11-21.27ZM1013.6,106.08c2.07-5.03,5.09-8.85,9.09-11.47,3.99-2.61,8.88-3.92,14.67-3.92s10.36,1.27,14.15,3.82c3.79,2.55,6.64,6.23,8.57,11.05,1.04,2.6,1.78,5.51,2.26,8.68h-51.01c.52-2.98,1.27-5.71,2.27-8.16Z"/>
+          <path d="M1121.02,67.75h-15.08v24.38h15.08v55.77c0,18.25,14.8,33.05,33.05,33.05h0v-88.83h0c0-13.46-10.91-24.38-24.38-24.38h-8.68Z"/>
+          <path d="M278.81,147.11V30.16h0c-18.69,0-33.85,15.15-33.85,33.85v87.73c0,16.14,13.08,29.22,29.22,29.22h63.73c0-18.69-15.15-33.85-33.85-33.85h-25.26Z"/>
+        </g>
+        <circle fill="var(--coral-500)" cx="833.47" cy="43.4" r="13.24"/>
+        <circle fill="var(--coral-500)" cx="1133.83" cy="43.4" r="13.24"/>
+      </svg>
+    </a>
+    <nav class="header-nav" aria-label="Navegação principal">
+      <a href="#validador">Validador</a>
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#perguntas">Perguntas</a>
+    </nav>
+    <a class="btn btn-primary btn-sm" href="#baixar">Baixar o app</a>
+  </div>
+</header>
+
+<main>
+
+<!-- ============================================================ HERO -->
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow reveal">📍 BH · MG — contabilidade digital com gente de verdade</p>
+      <h1 id="hero-title" class="reveal d1">Sua empresa <span class="hl">em dia<svg class="hl-stroke" viewBox="0 0 220 14" aria-hidden="true" preserveAspectRatio="none"><path d="M4 10 C 60 2, 150 2, 216 8" fill="none" stroke="var(--coral-500)" stroke-width="7" stroke-linecap="round"/></svg></span>, sem dor de cabeça.</h1>
+      <p class="hero-sub reveal d2">Contabilidade que fala a sua língua. Você toca o seu negócio — <strong>a burocracia é com a gente.</strong></p>
+
+      <div class="store-row reveal d3">
+        <a class="store-badge" href="#baixar" aria-label="Baixar na App Store">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.05 12.54c-.03-2.89 2.36-4.27 2.47-4.34-1.35-1.97-3.44-2.24-4.18-2.27-1.78-.18-3.47 1.05-4.37 1.05-.9 0-2.29-1.02-3.77-1-1.94.03-3.72 1.13-4.72 2.86-2.01 3.49-.51 8.66 1.45 11.49.96 1.39 2.1 2.94 3.6 2.89 1.45-.06 1.99-.93 3.74-.93s2.24.93 3.77.9c1.56-.03 2.54-1.41 3.49-2.8 1.1-1.61 1.55-3.17 1.58-3.25-.04-.02-3.03-1.16-3.06-4.6zM14.16 4.06c.8-.97 1.34-2.32 1.19-3.66-1.15.05-2.55.77-3.38 1.74-.74.85-1.39 2.23-1.22 3.54 1.29.1 2.6-.65 3.41-1.62z"/></svg>
+          <span><small>Baixar na</small><strong>App Store</strong></span>
+        </a>
+        <a class="store-badge" href="#baixar" aria-label="Disponível no Google Play">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3.6 1.8c-.34.36-.54.91-.54 1.62v17.15c0 .71.2 1.26.55 1.61l.09.08 9.61-9.61v-.22L3.7 1.72l-.1.08zm13.51 13.14-3.2-3.2v-.22l3.2-3.21 3.87 2.2c1.1.62 1.1 1.65 0 2.28l-3.87 2.15zm-.9.86L12.9 12.5 3.6 21.8c.36.38.96.42 1.63.05l10.98-6.05zM3.6 1.72l9.3 9.3 3.31-3.3L5.23 1.67C4.56 1.3 3.96 1.35 3.6 1.72z"/></svg>
+          <span><small>Disponível no</small><strong>Google Play</strong></span>
+        </a>
+      </div>
+
+      <p class="hero-proof reveal d4">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="var(--success-500)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="m5 12 5 5L20 7"/></svg>
+        Um escritório de verdade, <strong>22 anos em BH</strong>, no seu bolso.
+      </p>
+    </div>
+
+    <div class="hero-visual reveal d3" aria-hidden="true">
+      <div class="hero-blob"></div>
+      <div class="hero-plane" id="lot-plane"></div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="app-top">
+            <div class="app-greet">
+              <span class="app-hello">Oi, Ana 👋</span>
+              <span class="app-biz">Ana Design ME</span>
+            </div>
+            <div class="app-status">
+              <span class="app-check">
+                <svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="m5 12 5 5L20 7"/></svg>
+              </span>
+              <div>
+                <strong>Sua empresa em dia</strong>
+                <small>Nada pendente. Pode focar no trampo.</small>
+              </div>
+            </div>
+          </div>
+          <div class="app-body">
+            <div class="app-card">
+              <span class="app-ico">🧾</span>
+              <div><strong>Imposto de julho</strong><small>Pago ✅ · próximo só em agosto</small></div>
+            </div>
+            <div class="app-card">
+              <span class="app-ico">💬</span>
+              <div><strong>Seu contador</strong><small>"Tudo certo por aqui! Qualquer coisa, chama."</small></div>
+            </div>
+            <div class="app-card app-card-coral">
+              <span class="app-ico">🎉</span>
+              <div><strong>Legalizei!</strong><small>Sua nota fiscal foi emitida.</small></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ MARQUEE -->
+<section class="marquee-band" aria-label="Burocracias que deixam de ser problema seu">
+  <div class="container">
+    <p class="marquee-title">Tudo isso deixa de ser problema seu 👇</p>
+  </div>
+  <div class="marquee" data-marquee>
+    <div class="marquee-track">
+      <span class="mq-set">
+      <span class="mq-chip">DAS mensal <i>✓</i></span>
+      <span class="mq-chip">Nota fiscal <i>✓</i></span>
+      <span class="mq-chip">Pró-labore <i>✓</i></span>
+      <span class="mq-chip">Declarações <i>✓</i></span>
+      <span class="mq-chip">Alvará <i>✓</i></span>
+      <span class="mq-chip">Certificado digital <i>✓</i></span>
+      <span class="mq-chip">Prazos da Receita <i>✓</i></span>
+      <span class="mq-chip">Fator R <i>✓</i></span>
+      <span class="mq-chip">Anexo III <i>✓</i></span>
+      <span class="mq-chip">DARF <i>✓</i></span>
+      <span class="mq-chip">Guias de imposto <i>✓</i></span>
+      <span class="mq-chip">Papelada do governo <i>✓</i></span>
+      </span>
+    </div>
+  </div>
+  <div class="container">
+    <button class="mq-toggle" id="mq-toggle" type="button" aria-pressed="false">⏸ Pausar animação</button>
+    <p class="marquee-note">Você nem precisa saber o que é isso. É pra isso que a gente existe.</p>
+  </div>
+</section>
+
+<!-- ============================================================ VALIDADOR -->
+<section class="validador" id="validador" aria-labelledby="val-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">Transparência radical</p>
+      <h2 id="val-title">A gente cuida de você? <br class="only-mobile">Descubra agora.</h2>
+      <p class="section-sub">Antes de baixar, de graça: conta o que você faz e a gente confere na hora se a sua atividade já entra no Legalizei.</p>
+    </div>
+
+    <div class="concierge reveal d1">
+      <div class="concierge-head">
+        <span class="concierge-avatar" aria-hidden="true">
+          <svg viewBox="0 0 211 211"><rect fill="var(--coral-500)" width="211" height="211" rx="48"/><path fill="#fff" d="M211.09,32.95l-105.47,105.47-33.6-33.6c-13.22-13.22-34.65-13.22-47.87,0h0s60.8,60.8,60.8,60.8c11.41,11.41,29.92,11.41,41.33,0l84.81-84.81v-47.87Z"/></svg>
+        </span>
+        <div>
+          <strong>Concierge Legalizei</strong>
+          <small><span class="online-dot" aria-hidden="true"></span> online agora</small>
+        </div>
+      </div>
+
+      <!-- anúncio de estado p/ leitor de tela (sempre no DOM) -->
+      <p class="sr-only" role="status" id="v-live"></p>
+
+      <!-- estado A: pergunta -->
+      <div class="c-state" id="v-ask">
+        <p class="c-bubble">Oi! 👋 Me conta com as suas palavras: <strong>o que você faz?</strong> Eu confiro na hora se a gente cuida de você.</p>
+        <label class="c-field">
+          <textarea id="v-input" rows="2" placeholder="Ex: crio sites e logotipos pra pequenas empresas" aria-label="Descreva o que você faz"></textarea>
+        </label>
+        <p class="c-error hidden" id="v-retry">Hmm, não achei… me conta com mais detalhe o que você entrega no dia a dia 🙂</p>
+        <div class="c-chips">
+          <button class="c-chip" type="button">Crio sites</button>
+          <button class="c-chip" type="button">Sou fotógrafo</button>
+          <button class="c-chip" type="button">Faço marketing</button>
+          <button class="c-chip" type="button">Tenho um restaurante</button>
+          <button class="c-chip" type="button">Sou médico</button>
+        </div>
+        <button class="btn btn-primary c-go" id="v-go" type="button" disabled>Ver se a gente me atende</button>
+        <button class="c-link" id="v-know" type="button">Já sei meu CNAE exato</button>
+      </div>
+
+      <!-- estado: código direto -->
+      <div class="c-state hidden" id="v-code">
+        <p class="c-bubble">Show — direto ao ponto. 😎 Digita o código e eu te digo na hora se a gente cuida de você.</p>
+        <label class="c-field c-field-row">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M7 8h10M7 12h6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+          <input id="v-code-input" inputmode="numeric" placeholder="0000-0/00" aria-label="Código CNAE" aria-describedby="v-code-err">
+        </label>
+        <p class="c-error hidden" id="v-code-err" role="alert">Não reconheci esse código. Confere os números — ou me descreve o que você faz. 🙂</p>
+        <button class="btn btn-primary c-go" id="v-code-go" type="button" disabled>Verificar</button>
+        <button class="c-link" id="v-code-back" type="button">Prefiro descrever o que faço</button>
+      </div>
+
+      <!-- estado B: pensando -->
+      <div class="c-state c-thinking hidden" id="v-think" aria-live="polite">
+        <div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>
+        <p><strong>Analisando o que você faz…</strong></p>
+        <small id="v-echo"></small>
+      </div>
+
+      <!-- estado C: atendido -->
+      <div class="c-state hidden" id="v-ok" tabindex="-1">
+        <span class="tag tag-success">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="m5 12 5 5L20 7"/></svg>
+          Boa notícia — a gente cuida de você
+        </span>
+        <div class="result-card">
+          <div class="result-main">
+            <span class="result-emoji" id="v-ok-emoji">💻</span>
+            <div>
+              <strong id="v-ok-nome">Criação de sites e web design</strong>
+              <small id="v-ok-desc">Você entrega sites e presença digital pra outras empresas.</small>
+            </div>
+          </div>
+          <div class="result-cnae"><span>Sua atividade na Receita</span><em id="v-ok-cnae">CNAE 6201-5/02</em></div>
+          <p class="result-selo">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M20 6 9 17l-5-5"/></svg>
+            Impostos, notas e prazos: por nossa conta.
+          </p>
+        </div>
+        <a class="btn btn-primary c-go" href="#baixar">Baixar o app e começar</a>
+        <button class="c-link" id="v-ok-back" type="button">Não é bem isso — refazer</button>
+      </div>
+
+      <!-- estado D: lista de espera -->
+      <div class="c-state hidden" id="v-wait" tabindex="-1">
+        <span class="tag tag-warn">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>
+          Ainda não — mas tá chegando
+        </span>
+        <h3 class="wait-title">A gente ainda não atende <span id="v-wait-area">atividades médicas</span> por aqui.</h3>
+        <p class="wait-motivo" id="v-wait-motivo">É uma atividade regulamentada (precisa de registro no conselho), então a gente ainda não automatizou esse caso com a segurança que você merece. Estamos chegando lá.</p>
+        <form class="wait-form" id="v-wait-form">
+          <p><strong>Quer ser o primeiro a saber quando abrir?</strong></p>
+          <small>Sem spam. Só um toque quando a sua atividade entrar.</small>
+          <div class="wait-row">
+            <input type="email" id="v-wait-email" placeholder="seu e-mail" required aria-label="Seu e-mail">
+            <button class="btn btn-primary" type="submit">Me avisa</button>
+          </div>
+          <p class="wait-done hidden" id="v-wait-done">Anotado! 💌 Assim que abrir, você é o primeiro a saber.</p>
+        </form>
+        <button class="c-link" id="v-wait-back" type="button">Não é bem isso — refazer</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ DIFERENCIAIS -->
+<section class="difs" aria-labelledby="difs-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">Por que o Legalizei</p>
+      <h2 id="difs-title">Feito pra quem odeia burocracia.</h2>
+      <p class="section-sub">Contabilidade não precisa parecer órgão público. A gente prova.</p>
+    </div>
+    <div class="difs-grid">
+      <article class="dif-card reveal">
+        <div class="dif-anim" id="lot-humano" aria-hidden="true"></div>
+        <h3>Contador de verdade, não robô</h3>
+        <p>Gente de BH, 22 anos de escritório, que responde no WhatsApp quando você precisa.</p>
+      </article>
+      <article class="dif-card reveal d1">
+        <div class="dif-anim" id="lot-chata" aria-hidden="true"></div>
+        <h3>A parte chata é com a gente</h3>
+        <p>Impostos, guias, prazos, papelada do governo — você não toca em nada disso.</p>
+      </article>
+      <article class="dif-card reveal d2">
+        <div class="dif-anim" id="lot-claro" aria-hidden="true"></div>
+        <h3>Sem contabilês, sem susto</h3>
+        <p>Falamos a sua língua. Preço único e claro desde o começo — nada de taxa-surpresa.</p>
+      </article>
+      <article class="dif-card reveal d3">
+        <div class="dif-anim dif-anim-svg" aria-hidden="true">
+          <svg viewBox="0 0 120 120" class="phone-anim">
+            <rect x="38" y="14" width="44" height="92" rx="10" fill="none" stroke="var(--ink-700)" stroke-width="4"/>
+            <rect x="46" y="26" width="28" height="6" rx="3" fill="var(--coral-200)"/>
+            <rect x="46" y="38" width="28" height="6" rx="3" fill="var(--coral-300)"/>
+            <rect x="46" y="50" width="20" height="6" rx="3" fill="var(--coral-400)"/>
+            <circle class="pa-check-bg" cx="82" cy="82" r="18" fill="var(--coral-500)"/>
+            <path class="pa-check" d="m74 82 6 6 11-11" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Mobile-first de verdade</h3>
+        <p>Tudo se resolve no celular — sem "portal" que só funciona no computador.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ COMO FUNCIONA -->
+<section class="steps" id="como-funciona" aria-labelledby="steps-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">Simples assim</p>
+      <h2 id="steps-title">Três passos e pronto. Legalizei! 🎉</h2>
+    </div>
+    <ol class="steps-grid">
+      <li class="step reveal">
+        <span class="step-num">1</span>
+        <h3>Baixe o app</h3>
+        <p>Grátis na App Store e no Google Play. Rapidinho você já tá dentro.</p>
+      </li>
+      <li class="step reveal d1">
+        <span class="step-num">2</span>
+        <h3>Conte o que você faz</h3>
+        <p>Com as suas palavras. Sem formulário de órgão público, sem decorar código.</p>
+      </li>
+      <li class="step reveal d2">
+        <span class="step-num">3</span>
+        <h3>Deixe a burocracia com a gente</h3>
+        <p>A gente abre (ou migra) sua empresa e mantém tudo em dia. Você acompanha pelo celular.</p>
+      </li>
+    </ol>
+    <p class="steps-cta reveal d3"><a class="btn btn-primary" href="#baixar">Começar agora</a></p>
+  </div>
+</section>
+
+<!-- ============================================================ PROVA -->
+<section class="prova" aria-labelledby="prova-title">
+  <div class="container prova-grid">
+    <div class="prova-copy reveal">
+      <p class="eyebrow">Quem tá por trás</p>
+      <h2 id="prova-title">Um escritório de verdade. Há 22 anos em BH.</h2>
+      <p>O Legalizei é o escritório <strong>Legalize Digital</strong> no seu bolso: contadores que cuidam de empresas de Minas desde 2004. Não é robô, não é startup sem lastro — é gente que conhece a Receita, a prefeitura e o seu dia a dia.</p>
+      <ul class="prova-stats">
+        <li><strong>22 anos</strong><span>de estrada em contabilidade</span></li>
+        <li><strong>BH · MG</strong><span>raízes locais, atendimento digital</span></li>
+        <li><strong>WhatsApp</strong><span>resposta de gente, não de robô</span></li>
+      </ul>
+    </div>
+    <div class="prova-chat reveal d2" aria-label="Exemplo de conversa no WhatsApp com o contador">
+      <div class="chat-head">
+        <span class="chat-avatar" aria-hidden="true">
+          <svg viewBox="0 0 211 211"><rect fill="var(--coral-500)" width="211" height="211" rx="48"/><path fill="#fff" d="M211.09,32.95l-105.47,105.47-33.6-33.6c-13.22-13.22-34.65-13.22-47.87,0h0s60.8,60.8,60.8,60.8c11.41,11.41,29.92,11.41,41.33,0l84.81-84.81v-47.87Z"/></svg>
+        </span>
+        <div><strong>Seu contador · Legalizei</strong><small>online</small></div>
+      </div>
+      <div class="chat-body">
+        <p class="msg msg-out">Chegou um boleto DAS aqui… eu preciso fazer alguma coisa? 😰</p>
+        <p class="msg msg-in">Pode deixar comigo! Já tá agendado, vence dia 20 e sai da conta PJ. Você não faz nada. 👍</p>
+        <p class="msg msg-out">aaaa que alívio. valeu!!</p>
+        <p class="msg msg-in">Sua empresa segue em dia ✅ Bom trabalho aí!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ NÓS vs OS OUTROS -->
+<section class="vs" aria-labelledby="vs-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">Comparação honesta</p>
+      <h2 id="vs-title">Sem citar nomes. Mas compare aí.</h2>
+    </div>
+    <div class="vs-table-wrap reveal d1">
+      <table class="vs-table">
+        <thead>
+          <tr>
+            <th scope="col" class="vs-what"><span class="sr-only">Critério</span></th>
+            <th scope="col" class="vs-us">
+              <svg class="vs-logo" viewBox="0 0 211 211" aria-hidden="true"><rect fill="var(--coral-500)" width="211" height="211" rx="48"/><path fill="#fff" d="M211.09,32.95l-105.47,105.47-33.6-33.6c-13.22-13.22-34.65-13.22-47.87,0h0s60.8,60.8,60.8,60.8c11.41,11.41,29.92,11.41,41.33,0l84.81-84.81v-47.87Z"/></svg>
+              Legalizei
+            </th>
+            <th scope="col" class="vs-them">Os outros</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Atendimento</th>
+            <td class="vs-us"><i>✓</i> Gente de verdade no WhatsApp</td>
+            <td class="vs-them"><i>—</i> Robô e ticket sem resposta</td>
+          </tr>
+          <tr>
+            <th scope="row">Preço</th>
+            <td class="vs-us"><i>✓</i> Único e claro desde o início</td>
+            <td class="vs-them"><i>—</i> Taxa-surpresa no boleto</td>
+          </tr>
+          <tr>
+            <th scope="row">Celular</th>
+            <td class="vs-us"><i>✓</i> Tudo no app, de verdade</td>
+            <td class="vs-them"><i>—</i> "Tem app", mas manda pro computador</td>
+          </tr>
+          <tr>
+            <th scope="row">Foco</th>
+            <td class="vs-us"><i>✓</i> Seu negócio em dia</td>
+            <td class="vs-them"><i>—</i> Vitrine de produto extra</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ FAQ -->
+<section class="faq" id="perguntas" aria-labelledby="faq-title">
+  <div class="container faq-inner">
+    <div class="section-head reveal">
+      <p class="eyebrow">Sem letra miúda</p>
+      <h2 id="faq-title">Perguntas de quem tá chegando</h2>
+    </div>
+    <div class="faq-list reveal d1">
+      <details>
+        <summary>Vocês têm contador de verdade?<span class="faq-ico" aria-hidden="true"></span></summary>
+        <p>Temos — e é o coração da coisa. Por trás do app existe um escritório de contabilidade com 22 anos de estrada em BH. O app organiza; quem assina e cuida é contador registrado no conselho da profissão — gente qualificada, de carne e osso.</p>
+      </details>
+      <details>
+        <summary>Quanto custa?<span class="faq-ico" aria-hidden="true"></span></summary>
+        <p>Preço único mensal, sem susto: você vê o valor exato no app antes de assinar qualquer coisa — e ele não muda por "taxa extra" no meio do caminho. Transparência é regra aqui.</p>
+      </details>
+      <details>
+        <summary>Já tenho contador. Dá pra mudar?<span class="faq-ico" aria-hidden="true"></span></summary>
+        <p>Dá, e a mudança é com a gente: você informa o CNPJ, a gente puxa seus dados e cuida da transição inteira com o contador atual. Você não briga com ninguém. 😄</p>
+      </details>
+      <details>
+        <summary>Atende a minha atividade?<span class="faq-ico" aria-hidden="true"></span></summary>
+        <p>Descubra em 10 segundos no <a href="#validador">validador aqui em cima</a> — de graça, antes de baixar. Se ainda não atendemos, você entra na lista e é avisado assim que abrir.</p>
+      </details>
+      <details>
+        <summary>É só pra quem mora em BH?<span class="faq-ico" aria-hidden="true"></span></summary>
+        <p>Nosso foco hoje é BH e Minas Gerais — é onde conhecemos cada balcão de prefeitura. O atendimento é 100% digital, então você resolve tudo sem sair de casa.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ CTA FINAL -->
+<section class="cta-final" id="baixar" aria-labelledby="cta-title">
+  <div class="container cta-inner">
+    <svg class="cta-logo" viewBox="0 0 211 211" role="img" aria-label="Símbolo Legalizei">
+      <defs>
+        <mask id="check-knockout">
+          <rect width="211" height="211" rx="48" fill="#fff"/>
+          <path fill="#000" d="M211.09,32.95l-105.47,105.47-33.6-33.6c-13.22-13.22-34.65-13.22-47.87,0h0s60.8,60.8,60.8,60.8c11.41,11.41,29.92,11.41,41.33,0l84.81-84.81v-47.87Z"/>
+        </mask>
+      </defs>
+      <rect width="211" height="211" rx="48" fill="#fff" mask="url(#check-knockout)"/>
+    </svg>
+    <h2 id="cta-title" class="reveal">Bora tirar a burocracia da sua frente?</h2>
+    <p class="cta-sub reveal d1">Baixe o app, conte o que você faz — e deixe o resto com a gente. <strong>Legalizei! 🎉</strong></p>
+    <div class="store-row store-row-center reveal d2">
+      <a class="store-badge store-badge-light" href="#baixar" aria-label="Baixar na App Store (link da loja em breve)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.05 12.54c-.03-2.89 2.36-4.27 2.47-4.34-1.35-1.97-3.44-2.24-4.18-2.27-1.78-.18-3.47 1.05-4.37 1.05-.9 0-2.29-1.02-3.77-1-1.94.03-3.72 1.13-4.72 2.86-2.01 3.49-.51 8.66 1.45 11.49.96 1.39 2.1 2.94 3.6 2.89 1.45-.06 1.99-.93 3.74-.93s2.24.93 3.77.9c1.56-.03 2.54-1.41 3.49-2.8 1.1-1.61 1.55-3.17 1.58-3.25-.04-.02-3.03-1.16-3.06-4.6zM14.16 4.06c.8-.97 1.34-2.32 1.19-3.66-1.15.05-2.55.77-3.38 1.74-.74.85-1.39 2.23-1.22 3.54 1.29.1 2.6-.65 3.41-1.62z"/></svg>
+        <span><small>Baixar na</small><strong>App Store</strong></span>
+      </a>
+      <a class="store-badge store-badge-light" href="#baixar" aria-label="Disponível no Google Play (link da loja em breve)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3.6 1.8c-.34.36-.54.91-.54 1.62v17.15c0 .71.2 1.26.55 1.61l.09.08 9.61-9.61v-.22L3.7 1.72l-.1.08zm13.51 13.14-3.2-3.2v-.22l3.2-3.21 3.87 2.2c1.1.62 1.1 1.65 0 2.28l-3.87 2.15zm-.9.86L12.9 12.5 3.6 21.8c.36.38.96.42 1.63.05l10.98-6.05zM3.6 1.72l9.3 9.3 3.31-3.3L5.23 1.67C4.56 1.3 3.96 1.35 3.6 1.72z"/></svg>
+        <span><small>Disponível no</small><strong>Google Play</strong></span>
+      </a>
+    </div>
+    <p class="cta-note reveal d3">Grátis pra baixar · você valida sua atividade antes de assinar qualquer coisa</p>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================================================ FOOTER -->
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <svg class="footer-logo" viewBox="0 0 211 211" aria-hidden="true"><rect fill="var(--coral-500)" width="211" height="211" rx="48"/><path fill="#fff" d="M211.09,32.95l-105.47,105.47-33.6-33.6c-13.22-13.22-34.65-13.22-47.87,0h0s60.8,60.8,60.8,60.8c11.41,11.41,29.92,11.41,41.33,0l84.81-84.81v-47.87Z"/></svg>
+      <p><strong>Legalizei</strong> · contabilidade digital da Legalize Digital<br>22 anos em BH · Belo Horizonte — MG</p>
+    </div>
+    <nav class="footer-links" aria-label="Links do rodapé">
+      <a href="mailto:contato@legalizei.app">contato@legalizei.app</a>
+      <!-- Termos/Privacidade viram <a> quando as páginas existirem -->
+      <span>Termos de uso · em breve</span>
+      <span>Privacidade · em breve</span>
+    </nav>
+  </div>
+  <div class="container footer-legal">
+    <p>© 2026 Legalizei. A parte chata da burocracia é com a gente. 🧡</p>
+  </div>
+</footer>
+
+<!-- Lottie local + dados locais (window.*) -->
+<script src="assets/lottie.min.js" defer></script>
+<script src="assets/paperplane-data.js" defer></script>
+<script src="assets/customer-need-data.js" defer></script>
+<script src="assets/content-mod-data.js" defer></script>
+<script src="assets/marketing-mgmt-data.js" defer></script>
+<script src="script.js" defer></script>
+</body>
+</html>

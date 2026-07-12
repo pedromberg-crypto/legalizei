@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Legalizei · Abertura — Seus dados</title>
+
+  <!-- Sora: fonte única do sistema -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind (protótipo — CDN; no app real vira config) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Sora', 'system-ui', 'sans-serif'] },
+          colors: {
+            coral: { 50:'#FEF3EE',100:'#FBDDD1',200:'#F8C3B0',300:'#F5A184',400:'#F47F58',500:'#F2643C',600:'#DD4E27',700:'#B83D1C',800:'#8C2F16',900:'#5C1F0F' },
+            ink:   { 50:'#FAF8F5',100:'#F1EEE9',200:'#E3DED7',300:'#CBC5BC',400:'#A19B92',500:'#736E67',600:'#524E48',700:'#34363C',800:'#24262C',900:'#1B1E24' },
+            success:{ 50:'#E7F6EF',500:'#17A06A',700:'#0B5E40' },
+            warning:{ 50:'#FDF3E1',500:'#F5A524',700:'#98600A' },
+            danger: { 50:'#FCEBEB',500:'#E03E43',700:'#971F25' },
+            info:   { 50:'#EBF2FC',500:'#3B82E0',700:'#2360B8' },
+          },
+        },
+      },
+    }
+  </script>
+
+  <style>
+    /* tokens candidatos que EMERGEM desta página — depois viram o DS */
+    :root {
+      --radius-field: 12px;
+      --radius-card: 16px;
+      --shadow-soft: 0 1px 2px rgba(27,30,36,.04), 0 4px 16px rgba(27,30,36,.05);
+      --shadow-cta:  0 -6px 20px rgba(27,30,36,.06);
+    }
+    body { font-family: 'Sora', system-ui, sans-serif; }
+    /* input base — a anatomia do campo, candidata a componente */
+    .field {
+      width: 100%;
+      background: #fff;
+      border: 1px solid #E3DED7;              /* ink-200 */
+      border-radius: var(--radius-field);
+      padding: 14px 14px;
+      font-size: 16px;                         /* 16px evita zoom no iOS */
+      color: #1B1E24;                          /* ink-900 */
+      transition: border-color .15s, box-shadow .15s;
+      -webkit-appearance: none; appearance: none;
+    }
+    .field::placeholder { color: #A19B92; }    /* ink-400 */
+    .field:focus {
+      outline: none;
+      border-color: #F2643C;                   /* coral-500 */
+      box-shadow: 0 0 0 4px #FEF3EE;           /* coral-50 halo */
+    }
+    .field.is-error { border-color: #E03E43; } /* danger-500 */
+    .field.is-error:focus { box-shadow: 0 0 0 4px #FCEBEB; }
+    select.field { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23736E67' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; padding-right:40px; }
+  </style>
+</head>
+
+<body class="bg-ink-50 text-ink-900 antialiased">
+
+  <!-- Moldura de celular só no protótipo (some no app). No desktop centraliza a coluna. -->
+  <div class="min-h-screen flex justify-center">
+    <div class="w-full max-w-[440px] flex flex-col min-h-screen bg-ink-50 md:my-8 md:min-h-0 md:rounded-[24px] md:shadow-[0_8px_40px_rgba(27,30,36,.08)] md:overflow-hidden md:self-start">
+
+      <!-- Topo: voltar + stepper -->
+      <header class="px-5 pt-5 pb-3">
+        <div class="flex items-center gap-3 mb-5">
+          <button class="w-9 h-9 rounded-full flex items-center justify-center text-ink-600 hover:bg-ink-100 transition" aria-label="Voltar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <span class="text-sm font-medium text-ink-500">Abrir minha empresa</span>
+        </div>
+
+        <!-- Stepper: as 4 etapas da Fase 0 -->
+        <div class="flex items-center gap-2" aria-label="Etapa 1 de 4">
+          <div class="h-1.5 flex-1 rounded-full bg-coral-500"></div>
+          <div class="h-1.5 flex-1 rounded-full bg-ink-200"></div>
+          <div class="h-1.5 flex-1 rounded-full bg-ink-200"></div>
+          <div class="h-1.5 flex-1 rounded-full bg-ink-200"></div>
+        </div>
+        <p class="mt-2 text-xs font-medium text-ink-400">Etapa 1 de 4 · Seus dados</p>
+      </header>
+
+      <!-- Conteúdo -->
+      <main class="flex-1 px-5 pb-32">
+        <h1 class="text-[26px] leading-tight font-700 tracking-tight mt-2">Vamos começar por você</h1>
+        <p class="mt-2 text-[15px] text-ink-500 leading-relaxed">
+          São os dados do sócio principal. Usamos só pra abrir a empresa no seu nome — nada é compartilhado.
+        </p>
+
+        <form class="mt-7 flex flex-col gap-5" onsubmit="return false">
+
+          <!-- Nome -->
+          <div>
+            <label for="nome" class="block text-sm font-medium text-ink-700 mb-1.5">Nome completo</label>
+            <input id="nome" class="field" type="text" placeholder="Como está no seu documento" autocomplete="name">
+          </div>
+
+          <!-- CPF -->
+          <div>
+            <label for="cpf" class="block text-sm font-medium text-ink-700 mb-1.5">CPF</label>
+            <input id="cpf" class="field" type="text" inputmode="numeric" placeholder="000.000.000-00">
+          </div>
+
+          <!-- RG -->
+          <div>
+            <label for="rg" class="block text-sm font-medium text-ink-700 mb-1.5">RG</label>
+            <input id="rg" class="field" type="text" placeholder="Número do documento">
+            <p class="mt-1.5 text-xs text-ink-400">Precisamos dele pro registro na Junta.</p>
+          </div>
+
+          <!-- Estado civil -->
+          <div>
+            <label for="civil" class="block text-sm font-medium text-ink-700 mb-1.5">Estado civil</label>
+            <select id="civil" class="field text-ink-900" onchange="toggleRegime(this.value)">
+              <option value="" disabled selected class="text-ink-400">Selecione</option>
+              <option value="solteiro">Solteiro(a)</option>
+              <option value="casado">Casado(a)</option>
+              <option value="divorciado">Divorciado(a)</option>
+              <option value="viuvo">Viúvo(a)</option>
+              <option value="uniao">União estável</option>
+            </select>
+          </div>
+
+          <!-- Regime de bens (condicional: casado) -->
+          <div id="regimeWrap" class="hidden">
+            <label for="regime" class="block text-sm font-medium text-ink-700 mb-1.5">Regime de bens</label>
+            <select id="regime" class="field">
+              <option value="" disabled selected>Selecione</option>
+              <option>Comunhão parcial</option>
+              <option>Comunhão universal</option>
+              <option>Separação total</option>
+              <option>Participação final nos aquestos</option>
+            </select>
+            <p class="mt-1.5 text-xs text-ink-400">A Junta pede isso quando o sócio é casado.</p>
+          </div>
+
+          <!-- Contato -->
+          <div>
+            <label for="email" class="block text-sm font-medium text-ink-700 mb-1.5">E-mail</label>
+            <input id="email" class="field" type="email" placeholder="voce@email.com" autocomplete="email">
+          </div>
+
+          <!-- Exemplo de estado de erro (referência de componente) -->
+          <div>
+            <label for="tel" class="block text-sm font-medium text-ink-700 mb-1.5">Celular</label>
+            <input id="tel" class="field is-error" type="tel" inputmode="numeric" placeholder="(31) 90000-0000" value="(31) 9">
+            <p class="mt-1.5 text-xs text-danger-700 flex items-center gap-1">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Faltam dígitos — confira o número.
+            </p>
+          </div>
+
+        </form>
+      </main>
+
+      <!-- CTA fixo (mobile) / no rodapé do card (desktop) -->
+      <footer class="fixed bottom-0 left-0 right-0 md:absolute md:rounded-b-[24px]"
+              style="box-shadow: var(--shadow-cta);">
+        <div class="max-w-[440px] mx-auto bg-ink-50/95 backdrop-blur px-5 py-4 border-t border-ink-200">
+          <button class="w-full h-[52px] rounded-[14px] bg-coral-600 text-white font-600 text-[16px] hover:bg-coral-700 active:scale-[.99] transition flex items-center justify-center gap-2">
+            Continuar
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </button>
+        </div>
+      </footer>
+
+    </div>
+  </div>
+
+  <script>
+    function toggleRegime(v){
+      document.getElementById('regimeWrap').classList.toggle('hidden', v !== 'casado');
+    }
+  </script>
+</body>
+</html>

@@ -25,6 +25,8 @@ tags: [marca, decisao]
 | 2026-07-12 | **Logo travado** — símbolo = quadrado coral com check **vazado + sangrado** (canto sup-dir), fundo do check **branco sólido** (robusto sobre foto); wordmark "Legalizei" em **Sora estilizada** ink | 🟢 travado | Pedro (designer). Fusão recorte-negativo + sangrado. Master: [[legalizei-logo-horizontal.svg]]. Ver [[2026-07-12-logo-fechado]] |
 | 2026-07-12 | **3 pontos de coral** (ícone + pingo dos 2 "i") | 🟢 travado | Escolha do Pedro sobre "só i-final". Ritmo coral ícone→i→i; funciona com pingos reduzidos (r13,24). Exceção consciente à regra "1 coral por lockup". |
 | 2026-07-12 | **Specs do lockup** — ícone 1,4× H, centrado na faixa capitular, gap = 1× haste do L, raio ~0,27× lado | 🟢 travado | Verificadas no SVG (sub-pixel). Régua de proporção em [[2026-07-12-logo-fechado]]. |
+| 2026-07-12 | **Fonte Sora = todo o sistema** (display, títulos, corpo, UI) | 🟢 travado | Pedro cravou — não é só o wordmark. Outras sondadas e **descartadas**: Fraunces, Bricolage Grotesque, Space Grotesk, Schibsted Grotesk, Instrument Serif. Handoff pro dev: [[handoff-cores-fonte-dev]]. Ver [[legalize-fonte-sora-sistema]]. |
+| 2026-07-12 | **Logo p/ app = versão fundo composto** (quadrado coral sólido + check branco POR CIMA) | 🟢 travado | Sobre fundo claro, o check vazado do master original fica "oco". Quadrado sólido + check por cima = alto contraste, funciona em qualquer fundo. Uso em UI/app-icon. Arquivo `legalizei-logo-app-fundo-solido.svg`. |
 
 ## Links
 - [[marca]] · [[naming-defesa]]

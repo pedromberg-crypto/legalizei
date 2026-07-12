@@ -26,6 +26,23 @@ tags: [reporte, evolucao, sociedade]
 
 **Próximo:** reavaliar a rota do produto com as descobertas da semana (dev já trabalhando na nova validação). ~~fechar o logo~~ ✅ **logo fechado 12/07** ([[2026-07-12-logo-fechado]]) — falta só gerar derivados (favicon/ícone de app).
 
+## Semana 11–12/07/2026
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | Marca | Fonte do sistema definida (Sora, pra tudo); **handoff de cores + fonte entregue pro dev** já iniciar as telas | 🟢 |
+| 2 | Produto/UX | **Fluxo de entrada do app desenhado**: abrir do zero × migrar de contador; ao migrar, puxar dados do CNPJ automaticamente; filtrar já na entrada se o CNAE é atendido; pedir cadastro só depois de qualificar o cliente | 🟢 |
+| 3 | Protótipo | Arrancamos o **protótipo visual das telas** já com a marca — abertura animada + primeiras telas do cadastro | 🟢 |
+
+**Próximo (11–12):** confirmar com o dev a fonte de dados do cartão CNPJ (API); seguir prototipando as telas do wizard.
+
+### 📱 WhatsApp (11–12/07)
+```
+*Update Legalizei* 🎨
+- Definimos a fonte do app e passamos as cores prontas pro dev começar as telas
+- Desenhamos como o cliente entra no app: quem já tem empresa migra puxando os dados do CNPJ na hora; quem vai abrir do zero é guiado; e a gente já filtra logo na entrada se atende a atividade dele
+- Começamos o protótipo visual das telas com a nossa marca (abertura animada + início do cadastro)
+```
+
 ## 📱 Versão WhatsApp (copiar/colar — grupo ampliado, sem item de sociedade)
 ```
 *Relatório semanal — Legalizei* 📊

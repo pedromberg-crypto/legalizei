@@ -4,17 +4,20 @@
 > Status: ✅ negócio fechado com Mauro (2026-07-07) · V0/imersão em curso.
 
 ## 📍 Agora (torre de controle — mantida via `/fechar`)
-> **Última atualização:** 2026-07-12 · Janela nova? rode `/boot`. **Fase:** imersão mês 1 + marca (logo fechado).
+> **Última atualização:** 2026-07-12 · Janela nova? rode `/boot`. **Fase:** imersão mês 1 + marca + **arranque do protótipo UI**.
+
+**Régua:** é **MLP (mínimo LOVABLE), não MVP** — craft/encanto (animação, micro-interação) no escopo. Spec ainda diz "MVP" em vários lugares (corrigir) → [[legalize-mlp-nao-mvp]]
 
 **Estado das frentes:**
-- 🟢 **Pesquisa concorrente** — 6 teardowns + páginas públicas (planos/sobre/FAQ) + tom → [[_sintese-paginas-publicas]]
+- 🟢 **Pesquisa concorrente** — 6 teardowns + páginas públicas + tom → [[_sintese-paginas-publicas]]
 - 🟢 **Abertura BH** — fluxo validado c/ Izabela; órgãos mapeados → [[fluxo-abertura-portais-pedro-dev]]
-- 🟢 **CNAE** — entregável atendidos/não atendidos pronto pro dev → [[cnae-atendidos-e-nao-atendidos]]
-- 🟡 **Produto/tech** — stack+MLP+multi-tenant decididos; **reavaliar rota** (teto automação ~15–20% humano; dev já nisso) → [[2026-07-10-teto-automacao-orgaos-sem-api]]
-- 🟢 **Marca** — nome+conceito+tom+paleta travados; **logo FECHADO** (símbolo quadrado + check vazado/sangrado, check branco; wordmark Sora; 3 coral) → [[2026-07-12-logo-fechado]] · master [[legalizei-logo-horizontal.svg]] · falta só teste de fogo (16px/foto) + derivados (favicon/app-icon) → [[decisoes-marca]] · [[paleta-cores]]
-- ⏳ **Infra** — domínios escolhidos (carrinho Hostinger R$186 + .app.br no registro.br) **aguardando autorização de compra**; titular CNPJ Legalize Digital; gmail `legalizeiapp@gmail.com`
+- 🟢 **CNAE** — atendidos/não atendidos (460/68/804) pronto pro dev → [[cnae-atendidos-e-nao-atendidos]]
+- 🟢 **Marca** — nome+conceito+tom+paleta+logo travados; **fonte Sora = sistema inteiro (travado)**; falta teste de fogo + derivados (favicon/app-icon) → [[decisoes-marca]] · [[paleta-cores]]
+- 🟡 **Produto/tech** — stack+MLP+multi-tenant; **reavaliar rota** semana que vem. **Fluxo de entrada TRAVADO** (splash→fork abrir/migrar→gate CNAE concierge→login deferido→wizard; migrar puxa cartão CNPJ) → [[2026-07-12-fluxo-entrada-prototipo]]
+- 🟢 **Protótipo UI** — throwaway HTML+Tailwind em `ux-ui/prototipo/` (método página-primeiro, DS emerge). Feito: handoff cores+fonte pro dev; splash animada + fork; wizard Fase 0. Loop: server local + Chrome F5 → [[legalize-prototipo-ux]]
+- ⏳ **Infra** — domínios **aguardando autorização de compra** (Mauro); titular CNPJ Legalize Digital
 
-**Decisões abertas:** autorização de compra dos domínios (Mauro) · reavaliação da rota do produto (semana que vem). **Marca:** derivados do logo (favicon/app-icon) + teste de fogo, depois Design System.
+**Decisões abertas:** autorização compra domínios (Mauro) · reavaliação rota produto (semana que vem) · **provider da API de cartão CNPJ** (confirmar c/ dev — InfoSimples/CNPJá) · derivados do logo + teste de fogo, depois Design System.
 
 **Atalhos:** [[kanban-legalizei]] · [[parking-lot]] · [[evolucao-para-mauro]] (reporte sócio) · [[CHECKLIST-IMERSAO-30-DIAS]]
 

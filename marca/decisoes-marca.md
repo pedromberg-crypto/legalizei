@@ -22,6 +22,9 @@ tags: [marca, decisao]
 | 2026-07-10 | **Cor líder = CORAL (Direção A)** + sistema disciplinado de 2 cores (coral marca + base ink) | 🟢 travado | Decidido vendo lockup materializado. Coral quente = única cor vazia num setor azul-esverdeado frio; craft impecável neutraliza risco de "informal". Ver [[referencias]], [[_sintese-paginas-publicas]] |
 | 2026-07-10 | **Tom exato do coral = #F2643C** (opção 2 de 4) | 🟢 travado | Escolhido vendo 4 tons aplicados (terracota→vivo). Equilíbrio otimismo/credibilidade; nem berrante nem wellness. |
 | 2026-07-10 | **Paleta de cor v1 validada** (coral 50-900, ink/neutros, semânticos) | 🟢 validado | [[paleta-cores]]. Regras: coral=marca+ação (600 fill AA), coral nunca é erro, fundo papel quente, azul banido como marca. |
+| 2026-07-12 | **Logo travado** — símbolo = quadrado coral com check **vazado + sangrado** (canto sup-dir), fundo do check **branco sólido** (robusto sobre foto); wordmark "Legalizei" em **Sora estilizada** ink | 🟢 travado | Pedro (designer). Fusão recorte-negativo + sangrado. Master: [[legalizei-logo-horizontal.svg]]. Ver [[2026-07-12-logo-fechado]] |
+| 2026-07-12 | **3 pontos de coral** (ícone + pingo dos 2 "i") | 🟢 travado | Escolha do Pedro sobre "só i-final". Ritmo coral ícone→i→i; funciona com pingos reduzidos (r13,24). Exceção consciente à regra "1 coral por lockup". |
+| 2026-07-12 | **Specs do lockup** — ícone 1,4× H, centrado na faixa capitular, gap = 1× haste do L, raio ~0,27× lado | 🟢 travado | Verificadas no SVG (sub-pixel). Régua de proporção em [[2026-07-12-logo-fechado]]. |
 
 ## Links
 - [[marca]] · [[naming-defesa]]

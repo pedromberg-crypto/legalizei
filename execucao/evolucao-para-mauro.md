@@ -20,11 +20,11 @@ tags: [reporte, evolucao, sociedade]
 | 5 | **Teto de automação** | Validado pelos 3: o processo **não é 100% digital** (~15–20% exige humano) — JUCEMG e Gov.br não têm API e exigem login manual. **Os concorrentes também não são**: todo "abrir empresa grátis" vira formulário → "um consultor entra em contato". Ver [[2026-07-10-teto-automacao-orgaos-sem-api]] | 🟢 |
 | 6 | CNAEs | Mapa completo do que o app atende x não atende (460 sim / 68 condicional / 804 não) | 🟢 |
 | 7 | Tecnologia | Base técnica do app definida (stack, MLP, multi-tenant) | 🟢 |
-| 8 | Marca | Nome aprovado (Legalizei); tom de voz, personalidade e cor principal (coral) definidos; logo em criação | 🟢 / 🟡 logo |
+| 8 | Marca | Nome aprovado (Legalizei); tom de voz, personalidade e cor principal (coral) definidos; **logo fechado** (símbolo + logotipo, arquivos vetoriais) | 🟢 |
 | 9 | Domínios e e-mail | Escolhidos + carrinho montado na Hostinger (R$186/ano), no CNPJ da Legalize Digital | ⏳ aguarda autorização de compra |
 | 10 | Organização | Todo o conhecimento do projeto centralizado, versionado e seguro | 🟢 |
 
-**Próximo:** reavaliar a rota do produto com as descobertas da semana (dev já trabalhando na nova validação) + fechar o logo.
+**Próximo:** reavaliar a rota do produto com as descobertas da semana (dev já trabalhando na nova validação). ~~fechar o logo~~ ✅ **logo fechado 12/07** ([[2026-07-12-logo-fechado]]) — falta só gerar derivados (favicon/ícone de app).
 
 ## 📱 Versão WhatsApp (copiar/colar — grupo ampliado, sem item de sociedade)
 ```
@@ -37,11 +37,11 @@ _07 a 10/07_
 4️⃣ *Descoberta-chave* — ninguém é 100% automático: órgãos como JUCEMG e Gov.br exigem humano, E todos os concorrentes, no "abrir empresa grátis", terminam em "um consultor entra em contato". Confirmado pelos 3 ✅
 5️⃣ *CNAEs* — mapa do que o app atende e não atende (460 sim / 804 não) ✅
 6️⃣ *Tecnologia* — definida a base de como o app vai ser construído ✅
-7️⃣ *Marca* — nome aprovado, tom de voz e cor principal (coral) definidos; logo em criação 🟡
+7️⃣ *Marca* — nome aprovado, tom de voz e cor principal (coral) definidos; *logo fechado* ✅
 8️⃣ *Domínios e e-mail* — escolhidos e no carrinho (R$186/ano), no CNPJ da Legalize Digital ⏳ *aguardando autorização pra comprar*
 9️⃣ *Organização* — conhecimento do projeto centralizado e seguro ✅
 
-Semana que vem: reavaliar a rota do produto com essas descobertas (o dev já está nisso) + fechar o logo.
+Semana que vem: reavaliar a rota do produto com essas descobertas (o dev já está nisso). Logo já fechado ✅
 ```
 
 ## Links

@@ -1,14 +1,17 @@
 ---
 tipo: identidade-visual
 etapa: simbolo
-status: em-maos-do-pedro
+status: fechado
 data: 2026-07-10
+atualizado: 2026-07-12
 tags: [marca, design, simbolo, logo]
 ---
 
 # 🔣 Exploração de símbolo — Legalizei (rascunhos)
 
-> Direção conceitual: **"Legalizei = consegui"** (1ª pessoa, passado = conquista). Rascunhos vetoriais (SVG mão-livre) pra provocar direção — **Pedro (designer) leva pro processo humano de criação de marca**. Retomar debate depois. Cor/arquétipo/tom já travados ([[decisoes-marca]], [[paleta-cores]], [[conceito-marca]]).
+> ✅ **RESOLVIDO em 2026-07-12** → ver [[2026-07-12-logo-fechado]] e master [[legalizei-logo-horizontal.svg]]. O caminho vencedor não foi nenhum destes puros: virou **selo quadrado (linha C1) com check vazado + sangrado**, mantendo o "-i" coral do wordmark como assinatura (eco do B1). Esta nota fica como histórico da exploração.
+>
+> Direção conceitual: **"Legalizei = consegui"** (1ª pessoa, passado = conquista). Rascunhos vetoriais (SVG mão-livre) pra provocar direção. Cor/arquétipo/tom já travados ([[decisoes-marca]], [[paleta-cores]], [[conceito-marca]]).
 
 ## Caminhos rascunhados
 | Cód | Ideia | Leitura |
@@ -27,8 +30,9 @@ tags: [marca, design, simbolo, logo]
 - Pedro vai preferir refinar no processo humano — estes são só pontos de partida.
 
 ## Pendente
-- Fechar símbolo (Pedro).
-- Tipografia (sugestões de fonte enviadas no chat 2026-07-10; ver histórico — Fraunces, Bricolage Grotesque, Space Grotesk, Schibsted Grotesk, Instrument Serif, Sora).
+- ~~Fechar símbolo (Pedro).~~ ✅ **feito 2026-07-12** ([[2026-07-12-logo-fechado]]). Wordmark = **Sora** (uma das sugestões), estilizada.
+- **Derivados do logo:** favicon + ícone de app + versões mono/sobre-ink; teste de fogo 16/24px e sobre foto.
+- Tipografia **do sistema** (além do wordmark; sugestões 2026-07-10 — Fraunces, Bricolage Grotesque, Space Grotesk, Schibsted Grotesk, Instrument Serif, Sora).
 - Depois: Design System (tokens finais + componentes).
 
 ## Links

@@ -86,7 +86,7 @@
           <section id="ask" class="flex-1 flex flex-col">
             <h1 class="mt-4 text-[27px] leading-tight font-800 tracking-tight">O que você faz?</h1>
             <p class="mt-2.5 text-[15px] text-ink-500 leading-relaxed">
-              Conta com as suas palavras. A gente acha o enquadramento certo — você não precisa decorar código nenhum.
+              Conta com as suas palavras. A gente acha o enquadramento certo, você não precisa decorar código nenhum.
             </p>
 
             <label class="field relative block mt-6 rounded-[16px] bg-white border border-ink-200 p-4">
@@ -123,7 +123,7 @@
               <svg class="text-ink-400" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h6"/></svg>
               <input id="codeInput" inputmode="numeric" placeholder="0000-0/00" class="flex-1 bg-transparent text-[16px] tracking-wide text-ink-900">
             </label>
-            <p id="codeErr" class="hidden mt-2.5 text-[13px] text-danger-500 font-500">Não reconhecemos esse código. Confere os números — ou descreve o que você faz.</p>
+            <p id="codeErr" class="hidden mt-2.5 text-[13px] text-danger-500 font-500">Não reconhecemos esse código. Confere os números ou descreve o que você faz.</p>
 
             <button id="codeGo" class="btn w-full rounded-[16px] py-4 mt-6 bg-coral-500 text-white text-[16px] font-700 shadow-[0_8px_24px_rgba(242,100,60,.28)]" disabled>
               Verificar
@@ -142,13 +142,13 @@
 
           <!-- ---- ESTADO C: resultado ATENDIDO ---- -->
           <section id="ok" class="hidden flex-1 flex flex-col">
-            <div class="reveal">
-              <div class="inline-flex items-center gap-1.5 text-[13px] font-600 text-success-700 bg-success-50 rounded-full px-3 py-1.5">
+            <div class="reveal flex-1 flex flex-col">
+              <div class="self-start inline-flex items-center gap-1.5 text-[13px] font-600 text-success-700 bg-success-50 rounded-full px-3 py-1.5">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>
                 Boa notícia
               </div>
               <h2 class="mt-4 text-[24px] leading-tight font-800 tracking-tight">Achei o seu encaixe.</h2>
-              <p class="mt-2 text-[14.5px] text-ink-500 leading-relaxed">É disso que a gente cuida — do jeito certo, no Simples.</p>
+              <p class="mt-2 text-[14.5px] text-ink-500 leading-relaxed">É disso que a gente cuida, do jeito certo, no Simples.</p>
 
               <!-- card sugestão principal -->
               <div class="mt-5 rounded-[18px] bg-white border border-ink-200 p-5 shadow-[0_6px_20px_rgba(27,30,36,.05)]">
@@ -160,7 +160,7 @@
                   </div>
                 </div>
                 <div class="mt-4 flex items-center justify-between rounded-[12px] bg-ink-50 border border-ink-100 px-3.5 py-2.5">
-                  <span class="text-[12px] text-ink-400">Enquadramento</span>
+                  <span class="text-[12px] text-ink-400">Sua atividade na Receita</span>
                   <span id="ok-cnae" class="text-[12.5px] font-600 text-ink-600">CNAE 6201-5/02 · Anexo III</span>
                 </div>
                 <div class="mt-3 flex items-center gap-2 text-[12.5px] text-success-700">
@@ -169,14 +169,15 @@
                 </div>
               </div>
 
-              <div id="confirm-wrap" class="relative mt-6">
+              <!-- CTAs colados no rodapé da tela (padrão da 1ª aba) -->
+              <button id="ok-back" class="mt-auto w-full text-center py-3 text-[14px] text-ink-500 font-500">Não é bem isso, refazer</button>
+              <div id="confirm-wrap" class="relative mt-1">
                 <button id="ok-continue" class="btn w-full rounded-[16px] py-4 bg-coral-500 text-white text-[16px] font-700 shadow-[0_8px_24px_rgba(242,100,60,.28)]">
                   É isso mesmo, continuar
                 </button>
                 <!-- confete: círculo coral + check branco (eco do logo) explode ao confirmar -->
                 <div id="confetti" class="hidden pointer-events-none absolute left-1/2 top-1/2 w-[180px] h-[180px] -translate-x-1/2 -translate-y-1/2"></div>
               </div>
-              <button id="ok-back" class="w-full text-center py-3 mt-1 text-[14px] text-ink-500 font-500">Não é bem isso — refazer</button>
             </div>
           </section>
 
@@ -185,7 +186,7 @@
             <div class="reveal">
               <div class="inline-flex items-center gap-1.5 text-[13px] font-600 text-warn-700 bg-warn-50 rounded-full px-3 py-1.5">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg>
-                Ainda não — por enquanto
+                Ainda não, por enquanto
               </div>
               <h2 class="mt-4 text-[23px] leading-tight font-800 tracking-tight">
                 <span id="wait-area">Atividades médicas</span> ainda não entraram no app.
@@ -206,7 +207,7 @@
                 </button>
               </div>
 
-              <button id="wait-back" class="w-full text-center py-3 mt-3 text-[14px] text-ink-500 font-500">Errei — refazer</button>
+              <button id="wait-back" class="w-full text-center py-3 mt-3 text-[14px] text-ink-500 font-500">Não é bem isso, refazer</button>
             </div>
           </section>
 
@@ -230,8 +231,8 @@
     };
     const WAIT = {
       medico:  { area:'Atividades médicas', motivo:'É uma atividade regulamentada (precisa de registro no conselho), então a gente ainda não automatizou esse caso com a segurança que você merece. Estamos chegando lá.' },
-      advogado:{ area:'Advocacia', motivo:'Atividade regulamentada pela OAB — ainda não automatizamos esse enquadramento com a segurança necessária. Em breve.' },
-      transporte:{ area:'Transporte de cargas', motivo:'Esse tipo de operação sai do nosso foco atual (serviço e comércio leve no Simples). Ainda não é a nossa praia — por enquanto.' },
+      advogado:{ area:'Advocacia', motivo:'A advocacia tem regras próprias da OAB, então a gente ainda não automatizou esse caso com a segurança que você merece. Estamos chegando lá.' },
+      transporte:{ area:'Transporte de cargas', motivo:'Hoje a gente cuida de quem vive de prestar serviço. Transporte tem regras e rotina bem diferentes, ainda não é a nossa praia por enquanto.' },
     };
 
     // dicionário de gatilhos -> chave

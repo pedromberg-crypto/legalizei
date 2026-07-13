@@ -7,7 +7,6 @@ kanban-plugin: board
 - [ ] **[Dev] Teste E2E do backend** (robôs RPA: busca → clica → protocolo + cancelamento na Junta) 📅 2026-07-17 ⏫
 - [ ] **[Pedro] Especificar os BLOCOS do fluxo** — onde PAUSA (assinatura/externo/humano) e o que retoma ⏫
 - [ ] **[Pedro] Fechar formulário com Carla e Larissa** (última ponta da regra de negócio; bloqueia IACA) 📅 2026-07-17
-- [ ] **[Pedro] Handoff pacotão Git público** (LP + telas HTML/animação) → Dev traduz React Native 📅 2026-07-17
 - [ ] **[Dev] IACA** — entrevista → KINAE + 3 secundários + projeção de alíquota + prolabore
 - [ ] **[Dev] Infra própria** (banco/nuvem, plano grátis p/ teste) — em curso
 - [ ] **[Dev] Bitwarden "Legalize"** + centralizar credenciais — em curso
@@ -85,6 +84,8 @@ kanban-plugin: board
 - [x] Protótipo conectado/navegável fim-a-fim (index + elos) — 13/07
 - [x] Reporte técnico do Pedro Dev documentado · [[2026-07-10-reporte-tecnico-pedro-dev]]
 - [x] Alinhamento Pedro Dev + Léo documentado + plano de sequência · [[2026-07-13-alinhamento-pedro-dev-leonam]]
+- [x] Handoff Git → Dev: repo privado **base-ds-legalizei** (8 telas + LP v1 + Lotties) + Pedro Dev convidado (pedro.melodata) — 13/07
+- [x] Valores dos domínios enviados p/ aprovação (Miguel → Mauro): Hostinger R$312,11 + Registro.br R$76,00 (legalizei.app.br), CNPJ Legalize Digital — 13/07
 
 %% kanban:settings
 ```

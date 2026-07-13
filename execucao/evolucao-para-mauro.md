@@ -74,6 +74,25 @@ tags: [reporte, evolucao, sociedade]
 Sexta (17/07): teste E2E + 1ª versão da tela + apresentação do progresso
 ```
 
+## Semana 13/07/2026 — 2º flow (redes, handoff, regras de DP)
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | Regras de negócio (DP) | **Karla (Depto Pessoal)** respondeu as dúvidas em aberto: pró-labore/INSS (mín. 1 salário, custo líquido explícito), sócio não pode ser CLT da própria empresa, sócio com CLT em outra empresa (LGPD: informa manual), eSocial "sem movimento", **Fator R** (folha ≥28% → cai de 15,5% pra 6%), funcionário/PJ fica fora do 1º produto, obrigações acessórias por tributação | 🟢 → [[2026-07-13-conversa-karla]] |
+| 2 | Handoff pro dev | Repositório privado **base-ds-legalizei** com todas as telas + site + animações entregue; Pedro Dev já convidado | 🟢 |
+| 3 | Redes sociais | **Instagram e LinkedIn da Legalizei criados** (pegada "estamos chegando"); descrição/marca aplicadas; organização das redes montada no projeto | 🟢 (config em curso) |
+| 4 | Domínios | **Valores enviados pro Miguel aprovar contigo**: Hostinger R$312,11 + Registro.br R$76,00 (blindagem legalizei.app.br) | ⏳ aguarda pagamento |
+
+**Próximo (13/07 2º):** fechar as perguntas de **fiscal com a Larissa** (obrigações acessórias/prazos/multa); banner final do LinkedIn; **aprovar o pagamento dos domínios**.
+
+### 📱 WhatsApp (13/07 — 2º)
+```
+*Update Legalizei* 📣
+- Sentei com a Karla (DP) e travamos as regras que faltavam: pró-labore/INSS, sócio CLT, eSocial sem movimento, Fator R e o que fica pra depois (funcionário/PJ). Falta só a Larissa (fiscal)
+- Entreguei pro nosso dev o pacote com todas as telas, o site e as animações, num repositório próprio
+- Criamos o Instagram e o LinkedIn da Legalizei no clima "estamos chegando"
+- Mandei pro Miguel os valores dos domínios pra aprovação (Hostinger + Registro.br)
+```
+
 ## 📱 Versão WhatsApp (copiar/colar — grupo ampliado, sem item de sociedade)
 ```
 *Relatório semanal — Legalizei* 📊

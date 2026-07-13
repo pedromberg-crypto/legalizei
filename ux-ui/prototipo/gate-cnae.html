@@ -29,6 +29,16 @@
     .field:focus-within { border-color:#F2643C; box-shadow:0 0 0 4px rgba(242,100,60,.12); }
     textarea, input { outline:none; }
     textarea::placeholder, input::placeholder { color:#A19B92; }
+    /* placeholder animado (typewriter) */
+    #ghost {
+      position:absolute; top:16px; left:16px; right:16px;
+      font-size:15.5px; line-height:1.625; color:#A19B92;
+      pointer-events:none; white-space:pre-wrap; opacity:1;
+      border-right:2px solid #F2643C; padding-right:1px;
+      transition:opacity .18s; animation:caret 1.05s steps(1) infinite;
+    }
+    #ghost.gh-hide { opacity:0; }
+    @keyframes caret { 50% { border-right-color:transparent; } }
     .chip { transition:background-color .16s, border-color .16s, transform .12s; }
     .chip:active { transform:scale(.97); }
     .btn { transition:transform .16s, box-shadow .16s, opacity .16s; }
@@ -79,9 +89,10 @@
               Conta com as suas palavras. A gente acha o enquadramento certo — você não precisa decorar código nenhum.
             </p>
 
-            <label class="field block mt-6 rounded-[16px] bg-white border border-ink-200 p-4">
-              <textarea id="q" rows="3" class="w-full bg-transparent resize-none text-[15.5px] text-ink-900 leading-relaxed"
-                placeholder="Ex: crio sites e logotipos pra pequenas empresas"></textarea>
+            <label class="field relative block mt-6 rounded-[16px] bg-white border border-ink-200 p-4">
+              <textarea id="q" rows="3" class="relative w-full bg-transparent resize-none text-[15.5px] text-ink-900 leading-relaxed" aria-label="O que você faz?"></textarea>
+              <!-- placeholder animado: exemplos digitados letra por letra -->
+              <span id="ghost" aria-hidden="true"></span>
             </label>
 
             <p class="mt-4 text-[12.5px] text-ink-400 font-500">Exemplos rápidos</p>
@@ -163,7 +174,7 @@
                   É isso mesmo, continuar
                 </button>
                 <!-- confete: círculo coral + check branco (eco do logo) explode ao confirmar -->
-                <div id="confetti" class="hidden pointer-events-none absolute left-1/2 top-1/2 w-[260px] h-[260px] -translate-x-1/2 -translate-y-1/2"></div>
+                <div id="confetti" class="hidden pointer-events-none absolute left-1/2 top-1/2 w-[180px] h-[180px] -translate-x-1/2 -translate-y-1/2"></div>
               </div>
               <button id="ok-back" class="w-full text-center py-3 mt-1 text-[14px] text-ink-500 font-500">Não é bem isso — refazer</button>
             </div>
@@ -258,7 +269,41 @@
 
     document.querySelectorAll('.ex').forEach(b => b.addEventListener('click', () => {
       q.value = b.textContent.trim(); go.disabled = false; q.focus();
+      q.dispatchEvent(new Event('input'));
     }));
+
+    // ===== placeholder animado: 15 exemplos (CNAEs populares) digitados letra por letra =====
+    const GHOST = [
+      'Crio sites e landing pages...',
+      'Sou designer gráfico...',
+      'Fotografo casamentos e eventos...',
+      'Cuido do marketing de outras empresas...',
+      'Desenvolvo aplicativos sob medida...',
+      'Faço consultoria pra pequenos negócios...',
+      'Pinto casas e apartamentos...',
+      'Faço marmitas e comida caseira...',
+      'Sou personal trainer...',
+      'Faço bolos e doces por encomenda...',
+      'Sou cabeleireiro...',
+      'Dou aulas particulares de inglês...',
+      'Sou eletricista...',
+      'Edito vídeos pra redes sociais...',
+      'Monto móveis planejados...',
+    ];
+    const ghostEl = $('ghost');
+    // esconde na hora que houver texto (não espera o ciclo do typewriter)
+    q.addEventListener('input', () => { ghostEl.classList.toggle('gh-hide', q.value.length > 0); });
+    const ghostReduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let gIdx = Math.floor(Math.random() * GHOST.length), gCh = 0;
+    function ghostPick() { let n; do { n = Math.floor(Math.random() * GHOST.length); } while (n === gIdx && GHOST.length > 1); gIdx = n; gCh = 0; }
+    function ghostTick() {
+      if (q.value.length) { setTimeout(ghostTick, 350); return; } // pausa enquanto há texto
+      const p = GHOST[gIdx];
+      if (gCh <= p.length) { ghostEl.textContent = p.slice(0, gCh); gCh++; setTimeout(ghostTick, 42); }
+      else { setTimeout(() => { ghostPick(); ghostTick(); }, 1500); } // segura nos "..." e troca
+    }
+    if (ghostReduce) { ghostEl.textContent = GHOST[gIdx]; }
+    else ghostTick();
 
     function resolve(text) {
       for (const [re, key] of MATCH) if (re.test(text)) return key;

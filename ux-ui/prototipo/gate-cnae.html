@@ -158,9 +158,13 @@
                 </div>
               </div>
 
-              <button class="btn w-full rounded-[16px] py-4 mt-6 bg-coral-500 text-white text-[16px] font-700 shadow-[0_8px_24px_rgba(242,100,60,.28)]">
-                É isso mesmo, continuar
-              </button>
+              <div id="confirm-wrap" class="relative mt-6">
+                <button id="ok-continue" class="btn w-full rounded-[16px] py-4 bg-coral-500 text-white text-[16px] font-700 shadow-[0_8px_24px_rgba(242,100,60,.28)]">
+                  É isso mesmo, continuar
+                </button>
+                <!-- confete: círculo coral + check branco (eco do logo) explode ao confirmar -->
+                <div id="confetti" class="hidden pointer-events-none absolute left-1/2 top-1/2 w-[260px] h-[260px] -translate-x-1/2 -translate-y-1/2"></div>
+              </div>
               <button id="ok-back" class="w-full text-center py-3 mt-1 text-[14px] text-ink-500 font-500">Não é bem isso — refazer</button>
             </div>
           </section>
@@ -200,6 +204,8 @@
     </div>
   </div>
 
+  <script src="lottie.min.js"></script>
+  <script src="success-confetti-data.js"></script>
   <script>
     // ===== "IA" simulada: mapa palavra-chave -> enquadramento (CNAEs reais da whitelist) =====
     const OK = {
@@ -290,8 +296,29 @@
       setTimeout(() => present(key), 1400); // simula a IA
     });
 
-    $('ok-back').addEventListener('click', () => show(secAsk));
     $('wait-back').addEventListener('click', () => show(secAsk));
+    $('ok-back').addEventListener('click', () => show(secAsk));
+
+    // ---- confirmação: botão vira círculo + confete (aceite do CNAE) ----
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const okBtn = $('ok-continue'), confettiBox = $('confetti');
+    const NEXT = 'login.html'; // gate CNAE -> login (fluxo travado)
+    okBtn.addEventListener('click', () => {
+      if (okBtn.dataset.done) return; okBtn.dataset.done = '1';
+      okBtn.setAttribute('aria-disabled', 'true');
+      if (reduceMotion || !window.lottie || !window.CONFETTI) { location.href = NEXT; return; }
+      // encolhe o botão até virar um ponto (a lottie assume o círculo)
+      okBtn.style.transition = 'transform .32s cubic-bezier(.22,1,.36,1), opacity .32s';
+      okBtn.style.transformOrigin = 'center';
+      okBtn.style.transform = 'scale(.18)';
+      okBtn.style.opacity = '0';
+      confettiBox.classList.remove('hidden');
+      window.lottie.loadAnimation({
+        container: confettiBox, renderer: 'svg', loop: false, autoplay: true,
+        animationData: window.CONFETTI,
+      });
+      setTimeout(() => { location.href = NEXT; }, 1750);
+    });
 
     // ---- caminho "já sei meu CNAE" ----
     const codeIn = $('codeInput'), codeGo = $('codeGo');

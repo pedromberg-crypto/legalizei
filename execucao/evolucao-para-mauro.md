@@ -26,6 +26,8 @@ tags: [reporte, evolucao, sociedade]
 
 **Próximo:** reavaliar a rota do produto com as descobertas da semana (dev já trabalhando na nova validação). ~~fechar o logo~~ ✅ **logo fechado 12/07** ([[2026-07-12-logo-fechado]]) — falta só gerar derivados (favicon/ícone de app).
 
+**📎 Reporte técnico do dev (10/07):** Pedro Dev mandou o resumo de fundação técnica — stack mobile-first + réplica web, banco seguro com isolamento por cliente e **certificado digital em banco separado (LGPD)**, robôs "funcionários" guiados por um robô gerente, e o mapa da operação em 3 fases (entrevista IA → constituição CNPJ+certificado → portal do cliente). Já construindo infra do SaaS + protótipo de backend pra testar automações/IA/onboard. Próximo dele: fechar testes de fundo + alinhar identidade/branding comigo. → [[2026-07-10-reporte-tecnico-pedro-dev]]
+
 ## Semana 11–12/07/2026
 | # | Frente | O que evoluiu | Status |
 |---|---|---|---|
@@ -48,6 +50,30 @@ tags: [reporte, evolucao, sociedade]
 - Roteiro do site de captação pronto pra produzir, focado em baixar o app
 ```
 
+## Semana 13/07/2026 — alinhamento Pedro Dev + Léo
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | Modelo operacional | **Modelo do app travado**: foco só em **serviço** (comércio vai pro tradicional), atender só atividades que "passam liso", cobrança só depois de validar a atividade, WhatsApp como canal central, e o cadastro dividido em blocos que fluem sozinhos até a assinatura | 🟢 |
+| 2 | Regra de negócio (Léo) | Léo trouxe as dores do escritório digital antigo e viraram **requisito**: exigir upload de nota, prolabore padronizado, aviso de nota emitida por fora, status em tempo real pro cliente | 🟢 |
+| 3 | Contrato-como-produto | Definido que o **contrato é a mitigação de risco** (nota retroativa, obrigação acessória, cancelamento) — vai ser redigido junto da copy de onboarding | 🟢 (a redigir) |
+| 4 | Plano de sequência (PM) | Cortei as ~40 ideias da reunião pro **caminho crítico**: abrir 1 empresa real ponta a ponta (cobaia = CNPJ do próprio Pedro). Resto = backlog → [[2026-07-13-plano-sequencia-pm]] | 🟢 |
+| 5 | Backend | Pedro Dev em **teste ponta a ponta** (robôs + IA "diretor contábil" + infra própria) mirando **sexta 17/07** | 🟡 em curso |
+| 6 | Time | Consenso: **entra um operador** (indicação do Pedro Dev) pra escalar a execução, sob revisão do Dev | 🟢 (a contratar) |
+| 7 | Protótipo | Telas conectadas e **navegáveis fim a fim** pra apresentar no navegador | 🟢 |
+
+**Próximo (13/07):** [Dev] fechar teste E2E + V1 UI até 17/07 · [Pedro] especificar blocos do wizard + fechar formulário c/ Carla e Larissa + handoff Git · **fechar 3 decisões caras** (certificado terceiro / gateway Asaas / plano semestral) · **apresentar progresso ao Mauro (sex 17/07)**.
+
+### 📱 WhatsApp (13/07)
+```
+*Update Legalizei* 🚀
+- Travamos o modelo do app com o time: foco só em serviço, cobrança só depois de validar a atividade, WhatsApp como canal central e cadastro em blocos que fluem até a assinatura
+- As dores do escritório digital antigo (nota emitida por fora, prolabore, cancelamento) viraram requisito e vão pro contrato
+- Priorizei tudo num plano enxuto: a meta das próximas semanas é abrir 1 empresa REAL de ponta a ponta pelo app (cobaia = meu próprio CNPJ)
+- Pedro Dev está no teste de ponta a ponta do backend (robôs + IA + infra), mirando sexta
+- Protótipo já navegável fim a fim pra apresentar
+Sexta (17/07): teste E2E + 1ª versão da tela + apresentação do progresso
+```
+
 ## 📱 Versão WhatsApp (copiar/colar — grupo ampliado, sem item de sociedade)
 ```
 *Relatório semanal — Legalizei* 📊
@@ -67,4 +93,4 @@ Semana que vem: reavaliar a rota do produto com essas descobertas (o dev já est
 ```
 
 ## Links
-- [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[HOME]]
+- [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]]

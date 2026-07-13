@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Legalizei · Protótipo — mapa de telas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --coral-500:#F2643C; --coral-600:#DD4E27; --coral-50:#FEF1EC;
+      --ink-900:#1B1E24; --ink-700:#3B3F47; --ink-500:#6B7078; --ink-400:#A19B92; --ink-200:#E6E4E0; --paper:#FAF8F5;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Sora',system-ui,sans-serif;background:var(--paper);color:var(--ink-900);min-height:100dvh;padding:48px 24px}
+    .wrap{max-width:920px;margin:0 auto}
+    .head{margin-bottom:32px}
+    .tag{display:inline-block;font-size:12px;font-weight:600;color:var(--coral-600);background:var(--coral-50);padding:5px 12px;border-radius:999px;letter-spacing:.02em}
+    h1{font-size:30px;font-weight:800;margin-top:14px;letter-spacing:-.02em}
+    .sub{color:var(--ink-500);font-size:15px;margin-top:8px;line-height:1.5}
+    .start{display:inline-flex;align-items:center;gap:10px;margin-top:22px;background:var(--coral-500);color:#fff;font-weight:700;font-size:16px;padding:15px 26px;border-radius:15px;text-decoration:none;box-shadow:0 10px 26px rgba(242,100,60,.28);transition:transform .12s}
+    .start:hover{transform:translateY(-2px)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-top:40px}
+    a.card{display:block;background:#fff;border:1px solid var(--ink-200);border-radius:16px;padding:18px;text-decoration:none;color:inherit;transition:transform .12s,box-shadow .12s}
+    a.card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(27,30,36,.08)}
+    .num{font-size:12px;font-weight:700;color:var(--ink-400)}
+    .name{font-size:16px;font-weight:700;margin-top:6px}
+    .desc{font-size:12.5px;color:var(--ink-500);margin-top:5px;line-height:1.45}
+    .flow{font-size:13px;color:var(--ink-500);margin-top:36px;line-height:1.7;background:#fff;border:1px solid var(--ink-200);border-radius:14px;padding:18px 20px}
+    .flow b{color:var(--ink-900)}
+    .orphan{opacity:.62}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="head">
+      <span class="tag">Protótipo · fluxo de entrada</span>
+      <h1>Legalizei — mapa de telas</h1>
+      <p class="sub">Clique em <b>Começar</b> pra rodar o fluxo do início, ou pule direto pra qualquer tela.</p>
+      <a class="start" href="splash.html">
+        Começar apresentação
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <div class="grid">
+      <a class="card" href="splash.html"><div class="num">01</div><div class="name">Splash</div><div class="desc">Abertura coral, logo negativa, handoff.</div></a>
+      <a class="card" href="welcome.html"><div class="num">02</div><div class="name">Welcome</div><div class="desc">3 telas de onboarding, Lottie coral.</div></a>
+      <a class="card" href="fluxo-entrada.html"><div class="num">03</div><div class="name">Fluxo de entrada</div><div class="desc">Fork: abrir CNPJ ou migrar.</div></a>
+      <a class="card" href="gate-cnae.html"><div class="num">04</div><div class="name">Gate CNAE</div><div class="desc">Validador concierge + waitlist.</div></a>
+      <a class="card" href="login.html"><div class="num">05</div><div class="name">Login</div><div class="desc">Gradiente ink+coral, social.</div></a>
+      <a class="card" href="fase-0-dados-socio.html"><div class="num">06</div><div class="name">Wizard · Fase 0</div><div class="desc">Etapa 1 — dados do sócio.</div></a>
+      <a class="card orphan" href="entrada.html"><div class="num">alt</div><div class="name">Entrada (variante)</div><div class="desc">Versão tela única — fora do fluxo canônico.</div></a>
+    </div>
+
+    <p class="flow">
+      <b>Fluxo canônico:</b> Splash → Welcome → Fluxo de entrada → (<b>Abrir</b> ou <b>Migrar</b>) → Gate CNAE → Login → Wizard Fase 0.
+    </p>
+  </div>
+</body>
+</html>

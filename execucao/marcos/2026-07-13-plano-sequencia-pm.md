@@ -17,7 +17,7 @@ Cobaia = **CNPJ do próprio Pedro** (Mauro já autorizou dar baixa). Esse é o t
 ## 🦴 Espinha × 🎀 Enfeite
 **ESPINHA (só isto importa agora):**
 ```
-entrevista IA (KINAE) → valida atende? → cobra (gateway) →
+entrevista IA (CNAE) → valida atende? → cobra (gateway) →
 constitui CNPJ (RPA + ponto humano) → certificado digital →
 portal: emitir nota + ver vencimentos
 ```
@@ -36,7 +36,7 @@ Maior risco da espinha = o pedaço que ninguém controla: JUCEMG/Gov.br sem API 
 ### Semana 2 — decisão vira spec + fechar o que trava dinheiro
 5. **Redigir cláusulas de contrato + copy de onboarding** (nota retroativa, prolabore padrão, obrigação acessória, cancelamento). O contrato É a mitigação de risco (Léo) e é input da UX (double-check, PDF).
 6. **Fechar as 3 decisões caras** (abaixo).
-7. **Especificar a IACA** (entrevista → KINAE + 3 secundários + projeção de alíquota + prolabore) com regras validadas.
+7. **Especificar a IACA** (entrevista → CNAE principal + 3 secundários + projeção de alíquota + prolabore) com regras validadas.
 
 ### Semana 3 — primeiro cliente real + demo Mauro
 8. **Abrir o CNPJ do Pedro pelo app** (baixa o atual) — teste de fogo do North Star.

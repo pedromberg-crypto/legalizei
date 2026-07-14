@@ -5,9 +5,10 @@ kanban-plugin: board
 ## 🦴 ESPINHA — caminho crítico (North Star: abrir 1 empresa real) · [[2026-07-13-plano-sequencia-pm]]
 
 - [ ] **[Dev] Teste E2E do backend** (robôs RPA: busca → clica → protocolo + cancelamento na Junta) 📅 2026-07-17 ⏫
-- [ ] **[Pedro] Especificar os BLOCOS do fluxo** — onde PAUSA (assinatura/externo/humano) e o que retoma ⏫
+- [ ] **[Pedro] Especificar os BLOCOS do fluxo** — onde PAUSA (assinatura/externo/humano) e o que retoma ⏫ · **B1+B2 travados 14/07** → [[blocos-fluxo-abertura]]; faltam B3+ (cobrança→constituição→certificado→portal)
+- [ ] **[Pedro/Dev] Construir Mapa de Confusão CNAE** — pares traiçoeiros de desambiguação (treino IA + guarda-corpo do falso 🔴); deferido de propósito → [[blocos-fluxo-abertura]]
 - [ ] **[Pedro] Fechar formulário com Carla e Larissa** (última ponta da regra de negócio; bloqueia IACA) 📅 2026-07-17
-- [ ] **[Dev] IACA** — entrevista → KINAE + 3 secundários + projeção de alíquota + prolabore
+- [ ] **[Dev] IACA** — entrevista → CNAE principal + 3 secundários + projeção de alíquota + prolabore
 - [ ] **[Dev] Infra própria** (banco/nuvem, plano grátis p/ teste) — em curso
 - [ ] **[Dev] Bitwarden "Legalize"** + centralizar credenciais — em curso
 - [ ] **[Pedro] Abrir o CNPJ do próprio Pedro pelo app** (baixa o atual) — teste de fogo 🔴 semana 3
@@ -41,6 +42,7 @@ kanban-plugin: board
 - [ ] Criar **Instagram @legalizei.app**
 - [ ] Passar telas em **Figma** (mostrar caminhos/fluxo pro Dev)
 - [ ] **Apresentar progresso ao Mauro** — fixar reunião ~sex 17/07 (stakeholder mgmt)
+- [ ] **Registrar domínios de fato** (Hostinger 3 + registro.br legalizei.app.br) — Mauro pagou ✅; titular CNPJ Legalize; depois apontar DNS→Vercel + email contato@legalizei.app
 
 ## 📚 Backlog (anterior — ainda válido)
 
@@ -86,6 +88,7 @@ kanban-plugin: board
 - [x] Alinhamento Pedro Dev + Léo documentado + plano de sequência · [[2026-07-13-alinhamento-pedro-dev-leonam]]
 - [x] Handoff Git → Dev: repo privado **base-ds-legalizei** (8 telas + LP v1 + Lotties) + Pedro Dev convidado (pedro.melodata) — 13/07
 - [x] Valores dos domínios enviados p/ aprovação (Miguel → Mauro): Hostinger R$312,11 + Registro.br R$76,00 (legalizei.app.br), CNPJ Legalize Digital — 13/07
+- [x] **Mauro PAGOU tudo** (Hostinger R$312,11 + Registro.br R$76,00) — domínios autorizados/quitados; próximo = registrar de fato + DNS Vercel + email — 13/07
 
 %% kanban:settings
 ```

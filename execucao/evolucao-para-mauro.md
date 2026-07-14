@@ -93,6 +93,14 @@ Sexta (17/07): teste E2E + 1ª versão da tela + apresentação do progresso
 - Mandei pro Miguel os valores dos domínios pra aprovação (Hostinger + Registro.br)
 ```
 
+## Semana 14/07/2026 — domínios pagos + especificação do cadastro em blocos
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | Domínios | **Mauro pagou tudo** (Hostinger R$312,11 + Registro.br R$76,00). Próximo = registrar de fato + apontar DNS + e-mail contato@legalizei.app | 🟢 pago |
+| 2 | Produto (cadastro) | **Especificamos os 2 primeiros blocos do cadastro** (contrato com o dev): entrada/qualificação (descobre na hora se atende, e quem não atende vira lead pro escritório tradicional) + coleta/enquadramento (simulador de economia fiscal, dados do sócio, tudo pra abrir). Base pra o dev construir sem vai-e-volta | 🟡 em curso (faltam blocos de cobrança→constituição) |
+
+**Próximo (14/07):** especificar os blocos seguintes (cobrança → constituição → certificado → portal); fechar fiscal com a Larissa; registrar/apontar os domínios.
+
 ## 📱 Versão WhatsApp (copiar/colar — grupo ampliado, sem item de sociedade)
 ```
 *Relatório semanal — Legalizei* 📊

@@ -4,7 +4,7 @@
 > Status: ✅ negócio fechado com Mauro (2026-07-07) · V0/imersão em curso.
 
 ## 📍 Agora (torre de controle — mantida via `/fechar`)
-> **Última atualização:** 2026-07-14 · Janela nova? rode `/boot`. **Fase:** imersão mês 1 + modelo operacional travado + plano de sequência PM + protótipo/LP + **domínios PAGOS + especificação dos BLOCOS do fluxo em curso (B1+B2 travados) + KINAE aposentado (→ CNAE)**.
+> **Última atualização:** 2026-07-14 (2º flow) · Janela nova? rode `/boot`. **Fase:** imersão mês 1 + modelo operacional travado + plano de sequência PM + protótipo/LP + **domínios PAGOS + BLOCOS do fluxo (B1+B2+B3 travados) + cobrança travada (Asaas + cancelamento 4 camadas) + benchmark Padrão R$195 documentado**.
 
 **North Star (~3 sem):** abrir **1 empresa real ponta a ponta pelo app** (cobaia = CNPJ do próprio Pedro). Espinha = entrevista IA → valida CNAE → cobra → constitui CNPJ → certificado → portal (nota+vencimentos). Enfeite (extensão, notícias, parcerias, anti-scraping) = backlog. → [[2026-07-13-plano-sequencia-pm]]
 **Âncora da semana:** sexta **17/07** = teste E2E do backend + V1 UI + demo Mauro.
@@ -12,12 +12,12 @@
 **Régua:** é **MLP (mínimo LOVABLE), não MVP** — craft/encanto (animação, micro-interação) no escopo. Spec ainda diz "MVP" em vários lugares (corrigir) → [[legalize-mlp-nao-mvp]]
 
 **Estado das frentes:**
-- 🟢 **Pesquisa concorrente** — 6 teardowns + páginas públicas + tom → [[_sintese-paginas-publicas]]
+- 🟢 **Pesquisa concorrente** — 6 teardowns + páginas públicas + tom → [[_sintese-paginas-publicas]] · **plano Padrão R$195 documentado como régua do MLP** (escopo + pró-labore + lacunas) → [[plano-padrao-195-referencia]] · [[2026-07-14-escopo-servico-mensalidade]]
 - 🟢 **Abertura BH** — fluxo validado c/ Izabela; órgãos mapeados → [[fluxo-abertura-portais-pedro-dev]]
 - 🟢 **CNAE** — atendidos/não atendidos (460/68/804) pronto pro dev → [[cnae-atendidos-e-nao-atendidos]]
 - 🟢 **Marca** — nome+conceito+tom+paleta+logo travados; **fonte Sora = sistema inteiro (travado)**; falta teste de fogo + derivados (favicon/app-icon) → [[decisoes-marca]] · [[paleta-cores]]
 - 🟡 **Produto/tech** — stack+MLP+multi-tenant; **modelo operacional travado 13/07** (só serviço; CNAE atendido "passa liso"; onboard antes do pagamento; WhatsApp central; wizard em blocos; contrato-como-produto). **Dev em teste E2E do backend** (RPA+IACA+infra) mirando 17/07 → [[2026-07-13-alinhamento-pedro-dev-leonam]] · [[2026-07-13-plano-sequencia-pm]]
-- 🟡 **Blocos do fluxo (spec Pedro↔Dev)** — nova nota [[blocos-fluxo-abertura]] c/ Fontes-verdade rastreáveis. **B1 (Porta/Qualificação)** e **B2 (Coleta+Enquadramento/IACA)** travados 14/07: mini-loop de desambiguação CNAE (antídoto do falso 🔴), filtro por regime, roteamento (🟡 waitlist / 🔴 comercial Mauro), simulador Fator R, faturamento por faixa guiada. **Próximo = Bloco 3 (cobrança)**. Pendências: Mapa de Confusão CNAE (deferido) · 🟡 Larissa (anexos diferentes)
+- 🟡 **Blocos do fluxo (spec Pedro↔Dev)** — nota [[blocos-fluxo-abertura]] c/ Fontes-verdade rastreáveis. **B1 (Porta/Qualificação)** + **B2 (Coleta+Enquadramento/IACA)** + **B3 (Cobrança)** travados 14/07. B1: mini-loop desambiguação CNAE + roteamento (🟡 waitlist / 🔴 comercial Mauro). B2: simulador Fator R + faturamento por faixa. **B3: abertura grátis + 1ª mensalidade = 1º mês · gateway Asaas · boleto fora do happy path · política de cancelamento em 4 camadas** (autorização expressa + taxa não reembolsável + fidelidade/multa + pagar antes de constituir; base CDC art.49 + exceção serviço exaurido). **Próximo = Bloco 4 (constituição)**. Pendências: prazo da fidelidade (🟡 Pedro depois) · redação jurídica do contrato (Mauro/Larissa) · Mapa de Confusão CNAE (deferido) · 🟡 Larissa (anexos diferentes)
 - 🟢 **Regras de negócio (DP)** — **Karla (Depto Pessoal) respondeu os encaminhamentos**: pró-labore/INSS, sócio CLT (não pode/duplo vínculo LGPD), eSocial sem movimento, Fator R (V→III, ≥28%, 15,5%→6%), funcionário/PJ = fora do MVP, obrigações acessórias por tributação. **Falta só a Larissa (fiscal)** → [[2026-07-13-conversa-karla]]
 - 🟢 **Handoff Git pro Dev** — repo privado **base-ds-legalizei** (8 telas + LP v1 + 8 Lotties + README) criado e Pedro Dev convidado (pedro.melodata). ✅ tirado do caminho crítico
 - 🟢 **Redes sociais** — estrutura nova `mkt/redes-sociais/` (hub + perfil por rede). **IG `@legalizei.app`** criado (bio/config em curso, pegada "vem aí"). **LinkedIn** `company/legalizei-app` criado + pré-config ("Sobre" oficial + slogan + logo). Falta banner PNG final + linktree waitlist → [[redes-sociais]]
@@ -25,7 +25,7 @@
 - 🟢 **Landing page** — **CONSTRUÍDA (v1 local)** em `ux-ui/lp/` (HTML+CSS+JS puros, zero backend): 9 dobras, validador CNAE concierge (whitelist real, regulamentada vence verde), marquee de burocracias, chat WhatsApp mock, tabela vs., CTA gradiente assinatura. Review multi-agente: 51 achados AA/JS/copy aplicados. Falta: **review visual do Pedro** (`npx serve ux-ui/lp -l 4173`), Sora local (woff2), links reais das lojas, backend da waitlist → [[2026-07-12-lp-construida]]
 - 🟢 **Infra/domínios** — **Mauro PAGOU tudo** (Hostinger R$312,11 + Registro.br R$76,00). Domínios autorizados/quitados; titular CNPJ Legalize Digital. **Próximo:** registrar de fato → DNS Vercel → email contato@legalizei.app
 
-**Decisões a forçar (semana 2):** **certificado digital** → recomendo começar terceiro (Sete Minas) · **gateway** → recomendo Asaas · **plano** → semestral + política de cancelamento. **Ainda abertas:** **especificar Blocos 3+ do wizard** (B1+B2 travados; falta cobrança→constituição→certificado→portal) · provider API cartão CNPJ (InfoSimples/CNPJá) · derivados do logo + teste de fogo → Design System · review visual da LP (Pedro) + destino publicação.
+**Decisões a forçar (semana 2):** **certificado digital** → recomendo começar terceiro (Sete Minas) · **prazo de fidelidade** do plano (12m como o líder? menos, pra vender mais fácil?) → 🟡 Pedro valida mais pra frente. **Travadas 14/07:** gateway **Asaas** · política de cancelamento (4 camadas) · modelo de cobrança (abertura grátis + 1ª mensalidade). **Ainda abertas:** **especificar Blocos 4+** (constituição→certificado→portal) · provider API cartão CNPJ (InfoSimples/CNPJá) · derivados do logo + teste de fogo → Design System · review visual da LP (Pedro) + destino publicação.
 
 **Atalhos:** [[kanban-legalizei]] · [[parking-lot]] · [[evolucao-para-mauro]] (reporte sócio) · [[CHECKLIST-IMERSAO-30-DIAS]]
 

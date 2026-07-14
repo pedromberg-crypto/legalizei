@@ -101,6 +101,24 @@ Sexta (17/07): teste E2E + 1ª versão da tela + apresentação do progresso
 
 **Próximo (14/07):** especificar os blocos seguintes (cobrança → constituição → certificado → portal); fechar fiscal com a Larissa; registrar/apontar os domínios.
 
+## Semana 14/07/2026 — 3º flow (cobrança + como o cliente cancela)
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | Cobrança (Bloco 3) | **Definido como o cliente paga:** a 1ª mensalidade já é o 1º mês (abertura não se cobra, igual ao mercado — cliente paga só as taxas do governo à parte); gateway de pagamento = **Asaas**; aceita cartão, Pix e boleto | 🟢 |
+| 2 | Blindagem de cancelamento | **Resolvemos o risco "cliente cancela em 7 dias mas o CNPJ já foi aberto":** política em 4 camadas — autorização expressa antes de abrir (a lei tira o arrependimento de serviço já executado), taxas de governo não voltam, fidelidade com multa, e só abrimos depois de pago. Ninguém sai com empresa de graça | 🟢 (contrato a redigir) |
+| 3 | Benchmark do líder | **Documentamos o plano mais barato da Contabilizei (Padrão R$195)** como régua do nosso produto: o que entra, o que é cobrado à parte, e onde eles são fracos (não prometem prazo de abertura; app ruim) | 🟢 |
+
+**Próximo (14/07 3º):** [Pedro/Mauro] decidir o **prazo de fidelidade** do plano; [Mauro/Larissa] redigir o **contrato + termo de início de serviço**; especificar Bloco 4 (constituição).
+
+### 📱 WhatsApp (14/07 — 3º)
+```
+*Update Legalizei* 💳
+- Fechamos como o cliente vai pagar: a 1ª mensalidade já é o 1º mês (a abertura em si a gente não cobra, igual ao mercado; ele paga só as taxas do governo). Gateway = Asaas, com cartão, Pix e boleto
+- Resolvemos o risco do cancelamento: montamos uma política em 4 camadas pra ninguém cancelar e sair com o CNPJ aberto de graça (autorização antes de abrir, taxas não reembolsáveis, fidelidade com multa e só abrir depois de pago)
+- Documentamos o plano mais barato da Contabilizei (R$195) como nossa régua, incluindo onde eles deixam a desejar
+Falta decidir: prazo de fidelidade e redigir o contrato
+```
+
 ## 📱 Versão WhatsApp (copiar/colar — grupo ampliado, sem item de sociedade)
 ```
 *Relatório semanal — Legalizei* 📊

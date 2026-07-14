@@ -192,8 +192,98 @@ Simulador usa **ponto médio da faixa** + mostra **sensibilidade** ("na ponta de
 
 ---
 
-# 🚧 Blocos 3+ (a lapidar)
-- **Bloco 3 — Cobrança (gateway):** onboard antes do pagamento; só cobra após enquadrar. 1ª pausa de pagamento. → a especificar.
+# 🧩 BLOCO 3 — Cobrança (gateway)
+**Job:** cliente enquadrado (dossiê pronto no B2) vira **pagante**. Converte o valor já mostrado (economia do Fator R) em **assinatura recorrente + aceite de contrato**. É a **1ª pausa de dinheiro** do fluxo. Regra do modelo operacional: onboarda e enquadra ANTES de pedir cartão; o app só gasta dinheiro real com órgão/certificado (B4+) **depois** de pago.
+
+## Fontes-verdade do B3
+- [[2026-07-14-escopo-servico-mensalidade]] — teardown Contabilizei: abertura "grátis" (só taxas de governo), escopo da "Contabilidade completa", certificado incluso.
+- [[2026-07-08-planos-servico]] — snapshot de pricing do líder (âncora, tiers, "ideal até R$50 mil/mês").
+- CDC **art. 49** (direito de arrependimento 7 dias) + exceção do serviço já executado — jurisprudência. Fontes web citadas na leitura de 14/07 (Galícia Educação, Jurídico.ai, Migalhas).
+- [Contajá — política de cancelamento](https://contaja.com.br/politica-de-cancelamento-e-estorno/) e termos Contabilizei (fidelidade 12m + multa 30%) — benchmark de blindagem.
+
+## Passos
+
+| # | Passo | O que é / por que | Ator |
+|---|---|---|---|
+| 1 | Recap do valor | reprisa economia do Fator R (B2) + "o que você leva" (abertura + contabilidade completa mensal) | sistema |
+| 2 | Escolha do plano | tiers ancorados na faixa de faturamento do B2; **vitrine mostra só o preço mensal** | cliente |
+| 3 | Detalhe de custos | separa **honorário (mensalidade)** de **taxas de governo** (repasse, guia à parte, não reembolsável) | sistema |
+| 4 | **Aceite do contrato** + autorização de início | contrato-como-produto (honorários) + termo de ciência de início de serviço. **Pausa de assinatura** | cliente |
+| 5 | Método de pagamento | cartão / Pix / boleto (**Asaas**) | cliente |
+| 6 | **PAUSA de pagamento** | espera confirmação do gateway | gateway |
+| 7 | Confirmado → destrava B4 | "pagamento ok, começamos sua abertura agora" | sistema |
+
+## D1 — O que se cobra (modelo travado)
+Espelha o líder ([[2026-07-14-escopo-servico-mensalidade]]): **abertura "grátis"** (não se cobra o trabalho de abrir) — a receita é a **mensalidade**. A **1ª mensalidade já é o pagamento do 1º mês** do cliente (não é taxa de setup separada).
+- **Taxas de governo** (DARE JUCEMG etc.) = **repasse**, guia emitida à parte, **não reembolsável** (dinheiro que sai pro Estado).
+- **Certificado digital** incluso no plano (norma de mercado) — custo a absorver/repassar, decisão de infra.
+- Vitrine mostra **só o valor mensal** (D3): *price framing / âncora* — seguir o líder, base em psicologia de preço (confiança média; % de lift não cravado sem fonte primária).
+
+## As duas pausas do B3
+
+**Pausa A — Assinatura do contrato + autorização de início**
+
+| Campo | Definição |
+|---|---|
+| tipo | assinatura |
+| gatilho retomada | contrato aceito + termo de início autorizado (clique/assinatura eletrônica) |
+| cliente vê | contrato de honorários + termo de ciência ("ao iniciar, taxas de governo não voltam") |
+| SLA | instantâneo (in-app) |
+| fallback | não aceita → não avança; salva rascunho, reengaja |
+
+**Pausa B — Pagamento**
+
+| Campo | Definição |
+|---|---|
+| tipo | pagamento |
+| gatilho retomada | **webhook Asaas** = pago/confirmado (idempotente — não duplica cobrança/abertura) |
+| cliente vê | checkout → "pagamento confirmado, abertura iniciada" |
+| SLA | cartão instantâneo · Pix seg/min · **boleto 1–3 dias úteis** (compensa, atrasa abertura) |
+| fallback | cartão recusado → retry/troca método · boleto não pago em N dias → dunning → expira → reengaja/waitlist |
+
+**Boleto (D4):** aceito, mas **fora do happy path** — quem quer abrir rápido usa cartão/Pix (destrava na hora). Boleto só destrava B4 após compensação.
+
+## D5 — Política de cancelamento (blindagem em 4 camadas) 🔒
+Problema resolvido: *"cliente cancela em 7 dias mas o CNPJ já foi aberto — ganha empresa de graça?"* A lei tem exceção pra serviço exaurido; os líderes já blindam. Regra Legalizei:
+
+| Camada | O quê | Mata qual risco |
+|---|---|---|
+| 1 | **Autorização expressa de início** antes de constituir (termo no passo 4) | ativa a **exceção do art. 49** (serviço executado com anuência ≠ arrependimento devolutivo) |
+| 2 | **Taxas de governo não reembolsáveis** (repasse ao Estado) | nunca se perde o gasto de terceiro |
+| 3 | **Fidelidade + multa proporcional** ancorada na emissão do CNPJ (espelha Contabilizei: 12m + 30% sobre parcelas restantes) | abertura subsidiada, não doada — 🟡 **prazo pendente** (ver abaixo) |
+| 4 | **Só constituir (B4) DEPOIS do pagamento confirmado** — já é o desenho do fluxo | nunca gasta antes de receber |
+
+Resultado: cancela **em 7 dias antes de abrir** → devolve mensalidade, sem prejuízo (nada gasto ainda). Cancela **depois de aberto** → art. 49 não cobre serviço exaurido + retém taxa + cobra multa. Ninguém ganha CNPJ de graça.
+> Base legal: CDC art. 49 (7 dias, contratação fora do estabelecimento) + jurisprudência que afasta arrependimento quando o serviço se exauriu com autorização expressa. Confiança: 🟢 no prazo/regra; 🟡 na exceção (análise caso a caso, boa-fé). **Redação jurídica do termo/contrato = tarefa Mauro/Larissa.**
+
+## Pausa? (resumo)
+- **Duas pausas internas:** assinatura (instantânea) + pagamento (instantâneo a 3 dias conforme método). Nenhuma externa de órgão ainda — essas começam no B4.
+- **Fim** = pagamento confirmado → handoff pro **Bloco 4 (constituição)**.
+
+## 🛠️ Implicações pro Dev
+1. Integração **Asaas**: assinatura recorrente + cartão/Pix/boleto + **webhook idempotente** de confirmação.
+2. Máquina de estados: `aguardando-assinatura` → `aguardando-pagamento` → `pago` (só `pago` destrava B4). Sobrevive dias pausado.
+3. **Cobrança à parte** das taxas de governo (guia separada) — não some no valor do plano.
+4. **Dunning** (boleto/cartão falho): lembretes + expiração + reengajamento.
+5. Persistir **aceite do contrato + termo de início** com timestamp (prova pra camada 1 do cancelamento).
+6. Tiers do plano cruzados com a **faixa de faturamento do B2**.
+
+## ✅ Decisões travadas nesta rodada (2026-07-14)
+- **D1:** abertura "grátis"; **1ª mensalidade = 1º mês**; taxas de governo = repasse à parte, não reembolsável; certificado incluso. Espelha o líder.
+- **D2: Asaas** (gateway travado).
+- **D3:** vitrine mostra **só o mensal** (price framing) — segue o líder.
+- **D4:** boleto aceito, fora do happy path.
+- **D5:** política de cancelamento = **4 camadas de blindagem** (autorização expressa + taxa não reembolsável + fidelidade/multa + pagamento antes de constituir).
+
+## 🟡 Pendências do B3
+- **Prazo da fidelidade** (12m como o líder? menos, pra vender mais fácil?) — Pedro validará **mais pra frente** (14/07).
+- **Redação jurídica** do contrato-como-produto + termo de início de serviço → Mauro/Larissa.
+- Custos reais de terceiros (DARE JUCEMG, certificado A1) pra montar o repasse — 🟡 anti-guru, confirmar valores.
+- Escopo exato do "mensal" Legalizei vs. guia à parte — refinar contra [[2026-07-14-escopo-servico-mensalidade]].
+
+---
+
+# 🚧 Blocos 4+ (a lapidar)
 - **Blocos 4+ — Constituição:** DBE → JUCEMG → assinatura GOV.BR → registro/taxa → CNPJ → CRC → certificado A1 → credenciamento NFS-e. Pausas externas pesadas (JUCEMG 5 dias sem API, certificado). → a especificar.
 
 # ❓ Abertos / pendências

@@ -1,0 +1,23 @@
+# Relatório T0046 — persona "bloq-cltpropria" (Bloqueio 9 — sócio quer ser CLT da própria empresa)
+
+> flow **abertura** v0.2.2 · 2026-07-15 · **PASS ✅**
+
+**Perfil (médio):** Quer 'garantir direitos trabalhistas' sendo CLT da própria empresa. Confunde pró-labore com salário CLT.
+
+**Cobertura:** Entrada + B1 + B2 (completo, c/ simulador Fator R) + B3 (cobrança) + B4 (constituição) + B4.5 (ativação fiscal)
+
+| #  | Tela      | Passo            | Resultado                                       | OK | Sugestão (olhar leigo)                                                                                             |
+|----|-----------|------------------|-------------------------------------------------|----|--------------------------------------------------------------------------------------------------------------------|
+| 01 | ENTRADA·3 | entrada.fork     | rota: abertura de CNPJ                          | ✅  |                                                                                                                    |
+| 02 | B1·4      | b1.descricao     | descrição aceita                                | ✅  |                                                                                                                    |
+| 03 | B1·4      | b1.mapeamento    | CNAE 7020-4/00 · confiança alta · sem fork      | ✅  |                                                                                                                    |
+| 04 | B1·4      | b1.desambiguacao | (pulado)                                        | ✅  |                                                                                                                    |
+| 05 | B1·4      | b1.filtro        | serviço ✓ · Simples ✓ · não-regulada ✓          | ✅  |                                                                                                                    |
+| 06 | B1·4      | b1.veredito      | 🟢 atende                                       | ✅  |                                                                                                                    |
+| 07 | B1·5      | b1.conta         | conta criada · entra no B2                      | ✅  |                                                                                                                    |
+| 08 | B2·6      | b2.socio         | sócio ok · solteiro (sem regime de bens)        | ✅  |                                                                                                                    |
+| 09 | B2·7      | b2.clt           | ERRO: sócio não pode ser CLT da própria empresa | ✅  | Explicar que sócio se remunera por pró-labore, não por CLT da própria empresa — sem culpar, ensinando a diferença. |
+
+**Resumo:** veredito B1: 🟢 atende ✅  ·  status: bloqueado ✅  ·  parou em: b2.clt ✅  ·  RESULTADO: ✅ PASS
+
+Fonte da persona: [[casos-teste-fluxo-cnae]] FLOWS 7–9 — testes de bloqueio · [[2026-07-13-conversa-karla]]

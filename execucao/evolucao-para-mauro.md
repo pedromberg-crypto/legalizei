@@ -154,6 +154,23 @@ Falta decidir: prazo de fidelidade e redigir o contrato
 Falta confirmar 2 pontos fiscais com a Larissa (Fator R no 1º ano e troca de contador)
 ```
 
+## Semana 15/07/2026 — 3º flow (planejamento tributário com dado real + lapidação da experiência)
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | Feature "pagar menos imposto (legal)" | O app não só acerta a atividade do cliente — recomenda, **entre os códigos que servem pra mesma atividade, o que paga menos imposto**. Agora com **dado fiscal aterrado** (cruzamos uma pesquisa pesada de Belo Horizonte contra nossas fontes, sem contradição). Exemplo comprovado: quem dá treinamento pode economizar **~R$1.425/mês** com o enquadramento certo, com respaldo em decisões oficiais da Receita | 🟢 (falta a Larissa dar o carimbo final) |
+| 2 | Experiência do cadastro | O "robô testador" apontou **16 melhorias de linguagem e clareza** (mostrar tudo em R$ e não em jargão, bloqueios que explicam em vez de só barrar, acessibilidade pra cliente idoso) — **todas já registradas na especificação das telas**. Regra nova: primeiro deixamos a experiência redonda, a parte visual vem depois | 🟢 |
+
+**Próximo (15/07 3º):** rodar a 2ª bateria do robô testador com o fluxo já melhorado; fechar os pontos fiscais com a Larissa; seguir pra constituição (Bloco 4).
+
+### 📱 WhatsApp (15/07 — 3º)
+```
+*Update Legalizei* 💡
+- A função-chave do app (recomendar o enquadramento que faz o cliente pagar menos imposto, dentro da lei) agora está com dado fiscal firme: cruzamos uma pesquisa pesada de BH com nossas fontes e bateu. Exemplo real: quem dá treinamento pode economizar ~R$1.400/mês, com respaldo da Receita
+- O "robô testador" apontou 16 melhorias de clareza no cadastro (tudo em reais e não em jargão, telas que explicam em vez de só bloquear, acessibilidade) e já registramos todas
+- Regra que adotamos: primeiro deixamos a experiência redonda, o visual vem numa 2ª etapa
+Falta o carimbo final da Larissa no fiscal
+```
+
 ## 📱 Versão WhatsApp (copiar/colar — grupo ampliado, sem item de sociedade)
 ```
 *Relatório semanal — Legalizei* 📊

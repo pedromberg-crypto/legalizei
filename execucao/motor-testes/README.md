@@ -17,7 +17,7 @@ Exit code: `0` = PASS, `1` = FAIL, `2` = erro de uso.
 
 | Arquivo | O que é |
 |---|---|
-| `flow-schema.js` | O fluxo como **dados** (passos declarativos). Cobre Entrada + B1 + começo do B2. A IA de CNAE **não roda aqui**: vem dublada pela persona. |
+| `flow-schema.js` | O fluxo como **dados** (passos declarativos). Cobre Entrada + B1 + **B2 completo (c/ simulador Fator R) + B3 + B4 + B4.5**. Números fiscais aterrados em [[fiscal-simples-bh-2026]] (config `FISCAL`). A IA de CNAE **não roda aqui**: vem dublada pela persona. |
 | `personas/<id>.json` | Fixture: `respostas` (durável, cross-flow) + `eventos` (pausas roteirizadas) + `esperado` (trilha + veredito + status). |
 | `run.js` | Motor headless. Percorre o schema, simula pausas, compara com o esperado, grava a corrida sozinho. |
 | `historico-testes.jsonl` | Livro-caixa append-only. Duas linhas: `corrida` (o runner grava) e `ajuste` (tuning com fonte). |
@@ -43,5 +43,7 @@ Cada passo: `pula_se` (condicional exclusiva não roda), `valida` (barra o fluxo
 
 ## Estado
 
-- ✅ v0.1.0 — persona **Reta** (golden path) passa liso.
-- ⏳ escalar pras 6 personas ([[casos-teste-fluxo-cnae]]) só depois do Pedro aprovar o formato.
+- ✅ **v0.2.0** — cobertura **B1→B4→B4.5** (fluxo inteiro até "empresa ativa"). Simulador Fator R com números do consolidado fiscal: INSS 11% direto, teto folga, **IRRF zero ≤R$5k**, **pró-labore ótimo**.
+- ✅ **10 personas codadas, 10 PASS** (v0.2.1): `reta` · `cida` · `camaleao` (🟡 waitlist) · `sociedade` (2 sócios, folga teto, III) · `fronteira` (regulada disfarçada) · `knife` (Fator R 28% + boleto não pago → aguardando-pagamento) · `monstro` (pipeline + pausas) · `bloq-3socios` · `bloq-exterior` · `bloq-cltpropria` (3 recusas graciosas).
+- Guard-rails no schema: limite 2 sócios (B2.3), sócio exterior (B2.1), CLT-própria (B2.2).
+- 🟡 Simulador roda como **"estimativa"** até a Larissa fechar A/B/C ([[perguntas-larissa-fiscal]]) — sobretudo o ponto B (CPP-no-DAS), que afina o pró-labore ótimo.

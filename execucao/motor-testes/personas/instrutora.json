@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "id": "instrutora",
+    "nome": "Ivete — treinamentos + orientação de gestão (CNAE ótimo)",
+    "persona_seq": 11,
+    "flow": "abertura",
+    "descricao": "Testa o passo b2.cnae_otimo (CNAE fiscalmente ótimo). Solo, dá treinamentos e orienta gestão. Família: 7020-4/00 consultoria (Fator R → V 15,5%) × 8599-6/04 treinamento (§5º-B → III fixo 6%). Mesmas NFs, atividade real permite ambos → recomenda o mais barato. Base: [[cnae-fiscalmente-otimo]].",
+    "fonte": "[[cnae-fiscalmente-otimo]] exemplo #1 (🟡 claim 8599 não-Fator-R pendente Larissa)"
+  },
+  "perfil": {
+    "nivel": "médio",
+    "personalidade": "Ministra treinamentos corporativos e ajuda times na gestão. Não sabe que o código escolhido muda o imposto. Fica encantada quando o app mostra a economia.",
+    "estressa": ["achar que 'trocar o CNAE' é gambiarra ilegal", "não entender por que os dois códigos valem"]
+  },
+  "sugestoes": {
+    "b2.cnae_otimo": "Mostrar POR QUE os dois cobrem a atividade (emitem a mesma NF) + a economia em R$. Sem isso, ela acha que é malandragem e recusa. Nunca trocar em silêncio.",
+    "b2.simulador": "Deixar claro que são 2 alavancas: trocar de CNAE (aqui) OU subir pró-labore (Fator R). A dela nem precisa de pró-labore alto."
+  },
+  "respostas": {
+    "entrada_escolha": "abrir_cnpj",
+    "atividade_descricao": "dou treinamentos corporativos e oriento a gestão de equipes",
+    "cnae": "7020-4/00",
+    "cnae_confianca": "alta",
+    "cnae_ambiguo": false,
+    "filtro_servico": true,
+    "filtro_simples": true,
+    "filtro_regulada": false,
+    "socio_nome": "Ivete Barros Nunes",
+    "socio_cpf": "12345678909",
+    "socio_cpf_situacao": "regular",
+    "socio_estado_civil": "solteiro",
+    "socio_cep": "30240000",
+    "duplo_vinculo_clt": false,
+    "num_socios": 1,
+    "empresa_capital": 5000,
+    "empresa_endereco_tipo": "próprio",
+    "quer_endereco_fiscal": false,
+    "cnae_secundarios": [],
+    "cnae_equivalentes": [
+      { "cnae": "7020-4/00", "anexo": "V", "aliquota": 15.5, "cobre_atividade": "orientação/consultoria de gestão" },
+      { "cnae": "8599-6/04", "anexo": "III", "aliquota": 6, "cobre_atividade": "treinamento profissional e gerencial (§5º-B, sem Fator R)" }
+    ],
+    "natureza": "SLU",
+    "nome_viavel": true,
+    "faturamento_faixa": "10-20k",
+    "fator_r_folha_pct": 12,
+    "pro_labore": "minimo",
+    "b3_plano": "base",
+    "b3_metodo": "cartao",
+    "b3_aceite": true,
+    "b3_pagamento_status": "pago"
+  },
+  "eventos": {},
+  "esperado": {
+    "veredito_b1": "🟢 atende",
+    "status": "ativa",
+    "parou_em": "fim.ativa",
+    "trilha": [
+      { "passo": "entrada.fork",     "resultado": "rota: abertura de CNPJ" },
+      { "passo": "b1.descricao",     "resultado": "descrição aceita" },
+      { "passo": "b1.mapeamento",    "resultado": "CNAE 7020-4/00 · confiança alta · sem fork" },
+      { "passo": "b1.desambiguacao", "resultado": "(pulado)" },
+      { "passo": "b1.filtro",        "resultado": "serviço ✓ · Simples ✓ · não-regulada ✓" },
+      { "passo": "b1.veredito",      "resultado": "🟢 atende" },
+      { "passo": "b1.conta",         "resultado": "conta criada · entra no B2" },
+      { "passo": "b2.socio",         "resultado": "sócio ok · solteiro (sem regime de bens)" },
+      { "passo": "b2.clt",           "resultado": "sem duplo vínculo · pró-labore normal" },
+      { "passo": "b2.socios",        "resultado": "solo (sem +sócios)" },
+      { "passo": "b2.empresa",       "resultado": "empresa ok · capital R$5000 · endereço próprio" },
+      { "passo": "b2.cnae_sec",      "resultado": "sem secundários" },
+      { "passo": "b2.natureza",      "resultado": "natureza SLU (coerente com nº de sócios)" },
+      { "passo": "b2.nome",          "resultado": "razão social + fantasia · nome disponível (viabilidade prévia)" },
+      { "passo": "b2.cnae_otimo",    "resultado": "CNAE ótimo: 8599-6/04 (Anexo III, 6%) vs 7020-4/00 (15.5%) · economia ~R$1425/mês" },
+      { "passo": "b2.simulador",     "resultado": "est. Fator R 12% → Anexo V (15,5%) · ótimo R$4200 → Anexo III (IRRF zero)" },
+      { "passo": "b2.revisao",       "resultado": "dossiê completo · handoff B3" },
+      { "passo": "b3.recap",         "resultado": "recap: economia do Fator R + escopo (abertura grátis + mensal)" },
+      { "passo": "b3.plano",         "resultado": "plano base (faixa 10-20k)" },
+      { "passo": "b3.aceite",        "resultado": "contrato + termo de início aceitos (assinatura)" },
+      { "passo": "b3.pagamento",     "resultado": "pagamento confirmado (cartao) · destrava B4" },
+      { "passo": "b4.viabilidade",   "resultado": "viabilidade deferida (nome+endereço+CNAE) — JUCEMG unificada" },
+      { "passo": "b4.dbe",           "resultado": "DBE gerado (Coleta Web/Receita)" },
+      { "passo": "b4.registro",      "resultado": "contrato pronto (JUCEMG) + assinado GOV.BR prata/ouro" },
+      { "passo": "b4.taxa",          "resultado": "DAE JUCEMG paga (repasse ~R$268,51)" },
+      { "passo": "b4.cnpj",          "resultado": "CNPJ emitido + opção Simples automática + CRC assina" },
+      { "passo": "b4.certificado",   "resultado": "certificado A1 emitido (pós-CNPJ)" },
+      { "passo": "b4.municipal",     "resultado": "inscrição municipal + credenciamento NFS-e (DES-BH)" },
+      { "passo": "b45.ativacao",     "resultado": "procuração e-CAC → API Serpro (PGDAS-D/DAS automatizado)" },
+      { "passo": "fim.ativa",        "resultado": "empresa ativa e operando ✅" }
+    ]
+  }
+}

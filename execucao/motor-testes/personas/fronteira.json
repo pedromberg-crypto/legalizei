@@ -1,0 +1,44 @@
+{
+  "meta": {
+    "id": "fronteira",
+    "nome": "Fernanda — \"consultoria de alimentação e bem-estar\"",
+    "persona_seq": 4,
+    "flow": "abertura",
+    "descricao": "FLOW 4. Regulamentada disfarçada de serviço comum. Ramo A (é nutri, prescreve dieta) → CRN → 🟡 waitlist. Testa o critério não-regulamentada NÃO virar falso-🟢.",
+    "fonte": "[[casos-teste-fluxo-cnae]] FLOW 4 — Fronteira Regulada"
+  },
+  "perfil": {
+    "nivel": "médio-alto",
+    "personalidade": "Profissional, articulada. Descreve como 'consultoria' pra parecer serviço livre, mas é conselho regulado. Boa-fé, não está tentando burlar.",
+    "estressa": ["ser barrada sem entender o porquê do conselho", "jargão jurídico"]
+  },
+  "sugestoes": {
+    "b1.desambiguacao": "Perguntar 'você é nutricionista registrada / prescreve dieta?' — separa o conselho regulado da orientação genérica.",
+    "b1.veredito": "🟡 aqui é proteção dela (RT/CRN), não rejeição. Explicar em linguagem humana."
+  },
+  "respostas": {
+    "entrada_escolha": "abrir_cnpj",
+    "atividade_descricao": "faço consultoria em alimentação e bem-estar para clientes",
+    "cnae": "8650-0/02",
+    "cnae_confianca": "media",
+    "cnae_ambiguo": true,
+    "desambiguacao_ramo": "sou nutricionista registrada e prescrevo dieta",
+    "filtro_servico": true,
+    "filtro_simples": true,
+    "filtro_regulada": true
+  },
+  "eventos": {},
+  "esperado": {
+    "veredito_b1": "🟡 waitlist",
+    "status": "waitlist",
+    "parou_em": "b1.veredito",
+    "trilha": [
+      { "passo": "entrada.fork",     "resultado": "rota: abertura de CNPJ" },
+      { "passo": "b1.descricao",     "resultado": "descrição aceita" },
+      { "passo": "b1.mapeamento",    "resultado": "CNAE 8650-0/02 · confiança media · AMBÍGUO" },
+      { "passo": "b1.desambiguacao", "resultado": "desambiguou: sou nutricionista registrada e prescrevo dieta" },
+      { "passo": "b1.filtro",        "resultado": "serviço ✓ · Simples ✓ · REGULADA" },
+      { "passo": "b1.veredito",      "resultado": "🟡 waitlist" }
+    ]
+  }
+}

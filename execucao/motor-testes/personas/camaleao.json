@@ -1,0 +1,44 @@
+{
+  "meta": {
+    "id": "camaleao",
+    "nome": "Carla — \"vendo material de construção\"",
+    "persona_seq": 2,
+    "flow": "abertura",
+    "descricao": "FLOW 2. Par traiçoeiro no B1: 46xx representação (🟡 CORE) × 47xx varejo (🔴). Ramo A (representa, sem estoque) → regulada CORE → 🟡 waitlist. Testa desambiguação + NÃO dar falso 🔴 no ramo 🟡.",
+    "fonte": "[[casos-teste-fluxo-cnae]] FLOW 2 — Camaleão"
+  },
+  "perfil": {
+    "nivel": "médio",
+    "personalidade": "Sabe o que faz mas descreve de um jeito que confunde comércio com representação. Se levar 🔴 injusto, xinga e some.",
+    "estressa": ["ser tratada como loja quando é representante", "pergunta que não entende a diferença"]
+  },
+  "sugestoes": {
+    "b1.desambiguacao": "A pergunta-chave (representa/intermedeia ou tem estoque?) precisa ser humana, não fiscal. É o antídoto do falso 🔴.",
+    "b1.veredito": "No 🟡, deixar claro que NÃO é 'não' — é 'ainda não pra sua atividade', com captura de waitlist."
+  },
+  "respostas": {
+    "entrada_escolha": "abrir_cnpj",
+    "atividade_descricao": "vendo material de construção para lojas e obras",
+    "cnae": "4613-3/00",
+    "cnae_confianca": "media",
+    "cnae_ambiguo": true,
+    "desambiguacao_ramo": "represento fábricas, sem estoque próprio",
+    "filtro_servico": true,
+    "filtro_simples": true,
+    "filtro_regulada": true
+  },
+  "eventos": {},
+  "esperado": {
+    "veredito_b1": "🟡 waitlist",
+    "status": "waitlist",
+    "parou_em": "b1.veredito",
+    "trilha": [
+      { "passo": "entrada.fork",     "resultado": "rota: abertura de CNPJ" },
+      { "passo": "b1.descricao",     "resultado": "descrição aceita" },
+      { "passo": "b1.mapeamento",    "resultado": "CNAE 4613-3/00 · confiança media · AMBÍGUO" },
+      { "passo": "b1.desambiguacao", "resultado": "desambiguou: represento fábricas, sem estoque próprio" },
+      { "passo": "b1.filtro",        "resultado": "serviço ✓ · Simples ✓ · REGULADA" },
+      { "passo": "b1.veredito",      "resultado": "🟡 waitlist" }
+    ]
+  }
+}

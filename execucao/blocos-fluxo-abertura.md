@@ -141,19 +141,22 @@ Lógica do roteamento: **waitlist = futuros clientes DO app; Mauro = quem nunca 
 - **2.6 natureza jurídica:** default recomendado pela IA (não dropdown seco).
 
 ## Motor de enquadramento (a parte inteligente)
-Inputs: **CNAE principal + faturamento estimado + pró-labore**.
-- **Fator R:** folha (incl. pró-labore) ≥ **28% do faturamento** → **Anexo III (6%)**; senão **Anexo V (15,5%)**. (Karla)
-- **Simulador A × B** (transparente):
+Inputs: **CNAE principal + faturamento estimado + pró-labore**. Números aterrados em [[fiscal-simples-bh-2026]] (bloco CONSOLIDADO). **Saída = projeção "estimativa"** (empresa nova não tem Fator R real; #3).
+- **Fator R:** folha (incl. pró-labore) ≥ **28% do faturamento** → **Anexo III (6%)**; senão **Anexo V (15,5%)**. (Karla + #2/#8)
+- **Simulador A × B × Ótimo** (transparente):
 
-| | Cenário A | Cenário B |
-|---|---|---|
-| Pró-labore | mínimo (1 salário mín.) | maior (≥28% faturamento) |
-| Anexo | V | III |
-| Alíquota | 15,5% | 6% |
-| Custo extra | — | INSS 11% + IR sobre o pró-labore maior |
-| Resultado | mostra qual **compensa de fato** | decisão informada |
+| | Cenário A | Cenário B | **Ótimo (recomendado)** |
+|---|---|---|---|
+| Pró-labore | mínimo (R$1.621) | maior (≥28% faturamento) | o menor que cruza 28% **e** fica ≤ R$5.000 |
+| Anexo | V | III | III |
+| Alíquota | 15,5% | 6% | 6% |
+| Custo extra | INSS 11% (~R$178) | INSS 11% (máx R$932,31) **+ IRRF só acima de R$5k** | INSS 11% · **IRRF = ZERO** |
+| Resultado | mostra qual **compensa de fato** | decisão informada | **economia máxima com imposto mínimo** |
 
-- **Transparência de custo (regra dura Karla):** mostrar **custo da folha (INSS+IR) + pró-labore líquido** explícito. Dor histórica: cliente não sabia do custo → pedia aumento só pra baixar imposto → cancelava/reemitia guia = retrabalho.
+- **⚠️ Correção-chave (Lei 15.270/2025):** o IRRF é **ZERO até ~R$5.000/mês de pró-labore**. O simulador **não pode inflar o custo do cenário B com IRRF que não existe** — isso fazia o Anexo III parecer mais caro do que é. Base [[fiscal-simples-bh-2026]] #2/#9.
+- **Pró-labore ótimo (o diferencial):** a IA calcula o pró-labore que **cruza 28% (vira Anexo III) e fica sob R$5k (zero IRRF)** e mostra a economia mensal vs. Anexo V. Conselho que o contador tradicional cobra caro. → vira **feature-âncora do B2**.
+- **Transparência de custo (regra dura Karla):** mostrar **custo da folha (INSS 11% + IRRF real) + pró-labore líquido** explícito. Dor histórica: cliente não sabia do custo → pedia aumento só pra baixar imposto → cancelava/reemitia guia = retrabalho.
+- **🟡 Depende da Larissa:** se a **CPP embutida no DAS entra no numerador** (ponto B), o pró-labore necessário pra bater 28% muda → o "ótimo" recalcula. Ver [[perguntas-larissa-fiscal]].
 
 ## Faturamento estimado = faixa guiada (NÃO campo aberto)
 **Insight:** faturamento estimado **não é campo legal** — não entra em DBE/contrato/registro (esses usam capital social). É **input de simulação/plano**, não valor jurídico. Zero a mais estraga a *decisão*, não o *CNPJ*. E a empresa nem existe ainda → é chute honesto; faixa é mais honesta que precisão falsa. 🟡 confirmar com Izabela que nenhum doc de abertura captura receita estimada.
@@ -167,9 +170,9 @@ Inputs: **CNAE principal + faturamento estimado + pró-labore**.
 Simulador usa **ponto médio da faixa** + mostra **sensibilidade** ("na ponta de cima, o Fator R já compensa"). O que importa = de que lado dos 28% cai. Se um dia permitir digitação: máscara R$ + bounds (rejeita acima do teto) + confirm-back anti-zero-a-mais.
 
 ## Validações travadas (Karla)
-- Pró-labore **mínimo = 1 salário mínimo** (🟡 confirmar valor vigente, anti-guru).
+- Pró-labore **mínimo = 1 salário mínimo = R$1.621** (2026, [[fiscal-simples-bh-2026]] #9; reconferir jan/27).
 - **Sócio NÃO pode ser CLT da própria empresa** → bloqueio no form.
-- Duplo vínculo → se bater teto INSS, não recolhe pró-labore pra ele.
+- Duplo vínculo → INSS do pró-labore incide sobre a **folga `teto − salário CLT`**; só zera se CLT já ≥ **R$8.475,55** (não é binário — #6).
 
 ## Pausa?
 - **Sem pausa externa/assinatura/humano.** Casa com decisão #3 do [[2026-07-13-alinhamento-pedro-dev-leonam|alinhamento]] ("wizard flui sem o time até a assinatura").
@@ -278,7 +281,7 @@ Resultado: cancela **em 7 dias antes de abrir** → devolve mensalidade, sem pre
 ## 🟡 Pendências do B3
 - **Prazo da fidelidade** (12m como o líder? menos, pra vender mais fácil?) — Pedro validará **mais pra frente** (14/07).
 - **Redação jurídica** do contrato-como-produto + termo de início de serviço → Mauro/Larissa.
-- Custos reais de terceiros (DARE JUCEMG, certificado A1) pra montar o repasse — 🟡 anti-guru, confirmar valores.
+- Custos reais de terceiros pra montar o repasse: taxa JUCEMG **~R$268,51 (LTDA padrão) / R$134,26 (EI)** ([[fiscal-simples-bh-2026]] #10; Izabela citou ~R$288 — reconciliar) · certificado A1 **R$209–229/ano** (Izabela). TFLF BH anual 🟡 valor exato.
 - Escopo exato do "mensal" Legalizei vs. guia à parte — refinar contra [[2026-07-14-escopo-servico-mensalidade]].
 
 ---

@@ -1,0 +1,53 @@
+{
+  "meta": {
+    "id": "bloq-3socios",
+    "nome": "Bloqueio 7 — 3 sócios (acima do limite)",
+    "persona_seq": 8,
+    "flow": "abertura",
+    "descricao": "FLOW 7. Empresa com 3 sócios. Bate o limite de 2 na tela 2.3 → recusa graciosa → atendimento humano. Termina bloqueado em b2.socios.",
+    "fonte": "[[casos-teste-fluxo-cnae]] FLOWS 7–9 — testes de bloqueio"
+  },
+  "perfil": {
+    "nivel": "médio",
+    "personalidade": "Trio querendo abrir junto. Não sabe que o MVP só cobre até 2 sócios.",
+    "estressa": ["ser barrado sem alternativa", "não entender por que 3 sócios não dá"]
+  },
+  "sugestoes": {
+    "b2.socios": "Bloqueio tem que oferecer saída (atendimento humano), não só 'não'. Explicar que é limite do produto, não da lei."
+  },
+  "respostas": {
+    "entrada_escolha": "abrir_cnpj",
+    "atividade_descricao": "prestamos consultoria empresarial em grupo",
+    "cnae": "7020-4/00",
+    "cnae_confianca": "alta",
+    "cnae_ambiguo": false,
+    "filtro_servico": true,
+    "filtro_simples": true,
+    "filtro_regulada": false,
+    "socio_nome": "Rafael Costa Andrade",
+    "socio_cpf": "12345678909",
+    "socio_cpf_situacao": "regular",
+    "socio_estado_civil": "solteiro",
+    "socio_cep": "30180000",
+    "duplo_vinculo_clt": false,
+    "num_socios": 3
+  },
+  "eventos": {},
+  "esperado": {
+    "veredito_b1": "🟢 atende",
+    "status": "bloqueado",
+    "parou_em": "b2.socios",
+    "trilha": [
+      { "passo": "entrada.fork",     "resultado": "rota: abertura de CNPJ" },
+      { "passo": "b1.descricao",     "resultado": "descrição aceita" },
+      { "passo": "b1.mapeamento",    "resultado": "CNAE 7020-4/00 · confiança alta · sem fork" },
+      { "passo": "b1.desambiguacao", "resultado": "(pulado)" },
+      { "passo": "b1.filtro",        "resultado": "serviço ✓ · Simples ✓ · não-regulada ✓" },
+      { "passo": "b1.veredito",      "resultado": "🟢 atende" },
+      { "passo": "b1.conta",         "resultado": "conta criada · entra no B2" },
+      { "passo": "b2.socio",         "resultado": "sócio ok · solteiro (sem regime de bens)" },
+      { "passo": "b2.clt",           "resultado": "sem duplo vínculo · pró-labore normal" },
+      { "passo": "b2.socios",        "resultado": "ERRO: acima de 2 sócios: atendimento humano" }
+    ]
+  }
+}

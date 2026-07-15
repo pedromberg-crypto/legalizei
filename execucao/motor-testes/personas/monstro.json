@@ -1,0 +1,104 @@
+{
+  "meta": {
+    "id": "monstro",
+    "nome": "Heitor + Otávio — consultoria (boss / integração até B4)",
+    "persona_seq": 6,
+    "flow": "abertura",
+    "descricao": "FLOW 6 realinhado. 2 sócios (no limite), Heitor casado comunhão universal + CLT R$9k (ZERA teto), LTDA, Fator R na borda 28% → III. Pipeline inteiro até empresa ativa. Bordas que TERMINAM o flow saíram pros bloqueios 7–9.",
+    "fonte": "[[casos-teste-fluxo-cnae]] FLOW 6 — Caso Monstro"
+  },
+  "perfil": {
+    "nivel": "alto",
+    "personalidade": "Empreendedor experiente, empilha condicionais. Testa se o app aguenta o caminho todo sem quebrar com casos coexistindo.",
+    "estressa": ["state machine que perde estado numa pausa longa", "borda de escopo que dá crash em vez de recusa graciosa"]
+  },
+  "sugestoes": {
+    "b2.clt": "Heitor acima do teto: mostrar que ZERA o INSS do pró-labore dele (folga negativa), diferente do caso parcial.",
+    "b4.viabilidade": "Pipeline longo: manter o estado visível em cada pausa externa, senão o cliente experiente desconfia."
+  },
+  "respostas": {
+    "entrada_escolha": "abrir_cnpj",
+    "atividade_descricao": "prestamos consultoria empresarial e de gestão",
+    "cnae": "7020-4/00",
+    "cnae_confianca": "alta",
+    "cnae_ambiguo": false,
+    "filtro_servico": true,
+    "filtro_simples": true,
+    "filtro_regulada": false,
+    "socio_nome": "Heitor Nogueira Sales",
+    "socio_cpf": "12345678909",
+    "socio_cpf_situacao": "regular",
+    "socio_estado_civil": "casado",
+    "socio_regime_bens": "comunhão universal de bens",
+    "socio_cep": "30112000",
+    "duplo_vinculo_clt": true,
+    "clt_remuneracao": 9000,
+    "num_socios": 2,
+    "empresa_capital": 50000,
+    "empresa_endereco_tipo": "próprio",
+    "quer_endereco_fiscal": false,
+    "cnae_secundarios": [],
+    "natureza": "LTDA",
+    "nome_viavel": true,
+    "faturamento_faixa": "30k+",
+    "fator_r_folha_pct": 28,
+    "pro_labore": "otimo",
+    "b3_plano": "pro",
+    "b3_metodo": "cartao",
+    "b3_aceite": true,
+    "b3_pagamento_status": "pago"
+  },
+  "eventos": {
+    "b2.empresa": {
+      "tipo": "pausa",
+      "motivo": "dossiê longo, salvou e voltou dias depois",
+      "espera": "3 dias",
+      "retomada": "idempotente"
+    },
+    "b4.viabilidade": {
+      "tipo": "pausa",
+      "motivo": "análise de viabilidade na JUCEMG/prefeitura",
+      "espera": "2 dias úteis",
+      "retomada": "idempotente"
+    }
+  },
+  "esperado": {
+    "veredito_b1": "🟢 atende",
+    "status": "ativa",
+    "parou_em": "fim.ativa",
+    "trilha": [
+      { "passo": "entrada.fork",       "resultado": "rota: abertura de CNPJ" },
+      { "passo": "b1.descricao",       "resultado": "descrição aceita" },
+      { "passo": "b1.mapeamento",      "resultado": "CNAE 7020-4/00 · confiança alta · sem fork" },
+      { "passo": "b1.desambiguacao",   "resultado": "(pulado)" },
+      { "passo": "b1.filtro",          "resultado": "serviço ✓ · Simples ✓ · não-regulada ✓" },
+      { "passo": "b1.veredito",        "resultado": "🟢 atende" },
+      { "passo": "b1.conta",           "resultado": "conta criada · entra no B2" },
+      { "passo": "b2.socio",           "resultado": "sócio ok · casado (regime: comunhão universal de bens)" },
+      { "passo": "b2.clt",             "resultado": "tem CLT (R$9000) ≥ teto · zera INSS do pró-labore" },
+      { "passo": "b2.socios",          "resultado": "2 sócios · participação soma 100%" },
+      { "passo": "b2.empresa",         "resultado": "empresa ok · capital R$50000 · endereço próprio" },
+      { "passo": "b2.empresa::pausa",  "resultado": "⏸ dossiê longo, salvou e voltou dias depois · espera 3 dias · ▶ retomada idempotente" },
+      { "passo": "b2.cnae_sec",        "resultado": "sem secundários" },
+      { "passo": "b2.natureza",        "resultado": "natureza LTDA (coerente com nº de sócios)" },
+      { "passo": "b2.nome",            "resultado": "razão social + fantasia · nome disponível (viabilidade prévia)" },
+      { "passo": "b2.cnae_otimo",      "resultado": "enquadramento único (sem CNAE alternativo)" },
+      { "passo": "b2.simulador",       "resultado": "est. Fator R 28% → Anexo III (6%) · já otimizado" },
+      { "passo": "b2.revisao",         "resultado": "dossiê completo · handoff B3" },
+      { "passo": "b3.recap",           "resultado": "recap: economia do Fator R + escopo (abertura grátis + mensal)" },
+      { "passo": "b3.plano",           "resultado": "plano pro (faixa 30k+)" },
+      { "passo": "b3.aceite",          "resultado": "contrato + termo de início aceitos (assinatura)" },
+      { "passo": "b3.pagamento",       "resultado": "pagamento confirmado (cartao) · destrava B4" },
+      { "passo": "b4.viabilidade",     "resultado": "viabilidade deferida (nome+endereço+CNAE) — JUCEMG unificada" },
+      { "passo": "b4.viabilidade::pausa", "resultado": "⏸ análise de viabilidade na JUCEMG/prefeitura · espera 2 dias úteis · ▶ retomada idempotente" },
+      { "passo": "b4.dbe",             "resultado": "DBE gerado (Coleta Web/Receita)" },
+      { "passo": "b4.registro",        "resultado": "contrato pronto (JUCEMG) + assinado GOV.BR prata/ouro" },
+      { "passo": "b4.taxa",            "resultado": "DAE JUCEMG paga (repasse ~R$268,51)" },
+      { "passo": "b4.cnpj",            "resultado": "CNPJ emitido + opção Simples automática + CRC assina" },
+      { "passo": "b4.certificado",     "resultado": "certificado A1 emitido (pós-CNPJ)" },
+      { "passo": "b4.municipal",       "resultado": "inscrição municipal + credenciamento NFS-e (DES-BH)" },
+      { "passo": "b45.ativacao",       "resultado": "procuração e-CAC → API Serpro (PGDAS-D/DAS automatizado)" },
+      { "passo": "fim.ativa",          "resultado": "empresa ativa e operando ✅" }
+    ]
+  }
+}

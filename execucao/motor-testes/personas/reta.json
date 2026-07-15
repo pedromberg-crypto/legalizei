@@ -4,7 +4,7 @@
     "nome": "Bruno — dev freelancer solo",
     "persona_seq": 1,
     "flow": "abertura",
-    "descricao": "Golden path (FLOW 1). Solo, CNAE 6201-5/00, serviço não-regulado no Simples. Passa liso, zero desvio.",
+    "descricao": "Golden path (FLOW 1). Solo, CNAE 6201-5/00, serviço não-regulado no Simples. Passa liso B1→B4, zero desvio.",
     "fonte": "[[casos-teste-fluxo-cnae]] FLOW 1 — Reta"
   },
 
@@ -19,7 +19,10 @@
     "b1.mapeamento": "Mostrar o CNAE em linguagem humana antes do código; leigo não decora número.",
     "b1.veredito": "No 🟢, dizer em 1 linha o que vem agora ('vamos criar sua conta'); senão o leigo hesita.",
     "b2.socio": "Regime de bens é jargão. Microcopy inline que ensina, não culpa.",
-    "b2.clt": "'Duplo vínculo CLT' é técnico. Perguntar 'você trabalha registrado em carteira em outro lugar?'"
+    "b2.clt": "'Duplo vínculo CLT' é técnico. Perguntar 'você trabalha registrado em carteira em outro lugar?'",
+    "b2.simulador": "Leigo não entende 'Fator R'. Mostrar em R$ ('pague-se X, economize Y'), não em jargão fiscal. Rotular 'estimativa'.",
+    "b3.aceite": "Termo de início irreversível assusta o leigo. Explicar em 1 linha que taxas de governo não voltam, sem letra miúda.",
+    "b4.viabilidade": "Pausa de órgão externo: mostrar 'estamos abrindo, leva ~X dias' pra ele não achar que travou."
   },
 
   "respostas": {
@@ -37,14 +40,20 @@
     "socio_estado_civil": "solteiro",
     "socio_cep": "30140071",
     "duplo_vinculo_clt": false,
-
-    "_durável_fora_do_escopo_desta_versão": "campos abaixo já ficam prontos: quando o schema crescer pro resto do B2/B3, a mesma persona atravessa sem reescrever",
+    "num_socios": 1,
+    "empresa_capital": 5000,
+    "empresa_endereco_tipo": "próprio",
+    "quer_endereco_fiscal": false,
+    "cnae_secundarios": [],
     "natureza": "SLU",
+    "nome_viavel": true,
     "faturamento_faixa": "10-20k",
     "fator_r_folha_pct": 12,
     "pro_labore": "minimo",
     "b3_plano": "base",
-    "b3_metodo": "cartao"
+    "b3_metodo": "cartao",
+    "b3_aceite": true,
+    "b3_pagamento_status": "pago"
   },
 
   "eventos": {
@@ -53,24 +62,52 @@
       "motivo": "usuário fechou o app",
       "espera": "2 dias",
       "retomada": "idempotente"
+    },
+    "b4.certificado": {
+      "tipo": "pausa",
+      "motivo": "parceiro emitindo certificado",
+      "espera": "algumas horas",
+      "retomada": "idempotente"
     }
   },
 
   "esperado": {
     "veredito_b1": "🟢 atende",
-    "status": "segue",
-    "parou_em": "b2.clt",
+    "status": "ativa",
+    "parou_em": "fim.ativa",
     "trilha": [
-      { "passo": "entrada.fork",      "resultado": "rota: abertura de CNPJ" },
-      { "passo": "b1.descricao",      "resultado": "descrição aceita" },
-      { "passo": "b1.mapeamento",     "resultado": "CNAE 6201-5/00 · confiança alta · sem fork" },
-      { "passo": "b1.desambiguacao",  "resultado": "(pulado)" },
-      { "passo": "b1.filtro",         "resultado": "serviço ✓ · Simples ✓ · não-regulada ✓" },
-      { "passo": "b1.veredito",       "resultado": "🟢 atende" },
-      { "passo": "b1.conta",          "resultado": "conta criada · entra no B2" },
-      { "passo": "b2.socio",          "resultado": "sócio ok · solteiro (sem regime de bens)" },
-      { "passo": "b2.socio::pausa",   "resultado": "⏸ usuário fechou o app · espera 2 dias · ▶ retomada idempotente" },
-      { "passo": "b2.clt",            "resultado": "sem duplo vínculo · pró-labore normal" }
+      { "passo": "entrada.fork",         "resultado": "rota: abertura de CNPJ" },
+      { "passo": "b1.descricao",         "resultado": "descrição aceita" },
+      { "passo": "b1.mapeamento",        "resultado": "CNAE 6201-5/00 · confiança alta · sem fork" },
+      { "passo": "b1.desambiguacao",     "resultado": "(pulado)" },
+      { "passo": "b1.filtro",            "resultado": "serviço ✓ · Simples ✓ · não-regulada ✓" },
+      { "passo": "b1.veredito",          "resultado": "🟢 atende" },
+      { "passo": "b1.conta",             "resultado": "conta criada · entra no B2" },
+      { "passo": "b2.socio",             "resultado": "sócio ok · solteiro (sem regime de bens)" },
+      { "passo": "b2.socio::pausa",      "resultado": "⏸ usuário fechou o app · espera 2 dias · ▶ retomada idempotente" },
+      { "passo": "b2.clt",               "resultado": "sem duplo vínculo · pró-labore normal" },
+      { "passo": "b2.socios",            "resultado": "solo (sem +sócios)" },
+      { "passo": "b2.empresa",           "resultado": "empresa ok · capital R$5000 · endereço próprio" },
+      { "passo": "b2.cnae_sec",          "resultado": "sem secundários" },
+      { "passo": "b2.natureza",          "resultado": "natureza SLU (coerente com nº de sócios)" },
+      { "passo": "b2.nome",              "resultado": "razão social + fantasia · nome disponível (viabilidade prévia)" },
+      { "passo": "b2.cnae_otimo",        "resultado": "enquadramento único (sem CNAE alternativo)" },
+      { "passo": "b2.simulador",         "resultado": "est. Fator R 12% → Anexo V (15,5%) · ótimo R$4200 → Anexo III (IRRF zero)" },
+      { "passo": "b2.revisao",           "resultado": "dossiê completo · handoff B3" },
+      { "passo": "b3.recap",             "resultado": "recap: economia do Fator R + escopo (abertura grátis + mensal)" },
+      { "passo": "b3.plano",             "resultado": "plano base (faixa 10-20k)" },
+      { "passo": "b3.aceite",            "resultado": "contrato + termo de início aceitos (assinatura)" },
+      { "passo": "b3.pagamento",         "resultado": "pagamento confirmado (cartao) · destrava B4" },
+      { "passo": "b4.viabilidade",       "resultado": "viabilidade deferida (nome+endereço+CNAE) — JUCEMG unificada" },
+      { "passo": "b4.dbe",               "resultado": "DBE gerado (Coleta Web/Receita)" },
+      { "passo": "b4.registro",          "resultado": "contrato pronto (JUCEMG) + assinado GOV.BR prata/ouro" },
+      { "passo": "b4.taxa",              "resultado": "DAE JUCEMG paga (repasse ~R$268,51)" },
+      { "passo": "b4.cnpj",              "resultado": "CNPJ emitido + opção Simples automática + CRC assina" },
+      { "passo": "b4.certificado",       "resultado": "certificado A1 emitido (pós-CNPJ)" },
+      { "passo": "b4.certificado::pausa","resultado": "⏸ parceiro emitindo certificado · espera algumas horas · ▶ retomada idempotente" },
+      { "passo": "b4.municipal",         "resultado": "inscrição municipal + credenciamento NFS-e (DES-BH)" },
+      { "passo": "b45.ativacao",         "resultado": "procuração e-CAC → API Serpro (PGDAS-D/DAS automatizado)" },
+      { "passo": "fim.ativa",            "resultado": "empresa ativa e operando ✅" }
     ]
   }
 }

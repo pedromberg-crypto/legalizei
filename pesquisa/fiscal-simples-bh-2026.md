@@ -2,16 +2,19 @@
 tipo: pesquisa
 data: 2026-07-15
 tags: [fiscal, simples-nacional, fator-r, cnae, bh, compliance, pesquisa]
-status: parcial
+status: consolidado-v1
 fontes: oficiais
-confianca: alta-exceto-bloco-D
+confianca: alta (D resolvido r2+r3; 2 pontos na fila-Larissa)
+rodadas: 3 (nossa) + 2 docs Gemini cruzados
 ---
 
 # 🔬 Pesquisa fiscal — Simples · ME serviço · BH/MG (2026)
 
 > Pesquisa aterrada em fontes OFICIAIS (deep-research + verificação adversarial, 3 votos/claim). Escopo travado: **Simples Nacional · Microempresa · atividade de SERVIÇO · Belo Horizonte/MG · 2026**. Regra anti-guru: cada achado tem fonte + confiança. **Double-check humano = Larissa (fiscal).** Companheira de [[blocos-fluxo-abertura]] · [[spec-telas-entrada-b1-b2]] · [[cnae-atendidos-e-nao-atendidos]] · [[plano-padrao-195-referencia]].
 >
-> ⚠️ **Bloco D (valores fiscais vigentes) NÃO foi coberto** — a busca caiu no meio (erro de conexão). Re-rodar dedicado antes de usar número fiscal no app.
+> 🧭 **COMO LER:** as seções abaixo são um **log append-only** de 3 rodadas (rodada 1 = A–G · rodada 2 = D núcleo + J/K/L/M · rodada 3 = H·I·D-resíduo). **Para usar no flow, vá direto ao [[#✅ CONSOLIDADO — fonte-verdade fiscal (usar no flow)|bloco CONSOLIDADO no fim]]** — ele funde as 3 rodadas + o cruzamento com 2 pesquisas Gemini, com cada fato marcado 🟢 travado / 🟡 fila-Larissa.
+>
+> ✅ **Bloco D (valores fiscais) — RESOLVIDO** na rodada 2 (núcleo) + rodada 3 (INSS pró-labore + alíquotas). O aviso antigo de "não coberto" na seção D abaixo ficou só como histórico.
 
 ## Veredito de topo
 Produto viável. A maior parte do enquadramento é **modelável deterministicamente**. Só **1 condicional é fatal** (sócio no exterior). A pesquisa **derruba 3 suposições** (ver §Refutados).
@@ -123,5 +126,100 @@ Busca caiu no meio (erro de conexão). **Sem claim verificado** para: salário m
 - **Bloco H (Fator R 1º ano) — ZERO claims.** Como a Res. CGSN 140/2018 trata empresa recém-aberta sem 12m de folha (proporcionalização)? Composição exata da folha (pró-labore + CPP + FGTS + 13º). **Crítico: toda empresa nova nossa começa assim.**
 - **Bloco I (migração de contador) — ZERO claims.** Passo a passo, procuração, DAS/obrigações em aberto, prazos. **Crítico pro flow MIGRAR.**
 - **D residual:** alíquota correta de INSS sobre pró-labore + alíquotas iniciais DAS Anexo III (6%?) e V (15,5%?).
+
+---
+
+# 🔬 Rodada 3 (H · I · D-resíduo) + cruzamento Gemini — 2026-07-15
+
+> deep-research 3ª rodada (103 agentes, 22 claims confirmados / 3 refutados, verificação adversarial 3 votos) **cruzada** contra 2 relatórios Gemini das mesmas perguntas (doc "Contabilidade Simples Nacional BH" = blocos A–G · doc "Pesquisa Tributária BH" = H·I·J·K·L·M). Objetivo: fechar H·I·D-resíduo e resolver a refutação histórica do D.
+
+## H) Fator R no 1º ano + migração — núcleo FECHADO (🟢 alta)
+| Fato | Regra | Fonte | Confiança |
+|---|---|---|---|
+| Fórmula | **FS12 ÷ RBT12r** = folha 12 meses anteriores ÷ receita bruta 12 meses anteriores (interno+export); **não inclui o mês corrente** | CGSN 140/18 art. 26 · LC 123 art. 18 §24 | 🟢 |
+| Limiar | **≥28% → Anexo III** (começa 6%) · **<28% → Anexo V** (começa 15,5%) | LC 123 §5º-J / §5º-M | 🟢 |
+| Recém-aberta (<13 meses) | **ANUALIZAÇÃO**: mesmos critérios do art. 22 (receita em início de atividade), "no que couber" | CGSN 140/18 art. 26 §4º | 🟢 |
+| Mês de início | FS>0 e receita=0 → r=**0,28** · FS=0 e receita>0 → r=**0,01** · ambos>0 → **FS÷receita** | CGSN 140/18 art. 26 §6º I-III | 🟢 |
+| Migração (12+ meses) | usa **histórico REAL** dos 12 meses, sem proporcionalizar; troca de contador não zera nada (CNPJ continua) | CGSN 140/18 art. 26 | 🟢 |
+| Composição folha (numerador) | ENTRAM: salários + pró-labore + 13º + **CPP e FGTS efetivamente recolhidos**. FORA: aluguéis, distribuição de lucros, estagiário, MEI, INSS retido do segurado | LC 123 art. 18 §24 · CGSN 140/18 art. 26 §§1º-2º | 🟢 |
+
+**Cruzamento Gemini (H):** converge em tudo acima. Gemini traz tabela de composição idêntica (inclui INSS-retido-do-segurado como **excluído**, que a nossa também implica).
+
+## I) Migração de contador — Gemini TAPA nosso buraco (🟢 alta, 2 citações a verificar)
+Nossa 3ª rodada voltou rasa (só a procuração e-CAC). O Gemini entregou o operacional:
+| Peça do processo | O que é | Fonte (Gemini) |
+|---|---|---|
+| **Distrato** | rescisão do contrato antigo; **define a data de corte** (competência final do contador anterior) | CFC (norma de transferência) |
+| **TTRT Eletrônico CRC-MG** | Termo de Transferência de Responsabilidade Técnica; novo contador abre no portal CRC-MG, o antigo valida | CRC-MG |
+| **DBE Evento 232** "Alteração do Contabilista" | via Coletor Redesim; **atualiza RFB + Sefaz-MG + PBH de uma vez**; assinado com e-CNPJ da empresa | Redesim / RFB |
+| **Procuração e-CAC** | revoga a antiga + emite nova ao novo escritório; gov.br Prata/Ouro ou e-CNPJ; validade 5 anos; "restringir processos digitais? → **NÃO**" | gov.br/RFB |
+| **Obrigações do período anterior** | PGDAS-D/DEFIS/eSocial de fatos geradores no período do contador antigo **ficam com ele**, salvo cláusula expressa no distrato | CFC |
+| **Acervo** (XML, guias, senhas, bases) | **pertence à empresa**; reter por inadimplência = anti-ético (processo no CRC) | CFC / Cód. Ética |
+
+⚠️ **Verificar antes de codar:** (a) o **nº da resolução CFC** — Gemini escreve "1.590/2020" mas a própria lista de refs dele cita CFC 987/2003 e 1493/2015 → pode ser citação trocada; (b) o **código "Evento 232"** contra o Coletor Redesim oficial. → fila-Larissa/fonte primária.
+
+## D-resíduo) INSS pró-labore + alíquotas — refutação do D RESOLVIDA (🟢 alta)
+| Fato | Regra | Fonte | Confiança |
+|---|---|---|---|
+| INSS pró-labore | **11% DIRETO** sobre a retirada (NÃO 11%×20%); sócio = contribuinte individual; empresa retém+recolhe | Lei 8.212/91 art. 21 + Lei 10.666/03 art. 4º | 🟢 |
+| Teto / piso | base entre **R$1.621** (mín) e **R$8.475,55** (teto 2026) → **máx R$932,31/mês** | gov.br/INSS 2026 | 🟢 |
+| CPP patronal 20% | **DENTRO do DAS** nos Anexos I/II/III/**V**; recolhida à parte **só no Anexo IV**. **MVP (III/V) = SEM 20% separado** | LC 123 art. 13 VI · gov.br/RFB (Anexo IV) | 🟢 |
+| Anexo III inicial | **6,00%** (1ª faixa até R$180k/12m) | LC 123 Anexo III (Planalto) | 🟢 |
+| Anexo V inicial | **15,50%** (1ª faixa até R$180k/12m) | LC 123 Anexo V (Planalto) | 🟢 |
+
+**Cruzamento Gemini (D):** **convergência 100%.** A refutação histórica (formulação "11%+20%" da rodada 2) está **resolvida** — as duas pesquisas cravam **11% direto** + CPP embutida no DAS. Fim da controvérsia do D.
+
+## 🆕 Achado NOVO do Gemini (nenhuma rodada nossa pegou) — incorporar + verificar
+- **FS12 = regime de CAIXA · RBT12 = regime de competência** (Solução de Consulta COSIT 17/2021). Atrasar o pagamento do pró-labore **tira o valor do numerador no mês** → derruba o Fator R < 28% → joga pro Anexo V de repente. **Impacto direto no simulador do B2 + alerta ao usuário.** → 🟡 verificar COSIT 17/2021.
+
+## ❌ Refutados rodada 3 (não usar)
+1. **Folha do Fator R sem 13º / definição frouxa do §24** (1-2, fonte comprasnet) — a definição boa é a do Planalto/CGSN (13º ENTRA).
+2. **"Média aritmética acumulada × 12" para os meses 2–12** (1-2) — ver nota de tensão no consolidado (provável convergência matemática, mas frase/fonte não fecharam).
+
+## 🟡 Tensões Gemini × nós (as 2 que vão pra Larissa)
+1. **Mecânica exata dos meses 2–12 (recém-aberta):** nós refutamos "média×12" (1-2); Gemini crava 100%. **Não é contradição dura:** média×12 no numerador ÷ média×12 no denominador → o ×12 **cancela** → mesma razão que soma-acumulada/soma-acumulada. Dão o mesmo número. Larissa confirma o texto do art. 26 §§5º-6º.
+2. **CPP embutida no DAS entra no numerador?** Gemini diz que sim ("compõe a memória de cálculo" mesmo nos Anexos III/V). Leitura estrita do §24 (nossa) = só "**CPP efetivamente recolhida**"; numa ME sem funcionário a CPP não é recolhida à parte → **numerador ≈ só o pró-labore**. Muda o simulador do B2. Larissa decide.
+
+---
+
+# ✅ CONSOLIDADO — fonte-verdade fiscal (usar no flow)
+
+> Isto é o que alimenta o motor de testes e o flow entrada→B4. Cada linha 🟢 = travado (pode codar) · 🟡 = fila-Larissa (não hardcodar sem ela). Verificado nas 3 rodadas + cruzado com 2 pesquisas Gemini. Sem contradição dura entre as fontes; onde divergem é completude ou redação, não fato oposto.
+
+### 🟢 TRAVADO — pode entrar no produto
+| # | Fato | Valor / regra | Onde no flow |
+|---|---|---|---|
+| 1 | Enquadramento por CNAE | 3 grupos: **sempre Anexo III** · **sujeito a Fator R (III↔V)** · **Anexo IV**. Não existe serviço "sempre V" | B1 roteamento · B2 |
+| 2 | Fator R fórmula | folha 12m ÷ receita bruta 12m; **≥28% → III (6%)** · **<28% → V (15,5%)** | B2 simulador |
+| 3 | Fator R recém-aberta | **anualização** (art. 22 no que couber); **mês 1** = folha do mês ÷ receita do mês (casos-borda 0,28 / 0,01) | B2 · B4.5 (1º DAS) |
+| 4 | Fator R migração | histórico REAL 12 meses | flow #2 MIGRAR |
+| 5 | Composição folha | pró-labore + salários + 13º + CPP/FGTS **recolhidos**; fora lucro/aluguel/MEI/estagiário/INSS-retido | B2 simulador |
+| 6 | INSS pró-labore | **11% direto**; base R$1.621–8.475,55; **máx R$932,31/mês** | B2 · pró-labore |
+| 7 | CPP 20% | dentro do DAS (III/V) → **sem guia separada** no MVP | B2 · custo mensal |
+| 8 | Alíquotas iniciais DAS | **Anexo III 6,00%** · **Anexo V 15,50%** (até R$180k/12m) | B2 simulador |
+| 9 | Valores 2026 | mín **R$1.621** · teto INSS **R$8.475,55** · IRRF isento na prática até **~R$5.000/mês** (Lei 15.270/2025) · sublimite MG **R$3,6M** · ME até R$360k/ano | B2 · avisos |
+| 10 | Abertura BH | Redesim/Minas Fácil, baixo risco = **ALF imediato ~1 dia**, sem vistoria (~96%); JUCEMG LTDA padrão **R$268,51** / EI R$134,26 | B4 constituição |
+| 11 | Obrigações mensais | **PGDAS-D + DAS até dia 20**; NFS-e = usuário emite (Emissor Nacional); DAS = motor (API Serpro `TRANSDECLARACAO11`+`GERARDAS12`) | B4.5 ativação · portal |
+| 12 | DEFIS | anual, até 31/03 do ano seguinte | portal |
+| 13 | Sócio no exterior | **único 🔴 fatal** → bloqueia opção Simples (LC 123 art. 17 II) | B1 guarda-corpo |
+| 14 | Migração — passo oficial | Distrato → TTRT CRC-MG → **DBE Evento 232** (atualiza RFB+Sefaz+PBH) → procuração e-CAC nova; obrigações do período antigo ficam com o contador anterior | flow #2 MIGRAR |
+| 15 | Procuração e-CAC | delegação de serviços (opção "todos" cobre futuros); procurador aceita em "Minhas Autorizações"; "restringir processos digitais? → NÃO" | B4.5 · ativação |
+
+### 🟡 FILA-LARISSA — não hardcodar sem confirmação
+| # | Ponto | Por quê |
+|---|---|---|
+| A | **Mecânica exata Fator R meses 2–12** | nós refutamos "média×12" (1-2); Gemini crava 100%. Provável convergência matemática (×12 cancela), mas confirmar art. 26 §§5º-6º |
+| B | **CPP-no-DAS entra no numerador do Fator R?** | Gemini sim / leitura estrita §24 não. Muda o simulador do B2 (numerador = só pró-labore vs pró-labore+CPP) |
+| C | **FS12 regime de caixa** (COSIT 17/2021) | achado novo; se confirmado, atrasar pró-labore derruba o Fator R no mês → alerta no B2 |
+| D | **Nº resolução CFC** da transferência (1.590/2020?) + **código Evento 232** | possível citação trocada do Gemini; verificar em fonte primária antes de escrever no flow MIGRAR |
+| E | **Lista exata CNAE** "sempre III" × "Fator-R" × "IV" | mapear §5º-B/§5º-C contra `cnae-matriz.csv` (tarefa interna, factível) |
+| F | **DEFIS + eSocial sem movimento** p/ ME sem empregado | periodicidade e quem transmite não plenamente verificados |
+| G | **Taxas municipais BH exatas** + faixa e-CNPJ | valores de custo de abertura só parciais |
+
+### Implicações diretas no flow (entrada→B4)
+- **B2 (enquadramento/IACA):** simulador Fator R usa fatos #2–#8; **depende de A+B+C** pra ficar exato → marcar como "estimativa" até Larissa.
+- **B4 (constituição):** happy path de BH (#10) pronto pra virar schema.
+- **B4.5 (ativação fiscal):** #11+#15 → certificado → procuração e-CAC → API Serpro emite DAS sozinho.
+- **Flow #2 (MIGRAR):** #14 é o esqueleto; **depende de D** (citações CFC/Evento 232).
 
 ## Links

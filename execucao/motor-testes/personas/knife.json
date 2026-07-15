@@ -1,0 +1,78 @@
+{
+  "meta": {
+    "id": "knife",
+    "nome": "Gustavo — consultor de TI solo (Fator R na borda + boleto)",
+    "persona_seq": 5,
+    "flow": "abertura",
+    "descricao": "FLOW 5. Solo, faturamento topo, Fator R EXATAMENTE 28% (borda → Anexo III). B3 no boleto que NÃO é pago → dunning → não destrava B4. Termina em aguardando-pagamento.",
+    "fonte": "[[casos-teste-fluxo-cnae]] FLOW 5 — Knife-edge & Boleto"
+  },
+  "perfil": {
+    "nivel": "alto",
+    "personalidade": "Sabe de imposto, quer o Anexo III no talo. Escolhe boleto por hábito e esquece de pagar. Volta depois.",
+    "estressa": ["simulador que não mostra a sensibilidade da borda", "abertura que começa antes de pagar"]
+  },
+  "sugestoes": {
+    "b2.simulador": "Na borda (28% cravado) mostrar a sensibilidade: 'um real a menos de pró-labore te joga pro Anexo V'.",
+    "b3.pagamento": "Boleto fora do happy path: deixar explícito que a abertura só começa quando compensar. Dunning claro."
+  },
+  "respostas": {
+    "entrada_escolha": "abrir_cnpj",
+    "atividade_descricao": "presto consultoria e suporte de TI para empresas",
+    "cnae": "6204-0/00",
+    "cnae_confianca": "alta",
+    "cnae_ambiguo": false,
+    "filtro_servico": true,
+    "filtro_simples": true,
+    "filtro_regulada": false,
+    "socio_nome": "Gustavo Ferreira Lima",
+    "socio_cpf": "12345678909",
+    "socio_cpf_situacao": "regular",
+    "socio_estado_civil": "solteiro",
+    "socio_cep": "30170000",
+    "duplo_vinculo_clt": false,
+    "num_socios": 1,
+    "empresa_capital": 10000,
+    "empresa_endereco_tipo": "próprio",
+    "quer_endereco_fiscal": false,
+    "cnae_secundarios": [],
+    "natureza": "SLU",
+    "nome_viavel": true,
+    "faturamento_faixa": "30k+",
+    "fator_r_folha_pct": 28,
+    "pro_labore": "otimo",
+    "b3_plano": "pro",
+    "b3_metodo": "boleto",
+    "b3_aceite": true,
+    "b3_pagamento_status": "não pago"
+  },
+  "eventos": {},
+  "esperado": {
+    "veredito_b1": "🟢 atende",
+    "status": "aguardando-pagamento",
+    "parou_em": "b3.pagamento",
+    "trilha": [
+      { "passo": "entrada.fork",     "resultado": "rota: abertura de CNPJ" },
+      { "passo": "b1.descricao",     "resultado": "descrição aceita" },
+      { "passo": "b1.mapeamento",    "resultado": "CNAE 6204-0/00 · confiança alta · sem fork" },
+      { "passo": "b1.desambiguacao", "resultado": "(pulado)" },
+      { "passo": "b1.filtro",        "resultado": "serviço ✓ · Simples ✓ · não-regulada ✓" },
+      { "passo": "b1.veredito",      "resultado": "🟢 atende" },
+      { "passo": "b1.conta",         "resultado": "conta criada · entra no B2" },
+      { "passo": "b2.socio",         "resultado": "sócio ok · solteiro (sem regime de bens)" },
+      { "passo": "b2.clt",           "resultado": "sem duplo vínculo · pró-labore normal" },
+      { "passo": "b2.socios",        "resultado": "solo (sem +sócios)" },
+      { "passo": "b2.empresa",       "resultado": "empresa ok · capital R$10000 · endereço próprio" },
+      { "passo": "b2.cnae_sec",      "resultado": "sem secundários" },
+      { "passo": "b2.natureza",      "resultado": "natureza SLU (coerente com nº de sócios)" },
+      { "passo": "b2.nome",          "resultado": "razão social + fantasia · nome disponível (viabilidade prévia)" },
+      { "passo": "b2.cnae_otimo",    "resultado": "enquadramento único (sem CNAE alternativo)" },
+      { "passo": "b2.simulador",     "resultado": "est. Fator R 28% → Anexo III (6%) · já otimizado" },
+      { "passo": "b2.revisao",       "resultado": "dossiê completo · handoff B3" },
+      { "passo": "b3.recap",         "resultado": "recap: economia do Fator R + escopo (abertura grátis + mensal)" },
+      { "passo": "b3.plano",         "resultado": "plano pro (faixa 30k+)" },
+      { "passo": "b3.aceite",        "resultado": "contrato + termo de início aceitos (assinatura)" },
+      { "passo": "b3.pagamento",     "resultado": "pagamento não pago (boleto) · dunning · NÃO destrava B4" }
+    ]
+  }
+}

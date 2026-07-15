@@ -86,14 +86,14 @@ tags: [produto, ux, telas, spec, onboarding, entrada, b1, b2]
 |---|---|---|---|
 | "Tem outro emprego CLT?" | toggle | — | "Não" → pula resto da tela |
 | Valor da remuneração CLT | input R$ (se sim) | Obrigatório se sim; rejeita 0/negativo | Alimenta cálculo do teto INSS |
-| Aviso de teto INSS | leitura | — | Se já bate teto no CLT → não recolhe INSS no pró-labore (regra Karla) |
+| Aviso de teto INSS | leitura | — | **Cálculo de FOLGA, não binário:** INSS do pró-labore incide sobre `teto − salário CLT`. Só ZERA se o CLT já ≥ **teto R$8.475,55** (2026). Ex: CLT R$8k → ainda recolhe 11% sobre a folga de R$475,55. Fonte: [[fiscal-simples-bh-2026]] #6 |
 | Privacidade | — | Sistema não puxa vínculo de terceiro (LGPD) — cliente declara | Microcopy de confiança |
 
 ### Tela 8 — 2.3 +Sócios
 | Campo/Elemento | Entrada | Validação & margem de erro | IA / sugestão / microdetalhe |
 |---|---|---|---|
 | "Tem outros sócios?" | toggle | — | "Não" → solo (afeta natureza em 2.6) |
-| **Limite de sócios** | — | **Máx 3 no total (1 principal + 2 adicionais)** — espelha Contabilizei. Passou do teto → bloqueia "+adicionar" + "acima de 3 sócios = atendimento humano" | 🟡 confirmar se limite é 3 ou 2 |
+| **Limite de sócios** | — | **Máx 2 no total** (decisão 15/07). Passou → bloqueia "+adicionar" + "acima de 2 sócios = atendimento humano" | ✅ travado em 2 (era 3, corrigido) |
 | Bloco 2.1 por sócio | form repetível | Mesmas validações do 2.1 (CPF etc.) | "+ adicionar sócio" |
 | % de participação | input % | Soma obrigatória = 100% (rejeita ≠100) | Divisão igual como default editável |
 
@@ -128,13 +128,17 @@ tags: [produto, ux, telas, spec, onboarding, entrada, b1, b2]
 | Checagem de viabilidade | ação automática | Nome em uso → sugere variações | Consulta prévia (evita reprova JUCEMG) — 🟡 API |
 
 ### Tela 13 — 2.8 Simulador Fator R + pró-labore (clímax)
+> ⚠️ **Saída é PROJEÇÃO, não anexo travado.** Empresa nova não tem 12 meses de folha; o Fator R real só se firma operando. Rotular tudo como **"estimativa"** e explicar a anualização do 1º ano em 1 linha. Base: [[fiscal-simples-bh-2026]] #3 (bloco CONSOLIDADO).
+
 | Campo/Elemento | Entrada | Validação & margem de erro | IA / sugestão / microdetalhe |
 |---|---|---|---|
 | Faturamento estimado | faixa guiada (botões/slider) | Nunca campo aberto; slider fino opcional | IA já chega com faixa marcada (CNAE + solo/sócios) |
-| Pró-labore | slider/opções | Mínimo = 1 salário mín (🟡 valor); rejeita abaixo | Cenário A (mínimo) × B (≥28%) lado a lado |
-| Resultado Fator R | leitura | Motor: folha ≥ 28% do faturamento → Anexo III (6%), senão Anexo V (15,5%) | Ponto médio da faixa + sensibilidade ("na ponta de cima já vira III") |
-| Transparência de custo | leitura | — | Mostra INSS + IR da folha + pró-labore líquido explícito (regra dura Karla) |
-| Caso anexos diferentes | flag | "Pela maior × pela nota" → motor não crava, marca 🟡 | Pendência Larissa; não chuta número |
+| Pró-labore | slider/opções | Mínimo = **1 salário mín (R$1.621, 2026)**; rejeita abaixo | 3 cenários lado a lado (A · B · **Ótimo**) |
+| Resultado Fator R | leitura (est.) | Motor: folha ≥ **28%** do faturamento → Anexo III (**6%**), senão Anexo V (**15,5%**) | Ponto médio da faixa + sensibilidade ("na ponta de cima já vira III") |
+| **Pró-labore ÓTIMO (NOVO)** | recomendação da IA | calcula o pró-labore que cruza 28% **e** fica ≤ **R$5.000** (isenção de IRRF) | O diferencial: mostra "pague-se R$X → cai no Anexo III **sem pagar IRRF** → economia ~R$Y/mês". Base #3+#9 |
+| Transparência de custo | leitura | — | Custo da folha = **INSS 11% do pró-labore** (máx R$932,31/mês) **+ IRRF**. **⚠️ IRRF = ZERO até ~R$5.000/mês de pró-labore** (Lei 15.270/2025) — não inflar o custo com imposto que não existe. Base #2 |
+| Alerta regime de caixa | leitura (🟡) | — | "Pró-labore atrasado sai do cálculo do mês → pode cair pro Anexo V." Folha conta por **caixa**. 🟡 verificar COSIT 17/2021 antes de exibir. Base #C |
+| Caso anexos diferentes | flag | "Pela maior × pela nota" → motor não crava, marca 🟡 | Raro no MVP só-serviço; pendência Larissa. Não chuta número |
 
 ### Tela 14 — 2.9 Revisão do dossiê
 | Campo/Elemento | Entrada | Validação & margem de erro | IA / sugestão / microdetalhe |
@@ -154,11 +158,12 @@ tags: [produto, ux, telas, spec, onboarding, entrada, b1, b2]
 - Erros **inline**, nunca modal genérico; microcopy que ensina, não culpa.
 
 ## 🟡 Pendências desta spec
-- Limite de sócios: 3 ou 2 no total? (confirmar com Pedro)
+- ~~Limite de sócios: 3 ou 2?~~ ✅ **travado em 2** (15/07).
+- ~~Valores fiscais vigentes (salário mín, teto INSS)~~ ✅ **resolvido** em [[fiscal-simples-bh-2026]] CONSOLIDADO: mín R$1.621 · teto INSS R$8.475,55 · INSS máx R$932,31/mês · IRRF isento ~R$5k (reconferir jan/27).
 - Preço do endereço fiscal Legalizei (~R$60 benchmark, definir o nosso)
 - Provider da validação de CPF/situação cadastral (mesmo pool do cartão CNPJ)
-- Valores fiscais vigentes (salário mín, teto INSS)
 - Política de senha do login
+- **Fila-Larissa (impacta o simulador 2.8):** (A) mecânica Fator R meses 2–12 · (B) **CPP-no-DAS entra no numerador?** (muda o pró-labore ótimo) · (C) FS12 regime de caixa (COSIT 17/2021). Ver tabela em [[perguntas-larissa-fiscal]].
 
 ## Links
 - [[blocos-fluxo-abertura]] · [[mapa-telas-mobile]] · [[casos-teste-fluxo-cnae]] · [[2026-07-13-conversa-karla]] · [[HOME]]

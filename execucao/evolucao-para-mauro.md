@@ -119,6 +119,23 @@ Sexta (17/07): teste E2E + 1ª versão da tela + apresentação do progresso
 Falta decidir: prazo de fidelidade e redigir o contrato
 ```
 
+## Semana 15/07/2026 — marca no INPI + monitoramento do líder
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | Marca (INPI) | **Levantamos que precisamos registrar a marca "Legalizei" no INPI** — não é obrigatório pra operar, mas protege o nome (domínio e rede social não garantem nada; no Brasil quem registra primeiro leva). Dois pontos de atenção: o nome é "descritivo" (pode dar exigência) e é parecido com "Contabilizei" (precisa de busca prévia). **Decisão que depende de nós dois: em qual CNPJ registrar** (proposta: Legalize Digital). Próximo = busca de anterioridade | 🟡 a decidir |
+| 2 | Monitoramento do líder | Seguimos acompanhando a Contabilizei por dentro (caixa de cliente): mapeamos o e-mail de uma **função nova deles ("teto mínimo" de pró-labore)**, que revela como a automação de pró-labore deles funciona por baixo — insumo direto pro nosso simulador ser mais transparente | 🟢 |
+
+**Próximo (15/07):** [Pedro/Mauro] decidir titular da marca + autorizar busca/registro no INPI; seguir com a construção do motor de testes e os blocos seguintes do cadastro.
+
+### 📱 WhatsApp (15/07)
+```
+*Update Legalizei* ™️
+- Levantei que a gente precisa registrar a marca "Legalizei" no INPI pra proteger o nome (domínio e rede social não garantem). Não é obrigatório pra funcionar, mas é importante: no Brasil quem registra primeiro leva
+- Dois cuidados: o nome é meio "descritivo" e parecido com "Contabilizei", então dá pra ter exigência. Vou rodar a busca prévia
+- Decisão nossa: registrar em qual CNPJ (penso na Legalize Digital)
+- Continuo acompanhando a Contabilizei por dentro: mapeei uma função nova deles (teto mínimo de pró-labore) que ajuda a gente a fazer melhor
+```
+
 ## 📱 Versão WhatsApp (copiar/colar — grupo ampliado, sem item de sociedade)
 ```
 *Relatório semanal — Legalizei* 📊

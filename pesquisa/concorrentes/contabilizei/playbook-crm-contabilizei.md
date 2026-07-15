@@ -32,7 +32,10 @@ tags: [concorrente, insight]
 → **[[onboarding-jornada-completa]]** — os 26 emails da abertura reconstruídos dia a dia (D0 → D+29), com os 10 achados e a tabela "copiar × corrigir". Destaque: senha criada via fluxo de RESET (desenho deles, não bug) e ~23 dias do cadastro ao CNPJ em BH = benchmark a bater.
 
 ## Notas por gatilho
-[[emails-fiscal-operacional]] (33) · [[emails-cobranca]] (14) · [[emails-acesso-seguranca]] (12) · [[emails-nurture-educacional]] (10) · [[emails-suporte]] (7) · [[emails-onboarding]] (3) · [[emails-upsell-marketing]] (3)
+[[emails-fiscal-operacional]] (33) · [[emails-cobranca]] (14) · [[emails-acesso-seguranca]] (12) · [[emails-nurture-educacional]] (10) · [[emails-suporte]] (7) · [[emails-onboarding]] (3) · [[emails-upsell-marketing]] (3) · [[emails-produto-novidades]] (1)
+
+## Recebidos após a extração (08/07)
+- `2026-07-15` — **Teto mínimo de pró-labore** ([[emails-produto-novidades]]) — gatilho NOVO (novidade de produto). Decodifica a caixa-preta "Gestão Inteligente"/"cálculo inteligente" do teardown [[socios-e-pro-labore]]: automação zera pró-labore em mês sem NF e agora garante piso mínimo compensando imposto pra cima.
 
 ## Links
 - [[contabilizei]] · [[PESQUISA-MERCADO]] · [[HOME]]

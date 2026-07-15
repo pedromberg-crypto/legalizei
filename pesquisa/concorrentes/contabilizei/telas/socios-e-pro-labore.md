@@ -46,5 +46,8 @@ tags: [concorrente, ux]
 - Explicar cada campo (PIS vazio → "não obrigatório para o seu caso") com microcopy humana.
 - Manter a lógica do banner proativo de Reforma, mas linkar para o **impacto no SEU número**, não para um artigo genérico.
 
+## 🔓 Atualização 2026-07-15 — caixa-preta decodificada
+O email [[emails-produto-novidades]] (teto mínimo) revela o que a "Gestão Inteligente"/"cálculo inteligente" faz por baixo: **zera o pró-labore em mês sem NF** e agora **garante piso mínimo compensando imposto pra cima**. Confirma a fraqueza acima (jargão que esconde mecânica) e afia a contraproposta do simulador transparente: o slider precisa expor piso mínimo, zeragem por ausência de NF e compensação de imposto.
+
 ## Links
-- [[contabilizei]] · [[playbook-crm-contabilizei]] · [[HOME]]
+- [[contabilizei]] · [[playbook-crm-contabilizei]] · [[emails-produto-novidades]] · [[HOME]]

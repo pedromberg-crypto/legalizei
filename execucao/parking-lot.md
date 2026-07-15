@@ -17,6 +17,8 @@ tags: [gestao]
 | B | **Auditar a Agilize** (2º concorrente) — preço FIXO transparente, o oposto do líder; dá contraste | Só auditamos a Contabilizei até agora | 2026-07-09 | Após consolidar o líder; +1 coluna na [[cnae-matriz-governo]] |
 | C | **Fechar pendências da imersão** — diário diário, term sheet 1 pág, NDA/acessos | Maratona técnica consumiu os dias; §13 da base pede | 2026-07-09 | Dias correntes da imersão (S1) |
 | D | **Versão limpa do deck** (sem notas internas) — já existe flag SHOW_NOTES no build-deck.js | Deck já cumpriu com o Mauro; slide 5 desatualizado (preço R$195→210) | 2026-07-08 | Se houver reapresentação |
+| I | **Atender Lucro Presumido no MVP? (provocação)** — diferença Contabilizei R$195 (Simples) → R$239 (LP) é pequena (~22%), o que sugere complexidade **incremental**, não gigante. Vale medir esforço de suporte a LP já no V1. MVP segue **só Simples** por ora | Provocação do Pedro no flow de pesquisa fiscal 15/07 | 2026-07-15 | Depois do cruzamento das pesquisas fiscais (minha + Gemini) |
+| J | **Passo "ativação fiscal / emissão de DAS" no flow** — Contabilizei emite as guias pro cliente; precisamos do passo que liga certificado digital → procuração e-CAC → emissão automática de DAS/PGDAS-D (provável "B4.5", pós-constituição). Onde exatamente encaixa = definir | Pedro validou na pele (recebe guia da Contabilizei); bloco K/G da pesquisa | 2026-07-15 | Após cruzar as pesquisas (blocos D/H/I/K + Gemini) — voltar só pra posicionar o passo |
 
 ## Pendências fiscais encaminhadas (pós-Izabela 09/07)
 | Frente | Com quem | O que perguntar |

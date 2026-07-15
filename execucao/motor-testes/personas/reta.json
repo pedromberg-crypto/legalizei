@@ -1,0 +1,76 @@
+{
+  "meta": {
+    "id": "reta",
+    "nome": "Bruno — dev freelancer solo",
+    "persona_seq": 1,
+    "flow": "abertura",
+    "descricao": "Golden path (FLOW 1). Solo, CNAE 6201-5/00, serviço não-regulado no Simples. Passa liso, zero desvio.",
+    "fonte": "[[casos-teste-fluxo-cnae]] FLOW 1 — Reta"
+  },
+
+  "perfil": {
+    "nivel": "leigo total",
+    "personalidade": "Nunca abriu empresa. Não sabe o que é CNAE, pró-labore nem Simples. Quer só ficar legal pra emitir nota pros clientes. Lê tudo, tem medo de errar, abandona se travar.",
+    "estressa": ["jargão sem explicação", "campo aberto sem exemplo", "não saber qual é o próximo passo"]
+  },
+
+  "sugestoes": {
+    "b1.descricao": "Leigo trava no campo vazio. Manter placeholder typewriter com exemplos reais e aceitar gíria (já specado).",
+    "b1.mapeamento": "Mostrar o CNAE em linguagem humana antes do código; leigo não decora número.",
+    "b1.veredito": "No 🟢, dizer em 1 linha o que vem agora ('vamos criar sua conta'); senão o leigo hesita.",
+    "b2.socio": "Regime de bens é jargão. Microcopy inline que ensina, não culpa.",
+    "b2.clt": "'Duplo vínculo CLT' é técnico. Perguntar 'você trabalha registrado em carteira em outro lugar?'"
+  },
+
+  "respostas": {
+    "entrada_escolha": "abrir_cnpj",
+    "atividade_descricao": "desenvolvo sites e sistemas sob encomenda",
+    "cnae": "6201-5/00",
+    "cnae_confianca": "alta",
+    "cnae_ambiguo": false,
+    "filtro_servico": true,
+    "filtro_simples": true,
+    "filtro_regulada": false,
+    "socio_nome": "Bruno Almeida Souza",
+    "socio_cpf": "11144477735",
+    "socio_cpf_situacao": "regular",
+    "socio_estado_civil": "solteiro",
+    "socio_cep": "30140071",
+    "duplo_vinculo_clt": false,
+
+    "_durável_fora_do_escopo_desta_versão": "campos abaixo já ficam prontos: quando o schema crescer pro resto do B2/B3, a mesma persona atravessa sem reescrever",
+    "natureza": "SLU",
+    "faturamento_faixa": "10-20k",
+    "fator_r_folha_pct": 12,
+    "pro_labore": "minimo",
+    "b3_plano": "base",
+    "b3_metodo": "cartao"
+  },
+
+  "eventos": {
+    "b2.socio": {
+      "tipo": "pausa",
+      "motivo": "usuário fechou o app",
+      "espera": "2 dias",
+      "retomada": "idempotente"
+    }
+  },
+
+  "esperado": {
+    "veredito_b1": "🟢 atende",
+    "status": "segue",
+    "parou_em": "b2.clt",
+    "trilha": [
+      { "passo": "entrada.fork",      "resultado": "rota: abertura de CNPJ" },
+      { "passo": "b1.descricao",      "resultado": "descrição aceita" },
+      { "passo": "b1.mapeamento",     "resultado": "CNAE 6201-5/00 · confiança alta · sem fork" },
+      { "passo": "b1.desambiguacao",  "resultado": "(pulado)" },
+      { "passo": "b1.filtro",         "resultado": "serviço ✓ · Simples ✓ · não-regulada ✓" },
+      { "passo": "b1.veredito",       "resultado": "🟢 atende" },
+      { "passo": "b1.conta",          "resultado": "conta criada · entra no B2" },
+      { "passo": "b2.socio",          "resultado": "sócio ok · solteiro (sem regime de bens)" },
+      { "passo": "b2.socio::pausa",   "resultado": "⏸ usuário fechou o app · espera 2 dias · ▶ retomada idempotente" },
+      { "passo": "b2.clt",            "resultado": "sem duplo vínculo · pró-labore normal" }
+    ]
+  }
+}

@@ -136,6 +136,24 @@ Falta decidir: prazo de fidelidade e redigir o contrato
 - Continuo acompanhando a Contabilizei por dentro: mapeei uma função nova deles (teto mínimo de pró-labore) que ajuda a gente a fazer melhor
 ```
 
+## Semana 15/07/2026 — 2º flow (motor de testes + pesquisa fiscal oficial)
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | Motor de testes | Criamos um "robô testador" do cadastro: roda o fluxo inteiro com **7 clientes fictícios** (do leigo total ao mais avançado) e entrega um **relatório em tabela** mostrando onde cada um passaria ou travaria, com sugestões. Valida a experiência **rápido e barato** antes de programar as telas | 🟢 rodando |
+| 2 | Pesquisa fiscal (fontes oficiais) | Fomos direto às fontes oficiais (Receita, lei do Simples, Junta de MG, Prefeitura BH) e **confirmamos as regras que faltavam**: abertura em BH sai em ~1 dia (alvará imediato pra baixo risco), dá pra **emitir as guias (DAS) de forma automática** via API oficial da Receita/Serpro, e os valores de 2026. Tudo salvo e com fonte | 🟢 |
+| 3 | Foco do produto | Decidimos que o **MVP atende só serviço**: os CNAEs de comércio saem do 1º produto (ficam guardados pra reencaixe futuro). Enxuga o motor fiscal | 🟢 |
+
+**Próximo (15/07 2º):** [Pedro] rodar a 3ª pesquisa fiscal (2 pontos que faltaram: Fator R no 1º ano da empresa + migração de contador) e **fechar com a Larissa** · estender o motor pro resto do cadastro · especificar a constituição (Bloco 4).
+
+### 📱 WhatsApp (15/07 — 2º)
+```
+*Update Legalizei* 🧪
+- Montamos um "robô testador" do cadastro: ele roda o fluxo inteiro com 7 clientes fictícios (do mais leigo ao mais avançado) e mostra num relatório onde cada um travaria. Assim a gente valida a experiência rápido, antes de programar as telas
+- Fizemos uma pesquisa fiscal pesada só em fontes oficiais (Receita, lei do Simples, Junta de MG, Prefeitura de BH) e confirmamos o que faltava: abertura em BH em cerca de 1 dia, guias (DAS) que dá pra emitir de forma automática pela API oficial, e os valores de 2026
+- Decidimos focar o 1º produto só em serviço (comércio fica pra depois)
+Falta confirmar 2 pontos fiscais com a Larissa (Fator R no 1º ano e troca de contador)
+```
+
 ## 📱 Versão WhatsApp (copiar/colar — grupo ampliado, sem item de sociedade)
 ```
 *Relatório semanal — Legalizei* 📊

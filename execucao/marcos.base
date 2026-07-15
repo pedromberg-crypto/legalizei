@@ -1,6 +1,6 @@
 filters:
   and:
-    - 'note.tipo == "marco"'
+    - note.tipo == "marco"
 properties:
   file.name:
     displayName: Marco
@@ -17,19 +17,19 @@ views:
     name: Todos os marcos
     order:
       - file.name
-      - note.data
-      - note.area
-      - note.impacto
-      - note.tempo-gasto
+      - data
+      - area
+      - impacto
+      - tempo-gasto
   - type: table
     name: Por área
     groupBy:
-      property: note.area
+      property: area
       direction: ASC
     order:
       - file.name
-      - note.data
-      - note.impacto
-      - note.tempo-gasto
+      - data
+      - impacto
+      - tempo-gasto
     summaries:
-      note.tempo-gasto: Sum
+      tempo-gasto: Sum

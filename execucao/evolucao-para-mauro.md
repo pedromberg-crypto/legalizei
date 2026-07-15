@@ -171,6 +171,25 @@ Falta confirmar 2 pontos fiscais com a Larissa (Fator R no 1º ano e troca de co
 Falta o carimbo final da Larissa no fiscal
 ```
 
+## Semana 15/07/2026 — 4º flow (experiência do cadastro redonda de ponta a ponta)
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | Experiência do cadastro | Rodamos **mais 3 baterias** do robô testador (com o fluxo já melhorado). O cadastro está **redondo de ponta a ponta** — da 1ª tela até "empresa aberta e operando", testado com **11 clientes fictícios** (do mais leigo ao mais avançado). Criamos uma **nota de quão redonda** está a experiência de cada perfil; **subiu em todos** e o pior caso saiu de ~76% pra ~88% | 🟢 |
+| 2 | Parte final do fluxo | Especificamos o que faltava: **pagamento → constituição → primeiros dias** (a "conta da abertura" clara antes de pagar, o painel que mostra o andamento na Junta/Receita, e o "e agora?" pós-CNPJ: 1ª nota, 1º imposto, certificado) | 🟢 |
+| 3 | Correção de trava | O robô achou uma trava boba: quem confundia **pró-labore com "ser CLT da própria empresa"** era barrado. Corrigimos — agora o app **explica e deixa seguir**, em vez de travar. Um cliente a mais que abre | 🟢 |
+| 4 | **Decisão pra você + Larissa** | Quando o cliente **não encaixa** no app (ex: nutricionista, que precisa de responsável técnico; ou quem se encaixa melhor no MEI), queremos **oferecer o caminho certo ali na hora** em vez de só mandar pra fila. Isso é **decisão de negócio**: até onde a gente atende e o que oferece de alternativa | 🟡 aguarda call |
+
+**Próximo (15/07 4º):** a experiência das 11 personas está no teto — próximo ganho vem de **testar casos novos** (erro no meio do caminho, quem já tem CNPJ e quer trocar de contador) e das **decisões com você/Larissa**.
+
+### 📱 WhatsApp (15/07 — 4º)
+```
+*Update Legalizei* ✅
+- O cadastro do app está redondo de ponta a ponta: testamos com 11 clientes fictícios, da 1ª tela até a empresa aberta e operando. Criamos uma nota de "quão redonda" está a experiência de cada perfil e ela subiu em todos
+- Especificamos a parte final que faltava: pagamento, constituição e os primeiros dias (1ª nota, 1º imposto, certificado)
+- Corrigimos uma trava: quem confundia pró-labore com "ser CLT da própria empresa" era barrado; agora o app explica e deixa seguir
+Tem 1 ponto que precisa de uma decisão nossa (com a Larissa): o que oferecer pra quem não encaixa no app (ex: nutricionista que precisa de responsável técnico, ou caso de MEI)
+```
+
 ## 📱 Versão WhatsApp (copiar/colar — grupo ampliado, sem item de sociedade)
 ```
 *Relatório semanal — Legalizei* 📊

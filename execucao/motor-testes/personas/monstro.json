@@ -13,8 +13,8 @@
     "estressa": ["state machine que perde estado numa pausa longa", "borda de escopo que dá crash em vez de recusa graciosa"]
   },
   "sugestoes": {
-    "b2.clt": "Heitor acima do teto: mostrar que ZERA o INSS do pró-labore dele (folga negativa), diferente do caso parcial.",
-    "b4.viabilidade": "Pipeline longo: manter o estado visível em cada pausa externa, senão o cliente experiente desconfia."
+    "b4.viabilidade": "Notificação pros 2 sócios já ✅ (UX-20). 4ª ordem: failure-state COMPONDO com 2 sócios — se um passo de órgão falha e precisa de ação, dizer **de qual sócio é a vez** e notificar os dois. Pipeline longo + 2 pessoas = a falha não pode virar 'travou e ninguém sabe de quem é a bola'.",
+    "b2.simulador": "Ele empilha condicionais. 4ª ordem: um modo 'e se?' — deixar simular cenários (subo o pró-labore? mudo a faixa?) sem sair do fluxo. O experiente quer brincar com os números antes de cravar."
   },
   "respostas": {
     "entrada_escolha": "abrir_cnpj",

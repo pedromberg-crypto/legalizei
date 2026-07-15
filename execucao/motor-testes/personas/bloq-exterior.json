@@ -13,7 +13,7 @@
     "estressa": ["descobrir tarde que não pode", "não receber alternativa (Lucro Presumido / rota humana)"]
   },
   "sugestoes": {
-    "b2.socio": "Bloqueio precisa explicar que a empresa até existe, mas fora do Simples (produto). Oferecer rota humana, não crash."
+    "b2.socio": "Fail-fast (UX-21) + handoff (UX-35) já ✅. 4ª ordem: **modelar as saídas concretas** — custo/implicação do Lucro Presumido, ou 'se o sócio virar residente, o caminho é este'. Virar o bloqueio numa **decisão informada** que ele toma, não só num lead roteado pro humano."
   },
   "respostas": {
     "entrada_escolha": "abrir_cnpj",

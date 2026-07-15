@@ -15,14 +15,8 @@
   },
 
   "sugestoes": {
-    "b1.descricao": "Leigo trava no campo vazio. Manter placeholder typewriter com exemplos reais e aceitar gíria (já specado).",
-    "b1.mapeamento": "Mostrar o CNAE em linguagem humana antes do código; leigo não decora número.",
-    "b1.veredito": "No 🟢, dizer em 1 linha o que vem agora ('vamos criar sua conta'); senão o leigo hesita.",
-    "b2.socio": "Regime de bens é jargão. Microcopy inline que ensina, não culpa.",
-    "b2.clt": "'Duplo vínculo CLT' é técnico. Perguntar 'você trabalha registrado em carteira em outro lugar?'",
-    "b2.simulador": "Leigo não entende 'Fator R'. Mostrar em R$ ('pague-se X, economize Y'), não em jargão fiscal. Rotular 'estimativa'.",
-    "b3.aceite": "Termo de início irreversível assusta o leigo. Explicar em 1 linha que taxas de governo não voltam, sem letra miúda.",
-    "b4.viabilidade": "Pausa de órgão externo: mostrar 'estamos abrindo, leva ~X dias' pra ele não achar que travou."
+    "b4.viabilidade": "Painel mostra verde/girando/cinza (UX-18), mas falta o 4º estado: **vermelho/ação sua**. E se a JUCEMG recusa o nome apesar da prévia, ou a DAE volta? Precisa de recuperação DENTRO do pipeline assíncrono — falha de órgão vira tarefa clara pro cliente, não limbo 'em andamento'.",
+    "fim.ativa": "O simulador prometeu 'estimativa'. 4ª ordem: **fechar o loop** — depois do mês 1-2 operando, o app volta com o Fator R REAL ('sua folha real deu X, enquadramento certo / ajuste aqui'). A promessa da estimativa exige retorno, senão fica no ar."
   },
 
   "respostas": {

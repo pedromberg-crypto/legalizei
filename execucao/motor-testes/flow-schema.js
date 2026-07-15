@@ -169,9 +169,13 @@ module.exports = {
     {
       id: 'b2.clt', bloco: 'B2', tela: '7', tipo: 'toggle',
       nome: '2.2 Duplo vínculo CLT (INSS com folga do teto)',
-      valida: (ctx) => (ctx.respostas.socio_clt_propria ? 'sócio não pode ser CLT da própria empresa' : null),
+      // UX-43: querer ser CLT da própria empresa é confusão conceitual, não bloqueio fatal.
+      // Educa (sócio se remunera por pró-labore) e SEGUE — não termina o flow.
       deriva: (ctx) => {
         const r = ctx.respostas;
+        if (r.socio_clt_propria) {
+          return { resultado: 'CLT da própria não existe (duplo vínculo) · corrigido p/ pró-labore · segue', dados: { clt_propria_corrigido: true } };
+        }
         if (!r.duplo_vinculo_clt) return { resultado: 'sem duplo vínculo · pró-labore normal' };
         const { folga, zera } = inssComFolga(r.clt_remuneracao);
         return {

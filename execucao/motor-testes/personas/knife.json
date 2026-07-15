@@ -13,8 +13,8 @@
     "estressa": ["simulador que não mostra a sensibilidade da borda", "abertura que começa antes de pagar"]
   },
   "sugestoes": {
-    "b2.simulador": "Na borda (28% cravado) mostrar a sensibilidade: 'um real a menos de pró-labore te joga pro Anexo V'.",
-    "b3.pagamento": "Boleto fora do happy path: deixar explícito que a abertura só começa quando compensar. Dunning claro."
+    "b3.pagamento": "Margem de segurança (UX-39) e revalidação (UX-23) já ✅. 4ª ordem: o dunning ainda é passivo ('aguardando'). Falta **re-engajamento proativo** — 'seu boleto vence em X; seu enquadramento ótimo ainda economiza ~R$Y/mês; retoma?'. Carrinho abandonado com contexto fiscal converte melhor que espera muda.",
+    "b2.simulador": "Ele sabe de imposto. 4ª ordem: dar o 'porquê' do número num nível que ele audita — mostrar a conta do Fator R, não só o resultado. O cliente avançado desconfia de caixa-preta; abrir a memória de cálculo vira confiança."
   },
   "respostas": {
     "entrada_escolha": "abrir_cnpj",

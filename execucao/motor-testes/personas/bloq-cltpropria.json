@@ -4,7 +4,7 @@
     "nome": "Bloqueio 9 — sócio quer ser CLT da própria empresa",
     "persona_seq": 10,
     "flow": "abertura",
-    "descricao": "FLOW 9. Sócio tenta se registrar como CLT da própria empresa (duplo vínculo impossível). Bloqueio duro (Karla) no form. Recusa graciosa + explica. Termina bloqueado em b2.clt.",
+    "descricao": "FLOW 9 (revisto UX-43). Sócia quer ser CLT da própria empresa (confusão conceitual, não fraude). NÃO é fatal: motor educa (sócio se remunera por pró-labore) e SEGUE até empresa ativa. Antes terminava bloqueado em b2.clt; agora testa RECUPERAÇÃO (educa → destrava → completa).",
     "fonte": "[[casos-teste-fluxo-cnae]] FLOWS 7–9 — testes de bloqueio · [[2026-07-13-conversa-karla]]"
   },
   "perfil": {
@@ -13,7 +13,7 @@
     "estressa": ["ser barrado sem entender a diferença pró-labore × CLT", "achar que perde direitos"]
   },
   "sugestoes": {
-    "b2.clt": "Explicar que sócio se remunera por pró-labore, não por CLT da própria empresa — sem culpar, ensinando a diferença."
+    "b2.clt": "✅ UX-43 aplicado: o que era over-block virou recuperação. Ela só confundiu pró-labore com CLT; o motor agora educa e SEGUE até ativa, não termina em 'bloqueado'. Persona reconvertida de bloqueio → recuperação."
   },
   "respostas": {
     "entrada_escolha": "abrir_cnpj",
@@ -30,13 +30,27 @@
     "socio_estado_civil": "solteiro",
     "socio_cep": "30160000",
     "duplo_vinculo_clt": false,
-    "socio_clt_propria": true
+    "socio_clt_propria": true,
+    "num_socios": 1,
+    "empresa_capital": 5000,
+    "empresa_endereco_tipo": "próprio",
+    "quer_endereco_fiscal": false,
+    "cnae_secundarios": [],
+    "natureza": "SLU",
+    "nome_viavel": true,
+    "faturamento_faixa": "10-20k",
+    "fator_r_folha_pct": 12,
+    "pro_labore": "minimo",
+    "b3_plano": "base",
+    "b3_metodo": "cartao",
+    "b3_aceite": true,
+    "b3_pagamento_status": "pago"
   },
   "eventos": {},
   "esperado": {
     "veredito_b1": "🟢 atende",
-    "status": "bloqueado",
-    "parou_em": "b2.clt",
+    "status": "ativa",
+    "parou_em": "fim.ativa",
     "trilha": [
       { "passo": "entrada.fork",     "resultado": "rota: abertura de CNPJ" },
       { "passo": "b1.descricao",     "resultado": "descrição aceita" },
@@ -46,7 +60,28 @@
       { "passo": "b1.veredito",      "resultado": "🟢 atende" },
       { "passo": "b1.conta",         "resultado": "conta criada · entra no B2" },
       { "passo": "b2.socio",         "resultado": "sócio ok · solteiro (sem regime de bens)" },
-      { "passo": "b2.clt",           "resultado": "ERRO: sócio não pode ser CLT da própria empresa" }
+      { "passo": "b2.clt",           "resultado": "CLT da própria não existe (duplo vínculo) · corrigido p/ pró-labore · segue" },
+      { "passo": "b2.socios",        "resultado": "solo (sem +sócios)" },
+      { "passo": "b2.empresa",       "resultado": "empresa ok · capital R$5000 · endereço próprio" },
+      { "passo": "b2.cnae_sec",      "resultado": "sem secundários" },
+      { "passo": "b2.natureza",      "resultado": "natureza SLU (coerente com nº de sócios)" },
+      { "passo": "b2.nome",          "resultado": "razão social + fantasia · nome disponível (viabilidade prévia)" },
+      { "passo": "b2.cnae_otimo",    "resultado": "enquadramento único (sem CNAE alternativo)" },
+      { "passo": "b2.simulador",     "resultado": "est. Fator R 12% → Anexo V (15,5%) · ótimo R$4200 → Anexo III (IRRF zero)" },
+      { "passo": "b2.revisao",       "resultado": "dossiê completo · handoff B3" },
+      { "passo": "b3.recap",         "resultado": "recap: economia do Fator R + escopo (abertura grátis + mensal)" },
+      { "passo": "b3.plano",         "resultado": "plano base (faixa 10-20k)" },
+      { "passo": "b3.aceite",        "resultado": "contrato + termo de início aceitos (assinatura)" },
+      { "passo": "b3.pagamento",     "resultado": "pagamento confirmado (cartao) · destrava B4" },
+      { "passo": "b4.viabilidade",   "resultado": "viabilidade deferida (nome+endereço+CNAE) — JUCEMG unificada" },
+      { "passo": "b4.dbe",           "resultado": "DBE gerado (Coleta Web/Receita)" },
+      { "passo": "b4.registro",      "resultado": "contrato pronto (JUCEMG) + assinado GOV.BR prata/ouro" },
+      { "passo": "b4.taxa",          "resultado": "DAE JUCEMG paga (repasse ~R$268,51)" },
+      { "passo": "b4.cnpj",          "resultado": "CNPJ emitido + opção Simples automática + CRC assina" },
+      { "passo": "b4.certificado",   "resultado": "certificado A1 emitido (pós-CNPJ)" },
+      { "passo": "b4.municipal",     "resultado": "inscrição municipal + credenciamento NFS-e (DES-BH)" },
+      { "passo": "b45.ativacao",     "resultado": "procuração e-CAC → API Serpro (PGDAS-D/DAS automatizado)" },
+      { "passo": "fim.ativa",        "resultado": "empresa ativa e operando ✅" }
     ]
   }
 }

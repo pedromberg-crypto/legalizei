@@ -13,8 +13,8 @@
     "estressa": ["não saber o custo real do pró-labore de cada um", "regime de casamento pedindo documento do cônjuge"]
   },
   "sugestoes": {
-    "b2.clt": "Mostrar que o INSS do Diego é só sobre a FOLGA do teto (R$475,55), não zero nem cheio. Transparência evita o pedido de aumento errado.",
-    "b2.simulador": "Com 2 pró-labores a folha já passa 28% fácil → Anexo III. Mostrar a economia vs V em R$."
+    "b2.revisao": "Convite do 2º sócio já ✅ (UX-20). 4ª ordem: o flow assume que Diego e Elisa CONCORDAM. Falta **revisão compartilhada antes do commit** — Elisa aprova o dossiê/custo/split de pró-labore ANTES do Diego pagar. Sociedade quebra quando um decide sozinho e o outro descobre a conta depois.",
+    "b3.aceite": "Aceite hoje é de um sócio. Com contrato social, quem se compromete são os dois. Deixar explícito que ambos assinam e o que cada um está aceitando (não o dono clicando por todos)."
   },
   "respostas": {
     "entrada_escolha": "abrir_cnpj",

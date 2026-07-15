@@ -13,8 +13,7 @@
     "estressa": ["ser barrada sem entender o porquê do conselho", "jargão jurídico"]
   },
   "sugestoes": {
-    "b1.desambiguacao": "Perguntar 'você é nutricionista registrada / prescreve dieta?' — separa o conselho regulado da orientação genérica.",
-    "b1.veredito": "🟡 aqui é proteção dela (RT/CRN), não rejeição. Explicar em linguagem humana."
+    "b1.veredito": "UX-22 já separou 'precisa de RT'. 4ª ordem: **começar o caminho do RT**, não só nomear. 'Quer que a gente veja um responsável técnico pra você?' + o que muda no custo/prazo. Ela é cliente real; a distinção só vale se virar ação, senão é um 'não' mais educado."
   },
   "respostas": {
     "entrada_escolha": "abrir_cnpj",

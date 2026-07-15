@@ -13,8 +13,7 @@
     "estressa": ["ser tratada como loja quando é representante", "pergunta que não entende a diferença"]
   },
   "sugestoes": {
-    "b1.desambiguacao": "A pergunta-chave (representa/intermedeia ou tem estoque?) precisa ser humana, não fiscal. É o antídoto do falso 🔴.",
-    "b1.veredito": "No 🟡, deixar claro que NÃO é 'não' — é 'ainda não pra sua atividade', com captura de waitlist."
+    "b1.veredito": "Handoff com dossiê já ✅ (UX-35). 4ª ordem: transformar a espera em **escolha agível hoje**. Ela representa fábricas sem estoque — existe enquadramento servível agora (MEI? o caminho manual do Mauro já cotado?). Dar a **alternativa concreta que ela decide agora**, não só 'te avisamos quando abrir'."
   },
   "respostas": {
     "entrada_escolha": "abrir_cnpj",

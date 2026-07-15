@@ -1,0 +1,22 @@
+# Relatório T0109 — persona "bloq-exterior" (Bloqueio 8 — sócio no exterior (único fatal))
+
+> flow **abertura** v0.2.2 · 2026-07-15 · **PASS ✅**
+
+**Perfil (médio-alto):** Empreendedor com sócio morando fora. Não sabe que isso barra o Simples.
+
+**Cobertura:** Entrada + B1 + B2 (completo, c/ simulador Fator R) + B3 (cobrança) + B4 (constituição) + B4.5 (ativação fiscal)
+
+| #  | Tela      | Passo            | Resultado                                                                        | OK | Sugestão (olhar leigo)                                                                                                                                                                                                                                                      |
+|----|-----------|------------------|----------------------------------------------------------------------------------|----|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 01 | ENTRADA·3 | entrada.fork     | rota: abertura de CNPJ                                                           | ✅  |                                                                                                                                                                                                                                                                             |
+| 02 | B1·4      | b1.descricao     | descrição aceita                                                                 | ✅  |                                                                                                                                                                                                                                                                             |
+| 03 | B1·4      | b1.mapeamento    | CNAE 7020-4/00 · confiança alta · sem fork                                       | ✅  |                                                                                                                                                                                                                                                                             |
+| 04 | B1·4      | b1.desambiguacao | (pulado)                                                                         | ✅  |                                                                                                                                                                                                                                                                             |
+| 05 | B1·4      | b1.filtro        | serviço ✓ · Simples ✓ · não-regulada ✓                                           | ✅  |                                                                                                                                                                                                                                                                             |
+| 06 | B1·4      | b1.veredito      | 🟢 atende                                                                        | ✅  |                                                                                                                                                                                                                                                                             |
+| 07 | B1·5      | b1.conta         | conta criada · entra no B2                                                       | ✅  |                                                                                                                                                                                                                                                                             |
+| 08 | B2·6      | b2.socio         | ERRO: sócio no exterior: bloqueia opção Simples (LC 123 art.17 II) → rota humana | ✅  | Fail-fast (UX-21) + handoff (UX-35) já ✅. 4ª ordem: **modelar as saídas concretas** — custo/implicação do Lucro Presumido, ou 'se o sócio virar residente, o caminho é este'. Virar o bloqueio numa **decisão informada** que ele toma, não só num lead roteado pro humano. |
+
+**Resumo:** veredito B1: 🟢 atende ✅  ·  status: bloqueado ✅  ·  parou em: b2.socio ✅  ·  RESULTADO: ✅ PASS
+
+Fonte da persona: [[casos-teste-fluxo-cnae]] FLOWS 7–9 — testes de bloqueio · [[fiscal-simples-bh-2026]] F

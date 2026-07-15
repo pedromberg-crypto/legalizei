@@ -13,8 +13,8 @@
     "estressa": ["achar que 'trocar o CNAE' é gambiarra ilegal", "não entender por que os dois códigos valem"]
   },
   "sugestoes": {
-    "b2.cnae_otimo": "Mostrar POR QUE os dois cobrem a atividade (emitem a mesma NF) + a economia em R$. Sem isso, ela acha que é malandragem e recusa. Nunca trocar em silêncio.",
-    "b2.simulador": "Deixar claro que são 2 alavancas: trocar de CNAE (aqui) OU subir pró-labore (Fator R). A dela nem precisa de pró-labore alto."
+    "b2.cnae_otimo": "Carimbo + tradeoff + PDF já ✅ (UX-26). 4ª ordem: dar **como explorar**, não só aceitar/recusar — modelar 'mantenho 7020 principal + 8599 secundário' ou ver o **custo de reverter** depois. A melhor decisão fiscal merece um simulador de cenários, não um sim/não seco.",
+    "b2.simulador": "Ela adota o ótimo hoje. 4ª ordem: e no ano que vem? Se a atividade mudar de mix, o CNAE ótimo pode virar outro. Prever um **aviso periódico** ('seu enquadramento ainda é o melhor?') — otimização não é evento único, é manutenção."
   },
   "respostas": {
     "entrada_escolha": "abrir_cnpj",

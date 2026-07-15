@@ -13,7 +13,7 @@
     "estressa": ["ser barrado sem alternativa", "não entender por que 3 sócios não dá"]
   },
   "sugestoes": {
-    "b2.socios": "Bloqueio tem que oferecer saída (atendimento humano), não só 'não'. Explicar que é limite do produto, não da lei."
+    "b2.socios": "Fail-fast (UX-21) + handoff com dossiê (UX-35) já ✅. 4ª ordem: **modelar a alternativa agora** — 'com 2 sócios + o 3º como X você abriria hoje; ou o time do Mauro faz os 3'. Transformar o limite numa **decisão com opções**, não num 'não' roteado pra fila."
   },
   "respostas": {
     "entrada_escolha": "abrir_cnpj",

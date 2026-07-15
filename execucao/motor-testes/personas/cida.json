@@ -15,14 +15,8 @@
   },
 
   "sugestoes": {
-    "entrada.fork": "Botões grandes com rótulo literal ('abrir meu CNPJ'), não ícone; ela não decodifica símbolo.",
-    "b1.descricao": "Oferecer ditado por voz; ela digita devagar e erra no teclado do celular.",
-    "b1.veredito": "Confirmação com botão único e grande; medo de apertar errado exige zero ambiguidade.",
-    "b2.socio": "Fonte pequena no CPF/CEP a trava; permitir aumentar o texto e validar sem punir tentativa.",
-    "b2.clt": "Aposentada não é CLT. A pergunta tem que cobrir aposentado/autônomo, não só 'emprego registrado'.",
-    "b2.simulador": "Jargão fiscal a perde. Falar 'quanto você se paga' e 'quanto economiza', com letra grande. Nunca 'Fator R' cru.",
-    "b3.aceite": "Medo de erro irreversível é o pico dela aqui. Botão único grande + explicação curta do que é o termo.",
-    "b4.viabilidade": "Pausa longa de órgão: mandar aviso proativo (WhatsApp) pra ela não achar que perdeu o dinheiro."
+    "b1.veredito": "Modo assistido já specado (UX-28). 4ª ordem: ela reabre dias depois com baixa memória digital. Além de restaurar o estado, dar um **recap simples/falado ao reabrir** — 'você parou aqui, já fez isto, falta isto', letra grande. Retomar não é só restaurar a tela, é **reorientar** quem esquece onde estava.",
+    "b2.socio": "Form longo + pausa: ao voltar, priorizar UM próximo passo por vez (não a lista inteira de campos). Excesso de opções ao reabrir a paralisa mais que a falta delas."
   },
 
   "respostas": {

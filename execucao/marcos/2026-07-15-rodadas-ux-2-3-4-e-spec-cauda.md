@@ -1,7 +1,7 @@
 ---
-tipo: marco
+tipo: historico
+status: congelado
 data: 2026-07-15
-sessao: 4
 tags: [ux, flow, spec, motor, marco, otimizacao]
 ---
 

@@ -1,3 +1,8 @@
+---
+tipo: operacao
+status: vivo
+data: 2026-07-16
+---
 # 📣 Redes Sociais — hub
 
 Hub das redes da Legalizei. Cada rede = pasta própria com nota de perfil (contas/setup) + estratégia + posts datados. Regra: **uma nota = um assunto**.

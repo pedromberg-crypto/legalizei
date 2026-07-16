@@ -1,9 +1,8 @@
 ---
-tipo: marco
-etapa: reporte-tecnico
-autor: Pedro Dev
-periodo: 2026-07-07 a 2026-07-10
+tipo: historico
+status: congelado
 data: 2026-07-10
+etapa: reporte-tecnico
 tags: [reporte, tecnico, dev, arquitetura, seguranca, automacao]
 ---
 

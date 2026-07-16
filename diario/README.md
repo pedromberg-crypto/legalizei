@@ -1,3 +1,8 @@
+---
+tipo: historico
+status: congelado
+data: 2026-07-16
+---
 # Diário da Imersão
 
 1 nota por dia dentro da Legalize, nome `AAAA-MM-DD.md`, a partir de `_templates/diario-imersao.md`.

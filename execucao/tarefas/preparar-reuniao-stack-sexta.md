@@ -1,10 +1,7 @@
 ---
-tipo: tarefa
+tipo: operacao
+status: vivo
 data: 2026-07-08
-prazo: 2026-07-10
-status: semana
-area: tech
-origem: "[[2026-07-08-conversa-leo-pedro-dev]]"
 tags: []
 ---
 

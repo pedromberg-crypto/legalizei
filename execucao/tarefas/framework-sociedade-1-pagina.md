@@ -1,10 +1,7 @@
 ---
-tipo: tarefa
+tipo: operacao
+status: vivo
 data: 2026-07-08
-prazo: 2026-07-11
-status: semana
-area: gestao
-origem: "[[BASE-ESTRATEGICA]]"
 tags: []
 ---
 

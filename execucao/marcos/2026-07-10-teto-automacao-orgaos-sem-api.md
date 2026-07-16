@@ -1,8 +1,8 @@
 ---
-tipo: marco
+tipo: historico
+status: congelado
 data: 2026-07-10
 tags: [marco, tech, automacao, concorrente, produto]
-validado_por: [Pedro, Mauro, Pedro Dev]
 ---
 
 # 🧱 Marco — teto de automação: o processo NÃO é 100% digital

@@ -1,7 +1,9 @@
 ---
-tipo: spec
+tipo: derivado
+status: vivo
 data: 2026-07-14
-status: em-construcao
+assunto: personas
+deriva_de: [reordenacao-flow-cobranca-cedo]
 tags: [produto, qa, casos-teste, cnae, fluxo, onboarding]
 ---
 

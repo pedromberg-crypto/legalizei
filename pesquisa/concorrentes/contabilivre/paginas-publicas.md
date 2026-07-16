@@ -1,7 +1,8 @@
 ---
-tipo: teardown
-concorrente: Contabilivre
+tipo: fato
+status: vivo
 data: 2026-07-09
+concorrente: Contabilivre
 gatilho: paginas-publicas
 tags: [concorrente, marca]
 ---

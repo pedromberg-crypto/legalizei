@@ -1,7 +1,8 @@
 ---
-tipo: teardown
-concorrente: Contabilizei
+tipo: hub
+status: vivo
 data: 2026-07-09
+concorrente: Contabilizei
 gatilho: marca
 tags: [concorrente, marca]
 ---

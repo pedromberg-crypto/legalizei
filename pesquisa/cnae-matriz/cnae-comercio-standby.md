@@ -1,6 +1,9 @@
 ---
-tipo: standby
+tipo: derivado
+status: vivo
 data: 2026-07-15
+assunto: cnae-cortado
+deriva_de: [cnae-atendidos-e-nao-atendidos]
 tags: [cnae, comercio, standby, fora-do-mvp, backlog]
 ---
 

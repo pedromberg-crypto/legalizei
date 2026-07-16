@@ -1,7 +1,8 @@
 ---
-tipo: teardown
-concorrente: Contaja
+tipo: hub
+status: vivo
 data: 2026-07-09
+concorrente: Contaja
 gatilho: marca
 tags: [concorrente, marca]
 ---

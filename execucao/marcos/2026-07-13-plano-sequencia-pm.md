@@ -1,8 +1,8 @@
 ---
-tipo: marco
-etapa: plano-sequencia
+tipo: historico
+status: congelado
 data: 2026-07-13
-autor: Pedro Maia (lente PM Sênior)
+etapa: plano-sequencia
 tags: [plano, produto, priorizacao, caminho-critico, mvp]
 ---
 

@@ -1,5 +1,6 @@
 ---
-tipo: marco
+tipo: historico
+status: congelado
 data: 2026-07-16
 tags: [produto, flow, handoff, dev, decisao, ux, motor, repo]
 ---

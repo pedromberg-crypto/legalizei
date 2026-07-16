@@ -1,9 +1,7 @@
 ---
-tipo: marco
+tipo: historico
+status: congelado
 data: 2026-07-09
-area: pesquisa
-impacto: alto
-tempo-gasto: 4
 tags: [concorrente, ux, insight]
 ---
 

@@ -1,9 +1,7 @@
 ---
-tipo: marco
+tipo: historico
+status: congelado
 data: 2026-07-07
-area: gestao
-impacto: alto
-tempo-gasto: 3
 tags: [decisao]
 ---
 

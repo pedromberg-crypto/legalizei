@@ -1,9 +1,7 @@
 ---
-tipo: reuniao
+tipo: historico
+status: congelado
 data: 2026-07-09
-participantes:
-  - Pedro Maia
-  - Pedro Dev
 tags: [decisao, tech]
 ---
 

@@ -1,7 +1,8 @@
 ---
-tipo: teardown
-concorrente: Contabilizei
+tipo: fato
+status: vivo
 data: 2026-07-09
+concorrente: Contabilizei
 gatilho: paginas-publicas
 tags: [concorrente, marca]
 ---

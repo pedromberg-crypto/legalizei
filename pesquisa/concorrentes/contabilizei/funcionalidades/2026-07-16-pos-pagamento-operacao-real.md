@@ -1,9 +1,9 @@
 ---
-tipo: artefato-concorrente
+tipo: fato
+status: vivo
+data: 2026-07-16
 concorrente: contabilizei
 artefato: pos-pagamento-operacao
-data: 2026-07-16
-status: capturado-completo
 fonte: portal de solicitações (Zendesk) + 4 tickets + 5 anexos oficiais + cruzamento com os e-mails capturados (dez/2025 a jan/2026)
 tags: [concorrente, operacao, pos-pagamento, abertura, prazos, taxas, certificado, ux, cronologia]
 ---

@@ -1,7 +1,8 @@
 ---
-tipo: teardown
-concorrente: Contabilivre
+tipo: hub
+status: vivo
 data: 2026-07-09
+concorrente: Contabilivre
 gatilho: marca
 tags: [concorrente, marca]
 ---

@@ -1,10 +1,7 @@
 ---
-tipo: tarefa
+tipo: operacao
+status: vivo
 data: 2026-07-08
-prazo: 2026-07-15
-status: execucao
-area: produto
-origem: "[[CHECKLIST-IMERSAO-30-DIAS]]"
 tags: []
 ---
 

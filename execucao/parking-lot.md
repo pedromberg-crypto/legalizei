@@ -1,5 +1,6 @@
 ---
-tipo: parking
+tipo: operacao
+status: vivo
 data: 2026-07-09
 tags: [gestao]
 ---

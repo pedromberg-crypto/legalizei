@@ -1,8 +1,8 @@
 ---
-tipo: reporte
-etapa: evolucao-semanal
+tipo: operacao
 status: vivo
 data: 2026-07-10
+etapa: evolucao-semanal
 tags: [reporte, evolucao, sociedade]
 ---
 

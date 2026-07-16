@@ -1,7 +1,8 @@
 ---
-tipo: teardown
-concorrente: Facilite
+tipo: hub
+status: vivo
 data: 2026-07-09
+concorrente: Facilite
 gatilho: marca
 tags: [concorrente, marca]
 ---

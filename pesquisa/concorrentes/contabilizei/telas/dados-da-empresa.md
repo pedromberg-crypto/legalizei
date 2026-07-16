@@ -1,9 +1,8 @@
 ---
-tipo: teardown-tela
+tipo: fato
+status: vivo
 data: 2026-07-09
 concorrente: Contabilizei
-plataforma: [desktop, mobile]
-media: 6.0
 tags: [concorrente, ux]
 ---
 

@@ -1,3 +1,9 @@
+---
+tipo: derivado
+status: vivo
+data: 2026-07-16
+assunto: portais-orgaos
+---
 # Fluxo de abertura de empresa (BH) — passo × portal/URL
 
 > Mapeado com a Izabela (contadora) em 2026-07-09. ME serviço, Simples, sem funcionário, **Belo Horizonte**. Pra o Pedro Dev usar no mapeamento API×RPA. Regra de ouro: **processo sequencial — um passo destrava o outro.**

@@ -1,3 +1,9 @@
+---
+tipo: verdade
+status: vivo
+data: 2026-07-16
+assunto: mercado
+---
 # Pesquisa de Mercado — Legalize Digital (Camada 1, desk research)
 
 > Escopo: **SOMENTE BRASIL**. Data da coleta: **2026-06-21**. Fontes oficiais (Mapa de Empresas/MEMP, IBGE, Receita Federal, Congresso) + sites dos concorrentes.

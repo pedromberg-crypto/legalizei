@@ -1,7 +1,9 @@
 ---
-tipo: referencia
+tipo: derivado
+status: rascunho
 data: 2026-07-09
-status: coletando
+assunto: portais-orgaos
+deriva_de: [fluxo-abertura-portais-pedro-dev]
 tags: [compliance, imersao, bh]
 ---
 

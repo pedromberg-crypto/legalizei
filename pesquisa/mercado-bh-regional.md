@@ -1,6 +1,9 @@
 ---
-tipo: referencia
+tipo: derivado
+status: vivo
 data: 2026-07-09
+assunto: mercado-bh
+deriva_de: [PESQUISA-MERCADO]
 tags: [pesquisa, bh, sizing]
 ---
 

@@ -1,5 +1,6 @@
 ---
-tipo: artefato
+tipo: operacao
+status: vivo
 data: 2026-07-08
 concorrente: Contabilizei
 fonte: email

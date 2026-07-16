@@ -1,8 +1,10 @@
 ---
-tipo: marca
-etapa: conceito
-status: em-debate
+tipo: derivado
+status: rascunho
 data: 2026-07-09
+assunto: conceito
+deriva_de: [decisoes-marca]
+etapa: conceito
 tags: [marca, conceito]
 ---
 

@@ -1,7 +1,8 @@
 ---
-tipo: teardown
-concorrente: Facilite
+tipo: fato
+status: vivo
 data: 2026-07-09
+concorrente: Facilite
 gatilho: paginas-publicas
 tags: [concorrente, marca]
 ---

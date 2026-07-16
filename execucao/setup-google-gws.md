@@ -1,5 +1,6 @@
 ---
-tipo: referencia
+tipo: operacao
+status: vivo
 data: 2026-07-08
 tags: [meta]
 ---

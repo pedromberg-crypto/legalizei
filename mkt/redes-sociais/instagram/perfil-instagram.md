@@ -1,3 +1,8 @@
+---
+tipo: operacao
+status: vivo
+data: 2026-07-16
+---
 # Perfil — Instagram
 
 Conta oficial da Legalizei no Instagram. Volta pro [[redes-sociais]].

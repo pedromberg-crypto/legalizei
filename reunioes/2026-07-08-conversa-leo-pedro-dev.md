@@ -1,10 +1,7 @@
 ---
-tipo: reuniao
+tipo: historico
+status: congelado
 data: 2026-07-08
-participantes:
-  - Pedro Maia
-  - Pedro Dev
-  - Léo (Leonan)
 tags: [decisao, insight]
 ---
 

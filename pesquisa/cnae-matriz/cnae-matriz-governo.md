@@ -1,6 +1,8 @@
 ---
-tipo: referencia
+tipo: derivado
+status: vivo
 data: 2026-07-09
+assunto: matriz-cnae
 tags: [cnae, matriz, reference]
 ---
 

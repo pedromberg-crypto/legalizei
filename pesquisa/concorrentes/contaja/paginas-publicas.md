@@ -1,7 +1,8 @@
 ---
-tipo: teardown
-concorrente: Contaja
+tipo: fato
+status: vivo
 data: 2026-07-09
+concorrente: Contaja
 gatilho: paginas-publicas
 tags: [concorrente, marca]
 ---

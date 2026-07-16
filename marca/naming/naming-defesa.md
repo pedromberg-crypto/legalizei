@@ -1,8 +1,10 @@
 ---
-tipo: marca
-etapa: naming
-status: em-debate
+tipo: derivado
+status: rascunho
 data: 2026-07-09
+assunto: naming
+deriva_de: [decisoes-marca]
+etapa: naming
 tags: [marca, naming]
 ---
 

@@ -1,8 +1,8 @@
 ---
-tipo: marco
+tipo: historico
+status: congelado
 data: 2026-07-12
 tags: [marco, marca, design, simbolo, logo]
-validado_por: [Pedro]
 ---
 
 # 🧱 Marco — logo do Legalizei fechado

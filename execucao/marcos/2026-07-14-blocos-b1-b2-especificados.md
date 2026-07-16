@@ -1,7 +1,8 @@
 ---
-tipo: marco
-etapa: spec-blocos
+tipo: historico
+status: congelado
 data: 2026-07-14
+etapa: spec-blocos
 tags: [marco, produto, spec, blocos, onboarding, decisao]
 ---
 

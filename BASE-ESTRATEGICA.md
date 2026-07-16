@@ -1,3 +1,9 @@
+---
+tipo: verdade
+status: vivo
+data: 2026-07-16
+assunto: estrategia
+---
 # Legalize Digital — Base Estratégica (doc vivo)
 
 > Documento interno Pedro + Claude. Fonte única da verdade da estratégia.

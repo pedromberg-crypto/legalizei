@@ -1,4 +1,10 @@
 ---
+tipo: verdade
+status: vivo
+data: 2026-07-16
+assunto: cnae-cobertura
+---
+---
 tipo: entregavel-dev
 data: 2026-07-10
 tags: [cnae, dev, escopo]

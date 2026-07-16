@@ -1,7 +1,8 @@
 ---
-tipo: teardown
-concorrente: Marvee
+tipo: fato
+status: vivo
 data: 2026-07-09
+concorrente: Marvee
 gatilho: paginas-publicas
 tags: [concorrente, marca]
 ---

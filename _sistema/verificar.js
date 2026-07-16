@@ -69,7 +69,13 @@ const existe = (a) => notas.has(a) || alias.has(a);
           }
         }
       }
-      notas.set(slug, { rel, fm, txt, mtime: fs.statSync(p).mtimeMs });
+      // ⚠️ usa a `data:` do FRONTMATTER, nao o mtime do filesystem.
+      // Motivo (achado na 1a rodada): qualquer edicao em massa (migracao, lint,
+      // find&replace) reseta o mtime de tudo e o verificador fica cego. A data do
+      // frontmatter e SEMANTICA: diz quando o conteudo foi decidido, nao quando o
+      // arquivo foi tocado.
+      const dt = fm.data && /^\d{4}-\d{2}-\d{2}$/.test(fm.data) ? Date.parse(fm.data) : null;
+      notas.set(slug, { rel, fm, txt, data: dt, mtime: fs.statSync(p).mtimeMs });
     }
   }
 })(ROOT);
@@ -85,9 +91,14 @@ for (const [slug, n] of notas) {
       problemas.link.push({ de: n.rel, para: f, ctx: "deriva_de" });
       continue;
     }
-    if (fonte.mtime > n.mtime) {
-      const dias = ((fonte.mtime - n.mtime) / 86400000).toFixed(1);
-      problemas.derivado.push({ nota: n.rel, fonte: fonte.rel, dias });
+    // sem data em algum dos dois, nao da pra comparar: nao inventa alarme
+    if (n.data == null || fonte.data == null) continue;
+    if (fonte.data > n.data) {
+      const dias = Math.round((fonte.data - n.data) / 86400000);
+      problemas.derivado.push({
+        nota: n.rel, fonte: fonte.rel, dias,
+        dNota: n.fm.data, dFonte: fonte.fm.data,
+      });
     }
   }
 }

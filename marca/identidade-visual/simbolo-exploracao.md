@@ -1,9 +1,10 @@
 ---
-tipo: identidade-visual
-etapa: simbolo
-status: fechado
+tipo: derivado
+status: vivo
 data: 2026-07-10
-atualizado: 2026-07-12
+assunto: simbolo
+deriva_de: [decisoes-marca]
+etapa: simbolo
 tags: [marca, design, simbolo, logo]
 ---
 

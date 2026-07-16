@@ -1,7 +1,7 @@
 ---
-tipo: reuniao
+tipo: historico
+status: congelado
 data: 2026-07-07
-participantes: Pedro, Mauro
 tags: [decisao]
 ---
 

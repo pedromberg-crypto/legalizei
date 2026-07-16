@@ -1,9 +1,7 @@
 ---
-tipo: reuniao
+tipo: historico
+status: congelado
 data: 2026-07-08
-participantes:
-  - Pedro Maia
-  - Léo (Leonan)
 tags: [decisao, dor]
 ---
 

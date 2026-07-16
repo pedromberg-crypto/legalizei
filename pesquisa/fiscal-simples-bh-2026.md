@@ -1,11 +1,9 @@
 ---
-tipo: pesquisa
+tipo: verdade
+status: vivo
 data: 2026-07-15
+assunto: numeros-fiscais
 tags: [fiscal, simples-nacional, fator-r, cnae, bh, compliance, pesquisa]
-status: consolidado-v1
-fontes: oficiais
-confianca: alta (D resolvido r2+r3; 2 pontos na fila-Larissa)
-rodadas: 3 (nossa) + 2 docs Gemini cruzados
 ---
 
 # 🔬 Pesquisa fiscal — Simples · ME serviço · BH/MG (2026)

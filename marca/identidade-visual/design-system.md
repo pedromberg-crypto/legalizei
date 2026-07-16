@@ -1,8 +1,10 @@
 ---
-tipo: identidade-visual
-etapa: design-system
-status: fundacao-v1
+tipo: verdade
+status: vivo
 data: 2026-07-16
+assunto: design-system
+deriva_de: [paleta-cores, decisoes-marca]
+etapa: design-system
 tags: [marca, design, design-system, tokens, shell, arquetipos, ux]
 ---
 

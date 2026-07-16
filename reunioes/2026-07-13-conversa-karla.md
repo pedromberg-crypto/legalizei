@@ -1,9 +1,7 @@
 ---
-tipo: reuniao
+tipo: historico
+status: congelado
 data: 2026-07-13
-participantes:
-  - Pedro Maia
-  - Karla (Depto Pessoal / DP)
 tags: [decisao, compliance, imersao, dp, fiscal]
 ---
 

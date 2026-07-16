@@ -1,7 +1,7 @@
 ---
-tipo: pauta
+tipo: operacao
+status: rascunho
 data: 2026-07-09
-status: rascunho-avaliar
 tags: [tech, produto]
 ---
 

@@ -1,7 +1,8 @@
 ---
-tipo: teardown
-concorrente: Agilize
+tipo: hub
+status: vivo
 data: 2026-07-09
+concorrente: Agilize
 gatilho: marca
 tags: [concorrente, marca]
 ---

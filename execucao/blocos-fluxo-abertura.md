@@ -1,7 +1,9 @@
 ---
-tipo: spec
+tipo: derivado
+status: vivo
 data: 2026-07-14
-status: em-construcao
+assunto: logica-dos-blocos
+deriva_de: [reordenacao-flow-cobranca-cedo, fiscal-simples-bh-2026]
 tags: [produto, spec, blocos, onboarding, caminho-critico]
 ---
 

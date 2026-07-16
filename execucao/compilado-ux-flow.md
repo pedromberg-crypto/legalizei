@@ -1,7 +1,8 @@
 ---
-tipo: log
-data: 2026-07-15
+tipo: verdade
 status: vivo
+data: 2026-07-15
+assunto: otimizacoes-ux
 tags: [produto, ux, flow, log, otimizacao, backlog]
 ---
 

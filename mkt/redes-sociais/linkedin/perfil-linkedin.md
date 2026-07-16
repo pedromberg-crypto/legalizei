@@ -1,3 +1,8 @@
+---
+tipo: operacao
+status: vivo
+data: 2026-07-16
+---
 # Perfil — LinkedIn (página empresarial)
 
 Página empresarial da Legalizei no LinkedIn. Volta pro [[redes-sociais]].

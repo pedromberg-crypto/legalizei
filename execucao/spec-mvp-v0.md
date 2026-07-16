@@ -1,7 +1,9 @@
 ---
-tipo: spec
-data: 2026-07-09
+tipo: derivado
 status: rascunho
+data: 2026-07-09
+assunto: escopo-mvp
+deriva_de: [BASE-ESTRATEGICA]
 tags: [produto, spec]
 ---
 

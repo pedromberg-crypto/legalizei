@@ -1,9 +1,9 @@
 ---
-tipo: pesquisa
-etapa: anterioridade-marca
-status: rascunho-para-consultor
+tipo: derivado
+status: rascunho
 data: 2026-07-15
-confianca: media
+assunto: inpi
+etapa: anterioridade-marca
 tags: [marca, inpi, anterioridade, propriedade-industrial, legalizei]
 ---
 

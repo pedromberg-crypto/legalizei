@@ -1,9 +1,7 @@
 ---
-tipo: marco
+tipo: historico
+status: congelado
 data: 2026-07-08
-area: pesquisa
-impacto: alto
-tempo-gasto: 1
 tags: [concorrente, insight]
 ---
 

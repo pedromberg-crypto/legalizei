@@ -16,3 +16,5 @@ cnae_ibge.json
 app/.next/
 app/out/
 app/next-env.d.ts
+
+# a junction _memoria/ e resolvida pelo git como pasta normal (conteudo real do vault)

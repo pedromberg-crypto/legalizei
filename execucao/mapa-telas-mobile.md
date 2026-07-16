@@ -1,7 +1,9 @@
 ---
-tipo: spec
+tipo: derivado
+status: vivo
 data: 2026-07-15
-status: em-construcao
+assunto: inventario-de-telas
+deriva_de: [reordenacao-flow-cobranca-cedo]
 tags: [produto, ux, telas, mobile, onboarding, caminho-critico, inventario, pausas]
 ---
 

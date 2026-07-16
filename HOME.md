@@ -1,3 +1,8 @@
+---
+tipo: hub
+status: vivo
+data: 2026-07-16
+---
 # 🧠 Legalizei — HQ
 
 > Nota-hub do vault. Tudo parte daqui. Produto: **Legalizei** (contabilidade digital, MVP tipo Contabilizei).

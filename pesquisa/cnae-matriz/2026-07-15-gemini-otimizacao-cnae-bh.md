@@ -1,3 +1,8 @@
+---
+tipo: fato
+status: vivo
+data: 2026-07-16
+---
 # **Relatório de Pesquisa Tributária: Otimização e Enquadramento de CNAEs para Serviços no Simples Nacional (Belo Horizonte \- Ano-Calendário 2026\)**
 
 A arquitetura de um aplicativo de contabilidade digital voltado à recomendação do "CNAE fiscalmente ótimo" exige um mapeamento exaustivo da legislação federal e municipal. O ecossistema tributário brasileiro para Microempresas (ME) prestadoras de serviços é regido, no ano-calendário de 2026, pela Lei Complementar nº 123/2006, pelas normativas do Comitê Gestor do Simples Nacional (em especial a Resolução CGSN nº 140/2018) e, em âmbito local, pela Lei Complementar nº 116/2003 combinada com o Código Tributário de Belo Horizonte (Lei Municipal nº 8.725/2003). Mesmo com o início do período de transição da Reforma Tributária (Emenda Constitucional nº 132/2023) e a introdução em fase de teste da Contribuição sobre Bens e Serviços (CBS) e do Imposto sobre Bens e Serviços (IBS), o regime unificado do Simples Nacional mantém sua estrutura de recolhimento via Documento de Arrecadação do Simples Nacional (DAS) para as empresas que optarem por não realizar a apuração híbrida1.  

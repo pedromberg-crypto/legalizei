@@ -1,3 +1,8 @@
+---
+tipo: operacao
+status: vivo
+data: 2026-07-16
+---
 # Marketing
 
 Estratégias de aquisição do Legalizei.

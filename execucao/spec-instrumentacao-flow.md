@@ -1,7 +1,9 @@
 ---
-tipo: spec
+tipo: derivado
+status: vivo
 data: 2026-07-16
-status: em-construcao
+assunto: instrumentacao
+deriva_de: [reordenacao-flow-cobranca-cedo]
 tags: [produto, ux, dados, instrumentacao, metricas, coorte, flow]
 ---
 

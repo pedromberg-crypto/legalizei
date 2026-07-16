@@ -1,5 +1,6 @@
 ---
-tipo: marco
+tipo: historico
+status: congelado
 data: 2026-07-12
 tags: [produto, ux, prototipo, lottie, landing, decisao]
 ---

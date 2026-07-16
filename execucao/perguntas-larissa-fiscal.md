@@ -1,7 +1,7 @@
 ---
-tipo: briefing
+tipo: operacao
+status: fila-humana
 data: 2026-07-15
-status: aguardando-larissa
 tags: [fiscal, larissa, double-check, simples-nacional, fator-r, pendencia]
 ---
 

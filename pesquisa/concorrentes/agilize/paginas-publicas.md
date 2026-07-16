@@ -1,7 +1,8 @@
 ---
-tipo: teardown
-concorrente: Agilize
+tipo: fato
+status: vivo
 data: 2026-07-09
+concorrente: Agilize
 gatilho: paginas-publicas
 tags: [concorrente, marca]
 ---

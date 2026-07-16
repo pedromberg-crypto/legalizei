@@ -1,3 +1,9 @@
+---
+tipo: derivado
+status: vivo
+data: 2026-07-16
+assunto: imersao
+---
 # Imersão Legalize — Checklist dos Primeiros 30 Dias
 
 > **Regra do processo: cada semana destrava a seguinte. O mês 1 inteiro destrava o mês 2 (teste de demanda). O teste de demanda destrava o build.**

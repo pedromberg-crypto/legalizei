@@ -1,5 +1,6 @@
 ---
-tipo: marco
+tipo: historico
+status: congelado
 data: 2026-07-15
 tags: [marco, cnae, fiscal, ux, flow, motor, regra]
 ---

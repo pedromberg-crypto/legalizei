@@ -1,3 +1,8 @@
+---
+tipo: historico
+status: congelado
+data: 2026-07-16
+---
 # Reuniões
 
 Uma nota por reunião, nome `AAAA-MM-DD-assunto.md`, criada a partir de `_templates/reuniao.md`.

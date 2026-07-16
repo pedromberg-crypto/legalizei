@@ -1,3 +1,8 @@
+---
+tipo: fato
+status: vivo
+data: 2026-07-16
+---
 # Auditoria de telas — Contabilizei (área logada)
 
 Capturas da plataforma logada da Contabilizei (conta real do Pedro) pra auditoria de UX/UI. Método: Playwright headed + stealth (webdriver off + UA Chrome real; headless MATA a sessão — a Contabilizei amarra sessão ao dispositivo/UA do login).

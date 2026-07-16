@@ -1,5 +1,7 @@
 ---
-kanban-plugin: board
+tipo: hub
+status: vivo
+data: 2026-07-16
 ---
 
 ## 🦴 ESPINHA — caminho crítico (North Star: abrir 1 empresa real) · [[2026-07-13-plano-sequencia-pm]]

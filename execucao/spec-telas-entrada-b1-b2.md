@@ -1,7 +1,9 @@
 ---
-tipo: spec
+tipo: derivado
+status: vivo
 data: 2026-07-14
-status: em-construcao
+assunto: conteudo-das-telas
+deriva_de: [reordenacao-flow-cobranca-cedo, compilado-ux-flow]
 tags: [produto, ux, telas, spec, onboarding, entrada, b1, b2]
 ---
 

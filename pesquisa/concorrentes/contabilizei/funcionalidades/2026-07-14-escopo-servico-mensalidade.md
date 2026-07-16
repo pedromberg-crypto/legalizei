@@ -1,5 +1,6 @@
 ---
-tipo: artefato
+tipo: fato
+status: vivo
 data: 2026-07-14
 concorrente: Contabilizei
 fonte: site

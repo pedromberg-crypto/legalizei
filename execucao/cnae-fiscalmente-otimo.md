@@ -1,7 +1,9 @@
 ---
-tipo: spec
+tipo: verdade
+status: fila-humana
 data: 2026-07-15
-status: cruzado-gemini-validar-larissa
+assunto: cnae-otimo
+deriva_de: [fiscal-simples-bh-2026]
 tags: [produto, fiscal, cnae, planejamento-tributario, moat, motor]
 ---
 

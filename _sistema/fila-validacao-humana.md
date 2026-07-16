@@ -2,7 +2,6 @@
 tipo: hub
 status: vivo
 data: 2026-07-16
-assunto: fila-de-validacao
 tags: [sistema, fila, placeholder, decisao, meta]
 ---
 

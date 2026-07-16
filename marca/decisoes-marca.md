@@ -1,8 +1,9 @@
 ---
-tipo: marca
-etapa: geral
+tipo: verdade
 status: vivo
 data: 2026-07-09
+assunto: decisoes-de-marca
+etapa: geral
 tags: [marca, decisao]
 ---
 

@@ -1,7 +1,7 @@
 ---
-tipo: playbook
+tipo: operacao
+status: vivo
 data: 2026-07-09
-status: pronto
 tags: [tech, produto, imersao]
 ---
 

@@ -1,7 +1,8 @@
 ---
-tipo: referencia
-status: travado
+tipo: derivado
+status: vivo
 data: 2026-07-14
+assunto: benchmark-preco
 concorrente: Contabilizei
 fonte: site + sistema (conta real)
 gatilho: feature

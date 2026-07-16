@@ -1,9 +1,7 @@
 ---
-tipo: marco
+tipo: historico
+status: congelado
 data: 2026-07-08
-area: tech
-impacto: alto
-tempo-gasto: 6
 tags: []
 ---
 

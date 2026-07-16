@@ -1,7 +1,9 @@
 ---
-tipo: spec
+tipo: derivado
+status: vivo
 data: 2026-07-15
-status: em-construcao
+assunto: condicionais
+deriva_de: [reordenacao-flow-cobranca-cedo]
 tags: [produto, ux, telas, fluxo, condicionais, ramificacoes, personas, build]
 ---
 

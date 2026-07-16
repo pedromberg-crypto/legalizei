@@ -1,7 +1,9 @@
 ---
-tipo: processo
+tipo: derivado
+status: rascunho
 data: 2026-07-09
-status: rascunho-validar
+assunto: processo-abertura
+deriva_de: [fluxo-abertura-portais-pedro-dev]
 tags: [produto, compliance, imersao]
 ---
 

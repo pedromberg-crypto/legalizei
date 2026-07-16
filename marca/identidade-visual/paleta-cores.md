@@ -1,8 +1,9 @@
 ---
-tipo: identidade-visual
-etapa: paleta
-status: validado-v1
+tipo: verdade
+status: vivo
 data: 2026-07-10
+assunto: cor-primitivos
+etapa: paleta
 tags: [marca, design, cor, tokens]
 ---
 

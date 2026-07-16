@@ -1,6 +1,8 @@
 ---
-tipo: referencia
+tipo: derivado
+status: vivo
 data: 2026-07-07
+assunto: stack-vault
 tags: [meta]
 ---
 

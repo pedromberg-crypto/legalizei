@@ -1,8 +1,9 @@
 ---
-tipo: marca
-etapa: referencias
-status: pronto
+tipo: derivado
+status: vivo
 data: 2026-07-09
+assunto: referencias-visuais
+etapa: referencias
 tags: [marca, design, concorrente]
 ---
 

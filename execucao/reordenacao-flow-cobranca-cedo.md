@@ -1,7 +1,8 @@
 ---
-tipo: spec
+tipo: verdade
+status: vivo
 data: 2026-07-16
-status: travado
+assunto: ordem-do-flow
 tags: [produto, ux, flow, cobranca, reordenacao, personas, motor, decisao]
 ---
 

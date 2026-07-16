@@ -1,8 +1,7 @@
 ---
-tipo: reuniao
+tipo: historico
+status: congelado
 data: 2026-07-13
-participantes: [Pedro Maia, Pedro Dev, Léo]
-duracao: ~1h (gravada em 2 partes — parada e retomada)
 fonte: Plaud (2 transcrições + 2 summaries)
 tags: [reuniao, produto, backend, escopo, fiscal, ux, decisao]
 ---

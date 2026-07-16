@@ -1,5 +1,6 @@
 ---
-tipo: marco
+tipo: historico
+status: congelado
 data: 2026-07-15
 tags: [produto, testes, fiscal, cnae, pesquisa, decisao]
 ---

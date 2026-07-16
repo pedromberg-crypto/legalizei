@@ -1,9 +1,8 @@
 ---
-tipo: handoff
-destino: dev
-etapa: fases-0-1
-status: entregue
+tipo: operacao
+status: vivo
 data: 2026-07-12
+etapa: fases-0-1
 tags: [dev, design, cor, tipografia, tokens]
 ---
 

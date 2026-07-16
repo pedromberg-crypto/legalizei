@@ -1,8 +1,8 @@
 ---
-tipo: marca
-etapa: naming
-status: em-debate
+tipo: hub
+status: rascunho
 data: 2026-07-09
+etapa: naming
 tags: [marca, design]
 ---
 

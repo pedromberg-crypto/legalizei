@@ -1,9 +1,9 @@
 ---
-tipo: artefato-concorrente
+tipo: fato
+status: vivo
+data: 2026-07-16
 concorrente: contabilizei
 artefato: funil-abertura
-data: 2026-07-16
-status: capturado-completo
 fonte: prints do Pedro, percurso real no site (plano Padrão R$195)
 tags: [concorrente, funil, onboarding, cobranca, pricing, ux]
 ---

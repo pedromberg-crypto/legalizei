@@ -1,4 +1,9 @@
 ---
+tipo: fato
+status: vivo
+data: 2026-07-16
+---
+---
 tipo: teardown
 concorrente: Contabilizei
 data: 2026-07-07

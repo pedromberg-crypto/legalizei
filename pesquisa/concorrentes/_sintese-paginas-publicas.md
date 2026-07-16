@@ -1,8 +1,9 @@
 ---
-tipo: sintese
-etapa: concorrentes-paginas-publicas
-status: pronto
+tipo: derivado
+status: vivo
 data: 2026-07-09
+assunto: sintese-concorrentes
+etapa: concorrentes-paginas-publicas
 tags: [concorrente, pricing, posicionamento, marca]
 ---
 

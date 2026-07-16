@@ -106,7 +106,7 @@
       },
       {
         "passo": "b1.teaser",
-        "resultado": "sem economia estimável · teaser não exibido (não promete o que não sabe)"
+        "resultado": "teaser (serviço): CNPJ em ~2 dias úteis · alvará imediato · a gente paga seu DAS todo mês · sem promessa de economia (CNAE não tem alavanca fiscal)"
       },
       {
         "passo": "b1.conta",
@@ -118,7 +118,7 @@
       },
       {
         "passo": "b3.aceite",
-        "resultado": "contrato de serviço aceito (reversível · CDC art.49 vale limpo)"
+        "resultado": "contrato aceito · GARANTIA VISÍVEL: 7 dias pra desistir e receber de volta (CDC art.49)"
       },
       {
         "passo": "b3.pagamento",
@@ -163,6 +163,10 @@
       {
         "passo": "b2.revisao",
         "resultado": "dossiê completo · PDF exportável liberado (entregável de cliente)"
+      },
+      {
+        "passo": "b2.consenso",
+        "resultado": "(pulado)"
       },
       {
         "passo": "b2.termo",

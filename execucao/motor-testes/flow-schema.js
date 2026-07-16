@@ -83,6 +83,18 @@ function estimativaTeaser(r, fat) {
   return melhor > 0 ? Math.round(melhor) : null;
 }
 
+// UX-49 (rodada #5) — o teaser NÃO pode ser monotemático em economia.
+// A rodada #5 expôs: CNAE Anexo III direto (8593-7/00, 8599-6/04) não tem Fator R pra ganhar
+// nem família de swap → o motor corretamente não estimava nada → a pessoa via "seu CNAE é
+// atendido" e caía direto no "pague R$195", SEM UM ÚNICO ARGUMENTO. E são justamente a `cida`
+// e a `govbr-bronze`: as duas leigas totais, o nicho declarado do produto. O teaser funcionava
+// bem pro `knife`/`monstro` — quem menos precisa ser convencido.
+// Fix: o teaser passa a responder "o que você ganha", e economia é só UMA das respostas.
+// Os argumentos de serviço são verificáveis (prazo real medido no CNPJ do próprio Pedro,
+// dez/2025: pagamento 10/12 → CNPJ + Simples deferido 12/12) → 2026-07-16-pos-pagamento-operacao-real.md
+const ARGUMENTO_SERVICO = 'CNPJ em ~2 dias úteis · alvará imediato · a gente paga seu DAS todo mês';
+
+
 function validaCPF(cpf) {
   cpf = String(cpf || '').replace(/\D/g, '');
   if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
@@ -99,7 +111,7 @@ function validaCPF(cpf) {
 module.exports = {
   id: 'abertura',
   flow_num: 1,
-  versao: '0.3.0',
+  versao: '0.3.1',
   cobertura: 'Entrada + B1 (gate+teaser) + B3 (cobrança) + B2 (dossiê, dentro do app) + B4 + B4.5',
 
   passos: [
@@ -213,14 +225,18 @@ module.exports = {
       deriva: (ctx) => {
         const r = ctx.respostas;
         const fat = ctx.dados.fat_medio;
-        if (!fat) return { resultado: 'sem faixa · teaser não exibido' };
-        const est = estimativaTeaser(r, fat);
+        const est = fat ? estimativaTeaser(r, fat) : null;
+        // UX-49: sem economia estimável NÃO pode virar "sem argumento". Cai no argumento de
+        // serviço, que é verificável e vale pra todo mundo. Ninguém chega no checkout no vazio.
         if (est == null) {
-          return { resultado: 'sem economia estimável · teaser não exibido (não promete o que não sabe)' };
+          return {
+            resultado: `teaser (serviço): ${ARGUMENTO_SERVICO} · sem promessa de economia (CNAE não tem alavanca fiscal)`,
+            dados: { teaser_tipo: 'servico' },
+          };
         }
         return {
-          resultado: `teaser: economia estimada ~R$${est}/mês · carimbo "estimativa, confirmamos no cálculo" (UX-26)`,
-          dados: { teaser_estimativa: est },
+          resultado: `teaser (economia): ~R$${est}/mês estimado · ${ARGUMENTO_SERVICO} · carimbo "estimativa, confirmamos no cálculo" (UX-26)`,
+          dados: { teaser_estimativa: est, teaser_tipo: 'economia' },
         };
       },
     },
@@ -259,7 +275,19 @@ module.exports = {
       // e nada é irreversível ainda (nenhum centavo de governo saiu). O termo irreversível
       // desceu pro b2.termo (N20), onde a máquina de fato liga. 🟡 ratificar Larissa/Mauro.
       valida: (ctx) => (ctx.respostas.b3_aceite === false ? 'contrato não aceito → não avança' : null),
-      deriva: () => ({ resultado: 'contrato de serviço aceito (reversível · CDC art.49 vale limpo)' }),
+      // UX-52 (rodada #5): o leigo agora paga ANTES de ver o cálculo — confiança invertida,
+      // quem tem menos paga mais cedo. Não dá pra desfazer sem matar a reordenação, MAS o
+      // contrato aqui JÁ é reversível (art.49) e isso nunca foi dito. Comunicar é grátis e
+      // verdadeiro. UX-50: com 2 sócios, avisar que ele contrata sozinho em nome da sociedade.
+      deriva: (ctx) => {
+        const n = Number(ctx.respostas.num_socios || 1);
+        const multi = n > 1
+          ? ' · você contrata sozinho agora; seu sócio ratifica antes de abrirmos qualquer coisa'
+          : '';
+        return {
+          resultado: `contrato aceito · GARANTIA VISÍVEL: 7 dias pra desistir e receber de volta (CDC art.49)${multi}`,
+        };
+      },
     },
     {
       id: 'b3.pagamento', bloco: 'B3', tela: 'N9', tipo: 'pausa',
@@ -455,10 +483,31 @@ module.exports = {
       // 🆕 v0.3.0: o dossiê exportável era entregue ANTES de cobrar (T15) — o cliente levava
       // o melhor trabalho de graça. Agora ele já pagou, e o PDF é entregável. Boleto pendente
       // trava o export: senão o buraco original volta pela janela.
+      // UX-53 (rodada #5): travar o export DEPOIS de a pessoa preencher tudo é surpresa ruim.
+      // O aviso vem no começo do dossiê, não no fim — a trava deixa de ser pegadinha.
       deriva: (ctx) => ({
         resultado: ctx.dados.pagamento_pendente
-          ? 'dossiê completo · 🔒 export travado (aguardando o boleto compensar)'
+          ? 'dossiê completo · 🔒 export libera quando o boleto compensar (avisado desde o início do dossiê, sem surpresa)'
           : 'dossiê completo · PDF exportável liberado (entregável de cliente)',
+      }),
+    },
+    {
+      id: 'b2.consenso', bloco: 'B2', tela: 'N19.5', tipo: 'gate',
+      nome: '🆕 Consenso do 2º sócio (UX-44/UX-20) — antes do irreversível',
+      // 🆕 rodada #5 (UX-50). A reordenação QUEBROU o UX-44, que exigia "pagamento/registro só
+      // liberam com os dois de acordo": o titular passou a pagar no N9 e o sócio só aparecia
+      // 13 telas depois. A própria spec avisa: "sociedade quebra quando um decide e o outro
+      // descobre a conta depois" — e a gente tinha construído exatamente isso.
+      // Fix: o consenso não pode viver no pagamento (mataria a cobrança cedo), então migra pro
+      // portão do IRREVERSÍVEL. O titular arrisca os R$195 dele (reversíveis, art.49); ninguém
+      // compromete o outro em dinheiro de governo sem ratificação. Espírito do UX-44 preservado.
+      // Bônus: o convite do 2º sócio existia na spec (T21) desde o UX-20 e NUNCA foi passo do motor.
+      pula_se: (ctx) => Number(ctx.respostas.num_socios || 1) <= 1,
+      valida: (ctx) => (ctx.respostas.socio2_ratificou === false
+        ? '2º sócio não ratificou o dossiê/custo/split → não executa (consenso é pré-condição do irreversível)'
+        : null),
+      deriva: () => ({
+        resultado: '2º sócio convidado · ratificou dossiê + custo + split de pró-labore · consenso explícito dos dois',
       }),
     },
     {

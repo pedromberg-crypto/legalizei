@@ -93,7 +93,7 @@
       },
       {
         "passo": "b1.teaser",
-        "resultado": "teaser: economia estimada ~R$3800/mês · carimbo \"estimativa, confirmamos no cálculo\" (UX-26)"
+        "resultado": "teaser (economia): ~R$3800/mês estimado · CNPJ em ~2 dias úteis · alvará imediato · a gente paga seu DAS todo mês · carimbo \"estimativa, confirmamos no cálculo\" (UX-26)"
       },
       {
         "passo": "b1.conta",
@@ -105,7 +105,7 @@
       },
       {
         "passo": "b3.aceite",
-        "resultado": "contrato de serviço aceito (reversível · CDC art.49 vale limpo)"
+        "resultado": "contrato aceito · GARANTIA VISÍVEL: 7 dias pra desistir e receber de volta (CDC art.49)"
       },
       {
         "passo": "b3.pagamento",
@@ -150,6 +150,10 @@
       {
         "passo": "b2.revisao",
         "resultado": "dossiê completo · PDF exportável liberado (entregável de cliente)"
+      },
+      {
+        "passo": "b2.consenso",
+        "resultado": "(pulado)"
       },
       {
         "passo": "b2.termo",

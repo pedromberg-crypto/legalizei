@@ -148,7 +148,31 @@ tags: [produto, ux, flow, log, otimizacao, backlog]
 - **Proxy morto:** o atalho "já sei meu CNAE" **não** qualifica experiência (caso real: o Pedro chegou sabendo o CNAE e nada mais). Pré-mark por comportamento descartado.
 - **Custo zero de fork:** a coorte não é condicional. Contagem de condicionais e de telas **não muda**.
 
+---
+
+## 📋 Itens (rodada #5 — 1ª no flow REORDENADO, 2026-07-16)
+
+> **O que mudou:** primeira bateria depois da [[reordenacao-flow-cobranca-cedo]] (motor v0.3.0, 16 personas, T0167–T0182). Rodadas #1–4 otimizaram um flow que cobrava no fim; **este cobra na entrada**, e isso cria fricção **nova**, não descoberta antes. **O tabuleiro CAIU de 88-95% pra 63-100%** — e isso não é bug, é o preço da reordenação aparecendo. O que importa é **onde** caiu: nas leigas.
+
+| ID | Grupo | Sugestão (rodada #5) | Persona(s) | Status | Onde / quando |
+|---|---|---|---|---|---|
+| UX-49 | 🔥 Teaser sem argumento | **CNAE Anexo III direto (8593-7/00, 8599-6/04) não tem Fator R nem swap** → o motor corretamente não estimava nada → a pessoa via "seu CNAE é atendido" e caía no **"pague R$195" SEM UM ÚNICO ARGUMENTO**. E são as **duas leigas totais** (o nicho declarado). O teaser servia bem justo o `knife`/`monstro`, que menos precisam ser convencidos. **Fix: teaser responde "o que você ganha", economia é só UMA das respostas** — argumento de serviço (CNPJ ~2 dias, alvará imediato, DAS pago) é verificável e vale pra todos | cida, govbr-bronze | ✅ | **motor** `flow-schema.js` `b1.teaser` + `ARGUMENTO_SERVICO` · v0.3.1 · 16/07 |
+| UX-50 | 🔥 Consenso quebrado | **A reordenação QUEBROU o UX-44** ("pagamento/registro só liberam com os dois de acordo"): o titular passou a pagar no N9 e o 2º sócio só era convidado no N22, **13 telas depois**. A própria spec avisa que *"sociedade quebra quando um decide e o outro descobre a conta depois"* — e a gente tinha construído exatamente isso. **Fix: o consenso migra pro portão do IRREVERSÍVEL (N19.5).** O titular arrisca os R$195 dele (reversíveis, art.49); ninguém compromete o outro em dinheiro de governo sem ratificação. **Bônus: o convite do 2º sócio existia na spec (T21/UX-20) desde a rodada #2 e NUNCA tinha virado passo do motor** | sociedade, monstro | ✅ | **motor** `b2.consenso` (passo novo) + `b3.aceite` (aviso) · v0.3.1 · 16/07 |
+| UX-51 | Teaser erra pra cima | O teaser promete o **teto** do Fator R sabendo só CNAE + faixa. **Quanto maior o faturamento, maior a promessa e menor a chance de alcançar** — erra mais justamente em quem mais anima. Quem fatura R$40k precisa de R$11.200/mês de pró-labore; quem não pode tirar isso fica no Anexo V e ganha **zero** | promessa-quebrada | 🟡 | **motor marca** (`TEASER_PISO`, persona `promessa-quebrada`). Mitigação de UI (teaser como faixa? perguntar pró-labore viável no N4?) = decisão do Pedro |
+| UX-52 | Confiança invertida | **O leigo agora paga ANTES de ver o cálculo** — quem tem menos confiança paga mais cedo. Não dá pra desfazer sem matar a reordenação. **Fix: o contrato do N8 JÁ é reversível (CDC art.49) e isso nunca foi dito.** Comunicar a garantia de 7 dias é grátis e verdadeiro | reta, cida | ✅ | **motor** `b3.aceite` (garantia visível) · v0.3.1 · 16/07 |
+| UX-53 | Trava surpresa | Boleto pendente trava o export do dossiê **depois** de a pessoa preencher tudo. **Fix: avisar no início do dossiê, não no fim** — a trava deixa de ser pegadinha | knife | ✅ | **motor** `b2.revisao` (microcopy) · v0.3.1 · 16/07 |
+| UX-54 | ⚖️ Sunk cost sumiu | **O tradeoff que ninguém nomeou.** No flow antigo a conta vinha no T16, depois de 15 telas de investimento: ruim ("achei que fosse mais barato") mas **segurava** a pessoa. Agora **DAE ~R$268 + TFLF ~R$161 + plano R$195 ≈ R$625** chegam na 3ª tela, pra quem entrou há 2 minutos. Trocamos "frustração no fim" por "choque no começo" | todas que pagam | 🟢 | **aceito conscientemente.** Não é defeito, é a natureza da reordenação. Só o teste real mede o tamanho |
+
+**Resumo rodada #5:** 6 itens · **4 ✅ aplicados (todos no motor, v0.3.1)** · **1 🟡** (UX-51, mitigação = decisão do Pedro) · **1 🟢 aceito** (UX-54, tradeoff). Regressão: **16/16 PASS**. **Acumulado geral: 48 ✅ · 2 🟡 · 0 🔴.**
+
+### 🎯 Leitura da rodada
+- **O pilar da reordenação não cobria quem mais precisa dele.** O teaser (N5) foi travado como "economia" e funciona lindo pro avançado. Pras duas professoras leigas, ele **não existia** — e elas eram mandadas pro checkout no vazio. Rodar as personas achou isso; o debate não tinha achado.
+- **Otimizar um flow pode quebrar otimização de outro flow.** O UX-44 (consenso multi-sócio) estava ✅ desde a rodada #4 e a reordenação o **revogou silenciosamente**. Nenhum teste pegaria isso — o motor nunca teve o passo de consenso, ele só vivia na spec. **Item ✅ na spec ≠ item implementado.**
+- **A queda do tabuleiro é informação, não regressão.** Cair de 88-95% pra 63-100% mostrou exatamente **onde** a reordenação machuca: `govbr-bronze` (63%) e `cida` (76%) desabaram, `bloq-3socios`/`bloq-exterior` **ganharam** (barram antes do dinheiro). Sem a rodada, a gente teria ido pras telas com as leigas quebradas.
+- **A dívida spec × motor apareceu duas vezes no mesmo dia:** UX-21 (triagem prometida no B1, barrando no B2) e UX-20/44 (convite do 2º sócio na spec desde 15/07, sem passo no motor). **Vale auditar o resto do compilado contra o código.**
+
 ## 🧷 Follow-ups abertos (gerados por estas rodadas)
+- 🔴 **Auditar spec × motor:** a rodada #5 achou **2 itens ✅ na spec que nunca viraram código** (UX-21 e UX-20/44). Provável que haja mais. "✅ aplicado na spec" não garante implementado.
 - ~~🔴 Re-sincronizar [[mapa-telas-mobile]]~~ ✅ **feito 15/07** — reescrito e sincronizado com as 2 specs (22 telas Entrada→B4, 23 c/ dia-2) + tabela de pausas.
 - 🟡 **Espelhar no protótipo** `ux-ui/prototipo/` as telas novas/alteradas (protótipo não tem CNAE ótimo, bloqueios que educam, nem a cauda B3/B4/aterrissagem).
 - ~~🟡 Spec de B3/B4~~ ✅ **feita na rodada #3** → [[spec-telas-b3-b4-aterrissagem]] (fechou UX-17/18/19/20/28/31).

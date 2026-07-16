@@ -78,6 +78,13 @@ function rodar(persona) {
         resultado: `⏸ ${ev.motivo} · espera ${ev.espera} · ▶ retomada ${ev.retomada}`,
       });
     }
+    // recusa de órgão (B6/UX-40): estado 🔴 "precisa de você" + recuperação DENTRO do pipeline (não termina)
+    if (ev && ev.tipo === 'recusa') {
+      trilha.push({
+        passo: passo.id + '::recusa',
+        resultado: `🔴 ${ev.motivo} · precisa de você: ${ev.acao} · ▶ ${ev.retomada}`,
+      });
+    }
   }
   return { trilha, status, parouEm, veredito_b1: ctx.veredito_b1 };
 }

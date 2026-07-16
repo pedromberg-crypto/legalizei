@@ -1,0 +1,95 @@
+{
+  "meta": {
+    "id": "erro-orgao",
+    "nome": "Rafael — dev solo, nome reprovado na JUCEMG (erro de órgão recuperável)",
+    "persona_seq": 12,
+    "flow": "abertura",
+    "descricao": "Blind spot B6 (UX-40 / UX-37). Dev solo, dossiê limpo, paga no cartão e destrava o B4. Aí um órgão externo RECUSA: nome reprovado na JUCEMG apesar da viabilidade prévia. Não é crash nem limbo: vira estado 🔴 'precisa de você' (reescolher nome) e RECUPERA dentro do pipeline até empresa ativa. Testa que a cauda assíncrona tem 4º estado (vermelho) + recuperação, não só ✅/⏳/⬜.",
+    "fonte": "[[mapa-ramificacoes-flow]] B6 · [[spec-telas-b3-b4-aterrissagem]] T20 UX-40"
+  },
+  "perfil": {
+    "nivel": "médio",
+    "personalidade": "Confia no fluxo, pagou e fechou o app. Volta e vê que um órgão recusou. O medo é 'perdi meu dinheiro / travou e ninguém me avisa'.",
+    "estressa": ["passo que fica 'em andamento' eternamente escondendo uma recusa", "recomeçar do zero por causa de um nome reprovado", "não saber qual é a ação dele"]
+  },
+  "sugestoes": {
+    "b4.viabilidade": "B6 fechado: a recusa vira 🔴 'precisa de você' com a ação concreta (reescolher nome + sugestões automáticas), recuperável dentro do pipeline. Nunca um verde falso nem um 'em andamento' que na real travou. Com 2 sócios, dizer de quem é a pendência (ver monstro)."
+  },
+  "respostas": {
+    "entrada_escolha": "abrir_cnpj",
+    "atividade_descricao": "desenvolvo sites e sistemas sob encomenda",
+    "cnae": "6201-5/00",
+    "cnae_confianca": "alta",
+    "cnae_ambiguo": false,
+    "filtro_servico": true,
+    "filtro_simples": true,
+    "filtro_regulada": false,
+    "socio_nome": "Rafael Teixeira Lima",
+    "socio_cpf": "12345678909",
+    "socio_cpf_situacao": "regular",
+    "socio_estado_civil": "solteiro",
+    "socio_cep": "30140000",
+    "duplo_vinculo_clt": false,
+    "num_socios": 1,
+    "empresa_capital": 5000,
+    "empresa_endereco_tipo": "próprio",
+    "quer_endereco_fiscal": false,
+    "cnae_secundarios": [],
+    "natureza": "SLU",
+    "nome_viavel": true,
+    "faturamento_faixa": "ate 10k",
+    "fator_r_folha_pct": 10,
+    "pro_labore": "minimo",
+    "b3_plano": "base",
+    "b3_metodo": "cartao",
+    "b3_aceite": true,
+    "b3_pagamento_status": "pago",
+    "viabilidade_recusa": true
+  },
+  "eventos": {
+    "b4.viabilidade": {
+      "tipo": "recusa",
+      "motivo": "nome reprovado na JUCEMG apesar da prévia",
+      "acao": "reescolher nome (sugestões automáticas)",
+      "retomada": "nome novo reenviado → viabilidade deferida → segue"
+    }
+  },
+  "esperado": {
+    "veredito_b1": "🟢 atende",
+    "status": "ativa",
+    "parou_em": "fim.ativa",
+    "trilha": [
+      { "passo": "entrada.fork",       "resultado": "rota: abertura de CNPJ" },
+      { "passo": "b1.descricao",       "resultado": "descrição aceita" },
+      { "passo": "b1.mapeamento",      "resultado": "CNAE 6201-5/00 · confiança alta · sem fork" },
+      { "passo": "b1.desambiguacao",   "resultado": "(pulado)" },
+      { "passo": "b1.filtro",          "resultado": "serviço ✓ · Simples ✓ · não-regulada ✓" },
+      { "passo": "b1.veredito",        "resultado": "🟢 atende" },
+      { "passo": "b1.conta",           "resultado": "conta criada · entra no B2" },
+      { "passo": "b2.socio",           "resultado": "sócio ok · solteiro (sem regime de bens)" },
+      { "passo": "b2.clt",             "resultado": "sem duplo vínculo · pró-labore normal" },
+      { "passo": "b2.socios",          "resultado": "solo (sem +sócios)" },
+      { "passo": "b2.empresa",         "resultado": "empresa ok · capital R$5000 · endereço próprio" },
+      { "passo": "b2.cnae_sec",        "resultado": "sem secundários" },
+      { "passo": "b2.natureza",        "resultado": "natureza SLU (coerente com nº de sócios)" },
+      { "passo": "b2.nome",            "resultado": "razão social + fantasia · nome disponível (viabilidade prévia)" },
+      { "passo": "b2.cnae_otimo",      "resultado": "enquadramento único (sem CNAE alternativo)" },
+      { "passo": "b2.simulador",       "resultado": "est. Fator R 10% → Anexo V (15,5%) · ótimo R$1960 → Anexo III (IRRF zero)" },
+      { "passo": "b2.revisao",         "resultado": "dossiê completo · handoff B3" },
+      { "passo": "b3.recap",           "resultado": "recap: economia do Fator R + escopo (abertura grátis + mensal)" },
+      { "passo": "b3.plano",           "resultado": "plano base (faixa ate 10k)" },
+      { "passo": "b3.aceite",          "resultado": "contrato + termo de início aceitos (assinatura)" },
+      { "passo": "b3.pagamento",       "resultado": "pagamento confirmado (cartao) · destrava B4" },
+      { "passo": "b4.viabilidade",     "resultado": "viabilidade INDEFERIDA: nome reprovado na JUCEMG (apesar da prévia) — precisa de você" },
+      { "passo": "b4.viabilidade::recusa", "resultado": "🔴 nome reprovado na JUCEMG apesar da prévia · precisa de você: reescolher nome (sugestões automáticas) · ▶ nome novo reenviado → viabilidade deferida → segue" },
+      { "passo": "b4.dbe",             "resultado": "DBE gerado (Coleta Web/Receita)" },
+      { "passo": "b4.registro",        "resultado": "contrato pronto (JUCEMG) + assinado GOV.BR prata/ouro" },
+      { "passo": "b4.taxa",            "resultado": "DAE JUCEMG paga (repasse ~R$268,51)" },
+      { "passo": "b4.cnpj",            "resultado": "CNPJ emitido + opção Simples automática + CRC assina" },
+      { "passo": "b4.certificado",     "resultado": "certificado A1 emitido (pós-CNPJ)" },
+      { "passo": "b4.municipal",       "resultado": "inscrição municipal + credenciamento NFS-e (DES-BH)" },
+      { "passo": "b45.ativacao",       "resultado": "procuração e-CAC → API Serpro (PGDAS-D/DAS automatizado)" },
+      { "passo": "fim.ativa",          "resultado": "empresa ativa e operando ✅" }
+    ]
+  }
+}

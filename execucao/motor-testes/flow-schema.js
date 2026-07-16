@@ -69,7 +69,7 @@ function validaCPF(cpf) {
 module.exports = {
   id: 'abertura',
   flow_num: 1,
-  versao: '0.2.2',
+  versao: '0.2.3',
   cobertura: 'Entrada + B1 + B2 (completo, c/ simulador Fator R) + B3 (cobrança) + B4 (constituição) + B4.5 (ativação fiscal)',
 
   passos: [
@@ -142,7 +142,12 @@ module.exports = {
     {
       id: 'b1.conta', bloco: 'B1', tela: '5', tipo: 'acao',
       nome: 'Criar conta (só pós-🟢)',
-      deriva: () => ({ resultado: 'conta criada · entra no B2' }),
+      // B7 (UX-29): detecta nível GOV.BR cedo. Bronze → sinaliza upgrade antes do B4 (assinatura exige prata/ouro).
+      deriva: (ctx) => ({
+        resultado: ctx.respostas.govbr_nivel === 'bronze'
+          ? 'conta criada · GOV.BR bronze sinalizado (upgrade guiado antes do B4)'
+          : 'conta criada · entra no B2',
+      }),
     },
 
     // ── B2 — Coleta + Enquadramento ──────────────────────────────────────
@@ -331,7 +336,13 @@ module.exports = {
     {
       id: 'b4.viabilidade', bloco: 'B4', tela: '19', tipo: 'decisao',
       nome: 'Viabilidade (JUCEMG+municipal unificada)',
-      deriva: () => ({ resultado: 'viabilidade deferida (nome+endereço+CNAE) — JUCEMG unificada' }),
+      // B6 (UX-40): órgão externo pode recusar mesmo com prévia OK. Não é crash nem limbo:
+      // vira estado 🔴 "precisa de você" (evento `recusa` na persona) e recupera dentro do pipeline.
+      deriva: (ctx) => ({
+        resultado: ctx.respostas.viabilidade_recusa
+          ? 'viabilidade INDEFERIDA: nome reprovado na JUCEMG (apesar da prévia) — precisa de você'
+          : 'viabilidade deferida (nome+endereço+CNAE) — JUCEMG unificada',
+      }),
     },
     {
       id: 'b4.dbe', bloco: 'B4', tela: '20', tipo: 'acao',
@@ -341,7 +352,12 @@ module.exports = {
     {
       id: 'b4.registro', bloco: 'B4', tela: '21', tipo: 'acao',
       nome: 'Registro JUCEMG (contrato pronto) + assinatura GOV.BR',
-      deriva: () => ({ resultado: 'contrato pronto (JUCEMG) + assinado GOV.BR prata/ouro' }),
+      // B7 (UX-31): assinatura exige GOV.BR prata/ouro. Bronze detectado no B1 → upgrade guiado aqui, sem travar.
+      deriva: (ctx) => ({
+        resultado: ctx.respostas.govbr_nivel === 'bronze'
+          ? 'contrato pronto (JUCEMG) + GOV.BR upgrade bronze→prata/ouro (banco/biometria) → assinado'
+          : 'contrato pronto (JUCEMG) + assinado GOV.BR prata/ouro',
+      }),
     },
     {
       id: 'b4.taxa', bloco: 'B4', tela: '21', tipo: 'acao',

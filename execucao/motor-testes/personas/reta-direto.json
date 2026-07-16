@@ -1,0 +1,102 @@
+{
+  "meta": {
+    "id": "reta-direto",
+    "nome": "Bruno — MESMO caso da `reta`, coorte \"já abri antes\" (teste de invariância)",
+    "persona_seq": 14,
+    "flow": "abertura",
+    "descricao": "GUARDA-CORPO da UX-48, não é persona de comportamento. É a `reta` byte a byte, só que com coorte_experiencia = 'ja_abriu'. O esperado é a trilha IDÊNTICA à da `reta`. Prova a regra dura da decisão de trilha: a coorte é DADO PURO e nunca vaza pra lógica fiscal, validação ou guard-rail. Se um dia alguém fizer um passo do schema ler a coorte, este teste quebra e denuncia o vazamento.",
+    "fonte": "[[spec-instrumentacao-flow]] (invariância) · [[mapa-ramificacoes-flow]] (decisão UX-48) · gêmea de personas/reta.json"
+  },
+  "perfil": {
+    "nivel": "invariância (não é perfil de usuário)",
+    "personalidade": "Não modela gente. Modela uma promessa: densidade muda apresentação, jamais obrigação nem cálculo.",
+    "estressa": ["coorte de analytics vazando pra regra de negócio", "flag de UX virando bifurcação fiscal silenciosa"]
+  },
+  "sugestoes": {
+    "b1.conta": "UX-48: a coorte é capturada aqui (T5) e some da lógica. Se esta trilha um dia divergir da `reta`, alguém acoplou analytics em regra de negócio — investigar antes de seguir."
+  },
+  "respostas": {
+    "entrada_escolha": "abrir_cnpj",
+    "atividade_descricao": "desenvolvo sites e sistemas sob encomenda",
+    "cnae": "6201-5/00",
+    "cnae_confianca": "alta",
+    "cnae_ambiguo": false,
+    "filtro_servico": true,
+    "filtro_simples": true,
+    "filtro_regulada": false,
+    "socio_nome": "Bruno Almeida Souza",
+    "socio_cpf": "11144477735",
+    "socio_cpf_situacao": "regular",
+    "socio_estado_civil": "solteiro",
+    "socio_cep": "30140071",
+    "duplo_vinculo_clt": false,
+    "num_socios": 1,
+    "empresa_capital": 5000,
+    "empresa_endereco_tipo": "próprio",
+    "quer_endereco_fiscal": false,
+    "cnae_secundarios": [],
+    "natureza": "SLU",
+    "nome_viavel": true,
+    "faturamento_faixa": "10-20k",
+    "fator_r_folha_pct": 12,
+    "pro_labore": "minimo",
+    "b3_plano": "base",
+    "b3_metodo": "cartao",
+    "b3_aceite": true,
+    "b3_pagamento_status": "pago",
+    "coorte_experiencia": "ja_abriu"
+  },
+  "eventos": {
+    "b2.socio": {
+      "tipo": "pausa",
+      "motivo": "usuário fechou o app",
+      "espera": "2 dias",
+      "retomada": "idempotente"
+    },
+    "b4.certificado": {
+      "tipo": "pausa",
+      "motivo": "parceiro emitindo certificado",
+      "espera": "algumas horas",
+      "retomada": "idempotente"
+    }
+  },
+  "esperado": {
+    "veredito_b1": "🟢 atende",
+    "status": "ativa",
+    "parou_em": "fim.ativa",
+    "trilha": [
+      { "passo": "entrada.fork",         "resultado": "rota: abertura de CNPJ" },
+      { "passo": "b1.descricao",         "resultado": "descrição aceita" },
+      { "passo": "b1.mapeamento",        "resultado": "CNAE 6201-5/00 · confiança alta · sem fork" },
+      { "passo": "b1.desambiguacao",     "resultado": "(pulado)" },
+      { "passo": "b1.filtro",            "resultado": "serviço ✓ · Simples ✓ · não-regulada ✓" },
+      { "passo": "b1.veredito",          "resultado": "🟢 atende" },
+      { "passo": "b1.conta",             "resultado": "conta criada · entra no B2" },
+      { "passo": "b2.socio",             "resultado": "sócio ok · solteiro (sem regime de bens)" },
+      { "passo": "b2.socio::pausa",      "resultado": "⏸ usuário fechou o app · espera 2 dias · ▶ retomada idempotente" },
+      { "passo": "b2.clt",               "resultado": "sem duplo vínculo · pró-labore normal" },
+      { "passo": "b2.socios",            "resultado": "solo (sem +sócios)" },
+      { "passo": "b2.empresa",           "resultado": "empresa ok · capital R$5000 · endereço próprio" },
+      { "passo": "b2.cnae_sec",          "resultado": "sem secundários" },
+      { "passo": "b2.natureza",          "resultado": "natureza SLU (coerente com nº de sócios)" },
+      { "passo": "b2.nome",              "resultado": "razão social + fantasia · nome disponível (viabilidade prévia)" },
+      { "passo": "b2.cnae_otimo",        "resultado": "enquadramento único (sem CNAE alternativo)" },
+      { "passo": "b2.simulador",         "resultado": "est. Fator R 12% → Anexo V (15,5%) · ótimo R$4200 → Anexo III (IRRF zero)" },
+      { "passo": "b2.revisao",           "resultado": "dossiê completo · handoff B3" },
+      { "passo": "b3.recap",             "resultado": "recap: economia do Fator R + escopo (abertura grátis + mensal)" },
+      { "passo": "b3.plano",             "resultado": "plano base (faixa 10-20k)" },
+      { "passo": "b3.aceite",            "resultado": "contrato + termo de início aceitos (assinatura)" },
+      { "passo": "b3.pagamento",         "resultado": "pagamento confirmado (cartao) · destrava B4" },
+      { "passo": "b4.viabilidade",       "resultado": "viabilidade deferida (nome+endereço+CNAE) — JUCEMG unificada" },
+      { "passo": "b4.dbe",               "resultado": "DBE gerado (Coleta Web/Receita)" },
+      { "passo": "b4.registro",          "resultado": "contrato pronto (JUCEMG) + assinado GOV.BR prata/ouro" },
+      { "passo": "b4.taxa",              "resultado": "DAE JUCEMG paga (repasse ~R$268,51)" },
+      { "passo": "b4.cnpj",              "resultado": "CNPJ emitido + opção Simples automática + CRC assina" },
+      { "passo": "b4.certificado",       "resultado": "certificado A1 emitido (pós-CNPJ)" },
+      { "passo": "b4.certificado::pausa","resultado": "⏸ parceiro emitindo certificado · espera algumas horas · ▶ retomada idempotente" },
+      { "passo": "b4.municipal",         "resultado": "inscrição municipal + credenciamento NFS-e (DES-BH)" },
+      { "passo": "b45.ativacao",         "resultado": "procuração e-CAC → API Serpro (PGDAS-D/DAS automatizado)" },
+      { "passo": "fim.ativa",            "resultado": "empresa ativa e operando ✅" }
+    ]
+  }
+}

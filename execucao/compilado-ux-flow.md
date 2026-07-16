@@ -95,7 +95,8 @@ tags: [produto, ux, flow, log, otimizacao, backlog]
 ### 🧭 Pontos cegos de cobertura (🔴 backlog — não dá pra otimizar o que não testamos)
 > Pra honrar "cobrir **todas** as personas": as 11 atuais não cobrem estes casos. Enquanto não existirem, a % delas é **desconhecida**, não 100%. **Não atacados nesta rodada** (exigem construir persona / flow #2, não editar spec).
 
-- 🔴 **UX-37 — persona de erro recuperável:** CPF irregular · cartão recusado · nome indisponível · API de viabilidade fora. Testamos happy-path + bloqueio limpo; **recuperação de erro no meio = cega.**
+- ✅ **UX-37 — persona de erro recuperável** — **FECHADO 15/07.** Persona **`erro-orgao`** (nome reprovado na JUCEMG apesar da prévia → estado 🔴 "precisa de você" → recupera dentro do pipeline → ativa). Motor ganhou o evento **`recusa`** (irmão da `pausa`) + branch de viabilidade indeferida no schema v0.2.3. Destrava a validação completa da **UX-40**. Restam sem persona: cartão recusado · API de viabilidade fora.
+- ✅ **GOV.BR bronze** — **FECHADO 15/07.** Persona **`govbr-bronze`** (Marta, professora particular): detecta bronze no B1 → upgrade guiado → assina prata/ouro no B4, sem travar. Fecha o arco UX-29 + UX-31.
 - 🔴 **Personas `saas` / `bpo`** — famílias 2 e 3 do [[cnae-fiscalmente-otimo]]; estressam a T13 com outros clusters.
 - 🔴 **Flow #2 MIGRAR** — já tem CNPJ, troca de contador. **Metade do mercado, zero testado.**
 - 🔴 **MEI → ME** (desenquadramento) · **upsell-taker** (add-on de endereço no B3, nunca rodado) · **teto do Simples** (sublimite ISS perto de R$4,8M).
@@ -130,8 +131,25 @@ tags: [produto, ux, flow, log, otimizacao, backlog]
 - **Retornos decrescentes confirmados.** Sobra 1 item (UX-42) que **não é spec de UI, é decisão de produto/negócio** (servimos RT? cotamos MEI/Lucro Presumido?) e fica 🟡 até Mauro/Larissa. As 11 personas atuais estão **perto do teto do que conseguem revelar**.
 - **Próximo lever real ≠ rodada #5 nas mesmas 11.** É **construir os blind spots** (erro recuperável, saas/bpo, migrar) — só eles abrem fricção nova de verdade.
 
+---
+
+## 📋 Itens (decisão de trilha — 2026-07-16)
+
+> **O que mudou:** não é rodada de persona. Nasce do [[mapa-ramificacoes-flow]] (mapa de condicionais), que expôs uma tensão estrutural: as personas não são um espectro, são **2 extremos** (leigo total × avançado) que querem coisas opostas na mesma tela. Debatido e travado com o Pedro.
+
+| ID | Grupo | Decisão | Persona(s) | Status | Onde / quando |
+|---|---|---|---|---|---|
+| UX-48 | Trilha/densidade | **Trilha ÚNICA + coorte instrumentada.** (1) **Universais viram default pra todos** — botão grande/rótulo literal, zero jargão, recap ao reabrir, acessibilidade: não é "modo leigo", é design bom, e o experiente não é prejudicado. (2) **Profundidade vira expander pra todos** (default fechado): memória de cálculo + "e se?", base legal, prova exportável — auto-seleção por comportamento, sem flag. (3) **Ritmo/layout** (1 bloco por vez × agrupado · tutorial × checklist) é o único tradeoff real e **NÃO se constrói agora**: T5 captura a coorte *"É a primeira empresa que você abre?"* como **dado puro** e a bifurcação só nasce **se o dado pedir** | todas (tensão cida/reta × knife/monstro) | ✅ | [[spec-telas-entrada-b1-b2]] **T5 + notas transversais** · [[spec-telas-b3-b4-aterrissagem]] **notas transversais** · **nota nova** [[spec-instrumentacao-flow]] · [[mapa-ramificacoes-flow]] (decisão) · motor `reta-direto` (invariância) · 16/07 |
+
+### 🎯 Leitura da decisão
+- **A pergunta do Pedro achou o furo:** a proposta inicial gatava **profundidade** atrás do flag. Errado — profundidade resolve com expander, de graça, sem chute. Só **ritmo/layout** justifica flag.
+- **Metade do "modo leigo" não era modo, era design bom.** Botão grande, rótulo literal, zero jargão, recap: **universal**. Chamar isso de "modo" era um jeito de não construir pra todo mundo.
+- **Anti-guru aplicado a produto (chamada do Pedro):** bifurcar UX hoje = construir em cima de hipótese, com zero dado. Pior: **a cobaia do E2E de 17/07 é o próprio Pedro** (já abriu empresa) — a trilha guiada nem seria validável. Instrumenta primeiro, decide depois.
+- **Proxy morto:** o atalho "já sei meu CNAE" **não** qualifica experiência (caso real: o Pedro chegou sabendo o CNAE e nada mais). Pré-mark por comportamento descartado.
+- **Custo zero de fork:** a coorte não é condicional. Contagem de condicionais e de telas **não muda**.
+
 ## 🧷 Follow-ups abertos (gerados por estas rodadas)
-- 🔴 **Re-sincronizar [[mapa-telas-mobile]]** com a renumeração: entrou a **Tela 13 (CNAE ótimo)**, simulador virou **T14**, revisão **T15**, + a cauda T16–T23 na [[spec-telas-b3-b4-aterrissagem]].
+- ~~🔴 Re-sincronizar [[mapa-telas-mobile]]~~ ✅ **feito 15/07** — reescrito e sincronizado com as 2 specs (22 telas Entrada→B4, 23 c/ dia-2) + tabela de pausas.
 - 🟡 **Espelhar no protótipo** `ux-ui/prototipo/` as telas novas/alteradas (protótipo não tem CNAE ótimo, bloqueios que educam, nem a cauda B3/B4/aterrissagem).
 - ~~🟡 Spec de B3/B4~~ ✅ **feita na rodada #3** → [[spec-telas-b3-b4-aterrissagem]] (fechou UX-17/18/19/20/28/31).
 - 🔴 **Cobertura do motor (blind spots):** persona de erro recuperável (UX-37) · `saas`/`bpo` · flow #2 MIGRAR · MEI→ME · upsell-taker · teto do Simples. **São personas a construir, não spec** — a % delas fica desconhecida até existirem.

@@ -197,7 +197,7 @@ Tem 1 ponto que precisa de uma decisão nossa (com a Larissa): o que oferecer pr
 | 2 | Raio-X do cadastro | Contamos e mapeamos tudo: **22 telas** da 1ª tela até a empresa aberta, **5 momentos em que o processo espera** (pagamento, sócio, cartório digital, órgãos) e **os caminhos alternativos** (quem vira fila de espera, quem vai pro escritório tradicional, quem é barrado). Descobrimos que 3 dessas saídas podem usar **a mesma tela** — economia de trabalho | 🟢 |
 | 3 | Robô testador | Achamos **2 buracos** e cobrimos: (a) **e se um órgão recusar no meio?** (ex: Junta reprova o nome mesmo com a consulta prévia aprovada) — agora o app mostra "precisa de você" com a ação clara e **recupera**, em vez de deixar o cliente achando que travou; (b) **cliente com conta gov.br incompleta** — o app avisa cedo e ensina a resolver, em vez de travar na hora de assinar | 🟢 14/14 |
 | 4 | Decisão de experiência | O cliente leigo e o experiente querem coisas opostas na mesma tela. **Decidimos NÃO fazer dois caminhos diferentes**: o que é bom (botão grande, linguagem sem jargão) vira padrão **pra todos**; o detalhe fica escondido pra quem quiser abrir. **O resto a gente mede antes de construir** — perguntamos "é a primeira empresa que você abre?" só pra acompanhar, e só separamos os caminhos **se o dado provar que precisa**. Evita construir em cima de achismo | 🟢 |
-| 5 | **Decisão sua** | 🔴 **O preço do nosso plano trava as telas de pagamento.** O ~R$195 que usamos é da Contabilizei, **não é o nosso**. Sem esse número (+ endereço fiscal e certificado) não fecho as 4 telas de cobrança | 🔴 aguarda call |
+| 5 | **Decisão sua** | 🕓 **O preço NÃO trava mais** (mudei de ideia em 16/07): não dá pra precificar sem saber quanto **custa** rodar cada empresa (banco de dados + APIs). Sigo com o ~R$195 da Contabilizei como **placeholder marcado FAKE** e a gente crava o nosso depois do teste real de uso. **Quando sentar com você, é uma conversa só** e já tenho a lista pronta | 🕓 quando for a hora |
 
 **Próximo (16/07):** [Pedro] convidar o dev no repositório + **começar a construir as telas** (pelo miolo do cadastro, que está 100% especificado) · [Pedro/Mauro] **fechar o preço do plano** (destrava a cobrança) · [Pedro] decidir com o dev a base técnica de segurança (não cobrar/abrir duas vezes) e os fornecedores de consulta de CPF/CNPJ.
 
@@ -211,6 +211,29 @@ Tem 1 ponto que precisa de uma decisão nossa (com a Larissa): o que oferecer pr
 - Decisão de experiência: NÃO vamos fazer dois caminhos (leigo x experiente). O que é bom vira padrão pra todos, e o resto a gente MEDE antes de construir, em vez de chutar
 Preciso de você: fechar o preço do nosso plano. Sem ele não fecho as telas de pagamento
 ```
+
+### 🗓️ 2026-07-16 (2ª sessão) — inverti a ordem do app e comecei as telas
+
+| # | Frente | O que aconteceu | Status |
+|---|---|---|---|
+| 1 | **Ordem do app INVERTIDA** | Achei um erro grande na minha própria montagem: a gente só pedia o pagamento **depois de 15 telas**. O cliente ia investir tempo, ver o preço no fim e pensar *"achei que fosse mais barato"*. **Agora: valida a atividade → mostra o que ele ganha → paga → o resto acontece dentro do app**, já logado | 🟢 travado |
+| 2 | **Abri o funil da Contabilizei tela a tela** | Usei o **CNPJ que abri com eles em dez/2025** + prints do site. Achados: eles **cobram na 3ª tela** com 6 campos e **zero validação** · o "portal" deles é um **help desk (4 tickets)** · pedem por e-mail que o cliente **desabilite a segurança em 2 fatores do gov.br** · a **taxa da prefeitura (R$168) chegou no dia 40** com 4 dias pra pagar e nunca foi citada no checkout · **8 e-mails de "redefinir senha" em 3 dias** porque o onboarding deles não cria senha | 🟢 documentado |
+| 3 | **O prazo real deles** | Pagou 10/12 → **CNPJ em 12/12** → alvará 15/12 → dispensas só em **02/01**. Ou seja: **o CNPJ sai rápido, a cauda é longa** e é onde eles somem. Era "prazo não divulgado" no nosso benchmark; agora tem número com documento | 🟢 |
+| 4 | **Robô testador** | 14 → **19 casos, 2 fluxos** (abertura + **trocar de contador**, que era metade do mercado e a gente nunca tinha testado). Uma auditoria achou **5 regras que estavam escritas e não estavam no sistema** — uma delas fazia o robô dar **o conselho contrário** ao que a regra manda | 🟢 19/19 |
+| 5 | **Comecei as telas** | As 2 primeiras telas de verdade já rodam. Decidi fazer **direto em código, sem Figma** | 🟢 |
+| 6 | **Pra Larissa** | Duas coisas que o caso real levantou: (a) meu CNPJ saiu **LTDA** sendo sócio único, e nossa regra diz SLU — qual é a certa? (b) a lista de perguntas fiscais segue de pé | 🕓 |
+| 7 | **Pra você, sem pressa** | Preço · taxa da Junta (**R$268 × R$288**, divergência aberta desde 09/07) · certificado · endereço fiscal (o deles é **R$60/mês, cobrado da 2ª parcela** — confirmado com print). **Nada disso me trava agora**, junto tudo e a gente vê numa conversa só | 🕓 |
+
+### 📱 WhatsApp (16/07 — 2ª)
+> Mauro, dois avanços grandes hoje.
+>
+> 1️⃣ **Inverti a ordem do app.** Do jeito que estava, o cliente passava por 15 telas e só via o preço no fim. Agora ele valida a atividade, vê o que ganha, paga, e o resto acontece dentro do app. Mais honesto e para de vazar cliente no meio.
+>
+> 2️⃣ **Abri o funil da Contabilizei tela a tela**, usando o CNPJ que abri com eles ano passado. Eles cobram na 3ª tela sem validar quase nada, o "portal" deles é um help desk, e a taxa da prefeitura (R$168) chega no dia 40 sem nunca ter sido citada. O CNPJ sai em 2 dias, mas a cauda é longa e é onde eles somem. **É aí que a gente ganha.**
+>
+> 3️⃣ **Comecei as telas de verdade.** As duas primeiras já rodam.
+>
+> Sobre preço: **mudei de ideia, não me trava mais.** Não dá pra cravar sem saber quanto custa rodar cada empresa. Sigo com placeholder e a gente crava com dado. Quando sentar com você é **uma conversa só** — já tenho a lista pronta.
 
 ## 📱 Versão WhatsApp (copiar/colar — grupo ampliado, sem item de sociedade)
 ```

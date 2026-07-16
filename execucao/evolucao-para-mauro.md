@@ -190,6 +190,28 @@ Falta o carimbo final da Larissa no fiscal
 Tem 1 ponto que precisa de uma decisão nossa (com a Larissa): o que oferecer pra quem não encaixa no app (ex: nutricionista que precisa de responsável técnico, ou caso de MEI)
 ```
 
+## Semana 16/07/2026 — cadastro entregue pro dev construir
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | **Entrega pro dev** | **Entreguei o cadastro inteiro pro Pedro Dev construir o backend**, num repositório próprio: o "robô testador" + a especificação de todas as telas + a lista de CNAEs pronta pro sistema consultar. **O pulo do gato:** os **14 clientes fictícios viraram a prova de aceite** — se o sistema dele rodar os 14 e der o mesmo resultado, está certo por construção. Vale mais que qualquer documento | 🟢 entregue |
+| 2 | Raio-X do cadastro | Contamos e mapeamos tudo: **22 telas** da 1ª tela até a empresa aberta, **5 momentos em que o processo espera** (pagamento, sócio, cartório digital, órgãos) e **os caminhos alternativos** (quem vira fila de espera, quem vai pro escritório tradicional, quem é barrado). Descobrimos que 3 dessas saídas podem usar **a mesma tela** — economia de trabalho | 🟢 |
+| 3 | Robô testador | Achamos **2 buracos** e cobrimos: (a) **e se um órgão recusar no meio?** (ex: Junta reprova o nome mesmo com a consulta prévia aprovada) — agora o app mostra "precisa de você" com a ação clara e **recupera**, em vez de deixar o cliente achando que travou; (b) **cliente com conta gov.br incompleta** — o app avisa cedo e ensina a resolver, em vez de travar na hora de assinar | 🟢 14/14 |
+| 4 | Decisão de experiência | O cliente leigo e o experiente querem coisas opostas na mesma tela. **Decidimos NÃO fazer dois caminhos diferentes**: o que é bom (botão grande, linguagem sem jargão) vira padrão **pra todos**; o detalhe fica escondido pra quem quiser abrir. **O resto a gente mede antes de construir** — perguntamos "é a primeira empresa que você abre?" só pra acompanhar, e só separamos os caminhos **se o dado provar que precisa**. Evita construir em cima de achismo | 🟢 |
+| 5 | **Decisão sua** | 🔴 **O preço do nosso plano trava as telas de pagamento.** O ~R$195 que usamos é da Contabilizei, **não é o nosso**. Sem esse número (+ endereço fiscal e certificado) não fecho as 4 telas de cobrança | 🔴 aguarda call |
+
+**Próximo (16/07):** [Pedro] convidar o dev no repositório + **começar a construir as telas** (pelo miolo do cadastro, que está 100% especificado) · [Pedro/Mauro] **fechar o preço do plano** (destrava a cobrança) · [Pedro] decidir com o dev a base técnica de segurança (não cobrar/abrir duas vezes) e os fornecedores de consulta de CPF/CNPJ.
+
+### 📱 WhatsApp (16/07)
+```
+*Update Legalizei* 📦
+- Entreguei o cadastro inteiro pro nosso dev construir o backend, num repositório próprio: o robô testador, a especificação de todas as telas e a lista de CNAEs pronta pro sistema
+- O pulo do gato: os 14 clientes fictícios viraram a PROVA DE ACEITE. Se o sistema dele rodar os 14 e der o mesmo resultado, está certo por construção. Vale mais que qualquer documento
+- Fizemos o raio-X do cadastro: 22 telas, 5 momentos de espera e todos os caminhos alternativos mapeados
+- O robô achou 2 buracos e cobrimos: (1) e se um órgão recusar no meio (ex: Junta reprova o nome)? agora o app mostra o que fazer e recupera, em vez do cliente achar que travou; (2) cliente com conta gov.br incompleta é avisado cedo, não trava na assinatura
+- Decisão de experiência: NÃO vamos fazer dois caminhos (leigo x experiente). O que é bom vira padrão pra todos, e o resto a gente MEDE antes de construir, em vez de chutar
+Preciso de você: fechar o preço do nosso plano. Sem ele não fecho as telas de pagamento
+```
+
 ## 📱 Versão WhatsApp (copiar/colar — grupo ampliado, sem item de sociedade)
 ```
 *Relatório semanal — Legalizei* 📊

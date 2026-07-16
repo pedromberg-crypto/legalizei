@@ -9,7 +9,8 @@ Testa a **lógica** dos fluxos do app (abertura de CNPJ e, depois, portal) rápi
 ## Rodar
 
 ```bash
-node run.js reta                 # roda a persona e compara com o esperado (✅/❌)
+node run.js reta                 # flow #1 (abertura)
+node run.js migra-limpo          # flow #2 (migrar) — o motor escolhe o schema por meta.flow
 node run.js ajuste <passo> "<frase>" "<fonte>"   # registra um ajuste no livro-caixa
 ```
 
@@ -19,7 +20,8 @@ Exit code: `0` = PASS, `1` = FAIL, `2` = erro de uso.
 
 | Arquivo | O que é |
 |---|---|
-| `flow-schema.js` | O fluxo como **dados** (passos declarativos). Cobre Entrada + B1 + **B2 completo (c/ simulador Fator R) + B3 + B4 + B4.5**. Números fiscais aterrados em [[fiscal-simples-bh-2026]] (config `FISCAL`). A IA de CNAE **não roda aqui**: vem dublada pela persona. |
+| `flow-schema.js` | **FLOW #1 — abertura.** O fluxo como **dados** (passos declarativos). Ordem v0.3.x: ENTRADA → B1 → **B3** → **B2** → B4 → B4.5. Números fiscais aterrados em [[fiscal-simples-bh-2026]] (config `FISCAL`). A IA de CNAE **não roda aqui**: vem dublada pela persona. |
+| `flow-migrar.js` | **FLOW #2 — migrar** (quem já tem CNPJ e troca de contador). Era blind spot desde 15/07 (*"metade do mercado, zero testado"*). Reusa `FISCAL` do #1. |
 | `personas/<id>.json` | Fixture: `respostas` (durável, cross-flow) + `eventos` (pausas roteirizadas) + `esperado` (trilha + veredito + status). |
 | `run.js` | Motor headless. Percorre o schema, simula pausas, compara com o esperado, grava a corrida sozinho. |
 | `historico-testes.jsonl` | Livro-caixa append-only. Duas linhas: `corrida` (o runner grava) e `ajuste` (tuning com fonte). |
@@ -45,7 +47,41 @@ Cada passo: `pula_se` (condicional exclusiva não roda), `valida` (barra o fluxo
 
 ## Estado
 
-### ✅ v0.3.0 (2026-07-16) — reordenação · **16 personas, 16 PASS**
+### ✅ FLOW #2 — MIGRAR (v0.1.0, 2026-07-16) · **3 personas, 3 PASS**
+
+Blind spot mais antigo do vault (*"metade do mercado, zero testado"*, desde 15/07) — agora existe. Esqueleto do [[fiscal-simples-bh-2026]] #14: **Distrato → TTRT CRC-MG → DBE Evento 232 → procuração e-CAC nova**.
+
+**🔴 Achado da construção: o flow #1 não tinha porta pra cá.** O `entrada.fork` mandava quem escolhe "já tenho CNPJ" pra `saiu-fluxo` (login) — mas quem quer **trocar de contador não tem conta**. Metade do mercado batia numa porta escrita "faça login". O `m0.fork` corrige, e isso obriga a separar 3 coisas hoje coladas num botão só: *sou cliente* (login) × *tenho CNPJ e quero trocar* (migrar) × *tenho CNPJ e só quero cotar*.
+
+**Por que o flow #2 é fiscalmente MELHOR que o #1:** empresa com 12+ meses usa **histórico REAL**, sem proporcionalizar (CGSN 140/18 art. 26). No #1 o teaser é promessa em cima de faixa — daí nasceu a `promessa-quebrada`. Aqui é **diagnóstico**, com o número dele. **`TEASER_PISO` e o risco de promessa quebrada não se aplicam ao #2.** E não há taxa de governo (a empresa já existe): o choque do UX-54 (~R$625 na 3ª tela) também some.
+
+**Riscos exclusivos do #2** (nenhum tem irmão no #1):
+- **`m4.ttrt`** — o TTRT no CRC-MG **depende do contador ANTIGO validar**. Todas as pausas do #1 esperam órgão (neutro) ou o próprio cliente; esta espera **um concorrente contrariado**, que está perdendo o cliente pra nós. Persona `migra-refem`.
+- **`m4.pendencias`** — a empresa chega **com passado**: DAS atrasado, DEFIS vencida, dívida ativa. O #14 diz que a responsabilidade do período antigo é do contador anterior, mas **a dívida é da empresa**. Persona `migra-passivo`.
+- **`m2.honestidade`** — se o contador atual já faz tudo certo, a resposta honesta é "seu enquadramento está correto" e vende-se **serviço**, não economia inexistente. É o UX-49 do #1 aplicado aqui.
+
+| Persona | Testa |
+|---|---|
+| `migra-limpo` | golden path. Fator R real 8,1% → **paga R$1.900/mês a mais do que precisa**. O plano de R$195 se paga 9x |
+| `migra-refem` | contador antigo **não valida o TTRT** → bloqueado com o cliente **já pago** |
+| `migra-passivo` | R$4.800 de DAS + DEFIS + dívida ativa → migra, mas o motor **marca antes de assumir** |
+
+**🟡 Pendência D (fila-Larissa, herdada da pesquisa):** o nº da resolução CFC (o Gemini escreveu "1.590/2020" mas a própria lista de refs dele cita CFC 987/2003 e 1493/2015 → possível citação trocada) e o código **"Evento 232"** contra o Coletor Redesim oficial. **Verificar em fonte primária antes de codar pra valer.** O motor testa a mecânica, não crava a citação.
+
+### ✅ FLOW #1 — v0.3.2 (2026-07-16) · **16 personas, 16 PASS**
+
+**v0.3.2 — auditoria spec × motor.** A rodada #5 achou 2 itens ✅ na spec que nunca viraram código; a auditoria varreu os 48 e achou **5**:
+| Item | Prometia | O motor fazia |
+|---|---|---|
+| **UX-39** | "não cravar 28%, mirar ~30% de colchão" | usava `FATOR_R_LIMIAR` = **0.28 exato** — **dava o conselho que a spec proíbe**, e dizia "já otimizado" pra quem estava em 28,0% |
+| **UX-24** | "as duas telas **não podem ser ilhas**: o ótimo consome o CLT" | simulador **sem uma referência a CLT** |
+| **UX-06** | "**nunca trocar em silêncio**" + opt-in + trilha de auditoria | calculava o swap e **assumia a adoção**, contando economia que a cliente nunca escolheu |
+| UX-25 | custo do pró-labore **por sócio** | 🔴 ausente (exige array de sócios na persona) |
+| UX-30 | comunhão universal → dispara anuência do cônjuge | 🔴 detecta o regime, não dispara nada |
+
+Os 3 primeiros: **corrigidos** (`FATOR_R_MARGEM`, `custoProLabore`, `adota_cnae_otimo`). Os 2 últimos: 🔴 abertos.
+
+### ✅ v0.3.1 — rodada #5 de UX
 
 **A cobrança subiu.** Gate CNAE → teaser de economia → **paga** → todo o dossiê dentro do app. Motivo e evidência em [[reordenacao-flow-cobranca-cedo]].
 

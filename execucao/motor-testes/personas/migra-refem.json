@@ -1,0 +1,107 @@
+{
+  "meta": {
+    "id": "migra-refem",
+    "nome": "Rogério — contador antigo não valida o TTRT (refém de um concorrente contrariado)",
+    "persona_seq": 18,
+    "flow": "migrar",
+    "descricao": "FLOW #2 — O RISCO QUE SÓ EXISTE AQUI. Migração normal até o M4, mas o contador antigo NÃO valida o TTRT no CRC-MG. Ele está perdendo o cliente pra nós e não tem pressa nenhuma. O cliente PAGOU e está travado por um terceiro com interesse CONTRÁRIO. Nenhuma pausa do flow #1 tem essa natureza: lá se espera órgão (neutro) ou o próprio cliente. Aqui se espera um concorrente contrariado.",
+    "fonte": "[[fiscal-simples-bh-2026]] bloco I (TTRT: 'novo contador abre no portal CRC-MG, o antigo valida')"
+  },
+  "perfil": {
+    "nivel": "medio",
+    "personalidade": "Decidiu sair porque o contador some. Ironia: o mesmo sumiço que motivou a saída agora bloqueia a saída. Já pagou o Legalizei, está sem contador de fato e com o antigo ainda formalmente responsável. Vai cobrar de NÓS, não do contador antigo.",
+    "estressa": [
+      "pagar e ficar travado",
+      "depender da boa vontade de quem ele demitiu",
+      "não saber quanto tempo isso leva"
+    ]
+  },
+  "sugestoes": {
+    "m4.ttrt": "🔴 **O pior estado do produto inteiro e ele não tem dono.** O cliente pagou, não tem contador funcionando, e quem destrava é quem ele acabou de demitir. O flow #1 nunca produz isso (órgão é neutro). Precisa de: (a) AVISO NO M2, antes do pagamento, de que essa etapa depende de terceiro; (b) SLA claro ('se em X dias ele não validar, acionamos o CRC-MG por você'); (c) o caminho formal do CRC-MG modelado como rota, não como 'fale com o suporte'; (d) decidir se isso é motivo de reembolso — ele pagou por um serviço que um terceiro está impedindo.",
+    "m3.pagamento": "🔴 **DECISÃO DE PRODUTO:** cobrar ANTES do TTRT é cobrar por algo que a gente não controla. Ou (a) cobra depois do TTRT validado — mas aí perde a tese da cobrança cedo; ou (b) cobra antes e assume o risco com SLA + reembolso. Não decidir = o cliente descobre travado e o Reclame Aqui decide por nós."
+  },
+  "respostas": {
+    "entrada_escolha": "ja_tenho_cnpj",
+    "cnpj": "11222333000181",
+    "cnpj_situacao": "ativa",
+    "cnae": "6201-5/00",
+    "natureza": "SLU",
+    "porte": "ME",
+    "no_simples": true,
+    "filtro_servico": true,
+    "filtro_regulada": false,
+    "receita_12m": 180000,
+    "folha_12m": 14400,
+    "socio_nome": "Rogério Nunes Barreto",
+    "socio_cpf": "12345678909",
+    "socio_cpf_situacao": "regular",
+    "govbr_nivel": "ouro",
+    "plano": "base",
+    "aceite": true,
+    "pagamento_status": "pago",
+    "das_em_atraso": null,
+    "obrigacoes_pendentes": null,
+    "divida_ativa": false,
+    "ttrt_validado": false
+  },
+  "eventos": {},
+  "esperado": {
+    "veredito_b1": "🟢 atende",
+    "status": "bloqueado",
+    "parou_em": "m4.ttrt",
+    "trilha": [
+      {
+        "passo": "m0.fork",
+        "resultado": "rota: MIGRAR (troca de contador) — NÃO é login"
+      },
+      {
+        "passo": "m1.cnpj",
+        "resultado": "CNPJ ativo · CNAE 6201-5/00 · SLU · ME · no Simples: sim"
+      },
+      {
+        "passo": "m1.filtro",
+        "resultado": "serviço ✓ · Simples ✓ · não-regulada ✓"
+      },
+      {
+        "passo": "m1.veredito",
+        "resultado": "🟢 atende"
+      },
+      {
+        "passo": "m2.diagnostico",
+        "resultado": "Fator R REAL 8.0% (12m: folha R$14400 / receita R$180000) → hoje Anexo V (15,5%) · 🎯 você paga ~R$1425/mês a mais do que precisa"
+      },
+      {
+        "passo": "m2.honestidade",
+        "resultado": "proposta = economia real de ~R$1425/mês + serviço"
+      },
+      {
+        "passo": "m2.conta",
+        "resultado": "conta criada · entra no checkout"
+      },
+      {
+        "passo": "m3.conta_abertura",
+        "resultado": "conta da migração: transferência R$0 · SEM taxa de governo (a empresa já existe) · recorrente: plano base"
+      },
+      {
+        "passo": "m3.aceite",
+        "resultado": "contrato aceito · GARANTIA VISÍVEL: 7 dias pra desistir (CDC art.49)"
+      },
+      {
+        "passo": "m3.pagamento",
+        "resultado": "CPF regular ✓ · pagamento confirmado · entra no app"
+      },
+      {
+        "passo": "m4.pendencias",
+        "resultado": "sem passivo identificado · migração limpa"
+      },
+      {
+        "passo": "m4.distrato",
+        "resultado": "distrato formalizado com o escritório anterior"
+      },
+      {
+        "passo": "m4.ttrt",
+        "resultado": "ERRO: contador antigo NÃO validou o TTRT → migração travada por terceiro hostil → rota humana (CRC-MG resolve, mas leva tempo)"
+      }
+    ]
+  }
+}

@@ -171,8 +171,51 @@ tags: [produto, ux, flow, log, otimizacao, backlog]
 - **A queda do tabuleiro é informação, não regressão.** Cair de 88-95% pra 63-100% mostrou exatamente **onde** a reordenação machuca: `govbr-bronze` (63%) e `cida` (76%) desabaram, `bloq-3socios`/`bloq-exterior` **ganharam** (barram antes do dinheiro). Sem a rodada, a gente teria ido pras telas com as leigas quebradas.
 - **A dívida spec × motor apareceu duas vezes no mesmo dia:** UX-21 (triagem prometida no B1, barrando no B2) e UX-20/44 (convite do 2º sócio na spec desde 15/07, sem passo no motor). **Vale auditar o resto do compilado contra o código.**
 
+---
+
+## 🔍 Auditoria spec × motor (2026-07-16) — a dívida era maior
+
+> **Por que:** a rodada #5 achou 2 itens ✅ que nunca viraram código. A auditoria varreu os 48 e achou **5**. Só entram itens de **lógica** (microcopy/UI o motor não testa por design).
+
+| Item | A spec prometia | O motor fazia | Status |
+|---|---|---|---|
+| **UX-39** | "**não deixar cravar 28%**; um mês de folha menor joga pro Anexo V no ano inteiro; mirar **~30%** de colchão" | `proLaboreOtimo` usava `FATOR_R_LIMIAR` = **0.28 exato**. **Dava justamente o conselho que a spec proíbe** — e respondia "já otimizado" pra `knife`, que está com 28,0% cravado, sem uma palavra sobre a borda | ✅ **corrigido** (`FATOR_R_MARGEM` 0.30 + aviso de borda) |
+| **UX-24** | "o ótimo tem que **consumir o dado do CLT**... as duas telas **não podem ser ilhas**" | simulador **sem uma única referência a CLT** — calculava o custo como se ninguém tivesse vínculo | ✅ **corrigido** (`custoProLabore` consome a folga do teto) |
+| **UX-06** | "**nunca trocar em silêncio**" + opt-in explícito + trilha de auditoria | calculava o CNAE ótimo e **assumia a adoção**, contando economia de um swap que a cliente nunca escolheu | ✅ **corrigido** (`adota_cnae_otimo`; economia só conta se adotou) |
+| UX-25 | custo do pró-labore **por sócio** ("o medo real da sociedade é não saber o custo de cada um") | número agregado | 🔴 **aberto** — exige array de sócios na persona |
+| UX-30 | comunhão universal → flag que dispara anuência do cônjuge | detecta o regime, **não dispara nada** | 🔴 **aberto** |
+
+**Resultado:** 3 ✅ corrigidos · 2 🔴 abertos. Motor **v0.3.2, 16/16 PASS**.
+
+### 🎯 Leitura da auditoria
+- **"✅ aplicado na spec" ≠ implementado, e a taxa de erro é alta:** 5 de ~30 itens de lógica estavam só no papel. **A spec foi entregue ao dev como contrato** ([[legalize-handoff-dev-repo]]) — vale ele saber.
+- **O UX-39 é o pior tipo de dívida:** não era ausência, era **conselho ativamente errado**. O motor recomendava 28% cravado — exatamente o que a própria spec classifica como perigoso.
+- **Nenhuma persona pegava esses 5.** Todas as 16 passavam. Rodada de persona acha fricção de experiência; **só auditoria acha promessa não cumprida**. São ferramentas diferentes.
+
+---
+
+## 🆕 FLOW #2 — MIGRAR (2026-07-16): blind spot fechado
+
+> Aberto desde 15/07 com estas palavras: **"metade do mercado, zero testado"**. Agora existe: `flow-migrar.js` (v0.1.0) + 3 personas, 3/3 PASS. O `run.js` virou multi-flow de verdade (o README prometia "motor genérico" desde sempre; o schema estava hardcoded).
+
+| ID | Achado | Status |
+|---|---|---|
+| UX-55 | 🔴 **O flow #1 não tinha porta pro #2.** O `entrada.fork` manda "já tenho CNPJ" pra `saiu-fluxo` (login) — mas **quem troca de contador não tem conta**. Metade do mercado batia numa porta escrita "faça login". Obriga separar 3 coisas num botão só: *sou cliente* × *quero trocar de contador* × *só quero cotar* | ✅ `m0.fork` (motor) · 🔴 **a UI do N3 precisa mudar** |
+| UX-56 | 🎯 **O #2 é fiscalmente MELHOR que o #1.** Empresa com 12+ meses usa **histórico REAL** (CGSN 140/18 art. 26). No #1 o teaser é promessa em cima de faixa (→ `promessa-quebrada`); aqui é **diagnóstico com o número dele**. `TEASER_PISO` **não se aplica**. E sem taxa de governo, o choque do UX-54 também some | ✅ `m2.diagnostico` |
+| UX-57 | 🔴 **TTRT = pausa com terceiro HOSTIL.** O contador ANTIGO valida a saída no CRC-MG. Todas as pausas do #1 esperam órgão (neutro) ou o cliente; **esta espera um concorrente contrariado**, que está perdendo o cliente pra nós — e o cliente **já pagou**. Precisa de aviso pré-pagamento + SLA + rota CRC-MG + decisão sobre reembolso | 🔴 `migra-refem` prova · **decisão do Pedro/Mauro** |
+| UX-58 | 🔴 **Passivo herdado.** A empresa chega com passado (DAS atrasado, DEFIS vencida, dívida ativa). O #14 diz que a responsabilidade do período é do contador anterior, **mas a dívida é da empresa** — e quem conta a má notícia vira dono dela. Hoje aparece no M4, **depois do pagamento**: mesmo erro de "barrar tarde" que a gente acabou de corrigir no #1 | 🔴 `migra-passivo` prova · **subir pro M2 + decisão de escopo (upsell ou fora?)** |
+| UX-59 | ⚖️ **Honestidade no #2:** se o contador atual já faz tudo certo, a resposta é "seu enquadramento está correto" e vende-se **serviço**, não economia inexistente. É o UX-49 aplicado ao #2 | ✅ `m2.honestidade` |
+
+### 🎯 Leitura
+- **O `migra-limpo` vende sozinho:** Fator R real de 8,1% → **paga R$1.900/mês a mais do que precisa**. O plano de R$195 se paga **nove vezes**, com o número dela, sem estimativa. É o argumento mais forte que o produto tem em qualquer flow — e estava num blind spot.
+- **`migra-passivo` e `migra-refem` são provavelmente a MESMA pessoa.** Contador que deixa DAS atrasar e DEFIS vencer é o mesmo que não valida TTRT. O pior caso é o cruzamento dos dois, e ele não foi modelado.
+- 🟡 **Pendência D herdada:** nº da resolução CFC + código "Evento 232" ([[fiscal-simples-bh-2026]]) precisam de fonte primária antes de virar produto.
+
 ## 🧷 Follow-ups abertos (gerados por estas rodadas)
-- 🔴 **Auditar spec × motor:** a rodada #5 achou **2 itens ✅ na spec que nunca viraram código** (UX-21 e UX-20/44). Provável que haja mais. "✅ aplicado na spec" não garante implementado.
+- ~~🔴 Auditar spec × motor~~ ✅ **feito 16/07** — 5 gaps achados (3 corrigidos, 2 🔴: UX-25 custo por sócio · UX-30 anuência do cônjuge).
+- 🔴 **UI do N3 precisa separar 3 rotas** (login × migrar × cotar) — hoje "já tenho CNPJ" cai em login e mata o flow #2 (UX-55).
+- 🔴 **Decisões do flow #2:** cobrar antes do TTRT (que a gente não controla)? SLA + reembolso? Passivo é upsell ou fora do escopo?
+- 🔴 **Blind spots que sobram:** `saas`/`bpo` · MEI→ME · upsell-taker · teto do Simples · **cruzamento `migra-refem` × `migra-passivo`**.
 - ~~🔴 Re-sincronizar [[mapa-telas-mobile]]~~ ✅ **feito 15/07** — reescrito e sincronizado com as 2 specs (22 telas Entrada→B4, 23 c/ dia-2) + tabela de pausas.
 - 🟡 **Espelhar no protótipo** `ux-ui/prototipo/` as telas novas/alteradas (protótipo não tem CNAE ótimo, bloqueios que educam, nem a cauda B3/B4/aterrissagem).
 - ~~🟡 Spec de B3/B4~~ ✅ **feita na rodada #3** → [[spec-telas-b3-b4-aterrissagem]] (fechou UX-17/18/19/20/28/31).

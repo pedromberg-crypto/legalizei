@@ -11,10 +11,25 @@
 
 const fs = require('fs');
 const path = require('path');
-const schema = require('./flow-schema.js');
 
 const DIR = __dirname;
 const LEDGER = path.join(DIR, 'historico-testes.jsonl');
+
+// O README sempre prometeu que "o motor é genérico: novo flow vira outro schema". Não era —
+// o schema estava hardcoded. Agora a persona declara o flow em `meta.flow` e o motor carrega
+// o schema certo. Abertura = flow #1 · Migrar = flow #2.
+const FLOWS = {
+  abertura: './flow-schema.js',
+  migrar: './flow-migrar.js',
+};
+function carregarSchema(nome) {
+  const mod = FLOWS[nome || 'abertura'];
+  if (!mod) {
+    console.error(`flow desconhecido: "${nome}". Conhecidos: ${Object.keys(FLOWS).join(', ')}`);
+    process.exit(2);
+  }
+  return require(mod);
+}
 
 // ── livro-caixa (append-only) ─────────────────────────────────────────────
 function hoje() { return new Date().toISOString().slice(0, 10); }
@@ -40,7 +55,7 @@ function carregarPersona(id) {
   return JSON.parse(fs.readFileSync(p, 'utf8'));
 }
 
-function rodar(persona) {
+function rodar(persona, schema) {
   const ctx = { respostas: persona.respostas, dados: {}, veredito_b1: null };
   const trilha = [];
   let status = 'segue';
@@ -105,7 +120,7 @@ function comparar(atual, esperado) {
 }
 
 // ── render de tabela (Markdown, alinhado — legível cru no terminal e renderizado no chat) ──
-function metaPasso(id) {
+function metaPasso(id, schema) {
   const base = id.replace('::pausa', '');
   const p = schema.passos.find((x) => x.id === base);
   return p ? { bloco: p.bloco, tela: p.tela } : { bloco: '·', tela: '·' };
@@ -118,11 +133,11 @@ function tabela(headers, rows) {
   return [linha(headers), sep, ...rows.map(linha)].join('\n');
 }
 
-function montarTabela(linhas, persona) {
+function montarTabela(linhas, persona, schema) {
   const sug = persona.sugestoes || {};
   const rows = linhas.map((l, i) => {
     const passo = (l.a && l.a.passo) || (l.e && l.e.passo) || '(?)';
-    const m = metaPasso(passo);
+    const m = metaPasso(passo, schema);
     return [
       String(i + 1).padStart(2, '0'),
       `${m.bloco}·${m.tela}`,
@@ -165,7 +180,8 @@ if (!cmd) {
 }
 
 const persona = carregarPersona(cmd);
-const { trilha, status, parouEm, veredito_b1 } = rodar(persona);
+const schema = carregarSchema(persona.meta.flow);
+const { trilha, status, parouEm, veredito_b1 } = rodar(persona, schema);
 const { linhas } = comparar(trilha, persona.esperado);
 
 const esp = persona.esperado || {};
@@ -176,7 +192,7 @@ const passou = linhas.every((l) => l.ok) && vOk && sOk && pOk;
 
 const testId = proximoId('T', 'corrida');
 const perfil = persona.perfil || {};
-const tab = montarTabela(linhas, persona);
+const tab = montarTabela(linhas, persona, schema);
 
 // ── relatório visual (sempre em tabela) ──
 const cab = `🏁 ${testId} · FLOW ${schema.flow_num} "${schema.id}" v${schema.versao} · persona "${persona.meta.id}" (${persona.meta.nome})`;

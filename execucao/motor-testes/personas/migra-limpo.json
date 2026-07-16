@@ -1,0 +1,135 @@
+{
+  "meta": {
+    "id": "migra-limpo",
+    "nome": "Paula — designer, 3 anos de CNPJ, paga imposto demais e não sabe",
+    "persona_seq": 17,
+    "flow": "migrar",
+    "descricao": "FLOW #2 GOLDEN PATH. Já tem CNPJ há 3 anos, Anexo V, se paga pouco (Fator R real de 8%). Paga ~R$1.900/mês a mais do que precisa e nunca ouviu falar de Fator R. Migração limpa: sem passivo, contador antigo valida o TTRT sem drama. É o caso que prova a tese do flow #2: aqui a economia NÃO é estimativa, é o número REAL dela (CGSN 140/18 art. 26).",
+    "fonte": "[[fiscal-simples-bh-2026]] bloco I + #14 · blind spot 'flow #2 MIGRAR' aberto desde 15/07"
+  },
+  "perfil": {
+    "nivel": "medio",
+    "personalidade": "Toca o negócio dela, não a contabilidade. Tem contador desde a abertura, paga R$300/mês e nunca questionou. Descobre pelo Instagram que talvez esteja pagando mais imposto do que precisa. Cética: já ouviu promessa de economia antes.",
+    "estressa": [
+      "promessa vaga de economia",
+      "não saber se a troca vai dar dor de cabeça",
+      "medo de ficar sem contador no meio do mês do imposto"
+    ]
+  },
+  "sugestoes": {
+    "m2.diagnostico": "🎯 **Este é o ativo do flow #2 e ele é melhor que o do flow #1.** Na abertura o teaser é promessa em cima de faixa (e daí nasceu a `promessa-quebrada`). Aqui o número é DELA: histórico real de 12 meses, sem proporcionalizar. Isso não é teaser, é DIAGNÓSTICO. A copy tem que marcar a diferença: 'não é estimativa, é a sua conta'. É o argumento de venda mais forte que o produto tem em qualquer flow.",
+    "m4.pendencias": "A auditoria de passivo devia virar produto, não só checagem: um 'raio-x do que seu contador atual deixou' entregável em PDF. Vale mesmo pra quem NÃO migra — e é a prova social mais cara de fabricar.",
+    "m4.ttrt": "O cliente não sabe que o contador antigo precisa VALIDAR a saída dele. Descobrir isso no meio da migração é péssimo. Avisar no M2, antes de pagar: 'seu contador atual vai precisar assinar a transferência; se ele empacar, a gente resolve pelo CRC-MG'."
+  },
+  "respostas": {
+    "entrada_escolha": "ja_tenho_cnpj",
+    "cnpj": "12345678000195",
+    "cnpj_situacao": "ativa",
+    "cnae": "7410-2/02",
+    "natureza": "SLU",
+    "porte": "ME",
+    "no_simples": true,
+    "filtro_servico": true,
+    "filtro_regulada": false,
+    "receita_12m": 240000,
+    "folha_12m": 19452,
+    "socio_nome": "Paula Rezende Antunes",
+    "socio_cpf": "11144477735",
+    "socio_cpf_situacao": "regular",
+    "govbr_nivel": "prata",
+    "plano": "base",
+    "aceite": true,
+    "pagamento_status": "pago",
+    "das_em_atraso": null,
+    "obrigacoes_pendentes": null,
+    "divida_ativa": false,
+    "ttrt_validado": true
+  },
+  "eventos": {
+    "m4.evento232": {
+      "tipo": "pausa",
+      "motivo": "Redesim processando o Evento 232 (RFB + Sefaz-MG + PBH)",
+      "espera": "2 dias úteis",
+      "retomada": "idempotente"
+    }
+  },
+  "esperado": {
+    "veredito_b1": "🟢 atende",
+    "status": "migrada",
+    "parou_em": "fim.migrada",
+    "trilha": [
+      {
+        "passo": "m0.fork",
+        "resultado": "rota: MIGRAR (troca de contador) — NÃO é login"
+      },
+      {
+        "passo": "m1.cnpj",
+        "resultado": "CNPJ ativo · CNAE 7410-2/02 · SLU · ME · no Simples: sim"
+      },
+      {
+        "passo": "m1.filtro",
+        "resultado": "serviço ✓ · Simples ✓ · não-regulada ✓"
+      },
+      {
+        "passo": "m1.veredito",
+        "resultado": "🟢 atende"
+      },
+      {
+        "passo": "m2.diagnostico",
+        "resultado": "Fator R REAL 8.1% (12m: folha R$19452 / receita R$240000) → hoje Anexo V (15,5%) · 🎯 você paga ~R$1900/mês a mais do que precisa"
+      },
+      {
+        "passo": "m2.honestidade",
+        "resultado": "proposta = economia real de ~R$1900/mês + serviço"
+      },
+      {
+        "passo": "m2.conta",
+        "resultado": "conta criada · entra no checkout"
+      },
+      {
+        "passo": "m3.conta_abertura",
+        "resultado": "conta da migração: transferência R$0 · SEM taxa de governo (a empresa já existe) · recorrente: plano base"
+      },
+      {
+        "passo": "m3.aceite",
+        "resultado": "contrato aceito · GARANTIA VISÍVEL: 7 dias pra desistir (CDC art.49)"
+      },
+      {
+        "passo": "m3.pagamento",
+        "resultado": "CPF regular ✓ · pagamento confirmado · entra no app"
+      },
+      {
+        "passo": "m4.pendencias",
+        "resultado": "sem passivo identificado · migração limpa"
+      },
+      {
+        "passo": "m4.distrato",
+        "resultado": "distrato formalizado com o escritório anterior"
+      },
+      {
+        "passo": "m4.ttrt",
+        "resultado": "TTRT aberto no CRC-MG · contador antigo validou · responsabilidade técnica transferida"
+      },
+      {
+        "passo": "m4.evento232",
+        "resultado": "DBE Evento 232 transmitido (atualiza RFB + Sefaz-MG + PBH de uma vez) 🟡 código a verificar"
+      },
+      {
+        "passo": "m4.evento232::pausa",
+        "resultado": "⏸ Redesim processando o Evento 232 (RFB + Sefaz-MG + PBH) · espera 2 dias úteis · ▶ retomada idempotente"
+      },
+      {
+        "passo": "m4.procuracao",
+        "resultado": "procuração antiga REVOGADA + nova emitida ao Legalizei (5 anos) · 2FA intacto"
+      },
+      {
+        "passo": "m5.ativacao",
+        "resultado": "procuração e-CAC → API Serpro (PGDAS-D/DAS automatizado)"
+      },
+      {
+        "passo": "fim.migrada",
+        "resultado": "empresa migrada e operando ✅"
+      }
+    ]
+  }
+}

@@ -32,7 +32,12 @@ const FISCAL = {
   INSS_MAX: 932.31,       // 11% do teto
   INSS_ALIQ: 0.11,        // INSS do sócio sobre pró-labore (direto, não 11%×20%)
   IRRF_ISENCAO: 5000,     // isenção efetiva de IRRF/mês (Lei 15.270/2025)
-  FATOR_R_LIMIAR: 0.28,   // ≥28% → Anexo III · <28% → Anexo V
+  FATOR_R_LIMIAR: 0.28,   // ≥28% → Anexo III · <28% → Anexo V (a LEI)
+  // UX-39 (auditoria 16/07): a spec manda **não cravar 28%** — um mês de folha menor ou atrasada
+  // joga pro Anexo V no ano INTEIRO. O alvo recomendado é ~30%, com colchão. O motor recomendava
+  // 28% exato, ou seja, dava justamente o conselho que a spec proíbe. Item ✅ na spec desde a
+  // rodada #3 e NUNCA implementado.
+  FATOR_R_MARGEM: 0.30,   // alvo recomendado (colchão sobre o limiar legal)
   ANEXO_III: 0.06,
   ANEXO_V: 0.155,
   // 🟡 A TRAVAR (pendência da reordenação): qual desvio teaser(N5) × real(N18) é aceitável.
@@ -50,11 +55,36 @@ function faturamentoMedio(faixa) {
   return FAIXA_MEDIA[String(faixa || '').trim()] ?? null;
 }
 
-// pró-labore ótimo = o menor que cruza 28% (vira Anexo III). Mostra se fica ≤ R$5k (IRRF zero).
+// pró-labore ótimo = o que cruza o Fator R COM COLCHÃO (UX-39: mira 30%, não crava 28%).
 // MVP: folha ≈ pró-labore (solo sem funcionário). 🟡 ponto B (CPP-no-DAS) pode mudar o alvo.
 function proLaboreOtimo(fat) {
   if (!fat) return null;
-  return Math.round(Math.max(FISCAL.SALARIO_MIN, FISCAL.FATOR_R_LIMIAR * fat));
+  return Math.round(Math.max(FISCAL.SALARIO_MIN, FISCAL.FATOR_R_MARGEM * fat));
+}
+
+// UX-39: a zona entre o limiar legal (28%) e a margem recomendada (30%) é "encostado na borda":
+// tecnicamente Anexo III, mas um mês ruim derruba pro V no ano inteiro.
+function naBorda(folhaPct) {
+  return folhaPct >= FISCAL.FATOR_R_LIMIAR && folhaPct < FISCAL.FATOR_R_MARGEM;
+}
+
+// UX-24 (auditoria 16/07) — "as duas telas NÃO podem ser ilhas".
+// A spec é explícita: o pró-labore ótimo tem que CONSUMIR o dado do CLT declarado no b2.clt.
+// Sócio com CLT ≥ teto zera o INSS do pró-labore; com CLT parcial, recolhe só sobre a folga.
+// O simulador não tinha UMA referência a CLT — calculava o custo como se ninguém tivesse
+// vínculo. Item ✅ na spec desde a rodada #2 e NUNCA implementado.
+function custoProLabore(proLabore, cltRemun) {
+  const { folga, zera } = inssComFolga(cltRemun);
+  if (zera) return { inss: 0, nota: 'INSS zero (CLT já ≥ teto)' };
+  const base = Math.min(proLabore || 0, folga);
+  const inss = Math.round(base * FISCAL.INSS_ALIQ);
+  const parcial = folga < FISCAL.TETO_INSS;
+  return {
+    inss,
+    nota: parcial
+      ? `INSS R$${inss} (11% sobre a folga de R$${Math.round(folga)}, já descontado o CLT)`
+      : `INSS R$${inss} (11%)`,
+  };
 }
 
 // INSS do pró-labore com FOLGA do teto (duplo vínculo): incide sobre (teto − salário CLT).
@@ -111,7 +141,7 @@ function validaCPF(cpf) {
 module.exports = {
   id: 'abertura',
   flow_num: 1,
-  versao: '0.3.1',
+  versao: '0.3.2',
   cobertura: 'Entrada + B1 (gate+teaser) + B3 (cobrança) + B2 (dossiê, dentro do app) + B4 + B4.5',
 
   passos: [
@@ -409,6 +439,11 @@ module.exports = {
       id: 'b2.cnae_otimo', bloco: 'B2', tela: 'N17', tipo: 'simulador',
       nome: '2.8a CNAE fiscalmente ótimo — CUMPRE a promessa do N5',
       // Agora é ENTREGA ao cliente (ele já pagou), não isca.
+      // UX-06 (auditoria 16/07): "NUNCA trocar em silêncio" + opt-in explícito + trilha de
+      // auditoria. O motor calculava o ótimo e **assumia a adoção**, contando a economia de um
+      // swap que a cliente nunca escolheu. Linha dura anti-passivo da [[cnae-fiscalmente-otimo]]:
+      // a troca é decisão dela, e "manter o atual" é resposta legítima (o ótimo fiscal nem
+      // sempre é o ótimo comercial — cliente/edital pode exigir um CNAE específico).
       deriva: (ctx) => {
         const r = ctx.respostas;
         const fam = r.cnae_equivalentes;
@@ -420,9 +455,14 @@ module.exports = {
         const otimo = ord[0];
         const pior = ord[ord.length - 1];
         const economia = Math.round(economiaSwap(fam, fat));
+        const adota = r.adota_cnae_otimo === true;
+        const base = `CNAE ótimo: ${otimo.cnae} (Anexo ${otimo.anexo}, ${otimo.aliquota}%) vs ${pior.cnae} (${pior.aliquota}%) · economia ~R$${economia}/mês`;
         return {
-          resultado: `CNAE ótimo: ${otimo.cnae} (Anexo ${otimo.anexo}, ${otimo.aliquota}%) vs ${pior.cnae} (${pior.aliquota}%) · economia ~R$${economia}/mês`,
-          dados: { cnae_otimo: otimo.cnae, economia_swap: economia },
+          resultado: adota
+            ? `${base} · ✅ ADOTOU (opt-in explícito · trilha de auditoria gravada)`
+            : `${base} · manteve o CNAE atual (escolha respeitada · economia NÃO realizada)`,
+          // a economia só entra na conta se ela de fato adotou
+          dados: { cnae_otimo: otimo.cnae, economia_swap: adota ? economia : 0, swap_adotado: adota },
         };
       },
     },
@@ -445,10 +485,17 @@ module.exports = {
         const anexo = (anexoDireto || jaOtimo) ? 'III (6%)' : 'V (15,5%)';
         const otimo = proLaboreOtimo(fat);
         const irrf = otimo != null && otimo <= FISCAL.IRRF_ISENCAO ? 'IRRF zero' : 'IRRF s/ excedente';
+        // UX-24: consome o CLT declarado no b2.clt em vez de recalcular do zero.
+        const custo = otimo != null ? custoProLabore(otimo, r.clt_remuneracao) : null;
+        const custoTxt = custo ? ` · custo: ${custo.nota}` : '';
+        // UX-39: quem está entre 28% e 30% está tecnicamente em III, mas encostado na borda.
+        const borda = naBorda(folhaPct) ? ' · ⚠️ ENCOSTADO NA BORDA (um mês de folha menor joga pro Anexo V no ano inteiro; mire ~30%)' : '';
         const tail = anexoDireto
           ? ' · CNAE já é Anexo III sem Fator R (folha não muda nada)'
           : (otimo != null
-              ? (jaOtimo ? ' · já otimizado' : ` · ótimo R$${otimo} → Anexo III (${irrf})`)
+              ? (jaOtimo
+                  ? ` · já em III${borda}`
+                  : ` · ótimo R$${otimo} (mira 30%, com colchão) → Anexo III (${irrf})${custoTxt}`)
               : '');
 
         // Economia REAL = o que o PRODUTO consegue entregar, não o que o cliente adota.

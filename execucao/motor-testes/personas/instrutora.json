@@ -63,7 +63,8 @@
     "b3_aceite": true,
     "b3_pagamento_status": "pago",
     "cnae_anexo_padrao": "V",
-    "b2_termo_aceite": true
+    "b2_termo_aceite": true,
+    "adota_cnae_otimo": true
   },
   "eventos": {},
   "esperado": {
@@ -153,11 +154,11 @@
       },
       {
         "passo": "b2.cnae_otimo",
-        "resultado": "CNAE ótimo: 8599-6/04 (Anexo III, 6%) vs 7020-4/00 (15.5%) · economia ~R$1425/mês"
+        "resultado": "CNAE ótimo: 8599-6/04 (Anexo III, 6%) vs 7020-4/00 (15.5%) · economia ~R$1425/mês · ✅ ADOTOU (opt-in explícito · trilha de auditoria gravada)"
       },
       {
         "passo": "b2.simulador",
-        "resultado": "est. Fator R 12% → Anexo V (15,5%) · ótimo R$4200 → Anexo III (IRRF zero) · teaser cumprido (~R$1425 → ~R$1425)"
+        "resultado": "est. Fator R 12% → Anexo V (15,5%) · ótimo R$4500 (mira 30%, com colchão) → Anexo III (IRRF zero) · custo: INSS R$495 (11%) · teaser cumprido (~R$1425 → ~R$1425)"
       },
       {
         "passo": "b2.revisao",

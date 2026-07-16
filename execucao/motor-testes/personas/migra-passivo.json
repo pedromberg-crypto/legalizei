@@ -1,0 +1,135 @@
+{
+  "meta": {
+    "id": "migra-passivo",
+    "nome": "Cléber — chega com DAS atrasado e dívida ativa (a empresa tem passado)",
+    "persona_seq": 19,
+    "flow": "migrar",
+    "descricao": "FLOW #2 — PASSIVO HERDADO. Migra porque o contador sumiu, e o motivo do sumiço aparece na auditoria: R$ 4.800 de DAS em atraso, DEFIS não entregue e inscrição em dívida ativa. A empresa chega com passado. O consolidado (#14) diz que a responsabilidade do período antigo é do contador anterior, mas **a dívida é da empresa** e o cliente vai achar que a gente resolve. Segue até migrada (o passivo não bloqueia a migração), mas o motor MARCA antes de assumir.",
+    "fonte": "[[fiscal-simples-bh-2026]] #14 ('obrigações do período antigo ficam com o contador anterior')"
+  },
+  "perfil": {
+    "nivel": "leigo total",
+    "personalidade": "Achava que estava tudo em dia porque pagava o contador todo mês. Descobre o buraco no diagnóstico. Vai misturar duas coisas na cabeça: 'o Legalizei vai resolver isso' e 'o Legalizei me contou'. Quem conta a má notícia costuma virar dono dela.",
+    "estressa": [
+      "descobrir dívida que não sabia que tinha",
+      "não saber quem paga o quê",
+      "achar que contratou e o problema sumiu"
+    ]
+  },
+  "sugestoes": {
+    "m4.pendencias": "🔴 **Auditar é fácil; a linha de responsabilidade é que precisa de decisão.** Mostrar 'você deve R$4.800 + dívida ativa' sem dizer, na mesma tela, **o que é nosso e o que é dele**, cria um cliente que acha que contratou a solução do passivo. Precisa de: escopo explícito ('cuidamos do que vem daqui pra frente; o passado a gente te ajuda a organizar, mas a dívida é da empresa'), a rota de regularização (parcelamento?), e a decisão do Mauro: **isso é upsell ou é fora do escopo?**",
+    "m2.diagnostico": "⚠️ Ordem errada. O passivo aparece no M4, **depois do pagamento**. Deveria aparecer no M2, ANTES: quem tem dívida ativa pode nem querer migrar agora, e descobrir isso depois de pagar é o mesmo erro que a gente acabou de corrigir no flow #1 (barrar tarde). A auditoria de CNPJ é barata: sobe pro diagnóstico.",
+    "m4.ttrt": "Contador que deixou DAS atrasar e DEFIS vencer é exatamente o perfil que também não valida TTRT. `migra-passivo` e `migra-refem` provavelmente são a MESMA pessoa na vida real."
+  },
+  "respostas": {
+    "entrada_escolha": "ja_tenho_cnpj",
+    "cnpj": "44555666000177",
+    "cnpj_situacao": "ativa",
+    "cnae": "6204-0/00",
+    "natureza": "SLU",
+    "porte": "ME",
+    "no_simples": true,
+    "filtro_servico": true,
+    "filtro_regulada": false,
+    "receita_12m": 120000,
+    "folha_12m": 40000,
+    "socio_nome": "Cléber Augusto Pinto",
+    "socio_cpf": "52998224725",
+    "socio_cpf_situacao": "regular",
+    "govbr_nivel": "prata",
+    "plano": "base",
+    "aceite": true,
+    "pagamento_status": "pago",
+    "das_em_atraso": 4800,
+    "obrigacoes_pendentes": "DEFIS 2025 não entregue",
+    "divida_ativa": true,
+    "ttrt_validado": true
+  },
+  "eventos": {
+    "m4.pendencias": {
+      "tipo": "pausa",
+      "motivo": "cliente lendo o raio-x do passivo e decidindo se segue",
+      "espera": "1 dia",
+      "retomada": "idempotente"
+    }
+  },
+  "esperado": {
+    "veredito_b1": "🟢 atende",
+    "status": "migrada",
+    "parou_em": "fim.migrada",
+    "trilha": [
+      {
+        "passo": "m0.fork",
+        "resultado": "rota: MIGRAR (troca de contador) — NÃO é login"
+      },
+      {
+        "passo": "m1.cnpj",
+        "resultado": "CNPJ ativo · CNAE 6204-0/00 · SLU · ME · no Simples: sim"
+      },
+      {
+        "passo": "m1.filtro",
+        "resultado": "serviço ✓ · Simples ✓ · não-regulada ✓"
+      },
+      {
+        "passo": "m1.veredito",
+        "resultado": "🟢 atende"
+      },
+      {
+        "passo": "m2.diagnostico",
+        "resultado": "Fator R REAL 33.3% (12m: folha R$40000 / receita R$120000) → hoje Anexo III (6%) · seu enquadramento já está certo"
+      },
+      {
+        "passo": "m2.honestidade",
+        "resultado": "sem ganho fiscal · proposta = SERVIÇO (app, DAS automático, sem sumir) · NÃO inventa economia"
+      },
+      {
+        "passo": "m2.conta",
+        "resultado": "conta criada · entra no checkout"
+      },
+      {
+        "passo": "m3.conta_abertura",
+        "resultado": "conta da migração: transferência R$0 · SEM taxa de governo (a empresa já existe) · recorrente: plano base"
+      },
+      {
+        "passo": "m3.aceite",
+        "resultado": "contrato aceito · GARANTIA VISÍVEL: 7 dias pra desistir (CDC art.49)"
+      },
+      {
+        "passo": "m3.pagamento",
+        "resultado": "CPF regular ✓ · pagamento confirmado · entra no app"
+      },
+      {
+        "passo": "m4.pendencias",
+        "resultado": "⚠️ PASSIVO HERDADO: DAS em atraso (R$4800) · obrigações acessórias pendentes: DEFIS 2025 não entregue · inscrição em DÍVIDA ATIVA · mostrado ANTES de assumir · responsabilidade do período antigo é do contador anterior (#14), mas a dívida é da empresa"
+      },
+      {
+        "passo": "m4.pendencias::pausa",
+        "resultado": "⏸ cliente lendo o raio-x do passivo e decidindo se segue · espera 1 dia · ▶ retomada idempotente"
+      },
+      {
+        "passo": "m4.distrato",
+        "resultado": "distrato formalizado com o escritório anterior"
+      },
+      {
+        "passo": "m4.ttrt",
+        "resultado": "TTRT aberto no CRC-MG · contador antigo validou · responsabilidade técnica transferida"
+      },
+      {
+        "passo": "m4.evento232",
+        "resultado": "DBE Evento 232 transmitido (atualiza RFB + Sefaz-MG + PBH de uma vez) 🟡 código a verificar"
+      },
+      {
+        "passo": "m4.procuracao",
+        "resultado": "procuração antiga REVOGADA + nova emitida ao Legalizei (5 anos) · 2FA intacto"
+      },
+      {
+        "passo": "m5.ativacao",
+        "resultado": "procuração e-CAC → API Serpro (PGDAS-D/DAS automatizado)"
+      },
+      {
+        "passo": "fim.migrada",
+        "resultado": "empresa migrada e operando ✅"
+      }
+    ]
+  }
+}

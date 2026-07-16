@@ -83,7 +83,7 @@ tags: [produto, ux, flow, log, otimizacao, backlog]
 
 | ID | Grupo | Sugestão (3ª ordem) | Persona(s) | Status | Onde / quando |
 |---|---|---|---|---|---|
-| UX-32 | Mapa da jornada | Barra de progresso vira mapa: **onde estou / quanto falta / quanto já custou** no arco inteiro (~30 passos). Persistente entrada→ativa | todas | ✅ | spec B1/B2 **notas transversais** · rodada #3 |
+| UX-32 | Mapa da jornada | ~~Barra de progresso vira mapa persistente entrada→ativa~~ | todas | 🔴 **APOSENTADO 16/07** | **REVOGADO pelo shell** ([[design-system]] §0). Barra é motivacional quando **você** é o gargalo; no B4 o gargalo é a JUCEMG e o cliente não acelera nada. O N21 já tem timeline própria (9 etapas) — a barra por cima seria a 2ª barra medindo o mesmo com granularidade pior. **O que sobrevive:** a barra vale no **wizard (N1–N9)**, onde o usuário É o gargalo |
 | UX-33 | Conta da abertura | Custo total **antes do aceite**: o que é grátis (honorário) × taxas de governo (repasse ~R$268,51) × recorrente (mensalidade + endereço + certificado). Nunca esconder o repasse no preço | todas | ✅ | [[spec-telas-b3-b4-aterrissagem]] **T16** · rodada #3 |
 | UX-34 | Dossiê exportável | Generaliza a prova do CNAE ótimo (UX-26) pra **todo o enquadramento**: PDF do "por que esse CNAE/anexo/pró-labore". Defesa pra quem migra de contador | todas, esp. migração | ✅ | spec B1/B2 **T15 (revisão)** · rodada #3 |
 | UX-35 | Handoff humano com dossiê | Todo bloqueio/waitlist entrega pro humano **o que já foi preenchido** (não só e-mail). Cohort "não encaixa" vira lead quente com contexto | camaleao, fronteira, bloq-3socios, bloq-exterior, bloq-cltpropria | ✅ | spec B1/B2 **T4 (handoff, linha nova)** · rodada #3 |

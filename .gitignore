@@ -11,3 +11,8 @@ Thumbs.db
 # Node (se algum script local instalar deps)
 node_modules/
 cnae_ibge.json
+
+# Next.js (app de produto)
+app/.next/
+app/out/
+app/next-env.d.ts

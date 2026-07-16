@@ -2,10 +2,11 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "lp",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["--yes", "serve", "ux-ui/lp", "-l", "4173"],
-      "port": 4173
+      "name": "legalizei-app",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "app",
+      "port": 3000
     }
   ]
 }

@@ -76,12 +76,12 @@ tags: [marca, design, design-system, tokens, shell, arquetipos, ux]
 | `text-display` | 32 / 1.15 / 700 | o número grande (economia no N5/N18), veredito |
 | `text-h1` | 26 / 1.2 / 700 | título de tela |
 | `text-h2` | 20 / 1.3 / 600 | título de bloco |
-| **`text-body`** | **17 / 1.5 / 400** | **corpo padrão** |
-| `text-body-strong` | 17 / 1.5 / 600 | ênfase no corpo |
+| **`text-body`** | **16 / 1.5 / 400** | **corpo padrão** |
+| `text-body-strong` | 16 / 1.5 / 600 | ênfase no corpo |
 | `text-caption` | 14 / 1.4 / 400 | apoio, legenda |
 | `text-micro` | 12 / 1.4 / 500 | carimbo, meta |
 
-> 🟡 **`text-body` = 17px é decisão consciente, não default de framework.** O padrão web é 16. O nicho é leigo (Cida, 61 anos) e o **UX-12 pede letra grande como universal** (UX-48: não é "modo leigo", é design bom). 17 é generoso sem ficar estranho. **Chamada do Pedro** — se preferir 16, muda aqui e só aqui.
+> ✅ **`text-body` = 16px — decisão do Pedro (16/07).** Eu tinha proposto 17 pelo nicho leigo; ele optou pelo padrão web. **Consequência que fica registrada:** a acessibilidade do UX-12 ("letra grande") passa a depender **inteiramente da fonte ampliável**, não do default. Se a persona `cida` reclamar de leitura numa rodada futura, **o suspeito é este número.**
 >
 > **Fonte ampliável é requisito** (UX-12): a escala usa `rem`, nunca px travado.
 

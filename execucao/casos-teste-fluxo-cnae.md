@@ -7,7 +7,7 @@ tags: [produto, qa, casos-teste, cnae, fluxo, onboarding]
 
 # 🧪 Casos de teste de fluxo — personas CNAE
 
-> Personas p/ validar a lógica do fluxo de abertura ([[blocos-fluxo-abertura]]). 1 caso liso + 4 clusters isolados ("teste unitário": se quebrar, sabe qual condicional) + 1 monstro ("integração": condicionais coexistindo, pipeline B1→B4) + 3 testes de bloqueio (recusa graciosa) + persona **Cida** (eixo acessibilidade, codada no motor). CNAEs aterrados em [[cnae-atendidos-e-nao-atendidos]]. Régua de lapidação; **codadas no motor**: [[motor-testes-arquitetura]]. Companheiro do [[mapa-telas-mobile]].
+> Personas p/ validar a lógica do fluxo de abertura ([[blocos-fluxo-abertura]]). 1 caso liso + 4 clusters isolados ("teste unitário": se quebrar, sabe qual condicional) + 1 monstro ("integração": condicionais coexistindo, pipeline B1→B4) + 3 testes de bloqueio (recusa graciosa) + persona **Cida** (eixo acessibilidade, codada no motor). CNAEs aterrados em [[cnae-atendidos-e-nao-atendidos]]. Régua de lapidação; **codadas no motor**: [[legalize-motor-testes-arquitetura]]. Companheiro do [[mapa-telas-mobile]].
 >
 > **Realinhado 15/07** ao consolidado fiscal ([[fiscal-simples-bh-2026]]) + decisões MVP só-serviço + limite 2 sócios: corrigidos Sociedade (folga do teto), Knife-edge (anexos vira borda) e Monstro (2 sócios, pipeline até B4); os antigos stress "mista"/"3º sócio" viraram testes de bloqueio 7–9.
 

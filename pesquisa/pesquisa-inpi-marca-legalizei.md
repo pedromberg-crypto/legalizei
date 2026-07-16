@@ -9,7 +9,7 @@ tags: [marca, inpi, anterioridade, propriedade-industrial, legalizei]
 
 # 🔎 Pesquisa de anterioridade INPI — marca Legalizei
 
-> Nota-fonte da versão exportada `pesquisa-inpi-marca-legalizei.pdf` (documento-base entregue ao consultor de PI). Fonte primária jurídica = Manual de Marcas INPI. Cruzamento de anterioridade = pesquisa Gemini Pro Search (15/07), sem números de processo — puxar manualmente. Ver decisão de titular em [[decisoes-marca]] · concorrente em [[benchmark-padrao-195]] · torre em [[HOME]].
+> Nota-fonte da versão exportada `pesquisa-inpi-marca-legalizei.pdf` (documento-base entregue ao consultor de PI). Fonte primária jurídica = Manual de Marcas INPI. Cruzamento de anterioridade = pesquisa Gemini Pro Search (15/07), sem números de processo — puxar manualmente. Ver decisão de titular em [[decisoes-marca]] · concorrente em [[plano-padrao-195-referencia]] · torre em [[HOME]].
 
 ## 🧭 Veredito em uma linha
 Registro **viável, porém de risco alto** na forma nominativa pura: "Legalizei" é descritivo do próprio serviço (legalizar/formalizar empresa) e ecoa foneticamente "Contabilizei" na mesma classe. Caminho recomendado = **marca mista** (texto + logotipo distintivo) em **multiclasse (35 + 42)**. O ".app" não agrega proteção.

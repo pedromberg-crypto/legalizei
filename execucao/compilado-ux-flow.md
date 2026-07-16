@@ -7,7 +7,7 @@ tags: [produto, ux, flow, log, otimizacao, backlog]
 
 # 🔧 Compilado de otimizações de UX do flow — LOG VIVO
 
-> **O que é:** fonte única do que melhorar no flow de abertura + o que já foi feito. Nasce das baterias de personas do [[motor-testes-arquitetura|motor de testes]] (coluna "Sugestão / olhar leigo"). **Rodada #1** (T0026–T0036) → 16 ✅ na spec. **Rodada #2** (T0068–T0079, 2ª ordem pós-otimização) → 13 itens 🔴 novos. Cresce a cada rodada ou ideia solta.
+> **O que é:** fonte única do que melhorar no flow de abertura + o que já foi feito. Nasce das baterias de personas do [[legalize-motor-testes-arquitetura|motor de testes]] (coluna "Sugestão / olhar leigo"). **Rodada #1** (T0026–T0036) → 16 ✅ na spec. **Rodada #2** (T0068–T0079, 2ª ordem pós-otimização) → 13 itens 🔴 novos. Cresce a cada rodada ou ideia solta.
 >
 > **Como funciona (combinado com o Pedro):** cada item nasce 🔴 **aberto**. Quando a gente **executa** de fato (spec/protótipo/motor), viro pra ✅ **aplicado** com **data + onde**. No `/fechar` de cada flow eu passo aqui e atualizo o status do que mexemos. Toda sugestão nova entra neste doc.
 
@@ -257,4 +257,4 @@ Daí a decisão: **as duas alavancas não têm o mesmo grau de certeza, e tratá
 - 🟡 **Números a travar** que a cauda expôs: nosso preço (vs benchmark R$195), endereço fiscal, certificado, DAE JUCEMG vigente → [[spec-telas-b3-b4-aterrissagem]] pendências.
 
 ## Links
-- [[casos-teste-fluxo-cnae]] · [[spec-telas-entrada-b1-b2]] · [[spec-telas-b3-b4-aterrissagem]] · [[cnae-fiscalmente-otimo]] · [[blocos-fluxo-abertura]] · [[motor-testes-arquitetura]] · [[HOME]]
+- [[casos-teste-fluxo-cnae]] · [[spec-telas-entrada-b1-b2]] · [[spec-telas-b3-b4-aterrissagem]] · [[cnae-fiscalmente-otimo]] · [[blocos-fluxo-abertura]] · [[legalize-motor-testes-arquitetura]] · [[HOME]]

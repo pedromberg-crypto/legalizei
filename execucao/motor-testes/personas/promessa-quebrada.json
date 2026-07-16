@@ -1,72 +1,59 @@
 {
   "meta": {
-    "id": "monstro",
-    "nome": "Heitor + Otávio — consultoria (boss / integração até B4)",
-    "persona_seq": 6,
+    "id": "promessa-quebrada",
+    "nome": "Vitor — consultor de TI que subcontrata (fatura alto, tira pouco)",
+    "persona_seq": 15,
     "flow": "abertura",
-    "descricao": "FLOW 6 realinhado. 2 sócios (no limite), Heitor casado comunhão universal + CLT R$9k (ZERA teto), LTDA, Fator R na borda 28% → III. Pipeline inteiro até empresa ativa. Bordas que TERMINAM o flow saíram pros bloqueios 7–9.",
-    "fonte": "[[casos-teste-fluxo-cnae]] FLOW 6 — Caso Monstro"
+    "descricao": "FLOW 15 — GUARDA-CORPO DO TEASER (nasce da reordenação 16/07). Fatura R$40k mas subcontrata devs e só consegue se pagar R$3k de pró-labore. O ótimo do Fator R exigiria R$11.200 → o caminho NÃO EXISTE pra ele → economia real ZERO. Mas o teaser (N5) prometeu ~R$3.800/mês e foi o que vendeu o plano. E ELE JÁ PAGOU. Risco que não existia no flow antigo, onde ele via o número real antes de abrir a carteira.",
+    "fonte": "[[reordenacao-flow-cobranca-cedo]] — persona nova exigida pelo N5"
   },
   "perfil": {
-    "nivel": "alto",
-    "personalidade": "Empreendedor experiente, empilha condicionais. Testa se o app aguenta o caminho todo sem quebrar com casos coexistindo.",
+    "nivel": "medio",
+    "personalidade": "Pragmático. Entrou pelo anúncio de economia, leu 'estimativa' e ignorou como todo mundo ignora. Fatura bem mas a margem é apertada: quase tudo vira pagamento de subcontratado. Se descobrir depois de pagar que a economia não vale pra ele, não vai brigar por causa de R$195 — vai só falar mal e cancelar.",
     "estressa": [
-      "state machine que perde estado numa pausa longa",
-      "borda de escopo que dá crash em vez de recusa graciosa"
+      "promessa de marketing que não bate com a conta real",
+      "descobrir depois de pagar",
+      "carimbo de estimativa usado como desculpa"
     ]
   },
   "sugestoes": {
-    "b4.viabilidade": "Notificação pros 2 sócios já ✅ (UX-20). 4ª ordem: failure-state COMPONDO com 2 sócios — se um passo de órgão falha e precisa de ação, dizer **de qual sócio é a vez** e notificar os dois. Pipeline longo + 2 pessoas = a falha não pode virar 'travou e ninguém sabe de quem é a bola'.",
-    "b2.simulador": "Ele empilha condicionais. 4ª ordem: um modo 'e se?' — deixar simular cenários (subo o pró-labore? mudo a faixa?) sem sair do fluxo. O experiente quer brincar com os números antes de cravar."
+    "b1.teaser": "🔴 O teaser promete o TETO do Fator R (V→III = 9,5% do faturamento) sabendo só CNAE + faixa. Não sabe se a pessoa consegue se pagar o pró-labore necessário. Quanto MAIOR o faturamento, MAIOR a promessa e MENOR a chance de ela alcançar — a estimativa erra mais justamente em quem ela mais anima. Opções: (a) exibir o teaser como faixa ('entre R$0 e R$X, depende do quanto você se paga'), (b) perguntar o pró-labore viável já no N4, (c) só exibir teaser quando há família de swap (economia que independe da folha).",
+    "b2.simulador": "🔴 DECISÃO DE PRODUTO PENDENTE: o que acontece quando a promessa que vendeu o plano não se cumpre? Hoje o motor só MARCA. Ele segue pra empresa ativa e o serviço é entregue (a abertura vale R$195 sozinha), mas a expectativa foi criada por nós. Reembolso? Downgrade? Aviso honesto no N18 com opção de sair? Escolher NADA também é escolher — vira Reclame Aqui."
   },
   "respostas": {
     "entrada_escolha": "abrir_cnpj",
-    "atividade_descricao": "prestamos consultoria empresarial e de gestão",
-    "cnae": "7020-4/00",
+    "atividade_descricao": "presto consultoria de TI e subcontrato devs para os projetos",
+    "cnae": "6204-0/00",
+    "cnae_anexo_padrao": "V",
     "cnae_confianca": "alta",
     "cnae_ambiguo": false,
     "filtro_servico": true,
     "filtro_simples": true,
     "filtro_regulada": false,
-    "socio_nome": "Heitor Nogueira Sales",
-    "socio_cpf": "12345678909",
+    "socio_nome": "Vitor Andrade Pinto",
+    "socio_cpf": "52998224725",
     "socio_cpf_situacao": "regular",
-    "socio_estado_civil": "casado",
-    "socio_regime_bens": "comunhão universal de bens",
-    "socio_cep": "30112000",
-    "duplo_vinculo_clt": true,
-    "clt_remuneracao": 9000,
-    "num_socios": 2,
-    "empresa_capital": 50000,
+    "socio_estado_civil": "solteiro",
+    "socio_cep": "30310000",
+    "duplo_vinculo_clt": false,
+    "num_socios": 1,
+    "empresa_capital": 15000,
     "empresa_endereco_tipo": "próprio",
     "quer_endereco_fiscal": false,
     "cnae_secundarios": [],
-    "natureza": "LTDA",
+    "natureza": "SLU",
     "nome_viavel": true,
     "faturamento_faixa": "30k+",
-    "fator_r_folha_pct": 28,
-    "pro_labore": "otimo",
+    "fator_r_folha_pct": 7,
+    "pro_labore": "minimo",
+    "pro_labore_teto": 3000,
     "b3_plano": "pro",
     "b3_metodo": "cartao",
     "b3_aceite": true,
-    "b3_pagamento_status": "pago",
-    "cnae_anexo_padrao": "V",
-    "b2_termo_aceite": true
+    "b2_termo_aceite": true,
+    "b3_pagamento_status": "pago"
   },
-  "eventos": {
-    "b2.empresa": {
-      "tipo": "pausa",
-      "motivo": "dossiê longo, salvou e voltou dias depois",
-      "espera": "3 dias",
-      "retomada": "idempotente"
-    },
-    "b4.viabilidade": {
-      "tipo": "pausa",
-      "motivo": "análise de viabilidade na JUCEMG/prefeitura",
-      "espera": "2 dias úteis",
-      "retomada": "idempotente"
-    }
-  },
+  "eventos": {},
   "esperado": {
     "veredito_b1": "🟢 atende",
     "status": "ativa",
@@ -82,7 +69,7 @@
       },
       {
         "passo": "b1.mapeamento",
-        "resultado": "CNAE 7020-4/00 · confiança alta · sem fork"
+        "resultado": "CNAE 6204-0/00 · confiança alta · sem fork"
       },
       {
         "passo": "b1.desambiguacao",
@@ -98,7 +85,7 @@
       },
       {
         "passo": "b1.triagem",
-        "resultado": "elegível · 2 sócios · ninguém no exterior"
+        "resultado": "elegível · solo · ninguém no exterior"
       },
       {
         "passo": "b1.faturamento",
@@ -126,23 +113,19 @@
       },
       {
         "passo": "b2.socio",
-        "resultado": "sócio ok · casado (regime: comunhão universal de bens)"
+        "resultado": "sócio ok · solteiro (sem regime de bens)"
       },
       {
         "passo": "b2.clt",
-        "resultado": "tem CLT (R$9000) ≥ teto · zera INSS do pró-labore"
+        "resultado": "sem duplo vínculo · pró-labore normal"
       },
       {
         "passo": "b2.socios",
-        "resultado": "2 sócios · participação soma 100%"
+        "resultado": "solo (sem +sócios)"
       },
       {
         "passo": "b2.empresa",
-        "resultado": "empresa ok · capital R$50000 · endereço próprio"
-      },
-      {
-        "passo": "b2.empresa::pausa",
-        "resultado": "⏸ dossiê longo, salvou e voltou dias depois · espera 3 dias · ▶ retomada idempotente"
+        "resultado": "empresa ok · capital R$15000 · endereço próprio"
       },
       {
         "passo": "b2.cnae_sec",
@@ -150,7 +133,7 @@
       },
       {
         "passo": "b2.natureza",
-        "resultado": "natureza LTDA (coerente com nº de sócios)"
+        "resultado": "natureza SLU (coerente com nº de sócios)"
       },
       {
         "passo": "b2.nome",
@@ -162,7 +145,7 @@
       },
       {
         "passo": "b2.simulador",
-        "resultado": "est. Fator R 28% → Anexo III (6%) · já otimizado · teaser cumprido (~R$3800 → ~R$3800)"
+        "resultado": "est. Fator R 7% → Anexo V (15,5%) · ótimo R$11200 → Anexo III (IRRF s/ excedente) · 🔴 PROMESSA QUEBRADA: teaser ~R$3800 × real ~R$0 (pró-labore ótimo R$11200 > teto R$3000)"
       },
       {
         "passo": "b2.revisao",
@@ -175,10 +158,6 @@
       {
         "passo": "b4.viabilidade",
         "resultado": "viabilidade deferida (nome+endereço+CNAE) — JUCEMG unificada"
-      },
-      {
-        "passo": "b4.viabilidade::pausa",
-        "resultado": "⏸ análise de viabilidade na JUCEMG/prefeitura · espera 2 dias úteis · ▶ retomada idempotente"
       },
       {
         "passo": "b4.dbe",

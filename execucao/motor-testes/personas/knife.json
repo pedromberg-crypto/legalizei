@@ -10,7 +10,10 @@
   "perfil": {
     "nivel": "alto",
     "personalidade": "Sabe de imposto, quer o Anexo III no talo. Escolhe boleto por hábito e esquece de pagar. Volta depois.",
-    "estressa": ["simulador que não mostra a sensibilidade da borda", "abertura que começa antes de pagar"]
+    "estressa": [
+      "simulador que não mostra a sensibilidade da borda",
+      "abertura que começa antes de pagar"
+    ]
   },
   "sugestoes": {
     "b3.pagamento": "Margem de segurança (UX-39) e revalidação (UX-23) já ✅. 4ª ordem: o dunning ainda é passivo ('aguardando'). Falta **re-engajamento proativo** — 'seu boleto vence em X; seu enquadramento ótimo ainda economiza ~R$Y/mês; retoma?'. Carrinho abandonado com contexto fiscal converte melhor que espera muda.",
@@ -44,35 +47,112 @@
     "b3_plano": "pro",
     "b3_metodo": "boleto",
     "b3_aceite": true,
-    "b3_pagamento_status": "não pago"
+    "b3_pagamento_status": "não pago",
+    "cnae_anexo_padrao": "V",
+    "b2_termo_aceite": true
   },
   "eventos": {},
   "esperado": {
     "veredito_b1": "🟢 atende",
     "status": "aguardando-pagamento",
-    "parou_em": "b3.pagamento",
+    "parou_em": "b2.termo",
     "trilha": [
-      { "passo": "entrada.fork",     "resultado": "rota: abertura de CNPJ" },
-      { "passo": "b1.descricao",     "resultado": "descrição aceita" },
-      { "passo": "b1.mapeamento",    "resultado": "CNAE 6204-0/00 · confiança alta · sem fork" },
-      { "passo": "b1.desambiguacao", "resultado": "(pulado)" },
-      { "passo": "b1.filtro",        "resultado": "serviço ✓ · Simples ✓ · não-regulada ✓" },
-      { "passo": "b1.veredito",      "resultado": "🟢 atende" },
-      { "passo": "b1.conta",         "resultado": "conta criada · entra no B2" },
-      { "passo": "b2.socio",         "resultado": "sócio ok · solteiro (sem regime de bens)" },
-      { "passo": "b2.clt",           "resultado": "sem duplo vínculo · pró-labore normal" },
-      { "passo": "b2.socios",        "resultado": "solo (sem +sócios)" },
-      { "passo": "b2.empresa",       "resultado": "empresa ok · capital R$10000 · endereço próprio" },
-      { "passo": "b2.cnae_sec",      "resultado": "sem secundários" },
-      { "passo": "b2.natureza",      "resultado": "natureza SLU (coerente com nº de sócios)" },
-      { "passo": "b2.nome",          "resultado": "razão social + fantasia · nome disponível (viabilidade prévia)" },
-      { "passo": "b2.cnae_otimo",    "resultado": "enquadramento único (sem CNAE alternativo)" },
-      { "passo": "b2.simulador",     "resultado": "est. Fator R 28% → Anexo III (6%) · já otimizado" },
-      { "passo": "b2.revisao",       "resultado": "dossiê completo · handoff B3" },
-      { "passo": "b3.recap",         "resultado": "recap: economia do Fator R + escopo (abertura grátis + mensal)" },
-      { "passo": "b3.plano",         "resultado": "plano pro (faixa 30k+)" },
-      { "passo": "b3.aceite",        "resultado": "contrato + termo de início aceitos (assinatura)" },
-      { "passo": "b3.pagamento",     "resultado": "pagamento não pago (boleto) · dunning · NÃO destrava B4" }
+      {
+        "passo": "entrada.fork",
+        "resultado": "rota: abertura de CNPJ"
+      },
+      {
+        "passo": "b1.descricao",
+        "resultado": "descrição aceita"
+      },
+      {
+        "passo": "b1.mapeamento",
+        "resultado": "CNAE 6204-0/00 · confiança alta · sem fork"
+      },
+      {
+        "passo": "b1.desambiguacao",
+        "resultado": "(pulado)"
+      },
+      {
+        "passo": "b1.filtro",
+        "resultado": "serviço ✓ · Simples ✓ · não-regulada ✓"
+      },
+      {
+        "passo": "b1.veredito",
+        "resultado": "🟢 atende"
+      },
+      {
+        "passo": "b1.triagem",
+        "resultado": "elegível · solo · ninguém no exterior"
+      },
+      {
+        "passo": "b1.faturamento",
+        "resultado": "faixa 30k+ (ponto médio R$40000)"
+      },
+      {
+        "passo": "b1.teaser",
+        "resultado": "teaser: economia estimada ~R$3800/mês · carimbo \"estimativa, confirmamos no cálculo\" (UX-26)"
+      },
+      {
+        "passo": "b1.conta",
+        "resultado": "conta criada (credencial ok) · entra no checkout"
+      },
+      {
+        "passo": "b3.conta_abertura",
+        "resultado": "conta da abertura: honorário R$0 · governo (DAE JUCEMG ~R$268,51 agora 🟡 · TFLF BH ~R$161 em ~40 dias) · recorrente: plano pro"
+      },
+      {
+        "passo": "b3.aceite",
+        "resultado": "contrato de serviço aceito (reversível · CDC art.49 vale limpo)"
+      },
+      {
+        "passo": "b3.pagamento",
+        "resultado": "CPF regular ✓ · pagamento não pago (boleto) · ENTRA no app · dossiê liberado, execução travada"
+      },
+      {
+        "passo": "b2.socio",
+        "resultado": "sócio ok · solteiro (sem regime de bens)"
+      },
+      {
+        "passo": "b2.clt",
+        "resultado": "sem duplo vínculo · pró-labore normal"
+      },
+      {
+        "passo": "b2.socios",
+        "resultado": "solo (sem +sócios)"
+      },
+      {
+        "passo": "b2.empresa",
+        "resultado": "empresa ok · capital R$10000 · endereço próprio"
+      },
+      {
+        "passo": "b2.cnae_sec",
+        "resultado": "sem secundários"
+      },
+      {
+        "passo": "b2.natureza",
+        "resultado": "natureza SLU (coerente com nº de sócios)"
+      },
+      {
+        "passo": "b2.nome",
+        "resultado": "razão social + fantasia · nome disponível (viabilidade prévia)"
+      },
+      {
+        "passo": "b2.cnae_otimo",
+        "resultado": "enquadramento único (sem CNAE alternativo)"
+      },
+      {
+        "passo": "b2.simulador",
+        "resultado": "est. Fator R 28% → Anexo III (6%) · já otimizado · teaser cumprido (~R$3800 → ~R$3800)"
+      },
+      {
+        "passo": "b2.revisao",
+        "resultado": "dossiê completo · 🔒 export travado (aguardando o boleto compensar)"
+      },
+      {
+        "passo": "b2.termo",
+        "resultado": "🔒 execução travada: boleto não compensou · dunning proativo puxa de volta PRA CASA (UX-45)"
+      }
     ]
   }
 }

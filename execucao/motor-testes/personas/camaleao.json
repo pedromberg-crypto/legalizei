@@ -10,7 +10,10 @@
   "perfil": {
     "nivel": "médio",
     "personalidade": "Sabe o que faz mas descreve de um jeito que confunde comércio com representação. Se levar 🔴 injusto, xinga e some.",
-    "estressa": ["ser tratada como loja quando é representante", "pergunta que não entende a diferença"]
+    "estressa": [
+      "ser tratada como loja quando é representante",
+      "pergunta que não entende a diferença"
+    ]
   },
   "sugestoes": {
     "b1.veredito": "Handoff com dossiê já ✅ (UX-35). 4ª ordem: transformar a espera em **escolha agível hoje**. Ela representa fábricas sem estoque — existe enquadramento servível agora (MEI? o caminho manual do Mauro já cotado?). Dar a **alternativa concreta que ela decide agora**, não só 'te avisamos quando abrir'."
@@ -24,7 +27,8 @@
     "desambiguacao_ramo": "represento fábricas, sem estoque próprio",
     "filtro_servico": true,
     "filtro_simples": true,
-    "filtro_regulada": true
+    "filtro_regulada": true,
+    "cnae_anexo_padrao": "V"
   },
   "eventos": {},
   "esperado": {
@@ -32,12 +36,30 @@
     "status": "waitlist",
     "parou_em": "b1.veredito",
     "trilha": [
-      { "passo": "entrada.fork",     "resultado": "rota: abertura de CNPJ" },
-      { "passo": "b1.descricao",     "resultado": "descrição aceita" },
-      { "passo": "b1.mapeamento",    "resultado": "CNAE 4613-3/00 · confiança media · AMBÍGUO" },
-      { "passo": "b1.desambiguacao", "resultado": "desambiguou: represento fábricas, sem estoque próprio" },
-      { "passo": "b1.filtro",        "resultado": "serviço ✓ · Simples ✓ · REGULADA" },
-      { "passo": "b1.veredito",      "resultado": "🟡 waitlist" }
+      {
+        "passo": "entrada.fork",
+        "resultado": "rota: abertura de CNPJ"
+      },
+      {
+        "passo": "b1.descricao",
+        "resultado": "descrição aceita"
+      },
+      {
+        "passo": "b1.mapeamento",
+        "resultado": "CNAE 4613-3/00 · confiança media · AMBÍGUO"
+      },
+      {
+        "passo": "b1.desambiguacao",
+        "resultado": "desambiguou: represento fábricas, sem estoque próprio"
+      },
+      {
+        "passo": "b1.filtro",
+        "resultado": "serviço ✓ · Simples ✓ · REGULADA"
+      },
+      {
+        "passo": "b1.veredito",
+        "resultado": "🟡 waitlist"
+      }
     ]
   }
 }

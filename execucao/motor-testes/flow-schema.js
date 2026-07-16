@@ -1,22 +1,30 @@
-// flow-schema.js — o fluxo de abertura como DADOS (derivado de spec-telas-entrada-b1-b2.md + blocos-fluxo-abertura.md).
-// Node puro, zero dependência. Cobertura desta versão: Entrada + B1 + B2 (completo) + B3 + B4 + B4.5.
+// flow-schema.js — o fluxo de abertura como DADOS.
+// Node puro, zero dependência.
+//
+// ⚠️ v0.3.0 — REORDENAÇÃO (2026-07-16): a cobrança SUBIU.
+// Ordem de execução agora é ENTRADA → B1 → **B3** → **B2** → B4 → B4.5.
+// Os nomes dos blocos são os mesmos do vault (B1 gate · B2 dossiê · B3 cobrança · B4 constituição);
+// o que mudou foi a ORDEM. Ver a tabela B3 antes de B2 no relatório: é o ponto, não um bug.
+// Spec: execucao/reordenacao-flow-cobranca-cedo.md (telas N1–N25).
+//
+// Por que: o flow antigo cobrava no T16, depois de 15 telas de esforço e 7 pontos de
+// abandono sem compromisso, e entregava o dossiê exportável antes de cobrar. Confrontado
+// com o funil real do líder (cobra na 3ª tela, 6 campos rasos), a ordem antiga morreu.
 //
 // Cada passo é declarativo:
 //   id        chave global do passo (aparece na trilha e no livro-caixa)
-//   bloco     ENTRADA | B1 | B2 | B3 | B4 | B4.5 | FIM (mapa em mapa-telas-mobile.md)
-//   tela      nº da tela na spec
+//   bloco     ENTRADA | B1 | B2 | B3 | B4 | B4.5 | FIM
+//   tela      nº da tela na spec da reordenação (N1–N25)
 //   tipo      escolha | input | ia-dublada | decisao | gate | acao | toggle | simulador | pausa
-//   nome      rótulo humano
-//   pula_se   (ctx) => bool   — condicional mutuamente exclusiva não roda (ex: desambiguação só se ambíguo)
+//   pula_se   (ctx) => bool   — condicional mutuamente exclusiva não roda
 //   valida    (ctx) => null | "mensagem de erro"  — barra e para o fluxo
-//   deriva    (ctx) => { resultado, dados?, veredito_b1?, termina? }  — lógica de negócio
+//   deriva    (ctx) => { resultado, dados?, veredito_b1?, termina? }
 //
-// IMPORTANTE: a IA de mapeamento CNAE NÃO roda aqui. Vem "dublada" pela persona
-// (persona entrega cnae + confiança). Motor testa a LÓGICA do fluxo, sem gastar token.
+// IMPORTANTE: a IA de mapeamento CNAE NÃO roda aqui. Vem "dublada" pela persona.
+// Motor testa a LÓGICA do fluxo, sem gastar token.
 //
 // Números fiscais aterrados em pesquisa/fiscal-simples-bh-2026.md (bloco CONSOLIDADO, 2026).
-// 🟡 pendentes Larissa (ver perguntas-larissa-fiscal.md): mecânica meses 2-12 · CPP-no-DAS no
-// numerador · FS12 regime de caixa. Por isso a saída do simulador é "estimativa".
+// 🟡 pendentes Larissa: mecânica meses 2-12 · CPP-no-DAS no numerador · FS12 regime de caixa.
 
 const FISCAL = {
   SALARIO_MIN: 1621,      // = pró-labore mínimo (2026)
@@ -27,9 +35,13 @@ const FISCAL = {
   FATOR_R_LIMIAR: 0.28,   // ≥28% → Anexo III · <28% → Anexo V
   ANEXO_III: 0.06,
   ANEXO_V: 0.155,
+  // 🟡 A TRAVAR (pendência da reordenação): qual desvio teaser(N5) × real(N18) é aceitável.
+  // Abaixo deste piso, a promessa que vendeu o plano não se cumpre → 🔴 promessa quebrada.
+  // 0.5 = o real precisa ser ≥ 50% do que o teaser prometeu. Default proposto, não ratificado.
+  TEASER_PISO: 0.5,
 };
 
-// faixa guiada → ponto médio p/ simulação (nunca campo aberto; spec 2.8)
+// faixa guiada → ponto médio p/ simulação (nunca campo aberto)
 const FAIXA_MEDIA = {
   'ate 10k': 7000, 'ate-10k': 7000, 'ate10k': 7000,
   '10-20k': 15000, '20-30k': 25000, '30k+': 40000, '30k': 40000,
@@ -53,6 +65,24 @@ function inssComFolga(cltRemun) {
   return { folga, zera: folga <= 0 };
 }
 
+// economia do swap de CNAE = pior × melhor alíquota da família que cobre a MESMA atividade.
+function economiaSwap(fam, fat) {
+  if (!Array.isArray(fam) || fam.length <= 1 || !fat) return 0;
+  const ord = [...fam].sort((a, b) => a.aliquota - b.aliquota);
+  return ((ord[ord.length - 1].aliquota - ord[0].aliquota) / 100) * fat;
+}
+
+// TEASER (N5) — o que dá pra prometer sabendo SÓ o CNAE + a faixa de faturamento.
+// Não conhecemos a folha aqui (é dado do N18), então o Fator R entra como POTENCIAL MÁXIMO
+// (V→III). É exatamente daí que nasce o risco da persona `promessa-quebrada`: quem já se
+// paga bem tem economia real ZERO, mas o teaser prometeu o teto. Carimbo UX-26 é obrigatório.
+function estimativaTeaser(r, fat) {
+  const swap = economiaSwap(r.cnae_equivalentes, fat);
+  const fatorR = r.cnae_anexo_padrao === 'V' ? (FISCAL.ANEXO_V - FISCAL.ANEXO_III) * fat : 0;
+  const melhor = Math.max(swap, fatorR);
+  return melhor > 0 ? Math.round(melhor) : null;
+}
+
 function validaCPF(cpf) {
   cpf = String(cpf || '').replace(/\D/g, '');
   if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
@@ -69,13 +99,13 @@ function validaCPF(cpf) {
 module.exports = {
   id: 'abertura',
   flow_num: 1,
-  versao: '0.2.3',
-  cobertura: 'Entrada + B1 + B2 (completo, c/ simulador Fator R) + B3 (cobrança) + B4 (constituição) + B4.5 (ativação fiscal)',
+  versao: '0.3.0',
+  cobertura: 'Entrada + B1 (gate+teaser) + B3 (cobrança) + B2 (dossiê, dentro do app) + B4 + B4.5',
 
   passos: [
     // ── ENTRADA ──────────────────────────────────────────────────────────
     {
-      id: 'entrada.fork', bloco: 'ENTRADA', tela: '3', tipo: 'escolha',
+      id: 'entrada.fork', bloco: 'ENTRADA', tela: 'N3', tipo: 'escolha',
       nome: 'Fork: abrir CNPJ × já sou cliente',
       deriva: (ctx) => {
         const abrir = ctx.respostas.entrada_escolha === 'abrir_cnpj';
@@ -86,9 +116,9 @@ module.exports = {
       },
     },
 
-    // ── B1 — Gate-CNAE + Login ───────────────────────────────────────────
+    // ── B1 — Gate-CNAE + triagem + teaser + conta ────────────────────────
     {
-      id: 'b1.descricao', bloco: 'B1', tela: '4', tipo: 'input',
+      id: 'b1.descricao', bloco: 'B1', tela: 'N4', tipo: 'input',
       nome: 'Gate-CNAE: descrição da atividade',
       valida: (ctx) => {
         const t = (ctx.respostas.atividade_descricao || '').trim();
@@ -97,7 +127,7 @@ module.exports = {
       deriva: () => ({ resultado: 'descrição aceita' }),
     },
     {
-      id: 'b1.mapeamento', bloco: 'B1', tela: '4', tipo: 'ia-dublada',
+      id: 'b1.mapeamento', bloco: 'B1', tela: 'N4', tipo: 'ia-dublada',
       nome: 'Mapeamento CNAE (IA dublada pela persona)',
       deriva: (ctx) => {
         const r = ctx.respostas;
@@ -109,13 +139,13 @@ module.exports = {
       },
     },
     {
-      id: 'b1.desambiguacao', bloco: 'B1', tela: '4', tipo: 'decisao',
+      id: 'b1.desambiguacao', bloco: 'B1', tela: 'N4', tipo: 'decisao',
       nome: 'Mini-loop de desambiguação (só se ambíguo / baixa confiança)',
       pula_se: (ctx) => ctx.dados.confianca === 'alta' && !ctx.dados.ambiguo,
       deriva: (ctx) => ({ resultado: 'desambiguou: ' + (ctx.respostas.desambiguacao_ramo || '?') }),
     },
     {
-      id: 'b1.filtro', bloco: 'B1', tela: '4', tipo: 'decisao',
+      id: 'b1.filtro', bloco: 'B1', tela: 'N4', tipo: 'decisao',
       nome: 'Filtro de regime (serviço? Simples? regulada?)',
       deriva: (ctx) => {
         const r = ctx.respostas;
@@ -128,8 +158,10 @@ module.exports = {
       },
     },
     {
-      id: 'b1.veredito', bloco: 'B1', tela: '4', tipo: 'gate',
+      id: 'b1.veredito', bloco: 'B1', tela: 'N4', tipo: 'gate',
       nome: 'Veredito 🟢/🟡/🔴 (regra de ouro: regulada nunca vira 🟢 automático)',
+      // Decisão 16/07: regulada segue na waitlist. O líder atende (cobra e pede carteira
+      // profissional depois) — divergência estratégica consciente, reavaliar com o Mauro.
       deriva: (ctx) => {
         const d = ctx.dados;
         let v, termina = null;
@@ -140,27 +172,127 @@ module.exports = {
       },
     },
     {
-      id: 'b1.conta', bloco: 'B1', tela: '5', tipo: 'acao',
-      nome: 'Criar conta (só pós-🟢)',
-      // B7 (UX-29): detecta nível GOV.BR cedo. Bronze → sinaliza upgrade antes do B4 (assinatura exige prata/ouro).
+      id: 'b1.triagem', bloco: 'B1', tela: 'N4', tipo: 'gate',
+      nome: '🆕 Triagem de elegibilidade (UX-21 fail-fast) — ANTES do dinheiro',
+      // ⚠️ NOVO em v0.3.0 e OBRIGATÓRIO por causa da reordenação. O UX-21 já mandava perguntar
+      // "quantos sócios?" e "algum no exterior?" no B1; o motor v0.2.x só barrava lá no B2.
+      // Com cobrança no N9, barrar depois = cobrar de quem não pode abrir. Sobe pra cá.
+      // Só roda pós-🟢: quem é 🟡/🔴 já saiu e não precisa responder nada disso.
+      valida: (ctx) => {
+        const r = ctx.respostas;
+        if (r.socio_exterior) return 'sócio no exterior: bloqueia opção Simples (LC 123 art.17 II) → rota humana';
+        const n = Number(r.num_socios || 1);
+        if (n > 2) return 'acima de 2 sócios: atendimento humano';
+        return null;
+      },
+      deriva: (ctx) => {
+        const n = Number(ctx.respostas.num_socios || 1);
+        return {
+          resultado: `elegível · ${n <= 1 ? 'solo' : n + ' sócios'} · ninguém no exterior`,
+          dados: { num_socios: n },
+        };
+      },
+    },
+    {
+      id: 'b1.faturamento', bloco: 'B1', tela: 'N4', tipo: 'escolha',
+      nome: '🆕 Faixa de faturamento (alimenta o teaser)',
+      deriva: (ctx) => {
+        const fat = faturamentoMedio(ctx.respostas.faturamento_faixa);
+        return {
+          resultado: fat ? `faixa ${ctx.respostas.faturamento_faixa} (ponto médio R$${fat})` : 'faixa não informada',
+          dados: { fat_medio: fat },
+        };
+      },
+    },
+    {
+      id: 'b1.teaser', bloco: 'B1', tela: 'N5', tipo: 'simulador',
+      nome: '🆕 Teaser de economia (a PROVA, não o produto)',
+      // O pilar da reordenação: sem ele cobramos sem argumento e viramos commodity.
+      // Entrega que EXISTE economia (crível, com número) sem entregar o número exato,
+      // o PDF nem o dossiê. Carimbo de estimativa (UX-26) é obrigatório — tem dinheiro em cima.
+      deriva: (ctx) => {
+        const r = ctx.respostas;
+        const fat = ctx.dados.fat_medio;
+        if (!fat) return { resultado: 'sem faixa · teaser não exibido' };
+        const est = estimativaTeaser(r, fat);
+        if (est == null) {
+          return { resultado: 'sem economia estimável · teaser não exibido (não promete o que não sabe)' };
+        }
+        return {
+          resultado: `teaser: economia estimada ~R$${est}/mês · carimbo "estimativa, confirmamos no cálculo" (UX-26)`,
+          dados: { teaser_estimativa: est },
+        };
+      },
+    },
+    {
+      id: 'b1.conta', bloco: 'B1', tela: 'N6', tipo: 'acao',
+      nome: 'Criar conta (credencial funcionando) + detecta GOV.BR',
+      // UX-29: detecta nível GOV.BR cedo. Bronze → upgrade guiado antes do B4.
+      // Prova de que criar credencial aqui importa: o líder manda entrar via "Esqueci minha
+      // senha" e gerou 8 resets em 72h no caso real → 2026-07-16-pos-pagamento-operacao-real.md
       deriva: (ctx) => ({
         resultado: ctx.respostas.govbr_nivel === 'bronze'
-          ? 'conta criada · GOV.BR bronze sinalizado (upgrade guiado antes do B4)'
-          : 'conta criada · entra no B2',
+          ? 'conta criada (credencial ok) · GOV.BR bronze sinalizado (upgrade guiado antes do B4)'
+          : 'conta criada (credencial ok) · entra no checkout',
       }),
     },
 
-    // ── B2 — Coleta + Enquadramento ──────────────────────────────────────
+    // ── B3 — Cobrança (SUBIU: agora vem antes do dossiê) ─────────────────
     {
-      id: 'b2.socio', bloco: 'B2', tela: '6', tipo: 'input',
-      nome: '2.1 Dados do sócio',
+      id: 'b3.conta_abertura', bloco: 'B3', tela: 'N7', tipo: 'acao',
+      nome: 'A conta da abertura + plano (UX-33 — com PRAZO por linha)',
+      // Fusão do T16+T17. A captura do líder mostrou o custo de omitir: "Total a pagar R$195",
+      // e a TFLF (R$168,48) apareceu no dia 40 com 4 dias pra pagar e correção já embutida.
+      deriva: (ctx) => {
+        const r = ctx.respostas;
+        const up = r.quer_endereco_fiscal ? ' + endereço fiscal (add-on, a partir da 2ª parcela)' : '';
+        return {
+          resultado: `conta da abertura: honorário R$0 · governo (DAE JUCEMG ~R$268,51 agora 🟡 · ` +
+                     `TFLF BH ~R$161 em ~40 dias) · recorrente: plano ${r.b3_plano || 'base'}${up}`,
+        };
+      },
+    },
+    {
+      id: 'b3.aceite', bloco: 'B3', tela: 'N8', tipo: 'gate',
+      nome: 'Aceite do CONTRATO (assinatura — reversível, CDC art.49)',
+      // 🆕 v0.3.0: o T18 rachou em dois. Aqui é só o contrato de serviço: ele virou cliente,
+      // e nada é irreversível ainda (nenhum centavo de governo saiu). O termo irreversível
+      // desceu pro b2.termo (N20), onde a máquina de fato liga. 🟡 ratificar Larissa/Mauro.
+      valida: (ctx) => (ctx.respostas.b3_aceite === false ? 'contrato não aceito → não avança' : null),
+      deriva: () => ({ resultado: 'contrato de serviço aceito (reversível · CDC art.49 vale limpo)' }),
+    },
+    {
+      id: 'b3.pagamento', bloco: 'B3', tela: 'N9', tipo: 'pausa',
+      nome: 'Pagamento (CPF valida elegibilidade + cartão/boleto/Pix)',
+      // 🆕 v0.3.0 — duas mudanças:
+      // 1) CPF: obrigatório pro gateway de qualquer jeito. MESMO CAMPO, DOIS USOS —
+      //    situação cadastral irregular NÃO COBRA e roteia (persona `cpf-irregular`).
+      // 2) Boleto NÃO termina mais o flow (decisão do Pedro 16/07): entra no app, faz o B2
+      //    inteiro, e trava em b2.revisao (export) + b2.termo (execução) até compensar.
       valida: (ctx) => {
         const r = ctx.respostas;
-        if (!validaCPF(r.socio_cpf)) return 'CPF inválido (dígito verificador)';
-        if (r.socio_cpf_situacao !== 'regular') return `CPF ${r.socio_cpf_situacao} na Receita`;
-        if (r.socio_exterior) return 'sócio no exterior: bloqueia opção Simples (LC 123 art.17 II) → rota humana';
+        if (!validaCPF(r.socio_cpf)) return 'CPF inválido (dígito verificador) → não cobra';
+        if (r.socio_cpf_situacao !== 'regular') return `CPF ${r.socio_cpf_situacao} na Receita → não cobra, roteia pro humano`;
         return null;
       },
+      deriva: (ctx) => {
+        const r = ctx.respostas;
+        const st = r.b3_pagamento_status || 'pago';
+        if (st !== 'pago') {
+          return {
+            resultado: `CPF regular ✓ · pagamento ${st} (${r.b3_metodo}) · ENTRA no app · dossiê liberado, execução travada`,
+            dados: { pagamento_pendente: true },
+          };
+        }
+        return { resultado: `CPF regular ✓ · pagamento confirmado (${r.b3_metodo}) · entra no app` };
+      },
+    },
+
+    // ── B2 — Dossiê (DENTRO do app, logado e pago) ───────────────────────
+    {
+      id: 'b2.socio', bloco: 'B2', tela: 'N10', tipo: 'input',
+      nome: '2.1 Dados do sócio (CPF já validado no N9)',
+      // exterior saiu daqui: virou triagem no b1.triagem (antes do dinheiro).
       deriva: (ctx) => {
         const r = ctx.respostas;
         const casado = /casad/i.test(r.socio_estado_civil || '');
@@ -172,10 +304,11 @@ module.exports = {
       },
     },
     {
-      id: 'b2.clt', bloco: 'B2', tela: '7', tipo: 'toggle',
+      id: 'b2.clt', bloco: 'B2', tela: 'N11', tipo: 'toggle',
       nome: '2.2 Duplo vínculo CLT (INSS com folga do teto)',
       // UX-43: querer ser CLT da própria empresa é confusão conceitual, não bloqueio fatal.
-      // Educa (sócio se remunera por pró-labore) e SEGUE — não termina o flow.
+      // Educa e SEGUE. (Se ainda fosse bloqueio fatal, com a reordenação ela pagaria e seria
+      // barrada na tela seguinte — o UX-43 salvou a persona sem saber.)
       deriva: (ctx) => {
         const r = ctx.respostas;
         if (r.socio_clt_propria) {
@@ -191,27 +324,21 @@ module.exports = {
       },
     },
     {
-      id: 'b2.socios', bloco: 'B2', tela: '8', tipo: 'input',
-      nome: '2.3 +Sócios (limite 2)',
-      valida: (ctx) => {
-        const n = Number(ctx.respostas.num_socios || 1);
-        return n > 2 ? 'acima de 2 sócios: atendimento humano' : null;
-      },
+      id: 'b2.socios', bloco: 'B2', tela: 'N12', tipo: 'input',
+      nome: '2.3 +Sócios (limite já triado no B1 — aqui é o detalhe)',
       deriva: (ctx) => {
         const n = Number(ctx.respostas.num_socios || 1);
-        return {
-          resultado: n <= 1 ? 'solo (sem +sócios)' : `${n} sócios · participação soma 100%`,
-          dados: { num_socios: n },
-        };
+        return { resultado: n <= 1 ? 'solo (sem +sócios)' : `${n} sócios · participação soma 100%` };
       },
     },
     {
-      id: 'b2.empresa', bloco: 'B2', tela: '9', tipo: 'input',
+      id: 'b2.empresa', bloco: 'B2', tela: 'N13', tipo: 'input',
       nome: '2.4 Dados da empresa (+ upsell endereço fiscal)',
       valida: (ctx) => (Number(ctx.respostas.empresa_capital || 0) > 0 ? null : 'capital social deve ser > 0'),
       deriva: (ctx) => {
         const r = ctx.respostas;
-        const up = r.quer_endereco_fiscal ? ' · +endereço fiscal (upsell→plano)' : '';
+        // add-on pós-pagamento cobra "a partir da 2ª parcela" (mecânica copiada do líder).
+        const up = r.quer_endereco_fiscal ? ' · +endereço fiscal (add-on a partir da 2ª parcela)' : '';
         return {
           resultado: `empresa ok · capital R$${r.empresa_capital} · endereço ${r.empresa_endereco_tipo || 'próprio'}${up}`,
           dados: { endereco_fiscal: !!r.quer_endereco_fiscal },
@@ -219,7 +346,7 @@ module.exports = {
       },
     },
     {
-      id: 'b2.cnae_sec', bloco: 'B2', tela: '10', tipo: 'input',
+      id: 'b2.cnae_sec', bloco: 'B2', tela: 'N14', tipo: 'input',
       nome: '2.5 CNAE secundários',
       deriva: (ctx) => {
         const s = ctx.respostas.cnae_secundarios || [];
@@ -227,8 +354,11 @@ module.exports = {
       },
     },
     {
-      id: 'b2.natureza', bloco: 'B2', tela: '11', tipo: 'decisao',
+      id: 'b2.natureza', bloco: 'B2', tela: 'N15', tipo: 'decisao',
       nome: '2.6 Natureza jurídica (guard-rail SLU×LTDA)',
+      // 🟡 SOB SUSPEITA: o caso real (CNPJ do Pedro, dez/2025) saiu SOCIEDADE EMPRESÁRIA
+      // LIMITADA num caso SOLO. Se SLU é LTDA de sócio único (mesma natureza 206-2), esta
+      // regra está mal formulada e o guard-rail abaixo pode ser errado. Pergunta pra Larissa.
       valida: (ctx) => {
         const r = ctx.respostas;
         const n = Number(r.num_socios || 1);
@@ -239,7 +369,7 @@ module.exports = {
       deriva: (ctx) => ({ resultado: `natureza ${ctx.respostas.natureza} (coerente com nº de sócios)` }),
     },
     {
-      id: 'b2.nome', bloco: 'B2', tela: '12', tipo: 'input',
+      id: 'b2.nome', bloco: 'B2', tela: 'N16', tipo: 'input',
       nome: '2.7 Razão social + nome fantasia (viabilidade prévia)',
       deriva: (ctx) => ({
         resultado: ctx.respostas.nome_viavel !== false
@@ -248,96 +378,114 @@ module.exports = {
       }),
     },
     {
-      id: 'b2.cnae_otimo', bloco: 'B2', tela: '13', tipo: 'simulador',
-      nome: '2.8a CNAE fiscalmente ótimo (entre equivalentes que cobrem a atividade)',
-      // 🚧 recomenda o CNAE de menor carga ENTRE os que cobrem a atividade real.
-      // A família (cnae_equivalentes) vem dublada; na vida real = dado validado pela Larissa.
-      // Ver execucao/cnae-fiscalmente-otimo.md. Sem família → enquadramento único (no-op).
+      id: 'b2.cnae_otimo', bloco: 'B2', tela: 'N17', tipo: 'simulador',
+      nome: '2.8a CNAE fiscalmente ótimo — CUMPRE a promessa do N5',
+      // Agora é ENTREGA ao cliente (ele já pagou), não isca.
       deriva: (ctx) => {
         const r = ctx.respostas;
         const fam = r.cnae_equivalentes;
         if (!Array.isArray(fam) || fam.length <= 1) {
-          return { resultado: 'enquadramento único (sem CNAE alternativo)' };
+          return { resultado: 'enquadramento único (sem CNAE alternativo)', dados: { economia_swap: 0 } };
         }
-        const fat = faturamentoMedio(r.faturamento_faixa) || 0;
+        const fat = ctx.dados.fat_medio || 0;
         const ord = [...fam].sort((a, b) => a.aliquota - b.aliquota);
         const otimo = ord[0];
         const pior = ord[ord.length - 1];
-        const economia = Math.round(((pior.aliquota - otimo.aliquota) / 100) * fat);
+        const economia = Math.round(economiaSwap(fam, fat));
         return {
           resultado: `CNAE ótimo: ${otimo.cnae} (Anexo ${otimo.anexo}, ${otimo.aliquota}%) vs ${pior.cnae} (${pior.aliquota}%) · economia ~R$${economia}/mês`,
-          dados: { cnae_otimo: otimo.cnae },
+          dados: { cnae_otimo: otimo.cnae, economia_swap: economia },
         };
       },
     },
     {
-      id: 'b2.simulador', bloco: 'B2', tela: '13', tipo: 'simulador',
-      nome: '2.8 Simulador Fator R + pró-labore ótimo (estimativa)',
+      id: 'b2.simulador', bloco: 'B2', tela: 'N18', tipo: 'simulador',
+      nome: '2.9 Simulador Fator R + pró-labore ótimo — CUMPRE a promessa do N5',
+      // 🆕 v0.3.0: confere o real contra o que o teaser prometeu no N5. Se o real não alcança
+      // o piso, é 🔴 promessa quebrada — e ela JÁ PAGOU. Risco que não existia no flow antigo
+      // (ela via o número real antes de abrir a carteira). Persona: `promessa-quebrada`.
       deriva: (ctx) => {
         const r = ctx.respostas;
-        const fat = faturamentoMedio(r.faturamento_faixa);
+        const fat = ctx.dados.fat_medio;
         const folhaPct = r.fator_r_folha_pct != null ? Number(r.fator_r_folha_pct) / 100 : 0;
-        const anexo = folhaPct >= FISCAL.FATOR_R_LIMIAR ? 'III (6%)' : 'V (15,5%)';
+        const jaOtimo = folhaPct >= FISCAL.FATOR_R_LIMIAR;
+        // 🐛 corrigido em v0.3.0: o anexo NÃO sai só da folha. CNAE III-por-padrão (ex.: 8599-6/04,
+        // SC Cosit 205/14 + SRRF08 8022/18) já é Anexo III **sem Fator R** — a folha é irrelevante,
+        // e recomendar pró-labore ótimo pra essa pessoa é conselho errado. O motor v0.2.x decidia
+        // o anexo só por `folhaPct >= 28` e dizia "Anexo V" pra quem já estava em III.
+        const anexoDireto = r.cnae_anexo_padrao === 'III';
+        const anexo = (anexoDireto || jaOtimo) ? 'III (6%)' : 'V (15,5%)';
         const otimo = proLaboreOtimo(fat);
         const irrf = otimo != null && otimo <= FISCAL.IRRF_ISENCAO ? 'IRRF zero' : 'IRRF s/ excedente';
-        const jaOtimo = folhaPct >= FISCAL.FATOR_R_LIMIAR;
-        const tail = otimo != null
-          ? (jaOtimo ? ' · já otimizado' : ` · ótimo R$${otimo} → Anexo III (${irrf})`)
-          : '';
+        const tail = anexoDireto
+          ? ' · CNAE já é Anexo III sem Fator R (folha não muda nada)'
+          : (otimo != null
+              ? (jaOtimo ? ' · já otimizado' : ` · ótimo R$${otimo} → Anexo III (${irrf})`)
+              : '');
+
+        // Economia REAL = o que o PRODUTO consegue entregar, não o que o cliente adota.
+        // Distinção que importa: cliente que escolhe pró-labore mínimo e fica no Anexo V fez
+        // uma ESCOLHA — não é promessa quebrada. A promessa quebra quando o CAMINHO NÃO EXISTE:
+        // `pro_labore_teto` = o máximo que ela pode/quer se pagar. Se o ótimo estoura esse teto,
+        // o Fator R simplesmente não serve pra ela e a economia prometida no N5 vira zero.
+        const teto = r.pro_labore_teto != null ? Number(r.pro_labore_teto) : Infinity;
+        const caminhoExiste = r.cnae_anexo_padrao === 'V' && otimo != null && otimo <= teto;
+        const ganhoFatorR = caminhoExiste ? (FISCAL.ANEXO_V - FISCAL.ANEXO_III) * (fat || 0) : 0;
+        // as 2 alavancas são ALTERNATIVAS, não cumulativas: trocar de CNAE OU subir o pró-labore
+        // (cnae-fiscalmente-otimo.md). Quem migra pro 8599-6/04 (III sem Fator R) não precisa
+        // do Fator R. Somar inflaria a economia e mentiria pro cliente.
+        const real = Math.round(Math.max(ganhoFatorR, ctx.dados.economia_swap || 0));
+
+        const prometido = ctx.dados.teaser_estimativa;
+        let veredito = '';
+        if (prometido) {
+          veredito = real >= prometido * FISCAL.TEASER_PISO
+            ? ` · teaser cumprido (~R$${prometido} → ~R$${real})`
+            : ` · 🔴 PROMESSA QUEBRADA: teaser ~R$${prometido} × real ~R$${real} (pró-labore ótimo R$${otimo} > teto R$${teto})`;
+        }
         return {
-          resultado: `est. Fator R ${Math.round(folhaPct * 100)}% → Anexo ${anexo}${tail}`,
-          dados: { anexo, pro_labore_otimo: otimo },
+          resultado: `est. Fator R ${Math.round(folhaPct * 100)}% → Anexo ${anexo}${tail}${veredito}`,
+          dados: { anexo, pro_labore_otimo: otimo, economia_real: real },
         };
       },
     },
     {
-      id: 'b2.revisao', bloco: 'B2', tela: '14', tipo: 'acao',
-      nome: '2.9 Revisão do dossiê → handoff B3',
-      deriva: () => ({ resultado: 'dossiê completo · handoff B3' }),
+      id: 'b2.revisao', bloco: 'B2', tela: 'N19', tipo: 'acao',
+      nome: '2.10 Revisão do dossiê (export 🔒 trava se pagamento pendente)',
+      // 🆕 v0.3.0: o dossiê exportável era entregue ANTES de cobrar (T15) — o cliente levava
+      // o melhor trabalho de graça. Agora ele já pagou, e o PDF é entregável. Boleto pendente
+      // trava o export: senão o buraco original volta pela janela.
+      deriva: (ctx) => ({
+        resultado: ctx.dados.pagamento_pendente
+          ? 'dossiê completo · 🔒 export travado (aguardando o boleto compensar)'
+          : 'dossiê completo · PDF exportável liberado (entregável de cliente)',
+      }),
     },
-
-    // ── B3 — Cobrança (gateway Asaas) ────────────────────────────────────
     {
-      id: 'b3.recap', bloco: 'B3', tela: '15', tipo: 'acao',
-      nome: 'Recap do valor (economia do Fator R)',
-      deriva: () => ({ resultado: 'recap: economia do Fator R + escopo (abertura grátis + mensal)' }),
-    },
-    {
-      id: 'b3.plano', bloco: 'B3', tela: '16', tipo: 'escolha',
-      nome: 'Escolha do plano (tier por faixa)',
+      id: 'b2.termo', bloco: 'B2', tela: 'N20', tipo: 'gate',
+      nome: '🆕 Termo IRREVERSÍVEL (aqui a máquina liga e o dinheiro de governo sai)',
+      // 🆕 v0.3.0 — a outra metade do T18. É o portão da execução:
+      //  · sem pagamento compensado, não liga (a `knife` do boleto para aqui)
+      //  · aceito = a partir daqui as taxas de governo não voltam (exceção de serviço iniciado
+      //    morde de verdade, porque o serviço de fato inicia)
+      valida: (ctx) => (ctx.respostas.b2_termo_aceite === false ? 'termo irreversível não aceito → não executa' : null),
       deriva: (ctx) => {
-        const r = ctx.respostas;
-        return { resultado: `plano ${r.b3_plano || 'base'} (faixa ${r.faturamento_faixa || '?'})` };
-      },
-    },
-    {
-      id: 'b3.aceite', bloco: 'B3', tela: '17', tipo: 'gate',
-      nome: 'Aceite do contrato + termo de início (pausa assinatura)',
-      valida: (ctx) => (ctx.respostas.b3_aceite === false ? 'contrato/termo não aceito → não avança' : null),
-      deriva: () => ({ resultado: 'contrato + termo de início aceitos (assinatura)' }),
-    },
-    {
-      id: 'b3.pagamento', bloco: 'B3', tela: '18', tipo: 'pausa',
-      nome: 'Pagamento (Asaas) — só `pago` destrava B4',
-      deriva: (ctx) => {
-        const r = ctx.respostas;
-        const st = r.b3_pagamento_status || 'pago';
-        if (st !== 'pago') {
+        if (ctx.dados.pagamento_pendente) {
           return {
-            resultado: `pagamento ${st} (${r.b3_metodo}) · dunning · NÃO destrava B4`,
+            resultado: '🔒 execução travada: boleto não compensou · dunning proativo puxa de volta PRA CASA (UX-45)',
             termina: 'aguardando-pagamento',
           };
         }
-        return { resultado: `pagamento confirmado (${r.b3_metodo}) · destrava B4` };
+        return { resultado: 'termo irreversível aceito · taxas de governo não voltam a partir daqui · B4 liberado' };
       },
     },
 
     // ── B4 — Constituição (Redesim/JUCEMG/BH) ────────────────────────────
     {
-      id: 'b4.viabilidade', bloco: 'B4', tela: '19', tipo: 'decisao',
+      id: 'b4.viabilidade', bloco: 'B4', tela: 'N21', tipo: 'decisao',
       nome: 'Viabilidade (JUCEMG+municipal unificada)',
       // B6 (UX-40): órgão externo pode recusar mesmo com prévia OK. Não é crash nem limbo:
-      // vira estado 🔴 "precisa de você" (evento `recusa` na persona) e recupera dentro do pipeline.
+      // vira estado 🔴 "precisa de você" (evento `recusa` na persona) e recupera no pipeline.
       deriva: (ctx) => ({
         resultado: ctx.respostas.viabilidade_recusa
           ? 'viabilidade INDEFERIDA: nome reprovado na JUCEMG (apesar da prévia) — precisa de você'
@@ -345,49 +493,67 @@ module.exports = {
       }),
     },
     {
-      id: 'b4.dbe', bloco: 'B4', tela: '20', tipo: 'acao',
+      id: 'b4.dbe', bloco: 'B4', tela: 'N21', tipo: 'acao',
       nome: 'DBE / Coleta Web (Receita)',
       deriva: () => ({ resultado: 'DBE gerado (Coleta Web/Receita)' }),
     },
     {
-      id: 'b4.registro', bloco: 'B4', tela: '21', tipo: 'acao',
+      id: 'b4.registro', bloco: 'B4', tela: 'N21', tipo: 'acao',
       nome: 'Registro JUCEMG (contrato pronto) + assinatura GOV.BR',
-      // B7 (UX-31): assinatura exige GOV.BR prata/ouro. Bronze detectado no B1 → upgrade guiado aqui, sem travar.
+      // 🔒 REGRA DURA: nunca pedir pra desabilitar o 2FA do gov.br. O líder pede isso por
+      // escrito em e-mail padrão porque a automação dele não lida com 2FA. Nós resolvemos
+      // por procuração e-CAC (UX-31). Diferencial vendável, não detalhe técnico.
       deriva: (ctx) => ({
         resultado: ctx.respostas.govbr_nivel === 'bronze'
-          ? 'contrato pronto (JUCEMG) + GOV.BR upgrade bronze→prata/ouro (banco/biometria) → assinado'
-          : 'contrato pronto (JUCEMG) + assinado GOV.BR prata/ouro',
+          ? 'contrato pronto (JUCEMG) + GOV.BR upgrade bronze→prata/ouro (banco/biometria) → assinado · 2FA intacto'
+          : 'contrato pronto (JUCEMG) + assinado GOV.BR prata/ouro · 2FA intacto',
       }),
     },
     {
-      id: 'b4.taxa', bloco: 'B4', tela: '21', tipo: 'acao',
+      id: 'b4.taxa', bloco: 'B4', tela: 'N21', tipo: 'acao',
       nome: 'Taxa DAE JUCEMG (repasse)',
-      deriva: () => ({ resultado: 'DAE JUCEMG paga (repasse ~R$268,51)' }),
+      // 🟡 valor em disputa: vault diz R$288 "pago pelo cliente" (Izabela) × ~R$268,51 (tabela),
+      // aberto desde 09/07. O checkout do líder foi R$195 total e não há e-mail de DAE no caso
+      // real — ou absorvem, ou foi pago por fora, ou há isenção. Muda a régua do preço.
+      deriva: () => ({ resultado: 'DAE JUCEMG paga (repasse ~R$268,51 🟡 valor a reconciliar)' }),
     },
     {
-      id: 'b4.cnpj', bloco: 'B4', tela: '22', tipo: 'gate',
+      id: 'b4.cnpj', bloco: 'B4', tela: 'N21', tipo: 'gate',
       nome: 'CNPJ emitido + opção Simples automática + CRC',
       deriva: () => ({ resultado: 'CNPJ emitido + opção Simples automática + CRC assina' }),
     },
     {
-      id: 'b4.certificado', bloco: 'B4', tela: '23', tipo: 'acao',
+      id: 'b4.dispensas', bloco: 'B4', tela: 'N21', tipo: 'acao',
+      nome: '🆕 Dispensas (sanitária + bombeiros) — com consentimento informado',
+      // 🆕 v0.3.0 — FURO EXPOSTO PELA CAPTURA: a timeline não tinha as dispensas, e no caso
+      // real elas foram O GARGALO (alvará 15/12, dispensas só 02/01 — 18 dias, última etapa).
+      // A do Corpo de Bombeiros é AUTODECLARAÇÃO do empreendedor ("ambiente inócuo" +
+      // "instalarei medidas contra incêndio"). O líder declarou em nome do cliente e mandou
+      // como boa notícia. Aqui o consentimento é explícito (UX-31 estendido a todo ato
+      // declarado em nome do cliente).
+      deriva: () => ({
+        resultado: 'dispensa sanitária + bombeiros (REDESIMPLES) · autodeclaração EXPLICADA e consentida antes de assinar',
+      }),
+    },
+    {
+      id: 'b4.certificado', bloco: 'B4', tela: 'N21', tipo: 'acao',
       nome: 'Certificado digital A1 (pós-CNPJ)',
       deriva: () => ({ resultado: 'certificado A1 emitido (pós-CNPJ)' }),
     },
     {
-      id: 'b4.municipal', bloco: 'B4', tela: '24', tipo: 'acao',
+      id: 'b4.municipal', bloco: 'B4', tela: 'N21', tipo: 'acao',
       nome: 'Inscrição municipal + credenciamento NFS-e (DES-BH)',
       deriva: () => ({ resultado: 'inscrição municipal + credenciamento NFS-e (DES-BH)' }),
     },
 
     // ── B4.5 — Ativação fiscal (API Serpro) ──────────────────────────────
     {
-      id: 'b45.ativacao', bloco: 'B4.5', tela: '25', tipo: 'acao',
+      id: 'b45.ativacao', bloco: 'B4.5', tela: 'N23', tipo: 'acao',
       nome: 'Ativação fiscal: procuração e-CAC → API Serpro',
       deriva: () => ({ resultado: 'procuração e-CAC → API Serpro (PGDAS-D/DAS automatizado)' }),
     },
     {
-      id: 'fim.ativa', bloco: 'FIM', tela: '—', tipo: 'gate',
+      id: 'fim.ativa', bloco: 'FIM', tela: 'N24', tipo: 'gate',
       nome: 'Empresa ativa e operando',
       deriva: () => ({ resultado: 'empresa ativa e operando ✅', termina: 'ativa' }),
     },
@@ -397,5 +563,7 @@ module.exports = {
   faturamentoMedio,
   proLaboreOtimo,
   inssComFolga,
+  economiaSwap,
+  estimativaTeaser,
   validaCPF,
 };

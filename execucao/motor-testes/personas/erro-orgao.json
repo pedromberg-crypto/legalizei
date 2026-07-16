@@ -10,7 +10,11 @@
   "perfil": {
     "nivel": "médio",
     "personalidade": "Confia no fluxo, pagou e fechou o app. Volta e vê que um órgão recusou. O medo é 'perdi meu dinheiro / travou e ninguém me avisa'.",
-    "estressa": ["passo que fica 'em andamento' eternamente escondendo uma recusa", "recomeçar do zero por causa de um nome reprovado", "não saber qual é a ação dele"]
+    "estressa": [
+      "passo que fica 'em andamento' eternamente escondendo uma recusa",
+      "recomeçar do zero por causa de um nome reprovado",
+      "não saber qual é a ação dele"
+    ]
   },
   "sugestoes": {
     "b4.viabilidade": "B6 fechado: a recusa vira 🔴 'precisa de você' com a ação concreta (reescolher nome + sugestões automáticas), recuperável dentro do pipeline. Nunca um verde falso nem um 'em andamento' que na real travou. Com 2 sócios, dizer de quem é a pendência (ver monstro)."
@@ -44,7 +48,9 @@
     "b3_metodo": "cartao",
     "b3_aceite": true,
     "b3_pagamento_status": "pago",
-    "viabilidade_recusa": true
+    "viabilidade_recusa": true,
+    "cnae_anexo_padrao": "V",
+    "b2_termo_aceite": true
   },
   "eventos": {
     "b4.viabilidade": {
@@ -59,37 +65,146 @@
     "status": "ativa",
     "parou_em": "fim.ativa",
     "trilha": [
-      { "passo": "entrada.fork",       "resultado": "rota: abertura de CNPJ" },
-      { "passo": "b1.descricao",       "resultado": "descrição aceita" },
-      { "passo": "b1.mapeamento",      "resultado": "CNAE 6201-5/00 · confiança alta · sem fork" },
-      { "passo": "b1.desambiguacao",   "resultado": "(pulado)" },
-      { "passo": "b1.filtro",          "resultado": "serviço ✓ · Simples ✓ · não-regulada ✓" },
-      { "passo": "b1.veredito",        "resultado": "🟢 atende" },
-      { "passo": "b1.conta",           "resultado": "conta criada · entra no B2" },
-      { "passo": "b2.socio",           "resultado": "sócio ok · solteiro (sem regime de bens)" },
-      { "passo": "b2.clt",             "resultado": "sem duplo vínculo · pró-labore normal" },
-      { "passo": "b2.socios",          "resultado": "solo (sem +sócios)" },
-      { "passo": "b2.empresa",         "resultado": "empresa ok · capital R$5000 · endereço próprio" },
-      { "passo": "b2.cnae_sec",        "resultado": "sem secundários" },
-      { "passo": "b2.natureza",        "resultado": "natureza SLU (coerente com nº de sócios)" },
-      { "passo": "b2.nome",            "resultado": "razão social + fantasia · nome disponível (viabilidade prévia)" },
-      { "passo": "b2.cnae_otimo",      "resultado": "enquadramento único (sem CNAE alternativo)" },
-      { "passo": "b2.simulador",       "resultado": "est. Fator R 10% → Anexo V (15,5%) · ótimo R$1960 → Anexo III (IRRF zero)" },
-      { "passo": "b2.revisao",         "resultado": "dossiê completo · handoff B3" },
-      { "passo": "b3.recap",           "resultado": "recap: economia do Fator R + escopo (abertura grátis + mensal)" },
-      { "passo": "b3.plano",           "resultado": "plano base (faixa ate 10k)" },
-      { "passo": "b3.aceite",          "resultado": "contrato + termo de início aceitos (assinatura)" },
-      { "passo": "b3.pagamento",       "resultado": "pagamento confirmado (cartao) · destrava B4" },
-      { "passo": "b4.viabilidade",     "resultado": "viabilidade INDEFERIDA: nome reprovado na JUCEMG (apesar da prévia) — precisa de você" },
-      { "passo": "b4.viabilidade::recusa", "resultado": "🔴 nome reprovado na JUCEMG apesar da prévia · precisa de você: reescolher nome (sugestões automáticas) · ▶ nome novo reenviado → viabilidade deferida → segue" },
-      { "passo": "b4.dbe",             "resultado": "DBE gerado (Coleta Web/Receita)" },
-      { "passo": "b4.registro",        "resultado": "contrato pronto (JUCEMG) + assinado GOV.BR prata/ouro" },
-      { "passo": "b4.taxa",            "resultado": "DAE JUCEMG paga (repasse ~R$268,51)" },
-      { "passo": "b4.cnpj",            "resultado": "CNPJ emitido + opção Simples automática + CRC assina" },
-      { "passo": "b4.certificado",     "resultado": "certificado A1 emitido (pós-CNPJ)" },
-      { "passo": "b4.municipal",       "resultado": "inscrição municipal + credenciamento NFS-e (DES-BH)" },
-      { "passo": "b45.ativacao",       "resultado": "procuração e-CAC → API Serpro (PGDAS-D/DAS automatizado)" },
-      { "passo": "fim.ativa",          "resultado": "empresa ativa e operando ✅" }
+      {
+        "passo": "entrada.fork",
+        "resultado": "rota: abertura de CNPJ"
+      },
+      {
+        "passo": "b1.descricao",
+        "resultado": "descrição aceita"
+      },
+      {
+        "passo": "b1.mapeamento",
+        "resultado": "CNAE 6201-5/00 · confiança alta · sem fork"
+      },
+      {
+        "passo": "b1.desambiguacao",
+        "resultado": "(pulado)"
+      },
+      {
+        "passo": "b1.filtro",
+        "resultado": "serviço ✓ · Simples ✓ · não-regulada ✓"
+      },
+      {
+        "passo": "b1.veredito",
+        "resultado": "🟢 atende"
+      },
+      {
+        "passo": "b1.triagem",
+        "resultado": "elegível · solo · ninguém no exterior"
+      },
+      {
+        "passo": "b1.faturamento",
+        "resultado": "faixa ate 10k (ponto médio R$7000)"
+      },
+      {
+        "passo": "b1.teaser",
+        "resultado": "teaser: economia estimada ~R$665/mês · carimbo \"estimativa, confirmamos no cálculo\" (UX-26)"
+      },
+      {
+        "passo": "b1.conta",
+        "resultado": "conta criada (credencial ok) · entra no checkout"
+      },
+      {
+        "passo": "b3.conta_abertura",
+        "resultado": "conta da abertura: honorário R$0 · governo (DAE JUCEMG ~R$268,51 agora 🟡 · TFLF BH ~R$161 em ~40 dias) · recorrente: plano base"
+      },
+      {
+        "passo": "b3.aceite",
+        "resultado": "contrato de serviço aceito (reversível · CDC art.49 vale limpo)"
+      },
+      {
+        "passo": "b3.pagamento",
+        "resultado": "CPF regular ✓ · pagamento confirmado (cartao) · entra no app"
+      },
+      {
+        "passo": "b2.socio",
+        "resultado": "sócio ok · solteiro (sem regime de bens)"
+      },
+      {
+        "passo": "b2.clt",
+        "resultado": "sem duplo vínculo · pró-labore normal"
+      },
+      {
+        "passo": "b2.socios",
+        "resultado": "solo (sem +sócios)"
+      },
+      {
+        "passo": "b2.empresa",
+        "resultado": "empresa ok · capital R$5000 · endereço próprio"
+      },
+      {
+        "passo": "b2.cnae_sec",
+        "resultado": "sem secundários"
+      },
+      {
+        "passo": "b2.natureza",
+        "resultado": "natureza SLU (coerente com nº de sócios)"
+      },
+      {
+        "passo": "b2.nome",
+        "resultado": "razão social + fantasia · nome disponível (viabilidade prévia)"
+      },
+      {
+        "passo": "b2.cnae_otimo",
+        "resultado": "enquadramento único (sem CNAE alternativo)"
+      },
+      {
+        "passo": "b2.simulador",
+        "resultado": "est. Fator R 10% → Anexo V (15,5%) · ótimo R$1960 → Anexo III (IRRF zero) · teaser cumprido (~R$665 → ~R$665)"
+      },
+      {
+        "passo": "b2.revisao",
+        "resultado": "dossiê completo · PDF exportável liberado (entregável de cliente)"
+      },
+      {
+        "passo": "b2.termo",
+        "resultado": "termo irreversível aceito · taxas de governo não voltam a partir daqui · B4 liberado"
+      },
+      {
+        "passo": "b4.viabilidade",
+        "resultado": "viabilidade INDEFERIDA: nome reprovado na JUCEMG (apesar da prévia) — precisa de você"
+      },
+      {
+        "passo": "b4.viabilidade::recusa",
+        "resultado": "🔴 nome reprovado na JUCEMG apesar da prévia · precisa de você: reescolher nome (sugestões automáticas) · ▶ nome novo reenviado → viabilidade deferida → segue"
+      },
+      {
+        "passo": "b4.dbe",
+        "resultado": "DBE gerado (Coleta Web/Receita)"
+      },
+      {
+        "passo": "b4.registro",
+        "resultado": "contrato pronto (JUCEMG) + assinado GOV.BR prata/ouro · 2FA intacto"
+      },
+      {
+        "passo": "b4.taxa",
+        "resultado": "DAE JUCEMG paga (repasse ~R$268,51 🟡 valor a reconciliar)"
+      },
+      {
+        "passo": "b4.cnpj",
+        "resultado": "CNPJ emitido + opção Simples automática + CRC assina"
+      },
+      {
+        "passo": "b4.dispensas",
+        "resultado": "dispensa sanitária + bombeiros (REDESIMPLES) · autodeclaração EXPLICADA e consentida antes de assinar"
+      },
+      {
+        "passo": "b4.certificado",
+        "resultado": "certificado A1 emitido (pós-CNPJ)"
+      },
+      {
+        "passo": "b4.municipal",
+        "resultado": "inscrição municipal + credenciamento NFS-e (DES-BH)"
+      },
+      {
+        "passo": "b45.ativacao",
+        "resultado": "procuração e-CAC → API Serpro (PGDAS-D/DAS automatizado)"
+      },
+      {
+        "passo": "fim.ativa",
+        "resultado": "empresa ativa e operando ✅"
+      }
     ]
   }
 }

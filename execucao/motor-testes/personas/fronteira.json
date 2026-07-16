@@ -10,7 +10,10 @@
   "perfil": {
     "nivel": "médio-alto",
     "personalidade": "Profissional, articulada. Descreve como 'consultoria' pra parecer serviço livre, mas é conselho regulado. Boa-fé, não está tentando burlar.",
-    "estressa": ["ser barrada sem entender o porquê do conselho", "jargão jurídico"]
+    "estressa": [
+      "ser barrada sem entender o porquê do conselho",
+      "jargão jurídico"
+    ]
   },
   "sugestoes": {
     "b1.veredito": "UX-22 já separou 'precisa de RT'. 4ª ordem: **começar o caminho do RT**, não só nomear. 'Quer que a gente veja um responsável técnico pra você?' + o que muda no custo/prazo. Ela é cliente real; a distinção só vale se virar ação, senão é um 'não' mais educado."
@@ -24,7 +27,8 @@
     "desambiguacao_ramo": "sou nutricionista registrada e prescrevo dieta",
     "filtro_servico": true,
     "filtro_simples": true,
-    "filtro_regulada": true
+    "filtro_regulada": true,
+    "cnae_anexo_padrao": "V"
   },
   "eventos": {},
   "esperado": {
@@ -32,12 +36,30 @@
     "status": "waitlist",
     "parou_em": "b1.veredito",
     "trilha": [
-      { "passo": "entrada.fork",     "resultado": "rota: abertura de CNPJ" },
-      { "passo": "b1.descricao",     "resultado": "descrição aceita" },
-      { "passo": "b1.mapeamento",    "resultado": "CNAE 8650-0/02 · confiança media · AMBÍGUO" },
-      { "passo": "b1.desambiguacao", "resultado": "desambiguou: sou nutricionista registrada e prescrevo dieta" },
-      { "passo": "b1.filtro",        "resultado": "serviço ✓ · Simples ✓ · REGULADA" },
-      { "passo": "b1.veredito",      "resultado": "🟡 waitlist" }
+      {
+        "passo": "entrada.fork",
+        "resultado": "rota: abertura de CNPJ"
+      },
+      {
+        "passo": "b1.descricao",
+        "resultado": "descrição aceita"
+      },
+      {
+        "passo": "b1.mapeamento",
+        "resultado": "CNAE 8650-0/02 · confiança media · AMBÍGUO"
+      },
+      {
+        "passo": "b1.desambiguacao",
+        "resultado": "desambiguou: sou nutricionista registrada e prescrevo dieta"
+      },
+      {
+        "passo": "b1.filtro",
+        "resultado": "serviço ✓ · Simples ✓ · REGULADA"
+      },
+      {
+        "passo": "b1.veredito",
+        "resultado": "🟡 waitlist"
+      }
     ]
   }
 }

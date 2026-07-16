@@ -10,7 +10,10 @@
   "perfil": {
     "nivel": "médio-alto",
     "personalidade": "Empreendedor com sócio morando fora. Não sabe que isso barra o Simples.",
-    "estressa": ["descobrir tarde que não pode", "não receber alternativa (Lucro Presumido / rota humana)"]
+    "estressa": [
+      "descobrir tarde que não pode",
+      "não receber alternativa (Lucro Presumido / rota humana)"
+    ]
   },
   "sugestoes": {
     "b2.socio": "Fail-fast (UX-21) + handoff (UX-35) já ✅. 4ª ordem: **modelar as saídas concretas** — custo/implicação do Lucro Presumido, ou 'se o sócio virar residente, o caminho é este'. Virar o bloqueio numa **decisão informada** que ele toma, não só num lead roteado pro humano."
@@ -30,22 +33,43 @@
     "socio_estado_civil": "solteiro",
     "socio_cep": "30190000",
     "socio_exterior": true,
-    "duplo_vinculo_clt": false
+    "duplo_vinculo_clt": false,
+    "cnae_anexo_padrao": "V"
   },
   "eventos": {},
   "esperado": {
     "veredito_b1": "🟢 atende",
     "status": "bloqueado",
-    "parou_em": "b2.socio",
+    "parou_em": "b1.triagem",
     "trilha": [
-      { "passo": "entrada.fork",     "resultado": "rota: abertura de CNPJ" },
-      { "passo": "b1.descricao",     "resultado": "descrição aceita" },
-      { "passo": "b1.mapeamento",    "resultado": "CNAE 7020-4/00 · confiança alta · sem fork" },
-      { "passo": "b1.desambiguacao", "resultado": "(pulado)" },
-      { "passo": "b1.filtro",        "resultado": "serviço ✓ · Simples ✓ · não-regulada ✓" },
-      { "passo": "b1.veredito",      "resultado": "🟢 atende" },
-      { "passo": "b1.conta",         "resultado": "conta criada · entra no B2" },
-      { "passo": "b2.socio",         "resultado": "ERRO: sócio no exterior: bloqueia opção Simples (LC 123 art.17 II) → rota humana" }
+      {
+        "passo": "entrada.fork",
+        "resultado": "rota: abertura de CNPJ"
+      },
+      {
+        "passo": "b1.descricao",
+        "resultado": "descrição aceita"
+      },
+      {
+        "passo": "b1.mapeamento",
+        "resultado": "CNAE 7020-4/00 · confiança alta · sem fork"
+      },
+      {
+        "passo": "b1.desambiguacao",
+        "resultado": "(pulado)"
+      },
+      {
+        "passo": "b1.filtro",
+        "resultado": "serviço ✓ · Simples ✓ · não-regulada ✓"
+      },
+      {
+        "passo": "b1.veredito",
+        "resultado": "🟢 atende"
+      },
+      {
+        "passo": "b1.triagem",
+        "resultado": "ERRO: sócio no exterior: bloqueia opção Simples (LC 123 art.17 II) → rota humana"
+      }
     ]
   }
 }

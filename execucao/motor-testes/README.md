@@ -2,7 +2,9 @@
 
 Testa a **lógica** dos fluxos do app (abertura de CNPJ e, depois, portal) rápido e barato: sem UI, sem gastar token de IA. Node puro, zero dependência.
 
-> Arquitetura travada em [[2026-07-15-spec-telas-e-motor-testes]]. Fonte da lógica: [[spec-telas-entrada-b1-b2]] + [[blocos-fluxo-abertura]]. Personas: [[casos-teste-fluxo-cnae]].
+> Arquitetura travada em [[2026-07-15-spec-telas-e-motor-testes]]. Personas: [[casos-teste-fluxo-cnae]].
+>
+> ⚠️ **v0.3.0 (2026-07-16) — A ORDEM MUDOU.** Fonte da lógica agora é **[[reordenacao-flow-cobranca-cedo]]** (telas N1–N25), que reordenou [[spec-telas-entrada-b1-b2]] + [[spec-telas-b3-b4-aterrissagem]] + [[blocos-fluxo-abertura]]. Execução: **ENTRADA → B1 → B3 → B2 → B4 → B4.5**. Os nomes dos blocos são os mesmos; **a cobrança subiu**. Ver B3 antes de B2 no relatório é o ponto, não um bug.
 
 ## Rodar
 
@@ -43,9 +45,41 @@ Cada passo: `pula_se` (condicional exclusiva não roda), `valida` (barra o fluxo
 
 ## Estado
 
-- ✅ **v0.2.0** — cobertura **B1→B4→B4.5** (fluxo inteiro até "empresa ativa"). Simulador Fator R com números do consolidado fiscal: INSS 11% direto, teto folga, **IRRF zero ≤R$5k**, **pró-labore ótimo**.
-- ✅ **13 personas codadas, 13 PASS** (v0.2.3): `reta` · `cida` · `camaleao` (🟡 waitlist) · `sociedade` (2 sócios, folga teto, III) · `fronteira` (regulada disfarçada) · `knife` (Fator R 28% + boleto não pago → aguardando-pagamento) · `monstro` (pipeline + pausas) · `bloq-3socios` · `bloq-exterior` · `bloq-cltpropria` (3 recusas graciosas) · `instrutora` (CNAE ótimo) · **`erro-orgao`** (B6: nome reprovado na JUCEMG → estado 🔴 "precisa de você" → recupera) · **`govbr-bronze`** (B7: conta bronze → upgrade guiado B1→B4).
-- **v0.2.3 (2026-07-15):** fechou os blind spots do [[mapa-ramificacoes-flow]]. Novo evento `recusa` no `run.js` (irmão da `pausa`): estado 🔴 recuperável **dentro** do pipeline, sem crash nem limbo. Schema ganhou branch de viabilidade indeferida (B6) + nível GOV.BR bronze (B7).
-- **14ª persona — `reta-direto` (invariância, 2026-07-16):** não modela gente, modela uma **promessa**. É a `reta` byte a byte com `coorte_experiencia: "ja_abriu"`, esperando **trilha idêntica**. Guarda-corpo da **UX-48** (trilha única + coorte instrumentada, [[spec-instrumentacao-flow]]): prova que a coorte de analytics é **dado puro** e nunca vaza pra lógica fiscal/validação. Se um passo do schema um dia ler a coorte, este teste quebra e denuncia.
-- Guard-rails no schema: limite 2 sócios (B2.3), sócio exterior (B2.1), CLT-própria (B2.2).
-- 🟡 Simulador roda como **"estimativa"** até a Larissa fechar A/B/C ([[perguntas-larissa-fiscal]]) — sobretudo o ponto B (CPP-no-DAS), que afina o pró-labore ótimo.
+### ✅ v0.3.0 (2026-07-16) — reordenação · **16 personas, 16 PASS**
+
+**A cobrança subiu.** Gate CNAE → teaser de economia → **paga** → todo o dossiê dentro do app. Motivo e evidência em [[reordenacao-flow-cobranca-cedo]].
+
+**Passos novos:**
+| Passo | Tela | O que faz |
+|---|---|---|
+| `b1.triagem` | N4 | **fail-fast (UX-21) antes do dinheiro**: sócio no exterior · 3+ sócios. O UX-21 já mandava perguntar isso no B1, mas o motor v0.2.x só barrava lá no B2 — com cobrança no N9, isso viraria cobrar de quem não pode abrir |
+| `b1.faturamento` | N4 | faixa guiada que alimenta o teaser |
+| `b1.teaser` | N5 | **o pilar**: entrega a PROVA (existe economia, tem número) sem o produto. Carimbo UX-26 obrigatório |
+| `b2.termo` | N20 | **termo irreversível** — a outra metade do T18, que rachou. Aqui a máquina liga e o dinheiro de governo sai |
+| `b4.dispensas` | N21 | sanitária + bombeiros, com **consentimento informado** da autodeclaração. Furo exposto pela captura: no caso real foram **o gargalo** (18 dias, última etapa) |
+
+**Mudanças de lógica:**
+- `b3.pagamento` — **CPF valida elegibilidade** (mesmo campo que o gateway já exige, dois usos): irregular **não cobra**, roteia. E **boleto não termina mais o flow**: entra no app, faz o B2, trava em `b2.revisao` (export) + `b2.termo` (execução) até compensar.
+- `b3.aceite` — só o **contrato** (reversível, CDC art.49 limpo). O irreversível desceu pro `b2.termo`.
+- `b2.socio` / `b2.socios` — guard-rails de exterior e 3+ sócios **subiram** pra `b1.triagem`.
+- 🐛 **bug corrigido (existia desde a v0.2.x):** o simulador decidia o anexo **só pela folha**, ignorando o CNAE. CNAE III-por-padrão (8599-6/04, SC Cosit 205/14) **já é Anexo III sem Fator R** — o motor dizia "Anexo V" pra quem já estava em III e recomendava pró-labore ótimo desnecessário. Campo novo: `cnae_anexo_padrao`.
+- 🐛 **as 2 alavancas são alternativas, não cumulativas** (`max`, não soma): trocar de CNAE **ou** subir o pró-labore ([[cnae-fiscalmente-otimo]]). Somar inflaria a economia prometida.
+
+**Personas 14 → 16:**
+- **2 intactas:** `camaleao` · `fronteira` (saem no veredito 🟡, o gate não mudou).
+- **10 remapeadas** (só a ordem): `reta` · `cida` · `reta-direto` · `sociedade` · `monstro` · `instrutora` · `govbr-bronze` · `bloq-cltpropria` · `bloq-3socios` · `bloq-exterior`. As duas últimas **param mais cedo** (`b1.triagem` em vez do B2) — a spec dizia que sim, o motor não fazia.
+- **1 lógica nova:** `knife` — boleto entra no app, faz o dossiê, para em `b2.termo` (era `b3.pagamento`).
+- **2 novas:** **`promessa-quebrada`** (guarda-corpo do teaser: fatura R$40k, só tira R$3k, o ótimo exigiria R$11.200 → caminho não existe → teaser prometeu R$3.800, real R$0, **e ela já pagou**) · **`cpf-irregular`** (CPF suspenso barra no N9 **sem cobrar**).
+
+**Campos novos na persona:** `cnae_anexo_padrao` (`III`|`V`) · `pro_labore_teto` (máximo que ela pode se pagar; ausente = sem teto) · `b2_termo_aceite`.
+
+### Histórico
+- **v0.2.3 (15/07):** blind spots do [[mapa-ramificacoes-flow]]. Evento `recusa` no `run.js` (irmão da `pausa`): 🔴 recuperável **dentro** do pipeline, sem crash nem limbo. Branch de viabilidade indeferida (B6) + GOV.BR bronze (B7).
+- **`reta-direto` (16/07):** não modela gente, modela uma **promessa**. É a `reta` byte a byte com `coorte_experiencia: "ja_abriu"`, esperando trilha idêntica. Guarda-corpo da **UX-48**: prova que a coorte é **dado puro** e nunca vaza pra lógica. Se um passo do schema um dia ler a coorte, este teste denuncia.
+- **v0.2.0:** cobertura B1→B4→B4.5. Simulador com os números do consolidado fiscal.
+
+### 🟡 Pendências
+- **`FISCAL.TEASER_PISO` (0.5) não foi ratificado.** É o piso de desvio teaser × real que separa "estimativa" de promessa quebrada. Decisão de produto → [[reordenacao-flow-cobranca-cedo]].
+- **`b2.natureza` sob suspeita:** o caso real (CNPJ do Pedro) saiu **LTDA num solo**. Se SLU é LTDA de sócio único (mesma natureza 206-2), o guard-rail está errado. Pergunta pra Larissa.
+- **`b4.taxa`:** DAE JUCEMG ~R$268,51 × R$288 (Izabela), aberto desde 09/07.
+- Simulador roda como **"estimativa"** até a Larissa fechar A/B/C ([[perguntas-larissa-fiscal]]) — sobretudo o ponto B (CPP-no-DAS), que afina o pró-labore ótimo.

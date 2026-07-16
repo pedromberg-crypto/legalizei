@@ -1,0 +1,115 @@
+{
+  "meta": {
+    "id": "cpf-irregular",
+    "nome": "Sandra — CPF suspenso na Receita (descobre no checkout, não é cobrada)",
+    "persona_seq": 16,
+    "flow": "abertura",
+    "descricao": "FLOW 16 — ELEGIBILIDADE NO CHECKOUT (nasce da reordenação 16/07). CPF válido no dígito verificador, mas SUSPENSO na Receita. Passa o gate 🟢 e a triagem (é solo, ninguém no exterior), mas o CPF é conferido no N9 (mesmo campo que o gateway exige) e o pagamento NÃO acontece: quem não pode abrir empresa não é cobrado. Roteia pro humano. No flow antigo isso só aparecia no T6, depois de 15 telas — e com cobrança cedo seria pior: cobrar e barrar na tela seguinte.",
+    "fonte": "[[reordenacao-flow-cobranca-cedo]] — persona nova exigida pela cobrança no N9"
+  },
+  "perfil": {
+    "nivel": "leigo total",
+    "personalidade": "Não faz ideia de que o CPF está suspenso (provavelmente declaração de IR atrasada). Descobrir isso é um susto, não uma ofensa — desde que ninguém cobre nada dela e alguém explique como resolver.",
+    "estressa": [
+      "ser cobrada por algo que não pode usar",
+      "erro genérico que não diz o que fazer",
+      "descobrir tarde"
+    ]
+  },
+  "sugestoes": {
+    "b3.pagamento": "O erro NÃO pode parecer recusa de cartão — é outra coisa e a pessoa precisa entender a diferença. Copy precisa dizer o que é (CPF suspenso/pendente na Receita), que NADA foi cobrado, e o caminho concreto (regularizar no e-CAC / declaração pendente). E aplicar o UX-35: o que ela já preencheu vai junto pro humano, ela não recomeça do zero. Um 'pagamento não autorizado' aqui seria mentira e geraria retrabalho de suporte."
+  },
+  "respostas": {
+    "entrada_escolha": "abrir_cnpj",
+    "atividade_descricao": "faço design gráfico e identidade visual para pequenas empresas",
+    "cnae": "7410-2/02",
+    "cnae_anexo_padrao": "V",
+    "cnae_confianca": "alta",
+    "cnae_ambiguo": false,
+    "filtro_servico": true,
+    "filtro_simples": true,
+    "filtro_regulada": false,
+    "socio_nome": "Sandra Cristina Moreira",
+    "socio_cpf": "11144477735",
+    "socio_cpf_situacao": "suspenso",
+    "socio_estado_civil": "casada",
+    "socio_regime_bens": "comunhão parcial de bens",
+    "socio_cep": "30240000",
+    "duplo_vinculo_clt": false,
+    "num_socios": 1,
+    "empresa_capital": 5000,
+    "empresa_endereco_tipo": "próprio",
+    "quer_endereco_fiscal": false,
+    "cnae_secundarios": [],
+    "natureza": "SLU",
+    "nome_viavel": true,
+    "faturamento_faixa": "ate 10k",
+    "fator_r_folha_pct": 20,
+    "pro_labore": "minimo",
+    "b3_plano": "base",
+    "b3_metodo": "cartao",
+    "b3_aceite": true,
+    "b2_termo_aceite": true,
+    "b3_pagamento_status": "pago"
+  },
+  "eventos": {},
+  "esperado": {
+    "veredito_b1": "🟢 atende",
+    "status": "bloqueado",
+    "parou_em": "b3.pagamento",
+    "trilha": [
+      {
+        "passo": "entrada.fork",
+        "resultado": "rota: abertura de CNPJ"
+      },
+      {
+        "passo": "b1.descricao",
+        "resultado": "descrição aceita"
+      },
+      {
+        "passo": "b1.mapeamento",
+        "resultado": "CNAE 7410-2/02 · confiança alta · sem fork"
+      },
+      {
+        "passo": "b1.desambiguacao",
+        "resultado": "(pulado)"
+      },
+      {
+        "passo": "b1.filtro",
+        "resultado": "serviço ✓ · Simples ✓ · não-regulada ✓"
+      },
+      {
+        "passo": "b1.veredito",
+        "resultado": "🟢 atende"
+      },
+      {
+        "passo": "b1.triagem",
+        "resultado": "elegível · solo · ninguém no exterior"
+      },
+      {
+        "passo": "b1.faturamento",
+        "resultado": "faixa ate 10k (ponto médio R$7000)"
+      },
+      {
+        "passo": "b1.teaser",
+        "resultado": "teaser: economia estimada ~R$665/mês · carimbo \"estimativa, confirmamos no cálculo\" (UX-26)"
+      },
+      {
+        "passo": "b1.conta",
+        "resultado": "conta criada (credencial ok) · entra no checkout"
+      },
+      {
+        "passo": "b3.conta_abertura",
+        "resultado": "conta da abertura: honorário R$0 · governo (DAE JUCEMG ~R$268,51 agora 🟡 · TFLF BH ~R$161 em ~40 dias) · recorrente: plano base"
+      },
+      {
+        "passo": "b3.aceite",
+        "resultado": "contrato de serviço aceito (reversível · CDC art.49 vale limpo)"
+      },
+      {
+        "passo": "b3.pagamento",
+        "resultado": "ERRO: CPF suspenso na Receita → não cobra, roteia pro humano"
+      }
+    ]
+  }
+}

@@ -91,41 +91,39 @@ O CPF é obrigatório pro gateway de qualquer jeito (o líder pede no mesmo luga
 
 ---
 
-## 👥 Personas — o remapeamento (14 → 16)
+## 👥 Personas — o remapeamento (14 → 16) · ✅ **IMPLEMENTADO, 16/16 PASS** (motor v0.3.0)
 
-### ❌ Intactas (5) — não tocam o ponto de mudança
+### ❌ Intactas (2)
 | Persona | Por quê |
 |---|---|
-| `camaleao` | sai no gate (veredito 🟡 → waitlist). O gate não mudou |
+| `camaleao` | sai no veredito 🟡 (waitlist). O gate não mudou |
 | `fronteira` | idem |
-| `bloq-3socios` | a triagem do **UX-21** já pergunta no N4 |
-| `bloq-exterior` | idem |
-| `erro-orgao` | vive no N21, sempre foi pós-pagamento |
 
-> 🎖️ **As 4 saídas terminais estão blindadas porque o trabalho já tinha sido feito.** O **UX-21 (fail-fast)** subiu "quantos sócios?" e "algum no exterior?" pro B1 por razão de UX, meses atrás. Isso agora vira razão de **negócio**: **ninguém que não pode abrir chega no checkout.** Mesma sorte no `bloq-cltpropria` — se ainda fosse bloqueio fatal (era, até o UX-43), ela pagaria e seria barrada na tela seguinte.
+> ⚠️ **Correção do debate:** eu afirmei "5 intactas" contando `bloq-3socios`, `bloq-exterior` e `erro-orgao`. **O código desmentiu.** A spec do UX-21 dizia que a triagem de sócios/exterior acontecia no B1, mas **o motor v0.2.x nunca implementou isso** — barrava só lá no B2 (`b2.socio` / `b2.socios`). Divergência spec × motor que ninguém tinha visto, e que a reordenação tornou crítica: com cobrança no N9, barrar no B2 = **cobrar de quem não pode abrir**. Por isso nasceu o passo `b1.triagem`, e as duas personas de bloqueio **param mais cedo**. O `erro-orgao` também muda (a ordem geral mudou). O crédito ao UX-21 continua válido — a **decisão de UX** estava certa desde sempre e blindou o desenho; só não tinha virado código.
 
-### 🔄 Remapeadas (8) — ordem muda, lógica não
-| Persona | Nota do remapeamento |
+### 🔄 Remapeadas (10)
+| Persona | Nota |
 |---|---|
-| `reta` | happy path. N1→N9 (paga) → N10-N19 → N20 → N21-N24 |
-| `cida` | idem, com acessibilidade |
-| `reta-direto` | invariância UX-48 segue valendo |
+| `reta` · `cida` · `reta-direto` | ordem nova; `reta-direto` mantém a invariância da UX-48 |
 | `sociedade` | titular paga sozinho no N9; 2º sócio entra no N22 *(já era assim)* |
-| `monstro` | pipeline + pausas. **P2 muda de natureza** (agora é dentro do app) |
-| `instrutora` | paga no N9, só vê o CNAE ótimo no **N17**. ⚠️ **o N5 prometeu** |
-| `govbr-bronze` | detecção continua **antes** do dinheiro (N6) → assina no N23 |
-| `bloq-cltpropria` | recuperação no N11, agora pós-pagamento. Sobrevive pelo UX-43 |
+| `monstro` | pipeline + pausas; **P2 muda de natureza** (agora dentro do app) |
+| `instrutora` | paga no N9, vê o CNAE ótimo no **N17** — as 2 alavancas dão R$1.425 cada, teaser cumprido |
+| `govbr-bronze` | detecção antes do dinheiro (N6) → assina no N23. **Bug achado:** CNAE 8599-6/04 é Anexo III **direto**; o motor dizia "Anexo V" e recomendava pró-labore ótimo inútil |
+| `bloq-cltpropria` | recuperação no N11, pós-pagamento. **Sobrevive pelo UX-43** — se ainda fosse bloqueio fatal, ela pagaria e seria barrada na tela seguinte |
+| `bloq-3socios` · `bloq-exterior` | **param em `b1.triagem`** (era `b2.socios` / `b2.socio`) — antes do checkout |
 
 ### 🔴 Lógica nova (1)
 | Persona | O que muda |
 |---|---|
-| `knife` | boleto no N9 → **entra no app** → B2 completo → **N19 + N20 travados** → compensa → destrava. Antes: pausava fora e destravava o B4 inteiro |
+| `knife` | boleto no N9 → **entra no app** → B2 completo → para em **`b2.termo`** com `aguardando-pagamento`. `b2.revisao` trava o export junto. Era: pausava fora, em `b3.pagamento` |
 
 ### 🆕 Novas (2)
 | Persona | Testa |
 |---|---|
-| **`promessa-quebrada`** | **a mais perigosa do novo flow.** Teaser (N5) estima ~R$300/mês; simulador (N18) entrega R$40. **Ela já pagou.** Esse risco não existia antes — ela via o número real antes de abrir a carteira. Precisa de **limite explícito de desvio**: teaser só aparece com confiança alta, e o motor prova que o N18 nunca fica absurdamente abaixo do N5. "Era estimativa" não segura nem no CDC nem no Reclame Aqui |
-| **`cpf-irregular`** | CPF reprovado na Receita **dentro do N9**. Não é cartão recusado, é **elegibilidade**: roteia sem cobrar |
+| **`promessa-quebrada`** | **a mais perigosa do novo flow.** Vitor fatura R$40k mas subcontrata e só tira R$3k. O ótimo exigiria R$11.200 → **o caminho não existe pra ele** → economia real **R$0**. O teaser prometeu **R$3.800/mês** e foi o que vendeu o plano. **Ele já pagou.** Risco que não existia antes (ele via o número real antes de abrir a carteira) |
+| **`cpf-irregular`** | Sandra tem CPF válido no dígito mas **suspenso na Receita**. Barra no N9 e **não é cobrada**. Não é cartão recusado, é elegibilidade — a copy precisa dizer a diferença |
+
+> 🎯 **A `promessa-quebrada` expôs o mecanismo do risco, e ele é pior do que eu tinha descrito:** o teaser promete o **teto** do Fator R sabendo só CNAE + faixa. **Quanto maior o faturamento, maior a promessa e menor a chance de a pessoa alcançar** — a estimativa erra mais justamente em quem ela mais anima. Saídas possíveis (na persona): teaser como faixa · perguntar o pró-labore viável já no N4 · só exibir teaser quando há família de swap (economia que independe da folha).
 
 ## ⏸️ Pausas — o que mudou
 | Pausa | Antes | Agora |
@@ -141,8 +139,9 @@ O CPF é obrigatório pro gateway de qualquer jeito (o líder pede no mesmo luga
 2. **A TFLF não existe em lugar nenhum.** Dia ~40, ~R$161 + correção, 4 dias pra pagar. Não é abertura, é **portal**. Virou o N25 e é a prova da tese: **a cauda é o produto**.
 
 ## 🟡 Pendências
-- **Reescrever o motor** (`execucao/motor-testes/`) — 8 remapeadas + 1 lógica nova + 2 personas novas. **As 14 personas são o critério de aceite entregue ao dev ontem** ([[legalize-handoff-dev-repo]]) — o contrato muda e o dev precisa saber **hoje**.
-- **Limite de desvio do N5** — qual gap teaser × real é aceitável? Define `promessa-quebrada`.
+- ~~Reescrever o motor~~ ✅ **FEITO 16/07 — v0.3.0, 16/16 PASS.** **Mas o contrato com o dev mudou:** as 14 personas eram o critério de aceite entregue ontem ([[legalize-handoff-dev-repo]]), agora são **16 e a ordem é outra**. O dev precisa saber **hoje** (ele está em E2E).
+- 🔴 **`FISCAL.TEASER_PISO` = 0.5 é um default MEU, não ratificado.** É o piso que separa "estimativa honesta" de promessa quebrada (o real precisa ser ≥ 50% do prometido). Decisão de produto do Pedro.
+- 🔴 **O que fazer quando a promessa quebra?** O motor hoje só **marca**. A `promessa-quebrada` segue até empresa ativa e o serviço é entregue (a abertura vale o preço sozinha), mas a expectativa foi criada por nós. Reembolso? Aviso honesto no N18 com opção de sair? **Não escolher também é escolher** — vira Reclame Aqui.
 - **Natureza jurídica (N15)** — o caso real saiu **LTDA** num solo. Nossa regra diz "solo→SLU" como se fossem naturezas distintas. SLU é LTDA de sócio único (mesma natureza 206-2)? Se sim, **o T11 está mal formulado** e o guard-rail C6 pode estar errado. **Pergunta pra Larissa.**
 - **DAE JUCEMG** — vault diz "R$288 **pago pelo cliente**" (Izabela) × "~R$268,51" (tabela), divergência aberta desde 09/07. O checkout do líder foi **R$195 total** e não há e-mail de DAE. Ou absorvem, ou o Pedro pagou por fora, ou há isenção. **Não localizado.** Não bloqueia agora; **muda a régua do preço** se absorverem → [[legalize-preco-deferido-custo-real]].
 - **Rachadura do T18** — ratificar com Larissa/Mauro.

@@ -7,18 +7,21 @@
     "descricao": "Eixo de acessibilidade. Solo, casada (comunhão parcial → puxa regime de bens), aposentada (não-CLT), aulas de reforço/idiomas. CNAE 8593-7/00 🟡 confirmar na matriz. Serviço/Simples/não-regulada → 🟢 atende. Passa B1→B4 (folha 30% já otimiza p/ Anexo III).",
     "fonte": "[[casos-teste-fluxo-cnae]] (persona nova, eixo acessibilidade) · CNAE 🟡 [[cnae-atendidos-e-nao-atendidos]]"
   },
-
   "perfil": {
     "nivel": "baixa familiaridade digital",
     "personalidade": "Dá aula de reforço e inglês há anos no informal, quer emitir nota pros pais dos alunos. Usa o celular só pra WhatsApp e foto. Fonte pequena a incomoda, lê devagar, tem medo de apertar o botão errado e estragar tudo. Se trava, chama a filha e desiste até ela chegar.",
-    "estressa": ["fonte pequena e baixo contraste", "passos demais", "termo técnico ou em inglês", "medo de erro irreversível", "formulário longo sem salvar"]
+    "estressa": [
+      "fonte pequena e baixo contraste",
+      "passos demais",
+      "termo técnico ou em inglês",
+      "medo de erro irreversível",
+      "formulário longo sem salvar"
+    ]
   },
-
   "sugestoes": {
     "b1.veredito": "Modo assistido já specado (UX-28). 4ª ordem: ela reabre dias depois com baixa memória digital. Além de restaurar o estado, dar um **recap simples/falado ao reabrir** — 'você parou aqui, já fez isto, falta isto', letra grande. Retomar não é só restaurar a tela, é **reorientar** quem esquece onde estava.",
     "b2.socio": "Form longo + pausa: ao voltar, priorizar UM próximo passo por vez (não a lista inteira de campos). Excesso de opções ao reabrir a paralisa mais que a falta delas."
   },
-
   "respostas": {
     "entrada_escolha": "abrir_cnpj",
     "atividade_descricao": "dou aulas particulares de reforco escolar e ingles para criancas",
@@ -48,9 +51,10 @@
     "b3_plano": "base",
     "b3_metodo": "cartao",
     "b3_aceite": true,
-    "b3_pagamento_status": "pago"
+    "b3_pagamento_status": "pago",
+    "cnae_anexo_padrao": "III",
+    "b2_termo_aceite": true
   },
-
   "eventos": {
     "b1.veredito": {
       "tipo": "pausa",
@@ -59,43 +63,151 @@
       "retomada": "idempotente"
     }
   },
-
   "esperado": {
     "veredito_b1": "🟢 atende",
     "status": "ativa",
     "parou_em": "fim.ativa",
     "trilha": [
-      { "passo": "entrada.fork",         "resultado": "rota: abertura de CNPJ" },
-      { "passo": "b1.descricao",         "resultado": "descrição aceita" },
-      { "passo": "b1.mapeamento",        "resultado": "CNAE 8593-7/00 · confiança alta · sem fork" },
-      { "passo": "b1.desambiguacao",     "resultado": "(pulado)" },
-      { "passo": "b1.filtro",            "resultado": "serviço ✓ · Simples ✓ · não-regulada ✓" },
-      { "passo": "b1.veredito",          "resultado": "🟢 atende" },
-      { "passo": "b1.veredito::pausa",   "resultado": "⏸ chamou a filha pra confirmar · espera algumas horas · ▶ retomada idempotente" },
-      { "passo": "b1.conta",             "resultado": "conta criada · entra no B2" },
-      { "passo": "b2.socio",             "resultado": "sócio ok · casado (regime: comunhão parcial de bens)" },
-      { "passo": "b2.clt",               "resultado": "sem duplo vínculo · pró-labore normal" },
-      { "passo": "b2.socios",            "resultado": "solo (sem +sócios)" },
-      { "passo": "b2.empresa",           "resultado": "empresa ok · capital R$3000 · endereço próprio" },
-      { "passo": "b2.cnae_sec",          "resultado": "sem secundários" },
-      { "passo": "b2.natureza",          "resultado": "natureza SLU (coerente com nº de sócios)" },
-      { "passo": "b2.nome",              "resultado": "razão social + fantasia · nome disponível (viabilidade prévia)" },
-      { "passo": "b2.cnae_otimo",        "resultado": "enquadramento único (sem CNAE alternativo)" },
-      { "passo": "b2.simulador",         "resultado": "est. Fator R 30% → Anexo III (6%) · já otimizado" },
-      { "passo": "b2.revisao",           "resultado": "dossiê completo · handoff B3" },
-      { "passo": "b3.recap",             "resultado": "recap: economia do Fator R + escopo (abertura grátis + mensal)" },
-      { "passo": "b3.plano",             "resultado": "plano base (faixa ate 10k)" },
-      { "passo": "b3.aceite",            "resultado": "contrato + termo de início aceitos (assinatura)" },
-      { "passo": "b3.pagamento",         "resultado": "pagamento confirmado (cartao) · destrava B4" },
-      { "passo": "b4.viabilidade",       "resultado": "viabilidade deferida (nome+endereço+CNAE) — JUCEMG unificada" },
-      { "passo": "b4.dbe",               "resultado": "DBE gerado (Coleta Web/Receita)" },
-      { "passo": "b4.registro",          "resultado": "contrato pronto (JUCEMG) + assinado GOV.BR prata/ouro" },
-      { "passo": "b4.taxa",              "resultado": "DAE JUCEMG paga (repasse ~R$268,51)" },
-      { "passo": "b4.cnpj",              "resultado": "CNPJ emitido + opção Simples automática + CRC assina" },
-      { "passo": "b4.certificado",       "resultado": "certificado A1 emitido (pós-CNPJ)" },
-      { "passo": "b4.municipal",         "resultado": "inscrição municipal + credenciamento NFS-e (DES-BH)" },
-      { "passo": "b45.ativacao",         "resultado": "procuração e-CAC → API Serpro (PGDAS-D/DAS automatizado)" },
-      { "passo": "fim.ativa",            "resultado": "empresa ativa e operando ✅" }
+      {
+        "passo": "entrada.fork",
+        "resultado": "rota: abertura de CNPJ"
+      },
+      {
+        "passo": "b1.descricao",
+        "resultado": "descrição aceita"
+      },
+      {
+        "passo": "b1.mapeamento",
+        "resultado": "CNAE 8593-7/00 · confiança alta · sem fork"
+      },
+      {
+        "passo": "b1.desambiguacao",
+        "resultado": "(pulado)"
+      },
+      {
+        "passo": "b1.filtro",
+        "resultado": "serviço ✓ · Simples ✓ · não-regulada ✓"
+      },
+      {
+        "passo": "b1.veredito",
+        "resultado": "🟢 atende"
+      },
+      {
+        "passo": "b1.veredito::pausa",
+        "resultado": "⏸ chamou a filha pra confirmar · espera algumas horas · ▶ retomada idempotente"
+      },
+      {
+        "passo": "b1.triagem",
+        "resultado": "elegível · solo · ninguém no exterior"
+      },
+      {
+        "passo": "b1.faturamento",
+        "resultado": "faixa ate 10k (ponto médio R$7000)"
+      },
+      {
+        "passo": "b1.teaser",
+        "resultado": "sem economia estimável · teaser não exibido (não promete o que não sabe)"
+      },
+      {
+        "passo": "b1.conta",
+        "resultado": "conta criada (credencial ok) · entra no checkout"
+      },
+      {
+        "passo": "b3.conta_abertura",
+        "resultado": "conta da abertura: honorário R$0 · governo (DAE JUCEMG ~R$268,51 agora 🟡 · TFLF BH ~R$161 em ~40 dias) · recorrente: plano base"
+      },
+      {
+        "passo": "b3.aceite",
+        "resultado": "contrato de serviço aceito (reversível · CDC art.49 vale limpo)"
+      },
+      {
+        "passo": "b3.pagamento",
+        "resultado": "CPF regular ✓ · pagamento confirmado (cartao) · entra no app"
+      },
+      {
+        "passo": "b2.socio",
+        "resultado": "sócio ok · casado (regime: comunhão parcial de bens)"
+      },
+      {
+        "passo": "b2.clt",
+        "resultado": "sem duplo vínculo · pró-labore normal"
+      },
+      {
+        "passo": "b2.socios",
+        "resultado": "solo (sem +sócios)"
+      },
+      {
+        "passo": "b2.empresa",
+        "resultado": "empresa ok · capital R$3000 · endereço próprio"
+      },
+      {
+        "passo": "b2.cnae_sec",
+        "resultado": "sem secundários"
+      },
+      {
+        "passo": "b2.natureza",
+        "resultado": "natureza SLU (coerente com nº de sócios)"
+      },
+      {
+        "passo": "b2.nome",
+        "resultado": "razão social + fantasia · nome disponível (viabilidade prévia)"
+      },
+      {
+        "passo": "b2.cnae_otimo",
+        "resultado": "enquadramento único (sem CNAE alternativo)"
+      },
+      {
+        "passo": "b2.simulador",
+        "resultado": "est. Fator R 30% → Anexo III (6%) · CNAE já é Anexo III sem Fator R (folha não muda nada)"
+      },
+      {
+        "passo": "b2.revisao",
+        "resultado": "dossiê completo · PDF exportável liberado (entregável de cliente)"
+      },
+      {
+        "passo": "b2.termo",
+        "resultado": "termo irreversível aceito · taxas de governo não voltam a partir daqui · B4 liberado"
+      },
+      {
+        "passo": "b4.viabilidade",
+        "resultado": "viabilidade deferida (nome+endereço+CNAE) — JUCEMG unificada"
+      },
+      {
+        "passo": "b4.dbe",
+        "resultado": "DBE gerado (Coleta Web/Receita)"
+      },
+      {
+        "passo": "b4.registro",
+        "resultado": "contrato pronto (JUCEMG) + assinado GOV.BR prata/ouro · 2FA intacto"
+      },
+      {
+        "passo": "b4.taxa",
+        "resultado": "DAE JUCEMG paga (repasse ~R$268,51 🟡 valor a reconciliar)"
+      },
+      {
+        "passo": "b4.cnpj",
+        "resultado": "CNPJ emitido + opção Simples automática + CRC assina"
+      },
+      {
+        "passo": "b4.dispensas",
+        "resultado": "dispensa sanitária + bombeiros (REDESIMPLES) · autodeclaração EXPLICADA e consentida antes de assinar"
+      },
+      {
+        "passo": "b4.certificado",
+        "resultado": "certificado A1 emitido (pós-CNPJ)"
+      },
+      {
+        "passo": "b4.municipal",
+        "resultado": "inscrição municipal + credenciamento NFS-e (DES-BH)"
+      },
+      {
+        "passo": "b45.ativacao",
+        "resultado": "procuração e-CAC → API Serpro (PGDAS-D/DAS automatizado)"
+      },
+      {
+        "passo": "fim.ativa",
+        "resultado": "empresa ativa e operando ✅"
+      }
     ]
   }
 }

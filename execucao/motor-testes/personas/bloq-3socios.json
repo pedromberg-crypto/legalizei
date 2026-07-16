@@ -10,7 +10,10 @@
   "perfil": {
     "nivel": "médio",
     "personalidade": "Trio querendo abrir junto. Não sabe que o MVP só cobre até 2 sócios.",
-    "estressa": ["ser barrado sem alternativa", "não entender por que 3 sócios não dá"]
+    "estressa": [
+      "ser barrado sem alternativa",
+      "não entender por que 3 sócios não dá"
+    ]
   },
   "sugestoes": {
     "b2.socios": "Fail-fast (UX-21) + handoff com dossiê (UX-35) já ✅. 4ª ordem: **modelar a alternativa agora** — 'com 2 sócios + o 3º como X você abriria hoje; ou o time do Mauro faz os 3'. Transformar o limite numa **decisão com opções**, não num 'não' roteado pra fila."
@@ -30,24 +33,43 @@
     "socio_estado_civil": "solteiro",
     "socio_cep": "30180000",
     "duplo_vinculo_clt": false,
-    "num_socios": 3
+    "num_socios": 3,
+    "cnae_anexo_padrao": "V"
   },
   "eventos": {},
   "esperado": {
     "veredito_b1": "🟢 atende",
     "status": "bloqueado",
-    "parou_em": "b2.socios",
+    "parou_em": "b1.triagem",
     "trilha": [
-      { "passo": "entrada.fork",     "resultado": "rota: abertura de CNPJ" },
-      { "passo": "b1.descricao",     "resultado": "descrição aceita" },
-      { "passo": "b1.mapeamento",    "resultado": "CNAE 7020-4/00 · confiança alta · sem fork" },
-      { "passo": "b1.desambiguacao", "resultado": "(pulado)" },
-      { "passo": "b1.filtro",        "resultado": "serviço ✓ · Simples ✓ · não-regulada ✓" },
-      { "passo": "b1.veredito",      "resultado": "🟢 atende" },
-      { "passo": "b1.conta",         "resultado": "conta criada · entra no B2" },
-      { "passo": "b2.socio",         "resultado": "sócio ok · solteiro (sem regime de bens)" },
-      { "passo": "b2.clt",           "resultado": "sem duplo vínculo · pró-labore normal" },
-      { "passo": "b2.socios",        "resultado": "ERRO: acima de 2 sócios: atendimento humano" }
+      {
+        "passo": "entrada.fork",
+        "resultado": "rota: abertura de CNPJ"
+      },
+      {
+        "passo": "b1.descricao",
+        "resultado": "descrição aceita"
+      },
+      {
+        "passo": "b1.mapeamento",
+        "resultado": "CNAE 7020-4/00 · confiança alta · sem fork"
+      },
+      {
+        "passo": "b1.desambiguacao",
+        "resultado": "(pulado)"
+      },
+      {
+        "passo": "b1.filtro",
+        "resultado": "serviço ✓ · Simples ✓ · não-regulada ✓"
+      },
+      {
+        "passo": "b1.veredito",
+        "resultado": "🟢 atende"
+      },
+      {
+        "passo": "b1.triagem",
+        "resultado": "ERRO: acima de 2 sócios: atendimento humano"
+      }
     ]
   }
 }

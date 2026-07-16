@@ -28,9 +28,9 @@ tags: [produto, ux, flow, cobranca, reordenacao, personas, motor, decisao]
 |---|---|---|---|
 | **N1** | Splash | T1 | — |
 | **N2** | Welcome (3 slides, pulável) | T2 | — |
-| **N3** | Fork ("abrir" × "já sou cliente") | T3 | — |
-| **N4** | **Gate-CNAE** + triagem (sócios? exterior?) → veredito 🟢/🟡/🔴 | T4 | 🆕 **+ faixa de faturamento** (alimenta o N5) |
-| **N5** | 🆕 **Teaser de economia** | — | "existe economia pra você, ~R$X/mês **estimado**". **A prova, sem o produto.** Carimbo UX-26 **obrigatório** |
+| **N3** | **Fork de 3 rotas** (UX-55 ✅ 16/07) | T3 | 🆕 *Quero abrir minha empresa* (primário) · *Já tenho empresa* → **flow #2 migrar** (secundário) · *Entrar na minha conta* (link, não botão). **Não usar "migrar" na copy:** é jargão e excluiria quem não tem contador, que é o **melhor** cliente do #2 (sem contador antigo, o risco do TTRT nem existe) |
+| **N4** | **Gate-CNAE** + triagem (sócios? exterior?) → veredito 🟢/🟡/🔴 | T4 | 🆕 **+ faixa de faturamento** (alimenta o N5). **Sem campo de margem** — a faixa do N5 comunica a incerteza sem perguntar jargão pro leigo |
+| **N5** | 🆕 **Teaser em 3 modos** (UX-51 ✅ 16/07) | — | **`swap`** → número fechado (depende só do código, é seguro) · **`fator-r`** → **faixa**: *"de R$0 a ~R$X/mês, depende de quanto você consegue se pagar"* · **`servico`** → sem número (UX-49). **A prova, sem o produto** |
 | **N6** | **Criar conta** (e-mail + senha / social) | T5 | sai com **credencial funcionando** · detecta GOV.BR (UX-29) · captura coorte (UX-48) |
 | **N7** | **A conta da abertura + plano** | T16+T17 | **fundidos** · custo total **com prazo por linha** · plano único · add-on endereço |
 | **N8** | **Aceite do contrato** (assinatura) | T18 *(metade)* | **só o contrato de serviço.** Reversível, CDC art.49 limpo |
@@ -66,11 +66,19 @@ tags: [produto, ux, flow, cobranca, reordenacao, personas, motor, decisao]
 ### 1. Cobrar cedo, resolver o B2 dentro do produto
 O modelo do líder é cobrar cedo e resolver o B2 **fora** (por e-mail, num link, com "Manual de preenchimento"). O nosso é cobrar cedo e resolver **dentro**. Estritamente melhor que os dois modelos na mesa.
 
-### 2. 🆕 N5 — Teaser de economia (o pilar)
-Sem ele, cobramos sem argumento e viramos commodity com passos a mais. Com ele, entregamos a **prova** (existe economia, é crível, tem número) sem entregar o **produto** (número exato, PDF, dossiê). O curiosity gap substitui o sunk cost como motor de conversão.
-- Exige **faixa de faturamento** no N4.
-- Exige **carimbo de estimativa impecável** (UX-26) — agora tem dinheiro em cima da promessa.
-- Cria a persona `promessa-quebrada` como guarda-corpo.
+### 2. 🆕 N5 — Teaser em 3 modos (o pilar) ✅ refinado 16/07
+Sem ele, cobramos sem argumento e viramos commodity com passos a mais. Com ele, entregamos a **prova** (existe economia, é crível) sem entregar o **produto** (número exato, PDF, dossiê).
+
+**Refinamento que fechou o UX-51 — as duas alavancas não têm o mesmo grau de certeza:**
+| Modo | Quando | Promete |
+|---|---|---|
+| `swap` | há família de CNAE | **número fechado** — depende só do código, sabemos no N4 |
+| `fator-r` | Anexo V sem swap | **faixa** *"de R$0 a ~R$X, depende de quanto você consegue se pagar"* — depende da **margem**, que não sabemos no N4 |
+| `servico` | Anexo III direto | sem número (UX-49) |
+
+⚠️ **Correção de modelagem (16/07):** o pró-labore **não é custo, é dinheiro do cliente** — o custo real é só INSS+IRRF. Quem fatura R$40k teria ganho de R$3.800 contra ~R$2.630 de custo: **valeria a pena**. O que trava é a **MARGEM** (quem subcontrata e fica com R$10k não tem de onde tirar R$11.200). Restrição de caixa, não de vontade.
+
+**Efeito:** no modo `fator-r` a faixa **já inclui R$0** → não há piso a violar → a `promessa-quebrada` deixou de ser risco estrutural e virou teste de invariância. `TEASER_PISO` só vale no modo `swap`. **Sem campo novo no N4.**
 
 ### 3. 🆕 O T18 rachou em dois
 | Ato | Onde | Natureza |

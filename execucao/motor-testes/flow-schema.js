@@ -102,15 +102,38 @@ function economiaSwap(fam, fat) {
   return ((ord[ord.length - 1].aliquota - ord[0].aliquota) / 100) * fat;
 }
 
-// TEASER (N5) — o que dá pra prometer sabendo SÓ o CNAE + a faixa de faturamento.
-// Não conhecemos a folha aqui (é dado do N18), então o Fator R entra como POTENCIAL MÁXIMO
-// (V→III). É exatamente daí que nasce o risco da persona `promessa-quebrada`: quem já se
-// paga bem tem economia real ZERO, mas o teaser prometeu o teto. Carimbo UX-26 é obrigatório.
-function estimativaTeaser(r, fat) {
-  const swap = economiaSwap(r.cnae_equivalentes, fat);
-  const fatorR = r.cnae_anexo_padrao === 'V' ? (FISCAL.ANEXO_V - FISCAL.ANEXO_III) * fat : 0;
-  const melhor = Math.max(swap, fatorR);
-  return melhor > 0 ? Math.round(melhor) : null;
+// TEASER (N5) — decisão UX-51, travada 2026-07-16.
+//
+// O problema: o teaser promete sabendo só CNAE + faixa de faturamento. As duas alavancas NÃO
+// têm o mesmo grau de certeza, e tratá-las igual foi o erro que criou a `promessa-quebrada`:
+//
+//   · SWAP de CNAE  → a economia depende só do CÓDIGO. A gente sabe no N4. **Número seguro.**
+//   · FATOR R       → depende de quanto ela consegue se pagar de pró-labore, e isso depende da
+//                     MARGEM dela, que a gente NÃO sabe no N4 (e perguntar margem pro leigo
+//                     antes de explicar o que é pró-labore é jargão cedo). **Número inseguro.**
+//
+// ⚠️ Correção de modelagem (16/07): o pró-labore não é "custo" — é dinheiro DELA. O custo real
+// é só INSS + IRRF. Quem fatura R$40k teria ganho de R$3.800/mês contra ~R$2.630 de custo:
+// valeria a pena. O que impede de verdade é a MARGEM: quem subcontrata e fica com R$10k não
+// tem de onde tirar R$11.200 de pró-labore. É restrição de caixa, não de vontade.
+//
+// Decisão: **3 modos**. O número fechado só aparece quando é seguro.
+//   1. swap        → número fechado ("~R$X/mês")
+//   2. fator-r     → FAIXA com a condição dita ("de R$0 a R$X, depende de quanto você se paga")
+//   3. servico     → sem número (CNAE sem alavanca fiscal — UX-49)
+//
+// Efeito colateral que importa: no modo 2 a faixa **já inclui R$0**, então a promessa não tem
+// como quebrar. A `promessa-quebrada` deixa de ser um risco estrutural e vira um teste de
+// invariância (o piso nunca é violado porque nunca houve piso prometido).
+function teaser(r, fat) {
+  if (!fat) return { modo: 'servico' };
+  const swap = Math.round(economiaSwap(r.cnae_equivalentes, fat));
+  if (swap > 0) return { modo: 'swap', valor: swap };
+  const fatorR = r.cnae_anexo_padrao === 'V'
+    ? Math.round((FISCAL.ANEXO_V - FISCAL.ANEXO_III) * fat)
+    : 0;
+  if (fatorR > 0) return { modo: 'fator-r', teto: fatorR };
+  return { modo: 'servico' };
 }
 
 // UX-49 (rodada #5) — o teaser NÃO pode ser monotemático em economia.
@@ -141,20 +164,32 @@ function validaCPF(cpf) {
 module.exports = {
   id: 'abertura',
   flow_num: 1,
-  versao: '0.3.2',
+  versao: '0.4.0',
   cobertura: 'Entrada + B1 (gate+teaser) + B3 (cobrança) + B2 (dossiê, dentro do app) + B4 + B4.5',
 
   passos: [
     // ── ENTRADA ──────────────────────────────────────────────────────────
     {
       id: 'entrada.fork', bloco: 'ENTRADA', tela: 'N3', tipo: 'escolha',
-      nome: 'Fork: abrir CNPJ × já sou cliente',
+      nome: 'Fork de 3 rotas (UX-55, travado 16/07)',
+      // 🔴 O bug: até a v0.3.x este fork tinha 2 saídas e mandava "já tenho CNPJ" pra login.
+      // Mas quem quer trocar de contador NÃO TEM CONTA — metade do mercado batia numa porta
+      // escrita "faça login". Agora são 3 rotas:
+      //   abrir_cnpj    → flow #1 (este schema)
+      //   ja_tenho_cnpj → flow #2 (flow-migrar.js)
+      //   entrar        → login
+      // ⚠️ Copy travada como **"Já tenho empresa"**, não "quero migrar": (a) "migrar" é jargão
+      // (viola UX-12/48 — rótulo literal, zero jargão); (b) "migrar"/"trocar de contador"
+      // EXCLUIRIA quem não tem contador (faz sozinho, ou está sem há meses) — e essa pessoa é
+      // o MELHOR cliente do flow #2, porque sem contador antigo não há distrato nem TTRT, ou
+      // seja, o risco do `migra-refem` nem existe. A pergunta "tem contador?" vive lá dentro.
       deriva: (ctx) => {
-        const abrir = ctx.respostas.entrada_escolha === 'abrir_cnpj';
-        return {
-          resultado: abrir ? 'rota: abertura de CNPJ' : 'rota: login (fora do fluxo de abertura)',
-          termina: abrir ? null : 'saiu-fluxo',
-        };
+        const e = ctx.respostas.entrada_escolha;
+        if (e === 'abrir_cnpj') return { resultado: 'rota: abertura de CNPJ (flow #1)' };
+        if (e === 'ja_tenho_cnpj') {
+          return { resultado: 'rota: JÁ TENHO EMPRESA → flow #2 (migrar)', termina: 'rota-migrar' };
+        }
+        return { resultado: 'rota: entrar na minha conta (login)', termina: 'saiu-fluxo' };
       },
     },
 
@@ -253,20 +288,26 @@ module.exports = {
       // Entrega que EXISTE economia (crível, com número) sem entregar o número exato,
       // o PDF nem o dossiê. Carimbo de estimativa (UX-26) é obrigatório — tem dinheiro em cima.
       deriva: (ctx) => {
-        const r = ctx.respostas;
-        const fat = ctx.dados.fat_medio;
-        const est = fat ? estimativaTeaser(r, fat) : null;
-        // UX-49: sem economia estimável NÃO pode virar "sem argumento". Cai no argumento de
-        // serviço, que é verificável e vale pra todo mundo. Ninguém chega no checkout no vazio.
-        if (est == null) {
+        const t = teaser(ctx.respostas, ctx.dados.fat_medio);
+        // modo 1 — SWAP: depende só do código CNAE. Número seguro, promessa fechada.
+        if (t.modo === 'swap') {
           return {
-            resultado: `teaser (serviço): ${ARGUMENTO_SERVICO} · sem promessa de economia (CNAE não tem alavanca fiscal)`,
-            dados: { teaser_tipo: 'servico' },
+            resultado: `teaser (swap): seu CNAE tem uma versão mais barata · ~R$${t.valor}/mês · ${ARGUMENTO_SERVICO} · carimbo "estimativa, confirmamos no cálculo" (UX-26)`,
+            dados: { teaser_modo: 'swap', teaser_estimativa: t.valor },
           };
         }
+        // modo 2 — FATOR R: depende da margem dela, que não sabemos aqui. FAIXA com a condição
+        // dita na cara, incluindo o R$0. Não existe promessa a quebrar.
+        if (t.modo === 'fator-r') {
+          return {
+            resultado: `teaser (faixa): de R$0 a ~R$${t.teto}/mês, **depende de quanto você consegue se pagar** · ${ARGUMENTO_SERVICO} · a conta exata é no simulador`,
+            dados: { teaser_modo: 'fator-r', teaser_teto: t.teto },
+          };
+        }
+        // modo 3 — SERVIÇO (UX-49): sem alavanca fiscal, mas nunca sem argumento.
         return {
-          resultado: `teaser (economia): ~R$${est}/mês estimado · ${ARGUMENTO_SERVICO} · carimbo "estimativa, confirmamos no cálculo" (UX-26)`,
-          dados: { teaser_estimativa: est, teaser_tipo: 'economia' },
+          resultado: `teaser (serviço): ${ARGUMENTO_SERVICO} · sem promessa de economia (CNAE não tem alavanca fiscal)`,
+          dados: { teaser_modo: 'servico' },
         };
       },
     },
@@ -499,24 +540,33 @@ module.exports = {
               : '');
 
         // Economia REAL = o que o PRODUTO consegue entregar, não o que o cliente adota.
-        // Distinção que importa: cliente que escolhe pró-labore mínimo e fica no Anexo V fez
-        // uma ESCOLHA — não é promessa quebrada. A promessa quebra quando o CAMINHO NÃO EXISTE:
-        // `pro_labore_teto` = o máximo que ela pode/quer se pagar. Se o ótimo estoura esse teto,
-        // o Fator R simplesmente não serve pra ela e a economia prometida no N5 vira zero.
-        const teto = r.pro_labore_teto != null ? Number(r.pro_labore_teto) : Infinity;
-        const caminhoExiste = r.cnae_anexo_padrao === 'V' && otimo != null && otimo <= teto;
+        // Cliente que escolhe pró-labore mínimo e fica no Anexo V fez uma ESCOLHA — não é
+        // promessa quebrada. O que impede de verdade é a MARGEM (correção 16/07: o pró-labore
+        // não é custo, é dinheiro dela; o custo real é só INSS+IRRF. Quem fatura R$40k e
+        // subcontrata fica com R$10k e não tem de onde tirar R$11.200 de pró-labore).
+        const margem = r.margem_mensal != null ? Number(r.margem_mensal) : Infinity;
+        const caminhoExiste = r.cnae_anexo_padrao === 'V' && otimo != null && otimo <= margem;
         const ganhoFatorR = caminhoExiste ? (FISCAL.ANEXO_V - FISCAL.ANEXO_III) * (fat || 0) : 0;
         // as 2 alavancas são ALTERNATIVAS, não cumulativas: trocar de CNAE OU subir o pró-labore
         // (cnae-fiscalmente-otimo.md). Quem migra pro 8599-6/04 (III sem Fator R) não precisa
         // do Fator R. Somar inflaria a economia e mentiria pro cliente.
         const real = Math.round(Math.max(ganhoFatorR, ctx.dados.economia_swap || 0));
 
-        const prometido = ctx.dados.teaser_estimativa;
+        // UX-51 (travado 16/07): só o modo `swap` promete NÚMERO FECHADO no N5, e só ele pode
+        // quebrar promessa. O modo `fator-r` promete uma FAIXA que já inclui R$0 — não há piso
+        // a violar, só se confere que o real caiu dentro do que foi prometido.
         let veredito = '';
-        if (prometido) {
+        if (ctx.dados.teaser_modo === 'swap') {
+          const prometido = ctx.dados.teaser_estimativa;
           veredito = real >= prometido * FISCAL.TEASER_PISO
             ? ` · teaser cumprido (~R$${prometido} → ~R$${real})`
-            : ` · 🔴 PROMESSA QUEBRADA: teaser ~R$${prometido} × real ~R$${real} (pró-labore ótimo R$${otimo} > teto R$${teto})`;
+            : ` · 🔴 PROMESSA QUEBRADA: teaser ~R$${prometido} × real ~R$${real}`;
+        } else if (ctx.dados.teaser_modo === 'fator-r') {
+          const teto = ctx.dados.teaser_teto;
+          veredito = real <= teto
+            ? ` · dentro da faixa prometida (R$0–${teto} → ~R$${real})` +
+              (real === 0 ? ' · ⚠️ caiu no piso da faixa: a margem não comporta o pró-labore ótimo (a faixa avisou)' : '')
+            : ` · 🔴 real ACIMA do teto prometido (~R$${real} > R$${teto}) — a faixa está errada`;
         }
         return {
           resultado: `est. Fator R ${Math.round(folhaPct * 100)}% → Anexo ${anexo}${tail}${veredito}`,
@@ -660,6 +710,6 @@ module.exports = {
   proLaboreOtimo,
   inssComFolga,
   economiaSwap,
-  estimativaTeaser,
+  teaser,
   validaCPF,
 };

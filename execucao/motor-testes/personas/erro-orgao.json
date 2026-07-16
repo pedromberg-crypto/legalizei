@@ -67,7 +67,7 @@
     "trilha": [
       {
         "passo": "entrada.fork",
-        "resultado": "rota: abertura de CNPJ"
+        "resultado": "rota: abertura de CNPJ (flow #1)"
       },
       {
         "passo": "b1.descricao",
@@ -99,7 +99,7 @@
       },
       {
         "passo": "b1.teaser",
-        "resultado": "teaser (economia): ~R$665/mês estimado · CNPJ em ~2 dias úteis · alvará imediato · a gente paga seu DAS todo mês · carimbo \"estimativa, confirmamos no cálculo\" (UX-26)"
+        "resultado": "teaser (faixa): de R$0 a ~R$665/mês, **depende de quanto você consegue se pagar** · CNPJ em ~2 dias úteis · alvará imediato · a gente paga seu DAS todo mês · a conta exata é no simulador"
       },
       {
         "passo": "b1.conta",
@@ -151,7 +151,7 @@
       },
       {
         "passo": "b2.simulador",
-        "resultado": "est. Fator R 10% → Anexo V (15,5%) · ótimo R$2100 (mira 30%, com colchão) → Anexo III (IRRF zero) · custo: INSS R$231 (11%) · teaser cumprido (~R$665 → ~R$665)"
+        "resultado": "est. Fator R 10% → Anexo V (15,5%) · ótimo R$2100 (mira 30%, com colchão) → Anexo III (IRRF zero) · custo: INSS R$231 (11%) · dentro da faixa prometida (R$0–665 → ~R$665)"
       },
       {
         "passo": "b2.revisao",

@@ -200,7 +200,7 @@ tags: [produto, ux, flow, log, otimizacao, backlog]
 
 | ID | Achado | Status |
 |---|---|---|
-| UX-55 | 🔴 **O flow #1 não tinha porta pro #2.** O `entrada.fork` manda "já tenho CNPJ" pra `saiu-fluxo` (login) — mas **quem troca de contador não tem conta**. Metade do mercado batia numa porta escrita "faça login". Obriga separar 3 coisas num botão só: *sou cliente* × *quero trocar de contador* × *só quero cotar* | ✅ `m0.fork` (motor) · 🔴 **a UI do N3 precisa mudar** |
+| UX-55 | 🔴 **O flow #1 não tinha porta pro #2.** O `entrada.fork` mandava "já tenho CNPJ" pra `saiu-fluxo` (login) — mas **quem troca de contador não tem conta**. Metade do mercado batia numa porta escrita "faça login" | ✅ **TRAVADO 16/07** — ver decisão abaixo |
 | UX-56 | 🎯 **O #2 é fiscalmente MELHOR que o #1.** Empresa com 12+ meses usa **histórico REAL** (CGSN 140/18 art. 26). No #1 o teaser é promessa em cima de faixa (→ `promessa-quebrada`); aqui é **diagnóstico com o número dele**. `TEASER_PISO` **não se aplica**. E sem taxa de governo, o choque do UX-54 também some | ✅ `m2.diagnostico` |
 | UX-57 | 🔴 **TTRT = pausa com terceiro HOSTIL.** O contador ANTIGO valida a saída no CRC-MG. Todas as pausas do #1 esperam órgão (neutro) ou o cliente; **esta espera um concorrente contrariado**, que está perdendo o cliente pra nós — e o cliente **já pagou**. Precisa de aviso pré-pagamento + SLA + rota CRC-MG + decisão sobre reembolso | 🔴 `migra-refem` prova · **decisão do Pedro/Mauro** |
 | UX-58 | 🔴 **Passivo herdado.** A empresa chega com passado (DAS atrasado, DEFIS vencida, dívida ativa). O #14 diz que a responsabilidade do período é do contador anterior, **mas a dívida é da empresa** — e quem conta a má notícia vira dono dela. Hoje aparece no M4, **depois do pagamento**: mesmo erro de "barrar tarde" que a gente acabou de corrigir no #1 | 🔴 `migra-passivo` prova · **subir pro M2 + decisão de escopo (upsell ou fora?)** |
@@ -211,9 +211,43 @@ tags: [produto, ux, flow, log, otimizacao, backlog]
 - **`migra-passivo` e `migra-refem` são provavelmente a MESMA pessoa.** Contador que deixa DAS atrasar e DEFIS vencer é o mesmo que não valida TTRT. O pior caso é o cruzamento dos dois, e ele não foi modelado.
 - 🟡 **Pendência D herdada:** nº da resolução CFC + código "Evento 232" ([[fiscal-simples-bh-2026]]) precisam de fonte primária antes de virar produto.
 
+---
+
+## 🔒 Decisões travadas 2026-07-16 (destravam a construção do funil N1–N9)
+
+### UX-55 — Fork de 3 rotas no N3 ✅
+| Rota | CTA | Vai pra |
+|---|---|---|
+| primária | **"Quero abrir minha empresa"** | flow #1 |
+| secundária | **"Já tenho empresa"** | flow #2 (migrar) |
+| terciária (link, não botão) | **"Entrar na minha conta"** | login |
+
+**Copy travada em "Já tenho empresa", NÃO "quero migrar".** Dois motivos:
+1. **"Migrar" é jargão** — viola UX-12/48 (rótulo literal, zero jargão). Ninguém pensa "vou migrar minha empresa".
+2. **"Migrar"/"trocar de contador" EXCLUIRIA quem não tem contador** (faz sozinho ou está sem há meses). E essa pessoa é o **melhor cliente do flow #2**: sem contador antigo não há distrato nem TTRT, ou seja, **o risco do `migra-refem` nem existe**. Fechar a porta pra ela seria perder o caso mais fácil.
+
+A pergunta *"você tem contador hoje?"* vive **dentro** do flow #2, não no CTA. → motor `entrada.fork` (3 rotas, contrafactual verificado).
+
+### UX-51 — Teaser em 3 modos ✅
+**A correção que destravou:** eu tinha modelado o pró-labore como **custo**. Não é — **é dinheiro do cliente**; o custo real é só INSS + IRRF. Refazendo a conta de quem fatura R$40k: ganho R$3.800/mês contra ~R$2.630 de custo → **líquido +R$1.170, valeria a pena**. O que impede de verdade **é a MARGEM**: quem subcontrata e fica com R$10k **não tem de onde tirar** R$11.200 de pró-labore. É restrição de caixa, não de vontade.
+
+Daí a decisão: **as duas alavancas não têm o mesmo grau de certeza, e tratá-las igual foi o que criou a `promessa-quebrada`.**
+
+| Modo | Quando | O que promete |
+|---|---|---|
+| **`swap`** | há família de CNAE | **número fechado** ("~R$1.425/mês") — depende só do código, é seguro |
+| **`fator-r`** | CNAE Anexo V, sem swap | **FAIXA com a condição dita**: *"de R$0 a ~R$X/mês, **depende de quanto você consegue se pagar**"* — a margem é desconhecida no N4, e perguntar margem pro leigo antes de explicar pró-labore é jargão cedo |
+| **`servico`** | CNAE Anexo III direto | sem número (UX-49) |
+
+**Efeito que importa: a `promessa-quebrada` deixou de ser risco estrutural.** No modo `fator-r` a faixa **já inclui R$0**, então não existe piso a violar. O Vitor cai no piso e **a faixa tinha avisado**. A persona virou teste de invariância. O `TEASER_PISO` só se aplica ao modo `swap`.
+
+**Não precisou de campo novo no N4.** A faixa comunica a incerteza sem perguntar margem pro leigo.
+
 ## 🧷 Follow-ups abertos (gerados por estas rodadas)
 - ~~🔴 Auditar spec × motor~~ ✅ **feito 16/07** — 5 gaps achados (3 corrigidos, 2 🔴: UX-25 custo por sócio · UX-30 anuência do cônjuge).
-- 🔴 **UI do N3 precisa separar 3 rotas** (login × migrar × cotar) — hoje "já tenho CNPJ" cai em login e mata o flow #2 (UX-55).
+- ~~🔴 UI do N3 separar 3 rotas~~ ✅ **travado 16/07** (UX-55 acima).
+- ~~🔴 Mitigação do teaser~~ ✅ **travado 16/07** (UX-51 acima, 3 modos).
+- 🔴 **N19.5 (consenso do 2º sócio) não tem spec de UI.** O passo nasceu no motor em 16/07 (fix do UX-50) e a tela não existe em lugar nenhum: a Elisa recebe link, entra **sem conta**, revisa dossiê + custo + split e aprova. É um mini-flow pra quem nunca abriu o app. O UX-20 apontava isso desde a rodada #2.
 - 🔴 **Decisões do flow #2:** cobrar antes do TTRT (que a gente não controla)? SLA + reembolso? Passivo é upsell ou fora do escopo?
 - 🔴 **Blind spots que sobram:** `saas`/`bpo` · MEI→ME · upsell-taker · teto do Simples · **cruzamento `migra-refem` × `migra-passivo`**.
 - ~~🔴 Re-sincronizar [[mapa-telas-mobile]]~~ ✅ **feito 15/07** — reescrito e sincronizado com as 2 specs (22 telas Entrada→B4, 23 c/ dia-2) + tabela de pausas.

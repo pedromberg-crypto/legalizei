@@ -1,15 +1,15 @@
 {
   "meta": {
     "id": "promessa-quebrada",
-    "nome": "Vitor — consultor de TI que subcontrata (fatura alto, tira pouco)",
+    "nome": "Vitor — fatura R$40k, subcontrata, sobram R$10k (a margem não comporta o ótimo)",
     "persona_seq": 15,
     "flow": "abertura",
-    "descricao": "FLOW 15 — GUARDA-CORPO DO TEASER (nasce da reordenação 16/07). Fatura R$40k mas subcontrata devs e só consegue se pagar R$3k de pró-labore. O ótimo do Fator R exigiria R$11.200 → o caminho NÃO EXISTE pra ele → economia real ZERO. Mas o teaser (N5) prometeu ~R$3.800/mês e foi o que vendeu o plano. E ELE JÁ PAGOU. Risco que não existia no flow antigo, onde ele via o número real antes de abrir a carteira.",
+    "descricao": "FLOW 15 — GUARDA-CORPO DO TEASER. Fatura R$40k mas subcontrata devs: sobram ~R$10k/mês. O pró-labore ótimo exigiria R$11.200 — mais do que a empresa tem pra pagar. NÃO é que ele \"não quer\": a MARGEM não comporta. O Fator R não serve pra ele e a economia real é ZERO. ⚠️ Corrigido em 16/07: a v1 desta persona usava um  arbitrário e tratava pró-labore como CUSTO — errado, pró-labore é dinheiro dele (o custo é só INSS+IRRF). O que trava é caixa. Com o teaser em 3 modos (UX-51), ele cai no modo  (FAIXA R$0–3.800, com a condição dita) e a promessa não tem como quebrar: a faixa já avisava.",
     "fonte": "[[reordenacao-flow-cobranca-cedo]] — persona nova exigida pelo N5"
   },
   "perfil": {
     "nivel": "medio",
-    "personalidade": "Pragmático. Entrou pelo anúncio de economia, leu 'estimativa' e ignorou como todo mundo ignora. Fatura bem mas a margem é apertada: quase tudo vira pagamento de subcontratado. Se descobrir depois de pagar que a economia não vale pra ele, não vai brigar por causa de R$195 — vai só falar mal e cancelar.",
+    "personalidade": "Pragmático. Fatura bem e a margem é apertada: quase tudo vira pagamento de subcontratado. Antes do UX-51 ele era vendido com \"~R$3.800/mês de economia\" e descobria R$0 depois de pagar. Agora vê a faixa e a condição antes de abrir a carteira.",
     "estressa": [
       "promessa de marketing que não bate com a conta real",
       "descobrir depois de pagar",
@@ -17,8 +17,9 @@
     ]
   },
   "sugestoes": {
-    "b1.teaser": "🔴 O teaser promete o TETO do Fator R (V→III = 9,5% do faturamento) sabendo só CNAE + faixa. Não sabe se a pessoa consegue se pagar o pró-labore necessário. Quanto MAIOR o faturamento, MAIOR a promessa e MENOR a chance de ela alcançar — a estimativa erra mais justamente em quem ela mais anima. Opções: (a) exibir o teaser como faixa ('entre R$0 e R$X, depende do quanto você se paga'), (b) perguntar o pró-labore viável já no N4, (c) só exibir teaser quando há família de swap (economia que independe da folha).",
-    "b2.simulador": "🔴 DECISÃO DE PRODUTO PENDENTE: o que acontece quando a promessa que vendeu o plano não se cumpre? Hoje o motor só MARCA. Ele segue pra empresa ativa e o serviço é entregue (a abertura vale R$195 sozinha), mas a expectativa foi criada por nós. Reembolso? Downgrade? Aviso honesto no N18 com opção de sair? Escolher NADA também é escolher — vira Reclame Aqui."
+    "b1.teaser": "✅ **UX-51 resolvido aqui.** O teaser dele cai no modo : faixa R$0–3.800 com \"depende de quanto você consegue se pagar\" na cara. O R$0 está DENTRO da promessa, então não há piso a violar. Antes prometia R$3.800 fechado e entregava R$0 — o padrão perverso era: quanto MAIOR o faturamento, maior a promessa e menor a chance de alcançar.",
+    "b2.simulador": "⚠️ Ele cai no piso da faixa (R$0). A faixa avisou, mas a tela precisa **explicar o porquê sem culpar**: \"o Fator R exigiria R$11.200/mês de pró-labore e sua margem hoje é ~R$10k — não fecha. Se a margem subir, a gente te avisa.\" Isso é o UX-41 (loop estimativa→realidade) com gancho de retorno, não um beco.",
+    "b2.cnae_otimo": "6204-0/00 não tem família de swap. Se tivesse, ele cairia no modo  (número seguro) e teria economia REAL independente da margem — é a alavanca que serve exatamente pra quem tem margem apertada."
   },
   "respostas": {
     "entrada_escolha": "abrir_cnpj",
@@ -46,12 +47,12 @@
     "faturamento_faixa": "30k+",
     "fator_r_folha_pct": 7,
     "pro_labore": "minimo",
-    "pro_labore_teto": 3000,
     "b3_plano": "pro",
     "b3_metodo": "cartao",
     "b3_aceite": true,
     "b2_termo_aceite": true,
-    "b3_pagamento_status": "pago"
+    "b3_pagamento_status": "pago",
+    "margem_mensal": 10000
   },
   "eventos": {},
   "esperado": {
@@ -61,7 +62,7 @@
     "trilha": [
       {
         "passo": "entrada.fork",
-        "resultado": "rota: abertura de CNPJ"
+        "resultado": "rota: abertura de CNPJ (flow #1)"
       },
       {
         "passo": "b1.descricao",
@@ -93,7 +94,7 @@
       },
       {
         "passo": "b1.teaser",
-        "resultado": "teaser (economia): ~R$3800/mês estimado · CNPJ em ~2 dias úteis · alvará imediato · a gente paga seu DAS todo mês · carimbo \"estimativa, confirmamos no cálculo\" (UX-26)"
+        "resultado": "teaser (faixa): de R$0 a ~R$3800/mês, **depende de quanto você consegue se pagar** · CNPJ em ~2 dias úteis · alvará imediato · a gente paga seu DAS todo mês · a conta exata é no simulador"
       },
       {
         "passo": "b1.conta",
@@ -145,7 +146,7 @@
       },
       {
         "passo": "b2.simulador",
-        "resultado": "est. Fator R 7% → Anexo V (15,5%) · ótimo R$12000 (mira 30%, com colchão) → Anexo III (IRRF s/ excedente) · custo: INSS R$932 (11%) · 🔴 PROMESSA QUEBRADA: teaser ~R$3800 × real ~R$0 (pró-labore ótimo R$12000 > teto R$3000)"
+        "resultado": "est. Fator R 7% → Anexo V (15,5%) · ótimo R$12000 (mira 30%, com colchão) → Anexo III (IRRF s/ excedente) · custo: INSS R$932 (11%) · dentro da faixa prometida (R$0–3800 → ~R$0) · ⚠️ caiu no piso da faixa: a margem não comporta o pró-labore ótimo (a faixa avisou)"
       },
       {
         "passo": "b2.revisao",

@@ -74,7 +74,7 @@
     "trilha": [
       {
         "passo": "entrada.fork",
-        "resultado": "rota: abertura de CNPJ"
+        "resultado": "rota: abertura de CNPJ (flow #1)"
       },
       {
         "passo": "b1.descricao",
@@ -106,7 +106,7 @@
       },
       {
         "passo": "b1.teaser",
-        "resultado": "teaser (economia): ~R$1425/mês estimado · CNPJ em ~2 dias úteis · alvará imediato · a gente paga seu DAS todo mês · carimbo \"estimativa, confirmamos no cálculo\" (UX-26)"
+        "resultado": "teaser (swap): seu CNAE tem uma versão mais barata · ~R$1425/mês · CNPJ em ~2 dias úteis · alvará imediato · a gente paga seu DAS todo mês · carimbo \"estimativa, confirmamos no cálculo\" (UX-26)"
       },
       {
         "passo": "b1.conta",

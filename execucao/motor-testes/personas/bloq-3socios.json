@@ -44,7 +44,7 @@
     "trilha": [
       {
         "passo": "entrada.fork",
-        "resultado": "rota: abertura de CNPJ"
+        "resultado": "rota: abertura de CNPJ (flow #1)"
       },
       {
         "passo": "b1.descricao",

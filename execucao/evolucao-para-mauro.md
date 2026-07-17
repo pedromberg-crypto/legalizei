@@ -235,6 +235,27 @@ Preciso de você: fechar o preço do nosso plano. Sem ele não fecho as telas de
 >
 > Sobre preço: **mudei de ideia, não me trava mais.** Não dá pra cravar sem saber quanto custa rodar cada empresa. Sigo com placeholder e a gente crava com dado. Quando sentar com você é **uma conversa só** — já tenho a lista pronta.
 
+## Semana 17/07/2026 — a lista de CNAE não estava de pé
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | 🔥 **Achado grave: a lista de CNAEs** | Fui montar as categorias das telas e descobri que **a nossa lista de "quais atividades a gente atende" nunca foi verificada**. Ela foi montada assim: a Contabilizei **não publica** o que atende, só publica **17 categorias que ela recusa**. A gente pegou essas 17, tirou da lista completa do IBGE, e **presumiu que todo o resto era atendido**. Resultado: o sistema hoje diz que a gente atende **"Defesa", "Justiça", "Relações Exteriores", "Geração de Energia Elétrica" e "Casas de Bingo"**. E até o mapeamento das 17 falhou: **"Cartórios" está escrito na lista de recusados** e mesmo assim saiu como atendido | 🔴 achado |
+| 2 | O que fiz | Separei os 260 de serviço em 3: **45 impossíveis** (ninguém abre empresa disso, eu decido) · **91 duvidosos** (precisam da Larissa, cada um com **uma pergunta objetiva**, não "revisa aí") · **124 que sobreviveram**. Tudo em script que **roda de novo** e trava sozinho se alguém errar. **Os 124 não estão validados** — só não foram refutados por mim | 🟢 listado |
+| 3 | **Precisa da Larissa** | Os **91 duvidosos**, em 7 grupos. Os mais importantes: **10 atividades que exigem conselho** (corretor/CRECI, leiloeiro, clínica geriátrica, agronomia/CREA) estão marcadas como "atende" — isso é grave agora, porque **a gente cobra antes de conferir**: o corretor pagaria e só depois descobriria que não dá. E **9 de bar/restaurante/lanchonete** que eu acho que são comércio, não serviço | 🕓 aguarda |
+| 4 | Por que isso é bom, não ruim | Achamos **antes de ter cliente**. Se descobre depois, é cliente pago que não dá pra atender, e a conta cai no seu escritório sem estar combinada. **A Contabilizei convive com isso** porque tem call center absorvendo (por isso o WhatsApp está no rodapé de toda tela deles). A gente não tem, então tem que acertar antes | 🟢 |
+| 5 | Telas | Segui construindo. A tela de review agora simula o **iPhone de verdade** (antes o app desenhava por baixo do relógio e da bateria) e a **1ª tela do cadastro** ficou redonda. **Decisão travada:** a tela vai ter **botões de área** pra facilitar, mas o cliente **ainda escreve uma frase** do que faz. Só o botão não basta: quem dá treinamento **e** consultoria pagaria **15,5%** em vez de **6%** se a gente deixasse ele escolher só por categoria | 🟢 |
+
+**Próximo (17/07):** [Pedro] bater o martelo nos 45 impossíveis · [Pedro] levar os 91 pro crivo da contabilidade · [Pedro] extrair a tabela pública de CNAE da Contabilizei (ela tem **anexo, Fator R e alíquota por código** — dado que a gente não tem) · [Pedro] avisar o dev (agora são **os dados também**, não só a especificação).
+
+### 📱 WhatsApp (17/07)
+```
+*Update Legalizei* 🔎
+- Achado importante: nossa lista de "quais atividades a gente atende" nunca tinha sido verificada. Ela foi montada de trás pra frente: a Contabilizei não publica o que atende, só as 17 categorias que RECUSA. A gente tirou essas 17 da lista do IBGE e presumiu que todo o resto era atendido
+- Na prática o sistema dizia que a gente atende "Defesa", "Justiça" e "Casas de Bingo". E "Cartórios", que está escrito na lista de recusados
+- Já separei tudo: 45 impossíveis (eu resolvo), 91 que precisam da Larissa (com pergunta objetiva em cada um) e 124 que sobreviveram. Em script que roda de novo e trava sozinho se errar
+- A parte boa: achamos ANTES de ter cliente. Depois seria cliente pago que a gente não consegue atender, e a conta cairia no escritório
+Preciso da Larissa: 91 casos. O mais urgente são 10 atividades que exigem conselho (corretor, leiloeiro, agronomia) marcadas como "atende" — como a gente cobra antes de conferir, essa pessoa pagaria e só depois descobriria que não dá
+```
+
 ## 📱 Versão WhatsApp (copiar/colar — grupo ampliado, sem item de sociedade)
 ```
 *Relatório semanal — Legalizei* 📊

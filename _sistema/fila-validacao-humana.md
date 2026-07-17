@@ -36,6 +36,7 @@ tags: [sistema, fila, placeholder, decisao, meta]
 
 | O que | Estado | Quem decide |
 |---|---|---|
+| **🆕 Limpeza dos 260 — 91 duvidosos** | 🕓 os "260 de serviço" eram 2 heurísticas por seção empilhadas, nunca amostradas. Amostrei 16/07: **45 impossíveis** (Pedro decide) · **91 duvidosos** · 124 reais. Os 91 vêm em **7 baldes, cada um com uma pergunta fechada** (não é "revisa aí"): deveria-ser-condicional · licença-especial · **anexo-provavelmente-errado** · imóvel-próprio · terceiro-setor · provedor-pequeno · escala-duvidosa → [[limpeza-260-servico]] | **Larissa** (fiscal/anexo) + **Mauro** (escopo) |
 | **Natureza jurídica: SLU × LTDA** | 🕓 nossa regra diz "solo→SLU", mas **o CNPJ real do Pedro saiu LTDA num caso solo**. Se SLU é LTDA de sócio único (mesma natureza 206-2), o guard-rail do N15 está errado | **Larissa** |
 | **7 pontos fiscais** | 🕓 mecânica Fator R meses 2–12 · CPP-no-DAS no numerador · FS12 caixa · citações CFC · lista CNAE · DEFIS · taxas BH → [[perguntas-larissa-fiscal]] | **Larissa** |
 | **Famílias de swap CNAE** | 🕓 3 entram limpas no MVP; tráfego pago e white-label são de menor confiança → [[cnae-fiscalmente-otimo]] | **Larissa** |
@@ -67,7 +68,7 @@ Pra contraste. **Uma coisa só, e não é número:**
 
 | O que | Por quê |
 |---|---|
-| **Avisar o dev** | ele recebeu 15/07 uma spec congelada com *"as 14 personas são o critério de aceite"*. Desde então: a ordem inverteu, viraram **16 personas**, nasceu um **flow #2**, e **5 promessas da spec** se revelaram não implementadas. Ele está em E2E contra um contrato que não existe mais |
+| **Avisar o dev** | ele recebeu 15/07 uma spec congelada com *"as 14 personas são o critério de aceite"*. Desde então: a ordem inverteu, viraram **19 personas**, nasceu um **flow #2**, e **5 promessas da spec** se revelaram não implementadas. Ele está em E2E contra um contrato que não existe mais. **🆕 16/07: os DADOS também.** O `cnae-lookup-b1.json` que foi junto sai das mesmas 1332 subclasses pela mesma regra por seção: a triagem dele responde *"atende, passa liso"* pra `8422-1/00 DEFESA` → [[limpeza-260-servico]] |
 
 Todo o resto é 🕓.
 

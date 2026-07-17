@@ -34,17 +34,39 @@ import { Card } from "@/components/ui/card";
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-// Colhido do protótipo: atividades reais, não lorem.
+/**
+ * Colhido do protótipo: atividades reais, não lorem.
+ *
+ * Frase inteira e em 1ª pessoa, não rótulo de categoria. Este placeholder é a
+ * única coisa na tela que responde "o que é uma resposta boa aqui?", e
+ * "Fotografia" respondia "uma palavra basta" — o oposto do que a IA precisa
+ * pra mapear o CNAE, e do que a caixa grande promete.
+ *
+ * ⚠️ Só atividade que o MVP ATENDE. "Fisioterapia" estava na lista e saiu: é
+ * regulamentada, cai na waitlist. Sugerir no placeholder o que a gente vai
+ * recusar 2 telas depois é convidar pra porta fechada.
+ */
 const EXEMPLOS = [
-  "Criação de sites e web design",
-  "Desenvolvimento de software",
-  "Design e criação visual",
-  "Fotografia",
-  "Marketing e publicidade",
-  "Consultoria empresarial",
-  "Aulas particulares",
-  "Fisioterapia",
+  "Faço sites e lojas virtuais para pequenas empresas",
+  "Desenvolvo sistemas e aplicativos sob encomenda",
+  "Crio logo e identidade visual de marca",
+  "Fotografo casamento e ensaio de família",
+  "Cuido das redes sociais de uns cinco clientes",
+  "Dou consultoria de gestão para dono de pequena empresa",
+  "Dou aula particular de inglês online",
+  "Edito vídeo para canal do YouTube e para redes",
 ];
+
+/**
+ * Ritmo do typewriter. Constante nomeada porque é botão de ajuste, e o valor
+ * certo é o que dá pra LER — isso não se calcula, se olha.
+ * `segura` é o que mais pesa: é o tempo com a frase parada e inteira na tela.
+ */
+const RITMO = {
+  digita: 62, // ms por caractere digitado
+  segura: 2800, // ms com a frase completa, antes de começar a apagar
+  apaga: 20, // ms por caractere apagado (ninguém lê apagando; some rápido)
+};
 
 type Veredito = "atende" | "waitlist" | "nao-atende";
 
@@ -162,7 +184,20 @@ function Perguntando({
 
   return (
     <>
-      <div className="flex-1 min-h-0">
+      {/* A coluna vira flex pra a caixa poder esticar. Sem isto o `rows={4}`
+          trava a altura em ~4 linhas e sobram ~495px de nada até o CTA (metade
+          do 15 Pro Max), porque o vão do `flex-1` cai FORA da caixa em vez de
+          dentro dela.
+
+          O título segue ancorado no topo, de propósito: este é o arquétipo
+          A1-PERGUNTA (N4, N10–N16) e centralizar o bloco faria o h1 pular de
+          altura a cada etapa. Num wizard linear o olho usa o título como
+          âncora; quem estica é o campo, não a composição.
+
+          Efeito colateral que É o ponto: o tamanho da caixa diz quanto
+          escrever. `rows={4}` num vidro de 932 dizia "cabe pouco", enquanto a
+          copy pedia pra escrever à vontade. Agora os dois dizem a mesma coisa. */}
+      <div className="flex-1 min-h-0 flex flex-col">
         <h1 className="text-h1 mb-2">O que você faz?</h1>
         <p className="text-body text-text-secondary mb-6">
           Escreve do seu jeito. A gente descobre o resto.
@@ -172,19 +207,22 @@ function Perguntando({
           value={texto}
           onChange={(e) => setTexto(e.target.value)}
           placeholder={placeholder}
-          rows={4}
-          className="w-full rounded-md border border-border-hairline bg-surface-card
-                     p-3 text-body text-text-primary placeholder:text-text-muted
-                     resize-none focus:border-border-focus focus:outline-none"
+          className="w-full flex-1 min-h-[7rem] rounded-md border border-border-hairline
+                     bg-surface-card p-3 text-body text-text-primary
+                     placeholder:text-text-muted resize-none
+                     focus:border-border-focus focus:outline-none"
         />
 
         {/* Microcopy que ENSINA, não pune (UX-16). Só aparece quando falta
-            texto, e diz o que fazer, não o que ele errou. */}
-        {texto.length > 0 && !podeValidar && (
-          <p className="text-caption text-text-tertiary mt-2">
-            Conta um pouco mais do que você faz.
-          </p>
-        )}
+            texto, e diz o que fazer, não o que ele errou.
+
+            A linha fica SEMPRE reservada (o texto é que vai e volta). Com a
+            caixa em `flex-1`, aparecer/sumir passou a redimensionar a caixa
+            embaixo do dedo de quem está digitando: o vão que antes era espaço
+            morto agora é campo. Reservar 1 linha é mais barato que o pulo. */}
+        <p className="text-caption text-text-tertiary mt-2 min-h-[1.25rem]">
+          {texto.length > 0 && !podeValidar ? "Conta um pouco mais do que você faz." : ""}
+        </p>
       </div>
 
       {/* 🌾 CTA no rodapé = thumb zone (design-system.md §6) */}
@@ -519,7 +557,11 @@ function useTypewriter(palavras: string[], pausado: boolean) {
           }
         }
       },
-      apagando.current ? 30 : c.current === palavras[i.current % palavras.length].length ? 1600 : 55
+      apagando.current
+        ? RITMO.apaga
+        : c.current === palavras[i.current % palavras.length].length
+          ? RITMO.segura
+          : RITMO.digita
     );
     return () => clearTimeout(t);
   }, [txt, pausado, palavras, reduzido]);

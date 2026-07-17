@@ -68,6 +68,24 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
+   SAFE AREA — fato do APARELHO, não escolha de design.
+   Não é primitivo (não é decisão de marca) nem semântico (nenhuma tela pede
+   "me dá uma safe area"). É medida física do vidro, então mora sozinha.
+
+   O produto é React Native + Expo (stack travada 09/07). Lá isto é
+   `useSafeAreaInsets()`. Aqui, na prancheta, o valor tem 3 origens:
+     · iPhone real, fullscreen → env() devolve o inset de verdade
+     · browser no desktop      → env() devolve 0, e 0 é a resposta certa
+     · /mockup                 → a moldura INJETA o valor do aparelho escolhido
+
+   O default é env(): quem não sabe nada do aparelho acerta sozinho.
+   ───────────────────────────────────────────────────────────────────────── */
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
    CAMADA 2 — SEMÂNTICOS (o que a tela pode usar)
    ───────────────────────────────────────────────────────────────────────── */
 @theme {
@@ -197,6 +215,12 @@
     max-width: var(--container-app);
     margin-inline: auto;
     padding-inline: 24px; /* = space-5 */
+
+    /* O relógio/bateria e a Dynamic Island ocupam o topo do vidro. Sem isto a
+       tela pinta EMBAIXO deles: o fundo pode (e deve) ir até a borda, o
+       conteúdo não. É a mesma regra do rodapé, só que na outra ponta.
+       Empilha com o padding da tela: aqui = aparelho, `pt-6` = design. */
+    padding-top: var(--safe-top);
   }
 
   /* A área que rola. O min-height:0 é o que faz o 100dvh funcionar em flex. */
@@ -215,7 +239,11 @@
     position: sticky;
     bottom: 0;
     padding-block: 16px;
-    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    /* var(), não env() direto: assim o /mockup consegue mentir o inset e a
+       moldura vira simulador. Com env() aqui, o iframe sempre lia 0 e o CTA
+       aparecia colado embaixo da barra de gesto, que é onde ele NÃO pode
+       estar. A prancheta prometia thumb zone e entregava zona morta. */
+    padding-bottom: calc(16px + var(--safe-bottom));
     background: var(--color-surface-page);
   }
 }

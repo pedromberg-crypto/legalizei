@@ -1,5 +1,8 @@
 # Memory Index — Legalize
 
+- [🔥 Lista de CNAE furada na raiz](legalize-lista-cnae-furada-na-raiz.md) — os 460/260 "atendidos" saíram da INVERSÃO de uma lista de 17 recusas do concorrente (ausência de recusa = presença de atendimento); os 460 dizem `presumido...validar` e ninguém validou; 45 impossível / 91 duvidoso / 124 NÃO-refutados (≠ validados); respinga no dev; pista quente = tabela SEO tem Anexo/Fator R/Alíquota.
+- [Pill estreita, não valida (N4)](legalize-pill-estreita-nao-valida.md) — decisão 17/07: pill → "descreve mais" → IA cruza → aceite → pagamento; pill-valida mataria a Ivete (2 CNAEs em pills diferentes, 15,5% × 6%); sub-pills de CNAE descartadas; guarda-corpo precisa inverter.
+- [Pedro confere UI sozinho](legalize-pedro-confere-ui-sozinho.md) — NÃO abrir navegador pra "ver se ficou bom" no `app/`; ele olha no browser dele e reporta; medir por DOM só quando o número É a resposta; a instrução ganha do hook do preview.
 - [Objetivo e papel do Pedro](legalize-objetivo-e-papel-pedro.md) — NEGÓCIO FECHADO c/ Mauro 2026-07-07; MVP tipo Contabilizei; Pedro PM/sócio desde início; V0 rodando; BASE-ESTRATEGICA.md na raiz = fonte da verdade.
 - [Domínios e infra](legalize-dominios-infra.md) — 4 domínios via Hostinger (legalizei.app principal) ✅ PAGO 13/07 (Mauro quitou Hostinger R$312,11 + Registro.br R$76,00); falta registrar de fato + DNS Vercel + email; titular .br = CNPJ Legalize Digital (não CPF); app na Vercel.
 - [Assets marca: local+vault, não Artefatos](legalize-assets-marca-local-vault.md) — logo/SVGs ficam só em Downloads + vault Obsidian + git; NUNCA salvos em Artefatos claude.ai (pranchas de review podem ser temporárias, remover depois).

@@ -103,12 +103,47 @@ const ARQUETIPOS: {
     id: "a1",
     nome: "A1 · Pergunta",
     descricao:
-      "Campo aberto + typewriter. O esqueleto mais comum do flow (N4 e a coleta N10–N16).",
+      "Título fixo / corpo rola / CTA fixo. O esqueleto mais comum do flow: a porta (N4) e toda a coleta do dossiê (N10–N16, logada e paga).",
     telas: [
       {
         rota: "/gate",
         nome: "N4 · Gate-CNAE",
         nota: "A porta. Pills + veredito 🟢/🟡/🔴 + triagem + faixa.",
+      },
+      {
+        rota: "/dossie/socio",
+        nome: "N10 · Dados do sócio",
+        nota: "A mais longa: testa o corpo rolável. CPF valida situação; casado revela regime; comunhão universal avisa o cônjuge cedo (UX-30).",
+      },
+      {
+        rota: "/dossie/vinculo",
+        nome: "N11 · Vínculo INSS",
+        nota: 'Coleta o CLT que o N18 consome (UX-24). Teto é FOLGA, não binário. Pró-labore reenquadrado como ganho (UX-27).',
+      },
+      {
+        rota: "/dossie/socios",
+        nome: "N12 · +Sócios",
+        nota: "Limite 2 (trava, não 1ª notícia — N4 já filtrou). Divisão soma 100%, default 50/50.",
+      },
+      {
+        rota: "/dossie/empresa",
+        nome: "N13 · Dados da empresa",
+        nota: "Upsell endereço fiscal (oferece, não obriga; preço FAKE ~R$60). IPTU opcional. Alerta capital baixo.",
+      },
+      {
+        rota: "/dossie/cnae-secundarios",
+        nome: "N14 · CNAE secundários",
+        nota: "Principal herdado do N4, travado. Sugestões com prova social. Comércio entra com aviso, nunca some silencioso.",
+      },
+      {
+        rota: "/dossie/natureza",
+        nome: "N15 · Natureza jurídica",
+        nota: "Recomenda (solo→SLU), não trava. LTDA solo permitido (fato do CNPJ do Pedro). SLU+sócio = incoerência barrada.",
+      },
+      {
+        rota: "/dossie/nome",
+        nome: "N16 · Razão social",
+        nota: "IA sugere a razão. Checagem de viabilidade: nome em uso → variações (evita reprova JUCEMG).",
       },
     ],
   },
@@ -116,8 +151,24 @@ const ARQUETIPOS: {
     id: "a2",
     nome: "A2 · Veredito",
     descricao:
-      "Resultado 🟢/🟡/🔴. Regra de ouro: nunca dar veredito com baixa confiança.",
-    telas: [],
+      "Resultado 🟢/🟡/🔴. Regra de ouro: nunca dar veredito com baixa confiança. Fonte única (VereditoView), a mesma que o N4 usa — 🟡/🔴 saem pelo template de saída graciosa (A9).",
+    telas: [
+      {
+        rota: "/veredito/atende",
+        nome: "🟢 Atende",
+        nota: "Happy path. Linguagem humana ANTES do código (UX-05). CTA 'É isso mesmo' + refazer acima sem perder texto.",
+      },
+      {
+        rota: "/veredito/waitlist",
+        nome: "🟡 Waitlist (regulada)",
+        nota: "Não é 'não', é 'ainda não'. UX-22: dar o enquanto isso. Captura contato, não fecha a porta. Template A9.",
+      },
+      {
+        rota: "/veredito/nao-atende",
+        nome: "🔴 Comercial",
+        nota: "Vende produto → roteia pro time do Mauro. Mesmo template A9, rota diferente. Coral nunca é erro: token de estado.",
+      },
+    ],
   },
   {
     id: "a3",
@@ -432,8 +483,9 @@ function Phone({
         // alumínio: gradiente sutil, não chapado. É objeto físico, não UI.
         background:
           "linear-gradient(150deg, #3a3d44 0%, #16181d 45%, #2b2e35 100%)",
-        boxShadow:
-          "0 40px 80px -20px rgba(27,30,36,.45), 0 0 0 1px rgba(255,255,255,.06) inset",
+        // Sem sombra de projeção (pedido do Pedro 17/07). Fica só o filete
+        // interno que define a borda do alumínio — é o aparelho, não sombra.
+        boxShadow: "0 0 0 1px rgba(255,255,255,.06) inset",
       }}
     >
       {/* botões laterais */}

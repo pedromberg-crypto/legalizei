@@ -256,6 +256,24 @@ Preciso de você: fechar o preço do nosso plano. Sem ele não fecho as telas de
 Preciso da Larissa: 91 casos. O mais urgente são 10 atividades que exigem conselho (corretor, leiloeiro, agronomia) marcadas como "atende" — como a gente cobra antes de conferir, essa pessoa pagaria e só depois descobriria que não dá
 ```
 
+## Semana 17/07/2026 — 2º flow (as telas do cadastro, construídas e navegáveis)
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | Telas de coleta (7) | Construí **as 7 telas onde o cliente preenche os dados pra abrir** (dados do sócio, INSS/vínculo, sócios, empresa, atividades secundárias, tipo de empresa, nome) — direto em código, já com a nossa cara e com as regras que a gente travou embutidas: avisa o cônjuge cedo quando o regime de casamento exige, explica o INSS em vez de assustar, limita em 2 sócios com jeito, oferece o endereço fiscal sem empurrar. Todas navegáveis na prancheta de review | 🟢 |
+| 2 | Tela do "sim/não" da atividade | A tela que dá o veredito (🟢 a gente abre / 🟡 fila de espera / 🔴 caso pro escritório) ficou pronta nos 3 casos, com uma **animação de comemoração** (confete da marca) quando o cliente confirma. Detalhe que faz o app dar gosto de usar | 🟢 |
+| 3 | Acabamento | Revisei tela a tela e lapidei: menu de opções com a nossa cara (o padrão do celular é feio), atalhos de porcentagem na divisão entre sócios, e uma dica visual de "tem mais coisa pra rolar" que ajuda o cliente a ler o importante **sem** travar o botão | 🟢 |
+
+**Próximo (17/07 2º):** construir as telas de **resultado** (a economia de imposto, o número grande), depois as de espera e as de "não encaixa"; **rodar as telas contra os clientes fictícios** pra validar a experiência. Backend segue com o dev, em paralelo.
+
+### 📱 WhatsApp (17/07 — 2º)
+```
+*Update Legalizei* 📱
+- Construí as 7 telas onde o cliente preenche os dados pra abrir a empresa (sócio, INSS, sócios, empresa, atividades, tipo, nome), já com a nossa cara e com as regras embutidas: avisa o cônjuge cedo, explica o INSS, limita 2 sócios, oferece endereço fiscal sem empurrar. Todas navegáveis
+- A tela do "sim/não" da atividade ficou pronta nos 3 casos (a gente abre / fila / caso pro escritório), com uma animação de comemoração quando o cliente confirma
+- Lapidei tela a tela: menu de opções com a nossa cara, atalhos na divisão entre sócios, dica visual de rolagem
+Próximo: as telas de resultado (economia de imposto) e depois rodar tudo contra os clientes fictícios
+```
+
 ## 📱 Versão WhatsApp (copiar/colar — grupo ampliado, sem item de sociedade)
 ```
 *Relatório semanal — Legalizei* 📊

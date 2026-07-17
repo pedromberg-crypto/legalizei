@@ -1,8 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { VereditoView, type Resultado } from "@/components/veredito";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -97,17 +103,8 @@ const RITMO = {
   apaga: 20, // ms por caractere apagado (ninguém lê apagando; some rápido)
 };
 
-type Veredito = "atende" | "waitlist" | "nao-atende";
-
-interface Resultado {
-  humano: string;
-  explica: string;
-  cnae: string;
-  anexo: string;
-  veredito: Veredito;
-}
-
 // Mock do b1.mapeamento (IA dublada). Espelha os vereditos do motor.
+// `Resultado` / `Veredito` agora vêm de @/components/veredito (fonte única A2).
 function mapear(texto: string): Resultado {
   const t = texto.toLowerCase();
   if (/nutri|dentist|médic|medic|advog|arquitet|psicó|psico/.test(t)) {
@@ -341,114 +338,6 @@ function Analisando() {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
-   ARQUÉTIPO A2 — VEREDITO 🟢/🟡/🔴
-   Regra de ouro: nunca dar veredito com baixa confiança (aqui o mock sempre
-   tem confiança alta; no motor, baixa confiança dispara b1.desambiguacao).
-   ⚠️ Coral NUNCA é erro: 🟡/🔴 usam os tokens de estado, nunca o coral.
-   ───────────────────────────────────────────────────────────────────────── */
-function VereditoView({
-  r,
-  onRefazer,
-  onSeguir,
-}: {
-  r: Resultado;
-  onRefazer: () => void;
-  onSeguir: () => void;
-}) {
-  if (r.veredito === "atende") {
-    return (
-      <>
-        <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="w-6 h-6 rounded-full bg-state-success-tint
-                             flex items-center justify-center text-state-success-text
-                             text-caption font-bold">
-              ✓
-            </span>
-            <p className="text-caption font-semibold text-state-success-text">
-              Achei o seu encaixe
-            </p>
-          </div>
-
-          <Card>
-            {/* UX-05: linguagem humana ANTES do código. O leigo não decora número. */}
-            <h2 className="text-h2 mb-1">{r.humano}</h2>
-            <p className="text-body text-text-secondary mb-4">{r.explica}</p>
-            <div className="pt-3 border-t border-border-hairline">
-              <p className="text-micro text-text-tertiary mb-0.5">
-                Sua atividade na Receita
-              </p>
-              <p className="text-caption text-text-secondary">
-                CNAE {r.cnae} · {r.anexo}
-              </p>
-            </div>
-          </Card>
-
-          <p className="text-body text-text-secondary mt-4">
-            É disso que a gente cuida, do jeito certo, no Simples.
-          </p>
-        </div>
-
-        <div className="app-footer-cta">
-          {/* 🌾 colhido: "refazer" ACIMA do CTA, sem perder o texto digitado */}
-          <div className="flex justify-center mb-1">
-            <Button variant="ghost" onClick={onRefazer}>
-              Não é bem isso, refazer
-            </Button>
-          </div>
-          {/* UX-14: dizer em 1 linha o que vem agora, senão o leigo hesita */}
-          <Button full onClick={onSeguir}>
-            É isso mesmo
-          </Button>
-        </div>
-      </>
-    );
-  }
-
-  // 🟡 waitlist e 🔴 comercial compartilham o ARQUÉTIPO A9 (saída graciosa):
-  // barra + explica + captura + roteia. O mapa-ramificacoes já tinha achado
-  // que 5 saídas usam 1 template só — aqui elas de fato usam.
-  const waitlist = r.veredito === "waitlist";
-  return (
-    <>
-      <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <Card tint={false} className="border-border-strong">
-          <h2 className="text-h2 mb-2">
-            {waitlist ? "Ainda não, mas falta pouco" : "Seu caso pede um humano"}
-          </h2>
-          <p className="text-body text-text-secondary mb-3">
-            {waitlist
-              ? "Sua atividade precisa de responsável técnico registrado no conselho. A gente ainda não abre esse tipo sozinho, e não vamos fingir que abre."
-              : "Você vende produto, e a gente cuida de quem vive de prestar serviço. Nosso time contábil resolve o seu caso."}
-          </p>
-          <p className="text-caption text-text-tertiary">
-            CNAE {r.cnae} · {r.anexo}
-          </p>
-        </Card>
-
-        {/* UX-22: waitlist não pode ser beco. Dar o "enquanto isso". */}
-        <p className="text-body text-text-secondary mt-4">
-          {waitlist
-            ? "Quer ser o primeiro a saber quando abrir?"
-            : "Quer que a gente te conecte agora?"}
-        </p>
-      </div>
-
-      <div className="app-footer-cta">
-        <div className="flex justify-center mb-1">
-          <Button variant="ghost" onClick={onRefazer}>
-            Não é bem isso, refazer
-          </Button>
-        </div>
-        <Button full variant="dark">
-          {waitlist ? "Me avisa quando abrir" : "Falar com o time"}
-        </Button>
-      </div>
-    </>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────────────────────
    🆕 TRIAGEM (UX-21 fail-fast) — não existia no protótipo.
    Nasce da reordenação: com cobrança no N9, o que mata a elegibilidade tem
    que ser perguntado ANTES do dinheiro. Barrar depois = cobrar de quem não
@@ -597,6 +486,33 @@ function Faixa() {
   );
 }
 
+/**
+ * 🐛 ACHADO ao verificar no browser (16/07): o `prefers-reduced-motion` do
+ * globals.css só desliga animação CSS. O typewriter é JS, então passava batido
+ * e ficava em movimento perpétuo — violando o UX-12 justamente pra quem mais
+ * precisa dele. O protótipo tem o mesmo bug e ninguém tinha visto.
+ * (Nota honesta: eu achei isto investigando um timeout de screenshot e culpei o
+ * typewriter. Era falso: o simulador não tem typewriter, tem zero animações e
+ * trava igual — a ferramenta de captura é que estava instável. O bug de
+ * acessibilidade é real e o fix vale; a pista que me levou até ele é que era
+ * coincidência.)
+ *
+ * `useSyncExternalStore` = a forma canônica de assinar um store externo
+ * (matchMedia). Sem setState-em-effect (não cascateia render) e SSR-safe: o
+ * snapshot do servidor é `false`, e no cliente lê o valor real na 1ª pintura.
+ */
+function useReducedMotion() {
+  return useSyncExternalStore(
+    (notificar) => {
+      const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+      mq.addEventListener("change", notificar);
+      return () => mq.removeEventListener("change", notificar);
+    },
+    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    () => false,
+  );
+}
+
 /* ─────────────────────────────────────────────────────────────────────────
    🌾 Typewriter — colhido do protótipo. Não é enfeite: dá EXEMPLO REAL de
    resposta pro campo aberto, que é o que trava o leigo ("campo aberto sem
@@ -607,24 +523,7 @@ function useTypewriter(palavras: string[], pausado: boolean) {
   const i = useRef(0);
   const c = useRef(0);
   const apagando = useRef(false);
-  const [reduzido, setReduzido] = useState(false);
-
-  // 🐛 ACHADO ao verificar no browser (16/07): o `prefers-reduced-motion` do
-  // globals.css só desliga animação CSS. O typewriter é JS, então passava
-  // batido e ficava em movimento perpétuo — violando o UX-12 justamente pra
-  // quem mais precisa dele. O protótipo tem o mesmo bug e ninguém tinha visto.
-  // (Nota honesta: eu achei isto investigando um timeout de screenshot e
-  // culpei o typewriter. Era falso: o simulador não tem typewriter, tem zero
-  // animações e trava igual — a ferramenta de captura é que estava instável.
-  // O bug de acessibilidade é real e o fix vale; a pista que me levou até ele
-  // é que era coincidência.)
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduzido(mq.matches);
-    const on = (e: MediaQueryListEvent) => setReduzido(e.matches);
-    mq.addEventListener("change", on);
-    return () => mq.removeEventListener("change", on);
-  }, []);
+  const reduzido = useReducedMotion();
 
   useEffect(() => {
     if (pausado || reduzido) return;

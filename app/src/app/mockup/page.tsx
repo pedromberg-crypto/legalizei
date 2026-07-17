@@ -87,20 +87,63 @@ const APARELHOS: Aparelho[] = [
 /** Altura da barra de status. Não é a safe area: na Island sobram ~5pt embaixo. */
 const BARRA_H: Record<Topo, number> = { island: 54, notch: 44, barra: 20 };
 
-const TELAS = [
+/**
+ * Telas AGRUPADAS POR ARQUÉTIPO. Cada arquétipo é uma esteira horizontal: as
+ * telas dele aparecem lado a lado e, quando passam da largura, viram scroll
+ * lateral (clicar-segurar-arrastar). Preparado pra RECEBER as telas — hoje só
+ * as 2 farol existem como rota; o resto entra conforme a gente constrói.
+ */
+const ARQUETIPOS: {
+  id: string;
+  nome: string;
+  descricao: string;
+  telas: { rota: string; nome: string; nota: string }[];
+}[] = [
   {
-    rota: "/gate",
-    nome: "N4 · Gate-CNAE",
-    farol: "farol simples",
-    shell: "wizard (fora do app)",
-    nota: "A porta do produto. Textarea + typewriter, veredito 🟢/🟡/🔴, triagem, faixa.",
+    id: "a1",
+    nome: "A1 · Pergunta",
+    descricao:
+      "Campo aberto + typewriter. O esqueleto mais comum do flow (N4 e a coleta N10–N16).",
+    telas: [
+      {
+        rota: "/gate",
+        nome: "N4 · Gate-CNAE",
+        nota: "A porta. Pills + veredito 🟢/🟡/🔴 + triagem + faixa.",
+      },
+    ],
   },
   {
-    rota: "/simulador",
-    nome: "N18 · Simulador",
-    farol: "farol complexa",
-    shell: "app (dentro)",
-    nota: 'O clímax. "Fator R" nunca aparece. Sugestão mira 30%, avisa a borda.',
+    id: "a2",
+    nome: "A2 · Veredito",
+    descricao:
+      "Resultado 🟢/🟡/🔴. Regra de ouro: nunca dar veredito com baixa confiança.",
+    telas: [],
+  },
+  {
+    id: "a3",
+    nome: "A3 · Número / prova",
+    descricao:
+      "O número grande, sempre em R$. Dinheiro em cima da promessa (N5 teaser, N18 simulador).",
+    telas: [
+      {
+        rota: "/simulador",
+        nome: "N18 · Simulador",
+        nota: 'O clímax. "Fator R" nunca aparece. Sugestão mira 30%, avisa a borda.',
+      },
+    ],
+  },
+  {
+    id: "a7",
+    nome: "A7 · Espera",
+    descricao: "Loading que EXPLICA o que está acontecendo, não spinner mudo.",
+    telas: [],
+  },
+  {
+    id: "a9",
+    nome: "A9 · Saída graciosa",
+    descricao:
+      "Barra + explica + captura + roteia. 5 saídas usam 1 template só (waitlist, comercial, exterior, 3+ sócios).",
+    telas: [],
   },
 ];
 
@@ -119,10 +162,11 @@ export default function MockupPage() {
           <p className="text-micro text-text-tertiary mb-1">
             Legalizei · prancha de review
           </p>
-          <h1 className="text-h1 text-text-primary">As 2 telas-farol</h1>
-          <p className="text-body text-text-secondary mt-2 max-w-[52ch]">
-            Uma de cada lado da fronteira do N9. A tensão entre elas é o que
-            gera o Design System.
+          <h1 className="text-h1 text-text-primary">Telas por arquétipo</h1>
+          <p className="text-body text-text-secondary mt-2 max-w-[60ch]">
+            Cada arquétipo é uma esteira. Clique, segure e arraste pra passar
+            tela por tela. As farol N4 e N18 já estão aqui; o resto entra
+            conforme construímos.
           </p>
         </header>
 
@@ -177,58 +221,150 @@ export default function MockupPage() {
           {ap.porque}
         </p>
 
-        <div className="flex flex-wrap items-start justify-center gap-x-10 gap-y-12">
-          {TELAS.map((t) => (
-            <figure key={t.rota} className="flex flex-col items-center gap-4">
-              {/* Duas caixas, e as duas precisam existir:
-                  · a de fora RESERVA o rastro já escalado (o transform é só
-                    pintura, não mexe no layout, e sem isto sobra buraco);
-                  · a de dentro fica no tamanho NATURAL e só o transform a
-                    encolhe.
-                  A largura explícita aqui não é redundância. Sem ela a caixa de
-                  dentro herda a largura da de fora (já encolhida) e espreme a
-                  moldura, enquanto o vidro segue fixo em `ap.w`: a tela vaza
-                  pra fora do alumínio. A 100% ninguém vê, porque os dois
-                  valores empatam. */}
-              <div
-                style={{
-                  width: (ap.w + 24) * escala,
-                  height: (ap.h + 24) * escala,
-                  // flex item: sem isto o min-height:auto usa a altura NATURAL
-                  // do conteúdo (956) e abre um vão até a legenda.
-                  minHeight: 0,
-                }}
-              >
-                <div
-                  style={{
-                    width: ap.w + 24,
-                    height: ap.h + 24,
-                    transform: `scale(${escala})`,
-                    transformOrigin: "top left",
-                  }}
-                >
-                  <Phone
-                    src={`${t.rota}?v=${nonce}`}
-                    ap={ap}
-                    insets={insets}
-                  />
-                </div>
-              </div>
-
-              <figcaption className="text-center max-w-[300px]">
-                <p className="text-body font-semibold text-text-primary">
-                  {t.nome}
-                </p>
-                <p className="text-micro text-text-tertiary mt-1">
-                  {t.farol} · shell: {t.shell}
-                </p>
-                <p className="text-caption text-text-secondary mt-2">{t.nota}</p>
-              </figcaption>
-            </figure>
+        <div className="flex flex-col gap-6">
+          {ARQUETIPOS.map((a) => (
+            <Arquetipo
+              key={a.id}
+              a={a}
+              ap={ap}
+              escala={escala}
+              insets={insets}
+              nonce={nonce}
+            />
           ))}
         </div>
       </div>
     </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ESTEIRA POR ARQUÉTIPO — telas lado a lado, scroll lateral por arrasto.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/**
+ * Clicar-segurar-arrastar pra rolar a esteira na horizontal.
+ * ⚠️ Limite conhecido: o <iframe> engole os eventos que COMEÇAM sobre o vidro
+ * (a tela em si continua clicável, bom pra validar). Então o arrasto pega o
+ * ALUMÍNIO da moldura, a legenda e o vão entre telas — sobra superfície de
+ * sobra. `window` nos move/up: o arrasto continua mesmo saindo da esteira.
+ */
+function useDragScroll() {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let down = false;
+    let startX = 0;
+    let startLeft = 0;
+    const onDown = (e: PointerEvent) => {
+      down = true;
+      startX = e.clientX;
+      startLeft = el.scrollLeft;
+      el.style.cursor = "grabbing";
+    };
+    const onMove = (e: PointerEvent) => {
+      if (!down) return;
+      el.scrollLeft = startLeft - (e.clientX - startX);
+    };
+    const stop = () => {
+      down = false;
+      el.style.cursor = "grab";
+    };
+    el.addEventListener("pointerdown", onDown);
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", stop);
+    return () => {
+      el.removeEventListener("pointerdown", onDown);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", stop);
+    };
+  }, []);
+  return ref;
+}
+
+interface EsteiraProps {
+  ap: Aparelho;
+  escala: number;
+  insets: boolean;
+  nonce: number;
+}
+
+function Arquetipo({
+  a,
+  ...rest
+}: EsteiraProps & {
+  a: (typeof ARQUETIPOS)[number];
+}) {
+  const dragRef = useDragScroll();
+  return (
+    <section className="mb-10">
+      <div className="mb-5">
+        <h2 className="text-h2 text-text-primary">{a.nome}</h2>
+        <p className="text-caption text-text-secondary mt-1 max-w-[72ch]">
+          {a.descricao}
+        </p>
+      </div>
+
+      {a.telas.length === 0 ? (
+        <div
+          className="flex h-[180px] items-center justify-center rounded-lg border
+                     border-dashed border-border-strong text-caption text-text-tertiary"
+        >
+          Aguardando as telas deste arquétipo (construção na próxima sessão).
+        </div>
+      ) : (
+        // A esteira: mesmo gap-x-10 e mesma moldura de antes; overflow-x-auto +
+        // arrasto. Poucas telas cabem lado a lado; da 3ª/4ª em diante, rola.
+        <div
+          ref={dragRef}
+          className="flex cursor-grab select-none gap-x-10 overflow-x-auto pb-4"
+        >
+          {a.telas.map((t) => (
+            <PhoneFigure key={t.rota} t={t} {...rest} />
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
+function PhoneFigure({
+  t,
+  ap,
+  escala,
+  insets,
+  nonce,
+}: EsteiraProps & { t: { rota: string; nome: string; nota: string } }) {
+  return (
+    <figure className="flex shrink-0 flex-col items-center gap-4">
+      {/* Duas caixas (idêntico ao que era): a de fora reserva o rastro já
+          escalado; a de dentro fica no tamanho natural e só o transform encolhe.
+          A largura explícita evita a moldura espremer o vidro fora do 100%. */}
+      <div
+        style={{
+          width: (ap.w + 24) * escala,
+          height: (ap.h + 24) * escala,
+          minHeight: 0,
+        }}
+      >
+        <div
+          style={{
+            width: ap.w + 24,
+            height: ap.h + 24,
+            transform: `scale(${escala})`,
+            transformOrigin: "top left",
+          }}
+        >
+          <Phone src={`${t.rota}?v=${nonce}`} ap={ap} insets={insets} />
+        </div>
+      </div>
+
+      <figcaption className="max-w-[300px] text-center">
+        <p className="text-body font-semibold text-text-primary">{t.nome}</p>
+        <p className="text-caption text-text-secondary mt-2">{t.nota}</p>
+      </figcaption>
+    </figure>
   );
 }
 

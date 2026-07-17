@@ -211,7 +211,11 @@
   .app-page {
     display: flex;
     flex-direction: column;
-    min-height: 100dvh;
+    /* TETO real (height, não min-height): é o que faz "sem scroll" valer. Com
+       min-height a página crescia além do vidro e o aparelho rolava tudo; com
+       height fixo, o `flex-1 min-h-0` obriga a região interna (ex: as pills do
+       N4) a rolar sozinha, e o resto (input, CTA) fica ancorado. */
+    height: 100dvh;
     max-width: var(--container-app);
     margin-inline: auto;
     padding-inline: 24px; /* = space-5 */

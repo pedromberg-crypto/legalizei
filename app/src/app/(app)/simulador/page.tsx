@@ -81,13 +81,18 @@ export default function SimuladorPage() {
       </header>
 
       <main className="app-main">
-        <div className="flex-1 min-h-0 pb-4">
+        {/* Título/subtítulo FIXOS (padrão do N4): não rolam com o corpo. */}
+        <div className="shrink-0">
           <h1 className="text-h1 mb-2">Quanto você se paga?</h1>
-          <p className="text-body text-text-secondary mb-6">
+          <p className="text-body text-text-secondary mb-4">
             Esse número decide quanto de imposto a empresa paga. Mexe no botão e
             veja.
           </p>
+        </div>
 
+        {/* Corpo ROLÁVEL: conteúdo alto rola por dentro; título fica de fora
+            (fixo) e o CTA fixo no rodapé. Scrollbar escondida no mobile. */}
+        <div className="flex-1 min-h-0 overflow-y-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {/* ───── O NÚMERO GRANDE — arquétipo A3 (argumento/prova) ─────
               Sempre em R$. "Anexo III/V" nunca aparece cru. */}
           <Card tint className="mb-4">

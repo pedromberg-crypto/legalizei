@@ -9,7 +9,7 @@ data: 2026-07-16
 > Status: ✅ negócio fechado com Mauro (2026-07-07) · V0/imersão em curso.
 
 ## 📍 Agora (torre de controle — mantida via `/fechar`)
-> **Última atualização:** 2026-07-17 (flow que virou a noite, veio do 16/07) · Janela nova? rode `/boot`.
+> **Última atualização:** 2026-07-17 (2º flow do dia: extração completa da tabela CNAE do líder) · Janela nova? rode `/boot`.
 > **Fase:** **construção das telas em curso + 🔥 a lista de CNAE se revelou furada na raiz.**
 >
 > **O que esta sessão fez:** começou em *"arruma o espaçamento do mockup"* e terminou achando que **a lista do que a Legalizei atende nunca foi uma lista do que a Legalizei atende** → [[2026-07-17-lista-cnae-furada-e-pills-do-n4]].
@@ -18,7 +18,7 @@ data: 2026-07-16
 >
 > **Limpeza proposta** (`node pesquisa/cnae-matriz/classificar-260.js` → [[limpeza-260-servico]]): **45 impossível** (martelo do Pedro, pendente) · **91 duvidoso** (Larissa, 7 baldes com pergunta fechada, já na [[fila-validacao-humana]]) · **124 "real"**. ⚠️ **Os 124 são NÃO-REFUTADOS, não validados** — nenhum contador olhou. Pedro encaminhou pro crivo interno de contabilidade.
 >
-> 🔁 **RETOMAR NA PRÓXIMA JANELA — a pista estava quente quando a janela fechou.** `contabilizei.com.br/contabilidade-online/cnae/` tem as colunas **CNAE · Descrição · Anexo · Fator R · Alíquota · Atende**, que é **exatamente o que falta na nossa matriz** (`fator_r` e `aliquota_inicial` **vazios nos 1332**; `anexo_base` com a mesma string genérica em todos). **Não temos a lista:** só OCR podre de uma **imagem** (369 códigos, `6203100`→`4203100`, colunas descoladas). **O Pedro abriu os sites e ia guiar a extração.** Depois disso: **cortar as pills pra ~6** (ver abaixo) e **seguir as telas N1–N9**.
+> ✅ **PISTA RESOLVIDA (2º flow 17/07) — a tabela do líder foi extraída inteira.** Os **387 CNAEs** atendidos agora têm **anexo, Fator R, faixa de alíquota, MEI, hierarquia com códigos, descritores, relacionados, fontes** — exatamente o que faltava na matriz. Método reaproveitável: site é **Nuxt**, dado embutido em `window.__NUXT__`; `curl --compressed` + sandbox `vm` (headless, paralelo, throttle gentil pra não tomar anti-bot). Fidelidade **ALTA** (bateu 417/417 vs 2ª extração do Pedro; zeros à esquerda conferidos no IBGE); veracidade **não-ratificada** (afirmação do líder → Larissa). Dataset em `pesquisa/cnae-matriz/` (JSON+CSV+`.base`), hub [[cnae-atendidos-hub]], marco [[2026-07-17-extracao-tabela-cnae-contabilizei]]. **Próximo:** cruzar os 387 contra os 260 de serviço + consolidado fiscal · **cortar pills pra ~6** · **telas N1–N9**.
 >
 > **🔴 AVISAR O DEV — piorou.** Ele recebeu 15/07 uma spec congelada com *"as 14 personas são o critério de aceite"*. Desde então: **19 personas · a ordem inverteu · nasceu o flow #2 · 5 promessas da spec não implementadas.** **🆕 E os DADOS também:** o `cnae-lookup-b1.json` que foi junto sai das mesmas 1332 pela mesma regra, então a triagem que ele está codando responde **"atende, passa liso"** pra `DEFESA`. **Todo o resto é 🕓 fila-humana** → [[fila-validacao-humana]].
 >

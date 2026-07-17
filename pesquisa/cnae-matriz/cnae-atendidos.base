@@ -1,0 +1,37 @@
+filters:
+  and:
+    - tipo == "cnae-atendido"
+views:
+  - type: table
+    name: Todos os CNAEs
+    order:
+      - file.name
+      - descricao
+      - anexos
+      - fator_r
+      - pode_mei
+      - secao
+      - _status
+    sort:
+      - property: file.name
+        direction: ASC
+  - type: table
+    name: Fila Larissa (dúvidas)
+    filters:
+      and:
+        - _status != "OK"
+    order:
+      - file.name
+      - descricao
+      - anexos
+      - _flags
+      - _nota
+  - type: table
+    name: Com Fator R
+    filters:
+      and:
+        - fator_r == true
+    order:
+      - file.name
+      - descricao
+      - anexos

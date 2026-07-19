@@ -112,7 +112,6 @@ function mapear(texto: string): Resultado {
       humano: "Atividade regulamentada",
       explica: "Sua área precisa de responsável técnico registrado no conselho.",
       cnae: "8650-0/02",
-      anexo: "Anexo III",
       veredito: "waitlist",
     };
   }
@@ -121,16 +120,45 @@ function mapear(texto: string): Resultado {
       humano: "Comércio",
       explica: "Você vende produtos, não serviço.",
       cnae: "4713-0/02",
-      anexo: "Anexo I",
       veredito: "nao-atende",
     };
   }
+  // Dados reais do 6201-5/02 (contabilizei-cnae-completo.json + CONCLA/IBGE).
+  // As `vizinhas` fazem DUAS coisas: guarda-corpo do falso-🟢 (quem tem outra
+  // atividade PRINCIPAL se corrige aqui, antes do pagamento) e porta de entrada
+  // dos CNAEs secundários (quem faz as duas coisas descobre que cabe).
   return {
     humano: "Criação de sites e web design",
     explica: "Você entrega sites e presença digital pra outras empresas.",
     cnae: "6201-5/02",
-    anexo: "Anexo III",
     veredito: "atende",
+    compreende: [
+      "Criar e desenvolver sites, páginas e portais na internet",
+      "Desenhar a interface (o visual e a navegação) desses sites",
+    ],
+    vizinhas: [
+      {
+        oque: "Sistema sob medida, customizável",
+        cnae: "6202-3/00",
+        comoSecundaria: "mesmo-imposto",
+      },
+      {
+        oque: "Software pronto, de prateleira",
+        cnae: "6203-1/00",
+        comoSecundaria: "mesmo-imposto",
+      },
+      {
+        oque: "Consultoria em tecnologia",
+        cnae: "6204-0/00",
+        comoSecundaria: "mesmo-imposto",
+      },
+      {
+        oque: "Design gráfico (logo, material impresso)",
+        cnae: "7410-2/99",
+        comoSecundaria: "mesmo-imposto",
+      },
+    ],
+    fiscal: { entradas: [6, 15.5], dependeProLabore: true },
   };
 }
 
@@ -443,42 +471,109 @@ function Triagem({
 
 /* ─────────────────────────────────────────────────────────────────────────
    🆕 FAIXA de faturamento — alimenta o teaser do N5.
-   ⚠️ NUNCA campo aberto (spec): faixa guiada. E sem perguntar margem — a
-   decisão UX-51 foi que a FAIXA do teaser comunica a incerteza, em vez de
-   pedir jargão pro leigo aqui.
+   ⚠️ Faixa guiada segue sendo o DEFAULT (spec): campo aberto sozinho trava
+   quem está estimando. Sem perguntar margem (UX-51).
+
+   🆕 17/07 — "eles já sabem o número" (provocação do Pedro, e ele é o caso):
+   boa parte do nicho é PJ-ização — a pessoa abre CNPJ PORQUE já tem contrato
+   ou salário fechado. Pra ela, "quanto você ESPERA faturar" pede um chute
+   sobre algo que ela sabe com precisão. Duas correções:
+     · copy acolhe os dois ("já sabe" e "estima"), sem rotular ninguém;
+     · "sei o valor exato" abre entrada precisa — profundidade sob demanda
+       (UX-48), sem bifurcar trilha. A faixa é derivada do valor, então o
+       resto do flow continua recebendo o mesmo dado de sempre.
    ───────────────────────────────────────────────────────────────────────── */
+
+/** Deriva a faixa a partir do valor exato: quem sabe o número não repete a escolha. */
+function faixaDoValor(v: number): string | null {
+  if (v <= 0) return null;
+  if (v < 10000) return "ate 10k";
+  if (v < 20000) return "10-20k";
+  if (v <= 30000) return "20-30k";
+  return "30k+";
+}
+
 function Faixa() {
   const [faixa, setFaixa] = useState<string | null>(null);
+  const [modoExato, setModoExato] = useState(false);
+  const [exato, setExato] = useState("");
+
+  const valor = Number(exato.replace(/\D/g, "")) || 0;
+  const faixaExata = faixaDoValor(valor);
+  const escolhida = modoExato ? faixaExata : faixa;
+  const rotuloEscolhida = FAIXAS.find((f) => f.id === escolhida)?.label;
+
   return (
     <>
       {/* Título FIXO (padrão de 3 partes: título fixo / corpo rola / CTA fixo) */}
       <div className="shrink-0">
-        <h1 className="text-h1 mb-2">Quanto você espera faturar por mês?</h1>
+        <h1 className="text-h1 mb-2">Quanto você vai receber por mês?</h1>
         <p className="text-body text-text-secondary mb-6">
-          Uma estimativa basta. Serve pra calcular quanto você economiza.
+          Se você já sabe o valor, melhor ainda. Se não, uma estimativa basta.
         </p>
       </div>
 
       <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <div className="flex flex-col gap-2">
-          {FAIXAS.map((f) => (
+        {modoExato ? (
+          <div className="flex flex-col gap-2">
+            <input
+              value={exato}
+              onChange={(e) =>
+                setExato(
+                  (Number(e.target.value.replace(/\D/g, "")) || "").toLocaleString(
+                    "pt-BR"
+                  )
+                )
+              }
+              placeholder="R$ 0"
+              inputMode="numeric"
+              autoFocus
+              aria-label="Quanto você vai receber por mês"
+              className="w-full min-h-12 rounded-md border border-border-hairline bg-surface-card
+                         px-3 text-body text-text-primary placeholder:text-text-muted
+                         focus:border-border-focus focus:outline-none"
+            />
+            {/* Devolve o enquadramento na hora: mostra que o número foi entendido. */}
+            {rotuloEscolhida && (
+              <p className="text-caption text-text-secondary">
+                Isso te coloca na faixa{" "}
+                <strong className="text-text-primary">{rotuloEscolhida}</strong>.
+              </p>
+            )}
             <button
-              key={f.id}
-              onClick={() => setFaixa(f.id)}
-              className={`w-full min-h-12 rounded-md border px-4 text-left text-body font-semibold transition-colors
-                ${
-                  faixa === f.id
-                    ? "border-border-focus bg-surface-tint-brand text-text-primary"
-                    : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
-                }`}
+              onClick={() => setModoExato(false)}
+              className="mt-2 self-start text-caption font-medium text-text-secondary underline underline-offset-4"
             >
-              {f.label}
+              Prefiro escolher uma faixa
             </button>
-          ))}
-        </div>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-2">
+            {FAIXAS.map((f) => (
+              <button
+                key={f.id}
+                onClick={() => setFaixa(f.id)}
+                className={`w-full min-h-12 rounded-md border px-4 text-left text-body font-semibold transition-colors
+                  ${
+                    faixa === f.id
+                      ? "border-border-focus bg-surface-tint-brand text-text-primary"
+                      : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
+                  }`}
+              >
+                {f.label}
+              </button>
+            ))}
+            <button
+              onClick={() => setModoExato(true)}
+              className="mt-2 self-start text-caption font-medium text-text-secondary underline underline-offset-4"
+            >
+              Sei o valor exato
+            </button>
+          </div>
+        )}
       </div>
       <div className="app-footer-cta">
-        <Button full disabled={!faixa}>
+        <Button full disabled={!escolhida}>
           Ver o que eu ganho
         </Button>
       </div>

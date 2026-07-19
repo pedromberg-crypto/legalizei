@@ -14,6 +14,46 @@ tags: [fiscal, simples-nacional, fator-r, cnae, bh, compliance, pesquisa]
 >
 > ✅ **Bloco D (valores fiscais) — RESOLVIDO** na rodada 2 (núcleo) + rodada 3 (INSS pró-labore + alíquotas). O aviso antigo de "não coberto" na seção D abaixo ficou só como histórico.
 
+## 🆕 Rodada 4 (2026-07-19) — verificação em fonte primária
+
+> 8 pendências fechadas. Detalhe e crítica em [[2026-07-19-veredito-a3-e-pesquisa-fiscal-primaria]].
+
+| Item | Antes | Agora | Fonte |
+|---|---|---|---|
+| **CPP recolhida no DAS entra no numerador do Fator R?** | 🟡 fila-Larissa (item B) | 🟢 **SIM** | SC COSIT 17/2021 (sijut2.receita.fazenda.gov.br) |
+| **FS12 caixa × RBT12 competência** | 🟡 "verificar" | 🟢 confirmado | idem |
+| **Fator R em empresa nova** | ausente | 🟢 1º mês ×12; depois média aritmética ×12 | Res. CGSN 140/2018 art. 26 |
+| **Anexo III faixa 2** | não ratificado | 🟢 **11,20%**, deduzir **R$ 9.360** | LC 123 Anexo III |
+| **Anexo V faixa 2** | ausente | 🟢 **18,00%**, deduzir **R$ 4.500** | LC 123 Anexo V |
+| **Teto ME** | "menção não confirmada" | 🟢 **R$ 360.000/ano** (acima → EPP até R$4,8mi) | LC 123 art. 3º |
+| **Prazo de opção pelo Simples** | ausente | 🟢 30 dias da última inscrição, **teto 60 dias** do CNPJ | Res. CGSN 140/2018 art. 6º |
+| **Taxa JUCEMG (constituição LTDA)** | 🔴 divergência aberta desde 09/07 | 🟢 **R$ 268,51 (ME)** · EPP R$275,24 · demais R$280,61 · personalizado R$429,61 | [Tabela de Preços JUCEMG](https://jucemg.mg.gov.br/pagina/52/tabela-de-precos) + RP 02/2025 |
+
+**⚠️ O R$288 morreu.** Era o número que a gente mais repetia (veio da Izabela) e o
+menos verificado. Contrato **padrão** está congelado desde 2018; a revisão de
+setembro subiu **só o personalizado**, como incentivo à automação.
+
+**Impacto no produto:** com a CPP no numerador, o **pró-labore ótimo fica MENOR** e
+mais alcançável → muda o número que o N18 recomenda.
+
+### 🆕 Novos, ainda 🟡
+- **Lei 15.270/2025** — fim da isenção total de lucros: **10% retidos acima de
+  R$ 50 mil/mês** por PF. **Não atinge o nosso ICP** (teto R$30k/mês), mas vira
+  guarda-corpo. ⚠️ artigos citados ("3º-A", "6º-A") **não verificados**.
+- **Portaria SMFA 75/2025 (PBH)** — BHISS/DES-BH extinto, NFS-e só pelo Emissor
+  Nacional com certificado digital. Se confirmar, **derruba** o passo "NFS-e via
+  DES-BH" da Izabela e muda o custo de entrada. 🟡 fonte secundária.
+- **TFLF** — pesquisa diz R$168,48, edital em abril, vence 10/05, sem pro-rata.
+  **Conflita com o caso real do Pedro** (chegou ~dia 40, 4 dias pra pagar, ~R$161).
+  Provavelmente são **dois eventos** distintos. Fato datado ganha.
+
+### ⚠️ Não confie na nota de confiança do relatório de origem
+Ele deu **100%** a linhas citando **blog de contabilidade** (tabelas dos anexos,
+IRRF R$5k, lucros 10%, TFLF), quebrando a regra pedida. Os itens marcados 🟢 acima
+são os que têm norma + URL oficial; o resto ficou 🟡 de propósito.
+
+---
+
 ## Veredito de topo
 Produto viável. A maior parte do enquadramento é **modelável deterministicamente**. Só **1 condicional é fatal** (sócio no exterior). A pesquisa **derruba 3 suposições** (ver §Refutados).
 

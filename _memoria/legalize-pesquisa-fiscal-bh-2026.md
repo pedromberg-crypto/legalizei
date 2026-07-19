@@ -7,6 +7,24 @@ metadata:
   originSessionId: 6a4bf385-f126-45e0-bd08-cd2eece6bc93
 ---
 
+**🆕 RODADA 4 (2026-07-19) — fonte primária fechou 8 pendências.** **A taxa da
+JUCEMG virou R$ 268,51 (ME)** · EPP 275,24 · demais 280,61 · personalizado 429,61
+— **o R$288 morreu** (era o número mais repetido e menos verificado do vault,
+divergência aberta desde 09/07; contrato padrão está congelado desde 2018 e a
+revisão de setembro subiu só o personalizado). **A CPP recolhida no DAS ENTRA no
+numerador do Fator R** (SC COSIT 17/2021, sijut2 oficial) → resolve a pendência da
+Larissa **e faz o pró-labore ótimo ficar MENOR**, mudando o N18. Também fechados:
+FS12 caixa × RBT12 competência · Fator R de empresa nova (1º mês ×12, depois média
+×12) · **Anexo III faixa 2 = 11,20% / deduzir R$9.360** · **Anexo V faixa 2 = 18% /
+deduzir R$4.500** · teto ME R$360k · prazo do Simples (30d da última inscrição,
+teto 60d do CNPJ). **Custo de governo: ~R$437** (268,51 + ~168,48 de TFLF).
+🟡 novos: **Lei 15.270/2025** (lucros 10% acima de R$50k/mês — **não atinge o ICP**,
+e os artigos citados não foram verificados) · **Portaria SMFA 75/2025** (BHISS
+extinto → NFS-e Nacional com certificado; se confirmar, derruba o passo da Izabela)
+· **TFLF conflita com o caso real do Pedro** (dia ~40 × edital de abril → provável
+que sejam 2 eventos). ⚠️ **o relatório de origem inflou confiança** (100% pra blog):
+só o que tem norma + URL virou 🟢. Prompt cirúrgico da rodada 5 pronto, não rodado.
+
 3 rodadas de deep-research em fonte OFICIAL + cruzadas com 2 relatórios Gemini das mesmas perguntas, salvas em [[fiscal-simples-bh-2026]]. Escopo: Simples · ME serviço · BH/MG · 2026. Double-check final = Larissa. **Usar o bloco `✅ CONSOLIDADO` no fim da nota — funde tudo, marca 🟢 travado / 🟡 fila-Larissa.**
 
 **Cruzamento Gemini (15/07): sem contradição dura.** Onde diverge = completude ou redação, não fato oposto.

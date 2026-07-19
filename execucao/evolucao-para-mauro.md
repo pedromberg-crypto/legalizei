@@ -274,6 +274,30 @@ Preciso da Larissa: 91 casos. O mais urgente são 10 atividades que exigem conse
 Próximo: as telas de resultado (economia de imposto) e depois rodar tudo contra os clientes fictícios
 ```
 
+## Semana 19/07/2026 — custos confirmados na fonte + o que meu próprio CNPJ ensinou
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | **Custo de abertura corrigido** | Fomos na tabela oficial da Junta: a taxa de constituição é **R$ 268,51** (microempresa), não os **R$ 288** que a gente vinha usando desde o começo. Também confirmamos que **contrato padrão é mais barato que personalizado** (R$429,61), porque a Junta criou incentivo pra automação. **Custo total de governo: ~R$ 437** | 🟢 |
+| 2 | **Dúvida fiscal que travava o simulador** | A pergunta "aquele encargo que já vem dentro da guia do Simples conta pro cálculo que decide se a empresa paga 6% ou 15,5%?" foi **respondida pela própria Receita Federal** (Solução de Consulta 17/2021): **conta**. Isso faz o valor que o sócio precisa se pagar ser **menor** do que a gente calculava. Fechamos mais 7 números com fonte oficial | 🟢 |
+| 3 | **Meu CNPJ virou laboratório** | Analisei minhas próprias guias. Descobri que **eu pago 6%, então não fui mal enquadrado** — minha primeira suspeita estava errada e o dado me corrigiu. **Mas achei coisa melhor:** meu pró-labore foi reduzido pela metade num mês sem nota, e **quando eu voltar a faturar cheio isso me joga pra 15,5%**, custando **R$ 1.140 a mais por mês**. Ninguém me avisou | 🟢 |
+| 4 | **A tese comercial ficou mais afiada** | O erro do mercado **não é enquadrar errado na abertura**. É que esse cálculo **muda todo mês e ninguém fica olhando**. Isso não é um serviço de abertura, é de **acompanhamento** — e é exatamente onde o modelo deles (abre e some) não alcança | 🟢 |
+| 5 | Telas | Mais **9 telas** construídas e revisadas. O app já mostra o caminho inteiro: da porta de entrada até a prova de quanto o cliente economiza. **17 telas navegáveis** | 🟢 |
+| 6 | **Decisão sua** | 🕓 O plano previa **abrir 1 empresa de teste usando o meu CNPJ** — só que **o meu já existe**. Precisamos escolher: abrir uma segunda (custa taxa + certificado de verdade), usar outra pessoa, ou testar pelo caminho de **trocar de contador**, que é o meu caso real | 🕓 |
+
+**Próximo (19/07):** confirmar 3 pontos que ficaram sem fonte oficial (obrigatoriedade do certificado digital em BH, texto da nova lei do imposto de renda, e a mecânica da taxa da prefeitura); seguir com as telas de espera e de saída; decidir a cobaia do teste real.
+
+### 📱 WhatsApp (19/07)
+```
+*Update Legalizei* 🔍
+- Fomos na fonte oficial e corrigimos o custo de abertura: a taxa da Junta é R$ 268,51, não R$ 288 como a gente usava. Custo total de governo fica em ~R$ 437
+- A Receita Federal já respondeu (numa consulta oficial) a dúvida que travava nosso simulador de economia. Resultado: o valor que o sócio precisa se pagar pra cair no imposto menor é MENOR do que a gente calculava. Fechamos mais 7 números com fonte
+- Analisei as guias do MEU CNPJ (aberto pela Contabilizei). Boa notícia: eu pago 6%, então não fui mal enquadrado, minha suspeita inicial estava errada
+- Mas achei algo melhor: meu pró-labore foi cortado pela metade num mês sem nota, e quando eu voltar a faturar cheio isso me joga pro imposto de 15,5%. R$ 1.140 a mais por mês. Ninguém me avisou
+- É aí que a gente ganha: o erro do mercado não é a abertura, é que esse cálculo muda todo mês e ninguém acompanha. Nosso produto é o acompanhamento
+- Mais 9 telas prontas. O app já mostra o caminho todo, da entrada até a prova da economia
+Preciso de você: o plano era testar abrindo o MEU CNPJ, mas ele já existe. Temos que escolher outro caminho pro teste real
+```
+
 ## 📱 Versão WhatsApp (copiar/colar — grupo ampliado, sem item de sociedade)
 ```
 *Relatório semanal — Legalizei* 📊

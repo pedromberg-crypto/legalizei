@@ -9,7 +9,6 @@ const R: Resultado = {
   humano: "Comércio",
   explica: "Você vende produtos, não serviço.",
   cnae: "4713-0/02",
-  anexo: "Anexo I",
   veredito: "nao-atende",
 };
 

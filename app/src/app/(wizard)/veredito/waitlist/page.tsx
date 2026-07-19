@@ -10,7 +10,6 @@ const R: Resultado = {
   humano: "Atividade regulamentada",
   explica: "Sua área precisa de responsável técnico registrado no conselho.",
   cnae: "8650-0/02",
-  anexo: "Anexo III",
   veredito: "waitlist",
 };
 

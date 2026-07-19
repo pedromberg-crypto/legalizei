@@ -174,8 +174,28 @@ const ARQUETIPOS: {
     id: "a3",
     nome: "A3 · Número / prova",
     descricao:
-      "O número grande, sempre em R$. Dinheiro em cima da promessa (N5 teaser, N18 simulador).",
+      "O número grande, sempre em R$. Dinheiro em cima da promessa. O teaser (N5) dá a PROVA sem entregar o produto; o N17 e o N18 CUMPREM a promessa depois do pagamento.",
     telas: [
+      {
+        rota: "/teaser/swap",
+        nome: "N5 · Teaser (swap)",
+        nota: "Único modo que crava número: a economia vem da troca de código, que já é conhecida no N4. Não depende da margem.",
+      },
+      {
+        rota: "/teaser/fator-r",
+        nome: "N5 · Teaser (Fator R)",
+        nota: "Promete FAIXA começando em R$ 0. Como inclui zero, não há piso a violar — é o que desarma a `promessa-quebrada`.",
+      },
+      {
+        rota: "/teaser/servico",
+        nome: "N5 · Teaser (serviço)",
+        nota: "SEM número (UX-49). Já está na tabela mais barata: inventar economia aqui seria dívida sem lastro.",
+      },
+      {
+        rota: "/dossie/cnae-otimo",
+        nome: "N17 · CNAE ótimo",
+        nota: "A feature-âncora entregue. Atual × ótimo, o porquê é obrigatório, opt-in explícito, prova exportável.",
+      },
       {
         rota: "/simulador",
         nome: "N18 · Simulador",

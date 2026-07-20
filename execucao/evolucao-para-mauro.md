@@ -298,6 +298,20 @@ Próximo: as telas de resultado (economia de imposto) e depois rodar tudo contra
 Preciso de você: o plano era testar abrindo o MEU CNPJ, mas ele já existe. Temos que escolher outro caminho pro teste real
 ```
 
+## Semana 19/07/2026 — 2º flow: o app já tem o caminho inteiro até o pagamento
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | **Telas** | **Mais 13 telas prontas.** Agora existe o caminho completo: abertura da marca, boas-vindas, escolha "abrir × já tenho empresa", criar conta, **a conta da abertura**, contrato, pagamento, telas de espera e telas de saída pra quem a gente não atende | 🟢 |
+| 2 | **A conta da abertura** | Tela que **fecha o custo na cara do cliente antes de pedir dinheiro**: o que é grátis (nosso trabalho), o que é taxa do governo (R$ 268,51 da Junta, que não é nossa) e o que é mensalidade. Nenhum concorrente mostra isso separado | 🟢 |
+| 3 | **Contrato** | Reescrito: em vez de um bloco grande sobre cancelamento, entrou um card com **os 22 anos do escritório** — quem assina precisa saber com quem está assinando | 🟢 |
+| 4 | **Quem paga por boleto** | O cliente **entra no app e adianta a empresa toda** enquanto o boleto não cai. Só o passo final fica travado. Antes ele ficaria 3 dias sem nada pra fazer, achando que travou | 🟢 |
+| 5 | **Economia de custo** | Decidido que a **checagem do nome na Junta só roda depois do pagamento**. Como a JUCEMG não tem API (é robô), checar antes gastaria o recurso mais caro do sistema com quem talvez nunca pague | 🟢 |
+| 6 | **Pra Larissa** | Some à lista: **SLU e LTDA de sócio único são a mesma natureza?** Se forem, uma tela inteira do app não precisa existir (meu CNPJ é a evidência) | 🕓 |
+| 7 | **Pro dev** | **Validar o nome na Junta é a mesma coisa que validar a viabilidade da empresa?** A resposta muda o que dá pra liberar antes do pagamento | 🕓 |
+
+**Próximo:** a cauda do flow (revisão do dossiê, termo de início, painel de acompanhamento, assinatura no GOV.BR e o dia seguinte à empresa aberta).
+
 ## 📱 Versão WhatsApp (copiar/colar — grupo ampliado, sem item de sociedade)
 ```
 *Relatório semanal — Legalizei* 📊

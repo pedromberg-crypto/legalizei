@@ -83,7 +83,7 @@ export function TeaserView({ t, onSeguir }: { t: DadosTeaser; onSeguir?: () => v
 function Swap({ valor }: { valor: number }) {
   return (
     <>
-      <Card tint className="mb-4">
+      <Card tom="marca" className="mb-4">
         <p className="text-caption text-text-secondary mb-1">
           Você economiza por mês
         </p>
@@ -128,7 +128,7 @@ function Swap({ valor }: { valor: number }) {
 function FatorR({ teto }: { teto: number }) {
   return (
     <>
-      <Card tint className="mb-4">
+      <Card tom="marca" className="mb-4">
         <p className="text-caption text-text-secondary mb-1">
           Você pode economizar por mês
         </p>
@@ -182,7 +182,7 @@ function FatorR({ teto }: { teto: number }) {
 function Servico() {
   return (
     <>
-      <Card tint className="mb-4">
+      <Card tom="marca" className="mb-4">
         <p className="text-body font-semibold text-text-primary mb-1">
           Sua atividade já entra na tabela mais barata do Simples
         </p>

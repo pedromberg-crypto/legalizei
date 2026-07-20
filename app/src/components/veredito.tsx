@@ -414,7 +414,7 @@ const SELO: Record<SeloTipo, { fundo: string; texto: string; frase: string }> = 
   },
 };
 
-function Selo({ tipo }: { tipo: SeloTipo }) {
+export function Selo({ tipo }: { tipo: SeloTipo }) {
   const [entrou, setEntrou] = useState(false);
   useEffect(() => {
     const id = requestAnimationFrame(() => setEntrou(true));

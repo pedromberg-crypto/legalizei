@@ -96,7 +96,12 @@ export default function SocioPage() {
 
   return (
     <>
-      <TelaHeader meta="Dados do sócio" />
+      {/* "Seus dados", não "Dados do sócio" (19/07): quem abre sozinho não se
+          vê como sócio, se vê como dono — e a palavra pressupõe uma sociedade
+          que ele ainda não declarou. O título da tela já dizia "Seus dados";
+          era o meta que destoava. Casa também com `lib/passos`, que é o que o
+          cliente lê na P1/P2. */}
+      <TelaHeader meta="Seus dados" />
 
       <main className="app-main">
         <Titulo sub="É com eles que a empresa nasce na Junta. Confira com calma.">

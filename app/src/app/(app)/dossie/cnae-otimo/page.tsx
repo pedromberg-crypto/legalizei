@@ -59,7 +59,7 @@ export default function CnaeOtimoPage() {
 
         <Corpo>
           {/* ───── O NÚMERO GRANDE (A3) — sempre em R$ ───── */}
-          <Card tint>
+          <Card tom="marca">
             <p className="text-caption text-text-secondary mb-1">
               Você economiza por mês
             </p>

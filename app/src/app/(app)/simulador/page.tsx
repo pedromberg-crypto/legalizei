@@ -95,7 +95,7 @@ export default function SimuladorPage() {
         <div className="flex-1 min-h-0 overflow-y-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {/* ───── O NÚMERO GRANDE — arquétipo A3 (argumento/prova) ─────
               Sempre em R$. "Anexo III/V" nunca aparece cru. */}
-          <Card tint className="mb-4">
+          <Card tom="marca" className="mb-4">
             <p className="text-caption text-text-secondary mb-1">
               Você economiza por mês
             </p>

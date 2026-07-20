@@ -4,171 +4,27 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * CAMPOS DO DOSSIÊ (B2 · N10–N16) — vocabulário de FORM da coleta.
+ * CAMPOS DO DOSSIÊ (B2 · N10–N16) — o que ainda é LOCAL da coleta.
  * ═══════════════════════════════════════════════════════════════════════════
- * LOCAL, não DS. Regra dos 3 (design-system.md §4): só promove ao DS o que
- * aparece nas 2 farol (N4 gate · N18 simulador). Estes campos são o esqueleto
- * das 7 telas de coleta; ficam aqui até bater numa 3ª superfície fora do dossiê.
+ * ⚠️ 19/07: o esqueleto de 3 partes, o Aviso e os 2 campos básicos SAÍRAM
+ * daqui. A regra dos 3 bateu quando o N6–N9 (a travessia do dinheiro) passou
+ * a usar o mesmo esqueleto fora do dossiê, no shell do wizard. Eles moram
+ * agora em `components/ui/tela.tsx` e `components/ui/form.tsx`.
  *
- * O que ELES codificam de propósito:
- *   · O padrão de 3 partes (título fixo / corpo rola / CTA fixo) vira ESTRUTURA,
- *     não disciplina: quem usa Tela+Corpo+Rodape não consegue quebrar o layout.
- *   · Só tocam token semântico. Nenhum primitivo, nenhum hex. `bg-coral-500`
- *     não existe (atrito mecânico do globals.css).
- *   · Alvo de toque mínimo 48px (min-h-12) em tudo que se clica (UX-12).
+ * Este arquivo RE-EXPORTA os promovidos, então as 7 telas de coleta seguem
+ * importando "../campos" e nenhuma precisou ser tocada. O que sobrou aqui é
+ * o que ainda só existe no dossiê: as seleções.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-/* ─── Esqueleto de 3 partes ─────────────────────────────────────────────────
-   Uma tela do wizard/app é sempre: header meta · título FIXO · corpo ROLÁVEL ·
-   CTA FIXO. Estes 4 componentes tornam isso mecânico. */
-
-export function TelaHeader({ meta }: { meta: string }) {
-  return (
-    <header className="pt-6 pb-4">
-      <p className="text-micro text-text-tertiary">{meta}</p>
-    </header>
-  );
-}
-
-/** Título + subtítulo FIXOS (shrink-0): não rolam com o corpo. */
-export function Titulo({ children, sub }: { children: ReactNode; sub?: string }) {
-  return (
-    <div className="shrink-0">
-      <h1 className="text-h1 mb-2">{children}</h1>
-      {sub && <p className="text-body text-text-secondary mb-5">{sub}</p>}
-    </div>
-  );
-}
-
-/**
- * Corpo ROLÁVEL. min-h-0 é o que faz o 100dvh do shell funcionar em flex.
- * Scrollbar escondida no mobile.
- *
- * FADE de scroll (decisão 17/07): affordance, NÃO gate. Quando tem conteúdo
- * abaixo/acima da dobra, a ponta desbota — sinaliza "tem mais pra ver" sem
- * travar o CTA. É a alternativa ao scroll-gate (que puniria a Cida e brigaria
- * com o UX-48: densidade nunca vira obrigação). Mesmo mask das pills do N4.
- *
- * Recompute em 3 gatilhos: scroll · altura do CONTEÚDO muda (card condicional
- * revelado, ex: N11) · altura do VIEWPORT muda (troca de aparelho no /mockup
- * injeta --safe-*). O fade só aparece quando há overflow real — em tela alta
- * (15 Pro Max) some sozinho.
- */
-export function Corpo({ children }: { children: ReactNode }) {
-  const viewport = useRef<HTMLDivElement>(null);
-  const conteudo = useRef<HTMLDivElement>(null);
-  const [fade, setFade] = useState({ topo: false, base: false });
-
-  useEffect(() => {
-    const vp = viewport.current;
-    const ct = conteudo.current;
-    if (!vp || !ct) return;
-    const recompute = () => {
-      const topo = vp.scrollTop > 2;
-      const base = vp.scrollTop + vp.clientHeight < vp.scrollHeight - 2;
-      setFade((f) => (f.topo === topo && f.base === base ? f : { topo, base }));
-    };
-    recompute();
-    vp.addEventListener("scroll", recompute, { passive: true });
-    const ro = new ResizeObserver(recompute);
-    ro.observe(ct); // conteúdo cresce/encolhe (revelação condicional)
-    ro.observe(vp); // viewport muda (safe-area no /mockup)
-    return () => {
-      vp.removeEventListener("scroll", recompute);
-      ro.disconnect();
-    };
-  }, []);
-
-  // Mask REAL: só desbota a ponta que ainda tem conteúdo pra rolar.
-  const topStop = fade.topo ? "transparent 0, #000 20px" : "#000 0";
-  const baseStop = fade.base
-    ? "#000 calc(100% - 28px), transparent 100%"
-    : "#000 100%";
-  const mask = `linear-gradient(to bottom, ${topStop}, ${baseStop})`;
-
-  return (
-    <div
-      ref={viewport}
-      style={{ maskImage: mask, WebkitMaskImage: mask }}
-      className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-    >
-      <div ref={conteudo} className="flex flex-col gap-6 pb-4">
-        {children}
-      </div>
-    </div>
-  );
-}
-
-/** CTA colado no rodapé = thumb zone (design-system.md §6). Respeita safe-area. */
-export function Rodape({ children }: { children: ReactNode }) {
-  return <div className="app-footer-cta">{children}</div>;
-}
-
-/* ─── Campo rotulado ────────────────────────────────────────────────────────
-   Rótulo literal em cima (universal UX-48), dica opcional, filho embaixo. */
-
-export function Campo({
-  rotulo,
-  dica,
-  children,
-}: {
-  rotulo: string;
-  dica?: string;
-  children: ReactNode;
-}) {
-  return (
-    <div>
-      <p className="text-caption font-semibold text-text-primary">{rotulo}</p>
-      {dica && <p className="text-micro text-text-tertiary mt-0.5">{dica}</p>}
-      <div className="mt-1.5">{children}</div>
-    </div>
-  );
-}
-
-/* ─── Entrada de texto ──────────────────────────────────────────────────────
-   Erro INLINE (nunca modal), microcopy que ensina, não pune. */
-
-export function Texto({
-  valor,
-  onChange,
-  placeholder,
-  erro,
-  ok,
-  inputMode,
-  maxLength,
-}: {
-  valor: string;
-  onChange: (v: string) => void;
-  placeholder?: string;
-  erro?: string;
-  ok?: string;
-  inputMode?: "text" | "numeric" | "tel" | "email";
-  maxLength?: number;
-}) {
-  return (
-    <>
-      <input
-        value={valor}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        inputMode={inputMode}
-        maxLength={maxLength}
-        className={`w-full min-h-12 rounded-md border bg-surface-card px-3 text-body text-text-primary
-          placeholder:text-text-muted focus:outline-none
-          ${
-            erro
-              ? "border-state-danger"
-              : "border-border-hairline focus:border-border-focus"
-          }`}
-      />
-      {erro && <p className="text-micro text-state-danger-text mt-1">{erro}</p>}
-      {!erro && ok && (
-        <p className="text-micro text-state-success-text mt-1">{ok}</p>
-      )}
-    </>
-  );
-}
+export {
+  TelaHeader,
+  Titulo,
+  Corpo,
+  Rodape,
+  Aviso,
+} from "@/components/ui/tela";
+export { Campo, Texto } from "@/components/ui/form";
 
 /* ─── Seleção em botões ─────────────────────────────────────────────────────
    Botão grande com rótulo literal > dropdown pro leigo (UX-48). Linha p/ 2–3
@@ -413,44 +269,6 @@ export function Select({
           })}
         </ul>
       )}
-    </div>
-  );
-}
-
-/* ─── Aviso que EDUCA ───────────────────────────────────────────────────────
-   Bloqueio, alerta ou reforço. ⚠️ coral NUNCA é erro nem alerta (regra dura da
-   paleta): estados usam SEMPRE os tokens de estado. */
-
-type Variante = "info" | "warning" | "danger" | "success";
-
-const FUNDO: Record<Variante, string> = {
-  info: "bg-state-info-tint",
-  warning: "bg-state-warning-tint",
-  danger: "bg-state-danger-tint",
-  success: "bg-state-success-tint",
-};
-const TITULO: Record<Variante, string> = {
-  info: "text-state-info-text",
-  warning: "text-state-warning-text",
-  danger: "text-state-danger-text",
-  success: "text-state-success-text",
-};
-
-export function Aviso({
-  variante = "info",
-  titulo,
-  children,
-}: {
-  variante?: Variante;
-  titulo: string;
-  children: ReactNode;
-}) {
-  return (
-    <div className={`rounded-md p-4 ${FUNDO[variante]}`}>
-      <p className={`text-body font-semibold mb-1 ${TITULO[variante]}`}>
-        {titulo}
-      </p>
-      <p className="text-caption text-text-secondary">{children}</p>
     </div>
   );
 }

@@ -45,7 +45,10 @@ export default function SociosPage() {
 
   return (
     <>
-      <TelaHeader meta="Sociedade" />
+      {/* Mesmo alinhamento do N10: o cliente lê "Sócios" na lista de passos
+          (P1/P2), então é isso que a tela precisa dizer. Vocabulário diferente
+          pro mesmo passo faz ele reprocessar onde está. */}
+      <TelaHeader meta="Sócios" />
 
       <main className="app-main">
         <Titulo sub="Quem entra como dono junto com você. Dá pra ser só você.">

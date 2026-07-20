@@ -93,12 +93,44 @@ const BARRA_H: Record<Topo, number> = { island: 54, notch: 44, barra: 20 };
  * lateral (clicar-segurar-arrastar). Preparado pra RECEBER as telas — hoje só
  * as 2 farol existem como rota; o resto entra conforme a gente constrói.
  */
+interface Tela {
+  rota: string;
+  nome: string;
+  nota: string;
+  /** Tela de fundo escuro: o cromo do iOS inverte pra branco. Só a splash. */
+  statusClaro?: boolean;
+}
+
 const ARQUETIPOS: {
   id: string;
   nome: string;
   descricao: string;
-  telas: { rota: string; nome: string; nota: string }[];
+  telas: Tela[];
 }[] = [
+  {
+    id: "entrada",
+    nome: "Entrada · N1–N3",
+    descricao:
+      "As 3 primeiras telas, antes de qualquer pergunta. ⚠️ NÃO são um arquétipo: não mapeiam em nenhum de A1–A10 do design-system.md, porque não perguntam, não julgam e não provam nada. Ficam primeiro na prancheta porque são primeiras no flow — a ordem aqui é a ordem que o lead vê.",
+    telas: [
+      {
+        rota: "/splash",
+        nome: "N1 · Splash",
+        nota: "O único momento em que o coral cobre a tela toda. Logo negativa, check em wipe (mesmo gesto que o confete do N4 ecoa). 🚧 Não auto-navega: numa prancheta, tela que se substitui sozinha some.",
+        statusClaro: true,
+      },
+      {
+        rota: "/welcome",
+        nome: "N2 · Welcome",
+        nota: "3 teses da marca na ordem que desarma a desconfiança: gente de verdade → a dor sem contabilês → preço sem susto. Pulável desde o slide 1 (o `reta-direto` odeia onboarding que prende).",
+      },
+      {
+        rota: "/entrada",
+        nome: "N3 · Fork de 3 rotas",
+        nota: 'A palavra "migrar" NÃO aparece (UX-55): é jargão e "trocar de contador" excluiria quem não tem contador, que é o melhor cliente do flow #2. Pergunta pelo fato, nunca pela operação. Login é link, não botão.',
+      },
+    ],
+  },
   {
     id: "a1",
     nome: "A1 · Pergunta",
@@ -204,24 +236,93 @@ const ARQUETIPOS: {
     ],
   },
   {
+    id: "dinheiro",
+    nome: "💰 Dinheiro · N6–N9",
+    descricao:
+      "A travessia da fronteira: as 4 telas entre o teaser (N5) e o dossiê (N10). Agrupadas pela POSIÇÃO no flow, não por arquétipo — cada uma puxa um diferente (N6 = A1 pergunta · N7 = A5 recap · N8 = A6 aceite · N9 = A1) e o que importa aqui é ver a sequência inteira lado a lado, porque é onde a ordem carrega o argumento. A casa (shell do app) nasce depois do N9; até aqui é tudo wizard.",
+    telas: [
+      {
+        rota: "/conta",
+        nome: "N6 · Criar conta",
+        nota: "Sai com credencial funcionando. Coorte é dado puro e pulável, nunca bifurca trilha (UX-48). 🔴 O aviso do GOV.BR foi REMOVIDO em 19/07 (jargão + sem ação + contradizia \"a parte chata é com a gente\"); a UX-29 migra pro painel N21 como tarefa acionável.",
+      },
+      {
+        rota: "/plano",
+        nome: "N7 · A conta da abertura",
+        nota: 'Fecha a conta na cara do cliente antes de pedir dinheiro (UX-33). ✂️ Enxugada 19/07: hoje × todo mês SUBIU pro topo (é a resposta), os 3 baldes desceram pra justificativa. Cortados recap, aviso do "grátis" e expander redundante: 8 blocos → 5.',
+      },
+      {
+        rota: "/contrato",
+        nome: "N8 · Aceite do contrato",
+        nota: "Metade do T18: só o contrato de serviço. REVERSÍVEL, CDC art.49 limpo, então a copy não assusta. O termo irreversível desceu pro N20. Cancelamento aberto na tela: conteúdo legal nunca vai pra expander.",
+      },
+      {
+        rota: "/pagamento",
+        nome: "N9 · Pagamento",
+        nota: 'Mesmo CPF, dois usos: cobrança + elegibilidade. Situação irregular NÃO é cobrada (persona `cpf-irregular`) e não é "cartão recusado". Boleto fica, fora do happy path: entra no app e adianta tudo.',
+      },
+    ],
+  },
+  {
     id: "a7",
     nome: "A7 · Espera",
-    descricao: "Loading que EXPLICA o que está acontecendo, não spinner mudo.",
-    telas: [],
+    descricao:
+      "Loading que EXPLICA o que está acontecendo, não spinner mudo. Regra que manda nas duas: espera com tarefa não é espera, é andamento — por isso as duas abrem com o que DÁ pra fazer, nunca com o que está parado. (A espera de órgão do B4 não mora aqui: virou a timeline do painel N21, no UX-18.)",
+    telas: [
+      {
+        rota: "/aguardando",
+        nome: "P2 · Aguardando o boleto",
+        nota: 'Existe porque o boleto ficou (decisão do Pedro). Abre com o dossiê liberado, não com bloqueio: "sem sensação de travou" é regra da spec T19. Dunning com o gancho da economia (UX-45), não lembrete seco. Persona `knife`.',
+      },
+      {
+        rota: "/retomar",
+        nome: "P1 · Retomar de onde parou",
+        nota: "Retomar ≠ restaurar (UX-46): a `cida` volta sem contexto, então responde já fiz / falta / e agora — com UM passo só, porque a lista inteira recria a paralisia. UX-23: revalida a estimativa, que envelhece na virada do ano.",
+      },
+    ],
   },
   {
     id: "a9",
     nome: "A9 · Saída graciosa",
     descricao:
-      "Barra + explica + captura + roteia. 5 saídas usam 1 template só (waitlist, comercial, exterior, 3+ sócios).",
-    telas: [],
+      'Barra + explica + captura + roteia. Bloqueio que EDUCA, não que pune: ninguém sai achando que fez algo errado, e nenhuma saída termina em beco. Das 5 terminais, o login é rota feliz (vive em "Fora do flow") e as duas do CNAE (🟡 waitlist · 🔴 comercial) estão no A2, porque nascem do veredito. Aqui ficam as duas da triagem do N4 — que barram ANTES do dinheiro (UX-21).',
+    telas: [
+      {
+        rota: "/saida/exterior",
+        nome: "Sócio no exterior",
+        nota: 'UX-07: "a empresa existe, mas fora do Simples". A LC 123 art. 17 barra a opção pelo Simples, não a abertura — confundir as duas daria uma notícia muito pior que a verdadeira. Rota humana. 🟡 sem cotar Lucro Presumido (UX-42 depende do Mauro).',
+      },
+      {
+        rota: "/saida/socios",
+        nome: "3 ou mais sócios",
+        nota: 'UX-09: "limite do PRODUTO, não da lei" — e a copy diz isso com todas as letras. Fingir que é regra externa seria mentir pra parecer menos limitado; assumir que o limite é nosso custa orgulho e compra confiança. Sendo nosso, pode cair (sem prazo cravado).',
+      },
+    ],
+  },
+  {
+    id: "fora",
+    nome: "Fora do flow de abertura",
+    descricao:
+      "Telas SEM número N, e a ausência é a informação: a numeração N1–N25 cobre quem está abrindo empresa. Estas ficam do lado de fora. Aqui também mora o portal (pós-abertura) quando ele existir.",
+    telas: [
+      {
+        rota: "/login",
+        nome: "Login",
+        nota: "A saída terminal A1: diverge no N3 (\"já sou cliente\"), sai da abertura e não reconverge. Não usa o template A9 — aquele é pra recusa, e isto é rota feliz de quem volta pra casa. Layout de 2 painéis, único no produto.",
+        statusClaro: true,
+      },
+    ],
   },
 ];
 
 export default function MockupPage() {
   const [nonce, setNonce] = useState(0);
   const [apId, setApId] = useState(APARELHOS[0].id);
-  const [escala, setEscala] = useState(1);
+  // 75% é o default porque a prancheta cresceu: com 8 grupos e 26 telas, 100%
+  // obriga a rolar pra ver uma esteira inteira. O zoom é da MOLDURA, não do
+  // conteúdo (o iframe segue renderizando em 430pt), então nada do que o Pedro
+  // revisa muda de tamanho relativo — só cabe mais na mesa.
+  const [escala, setEscala] = useState(0.75);
   const [insets, setInsets] = useState(true);
 
   const ap = APARELHOS.find((a) => a.id === apId) ?? APARELHOS[0];
@@ -235,9 +336,9 @@ export default function MockupPage() {
           </p>
           <h1 className="text-h1 text-text-primary">Telas por arquétipo</h1>
           <p className="text-body text-text-secondary mt-2 max-w-[60ch]">
-            Cada arquétipo é uma esteira. Clique, segure e arraste pra passar
-            tela por tela. As farol N4 e N18 já estão aqui; o resto entra
-            conforme construímos.
+            Cada grupo é uma esteira. Clique, segure e arraste pra passar tela
+            por tela. Os grupos estão na ordem do flow: entrada (N1–N3) primeiro,
+            depois por arquétipo. Faltam A7 (espera) e A9 (saída graciosa).
           </p>
         </header>
 
@@ -406,7 +507,7 @@ function PhoneFigure({
   escala,
   insets,
   nonce,
-}: EsteiraProps & { t: { rota: string; nome: string; nota: string } }) {
+}: EsteiraProps & { t: Tela }) {
   return (
     <figure className="flex shrink-0 flex-col items-center gap-4">
       {/* Duas caixas (idêntico ao que era): a de fora reserva o rastro já
@@ -427,7 +528,12 @@ function PhoneFigure({
             transformOrigin: "top left",
           }}
         >
-          <Phone src={`${t.rota}?v=${nonce}`} ap={ap} insets={insets} />
+          <Phone
+            src={`${t.rota}?v=${nonce}`}
+            ap={ap}
+            insets={insets}
+            statusClaro={t.statusClaro}
+          />
         </div>
       </div>
 
@@ -447,10 +553,12 @@ function Phone({
   src,
   ap,
   insets,
+  statusClaro = false,
 }: {
   src: string;
   ap: Aparelho;
   insets: boolean;
+  statusClaro?: boolean;
 }) {
   const ref = useRef<HTMLIFrameElement>(null);
 
@@ -529,7 +637,7 @@ function Phone({
         />
 
         {/* Cromo do iOS. pointer-events-none em tudo: a tela continua clicável. */}
-        <BarraDeStatus ap={ap} />
+        <BarraDeStatus ap={ap} claro={statusClaro} />
         {ap.topo === "island" && <Island />}
         {ap.topo === "notch" && <Notch />}
         {ap.safeBottom > 0 && (
@@ -547,18 +655,20 @@ function Phone({
  * motivo de a tela não começar em y=0. Fixo em 9:41 de propósito: relógio vivo
  * é ruído numa prancheta, e 9:41 é a convenção de mockup da Apple.
  *
- * 🚧 Só na variante escura. A hora fica clara quando o fundo é escuro (a
- * splash coral), mas essa tela ainda não existe: construir a variante agora
- * seria abstração especulativa (design-system.md §6).
+ * ✅ 19/07 — a variante CLARA nasceu junto com a tela que a exigia (N1 splash,
+ * coral cheio). Era o que o comentário anterior deixava reservado: não se
+ * constrói variante antes da tela existir (design-system.md §6), mas quando a
+ * tela chega, o cromo tem que acompanhar — senão a prancheta mostra um relógio
+ * preto ilegível sobre coral e o Pedro revisa um artefato que não existe.
  */
-function BarraDeStatus({ ap }: { ap: Aparelho }) {
+function BarraDeStatus({ ap, claro = false }: { ap: Aparelho; claro?: boolean }) {
   const h = BARRA_H[ap.topo];
   const lado = ap.topo === "barra" ? 12 : ap.w >= 430 ? 24 : 21;
 
   return (
     <div
-      className="pointer-events-none absolute inset-x-0 top-0 z-10 flex
-                 items-center justify-between text-black"
+      className={`pointer-events-none absolute inset-x-0 top-0 z-10 flex
+                 items-center justify-between ${claro ? "text-white" : "text-black"}`}
       style={{ height: h, paddingLeft: lado, paddingRight: lado }}
     >
       <span

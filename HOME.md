@@ -9,8 +9,18 @@ data: 2026-07-16
 > Status: ✅ negócio fechado com Mauro (2026-07-07) · V0/imersão em curso.
 
 ## 📍 Agora (torre de controle — mantida via `/fechar`)
-> **Última atualização:** 2026-07-19 (A2 lapidado + captura · A3 construído · pesquisa fiscal fechou 8 pendências · cobaia analisada) · Janela nova? rode `/boot`.
-> **Fase:** **construção das telas EM CURSO — A1, A2 e A3 prontos (17 telas no `/mockup`); faltam A7 Espera e A9 Saída.**
+> **Última atualização:** 2026-07-19 (5º flow: **13 telas novas** — N1–N3, N6–N9, login, A7 e A9 · prancheta SEM grupo vazio) · Janela nova? rode `/boot`.
+> **Fase:** **o wizard inteiro (N1–N9) existe em código. 26 telas no `/mockup`, 8 grupos, nenhum vazio.** Falta a cauda: N19–N25 (revisão, termo irreversível, painel, GOV.BR, dia-2).
+>
+> 🏗️ **O QUE O 5º FLOW FEZ (todas revisadas pelo Pedro em tempo real)** → [[2026-07-19-telas-n1-n9-espera-e-saida]]
+> **Entrada N1–N3** (splash · welcome · fork) — colhidas do protótipo, **sem a palavra "migrar"** (UX-55: excluiria quem não tem contador, o melhor cliente do flow #2). **💰 Dinheiro N6–N9** (conta · a conta da abertura · aceite · pagamento) — a travessia inteira. **A7 Espera** (P1 retomar · P2 boleto) e **A9 Saída graciosa** (exterior · 3+ sócios). **Login** ganhou casa: é a saída terminal A1, sem número N, no grupo "Fora do flow".
+> **Infra:** `lib/passos.ts` · `lista-passos.tsx` · `lottie.tsx` · `logo.tsx` (3 variantes) · `marcas-sociais.tsx` · **`ui/tela.tsx` + `ui/form.tsx` promovidos do dossiê** (regra dos 3) · `Card` com `tom`.
+>
+> 🔍 **A REVIEW DO PEDRO PEGOU 5 BUGS MEUS, e o padrão é sempre o mesmo: número que eu inventei em dois lugares.** (1) **"5 de 9" × "3 de 6"** nas duas telas do A7, lado a lado → virou `lib/passos.ts`, e **são 10 passos** (9 sem CNAE ótimo). (2) **O contador mentia no fim**: parava no N18, então quem paga com cartão chegava em "9 de 9" e ainda tinha revisar, assinar termo e assinar no GOV.BR. (3) **"O próximo passo é só esse"** lia como "só falta esse", com 6 pela frente. (4) **"R$1.518 → R$1.621" como boa notícia** — salário mínimo não cai. (5) **"R$ 10 a 20 mil" foi lido como DEZ REAIS** — só as faixas do meio abreviam o "mil".
+>
+> 🎯 **3 decisões de produto que ele destravou:** **N7** — o maior número da tela era o R$463,51 (soma artificial de repasse + mensalidade); virou **"Grátis"** em verde, e o total desceu pro rodapé. **N8** — o cancelamento tinha o maior bloco da tela do SIM; virou 2 bullets, com a fidelidade dita como **consequência do benefício**, e o card azul defensivo deu lugar aos **22 anos do escritório**. **N16** — **"digitar é grátis, checar é caro"**: o nome é salvo, a consulta na JUCEMG roda quando o pagamento cai (nenhum RPA por quem não pagou).
+>
+> 🚧 **10 DÍVIDAS ABERTAS, e 3 são a mesma classe de risco:** UX-29 espera o **N21** · camada 2 do cancelamento espera o **N20** · gancho por modo espera o **CRM**. **São telas não construídas carregando conteúdo que tiramos de outras** — se o N20 nascer sem a camada 2, a redução do N8 vira omissão. Só a **UX-23 dá pra fechar hoje** (o N18 existe). Fora essas: validação nome≠empresa na junta (dev/Izabela) · faixas sem âncora fiscal · endereço fiscal fora da conta do N7 · `govbr-bronze` desatualizada · N12 re-pergunta o que o N4 já sabe · ⚠️ **`next build` corrompe o `.next` do dev server** (404 em tudo — verificar só com `tsc`+`eslint`).
 >
 > ⚠️ **Erro de data corrigido:** o marco [[2026-07-17-telas-a1-a2-construidas]] e comentários de código levam "17/07", mas foram escritos em **19/07** (usei a data do último commit). Conteúdo vale, data não.
 >

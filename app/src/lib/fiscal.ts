@@ -30,6 +30,28 @@ export const FISCAL = {
   ANEXO_V: 0.155,
 } as const;
 
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * O QUE CUSTA ABRIR — os números da "conta da abertura" (N7 · UX-33).
+ * ═══════════════════════════════════════════════════════════════════════════
+ * ⚠️ Cada linha carrega o próprio grau de confiança, e a UI PRECISA respeitar
+ * isso. Misturar número ratificado com placeholder na mesma tela, sem marcar,
+ * é exatamente o pecado anti-guru que o vault proíbe.
+ */
+export const CUSTOS = {
+  /** 🟢 RATIFICADO 19/07 em fonte primária. O "~R$288" que a gente repetia
+   *  desde 09/07 estava errado — era o número mais citado e menos verificado
+   *  do projeto. Repasse ao Estado: não é margem nossa e não é reembolsável. */
+  DAE_JUCEMG: 268.51,
+  /** 🔴 FAKE. Placeholder de benchmark (plano Padrão da Contabilizei), NÃO o
+   *  nosso preço. Travado como deferido até haver custo unitário real (DB+API).
+   *  Não reabrir sem o Pedro puxar. Aparece na tela com marca de provisório. */
+  MENSALIDADE: 195,
+  /** 🟢 Decisão D1 (14/07): não se cobra o trabalho de abrir. A receita é a
+   *  mensalidade. "Grátis" = honorário zero, NUNCA "governo zero". */
+  HONORARIO_ABERTURA: 0,
+} as const;
+
 export const FAIXA_MEDIA: Record<string, number> = {
   "ate 10k": 7000,
   "10-20k": 15000,
@@ -66,10 +88,19 @@ export function custoProLabore(proLabore: number, cltRemun = 0) {
   };
 }
 
-export function brl(v: number): string {
+/**
+ * Sem centavos por padrão: o número grande do N5/N18 é estimativa, e centavo em
+ * estimativa finge uma precisão que não existe.
+ *
+ * `centavos: true` só onde o valor é EXATO e o cliente vai conferir contra a
+ * guia — a taxa da JUCEMG no N7. Ali arredondar seria mentir sobre um repasse
+ * de governo, que é justamente o número que precisa bater até o último dígito.
+ */
+export function brl(v: number, centavos = false): string {
   return v.toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL",
-    maximumFractionDigits: 0,
+    minimumFractionDigits: centavos ? 2 : 0,
+    maximumFractionDigits: centavos ? 2 : 0,
   });
 }

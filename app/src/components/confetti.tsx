@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { carregarRuntime, type LottieAnim } from "@/components/lottie";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -12,9 +13,14 @@ import { useEffect, useRef } from "react";
  * o CTA — o pai provê o contexto `relative`. 180px = o tamanho do protótipo: o
  * botão encolhe até virar um ponto e a lottie "assume o círculo" ali no rodapé.
  *
- * Zero-dependência: carrega o runtime lottie-web (UMD) de /lottie/ SOB DEMANDA
- * (a mesma abordagem "driver manual" do protótipo). Evita npm install e reusa o
- * asset recolorido. O produto é React Native (lá vira lottie-react-native).
+ * Zero-dependência: o runtime lottie-web (UMD) vem de `components/lottie.tsx`,
+ * carregado sob demanda. Evita npm install e reusa o asset recolorido. O
+ * produto é React Native (lá vira lottie-react-native).
+ *
+ * Aqui NÃO usa o `<Lottie>` de lá de propósito: aquele é player de LOOP com
+ * driver manual de frame (pra não congelar offscreen). Este é um burst único
+ * com autoplay, e precisa tocar na velocidade real pra o timing casar com o
+ * botão encolhendo. Mesmo runtime, comportamentos diferentes.
  *
  * Avança em `avancarMs` (~pico do burst, não os 3s inteiros — snappy, igual ao
  * protótipo que navegava em 1750ms); o confete segue tocando até desmontar.
@@ -22,50 +28,6 @@ import { useEffect, useRef } from "react";
  * Guarda anti-trava: se o asset falhar, onDone dispara mesmo assim.
  * ═══════════════════════════════════════════════════════════════════════════
  */
-
-interface LottieAnim {
-  destroy(): void;
-}
-interface LottieRuntime {
-  loadAnimation(cfg: {
-    container: Element;
-    renderer: "svg";
-    loop: boolean;
-    autoplay: boolean;
-    path: string;
-  }): LottieAnim;
-}
-
-function getRuntime(): LottieRuntime | undefined {
-  return (window as unknown as { lottie?: LottieRuntime }).lottie;
-}
-
-/** Carrega o UMD uma única vez; chamadas seguintes reusam window.lottie. */
-function carregarRuntime(): Promise<LottieRuntime> {
-  const existente = getRuntime();
-  if (existente) return Promise.resolve(existente);
-  return new Promise((resolve, reject) => {
-    const id = "lottie-umd";
-    const aoCarregar = () => {
-      const rt = getRuntime();
-      if (rt) resolve(rt);
-      else reject(new Error("lottie não inicializou"));
-    };
-    const jaNoDom = document.getElementById(id) as HTMLScriptElement | null;
-    if (jaNoDom) {
-      jaNoDom.addEventListener("load", aoCarregar);
-      jaNoDom.addEventListener("error", () => reject(new Error("lottie falhou")));
-      return;
-    }
-    const s = document.createElement("script");
-    s.id = id;
-    s.src = "/lottie/lottie.min.js";
-    s.async = true;
-    s.onload = aoCarregar;
-    s.onerror = () => reject(new Error("lottie falhou"));
-    document.head.appendChild(s);
-  });
-}
 
 export function Confetti({
   onDone,

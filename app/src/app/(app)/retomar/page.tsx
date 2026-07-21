@@ -99,11 +99,10 @@ export default function RetomarPage() {
             />
           </div>
 
-          {/* UX-38: mesma frase do P2. Repetida de propósito — quem pausa é
-              exatamente quem tem medo de ter pago à toa. */}
+          {/* UX-38: meia-linha (R1). O ângulo daqui é "pagamento registrado",
+              que é o medo de quem pausou. O dono forte da idempotência é o N9. */}
           <p className="text-micro text-text-tertiary">
-            Seu progresso está salvo e o seu pagamento está registrado. A gente
-            não cobra de novo nem abre a mesma empresa duas vezes.
+            Seu pagamento está registrado. Nada é cobrado nem aberto duas vezes.
           </p>
         </Corpo>
 

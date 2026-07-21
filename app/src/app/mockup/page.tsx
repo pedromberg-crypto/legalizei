@@ -90,8 +90,8 @@ const BARRA_H: Record<Topo, number> = { island: 54, notch: 44, barra: 20 };
 /**
  * Telas AGRUPADAS POR ARQUÉTIPO. Cada arquétipo é uma esteira horizontal: as
  * telas dele aparecem lado a lado e, quando passam da largura, viram scroll
- * lateral (clicar-segurar-arrastar). Preparado pra RECEBER as telas — hoje só
- * as 2 farol existem como rota; o resto entra conforme a gente constrói.
+ * lateral (clicar-segurar-arrastar). O flow de abertura inteiro (N1 → empresa
+ * ativa) já existe como rota; falta só o flow #2 (migração).
  */
 interface Tela {
   rota: string;
@@ -300,6 +300,52 @@ const ARQUETIPOS: {
     ],
   },
   {
+    id: "b4",
+    nome: "B4 · Constituição",
+    descricao:
+      "Depois do pagamento e do dossiê, a reta final: revisar, autorizar o irreversível, e acompanhar a máquina rodando. O gargalo aqui é a JUCEMG, não o cliente, então o padrão muda de 'pergunta' pra 'andamento visível' (A8). A recusa de órgão é o 4º estado do painel, não uma tela à parte.",
+    telas: [
+      {
+        rota: "/revisar",
+        nome: "N19 · Revisar",
+        nota: "Recap read-only de tudo antes do irreversível. Cada bloco tem 'ajustar' que volta pro passo. Último ponto em que corrigir é de graça. Números com carimbo de estimativa; a taxa da Junta (R$ 268,51) é a única quantia dura.",
+      },
+      {
+        rota: "/termo",
+        nome: "N20 · Termo irreversível",
+        nota: "A outra metade do T18 racha: aqui é o commit. 'A taxa do governo não volta' em 1 linha, sem letra miúda. As 4 camadas do cancelamento abertas na tela (conteúdo legal nunca vai pra expander). Botão único, trava até o aceite.",
+      },
+      {
+        rota: "/painel",
+        nome: "N21 · Painel (andamento)",
+        nota: "O coração do B4. Timeline de 9 etapas com 4 estados (feito/girando/a fazer/recusa). Faixa de idempotência (UX-38: 'não cobramos de novo'). Previsão honesta. Zero jargão na frente, órgão como recibo.",
+      },
+      {
+        rota: "/painel/recusa",
+        nome: "REC · Órgão recusa",
+        nota: "O 4º estado (UX-40): a Junta reprovou o nome apesar da prévia (persona `erro-orgao` do motor). Vermelho + 'precisa de você' + a ação, recuperação DENTRO do pipeline. Aqui o danger é legítimo: um órgão externo parou a fila mesmo.",
+      },
+      {
+        rota: "/assinatura",
+        nome: "N22 · Assinatura dos sócios",
+        nota: "GOV.BR + e-CAC. Dobra o check de nível (N23: bronze→upgrade inline). Consenso multi-sócio (UX-44): o 2º sócio aprova custo e assina, o dono nunca clica por ele. Procuração e-CAC explicada em 1 linha (UX-31). Mock na sociedade de 2.",
+      },
+    ],
+  },
+  {
+    id: "dia2",
+    nome: "Aterrissagem · dia-2",
+    descricao:
+      "O flow NÃO acaba no troféu. 'Empresa ativa' é ponte, não linha de chegada (mesma doutrina do Destino em lista-passos). Pro leigo que não sabe operar, esta tela vira o ✅ em 'e agora, faça isto'.",
+    telas: [
+      {
+        rota: "/ativa",
+        nome: "N24 · Empresa ativa",
+        nota: "CNPJ ativo + 3 primeiros passos acionáveis (1ª nota, 1º DAS, certificado — UX-19). O loop estimativa→realidade (UX-41): daqui a uns meses a gente confere o Fator R real. WhatsApp fixo. Celebração curta: o produto COMEÇA aqui.",
+      },
+    ],
+  },
+  {
     id: "fora",
     nome: "Fora do flow de abertura",
     descricao:
@@ -318,8 +364,8 @@ const ARQUETIPOS: {
 export default function MockupPage() {
   const [nonce, setNonce] = useState(0);
   const [apId, setApId] = useState(APARELHOS[0].id);
-  // 75% é o default porque a prancheta cresceu: com 8 grupos e 26 telas, 100%
-  // obriga a rolar pra ver uma esteira inteira. O zoom é da MOLDURA, não do
+  // 75% é o default porque a prancheta cresceu: com 10 grupos e o flow inteiro,
+  // 100% obriga a rolar pra ver uma esteira inteira. O zoom é da MOLDURA, não do
   // conteúdo (o iframe segue renderizando em 430pt), então nada do que o Pedro
   // revisa muda de tamanho relativo — só cabe mais na mesa.
   const [escala, setEscala] = useState(0.75);
@@ -338,7 +384,8 @@ export default function MockupPage() {
           <p className="text-body text-text-secondary mt-2 max-w-[60ch]">
             Cada grupo é uma esteira. Clique, segure e arraste pra passar tela
             por tela. Os grupos estão na ordem do flow: entrada (N1–N3) primeiro,
-            depois por arquétipo. Faltam A7 (espera) e A9 (saída graciosa).
+            depois por arquétipo. O flow inteiro está aqui, da splash à empresa
+            ativa. Falta só construir o flow #2 (migração).
           </p>
         </header>
 

@@ -93,7 +93,7 @@ function Swap({ valor }: { valor: number }) {
           {brl(valor * 12)} por ano
         </p>
         <p className="text-micro text-text-tertiary mt-3">
-          Estimativa. A gente confirma com o contador antes de registrar.
+          É uma estimativa. O número exato a gente fecha com o contador.
         </p>
       </Card>
 

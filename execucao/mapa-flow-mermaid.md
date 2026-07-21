@@ -56,12 +56,12 @@ flowchart TD
   P1["P1 · Retomar de onde parou"]:::espera
   SE["Saída · exterior<br/>LC 123 art.17"]:::saida
   SS["Saída · 3+ sócios<br/>limite do produto"]:::saida
-  N19["N19 · Revisar dossiê"]:::todo
-  N20["N20 · Termo irreversível"]:::todo
-  N21["N21 · Painel / timeline órgãos"]:::todo
-  REC["Órgão recusa<br/>'precisa de você'"]:::todo
-  N22["N22 · Assinatura dos sócios"]:::todo
-  N23{"N23 · GOV.BR<br/>bronze → upgrade"}:::todo
+  N19["N19 · Revisar dossiê"]
+  N20["N20 · Termo irreversível"]
+  N21["N21 · Painel / timeline órgãos"]
+  REC["REC · Órgão recusa<br/>'precisa de você'"]
+  N22["N22 · Assinatura dos sócios"]
+  N23{"GOV.BR nível<br/>bronze→upgrade"}:::inline
   ATIVA(["✅ Empresa ativa"]):::feliz
 
   N1 --> N2
@@ -154,13 +154,12 @@ flowchart TD
 | 29 | P1 · Retomar de onde parou | ✅ | ⚪ | UX-23 dá pra fechar (N18 existe) |
 | 30 | Saída · exterior · LC 123 art.17 | ✅ | 🟢 | UX-42 Lucro Presumido (Mauro); debate de tom |
 | 31 | Saída · 3+ sócios · limite do produto | ✅ | 🟢 | Debate 3+→waitlist |
-| 32 | N19 · Revisar dossiê | 🚧 | 🟡 | Construir |
-| 33 | N20 · Termo irreversível | 🚧 | 🟡 | Construir + cancelamento camada 2 + rachadura T18 (Larissa/Mauro) |
-| 34 | N21 · Painel / timeline órgãos | 🚧 | 🟡 | Construir (recebe UX-29 do N6 + gancho por modo/CRM) |
-| 35 | Órgão recusa · 'precisa de você' | 🚧 | 🟡 | Construir (B6 testado no motor) |
-| 36 | N22 · Assinatura dos sócios | 🚧 | 🟡 | Construir + convite 2º sócio (B5) |
-| 37 | N23 · GOV.BR · bronze → upgrade | 🚧 | 🟡 | Construir (B7 testado no motor) |
-| 38 | ✅ Empresa ativa | 🚧 | 🟢 | Construir dia-2 (N24-25). TFLF BH R$161,36 = fato duro |
+| 32 | N19 · Revisar dossiê | ✅ | ⚪ | Recap read-only; carry-forward dos passos = estado do wizard (dev) |
+| 33 | N20 · Termo irreversível | ✅ | 🟡 | Redação jurídica do termo + 4 camadas de cancelamento (Mauro/Larissa); racha T18 |
+| 34 | N21 · Painel / timeline órgãos | ✅ | 🟡 | Timeline real depende do pipeline do dev (RPA/órgãos); prazo ~8d é placeholder; UX-29 do N6 + gancho por modo/CRM |
+| 35 | REC · Órgão recusa · 'precisa de você' | ✅ | ⚪ | B6 testado no motor (nome recusado); faltam DAE-volta e doc-pendência como casos |
+| 36 | N22 · Assinatura dos sócios | ✅ | 🟡 | GOV.BR/e-CAC deep-link (dev); convite 2º sócio (B5) + arquitetura multi-usuário (Pedro) |
+| 37 | ✅ Empresa ativa | ✅ | 🟡 | Dia-2 (1ª nota/DAS/certificado) é UI mock; loop UX-41 vive no portal; TFLF BH R$161,36 = fato duro |
 <!-- FLOW:TABELA:FIM -->
 
 ## 🚪 Saídas terminais (5) — sai do flow, não volta
@@ -187,6 +186,7 @@ flowchart TD
 > Cada linha = um estado estrutural do mapa. Snapshots completos em `flow/versoes/` (`.json` p/ diff + `.mmd` legível). Mais recente no topo.
 
 <!-- FLOW:VERSOES:INI -->
+- **v3** · 2026-07-21 · renomeou REC "Órgão recusa 'precisa de você'"→"REC · Órgão recusa 'precisa de você'"; N23 "N23 · GOV.BR bronze → upgrade"→"GOV.BR nível bronze→upgrade" · status N19 planejada→construida; N20 planejada→construida; N21 planejada→construida; REC planejada→construida; N22 planejada→construida; N23 planejada→construida; ATIVA planejada→construida · validação N19 pendente→ux; REC pendente→ux; ATIVA oficial→pendente · falta-validar em N19,N20,N21,REC,N22,N23,ATIVA
 - **v2** · 2026-07-21 · falta-validar em N14
 - **v1** · 2026-07-21 · versão inicial (40 nós, 44 conexões)
 (o gerador preenche aqui)

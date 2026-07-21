@@ -124,10 +124,10 @@ export default function AguardandoPage() {
             <Button variant="ghost">Prefiro pagar por Pix e adiantar</Button>
           </div>
 
-          {/* UX-38: a frase que desarma quem pagou e fechou o app. */}
+          {/* UX-38: meia-linha (R1). O N9 é o dono forte da idempotência; aqui
+              é eco curto, com o ângulo do boleto (pode ter caído sem ele saber). */}
           <p className="text-micro text-text-tertiary">
-            Seu progresso está salvo. A gente não cobra de novo nem abre a mesma
-            empresa duas vezes, mesmo que você já tenha pago e não saiba.
+            Seu progresso está salvo. Se você já pagou, não cobramos de novo.
           </p>
         </Corpo>
 

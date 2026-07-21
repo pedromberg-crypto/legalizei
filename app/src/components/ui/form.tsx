@@ -82,3 +82,57 @@ export function Texto({
     </>
   );
 }
+
+/* ─── Checkbox de aceite — promovido ao DS (K4, 21/07) ─────────────────────
+   Antes cada tela de aceite tinha o seu: o N8 usava `<input>` nativo (accent
+   coral), o N20 um botão custom com check verde. São telas-IRMÃS (as duas de
+   aceite do flow) e o usuário vê as duas — dois padrões pro mesmo gesto é
+   incoerência de DS. Um só, usado nos dois.
+
+   Visual custom + input nativo escondido (`sr-only`) = semântica de verdade
+   (teclado, leitor de tela) com controle de estilo. A caixa inteira é o alvo
+   (o <label> embrulha tudo). Marcado = fill de AÇÃO (coral-600), não estado-
+   sucesso: aceitar é um ATO, não um "deu certo" — verde é token de estado, e
+   gastá-lo aqui enfraqueceria o verde onde ele importa (CNPJ ativo). */
+export function Checkbox({
+  checked,
+  onChange,
+  children,
+}: {
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  children: ReactNode;
+}) {
+  return (
+    <label className="flex cursor-pointer items-start gap-3 rounded-md border border-border-hairline bg-surface-card p-3">
+      <span
+        className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 transition-colors ${
+          checked
+            ? "border-action-primary bg-action-primary"
+            : "border-border-strong bg-surface-card"
+        }`}
+        aria-hidden
+      >
+        {checked && (
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M4 12.5 9.5 18 20 6"
+              stroke="#fff"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        )}
+      </span>
+      <span className="text-caption text-text-secondary">{children}</span>
+      {/* Input real, invisível: dá a semântica e o toggle por teclado. */}
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        className="sr-only"
+      />
+    </label>
+  );
+}

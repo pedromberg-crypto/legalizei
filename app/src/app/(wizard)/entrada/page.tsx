@@ -73,7 +73,7 @@ export default function EntradaPage() {
           >
             <Escudo />
             <p className="text-caption font-semibold text-text-secondary">
-              22 anos de escritório por trás do app.
+              Um escritório de contabilidade de verdade, em BH.
             </p>
           </div>
         </div>

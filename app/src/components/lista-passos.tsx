@@ -1,4 +1,5 @@
 import { passosDoCliente } from "@/lib/passos";
+import { StatusIcon, type StatusEstado } from "@/components/ui/status";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -63,16 +64,12 @@ function Linha({
   feito: boolean;
   travado: boolean;
 }) {
+  // ListaPassos usa só {feito, a-fazer, travado} do vocabulário do StatusIcon.
+  const estado: StatusEstado = feito ? "feito" : travado ? "travado" : "a-fazer";
   return (
     <div className="flex items-start gap-2.5">
       <span className="mt-0.5 shrink-0">
-        {feito ? (
-          <Check />
-        ) : travado ? (
-          <Cadeado />
-        ) : (
-          <span className="block h-[18px] w-[18px] rounded-full border-2 border-border-strong" />
-        )}
+        <StatusIcon estado={estado} />
       </span>
       <div className="min-w-0">
         <span
@@ -121,12 +118,12 @@ function Destino({ travado = false }: { travado?: boolean }) {
     <div className="mt-1 flex items-start gap-2.5">
       <span className="mt-0.5 shrink-0">
         {travado ? (
-          <Cadeado />
+          <StatusIcon estado="travado" />
         ) : (
-          /* Círculo VAZIO, mesmo desenho dos "a fazer", só que verde. Vazio
-             porque ainda não aconteceu — preenchê-lo diria que já está pronto.
-             Quando a empresa sai, ele vira o check preenchido igual aos de
-             cima, e a lista fecha no mesmo vocabulário em que começou. */
+          /* Círculo VAZIO verde: o "a-fazer" pintado de META. Vazio porque ainda
+             não aconteceu; quando a empresa sai, vira o check preenchido igual
+             aos de cima e a lista fecha no mesmo vocabulário. Fica LOCAL: é marca
+             de DESTINO, não um estado do StatusIcon (nenhum passo é "meta"). */
           <span className="block h-[18px] w-[18px] rounded-full border-2 border-state-success" />
         )}
       </span>
@@ -145,44 +142,3 @@ function Destino({ travado = false }: { travado?: boolean }) {
   );
 }
 
-function Check() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      className="shrink-0 text-state-success"
-      aria-hidden
-    >
-      <circle cx="12" cy="12" r="11" fill="currentColor" />
-      <path
-        d="m7.5 12.4 3.1 3.1 6-6.2"
-        stroke="#fff"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function Cadeado() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="shrink-0 text-text-muted"
-      aria-hidden
-    >
-      <rect x="4" y="11" width="16" height="10" rx="2" />
-      <path d="M8 11V7a4 4 0 0 1 8 0v4" />
-    </svg>
-  );
-}

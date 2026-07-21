@@ -331,6 +331,23 @@ Preciso de você: o plano era testar abrindo o MEU CNPJ, mas ele já existe. Tem
 - Ajustei a tela de atividades: só sugere atividades secundárias que NÃO mudam o imposto do cliente
 ```
 
+## Semana 21/07/2026 — 2º flow: o app inteiro em pé + máquina de qualidade da copy
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | App ponta a ponta | **Construí a parte final que faltava**: revisar tudo antes de abrir, autorizar o início (o passo sem volta), o painel que mostra a abertura andando na Junta/Receita (inclusive o que fazer se um órgão recusar), a assinatura no GOV.BR e a tela de "empresa aberta, e agora" (1ª nota, 1º imposto, certificado). **Agora o app existe do início ao fim, da 1ª tela até a empresa operando.** Falta só o caminho de quem já tem empresa e quer trocar de contador | 🟢 |
+| 2 | Qualidade da copy | Montei uma **"máquina de revisão de texto" do app**: um robô varre todas as telas atrás de repetição, excesso de informação e frase negativa, e eu reviso o que exige olho humano (tom, hierarquia, sensação). Passei o app inteiro por ela em 4 rodadas e enxuguei dezenas de pontos. **Ela se atualiza e melhora sozinha** a cada uso | 🟢 |
+| 3 | Pra Larissa | 1 ponto novo: no passo de autorizar a abertura, o texto do "li e aceito" deve dizer que **a taxa da Junta já paga não é reembolsável** (fecha o risco de contestação) | 🕓 |
+
+**Próximo (21/07 2º):** revisar as frases negativas que sobraram (última rodada de copy); seguir com o caminho de "trocar de contador"; decidir o prazo de fidelidade.
+
+### 📱 WhatsApp (21/07 — 2º)
+```
+*Update Legalizei* 🏁
+- Construí a parte final que faltava do app: revisar antes de abrir, autorizar o início, o painel que mostra a abertura andando nos órgãos (com o que fazer se algo for recusado), a assinatura no GOV.BR e a tela de "empresa aberta, e agora". Agora o app existe do início ao fim
+- Montei uma máquina de revisão de texto: um robô varre todas as telas atrás de repetição, excesso e frase negativa, e eu reviso o que precisa de olho humano. Passei o app inteiro por ela e enxuguei dezenas de pontos. Ela melhora sozinha a cada uso
+Falta 1 ponto pra Larissa: no aceite da abertura, o texto deve dizer que a taxa da Junta já paga não é reembolsável
+```
+
 ## 📱 Versão WhatsApp (copiar/colar — grupo ampliado, sem item de sociedade)
 ```
 *Relatório semanal — Legalizei* 📊

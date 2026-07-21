@@ -5,6 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: 601a6913-bbd4-4193-878a-0bfa86ca2923
+  modified: 2026-07-21T17:52:33.529Z
 ---
 
 Padrão de layout do app travado 2026-07-17. Regra dura pra TODA tela do wizard/app:
@@ -36,3 +37,11 @@ Padrão de layout do app travado 2026-07-17. Regra dura pra TODA tela do wizard/
 **⚠️ A LIÇÃO DO FLOW: número inventado em dois lugares diverge.** A P1 dizia "3 de 6" e a P2 "5 de 9", lado a lado na mesma esteira — o Pedro pegou de olho. Virou `lib/passos.ts` (fonte única, **10 passos**, 9 sem CNAE ótimo). Mesmo padrão do rótulo de faixa em 5 arquivos e da dívida declarada do `lib/fiscal`. **Contagem de passos é promessa de esforço:** duas telas discordando derruba a confiança em todos os outros números, inclusive os fiscais.
 
 **Regras de copy que o flow travou:** ① o maior número da tela tem que ser o **melhor argumento**, não a maior soma (N7: "Grátis" > R$463,51, que era repasse + mensalidade somados sem serem a mesma natureza). ② **trava de negócio se explica pelo efeito no cliente, nunca pela nossa proteção** ("é a nossa garantia de não gastar antes de receber" levanta a pergunta que ninguém fez). ③ **apresentação não pode alterar o que o cliente entende que deve** ("o próximo passo é só esse" mentia com 6 pela frente). ④ lista é **mapa**: nome + estado, sem legenda item a item.
+
+---
+
+**Estado (21/07, 7º flow): A CAUDA EXISTE → o flow é ponta-a-ponta.** N19 revisar · N20 termo irreversível · N21 painel + `/painel/recusa` (REC) · N22 assinatura · N24 empresa ativa (dia-2). `components/painel.tsx` compartilhado (2 rotas). 2 grupos novos no `/mockup` (B4 + dia-2). **Falta só o flow #2 (migrar).** Marco [[2026-07-21-cauda-auditoria-statusicon]].
+
+**StatusIcon promovido ao DS (`ui/status.tsx`, regra-dos-3 estourada):** o check verde estava em 5 arquivos. Vira 1 vocabulário de 5 estados (feito/a-fazer/girando/travado/recusa). `ListaPassos` (P1/P2, usa {feito,a-fazer,travado}) e `PainelView` (N21/REC, usa {feito,girando,a-fazer,recusa}) COMPÕEM o átomo, mas os wrappers seguem SEPARADOS: a agência é OPOSTA (SUA vez de preencher × vez do ÓRGÃO de processar), borrar faria "Tirar o CNPJ" ler como tarefa do cliente. Fica local: destino "empresa constituída" (marca de meta) + cadeado da faixa de idempotência (decorativo). A máquina de copy que gerou isso: [[legalize-auditoria-copy-rubrica]].
+
+**N24 fix:** o `Confetti` da marca resolve num check coral PARADO (feito pra substituir o CTA do veredito) → sobre o card virava blob no meio tapando texto (Pedro pegou no mockup). Trocado por entrada comemorativa (card sobe + selo verde dá pop com overshoot). Confetti segue no veredito.

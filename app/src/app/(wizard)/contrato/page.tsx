@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { TelaHeader, Titulo, Corpo, Rodape } from "@/components/ui/tela";
+import { Checkbox } from "@/components/ui/form";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -86,7 +87,7 @@ export default function ContratoPage() {
             N24, empresa ativa) mas também não pode soar como saída de
             emergência. "Está tudo combinado" fecha um acordo; "leia com calma
             antes de aceitar" pedia cautela pra uma decisão que não é arriscada. */}
-        <Titulo sub="O que a gente faz por você e o que você paga. Sem letra miúda.">
+        <Titulo sub="O que a gente faz por você e o que você paga.">
           Está tudo combinado
         </Titulo>
 
@@ -105,8 +106,7 @@ export default function ContratoPage() {
                 contabilidade todo mês.
               </Bullet>
               <Bullet>
-                Você paga uma mensalidade. As taxas do governo são à parte e vão
-                direto pro Estado.
+                Você paga uma mensalidade. As taxas do governo são à parte.
               </Bullet>
               {/* A fidelidade dita como CONSEQUÊNCIA do benefício, não como
                   punição. É a mesma cláusula, na ordem que respeita a verdade:
@@ -116,8 +116,8 @@ export default function ContratoPage() {
                 permanência.
               </Bullet>
               <Bullet>
-                Nada é irreversível hoje: você tem 7 dias pra desistir e receber
-                de volta.
+                Nada é irreversível hoje: você tem 7 dias pra mudar de ideia e
+                receber tudo de volta.
               </Bullet>
             </ul>
           </div>
@@ -144,33 +144,32 @@ export default function ContratoPage() {
               alerta do sistema. O azul é token de estado e não tem nada a
               informar neste ponto.
 
-              A última frase preserva o que o card velho fazia de útil: avisar
-              que existe uma confirmação separada (o N20). Sem ela, a gente
-              trocaria ansiedade agora por surpresa depois. */}
+              M3 (21/07): o card era 3 pontos logo após 4 bullets, denso. Saiu
+              "nada acontece sem você" — a confirmação separada (o N20) aparece
+              clara quando ele chega lá, e a tranquilidade de "não está travado"
+              já vem do bullet "nada é irreversível hoje". Ficam as 2 provas de
+              COM QUEM se assina, que é o trabalho do card. */}
           <Card tom="marca">
             <p className="text-body font-semibold text-text-primary mb-3">
               Você está abrindo com um escritório de verdade
             </p>
-            {/* Os 3 argumentos saíram da prosa e viraram itens. Em parágrafo
+            {/* Os 2 argumentos saíram da prosa e viraram itens. Em parágrafo
                 corrido eles existiam mas ninguém lia: são as credenciais que
                 justificam apertar o botão, e credencial enterrada em texto não
                 credencia nada. Cada um tem manchete (o que é) e uma linha (por
                 que importa). */}
             <div className="flex flex-col gap-3">
+              {/* V9: o título do card já diz "escritório de verdade"; os textos
+                  repetiam "escritório" e "de verdade". Enxugados. */}
               <Ponto
                 icone={<IconeEscudo />}
                 titulo="22 anos de estrada"
-                texto="Um escritório de contabilidade em Belo Horizonte, de antes de existir app pra isso."
+                texto="Contabilidade em Belo Horizonte, de antes de existir app pra isso."
               />
               <Ponto
                 icone={<IconePessoa />}
                 titulo="Contador com nome e telefone"
-                texto="Quem cuida da sua empresa é gente de verdade, e você fala direto com ela."
-              />
-              <Ponto
-                icone={<IconeMao />}
-                titulo="Nada acontece sem você"
-                texto="Na hora de registrar pra valer, a gente pede a sua confirmação."
+                texto="Quem cuida da sua empresa é uma pessoa, e você fala direto com ela."
               />
             </div>
           </Card>
@@ -178,18 +177,10 @@ export default function ContratoPage() {
           {/* ───── CHECKBOX EXPLÍCITO ─────
               Nunca pré-marcado, nunca "ao continuar você concorda". O aceite é
               um ato, e ele fica registrado com data e hora (prova da camada 1
-              da política de cancelamento). */}
-          <label className="flex cursor-pointer items-start gap-3 rounded-md border border-border-hairline bg-surface-card p-4">
-            <input
-              type="checkbox"
-              checked={aceito}
-              onChange={(e) => setAceito(e.target.checked)}
-              className="mt-0.5 h-5 w-5 shrink-0 accent-[var(--color-action-primary)]"
-            />
-            <span className="text-body text-text-primary">
-              Li e aceito o contrato de serviço da Legalizei.
-            </span>
-          </label>
+              da política de cancelamento). Componente do DS (K4), o mesmo do N20. */}
+          <Checkbox checked={aceito} onChange={setAceito}>
+            Li e aceito o contrato de serviço da Legalizei.
+          </Checkbox>
         </Corpo>
 
         {/* Botão único grande (A6). Desabilitado até marcar: o gate é o aceite,
@@ -245,17 +236,6 @@ function IconePessoa() {
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
       <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
       <circle cx="12" cy="7" r="4" />
-    </svg>
-  );
-}
-
-function IconeMao() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M11 11V6a1.5 1.5 0 0 1 3 0v5" />
-      <path d="M14 10.5V5a1.5 1.5 0 0 1 3 0v6" />
-      <path d="M17 11V7.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-2a6 6 0 0 1-6-6v-1.5" />
-      <path d="M11 11.5V10a1.5 1.5 0 0 0-3 0v4" />
     </svg>
   );
 }

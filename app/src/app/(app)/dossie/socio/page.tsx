@@ -212,9 +212,8 @@ export default function SocioPage() {
           {/* Bloqueio que educa, nunca crash. ⚠️ danger, nunca coral. */}
           {exterior === true && (
             <Aviso variante="danger" titulo="Esse caso a gente resolve com uma pessoa">
-              Com sócio morando fora, a empresa até existe, mas fica fora do
-              Simples. Nosso time te explica as opções sem você perder o que já
-              preencheu.
+              Morando fora, a empresa pode existir, mas não pelo Simples. Nosso
+              time te mostra as opções, e você não perde nada do que já preencheu.
             </Aviso>
           )}
         </Corpo>

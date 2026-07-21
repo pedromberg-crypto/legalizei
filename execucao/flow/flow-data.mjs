@@ -76,14 +76,14 @@ export const NODES = [
   { id: "SE", rota: "/saida/exterior", label: "Saída · exterior<br/>LC 123 art.17", forma: "tela", classe: "saida", status: "construida", validado: "oficial", falta: "UX-42 Lucro Presumido (Mauro); debate de tom" },
   { id: "SS", rota: "/saida/socios", label: "Saída · 3+ sócios<br/>limite do produto", forma: "tela", classe: "saida", status: "construida", validado: "oficial", falta: "Debate 3+→waitlist" },
 
-  // ── B4 · CONSTITUIÇÃO (planejado, sem rota) ──────────────────────────────
-  { id: "N19", label: "N19 · Revisar dossiê", forma: "tela", classe: "todo", status: "planejada", validado: "pendente", falta: "Construir" },
-  { id: "N20", label: "N20 · Termo irreversível", forma: "tela", classe: "todo", status: "planejada", validado: "pendente", falta: "Construir + cancelamento camada 2 + rachadura T18 (Larissa/Mauro)" },
-  { id: "N21", label: "N21 · Painel / timeline órgãos", forma: "tela", classe: "todo", status: "planejada", validado: "pendente", falta: "Construir (recebe UX-29 do N6 + gancho por modo/CRM)" },
-  { id: "REC", label: "Órgão recusa<br/>'precisa de você'", forma: "tela", classe: "todo", status: "planejada", validado: "pendente", falta: "Construir (B6 testado no motor)" },
-  { id: "N22", label: "N22 · Assinatura dos sócios", forma: "tela", classe: "todo", status: "planejada", validado: "pendente", falta: "Construir + convite 2º sócio (B5)" },
-  { id: "N23", label: "N23 · GOV.BR<br/>bronze → upgrade", forma: "decisao", classe: "todo", status: "planejada", validado: "pendente", falta: "Construir (B7 testado no motor)" },
-  { id: "ATIVA", label: "✅ Empresa ativa", forma: "terminal", classe: "feliz", status: "planejada", validado: "oficial", falta: "Construir dia-2 (N24-25). TFLF BH R$161,36 = fato duro" },
+  // ── B4 · CONSTITUIÇÃO (construído 21/07 — a cauda ganhou rota) ────────────
+  { id: "N19", rota: "/revisar", label: "N19 · Revisar dossiê", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "Recap read-only; carry-forward dos passos = estado do wizard (dev)" },
+  { id: "N20", rota: "/termo", label: "N20 · Termo irreversível", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Redação jurídica do termo + 4 camadas de cancelamento (Mauro/Larissa); racha T18" },
+  { id: "N21", rota: "/painel", label: "N21 · Painel / timeline órgãos", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Timeline real depende do pipeline do dev (RPA/órgãos); prazo ~8d é placeholder; UX-29 do N6 + gancho por modo/CRM" },
+  { id: "REC", rota: "/painel/recusa", label: "REC · Órgão recusa<br/>'precisa de você'", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "B6 testado no motor (nome recusado); faltam DAE-volta e doc-pendência como casos" },
+  { id: "N22", rota: "/assinatura", label: "N22 · Assinatura dos sócios", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "GOV.BR/e-CAC deep-link (dev); convite 2º sócio (B5) + arquitetura multi-usuário (Pedro)" },
+  { id: "N23", label: "GOV.BR nível<br/>bronze→upgrade", forma: "decisao", classe: "inline", status: "construida", validado: "pendente", falta: "Dobrado inline no N22 (B7 no motor)", naTabela: false },
+  { id: "ATIVA", rota: "/ativa", label: "✅ Empresa ativa", forma: "terminal", classe: "feliz", status: "construida", validado: "pendente", falta: "Dia-2 (1ª nota/DAS/certificado) é UI mock; loop UX-41 vive no portal; TFLF BH R$161,36 = fato duro" },
 ];
 
 export const EDGES = [

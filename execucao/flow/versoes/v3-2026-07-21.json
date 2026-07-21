@@ -1,0 +1,550 @@
+{
+  "nodes": [
+    {
+      "id": "N1",
+      "label": "N1 · Splash",
+      "status": "construida",
+      "validado": "ux",
+      "falta": ""
+    },
+    {
+      "id": "N2",
+      "label": "N2 · Welcome",
+      "status": "construida",
+      "validado": "ux",
+      "falta": ""
+    },
+    {
+      "id": "N3",
+      "label": "N3 · Fork<br/>3 rotas",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Rota migrar aponta pro flow #2 (não existe): cobrar antes do TTRT? passivo herdado? (Pedro/Mauro)"
+    },
+    {
+      "id": "LOGIN",
+      "label": "Login / portal",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "Rota feliz"
+    },
+    {
+      "id": "MIG",
+      "label": "Flow #2 · Migração<br/>não construído",
+      "status": "planejada",
+      "validado": "pendente",
+      "falta": "Construir flow #2"
+    },
+    {
+      "id": "N4A",
+      "label": "Descreve atividade + pills",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Lista CNAE furada na raiz: 124 não-refutados, 45 impossíveis, 91 duvidosos; IA real (hoje mock) — Larissa/Pedro/dev"
+    },
+    {
+      "id": "N4V",
+      "label": "Veredito CNAE",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Depende da lista CNAE; dev cnae-lookup responde 'atende' pra DEFESA"
+    },
+    {
+      "id": "DESAMB",
+      "label": "Desambiguação<br/>mini-loop",
+      "status": "construida",
+      "validado": "ux",
+      "falta": ""
+    },
+    {
+      "id": "N4T",
+      "label": "Triagem<br/>sócios? exterior?",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "Exterior = LC 123 art.17 (oficial); limite 2 travado. Abertos: debate 3+→waitlist, UX-42 (Mauro/Larissa)"
+    },
+    {
+      "id": "N4F",
+      "label": "Faixa de faturamento",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "Faixas sem âncora fiscal"
+    },
+    {
+      "id": "VA",
+      "label": "🟢 Atende",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Depende da lista CNAE"
+    },
+    {
+      "id": "VW",
+      "label": "🟡 Waitlist",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "Waitlist decidido 16/07; líder atende regulada (Mauro reavaliar)"
+    },
+    {
+      "id": "VC",
+      "label": "🔴 Comercial Mauro",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Mauro recebe/trabalha o lead? (debate de saída)"
+    },
+    {
+      "id": "N5",
+      "label": "N5 · Teaser<br/>swap / fator-R / serviço",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "TEASER_PISO=0.5 é chute (só modo swap) — Pedro. Fator-R/serviço derivam de lib/fiscal"
+    },
+    {
+      "id": "N6",
+      "label": "N6 · Criar conta",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Provider de validação CPF/situação (Pedro)"
+    },
+    {
+      "id": "N7",
+      "label": "N7 · A conta da abertura",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Preço ~R$195 FAKE (Mauro+custo); DAE R$268,51×R$288 em disputa; certificado A1 (Mauro)"
+    },
+    {
+      "id": "N8",
+      "label": "N8 · Aceite contrato<br/>reversível, CDC 49",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Redação jurídica do contrato (Mauro/Larissa); rachadura T18"
+    },
+    {
+      "id": "N9",
+      "label": "N9 · Pagamento",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Asaas travado; falta provider cartão CNPJ + chave de idempotência (Pedro)"
+    },
+    {
+      "id": "P2",
+      "label": "P2 · Aguardando boleto<br/>dossiê já liberado",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "Dunning revisado"
+    },
+    {
+      "id": "N10",
+      "label": "N10 · Seus dados",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "CPF valida situação (provider do N6); regime de bens (casado)"
+    },
+    {
+      "id": "N11",
+      "label": "N11 · Vínculo INSS",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "INSS 11% direto + teto folga = consolidado fiscal fechado"
+    },
+    {
+      "id": "N12",
+      "label": "N12 · Sócios?",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Re-pergunta o N4 (carry-forward pendente); limite 2 ok"
+    },
+    {
+      "id": "N12B",
+      "label": "Coleta 2º sócio<br/>+ convite",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Convite (B5) depende do N21 planejado"
+    },
+    {
+      "id": "N13",
+      "label": "N13 · Dados da empresa<br/>+upsell endereço",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Endereço ~R$60/mês = nosso preço (Mauro); custo do líder já confirmado"
+    },
+    {
+      "id": "N14",
+      "label": "N14 · CNAE secundários",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Só sugere secundárias mesmo-imposto (mesmo anexo + Fator R); regime-changer nunca aparece (decisão 21/07). Depende do anexo-por-CNAE (dataset/Larissa)"
+    },
+    {
+      "id": "N15",
+      "label": "N15 · Natureza jurídica",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "SLU × LTDA: regra solo→SLU vs LTDA solo real (Larissa)"
+    },
+    {
+      "id": "N16",
+      "label": "N16 · Nome / razão social",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Viabilidade JUCEMG (RPA, não API); nome≠empresa (dev/Izabela)"
+    },
+    {
+      "id": "SWAP",
+      "label": "há família<br/>de swap?",
+      "status": "construida",
+      "validado": "ux",
+      "falta": ""
+    },
+    {
+      "id": "N17",
+      "label": "N17 · CNAE ótimo",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "3 famílias de swap OK; tráfego pago/white-label menor confiança (Larissa)"
+    },
+    {
+      "id": "N18",
+      "label": "N18 · Simulador pró-labore",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "7 pontos fiscais (Larissa); alerta FS12 (COSIT 17/2021) não exibir até conferir"
+    },
+    {
+      "id": "P1",
+      "label": "P1 · Retomar de onde parou",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "UX-23 dá pra fechar (N18 existe)"
+    },
+    {
+      "id": "SE",
+      "label": "Saída · exterior<br/>LC 123 art.17",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "UX-42 Lucro Presumido (Mauro); debate de tom"
+    },
+    {
+      "id": "SS",
+      "label": "Saída · 3+ sócios<br/>limite do produto",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "Debate 3+→waitlist"
+    },
+    {
+      "id": "N19",
+      "label": "N19 · Revisar dossiê",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "Recap read-only; carry-forward dos passos = estado do wizard (dev)"
+    },
+    {
+      "id": "N20",
+      "label": "N20 · Termo irreversível",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Redação jurídica do termo + 4 camadas de cancelamento (Mauro/Larissa); racha T18"
+    },
+    {
+      "id": "N21",
+      "label": "N21 · Painel / timeline órgãos",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Timeline real depende do pipeline do dev (RPA/órgãos); prazo ~8d é placeholder; UX-29 do N6 + gancho por modo/CRM"
+    },
+    {
+      "id": "REC",
+      "label": "REC · Órgão recusa<br/>'precisa de você'",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "B6 testado no motor (nome recusado); faltam DAE-volta e doc-pendência como casos"
+    },
+    {
+      "id": "N22",
+      "label": "N22 · Assinatura dos sócios",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "GOV.BR/e-CAC deep-link (dev); convite 2º sócio (B5) + arquitetura multi-usuário (Pedro)"
+    },
+    {
+      "id": "N23",
+      "label": "GOV.BR nível<br/>bronze→upgrade",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Dobrado inline no N22 (B7 no motor)"
+    },
+    {
+      "id": "ATIVA",
+      "label": "✅ Empresa ativa",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Dia-2 (1ª nota/DAS/certificado) é UI mock; loop UX-41 vive no portal; TFLF BH R$161,36 = fato duro"
+    }
+  ],
+  "edges": [
+    {
+      "de": "N1",
+      "para": "N2",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "N2",
+      "para": "N3",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "N3",
+      "para": "LOGIN",
+      "label": "já sou cliente",
+      "tracejado": false
+    },
+    {
+      "de": "N3",
+      "para": "N4A",
+      "label": "quero abrir empresa",
+      "tracejado": false
+    },
+    {
+      "de": "N3",
+      "para": "MIG",
+      "label": "já tenho contador (migrar)",
+      "tracejado": true
+    },
+    {
+      "de": "N4A",
+      "para": "N4V",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "N4V",
+      "para": "DESAMB",
+      "label": "ambíguo",
+      "tracejado": false
+    },
+    {
+      "de": "DESAMB",
+      "para": "N4A",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "N4V",
+      "para": "VA",
+      "label": "🟢 atende",
+      "tracejado": false
+    },
+    {
+      "de": "VA",
+      "para": "N4T",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "N4V",
+      "para": "VW",
+      "label": "🟡 regulada",
+      "tracejado": false
+    },
+    {
+      "de": "N4V",
+      "para": "VC",
+      "label": "🔴 comércio",
+      "tracejado": false
+    },
+    {
+      "de": "N4T",
+      "para": "N4F",
+      "label": "até 2 + Brasil",
+      "tracejado": false
+    },
+    {
+      "de": "N4T",
+      "para": "SE",
+      "label": "sócio no exterior",
+      "tracejado": false
+    },
+    {
+      "de": "N4T",
+      "para": "SS",
+      "label": "3+ sócios",
+      "tracejado": false
+    },
+    {
+      "de": "N4F",
+      "para": "N5",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "N5",
+      "para": "N6",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "N6",
+      "para": "N7",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "N7",
+      "para": "N8",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "N8",
+      "para": "N9",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "N9",
+      "para": "N10",
+      "label": "cartão",
+      "tracejado": false
+    },
+    {
+      "de": "N9",
+      "para": "P2",
+      "label": "boleto",
+      "tracejado": false
+    },
+    {
+      "de": "P2",
+      "para": "N10",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "N10",
+      "para": "N11",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "N11",
+      "para": "N12",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "N12",
+      "para": "N12B",
+      "label": "2 sócios",
+      "tracejado": false
+    },
+    {
+      "de": "N12B",
+      "para": "N13",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "N12",
+      "para": "N13",
+      "label": "solo",
+      "tracejado": false
+    },
+    {
+      "de": "N13",
+      "para": "N14",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "N14",
+      "para": "N15",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "N15",
+      "para": "N16",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "N16",
+      "para": "SWAP",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "SWAP",
+      "para": "N17",
+      "label": "sim",
+      "tracejado": false
+    },
+    {
+      "de": "N17",
+      "para": "N18",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "SWAP",
+      "para": "N18",
+      "label": "não",
+      "tracejado": false
+    },
+    {
+      "de": "N18",
+      "para": "N19",
+      "label": "",
+      "tracejado": true
+    },
+    {
+      "de": "N19",
+      "para": "N20",
+      "label": "",
+      "tracejado": true
+    },
+    {
+      "de": "N20",
+      "para": "N21",
+      "label": "",
+      "tracejado": true
+    },
+    {
+      "de": "N21",
+      "para": "REC",
+      "label": "",
+      "tracejado": true
+    },
+    {
+      "de": "REC",
+      "para": "N21",
+      "label": "",
+      "tracejado": true
+    },
+    {
+      "de": "N21",
+      "para": "N22",
+      "label": "",
+      "tracejado": true
+    },
+    {
+      "de": "N22",
+      "para": "N23",
+      "label": "",
+      "tracejado": true
+    },
+    {
+      "de": "N23",
+      "para": "ATIVA",
+      "label": "",
+      "tracejado": true
+    },
+    {
+      "de": "P1",
+      "para": "N10",
+      "label": "volta ao passo pausado",
+      "tracejado": true
+    }
+  ]
+}

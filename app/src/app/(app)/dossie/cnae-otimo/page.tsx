@@ -69,7 +69,7 @@ export default function CnaeOtimoPage() {
             </p>
             {/* UX-26: carimbo OBRIGATÓRIO. Tem dinheiro em cima da promessa. */}
             <p className="text-micro text-text-tertiary mt-3">
-              Estimativa. A gente confirma com o contador antes de registrar.
+              Valor estimado. O contador confirma antes de trocar o código.
             </p>
           </Card>
 
@@ -97,28 +97,24 @@ export default function CnaeOtimoPage() {
 
           {/* ───── OBRIGATÓRIO: por que é válido ─────
               Sem isto o leigo acha que é fraude e recusa a economia. */}
-          <Aviso variante="info" titulo="Não é malandragem, é o código certo">
-            Os dois códigos emitem a mesma nota fiscal pro treinamento que você
-            dá. A diferença é só de tabela de imposto. Escolher o mais barato
-            entre os que servem pra sua atividade é o trabalho de um contador.
+          {/* R5+V6: o N5 (teaser) já fez o argumento "não é malandragem" antes
+              do pagamento. O R5 arrumou só o TÍTULO; o V6 terminou o serviço —
+              o corpo tirou a dupla de frases que o N5 já entrega ("mesma nota /
+              trabalho de contador") e ficou só o mecanismo NOVO (o que muda é a
+              tabela). A validade obrigatória (spec) continua, sem eco do N5. */}
+          <Aviso variante="info" titulo="Por que a troca é legítima">
+            O que você faz e a nota que emite são exatamente iguais nos dois
+            códigos. A diferença é só a tabela de imposto.
           </Aviso>
 
-          {/* ───── AS 2 ALAVANCAS (spec T13) ───── */}
-          <div>
-            <p className="text-body font-semibold text-text-primary mb-2">
-              Existem dois caminhos, e esse é o mais fácil
-            </p>
-            <p className="text-caption text-text-secondary">
-              <strong className="text-text-primary">Trocar o código</strong> (o
-              desta tela) funciona sozinho, sem você precisar mudar mais nada.
-              O outro caminho é{" "}
-              <strong className="text-text-primary">
-                aumentar quanto você se paga
-              </strong>
-              , e a gente calcula ele na próxima tela. Quem trabalha sozinho
-              costuma ganhar mais aqui.
-            </p>
-          </div>
+          {/* ───── AS 2 ALAVANCAS (spec T13) ─────
+              M2: menção de 1 linha. O outro caminho (pró-labore) é o assunto
+              INTEIRO do N18, a PRÓXIMA tela. Pré-explicá-lo aqui pesava e
+              competia com o CTA. Diz que existe, e segue. */}
+          <p className="text-caption text-text-secondary">
+            Esse é o mais fácil dos dois jeitos de pagar menos: funciona sozinho.
+            O outro, aumentar quanto você se paga, a gente vê na próxima tela.
+          </p>
 
           {/* ───── UX-26: tradeoff honesto ───── */}
           <Aviso variante="warning" titulo="Antes de trocar, confira uma coisa">
@@ -129,15 +125,28 @@ export default function CnaeOtimoPage() {
           </Aviso>
 
           {/* ───── UX-26: prova exportável ─────
-              Materializa a confiança FORA do app: vira defesa com o contador
-              antigo ou com o cliente, em vez de "confia em mim". */}
-          <button
-            className="flex min-h-12 w-full items-center justify-center rounded-md border
-                       border-border-strong bg-surface-card px-4 text-body font-semibold
-                       text-text-primary transition-colors hover:bg-surface-alt"
-          >
-            Baixar o porquê em PDF
-          </button>
+              Materializa a confiança FORA do app. V7: peso de LINK, não de CTA
+              (era full-width + borda + semibold e competia com os botões de
+              decisão do rodapé). Utilitário não disputa com a decisão. */}
+          <div className="flex justify-center">
+            <button className="inline-flex items-center gap-2 text-caption font-semibold text-action-primary-sm underline underline-offset-4">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <path d="M12 3v12m0 0 4-4m-4 4-4-4" />
+                <path d="M5 21h14" />
+              </svg>
+              Baixar o porquê em PDF
+            </button>
+          </div>
 
           {escolha && (
             <Aviso

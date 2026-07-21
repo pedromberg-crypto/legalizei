@@ -11,7 +11,7 @@ const sora = Sora({
 });
 
 export const metadata: Metadata = {
-  title: "Legalizei",
+  title: "Legalizai",
   description:
     "Contabilidade digital de quem vive de prestar serviço. Você cuida do negócio, a gente cuida da papelada.",
 };

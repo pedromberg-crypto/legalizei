@@ -209,8 +209,8 @@ export function PainelView({
           <div className="mt-2 flex items-start gap-2.5 rounded-md bg-surface-alt p-3">
             <Cadeado />
             <p className="text-micro text-text-secondary">
-              Seu progresso está salvo. A abertura roda uma vez só, sem cobrança
-              dupla, mesmo que você feche o app.
+              A abertura roda uma vez só. Pode fechar o app que o processo segue
+              sozinho, de onde parou.
             </p>
           </div>
 

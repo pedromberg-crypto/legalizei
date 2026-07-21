@@ -153,8 +153,7 @@ export default function PagamentoPage() {
               O motor já é idempotente na retomada; aqui a UI finalmente
               comunica isso. Mata o medo de quem paga e some. */}
           <p className="text-micro text-text-tertiary">
-            Seu progresso fica salvo. A gente nunca cobra duas vezes nem abre a
-            mesma empresa duas vezes, mesmo que você feche o app agora.
+            Você paga uma vez só, mesmo que o app feche na hora do pagamento.
           </p>
         </Corpo>
 

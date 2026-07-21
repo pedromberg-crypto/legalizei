@@ -65,10 +65,10 @@ import { ListaPassos } from "@/components/lista-passos";
     tela e na P1, com números diferentes (9 × 6), e o Pedro pegou as duas lado a
     lado na prancheta. Contagem de passos é promessa de esforço — duas telas do
     mesmo app discordando derruba a confiança em todo o resto dos números. */
-const BOLETO = { passosFeitos: 5, temCnaeOtimo: true };
+const BOLETO = { passosFeitos: 5 };
 
 export default function AguardandoPage() {
-  const total = passosDoCliente(BOLETO.temCnaeOtimo).length;
+  const total = passosDoCliente().length;
 
   return (
     <>
@@ -108,7 +108,6 @@ export default function AguardandoPage() {
             </div>
             <ListaPassos
               concluidos={BOLETO.passosFeitos}
-              temCnaeOtimo={BOLETO.temCnaeOtimo}
               pagamentoPendente
               mostrarDestino
             />

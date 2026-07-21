@@ -45,7 +45,6 @@ import {
 
 // Viria do estado do wizard (N4). Mock pra farol.
 const FAIXA = "10-20k";
-const TEASER = { modo: "fator-r" as const, teto: 1425 };
 const SOCIOS = [{ nome: "Você", cltRemuneracao: 0 }];
 
 export default function SimuladorPage() {

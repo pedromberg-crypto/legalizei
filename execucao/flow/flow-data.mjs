@@ -46,8 +46,11 @@ export const NODES = [
   { id: "VW", rota: "/veredito/waitlist", label: "🟡 Waitlist", forma: "tela", classe: "saida", status: "construida", validado: "oficial", falta: "Waitlist decidido 16/07; líder atende regulada (Mauro reavaliar)" },
   { id: "VC", rota: "/veredito/nao-atende", label: "🔴 Comercial Mauro", forma: "tela", classe: "saida", status: "construida", validado: "pendente", falta: "Mauro recebe/trabalha o lead? (debate de saída)" },
 
-  // ── A3 · TEASER ──────────────────────────────────────────────────────────
-  { id: "N5", rota: "/teaser/swap", rotasCobre: ["/teaser/fator-r", "/teaser/servico"], label: "N5 · Teaser<br/>swap / fator-R / serviço", forma: "decisao", classe: "", status: "construida", validado: "pendente", falta: "TEASER_PISO=0.5 é chute (só modo swap) — Pedro. Fator-R/serviço derivam de lib/fiscal" },
+  // ── ENCAIXE · escolhe/trava o CNAE (NOVO 21/07, reordenacao-cluster-fiscal) ──
+  { id: "ENC", rota: "/encaixe", label: "ENCAIXE<br/>escolhe/trava CNAE", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Recomendado + alternativas; % de fit real (IA cruza pill+texto) pendente; defesa de legitimidade inline. Trava o CNAE antes do nome/Junta" },
+
+  // ── A3 · RESUMO DE VALOR (era o teaser; a prova migrou pro ENCAIXE) ─────────
+  { id: "N5", rota: "/resumo", label: "N5' · Resumo de valor<br/>faixa-based, suave", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "Opção B: vende segurança, não promete economia. Alíquota de entrada (Anexo III) sobre a mediana da faixa" },
 
   // ── B3 · DINHEIRO · N6–N9 ────────────────────────────────────────────────
   { id: "N6", rota: "/conta", label: "N6 · Criar conta", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Provider de validação CPF/situação (Pedro)" },
@@ -65,8 +68,6 @@ export const NODES = [
   { id: "N14", rota: "/dossie/cnae-secundarios", label: "N14 · CNAE secundários", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Só sugere secundárias mesmo-imposto (mesmo anexo + Fator R); regime-changer nunca aparece (decisão 21/07). Depende do anexo-por-CNAE (dataset/Larissa)" },
   { id: "N15", rota: "/dossie/natureza", label: "N15 · Natureza jurídica", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "SLU × LTDA: regra solo→SLU vs LTDA solo real (Larissa)" },
   { id: "N16", rota: "/dossie/nome", label: "N16 · Nome / razão social", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Viabilidade JUCEMG (RPA, não API); nome≠empresa (dev/Izabela)" },
-  { id: "SWAP", label: "há família<br/>de swap?", forma: "decisao", classe: "", status: "construida", validado: "ux", falta: "", naTabela: false },
-  { id: "N17", rota: "/dossie/cnae-otimo", label: "N17 · CNAE ótimo", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "3 famílias de swap OK; tráfego pago/white-label menor confiança (Larissa)" },
   { id: "N18", rota: "/simulador", label: "N18 · Simulador pró-labore", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "7 pontos fiscais (Larissa); alerta FS12 (COSIT 17/2021) não exibir até conferir" },
 
   // ── A7 · ESPERA ──────────────────────────────────────────────────────────
@@ -97,7 +98,8 @@ export const EDGES = [
   { de: "N4V", para: "DESAMB", label: "ambíguo" },
   { de: "DESAMB", para: "N4A" },
   { de: "N4V", para: "VA", label: "🟢 atende" },
-  { de: "VA", para: "N4T" },
+  { de: "VA", para: "ENC" },
+  { de: "ENC", para: "N4T" },
   { de: "N4V", para: "VW", label: "🟡 regulada" },
   { de: "N4V", para: "VC", label: "🔴 comércio" },
   { de: "N4T", para: "N4F", label: "até 2 + Brasil" },
@@ -121,10 +123,7 @@ export const EDGES = [
   { de: "N13", para: "N14" },
   { de: "N14", para: "N15" },
   { de: "N15", para: "N16" },
-  { de: "N16", para: "SWAP" },
-  { de: "SWAP", para: "N17", label: "sim" },
-  { de: "N17", para: "N18" },
-  { de: "SWAP", para: "N18", label: "não" },
+  { de: "N16", para: "N18" },
 
   { de: "N18", para: "N19", tracejado: true },
   { de: "N19", para: "N20", tracejado: true },

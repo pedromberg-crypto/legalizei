@@ -22,7 +22,7 @@ import {
  *
  * Regras da spec:
  *   · Índice cadastral IPTU guardado pro registro em BH (🟡 opcional se não tem).
- *   · UPSELL endereço fiscal Legalizei: NÃO bloqueia — só oferece. Se aceita,
+ *   · UPSELL endereço fiscal Legalizai: NÃO bloqueia — só oferece. Se aceita,
  *     salva flag + injeta no plano do B3. Resolve "sem endereço comercial".
  *   · Capital social > 0; IA alerta se muito baixo/alto.
  *   · Tipo de endereço afeta viabilidade em BH (flag pra blocos futuros).
@@ -104,7 +104,7 @@ export default function EmpresaPage() {
               >
                 <div className="flex items-center justify-between gap-3">
                   <span className="text-body font-semibold text-text-primary">
-                    Quero um endereço fiscal da Legalizei
+                    Quero um endereço fiscal da Legalizai
                   </span>
                   {/* chip escuro: AA seguro (texto pequeno em coral falharia) e
                       concreto o bastante pra puxar o olho. */}
@@ -122,9 +122,7 @@ export default function EmpresaPage() {
 
           {querFiscal && (
             <Aviso variante="success" titulo="A gente cuida do endereço">
-              Você usa um endereço nosso, regularizado pra receber a empresa. Ele
-              entra junto no seu plano. Sem endereço comercial deixa de ser
-              problema.
+              Fechado. Ele entra junto no seu plano.
             </Aviso>
           )}
 

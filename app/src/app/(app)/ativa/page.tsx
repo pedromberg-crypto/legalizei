@@ -129,7 +129,7 @@ export default function AtivaPage() {
           {/* UX-41: o loop da estimativa. Fecha a promessa do N18. */}
           <Card tom="marca">
             <p className="text-caption font-semibold text-text-primary mb-1">
-              A gente não some depois de abrir
+              A gente fica de olho pra você pagar menos
             </p>
             <p className="text-caption text-text-secondary">
               Daqui a uns meses, com o quanto você faturou de verdade, a gente

@@ -126,11 +126,11 @@ export default function NaturezaPage() {
 
           <Card>
             <p className="text-caption font-semibold text-text-primary mb-1">
-              Não precisa decorar sigla
+              A gente cuida da sigla
             </p>
             <p className="text-caption text-text-secondary">
-              Os dois separam seu dinheiro pessoal do da empresa. A gente cuida
-              do resto do papel.
+              Os dois separam seu dinheiro pessoal do da empresa. O resto do
+              papel a gente resolve.
             </p>
           </Card>
         </Corpo>

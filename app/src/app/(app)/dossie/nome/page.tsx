@@ -115,8 +115,8 @@ export default function NomePage() {
           </Campo>
 
           <Aviso variante="info" titulo="A gente confere antes de registrar">
-            Fazemos a consulta prévia na Junta pra evitar que o nome seja
-            reprovado no meio do caminho. Se der conflito, a gente te avisa.
+            Fazemos a consulta prévia na Junta pra o nome passar de primeira. Se
+            der conflito, a gente te avisa.
           </Aviso>
         </Corpo>
 

@@ -137,7 +137,7 @@ export default function ContaPage() {
         <Rodape>
           <Button full>Criar minha conta</Button>
           <p className="text-micro text-text-tertiary mt-3 text-center">
-            Ainda não estamos cobrando nada.
+            Criar conta é de graça. Você só paga quando decidir abrir.
           </p>
         </Rodape>
       </main>

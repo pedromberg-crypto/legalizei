@@ -179,7 +179,7 @@ export default function ContratoPage() {
               um ato, e ele fica registrado com data e hora (prova da camada 1
               da política de cancelamento). Componente do DS (K4), o mesmo do N20. */}
           <Checkbox checked={aceito} onChange={setAceito}>
-            Li e aceito o contrato de serviço da Legalizei.
+            Li e aceito o contrato de serviço da Legalizai.
           </Checkbox>
         </Corpo>
 

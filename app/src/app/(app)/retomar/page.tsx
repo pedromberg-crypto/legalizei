@@ -59,11 +59,10 @@ const ESTADO = {
   /** Quantos passos ele já concluiu. A LISTA vem de `lib/passos`, não daqui:
       inventar os nomes aqui foi exatamente o que fez a P1 e a P2 divergirem. */
   concluidos: 3,
-  temCnaeOtimo: true,
 };
 
 export default function RetomarPage() {
-  const passos = passosDoCliente(ESTADO.temCnaeOtimo);
+  const passos = passosDoCliente();
   const feito = ESTADO.concluidos;
   const total = passos.length;
 
@@ -92,11 +91,7 @@ export default function RetomarPage() {
             {/* Sem `pagamentoPendente`: quem chega nesta tela pagou por cartão
                 ou Pix, então nada trava e o caminho aparece inteiro liberado.
                 O caso do boleto é a P2, que usa a mesma lista com o cadeado. */}
-            <ListaPassos
-              concluidos={feito}
-              temCnaeOtimo={ESTADO.temCnaeOtimo}
-              mostrarDestino
-            />
+            <ListaPassos concluidos={feito} mostrarDestino />
           </div>
 
           {/* UX-38: meia-linha (R1). O ângulo daqui é "pagamento registrado",

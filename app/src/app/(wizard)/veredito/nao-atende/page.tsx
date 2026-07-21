@@ -16,7 +16,7 @@ export default function VereditoNaoAtendePage() {
   return (
     <>
       <header className="pt-6 pb-4">
-        <p className="text-micro text-text-tertiary">Legalizei</p>
+        <p className="text-micro text-text-tertiary">Legalizai</p>
       </header>
       <main className="app-main">
         <VereditoView r={R} />

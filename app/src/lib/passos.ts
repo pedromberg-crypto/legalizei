@@ -15,10 +15,12 @@
  * ─── O QUE CONTA COMO PASSO ──────────────────────────────────────────────
  * Tudo que exige AÇÃO do cliente até a empresa entrar na máquina.
  *
- * Inclui o N17 e o N18 mesmo eles sendo arquétipo A3 (número/prova) e não A1
- * (coleta): do ponto de vista de quem preenche, escolher o CNAE ótimo e mexer
- * no pró-labore são passos como qualquer outro — exigem decisão e não dá pra
- * seguir sem eles. A taxonomia interna de arquétipo não é problema do cliente.
+ * Inclui o N18 (pró-labore) mesmo sendo arquétipo A3 (número/prova) e não A1
+ * (coleta): do ponto de vista de quem preenche, mexer no pró-labore é passo
+ * como qualquer outro, exige decisão e não dá pra seguir sem ele.
+ *
+ * ⚠️ O CNAE ótimo NÃO é mais passo do dossiê: virou o ENCAIXE, pré-pagamento
+ * (reordenacao-cluster-fiscal-encaixe, 21/07). Saiu daqui e a contagem caiu 1.
  *
  * ─── ⚠️ A CORREÇÃO DE 19/07 — O CONTADOR MENTIA NO FIM ───────────────────
  * A v1 parava no N18, com esta justificativa: N19 e N20 travam enquanto o
@@ -76,14 +78,6 @@ export const PASSOS_DOSSIE: Passo[] = [
   // isso é comportamento DO N16 — se explica lá dentro, na hora em que ele
   // digita, não como legenda na lista (que é mapa, não manual).
   { nome: "Nome da empresa", tela: "N16" },
-  // Só aparece quando existe família de CNAE pra trocar. Sem ela, o flow pula
-  // direto pro simulador e o total do cliente é 9, não 10.
-  {
-    nome: "Melhor enquadramento",
-    tela: "N17",
-    condicional: true,
-    travaSemPagamento: true,
-  },
   { nome: "Quanto você se paga", tela: "N18", travaSemPagamento: true },
   // N19 + N20 num passo só: pro cliente é um ato (conferir e autorizar). São
   // duas telas por razão jurídica, não por razão de tarefa.
@@ -91,9 +85,11 @@ export const PASSOS_DOSSIE: Passo[] = [
 ];
 
 /**
- * Os passos que ESTE cliente vai ver. O total muda por pessoa, e é por isso
- * que ele nunca pode ser uma constante digitada numa tela.
+ * Os passos que ESTE cliente vai ver. Desde 21/07 não há mais passo
+ * condicional (o CNAE ótimo virou o ENCAIXE, pré-pagamento), então todos veem
+ * a mesma lista. A função e o campo `condicional` ficam pra manter a fonte
+ * única, caso volte a haver ramificação de passos.
  */
-export function passosDoCliente(temCnaeOtimo: boolean): Passo[] {
-  return PASSOS_DOSSIE.filter((p) => !p.condicional || temCnaeOtimo);
+export function passosDoCliente(): Passo[] {
+  return PASSOS_DOSSIE.filter((p) => !p.condicional);
 }

@@ -110,12 +110,12 @@ _32 telas navegáveis · gerado de `flow-data.mjs`._
 
 | ID | Status | Onde | Trecho | Reenquadre proposto | Sev |
 |---|:--:|---|---|---|:--:|
-| F1 | 🔲 | N24 ativa | "A gente **não some** depois de abrir" (na tela de celebração) | "A gente continua com você depois de abrir" | 🟠 |
-| F2 | 🔲 | N6 conta | "**Ainda não** estamos cobrando nada" | "Criar conta é de graça. Você só paga quando decidir abrir" | 🟠 |
-| F3 | 🔲 | N15 natureza | "**Não precisa** decorar sigla" | "A gente cuida da sigla. Os dois separam seu dinheiro do da empresa" | 🟠 |
-| F4 | 🔲 | N16 nome | "evitar que o nome seja **reprovado** no meio do caminho" | "pra o nome passar de primeira" | 🟡 |
-| F5 | 🔲 | N13 empresa | "**Sem** endereço comercial **deixa de ser problema**" | "Você fica com um endereço comercial pronto, mesmo sem ter um" | 🟡 |
-| F6 | 🔲 | N9 pagamento | "**nunca** cobra duas vezes" (dupla negação na fronteira do dinheiro) | "Pago uma vez, aberto uma vez" | 🟡 |
+| F1 | ✅ | N24 ativa | "A gente **não some** depois de abrir" (na tela de celebração) | "A gente continua com você depois de abrir" | 🟠 |
+| F2 | ✅ | N6 conta | "**Ainda não** estamos cobrando nada" | "Criar conta é de graça. Você só paga quando decidir abrir." | 🟠 |
+| F3 | ✅ | N15 natureza | "**Não precisa** decorar sigla" | "A gente cuida da sigla" (heading); corpo passou "A gente cuida do resto" → "O resto do papel a gente resolve" pra não dobrar o "a gente cuida" | 🟠 |
+| F4 | ✅ | N16 nome | "evitar que o nome seja **reprovado** no meio do caminho" | "pra o nome passar de primeira" | 🟡 |
+| F5 | ✅ | N13 empresa | "**Sem** endereço comercial **deixa de ser problema**" | "Você fica com um endereço comercial pronto pra receber a empresa, mesmo sem ter um. Ele entra junto no seu plano, regularizado." | 🟡 |
+| F6 | ✅ | N9 pagamento | "**nunca** cobra duas vezes" (dupla negação na fronteira do dinheiro) | "Pago uma vez, aberto uma vez" | 🟡 |
 
 **Deixados de fora de propósito** (⏸️ negativo é honestidade estrutural, não mexer): N5 fator-r "começa em zero" · N18 "encostado no limite" · N20 "não dá pra desfazer" · todas as saídas/waitlist (rejeição = registro correto).
 
@@ -161,6 +161,21 @@ _32 telas navegáveis · gerado de `flow-data.mjs`._
 | V9 | ✅ | N8 | D5 | cluster "escritório"/"de verdade" 2-3× no card → textos dos 2 pontos enxutos |
 | V10 | ✅ | N8 | D3 | "7 dias pra **desistir**" → "pra **mudar de ideia** e receber tudo de volta" (mantido "sem honorário", que é preciso vs N7) |
 | V11 | ⏸️ | N8 | D1 | resumo de custo reafirma o N7 → **aceito** (função de contrato) |
+
+### 2ª passada — nas 6 telas do round F (N24/N6/N15/N16/N13/N9)
+
+> 2026-07-21, logo após aplicar F1–F6. Mesma máquina (agente mecânico D1–D6 + camada crítica D7–D11). **Achado-chave repetiu o padrão: V12 é um eco que o MEU próprio F1 criou** (positivar a negativa colidiu com o subtítulo da tela) — e a câmera mecânica não pegou, a crítica sim. Prova de que positivar sem reler a tela inteira planta redundância. D2/D4/D6/D8/D9/D10/D11 limpos.
+
+| ID | Status | Tela | Dim | Achado → o que virou |
+|---|:--:|---|:--:|---|
+| V12 | ✅ | N24 ativa | D5 | **F1 criou eco:** o subtítulo já diz "a gente continua com você daqui pra frente"; meu F1 pôs "A gente continua com você depois de abrir" no card 40px abaixo → heading vira **"A gente fica de olho pra você pagar menos"** (o benefício do loop UX-41, não re-prometer presença). *Camada crítica pegou; mecânica não.* |
+| V13 | ✅ | N13 empresa | D5 | **F5 duplicou o botão:** o botão do upsell já vende "endereço comercial pronto pra receber a empresa"; meu F5 fez o Aviso repetir quase igual → Aviso enxuto **"Fechado. Ele entra junto no seu plano."** (confirma + única info nova) |
+| V14 | ✅ | N9 ↔ N21 | D1 | idempotência quase verbatim em 2 telas do caminho-cartão → **diferenciado por momento:** N9 (ato de pagar) fica dono da **cobrança** ("Você paga uma vez só, mesmo que o app feche na hora do pagamento") · N21 (espera assíncrona) fica dono do **processo** ("A abertura roda uma vez só. Pode fechar o app que o processo segue sozinho, de onde parou"). Zero overlap. Pedro autorizou tocar o N21 fora do escopo F |
+| V15 | ✅ | N6 conta | D1 | "seu progresso fica salvo" ecoava N9/N21 → **DISSOLVIDO pelo V14:** ao tirar "progresso salvo" do N9 e do N21, o N6 vira o único dono da promessa de persistência. 1 fix curou 2 achados |
+| V16 | ⏸️ | N15 natureza | D5 | card do SLU "patrimônio separado" × card final "os dois separam dinheiro" → **aceito como ADITIVO:** o card do LTDA não menciona separação, então o card final cobre quem escolhe LTDA. Pré-existente |
+| V17 | ⏸️ | N9 pagamento | D5 | total no subtítulo × CTA "Pagar R$X" → **aceito:** doutrina "total colado no CTA" (confirmar o valor no clique), igual N7 |
+
+**Inventário-prova (2ª passada):** D6 travessão = 0 em copy visível (6 telas + componentes) ✅ · D4 anti-guru = nenhum número externo sem carimbo (preços são placeholder-próprio deferido, DAS/dia-20 é fato legal) ✅ · D2 massa = N13 é form com disclosure progressivo, N24 é farol (exceções) ✅ · D3 negativa = os "não/sem" restantes vivem em erro/branch ou são honestidade estrutural ✅ · D7 = 🔎 **watch pré-existente** (chip "Sugerido" do N15 e Aviso `success` do N13 usam verde num papel semi-decorativo; não-F, não mexido) · D8/D9/D10/D11 limpos.
 
 ---
 

@@ -191,6 +191,11 @@ const ARQUETIPOS: {
         nota: "Happy path. Linguagem humana ANTES do código (UX-05). CTA 'É isso mesmo' + refazer acima sem perder texto.",
       },
       {
+        rota: "/encaixe",
+        nome: "🆕 ENCAIXE · escolhe o CNAE",
+        nota: "NOVO (reordenacao-cluster-fiscal-encaixe): logo após o 🟢, ainda pré-pago, TRAVA o CNAE (o nome/objeto/Junta dependem dele). Recomendado + alternativas. 4 regras: vem após o veredito · % é fit real (IA cruza pill+texto), não vinculante · garante o SETUP não o resultado · defesa de legitimidade inline. STAGE 1 aditivo: dissolve N5 teaser + N17 no stage 2.",
+      },
+      {
         rota: "/veredito/waitlist",
         nome: "🟡 Waitlist (regulada)",
         nota: "Não é 'não', é 'ainda não'. UX-22: dar o enquanto isso. Captura contato, não fecha a porta. Template A9.",
@@ -206,27 +211,12 @@ const ARQUETIPOS: {
     id: "a3",
     nome: "A3 · Número / prova",
     descricao:
-      "O número grande, sempre em R$. Dinheiro em cima da promessa. O teaser (N5) dá a PROVA sem entregar o produto; o N17 e o N18 CUMPREM a promessa depois do pagamento.",
+      "Depois da reordenação (ENCAIXE): a escolha do CNAE saiu daqui e virou o ENCAIXE, pré-pago (grupo A2). Sobrou o N5' resumo de valor (vende segurança, sem prometer economia) e o N18 simulador, que cumpre o Fator R depois do pagamento.",
     telas: [
       {
-        rota: "/teaser/swap",
-        nome: "N5 · Teaser (swap)",
-        nota: "Único modo que crava número: a economia vem da troca de código, que já é conhecida no N4. Não depende da margem.",
-      },
-      {
-        rota: "/teaser/fator-r",
-        nome: "N5 · Teaser (Fator R)",
-        nota: "Promete FAIXA começando em R$ 0. Como inclui zero, não há piso a violar — é o que desarma a `promessa-quebrada`.",
-      },
-      {
-        rota: "/teaser/servico",
-        nome: "N5 · Teaser (serviço)",
-        nota: "SEM número (UX-49). Já está na tabela mais barata: inventar economia aqui seria dívida sem lastro.",
-      },
-      {
-        rota: "/dossie/cnae-otimo",
-        nome: "N17 · CNAE ótimo",
-        nota: "A feature-âncora entregue. Atual × ótimo, o porquê é obrigatório, opt-in explícito, prova exportável.",
+        rota: "/resumo",
+        nome: "N5' · Resumo de valor",
+        nota: "Opção B: pós-faixa, pré-pago. Vende SEGURANÇA, não promete economia. Número suave por faixa, com carimbo. Substituiu os 3 teasers (a prova migrou pro ENCAIXE).",
       },
       {
         rota: "/simulador",
@@ -378,7 +368,7 @@ export default function MockupPage() {
       <div className="mx-auto max-w-[1180px] px-6 py-10">
         <header className="mb-8">
           <p className="text-micro text-text-tertiary mb-1">
-            Legalizei · prancha de review
+            Legalizai · prancha de review
           </p>
           <h1 className="text-h1 text-text-primary">Telas por arquétipo</h1>
           <p className="text-body text-text-secondary mt-2 max-w-[60ch]">

@@ -25,18 +25,16 @@ import { StatusIcon, type StatusEstado } from "@/components/ui/status";
  */
 export function ListaPassos({
   concluidos,
-  temCnaeOtimo,
   pagamentoPendente = false,
   mostrarDestino = false,
 }: {
   concluidos: number;
-  temCnaeOtimo: boolean;
   /** Boleto emitido e ainda não compensado. Só isso liga o estado travado. */
   pagamentoPendente?: boolean;
   /** Fecha a lista com "Empresa constituída". Ver `Destino` abaixo. */
   mostrarDestino?: boolean;
 }) {
-  const passos = passosDoCliente(temCnaeOtimo);
+  const passos = passosDoCliente();
 
   return (
     <div className="flex flex-col gap-1.5">

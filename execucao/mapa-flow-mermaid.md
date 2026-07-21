@@ -36,7 +36,8 @@ flowchart TD
   VA["🟢 Atende"]
   VW["🟡 Waitlist"]:::saida
   VC["🔴 Comercial Mauro"]:::saida
-  N5{"N5 · Teaser<br/>swap / fator-R / serviço"}
+  ENC["ENCAIXE<br/>escolhe/trava CNAE"]
+  N5["N5' · Resumo de valor<br/>faixa-based, suave"]
   N6["N6 · Criar conta"]
   N7["N7 · A conta da abertura"]
   N8["N8 · Aceite contrato<br/>reversível, CDC 49"]
@@ -50,8 +51,6 @@ flowchart TD
   N14["N14 · CNAE secundários"]
   N15["N15 · Natureza jurídica"]
   N16["N16 · Nome / razão social"]
-  SWAP{"há família<br/>de swap?"}
-  N17["N17 · CNAE ótimo"]
   N18["N18 · Simulador pró-labore"]
   P1["P1 · Retomar de onde parou"]:::espera
   SE["Saída · exterior<br/>LC 123 art.17"]:::saida
@@ -73,7 +72,8 @@ flowchart TD
   N4V -->|"ambíguo"| DESAMB
   DESAMB --> N4A
   N4V -->|"🟢 atende"| VA
-  VA --> N4T
+  VA --> ENC
+  ENC --> N4T
   N4V -->|"🟡 regulada"| VW
   N4V -->|"🔴 comércio"| VC
   N4T -->|"até 2 + Brasil"| N4F
@@ -95,10 +95,7 @@ flowchart TD
   N13 --> N14
   N14 --> N15
   N15 --> N16
-  N16 --> SWAP
-  SWAP -->|"sim"| N17
-  N17 --> N18
-  SWAP -->|"não"| N18
+  N16 --> N18
   N18 -.-> N19
   N19 -.-> N20
   N20 -.-> N21
@@ -135,21 +132,21 @@ flowchart TD
 | 10 | 🟢 Atende | ✅ | 🟡 | Depende da lista CNAE |
 | 11 | 🟡 Waitlist | ✅ | 🟢 | Waitlist decidido 16/07; líder atende regulada (Mauro reavaliar) |
 | 12 | 🔴 Comercial Mauro | ✅ | 🟡 | Mauro recebe/trabalha o lead? (debate de saída) |
-| 13 | N5 · Teaser · swap / fator-R / serviço | ✅ | 🟡 | TEASER_PISO=0.5 é chute (só modo swap) — Pedro. Fator-R/serviço derivam de lib/fiscal |
-| 14 | N6 · Criar conta | ✅ | 🟡 | Provider de validação CPF/situação (Pedro) |
-| 15 | N7 · A conta da abertura | ✅ | 🟡 | Preço ~R$195 FAKE (Mauro+custo); DAE R$268,51×R$288 em disputa; certificado A1 (Mauro) |
-| 16 | N8 · Aceite contrato · reversível, CDC 49 | ✅ | 🟡 | Redação jurídica do contrato (Mauro/Larissa); rachadura T18 |
-| 17 | N9 · Pagamento | ✅ | 🟡 | Asaas travado; falta provider cartão CNPJ + chave de idempotência (Pedro) |
-| 18 | P2 · Aguardando boleto · dossiê já liberado | ✅ | ⚪ | Dunning revisado |
-| 19 | N10 · Seus dados | ✅ | 🟡 | CPF valida situação (provider do N6); regime de bens (casado) |
-| 20 | N11 · Vínculo INSS | ✅ | 🟢 | INSS 11% direto + teto folga = consolidado fiscal fechado |
-| 21 | N12 · Sócios? | ✅ | 🟡 | Re-pergunta o N4 (carry-forward pendente); limite 2 ok |
-| 22 | Coleta 2º sócio · + convite | ✅ | 🟡 | Convite (B5) depende do N21 planejado |
-| 23 | N13 · Dados da empresa · +upsell endereço | ✅ | 🟡 | Endereço ~R$60/mês = nosso preço (Mauro); custo do líder já confirmado |
-| 24 | N14 · CNAE secundários | ✅ | 🟡 | Só sugere secundárias mesmo-imposto (mesmo anexo + Fator R); regime-changer nunca aparece (decisão 21/07). Depende do anexo-por-CNAE (dataset/Larissa) |
-| 25 | N15 · Natureza jurídica | ✅ | 🟡 | SLU × LTDA: regra solo→SLU vs LTDA solo real (Larissa) |
-| 26 | N16 · Nome / razão social | ✅ | 🟡 | Viabilidade JUCEMG (RPA, não API); nome≠empresa (dev/Izabela) |
-| 27 | N17 · CNAE ótimo | ✅ | 🟡 | 3 famílias de swap OK; tráfego pago/white-label menor confiança (Larissa) |
+| 13 | ENCAIXE · escolhe/trava CNAE | ✅ | 🟡 | Recomendado + alternativas; % de fit real (IA cruza pill+texto) pendente; defesa de legitimidade inline. Trava o CNAE antes do nome/Junta |
+| 14 | N5' · Resumo de valor · faixa-based, suave | ✅ | ⚪ | Opção B: vende segurança, não promete economia. Alíquota de entrada (Anexo III) sobre a mediana da faixa |
+| 15 | N6 · Criar conta | ✅ | 🟡 | Provider de validação CPF/situação (Pedro) |
+| 16 | N7 · A conta da abertura | ✅ | 🟡 | Preço ~R$195 FAKE (Mauro+custo); DAE R$268,51×R$288 em disputa; certificado A1 (Mauro) |
+| 17 | N8 · Aceite contrato · reversível, CDC 49 | ✅ | 🟡 | Redação jurídica do contrato (Mauro/Larissa); rachadura T18 |
+| 18 | N9 · Pagamento | ✅ | 🟡 | Asaas travado; falta provider cartão CNPJ + chave de idempotência (Pedro) |
+| 19 | P2 · Aguardando boleto · dossiê já liberado | ✅ | ⚪ | Dunning revisado |
+| 20 | N10 · Seus dados | ✅ | 🟡 | CPF valida situação (provider do N6); regime de bens (casado) |
+| 21 | N11 · Vínculo INSS | ✅ | 🟢 | INSS 11% direto + teto folga = consolidado fiscal fechado |
+| 22 | N12 · Sócios? | ✅ | 🟡 | Re-pergunta o N4 (carry-forward pendente); limite 2 ok |
+| 23 | Coleta 2º sócio · + convite | ✅ | 🟡 | Convite (B5) depende do N21 planejado |
+| 24 | N13 · Dados da empresa · +upsell endereço | ✅ | 🟡 | Endereço ~R$60/mês = nosso preço (Mauro); custo do líder já confirmado |
+| 25 | N14 · CNAE secundários | ✅ | 🟡 | Só sugere secundárias mesmo-imposto (mesmo anexo + Fator R); regime-changer nunca aparece (decisão 21/07). Depende do anexo-por-CNAE (dataset/Larissa) |
+| 26 | N15 · Natureza jurídica | ✅ | 🟡 | SLU × LTDA: regra solo→SLU vs LTDA solo real (Larissa) |
+| 27 | N16 · Nome / razão social | ✅ | 🟡 | Viabilidade JUCEMG (RPA, não API); nome≠empresa (dev/Izabela) |
 | 28 | N18 · Simulador pró-labore | ✅ | 🟡 | 7 pontos fiscais (Larissa); alerta FS12 (COSIT 17/2021) não exibir até conferir |
 | 29 | P1 · Retomar de onde parou | ✅ | ⚪ | UX-23 dá pra fechar (N18 existe) |
 | 30 | Saída · exterior · LC 123 art.17 | ✅ | 🟢 | UX-42 Lucro Presumido (Mauro); debate de tom |
@@ -186,6 +183,7 @@ flowchart TD
 > Cada linha = um estado estrutural do mapa. Snapshots completos em `flow/versoes/` (`.json` p/ diff + `.mmd` legível). Mais recente no topo.
 
 <!-- FLOW:VERSOES:INI -->
+- **v4** · 2026-07-21 · +nós ENC · -nós SWAP,N17 · renomeou N5 "N5 · Teaser swap / fator-R / serviço"→"N5' · Resumo de valor faixa-based, suave" · validação N5 pendente→ux · falta-validar em N5 · +conexões VA→ENC,ENC→N4T,N16→N18 · -conexões VA→N4T,N16→SWAP,SWAP→N17,N17→N18,SWAP→N18
 - **v3** · 2026-07-21 · renomeou REC "Órgão recusa 'precisa de você'"→"REC · Órgão recusa 'precisa de você'"; N23 "N23 · GOV.BR bronze → upgrade"→"GOV.BR nível bronze→upgrade" · status N19 planejada→construida; N20 planejada→construida; N21 planejada→construida; REC planejada→construida; N22 planejada→construida; N23 planejada→construida; ATIVA planejada→construida · validação N19 pendente→ux; REC pendente→ux; ATIVA oficial→pendente · falta-validar em N19,N20,N21,REC,N22,N23,ATIVA
 - **v2** · 2026-07-21 · falta-validar em N14
 - **v1** · 2026-07-21 · versão inicial (40 nós, 44 conexões)

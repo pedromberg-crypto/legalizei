@@ -9,6 +9,7 @@ import {
 } from "react";
 import { Button } from "@/components/ui/button";
 import { VereditoView, type Resultado } from "@/components/veredito";
+import { EncaixeView, encaixeDeResultado } from "@/components/encaixe";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -162,7 +163,13 @@ function mapear(texto: string): Resultado {
   };
 }
 
-type Etapa = "perguntando" | "analisando" | "veredito" | "triagem" | "faixa";
+type Etapa =
+  | "perguntando"
+  | "analisando"
+  | "veredito"
+  | "encaixe"
+  | "triagem"
+  | "faixa";
 
 const FAIXAS = [
   { id: "ate 10k", label: "Até R$ 10 mil" },
@@ -190,7 +197,7 @@ export default function GatePage() {
   return (
     <>
       <header className="pt-6 pb-4">
-        <p className="text-micro text-text-tertiary">Legalizei</p>
+        <p className="text-micro text-text-tertiary">Legalizai</p>
       </header>
 
       <main className="app-main">
@@ -201,6 +208,13 @@ export default function GatePage() {
         {etapa === "veredito" && resultado && (
           <VereditoView
             r={resultado}
+            onRefazer={() => setEtapa("perguntando")}
+            onSeguir={() => setEtapa("encaixe")}
+          />
+        )}
+        {etapa === "encaixe" && resultado && (
+          <EncaixeView
+            dados={encaixeDeResultado(resultado)}
             onRefazer={() => setEtapa("perguntando")}
             onSeguir={() => setEtapa("triagem")}
           />

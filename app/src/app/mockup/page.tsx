@@ -144,7 +144,7 @@ const ARQUETIPOS: {
       },
       {
         rota: "/dossie/socio",
-        nome: "N10 · Dados do sócio",
+        nome: "N10 · Seus dados",
         nota: "A mais longa: testa o corpo rolável. CPF valida situação; casado revela regime; comunhão universal avisa o cônjuge cedo (UX-30).",
       },
       {

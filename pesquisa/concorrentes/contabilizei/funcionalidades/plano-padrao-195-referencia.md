@@ -71,6 +71,23 @@ Fonte: tela "Sócios e Pró-labore" (sistema, 14/07). Números exibidos pela UI 
 | Parcelamento de impostos | 🟢 plataforma **mostra disponibilidade, cliente opta** |
 | IRPF do sócio (pessoa física) | 🟡 confirmar com especialistas Legalize |
 
+## 🆕 2026-07-21 — Sociedade na abertura × pró-labore (a distinção que faltava)
+Provocação do Pedro: o *"até 2 sócios grátis"* que aparece na vitrine é do **serviço financeiro (pró-labore)**, não da abertura. Pesquisa no blog + página de abertura confirmou **dois "grátis" diferentes**:
+
+| O que | Grátis? | Onde mora | Confiança |
+|---|---|---|---|
+| **Abertura** (honorários) | ✅ em qualquer plano | *"não cobramos honorários de abertura"*; cliente paga só **taxas de governo** (junta/cartório/OAB, municipal, alvará) | 🟢 fonte |
+| **Pró-labore mensal** | ✅ **até 2 sócios** | serviço **recorrente** do plano; é AQUI o *"Até 2 sócios grátis"* | 🟢 fonte |
+
+- **Fidelidade 12 meses** é a contrapartida da abertura grátis (*"fidelidade mínima de 12 meses"*). → insumo direto pro 🟡 aberto **prazo de fidelidade** (o líder usa 12m).
+- **3+ sócios → plano superior** ("Experts Essencial" inclui 3 no valor base). **Headcount de folha = driver do tier** — é o mesmo motivo de a calculadora unificar *"sócios ou funcionários"* numa caixa só (sócio = pró-labore, funcionário = folha, ambos "pessoa a processar/mês").
+
+**Abertura de 2 sócios É self-service online no plano básico** (sem sair de casa): 1 pessoa fornece os dados de **todos** os sócios (RG/CPF/endereço/certidão de casamento/e-CPF), a **contabilidade redige o contrato social**, e **cada sócio assina eletronicamente** (Gov.br/certificado). A única etapa multi-pessoa é a **assinatura**. ⚠️ Não atravessei o fluxo logado (criar conta = proibido) — mecânica de tela **inferida** de docs + calculadora (confiança alta no "é suportado self-service"; média na tela exata).
+
+**Implicação pro nosso flow:** mapeia N12 (coleta 2º sócio) + N22 (assinatura dos sócios, planejado) + B5 (convite). A **fricção real = assinatura eletrônica do 2º sócio**, já prevista no [[mapa-flow-mermaid|mapa]] como planejada. Reforça a decisão de **manter até 2 sócios grátis na constituição** (o líder faz idêntico).
+
+**Fontes:** [abrir-empresa](https://www.contabilizei.com.br/abrir-empresa/) · [sociedade-limitada](https://www.contabilizei.com.br/contabilidade-online/sociedade-limitada/) · [passo-a-passo LTDA](https://www.contabilizei.com.br/contabilidade-online/passo-a-passo-abrir-ltda-com-contabilidade-online/) · [como-abrir-empresa](https://www.contabilizei.com.br/contabilidade-online/como-abrir-empresa/)
+
 ## 🚨 Pontos de alerta / oportunidade pro Legalizei
 1. **Prazo de abertura NÃO divulgado** 🔴 — Contabilizei não promete tempo. Nosso diferencial em potencial: **cravar prazo** (ex: "empresa em X dias").
 2. **App mobile fraco** — porta pra ganhar no mobile-first.

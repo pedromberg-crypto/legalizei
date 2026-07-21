@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "../campos";
+import { TelaHeader, Titulo, Corpo, Rodape } from "../campos";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -12,15 +12,30 @@ import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "../campos";
  * Spec: spec-telas-entrada-b1-b2.md → Tela 10 (2.5) · mapa T10→N14
  * Motor: b2.coleta (cnae secundários)
  *
- * Regras da spec:
- *   · CNAE principal HERDADO do N4 — travado, mostrado no topo, não editável.
- *   · Secundários sugeridos pela IA com toggle + prova social ("comum nessa
- *     atividade").
- *   · Secundário que QUEBRA o recorte (regulada/comércio) → pill de aviso, não
- *     some silencioso.
+ * ─── REGRA ESTRUTURAL (decisão do Pedro, 2026-07-21) ─────────────────────
+ * SÓ sugere secundárias **similares** e de **MESMO IMPOSTO** que a principal:
+ * mesmo Anexo do Simples + mesma dependência de Fator R. Assim, incluir uma
+ * secundária NUNCA muda o que o cliente paga.
  *
- * 🚧 IA dublada: as sugestões e o "comum como secundário" são mock. No motor a
- * lista vem do cruzamento da atividade; aqui é fixa pra provar o fluxo.
+ * Isto REVERTE a regra antiga ("secundário que quebra o recorte entra com
+ * aviso"). O que muda o regime **não aparece aqui — nem com aviso.** Dois
+ * motivos:
+ *   1. Quem revende produto é COMÉRCIO, e comércio é barrado lá no N4 (🔴
+ *      comercial Mauro). Sugerir um CNAE de comércio numa tela do fluxo
+ *      só-serviço contradiz o próprio escopo do produto.
+ *   2. Oferecer uma opção que silenciosamente troca o Anexo/Fator R é o
+ *      oposto da feature-âncora (que existe pra BAIXAR imposto, não subir).
+ *
+ * ─── DE ONDE SAEM AS SUGESTÕES ───────────────────────────────────────────
+ * No app real: dataset de CNAE filtrado por `anexo == principal.anexo` E
+ * `fator_r == principal.fator_r` (contabilizei-cnae-completo.json + ratificação
+ * Larissa). Aqui o mock usa exatamente as **vizinhas já vetadas como
+ * `mesmo-imposto` no N4** (gate `vizinhas`), pra não inventar equivalência
+ * fiscal: 6202 / 6203 / 6204 / 7410. Publicidade (7311) e hospedagem (6311)
+ * ficaram DE FORA de propósito — plausíveis, mas não vetadas como mesmo-anexo.
+ *
+ * 🚧 IA dublada: a lista e o "comum como secundário" são mock. A regra do
+ * filtro (mesmo-imposto) é que é definitiva.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -35,10 +50,10 @@ interface Sugestao {
   cnae: string;
   humano: string;
   prova: string;
-  // "fora do recorte" = regulada/comércio: entra com aviso, não silencioso.
-  fora?: string;
 }
 
+// Todas MESMO-IMPOSTO que a principal (Anexo III/V com Fator R). Nenhuma muda o
+// enquadramento — é a condição pra estar nesta lista.
 const SUGESTOES: Sugestao[] = [
   {
     id: "s1",
@@ -48,22 +63,21 @@ const SUGESTOES: Sugestao[] = [
   },
   {
     id: "s2",
-    cnae: "7311-4/00",
-    humano: "Agência de publicidade",
-    prova: "Aparece muito junto de web design.",
+    cnae: "6204-0/00",
+    humano: "Consultoria em tecnologia da informação",
+    prova: "Quem entrega site costuma orientar a parte técnica também.",
   },
   {
     id: "s3",
-    cnae: "6311-9/00",
-    humano: "Hospedagem de sites",
-    prova: "Quem entrega site costuma hospedar também.",
+    cnae: "7410-2/99",
+    humano: "Design gráfico e identidade visual",
+    prova: "Anda junto de web design na maioria dos casos.",
   },
   {
     id: "s4",
-    cnae: "4751-2/01",
-    humano: "Comércio de equipamentos de informática",
-    prova: "Se você revende produtos.",
-    fora: "Isso é comércio. Ele muda o imposto e sai do nosso happy path.",
+    cnae: "6203-1/00",
+    humano: "Software pronto (de prateleira)",
+    prova: "Se além do site você licencia algum produto seu.",
   },
 ];
 
@@ -73,8 +87,6 @@ export default function CnaeSecundariosPage() {
   function alterna(id: string) {
     setAtivos((a) => ({ ...a, [id]: !a[id] }));
   }
-
-  const algumFora = SUGESTOES.some((s) => s.fora && ativos[s.id]);
 
   return (
     <>
@@ -104,6 +116,12 @@ export default function CnaeSecundariosPage() {
           <div>
             <p className="text-micro text-text-tertiary mb-1.5">
               Sugestões pra você (toque pra incluir)
+            </p>
+            {/* A garantia vira argumento: incluir não muda o imposto. É o que
+                separa esta lista da versão antiga, que sugeria comércio. */}
+            <p className="text-caption text-text-secondary mb-2.5">
+              Todas ficam no mesmo imposto da sua atividade principal, então
+              incluir não muda o que você paga.
             </p>
             <div className="flex flex-col gap-2">
               {SUGESTOES.map((s) => {
@@ -141,25 +159,11 @@ export default function CnaeSecundariosPage() {
                       </span>
                     </div>
                     <p className="text-micro text-text-tertiary mt-2">{s.prova}</p>
-                    {/* Aviso que NÃO some silencioso quando quebra o recorte. */}
-                    {s.fora && on && (
-                      <p className="text-micro text-state-warning-text mt-2">
-                        {s.fora}
-                      </p>
-                    )}
                   </button>
                 );
               })}
             </div>
           </div>
-
-          {algumFora && (
-            <Aviso variante="warning" titulo="Uma escolha muda seu enquadramento">
-              Você marcou uma atividade de comércio. Dá pra seguir, mas ela pode
-              tirar você do Simples mais barato. Nosso time confirma antes de
-              registrar.
-            </Aviso>
-          )}
 
           <p className="text-micro text-text-tertiary">
             Sem secundárias também está ótimo. Você pode adicionar depois.

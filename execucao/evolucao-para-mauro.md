@@ -312,6 +312,25 @@ Preciso de você: o plano era testar abrindo o MEU CNPJ, mas ele já existe. Tem
 
 **Próximo:** a cauda do flow (revisão do dossiê, termo de início, painel de acompanhamento, assinatura no GOV.BR e o dia seguinte à empresa aberta).
 
+## Semana 21/07/2026 — mapa vivo do app + como o líder trata sociedade
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | Organização | Fizemos um **mapa visual do app inteiro** (as 26 telas + todos os caminhos e saídas), com uma tabela de **o que já está validado × o que ainda depende de gente** (Larissa/você). O mapa **se atualiza sozinho** a partir do código e guarda versões, então nunca mais fica desatualizado | 🟢 |
+| 2 | Sociedade (decisão) | Debatemos se valia cortar sociedade do 1º produto (abrir só individual e vender sócio depois). **Decidi manter até 2 sócios grátis na abertura, igual à Contabilizei** — porque adicionar sócio depois é uma alteração contratual cara, então "cobrar simbólico" não fecha e penalizaria quem já quer abrir com sócio | 🟢 |
+| 3 | Inteligência do líder | Confirmei na fonte pública como a Contabilizei trata sociedade: a **abertura é grátis** (o cliente paga só as taxas do governo) e exige **fidelidade de 12 meses**; o *"até 2 sócios grátis"* é do **serviço mensal (pró-labore)**, não da abertura. Insumo direto pra nossa decisão de **prazo de fidelidade** | 🟢 |
+| 4 | Tela de atividades | Ajuste: as sugestões de atividade secundária agora só mostram as que **não mudam o imposto** do cliente (antes o exemplo sugeria comércio, que não fazia sentido e mudava o enquadramento) | 🟢 |
+
+**Próximo (21/07):** seguir com a cauda do flow; levar à Larissa o ponto SLU × LTDA (agora com evidência de que SLU é a sociedade limitada de sócio único); decidir o prazo de fidelidade (referência do líder: 12 meses).
+
+### 📱 WhatsApp (21/07)
+```
+*Update Legalizei* 🗺️
+- Montei um mapa visual do app inteiro (as 26 telas + todos os caminhos), com uma tabela de o que já está validado e o que ainda depende da Larissa/de você. Ele se atualiza sozinho a partir do código e guarda versões
+- Decisão sobre sociedade: mantenho até 2 sócios grátis na abertura, igual à Contabilizei. Adicionar sócio depois é uma alteração cara, então não compensa cobrar "simbólico" e empurrar pra depois
+- Confirmei na fonte como o líder trata isso: a abertura é grátis (paga só as taxas do governo) com fidelidade de 12 meses; o "até 2 sócios grátis" que aparece é do serviço mensal, não da abertura. Serve de referência pro nosso prazo de fidelidade
+- Ajustei a tela de atividades: só sugere atividades secundárias que NÃO mudam o imposto do cliente
+```
+
 ## 📱 Versão WhatsApp (copiar/colar — grupo ampliado, sem item de sociedade)
 ```
 *Relatório semanal — Legalizei* 📊

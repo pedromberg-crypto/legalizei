@@ -5,6 +5,8 @@ Testa a **lógica** dos fluxos do app (abertura de CNPJ e, depois, portal) rápi
 > Arquitetura travada em [[2026-07-15-spec-telas-e-motor-testes]]. Personas: [[casos-teste-fluxo-cnae]].
 >
 > ⚠️ **v0.3.0 (2026-07-16) — A ORDEM MUDOU.** Fonte da lógica agora é **[[reordenacao-flow-cobranca-cedo]]** (telas N1–N25), que reordenou [[spec-telas-entrada-b1-b2]] + [[spec-telas-b3-b4-aterrissagem]] + [[blocos-fluxo-abertura]]. Execução: **ENTRADA → B1 → B3 → B2 → B4 → B4.5**. Os nomes dos blocos são os mesmos; **a cobrança subiu**. Ver B3 antes de B2 no relatório é o ponto, não um bug.
+>
+> ⚠️ **v0.5.0 (2026-07-21) — ENCAIXE.** O CNAE agora se escolhe **pré-pago** no `b1.encaixe` (após o veredito, antes da triagem); o teaser (N5) virou o **N5' resumo** (vende segurança, não promete economia) e o **N17 (`b2.cnae_otimo`) saiu**. Ver a seção v0.5.0 em Estado. Fonte: **[[reordenacao-cluster-fiscal-encaixe]]**.
 
 ## Rodar
 
@@ -46,6 +48,19 @@ Uma linha por evento, discriminada por `tipo`:
 Cada passo: `pula_se` (condicional exclusiva não roda), `valida` (barra o fluxo), `deriva` (lógica → `{ resultado, dados?, veredito_b1?, termina? }`). Pausa = evento na persona, testando parar/esperar/retomar idempotente — não o órgão.
 
 ## Estado
+
+### ✅ v0.5.0 — ENCAIXE: reorder do cluster fiscal (2026-07-21) · **19 personas, 19 PASS**
+
+A escolha do CNAE saiu do B2 (N17 tardio) e virou o **ENCAIXE** (`b1.encaixe`), no B1, logo após o veredito 🟢 e **antes da triagem** — pré-pago. TRAVA o CNAE (o nome/objeto/Junta dependem dele desde o 1º preenchimento, confirmado pelo Pedro). Herda o opt-in do antigo N17 ("nunca troca em silêncio").
+
+**O que mudou:**
+- **`b2.cnae_otimo` (N17) REMOVIDO** — a lógica de swap migrou pro `b1.encaixe`.
+- **`b1.teaser` (N5) → `b1.resumo` (N5')** — opção B: vende **segurança**, mostra o imposto por faixa (Anexo III sobre a mediana) com carimbo de que varia. **Não promete economia.**
+- **`b2.simulador`** computa a economia do swap (vinda do encaixe) + Fator R; **sem o check de promessa-quebrada** (não há mais número prometido pré-pago).
+- `FISCAL.TEASER_PISO` e a função `teaser()` **removidos** (sem promessa, sem piso a violar).
+- **`promessa-quebrada` mudou de sentido:** já não é "teaser prometeu X, real 0"; agora o simulador mostra **economia real R$0** honestamente (o resumo já avisou que varia).
+
+Goldens das 16 personas de abertura **regenerados** e inspecionados; as 3 de migração (flow #2) não mudaram. Fonte: **[[reordenacao-cluster-fiscal-encaixe]]**.
 
 ### ✅ FLOW #2 — MIGRAR (v0.1.0, 2026-07-16) · **3 personas, 3 PASS**
 
@@ -115,7 +130,6 @@ Os 3 primeiros: **corrigidos** (`FATOR_R_MARGEM`, `custoProLabore`, `adota_cnae_
 - **v0.2.0:** cobertura B1→B4→B4.5. Simulador com os números do consolidado fiscal.
 
 ### 🟡 Pendências
-- **`FISCAL.TEASER_PISO` (0.5) não foi ratificado.** É o piso de desvio teaser × real que separa "estimativa" de promessa quebrada. Decisão de produto → [[reordenacao-flow-cobranca-cedo]].
 - **`b2.natureza` sob suspeita:** o caso real (CNPJ do Pedro) saiu **LTDA num solo**. Se SLU é LTDA de sócio único (mesma natureza 206-2), o guard-rail está errado. Pergunta pra Larissa.
 - **`b4.taxa`:** DAE JUCEMG ~R$268,51 × R$288 (Izabela), aberto desde 09/07.
 - Simulador roda como **"estimativa"** até a Larissa fechar A/B/C ([[perguntas-larissa-fiscal]]) — sobretudo o ponto B (CPP-no-DAS), que afina o pró-labore ótimo.

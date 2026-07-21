@@ -67,6 +67,10 @@
         "resultado": "🟢 atende"
       },
       {
+        "passo": "b1.encaixe",
+        "resultado": "enquadramento único (sem CNAE alternativo) · segue com o código encontrado"
+      },
+      {
         "passo": "b1.triagem",
         "resultado": "ERRO: acima de 2 sócios: atendimento humano"
       }

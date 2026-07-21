@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: 78f8fc8b-c410-4fe7-92a2-0df9ccb4eaff
-  modified: 2026-07-21T21:07:02.138Z
+  modified: 2026-07-21T21:24:18.795Z
 ---
 
 Em 2026-07-21 o cluster fiscal foi **reordenado** (stage 1+2 construído, `tsc`+eslint limpo). O CNAE deixou de ser um **swap tardio** (N17, depois do dossiê) e passou a ser escolhido na **DESCOBERTA**, pré-pagamento, numa tela nova: o **ENCAIXE** (`veredito 🟢 → ENCAIXE → triagem`). Motivo travado pelo Pedro: **o CNAE entra no 1º preenchimento e o nome/objeto/Junta dependem dele** → travar cedo é requisito, não estética. Modelo = o print do Pedro (card Recomendado + alternativas, com % de adequação que é fit real da IA cruzando pill+texto, não vinculante).
@@ -14,6 +14,6 @@ Em 2026-07-21 o cluster fiscal foi **reordenado** (stage 1+2 construído, `tsc`+
 
 **As 4 regras do ENCAIXE:** (1) vem depois do veredito, não na tela de descrever; (2) o % é fit à descrição, sugestão não-vinculante; (3) garante o SETUP ("o código mais barato que serve"), nunca o resultado (fator-r depende da margem); (4) defesa de legitimidade inline obrigatória ("emite a mesma nota, não é malandragem").
 
-**⚠️ ABERTO — 1º item da próxima janela:** o **motor** (`execucao/motor-testes/flow-schema.js`) ainda modela o flow VELHO (b2.cnae_otimo/N17) → drift interno até atualizar. E N14/N16 lendo o "CNAE travado" está deferido até existir store de estado real (hoje tudo é mock por tela).
+**✅ Motor atualizado (9º flow, mesmo dia 21/07):** flow-schema **v0.5.0** com `b1.encaixe` (após veredito, antes da triagem) + `b1.resumo` (N5'), **N17/`b2.cnae_otimo` removido**, `TEASER_PISO`+`teaser()` removidos, promessa-quebrada dissolvida (mostra economia real R$0 honestamente); **19/19 PASS** (goldens das 16 personas de abertura regenerados + inspecionados; as 3 de migração intactas). App + mermaid + motor + nota **consistentes**. **Ainda ABERTO:** N14/N16 lendo o "CNAE travado" (deferido até existir store de estado real; hoje tudo é mock por tela).
 
 Fonte completa: [[reordenacao-cluster-fiscal-encaixe]]. Supera parte de [[legalize-cnae-fiscalmente-otimo]] (a entrega migrou pro ENCAIXE) e [[legalize-pill-estreita-nao-valida]]. Ver [[legalize-mapa-flow-vivo]] (v4).

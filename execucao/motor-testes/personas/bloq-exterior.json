@@ -67,6 +67,10 @@
         "resultado": "🟢 atende"
       },
       {
+        "passo": "b1.encaixe",
+        "resultado": "enquadramento único (sem CNAE alternativo) · segue com o código encontrado"
+      },
+      {
         "passo": "b1.triagem",
         "resultado": "ERRO: sócio no exterior: bloqueia opção Simples (LC 123 art.17 II) → rota humana"
       }

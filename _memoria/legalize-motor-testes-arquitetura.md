@@ -1,10 +1,11 @@
 ---
 name: legalize-motor-testes-arquitetura
-description: Motor de testes em execucao/motor-testes/ (headless, Node puro). **v0.4.0 · 19 personas · 2 flows** (16 abertura + 3 migrar). Ordem: ENTRADA→B1→B3→B2→B4 (a cobranca SUBIU). Guard-rails fatais vivem no b1.triagem (N4, ANTES do dinheiro). Motor = criterio de aceite do backend; contradicao motor x spec, motor ganha.
+description: Motor de testes em execucao/motor-testes/ (headless, Node puro). **v0.5.0 · 19 personas · 2 flows** (16 abertura + 3 migrar). Ordem: ENTRADA→B1→B3→B2→B4. **ENCAIXE (21/07): CNAE escolhido PRE-PAGO no b1.encaixe; teaser virou b1.resumo (N5'); N17/b2.cnae_otimo removido.** Guard-rails fatais no b1.triagem (N4, ANTES do dinheiro). Motor = criterio de aceite; contradicao motor x spec, motor ganha.
 metadata:
   node_type: memory
   type: project
   originSessionId: 2b138de1-6d80-46f8-901a-58ce799ebff4
+  modified: 2026-07-21T21:25:04.698Z
 ---
 
 **O que é:** motor headless que percorre personas pelas telas em ms, sem UI e sem gastar token
@@ -16,7 +17,9 @@ metadata:
 
 ---
 
-## ⚠️ ESTADO ATUAL — v0.4.0 (2026-07-16)
+## ⚠️ ESTADO ATUAL — v0.5.0 (2026-07-21)
+
+**🆕 ENCAIXE (v0.5.0, 21/07):** a escolha do CNAE virou o `b1.encaixe` (após o veredito, antes da triagem, **pré-pago**); o `b1.teaser` virou `b1.resumo` (N5', opção B, **não promete economia**); o `b2.cnae_otimo` (N17) + `TEASER_PISO` + a função `teaser()` foram **removidos**; a `promessa-quebrada` mostra economia real R$0 honestamente (sem número prometido, sem piso a violar). Goldens das 16 personas de abertura regenerados + inspecionados, **19/19 PASS**. → [[reordenacao-cluster-fiscal-encaixe]].
 
 **A ORDEM MUDOU. A cobrança subiu.** Execução: `ENTRADA → B1 → **B3** → **B2** → B4 → B4.5`.
 Os nomes dos blocos são os do vault; o que mudou foi a **ordem**. Telas renumeradas T1–T23 →
@@ -33,8 +36,8 @@ Sócio no exterior e 3+ sócios **NÃO** são mais barrados no B2. Subiram na v0
 coração da reordenação: **com cobrança no N9, barrar depois = cobrar de quem não pode abrir.**
 (`b2.socios` virou input sem `valida`; `b2.socio` não checa mais exterior.)
 
-**Passos que nasceram na reordenação:** `b1.triagem` · `b1.faturamento` · `b1.teaser` (3 modos:
-swap = número fechado · fator-r = **faixa** que inclui R$0 · servico = sem número) · `b2.consenso`
+**Passos que nasceram na reordenação:** `b1.triagem` · `b1.faturamento` · **`b1.encaixe`** (v0.5.0:
+escolhe/trava o CNAE, pré-pago) · **`b1.resumo`** (v0.5.0: N5' resumo de valor, sem promessa) · `b2.consenso`
 (N19.5, 2º sócio ratifica antes do irreversível) · `b2.termo` (N20, o irreversível, separado do
 aceite do N8) · `b4.dispensas`.
 

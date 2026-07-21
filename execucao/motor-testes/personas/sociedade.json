@@ -85,6 +85,10 @@
         "resultado": "🟢 atende"
       },
       {
+        "passo": "b1.encaixe",
+        "resultado": "enquadramento único (sem CNAE alternativo) · segue com o código encontrado"
+      },
+      {
         "passo": "b1.triagem",
         "resultado": "elegível · 2 sócios · ninguém no exterior"
       },
@@ -93,8 +97,8 @@
         "resultado": "faixa 30k+ (ponto médio R$40000)"
       },
       {
-        "passo": "b1.teaser",
-        "resultado": "teaser (faixa): de R$0 a ~R$3800/mês, **depende de quanto você consegue se pagar** · CNPJ em ~2 dias úteis · alvará imediato · a gente paga seu DAS todo mês · a conta exata é no simulador"
+        "passo": "b1.resumo",
+        "resultado": "resumo (segurança): imposto por volta de ~R$2400/mês na sua faixa · pode variar conforme quanto você se paga · CNPJ em ~2 dias úteis · alvará imediato · a gente paga seu DAS todo mês · carimbo estimativa (UX-26)"
       },
       {
         "passo": "b1.conta",
@@ -141,12 +145,8 @@
         "resultado": "razão social + fantasia · nome disponível (viabilidade prévia)"
       },
       {
-        "passo": "b2.cnae_otimo",
-        "resultado": "enquadramento único (sem CNAE alternativo)"
-      },
-      {
         "passo": "b2.simulador",
-        "resultado": "est. Fator R 35% → Anexo III (6%) · já em III · dentro da faixa prometida (R$0–3800 → ~R$3800)"
+        "resultado": "est. Fator R 35% → Anexo III (6%) · já em III · economia real ~R$3800/mês"
       },
       {
         "passo": "b2.revisao",

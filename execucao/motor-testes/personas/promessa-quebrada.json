@@ -17,9 +17,9 @@
     ]
   },
   "sugestoes": {
-    "b1.teaser": "✅ **UX-51 resolvido aqui.** O teaser dele cai no modo : faixa R$0–3.800 com \"depende de quanto você consegue se pagar\" na cara. O R$0 está DENTRO da promessa, então não há piso a violar. Antes prometia R$3.800 fechado e entregava R$0 — o padrão perverso era: quanto MAIOR o faturamento, maior a promessa e menor a chance de alcançar.",
-    "b2.simulador": "⚠️ Ele cai no piso da faixa (R$0). A faixa avisou, mas a tela precisa **explicar o porquê sem culpar**: \"o Fator R exigiria R$11.200/mês de pró-labore e sua margem hoje é ~R$10k — não fecha. Se a margem subir, a gente te avisa.\" Isso é o UX-41 (loop estimativa→realidade) com gancho de retorno, não um beco.",
-    "b2.cnae_otimo": "6204-0/00 não tem família de swap. Se tivesse, ele cairia no modo  (número seguro) e teria economia REAL independente da margem — é a alavanca que serve exatamente pra quem tem margem apertada."
+    "b1.resumo": "✅ **UX-51 dissolvido de vez.** No modelo novo o N5' resumo NÃO promete economia: mostra o imposto por faixa (~R$2.400/mês) com carimbo de que varia. Sem número prometido, não há piso a violar. O padrão perverso antigo (quanto MAIOR o faturamento, maior a promessa e menor a chance de alcançar) deixou de existir por construção.",
+    "b2.simulador": "⚠️ Ele cai em economia R$0. O resumo já avisou que varia, mas a tela precisa **explicar o porquê sem culpar**: \"o Fator R exigiria R$12.000/mês de pró-labore e sua margem hoje é ~R$10k — não fecha. Se a margem subir, a gente te avisa.\" Isso é o UX-41 (loop estimativa→realidade) com gancho de retorno, não um beco.",
+    "b1.encaixe": "6204-0/00 não tem família de swap → no ENCAIXE ele vê \"enquadramento único\". Se tivesse alternativa mais barata, o recomendado apareceria aqui (número seguro, decidido pré-pago) — é a alavanca que serve exatamente pra quem tem margem apertada."
   },
   "respostas": {
     "entrada_escolha": "abrir_cnpj",
@@ -85,6 +85,10 @@
         "resultado": "🟢 atende"
       },
       {
+        "passo": "b1.encaixe",
+        "resultado": "enquadramento único (sem CNAE alternativo) · segue com o código encontrado"
+      },
+      {
         "passo": "b1.triagem",
         "resultado": "elegível · solo · ninguém no exterior"
       },
@@ -93,8 +97,8 @@
         "resultado": "faixa 30k+ (ponto médio R$40000)"
       },
       {
-        "passo": "b1.teaser",
-        "resultado": "teaser (faixa): de R$0 a ~R$3800/mês, **depende de quanto você consegue se pagar** · CNPJ em ~2 dias úteis · alvará imediato · a gente paga seu DAS todo mês · a conta exata é no simulador"
+        "passo": "b1.resumo",
+        "resultado": "resumo (segurança): imposto por volta de ~R$2400/mês na sua faixa · pode variar conforme quanto você se paga · CNPJ em ~2 dias úteis · alvará imediato · a gente paga seu DAS todo mês · carimbo estimativa (UX-26)"
       },
       {
         "passo": "b1.conta",
@@ -141,12 +145,8 @@
         "resultado": "razão social + fantasia · nome disponível (viabilidade prévia)"
       },
       {
-        "passo": "b2.cnae_otimo",
-        "resultado": "enquadramento único (sem CNAE alternativo)"
-      },
-      {
         "passo": "b2.simulador",
-        "resultado": "est. Fator R 7% → Anexo V (15,5%) · ótimo R$12000 (mira 30%, com colchão) → Anexo III (IRRF s/ excedente) · custo: INSS R$932 (11%) · dentro da faixa prometida (R$0–3800 → ~R$0) · ⚠️ caiu no piso da faixa: a margem não comporta o pró-labore ótimo (a faixa avisou)"
+        "resultado": "est. Fator R 7% → Anexo V (15,5%) · ótimo R$12000 (mira 30%, com colchão) → Anexo III (IRRF s/ excedente) · custo: INSS R$932 (11%) · economia real R$0 (a margem não comporta o pró-labore ótimo; o resumo já avisou que varia)"
       },
       {
         "passo": "b2.revisao",

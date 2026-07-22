@@ -93,6 +93,7 @@ Mapeei **14 superfícies** + **16 popups/modais** do portal logado. O portal do 
 | P14 | 🔴 **Mensalidade atrasada / "Aqui está o que você perde"** | Home | lista o que perde (garantia, distribuição de lucro, NF, suporte) + "riscos: multas >R$450/mês" | **Dunning por medo** (retenção de inadimplente) |
 | P15 | **CSAT "Central do Sócio"** | Central de Sócios | "Quão satisfeito com a experiência?" (1–5) | **Medição de satisfação** da feature (fechei no X) |
 | P16 | **"Avalie esta tela"** (pervasivo) | Impostos + várias | CSAT inline no rodapé de quase toda tela | **Instrumentação de satisfação** por tela — o líder mede tudo |
+| P17 | **"Novo emissor mais ágil e inteligente"** | Emissor de notas | anúncio + vídeo: sugestão de códigos, ajuda contextual, "acompanhar a Reforma Tributária" | **Adoção de feature** — educa sobre a migração do emissor (que está instável) |
 
 **Leitura estratégica:** o líder monetiza o **medo** (exclusão do Simples, multas, tributação incorreta) e cria **dependência** (extrato só automatiza no banco deles). É eficaz e é o **flanco ético** que a gente ataca — nosso posicionamento pode ser o oposto: transparência, sem pegadinha, sem vender pânico. (Casa com a decisão do flow de abertura de não usar "vende pânico".)
 
@@ -258,4 +259,29 @@ Construir o portal na ordem da **necessidade real do novo CNPJ**, replicando só
 6. Depois: conciliação bancária (Open Finance), relatórios avançados, e os upsells — **backlog**, não MVP.
 
 > **Regra de ouro do dossiê:** a gente não copia a plataforma do líder. A gente **pega o subconjunto que o novo precisa, fecha os loops que eles deixam abertos, e tira o pânico e o jargão.** É menos tela, mais clareza.
+
+---
+
+# 🔬 2ª PASSADA (2026-07-22) — aprofundamento dos fluxos que a gente vai construir
+> Passada focada em profundidade nos 3 fluxos-chave + a aba de guia dos impostos. Read-only mantido (nada emitido/pago/confirmado). Cobertura subiu de ~35–40% pra **~60%**.
+
+## A. 🏛️ Guia dos impostos (aprofundado)
+- **Minhas alíquotas** (`#/minhas-aliquotas`) = **a composição da guia**. Por CNAE/item de serviço: **Total %** · **ISS %** · **Alíquota** (*Variável* quando depende do Fator R) · **Folha %** (o índice do Fator R) · toggle **Mercado interno/externo** · item LC116. *(Caso do Pedro: 7319-0/04 · Total 6% · ISS 2,01% · Alíquota Variável · Folha 37% — confirma o Fator R da cobaia.)*
+- **Mecânica da guia:** cada uma é **DARF Unificado** por competência; valor único na tela (não decomposto) + pagamento por **confirmação manual ✓/✗**. ⚠️ **Clicar na LINHA da guia TRAVOU o renderer** (abre PDF/impressão nativa pesada) — não dá pra ver a decomposição interna do DARF por ali; a composição real vem das alíquotas.
+- **Simulador de impostos** (`#/simulador/impostos-avancado`): **forward-looking** — adiciona notas simuladas (atividade + valor) → prevê pro **próximo mês**: Faturamento · **Pró-labore (automático)** · DAS Simples · **DARF** (INSS do pró-labore) · Total estimado · **Faturamento líquido**. Diagrama da rotina (emite 1º→último dia do mês → guias dias 15–20 do mês seguinte). **Diferença-chave vs nosso N18:** o deles é PREVISÃO com pró-labore automático (você não mexe); o nosso é **INTERATIVO** (mexe no pró-labore e vê o imposto mudar).
+
+## B. 🧾 Fluxo de emitir nota (aprofundado)
+Novo emissor (`#/emissor/*`, painel novo — separado do `/sistema/consultarnotas` legado = mais uma costura de UI). **Wizard:**
+1. **Selecione o cliente** (`/tomadores`): buscar (nome/CPF/CNPJ) · **Não informar cliente** (B2C) · **Novo Cliente**. Guarda últimos clientes (quick-emit).
+2. **Emitir nota** (`/emitir`): **Valor (R$)*** · **Atividade da empresa (CNAE)*** (mostra alíquota 6%) · **Serviço prestado (Código Nacional)*** (LC116, ex. 17.01.01) · **Serviço prestado (Código Municipal)*** · **✨ Consultor tributário** (IA sugere códigos por CNAE/histórico, "Sugerido").
+- ⚠️ **Aviso deles na própria tela:** *"Estamos melhorando nosso emissor devido à reforma tributária e podem ocorrer instabilidades."* + modal de anúncio (P17). **Estão em migração e admitem bug.**
+- **Leitura:** mesmo com IA sugerindo código, o form ainda pede **3 códigos de serviço** (Nacional/Municipal/CNAE) = jargão que trava o leigo. **Nosso N24 pode pré-preencher tudo** (já sabemos o CNAE/serviço do onboarding) e pedir só **valor + cliente**.
+
+## C. 👥 Editar pró-labore (aprofundado) — confirma nossa maior aposta
+`#/socio/editar-gestao` → **"Como você prefere gerenciar seu pró-labore?"** — **4 presets:** ⚡**Otimização automática inteligente** [recomendado] (ajusta todo mês pro menor imposto) · **Personalizado** (valor fixo) · **Salário Mínimo** (R$1.621) · **Teto do INSS** (R$8.475,55).
+- **É um SELETOR de estratégia (radio button), NÃO um simulador.** Você escolhe "otimização automática" e **confia** — nunca vê a relação pró-labore→imposto, nem brinca com o número. → **Confirma com precisão o nosso diferencial:** o N18 interativo (mexe e vê mudar, com "encostado na borda") **ensina o que eles escondem atrás de "confie na gente".**
+
+**Popup novo:** **P17 — "Novo emissor mais ágil e inteligente"** (anúncio de feature + vídeo YouTube, dispara ao entrar no emissor; propósito: educar sobre a migração da reforma).
+
+**Ainda fora (~40% restante):** relatórios por dentro (DRE/Balanço) · Folha/Benefícios/Cobrar-cliente/Conta-Digital por dentro · app mobile · a decomposição interna do DARF (trava o renderer).
 

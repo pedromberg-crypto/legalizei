@@ -369,6 +369,26 @@ Falta 1 ponto pra Larissa: no aceite da abertura, o texto deve dizer que a taxa 
 Próximo: sentar com você pra decidir o que a gente faz com essa inteligência de preço
 ```
 
+## Semana 22/07/2026 — 2º flow: definimos a parte interna do app (o "depois que abre")
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | Parte interna do app | **Definimos o que o cliente vê depois que a empresa abre** (a área logada, o "dia a dia"): o que aparece na tela inicial, como ele navega, e o que cada tela mostra. Antes a gente só tinha telas de teste soltas; agora tem um mapa fechado | 🟢 |
+| 2 | Como a gente cobra (3 baldes) | Peguei **tudo** que a Contabilizei oferece por dentro e separei em: o que **entra no nosso plano**, o que a gente **vende à parte** (aquela prateleira de serviços que eles escondem), o que fica **pra depois**, e as práticas deles que a gente **recusa** (vender por medo, pegadinha de preço) | 🟢 |
+| 3 | **Decisão que precisa de você depois** | Os serviços que o cliente novo precisa cedo (certidão, declaração pra abrir conta no banco, liberação de nota) **eu deixei como vendáveis por ora** — mas **preço e o que a gente inclui de graça é decisão nossa, com você**. Não travei no produto | 🕓 conversa com você |
+| 4 | O diferencial da tela inicial | O nosso trunfo (acompanhar o imposto vivo e avisar antes de subir) **só brilha depois de alguns meses de empresa** — no 1º dia a empresa não tem número nenhum. Então desenhei **duas versões da tela inicial**: a de quem acabou de abrir (foco em dar o 1º passo) e a de quem já está rodando (o painel de acompanhamento). Evita prometer o que não dá pra mostrar no dia 1 | 🟢 |
+| 5 | Achei e corrigi um erro meu | Revisando meu próprio trabalho, achei um conflito: eu tinha escrito que o **certificado digital seria invisível**, mas ele **exige uma videoconferência do cliente** com a certificadora. Corrigi antes de construir em cima do erro | 🟢 |
+
+**Próximo (22/07 2º):** amarrar essa definição nova com o mapa do portal que eu já tinha (tem um ponto a reconciliar) e depois montar a tela inicial de verdade juntando os componentes que já validei. O **preço + a lista do que a gente inclui vs cobra à parte** fica pra nossa conversa.
+
+### 📱 WhatsApp (22/07 — 2º)
+```
+*Update Legalizei* 🧩
+- Definimos a parte interna do app (o que o cliente vê depois que a empresa abre): a tela inicial, a navegação e o que cada tela mostra. Antes eram telas soltas, agora é um mapa fechado
+- Peguei tudo que a Contabilizei oferece por dentro e separei em 4 caixas: o que entra no nosso plano, o que a gente vende à parte (a prateleira que eles escondem), o que fica pra depois, e o que a gente recusa fazer (vender por medo, pegadinha de preço)
+- Uma decisão fica pra nossa conversa: os serviços que o cliente novo precisa cedo (certidão, declaração pra abrir conta, liberação de nota) eu deixei como vendáveis por ora, mas o preço e o que incluir de graça é decisão nossa
+- Desenhei duas versões da tela inicial: a de quem acabou de abrir e a de quem já está rodando. Nosso diferencial (acompanhar o imposto vivo) só faz sentido depois de alguns meses, então não adianta prometer no dia 1
+```
+
 ## 📱 Versão WhatsApp (copiar/colar — grupo ampliado, sem item de sociedade)
 ```
 *Relatório semanal — Legalizei* 📊

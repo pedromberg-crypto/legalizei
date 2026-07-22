@@ -51,9 +51,6 @@ const ABAS: { href: string; label: string; Icone: () => ReactNode }[] = [
 const RAIZES = new Set([
   ...ABAS.map((a) => a.href),
   "/pro-labore",
-  "/inicio-v2",
-  "/inicio-v3",
-  "/inicio-v4",
   "/inicio-ref5",
   "/inicio-ref6",
   "/inicio-ref7",
@@ -61,12 +58,10 @@ const RAIZES = new Set([
   "/inicio-ref11",
   "/inicio-ref12",
   "/mais-v1",
-  "/mais-v2",
   "/mais-completa",
   "/obrigacoes",
   "/impostos-v1",
   "/impostos-v2",
-  "/impostos-completa",
   "/componentes",
 ]);
 

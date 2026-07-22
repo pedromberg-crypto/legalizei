@@ -1,11 +1,11 @@
 ---
 name: legalize-portal-interno-lab-acervo
-description: Portal interno (dia-2) construído + laboratório de layout (/mockup-inicio) + acervo de ~29 componentes validados (/componentes). Próximo = montar a home final mesclando os campeões.
+description: Portal interno (dia-2) construído + laboratório (/mockup-inicio, PODADO) + acervo de ~29 componentes (/componentes). Parte interna DEFINIDA em spec (cruzamento-portal-interno). Próximo = reconciliar spec × matriz P0–P14 (conflito no certificado), depois telas × acervo = home final.
 metadata: 
   node_type: memory
   type: project
   originSessionId: 264d5a1b-ca99-4d1b-969d-e6c48eeaef92
-  modified: 2026-07-22T19:55:26.234Z
+  modified: 2026-07-22T21:10:42.900Z
 ---
 
 **O portal PÓS-ABERTURA (o "dia-2") foi construído como mockup** no app (`app/`, Next 16), commit `37eb994` no `main`. Estado em 2026-07-22.
@@ -20,6 +20,8 @@ metadata:
 
 **ACERVO** `/componentes` (`app/src/app/(app)/(portal)/componentes/`): **~29 componentes VALIDADOS** pelo Pedro, extraídos pra `components/lab/*-blocks.tsx` (**fonte única reutilizável**) e agrupados por origem. Páginas garimpadas: Mais·v1 · ref5 · ref6 · ref7 · ref9 · ref11 · ref12 · mais·completa · impostos·v1 · impostos·v2. Destaques: DAS-ticket (sem barcode, com Pix) · hero-dark · swipe-to-pay · pergunte-à-IA · day-strip fiscal · gauge do teto · insight proativo · quem-cuida-de-você. Charts próprios em `components/lab/charts.tsx` (line/bar/donut/gauge).
 
-**➡️ PRÓXIMO PASSO (onde paramos):** **montar a HOME FINAL** = mesclagem inteligente dos componentes campeões do acervo numa peça só, coerente. Pedro ainda não travou os "must-have"; ele vai escolher (ou eu proponho uma composição).
+**➡️ 13º FLOW (22/07) — a parte interna foi DEFINIDA (não mais só mockup):** [[legalize-portal-monetizacao-baldes]] (os 3 baldes) + spec canônica `execucao/cruzamento-portal-interno.md` (nav 4 abas + CTA · **home em 2 estados dia-1×regime** · abas por dentro · faseamento). Laboratório `/mockup-inicio` **podado** (removidas 5 explorações sem ✓: inicio-v2/v3/v4, mais-v2, impostos-completa; `/obrigacoes` fica; acervo intacto). Auto-auditoria de 10 achados aplicada (gauge→**vigília preditiva**; economia-acumulada travada anti-guru; hierarquia 1-herói).
+
+**➡️ PRÓXIMO PASSO (onde paramos):** o cruzamento NÃO acabou — o de hoje foi paridade×inovação (o QUÊ). Falta **#1 (🔴 antes de construir): reconciliar a spec × a matriz P0–P14** — elas CONFLITAM: "certificado invisível/✓" briga com a matriz, que diz que **P0 exige validação de identidade por vídeo = pausa com ação do cliente**, não checkmark; + os módulos de inovação (vigília, economia, IACA proativa) não têm P-número/arquétipo. Depois **#2 telas × acervo = montar a home final**. **#3 seam N24→P0→dia-1**.
 
 **Regras que valeram:** paleta estrita (coral=marca/ação, verde/âmbar=estado; tints de estado usados como pastéis decorativos = desvio marcado a decidir); tudo mockup sem preço real ([[legalize-preco-deferido-custo-real]]); verificar com `tsc`+eslint, o Pedro confere UI ([[legalize-pedro-confere-ui-sozinho]]). Base do portal = [[legalize-contabilizei-dossie-coverage]] (o subconjunto grátis-R$195). Mapa das telas do FLOW DE ABERTURA (≠ portal) = [[legalize-telas-padrao-layout]].

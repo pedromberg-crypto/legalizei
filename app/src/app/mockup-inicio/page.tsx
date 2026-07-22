@@ -5,21 +5,6 @@ import { BoardPagina, BoardSecao, type Versao } from "@/components/lab/versao-bo
  * Cada referência de página é uma SEÇÃO empilhada; as novas descem no fim.
  */
 
-const INICIO: Versao[] = [
-  {
-    rota: "/inicio-v2",
-    v: "v2",
-    titulo: "Dashboard-first",
-    nota: "Os 4 números de decisão são o herói (2×2 no topo) → foco → 4 ações. Aposta: o dono abre pra DECIDIR (cresci? pago quanto? teto? alíquota?).",
-  },
-  {
-    rota: "/inicio-v3",
-    v: "v3",
-    titulo: "Número no header",
-    nota: "O pulso do negócio (em dia + faturamento) mora DENTRO do header escuro, como saldo de banco. Sheet só com foco + ações + vencimentos. Aposta: 1ª coisa = alívio.",
-  },
-];
-
 const MAIS: Versao[] = [
   {
     rota: "/mais-v1",
@@ -29,26 +14,11 @@ const MAIS: Versao[] = [
     feito: true,
   },
   {
-    rota: "/mais-v2",
-    v: "v2",
-    titulo: "Lista",
-    nota: "A variante direita: rows com chevron por seção. Densa e escalável, cabe muito item. Tende a ganhar num hub de menu que cresce.",
-  },
-  {
     rota: "/mais-completa",
     v: "completa",
     titulo: "Com resumo do negócio",
     nota: "A gaveta mais cheia: ganha um RESUMO no topo (CNPJ ativo + em dia + faturamento + imposto) antes das seções, pra a Mais não ser só menu seco.",
     feito: true,
-  },
-];
-
-const INICIO_DASH: Versao[] = [
-  {
-    rota: "/inicio-v4",
-    v: "v4",
-    titulo: "Stat-grid + recentes",
-    nota: "Ref. Approval Dashboard (tela 1): saudação + 2×2 de stat cards com tendência + 'Movimentações recentes'. Painel como central de STATUS.",
   },
 ];
 
@@ -75,12 +45,6 @@ const IMPOSTOS: Versao[] = [
     titulo: "Discover (busca+lista)",
     nota: "Ref. Discover: busca por competência + filtro + 2 cards de resumo + guias como lista com expandir. Mais explorável, menos foco na ação de pagar.",
     feito: true,
-  },
-  {
-    rota: "/impostos-completa",
-    v: "completa",
-    titulo: "Saldo + ano + insight",
-    nota: "A mais cheia: saldo a pagar + 2 números do ano (pago no ano, alíquota) + INSIGHT (de olho no Fator R) + guias como transações.",
   },
 ];
 
@@ -197,20 +161,9 @@ export default function LaboratorioPage() {
         versoes={INICIO_REF12}
       />
       <BoardSecao
-        titulo="Início · v1 / v2 / v3"
-        subtitulo="Ref. nexobank (header escuro + sheet + card de dado + grid de ações). Topo escuro."
-        versoes={INICIO}
-        statusClaro
-      />
-      <BoardSecao
-        titulo="Mais · v1 / v2"
-        subtitulo="Ref. perfil-menu (perfil + nudge do certificado + seções): grid de tiles × lista. Topo claro."
+        titulo="Mais · v1 / completa"
+        subtitulo="Ref. perfil-menu (perfil + nudge do certificado + seções): grid de tiles + variante com resumo do negócio no topo. Topo claro."
         versoes={MAIS}
-      />
-      <BoardSecao
-        titulo="Início · v4 / v5 (ref. Approval Dashboard)"
-        subtitulo="Outra leitura da Início: stat-grid com tendências × analytics com charts (linha + donut). Verde do ref traduzido pros nossos tokens. Topo claro."
-        versoes={INICIO_DASH}
       />
       <BoardSecao
         titulo="Impostos · v1 / v2 (ref. Rewards)"

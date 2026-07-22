@@ -1,5 +1,6 @@
 # Memory Index — Legalize
 
+- [Dossiê Contabilizei logada + onde continuar](legalize-contabilizei-dossie-coverage.md) — teardown READ-ONLY da plataforma do líder (~60%); 3 achados (medo/loops abertos/preset-não-simulador) + grade de preço viva (139/195/225/395/79); diz o que já leu e ONDE CONTINUAR; base do nosso portal interno.
 - [Rename Legalizei→Legalizai (só no app)](legalize-rename-legalizai.md) — marca virou Legalizai no APP (logo + 8 copies + título); domínio legalizei.app/IG/docs seguem Legalizei; rename brand-level (domínios/INPI) é decisão aberta de sócio.
 - [Cluster fiscal reordenado (ENCAIXE)](legalize-encaixe-cluster-fiscal.md) — 21/07: CNAE se escolhe pré-pago no ENCAIXE (após veredito 🟢), não em swap tardio; teaser+N17 REMOVIDOS, N5' resumo criado, passos −1, mapa v4; **motor ficou 1 passo atrás** (1º item da próxima janela).
 

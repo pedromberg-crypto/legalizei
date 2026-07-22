@@ -1,5 +1,7 @@
 # Memory Index — Legalize
 
+- [Portal interno + laboratório + acervo](legalize-portal-interno-lab-acervo.md) — **onde paramos (22/07)**: portal dia-2 construído (shell navbar + telas + /obrigacoes) · laboratório `/mockup-inicio` com ~12 explorações de home a partir de refs · **acervo `/componentes` com ~29 componentes validados** extraídos pra `components/lab/*-blocks.tsx` (fonte única); commit `37eb994`. **PRÓXIMO = montar a HOME FINAL** mesclando os campeões.
+
 - [Dossiê Contabilizei logada + onde continuar](legalize-contabilizei-dossie-coverage.md) — teardown READ-ONLY da plataforma do líder (~85%, 3 passadas); 4 achados (medo/loops abertos/preset-não-simulador/**camada à-la-carte de ~45 serviços = receita oculta: sair 1.406–1.999, alterar empresa/add-sócio a partir de 1.299, IGP-DI anual**) + grade viva (139/195/225/395/79); diz o que já leu e o que sobra (bloqueado/risco/marginal); base do nosso portal interno.
 - [Rename Legalizei→Legalizai (só no app)](legalize-rename-legalizai.md) — marca virou Legalizai no APP (logo + 8 copies + título); domínio legalizei.app/IG/docs seguem Legalizei; rename brand-level (domínios/INPI) é decisão aberta de sócio.
 - [Cluster fiscal reordenado (ENCAIXE)](legalize-encaixe-cluster-fiscal.md) — 21/07: CNAE se escolhe pré-pago no ENCAIXE (após veredito 🟢), não em swap tardio; teaser+N17 REMOVIDOS, N5' resumo criado, passos −1, mapa v4; **motor ficou 1 passo atrás** (1º item da próxima janela).

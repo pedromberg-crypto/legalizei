@@ -88,6 +88,46 @@ Provocação do Pedro: o *"até 2 sócios grátis"* que aparece na vitrine é do
 
 **Fontes:** [abrir-empresa](https://www.contabilizei.com.br/abrir-empresa/) · [sociedade-limitada](https://www.contabilizei.com.br/contabilidade-online/sociedade-limitada/) · [passo-a-passo LTDA](https://www.contabilizei.com.br/contabilidade-online/passo-a-passo-abrir-ltda-com-contabilidade-online/) · [como-abrir-empresa](https://www.contabilizei.com.br/contabilidade-online/como-abrir-empresa/)
 
+## 🆕 2026-07-22 — grade VIVA completa + camada à-la-carte + reajuste IGP-DI (dossiê logado 3ª passada)
+Fonte: `pesquisa/concorrentes/contabilizei/2026-07-21-dossie-plataforma-logada.md` (§7 + §F, conta real, READ-ONLY). **A régua não é mais só "R$195": é uma escada de tiers + surcharge + avulsos + reajuste anual.**
+
+### Escada de planos (capturada ao vivo)
+| Plano | R$/mês | O que adiciona | Confiança |
+|---|---|---|---|
+| **Básico** | **139** | contabilidade completa + emissor NF grátis + e-mail 9–22h · **certificado à parte** · sem contador exclusivo/telefone | 🟢 print |
+| **Padrão** (atual do Pedro) | **195** (era ~~199~~, "R$4 OFF") | Básico + **certificado e-CNPJ grátis** · R$2,70/boleto | 🟢 print |
+| **Multibenefícios** | **225** | Padrão + telemedicina + benefícios de parceiros (escolhe 2 de 7) | 🟢 print |
+| **Experts** | **395** | Padrão + contador/consultoria exclusiva · **NF emitida PELA Contabilizei** · certificado incluso · WhatsApp 18–22h · folha · prioridade | 🟢 print |
+| **Manutenção** (oculto, dunning) | **79** | só p/ empresa **SEM faturamento** · sem NF, sem WhatsApp, só mantém CNPJ regular | 🟢 print |
+
+- 🔴 **O anunciado é PISO:** cada plano diz *"a partir de"* + tem **Cobrança de Faturamento** e **Cobrança de Funcionários** variáveis por cima (só aparece clicando "visualizar"). Preço real **escala com receita e headcount**.
+- 🔴 **Reajuste anual por IGP-DI** (popup P18, vendido pelo chat como conversa calorosa: *"aceita o aumento ou prefere conversar?"*). O mensal **sobe todo ano** por índice.
+
+### Camada à-la-carte (~45 serviços avulsos, preço exposto) — a receita oculta
+`/sistema/#/servicos-disponiveis`. **Conta real do cliente = `mensalidade + surcharge + avulsos`.** Cobrança "à vista na mensalidade (não parcela no boleto) ou 3x cartão c/ juros; gerada na entrega". Os que importam:
+| Serviço | Preço | Leitura |
+|---|---|---|
+| 🔴 Baixa de empresa (abriu/migrou +6m) | **1.406** | **sair custa caro** (anti-churn) |
+| 🔴 Baixa de empresa (migrou −6m) | **1.999** | pior ainda p/ recém-chegado |
+| 🔴 Alteração contratual completa (add sócio/CNAE/endereço) | **a partir de 1.299 + taxas** | **número duro** do "add sócio depois é caro"; mexer na empresa = serviço mais caro |
+| Verificação de pendências | **24,90** | **isca de funil** → gera orçamento de regularização → máquina de medo |
+| DECORE (comprovante de renda do sócio, CRC) | **713,90** | doc comum (empréstimo/aluguel), caro |
+| Obtenção/renovação de alvará | **416 + taxas** | liga na complexidade de abertura (tato-registro) |
+| CPOM/CEPOM (prestador outro município, evita bitributação ISS) | **249** | serviço que fatura fora de BH |
+| Regularização Inscrição Estadual | **230,90 + taxas** | dia-1 de quem tem IE |
+| Liberação p/ emitir NF (AIDF) | **103,20** | destrava emissão em alguns municípios |
+| Emissão CND (certidão negativa) | **35,90** | banco/licitação pedem |
+| Declaração de faturamento / **previsão de faturamento** | **68,90** cada | previsão = **empresa recém-aberta sem NF pra abrir conta PJ** = dor exata do ICP |
+| Alteração de porte ME/EPP | **156,40** | ao crescer de faixa |
+| Reemissão de guia (Simples/INSS/IRRF/ISS/FGTS) | **15,90** (FGTS antigo 52,10) | micro-cobranças recorrentes |
+| Grátis (R$0): Balanço/DRE assinado *sem* índices · atualizar plataforma | **0** | só docs baratos de produzir |
+
+### Implicação pro nosso pricing (o flanco)
+1. **Incluir no plano** o que o novo CNPJ precisa cedo e eles cobram avulso: **CND, declaração/previsão de faturamento (abrir conta PJ), liberação de NF/AIDF, Inscrição Estadual**.
+2. **Não punir saída nem alteração** com preço de retenção (R$1.299–1.999). Add sócio depois deveria ser barato/previsível.
+3. **Preço transparente de verdade:** custo real do perfil, sem "a partir de", sem surcharge-surpresa, com **regra de reajuste explícita** (eles escondem o IGP-DI num chat).
+4. **Provavelmente 1 plano único** (mata a paralisia de 4 tiers + o downsell "Manutenção R$79"). Preço ainda **DEFERIDO até custo real** ([[legalize-preco-deferido-custo-real]]).
+
 ## 🚨 Pontos de alerta / oportunidade pro Legalizei
 1. **Prazo de abertura NÃO divulgado** 🔴 — Contabilizei não promete tempo. Nosso diferencial em potencial: **cravar prazo** (ex: "empresa em X dias").
 2. **App mobile fraco** — porta pra ganhar no mobile-first.

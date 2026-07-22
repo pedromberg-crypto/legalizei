@@ -21,9 +21,10 @@ tags: [concorrente, contabilizei, teardown, produto, portal, dossie]
 Topo: `Ajuda · Dados da empresa e banco · Minha conta`. Canto: chat "Fale conosco".
 
 ## ⚡ Sumário executivo (leia isto primeiro)
-Mapeei **14 superfícies** + **16 popups/modais** do portal logado. O portal do líder é **completo, denso e feito pra durar** — mas **hostil ao recém-chegado**: jargão contábil, obrigação misturada com upsell, e trabalho empurrado pro cliente. Um CNPJ novo precisa de um **subconjunto pequeno** (emitir nota · pagar imposto · pró-labore · sentir-se em dia); o resto é fundo ou upsell.
+Mapeei **~todas as superfícies do menu** + **18 popups/modais** do portal logado (3 passadas, **cobertura ~85%**). O portal do líder é **completo, denso e feito pra durar** — mas **hostil ao recém-chegado**: jargão contábil, obrigação misturada com upsell, e trabalho empurrado pro cliente. Um CNPJ novo precisa de um **subconjunto pequeno** (emitir nota · pagar imposto · pró-labore · sentir-se em dia); o resto é fundo ou upsell.
 **3 achados que mandam:** (1) **a máquina de conversão é medo** (dunning: exclusão do Simples, multas, "o que você perde") — flanco ético a atacar; (2) **eles deixam loops abertos** (você confirma manualmente se pagou o imposto, envia extrato manual) — nosso maior espaço pra encantar; (3) **pró-labore inteligente eles JÁ têm** (mas sem simulador interativo) — nosso N18 tem que ser visivelmente melhor. Grade de preço viva: **Básico R$139 · Padrão R$195 · Multi R$225 · Experts R$395 · Manutenção R$79** (+ surcharge de faturamento/funcionários escondido).
-→ **A recomendação acionável está no fim (§D "Por onde começar").**
+**🆕 4º achado (3ª passada):** o **preço anunciado é só o piso** — existe uma **camada à-la-carte de ~45 serviços avulsos** (§F) onde todo evento sensível é paywall: **sair custa R$1.406–1.999 · alterar a empresa/add sócio a partir de R$1.299 · provar renda (DECORE) R$713,90 · declaração p/ abrir conta PJ R$68,90**; e a mensalidade **reajusta todo ano por IGP-DI** (P18). A conta real = `mensalidade + surcharge + avulsos`.
+→ **A recomendação acionável está no §D "Por onde começar"; a 3ª passada (Relatórios · catálogo à-la-carte · Cobrar-cliente · config) está no fim.**
 
 ---
 
@@ -94,6 +95,7 @@ Mapeei **14 superfícies** + **16 popups/modais** do portal logado. O portal do 
 | P15 | **CSAT "Central do Sócio"** | Central de Sócios | "Quão satisfeito com a experiência?" (1–5) | **Medição de satisfação** da feature (fechei no X) |
 | P16 | **"Avalie esta tela"** (pervasivo) | Impostos + várias | CSAT inline no rodapé de quase toda tela | **Instrumentação de satisfação** por tela — o líder mede tudo |
 | P17 | **"Novo emissor mais ágil e inteligente"** | Emissor de notas | anúncio + vídeo: sugestão de códigos, ajuda contextual, "acompanhar a Reforma Tributária" | **Adoção de feature** — educa sobre a migração do emissor (que está instável) |
+| P18 | 🔴 **Reajuste anual da mensalidade (IGP-DI)** | Chat "Fale conosco" (global, script seeded no DOM) | "sua mensalidade vai mudar a partir de Outubro... nos últimos anos optamos por não reajustar, mesmo estando de acordo com o **IGP-DI**... custos cresceram e o país mudou... **você aceita o aumento ou prefere conversar com alguém pra entender melhor?**" | **Retenção no reajuste** — empacota o aumento anual como conversa calorosa (relacionamento, não fatura fria) + binário aceitar/conversar. Descoberto na 3ª passada (22/07) |
 
 **Leitura estratégica:** o líder monetiza o **medo** (exclusão do Simples, multas, tributação incorreta) e cria **dependência** (extrato só automatiza no banco deles). É eficaz e é o **flanco ético** que a gente ataca — nosso posicionamento pode ser o oposto: transparência, sem pegadinha, sem vender pânico. (Casa com a decisão do flow de abertura de não usar "vende pânico".)
 
@@ -283,5 +285,57 @@ Novo emissor (`#/emissor/*`, painel novo — separado do `/sistema/consultarnota
 
 **Popup novo:** **P17 — "Novo emissor mais ágil e inteligente"** (anúncio de feature + vídeo YouTube, dispara ao entrar no emissor; propósito: educar sobre a migração da reforma).
 
-**Ainda fora (~40% restante):** relatórios por dentro (DRE/Balanço) · Folha/Benefícios/Cobrar-cliente/Conta-Digital por dentro · app mobile · a decomposição interna do DARF (trava o renderer).
+**Ainda fora (após a 2ª passada):** relatórios por dentro (DRE/Balanço) · Folha/Benefícios/Cobrar-cliente/Conta-Digital por dentro · app mobile · a decomposição interna do DARF (trava o renderer). *(Quase tudo resolvido na 3ª passada abaixo.)*
+
+---
+
+# 🔬 3ª PASSADA (2026-07-22) — as superfícies que faltavam (Relatórios · Serviços avulsos · Cobrar-cliente · Folha · Config)
+> Varredura READ-ONLY das superfícies que a 2ª passada deixou de fora. **Nada emitido/pago/confirmado/salvo.** **Conta Digital PJ NÃO foi acessada por dentro** (banco real, read-only sagrado). App mobile não navegável (sem device; existe: App Store `id1622060253` · Play `br.com.contabilizei.app`). Cobertura subiu de ~60% pra **~85%**.
+
+## E. 📊 Relatórios por dentro — o shell legacy dos contábeis
+- **Os 5 relatórios contábeis dividem UM shell legacy** (`/sistema/#/relatorio-contabil/DRE`) com abas no topo: **DRE · DIÁRIO · RAZÃO · BALANCETE · BALANÇO**. Print-first (ícone de impressora no título + botão **Imprimir**). Fluxo: escolher **competência** (mês/ano) → lupa → renderiza. Mais uma costura de UI legada (≠ painel novo).
+- **Estrutura do DRE** (capturado, Dez/2025): `RECEITA OPERACIONAL BRUTA` → `(-) DEDUÇÕES` → `RECEITA LÍQUIDA` → **`(-) CUSTOS DAS VENDAS −100 = "(-) Custo com Pró-labore aos Sócios −100"`** → `(-) DESPESAS` → `OUTRAS RECEITAS` → `RESULTADO FINANCEIRO` → `IMPOSTOS SOBRE O LUCRO` → `LUCRO ANTES DAS PARTICIPAÇÕES −100` → `PARTICIPAÇÕES` → **`RESULTADO LÍQUIDO −100`**. Leitura: **P&L de jargão puro**, o pró-labore aparece como "custo", e num mês sem receita o relatório fecha no **prejuízo** — nada explicado pro leigo (confirma o "100% jargão" da 1ª passada, agora com a mecânica exata).
+- **Declarações mensais** (`/sistema/#/declaracoes-mensais`, abas Mensal/Anual/Informe de Rendimentos): seletor de competência + **"Sem informações"** → **empty state morto** (CNPJ sem faturamento não vê nada; nenhum "você está em dia ✓").
+- 🔧 **Nosso ganho:** "você está em dia ✓" (prova de compliance humana) na frente; DRE/Balanço/Razão/Diário/Balancete atrás de "Relatórios contábeis (avançado)" com 1 linha traduzindo cada. UI única (sem shell legacy).
+
+## F. ➕ Serviços adicionais — o CATÁLOGO À-LA-CARTE (a camada de receita oculta) ⭐⭐⭐
+`/sistema/#/servicos-disponiveis` · ~45 serviços avulsos, **cada um com preço exposto**. É a **receita por cima da mensalidade**: todo evento fora do happy-path é um serviço pago. **Mecânica de cobrança quase universal:** *"à vista na mensalidade (não parcela no boleto), ou 3x no cartão com juros; a cobrança é gerada na entrega do serviço"* → o avulso **gruda na fatura mensal**.
+
+**Os que mandam (estratégicos):**
+| Serviço | Preço | Por que importa |
+|---|---|---|
+| 🔴 **Baixa de empresa** (abriu na Contabilizei / migrou +6m) | **R$ 1.406,00** | **sair custa caro** (anti-churn puro) |
+| 🔴 **Baixa de empresa** (migrou −6m) | **R$ 1.999,00** | ainda mais caro pra quem chegou há pouco |
+| 🔴 **Alteração contratual completa** (add sócio · CNAE · endereço · capital · nome) na RF+Prefeitura | **a partir de R$ 1.299,00 + taxas** (45–120 dias) | **confirma com NÚMERO** o achado "adicionar sócio depois = alteração cara"; mexer na empresa é o serviço mais caro |
+| **Verificação de pendências** | **R$ 24,90** | **isca de funil**: barato → gera "orçamento de regularização" → empurra pro serviço grande (alimenta a máquina de medo) |
+| **DECORE** (comprovante de renda do sócio, protocolado no CRC) | **R$ 713,90** | doc comum (empréstimo/aluguel) e caro |
+| **Obtenção/Renovação de alvará** (inclui Vig. Sanitária/Meio Ambiente) | **R$ 416,00 + taxas** | ligado à nossa complexidade de abertura (tato-registro) |
+| **CPOM/CEPOM** (prestador de outro município, evita bitributação de ISS) | **R$ 249,00** | relevante pra serviço que fatura fora de BH |
+| **Regularização de Inscrição Estadual** | **R$ 230,90 + taxas** | evento comum no dia-1 de quem tem IE |
+| **Liberação p/ emitir NF (AIDF)** | **R$ 103,20** | destrava emissão em alguns municípios |
+| **Emissão de CND** (certidão negativa) | **R$ 35,90** | banco/licitação pedem |
+| **Declaração de faturamento / previsão de faturamento** | **R$ 68,90** cada | **previsão** é destinada a **empresa recém-aberta sem NF** pra **abrir conta PJ** — dor exata do nosso ICP |
+| **Alteração de porte ME/EPP** | **R$ 156,40** | quando cresce de faixa |
+| **Alteração de Pró-labore** (meses já processados) | **R$ 98,90** | corrigir pró-labore passado é pago |
+| **Reemissão de guia** (INSS/IRRF · Simples · ISS · FGTS) | **R$ 15,90** cada (FGTS antigo R$52,10 / nossa comp. R$31,20) | micro-cobranças recorrentes |
+| **Grátis (R$ 0):** Balanço/DRE assinado *sem* índices · Atualizar plataforma com alteração externa | R$ 0,00 | os grátis são só docs baratos de produzir |
+
+**Leitura estratégica:** o **R$195 anunciado é o piso**; a conta real do cliente é `mensalidade + surcharge (faturamento/headcount) + à-la-carte`. Todo momento sensível — **sair, mudar a empresa, provar renda, abrir conta, regularizar** — é **paywall**. 🔧 **Nosso flanco:** (1) **incluir no plano** o que eles cobram avulso e o novo CNPJ precisa cedo (CND, declaração de faturamento pra abrir conta, liberação de NF); (2) **não punir a saída/alteração** com preço de retenção; (3) transparência: dizer o custo real do perfil, sem "a partir de".
+
+## G. 💰 Cobrar seu cliente (recebíveis) — gateway embutido
+`/painel-de-controle/#/cobrancas/historico` (painel novo). **2 formas: Cartão de crédito** ("receba em até 2 dias úteis") · **Pix** ("receba em minutos"). **Sem boleto.** Feature paga ("Informações e Preço · Como cobrar por cartão · Termos de uso") + histórico com filtros (mês/ano/forma/status, Pagos/Pendentes). É um **gateway de recebíveis** embutido (compete com Asaas/InfinitePay) — **adjacente à nossa decisão de gateway do B3.** 🎯 dispensável no dia-1 do solo de serviço.
+
+## H. Superfícies menores (glances)
+- **Folha de Pagamento** (`/sistema/#/colaboradores`, abas Colaboradores/Folha Mensal): "Adicionar colaborador" + cross-link "Ir para os sócios". Empty. Legacy shell. **Dispensável** pro solo sem funcionário.
+- **Meus Benefícios** (`/beneficios/landing-upsell`): landing de upsell "Plano Multibenefícios — só a Contabilizei completa sua empresa", **escolhe 2 de 7** (TotalPass academia · Starbem psi+nutri · Conexa telemedicina · seguro de vida · odonto...). **Plano de Saúde** = nav irmão, mesma pegada. **UPSELL**, fora do MVP.
+- **Minha conta** (drawer): E-mail · Senha · Telefone · **Alterar dados · Cadastrar novo usuário · Sair.** Config enxuta (contato/login/multi-usuário). O painel **"Dados da empresa e banco"** (topbar) reúne CNPJ/regime/inscrição · Dados de acesso · **Contrato Contabilizei** · Área de Documentos · widget **Certificado Digital** (validade + "faça o upload") · dados do Contabilizei.bank + QR do app.
+
+## Achados novos da 3ª passada (além do catálogo)
+1. 🆕 **P18 — reajuste anual por IGP-DI** (ver Catálogo): o aumento de mensalidade é vendido pelo **chat** como conversa calorosa ("optamos por não reajustar nos últimos anos... aceita o aumento ou prefere conversar?"). **Insumo pro nosso pricing:** o líder **reajusta todo ano** por índice — nosso preço transparente pode inclusive prometer regra de reajuste clara.
+2. 🆕 **"Indique um amigo" + programa de pontos** ("Indique e acumule pontos") — **referral** é canal ativo deles (item de nav + widget).
+3. 🆕 **Sistema de chamados FORA DO AR:** *"Seus chamados estão indisponíveis no momento. Estamos trabalhando na solução."* — sinal de **confiabilidade/dívida técnica** do suporte (junta com as 2 gerações de UI coladas e o "emissor instável pela reforma").
+4. 🆕 **Upsell "Conheça o experts"** fixo no topbar — empurra o plano caro (R$395) o tempo todo.
+
+## Cobertura e o que ainda falta (~15%)
+**Deliberadamente NÃO acessado:** Conta Digital PJ por dentro (banco real, read-only sagrado) · app mobile (sem device). **Trap conhecido:** decomposição interna do DARF (clicar na linha da guia trava o renderer — a composição já veio de *Minhas alíquotas* na 2ª passada). **Marginal, se um dia quiser 100%:** rodar o Simulador com nota fake pra números concretos (a mecânica já está documentada) · enumerar os 7 benefícios do Multibenefícios · Plano de Saúde por dentro.
 

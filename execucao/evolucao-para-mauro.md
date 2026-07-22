@@ -348,6 +348,27 @@ Preciso de você: o plano era testar abrindo o MEU CNPJ, mas ele já existe. Tem
 Falta 1 ponto pra Larissa: no aceite da abertura, o texto deve dizer que a taxa da Junta já paga não é reembolsável
 ```
 
+## Semana 22/07/2026 — o preço real da Contabilizei por dentro (conta de cliente)
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | **Inteligência de preço do líder** | Continuei o raio-X da plataforma da Contabilizei por dentro (na minha conta de cliente, só olhando). Achado que muda nossa conversa de preço: **o "R$195" é só a fachada.** A conta real do cliente é **plano + um adicional que sobe conforme o faturamento e o nº de funcionários (escondido) + uma prateleira de ~45 serviços cobrados à parte**. E a mensalidade **reajusta todos os anos** por um índice (IGP-DI), vendido dentro do chat como conversa amigável | 🟢 documentado |
+| 2 | **Onde eles ganham dinheiro escondido** | Os números da prateleira à parte (todos da tela real): **fechar a empresa custa R$1.406 a R$1.999** · **mudar a empresa / adicionar um sócio depois custa a partir de R$1.299** · comprovante de renda do sócio (DECORE) **R$713,90** · declaração pra abrir conta no banco **R$68,90** · certidão negativa **R$35,90**. Tem até uma isca: "verificação de pendências" por **R$24,90** que serve pra gerar orçamento de regularização (a máquina de medo deles) | 🟢 |
+| 3 | **O que isso vale pra gente** | Confirma nosso flanco: **incluir no plano** o que o cliente novo precisa cedo e eles cobram à parte (certidão, declaração pra abrir conta, liberação de nota), **não punir quem quer sair ou mudar**, e **preço transparente de verdade** com regra de reajuste na cara (eles escondem). Isso vai direto pro nosso benchmark de preço | 🟢 |
+| 4 | Cobertura | O dossiê da plataforma deles está em **~85%**. O que falta é ou impossível daqui (o app de celular deles), ou eu **escolhi não mexer** (a conta bancária de verdade), ou é irrelevante pro que a gente constrói | 🟢 |
+
+**Próximo (22/07):** sentar (eu e você) pra **decidir pra onde levar essa inteligência de preço** — o que a gente inclui no plano, como se posiciona contra a opacidade deles; seguir com o caminho de "trocar de contador" (flow #2). O **preço do nosso plano segue em aberto de propósito**, até a gente medir o custo real de rodar uma empresa.
+
+### 📱 WhatsApp (22/07)
+```
+*Update Legalizei* 💰
+- Continuei o raio-X da Contabilizei por dentro (minha conta de cliente, só olhando) e achei o que faltava sobre o preço deles: o "R$195" é só a fachada
+- A conta real do cliente é: plano + um adicional que sobe com faturamento/funcionários (escondido) + uma prateleira de ~45 serviços cobrados à parte. E a mensalidade reajusta todo ano por índice, vendido como conversa amigável no chat
+- Os números da prateleira (da tela real): fechar a empresa R$1.406 a 1.999, mudar a empresa/adicionar sócio depois a partir de R$1.299, comprovante de renda do sócio R$713, declaração pra abrir conta no banco R$68. Tem até uma isca de R$24,90 pra gerar orçamento de regularização
+- Isso confirma nosso caminho: incluir no plano o que o cliente novo precisa cedo, não punir quem sai ou muda, e preço transparente de verdade
+- O dossiê da plataforma deles está em ~85%. O que falta é impossível daqui (o app deles) ou eu escolhi não mexer (a conta bancária real)
+Próximo: sentar com você pra decidir o que a gente faz com essa inteligência de preço
+```
+
 ## 📱 Versão WhatsApp (copiar/colar — grupo ampliado, sem item de sociedade)
 ```
 *Relatório semanal — Legalizei* 📊

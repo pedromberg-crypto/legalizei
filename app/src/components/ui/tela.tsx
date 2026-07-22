@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
 /**
@@ -21,11 +22,49 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-export function TelaHeader({ meta }: { meta: string }) {
+/**
+ * `voltar` (opt-in, 22/07): href do pai pra telas de DETALHE do portal (ex:
+ * impostos → pagar). Ausente = sem seta (todo o wizard e as telas-raiz seguem
+ * iguais, sem tocar nelas). A nav ENTRE seções é a barra de abas, não isto;
+ * isto é só o back de drill-down.
+ */
+export function TelaHeader({ meta, voltar }: { meta: string; voltar?: string }) {
+  if (voltar) {
+    return (
+      <header className="pt-6 pb-4 flex items-center gap-1.5">
+        <Link
+          href={voltar}
+          aria-label="Voltar"
+          className="-ml-1.5 flex h-7 w-7 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-alt"
+        >
+          <SetaVoltar />
+        </Link>
+        <p className="text-micro text-text-tertiary">{meta}</p>
+      </header>
+    );
+  }
   return (
     <header className="pt-6 pb-4">
       <p className="text-micro text-text-tertiary">{meta}</p>
     </header>
+  );
+}
+
+function SetaVoltar() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="m15 18-6-6 6-6" />
+    </svg>
   );
 }
 

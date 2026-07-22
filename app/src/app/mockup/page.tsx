@@ -336,6 +336,34 @@ const ARQUETIPOS: {
     ],
   },
   {
+    id: "portal",
+    nome: "Portal interno · dia-2 (NOVO)",
+    descricao:
+      "A parte interna, pós-abertura — o portal que o N24 entrega. Matriz: matriz-portal-interno.md (P0–P14, só o grátis-R$195). 1º batch: o GATE + o HUB novo + o shell LISTA + o diferencial de pagar. Ordem = a que o cliente vive: o certificado destrava tudo → a casa → os impostos → pagar. 🆕 SHELL DO PORTAL no ar: barra de abas (Início · Impostos · Notas · Pró-labore · Mais) nas telas-raiz, e seta 'voltar' no detalhe (pagar). Toque as abas dentro do iframe pra navegar. O certificado (gate) fica FORA da barra de propósito. Os demais (P4–P14) reusam estes shells + a engine do N18.",
+    telas: [
+      {
+        rota: "/certificado",
+        nome: "P0 · Certificado (gate)",
+        nota: "O gate: destrava emitir nota E acessar a Receita (provocação do Pedro 22/07). Enquanto pendente, P3/P6 ficam travados. Não é bastidor silencioso: exige validação de identidade por vídeo (pausa com ação, herdada do teto-de-automação). Reusa StatusIcon (cadeados = o que ele libera).",
+      },
+      {
+        rota: "/inicio",
+        nome: "P1 · Home (o que fazer hoje)",
+        nota: "O HUB, o único shell novo de peso. Oposto da home-catálogo do líder: UM foco (a próxima obrigação, com a ação embutida) + 'você está em dia' + atalhos. Sem rodapé fixo (a ação mora no card-foco, doutrina K6 do painel).",
+      },
+      {
+        rota: "/impostos",
+        nome: "P2 · Meus impostos (lista)",
+        nota: "O shell LISTA nasce aqui (serve depois notas/relatórios/documentos). Item vivo do mês → pagar; histórico já 'pago'. Mata o flanco nº1 do líder: nada de 'confirme que pagou' — a gente acompanha.",
+      },
+      {
+        rota: "/impostos/pagar",
+        nome: "P3 · Pagar o DAS ⭐",
+        nota: "O diferencial nº1: paga pelo app, o status vira sozinho. ⚠️ a EXECUÇÃO (Pix/Open Finance) é dependência aberta 🔴 — o CTA é farol. Número grande + de-onde-vem sem jargão + 'não precisa confirmar nada'.",
+      },
+    ],
+  },
+  {
     id: "fora",
     nome: "Fora do flow de abertura",
     descricao:
@@ -376,6 +404,15 @@ export default function MockupPage() {
             por tela. Os grupos estão na ordem do flow: entrada (N1–N3) primeiro,
             depois por arquétipo. O flow inteiro está aqui, da splash à empresa
             ativa. Falta só construir o flow #2 (migração).
+          </p>
+          {/* Laboratório de VERSÕES de página (todas as explorações num board). */}
+          <p className="mt-3 text-caption">
+            <a
+              href="/mockup-inicio"
+              className="font-semibold text-action-primary-sm underline underline-offset-4"
+            >
+              → Laboratório de versões (Início, Mais, e as próximas)
+            </a>
           </p>
         </header>
 
@@ -545,12 +582,37 @@ function PhoneFigure({
   insets,
   nonce,
 }: EsteiraProps & { t: Tela }) {
+  // ── Lazy-mount ────────────────────────────────────────────────────────────
+  // Cada <iframe> é um DOCUMENTO inteiro (árvore React + conexão HMR próprias).
+  // Montar as ~26 (logo ~40, com o portal) de uma vez é o que estoura a RAM do
+  // note. Aqui a figura só monta o Phone quando entra perto da viewport; fora de
+  // vista fica um placeholder do MESMO tamanho (sem iframe), então a esteira não
+  // pula e a RAM fica limitada ao que está à vista — não cresce com o nº de telas.
+  //
+  // rootMargin generoso ("600px 250px") pré-carrega o que está prestes a entrar,
+  // pra não dar flash em rolagem normal. O clipping das esteiras horizontais já
+  // é considerado pelo IntersectionObserver (root = viewport), então tela fora de
+  // vista NA HORIZONTAL também desmonta.
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [perto, setPerto] = useState(false);
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => setPerto(entries[0]?.isIntersecting ?? false),
+      { rootMargin: "600px 250px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
     <figure className="flex shrink-0 flex-col items-center gap-4">
       {/* Duas caixas (idêntico ao que era): a de fora reserva o rastro já
           escalado; a de dentro fica no tamanho natural e só o transform encolhe.
           A largura explícita evita a moldura espremer o vidro fora do 100%. */}
       <div
+        ref={wrapRef}
         style={{
           width: (ap.w + 24) * escala,
           height: (ap.h + 24) * escala,
@@ -565,12 +627,16 @@ function PhoneFigure({
             transformOrigin: "top left",
           }}
         >
-          <Phone
-            src={`${t.rota}?v=${nonce}`}
-            ap={ap}
-            insets={insets}
-            statusClaro={t.statusClaro}
-          />
+          {perto ? (
+            <Phone
+              src={`${t.rota}?v=${nonce}`}
+              ap={ap}
+              insets={insets}
+              statusClaro={t.statusClaro}
+            />
+          ) : (
+            <PhonePlaceholder ap={ap} nome={t.nome} />
+          )}
         </div>
       </div>
 
@@ -579,6 +645,36 @@ function PhoneFigure({
         <p className="text-caption text-text-secondary mt-2">{t.nota}</p>
       </figcaption>
     </figure>
+  );
+}
+
+/**
+ * Placeholder do MESMO tamanho da moldura, SEM iframe. Segura o layout (a esteira
+ * não pula) e a RAM (nenhum documento montado) enquanto a tela está fora de vista.
+ * Mesma moldura de alumínio do Phone; o vidro é uma superfície neutra com o nome,
+ * pra dar de relance qual tela vai aparecer ali quando rolar até ela.
+ */
+function PhonePlaceholder({ ap, nome }: { ap: Aparelho; nome: string }) {
+  return (
+    <div
+      className="relative shrink-0 p-3"
+      style={{
+        width: "fit-content",
+        borderRadius: ap.raio + 12,
+        background:
+          "linear-gradient(150deg, #3a3d44 0%, #16181d 45%, #2b2e35 100%)",
+        boxShadow: "0 0 0 1px rgba(255,255,255,.06) inset",
+      }}
+    >
+      <div
+        className="relative flex items-center justify-center overflow-hidden bg-surface-alt"
+        style={{ width: ap.w, height: ap.h, borderRadius: ap.raio }}
+      >
+        <span className="text-caption text-text-tertiary px-6 text-center">
+          {nome}
+        </span>
+      </div>
+    </div>
   );
 }
 

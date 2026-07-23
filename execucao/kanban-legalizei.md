@@ -66,8 +66,12 @@ data: 2026-07-19
 
 ## 👥 Time / paralelo (fora do caminho crítico)
 
+- [x] **2º dev júnior contratado — começou 21/07** (além do Pedro Dev/`pedro.melodata`) ⏫ ⚠️ *confirmar qual dev recebeu as páginas do flow (abaixo)*
+- [x] **Enviadas ao dev as páginas iniciais do flow de abertura** (do zero) + mais algumas — material de arranque
+- [ ] **Onboarding do 2º dev júnior** — o quê ele pega primeiro (flow de abertura?), sob revisão de quem, fluxo branch→review→merge
+- [x] **Gestor de tráfego pago autorizado — início agosto/2026** ⏫ ⚠️ *amarrar a objetivo EXPLÍCITO: smoke test de demanda (o V0 da BASE §4), não "gerar leads" genérico — pré-requisito: LP publicada + waitlist funcionando*
 - [ ] Contratar **operador** (amigo do Pedro Dev: CC + IA + assistentes WhatsApp) + onboarding sob instrução
-- [ ] Definir fluxo **branch → review → merge** pro operador
+- [ ] Definir fluxo **branch → review → merge** pro operador (agora vale pros 2 devs + operador)
 - [ ] Abrir conta **API WhatsApp Business** + treinar assistente em número simbólico → oficial
 - [ ] **Registrar domínios de fato** (Hostinger 3 + registro.br legalizei.app.br) — Mauro pagou ✅; depois DNS→Vercel + email contato@legalizei.app
 - [ ] **Repo/Vercel do app** `app/` — decisão do Pedro, depois

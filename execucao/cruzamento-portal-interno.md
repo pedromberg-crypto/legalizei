@@ -32,6 +32,8 @@ Honra a navbar já construída (`app/(app)/(portal)/layout.tsx`): 4 abas + CTA c
 
 Topo global: **bell de avisos** (casa dos alertas proativos da IACA/vigília) + acesso do **2º sócio** (sociedade até 2).
 
+> 👤 **Acesso à parte (não é nav do cliente): operador externo do parceiro do certificado** — login escopado só pra upload dos docs do certificado do cliente atribuído (ver §Resolvido abaixo). Superfície de ops/admin, isolada do app do cliente.
+
 ---
 
 ## 🏠 Home — 2 estados reais (data-driven, não por persona → alinha UX-48)
@@ -41,7 +43,7 @@ O estado é decidido pelo **dado da conta** (tem nota/faturamento? certificado?)
 Herói = **começar**, não um dashboard de zeros.
 | Camada | Módulo | Origem | Conteúdo | Fase |
 |---|---|:--:|---|:--:|
-| **HERÓI** | Trilha de ativação | ⚪ | "✓ empresa aberta · ✓ certificado pronto *(nós emitimos)* · **→ emita sua 1ª nota**" + "o que esperar" (quando cai o 1º imposto, como funciona) | MVP |
+| **HERÓI** | Trilha de ativação | ⚪ | "✓ empresa aberta · **certificado: em emissão pelo nosso parceiro** (1 videochamada rápida com eles) → ✓ pronto · **→ emita sua 1ª nota**" + "o que esperar" (quando cai o 1º imposto, como funciona) | MVP |
 | Secundário | Perguntar à IACA | ⚪ | tira a 1ª dúvida fiscal sem jargão | MVP |
 | Cuidado | Quem cuida + WhatsApp | ⚪ | rosto do time (22 anos) + falar com humano | MVP |
 | Dormente | Vigília fiscal | 🟣 | "seu monitoramento começa quando você emitir a 1ª nota" (sem número fake) | MVP |
@@ -147,6 +149,9 @@ Hierarquia dura: 1 herói, resto progressivo/abaixo da dobra.
 | 2 gerações de UI coladas / emissor instável | nascer consistente |
 
 ---
+
+## ✅ Resolvido 22/07 — modelo do certificado (P0) + acesso do parceiro
+**Emissão 100% do parceiro terceirizado, FORA do nosso app** (contato, agendamento, videochamada de identidade). A gente só **transfere** o cliente e recebe o certificado de volta. Reconcilia o conflito spec × matriz: P0 no nosso app = **status + handoff + validação do upload**, não videoconf embutida nem ✓ invisível. **Requisito novo — operador externo:** um funcionário do parceiro tem **login escopado** (ver clientes atribuídos aguardando cert · **upload** dos docs do certificado · nada além). **Trava de segurança (LGPD):** escopo mínimo · só o cliente atribuído · log de auditoria · zero acesso a dado fiscal/financeiro. ⚠️ **construir esse acesso → carregar a skill `seguranca-de-sistema`.** Provider específico + mecânica de atribuição = 🟡. Detalhe canônico em [[matriz-portal-interno]] §Módulo 0.
 
 ## 🔓 Decisões abertas (pra fechar antes/durante a construção)
 1. **Pagar o DAS pelo app** — viabilidade de infra com o dev; fallback Pix copia-e-cola se não fechar no MVP.

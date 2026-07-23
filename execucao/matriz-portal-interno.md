@@ -32,7 +32,7 @@ Estas NÃO travam a matriz nem os mockups, mas travam virar **produto de verdade
 1. **🔧 O motor contábil mensal existe?** — quem calcula o DAS, gera as declarações e fecha a competência é o backend do dev (o "IA diretor contábil" + robôs). O portal é uma **janela** sobre isso; sem o motor, as telas mostram mock, não dado real. → 🟡
 2. **🏛️ Pagar o DAS pelo app** — nosso diferencial nº1. Emitir a guia a pesquisa fiscal resolveu (API Serpro); **pagar** é outra decisão (Open Finance / débito / PIX). Sem isso, caímos no "confirme que pagou" deles. → 🔴 decisão aberta.
 3. **🏛️ Conciliação bancária (Open Finance)** — deliberadamente fora do mínimo; a Conta PJ deles é lock-in. → deferido.
-4. **🏛️ Provider do certificado (P0)** — o gate do portal depende da certificadora escolhida (recomendação prévia: começar com terceiro, Sete Minas) + da validação de identidade do cliente. → 🟡 decisão na fila.
+4. **🤝 Certificado via PARCEIRO terceirizado (P0)** — **modelo decidido 22/07:** a emissão inteira (contato, agendamento, videochamada de validação de identidade) é executada **pelo parceiro, fora do nosso app**; nós só **transferimos** o cliente. Um **funcionário do parceiro** tem **acesso escopado** ao nosso sistema pra **fazer upload do certificado pronto** → a gente **valida e libera**. → 🟢 modelo travado (parceiro específico + a mecânica de acesso escopado = 🟡).
 
 ---
 
@@ -72,9 +72,11 @@ O portal **não começa do zero** — é a **continuação** de uma espinha de d
 
 | Tela | Arquétipo | Mostra | Dado | Ações | Validação |
 |---|---|---|---|---|---|
-| **P0 · Certificado digital** ⭐ | **Gate** ✅ | o gate: "vamos fazer seu certificado, é o que destrava tudo". **Estados:** pendente / **em validação de identidade** (videoconf com a certificadora) / emitido. Enquanto pendente, P3/P6 ficam travados | 🏛️ certificadora (provider) · 📋 dados do responsável (da entrada) | iniciar emissão · agendar validação | 🟡 (depende da **decisão de provider** — Sete Minas/terceiro, já na fila) |
+| **P0 · Certificado digital** ⭐ | **Gate** ✅ | o gate que destrava tudo. **Emissão é 100% do PARCEIRO, fora do nosso app** (contato, agendamento, videochamada de identidade). **Estados na ótica do app:** pendente → **transferido ao parceiro** (o cliente faz a videochamada COM eles) → **certificado recebido** (operador do parceiro fez upload) → **validado** (destrava P3/P6) | 🤝 parceiro (executa a emissão) · 👤 operador do parceiro (upload no nosso sistema) · 📋 dados do responsável | transferir ao parceiro · receber upload · validar | 🟢 modelo travado 22/07 (parceiro específico 🟡) |
 
-> ⚠️ **Não é bastidor silencioso.** Emitir e-CNPJ exige **validação de identidade do responsável** (videoconferência) → é uma **pausa com ação do cliente**, igual às pausas do flow de abertura. Herdamos do teto-de-automação: certificado tem humano no meio.
+> ✅ **RESOLVIDO 22/07 — nem bastidor silencioso, nem tela nossa de videochamada.** A validação de identidade (videochamada) acontece **com o PARCEIRO terceirizado**, fora do nosso app. A gente **transfere** o cliente e recebe de volta o certificado. Isso reconcilia o conflito spec × matriz: no NOSSO app, P0 é **status + handoff + validação do upload** — não uma videoconf embutida, nem um simples ✓ invisível.
+>
+> **👤 Acesso do parceiro (operador externo) — requisito novo:** um funcionário do parceiro precisa de **login escopado** no nosso sistema, restrito a: (a) ver os clientes atribuídos aguardando certificado; (b) **fazer upload** dos documentos do certificado; (c) nada além disso. **Trava de segurança (LGPD, cf. dev isola certificado em banco separado):** escopo mínimo · só o cliente atribuído · log de auditoria de cada upload · zero acesso a dado fiscal/financeiro do cliente. ⚠️ **quando formos CONSTRUIR esse acesso, carregar a skill `seguranca-de-sistema`** (é autorização + acesso externo a dado sensível). Provider específico + mecânica de atribuição = 🟡 a definir.
 
 ### Módulo A — Home ("o que fazer hoje")
 | Tela | Arquétipo | Mostra | Dado | Ações | Validação |

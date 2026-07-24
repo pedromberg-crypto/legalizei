@@ -54,6 +54,7 @@ Então a pergunta nunca é *"esse doc está vivo?"*. É sempre **"esse doc manda
 | **NÚMEROS fiscais** | [[fiscal-simples-bh-2026]] bloco **CONSOLIDADO** | derivados: `flow-schema.js` FISCAL · `app/src/lib/fiscal.ts` |
 | **CNAE atendido / não atendido** | [[cnae-atendidos-e-nao-atendidos]] | [[cnae-comercio-standby]] = os 200 cortados |
 | **CNAE fiscalmente ótimo** | [[cnae-fiscalmente-otimo]] | 🕓 famílias 🟡 esperam Larissa |
+| **Consultas de órgãos · autofill (o que uma API de fato entrega)** | [[infosimples-funcionalidades]] + [[orgaos-e-cobertura-infosimples]] | ⚠️ **regra dura 24/07:** antes de criar QUALQUER campo de autofill/consulta, checar aqui. Não assumir o que um número (CNPJ/CPF/CEP) puxa — já erramos supondo |
 | **Cor · tipo · espaço · shell · arquétipo** | [[design-system]] | derivado: `app/src/app/globals.css` |
 | **Primitivos de cor** | [[paleta-cores]] | as **regras** em prosa lá viraram token no [[design-system]] §2 |
 | **Decisões de marca** | [[decisoes-marca]] (ADR) | — |

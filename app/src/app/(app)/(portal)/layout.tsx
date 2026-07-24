@@ -46,11 +46,29 @@ const ABAS: { href: string; label: string; Icone: () => ReactNode }[] = [
   { href: "/mais", label: "Mais", Icone: IconeMais },
 ];
 
+/**
+ * Qual aba está ativa. Regra base = PREFIXO (`/inicio` cobre `/inicio-ref5`…).
+ * ⚠️ As explorações de home nasceram como `/home-*` (campeã + A–F) e NÃO batem
+ * no prefixo `/inicio` — sem este mapeamento, nenhuma aba acende nessas telas.
+ */
+function abaAtiva(pathname: string): string | null {
+  if (pathname.startsWith("/home-")) return "/inicio";
+  const aba = ABAS.find((a) => pathname.startsWith(a.href));
+  return aba ? aba.href : null;
+}
+
 // A barra só nas telas-raiz. /pro-labore + as versões da Início (exploração)
 // entram como raiz pra mostrar a barra. Detalhe (ex: /impostos/pagar) esconde.
 const RAIZES = new Set([
   ...ABAS.map((a) => a.href),
   "/pro-labore",
+  "/home-campea",
+  "/home-a",
+  "/home-b",
+  "/home-c",
+  "/home-d",
+  "/home-e",
+  "/home-f",
   "/inicio-ref5",
   "/inicio-ref6",
   "/inicio-ref7",
@@ -112,10 +130,19 @@ function BarraAbas({ pathname }: { pathname: string }) {
     // CTA elevado (pt-7 = a protrusão) e respeita o home-indicator (var safe,
     // não env — pra o /mockup conseguir simular o inset, igual ao footer-cta).
     <div
-      className="relative shrink-0 px-4 pt-7"
+      className="app-navbar pointer-events-none absolute inset-x-0 bottom-0 z-40 px-4 pt-7"
       style={{ paddingBottom: "calc(10px + var(--safe-bottom))" }}
     >
-      <nav className="relative flex h-16 items-stretch rounded-[28px] border border-border-hairline bg-surface-card shadow-lg">
+      <nav
+        className="pointer-events-auto relative flex h-16 items-stretch rounded-[28px] border border-border-hairline bg-surface-card"
+        style={{
+          // Barra docada no rodapé: a sombra PRECISA subir (y negativo). Uma
+          // sombra pra baixo cai fora da tela e some — foi o bug do "parece
+          // colado". Esta projeta sobre o conteúdo acima = float visível.
+          boxShadow:
+            "0 -8px 30px -8px rgba(20,23,28,0.22), 0 -2px 8px -4px rgba(20,23,28,0.12)",
+        }}
+      >
         {esquerda.map((a) => (
           <Aba key={a.href} a={a} pathname={pathname} onIr={ir} />
         ))}
@@ -128,14 +155,19 @@ function BarraAbas({ pathname }: { pathname: string }) {
         ))}
 
         {/* CTA ELEVADO — Emitir NF-e. Sobe metade pra fora da barra (o notch do
-            print). → /notas por ora (a emissão P6 mora lá; vira /emitir depois). */}
+            print). → /emitir (P6, a tela de emissão em 1 passo). */}
         <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
           <Link
-            href="/notas"
+            href="/emitir"
             aria-label="Emitir nota fiscal"
-            className="flex h-14 w-14 items-center justify-center rounded-[18px] bg-action-primary text-text-on-brand shadow-lg transition-colors hover:bg-action-primary-hover active:bg-action-primary-hover"
+            className="flex h-[62px] w-[62px] items-center justify-center rounded-[18px] bg-action-primary text-text-on-brand shadow-lg transition-colors hover:bg-action-primary-hover active:bg-action-primary-hover"
           >
-            <IconeEmitir />
+            {/* Sigla no lugar do ícone (pedido do Pedro). 20px BOLD não é
+                estética: branco sobre coral-600 só passa AA em texto grande
+                (≥18,66px bold) — ver o token text-on-brand no globals. */}
+            <span className="text-h2 font-bold leading-none tracking-tight">
+              NF-e
+            </span>
           </Link>
         </div>
       </nav>
@@ -153,22 +185,21 @@ function Aba({
   onIr: (base: string) => void;
 }) {
   const { Icone, label } = a;
-  // Ativa pela BASE (/inicio cobre as versões /inicio-v1…); a navegação (onIr)
-  // resolve a última versão visitada daquela aba.
-  const ativo = pathname.startsWith(a.href);
+  // Ativa pela BASE (/inicio cobre as versões /inicio-ref5… e as /home-*); a
+  // navegação (onIr) resolve a última versão visitada daquela aba.
+  const ativo = abaAtiva(pathname) === a.href;
   return (
     <button
       type="button"
       onClick={() => onIr(a.href)}
       aria-current={ativo ? "page" : undefined}
-      className={`flex flex-1 flex-col items-center justify-center gap-0.5 transition-colors ${
-        ativo ? "text-text-primary" : "text-text-tertiary"
+      className={`flex flex-1 flex-col items-center justify-center gap-1 transition-colors ${
+        ativo ? "text-action-primary-sm" : "text-text-tertiary"
       }`}
     >
-      {/* filete de aba ativa (indicador do print), sem pular layout */}
-      <span
-        className={`h-1 w-5 rounded-full ${ativo ? "bg-text-primary" : "bg-transparent"}`}
-      />
+      {/* Sem filete: o "você está aqui" é o ÍCONE + RÓTULO em coral (decisão do
+          Pedro). O ícone usa currentColor, então herda a cor do botão.
+          `action-primary-sm` (coral-700) = o coral AA pra elemento pequeno. */}
       <Icone />
       <span className={`text-micro ${ativo ? "font-semibold" : ""}`}>{label}</span>
     </button>
@@ -231,23 +262,3 @@ function IconeMais() {
   );
 }
 
-/* CTA central: nota + "novo". Traço branco (text-on-brand) sobre o coral. */
-function IconeEmitir() {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M7 3h7l4 4v14H7z" />
-      <path d="M14 3v4h4" />
-      <path d="M12 11.5v5M9.5 14h5" />
-    </svg>
-  );
-}

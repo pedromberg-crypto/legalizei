@@ -163,3 +163,5 @@ Hierarquia dura: 1 herói, resto progressivo/abaixo da dobra.
 
 ## Cruza com
 [[matriz-portal-interno]] (P0–P14) · [[home-candidatos-modulos]] (banco de inovação) · [[2026-07-21-dossie-plataforma-logada]] (paridade) · [[cnae-fiscalmente-otimo]] (âncora) · [[legalize-cobaia-cnpj-pedro]] (o insight da vigília) · [[benchmark-padrao-195]].
+
+> 🔌 **Autofill/consulta:** todo campo que puxa dado de órgão (CNPJ, CEP, situação, certidão) segue [[infosimples-funcionalidades]] — autoridade do que cada API entrega. Não assumir; checar lá.

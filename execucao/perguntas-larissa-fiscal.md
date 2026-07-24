@@ -7,7 +7,7 @@ tags: [fiscal, larissa, double-check, simples-nacional, fator-r, pendencia]
 
 # 📋 Perguntas pra Larissa (fiscal) — double-check do consolidado
 
-> 7 pontos que sobraram da pesquisa fiscal ([[fiscal-simples-bh-2026]] bloco CONSOLIDADO) + cruzamento com 2 relatórios Gemini. **Não são dúvidas do zero** — cada um tem uma hipótese nossa com fonte; a Larissa **confirma, corrige ou completa**. Ordenados por impacto no produto. Os 3 primeiros (A·B·C) travam a EXATIDÃO do simulador Fator R do B2. Contexto: **Simples · ME serviço · BH/MG · 2026**.
+> 8 pontos (A–G da pesquisa fiscal [[fiscal-simples-bh-2026]] bloco CONSOLIDADO + cruzamento com 2 relatórios Gemini; **H veio da tela de Emitir NF-e do portal**). **Não são dúvidas do zero** — cada um tem uma hipótese nossa com fonte; a Larissa **confirma, corrige ou completa**. Ordenados por impacto no produto. Os 3 primeiros (A·B·C) travam a EXATIDÃO do simulador Fator R do B2. Contexto: **Simples · ME serviço · BH/MG · 2026**.
 
 ## Como responder
 Coluna "Resposta Larissa" + "Confirma?" (✅ nossa hipótese certa / ⚠️ corrigir / ➕ completar). Onde citar norma, melhor ainda.
@@ -21,6 +21,7 @@ Coluna "Resposta Larissa" + "Confirma?" (✅ nossa hipótese certa / ⚠️ corr
 | **E** | Dá pra **pré-classificar por CNAE** quais são "sempre Anexo III", "sujeitos a Fator R (III×V)" e "Anexo IV"? Tem uma lista/critério objetivo (§5º-B / §5º-C art. 18 LC 123)? | Confirmado que existem os 3 grupos; **falta mapear a lista exata** contra nossa `cnae-matriz.csv` (hipótese fácil do §5º-D já foi refutada) | Define o que o B1 filtra e o que o B2 calcula em runtime. Tarefa de cruzamento que a gente faz, mas quer o critério dela | | |
 | **F** | Pra **ME serviço no Simples SEM funcionário**, quais **obrigações acessórias** realmente se aplicam (DEFIS anual, eSocial "sem movimento", DCTFWeb, DES-BH) — periodicidade e quem transmite? | DEFIS anual (31/03); eSocial/DCTFWeb mensais pelo contador; DES-BH mensal. Não plenamente verificado pro caso sem empregado | Define o que o portal automatiza vs. o que o contador transmite (as 3 camadas U/S/C) | | |
 | **G** | Valores **municipais de BH** exatos: **TFLF** (Taxa de Fiscalização/Localização) anual e faixa de **certificado digital A1** em 2026? | TFLF ~R$85–95 (<50m²) 🟡; JUCEMG LTDA padrão R$268,51 (Izabela citou ~R$288); cert A1 R$209–229/ano | Compõem o "repasse de taxas de governo" do B3 (guia à parte, não reembolsável) | | |
+| **H** 🆕 | Pra emitir **NFS-e em BH (NFS-e Nacional)** a **consumidor final (B2C)**, é obrigatório informar o **CPF do tomador**, ou dá pra emitir como **"consumidor não identificado"**? | O emissor da Contabilizei oferece **"Não informar cliente" (B2C)** → no nível de plataforma dá pra emitir sem tomador nomeado ([[nf-emissao-1]]). Falta a **regra municipal** (CPF obrigatório × não-identificado) | Define a opção **"Consumidor final"** da tela **Emitir NF-e**: se BH exige CPF, a gente pede o CPF (opcional); se aceita não-identificado, emite direto. *(veio do portal, não do consolidado fiscal — não-bloqueador)* | | |
 
 ## Impacto se A/B/C não fecharem antes de codar
 - O simulador Fator R do **B2.8** roda com a **mecânica** pronta, mas marcado **"estimativa"**. O número fino (principalmente o **pró-labore ótimo**) só trava com **B**.

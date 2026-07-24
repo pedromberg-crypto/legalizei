@@ -389,6 +389,28 @@ Próximo: sentar com você pra decidir o que a gente faz com essa inteligência 
 - Desenhei duas versões da tela inicial: a de quem acabou de abrir e a de quem já está rodando. Nosso diferencial (acompanhar o imposto vivo) só faz sentido depois de alguns meses, então não adianta prometer no dia 1
 ```
 
+## Semana 23–24/07/2026 — o app ganhou cara: tela inicial, perfil, emitir nota + gestão interna + automação de consultas
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | Tela inicial do app (a home) | **Montamos a home final** escolhendo peça por peça (mostrei 6 versões, você aprovou os trechos e a gente foi montando a "campeã"): o resumo do negócio, o imposto do mês pra pagar, atalhos, notas recentes, dicas e "quem cuida de você". Fica de pé e navegável | 🟢 |
+| 2 | Tela de perfil da empresa | Construída como um **currículo da empresa** (tempo de CNPJ, notas emitidas, faturamento, situação fiscal), não como um cadastro chato — e já dizendo com honestidade o que só muda por alteração contratual (que é serviço pago) | 🟢 |
+| 3 | Tela de emitir nota (NF-e) | A tela mais importante do dia a dia: pede só **cliente + valor**, puxa **tudo do cliente automaticamente pelo CNPJ**, mostra o imposto na hora e trava a atividade pra não dar erro. Ainda estamos lapidando | 🟡 em edição |
+| 4 | Gestão interna do app | Definimos **como a gente vai operar por dentro**: um painel (kanban) pra acompanhar cada cliente pelas etapas (o que depende de nós, do governo, do cliente ou do parceiro do certificado) + o painel de métricas + como o **parceiro do certificado** trabalha dentro do nosso sistema. Entregue pro dev | 🟢 |
+| 5 | Automação de consultas ao governo | Estudamos a fundo uma empresa de APIs (**InfoSimples**) e validamos **exatamente o que dá pra automatizar**: pelo CNPJ o sistema puxa razão social, endereço, e-mail, telefone, sócios, situação, certidões (federal, estadual, municipal de BH), FGTS, trabalhista. Isso vira base da automação e **corta erro** | 🟢 |
+| 6 | **Decisão sua** | 🕓 O modelo do **parceiro do certificado** (a gente transfere o cliente, eles fazem, sobem o doc no nosso sistema) + **preço/política dos serviços vendáveis** seguem pra nossa conversa | 🕓 |
+
+**Próximo (23–24/07):** terminar a tela de emitir nota, seguir com as outras telas do app (pagar imposto, pró-labore, notas, impostos), e as perguntas fiscais que se acumularam pra Larissa.
+
+### 📱 WhatsApp (24/07)
+```
+*Update Legalizei* 📱
+- Montamos a tela inicial final do app: escolhi as peças com você aprovando trecho a trecho, e ela já fica de pé (resumo do negócio, imposto do mês, atalhos, notas, dicas, "quem cuida de você")
+- Construímos a tela de perfil da empresa (um currículo do CNPJ, não um cadastro chato) e a tela de emitir nota fiscal, que puxa tudo do cliente só pelo CNPJ e mostra o imposto na hora
+- Definimos a gestão interna do app: um painel pra acompanhar cada cliente pelas etapas + como o parceiro do certificado trabalha dentro do nosso sistema. Já entreguei pro dev
+- Validamos a fundo uma empresa de APIs (InfoSimples): pelo CNPJ o sistema puxa sozinho quase tudo (dados, endereço, sócios, certidões de BH, FGTS). Isso automatiza e corta erro
+Precisa de você: fechar o modelo/preço do parceiro do certificado e dos serviços vendáveis
+```
+
 ## 📱 Versão WhatsApp (copiar/colar — grupo ampliado, sem item de sociedade)
 ```
 *Relatório semanal — Legalizei* 📊

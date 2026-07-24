@@ -211,6 +211,7 @@
   .app-page {
     display: flex;
     flex-direction: column;
+    position: relative; /* âncora da navbar flutuante do portal (absolute) */
     /* TETO real (height, não min-height): é o que faz "sem scroll" valer. Com
        min-height a página crescia além do vidro e o aparelho rolava tudo; com
        height fixo, o `flex-1 min-h-0` obriga a região interna (ex: as pills do

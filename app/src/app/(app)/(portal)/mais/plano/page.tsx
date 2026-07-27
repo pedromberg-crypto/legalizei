@@ -12,10 +12,12 @@ import { CancelarSheet } from "./cancelar-sheet";
  * A gestão dos pagamentos do NOSSO app: plano atual, PRÓXIMA FATURA, forma de
  * pagamento e faturas anteriores.
  *
- * ─── MODELO DA PRÓXIMA FATURA (ref. Contabilizei) ───────────────────────────
+ * ─── MODELO DA PRÓXIMA FATURA (27/07) ───────────────────────────────────────
  * Serviço avulso (ex.: recálculo de guia R$15,90) NÃO cobra na hora — ele
- * ENTRA na próxima fatura, junto da mensalidade. A pessoa vê o que foi
- * adicionado e pode remover antes de fechar. Transparência > cobrança-surpresa.
+ * ENTRA na próxima fatura, junto da mensalidade. Mas é EFETIVO: pedir = o
+ * trabalho já começou, então NÃO é removível (chip "Em andamento", sem X). A
+ * pessoa vê o que já contratou e o total consolidado. Transparência > surpresa,
+ * sem fingir carrinho.
  *
  * ⚠️ Preços/valores = FAROL/FAKE (preço deferido ao Mauro).
  * ═══════════════════════════════════════════════════════════════════════════
@@ -32,23 +34,26 @@ const FATURAS = [
   { comp: "Abril de 2026", valor: "R$ 149,00", data: "05/04" },
 ];
 
-type Avulso = { id: string; label: string; valor: number; quando: string };
+type Avulso = {
+  id: string;
+  label: string;
+  valor: number;
+  quando: string;
+  situacao: string; // status do trabalho: "Em andamento" · "Concluído"
+};
 
 function formatBRL(valor: number): string {
   return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
 export default function PlanoPage() {
-  const [adicionados, setAdicionados] = useState<Avulso[]>([
-    { id: "a1", label: "Recálculo de guia de imposto", valor: 1590, quando: "pedido em 22/07" },
-    { id: "a2", label: "Certidão negativa (CND)", valor: 3500, quando: "pedido em 20/07" },
-  ]);
+  const adicionados: Avulso[] = [
+    { id: "a1", label: "Recálculo de guia de imposto", valor: 1590, quando: "pedido em 22/07", situacao: "Recalculando" },
+    { id: "a2", label: "Certidão negativa (CND)", valor: 3500, quando: "pedido em 20/07", situacao: "Em andamento" },
+  ];
 
   const [pagamentoAberto, setPagamentoAberto] = useState(false);
   const [cancelarAberto, setCancelarAberto] = useState(false);
-
-  const remover = (id: string) =>
-    setAdicionados((a) => a.filter((x) => x.id !== id));
 
   const totalProxima =
     PLANO.valor + adicionados.reduce((s, i) => s + i.valor, 0);
@@ -107,19 +112,17 @@ export default function PlanoPage() {
                       <p className="truncate text-caption text-text-primary">
                         {i.label}
                       </p>
-                      <p className="text-micro text-text-tertiary">{i.quando}</p>
+                      <p className="mt-0.5 flex items-center gap-1.5 text-micro text-text-tertiary">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-surface-tint-brand px-1.5 py-0.5 font-semibold text-action-primary-sm">
+                          <span className="h-1.5 w-1.5 rounded-full bg-action-primary-sm" />
+                          {i.situacao}
+                        </span>
+                        <span>· {i.quando}</span>
+                      </p>
                     </div>
                     <span className="shrink-0 text-caption font-semibold text-text-primary">
                       {formatBRL(i.valor / 100)}
                     </span>
-                    <button
-                      type="button"
-                      aria-label={`Remover ${i.label}`}
-                      onClick={() => remover(i.id)}
-                      className="shrink-0 text-text-tertiary transition-colors hover:text-state-danger-text"
-                    >
-                      <IconeX />
-                    </button>
                   </div>
                 ))}
 
@@ -134,7 +137,8 @@ export default function PlanoPage() {
               </div>
               <p className="mt-2 text-micro text-text-tertiary">
                 Serviços avulsos que você pede entram aqui, sem cobrança na hora,
-                e caem nesta fatura. Dá pra remover antes de fechar.
+                e caem nesta fatura. Como o trabalho já começa quando você pede,
+                eles são cobrança confirmada.
               </p>
             </div>
 
@@ -251,13 +255,6 @@ export default function PlanoPage() {
   );
 }
 
-function IconeX() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M18 6 6 18M6 6l12 12" />
-    </svg>
-  );
-}
 function IconeCartao() {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>

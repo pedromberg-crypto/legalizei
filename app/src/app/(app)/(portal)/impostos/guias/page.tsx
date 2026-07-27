@@ -15,7 +15,7 @@ import { TelaHeader } from "@/components/ui/tela";
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-type StatusGuia = "a-vencer" | "paga";
+type StatusGuia = "a-vencer" | "paga" | "recalculando";
 type Guia = {
   id: string;
   tipo: string;
@@ -28,7 +28,7 @@ type Guia = {
 const GUIAS: Guia[] = [
   { id: "g10", tipo: "Imposto do mês", valor: 17831, data: "Vence 20/07", status: "a-vencer", mes: "Junho de 2026" },
   { id: "g9", tipo: "INSS do pró-labore", valor: 10255, data: "Vence 20/07", status: "a-vencer", mes: "Junho de 2026" },
-  { id: "g8", tipo: "Imposto do mês", valor: 15290, data: "Pago em 18/06", status: "paga", mes: "Maio de 2026" },
+  { id: "g8", tipo: "Imposto do mês", valor: 15290, data: "Recalculando · fica pronto em breve", status: "recalculando", mes: "Maio de 2026" },
   { id: "g7", tipo: "INSS do pró-labore", valor: 10255, data: "Pago em 18/06", status: "paga", mes: "Maio de 2026" },
   { id: "g6", tipo: "Imposto do mês", valor: 14120, data: "Pago em 20/05", status: "paga", mes: "Abril de 2026" },
   { id: "g5", tipo: "INSS do pró-labore", valor: 10255, data: "Pago em 20/05", status: "paga", mes: "Abril de 2026" },
@@ -65,6 +65,11 @@ const ST: Record<StatusGuia, { tint: string; cor: string; label: string }> = {
     tint: "bg-state-success-tint text-state-success-text",
     cor: "text-state-success-text",
     label: "Paga",
+  },
+  recalculando: {
+    tint: "bg-surface-tint-brand text-action-primary-sm",
+    cor: "text-action-primary-sm",
+    label: "Recalculando",
   },
 };
 
@@ -267,6 +272,28 @@ function origemDe(tipo: string): string {
 // paga abre pra visualizar/baixar comprovante (status vai no param).
 function GuiaLinha({ g }: { g: Guia }) {
   const st = ST[g.status];
+
+  // Recalculando = trabalho em andamento, nada a pagar ainda → linha informativa.
+  if (g.status === "recalculando") {
+    return (
+      <div className="flex items-center gap-3 rounded-2xl border border-border-hairline bg-surface-card p-3">
+        <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${st.tint}`}>
+          <IconeBanco />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-caption font-semibold text-text-primary">{g.tipo}</p>
+          <p className="mt-0.5 text-micro">
+            <span className={st.cor}>{st.label}</span>
+            <span className="text-text-tertiary"> · {g.data}</span>
+          </p>
+        </div>
+        <p className="shrink-0 text-caption font-semibold text-text-tertiary">
+          {formatBRL(g.valor / 100)}
+        </p>
+      </div>
+    );
+  }
+
   const href =
     `/impostos/pagar?tipo=${encodeURIComponent(g.tipo)}` +
     `&comp=${encodeURIComponent(g.mes)}` +

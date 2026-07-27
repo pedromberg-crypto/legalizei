@@ -8,15 +8,21 @@ import { Button } from "@/components/ui/button";
  * ═══════════════════════════════════════════════════════════════════════════
  * SERVIÇO AVULSO — sheet de detalhe + adicionar. 24/07.
  * ═══════════════════════════════════════════════════════════════════════════
- * O momento de conversão: valor + o que inclui + preço → "Adicionar à minha
- * fatura" (sem cobrança na hora; entra na próxima). Fase 2 confirma + oferece
- * ver a fatura ou continuar.
+ * O momento de conversão: valor + o que inclui + preço → "Solicitar serviço"
+ * → DOUBLE-CHECK ("confirma mesmo?") → solicitado.
+ *
+ * ─── REGRA DURA (27/07): a solicitação é EFETIVA, não é carrinho ────────────
+ * Pedir um serviço avulso = contratar. O trabalho começa na hora (às vezes
+ * automático, às vezes manual), então NÃO existe "remover antes de fechar": o
+ * valor já entra, efetivo, na próxima fatura. Por isso o passo de confirmação
+ * ("confirma mesmo essa solicitação?") — protege o cliente de pedir sem querer
+ * e nos resguarda da contratação. Nada de linguagem de carrinho removível.
  *
  * ─── FASE DE SELEÇÃO (ex.: Recalcular guia) ─────────────────────────────────
  * Alguns serviços agem sobre um ITEM. Recalcular guia só faz sentido em guia já
  * VENCIDA (≥1 dia): você emitiu nota depois do fechamento. Se `guias` vem, o
  * sheet abre num seletor: as vencidas são clicáveis, as a-vencer aparecem
- * bloqueadas com o motivo. Escolher → adiciona o recálculo daquela guia.
+ * bloqueadas com o motivo. Escolher → confirma → a guia entra em "Recalculando".
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export type ServicoBase = {
@@ -47,9 +53,9 @@ export function ServicoSheet({
   onFechar: () => void;
 }) {
   const [entrou, setEntrou] = useState(false);
-  const [fase, setFase] = useState<"selecionar" | "detalhe" | "adicionado">(
-    guias ? "selecionar" : "detalhe",
-  );
+  const [fase, setFase] = useState<
+    "selecionar" | "detalhe" | "confirmar" | "adicionado"
+  >(guias ? "selecionar" : "detalhe");
   const [selecionada, setSelecionada] = useState<GuiaRecalc | null>(null);
 
   useEffect(() => {
@@ -63,10 +69,12 @@ export function ServicoSheet({
 
   const escolher = (g: GuiaRecalc) => {
     setSelecionada(g);
-    setFase("adicionado");
+    setFase("confirmar");
   };
 
   const adicionado = fase === "adicionado";
+  const confirmando = fase === "confirmar";
+  const oRecalc = !!selecionada;
   const oQueFoi = selecionada
     ? `Recálculo da guia de ${selecionada.comp}`
     : servico.nome;
@@ -115,12 +123,61 @@ export function ServicoSheet({
               <span className="flex h-16 w-16 items-center justify-center rounded-full bg-state-success text-text-on-dark">
                 <IconeCheck />
               </span>
-              <h2 className="mt-4 text-h2 text-text-primary">Adicionado!</h2>
+              <h2 className="mt-4 text-h2 text-text-primary">
+                Solicitação confirmada!
+              </h2>
               <p className="mx-auto mt-1 max-w-[19rem] text-body text-text-secondary">
                 <span className="font-semibold text-text-primary">{oQueFoi}</span>{" "}
-                entra na sua próxima fatura, em {proximaFatura}. Sem cobrança
-                agora, e dá pra remover antes de fechar.
+                já está com a gente. O valor de {servico.preco} entra na sua
+                próxima fatura, em {proximaFatura}.
               </p>
+              {oRecalc && selecionada && (
+                <p className="mx-auto mt-3 max-w-[19rem] rounded-2xl bg-surface-tint-brand px-4 py-3 text-caption text-text-secondary">
+                  A guia de {selecionada.comp} agora aparece como{" "}
+                  <span className="font-semibold text-action-primary-sm">
+                    Recalculando
+                  </span>{" "}
+                  em Impostos, até o novo DAS ficar pronto.
+                </p>
+              )}
+            </div>
+          ) : confirmando ? (
+            <div className="flex flex-col items-center py-2 text-center">
+              <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-surface-tint-brand text-action-primary-sm">
+                <servico.Icone />
+              </span>
+              <h2 className="mt-3 text-h2 text-text-primary">
+                Confirmar solicitação?
+              </h2>
+              <p className="mx-auto mt-1 max-w-[19rem] text-body text-text-secondary">
+                <span className="font-semibold text-text-primary">{oQueFoi}</span>
+                {" · "}
+                {servico.preco}
+              </p>
+              <div className="mt-5 w-full rounded-2xl border border-border-hairline bg-surface-card p-4 text-left">
+                <div className="flex items-start gap-2.5">
+                  <span className="mt-0.5 shrink-0 text-text-tertiary">
+                    <IconeInfo />
+                  </span>
+                  <p className="text-caption text-text-secondary">
+                    Ao confirmar, a gente <span className="font-semibold text-text-primary">já começa o serviço</span>{" "}
+                    e o valor entra, efetivo, na sua fatura de {proximaFatura}.
+                    Depois de confirmar, não dá pra desfazer.
+                  </p>
+                </div>
+                {oRecalc && selecionada && (
+                  <div className="mt-2.5 flex items-start gap-2.5 border-t border-border-hairline pt-2.5">
+                    <span className="mt-0.5 shrink-0 text-text-tertiary">
+                      <IconeRefreshMini />
+                    </span>
+                    <p className="text-caption text-text-secondary">
+                      A guia de {selecionada.comp} vai ficar como{" "}
+                      <span className="font-semibold text-text-primary">Recalculando</span>{" "}
+                      até o novo DAS ficar pronto.
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           ) : fase === "selecionar" ? (
             <>
@@ -234,17 +291,31 @@ export function ServicoSheet({
                 </Button>
               </div>
             </>
+          ) : confirmando ? (
+            <>
+              <Button full onClick={() => setFase("adicionado")}>
+                Confirmar solicitação
+              </Button>
+              <div className="mt-1 flex justify-center">
+                <Button
+                  variant="ghost"
+                  onClick={() => setFase(oRecalc ? "selecionar" : "detalhe")}
+                >
+                  Voltar
+                </Button>
+              </div>
+            </>
           ) : fase === "selecionar" ? (
             <p className="text-center text-micro text-text-tertiary">
               Só dá pra recalcular guia já vencida (há pelo menos 1 dia).
             </p>
           ) : (
             <>
-              <Button full onClick={() => setFase("adicionado")}>
-                Adicionar à minha fatura
+              <Button full onClick={() => setFase("confirmar")}>
+                Solicitar serviço
               </Button>
               <p className="mt-2 text-center text-micro text-text-tertiary">
-                Sem cobrança agora. Entra na sua próxima fatura.
+                A gente confirma com você antes de começar.
               </p>
             </>
           )}
@@ -279,6 +350,22 @@ function IconeCheckMini() {
   return (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
       <path d="m5 12 4.5 4.5L19 7" />
+    </svg>
+  );
+}
+function IconeInfo() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 11v5M12 7.5v.01" />
+    </svg>
+  );
+}
+function IconeRefreshMini() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M21 12a9 9 0 1 1-2.64-6.36" />
+      <path d="M21 4v5h-5" />
     </svg>
   );
 }

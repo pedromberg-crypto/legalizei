@@ -66,55 +66,105 @@ const CAMPEA: Versao[] = [
     rota: "/mais/plano",
     v: "mais · gerenciar plano",
     titulo: "Gerenciar plano (billing)",
-    nota: "Gestão dos pagamentos da nossa recorrência: plano atual · PRÓXIMA FATURA com avulsos ADICIONADOS (modelo Contabilizei: serviço não cobra na hora, cai na próxima fatura, removível antes) · forma de pagamento (trocar → sheet com Pix + adicionar) · faturas anteriores (baixar) · cancelar (sheet 'tem certeza?' + ativa-até-X). Valores farol.",
+    nota: "Gestão dos pagamentos da nossa recorrência: plano atual · PRÓXIMA FATURA com avulsos JÁ CONTRATADOS (27/07: serviço não cobra na hora, cai na próxima fatura, mas é EFETIVO — chip 'Em andamento'/'Recalculando', SEM remover) · forma de pagamento (trocar → sheet com Pix + adicionar) · faturas anteriores (baixar) · cancelar (sheet 'tem certeza?' + ativa-até-X). Valores farol.",
   },
   {
     rota: "/mais/servicos",
     v: "mais · serviços avulsos",
     titulo: "Loja de upsells (conversão)",
-    nota: "O catálogo à-la-carte, feito pra converter. Hero + removedor de fricção ('sem cobrança na hora, cai na próxima fatura') · Mais pedidos (destaque + prova social) · catálogo por categoria (Certidões/Fiscal/Societário). Toca → sheet de detalhe (valor + o que inclui + preço) → 'Adicionar à minha fatura' (2 fases → ver fatura). Preços farol.",
+    nota: "O catálogo à-la-carte, feito pra converter. Hero + removedor de fricção ('sem cobrança na hora, cai na próxima fatura', SEM prometer remover) · Mais pedidos (destaque + prova social) · catálogo por categoria (Certidões/Fiscal/Societário). Toca → sheet de detalhe → 'Solicitar serviço' → DOUBLE-CHECK ('confirma mesmo?', avisa efetivo + irreversível) → confirmado. Recálculo: escolhe guia → confirma → guia entra em 'Recalculando'. Preços farol.",
   },
 ];
 
-const HOMES: Versao[] = [
+/* As páginas internas de MAIS construídas 27/07 (dobras Sua empresa +
+   Contabilidade). Drill-down de /mais, sem navbar, padrão TelaHeader+voltar. */
+const MAIS_PAGINAS: Versao[] = [
   {
-    rota: "/home-a",
-    v: "A",
-    titulo: "Acolhe (wellness)",
-    nota: "Alívio primeiro: saudação → DAS 'a gente já gerou' → você está em dia → vigília → quem cuida → IA. A estética que acalma o domínio assustador.",
+    rota: "/mais/empresa",
+    v: "empresa · dados",
+    titulo: "Dados da empresa",
+    nota: "A ficha do CNPJ em 3 blocos (Identificação · Enquadramento · Endereço), CNPJ copiável. É LEITURA: mudar qualquer campo é alteração cadastral (Junta+Receita) = serviço pago. Honestidade antes do toque: sem lápis que 'edita de graça' → CTA manda pro fluxo pago.",
   },
   {
-    rota: "/home-b",
-    v: "B",
-    titulo: "Pulso (fintech)",
-    nota: "O negócio como banco: hero dark com faturamento + 4 ações → stat cards → vigília → DAS ticket → movimentações → IA. Estética premium.",
+    rota: "/mais/socios",
+    v: "empresa · sócios",
+    titulo: "Sócios",
+    nota: "Quadro societário: card por sócio (participação · papel · pró-labore), CPF mascarado, chip 'Administra'. No mock a Ana é sócia única (SLU 100%). Adicionar/mudar sócio = alteração contratual paga (até 2 no plano) → Serviços.",
   },
   {
-    rota: "/home-c",
-    v: "C",
-    titulo: "Copiloto (IA)",
-    nota: "A IACA na frente: perfil → pergunte à IA → grid de ações → DAS → vigília → notas recentes. O app como parceiro que age.",
+    rota: "/mais/documentos",
+    v: "empresa · documentos",
+    titulo: "Documentos",
+    nota: "O arquivo da empresa agrupado (Constituição · Certidões · Fiscais); ação = BAIXAR (a gente gera/guarda; certificado tem casa própria). Documento que precisa ser emitido (declaração, DECORE) → Serviços.",
+  },
+  {
+    rota: "/mais/certificado",
+    v: "empresa · certificado",
+    titulo: "Certificado digital",
+    nota: "O gate universal. Estado ATIVO (e-CNPJ A1, válido 12/2027, bate com o Perfil): hero verde 'em dia' + 'o que destrava' (nota/imposto/declaração) + detalhes + renovar/trocar. Pendente vira o mesmo layout em alerta + 'enviar certificado'.",
+  },
+  {
+    rota: "/mais/em-dia",
+    v: "contab · situação",
+    titulo: "Você está em dia (reimaginado)",
+    nota: "O card 'em dia' virou PAINEL DE CONFORMIDADE: hero escuro com veredito grande + STREAK ('6 meses sem atraso') → órgãos com dot pulsante (Receita/Prefeitura/Junta) → cumprido no mês (DAS/INSS/PGDAS-D, quem fez) → no radar (DEFIS/certificado). Tranquilidade auditável, anti-loop-aberto.",
+  },
+  {
+    rota: "/mais/relatorios",
+    v: "contab · relatórios",
+    titulo: "Relatórios (o dinheiro em português)",
+    nota: "Anti-jargão do líder: hero dark com GRÁFICO de faturamento (LineChart reusado) + variação % + resumo do ano (faturado/imposto/sobrou) → relatórios em linguagem de dono ('quanto entrou, saiu, sobrou') pra baixar. Nota: relatório contábil formal (DRE/balanço) existe sob pedido → Serviços.",
+  },
+  {
+    rota: "/mais/declaracoes",
+    v: "contab · declarações",
+    titulo: "Declarações",
+    nota: "O que a gente ENTREGA ao fisco, agrupado por cadência (todo mês: PGDAS-D · todo ano: DEFIS). Cada uma diz em português o que é + status (Entregue/No prazo) + comprovante. Tese: você não preenche nada, a gente entrega no prazo.",
   },
 ];
 
-const HOMES2: Versao[] = [
+const DIA1: Versao[] = [
   {
-    rota: "/home-d",
-    v: "D",
-    titulo: "Agenda fiscal",
-    nota: "O tempo primeiro (ref5): day-strip com countdown → obrigações do mês → DAS ticket → vigília → aprenda com a gente. A home como sua agenda fiscal.",
+    rota: "/home-dia1",
+    v: "home · dia-1",
+    titulo: "Home de ativação (estado dia-1)",
+    nota: "O 2º estado da home (empresa recém-nascida: faturamento 0, Fator R projetado → o diferencial ainda não tem o que vigiar). Vira TRILHA DE ATIVAÇÃO: hero celebra o nascimento (confetti da marca) + CNPJ pill → checklist com progresso (o certificado é o passo 'agora', gate universal) → 'sem pressa com imposto' → Aprenda + Quem cuida (reuso). Transição dia-1→regime é data-driven no real.",
+  },
+];
+
+const NOVAS: Versao[] = [
+  {
+    rota: "/avisos",
+    v: "avisos (sino)",
+    titulo: "Central de notificações",
+    nota: "Chega pelo SINO no topo da home (badge coral = não-lidos). Onde a tese 'a gente avisa ANTES da dor' vira histórico: fiscal (Fator R) · DAS pronto · serviço concluído · nota emitida/recusada · declaração entregue · novidade. Cada tipo tem ícone+cor de estado; não-lido tem dot; 'Marcar lidas' limpa. Farol.",
   },
   {
-    rota: "/home-e",
-    v: "E",
-    titulo: "Toque rápido",
-    nota: "Tudo a um gesto (ref12+11+6): perfil → círculos de atalho → swipe-to-pay do DAS → emitir pra cliente → vigília → débito automático. Velocidade.",
+    rota: "/impostos/aliquotas",
+    v: "impostos · alíquota (P4)",
+    titulo: "Sua alíquota + Fator R",
+    nota: "Detalhe da vigília (chega do 'Entender' e dos cards da vigília na aba Impostos). Alíquota efetiva 6% (herói) → Fator R numa barra contra o corte dos 28% (folga) → 'número vivo' (tese North Star: muda todo mês, ninguém olha) → memória de cálculo → CTA ajustar pró-labore. Mecânica da efetiva = fila-Larissa; mostra o conceito. Farol.",
   },
   {
-    rota: "/home-f",
-    v: "F",
-    titulo: "Descobrir & cuidar",
-    nota: "Hub acolhedor (ref7+5): saudação → busca → chips → vigília → você está em dia → indique e ganhe → aprenda. Descoberta + relacionamento.",
+    rota: "/pro-labore",
+    v: "pró-labore (P8+P9)",
+    titulo: "Ver + ajustar (o diferencial-âncora)",
+    nota: "Substitui o stub. Reusa a engine lib/fiscal (a mesma do N18/simulador do wizard), agora em regime. P8 = estado atual (você se paga X, selo do enquadramento). P9 = INTERATIVO: slider com 'sai do seu bolso/mês' = imposto + INSS ao vivo (o vale = ponto ótimo), sugestão mira 30% (folga), aviso de borda + 'imposto dobra' no Anexo V, memória de cálculo. Cenário na BORDA de propósito, pra mostrar o valor do monitoramento. Chega da CTA da alíquota. Farol.",
+  },
+];
+
+const BLOG: Versao[] = [
+  {
+    rota: "/blog",
+    v: "blog · home",
+    titulo: "Aprenda com a gente (home dos posts)",
+    nota: "Ref. TripGlide traduzida: busca + chips de CATEGORIA (Impostos/Abrir empresa/Nota fiscal/Dicas, no lugar dos continentes) → carrossel-HERÓI dos destaques (card grande com imagem/categoria/tempo/'Ler post') → LISTA de todas as publicações abaixo, filtrada por chip+busca. Chega do 'Aprenda com a gente' da home. Imagens picsum mock.",
+  },
+  {
+    rota: "/blog/post?id=fator-r",
+    v: "blog · post",
+    titulo: "Leitura do post",
+    nota: "Remix do print 2 (orientação do Pedro): imagem em DESTAQUE no topo (full-bleed) com voltar + CURTIR + COMPARTILHAR discreto (review fora agora) → corpo no meio → o carrossel que no print fica em cima vira POSTS SUGERIDOS ('Leia também') no fim. `?id=` troca o post; sem id cai no 1º.",
   },
 ];
 
@@ -140,14 +190,24 @@ export default function MockupHomePage() {
         versoes={CAMPEA}
       />
       <BoardSecao
-        titulo="As 3 sugestões (estado regime)"
-        subtitulo="Topo claro nas três. A VIGÍLIA FISCAL (gauge do teto + Fator R + alerta preditivo) foi montada nova — é o nosso diferencial, não tinha campeão pronto no acervo."
-        versoes={HOMES}
+        titulo="🌱 Home dia-1 (ativação — nova 27/07)"
+        subtitulo="O estado da home logo após a empresa nascer. Fecha o último buraco do MLP: a decisão das '2 homes' (dia-1 × regime) virou tela. Trilha de ativação guiada, com o certificado como passo-âncora."
+        versoes={DIA1}
       />
       <BoardSecao
-        titulo="Mais 3 (outra mesclagem dos campeões)"
-        subtitulo="Mesmos componentes aprovados, arranjados de outro jeito, puxando das referências que sobraram (agenda ref5, ação ref12, hub ref7). A vigília fiscal segue nas três."
-        versoes={HOMES2}
+        titulo="🗂️ Mais · páginas internas (novas — 27/07)"
+        subtitulo="As dobras 'Sua empresa' (dados · sócios · documentos · certificado) e 'Contabilidade' (você está em dia · relatórios · declarações), construídas como drill-down de /mais. Toca dentro do aparelho pra navegar. Regra travada: página, não acordeon; honestidade antes do toque (mudança cadastral/contratual = serviço pago); 'você está em dia' virou painel de conformidade."
+        versoes={MAIS_PAGINAS}
+      />
+      <BoardSecao
+        titulo="🔔 Avisos + alíquota + pró-labore (novas — 27/07)"
+        subtitulo="Central de notificações (do sino), detalhe da alíquota/Fator R (da vigília) e o pró-labore interativo P8+P9 (o diferencial-âncora, reusa a engine do simulador). Fecham os últimos buracos do MLP."
+        versoes={NOVAS}
+      />
+      <BoardSecao
+        titulo="📰 Blog — Aprenda com a gente (novo — 27/07)"
+        subtitulo="A home dos posts (ref. TripGlide) + a leitura do post (ref. print 2 remixada: hero no topo, corpo no meio, sugeridos no fim). Chega do 'Aprenda com a gente' da home. Fecha o último buraco do MLP (só sobra a Home dia-1)."
+        versoes={BLOG}
       />
       <BoardSecao
         titulo="🧩 Acervo — os componentes vencedores"

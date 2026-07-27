@@ -1,6 +1,6 @@
 # Memory Index — Legalize
 
-- [Portal interno construído (mockup)](legalize-portal-telas-construidas.md) — os 4 tabs + sub-páginas prontos como UI/farol (16º flow 27/07); decisões duráveis: não-intermediar-pagamento-de-guia (mostra/copia código), avulso-cai-na-próxima-fatura, débito-auto=benefício-do-plano, recalcular-só-guia-vencida, perfil=só-conta.
+- [Portal do cliente construído (mockup)](legalize-portal-telas-construidas.md) — **MLP do portal FECHADO** (16º+17º flow 27/07): 19 telas sem stub (dobras Sua empresa + Contabilidade · Avisos/sino · Alíquota P4 · Blog · Home dia-1 · Pró-labore P8+P9 interativo). Decisões: 🔴 **avulso EFETIVO não-removível + double-check** (revertido), página≠acordeon, honestidade-antes-do-toque, certificado-dia1=parceira-valida (transfer=upload), não-intermediar-guia. **Falta = flow #2 (migrar)**, não página.
 - [Raio de card = rounded-2xl (16px)](legalize-card-radius-padrao.md) — padrão travado 24/07: cards de conteúdo usam `rounded-2xl` (16px, igual NF); NUNCA `rounded-xl` (que no DS invertido = 24px, redondo demais). Inputs/ícones-container seguem `rounded-xl`.
 - [APIs de órgãos = autoridade (consultar antes de autofill)](legalize-apis-orgaos-autoridade.md) — **regra dura 24/07**: antes de criar qualquer campo de autofill/consulta/validação de documento, checar `pesquisa/integracoes-apis/` (InfoSimples cruzada); CNPJ 🔓 puxa tudo · CPF só validar dígito · vigília forte é 🔐 (procuração/certificado) · emitir NFS-e não é coberto (RPA); objetivo = parar de errar formulário + tirar validação da Larissa.
 

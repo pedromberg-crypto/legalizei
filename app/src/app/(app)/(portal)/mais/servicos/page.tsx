@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { TelaHeader } from "@/components/ui/tela";
 import { ServicoSheet, type ServicoBase, type GuiaRecalc } from "./servico-sheet";
 
@@ -9,10 +9,10 @@ import { ServicoSheet, type ServicoBase, type GuiaRecalc } from "./servico-sheet
  * MAIS · SERVIÇOS AVULSOS — a loja de upsells (24/07). Drill-down de /mais.
  * ═══════════════════════════════════════════════════════════════════════════
  * O catálogo à-la-carte, feito pra CONVERTER:
- *   · Remove a fricção logo no topo: "sem cobrança na hora, cai na próxima
- *     fatura, dá pra remover antes" (o modelo que já existe em Gerenciar plano).
+ *   · Remove a fricção do PREÇO no topo: "sem cobrança na hora, cai na próxima
+ *     fatura" — SEM prometer remover (a solicitação é efetiva, ver sheet).
  *   · Mais pedidos em destaque (prova social) + catálogo por categoria.
- *   · 1 toque → sheet de detalhe → "Adicionar à minha fatura" (2 fases).
+ *   · 1 toque → sheet de detalhe → "Solicitar serviço" → double-check.
  *
  * ⚠️ Preços = FAROL/FAKE (deferidos ao Mauro).
  * ═══════════════════════════════════════════════════════════════════════════
@@ -120,6 +120,32 @@ const SERVICOS: Servico[] = [
     categoria: "Alterações societárias",
     Icone: IconeXCirculo,
   },
+  {
+    id: "renovacao-cert",
+    nome: "Renovação de certificado digital",
+    desc: "Renova seu e-CNPJ antes de vencer, sem travar a emissão de nota.",
+    preco: "a partir de R$ 120",
+    categoria: "Fiscal",
+    Icone: IconeEscudo,
+    inclui: [
+      "Emissão do novo e-CNPJ A1 (na nuvem)",
+      "A gente instala e valida por você",
+      "Zero interrupção pra emitir nota e gerar guia",
+    ],
+  },
+  {
+    id: "relatorio-contabil",
+    nome: "Relatório contábil formal",
+    desc: "DRE, balanço patrimonial ou livro-caixa, oficial e assinado.",
+    preco: "a partir de R$ 89",
+    categoria: "Certidões e documentos",
+    Icone: IconeDoc,
+    inclui: [
+      "Documento oficial assinado pelo contador",
+      "DRE, balanço ou livro-caixa (você escolhe)",
+      "Aceito por banco, licitação e investidor",
+    ],
+  },
 ];
 
 const CATEGORIAS = [
@@ -130,6 +156,19 @@ const CATEGORIAS = [
 
 export default function ServicosPage() {
   const [aberto, setAberto] = useState<Servico | null>(null);
+
+  // Deep-link: /mais/servicos?abrir=<id> abre o sheet do serviço direto (as
+  // páginas de empresa/sócios/certificado/relatórios mandam pra cá com intenção
+  // já resolvida). Lê de window (client-only) → sem precisar de Suspense.
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get("abrir");
+    if (!id) return;
+    const s = SERVICOS.find((x) => x.id === id);
+    // Sync de query-param no mount: server e client 1º render = null (sem
+    // mismatch), o effect abre depois. É o padrão hydration-safe pra deep-link.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (s) setAberto(s);
+  }, []);
 
   const populares = SERVICOS.filter((s) => s.popular);
 
@@ -157,8 +196,8 @@ export default function ServicosPage() {
                   <span className="font-semibold text-text-primary">
                     Sem cobrança na hora.
                   </span>{" "}
-                  O que você pedir entra na sua próxima fatura, e dá pra remover
-                  antes de fechar.
+                  O que você pedir entra na sua próxima fatura. A gente confirma
+                  com você antes de começar.
                 </p>
               </div>
             </div>

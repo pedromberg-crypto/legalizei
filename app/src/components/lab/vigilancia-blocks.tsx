@@ -1,10 +1,15 @@
 "use client";
 
+import Link from "next/link";
+
 /**
  * VIGÍLIA FISCAL — o diferencial. Sem o gauge (o Pedro não curtiu o mostrador
  * radial). Fica o que ele aprovou: os cards (alíquota + Fator R) + o ALERTA
  * PREDITIVO (o valor de verdade: avisa ANTES da dor — a lição da cobaia). O
  * teto do Simples virou uma BARRA simples. Mock pra farol.
+ *
+ * 27/07: alíquota + Fator R + "Entender" levam ao detalhe /impostos/aliquotas
+ * (P4). A vigília espia; a página explica.
  */
 export function Vigilancia() {
   return (
@@ -13,9 +18,12 @@ export function Vigilancia() {
         <p className="text-body-strong font-semibold text-text-primary">
           Sua vigília fiscal
         </p>
-        <button className="text-caption font-semibold text-action-primary-sm">
+        <Link
+          href="/impostos/aliquotas"
+          className="text-caption font-semibold text-action-primary-sm"
+        >
           Entender
-        </button>
+        </Link>
       </div>
 
       <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
@@ -34,20 +42,26 @@ export function Vigilancia() {
           Faltam R$ 321.600 pro limite. Tranquilo.
         </p>
 
-        {/* os cards que o Pedro curtiu */}
+        {/* os cards que o Pedro curtiu — agora levam ao detalhe (P4) */}
         <div className="mt-4 flex items-stretch gap-2">
-          <div className="flex-1 rounded-2xl bg-surface-alt p-3">
+          <Link
+            href="/impostos/aliquotas"
+            className="flex-1 rounded-2xl bg-surface-alt p-3 transition-colors hover:bg-surface-tint-brand active:bg-surface-tint-brand"
+          >
             <p className="text-micro text-text-tertiary">Sua alíquota</p>
             <p className="mt-0.5 text-body font-semibold text-text-primary">6%</p>
             <p className="text-micro font-semibold text-state-success-text">
               a menor possível
             </p>
-          </div>
-          <div className="flex-1 rounded-2xl bg-surface-alt p-3">
+          </Link>
+          <Link
+            href="/impostos/aliquotas"
+            className="flex-1 rounded-2xl bg-surface-alt p-3 transition-colors hover:bg-surface-tint-brand active:bg-surface-tint-brand"
+          >
             <p className="text-micro text-text-tertiary">Fator R</p>
             <p className="mt-0.5 text-body font-semibold text-text-primary">37%</p>
             <p className="text-micro text-text-tertiary">folha ÷ faturamento</p>
-          </div>
+          </Link>
         </div>
 
         {/* alerta preditivo — o coração da vigília */}

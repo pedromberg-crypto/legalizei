@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { DADOS } from "@/components/lab/nexo-shell";
 
 /**
@@ -24,25 +25,25 @@ const PERFIL = {
   iniciais: "AB",
 };
 
-export type Item = { label: string; Icone: () => ReactNode };
+export type Item = { label: string; Icone: () => ReactNode; href?: string };
 export type Secao = { nome: string; itens: Item[] };
 
 export const SECOES: Secao[] = [
   {
     nome: "Sua empresa",
     itens: [
-      { label: "Dados da empresa", Icone: IconeEmpresa },
-      { label: "Sócios", Icone: IconeSocios },
-      { label: "Documentos", Icone: IconeDocs },
-      { label: "Certificado digital", Icone: IconeCert },
+      { label: "Dados da empresa", Icone: IconeEmpresa, href: "/mais/empresa" },
+      { label: "Sócios", Icone: IconeSocios, href: "/mais/socios" },
+      { label: "Documentos", Icone: IconeDocs, href: "/mais/documentos" },
+      { label: "Certificado digital", Icone: IconeCert, href: "/mais/certificado" },
     ],
   },
   {
     nome: "Contabilidade",
     itens: [
-      { label: "Você está em dia", Icone: IconeEmDia },
-      { label: "Relatórios", Icone: IconeRelatorio },
-      { label: "Declarações", Icone: IconeDeclaracao },
+      { label: "Você está em dia", Icone: IconeEmDia, href: "/mais/em-dia" },
+      { label: "Relatórios", Icone: IconeRelatorio, href: "/mais/relatorios" },
+      { label: "Declarações", Icone: IconeDeclaracao, href: "/mais/declaracoes" },
     ],
   },
   {
@@ -111,7 +112,7 @@ function Availability() {
    Exportado (validado no acervo — Mais · v1). */
 export function NudgeCertificado() {
   return (
-    <button className="w-full text-left">
+    <Link href="/mais/certificado" className="block text-left">
       <div className="flex items-center gap-3 rounded-2xl bg-surface-dark p-4 text-text-on-dark">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/25">
           <IconeCert />
@@ -124,7 +125,7 @@ export function NudgeCertificado() {
         </div>
         <IconeChevron />
       </div>
-    </button>
+    </Link>
   );
 }
 
@@ -160,25 +161,39 @@ export function SecaoLista({ secao }: { secao: Secao }) {
     <div>
       <p className="text-micro text-text-tertiary mb-1">{secao.nome}</p>
       <div className="overflow-hidden rounded-2xl border border-border-hairline bg-surface-card">
-        {secao.itens.map(({ label, Icone }, i) => (
-          <button key={label} className="w-full text-left">
-            <div
-              className={`flex items-center gap-3 px-4 py-3.5 ${
-                i > 0 ? "border-t border-border-hairline" : ""
-              }`}
-            >
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-surface-alt text-text-secondary">
-                <Icone />
-              </span>
-              <span className="min-w-0 flex-1 text-body text-text-primary">
-                {label}
-              </span>
-              <IconeChevron className="text-text-tertiary" />
-            </div>
-          </button>
+        {secao.itens.map((item, i) => (
+          <ItemLinha key={item.label} item={item} primeiro={i === 0} />
         ))}
       </div>
     </div>
+  );
+}
+
+/* Uma linha: vira <Link> quando tem href (drill-down), senão <button> (farol). */
+function ItemLinha({ item, primeiro }: { item: Item; primeiro: boolean }) {
+  const { label, Icone, href } = item;
+  const inner = (
+    <div
+      className={`flex items-center gap-3 px-4 py-3.5 ${
+        primeiro ? "" : "border-t border-border-hairline"
+      }`}
+    >
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-surface-alt text-text-secondary">
+        <Icone />
+      </span>
+      <span className="min-w-0 flex-1 text-body text-text-primary">{label}</span>
+      <IconeChevron className="text-text-tertiary" />
+    </div>
+  );
+  return href ? (
+    <Link
+      href={href}
+      className="block text-left transition-colors active:bg-surface-alt"
+    >
+      {inner}
+    </Link>
+  ) : (
+    <button className="w-full text-left">{inner}</button>
   );
 }
 

@@ -29,18 +29,38 @@ export function CabecalhoCampea() {
           <br />
           Ana Beatriz
         </h1>
-        <Link
-          href="/perfil"
-          aria-label="Ver meu perfil"
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-surface-dark text-caption font-bold text-text-on-dark transition-opacity hover:opacity-90"
-        >
-          AB
-        </Link>
+        <div className="flex shrink-0 items-center gap-2">
+          {/* Sino → central de Avisos. Badge coral = há não-lidos. */}
+          <Link
+            href="/avisos"
+            aria-label="Ver avisos"
+            className="relative flex h-11 w-11 items-center justify-center rounded-full border border-border-hairline bg-surface-card text-text-secondary transition-colors hover:border-border-strong active:bg-surface-alt"
+          >
+            <SinoIcone />
+            <span className="absolute right-2.5 top-2.5 h-2.5 w-2.5 rounded-full border-2 border-surface-card bg-action-primary" />
+          </Link>
+          <Link
+            href="/perfil"
+            aria-label="Ver meu perfil"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-surface-dark text-caption font-bold text-text-on-dark transition-opacity hover:opacity-90"
+          >
+            AB
+          </Link>
+        </div>
       </div>
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <PillCnpj />
       </div>
     </div>
+  );
+}
+
+function SinoIcone() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6" />
+      <path d="M10 20a2 2 0 0 0 4 0" />
+    </svg>
   );
 }
 
@@ -172,13 +192,16 @@ export function AprendaGradiente() {
         <p className="text-body-strong font-semibold text-text-primary">
           Aprenda com a gente
         </p>
-        <button className="text-caption font-semibold text-action-primary-sm">
+        <Link
+          href="/blog"
+          className="text-caption font-semibold text-action-primary-sm"
+        >
           Ver tudo
-        </button>
+        </Link>
       </div>
       <div className="-mx-6 flex gap-3 overflow-x-auto px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {POSTS_G.map((p) => (
-          <button key={p.titulo} className="text-left">
+          <Link key={p.titulo} href="/blog" className="text-left">
             <div
               className="flex h-[168px] w-[190px] shrink-0 flex-col justify-between overflow-hidden rounded-2xl bg-surface-dark p-4 text-text-on-dark"
               style={{
@@ -195,7 +218,7 @@ export function AprendaGradiente() {
                 <p className="mt-1 text-micro text-text-on-dark/60">{p.meta}</p>
               </div>
             </div>
-          </button>
+          </Link>
         ))}
       </div>
     </div>

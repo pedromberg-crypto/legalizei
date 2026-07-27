@@ -95,7 +95,32 @@ export default function MaisPage() {
           <SecaoLista secao={SECOES[0]} />
           <SecaoLista secao={SECOES[1]} />
 
-          {/* 5. Fale com a gente — canal humano */}
+          {/* 5. Conta — subiu pra logo abaixo de Contabilidade (Sair fora do
+              card, vermelho; Indicar = futuro) */}
+          <ContaSecao />
+
+          {/* 6. Aprenda com a gente → home do blog (desceu pro rodapé) */}
+          <Link
+            href="/blog"
+            className="flex items-center gap-3 rounded-2xl border border-border-hairline bg-surface-card p-4 transition-colors hover:border-border-strong active:bg-surface-alt"
+          >
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-surface-tint-brand text-action-primary-sm">
+              <IconeBlog />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="text-caption font-semibold text-text-primary">
+                Aprenda com a gente
+              </p>
+              <p className="text-micro text-text-tertiary">
+                Guias e novidades pra entender sua empresa sem juridiquês.
+              </p>
+            </div>
+            <span className="shrink-0 text-text-tertiary">
+              <IconeChevron />
+            </span>
+          </Link>
+
+          {/* 7. Fale com a gente — canal humano (desceu pro rodapé) */}
           <button
             type="button"
             className="flex w-full items-center gap-3 rounded-2xl border border-border-hairline bg-surface-card p-4 text-left transition-colors hover:border-border-strong active:bg-surface-alt"
@@ -116,8 +141,8 @@ export default function MaisPage() {
             </span>
           </button>
 
-          {/* 6. Conta */}
-          <SecaoLista secao={SECOES[2]} />
+          {/* 8. Sair — último de tudo */}
+          <BotaoSair />
 
           <p className="text-center text-micro text-text-muted">
             Legalizai · versão 0.1 (protótipo)
@@ -209,7 +234,108 @@ function ServicoCard({ s }: { s: Servico }) {
   );
 }
 
+/* ─── Seção Conta ──────────────────────────────────────────────────────────
+   Notificações → Avisos · Indicar = cadeado de futuro (sem página ainda) ·
+   Sair FORA do card, em vermelho-escuro, pra achar rápido (pedido do Pedro). */
+function ContaSecao() {
+  return (
+    <div>
+      <p className="mb-1 text-micro text-text-tertiary">Conta</p>
+      <div className="overflow-hidden rounded-2xl border border-border-hairline bg-surface-card">
+        {/* Notificações → central de Avisos (dot coral = há novos) */}
+        <Link
+          href="/avisos"
+          className="block text-left transition-colors active:bg-surface-alt"
+        >
+          <div className="flex items-center gap-3 px-4 py-3.5">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-surface-alt text-text-secondary">
+              <IconeSino />
+            </span>
+            <span className="min-w-0 flex-1 text-body text-text-primary">
+              Notificações
+            </span>
+            <span className="h-2 w-2 shrink-0 rounded-full bg-action-primary" aria-label="Novos" />
+            <IconeChevron />
+          </div>
+        </Link>
+
+        {/* Indicar um amigo — cadeado de futuro */}
+        <div
+          aria-disabled
+          className="flex items-center gap-3 border-t border-border-hairline px-4 py-3.5 opacity-60"
+        >
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-surface-alt text-text-tertiary">
+            <IconeIndicar />
+          </span>
+          <span className="min-w-0 flex-1 text-body text-text-primary">
+            Indicar um amigo
+          </span>
+          <span className="flex shrink-0 items-center gap-1 rounded-full bg-surface-alt px-2 py-0.5 text-micro font-semibold text-text-tertiary">
+            <IconeCadeado />
+            Em breve
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* Sair — sempre o ÚLTIMO item da tela, separado e vermelho-escuro (achar rápido). */
+function BotaoSair() {
+  return (
+    <button
+      type="button"
+      className="flex w-full items-center justify-center gap-2 rounded-2xl border border-border-hairline bg-surface-card py-3.5 text-body font-semibold text-state-danger-text transition-colors hover:border-state-danger-text/40 active:bg-state-danger-tint"
+    >
+      <IconeSair />
+      Sair
+    </button>
+  );
+}
+
 /* ─── ícones ───────────────────────────────────────────────────────────────── */
+function IconeBlog() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M4 5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" />
+      <path d="M14 3v5h5" />
+      <path d="M8 13h7M8 17h5" />
+    </svg>
+  );
+}
+function IconeSino() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6" />
+      <path d="M10 20a2 2 0 0 0 4 0" />
+    </svg>
+  );
+}
+function IconeIndicar() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <circle cx="9" cy="8" r="3" />
+      <path d="M4 20a5 5 0 0 1 10 0" />
+      <path d="M18 8v6M15 11h6" />
+    </svg>
+  );
+}
+function IconeCadeado() {
+  return (
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <rect x="4" y="11" width="16" height="10" rx="2" />
+      <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+    </svg>
+  );
+}
+function IconeSair() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+      <path d="M16 17l5-5-5-5M21 12H9" />
+    </svg>
+  );
+}
 function IconeChevron() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>

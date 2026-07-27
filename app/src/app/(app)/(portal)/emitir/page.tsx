@@ -1,9 +1,12 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { Suspense, useState, type ReactNode } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Rodape } from "@/components/ui/tela";
+import { ResumoSheet, type ResumoNota } from "./resumo-sheet";
+import { ClientesSheet } from "./clientes-sheet";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -19,7 +22,7 @@ import { Rodape } from "@/components/ui/tela";
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-type Cliente = {
+export type Cliente = {
   id: string;
   tipo: "PJ" | "PF";
   ini: string;
@@ -41,7 +44,17 @@ const CLIENTES: Cliente[] = (
   ] as Cliente[]
 ).sort((a, b) => b.emissoes - a.emissoes);
 
-const ALIQUOTA = 0.06;
+// Valores recentes POR CLIENTE (mock, centavos, mais recente primeiro). No real:
+// histórico de NF do próprio cliente. Viram pills de clique rápido no valor.
+const VALORES_POR_CLIENTE: Record<string, number[]> = {
+  tf: [180000, 90000],
+  pp: [50000, 45000],
+  mc: [30000],
+  jl: [120000, 60000],
+};
+
+// Última NF emitida (mock) — alimenta o atalho "Repetir última nota".
+const ULTIMA_NF = { clienteId: "pp", valorCentavos: 50000 };
 
 function formatBRL(valor: number): string {
   return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -65,8 +78,26 @@ function maskCPF(v: string): string {
 }
 
 export default function EmitirPage() {
-  const [cliente, setCliente] = useState<string | null>(null);
-  const [valor, setValor] = useState("");
+  return (
+    <Suspense fallback={null}>
+      <EmitirForm />
+    </Suspense>
+  );
+}
+
+function EmitirForm() {
+  // "Corrigir e reemitir" (vindo de uma nota recusada, P7): pré-preenche o
+  // favorecido + valor e mostra o motivo, pra corrigir o dado que falhou.
+  const sp = useSearchParams();
+  const corrigir = sp.get("corrigir") === "1";
+  const motivo = sp.get("motivo") ?? "";
+
+  const [cliente, setCliente] = useState<string | null>(
+    corrigir ? sp.get("cliente") : null,
+  );
+  const [valor, setValor] = useState(corrigir ? (sp.get("valor") ?? "") : "");
+  const [resumoAberto, setResumoAberto] = useState(false); // sheet de revisão/emissão
+  const [buscaAberta, setBuscaAberta] = useState(false); // sheet "ver todos" clientes
 
   // Ficha do novo cliente
   const [novoTipo, setNovoTipo] = useState<"PJ" | "PF">("PJ");
@@ -108,11 +139,56 @@ export default function EmitirPage() {
 
   const numero = Number(valor.replace(/\D/g, "")) / 100;
   const temValor = numero > 0;
-  const imposto = numero * ALIQUOTA;
 
   const favorecidoOk =
     cliente === "novo" ? novoDoc.trim() !== "" && novoNome.trim() !== "" : true;
   const podeEmitir = temValor && cliente !== null && favorecidoOk;
+
+  // Rótulo do favorecido pro resumo do sheet (o que a pessoa revê antes de emitir).
+  const favObj = CLIENTES.find((c) => c.id === cliente) ?? null;
+  const favorecidoLabel =
+    cliente === "sem"
+      ? "Consumidor final"
+      : cliente === "novo"
+        ? novoNome.trim() || "Novo cliente"
+        : (favObj?.nome ?? "");
+  const favorecidoSub =
+    cliente === "sem"
+      ? "Nota sem tomador (B2C)"
+      : cliente === "novo"
+        ? novoDoc.trim() || undefined
+        : favObj
+          ? `${favObj.doc} · ${favObj.cidade}`
+          : undefined;
+
+  const dadosResumo: ResumoNota = {
+    favorecido: favorecidoLabel,
+    favorecidoSub,
+    servico: "Marketing e publicidade",
+    servicoMeta: "CNAE 7319-0/04 · Alíquota 6%",
+    valor: numero,
+  };
+
+  // "Emitir outra": zera o formulário e fecha o sheet (fase enviada).
+  const reemitir = () => {
+    setResumoAberto(false);
+    setCliente(null);
+    setValor("");
+    trocarTipo("PJ");
+    setSalvarNaBase(true);
+  };
+
+  // Valores recentes DO cliente selecionado (dedup, no máx 2) — pills de valor.
+  const valoresCliente = cliente
+    ? [...new Set(VALORES_POR_CLIENTE[cliente] ?? [])].slice(0, 2)
+    : [];
+
+  // Atalho "repetir última nota" (só na tela fresca, antes de tocar em nada).
+  const ultimaNfCliente = CLIENTES.find((c) => c.id === ULTIMA_NF.clienteId) ?? null;
+  const repetirUltima = () => {
+    setCliente(ULTIMA_NF.clienteId);
+    setValor(String(ULTIMA_NF.valorCentavos));
+  };
 
   return (
     <>
@@ -130,19 +206,71 @@ export default function EmitirPage() {
       <main className="app-main">
         <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <div className="flex flex-col gap-6 pb-4">
+            {/* ── Corrigindo uma nota recusada (vindo do P7) ── */}
+            {corrigir && (
+              <div className="flex items-start gap-2.5 rounded-2xl bg-state-warning-tint p-3">
+                <span className="mt-0.5 shrink-0 text-state-warning-text">
+                  <Alerta />
+                </span>
+                <div className="min-w-0">
+                  <p className="text-caption font-semibold text-state-warning-text">
+                    Corrigindo uma nota recusada
+                  </p>
+                  <p className="mt-0.5 text-micro text-text-secondary">
+                    {motivo || "Confira os dados do favorecido e reemita."}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* ── Repetir última nota (atalho — só na tela fresca) ──
+                Cobrança recorrente é a emissão mais comum: 1 toque preenche
+                cliente + valor da última. Some assim que ele toca em algo. */}
+            {!cliente && valor === "" && ultimaNfCliente && (
+              <button
+                type="button"
+                onClick={repetirUltima}
+                className="flex items-center gap-3 rounded-2xl border border-border-hairline bg-surface-card p-3 text-left transition-colors hover:border-border-strong active:bg-surface-alt"
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface-tint-brand text-action-primary-sm">
+                  <Repetir />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-caption font-semibold text-text-primary">
+                    Repetir última nota
+                  </span>
+                  <span className="block truncate text-micro text-text-tertiary">
+                    {ultimaNfCliente.nome} · {formatBRL(ULTIMA_NF.valorCentavos / 100)}
+                  </span>
+                </span>
+                <span className="shrink-0 text-text-tertiary">
+                  <ChevronDir />
+                </span>
+              </button>
+            )}
+
             {/* ── Favorecido ── */}
             <div>
-              <p className="mb-2 text-body-strong font-semibold text-text-primary">
-                Pra quem é a nota?
-              </p>
+              <div className="mb-2 flex items-center justify-between gap-3">
+                <p className="text-body-strong font-semibold text-text-primary">
+                  Pra quem é a nota?
+                </p>
+                {/* Discreto: as bolhas mostram os recorrentes; "Ver todos" abre
+                    a base inteira, pesquisável (resolve base grande sem poluir). */}
+                <button
+                  type="button"
+                  onClick={() => setBuscaAberta(true)}
+                  className="flex shrink-0 items-center gap-1 text-caption font-semibold text-action-primary-sm"
+                >
+                  <LupaMini /> Ver todos
+                </button>
+              </div>
               <div className="-mx-6 flex gap-3 overflow-x-auto px-6 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 <ClienteBolha ativo={cliente === "novo"} onClick={() => setCliente("novo")} ini={<Mais />} l1="Novo" l2="cliente" tracejado />
                 <ClienteBolha ativo={cliente === "sem"} onClick={() => setCliente("sem")} ini={<Pessoa />} l1="Consumidor" l2="final" />
                 {CLIENTES.map((c) => (
                   <ClienteBolha key={c.id} ativo={cliente === c.id} onClick={() => setCliente(c.id)} ini={c.ini} l1={c.l1} l2={c.l2} />
                 ))}
-                {/* Escape hatch pro caso da base MUITO grande (placeholder) */}
-                <ClienteBolha ativo={false} onClick={() => {}} ini={<Lupa />} l1="Buscar" l2="cliente" tracejado />
               </div>
             </div>
 
@@ -187,13 +315,35 @@ export default function EmitirPage() {
                   className="w-full bg-transparent text-display font-bold text-text-primary outline-none placeholder:text-text-muted"
                 />
               </div>
-              {temValor && (
+              {temValor ? (
+                // O imposto NÃO é afirmado aqui: no Simples é DAS mensal sobre
+                // receita, não retenção por nota. A aba Impostos cobre com dado
+                // assertivo; aqui, só o ponteiro (observação, não número-guru).
                 <p className="mt-2 text-caption text-text-secondary">
-                  Dessa nota,{" "}
-                  <span className="font-semibold text-text-primary">{formatBRL(imposto)}</span>{" "}
-                  vão de imposto (6%). O resto é seu.
+                  Os impostos dessa nota você acompanha na aba{" "}
+                  <span className="font-semibold text-text-primary">Impostos</span>.
                 </p>
-              )}
+              ) : valoresCliente.length > 0 ? (
+                // Clique rápido: últimos valores DESSE cliente (só quando há um
+                // com histórico; consumidor final / novo cliente não têm).
+                <div className="mt-3">
+                  <p className="mb-2 text-micro text-text-tertiary">
+                    Últimos valores desse cliente
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {valoresCliente.map((centavos) => (
+                      <button
+                        key={centavos}
+                        type="button"
+                        onClick={() => setValor(String(centavos))}
+                        className="rounded-full border border-border-hairline bg-surface-card px-3 py-1.5 text-caption text-text-secondary transition-colors hover:border-border-strong active:bg-surface-alt"
+                      >
+                        {formatBRL(centavos / 100)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
             </div>
 
             {/* ── O serviço: TRAVADO no cadastro (decisão A, sem "Alterar") ── */}
@@ -218,11 +368,39 @@ export default function EmitirPage() {
         </div>
       </main>
 
+      {/* O CTA de trás REVISA (não emite): abre o sheet com o resumo. Emitir de
+          fato é o botão de dentro do sheet — por isso este mudou de "Emitir"
+          pra "Revisar" (dois "emitir" lado a lado confundiriam). */}
       <Rodape>
-        <Button variant="primary" full disabled={!podeEmitir}>
-          {podeEmitir ? `Emitir nota de ${formatBRL(numero)}` : "Emitir nota"}
+        <Button
+          variant="primary"
+          full
+          disabled={!podeEmitir}
+          onClick={() => setResumoAberto(true)}
+        >
+          {podeEmitir ? `Revisar nota de ${formatBRL(numero)}` : "Revisar nota"}
         </Button>
       </Rodape>
+
+      {resumoAberto && (
+        <ResumoSheet
+          dados={dadosResumo}
+          onFechar={() => setResumoAberto(false)}
+          onReemitir={reemitir}
+        />
+      )}
+
+      {buscaAberta && (
+        <ClientesSheet
+          clientes={CLIENTES}
+          selecionado={cliente}
+          onSelect={(id) => {
+            setCliente(id);
+            setBuscaAberta(false);
+          }}
+          onFechar={() => setBuscaAberta(false)}
+        />
+      )}
     </>
   );
 }
@@ -324,13 +502,15 @@ function FichaNovoCliente({
           {buscou ? (
             <>
               {situacao === "baixada" ? (
-                <div className="flex gap-2.5 rounded-xl bg-state-warning-tint p-3">
+                <div className="flex gap-2.5 rounded-2xl bg-state-warning-tint p-3">
                   <span className="mt-0.5 shrink-0 text-state-warning-text">
                     <Alerta />
                   </span>
                   <p className="text-micro text-state-warning-text">
                     Esse CNPJ consta como <strong>baixado ou suspenso</strong> na
-                    Receita. Confira se é mesmo o cliente certo antes de seguir.
+                    Receita. Você ainda consegue emitir, mas uma nota pra um CNPJ
+                    baixado <strong>pode ser recusada ou questionada depois</strong>.
+                    Confirme com o cliente antes de seguir.
                   </p>
                 </div>
               ) : (
@@ -581,8 +761,19 @@ function Mais() {
 function Pessoa() {
   return <svg {...ic()}><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /></svg>;
 }
-function Lupa() {
-  return <svg {...ic()}><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>;
+function LupaMini() {
+  return <svg {...ic()} width={15} height={15}><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>;
+}
+function Repetir() {
+  return (
+    <svg {...ic()} width={18} height={18}>
+      <path d="M21 12a9 9 0 1 1-2.64-6.36" />
+      <path d="M21 4v5h-5" />
+    </svg>
+  );
+}
+function ChevronDir() {
+  return <svg {...ic()} width={18} height={18}><path d="m9 6 6 6-6 6" /></svg>;
 }
 function Scan() {
   return (

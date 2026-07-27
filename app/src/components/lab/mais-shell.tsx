@@ -32,6 +32,7 @@ export const SECOES: Secao[] = [
     nome: "Sua empresa",
     itens: [
       { label: "Dados da empresa", Icone: IconeEmpresa },
+      { label: "Sócios", Icone: IconeSocios },
       { label: "Documentos", Icone: IconeDocs },
       { label: "Certificado digital", Icone: IconeCert },
     ],
@@ -241,6 +242,15 @@ function IconeEmpresa() {
       <path d="M5 21V7l8-4v18" />
       <path d="M19 21V11l-6-4" />
       <path d="M9 9v.01M9 12v.01M9 15v.01" />
+    </svg>
+  );
+}
+function IconeSocios() {
+  return (
+    <svg {...ic()}>
+      <circle cx="9" cy="8" r="3" />
+      <path d="M3 20a6 6 0 0 1 12 0" />
+      <path d="M16 3.6a3 3 0 0 1 0 5.8M21 20a6 6 0 0 0-4-5.7" />
     </svg>
   );
 }

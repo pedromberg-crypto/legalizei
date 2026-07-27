@@ -71,7 +71,7 @@ function AFazer() {
 function Girando() {
   return (
     <span
-      className="block h-[18px] w-[18px] animate-spin rounded-full border-2 border-border-hairline border-t-[color:var(--color-state-info)]"
+      className="block h-[18px] w-[18px] shrink-0 animate-spin rounded-full border-2 border-border-hairline border-t-[color:var(--color-state-info)]"
       aria-label="em andamento"
     />
   );

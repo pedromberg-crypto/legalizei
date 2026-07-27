@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import Link from "next/link";
 
 /**
  * CALENDÁRIO DE OBRIGAÇÕES · página (ref. schedule odontológico).
@@ -35,7 +36,15 @@ export default function ObrigacoesPage() {
   return (
     <main className="app-main">
       <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <div className="pb-4 pt-4">
+        <div className="pb-[calc(100px+var(--safe-bottom))] pt-4">
+          {/* Voltar pra aba Impostos (de onde o calendário é aberto) */}
+          <Link
+            href="/impostos"
+            className="-ml-1.5 mb-3 inline-flex items-center gap-1 text-caption font-semibold text-text-secondary transition-colors hover:text-text-primary"
+          >
+            <SetaEsq /> Impostos
+          </Link>
+
           {/* Header */}
           <div className="flex items-end justify-between">
             <div>
@@ -96,26 +105,6 @@ export default function ObrigacoesPage() {
                 </div>
               ))}
 
-              {/* slot dashed */}
-              <div className="flex gap-3">
-                <div className="w-11 shrink-0" />
-                <div className="flex flex-col items-center">
-                  <span className="mt-5 h-2.5 w-2.5 rounded-full border-2 border-border-strong" />
-                </div>
-                <div className="flex-1">
-                  <button className="w-full text-left">
-                    <div className="flex items-center justify-between rounded-2xl border border-dashed border-border-strong p-4">
-                      <div>
-                        <p className="text-caption font-semibold text-text-primary">Adicionar lembrete</p>
-                        <p className="text-micro text-text-tertiary mt-0.5">Toque para criar um seu</p>
-                      </div>
-                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-dark text-text-on-dark">
-                        <Mais />
-                      </span>
-                    </div>
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -136,7 +125,7 @@ function EventoCard({ e }: { e: { titulo: string; sub: string; estado: Estado } 
       </div>
       {e.estado === "pagar" && (
         <button className="mt-3 rounded-lg bg-action-primary px-3 py-1.5 text-micro font-semibold text-text-on-brand">
-          Pagar com Pix
+          Ver a guia
         </button>
       )}
     </div>
@@ -187,9 +176,6 @@ function SetaEsq() {
 }
 function SetaDir() {
   return <svg {...ic()}><path d="m9 18 6-6-6-6" /></svg>;
-}
-function Mais() {
-  return <svg {...ic()} width={16} height={16}><path d="M12 5v14M5 12h14" /></svg>;
 }
 function Check() {
   return <svg {...ic()} width={16} height={16}><path d="m6 12 4 4 8-9" /></svg>;

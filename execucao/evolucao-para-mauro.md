@@ -411,6 +411,31 @@ Próximo: sentar com você pra decidir o que a gente faz com essa inteligência 
 Precisa de você: fechar o modelo/preço do parceiro do certificado e dos serviços vendáveis
 ```
 
+## Semana 24–27/07/2026 — o app por dentro ficou inteiro (parte do cliente)
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | Emitir nota | Terminei a tela mais usada do dia a dia: pede só cliente + valor, e no fim **sobe um resumo pra conferir e confirmar** ("nota enviada"). Dá pra **ver todos os clientes** com busca, repetir a última nota num toque, e se uma nota é recusada o app leva o cliente **de volta pra corrigir e reemitir**, já preenchido | 🟢 |
+| 2 | Notas | Construí a área de notas: a **lista** (com busca, filtro por situação e navegação por mês, pra achar uma nota antiga) e o **detalhe de cada nota** (ver o documento, baixar o PDF, enviar pro cliente por WhatsApp/e-mail). O status é automático — o cliente **não precisa marcar "paguei/emiti" na mão**, ao contrário do líder | 🟢 |
+| 3 | Impostos | A área de impostos ficou de pé: o **imposto do mês pra pagar**, o acompanhamento fiscal (nosso diferencial), o histórico e o calendário de obrigações. **Decisão prática:** como a gente **não intermedia o pagamento por ora**, ao "pagar" o app **mostra e deixa baixar a guia + copiar o código de barras**, e a pessoa paga no banco/Pix/lotérica do jeito dela | 🟢 |
+| 4 | Área "Mais" + plano | Montei o hub do app (a gaveta do que não é rotina) e a tela de **gerenciar o plano**: trocar forma de pagamento (cartão **ou Pix**), ver faturas passadas e cancelar. O jeito de cobrar os **serviços avulsos** ficou igual ao do líder no que funciona bem: **não cobra na hora, entra na próxima fatura** e dá pra remover antes | 🟢 |
+| 5 | Loja de serviços avulsos | Construí a **prateleira de serviços à-la-carte** (certidão, declaração de faturamento, recálculo de guia, alteração, etc.) pensada pra **converter**: os mais pedidos em destaque e a fricção baixa ("sem cobrança agora"). É por onde entra a receita extra que a gente mapeou no líder | 🟢 |
+| 6 | **Decisão sua (segue de pé)** | 🕓 **Preço** do plano e dos avulsos, **política do parceiro do certificado**, e o que a gente inclui de graça vs vende à parte. No app estão como **valores de exemplo**, marcados | 🕓 |
+
+**Observação honesta:** tudo isso é **protótipo visual** (a "casca" do app, navegável), sem o motor por trás ainda e sem os números fiscais carimbados pela Larissa. Serve pra a gente ver e decidir a experiência antes de programar de verdade.
+
+**Próximo (24–27/07):** lapidar detalhes; fechar com a Larissa o que é fiscal (o cálculo do imposto, o caso do cliente com CNPJ baixado); o caminho de "trocar de contador" (flow #2); e a nossa conversa de preço/parceiro.
+
+### 📱 WhatsApp (27/07)
+```
+*Update Legalizei* 📱
+- Terminei o app por dentro (a parte do cliente depois que a empresa abre): emitir nota, a área de notas, os impostos, o perfil e a área "Mais" com o plano. Tudo navegável
+- Emitir nota: pede só cliente + valor, sobe um resumo pra confirmar, e se a nota é recusada leva o cliente de volta pra corrigir. Status automático, sem o cliente marcar nada na mão (diferente do líder)
+- Impostos: como a gente não intermedia o pagamento por ora, o app mostra/baixa a guia e deixa copiar o código de barras — a pessoa paga do jeito dela
+- Montei a tela de gerenciar plano (trocar cartão ou Pix, faturas, cancelar) e a "loja" de serviços avulsos, cobrando igual ao líder no que funciona: não cobra na hora, cai na próxima fatura
+- Importante: tudo isso é protótipo visual (a casca do app), sem o motor por trás e sem os números fiscais carimbados pela Larissa ainda
+Preciso de você (sem pressa): preço do plano e dos avulsos, e o modelo do parceiro do certificado. No app estão como valores de exemplo
+```
+
 ## 📱 Versão WhatsApp (copiar/colar — grupo ampliado, sem item de sociedade)
 ```
 *Relatório semanal — Legalizei* 📊

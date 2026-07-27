@@ -36,14 +36,14 @@ export function Vigilancia() {
 
         {/* os cards que o Pedro curtiu */}
         <div className="mt-4 flex items-stretch gap-2">
-          <div className="flex-1 rounded-xl bg-surface-alt p-3">
+          <div className="flex-1 rounded-2xl bg-surface-alt p-3">
             <p className="text-micro text-text-tertiary">Sua alíquota</p>
             <p className="mt-0.5 text-body font-semibold text-text-primary">6%</p>
             <p className="text-micro font-semibold text-state-success-text">
               a menor possível
             </p>
           </div>
-          <div className="flex-1 rounded-xl bg-surface-alt p-3">
+          <div className="flex-1 rounded-2xl bg-surface-alt p-3">
             <p className="text-micro text-text-tertiary">Fator R</p>
             <p className="mt-0.5 text-body font-semibold text-text-primary">37%</p>
             <p className="text-micro text-text-tertiary">folha ÷ faturamento</p>
@@ -51,7 +51,7 @@ export function Vigilancia() {
         </div>
 
         {/* alerta preditivo — o coração da vigília */}
-        <div className="mt-3 flex gap-2.5 rounded-xl border border-border-hairline bg-surface-alt p-3">
+        <div className="mt-3 flex gap-2.5 rounded-2xl border border-border-hairline bg-surface-alt p-3">
           <span className="mt-0.5 shrink-0 text-action-primary-sm">
             <Olho />
           </span>

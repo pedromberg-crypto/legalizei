@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { AcoesRapidas } from "@/components/lab/ref11-blocks";
+import { LinhaNota, type Nota } from "@/components/nota-linha";
 
 /**
  * COMPONENTES HÍBRIDOS DA CAMPEÃ — nascem aqui quando o Pedro pede um conteúdo
@@ -205,10 +206,10 @@ export function AprendaGradiente() {
  * Notas recentes (conteúdo da ref11) com o DESIGN das Movimentações (ref6):
  * ícone circular escuro + nome/data + valor à direita. Notas = entrada → verde.
  */
-const NOTAS = [
-  { ini: "NF", nome: "Nota #0012 · Maria Costa", quando: "há 2h", valor: "R$ 1.200" },
-  { ini: "NF", nome: "Nota #0011 · João Lima", quando: "28/05", valor: "R$ 3.000" },
-  { ini: "NF", nome: "Nota #0010 · Rita Souza", quando: "22/05", valor: "R$ 850" },
+const NOTAS: Nota[] = [
+  { id: "12", numero: "0012", tomador: "Maria Costa", valor: 120000, data: "há 2h", status: "emitida" },
+  { id: "11", numero: "0011", tomador: "João Lima", valor: 300000, data: "28/05", status: "emitida" },
+  { id: "10", numero: "0010", tomador: "Rita Souza", valor: 85000, data: "22/05", status: "emitida" },
 ];
 
 export function NotasRecentesMov() {
@@ -224,23 +225,7 @@ export function NotasRecentesMov() {
       </div>
       <div className="flex flex-col gap-2">
         {NOTAS.map((n) => (
-          <div
-            key={n.nome}
-            className="flex items-center gap-3 rounded-2xl border border-border-hairline bg-surface-card p-3"
-          >
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface-dark text-caption font-bold text-text-on-dark">
-              {n.ini}
-            </span>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-caption font-semibold text-text-primary">
-                {n.nome}
-              </p>
-              <p className="text-micro text-text-tertiary mt-0.5">{n.quando}</p>
-            </div>
-            <p className="text-caption font-semibold text-state-success-text">
-              + {n.valor}
-            </p>
-          </div>
+          <LinhaNota key={n.id} nota={n} statusNoTexto={false} />
         ))}
       </div>
     </div>

@@ -1,32 +1,21 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Rodape, Aviso } from "@/components/ui/tela";
+import { Rodape } from "@/components/ui/tela";
 import { PillCnpj } from "@/components/lab/campea-blocks";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * PERFIL — chega pelo círculo de iniciais (avatar) da home. Drill-down, então
- * NÃO entra nas RAIZES: a navbar some e a seta "voltar" assume (regra do shell).
+ * PERFIL — o CURRÍCULO da empresa. Drill-down (sem navbar; o back assume).
  * ═══════════════════════════════════════════════════════════════════════════
- * ─── A TESE (ref. do print do Pedro) ────────────────────────────────────────
- * Aquele perfil de referência não é tela de config — é um CURRÍCULO. Os stat
- * tiles (2k pacientes · 7 anos · €25/h) são o TRACK RECORD da pessoa. Nossa
- * tradução: o track record não é do usuário, é DA EMPRESA dele. Isso vira
- * "Dados cadastrais" (chato, o que o líder faz) em IDENTIDADE + orgulho.
+ * Identidade + track record + credenciais fiscais (o "currículo" do print).
  *
- * ─── CONSOLIDAÇÃO (decisão nova) ────────────────────────────────────────────
- * As abas Empresa · Sócios · Documentos · Conta absorvem P12 + P13 + P14 da
- * matriz: 3 telas viram 3 abas. O líder espalha isso em cantos diferentes do
- * topbar ("Dados da empresa e banco" × "Minha conta"); a gente unifica em
- * "quem eu sou aqui".
- *
- * ─── HONESTIDADE SOBRE EDIÇÃO ───────────────────────────────────────────────
- * Quase nada aqui é auto-editável: razão social, CNAE, endereço e capital só
- * mudam por ALTERAÇÃO CONTRATUAL (45–120 dias, serviço pago). O líder deixa
- * clicar "editar" e só depois apresenta a conta. A gente diz ANTES do toque.
+ * ─── REORG (Pedro, 24/07) ───────────────────────────────────────────────────
+ * As abas Empresa · Sócios · Documentos migraram pra aba MAIS (o hub), pra não
+ * duplicar. Sobrou só a CONTA — e como é só ela, sem abas: rola normal, logo
+ * abaixo das credenciais. O topo (identidade/stats/credenciais) fica igual.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -36,16 +25,10 @@ const PESSOA = {
   razao: "Ana Beatriz Ramos Desenvolvimento de Software",
 };
 
-const ABAS = ["Empresa", "Sócios", "Documentos", "Conta"] as const;
-type Aba = (typeof ABAS)[number];
-
 export default function PerfilPage() {
-  const [aba, setAba] = useState<Aba>("Empresa");
-
   return (
     <>
-      {/* 1. Topo: voltar + config. (Sem compartilhar/favoritar do ref: é o
-          perfil dele mesmo, não tem pra quem compartilhar.) */}
+      {/* 1. Topo: voltar + config. */}
       <header className="flex items-center justify-between pb-4 pt-6">
         <Link
           href="/home-campea"
@@ -66,12 +49,21 @@ export default function PerfilPage() {
       <main className="app-main">
         <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <div className="flex flex-col gap-6 pb-4">
-            {/* 2. Identidade — o selo verde que saiu do cabeçalho da home tem
-                casa melhor aqui: no header era ruído, no currículo é credencial. */}
+            {/* 2. Identidade */}
             <div className="flex flex-col items-center text-center">
-              <span className="flex h-20 w-20 items-center justify-center rounded-full bg-surface-dark text-h2 font-bold text-text-on-dark">
-                {PESSOA.iniciais}
-              </span>
+              {/* Avatar com lápis: troca por foto da pessoa ou logo da empresa. */}
+              <button
+                type="button"
+                aria-label="Trocar foto ou logo"
+                className="relative"
+              >
+                <span className="flex h-20 w-20 items-center justify-center rounded-full bg-surface-dark text-h2 font-bold text-text-on-dark">
+                  {PESSOA.iniciais}
+                </span>
+                <span className="absolute bottom-0 right-0 flex h-7 w-7 items-center justify-center rounded-full border-2 border-surface-page bg-action-primary text-text-on-brand">
+                  <Lapis />
+                </span>
+              </button>
               <p className="mt-3 text-h1 text-text-primary">{PESSOA.nome}</p>
               <p className="mt-1 text-caption text-text-secondary">{PESSOA.razao}</p>
               <span className="mt-3 flex items-center gap-1.5 rounded-full bg-state-success-tint px-3 py-1.5 text-micro font-semibold text-state-success-text">
@@ -83,15 +75,14 @@ export default function PerfilPage() {
               </div>
             </div>
 
-            {/* 4. Track record da EMPRESA (o "2k pacientes · 7 anos" do ref) */}
+            {/* 4. Track record da EMPRESA */}
             <div className="grid grid-cols-3 gap-2">
               <Stat valor="4 meses" rotulo="De CNPJ" />
               <Stat valor="12" rotulo="Notas emitidas" />
               <Stat valor="R$ 38,4 mil" rotulo="Faturado em 12m" />
             </div>
 
-            {/* 5. Credenciais — o currículo fiscal: o que a empresa é aos olhos
-                do governo (o "★4.8 · Mercy Hospital · idiomas" do ref) */}
+            {/* 5. Credenciais — o currículo fiscal */}
             <div className="flex flex-col gap-2">
               <Credencial
                 Icone={IconePercent}
@@ -115,38 +106,18 @@ export default function PerfilPage() {
               />
             </div>
 
-            {/* 6. Abas — absorvem P12 + P13 + P14 */}
+            {/* 6. Conta — antes era aba; agora corrido (empresa/sócios/docs = Mais) */}
             <div>
-              <div className="-mx-6 flex gap-5 overflow-x-auto border-b border-border-hairline px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                {ABAS.map((t) => (
-                  <button
-                    key={t}
-                    type="button"
-                    onClick={() => setAba(t)}
-                    aria-current={aba === t ? "true" : undefined}
-                    className={`shrink-0 border-b-2 pb-2.5 text-caption font-semibold transition-colors ${
-                      aba === t
-                        ? "border-action-primary text-text-primary"
-                        : "border-transparent text-text-tertiary"
-                    }`}
-                  >
-                    {t}
-                  </button>
-                ))}
-              </div>
-              <div className="mt-4">
-                {aba === "Empresa" && <AbaEmpresa />}
-                {aba === "Sócios" && <AbaSocios />}
-                {aba === "Documentos" && <AbaDocumentos />}
-                {aba === "Conta" && <AbaConta />}
-              </div>
+              <p className="mb-2 text-body-strong font-semibold text-text-primary">
+                Conta
+              </p>
+              <AbaConta />
             </div>
           </div>
         </div>
       </main>
 
-      {/* 7. CTA — o perfil é LEITURA; a ação que sobra é humana. Escuro, como o
-          "Book Appointment" do ref (e AA-safe pelo variant do DS). */}
+      {/* 7. CTA — o perfil é LEITURA; a ação que sobra é humana. */}
       <Rodape>
         <Button variant="dark" full>
           Falar com meu contador
@@ -156,89 +127,7 @@ export default function PerfilPage() {
   );
 }
 
-/* ─── Abas ─────────────────────────────────────────────────────────────────── */
-
-function AbaEmpresa() {
-  return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-2">
-        <Dado rotulo="Razão social" valor={PESSOA.razao} />
-        <Dado rotulo="Nome fantasia" valor="Beatriz Studio" />
-        <Dado rotulo="Natureza jurídica" valor="Sociedade Limitada Unipessoal" />
-        <Dado rotulo="Capital social" valor="R$ 10.000,00" />
-        <Dado rotulo="Endereço" valor="Rua Padre Rolim, 123 · Belo Horizonte/MG" />
-        <Dado rotulo="Inscrição municipal" valor="1.234.567-8" />
-      </div>
-      {/* A honestidade antes do toque — o oposto da pegadinha do líder */}
-      <Aviso variante="info" titulo="Esses dados não mudam por aqui">
-        Razão social, endereço, capital e atividade só mudam por alteração
-        contratual na Junta e na Receita. Leva de 45 a 120 dias e é um serviço à
-        parte. Fale com a gente antes: a gente te diz o custo e o prazo primeiro.
-      </Aviso>
-    </div>
-  );
-}
-
-function AbaSocios() {
-  return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-2">
-        <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
-          <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface-dark text-caption font-bold text-text-on-dark">
-              AB
-            </span>
-            <div className="min-w-0 flex-1">
-              <p className="text-caption font-semibold text-text-primary">
-                Ana Beatriz Ramos
-              </p>
-              <p className="text-micro text-text-tertiary mt-0.5">
-                Administradora · 100% das cotas
-              </p>
-            </div>
-          </div>
-          <div className="mt-3 flex flex-col gap-1.5 border-t border-border-hairline pt-3">
-            <LinhaMini rotulo="Pró-labore" valor="R$ 1.621,00/mês" />
-            <LinhaMini rotulo="Outro vínculo (CLT)" valor="Não" />
-          </div>
-        </div>
-      </div>
-      <Aviso variante="info" titulo="Quer adicionar um sócio?">
-        Entrar com um segundo sócio depois da abertura é alteração contratual
-        (serviço à parte). Se for o caso, a gente cota antes de fazer.
-      </Aviso>
-    </div>
-  );
-}
-
-function AbaDocumentos() {
-  const DOCS = [
-    { nome: "Contrato social", sub: "Assinado · 03/2026" },
-    { nome: "Cartão CNPJ", sub: "Emitido pela Receita" },
-    { nome: "Certificado digital e-CNPJ", sub: "Válido até 12/2027" },
-    { nome: "Certidão negativa (CND)", sub: "Emitida em 07/2026" },
-    { nome: "Declarações entregues", sub: "Todas em dia" },
-  ];
-  return (
-    <div className="flex flex-col gap-2">
-      {DOCS.map((d) => (
-        <button key={d.nome} type="button" className="text-left">
-          <div className="flex items-center gap-3 rounded-2xl border border-border-hairline bg-surface-card p-3">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-surface-alt text-text-secondary">
-              <IconeDoc />
-            </span>
-            <div className="min-w-0 flex-1">
-              <p className="text-caption font-semibold text-text-primary">{d.nome}</p>
-              <p className="text-micro text-text-tertiary mt-0.5">{d.sub}</p>
-            </div>
-            <Chevron />
-          </div>
-        </button>
-      ))}
-    </div>
-  );
-}
-
+/* ─── Conta ────────────────────────────────────────────────────────────────── */
 function AbaConta() {
   const ITENS = [
     { nome: "E-mail", sub: "ana@beatrizstudio.com.br" },
@@ -268,7 +157,6 @@ function AbaConta() {
 }
 
 /* ─── auxiliares ───────────────────────────────────────────────────────────── */
-
 function Stat({ valor, rotulo }: { valor: string; rotulo: string }) {
   return (
     <div className="rounded-2xl border border-border-hairline bg-surface-card p-3 text-center">
@@ -296,24 +184,6 @@ function Credencial({
         <p className="text-caption font-semibold text-text-primary">{titulo}</p>
         <p className="text-micro text-text-tertiary">{sub}</p>
       </div>
-    </div>
-  );
-}
-
-function Dado({ rotulo, valor }: { rotulo: string; valor: string }) {
-  return (
-    <div className="rounded-xl bg-surface-alt p-3">
-      <p className="text-micro text-text-tertiary">{rotulo}</p>
-      <p className="text-caption font-medium text-text-primary mt-0.5">{valor}</p>
-    </div>
-  );
-}
-
-function LinhaMini({ rotulo, valor }: { rotulo: string; valor: string }) {
-  return (
-    <div className="flex items-center justify-between">
-      <p className="text-micro text-text-tertiary">{rotulo}</p>
-      <p className="text-micro font-semibold text-text-primary">{valor}</p>
     </div>
   );
 }
@@ -346,6 +216,9 @@ function Engrenagem() {
 function Check() {
   return <svg {...ic()} width={14} height={14} strokeWidth={2.5}><path d="m5 12 4.5 4.5L19 7" /></svg>;
 }
+function Lapis() {
+  return <svg {...ic()} width={13} height={13}><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" /></svg>;
+}
 function IconePercent() {
   return <svg {...ic()}><path d="M19 5 5 19" /><circle cx="6.5" cy="6.5" r="2.5" /><circle cx="17.5" cy="17.5" r="2.5" /></svg>;
 }
@@ -354,9 +227,6 @@ function IconeMala() {
 }
 function IconeEscudo() {
   return <svg {...ic()}><path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6z" /><path d="m9 12 2 2 4-4" /></svg>;
-}
-function IconeDoc() {
-  return <svg {...ic()}><path d="M7 3h7l4 4v14H7z" /><path d="M14 3v4h4" /></svg>;
 }
 function Chevron() {
   return (

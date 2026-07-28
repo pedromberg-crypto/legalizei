@@ -454,5 +454,32 @@ _07 a 10/07_
 Semana que vem: reavaliar a rota do produto com essas descobertas (o dev já está nisso). Logo já fechado ✅
 ```
 
+## Semana 28/07/2026 — reunião gravada virou 12 decisões travadas no fluxo de entrada
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | **Só Belo Horizonte no MLP** | O app agora **trava logo na entrada**: se a pessoa não é de BH, a gente avisa que ainda não atende e captura o contato pra avisar quando abrir. Ninguém passa disso achando que a gente atende em outra cidade | 🟢 |
+| 2 | **3 caminhos do "não atende"** | Antes era só "regulamentado" ou "comércio → time do Mauro". Agora tem um 3º: quando **ninguém** atende (nem a gente, nem regulamentado, nem o seu escritório), o app é honesto e não finge que existe pra onde mandar | 🟢 |
+| 3 | **Dado pessoal logo no cadastro** | Nome, CPF, telefone e endereço passam a ser pedidos **já na criação da conta**, com confirmação por código (e-mail/SMS). Mais adiante o cliente só CONFERE, não digita tudo de novo | 🟢 |
+| 4 | **Índice do IPTU virou obrigatório** | Corrigi um erro: o app deixava esse campo opcional, mas sem ele a documentação **não passa na Junta**. Agora trava até preencher | 🟢 |
+| 5 | **Nome recusado: tenta sozinho antes de incomodar** | Se o 1º nome cai na Junta, o app já tenta o 2º e o 3º (as opções que o cliente priorizou) **sozinho**, sem precisar chamar ele de novo. Só se as 3 falharem é que pede novas sugestões | 🟢 |
+| 6 | **Taxa da Junta: confirmado o formato atual** | Debatemos os dois jeitos de cobrar a taxa da Junta (a gente absorve × o cliente paga) e **fechamos no formato que já estava**: o cliente paga junto com a assinatura, e a gente só repassa pro governo depois que a Junta aprova o nome — sem cobrar de novo nem travar ele numa tela extra | 🟢 |
+| 7 | Design system em página só | Fiz uma página (HTML, abre em qualquer navegador) com todo o padrão visual do app — cor, tipografia, componentes — **incluindo modo escuro**, testado pra garantir que o texto fica legível de verdade. Serve pra qualquer um da equipe consultar sem precisar instalar nada | 🟢 |
+
+**Observação honesta:** o **motor de testes** (o que garante que o backend vai se comportar certo) ainda **não foi atualizado** com essas 12 mudanças — é o próximo passo antes de qualquer um começar a programar em cima disso.
+
+**Próximo:** revalidar o motor de testes contra o fluxo novo; seguem pendentes preço do plano/avulsos e o modelo do parceiro do certificado.
+
+### 📱 WhatsApp (28/07)
+```
+*Update Legalizei* 🗺️
+- Travamos 12 decisões do fluxo de entrada numa reunião: o app só abre empresa em Belo Horizonte por enquanto (avisa e captura contato se não for); separamos melhor quem a gente não atende (regulamentado vai pra fila, quem seu escritório atende vai pra vocês, e quem ninguém atende recebe resposta honesta)
+- Nome, CPF, telefone e endereço agora são pedidos já na criação da conta, com confirmação por código
+- Corrigi um erro: o índice do IPTU estava como opcional, mas sem ele a Junta recusa a documentação — já travei como obrigatório
+- Se o nome escolhido é recusado, o app tenta as outras 2 opções sozinho antes de incomodar o cliente de novo
+- Confirmamos o formato da taxa da Junta: o cliente paga junto com a assinatura, e só repassamos pro governo depois que aprova — sem tela extra
+- Fiz uma página com todo o padrão visual do app (cores, tipografia, modo escuro testado) — dá pra abrir e conferir sem instalar nada
+Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
+```
+
 ## Links
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]]

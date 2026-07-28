@@ -1,11 +1,11 @@
 ---
 name: legalize-motor-testes-arquitetura
-description: Motor de testes em execucao/motor-testes/ (headless, Node puro). **v0.5.0 · 19 personas · 2 flows** (16 abertura + 3 migrar). Ordem: ENTRADA→B1→B3→B2→B4. **ENCAIXE (21/07): CNAE escolhido PRE-PAGO no b1.encaixe; teaser virou b1.resumo (N5'); N17/b2.cnae_otimo removido.** Guard-rails fatais no b1.triagem (N4, ANTES do dinheiro). Motor = criterio de aceite; contradicao motor x spec, motor ganha.
+description: Motor de testes em execucao/motor-testes/ (headless, Node puro). **v0.5.0 · 19 personas · 2 flows** (16 abertura + 3 migrar). Ordem: ENTRADA→B1→B3→B2→B4. **ENCAIXE (21/07): CNAE escolhido PRE-PAGO no b1.encaixe; teaser virou b1.resumo (N5'); N17/b2.cnae_otimo removido.** Guard-rails fatais no b1.triagem (N4, ANTES do dinheiro). Motor = criterio de aceite; contradicao motor x spec, motor ganha. 🔴 28/07: DESATUALIZADO DE NOVO — N5/N18 removidos do flow real, gate de cidade novo, veredito 3 vias, front-load no N6; motor ainda nao reflete nada disso.
 metadata:
   node_type: memory
   type: project
   originSessionId: 2b138de1-6d80-46f8-901a-58ce799ebff4
-  modified: 2026-07-21T21:25:04.698Z
+  modified: 2026-07-28T19:05:02.705Z
 ---
 
 **O que é:** motor headless que percorre personas pelas telas em ms, sem UI e sem gastar token
@@ -57,6 +57,15 @@ spec sempre pediu colchão e o motor dava o conselho oposto até a auditoria de 
 Custo **consome o CLT** declarado (UX-24). As 2 alavancas (Fator R × CNAE-swap) são
 **alternativas, não cumulativas** (`max`, não soma). CNAE III-por-padrão (8599-6/04) já é
 Anexo III **sem** Fator R.
+
+## 🔴 28/07 — desatualizado de novo, dessa vez pelas TELAS (não só pelo dev)
+Reunião "Rua Satélite 9" (28/07) travou 12 decisões e todas foram implementadas nas telas
+(app/), mas **não no motor**: N5 e N18 removidos do flow · N3 ganhou gate de cidade (BH-MG) ·
+veredito 🔴 virou 3 vias (waitlist/Mauro/descarta, não 2) · N6 virou front-load de dados
+pessoais (N10 vira confirmação) · N13 IPTU obrigatório · REC ganhou retry automático. As 19
+personas continuam testando o flow ANTIGO. Reconciliar = revalidar persona por persona, não
+é find-replace. Ficou como dívida explícita no commit + PR #1 de `legalizei-app`. →
+[[legalize-reuniao-rua-satelite-9]]
 
 ## 🔴 Buracos conhecidos (auditoria 16/07)
 - **IRRF não é calculado.** `custoProLabore()` devolve só `{inss}`; IRRF existe como **rótulo**.

@@ -1,0 +1,93 @@
+```mermaid
+flowchart TD
+  subgraph GATE["N4 · Gate-CNAE — uma tela"]
+    direction TB
+    N4A["Descreve atividade + pills"]
+    N4V{"Veredito CNAE"}
+    DESAMB["Desambiguação<br/>mini-loop"]:::inline
+    N4T{"Triagem<br/>sócios? exterior?"}
+    N4F["Faixa de faturamento"]
+  end
+  N1["N1 · Splash"]
+  N2["N2 · Welcome"]
+  N3{"N3 · Fork<br/>3 rotas"}
+  LOGIN(["Login / portal"]):::feliz
+  MIG["Flow #2 · Migração<br/>não construído"]:::todo
+  VA["🟢 Atende"]
+  VW["🟡 Waitlist"]:::saida
+  VC["🔴 Comercial Mauro"]:::saida
+  ENC["ENCAIXE<br/>escolhe/trava CNAE"]
+  N6["N6 · Criar conta"]
+  N7["N7 · A conta da abertura"]
+  N8["N8 · Aceite contrato<br/>reversível, CDC 49"]
+  N9{"N9 · Pagamento"}
+  P2["P2 · Aguardando boleto<br/>dossiê já liberado"]:::espera
+  N10["N10 · Seus dados"]
+  N11["N11 · Vínculo INSS"]
+  N12{"N12 · Sócios?"}
+  N12B["Coleta 2º sócio<br/>+ convite"]:::branch
+  N13["N13 · Dados da empresa<br/>+upsell endereço"]
+  N14["N14 · CNAE secundários"]
+  N15["N15 · Natureza jurídica"]
+  N16["N16 · Nome / razão social"]
+  N18["N18 · Simulador pró-labore"]
+  P1["P1 · Retomar de onde parou"]:::espera
+  SE["Saída · exterior<br/>LC 123 art.17"]:::saida
+  SS["Saída · 3+ sócios<br/>limite do produto"]:::saida
+  N19["N19 · Revisar dossiê"]
+  N20["N20 · Termo irreversível"]
+  N21["N21 · Painel / timeline órgãos"]
+  REC["REC · Órgão recusa<br/>'precisa de você'"]
+  N22["N22 · Assinatura dos sócios"]
+  N23{"GOV.BR nível<br/>bronze→upgrade"}:::inline
+  ATIVA(["✅ Empresa ativa"]):::feliz
+
+  N1 --> N2
+  N2 --> N3
+  N3 -->|"já sou cliente"| LOGIN
+  N3 -->|"quero abrir empresa"| N4A
+  N3 -.->|"já tenho contador (migrar)"| MIG
+  N4A --> N4V
+  N4V -->|"ambíguo"| DESAMB
+  DESAMB --> N4A
+  N4V -->|"🟢 atende"| VA
+  VA --> ENC
+  ENC --> N4T
+  N4V -->|"🟡 regulada"| VW
+  N4V -->|"🔴 comércio"| VC
+  N4T -->|"até 2 + Brasil"| N4F
+  N4T -->|"sócio no exterior"| SE
+  N4T -->|"3+ sócios"| SS
+  N4F --> N6
+  N6 --> N7
+  N7 --> N8
+  N8 --> N9
+  N9 -->|"cartão"| N10
+  N9 -->|"boleto"| P2
+  P2 --> N10
+  N10 --> N11
+  N11 --> N12
+  N12 -->|"2 sócios"| N12B
+  N12B --> N13
+  N12 -->|"solo"| N13
+  N13 --> N14
+  N14 --> N15
+  N15 --> N16
+  N16 --> N18
+  N18 -.-> N19
+  N19 -.-> N20
+  N20 -.-> N21
+  N21 -.-> REC
+  REC -.-> N21
+  N21 -.-> N22
+  N22 -.-> N23
+  N23 -.-> ATIVA
+  P1 -.->|"volta ao passo pausado"| N10
+
+  classDef saida fill:#fde8e4,stroke:#e0603f,color:#7a2d18;
+  classDef feliz fill:#e6f4ea,stroke:#2f9e5a,color:#1c5e37;
+  classDef espera fill:#fff4e0,stroke:#e0a03f,color:#7a5518;
+  classDef branch fill:#eef1ff,stroke:#5b6cf0,color:#2a338a;
+  classDef inline fill:#f1f1f3,stroke:#9aa0a6,color:#555;
+  classDef todo fill:#f7f7f8,stroke:#bcbcc2,stroke-dasharray:5 4,color:#888;
+```

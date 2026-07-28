@@ -1,33 +1,42 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * GERADOR + VERSIONADOR do mapa do flow.
+ * GERADOR + VERSIONADOR do mapa do PORTAL (telas internas / dia-2).
  * ═══════════════════════════════════════════════════════════════════════════
- * Lê a fonte-única (flow-data.mjs), re-renderiza o diagrama Mermaid + a tabela
- * de validação DENTRO da nota `mapa-flow-mermaid.md` (entre marcadores), e:
+ * Irmão de `flow/gerar-mapa.mjs`. Lê `portal-data.mjs`, re-renderiza o diagrama
+ * Mermaid + a tabela DENTRO de `mapa-portal-mermaid.md` (entre marcadores) e:
+ *   1. CHECA DRIFT — cada nó com `rota` precisa de um page.tsx real em (portal)
+ *      (ou na lista de seam externo). Rota nova sem nó, ou nó sem rota, avisa.
+ *      As rotas de LABORATÓRIO (home-*, inicio-ref*, -v1/v2, componentes) são
+ *      ignoradas de propósito — não são telas canônicas do produto.
+ *   2. VERSIONA — snapshot em `versoes/` só quando a estrutura muda.
  *
- *   1. CHECA DRIFT — cada nó com `rota` tem que ter um page.tsx real no app.
- *      Rota citada que não existe, ou rota que existe sem nó, vira aviso.
- *   2. VERSIONA — se o conteúdo estrutural mudou desde a última vez, incrementa
- *      a versão, grava um snapshot em `versoes/` (.json p/ diff + .mmd legível)
- *      e prepende uma linha no histórico da nota, com o RESUMO do que mudou.
- *      Igual não muda → não versiona (não polui o histórico).
- *
- * Rodar:  node execucao/flow/gerar-mapa.mjs
+ * Rodar:  node execucao/portal/gerar-mapa-portal.mjs
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
 import fs from "node:fs";
 import path from "node:path";
-import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
-import { NODES, EDGES, SUBGRAFOS } from "./flow-data.mjs";
+import { NODES, EDGES, SUBGRAFOS } from "./portal-data.mjs";
 
-const DIR = path.dirname(fileURLToPath(import.meta.url)); // execucao/flow
-const NOTA = path.join(DIR, "..", "mapa-flow-mermaid.md"); // execucao/mapa-flow-mermaid.md
+const DIR = path.dirname(fileURLToPath(import.meta.url)); // execucao/portal
+const NOTA = path.join(DIR, "..", "mapa-portal-mermaid.md");
 const VERSOES = path.join(DIR, "versoes");
-const APP = path.join(DIR, "..", "..", "app", "src", "app");
+const PORTAL = path.join(DIR, "..", "..", "app", "src", "app", "(app)", "(portal)");
 
 const hoje = new Date().toISOString().slice(0, 10);
+
+// Telas-seam que vivem FORA de (portal) mas fazem parte da entrada do portal.
+const SEAM_EXTERNO = new Set(["/certificado"]);
+
+// Rotas que EXISTEM em (portal) mas são laboratório/exploração — não canônicas.
+const IGNORA = new Set([
+  "/componentes",
+  "/home-a", "/home-b", "/home-c", "/home-d", "/home-e", "/home-f", "/home-campea",
+  "/inicio-ref5", "/inicio-ref6", "/inicio-ref7", "/inicio-ref9", "/inicio-ref11", "/inicio-ref12",
+  "/impostos-v1", "/impostos-v2",
+  "/mais-v1", "/mais-completa",
+]);
 
 /* ─── 1. RENDER: Mermaid ────────────────────────────────────────────────── */
 
@@ -44,8 +53,6 @@ function defNo(n) {
 
 function renderMermaid() {
   const linhas = ["```mermaid", "flowchart TD"];
-
-  // Subgrafos primeiro (com seus nós dentro).
   for (const sg of SUBGRAFOS) {
     const membros = NODES.filter((n) => n.grupo === sg.id);
     if (!membros.length) continue;
@@ -54,19 +61,13 @@ function renderMermaid() {
     for (const n of membros) linhas.push("  " + defNo(n));
     linhas.push("  end");
   }
-
-  // Nós fora de subgrafo.
   for (const n of NODES.filter((x) => !x.grupo)) linhas.push(defNo(n));
-
   linhas.push("");
-
-  // Conexões (só ids; os labels já foram definidos acima).
   for (const e of EDGES) {
     const seta = e.tracejado ? "-.->" : "-->";
     const rot = e.label ? `|"${e.label}"|` : "";
     linhas.push(`  ${e.de} ${seta}${rot} ${e.para}`);
   }
-
   linhas.push("");
   linhas.push("  classDef saida fill:#fde8e4,stroke:#e0603f,color:#7a2d18;");
   linhas.push("  classDef feliz fill:#e6f4ea,stroke:#2f9e5a,color:#1c5e37;");
@@ -88,24 +89,22 @@ function renderTabela(driftMsgs) {
     linhas.push(`> ⚠️ **Drift detectado:** ${driftMsgs.join(" · ")}`);
     linhas.push("");
   }
-  // 🆕 28/07: coluna "Dados coletados" — o que aquela etapa pede do cliente,
-  // até a constituição (ATIVA). Vem do campo `dados` de cada nó em flow-data.
-  linhas.push("| # | Tela | Dados coletados nesta etapa | Construída | Validado | Falta validar |");
+  linhas.push("| # | Tela | Rota | Construída | Validado | Falta validar |");
   linhas.push("|---|---|---|:--:|:--:|---|");
   let i = 0;
   for (const n of NODES) {
     if (n.naTabela === false) continue;
     i++;
     const tela = n.label.replace(/<br\/>/g, " · ");
+    const rota = n.rota ? `\`${n.rota}\`` : "—";
     const constr = n.status === "construida" ? "✅" : "🚧";
     const val = SEL[n.validado] ?? "🟡";
-    const dados = n.dados && n.dados.trim() ? n.dados : "—";
-    linhas.push(`| ${i} | ${tela} | ${dados} | ${constr} | ${val} | ${n.falta || "—"} |`);
+    linhas.push(`| ${i} | ${tela} | ${rota} | ${constr} | ${val} | ${n.falta || "—"} |`);
   }
   return linhas.join("\n");
 }
 
-/* ─── 3. DRIFT: nós com rota × page.tsx reais ───────────────────────────── */
+/* ─── 3. DRIFT: nós com rota × page.tsx reais em (portal) ────────────────── */
 
 function rotasReais(dir, segs = [], acc = new Set()) {
   if (!fs.existsSync(dir)) return acc;
@@ -121,19 +120,16 @@ function rotasReais(dir, segs = [], acc = new Set()) {
 }
 
 function checarDrift() {
-  const reais = rotasReais(APP);
+  const reais = rotasReais(PORTAL);
   const doMapa = new Set();
-  for (const n of NODES) {
-    if (n.rota) doMapa.add(n.rota);
-    if (n.rotasCobre) for (const r of n.rotasCobre) doMapa.add(r); // 1 nó cobre N rotas
-  }
+  for (const n of NODES) if (n.rota) doMapa.add(n.rota);
   const msgs = [];
   for (const n of NODES.filter((x) => x.rota)) {
-    if (!reais.has(n.rota)) msgs.push(`${n.id} cita ${n.rota} mas não há page.tsx`);
+    if (SEAM_EXTERNO.has(n.rota)) continue; // seam vive fora de (portal)
+    if (!reais.has(n.rota)) msgs.push(`${n.id} cita ${n.rota} mas não há page.tsx em (portal)`);
   }
-  const ignora = new Set(["/", "/mockup"]); // raiz + ferramenta de review
   for (const r of reais) {
-    if (!ignora.has(r) && !doMapa.has(r)) msgs.push(`rota ${r} existe mas não está no mapa`);
+    if (!IGNORA.has(r) && !doMapa.has(r)) msgs.push(`rota ${r} existe mas não está no mapa`);
   }
   return msgs;
 }
@@ -141,18 +137,8 @@ function checarDrift() {
 /* ─── 4. VERSIONAMENTO ──────────────────────────────────────────────────── */
 
 function estruturaAtual() {
-  // O que conta como "mudança estrutural": id, label, status, validado, falta,
-  // dados (🆕 28/07), e as conexões. Ordem estável (a fonte já é ordenada) →
-  // hash determinístico.
   return {
-    nodes: NODES.map((n) => ({
-      id: n.id,
-      label: n.label,
-      status: n.status,
-      validado: n.validado,
-      falta: n.falta || "",
-      dados: n.dados || "",
-    })),
+    nodes: NODES.map((n) => ({ id: n.id, label: n.label, status: n.status, validado: n.validado, falta: n.falta || "" })),
     edges: EDGES.map((e) => ({ de: e.de, para: e.para, label: e.label || "", tracejado: !!e.tracejado })),
   };
 }
@@ -174,11 +160,7 @@ function diffResumo(prev, cur) {
   const cN = new Map(cur.nodes.map((n) => [n.id, n]));
   const add = [...cN.keys()].filter((k) => !pN.has(k));
   const rem = [...pN.keys()].filter((k) => !cN.has(k));
-  const relabel = [];
-  const statusMud = [];
-  const validMud = [];
-  const faltaMud = [];
-  const dadosMud = [];
+  const relabel = [], statusMud = [], validMud = [], faltaMud = [];
   for (const [id, c] of cN) {
     const p = pN.get(id);
     if (!p) continue;
@@ -186,14 +168,12 @@ function diffResumo(prev, cur) {
     if (p.status !== c.status) statusMud.push(`${id} ${p.status}→${c.status}`);
     if (p.validado !== c.validado) validMud.push(`${id} ${p.validado}→${c.validado}`);
     if (p.falta !== c.falta) faltaMud.push(id);
-    if ((p.dados || "") !== (c.dados || "")) dadosMud.push(id);
   }
   const kE = (e) => `${e.de}→${e.para}`;
   const pE = new Set(prev.edges.map(kE));
   const cE = new Set(cur.edges.map(kE));
   const addE = [...cE].filter((k) => !pE.has(k));
   const remE = [...pE].filter((k) => !cE.has(k));
-
   const partes = [];
   if (add.length) partes.push(`+nós ${add.join(",")}`);
   if (rem.length) partes.push(`-nós ${rem.join(",")}`);
@@ -201,10 +181,6 @@ function diffResumo(prev, cur) {
   if (statusMud.length) partes.push(`status ${statusMud.join("; ")}`);
   if (validMud.length) partes.push(`validação ${validMud.join("; ")}`);
   if (faltaMud.length) partes.push(`falta-validar em ${faltaMud.join(",")}`);
-  // Lista os ids só quando é ajuste pontual; preenchimento em massa (ex: coluna
-  // nova) vira contagem, senão o histórico fica ilegível.
-  if (dadosMud.length > 8) partes.push(`dados-coletados preenchido em ${dadosMud.length} nós`);
-  else if (dadosMud.length) partes.push(`dados-coletados em ${dadosMud.join(",")}`);
   if (addE.length) partes.push(`+conexões ${addE.join(",")}`);
   if (remE.length) partes.push(`-conexões ${remE.join(",")}`);
   return partes.join(" · ") || "ajuste sem efeito estrutural";
@@ -213,15 +189,15 @@ function diffResumo(prev, cur) {
 /* ─── 5. ESCREVER NA NOTA ───────────────────────────────────────────────── */
 
 function setBloco(txt, nome, inner) {
-  const ini = `<!-- FLOW:${nome}:INI -->`;
-  const fim = `<!-- FLOW:${nome}:FIM -->`;
+  const ini = `<!-- PORTAL:${nome}:INI -->`;
+  const fim = `<!-- PORTAL:${nome}:FIM -->`;
   const re = new RegExp(`${ini}[\\s\\S]*?${fim}`);
-  if (!re.test(txt)) throw new Error(`Marcador FLOW:${nome} não encontrado na nota.`);
+  if (!re.test(txt)) throw new Error(`Marcador PORTAL:${nome} não encontrado na nota.`);
   return txt.replace(re, `${ini}\n${inner}\n${fim}`);
 }
 
 function blocoAtual(txt, nome) {
-  const m = txt.match(new RegExp(`<!-- FLOW:${nome}:INI -->\\n([\\s\\S]*?)\\n<!-- FLOW:${nome}:FIM -->`));
+  const m = txt.match(new RegExp(`<!-- PORTAL:${nome}:INI -->\\n([\\s\\S]*?)\\n<!-- PORTAL:${nome}:FIM -->`));
   return m ? m[1].trim() : "";
 }
 
@@ -240,11 +216,9 @@ let versao = prev ? prev.v : 0;
 if (mudou) {
   versao = (prev ? prev.v : 0) + 1;
   const resumo = prev ? diffResumo(prev.dados, cur) : `versão inicial (${cur.nodes.length} nós, ${cur.edges.length} conexões)`;
-
   fs.mkdirSync(VERSOES, { recursive: true });
   fs.writeFileSync(path.join(VERSOES, `v${versao}-${hoje}.json`), JSON.stringify(cur, null, 2));
   fs.writeFileSync(path.join(VERSOES, `v${versao}-${hoje}.mmd`), renderMermaid());
-
   const hist = blocoAtual(nota, "VERSOES");
   const linha = `- **v${versao}** · ${hoje} · ${resumo}`;
   nota = setBloco(nota, "VERSOES", hist ? `${linha}\n${hist}` : linha);
@@ -254,9 +228,6 @@ if (mudou) {
 }
 
 fs.writeFileSync(NOTA, nota);
-if (drift.length) {
-  console.log(`⚠️  drift: ${drift.join(" · ")}`);
-} else {
-  console.log("✓ sem drift (mapa bate com as rotas reais)");
-}
+if (drift.length) console.log(`⚠️  drift: ${drift.join(" · ")}`);
+else console.log("✓ sem drift (mapa bate com as rotas reais de (portal))");
 console.log(`✓ nota atualizada: ${path.relative(path.join(DIR, "..", ".."), NOTA)}`);

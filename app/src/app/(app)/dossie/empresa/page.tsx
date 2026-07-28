@@ -10,6 +10,7 @@ import {
   Campo,
   Texto,
   Select,
+  OpcoesLinha,
   Aviso,
 } from "../campos";
 
@@ -20,12 +21,25 @@ import {
  * Spec: spec-telas-entrada-b1-b2.md → Tela 9 (2.4) · mapa T9→N13
  * Motor: b2.coleta (empresa) · flag de endereço fiscal → injeta no plano do B3
  *
- * Regras da spec:
- *   · Índice cadastral IPTU guardado pro registro em BH (🟡 opcional se não tem).
- *   · UPSELL endereço fiscal Legalizai: NÃO bloqueia — só oferece. Se aceita,
- *     salva flag + injeta no plano do B3. Resolve "sem endereço comercial".
- *   · Capital social > 0; IA alerta se muito baixo/alto.
- *   · Tipo de endereço afeta viabilidade em BH (flag pra blocos futuros).
+ * ⚠️ REESCRITA 28/07 (cruzamento de dados JUCEMG):
+ *
+ * 1. CEP AGORA PUXA TUDO — logradouro, bairro, município, UF. Antes era um
+ *    placeholder decorativo ("Rua encontrada pelo CEP", texto fixo, nenhum
+ *    dado real). A pessoa só COMPLEMENTA (número + complemento).
+ *
+ * 2. RESIDÊNCIA DE SÓCIO — pergunta nova, DINÂMICA pelo que foi respondido
+ *    na triagem do N4: solo → a pergunta nem aparece (não existe "outro
+ *    sócio" pra confirmar). Com sócio (2, o máximo do MLP) → trava até
+ *    responder pelos DOIS, nominalmente.
+ *
+ * 3. ÁREA UTILIZADA (m²) — de propósito FORA da UI. É dado interno nosso,
+ *    preenchido automaticamente por trás (é prestação de serviço, não
+ *    precisamos que o cliente saiba disso). NÃO adicionar campo aqui.
+ *
+ * 4. ATIVIDADE INÓCUA — também de propósito FORA da UI. É derivada do CNAE
+ *    (baixo impacto, elegível a funcionar em residência) internamente, na
+ *    arrecadação do resto dos dados. O `tipo` abaixo (próprio/coworking/
+ *    virtual) é um campo DIFERENTE — sobre o imóvel, não sobre a atividade.
  *
  * 🕓 Preço do endereço fiscal = placeholder FAKE (~R$60/mês). Não reabrir até
  * o Pedro fechar custo (legalize-preco-deferido-custo-real). Marcado na UI.
@@ -38,6 +52,11 @@ const TIPO_ENDERECO = [
   { v: "virtual", label: "Endereço virtual" },
 ];
 
+// Herdado da triagem do N4 (mock, sem estado real ainda). 1 = solo, 2 = com
+// sócio — é o máximo do MLP, 3+ já saiu pela saída graciosa lá atrás.
+const SOCIOS_N4: number = 2;
+const NOMES_SOCIOS = SOCIOS_N4 === 2 ? ["Ana Beatriz Ramos", "Carlos Eduardo Silva"] : ["Ana Beatriz Ramos"];
+
 function mascaraCep(v: string) {
   const d = v.replace(/\D/g, "").slice(0, 8);
   return d.replace(/(\d{5})(\d)/, "$1-$2");
@@ -48,23 +67,56 @@ function mascaraReais(v: string) {
   return Number(d).toLocaleString("pt-BR");
 }
 
+interface EnderecoCep {
+  logradouro: string;
+  bairro: string;
+  municipio: string;
+  uf: string;
+}
+
+// 🚧 Mock do autofill por CEP. No app real: API de CEP (ViaCEP ou similar).
+function buscarCep(cepDigitos: string): EnderecoCep | null {
+  if (cepDigitos.length !== 8) return null;
+  return {
+    logradouro: "Rua dos Timbiras",
+    bairro: "Funcionários",
+    municipio: "Belo Horizonte",
+    uf: "MG",
+  };
+}
+
 export default function EmpresaPage() {
   const [usarProprio, setUsarProprio] = useState<boolean | null>(null);
   const [cep, setCep] = useState("");
   const [numero, setNumero] = useState("");
+  const [complemento, setComplemento] = useState("");
   const [iptu, setIptu] = useState("");
   const [tipo, setTipo] = useState("");
   const [capital, setCapital] = useState("");
+  const [residenciaSocios, setResidenciaSocios] = useState<Record<string, boolean>>({});
 
   const querFiscal = usarProprio === false;
-  const cepCheio = cep.replace(/\D/g, "").length === 8;
+  const cepDigitos = cep.replace(/\D/g, "");
+  const cepCheio = cepDigitos.length === 8;
+  const endereco = buscarCep(cepDigitos);
   const capitalNum = Number(capital.replace(/\D/g, "")) || 0;
   const capitalBaixo = capitalNum > 0 && capitalNum < 1000;
+
+  // Dinâmico pelo N4: solo não precisa responder (não existe outro sócio pra
+  // confirmar); com sócio, trava até os DOIS nomes terem resposta.
+  const residenciaCompleta =
+    SOCIOS_N4 === 1 || NOMES_SOCIOS.every((n) => n in residenciaSocios);
 
   // Se pega endereço fiscal, o endereço próprio deixa de ser obrigatório.
   const completo =
     querFiscal ||
-    (usarProprio === true && cepCheio && numero.trim() !== "" && tipo !== "" && capitalNum > 0);
+    (usarProprio === true &&
+      cepCheio &&
+      numero.trim() !== "" &&
+      iptu.trim() !== "" &&
+      tipo !== "" &&
+      capitalNum > 0 &&
+      residenciaCompleta);
 
   return (
     <>
@@ -128,7 +180,7 @@ export default function EmpresaPage() {
 
           {usarProprio === true && (
             <>
-              <Campo rotulo="CEP da empresa" dica="A gente completa a rua.">
+              <Campo rotulo="CEP da empresa" dica="A gente puxa o resto do endereço, você só completa.">
                 <Texto
                   valor={cep}
                   onChange={(v) => setCep(mascaraCep(v))}
@@ -136,30 +188,44 @@ export default function EmpresaPage() {
                   inputMode="numeric"
                 />
               </Campo>
-              {cepCheio && (
-                <div className="-mt-3 grid grid-cols-[1fr_auto] gap-3">
-                  <div className="flex min-h-12 items-center rounded-md border border-border-hairline bg-surface-alt px-3 text-caption text-text-secondary">
-                    Rua encontrada pelo CEP
+
+              {/* Autofill REAL (mock): logradouro, bairro, município e UF vêm
+                  do CEP. A pessoa só completa número + complemento. */}
+              {endereco && (
+                <>
+                  <div className="-mt-3 rounded-md border border-border-hairline bg-surface-alt px-3 py-2.5 text-caption text-text-secondary">
+                    {endereco.logradouro}, {endereco.bairro} — {endereco.municipio}/{endereco.uf}
                   </div>
-                  <div className="w-24">
-                    <Texto
-                      valor={numero}
-                      onChange={setNumero}
-                      placeholder="Nº"
-                      inputMode="numeric"
-                    />
+                  <div className="grid grid-cols-2 gap-3">
+                    <Campo rotulo="Número">
+                      <Texto
+                        valor={numero}
+                        onChange={setNumero}
+                        placeholder="Nº"
+                        inputMode="numeric"
+                      />
+                    </Campo>
+                    <Campo rotulo="Complemento" dica="Opcional">
+                      <Texto
+                        valor={complemento}
+                        onChange={setComplemento}
+                        placeholder="Bloco, sala..."
+                      />
+                    </Campo>
                   </div>
-                </div>
+                </>
               )}
 
+              {/* ⚠️ 28/07 (reunião Rua Satélite 9): OBRIGATÓRIO, travado — sem
+                  ele a documentação não passa na JUCEMG. Antes era opcional. */}
               <Campo
                 rotulo="Índice cadastral do IPTU"
-                dica="Está no carnê do IPTU. Se não tiver agora, a gente segue e pede depois."
+                dica="Está no carnê do IPTU. Obrigatório — sem ele a documentação não passa na Junta."
               >
                 <Texto
                   valor={iptu}
                   onChange={setIptu}
-                  placeholder="Opcional"
+                  placeholder="000.000.000.000"
                   inputMode="numeric"
                 />
               </Campo>
@@ -167,6 +233,33 @@ export default function EmpresaPage() {
               <Campo rotulo="Como é esse endereço?">
                 <Select valor={tipo} onChange={setTipo} opcoes={TIPO_ENDERECO} />
               </Campo>
+
+              {/* Residência de sócio — DINÂMICO pelo N4. Solo: nem aparece
+                  (não existe outro sócio pra confirmar). Com sócio: trava até
+                  responder pelos dois, nominalmente. */}
+              {SOCIOS_N4 > 1 && (
+                <div>
+                  <p className="text-caption font-semibold text-text-primary mb-2">
+                    Esse endereço é residência de algum sócio?
+                  </p>
+                  <div className="flex flex-col gap-2">
+                    {NOMES_SOCIOS.map((nome) => (
+                      <Campo key={nome} rotulo={nome}>
+                        <OpcoesLinha
+                          opcoes={[
+                            { v: false, label: "Não" },
+                            { v: true, label: "Sim" },
+                          ]}
+                          valor={residenciaSocios[nome] ?? null}
+                          onChange={(v) =>
+                            setResidenciaSocios((r) => ({ ...r, [nome]: v }))
+                          }
+                        />
+                      </Campo>
+                    ))}
+                  </div>
+                </div>
+              )}
             </>
           )}
 

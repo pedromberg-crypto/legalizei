@@ -7,6 +7,7 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { VereditoView, type Resultado } from "@/components/veredito";
 import { EncaixeView, encaixeDeResultado } from "@/components/encaixe";
@@ -178,10 +179,29 @@ const FAIXAS = [
   { id: "30k+", label: "Mais de R$ 30 mil" },
 ];
 
+/**
+ * ⚠️ 28/07 — DEEP-LINK por `?etapa=`. As 6 etapas do gate viviam presas dentro
+ * de UM SPA: a prancheta (/mockup) só sabia carregar `/gate` do zero, então
+ * nunca mostrava veredito/encaixe/triagem/faixa sem clicar através de tudo —
+ * a triagem (sócios+exterior) passou batida numa revisão inteira por causa
+ * disso. Mesmo padrão já usado em /notas/detalhe?s= e /blog/post?id=.
+ */
+const ETAPAS_LINKAVEIS: Etapa[] = ["veredito", "encaixe", "triagem", "faixa"];
+
 export default function GatePage() {
-  const [etapa, setEtapa] = useState<Etapa>("perguntando");
+  const searchParams = useSearchParams();
+  const etapaParam = searchParams.get("etapa") as Etapa | null;
+  const etapaInicial: Etapa =
+    etapaParam && ETAPAS_LINKAVEIS.includes(etapaParam) ? etapaParam : "perguntando";
+  // veredito/encaixe precisam de um resultado pra renderizar — usa o caso
+  // 🟢 atende (o default de `mapear("")`), o mesmo caminho feliz que as
+  // telas /veredito/atende e /encaixe já usam como demo.
+  const resultadoInicial =
+    etapaInicial === "veredito" || etapaInicial === "encaixe" ? mapear("") : null;
+
+  const [etapa, setEtapa] = useState<Etapa>(etapaInicial);
   const [texto, setTexto] = useState("");
-  const [resultado, setResultado] = useState<Resultado | null>(null);
+  const [resultado, setResultado] = useState<Resultado | null>(resultadoInicial);
   const [socios, setSocios] = useState<number | null>(null);
   const [exterior, setExterior] = useState<boolean | null>(null);
 
@@ -247,13 +267,21 @@ function Perguntando({
   onValidar: () => void;
 }) {
   const [categoria, setCategoria] = useState<string | null>(null);
+  // 🆕 28/07 (reunião Rua Satélite 9): atalho "já sei o número do meu CNAE" —
+  // pra quem já vem informado, pula descrever/pills e vai direto pra
+  // consulta na lista validada. Mesma engine (mapear/veredito), só muda o
+  // que o campo pede e como valida.
+  const [sabeCodigo, setSabeCodigo] = useState(false);
   const sel = PILLS.find((p) => p.id === categoria);
   const tw = useTypewriter(EXEMPLOS, texto.length > 0 || categoria !== null);
   // Pill escolhida troca o exemplo por uma frase fixa da categoria; sem pill,
   // o typewriter cicla exemplos genéricos. O EXEMPLO é o que ensina o campo.
-  const placeholder = sel ? `Ex: ${sel.ex}` : tw;
+  const placeholder = sabeCodigo ? "Ex: 6201-5/02" : sel ? `Ex: ${sel.ex}` : tw;
   // b1.descricao valida >= 10 caracteres. Espelha o motor exatamente.
-  const podeValidar = texto.trim().length >= 10;
+  // No modo código, a régua é outra: só precisa parecer um CNAE (dígitos).
+  const podeValidar = sabeCodigo
+    ? texto.replace(/\D/g, "").length >= 6
+    : texto.trim().length >= 10;
 
   // ── Scroll-fade das pills ────────────────────────────────────────────────
   // Inversão de quem estica: o textarea virou FIXO e as PILLS são a única
@@ -289,40 +317,47 @@ function Perguntando({
       {/* Título/subtítulo fixos. As PILLS são a única coisa que rola; input e
           CTA têm altura reservada. Só funciona com o shell travado em 100dvh. */}
       <div className="flex-1 min-h-0 flex flex-col">
-        <h1 className="text-h1 mb-2">O que você faz?</h1>
+        <h1 className="text-h1 mb-2">
+          {sabeCodigo ? "Qual o número do seu CNAE?" : "O que você faz?"}
+        </h1>
         <p className="text-body text-text-secondary mb-4">
-          Acha o que mais parece. Depois conta do seu jeito.
+          {sabeCodigo
+            ? "A gente confere se ele está na nossa lista de atendidos."
+            : "Acha o que mais parece. Depois conta do seu jeito."}
         </p>
 
         {/* Pills de reconhecimento (17). A pill ESTREITA, não valida (decisão
             17/07 → legalize-pill-estreita-nao-valida). Aqui são a região
             rolável: flex-wrap que estoura na vertical, fade nas pontas (mask),
-            scrollbar escondida. */}
-        <div
-          ref={scRef}
-          onScroll={recompute}
-          style={{ maskImage: mask, WebkitMaskImage: mask }}
-          className="flex min-h-0 flex-1 flex-wrap content-start gap-2 overflow-y-auto pb-1
-                     [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
-          {PILLS.map((p) => {
-            const on = categoria === p.id;
-            return (
-              <button
-                key={p.id}
-                onClick={() => setCategoria(on ? null : p.id)}
-                className={`h-fit rounded-full border px-3 py-1.5 text-caption font-medium transition-colors
-                  ${
-                    on
-                      ? "border-border-focus bg-surface-tint-brand text-text-primary"
-                      : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
-                  }`}
-              >
-                {p.label}
-              </button>
-            );
-          })}
-        </div>
+            scrollbar escondida. Somem no modo código — não fazem sentido pra
+            quem já sabe o número. */}
+        {!sabeCodigo && (
+          <div
+            ref={scRef}
+            onScroll={recompute}
+            style={{ maskImage: mask, WebkitMaskImage: mask }}
+            className="flex min-h-0 flex-1 flex-wrap content-start gap-2 overflow-y-auto pb-1
+                       [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {PILLS.map((p) => {
+              const on = categoria === p.id;
+              return (
+                <button
+                  key={p.id}
+                  onClick={() => setCategoria(on ? null : p.id)}
+                  className={`h-fit rounded-full border px-3 py-1.5 text-caption font-medium transition-colors
+                    ${
+                      on
+                        ? "border-border-focus bg-surface-tint-brand text-text-primary"
+                        : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
+                    }`}
+                >
+                  {p.label}
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         {/* 8px de âncora (mt-2) → input de altura FIXA. Não estica mais: as pills
             é que absorvem a variação de tela. */}
@@ -338,12 +373,27 @@ function Perguntando({
         {/* Microcopy que ENSINA, não pune (UX-16). Reforça o "descreve mais"
             quando a pill foi escolhida — a pill não fecha, o texto fecha. */}
         <p className="text-caption text-text-tertiary mt-2 min-h-[1.25rem]">
-          {sel
-            ? "Boa. Agora conta um pouco mais pra gente confirmar."
-            : texto.length > 0 && !podeValidar
-              ? "Conta um pouco mais do que você faz."
-              : ""}
+          {sabeCodigo
+            ? "Formato: 0000-0/00"
+            : sel
+              ? "Boa. Agora conta um pouco mais pra gente confirmar."
+              : texto.length > 0 && !podeValidar
+                ? "Conta um pouco mais do que você faz."
+                : ""}
         </p>
+
+        {/* 🆕 28/07: CTA discreto do atalho — não compete com o CTA principal
+            (texto pequeno, sublinhado, sem fill). */}
+        <button
+          onClick={() => {
+            setSabeCodigo((v) => !v);
+            setTexto("");
+            setCategoria(null);
+          }}
+          className="mt-2 self-start text-caption font-medium text-text-secondary underline underline-offset-4"
+        >
+          {sabeCodigo ? "Prefiro descrever o que faço" : "Já sei o número do meu CNAE"}
+        </button>
       </div>
 
       {/* 🌾 CTA no rodapé = thumb zone (design-system.md §6) */}
@@ -384,6 +434,10 @@ function Analisando() {
    Nasce da reordenação: com cobrança no N9, o que mata a elegibilidade tem
    que ser perguntado ANTES do dinheiro. Barrar depois = cobrar de quem não
    pode abrir. Espelha b1.triagem do motor.
+   ⚠️ 28/07: a saída AGORA navega de verdade — "Falar com o time" era beco sem
+   saída (as telas /saida/exterior e /saida/socios existiam mas nada linkava
+   pra elas). Exterior tem precedência (bloqueio legal, LC 123 art.17) sobre
+   3+ sócios (limite do produto) — mesma ordem que já dava o texto do aviso.
    ───────────────────────────────────────────────────────────────────────── */
 function Triagem({
   socios,
@@ -398,8 +452,10 @@ function Triagem({
   setExterior: (b: boolean) => void;
   onSeguir: () => void;
 }) {
+  const router = useRouter();
   const bloqueado = (socios !== null && socios > 2) || exterior === true;
   const completo = socios !== null && exterior !== null;
+  const rotaSaida = exterior === true ? "/saida/exterior" : "/saida/socios";
 
   return (
     <>
@@ -470,7 +526,7 @@ function Triagem({
 
       <div className="app-footer-cta">
         {bloqueado ? (
-          <Button full variant="dark">
+          <Button full variant="dark" onClick={() => router.push(rotaSaida)}>
             Falar com o time
           </Button>
         ) : (
@@ -508,6 +564,7 @@ function faixaDoValor(v: number): string | null {
 }
 
 function Faixa() {
+  const router = useRouter();
   const [faixa, setFaixa] = useState<string | null>(null);
   const [modoExato, setModoExato] = useState(false);
   const [exato, setExato] = useState("");
@@ -587,8 +644,11 @@ function Faixa() {
         )}
       </div>
       <div className="app-footer-cta">
-        <Button full disabled={!escolhida}>
-          Ver o que eu ganho
+        {/* 28/07: N5' (Resumo de valor) foi REMOVIDO — segue direto pro N6.
+            Copy trocada: "ver o que eu ganho" prometia uma revelação que só
+            existia no N5'; sem ele, a promessa vira mentira. */}
+        <Button full disabled={!escolhida} onClick={() => router.push("/conta")}>
+          Continuar
         </Button>
       </div>
     </>

@@ -67,6 +67,16 @@ export interface Resultado {
   cnae: string;
   veredito: Veredito;
   /**
+   * 🆕 28/07 (reunião Rua Satélite 9) — só usado quando `veredito === "nao-atende"`.
+   * Antes era 1 bucket só ("comercial Mauro"); virou 2 destinos reais:
+   *   · `mauro`    — não atendemos, MAS a Legalize Digital (escritório
+   *     tradicional do Mauro) atende. Vira "contato especial".
+   *   · `descarta` — ninguém atende (nem a gente, nem regulamentado, nem o
+   *     Mauro). Decisão explícita de descartar, não omissão.
+   * Default (ausente) = `mauro`, pra não quebrar os usos existentes.
+   */
+  motivo?: "mauro" | "descarta";
+  /**
    * O que o código oficialmente cobre (CONCLA/IBGE).
    * 🚚 NÃO renderizado aqui desde 17/07: a linha `explica` da FACE já faz esse
    * trabalho em linguagem dele, e repetir dentro da gaveta era peso sem ganho.
@@ -213,9 +223,39 @@ export function VereditoView({
   // 🟡 waitlist e 🔴 comercial compartilham o TEMPLATE de saída graciosa (A9):
   // barra + explica + CAPTURA + roteia.
   const waitlist = r.veredito === "waitlist";
+  // 🆕 28/07: o 🔴 virou 2 destinos. `descarta` não tem pra onde rotear —
+  // não passa pelo formulário de captura, é um decline limpo.
+  const descarta = r.veredito === "nao-atende" && r.motivo === "descarta";
   // Baixa fricção de propósito: quem foi recusado não preenche formulário longo.
   const contatoOk = /@/.test(contato) || contato.replace(/\D/g, "").length >= 10;
   const podeEnviar = nome.trim().length >= 2 && contatoOk;
+
+  /* ── DESCARTA — não tem template de captura, é decline limpo (28/07) ────
+     Ninguém atende (nem a gente, nem regulado, nem o Mauro). Não é beco
+     (doutrina A9): explica honestamente e sugere um contador qualquer, sem
+     fingir que existe rota nossa pra esse caso. */
+  if (descarta) {
+    return (
+      <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <Selo tipo="humano" />
+        <Card>
+          <h2 className="text-h2 mb-1">{r.humano}</h2>
+          <p className="text-body text-text-secondary mb-4">{r.explica}</p>
+          <div className="pt-3 border-t border-border-hairline">
+            <p className="text-micro text-text-tertiary mb-0.5">
+              Sua atividade na Receita
+            </p>
+            <p className="text-caption text-text-secondary">CNAE {r.cnae}</p>
+          </div>
+        </Card>
+        <p className="text-body text-text-secondary mt-4">
+          Esse tipo de atividade a gente não atende, hoje. Não é erro seu — é
+          fora do nosso escopo, e não temos um parceiro pra esse caso
+          específico. O melhor caminho é procurar um contador da sua região.
+        </p>
+      </div>
+    );
+  }
 
   /* ── ESTADO 2: confirmado ──────────────────────────────────────────────
      Terminal. O selo vira VERDE porque o que deu certo foi a AÇÃO (entrou na
@@ -233,7 +273,7 @@ export function VereditoView({
             <p className="text-body text-text-secondary">
               {waitlist
                 ? "Assim que a gente abrir para a sua atividade, você é avisado em primeira mão e entra na frente da fila."
-                : "Nosso time contábil recebeu o seu caso e vai te chamar no WhatsApp."}
+                : "A Legalize Digital, nosso escritório parceiro, recebeu o seu caso e vai te chamar no WhatsApp."}
             </p>
           </Card>
 
@@ -293,7 +333,7 @@ export function VereditoView({
         <p className="text-body text-text-secondary mt-4 mb-4">
           {waitlist
             ? "A gente ainda não abre esse tipo sozinho, e não vamos fingir que abre. Quer ser avisado quando abrir?"
-            : "A gente cuida de quem vive de prestar serviço, e o seu caso o nosso time contábil resolve. Quer que a gente te conecte?"}
+            : "A gente cuida de quem vive de prestar serviço. O seu caso a Legalize Digital, nosso escritório parceiro, resolve do jeito tradicional. Quer que a gente te conecte?"}
         </p>
 
         {/* Captura na PRÓPRIA tela (spec T4): 2 campos, sem conta, sem senha. */}
@@ -310,6 +350,19 @@ export function VereditoView({
             onChange={setContato}
             placeholder="(31) 90000-0000"
           />
+          {/* 🆕 28/07: campo "CNAE pretendido" — só waitlist. É read-only (a
+              gente já derivou, não faz sentido pedir de novo); vira dado
+              explícito pro CRM em vez de só texto de confirmação depois. */}
+          {waitlist && (
+            <div>
+              <p className="text-caption font-semibold text-text-primary mb-1.5">
+                CNAE pretendido
+              </p>
+              <div className="flex min-h-12 items-center rounded-md border border-border-hairline bg-surface-alt px-3 text-body text-text-secondary">
+                {r.cnae} — {r.humano}
+              </div>
+            </div>
+          )}
           {/* 🕓 LGPD: opt-in pela ação + aviso. Se o jurídico exigir checkbox
               explícito, vira checkbox (decisão Mauro/Larissa). */}
           <p className="text-micro text-text-tertiary">

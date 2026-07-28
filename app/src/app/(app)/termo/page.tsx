@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
 import { Checkbox } from "@/components/ui/form";
@@ -49,6 +50,12 @@ import { Checkbox } from "@/components/ui/form";
 
 export default function TermoPage() {
   const [aceito, setAceito] = useState(false);
+  // 🆕 28/07: ?cenario=empresa-paga é a alternativa DOCUMENTADA (não a
+  // definitiva) — ver nota completa em /plano. Sem taxa paga pelo cliente,
+  // o argumento de irreversibilidade muda de base: some "não volta o
+  // dinheiro" e sobra "o trabalho de registro já começou".
+  const searchParams = useSearchParams();
+  const empresaPaga = searchParams.get("cenario") === "empresa-paga";
 
   return (
     <>
@@ -72,8 +79,13 @@ export default function TermoPage() {
               <Item>Protocola sua empresa na Junta Comercial de Minas.</Item>
               {/* V5: positivo (era "você não paga nada de novo"). V1: única
                   menção a "que você já pagou" na tela — a Camada 2 deixou de
-                  repetir a frase gêmea. */}
-              <Item>A taxa que você já pagou cobre esse registro.</Item>
+                  repetir a frase gêmea. 🆕 28/07: no cenário empresa-paga não
+                  existe taxa paga pelo cliente pra citar. */}
+              <Item>
+                {empresaPaga
+                  ? "A taxa da Junta é por nossa conta — você não paga essa parte."
+                  : "A taxa que você já pagou cobre esse registro."}
+              </Item>
               <Item>Segue com Receita, Simples e Prefeitura até o CNPJ ativar.</Item>
             </ul>
           </div>
@@ -100,8 +112,9 @@ export default function TermoPage() {
                 aceite. Nada é registrado sem esse passo.
               </Camada>
               <Camada>
-                A taxa da Junta não é reembolsável depois que a gente registra,
-                porque ela vai pro governo, não pra gente.
+                {empresaPaga
+                  ? "A taxa da Junta é por nossa conta — não é algo que você paga nem que volta ou deixa de voltar pra você."
+                  : "A taxa da Junta não é reembolsável depois que a gente registra, porque ela vai pro governo, não pra gente."}
               </Camada>
               <Camada>
                 O nosso serviço (a mensalidade) você cancela quando quiser,
@@ -121,8 +134,9 @@ export default function TermoPage() {
               Reverte em parte a de-dup da M1, de propósito: consentir ≠ divulgar.
               🟡 redação jurídica final é da Larissa. */}
           <Checkbox checked={aceito} onChange={setAceito}>
-            Autorizo o início da abertura, ciente de que ela não pode ser
-            desfeita e de que a taxa da Junta já paga não é reembolsável.
+            {empresaPaga
+              ? "Autorizo o início da abertura, ciente de que ela não pode ser desfeita."
+              : "Autorizo o início da abertura, ciente de que ela não pode ser desfeita e de que a taxa da Junta já paga não é reembolsável."}
           </Checkbox>
         </Corpo>
 

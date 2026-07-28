@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   TelaHeader,
   Titulo,
@@ -16,23 +17,33 @@ import {
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * N10 — DADOS DO SÓCIO  ·  arquétipo A1 (Pergunta) · shell APP (dentro, pago)
+ * N10 — SEUS DADOS (confirmação) · arquétipo A5 (recap) → A1 (o que faltou)
  * ═══════════════════════════════════════════════════════════════════════════
  * Spec: execucao/spec-telas-entrada-b1-b2.md → Tela 6 (2.1) · mapa T6→N10
- * Motor: b2.coleta (dados do sócio)
  *
- * Primeira tela da coleta. É a mais longa do dossiê, então é o teste do corpo
- * rolável: título fixo em cima, campos rolam, CTA fixo embaixo.
+ * ⚠️ REESCRITA 28/07 (reunião Rua Satélite 9) — VIRA CONFIRMAÇÃO, não coleta
+ * do zero. Nome/CPF/telefone/endereço migraram pro N6 (front-load, criar
+ * conta). Aqui a pessoa só CONFERE (com "editar" pra cada bloco) e preenche
+ * o que faltou: RG, órgão emissor, estado civil (+ regime de bens), e
+ * confirma se mora fora do Brasil.
  *
- * O que a spec exige e por quê:
- *   · CPF valida dígito + situação cadastral (não deixa CPF errado seguir).
- *     🚧 IA dublada: aqui o "regular na Receita" é mock; provider real 🟡.
- *   · Estado civil "casado" REVELA regime de bens (campo condicional).
- *   · Comunhão universal dispara aviso do cônjuge CEDO (UX-30), não no cartório.
+ * "Editar" é mock — mesmo padrão do N19 (Ajustar): no app real abre só
+ * aquele campo, salva e volta pra cá, sem re-andar o N6 inteiro.
+ *
+ * Regras que seguem valendo:
+ *   · Comunhão universal dispara aviso do cônjuge CEDO (UX-30).
  *   · "Reside no exterior?" aqui é CONFIRMAÇÃO — a triagem do N4 já perguntou
  *     (UX-21 fail-fast). Sim = bloqueio que educa, fora do Simples (LC 123 art.17).
  * ═══════════════════════════════════════════════════════════════════════════
  */
+
+// Herdado do N6 (mock, sem estado real compartilhado ainda).
+const JA_CAPTADO = {
+  nome: "Ana Beatriz Ramos",
+  cpf: "123.456.789-00",
+  telefone: "(31) 99999-0000",
+  endereco: "Rua dos Timbiras, 1200, Funcionários, Belo Horizonte/MG",
+};
 
 const ESTADO_CIVIL = [
   { v: "solteiro", label: "Solteiro(a)" },
@@ -49,87 +60,55 @@ const REGIME_BENS = [
   { v: "final", label: "Participação final nos aquestos" },
 ];
 
-// 🚧 IA dublada: só o dígito conta (11 números). O "regular na Receita" é o que
-// o provider (Serpro/InfoSimples) vai devolver; aqui é mock pra farol.
-function mascaraCpf(v: string) {
-  const d = v.replace(/\D/g, "").slice(0, 11);
-  return d
-    .replace(/(\d{3})(\d)/, "$1.$2")
-    .replace(/(\d{3})(\d)/, "$1.$2")
-    .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-}
-
-function mascaraCep(v: string) {
-  const d = v.replace(/\D/g, "").slice(0, 8);
-  return d.replace(/(\d{5})(\d)/, "$1-$2");
-}
-
 export default function SocioPage() {
-  const [nome, setNome] = useState("");
-  const [cpf, setCpf] = useState("");
   const [rg, setRg] = useState("");
   const [orgao, setOrgao] = useState("");
   const [civil, setCivil] = useState("");
   const [regime, setRegime] = useState("");
-  const [cep, setCep] = useState("");
-  const [numero, setNumero] = useState("");
-  const [contato, setContato] = useState("");
   const [exterior, setExterior] = useState<boolean | null>(null);
 
-  const cpfDigitos = cpf.replace(/\D/g, "");
-  const cpfCheio = cpfDigitos.length === 11;
-  const nomeOk = nome.trim().split(/\s+/).length >= 2;
-  // Mock do autocomplete de CEP: 8 dígitos "acha" o endereço.
-  const cepCheio = cep.replace(/\D/g, "").length === 8;
-
   const completo =
-    nomeOk &&
-    cpfCheio &&
     rg.trim() !== "" &&
     orgao.trim() !== "" &&
     civil !== "" &&
     (civil !== "casado" || regime !== "") &&
-    cepCheio &&
-    numero.trim() !== "" &&
-    contato.trim() !== "" &&
     exterior === false;
 
   return (
     <>
       {/* "Seus dados", não "Dados do sócio" (19/07): quem abre sozinho não se
-          vê como sócio, se vê como dono — e a palavra pressupõe uma sociedade
-          que ele ainda não declarou. O título da tela já dizia "Seus dados";
-          era o meta que destoava. Casa também com `lib/passos`, que é o que o
-          cliente lê na P1/P2. */}
+          vê como sócio, se vê como dono. */}
       <TelaHeader meta="Seus dados" />
 
       <main className="app-main">
-        <Titulo sub="É com eles que a empresa nasce na Junta. Confira com calma.">
+        <Titulo sub="Confira o que você já preencheu e complete o resto.">
           Seus dados
         </Titulo>
 
         <Corpo>
-          <Campo rotulo="Nome completo">
-            <Texto
-              valor={nome}
-              onChange={setNome}
-              placeholder="Como está no seu documento"
-              erro={
-                nome.length > 0 && !nomeOk ? "Escreva o nome completo." : undefined
-              }
-            />
-          </Campo>
+          {/* CONFIRMAÇÃO — já veio do N6, só conferir. "Editar" mock, mesmo
+              padrão do N19. */}
+          <Card>
+            <div className="mb-2 flex items-center justify-between gap-3">
+              <h2 className="text-body font-semibold text-text-primary">
+                Já preenchido no cadastro
+              </h2>
+              <button
+                className="shrink-0 text-caption font-semibold text-action-primary-sm underline underline-offset-4"
+                aria-label="Editar dados do cadastro"
+              >
+                Editar
+              </button>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <LinhaConfirma rotulo="Nome" valor={JA_CAPTADO.nome} />
+              <LinhaConfirma rotulo="CPF" valor={JA_CAPTADO.cpf} />
+              <LinhaConfirma rotulo="Telefone" valor={JA_CAPTADO.telefone} />
+              <LinhaConfirma rotulo="Endereço" valor={JA_CAPTADO.endereco} />
+            </div>
+          </Card>
 
-          <Campo rotulo="CPF">
-            <Texto
-              valor={cpf}
-              onChange={(v) => setCpf(mascaraCpf(v))}
-              placeholder="000.000.000-00"
-              inputMode="numeric"
-              ok={cpfCheio ? "Encontramos e está regular na Receita." : undefined}
-            />
-          </Campo>
-
+          {/* O QUE FALTA — só o que o N6 não pergunta. */}
           <div className="grid grid-cols-2 gap-3">
             <Campo rotulo="RG">
               <Texto valor={rg} onChange={setRg} placeholder="00.000.000" />
@@ -163,39 +142,6 @@ export default function SocioPage() {
               )}
             </Campo>
           )}
-
-          <Campo rotulo="Seu endereço" dica="A gente completa a rua pelo CEP.">
-            <Texto
-              valor={cep}
-              onChange={(v) => setCep(mascaraCep(v))}
-              placeholder="CEP 00000-000"
-              inputMode="numeric"
-            />
-          </Campo>
-          {cepCheio && (
-            <div className="-mt-3 grid grid-cols-[1fr_auto] gap-3">
-              <div className="flex min-h-12 items-center rounded-md border border-border-hairline bg-surface-alt px-3 text-caption text-text-secondary">
-                Rua encontrada pelo CEP
-              </div>
-              <div className="w-24">
-                <Texto
-                  valor={numero}
-                  onChange={setNumero}
-                  placeholder="Nº"
-                  inputMode="numeric"
-                />
-              </div>
-            </div>
-          )}
-
-          <Campo rotulo="Seu contato (WhatsApp)">
-            <Texto
-              valor={contato}
-              onChange={setContato}
-              placeholder="(31) 90000-0000"
-              inputMode="tel"
-            />
-          </Campo>
 
           {/* Confirmação, não 1ª notícia: o N4 já perguntou (UX-21). */}
           <Campo rotulo="Você mora fora do Brasil?">
@@ -231,5 +177,14 @@ export default function SocioPage() {
         </Rodape>
       </main>
     </>
+  );
+}
+
+function LinhaConfirma({ rotulo, valor }: { rotulo: string; valor: string }) {
+  return (
+    <div className="flex flex-col">
+      <span className="text-micro text-text-tertiary">{rotulo}</span>
+      <span className="text-caption text-text-primary">{valor}</span>
+    </div>
   );
 }

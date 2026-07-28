@@ -88,10 +88,16 @@ const APARELHOS: Aparelho[] = [
 const BARRA_H: Record<Topo, number> = { island: 54, notch: 44, barra: 20 };
 
 /**
- * Telas AGRUPADAS POR ARQUÉTIPO. Cada arquétipo é uma esteira horizontal: as
- * telas dele aparecem lado a lado e, quando passam da largura, viram scroll
- * lateral (clicar-segurar-arrastar). O flow de abertura inteiro (N1 → empresa
- * ativa) já existe como rota; falta só o flow #2 (migração).
+ * Telas AGRUPADAS NA ORDEM DO FLOW (reorg 28/07 — antes era por arquétipo).
+ * Cada grupo é uma esteira horizontal: as telas dele aparecem lado a lado e,
+ * quando passam da largura, viram scroll lateral (clicar-segurar-arrastar).
+ * A ordem dos GRUPOS segue `flow/flow-data.mjs` (fonte-única do mapa-flow-
+ * mermaid): Entrada → N4+veredito → saídas da triagem → dinheiro (N6–N9) →
+ * pausas (P1–P2) → dossiê (N10–N16) → constituição (N19–N22) →
+ * empresa ativa → portal (dia-2) → fora do flow. Onde o flow bifurca (N4
+ * veredito, N4 triagem), o ramo entra logo depois do nó que o gera — não no
+ * fim. O flow de abertura inteiro (N1 → empresa ativa) já existe como rota;
+ * falta só o flow #2 (migração).
  */
 interface Tela {
   rota: string;
@@ -101,7 +107,7 @@ interface Tela {
   statusClaro?: boolean;
 }
 
-const ARQUETIPOS: {
+const GRUPOS: {
   id: string;
   nome: string;
   descricao: string;
@@ -127,64 +133,31 @@ const ARQUETIPOS: {
       {
         rota: "/entrada",
         nome: "N3 · Fork de 3 rotas",
-        nota: 'A palavra "migrar" NÃO aparece (UX-55): é jargão e "trocar de contador" excluiria quem não tem contador, que é o melhor cliente do flow #2. Pergunta pelo fato, nunca pela operação. Login é link, não botão.',
+        nota: 'A palavra "migrar" NÃO aparece (UX-55): é jargão e "trocar de contador" excluiria quem não tem contador, que é o melhor cliente do flow #2. Pergunta pelo fato, nunca pela operação. Login é link, não botão. ✅ 28/07: 3 rotas CONFIRMADAS na reunião (abrir/migrar/já-cliente).',
+      },
+      {
+        rota: "/entrada?intencao=abrir",
+        nome: "🆕 N3G · Gate de cidade (BH-MG)",
+        nota: "✅ 28/07 (reunião Rua Satélite 9) — 2º passo do N3, mesma tela. MLP só atende Belo Horizonte/MG; trava 'abrir'/'migrar' até confirmar (login pula, já passou por isso). Deep-link ?intencao= pra ver sem clicar através do passo 1.",
+      },
+      {
+        rota: "/saida/fora-bh",
+        nome: "🆕 Saída · fora de BH",
+        nota: "✅ 28/07 — nasce do gate de cidade (N3G), não da triagem do N4. Mesmo template A9 das outras saídas (barra+explica+captura+roteia). MLP em fase de testes, só BH por enquanto.",
       },
     ],
   },
   {
-    id: "a1",
-    nome: "A1 · Pergunta",
+    id: "n4-veredito",
+    nome: "N4 · Porta + veredito",
     descricao:
-      "Título fixo / corpo rola / CTA fixo. O esqueleto mais comum do flow: a porta (N4) e toda a coleta do dossiê (N10–N16, logada e paga).",
+      "A porta do flow, numa tela só (pills, veredito, triagem, faixa). Do veredito 🟢/🟡/🔴 saem 3 desfechos — regra de ouro: nunca dar veredito com baixa confiança. O 🟢 Atende segue direto pro ENCAIXE (trava o CNAE, ainda pré-pago, porque nome/objeto/Junta dependem dele); 🟡 e 🔴 saem pelo template de saída graciosa (A9). Fonte única VereditoView.",
     telas: [
       {
         rota: "/gate",
         nome: "N4 · Gate-CNAE",
-        nota: "A porta. Pills + veredito 🟢/🟡/🔴 + triagem + faixa.",
+        nota: "A porta. Pills + veredito 🟢/🟡/🔴 + triagem + faixa. ✅ 28/07: ganhou o atalho 'já sei o número do meu CNAE' (troca pra modo código, mesma engine, pula descrição+pills).",
       },
-      {
-        rota: "/dossie/socio",
-        nome: "N10 · Seus dados",
-        nota: "A mais longa: testa o corpo rolável. CPF valida situação; casado revela regime; comunhão universal avisa o cônjuge cedo (UX-30).",
-      },
-      {
-        rota: "/dossie/vinculo",
-        nome: "N11 · Vínculo INSS",
-        nota: 'Coleta o CLT que o N18 consome (UX-24). Teto é FOLGA, não binário. Pró-labore reenquadrado como ganho (UX-27).',
-      },
-      {
-        rota: "/dossie/socios",
-        nome: "N12 · +Sócios",
-        nota: "Limite 2 (trava, não 1ª notícia — N4 já filtrou). Divisão soma 100%, default 50/50.",
-      },
-      {
-        rota: "/dossie/empresa",
-        nome: "N13 · Dados da empresa",
-        nota: "Upsell endereço fiscal (oferece, não obriga; preço FAKE ~R$60). IPTU opcional. Alerta capital baixo.",
-      },
-      {
-        rota: "/dossie/cnae-secundarios",
-        nome: "N14 · CNAE secundários",
-        nota: "Principal herdado do N4, travado. Sugestões com prova social. Comércio entra com aviso, nunca some silencioso.",
-      },
-      {
-        rota: "/dossie/natureza",
-        nome: "N15 · Natureza jurídica",
-        nota: "Recomenda (solo→SLU), não trava. LTDA solo permitido (fato do CNPJ do Pedro). SLU+sócio = incoerência barrada.",
-      },
-      {
-        rota: "/dossie/nome",
-        nome: "N16 · Razão social",
-        nota: "IA sugere a razão. Checagem de viabilidade: nome em uso → variações (evita reprova JUCEMG).",
-      },
-    ],
-  },
-  {
-    id: "a2",
-    nome: "A2 · Veredito",
-    descricao:
-      "Resultado 🟢/🟡/🔴. Regra de ouro: nunca dar veredito com baixa confiança. Fonte única (VereditoView), a mesma que o N4 usa — 🟡/🔴 saem pelo template de saída graciosa (A9).",
-    telas: [
       {
         rota: "/veredito/atende",
         nome: "🟢 Atende",
@@ -196,45 +169,60 @@ const ARQUETIPOS: {
         nota: "NOVO (reordenacao-cluster-fiscal-encaixe): logo após o 🟢, ainda pré-pago, TRAVA o CNAE (o nome/objeto/Junta dependem dele). Recomendado + alternativas. 4 regras: vem após o veredito · % é fit real (IA cruza pill+texto), não vinculante · garante o SETUP não o resultado · defesa de legitimidade inline. STAGE 1 aditivo: dissolve N5 teaser + N17 no stage 2.",
       },
       {
+        rota: "/gate?etapa=triagem",
+        nome: "N4 · Triagem (sócios + exterior)",
+        nota: "🔎 SEPARADA 28/07 — vivia presa dentro do SPA do gate, invisível na prancheta (só dava pra ver clicando através de tudo). É o fail-fast do UX-21: sócios (máx. 2 no MLP) + exterior, perguntado logo após o ENCAIXE, ANTES do dinheiro. Bloqueado → 'Falar com o time' agora navega de verdade pra /saida/exterior ou /saida/socios (era beco sem saída até 28/07).",
+      },
+      {
+        rota: "/gate?etapa=faixa",
+        nome: "N4 · Faixa de faturamento",
+        nota: "🔎 SEPARADA 28/07 — mesma amarração do SPA. Última etapa do gate; segue direto pro N6 (o N5' foi removido). Faixa guiada por padrão + 'sei o valor exato' pra quem já sabe o número (UX-51).",
+      },
+      {
         rota: "/veredito/waitlist",
         nome: "🟡 Waitlist (regulada)",
-        nota: "Não é 'não', é 'ainda não'. UX-22: dar o enquanto isso. Captura contato, não fecha a porta. Template A9.",
+        nota: "Não é 'não', é 'ainda não'. UX-22: dar o enquanto isso. Captura contato, não fecha a porta. Template A9. ✅ 28/07: ganhou campo CNAE pretendido (read-only, junto do nome+contato).",
       },
       {
         rota: "/veredito/nao-atende",
-        nome: "🔴 Comercial",
-        nota: "Vende produto → roteia pro time do Mauro. Mesmo template A9, rota diferente. Coral nunca é erro: token de estado.",
+        nome: "🔴 Contato especial (Mauro)",
+        nota: "✅ 28/07: RELABEL — era 'Comercial'. É quem NÃO atendemos mas a Legalize Digital (escritório do Mauro) atende do jeito tradicional. Mesmo template A9. Coral nunca é erro: token de estado.",
+      },
+      {
+        rota: "/veredito/descartado",
+        nome: "🆕 🔴 Fora de escopo (descarta)",
+        nota: "✅ 28/07 (reunião Rua Satélite 9) — 3ª via do veredito 🔴, antes inexistente. Ninguém atende (nem a gente, nem regulamentado, nem o Mauro) — decisão explícita de descartar. SEM formulário de captura: não tem pra onde rotear, é decline limpo dentro do VereditoView (`motivo: 'descarta'`).",
       },
     ],
   },
   {
-    id: "a3",
-    nome: "A3 · Número / prova",
+    id: "saidas-triagem",
+    nome: "Antes do dinheiro · saídas da triagem",
     descricao:
-      "Depois da reordenação (ENCAIXE): a escolha do CNAE saiu daqui e virou o ENCAIXE, pré-pago (grupo A2). Sobrou o N5' resumo de valor (vende segurança, sem prometer economia) e o N18 simulador, que cumpre o Fator R depois do pagamento.",
+      "A triagem do N4 (sócios? exterior?) barra ANTES do dinheiro (UX-21) — quem cai aqui nunca chega a ver preço. Mesmo template de saída graciosa do veredito: educa, não pune, nenhuma saída termina em beco.",
     telas: [
       {
-        rota: "/resumo",
-        nome: "N5' · Resumo de valor",
-        nota: "Opção B: pós-faixa, pré-pago. Vende SEGURANÇA, não promete economia. Número suave por faixa, com carimbo. Substituiu os 3 teasers (a prova migrou pro ENCAIXE).",
+        rota: "/saida/exterior",
+        nome: "Sócio no exterior",
+        nota: 'UX-07: "a empresa existe, mas fora do Simples". A LC 123 art. 17 barra a opção pelo Simples, não a abertura — confundir as duas daria uma notícia muito pior que a verdadeira. Rota humana. 🟡 sem cotar Lucro Presumido (UX-42 depende do Mauro). 🟡 28/07: Pedro cogitou descartar esta saída dedicada — "estou pensando", NÃO travado. Conteúdo jurídico revisado, não apagar sem confirmação final.',
       },
       {
-        rota: "/simulador",
-        nome: "N18 · Simulador",
-        nota: 'O clímax. "Fator R" nunca aparece. Sugestão mira 30%, avisa a borda.',
+        rota: "/saida/socios",
+        nome: "3 ou mais sócios",
+        nota: '🟡 28/07: UX-09: "limite do PRODUTO, não da lei". Pedro cogitou juntar esta saída com a Waitlist (regulamentados) — "estou pensando", NÃO travado.',
       },
     ],
   },
   {
     id: "dinheiro",
-    nome: "💰 Dinheiro · N6–N9",
+    nome: "💰 N6–N9 · O dinheiro",
     descricao:
-      "A travessia da fronteira: as 4 telas entre o teaser (N5) e o dossiê (N10). Agrupadas pela POSIÇÃO no flow, não por arquétipo — cada uma puxa um diferente (N6 = A1 pergunta · N7 = A5 recap · N8 = A6 aceite · N9 = A1) e o que importa aqui é ver a sequência inteira lado a lado, porque é onde a ordem carrega o argumento. A casa (shell do app) nasce depois do N9; até aqui é tudo wizard.",
+      "A travessia da fronteira, da faixa (N4) ao pagamento. ⚠️ 28/07: o N5' (Resumo de valor) foi REMOVIDO — a faixa segue direto pro N6, sem teaser intermediário. N6–N9 são a sequência clássica — conta, proposta, contrato, pagamento — e é onde a ORDEM carrega o argumento (N6 = A1 pergunta · N7 = A5 recap · N8 = A6 aceite · N9 = A1). A casa (shell do app) só nasce depois do N9; até aqui é tudo wizard.",
     telas: [
       {
         rota: "/conta",
         nome: "N6 · Criar conta",
-        nota: "Sai com credencial funcionando. Coorte é dado puro e pulável, nunca bifurca trilha (UX-48). 🔴 O aviso do GOV.BR foi REMOVIDO em 19/07 (jargão + sem ação + contradizia \"a parte chata é com a gente\"); a UX-29 migra pro painel N21 como tarefa acionável.",
+        nota: "Sai com credencial funcionando. Coorte é dado puro e pulável, nunca bifurca trilha (UX-48). 🔴 O aviso do GOV.BR foi REMOVIDO em 19/07 (jargão + sem ação + contradizia \"a parte chata é com a gente\"); a UX-29 migra pro painel N21 como tarefa acionável. ✅ 28/07: FRONT-LOAD — nome/CPF/telefone/endereço (autofill CEP) migraram pra cá do N10, + etapa de código de verificação (mock).",
       },
       {
         rota: "/plano",
@@ -254,10 +242,10 @@ const ARQUETIPOS: {
     ],
   },
   {
-    id: "a7",
-    nome: "A7 · Espera",
+    id: "pausas",
+    nome: "⏸ Pausas · P1–P2",
     descricao:
-      "Loading que EXPLICA o que está acontecendo, não spinner mudo. Regra que manda nas duas: espera com tarefa não é espera, é andamento — por isso as duas abrem com o que DÁ pra fazer, nunca com o que está parado. (A espera de órgão do B4 não mora aqui: virou a timeline do painel N21, no UX-18.)",
+      "Loading que EXPLICA o que está acontecendo, não spinner mudo. Espera com tarefa não é espera, é andamento — por isso as duas abrem com o que DÁ pra fazer, nunca com o que está parado. P2 nasce do boleto (branch do N9); P1 reentra no fluxo pelo N10 — por isso moram entre o dinheiro e o dossiê. (A espera de órgão do B4 não mora aqui: virou a timeline do painel N21, no UX-18.)",
     telas: [
       {
         rota: "/aguardando",
@@ -272,26 +260,51 @@ const ARQUETIPOS: {
     ],
   },
   {
-    id: "a9",
-    nome: "A9 · Saída graciosa",
+    id: "dossie",
+    nome: "N10–N16 · O dossiê",
     descricao:
-      'Barra + explica + captura + roteia. Bloqueio que EDUCA, não que pune: ninguém sai achando que fez algo errado, e nenhuma saída termina em beco. Das 5 terminais, o login é rota feliz (vive em "Fora do flow") e as duas do CNAE (🟡 waitlist · 🔴 comercial) estão no A2, porque nascem do veredito. Aqui ficam as duas da triagem do N4 — que barram ANTES do dinheiro (UX-21).',
+      "A coleta do dossiê, logada e paga. N10 é a mais longa (testa o corpo rolável); dali em diante cada tela herda o que já foi dito antes — CNAE principal já travado no N4, limite de sócios já filtrado na triagem.",
     telas: [
       {
-        rota: "/saida/exterior",
-        nome: "Sócio no exterior",
-        nota: 'UX-07: "a empresa existe, mas fora do Simples". A LC 123 art. 17 barra a opção pelo Simples, não a abertura — confundir as duas daria uma notícia muito pior que a verdadeira. Rota humana. 🟡 sem cotar Lucro Presumido (UX-42 depende do Mauro).',
+        rota: "/dossie/socio",
+        nome: "N10 · Seus dados (confirmação)",
+        nota: "✅ 28/07: RECONSTRUÍDA — não coleta mais do zero. Card read-only confirma nome/CPF/telefone/endereço já vindos do N6; só pede o que faltou (RG, órgão emissor, estado civil). Casado revela regime; comunhão universal avisa o cônjuge cedo (UX-30).",
       },
       {
-        rota: "/saida/socios",
-        nome: "3 ou mais sócios",
-        nota: 'UX-09: "limite do PRODUTO, não da lei" — e a copy diz isso com todas as letras. Fingir que é regra externa seria mentir pra parecer menos limitado; assumir que o limite é nosso custa orgulho e compra confiança. Sendo nosso, pode cair (sem prazo cravado).',
+        rota: "/dossie/vinculo",
+        nome: "N11 · Vínculo INSS",
+        nota: 'Coleta o CLT que alimenta a sugestão de enquadramento (UX-24, hoje um card no N19 — o simulador dedicado N18 foi dissolvido 28/07). Teto é FOLGA, não binário. Pró-labore reenquadrado como ganho (UX-27).',
+      },
+      {
+        rota: "/dossie/socios",
+        nome: "N12 · +Sócios",
+        nota: "Limite 2 (trava, não 1ª notícia — N4 já filtrou). Divisão soma 100%, default 50/50.",
+      },
+      {
+        rota: "/dossie/empresa",
+        nome: "N13 · Dados da empresa",
+        nota: "Upsell endereço fiscal (oferece, não obriga; preço FAKE ~R$60). ✅ 28/07: IPTU virou OBRIGATÓRIO travado (JUCEMG exige, era opcional). Residência de sócio dinâmica pelo N4 (pula se solo). Alerta capital baixo.",
+      },
+      {
+        rota: "/dossie/cnae-secundarios",
+        nome: "N14 · CNAE secundários",
+        nota: "Principal herdado do N4, travado. Sugestões com prova social. Comércio entra com aviso, nunca some silencioso.",
+      },
+      {
+        rota: "/dossie/natureza",
+        nome: "N15 · Natureza jurídica",
+        nota: "Recomenda (solo→SLU), não trava. LTDA solo permitido (fato do CNPJ do Pedro). SLU+sócio = incoerência barrada.",
+      },
+      {
+        rota: "/dossie/nome",
+        nome: "N16 · Razão social",
+        nota: "IA sugere a razão. Checagem de viabilidade: nome em uso → variações (evita reprova JUCEMG).",
       },
     ],
   },
   {
     id: "b4",
-    nome: "B4 · Constituição",
+    nome: "N19–N22 · Constituição",
     descricao:
       "Depois do pagamento e do dossiê, a reta final: revisar, autorizar o irreversível, e acompanhar a máquina rodando. O gargalo aqui é a JUCEMG, não o cliente, então o padrão muda de 'pergunta' pra 'andamento visível' (A8). A recusa de órgão é o 4º estado do painel, não uma tela à parte.",
     telas: [
@@ -313,7 +326,7 @@ const ARQUETIPOS: {
       {
         rota: "/painel/recusa",
         nome: "REC · Órgão recusa",
-        nota: "O 4º estado (UX-40): a Junta reprovou o nome apesar da prévia (persona `erro-orgao` do motor). Vermelho + 'precisa de você' + a ação, recuperação DENTRO do pipeline. Aqui o danger é legítimo: um órgão externo parou a fila mesmo.",
+        nota: "O 4º estado (UX-40): a Junta reprovou o nome apesar da prévia (persona `erro-orgao` do motor). Vermelho + 'precisa de você' + a ação, recuperação DENTRO do pipeline. Aqui o danger é legítimo: um órgão externo parou a fila mesmo. ✅ 28/07: RETRY AUTOMÁTICO — tenta as 3 opções do N16 em sequência (~1.4s cada), sem ação do cliente; só pede 3 novas sugestões se as 3 falharem. Mock sempre esgota as 3, pra provar o pior caso.",
       },
       {
         rota: "/assinatura",
@@ -336,25 +349,53 @@ const ARQUETIPOS: {
     ],
   },
   {
+    id: "cenario-empresa-paga",
+    nome: "🆕 Cenário alternativo · Legalizai paga o DAE",
+    descricao:
+      "✅ 28/07 (reunião Rua Satélite 9). DECISÃO TRAVADA: o cliente paga a taxa da Junta (definitiva, é o que está em todas as telas acima). Este cenário é a alternativa DOCUMENTADA — não implementada em produção — pra caso a Legalizai decida absorver o custo do DAE. Mostra só as 4 telas que MUDAM (via `?cenario=empresa-paga`); todo o resto do flow é idêntico, por isso não replica. Compare com as versões normais acima.",
+    telas: [
+      {
+        rota: "/plano?cenario=empresa-paga",
+        nome: "N7 · A conta (sem taxa)",
+        nota: "A linha 'Taxa da Junta Comercial' (R$268,51) some — vira um card dizendo 'por nossa conta'. O total no rodapé cai pra só a mensalidade.",
+      },
+      {
+        rota: "/pagamento?cenario=empresa-paga",
+        nome: "N9 · Pagamento (sem taxa)",
+        nota: "Total cobrado = só a mensalidade (`CUSTOS.MENSALIDADE`), sem somar o DAE_JUCEMG.",
+      },
+      {
+        rota: "/revisar?cenario=empresa-paga",
+        nome: "N19 · Revisar (sem taxa)",
+        nota: "O card 'Taxa da Junta (já paga)' vira 'Taxa da Junta — por nossa conta': não tem valor pra confirmar, porque o cliente nunca pagou essa parte.",
+      },
+      {
+        rota: "/termo?cenario=empresa-paga",
+        nome: "N20 · Termo (sem taxa)",
+        nota: "O argumento de irreversibilidade PERDE a base 'a taxa não volta' (o cliente nunca pagou). Item da lista, Camada 2 e o texto do checkbox de aceite mudam todos juntos.",
+      },
+    ],
+  },
+  {
     id: "portal",
     nome: "Portal interno · dia-2 (NOVO)",
     descricao:
-      "A parte interna, pós-abertura — o portal que o N24 entrega. Matriz: matriz-portal-interno.md (P0–P14, só o grátis-R$195). 1º batch: o GATE + o HUB novo + o shell LISTA + o diferencial de pagar. Ordem = a que o cliente vive: o certificado destrava tudo → a casa → os impostos → pagar. 🆕 SHELL DO PORTAL no ar: barra de abas (Início · Impostos · Notas · Pró-labore · Mais) nas telas-raiz, e seta 'voltar' no detalhe (pagar). Toque as abas dentro do iframe pra navegar. O certificado (gate) fica FORA da barra de propósito. Os demais (P4–P14) reusam estes shells + a engine do N18.",
+      "A parte interna, pós-abertura — o portal que o N24 entrega. Matriz: matriz-portal-interno.md (P0–P14, só o grátis-R$195). P0–P2 aqui são as versões mais ATUAIS (puxadas de /mockup-home, 27/07): a home dia-1 de ativação, a Campeã em montagem, e o dashboard de Impostos completo. 🆕 SHELL DO PORTAL no ar: barra de abas (Início · Impostos · Notas · Pró-labore · Mais) nas telas-raiz, e seta 'voltar' no detalhe (pagar). Toque as abas dentro do iframe pra navegar. Os demais (P4–P14) reusam estes shells + a mesma engine fiscal (`lib/fiscal`, do antigo N18, dissolvido 28/07 — a experiência completa agora só vive aqui, pós-constituição).",
     telas: [
       {
-        rota: "/certificado",
-        nome: "P0 · Certificado (gate)",
-        nota: "O gate: destrava emitir nota E acessar a Receita (provocação do Pedro 22/07). Enquanto pendente, P3/P6 ficam travados. Não é bastidor silencioso: exige validação de identidade por vídeo (pausa com ação, herdada do teto-de-automação). Reusa StatusIcon (cadeados = o que ele libera).",
+        rota: "/home-dia1",
+        nome: "P0 · Home de ativação (estado dia-1)",
+        nota: "O 2º estado da home (empresa recém-nascida: faturamento 0, Fator R projetado → o diferencial ainda não tem o que vigiar). Vira TRILHA DE ATIVAÇÃO: hero celebra o nascimento (confetti da marca) + CNPJ pill → checklist com progresso (o certificado é o passo 'agora', gate universal) → 'sem pressa com imposto' → Aprenda + Quem cuida (reuso). Transição dia-1→regime é data-driven no real.",
       },
       {
-        rota: "/inicio",
-        nome: "P1 · Home (o que fazer hoje)",
-        nota: "O HUB, o único shell novo de peso. Oposto da home-catálogo do líder: UM foco (a próxima obrigação, com a ação embutida) + 'você está em dia' + atalhos. Sem rodapé fixo (a ação mora no card-foco, doutrina K6 do painel).",
+        rota: "/home-campea",
+        nome: "P1 · ★ Campeã (em montagem)",
+        nota: "Seu canvas: os trechos que você valida entram aqui, na ordem, pra mover / manter / ajustar / remover. Começou com Saudação + Próximo compromisso (da A). Mande o print do próximo trecho e eu adiciono.",
       },
       {
         rota: "/impostos",
-        nome: "P2 · Meus impostos (lista)",
-        nota: "O shell LISTA nasce aqui (serve depois notas/relatórios/documentos). Item vivo do mês → pagar; histórico já 'pago'. Mata o flanco nº1 do líder: nada de 'confirme que pagou' — a gente acompanha.",
+        nome: "P2 · Impostos (dashboard fiscal)",
+        nota: "Onde a promessa 'o imposto você acompanha em Impostos' aterrissa. Herói = DAS do mês (valor + vence + de-onde-vem + Pagar → P3) · Vigília fiscal (diferencial) · Débito automático (toggle) · Guias anteriores com status AUTOMÁTICO (anti-líder: sem 'confirme que pagou') · Calendário fiscal → /obrigacoes. Números farol; composição = fila-Larissa.",
       },
       {
         rota: "/impostos/pagar",
@@ -382,7 +423,7 @@ const ARQUETIPOS: {
 export default function MockupPage() {
   const [nonce, setNonce] = useState(0);
   const [apId, setApId] = useState(APARELHOS[0].id);
-  // 75% é o default porque a prancheta cresceu: com 10 grupos e o flow inteiro,
+  // 75% é o default porque a prancheta cresceu: com 11 grupos e o flow inteiro,
   // 100% obriga a rolar pra ver uma esteira inteira. O zoom é da MOLDURA, não do
   // conteúdo (o iframe segue renderizando em 430pt), então nada do que o Pedro
   // revisa muda de tamanho relativo — só cabe mais na mesa.
@@ -398,12 +439,14 @@ export default function MockupPage() {
           <p className="text-micro text-text-tertiary mb-1">
             Legalizai · prancha de review
           </p>
-          <h1 className="text-h1 text-text-primary">Telas por arquétipo</h1>
+          <h1 className="text-h1 text-text-primary">Telas na ordem do flow</h1>
           <p className="text-body text-text-secondary mt-2 max-w-[60ch]">
             Cada grupo é uma esteira. Clique, segure e arraste pra passar tela
-            por tela. Os grupos estão na ordem do flow: entrada (N1–N3) primeiro,
-            depois por arquétipo. O flow inteiro está aqui, da splash à empresa
-            ativa. Falta só construir o flow #2 (migração).
+            por tela. Reorganizado 28/07: os grupos seguem a ordem REAL do flow
+            (a mesma de `flow/flow-data.mjs`), não mais por arquétipo — onde o
+            flow bifurca (veredito, triagem), o ramo entra logo depois do nó
+            que o gera. O flow inteiro está aqui, da splash à empresa ativa.
+            Falta só construir o flow #2 (migração).
           </p>
           {/* Laboratório de VERSÕES de página (todas as explorações num board). */}
           <p className="mt-3 text-caption">
@@ -468,8 +511,8 @@ export default function MockupPage() {
         </p>
 
         <div className="flex flex-col gap-6">
-          {ARQUETIPOS.map((a) => (
-            <Arquetipo
+          {GRUPOS.map((a) => (
+            <Grupo
               key={a.id}
               a={a}
               ap={ap}
@@ -485,7 +528,7 @@ export default function MockupPage() {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   ESTEIRA POR ARQUÉTIPO — telas lado a lado, scroll lateral por arrasto.
+   ESTEIRA POR GRUPO (ordem do flow) — telas lado a lado, scroll lateral por arrasto.
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /**
@@ -536,11 +579,11 @@ interface EsteiraProps {
   nonce: number;
 }
 
-function Arquetipo({
+function Grupo({
   a,
   ...rest
 }: EsteiraProps & {
-  a: (typeof ARQUETIPOS)[number];
+  a: (typeof GRUPOS)[number];
 }) {
   const dragRef = useDragScroll();
   return (
@@ -629,7 +672,10 @@ function PhoneFigure({
         >
           {perto ? (
             <Phone
-              src={`${t.rota}?v=${nonce}`}
+              // ⚠️ 28/07: rota pode JÁ ter querystring (?etapa=, ?s=, ?id=).
+              // `?v=` fixo dava dois `?` (etapa=triagem?v=0) — quebrava o
+              // parse e a tela sempre caía no default. `&` quando já tem `?`.
+              src={`${t.rota}${t.rota.includes("?") ? "&" : "?"}v=${nonce}`}
               ap={ap}
               insets={insets}
               statusClaro={t.statusClaro}

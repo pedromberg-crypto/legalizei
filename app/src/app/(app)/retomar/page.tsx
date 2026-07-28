@@ -42,14 +42,16 @@ import { ListaPassos } from "@/components/lista-passos";
  *
  * **2. Pró-labore fora de contexto assusta.** O dono de PJ parte do princípio
  * de que todo o faturamento é dele — o conceito de "se pagar um salário" é
- * contraintuitivo, e o N18 gasta uma tela inteira pra construí-lo, com slider,
- * simulação e memória de cálculo aberta. Jogar isso numa tela de reorientação,
- * sem contexto e sem nenhuma ação possível, é criar dúvida e não dar saída.
+ * contraintuitivo. Jogar isso numa tela de reorientação, sem contexto e sem
+ * nenhuma ação possível, é criar dúvida e não dar saída.
  *
- * ✅ **Onde passa a viver:** no **N18**, que é onde o número mora, onde o
- * conceito é explicado e onde ele pode mexer no valor. A revalidação continua
- * acontecendo em toda re-entrada; só o AVISO mudou de endereço.
- * 🚧 O N18 ainda não implementa isso — ver `simulador/page.tsx`.
+ * ⚠️ 28/07: o N18 (simulador dedicado, com slider) foi DISSOLVIDO do wizard —
+ * gerava mais dúvida que clareza antes de a empresa existir. O número agora
+ * é só uma SUGESTÃO dentro do card "Seu enquadramento" no **N19**, com aviso
+ * de que pode ser ajustado depois da constituição. Onde o conceito é
+ * explicado de verdade e ele pode mexer no valor é **pós-constituição, no
+ * app** (aba Impostos > Pró-labore, `/pro-labore`, mesma engine `lib/fiscal`).
+ * A revalidação (UX-23) acontece lá, não mais numa tela de retomada do wizard.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 

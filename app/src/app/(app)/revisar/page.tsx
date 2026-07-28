@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { TelaHeader, Titulo, Corpo, Rodape } from "@/components/ui/tela";
@@ -11,7 +12,7 @@ import { brl } from "@/lib/fiscal";
  * N19 — REVISAR O DOSSIÊ  ·  arquétipo A5 (recap) · shell APP (pago)
  * ═══════════════════════════════════════════════════════════════════════════
  * Spec: execucao/spec-telas-b3-b4-aterrissagem.md → Tela 20 (o "revisar e
- * confirmar" de lib/passos) · vem depois do N18, antes do N20 irreversível.
+ * confirmar" de lib/passos) · vem depois do N16, antes do N20 irreversível.
  *
  * ─── POR QUE ESTA TELA EXISTE ───────────────────────────────────────────────
  * O N20 é IRREVERSÍVEL (taxa de governo não volta). Ninguém deve cruzar essa
@@ -21,10 +22,12 @@ import { brl } from "@/lib/fiscal";
  * É LEITURA, não formulário: cada bloco tem um "ajustar" que volta pro passo
  * de origem. A confiança vem de ele reconhecer o que digitou, não de redigitar.
  *
- * ⚠️ Os números fiscais entram com CARIMBO de estimativa (UX-26) e derivam do
- * que foi escolhido no N18 — nunca um valor novo inventado aqui. A única quantia
- * DURA é a taxa da Junta (R$ 268,51, ME, fiscal-simples-bh-2026 🟢); o resto é
- * estimativa até o contador confirmar.
+ * ⚠️ 28/07: o enquadramento NÃO é mais escolhido manualmente num simulador
+ * (N18) antes de a empresa existir — é SUGERIDO aqui a partir do que foi
+ * preenchido (CNAE + faixa de faturamento), com carimbo de estimativa
+ * (UX-26) e mensagem explícita de refino pós-constituição. A única quantia
+ * DURA é a taxa da Junta (R$ 268,51, ME, fiscal-simples-bh-2026 🟢); o resto
+ * é estimativa até o contador confirmar.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -45,7 +48,12 @@ const DOSSIE = {
     ],
   },
   enquadramento: {
-    // Derivado do N18. Estimativa, não fato.
+    // ⚠️ 28/07: sugerido a partir do que a pessoa preencheu (CNAE + faixa de
+    // faturamento), não mais escolhido num simulador manual antes de existir
+    // empresa. Estimativa, refinada de verdade só depois da constituição
+    // (aba Impostos > Pró-labore, mesma engine).
+    anexo: "III",
+    aliquota: 6,
     proLabore: 3600,
     economiaMes: 940,
   },
@@ -54,6 +62,10 @@ const DOSSIE = {
 
 export default function RevisarPage() {
   const d = DOSSIE;
+  // 🆕 28/07: ?cenario=empresa-paga é a alternativa DOCUMENTADA (não a
+  // definitiva) — ver nota completa em /plano.
+  const searchParams = useSearchParams();
+  const empresaPaga = searchParams.get("cenario") === "empresa-paga";
   return (
     <>
       <TelaHeader meta="Revisar" />
@@ -91,29 +103,67 @@ export default function RevisarPage() {
             ))}
           </Bloco>
 
-          {/* K10: no review final o trabalho é CONFERIR fato, não revender. O
-              pró-labore é o que ELA escolheu (fato a confirmar); a economia é
-              projeção e já apareceu antes (N5/N17/N18). Some daqui, e sem número
-              estimado a tela não precisa do carimbo. */}
-          <Bloco titulo="Quanto você se paga" passo="Quanto você se paga">
-            <Linha rotulo="Por mês" valor={brl(d.enquadramento.proLabore)} />
-          </Bloco>
+          {/* ⚠️ 28/07: virou CARD de SUGESTÃO, não recap de escolha manual — o
+              N18 (simulador interativo) saiu do caminho obrigatório pré-
+              constituição. A gente já escolhe o melhor enquadramento com o
+              que foi preenchido (CNAE + faixa); o pró-labore some como PILL
+              dentro do mesmo card, com o aviso de que isso é refinado de
+              verdade só depois que a empresa nascer (aba Impostos, mesma
+              engine do N18). */}
+          <Card>
+            <div className="mb-2 flex items-center justify-between gap-3">
+              <h2 className="text-body font-semibold text-text-primary">
+                Seu enquadramento
+              </h2>
+              <span className="shrink-0 rounded-full bg-surface-tint-brand px-2.5 py-1 text-micro font-semibold text-action-primary-sm">
+                ✨ Sugestão
+              </span>
+            </div>
+            <p className="text-caption text-text-secondary mb-3">
+              Já escolhemos o melhor enquadramento pra você, com base no que
+              você preencheu.
+            </p>
+            <div className="flex flex-col gap-1.5">
+              <Linha rotulo="Regime" valor={`Simples Nacional · Anexo ${d.enquadramento.anexo} (${d.enquadramento.aliquota}%)`} />
+              <Linha rotulo="Quanto você se paga por mês" valor={brl(d.enquadramento.proLabore)} />
+            </div>
+            <p className="text-micro text-text-tertiary mt-3">
+              Esse número é uma estimativa. Depois que a empresa nascer, a
+              gente lapida ele com você de verdade (é o Pró-labore, na aba
+              Impostos).
+            </p>
+          </Card>
 
           {/* A taxa dura como LINHA de recap: ela já foi paga no N9 e o N7 já é
               o dono da explicação (repasse de governo). Aqui não re-argumenta
-              (R2), só confirma o valor dentro do que ela está conferindo. */}
+              (R2), só confirma o valor dentro do que ela está conferindo.
+              🆕 28/07: no cenário empresa-paga não tem valor pra confirmar —
+              o cliente nunca pagou essa parte. */}
           <Card>
-            <div className="flex items-baseline justify-between">
-              <span className="text-body font-semibold text-text-primary">
-                Taxa da Junta (já paga)
-              </span>
-              <span className="text-body font-semibold text-text-primary">
-                {brl(d.taxaJunta)}
-              </span>
-            </div>
-            <p className="text-micro text-text-tertiary mt-1">
-              Repasse ao governo, já incluído no que você pagou.
-            </p>
+            {empresaPaga ? (
+              <>
+                <span className="text-body font-semibold text-text-primary">
+                  Taxa da Junta — por nossa conta
+                </span>
+                <p className="text-micro text-text-tertiary mt-1">
+                  Você não paga essa parte. A gente cobre direto com o governo.
+                </p>
+              </>
+            ) : (
+              <>
+                <div className="flex items-baseline justify-between">
+                  <span className="text-body font-semibold text-text-primary">
+                    Taxa da Junta (já paga)
+                  </span>
+                  <span className="text-body font-semibold text-text-primary">
+                    {brl(d.taxaJunta)}
+                  </span>
+                </div>
+                <p className="text-micro text-text-tertiary mt-1">
+                  Repasse ao governo, já incluído no que você pagou.
+                </p>
+              </>
+            )}
           </Card>
         </Corpo>
 

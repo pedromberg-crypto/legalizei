@@ -1,6 +1,11 @@
-import type { ReactNode } from "react";
+"use client";
+
+import { useState, type ReactNode } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Logo } from "@/components/logo";
 import { Lottie } from "@/components/lottie";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -35,9 +40,107 @@ import { Lottie } from "@/components/lottie";
  * aqui é menor que 18,66px bold, e sobre coral-600 daria 4,04:1 (falha AA em
  * texto normal). A regra travada em 12/07 diz que texto menor exige fill mais
  * escuro. É o mesmo motivo do variant `primarySm` do Button.
+ *
+ * ─── 🆕 GATE DE CIDADE (28/07, reunião Rua Satélite 9) ──────────────────────
+ * MLP só atende Belo Horizonte/MG — nenhum outro município ainda. "Abrir" e
+ * "já tenho empresa" passam por uma confirmação de cidade ANTES de navegar
+ * (mesma tela, 2º passo — não é rota nova, é etapa). "Entrar na conta" pula
+ * o gate: quem já é cliente já passou por isso. Fora de BH → saída graciosa
+ * dedicada (`/saida/fora-bh`), mesmo template A9 das outras saídas.
+ *
+ * Migrar (flow #2) confirma a cidade igual, mas não tem pra onde navegar
+ * ainda (flow #2 não construído) — mostra um estado "em breve" honesto em
+ * vez de 404 ou clique morto.
  * ═══════════════════════════════════════════════════════════════════════════
  */
+
+type Intencao = "abrir" | "migrar";
+
 export default function EntradaPage() {
+  const router = useRouter();
+  // ⚠️ 28/07: deep-link pro passo 2 (mesmo padrão do /gate?etapa=) — sem
+  // isso o /mockup só conseguia mostrar o passo 1 do gate de cidade.
+  const searchParams = useSearchParams();
+  const intencaoParam = searchParams.get("intencao");
+  const intencaoInicial: Intencao | null =
+    intencaoParam === "abrir" || intencaoParam === "migrar" ? intencaoParam : null;
+  const [intencao, setIntencao] = useState<Intencao | null>(intencaoInicial);
+  const [migrarEmBreve, setMigrarEmBreve] = useState(false);
+
+  function escolher(i: Intencao) {
+    setIntencao(i);
+  }
+
+  function confirmarCidade(bh: boolean) {
+    if (!bh) {
+      router.push("/saida/fora-bh");
+      return;
+    }
+    if (intencao === "abrir") {
+      router.push("/gate");
+    } else {
+      // Flow #2 não construído — estado honesto, sem clique morto nem 404.
+      setMigrarEmBreve(true);
+    }
+  }
+
+  // ─── PASSO 2: confirma cidade (só depois de escolher abrir/migrar) ───────
+  if (intencao) {
+    return (
+      <>
+        <header className="pt-6 pb-2">
+          <Logo className="h-8 w-auto" />
+        </header>
+        <main className="app-main">
+          <div className="flex-1 min-h-0 flex flex-col justify-center">
+            {migrarEmBreve ? (
+              <Card>
+                <h2 className="text-h2 mb-1">Essa parte ainda não existe</h2>
+                <p className="text-body text-text-secondary">
+                  Migrar de contador é um fluxo que ainda estamos construindo.
+                  Fala com a gente no WhatsApp que a gente te ajuda na mão
+                  enquanto isso.
+                </p>
+              </Card>
+            ) : (
+              <>
+                <h1 className="text-h1 mb-2">Onde fica a sua empresa?</h1>
+                <p className="text-body text-text-secondary mb-6">
+                  Hoje a gente só abre em Belo Horizonte/MG — é a fase de
+                  testes do produto.
+                </p>
+                <div className="flex gap-2">
+                  <Button full onClick={() => confirmarCidade(true)}>
+                    Sim, é em BH
+                  </Button>
+                  <Button
+                    full
+                    variant="secondary"
+                    onClick={() => confirmarCidade(false)}
+                  >
+                    Não é em BH
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
+          {!migrarEmBreve && (
+            <div className="app-footer-cta">
+              <Button
+                full
+                variant="ghost"
+                onClick={() => setIntencao(null)}
+              >
+                Voltar
+              </Button>
+            </div>
+          )}
+        </main>
+      </>
+    );
+  }
+
+  // ─── PASSO 1: as 3 rotas ──────────────────────────────────────────────────
   return (
     <>
       <header className="pt-6 pb-2">
@@ -84,15 +187,20 @@ export default function EntradaPage() {
             icone={<Mais />}
             titulo="Quero abrir minha empresa"
             sub="Ainda não tenho CNPJ. Quero começar do zero."
+            onClick={() => escolher("abrir")}
           />
           <Escolha
             icone={<Predio />}
             titulo="Já tenho empresa"
             sub="Tenho CNPJ e quero que vocês cuidem da contabilidade."
+            onClick={() => escolher("migrar")}
           />
           <p className="text-caption text-text-tertiary mt-5 text-center">
             Já é cliente?{" "}
-            <button className="font-semibold text-text-primary underline underline-offset-4">
+            <button
+              onClick={() => router.push("/login")}
+              className="font-semibold text-text-primary underline underline-offset-4"
+            >
               Entrar na minha conta
             </button>
           </p>
@@ -114,14 +222,17 @@ function Escolha({
   titulo,
   sub,
   destaque = false,
+  onClick,
 }: {
   icone: ReactNode;
   titulo: string;
   sub: string;
   destaque?: boolean;
+  onClick?: () => void;
 }) {
   return (
     <button
+      onClick={onClick}
       className={`mt-3 flex w-full items-start gap-4 rounded-lg p-4 text-left
                   transition-colors ${
                     destaque

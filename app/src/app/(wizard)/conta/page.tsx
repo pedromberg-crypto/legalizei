@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { TelaHeader, Titulo, Corpo, Rodape } from "@/components/ui/tela";
 import { Campo, Texto } from "@/components/ui/form";
@@ -15,6 +16,15 @@ import { IconeApple, IconeGoogle } from "@/components/marcas-sociais";
  * A primeira tela depois do teaser (N5). O lead viu a prova, agora dá o nome.
  * Sai daqui com **credencial funcionando** — não é "cadastro", é conta: se ele
  * fechar o app no N7 e voltar amanhã, o progresso está lá.
+ *
+ * ─── ⚠️ FRONT-LOAD DE DADOS PESSOAIS (28/07, reunião Rua Satélite 9) ────────
+ * Decisão travada: nome completo, CPF, telefone e endereço migram PRA CÁ —
+ * antes só viviam no N10 (pós-pagamento). Motivo: captar tudo num lugar só,
+ * com validação obrigatória por e-mail/SMS logo na entrada. O N10 deixa de
+ * coletar do zero e vira tela de CONFIRMAÇÃO do que já veio daqui.
+ *
+ * 🚧 Mock: CEP autofill e validação de código são dublados, mesmo padrão do
+ * resto do wizard (sem provider real ainda).
  *
  * ─── 🔴 O AVISO DO GOV.BR SAIU DAQUI (19/07) — e por quê ──────────────────
  * A tela nasceu com um bloco avisando que a assinatura no N23 exige conta
@@ -55,17 +65,115 @@ import { IconeApple, IconeGoogle } from "@/components/marcas-sociais";
  *    abrir empresa.
  * ═══════════════════════════════════════════════════════════════════════════
  */
+
+function mascaraCpf(v: string) {
+  const d = v.replace(/\D/g, "").slice(0, 11);
+  return d
+    .replace(/(\d{3})(\d)/, "$1.$2")
+    .replace(/(\d{3})(\d)/, "$1.$2")
+    .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+}
+function mascaraTelefone(v: string) {
+  const d = v.replace(/\D/g, "").slice(0, 11);
+  return d
+    .replace(/(\d{2})(\d)/, "($1) $2")
+    .replace(/(\d{5})(\d{1,4})$/, "$1-$2");
+}
+function mascaraCep(v: string) {
+  const d = v.replace(/\D/g, "").slice(0, 8);
+  return d.replace(/(\d{5})(\d)/, "$1-$2");
+}
+
+interface EnderecoCep {
+  logradouro: string;
+  bairro: string;
+  municipio: string;
+  uf: string;
+}
+// 🚧 Mock do autofill por CEP — mesmo padrão do N13 (sem API real ainda).
+function buscarCep(cepDigitos: string): EnderecoCep | null {
+  if (cepDigitos.length !== 8) return null;
+  return {
+    logradouro: "Rua dos Timbiras",
+    bairro: "Funcionários",
+    municipio: "Belo Horizonte",
+    uf: "MG",
+  };
+}
+
 export default function ContaPage() {
+  const router = useRouter();
+  const [etapa, setEtapa] = useState<"form" | "codigo">("form");
+  const [codigo, setCodigo] = useState("");
+
+  const [nome, setNome] = useState("");
+  const [cpf, setCpf] = useState("");
+  const [telefone, setTelefone] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [cep, setCep] = useState("");
+  const [numero, setNumero] = useState("");
   const [coorte, setCoorte] = useState<"primeira" | "ja-abri" | null>(null);
 
+  const nomeOk = nome.trim().split(/\s+/).length >= 2;
+  const cpfCheio = cpf.replace(/\D/g, "").length === 11;
+  const telefoneCheio = telefone.replace(/\D/g, "").length >= 10;
+  const cepDigitos = cep.replace(/\D/g, "");
+  const cepCheio = cepDigitos.length === 8;
+  const endereco = buscarCep(cepDigitos);
+
+  const completo =
+    nomeOk &&
+    cpfCheio &&
+    telefoneCheio &&
+    /@/.test(email) &&
+    senha.length >= 8 &&
+    cepCheio &&
+    numero.trim() !== "";
+
+  // ─── ETAPA 2: validação obrigatória por e-mail/SMS (28/07) ────────────────
+  if (etapa === "codigo") {
+    return (
+      <>
+        <TelaHeader meta="Confirme seu acesso" />
+        <main className="app-main">
+          <Titulo sub={`Mandamos um código de 6 dígitos pro ${email || "seu e-mail"} e por SMS.`}>
+            Digite o código
+          </Titulo>
+          <Corpo>
+            <Campo rotulo="Código de verificação">
+              <Texto
+                valor={codigo}
+                onChange={(v) => setCodigo(v.replace(/\D/g, "").slice(0, 6))}
+                placeholder="000000"
+                inputMode="numeric"
+              />
+            </Campo>
+            <p className="text-micro text-text-tertiary">
+              Não chegou? Confere o spam ou pede um novo em 30s.
+            </p>
+          </Corpo>
+          <Rodape>
+            <Button
+              full
+              disabled={codigo.length !== 6}
+              onClick={() => router.push("/plano")}
+            >
+              Confirmar
+            </Button>
+          </Rodape>
+        </main>
+      </>
+    );
+  }
+
+  // ─── ETAPA 1: formulário (front-load 28/07) ────────────────────────────────
   return (
     <>
       <TelaHeader meta="Sua conta" />
 
       <main className="app-main">
-        <Titulo sub="Assim seu progresso fica salvo. Você pode sair e voltar quando quiser, do jeito que parou.">
+        <Titulo sub="Assim seu progresso fica salvo, e a gente já adianta o que precisa pra Junta.">
           Vamos criar seu acesso
         </Titulo>
 
@@ -89,6 +197,34 @@ export default function ContaPage() {
             <span className="h-px flex-1 bg-border-hairline" />
           </div>
 
+          <Campo rotulo="Nome completo">
+            <Texto
+              valor={nome}
+              onChange={setNome}
+              placeholder="Como está no seu documento"
+              erro={nome.length > 0 && !nomeOk ? "Escreva o nome completo." : undefined}
+            />
+          </Campo>
+
+          <div className="grid grid-cols-2 gap-3">
+            <Campo rotulo="CPF">
+              <Texto
+                valor={cpf}
+                onChange={(v) => setCpf(mascaraCpf(v))}
+                placeholder="000.000.000-00"
+                inputMode="numeric"
+              />
+            </Campo>
+            <Campo rotulo="Telefone">
+              <Texto
+                valor={telefone}
+                onChange={(v) => setTelefone(mascaraTelefone(v))}
+                placeholder="(31) 90000-0000"
+                inputMode="tel"
+              />
+            </Campo>
+          </div>
+
           <Campo rotulo="Seu e-mail">
             <Texto
               valor={email}
@@ -107,6 +243,31 @@ export default function ContaPage() {
               placeholder="••••••••"
             />
           </Campo>
+
+          {/* 🆕 Endereço — mesmo autofill do N13, front-load 28/07. */}
+          <Campo rotulo="Seu CEP" dica="A gente puxa o resto do endereço.">
+            <Texto
+              valor={cep}
+              onChange={(v) => setCep(mascaraCep(v))}
+              placeholder="00000-000"
+              inputMode="numeric"
+            />
+          </Campo>
+          {endereco && (
+            <>
+              <div className="-mt-3 rounded-md border border-border-hairline bg-surface-alt px-3 py-2.5 text-caption text-text-secondary">
+                {endereco.logradouro}, {endereco.bairro} — {endereco.municipio}/{endereco.uf}
+              </div>
+              <div className="-mt-3 w-24">
+                <Texto
+                  valor={numero}
+                  onChange={setNumero}
+                  placeholder="Nº"
+                  inputMode="numeric"
+                />
+              </div>
+            </>
+          )}
 
           {/* ───── UX-48: coorte. Dado puro, opcional, sem rótulo ───── */}
           <div>
@@ -135,7 +296,9 @@ export default function ContaPage() {
         </Corpo>
 
         <Rodape>
-          <Button full>Criar minha conta</Button>
+          <Button full disabled={!completo} onClick={() => setEtapa("codigo")}>
+            Criar minha conta
+          </Button>
           <p className="text-micro text-text-tertiary mt-3 text-center">
             Criar conta é de graça. Você só paga quando decidir abrir.
           </p>

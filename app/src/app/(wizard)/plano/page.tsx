@@ -1,3 +1,6 @@
+"use client";
+
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { TelaHeader, Titulo, Corpo, Rodape } from "@/components/ui/tela";
@@ -70,10 +73,19 @@ import { CUSTOS, brl } from "@/lib/fiscal";
  *
  * 💸 O preço é PLACEHOLDER declarado (ver `CUSTOS.MENSALIDADE`). A tela marca
  * isso na cara — número provisório sem aviso é como número sem fonte.
+ *
+ * ─── 🆕 CENÁRIO ALTERNATIVO — `?cenario=empresa-paga` (28/07) ───────────────
+ * DECISÃO TRAVADA: o cliente paga a taxa da Junta (do jeito que já está
+ * acima) — é a versão DEFINITIVA. Este `?cenario=` é só a alternativa
+ * DOCUMENTADA/opcional (Legalizai absorve o custo do DAE): a taxa some da
+ * conta, o cliente só vê a mensalidade. Não é a versão em produção — existe
+ * pra comparar as duas sem duplicar a tela inteira.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function PlanoPage() {
-  const hoje = CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
+  const searchParams = useSearchParams();
+  const empresaPaga = searchParams.get("cenario") === "empresa-paga";
+  const hoje = empresaPaga ? CUSTOS.MENSALIDADE : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
 
   return (
     <>
@@ -131,20 +143,32 @@ export default function PlanoPage() {
               pegadinha que esta tela existe pra evitar. Fica legível, com a
               explicação colada, em peso de LINHA e não de herói.
               Com centavos porque o cliente confere contra a guia. */}
-          <div className="rounded-md border border-border-hairline bg-surface-card p-4">
-            <div className="flex items-baseline justify-between gap-3">
+          {empresaPaga ? (
+            <div className="rounded-md border border-border-hairline bg-surface-tint-brand p-4">
               <p className="text-body font-semibold text-text-primary">
-                Taxa da Junta Comercial
+                Taxa da Junta Comercial — por nossa conta
               </p>
-              <span className="shrink-0 text-body font-semibold text-text-primary">
-                {brl(CUSTOS.DAE_JUCEMG, true)}
-              </span>
+              <p className="text-caption text-text-secondary mt-1">
+                Diferente da maioria, a gente cobre essa taxa pra você. Não
+                entra na sua conta.
+              </p>
             </div>
-            <p className="text-caption text-text-secondary mt-1">
-              Cobrada uma vez, e vai direto pro Estado: a gente não fica com
-              nada. Você pagaria essa taxa abrindo com qualquer um.
-            </p>
-          </div>
+          ) : (
+            <div className="rounded-md border border-border-hairline bg-surface-card p-4">
+              <div className="flex items-baseline justify-between gap-3">
+                <p className="text-body font-semibold text-text-primary">
+                  Taxa da Junta Comercial
+                </p>
+                <span className="shrink-0 text-body font-semibold text-text-primary">
+                  {brl(CUSTOS.DAE_JUCEMG, true)}
+                </span>
+              </div>
+              <p className="text-caption text-text-secondary mt-1">
+                Cobrada uma vez, e vai direto pro Estado: a gente não fica com
+                nada. Você pagaria essa taxa abrindo com qualquer um.
+              </p>
+            </div>
+          )}
         </Corpo>
 
         {/* ═══ O TOTAL — no rodapé, junto da decisão ═══

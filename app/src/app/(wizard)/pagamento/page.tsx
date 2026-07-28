@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
 import { Campo, Texto } from "@/components/ui/form";
@@ -78,9 +79,13 @@ const METODOS: {
 ];
 
 export default function PagamentoPage() {
+  const searchParams = useSearchParams();
+  const empresaPaga = searchParams.get("cenario") === "empresa-paga";
   const [cpf, setCpf] = useState("");
   const [metodo, setMetodo] = useState<Metodo>("cartao");
-  const total = CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
+  // 🆕 28/07: ?cenario=empresa-paga é a alternativa DOCUMENTADA (não a
+  // definitiva) — a Legalizai absorve o DAE, o cliente paga só a mensalidade.
+  const total = empresaPaga ? CUSTOS.MENSALIDADE : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
   const escolhido = METODOS.find((m) => m.id === metodo)!;
 
   return (

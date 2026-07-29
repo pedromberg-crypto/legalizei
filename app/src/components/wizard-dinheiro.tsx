@@ -1,0 +1,1321 @@
+"use client";
+
+import { useState, type ReactNode } from "react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
+import { Campo, Texto, Checkbox } from "@/components/ui/form";
+import { IconeApple, IconeGoogle } from "@/components/marcas-sociais";
+import { Logo } from "@/components/logo";
+import { CUSTOS, brl } from "@/lib/fiscal";
+
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * B3 · A TRAVESSIA DO DINHEIRO (N6→N9) — as telas, FONTE ÚNICA
+ * ═══════════════════════════════════════════════════════════════════════════
+ * ⚠️ EXTRAÍDO das pages `(wizard)/conta|plano|contrato|pagamento` em 29/07,
+ * mesmo padrão de `EntradaView` e `gate-telas`: a `/apresentacao` renderiza a
+ * tela APROVADA, não uma cópia. Cópia diverge em silêncio.
+ *
+ * Estado por props (controlado) pra a demo conseguir preencher com 1 clique
+ * sem duplicar tela. As pages de produção seguem donas da navegação.
+ *
+ * O racional de cada tela continua documentado na respectiva page.
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+
+/* ═══════════════════ N6 · CRIAR CONTA ═══════════════════════════════════ */
+
+export function mascaraCpf(v: string) {
+  const d = v.replace(/\D/g, "").slice(0, 11);
+  return d
+    .replace(/(\d{3})(\d)/, "$1.$2")
+    .replace(/(\d{3})(\d)/, "$1.$2")
+    .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+}
+export function mascaraTelefone(v: string) {
+  const d = v.replace(/\D/g, "").slice(0, 11);
+  return d.replace(/(\d{2})(\d)/, "($1) $2").replace(/(\d{5})(\d{1,4})$/, "$1-$2");
+}
+export function mascaraCep(v: string) {
+  const d = v.replace(/\D/g, "").slice(0, 8);
+  return d.replace(/(\d{5})(\d)/, "$1-$2");
+}
+
+interface EnderecoCep {
+  logradouro: string;
+  bairro: string;
+  municipio: string;
+  uf: string;
+}
+/** 🚧 Mock do autofill por CEP — mesmo padrão do N13 (sem API real ainda). */
+export function buscarCep(cepDigitos: string): EnderecoCep | null {
+  if (cepDigitos.length !== 8) return null;
+  return {
+    logradouro: "Rua dos Timbiras",
+    bairro: "Funcionários",
+    municipio: "Belo Horizonte",
+    uf: "MG",
+  };
+}
+
+export type DadosConta = {
+  nome: string;
+  cpf: string;
+  telefone: string;
+  email: string;
+  senha: string;
+  cep: string;
+  numero: string;
+  coorte: "primeira" | "ja-abri" | null;
+  codigo: string;
+};
+
+export function ContaView({
+  d,
+  set,
+  etapa,
+  onCriarConta,
+  onConfirmar,
+  onVoltar,
+  layout = "classico",
+}: {
+  d: DadosConta;
+  set: <K extends keyof DadosConta>(k: K, v: DadosConta[K]) => void;
+  /** `form` = os dados; `codigo` = validação obrigatória (front-load 28/07). */
+  etapa: "form" | "codigo";
+  onCriarConta: () => void;
+  onConfirmar: () => void;
+  /** UX-60: seta de voltar (a demo navega por estado). */
+  onVoltar?: () => void;
+  /**
+   * 🔓 UX-71 (29/07) — `painel` recria o N6 com o layout do LOGIN: painel
+   * escuro que sangra (marca + saudação) + folha clara sobreposta com o
+   * formulário. Default `classico` mantém a tela aprovada intacta.
+   */
+  layout?: "classico" | "painel";
+}) {
+  if (layout === "painel" && etapa === "form") {
+    return <ContaPainel d={d} set={set} onCriarConta={onCriarConta} onVoltar={onVoltar} />;
+  }
+  const nomeOk = d.nome.trim().split(/\s+/).length >= 2;
+  const cpfCheio = d.cpf.replace(/\D/g, "").length === 11;
+  const telefoneCheio = d.telefone.replace(/\D/g, "").length >= 10;
+  const cepDigitos = d.cep.replace(/\D/g, "");
+  const cepCheio = cepDigitos.length === 8;
+  const endereco = buscarCep(cepDigitos);
+
+  const completo =
+    nomeOk &&
+    cpfCheio &&
+    telefoneCheio &&
+    /@/.test(d.email) &&
+    d.senha.length >= 8 &&
+    cepCheio &&
+    d.numero.trim() !== "";
+
+  if (etapa === "codigo") {
+    return (
+      <>
+        <TelaHeader meta="Confirme seu acesso" onVoltar={onVoltar} />
+        <main className="app-main">
+          <Titulo sub={`Mandamos um código de 6 dígitos pro ${d.email || "seu e-mail"} e por SMS.`}>
+            Digite o código
+          </Titulo>
+          <Corpo>
+            <Campo rotulo="Código de verificação">
+              <Texto
+                valor={d.codigo}
+                onChange={(v) => set("codigo", v.replace(/\D/g, "").slice(0, 6))}
+                placeholder="000000"
+                inputMode="numeric"
+              />
+            </Campo>
+            <p className="text-micro text-text-tertiary">
+              Não chegou? Confere o spam ou pede um novo em 30s.
+            </p>
+          </Corpo>
+          <Rodape>
+            <Button full disabled={d.codigo.length !== 6} onClick={onConfirmar}>
+              Confirmar
+            </Button>
+          </Rodape>
+        </main>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <TelaHeader meta="Sua conta" onVoltar={onVoltar} />
+      <main className="app-main">
+        <Titulo sub="Assim seu progresso fica salvo, e a gente já adianta o que precisa pra Junta.">
+          Vamos criar seu acesso
+        </Titulo>
+
+        <Corpo>
+          {/* Social primeiro: caminho de menos atrito, e quem tem Google não
+              precisa inventar mais uma senha. */}
+          <div className="flex flex-col gap-2">
+            <Button variant="secondary" full>
+              <IconeGoogle />
+              Continuar com o Google
+            </Button>
+            <Button variant="secondary" full>
+              <IconeApple />
+              Continuar com a Apple
+            </Button>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <span className="h-px flex-1 bg-border-hairline" />
+            <span className="text-micro text-text-tertiary">ou com e-mail</span>
+            <span className="h-px flex-1 bg-border-hairline" />
+          </div>
+
+          <Campo rotulo="Nome completo">
+            <Texto
+              valor={d.nome}
+              onChange={(v) => set("nome", v)}
+              placeholder="Como está no seu documento"
+              erro={d.nome.length > 0 && !nomeOk ? "Escreva o nome completo." : undefined}
+            />
+          </Campo>
+
+          <div className="grid grid-cols-2 gap-3">
+            <Campo rotulo="CPF">
+              <Texto
+                valor={d.cpf}
+                onChange={(v) => set("cpf", mascaraCpf(v))}
+                placeholder="000.000.000-00"
+                inputMode="numeric"
+              />
+            </Campo>
+            <Campo rotulo="Telefone">
+              <Texto
+                valor={d.telefone}
+                onChange={(v) => set("telefone", mascaraTelefone(v))}
+                placeholder="(31) 90000-0000"
+                inputMode="tel"
+              />
+            </Campo>
+          </div>
+
+          <Campo rotulo="Seu e-mail">
+            <Texto
+              valor={d.email}
+              onChange={(v) => set("email", v)}
+              type="email"
+              inputMode="email"
+              placeholder="voce@email.com.br"
+            />
+          </Campo>
+
+          <Campo rotulo="Crie uma senha" dica="No mínimo 8 caracteres.">
+            <Texto
+              valor={d.senha}
+              onChange={(v) => set("senha", v)}
+              type="password"
+              placeholder="••••••••"
+            />
+          </Campo>
+
+          {/* 🆕 Endereço — mesmo autofill do N13, front-load 28/07. */}
+          <Campo rotulo="Seu CEP" dica="A gente puxa o resto do endereço.">
+            <Texto
+              valor={d.cep}
+              onChange={(v) => set("cep", mascaraCep(v))}
+              placeholder="00000-000"
+              inputMode="numeric"
+            />
+          </Campo>
+          {endereco && (
+            <>
+              <div className="-mt-3 rounded-md border border-border-hairline bg-surface-alt px-3 py-2.5 text-caption text-text-secondary">
+                {endereco.logradouro}, {endereco.bairro} — {endereco.municipio}/{endereco.uf}
+              </div>
+              <div className="-mt-3 w-24">
+                <Texto
+                  valor={d.numero}
+                  onChange={(v) => set("numero", v)}
+                  placeholder="Nº"
+                  inputMode="numeric"
+                />
+              </div>
+            </>
+          )}
+
+          {/* ───── UX-48: coorte. Dado puro, opcional, sem rótulo ───── */}
+          <div>
+            <p className="text-caption font-semibold text-text-primary">
+              É a primeira empresa que você abre?
+            </p>
+            <p className="text-micro text-text-tertiary mt-0.5">
+              Só pra gente entender quem usa o app. Não muda nada no seu
+              processo, e dá pra pular.
+            </p>
+            <div className="mt-2 flex gap-2">
+              <BotaoCoorte on={d.coorte === "primeira"} onClick={() => set("coorte", "primeira")}>
+                É a primeira
+              </BotaoCoorte>
+              <BotaoCoorte on={d.coorte === "ja-abri"} onClick={() => set("coorte", "ja-abri")}>
+                Já abri antes
+              </BotaoCoorte>
+            </div>
+          </div>
+        </Corpo>
+
+        <Rodape>
+          <Button full disabled={!completo} onClick={onCriarConta}>
+            Criar minha conta
+          </Button>
+          <p className="text-micro text-text-tertiary mt-3 text-center">
+            Criar conta é de graça. Você só paga quando decidir abrir.
+          </p>
+        </Rodape>
+      </main>
+    </>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   🔓 UX-71 · N6 com o layout do LOGIN (2 painéis)
+   ─────────────────────────────────────────────────────────────────────────
+   O login é a ÚNICA tela com essa estrutura, e ela existe pra marcar "aqui é
+   outro lugar: você está entrando em casa, não no meio de um processo". Trazer
+   pro N6 faz sentido porque criar conta é o irmão do entrar — e é a primeira
+   vez no flow que a pessoa ganha credencial.
+
+   ⚠️ DIFERENÇA QUE IMPORTA (e é o motivo de não ser cópia literal):
+   · No login a folha clara é `shrink-0` e NÃO rola — são 2 campos. Aqui são 7
+     + a coorte, então a folha é a região rolável e o CTA vai pro rodapé fixo
+     (thumb zone). Copiar o `shrink-0` estouraria a tela no iPhone SE.
+   · O login usa placeholder COMO rótulo ("é a exceção que só o login
+     justifica", diz o comentário lá). Aqui os campos têm formato (CPF, CEP,
+     telefone) e são 7: mantive o `aria-label` em cada um pra não perder
+     acessibilidade quando o placeholder some ao digitar (UX-48).
+   ───────────────────────────────────────────────────────────────────────── */
+function ContaPainel({
+  d,
+  set,
+  onCriarConta,
+  onVoltar,
+}: {
+  d: DadosConta;
+  set: <K extends keyof DadosConta>(k: K, v: DadosConta[K]) => void;
+  onCriarConta: () => void;
+  onVoltar?: () => void;
+}) {
+  /**
+   * 🔓 UX-72 — cadastro por Google/Apple. O provedor já entrega nome e e-mail
+   * (e o Apple pode entregar um e-mail de relay), então repetir esses campos é
+   * pedir o que a gente já tem. Ao conectar, a tela passa a mostrar **só o que
+   * falta**: CPF, telefone e endereço, que nenhum provedor fornece.
+   * `null` = ainda não conectou (cadastro por e-mail).
+   */
+  const [social, setSocial] = useState<"google" | "apple" | null>(null);
+
+  function conectar(provedor: "google" | "apple") {
+    setSocial(provedor);
+    // 🚧 Mock do retorno do provedor. No real vem do OAuth.
+    set("nome", "Ana Beatriz Ramos");
+    set("email", provedor === "apple" ? "ana.b@privaterelay.appleid.com" : "ana.beatriz@gmail.com");
+    // Senha não existe em conta social: satisfaz a regra sem pedir nada.
+    set("senha", "__social__");
+  }
+
+  const nomeOk = d.nome.trim().split(/\s+/).length >= 2;
+  const cpfCheio = d.cpf.replace(/\D/g, "").length === 11;
+  const telefoneCheio = d.telefone.replace(/\D/g, "").length >= 10;
+  const cepDigitos = d.cep.replace(/\D/g, "");
+  const endereco = buscarCep(cepDigitos);
+  /**
+   * 🔓 UX-73 — a coorte virou OBRIGATÓRIA (inclusive no cadastro social).
+   * ⚠️ Contraria a decisão UX-48, que a definiu como "dado puro, pulável sem
+   * custo" — o racional lá era não cobrar fricção por algo que não muda nada
+   * no fluxo. Pedido do Pedro em 29/07: pulável demais enviesa o dado. Fica
+   * deslinkado até ele confirmar contra o UX-48.
+   */
+  const completo =
+    nomeOk &&
+    cpfCheio &&
+    telefoneCheio &&
+    /@/.test(d.email) &&
+    d.senha.length >= 8 &&
+    cepDigitos.length === 8 &&
+    d.numero.trim() !== "" &&
+    d.coorte !== null;
+
+  return (
+    <main className="app-main">
+      {/* PAINEL ESCURO — sangra nos 3 lados, mesma mecânica do login: a margem
+          negativa desfaz o padding do shell pra COR chegar na borda do vidro,
+          e o padding devolve a inset pro CONTEÚDO. */}
+      <div
+        className="-mx-6 shrink-0 px-7 pb-14"
+        style={{
+          marginTop: "calc(-1 * var(--safe-top))",
+          paddingTop: "calc(var(--safe-top) + 1.5rem)",
+          backgroundColor: "var(--color-surface-dark)",
+          backgroundImage:
+            "radial-gradient(120% 80% at 15% 0%, color-mix(in srgb, var(--color-brand) 22%, transparent), transparent 60%)",
+        }}
+      >
+        {/* Logo CENTRALIZADO; a seta fica absoluta pra não deslocar o centro. */}
+        <div className="relative flex items-center justify-center">
+          {onVoltar && (
+            <button
+              onClick={onVoltar}
+              aria-label="Voltar"
+              className="absolute left-0 flex h-7 w-7 items-center justify-center rounded-md text-text-on-dark/70 transition-colors hover:text-text-on-dark"
+            >
+              <SetaVoltarPainel />
+            </button>
+          )}
+          <Logo variante="escura" className="h-8 w-auto shrink-0" />
+        </div>
+
+        <div className="mt-10">
+          <h1 className="text-h1 text-text-on-dark">Vamos criar seu acesso.</h1>
+          <p className="text-caption text-text-on-dark/70 mt-1.5">
+            Assim seu progresso fica salvo, e a gente já adianta o que precisa
+            pra Junta.
+          </p>
+        </div>
+      </div>
+
+      {/* FOLHA CLARA — sobrepõe o painel (o canto arredondado "monta" na cor).
+          Diferente do login, ela ROLA: é a região elástica da tela. */}
+      <div className="-mx-6 -mt-5 flex min-h-0 flex-1 flex-col overflow-y-auto rounded-t-xl bg-surface-page px-7 pt-7 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {/* 🔓 UX-72 — conectado por Google/Apple: nome e e-mail vêm do provedor,
+            então em vez de repetir os campos a tela CONFIRMA quem entrou e pede
+            só o que falta. */}
+        {social && (
+          <div className="mb-4 flex items-center gap-3 rounded-lg border border-border-hairline bg-surface-card p-3">
+            <span className="shrink-0">
+              {social === "google" ? <IconeGoogle /> : <IconeApple />}
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-caption font-semibold text-text-primary">{d.nome}</p>
+              <p className="truncate text-micro text-text-tertiary">{d.email}</p>
+            </div>
+            <button
+              onClick={() => {
+                setSocial(null);
+                set("nome", "");
+                set("email", "");
+                set("senha", "");
+              }}
+              className="shrink-0 text-micro font-semibold text-text-secondary underline underline-offset-4"
+            >
+              Trocar
+            </button>
+          </div>
+        )}
+
+        {/* Um campo por linha: CPF e telefone lado a lado cortavam o valor
+            mascarado (000.000.000-00 não cabe em meia largura no SE). */}
+        <div className="flex flex-col gap-3.5">
+          {!social && (
+            <CampoIconeConta icone={<IconePessoaConta />}>
+              <input
+                value={d.nome}
+                onChange={(e) => set("nome", e.target.value)}
+                placeholder="Nome completo"
+                aria-label="Nome completo"
+                autoComplete="name"
+                className="min-h-12 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
+              />
+            </CampoIconeConta>
+          )}
+
+          <CampoIconeConta icone={<IconeDoc />}>
+            <input
+              value={d.cpf}
+              onChange={(e) => set("cpf", mascaraCpf(e.target.value))}
+              placeholder="CPF"
+              aria-label="CPF"
+              inputMode="numeric"
+              className="min-h-12 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
+            />
+          </CampoIconeConta>
+
+          <CampoIconeConta icone={<IconeTelefone />}>
+            <input
+              value={d.telefone}
+              onChange={(e) => set("telefone", mascaraTelefone(e.target.value))}
+              placeholder="Telefone"
+              aria-label="Telefone"
+              inputMode="tel"
+              className="min-h-12 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
+            />
+          </CampoIconeConta>
+
+          {!social && (
+            <>
+              <CampoIconeConta icone={<IconeEmailConta />}>
+                <input
+                  value={d.email}
+                  onChange={(e) => set("email", e.target.value)}
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  placeholder="E-mail"
+                  aria-label="E-mail"
+                  className="min-h-12 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
+                />
+              </CampoIconeConta>
+
+              <CampoIconeConta icone={<IconeCadeadoConta />}>
+                <input
+                  value={d.senha}
+                  onChange={(e) => set("senha", e.target.value)}
+                  type="password"
+                  autoComplete="new-password"
+                  placeholder="Senha (mín. 8 caracteres)"
+                  aria-label="Senha"
+                  className="min-h-12 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
+                />
+              </CampoIconeConta>
+            </>
+          )}
+
+          <CampoIconeConta icone={<IconeLocal />}>
+            <input
+              value={d.cep}
+              onChange={(e) => set("cep", mascaraCep(e.target.value))}
+              placeholder="CEP"
+              aria-label="CEP"
+              inputMode="numeric"
+              autoComplete="postal-code"
+              className="min-h-12 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
+            />
+          </CampoIconeConta>
+
+          {/* Endereço em LINHA PRÓPRIA, sem truncate: cortar o logradouro
+              esconde justamente o que a pessoa precisa conferir. O número vem
+              abaixo, com largura inteira. */}
+          {endereco && (
+            <>
+              <div className="rounded-lg bg-surface-alt px-4 py-3">
+                <p className="text-caption text-text-secondary">
+                  {endereco.logradouro}, {endereco.bairro}
+                </p>
+                <p className="text-caption text-text-secondary">
+                  {endereco.municipio}/{endereco.uf}
+                </p>
+              </div>
+              <CampoIconeConta>
+                <input
+                  value={d.numero}
+                  onChange={(e) => set("numero", e.target.value)}
+                  placeholder="Número"
+                  aria-label="Número"
+                  inputMode="numeric"
+                  className="min-h-12 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
+                />
+              </CampoIconeConta>
+            </>
+          )}
+        </div>
+
+        {/* 🔓 UX-73 — coorte OBRIGATÓRIA, inclusive no cadastro social.
+            ⚠️ Contraria o UX-48 ("dado puro, pulável sem custo"). Ver a nota
+            no cálculo de `completo`, acima. */}
+        <div className="mt-6">
+          <p className="text-caption font-semibold text-text-primary">
+            É a primeira empresa que você abre?
+          </p>
+          <p className="text-micro text-text-tertiary mt-0.5">
+            Ajuda a gente a te acompanhar do jeito certo.
+          </p>
+          <div className="mt-2 flex gap-2">
+            <BotaoCoorte on={d.coorte === "primeira"} onClick={() => set("coorte", "primeira")}>
+              É a primeira
+            </BotaoCoorte>
+            <BotaoCoorte on={d.coorte === "ja-abri"} onClick={() => set("coorte", "ja-abri")}>
+              Já abri antes
+            </BotaoCoorte>
+          </div>
+        </div>
+
+        {/* Social só faz sentido antes de conectar. */}
+        {!social && (
+          <>
+            <div className="my-6 flex items-center gap-3">
+              <span className="h-px flex-1 bg-border-hairline" />
+              <span className="text-micro text-text-tertiary">ou crie com</span>
+              <span className="h-px flex-1 bg-border-hairline" />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <Button variant="secondary" onClick={() => conectar("google")}>
+                <IconeGoogle />
+                Google
+              </Button>
+              <Button variant="secondary" onClick={() => conectar("apple")}>
+                <IconeApple />
+                Apple
+              </Button>
+            </div>
+          </>
+        )}
+
+        <div className="h-6 shrink-0" />
+      </div>
+
+      {/* CTA no rodapé (thumb zone). No login ele mora dentro da folha porque
+          lá nada rola; aqui rolaria pra fora da vista. */}
+      <Rodape>
+        <Button full disabled={!completo} onClick={onCriarConta}>
+          Criar minha conta
+        </Button>
+        <p className="text-micro text-text-tertiary mt-3 text-center">
+          Criar conta é de graça. Você só paga quando decidir abrir.
+        </p>
+      </Rodape>
+    </main>
+  );
+}
+
+/** Campo com ícone à esquerda — colhido do login. `icone` opcional (o Nº não tem). */
+function CampoIconeConta({ icone, children }: { icone?: ReactNode; children: ReactNode }) {
+  return (
+    <label className="flex items-center gap-3 rounded-lg border border-border-hairline bg-surface-card px-4 transition-colors focus-within:border-border-focus">
+      {icone && <span className="shrink-0 text-text-muted">{icone}</span>}
+      {children}
+    </label>
+  );
+}
+
+function ic20() {
+  return {
+    width: 20,
+    height: 20,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 2,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    "aria-hidden": true,
+  };
+}
+function SetaVoltarPainel() {
+  return <svg {...ic20()} width={18} height={18}><path d="m15 18-6-6 6-6" /></svg>;
+}
+function IconePessoaConta() {
+  return <svg {...ic20()}><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 4-6 8-6s8 2 8 6" /></svg>;
+}
+function IconeDoc() {
+  return <svg {...ic20()}><path d="M7 3h7l4 4v14H7z" /><path d="M14 3v4h4" /><path d="M10 13h5M10 17h3" /></svg>;
+}
+function IconeTelefone() {
+  return <svg {...ic20()}><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z" /></svg>;
+}
+function IconeEmailConta() {
+  return <svg {...ic20()}><rect x="2" y="4" width="20" height="16" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg>;
+}
+function IconeCadeadoConta() {
+  return <svg {...ic20()}><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>;
+}
+function IconeLocal() {
+  return <svg {...ic20()}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z" /><circle cx="12" cy="10" r="3" /></svg>;
+}
+
+/**
+ * Local, não DS: parece o `OpcoesLinha` do dossiê, mas aqui **desmarcar é
+ * válido** (a pergunta é opcional) e nenhuma validação depende da resposta.
+ */
+function BotaoCoorte({
+  on,
+  onClick,
+  children,
+}: {
+  on: boolean;
+  onClick: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      aria-pressed={on}
+      className={`min-h-12 flex-1 rounded-md border px-3 text-body transition-colors ${
+        on
+          ? "border-action-primary bg-action-primary font-semibold text-text-on-brand"
+          : "border-border-hairline bg-surface-card text-text-secondary hover:bg-surface-alt"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
+/* ═══════════════════ N7 · A CONTA DA ABERTURA ═══════════════════════════ */
+
+export function PlanoView({
+  empresaPaga = false,
+  onSeguir,
+  onVoltar,
+  layout = "classico",
+}: {
+  /** `?cenario=empresa-paga`: alternativa DOCUMENTADA (a Legalizai absorve o
+      DAE). A definitiva é o cliente pagar, como está por padrão. */
+  empresaPaga?: boolean;
+  onSeguir?: () => void;
+  onVoltar?: () => void;
+  /** 🔓 UX-74 — `oferta` é a versão vendedora (ver `PlanoOferta`). */
+  layout?: "classico" | "oferta";
+}) {
+  const hoje = empresaPaga ? CUSTOS.MENSALIDADE : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
+
+  if (layout === "oferta") {
+    return <PlanoOferta empresaPaga={empresaPaga} onSeguir={onSeguir} onVoltar={onVoltar} />;
+  }
+
+  return (
+    <>
+      <TelaHeader meta="A conta da abertura" onVoltar={onVoltar} />
+      <main className="app-main">
+        <Titulo sub="Tudo que você vai pagar, num lugar só. Sem letra miúda depois.">
+          Quanto custa abrir
+        </Titulo>
+
+        <Corpo>
+          {/* ═══ HERÓI 1 — O GRÁTIS ═══ */}
+          <Card tom="sucesso">
+            <p className="text-caption text-state-success-text mb-1">Abrir a sua empresa</p>
+            <div className="flex items-center gap-2.5">
+              <CheckGrande />
+              <p className="text-display text-state-success-text">Grátis</p>
+            </div>
+            <p className="text-caption text-text-secondary mt-2">
+              Documentos, junta comercial, CNPJ e Simples Nacional. A gente não
+              cobra honorário nenhum pra abrir.
+            </p>
+          </Card>
+
+          {/* ═══ HERÓI 2 — O QUE ELE DE FATO COMPRA ═══ */}
+          <Card>
+            <p className="text-caption text-text-secondary mb-1">Depois, todo mês</p>
+            <p className="text-display text-text-primary">{brl(CUSTOS.MENSALIDADE)}</p>
+            <p className="text-caption text-text-secondary mt-2">
+              Suas guias todo mês, notas fiscais, obrigações do governo e
+              contador de verdade pra falar. Certificado digital incluso.
+            </p>
+            <p className="text-micro text-text-tertiary mt-2">
+              a 1ª mensalidade já é o seu 1º mês
+            </p>
+          </Card>
+
+          {/* ═══ A TAXA — honesta, sem holofote ═══ */}
+          {empresaPaga ? (
+            <div className="rounded-md border border-border-hairline bg-surface-tint-brand p-4">
+              <p className="text-body font-semibold text-text-primary">
+                Taxa da Junta Comercial — por nossa conta
+              </p>
+              <p className="text-caption text-text-secondary mt-1">
+                Diferente da maioria, a gente cobre essa taxa pra você. Não
+                entra na sua conta.
+              </p>
+            </div>
+          ) : (
+            <div className="rounded-md border border-border-hairline bg-surface-card p-4">
+              <div className="flex items-baseline justify-between gap-3">
+                <p className="text-body font-semibold text-text-primary">
+                  Taxa da Junta Comercial
+                </p>
+                <span className="shrink-0 text-body font-semibold text-text-primary">
+                  {brl(CUSTOS.DAE_JUCEMG, true)}
+                </span>
+              </div>
+              <p className="text-caption text-text-secondary mt-1">
+                Cobrada uma vez, e vai direto pro Estado: a gente não fica com
+                nada. Você pagaria essa taxa abrindo com qualquer um.
+              </p>
+            </div>
+          )}
+        </Corpo>
+
+        {/* ═══ O TOTAL — no rodapé, junto da decisão ═══ */}
+        <Rodape>
+          <div className="mb-3 flex items-baseline justify-between gap-3">
+            <span className="text-caption text-text-secondary">Você paga hoje</span>
+            <span className="text-h2 text-text-primary">{brl(hoje, true)}</span>
+          </div>
+          <Button full onClick={onSeguir}>
+            Continuar
+          </Button>
+        </Rodape>
+      </main>
+    </>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   🔓 UX-74 · N7 VERSÃO OFERTA — a tela mais comercial do flow
+   ─────────────────────────────────────────────────────────────────────────
+   A versão clássica responde "quanto custa?" com honestidade, mas não VENDE:
+   dois cards e uma linha de taxa. Esta versão mantém as regras duras e trabalha
+   a conversão.
+
+   ⚠️ O QUE **NÃO** MUDOU, porque é regra travada:
+   · Os 3 baldes seguem separados: grátis (honorário) · taxa de governo
+     (repasse) · mensalidade (recorrente). Nunca misturar.
+   · "Grátis" = **honorário zero, não governo zero**. A taxa da Junta continua
+     visível, com o valor, e o total do dia continua conferível no rodapé.
+     Esconder viraria a pegadinha que esta tela existe pra evitar.
+   · Preço é **placeholder declarado** (`CUSTOS.MENSALIDADE`, marcado FAKE no
+     lib/fiscal): a tela avisa, porque número provisório sem aviso é igual a
+     número sem fonte.
+   · Nada de contagem regressiva, vaga limitada ou desconto inventado. Escassez
+     falsa numa tela de contabilidade queima a confiança que os 22 anos do
+     escritório constroem.
+
+   O QUE ESTA VERSÃO ADICIONA:
+   · **Âncora real**: abertura em escritório tradicional custa honorário, e o
+     nosso é zero. É comparação verdadeira, não preço riscado inventado.
+   · **O plano vira produto**: card único com o que está incluso, item a item,
+     em linguagem de dono (escopo espelhado do benchmark de mercado).
+   · **FAQ que desarma objeção** no lugar onde ela nasce: fidelidade, o que
+     acontece se cancelar, por que a taxa existe.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/** O que a mensalidade inclui. Espelha o escopo do benchmark de mercado
+    (plano de referência), em linguagem de dono e sem jargão fiscal. */
+const INCLUSO: { titulo: string; sub: string }[] = [
+  { titulo: "Abertura completa do CNPJ", sub: "Junta, Receita, Simples e inscrição municipal." },
+  { titulo: "Certificado digital", sub: "Incluso, sem custo extra." },
+  { titulo: "Imposto calculado e guia pronta", sub: "Todo mês, sem você fazer conta." },
+  { titulo: "Notas fiscais sem limite", sub: "Emite pelo app, em segundos." },
+  { titulo: "Declarações no prazo", sub: "As obrigações do governo são por nossa conta." },
+  { titulo: "Pró-labore de até 2 sócios", sub: "Calculado junto com o seu imposto." },
+  { titulo: "Contador de verdade", sub: "Uma pessoa com nome, no WhatsApp." },
+];
+
+/**
+ * Honorário de abertura numa contabilidade tradicional, usado no comparativo.
+ *
+ * **R$ 1.621,00 = o salário mínimo vigente** (valor do Pedro, 29/07). A régua
+ * de mercado é essa: escritório tradicional costuma cobrar em torno de um
+ * salário mínimo pra abrir. Não é média estatística, é referência de mercado —
+ * e a tela diz exatamente isso, sem fingir precisão que o número não tem.
+ *
+ * ⚠️ O mesmo R$ 1.621 aparece no flow como salário mínimo (pró-labore). Se o
+ * mínimo mudar, este número **não** deve acompanhar sozinho: aqui ele é âncora
+ * de preço de serviço, lá é base de cálculo. Coincidem hoje, por escolha.
+ */
+const HONORARIO_TRADICIONAL = 1621;
+
+const FAQ: { p: string; r: string }[] = [
+  {
+    p: "Se a abertura é grátis, onde está a pegadinha?",
+    r: "Não tem. A gente não cobra honorário pra abrir porque ganha na mensalidade depois. O que você paga hoje é a taxa da Junta Comercial, que vai inteira pro Estado.",
+  },
+  {
+    p: "Por que existe um período mínimo?",
+    r: "Porque a abertura sai de graça. O período mínimo é o que torna isso possível: sem ele, teríamos que cobrar o honorário lá na frente.",
+  },
+  {
+    p: "E se eu desistir?",
+    r: "Você tem 7 dias pra mudar de ideia e receber tudo de volta, inclusive a taxa, desde que a empresa ainda não tenha sido aberta.",
+  },
+  {
+    p: "A mensalidade muda depois?",
+    r: "O valor acompanha o seu faturamento. Se a empresa crescer muito, a gente conversa antes, nunca cobra surpresa.",
+  },
+];
+
+function PlanoOferta({
+  empresaPaga,
+  onSeguir,
+  onVoltar,
+}: {
+  empresaPaga: boolean;
+  onSeguir?: () => void;
+  onVoltar?: () => void;
+}) {
+  const hoje = empresaPaga ? CUSTOS.MENSALIDADE : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
+  const [aberta, setAberta] = useState<number | null>(null);
+
+  return (
+    <>
+      <TelaHeader meta="A conta da abertura" onVoltar={onVoltar} />
+      <main className="app-main">
+        <Titulo sub="Tudo que você vai pagar, num lugar só. Sem letra miúda depois.">
+          Quanto custa abrir
+        </Titulo>
+
+        <Corpo>
+          {/* HERÓI — o grátis é o argumento mais forte do produto, e a âncora
+              é verdadeira: abrir em escritório tradicional custa honorário. */}
+          <Card tom="sucesso">
+            <p className="text-caption text-state-success-text">
+              Nosso honorário de abertura
+            </p>
+            <div className="mt-1 flex items-center gap-2.5">
+              <CheckGrande />
+              <p className="text-display text-state-success-text">Grátis</p>
+            </div>
+            {/* ⚠️ A copy NÃO pode listar "Junta" aqui: a taxa da Junta é cobrada
+                logo abaixo. O que é grátis é o nosso TRABALHO, não o repasse ao
+                Estado. Dizer "Junta por nossa conta" e cobrar a taxa depois é a
+                contradição que esta tela existe pra evitar. */}
+            <p className="text-caption text-text-secondary mt-2">
+              Todo o trabalho de abrir é por nossa conta: documentação, contrato
+              social, protocolo, CNPJ e enquadramento no Simples.
+            </p>
+          </Card>
+
+          {/* O PLANO COMO PRODUTO — card único (só existe 1 plano no MLP). */}
+          <div className="overflow-hidden rounded-2xl bg-surface-dark text-text-on-dark">
+            <div className="px-5 pt-5">
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-caption text-text-on-dark/70">Depois, todo mês</p>
+                <span className="rounded-full bg-white/15 px-2.5 py-1 text-micro font-bold">
+                  Plano único
+                </span>
+              </div>
+              <div className="mt-1 flex items-baseline gap-1.5">
+                <p className="text-display font-bold">{brl(CUSTOS.MENSALIDADE)}</p>
+                <span className="text-body text-text-on-dark/70">/mês</span>
+              </div>
+              <p className="text-micro text-text-on-dark/60 mt-1">
+                a 1ª mensalidade já é o seu 1º mês
+              </p>
+            </div>
+
+            <div className="mt-4 flex flex-col gap-3 px-5 pb-5">
+              {INCLUSO.map((i) => (
+                <div key={i.titulo} className="flex items-start gap-2.5">
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-state-success text-text-on-dark">
+                    <CheckMiniPlano />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-caption font-semibold">{i.titulo}</p>
+                    <p className="text-micro text-text-on-dark/60">{i.sub}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* A TAXA — honesta, com valor, sem holofote. Regra dura: o repasse
+              de governo NUNCA se esconde dentro do preço. */}
+          {empresaPaga ? (
+            <div className="rounded-2xl border border-border-hairline bg-surface-tint-brand p-4">
+              <p className="text-body font-semibold text-text-primary">
+                Taxa da Junta Comercial, por nossa conta
+              </p>
+              <p className="text-caption text-text-secondary mt-1">
+                Diferente da maioria, a gente cobre essa taxa pra você. Não
+                entra na sua conta.
+              </p>
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
+              <div className="flex items-baseline justify-between gap-3">
+                <p className="text-body font-semibold text-text-primary">
+                  Taxa da Junta Comercial
+                </p>
+                <span className="shrink-0 text-body font-semibold text-text-primary">
+                  {brl(CUSTOS.DAE_JUCEMG, true)}
+                </span>
+              </div>
+              <p className="text-caption text-text-secondary mt-1">
+                Cobrada uma vez, e vai direto pro Estado: a gente não fica com
+                nada. Você pagaria essa taxa abrindo com qualquer um.
+              </p>
+            </div>
+          )}
+
+          {/* COMPARATIVO — fecha a conta. Vem DEPOIS da taxa de propósito: só
+              faz sentido comparar quando a pessoa já viu tudo que paga, e é
+              aqui que fica evidente que a taxa é igual nos dois caminhos e o
+              que muda é só o honorário. */}
+          <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
+            <p className="text-body font-semibold text-text-primary">
+              O que você economiza abrindo aqui
+            </p>
+            <div className="mt-3 flex flex-col gap-2.5">
+              <div className="flex items-baseline justify-between gap-3">
+                <span className="text-caption text-text-secondary">
+                  Contabilidade tradicional
+                </span>
+                <span className="shrink-0 text-body font-semibold text-text-tertiary line-through">
+                  {brl(HONORARIO_TRADICIONAL)}
+                </span>
+              </div>
+              <div className="flex items-baseline justify-between gap-3">
+                <span className="text-caption font-semibold text-text-primary">Aqui</span>
+                <span className="shrink-0 text-h2 font-bold text-state-success-text">
+                  R$ 0
+                </span>
+              </div>
+              <div className="mt-1 border-t border-border-hairline pt-2.5">
+                <p className="text-caption text-text-secondary">
+                  A taxa da Junta acima é a mesma nos dois casos. O que muda é o
+                  honorário: lá se paga, aqui não.
+                </p>
+              </div>
+            </div>
+            <p className="text-micro text-text-tertiary mt-3">
+              Referência de mercado: abrir com contador costuma custar em torno
+              de um salário mínimo de honorário.
+            </p>
+          </div>
+
+          {/* FAQ — a objeção respondida onde ela nasce. */}
+          <div>
+            <p className="text-body font-semibold text-text-primary mb-2">
+              Perguntas que todo mundo faz
+            </p>
+            <div className="overflow-hidden rounded-2xl border border-border-hairline bg-surface-card">
+              {FAQ.map((f, i) => {
+                const on = aberta === i;
+                return (
+                  <div key={f.p} className={i > 0 ? "border-t border-border-hairline" : ""}>
+                    <button
+                      onClick={() => setAberta(on ? null : i)}
+                      aria-expanded={on}
+                      className="flex w-full items-center justify-between gap-3 px-4 py-3.5 text-left"
+                    >
+                      <span className="text-caption font-semibold text-text-primary">{f.p}</span>
+                      <span className="shrink-0 text-text-tertiary">
+                        {on ? <IconeMenos /> : <IconeMais />}
+                      </span>
+                    </button>
+                    {on && (
+                      <p className="px-4 pb-3.5 text-caption text-text-secondary">{f.r}</p>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* QUEM ESTÁ DO OUTRO LADO — o diferencial que nenhum concorrente
+              digital tem. Vale mais aqui do que qualquer selo inventado. */}
+          <div className="flex items-center gap-3 rounded-2xl bg-surface-tint-brand p-4">
+            <span className="shrink-0 text-action-primary">
+              <IconeEscudo />
+            </span>
+            <p className="text-caption text-text-secondary">
+              Por trás do app tem um escritório de contabilidade com{" "}
+              <strong className="text-text-primary">22 anos em Belo Horizonte</strong>. Não
+              é robô, e você fala com uma pessoa.
+            </p>
+          </div>
+
+          {/* Preço é placeholder declarado: número provisório sem aviso é igual
+              a número sem fonte. */}
+          <p className="text-micro text-text-tertiary">
+            Valores de referência enquanto fechamos o preço final.
+          </p>
+        </Corpo>
+
+        <Rodape>
+          <div className="mb-3 flex items-baseline justify-between gap-3">
+            <span className="text-caption text-text-secondary">Você paga hoje</span>
+            <span className="text-h2 text-text-primary">{brl(hoje, true)}</span>
+          </div>
+          <Button full onClick={onSeguir}>
+            Continuar
+          </Button>
+        </Rodape>
+      </main>
+    </>
+  );
+}
+
+function CheckMiniPlano() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="m5 12 4 4 8-9" />
+    </svg>
+  );
+}
+function IconeMais() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+      <path d="M12 5v14M5 12h14" />
+    </svg>
+  );
+}
+function IconeMenos() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+      <path d="M5 12h14" />
+    </svg>
+  );
+}
+
+/** Check preenchido, 28px. Local: só o card do grátis usa. */
+function CheckGrande() {
+  return (
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" className="shrink-0 text-state-success" aria-hidden>
+      <circle cx="12" cy="12" r="11" fill="currentColor" />
+      <path d="m7.5 12.4 3.1 3.1 6-6.2" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+/* ═══════════════════ N8 · ACEITE DO CONTRATO ════════════════════════════ */
+
+export function ContratoView({
+  aceito,
+  setAceito,
+  onSeguir,
+  onVoltar,
+}: {
+  aceito: boolean;
+  setAceito: (v: boolean) => void;
+  onSeguir?: () => void;
+  onVoltar?: () => void;
+}) {
+  return (
+    <>
+      <TelaHeader meta="Contrato de serviço" onVoltar={onVoltar} />
+      <main className="app-main">
+        <Titulo sub="O que a gente faz por você e o que você paga.">
+          Está tudo combinado
+        </Titulo>
+
+        <Corpo>
+          {/* RESUMO HUMANO, ACIMA DO JURÍDICO. */}
+          <div>
+            <p className="text-body font-semibold text-text-primary mb-2">Em quatro linhas</p>
+            <ul className="flex flex-col gap-2">
+              <Bullet>
+                A gente abre a sua empresa sem cobrar honorário e cuida da sua
+                contabilidade todo mês.
+              </Bullet>
+              <Bullet>
+                Você paga uma mensalidade. As taxas do governo são à parte.
+              </Bullet>
+              <Bullet>
+                Como a abertura é gratuita, o plano tem um período mínimo de
+                permanência.
+              </Bullet>
+              <Bullet>
+                Nada é irreversível hoje: você tem 7 dias pra mudar de ideia e
+                receber tudo de volta.
+              </Bullet>
+            </ul>
+          </div>
+
+          <a
+            href="#"
+            className="flex min-h-12 w-full items-center justify-center rounded-md border
+                       border-border-strong bg-surface-card px-4 text-body font-semibold
+                       text-text-primary transition-colors hover:bg-surface-alt"
+          >
+            Ler o contrato completo
+          </a>
+
+          {/* QUEM ESTÁ DO OUTRO LADO — o instante do aceite é o de maior dúvida
+              sobre COM QUEM se assina. */}
+          <Card tom="marca">
+            <p className="text-body font-semibold text-text-primary mb-3">
+              Você está abrindo com um escritório de verdade
+            </p>
+            <div className="flex flex-col gap-3">
+              <Ponto
+                icone={<IconeEscudo />}
+                titulo="22 anos de estrada"
+                texto="Contabilidade em Belo Horizonte, de antes de existir app pra isso."
+              />
+              <Ponto
+                icone={<IconePessoa />}
+                titulo="Contador com nome e telefone"
+                texto="Quem cuida da sua empresa é uma pessoa, e você fala direto com ela."
+              />
+            </div>
+          </Card>
+
+          {/* CHECKBOX EXPLÍCITO: nunca pré-marcado. */}
+          <Checkbox checked={aceito} onChange={setAceito}>
+            Li e aceito o contrato de serviço da Legalizai.
+          </Checkbox>
+        </Corpo>
+
+        <Rodape>
+          <Button full disabled={!aceito} onClick={onSeguir}>
+            Aceitar e continuar
+          </Button>
+        </Rodape>
+      </main>
+    </>
+  );
+}
+
+function Ponto({ icone, titulo, texto }: { icone: ReactNode; titulo: string; texto: string }) {
+  return (
+    <div className="flex gap-3">
+      <span className="mt-0.5 shrink-0 text-action-primary">{icone}</span>
+      <div>
+        <p className="text-caption font-semibold text-text-primary">{titulo}</p>
+        <p className="text-caption text-text-secondary mt-0.5">{texto}</p>
+      </div>
+    </div>
+  );
+}
+
+function Bullet({ children }: { children: ReactNode }) {
+  return (
+    <li className="flex gap-2.5">
+      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-action-primary" />
+      <span className="text-body text-text-secondary">{children}</span>
+    </li>
+  );
+}
+
+function IconeEscudo() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+      <path d="m9 12 2 2 4-4" />
+    </svg>
+  );
+}
+function IconePessoa() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+  );
+}
+
+/* ═══════════════════ N9 · PAGAMENTO ═════════════════════════════════════ */
+
+export type Metodo = "cartao" | "pix" | "boleto";
+
+export const METODOS: { id: Metodo; nome: string; quando: string; efeito: string }[] = [
+  {
+    id: "cartao",
+    nome: "Cartão de crédito",
+    quando: "na hora",
+    efeito: "Sua abertura começa hoje mesmo, assim que o pagamento passar.",
+  },
+  {
+    id: "pix",
+    nome: "Pix",
+    quando: "em minutos",
+    efeito: "Sua abertura começa assim que o Pix cair, geralmente em minutos.",
+  },
+  {
+    id: "boleto",
+    nome: "Boleto",
+    quando: "1 a 3 dias úteis",
+    efeito:
+      "Você já entra no app e adianta tudo. A abertura em si só começa quando o boleto compensar.",
+  },
+];
+
+export function PagamentoView({
+  cpf,
+  setCpf,
+  metodo,
+  setMetodo,
+  empresaPaga = false,
+  onPagar,
+  onVoltar,
+}: {
+  cpf: string;
+  setCpf: (v: string) => void;
+  metodo: Metodo;
+  setMetodo: (m: Metodo) => void;
+  empresaPaga?: boolean;
+  onPagar?: () => void;
+  onVoltar?: () => void;
+}) {
+  const total = empresaPaga ? CUSTOS.MENSALIDADE : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
+  const escolhido = METODOS.find((m) => m.id === metodo)!;
+
+  return (
+    <>
+      <TelaHeader meta="Pagamento" onVoltar={onVoltar} />
+      <main className="app-main">
+        <Titulo sub={`${brl(total, true)} hoje, e depois ${brl(CUSTOS.MENSALIDADE)} por mês.`}>
+          Falta só isso
+        </Titulo>
+
+        <Corpo>
+          {/* CPF: cobrança + elegibilidade no mesmo campo (decisão nº 5). */}
+          <Campo
+            rotulo="Seu CPF"
+            dica="A gente confere na Receita se ele está regular pra abrir empresa."
+          >
+            <Texto
+              valor={cpf}
+              onChange={setCpf}
+              inputMode="numeric"
+              maxLength={14}
+              placeholder="000.000.000-00"
+            />
+          </Campo>
+
+          <div>
+            <p className="text-caption font-semibold text-text-primary mb-2">
+              Como você prefere pagar
+            </p>
+            <div className="flex flex-col gap-2">
+              {METODOS.map((m) => (
+                <button
+                  key={m.id}
+                  onClick={() => setMetodo(m.id)}
+                  aria-pressed={metodo === m.id}
+                  className={`flex min-h-12 items-center justify-between gap-3 rounded-md border p-4 text-left transition-colors ${
+                    metodo === m.id
+                      ? "border-action-primary bg-action-primary"
+                      : "border-border-hairline bg-surface-card hover:bg-surface-alt"
+                  }`}
+                >
+                  <span
+                    className={`text-body font-semibold ${
+                      metodo === m.id ? "text-text-on-brand" : "text-text-primary"
+                    }`}
+                  >
+                    {m.nome}
+                  </span>
+                  <span
+                    className={`text-caption ${
+                      metodo === m.id ? "text-text-on-brand/80" : "text-text-secondary"
+                    }`}
+                  >
+                    cai {m.quando}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* O EFEITO DA ESCOLHA, EM TEMPO REAL: o cliente escolhe QUANDO a
+              empresa dele começa a existir, não "meio de pagamento". */}
+          <Aviso
+            variante={metodo === "boleto" ? "warning" : "success"}
+            titulo={
+              metodo === "boleto"
+                ? "Com boleto, a abertura espera o pagamento"
+                : "Acelere seu processo"
+            }
+          >
+            {escolhido.efeito}
+          </Aviso>
+
+          {/* IDEMPOTÊNCIA VISÍVEL (UX-38): mata o medo de quem paga e some. */}
+          <p className="text-micro text-text-tertiary">
+            Você paga uma vez só, mesmo que o app feche na hora do pagamento.
+          </p>
+        </Corpo>
+
+        <Rodape>
+          <Button full onClick={onPagar}>
+            Pagar {brl(total, true)}
+          </Button>
+        </Rodape>
+      </main>
+    </>
+  );
+}

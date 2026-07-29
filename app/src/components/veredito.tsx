@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Confetti } from "@/components/confetti";
+// ⚠️ `encaixe.tsx` importa daqui, mas só `import type` (apagado no build), então
+// não há ciclo em runtime.
+import { ConteudoCnae, OutrasOpcoes, encaixeDeResultado } from "@/components/encaixe";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -137,18 +140,82 @@ export function VereditoView({
   r,
   onRefazer,
   onSeguir,
+  captura,
+  acoesConfirmacao,
+  mostrarAlternativas = false,
 }: {
   r: Resultado;
   // Opcionais: o gate passa a navegação real; o mock do /mockup não precisa.
   onRefazer?: () => void;
   onSeguir?: () => void;
+  /**
+   * 🆕 29/07 — saídas da tela de confirmação (🟡/🔴 enviado). Terminal não pode
+   * ser beco: quem entrou na lista continua sendo público e merece pra onde
+   * ir. Opcional — sem isto, o CTA único de sempre.
+   */
+  acoesConfirmacao?: {
+    label: string;
+    variante?: "primary" | "secondary" | "ghost" | "dark";
+    onClick?: () => void;
+  }[];
+  /**
+   * 🔓 UX-65 (29/07) — mostra as alternativas de CNAE no veredito 🟢, no mesmo
+   * formato do ENCAIXE. Opcional: sem isto a tela segue como a aprovada.
+   *
+   * ⚠️ Vale registrar a tensão, porque ela é real: a doutrina desta tela é
+   * "vende RECONHECIMENTO, não escolha" — quem trava o CNAE é o ENCAIXE, na
+   * tela seguinte. Antecipar a lista aqui pode fazer as duas telas parecerem a
+   * mesma pergunta feita duas vezes. Por isso as opções entram em LEITURA.
+   */
+  mostrarAlternativas?: boolean;
+  /**
+   * 🆕 29/07 — captura CONTROLADA (opcional). Sem isto, a tela segue com o
+   * estado interno de sempre e ninguém fora precisa saber que ele existe.
+   * Existe pra a `/apresentacao` conseguir "Simular validação" (preencher
+   * nome+contato e pular pra confirmação) SEM clonar a tela: cópia divergia
+   * em silêncio, que é o problema que a extração de 29/07 veio resolver.
+   */
+  captura?: {
+    nome: string;
+    setNome: (v: string) => void;
+    contato: string;
+    setContato: (v: string) => void;
+    enviado: boolean;
+    setEnviado: (v: boolean) => void;
+  };
 }) {
   const [celebrar, setCelebrar] = useState(false);
   // Captura das saídas 🟡/🔴 (spec T4 + UX-35). Hooks no topo: não podem viver
   // dentro do ramo, e o caminho feliz simplesmente não usa.
-  const [nome, setNome] = useState("");
-  const [contato, setContato] = useState("");
-  const [enviado, setEnviado] = useState(false);
+  const [nomeI, setNomeI] = useState("");
+  const [contatoI, setContatoI] = useState("");
+  const [enviadoI, setEnviadoI] = useState(false);
+  const nome = captura?.nome ?? nomeI;
+  const setNome = captura?.setNome ?? setNomeI;
+  const contato = captura?.contato ?? contatoI;
+  const setContato = captura?.setContato ?? setContatoI;
+  const enviado = captura?.enviado ?? enviadoI;
+  const setEnviado = captura?.setEnviado ?? setEnviadoI;
+
+  /**
+   * 🔓 UX-65 — troca de card no veredito 🟢. Todas as opções (recomendado +
+   * vizinhas) numa lista só, ordenada por compatibilidade. Clicar numa
+   * alternativa PROMOVE ela ao card de cima, e a antiga desce pra lista.
+   * `null` = ninguém trocou ainda → vale a de maior %.
+   */
+  const [cnaePromovido, setCnaePromovido] = useState<string | null>(null);
+  const dadosEncaixe = encaixeDeResultado(r);
+  const opcoes = [
+    {
+      humano: dadosEncaixe.recomendado.humano,
+      cnae: dadosEncaixe.recomendado.cnae,
+      adequacao: dadosEncaixe.recomendado.adequacao,
+      explica: r.explica,
+    },
+    ...dadosEncaixe.alternativas.map((a) => ({ ...a, explica: undefined as string | undefined })),
+  ].sort((a, b) => b.adequacao - a.adequacao);
+  const emCima = opcoes.find((o) => o.cnae === cnaePromovido) ?? opcoes[0];
+  const outras = opcoes.filter((o) => o.cnae !== emCima.cnae);
 
   if (r.veredito === "atende") {
     return (
@@ -156,21 +223,48 @@ export function VereditoView({
         <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <Selo tipo="sucesso" />
 
-          <Card>
-            {/* UX-05: linguagem humana ANTES do código. O leigo não decora número. */}
-            <h2 className="text-h2 mb-1">{r.humano}</h2>
-            <p className="text-body text-text-secondary mb-4">{r.explica}</p>
-            {/* O código fica como RECIBO discreto: prova de que existe um
-                enquadramento oficial, sem virar jargão na cara dele. */}
-            <div className="pt-3 border-t border-border-hairline">
-              <p className="text-micro text-text-tertiary mb-0.5">
-                Sua atividade na Receita
-              </p>
-              <p className="text-caption text-text-secondary">CNAE {r.cnae}</p>
-            </div>
-          </Card>
+          {mostrarAlternativas ? (
+            /* 🔓 UX-65 — mesmo layout do card do ENCAIXE (fonte única
+               `ConteudoCnae`). Sem borda de cor: a pill ★ + o badge de % já
+               marcam o destaque, e o verde por fora pesava demais. */
+            <Card>
+              <ConteudoCnae
+                humano={emCima.humano}
+                cnae={emCima.cnae}
+                descricao={emCima.explica}
+                cobre={emCima.cnae === r.cnae ? (r.compreende ?? []) : []}
+                adequacao={emCima.adequacao}
+                adequacaoModo="badge"
+                recomendado={emCima.cnae === opcoes[0].cnae}
+              />
+            </Card>
+          ) : (
+            <Card>
+              {/* UX-05: linguagem humana ANTES do código. O leigo não decora número. */}
+              <h2 className="text-h2 mb-1">{r.humano}</h2>
+              <p className="text-body text-text-secondary mb-4">{r.explica}</p>
+              {/* O código fica como RECIBO discreto: prova de que existe um
+                  enquadramento oficial, sem virar jargão na cara dele. */}
+              <div className="pt-3 border-t border-border-hairline">
+                <p className="text-micro text-text-tertiary mb-0.5">
+                  Sua atividade na Receita
+                </p>
+                <p className="text-caption text-text-secondary">CNAE {r.cnae}</p>
+              </div>
+            </Card>
+          )}
 
           <Detalhe r={r} />
+
+          {/* 🔓 Alternativas CLICÁVEIS: tocar promove a opção ao card de cima e
+              devolve a antiga pra lista. Mesmo componente do ENCAIXE. */}
+          {mostrarAlternativas && (
+            <OutrasOpcoes
+              alternativas={outras}
+              onEscolher={setCnaePromovido}
+              titulo="Outras opções compatíveis"
+            />
+          )}
 
           {/* UX-14: em 1 linha, o que vem agora. Sem prometer número (o N5 é
               quem promete, e em 3 modos calibrados). */}
@@ -236,24 +330,45 @@ export function VereditoView({
      fingir que existe rota nossa pra esse caso. */
   if (descarta) {
     return (
-      <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <Selo tipo="humano" />
-        <Card>
-          <h2 className="text-h2 mb-1">{r.humano}</h2>
-          <p className="text-body text-text-secondary mb-4">{r.explica}</p>
-          <div className="pt-3 border-t border-border-hairline">
-            <p className="text-micro text-text-tertiary mb-0.5">
-              Sua atividade na Receita
-            </p>
-            <p className="text-caption text-text-secondary">CNAE {r.cnae}</p>
+      <>
+        <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <Selo tipo="humano" />
+          <Card>
+            <h2 className="text-h2 mb-1">{r.humano}</h2>
+            <p className="text-body text-text-secondary mb-4">{r.explica}</p>
+            <div className="pt-3 border-t border-border-hairline">
+              <p className="text-micro text-text-tertiary mb-0.5">
+                Sua atividade na Receita
+              </p>
+              <p className="text-caption text-text-secondary">CNAE {r.cnae}</p>
+            </div>
+          </Card>
+          <p className="text-body text-text-secondary mt-4">
+            Esse tipo de atividade a gente não atende, hoje. Não é erro seu — é
+            fora do nosso escopo, e não temos um parceiro pra esse caso
+            específico. O melhor caminho é procurar um contador da sua região.
+          </p>
+        </div>
+
+        {/* Decline limpo ≠ porta fechada na cara. Sem `acoesConfirmacao` a
+            tela segue como antes (sem CTA), e a produção não muda. */}
+        {acoesConfirmacao && (
+          <div className="app-footer-cta">
+            <div className="flex flex-col gap-2">
+              {acoesConfirmacao.map((a) => (
+                <Button
+                  key={a.label}
+                  full
+                  variant={a.variante ?? "secondary"}
+                  onClick={a.onClick}
+                >
+                  {a.label}
+                </Button>
+              ))}
+            </div>
           </div>
-        </Card>
-        <p className="text-body text-text-secondary mt-4">
-          Esse tipo de atividade a gente não atende, hoje. Não é erro seu — é
-          fora do nosso escopo, e não temos um parceiro pra esse caso
-          específico. O melhor caminho é procurar um contador da sua região.
-        </p>
-      </div>
+        )}
+      </>
     );
   }
 
@@ -265,7 +380,11 @@ export function VereditoView({
     return (
       <>
         <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <Selo tipo="sucesso" />
+          {/* A frase diz o que DE FATO deu certo (a ação), não o veredito. */}
+          <Selo
+            tipo="sucesso"
+            frase={waitlist ? "Você entrou na lista" : "Seu contato chegou"}
+          />
           <Card>
             <h2 className="text-h2 mb-1">
               {waitlist ? "Pronto, você está na lista" : "Seu contato já foi"}
@@ -298,12 +417,31 @@ export function VereditoView({
           )}
         </div>
 
-        {waitlist && (
+        {/* Saídas da tela terminal. Sem `acoesConfirmacao` fica o CTA único de
+            sempre (só waitlist) — as rotas de produção não mudam. */}
+        {acoesConfirmacao ? (
           <div className="app-footer-cta">
-            <Button full variant="secondary">
-              Falar com um contador agora
-            </Button>
+            <div className="flex flex-col gap-2">
+              {acoesConfirmacao.map((a) => (
+                <Button
+                  key={a.label}
+                  full
+                  variant={a.variante ?? "secondary"}
+                  onClick={a.onClick}
+                >
+                  {a.label}
+                </Button>
+              ))}
+            </div>
           </div>
+        ) : (
+          waitlist && (
+            <div className="app-footer-cta">
+              <Button full variant="secondary">
+                Falar com um contador agora
+              </Button>
+            </div>
+          )
         )}
       </>
     );
@@ -467,7 +605,7 @@ const SELO: Record<SeloTipo, { fundo: string; texto: string; frase: string }> = 
   },
 };
 
-export function Selo({ tipo }: { tipo: SeloTipo }) {
+export function Selo({ tipo, frase }: { tipo: SeloTipo; frase?: string }) {
   const [entrou, setEntrou] = useState(false);
   useEffect(() => {
     const id = requestAnimationFrame(() => setEntrou(true));
@@ -492,7 +630,12 @@ export function Selo({ tipo }: { tipo: SeloTipo }) {
       >
         <Simbolo tipo={tipo} entrou={entrou} />
       </span>
-      <p className={`mt-3 text-body font-semibold ${s.texto}`}>{s.frase}</p>
+      {/* 🐛 FIX 29/07 — a frase era FIXA por tipo, e o tipo `sucesso` dizia
+          "Achei o seu encaixe" em TODA confirmação: quem entrava na lista de
+          espera (waitlist) via a frase do caminho feliz, que é justamente o
+          que não aconteceu com ele. Agora quem sabe o que deu certo é a tela
+          que usa o selo; sem `frase`, o default de sempre. */}
+      <p className={`mt-3 text-body font-semibold ${s.texto}`}>{frase ?? s.frase}</p>
     </div>
   );
 }

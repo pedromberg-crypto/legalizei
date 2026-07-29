@@ -153,6 +153,60 @@ function CheckVerde() {
   );
 }
 
+/**
+ * MOLDURA do 15 Pro Max SEM iframe — mesma casca visual do `Aparelho`, mas o
+ * conteúdo entra como children e roda no MESMO React tree do pai. Nasceu pra
+ * /apresentacao (28/07): lá o painel de explicação precisa reagir ao estado da
+ * tela, e iframe isola o estado. Injeta os insets como CSS vars locais, então
+ * `.app-page`/`.app-footer-cta` leem os mesmos 59/34 do board.
+ */
+export function MolduraAparelho({
+  children,
+  statusClaro = false,
+}: {
+  children: ReactNode;
+  statusClaro?: boolean;
+}) {
+  return (
+    <div
+      className="relative p-3"
+      style={{
+        width: "fit-content",
+        borderRadius: 60,
+        background: "linear-gradient(150deg, #3a3d44 0%, #16181d 45%, #2b2e35 100%)",
+        boxShadow: "0 0 0 1px rgba(255,255,255,.06) inset",
+      }}
+    >
+      <div
+        className="relative overflow-hidden bg-surface-page"
+        style={
+          {
+            width: W,
+            height: H,
+            borderRadius: 52,
+            "--safe-top": `${SAFE_TOP}px`,
+            "--safe-bottom": `${SAFE_BOTTOM}px`,
+          } as React.CSSProperties
+        }
+      >
+        {children}
+
+        <div
+          className={`pointer-events-none absolute inset-x-0 top-0 z-10 flex h-[54px] items-center justify-between px-6 ${
+            statusClaro ? "text-white" : "text-black"
+          }`}
+        >
+          <span className="text-[15px] font-semibold tracking-[-.2px]">9:41</span>
+          <span className="text-[13px]">●●●</span>
+        </div>
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex justify-center pt-[11px]">
+          <div className="h-[37px] w-[125px] rounded-full bg-black" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Aparelho({ src, statusClaro }: { src: string; statusClaro: boolean }) {
   const ref = useRef<HTMLIFrameElement>(null);
 

@@ -14,11 +14,9 @@ import {
   DasTicket,
   StatsCoral,
   ProximasObrigacoes,
-  BlogCarousel,
 } from "@/components/lab/ref5-blocks";
-import { HeroDark, EmitirPra, MovimentacoesRecentes } from "@/components/lab/ref6-blocks";
+import { HeroDark, EmitirPra } from "@/components/lab/ref6-blocks";
 import {
-  Saudacao,
   SearchServico,
   CategoriaChips,
   IndiqueGanhe,
@@ -28,13 +26,18 @@ import { ProximoCompromisso, QuemCuida } from "@/components/lab/ref9-blocks";
 import {
   ProfileRow,
   SearchMic,
-  AcoesRapidas,
   EmitirPorVoz,
   PergunteIA,
-  NotasRecentes,
 } from "@/components/lab/ref11-blocks";
 import { CategoryCircles, PromoDebito, ContaSwipe } from "@/components/lab/ref12-blocks";
 import { GuiasRecentes, SuasGuias } from "@/components/lab/impostos-blocks";
+import {
+  CabecalhoCampea,
+  AtalhosRapidos,
+  AprendaGradiente,
+  NotasRecentesMov,
+} from "@/components/lab/campea-blocks";
+import { Vigilancia } from "@/components/lab/vigilancia-blocks";
 
 /**
  * 🧩 ACERVO DE COMPONENTES VALIDADOS · a gaveta dos campeões.
@@ -68,7 +71,7 @@ export default function ComponentesPage() {
           {/* ── ref5 · agenda + ticket + blog ── */}
           <Fonte pagina="ref5 · agenda + ticket + blog" />
           <div className="flex flex-col gap-7">
-            <Item titulo="Day-strip fiscal + countdown" origem="ref5">
+            <Item titulo="Day-strip fiscal (círculo + dot embaixo)" origem="ref5 · atualizado 28/07 p/ bater com /obrigacoes">
               <DayStripFiscal />
             </Item>
             <Item titulo="DAS ticket (sem barcode, com Pix)" origem="ref5">
@@ -77,11 +80,11 @@ export default function ComponentesPage() {
             <Item titulo="Stat cards com chip coral" origem="ref5">
               <StatsCoral />
             </Item>
-            <Item titulo="Próximas obrigações (por mês)" origem="ref5">
+            <Item titulo="Próximas obrigações (timeline por dia)" origem="ref5 · atualizado 28/07 p/ bater com /obrigacoes">
               <ProximasObrigacoes />
             </Item>
-            <Item titulo="Blog carousel 'Aprenda com a gente'" origem="ref5">
-              <BlogCarousel />
+            <Item titulo="Aprenda com a gente (gradiente escuro)" origem="campea-blocks (substitui ref5)">
+              <AprendaGradiente />
             </Item>
           </div>
 
@@ -91,30 +94,27 @@ export default function ComponentesPage() {
             <Item titulo="Hero dark (seletor + número + 4 glass)" origem="ref6">
               <HeroDark boxed />
             </Item>
-            <Item titulo="Emitir pra (clientes recentes)" origem="ref6">
+            <Item titulo="Emitir pra (ativo + consumidor final + repetir última)" origem="ref6 · atualizado 28/07 p/ bater com emitir/page.tsx">
               <EmitirPra />
-            </Item>
-            <Item titulo="Movimentações recentes" origem="ref6">
-              <MovimentacoesRecentes />
             </Item>
           </div>
 
           {/* ── ref7 · saúde (busca + compromissos + promo) ── */}
           <Fonte pagina="ref7 · saúde (busca + promo + compliance)" />
           <div className="flex flex-col gap-7">
-            <Item titulo="Saudação + avatar" origem="ref7">
-              <Saudacao />
+            <Item titulo="Cabeçalho campeã (saudação + sino + pill CNPJ)" origem="campea-blocks (substitui ref7)">
+              <CabecalhoCampea />
             </Item>
-            <Item titulo="Search bar (botão dark)" origem="ref7">
+            <Item titulo="Search bar (botão dark) — superseded" origem="ref7 · perdeu o A/B em 28/07, ver 'Search bar' do ref11">
               <SearchServico />
             </Item>
-            <Item titulo="Chips de categoria" origem="ref7">
+            <Item titulo="Chips de categoria (ativo/inativo)" origem="ref7 · atualizado 28/07">
               <CategoriaChips />
             </Item>
-            <Item titulo="Card marketing 'Indique e ganhe'" origem="ref7">
+            <Item titulo="Indicar um amigo (row travada 'Em breve')" origem="ref7 · descopado 28/07, bate com mais/page.tsx">
               <IndiqueGanhe />
             </Item>
-            <Item titulo="Checklist de compliance (Sua situação)" origem="ref7">
+            <Item titulo="Veredito + streak + órgãos (Sua situação)" origem="ref7 · atualizado 28/07, virou página em mais/em-dia">
               <SuaSituacao />
             </Item>
           </div>
@@ -133,14 +133,14 @@ export default function ComponentesPage() {
           {/* ── ref11 · AI notes (página inteira aprovada) ── */}
           <Fonte pagina="ref11 · AI notes (página inteira ✓)" />
           <div className="flex flex-col gap-7">
-            <Item titulo="Profile row" origem="ref11">
+            <Item titulo="Você (row com dot verde + chevron)" origem="ref11 · atualizado 28/07 p/ bater com mais/page.tsx">
               <ProfileRow />
             </Item>
-            <Item titulo="Search bar com mic" origem="ref11">
+            <Item titulo="Search bar (sem mic, input + limpar)" origem="ref11 · atualizado 28/07 p/ bater com notas/blog/guias">
               <SearchMic />
             </Item>
-            <Item titulo="Grid de ações (card ativo)" origem="ref11">
-              <AcoesRapidas />
+            <Item titulo="Atalhos rápidos (grid + título + Ver tudo)" origem="campea-blocks (substitui ref11)">
+              <AtalhosRapidos />
             </Item>
             <Item titulo="Emitir por voz (waveform)" origem="ref11">
               <EmitirPorVoz />
@@ -148,8 +148,8 @@ export default function ComponentesPage() {
             <Item titulo="Pergunte à IA (IACA)" origem="ref11">
               <PergunteIA />
             </Item>
-            <Item titulo="Notas recentes (com tags)" origem="ref11">
-              <NotasRecentes />
+            <Item titulo="Notas recentes (ícone escuro + status dot)" origem="campea-blocks (substitui ref6+ref11)">
+              <NotasRecentesMov />
             </Item>
           </div>
 
@@ -162,7 +162,7 @@ export default function ComponentesPage() {
             <Item titulo="Promo débito automático" origem="ref12">
               <PromoDebito />
             </Item>
-            <Item titulo="Conta do imposto + swipe-to-pay" origem="ref12">
+            <Item titulo="Conta do imposto (card do carrossel)" origem="ref12 · atualizado 28/07, swipe-to-pay abandonado">
               <ContaSwipe />
             </Item>
           </div>
@@ -170,10 +170,10 @@ export default function ComponentesPage() {
           {/* ── mais · completa (sem o aviso do WhatsApp, pedido do Pedro) ── */}
           <Fonte pagina="mais · completa (com resumo)" />
           <div className="flex flex-col gap-7">
-            <Item titulo="Profile header (avatar + nome + editar)" origem="mais·completa">
+            <Item titulo="Profile header (avatar + lápis sobreposto)" origem="mais·completa · atualizado 28/07 (editar virou badge no avatar)">
               <ProfileHeader />
             </Item>
-            <Item titulo="Resumo do negócio" origem="mais·completa">
+            <Item titulo="Resumo do negócio — sem substituto único" origem="mais·completa · dividido em em-dia + relatorios (28/07)">
               <ResumoNegocio />
             </Item>
             <Item titulo="Seção como lista (rows + chevron)" origem="mais·completa">
@@ -187,7 +187,7 @@ export default function ComponentesPage() {
           {/* ── impostos · v1 (saldo + transações) ── */}
           <Fonte pagina="impostos · v1 (saldo + transações)" />
           <div className="flex flex-col gap-7">
-            <Item titulo="Guias recentes (transações com chips)" origem="impostos·v1">
+            <Item titulo="Guias recentes (StatusIcon + linha vira Link)" origem="impostos·v1 · atualizado 28/07">
               <GuiasRecentes />
             </Item>
           </div>
@@ -195,8 +195,16 @@ export default function ComponentesPage() {
           {/* ── impostos · v2 (discover — busca + lista) ── */}
           <Fonte pagina="impostos · v2 (discover)" />
           <div className="flex flex-col gap-7">
-            <Item titulo="Suas guias (lista com expandir)" origem="impostos·v2">
+            <Item titulo="Suas guias (ícone tintado, sem chevron-expandir)" origem="impostos·v2 · atualizado 28/07">
               <SuasGuias />
+            </Item>
+          </div>
+
+          {/* ── vigília fiscal (aprovada, ausente do acervo até 28/07) ── */}
+          <Fonte pagina="impostos · vigília fiscal (aprovado, live em /impostos)" />
+          <div className="flex flex-col gap-7">
+            <Item titulo="Vigília fiscal (alíquota + Fator R + alerta preditivo)" origem="vigilancia-blocks">
+              <Vigilancia />
             </Item>
           </div>
         </div>

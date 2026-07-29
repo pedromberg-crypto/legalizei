@@ -1,19 +1,23 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { DADOS } from "@/components/lab/nexo-shell";
 
 /**
  * COMPONENTES VALIDADOS DA ref6 (fintech premium dark). Fonte única.
  * O HeroDark tem `boxed`: full-bleed (header fixo da página) × card arredondado
  * (acervo, pra o overflow não cortar o topo).
+ * 28/07: EmitirPra ATUALIZADO pra bater com o ClienteBolha real de
+ * emitir/page.tsx — estado ativo/selecionado, bolha "Consumidor final",
+ * rótulo em 2 linhas e o atalho "Repetir última nota".
  */
 
+// Já ordenados por frequência de emissão (mock — o real ordena de verdade).
 const CLIENTES = [
-  { ini: "MC", nome: "Maria" },
-  { ini: "JL", nome: "João" },
-  { ini: "RS", nome: "Rita" },
-  { ini: "PA", nome: "Paulo" },
+  { id: "tf", ini: "TF", l1: "TechFlow", l2: "Software" },
+  { id: "pp", ini: "PP", l1: "Padaria", l2: "Pão Quente" },
+  { id: "mc", ini: "MC", l1: "Maria", l2: "Costa" },
+  { id: "jl", ini: "JL", l1: "João", l2: "Lima" },
 ];
 
 const MOV = [
@@ -68,26 +72,77 @@ export function HeroDark({ boxed = false }: { boxed?: boolean }) {
 
 /* ─── 2. Emitir pra (clientes recentes) ───────────────────────────────────── */
 export function EmitirPra() {
+  const [ativo, setAtivo] = useState<string | null>("pp");
   return (
     <div>
-      <Cabecalho titulo="Emitir pra" />
-      <div className="-mx-6 flex gap-3 overflow-x-auto px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <div className="flex flex-col items-center gap-1.5">
-          <span className="flex h-12 w-12 items-center justify-center rounded-full border border-border-strong text-text-secondary">
-            <Mais />
+      {/* Repetir última nota — atalho no topo, pedido do Pedro 24/07 */}
+      <button
+        type="button"
+        className="mb-3 flex w-full items-center gap-3 rounded-2xl border border-border-hairline bg-surface-card p-3 text-left transition-colors hover:border-border-strong active:bg-surface-alt"
+      >
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface-tint-brand text-action-primary-sm">
+          <Repetir />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-caption font-semibold text-text-primary">
+            Repetir última nota
           </span>
-          <span className="text-micro text-text-tertiary">Novo</span>
-        </div>
+          <span className="block truncate text-micro text-text-tertiary">
+            Padaria Pão Quente · R$ 500,00
+          </span>
+        </span>
+      </button>
+
+      <Cabecalho titulo="Emitir pra" />
+      <div className="-mx-6 flex gap-3 overflow-x-auto px-6 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <Bolha ativo={false} onClick={() => setAtivo(null)} ini={<Mais />} l1="Novo" l2="cliente" tracejado />
+        <Bolha ativo={ativo === "consumidor"} onClick={() => setAtivo("consumidor")} ini={<Pessoa />} l1="Consumidor" l2="final" />
         {CLIENTES.map((c) => (
-          <div key={c.ini} className="flex flex-col items-center gap-1.5">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-surface-alt text-caption font-bold text-text-secondary">
-              {c.ini}
-            </span>
-            <span className="text-micro text-text-tertiary">{c.nome}</span>
-          </div>
+          <Bolha key={c.id} ativo={ativo === c.id} onClick={() => setAtivo(c.id)} ini={c.ini} l1={c.l1} l2={c.l2} />
         ))}
       </div>
     </div>
+  );
+}
+
+/* Bolha de favorecido: estado ativo + rótulo sempre em 2 linhas. */
+function Bolha({
+  ativo,
+  onClick,
+  ini,
+  l1,
+  l2,
+  tracejado = false,
+}: {
+  ativo: boolean;
+  onClick: () => void;
+  ini: ReactNode;
+  l1: string;
+  l2: string;
+  tracejado?: boolean;
+}) {
+  return (
+    <button type="button" onClick={onClick} className="flex shrink-0 flex-col items-center gap-1.5" aria-pressed={ativo}>
+      <span
+        className={`flex h-12 w-12 items-center justify-center rounded-full text-caption font-bold transition-colors ${
+          ativo
+            ? "bg-action-primary text-text-on-brand"
+            : tracejado
+              ? "border border-dashed border-border-strong text-text-secondary"
+              : "bg-surface-alt text-text-secondary"
+        }`}
+      >
+        {ini}
+      </span>
+      <span className="text-center leading-tight">
+        <span className={`block whitespace-nowrap text-micro ${ativo ? "font-semibold text-text-primary" : "text-text-tertiary"}`}>
+          {l1}
+        </span>
+        <span className={`block whitespace-nowrap text-micro ${ativo ? "text-text-secondary" : "text-text-tertiary"}`}>
+          {l2}
+        </span>
+      </span>
+    </button>
   );
 }
 
@@ -170,4 +225,10 @@ function Mais() {
 }
 function Grade() {
   return <svg {...ic()}><circle cx="6" cy="6" r="1.5" /><circle cx="12" cy="6" r="1.5" /><circle cx="18" cy="6" r="1.5" /><circle cx="6" cy="12" r="1.5" /><circle cx="12" cy="12" r="1.5" /><circle cx="18" cy="12" r="1.5" /><circle cx="6" cy="18" r="1.5" /><circle cx="12" cy="18" r="1.5" /><circle cx="18" cy="18" r="1.5" /></svg>;
+}
+function Repetir() {
+  return <svg {...ic()} width={18} height={18}><path d="M3 12a9 9 0 0 1 15-6.7L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-15 6.7L3 16" /><path d="M3 21v-5h5" /></svg>;
+}
+function Pessoa() {
+  return <svg {...ic()} width={18} height={18}><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 4-6 8-6s8 2 8 6" /></svg>;
 }

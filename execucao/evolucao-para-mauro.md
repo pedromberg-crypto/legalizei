@@ -481,5 +481,32 @@ Semana que vem: reavaliar a rota do produto com essas descobertas (o dev já est
 Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 ```
 
+## Semana 29/07/2026 — uma apresentação pra vocês, e o que ela já corrigiu
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | **Apresentação pra equipe** | Montei uma tela que mostra o app **do lado do celular** e, do lado direito, a explicação de cada passo: o que aquela tela faz, **o que ela interfere na constituição da empresa** e por que pede aquele dado. Também marca **de quem é a espera** em cada momento (do cliente, nossa, ou do órgão) | 🟢 |
+| 2 | **Preenchimento com 1 clique** | Na apresentação dá pra preencher qualquer tela num toque, e escolher o cenário: caminho normal, atividade regulamentada, comércio, ou fora de escopo. Assim dá pra mostrar **o que causa cada desfecho**, não só o resultado | 🟢 |
+| 3 | **2 erros achados e corrigidos** | Preparar a apresentação expôs dois defeitos reais: (a) quem escolhia "já tenho empresa", voltava e escolhia "quero abrir" **via a tela errada**; (b) a tela de confirmação dizia *"achei o seu encaixe"* até para quem tinha entrado na **lista de espera** (onde nada foi encontrado) | 🟢 |
+| 4 | **A tela de preço ficou vendedora** | A tela que mostra quanto custa era honesta mas fraca. Agora o plano vira **produto**: lista do que está incluso, perguntas frequentes que respondem as objeções reais (*"onde está a pegadinha?"*, *"por que fidelidade?"*) e um **comparativo** com o que se paga de honorário numa contabilidade tradicional | 🟢 |
+| 5 | **Cidade validada de verdade** | Quem não é de BH entra numa lista de espera que agora **pergunta qual é a cidade**, com a lista oficial dos 5.570 municípios do IBGE. Sem isso a fila era só um monte de e-mail; agora dá pra saber **pra onde vale expandir** | 🟢 |
+| 6 | **Padrão visual reconciliado** | O acervo de componentes tinha ficado desatualizado em relação às telas reais. Reconciliei, e as telas agora são **peça única**: o que muda no app muda na apresentação, sem risco de mostrar algo que não existe | 🟢 |
+
+**Observação honesta:** o **motor de testes** continua sem atualizar (agora também em relação às mudanças desta semana). Segue sendo o passo antes de programar em cima disso.
+
+**Pergunta pro Mauro:** no comparativo de preço usei **R$ 1.621** (um salário mínimo) como honorário médio de abertura numa contabilidade tradicional. Você tem o número real de mercado — qual valor devo usar?
+
+**Próximo:** seguir a apresentação pelas telas seguintes (dossiê e acompanhamento na Junta) e revalidar o motor de testes. Preço do plano/avulsos e modelo do parceiro do certificado seguem pendentes.
+
+### 📱 WhatsApp (29/07)
+```
+*Update Legalizei* 🎤
+- Montei uma *apresentação* do app pra mostrar pra equipe de vocês: de um lado o celular com a tela real, do outro a explicação do que cada passo faz e o que ele interfere na constituição da empresa
+- Ela também mostra *de quem é a espera* em cada momento: do cliente, nossa, ou do órgão público
+- Preparar isso já achou e corrigiu 2 erros reais: quem escolhia "já tenho empresa" e voltava via a tela errada, e a confirmação dizia "achei o seu encaixe" até pra quem entrou na lista de espera
+- A tela de preço ficou bem mais vendedora: o que está incluso item a item, perguntas frequentes que respondem as objeções ("onde está a pegadinha?") e um comparativo com o honorário de uma contabilidade tradicional
+- Quem não é de BH agora entra numa lista que pergunta a cidade, validada na lista oficial do IBGE. Assim dá pra saber pra onde vale expandir
+*Pergunta:* no comparativo usei R$ 1.621 (um salário mínimo) como honorário de abertura numa contabilidade tradicional. Qual o número real que vocês praticam?
+```
+
 ## Links
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]]

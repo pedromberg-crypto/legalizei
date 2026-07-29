@@ -89,67 +89,23 @@ export function EncaixeView({
       </div>
 
       <div className="flex-1 min-h-0 overflow-y-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {/* ───── O RECOMENDADO ───── */}
+        {/* ───── O RECOMENDADO — redesign v2 ROBUSTO, validado 28/07 via
+            /mockup-v2. Adequação virou barra percentual (idioma da
+            Vigilancia); CNAE+highlight viraram par de stat cards lado a lado
+            (mesma composição alíquota/Fator R); "cobre" ganhou ícone-check em
+            chip (idioma de SuaSituacao/órgãos). ───── */}
         <Card
           className={
             noRecomendado ? "border-border-focus bg-surface-tint-brand" : ""
           }
         >
-          <div className="mb-2 flex items-start justify-between gap-3">
-            <div>
-              <span className="text-micro font-semibold text-state-success-text">
-                ★ Recomendado
-              </span>
-              <p className="text-body-strong font-semibold text-text-primary mt-0.5">
-                {dados.recomendado.humano}
-              </p>
-            </div>
-            <Adequacao valor={dados.recomendado.adequacao} />
-          </div>
-
-          <p className="text-caption text-text-secondary">
-            {dados.recomendado.descricao}
-          </p>
-
-          {/* O código como recibo discreto (UX-05: humano antes do número). */}
-          <div className="mt-3 flex items-center justify-between rounded-md bg-surface-alt px-3 py-2">
-            <span className="text-micro text-text-tertiary">
-              Sua atividade na Receita
-            </span>
-            <span className="text-caption font-semibold text-text-primary">
-              CNAE {dados.recomendado.cnae}
-            </span>
-          </div>
-
-          {/* Regra 3: garante o SETUP, nunca o resultado. */}
-          <div className="mt-3 rounded-md bg-state-success-tint p-3">
-            <p className="text-caption font-semibold text-state-success-text mb-0.5">
-              O código mais barato que serve pra você
-            </p>
-            <p className="text-caption text-text-secondary">
-              Já cuido de tudo daqui pra frente: impostos, guias e prazos.
-            </p>
-          </div>
-
-          {/* O que o CNAE cobre (compreende). */}
-          {dados.recomendado.cobre.length > 0 && (
-            <div className="mt-3">
-              <p className="text-caption font-semibold text-text-primary mb-1.5">
-                O que esse CNAE cobre
-              </p>
-              <ul className="flex flex-col gap-1">
-                {dados.recomendado.cobre.map((c) => (
-                  <li
-                    key={c}
-                    className="flex items-start gap-2 text-caption text-text-secondary"
-                  >
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-action-primary" />
-                    {c}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <ConteudoCnae
+            humano={dados.recomendado.humano}
+            cnae={dados.recomendado.cnae}
+            descricao={dados.recomendado.descricao}
+            cobre={dados.recomendado.cobre}
+            adequacao={dados.recomendado.adequacao}
+          />
 
           {/* Regra 4: defesa de legitimidade INLINE, obrigatória. */}
           <p className="text-caption text-text-secondary mt-3">
@@ -160,43 +116,11 @@ export function EncaixeView({
         </Card>
 
         {/* ───── OUTRAS OPÇÕES (regra 2: sugestão, a escolha é dela) ───── */}
-        {dados.alternativas.length > 0 && (
-          <div className="mt-4">
-            <p className="text-micro text-text-tertiary mb-2">
-              Outras opções pra você
-            </p>
-            <div className="flex flex-col gap-2">
-              {dados.alternativas.map((a) => {
-                const on = escolhido === a.cnae;
-                return (
-                  <button
-                    key={a.cnae}
-                    onClick={() => setEscolhido(a.cnae)}
-                    className={`rounded-md border p-3 text-left transition-colors ${
-                      on
-                        ? "border-border-focus bg-surface-tint-brand"
-                        : "border-border-hairline bg-surface-card hover:border-border-strong"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between gap-3">
-                      <div>
-                        <p className="text-caption font-semibold text-text-primary">
-                          {a.humano}
-                        </p>
-                        <p className="text-micro text-text-tertiary mt-0.5">
-                          CNAE {a.cnae} · imposto baixo
-                        </p>
-                      </div>
-                      <span className="shrink-0 text-caption font-semibold text-text-secondary">
-                        {a.adequacao}%
-                      </span>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
+        <OutrasOpcoes
+          alternativas={dados.alternativas}
+          escolhido={escolhido}
+          onEscolher={setEscolhido}
+        />
       </div>
 
       <div className="app-footer-cta">
@@ -213,15 +137,201 @@ export function EncaixeView({
   );
 }
 
-/** O anel de adequação (verde). Regra 2: é fit à descrição, não "% barato". */
-function Adequacao({ valor }: { valor: number }) {
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * CONTEÚDO DO CARD DE CNAE — FONTE ÚNICA (29/07).
+ * ═══════════════════════════════════════════════════════════════════════════
+ * O interior do card do ENCAIXE (pill · título · descrição · adequação · par
+ * de stat cards · o que cobre), extraído porque o veredito 🟢 passou a usar o
+ * mesmo layout. Quem envolve no `Card` é cada tela — assim cada uma escolhe a
+ * própria borda/fundo sem duplicar o miolo.
+ *
+ * `adequacaoModo`: `barra` (ENCAIXE, onde a comparação é o assunto da tela) ou
+ * `badge` (veredito, onde o número é um selo e não o herói).
+ *
+ * ⚠️ `recomendado={false}` troca a pill de "★ Recomendado" pra "Sua escolha":
+ * chamar de recomendada uma alternativa de 72% que a pessoa promoveu na mão
+ * seria mentir — e o produto tem regra dura contra isso.
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+export function ConteudoCnae({
+  humano,
+  cnae,
+  descricao,
+  cobre = [],
+  adequacao,
+  adequacaoModo = "barra",
+  recomendado = true,
+}: {
+  humano: string;
+  cnae: string;
+  descricao?: string;
+  cobre?: string[];
+  adequacao: number;
+  adequacaoModo?: "barra" | "badge";
+  recomendado?: boolean;
+}) {
   return (
-    <div className="flex shrink-0 flex-col items-center">
-      <span className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-state-success-text text-caption font-semibold text-state-success-text">
-        {valor}%
-      </span>
-      <span className="text-micro text-text-tertiary mt-0.5">adequação</span>
+    <>
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <span
+            className={`text-micro font-semibold ${
+              recomendado ? "text-state-success-text" : "text-text-tertiary"
+            }`}
+          >
+            {recomendado ? "★ Recomendado" : "Sua escolha"}
+          </span>
+          <p className="text-body-strong font-semibold text-text-primary mt-0.5">
+            {humano}
+          </p>
+        </div>
+        {adequacaoModo === "badge" && (
+          <span className="mt-0.5 shrink-0 rounded-full bg-state-success-tint px-2.5 py-1 text-micro font-bold text-state-success-text">
+            {adequacao}% compatível
+          </span>
+        )}
+      </div>
+
+      {descricao && (
+        <p className="mt-2 text-caption text-text-secondary">{descricao}</p>
+      )}
+
+      {adequacaoModo === "barra" && (
+        <div className="mt-3">
+          <div className="flex items-center justify-between">
+            <p className="text-micro text-text-tertiary">Adequação à sua descrição</p>
+            <p className="text-caption font-semibold text-state-success-text">
+              {adequacao}%
+            </p>
+          </div>
+          <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface-alt">
+            <div
+              className="h-full rounded-full bg-state-success"
+              style={{ width: `${adequacao}%` }}
+            />
+          </div>
+        </div>
+      )}
+
+      <div className="mt-3 flex items-stretch gap-2">
+        <div className="flex-1 rounded-2xl bg-surface-alt p-3">
+          <p className="text-micro text-text-tertiary">Sua atividade</p>
+          <p className="mt-0.5 text-body font-semibold text-text-primary">CNAE {cnae}</p>
+          <p className="text-micro text-text-tertiary">na Receita</p>
+        </div>
+        {/* 29/07 — era "O mais barato / que serve / pra você". "Barato" é
+            linguagem de varejo (preço de produto), e o assunto aqui é IMPOSTO.
+            O rodapé "entre os que servem" é o que mantém a regra 3 do ENCAIXE:
+            garante o SETUP, nunca o resultado — não é "o menor imposto
+            possível", é o menor entre os códigos que cobrem a atividade. */}
+        <div className="flex-1 rounded-2xl bg-state-success-tint p-3">
+          <p className="text-micro text-state-success-text">Imposto</p>
+          <p className="mt-0.5 text-body font-semibold text-state-success-text">mais baixo</p>
+          <p className="text-micro text-text-secondary">entre os que servem</p>
+        </div>
+      </div>
+
+      {/* O que o CNAE cobre (compreende). */}
+      {cobre.length > 0 && (
+        <div className="mt-3">
+          <p className="text-caption font-semibold text-text-primary mb-1.5">
+            O que esse CNAE cobre
+          </p>
+          <div className="flex flex-col gap-1.5">
+            {cobre.map((c) => (
+              <div key={c} className="flex items-start gap-2.5">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-state-success-tint text-state-success-text">
+                  <CheckMini />
+                </span>
+                <p className="text-caption text-text-secondary">{c}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * OUTRAS OPÇÕES — as alternativas de CNAE. FONTE ÚNICA (29/07).
+ * ═══════════════════════════════════════════════════════════════════════════
+ * Extraído do corpo do `EncaixeView` porque o veredito 🟢 passou a mostrar a
+ * mesma lista. Copiar a marcação criaria dois blocos "iguais" que divergem na
+ * primeira mexida — é o mesmo erro que a extração das telas veio corrigir.
+ *
+ * `onEscolher` ausente = modo LEITURA (renderiza `div`, não `button`). No
+ * veredito o CNAE ainda não está travado: quem trava é o ENCAIXE, na tela
+ * seguinte. Deixar clicável ali daria a entender que a escolha acontece duas
+ * vezes.
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+export function OutrasOpcoes({
+  alternativas,
+  escolhido,
+  onEscolher,
+  titulo = "Outras opções pra você",
+}: {
+  alternativas: OpcaoCnae[];
+  escolhido?: string;
+  onEscolher?: (cnae: string) => void;
+  titulo?: string;
+}) {
+  if (alternativas.length === 0) return null;
+
+  return (
+    <div className="mt-4">
+      <p className="text-micro text-text-tertiary mb-2">{titulo}</p>
+      <div className="flex flex-col gap-2">
+        {alternativas.map((a) => {
+          const on = escolhido === a.cnae;
+          const conteudo = (
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-caption font-semibold text-text-primary">{a.humano}</p>
+                <p className="text-micro text-text-tertiary mt-0.5">
+                  CNAE {a.cnae} · imposto baixo
+                </p>
+              </div>
+              <span className="shrink-0 text-caption font-semibold text-text-secondary">
+                {a.adequacao}%
+              </span>
+            </div>
+          );
+
+          return onEscolher ? (
+            <button
+              key={a.cnae}
+              onClick={() => onEscolher(a.cnae)}
+              className={`rounded-2xl border p-3 text-left transition-colors ${
+                on
+                  ? "border-border-focus bg-surface-tint-brand"
+                  : "border-border-hairline bg-surface-card hover:border-border-strong"
+              }`}
+            >
+              {conteudo}
+            </button>
+          ) : (
+            <div
+              key={a.cnae}
+              className="rounded-2xl border border-border-hairline bg-surface-card p-3"
+            >
+              {conteudo}
+            </div>
+          );
+        })}
+      </div>
     </div>
+  );
+}
+
+function CheckMini() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="m5 12 4 4 8-9" />
+    </svg>
   );
 }
 

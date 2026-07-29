@@ -1,16 +1,20 @@
 "use client";
 
+import { useState } from "react";
+
 /**
  * COMPONENTES VALIDADOS DA ref7 (saúde). Fonte única.
  * saudação · search-serviço · chips-categoria · card marketing · checklist compliance.
+ * 28/07: CategoriaChips ATUALIZADO (sem bolha de filtro, com estado ativo) pra
+ * bater com os chips reais de blog/notas/impostos·guias.
  */
 
 const CATS = ["Notas", "Impostos", "Pró-labore", "Documentos", "Relatórios"];
 
-const COMPLIANCE = [
-  { nome: "Declarações do mês", sub: "Entregues pela gente", estado: "ok" },
-  { nome: "DAS", sub: "Em dia até junho", estado: "ok" },
-  { nome: "Certificado digital", sub: "Precisa fazer", estado: "pendente" },
+const ORGAOS = [
+  { nome: "Receita Federal", situacao: "Ativa e regular" },
+  { nome: "Prefeitura de BH · ISS", situacao: "Regular" },
+  { nome: "JUCEMG · Junta Comercial", situacao: "Regular" },
 ];
 
 /* ─── 1. Saudação + avatar ────────────────────────────────────────────────── */
@@ -29,7 +33,9 @@ export function Saudacao() {
   );
 }
 
-/* ─── 2. Search bar (botão dark) ──────────────────────────────────────────── */
+/* ─── 2. Search bar (botão dark) — SUPERSEDIDA 28/07 pela busca real (input
+   inline + botão limpar, ver SearchMic em ref11-blocks.tsx). Mantida só de
+   registro histórico do A/B; não usar como referência de implementação. ──── */
 export function SearchServico() {
   return (
     <div className="flex items-center gap-2 rounded-2xl bg-surface-alt p-1.5 pl-4">
@@ -41,81 +47,97 @@ export function SearchServico() {
   );
 }
 
-/* ─── 3. Chips de categoria ───────────────────────────────────────────────── */
+/* ─── 3. Chips de categoria (ativo/inativo — sem bolha de filtro) ─────────── */
 export function CategoriaChips() {
+  const [ativo, setAtivo] = useState(CATS[0]);
   return (
-    <div className="-mx-6 flex items-center gap-2 overflow-x-auto px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface-alt text-text-secondary">
-        <Filtro />
-      </span>
-      {CATS.map((c) => (
-        <span
-          key={c}
-          className="shrink-0 rounded-full border border-border-hairline bg-surface-card px-4 py-2 text-caption font-medium text-text-primary"
-        >
-          {c}
-        </span>
-      ))}
+    <div className="-mx-6 flex gap-2 overflow-x-auto px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      {CATS.map((c) => {
+        const sel = c === ativo;
+        return (
+          <button
+            key={c}
+            type="button"
+            onClick={() => setAtivo(c)}
+            aria-pressed={sel}
+            className={`shrink-0 rounded-full px-4 py-2 text-caption font-semibold transition-colors ${
+              sel
+                ? "bg-surface-dark text-text-on-dark"
+                : "border border-border-hairline text-text-secondary hover:border-border-strong"
+            }`}
+          >
+            {c}
+          </button>
+        );
+      })}
     </div>
   );
 }
 
-/* ─── 4. Card de marketing (indique e ganhe) ──────────────────────────────── */
+/* ─── 4. Indicar um amigo — DESCOPADO pra row travada "Em breve" (28/07: era
+   card de marketing, mais/page.tsx entregou como feature bloqueada) ───────── */
 export function IndiqueGanhe() {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-2xl bg-surface-dark p-4 text-text-on-dark">
-      <div className="min-w-0">
-        <p className="text-body font-bold">Indique e ganhe 🎁</p>
-        <p className="mt-0.5 text-caption text-text-on-dark/70">
-          Cada amigo que abrir empresa vira 1 mês grátis pra você.
-        </p>
-        <button className="mt-2 text-caption font-semibold text-action-primary">Como funciona</button>
-      </div>
-      <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-action-primary text-text-on-brand">
-        <Presente />
+    <div
+      aria-disabled
+      className="flex items-center gap-3 rounded-2xl border border-border-hairline bg-surface-card px-4 py-3.5 opacity-60"
+    >
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-surface-alt text-text-tertiary">
+        <IconeIndicar />
+      </span>
+      <span className="min-w-0 flex-1 text-body text-text-primary">Indicar um amigo</span>
+      <span className="flex shrink-0 items-center gap-1 rounded-full bg-surface-alt px-2 py-0.5 text-micro font-semibold text-text-tertiary">
+        <IconeCadeado />
+        Em breve
       </span>
     </div>
   );
 }
 
-/* ─── 5. Checklist de compliance (Sua situação) ───────────────────────────── */
+/* ─── 5. Sua situação — EXPANDIDA em página (28/07: mais/em-dia/page.tsx).
+   O widget de 3 linhas virou hero (veredito+streak) + órgãos com dot
+   pulsante; aqui fica um recorte fiel dessas 2 partes (o resto — "cumprido
+   no mês"/"no radar" — é lista simples, já coberta noutros itens do acervo). */
 export function SuaSituacao() {
   return (
-    <div>
-      <div className="mb-2 flex items-center justify-between">
-        <p className="text-body-strong font-semibold text-text-primary">Sua situação</p>
-        <button className="text-caption font-semibold text-action-primary-sm">Ver tudo</button>
+    <div className="flex flex-col gap-3">
+      <div className="overflow-hidden rounded-2xl bg-surface-dark p-5 text-text-on-dark">
+        <div className="flex items-center gap-3">
+          <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-state-success text-text-on-dark">
+            <CheckGrande />
+          </span>
+          <div className="min-w-0">
+            <p className="text-h2 font-bold">Tudo em dia</p>
+            <p className="text-caption text-text-on-dark/70">
+              Nenhuma pendência com a Receita, a Prefeitura ou a Junta.
+            </p>
+          </div>
+        </div>
+        <div className="mt-4 flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2.5">
+          <span className="text-state-success">
+            <Chama />
+          </span>
+          <p className="text-caption text-text-on-dark/90">
+            <span className="font-bold text-text-on-dark">6 meses seguidos</span> sem
+            nenhum atraso.
+          </p>
+        </div>
       </div>
-      <div className="flex flex-col gap-2">
-        {COMPLIANCE.map((c) => {
-          const ok = c.estado === "ok";
-          return (
-            <div key={c.nome} className="flex items-center gap-3 rounded-2xl bg-surface-alt p-3">
-              <span
-                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
-                  ok
-                    ? "bg-state-success-tint text-state-success-text"
-                    : "bg-state-warning-tint text-state-warning-text"
-                }`}
-              >
-                {ok ? <Check /> : <Alerta />}
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="text-caption font-semibold text-text-primary">{c.nome}</p>
-                <p className="mt-0.5 text-micro text-text-tertiary">{c.sub}</p>
-              </div>
-              <span
-                className={`rounded-full px-2.5 py-1 text-micro font-semibold ${
-                  ok
-                    ? "bg-state-success-tint text-state-success-text"
-                    : "bg-state-warning-tint text-state-warning-text"
-                }`}
-              >
-                {ok ? "Em dia" : "Pendente"}
-              </span>
-            </div>
-          );
-        })}
+
+      <div className="overflow-hidden rounded-2xl border border-border-hairline bg-surface-card">
+        {ORGAOS.map((o, i) => (
+          <div
+            key={o.nome}
+            className={`flex items-center gap-3 px-4 py-3 ${i > 0 ? "border-t border-border-hairline" : ""}`}
+          >
+            <span className="relative flex h-2.5 w-2.5 shrink-0">
+              <span className="absolute inline-flex h-full w-full rounded-full bg-state-success opacity-60" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-state-success" />
+            </span>
+            <p className="min-w-0 flex-1 text-caption font-semibold text-text-primary">{o.nome}</p>
+            <p className="shrink-0 text-micro font-semibold text-state-success-text">{o.situacao}</p>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -128,15 +150,19 @@ function ic() {
 function Lupa() {
   return <svg {...ic()} width={20} height={20}><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>;
 }
-function Filtro() {
-  return <svg {...ic()}><path d="M4 6h16M7 12h10M10 18h4" /></svg>;
+function IconeIndicar() {
+  return <svg {...ic()}><circle cx="9" cy="8" r="3" /><path d="M4 20a5 5 0 0 1 10 0" /><path d="M18 8v6M15 11h6" /></svg>;
 }
-function Presente() {
-  return <svg {...ic()} width={26} height={26}><rect x="3" y="8" width="18" height="4" rx="1" /><path d="M5 12v9h14v-9M12 8v13" /><path d="M12 8S10 3 7.5 4.5 9 8 12 8zM12 8s2-5 4.5-3.5S15 8 12 8z" /></svg>;
+function IconeCadeado() {
+  return <svg {...ic()} width={11} height={11} strokeWidth={2.2}><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>;
 }
-function Check() {
-  return <svg {...ic()}><path d="m6 12 4 4 8-9" /></svg>;
+function CheckGrande() {
+  return <svg {...ic()} width={28} height={28} strokeWidth={2.6}><path d="m5 12.5 4.5 4.5L19 7" /></svg>;
 }
-function Alerta() {
-  return <svg {...ic()}><path d="M12 9v4M12 17v.01" /><path d="M10.3 3.9 2 18a2 2 0 0 0 1.7 3h16.6a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" /></svg>;
+function Chama() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M12 2c1 3-1 4-1 6a2 2 0 0 0 4 0c0-.6-.2-1.2-.4-1.7C16.5 8 18 10.5 18 13.5A6 6 0 0 1 6 13.5c0-2.4 1.2-4 2.5-5.3C9.7 7 11 5.5 12 2z" />
+    </svg>
+  );
 }

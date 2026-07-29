@@ -28,7 +28,34 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
  * iguais, sem tocar nelas). A nav ENTRE seções é a barra de abas, não isto;
  * isto é só o back de drill-down.
  */
-export function TelaHeader({ meta, voltar }: { meta: string; voltar?: string }) {
+export function TelaHeader({
+  meta,
+  voltar,
+  onVoltar,
+}: {
+  meta: string;
+  voltar?: string;
+  /**
+   * 🆕 29/07 — voltar por AÇÃO, não por rota. A `/apresentacao` navega por
+   * estado (não tem router), e o UX-60 pede a seta nas telas do wizard.
+   * Mesma afordância visual do `voltar`.
+   */
+  onVoltar?: () => void;
+}) {
+  if (onVoltar) {
+    return (
+      <header className="pt-6 pb-4 flex items-center gap-1.5">
+        <button
+          onClick={onVoltar}
+          aria-label="Voltar"
+          className="-ml-1.5 flex h-7 w-7 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-alt"
+        >
+          <SetaVoltar />
+        </button>
+        <p className="text-micro text-text-tertiary">{meta}</p>
+      </header>
+    );
+  }
   if (voltar) {
     return (
       <header className="pt-6 pb-4 flex items-center gap-1.5">

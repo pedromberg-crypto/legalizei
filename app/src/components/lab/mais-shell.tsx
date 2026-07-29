@@ -72,6 +72,11 @@ export function MaisShell({ children }: { children: ReactNode }) {
   );
 }
 
+/* 28/07: sem substituto único real — a identidade+editar se dividiu em 2
+   telas com idiomas diferentes: mais/page.tsx (virou Link "Você", dot verde +
+   chevron, sem Editar — ver ProfileRow em ref11-blocks) e perfil/page.tsx
+   (o lápis migrou de botão de texto pra badge sobre o próprio avatar). Aqui
+   fica a versão com o badge, mais fiel ao que sobrou do "editar". */
 export function ProfileHeader() {
   return (
     <div className="flex items-center gap-3">
@@ -81,17 +86,14 @@ export function ProfileHeader() {
             {PERFIL.iniciais}
           </span>
         </div>
-        {/* selo verde de "ativo" (estado real: CNPJ ativo) */}
-        <span className="absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full border-2 border-surface-page bg-state-success" />
+        <span className="absolute bottom-0 right-0 flex h-5 w-5 items-center justify-center rounded-full border-2 border-surface-page bg-action-primary text-text-on-brand">
+          <IconePencil />
+        </span>
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-body font-semibold text-text-primary">{PERFIL.nome}</p>
         <p className="truncate text-caption text-text-tertiary">{PERFIL.email}</p>
       </div>
-      <button className="flex items-center gap-1 text-caption font-semibold text-action-primary-sm">
-        <IconePencil />
-        Editar
-      </button>
     </div>
   );
 }
@@ -129,7 +131,13 @@ export function NudgeCertificado() {
   );
 }
 
-/* ─── Resumo do negócio (validado — mais · completa) ──────────────────────── */
+/* ─── Resumo do negócio (validado — mais · completa) ────────────────────────
+   28/07: SEM substituto único real — o conteúdo se dividiu em 2 telas com
+   idiomas próprios: o badge "CNPJ ativo e em dia" virou o hero+streak de
+   mais/em-dia/page.tsx (ver SuaSituacao em ref7-blocks.tsx); o grid
+   faturamento/imposto foi superado por mais/relatorios/page.tsx (LineChart +
+   3-stat). Mantido aqui como registro do widget original, não como referência
+   de implementação atual. */
 export function ResumoNegocio() {
   return (
     <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">

@@ -11,6 +11,8 @@ tags: [produto, ux, flow, log, otimizacao, backlog]
 > **O que é:** fonte única do que melhorar no flow de abertura + o que já foi feito. Nasce das baterias de personas do [[legalize-motor-testes-arquitetura|motor de testes]] (coluna "Sugestão / olhar leigo"). **Rodada #1** (T0026–T0036) → 16 ✅ na spec. **Rodada #2** (T0068–T0079, 2ª ordem pós-otimização) → 13 itens 🔴 novos. Cresce a cada rodada ou ideia solta.
 >
 > **Como funciona (combinado com o Pedro):** cada item nasce 🔴 **aberto**. Quando a gente **executa** de fato (spec/protótipo/motor), viro pra ✅ **aplicado** com **data + onde**. No `/fechar` de cada flow eu passo aqui e atualizo o status do que mexemos. Toda sugestão nova entra neste doc.
+>
+> 🆕 **2ª fonte de achados (29/07): a APRESENTAÇÃO** (`/apresentacao`). Narrar o flow tela a tela pra gestão da Legalize Digital expõe buracos que construir não expõe. Tudo que aparecer lá entra na **rodada #6** e é corrigido no flow original depois.
 
 ## Legenda de status
 - ✅ **aplicado** — já está na spec/protótipo/motor (com ponteiro de onde)
@@ -243,6 +245,16 @@ Daí a decisão: **as duas alavancas não têm o mesmo grau de certeza, e tratá
 **Efeito que importa: a `promessa-quebrada` deixou de ser risco estrutural.** No modo `fator-r` a faixa **já inclui R$0**, então não existe piso a violar. O Vitor cai no piso e **a faixa tinha avisado**. A persona virou teste de invariância. O `TEASER_PISO` só se aplica ao modo `swap`.
 
 **Não precisou de campo novo no N4.** A faixa comunica a incerteza sem perguntar margem pro leigo.
+
+---
+
+## 📋 Itens (rodada #6 — achados da APRESENTAÇÃO pra gestão, 2026-07-29) → nota própria
+
+> **Esta rodada mora em [[achados-apresentacao]]**, não aqui. Motivo: a origem é outra — o resto deste doc nasce de **bateria de personas** (motor); a rodada #6 nasce de **narrar o flow pra quem não construiu**, montando a `/apresentacao`. Lentes diferentes, e a distinção importa: item que veio de lá **não passou pelo motor**, então aplicar exige revalidar as personas afetadas.
+>
+> **IDs continuam nesta série** (UX-60+), pra não existirem dois sistemas de numeração.
+>
+> **Aberto agora:** UX-60 (o N4 não tem volta pro N3) — 🟢 já aplicado na apresentação, 🔴 pendente no flow original.
 
 ## 🧷 Follow-ups abertos (gerados por estas rodadas)
 - ~~🔴 Auditar spec × motor~~ ✅ **feito 16/07** — 5 gaps achados (3 corrigidos, 2 🔴: UX-25 custo por sócio · UX-30 anuência do cônjuge).

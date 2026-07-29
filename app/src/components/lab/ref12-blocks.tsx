@@ -55,7 +55,9 @@ export function PromoDebito() {
   );
 }
 
-/* ─── 3. Conta do imposto + swipe-to-pay ──────────────────────────────────── */
+/* ─── 3. Conta do imposto (card do carrossel real — swipe-to-pay ABANDONADO,
+   28/07: bate com impostos/page.tsx CardImposto — badge "Vence" + valor
+   grande + Pagar sólido, sem breakdown itemizado nem gesto de arrastar) ──── */
 export function ContaSwipe() {
   return (
     <div>
@@ -63,39 +65,19 @@ export function ContaSwipe() {
         <p className="text-body-strong font-semibold text-text-primary">Seu imposto de junho</p>
         <button className="text-caption font-semibold text-action-primary-sm">Ver tudo</button>
       </div>
-      <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
-        <Linha rotulo="Imposto (DAS)" valor="R$ 178,31" />
-        <Linha rotulo="Taxa" valor="R$ 0,00" />
-        <div className="my-3 border-t border-dashed border-border-hairline" />
-        <Linha rotulo="Total" valor="R$ 178,31" forte />
-
-        {/* swipe to pay */}
-        <div className="mt-4 flex items-center rounded-full bg-action-primary p-1.5">
-          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-action-primary-sm">
-            <Seta />
-          </span>
-          <span className="flex-1 pr-11 text-center text-caption font-bold text-text-on-brand">
-            Deslize para pagar
+      <div className="flex flex-col rounded-2xl border border-border-hairline bg-surface-card p-5">
+        <div className="flex items-center justify-between gap-2">
+          <p className="truncate text-caption text-text-secondary">Imposto do mês</p>
+          <span className="shrink-0 rounded-full bg-state-info-tint px-2.5 py-1 text-micro font-semibold text-state-info-text">
+            Vence 20/07
           </span>
         </div>
-        <p className="mt-2 text-center text-micro text-text-tertiary">
-          Assim que cair, a gente atualiza sozinho.
-        </p>
+        <p className="mt-1 text-display font-bold text-text-primary">R$ 178,31</p>
+        <p className="mt-1 text-micro text-text-tertiary">Faturou R$ 4.200 · 6% do Simples.</p>
+        <button className="mt-4 inline-flex min-h-12 w-full items-center justify-center rounded-md bg-action-primary text-lg font-bold text-text-on-brand transition-colors hover:bg-action-primary-hover">
+          Pagar
+        </button>
       </div>
-    </div>
-  );
-}
-
-/* ─── auxiliares ──────────────────────────────────────────────────────────── */
-function Linha({ rotulo, valor, forte = false }: { rotulo: string; valor: string; forte?: boolean }) {
-  return (
-    <div className="flex items-center justify-between py-1">
-      <span className={`text-caption ${forte ? "font-bold text-text-primary" : "text-text-secondary"}`}>
-        {rotulo}
-      </span>
-      <span className={forte ? "text-h2 font-bold text-text-primary" : "text-caption font-semibold text-text-primary"}>
-        {valor}
-      </span>
     </div>
   );
 }
@@ -106,9 +88,6 @@ function ic() {
 }
 function Raio() {
   return <svg {...ic()}><path d="M13 2 3 14h7l-1 8 10-12h-7z" /></svg>;
-}
-function Seta() {
-  return <svg {...ic()} width={18} height={18}><path d="M5 12h14M13 6l6 6-6 6" /></svg>;
 }
 function IconeNota() {
   return <svg {...ic()}><path d="M7 3h7l4 4v14H7z" /><path d="M14 3v4h4" /><path d="M10 13h5M10 17h5" /></svg>;

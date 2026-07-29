@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { CampoMunicipio } from "@/components/campo-municipio";
 import { Selo } from "@/components/veredito";
 
 /**
@@ -56,31 +57,131 @@ export interface DadosSaida {
   origem: { rotulo: string; texto: string };
   /** O que ainda é possível. Nenhuma saída termina em beco. */
   saida: string;
+  /**
+   * 🆕 29/07 — etiqueta do MOTIVO, pro lead já chegar classificado no CRM.
+   * Uma lista de espera sem motivo é uma lista de e-mails: não dá pra
+   * priorizar expansão, nem saber quantos esperam por quê. Opcional — as
+   * saídas antigas seguem sem, e nada muda nelas.
+   */
+  tag?: string;
+  /**
+   * 🆕 29/07 — pergunta extra específica da saída. Na saída de cidade é QUAL
+   * cidade: sem isso a waitlist geográfica não informa pra onde expandir.
+   */
+  extra?: {
+    rotulo: string;
+    placeholder: string;
+    obrigatorio?: boolean;
+    /** `municipio` = autocomplete validado contra a base do IBGE. */
+    tipo?: "texto" | "municipio";
+  };
+  /** CTA do envio. Default "Falar com o time" (saídas que viram atendimento). */
+  ctaEnviar?: string;
+  /**
+   * 🆕 29/07 — copy da confirmação. O default promete "nosso time fala com
+   * você em até um dia útil", o que é VERDADE nas saídas de triagem (exterior,
+   * 3+ sócios: um humano assume o caso) e MENTIRA numa lista de espera de
+   * cidade — lá ninguém vai ligar amanhã, a gente avisa quando abrir. Saída
+   * que não promete ligação sobrescreve.
+   */
+  confirmacao?: {
+    titulo: string;
+    texto: string;
+    /** CTA único (default das saídas antigas). */
+    cta?: string;
+    /**
+     * 🆕 29/07 — várias saídas na confirmação. A tela terminal não pode ser
+     * beco: quem entrou na lista de espera continua sendo público, e merece
+     * pra onde ir (blog, site) além de poder recomeçar.
+     */
+    acoes?: {
+      label: string;
+      variante?: "primary" | "secondary" | "ghost" | "dark";
+      onClick?: () => void;
+      /** true = destino ainda não existe; a demo mostra, mas avisa. */
+      pendente?: boolean;
+    }[];
+  };
 }
 
-export function SaidaView({ d }: { d: DadosSaida }) {
-  const [nome, setNome] = useState("");
-  const [contato, setContato] = useState("");
-  const [enviado, setEnviado] = useState(false);
-  const podeEnviar = nome.trim().length > 1 && contato.trim().length > 5;
+export function SaidaView({
+  d,
+  captura,
+}: {
+  d: DadosSaida;
+  /**
+   * 🆕 29/07 — captura CONTROLADA (opcional), mesmo padrão do `VereditoView`.
+   * Sem isto a tela segue com o estado interno de sempre. Existe pra a
+   * `/apresentacao` conseguir "Preencher automático" sem clonar a tela.
+   */
+  captura?: {
+    nome: string;
+    setNome: (v: string) => void;
+    contato: string;
+    setContato: (v: string) => void;
+    extra: string;
+    setExtra: (v: string) => void;
+    enviado: boolean;
+    setEnviado: (v: boolean) => void;
+  };
+}) {
+  const [nomeI, setNomeI] = useState("");
+  const [contatoI, setContatoI] = useState("");
+  const [extraI, setExtraI] = useState("");
+  const [enviadoI, setEnviadoI] = useState(false);
+  const nome = captura?.nome ?? nomeI;
+  const setNome = captura?.setNome ?? setNomeI;
+  const contato = captura?.contato ?? contatoI;
+  const setContato = captura?.setContato ?? setContatoI;
+  const extra = captura?.extra ?? extraI;
+  const setExtra = captura?.setExtra ?? setExtraI;
+  const enviado = captura?.enviado ?? enviadoI;
+  const setEnviado = captura?.setEnviado ?? setEnviadoI;
+  const extraOk = !d.extra?.obrigatorio || extra.trim().length > 1;
+  const podeEnviar = nome.trim().length > 1 && contato.trim().length > 5 && extraOk;
 
   if (enviado) {
     return (
       <>
         <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <Selo tipo="humano" />
+          {/* Frase própria: o default do selo `sucesso` é "Achei o seu
+              encaixe", que aqui seria mentira (ninguém encaixou — a pessoa
+              entrou numa fila). Ver fix de 29/07 em veredito.tsx. */}
+          <Selo tipo="sucesso" frase="Recebemos o seu contato" />
           <Card>
-            <h2 className="text-h2 mb-1">Recebemos o seu contato</h2>
+            {d.tag && (
+              <span className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-state-info-tint px-2.5 py-1 text-micro font-semibold text-state-info-text">
+                {d.tag}
+              </span>
+            )}
+            <h2 className="text-h2 mb-1">
+              {d.confirmacao?.titulo ?? "Recebemos o seu contato"}
+            </h2>
             <p className="text-body text-text-secondary">
-              Nosso time vai falar com você em até um dia útil, já sabendo do
-              seu caso. Você não vai precisar explicar tudo de novo.
+              {d.confirmacao?.texto ??
+                "Nosso time vai falar com você em até um dia útil, já sabendo do seu caso. Você não vai precisar explicar tudo de novo."}
             </p>
           </Card>
         </div>
         <div className="app-footer-cta">
-          <Button full variant="secondary">
-            Falar agora no WhatsApp
-          </Button>
+          {d.confirmacao?.acoes ? (
+            <div className="flex flex-col gap-2">
+              {d.confirmacao.acoes.map((a) => (
+                <Button
+                  key={a.label}
+                  full
+                  variant={a.variante ?? "secondary"}
+                  onClick={a.onClick}
+                >
+                  {a.label}
+                </Button>
+              ))}
+            </div>
+          ) : (
+            <Button full variant="secondary">
+              {d.confirmacao?.cta ?? "Falar agora no WhatsApp"}
+            </Button>
+          )}
         </div>
       </>
     );
@@ -95,6 +196,13 @@ export function SaidaView({ d }: { d: DadosSaida }) {
         <Selo tipo="humano" />
 
         <Card>
+          {/* A etiqueta do motivo aparece ANTES do título: quem chega aqui
+              precisa entender em 1 segundo que não é erro dele, é escopo. */}
+          {d.tag && (
+            <span className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-state-info-tint px-2.5 py-1 text-micro font-semibold text-state-info-text">
+              {d.tag}
+            </span>
+          )}
           <h2 className="text-h2 mb-1">{d.titulo}</h2>
           <p className="text-body text-text-secondary mb-4">{d.explica}</p>
           {/* EXPLICA — a origem separada do resto, porque "a lei impede" e "a
@@ -126,6 +234,23 @@ export function SaidaView({ d }: { d: DadosSaida }) {
             onChange={setContato}
             placeholder="(31) 90000-0000"
           />
+          {d.extra?.tipo === "municipio" ? (
+            <CampoMunicipio
+              rotulo={d.extra.rotulo}
+              placeholder={d.extra.placeholder}
+              valor={extra}
+              onSelecionar={setExtra}
+            />
+          ) : (
+            d.extra && (
+              <CampoSaida
+                rotulo={d.extra.rotulo}
+                valor={extra}
+                onChange={setExtra}
+                placeholder={d.extra.placeholder}
+              />
+            )
+          )}
           {/* UX-35: o diferencial em uma linha. Sem isso o handoff é um
               e-mail solto e o cliente recomeça a conversa do zero. */}
           <p className="text-micro text-text-tertiary">
@@ -142,7 +267,7 @@ export function SaidaView({ d }: { d: DadosSaida }) {
           disabled={!podeEnviar}
           onClick={() => setEnviado(true)}
         >
-          Falar com o time
+          {d.ctaEnviar ?? "Falar com o time"}
         </Button>
       </div>
     </>

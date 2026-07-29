@@ -1,11 +1,15 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useState } from "react";
+import Link from "next/link";
 
 /**
  * COMPONENTES VALIDADOS DA ref11 (AI notes) — página inteira aprovada.
  * profile-row · search-mic · ações-rápidas (card ativo) · emitir-por-voz ·
  * pergunte-à-IA · notas-recentes. Fonte única.
+ * 28/07: ProfileRow e SearchMic ATUALIZADOS pra bater com mais/page.tsx (row
+ * "Você" virou Link com dot verde + chevron único) e a busca real de
+ * notas/blog (sem mic, input funcional + botão limpar).
  */
 
 const ACOES = [
@@ -27,30 +31,54 @@ const NOTAS = [
   { titulo: "Nota #0011 · João Lima", valor: "R$ 3.000", tags: ["Serviço", "Paga"], quando: "28/05" },
 ];
 
-/* ─── 1. Profile row ──────────────────────────────────────────────────────── */
+/* ─── 1. Profile row → virou "Você" (Link, dot verde, chevron único) ─────── */
 export function ProfileRow() {
   return (
-    <div className="flex items-center gap-3">
-      <span className="flex h-11 w-11 items-center justify-center rounded-full bg-surface-dark text-caption font-bold text-text-on-dark">
-        AB
+    <Link
+      href="/perfil"
+      className="flex items-center gap-3 rounded-2xl border border-border-hairline bg-surface-card p-3 transition-colors hover:border-border-strong active:bg-surface-alt"
+    >
+      <span className="relative shrink-0">
+        <span className="flex h-12 w-12 items-center justify-center rounded-full bg-surface-dark text-body font-bold text-text-on-dark">
+          AB
+        </span>
+        <span className="absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full border-2 border-surface-card bg-state-success" />
       </span>
       <div className="min-w-0 flex-1">
-        <p className="text-body font-bold text-text-primary">Ana Beatriz</p>
-        <p className="text-caption text-text-tertiary">ME · Serviço · Simples</p>
+        <p className="text-body font-semibold text-text-primary">Ana Beatriz</p>
+        <p className="truncate text-caption text-text-tertiary">
+          Sua conta · e-mail, senha e notificações
+        </p>
       </div>
-      <Redondo><Engrenagem /></Redondo>
-      <Redondo><Sino /></Redondo>
-    </div>
+      <span className="shrink-0 text-text-tertiary">
+        <ChevronDireita />
+      </span>
+    </Link>
   );
 }
 
-/* ─── 2. Search bar com mic ───────────────────────────────────────────────── */
+/* ─── 2. Search bar (sem mic — input funcional + botão limpar) ────────────── */
 export function SearchMic() {
+  const [busca, setBusca] = useState("");
   return (
     <div className="flex items-center gap-2 rounded-2xl border border-border-hairline bg-surface-card px-4 py-3">
       <Lupa />
-      <span className="flex-1 text-caption text-text-muted">Buscar nota, cliente, imposto…</span>
-      <span className="text-action-primary-sm"><Mic /></span>
+      <input
+        value={busca}
+        onChange={(e) => setBusca(e.target.value)}
+        placeholder="Buscar nota, cliente, imposto…"
+        className="flex-1 bg-transparent text-caption text-text-primary placeholder:text-text-muted focus:outline-none"
+      />
+      {busca !== "" && (
+        <button
+          type="button"
+          onClick={() => setBusca("")}
+          aria-label="Limpar busca"
+          className="shrink-0 text-text-tertiary transition-colors hover:text-text-primary"
+        >
+          <IconeX />
+        </button>
+      )}
     </div>
   );
 }
@@ -157,13 +185,6 @@ export function NotasRecentes() {
 }
 
 /* ─── auxiliares ──────────────────────────────────────────────────────────── */
-function Redondo({ children }: { children: ReactNode }) {
-  return (
-    <span className="flex h-10 w-10 items-center justify-center rounded-full border border-border-hairline bg-surface-card text-text-secondary">
-      {children}
-    </span>
-  );
-}
 function Onda() {
   const alturas = [8, 14, 20, 12, 22, 16, 10, 18, 24, 14, 8, 16];
   return (
@@ -179,11 +200,11 @@ function Onda() {
 function ic() {
   return { width: 18, height: 18, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true };
 }
-function Engrenagem() {
-  return <svg {...ic()}><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 8 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15H4.5a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 6.2 10 1.65 1.65 0 0 0 5.87 8.2l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H11a1.65 1.65 0 0 0 1-1.51V4.5a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V11a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>;
+function ChevronDireita() {
+  return <svg {...ic()}><path d="m9 18 6-6-6-6" /></svg>;
 }
-function Sino() {
-  return <svg {...ic()}><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6" /><path d="M10 20a2 2 0 0 0 4 0" /></svg>;
+function IconeX() {
+  return <svg {...ic()} width={16} height={16}><path d="M18 6 6 18M6 6l12 12" /></svg>;
 }
 function Lupa() {
   return <svg {...ic()} className="text-text-tertiary"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>;

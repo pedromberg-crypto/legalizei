@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
  * única — usados na página ref5 E no acervo /componentes.
  * Ajuste do Pedro: o DAS-ticket perdeu o código de barras (não condiz), fica só
  * a moldura de ticket + chips fiscais + Pagar com Pix.
+ * 28/07: DayStripFiscal e ProximasObrigacoes ATUALIZADOS pra bater com o
+ * /obrigacoes aprovado (círculo+dot embaixo em vez de pill, timeline dark
+ * agrupada por dia em vez de cards claros por mês).
  */
 
 const SEMANA = [
@@ -20,15 +23,13 @@ const SEMANA = [
   { d: "Dom", n: "20", obr: true },
 ];
 
-const MESES = [
-  {
-    mes: "Julho",
-    itens: [
-      { dia: "20", nome: "DAS de junho", info: "Vence · R$ 178,31" },
-      { dia: "31", nome: "Emitir notas de julho", info: "Conforme faturar" },
-    ],
-  },
-  { mes: "Agosto", itens: [{ dia: "20", nome: "DAS de julho", info: "Estimado ~R$ 252" }] },
+type EstadoObrigacao = "feito" | "girando" | "pagar" | "aberto";
+
+const EVENTOS: { dia: string; titulo: string; sub: string; estado: EstadoObrigacao }[] = [
+  { dia: "15/07", titulo: "Declaração mensal", sub: "A gente entrega, nada a fazer", estado: "feito" },
+  { dia: "20/07", titulo: "DAS de junho", sub: "R$ 178,31 · a pagar", estado: "pagar" },
+  { dia: "31/07", titulo: "Emitir notas de julho", sub: "Conforme você faturar", estado: "aberto" },
+  { dia: "31/07", titulo: "Declaração de julho", sub: "Em preparação pela gente", estado: "girando" },
 ];
 
 const POSTS = [
@@ -37,32 +38,27 @@ const POSTS = [
   { titulo: "Reforma tributária 2026: o que muda", meta: "5 min", Icone: IconeAlerta },
 ];
 
-/* ─── 1. Day-strip fiscal + countdown ─────────────────────────────────────── */
+/* ─── 1. Day-strip fiscal (círculo + dot embaixo — bate com /obrigacoes) ──── */
 export function DayStripFiscal() {
   return (
-    <div>
-      <div className="-mx-6 flex gap-2 overflow-x-auto px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {SEMANA.map((d) => (
-          <div key={d.n} className="flex flex-col items-center gap-1.5">
-            <div
-              className={`flex h-[68px] w-[52px] shrink-0 flex-col items-center justify-center rounded-[24px] ${
-                d.ativo
-                  ? "bg-action-primary text-text-on-brand"
-                  : "border border-border-hairline bg-surface-card text-text-primary"
-              }`}
-            >
-              <span className="text-body font-bold">{d.n}</span>
-              <span className={`text-micro ${d.ativo ? "text-text-on-brand/80" : "text-text-tertiary"}`}>
-                {d.d}
-              </span>
-              {d.obr && !d.ativo && <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-action-primary" />}
-            </div>
-          </div>
-        ))}
-      </div>
-      <p className="mt-5 text-body-strong font-bold text-text-primary">
-        Seu imposto vence em <span className="text-action-primary-sm">4 dias</span>
-      </p>
+    <div className="-mx-6 flex justify-between gap-1 px-6">
+      {SEMANA.map((d) => (
+        <div key={d.n} className="flex flex-col items-center gap-1.5">
+          <span className="text-micro text-text-tertiary">{d.d}</span>
+          <span
+            className={`flex h-10 w-10 items-center justify-center rounded-full text-caption font-semibold ${
+              d.ativo
+                ? "bg-action-primary text-text-on-brand"
+                : "border border-border-hairline bg-surface-card text-text-primary"
+            }`}
+          >
+            {d.n}
+          </span>
+          <span
+            className={`h-1.5 w-1.5 rounded-full ${d.obr && !d.ativo ? "bg-action-primary" : "bg-transparent"}`}
+          />
+        </div>
+      ))}
     </div>
   );
 }
@@ -118,38 +114,78 @@ export function StatsCoral() {
   );
 }
 
-/* ─── 4. Próximas obrigações (agrupadas por mês) ──────────────────────────── */
+/* ─── 4. Próximas obrigações (timeline dark, agrupada por dia — /obrigacoes) ─ */
 export function ProximasObrigacoes() {
   return (
-    <div>
-      <div className="mb-2 flex items-center gap-2">
-        <p className="text-body-strong font-semibold text-text-primary">Próximas obrigações</p>
-        <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-surface-tint-brand px-1.5 text-micro font-bold text-action-primary-sm">
-          3
-        </span>
-      </div>
-      {MESES.map((m) => (
-        <div key={m.mes} className="mb-3">
-          <p className="text-micro text-text-tertiary mb-2">{m.mes}</p>
-          <div className="flex flex-col gap-2">
-            {m.itens.map((it) => (
-              <div
-                key={it.nome}
-                className="flex items-center gap-3 rounded-2xl border border-border-hairline bg-surface-card p-3"
-              >
-                <div className="flex h-11 w-11 shrink-0 flex-col items-center justify-center rounded-xl bg-surface-alt">
-                  <span className="text-body font-bold leading-none text-text-primary">{it.dia}</span>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-caption font-semibold text-text-primary">{it.nome}</p>
-                  <p className="text-micro text-text-tertiary mt-0.5">{it.info}</p>
-                </div>
-              </div>
-            ))}
+    <div className="rounded-3xl bg-surface-alt p-4">
+      <p className="mb-4 text-center text-body-strong font-semibold text-text-primary">
+        Obrigações do mês
+      </p>
+      <div className="flex flex-col">
+        {EVENTOS.map((e, i) => (
+          <div key={i} className="flex gap-3">
+            <div className="w-11 shrink-0 pt-4 text-right">
+              <span className="text-micro font-medium text-text-tertiary">{e.dia}</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="mt-5 h-2.5 w-2.5 shrink-0 rounded-full bg-surface-dark" />
+              {i < EVENTOS.length - 1 && <span className="w-px flex-1 bg-border-strong" />}
+            </div>
+            <div className="flex-1 pb-3">
+              <EventoObrigacaoCard e={e} />
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
+  );
+}
+
+function EventoObrigacaoCard({
+  e,
+}: {
+  e: { titulo: string; sub: string; estado: EstadoObrigacao };
+}) {
+  return (
+    <div className="rounded-2xl bg-surface-dark p-4 text-text-on-dark">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-caption font-bold">{e.titulo}</p>
+          <p className="text-micro text-text-on-dark/70 mt-1">{e.sub}</p>
+        </div>
+        <MarcadorObrigacao estado={e.estado} />
+      </div>
+      {e.estado === "pagar" && (
+        <button className="mt-3 rounded-lg bg-action-primary px-3 py-1.5 text-micro font-semibold text-text-on-brand">
+          Ver a guia
+        </button>
+      )}
+    </div>
+  );
+}
+
+function MarcadorObrigacao({ estado }: { estado: EstadoObrigacao }) {
+  if (estado === "feito") {
+    return (
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-state-success text-text-on-dark">
+        <IconeCheckSm />
+      </span>
+    );
+  }
+  if (estado === "girando") {
+    return <span className="h-8 w-8 shrink-0 rounded-full border-2 border-white/25 border-t-white" />;
+  }
+  if (estado === "pagar") {
+    return (
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-action-primary text-text-on-brand">
+        <IconeBancoSm />
+      </span>
+    );
+  }
+  return (
+    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/15 text-text-on-dark">
+      <IconeNotaSm />
+    </span>
   );
 }
 
@@ -222,4 +258,13 @@ function IconeNota() {
 }
 function IconeAlerta() {
   return <svg {...i20()} width={26} height={26}><path d="M12 3 2 20h20z" /><path d="M12 10v4M12 17v.01" /></svg>;
+}
+function IconeCheckSm() {
+  return <svg {...i20()} width={16} height={16}><path d="m6 12 4 4 8-9" /></svg>;
+}
+function IconeBancoSm() {
+  return <svg {...i20()} width={16} height={16}><path d="M3 9 12 4l9 5" /><path d="M5 9v9M10 9v9M14 9v9M19 9v9" /><path d="M3 20h18" /></svg>;
+}
+function IconeNotaSm() {
+  return <svg {...i20()} width={16} height={16}><path d="M7 3h7l4 4v14H7z" /><path d="M14 3v4h4" /></svg>;
 }

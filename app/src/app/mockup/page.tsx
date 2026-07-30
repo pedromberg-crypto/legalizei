@@ -349,6 +349,74 @@ const GRUPOS: {
     ],
   },
   {
+    id: "migrar",
+    nome: "🆕 FLOW #2 · Migrar de contador (M1–M5)",
+    descricao:
+      "O blind spot mais antigo do projeto, construído em 30/07: \"metade do mercado, zero testado\" desde 15/07. A lógica já estava modelada e testada no motor (`flow-migrar.js`, M0–M5, 3 personas); faltavam as telas. 4 diferenças estruturais em relação ao flow #1: (1) NÃO tem entrevista de atividade — o CNAE já existe, a gente lê o cartão CNPJ; (2) o diagnóstico usa o número REAL dos 12 meses (CGSN 140/18 art. 26), não estimativa em cima de faixa — a dívida `promessa-quebrada` não se aplica aqui; (3) NÃO tem taxa de governo (a empresa já existe); (4) 🔴 a pausa mais perigosa do produto inteiro mora no M4 — o TTRT depende do contador ANTIGO validar, ou seja, de um terceiro que está perdendo o cliente pra nós. 💰 DECISÃO TRAVADA (Pedro, 30/07): cobra ANTES do TTRT, com promessa explícita de devolução no contrato como contrapartida.",
+    telas: [
+      {
+        rota: "/entrada?intencao=migrar",
+        nome: "M0 · A porta que era beco",
+        nota: "O achado M0 do motor: o fork do N3 mandava quem escolhia 'já tenho empresa' pra um card 'essa parte ainda não existe'. Metade do mercado batia numa porta fechada. ✅ 30/07: o gate de cidade agora segue pro M1 quando a intenção é migrar. O título também conjuga certo ('onde FICA', presente — a empresa já existe).",
+      },
+      {
+        rota: "/migrar/cnpj",
+        nome: "M1 · Seu CNPJ (consulta + veredito)",
+        nota: "Consulta e veredito na MESMA tela, de propósito: no flow #1 o veredito é tela própria porque depende da IA interpretar o que a pessoa escreveu (e ela pode errar); aqui o CNAE é fato registrado. Digite qualquer CNPJ de 14 dígitos → loading que explica → cartão + as 3 checagens + veredito. As 2 saídas (regulada / não atendemos) estão alcançáveis por link discreto, pra a prancheta ver sem trocar de CNPJ.",
+      },
+      {
+        rota: "/migrar/diagnostico",
+        nome: "M2 · Diagnóstico com o número REAL",
+        nota: "🎯 O coração comercial do flow #2 e a maior vantagem sobre o #1: empresa com 12+ meses tem histórico, então o Fator R sai do que DE FATO aconteceu — não de faixa declarada. Cenário padrão = Fator R abaixo do corte (paga Anexo V sem precisar), com a conta aberta: receita 12m, folha 12m, o % e o corte de 28%.",
+      },
+      {
+        rota: "/migrar/diagnostico?cenario=ja-otimo",
+        nome: "M2 · ⚖️ Guarda-corpo de honestidade",
+        nota: "O caminho que a maioria dos produtos não constrói: e se o contador atual JÁ acertou? A tela diz isso ('seu imposto já está certo') e troca o argumento pra SERVIÇO — guia pronta, nota em 2 toques, alguém olhando o número. Vender economia pra quem não tem seria a `promessa-quebrada` do flow #2.",
+      },
+      {
+        rota: "/migrar/plano",
+        nome: "M3 · A conta da migração",
+        nota: "Sem taxa de governo — a empresa já existe, não há DAE da Junta nem TFLF. O choque de custo do N7 (~R$463 na 3ª tela, UX-54) simplesmente não acontece, e a tela diz isso explicitamente em vez de só omitir. Só a mensalidade no rodapé.",
+      },
+      {
+        rota: "/migrar/contrato",
+        nome: "M3b · Contrato (com a promessa de devolução)",
+        nota: "🔴 A linha que sustenta a decisão de cobrar antes do TTRT: 'se a transferência não for concluída por algum motivo fora do seu controle, você recebe tudo de volta'. NÃO é copy de marketing — é a contrapartida obrigatória de cobrar por algo cujo destravamento depende de um terceiro hostil. Se essa linha sair, a decisão inteira precisa ser reaberta.",
+      },
+      {
+        rota: "/pagamento?fluxo=migrar",
+        nome: "M3c · Pagamento (reusa o N9)",
+        nota: "Mesma tela do N9 com `?fluxo=migrar`: o total não soma taxa de governo e o aviso fala de MIGRAÇÃO ('sua migração começa hoje' / 'a gente já aciona seu contador anterior'). CPF, métodos e a faixa de idempotência são idênticos — não valia uma tela nova.",
+      },
+      {
+        rota: "/migrar/passivo",
+        nome: "M4a · 🔥 Auditoria de passivo",
+        nota: "O risco EXCLUSIVO do flow #2: a empresa chega com passado. O consolidado fiscal (#14) diz que as obrigações do período antigo ficam com o contador anterior — mas o cliente não sabe disso, e a DÍVIDA é da empresa. Assumir sem auditar = herdar problema que a gente não criou e virar o culpado. Persona `migra-passivo`. 🕓 Se isso vira upsell é decisão do Mauro.",
+      },
+      {
+        rota: "/migrar/passivo?cenario=limpo",
+        nome: "M4a · Migração limpa",
+        nota: "Persona `migra-limpo`: nada pendente. A tela existe mesmo sem problema porque a auditoria é a promessa ('você tem o direito de saber o que está assumindo antes da gente encostar nela'), não o alarme.",
+      },
+      {
+        rota: "/migrar/transferencia",
+        nome: "M4b · A transferência (pipeline)",
+        nota: "Reusa o PainelView do N21 (parametrizado em 30/07) — mesma máquina de 4 estados, outro pipeline: encerrar com o antigo → transferir no conselho → atualizar os órgãos → liberar acesso. Os códigos oficiais (resolução CFC, Evento 232) ficam FORA da tela: são 🟡 pendência D, não ratificados em fonte primária.",
+      },
+      {
+        rota: "/migrar/transferencia?estado=travado",
+        nome: "M4b · 🔴 TTRT travado (migra-refem)",
+        nota: "A pausa mais perigosa do produto inteiro. O TTRT é aberto por nós no CRC-MG e validado pelo contador ANTIGO — um concorrente que está perdendo o cliente. Todas as pausas do flow #1 esperam órgão neutro ou o próprio cliente; esta espera alguém com interesse contrário. A tela ASSUME o problema ('a gente assumiu esse problema') em vez de repassar culpa ou deixar no limbo.",
+      },
+      {
+        rota: "/migrar/ativa",
+        nome: "M5 · Empresa migrada",
+        nota: "Fecha o loop do M2: a economia prometida com número REAL vira a 1ª tarefa concreta, com valor na cara ('ajustar seu pró-labore e economizar R$X/mês'). Diferença central vs. o N24: lá a promessa é estimativa que só resolve meses depois; aqui o número era real desde a 2ª tela, então pode virar ação imediata.",
+      },
+    ],
+  },
+  {
     id: "cenario-empresa-paga",
     nome: "🆕 Cenário alternativo · Legalizai paga o DAE",
     descricao:

@@ -15,12 +15,23 @@
  * ─── O QUE CONTA COMO PASSO ──────────────────────────────────────────────
  * Tudo que exige AÇÃO do cliente até a empresa entrar na máquina.
  *
- * Inclui o N18 (pró-labore) mesmo sendo arquétipo A3 (número/prova) e não A1
- * (coleta): do ponto de vista de quem preenche, mexer no pró-labore é passo
- * como qualquer outro, exige decisão e não dá pra seguir sem ele.
- *
  * ⚠️ O CNAE ótimo NÃO é mais passo do dossiê: virou o ENCAIXE, pré-pagamento
  * (reordenacao-cluster-fiscal-encaixe, 21/07). Saiu daqui e a contagem caiu 1.
+ *
+ * ─── 🐛 29/07 — O CONTADOR VOLTOU A MENTIR, E PELO MOTIVO OPOSTO ──────────
+ * O **N18 (pró-labore) foi DISSOLVIDO do wizard em 28/07**: o enquadramento
+ * deixou de ser escolhido num simulador manual antes de a empresa existir e
+ * passou a ser SUGERIDO no N19, com o refino de verdade acontecendo depois da
+ * constituição (`/pro-labore`, mesma engine). A tela sumiu; o passo ficou.
+ *
+ * Resultado: a lista prometia 9 passos e um deles não existia mais — o cliente
+ * ia esperar um "Quanto você se paga" que nunca chegaria. É o mesmo dano de
+ * 19/07 pela porta oposta: lá o contador parava cedo demais, aqui ele contava
+ * um passo fantasma. **Saiu daqui, e a contagem caiu de 9 pra 8.**
+ *
+ * A lição do arquivo continua valendo, e agora com um adendo: fonte única não
+ * basta se ninguém a revisita quando uma tela morre. Ao remover tela do flow,
+ * este arquivo é parada obrigatória.
  *
  * ─── ⚠️ A CORREÇÃO DE 19/07 — O CONTADOR MENTIA NO FIM ───────────────────
  * A v1 parava no N18, com esta justificativa: N19 e N20 travam enquanto o
@@ -78,7 +89,8 @@ export const PASSOS_DOSSIE: Passo[] = [
   // isso é comportamento DO N16 — se explica lá dentro, na hora em que ele
   // digita, não como legenda na lista (que é mapa, não manual).
   { nome: "Nome da empresa", tela: "N16" },
-  { nome: "Quanto você se paga", tela: "N18", travaSemPagamento: true },
+  // 🐛 Aqui vivia { nome: "Quanto você se paga", tela: "N18" }. O N18 foi
+  // dissolvido em 28/07 (ver header) e o passo virou promessa vazia.
   // N19 + N20 num passo só: pro cliente é um ato (conferir e autorizar). São
   // duas telas por razão jurídica, não por razão de tarefa.
   { nome: "Revisar e confirmar", tela: "N19+N20", travaSemPagamento: true },

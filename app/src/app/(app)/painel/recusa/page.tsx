@@ -52,11 +52,11 @@ export default function RecusaPage() {
   if (fase === "esgotado") {
     return (
       <PainelView
-        concluidas={2}
-        emAndamento={2}
+        concluidas={1}
+        emAndamento={1}
         socios={1}
         recusa={{
-          etapa: 2,
+          etapa: 1,
           titulo: "As 3 opções de nome não passaram",
           motivo:
             "Testamos automaticamente as 3 que você priorizou, e nenhuma passou na Junta. Precisamos de mais 3 sugestões suas pra tentar de novo.",
@@ -67,14 +67,16 @@ export default function RecusaPage() {
   }
 
   // Enquanto tenta 1ª/2ª/3ª automaticamente: mesma timeline do painel, com o
-  // status da etapa 2 mostrando qual tentativa está rodando agora.
+  // status da etapa 1 ("Analisando viabilidade") mostrando qual tentativa
+  // está rodando agora. ⚠️ 29/07: índice mudou de 2 pra 1 (ETAPAS caiu de 4
+  // pra 3 — ver `components/painel.tsx`).
   return (
     <PainelView
-      concluidas={2}
-      emAndamento={2}
+      concluidas={1}
+      emAndamento={1}
       socios={1}
       recusa={{
-        etapa: 2,
+        etapa: 1,
         titulo:
           fase === "tentando"
             ? `Testando a opção ${tentativa + 1} de 3: "${OPCOES[tentativa]}"`

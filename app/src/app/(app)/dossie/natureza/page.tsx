@@ -1,14 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "../campos";
+import { useRouter } from "next/navigation";
+import { NaturezaView } from "@/components/wizard-dossie";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * N15 — NATUREZA JURÍDICA · A1 · shell APP
+ * N15 — NATUREZA JURÍDICA · rota de produção (shell APP)
  * ═══════════════════════════════════════════════════════════════════════════
+ * ⚠️ A TELA vive em `components/wizard-dossie.tsx` (`NaturezaView`) desde
+ * 29/07. Esta page é o wrapper: liga a navegação.
+ *
  * Spec: spec-telas-entrada-b1-b2.md → Tela 11 (2.6) · mapa T11→N15
  * Motor: b2.coleta (natureza) · coerência com N12 (sócios)
  *
@@ -23,124 +24,23 @@ import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "../campos";
  * caso solo. A spec diz "solo→SLU"; o produto RECOMENDA SLU mas deixa a pessoa
  * escolher LTDA. A recomendação nunca é uma trava — só a incoerência é.
  *
- * 🚧 Mock: solo vem herdado do N12. Aqui fixo em solo pra provar a recomendação
- * + o guard-rail de incoerência quando a pessoa força a opção errada.
+ * ─── 🐛 29/07 — O GUARD-RAIL NUNCA TINHA RODADO ──────────────────────────
+ * `TEM_SOCIO` era um `const false` local, e `incoerente` é `escolha === "slu"
+ * && TEM_SOCIO`. Com o mock fixo em solo, a expressão era **sempre falsa**: o
+ * bloco de bloqueio jamais renderizou, nem uma vez, em review nenhuma. E o doc
+ * afirmava que o mock existia justamente "pra provar o guard-rail".
+ *
+ * Duas correções:
+ *   1. `TEM_SOCIO` passou a vir da fonte única (`../mock`, hoje com sócio), o
+ *      que torna o caminho ALCANÇÁVEL: escolher "dono único" tendo sócio agora
+ *      dispara o aviso de verdade.
+ *   2. A copy dizia **"A gente já ajustou pra você"** e nada era ajustado — só
+ *      o botão desabilitava. Ou seja: se algum dia rodasse, mentiria. Agora o
+ *      aviso traz a ação que ele promete, e quem ajusta é o clique.
  * ═══════════════════════════════════════════════════════════════════════════
  */
-
-// Herdado do N12 (mock). true = tem 2º sócio.
-const TEM_SOCIO = false;
-
-type Tipo = "slu" | "ltda";
-
-const RECOMENDADO: Tipo = TEM_SOCIO ? "ltda" : "slu";
-
-const INFO: Record<Tipo, { nome: string; linha: string; sigla: string }> = {
-  slu: {
-    nome: "Empresa de dono único",
-    sigla: "SLU",
-    linha: "Feita pra quem abre sozinho. Seu patrimônio pessoal fica separado da empresa.",
-  },
-  ltda: {
-    nome: "Sociedade entre sócios",
-    sigla: "LTDA",
-    linha: "Feita pra 2 ou mais donos, com a divisão da empresa em contrato.",
-  },
-};
-
 export default function NaturezaPage() {
-  const [escolha, setEscolha] = useState<Tipo>(RECOMENDADO);
+  const router = useRouter();
 
-  // Guard-rail: SLU (dono único) + tem sócio = impossível.
-  const incoerente = escolha === "slu" && TEM_SOCIO;
-  // LTDA solo é permitido (fato do CNPJ do Pedro); só avisa, não trava.
-  const ltdaSolo = escolha === "ltda" && !TEM_SOCIO;
-
-  return (
-    <>
-      <TelaHeader meta="Tipo da empresa" />
-
-      <main className="app-main">
-        <Titulo sub="É o formato jurídico da empresa. A gente já sugere o certo pro seu caso.">
-          O tipo da sua empresa
-        </Titulo>
-
-        <Corpo>
-          <div>
-            <p className="text-micro text-text-tertiary mb-1.5">
-              Nossa recomendação pra você
-            </p>
-            <div className="flex flex-col gap-2">
-              {(["slu", "ltda"] as Tipo[]).map((t) => {
-                const on = escolha === t;
-                const rec = t === RECOMENDADO;
-                return (
-                  <button
-                    key={t}
-                    onClick={() => setEscolha(t)}
-                    className={`rounded-md border p-4 text-left transition-colors
-                      ${
-                        on
-                          ? "border-border-focus bg-surface-tint-brand"
-                          : "border-border-hairline bg-surface-card hover:border-border-strong"
-                      }`}
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-body font-semibold text-text-primary">
-                        {INFO[t].nome}
-                      </span>
-                      {rec && (
-                        <span className="rounded-full bg-state-success-tint px-2 py-0.5 text-micro font-semibold text-state-success-text">
-                          Sugerido
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-caption text-text-secondary">
-                      {INFO[t].linha}
-                    </p>
-                    <p className="text-micro text-text-tertiary mt-1">
-                      Sigla oficial: {INFO[t].sigla}
-                    </p>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Guard-rail contra escolha impossível (spec Tela 11). */}
-          {incoerente && (
-            <Aviso variante="danger" titulo="Esse tipo não combina com sócios">
-              Empresa de dono único é só pra quem abre sozinho. Como você tem
-              sócio, o certo é a sociedade. A gente já ajustou pra você.
-            </Aviso>
-          )}
-
-          {/* LTDA solo é permitido (fato do CNPJ do Pedro), só contextualiza. */}
-          {ltdaSolo && (
-            <Aviso variante="info" titulo="Dá pra abrir sozinho como sociedade">
-              É possível e às vezes faz sentido, mas exige um pouco mais de
-              formalidade. Se você não tem um motivo específico, a de dono único
-              costuma ser mais simples.
-            </Aviso>
-          )}
-
-          <Card>
-            <p className="text-caption font-semibold text-text-primary mb-1">
-              A gente cuida da sigla
-            </p>
-            <p className="text-caption text-text-secondary">
-              Os dois separam seu dinheiro pessoal do da empresa. O resto do
-              papel a gente resolve.
-            </p>
-          </Card>
-        </Corpo>
-
-        <Rodape>
-          <Button full disabled={incoerente}>
-            Continuar
-          </Button>
-        </Rodape>
-      </main>
-    </>
-  );
+  return <NaturezaView onSeguir={() => router.push("/dossie/nome")} />;
 }

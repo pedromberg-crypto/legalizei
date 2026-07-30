@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Confetti } from "@/components/confetti";
 // ⚠️ `encaixe.tsx` importa daqui, mas só `import type` (apagado no build), então
 // não há ciclo em runtime.
 import { ConteudoCnae, OutrasOpcoes, encaixeDeResultado } from "@/components/encaixe";
@@ -184,7 +183,6 @@ export function VereditoView({
     setEnviado: (v: boolean) => void;
   };
 }) {
-  const [celebrar, setCelebrar] = useState(false);
   // Captura das saídas 🟡/🔴 (spec T4 + UX-35). Hooks no topo: não podem viver
   // dentro do ramo, e o caminho feliz simplesmente não usa.
   const [nomeI, setNomeI] = useState("");
@@ -274,41 +272,28 @@ export function VereditoView({
           </p>
         </div>
 
+        {/* ─────────────────────────────────────────────────────────────────
+            🪒 29/07 — A CELEBRAÇÃO DO CTA FOI REMOVIDA (decisão do Pedro).
+
+            Aqui existia uma sequência: ao tocar "É isso mesmo", o botão
+            ENCOLHIA até virar um ponto (scale .18 + fade), o "refazer" sumia
+            instantâneo, e um confete Lottie da marca assumia o círculo no
+            rodapé; só quando a animação terminava é que o `onSeguir` disparava.
+
+            Agora o CTA é igual ao das outras telas: toca e segue. O confete
+            segue vivo onde ele comemora um FATO (o N24, empresa ativa) — aqui
+            ele comemorava uma confirmação de meio de caminho.
+            ───────────────────────────────────────────────────────────────── */}
         <div className="app-footer-cta">
-          {/* 🌾 colhido: "refazer" ACIMA do CTA, sem perder o texto digitado.
-              Ao celebrar, some INSTANTÂNEO (invisible, sem transição): a pessoa
-              já confirmou, não faz sentido oferecer voltar durante o confete. É
-              `invisible`, não removido, pra não dar reflow e empurrar o burst. */}
-          <div className={`flex justify-center mb-1 ${celebrar ? "invisible" : ""}`}>
+          {/* 🌾 colhido: "refazer" ACIMA do CTA, sem perder o texto digitado. */}
+          <div className="flex justify-center mb-1">
             <Button variant="ghost" onClick={onRefazer}>
               Não é bem isso, refazer
             </Button>
           </div>
-          {/* 🌾 colhido: ao confirmar, o botão ENCOLHE até virar um ponto e o
-              confete (Lottie da marca) assume o círculo ali no rodapé. */}
-          <div className="relative">
-            <div
-              style={{
-                transition:
-                  "transform .32s cubic-bezier(.22,1,.36,1), opacity .32s",
-                transformOrigin: "center",
-                transform: celebrar ? "scale(.18)" : "scale(1)",
-                opacity: celebrar ? 0 : 1,
-              }}
-            >
-              <Button full disabled={celebrar} onClick={() => setCelebrar(true)}>
-                É isso mesmo
-              </Button>
-            </div>
-            {celebrar && (
-              <Confetti
-                onDone={() => {
-                  setCelebrar(false);
-                  onSeguir?.();
-                }}
-              />
-            )}
-          </div>
+          <Button full onClick={onSeguir}>
+            É isso mesmo
+          </Button>
         </div>
       </>
     );

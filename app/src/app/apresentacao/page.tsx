@@ -14,6 +14,33 @@ import { SaidaView, type DadosSaida } from "@/components/saida";
 import { TelaHeader } from "@/components/ui/tela";
 import { VereditoView, type Resultado } from "@/components/veredito";
 import {
+  SocioView,
+  VinculoView,
+  SociosView,
+  EmpresaView,
+  CnaeSecundariosView,
+  NaturezaView,
+  NomeView,
+} from "@/components/wizard-dossie";
+import {
+  RevisarView,
+  TermoView,
+  AssinaturaView,
+  HomeAtivacaoView,
+  RetomarView,
+  AguardandoView,
+} from "@/components/wizard-cauda";
+import { PainelView } from "@/components/painel";
+import {
+  MigrarCnpjView,
+  MigrarDiagnosticoView,
+  MigrarPlanoView,
+  MigrarContratoView,
+  MigrarPassivoView,
+  MigrarTransferenciaView,
+  MigrarAtivaView,
+} from "@/components/wizard-migrar";
+import {
   ContaView,
   PlanoView,
   ContratoView,
@@ -237,7 +264,144 @@ type Etapa =
   | "plano"
   | "contrato"
   | "pagamento"
+  // ─── B4 · o dossiê (29/07) ───────────────────────────────────────────────
+  // Depois do dinheiro, a coleta. Estas 7 só puderam entrar na demo junto com
+  // a extração pra `components/wizard-dossie.tsx`: antes eram `page.tsx` com
+  // estado próprio, e o que não é componente não renderiza dentro do aparelho.
+  | "socio"
+  | "vinculo"
+  | "socios"
+  | "empresa"
+  | "cnae-secundarios"
+  | "natureza"
+  | "nome"
+  // ─── A CAUDA (N19–N24) + as 2 pausas de pagamento (P1, P2) — 29/07 ──────
+  // P1/P2 NÃO são sequenciais: são pausas de pagamento (`N9--boleto-->P2`,
+  // `P1--reentrada-->N10`), alcançáveis por pill própria, não pelo botão
+  // Continuar de nenhuma tela do meio.
+  | "revisar"
+  | "termo"
+  | "painel"
+  | "assinatura"
+  | "ativacao"
+  // ─── FLOW #2 · migrar de contador (30/07) ────────────────────────────────
+  // Ramo PARALELO, não continuação: sai do fork do N3 e nunca reencontra o
+  // flow #1. Por isso tem sequência própria, não entra em ETAPAS_CAUDA.
+  | "m-cnpj"
+  | "m-diagnostico"
+  | "m-plano"
+  | "m-contrato"
+  | "m-pagamento"
+  | "m-passivo"
+  | "m-transferencia"
+  | "m-travado"
+  | "m-ativa"
+  | "retomar"
+  | "aguardando"
   | "fim";
+
+/**
+ * As 7 etapas do dossiê, na ordem. Fonte única do roteamento da demo: o
+ * `momento`, o shell de tela cheia e a sequência de "Continuar" leem daqui, em
+ * vez de repetir a lista em três `||` diferentes.
+ */
+const ETAPAS_DOSSIE = [
+  "socio",
+  "vinculo",
+  "socios",
+  "empresa",
+  "cnae-secundarios",
+  "natureza",
+  "nome",
+] as const satisfies readonly Etapa[];
+
+type EtapaDossie = (typeof ETAPAS_DOSSIE)[number];
+
+function noDossie(e: Etapa): e is EtapaDossie {
+  return (ETAPAS_DOSSIE as readonly string[]).includes(e);
+}
+
+/**
+ * A etapa seguinte à do dossiê. A última (`nome`) segue pro N19 (revisar) —
+ * era `?? "fim"` até a cauda entrar na demo; agora "fim" é depois do N24.
+ */
+function depoisDoDossie(e: EtapaDossie): Etapa {
+  const i = ETAPAS_DOSSIE.indexOf(e);
+  return ETAPAS_DOSSIE[i + 1] ?? "revisar";
+}
+
+/** A etapa anterior. A primeira (`socio`) volta pro pagamento. */
+function antesDoDossie(e: EtapaDossie): Etapa {
+  const i = ETAPAS_DOSSIE.indexOf(e);
+  return i === 0 ? "pagamento" : ETAPAS_DOSSIE[i - 1];
+}
+
+/**
+ * As etapas da cauda (N19–N24) — só as que ligam num shell de tela cheia
+ * igual ao B3/B4. P1/P2 (retomar, aguardando) NÃO entram aqui: são pausas
+ * isoladas, sem posição fixa nesta sequência (ver comentário no `type Etapa`).
+ */
+const ETAPAS_CAUDA = [
+  "revisar",
+  "termo",
+  "painel",
+  "assinatura",
+  "ativacao",
+] as const satisfies readonly Etapa[];
+
+type EtapaCauda = (typeof ETAPAS_CAUDA)[number];
+
+function naCauda(e: Etapa): e is EtapaCauda {
+  return (ETAPAS_CAUDA as readonly string[]).includes(e);
+}
+
+/**
+ * FLOW #2 — migrar de contador, na ordem real (30/07).
+ *
+ * ⚠️ É um ramo PARALELO, não continuação do flow #1: sai do fork do N3 e nunca
+ * reencontra o tronco. Por isso tem sequência própria — `depoisDoMigrar` e
+ * `antesDoMigrar` andam só aqui dentro, e o "antes" do 1º passo devolve pro
+ * gate de cidade (`cidade`), que é de onde ele de fato veio.
+ *
+ * `m-travado` fica FORA da sequência: é estado de exceção do `m-transferencia`
+ * (persona `migra-refem`), alcançável por pill própria, não por "Continuar".
+ */
+const ETAPAS_MIGRAR = [
+  "m-cnpj",
+  "m-diagnostico",
+  "m-plano",
+  "m-contrato",
+  "m-pagamento",
+  "m-passivo",
+  "m-transferencia",
+  "m-ativa",
+] as const satisfies readonly Etapa[];
+
+type EtapaMigrar = (typeof ETAPAS_MIGRAR)[number];
+
+function noMigrar(e: Etapa): e is EtapaMigrar | "m-travado" {
+  return (ETAPAS_MIGRAR as readonly string[]).includes(e) || e === "m-travado";
+}
+
+function depoisDoMigrar(e: EtapaMigrar): Etapa {
+  const i = ETAPAS_MIGRAR.indexOf(e);
+  return ETAPAS_MIGRAR[i + 1] ?? "fim";
+}
+
+function antesDoMigrar(e: EtapaMigrar): Etapa {
+  const i = ETAPAS_MIGRAR.indexOf(e);
+  // O 1º passo do flow #2 volta pro gate de cidade, que é de onde ele veio.
+  return i === 0 ? "cidade" : ETAPAS_MIGRAR[i - 1];
+}
+
+/** P1 (retomar) e P2 (aguardando) — pausas de pagamento, fora da sequência. */
+const ETAPAS_ESPERA = ["retomar", "aguardando"] as const satisfies readonly Etapa[];
+
+type EtapaEspera = (typeof ETAPAS_ESPERA)[number];
+
+function naEspera(e: Etapa): e is EtapaEspera {
+  return (ETAPAS_ESPERA as readonly string[]).includes(e);
+}
 
 /** Estado inteiro da tela — unidade do histórico (seta de voltar). */
 type Snapshot = {
@@ -284,6 +448,32 @@ type Momento =
   | "plano"
   | "contrato"
   | "pagamento"
+  | "socio"
+  | "vinculo"
+  | "socios"
+  | "empresa"
+  | "cnae-secundarios"
+  | "natureza"
+  | "nome"
+  | "revisar"
+  | "termo"
+  | "painel"
+  | "assinatura"
+  | "ativacao"
+  // ─── FLOW #2 · migrar de contador (30/07) ────────────────────────────────
+  // Ramo PARALELO, não continuação: sai do fork do N3 e nunca reencontra o
+  // flow #1. Por isso tem sequência própria, não entra em ETAPAS_CAUDA.
+  | "m-cnpj"
+  | "m-diagnostico"
+  | "m-plano"
+  | "m-contrato"
+  | "m-pagamento"
+  | "m-passivo"
+  | "m-transferencia"
+  | "m-travado"
+  | "m-ativa"
+  | "retomar"
+  | "aguardando"
   | "fim";
 
 /**
@@ -345,8 +535,13 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
   plano: [
     {
       id: "UX-74",
-      oque: "N7 reconstruído como OFERTA: âncora verdadeira (escritório tradicional cobra honorário, a gente não) · o plano vira produto, com card escuro e os 7 itens inclusos em linguagem de dono · FAQ que desarma as 4 objeções reais (pegadinha, fidelidade, desistência, reajuste) · prova dos 22 anos do escritório. A tela aprovada é honesta mas não vende: dois cards e uma linha de taxa.",
+      oque: "N7 reconstruído como OFERTA: o plano vira produto, com card escuro e os itens inclusos em linguagem de dono, e a âncora verdadeira (escritório tradicional cobra honorário, a gente não). A tela aprovada é honesta mas não vende: dois cards e uma linha de taxa.",
       status: "🔴 pendente no PlanoView (prop layout='oferta')",
+    },
+    {
+      id: "UX-75",
+      oque: "LAPIDAÇÃO da própria UX-74 (achado do Pedro: 'muita informação'). Saíram 3 blocos, cada um por um motivo: (1) o FAQ era pré-eco do N8, que já responde 3 das 4 perguntas na tela onde a pessoa assina; a 4ª, que o N8 não cobre, virou micro-linha VISÍVEL sob o preço, porque letra miúda escondida em acordeon é a pegadinha que a tela existe pra evitar; (2) o card comparativo era o 3º lugar dizendo 'grátis' e usava preço riscado, linguagem de varejo, o mesmo vício cortado do N4 no mesmo dia; a âncora sobreviveu como 1 linha no card verde; (3) os '22 anos' já apareciam no N2 e no N8, onde são card completo. Inclusos caíram de 7 pra 5 ('Abertura do CNPJ' misturava balde, estava dentro do card MENSAL). 8 blocos → 4.",
+      status: "✅ aplicado no PlanoOferta (29/07)",
     },
     {
       id: "⚠️ preço",
@@ -354,9 +549,168 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
       status: "🟡 preço final deferido ao Mauro",
     },
     {
-      id: "🟡 número",
-      oque: "Card comparativo novo: mostra o honorário de abertura numa contabilidade tradicional (R$ 1.621, o salário mínimo vigente) contra o nosso R$ 0, deixando explícito que as taxas de governo são as mesmas nos dois casos. A régua é referência de mercado, não média estatística, e a copy diz isso.",
-      status: "🟡 valor definido pelo Pedro (29/07); confirmar com o Mauro",
+      id: "⚓ âncora",
+      oque: "A comparação com a contabilidade tradicional sobrevive como UMA linha no card verde, sem número: 'costuma custar em torno de um salário mínimo de honorário'. O card comparativo com o R$ 1.621 riscado saiu junto na lapidação. Sem número exposto, some também o risco de fingir precisão estatística numa régua que é referência de mercado.",
+      status: "✅ resolvido pela UX-75 (não depende mais de valor)",
+    },
+  ],
+  contrato: [
+    {
+      id: "UX-76",
+      oque: "As '4 linhas' eram 2 novas e 2 ecos: 'abre sem honorário' e 'mensalidade; taxas à parte' RE-EXPLICAVAM com palavras o que o N7 tinha mostrado com números um toque antes. E a tela do aceite não exibia um único valor: você assinava sem ver na tela quanto paga. As duas primeiras linhas viraram os NÚMEROS (paga hoje, com a composição · depois todo mês) e as duas com informação nova de verdade (período mínimo · 7 dias) seguem como bullet. Continua sendo quatro linhas.",
+      status: "✅ aplicado no ContratoView (29/07)",
+    },
+    {
+      id: "🐛 BUG-03",
+      oque: "'Ler o contrato completo' era `<a href=\"#\">` — âncora morta que sequestra a URL e joga a página pro topo no meio do aceite. Mesma classe do 'Falar com o time' sem onClick pego em 28/07, e aqui é O link da tela. Virou botão de verdade com prop `onLerContrato`.",
+      status: "✅ corrigido — ⚠️ segue INERTE até existir o documento (Mauro/Larissa)",
+    },
+    {
+      id: "🟡 fidelidade",
+      oque: "O período mínimo não tem prazo declarado: a pessoa aceita um lock-in de duração não informada. Por decisão do Pedro (29/07) a copy fica GENÉRICA — sem número inventado, sem placeholder FAKE — e aponta pro contrato, que é onde o prazo vai estar.",
+      status: "🟡 prazo da fidelidade pendente (Mauro/Larissa)",
+    },
+  ],
+  pagamento: [
+    {
+      id: "🐛 BUG-04",
+      oque: "CPF pedido DUAS VEZES. O N6 virou front-load em 28/07 e passou a coletar CPF, mas o N9 continuava abrindo campo vazio e pedindo de novo. É literalmente o '1 dado duplicado sem reuso (CPF pedido 2x)' que o cruzamento com os dados da JUCEMG pegou na reunião de 28/07: a correção foi aplicada no N10 e esqueceu esta tela. Agora o N9 só EXIBE o CPF: como ele já foi digitado e validado no cadastro, não há o que reconfirmar nem editar (decisão do Pedro, 29/07).",
+      status: "✅ corrigido — ⚠️ na produção só funciona com persistência (RF-01)",
+    },
+    {
+      id: "UX-77",
+      oque: "'Acelere seu processo' era imperativo de varejo numa tela onde não há mais nada a vender: a pessoa já decidiu, só falta pagar. O título agora AFIRMA o fato ('Sua abertura começa hoje'). E o aviso repetia a pill do botão a 3 cm de distância: agora a pill diz quando o DINHEIRO cai e o aviso diz o que acontece com a EMPRESA. ⚠️ A decisão de fundo não mudou (o cartão é empurrado porque destrava a abertura na hora, e a vantagem é real do cliente); mudou só a redação.",
+      status: "✅ aplicado no PagamentoView (29/07)",
+    },
+  ],
+  /* ═══ B4 · o dossiê — 29/07 ═══════════════════════════════════════════
+     Estas telas entraram na demo hoje, junto com a extração pra
+     `components/wizard-dossie.tsx`. Os achados abaixo saíram da leitura das 7
+     e JÁ ESTÃO CORRIGIDOS: não são divergências da demo, são defeitos de
+     produção que a demo agora renderiza consertados. */
+  socio: [
+    {
+      id: "UX-80",
+      oque: "REMOVIDA a pergunta 'Você mora fora do Brasil?'. Era confirmação do que a triagem do N4 já pergunta e já barra, com saída dedicada (LC 123 art. 17) — mesma duplicação que tiramos do CPF no N9. Saíram junto o aviso de bloqueio e o botão 'Falar com o time'. ⚠️ Efeito colateral assumido: o N10 passa a CONFIAR na resposta do N4, e a segunda barreira deixou de existir. A saída /saida/exterior continua alcançável pela triagem.",
+      status: "✅ decisão do Pedro (29/07), aplicada no SocioView",
+    },
+    {
+      id: "🐛 BUG-08",
+      oque: "O '✨ Preencher automático' APARECIA nas 7 telas do dossiê e não fazia nada. Ele é ligado por `naTravessia`, que passou a incluir o dossiê quando as telas entraram na demo, mas o preencherEtapa() só conhecia os campos do B3. Botão visível e inerte numa apresentação é pior que botão ausente. A demo NÃO passou a mexer no estado interno das 7 (isso recriaria o acoplamento que a fidelidade por construção evita): ela incrementa um nonce e cada tela sabe se preencher, com valores que moram junto do cliente de mentira.",
+      status: "✅ corrigido (29/07) — vale pras 7 telas",
+    },
+    {
+      id: "🐛 BUG-05",
+      oque: "Os dois botões da tela eram MORTOS — nem 'Continuar' nem 'Falar com o time' tinham onClick, e o arquivo nem importava useRouter. Pior no segundo: quem chega nele é justamente quem foi barrado (mora fora do Brasil), então a pessoa recebia a notícia ruim e o único caminho adiante não respondia. Mesma classe do beco sem saída pego em 28/07. ⚠️ Ao consertar, apareceu que a cadeia INTEIRA do dossiê estava morta: nenhuma das 7 telas navegava, o flow parava no N10.",
+      status: "✅ corrigido — cadeia N10→N16→/revisar ligada",
+    },
+    {
+      id: "🎭 mock",
+      oque: "As telas do dossiê declaravam mocks próprios e contraditórios: o N12 deixava escolher 'Só eu', o N13 tinha 2 sócios fixos e perguntava pelos dois nominalmente, o N15 tinha solo fixo. E o nome trocava no meio: 'Ana Beatriz Ramos' aqui, 'Ana Souza' no N16. Agora existe uma fonte única (`dossie/mock.ts`) e a cliente tem um nome só do começo ao fim.",
+      status: "✅ unificado — 🚧 morre com o RF-01 (estado real entre telas)",
+    },
+  ],
+  socios: [
+    {
+      id: "UX-78",
+      oque: "O limite de 2 sócios era um Aviso de bloco inteiro, com título, e aparecia pra 100% de quem chega aqui — a triagem do N4 já barrou 3+ lá atrás, então todo mundo que lia estava DENTRO do limite. Dar peso de notícia ruim a quem não foi barrado gasta atenção contra o próprio usuário. Virou nota de rodapé do campo: a trava continua dita, sem alarme. Também caiu um dos três 'só' da tela ('Dá pra ser só você' + 'Só eu' + 'Empresa só sua').",
+      status: "✅ aplicado no SociosView (29/07)",
+    },
+  ],
+  empresa: [
+    {
+      id: "🐛 BUG-06",
+      oque: "O CAPITAL SOCIAL ESCAPAVA. A condição de liberação era `querFiscal || (…)`, e o `||` fazia curto-circuito: quem escolhia 'quero um endereço fiscal da Legalizai' liberava o Continuar NA HORA, com o capital social em branco — e o campo estava ali, renderizado logo abaixo, porque ele aparece nos dois caminhos. Capital social vai no contrato social e a JUCEMG exige. O endereço é que é condicional, não ele.",
+      status: "✅ corrigido no EmpresaView (29/07)",
+    },
+    {
+      id: "🕓 preço",
+      oque: "O chip 'R$ 60/mês' do endereço fiscal aparecia sem marcação nenhuma, embora o doc da tela afirmasse 'Marcado na UI'. Não estava. O N7 declara os valores provisórios; esta tela não declarava nenhum, e número provisório sem aviso é igual a número sem fonte. A marcação foi criada de verdade.",
+      status: "✅ corrigido — 🟡 preço final segue com o Mauro",
+    },
+    {
+      id: "✍️ título",
+      oque: "'Onde a empresa fica?' numa tela que também coleta capital social, que não é lugar nenhum. Virou 'Os dados da empresa'.",
+      status: "✅ aplicado",
+    },
+  ],
+  natureza: [
+    {
+      id: "🐛 BUG-07",
+      oque: "O GUARD-RAIL NUNCA TINHA RODADO. `TEM_SOCIO` era um const false local, e a condição de incoerência é 'escolheu dono único E tem sócio' — sempre falsa. O bloco de bloqueio jamais renderizou, nem uma vez, em review nenhuma, e o doc da tela afirmava que o mock existia justamente 'pra provar o guard-rail'. Com a fonte única (hoje com sócio) o caminho virou alcançável. E apareceu que a copy mentiria: dizia 'A gente já ajustou pra você' e nada ajustava, só desabilitava o botão — agora o aviso traz o botão que faz o que ele promete.",
+      status: "✅ corrigido no NaturezaView (29/07)",
+    },
+  ],
+  nome: [
+    {
+      id: "✍️ UX-79",
+      oque: "O aviso dizia 'A ordem não muda nada na abertura' logo abaixo de um subtítulo que pede pra pessoa ORDENAR os 3 nomes. Lidos em sequência, o segundo esvaziava o primeiro: por que ordenar algo que não muda nada? O que a frase queria dizer era 'não atrasa' — virou 'Nenhuma tentativa atrasa a sua abertura'.",
+      status: "✅ aplicado no NomeView (29/07)",
+    },
+  ],
+  /* ═══ A CAUDA (N19–N24) + P1/P2 — entraram na demo hoje (29/07) ═══════ */
+  revisar: [
+    {
+      id: "🐛 BUG-09",
+      oque: "N19 tinha mock de identidade PRÓPRIO (`DOSSIE`), divergente do resto do dossiê: CNAE principal com um dígito diferente do travado no Encaixe (6201-5/01 × 6201-5/02) e secundárias (Hospedagem, Suporte técnico) que o N14 nunca ofereceu como opção. Mesma classe de bug que o `dossie/mock.ts` foi criado pra matar — corrigido herdando de lá.",
+      status: "✅ corrigido no RevisarView (29/07)",
+    },
+    {
+      id: "🐛 BUG-10",
+      oque: "'Confirmar e seguir' não tinha onClick — a tela nunca tinha sido ligada a lugar nenhum, porque nunca tinha sido apresentada.",
+      status: "✅ corrigido — segue pro N20",
+    },
+  ],
+  termo: [
+    {
+      id: "🐛 BUG-10",
+      oque: "Mesmo defeito do N19: 'Autorizo, pode abrir' não navegava.",
+      status: "✅ corrigido — segue pro N21 (painel)",
+    },
+  ],
+  painel: [
+    {
+      id: "✍️ reduzido (1ª passada)",
+      oque: "Caiu de 9 pra 4 status: tudo que vinha DEPOIS do registro (pagar taxa · tirar CNPJ · Simples · certificado · liberar nota · deixar pronto) saiu — o certificado já tem tela própria (P0). 'Registrar a empresa' virou 'Analisando viabilidade' (nome mais honesto pro que a Junta faz — é onde a recusa de nome acontece). Entrou 'Agora é só assinar', cinza até a Junta deferir.",
+      status: "✅ aplicado no painel.tsx (29/07)",
+    },
+    {
+      id: "✍️ reduzido (2ª passada)",
+      oque: "'Conferir o nome' + 'Montar o contrato social' — os 2 passos ANTES da análise — eram trabalho NOSSO nos bastidores, não algo que o cliente reconhece ter feito. Viraram 1 status só: 'Documentação completa preenchida', já verde ao chegar no painel. Lista caiu de 4 pra 3.",
+      status: "✅ aplicado — índices de `concluidas`/`emAndamento` ajustados em /painel, /painel/recusa e na demo (2/2 → 1/1)",
+    },
+  ],
+  assinatura: [
+    {
+      id: "🐛 BUG-10",
+      oque: "Nenhum dos 3 CTAs (convidar sócio · assinar direto · assinar no GOV.BR) navegava. ⚠️ Sem estado real de consenso multi-sócio (mock pra farol): qualquer CTA habilitado avança — simular a espera assíncrona de verdade é trabalho de painel/CRM, não desta apresentação.",
+      status: "✅ corrigido — segue pro P0 (home de ativação)",
+    },
+  ],
+  ativacao: [
+    {
+      id: "🔓 SWAP",
+      oque: "O que vem depois da assinatura NÃO é o N24 ('empresa ativa', 3 primeiros passos genéricos): é esta home de dia-1, que trata o certificado como item 'agora' de uma trilha (1 de 3), não como coisa já liberada. ⚠️ Autocrítica: a 1ª tentativa desta correção trouxe a tela ERRADA (`/certificado`, um gate isolado que também existe, também chamado de 'P0' num doc antigo) — o Pedro mandou o print da tela real pra corrigir.",
+      status: "✅ corrigido — HomeAtivacaoView substitui o que era CertificadoView na sequência",
+    },
+    {
+      id: "✍️ sem confete",
+      oque: "A fonte (`home-dia1/page.tsx`) tinha `<Confetti>` no hero de nascimento. Removido por pedido explícito — mesmo padrão do dia inteiro (celebração saiu do CTA do veredito 🟢, materialização saiu do N24).",
+      status: "✅ aplicado no HomeAtivacaoView (29/07)",
+    },
+  ],
+  aguardando: [
+    {
+      id: "🐛 BUG-11",
+      oque: "O `/pagamento` de produção mandava TODO MUNDO direto pro dossiê, inclusive quem pagou boleto. A aresta `N9--boleto-->P2` do mapa (`flow-data.mjs`) nunca tinha sido implementada — a P2 existia como rota isolada, sem ninguém apontando pra ela.",
+      status: "✅ corrigido no wrapper de produção `/pagamento` — boleto agora passa por P2 antes do N10",
+    },
+  ],
+  retomar: [
+    {
+      id: "🐛 BUG-12",
+      oque: "'Continuar de onde parei' não navegava.",
+      status: "✅ corrigido — segue pro N10 (mesma aresta do mapa: reentrada aterrissa no início do dossiê)",
     },
   ],
   "fora-bh": [
@@ -435,6 +789,29 @@ const NOME_MOCKUP: Record<Momento, string> = {
   plano: "N7 · A conta da abertura",
   contrato: "N8 · Aceite do contrato",
   pagamento: "N9 · Pagamento",
+  socio: "N10 · Seus dados",
+  vinculo: "N11 · Vínculo de INSS",
+  socios: "N12 · Sócios",
+  empresa: "N13 · Dados da empresa",
+  "cnae-secundarios": "N14 · Atividades secundárias",
+  natureza: "N15 · Tipo da empresa",
+  nome: "N16 · Nome da empresa",
+  revisar: "N19 · Revisar o dossiê",
+  termo: "N20 · Termo irreversível",
+  painel: "N21 · Painel de acompanhamento",
+  assinatura: "N22 · Assinatura (GOV.BR)",
+  ativacao: "🔓 P0 · Home de ativação (dia-1)",
+  "m-cnpj": "🆕 M1 · Seu CNPJ (flow #2)",
+  "m-diagnostico": "🆕 M2 · Diagnóstico com número real",
+  "m-plano": "🆕 M3 · A conta da migração",
+  "m-contrato": "🆕 M3b · Contrato da migração",
+  "m-pagamento": "🆕 M3c · Pagamento (migração)",
+  "m-passivo": "🆕 M4a · Auditoria de passivo",
+  "m-transferencia": "🆕 M4b · A transferência",
+  "m-travado": "🆕 M4b · 🔴 TTRT travado",
+  "m-ativa": "🆕 M5 · Empresa migrada",
+  retomar: "🆕 P1 · Retomar de onde parou",
+  aguardando: "🆕 P2 · Aguardando o boleto",
   fim: "— fim do piloto —",
 };
 
@@ -570,11 +947,224 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     porque:
       "Um campo, dois usos, sem gastar uma tela a mais. E a copy precisa distinguir 'CPF suspenso' de 'cartão recusado': trocar de cartão não resolve o primeiro.",
   },
+
+  /* ═══════════════════ B4 · O DOSSIÊ (N10–N16) ═══════════════════════════
+     A partir daqui o cliente JÁ PAGOU e a casa (o portal) já nasceu. O que
+     acontece nas 7 telas seguintes é a montagem do documento que vai pra
+     JUCEMG — por isso o "o que interfere na constituição" fica muito mais
+     literal do que no bloco do dinheiro: aqui quase todo campo VIRA linha de
+     contrato social ou de formulário de registro. */
+
+  socio: {
+    dono: "usuario",
+    faz: "Confirma o que já foi preenchido no cadastro e completa o que falta: RG, órgão emissor, estado civil e regime de bens.",
+    interfere:
+      "Estado civil e regime de bens vão no contrato social e podem CONVOCAR outra pessoa: na comunhão universal, o cônjuge assina esta abertura. Descobrir isso no cartório trava tudo; descobrir aqui é só um aviso.",
+    porque:
+      "Nome, CPF, telefone e endereço não são pedidos de novo — eles subiram pro N6 no front-load de 28/07. Esta tela vira CONFIRMAÇÃO. É a mesma regra que tirou o CPF duplicado do N9.",
+  },
+  vinculo: {
+    dono: "usuario",
+    faz: "Pergunta se a pessoa já recolhe INSS por fora (carteira, aposentadoria, autônomo ou sócio de outra empresa) e quanto.",
+    interfere:
+      "Não entra no registro da empresa, mas muda o CUSTO do pró-labore. Quem já contribui paga INSS na empresa só sobre a FOLGA até o teto, não sobre o valor cheio.",
+    porque:
+      "É o dado que impede a gente de sugerir um pró-labore alto sem necessidade. E aproveita pra reenquadrar: na própria empresa não existe CLT, e o pró-labore conta a favor da aposentadoria.",
+  },
+  socios: {
+    dono: "usuario",
+    faz: "Confirma se a empresa tem 2º sócio e, se tiver, coleta o nome e a divisão de participação.",
+    interfere:
+      "A divisão em % vai literalmente no contrato social, e o número de sócios determina a natureza jurídica da tela seguinte. Também define quantas assinaturas o GOV.BR vai exigir no fim.",
+    porque:
+      "O produto abre com até 2 sócios: é limite nosso, não da lei, e a copy diz isso. A triagem do N4 já barrou 3+ lá atrás, então aqui é só trava de segurança — por isso deixou de ter peso de alerta.",
+  },
+  empresa: {
+    dono: "usuario",
+    faz: "Endereço da empresa (CEP puxa o resto), índice do IPTU, tipo do imóvel, residência de sócio e capital social.",
+    interfere:
+      "É a tela mais pesada da constituição. O índice do IPTU é OBRIGATÓRIO: sem ele a documentação não passa na JUCEMG. O capital social vai no contrato. E se o endereço é residência de sócio, muda a análise de viabilidade da prefeitura.",
+    porque:
+      "Área utilizada e atividade inócua a gente resolve por dentro, sem perguntar — são dados que derivamos do CNAE. Só pedimos o que ninguém consegue adivinhar. E quem não tem endereço comercial compra o nosso aqui, em vez de travar.",
+  },
+  "cnae-secundarios": {
+    dono: "usuario",
+    faz: "Oferece atividades secundárias pra somar à principal, que já foi travada lá no Encaixe.",
+    interfere:
+      "Os CNAEs secundários entram no CNPJ e no objeto social. Errar aqui é o que faz a empresa nascer impedida de faturar algo que ela de fato faz.",
+    porque:
+      "A regra dura: só sugerimos secundárias de MESMO IMPOSTO que a principal (mesmo Anexo, mesma dependência de Fator R). O que trocaria o regime não aparece nem com aviso — a feature-âncora existe pra baixar imposto, não pra subir sem a pessoa perceber.",
+  },
+  natureza: {
+    dono: "usuario",
+    faz: "Sugere o formato jurídico (dono único ou sociedade) a partir do número de sócios, e deixa mudar.",
+    interfere:
+      "Define o tipo do registro na Junta e o modelo de contrato social. Escolher dono único tendo sócio é impossível, e a tela bloqueia com a correção na mão.",
+    porque:
+      "A recomendação nunca é uma trava: só a incoerência é. O CNPJ real do Pedro saiu LTDA num caso solo, então o produto sugere, explica, e deixa a pessoa decidir.",
+  },
+  nome: {
+    dono: "usuario",
+    faz: "Três opções de razão social pra ordenar por prioridade, mais o objeto social sugerido e o nome fantasia.",
+    interfere:
+      "É o último dado da coleta. A Junta pode recusar um nome já existente — por isso pedimos 3 e tentamos em ordem, sem voltar pra incomodar o cliente a cada tentativa.",
+    porque:
+      "Não existe API pra consultar disponibilidade na JUCEMG antes de protocolar. O 'nome disponível' ao vivo que a tela tinha antes MENTIA. Três opções ordenadas é a honestidade possível: prometemos o que dá pra cumprir.",
+  },
+
   fim: {
     dono: null,
-    faz: "Fim da travessia do dinheiro. No fluxo real, o pagamento aprovado abre a casa (o portal) e começa o dossiê: N10 em diante.",
-    interfere: "É a partir daqui que a constituição de fato roda: dossiê, viabilidade na JUCEMG, registro, CNPJ e Simples.",
-    porque: "Próxima fase da demo: B4 (o dossiê + o painel de acompanhamento), onde aparecem as pausas de ÓRGÃO — as que não dependem nem do cliente nem da gente.",
+    faz: "Fim do dossiê. Daqui o cliente vai pro N19 (revisar o que foi montado) e pro N20 (o termo irreversível), que autoriza a abertura de fato.",
+    interfere:
+      "É o ponto em que o documento está completo e a máquina liga: viabilidade na JUCEMG, registro, CNPJ e enquadramento no Simples.",
+    porque:
+      "Próxima fase da demo: a CAUDA (N19–N24), onde aparecem as pausas de ÓRGÃO — as que não dependem nem do cliente nem da gente, e que são justamente as mais difíceis de explicar sem um painel.",
+  },
+
+  /* ═══════════════════ A CAUDA (N19–N24) ═════════════════════════════════
+     Do "está tudo certo?" ao CNPJ ativo. Diferença de tom em relação ao B3/B4:
+     aqui o cliente já pagou e já preencheu — o que resta é AUTORIZAR e depois
+     ESPERAR o órgão. Por isso a partir do N21 o "dono da pausa" vira 🟦 nossa
+     (ou "espera de terceiro"): não há mais formulário pra avançar, só status. */
+
+  revisar: {
+    dono: "usuario",
+    faz: "Mostra tudo que foi preenchido, bloco por bloco, com 'ajustar' em cada um. É leitura, não formulário.",
+    interfere:
+      "É o último ponto em que corrigir é de graça. A tela seguinte (N20) é irreversível: depois dela, a Junta já está sendo protocolada com esses dados.",
+    porque:
+      "Ninguém deveria autorizar um registro que nunca viu inteiro. O enquadramento aparece como SUGESTÃO (não escolha manual): o antigo simulador pré-empresa foi dissolvido em 28/07, porque gerava mais dúvida que clareza antes de a empresa existir.",
+  },
+  termo: {
+    dono: "usuario",
+    faz: "Pede autorização explícita pra começar o registro de verdade. É o ponto sem volta do fluxo inteiro.",
+    interfere:
+      "A partir do aceite, a taxa da Junta (já paga no N9) é gasta e o protocolo começa. Antes disso, tudo ainda é reversível (CDC art. 49).",
+    porque:
+      "O antigo T18 juntava contrato reversível e autorização irreversível na mesma tela — problema jurídico e de tom. Racharam em duas: N8 (contrato, não assusta) e este N20 (autorização, existe pra assustar exatamente o necessário, nem mais nem menos).",
+  },
+  painel: {
+    dono: "nossa",
+    faz: "Timeline do que está rolando na Junta, Receita e Prefeitura. Sem CTA de avançar: é status, não formulário.",
+    interfere:
+      "Nada mais depende do cliente até o CNPJ sair (ou até um órgão recusar algo). É o pipeline assíncrono rodando — dias, não minutos.",
+    porque:
+      "Sem painel, quem pagou e nunca mais viu nada acha que comprou e ninguém fez nada. Cada etapa mostra se é 'a vez do órgão' ou 'precisamos de você' (o 4º estado, recusa) — nunca um limbo mudo.",
+  },
+  assinatura: {
+    dono: "usuario",
+    faz: "Pede a assinatura via GOV.BR (todos os sócios, quando há mais de um) e explica a procuração eletrônica que acompanha.",
+    interfere:
+      "A Junta só registra com a assinatura de quem é sócio. Nível GOV.BR abaixo de prata trava a assinatura — por isso o gate de nível mora dobrado aqui (era N23 no mapa).",
+    porque:
+      "Com 2 sócios, ninguém assina pelo outro: o parceiro confirma os próprios dados e o custo antes de assinar (consenso antes do commit). Evita o cenário 'um decidiu e o outro descobriu depois'.",
+  },
+  ativacao: {
+    dono: "usuario",
+    faz: "A home do dia-1: celebra o CNPJ nascido e vira uma trilha de ativação — 1 de 3, com o certificado como passo 'agora' (girando).",
+    interfere:
+      "O certificado é pré-requisito pra emitir nota e acessar a Receita — sem ele, o app não abre por completo. É por isso que a home NÃO é a de regime: empresa recém-nascida ainda não tem o que vigiar (faturamento zero).",
+    porque:
+      "🔓 SWAP validado (29/07): é ESTA tela que vem depois da assinatura, não o N24 ('empresa ativa', 3 primeiros passos) nem o gate isolado de certificado. Sem confete no hero de nascimento, por pedido explícito — mesmo padrão do dia (a celebração saiu do CTA do veredito 🟢 e a materialização saiu do N24).",
+  },
+
+  /* ═══════════════════ FLOW #2 · MIGRAR DE CONTADOR ══════════════════════
+     Ramo PARALELO: sai do fork do N3 (quem já tem CNPJ) e nunca reencontra o
+     flow #1. Era o blind spot mais antigo do projeto — "metade do mercado,
+     zero testado" desde 15/07. Construído em 30/07. */
+
+  "m-cnpj": {
+    dono: "usuario",
+    faz: "Pede só o CNPJ e puxa tudo da Receita: atividade, tipo, porte, endereço. Mostra o cartão e o veredito na mesma tela.",
+    interfere:
+      "Não interfere na constituição — a empresa já existe. O que se decide aqui é se a gente ATENDE essa empresa: atividade de serviço, no Simples, sem conselho de classe.",
+    porque:
+      "É a maior diferença em relação ao flow #1: aqui NÃO existe entrevista de atividade. O CNAE já está registrado, então a gente lê em vez de perguntar. Todo o N4 (pills, IA, desambiguação) desaparece — e com ele o risco de a IA errar a interpretação.",
+  },
+  "m-diagnostico": {
+    dono: "usuario",
+    faz: "Mostra quanto ele paga de imposto hoje e quanto poderia pagar, usando os 12 meses reais de faturamento e folha.",
+    interfere:
+      "Não muda a empresa, mas define a proposta comercial inteira. É aqui que a pessoa decide se vale trocar de contador.",
+    porque:
+      "🎯 O número é REAL, não estimativa. Empresa com 12+ meses tem histórico, então o Fator R sai do que de fato aconteceu. No flow #1 o teaser promete em cima de faixa declarada, e é de lá que veio a dívida 'promessa quebrada' — aqui esse risco não existe. ⚖️ E tem guarda-corpo: se o contador atual já acertou, a tela diz isso e vende serviço, não economia inventada.",
+  },
+  "m-plano": {
+    dono: "usuario",
+    faz: "A conta da migração: transferência grátis + a mensalidade. Nada além disso.",
+    interfere:
+      "Nenhuma taxa de governo incide aqui. A empresa já existe, então não há DAE da Junta nem TFLF a pagar.",
+    porque:
+      "É vantagem concreta sobre o flow #1, e a tela diz isso em vez de só omitir. Na abertura o cliente leva um choque de ~R$463 na 3ª tela; aqui ele vê só a mensalidade. Trocar de contador não custa nada aos órgãos.",
+  },
+  "m-contrato": {
+    dono: "usuario",
+    faz: "Aceite do contrato, com a conta em números e a promessa de devolução se a transferência não sair.",
+    interfere:
+      "É onde a pessoa vira cliente. A partir daqui a gente aciona o contador antigo dela.",
+    porque:
+      "🔴 A linha da devolução é a contrapartida obrigatória da decisão de cobrar ANTES da transferência. Como o destravamento depende do contador antigo (um terceiro que está perdendo o cliente), o cliente precisa saber antes de pagar o que acontece se travar. Sem essa promessa, a decisão de cobrar antes seria cobrar por um resultado que a gente não controla.",
+  },
+  "m-pagamento": {
+    dono: "usuario",
+    faz: "Mesma tela do N9, sem somar taxa de governo. O aviso fala de migração: 'a gente já aciona seu contador anterior'.",
+    interfere:
+      "O pagamento é o gatilho: é ele que autoriza a gente a acionar o escritório antigo e abrir a transferência no conselho.",
+    porque:
+      "💰 Decisão travada em 30/07: cobra ANTES da transferência, igual ao flow #1. O risco assumido está dito na cara — a gente cobra por algo cujo destravamento depende de terceiro. Por isso o contrato promete devolução e a tela de transferência tem um estado dedicado pra quando trava.",
+  },
+  "m-passivo": {
+    dono: "nossa",
+    faz: "Mostra o que o contador anterior deixou pendente: imposto atrasado, declaração não entregue, dívida ativa.",
+    interfere:
+      "Define o que a gente assume e o que fica para trás. A data de corte do distrato separa a responsabilidade dos dois escritórios.",
+    porque:
+      "🔥 É o risco que a abertura não tem: a empresa chega com passado. A regra diz que as obrigações do período antigo ficam com o contador anterior — mas a DÍVIDA é da empresa, e o cliente não sabe disso. Assumir sem auditar seria herdar problema que a gente não criou e virar o culpado por ele.",
+  },
+  "m-transferencia": {
+    dono: "nossa",
+    faz: "Timeline do que está acontecendo: encerrar com o antigo, transferir no conselho, atualizar os órgãos, liberar o acesso.",
+    interfere:
+      "É a transferência formal da responsabilidade técnica. Sem ela, a gente não pode assinar nada pela empresa nem acessar os sistemas da Receita.",
+    porque:
+      "🔴 Aqui mora a pausa mais perigosa do produto inteiro: a transferência no conselho é aberta por nós e VALIDADA PELO CONTADOR ANTIGO. Todas as pausas do flow de abertura esperam um órgão neutro ou o próprio cliente. Esta espera um concorrente que está perdendo o cliente para nós.",
+  },
+  "m-travado": {
+    dono: "nossa",
+    faz: "O estado de exceção: o contador antigo não validou a transferência. A tela assume o problema e explica o caminho.",
+    interfere:
+      "A migração fica parada até destravar. O cliente já pagou, então a responsabilidade de resolver é nossa, não dele.",
+    porque:
+      "É a contrapartida de UX de cobrar antes. A tela não repassa a culpa nem deixa o cliente no limbo: diz que a gente acionou, que o conselho destrava se não houver resposta, e que a gente conduz do começo ao fim. O contrato garante a devolução se nada disso funcionar.",
+  },
+  "m-ativa": {
+    dono: null,
+    faz: "Migração concluída. A economia que o diagnóstico prometeu vira a primeira tarefa, com o valor na tela.",
+    interfere:
+      "A contabilidade passa a ser nossa a partir da data de corte. O cliente não precisa mais falar com o escritório antigo.",
+    porque:
+      "Fecha o loop do M2. No flow #1 a promessa é estimativa e só se resolve meses depois; aqui o número era real desde a segunda tela, então pode virar ação imediata. Deixar a promessa sumir depois da venda seria repetir o erro que este flow não precisa cometer.",
+  },
+
+  /* ═══════════════════ P1 · P2 — pausas de pagamento ══════════════════════
+     ⚠️ NÃO ficam entre N16 e N19. Vivem entre N9 e N10 (mapa: `flow-data.mjs`):
+     P2 só existe pra quem pagou boleto; P1 é reentrada de quem fechou o app. */
+
+  retomar: {
+    dono: "usuario",
+    faz: "Reorienta quem fechou o app e voltou depois: o que já fez, o que falta, e UM próximo passo só.",
+    interfere:
+      "Não interfere na constituição — é sobre CONTINUIDADE da experiência. Sem ela, quem sai no meio do dossiê volta sem saber se perdeu algo.",
+    porque:
+      "UX-46: reorientar ≠ restaurar. Devolver a tela exata de onde parou só ajuda quem lembra o que estava fazendo. Quem esqueceu precisa das 3 respostas (o que já fiz, o que falta, o que faço agora), não de 4 pendências pra escolher.",
+  },
+  aguardando: {
+    dono: "usuario",
+    faz: "Mostra que o boleto está a caminho e que dá pra adiantar o dossiê inteiro enquanto ele não compensa.",
+    interfere:
+      "Só os 2 últimos passos (N19 revisar + N20 autorizar) ficam retidos até o pagamento cair — o resto do dossiê (N10–N16) roda livre.",
+    porque:
+      "Boleto foi mantido fora do happy path (perderia cliente se cortado), mas a tela existe pra matar a 'sensação de travou': espera com tarefa não é espera, é andamento.",
   },
 };
 
@@ -594,6 +1184,13 @@ export default function ApresentacaoPage() {
   const [nomeV, setNomeV] = useState("");
   const [contatoV, setContatoV] = useState("");
   const [enviadoV, setEnviadoV] = useState(false);
+
+  /**
+   * Nonce do "✨ Preencher automático" nas telas do dossiê. Cada clique
+   * incrementa; as Views escutam a MUDANÇA (não o valor), então clicar de novo
+   * na mesma tela preenche de novo — apresentar é repetir.
+   */
+  const [preenchimento, setPreenchimento] = useState(0);
 
   // Captura da saída de cidade (separada da do veredito: são telas distintas
   // e preencher uma não pode contaminar a outra).
@@ -634,6 +1231,18 @@ export default function ApresentacaoPage() {
   const [aceite, setAceite] = useState(false);
   const [cpfPag, setCpfPag] = useState("");
   const [metodo, setMetodo] = useState<Metodo>("cartao");
+
+  // ── Cauda (N20) ─────────────────────────────────────────────────────────
+  // Estado PRÓPRIO, separado do `aceite` do N8: são dois consentimentos
+  // jurídicos distintos (reversível × irreversível). Reusar o mesmo booleano
+  // faria o N20 nascer pré-marcado só porque o N8 foi aceito antes.
+  const [aceiteTermo, setAceiteTermo] = useState(false);
+
+  // ── Flow #2 ─────────────────────────────────────────────────────────────
+  // Aceite PRÓPRIO: o contrato da migração é outro documento (promete devolução
+  // se a transferência travar). Reusar o `aceite` do N8 faria o M3b nascer
+  // pré-marcado pra quem tivesse passado pelo flow #1 na mesma sessão.
+  const [aceiteMigrar, setAceiteMigrar] = useState(false);
 
   /**
    * HISTÓRICO — pilha de snapshots pra a seta de voltar.
@@ -746,6 +1355,8 @@ export default function ApresentacaoPage() {
     setAceite(false);
     setCpfPag("");
     setMetodo("cartao");
+    setAceiteTermo(false);
+    setAceiteMigrar(false);
     setHistorico([]);
     momentoAnterior.current = null;
     anterior.current = null;
@@ -802,6 +1413,28 @@ export default function ApresentacaoPage() {
     } else if (etapa === "pagamento") {
       setCpfPag("123.456.789-00");
       setMetodo("cartao");
+    } else if (etapa === "termo") {
+      setAceiteTermo(true);
+    } else if (etapa === "m-contrato") {
+      setAceiteMigrar(true);
+    } else if (etapa === "m-cnpj") {
+      // O CNPJ é estado INTERNO do MigrarCnpjView (mesmo caso do dossiê), então
+      // a demo não escreve nele: incrementa o nonce e a tela se preenche.
+      setPreenchimento((n) => n + 1);
+    } else if (noDossie(etapa)) {
+      /**
+       * 🐛 29/07 — AQUI NÃO EXISTIA RAMO NENHUM, e o botão aparecia mesmo
+       * assim: `mostraPreencher` liga por `naTravessia`, que passou a incluir
+       * o dossiê quando as 7 telas entraram na demo. Resultado: "✨ Preencher
+       * automático" visível e inerte nas 7. Botão que não responde numa
+       * apresentação é pior que botão ausente.
+       *
+       * A demo NÃO mexe nos campos internos das telas — ela não os conhece, e
+       * passar a conhecer recriaria o acoplamento que a fidelidade por
+       * construção existe pra evitar. Ela só incrementa um nonce; cada View
+       * sabe se preencher (ver `usePreencher` em `wizard-dossie.tsx`).
+       */
+      setPreenchimento((n) => n + 1);
     }
   }
 
@@ -810,6 +1443,111 @@ export default function ApresentacaoPage() {
     setContatoV("ana.beatriz@email.com");
     setEnviadoV(true);
   }
+
+  /**
+   * ✈️ PULAR PRA QUALQUER TELA — barra de pills no rodapé (29/07).
+   *
+   * Motivo: depois de cada edição de código o Fast Refresh reseta o estado da
+   * demo pro `fork`, e reandar o flow inteiro (N3→N16) só pra chegar na tela
+   * que acabou de mudar é lento. As pills navegam direto.
+   *
+   * `setEtapa` sozinho não bastaria: telas do meio do flow (`triagem`,
+   * `faixa`, `conta`, `contrato`, `pagamento`, `veredito`…) leem dado que só
+   * existe se as telas ANTERIORES foram andadas — pular direto renderizaria
+   * formulário vazio ou (no caso do veredito) a tela nem existe sem
+   * `resultado`. Por isso esta função garante, IDEMPOTENTE (só preenche o que
+   * ainda está vazio — não pisa em edição ao vivo), os dados de que cada
+   * trecho do flow depende, na mesma ordem em que o flow real os produziria.
+   */
+  function pularPara(alvo: Etapa) {
+    if (!resultado) setResultado(mapear(""));
+    if (socios === null) setSocios(1);
+    if (exterior === null) setExterior(false);
+    if (faixaEsc === null) setFaixaEsc("20-30k");
+    if (!dadosConta.nome) {
+      setDadosConta({
+        nome: "Ana Beatriz Ramos",
+        cpf: "123.456.789-00",
+        telefone: "(31) 98888-7766",
+        email: "ana.beatriz@email.com",
+        senha: "legalizai2026",
+        cep: "30140-060",
+        numero: "1000",
+        coorte: "primeira",
+        codigo: "482913",
+      });
+    }
+    if (!aceite) setAceite(true);
+    if (!cpfPag) setCpfPag("123.456.789-00");
+    // Cauda: termo/painel/assinatura/ativa pressupõem o aceite do N20 já
+    // dado — sem isso o N20, se alguém voltasse até lá, mostraria o CTA
+    // travado por engano.
+    if (!aceiteTermo) setAceiteTermo(true);
+    // Flow #2: sem isso, pular direto pro M3b mostraria o CTA travado (o
+    // checkbox nasce desmarcado e ninguém marcou).
+    if (!aceiteMigrar) setAceiteMigrar(true);
+    // A pilha de "voltar" não faz sentido pra um salto: zera, senão a seta
+    // externa devolveria pra uma tela de trás do salto, não de trás do fluxo.
+    setHistorico([]);
+    momentoAnterior.current = null;
+    anterior.current = null;
+    setEtapa(alvo);
+  }
+
+  /** Ordem real do flow — a mesma ordem das pills no rodapé. */
+  const PILLS: { etapa: Etapa; label: string }[] = [
+    { etapa: "fork", label: "N3 · Fork" },
+    { etapa: "cidade", label: "N3G · Cidade" },
+    { etapa: "perguntando", label: "N4 · Gate-CNAE" },
+    { etapa: "veredito", label: "🟢 Veredito" },
+    { etapa: "triagem", label: "N4 · Triagem" },
+    { etapa: "faixa", label: "N4 · Faixa" },
+    { etapa: "conta", label: "N6 · Conta" },
+    { etapa: "conta-codigo", label: "N6 · Código" },
+    { etapa: "plano", label: "N7 · Plano" },
+    { etapa: "contrato", label: "N8 · Contrato" },
+    { etapa: "pagamento", label: "N9 · Pagamento" },
+    { etapa: "socio", label: "N10 · Seus dados" },
+    { etapa: "vinculo", label: "N11 · Vínculo" },
+    { etapa: "socios", label: "N12 · Sócios" },
+    { etapa: "empresa", label: "N13 · Empresa" },
+    { etapa: "cnae-secundarios", label: "N14 · Secundários" },
+    { etapa: "natureza", label: "N15 · Natureza" },
+    { etapa: "nome", label: "N16 · Nome" },
+    { etapa: "revisar", label: "N19 · Revisar" },
+    { etapa: "termo", label: "N20 · Termo" },
+    { etapa: "painel", label: "N21 · Painel" },
+    { etapa: "assinatura", label: "N22 · Assinatura" },
+    { etapa: "ativacao", label: "🔓 P0 · Ativação" },
+    { etapa: "fim", label: "Fim" },
+  ];
+
+  /**
+   * P1/P2 são pausas de PAGAMENTO (entre N9 e N10), não sequência — por isso
+   * ficam numa barra separada, não na `PILLS` principal (ver comentário no
+   * `type Etapa`).
+   */
+  const PILLS_PAUSA: { etapa: Etapa; label: string }[] = [
+    { etapa: "retomar", label: "🆕 P1 · Retomar" },
+    { etapa: "aguardando", label: "🆕 P2 · Aguardando boleto" },
+  ];
+
+  /**
+   * FLOW #2 — barra própria, porque é um RAMO PARALELO, não continuação.
+   * Misturar na fila de cima sugeriria que M1 vem depois do N24, o que é falso:
+   * ele sai do fork do N3 e nunca reencontra o flow #1.
+   */
+  const PILLS_MIGRAR: { etapa: Etapa; label: string }[] = [
+    { etapa: "m-cnpj", label: "M1 · Seu CNPJ" },
+    { etapa: "m-diagnostico", label: "M2 · Diagnóstico" },
+    { etapa: "m-plano", label: "M3 · A conta" },
+    { etapa: "m-contrato", label: "M3b · Contrato" },
+    { etapa: "m-pagamento", label: "M3c · Pagamento" },
+    { etapa: "m-passivo", label: "M4a · Passivo" },
+    { etapa: "m-transferencia", label: "M4b · Transferência" },
+    { etapa: "m-travado", label: "🔴 M4b · TTRT travado" },
+    { etapa: "m-ativa", label: "M5 · Migrada" },
+  ];
 
   const momento: Momento =
     etapa === "fork"
@@ -838,7 +1576,12 @@ export default function ApresentacaoPage() {
                           ? "contrato"
                           : etapa === "pagamento"
                             ? "pagamento"
-                            : etapa === "fim"
+                            : noDossie(etapa) ||
+                                naCauda(etapa) ||
+                                naEspera(etapa) ||
+                                noMigrar(etapa)
+                              ? etapa
+                              : etapa === "fim"
                     ? "fim"
                     : resultado
                       ? resultado.veredito === "atende"
@@ -889,12 +1632,43 @@ export default function ApresentacaoPage() {
     etapa === "conta-codigo" ||
     etapa === "plano" ||
     etapa === "contrato" ||
-    etapa === "pagamento";
+    etapa === "pagamento" ||
+    // O dossiê usa o mesmo shell de tela cheia da travessia do dinheiro: são
+    // telas de coleta, sem navbar, dentro do aparelho.
+    noDossie(etapa) ||
+    // A cauda (N19–N24) e as 2 pausas (P1/P2) seguem o mesmo shell — todas
+    // trazem o próprio header+main, igual às de cima.
+    naCauda(etapa) ||
+    naEspera(etapa) ||
+    // O flow #2 inteiro também: são telas de tela-cheia, sem navbar.
+    noMigrar(etapa);
   const mostraPreencher =
     etapa === "triagem" ||
     etapa === "faixa" ||
     (etapa === "fora-bh" && !enviadoS) ||
-    naTravessia;
+    // ⚠️ 29/07 — "natureza" saiu daqui. A tela virou condicional (só existe o
+    // formato que bate com o nº de sócios, já selecionado): não sobrou campo
+    // nenhum pra preencher. Botão sem função é pior que botão ausente.
+    // "revisar", "painel", "assinatura", "ativacao", "retomar",
+    // "aguardando" nunca entram: são recap/status/home/aceite sem campo
+    // livre — só "termo" tem um checkbox (o aceite irreversível).
+    // 🐛 30/07 — o FLOW #2 quase repetiu o BUG-08. `naTravessia` passou a
+    // incluir as telas de migração, então o botão apareceria nas 9 — e o
+    // `preencherEtapa` só conheceria 2 delas. Em vez de listar exceção por
+    // exceção (que foi o que deixou o bug passar da 1ª vez), a regra agora é
+    // POSITIVA: só mostra onde existe campo livre pra preencher.
+    (naTravessia &&
+      etapa !== "natureza" &&
+      etapa !== "revisar" &&
+      etapa !== "painel" &&
+      etapa !== "assinatura" &&
+      etapa !== "ativacao" &&
+      etapa !== "retomar" &&
+      etapa !== "aguardando" &&
+      // Do flow #2, só estas 2 têm o que preencher: o CNPJ (input) e o aceite
+      // (checkbox). Diagnóstico, plano, passivo, transferência, travado e
+      // migrada são leitura/status — botão ali seria inerte.
+      (!noMigrar(etapa) || etapa === "m-cnpj" || etapa === "m-contrato"));
   const mostraSimularValidacao = momento === "veredito-waitlist" || momento === "veredito-mauro";
   const cenario = CENARIOS.find((c) => c.id === cenarioArmado) ?? null;
 
@@ -1032,6 +1806,10 @@ export default function ApresentacaoPage() {
                           setEtapa("cidade");
                         }}
                         onSeguir={() => setEtapa("perguntando")}
+                        // ✅ 30/07 — a porta do FLOW #2. Era aqui que "metade
+                        // do mercado" batia num card "essa parte ainda não
+                        // existe" (achado M0 do motor de testes).
+                        onMigrar={() => setEtapa("m-cnpj")}
                         onForaBh={() => setEtapa("fora-bh")}
                         onLogin={() => {}}
                         destaqueCoral600
@@ -1073,9 +1851,205 @@ export default function ApresentacaoPage() {
                             setCpf={setCpfPag}
                             metodo={metodo}
                             setMetodo={setMetodo}
-                            onPagar={() => setEtapa("fim")}
+                            // 🐛 O CPF já foi coletado no N6 (front-load 28/07).
+                            // A demo é o único lugar que carrega o estado das
+                            // duas telas, então é aqui que dá pra provar o
+                            // reuso: o N9 confirma em vez de pedir de novo.
+                            cpfCadastrado={dadosConta.cpf}
+                            // O pagamento aprovado não é mais o fim da demo:
+                            // ele abre a casa e começa o dossiê (N10).
+                            onPagar={() => setEtapa("socio")}
                             onVoltar={() => voltar(() => setEtapa("contrato"))}
                           />
+                        )}
+
+                        {/* ═══ B4 · O DOSSIÊ (N10–N16) ═══════════════════════
+                            As MESMAS telas das rotas `/dossie/*` — elas moram
+                            em `components/wizard-dossie.tsx` desde 29/07, e as
+                            pages de produção são wrappers finos. A demo não
+                            tem cópia própria de nenhuma delas. */}
+                        {etapa === "socio" && (
+                          <SocioView
+                            preencher={preenchimento}
+                            onSeguir={() => setEtapa(depoisDoDossie("socio"))}
+                            onVoltar={() => voltar(() => setEtapa(antesDoDossie("socio")))}
+                          />
+                        )}
+                        {etapa === "vinculo" && (
+                          <VinculoView
+                            preencher={preenchimento}
+                            onSeguir={() => setEtapa(depoisDoDossie("vinculo"))}
+                            onVoltar={() => voltar(() => setEtapa(antesDoDossie("vinculo")))}
+                          />
+                        )}
+                        {etapa === "socios" && (
+                          <SociosView
+                            preencher={preenchimento}
+                            onSeguir={() => setEtapa(depoisDoDossie("socios"))}
+                            onVoltar={() => voltar(() => setEtapa(antesDoDossie("socios")))}
+                          />
+                        )}
+                        {etapa === "empresa" && (
+                          <EmpresaView
+                            preencher={preenchimento}
+                            onSeguir={() => setEtapa(depoisDoDossie("empresa"))}
+                            onVoltar={() => voltar(() => setEtapa(antesDoDossie("empresa")))}
+                          />
+                        )}
+                        {etapa === "cnae-secundarios" && (
+                          <CnaeSecundariosView
+                            preencher={preenchimento}
+                            onSeguir={() => setEtapa(depoisDoDossie("cnae-secundarios"))}
+                            onVoltar={() =>
+                              voltar(() => setEtapa(antesDoDossie("cnae-secundarios")))
+                            }
+                          />
+                        )}
+                        {etapa === "natureza" && (
+                          <NaturezaView
+                            onSeguir={() => setEtapa(depoisDoDossie("natureza"))}
+                            onVoltar={() => voltar(() => setEtapa(antesDoDossie("natureza")))}
+                          />
+                        )}
+                        {etapa === "nome" && (
+                          <NomeView
+                            preencher={preenchimento}
+                            onSeguir={() => setEtapa(depoisDoDossie("nome"))}
+                            onVoltar={() => voltar(() => setEtapa(antesDoDossie("nome")))}
+                          />
+                        )}
+
+                        {/* ═══ A CAUDA (N19–N24) ═══════════════════════════
+                            Mesmas telas de `/revisar` · `/termo` · `/painel` ·
+                            `/assinatura` · `/ativa` — moram em
+                            `components/wizard-cauda.tsx` desde 29/07. */}
+                        {etapa === "revisar" && (
+                          <RevisarView
+                            onSeguir={() => setEtapa("termo")}
+                            onVoltar={() => voltar(() => setEtapa("nome"))}
+                          />
+                        )}
+                        {etapa === "termo" && (
+                          <TermoView
+                            aceito={aceiteTermo}
+                            setAceito={setAceiteTermo}
+                            onSeguir={() => setEtapa("painel")}
+                            onVoltar={() => voltar(() => setEtapa("revisar"))}
+                          />
+                        )}
+                        {etapa === "painel" && (
+                          // Sem `onVoltar`: o componente original (`/painel`)
+                          // não tem seta própria — é status assíncrono, não
+                          // passo de wizard. A seta EXTERNA do aparelho segue
+                          // funcionando (lê o histórico, não este prop).
+                          // ⚠️ 29/07: índices 1/1, não mais 2/2 — `ETAPAS` caiu
+                          // de 4 pra 3 (ver `components/painel.tsx`).
+                          <PainelView concluidas={1} emAndamento={1} socios={socios ?? 1} />
+                        )}
+                        {etapa === "assinatura" && (
+                          <AssinaturaView
+                            onSeguir={() => setEtapa("ativacao")}
+                            onVoltar={() => voltar(() => setEtapa("painel"))}
+                          />
+                        )}
+                        {/* 🔓 SWAP validado (29/07): a home de ativação (P0)
+                            substitui o N24 aqui — ver nota em `wizard-cauda.tsx`.
+                            Sem onVoltar/onSeguir: a tela original não tem CTA de
+                            avançar (é a home, não passo de wizard); a seta
+                            externa do aparelho segue funcionando via histórico. */}
+                        {etapa === "ativacao" && <HomeAtivacaoView />}
+
+                        {/* ═══ P1 · P2 — pausas de pagamento ════════════════
+                            Fora da sequência linear: alcançadas só pela pill
+                            própria (não pelo botão Continuar de outra tela). */}
+                        {etapa === "retomar" && (
+                          <RetomarView onSeguir={() => setEtapa("socio")} />
+                        )}
+                        {etapa === "aguardando" && (
+                          <AguardandoView onSeguir={() => setEtapa("socio")} />
+                        )}
+
+                        {/* ═══ FLOW #2 · MIGRAR (M1–M5) ══════════════════════
+                            As MESMAS telas das rotas `/migrar/*`. Ramo paralelo:
+                            entra pelo fork do N3 e nunca reencontra o flow #1. */}
+                        {etapa === "m-cnpj" && (
+                          <MigrarCnpjView
+                            preencher={preenchimento}
+                            onSeguir={() => setEtapa(depoisDoMigrar("m-cnpj"))}
+                            // As 2 saídas do veredito são as MESMAS do flow #1
+                            // (mesmo template A9) — reusa, não duplica.
+                            onSaidaRegulada={() => {
+                              setResultado(mapear("nutricionista"));
+                              setEtapa("veredito");
+                            }}
+                            onSaidaNaoAtende={() => {
+                              setResultado(mapear("loja de roupas"));
+                              setEtapa("veredito");
+                            }}
+                            onVoltar={() => voltar(() => setEtapa(antesDoMigrar("m-cnpj")))}
+                          />
+                        )}
+                        {etapa === "m-diagnostico" && (
+                          <MigrarDiagnosticoView
+                            onSeguir={() => setEtapa(depoisDoMigrar("m-diagnostico"))}
+                            onVoltar={() =>
+                              voltar(() => setEtapa(antesDoMigrar("m-diagnostico")))
+                            }
+                          />
+                        )}
+                        {etapa === "m-plano" && (
+                          <MigrarPlanoView
+                            onSeguir={() => setEtapa(depoisDoMigrar("m-plano"))}
+                            onVoltar={() => voltar(() => setEtapa(antesDoMigrar("m-plano")))}
+                          />
+                        )}
+                        {etapa === "m-contrato" && (
+                          <MigrarContratoView
+                            aceito={aceiteMigrar}
+                            setAceito={setAceiteMigrar}
+                            onSeguir={() => setEtapa(depoisDoMigrar("m-contrato"))}
+                            onVoltar={() =>
+                              voltar(() => setEtapa(antesDoMigrar("m-contrato")))
+                            }
+                          />
+                        )}
+                        {etapa === "m-pagamento" && (
+                          <PagamentoView
+                            cpf={cpfPag}
+                            setCpf={setCpfPag}
+                            metodo={metodo}
+                            setMetodo={setMetodo}
+                            cpfCadastrado={dadosConta.cpf}
+                            fluxo="migrar"
+                            onPagar={() => setEtapa(depoisDoMigrar("m-pagamento"))}
+                            onVoltar={() =>
+                              voltar(() => setEtapa(antesDoMigrar("m-pagamento")))
+                            }
+                          />
+                        )}
+                        {etapa === "m-passivo" && (
+                          <MigrarPassivoView
+                            onSeguir={() => setEtapa(depoisDoMigrar("m-passivo"))}
+                            onVoltar={() =>
+                              voltar(() => setEtapa(antesDoMigrar("m-passivo")))
+                            }
+                          />
+                        )}
+                        {etapa === "m-transferencia" && (
+                          // Sem onVoltar: é tela de status assíncrono, igual ao
+                          // N21. A seta externa do aparelho segue funcionando.
+                          <MigrarTransferenciaView
+                            onSeguir={() => setEtapa(depoisDoMigrar("m-transferencia"))}
+                          />
+                        )}
+                        {etapa === "m-travado" && (
+                          <MigrarTransferenciaView
+                            travado
+                            onAcaoTravado={() => setEtapa("m-transferencia")}
+                          />
+                        )}
+                        {etapa === "m-ativa" && (
+                          <MigrarAtivaView onSeguir={() => setEtapa("fim")} />
                         )}
                       </>
                     ) : naSaidaCidade ? (
@@ -1299,6 +2273,89 @@ export default function ApresentacaoPage() {
               <Bloco titulo="🏗️ O que interfere na constituição da empresa">{desc.interfere}</Bloco>
               <Bloco titulo="📋 Por que pede esses dados">{desc.porque}</Bloco>
             </div>
+          </div>
+        </div>
+
+        {/* ✈️ NAVEGAÇÃO RÁPIDA — pills na ordem real do flow (29/07).
+            Cada clique preenche (idempotente) o que a tela-alvo depende e
+            pula direto pra ela, sem reandar o flow inteiro. */}
+        <div className="mt-8 border-t border-border-hairline pt-5">
+          <p className="text-micro font-semibold tracking-wide text-text-tertiary mb-2.5">
+            IR DIRETO PRA TELA
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {PILLS.map((p) => {
+              const atual = etapa === p.etapa;
+              return (
+                <button
+                  key={p.etapa}
+                  onClick={() => pularPara(p.etapa)}
+                  aria-current={atual}
+                  className={`rounded-full px-3.5 py-1.5 text-caption font-semibold transition-colors
+                    ${
+                      atual
+                        ? "bg-action-primary text-text-on-brand"
+                        : "border border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
+                    }`}
+                >
+                  {p.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* P1/P2 numa linha separada: não são passo da sequência, são
+              pausas de pagamento (ver `type Etapa`). Misturar na fila de cima
+              sugeriria "depois do N16 vem isso", que é falso — elas vivem
+              entre N9 e N10. */}
+          {/* FLOW #2 — barra própria. É ramo paralelo (sai do fork do N3),
+              não continuação do flow #1. */}
+          <p className="text-micro font-semibold tracking-wide text-text-tertiary mt-4 mb-2.5">
+            🆕 FLOW #2 · MIGRAR DE CONTADOR (ramo paralelo, sai do N3)
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {PILLS_MIGRAR.map((p) => {
+              const atual = etapa === p.etapa;
+              return (
+                <button
+                  key={p.etapa}
+                  onClick={() => pularPara(p.etapa)}
+                  aria-current={atual}
+                  className={`rounded-full px-3.5 py-1.5 text-caption font-semibold transition-colors
+                    ${
+                      atual
+                        ? "bg-action-primary text-text-on-brand"
+                        : "border border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
+                    }`}
+                >
+                  {p.label}
+                </button>
+              );
+            })}
+          </div>
+
+          <p className="text-micro font-semibold tracking-wide text-text-tertiary mt-4 mb-2.5">
+            🆕 PAUSAS DE PAGAMENTO (entre N9 e N10 — não é sequência)
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {PILLS_PAUSA.map((p) => {
+              const atual = etapa === p.etapa;
+              return (
+                <button
+                  key={p.etapa}
+                  onClick={() => pularPara(p.etapa)}
+                  aria-current={atual}
+                  className={`rounded-full px-3.5 py-1.5 text-caption font-semibold transition-colors
+                    ${
+                      atual
+                        ? "bg-action-primary text-text-on-brand"
+                        : "border border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
+                    }`}
+                >
+                  {p.label}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>

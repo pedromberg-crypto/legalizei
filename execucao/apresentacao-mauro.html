@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apresentação — Mauro</title>
+<style>
+  :root {
+    --coral-50: #FEF3EE;
+    --coral-100: #FBDDD1;
+    --coral-200: #F8C3B0;
+    --coral-500: #F2643C;
+    --coral-600: #DD4E27;
+    --coral-700: #B83D1C;
+    --ink-50: #FAF8F5;
+    --ink-100: #F1EEE9;
+    --ink-200: #E3DED7;
+    --ink-300: #CBC5BC;
+    --ink-400: #A19B92;
+    --ink-500: #736E67;
+    --ink-600: #524E48;
+    --ink-900: #1B1E24;
+    --success-tint: #E7F6EF; --success-base: #17A06A; --success-text: #0B5E40;
+    --warning-tint: #FDF3E1; --warning-base: #F5A524; --warning-text: #98600A;
+    --danger-tint: #FCEBEB;  --danger-base: #E03E43;  --danger-text: #971F25;
+    --info-tint: #EBF2FC;    --info-base: #3B82E0;    --info-text: #2360B8;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--ink-50);
+    color: var(--ink-900);
+    margin: 0;
+    padding: 0 0 64px 0;
+    line-height: 1.5;
+  }
+
+  .topo {
+    background: var(--ink-900);
+    color: white;
+    padding: 32px 24px;
+  }
+  .topo .marca {
+    display: inline-block;
+    width: 12px; height: 12px;
+    background: var(--coral-500);
+    border-radius: 3px;
+    margin-right: 10px;
+  }
+  .topo h1 {
+    font-size: 24px;
+    margin: 0 0 4px 0;
+    display: flex;
+    align-items: center;
+  }
+  .topo p {
+    margin: 0;
+    color: rgba(255,255,255,.65);
+    font-size: 14px;
+  }
+
+  .container {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 32px 24px 0 24px;
+  }
+
+  h2.secao {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--ink-500);
+    margin: 40px 0 16px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--ink-200);
+  }
+  h2.secao:first-child { margin-top: 0; }
+
+  /* ── Links ─────────────────────────────────────────────────────── */
+  .links {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .links a {
+    display: block;
+    background: white;
+    border: 1px solid var(--ink-200);
+    border-radius: 16px;
+    padding: 18px 20px;
+    text-decoration: none;
+    color: var(--ink-900);
+    transition: border-color .15s, transform .15s;
+  }
+  .links a:hover {
+    border-color: var(--coral-600);
+    transform: translateY(-2px);
+  }
+  .links a .rotulo {
+    font-weight: 700;
+    font-size: 15px;
+    display: block;
+  }
+  .links a .rota {
+    font-size: 12px;
+    color: var(--ink-500);
+    display: block;
+    margin-top: 3px;
+    word-break: break-all;
+  }
+  .links a .dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--coral-600);
+    margin-right: 8px;
+  }
+
+  .aviso {
+    font-size: 12.5px;
+    color: var(--ink-500);
+    background: var(--info-tint);
+    border-left: 3px solid var(--info-base);
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-top: 14px;
+  }
+
+  /* ── Resumo CNAE (tabela clicável) ─────────────────────────────── */
+  .resumo {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--ink-200);
+  }
+  .resumo th {
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--ink-500);
+    padding: 12px 16px;
+    background: var(--ink-100);
+    font-weight: 600;
+  }
+  .resumo td {
+    padding: 14px 16px;
+    border-top: 1px solid var(--ink-200);
+    font-size: 14.5px;
+  }
+  .resumo tr.veredito-linha { cursor: default; }
+  .qtd { font-weight: 700; font-size: 18px; }
+  .selo {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .selo.atende  { background: var(--success-tint); color: var(--success-text); }
+  .selo.duvida  { background: var(--warning-tint); color: var(--warning-text); }
+  .selo.nao     { background: var(--danger-tint);  color: var(--danger-text); }
+
+  /* ── Detalhe (accordion nativo) ─────────────────────────────────── */
+  details.veredito {
+    background: white;
+    border: 1px solid var(--ink-200);
+    border-radius: 16px;
+    margin-top: 14px;
+    overflow: hidden;
+  }
+  details.veredito > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 700;
+    font-size: 15px;
+  }
+  details.veredito > summary::-webkit-details-marker { display: none; }
+  details.veredito > summary::after {
+    content: "▾";
+    color: var(--ink-400);
+    font-size: 13px;
+    transition: transform .15s;
+  }
+  details.veredito[open] > summary::after { transform: rotate(180deg); }
+  details.veredito > summary .qtd-mini {
+    font-weight: 400;
+    color: var(--ink-500);
+    font-size: 13px;
+    margin-left: 10px;
+  }
+  .veredito-corpo {
+    padding: 4px 20px 20px 20px;
+    border-top: 1px solid var(--ink-200);
+  }
+  .veredito-corpo > .intro {
+    font-size: 13.5px;
+    color: var(--ink-600);
+    padding: 14px 0 4px 0;
+  }
+
+  /* Sub-balde dentro de um veredito */
+  details.balde {
+    border: 1px solid var(--ink-200);
+    border-radius: 12px;
+    margin-top: 12px;
+    background: var(--ink-50);
+  }
+  details.balde > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 12px 16px;
+    font-weight: 600;
+    font-size: 13.5px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  details.balde > summary::-webkit-details-marker { display: none; }
+  details.balde > summary .n { color: var(--coral-700); font-weight: 700; }
+  details.balde .pergunta {
+    font-size: 12.5px;
+    color: var(--ink-600);
+    padding: 0 16px 10px 16px;
+    font-style: italic;
+  }
+  details.balde .leitura {
+    font-size: 12px;
+    color: var(--info-text);
+    background: var(--info-tint);
+    margin: 0 16px 12px 16px;
+    padding: 8px 10px;
+    border-radius: 8px;
+  }
+
+  table.cnaes {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  table.cnaes th {
+    text-align: left;
+    padding: 6px 16px;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    border-top: 1px solid var(--ink-200);
+  }
+  table.cnaes td {
+    padding: 6px 16px;
+    border-top: 1px solid var(--ink-100);
+  }
+  table.cnaes td.codigo {
+    font-family: 'Courier New', monospace;
+    color: var(--ink-500);
+    white-space: nowrap;
+    width: 100px;
+  }
+  table.cnaes tr:hover td { background: var(--ink-100); }
+
+  .grupo-titulo {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-900);
+    padding: 14px 16px 4px 16px;
+  }
+
+  .rodape-nota {
+    margin-top: 40px;
+    font-size: 12px;
+    color: var(--ink-400);
+    text-align: center;
+  }
+
+  td.motivo {
+    color: var(--ink-500);
+    font-size: 12px;
+    font-style: italic;
+    width: 34%;
+  }
+
+  .novo {
+    display: inline-block;
+    background: var(--coral-600);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 999px;
+    letter-spacing: .04em;
+    vertical-align: middle;
+  }
+
+  /* ── Perguntas ─────────────────────────────────────────────────── */
+  .perguntas { display: flex; flex-direction: column; gap: 14px; }
+  .pergunta-card {
+    background: white;
+    border: 1px solid var(--ink-200);
+    border-left: 4px solid var(--coral-600);
+    border-radius: 16px;
+    padding: 20px 22px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .pergunta-card .num {
+    flex: 0 0 auto;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--coral-50);
+    color: var(--coral-700);
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .pergunta-card .texto { font-size: 15.5px; font-weight: 600; line-height: 1.45; }
+  .pergunta-card .contexto {
+    font-size: 12.5px;
+    color: var(--ink-500);
+    font-weight: 400;
+    margin-top: 6px;
+  }
+
+  /* ── Simulação financeira ──────────────────────────────────────── */
+  .sim-bloco {
+    background: white;
+    border: 1px solid var(--ink-200);
+    border-radius: 16px;
+    padding: 20px 22px;
+    margin-top: 12px;
+  }
+  .sim-bloco h4 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--ink-500);
+    margin: 0 0 10px 0;
+  }
+  .premissas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .premissas span {
+    background: var(--ink-100);
+    border-radius: 999px;
+    padding: 5px 12px;
+    font-size: 12px;
+    color: var(--ink-600);
+  }
+  .premissas span b { color: var(--ink-900); }
+
+  table.sim {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    margin-bottom: 6px;
+  }
+  table.sim th {
+    text-align: right;
+    padding: 8px 10px;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--ink-500);
+    border-bottom: 1px solid var(--ink-200);
+  }
+  table.sim th:first-child { text-align: left; }
+  table.sim td {
+    padding: 9px 10px;
+    text-align: right;
+    border-bottom: 1px solid var(--ink-100);
+    font-variant-numeric: tabular-nums;
+  }
+  table.sim td:first-child { text-align: left; font-weight: 600; }
+  table.sim tr.destaque td { background: var(--coral-50); }
+  table.sim tr.destaque td:first-child { color: var(--coral-700); }
+  .pos { color: var(--success-text); font-weight: 700; }
+  .neg { color: var(--danger-text); font-weight: 700; }
+
+  .sim-titulo {
+    font-size: 14px;
+    font-weight: 700;
+    margin: 20px 0 8px 0;
+  }
+  .sim-titulo:first-of-type { margin-top: 0; }
+  .sim-nota {
+    font-size: 12px;
+    color: var(--ink-500);
+    margin-top: 6px;
+  }
+  .alerta {
+    background: var(--danger-tint);
+    border-left: 3px solid var(--danger-base);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 12.5px;
+    color: var(--ink-600);
+    margin-top: 16px;
+  }
+  .alerta b { color: var(--danger-text); }
+
+  /* ── Abas da simulação (CSS puro, sem JS — abre offline em qualquer lugar) ── */
+  .tabs > input { position: absolute; opacity: 0; pointer-events: none; }
+  .tab-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 5px;
+    background: var(--ink-100);
+    border-radius: 999px;
+    margin-bottom: 20px;
+  }
+  .tab-bar label {
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+    padding: 9px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-600);
+    white-space: nowrap;
+    transition: background .15s, color .15s;
+  }
+  .tab-bar label:hover { color: var(--ink-900); }
+  .tab-painel { display: none; }
+
+  /* liga cada radio ao seu rótulo e ao seu painel */
+  #sim-a:checked ~ .tab-bar label[for="sim-a"],
+  #sim-b:checked ~ .tab-bar label[for="sim-b"],
+  #sim-c:checked ~ .tab-bar label[for="sim-c"] {
+    background: var(--coral-600);
+    color: #fff;
+    box-shadow: 0 1px 3px rgba(27,30,36,.18);
+  }
+  #sim-a:checked ~ #p-a,
+  #sim-b:checked ~ #p-b,
+  #sim-c:checked ~ #p-c { display: block; }
+
+  /* foco por teclado (o radio real está escondido) */
+  #sim-a:focus-visible ~ .tab-bar label[for="sim-a"],
+  #sim-b:focus-visible ~ .tab-bar label[for="sim-b"],
+  #sim-c:focus-visible ~ .tab-bar label[for="sim-c"] {
+    outline: 2px solid var(--coral-600);
+    outline-offset: 2px;
+  }
+
+  .comparativo {
+    background: var(--info-tint);
+    border-left: 3px solid var(--info-base);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 12.5px;
+    color: var(--ink-600);
+    margin-top: 16px;
+  }
+  .comparativo b { color: var(--info-text); }
+
+  .premissa-fixa {
+    background: var(--ink-100);
+    border-left: 3px solid var(--ink-400);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 12.5px;
+    color: var(--ink-600);
+    margin-bottom: 18px;
+  }
+  .premissa-fixa b { color: var(--ink-900); }
+
+  /* ── Bloco que expande (tira o peso analítico da 1ª leitura) ───────────── */
+  details.expandivel {
+    border: 1px solid var(--ink-200);
+    border-radius: 12px;
+    background: var(--ink-50);
+    margin-top: 14px;
+    overflow: hidden;
+  }
+  details.expandivel > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 11px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-600);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    transition: background .15s, color .15s;
+  }
+  details.expandivel > summary::-webkit-details-marker { display: none; }
+  details.expandivel > summary:hover { background: var(--ink-100); color: var(--ink-900); }
+  details.expandivel > summary::after {
+    content: "▾";
+    font-size: 11px;
+    color: var(--ink-400);
+    transition: transform .15s;
+  }
+  details.expandivel[open] > summary::after { transform: rotate(180deg); }
+  details.expandivel[open] > summary { border-bottom: 1px solid var(--ink-200); }
+  .expandivel-corpo { padding: 14px 16px 16px; }
+  .expandivel-corpo > *:first-child { margin-top: 0; }
+  .expandivel-corpo > *:last-child { margin-bottom: 0; }
+</style>
+</head>
+<body>
+
+  <div class="topo">
+    <h1><span class="marca"></span>Apresentação — Legalizai</h1>
+    <p>Preparado para o Mauro · atualizado 30/07/2026</p>
+  </div>
+
+  <div class="container">
+
+    <!-- ═══════════════════ LINKS ═══════════════════ -->
+    <h2 class="secao">Links</h2>
+    <div class="links">
+      <a href="http://localhost:3000/mockup" target="_blank">
+        <span class="rotulo"><span class="dot"></span>Mockup</span>
+        <span class="rota">/mockup — prancha de review (todas as telas)</span>
+      </a>
+      <a href="http://localhost:3000/mockup-home" target="_blank">
+        <span class="rotulo"><span class="dot"></span>Mockup Home</span>
+        <span class="rota">/mockup-home — visualizador da home do portal</span>
+      </a>
+      <a href="http://localhost:3000/apresentacao" target="_blank">
+        <span class="rotulo"><span class="dot"></span>Apresentação</span>
+        <span class="rota">/apresentacao — demo interativa do flow</span>
+      </a>
+      <a href="file:///C:/Users/pedro/Desktop/Projetos/pessoal/legalize/marca/identidade-visual/design-system.html" target="_blank">
+        <span class="rotulo"><span class="dot"></span>Design System</span>
+        <span class="rota">design-system.html — cores, tipografia, componentes</span>
+      </a>
+    </div>
+    <p class="aviso">⚠️ Os 3 primeiros links precisam do servidor local rodando (<code>npm run dev</code> na pasta <code>app/</code>) na máquina de quem está apresentando — funcionam só aqui, não numa cópia enviada pelo WhatsApp.</p>
+
+    <!-- ═══════════════════ CNAEs ═══════════════════ -->
+    <h2 class="secao">CNAEs — o que atendemos</h2>
+
+    <table class="resumo">
+      <thead>
+        <tr><th>Veredito</th><th>Quantidade</th><th>O que significa</th></tr>
+      </thead>
+      <tbody>
+        <tr class="veredito-linha">
+          <td><span class="selo atende">🟢 Atende</span></td>
+          <td class="qtd">111</td>
+          <td>Sobrevive à validação. É daqui que nascem as pills do gate de atividade.</td>
+        </tr>
+        <tr class="veredito-linha">
+          <td><span class="selo duvida">🕓 Em validação</span></td>
+          <td class="qtd">98</td>
+          <td>8 grupos, cada um com 1 pergunta fechada pra Larissa (fiscal) e/ou Mauro (escopo). Nada decidido ainda.</td>
+        </tr>
+        <tr class="veredito-linha">
+          <td><span class="selo nao">⛔ Não atendemos</span></td>
+          <td class="qtd">51</td>
+          <td>Impossível por natureza (órgão público, jogo de azar, vedação legal ao Simples) ou exige regulação externa pesada — nem nós, nem repasse.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="aviso">Base: os 260 CNAEs de serviço do escopo do MLP, avaliados 1 a 1 em 16/07 (script <code>classificar-260.js</code>). <strong>Revisado em 30/07</strong> com o pente fino de complexidade de abertura (CGSIM Res. 51/2019 — lista oficial de baixo risco): 13 CNAEs saíram do "atende". Clique em cada veredito abaixo pra ver o detalhe.</p>
+
+    <!-- 🟢 ATENDE -->
+    <details class="veredito">
+      <summary>🟢 Atende <span class="qtd-mini">111 CNAEs — 6 seções do IBGE</span></summary>
+      <div class="veredito-corpo">
+        <p class="intro">Lista do que o gate confirma como "atende" hoje. Nenhum destes precisa de conselho profissional nem é comércio/indústria. <strong>Revisado em 30/07:</strong> as seções E (água/esgoto/resíduos) e H (transporte) saíram inteiras — todas exigiam licenciamento ambiental ou de trânsito além da abertura.</p>
+
+        <details class="balde">
+          <summary><span class="n">23</span> · J — Informação e comunicação</summary>
+          <table class="cnaes">
+            <tr><td class="codigo">5811-5/00</td><td>Edição de livros</td></tr>
+            <tr><td class="codigo">5812-3/01</td><td>Edição de jornais diários</td></tr>
+            <tr><td class="codigo">5812-3/02</td><td>Edição de jornais não diários</td></tr>
+            <tr><td class="codigo">5813-1/00</td><td>Edição de revistas</td></tr>
+            <tr><td class="codigo">5819-1/00</td><td>Edição de cadastros, listas e de outros produtos gráficos</td></tr>
+            <tr><td class="codigo">5911-1/01</td><td>Estúdios cinematográficos</td></tr>
+            <tr><td class="codigo">5911-1/02</td><td>Produção de filmes para publicidade</td></tr>
+            <tr><td class="codigo">5911-1/99</td><td>Atividades de produção cinematográfica, de vídeos e de programas de televisão não especificadas anteriormente</td></tr>
+            <tr><td class="codigo">5912-0/01</td><td>Serviços de dublagem</td></tr>
+            <tr><td class="codigo">5912-0/02</td><td>Serviços de mixagem sonora em produção audiovisual</td></tr>
+            <tr><td class="codigo">5912-0/99</td><td>Atividades de pós produção cinematográfica, de vídeos e de programas de televisão não especificadas anteriormente</td></tr>
+            <tr><td class="codigo">5913-8/00</td><td>Distribuição cinematográfica, de vídeo e de programas de televisão</td></tr>
+            <tr><td class="codigo">5920-1/00</td><td>Atividades de gravação de som e de edição de música</td></tr>
+            <tr><td class="codigo">6201-5/01</td><td>Desenvolvimento de programas de computador sob encomenda</td></tr>
+            <tr><td class="codigo">6201-5/02</td><td>Web design</td></tr>
+            <tr><td class="codigo">6202-3/00</td><td>Desenvolvimento e licenciamento de programas de computador customizáveis</td></tr>
+            <tr><td class="codigo">6203-1/00</td><td>Desenvolvimento e licenciamento de programas de computador não customizáveis</td></tr>
+            <tr><td class="codigo">6204-0/00</td><td>Consultoria em tecnologia da informação</td></tr>
+            <tr><td class="codigo">6209-1/00</td><td>Suporte técnico, manutenção e outros serviços em tecnologia da informação</td></tr>
+            <tr><td class="codigo">6311-9/00</td><td>Tratamento de dados, provedores de serviços de aplicação e serviços de hospedagem na internet</td></tr>
+            <tr><td class="codigo">6319-4/00</td><td>Portais, provedores de conteúdo e outros serviços de informação na internet</td></tr>
+            <tr><td class="codigo">6391-7/00</td><td>Agências de notícias</td></tr>
+            <tr><td class="codigo">6399-2/00</td><td>Outras atividades de prestação de serviços de informação não especificadas anteriormente</td></tr>
+          </table>
+        </details>
+
+        <details class="balde">
+          <summary><span class="n">23</span> · M — Atividades profissionais, científicas e técnicas</summary>
+          <table class="cnaes">
+            <tr><td class="codigo">7020-4/00</td><td>Atividades de consultoria em gestão empresarial, exceto consultoria técnica específica</td></tr>
+            <tr><td class="codigo">7210-0/00</td><td>Pesquisa e desenvolvimento experimental em ciências físicas e naturais</td></tr>
+            <tr><td class="codigo">7220-7/00</td><td>Pesquisa e desenvolvimento experimental em ciências sociais e humanas</td></tr>
+            <tr><td class="codigo">7311-4/00</td><td>Agências de publicidade</td></tr>
+            <tr><td class="codigo">7312-2/00</td><td>Agenciamento de espaços para publicidade, exceto em veículos de comunicação</td></tr>
+            <tr><td class="codigo">7319-0/01</td><td>Criação estandes para feiras e exposições</td></tr>
+            <tr><td class="codigo">7319-0/02</td><td>Promoção de vendas</td></tr>
+            <tr><td class="codigo">7319-0/03</td><td>Marketing direto</td></tr>
+            <tr><td class="codigo">7319-0/04</td><td>Consultoria em publicidade</td></tr>
+            <tr><td class="codigo">7319-0/99</td><td>Outras atividades de publicidade não especificadas anteriormente</td></tr>
+            <tr><td class="codigo">7320-3/00</td><td>Pesquisas de mercado e de opinião pública</td></tr>
+            <tr><td class="codigo">7410-2/02</td><td>Design de interiores</td></tr>
+            <tr><td class="codigo">7410-2/03</td><td>Design de produto</td></tr>
+            <tr><td class="codigo">7410-2/99</td><td>Atividades de design não especificadas anteriormente</td></tr>
+            <tr><td class="codigo">7420-0/01</td><td>Atividades de produção de fotografias, exceto aérea e submarina</td></tr>
+            <tr><td class="codigo">7420-0/02</td><td>Atividades de produção de fotografias aéreas e submarinas</td></tr>
+            <tr><td class="codigo">7420-0/03</td><td>Laboratórios fotográficos</td></tr>
+            <tr><td class="codigo">7420-0/04</td><td>Filmagem de festas e eventos</td></tr>
+            <tr><td class="codigo">7420-0/05</td><td>Serviços de microfilmagem</td></tr>
+            <tr><td class="codigo">7490-1/01</td><td>Serviços de tradução, interpretação e similares</td></tr>
+            <tr><td class="codigo">7490-1/04</td><td>Atividades de intermediação e agenciamento de serviços e negócios em geral, exceto imobiliários</td></tr>
+            <tr><td class="codigo">7490-1/05</td><td>Agenciamento de profissionais para atividades esportivas, culturais e artísticas</td></tr>
+            <tr><td class="codigo">7490-1/99</td><td>Outras atividades profissionais, científicas e técnicas não especificadas anteriormente</td></tr>
+          </table>
+        </details>
+
+        <details class="balde">
+          <summary><span class="n">19</span> · N — Atividades administrativas e serviços complementares</summary>
+          <table class="cnaes">
+            <tr><td class="codigo">7723-3/00</td><td>Aluguel de objetos do vestuário, jóias e acessórios</td></tr>
+            <tr><td class="codigo">7733-1/00</td><td>Aluguel de máquinas e equipamentos para escritórios</td></tr>
+            <tr><td class="codigo">7911-2/00</td><td>Agências de viagens</td></tr>
+            <tr><td class="codigo">7912-1/00</td><td>Operadores turísticos</td></tr>
+            <tr><td class="codigo">7990-2/00</td><td>Serviços de reservas e outros serviços de turismo não especificados anteriormente</td></tr>
+            <tr><td class="codigo">8121-4/00</td><td>Limpeza em prédios e em domicílios</td></tr>
+            <tr><td class="codigo">8122-2/00</td><td>Imunização e controle de pragas urbanas</td></tr>
+            <tr><td class="codigo">8129-0/00</td><td>Atividades de limpeza não especificadas anteriormente</td></tr>
+            <tr><td class="codigo">8130-3/00</td><td>Atividades paisagísticas</td></tr>
+            <tr><td class="codigo">8211-3/00</td><td>Serviços combinados de escritório e apoio administrativo</td></tr>
+            <tr><td class="codigo">8219-9/01</td><td>Fotocópias</td></tr>
+            <tr><td class="codigo">8219-9/99</td><td>Preparação de documentos e serviços especializados de apoio administrativo não especificados anteriormente</td></tr>
+            <tr><td class="codigo">8220-2/00</td><td>Atividades de teleatendimento</td></tr>
+            <tr><td class="codigo">8230-0/01</td><td>Serviços de organização de feiras, congressos, exposições e festas</td></tr>
+            <tr><td class="codigo">8230-0/02</td><td>Casas de festas e eventos</td></tr>
+            <tr><td class="codigo">8291-1/00</td><td>Atividades de cobranças e informações cadastrais</td></tr>
+            <tr><td class="codigo">8299-7/03</td><td>Serviços de gravação de carimbos, exceto confecção</td></tr>
+            <tr><td class="codigo">8299-7/07</td><td>Salas de acesso à internet</td></tr>
+            <tr><td class="codigo">8299-7/99</td><td>Outras atividades de serviços prestados principalmente às empresas não especificadas anteriormente</td></tr>
+          </table>
+        </details>
+
+        <details class="balde">
+          <summary><span class="n">10</span> · P — Educação</summary>
+          <table class="cnaes">
+            <tr><td class="codigo">8550-3/02</td><td>Atividades de apoio à educação, exceto caixas escolares</td></tr>
+            <tr><td class="codigo">8592-9/01</td><td>Ensino de dança</td></tr>
+            <tr><td class="codigo">8592-9/02</td><td>Ensino de artes cênicas, exceto dança</td></tr>
+            <tr><td class="codigo">8592-9/03</td><td>Ensino de música</td></tr>
+            <tr><td class="codigo">8592-9/99</td><td>Ensino de arte e cultura não especificado anteriormente</td></tr>
+            <tr><td class="codigo">8593-7/00</td><td>Ensino de idiomas</td></tr>
+            <tr><td class="codigo">8599-6/03</td><td>Treinamento em informática</td></tr>
+            <tr><td class="codigo">8599-6/04</td><td>Treinamento em desenvolvimento profissional e gerencial</td></tr>
+            <tr><td class="codigo">8599-6/05</td><td>Cursos preparatórios para concursos</td></tr>
+            <tr><td class="codigo">8599-6/99</td><td>Outras atividades de ensino não especificadas anteriormente</td></tr>
+          </table>
+        </details>
+
+        <details class="balde">
+          <summary><span class="n">17</span> · R — Artes, cultura, esporte e recreação</summary>
+          <table class="cnaes">
+            <tr><td class="codigo">9001-9/01</td><td>Produção teatral</td></tr>
+            <tr><td class="codigo">9001-9/02</td><td>Produção musical</td></tr>
+            <tr><td class="codigo">9001-9/03</td><td>Produção de espetáculos de dança</td></tr>
+            <tr><td class="codigo">9001-9/04</td><td>Produção de espetáculos circenses, de marionetes e similares</td></tr>
+            <tr><td class="codigo">9001-9/06</td><td>Atividades de sonorização e de iluminação</td></tr>
+            <tr><td class="codigo">9001-9/99</td><td>Artes cênicas, espetáculos e atividades complementares não especificadas anteriormente</td></tr>
+            <tr><td class="codigo">9002-7/01</td><td>Atividades de artistas plásticos, jornalistas independentes e escritores</td></tr>
+            <tr><td class="codigo">9002-7/02</td><td>Restauração de obras de arte</td></tr>
+            <tr><td class="codigo">9003-5/00</td><td>Gestão de espaços para artes cênicas, espetáculos e outras atividades artísticas</td></tr>
+            <tr><td class="codigo">9311-5/00</td><td>Gestão de instalações de esportes</td></tr>
+            <tr><td class="codigo">9313-1/00</td><td>Atividades de condicionamento físico</td></tr>
+            <tr><td class="codigo">9319-1/01</td><td>Produção e promoção de eventos esportivos</td></tr>
+            <tr><td class="codigo">9319-1/99</td><td>Outras atividades esportivas não especificadas anteriormente</td></tr>
+            <tr><td class="codigo">9329-8/02</td><td>Exploração de boliches</td></tr>
+            <tr><td class="codigo">9329-8/03</td><td>Exploração de jogos de sinuca, bilhar e similares</td></tr>
+            <tr><td class="codigo">9329-8/04</td><td>Exploração de jogos eletrônicos recreativos</td></tr>
+            <tr><td class="codigo">9329-8/99</td><td>Outras atividades de recreação e lazer não especificadas anteriormente</td></tr>
+          </table>
+        </details>
+
+        <details class="balde">
+          <summary><span class="n">19</span> · S — Outras atividades de serviços</summary>
+          <table class="cnaes">
+            <tr><td class="codigo">9511-8/00</td><td>Reparação e manutenção de computadores e de equipamentos periféricos</td></tr>
+            <tr><td class="codigo">9512-6/00</td><td>Reparação e manutenção de equipamentos de comunicação</td></tr>
+            <tr><td class="codigo">9521-5/00</td><td>Reparação e manutenção de equipamentos eletroeletrônicos de uso pessoal e doméstico</td></tr>
+            <tr><td class="codigo">9529-1/01</td><td>Reparação de calçados, de bolsas e artigos de viagem</td></tr>
+            <tr><td class="codigo">9529-1/02</td><td>Chaveiros</td></tr>
+            <tr><td class="codigo">9529-1/03</td><td>Reparação de relógios</td></tr>
+            <tr><td class="codigo">9529-1/04</td><td>Reparação de bicicletas, triciclos e outros veículos não motorizados</td></tr>
+            <tr><td class="codigo">9529-1/05</td><td>Reparação de artigos do mobiliário</td></tr>
+            <tr><td class="codigo">9529-1/06</td><td>Reparação de jóias</td></tr>
+            <tr><td class="codigo">9529-1/99</td><td>Reparação e manutenção de outros objetos e equipamentos pessoais e domésticos não especificados anteriormente</td></tr>
+            <tr><td class="codigo">9601-7/01</td><td>Lavanderias</td></tr>
+            <tr><td class="codigo">9601-7/02</td><td>Tinturarias</td></tr>
+            <tr><td class="codigo">9601-7/03</td><td>Toalheiros</td></tr>
+            <tr><td class="codigo">9602-5/01</td><td>Cabeleireiros, manicure e pedicure</td></tr>
+            <tr><td class="codigo">9602-5/02</td><td>Atividades de estética e outros serviços de cuidados com a beleza</td></tr>
+            <tr><td class="codigo">9609-2/02</td><td>Agências matrimoniais</td></tr>
+            <tr><td class="codigo">9609-2/07</td><td>Alojamento de animais domésticos</td></tr>
+            <tr><td class="codigo">9609-2/08</td><td>Higiene e embelezamento de animais domésticos</td></tr>
+            <tr><td class="codigo">9609-2/99</td><td>Outras atividades de serviços pessoais não especificadas anteriormente</td></tr>
+          </table>
+        </details>
+
+      </div>
+    </details>
+
+    <!-- 🕓 EM VALIDAÇÃO -->
+    <details class="veredito">
+      <summary>🕓 Em validação <span class="qtd-mini">98 CNAEs — 8 grupos, cada um com 1 pergunta pendente</span></summary>
+      <div class="veredito-corpo">
+        <p class="intro">Nenhum destes é decisão fechada. Cada grupo tem 1 pergunta objetiva pra Larissa (fiscal) e/ou Mauro (escopo). A coluna "leitura" é interpretação minha da própria pergunta — não é veredito.</p>
+
+        <details class="balde">
+          <summary><span class="n">7</span> · Sem classificação de risco <span class="novo">NOVO 30/07</span></summary>
+          <p class="pergunta">Pergunta: estes 7 estavam em "atende" mas <strong>nunca foram avaliados</strong> — ficaram de fora da lista oficial de risco (CGSIM) que classificou todos os outros. Cada um parece precisar de alguma autorização além do CNPJ. Vale abrir e avisar, ou nem oferecer?</p>
+          <p class="leitura">Minha leitura: todos parecem exigir licença/cadastro municipal ou setorial, mas nenhum é bloqueio absoluto como os do grupo cortado.</p>
+          <table class="cnaes">
+            <tr><td class="codigo">5223-1/00</td><td>Estacionamento de veículos</td><td class="motivo">alvará + bombeiros + zoneamento</td></tr>
+            <tr><td class="codigo">5229-0/01</td><td>Apoio ao transporte por táxi, inclusive centrais de chamada</td><td class="motivo">possível cadastro na BHTrans</td></tr>
+            <tr><td class="codigo">5229-0/02</td><td>Serviços de reboque de veículos</td><td class="motivo">DETRAN/ANTT + frota</td></tr>
+            <tr><td class="codigo">5229-0/99</td><td>Outras atividades auxiliares dos transportes terrestres</td><td class="motivo">genérico demais pra afirmar</td></tr>
+            <tr><td class="codigo">8111-7/00</td><td>Serviços combinados para apoio a edifícios</td><td class="motivo">irmão da limpeza (8121), que já é "verificar"</td></tr>
+            <tr><td class="codigo">8299-7/05</td><td>Serviços de levantamento de fundos sob contrato</td><td class="motivo">ambíguo — pode encostar em CVM</td></tr>
+            <tr><td class="codigo">9609-2/04</td><td>Exploração de máquinas de serviços pessoais acionadas por moeda</td><td class="motivo">autorização municipal de instalação</td></tr>
+          </table>
+        </details>
+
+        <details class="balde">
+          <summary><span class="n">10</span> · Deveria ser condicional?</summary>
+          <p class="pergunta">Pergunta: exigem responsável técnico/registro em conselho ou junta? Se sim, não é "atende liso" — é dos 68 condicionais, o gate deveria mandar pra waitlist.</p>
+          <p class="leitura">Minha leitura: se confirmado, vira 🟡 Waitlist (é a própria definição de regulamentado).</p>
+          <table class="cnaes">
+            <tr><td class="codigo">5239-7/01</td><td>Serviços de praticagem</td></tr>
+            <tr><td class="codigo">6821-8/01</td><td>Corretagem na compra e venda e avaliação de imóveis</td></tr>
+            <tr><td class="codigo">6821-8/02</td><td>Corretagem no aluguel de imóveis</td></tr>
+            <tr><td class="codigo">7490-1/03</td><td>Serviços de agronomia e de consultoria às atividades agrícolas e pecuárias</td></tr>
+            <tr><td class="codigo">8299-7/04</td><td>Leiloeiros independentes</td></tr>
+            <tr><td class="codigo">8591-1/00</td><td>Ensino de esportes</td></tr>
+            <tr><td class="codigo">8711-5/01</td><td>Clínicas e residências geriátricas</td></tr>
+            <tr><td class="codigo">8712-3/00</td><td>Atividades de fornecimento de infraestrutura de apoio e assistência a paciente no domicílio</td></tr>
+            <tr><td class="codigo">8720-4/01</td><td>Atividades de centros de assistência psicossocial</td></tr>
+            <tr><td class="codigo">8720-4/99</td><td>Atividades de assistência psicossocial e à saúde a portadores de distúrbios psíquicos, deficiência mental e dependência química e grupos similares não especificadas anteriormente</td></tr>
+          </table>
+        </details>
+
+        <details class="balde">
+          <summary><span class="n">25</span> · Depende de licença especial?</summary>
+          <p class="pergunta">Pergunta: dependem de licença setorial (DETRAN, ANAC, MEC/CEE, vigilância sanitária, ambiental) pra OPERAR — a empresa abre, mas não funciona sem a licença. A gente abre e avisa, ou manda pra waitlist?</p>
+          <p class="leitura">Minha leitura: indefinido — varia por licença. Precisa de resposta caso a caso, não dá pra tratar como 1 bloco.</p>
+          <table class="cnaes">
+            <tr><td class="codigo">3812-2/00</td><td>Coleta de resíduos perigosos</td></tr>
+            <tr><td class="codigo">3822-0/00</td><td>Tratamento e disposição de resíduos perigosos</td></tr>
+            <tr><td class="codigo">3900-5/00</td><td>Descontaminação e outros serviços de gestão de resíduos</td></tr>
+            <tr><td class="codigo">5211-7/01</td><td>Armazéns gerais - emissão de warrant</td></tr>
+            <tr><td class="codigo">5250-8/02</td><td>Atividades de despachantes aduaneiros</td></tr>
+            <tr><td class="codigo">8299-7/06</td><td>Casas lotéricas</td></tr>
+            <tr><td class="codigo">8511-2/00</td><td>Educação infantil - creche</td></tr>
+            <tr><td class="codigo">8512-1/00</td><td>Educação infantil - pré-escola</td></tr>
+            <tr><td class="codigo">8513-9/00</td><td>Ensino fundamental</td></tr>
+            <tr><td class="codigo">8520-1/00</td><td>Ensino médio</td></tr>
+            <tr><td class="codigo">8531-7/00</td><td>Educação superior - graduação</td></tr>
+            <tr><td class="codigo">8532-5/00</td><td>Educação superior - graduação e pós graduação</td></tr>
+            <tr><td class="codigo">8533-3/00</td><td>Educação superior - pós graduação e extensão</td></tr>
+            <tr><td class="codigo">8541-4/00</td><td>Educação profissional de nível técnico</td></tr>
+            <tr><td class="codigo">8542-2/00</td><td>Educação profissional de nível tecnológico</td></tr>
+            <tr><td class="codigo">8599-6/01</td><td>Formação de condutores</td></tr>
+            <tr><td class="codigo">8599-6/02</td><td>Cursos de pilotagem</td></tr>
+            <tr><td class="codigo">9603-3/01</td><td>Gestão e manutenção de cemitérios</td></tr>
+            <tr><td class="codigo">9603-3/02</td><td>Serviços de cremação</td></tr>
+            <tr><td class="codigo">9603-3/03</td><td>Serviços de sepultamento</td></tr>
+            <tr><td class="codigo">9603-3/04</td><td>Serviços de funerárias</td></tr>
+            <tr><td class="codigo">9603-3/05</td><td>Serviços de somatoconservação</td></tr>
+            <tr><td class="codigo">9603-3/99</td><td>Atividades funerárias e serviços relacionados não especificados anteriormente</td></tr>
+            <tr><td class="codigo">9609-2/05</td><td>Atividades de sauna e banhos</td></tr>
+            <tr><td class="codigo">9609-2/06</td><td>Serviços de tatuagem e colocação de piercing</td></tr>
+          </table>
+        </details>
+
+        <details class="balde">
+          <summary><span class="n">19</span> · Anexo provavelmente errado</summary>
+          <p class="pergunta">Pergunta: o anexo veio de regra por SEÇÃO, e a seção não sabe o que a atividade faz de verdade. Bar/restaurante/lanchonete são Anexo I (comércio), "edição integrada à impressão" imprime (transformação, Anexo II), recuperação de material é transformação. Se certo, já deveriam estar fora do escopo desde 15/07.</p>
+          <p class="leitura">Minha leitura: vira 🔴 Escritório do Mauro (contato especial) — é comércio/indústria, não serviço.</p>
+          <table class="cnaes">
+            <tr><td class="codigo">3831-9/01</td><td>Recuperação de sucatas de alumínio</td></tr>
+            <tr><td class="codigo">3831-9/99</td><td>Recuperação de materiais metálicos, exceto alumínio</td></tr>
+            <tr><td class="codigo">3832-7/00</td><td>Recuperação de materiais plásticos</td></tr>
+            <tr><td class="codigo">3839-4/01</td><td>Usinas de compostagem</td></tr>
+            <tr><td class="codigo">3839-4/99</td><td>Recuperação de materiais não especificados anteriormente</td></tr>
+            <tr><td class="codigo">5611-2/01</td><td>Restaurantes e similares</td></tr>
+            <tr><td class="codigo">5611-2/03</td><td>Lanchonetes, casas de chá, de sucos e similares</td></tr>
+            <tr><td class="codigo">5611-2/04</td><td>Bares e outros estabelecimentos especializados em servir bebidas, sem entretenimento</td></tr>
+            <tr><td class="codigo">5611-2/05</td><td>Bares e outros estabelecimentos especializados em servir bebidas, com entretenimento</td></tr>
+            <tr><td class="codigo">5612-1/00</td><td>Serviços ambulantes de alimentação</td></tr>
+            <tr><td class="codigo">5620-1/01</td><td>Fornecimento de alimentos preparados preponderantemente para empresas</td></tr>
+            <tr><td class="codigo">5620-1/02</td><td>Serviços de alimentação para eventos e recepções - bufê</td></tr>
+            <tr><td class="codigo">5620-1/03</td><td>Cantinas - serviços de alimentação privativos</td></tr>
+            <tr><td class="codigo">5620-1/04</td><td>Fornecimento de alimentos preparados preponderantemente para consumo domiciliar</td></tr>
+            <tr><td class="codigo">5821-2/00</td><td>Edição integrada à impressão de livros</td></tr>
+            <tr><td class="codigo">5822-1/01</td><td>Edição integrada à impressão de jornais diários</td></tr>
+            <tr><td class="codigo">5822-1/02</td><td>Edição integrada à impressão de jornais não diários</td></tr>
+            <tr><td class="codigo">5823-9/00</td><td>Edição integrada à impressão de revistas</td></tr>
+            <tr><td class="codigo">5829-8/00</td><td>Edição integrada à impressão de cadastros, listas e de outros produtos gráficos</td></tr>
+          </table>
+        </details>
+
+        <details class="balde">
+          <summary><span class="n">2</span> · Imóvel próprio</summary>
+          <p class="pergunta">Pergunta: o art.17 da LC 123 veda locação de imóveis próprios (com ressalva quando há ISS). Compra e venda de imóvel próprio entra na mesma leitura? Qual dos 2 sobrevive?</p>
+          <p class="leitura">Minha leitura: provável ⛔ impossível (vedação ao Simples), mas depende da resposta.</p>
+          <table class="cnaes">
+            <tr><td class="codigo">6810-2/01</td><td>Compra e venda de imóveis próprios</td></tr>
+            <tr><td class="codigo">6810-2/02</td><td>Aluguel de imóveis próprios</td></tr>
+          </table>
+        </details>
+
+        <details class="balde">
+          <summary><span class="n">8</span> · Terceiro setor</summary>
+          <p class="pergunta">Pergunta: orfanato, albergue, ILPI e assistência social costumam ser associação/OSC, não ME com sócio e pró-labore. Existe mercado de ME aqui ou é lista morta?</p>
+          <p class="leitura">Minha leitura: provável ⛔ impossível (não é modelo de ME com sócio).</p>
+          <table class="cnaes">
+            <tr><td class="codigo">8711-5/02</td><td>Instituições de longa permanência para idosos</td></tr>
+            <tr><td class="codigo">8711-5/03</td><td>Atividades de assistência a deficientes físicos, imunodeprimidos e convalescentes</td></tr>
+            <tr><td class="codigo">8711-5/04</td><td>Centros de apoio a pacientes com câncer e com AIDS</td></tr>
+            <tr><td class="codigo">8711-5/05</td><td>Condomínios residenciais para idosos</td></tr>
+            <tr><td class="codigo">8730-1/01</td><td>Orfanatos</td></tr>
+            <tr><td class="codigo">8730-1/02</td><td>Albergues assistenciais</td></tr>
+            <tr><td class="codigo">8730-1/99</td><td>Atividades de assistência social prestadas em residências coletivas e particulares não especificadas anteriormente</td></tr>
+            <tr><td class="codigo">8800-6/00</td><td>Serviços de assistência social sem alojamento</td></tr>
+          </table>
+        </details>
+
+        <details class="balde">
+          <summary><span class="n">4</span> · Provedor pequeno</summary>
+          <p class="pergunta">Pergunta: SCM e provedor de acesso têm ISP pequeno de bairro que é ME de verdade, diferente das operadoras grandes. Fica, ou sai junto com as teles?</p>
+          <p class="leitura">Minha leitura: provável 🟢 fica (atende) — é o caso legítimo de pequeno porte.</p>
+          <table class="cnaes">
+            <tr><td class="codigo">6110-8/03</td><td>Serviços de comunicação multimídia - SCM</td></tr>
+            <tr><td class="codigo">6190-6/01</td><td>Provedores de acesso às redes de comunicações</td></tr>
+            <tr><td class="codigo">6190-6/02</td><td>Provedores de voz sobre protocolo internet - VoIP</td></tr>
+            <tr><td class="codigo">6190-6/99</td><td>Outras atividades de telecomunicações não especificadas anteriormente</td></tr>
+          </table>
+        </details>
+
+        <details class="balde">
+          <summary><span class="n">23</span> · Escala duvidosa</summary>
+          <p class="pergunta">Pergunta: cabem em ME de 2 sócios em Belo Horizonte, ou são operação de porte maior? Se não tiver demanda real, é lista morta que só suja o gate.</p>
+          <p class="leitura">Minha leitura: maioria provável ⛔ impossível (lista morta, sem demanda de ME real em BH) — mas não item a item.</p>
+          <table class="cnaes">
+            <tr><td class="codigo">3530-1/00</td><td>Produção e distribuição de vapor, água quente e ar condicionado</td></tr>
+            <tr><td class="codigo">5211-7/02</td><td>Guarda móveis</td></tr>
+            <tr><td class="codigo">5211-7/99</td><td>Depósitos de mercadorias para terceiros, exceto armazéns gerais e guarda móveis</td></tr>
+            <tr><td class="codigo">5212-5/00</td><td>Carga e descarga</td></tr>
+            <tr><td class="codigo">5232-0/00</td><td>Atividades de agenciamento marítimo</td></tr>
+            <tr><td class="codigo">5239-7/99</td><td>Atividades auxiliares dos transportes aquaviários não especificadas anteriormente</td></tr>
+            <tr><td class="codigo">5240-1/99</td><td>Atividades auxiliares dos transportes aéreos, exceto operação dos aeroportos e campos de aterrissagem</td></tr>
+            <tr><td class="codigo">5250-8/01</td><td>Comissaria de despachos</td></tr>
+            <tr><td class="codigo">5250-8/03</td><td>Agenciamento de cargas, exceto para o transporte marítimo</td></tr>
+            <tr><td class="codigo">5250-8/04</td><td>Organização logística do transporte de carga</td></tr>
+            <tr><td class="codigo">5250-8/05</td><td>Operador de transporte multimodal - OTM</td></tr>
+            <tr><td class="codigo">5914-6/00</td><td>Atividades de exibição cinematográfica</td></tr>
+            <tr><td class="codigo">6022-5/01</td><td>Programadoras</td></tr>
+            <tr><td class="codigo">6022-5/02</td><td>Atividades relacionadas à televisão por assinatura, exceto programadoras</td></tr>
+            <tr><td class="codigo">7490-1/02</td><td>Escafandria e mergulho</td></tr>
+            <tr><td class="codigo">8292-0/00</td><td>Envasamento e empacotamento sob contrato</td></tr>
+            <tr><td class="codigo">8299-7/01</td><td>Medição de consumo de energia elétrica, gás e água</td></tr>
+            <tr><td class="codigo">9001-9/05</td><td>Produção de espetáculos de rodeios, vaquejadas e similares</td></tr>
+            <tr><td class="codigo">9101-5/00</td><td>Atividades de bibliotecas e arquivos</td></tr>
+            <tr><td class="codigo">9102-3/01</td><td>Atividades de museus e de exploração de lugares e prédios históricos e atrações similares</td></tr>
+            <tr><td class="codigo">9102-3/02</td><td>Restauração e conservação de lugares e prédios históricos</td></tr>
+            <tr><td class="codigo">9312-3/00</td><td>Clubes sociais, esportivos e similares</td></tr>
+            <tr><td class="codigo">9321-2/00</td><td>Parques de diversão e parques temáticos</td></tr>
+          </table>
+        </details>
+
+      </div>
+    </details>
+
+    <!-- ⛔ NÃO ATENDEMOS -->
+    <details class="veredito">
+      <summary>⛔ Não atendemos <span class="qtd-mini">51 CNAEs — 7 motivos, todos fechados</span></summary>
+      <div class="veredito-corpo">
+        <p class="intro">Decisão do Pedro, factual — nenhum destes é ME de serviço viável pro nosso produto. Não vira waitlist nem repasse.</p>
+
+        <details class="balde">
+          <summary><span class="n">6</span> · Regulação externa pesada <span class="novo">NOVO 30/07</span></summary>
+          <p class="pergunta">Estes 6 estavam listados como "atende" e não deveriam. Todos exigem licença ou autorização que <strong>vai muito além de abrir o CNPJ</strong> — a empresa abre, mas não pode operar. Cair aqui era o pior erro possível: cobraríamos antes de descobrir que a pessoa não pode trabalhar.</p>
+          <table class="cnaes">
+            <tr><td class="codigo">3821-1/00</td><td>Tratamento e disposição de resíduos não perigosos</td><td class="motivo">licença ambiental completa (LP/LI/LO)</td></tr>
+            <tr><td class="codigo">3811-4/00</td><td>Coleta de resíduos não perigosos</td><td class="motivo">licença ambiental + cadastro de transportador</td></tr>
+            <tr><td class="codigo">3702-9/00</td><td>Atividades relacionadas a esgoto, exceto gestão de redes</td><td class="motivo">limpa-fossa: licença ambiental + manifesto</td></tr>
+            <tr><td class="codigo">3600-6/02</td><td>Distribuição de água por caminhões</td><td class="motivo">carro-pipa: vigilância sanitária + outorga de água</td></tr>
+            <tr><td class="codigo">9329-8/01</td><td>Discotecas, dancetarias, salões de dança e similares</td><td class="motivo">bombeiros (AVCB) + vigilância + lei do silêncio</td></tr>
+            <tr><td class="codigo">8299-7/02</td><td>Emissão de vales alimentação, transporte e similares</td><td class="motivo">arranjo de pagamento (PAT/MTE + Lei 14.442/2022)</td></tr>
+          </table>
+        </details>
+
+        <details class="balde">
+          <summary><span class="n">12</span> · Função estatal</summary>
+          <p class="pergunta">Função de Estado ou delegação estatal. Não se abre por CNPJ de ME: ou é órgão público, ou é concurso/outorga.</p>
+          <table class="cnaes">
+            <tr><td class="codigo">6912-5/00</td><td>Cartórios</td></tr>
+            <tr><td class="codigo">8411-6/00</td><td>Administração pública em geral</td></tr>
+            <tr><td class="codigo">8412-4/00</td><td>Regulação das atividades de saúde, educação, serviços culturais e outros serviços sociais</td></tr>
+            <tr><td class="codigo">8413-2/00</td><td>Regulação das atividades econômicas</td></tr>
+            <tr><td class="codigo">8421-3/00</td><td>Relações exteriores</td></tr>
+            <tr><td class="codigo">8422-1/00</td><td>Defesa</td></tr>
+            <tr><td class="codigo">8423-0/00</td><td>Justiça</td></tr>
+            <tr><td class="codigo">8424-8/00</td><td>Segurança e ordem pública</td></tr>
+            <tr><td class="codigo">8425-6/00</td><td>Defesa civil</td></tr>
+            <tr><td class="codigo">8430-2/00</td><td>Seguridade social obrigatória</td></tr>
+            <tr><td class="codigo">8550-3/01</td><td>Administração de caixas escolares</td></tr>
+            <tr><td class="codigo">9900-8/00</td><td>Organismos internacionais e outras instituições extraterritoriais</td></tr>
+          </table>
+        </details>
+
+        <details class="balde">
+          <summary><span class="n">1</span> · Não é empresa</summary>
+          <p class="pergunta">Relação de emprego doméstico entre pessoas físicas. Não gera CNPJ.</p>
+          <table class="cnaes">
+            <tr><td class="codigo">9700-5/00</td><td>Serviços domésticos</td></tr>
+          </table>
+        </details>
+
+        <details class="balde">
+          <summary><span class="n">6</span> · Vedação ao Simples</summary>
+          <p class="pergunta">Vedação expressa ao Simples Nacional (LC 123/2006, art. 17). Mesmo abrindo, a empresa não pode optar pelo Simples — que é a premissa do produto inteiro.</p>
+          <table class="cnaes">
+            <tr><td class="codigo">3511-5/01</td><td>Geração de energia elétrica</td></tr>
+            <tr><td class="codigo">3511-5/02</td><td>Atividades de coordenação e controle da operação da geração e transmissão de energia elétrica</td></tr>
+            <tr><td class="codigo">3512-3/00</td><td>Transmissão de energia elétrica</td></tr>
+            <tr><td class="codigo">3513-1/00</td><td>Comércio atacadista de energia elétrica</td></tr>
+            <tr><td class="codigo">3514-0/00</td><td>Distribuição de energia elétrica</td></tr>
+            <tr><td class="codigo">6810-2/03</td><td>Loteamento de imóveis próprios</td></tr>
+          </table>
+        </details>
+
+        <details class="balde">
+          <summary><span class="n">22</span> · Concessão de infraestrutura</summary>
+          <p class="pergunta">Concessão/outorga pública de infraestrutura (ANATEL, ANTT, ANAC, ANEEL, saneamento, radiodifusão). Escala e barreira de entrada incompatíveis com ME.</p>
+          <table class="cnaes">
+            <tr><td class="codigo">3520-4/01</td><td>Produção de gás; processamento de gás natural</td></tr>
+            <tr><td class="codigo">3520-4/02</td><td>Distribuição de combustíveis gasosos por redes urbanas</td></tr>
+            <tr><td class="codigo">3600-6/01</td><td>Captação, tratamento e distribuição de água</td></tr>
+            <tr><td class="codigo">3701-1/00</td><td>Gestão de redes de esgoto</td></tr>
+            <tr><td class="codigo">5221-4/00</td><td>Concessionárias de rodovias, pontes, túneis e serviços relacionados</td></tr>
+            <tr><td class="codigo">5222-2/00</td><td>Terminais rodoviários e ferroviários</td></tr>
+            <tr><td class="codigo">5231-1/01</td><td>Administração da infraestrutura portuária</td></tr>
+            <tr><td class="codigo">5231-1/02</td><td>Atividades do operador portuário</td></tr>
+            <tr><td class="codigo">5231-1/03</td><td>Gestão de terminais aquaviários</td></tr>
+            <tr><td class="codigo">5240-1/01</td><td>Operação dos aeroportos e campos de aterrissagem</td></tr>
+            <tr><td class="codigo">6010-1/00</td><td>Atividades de rádio</td></tr>
+            <tr><td class="codigo">6021-7/00</td><td>Atividades de televisão aberta</td></tr>
+            <tr><td class="codigo">6110-8/01</td><td>Serviços de telefonia fixa comutada - STFC</td></tr>
+            <tr><td class="codigo">6110-8/02</td><td>Serviços de redes de transportes de telecomunicações - SRTT</td></tr>
+            <tr><td class="codigo">6110-8/99</td><td>Serviços de telecomunicações por fio não especificados anteriormente</td></tr>
+            <tr><td class="codigo">6120-5/01</td><td>Telefonia móvel celular</td></tr>
+            <tr><td class="codigo">6120-5/02</td><td>Serviço móvel especializado - SME</td></tr>
+            <tr><td class="codigo">6120-5/99</td><td>Serviços de telecomunicações sem fio não especificados anteriormente</td></tr>
+            <tr><td class="codigo">6130-2/00</td><td>Telecomunicações por satélite</td></tr>
+            <tr><td class="codigo">6141-8/00</td><td>Operadoras de televisão por assinatura por cabo</td></tr>
+            <tr><td class="codigo">6142-6/00</td><td>Operadoras de televisão por assinatura por microondas</td></tr>
+            <tr><td class="codigo">6143-4/00</td><td>Operadoras de televisão por assinatura por satélite</td></tr>
+          </table>
+        </details>
+
+        <details class="balde">
+          <summary><span class="n">3</span> · Proibido/restrito</summary>
+          <p class="pergunta">Jogo de azar. Atividade proibida/restrita no Brasil; não é mercado do MLP de contabilidade.</p>
+          <table class="cnaes">
+            <tr><td class="codigo">9200-3/01</td><td>Casas de bingo</td></tr>
+            <tr><td class="codigo">9200-3/02</td><td>Exploração de apostas em corridas de cavalos</td></tr>
+            <tr><td class="codigo">9200-3/99</td><td>Exploração de jogos de azar e apostas não especificados anteriormente</td></tr>
+          </table>
+        </details>
+
+        <details class="balde">
+          <summary><span class="n">1</span> · Institucional público</summary>
+          <p class="pergunta">Equipamento público ou de conservação, não empresa de serviço.</p>
+          <table class="cnaes">
+            <tr><td class="codigo">9103-1/00</td><td>Atividades de jardins botânicos, zoológicos, parques nacionais, reservas ecológicas e áreas de proteção ambiental</td></tr>
+          </table>
+        </details>
+
+      </div>
+    </details>
+
+    <p class="rodape-nota">Fonte: pesquisa/cnae-matriz/limpeza-260-servico.md (16/07) + cnae-complexidade-abertura.json / CGSIM Res. 51-2019 (pente fino 30/07)</p>
+
+    <!-- ═══════════════════ PERGUNTAS ═══════════════════ -->
+    <h2 class="secao">Perguntas</h2>
+    <div class="perguntas">
+
+      <div class="pergunta-card">
+        <span class="num">1</span>
+        <div>
+          <div class="texto">Vamos seguir os concorrentes e trabalhar com teto do Simples Nacional de até R$ 360 mil, a princípio?</div>
+          <div class="contexto">Define o recorte de cliente do MLP: ME (até R$ 360 mil/ano) ou já abrir pra EPP (até R$ 4,8 milhões). Impacta as faixas de faturamento do cadastro e o cálculo de imposto.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-card">
+        <span class="num">2</span>
+        <div>
+          <div class="texto">Confirmamos o escopo do MLP só em Simples Nacional? E quando o cliente crescer e sair do Simples, ele vai pra onde?</div>
+          <div class="contexto">A Contabilizei <b>não</b> tem "plano do Simples" e "plano do Presumido" — tem um produto só, e o regime é 1 de 9 variáveis de preço. Pra nós, atender só Simples é escopo do <b>motor fiscal</b> (Presumido é outra engine: 5+ guias/mês e escrituração completa), não de plano. O risco é perder o cliente no momento em que ele vale mais.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-card">
+        <span class="num">3</span>
+        <div>
+          <div class="texto">Preço único para toda a faixa da ME, ou escalonado por faturamento como o concorrente?</div>
+          <div class="contexto">Na tabela real deles, o R$ 139 só vale até R$ 25 mil/mês — de R$ 25 a 50 mil já são R$ 228 (<b>+64%</b>, sem aviso no funil). Nosso público (ME até R$ 360 mil/ano = R$ 30 mil/mês) <b>atravessa essa fronteira</b>: o cliente no teto já paga a faixa de cima.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-card">
+        <span class="num">4</span>
+        <div>
+          <div class="texto">Já conseguimos providenciar um cartão de crédito para cadastro no tráfego pago (apenas cadastro)?</div>
+          <div class="contexto">Só para deixar as contas de anúncio criadas e verificadas. Não implica investimento agora.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-card">
+        <span class="num">5</span>
+        <div>
+          <div class="texto">Qual será nosso budget inicial para tráfego pago por mês?</div>
+          <div class="contexto">Indicação inicial: <b>R$ 1.000 a R$ 1.500 por semana</b> — o que dá aproximadamente <b>R$ 4.300 a R$ 6.500 por mês</b>. Abaixo desse piso a plataforma não sai da fase de aprendizado e o custo por lead fica instável.</div>
+        </div>
+      </div>
+
+      <div class="pergunta-card">
+        <span class="num">6</span>
+        <div>
+          <div class="texto">Sobre a taxa da Junta e o certificado digital: nós vamos arcar com os dois, amarrando fidelidade de 12 meses, ou precisamos repensar?</div>
+          <div class="contexto">Ainda não temos o custo de operação por usuário fechado. A simulação abaixo isola só esses dois custos duros, pra ver o que o modelo aguenta.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Simulação da pergunta 3 -->
+    <div class="sim-bloco">
+      <h4>Simulação — escolha o plano</h4>
+
+      <details class="expandivel">
+        <summary>📌 As 2 regras que valem para as três simulações</summary>
+        <div class="expandivel-corpo">
+          <div class="premissa-fixa">
+            <b>1. A taxa da Junta (R$ 268,51) não é custo nosso.</b> Constatado no contrato da Contabilizei (cláusulas 4.3&nbsp;"h", 2.4 e 3.14): <i>o cliente paga todas as taxas públicas</i>, o líder não absorve nenhuma. Decisão de 30/07: a gente também não arca. Sobra uma única variável de custo — o certificado digital.<br><br>
+            <b>2. A multa é 30% do saldo não pago da fidelidade</b>, não do valor total do contrato. Mesma régua da Contabilizei (cláusula 7.1&nbsp;"b"). Quanto mais cedo o cliente sai, maior o saldo devedor — e maior a multa.
+          </div>
+        </div>
+      </details>
+
+      <div class="tabs" style="margin-top:18px">
+        <input type="radio" name="simplano" id="sim-a" checked>
+        <input type="radio" name="simplano" id="sim-b">
+        <input type="radio" name="simplano" id="sim-c">
+
+        <div class="tab-bar">
+          <label for="sim-a">R$ 139/mês · 12 meses</label>
+          <label for="sim-b">R$ 195/mês · 12 meses</label>
+          <label for="sim-c">3 meses grátis · 15 meses</label>
+        </div>
+
+        <div class="tab-painel" id="p-a">
+        <div class="premissas">
+          <span>Mensalidade <b>R$ 139,00</b></span>
+          <span>Fidelidade <b>12 meses</b></span>
+          <span>Meses pagos <b>12</b></span>
+          <span>Receita do contrato <b>R$ 1.668,00</b></span>
+          <span>Multa <b>30% do saldo não pago</b></span>
+          <span>Certificado <b>R$ 200,00</b></span>
+        </div>
+
+        <div class="sim-titulo">✅ Cenário A — cliente cumpre os 12 meses</div>
+        <table class="sim">
+          <thead>
+            <tr>
+              <th>Quem paga o certificado</th>
+              <th>Nosso custo</th>
+              <th>Receita</th>
+              <th>Sobra</th>
+              <th>Margem</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="destaque">
+              <td>Arcamos o certificado</td>
+              <td>R$ 200,00</td>
+              <td>R$ 1.668,00</td>
+              <td class="pos">+ R$ 1.468,00</td>
+              <td>88%</td>
+            </tr>
+            <tr>
+              <td>Cliente paga o certificado</td>
+              <td>R$ 0,00</td>
+              <td>R$ 1.668,00</td>
+              <td class="pos">+ R$ 1.668,00</td>
+              <td>100%</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="sim-nota">Quando o custo se paga: arcando o certificado, <b>2 meses pagos</b>.</p>
+
+        <div class="sim-titulo">⚠️ Cenário B — cliente cancela no 1º mês (paga a multa)</div>
+        <table class="sim">
+          <thead>
+            <tr>
+              <th>Quem paga o certificado</th>
+              <th>Nosso custo</th>
+              <th>Receita (1 mês + multa)</th>
+              <th>Sobra</th>
+              <th>Margem</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="destaque">
+              <td>Arcamos o certificado</td>
+              <td>R$ 200,00</td>
+              <td>R$ 597,70</td>
+              <td class="pos">+ R$ 397,70</td>
+              <td>67%</td>
+            </tr>
+            <tr>
+              <td>Cliente paga o certificado</td>
+              <td>R$ 0,00</td>
+              <td>R$ 597,70</td>
+              <td class="pos">+ R$ 597,70</td>
+              <td>100%</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="sim-nota">Ele pagou 1 mensalidade, então restam 11 × R$ 139,00 = R$ 1.529,00 de saldo. A multa é 30% disso = <b>R$ 458,70</b>, mais a mensalidade já paga.</p>
+
+        <details class="expandivel">
+          <summary>⚠️ E se a multa não for paga? Perda de R$ 61,00</summary>
+          <div class="expandivel-corpo">
+            <div class="alerta">
+              <b>O risco real não é o cancelamento, é a multa não entrar.</b> Se o cliente cancela no 1º mês e não paga os R$ 458,70 (calote, contestação de cartão, cobrança que não compensa judicialmente), o resultado vira: arcamos o certificado <b>− R$ 61,00</b> · cliente paga o certificado <b>+ R$ 139,00</b>.
+            </div>
+          </div>
+        </details>
+        </div>
+
+        <div class="tab-painel" id="p-b">
+        <div class="premissas">
+          <span>Mensalidade <b>R$ 195,00</b></span>
+          <span>Fidelidade <b>12 meses</b></span>
+          <span>Meses pagos <b>12</b></span>
+          <span>Receita do contrato <b>R$ 2.340,00</b></span>
+          <span>Multa <b>30% do saldo não pago</b></span>
+          <span>Certificado <b>R$ 200,00</b></span>
+        </div>
+
+        <div class="sim-titulo">✅ Cenário A — cliente cumpre os 12 meses</div>
+        <table class="sim">
+          <thead>
+            <tr>
+              <th>Quem paga o certificado</th>
+              <th>Nosso custo</th>
+              <th>Receita</th>
+              <th>Sobra</th>
+              <th>Margem</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="destaque">
+              <td>Arcamos o certificado</td>
+              <td>R$ 200,00</td>
+              <td>R$ 2.340,00</td>
+              <td class="pos">+ R$ 2.140,00</td>
+              <td>91%</td>
+            </tr>
+            <tr>
+              <td>Cliente paga o certificado</td>
+              <td>R$ 0,00</td>
+              <td>R$ 2.340,00</td>
+              <td class="pos">+ R$ 2.340,00</td>
+              <td>100%</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="sim-nota">Quando o custo se paga: arcando o certificado, <b>2 meses pagos</b>.</p>
+
+        <div class="sim-titulo">⚠️ Cenário B — cliente cancela no 1º mês (paga a multa)</div>
+        <table class="sim">
+          <thead>
+            <tr>
+              <th>Quem paga o certificado</th>
+              <th>Nosso custo</th>
+              <th>Receita (1 mês + multa)</th>
+              <th>Sobra</th>
+              <th>Margem</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="destaque">
+              <td>Arcamos o certificado</td>
+              <td>R$ 200,00</td>
+              <td>R$ 838,50</td>
+              <td class="pos">+ R$ 638,50</td>
+              <td>76%</td>
+            </tr>
+            <tr>
+              <td>Cliente paga o certificado</td>
+              <td>R$ 0,00</td>
+              <td>R$ 838,50</td>
+              <td class="pos">+ R$ 838,50</td>
+              <td>100%</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="sim-nota">Ele pagou 1 mensalidade, então restam 11 × R$ 195,00 = R$ 2.145,00 de saldo. A multa é 30% disso = <b>R$ 643,50</b>, mais a mensalidade já paga.</p>
+
+        <details class="expandivel">
+          <summary>⚠️ E se a multa não for paga? Perda de R$ 5,00</summary>
+          <div class="expandivel-corpo">
+            <div class="alerta">
+              <b>O risco real não é o cancelamento, é a multa não entrar.</b> Se o cliente cancela no 1º mês e não paga os R$ 643,50 (calote, contestação de cartão, cobrança que não compensa judicialmente), o resultado vira: arcamos o certificado <b>− R$ 5,00</b> · cliente paga o certificado <b>+ R$ 195,00</b>.
+            </div>
+          </div>
+        </details>
+        </div>
+
+        <div class="tab-painel" id="p-c">
+        <div class="premissas">
+          <span>Mensalidade <b>R$ 139,00</b></span>
+          <span>Grátis <b>3 primeiros meses</b></span>
+          <span>Fidelidade <b>15 meses</b></span>
+          <span>Meses pagos <b>12</b></span>
+          <span>Receita do contrato <b>R$ 1.668,00</b></span>
+          <span>Multa <b>30% do saldo não pago</b></span>
+          <span>Certificado <b>R$ 200,00</b></span>
+        </div>
+
+        <div class="sim-titulo">✅ Cenário A — cliente cumpre os 15 meses (12 pagos)</div>
+        <table class="sim">
+          <thead>
+            <tr>
+              <th>Quem paga o certificado</th>
+              <th>Nosso custo</th>
+              <th>Receita</th>
+              <th>Sobra</th>
+              <th>Margem</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="destaque">
+              <td>Arcamos o certificado</td>
+              <td>R$ 200,00</td>
+              <td>R$ 1.668,00</td>
+              <td class="pos">+ R$ 1.468,00</td>
+              <td>88%</td>
+            </tr>
+            <tr>
+              <td>Cliente paga o certificado</td>
+              <td>R$ 0,00</td>
+              <td>R$ 1.668,00</td>
+              <td class="pos">+ R$ 1.668,00</td>
+              <td>100%</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="sim-nota">Quando o custo se paga: arcando o certificado, <b>2 meses pagos</b> (mês 5 do contrato).</p>
+
+        <div class="sim-titulo">⚠️ Cenário B — cancela no 1º mês, dentro da gratuidade (paga a multa)</div>
+        <table class="sim">
+          <thead>
+            <tr>
+              <th>Quem paga o certificado</th>
+              <th>Nosso custo</th>
+              <th>Receita (só a multa)</th>
+              <th>Sobra</th>
+              <th>Margem</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="destaque">
+              <td>Arcamos o certificado</td>
+              <td>R$ 200,00</td>
+              <td>R$ 500,40</td>
+              <td class="pos">+ R$ 300,40</td>
+              <td>60%</td>
+            </tr>
+            <tr>
+              <td>Cliente paga o certificado</td>
+              <td>R$ 0,00</td>
+              <td>R$ 500,40</td>
+              <td class="pos">+ R$ 500,40</td>
+              <td>100%</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="sim-nota">Como ele está na gratuidade, <b>nada foi pago</b>: o saldo devedor é a fidelidade inteira (12 × R$ 139,00 = R$ 1.668,00), e 30% disso dá <b>R$ 500,40</b>. A receita é só a multa.</p>
+
+        <details class="expandivel">
+          <summary>⚠️ E se a multa não for paga? Perda de R$ 200,00</summary>
+          <div class="expandivel-corpo">
+            <div class="alerta">
+              <b>O risco real não é o cancelamento, é a multa não entrar.</b> Se o cliente cancela no 1º mês e não paga os R$ 500,40 (calote, contestação de cartão, cobrança que não compensa judicialmente), o resultado vira: arcamos o certificado <b>− R$ 200,00</b> · cliente paga o certificado <b>+ R$ 0,00</b>.
+            </div>
+          </div>
+        </details>
+        </div>
+      </div>
+
+      <details class="expandivel">
+        <summary>📊 Comparativo das três + ressalvas da conta</summary>
+        <div class="expandivel-corpo">
+          <div class="comparativo">
+            <b>Lendo as três lado a lado.</b> Com a Junta fora, o único jeito de a conta ficar negativa é o cliente sair cedo <i>e</i> não pagar a multa — e aí a perda é exatamente o certificado. A <b>R$ 195</b> é a mais resiliente: no pior caso perde <b>R$ 5,00</b>. A <b>R$ 139</b> perde <b>R$ 61,00</b>. A de <b>3 meses grátis</b> é a pior: perde os <b>R$ 200</b> inteiros, porque quem cancela dentro da gratuidade não pagou mensalidade nenhuma.<br><br>
+            <b>Efeito colateral da multa sobre saldo:</b> ela é a única coisa que joga a favor do modelo grátis. Como nada foi pago, o saldo devedor é a fidelidade inteira, e a multa sai <b>maior</b> (R$ 500,40) do que na de R$ 139 (R$ 458,70). Ainda assim o grátis não gera receita a mais — os R$ 1.468 são os mesmos, só chegam 3 meses depois.
+          </div>
+
+          <p class="sim-nota">
+            ⚠️ <b>O que esta conta NÃO inclui:</b> custo de operação por usuário (servidor, APIs, consultas, horas do time) — ainda não medido. Também não inclui aquisição (tráfego pago). É margem bruta sobre o único custo duro que sobrou, não lucro.<br>
+            ⚠️ <b>Fidelidade conta de quando?</b> Na Contabilizei (cláusula 2.1&nbsp;"b") os 12 meses correm <i>a partir da emissão do CNPJ</i>, não do aceite — protege o cliente contra demora de órgão. A gente ainda não definiu esse marco.<br>
+            ⚠️ <b>A multa cai com o tempo.</b> Os números acima são do pior caso pra nós (saída no 1º mês, saldo máximo). Quem sai no mês 6 do plano de R$ 139 deve 30% de R$ 834,00 = R$ 250,20 — a proteção diminui conforme o contrato avança, mas nessa altura as mensalidades já cobriram o certificado.
+          </p>
+        </div>
+      </details>
+
+
+
+    </div>
+
+  </div>
+
+</body>
+</html>

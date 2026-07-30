@@ -773,57 +773,51 @@ export function PlanoView({
      escritório constroem.
 
    O QUE ESTA VERSÃO ADICIONA:
-   · **Âncora real**: abertura em escritório tradicional custa honorário, e o
-     nosso é zero. É comparação verdadeira, não preço riscado inventado.
    · **O plano vira produto**: card único com o que está incluso, item a item,
      em linguagem de dono (escopo espelhado do benchmark de mercado).
-   · **FAQ que desarma objeção** no lugar onde ela nasce: fidelidade, o que
-     acontece se cancelar, por que a taxa existe.
+   · **Âncora real**, em uma linha: abertura em escritório tradicional custa
+     honorário, e o nosso é zero.
+
+   ─── 🪒 LAPIDAÇÃO 29/07 — a 1ª versão vendia a mesma coisa 3 vezes ─────────
+   Achado do Pedro ("muita informação"). A auditoria achou 3 causas, e nenhuma
+   delas era "texto comprido":
+
+   1. **O FAQ era pré-eco do N8.** `ContratoView` abre com "Em quatro linhas" e
+      responde 3 das 4 FAQs — honorário zero, período mínimo, 7 dias pra
+      desistir — melhor escritas e na tela onde a pessoa assina. O N7 gastava 4
+      acordeões pra antecipar a tela seguinte. **FAQ removido**; a única que o
+      N8 não cobre (variação por faturamento) subiu pra micro-linha visível
+      colada no preço, porque letra miúda dentro de acordeon numa tela que
+      promete "sem letra miúda" é a própria pegadinha.
+   2. **"Grátis" era argumentado 3x** (card verde · comparativo · FAQ). **O
+      comparativo morreu**; a âncora virou 1 linha dentro do card verde. De
+      quebra saiu o preço riscado, que é linguagem de varejo — o mesmo vício
+      cortado do card verde do N4 no mesmo dia.
+   3. **"22 anos" aparecia em N2, N7 e N8.** **Removido daqui**: no N8 é card
+      completo e nasce onde a dúvida "com quem eu assino?" realmente aparece.
+
+   Fora isso, `INCLUSO` caiu de 7 pra 5: "Abertura completa do CNPJ" estava
+   dentro do card MENSAL (mistura de baldes, e o card verde já dizia), e
+   "Declarações no prazo" fundiu com o imposto — é a mesma promessa.
+
+   Resultado: 8 blocos → 4. A tela responde 2 perguntas (quanto pago hoje · o
+   que levo todo mês); o resto é do N8.
    ───────────────────────────────────────────────────────────────────────── */
 
-/** O que a mensalidade inclui. Espelha o escopo do benchmark de mercado
-    (plano de referência), em linguagem de dono e sem jargão fiscal. */
+/**
+ * O que a mensalidade inclui. Espelha o escopo do benchmark de mercado
+ * (plano de referência), em linguagem de dono e sem jargão fiscal.
+ *
+ * ⚠️ **A abertura NÃO entra nesta lista.** Ela é grátis e mora no card verde,
+ * acima. Listar "abertura do CNPJ" aqui dentro misturaria os baldes — a regra
+ * dura que esta tela existe pra proteger — e repetiria o card de cima.
+ */
 const INCLUSO: { titulo: string; sub: string }[] = [
-  { titulo: "Abertura completa do CNPJ", sub: "Junta, Receita, Simples e inscrição municipal." },
   { titulo: "Certificado digital", sub: "Incluso, sem custo extra." },
-  { titulo: "Imposto calculado e guia pronta", sub: "Todo mês, sem você fazer conta." },
+  { titulo: "Imposto e declarações", sub: "Guia pronta todo mês e obrigação entregue no prazo." },
   { titulo: "Notas fiscais sem limite", sub: "Emite pelo app, em segundos." },
-  { titulo: "Declarações no prazo", sub: "As obrigações do governo são por nossa conta." },
   { titulo: "Pró-labore de até 2 sócios", sub: "Calculado junto com o seu imposto." },
   { titulo: "Contador de verdade", sub: "Uma pessoa com nome, no WhatsApp." },
-];
-
-/**
- * Honorário de abertura numa contabilidade tradicional, usado no comparativo.
- *
- * **R$ 1.621,00 = o salário mínimo vigente** (valor do Pedro, 29/07). A régua
- * de mercado é essa: escritório tradicional costuma cobrar em torno de um
- * salário mínimo pra abrir. Não é média estatística, é referência de mercado —
- * e a tela diz exatamente isso, sem fingir precisão que o número não tem.
- *
- * ⚠️ O mesmo R$ 1.621 aparece no flow como salário mínimo (pró-labore). Se o
- * mínimo mudar, este número **não** deve acompanhar sozinho: aqui ele é âncora
- * de preço de serviço, lá é base de cálculo. Coincidem hoje, por escolha.
- */
-const HONORARIO_TRADICIONAL = 1621;
-
-const FAQ: { p: string; r: string }[] = [
-  {
-    p: "Se a abertura é grátis, onde está a pegadinha?",
-    r: "Não tem. A gente não cobra honorário pra abrir porque ganha na mensalidade depois. O que você paga hoje é a taxa da Junta Comercial, que vai inteira pro Estado.",
-  },
-  {
-    p: "Por que existe um período mínimo?",
-    r: "Porque a abertura sai de graça. O período mínimo é o que torna isso possível: sem ele, teríamos que cobrar o honorário lá na frente.",
-  },
-  {
-    p: "E se eu desistir?",
-    r: "Você tem 7 dias pra mudar de ideia e receber tudo de volta, inclusive a taxa, desde que a empresa ainda não tenha sido aberta.",
-  },
-  {
-    p: "A mensalidade muda depois?",
-    r: "O valor acompanha o seu faturamento. Se a empresa crescer muito, a gente conversa antes, nunca cobra surpresa.",
-  },
 ];
 
 function PlanoOferta({
@@ -836,7 +830,6 @@ function PlanoOferta({
   onVoltar?: () => void;
 }) {
   const hoje = empresaPaga ? CUSTOS.MENSALIDADE : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
-  const [aberta, setAberta] = useState<number | null>(null);
 
   return (
     <>
@@ -865,6 +858,15 @@ function PlanoOferta({
               Todo o trabalho de abrir é por nossa conta: documentação, contrato
               social, protocolo, CNPJ e enquadramento no Simples.
             </p>
+            {/* ⚓ A ÂNCORA, em UMA linha. Era um card comparativo inteiro com
+                preço riscado — e preço riscado é linguagem de varejo, o mesmo
+                vício cortado do card verde do N4 em 29/07. Aqui a comparação
+                vive como referência qualitativa: sem número, sem risco, sem
+                fingir precisão estatística que a régua não tem. */}
+            <p className="text-micro text-text-tertiary mt-2">
+              Em escritório tradicional, esse mesmo trabalho costuma custar em
+              torno de um salário mínimo de honorário.
+            </p>
           </Card>
 
           {/* O PLANO COMO PRODUTO — card único (só existe 1 plano no MLP). */}
@@ -882,6 +884,16 @@ function PlanoOferta({
               </div>
               <p className="text-micro text-text-on-dark/60 mt-1">
                 a 1ª mensalidade já é o seu 1º mês
+              </p>
+              {/* 🔓 Era a FAQ "a mensalidade muda depois?", escondida num
+                  acordeon. É a ÚNICA letra miúda real da tela — e o subtítulo
+                  promete "sem letra miúda depois". Esconder a variação por
+                  faturamento dentro de um acordeon é exatamente a pegadinha que
+                  esta tela existe pra evitar. Então ela sobe, visível, colada no
+                  preço que ela qualifica. */}
+              <p className="text-micro text-text-on-dark/60 mt-1">
+                O valor acompanha o seu faturamento. Se a empresa crescer muito,
+                a gente conversa antes.
               </p>
             </div>
 
@@ -929,83 +941,30 @@ function PlanoOferta({
             </div>
           )}
 
-          {/* COMPARATIVO — fecha a conta. Vem DEPOIS da taxa de propósito: só
-              faz sentido comparar quando a pessoa já viu tudo que paga, e é
-              aqui que fica evidente que a taxa é igual nos dois caminhos e o
-              que muda é só o honorário. */}
-          <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
-            <p className="text-body font-semibold text-text-primary">
-              O que você economiza abrindo aqui
-            </p>
-            <div className="mt-3 flex flex-col gap-2.5">
-              <div className="flex items-baseline justify-between gap-3">
-                <span className="text-caption text-text-secondary">
-                  Contabilidade tradicional
-                </span>
-                <span className="shrink-0 text-body font-semibold text-text-tertiary line-through">
-                  {brl(HONORARIO_TRADICIONAL)}
-                </span>
-              </div>
-              <div className="flex items-baseline justify-between gap-3">
-                <span className="text-caption font-semibold text-text-primary">Aqui</span>
-                <span className="shrink-0 text-h2 font-bold text-state-success-text">
-                  R$ 0
-                </span>
-              </div>
-              <div className="mt-1 border-t border-border-hairline pt-2.5">
-                <p className="text-caption text-text-secondary">
-                  A taxa da Junta acima é a mesma nos dois casos. O que muda é o
-                  honorário: lá se paga, aqui não.
-                </p>
-              </div>
-            </div>
-            <p className="text-micro text-text-tertiary mt-3">
-              Referência de mercado: abrir com contador costuma custar em torno
-              de um salário mínimo de honorário.
-            </p>
-          </div>
+          {/* ─────────────────────────────────────────────────────────────────
+              🪒 AQUI TERMINAVA A TELA — e não termina mais (lapidação 29/07).
+              Saíram daqui 3 blocos, por 3 motivos diferentes:
 
-          {/* FAQ — a objeção respondida onde ela nasce. */}
-          <div>
-            <p className="text-body font-semibold text-text-primary mb-2">
-              Perguntas que todo mundo faz
-            </p>
-            <div className="overflow-hidden rounded-2xl border border-border-hairline bg-surface-card">
-              {FAQ.map((f, i) => {
-                const on = aberta === i;
-                return (
-                  <div key={f.p} className={i > 0 ? "border-t border-border-hairline" : ""}>
-                    <button
-                      onClick={() => setAberta(on ? null : i)}
-                      aria-expanded={on}
-                      className="flex w-full items-center justify-between gap-3 px-4 py-3.5 text-left"
-                    >
-                      <span className="text-caption font-semibold text-text-primary">{f.p}</span>
-                      <span className="shrink-0 text-text-tertiary">
-                        {on ? <IconeMenos /> : <IconeMais />}
-                      </span>
-                    </button>
-                    {on && (
-                      <p className="px-4 pb-3.5 text-caption text-text-secondary">{f.r}</p>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+              1. **COMPARATIVO** (tradicional R$ 1.621 riscado × "Aqui R$ 0") —
+                 era o 3º lugar da tela dizendo "grátis", depois do card verde e
+                 da FAQ. Argumento forte repetido não soma, dilui. E o preço
+                 riscado é linguagem de varejo, o mesmo vício cortado do N4 no
+                 mesmo dia. A âncora sobreviveu como 1 linha no card verde.
 
-          {/* QUEM ESTÁ DO OUTRO LADO — o diferencial que nenhum concorrente
-              digital tem. Vale mais aqui do que qualquer selo inventado. */}
-          <div className="flex items-center gap-3 rounded-2xl bg-surface-tint-brand p-4">
-            <span className="shrink-0 text-action-primary">
-              <IconeEscudo />
-            </span>
-            <p className="text-caption text-text-secondary">
-              Por trás do app tem um escritório de contabilidade com{" "}
-              <strong className="text-text-primary">22 anos em Belo Horizonte</strong>. Não
-              é robô, e você fala com uma pessoa.
-            </p>
-          </div>
+              2. **FAQ (4 acordeões)** — era pré-eco do N8. A tela seguinte abre
+                 com "Em quatro linhas" e responde 3 das 4 melhor e no lugar
+                 certo (honorário zero · período mínimo · 7 dias pra desistir).
+                 Antecipar o N8 aqui gastava 4 blocos pra dizer o que o usuário
+                 leria um toque depois. A 4ª (variação por faturamento) o N8 NÃO
+                 cobre: virou micro-linha visível sob o preço.
+
+              3. **CARD DOS 22 ANOS** — aparecia em N2, N7 e N8. No N8 ele é card
+                 completo, com 2 pontos, e nasce onde a dúvida "com quem eu
+                 assino?" de fato aparece. Aqui era a terceira repetição.
+
+              A tela voltou a responder 2 perguntas: quanto pago hoje, e o que
+              levo todo mês. O resto é do N8.
+              ───────────────────────────────────────────────────────────────── */}
 
           {/* Preço é placeholder declarado: número provisório sem aviso é igual
               a número sem fonte. */}
@@ -1035,21 +994,6 @@ function CheckMiniPlano() {
     </svg>
   );
 }
-function IconeMais() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
-      <path d="M12 5v14M5 12h14" />
-    </svg>
-  );
-}
-function IconeMenos() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
-      <path d="M5 12h14" />
-    </svg>
-  );
-}
-
 /** Check preenchido, 28px. Local: só o card do grátis usa. */
 function CheckGrande() {
   return (
@@ -1065,14 +1009,24 @@ function CheckGrande() {
 export function ContratoView({
   aceito,
   setAceito,
+  empresaPaga = false,
   onSeguir,
   onVoltar,
+  onLerContrato,
 }: {
   aceito: boolean;
   setAceito: (v: boolean) => void;
+  /** Mesmo `?cenario=empresa-paga` do N7/N9: muda o que entra no "paga hoje". */
+  empresaPaga?: boolean;
   onSeguir?: () => void;
   onVoltar?: () => void;
+  /** 🚧 O documento jurídico não existe ainda (Mauro/Larissa). Enquanto não
+      existir, o botão fica inerte — mas NÃO é mais um `href="#"`, que sequestra
+      a URL e rola a página pro topo no meio do aceite. */
+  onLerContrato?: () => void;
 }) {
+  const hoje = empresaPaga ? CUSTOS.MENSALIDADE : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
+
   return (
     <>
       <TelaHeader meta="Contrato de serviço" onVoltar={onVoltar} />
@@ -1082,20 +1036,55 @@ export function ContratoView({
         </Titulo>
 
         <Corpo>
-          {/* RESUMO HUMANO, ACIMA DO JURÍDICO. */}
+          {/* ═══ RESUMO HUMANO, ACIMA DO JURÍDICO ═══════════════════════════
+              🪒 29/07 — as 4 linhas eram 2 novas e 2 ecos. "Abre sem honorário
+              e cuida todo mês" e "mensalidade; taxas à parte" RE-EXPLICAVAM com
+              palavras o que o N7 tinha acabado de mostrar com números, um toque
+              antes. Enquanto isso, a tela do ACEITE não exibia um único valor:
+              você assinava o contrato sem ver na tela quanto paga.
+
+              Então as duas primeiras linhas viraram os NÚMEROS (é o que um
+              recap-antes-de-assinar deve fazer) e as duas que carregam
+              informação nova de verdade — período mínimo e os 7 dias —
+              continuam como bullet. Seguem sendo quatro linhas.
+              ════════════════════════════════════════════════════════════════ */}
           <div>
             <p className="text-body font-semibold text-text-primary mb-2">Em quatro linhas</p>
-            <ul className="flex flex-col gap-2">
-              <Bullet>
-                A gente abre a sua empresa sem cobrar honorário e cuida da sua
-                contabilidade todo mês.
-              </Bullet>
-              <Bullet>
-                Você paga uma mensalidade. As taxas do governo são à parte.
-              </Bullet>
+
+            <div className="rounded-2xl border border-border-hairline bg-surface-card">
+              <div className="flex items-baseline justify-between gap-3 px-4 pt-3.5">
+                <span className="text-caption text-text-secondary">Você paga hoje</span>
+                <span className="shrink-0 text-body font-semibold text-text-primary">
+                  {brl(hoje, true)}
+                </span>
+              </div>
+              <p className="px-4 pb-3.5 text-micro text-text-tertiary">
+                {empresaPaga
+                  ? "só a 1ª mensalidade: a taxa da Junta fica por nossa conta"
+                  : "taxa da Junta Comercial + a 1ª mensalidade. Abrir não tem honorário"}
+              </p>
+
+              <div className="border-t border-border-hairline">
+                <div className="flex items-baseline justify-between gap-3 px-4 pt-3.5">
+                  <span className="text-caption text-text-secondary">Depois, todo mês</span>
+                  <span className="shrink-0 text-body font-semibold text-text-primary">
+                    {brl(CUSTOS.MENSALIDADE)}
+                  </span>
+                </div>
+                <p className="px-4 pb-3.5 text-micro text-text-tertiary">
+                  sua contabilidade completa. As taxas do governo são sempre à parte
+                </p>
+              </div>
+            </div>
+
+            <ul className="mt-2 flex flex-col gap-2">
+              {/* 🟡 O PRAZO DA FIDELIDADE segue em aberto (Mauro/Larissa). Por
+                  decisão do Pedro (29/07) a copy fica GENÉRICA — sem número
+                  inventado e sem placeholder FAKE — e aponta pro contrato, que
+                  é onde o prazo vai estar quando existir. */}
               <Bullet>
                 Como a abertura é gratuita, o plano tem um período mínimo de
-                permanência.
+                permanência, descrito no contrato.
               </Bullet>
               <Bullet>
                 Nada é irreversível hoje: você tem 7 dias pra mudar de ideia e
@@ -1104,14 +1093,19 @@ export function ContratoView({
             </ul>
           </div>
 
-          <a
-            href="#"
+          {/* 🐛 Era `<a href="#">` — âncora morta: sequestra a URL e joga a
+              página pro topo bem no meio do aceite. Mesma classe do "Falar com
+              o time" sem `onClick` pego em 28/07. Agora é botão de verdade,
+              esperando o documento do Mauro/Larissa. */}
+          <button
+            type="button"
+            onClick={onLerContrato}
             className="flex min-h-12 w-full items-center justify-center rounded-md border
                        border-border-strong bg-surface-card px-4 text-body font-semibold
                        text-text-primary transition-colors hover:bg-surface-alt"
           >
             Ler o contrato completo
-          </a>
+          </button>
 
           {/* QUEM ESTÁ DO OUTRO LADO — o instante do aceite é o de maior dúvida
               sobre COM QUEM se assina. */}
@@ -1191,25 +1185,60 @@ function IconePessoa() {
 
 export type Metodo = "cartao" | "pix" | "boleto";
 
-export const METODOS: { id: Metodo; nome: string; quando: string; efeito: string }[] = [
+/**
+ * ⚠️ A DECISÃO DE FUNDO NÃO MUDOU (ver doc da rota `/pagamento` §3): o cartão é
+ * empurrado porque destrava a abertura na hora, e a vantagem declarada é do
+ * cliente. O que mudou em 29/07 foi só a REDAÇÃO:
+ *
+ *   · O título do aviso era **"Acelere seu processo"** — imperativo de varejo
+ *     numa tela onde não há mais nada a vender: a pessoa já decidiu, só falta
+ *     pagar. Agora o título AFIRMA o fato ("Sua abertura começa hoje") em vez
+ *     de mandar a pessoa fazer algo.
+ *   · O texto repetia a pill do botão selecionado a 3 cm de distância ("cai na
+ *     hora" × "assim que o pagamento passar... em minutos"). Agora a pill diz
+ *     QUANDO O DINHEIRO CAI e o aviso diz O QUE ACONTECE COM A EMPRESA — que
+ *     são fatos diferentes e agora soam diferentes.
+ */
+export const METODOS: {
+  id: Metodo;
+  nome: string;
+  quando: string;
+  aviso: string;
+  efeito: string;
+  /** 30/07 — mesma tela serve o flow #2; lá o que começa é a MIGRAÇÃO. */
+  avisoMigrar: string;
+  efeitoMigrar: string;
+}[] = [
   {
     id: "cartao",
     nome: "Cartão de crédito",
     quando: "na hora",
-    efeito: "Sua abertura começa hoje mesmo, assim que o pagamento passar.",
+    aviso: "Sua abertura começa hoje",
+    efeito: "Assim que o pagamento passar, a gente já entra com o processo.",
+    avisoMigrar: "Sua migração começa hoje",
+    efeitoMigrar:
+      "Assim que o pagamento passar, a gente já aciona seu contador anterior.",
   },
   {
     id: "pix",
     nome: "Pix",
     quando: "em minutos",
-    efeito: "Sua abertura começa assim que o Pix cair, geralmente em minutos.",
+    aviso: "Sua abertura começa em minutos",
+    efeito: "Assim que o Pix cair, a gente já entra com o processo.",
+    avisoMigrar: "Sua migração começa em minutos",
+    efeitoMigrar:
+      "Assim que o Pix cair, a gente já aciona seu contador anterior.",
   },
   {
     id: "boleto",
     nome: "Boleto",
     quando: "1 a 3 dias úteis",
+    aviso: "Com boleto, a abertura espera o pagamento",
     efeito:
       "Você já entra no app e adianta tudo. A abertura em si só começa quando o boleto compensar.",
+    avisoMigrar: "Com boleto, a migração espera o pagamento",
+    efeitoMigrar:
+      "Você já entra no app, mas a gente só aciona seu contador anterior quando o boleto compensar.",
   },
 ];
 
@@ -1219,6 +1248,8 @@ export function PagamentoView({
   metodo,
   setMetodo,
   empresaPaga = false,
+  cpfCadastrado,
+  fluxo = "abertura",
   onPagar,
   onVoltar,
 }: {
@@ -1227,11 +1258,40 @@ export function PagamentoView({
   metodo: Metodo;
   setMetodo: (m: Metodo) => void;
   empresaPaga?: boolean;
+  /**
+   * 🐛 CPF PEDIDO 2× — corrigido em 29/07.
+   *
+   * O N6 virou front-load em 28/07 e passou a coletar CPF (`DadosConta.cpf`).
+   * O N9 continuava abrindo um campo vazio e pedindo tudo de novo: é o mesmo
+   * "1 dado duplicado sem reuso (CPF pedido 2×)" que o cruzamento com os dados
+   * da JUCEMG pegou na reunião de 28/07 — a correção foi aplicada no N10 e
+   * esqueceu esta tela.
+   *
+   * Com o CPF do N6 aqui, a tela só **EXIBE** (decisão do Pedro, 29/07): o dado
+   * já foi digitado e validado no cadastro, então não há o que reconfirmar nem
+   * editar. Ausente = comportamento antigo, campo em branco — é o caso das
+   * rotas de produção, que ainda não têm persistência entre telas (RF-01).
+   */
+  cpfCadastrado?: string;
+  /**
+   * 30/07 — `migrar` = flow #2. Muda 2 coisas e só: (1) o total não soma taxa
+   * de governo (a empresa já existe, não há DAE nem TFLF); (2) o aviso fala de
+   * MIGRAÇÃO, não de abertura. O resto da tela (CPF, métodos, idempotência) é
+   * idêntico, então não vale uma tela nova.
+   */
+  fluxo?: "abertura" | "migrar";
   onPagar?: () => void;
   onVoltar?: () => void;
 }) {
-  const total = empresaPaga ? CUSTOS.MENSALIDADE : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
+  const migrar = fluxo === "migrar";
+  const total = migrar
+    ? CUSTOS.MENSALIDADE
+    : empresaPaga
+      ? CUSTOS.MENSALIDADE
+      : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
   const escolhido = METODOS.find((m) => m.id === metodo)!;
+
+  const temCadastrado = Boolean(cpfCadastrado?.trim());
 
   return (
     <>
@@ -1242,19 +1302,34 @@ export function PagamentoView({
         </Titulo>
 
         <Corpo>
-          {/* CPF: cobrança + elegibilidade no mesmo campo (decisão nº 5). */}
-          <Campo
-            rotulo="Seu CPF"
-            dica="A gente confere na Receita se ele está regular pra abrir empresa."
-          >
-            <Texto
-              valor={cpf}
-              onChange={setCpf}
-              inputMode="numeric"
-              maxLength={14}
-              placeholder="000.000.000-00"
-            />
-          </Campo>
+          {/* CPF: cobrança + elegibilidade no mesmo dado (decisão nº 5).
+              Já veio do N6 → confirma. Não veio → coleta, como antes. */}
+          {temCadastrado ? (
+            /* Só EXIBE (decisão do Pedro, 29/07). A pessoa já digitou e validou
+               o CPF no cadastro do app (N6): reabrir edição aqui convidaria a
+               divergir de um dado que já passou por validação, e ainda daria a
+               entender que a gente não guardou o que ela preencheu. */
+            <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
+              <p className="text-caption text-text-secondary">Seu CPF</p>
+              <p className="mt-1 text-body font-semibold text-text-primary">{cpfCadastrado}</p>
+              <p className="text-micro text-text-tertiary mt-2">
+                A gente confere na Receita se ele está regular pra abrir empresa.
+              </p>
+            </div>
+          ) : (
+            <Campo
+              rotulo="Seu CPF"
+              dica="A gente confere na Receita se ele está regular pra abrir empresa."
+            >
+              <Texto
+                valor={cpf}
+                onChange={setCpf}
+                inputMode="numeric"
+                maxLength={14}
+                placeholder="000.000.000-00"
+              />
+            </Campo>
+          )}
 
           <div>
             <p className="text-caption font-semibold text-text-primary mb-2">
@@ -1295,13 +1370,9 @@ export function PagamentoView({
               empresa dele começa a existir, não "meio de pagamento". */}
           <Aviso
             variante={metodo === "boleto" ? "warning" : "success"}
-            titulo={
-              metodo === "boleto"
-                ? "Com boleto, a abertura espera o pagamento"
-                : "Acelere seu processo"
-            }
+            titulo={migrar ? escolhido.avisoMigrar : escolhido.aviso}
           >
-            {escolhido.efeito}
+            {migrar ? escolhido.efeitoMigrar : escolhido.efeito}
           </Aviso>
 
           {/* IDEMPOTÊNCIA VISÍVEL (UX-38): mata o medo de quem paga e some. */}

@@ -508,5 +508,37 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 *Pergunta:* no comparativo usei R$ 1.621 (um salário mínimo) como honorário de abertura numa contabilidade tradicional. Qual o número real que vocês praticam?
 ```
 
+## Semana 30/07/2026 — o caminho de quem JÁ TEM empresa passou a existir
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | **Migrar de contador: telas prontas** | Metade do mercado é quem **já tem CNPJ** e quer trocar de contador. Esse caminho existia só no papel: quem clicava em "já tenho empresa" batia num aviso de *"ainda não disponível"*. Agora tem **as 9 telas do começo ao fim**, navegáveis | 🟢 |
+| 2 | **A promessa aqui é mais forte que a da abertura** | Quem migra já tem **12 meses de faturamento e folha reais**. Então o app não estima nada: mostra **o número dele**, e quanto ele está deixando na mesa hoje. É o argumento comercial mais forte do produto | 🟢 |
+| 3 | **Honestidade quando não há economia** | Se o contador atual **já fez certo**, a tela **diz isso** e vende serviço (atendimento, prazo, portal), não economia inventada. Prometer redução pra quem já está otimizado seria a mesma armadilha que a gente critica nos outros | 🟢 |
+| 4 | ⚠️ **Decisão: cobramos ANTES da transferência** | Igual à abertura. Mas com uma diferença dura: quem libera a transferência é o **contador ANTIGO** (ele valida no Conselho). É a única espera do produto que depende de alguém que está **perdendo o cliente**. Por isso travei uma contrapartida obrigatória no contrato: *"se a transferência não sair por motivo fora do seu controle, você recebe tudo de volta"* | 🟢 (contrapartida é condição) |
+| 5 | 🔥 **CNAEs: o "atendemos" encolheu de 124 → 111** | Passei um pente fino nos atendidos contra a **lista oficial de baixo risco** (CGSIM Res. 51/2019). Resultado: 6 saíram pra "não atendemos", 7 foram pra "em validação". **A seção de água/esgoto/resíduos saiu inteira** — exige licenciamento ambiental, e o pior: aqueles CNAEs **nunca tinham sido avaliados**, entraram na lista por não terem sido recusados | 🟢 |
+| 6 | 📄 **Li o contrato do concorrente (plano R$195)** | 3 achados que mexem com a gente: (a) eles **não pagam a taxa da Junta** — está escrito que é obrigação do cliente. Vamos fazer igual; (b) a multa de rescisão é **30% do que falta pagar**, não do total; (c) a fidelidade deles **conta a partir do CNPJ emitido**, não da assinatura — protege o cliente contra demora do governo | 🟢 |
+| 7 | 💰 **Simulação do plano de R$139** | Com a taxa da Junta fora, sobra **um só custo nosso na abertura: o certificado digital (~R$200)**. Simulei 3 cenários (cliente fica 12 meses / sai no 3º / sai no 8º) — em todos, a multa de 30% do saldo cobre o certificado com folga. **Mas:** na tabela real deles, R$139 só vale até R$25 mil/mês de faturamento; nosso cliente-alvo no teto da ME já pagaria **R$228** lá | 🟢 |
+| 8 | **Apresentação pra vocês (HTML)** | Montei um documento único com: os links de tudo, a lista dos CNAEs por categoria clicável, **6 perguntas pra você decidir** e as simulações de preço com a conta aberta | 🟢 |
+| 9 | 🐛 **8 defeitos reais corrigidos** | Entre eles: a sequência inteira de telas do dossiê **não avançava**; o capital social podia passar em branco; o CPF era pedido duas vezes; quem pagava por boleto **nunca chegava** na tela de acompanhamento | 🟢 |
+
+**Observação honesta:** o **motor de testes** segue sem atualizar (agora somam-se as mudanças de 28, 29 e 30/07). É dívida acumulada há 3 sessões e continua sendo o passo antes de programar em cima disso.
+
+**Perguntas pro Mauro (as 6 estão na apresentação):** teto de faturamento do plano · cartão pra tráfego pago · taxa da Junta e certificado (quanto considerar) · plano do Simples × plano do Lucro Presumido · fidelidade de 12 meses com multa de 30% · destino dos CNAEs que precisam de licença municipal.
+
+**Próximo:** revalidar o motor de testes; concluir a reorganização da documentação (em curso). Preço do plano/avulsos e parceiro do certificado seguem pendentes.
+
+### 📱 WhatsApp (30/07)
+```
+*Update Legalizei* 🔁
+- O caminho de quem *já tem empresa e quer trocar de contador* agora existe de verdade: 9 telas do começo ao fim. Antes esbarrava num "ainda não disponível" (e isso é metade do mercado)
+- Aqui a promessa é mais forte que na abertura: como a empresa já fatura, mostramos o *número real* dos 12 meses dele, não uma estimativa
+- E se o contador atual já fez certo, a tela *diz isso* e vende serviço, não economia inventada
+- Decisão: cobramos antes da transferência. Só que quem libera a transferência é o contador antigo (ele valida no Conselho), então travei no contrato: se não sair por motivo fora do controle do cliente, devolvemos tudo
+- Pente fino nos CNAEs: caiu de 124 pra 111 atendidos. Água/esgoto/resíduos saiu inteiro (exige licença ambiental) e nem tinha sido avaliado antes
+- Li o contrato da Contabilizei: eles *não pagam a taxa da Junta* (é obrigação do cliente) e a multa deles é 30% do que falta pagar. Vamos fazer igual
+- Simulei o plano de R$139 com 12 meses de fidelidade: com a Junta fora, nosso único custo na abertura é o certificado (~R$200), e a multa cobre em qualquer cenário de saída
+- Montei uma apresentação com tudo isso + *6 perguntas pra você decidir*
+```
+
 ## Links
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]]

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ContratoView } from "@/components/wizard-dinheiro";
 
 /**
@@ -49,12 +49,17 @@ import { ContratoView } from "@/components/wizard-dinheiro";
  */
 export default function ContratoPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  // 29/07: a tela passou a exibir o "você paga hoje", então precisa saber do
+  // cenário — antes não precisava, porque não mostrava nenhum valor.
+  const empresaPaga = searchParams.get("cenario") === "empresa-paga";
   const [aceito, setAceito] = useState(false);
 
   return (
     <ContratoView
       aceito={aceito}
       setAceito={setAceito}
+      empresaPaga={empresaPaga}
       onSeguir={() => router.push("/pagamento")}
     />
   );

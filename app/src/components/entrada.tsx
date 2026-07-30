@@ -64,6 +64,7 @@ export function EntradaView({
   intencao,
   onIntencao,
   onSeguir,
+  onMigrar,
   onForaBh,
   onLogin,
   destaqueCoral600 = false,
@@ -73,6 +74,16 @@ export function EntradaView({
   onIntencao: (i: Intencao | null) => void;
   /** BH confirmado + intenção "abrir" → segue pro N4. */
   onSeguir: () => void;
+  /**
+   * ✅ 30/07 — BH confirmado + intenção "migrar" → **segue pro flow #2 (M1)**.
+   *
+   * Até hoje esta porta batia num card "essa parte ainda não existe". Era o
+   * achado M0 do motor: *"o flow #1 não tem porta pra cá — metade do mercado
+   * bate numa porta escrita 'faça login'"*. As telas M1–M5 existem agora, então
+   * o beco virou caminho. Opcional de propósito: quem não passar `onMigrar`
+   * (nenhum consumidor hoje) volta ao comportamento honesto de "em breve".
+   */
+  onMigrar?: () => void;
   onForaBh: () => void;
   onLogin: () => void;
   /**
@@ -116,8 +127,11 @@ export function EntradaView({
     }
     if (intencao === "abrir") {
       onSeguir();
+    } else if (onMigrar) {
+      // ✅ 30/07: o flow #2 existe. A porta que era beco virou caminho.
+      onMigrar();
     } else {
-      // Flow #2 não construído — estado honesto, sem clique morto nem 404.
+      // Fallback honesto pra quem ainda não ligou o flow #2 (sem clique morto).
       setMigrarEmBreve(true);
     }
   }
@@ -142,7 +156,15 @@ export function EntradaView({
               </Card>
             ) : (
               <>
-                <h1 className="text-h1 mb-2">Onde fica a sua empresa?</h1>
+                {/* ✍️ 30/07 — o título conjuga pela INTENÇÃO, não é fixo.
+                    Quem vem de "quero abrir" ainda NÃO tem empresa: perguntar
+                    "onde fica" pressupõe uma que não existe. Quem vem de "já
+                    tenho empresa" (migrar) tem, e aí o presente é o certo. */}
+                <h1 className="text-h1 mb-2">
+                  {intencao === "abrir"
+                    ? "Onde ficará a sua empresa?"
+                    : "Onde fica a sua empresa?"}
+                </h1>
                 <p className="text-body text-text-secondary mb-6">
                   Hoje a gente só abre em Belo Horizonte/MG — é a fase de
                   testes do produto.

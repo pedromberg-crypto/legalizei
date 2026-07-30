@@ -33,6 +33,9 @@ export default function EntradaPage() {
       intencao={intencao}
       onIntencao={setIntencao}
       onSeguir={() => router.push("/gate")}
+      // ✅ 30/07 — o flow #2 existe. Era aqui que "metade do mercado" batia
+      // num card "essa parte ainda não existe" (achado M0 do motor).
+      onMigrar={() => router.push("/migrar/cnpj")}
       onForaBh={() => router.push("/saida/fora-bh")}
       onLogin={() => router.push("/login")}
     />

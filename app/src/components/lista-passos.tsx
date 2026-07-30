@@ -17,8 +17,8 @@ import { StatusIcon, type StatusEstado } from "@/components/ui/status";
  *                     processo; cinza mostra que existe e que ainda não é a vez.
  *
  * O travado só aparece com boleto pendente, e só no passo que realmente trava.
- * A mecânica do boleto libera N10–N18 inteiros e retém apenas o desfecho
- * (N19 revisão + N20 termo) — então travar mais que isso seria mentir na
+ * A mecânica do boleto libera a coleta inteira (N10–N16) e retém apenas o
+ * desfecho (N19 revisão + N20 termo) — então travar mais que isso seria mentir na
  * direção oposta, fazendo o cliente achar que não pode fazer nada enquanto
  * espera. O que ele mais precisa saber é justamente o contrário.
  * ═══════════════════════════════════════════════════════════════════════════

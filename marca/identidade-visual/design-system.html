@@ -141,6 +141,31 @@ body,nav.side,nav.side a,.panel,.card,.sw,.rule,.arq,.input,.checkbox,.checkbox 
   transition:background-color .25s ease,border-color .25s ease,color .25s ease;
 }
 
+/* ── Scrollbar ────────────────────────────────────────────────────────────
+   O default do Windows desenha trilho BRANCO + setinhas de seta. No tema
+   escuro isso vira uma faixa branca gritante colada no conteúdo — mais
+   contrastada que qualquer coisa da página. Aqui ela some no fundo e só o
+   polegar aparece, em token (logo acompanha claro/escuro sozinho). */
+*{scrollbar-width:thin;scrollbar-color:var(--color-border-strong) transparent}
+::-webkit-scrollbar{width:12px;height:12px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-button{display:none}         /* mata as setinhas do Windows */
+::-webkit-scrollbar-corner{background:transparent}
+::-webkit-scrollbar-thumb{
+  background:var(--color-border-strong);
+  border-radius:999px;
+  /* borda da cor da página + background-clip = polegar mais fino, com respiro,
+     sem precisar afinar a área de clique (continua fácil de pegar com o mouse) */
+  border:3px solid var(--color-surface-page);
+  background-clip:padding-box;
+  transition:background-color .15s ease;
+}
+::-webkit-scrollbar-thumb:hover{
+  background:var(--color-text-muted);
+  background-clip:padding-box;
+  border:3px solid var(--color-surface-page);
+}
+
 /* toggle de tema (fixo, canto superior direito) */
 .theme-toggle{
   position:fixed;top:20px;right:24px;z-index:50;
@@ -165,18 +190,37 @@ nav.side{
   width:232px;flex-shrink:0;padding:32px 20px;border-right:1px solid var(--color-border-hairline);
   background:var(--color-surface-page);
 }
-nav.side .brand{display:flex;align-items:center;gap:10px;margin-bottom:28px}
+nav.side .brand{display:flex;align-items:center;gap:10px;margin-bottom:24px}
 nav.side .brand svg{height:22px;width:auto}
 nav.side a{
   display:block;text-decoration:none;color:var(--color-text-secondary);
-  font-size:var(--text-caption);padding:7px 10px;border-radius:var(--radius-sm);
-  transition:background .15s,color .15s;
+  font-size:var(--text-caption);line-height:1.35;
+  padding:9px 12px;border-radius:var(--radius-sm);
+  margin-bottom:3px;                       /* respiro entre itens (estavam colados) */
+  transition:background .15s,color .15s,box-shadow .15s;
 }
 nav.side a:hover{background:var(--color-surface-alt);color:var(--color-text-primary)}
+
+/* ATIVO — classe, não style inline.
+   ⚠️ O scrollspy antigo pintava `style.background` e só limpava `style.color`,
+   então TODO item por onde a leitura passava ficava tingido pra sempre — o menu
+   inteiro virava um bloco rosa (claro) / marrom (escuro). Com classe, o
+   `remove()` limpa tudo de uma vez. */
+nav.side a.ativo{
+  background:var(--color-surface-tint-brand);
+  color:var(--color-action-primary);
+  font-weight:600;
+  /* filete coral à esquerda, por dentro do raio: marca o ativo sem depender só
+     da cor de fundo (que é fraca no claro e escura demais no dark) */
+  box-shadow:inset 2px 0 0 var(--color-action-primary);
+}
 nav.side .grp{
   font-size:var(--text-micro);font-weight:600;letter-spacing:.04em;text-transform:uppercase;
-  color:var(--color-text-muted);margin:20px 10px 6px;
+  color:var(--color-text-muted);
+  margin:0 12px 8px;padding-top:22px;margin-top:14px;
+  border-top:1px solid var(--color-border-hairline);   /* separa os 3 grupos */
 }
+nav.side .grp:first-of-type{margin-top:0;padding-top:0;border-top:none}
 main{flex:1;min-width:0;padding:48px 56px 120px}
 
 section{margin-bottom:72px;scroll-margin-top:24px}
@@ -917,8 +961,12 @@ const links = [...document.querySelectorAll('nav.side a')];
 const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
 const obs = new IntersectionObserver(es => {
   es.forEach(e => { if(e.isIntersecting){
-    links.forEach(l=>l.style.color='');
-    const a = map.get(e.target.id); if(a){a.style.color='var(--color-action-primary)';a.style.background='var(--color-surface-tint-brand)';}
+    // 🐛 fix: a versão anterior fazia `l.style.color=''` (limpava a cor) mas
+    // pintava `a.style.background` e NUNCA o limpava. Resultado: cada seção
+    // visitada deixava o item tingido pra sempre e, depois de rolar a página,
+    // o menu inteiro ficava com fundo coral. Classe única resolve os dois.
+    links.forEach(l=>l.classList.remove('ativo'));
+    const a = map.get(e.target.id); if(a) a.classList.add('ativo');
   }});
 }, {rootMargin:'-10% 0px -80% 0px'});
 document.querySelectorAll('section[id]').forEach(s=>obs.observe(s));

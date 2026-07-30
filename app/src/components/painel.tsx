@@ -37,8 +37,8 @@ import { StatusIcon, type StatusEstado } from "@/components/ui/status";
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-/** Uma etapa do pipeline de abertura. `orgao` é recibo discreto (zero jargão na frente). */
-interface Etapa {
+/** Uma etapa do pipeline. `orgao` é recibo discreto (zero jargão na frente). */
+export interface Etapa {
   nome: string;
   orgao?: string;
 }
@@ -47,20 +47,34 @@ interface Etapa {
  * O pipeline, do jeito que a spec T20 lista, traduzido pra linguagem de gente.
  * O código do órgão fica como recibo (micro), nunca como o nome do passo — quem
  * abre a 1ª empresa não sabe o que é DAE nem e-CAC, e não precisa saber.
+ *
+ * ─── 🔓 REDUZIDO 29/07 (decisão do Pedro, em 2 passadas) ──────────────────
+ * Era uma lista de 9 passos, do "conferir o nome" ao "deixar tudo pronto pra
+ * sua 1ª nota". Ficaram 3:
+ *
+ *   1ª passada — cortou tudo que vinha DEPOIS do registro (pagar taxa, tirar
+ *   CNPJ, Simples, certificado, liberar nota, deixar pronto). O certificado já
+ *   ganhou tela própria (P0, `wizard-cauda.tsx`), e o resto virou passos
+ *   demais pra uma timeline que existe pra tranquilizar, não pra instruir.
+ *   "Registrar a empresa" virou **"Analisando viabilidade"** — nome mais
+ *   honesto pro que a Junta de fato faz aqui (é onde a recusa de nome
+ *   acontece, ver `/painel/recusa`). Entrou **"Agora é só assinar"**, cinza
+ *   (a-fazer) até a Junta deferir — o StatusIcon já faz isso sozinho por não
+ *   estar `< concluidas` nem `=== emAndamento`; quando defere, `emAndamento`
+ *   avança pra este índice e ele acende, apontando pro N22.
+ *
+ *   2ª passada — "Conferir o nome" e "Montar o contrato social" (os 2 passos
+ *   ANTES da análise) viraram **1 só: "Documentação completa preenchida"**,
+ *   já `feito` (verde) assim que a pessoa chega no painel. Do ponto de vista
+ *   de quem preencheu o dossiê inteiro (N10–N16), os dois eram trabalho NOSSO
+ *   nos bastidores, não passos que ela reconhece ter feito — a granularidade
+ *   servia à spec, não à leitura do cliente. Um check único diz "o que era seu
+ *   já está feito", sem fingir que ela participou de "montar contrato".
  */
-const ETAPAS: Etapa[] = [
-  { nome: "Conferir o nome", orgao: "Junta Comercial" },
-  { nome: "Montar o contrato social" },
-  { nome: "Registrar a empresa", orgao: "Junta Comercial" },
-  // "com o que você já pagou": a cobrança foi no N9. Aqui a gente REPASSA a taxa
-  // pra Junta, não cobra de novo. O rótulo tem que deixar isso explícito, senão
-  // o painel reabre o "paguei duas vezes?" que o N20 acabou de fechar.
-  { nome: "Pagar a taxa na Junta", orgao: "com o que você já pagou" },
-  { nome: "Tirar o CNPJ", orgao: "Receita Federal" },
-  { nome: "Entrar no Simples", orgao: "Receita Federal" },
-  { nome: "Emitir o certificado digital" },
-  { nome: "Liberar a emissão de nota", orgao: "Prefeitura de BH" },
-  { nome: "Deixar tudo pronto pra sua 1ª nota" },
+const ETAPAS_ABERTURA: Etapa[] = [
+  { nome: "Documentação completa preenchida" },
+  { nome: "Analisando viabilidade", orgao: "Junta Comercial" },
+  { nome: "Agora é só assinar" },
 ];
 
 export interface Recusa {
@@ -78,6 +92,14 @@ export function PainelView({
   emAndamento,
   recusa,
   socios = 1,
+  etapas = ETAPAS_ABERTURA,
+  eyebrow = "Sua abertura",
+  titulo,
+  sub,
+  prazo,
+  idempotencia,
+  ctaNormal,
+  onAcaoRecusa,
 }: {
   /** Quantas etapas já fecharam (verde). */
   concluidas: number;
@@ -87,22 +109,50 @@ export function PainelView({
   recusa?: Recusa;
   /** Muda a faixa de notificação: com 2, o andamento vai pros dois. */
   socios?: number;
+  /**
+   * 🔁 30/07 — parametrizado para o FLOW #2 (migração) reusar a máquina de 4
+   * estados sem duplicar timeline. O default é o pipeline de ABERTURA, então
+   * `/painel` e `/painel/recusa` não mudaram nada.
+   *
+   * A migração tem outro pipeline (distrato → TTRT → Evento 232 → procuração) e
+   * uma diferença de natureza: lá a espera é por um CONCORRENTE (o contador
+   * antigo valida o TTRT), não por um órgão neutro. Mesma UI, tensão diferente.
+   */
+  etapas?: Etapa[];
+  eyebrow?: string;
+  titulo?: { normal: string; recusa: string };
+  sub?: { normal: string; recusa: string };
+  /** Texto do card "quanto tempo leva". Default = o da abertura (órgãos). */
+  prazo?: string;
+  /** Faixa de idempotência (UX-38). Default fala de "abertura". */
+  idempotencia?: string;
+  /** Rodapé fixo quando NÃO há recusa (a abertura não tem; a migração tem). */
+  ctaNormal?: { label: string; onClick?: () => void };
+  onAcaoRecusa?: () => void;
 }) {
+  const ETAPAS = etapas;
+  const t = titulo ?? {
+    normal: "Estamos abrindo sua empresa",
+    recusa: "Precisamos de você num ponto",
+  };
+  const s = sub ?? {
+    normal:
+      "A parte chata é com a gente. Você acompanha por aqui e a gente avisa no WhatsApp a cada passo.",
+    recusa:
+      "A abertura seguiu bem até aqui. Um órgão pediu um ajuste, e é rápido de resolver.",
+  };
+
   return (
     <>
       <header className="pt-6 pb-4">
-        <p className="text-micro text-text-tertiary">Sua abertura</p>
+        <p className="text-micro text-text-tertiary">{eyebrow}</p>
       </header>
 
       <main className="app-main">
         <div className="shrink-0">
-          <h1 className="text-h1 mb-2">
-            {recusa ? "Precisamos de você num ponto" : "Estamos abrindo sua empresa"}
-          </h1>
+          <h1 className="text-h1 mb-2">{recusa ? t.recusa : t.normal}</h1>
           <p className="text-body text-text-secondary mb-4">
-            {recusa
-              ? "A abertura seguiu bem até aqui. Um órgão pediu um ajuste, e é rápido de resolver."
-              : "A parte chata é com a gente. Você acompanha por aqui e a gente avisa no WhatsApp a cada passo."}
+            {recusa ? s.recusa : s.normal}
           </p>
         </div>
 
@@ -118,7 +168,8 @@ export function PainelView({
             <Card className="mb-4">
               <p className="text-caption text-text-secondary">Quanto tempo leva</p>
               <p className="text-body text-text-primary mt-0.5">
-                Depende de cada órgão, e o tempo deles a gente não controla.
+                {prazo ??
+                  "Depende de cada órgão, e o tempo deles a gente não controla."}
               </p>
               <p className="text-micro text-text-tertiary mt-1">
                 Assim que um passo anda, a gente atualiza aqui e te avisa no
@@ -179,10 +230,14 @@ export function PainelView({
                       </p>
                     )}
 
-                    {/* Girando: diz que a bola está com o órgão, não travou. */}
+                    {/* Girando: diz que a bola está com o órgão, não travou.
+                        ✍️ 29/07 — "Não precisa fazer nada" descrevia ausência
+                        de ação; "Te avisaremos quando terminar" promete o quê
+                        vem a seguir (o WhatsApp), que é o que tranquiliza de
+                        verdade quem está esperando. */}
                     {girando && (
                       <p className="text-micro text-state-info-text mt-1">
-                        Em andamento agora. Não precisa fazer nada.
+                        Em andamento agora. Te avisaremos quando terminar.
                       </p>
                     )}
 
@@ -209,8 +264,8 @@ export function PainelView({
           <div className="mt-2 flex items-start gap-2.5 rounded-md bg-surface-alt p-3">
             <Cadeado />
             <p className="text-micro text-text-secondary">
-              A abertura roda uma vez só. Pode fechar o app que o processo segue
-              sozinho, de onde parou.
+              {idempotencia ??
+                "A abertura roda uma vez só. Pode fechar o app que o processo segue sozinho, de onde parou."}
             </p>
           </div>
 
@@ -232,10 +287,24 @@ export function PainelView({
           )}
         </div>
 
-        {recusa && (
+        {recusa ? (
           <Rodape>
-            <Button full>{recusa.acao}</Button>
+            <Button full onClick={onAcaoRecusa}>
+              {recusa.acao}
+            </Button>
           </Rodape>
+        ) : (
+          /* 30/07 — a ABERTURA não tem CTA aqui de propósito (K6: tela de status
+             não inventa ação primária). A MIGRAÇÃO tem: quando a transferência
+             fecha, existe um próximo passo real (entrar no app já migrado), e
+             aí o botão não é decorativo. Só aparece se quem chama passar. */
+          ctaNormal && (
+            <Rodape>
+              <Button full onClick={ctaNormal.onClick}>
+                {ctaNormal.label}
+              </Button>
+            </Rodape>
+          )
         )}
       </main>
     </>

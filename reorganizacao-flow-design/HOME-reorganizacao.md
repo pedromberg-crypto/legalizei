@@ -147,6 +147,16 @@ Pergunta do Pedro: a categoria Telas já se conecta com Design? **Sim, e mais fo
 
 Bati os **37 estados** do `type Etapa` da `/apresentacao` um por um contra o Storybook — **os 35 reais (exclui `fim`, que é estado de encerramento da demo, e a exceção `m-travado`, que é variante de M5) todos têm story correspondente** depois dos 2 fixes acima.
 
+**31/07 — TEMA ESCURO: promovido de proposta pra fonte canônica.** Achado ao investigar a pergunta do Pedro: o dark **já é código real, rodando de verdade — no `CRM_app`** (`index.html` trava `data-theme="dark"`, sem toggle, é o tema fixo do sistema interno). Confirmado com os valores exatos batendo (`#15171C` etc.) contra a proposta da `design-system.html`.
+
+**Decisão travada:** conectar pelo TOKEN, não pelo componente — os dois produtos têm componentes próprios (CRM = desktop denso; legalizei = mobile wizard/portal), só a paleta é espelho de verdade. Execução:
+- `legalizei/app/src/app/globals.css` ganhou o bloco `:root[data-theme="dark"]` — vira a **fonte canônica de claro E escuro**. Legalizei continua light-only na prática (nada seta `data-theme` nele) — é token disponível, não modo ligado.
+- `CRM_app/src/tokens.css` — comentário atualizado: deixou de ser cópia independente, agora é **espelho declarado** (sincroniza à mão, sem build-time import ainda — próximo passo se isso virar dor de verdade).
+- `design-system.html` §escuro — badge trocado de "PROPOSTA" pra "CÓDIGO REAL — no CRM", copy atualizada.
+- Build do Storybook validado depois da mudança (mesmo pipeline PostCSS/Tailwind do app real).
+
+**🕓 Pendente:** commitar os 2 repos (`legalizei` já tem outras mudanças de hoje pendentes de push; `CRM_app` é repo separado, ainda não toquei em git lá nesta sessão).
+
 **🕓 Pendente — decisão do Pedro, não executei sem confirmar:** deploy no Vercel como projeto NOVO e separado do app (mesmo repo, root `app/`, build `npm run build-storybook`, output `storybook-static`). Não commitei um `vercel.json` dentro de `app/` de propósito: risco real de colidir com a config do projeto Vercel do app principal SE ele também tiver root `app/` — mais seguro configurar via dashboard do novo projeto (Build/Output/Install Command), não via arquivo commitado. `/componentes` (Next) e as 27 exploração não-produção do acervo **não foram apagados** — ficaram fora do escopo de hoje (decisão maior, destrutiva, pendente de confirmação separada).
 
 ## 📜 Log de decisões

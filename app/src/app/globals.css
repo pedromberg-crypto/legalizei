@@ -167,6 +167,65 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
+   TEMA ESCURO — fonte canônica (promovida 31/07 do CRM_app/src/tokens.css).
+   ═══════════════════════════════════════════════════════════════════════════
+   Nasceu como PROPOSTA aqui (design-system.html §escuro): remapeia só a
+   camada 2 (--color-*), primitivos e componentes intactos. O CRM_app
+   implementou de verdade primeiro (é onde o dark roda em produção hoje,
+   superfície desktop) — os valores abaixo são espelho EXATO de lá, agora
+   com fonte única. `CRM_app/tokens.css` deixa de ser cópia independente:
+   se um valor mudar, muda aqui e sincroniza lá.
+
+   ⚠️ Este app (legalizei, mobile wizard/portal) CONTINUA light-only — nada
+   aqui liga sozinho. O bloco só ativa se algo setar `data-theme="dark"` no
+   `<html>`, e isto não acontece em nenhuma rota hoje. É token disponível,
+   não modo ligado. Contraste AA verificado por número (não estimado) —
+   ver design-system.html §escuro para as medições.
+   ═══════════════════════════════════════════════════════════════════════════ */
+:root[data-theme="dark"] {
+  --color-surface-page: #15171C;
+  --color-surface-card: #1F2228;
+  --color-surface-alt: #282B32;
+  --color-surface-dark: #0A0B0E;
+  --color-surface-tint-brand: #2A1B15;
+
+  --color-border-hairline: #2E313A;
+  --color-border-strong: #3C4049;
+  --color-border-focus: var(--p-coral-400);
+
+  --color-text-primary: #F4F1EC;
+  --color-text-secondary: #BDB8B0;
+  --color-text-tertiary: #8E8981;
+  --color-text-muted: #615D57;
+  --color-text-on-brand: var(--p-white);
+  --color-text-on-dark: var(--p-white);
+
+  --color-action-primary: var(--p-coral-500);
+  --color-action-primary-sm: var(--p-coral-600);
+  --color-action-primary-hover: var(--p-coral-400);
+  --color-action-dark: #0A0B0E;
+  --color-brand: var(--p-coral-500);
+
+  --color-state-success-tint: #122720;
+  --color-state-success: var(--p-success-500);
+  --color-state-success-text: #5FCB9E;
+  --color-state-warning-tint: #2A2211;
+  --color-state-warning: var(--p-warning-500);
+  --color-state-warning-text: #F1BC6A;
+  --color-state-danger-tint: #2B1517;
+  --color-state-danger: var(--p-danger-500);
+  --color-state-danger-text: #F08D90;
+  --color-state-info-tint: #132131;
+  --color-state-info: var(--p-info-500);
+  --color-state-info-text: #82B2EF;
+}
+
+:root[data-theme="dark"] *::selection {
+  background: var(--p-coral-600);
+  color: #fff;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
    ESPAÇAMENTO — sem token novo, de propósito.
    A escala nativa do Tailwind JÁ é base-4 e bate exatamente com a do
    design-system.md. Criar space-1..8 por cima seria abstração duplicada

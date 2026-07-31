@@ -141,6 +141,12 @@ Pergunta do Pedro: a categoria Telas já se conecta com Design? **Sim, e mais fo
 
 **31/07 — N1 (Splash) + N2 (Welcome, 3 slides) extraídos e adicionados.** Não estavam extraídos como o resto (viviam soltos dentro do `page.tsx`, únicos 2 casos) — agora `components/splash.tsx`/`welcome.tsx`, page vira wrapper fino, mesmo padrão de todo o resto. 🐛 **Achado na extração:** CTA "Começar" do último slide do Welcome não navegava (`avancar()` retornava cedo, mesma classe de CTA morto já corrigida 3x nesta sessão) — corrigido com `onSeguir` opcional. Total agora **33 arquivos**. Logo ganhou story `TodasAsVariantes` (compilado das 3), mesmo padrão do Button/Card/Aviso.
 
+**31/07 — 2 checagens de rigor pedidas pelo Pedro (acervo `/componentes` × Storybook, e `/apresentacao` × Storybook), 2 gaps reais achados e fechados:**
+1. **`SecaoLista` estava faltando.** A auditoria de ontem tinha classificado ela errado (rota `/mais` é real, não exploração) — reconferido item por item contra as rotas REAIS do portal-data.mjs (não só o nome da rota). Story criada. **Confirma: dos 32 itens do acervo, só 4 são produção real** (`SecaoLista`, `Vigilancia`, `QuemCuida`, `AprendaGradiente`) — os outros 28 são exploração pura (home-a...f, inicio-ref5...12) e 2 são órfãos totais (`NudgeCertificado`, `ProfileHeader`, zero uso em lugar nenhum).
+2. **`SaidaView` tinha uma 3ª variação real não coberta**: a lista de espera de "fora de BH" (`extra.tipo: "municipio"`, liga o `CampoMunicipio`) — só tinha coberto exterior/3+sócios. Story `ForaDeBhListaDeEspera` criada.
+
+Bati os **37 estados** do `type Etapa` da `/apresentacao` um por um contra o Storybook — **os 35 reais (exclui `fim`, que é estado de encerramento da demo, e a exceção `m-travado`, que é variante de M5) todos têm story correspondente** depois dos 2 fixes acima.
+
 **🕓 Pendente — decisão do Pedro, não executei sem confirmar:** deploy no Vercel como projeto NOVO e separado do app (mesmo repo, root `app/`, build `npm run build-storybook`, output `storybook-static`). Não commitei um `vercel.json` dentro de `app/` de propósito: risco real de colidir com a config do projeto Vercel do app principal SE ele também tiver root `app/` — mais seguro configurar via dashboard do novo projeto (Build/Output/Install Command), não via arquivo commitado. `/componentes` (Next) e as 27 exploração não-produção do acervo **não foram apagados** — ficaram fora do escopo de hoje (decisão maior, destrutiva, pendente de confirmação separada).
 
 ## 📜 Log de decisões

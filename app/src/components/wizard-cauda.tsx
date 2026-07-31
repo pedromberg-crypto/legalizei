@@ -1,12 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
 import { Checkbox } from "@/components/ui/form";
-import { StatusIcon } from "@/components/ui/status";
 import { PillCnpj, AprendaGradiente } from "@/components/lab/campea-blocks";
 import { QuemCuida } from "@/components/lab/ref9-blocks";
 import { CUSTOS, brl } from "@/lib/fiscal";
@@ -497,224 +496,29 @@ function Check() {
   );
 }
 
-/* ═══════════════════ N24 · EMPRESA ATIVA + DIA-2 ════════════════════════ */
-
-export function AtivaView({ onSeguir }: { onSeguir?: () => void }) {
-  const [entrou, setEntrou] = useState(false);
-  useState(() => {
-    // Mesmo truque do original: dispara depois do 1º paint, sem useEffect
-    // porque este componente não precisa de cleanup (a demo desmonta a tela
-    // inteira ao trocar de etapa).
-    if (typeof window !== "undefined") {
-      requestAnimationFrame(() => setEntrou(true));
-    }
-  });
-
-  return (
-    <>
-      <TelaHeader meta="Pronto" />
-
-      <main className="app-main">
-        <Titulo sub="O CNPJ saiu e já pode emitir nota. A parte difícil acabou, e a gente continua com você daqui pra frente.">
-          Sua empresa existe
-        </Titulo>
-
-        <Corpo>
-          <div
-            style={{
-              transform: entrou ? "translateY(0) scale(1)" : "translateY(10px) scale(.96)",
-              opacity: entrou ? 1 : 0,
-              transition: "transform .5s cubic-bezier(.22,1,.36,1), opacity .4s ease",
-            }}
-          >
-            <Card tom="sucesso">
-              <div className="flex items-center gap-2 mb-2">
-                <span
-                  style={{
-                    display: "inline-flex",
-                    transform: entrou ? "scale(1)" : "scale(.4)",
-                    opacity: entrou ? 1 : 0,
-                    transition:
-                      "transform .45s cubic-bezier(.34,1.56,.64,1) .14s, opacity .25s ease .14s",
-                  }}
-                >
-                  <StatusIcon estado="feito" />
-                </span>
-                <span className="text-caption font-semibold text-state-success-text">
-                  CNPJ ativo
-                </span>
-              </div>
-              <p className="text-body font-semibold text-text-primary">
-                {NOME_EMPRESARIAL} Web Studio
-              </p>
-              <p className="text-caption text-text-secondary mt-0.5">54.321.000/0001-09</p>
-            </Card>
-          </div>
-
-          <div>
-            <p className="text-body-strong font-semibold text-text-primary mb-2">
-              Seus primeiros passos
-            </p>
-            <div className="flex flex-col gap-2">
-              <PassoCard
-                titulo="Sua 1ª nota"
-                texto="Vou te guiar passo a passo pra emitir sua primeira nota fiscal, sem pressa."
-                acao="Emitir agora"
-              />
-              <PassoCard
-                titulo="Seu 1º imposto (DAS)"
-                texto="Todo mês a gente calcula e você paga pelo app. O do mês vence dia 20."
-                acao="Ver o cálculo"
-              />
-              <PassoCard
-                titulo="Seu certificado digital"
-                texto="Já está guardado com a gente. É o que assina suas notas e declarações."
-                acao="Ver onde está"
-              />
-            </div>
-          </div>
-
-          <Card tom="marca">
-            <p className="text-caption font-semibold text-text-primary mb-1">
-              A gente fica de olho pra você pagar menos
-            </p>
-            <p className="text-caption text-text-secondary">
-              Daqui a uns meses, com o quanto você faturou de verdade, a gente
-              confere se seu enquadramento continua o mais barato e avisa se dá
-              pra melhorar.
-            </p>
-          </Card>
-
-          <p className="text-caption text-text-secondary">
-            Qualquer dúvida, a gente está no WhatsApp, sempre.
-          </p>
-        </Corpo>
-
-        <Rodape>
-          <Button full onClick={onSeguir}>
-            Ir pro meu painel
-          </Button>
-          <div className="mt-2 flex justify-center">
-            <Button variant="ghost">Falar no WhatsApp</Button>
-          </div>
-        </Rodape>
-      </main>
-    </>
-  );
-}
-
-function PassoCard({ titulo, texto, acao }: { titulo: string; texto: string; acao: string }) {
-  return (
-    <Card>
-      <p className="text-caption font-semibold text-text-primary mb-0.5">{titulo}</p>
-      <p className="text-micro text-text-secondary">{texto}</p>
-      <button className="mt-2 text-caption font-semibold text-action-primary-sm underline underline-offset-4">
-        {acao}
-      </button>
-    </Card>
-  );
-}
-
-/* ═══════════════════ P0 · CERTIFICADO DIGITAL (gate) ════════════════════ */
-
-/**
- * ⚠️ 29/07 — SWAP VALIDADO PELO PEDRO: **P0 substitui o N24 como "o que vem
- * depois da assinatura"**, não os dois juntos.
- *
- * O N24 ("Empresa ativa" + 3 primeiros passos) tratava a emissão de nota como
- * já liberada. Mas o dossiê é claro: o certificado é PRÉ-REQUISITO pra emitir
- * nota E pra acessar a Receita — "sem ele, a gente não faz NADA pela pessoa"
- * (matriz-portal-interno.md, Módulo 0). O portal de dia-2 abre AQUI, não no
- * "sua empresa existe, aqui estão seus primeiros passos": os 3 primeiros
- * passos do N24 estariam todos travados até o P0 resolver.
- *
- * `AtivaView` (N24) CONTINUA existindo — é a rota `/ativa`, e não foi apagada
- * — mas deixou de ser o próximo passo depois da assinatura, na demo e na
- * produção. Fica órfã da sequência principal por ora (fora do escopo deste
- * swap decidir se ela volta em outro ponto do dia-2).
- *
- * ⚠️ SEM ANIMAÇÃO DE ENTRADA, de propósito (decisão do Pedro): o N24 tinha a
- * materialização (card sobe + check com "pop" de overshoot), e o mesmo dia já
- * teve a celebração do CTA removida do veredito 🟢 por decisão idêntica — o
- * padrão do dia é "sem enfeite de entrada nas telas de meio de fluxo". Esta
- * View nasce estática, igual a `CertificadoPage` sempre foi (a fonte nunca
- * teve efeito nenhum — nada precisou ser removido do arquivo original).
- */
-const LIBERA_CERTIFICADO = [
-  "Emitir nota fiscal",
-  "Pagar seus impostos pela gente",
-  "A gente cuidar das suas obrigações com a Receita",
-];
-
-export function CertificadoView({ onSeguir }: { onSeguir?: () => void }) {
-  return (
-    <>
-      <TelaHeader meta="Certificado digital" />
-
-      <main className="app-main">
-        <Titulo sub="É o que destrava emitir nota e cuidar dos seus impostos. Leva uns minutos, e a gente faz junto com você.">
-          Falta só o seu certificado
-        </Titulo>
-
-        <Corpo>
-          <Card>
-            <p className="text-caption font-semibold text-text-primary mb-1">O que é</p>
-            <p className="text-caption text-text-secondary">
-              O certificado é a sua assinatura digital. É com ele que a gente
-              emite suas notas e fala com a Receita por você. Todo CNPJ precisa
-              de um.
-            </p>
-          </Card>
-
-          {/* O GATE, visível: cadeado neutro (retido), não alarme. */}
-          <div>
-            <p className="text-body-strong font-semibold text-text-primary mb-2">
-              O que ele libera
-            </p>
-            <div className="flex flex-col gap-2.5">
-              {LIBERA_CERTIFICADO.map((item) => (
-                <div key={item} className="flex items-start gap-2.5">
-                  <span className="mt-0.5">
-                    <StatusIcon estado="travado" />
-                  </span>
-                  <p className="text-caption text-text-muted">{item}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <Aviso variante="info" titulo="Como funciona">
-            Você faz uma validação rápida por vídeo, só pra confirmar que é você.
-            Depois disso o certificado fica guardado com a gente e você não vê
-            mais essa tela.
-          </Aviso>
-        </Corpo>
-
-        <Rodape>
-          <Button full onClick={onSeguir}>
-            Fazer meu certificado agora
-          </Button>
-          <div className="mt-2 flex justify-center">
-            <Button variant="ghost">Tirar uma dúvida no WhatsApp</Button>
-          </div>
-        </Rodape>
-      </main>
-    </>
-  );
-}
+/* ═══════════════════ N24 + CERTIFICADO (ÓRFÃS, removidas 30/07) ═════════
+ * AtivaView (N24, /ativa) e CertificadoView (/certificado) existiam desde
+ * 29/07 mas ficaram órfãs no swap daquele dia: o que segue a assinatura
+ * (N22) é o P0 (HomeAtivacaoView, abaixo), não elas. Rastreando router.push/
+ * href no código real (30/07): nenhuma rota navegava mais até nenhuma das
+ * duas. Removidas junto das rotas `/ativa` e `/certificado`. Ver flow-data.mjs
+ * (nós ATIVA/CERT, ⚠️ ÓRFÃO) e HOME-reorganizacao.md.
+ * ══════════════════════════════════════════════════════════════════════ */
 
 /* ═══════════════════ P0 · HOME DE ATIVAÇÃO (dia-1) ══════════════════════ */
 
 /**
- * ⚠️ 29/07 — CORREÇÃO: **este é o P0 de verdade**, não o `CertificadoView`
- * acima. O Pedro mandou o print da tela real (a home dia-1, com "Bem-vinda,
- * Ana" / trilha "1 de 3" / CNPJ com copiar) e a etiqueta na origem —
- * `portal-data.mjs` — chamava a rota `/certificado` de "P0", mas quem o Pedro
- * já validou como o próximo passo depois da assinatura é ESTA tela
- * (`/home-dia1`), que engloba a validação do certificado como o item 2 da
- * própria trilha, não como gate isolado. `CertificadoView` continua existindo
- * (é a rota `/certificado`, ainda válida sozinha) — só não é mais o que segue
- * o N22 na demo nem na produção.
+ * ⚠️ 29/07 — CORREÇÃO: este é o P0 de verdade, não o gate isolado de
+ * certificado que existia antes. O Pedro mandou o print da tela real (a home
+ * dia-1, com "Bem-vinda, Ana" / trilha "1 de 3" / CNPJ com copiar) e a
+ * etiqueta na origem — `portal-data.mjs` — chamava a rota `/certificado` de
+ * "P0", mas quem o Pedro já validou como o próximo passo depois da assinatura
+ * é ESTA tela (`/home-dia1`), que engloba a validação do certificado como o
+ * item 2 da própria trilha, não como gate isolado.
+ *
+ * 🆕 30/07 — `CertificadoView` e a rota `/certificado` foram REMOVIDAS de
+ * verdade (não só desativadas): rastreando router.push/href no código real,
+ * nada navegava mais até lá. Ver comentário acima desta seção.
  *
  * ⚠️ SEM CONFETE, por pedido explícito do Pedro. A fonte (`home-dia1/page.tsx`)
  * tinha `<Confetti>` no hero de nascimento (`festa` toggle). Mesmo padrão do

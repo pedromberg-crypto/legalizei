@@ -30,9 +30,9 @@ export const SUBGRAFOS = [
 
 export const NODES = [
   // ── SEAM DE ENTRADA (como se chega no portal) ─────────────────────────────
-  { id: "ENTRY", label: "Da abertura (N24) / Login", forma: "terminal", classe: "feliz", status: "construida", validado: "ux", falta: "", naTabela: false },
-  { id: "CERT", rota: "/certificado", label: "P0 · Certificado (gate)", forma: "tela", classe: "espera", status: "construida", validado: "pendente", falta: "Certificadora PARCEIRA valida por videochamada (não upload); o gate destrava emitir NF-e + acesso à Receita. Enquanto pendente, o resto trava." },
-  { id: "DIA1", rota: "/home-dia1", label: "Home dia-1<br/>(ativação)", forma: "tela", classe: "feliz", status: "construida", validado: "ux", falta: "Confetti da marca no nascimento + trilha de ativação (1 de 3); certificado é etapa PASSIVA; SEM navbar até liberar acesso; download do Cartão CNPJ." },
+  { id: "ENTRY", label: "Da abertura (N22/M6) / Login", forma: "terminal", classe: "feliz", status: "construida", validado: "ux", falta: "🆕 30/07: corrigido — N22 (assinatura) e M6 (migração concluída) empurram direto pra cá, confirmado rastreando router.push no código. Autoridade do handoff = flow-data.mjs (#1).", naTabela: false },
+  { id: "DIA1", rota: "/home-dia1", label: "✅ P0 · Home dia-1<br/>(ativação)", forma: "tela", classe: "feliz", status: "construida", validado: "oficial", falta: "🔓 SWAP validado 30/07: substitui N24, sem confete nem selo coral no hero. Trilha de ativação (1 de 3) trata o certificado como item PASSIVO da própria trilha, não gate isolado. SEM navbar até liberar acesso; download do Cartão CNPJ." },
+  { id: "CERT", label: "Certificado (gate)<br/>🗑️ REMOVIDO 30/07", forma: "tela", classe: "todo", status: "planejada", validado: "oficial", falta: "Era P0 antes do swap de 29/07, virou rota morta (nada navegava mais até aqui). Arquivo `/certificado` e a view apagados de vez 30/07, confirmado pelo Pedro. Fica só como marca histórica no mapa." },
 
   // ── NAVBAR (estrutural: liga as 4 abas + o CTA central) ────────────────────
   { id: "BARRA", label: "Navbar flutuante<br/>4 abas + CTA central", forma: "decisao", classe: "inline", status: "construida", validado: "ux", falta: "", naTabela: false },
@@ -82,8 +82,7 @@ export const NODES = [
 
 export const EDGES = [
   // seam de entrada
-  { de: "ENTRY", para: "CERT" },
-  { de: "CERT", para: "DIA1", label: "parceira valida" },
+  { de: "ENTRY", para: "DIA1" },
   { de: "DIA1", para: "INICIO", label: "acesso liberado" },
 
   // navbar → 4 abas + CTA central

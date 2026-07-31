@@ -53,9 +53,9 @@ flowchart TD
     RELAT["Relatórios"]
     DECLAR["Declarações"]
   end
-  ENTRY(["Da abertura (N24) / Login"]):::feliz
-  CERT["P0 · Certificado (gate)"]:::espera
-  DIA1["Home dia-1<br/>(ativação)"]:::feliz
+  ENTRY(["Da abertura (N22/M6) / Login"]):::feliz
+  DIA1["✅ P0 · Home dia-1<br/>(ativação)"]:::feliz
+  CERT["Certificado (gate)<br/>🗑️ REMOVIDO 30/07"]:::todo
   BARRA{"Navbar flutuante<br/>4 abas + CTA central"}:::inline
   EMITIR["Emitir NF-e (P6)"]
   SH_REV["Sheet · revisar→emitir→enviada"]:::inline
@@ -67,8 +67,7 @@ flowchart TD
   CONTASET["Ajustes de conta<br/>(e-mail / senha)"]:::todo
   WPP(["WhatsApp (canal humano)"]):::todo
 
-  ENTRY --> CERT
-  CERT -->|"parceira valida"| DIA1
+  ENTRY --> DIA1
   DIA1 -->|"acesso liberado"| INICIO
   INICIO -.-> BARRA
   BARRA --> INICIO
@@ -123,8 +122,8 @@ flowchart TD
 <!-- PORTAL:TABELA:INI -->
 | # | Tela | Rota | Construída | Validado | Falta validar |
 |---|---|---|:--:|:--:|---|
-| 1 | P0 · Certificado (gate) | `/certificado` | ✅ | 🟡 | Certificadora PARCEIRA valida por videochamada (não upload); o gate destrava emitir NF-e + acesso à Receita. Enquanto pendente, o resto trava. |
-| 2 | Home dia-1 · (ativação) | `/home-dia1` | ✅ | ⚪ | Confetti da marca no nascimento + trilha de ativação (1 de 3); certificado é etapa PASSIVA; SEM navbar até liberar acesso; download do Cartão CNPJ. |
+| 1 | ✅ P0 · Home dia-1 · (ativação) | `/home-dia1` | ✅ | 🟢 | 🔓 SWAP validado 30/07: substitui N24, sem confete nem selo coral no hero. Trilha de ativação (1 de 3) trata o certificado como item PASSIVO da própria trilha, não gate isolado. SEM navbar até liberar acesso; download do Cartão CNPJ. |
+| 2 | Certificado (gate) · 🗑️ REMOVIDO 30/07 | — | 🚧 | 🟢 | Era P0 antes do swap de 29/07, virou rota morta (nada navegava mais até aqui). Arquivo `/certificado` e a view apagados de vez 30/07, confirmado pelo Pedro. Fica só como marca histórica no mapa. |
 | 3 | Início · Home (regime) | `/inicio` | ✅ | ⚪ | Home Campeã (montada em /mockup-home): saudação+CNPJ-pill, próximo compromisso, atalhos, notas recentes, aprenda, quem cuida, vigília preditiva. Número-guru fora. |
 | 4 | Impostos · dashboard | `/impostos` | ✅ | 🟡 | Carrossel do mês (DAS+INSS) · vigília fiscal · guias anteriores clicáveis (status automático) · calendário. NÃO intermediamos pagamento. |
 | 5 | Guias anteriores | `/impostos/guias` | ✅ | ⚪ | Mesma estrutura da lista de notas (busca+filtro+mês); status automático por param. |
@@ -174,6 +173,8 @@ flowchart TD
 > Cada linha = um estado estrutural do mapa. Snapshots completos em `portal/versoes/` (`.json` p/ diff + `.mmd` legível). Mais recente no topo.
 
 <!-- PORTAL:VERSOES:INI -->
+- **v3** · 2026-07-30 · renomeou CERT "Certificado (gate) ⚠️ ÓRFÃO"→"Certificado (gate) 🗑️ REMOVIDO 30/07" · status CERT construida→planejada · validação CERT pendente→oficial · falta-validar em CERT
+- **v2** · 2026-07-30 · renomeou ENTRY "Da abertura (N24) / Login"→"Da abertura (N22/M6) / Login"; DIA1 "Home dia-1 (ativação)"→"✅ P0 · Home dia-1 (ativação)"; CERT "P0 · Certificado (gate)"→"Certificado (gate) ⚠️ ÓRFÃO" · validação DIA1 ux→oficial · falta-validar em ENTRY,DIA1,CERT · +conexões ENTRY→DIA1 · -conexões ENTRY→CERT,CERT→DIA1
 - **v1** · 2026-07-27 · versão inicial (32 nós, 41 conexões)
 (o gerador preenche aqui)
 <!-- PORTAL:VERSOES:FIM -->

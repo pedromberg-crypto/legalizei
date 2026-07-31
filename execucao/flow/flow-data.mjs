@@ -34,9 +34,8 @@ export const NODES = [
   // ── ENTRADA · N1–N3 ──────────────────────────────────────────────────────
   { id: "N1", rota: "/splash", label: "N1 · Splash", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "", dados: "" },
   { id: "N2", rota: "/welcome", label: "N2 · Welcome", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "", dados: "" },
-  { id: "N3", rota: "/entrada", label: "N3 · Fork<br/>3 rotas", forma: "decisao", classe: "", status: "construida", validado: "oficial", falta: "3 rotas CONFIRMADAS 28/07 (reunião Rua Satélite 9): abrir · migrar · já sou cliente. Rota migrar aponta pro flow #2 (não existe): cobrar antes do TTRT? passivo herdado? (Pedro/Mauro)", dados: "" },
+  { id: "N3", rota: "/entrada", label: "N3 · Fork<br/>3 rotas", forma: "decisao", classe: "", status: "construida", validado: "oficial", falta: "3 rotas CONFIRMADAS 28/07 (reunião Rua Satélite 9): abrir · migrar · já sou cliente. 🆕 30/07: flow #2 (migrar) CONSTRUÍDO — ver M1-M6 abaixo.", dados: "" },
   { id: "LOGIN", rota: "/login", label: "Login / portal", forma: "terminal", classe: "feliz", status: "construida", validado: "ux", falta: "Rota feliz", dados: "" },
-  { id: "MIG", label: "Flow #2 · Migração<br/>não construído", forma: "tela", classe: "todo", status: "planejada", validado: "pendente", falta: "Construir flow #2", dados: "" },
 
   // 🆕 28/07 · GATE DE CIDADE (reunião Rua Satélite 9) — MLP só atende Belo
   // Horizonte/MG. Trava "quero abrir"/"migrar" até confirmar; "já sou cliente"
@@ -44,9 +43,21 @@ export const NODES = [
   { id: "N3G", rota: "/entrada", label: "Gate cidade<br/>(BH-MG)", forma: "decisao", classe: "", status: "construida", validado: "oficial", falta: "Construído 28/07 — 2º passo INLINE do N3, mesma rota (/entrada), sem rota própria.", dados: "Confirma cidade de abertura = Belo Horizonte/MG (único município atendido no MLP)" },
   { id: "SAIDACID", rota: "/saida/fora-bh", label: "Saída · fora de BH<br/>MLP só atende BH-MG", forma: "terminal", classe: "saida", status: "construida", validado: "oficial", falta: "", dados: "— (saída, fora do caminho até a constituição)" },
 
+  // ── FLOW #2 · MIGRAR DE CONTADOR (M1-M6, construído 30/07) ────────────────
+  // Fonte: components/wizard-migrar.tsx. Sem entrevista de CNAE (o cartão CNPJ
+  // já traz) — diferença estrutural vs. o flow #1. Rotas confirmadas 30/07
+  // rastreando router.push/onSeguir no código real, não inferidas.
+  { id: "M1", rota: "/migrar/cnpj", label: "M1 · Lê o cartão CNPJ", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "Autofill por CNPJ (API pública); sem entrevista de atividade — o CNAE já existe", dados: "CNPJ (consulta) · confirmação dos dados do cartão" },
+  { id: "M2", rota: "/migrar/diagnostico", label: "M2 · Diagnóstico<br/>Fator R real (12m)", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "⚖️ Guarda-corpo de honestidade (`?cenario=ja-otimo`): se o contador atual já acertou o enquadramento, a tela DIZ isso e vende serviço, não economia inventada. Usa histórico REAL (CGSN 140/18 art.26), não estimativa — dívida `promessa-quebrada` do flow #1 NÃO se aplica aqui", dados: "Folha + receita dos últimos 12 meses (histórico real, não faixa)" },
+  { id: "M3", rota: "/migrar/plano", label: "M3 · Plano", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Mesma mensalidade do flow #1; sem taxa de governo (empresa já existe)", dados: "" },
+  { id: "M3B", rota: "/migrar/contrato", label: "M3b · Contrato<br/>+ promessa de devolução", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "🔴 DECISÃO TRAVADA 30/07: cobra ANTES do TTRT, com contrapartida OBRIGATÓRIA no contrato ('se a transferência não sair por motivo fora do seu controle, devolve tudo'). Se essa linha sair do contrato, a decisão reabre (Mauro/Larissa redigem)", dados: "Aceite do contrato (com a cláusula de devolução)" },
+  { id: "M4", rota: "/migrar/passivo", label: "M4 · Passivo herdado", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "🕓 Aberto com o Mauro: upsell ou fora de escopo? Variantes `?cenario=limpo` (persona migra-limpo, sem passivo) × com-passivo", dados: "" },
+  { id: "M5", rota: "/migrar/transferencia", label: "M5 · Aguardando TTRT", forma: "tela", classe: "espera", status: "construida", validado: "oficial", falta: "🔴 A PAUSA MAIS PERIGOSA DO PRODUTO: quem libera é o CONTADOR ANTIGO (valida no CRC-MG) — único momento em que o dono da espera é um concorrente perdendo o cliente, não um órgão neutro nem o próprio cliente. Nº da resolução CFC / Evento 232 Redesim NÃO ratificados em fonte primária — por isso não aparecem na tela (🟡 pendência)", dados: "" },
+  { id: "M6", rota: "/migrar/ativa", label: "✅ M6 · Migração concluída", forma: "terminal", classe: "feliz", status: "construida", validado: "ux", falta: "Segue pro mesmo handoff do flow #1 → P0 (home dia-1), autoridade #2 (portal-data.mjs)", dados: "" },
+
   // ── N4 · GATE (uma tela, várias etapas) ──────────────────────────────────
   { id: "N4A", rota: "/gate", label: "Descreve atividade + pills", forma: "tela", classe: "", status: "construida", validado: "pendente", grupo: "GATE", falta: "✅ 28/07: CTA 'já sei o número do meu CNAE' construído (troca pra modo código, mesma engine). Lista CNAE furada na raiz: 124 não-refutados, 45 impossíveis, 91 duvidosos; IA real (hoje mock) — Larissa/Pedro/dev", dados: "Descrição da atividade (texto livre) → CNAE principal (derivado por IA) · OU o código já sabido (atalho 28/07, mesma engine)" },
-  { id: "N4V", label: "Veredito CNAE", forma: "decisao", classe: "", status: "construida", validado: "oficial", grupo: "GATE", falta: "🆕 28/07: veredito 🔴 virou 3 vias (travado na reunião), hoje o mock só faz 2 — falta implementar o split: regulamentado→waitlist (já existe) · atendido pelo Mauro (comércio etc)→contato especial · genuinamente ninguém atende→descarta (novo). Depende da lista CNAE; dev cnae-lookup responde 'atende' pra DEFESA", dados: "" },
+  { id: "N4V", label: "Veredito CNAE", forma: "decisao", classe: "", status: "construida", validado: "oficial", grupo: "GATE", falta: "🆕 28/07: veredito 🔴 virou 3 vias (travado na reunião), hoje o mock só faz 2 — falta implementar o split: regulamentado→waitlist (já existe) · atendido pelo Mauro (comércio etc)→contato especial · genuinamente ninguém atende→descarta (novo). Depende da lista CNAE; dev cnae-lookup responde 'atende' pra DEFESA. 🆕 31/07: veredito 🟢 ganhou cards clicáveis (UX-65) e travar o CNAE via ENCAIXE virou redundante — ENCAIXE removido, o veredito trava direto", dados: "" },
   { id: "DESAMB", label: "Desambiguação<br/>mini-loop", forma: "tela", classe: "inline", status: "construida", validado: "ux", grupo: "GATE", falta: "", naTabela: false, dados: "" },
   { id: "N4T", label: "Triagem<br/>sócios? exterior?", forma: "decisao", classe: "", status: "construida", validado: "oficial", grupo: "GATE", falta: "Exterior = LC 123 art.17 (oficial); limite 2 travado. Abertos: debate 3+→waitlist, UX-42 (Mauro/Larissa)", dados: "Quantidade de sócios (1 / 2 / 3+) · mora fora do Brasil (sim/não)" },
   { id: "N4F", label: "Faixa de faturamento", forma: "tela", classe: "", status: "construida", validado: "ux", grupo: "GATE", falta: "Faixas sem âncora fiscal", dados: "Faixa de faturamento mensal (ou valor exato, se souber)" },
@@ -59,9 +70,6 @@ export const NODES = [
   // CNAE que não é regulamentado E o Mauro também não atende — "podemos
   // descartar" (decisão explícita, não é omissão).
   { id: "VD", rota: "/veredito/descartado", label: "🔴 Fora de escopo<br/>(descarta)", forma: "tela", classe: "saida", status: "construida", validado: "oficial", falta: "mapear() do N4 ainda não decide entre VC/VD de verdade (mock estático) — falta o split real na IA/lista de CNAEs", dados: "— (saída, fora do caminho até a constituição)" },
-
-  // ── ENCAIXE · escolhe/trava o CNAE (NOVO 21/07, reordenacao-cluster-fiscal) ──
-  { id: "ENC", rota: "/encaixe", label: "ENCAIXE<br/>escolhe/trava CNAE", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Recomendado + alternativas; % de fit real (IA cruza pill+texto) pendente; defesa de legitimidade inline. Trava o CNAE antes do nome/Junta", dados: "Confirmação/travamento do CNAE principal (dentre alternativas sugeridas)" },
 
   // ── B3 · DINHEIRO · N6–N9 ────────────────────────────────────────────────
   { id: "N6", rota: "/conta", label: "N6 · Criar conta", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "✅ 28/07: FRONT-LOAD construído — nome/CPF/telefone/endereço (autofill CEP) + etapa de validação por código (mock). Provider de validação CPF/situação real (Pedro)", dados: "E-mail · senha · 'é a 1ª empresa que abre?' (opcional) · nome completo · CPF · telefone · endereço (front-load 28/07) · código de verificação (mock)" },
@@ -90,11 +98,12 @@ export const NODES = [
   // ── B4 · CONSTITUIÇÃO (construído 21/07 — a cauda ganhou rota) ────────────
   { id: "N19", rota: "/revisar", label: "N19 · Revisar dossiê", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "Recap read-only; carry-forward dos passos = estado do wizard (dev)", dados: "— (leitura + confirmação; enquadramento e pró-labore são SUGERIDOS pelo sistema, 28/07 — não digitados)" },
   { id: "N20", rota: "/termo", label: "N20 · Termo irreversível", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Redação jurídica do termo + 4 camadas de cancelamento (Mauro/Larissa); racha T18", dados: "Aceite do termo irreversível (checkbox)" },
-  { id: "N21", rota: "/painel", label: "N21 · Painel / timeline órgãos", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "🆕 28/07: DAE (taxa da Junta) — decisão travada: cliente paga no N9 (junto com a mensalidade, como já é hoje). A gente SEGURA esse valor e só repassa a JUCEMG DEPOIS que a viabilidade aqui aprova — timing de backend, invisível pro cliente, SEM tela nova. 'Empresa paga o DAE' fica documentado como alternativa opcional, não implementada agora. Timeline real depende do pipeline do dev (RPA/órgãos); prazo ~8d é placeholder; UX-29 do N6 + gancho por modo/CRM", dados: "" },
+  { id: "N21", rota: "/painel", label: "N21 · Painel<br/>3 status", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "🆕 30/07: reduzido de 9→3 status (2 passadas). 'Registrar a empresa'→'Analisando viabilidade'; novo 'Documentação completa preenchida' (check, acima) + 'Agora é só assinar' (cinza, depende do deferimento da Junta). 🆕 28/07: DAE (taxa da Junta) — cliente paga no N9 junto com a mensalidade; a gente SEGURA e só repassa à JUCEMG depois da viabilidade aprovar — timing de backend, SEM tela nova. 🆕 30/07: NÃO absorvemos a taxa (alinhado ao líder, contrato Contabilizei 4.3\"h\"). Timeline real depende do pipeline do dev; prazo ~8d é placeholder", dados: "" },
   { id: "REC", rota: "/painel/recusa", label: "REC · Órgão recusa<br/>'precisa de você'", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "✅ 28/07: retry automático construído — tenta as 3 opções do N16 em sequência (mock sempre falha as 3, pra provar o pior caso); só aí pede novas sugestões. B6 testado no motor (nome recusado); faltam DAE-volta e doc-pendência como casos", dados: "Retry automático pelas 3 opções priorizadas (N16) antes de pedir novas sugestões ao cliente" },
   { id: "N22", rota: "/assinatura", label: "N22 · Assinatura dos sócios", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "GOV.BR/e-CAC deep-link (dev); convite 2º sócio (B5) + arquitetura multi-usuário (Pedro)", dados: "Assinatura via GOV.BR/e-CAC (ação, não campo de texto)" },
   { id: "N23", label: "GOV.BR nível<br/>bronze→upgrade", forma: "decisao", classe: "inline", status: "construida", validado: "pendente", falta: "Dobrado inline no N22 (B7 no motor)", naTabela: false, dados: "" },
-  { id: "ATIVA", rota: "/ativa", label: "✅ Empresa ativa", forma: "terminal", classe: "feliz", status: "construida", validado: "oficial", falta: "🆕 28/07: confirmado — cliente só recebe notificação 'empresa aberta' e cai direto na P0 (certificado). Sem tela de pagamento de DAE no meio (ver nota em N21). Dia-2 (1ª nota/DAS/certificado) é UI mock; loop UX-41 vive no portal; TFLF BH R$161,36 = fato duro", dados: "" },
+  { id: "ATIVA", label: "N24 · Empresa ativa<br/>🗑️ REMOVIDO 30/07", forma: "terminal", classe: "todo", status: "planejada", validado: "oficial", falta: "Era órfão desde o swap N22→P0 (nenhuma rota navegava mais até aqui) — arquivo `/ativa` e a view apagados de vez 30/07, confirmado pelo Pedro. Fica só como marca histórica no mapa", dados: "" },
+  { id: "P0", rota: "/home-dia1", label: "✅ P0 · Home dia-1<br/>(ativação)", forma: "terminal", classe: "feliz", status: "construida", validado: "oficial", falta: "🔓 SWAP validado 30/07 (confirmado no código: assinatura empurra direto pra cá): substitui o N24 — trata o certificado como item 2/3 da própria trilha, não gate isolado. Sem confete nem selo coral no hero. Handoff real pro flow #2 dentro do app → autoridade portal-data.mjs (item #5 da reorganização)", dados: "" },
 ];
 
 export const EDGES = [
@@ -102,16 +111,26 @@ export const EDGES = [
   { de: "N2", para: "N3" },
   { de: "N3", para: "LOGIN", label: "já sou cliente" },
   { de: "N3", para: "N3G", label: "quero abrir / migrar" },
-  { de: "N3G", para: "N4A", label: "BH confirmado" },
-  { de: "N3G", para: "MIG", label: "BH confirmado, migrar", tracejado: true },
+  { de: "N3G", para: "N4A", label: "BH confirmado, abrir" },
+  { de: "N3G", para: "M1", label: "BH confirmado, migrar" },
   { de: "N3G", para: "SAIDACID", label: "fora de BH" },
+
+  { de: "M1", para: "M2" },
+  { de: "M1", para: "VW", label: "🟡 regulada" },
+  { de: "M1", para: "VC", label: "🔴 Mauro atende" },
+  { de: "M2", para: "M3" },
+  { de: "M3", para: "M3B" },
+  { de: "M3B", para: "N9", label: "fluxo migrar" },
+  { de: "N9", para: "M4", label: "fluxo migrar", tracejado: true },
+  { de: "M4", para: "M5" },
+  { de: "M5", para: "M6", tracejado: true },
+  { de: "M6", para: "P0", tracejado: true },
 
   { de: "N4A", para: "N4V" },
   { de: "N4V", para: "DESAMB", label: "ambíguo" },
   { de: "DESAMB", para: "N4A" },
   { de: "N4V", para: "VA", label: "🟢 atende" },
-  { de: "VA", para: "ENC" },
-  { de: "ENC", para: "N4T" },
+  { de: "VA", para: "N4T" },
   { de: "N4V", para: "VW", label: "🟡 regulada" },
   { de: "N4V", para: "VC", label: "🔴 Mauro atende" },
   { de: "N4V", para: "VD", label: "🔴 ninguém atende" },
@@ -143,7 +162,7 @@ export const EDGES = [
   { de: "REC", para: "N21", tracejado: true },
   { de: "N21", para: "N22", tracejado: true },
   { de: "N22", para: "N23", tracejado: true },
-  { de: "N23", para: "ATIVA", tracejado: true },
+  { de: "N23", para: "P0", tracejado: true },
 
   { de: "P1", para: "N10", label: "volta ao passo pausado", tracejado: true },
 ];

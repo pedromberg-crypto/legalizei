@@ -1,0 +1,470 @@
+{
+  "nodes": [
+    {
+      "id": "ENTRY",
+      "label": "Da abertura (N22/M6) / Login",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "🆕 30/07: corrigido — N22 (assinatura) e M6 (migração concluída) empurram direto pra cá, confirmado rastreando router.push no código. Autoridade do handoff = flow-data.mjs (#1)."
+    },
+    {
+      "id": "DIA1",
+      "label": "✅ P0 · Home dia-1<br/>(ativação)",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "🔓 SWAP validado 30/07: substitui N24, sem confete nem selo coral no hero. Trilha de ativação (1 de 3) trata o certificado como item PASSIVO da própria trilha, não gate isolado. SEM navbar até liberar acesso; download do Cartão CNPJ."
+    },
+    {
+      "id": "CERT",
+      "label": "Certificado (gate)<br/>🗑️ REMOVIDO 30/07",
+      "status": "planejada",
+      "validado": "oficial",
+      "falta": "Era P0 antes do swap de 29/07, virou rota morta (nada navegava mais até aqui). Arquivo `/certificado` e a view apagados de vez 30/07, confirmado pelo Pedro. Fica só como marca histórica no mapa."
+    },
+    {
+      "id": "BARRA",
+      "label": "Navbar flutuante<br/>4 abas + CTA central",
+      "status": "construida",
+      "validado": "ux",
+      "falta": ""
+    },
+    {
+      "id": "INICIO",
+      "label": "Início · Home (regime)",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "Home Campeã (montada em /mockup-home): saudação+CNPJ-pill, próximo compromisso, atalhos, notas recentes, aprenda, quem cuida, vigília preditiva. Número-guru fora."
+    },
+    {
+      "id": "IMPOSTOS",
+      "label": "Impostos · dashboard",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Carrossel do mês (DAS+INSS) · vigília fiscal · guias anteriores clicáveis (status automático) · calendário. NÃO intermediamos pagamento."
+    },
+    {
+      "id": "GUIAS",
+      "label": "Guias anteriores",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "Mesma estrutura da lista de notas (busca+filtro+mês); status automático por param."
+    },
+    {
+      "id": "ALIQ",
+      "label": "Alíquota efetiva (P4)",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Alíquota efetiva + Fator R numa barra contra o corte dos 28% + 'número vivo' (tese North Star) + memória de cálculo. Fiscal → Larissa."
+    },
+    {
+      "id": "PAGAR",
+      "label": "Ver / baixar guia",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "'Pagar' virou VER/BAIXAR: documento + copiar código de barras + enviar. NÃO intermediamos pagamento; status-aware por param."
+    },
+    {
+      "id": "OBRIG",
+      "label": "Calendário de obrigações",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "Exploração mantida a pedido do Pedro (calendário)."
+    },
+    {
+      "id": "NOTAS",
+      "label": "Notas · lista (P5)",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "Ledger: busca + filtro por status (escopado ao mês) + seletor de mês + exportar + alerta de recusadas + vazio. Card único (home↔P5)."
+    },
+    {
+      "id": "NOTADET",
+      "label": "Nota · visualizador (P7)",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "Status-aware (emitida/emitindo/recusada/cancelada) + documento em tela cheia + enviar por canal + corrigir-e-reemitir."
+    },
+    {
+      "id": "EMITIR",
+      "label": "Emitir NF-e (P6)",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Favorecido (bolhas por frequência, Consumidor final, Novo cliente) + valor (prévia viva do imposto) + serviço travado. Autofill por CNPJ (API pública); emissão NFS-e = RPA (não coberto). B2C = 'Consumidor final'."
+    },
+    {
+      "id": "SH_REV",
+      "label": "Sheet · revisar→emitir→enviada",
+      "status": "construida",
+      "validado": "ux",
+      "falta": ""
+    },
+    {
+      "id": "SH_CLI",
+      "label": "Sheet · clientes (ver todos)",
+      "status": "construida",
+      "validado": "ux",
+      "falta": ""
+    },
+    {
+      "id": "MAIS",
+      "label": "Mais · hub",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "Ordem por praticidade: Você→Perfil · plano · serviços à-la-carte · seções (Empresa/Contabilidade) · WhatsApp · Conta."
+    },
+    {
+      "id": "PERFIL",
+      "label": "Perfil (a Conta)",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "Só a Conta (currículo/empresa migrou pro Mais) + lápis no avatar (trocar foto/logo)."
+    },
+    {
+      "id": "PLANO",
+      "label": "Gerenciar plano",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Preço FAKE (Mauro/custo). Próxima fatura com avulsos ADICIONADOS (modelo Contabilizei) · trocar pagamento (Pix) · cancelar (4 camadas, CDC art.49)."
+    },
+    {
+      "id": "SERVICOS",
+      "label": "Loja de avulsos",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Camada à-la-carte (CND, declaração, alteração, reemissão). Preço+catálogo → Mauro. Avulso EFETIVO não-removível + double-check."
+    },
+    {
+      "id": "EMPRESA",
+      "label": "Sua empresa · ficha",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "Ficha em blocos + copiar por dobra + copiar TUDO (formato WhatsApp) + CNPJ solto. Regra: página, não acordeon; honestidade antes do toque."
+    },
+    {
+      "id": "SOCIOS",
+      "label": "Sócios",
+      "status": "construida",
+      "validado": "ux",
+      "falta": ""
+    },
+    {
+      "id": "DOCS",
+      "label": "Documentos",
+      "status": "construida",
+      "validado": "ux",
+      "falta": ""
+    },
+    {
+      "id": "CERTM",
+      "label": "Certificado (ativo)",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Estado ativo do certificado; emissão/renovação = certificadora parceira (transfer = upload)."
+    },
+    {
+      "id": "EMDIA",
+      "label": "Você está em dia",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "Painel de conformidade: hero escuro + streak + órgãos + cumprido-no-mês."
+    },
+    {
+      "id": "RELAT",
+      "label": "Relatórios",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Anti-jargão: gráfico de faturamento + 'depois do imposto', honesto. Fiscal → Larissa."
+    },
+    {
+      "id": "DECLAR",
+      "label": "Declarações",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "PGDAS-D mensal · DEFIS anual, 'você não preenche nada'. Fiscal → Larissa."
+    },
+    {
+      "id": "AVISOS",
+      "label": "Avisos (central)",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "Central de notificações (tipos com cor de estado, não-lido, marcar-lidas); sino no header da home + Mais>Conta."
+    },
+    {
+      "id": "PROLAB",
+      "label": "Pró-labore (P8+P9)",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Reusa a engine lib/fiscal (mesma do N18): estado atual + interativo (imposto + INSS ao vivo), mira 30%, aviso de borda. Fiscal → Larissa."
+    },
+    {
+      "id": "BLOG",
+      "label": "Blog · home",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "Busca + chips de categoria + carrossel-herói + lista (ref. TripGlide). 'Aprenda com a gente' liga aqui."
+    },
+    {
+      "id": "BLOGPOST",
+      "label": "Blog · post",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "Leitura: imagem full-bleed sob o notch + folha arredondada + curtir + compartilhar + sugeridos."
+    },
+    {
+      "id": "CONTASET",
+      "label": "Ajustes de conta<br/>(e-mail / senha)",
+      "status": "planejada",
+      "validado": "pendente",
+      "falta": "Settings menores da Conta; deferível (HOME §Agora)."
+    },
+    {
+      "id": "WPP",
+      "label": "WhatsApp (canal humano)",
+      "status": "planejada",
+      "validado": "ux",
+      "falta": "Sem rota — canal externo (nossa tese: contador humano sempre)."
+    }
+  ],
+  "edges": [
+    {
+      "de": "ENTRY",
+      "para": "DIA1",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "DIA1",
+      "para": "INICIO",
+      "label": "acesso liberado",
+      "tracejado": false
+    },
+    {
+      "de": "INICIO",
+      "para": "BARRA",
+      "label": "",
+      "tracejado": true
+    },
+    {
+      "de": "BARRA",
+      "para": "INICIO",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "BARRA",
+      "para": "IMPOSTOS",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "BARRA",
+      "para": "NOTAS",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "BARRA",
+      "para": "MAIS",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "BARRA",
+      "para": "EMITIR",
+      "label": "CTA central",
+      "tracejado": false
+    },
+    {
+      "de": "INICIO",
+      "para": "IMPOSTOS",
+      "label": "próximo: DAS",
+      "tracejado": true
+    },
+    {
+      "de": "INICIO",
+      "para": "ALIQ",
+      "label": "vigília fiscal",
+      "tracejado": true
+    },
+    {
+      "de": "INICIO",
+      "para": "PROLAB",
+      "label": "atalho",
+      "tracejado": true
+    },
+    {
+      "de": "INICIO",
+      "para": "AVISOS",
+      "label": "sino",
+      "tracejado": true
+    },
+    {
+      "de": "INICIO",
+      "para": "BLOG",
+      "label": "aprenda",
+      "tracejado": true
+    },
+    {
+      "de": "IMPOSTOS",
+      "para": "GUIAS",
+      "label": "anteriores",
+      "tracejado": false
+    },
+    {
+      "de": "IMPOSTOS",
+      "para": "PAGAR",
+      "label": "ver/baixar",
+      "tracejado": false
+    },
+    {
+      "de": "IMPOSTOS",
+      "para": "ALIQ",
+      "label": "alíquota",
+      "tracejado": false
+    },
+    {
+      "de": "IMPOSTOS",
+      "para": "OBRIG",
+      "label": "calendário",
+      "tracejado": false
+    },
+    {
+      "de": "GUIAS",
+      "para": "PAGAR",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "NOTAS",
+      "para": "NOTADET",
+      "label": "abrir nota",
+      "tracejado": false
+    },
+    {
+      "de": "NOTADET",
+      "para": "EMITIR",
+      "label": "recusada→corrigir",
+      "tracejado": true
+    },
+    {
+      "de": "EMITIR",
+      "para": "SH_CLI",
+      "label": "",
+      "tracejado": true
+    },
+    {
+      "de": "EMITIR",
+      "para": "SH_REV",
+      "label": "",
+      "tracejado": true
+    },
+    {
+      "de": "MAIS",
+      "para": "PERFIL",
+      "label": "header",
+      "tracejado": false
+    },
+    {
+      "de": "MAIS",
+      "para": "PLANO",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "MAIS",
+      "para": "SERVICOS",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "MAIS",
+      "para": "EMPRESA",
+      "label": "Empresa",
+      "tracejado": false
+    },
+    {
+      "de": "MAIS",
+      "para": "SOCIOS",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "MAIS",
+      "para": "DOCS",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "MAIS",
+      "para": "CERTM",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "MAIS",
+      "para": "EMDIA",
+      "label": "Contabilidade",
+      "tracejado": false
+    },
+    {
+      "de": "MAIS",
+      "para": "RELAT",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "MAIS",
+      "para": "DECLAR",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "MAIS",
+      "para": "AVISOS",
+      "label": "Conta",
+      "tracejado": false
+    },
+    {
+      "de": "MAIS",
+      "para": "BLOG",
+      "label": "aprenda",
+      "tracejado": false
+    },
+    {
+      "de": "MAIS",
+      "para": "WPP",
+      "label": "fale com a gente",
+      "tracejado": true
+    },
+    {
+      "de": "PERFIL",
+      "para": "CONTASET",
+      "label": "",
+      "tracejado": true
+    },
+    {
+      "de": "EMPRESA",
+      "para": "SERVICOS",
+      "label": "alterar = serviço",
+      "tracejado": true
+    },
+    {
+      "de": "CERTM",
+      "para": "SERVICOS",
+      "label": "renovar",
+      "tracejado": true
+    },
+    {
+      "de": "SERVICOS",
+      "para": "GUIAS",
+      "label": "recalcular guia",
+      "tracejado": true
+    },
+    {
+      "de": "BLOG",
+      "para": "BLOGPOST",
+      "label": "ler",
+      "tracejado": false
+    }
+  ]
+}

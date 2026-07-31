@@ -164,11 +164,6 @@ const GRUPOS: {
         nota: "Happy path. Linguagem humana ANTES do código (UX-05). CTA 'É isso mesmo' + refazer acima sem perder texto.",
       },
       {
-        rota: "/encaixe",
-        nome: "🆕 ENCAIXE · escolhe o CNAE",
-        nota: "NOVO (reordenacao-cluster-fiscal-encaixe): logo após o 🟢, ainda pré-pago, TRAVA o CNAE (o nome/objeto/Junta dependem dele). Recomendado + alternativas. 4 regras: vem após o veredito · % é fit real (IA cruza pill+texto), não vinculante · garante o SETUP não o resultado · defesa de legitimidade inline. STAGE 1 aditivo: dissolve N5 teaser + N17 no stage 2.",
-      },
-      {
         rota: "/gate?etapa=triagem",
         nome: "N4 · Triagem (sócios + exterior)",
         nota: "🔎 SEPARADA 28/07 — vivia presa dentro do SPA do gate, invisível na prancheta (só dava pra ver clicando através de tudo). É o fail-fast do UX-21: sócios (máx. 2 no MLP) + exterior, perguntado logo após o ENCAIXE, ANTES do dinheiro. Bloqueado → 'Falar com o time' agora navega de verdade pra /saida/exterior ou /saida/socios (era beco sem saída até 28/07).",

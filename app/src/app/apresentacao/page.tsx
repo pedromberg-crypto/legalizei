@@ -58,12 +58,13 @@ import {
  * (N6 conta → N7 a conta da abertura → N8 contrato → N9 pagamento).
  *
  * ⚠️ O ENCAIXE saiu da demo em 29/07: depois que o veredito 🟢 ganhou os cards
- * clicáveis (UX-65), as duas telas passaram a fazer a mesma pergunta. A rota
- * `/encaixe` continua existindo em produção.
+ * clicáveis (UX-65), as duas telas passaram a fazer a mesma pergunta. 🆕 31/07:
+ * confirmado pelo Pedro e REMOVIDO de produção também — `/encaixe`,
+ * `EncaixeView` e a etapa "encaixe" do `/gate` não existem mais.
  *
  * ─── 🔗 FIDELIDADE É POR CONSTRUÇÃO, NÃO POR DISCIPLINA (29/07) ────────────
  * Todas as telas aqui são os componentes APROVADOS, importados: `EntradaView`
- * · `PerguntaView` · `AnalisandoView` · `VereditoView` · `EncaixeView` ·
+ * · `PerguntaView` · `AnalisandoView` · `VereditoView` ·
  * `TriagemView` · `FaixaView`. As rotas de produção (`/entrada`, `/gate`)
  * consomem exatamente os mesmos. **Não existe cópia** — a v1 desta tela tinha
  * uma, e ela divergiu em silêncio (o N3 perdeu o Lottie, os ícones e o layout

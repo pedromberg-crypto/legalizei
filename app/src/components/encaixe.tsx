@@ -1,8 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import type { Resultado } from "@/components/veredito";
 
 /**
@@ -62,80 +59,13 @@ export function encaixeDeResultado(r: Resultado): EncaixeData {
   };
 }
 
-export function EncaixeView({
-  dados,
-  onSeguir,
-  onRefazer,
-}: {
-  dados: EncaixeData;
-  onSeguir?: () => void;
-  onRefazer?: () => void;
-}) {
-  const [escolhido, setEscolhido] = useState(dados.recomendado.cnae);
-  const noRecomendado = escolhido === dados.recomendado.cnae;
-
-  return (
-    <>
-      {/* Título fixo (padrão de 3 partes: título fixo / corpo rola / CTA fixo) */}
-      <div className="shrink-0">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-state-success-tint px-2.5 py-1 text-micro font-semibold text-state-success-text">
-          <Check />
-          Boa notícia
-        </span>
-        <h1 className="text-h1 mt-3 mb-1">Achei o seu encaixe.</h1>
-        <p className="text-body text-text-secondary mb-4">
-          É disso que a gente cuida, do jeito certo, no Simples.
-        </p>
-      </div>
-
-      <div className="flex-1 min-h-0 overflow-y-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {/* ───── O RECOMENDADO — redesign v2 ROBUSTO, validado 28/07 via
-            /mockup-v2. Adequação virou barra percentual (idioma da
-            Vigilancia); CNAE+highlight viraram par de stat cards lado a lado
-            (mesma composição alíquota/Fator R); "cobre" ganhou ícone-check em
-            chip (idioma de SuaSituacao/órgãos). ───── */}
-        <Card
-          className={
-            noRecomendado ? "border-border-focus bg-surface-tint-brand" : ""
-          }
-        >
-          <ConteudoCnae
-            humano={dados.recomendado.humano}
-            cnae={dados.recomendado.cnae}
-            descricao={dados.recomendado.descricao}
-            cobre={dados.recomendado.cobre}
-            adequacao={dados.recomendado.adequacao}
-          />
-
-          {/* Regra 4: defesa de legitimidade INLINE, obrigatória. */}
-          <p className="text-caption text-text-secondary mt-3">
-            Faz algo parecido que não está na lista? Esse continua sendo o código
-            certo pra sua área. Todos emitem a mesma nota fiscal, e escolher o
-            mais barato é o que um bom contador faz.
-          </p>
-        </Card>
-
-        {/* ───── OUTRAS OPÇÕES (regra 2: sugestão, a escolha é dela) ───── */}
-        <OutrasOpcoes
-          alternativas={dados.alternativas}
-          escolhido={escolhido}
-          onEscolher={setEscolhido}
-        />
-      </div>
-
-      <div className="app-footer-cta">
-        <div className="flex justify-center mb-1">
-          <Button variant="ghost" onClick={onRefazer}>
-            Não é bem isso, refazer
-          </Button>
-        </div>
-        <Button full onClick={onSeguir}>
-          {noRecomendado ? "É isso mesmo, continuar" : "Seguir com esse, continuar"}
-        </Button>
-      </div>
-    </>
-  );
-}
+/* 🆕 31/07 — `EncaixeView` REMOVIDA (confirmado pelo Pedro: tela não usada
+ * mais). Ficou redundante desde que o veredito 🟢 ganhou cards clicáveis
+ * (UX-65, 29/07) — as duas telas faziam a mesma pergunta. O miolo visual
+ * (`ConteudoCnae`, `OutrasOpcoes`, abaixo) continua vivo: `VereditoView` os
+ * usa direto. Rota `/encaixe` e o tile do /mockup removidos junto. Ver
+ * flow-data.mjs (nó ENC removido) e HOME-reorganizacao.md.
+ */
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -331,20 +261,6 @@ function CheckMini() {
   return (
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
       <path d="m5 12 4 4 8-9" />
-    </svg>
-  );
-}
-
-function Check() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M5 12.5 10 17.5 19 7"
-        stroke="currentColor"
-        strokeWidth="2.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
     </svg>
   );
 }

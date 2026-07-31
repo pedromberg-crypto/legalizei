@@ -446,13 +446,14 @@ td .swatch-inline{display:inline-block;width:16px;height:16px;border-radius:4px;
   <a href="#escuro">Tema escuro</a>
 
   <div class="grp">Componentes</div>
-  <a href="#logo">Logo</a>
-  <a href="#botoes">Botões</a>
-  <a href="#cards">Cards</a>
-  <a href="#form">Formulário</a>
-  <a href="#aviso">Avisos</a>
-  <a href="#status">Status</a>
-  <a href="#nota">Linha de nota</a>
+  <a href="#storybook-aviso">🟢 Storybook (ao vivo)</a>
+  <a href="#logo">Logo <span style="opacity:.5">· histórico</span></a>
+  <a href="#botoes">Botões <span style="opacity:.5">· histórico</span></a>
+  <a href="#cards">Cards <span style="opacity:.5">· histórico</span></a>
+  <a href="#form">Formulário <span style="opacity:.5">· histórico</span></a>
+  <a href="#aviso">Avisos <span style="opacity:.5">· histórico</span></a>
+  <a href="#status">Status <span style="opacity:.5">· histórico</span></a>
+  <a href="#nota">Linha de nota <span style="opacity:.5">· histórico</span></a>
 
   <div class="grp">Sistema</div>
   <a href="#shells">Os 2 shells</a>
@@ -679,9 +680,22 @@ td .swatch-inline{display:inline-block;width:16px;height:16px;border-radius:4px;
     </div>
   </section>
 
+  <!-- AVISO STORYBOOK — 31/07: a vitrine de componentes virou renderização
+       de verdade (Storybook), não mais recriação manual em HTML. As seções
+       abaixo (Logo → Linha de nota) ficam como HISTÓRICO/fallback offline;
+       pra ver o componente REAL (importado do código, zero cópia), é o link. -->
+  <section id="storybook-aviso">
+    <div class="eyebrow">Componentes · histórico</div>
+    <h2 class="sec">🟢 Vitrine ao vivo — Storybook</h2>
+    <p class="lead">As seções abaixo (Logo, Botões, Cards, Formulário, Avisos, Status, Linha de nota) eram HTML recriado à mão — risco de divergir do código real (achamos isso na prática: física de spring que só existe no repo do dev, conflito de raio 16×18). <b>A partir de 31/07, a fonte de verdade dos componentes é o Storybook</b>: renderiza os componentes de verdade, importados, com legenda de onde cada um é usado em produção.</p>
+    <div class="callout" style="margin-top:16px">
+      <b>Storybook (ao vivo):</b> <code class="tok">npm run storybook</code> na pasta <code class="tok">app/</code> (porta 6006) — ou o link publicado, quando o deploy no Vercel estiver de pé. As seções abaixo continuam aqui como referência histórica/offline, não são mais atualizadas ativamente.
+    </div>
+  </section>
+
   <!-- LOGO -->
   <section id="logo">
-    <div class="eyebrow">Componentes</div>
+    <div class="eyebrow">Componentes · histórico</div>
     <h2 class="sec">Logo</h2>
     <p class="lead">3 variantes. O <code class="tok">brand</code> (coral-500) só vive aqui — é o único lugar do app que pode pedir a cor de marca.</p>
     <div class="demo-row" style="margin-top:24px">
@@ -692,7 +706,7 @@ td .swatch-inline{display:inline-block;width:16px;height:16px;border-radius:4px;
 
   <!-- BOTOES -->
   <section id="botoes">
-    <div class="eyebrow">Componentes</div>
+    <div class="eyebrow">Componentes · histórico</div>
     <h2 class="sec">Botões</h2>
     <p class="lead">5 variantes. As regras de AA aqui não são estilo, são decisão travada: branco sobre coral-600 dá 4,04:1 — passa AA <b>só em texto grande</b> (≥18,66px bold). Hover sempre escurece.</p>
     <div class="panel" style="margin-top:24px">
@@ -719,7 +733,7 @@ td .swatch-inline{display:inline-block;width:16px;height:16px;border-radius:4px;
 
   <!-- CARDS -->
   <section id="cards">
-    <div class="eyebrow">Componentes</div>
+    <div class="eyebrow">Componentes · histórico</div>
     <h2 class="sec">Card — <code style="font-size:.7em">tom</code></h2>
     <p class="lead">Sem sombra por padrão. O <code class="tok">tom</code> responde "que tipo de coisa este card é", não "que cor".</p>
     <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:24px">
@@ -732,7 +746,7 @@ td .swatch-inline{display:inline-block;width:16px;height:16px;border-radius:4px;
 
   <!-- FORM -->
   <section id="form">
-    <div class="eyebrow">Componentes</div>
+    <div class="eyebrow">Componentes · histórico</div>
     <h2 class="sec">Formulário</h2>
     <p class="lead">Rótulo literal em cima (universal, UX-48). Erro sempre <b>inline</b>, nunca modal. Microcopy que ensina, não pune.</p>
     <div class="two" style="margin-top:24px">
@@ -770,7 +784,7 @@ td .swatch-inline{display:inline-block;width:16px;height:16px;border-radius:4px;
 
   <!-- AVISO -->
   <section id="aviso">
-    <div class="eyebrow">Componentes</div>
+    <div class="eyebrow">Componentes · histórico</div>
     <h2 class="sec">Aviso — que educa</h2>
     <p class="lead">Bloqueio, alerta ou reforço. Coral <b>nunca</b> é erro nem alerta — estados usam sempre os tokens de estado.</p>
     <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:24px">
@@ -783,7 +797,7 @@ td .swatch-inline{display:inline-block;width:16px;height:16px;border-radius:4px;
 
   <!-- STATUS -->
   <section id="status">
-    <div class="eyebrow">Componentes</div>
+    <div class="eyebrow">Componentes · histórico</div>
     <h2 class="sec">StatusIcon — o átomo de status</h2>
     <p class="lead">Um vocabulário de 5 estados, unificado. Antes o check verde estava copiado em 5 arquivos. Feito = verde (estado real) · recusa = danger · girando = info · travado = muted. <b>Coral nunca é estado.</b></p>
     <div class="panel" style="margin-top:24px">
@@ -800,7 +814,7 @@ td .swatch-inline{display:inline-block;width:16px;height:16px;border-radius:4px;
 
   <!-- NOTA -->
   <section id="nota">
-    <div class="eyebrow">Componentes</div>
+    <div class="eyebrow">Componentes · histórico</div>
     <h2 class="sec">Linha de nota</h2>
     <p class="lead">Fonte única do card de nota fiscal — a mesma na home (glance) e na lista /notas (ledger). Avatar = iniciais do cliente + dot de status. Valor verde só quando virou receita de fato.</p>
     <div class="grid" style="max-width:520px;margin-top:24px">

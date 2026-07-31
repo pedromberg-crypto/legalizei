@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { VereditoView, type Resultado } from "@/components/veredito";
-import { EncaixeView, encaixeDeResultado } from "@/components/encaixe";
 import {
   PerguntaView,
   AnalisandoView,
@@ -21,8 +20,15 @@ import {
  *
  * ⚠️ AS TELAS vivem em `components/gate-telas.tsx` desde 29/07 (`PerguntaView`,
  * `AnalisandoView`, `TriagemView`, `FaixaView`) — mesma extração que
- * `VereditoView`/`EncaixeView` já tinham. Esta page é o ORQUESTRADOR: guarda o
+ * `VereditoView` já tinha. Esta page é o ORQUESTRADOR: guarda o
  * estado do gate, chama o mock da IA e liga a navegação real.
+ *
+ * 🆕 31/07 — ENCAIXE REMOVIDO (era `components/encaixe.tsx` → `EncaixeView`,
+ * entre veredito e triagem). Ficou redundante desde que o veredito 🟢 ganhou
+ * cards clicáveis (UX-65, 29/07): as duas telas faziam a mesma pergunta.
+ * Confirmado pelo Pedro que a tela não é mais usada. `ConteudoCnae` e
+ * `OutrasOpcoes` (o miolo visual) continuam vivos — `VereditoView` os usa
+ * direto. Ver flow-data.mjs (nó ENC removido) e HOME-reorganizacao.md.
  * Motivo da extração: a `/apresentacao` precisa renderizar a tela APROVADA, e
  * cópia diverge em silêncio. Mexeu no visual/copy? Mexe no componente.
  *
@@ -78,18 +84,17 @@ type Etapa =
   | "perguntando"
   | "analisando"
   | "veredito"
-  | "encaixe"
   | "triagem"
   | "faixa";
 
 /**
- * ⚠️ 28/07 — DEEP-LINK por `?etapa=`. As 6 etapas do gate viviam presas dentro
+ * ⚠️ 28/07 — DEEP-LINK por `?etapa=`. As etapas do gate viviam presas dentro
  * de UM SPA: a prancheta (/mockup) só sabia carregar `/gate` do zero, então
- * nunca mostrava veredito/encaixe/triagem/faixa sem clicar através de tudo —
+ * nunca mostrava veredito/triagem/faixa sem clicar através de tudo —
  * a triagem (sócios+exterior) passou batida numa revisão inteira por causa
  * disso. Mesmo padrão já usado em /notas/detalhe?s= e /blog/post?id=.
  */
-const ETAPAS_LINKAVEIS: Etapa[] = ["veredito", "encaixe", "triagem", "faixa"];
+const ETAPAS_LINKAVEIS: Etapa[] = ["veredito", "triagem", "faixa"];
 
 export default function GatePage() {
   const router = useRouter();
@@ -97,11 +102,10 @@ export default function GatePage() {
   const etapaParam = searchParams.get("etapa") as Etapa | null;
   const etapaInicial: Etapa =
     etapaParam && ETAPAS_LINKAVEIS.includes(etapaParam) ? etapaParam : "perguntando";
-  // veredito/encaixe precisam de um resultado pra renderizar — usa o caso
-  // 🟢 atende (o default de `mapear("")`), o mesmo caminho feliz que as
-  // telas /veredito/atende e /encaixe já usam como demo.
-  const resultadoInicial =
-    etapaInicial === "veredito" || etapaInicial === "encaixe" ? mapear("") : null;
+  // veredito precisa de um resultado pra renderizar — usa o caso 🟢 atende
+  // (o default de `mapear("")`), o mesmo caminho feliz que /veredito/atende
+  // já usa como demo.
+  const resultadoInicial = etapaInicial === "veredito" ? mapear("") : null;
 
   const [etapa, setEtapa] = useState<Etapa>(etapaInicial);
   const [texto, setTexto] = useState("");
@@ -145,13 +149,6 @@ export default function GatePage() {
         {etapa === "veredito" && resultado && (
           <VereditoView
             r={resultado}
-            onRefazer={() => setEtapa("perguntando")}
-            onSeguir={() => setEtapa("encaixe")}
-          />
-        )}
-        {etapa === "encaixe" && resultado && (
-          <EncaixeView
-            dados={encaixeDeResultado(resultado)}
             onRefazer={() => setEtapa("perguntando")}
             onSeguir={() => setEtapa("triagem")}
           />

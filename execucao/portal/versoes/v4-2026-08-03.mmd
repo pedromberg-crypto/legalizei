@@ -1,0 +1,95 @@
+```mermaid
+flowchart TD
+  subgraph SG_INI["Aba · Início"]
+    direction TB
+    INICIO["P-INI1 · Início · Home (regime)"]
+  end
+  subgraph SG_IMP["Aba · Impostos"]
+    direction TB
+    IMPOSTOS["P-IMP1 · Impostos · dashboard"]
+    GUIAS["P-IMP2 · Guias anteriores"]
+    ALIQ["P-IMP3 · Alíquota efetiva"]
+    PAGAR["P-IMP4 · Ver / baixar guia"]
+    OBRIG["P-IMP5 · Calendário de obrigações"]
+  end
+  subgraph SG_NOT["Aba · Notas"]
+    direction TB
+    NOTAS["P-NOT1 · Notas · lista"]
+    NOTADET["P-NOT2 · Nota · visualizador"]
+  end
+  subgraph SG_MAIS["Aba · Mais"]
+    direction TB
+    MAIS["P-MAIS1 · Mais · hub"]
+    PERFIL["P-MAIS2 · Perfil (a Conta)"]
+    PLANO["P-MAIS3 · Gerenciar plano"]
+    SERVICOS["P-MAIS4 · Loja de avulsos"]:::branch
+    EMPRESA["P-MAIS5 · Sua empresa · ficha"]
+    SOCIOS["P-MAIS6 · Sócios"]
+    DOCS["P-MAIS7 · Documentos"]
+    CERTM["P-MAIS8 · Certificado (ativo)"]
+    EMDIA["P-MAIS9 · Você está em dia"]
+    RELAT["P-MAIS10 · Relatórios"]
+    DECLAR["P-MAIS11 · Declarações"]
+  end
+  ENTRY(["Da abertura (A4/E9.4) / Login"]):::feliz
+  DIA1["✅ A5 · Home dia-1<br/>(ativação)"]:::feliz
+  CERT["Certificado (gate)<br/>🗑️ REMOVIDO 30/07"]:::todo
+  BARRA{"Navbar flutuante<br/>4 abas + CTA central"}:::inline
+  EMITIR["P-EMI1 · Emitir NF-e"]
+  SH_REV["Sheet · revisar→emitir→enviada"]:::inline
+  SH_CLI["Sheet · clientes (ver todos)"]:::inline
+  AVISOS["P-GER1 · Avisos (central)"]
+  PROLAB["P-GER2 · Pró-labore"]
+  BLOG["P-GER3 · Blog · home"]
+  BLOGPOST["P-GER4 · Blog · post"]
+  CONTASET["P-MAIS2.1 · Ajustes de conta<br/>(e-mail / senha)"]:::todo
+  WPP(["WhatsApp (canal humano)"]):::todo
+
+  ENTRY --> DIA1
+  DIA1 -->|"acesso liberado"| INICIO
+  INICIO -.-> BARRA
+  BARRA --> INICIO
+  BARRA --> IMPOSTOS
+  BARRA --> NOTAS
+  BARRA --> MAIS
+  BARRA -->|"CTA central"| EMITIR
+  INICIO -.->|"próximo: DAS"| IMPOSTOS
+  INICIO -.->|"vigília fiscal"| ALIQ
+  INICIO -.->|"atalho"| PROLAB
+  INICIO -.->|"sino"| AVISOS
+  INICIO -.->|"aprenda"| BLOG
+  IMPOSTOS -->|"anteriores"| GUIAS
+  IMPOSTOS -->|"ver/baixar"| PAGAR
+  IMPOSTOS -->|"alíquota"| ALIQ
+  IMPOSTOS -->|"calendário"| OBRIG
+  GUIAS --> PAGAR
+  NOTAS -->|"abrir nota"| NOTADET
+  NOTADET -.->|"recusada→corrigir"| EMITIR
+  EMITIR -.-> SH_CLI
+  EMITIR -.-> SH_REV
+  MAIS -->|"header"| PERFIL
+  MAIS --> PLANO
+  MAIS --> SERVICOS
+  MAIS -->|"Empresa"| EMPRESA
+  MAIS --> SOCIOS
+  MAIS --> DOCS
+  MAIS --> CERTM
+  MAIS -->|"Contabilidade"| EMDIA
+  MAIS --> RELAT
+  MAIS --> DECLAR
+  MAIS -->|"Conta"| AVISOS
+  MAIS -->|"aprenda"| BLOG
+  MAIS -.->|"fale com a gente"| WPP
+  PERFIL -.-> CONTASET
+  EMPRESA -.->|"alterar = serviço"| SERVICOS
+  CERTM -.->|"renovar"| SERVICOS
+  SERVICOS -.->|"recalcular guia"| GUIAS
+  BLOG -->|"ler"| BLOGPOST
+
+  classDef saida fill:#fde8e4,stroke:#e0603f,color:#7a2d18;
+  classDef feliz fill:#e6f4ea,stroke:#2f9e5a,color:#1c5e37;
+  classDef espera fill:#fff4e0,stroke:#e0a03f,color:#7a5518;
+  classDef branch fill:#eef1ff,stroke:#5b6cf0,color:#2a338a;
+  classDef inline fill:#f1f1f3,stroke:#9aa0a6,color:#555;
+  classDef todo fill:#f7f7f8,stroke:#bcbcc2,stroke-dasharray:5 4,color:#888;
+```

@@ -55,7 +55,6 @@ import { PagamentoView, type Metodo } from "@/components/wizard-dinheiro";
 export default function PagamentoPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const empresaPaga = searchParams.get("cenario") === "empresa-paga";
   /**
    * 30/07 — `?fluxo=migrar` reusa esta tela no FLOW #2. A tela é a mesma (CPF,
    * método, idempotência); o que muda é que não há taxa de governo a somar e o
@@ -77,7 +76,6 @@ export default function PagamentoPage() {
       setCpf={setCpf}
       metodo={metodo}
       setMetodo={setMetodo}
-      empresaPaga={empresaPaga}
       fluxo={fluxo}
       onPagar={() => router.push(destino())}
     />

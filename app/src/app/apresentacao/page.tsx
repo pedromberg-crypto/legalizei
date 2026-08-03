@@ -251,6 +251,39 @@ const SAIDA_FORA_BH: DadosSaida = {
   },
 };
 
+/**
+ * 🆕 03/08 — GAP DE COBERTURA fechado: E5.4/E5.5 (saídas da triagem) existiam
+ * em `/mockup` mas não eram alcançáveis na demo (TriagemView tinha
+ * `onSaida={() => {}}`, um no-op). Conteúdo IDÊNTICO ao das rotas de
+ * produção (`/saida/exterior`, `/saida/socios`) — fonte única, sem cópia
+ * divergente.
+ */
+const DADOS_EXTERIOR: DadosSaida = {
+  titulo: "Com sócio morando fora, o caminho é outro",
+  explica:
+    "A sua empresa pode existir normalmente. O que a lei não permite é ela entrar no Simples Nacional, que é o regime em que a gente abre empresa aqui pelo app.",
+  origem: {
+    rotulo: "De onde vem essa regra",
+    texto:
+      "Lei Complementar 123, artigo 17: empresa com sócio que mora no exterior não pode optar pelo Simples Nacional.",
+  },
+  saida:
+    "Existem outros regimes que atendem o seu caso, e o nosso time contábil faz esse tipo de abertura fora do app. Quer conversar com eles?",
+};
+
+const DADOS_SOCIOS: DadosSaida = {
+  titulo: "Com três ou mais sócios, ainda não pelo app",
+  explica:
+    "Não tem nada de errado com a sua sociedade, e a lei permite. É o nosso app que hoje abre empresa com no máximo dois sócios.",
+  origem: {
+    rotulo: "De onde vem esse limite",
+    texto:
+      "É uma escolha nossa, não uma regra do governo. A cada sócio a mais mudam as assinaturas e o contrato, e a gente preferiu fazer bem para dois antes de abrir para mais.",
+  },
+  saida:
+    "O escritório que está por trás do app faz esse tipo de abertura todo dia, fora do aplicativo. Quer que a gente te apresente?",
+};
+
 type Etapa =
   | "fork"
   | "cidade"
@@ -260,6 +293,11 @@ type Etapa =
   | "veredito"
   | "triagem"
   | "faixa"
+  // 🆕 03/08 — E5.4/E5.5, saídas da triagem (gap fechado, ver DADOS_EXTERIOR/
+  // DADOS_SOCIOS). Alcançáveis só pela interação real (escolher exterior/3+
+  // sócios na TriagemView), sem pill de atalho — mesmo padrão de veredito.
+  | "saida-exterior"
+  | "saida-socios"
   | "conta"
   | "conta-codigo"
   | "plano"
@@ -283,6 +321,7 @@ type Etapa =
   | "revisar"
   | "termo"
   | "painel"
+  | "painel-recusa"
   | "assinatura"
   | "ativacao"
   // ─── MIGRAR DE CONTADOR (30/07) — decimal de Entrada ─────────────────────
@@ -347,6 +386,7 @@ const ETAPAS_CAUDA = [
   "revisar",
   "termo",
   "painel",
+  "painel-recusa",
   "assinatura",
   "ativacao",
 ] as const satisfies readonly Etapa[];
@@ -445,6 +485,8 @@ type Momento =
   | "veredito-descarta"
   | "triagem"
   | "faixa"
+  | "saida-exterior"
+  | "saida-socios"
   | "conta"
   | "conta-codigo"
   | "plano"
@@ -460,6 +502,7 @@ type Momento =
   | "revisar"
   | "termo"
   | "painel"
+  | "painel-recusa"
   | "assinatura"
   | "ativacao"
   // ─── MIGRAR DE CONTADOR (30/07) — decimal de Entrada ─────────────────────
@@ -494,51 +537,51 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
   "veredito-atende": [
     {
       id: "UX-65",
-      oque: "Ganhou 'Outras opções compatíveis' (mesmo componente do ENCAIXE) + % de compatibilidade no card de cima. Os cards são clicáveis: tocar promove a opção pro topo e devolve a antiga pra lista. A tela aprovada só mostra o recomendado + a gaveta 'e se eu faço mais de uma coisa?'.",
-      status: "🔴 pendente no VereditoView",
+      oque: "'Outras opções compatíveis' + % de compatibilidade no card de cima. Os cards são clicáveis: tocar promove a opção pro topo e devolve a antiga pra lista.",
+      status: "✅ mesclado em /veredito/atende (03/08) — prop `mostrarAlternativas` já existia no VereditoView desde 31/07, só o wrapper de produção não passava",
     },
     {
-      id: "⚠️ decidir",
-      oque: "A troca feita AQUI não chega no ENCAIXE (tela seguinte), que remonta a lista a partir do CNAE original — promover 'Design gráfico' aqui e seguir mostra 'Criação de sites' como recomendado lá. Ou o veredito escolhe e o encaixe confirma, ou o encaixe escolhe e aqui é só leitura. Hoje as duas escolhem.",
-      status: "🔴 decisão de produto (Pedro)",
+      id: "⚠️ decidir (obsoleto)",
+      oque: "Preocupação original: a troca feita aqui não chegava no ENCAIXE (tela seguinte), que remontava a lista a partir do CNAE original. Ficou sem objeto: o ENCAIXE foi removido 31/07 (o veredito 🟢 já trava o CNAE direto, cards clicáveis).",
+      status: "✅ resolvido por remoção da tela que gerava o conflito",
     },
   ],
   "veredito-waitlist-enviado": [
     {
       id: "UX-64",
       oque: "Ganhou saídas: 'Ler o blog', 'Conhecer o site' e 'Voltar ao início'. A tela aprovada só oferece 'Falar com um contador agora' — quem não quer falar com ninguém agora fica sem pra onde ir.",
-      status: "🔴 pendente no VereditoView (blog/site ainda sem rota)",
+      status: "✅ 'Voltar ao início' mesclado (03/08, real: /entrada) — 'Ler o blog'/'Conhecer o site' seguem 🔴, blog/site ainda sem rota",
     },
   ],
   "veredito-mauro-enviado": [
     {
       id: "UX-64",
       oque: "Mesmas saídas da waitlist. Na tela aprovada este estado não tem CTA nenhum — é beco puro.",
-      status: "🔴 pendente no VereditoView (blog/site ainda sem rota)",
+      status: "✅ 'Voltar ao início' mesclado (03/08, real: /entrada) — 'Ler o blog'/'Conhecer o site' seguem 🔴, blog/site ainda sem rota",
     },
   ],
   conta: [
     {
       id: "UX-71",
       oque: "E6 recriado com o layout do LOGIN: painel escuro que sangra (marca centralizada + saudação) + folha clara sobreposta com os campos (ícone à esquerda, placeholder como rótulo). A tela aprovada é o formulário clássico com rótulo em cima. Diferenças necessárias: a folha ROLA (são 7 campos, não 2) e o CTA foi pro rodapé fixo. Campos passaram a ser 1 por linha (CPF/telefone lado a lado cortavam o valor mascarado) e o endereço do CEP não trunca mais.",
-      status: "🔴 pendente no ContaView (prop layout='painel')",
+      status: "✅ mesclado em /conta (03/08, prop layout='painel')",
     },
     {
       id: "UX-72",
       oque: "Cadastro por Google/Apple agora CONECTA de verdade: nome e e-mail vêm do provedor, a tela mostra um card 'conectado como…' (com opção de trocar) e pede só o que falta — CPF, telefone e endereço, que nenhum provedor fornece. Senha some (conta social não tem).",
-      status: "🔴 pendente no ContaView",
+      status: "🟡 visual mesclado (layout='painel', 03/08); `conectar()` segue MOCK — falta OAuth real (Google/Apple)",
     },
     {
       id: "UX-73",
       oque: "A pergunta 'é a primeira empresa?' virou OBRIGATÓRIA (inclusive no cadastro social). ⚠️ Contraria a decisão UX-48, que a definiu como 'dado puro, pulável sem custo' — lá o racional era não cobrar fricção por algo que não muda nada no fluxo.",
-      status: "🔴 decisão do Pedro × UX-48",
+      status: "🔴 NÃO mesclado de propósito (03/08): ao ligar layout='painel' em produção, a coorte ficou opcional (regra já travada da UX-48) — essa parte da demo continua deslinkada até decisão explícita",
     },
   ],
   plano: [
     {
       id: "UX-74",
       oque: "E7 reconstruído como OFERTA: o plano vira produto, com card escuro e os itens inclusos em linguagem de dono, e a âncora verdadeira (escritório tradicional cobra honorário, a gente não). A tela aprovada é honesta mas não vende: dois cards e uma linha de taxa.",
-      status: "🔴 pendente no PlanoView (prop layout='oferta')",
+      status: "✅ mesclado em /plano (03/08, prop layout='oferta')",
     },
     {
       id: "UX-75",
@@ -719,7 +762,7 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
     {
       id: "UX-62",
       oque: "Virou lista de espera classificada: etiqueta '📍 Outra cidade' + campo obrigatório 'qual a sua cidade?' + confirmação que promete só avisar (a oficial promete ligação em 1 dia útil, que aqui não se cumpre).",
-      status: "🔴 pendente em /saida/fora-bh",
+      status: "✅ mesclado em /saida/fora-bh (03/08) — 'Voltar ao início' real; blog/site continuam sem rota",
     },
   ],
   perguntando: [
@@ -750,14 +793,14 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
     {
       id: "UX-68",
       oque: "'Sei o valor exato' revela o campo ABAIXO das faixas, em vez de trocar a tela inteira. Tocar numa faixa limpa o valor digitado (senão o número continuaria mandando e a seleção mentiria).",
-      status: "🔴 pendente no FaixaView",
+      status: "✅ mesclado em /gate (03/08, prop exatoInline)",
     },
   ],
   "veredito-descarta": [
     {
       id: "UX-64",
       oque: "Decline limpo ganhou saídas ('Ler o blog', 'Conhecer o site', 'Voltar ao início'). A tela aprovada não tem CTA nenhum: explica e para, sem oferecer pra onde ir.",
-      status: "🔴 pendente no VereditoView (blog/site ainda sem rota)",
+      status: "✅ 'Voltar ao início' mesclado (03/08, real: /entrada) — 'Ler o blog'/'Conhecer o site' seguem 🔴, blog/site ainda sem rota",
     },
     {
       id: "demo",
@@ -786,6 +829,8 @@ const NOME_MOCKUP: Record<Momento, string> = {
   "veredito-descarta": "🔴 E5.3 · Fora de escopo (descarta)",
   triagem: "E5 · Triagem (sócios + exterior)",
   faixa: "E5 · Faixa de faturamento",
+  "saida-exterior": "🆕 E5.4 · Saída · sócio no exterior",
+  "saida-socios": "🆕 E5.5 · Saída · 3+ sócios",
   conta: "E6 · Criar conta",
   "conta-codigo": "E6 · Confirmar acesso (código)",
   plano: "E7 · A conta da abertura",
@@ -801,6 +846,7 @@ const NOME_MOCKUP: Record<Momento, string> = {
   revisar: "A1 · Revisar o dossiê",
   termo: "A2 · Termo irreversível",
   painel: "A3 · Painel de acompanhamento",
+  "painel-recusa": "🆕 A3.1 · Órgão recusa",
   assinatura: "A4 · Assinatura (GOV.BR)",
   ativacao: "🔓 A5 · Home de ativação (dia-1)",
   "m-cnpj": "🆕 E4.2 · Seu CNPJ (migrar)",
@@ -908,6 +954,18 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     faz: "Pergunta quanto a pessoa espera faturar por mês — faixa guiada ou valor exato.",
     interfere: "Alimenta o cálculo de enquadramento e Fator R nas telas seguintes (a conta da abertura e o pró-labore).",
     porque: "Base necessária pra estimar corretamente o que a empresa vai pagar — sem isso o resto do fluxo chuta.",
+  },
+  "saida-exterior": {
+    dono: null,
+    faz: "Explica que a empresa pode existir, mas fora do Simples — a lei (LC 123 art.17) barra a opção pelo Simples com sócio domiciliado no exterior.",
+    interfere: "Encerra o funil do app (que só faz Simples). Não é 'não pode abrir empresa', é 'não pelo Simples' — confundir as duas seria uma notícia pior que a verdadeira.",
+    porque: "Honestidade > beco sem saída silencioso (doutrina das telas de saída, A9). Roteia pro time contábil, que atende esse regime fora do app.",
+  },
+  "saida-socios": {
+    dono: null,
+    faz: "Explica que o limite de 2 sócios é do PRODUTO, não da lei — a sociedade é legal, só o app que ainda não abre com 3+.",
+    interfere: "Encerra o funil do app. 'Ainda' porque o limite pode cair (decisão de 15/07, não é regra externa).",
+    porque: "Dizer que o limite é nosso custa orgulho e compra confiança — mesma escolha da doutrina anti-guru. Roteia pro escritório, que já faz esse tipo de abertura fora do app.",
   },
   conta: {
     dono: "usuario",
@@ -1053,6 +1111,12 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
       "Nada mais depende do cliente até o CNPJ sair (ou até um órgão recusar algo). É o pipeline assíncrono rodando — dias, não minutos.",
     porque:
       "Sem painel, quem pagou e nunca mais viu nada acha que comprou e ninguém fez nada. Cada etapa mostra se é 'a vez do órgão' ou 'precisamos de você' (o 4º estado, recusa) — nunca um limbo mudo.",
+  },
+  "painel-recusa": {
+    dono: "nossa",
+    faz: "O 4º estado do painel: a Junta reprovou as 3 opções de nome que a pessoa priorizou lá no C7, apesar do retry automático.",
+    interfere: "A constituição PARA até o cliente sugerir 3 novos nomes — é a única pausa da Aprovação que volta a depender dele, não do órgão.",
+    porque: "Vermelho legítimo (um órgão externo parou a fila mesmo) + 'precisa de você' + a ação, tudo DENTRO do pipeline — nunca um limbo mudo (UX-40). Produção tenta as 3 opções sozinha antes de chegar aqui; a demo pula direto pro pior caso.",
   },
   assinatura: {
     dono: "usuario",
@@ -1570,6 +1634,10 @@ export default function ApresentacaoPage() {
                 ? "triagem"
                 : etapa === "faixa"
                   ? "faixa"
+                  : etapa === "saida-exterior"
+                    ? "saida-exterior"
+                    : etapa === "saida-socios"
+                      ? "saida-socios"
                   : etapa === "conta"
                     ? "conta"
                     : etapa === "conta-codigo"
@@ -1631,6 +1699,7 @@ export default function ApresentacaoPage() {
   const mostraCenarios = etapa === "perguntando";
   const naEntrada = etapa === "fork" || etapa === "cidade";
   const naSaidaCidade = etapa === "fora-bh";
+  const naSaidaTriagem = etapa === "saida-exterior" || etapa === "saida-socios";
   const naTravessia =
     etapa === "conta" ||
     etapa === "conta-codigo" ||
@@ -1674,6 +1743,9 @@ export default function ApresentacaoPage() {
       // migrada são leitura/status — botão ali seria inerte.
       (!noMigrar(etapa) || etapa === "m-cnpj" || etapa === "m-contrato"));
   const mostraSimularValidacao = momento === "veredito-waitlist" || momento === "veredito-mauro";
+  // 🆕 03/08 — atalho pro A3.1 (gap fechado): produção só chega lá por retry
+  // automático mockado, sem interação real pra demo replicar.
+  const mostraSimularRecusa = momento === "painel";
   const cenario = CENARIOS.find((c) => c.id === cenarioArmado) ?? null;
 
   return (
@@ -1691,12 +1763,14 @@ export default function ApresentacaoPage() {
               pelos botões de dentro do aparelho.
             </p>
           </div>
-          <button
-            onClick={reiniciar}
-            className="shrink-0 rounded-full border border-border-hairline bg-surface-card px-4 py-2 text-caption font-semibold text-text-secondary transition-colors hover:border-border-strong"
-          >
-            ↺ Reiniciar demo
-          </button>
+          <div className="flex shrink-0 items-center gap-2">
+            <button
+              onClick={reiniciar}
+              className="rounded-full border border-border-hairline bg-surface-card px-4 py-2 text-caption font-semibold text-text-secondary transition-colors hover:border-border-strong"
+            >
+              ↺ Reiniciar demo
+            </button>
+          </div>
         </header>
 
         {/* Grid de 2 LINHAS (não 2 colunas com padding chutado): linha 1 são os
@@ -1765,6 +1839,14 @@ export default function ApresentacaoPage() {
                   className="rounded-xl bg-surface-dark px-4 py-2.5 text-caption font-bold text-text-on-dark transition-colors hover:opacity-90"
                 >
                   ✅ Simular validação
+                </button>
+              )}
+              {mostraSimularRecusa && (
+                <button
+                  onClick={() => setEtapa("painel-recusa")}
+                  className="rounded-xl bg-surface-dark px-4 py-2.5 text-caption font-bold text-text-on-dark transition-colors hover:opacity-90"
+                >
+                  🔴 Simular recusa de nome
                 </button>
               )}
             </div>
@@ -1950,6 +2032,23 @@ export default function ApresentacaoPage() {
                           // de 4 pra 3 (ver `components/painel.tsx`).
                           <PainelView concluidas={1} emAndamento={1} socios={socios ?? 1} />
                         )}
+                        {/* 🆕 03/08 — A3.1, gap fechado. Sem interação natural pra
+                            chegar aqui (produção retry-automático mockado); estado
+                            'esgotado' fixo, idêntico ao de `/painel/recusa`. */}
+                        {etapa === "painel-recusa" && (
+                          <PainelView
+                            concluidas={1}
+                            emAndamento={1}
+                            socios={socios ?? 1}
+                            recusa={{
+                              etapa: 1,
+                              titulo: "As 3 opções de nome não passaram",
+                              motivo:
+                                "Testamos automaticamente as 3 que você priorizou, e nenhuma passou na Junta. Precisamos de mais 3 sugestões suas pra tentar de novo.",
+                              acao: "Sugerir mais 3 nomes",
+                            }}
+                          />
+                        )}
                         {etapa === "assinatura" && (
                           <AssinaturaView
                             onSeguir={() => setEtapa("ativacao")}
@@ -2091,6 +2190,13 @@ export default function ApresentacaoPage() {
                           />
                         </main>
                       </>
+                    ) : naSaidaTriagem ? (
+                      <>
+                        <TelaHeader meta="Sobre o seu caso" />
+                        <main className="app-main">
+                          <SaidaView d={etapa === "saida-exterior" ? DADOS_EXTERIOR : DADOS_SOCIOS} />
+                        </main>
+                      </>
                     ) : (
                       <>
                         {/* 🔓 UX-60 aplicado AQUI (deslinkado): o E5 aprovado
@@ -2164,7 +2270,9 @@ export default function ApresentacaoPage() {
                               exterior={exterior}
                               setExterior={setExterior}
                               onSeguir={() => setEtapa("faixa")}
-                              onSaida={() => {}}
+                              onSaida={(rota) =>
+                                setEtapa(rota === "/saida/exterior" ? "saida-exterior" : "saida-socios")
+                              }
                               exteriorSoComSocio
                             />
                           )}

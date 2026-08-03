@@ -1,3 +1,6 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import { VereditoView, type Resultado } from "@/components/veredito";
 
 /**
@@ -7,6 +10,10 @@ import { VereditoView, type Resultado } from "@/components/veredito";
  * Legalize Digital do Mauro atende (`/veredito/nao-atende`). Decisão
  * explícita de descartar, não omissão. Sem template de captura — não tem
  * pra onde rotear, então `VereditoView` desvia pro decline limpo.
+ *
+ * 🆕 03/08 — UX-64 mesclado PARCIAL (fonte: /apresentacao): "Voltar ao
+ * início" ligado (real aqui, `/entrada`). "Ler o blog"/"Conhecer o site"
+ * ficam de fora — rota pública ainda não existe.
  */
 const R: Resultado = {
   humano: "Atividade fora do nosso escopo",
@@ -17,13 +24,20 @@ const R: Resultado = {
 };
 
 export default function VereditoDescartadoPage() {
+  const router = useRouter();
+
   return (
     <>
       <header className="pt-6 pb-4">
         <p className="text-micro text-text-tertiary">Legalizai</p>
       </header>
       <main className="app-main">
-        <VereditoView r={R} />
+        <VereditoView
+          r={R}
+          acoesConfirmacao={[
+            { label: "Voltar ao início", variante: "ghost", onClick: () => router.push("/entrada") },
+          ]}
+        />
       </main>
     </>
   );

@@ -63,7 +63,10 @@ export default function VereditoAtendePage() {
         <p className="text-micro text-text-tertiary">Legalizai</p>
       </header>
       <main className="app-main">
-        <VereditoView r={R} />
+        {/* 🆕 03/08 — UX-65 ligado (já travado 31/07: "veredito 🟢 ganhou
+            cards clicáveis, trava o CNAE direto"; o wrapper nunca tinha sido
+            atualizado pra passar a prop). Fonte: /apresentacao. */}
+        <VereditoView r={R} mostrarAlternativas />
       </main>
     </>
   );

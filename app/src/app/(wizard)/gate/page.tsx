@@ -147,10 +147,17 @@ export default function GatePage() {
         )}
         {etapa === "analisando" && <AnalisandoView />}
         {etapa === "veredito" && resultado && (
+          // 🆕 03/08 — mostrarAlternativas (UX-65) + acoesConfirmacao (UX-64
+          // parcial) mesclados aqui também: é o fluxo AO VIVO, separado da
+          // página-mock /veredito/*. Fonte: /apresentacao.
           <VereditoView
             r={resultado}
             onRefazer={() => setEtapa("perguntando")}
             onSeguir={() => setEtapa("triagem")}
+            mostrarAlternativas
+            acoesConfirmacao={[
+              { label: "Voltar ao início", variante: "ghost", onClick: () => router.push("/entrada") },
+            ]}
           />
         )}
         {etapa === "triagem" && (
@@ -172,6 +179,9 @@ export default function GatePage() {
             exato={exato}
             setExato={setExato}
             onSeguir={() => router.push("/conta")}
+            // 🆕 03/08 — UX-68 mesclado: revela o campo inline em vez de
+            // trocar a tela inteira. Fonte: /apresentacao.
+            exatoInline
           />
         )}
       </main>

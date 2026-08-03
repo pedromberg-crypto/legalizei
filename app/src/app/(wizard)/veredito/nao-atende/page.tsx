@@ -1,3 +1,6 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import { VereditoView, type Resultado } from "@/components/veredito";
 
 /**
@@ -7,6 +10,10 @@ import { VereditoView, type Resultado } from "@/components/veredito";
  * Digital atende". O outro (`descarta`, ninguém atende) é a página VD nova.
  * Sai pelo TEMPLATE de saída graciosa (A9). ⚠️ Coral nunca é erro: usa token
  * de estado.
+ *
+ * 🆕 03/08 — UX-64 mesclado PARCIAL (fonte: /apresentacao): "Voltar ao
+ * início" ligado (real aqui, `/entrada`). "Ler o blog"/"Conhecer o site"
+ * ficam de fora — rota pública ainda não existe.
  */
 const R: Resultado = {
   humano: "Comércio",
@@ -17,13 +24,20 @@ const R: Resultado = {
 };
 
 export default function VereditoNaoAtendePage() {
+  const router = useRouter();
+
   return (
     <>
       <header className="pt-6 pb-4">
         <p className="text-micro text-text-tertiary">Legalizai</p>
       </header>
       <main className="app-main">
-        <VereditoView r={R} />
+        <VereditoView
+          r={R}
+          acoesConfirmacao={[
+            { label: "Voltar ao início", variante: "ghost", onClick: () => router.push("/entrada") },
+          ]}
+        />
       </main>
     </>
   );

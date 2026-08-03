@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { PlanoView } from "@/components/wizard-dinheiro";
 
 /**
@@ -8,7 +8,7 @@ import { PlanoView } from "@/components/wizard-dinheiro";
  * N7 — A CONTA DA ABERTURA + PLANO · rota de produção (shell WIZARD)
  * ═══════════════════════════════════════════════════════════════════════════
  * ⚠️ A TELA vive em `components/wizard-dinheiro.tsx` (`PlanoView`) desde 29/07.
- * Esta page é o wrapper: lê o `?cenario=` e liga a navegação.
+ * Esta page é o wrapper: liga a navegação.
  *
  * Spec: spec-telas-b3-b4-aterrissagem.md → Telas 16+17, FUNDIDAS (UX-33)
  *
@@ -41,16 +41,14 @@ import { PlanoView } from "@/components/wizard-dinheiro";
  *
  * 💸 Preço é PLACEHOLDER declarado (ver `CUSTOS.MENSALIDADE`).
  *
- * ─── 🆕 `?cenario=empresa-paga` (28/07) ────────────────────────────────────
- * DECISÃO TRAVADA: o cliente paga a taxa da Junta (padrão acima). O `?cenario=`
- * é só a alternativa DOCUMENTADA (Legalizai absorve o DAE), pra comparar as
- * duas sem duplicar a tela.
+ * 🔴 03/08 (Pedro): DESCARTADO o cenário `?cenario=empresa-paga` — decisão
+ * definitiva e única é o cliente pagar a taxa da Junta (padrão acima).
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function PlanoPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const empresaPaga = searchParams.get("cenario") === "empresa-paga";
 
-  return <PlanoView empresaPaga={empresaPaga} onSeguir={() => router.push("/contrato")} />;
+  // 🆕 03/08 — UX-74 mesclado (versão "oferta": card escuro, âncora de
+  // honorário). Fonte: /apresentacao.
+  return <PlanoView onSeguir={() => router.push("/contrato")} layout="oferta" />;
 }

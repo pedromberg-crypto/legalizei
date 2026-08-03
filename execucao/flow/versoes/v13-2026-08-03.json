@@ -1,0 +1,686 @@
+{
+  "nodes": [
+    {
+      "id": "E1",
+      "label": "E1 · Splash",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "",
+      "dados": ""
+    },
+    {
+      "id": "E2",
+      "label": "E2 · Welcome",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "",
+      "dados": ""
+    },
+    {
+      "id": "E3",
+      "label": "E3 · Fork<br/>3 rotas",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "3 rotas CONFIRMADAS 28/07 (reunião Rua Satélite 9): abrir · migrar · já sou cliente.",
+      "dados": ""
+    },
+    {
+      "id": "E3_1",
+      "label": "E3.1 · Login / portal",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "Rota feliz",
+      "dados": ""
+    },
+    {
+      "id": "E4",
+      "label": "E4 · Gate cidade<br/>(BH-MG)",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "Construído 28/07 — 2º passo INLINE do E3, mesma rota (/entrada), sem rota própria.",
+      "dados": "Confirma cidade de abertura = Belo Horizonte/MG (único município atendido no MLP)"
+    },
+    {
+      "id": "E4_1",
+      "label": "E4.1 · Saída · fora de BH<br/>MLP só atende BH-MG",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "",
+      "dados": "— (saída, fora do caminho até a constituição)"
+    },
+    {
+      "id": "E4_2",
+      "label": "E4.2 · Lê o cartão CNPJ",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "Autofill por CNPJ (API pública); sem entrevista de atividade — o CNAE já existe",
+      "dados": "CNPJ (consulta) · confirmação dos dados do cartão"
+    },
+    {
+      "id": "E4_3",
+      "label": "E4.3 · Diagnóstico<br/>Fator R real (12m)",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "⚖️ Guarda-corpo de honestidade (`?cenario=ja-otimo`): se o contador atual já acertou o enquadramento, a tela DIZ isso e vende serviço, não economia inventada. Usa histórico REAL (CGSN 140/18 art.26), não estimativa — dívida `promessa-quebrada` do caminho abrir NÃO se aplica aqui",
+      "dados": "Folha + receita dos últimos 12 meses (histórico real, não faixa)"
+    },
+    {
+      "id": "E4_4",
+      "label": "E4.4 · Plano",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Mesma mensalidade do caminho abrir; sem taxa de governo (empresa já existe)",
+      "dados": ""
+    },
+    {
+      "id": "E4_5",
+      "label": "E4.5 · Contrato<br/>+ promessa de devolução",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "🔴 DECISÃO TRAVADA 30/07: cobra ANTES do TTRT, com contrapartida OBRIGATÓRIA no contrato ('se a transferência não sair por motivo fora do seu controle, devolve tudo'). Se essa linha sair do contrato, a decisão reabre (Mauro/Larissa redigem)",
+      "dados": "Aceite do contrato (com a cláusula de devolução)"
+    },
+    {
+      "id": "E9_2",
+      "label": "E9.2 · Passivo herdado",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "🕓 Aberto com o Mauro: upsell ou fora de escopo? Variantes `?cenario=limpo` (persona migra-limpo, sem passivo) × com-passivo",
+      "dados": ""
+    },
+    {
+      "id": "E9_3",
+      "label": "E9.3 · Aguardando TTRT",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "🔴 A PAUSA MAIS PERIGOSA DO PRODUTO: quem libera é o CONTADOR ANTIGO (valida no CRC-MG) — único momento em que o dono da espera é um concorrente perdendo o cliente, não um órgão neutro nem o próprio cliente. Nº da resolução CFC / Evento 232 Redesim NÃO ratificados em fonte primária — por isso não aparecem na tela (🟡 pendência)",
+      "dados": ""
+    },
+    {
+      "id": "E9_4",
+      "label": "✅ E9.4 · Migração concluída",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "Segue pro mesmo handoff do caminho abrir → A5 (home dia-1), autoridade #2 (portal-data.mjs)",
+      "dados": ""
+    },
+    {
+      "id": "E5A",
+      "label": "Descreve atividade + pills",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "✅ 28/07: CTA 'já sei o número do meu CNAE' construído (troca pra modo código, mesma engine). Lista CNAE furada na raiz: 124 não-refutados, 45 impossíveis, 91 duvidosos; IA real (hoje mock) — Larissa/Pedro/dev",
+      "dados": "Descrição da atividade (texto livre) → CNAE principal (derivado por IA) · OU o código já sabido (atalho 28/07, mesma engine)"
+    },
+    {
+      "id": "E5V",
+      "label": "Veredito CNAE",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "🆕 28/07: veredito 🔴 virou 3 vias (travado na reunião), hoje o mock só faz 2 — falta implementar o split: regulamentado→waitlist (já existe) · atendido pelo Mauro (comércio etc)→contato especial · genuinamente ninguém atende→descarta (novo). Depende da lista CNAE; dev cnae-lookup responde 'atende' pra DEFESA. 🆕 31/07: veredito 🟢 ganhou cards clicáveis (UX-65) e travar o CNAE via ENCAIXE virou redundante — ENCAIXE removido, o veredito trava direto",
+      "dados": ""
+    },
+    {
+      "id": "DESAMB",
+      "label": "Desambiguação<br/>mini-loop",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "",
+      "dados": ""
+    },
+    {
+      "id": "E5VA",
+      "label": "🟢 Atende",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Depende da lista CNAE",
+      "dados": ""
+    },
+    {
+      "id": "E5T",
+      "label": "Triagem<br/>sócios? exterior?",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "Exterior = LC 123 art.17 (oficial); limite 2 travado. Abertos: debate 3+→waitlist, UX-42 (Mauro/Larissa)",
+      "dados": "Quantidade de sócios (1 / 2 / 3+) · mora fora do Brasil (sim/não)"
+    },
+    {
+      "id": "E5F",
+      "label": "Faixa de faturamento",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "Faixas sem âncora fiscal",
+      "dados": "Faixa de faturamento mensal (ou valor exato, se souber)"
+    },
+    {
+      "id": "E5_1",
+      "label": "E5.1 · 🟡 Waitlist",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "✅ 28/07: campo CNAE pretendido construído (read-only, junto do nome+contato). Tags de CRM ficam pra depois, não travam. Waitlist decidido 16/07; líder atende regulada (Mauro reavaliar)",
+      "dados": "Nome + contato · CNAE pretendido (✅ campo construído 28/07)"
+    },
+    {
+      "id": "E5_2",
+      "label": "E5.2 · 🔴 Contato especial<br/>(atendido pelo Mauro)",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "✅ 28/07: relabel construído — é quem NÃO atendemos mas a Legalize Digital (Mauro) atende (ex: comércio). Falta só o split real no mapear() do E5 (hoje é mock estático por página).",
+      "dados": "— (saída, fora do caminho até a constituição)"
+    },
+    {
+      "id": "E5_3",
+      "label": "E5.3 · 🔴 Fora de escopo<br/>(descarta)",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "mapear() do E5 ainda não decide entre E5.2/E5.3 de verdade (mock estático) — falta o split real na IA/lista de CNAEs",
+      "dados": "— (saída, fora do caminho até a constituição)"
+    },
+    {
+      "id": "E5_4",
+      "label": "E5.4 · Saída · exterior<br/>LC 123 art.17",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "🟡 28/07: Pedro cogitou 'de fato descartar' essa saída dedicada (juntar no genérico) — dito na MESMA frase tentativa do E5.5, NÃO travado. Tela já tem conteúdo jurídico revisado (LC123 art.17) — não apagar sem confirmação final. UX-42 Lucro Presumido (Mauro); debate de tom",
+      "dados": "— (saída, fora do caminho até a constituição)"
+    },
+    {
+      "id": "E5_5",
+      "label": "E5.5 · Saída · 3+ sócios<br/>limite do produto",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "🟡 28/07: Pedro cogitou juntar essa saída com a Waitlist (regulamentados) — 'estou pensando', NÃO travado. Debate 3+→waitlist",
+      "dados": "— (saída, fora do caminho até a constituição)"
+    },
+    {
+      "id": "E6",
+      "label": "E6 · Criar conta",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "✅ 28/07: FRONT-LOAD construído — nome/CPF/telefone/endereço (autofill CEP) + etapa de validação por código (mock). Provider de validação CPF/situação real (Pedro)",
+      "dados": "E-mail · senha · 'é a 1ª empresa que abre?' (opcional) · nome completo · CPF · telefone · endereço (front-load 28/07) · código de verificação (mock)"
+    },
+    {
+      "id": "E7",
+      "label": "E7 · A conta da abertura",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Preço ~R$195 FAKE (Mauro+custo); DAE R$268,51×R$288 em disputa; certificado A1 (Mauro)",
+      "dados": ""
+    },
+    {
+      "id": "E8",
+      "label": "E8 · Aceite contrato<br/>reversível, CDC 49",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Redação jurídica do contrato (Mauro/Larissa); rachadura T18",
+      "dados": "Aceite do contrato de serviço (checkbox)"
+    },
+    {
+      "id": "E9",
+      "label": "E9 · Pagamento",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Asaas travado; falta provider cartão CNPJ + chave de idempotência (Pedro)",
+      "dados": "CPF (cobrança + elegibilidade) · método de pagamento (cartão/Pix/boleto)"
+    },
+    {
+      "id": "E9_1",
+      "label": "E9.1 · Aguardando boleto<br/>dossiê já liberado",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "Dunning revisado",
+      "dados": ""
+    },
+    {
+      "id": "C1",
+      "label": "C1 · Seus dados",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "✅ 28/07: reconstruída como CONFIRMAÇÃO — card read-only do que veio do E6 (mock, sem estado real compartilhado ainda) + só pede o que faltou. CPF valida situação (provider do E6); regime de bens (casado)",
+      "dados": "CONFIRMA nome/CPF/endereço já captados no E6 (não recoleta) · RG + órgão emissor (novo aqui) · estado civil (+ regime de bens se casado) · confirma se mora fora do Brasil"
+    },
+    {
+      "id": "C2",
+      "label": "C2 · Vínculo INSS",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "INSS 11% direto + teto folga = consolidado fiscal fechado",
+      "dados": "Já contribui INSS por fora? (sim/não) · valor do vínculo (CLT/aposentadoria/autônomo/sócio de outro CNPJ)"
+    },
+    {
+      "id": "C3",
+      "label": "C3 · Sócios?",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Re-pergunta o E5T (carry-forward pendente); limite 2 ok",
+      "dados": "Confirma se terá 2º sócio"
+    },
+    {
+      "id": "C3_1",
+      "label": "C3.1 · Coleta 2º sócio<br/>+ convite",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Convite depende do A3 planejado",
+      "dados": "Nome completo do 2º sócio · % de participação de cada um (soma 100%)"
+    },
+    {
+      "id": "C4",
+      "label": "C4 · Dados da empresa<br/>+upsell endereço",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "✅ 28/07: IPTU corrigido pra OBRIGATÓRIO travado (JUCEMG exige). Capital social mantém input livre por ora (faixas sugeridas aguardam validação com mais técnicos contábeis). Endereço ~R$60/mês = nosso preço (Mauro); custo do líder já confirmado",
+      "dados": "Endereço próprio ou fiscal Legalizai · CEP (autofill logradouro/bairro/município/UF) + número + complemento · índice cadastral IPTU (OBRIGATÓRIO, JUCEMG exige) · tipo de endereço · residência de sócio (dinâmico pelo E5T — pula se solo) · capital social"
+    },
+    {
+      "id": "C5",
+      "label": "C5 · CNAE secundários",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Só sugere secundárias mesmo-imposto (mesmo anexo + Fator R); regime-changer nunca aparece (decisão 21/07). Depende do anexo-por-CNAE (dataset/Larissa)",
+      "dados": "CNAEs secundários (seleção múltipla, opcional)"
+    },
+    {
+      "id": "C6",
+      "label": "C6 · Natureza jurídica",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "SLU × LTDA: regra solo→SLU vs LTDA solo real (Larissa)",
+      "dados": "Escolha da natureza jurídica (SLU ou LTDA — sugerida, editável)"
+    },
+    {
+      "id": "C7",
+      "label": "C7 · Nome / razão social",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Viabilidade JUCEMG (RPA, não API); nome≠empresa (dev/Izabela); 3 opções por prioridade (28/07)",
+      "dados": "3 opções de razão social por ordem de prioridade (sugeridas por IA) · objeto social (sugerido por CNAE+secundárias, editável) · nome fantasia (opcional)"
+    },
+    {
+      "id": "C0_1",
+      "label": "C0.1 · Retomar de onde parou",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "UX-23 fechado — mora em /pro-labore pós-constituição",
+      "dados": ""
+    },
+    {
+      "id": "A1",
+      "label": "A1 · Revisar dossiê",
+      "status": "construida",
+      "validado": "ux",
+      "falta": "Recap read-only; carry-forward dos passos = estado do wizard (dev)",
+      "dados": "— (leitura + confirmação; enquadramento e pró-labore são SUGERIDOS pelo sistema, 28/07 — não digitados)"
+    },
+    {
+      "id": "A2",
+      "label": "A2 · Termo irreversível",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Redação jurídica do termo + 4 camadas de cancelamento (Mauro/Larissa); racha T18",
+      "dados": "Aceite do termo irreversível (checkbox)"
+    },
+    {
+      "id": "A3",
+      "label": "A3 · Painel<br/>3 status",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "🆕 30/07: reduzido de 9→3 status (2 passadas). 'Registrar a empresa'→'Analisando viabilidade'; novo 'Documentação completa preenchida' (check, acima) + 'Agora é só assinar' (cinza, depende do deferimento da Junta). 🆕 28/07: DAE (taxa da Junta) — cliente paga no E9 junto com a mensalidade; a gente SEGURA e só repassa à JUCEMG depois da viabilidade aprovar — timing de backend, SEM tela nova. 🆕 30/07: NÃO absorvemos a taxa (alinhado ao líder, contrato Contabilizei 4.3\"h\"). Timeline real depende do pipeline do dev; prazo ~8d é placeholder",
+      "dados": ""
+    },
+    {
+      "id": "A3_1",
+      "label": "A3.1 · Órgão recusa<br/>'precisa de você'",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "✅ 28/07: retry automático construído — tenta as 3 opções do C7 em sequência (mock sempre falha as 3, pra provar o pior caso); só aí pede novas sugestões. Testado no motor (nome recusado); faltam DAE-volta e doc-pendência como casos",
+      "dados": "Retry automático pelas 3 opções priorizadas (C7) antes de pedir novas sugestões ao cliente"
+    },
+    {
+      "id": "A4",
+      "label": "A4 · Assinatura dos sócios",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "GOV.BR/e-CAC deep-link (dev); convite 2º sócio + arquitetura multi-usuário (Pedro)",
+      "dados": "Assinatura via GOV.BR/e-CAC (ação, não campo de texto)"
+    },
+    {
+      "id": "A4G",
+      "label": "GOV.BR nível<br/>bronze→upgrade",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Dobrado inline no A4",
+      "dados": ""
+    },
+    {
+      "id": "REMOVIDO_N24",
+      "label": "'Empresa ativa'<br/>🗑️ REMOVIDO 30/07",
+      "status": "planejada",
+      "validado": "oficial",
+      "falta": "Era órfão desde o swap A4→A5 (nenhuma rota navegava mais até aqui) — arquivo `/ativa` e a view apagados de vez 30/07, confirmado pelo Pedro. Fica só como marca histórica no mapa",
+      "dados": ""
+    },
+    {
+      "id": "A5",
+      "label": "✅ A5 · Home dia-1<br/>(ativação)",
+      "status": "construida",
+      "validado": "oficial",
+      "falta": "🔓 SWAP validado 30/07 (confirmado no código: assinatura empurra direto pra cá). Trata o certificado como item 2/3 da própria trilha, não gate isolado. Sem confete nem selo coral no hero. Handoff pro flow Portal (letra P) → autoridade portal-data.mjs",
+      "dados": ""
+    }
+  ],
+  "edges": [
+    {
+      "de": "E1",
+      "para": "E2",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "E2",
+      "para": "E3",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "E3",
+      "para": "E3_1",
+      "label": "já sou cliente",
+      "tracejado": false
+    },
+    {
+      "de": "E3",
+      "para": "E4",
+      "label": "quero abrir / migrar",
+      "tracejado": false
+    },
+    {
+      "de": "E4",
+      "para": "E5A",
+      "label": "BH confirmado, abrir",
+      "tracejado": false
+    },
+    {
+      "de": "E4",
+      "para": "E4_2",
+      "label": "BH confirmado, migrar",
+      "tracejado": false
+    },
+    {
+      "de": "E4",
+      "para": "E4_1",
+      "label": "fora de BH",
+      "tracejado": false
+    },
+    {
+      "de": "E4_2",
+      "para": "E4_3",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "E4_2",
+      "para": "E5_1",
+      "label": "🟡 regulada",
+      "tracejado": false
+    },
+    {
+      "de": "E4_2",
+      "para": "E5_2",
+      "label": "🔴 Mauro atende",
+      "tracejado": false
+    },
+    {
+      "de": "E4_3",
+      "para": "E4_4",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "E4_4",
+      "para": "E4_5",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "E4_5",
+      "para": "E9",
+      "label": "fluxo migrar",
+      "tracejado": false
+    },
+    {
+      "de": "E9",
+      "para": "E9_2",
+      "label": "fluxo migrar",
+      "tracejado": true
+    },
+    {
+      "de": "E9_2",
+      "para": "E9_3",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "E9_3",
+      "para": "E9_4",
+      "label": "",
+      "tracejado": true
+    },
+    {
+      "de": "E9_4",
+      "para": "A5",
+      "label": "",
+      "tracejado": true
+    },
+    {
+      "de": "E5A",
+      "para": "E5V",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "E5V",
+      "para": "DESAMB",
+      "label": "ambíguo",
+      "tracejado": false
+    },
+    {
+      "de": "DESAMB",
+      "para": "E5A",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "E5V",
+      "para": "E5VA",
+      "label": "🟢 atende",
+      "tracejado": false
+    },
+    {
+      "de": "E5VA",
+      "para": "E5T",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "E5V",
+      "para": "E5_1",
+      "label": "🟡 regulada",
+      "tracejado": false
+    },
+    {
+      "de": "E5V",
+      "para": "E5_2",
+      "label": "🔴 Mauro atende",
+      "tracejado": false
+    },
+    {
+      "de": "E5V",
+      "para": "E5_3",
+      "label": "🔴 ninguém atende",
+      "tracejado": false
+    },
+    {
+      "de": "E5T",
+      "para": "E5F",
+      "label": "até 2 + Brasil",
+      "tracejado": false
+    },
+    {
+      "de": "E5T",
+      "para": "E5_4",
+      "label": "sócio no exterior",
+      "tracejado": false
+    },
+    {
+      "de": "E5T",
+      "para": "E5_5",
+      "label": "3+ sócios",
+      "tracejado": false
+    },
+    {
+      "de": "E5F",
+      "para": "E6",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "E6",
+      "para": "E7",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "E7",
+      "para": "E8",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "E8",
+      "para": "E9",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "E9",
+      "para": "C1",
+      "label": "cartão",
+      "tracejado": false
+    },
+    {
+      "de": "E9",
+      "para": "E9_1",
+      "label": "boleto",
+      "tracejado": false
+    },
+    {
+      "de": "E9_1",
+      "para": "C1",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "C1",
+      "para": "C2",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "C2",
+      "para": "C3",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "C3",
+      "para": "C3_1",
+      "label": "2 sócios",
+      "tracejado": false
+    },
+    {
+      "de": "C3_1",
+      "para": "C4",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "C3",
+      "para": "C4",
+      "label": "solo",
+      "tracejado": false
+    },
+    {
+      "de": "C4",
+      "para": "C5",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "C5",
+      "para": "C6",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "C6",
+      "para": "C7",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "C7",
+      "para": "A1",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "A1",
+      "para": "A2",
+      "label": "",
+      "tracejado": true
+    },
+    {
+      "de": "A2",
+      "para": "A3",
+      "label": "",
+      "tracejado": true
+    },
+    {
+      "de": "A3",
+      "para": "A3_1",
+      "label": "",
+      "tracejado": true
+    },
+    {
+      "de": "A3_1",
+      "para": "A3",
+      "label": "",
+      "tracejado": true
+    },
+    {
+      "de": "A3",
+      "para": "A4",
+      "label": "",
+      "tracejado": true
+    },
+    {
+      "de": "A4",
+      "para": "A4G",
+      "label": "",
+      "tracejado": true
+    },
+    {
+      "de": "A4G",
+      "para": "A5",
+      "label": "",
+      "tracejado": true
+    },
+    {
+      "de": "C0_1",
+      "para": "C1",
+      "label": "volta ao passo pausado",
+      "tracejado": true
+    }
+  ]
+}

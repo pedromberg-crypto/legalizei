@@ -45,7 +45,6 @@ export const N6_CodigoDeVerificacao: Story = { render: () => <Shell><ContaIntera
 
 export const N7_Classico: Story = { render: () => <Shell><PlanoView onSeguir={() => {}} /></Shell> };
 export const N7_Oferta: Story = { render: () => <Shell><PlanoView layout="oferta" onSeguir={() => {}} /></Shell> };
-export const N7_EmpresaPagaAJunta: Story = { render: () => <Shell><PlanoView empresaPaga onSeguir={() => {}} /></Shell> };
 
 function ContratoInterativo() {
   const [aceito, setAceito] = useState(false);

@@ -1,17 +1,19 @@
 ---
 name: legalize-rename-legalizai
-description: Marca renomeada Legalizei→Legalizai NO APP (logo + copy); domínio/IG/docs seguem Legalizei; rename brand-level é decisão aberta
+description: Marca é Legalizai DE FATO (não só no app) desde 03/08; domínio pago continua legalizei.app; INPI/IG/vault ainda dizem Legalizei (pendente)
 metadata: 
   node_type: memory
   type: project
   originSessionId: 78f8fc8b-c410-4fe7-92a2-0df9ccb4eaff
-  modified: 2026-07-21T21:06:41.795Z
+  modified: 2026-08-03T00:00:00.000Z
 ---
 
-Em 2026-07-21 a marca virou **Legalizai** (era Legalizei). O wordmark novo mudou a 8ª letra **e→a** e o "ai" final é **coral**; o ícone (quadrado coral + check) não mudou.
+Em 2026-07-21 a marca virou **Legalizai** (era Legalizei) só no app. Em **2026-08-03 o Pedro travou o rename de fato**: "essa daí (Legalizei) não usamos mais" — ao pedir atualização da LP institucional pra rebrand completo. Não é mais thread aberta de sócio, é decisão tomada.
 
-**Aplicado só no APP:** `logo.tsx` reescrito (viewBox 659.73×130, 3 variantes, negativos MONO-brancos por decisão do Pedro, wipe da splash preservado via quadrado sólido + check endereçável) + "Legalizei"→"Legalizai" em 8 arquivos de copy + `<title>`. Assets Lottie (`*-legalizei.json`, minúsculo) e o comentário-histórico do logo ficaram intactos. 3 SVGs-fonte em `marca/identidade-visual/legalizai-*`.
+O wordmark muda a 8ª letra **e→a**, "ai" final em coral; o ícone (quadrado coral + check) não muda. Fonte única dos paths: `app/src/components/logo.tsx` (viewBox 659.73×130) — qualquer superfície nova (LP, coming-soon) deve puxar de lá, não redesenhar.
 
-**⚠️ NÃO propagou pro brand-level:** docs do vault, domínio `legalizei.app` e IG `@legalizei.app` **ainda dizem Legalizei**. Se o rename é pra valer (domínios/INPI), é decisão de sócio (Mauro) — thread à parte, não decidido. Ao escrever copy nova do app use **Legalizai**; ao falar de domínio/infra, ainda é `legalizei.app`.
+**Onde já está aplicado:** app (`logo.tsx`, 8 arquivos de copy, 21/07) · LP institucional `ux-ui/lp/` (wordmark+ícone+15 ocorrências de copy, 03/08) · LP `ux-ui/coming-soon/` (nasceu já em Legalizai).
 
-Relacionado: [[legalize-dominios-infra]] · [[legalize-marca-inpi]] · [[legalize-assets-marca-local-vault]].
+**⚠️ Ainda NÃO propagou:** domínio pago continua `legalizei.app` (é o ativo registrado, não vai mudar por conta própria — ver [[legalize-dominios-infra]]), IG `@legalizei.app`, INPI ([[legalize-marca-inpi]]) e o resto dos docs do vault. Ao escrever copy nova (app, LP, marketing) usar **Legalizai**; ao falar de domínio/e-mail/infra, é `legalizei.app`.
+
+Relacionado: [[legalize-dominios-infra]] · [[legalize-marca-inpi]] · [[legalize-assets-marca-local-vault]] · [[legalize-lp-atualizada-rebrand-legal]].

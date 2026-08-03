@@ -24,47 +24,47 @@ tags: [produto, ux, telas, portal, navegacao, mermaid, mapa, vivo]
 flowchart TD
   subgraph SG_INI["Aba · Início"]
     direction TB
-    INICIO["Início · Home (regime)"]
+    INICIO["P-INI1 · Início · Home (regime)"]
   end
   subgraph SG_IMP["Aba · Impostos"]
     direction TB
-    IMPOSTOS["Impostos · dashboard"]
-    GUIAS["Guias anteriores"]
-    ALIQ["Alíquota efetiva (P4)"]
-    PAGAR["Ver / baixar guia"]
-    OBRIG["Calendário de obrigações"]
+    IMPOSTOS["P-IMP1 · Impostos · dashboard"]
+    GUIAS["P-IMP2 · Guias anteriores"]
+    ALIQ["P-IMP3 · Alíquota efetiva"]
+    PAGAR["P-IMP4 · Ver / baixar guia"]
+    OBRIG["P-IMP5 · Calendário de obrigações"]
   end
   subgraph SG_NOT["Aba · Notas"]
     direction TB
-    NOTAS["Notas · lista (P5)"]
-    NOTADET["Nota · visualizador (P7)"]
+    NOTAS["P-NOT1 · Notas · lista"]
+    NOTADET["P-NOT2 · Nota · visualizador"]
   end
   subgraph SG_MAIS["Aba · Mais"]
     direction TB
-    MAIS["Mais · hub"]
-    PERFIL["Perfil (a Conta)"]
-    PLANO["Gerenciar plano"]
-    SERVICOS["Loja de avulsos"]:::branch
-    EMPRESA["Sua empresa · ficha"]
-    SOCIOS["Sócios"]
-    DOCS["Documentos"]
-    CERTM["Certificado (ativo)"]
-    EMDIA["Você está em dia"]
-    RELAT["Relatórios"]
-    DECLAR["Declarações"]
+    MAIS["P-MAIS1 · Mais · hub"]
+    PERFIL["P-MAIS2 · Perfil (a Conta)"]
+    PLANO["P-MAIS3 · Gerenciar plano"]
+    SERVICOS["P-MAIS4 · Loja de avulsos"]:::branch
+    EMPRESA["P-MAIS5 · Sua empresa · ficha"]
+    SOCIOS["P-MAIS6 · Sócios"]
+    DOCS["P-MAIS7 · Documentos"]
+    CERTM["P-MAIS8 · Certificado (ativo)"]
+    EMDIA["P-MAIS9 · Você está em dia"]
+    RELAT["P-MAIS10 · Relatórios"]
+    DECLAR["P-MAIS11 · Declarações"]
   end
-  ENTRY(["Da abertura (N22/M6) / Login"]):::feliz
-  DIA1["✅ P0 · Home dia-1<br/>(ativação)"]:::feliz
+  ENTRY(["Da abertura (A4/E9.4) / Login"]):::feliz
+  DIA1["✅ A5 · Home dia-1<br/>(ativação)"]:::feliz
   CERT["Certificado (gate)<br/>🗑️ REMOVIDO 30/07"]:::todo
   BARRA{"Navbar flutuante<br/>4 abas + CTA central"}:::inline
-  EMITIR["Emitir NF-e (P6)"]
+  EMITIR["P-EMI1 · Emitir NF-e"]
   SH_REV["Sheet · revisar→emitir→enviada"]:::inline
   SH_CLI["Sheet · clientes (ver todos)"]:::inline
-  AVISOS["Avisos (central)"]
-  PROLAB["Pró-labore (P8+P9)"]
-  BLOG["Blog · home"]
-  BLOGPOST["Blog · post"]
-  CONTASET["Ajustes de conta<br/>(e-mail / senha)"]:::todo
+  AVISOS["P-GER1 · Avisos (central)"]
+  PROLAB["P-GER2 · Pró-labore"]
+  BLOG["P-GER3 · Blog · home"]
+  BLOGPOST["P-GER4 · Blog · post"]
+  CONTASET["P-MAIS2.1 · Ajustes de conta<br/>(e-mail / senha)"]:::todo
   WPP(["WhatsApp (canal humano)"]):::todo
 
   ENTRY --> DIA1
@@ -122,33 +122,33 @@ flowchart TD
 <!-- PORTAL:TABELA:INI -->
 | # | Tela | Rota | Construída | Validado | Falta validar |
 |---|---|---|:--:|:--:|---|
-| 1 | ✅ P0 · Home dia-1 · (ativação) | `/home-dia1` | ✅ | 🟢 | 🔓 SWAP validado 30/07: substitui N24, sem confete nem selo coral no hero. Trilha de ativação (1 de 3) trata o certificado como item PASSIVO da própria trilha, não gate isolado. SEM navbar até liberar acesso; download do Cartão CNPJ. |
+| 1 | ✅ A5 · Home dia-1 · (ativação) | `/home-dia1` | ✅ | 🟢 | 🔓 SWAP validado 30/07: substitui a 'empresa ativa' antiga, sem confete nem selo coral no hero. Trilha de ativação (1 de 3) trata o certificado como item PASSIVO da própria trilha, não gate isolado. SEM navbar até liberar acesso; download do Cartão CNPJ. Mesma tela do A5 em flow-data.mjs (handoff Aprovação→Portal). |
 | 2 | Certificado (gate) · 🗑️ REMOVIDO 30/07 | — | 🚧 | 🟢 | Era P0 antes do swap de 29/07, virou rota morta (nada navegava mais até aqui). Arquivo `/certificado` e a view apagados de vez 30/07, confirmado pelo Pedro. Fica só como marca histórica no mapa. |
-| 3 | Início · Home (regime) | `/inicio` | ✅ | ⚪ | Home Campeã (montada em /mockup-home): saudação+CNPJ-pill, próximo compromisso, atalhos, notas recentes, aprenda, quem cuida, vigília preditiva. Número-guru fora. |
-| 4 | Impostos · dashboard | `/impostos` | ✅ | 🟡 | Carrossel do mês (DAS+INSS) · vigília fiscal · guias anteriores clicáveis (status automático) · calendário. NÃO intermediamos pagamento. |
-| 5 | Guias anteriores | `/impostos/guias` | ✅ | ⚪ | Mesma estrutura da lista de notas (busca+filtro+mês); status automático por param. |
-| 6 | Alíquota efetiva (P4) | `/impostos/aliquotas` | ✅ | 🟡 | Alíquota efetiva + Fator R numa barra contra o corte dos 28% + 'número vivo' (tese North Star) + memória de cálculo. Fiscal → Larissa. |
-| 7 | Ver / baixar guia | `/impostos/pagar` | ✅ | ⚪ | 'Pagar' virou VER/BAIXAR: documento + copiar código de barras + enviar. NÃO intermediamos pagamento; status-aware por param. |
-| 8 | Calendário de obrigações | `/obrigacoes` | ✅ | ⚪ | Exploração mantida a pedido do Pedro (calendário). |
-| 9 | Notas · lista (P5) | `/notas` | ✅ | ⚪ | Ledger: busca + filtro por status (escopado ao mês) + seletor de mês + exportar + alerta de recusadas + vazio. Card único (home↔P5). |
-| 10 | Nota · visualizador (P7) | `/notas/detalhe` | ✅ | ⚪ | Status-aware (emitida/emitindo/recusada/cancelada) + documento em tela cheia + enviar por canal + corrigir-e-reemitir. |
-| 11 | Emitir NF-e (P6) | `/emitir` | ✅ | 🟡 | Favorecido (bolhas por frequência, Consumidor final, Novo cliente) + valor (prévia viva do imposto) + serviço travado. Autofill por CNPJ (API pública); emissão NFS-e = RPA (não coberto). B2C = 'Consumidor final'. |
-| 12 | Mais · hub | `/mais` | ✅ | ⚪ | Ordem por praticidade: Você→Perfil · plano · serviços à-la-carte · seções (Empresa/Contabilidade) · WhatsApp · Conta. |
-| 13 | Perfil (a Conta) | `/perfil` | ✅ | ⚪ | Só a Conta (currículo/empresa migrou pro Mais) + lápis no avatar (trocar foto/logo). |
-| 14 | Gerenciar plano | `/mais/plano` | ✅ | 🟡 | Preço FAKE (Mauro/custo). Próxima fatura com avulsos ADICIONADOS (modelo Contabilizei) · trocar pagamento (Pix) · cancelar (4 camadas, CDC art.49). |
-| 15 | Loja de avulsos | `/mais/servicos` | ✅ | 🟡 | Camada à-la-carte (CND, declaração, alteração, reemissão). Preço+catálogo → Mauro. Avulso EFETIVO não-removível + double-check. |
-| 16 | Sua empresa · ficha | `/mais/empresa` | ✅ | ⚪ | Ficha em blocos + copiar por dobra + copiar TUDO (formato WhatsApp) + CNPJ solto. Regra: página, não acordeon; honestidade antes do toque. |
-| 17 | Sócios | `/mais/socios` | ✅ | ⚪ | — |
-| 18 | Documentos | `/mais/documentos` | ✅ | ⚪ | — |
-| 19 | Certificado (ativo) | `/mais/certificado` | ✅ | 🟡 | Estado ativo do certificado; emissão/renovação = certificadora parceira (transfer = upload). |
-| 20 | Você está em dia | `/mais/em-dia` | ✅ | ⚪ | Painel de conformidade: hero escuro + streak + órgãos + cumprido-no-mês. |
-| 21 | Relatórios | `/mais/relatorios` | ✅ | 🟡 | Anti-jargão: gráfico de faturamento + 'depois do imposto', honesto. Fiscal → Larissa. |
-| 22 | Declarações | `/mais/declaracoes` | ✅ | 🟡 | PGDAS-D mensal · DEFIS anual, 'você não preenche nada'. Fiscal → Larissa. |
-| 23 | Avisos (central) | `/avisos` | ✅ | ⚪ | Central de notificações (tipos com cor de estado, não-lido, marcar-lidas); sino no header da home + Mais>Conta. |
-| 24 | Pró-labore (P8+P9) | `/pro-labore` | ✅ | 🟡 | Reusa a engine lib/fiscal (mesma do N18): estado atual + interativo (imposto + INSS ao vivo), mira 30%, aviso de borda. Fiscal → Larissa. |
-| 25 | Blog · home | `/blog` | ✅ | ⚪ | Busca + chips de categoria + carrossel-herói + lista (ref. TripGlide). 'Aprenda com a gente' liga aqui. |
-| 26 | Blog · post | `/blog/post` | ✅ | ⚪ | Leitura: imagem full-bleed sob o notch + folha arredondada + curtir + compartilhar + sugeridos. |
-| 27 | Ajustes de conta · (e-mail / senha) | — | 🚧 | 🟡 | Settings menores da Conta; deferível (HOME §Agora). |
+| 3 | P-INI1 · Início · Home (regime) | `/inicio` | ✅ | ⚪ | Home Campeã (montada em /mockup-home): saudação+CNPJ-pill, próximo compromisso, atalhos, notas recentes, aprenda, quem cuida, vigília preditiva. Número-guru fora. |
+| 4 | P-IMP1 · Impostos · dashboard | `/impostos` | ✅ | 🟡 | Carrossel do mês (DAS+INSS) · vigília fiscal · guias anteriores clicáveis (status automático) · calendário. NÃO intermediamos pagamento. |
+| 5 | P-IMP2 · Guias anteriores | `/impostos/guias` | ✅ | ⚪ | Mesma estrutura da lista de notas (busca+filtro+mês); status automático por param. |
+| 6 | P-IMP3 · Alíquota efetiva | `/impostos/aliquotas` | ✅ | 🟡 | Alíquota efetiva + Fator R numa barra contra o corte dos 28% + 'número vivo' (tese North Star) + memória de cálculo. Fiscal → Larissa. |
+| 7 | P-IMP4 · Ver / baixar guia | `/impostos/pagar` | ✅ | ⚪ | 'Pagar' virou VER/BAIXAR: documento + copiar código de barras + enviar. NÃO intermediamos pagamento; status-aware por param. |
+| 8 | P-IMP5 · Calendário de obrigações | `/obrigacoes` | ✅ | ⚪ | Exploração mantida a pedido do Pedro (calendário). |
+| 9 | P-NOT1 · Notas · lista | `/notas` | ✅ | ⚪ | Ledger: busca + filtro por status (escopado ao mês) + seletor de mês + exportar + alerta de recusadas + vazio. Card único (home↔P-NOT1). |
+| 10 | P-NOT2 · Nota · visualizador | `/notas/detalhe` | ✅ | ⚪ | Status-aware (emitida/emitindo/recusada/cancelada) + documento em tela cheia + enviar por canal + corrigir-e-reemitir. |
+| 11 | P-EMI1 · Emitir NF-e | `/emitir` | ✅ | 🟡 | Favorecido (bolhas por frequência, Consumidor final, Novo cliente) + valor (prévia viva do imposto) + serviço travado. Autofill por CNPJ (API pública); emissão NFS-e = RPA (não coberto). B2C = 'Consumidor final'. |
+| 12 | P-MAIS1 · Mais · hub | `/mais` | ✅ | ⚪ | Ordem por praticidade: Você→Perfil · plano · serviços à-la-carte · seções (Empresa/Contabilidade) · WhatsApp · Conta. |
+| 13 | P-MAIS2 · Perfil (a Conta) | `/perfil` | ✅ | ⚪ | Só a Conta (currículo/empresa migrou pro Mais) + lápis no avatar (trocar foto/logo). |
+| 14 | P-MAIS3 · Gerenciar plano | `/mais/plano` | ✅ | 🟡 | Preço FAKE (Mauro/custo). Próxima fatura com avulsos ADICIONADOS (modelo Contabilizei) · trocar pagamento (Pix) · cancelar (4 camadas, CDC art.49). |
+| 15 | P-MAIS4 · Loja de avulsos | `/mais/servicos` | ✅ | 🟡 | Camada à-la-carte (CND, declaração, alteração, reemissão). Preço+catálogo → Mauro. Avulso EFETIVO não-removível + double-check. |
+| 16 | P-MAIS5 · Sua empresa · ficha | `/mais/empresa` | ✅ | ⚪ | Ficha em blocos + copiar por dobra + copiar TUDO (formato WhatsApp) + CNPJ solto. Regra: página, não acordeon; honestidade antes do toque. |
+| 17 | P-MAIS6 · Sócios | `/mais/socios` | ✅ | ⚪ | — |
+| 18 | P-MAIS7 · Documentos | `/mais/documentos` | ✅ | ⚪ | — |
+| 19 | P-MAIS8 · Certificado (ativo) | `/mais/certificado` | ✅ | 🟡 | Estado ativo do certificado; emissão/renovação = certificadora parceira (transfer = upload). |
+| 20 | P-MAIS9 · Você está em dia | `/mais/em-dia` | ✅ | ⚪ | Painel de conformidade: hero escuro + streak + órgãos + cumprido-no-mês. |
+| 21 | P-MAIS10 · Relatórios | `/mais/relatorios` | ✅ | 🟡 | Anti-jargão: gráfico de faturamento + 'depois do imposto', honesto. Fiscal → Larissa. |
+| 22 | P-MAIS11 · Declarações | `/mais/declaracoes` | ✅ | 🟡 | PGDAS-D mensal · DEFIS anual, 'você não preenche nada'. Fiscal → Larissa. |
+| 23 | P-GER1 · Avisos (central) | `/avisos` | ✅ | ⚪ | Central de notificações (tipos com cor de estado, não-lido, marcar-lidas); sino no header da home + Mais>Conta. |
+| 24 | P-GER2 · Pró-labore | `/pro-labore` | ✅ | 🟡 | Reusa a engine lib/fiscal (mesma do C-flow): estado atual + interativo (imposto + INSS ao vivo), mira 30%, aviso de borda. Fiscal → Larissa. |
+| 25 | P-GER3 · Blog · home | `/blog` | ✅ | ⚪ | Busca + chips de categoria + carrossel-herói + lista (ref. TripGlide). 'Aprenda com a gente' liga aqui. |
+| 26 | P-GER4 · Blog · post | `/blog/post` | ✅ | ⚪ | Leitura: imagem full-bleed sob o notch + folha arredondada + curtir + compartilhar + sugeridos. |
+| 27 | P-MAIS2.1 · Ajustes de conta · (e-mail / senha) | — | 🚧 | 🟡 | Settings menores da Conta; deferível (HOME §Agora). |
 <!-- PORTAL:TABELA:FIM -->
 
 ## 🧭 A espinha (como se lê o mapa)
@@ -173,6 +173,7 @@ flowchart TD
 > Cada linha = um estado estrutural do mapa. Snapshots completos em `portal/versoes/` (`.json` p/ diff + `.mmd` legível). Mais recente no topo.
 
 <!-- PORTAL:VERSOES:INI -->
+- **v4** · 2026-08-03 · renomeou ENTRY "Da abertura (N22/M6) / Login"→"Da abertura (A4/E9.4) / Login"; DIA1 "✅ P0 · Home dia-1 (ativação)"→"✅ A5 · Home dia-1 (ativação)"; INICIO "Início · Home (regime)"→"P-INI1 · Início · Home (regime)"; IMPOSTOS "Impostos · dashboard"→"P-IMP1 · Impostos · dashboard"; GUIAS "Guias anteriores"→"P-IMP2 · Guias anteriores"; ALIQ "Alíquota efetiva (P4)"→"P-IMP3 · Alíquota efetiva"; PAGAR "Ver / baixar guia"→"P-IMP4 · Ver / baixar guia"; OBRIG "Calendário de obrigações"→"P-IMP5 · Calendário de obrigações"; NOTAS "Notas · lista (P5)"→"P-NOT1 · Notas · lista"; NOTADET "Nota · visualizador (P7)"→"P-NOT2 · Nota · visualizador"; EMITIR "Emitir NF-e (P6)"→"P-EMI1 · Emitir NF-e"; MAIS "Mais · hub"→"P-MAIS1 · Mais · hub"; PERFIL "Perfil (a Conta)"→"P-MAIS2 · Perfil (a Conta)"; PLANO "Gerenciar plano"→"P-MAIS3 · Gerenciar plano"; SERVICOS "Loja de avulsos"→"P-MAIS4 · Loja de avulsos"; EMPRESA "Sua empresa · ficha"→"P-MAIS5 · Sua empresa · ficha"; SOCIOS "Sócios"→"P-MAIS6 · Sócios"; DOCS "Documentos"→"P-MAIS7 · Documentos"; CERTM "Certificado (ativo)"→"P-MAIS8 · Certificado (ativo)"; EMDIA "Você está em dia"→"P-MAIS9 · Você está em dia"; RELAT "Relatórios"→"P-MAIS10 · Relatórios"; DECLAR "Declarações"→"P-MAIS11 · Declarações"; AVISOS "Avisos (central)"→"P-GER1 · Avisos (central)"; PROLAB "Pró-labore (P8+P9)"→"P-GER2 · Pró-labore"; BLOG "Blog · home"→"P-GER3 · Blog · home"; BLOGPOST "Blog · post"→"P-GER4 · Blog · post"; CONTASET "Ajustes de conta (e-mail / senha)"→"P-MAIS2.1 · Ajustes de conta (e-mail / senha)" · falta-validar em ENTRY,DIA1,NOTAS,PROLAB
 - **v3** · 2026-07-30 · renomeou CERT "Certificado (gate) ⚠️ ÓRFÃO"→"Certificado (gate) 🗑️ REMOVIDO 30/07" · status CERT construida→planejada · validação CERT pendente→oficial · falta-validar em CERT
 - **v2** · 2026-07-30 · renomeou ENTRY "Da abertura (N24) / Login"→"Da abertura (N22/M6) / Login"; DIA1 "Home dia-1 (ativação)"→"✅ P0 · Home dia-1 (ativação)"; CERT "P0 · Certificado (gate)"→"Certificado (gate) ⚠️ ÓRFÃO" · validação DIA1 ux→oficial · falta-validar em ENTRY,DIA1,CERT · +conexões ENTRY→DIA1 · -conexões ENTRY→CERT,CERT→DIA1
 - **v1** · 2026-07-27 · versão inicial (32 nós, 41 conexões)

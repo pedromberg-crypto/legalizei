@@ -540,5 +540,27 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 - Montei uma apresentação com tudo isso + *6 perguntas pra você decidir*
 ```
 
+## Semana 31/07/2026 — organizamos a "caixa de ferramentas" do design e conectamos o painel interno
+
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | **Catálogo vivo de telas e componentes** | Montei uma ferramenta (Storybook) que mostra CADA tela e peça visual do app renderizada de verdade — não é mais um documento que pode ficar desatualizado, é o próprio código. Isso evita o que já aconteceu antes: um documento dizer uma coisa e o app fazer outra | 🟢 |
+| 2 | **3 bugs pequenos achados organizando isso** | O botão "Começar" da 2ª tela do app não levava a lugar nenhum (corrigido); e 2 telas que a gente achava que estavam catalogadas na verdade não estavam | 🟢 |
+| 3 | **Limpeza de telas que não existem mais** | 3 rotas que sobraram de uma versão antiga do fluxo (viraram beco sem saída depois de mudanças já aprovadas) foram removidas de vez, não só esquecidas no código | 🟢 |
+| 4 | **Painel interno (CRM) conectado ao mesmo sistema visual do app** | O CRM já roda no modo escuro (é o padrão dele). Conectei os dois pra que, se a gente mudar uma cor no app principal, o CRM acompanhe — antes eram cópias independentes que podiam divergir sem ninguém perceber | 🟢 |
+
+**Observação honesta:** o **motor de testes** segue sem atualizar, agora 4 sessões atrasado (28, 29, 30 e 31/07).
+
+**Próximo:** decidir com você o destino de ~30 telas de exploração que ainda estão no código mas não são mais usadas (manter como arquivo histórico ou remover).
+
+### 📱 WhatsApp (31/07)
+```
+*Update Legalizei* 🧰
+- Montei um catálogo vivo de todas as telas e peças do app — renderizado do código de verdade, não um documento que pode ficar desatualizado
+- Isso já achou e corrigiu 3 bugs pequenos (um botão que não levava a lugar nenhum, 2 telas que a gente achava catalogadas e não estavam)
+- Limpei 3 rotas que sobraram de uma versão antiga e não iam a lugar nenhum
+- Conectei o painel interno (CRM, que já roda no modo escuro) ao mesmo sistema visual do app principal — antes eram cópias que podiam divergir sem ninguém perceber
+```
+
 ## Links
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]]

@@ -562,5 +562,26 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 - Conectei o painel interno (CRM, que já roda no modo escuro) ao mesmo sistema visual do app principal — antes eram cópias que podiam divergir sem ninguém perceber
 ```
 
+## Semana 03/08/2026 — o site saiu do papel: no ar, com marca nova e páginas que os anúncios exigem
+
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | **Rebrand Legalizai valeu pra valer** | A marca virou Legalizai (não mais Legalizei) no site também, não só no app — logo, textos, tudo trocado | 🟢 |
+| 2 | **Site (landing page) e página "em breve" no ar** | Publiquei os dois no ar de verdade (não é mais rascunho local): o site principal e uma página simples de "chegando em breve" que já captura nome, e-mail, WhatsApp e cidade de quem quiser ser avisado no lançamento | 🟢 |
+| 3 | **Política de Privacidade e Termos de Uso publicados** | O Google e o Meta (Instagram/Facebook) exigem essas 2 páginas pra aprovar conta de anúncio — já estão no ar com os dados reais da Legalize Digital | 🟢 |
+| 4 | **2 bugs achados e corrigidos ao publicar** | Coisas que só aparecem quando o site vai pro ar de verdade (link quebrado entre as páginas, estilo não carregando) — achei e corrigi na hora | 🟢 |
+
+**Próximo:** configurar de fato as contas de anúncio no Google e Meta (as páginas só destravam a aprovação, o cadastro em si ainda falta).
+
+### 📱 WhatsApp (03/08)
+```
+*Update Legalizei* 🚀
+- O site saiu do papel: publiquei o site principal e uma página de "chegando em breve" (já captura nome, e-mail, WhatsApp e cidade de quem quiser ser avisado)
+- A marca virou Legalizai também no site, não só no app
+- Publiquei Política de Privacidade e Termos de Uso — o Google e o Meta exigem isso pra aprovar conta de anúncio
+- Achei e corrigi 2 bugs que só apareceram quando o site foi pro ar de verdade
+- Próximo passo: configurar as contas de anúncio de fato
+```
+
 ## Links
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]]

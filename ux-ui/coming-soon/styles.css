@@ -1,0 +1,55 @@
+/* ============================================================
+   LEGALIZAI · Coming Soon
+   Reusa tokens/base/botões/wait-form de ../lp/styles.css.
+   Só o layout da tela única (sem header/nav/seções da LP principal).
+   ============================================================ */
+
+body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
+
+.soon-main {
+  flex:1; display:flex; align-items:center; justify-content:center;
+  padding:48px 20px;
+}
+
+.soon-card {
+  width:100%; max-width:480px; text-align:center;
+}
+
+.soon-logo { height:34px; width:auto; margin:0 auto 28px; }
+
+.soon-card .eyebrow { margin-bottom:18px; }
+
+.soon-card h1 {
+  font-size:clamp(1.7rem, 3.4vw + 1rem, 2.5rem);
+  font-weight:800; line-height:1.15; letter-spacing:-.02em;
+}
+
+.soon-sub { margin-top:14px; color:var(--ink-500); font-size:1.02rem; line-height:1.6; }
+
+.soon-form { margin-top:28px; text-align:left; }
+.soon-form .wait-form { background:var(--ink-100); }
+
+.soon-fields { display:flex; flex-direction:column; gap:10px; margin-top:14px; }
+.soon-field-row { display:flex; gap:10px; }
+.soon-fields input, .soon-field-row input {
+  flex:1; min-width:0; border:1.5px solid var(--ink-200); border-radius:14px;
+  padding:13px 16px; font-size:1rem; background:#fff; outline:0; /* ≥16px: evita zoom do iOS */
+  transition:border-color .18s, box-shadow .18s;
+}
+.soon-fields input:focus, .soon-field-row input:focus {
+  border-color:var(--coral-500); box-shadow:0 0 0 4px rgba(242,100,60,.12);
+}
+.soon-submit { width:100%; margin-top:12px; padding:13px 22px; }
+
+.soon-difs {
+  margin-top:36px; display:flex; flex-direction:column; gap:12px;
+  text-align:left; border-top:1px solid var(--ink-200); padding-top:24px;
+}
+.soon-dif { display:flex; align-items:flex-start; gap:12px; font-size:.92rem; color:var(--ink-600); }
+.soon-dif span { flex:none; font-size:1.1rem; line-height:1.3; }
+
+.soon-footer { padding:24px 20px 32px; text-align:center; }
+.soon-footer nav { display:flex; justify-content:center; flex-wrap:wrap; gap:16px; margin-bottom:10px; }
+.soon-footer nav a { font-size:.82rem; color:var(--ink-500); text-decoration:none; }
+.soon-footer nav a:hover { color:var(--ink-900); text-decoration:underline; }
+.soon-footer p { font-size:.76rem; color:var(--ink-400); }

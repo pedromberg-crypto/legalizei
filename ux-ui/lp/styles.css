@@ -20,7 +20,7 @@
 
   --font: 'Sora', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
-  --r-btn:16px; --r-card:22px; --r-field:16px;
+  --r-btn:16px; --r-card:16px; --r-field:16px;
   --shadow-coral:0 8px 24px rgba(242,100,60,.28);
   --shadow-card:0 6px 24px rgba(27,30,36,.06);
   --shadow-card-hover:0 14px 36px rgba(27,30,36,.10);
@@ -476,6 +476,7 @@ details[open] .faq-ico::after { transform:translate(-50%,-50%) rotate(90deg); }
 .footer-links span { font-size:.84rem; color:var(--ink-400); }
 .footer-legal { margin-top:22px; padding-top:20px; border-top:1px solid var(--ink-800); }
 .footer-legal p { font-size:.78rem; color:var(--ink-400); }
+.footer-legal p + p { margin-top:6px; }
 
 /* ============================================================ SCROLL REVEAL */
 .reveal { opacity:0; transform:translateY(22px); transition:opacity .6s var(--ease-out), transform .6s var(--ease-out); }
@@ -530,6 +531,20 @@ details[open] .faq-ico::after { transform:translate(-50%,-50%) rotate(90deg); }
   .marquee-track, .mq-set { flex-wrap:wrap; justify-content:center; row-gap:10px; width:auto; }
   .mq-toggle { display:none; }
 }
+
+/* ============================================================ LEGAL (privacidade/termos) */
+.legal { max-width:760px; margin:0 auto; padding:56px 20px 88px; }
+.legal-eyebrow { color:var(--ink-500); font-size:.9rem; margin-bottom:8px; }
+.legal h1 { font-size:clamp(1.7rem, 2.6vw + 1rem, 2.3rem); margin-bottom:8px; }
+.legal .legal-updated { color:var(--ink-500); font-size:.88rem; margin-bottom:36px; }
+.legal h2 { font-size:1.2rem; font-weight:700; margin-top:36px; margin-bottom:12px; }
+.legal p, .legal li { color:var(--ink-600); line-height:1.75; font-size:.98rem; }
+.legal p + p { margin-top:12px; }
+.legal ul, .legal ol { margin-top:12px; padding-left:22px; display:flex; flex-direction:column; gap:8px; }
+.legal a { color:var(--coral-700); text-decoration:underline; }
+.legal strong { color:var(--ink-900); }
+.legal .legal-empresa { background:var(--coral-50); border:1px solid var(--coral-100); border-radius:var(--r-card); padding:18px 20px; margin:20px 0 8px; font-size:.92rem; }
+.legal .legal-empresa p { color:var(--ink-700); }
 
 /* ============================================================ PRINT */
 @media print {

@@ -29,6 +29,18 @@ body.soon-body { min-height:100dvh; display:flex; flex-direction:column; }
 .soon-form { margin-top:28px; text-align:left; }
 .soon-form .wait-form { background:var(--ink-100); }
 
+.soon-fields { display:flex; flex-direction:column; gap:10px; margin-top:14px; }
+.soon-field-row { display:flex; gap:10px; }
+.soon-fields input, .soon-field-row input {
+  flex:1; min-width:0; border:1.5px solid var(--ink-200); border-radius:14px;
+  padding:13px 16px; font-size:1rem; background:#fff; outline:0; /* ≥16px: evita zoom do iOS */
+  transition:border-color .18s, box-shadow .18s;
+}
+.soon-fields input:focus, .soon-field-row input:focus {
+  border-color:var(--coral-500); box-shadow:0 0 0 4px rgba(242,100,60,.12);
+}
+.soon-submit { width:100%; margin-top:12px; padding:13px 22px; }
+
 .soon-difs {
   margin-top:36px; display:flex; flex-direction:column; gap:12px;
   text-align:left; border-top:1px solid var(--ink-200); padding-top:24px;

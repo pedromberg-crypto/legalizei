@@ -45,10 +45,16 @@
       <form class="wait-form" id="soon-form">
         <p><strong>Quer ser avisado no lançamento?</strong></p>
         <small>Sem spam. Só um toque quando abrir.</small>
-        <div class="wait-row">
-          <input type="email" id="soon-email" placeholder="seu e-mail" required aria-label="Seu e-mail">
-          <button class="btn btn-primary" type="submit">Me avisa</button>
+        <div class="soon-fields">
+          <div class="soon-field-row">
+            <input type="text" id="soon-nome" placeholder="Nome" required aria-label="Nome" autocomplete="given-name">
+            <input type="text" id="soon-sobrenome" placeholder="Sobrenome" required aria-label="Sobrenome" autocomplete="family-name">
+          </div>
+          <input type="email" id="soon-email" placeholder="Seu e-mail" required aria-label="Seu e-mail" autocomplete="email">
+          <input type="tel" id="soon-whatsapp" placeholder="WhatsApp com DDD" required aria-label="WhatsApp" autocomplete="tel" inputmode="numeric">
+          <input type="text" id="soon-cidade" placeholder="Cidade" required aria-label="Cidade" autocomplete="address-level2">
         </div>
+        <button class="btn btn-primary soon-submit" type="submit">Me avisa</button>
         <p class="wait-done hidden" id="soon-done">Anotado! 💌 Assim que abrir, você é o primeiro a saber.</p>
       </form>
     </div>

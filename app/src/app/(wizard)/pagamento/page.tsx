@@ -64,11 +64,17 @@ export default function PagamentoPage() {
    */
   const fluxo = searchParams.get("fluxo") === "migrar" ? "migrar" : "abertura";
   const mei = ehMei(searchParams);
+  /** 🆕 04/08 — MEI sem contador hoje (M2) não tem passivo pra auditar nem
+   *  TTRT pra transferir: pula M4 inteiro e vai direto pro M5. */
+  const semContador = mei && searchParams.get("contador") === "nao";
   const [cpf, setCpf] = useState("");
   const [metodo, setMetodo] = useState<Metodo>("cartao");
 
   function destino() {
-    if (fluxo === "migrar") return "/migrar/passivo";
+    if (fluxo === "migrar") {
+      if (semContador) return comRegime("/migrar/ativa", true);
+      return comRegime("/migrar/passivo", mei);
+    }
     return comRegime(metodo === "boleto" ? "/aguardando" : "/dossie/socio", mei);
   }
 

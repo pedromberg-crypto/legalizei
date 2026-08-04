@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { MigrarContratoView } from "@/components/wizard-migrar";
 
 /**
@@ -22,17 +22,29 @@ import { MigrarContratoView } from "@/components/wizard-migrar";
  * Se essa linha sair, a decisão inteira precisa ser reaberta.
  *
  * 🟡 Redação jurídica final é do Mauro/Larissa (mesma fila do contrato do N8).
+ *
+ * 🆕 04/08 — MEI sem contador hoje (`?regime=mei&contador=nao`) não tem TTRT
+ * pra falhar, então a cláusula de devolução vira promessa de início imediato
+ * (`semTransferencia`). Params seguem pro pagamento e pro M4/M5.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function MigrarContratoPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [aceito, setAceito] = useState(false);
+
+  const mei = searchParams.get("regime") === "mei";
+  const semContador = searchParams.get("contador") === "nao";
+  const qs = searchParams.toString();
 
   return (
     <MigrarContratoView
       aceito={aceito}
       setAceito={setAceito}
-      onSeguir={() => router.push("/pagamento?fluxo=migrar")}
+      semTransferencia={mei && semContador}
+      onSeguir={() =>
+        router.push(qs ? `/pagamento?fluxo=migrar&${qs}` : "/pagamento?fluxo=migrar")
+      }
       onVoltar={() => router.push("/migrar/plano")}
     />
   );

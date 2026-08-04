@@ -156,12 +156,12 @@ const GRUPOS: {
       {
         rota: "/migrar/cnpj",
         nome: "E4.2 · Migrar · Seu CNPJ (consulta + veredito)",
-        nota: "Consulta e veredito na MESMA tela, de propósito: no caminho abrir o veredito é tela própria porque depende da IA interpretar texto livre (pode errar); aqui o CNAE é fato registrado. Digite qualquer CNPJ de 14 dígitos → loading que explica → cartão + as 4 checagens + veredito. As 4 saídas (regulada/não atendemos/regime não suportado/CNPJ inapto) reusam E5.1/E5.2 + as 2 novas, alcançáveis por link discreto. 🆕 04/08: 4ª checagem (regime dentro do que migramos) + `?cenario=mei|presumido|inapto` pra demonstrar as 2 saídas novas (achado do cruzamento com `Fluxo Migração GEMINI.md`).",
+        nota: "Consulta e veredito na MESMA tela, de propósito: no caminho abrir o veredito é tela própria porque depende da IA interpretar texto livre (pode errar); aqui o CNAE é fato registrado. Digite qualquer CNPJ de 14 dígitos → loading que explica → cartão + as 4 checagens + veredito. 🆕 04/08 (2ª rodada): **MEI agora PASSA** (checagem de regime ok) — só Lucro Presumido segue bloqueado. `?cenario=mei|presumido|inapto` demonstra os 3 cenários.",
       },
       {
         rota: "/saida/regime-nao-suportado",
-        nome: "🆕 E4.2 · Saída · Regime não suportado (MEI/Presumido)",
-        nota: "04/08 — nasce do M1 (`/migrar/cnpj?cenario=mei` ou `?cenario=presumido`, mock de demo): CNPJ ativo, mas regime de origem (MEI ou Lucro Presumido) ainda sem rota de migração pronta. Reforça, com fonte independente (Gemini), a mesma pendência de escopo já aberta sobre MEI/LP. 🟡 educa e captura contato, não finge que migramos os dois hoje.",
+        nome: "🆕 E4.2 · Saída · Regime não suportado (só Lucro Presumido)",
+        nota: "04/08 — nasce do M1 (`/migrar/cnpj?cenario=presumido`, mock de demo): CNPJ ativo, mas Lucro Presumido usa motor fiscal totalmente diferente (IRPJ/CSLL/PIS-COFINS/ISS, não Anexo/Fator R) que ainda não temos. 🆕 04/08 (2ª rodada): MEI SAIU desta saída — decisão do Pedro, MEI migra normal agora. Só resta Presumido aqui, decisão de negócio aberta (`pesquisa/parking-lot.md` item I).",
       },
       {
         rota: "/saida/cnpj-inapto",
@@ -179,14 +179,19 @@ const GRUPOS: {
         nota: "O caminho que a maioria dos produtos não constrói: e se o contador atual JÁ acertou? A tela diz isso ('seu imposto já está certo') e troca o argumento pra SERVIÇO — guia pronta, nota em 2 toques, alguém olhando o número. Vender economia pra quem não tem seria a `promessa-quebrada` do caminho migrar.",
       },
       {
+        rota: "/migrar/diagnostico?regime=mei",
+        nome: "🆕 E4.3 · Migrar · Diagnóstico MEI (\"tem contador?\")",
+        nota: "04/08 — MEI não tem Fator R (paga DAS-MEI fixo), então o diagnóstico de número real não se aplica. Vira uma pergunta que decide tudo: 'você tem contador hoje?' — MEI não é obrigado a ter um (DASN-SIMEI é autodeclaratório). Resposta vira `?contador=sim|nao` e viaja até o pagamento pra decidir se pula M4 (auditoria+TTRT) inteiro.",
+      },
+      {
         rota: "/migrar/plano",
         nome: "E4.4 · Migrar · A conta da migração",
-        nota: "Sem taxa de governo — a empresa já existe, não há DAE da Junta nem TFLF. O choque de custo do E7 (~R$463 na 3ª tela, UX-54) simplesmente não acontece, e a tela diz isso explicitamente em vez de só omitir. Só a mensalidade no rodapé.",
+        nota: "Sem taxa de governo — a empresa já existe, não há DAE da Junta nem TFLF. O choque de custo do E7 (~R$463 na 3ª tela, UX-54) simplesmente não acontece, e a tela diz isso explicitamente em vez de só omitir. Só a mensalidade no rodapé. Igual pros dois regimes (MEI/ME) — só repassa os params adiante.",
       },
       {
         rota: "/migrar/contrato",
         nome: "E4.5 · Migrar · Contrato (com a promessa de devolução)",
-        nota: "🔴 A linha que sustenta a decisão de cobrar antes do TTRT: 'se a transferência não for concluída por algum motivo fora do seu controle, você recebe tudo de volta'. NÃO é copy de marketing — é a contrapartida obrigatória de cobrar por algo cujo destravamento depende de um terceiro hostil. Se essa linha sair, a decisão inteira precisa ser reaberta. Daqui segue pro pagamento (E9, esteira seguinte) — mesmo tronco do caminho abrir.",
+        nota: "🔴 A linha que sustenta a decisão de cobrar antes do TTRT: 'se a transferência não for concluída por algum motivo fora do seu controle, você recebe tudo de volta'. NÃO é copy de marketing — é a contrapartida obrigatória de cobrar por algo cujo destravamento depende de um terceiro hostil. Se essa linha sair, a decisão inteira precisa ser reaberta. Daqui segue pro pagamento (E9, esteira seguinte) — mesmo tronco do caminho abrir. 🆕 04/08: MEI sem contador (`?regime=mei&contador=nao`) não tem TTRT pra falhar — a cláusula vira promessa de início imediato em vez de devolução.",
       },
     ],
   },
@@ -313,7 +318,7 @@ const GRUPOS: {
       {
         rota: "/migrar/ativa",
         nome: "E9.4 · ✅ Empresa migrada",
-        nota: "Fecha o loop do E4.3: a economia prometida com número REAL vira a 1ª tarefa concreta, com valor na cara ('ajustar seu pró-labore e economizar R$X/mês'). Diferença central vs. o caminho abrir: lá a promessa é estimativa que só resolve meses depois; aqui o número era real desde a 2ª tela. Segue direto pra A5 (Home dia-1, esteira Aprovação).",
+        nota: "Fecha o loop do E4.3: a economia prometida com número REAL vira a 1ª tarefa concreta, com valor na cara ('ajustar seu pró-labore e economizar R$X/mês'). Diferença central vs. o caminho abrir: lá a promessa é estimativa que só resolve meses depois; aqui o número era real desde a 2ª tela. Segue direto pra A5 (Home dia-1, esteira Aprovação). 🆕 04/08: `?regime=mei` troca isso por vigilância do limite de faturamento (R$81 mil/ano) — MEI não tem Fator R.",
       },
     ],
   },
@@ -595,11 +600,13 @@ const MAPA_EDGES: Conexao[] = [
   { de: "/entrada", para: "/migrar/cnpj", tracejado: true },
   { de: "/migrar/cnpj", para: "/migrar/diagnostico" },
   { de: "/migrar/cnpj", para: "/migrar/diagnostico?cenario=ja-otimo", tracejado: true },
+  { de: "/migrar/cnpj", para: "/migrar/diagnostico?regime=mei", tracejado: true },
   { de: "/migrar/cnpj", para: "/veredito/waitlist", tracejado: true },
   { de: "/migrar/cnpj", para: "/veredito/nao-atende", tracejado: true },
   { de: "/migrar/cnpj", para: "/saida/regime-nao-suportado", tracejado: true },
   { de: "/migrar/cnpj", para: "/saida/cnpj-inapto", tracejado: true },
   { de: "/migrar/diagnostico", para: "/migrar/plano" },
+  { de: "/migrar/diagnostico?regime=mei", para: "/migrar/plano", tracejado: true },
   { de: "/migrar/plano", para: "/migrar/contrato" },
   { de: "/migrar/contrato", para: "/pagamento?fluxo=migrar" },
 

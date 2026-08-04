@@ -1,6 +1,6 @@
 # Memory Index — Legalize
 
-- [Escopo aberto: MEI + Lucro Presumido](legalize-escopo-mei-lucro-presumido-aberto.md) — 03/08: Pedro mencionou incluir MEI e feature LP mas NÃO confirmou; reverte decisão travada 08/07 (MEI fora) e promove item parqueado 15/07 (LP). Perguntar de novo.
+- [Escopo MEI confirmado, Lucro Presumido segue fora](legalize-escopo-mei-lucro-presumido-aberto.md) — 04/08: MEI 🟢 entra (inclusive Migrar, subfluxo "tem contador?"); LP 🔴 fica na saída "não atendemos" até pesquisa fiscal dedicada.
 - [LP institucional + rebrand + páginas legais + deploy](legalize-lp-atualizada-rebrand-legal.md) — 03/08: LP+coming-soon NO AR no Vercel (legalizei-lp/legalizei-em-breve); rebrand Legalizai; CNPJ real; páginas legais; 2 bugs cross-projeto corrigidos.
 - [Rename Legalizei→Legalizai (agora DE FATO)](legalize-rename-legalizai.md) — 03/08: deixou de ser só-do-app; Pedro travou "essa daí não usamos mais". Domínio pago segue legalizei.app; INPI/IG/vault pendentes.
 - [Storybook = fonte de verdade renderizada](legalize-storybook-fonte-verdade.md) — 31/07: `@storybook/nextjs-vite`, mesmo repo, 33+ stories cobrindo TODO o DS + TODAS as telas (splash→migrar M6). Deploy Vercel pendente. `/componentes` legado não apagado (decisão pendente).

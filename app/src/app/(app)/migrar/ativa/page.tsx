@@ -1,6 +1,8 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { MigrarAtivaView } from "@/components/wizard-migrar";
+import { ehMei } from "@/lib/regime";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -19,8 +21,13 @@ import { MigrarAtivaView } from "@/components/wizard-migrar";
  * a dívida `promessa-quebrada`); aqui o número era real desde a 2ª tela, então
  * ele PODE virar ação imediata. Deixar a promessa sumir depois da venda seria
  * repetir exatamente o erro que o flow #2 não precisa cometer.
+ * 🆕 04/08 — `?regime=mei` troca o "primeiro ganho" de economia (Fator R, só
+ * ME) por vigilância de limite de faturamento (MEI não tem Fator R).
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function MigrarAtivaPage() {
-  return <MigrarAtivaView />;
+  const searchParams = useSearchParams();
+  const mei = ehMei(searchParams);
+
+  return <MigrarAtivaView regime={mei ? "mei" : "me"} />;
 }

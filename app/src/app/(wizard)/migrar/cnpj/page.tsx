@@ -19,8 +19,11 @@ import { MigrarCnpjView, type CenarioM1 } from "@/components/wizard-migrar";
  * registrado. Separar em duas telas custaria um toque pra mostrar um dado que
  * já estava na anterior.
  *
- * 🆕 04/08 — `?cenario=mei|presumido|inapto` demo as 2 saídas novas achadas no
+ * 🆕 04/08 — `?cenario=mei|presumido|inapto` demo os cenários achados no
  * cruzamento com `Fluxo Migração GEMINI.md` (ver `EMPRESA_MIGRAR_CENARIOS`).
+ * 🆕 04/08 (2ª rodada) — MEI agora SEGUE pro M2 (`/migrar/diagnostico?regime=
+ * mei`), não bloqueia mais. Só Presumido segue pra `/saida/regime-nao-
+ * suportado`.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function MigrarCnpjPage() {
@@ -35,7 +38,9 @@ export default function MigrarCnpjPage() {
   return (
     <MigrarCnpjView
       cenario={cenario}
-      onSeguir={() => router.push("/migrar/diagnostico")}
+      onSeguir={() =>
+        router.push(cenario === "mei" ? "/migrar/diagnostico?regime=mei" : "/migrar/diagnostico")
+      }
       onSaidaRegulada={() => router.push("/veredito/waitlist")}
       onSaidaNaoAtende={() => router.push("/veredito/nao-atende")}
       onSaidaRegimeNaoSuportado={() => router.push("/saida/regime-nao-suportado")}

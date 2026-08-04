@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { MigrarCnpjView } from "@/components/wizard-migrar";
+import { useRouter, useSearchParams } from "next/navigation";
+import { MigrarCnpjView, type CenarioM1 } from "@/components/wizard-migrar";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -18,16 +18,28 @@ import { MigrarCnpjView } from "@/components/wizard-migrar";
  * própria porque depende de interpretação da IA (que pode errar); aqui é fato
  * registrado. Separar em duas telas custaria um toque pra mostrar um dado que
  * já estava na anterior.
+ *
+ * 🆕 04/08 — `?cenario=mei|presumido|inapto` demo as 2 saídas novas achadas no
+ * cruzamento com `Fluxo Migração GEMINI.md` (ver `EMPRESA_MIGRAR_CENARIOS`).
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function MigrarCnpjPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const cenarioParam = searchParams.get("cenario");
+  const cenario: CenarioM1 =
+    cenarioParam === "mei" || cenarioParam === "presumido" || cenarioParam === "inapto"
+      ? cenarioParam
+      : "padrao";
 
   return (
     <MigrarCnpjView
+      cenario={cenario}
       onSeguir={() => router.push("/migrar/diagnostico")}
       onSaidaRegulada={() => router.push("/veredito/waitlist")}
       onSaidaNaoAtende={() => router.push("/veredito/nao-atende")}
+      onSaidaRegimeNaoSuportado={() => router.push("/saida/regime-nao-suportado")}
+      onSaidaInapto={() => router.push("/saida/cnpj-inapto")}
       onVoltar={() => router.push("/entrada")}
     />
   );

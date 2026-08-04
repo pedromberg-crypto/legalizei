@@ -1,7 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { NaturezaView } from "@/components/wizard-dossie";
+import { ehMei, comRegime } from "@/lib/regime";
+
+/** 🆕 03/08 — só alcançável pelo caminho ME (MEI pula: natureza é sempre
+ *  fixa, sem escolha; ver `/dossie/cnae-secundarios`, C5, onde bifurca). */
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -41,6 +45,7 @@ import { NaturezaView } from "@/components/wizard-dossie";
  */
 export default function NaturezaPage() {
   const router = useRouter();
+  const mei = ehMei(useSearchParams());
 
-  return <NaturezaView onSeguir={() => router.push("/dossie/nome")} />;
+  return <NaturezaView onSeguir={() => router.push(comRegime("/dossie/nome", mei))} />;
 }

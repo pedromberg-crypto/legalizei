@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { TermoView } from "@/components/wizard-cauda";
+import { ehMei, comRegime } from "@/lib/regime";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -25,13 +26,15 @@ import { TermoView } from "@/components/wizard-cauda";
  */
 export default function TermoPage() {
   const router = useRouter();
+  const mei = ehMei(useSearchParams());
   const [aceito, setAceito] = useState(false);
 
   return (
     <TermoView
       aceito={aceito}
       setAceito={setAceito}
-      onSeguir={() => router.push("/painel")}
+      mei={mei}
+      onSeguir={() => router.push(comRegime("/painel", mei))}
     />
   );
 }

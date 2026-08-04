@@ -656,19 +656,24 @@ export function PlanoView({
   onSeguir,
   onVoltar,
   layout = "classico",
+  semTaxaJunta = false,
 }: {
   onSeguir?: () => void;
   onVoltar?: () => void;
   /** 🔓 UX-74 — `oferta` é a versão vendedora (ver `PlanoOferta`). */
   layout?: "classico" | "oferta";
+  /**
+   * 🆕 03/08 — MEI não passa pela Junta Comercial (registro é direto no
+   * Portal do Empreendedor), então não existe DAE a cobrar. ⚠️ Distinto do
+   * cenário "Legalizai paga o DAE" (DESCARTADO 03/08): lá a taxa existia e
+   * alguém absorvia; aqui a taxa simplesmente NÃO EXISTE pro MEI.
+   */
+  semTaxaJunta?: boolean;
 }) {
-  // 🔴 03/08 (Pedro): DESCARTADO o cenário "Legalizai paga o DAE" — decisão
-  // definitiva é o cliente pagar a taxa da Junta, sem alternativa. Era
-  // `empresaPaga ? CUSTOS.MENSALIDADE : ...`, virou sempre a soma.
-  const hoje = CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
+  const hoje = semTaxaJunta ? CUSTOS.MENSALIDADE : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
 
   if (layout === "oferta") {
-    return <PlanoOferta onSeguir={onSeguir} onVoltar={onVoltar} />;
+    return <PlanoOferta onSeguir={onSeguir} onVoltar={onVoltar} semTaxaJunta={semTaxaJunta} />;
   }
 
   return (
@@ -713,12 +718,29 @@ export function PlanoView({
                 Taxa da Junta Comercial
               </p>
               <span className="shrink-0 text-body font-semibold text-text-primary">
-                {brl(CUSTOS.DAE_JUCEMG, true)}
+                {semTaxaJunta ? "Não tem" : brl(CUSTOS.DAE_JUCEMG, true)}
               </span>
             </div>
             <p className="text-caption text-text-secondary mt-1">
-              Cobrada uma vez, e vai direto pro Estado: a gente não fica com
-              nada. Você pagaria essa taxa abrindo com qualquer um.
+              {semTaxaJunta
+                ? "MEI não passa pela Junta Comercial — o registro é direto no Portal do Empreendedor, sem essa taxa."
+                : "Cobrada uma vez, e vai direto pro Estado: a gente não fica com nada. Você pagaria essa taxa abrindo com qualquer um."}
+            </p>
+          </div>
+
+          {/* 🆕 03/08 — COLABORADORES (mesma lógica da versão oferta). */}
+          <div className="rounded-md border border-border-hairline bg-surface-card p-4">
+            <div className="flex items-baseline justify-between gap-3">
+              <p className="text-body font-semibold text-text-primary">Colaboradores</p>
+              <span className="shrink-0 text-body font-semibold text-text-primary">
+                {CUSTOS.COLABORADORES_INCLUSOS === 0
+                  ? "não incluso"
+                  : `${CUSTOS.COLABORADORES_INCLUSOS} incluso${CUSTOS.COLABORADORES_INCLUSOS > 1 ? "s" : ""}`}
+              </span>
+            </div>
+            <p className="text-caption text-text-secondary mt-1">
+              Cada colaborador é {brl(CUSTOS.CUSTO_FUNCIONARIO, true)}/mês a mais na
+              mensalidade. Sem funcionário, sem custo extra.
             </p>
           </div>
         </Corpo>
@@ -809,11 +831,13 @@ const INCLUSO: { titulo: string; sub: string }[] = [
 function PlanoOferta({
   onSeguir,
   onVoltar,
+  semTaxaJunta = false,
 }: {
   onSeguir?: () => void;
   onVoltar?: () => void;
+  semTaxaJunta?: boolean;
 }) {
-  const hoje = CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
+  const hoje = semTaxaJunta ? CUSTOS.MENSALIDADE : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
 
   return (
     <>
@@ -904,12 +928,32 @@ function PlanoOferta({
                 Taxa da Junta Comercial
               </p>
               <span className="shrink-0 text-body font-semibold text-text-primary">
-                {brl(CUSTOS.DAE_JUCEMG, true)}
+                {semTaxaJunta ? "Não tem" : brl(CUSTOS.DAE_JUCEMG, true)}
               </span>
             </div>
             <p className="text-caption text-text-secondary mt-1">
-              Cobrada uma vez, e vai direto pro Estado: a gente não fica com
-              nada. Você pagaria essa taxa abrindo com qualquer um.
+              {semTaxaJunta
+                ? "MEI não passa pela Junta Comercial — o registro é direto no Portal do Empreendedor, sem essa taxa."
+                : "Cobrada uma vez, e vai direto pro Estado: a gente não fica com nada. Você pagaria essa taxa abrindo com qualquer um."}
+            </p>
+          </div>
+
+          {/* 🆕 03/08 — COLABORADORES, visível desde já (achado da reunião com
+              o Mauro: "quanto custa a mais" precisa aparecer cedo, não só
+              depois de contratar). 🔴 Preço FAKE — referência de mercado
+              (Contabilizei Avançado, R$39/cabeça linear), não decisão nossa. */}
+          <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
+            <div className="flex items-baseline justify-between gap-3">
+              <p className="text-body font-semibold text-text-primary">Colaboradores</p>
+              <span className="shrink-0 text-body font-semibold text-text-primary">
+                {CUSTOS.COLABORADORES_INCLUSOS === 0
+                  ? "não incluso"
+                  : `${CUSTOS.COLABORADORES_INCLUSOS} incluso${CUSTOS.COLABORADORES_INCLUSOS > 1 ? "s" : ""}`}
+              </span>
+            </div>
+            <p className="text-caption text-text-secondary mt-1">
+              Cada colaborador é {brl(CUSTOS.CUSTO_FUNCIONARIO, true)}/mês a mais na
+              mensalidade. Sem funcionário, sem custo extra.
             </p>
           </div>
 
@@ -984,6 +1028,7 @@ export function ContratoView({
   onSeguir,
   onVoltar,
   onLerContrato,
+  semTaxaJunta = false,
 }: {
   aceito: boolean;
   setAceito: (v: boolean) => void;
@@ -993,9 +1038,10 @@ export function ContratoView({
       existir, o botão fica inerte — mas NÃO é mais um `href="#"`, que sequestra
       a URL e rola a página pro topo no meio do aceite. */
   onLerContrato?: () => void;
+  /** 🆕 03/08 — MEI não paga taxa da Junta (não existe, não é cenário). */
+  semTaxaJunta?: boolean;
 }) {
-  // 🔴 03/08 (Pedro): DESCARTADO o cenário "Legalizai paga o DAE".
-  const hoje = CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
+  const hoje = semTaxaJunta ? CUSTOS.MENSALIDADE : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
 
   return (
     <>
@@ -1029,7 +1075,9 @@ export function ContratoView({
                 </span>
               </div>
               <p className="px-4 pb-3.5 text-micro text-text-tertiary">
-                taxa da Junta Comercial + a 1ª mensalidade. Abrir não tem honorário
+                {semTaxaJunta
+                  ? "só a 1ª mensalidade — MEI não paga taxa da Junta. Abrir não tem honorário"
+                  : "taxa da Junta Comercial + a 1ª mensalidade. Abrir não tem honorário"}
               </p>
 
               <div className="border-t border-border-hairline">
@@ -1217,6 +1265,7 @@ export function PagamentoView({
   setMetodo,
   cpfCadastrado,
   fluxo = "abertura",
+  semTaxaJunta = false,
   onPagar,
   onVoltar,
 }: {
@@ -1246,13 +1295,14 @@ export function PagamentoView({
    * idêntico, então não vale uma tela nova.
    */
   fluxo?: "abertura" | "migrar";
+  /** 🆕 03/08 — MEI não paga taxa da Junta. Só se aplica a `fluxo="abertura"`
+   *  (migrar já não soma DAE por natureza, empresa já existe). */
+  semTaxaJunta?: boolean;
   onPagar?: () => void;
   onVoltar?: () => void;
 }) {
   const migrar = fluxo === "migrar";
-  // 🔴 03/08 (Pedro): DESCARTADO o cenário "Legalizai paga o DAE" no caminho
-  // abrir. Migrar continua sem DAE por natureza (empresa já existe).
-  const total = migrar ? CUSTOS.MENSALIDADE : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
+  const total = migrar || semTaxaJunta ? CUSTOS.MENSALIDADE : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
   const escolhido = METODOS.find((m) => m.id === metodo)!;
 
   const temCadastrado = Boolean(cpfCadastrado?.trim());

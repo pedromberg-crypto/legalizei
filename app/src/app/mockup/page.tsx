@@ -120,7 +120,7 @@ const GRUPOS: {
     id: "entrada",
     nome: "E1–E4 · Entrada (com Migrar fundido no fork)",
     descricao:
-      "As primeiras telas, antes de qualquer pergunta de negócio — e o ponto onde o flow bifurca em 2 caminhos (ADR 03/08: Migrar não é 'flow #2', é decimal DENTRO da Entrada). E1–E3 não mapeiam em nenhum arquétipo A1–A10: não perguntam, não julgam, não provam nada. Em E4 (gate de cidade) a esteira se abre: quem escolheu 'abrir' segue pra E5 (próxima esteira); quem escolheu 'migrar' continua AQUI MESMO, em E4.2–E4.5, e só reencontra o tronco lá no pagamento (E9, esteira seguinte).",
+      "As primeiras telas, antes de qualquer pergunta de negócio — e o ponto onde o flow bifurca em 2 caminhos (ADR 03/08: Migrar não é 'flow #2', é decimal DENTRO da Entrada). E1–E3 não mapeiam em nenhum arquétipo A1–A10: não perguntam, não julgam, não provam nada. 🆕 03/08: quem escolhe 'abrir' passa pela E3.2 (MEI×ME) ANTES do gate de cidade — MEI pula E4 inteiro (sem limite geográfico) e vai direto pro E5; só ME confirma cidade. Migrar não passa pela E3.2, vai direto pro gate de cidade e continua em E4.2–E4.5, reencontrando o tronco no pagamento (E9).",
     telas: [
       {
         rota: "/splash",
@@ -140,18 +140,33 @@ const GRUPOS: {
       },
       {
         rota: "/entrada?intencao=abrir",
-        nome: "E4 · Gate de cidade (BH-MG)",
-        nota: "✅ 28/07 (reunião Rua Satélite 9) — 2º passo do E3, mesma tela. MLP só atende Belo Horizonte/MG; trava 'abrir'/'migrar' até confirmar (login pula, já passou por isso). É AQUI que a esteira bifurca: abrir segue pra E5, migrar continua nas telas seguintes.",
+        nome: "🆕 E3.2 · MEI × ME — 🏷️ SÓ CAMINHO ABRIR",
+        nota: "03/08 — REALOCADA (morava no fim do E5, decisão revertida). Pergunta DIRETA logo após o fork, antes do gate de cidade — quem abre MEI geralmente já sabe. Recomendação, não trava. Escolher MEI pula o E4 inteiro e vai direto pro E5 (`/gate?regime=mei`) — MEI atende o Brasil todo, só o ME/Simples é que hoje só atende BH/MG. 🔴 Ainda não corrige se a pessoa disser MEI aqui e depois a triagem revelar 2+ sócios (gap conhecido). Migrar NÃO passa por esta tela.",
+      },
+      {
+        rota: "/entrada?intencao=abrir&regime=me",
+        nome: "E4 · Gate de cidade (BH-MG) · 🏷️ SÓ ME + MIGRAR",
+        nota: "✅ 28/07 (reunião Rua Satélite 9) — 2º passo do E3, mesma tela. MLP só atende Belo Horizonte/MG; trava 'abrir'/'migrar' até confirmar (login pula, já passou por isso). 03/08: MEI PULA esta tela inteira (sem limite geográfico) — só quem escolheu ME (ou Migrar, que nem passa pela E3.2) confirma cidade. Rota com `&regime=me` pula a pergunta pra revisão direta.",
       },
       {
         rota: "/saida/fora-bh",
-        nome: "E4.1 · Saída · fora de BH",
-        nota: "✅ 28/07 — nasce do gate de cidade (E4), não da triagem do E5. Mesmo template A9 das outras saídas (barra+explica+captura+roteia). MLP em fase de testes, só BH por enquanto.",
+        nome: "E4.1 · Saída · fora de BH · 🏷️ SÓ ME + MIGRAR",
+        nota: "✅ 28/07 — nasce do gate de cidade (E4), não da triagem do E5. Mesmo template A9 das outras saídas (barra+explica+captura+roteia). MLP em fase de testes, só BH por enquanto. 03/08: MEI nunca cai aqui — pula o E4 inteiro.",
       },
       {
         rota: "/migrar/cnpj",
         nome: "E4.2 · Migrar · Seu CNPJ (consulta + veredito)",
-        nota: "Consulta e veredito na MESMA tela, de propósito: no caminho abrir o veredito é tela própria porque depende da IA interpretar texto livre (pode errar); aqui o CNAE é fato registrado. Digite qualquer CNPJ de 14 dígitos → loading que explica → cartão + as 3 checagens + veredito. As 2 saídas (regulada/não atendemos) reusam E5.1/E5.2, alcançáveis por link discreto.",
+        nota: "Consulta e veredito na MESMA tela, de propósito: no caminho abrir o veredito é tela própria porque depende da IA interpretar texto livre (pode errar); aqui o CNAE é fato registrado. Digite qualquer CNPJ de 14 dígitos → loading que explica → cartão + as 4 checagens + veredito. As 4 saídas (regulada/não atendemos/regime não suportado/CNPJ inapto) reusam E5.1/E5.2 + as 2 novas, alcançáveis por link discreto. 🆕 04/08: 4ª checagem (regime dentro do que migramos) + `?cenario=mei|presumido|inapto` pra demonstrar as 2 saídas novas (achado do cruzamento com `Fluxo Migração GEMINI.md`).",
+      },
+      {
+        rota: "/saida/regime-nao-suportado",
+        nome: "🆕 E4.2 · Saída · Regime não suportado (MEI/Presumido)",
+        nota: "04/08 — nasce do M1 (`/migrar/cnpj?cenario=mei` ou `?cenario=presumido`, mock de demo): CNPJ ativo, mas regime de origem (MEI ou Lucro Presumido) ainda sem rota de migração pronta. Reforça, com fonte independente (Gemini), a mesma pendência de escopo já aberta sobre MEI/LP. 🟡 educa e captura contato, não finge que migramos os dois hoje.",
+      },
+      {
+        rota: "/saida/cnpj-inapto",
+        nome: "🆕 E4.2 · Saída · CNPJ inapto/suspenso",
+        nota: "04/08 — nasce do M1 (`/migrar/cnpj?cenario=inapto`, mock de demo): situação cadastral ≠ ativa. Diferente da auditoria de passivo (M4a, que pressupõe CNPJ ATIVO com dívida): aqui a Receita nem reconhece a empresa como ativa, então a regularização vem ANTES de qualquer migração.",
       },
       {
         rota: "/migrar/diagnostico",
@@ -179,7 +194,7 @@ const GRUPOS: {
     id: "n4-veredito",
     nome: "E5 · Porta + veredito",
     descricao:
-      "A porta do flow, numa tela só (pills, veredito, triagem, faixa). Do veredito 🟢/🟡/🔴 saem 3 desfechos — regra de ouro: nunca dar veredito com baixa confiança. O 🟢 Atende trava o CNAE direto (cards clicáveis, UX-65); 🟡 e 🔴 saem pelo template de saída graciosa (A9). Fonte única VereditoView. As saídas E5.1/E5.2 também são reusadas pelo Migrar (E4.2, esteira anterior).",
+      "A porta do flow, numa tela só (pills, veredito, triagem, faixa). Do veredito 🟢/🟡/🔴 saem 3 desfechos — regra de ouro: nunca dar veredito com baixa confiança. O 🟢 Atende trava o CNAE direto (cards clicáveis, UX-65); 🟡 e 🔴 saem pelo template de saída graciosa (A9). Fonte única VereditoView. As saídas E5.1/E5.2 também são reusadas pelo Migrar (E4.2, esteira anterior). O `regime` (MEI×ME, decidido lá na Entrada — E3.2) atravessa esta esteira inteira e o resto do flow (🏷️ tags mostram onde MEI difere).",
     telas: [
       {
         rota: "/gate",
@@ -240,7 +255,7 @@ const GRUPOS: {
     id: "dinheiro",
     nome: "💰 E6–E9 · O dinheiro",
     descricao:
-      "A travessia da fronteira, da faixa (E5) ao pagamento. E6–E9 são a sequência clássica — conta, proposta, contrato, pagamento — e é onde a ORDEM carrega o argumento (E6 = A1 pergunta · E7 = A5 recap · E8 = A6 aceite · E9 = A1). A casa (shell do app) só nasce depois do E9; até aqui é tudo wizard. É também onde o Migrar (esteira 1) reencontra o tronco — mesma tela E9, aviso muda por `?fluxo=migrar`.",
+      "A travessia da fronteira, da faixa (E5) ao pagamento. E6–E9 são a sequência clássica — conta, proposta, contrato, pagamento — e é onde a ORDEM carrega o argumento (E6 = A1 pergunta · E7 = A5 recap · E8 = A6 aceite · E9 = A1). A casa (shell do app) só nasce depois do E9; até aqui é tudo wizard. É também onde o Migrar (esteira 1) reencontra o tronco — mesma tela E9, aviso muda por `?fluxo=migrar`. 🆕 03/08: E7/E8/E9 também variam por `?regime=mei` — sem taxa da Junta (🏷️ tags em cada tela).",
     telas: [
       {
         rota: "/conta",
@@ -249,18 +264,18 @@ const GRUPOS: {
       },
       {
         rota: "/plano",
-        nome: "E7 · A conta da abertura",
-        nota: 'Fecha a conta na cara do cliente antes de pedir dinheiro (UX-33). ✂️ Enxugada 19/07: hoje × todo mês SUBIU pro topo (é a resposta), os 3 baldes desceram pra justificativa. Cortados recap, aviso do "grátis" e expander redundante: 8 blocos → 5.',
+        nome: "E7 · A conta da abertura · 🏷️ AMBOS (MEI: sem taxa)",
+        nota: 'Fecha a conta na cara do cliente antes de pedir dinheiro (UX-33). ✂️ Enxugada 19/07: hoje × todo mês SUBIU pro topo (é a resposta), os 3 baldes desceram pra justificativa. Cortados recap, aviso do "grátis" e expander redundante: 8 blocos → 5. 03/08: MEI não paga taxa da Junta — card "Colaboradores" (R$39/cabeça, referência real Contabilizei) visível pros dois.',
       },
       {
         rota: "/contrato",
-        nome: "E8 · Aceite do contrato",
-        nota: "Metade do T18: só o contrato de serviço. REVERSÍVEL, CDC art.49 limpo, então a copy não assusta. O termo irreversível desceu pro A2. Cancelamento aberto na tela: conteúdo legal nunca vai pra expander.",
+        nome: "E8 · Aceite do contrato · 🏷️ AMBOS (MEI: copy sem taxa)",
+        nota: "Metade do T18: só o contrato de serviço. REVERSÍVEL, CDC art.49 limpo, então a copy não assusta. O termo irreversível desceu pro A2. Cancelamento aberto na tela: conteúdo legal nunca vai pra expander. 03/08: MEI vê 'só a 1ª mensalidade' em vez de 'taxa da Junta + mensalidade'.",
       },
       {
         rota: "/pagamento",
-        nome: "E9 · Pagamento",
-        nota: 'Mesmo CPF, dois usos: cobrança + elegibilidade. Situação irregular NÃO é cobrada (persona `cpf-irregular`) e não é "cartão recusado". Boleto fica, fora do happy path: entra no app e adianta tudo.',
+        nome: "E9 · Pagamento · 🏷️ AMBOS (MEI: sem taxa)",
+        nota: 'Mesmo CPF, dois usos: cobrança + elegibilidade. Situação irregular NÃO é cobrada (persona `cpf-irregular`) e não é "cartão recusado". Boleto fica, fora do happy path: entra no app e adianta tudo. 03/08: total não soma a taxa da Junta quando MEI.',
       },
       {
         rota: "/pagamento?fluxo=migrar",
@@ -288,7 +303,7 @@ const GRUPOS: {
       {
         rota: "/migrar/transferencia",
         nome: "E9.3 · A transferência (pipeline)",
-        nota: "Reusa o PainelView do A3 (parametrizado 30/07) — mesma máquina de 4 estados, outro pipeline: encerrar com o antigo → transferir no conselho → atualizar os órgãos → liberar acesso. Os códigos oficiais (resolução CFC, Evento 232) ficam FORA da tela: são 🟡 pendência, não ratificados em fonte primária.",
+        nota: "Reusa o PainelView do A3 (parametrizado 30/07) — mesma máquina de estados, outro pipeline: encerrar com o antigo → transferir no conselho (CRC-MG) → atualizar no Redesim (Receita+Estado) → trocar responsável na Prefeitura (CadWeb PBH) → liberar acesso. Os códigos oficiais (resolução CFC, Evento 232) ficam FORA da tela: são 🟡 pendência, não ratificados em fonte primária. 🆕 04/08: pipeline virou 5 etapas (era 4) — cruzamento com `Fluxo Migração GEMINI.md` tratou a troca municipal (PBH) como ação separada da atualização federal/estadual; 🟡 se confirmar que é o mesmo mecanismo, volta pra 4.",
       },
       {
         rota: "/migrar/transferencia?estado=travado",
@@ -324,7 +339,7 @@ const GRUPOS: {
     id: "dossie",
     nome: "C1–C7 · Constituição (o dossiê)",
     descricao:
-      "A coleta do dossiê, logada e paga. C1 é a mais longa (testa o corpo rolável); dali em diante cada tela herda o que já foi dito antes — CNAE principal já travado no E5, limite de sócios já filtrado na triagem.",
+      "A coleta do dossiê, logada e paga. C1 é a mais longa (testa o corpo rolável); dali em diante cada tela herda o que já foi dito antes — CNAE principal já travado no E5, limite de sócios já filtrado na triagem. 🆕 03/08: MEI e ME divergem AQUI — MEI pula C2/C3 (direto C1→C4) e C6 (C5→C7), ME segue a sequência cheia. C4 e C7 são pontos de reencontro (🏷️ tags marcam cada tela).",
     telas: [
       {
         rota: "/dossie/socio",
@@ -333,18 +348,18 @@ const GRUPOS: {
       },
       {
         rota: "/dossie/vinculo",
-        nome: "C2 · Vínculo INSS",
-        nota: "Coleta o CLT que alimenta a sugestão de enquadramento (UX-24, hoje um card no A1 — o simulador dedicado foi dissolvido 28/07). Teto é FOLGA, não binário. Pró-labore reenquadrado como ganho (UX-27).",
+        nome: "C2 · Vínculo INSS · 🏷️ SÓ ME (MEI pula)",
+        nota: "Coleta o CLT que alimenta a sugestão de enquadramento (UX-24, hoje um card no A1 — o simulador dedicado foi dissolvido 28/07). Teto é FOLGA, não binário. Pró-labore reenquadrado como ganho (UX-27). 03/08: Fator R não existe pra MEI (DAS já é fixo) — MEI pula direto de C1 pra C4.",
       },
       {
         rota: "/dossie/socios",
-        nome: "C3 · +Sócios",
-        nota: "Limite 2 (trava, não 1ª notícia — E5 já filtrou). Divisão soma 100%, default 50/50.",
+        nome: "C3 · +Sócios · 🏷️ SÓ ME (MEI pula)",
+        nota: "Limite 2 (trava, não 1ª notícia — E5 já filtrou). Divisão soma 100%, default 50/50. 03/08: MEI não pode ter sócio (fato legal) — pulada junto com C2.",
       },
       {
         rota: "/dossie/empresa",
-        nome: "C4 · Dados da empresa",
-        nota: "Upsell endereço fiscal (oferece, não obriga; preço FAKE ~R$60). ✅ 28/07: IPTU virou OBRIGATÓRIO travado (JUCEMG exige, era opcional). Residência de sócio dinâmica pelo E5 (pula se solo). Alerta capital baixo.",
+        nome: "C4 · Dados da empresa · 🏷️ AMBOS — reencontro (MEI: sem capital social)",
+        nota: "Upsell endereço fiscal (oferece, não obriga; preço FAKE ~R$60). ✅ 28/07: IPTU virou OBRIGATÓRIO travado (JUCEMG exige, era opcional). Residência de sócio dinâmica pelo E5 (pula se solo). Alerta capital baixo. 03/08: os 2 caminhos se reencontram aqui (MEI vem direto de C1, ME vem de C3); capital social some pro MEI (não é sociedade formal). 🆕 04/08: campo do IPTU ganhou validação de dígito mínimo (10) — antes aceitava qualquer string não-vazia; 🟡 formato exato (10-12 dígitos) segue fila-Larissa.",
       },
       {
         rota: "/dossie/cnae-secundarios",
@@ -353,13 +368,13 @@ const GRUPOS: {
       },
       {
         rota: "/dossie/natureza",
-        nome: "C6 · Natureza jurídica",
-        nota: "Recomenda (solo→SLU), não trava. LTDA solo permitido (fato do CNPJ do Pedro). SLU+sócio = incoerência barrada.",
+        nome: "C6 · Natureza jurídica · 🏷️ SÓ ME (MEI pula)",
+        nota: "Recomenda (solo→SLU), não trava. LTDA solo permitido (fato do CNPJ do Pedro). SLU+sócio = incoerência barrada. 03/08: natureza do MEI é sempre fixa (Empresário Individual - MEI), sem escolha — pula direto de C5 pra C7.",
       },
       {
         rota: "/dossie/nome",
-        nome: "C7 · Razão social",
-        nota: "IA sugere a razão. Checagem de viabilidade: nome em uso → variações (evita reprova JUCEMG).",
+        nome: "C7 · Razão social · 🏷️ AMBOS — reencontro final",
+        nota: "IA sugere a razão. Checagem de viabilidade: nome em uso → variações (evita reprova JUCEMG). 03/08: reencontro dos 2 caminhos (MEI vem de C5, ME vem de C6) antes de seguir pra Aprovação.",
       },
     ],
   },
@@ -367,32 +382,32 @@ const GRUPOS: {
     id: "b4",
     nome: "A1–A5 · Aprovação",
     descricao:
-      "Depois do pagamento e do dossiê, a reta final: revisar, autorizar o irreversível, acompanhar a máquina rodando e chegar na home de ativação. O gargalo aqui é a JUCEMG, não o cliente, então o padrão muda de 'pergunta' pra 'andamento visível' (A8). A recusa de órgão é o 4º estado do painel, não uma tela à parte. A5 é o handoff pro Portal (próxima esteira) — e também onde o Migrar (E9.4) aterrissa direto, sem passar pelas A1–A4.",
+      "Depois do pagamento e do dossiê, a reta final: revisar, autorizar o irreversível, acompanhar a máquina rodando e chegar na home de ativação. O gargalo aqui é a JUCEMG, não o cliente, então o padrão muda de 'pergunta' pra 'andamento visível' (A8). A recusa de órgão é o 4º estado do painel, não uma tela à parte. A5 é o handoff pro Portal (próxima esteira) — e também onde o Migrar (E9.4) aterrissa direto, sem passar pelas A1–A4. 🆕 03/08: as 4 telas EXISTEM pros dois (MEI×ME), mas a copy/timeline varia — A3.1 (recusa) só existe pra ME.",
     telas: [
       {
         rota: "/revisar",
-        nome: "A1 · Revisar",
-        nota: "Recap read-only de tudo antes do irreversível. Cada bloco tem 'ajustar' que volta pro passo. Último ponto em que corrigir é de graça. Números com carimbo de estimativa; a taxa da Junta (R$ 268,51) é a única quantia dura.",
+        nome: "A1 · Revisar · 🏷️ AMBOS (MEI: sem capital/taxa)",
+        nota: "Recap read-only de tudo antes do irreversível. Cada bloco tem 'ajustar' que volta pro passo. Último ponto em que corrigir é de graça. Números com carimbo de estimativa; a taxa da Junta (R$ 268,51) é a única quantia dura. 03/08: MEI não vê capital social nem taxa da Junta; enquadramento vira 'DAS fixo' em vez de 'Simples Anexo X'.",
       },
       {
         rota: "/termo",
-        nome: "A2 · Termo irreversível",
-        nota: "A outra metade do T18 racha: aqui é o commit. 'A taxa do governo não volta' em 1 linha, sem letra miúda. As 4 camadas do cancelamento abertas na tela (conteúdo legal nunca vai pra expander). Botão único, trava até o aceite.",
+        nome: "A2 · Termo irreversível · 🏷️ AMBOS (MEI: sem cláusula de taxa)",
+        nota: "A outra metade do T18 racha: aqui é o commit. 'A taxa do governo não volta' em 1 linha, sem letra miúda. As 4 camadas do cancelamento abertas na tela (conteúdo legal nunca vai pra expander). Botão único, trava até o aceite. 03/08: MEI perde a camada 'taxa não reembolsável' (não pagou taxa) e o texto de protocolo cita Portal do Empreendedor, não Junta.",
       },
       {
         rota: "/painel",
-        nome: "A3 · Painel (andamento)",
-        nota: "O coração da Aprovação. Timeline de 3 status com 4 estados (feito/girando/a fazer/recusa). Faixa de idempotência (UX-38: 'não cobramos de novo'). Previsão honesta. Zero jargão na frente, órgão como recibo.",
+        nome: "A3 · Painel (andamento) · 🏷️ AMBOS — timeline bem diferente",
+        nota: "O coração da Aprovação. Timeline de 3 status com 4 estados (feito/girando/a fazer/recusa). Faixa de idempotência (UX-38: 'não cobramos de novo'). Previsão honesta. Zero jargão na frente, órgão como recibo. 03/08: reusa a MESMA parametrização que o Migrar já usa (`etapas`/`titulo`/`sub`/`prazo`) — MEI vira 1 passo só ('Registrando no Portal do Empreendedor'), sem Junta, prazo qualitativo 'minutos, não dias'.",
       },
       {
         rota: "/painel/recusa",
-        nome: "A3.1 · Órgão recusa",
-        nota: "O 4º estado (UX-40): a Junta reprovou o nome apesar da prévia (persona `erro-orgao` do motor). Vermelho + 'precisa de você' + a ação, recuperação DENTRO do pipeline. Aqui o danger é legítimo: um órgão externo parou a fila mesmo. ✅ 28/07: RETRY AUTOMÁTICO — tenta as 3 opções do C7 em sequência (~1.4s cada), sem ação do cliente; só pede 3 novas sugestões se as 3 falharem. Mock sempre esgota as 3, pra provar o pior caso.",
+        nome: "A3.1 · Órgão recusa · 🏷️ SÓ ME (não existe pro MEI)",
+        nota: "O 4º estado (UX-40): a Junta reprovou o nome apesar da prévia (persona `erro-orgao` do motor). Vermelho + 'precisa de você' + a ação, recuperação DENTRO do pipeline. Aqui o danger é legítimo: um órgão externo parou a fila mesmo. ✅ 28/07: RETRY AUTOMÁTICO — tenta as 3 opções do C7 em sequência (~1.4s cada), sem ação do cliente; só pede 3 novas sugestões se as 3 falharem. Mock sempre esgota as 3, pra provar o pior caso. 03/08: MEI não passa pela Junta, então esse tipo de disputa de nome não existe do mesmo jeito — não implementado pro MEI.",
       },
       {
         rota: "/assinatura",
-        nome: "A4 · Assinatura dos sócios",
-        nota: "GOV.BR + e-CAC. Dobra o check de nível (bronze→upgrade inline). Consenso multi-sócio (UX-44): o 2º sócio aprova custo e assina, o dono nunca clica por ele. Procuração e-CAC explicada em 1 linha (UX-31). Mock na sociedade de 2.",
+        nome: "A4 · Assinatura dos sócios · 🏷️ AMBOS (MEI: copy sem Junta)",
+        nota: "GOV.BR + e-CAC. Dobra o check de nível (bronze→upgrade inline). Consenso multi-sócio (UX-44): o 2º sócio aprova custo e assina, o dono nunca clica por ele. Procuração e-CAC explicada em 1 linha (UX-31). Mock na sociedade de 2. 03/08: consenso multi-sócio já não aparece pro MEI de qualquer forma (é sempre solo); só a copy do subtítulo/aviso troca 'Junta' por 'Portal do Empreendedor'.",
       },
       {
         rota: "/home-dia1",
@@ -485,7 +500,7 @@ const GRUPOS: {
       {
         rota: "/mais/documentos",
         nome: "P-MAIS7 · Documentos",
-        nota: "Documentos da constituição disponíveis pra download (contrato social, cartão CNPJ).",
+        nota: "Documentos da constituição disponíveis pra download (contrato social, cartão CNPJ). 🆕 04/08: ganhou Alvará (dispensa de licenciamento) + Termo de Opção pelo Simples — faltavam na Pasta Digital vs. cruzamento com Gemini. `?fluxo=migrar` mostra também o Relatório de Oportunidade Fiscal (a prova da economia do E4.3), seção própria acima dos grupos.",
       },
       {
         rota: "/mais/certificado",
@@ -569,13 +584,21 @@ const MAPA_EDGES: Conexao[] = [
   { de: "/welcome", para: "/entrada" },
   { de: "/entrada", para: "/entrada?intencao=abrir" },
   { de: "/entrada", para: "/login", tracejado: true },
-  { de: "/entrada?intencao=abrir", para: "/gate" },
-  { de: "/entrada?intencao=abrir", para: "/saida/fora-bh", tracejado: true },
-  { de: "/entrada?intencao=abrir", para: "/migrar/cnpj" },
+  // 🆕 03/08 — E3.2 (MEI×ME) fica ENTRE o fork e o gate de cidade. MEI pula
+  // o E4 inteiro (sem limite geográfico); só ME confirma cidade.
+  { de: "/entrada?intencao=abrir", para: "/gate?regime=mei", tracejado: true },
+  { de: "/entrada?intencao=abrir", para: "/entrada?intencao=abrir&regime=me" },
+  { de: "/entrada?intencao=abrir&regime=me", para: "/gate" },
+  { de: "/entrada?intencao=abrir&regime=me", para: "/saida/fora-bh", tracejado: true },
+  // Migrar não passa pela E3.2 — sai direto do fork, confirma cidade à parte
+  // (mesma tela E4, sem tile própria) e segue pro M1.
+  { de: "/entrada", para: "/migrar/cnpj", tracejado: true },
   { de: "/migrar/cnpj", para: "/migrar/diagnostico" },
   { de: "/migrar/cnpj", para: "/migrar/diagnostico?cenario=ja-otimo", tracejado: true },
   { de: "/migrar/cnpj", para: "/veredito/waitlist", tracejado: true },
   { de: "/migrar/cnpj", para: "/veredito/nao-atende", tracejado: true },
+  { de: "/migrar/cnpj", para: "/saida/regime-nao-suportado", tracejado: true },
+  { de: "/migrar/cnpj", para: "/saida/cnpj-inapto", tracejado: true },
   { de: "/migrar/diagnostico", para: "/migrar/plano" },
   { de: "/migrar/plano", para: "/migrar/contrato" },
   { de: "/migrar/contrato", para: "/pagamento?fluxo=migrar" },

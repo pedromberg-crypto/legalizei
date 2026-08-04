@@ -1,7 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { SociosView } from "@/components/wizard-dossie";
+import { ehMei, comRegime } from "@/lib/regime";
+
+/** 🆕 03/08 — só alcançável pelo caminho ME (MEI não pode ter sócio, pula
+ *  esta tela; ver `/dossie/socio`, C1, onde bifurca). */
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -30,6 +34,7 @@ import { SociosView } from "@/components/wizard-dossie";
  */
 export default function SociosPage() {
   const router = useRouter();
+  const mei = ehMei(useSearchParams());
 
-  return <SociosView onSeguir={() => router.push("/dossie/empresa")} />;
+  return <SociosView onSeguir={() => router.push(comRegime("/dossie/empresa", mei))} />;
 }

@@ -1,7 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { RevisarView } from "@/components/wizard-cauda";
+import { ehMei, comRegime } from "@/lib/regime";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -27,6 +28,7 @@ import { RevisarView } from "@/components/wizard-cauda";
  */
 export default function RevisarPage() {
   const router = useRouter();
+  const mei = ehMei(useSearchParams());
 
-  return <RevisarView onSeguir={() => router.push("/termo")} />;
+  return <RevisarView mei={mei} onSeguir={() => router.push(comRegime("/termo", mei))} />;
 }

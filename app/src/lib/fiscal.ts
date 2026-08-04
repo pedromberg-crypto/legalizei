@@ -28,6 +28,13 @@ export const FISCAL = {
   FATOR_R_MARGEM: 0.3, // UX-39: o ALVO recomendado tem colchão. Nunca cravar 28%.
   ANEXO_III: 0.06,
   ANEXO_V: 0.155,
+  /** 🟢 MEI — teto de faturamento (LC 123 art.18-A): R$81.000/ano ÷ 12.
+   *  🔴 O QUE FALTA: a lista de CNAEs elegíveis pro MEI é PRÓPRIA (mais
+   *  restrita que "atende Simples ME") e ainda não está no vault — fila
+   *  Larissa. `elegivelParaMei()` (gate-telas.tsx) hoje só checa sócio+faixa,
+   *  NÃO filtra por atividade. Não travar como fato até isso ser ratificado.
+   */
+  MEI_TETO_MENSAL: 6750,
 } as const;
 
 /**
@@ -50,6 +57,15 @@ export const CUSTOS = {
   /** 🟢 Decisão D1 (14/07): não se cobra o trabalho de abrir. A receita é a
    *  mensalidade. "Grátis" = honorário zero, NUNCA "governo zero". */
   HONORARIO_ABERTURA: 0,
+  /** 🔴 FAKE — referência de mercado, NÃO decisão de preço nossa. Fonte:
+   *  `pesquisa/concorrentes/contabilizei/pricing-snapshots/2026-07-30-tabela-real-faixas.md`
+   *  (tela real de cliente, confiança alta): plano Avançado (nosso benchmark
+   *  direto) cobra R$39,00 por funcionário, LINEAR (39×N). O nº de
+   *  colaboradores inclusos no plano (aqui 0) é placeholder — decisão de
+   *  negócio do Mauro, não travada. 03/08.
+   */
+  CUSTO_FUNCIONARIO: 39,
+  COLABORADORES_INCLUSOS: 0,
 } as const;
 
 export const FAIXA_MEDIA: Record<string, number> = {

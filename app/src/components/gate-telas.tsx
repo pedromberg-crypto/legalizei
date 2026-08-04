@@ -8,6 +8,8 @@ import {
   useSyncExternalStore,
 } from "react";
 import { Button } from "@/components/ui/button";
+import { TelaHeader } from "@/components/ui/tela";
+import { FISCAL } from "@/lib/fiscal";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -654,6 +656,165 @@ export function FaixaView({
           Continuar
         </Button>
       </div>
+    </>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   MEI × ME — `MeiOuMeView` é usada hoje em `/entrada` (E3.2), logo depois do
+   fork, ANTES do gate de cidade. 🔁 REALOCADA 03/08 — morava no fim do E5
+   (depois da faixa), decisão revertida pelo Pedro: quem abre MEI já sabe que
+   é MEI, e MEI não tem o limite geográfico do MLP (pula o gate de cidade).
+
+   ⚠️ Recomendação, não trava (mesma doutrina do C6/Natureza jurídica): quem
+   se qualifica pode preferir ME mesmo assim (planeja sócio, quer teto maior).
+   ───────────────────────────────────────────────────────────────────────── */
+
+/**
+ * Elegibilidade ao MEI. Checa sócio (fato legal: MEI não tem sócio) + faixa
+ * de faturamento (teto LC 123 art.18-A). 🔴 NÃO checa atividade/CNAE — essa
+ * lista ainda não está no vault (fila Larissa). Ver comentário em `FISCAL`.
+ *
+ * 🟡 ÓRFÃ desde a realocação de 03/08 — a pergunta agora acontece ANTES de
+ * sócio/faturamento existirem, então não dá mais pra usar isto pra GATEAR a
+ * tela. Fica pronta pra virar guard-rail (ex: se a pessoa disse "MEI" aqui e
+ * depois a triagem revelar 2+ sócios, corrigir) — isso ainda NÃO foi
+ * construído, é gap conhecido.
+ */
+export function elegivelParaMei(
+  socios: number | null,
+  faixa: string | null,
+  modoExato: boolean,
+  exato: string,
+): boolean {
+  if (socios !== 1) return false;
+  const valor = Number(exato.replace(/\D/g, "")) || 0;
+  if (modoExato && valor > 0) return valor <= FISCAL.MEI_TETO_MENSAL;
+  // Sem valor exato: só a faixa "até 10 mil" é compatível com o teto de
+  // R$6.750/mês — as demais já excedem. Ambíguo dentro da própria faixa
+  // (pode estar acima ou abaixo do teto); a tela deixa a pessoa decidir.
+  return faixa === "ate 10k";
+}
+
+const OPCOES_REGIME = [
+  {
+    id: "mei" as const,
+    nome: "MEI · Microempreendedor Individual",
+    // 🆕 03/08 — lista ÚNICA (era pontos + "Recomendado para" separados —
+    // duas listas com estilo diferente pra informação do mesmo tipo lia como
+    // inconsistência, não hierarquia). Concreto (número) primeiro.
+    checks: [
+      "Fatura (ou espera faturar) até ~R$6.750/mês (teto de R$81 mil/ano)",
+      "Abre em qualquer cidade do Brasil",
+      "Sem taxa da Junta — registro é praticamente na hora",
+      "Sem sócio · até 1 funcionário com carteira",
+    ],
+  },
+  {
+    id: "me" as const,
+    nome: "ME · Simples Nacional",
+    checks: [
+      "Fatura acima de ~R$6.750/mês, ou espera crescer rápido",
+      "Por enquanto, só empresas de Belo Horizonte/MG",
+      "Sem teto de R$81 mil — cresce sem trocar de regime depois",
+      "Pode ter sócio · mais de 1 funcionário sem limite do regime",
+    ],
+  },
+];
+
+function CheckMiniRegime() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="m5 12 4 4 8-9" />
+    </svg>
+  );
+}
+
+export function MeiOuMeView({
+  regime,
+  setRegime,
+  onSeguir,
+  onVoltar,
+}: {
+  regime: "mei" | "me" | null;
+  setRegime: (v: "mei" | "me") => void;
+  onSeguir: () => void;
+  /** Volta pro fork (E3) — quem chegou aqui pode ter errado abrir×migrar. */
+  onVoltar?: () => void;
+}) {
+  return (
+    <>
+      {/* 🆕 03/08 — faltava até o chrome de página (esta tela é renderizada
+          sozinha, sem `/gate` ao redor pra fornecer header+main). Seta de
+          voltar em CIMA, mesmo padrão de todas as outras telas (ex: E4.2). */}
+      <TelaHeader meta="Sobre a sua empresa" onVoltar={onVoltar} />
+      <main className="app-main">
+      <div className="shrink-0">
+        <h1 className="text-h1 mb-2">Você já sabe se é MEI ou ME?</h1>
+        <p className="text-body text-text-secondary mb-6">
+          Se não souber, a diferença real é essa — dá pra trocar de ideia
+          depois, mas muda um pouco o que a gente pergunta a seguir.
+        </p>
+      </div>
+
+      <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="flex flex-col gap-3">
+          {OPCOES_REGIME.map((o) => (
+            <button
+              key={o.id}
+              onClick={() => setRegime(o.id)}
+              className={`w-full rounded-md border p-4 text-left transition-colors
+                ${
+                  regime === o.id
+                    ? "border-action-primary bg-action-primary text-text-on-brand"
+                    : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
+                }`}
+            >
+              <span
+                className={`text-body-strong font-bold ${regime === o.id ? "text-text-on-brand" : "text-text-primary"}`}
+              >
+                {o.nome}
+              </span>
+
+              {/* 🆕 03/08 — lista única de checks (mesmo padrão visual do "O
+                  que esse CNAE cobre", ConteudoCnae/tela Atende). Era 2 listas
+                  com estilo diferente (bullet + check) pra informação do
+                  mesmo tipo — lia como inconsistência, não hierarquia. */}
+              <div className="mt-2 flex flex-col gap-1.5">
+                {o.checks.map((c) => (
+                  <div key={c} className="flex items-start gap-2.5">
+                    <span
+                      className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${
+                        regime === o.id
+                          ? "bg-white/20 text-text-on-brand"
+                          : "bg-state-success-tint text-state-success-text"
+                      }`}
+                    >
+                      <CheckMiniRegime />
+                    </span>
+                    <p
+                      className={`text-caption ${regime === o.id ? "text-text-on-brand/85" : "text-text-secondary"}`}
+                    >
+                      {c}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </button>
+          ))}
+        </div>
+        <p className="text-micro text-text-tertiary mt-4">
+          Sua atividade ainda precisa estar na lista permitida pro MEI —
+          confirmamos isso mais pra frente.
+        </p>
+      </div>
+
+      <div className="app-footer-cta">
+        <Button full disabled={!regime} onClick={onSeguir}>
+          Continuar
+        </Button>
+      </div>
+      </main>
     </>
   );
 }

@@ -1,7 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { SocioView } from "@/components/wizard-dossie";
+import { ehMei, comRegime } from "@/lib/regime";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -37,6 +38,12 @@ import { SocioView } from "@/components/wizard-dossie";
  */
 export default function SocioPage() {
   const router = useRouter();
+  const mei = ehMei(useSearchParams());
 
-  return <SocioView onSeguir={() => router.push("/dossie/vinculo")} />;
+  // 🆕 03/08 — MEI pula C2 (Vínculo INSS/Fator R, não existe MEI) e C3
+  // (Sócios, MEI não pode ter) — vai direto pra C4. ME segue a sequência
+  // normal. Ver mapa em `/mockup` — grupo "Constituição".
+  return (
+    <SocioView onSeguir={() => router.push(comRegime(mei ? "/dossie/empresa" : "/dossie/vinculo", mei))} />
+  );
 }

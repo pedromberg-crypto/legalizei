@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { useSearchParams } from "next/navigation";
 import { TelaHeader } from "@/components/ui/tela";
 
 /**
@@ -14,6 +15,12 @@ import { TelaHeader } from "@/components/ui/tela";
  * aqui e precisa ser emitido (CND nova, declaração) vai pra Serviços.
  *
  * ⚠️ Documentos = FAROL/mock.
+ *
+ * 🆕 04/08 — cruzamento com 2 pesquisas Gemini (blueprint abertura + migração):
+ * a "Pasta Digital" completa tem 7 entregáveis, faltavam 2 aqui (Alvará e
+ * Termo de Opção pelo Simples). Também ganhou variante `?fluxo=migrar`: quem
+ * migrou vê o Relatório de Oportunidade Fiscal — a prova da economia
+ * prometida lá no E4.3, não só um documento genérico de constituição.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -27,6 +34,8 @@ const GRUPOS: Grupo[] = [
       { nome: "Contrato social", meta: "PDF · registrado em 12/03/2026" },
       { nome: "Certificado da condição de MEI/ME", meta: "PDF · 12/03/2026" },
       { nome: "Cartão CNPJ", meta: "PDF · atualizado em 05/07/2026" },
+      { nome: "Certificado de dispensa de licenciamento (Alvará)", meta: "PDF · 12/03/2026" },
+      { nome: "Termo de deferimento da opção pelo Simples Nacional", meta: "PDF · 15/03/2026" },
     ],
   },
   {
@@ -45,7 +54,15 @@ const GRUPOS: Grupo[] = [
   },
 ];
 
+const DOC_MIGRACAO: Doc = {
+  nome: "Relatório de oportunidade fiscal (pró-labore otimizado)",
+  meta: "PDF · a economia calculada na migração, mês a mês",
+};
+
 export default function DocumentosPage() {
+  const searchParams = useSearchParams();
+  const veioDeMigracao = searchParams.get("fluxo") === "migrar";
+
   return (
     <>
       <TelaHeader meta="Sua empresa · Documentos" voltar="/mais" />
@@ -63,6 +80,19 @@ export default function DocumentosPage() {
                 Os papéis da sua empresa, prontos pra baixar quando precisar.
               </p>
             </div>
+
+            {/* Migrou de contador: a prova da economia entra ANTES dos grupos
+                genéricos — é o documento que fecha a promessa do E4.3. */}
+            {veioDeMigracao && (
+              <div>
+                <p className="mb-2 text-body-strong font-semibold text-text-primary">
+                  Da sua migração
+                </p>
+                <div className="overflow-hidden rounded-2xl border border-border-hairline bg-surface-card">
+                  <DocLinha d={DOC_MIGRACAO} primeiro />
+                </div>
+              </div>
+            )}
 
             {/* Grupos de documentos */}
             {GRUPOS.map((g) => (

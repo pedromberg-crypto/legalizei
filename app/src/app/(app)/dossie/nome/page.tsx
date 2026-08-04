@@ -1,7 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { NomeView } from "@/components/wizard-dossie";
+import { ehMei, comRegime } from "@/lib/regime";
+
+/** 🆕 03/08 — última do dossiê pros DOIS caminhos (reencontro: MEI vem de C5,
+ *  ME vem de C6). Propaga `regime` pro A1 (Revisar/Termo mudam copy). */
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -40,6 +44,7 @@ import { NomeView } from "@/components/wizard-dossie";
  */
 export default function NomePage() {
   const router = useRouter();
+  const mei = ehMei(useSearchParams());
 
-  return <NomeView onSeguir={() => router.push("/revisar")} />;
+  return <NomeView onSeguir={() => router.push(comRegime("/revisar", mei))} />;
 }

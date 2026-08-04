@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PagamentoView, type Metodo } from "@/components/wizard-dinheiro";
+import { ehMei, comRegime } from "@/lib/regime";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -62,12 +63,13 @@ export default function PagamentoPage() {
    * passivo), não o dossiê.
    */
   const fluxo = searchParams.get("fluxo") === "migrar" ? "migrar" : "abertura";
+  const mei = ehMei(searchParams);
   const [cpf, setCpf] = useState("");
   const [metodo, setMetodo] = useState<Metodo>("cartao");
 
   function destino() {
     if (fluxo === "migrar") return "/migrar/passivo";
-    return metodo === "boleto" ? "/aguardando" : "/dossie/socio";
+    return comRegime(metodo === "boleto" ? "/aguardando" : "/dossie/socio", mei);
   }
 
   return (
@@ -77,6 +79,7 @@ export default function PagamentoPage() {
       metodo={metodo}
       setMetodo={setMetodo}
       fluxo={fluxo}
+      semTaxaJunta={mei}
       onPagar={() => router.push(destino())}
     />
   );

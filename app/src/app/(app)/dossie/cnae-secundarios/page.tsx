@@ -1,7 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { CnaeSecundariosView } from "@/components/wizard-dossie";
+import { ehMei, comRegime } from "@/lib/regime";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -42,6 +43,11 @@ import { CnaeSecundariosView } from "@/components/wizard-dossie";
  */
 export default function CnaeSecundariosPage() {
   const router = useRouter();
+  const mei = ehMei(useSearchParams());
 
-  return <CnaeSecundariosView onSeguir={() => router.push("/dossie/natureza")} />;
+  // 🆕 03/08 — MEI pula C6 (Natureza jurídica): natureza é sempre fixa
+  // (Empresário Individual - MEI), sem escolha SLU/LTDA. Vai direto pro C7.
+  return (
+    <CnaeSecundariosView onSeguir={() => router.push(comRegime(mei ? "/dossie/nome" : "/dossie/natureza", mei))} />
+  );
 }

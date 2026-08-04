@@ -531,7 +531,7 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
     {
       id: "UX-63",
       oque: "Card de destaque usa o coral-600 do botão primário (era coral-700). ⚠️ Custa contraste: branco sobre coral-600 = 4,04:1, e o título tem 16px bold (não conta como texto grande) — AA exige 4,5:1. No coral-700 era 5,64:1.",
-      status: "🔴 decisão do Pedro (AA × consistência de cor)",
+      status: "✅ mesclado em /entrada (03/08, Pedro escolheu consistência sobre AA)",
     },
   ],
   "veredito-atende": [

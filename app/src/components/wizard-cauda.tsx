@@ -72,11 +72,9 @@ function useRevisao() {
 }
 
 export function RevisarView({
-  empresaPaga = false,
   onSeguir,
   onVoltar,
 }: {
-  empresaPaga?: boolean;
   onSeguir?: () => void;
   onVoltar?: () => void;
 }) {
@@ -147,30 +145,17 @@ export function RevisarView({
           {/* A taxa dura como LINHA de recap: já foi paga no N9, o N7 já é o
               dono da explicação. Aqui não re-argumenta, só confirma o valor. */}
           <Card>
-            {empresaPaga ? (
-              <>
-                <span className="text-body font-semibold text-text-primary">
-                  Taxa da Junta — por nossa conta
-                </span>
-                <p className="text-micro text-text-tertiary mt-1">
-                  Você não paga essa parte. A gente cobre direto com o governo.
-                </p>
-              </>
-            ) : (
-              <>
-                <div className="flex items-baseline justify-between">
-                  <span className="text-body font-semibold text-text-primary">
-                    Taxa da Junta (já paga)
-                  </span>
-                  <span className="text-body font-semibold text-text-primary">
-                    {brl(d.taxaJunta)}
-                  </span>
-                </div>
-                <p className="text-micro text-text-tertiary mt-1">
-                  Repasse ao governo, já incluído no que você pagou.
-                </p>
-              </>
-            )}
+            <div className="flex items-baseline justify-between">
+              <span className="text-body font-semibold text-text-primary">
+                Taxa da Junta (já paga)
+              </span>
+              <span className="text-body font-semibold text-text-primary">
+                {brl(d.taxaJunta)}
+              </span>
+            </div>
+            <p className="text-micro text-text-tertiary mt-1">
+              Repasse ao governo, já incluído no que você pagou.
+            </p>
           </Card>
         </Corpo>
 
@@ -223,13 +208,11 @@ function Linha({ rotulo, valor }: { rotulo: string; valor: string }) {
 export function TermoView({
   aceito,
   setAceito,
-  empresaPaga = false,
   onSeguir,
   onVoltar,
 }: {
   aceito: boolean;
   setAceito: (v: boolean) => void;
-  empresaPaga?: boolean;
   onSeguir?: () => void;
   onVoltar?: () => void;
 }) {
@@ -249,11 +232,7 @@ export function TermoView({
             </p>
             <ul className="flex flex-col gap-2">
               <Item>Protocola sua empresa na Junta Comercial de Minas.</Item>
-              <Item>
-                {empresaPaga
-                  ? "A taxa da Junta é por nossa conta — você não paga essa parte."
-                  : "A taxa que você já pagou cobre esse registro."}
-              </Item>
+              <Item>A taxa que você já pagou cobre esse registro.</Item>
               <Item>Segue com Receita, Simples e Prefeitura até o CNPJ ativar.</Item>
             </ul>
           </div>
@@ -273,9 +252,8 @@ export function TermoView({
                 aceite. Nada é registrado sem esse passo.
               </Camada>
               <Camada>
-                {empresaPaga
-                  ? "A taxa da Junta é por nossa conta — não é algo que você paga nem que volta ou deixa de voltar pra você."
-                  : "A taxa da Junta não é reembolsável depois que a gente registra, porque ela vai pro governo, não pra gente."}
+                A taxa da Junta não é reembolsável depois que a gente registra,
+                porque ela vai pro governo, não pra gente.
               </Camada>
               <Camada>
                 O nosso serviço (a mensalidade) você cancela quando quiser,
@@ -289,9 +267,8 @@ export function TermoView({
           </div>
 
           <Checkbox checked={aceito} onChange={setAceito}>
-            {empresaPaga
-              ? "Autorizo o início da abertura, ciente de que ela não pode ser desfeita."
-              : "Autorizo o início da abertura, ciente de que ela não pode ser desfeita e de que a taxa da Junta já paga não é reembolsável."}
+            Autorizo o início da abertura, ciente de que ela não pode ser
+            desfeita e de que a taxa da Junta já paga não é reembolsável.
           </Checkbox>
         </Corpo>
 

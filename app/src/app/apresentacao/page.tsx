@@ -53,9 +53,9 @@ import {
  * ═══════════════════════════════════════════════════════════════════════════
  * /apresentacao — DEMO PRA GESTÃO INTERNA (Legalize Digital), 28–29/07.
  * ═══════════════════════════════════════════════════════════════════════════
- * COBERTURA: N3 (fork + gate de cidade) · N4 inteiro (descrever · analisar ·
- * veredito 3 vias · triagem · faixa) · **B3, a travessia do dinheiro**
- * (N6 conta → N7 a conta da abertura → N8 contrato → N9 pagamento).
+ * COBERTURA: E3 (fork + gate de cidade E4) · E5 inteiro (descrever · analisar ·
+ * veredito 3 vias · triagem · faixa) · **a travessia do dinheiro**
+ * (E6 conta → E7 a conta da abertura → E8 contrato → E9 pagamento).
  *
  * ⚠️ O ENCAIXE saiu da demo em 29/07: depois que o veredito 🟢 ganhou os cards
  * clicáveis (UX-65), as duas telas passaram a fazer a mesma pergunta. 🆕 31/07:
@@ -67,7 +67,7 @@ import {
  * · `PerguntaView` · `AnalisandoView` · `VereditoView` ·
  * `TriagemView` · `FaixaView`. As rotas de produção (`/entrada`, `/gate`)
  * consomem exatamente os mesmos. **Não existe cópia** — a v1 desta tela tinha
- * uma, e ela divergiu em silêncio (o N3 perdeu o Lottie, os ícones e o layout
+ * uma, e ela divergiu em silêncio (o E3 perdeu o Lottie, os ícones e o layout
  * dos cards em 1 dia). Se mudar na oficial, muda aqui. Sem sincronizar na mão.
  *
  * ⚠️ REGRA (Pedro, 29/07): quando eu editar uma tela aqui pra testar um achado,
@@ -251,6 +251,39 @@ const SAIDA_FORA_BH: DadosSaida = {
   },
 };
 
+/**
+ * 🆕 03/08 — GAP DE COBERTURA fechado: E5.4/E5.5 (saídas da triagem) existiam
+ * em `/mockup` mas não eram alcançáveis na demo (TriagemView tinha
+ * `onSaida={() => {}}`, um no-op). Conteúdo IDÊNTICO ao das rotas de
+ * produção (`/saida/exterior`, `/saida/socios`) — fonte única, sem cópia
+ * divergente.
+ */
+const DADOS_EXTERIOR: DadosSaida = {
+  titulo: "Com sócio morando fora, o caminho é outro",
+  explica:
+    "A sua empresa pode existir normalmente. O que a lei não permite é ela entrar no Simples Nacional, que é o regime em que a gente abre empresa aqui pelo app.",
+  origem: {
+    rotulo: "De onde vem essa regra",
+    texto:
+      "Lei Complementar 123, artigo 17: empresa com sócio que mora no exterior não pode optar pelo Simples Nacional.",
+  },
+  saida:
+    "Existem outros regimes que atendem o seu caso, e o nosso time contábil faz esse tipo de abertura fora do app. Quer conversar com eles?",
+};
+
+const DADOS_SOCIOS: DadosSaida = {
+  titulo: "Com três ou mais sócios, ainda não pelo app",
+  explica:
+    "Não tem nada de errado com a sua sociedade, e a lei permite. É o nosso app que hoje abre empresa com no máximo dois sócios.",
+  origem: {
+    rotulo: "De onde vem esse limite",
+    texto:
+      "É uma escolha nossa, não uma regra do governo. A cada sócio a mais mudam as assinaturas e o contrato, e a gente preferiu fazer bem para dois antes de abrir para mais.",
+  },
+  saida:
+    "O escritório que está por trás do app faz esse tipo de abertura todo dia, fora do aplicativo. Quer que a gente te apresente?",
+};
+
 type Etapa =
   | "fork"
   | "cidade"
@@ -260,12 +293,17 @@ type Etapa =
   | "veredito"
   | "triagem"
   | "faixa"
+  // 🆕 03/08 — E5.4/E5.5, saídas da triagem (gap fechado, ver DADOS_EXTERIOR/
+  // DADOS_SOCIOS). Alcançáveis só pela interação real (escolher exterior/3+
+  // sócios na TriagemView), sem pill de atalho — mesmo padrão de veredito.
+  | "saida-exterior"
+  | "saida-socios"
   | "conta"
   | "conta-codigo"
   | "plano"
   | "contrato"
   | "pagamento"
-  // ─── B4 · o dossiê (29/07) ───────────────────────────────────────────────
+  // ─── CONSTITUIÇÃO · o dossiê (29/07) ─────────────────────────────────────
   // Depois do dinheiro, a coleta. Estas 7 só puderam entrar na demo junto com
   // a extração pra `components/wizard-dossie.tsx`: antes eram `page.tsx` com
   // estado próprio, e o que não é componente não renderiza dentro do aparelho.
@@ -276,18 +314,19 @@ type Etapa =
   | "cnae-secundarios"
   | "natureza"
   | "nome"
-  // ─── A CAUDA (N19–N24) + as 2 pausas de pagamento (P1, P2) — 29/07 ──────
-  // P1/P2 NÃO são sequenciais: são pausas de pagamento (`N9--boleto-->P2`,
-  // `P1--reentrada-->N10`), alcançáveis por pill própria, não pelo botão
+  // ─── APROVAÇÃO (A1–A5) + as 2 pausas de pagamento (C0.1, E9.1) — 29/07 ──
+  // C0.1/E9.1 NÃO são sequenciais: são pausas de pagamento (`E9--boleto-->E9.1`,
+  // `C0.1--reentrada-->C1`), alcançáveis por pill própria, não pelo botão
   // Continuar de nenhuma tela do meio.
   | "revisar"
   | "termo"
   | "painel"
+  | "painel-recusa"
   | "assinatura"
   | "ativacao"
-  // ─── FLOW #2 · migrar de contador (30/07) ────────────────────────────────
-  // Ramo PARALELO, não continuação: sai do fork do N3 e nunca reencontra o
-  // flow #1. Por isso tem sequência própria, não entra em ETAPAS_CAUDA.
+  // ─── MIGRAR DE CONTADOR (30/07) — decimal de Entrada ─────────────────────
+  // Ramo decimal, não continuação: sai do fork E4 e reencontra o tronco só no
+  // pagamento (E9). Por isso tem sequência própria, não entra em ETAPAS_CAUDA.
   | "m-cnpj"
   | "m-diagnostico"
   | "m-plano"
@@ -323,8 +362,8 @@ function noDossie(e: Etapa): e is EtapaDossie {
 }
 
 /**
- * A etapa seguinte à do dossiê. A última (`nome`) segue pro N19 (revisar) —
- * era `?? "fim"` até a cauda entrar na demo; agora "fim" é depois do N24.
+ * A etapa seguinte à do dossiê. A última (`nome`) segue pro A1 (revisar) —
+ * era `?? "fim"` até a cauda entrar na demo; agora "fim" é depois do A5.
  */
 function depoisDoDossie(e: EtapaDossie): Etapa {
   const i = ETAPAS_DOSSIE.indexOf(e);
@@ -338,14 +377,16 @@ function antesDoDossie(e: EtapaDossie): Etapa {
 }
 
 /**
- * As etapas da cauda (N19–N24) — só as que ligam num shell de tela cheia
- * igual ao B3/B4. P1/P2 (retomar, aguardando) NÃO entram aqui: são pausas
- * isoladas, sem posição fixa nesta sequência (ver comentário no `type Etapa`).
+ * As etapas da Aprovação (A1–A5) — só as que ligam num shell de tela cheia
+ * igual à Entrada/Constituição. C0.1/E9.1 (retomar, aguardando) NÃO entram
+ * aqui: são pausas isoladas, sem posição fixa nesta sequência (ver comentário
+ * no `type Etapa`).
  */
 const ETAPAS_CAUDA = [
   "revisar",
   "termo",
   "painel",
+  "painel-recusa",
   "assinatura",
   "ativacao",
 ] as const satisfies readonly Etapa[];
@@ -357,12 +398,12 @@ function naCauda(e: Etapa): e is EtapaCauda {
 }
 
 /**
- * FLOW #2 — migrar de contador, na ordem real (30/07).
+ * MIGRAR DE CONTADOR — na ordem real (30/07), decimal de Entrada (E4→E9).
  *
- * ⚠️ É um ramo PARALELO, não continuação do flow #1: sai do fork do N3 e nunca
- * reencontra o tronco. Por isso tem sequência própria — `depoisDoMigrar` e
- * `antesDoMigrar` andam só aqui dentro, e o "antes" do 1º passo devolve pro
- * gate de cidade (`cidade`), que é de onde ele de fato veio.
+ * ⚠️ É um ramo decimal, não continuação do caminho abrir: sai do fork E4 e
+ * reencontra o tronco só no pagamento (E9). Por isso tem sequência própria —
+ * `depoisDoMigrar` e `antesDoMigrar` andam só aqui dentro, e o "antes" do 1º
+ * passo devolve pro gate de cidade (`cidade`), que é de onde ele de fato veio.
  *
  * `m-travado` fica FORA da sequência: é estado de exceção do `m-transferencia`
  * (persona `migra-refem`), alcançável por pill própria, não por "Continuar".
@@ -391,11 +432,11 @@ function depoisDoMigrar(e: EtapaMigrar): Etapa {
 
 function antesDoMigrar(e: EtapaMigrar): Etapa {
   const i = ETAPAS_MIGRAR.indexOf(e);
-  // O 1º passo do flow #2 volta pro gate de cidade, que é de onde ele veio.
+  // O 1º passo do Migrar volta pro gate de cidade, que é de onde ele veio.
   return i === 0 ? "cidade" : ETAPAS_MIGRAR[i - 1];
 }
 
-/** P1 (retomar) e P2 (aguardando) — pausas de pagamento, fora da sequência. */
+/** C0.1 (retomar) e E9.1 (aguardando) — pausas de pagamento, fora da sequência. */
 const ETAPAS_ESPERA = ["retomar", "aguardando"] as const satisfies readonly Etapa[];
 
 type EtapaEspera = (typeof ETAPAS_ESPERA)[number];
@@ -444,6 +485,8 @@ type Momento =
   | "veredito-descarta"
   | "triagem"
   | "faixa"
+  | "saida-exterior"
+  | "saida-socios"
   | "conta"
   | "conta-codigo"
   | "plano"
@@ -459,11 +502,12 @@ type Momento =
   | "revisar"
   | "termo"
   | "painel"
+  | "painel-recusa"
   | "assinatura"
   | "ativacao"
-  // ─── FLOW #2 · migrar de contador (30/07) ────────────────────────────────
-  // Ramo PARALELO, não continuação: sai do fork do N3 e nunca reencontra o
-  // flow #1. Por isso tem sequência própria, não entra em ETAPAS_CAUDA.
+  // ─── MIGRAR DE CONTADOR (30/07) — decimal de Entrada ─────────────────────
+  // Ramo decimal, não continuação: sai do fork E4 e reencontra o tronco só no
+  // pagamento (E9). Por isso tem sequência própria, não entra em ETAPAS_CAUDA.
   | "m-cnpj"
   | "m-diagnostico"
   | "m-plano"
@@ -493,55 +537,55 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
   "veredito-atende": [
     {
       id: "UX-65",
-      oque: "Ganhou 'Outras opções compatíveis' (mesmo componente do ENCAIXE) + % de compatibilidade no card de cima. Os cards são clicáveis: tocar promove a opção pro topo e devolve a antiga pra lista. A tela aprovada só mostra o recomendado + a gaveta 'e se eu faço mais de uma coisa?'.",
-      status: "🔴 pendente no VereditoView",
+      oque: "'Outras opções compatíveis' + % de compatibilidade no card de cima. Os cards são clicáveis: tocar promove a opção pro topo e devolve a antiga pra lista.",
+      status: "✅ mesclado em /veredito/atende (03/08) — prop `mostrarAlternativas` já existia no VereditoView desde 31/07, só o wrapper de produção não passava",
     },
     {
-      id: "⚠️ decidir",
-      oque: "A troca feita AQUI não chega no ENCAIXE (tela seguinte), que remonta a lista a partir do CNAE original — promover 'Design gráfico' aqui e seguir mostra 'Criação de sites' como recomendado lá. Ou o veredito escolhe e o encaixe confirma, ou o encaixe escolhe e aqui é só leitura. Hoje as duas escolhem.",
-      status: "🔴 decisão de produto (Pedro)",
+      id: "⚠️ decidir (obsoleto)",
+      oque: "Preocupação original: a troca feita aqui não chegava no ENCAIXE (tela seguinte), que remontava a lista a partir do CNAE original. Ficou sem objeto: o ENCAIXE foi removido 31/07 (o veredito 🟢 já trava o CNAE direto, cards clicáveis).",
+      status: "✅ resolvido por remoção da tela que gerava o conflito",
     },
   ],
   "veredito-waitlist-enviado": [
     {
       id: "UX-64",
       oque: "Ganhou saídas: 'Ler o blog', 'Conhecer o site' e 'Voltar ao início'. A tela aprovada só oferece 'Falar com um contador agora' — quem não quer falar com ninguém agora fica sem pra onde ir.",
-      status: "🔴 pendente no VereditoView (blog/site ainda sem rota)",
+      status: "✅ 'Voltar ao início' mesclado (03/08, real: /entrada) — 'Ler o blog'/'Conhecer o site' seguem 🔴, blog/site ainda sem rota",
     },
   ],
   "veredito-mauro-enviado": [
     {
       id: "UX-64",
       oque: "Mesmas saídas da waitlist. Na tela aprovada este estado não tem CTA nenhum — é beco puro.",
-      status: "🔴 pendente no VereditoView (blog/site ainda sem rota)",
+      status: "✅ 'Voltar ao início' mesclado (03/08, real: /entrada) — 'Ler o blog'/'Conhecer o site' seguem 🔴, blog/site ainda sem rota",
     },
   ],
   conta: [
     {
       id: "UX-71",
-      oque: "N6 recriado com o layout do LOGIN: painel escuro que sangra (marca centralizada + saudação) + folha clara sobreposta com os campos (ícone à esquerda, placeholder como rótulo). A tela aprovada é o formulário clássico com rótulo em cima. Diferenças necessárias: a folha ROLA (são 7 campos, não 2) e o CTA foi pro rodapé fixo. Campos passaram a ser 1 por linha (CPF/telefone lado a lado cortavam o valor mascarado) e o endereço do CEP não trunca mais.",
-      status: "🔴 pendente no ContaView (prop layout='painel')",
+      oque: "E6 recriado com o layout do LOGIN: painel escuro que sangra (marca centralizada + saudação) + folha clara sobreposta com os campos (ícone à esquerda, placeholder como rótulo). A tela aprovada é o formulário clássico com rótulo em cima. Diferenças necessárias: a folha ROLA (são 7 campos, não 2) e o CTA foi pro rodapé fixo. Campos passaram a ser 1 por linha (CPF/telefone lado a lado cortavam o valor mascarado) e o endereço do CEP não trunca mais.",
+      status: "✅ mesclado em /conta (03/08, prop layout='painel')",
     },
     {
       id: "UX-72",
       oque: "Cadastro por Google/Apple agora CONECTA de verdade: nome e e-mail vêm do provedor, a tela mostra um card 'conectado como…' (com opção de trocar) e pede só o que falta — CPF, telefone e endereço, que nenhum provedor fornece. Senha some (conta social não tem).",
-      status: "🔴 pendente no ContaView",
+      status: "🟡 visual mesclado (layout='painel', 03/08); `conectar()` segue MOCK — falta OAuth real (Google/Apple)",
     },
     {
       id: "UX-73",
       oque: "A pergunta 'é a primeira empresa?' virou OBRIGATÓRIA (inclusive no cadastro social). ⚠️ Contraria a decisão UX-48, que a definiu como 'dado puro, pulável sem custo' — lá o racional era não cobrar fricção por algo que não muda nada no fluxo.",
-      status: "🔴 decisão do Pedro × UX-48",
+      status: "🔴 NÃO mesclado de propósito (03/08): ao ligar layout='painel' em produção, a coorte ficou opcional (regra já travada da UX-48) — essa parte da demo continua deslinkada até decisão explícita",
     },
   ],
   plano: [
     {
       id: "UX-74",
-      oque: "N7 reconstruído como OFERTA: o plano vira produto, com card escuro e os itens inclusos em linguagem de dono, e a âncora verdadeira (escritório tradicional cobra honorário, a gente não). A tela aprovada é honesta mas não vende: dois cards e uma linha de taxa.",
-      status: "🔴 pendente no PlanoView (prop layout='oferta')",
+      oque: "E7 reconstruído como OFERTA: o plano vira produto, com card escuro e os itens inclusos em linguagem de dono, e a âncora verdadeira (escritório tradicional cobra honorário, a gente não). A tela aprovada é honesta mas não vende: dois cards e uma linha de taxa.",
+      status: "✅ mesclado em /plano (03/08, prop layout='oferta')",
     },
     {
       id: "UX-75",
-      oque: "LAPIDAÇÃO da própria UX-74 (achado do Pedro: 'muita informação'). Saíram 3 blocos, cada um por um motivo: (1) o FAQ era pré-eco do N8, que já responde 3 das 4 perguntas na tela onde a pessoa assina; a 4ª, que o N8 não cobre, virou micro-linha VISÍVEL sob o preço, porque letra miúda escondida em acordeon é a pegadinha que a tela existe pra evitar; (2) o card comparativo era o 3º lugar dizendo 'grátis' e usava preço riscado, linguagem de varejo, o mesmo vício cortado do N4 no mesmo dia; a âncora sobreviveu como 1 linha no card verde; (3) os '22 anos' já apareciam no N2 e no N8, onde são card completo. Inclusos caíram de 7 pra 5 ('Abertura do CNPJ' misturava balde, estava dentro do card MENSAL). 8 blocos → 4.",
+      oque: "LAPIDAÇÃO da própria UX-74 (achado do Pedro: 'muita informação'). Saíram 3 blocos, cada um por um motivo: (1) o FAQ era pré-eco do E8, que já responde 3 das 4 perguntas na tela onde a pessoa assina; a 4ª, que o E8 não cobre, virou micro-linha VISÍVEL sob o preço, porque letra miúda escondida em acordeon é a pegadinha que a tela existe pra evitar; (2) o card comparativo era o 3º lugar dizendo 'grátis' e usava preço riscado, linguagem de varejo, o mesmo vício cortado do E5 no mesmo dia; a âncora sobreviveu como 1 linha no card verde; (3) os '22 anos' já apareciam no E2 e no E8, onde são card completo. Inclusos caíram de 7 pra 5 ('Abertura do CNPJ' misturava balde, estava dentro do card MENSAL). 8 blocos → 4.",
       status: "✅ aplicado no PlanoOferta (29/07)",
     },
     {
@@ -558,7 +602,7 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
   contrato: [
     {
       id: "UX-76",
-      oque: "As '4 linhas' eram 2 novas e 2 ecos: 'abre sem honorário' e 'mensalidade; taxas à parte' RE-EXPLICAVAM com palavras o que o N7 tinha mostrado com números um toque antes. E a tela do aceite não exibia um único valor: você assinava sem ver na tela quanto paga. As duas primeiras linhas viraram os NÚMEROS (paga hoje, com a composição · depois todo mês) e as duas com informação nova de verdade (período mínimo · 7 dias) seguem como bullet. Continua sendo quatro linhas.",
+      oque: "As '4 linhas' eram 2 novas e 2 ecos: 'abre sem honorário' e 'mensalidade; taxas à parte' RE-EXPLICAVAM com palavras o que o E7 tinha mostrado com números um toque antes. E a tela do aceite não exibia um único valor: você assinava sem ver na tela quanto paga. As duas primeiras linhas viraram os NÚMEROS (paga hoje, com a composição · depois todo mês) e as duas com informação nova de verdade (período mínimo · 7 dias) seguem como bullet. Continua sendo quatro linhas.",
       status: "✅ aplicado no ContratoView (29/07)",
     },
     {
@@ -575,7 +619,7 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
   pagamento: [
     {
       id: "🐛 BUG-04",
-      oque: "CPF pedido DUAS VEZES. O N6 virou front-load em 28/07 e passou a coletar CPF, mas o N9 continuava abrindo campo vazio e pedindo de novo. É literalmente o '1 dado duplicado sem reuso (CPF pedido 2x)' que o cruzamento com os dados da JUCEMG pegou na reunião de 28/07: a correção foi aplicada no N10 e esqueceu esta tela. Agora o N9 só EXIBE o CPF: como ele já foi digitado e validado no cadastro, não há o que reconfirmar nem editar (decisão do Pedro, 29/07).",
+      oque: "CPF pedido DUAS VEZES. O E6 virou front-load em 28/07 e passou a coletar CPF, mas o E9 continuava abrindo campo vazio e pedindo de novo. É literalmente o '1 dado duplicado sem reuso (CPF pedido 2x)' que o cruzamento com os dados da JUCEMG pegou na reunião de 28/07: a correção foi aplicada no C1 e esqueceu esta tela. Agora o E9 só EXIBE o CPF: como ele já foi digitado e validado no cadastro, não há o que reconfirmar nem editar (decisão do Pedro, 29/07).",
       status: "✅ corrigido — ⚠️ na produção só funciona com persistência (RF-01)",
     },
     {
@@ -592,7 +636,7 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
   socio: [
     {
       id: "UX-80",
-      oque: "REMOVIDA a pergunta 'Você mora fora do Brasil?'. Era confirmação do que a triagem do N4 já pergunta e já barra, com saída dedicada (LC 123 art. 17) — mesma duplicação que tiramos do CPF no N9. Saíram junto o aviso de bloqueio e o botão 'Falar com o time'. ⚠️ Efeito colateral assumido: o N10 passa a CONFIAR na resposta do N4, e a segunda barreira deixou de existir. A saída /saida/exterior continua alcançável pela triagem.",
+      oque: "REMOVIDA a pergunta 'Você mora fora do Brasil?'. Era confirmação do que a triagem do E5 já pergunta e já barra, com saída dedicada (LC 123 art. 17) — mesma duplicação que tiramos do CPF no E9. Saíram junto o aviso de bloqueio e o botão 'Falar com o time'. ⚠️ Efeito colateral assumido: o C1 passa a CONFIAR na resposta do E5, e a segunda barreira deixou de existir. A saída /saida/exterior continua alcançável pela triagem.",
       status: "✅ decisão do Pedro (29/07), aplicada no SocioView",
     },
     {
@@ -602,19 +646,19 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
     },
     {
       id: "🐛 BUG-05",
-      oque: "Os dois botões da tela eram MORTOS — nem 'Continuar' nem 'Falar com o time' tinham onClick, e o arquivo nem importava useRouter. Pior no segundo: quem chega nele é justamente quem foi barrado (mora fora do Brasil), então a pessoa recebia a notícia ruim e o único caminho adiante não respondia. Mesma classe do beco sem saída pego em 28/07. ⚠️ Ao consertar, apareceu que a cadeia INTEIRA do dossiê estava morta: nenhuma das 7 telas navegava, o flow parava no N10.",
-      status: "✅ corrigido — cadeia N10→N16→/revisar ligada",
+      oque: "Os dois botões da tela eram MORTOS — nem 'Continuar' nem 'Falar com o time' tinham onClick, e o arquivo nem importava useRouter. Pior no segundo: quem chega nele é justamente quem foi barrado (mora fora do Brasil), então a pessoa recebia a notícia ruim e o único caminho adiante não respondia. Mesma classe do beco sem saída pego em 28/07. ⚠️ Ao consertar, apareceu que a cadeia INTEIRA do dossiê estava morta: nenhuma das 7 telas navegava, o flow parava no C1.",
+      status: "✅ corrigido — cadeia C1→C7→/revisar ligada",
     },
     {
       id: "🎭 mock",
-      oque: "As telas do dossiê declaravam mocks próprios e contraditórios: o N12 deixava escolher 'Só eu', o N13 tinha 2 sócios fixos e perguntava pelos dois nominalmente, o N15 tinha solo fixo. E o nome trocava no meio: 'Ana Beatriz Ramos' aqui, 'Ana Souza' no N16. Agora existe uma fonte única (`dossie/mock.ts`) e a cliente tem um nome só do começo ao fim.",
+      oque: "As telas do dossiê declaravam mocks próprios e contraditórios: o C3 deixava escolher 'Só eu', o C4 tinha 2 sócios fixos e perguntava pelos dois nominalmente, o C6 tinha solo fixo. E o nome trocava no meio: 'Ana Beatriz Ramos' aqui, 'Ana Souza' no C7. Agora existe uma fonte única (`dossie/mock.ts`) e a cliente tem um nome só do começo ao fim.",
       status: "✅ unificado — 🚧 morre com o RF-01 (estado real entre telas)",
     },
   ],
   socios: [
     {
       id: "UX-78",
-      oque: "O limite de 2 sócios era um Aviso de bloco inteiro, com título, e aparecia pra 100% de quem chega aqui — a triagem do N4 já barrou 3+ lá atrás, então todo mundo que lia estava DENTRO do limite. Dar peso de notícia ruim a quem não foi barrado gasta atenção contra o próprio usuário. Virou nota de rodapé do campo: a trava continua dita, sem alarme. Também caiu um dos três 'só' da tela ('Dá pra ser só você' + 'Só eu' + 'Empresa só sua').",
+      oque: "O limite de 2 sócios era um Aviso de bloco inteiro, com título, e aparecia pra 100% de quem chega aqui — a triagem do E5 já barrou 3+ lá atrás, então todo mundo que lia estava DENTRO do limite. Dar peso de notícia ruim a quem não foi barrado gasta atenção contra o próprio usuário. Virou nota de rodapé do campo: a trava continua dita, sem alarme. Também caiu um dos três 'só' da tela ('Dá pra ser só você' + 'Só eu' + 'Empresa só sua').",
       status: "✅ aplicado no SociosView (29/07)",
     },
   ],
@@ -626,7 +670,7 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
     },
     {
       id: "🕓 preço",
-      oque: "O chip 'R$ 60/mês' do endereço fiscal aparecia sem marcação nenhuma, embora o doc da tela afirmasse 'Marcado na UI'. Não estava. O N7 declara os valores provisórios; esta tela não declarava nenhum, e número provisório sem aviso é igual a número sem fonte. A marcação foi criada de verdade.",
+      oque: "O chip 'R$ 60/mês' do endereço fiscal aparecia sem marcação nenhuma, embora o doc da tela afirmasse 'Marcado na UI'. Não estava. O E7 declara os valores provisórios; esta tela não declarava nenhum, e número provisório sem aviso é igual a número sem fonte. A marcação foi criada de verdade.",
       status: "✅ corrigido — 🟡 preço final segue com o Mauro",
     },
     {
@@ -649,30 +693,30 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
       status: "✅ aplicado no NomeView (29/07)",
     },
   ],
-  /* ═══ A CAUDA (N19–N24) + P1/P2 — entraram na demo hoje (29/07) ═══════ */
+  /* ═══ A CAUDA (A1–A5) + C0.1/E9.1 — entraram na demo hoje (29/07) ═══════ */
   revisar: [
     {
       id: "🐛 BUG-09",
-      oque: "N19 tinha mock de identidade PRÓPRIO (`DOSSIE`), divergente do resto do dossiê: CNAE principal com um dígito diferente do travado no Encaixe (6201-5/01 × 6201-5/02) e secundárias (Hospedagem, Suporte técnico) que o N14 nunca ofereceu como opção. Mesma classe de bug que o `dossie/mock.ts` foi criado pra matar — corrigido herdando de lá.",
+      oque: "A1 tinha mock de identidade PRÓPRIO (`DOSSIE`), divergente do resto do dossiê: CNAE principal com um dígito diferente do travado no Encaixe (6201-5/01 × 6201-5/02) e secundárias (Hospedagem, Suporte técnico) que o C5 nunca ofereceu como opção. Mesma classe de bug que o `dossie/mock.ts` foi criado pra matar — corrigido herdando de lá.",
       status: "✅ corrigido no RevisarView (29/07)",
     },
     {
       id: "🐛 BUG-10",
       oque: "'Confirmar e seguir' não tinha onClick — a tela nunca tinha sido ligada a lugar nenhum, porque nunca tinha sido apresentada.",
-      status: "✅ corrigido — segue pro N20",
+      status: "✅ corrigido — segue pro A2",
     },
   ],
   termo: [
     {
       id: "🐛 BUG-10",
-      oque: "Mesmo defeito do N19: 'Autorizo, pode abrir' não navegava.",
-      status: "✅ corrigido — segue pro N21 (painel)",
+      oque: "Mesmo defeito do A1: 'Autorizo, pode abrir' não navegava.",
+      status: "✅ corrigido — segue pro A3 (painel)",
     },
   ],
   painel: [
     {
       id: "✍️ reduzido (1ª passada)",
-      oque: "Caiu de 9 pra 4 status: tudo que vinha DEPOIS do registro (pagar taxa · tirar CNPJ · Simples · certificado · liberar nota · deixar pronto) saiu — o certificado já tem tela própria (P0). 'Registrar a empresa' virou 'Analisando viabilidade' (nome mais honesto pro que a Junta faz — é onde a recusa de nome acontece). Entrou 'Agora é só assinar', cinza até a Junta deferir.",
+      oque: "Caiu de 9 pra 4 status: tudo que vinha DEPOIS do registro (pagar taxa · tirar CNPJ · Simples · certificado · liberar nota · deixar pronto) saiu — o certificado já tem tela própria (A5). 'Registrar a empresa' virou 'Analisando viabilidade' (nome mais honesto pro que a Junta faz — é onde a recusa de nome acontece). Entrou 'Agora é só assinar', cinza até a Junta deferir.",
       status: "✅ aplicado no painel.tsx (29/07)",
     },
     {
@@ -685,46 +729,46 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
     {
       id: "🐛 BUG-10",
       oque: "Nenhum dos 3 CTAs (convidar sócio · assinar direto · assinar no GOV.BR) navegava. ⚠️ Sem estado real de consenso multi-sócio (mock pra farol): qualquer CTA habilitado avança — simular a espera assíncrona de verdade é trabalho de painel/CRM, não desta apresentação.",
-      status: "✅ corrigido — segue pro P0 (home de ativação)",
+      status: "✅ corrigido — segue pro A5 (home de ativação)",
     },
   ],
   ativacao: [
     {
       id: "🔓 SWAP",
-      oque: "O que vem depois da assinatura NÃO é o N24 ('empresa ativa', 3 primeiros passos genéricos): é esta home de dia-1, que trata o certificado como item 'agora' de uma trilha (1 de 3), não como coisa já liberada. ⚠️ Autocrítica: a 1ª tentativa desta correção trouxe a tela ERRADA (`/certificado`, um gate isolado que também existe, também chamado de 'P0' num doc antigo) — o Pedro mandou o print da tela real pra corrigir.",
+      oque: "O que vem depois da assinatura NÃO é a antiga 'empresa ativa' (3 primeiros passos genéricos, removida 30/07): é esta home de dia-1 (A5), que trata o certificado como item 'agora' de uma trilha (1 de 3), não como coisa já liberada. ⚠️ Autocrítica: a 1ª tentativa desta correção trouxe a tela ERRADA (`/certificado`, um gate isolado que também existe, também chamado de 'A5' num doc antigo) — o Pedro mandou o print da tela real pra corrigir.",
       status: "✅ corrigido — HomeAtivacaoView substitui o que era CertificadoView na sequência",
     },
     {
       id: "✍️ sem confete",
-      oque: "A fonte (`home-dia1/page.tsx`) tinha `<Confetti>` no hero de nascimento. Removido por pedido explícito — mesmo padrão do dia inteiro (celebração saiu do CTA do veredito 🟢, materialização saiu do N24).",
+      oque: "A fonte (`home-dia1/page.tsx`) tinha `<Confetti>` no hero de nascimento. Removido por pedido explícito — mesmo padrão do dia inteiro (celebração saiu do CTA do veredito 🟢, materialização saiu da antiga 'empresa ativa').",
       status: "✅ aplicado no HomeAtivacaoView (29/07)",
     },
   ],
   aguardando: [
     {
       id: "🐛 BUG-11",
-      oque: "O `/pagamento` de produção mandava TODO MUNDO direto pro dossiê, inclusive quem pagou boleto. A aresta `N9--boleto-->P2` do mapa (`flow-data.mjs`) nunca tinha sido implementada — a P2 existia como rota isolada, sem ninguém apontando pra ela.",
-      status: "✅ corrigido no wrapper de produção `/pagamento` — boleto agora passa por P2 antes do N10",
+      oque: "O `/pagamento` de produção mandava TODO MUNDO direto pro dossiê, inclusive quem pagou boleto. A aresta `E9--boleto-->E9.1` do mapa (`flow-data.mjs`) nunca tinha sido implementada — a E9.1 existia como rota isolada, sem ninguém apontando pra ela.",
+      status: "✅ corrigido no wrapper de produção `/pagamento` — boleto agora passa por E9.1 antes do C1",
     },
   ],
   retomar: [
     {
       id: "🐛 BUG-12",
       oque: "'Continuar de onde parei' não navegava.",
-      status: "✅ corrigido — segue pro N10 (mesma aresta do mapa: reentrada aterrissa no início do dossiê)",
+      status: "✅ corrigido — segue pro C1 (mesma aresta do mapa: reentrada aterrissa no início do dossiê)",
     },
   ],
   "fora-bh": [
     {
       id: "UX-62",
       oque: "Virou lista de espera classificada: etiqueta '📍 Outra cidade' + campo obrigatório 'qual a sua cidade?' + confirmação que promete só avisar (a oficial promete ligação em 1 dia útil, que aqui não se cumpre).",
-      status: "🔴 pendente em /saida/fora-bh",
+      status: "✅ mesclado em /saida/fora-bh (03/08) — 'Voltar ao início' real; blog/site continuam sem rota",
     },
   ],
   perguntando: [
     {
       id: "UX-60",
-      oque: "Seta de voltar no header, pra sair do N4 e revisar o fork do N3. A tela aprovada não tem — quem erra a escolha do N3 fica preso.",
+      oque: "Seta de voltar no header, pra sair do E5 e revisar o fork do E3. A tela aprovada não tem — quem erra a escolha do E3 fica preso.",
       status: "🔴 pendente no /gate de produção",
     },
   ],
@@ -736,7 +780,7 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
     },
     {
       id: "UX-67",
-      oque: "Pergunta do exterior virou condicional: some no 'Só eu', e só aparece depois de escolher o nº de sócios. O título se dirige a quem existe — 2 sócios: 'Seu sócio mora fora do Brasil?'; 3+: 'Algum sócio mora fora do Brasil?'. ⚠️ Ressalva fiscal: o gate do N3 confirma onde fica a EMPRESA (BH), não onde a pessoa MORA — sócio único domiciliado fora derruba o Simples igual (LC 123 art.17). Alternativa sem furo pro caso solo: 'Você mora fora do Brasil?' em vez de remover.",
+      oque: "Pergunta do exterior virou condicional: some no 'Só eu', e só aparece depois de escolher o nº de sócios. O título se dirige a quem existe — 2 sócios: 'Seu sócio mora fora do Brasil?'; 3+: 'Algum sócio mora fora do Brasil?'. ⚠️ Ressalva fiscal: o gate do E4 confirma onde fica a EMPRESA (BH), não onde a pessoa MORA — sócio único domiciliado fora derruba o Simples igual (LC 123 art.17). Alternativa sem furo pro caso solo: 'Você mora fora do Brasil?' em vez de remover.",
       status: "🔴 decisão do Pedro (risco de falso-negativo antes do pagamento)",
     },
   ],
@@ -749,14 +793,14 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
     {
       id: "UX-68",
       oque: "'Sei o valor exato' revela o campo ABAIXO das faixas, em vez de trocar a tela inteira. Tocar numa faixa limpa o valor digitado (senão o número continuaria mandando e a seleção mentiria).",
-      status: "🔴 pendente no FaixaView",
+      status: "✅ mesclado em /gate (03/08, prop exatoInline)",
     },
   ],
   "veredito-descarta": [
     {
       id: "UX-64",
       oque: "Decline limpo ganhou saídas ('Ler o blog', 'Conhecer o site', 'Voltar ao início'). A tela aprovada não tem CTA nenhum: explica e para, sem oferecer pra onde ir.",
-      status: "🔴 pendente no VereditoView (blog/site ainda sem rota)",
+      status: "✅ 'Voltar ao início' mesclado (03/08, real: /entrada) — 'Ler o blog'/'Conhecer o site' seguem 🔴, blog/site ainda sem rota",
     },
     {
       id: "demo",
@@ -771,48 +815,51 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
  * alteração usando o mesmo vocabulário nos dois lugares.
  */
 const NOME_MOCKUP: Record<Momento, string> = {
-  fork: "N3 · Fork de 3 rotas",
-  cidade: "🆕 N3G · Gate de cidade (BH-MG)",
-  "fora-bh": "🆕 Saída · fora de BH",
-  "fora-bh-enviado": "🆕 Saída · fora de BH (na lista)",
-  perguntando: "N4 · Gate-CNAE",
-  analisando: "N4 · Gate-CNAE (analisando)",
+  fork: "E3 · Fork de 3 rotas",
+  cidade: "🆕 E4 · Gate de cidade (BH-MG)",
+  "fora-bh": "🆕 E4.1 · Saída · fora de BH",
+  "fora-bh-enviado": "🆕 E4.1 · Saída · fora de BH (na lista)",
+  perguntando: "E5 · Gate-CNAE",
+  analisando: "E5 · Gate-CNAE (analisando)",
   "veredito-atende": "🟢 Atende",
-  "veredito-waitlist": "🟡 Waitlist (regulada)",
-  "veredito-waitlist-enviado": "🟡 Waitlist · confirmada",
-  "veredito-mauro": "🔴 Contato especial (Mauro atende)",
-  "veredito-mauro-enviado": "🔴 Contato especial · confirmado",
-  "veredito-descarta": "🔴 Fora de escopo (descarta)",
-  triagem: "N4 · Triagem (sócios + exterior)",
-  faixa: "N4 · Faixa de faturamento",
-  conta: "N6 · Criar conta",
-  "conta-codigo": "N6 · Confirmar acesso (código)",
-  plano: "N7 · A conta da abertura",
-  contrato: "N8 · Aceite do contrato",
-  pagamento: "N9 · Pagamento",
-  socio: "N10 · Seus dados",
-  vinculo: "N11 · Vínculo de INSS",
-  socios: "N12 · Sócios",
-  empresa: "N13 · Dados da empresa",
-  "cnae-secundarios": "N14 · Atividades secundárias",
-  natureza: "N15 · Tipo da empresa",
-  nome: "N16 · Nome da empresa",
-  revisar: "N19 · Revisar o dossiê",
-  termo: "N20 · Termo irreversível",
-  painel: "N21 · Painel de acompanhamento",
-  assinatura: "N22 · Assinatura (GOV.BR)",
-  ativacao: "🔓 P0 · Home de ativação (dia-1)",
-  "m-cnpj": "🆕 M1 · Seu CNPJ (flow #2)",
-  "m-diagnostico": "🆕 M2 · Diagnóstico com número real",
-  "m-plano": "🆕 M3 · A conta da migração",
-  "m-contrato": "🆕 M3b · Contrato da migração",
-  "m-pagamento": "🆕 M3c · Pagamento (migração)",
-  "m-passivo": "🆕 M4a · Auditoria de passivo",
-  "m-transferencia": "🆕 M4b · A transferência",
-  "m-travado": "🆕 M4b · 🔴 TTRT travado",
-  "m-ativa": "🆕 M5 · Empresa migrada",
-  retomar: "🆕 P1 · Retomar de onde parou",
-  aguardando: "🆕 P2 · Aguardando o boleto",
+  "veredito-waitlist": "🟡 E5.1 · Waitlist (regulada)",
+  "veredito-waitlist-enviado": "🟡 E5.1 · Waitlist · confirmada",
+  "veredito-mauro": "🔴 E5.2 · Contato especial (Mauro atende)",
+  "veredito-mauro-enviado": "🔴 E5.2 · Contato especial · confirmado",
+  "veredito-descarta": "🔴 E5.3 · Fora de escopo (descarta)",
+  triagem: "E5 · Triagem (sócios + exterior)",
+  faixa: "E5 · Faixa de faturamento",
+  "saida-exterior": "🆕 E5.4 · Saída · sócio no exterior",
+  "saida-socios": "🆕 E5.5 · Saída · 3+ sócios",
+  conta: "E6 · Criar conta",
+  "conta-codigo": "E6 · Confirmar acesso (código)",
+  plano: "E7 · A conta da abertura",
+  contrato: "E8 · Aceite do contrato",
+  pagamento: "E9 · Pagamento",
+  socio: "C1 · Seus dados",
+  vinculo: "C2 · Vínculo de INSS",
+  socios: "C3 · Sócios",
+  empresa: "C4 · Dados da empresa",
+  "cnae-secundarios": "C5 · Atividades secundárias",
+  natureza: "C6 · Tipo da empresa",
+  nome: "C7 · Nome da empresa",
+  revisar: "A1 · Revisar o dossiê",
+  termo: "A2 · Termo irreversível",
+  painel: "A3 · Painel de acompanhamento",
+  "painel-recusa": "🆕 A3.1 · Órgão recusa",
+  assinatura: "A4 · Assinatura (GOV.BR)",
+  ativacao: "🔓 A5 · Home de ativação (dia-1)",
+  "m-cnpj": "🆕 E4.2 · Seu CNPJ (migrar)",
+  "m-diagnostico": "🆕 E4.3 · Diagnóstico com número real",
+  "m-plano": "🆕 E4.4 · A conta da migração",
+  "m-contrato": "🆕 E4.5 · Contrato da migração",
+  "m-pagamento": "🆕 E9 · Pagamento (migração)",
+  "m-passivo": "🆕 E9.2 · Auditoria de passivo",
+  "m-transferencia": "🆕 E9.3 · A transferência",
+  "m-travado": "🆕 E9.3 · 🔴 TTRT travado",
+  "m-ativa": "🆕 E9.4 · Empresa migrada",
+  retomar: "🆕 C0.1 · Retomar de onde parou",
+  aguardando: "🆕 E9.1 · Aguardando o boleto",
   fim: "— fim do piloto —",
 };
 
@@ -908,13 +955,25 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     interfere: "Alimenta o cálculo de enquadramento e Fator R nas telas seguintes (a conta da abertura e o pró-labore).",
     porque: "Base necessária pra estimar corretamente o que a empresa vai pagar — sem isso o resto do fluxo chuta.",
   },
+  "saida-exterior": {
+    dono: null,
+    faz: "Explica que a empresa pode existir, mas fora do Simples — a lei (LC 123 art.17) barra a opção pelo Simples com sócio domiciliado no exterior.",
+    interfere: "Encerra o funil do app (que só faz Simples). Não é 'não pode abrir empresa', é 'não pelo Simples' — confundir as duas seria uma notícia pior que a verdadeira.",
+    porque: "Honestidade > beco sem saída silencioso (doutrina das telas de saída, A9). Roteia pro time contábil, que atende esse regime fora do app.",
+  },
+  "saida-socios": {
+    dono: null,
+    faz: "Explica que o limite de 2 sócios é do PRODUTO, não da lei — a sociedade é legal, só o app que ainda não abre com 3+.",
+    interfere: "Encerra o funil do app. 'Ainda' porque o limite pode cair (decisão de 15/07, não é regra externa).",
+    porque: "Dizer que o limite é nosso custa orgulho e compra confiança — mesma escolha da doutrina anti-guru. Roteia pro escritório, que já faz esse tipo de abertura fora do app.",
+  },
   conta: {
     dono: "usuario",
     faz: "Cria o acesso e já coleta os dados pessoais: nome, CPF, telefone e endereço. Antes isso só era pedido depois do pagamento.",
     interfere:
       "São exatamente os dados que a Junta exige pra constituir: quem é o sócio, com que documento e onde ele mora. Coletar aqui adianta o dossiê inteiro.",
     porque:
-      "Front-load decidido em 28/07: captar num lugar só, com validação por código logo na entrada. Assim o N10 vira confirmação, não recoleta. Criar conta é grátis; o dinheiro só aparece na tela seguinte.",
+      "Front-load decidido em 28/07: captar num lugar só, com validação por código logo na entrada. Assim o C1 vira confirmação, não recoleta. Criar conta é grátis; o dinheiro só aparece na tela seguinte.",
   },
   "conta-codigo": {
     dono: "usuario",
@@ -938,7 +997,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     interfere:
       "É aqui que a pessoa vira cliente. Ainda NÃO é o ponto sem volta: nada foi executado, e o CDC art. 49 (7 dias) vale limpo.",
     porque:
-      "O termo irreversível é outra tela (N20), depois do dossiê. Separar os dois atos é o que mantém cada um juridicamente sólido. Conteúdo legal nunca fica atrás de expander.",
+      "O termo irreversível é outra tela (A2), depois do dossiê. Separar os dois atos é o que mantém cada um juridicamente sólido. Conteúdo legal nunca fica atrás de expander.",
   },
   pagamento: {
     dono: "usuario",
@@ -949,7 +1008,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
       "Um campo, dois usos, sem gastar uma tela a mais. E a copy precisa distinguir 'CPF suspenso' de 'cartão recusado': trocar de cartão não resolve o primeiro.",
   },
 
-  /* ═══════════════════ B4 · O DOSSIÊ (N10–N16) ═══════════════════════════
+  /* ═══════════════════ CONSTITUIÇÃO · O DOSSIÊ (C1–C7) ═══════════════════
      A partir daqui o cliente JÁ PAGOU e a casa (o portal) já nasceu. O que
      acontece nas 7 telas seguintes é a montagem do documento que vai pra
      JUCEMG — por isso o "o que interfere na constituição" fica muito mais
@@ -962,7 +1021,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     interfere:
       "Estado civil e regime de bens vão no contrato social e podem CONVOCAR outra pessoa: na comunhão universal, o cônjuge assina esta abertura. Descobrir isso no cartório trava tudo; descobrir aqui é só um aviso.",
     porque:
-      "Nome, CPF, telefone e endereço não são pedidos de novo — eles subiram pro N6 no front-load de 28/07. Esta tela vira CONFIRMAÇÃO. É a mesma regra que tirou o CPF duplicado do N9.",
+      "Nome, CPF, telefone e endereço não são pedidos de novo — eles subiram pro E6 no front-load de 28/07. Esta tela vira CONFIRMAÇÃO. É a mesma regra que tirou o CPF duplicado do E9.",
   },
   vinculo: {
     dono: "usuario",
@@ -978,7 +1037,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     interfere:
       "A divisão em % vai literalmente no contrato social, e o número de sócios determina a natureza jurídica da tela seguinte. Também define quantas assinaturas o GOV.BR vai exigir no fim.",
     porque:
-      "O produto abre com até 2 sócios: é limite nosso, não da lei, e a copy diz isso. A triagem do N4 já barrou 3+ lá atrás, então aqui é só trava de segurança — por isso deixou de ter peso de alerta.",
+      "O produto abre com até 2 sócios: é limite nosso, não da lei, e a copy diz isso. A triagem do E5 já barrou 3+ lá atrás, então aqui é só trava de segurança — por isso deixou de ter peso de alerta.",
   },
   empresa: {
     dono: "usuario",
@@ -1015,24 +1074,25 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
 
   fim: {
     dono: null,
-    faz: "Fim do dossiê. Daqui o cliente vai pro N19 (revisar o que foi montado) e pro N20 (o termo irreversível), que autoriza a abertura de fato.",
+    faz: "Fim do dossiê. Daqui o cliente vai pro A1 (revisar o que foi montado) e pro A2 (o termo irreversível), que autoriza a abertura de fato.",
     interfere:
       "É o ponto em que o documento está completo e a máquina liga: viabilidade na JUCEMG, registro, CNPJ e enquadramento no Simples.",
     porque:
-      "Próxima fase da demo: a CAUDA (N19–N24), onde aparecem as pausas de ÓRGÃO — as que não dependem nem do cliente nem da gente, e que são justamente as mais difíceis de explicar sem um painel.",
+      "Próxima fase da demo: a APROVAÇÃO (A1–A5), onde aparecem as pausas de ÓRGÃO — as que não dependem nem do cliente nem da gente, e que são justamente as mais difíceis de explicar sem um painel.",
   },
 
-  /* ═══════════════════ A CAUDA (N19–N24) ═════════════════════════════════
-     Do "está tudo certo?" ao CNPJ ativo. Diferença de tom em relação ao B3/B4:
-     aqui o cliente já pagou e já preencheu — o que resta é AUTORIZAR e depois
-     ESPERAR o órgão. Por isso a partir do N21 o "dono da pausa" vira 🟦 nossa
-     (ou "espera de terceiro"): não há mais formulário pra avançar, só status. */
+  /* ═══════════════════ APROVAÇÃO (A1–A5) ══════════════════════════════════
+     Do "está tudo certo?" ao CNPJ ativo. Diferença de tom em relação a
+     Entrada/Constituição: aqui o cliente já pagou e já preencheu — o que
+     resta é AUTORIZAR e depois ESPERAR o órgão. Por isso a partir do A3 o
+     "dono da pausa" vira 🟦 nossa (ou "espera de terceiro"): não há mais
+     formulário pra avançar, só status. */
 
   revisar: {
     dono: "usuario",
     faz: "Mostra tudo que foi preenchido, bloco por bloco, com 'ajustar' em cada um. É leitura, não formulário.",
     interfere:
-      "É o último ponto em que corrigir é de graça. A tela seguinte (N20) é irreversível: depois dela, a Junta já está sendo protocolada com esses dados.",
+      "É o último ponto em que corrigir é de graça. A tela seguinte (A2) é irreversível: depois dela, a Junta já está sendo protocolada com esses dados.",
     porque:
       "Ninguém deveria autorizar um registro que nunca viu inteiro. O enquadramento aparece como SUGESTÃO (não escolha manual): o antigo simulador pré-empresa foi dissolvido em 28/07, porque gerava mais dúvida que clareza antes de a empresa existir.",
   },
@@ -1040,9 +1100,9 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     dono: "usuario",
     faz: "Pede autorização explícita pra começar o registro de verdade. É o ponto sem volta do fluxo inteiro.",
     interfere:
-      "A partir do aceite, a taxa da Junta (já paga no N9) é gasta e o protocolo começa. Antes disso, tudo ainda é reversível (CDC art. 49).",
+      "A partir do aceite, a taxa da Junta (já paga no E9) é gasta e o protocolo começa. Antes disso, tudo ainda é reversível (CDC art. 49).",
     porque:
-      "O antigo T18 juntava contrato reversível e autorização irreversível na mesma tela — problema jurídico e de tom. Racharam em duas: N8 (contrato, não assusta) e este N20 (autorização, existe pra assustar exatamente o necessário, nem mais nem menos).",
+      "O antigo T18 juntava contrato reversível e autorização irreversível na mesma tela — problema jurídico e de tom. Racharam em duas: E8 (contrato, não assusta) e este A2 (autorização, existe pra assustar exatamente o necessário, nem mais nem menos).",
   },
   painel: {
     dono: "nossa",
@@ -1052,11 +1112,17 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     porque:
       "Sem painel, quem pagou e nunca mais viu nada acha que comprou e ninguém fez nada. Cada etapa mostra se é 'a vez do órgão' ou 'precisamos de você' (o 4º estado, recusa) — nunca um limbo mudo.",
   },
+  "painel-recusa": {
+    dono: "nossa",
+    faz: "O 4º estado do painel: a Junta reprovou as 3 opções de nome que a pessoa priorizou lá no C7, apesar do retry automático.",
+    interfere: "A constituição PARA até o cliente sugerir 3 novos nomes — é a única pausa da Aprovação que volta a depender dele, não do órgão.",
+    porque: "Vermelho legítimo (um órgão externo parou a fila mesmo) + 'precisa de você' + a ação, tudo DENTRO do pipeline — nunca um limbo mudo (UX-40). Produção tenta as 3 opções sozinha antes de chegar aqui; a demo pula direto pro pior caso.",
+  },
   assinatura: {
     dono: "usuario",
     faz: "Pede a assinatura via GOV.BR (todos os sócios, quando há mais de um) e explica a procuração eletrônica que acompanha.",
     interfere:
-      "A Junta só registra com a assinatura de quem é sócio. Nível GOV.BR abaixo de prata trava a assinatura — por isso o gate de nível mora dobrado aqui (era N23 no mapa).",
+      "A Junta só registra com a assinatura de quem é sócio. Nível GOV.BR abaixo de prata trava a assinatura — por isso o gate de nível mora dobrado aqui (A4G no mapa).",
     porque:
       "Com 2 sócios, ninguém assina pelo outro: o parceiro confirma os próprios dados e o custo antes de assinar (consenso antes do commit). Evita o cenário 'um decidiu e o outro descobriu depois'.",
   },
@@ -1066,13 +1132,13 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     interfere:
       "O certificado é pré-requisito pra emitir nota e acessar a Receita — sem ele, o app não abre por completo. É por isso que a home NÃO é a de regime: empresa recém-nascida ainda não tem o que vigiar (faturamento zero).",
     porque:
-      "🔓 SWAP validado (29/07): é ESTA tela que vem depois da assinatura, não o N24 ('empresa ativa', 3 primeiros passos) nem o gate isolado de certificado. Sem confete no hero de nascimento, por pedido explícito — mesmo padrão do dia (a celebração saiu do CTA do veredito 🟢 e a materialização saiu do N24).",
+      "🔓 SWAP validado (29/07): é ESTA tela que vem depois da assinatura, não a antiga 'empresa ativa' (3 primeiros passos, removida 30/07) nem o gate isolado de certificado. Sem confete no hero de nascimento, por pedido explícito — mesmo padrão do dia (a celebração saiu do CTA do veredito 🟢 e a materialização saiu da tela antiga).",
   },
 
-  /* ═══════════════════ FLOW #2 · MIGRAR DE CONTADOR ══════════════════════
-     Ramo PARALELO: sai do fork do N3 (quem já tem CNPJ) e nunca reencontra o
-     flow #1. Era o blind spot mais antigo do projeto — "metade do mercado,
-     zero testado" desde 15/07. Construído em 30/07. */
+  /* ═══════════════════ MIGRAR DE CONTADOR (decimal de Entrada) ═══════════
+     Ramo decimal: sai do fork E4 (quem já tem CNPJ) e reencontra o tronco só
+     no pagamento (E9). Era o blind spot mais antigo do projeto — "metade do
+     mercado, zero testado" desde 15/07. Construído em 30/07. */
 
   "m-cnpj": {
     dono: "usuario",
@@ -1080,7 +1146,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     interfere:
       "Não interfere na constituição — a empresa já existe. O que se decide aqui é se a gente ATENDE essa empresa: atividade de serviço, no Simples, sem conselho de classe.",
     porque:
-      "É a maior diferença em relação ao flow #1: aqui NÃO existe entrevista de atividade. O CNAE já está registrado, então a gente lê em vez de perguntar. Todo o N4 (pills, IA, desambiguação) desaparece — e com ele o risco de a IA errar a interpretação.",
+      "É a maior diferença em relação ao caminho abrir: aqui NÃO existe entrevista de atividade. O CNAE já está registrado, então a gente lê em vez de perguntar. Todo o E5 (pills, IA, desambiguação) desaparece — e com ele o risco de a IA errar a interpretação.",
   },
   "m-diagnostico": {
     dono: "usuario",
@@ -1088,7 +1154,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     interfere:
       "Não muda a empresa, mas define a proposta comercial inteira. É aqui que a pessoa decide se vale trocar de contador.",
     porque:
-      "🎯 O número é REAL, não estimativa. Empresa com 12+ meses tem histórico, então o Fator R sai do que de fato aconteceu. No flow #1 o teaser promete em cima de faixa declarada, e é de lá que veio a dívida 'promessa quebrada' — aqui esse risco não existe. ⚖️ E tem guarda-corpo: se o contador atual já acertou, a tela diz isso e vende serviço, não economia inventada.",
+      "🎯 O número é REAL, não estimativa. Empresa com 12+ meses tem histórico, então o Fator R sai do que de fato aconteceu. No caminho abrir o teaser promete em cima de faixa declarada, e é de lá que veio a dívida 'promessa quebrada' — aqui esse risco não existe. ⚖️ E tem guarda-corpo: se o contador atual já acertou, a tela diz isso e vende serviço, não economia inventada.",
   },
   "m-plano": {
     dono: "usuario",
@@ -1096,7 +1162,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     interfere:
       "Nenhuma taxa de governo incide aqui. A empresa já existe, então não há DAE da Junta nem TFLF a pagar.",
     porque:
-      "É vantagem concreta sobre o flow #1, e a tela diz isso em vez de só omitir. Na abertura o cliente leva um choque de ~R$463 na 3ª tela; aqui ele vê só a mensalidade. Trocar de contador não custa nada aos órgãos.",
+      "É vantagem concreta sobre o caminho abrir, e a tela diz isso em vez de só omitir. Na abertura o cliente leva um choque de ~R$463 na 3ª tela; aqui ele vê só a mensalidade. Trocar de contador não custa nada aos órgãos.",
   },
   "m-contrato": {
     dono: "usuario",
@@ -1108,11 +1174,11 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   },
   "m-pagamento": {
     dono: "usuario",
-    faz: "Mesma tela do N9, sem somar taxa de governo. O aviso fala de migração: 'a gente já aciona seu contador anterior'.",
+    faz: "Mesma tela do E9, sem somar taxa de governo. O aviso fala de migração: 'a gente já aciona seu contador anterior'.",
     interfere:
       "O pagamento é o gatilho: é ele que autoriza a gente a acionar o escritório antigo e abrir a transferência no conselho.",
     porque:
-      "💰 Decisão travada em 30/07: cobra ANTES da transferência, igual ao flow #1. O risco assumido está dito na cara — a gente cobra por algo cujo destravamento depende de terceiro. Por isso o contrato promete devolução e a tela de transferência tem um estado dedicado pra quando trava.",
+      "💰 Decisão travada em 30/07: cobra ANTES da transferência, igual ao caminho abrir. O risco assumido está dito na cara — a gente cobra por algo cujo destravamento depende de terceiro. Por isso o contrato promete devolução e a tela de transferência tem um estado dedicado pra quando trava.",
   },
   "m-passivo": {
     dono: "nossa",
@@ -1144,12 +1210,12 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     interfere:
       "A contabilidade passa a ser nossa a partir da data de corte. O cliente não precisa mais falar com o escritório antigo.",
     porque:
-      "Fecha o loop do M2. No flow #1 a promessa é estimativa e só se resolve meses depois; aqui o número era real desde a segunda tela, então pode virar ação imediata. Deixar a promessa sumir depois da venda seria repetir o erro que este flow não precisa cometer.",
+      "Fecha o loop do E4.3. No caminho abrir a promessa é estimativa e só se resolve meses depois; aqui o número era real desde a segunda tela, então pode virar ação imediata. Deixar a promessa sumir depois da venda seria repetir o erro que este flow não precisa cometer.",
   },
 
-  /* ═══════════════════ P1 · P2 — pausas de pagamento ══════════════════════
-     ⚠️ NÃO ficam entre N16 e N19. Vivem entre N9 e N10 (mapa: `flow-data.mjs`):
-     P2 só existe pra quem pagou boleto; P1 é reentrada de quem fechou o app. */
+  /* ═══════════════════ C0.1 · E9.1 — pausas de pagamento ═══════════════════
+     ⚠️ NÃO ficam entre C7 e A1. Vivem entre E9 e C1 (mapa: `flow-data.mjs`):
+     E9.1 só existe pra quem pagou boleto; C0.1 é reentrada de quem fechou o app. */
 
   retomar: {
     dono: "usuario",
@@ -1163,7 +1229,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     dono: "usuario",
     faz: "Mostra que o boleto está a caminho e que dá pra adiantar o dossiê inteiro enquanto ele não compensa.",
     interfere:
-      "Só os 2 últimos passos (N19 revisar + N20 autorizar) ficam retidos até o pagamento cair — o resto do dossiê (N10–N16) roda livre.",
+      "Só os 2 últimos passos (A1 revisar + A2 autorizar) ficam retidos até o pagamento cair — o resto do dossiê (C1–C7) roda livre.",
     porque:
       "Boleto foi mantido fora do happy path (perderia cliente se cortado), mas a tela existe pra matar a 'sensação de travou': espera com tarefa não é espera, é andamento.",
   },
@@ -1217,7 +1283,7 @@ export default function ApresentacaoPage() {
   const [notaVisivel, setNotaVisivel] = useState(false);
   const [notaFixada, setNotaFixada] = useState(false);
 
-  // ── B3 · a travessia do dinheiro (N6→N9) ───────────────────────────────
+  // ── ENTRADA · a travessia do dinheiro (E6→E9) ──────────────────────────
   const [dadosConta, setDadosConta] = useState<DadosConta>({
     nome: "",
     cpf: "",
@@ -1233,16 +1299,16 @@ export default function ApresentacaoPage() {
   const [cpfPag, setCpfPag] = useState("");
   const [metodo, setMetodo] = useState<Metodo>("cartao");
 
-  // ── Cauda (N20) ─────────────────────────────────────────────────────────
-  // Estado PRÓPRIO, separado do `aceite` do N8: são dois consentimentos
+  // ── Aprovação (A2) ─────────────────────────────────────────────────────
+  // Estado PRÓPRIO, separado do `aceite` do E8: são dois consentimentos
   // jurídicos distintos (reversível × irreversível). Reusar o mesmo booleano
-  // faria o N20 nascer pré-marcado só porque o N8 foi aceito antes.
+  // faria o A2 nascer pré-marcado só porque o E8 foi aceito antes.
   const [aceiteTermo, setAceiteTermo] = useState(false);
 
-  // ── Flow #2 ─────────────────────────────────────────────────────────────
+  // ── Migrar (decimal de Entrada) ────────────────────────────────────────
   // Aceite PRÓPRIO: o contrato da migração é outro documento (promete devolução
-  // se a transferência travar). Reusar o `aceite` do N8 faria o M3b nascer
-  // pré-marcado pra quem tivesse passado pelo flow #1 na mesma sessão.
+  // se a transferência travar). Reusar o `aceite` do E8 faria o E4.5 nascer
+  // pré-marcado pra quem tivesse passado pelo caminho abrir na mesma sessão.
   const [aceiteMigrar, setAceiteMigrar] = useState(false);
 
   /**
@@ -1301,8 +1367,8 @@ export default function ApresentacaoPage() {
   /**
    * VOLTAR — desempilha e restaura. É a ÚNICA forma de andar pra trás na demo.
    *
-   * 🐛 FIX 29/07: antes cada botão de volta (seta externa · "Voltar" do N3 ·
-   * seta do N4 · "refazer" do veredito) fazia `setEtapa(...)` por conta
+   * 🐛 FIX 29/07: antes cada botão de volta (seta externa · "Voltar" do E3 ·
+   * seta do E5 · "refazer" do veredito) fazia `setEtapa(...)` por conta
    * própria. Como o histórico empilha toda troca de momento, a VOLTA também
    * era empilhada — e a seta externa passava a levar pra FRENTE. Era esse o
    * "vai e volta confuso". Agora tudo que anda pra trás passa por aqui.
@@ -1449,7 +1515,7 @@ export default function ApresentacaoPage() {
    * ✈️ PULAR PRA QUALQUER TELA — barra de pills no rodapé (29/07).
    *
    * Motivo: depois de cada edição de código o Fast Refresh reseta o estado da
-   * demo pro `fork`, e reandar o flow inteiro (N3→N16) só pra chegar na tela
+   * demo pro `fork`, e reandar o flow inteiro (E3→C7) só pra chegar na tela
    * que acabou de mudar é lento. As pills navegam direto.
    *
    * `setEtapa` sozinho não bastaria: telas do meio do flow (`triagem`,
@@ -1480,11 +1546,11 @@ export default function ApresentacaoPage() {
     }
     if (!aceite) setAceite(true);
     if (!cpfPag) setCpfPag("123.456.789-00");
-    // Cauda: termo/painel/assinatura/ativa pressupõem o aceite do N20 já
-    // dado — sem isso o N20, se alguém voltasse até lá, mostraria o CTA
+    // Aprovação: termo/painel/assinatura/ativa pressupõem o aceite do A2 já
+    // dado — sem isso o A2, se alguém voltasse até lá, mostraria o CTA
     // travado por engano.
     if (!aceiteTermo) setAceiteTermo(true);
-    // Flow #2: sem isso, pular direto pro M3b mostraria o CTA travado (o
+    // Migrar: sem isso, pular direto pro E4.5 mostraria o CTA travado (o
     // checkbox nasce desmarcado e ninguém marcou).
     if (!aceiteMigrar) setAceiteMigrar(true);
     // A pilha de "voltar" não faz sentido pra um salto: zera, senão a seta
@@ -1497,57 +1563,58 @@ export default function ApresentacaoPage() {
 
   /** Ordem real do flow — a mesma ordem das pills no rodapé. */
   const PILLS: { etapa: Etapa; label: string }[] = [
-    { etapa: "fork", label: "N3 · Fork" },
-    { etapa: "cidade", label: "N3G · Cidade" },
-    { etapa: "perguntando", label: "N4 · Gate-CNAE" },
+    { etapa: "fork", label: "E3 · Fork" },
+    { etapa: "cidade", label: "E4 · Cidade" },
+    { etapa: "perguntando", label: "E5 · Gate-CNAE" },
     { etapa: "veredito", label: "🟢 Veredito" },
-    { etapa: "triagem", label: "N4 · Triagem" },
-    { etapa: "faixa", label: "N4 · Faixa" },
-    { etapa: "conta", label: "N6 · Conta" },
-    { etapa: "conta-codigo", label: "N6 · Código" },
-    { etapa: "plano", label: "N7 · Plano" },
-    { etapa: "contrato", label: "N8 · Contrato" },
-    { etapa: "pagamento", label: "N9 · Pagamento" },
-    { etapa: "socio", label: "N10 · Seus dados" },
-    { etapa: "vinculo", label: "N11 · Vínculo" },
-    { etapa: "socios", label: "N12 · Sócios" },
-    { etapa: "empresa", label: "N13 · Empresa" },
-    { etapa: "cnae-secundarios", label: "N14 · Secundários" },
-    { etapa: "natureza", label: "N15 · Natureza" },
-    { etapa: "nome", label: "N16 · Nome" },
-    { etapa: "revisar", label: "N19 · Revisar" },
-    { etapa: "termo", label: "N20 · Termo" },
-    { etapa: "painel", label: "N21 · Painel" },
-    { etapa: "assinatura", label: "N22 · Assinatura" },
-    { etapa: "ativacao", label: "🔓 P0 · Ativação" },
+    { etapa: "triagem", label: "E5 · Triagem" },
+    { etapa: "faixa", label: "E5 · Faixa" },
+    { etapa: "conta", label: "E6 · Conta" },
+    { etapa: "conta-codigo", label: "E6 · Código" },
+    { etapa: "plano", label: "E7 · Plano" },
+    { etapa: "contrato", label: "E8 · Contrato" },
+    { etapa: "pagamento", label: "E9 · Pagamento" },
+    { etapa: "socio", label: "C1 · Seus dados" },
+    { etapa: "vinculo", label: "C2 · Vínculo" },
+    { etapa: "socios", label: "C3 · Sócios" },
+    { etapa: "empresa", label: "C4 · Empresa" },
+    { etapa: "cnae-secundarios", label: "C5 · Secundários" },
+    { etapa: "natureza", label: "C6 · Natureza" },
+    { etapa: "nome", label: "C7 · Nome" },
+    { etapa: "revisar", label: "A1 · Revisar" },
+    { etapa: "termo", label: "A2 · Termo" },
+    { etapa: "painel", label: "A3 · Painel" },
+    { etapa: "assinatura", label: "A4 · Assinatura" },
+    { etapa: "ativacao", label: "🔓 A5 · Ativação" },
     { etapa: "fim", label: "Fim" },
   ];
 
   /**
-   * P1/P2 são pausas de PAGAMENTO (entre N9 e N10), não sequência — por isso
-   * ficam numa barra separada, não na `PILLS` principal (ver comentário no
-   * `type Etapa`).
+   * As pausas de pagamento (C0.1/E9.1, entre E9 e C1) não são sequência — por
+   * isso ficam numa barra separada, não na `PILLS` principal (ver comentário
+   * no `type Etapa`).
    */
   const PILLS_PAUSA: { etapa: Etapa; label: string }[] = [
-    { etapa: "retomar", label: "🆕 P1 · Retomar" },
-    { etapa: "aguardando", label: "🆕 P2 · Aguardando boleto" },
+    { etapa: "retomar", label: "🆕 C0.1 · Retomar" },
+    { etapa: "aguardando", label: "🆕 E9.1 · Aguardando boleto" },
   ];
 
   /**
-   * FLOW #2 — barra própria, porque é um RAMO PARALELO, não continuação.
-   * Misturar na fila de cima sugeriria que M1 vem depois do N24, o que é falso:
-   * ele sai do fork do N3 e nunca reencontra o flow #1.
+   * MIGRAR — barra própria, porque é um RAMO decimal de Entrada (E4/E9), não
+   * continuação sequencial. Misturar na fila de cima sugeriria que E4.2 vem
+   * depois de A5, o que é falso: ele sai do fork E4 e reencontra o tronco só
+   * no pagamento (E9).
    */
   const PILLS_MIGRAR: { etapa: Etapa; label: string }[] = [
-    { etapa: "m-cnpj", label: "M1 · Seu CNPJ" },
-    { etapa: "m-diagnostico", label: "M2 · Diagnóstico" },
-    { etapa: "m-plano", label: "M3 · A conta" },
-    { etapa: "m-contrato", label: "M3b · Contrato" },
-    { etapa: "m-pagamento", label: "M3c · Pagamento" },
-    { etapa: "m-passivo", label: "M4a · Passivo" },
-    { etapa: "m-transferencia", label: "M4b · Transferência" },
-    { etapa: "m-travado", label: "🔴 M4b · TTRT travado" },
-    { etapa: "m-ativa", label: "M5 · Migrada" },
+    { etapa: "m-cnpj", label: "E4.2 · Seu CNPJ" },
+    { etapa: "m-diagnostico", label: "E4.3 · Diagnóstico" },
+    { etapa: "m-plano", label: "E4.4 · A conta" },
+    { etapa: "m-contrato", label: "E4.5 · Contrato" },
+    { etapa: "m-pagamento", label: "E9 · Pagamento" },
+    { etapa: "m-passivo", label: "E9.2 · Passivo" },
+    { etapa: "m-transferencia", label: "E9.3 · Transferência" },
+    { etapa: "m-travado", label: "🔴 E9.3 · TTRT travado" },
+    { etapa: "m-ativa", label: "E9.4 · Migrada" },
   ];
 
   const momento: Momento =
@@ -1567,6 +1634,10 @@ export default function ApresentacaoPage() {
                 ? "triagem"
                 : etapa === "faixa"
                   ? "faixa"
+                  : etapa === "saida-exterior"
+                    ? "saida-exterior"
+                    : etapa === "saida-socios"
+                      ? "saida-socios"
                   : etapa === "conta"
                     ? "conta"
                     : etapa === "conta-codigo"
@@ -1628,6 +1699,7 @@ export default function ApresentacaoPage() {
   const mostraCenarios = etapa === "perguntando";
   const naEntrada = etapa === "fork" || etapa === "cidade";
   const naSaidaCidade = etapa === "fora-bh";
+  const naSaidaTriagem = etapa === "saida-exterior" || etapa === "saida-socios";
   const naTravessia =
     etapa === "conta" ||
     etapa === "conta-codigo" ||
@@ -1637,11 +1709,11 @@ export default function ApresentacaoPage() {
     // O dossiê usa o mesmo shell de tela cheia da travessia do dinheiro: são
     // telas de coleta, sem navbar, dentro do aparelho.
     noDossie(etapa) ||
-    // A cauda (N19–N24) e as 2 pausas (P1/P2) seguem o mesmo shell — todas
-    // trazem o próprio header+main, igual às de cima.
+    // A Aprovação (A1–A5) e as 2 pausas (C0.1/E9.1) seguem o mesmo shell —
+    // todas trazem o próprio header+main, igual às de cima.
     naCauda(etapa) ||
     naEspera(etapa) ||
-    // O flow #2 inteiro também: são telas de tela-cheia, sem navbar.
+    // Migrar inteiro também: são telas de tela-cheia, sem navbar.
     noMigrar(etapa);
   const mostraPreencher =
     etapa === "triagem" ||
@@ -1653,7 +1725,7 @@ export default function ApresentacaoPage() {
     // "revisar", "painel", "assinatura", "ativacao", "retomar",
     // "aguardando" nunca entram: são recap/status/home/aceite sem campo
     // livre — só "termo" tem um checkbox (o aceite irreversível).
-    // 🐛 30/07 — o FLOW #2 quase repetiu o BUG-08. `naTravessia` passou a
+    // 🐛 30/07 — o MIGRAR quase repetiu o BUG-08. `naTravessia` passou a
     // incluir as telas de migração, então o botão apareceria nas 9 — e o
     // `preencherEtapa` só conheceria 2 delas. Em vez de listar exceção por
     // exceção (que foi o que deixou o bug passar da 1ª vez), a regra agora é
@@ -1666,11 +1738,14 @@ export default function ApresentacaoPage() {
       etapa !== "ativacao" &&
       etapa !== "retomar" &&
       etapa !== "aguardando" &&
-      // Do flow #2, só estas 2 têm o que preencher: o CNPJ (input) e o aceite
+      // Do Migrar, só estas 2 têm o que preencher: o CNPJ (input) e o aceite
       // (checkbox). Diagnóstico, plano, passivo, transferência, travado e
       // migrada são leitura/status — botão ali seria inerte.
       (!noMigrar(etapa) || etapa === "m-cnpj" || etapa === "m-contrato"));
   const mostraSimularValidacao = momento === "veredito-waitlist" || momento === "veredito-mauro";
+  // 🆕 03/08 — atalho pro A3.1 (gap fechado): produção só chega lá por retry
+  // automático mockado, sem interação real pra demo replicar.
+  const mostraSimularRecusa = momento === "painel";
   const cenario = CENARIOS.find((c) => c.id === cenarioArmado) ?? null;
 
   return (
@@ -1683,17 +1758,19 @@ export default function ApresentacaoPage() {
             </p>
             <h1 className="text-h1 text-text-primary">Onboarding — como funciona por dentro</h1>
             <p className="text-body text-text-secondary mt-1 max-w-[70ch]">
-              Do fork (N3) ao pagamento (N9). As telas são as aprovadas (mesmo componente
+              Do fork (E3) ao pagamento (E9). As telas são as aprovadas (mesmo componente
               do app), não maquete. Escolha um cenário pra preencher o campo e avance
               pelos botões de dentro do aparelho.
             </p>
           </div>
-          <button
-            onClick={reiniciar}
-            className="shrink-0 rounded-full border border-border-hairline bg-surface-card px-4 py-2 text-caption font-semibold text-text-secondary transition-colors hover:border-border-strong"
-          >
-            ↺ Reiniciar demo
-          </button>
+          <div className="flex shrink-0 items-center gap-2">
+            <button
+              onClick={reiniciar}
+              className="rounded-full border border-border-hairline bg-surface-card px-4 py-2 text-caption font-semibold text-text-secondary transition-colors hover:border-border-strong"
+            >
+              ↺ Reiniciar demo
+            </button>
+          </div>
         </header>
 
         {/* Grid de 2 LINHAS (não 2 colunas com padding chutado): linha 1 são os
@@ -1764,6 +1841,14 @@ export default function ApresentacaoPage() {
                   ✅ Simular validação
                 </button>
               )}
+              {mostraSimularRecusa && (
+                <button
+                  onClick={() => setEtapa("painel-recusa")}
+                  className="rounded-xl bg-surface-dark px-4 py-2.5 text-caption font-bold text-text-on-dark transition-colors hover:opacity-90"
+                >
+                  🔴 Simular recusa de nome
+                </button>
+              )}
             </div>
           </div>
 
@@ -1807,7 +1892,7 @@ export default function ApresentacaoPage() {
                           setEtapa("cidade");
                         }}
                         onSeguir={() => setEtapa("perguntando")}
-                        // ✅ 30/07 — a porta do FLOW #2. Era aqui que "metade
+                        // ✅ 30/07 — a porta do Migrar. Era aqui que "metade
                         // do mercado" batia num card "essa parte ainda não
                         // existe" (achado M0 do motor de testes).
                         onMigrar={() => setEtapa("m-cnpj")}
@@ -1816,8 +1901,8 @@ export default function ApresentacaoPage() {
                         destaqueCoral600
                       />
                     ) : naTravessia ? (
-                      /* B3 · N6→N9. Como o EntradaView, estas telas trazem o
-                         próprio header+main — por isso ficam fora do bloco
+                      /* Entrada · E6→E9. Como o EntradaView, estas telas trazem
+                         o próprio header+main — por isso ficam fora do bloco
                          genérico abaixo. */
                       <>
                         {(etapa === "conta" || etapa === "conta-codigo") && (
@@ -1852,19 +1937,19 @@ export default function ApresentacaoPage() {
                             setCpf={setCpfPag}
                             metodo={metodo}
                             setMetodo={setMetodo}
-                            // 🐛 O CPF já foi coletado no N6 (front-load 28/07).
+                            // 🐛 O CPF já foi coletado no E6 (front-load 28/07).
                             // A demo é o único lugar que carrega o estado das
                             // duas telas, então é aqui que dá pra provar o
-                            // reuso: o N9 confirma em vez de pedir de novo.
+                            // reuso: o E9 confirma em vez de pedir de novo.
                             cpfCadastrado={dadosConta.cpf}
                             // O pagamento aprovado não é mais o fim da demo:
-                            // ele abre a casa e começa o dossiê (N10).
+                            // ele abre a casa e começa o dossiê (C1).
                             onPagar={() => setEtapa("socio")}
                             onVoltar={() => voltar(() => setEtapa("contrato"))}
                           />
                         )}
 
-                        {/* ═══ B4 · O DOSSIÊ (N10–N16) ═══════════════════════
+                        {/* ═══ CONSTITUIÇÃO · O DOSSIÊ (C1–C7) ═══════════════
                             As MESMAS telas das rotas `/dossie/*` — elas moram
                             em `components/wizard-dossie.tsx` desde 29/07, e as
                             pages de produção são wrappers finos. A demo não
@@ -1920,7 +2005,7 @@ export default function ApresentacaoPage() {
                           />
                         )}
 
-                        {/* ═══ A CAUDA (N19–N24) ═══════════════════════════
+                        {/* ═══ APROVAÇÃO (A1–A5) ═══════════════════════════
                             Mesmas telas de `/revisar` · `/termo` · `/painel` ·
                             `/assinatura` · `/ativa` — moram em
                             `components/wizard-cauda.tsx` desde 29/07. */}
@@ -1947,20 +2032,37 @@ export default function ApresentacaoPage() {
                           // de 4 pra 3 (ver `components/painel.tsx`).
                           <PainelView concluidas={1} emAndamento={1} socios={socios ?? 1} />
                         )}
+                        {/* 🆕 03/08 — A3.1, gap fechado. Sem interação natural pra
+                            chegar aqui (produção retry-automático mockado); estado
+                            'esgotado' fixo, idêntico ao de `/painel/recusa`. */}
+                        {etapa === "painel-recusa" && (
+                          <PainelView
+                            concluidas={1}
+                            emAndamento={1}
+                            socios={socios ?? 1}
+                            recusa={{
+                              etapa: 1,
+                              titulo: "As 3 opções de nome não passaram",
+                              motivo:
+                                "Testamos automaticamente as 3 que você priorizou, e nenhuma passou na Junta. Precisamos de mais 3 sugestões suas pra tentar de novo.",
+                              acao: "Sugerir mais 3 nomes",
+                            }}
+                          />
+                        )}
                         {etapa === "assinatura" && (
                           <AssinaturaView
                             onSeguir={() => setEtapa("ativacao")}
                             onVoltar={() => voltar(() => setEtapa("painel"))}
                           />
                         )}
-                        {/* 🔓 SWAP validado (29/07): a home de ativação (P0)
-                            substitui o N24 aqui — ver nota em `wizard-cauda.tsx`.
+                        {/* 🔓 SWAP validado (29/07): a home de ativação (A5)
+                            substitui a antiga 'empresa ativa' aqui — ver nota em `wizard-cauda.tsx`.
                             Sem onVoltar/onSeguir: a tela original não tem CTA de
                             avançar (é a home, não passo de wizard); a seta
                             externa do aparelho segue funcionando via histórico. */}
                         {etapa === "ativacao" && <HomeAtivacaoView />}
 
-                        {/* ═══ P1 · P2 — pausas de pagamento ════════════════
+                        {/* ═══ C0.1 · E9.1 — pausas de pagamento ════════════
                             Fora da sequência linear: alcançadas só pela pill
                             própria (não pelo botão Continuar de outra tela). */}
                         {etapa === "retomar" && (
@@ -1970,14 +2072,14 @@ export default function ApresentacaoPage() {
                           <AguardandoView onSeguir={() => setEtapa("socio")} />
                         )}
 
-                        {/* ═══ FLOW #2 · MIGRAR (M1–M5) ══════════════════════
-                            As MESMAS telas das rotas `/migrar/*`. Ramo paralelo:
-                            entra pelo fork do N3 e nunca reencontra o flow #1. */}
+                        {/* ═══ MIGRAR (E4.2–E9.4) ════════════════════════════
+                            As MESMAS telas das rotas `/migrar/*`. Ramo decimal:
+                            entra pelo fork E4 e reencontra o tronco só em E9. */}
                         {etapa === "m-cnpj" && (
                           <MigrarCnpjView
                             preencher={preenchimento}
                             onSeguir={() => setEtapa(depoisDoMigrar("m-cnpj"))}
-                            // As 2 saídas do veredito são as MESMAS do flow #1
+                            // As 2 saídas do veredito são as MESMAS do caminho abrir
                             // (mesmo template A9) — reusa, não duplica.
                             onSaidaRegulada={() => {
                               setResultado(mapear("nutricionista"));
@@ -2038,7 +2140,7 @@ export default function ApresentacaoPage() {
                         )}
                         {etapa === "m-transferencia" && (
                           // Sem onVoltar: é tela de status assíncrono, igual ao
-                          // N21. A seta externa do aparelho segue funcionando.
+                          // A3. A seta externa do aparelho segue funcionando.
                           <MigrarTransferenciaView
                             onSeguir={() => setEtapa(depoisDoMigrar("m-transferencia"))}
                           />
@@ -2088,10 +2190,17 @@ export default function ApresentacaoPage() {
                           />
                         </main>
                       </>
+                    ) : naSaidaTriagem ? (
+                      <>
+                        <TelaHeader meta="Sobre o seu caso" />
+                        <main className="app-main">
+                          <SaidaView d={etapa === "saida-exterior" ? DADOS_EXTERIOR : DADOS_SOCIOS} />
+                        </main>
+                      </>
                     ) : (
                       <>
-                        {/* 🔓 UX-60 aplicado AQUI (deslinkado): o N4 aprovado
-                            não tem volta pro N3. */}
+                        {/* 🔓 UX-60 aplicado AQUI (deslinkado): o E5 aprovado
+                            não tem volta pro E3. */}
                         {/* 🔓 UX-60 — nenhuma tela do wizard tem voltar. Aqui
                             todas as do piloto ganham (menos a de loading, que
                             não é passo). */}
@@ -2161,7 +2270,9 @@ export default function ApresentacaoPage() {
                               exterior={exterior}
                               setExterior={setExterior}
                               onSeguir={() => setEtapa("faixa")}
-                              onSaida={() => {}}
+                              onSaida={(rota) =>
+                                setEtapa(rota === "/saida/exterior" ? "saida-exterior" : "saida-socios")
+                              }
                               exteriorSoComSocio
                             />
                           )}
@@ -2305,14 +2416,14 @@ export default function ApresentacaoPage() {
             })}
           </div>
 
-          {/* P1/P2 numa linha separada: não são passo da sequência, são
+          {/* C0.1/E9.1 numa linha separada: não são passo da sequência, são
               pausas de pagamento (ver `type Etapa`). Misturar na fila de cima
-              sugeriria "depois do N16 vem isso", que é falso — elas vivem
-              entre N9 e N10. */}
-          {/* FLOW #2 — barra própria. É ramo paralelo (sai do fork do N3),
-              não continuação do flow #1. */}
+              sugeriria "depois do C7 vem isso", que é falso — elas vivem
+              entre E9 e C1. */}
+          {/* MIGRAR — barra própria. É ramo decimal (sai do fork E4),
+              não continuação sequencial do caminho abrir. */}
           <p className="text-micro font-semibold tracking-wide text-text-tertiary mt-4 mb-2.5">
-            🆕 FLOW #2 · MIGRAR DE CONTADOR (ramo paralelo, sai do N3)
+            🆕 MIGRAR DE CONTADOR (E4.2–E9.4, ramo decimal, sai do E4)
           </p>
           <div className="flex flex-wrap gap-2">
             {PILLS_MIGRAR.map((p) => {
@@ -2336,7 +2447,7 @@ export default function ApresentacaoPage() {
           </div>
 
           <p className="text-micro font-semibold tracking-wide text-text-tertiary mt-4 mb-2.5">
-            🆕 PAUSAS DE PAGAMENTO (entre N9 e N10 — não é sequência)
+            🆕 PAUSAS DE PAGAMENTO (entre E9 e C1 — não é sequência)
           </p>
           <div className="flex flex-wrap gap-2">
             {PILLS_PAUSA.map((p) => {
@@ -2386,7 +2497,7 @@ function FimPiloto({ onReiniciar }: { onReiniciar: () => void }) {
     <div className="flex-1 flex flex-col items-center justify-center gap-4 text-center">
       <p className="text-h2 text-text-primary">Fim do piloto</p>
       <p className="text-body text-text-secondary max-w-[26ch]">
-        O flow real segue pro N6 (Criar conta). Essa parte entra na próxima fase.
+        O flow real segue pro E6 (Criar conta). Essa parte entra na próxima fase.
       </p>
       <Button onClick={onReiniciar}>Recomeçar demo</Button>
     </div>

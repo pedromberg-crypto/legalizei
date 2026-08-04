@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { RevisarView } from "@/components/wizard-cauda";
 
 /**
@@ -8,8 +8,8 @@ import { RevisarView } from "@/components/wizard-cauda";
  * N19 — REVISAR O DOSSIÊ · rota de produção (shell APP)
  * ═══════════════════════════════════════════════════════════════════════════
  * ⚠️ A TELA vive em `components/wizard-cauda.tsx` (`RevisarView`) desde 29/07 —
- * fidelidade por construção, mesma regra do B3/B4. Esta page é o wrapper: lê
- * o `?cenario=` e liga a navegação (antes não ia pra lugar nenhum).
+ * fidelidade por construção, mesma regra do B3/B4. Esta page é o wrapper: liga
+ * a navegação (antes não ia pra lugar nenhum).
  *
  * Spec: execucao/spec-telas-b3-b4-aterrissagem.md → Tela 20 · vem depois do
  * N16, antes do N20 irreversível.
@@ -27,10 +27,6 @@ import { RevisarView } from "@/components/wizard-cauda";
  */
 export default function RevisarPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const empresaPaga = searchParams.get("cenario") === "empresa-paga";
 
-  return (
-    <RevisarView empresaPaga={empresaPaga} onSeguir={() => router.push("/termo")} />
-  );
+  return <RevisarView onSeguir={() => router.push("/termo")} />;
 }

@@ -67,6 +67,10 @@ export default function ContaPage() {
       etapa={etapa}
       onCriarConta={() => setEtapa("codigo")}
       onConfirmar={() => router.push("/plano")}
+      // 🆕 03/08 — UX-71 mesclado (painel escuro + folha sobreposta + login
+      // social). UX-73 (coorte obrigatória) NÃO veio junto — decisão em
+      // aberto, ver comentário em `ContaPainel`. Fonte: /apresentacao.
+      layout="painel"
     />
   );
 }

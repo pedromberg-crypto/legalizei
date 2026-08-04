@@ -330,11 +330,11 @@ function ContaPainel({
   const cepDigitos = d.cep.replace(/\D/g, "");
   const endereco = buscarCep(cepDigitos);
   /**
-   * 🔓 UX-73 — a coorte virou OBRIGATÓRIA (inclusive no cadastro social).
-   * ⚠️ Contraria a decisão UX-48, que a definiu como "dado puro, pulável sem
-   * custo" — o racional lá era não cobrar fricção por algo que não muda nada
-   * no fluxo. Pedido do Pedro em 29/07: pulável demais enviesa o dado. Fica
-   * deslinkado até ele confirmar contra o UX-48.
+   * 🔴 UX-73 NÃO mesclado (03/08) — a tentativa de tornar a coorte
+   * OBRIGATÓRIA contraria a UX-48 já travada ("dado puro, pulável sem
+   * custo"). Ao ligar `layout="painel"` em produção (03/08), a coorte segue
+   * OPCIONAL — a regra que já está travada — até o Pedro decidir contra a
+   * UX-48 de propósito, não como efeito colateral de outra mesclagem.
    */
   const completo =
     nomeOk &&
@@ -343,8 +343,7 @@ function ContaPainel({
     /@/.test(d.email) &&
     d.senha.length >= 8 &&
     cepDigitos.length === 8 &&
-    d.numero.trim() !== "" &&
-    d.coorte !== null;
+    d.numero.trim() !== "";
 
   return (
     <main className="app-main">
@@ -654,23 +653,22 @@ function BotaoCoorte({
 /* ═══════════════════ N7 · A CONTA DA ABERTURA ═══════════════════════════ */
 
 export function PlanoView({
-  empresaPaga = false,
   onSeguir,
   onVoltar,
   layout = "classico",
 }: {
-  /** `?cenario=empresa-paga`: alternativa DOCUMENTADA (a Legalizai absorve o
-      DAE). A definitiva é o cliente pagar, como está por padrão. */
-  empresaPaga?: boolean;
   onSeguir?: () => void;
   onVoltar?: () => void;
   /** 🔓 UX-74 — `oferta` é a versão vendedora (ver `PlanoOferta`). */
   layout?: "classico" | "oferta";
 }) {
-  const hoje = empresaPaga ? CUSTOS.MENSALIDADE : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
+  // 🔴 03/08 (Pedro): DESCARTADO o cenário "Legalizai paga o DAE" — decisão
+  // definitiva é o cliente pagar a taxa da Junta, sem alternativa. Era
+  // `empresaPaga ? CUSTOS.MENSALIDADE : ...`, virou sempre a soma.
+  const hoje = CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
 
   if (layout === "oferta") {
-    return <PlanoOferta empresaPaga={empresaPaga} onSeguir={onSeguir} onVoltar={onVoltar} />;
+    return <PlanoOferta onSeguir={onSeguir} onVoltar={onVoltar} />;
   }
 
   return (
@@ -709,32 +707,20 @@ export function PlanoView({
           </Card>
 
           {/* ═══ A TAXA — honesta, sem holofote ═══ */}
-          {empresaPaga ? (
-            <div className="rounded-md border border-border-hairline bg-surface-tint-brand p-4">
+          <div className="rounded-md border border-border-hairline bg-surface-card p-4">
+            <div className="flex items-baseline justify-between gap-3">
               <p className="text-body font-semibold text-text-primary">
-                Taxa da Junta Comercial — por nossa conta
+                Taxa da Junta Comercial
               </p>
-              <p className="text-caption text-text-secondary mt-1">
-                Diferente da maioria, a gente cobre essa taxa pra você. Não
-                entra na sua conta.
-              </p>
+              <span className="shrink-0 text-body font-semibold text-text-primary">
+                {brl(CUSTOS.DAE_JUCEMG, true)}
+              </span>
             </div>
-          ) : (
-            <div className="rounded-md border border-border-hairline bg-surface-card p-4">
-              <div className="flex items-baseline justify-between gap-3">
-                <p className="text-body font-semibold text-text-primary">
-                  Taxa da Junta Comercial
-                </p>
-                <span className="shrink-0 text-body font-semibold text-text-primary">
-                  {brl(CUSTOS.DAE_JUCEMG, true)}
-                </span>
-              </div>
-              <p className="text-caption text-text-secondary mt-1">
-                Cobrada uma vez, e vai direto pro Estado: a gente não fica com
-                nada. Você pagaria essa taxa abrindo com qualquer um.
-              </p>
-            </div>
-          )}
+            <p className="text-caption text-text-secondary mt-1">
+              Cobrada uma vez, e vai direto pro Estado: a gente não fica com
+              nada. Você pagaria essa taxa abrindo com qualquer um.
+            </p>
+          </div>
         </Corpo>
 
         {/* ═══ O TOTAL — no rodapé, junto da decisão ═══ */}
@@ -821,15 +807,13 @@ const INCLUSO: { titulo: string; sub: string }[] = [
 ];
 
 function PlanoOferta({
-  empresaPaga,
   onSeguir,
   onVoltar,
 }: {
-  empresaPaga: boolean;
   onSeguir?: () => void;
   onVoltar?: () => void;
 }) {
-  const hoje = empresaPaga ? CUSTOS.MENSALIDADE : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
+  const hoje = CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
 
   return (
     <>
@@ -914,32 +898,20 @@ function PlanoOferta({
 
           {/* A TAXA — honesta, com valor, sem holofote. Regra dura: o repasse
               de governo NUNCA se esconde dentro do preço. */}
-          {empresaPaga ? (
-            <div className="rounded-2xl border border-border-hairline bg-surface-tint-brand p-4">
+          <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
+            <div className="flex items-baseline justify-between gap-3">
               <p className="text-body font-semibold text-text-primary">
-                Taxa da Junta Comercial, por nossa conta
+                Taxa da Junta Comercial
               </p>
-              <p className="text-caption text-text-secondary mt-1">
-                Diferente da maioria, a gente cobre essa taxa pra você. Não
-                entra na sua conta.
-              </p>
+              <span className="shrink-0 text-body font-semibold text-text-primary">
+                {brl(CUSTOS.DAE_JUCEMG, true)}
+              </span>
             </div>
-          ) : (
-            <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
-              <div className="flex items-baseline justify-between gap-3">
-                <p className="text-body font-semibold text-text-primary">
-                  Taxa da Junta Comercial
-                </p>
-                <span className="shrink-0 text-body font-semibold text-text-primary">
-                  {brl(CUSTOS.DAE_JUCEMG, true)}
-                </span>
-              </div>
-              <p className="text-caption text-text-secondary mt-1">
-                Cobrada uma vez, e vai direto pro Estado: a gente não fica com
-                nada. Você pagaria essa taxa abrindo com qualquer um.
-              </p>
-            </div>
-          )}
+            <p className="text-caption text-text-secondary mt-1">
+              Cobrada uma vez, e vai direto pro Estado: a gente não fica com
+              nada. Você pagaria essa taxa abrindo com qualquer um.
+            </p>
+          </div>
 
           {/* ─────────────────────────────────────────────────────────────────
               🪒 AQUI TERMINAVA A TELA — e não termina mais (lapidação 29/07).
@@ -1009,15 +981,12 @@ function CheckGrande() {
 export function ContratoView({
   aceito,
   setAceito,
-  empresaPaga = false,
   onSeguir,
   onVoltar,
   onLerContrato,
 }: {
   aceito: boolean;
   setAceito: (v: boolean) => void;
-  /** Mesmo `?cenario=empresa-paga` do N7/N9: muda o que entra no "paga hoje". */
-  empresaPaga?: boolean;
   onSeguir?: () => void;
   onVoltar?: () => void;
   /** 🚧 O documento jurídico não existe ainda (Mauro/Larissa). Enquanto não
@@ -1025,7 +994,8 @@ export function ContratoView({
       a URL e rola a página pro topo no meio do aceite. */
   onLerContrato?: () => void;
 }) {
-  const hoje = empresaPaga ? CUSTOS.MENSALIDADE : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
+  // 🔴 03/08 (Pedro): DESCARTADO o cenário "Legalizai paga o DAE".
+  const hoje = CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
 
   return (
     <>
@@ -1059,9 +1029,7 @@ export function ContratoView({
                 </span>
               </div>
               <p className="px-4 pb-3.5 text-micro text-text-tertiary">
-                {empresaPaga
-                  ? "só a 1ª mensalidade: a taxa da Junta fica por nossa conta"
-                  : "taxa da Junta Comercial + a 1ª mensalidade. Abrir não tem honorário"}
+                taxa da Junta Comercial + a 1ª mensalidade. Abrir não tem honorário
               </p>
 
               <div className="border-t border-border-hairline">
@@ -1247,7 +1215,6 @@ export function PagamentoView({
   setCpf,
   metodo,
   setMetodo,
-  empresaPaga = false,
   cpfCadastrado,
   fluxo = "abertura",
   onPagar,
@@ -1257,7 +1224,6 @@ export function PagamentoView({
   setCpf: (v: string) => void;
   metodo: Metodo;
   setMetodo: (m: Metodo) => void;
-  empresaPaga?: boolean;
   /**
    * 🐛 CPF PEDIDO 2× — corrigido em 29/07.
    *
@@ -1284,11 +1250,9 @@ export function PagamentoView({
   onVoltar?: () => void;
 }) {
   const migrar = fluxo === "migrar";
-  const total = migrar
-    ? CUSTOS.MENSALIDADE
-    : empresaPaga
-      ? CUSTOS.MENSALIDADE
-      : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
+  // 🔴 03/08 (Pedro): DESCARTADO o cenário "Legalizai paga o DAE" no caminho
+  // abrir. Migrar continua sem DAE por natureza (empresa já existe).
+  const total = migrar ? CUSTOS.MENSALIDADE : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
   const escolhido = METODOS.find((m) => m.id === metodo)!;
 
   const temCadastrado = Boolean(cpfCadastrado?.trim());

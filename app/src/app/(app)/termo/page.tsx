@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { TermoView } from "@/components/wizard-cauda";
 
 /**
@@ -9,8 +9,8 @@ import { TermoView } from "@/components/wizard-cauda";
  * N20 — TERMO DE INÍCIO (IRREVERSÍVEL) · rota de produção (shell APP)
  * ═══════════════════════════════════════════════════════════════════════════
  * ⚠️ A TELA vive em `components/wizard-cauda.tsx` (`TermoView`) desde 29/07.
- * Esta page é o wrapper: guarda o aceite, lê `?cenario=` e liga a navegação
- * (antes o botão não ia pra lugar nenhum).
+ * Esta page é o wrapper: guarda o aceite e liga a navegação (antes o botão
+ * não ia pra lugar nenhum).
  *
  * Spec: spec-telas-b3-b4-aterrissagem.md → Tela 18 (3.3)
  *
@@ -26,14 +26,11 @@ import { TermoView } from "@/components/wizard-cauda";
 export default function TermoPage() {
   const router = useRouter();
   const [aceito, setAceito] = useState(false);
-  const searchParams = useSearchParams();
-  const empresaPaga = searchParams.get("cenario") === "empresa-paga";
 
   return (
     <TermoView
       aceito={aceito}
       setAceito={setAceito}
-      empresaPaga={empresaPaga}
       onSeguir={() => router.push("/painel")}
     />
   );

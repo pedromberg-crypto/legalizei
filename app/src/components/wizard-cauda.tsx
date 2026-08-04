@@ -74,9 +74,15 @@ function useRevisao() {
 export function RevisarView({
   onSeguir,
   onVoltar,
+  mei = false,
 }: {
   onSeguir?: () => void;
   onVoltar?: () => void;
+  /** 🆕 03/08 — MEI: some capital social (não existe), a taxa da Junta
+   *  (não passa por lá) e o enquadramento Simples/Anexo (MEI é DAS fixo, não
+   *  Anexo/Fator R). 🔴 valor exato do DAS-MEI 2026 NÃO está ratificado no
+   *  vault — por isso a tela diz "DAS fixo" sem número, em vez de inventar. */
+  mei?: boolean;
 }) {
   const d = useRevisao();
   return (
@@ -97,9 +103,9 @@ export function RevisarView({
 
           <Bloco titulo="A empresa" passo="Dados da empresa">
             <Linha rotulo="Nome" valor={d.empresa.razao} />
-            <Linha rotulo="Tipo" valor={d.empresa.natureza} />
+            <Linha rotulo="Tipo" valor={mei ? "MEI" : d.empresa.natureza} />
             <Linha rotulo="Endereço" valor={d.empresa.endereco} />
-            <Linha rotulo="Capital social" valor={brl(d.empresa.capital)} />
+            {!mei && <Linha rotulo="Capital social" valor={brl(d.empresa.capital)} />}
           </Bloco>
 
           <Bloco titulo="O que a empresa faz" passo="Atividades">
@@ -120,43 +126,57 @@ export function RevisarView({
               <h2 className="text-body font-semibold text-text-primary">
                 Seu enquadramento
               </h2>
-              <span className="shrink-0 rounded-full bg-surface-tint-brand px-2.5 py-1 text-micro font-semibold text-action-primary-sm">
-                ✨ Sugestão
-              </span>
+              {!mei && (
+                <span className="shrink-0 rounded-full bg-surface-tint-brand px-2.5 py-1 text-micro font-semibold text-action-primary-sm">
+                  ✨ Sugestão
+                </span>
+              )}
             </div>
-            <p className="text-caption text-text-secondary mb-3">
-              Já escolhemos o melhor enquadramento pra você, com base no que
-              você preencheu.
-            </p>
-            <div className="flex flex-col gap-1.5">
-              <Linha
-                rotulo="Regime"
-                valor={`Simples Nacional · Anexo ${d.enquadramento.anexo} (${d.enquadramento.aliquota}%)`}
-              />
-              <Linha rotulo="Quanto você se paga por mês" valor={brl(d.enquadramento.proLabore)} />
-            </div>
-            <p className="text-micro text-text-tertiary mt-3">
-              Esse número é uma estimativa. Depois que a empresa nascer, a
-              gente lapida ele com você de verdade (é o Pró-labore, na aba
-              Impostos).
-            </p>
+            {mei ? (
+              <p className="text-caption text-text-secondary">
+                MEI paga um DAS fixo por mês, sem Fator R nem Anexo pra
+                calcular — bem mais simples que o Simples Nacional.
+              </p>
+            ) : (
+              <>
+                <p className="text-caption text-text-secondary mb-3">
+                  Já escolhemos o melhor enquadramento pra você, com base no
+                  que você preencheu.
+                </p>
+                <div className="flex flex-col gap-1.5">
+                  <Linha
+                    rotulo="Regime"
+                    valor={`Simples Nacional · Anexo ${d.enquadramento.anexo} (${d.enquadramento.aliquota}%)`}
+                  />
+                  <Linha rotulo="Quanto você se paga por mês" valor={brl(d.enquadramento.proLabore)} />
+                </div>
+                <p className="text-micro text-text-tertiary mt-3">
+                  Esse número é uma estimativa. Depois que a empresa nascer, a
+                  gente lapida ele com você de verdade (é o Pró-labore, na aba
+                  Impostos).
+                </p>
+              </>
+            )}
           </Card>
 
           {/* A taxa dura como LINHA de recap: já foi paga no N9, o N7 já é o
-              dono da explicação. Aqui não re-argumenta, só confirma o valor. */}
-          <Card>
-            <div className="flex items-baseline justify-between">
-              <span className="text-body font-semibold text-text-primary">
-                Taxa da Junta (já paga)
-              </span>
-              <span className="text-body font-semibold text-text-primary">
-                {brl(d.taxaJunta)}
-              </span>
-            </div>
-            <p className="text-micro text-text-tertiary mt-1">
-              Repasse ao governo, já incluído no que você pagou.
-            </p>
-          </Card>
+              dono da explicação. Aqui não re-argumenta, só confirma o valor.
+              MEI não tem essa taxa — o card some (não faz sentido "R$0"). */}
+          {!mei && (
+            <Card>
+              <div className="flex items-baseline justify-between">
+                <span className="text-body font-semibold text-text-primary">
+                  Taxa da Junta (já paga)
+                </span>
+                <span className="text-body font-semibold text-text-primary">
+                  {brl(d.taxaJunta)}
+                </span>
+              </div>
+              <p className="text-micro text-text-tertiary mt-1">
+                Repasse ao governo, já incluído no que você pagou.
+              </p>
+            </Card>
+          )}
         </Corpo>
 
         <Rodape>
@@ -210,11 +230,16 @@ export function TermoView({
   setAceito,
   onSeguir,
   onVoltar,
+  mei = false,
 }: {
   aceito: boolean;
   setAceito: (v: boolean) => void;
   onSeguir?: () => void;
   onVoltar?: () => void;
+  /** 🆕 03/08 — MEI registra no Portal do Empreendedor, não na Junta; e não
+   *  pagou taxa nenhuma, então a cláusula de não-reembolso da taxa não existe
+   *  pra ela. */
+  mei?: boolean;
 }) {
   return (
     <>
@@ -231,15 +256,20 @@ export function TermoView({
               Quando você autoriza, a gente começa agora:
             </p>
             <ul className="flex flex-col gap-2">
-              <Item>Protocola sua empresa na Junta Comercial de Minas.</Item>
-              <Item>A taxa que você já pagou cobre esse registro.</Item>
+              <Item>
+                {mei
+                  ? "Registra sua empresa no Portal do Empreendedor."
+                  : "Protocola sua empresa na Junta Comercial de Minas."}
+              </Item>
+              {!mei && <Item>A taxa que você já pagou cobre esse registro.</Item>}
               <Item>Segue com Receita, Simples e Prefeitura até o CNPJ ativar.</Item>
             </ul>
           </div>
 
           <Aviso variante="warning" titulo="A partir daqui, não dá pra desfazer">
-            É o ponto sem volta: o que a Junta registrar a partir de agora não
-            tem como ser desfeito. Vale conferir tudo antes de autorizar.
+            {mei
+              ? "É o ponto sem volta: o que for registrado a partir de agora não tem como ser desfeito. Vale conferir tudo antes de autorizar."
+              : "É o ponto sem volta: o que a Junta registrar a partir de agora não tem como ser desfeito. Vale conferir tudo antes de autorizar."}
           </Aviso>
 
           <div>
@@ -251,24 +281,27 @@ export function TermoView({
                 Você autoriza esta abertura de forma expressa, aqui, marcando o
                 aceite. Nada é registrado sem esse passo.
               </Camada>
-              <Camada>
-                A taxa da Junta não é reembolsável depois que a gente registra,
-                porque ela vai pro governo, não pra gente.
-              </Camada>
+              {!mei && (
+                <Camada>
+                  A taxa da Junta não é reembolsável depois que a gente
+                  registra, porque ela vai pro governo, não pra gente.
+                </Camada>
+              )}
               <Camada>
                 O nosso serviço (a mensalidade) você cancela quando quiser,
                 respeitando o prazo do plano.
               </Camada>
               <Camada>
                 Até aqui, nada foi registrado. Se você desistir antes de
-                autorizar, recebe de volta o que pagou, inclusive a taxa.
+                autorizar, recebe de volta o que pagou{!mei && ", inclusive a taxa"}.
               </Camada>
             </div>
           </div>
 
           <Checkbox checked={aceito} onChange={setAceito}>
-            Autorizo o início da abertura, ciente de que ela não pode ser
-            desfeita e de que a taxa da Junta já paga não é reembolsável.
+            {mei
+              ? "Autorizo o início da abertura, ciente de que ela não pode ser desfeita."
+              : "Autorizo o início da abertura, ciente de que ela não pode ser desfeita e de que a taxa da Junta já paga não é reembolsável."}
           </Checkbox>
         </Corpo>
 
@@ -336,9 +369,13 @@ const NIVEL_GOVBR: "bronze" | "prata" | "ouro" = "prata";
 export function AssinaturaView({
   onSeguir,
   onVoltar,
+  mei = false,
 }: {
   onSeguir?: () => void;
   onVoltar?: () => void;
+  /** 🆕 03/08 — MEI assina no Portal do Empreendedor, não na Junta. Sócio já
+   *  não se aplica (MEI é sempre solo, `sociedade` abaixo já cobre isso). */
+  mei?: boolean;
 }) {
   const sociedade = SOCIOS_ASSINATURA.length > 1;
   const bronze = NIVEL_GOVBR === "bronze";
@@ -348,7 +385,13 @@ export function AssinaturaView({
       <TelaHeader meta="Assinatura" onVoltar={onVoltar} />
 
       <main className="app-main">
-        <Titulo sub="A Junta registra a empresa com a assinatura dos sócios. É pelo GOV.BR e leva uns minutos.">
+        <Titulo
+          sub={
+            mei
+              ? "O registro do MEI é pelo GOV.BR, com o seu CPF. Leva uns minutos."
+              : "A Junta registra a empresa com a assinatura dos sócios. É pelo GOV.BR e leva uns minutos."
+          }
+        >
           Hora de assinar
         </Titulo>
 
@@ -367,7 +410,9 @@ export function AssinaturaView({
                 </span>
               </div>
               <p className="text-micro text-text-secondary mt-1">
-                É o nível que a Junta aceita pra assinar. Pode seguir.
+                {mei
+                  ? "É o nível que o Portal do Empreendedor aceita pra assinar. Pode seguir."
+                  : "É o nível que a Junta aceita pra assinar. Pode seguir."}
               </p>
             </Card>
           )}

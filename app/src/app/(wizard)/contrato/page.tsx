@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ContratoView } from "@/components/wizard-dinheiro";
+import { ehMei, comRegime } from "@/lib/regime";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -49,13 +50,15 @@ import { ContratoView } from "@/components/wizard-dinheiro";
  */
 export default function ContratoPage() {
   const router = useRouter();
+  const mei = ehMei(useSearchParams());
   const [aceito, setAceito] = useState(false);
 
   return (
     <ContratoView
       aceito={aceito}
       setAceito={setAceito}
-      onSeguir={() => router.push("/pagamento")}
+      onSeguir={() => router.push(comRegime("/pagamento", mei))}
+      semTaxaJunta={mei}
     />
   );
 }

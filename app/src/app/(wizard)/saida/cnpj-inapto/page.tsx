@@ -1,0 +1,59 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { SaidaView, type DadosSaida } from "@/components/saida";
+import { TelaHeader } from "@/components/ui/tela";
+
+/**
+ * A9 · SAÍDA — CNPJ INAPTO/SUSPENSO/BAIXADO · 🆕 04/08
+ *
+ * Nasce do M1 (`/migrar/cnpj`), não da auditoria de passivo (M4a). Achado do
+ * cruzamento com o `Fluxo Migração GEMINI.md`: o Gemini trava isso já na
+ * entrada (status cadastral ≠ ativo → regularização, não migração direta).
+ * Nosso M1 hoje não tinha essa saída — o veredito só cobria "ativo com CNAE
+ * aceito ou não". CNPJ suspenso/inapto é um problema DIFERENTE de "empresa
+ * ativa com dívida" (isso já a M4a/auditoria de passivo cobre bem).
+ *
+ * Mesmo template A9 — aqui o motivo é regularização cadastral, não escopo do
+ * produto, então a copy é mais prática (o que fazer) que educativa.
+ */
+const D: DadosSaida = {
+  tag: "CNPJ irregular",
+  titulo: "Essa empresa precisa regularizar antes de migrar",
+  explica:
+    "A Receita mostra sua empresa com situação diferente de ativa (suspensa, inapta ou baixada). A gente não consegue assumir a contabilidade nesse estado — a regularização vem primeiro.",
+  origem: {
+    rotulo: "Por que isso trava a migração",
+    texto:
+      "Sem situação ativa na Receita não dá pra fazer a transferência de responsabilidade nem declarar nada em nome da empresa — é exigência dos próprios órgãos, não nossa.",
+  },
+  saida:
+    "Deixa seu contato que a gente te ajuda a entender o que falta pra regularizar. Depois de ativa de novo, a migração segue normal.",
+  ctaEnviar: "Quero ajuda pra regularizar",
+  confirmacao: {
+    titulo: "Recebemos seu contato",
+    texto:
+      "Nosso time entra em contato pra entender o que está pendente na sua empresa e como regularizar. Assim que resolver, você volta e migra com a gente.",
+  },
+};
+
+export default function SaidaCnpjInaptoPage() {
+  const router = useRouter();
+
+  return (
+    <>
+      <TelaHeader meta="Sobre a situação do CNPJ" />
+      <main className="app-main">
+        <SaidaView
+          d={{
+            ...D,
+            confirmacao: {
+              ...D.confirmacao!,
+              acoes: [{ label: "Voltar ao início", variante: "ghost", onClick: () => router.push("/entrada") }],
+            },
+          }}
+        />
+      </main>
+    </>
+  );
+}

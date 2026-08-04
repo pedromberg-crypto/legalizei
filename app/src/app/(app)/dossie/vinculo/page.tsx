@@ -1,7 +1,15 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { VinculoView } from "@/components/wizard-dossie";
+import { ehMei, comRegime } from "@/lib/regime";
+
+/**
+ * 🆕 03/08 — só alcançável pelo caminho ME (MEI pula esta tela: Fator R não
+ * existe pra MEI, o DAS já é fixo). `regime` só é propagado por defesa, aqui
+ * nunca deve chegar "mei". Ver `/dossie/socio` (C1) pra onde a bifurcação
+ * acontece.
+ */
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -36,6 +44,7 @@ import { VinculoView } from "@/components/wizard-dossie";
  */
 export default function VinculoPage() {
   const router = useRouter();
+  const mei = ehMei(useSearchParams());
 
-  return <VinculoView onSeguir={() => router.push("/dossie/socios")} />;
+  return <VinculoView onSeguir={() => router.push(comRegime("/dossie/socios", mei))} />;
 }

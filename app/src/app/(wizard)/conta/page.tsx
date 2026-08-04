@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ContaView, type DadosConta } from "@/components/wizard-dinheiro";
+import { ehMei, comRegime } from "@/lib/regime";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -47,6 +48,7 @@ import { ContaView, type DadosConta } from "@/components/wizard-dinheiro";
  */
 export default function ContaPage() {
   const router = useRouter();
+  const mei = ehMei(useSearchParams());
   const [etapa, setEtapa] = useState<"form" | "codigo">("form");
   const [dados, setDados] = useState<DadosConta>({
     nome: "",
@@ -66,7 +68,7 @@ export default function ContaPage() {
       set={(k, v) => setDados((p) => ({ ...p, [k]: v }))}
       etapa={etapa}
       onCriarConta={() => setEtapa("codigo")}
-      onConfirmar={() => router.push("/plano")}
+      onConfirmar={() => router.push(comRegime("/plano", mei))}
       // 🆕 03/08 — UX-71 mesclado (painel escuro + folha sobreposta + login
       // social). UX-73 (coorte obrigatória) NÃO veio junto — decisão em
       // aberto, ver comentário em `ContaPainel`. Fonte: /apresentacao.

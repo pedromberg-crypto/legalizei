@@ -9,6 +9,7 @@ import {
   TriagemView,
   FaixaView,
 } from "@/components/gate-telas";
+import { ehMei, comRegime } from "@/lib/regime";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -80,12 +81,7 @@ function mapear(texto: string): Resultado {
   };
 }
 
-type Etapa =
-  | "perguntando"
-  | "analisando"
-  | "veredito"
-  | "triagem"
-  | "faixa";
+type Etapa = "perguntando" | "analisando" | "veredito" | "triagem" | "faixa";
 
 /**
  * ⚠️ 28/07 — DEEP-LINK por `?etapa=`. As etapas do gate viviam presas dentro
@@ -99,6 +95,10 @@ const ETAPAS_LINKAVEIS: Etapa[] = ["veredito", "triagem", "faixa"];
 export default function GatePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  // 🆕 03/08 — MEI×ME agora decide ANTES do gate, em /entrada (E3.2), logo
+  // depois do fork. Chega aqui só como flag pra repassar adiante — o /gate
+  // não pergunta mais nada sobre isso.
+  const mei = ehMei(searchParams);
   const etapaParam = searchParams.get("etapa") as Etapa | null;
   const etapaInicial: Etapa =
     etapaParam && ETAPAS_LINKAVEIS.includes(etapaParam) ? etapaParam : "perguntando";
@@ -178,7 +178,7 @@ export default function GatePage() {
             setModoExato={setModoExato}
             exato={exato}
             setExato={setExato}
-            onSeguir={() => router.push("/conta")}
+            onSeguir={() => router.push(comRegime("/conta", mei))}
             // 🆕 03/08 — UX-68 mesclado: revela o campo inline em vez de
             // trocar a tela inteira. Fonte: /apresentacao.
             exatoInline

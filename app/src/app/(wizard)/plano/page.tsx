@@ -1,7 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { PlanoView } from "@/components/wizard-dinheiro";
+import { ehMei, comRegime } from "@/lib/regime";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -47,8 +48,15 @@ import { PlanoView } from "@/components/wizard-dinheiro";
  */
 export default function PlanoPage() {
   const router = useRouter();
+  const mei = ehMei(useSearchParams());
 
   // 🆕 03/08 — UX-74 mesclado (versão "oferta": card escuro, âncora de
-  // honorário). Fonte: /apresentacao.
-  return <PlanoView onSeguir={() => router.push("/contrato")} layout="oferta" />;
+  // honorário). Fonte: /apresentacao. `semTaxaJunta` = MEI, ver /gate.
+  return (
+    <PlanoView
+      onSeguir={() => router.push(comRegime("/contrato", mei))}
+      layout="oferta"
+      semTaxaJunta={mei}
+    />
+  );
 }

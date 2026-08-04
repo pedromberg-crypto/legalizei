@@ -1,7 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AssinaturaView } from "@/components/wizard-cauda";
+import { ehMei } from "@/lib/regime";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -30,6 +31,9 @@ import { AssinaturaView } from "@/components/wizard-cauda";
  */
 export default function AssinaturaPage() {
   const router = useRouter();
+  const mei = ehMei(useSearchParams());
 
-  return <AssinaturaView onSeguir={() => router.push("/home-dia1")} />;
+  // 🆕 03/08 — regime PARA aqui de propósito: A5 (home dia-1) e o Portal são
+  // iguais pros dois caminhos, escopo desta rodada não foi até lá.
+  return <AssinaturaView mei={mei} onSeguir={() => router.push("/home-dia1")} />;
 }

@@ -78,6 +78,27 @@ export const EMPRESA_MIGRAR = {
 };
 
 /**
+ * 🆕 04/08 — cenários de demo pra exercitar os 2 gaps achados no cruzamento
+ * com o `Fluxo Migração GEMINI.md`: hoje o M1 só sabia checar "situação ativa
+ * + optante Simples + CNAE liso", sem nunca perguntar SE o regime de origem é
+ * um dos que migramos (MEI e Lucro Presumido ainda não têm rota) nem tratar
+ * CNPJ inapto/suspenso (hoje passaria batido ou cairia num veredito genérico).
+ * Mesmo padrão de `?cenario=` já usado em `migrar/diagnostico` e
+ * `migrar/passivo` — não é fonte de verdade fiscal nova, é só destravar as
+ * telas de saída que ainda não existiam. 🟡 fila-Larissa: MEI e Presumido no
+ * Migrar continuam sem decisão de escopo — aqui só param o cliente com
+ * educação, não fingem que migramos os dois hoje.
+ */
+export type CenarioM1 = "padrao" | "mei" | "presumido" | "inapto";
+
+export const EMPRESA_MIGRAR_CENARIOS: Record<CenarioM1, typeof EMPRESA_MIGRAR> = {
+  padrao: EMPRESA_MIGRAR,
+  mei: { ...EMPRESA_MIGRAR, porte: "Microempreendedor Individual (MEI)", noSimples: false },
+  presumido: { ...EMPRESA_MIGRAR, porte: "Microempresa (ME)", natureza: "Lucro Presumido", noSimples: false },
+  inapto: { ...EMPRESA_MIGRAR, situacao: "SUSPENSA" },
+};
+
+/**
  * Histórico dos últimos 12 meses — o que torna o diagnóstico REAL.
  * Cenário de propósito: Fator R ABAIXO do corte (a pessoa paga Anexo V sem
  * precisar). É o caso que prova o valor do produto.
@@ -123,9 +144,12 @@ type FaseM1 = "input" | "consultando" | "achou";
  */
 export function MigrarCnpjView({
   preencher,
+  cenario = "padrao",
   onSeguir,
   onSaidaRegulada,
   onSaidaNaoAtende,
+  onSaidaRegimeNaoSuportado,
+  onSaidaInapto,
   onVoltar,
 }: {
   /**
@@ -135,21 +159,31 @@ export function MigrarCnpjView({
    * booleano porque apresentar é repetir.
    */
   preencher?: number;
+  /** 🆕 04/08 — qual empresa mockada consultar. Ver `EMPRESA_MIGRAR_CENARIOS`. */
+  cenario?: CenarioM1;
   onSeguir?: () => void;
   onSaidaRegulada?: () => void;
   onSaidaNaoAtende?: () => void;
+  /** 🆕 04/08 — CNPJ ativo, mas regime de origem (MEI ou Presumido) ainda sem rota de migração. */
+  onSaidaRegimeNaoSuportado?: () => void;
+  /** 🆕 04/08 — CNPJ inapto/suspenso/baixado: precisa regularizar antes de migrar. */
+  onSaidaInapto?: () => void;
   onVoltar?: () => void;
 }) {
   const [cnpj, setCnpj] = useState("");
   const [fase, setFase] = useState<FaseM1>("input");
 
+  const empresa = EMPRESA_MIGRAR_CENARIOS[cenario];
+  const situacaoOk = empresa.situacao === "ATIVA";
+  const regimeOk = empresa.noSimples;
+
   const feito = useRef<number | undefined>(undefined);
   useEffect(() => {
     if (preencher === undefined || preencher === 0 || feito.current === preencher) return;
     feito.current = preencher;
-    setCnpj(EMPRESA_MIGRAR.cnpj);
+    setCnpj(empresa.cnpj);
     setFase("input");
-  }, [preencher]);
+  }, [preencher, empresa.cnpj]);
 
   const digitos = cnpj.replace(/\D/g, "");
   const completo = digitos.length === 14;
@@ -182,7 +216,8 @@ export function MigrarCnpjView({
   }
 
   if (fase === "achou") {
-    const e = EMPRESA_MIGRAR;
+    const e = empresa;
+    const podeSeguir = situacaoOk && regimeOk;
     return (
       <>
         <TelaHeader meta="Sua empresa" onVoltar={() => setFase("input")} />
@@ -205,17 +240,35 @@ export function MigrarCnpjView({
             </Card>
 
             {/* O veredito é consequência do que a consulta trouxe, não de uma
-                interpretação nossa. Por isso vem junto, sem tela extra. */}
+                interpretação nossa. Por isso vem junto, sem tela extra.
+                🆕 04/08 — 4ª checagem (regime de origem): faltava distinguir
+                MEI/Presumido de ME-Simples. Achado do cruzamento com o
+                `Fluxo Migração GEMINI.md` — sem isso o app fingia migrar
+                qualquer CNPJ ativo, mesmo os 2 regimes que ainda não temos
+                rota pra assumir. */}
             <div className="flex flex-col gap-2">
-              <ChecagemLinha ok titulo="Situação ativa na Receita" />
-              <ChecagemLinha ok titulo="Optante pelo Simples Nacional" />
+              <ChecagemLinha ok={situacaoOk} titulo="Situação ativa na Receita" />
+              <ChecagemLinha ok={regimeOk} titulo="Regime dentro do que migramos hoje (Simples/ME)" />
               <ChecagemLinha ok titulo="Prestação de serviço, sem conselho de classe" />
             </div>
 
-            <Aviso variante="success" titulo="A gente cuida dessa empresa">
-              Sua atividade está dentro do que a gente atende. O próximo passo é
-              ver quanto você paga hoje de imposto e se dá pra pagar menos.
-            </Aviso>
+            {!situacaoOk ? (
+              <Aviso variante="danger" titulo="Essa empresa precisa regularizar antes">
+                A Receita mostra situação {e.situacao.toLowerCase()}, não ativa.
+                A gente não consegue assumir a contabilidade nesse estado — o
+                primeiro passo é regularizar o CNPJ.
+              </Aviso>
+            ) : !regimeOk ? (
+              <Aviso variante="warning" titulo="Esse regime ainda não migramos">
+                Hoje só migramos empresa no Simples Nacional (ME). {e.porte} é
+                um regime diferente — ainda não temos essa rota pronta.
+              </Aviso>
+            ) : (
+              <Aviso variante="success" titulo="A gente cuida dessa empresa">
+                Sua atividade está dentro do que a gente atende. O próximo passo é
+                ver quanto você paga hoje de imposto e se dá pra pagar menos.
+              </Aviso>
+            )}
 
             {/* ⚠️ As saídas existem e são alcançáveis — não são botão morto.
                 No mock elas ficam como link discreto pra a prancheta conseguir
@@ -237,9 +290,19 @@ export function MigrarCnpjView({
           </Corpo>
 
           <Rodape>
-            <Button full onClick={onSeguir}>
-              É essa a minha empresa
-            </Button>
+            {podeSeguir ? (
+              <Button full onClick={onSeguir}>
+                É essa a minha empresa
+              </Button>
+            ) : !situacaoOk ? (
+              <Button full variant="dark" onClick={onSaidaInapto}>
+                Ver como regularizar
+              </Button>
+            ) : (
+              <Button full variant="dark" onClick={onSaidaRegimeNaoSuportado}>
+                Falar com o time sobre esse regime
+              </Button>
+            )}
           </Rodape>
         </main>
       </>
@@ -755,11 +818,20 @@ function ItemPassivo({
  * O pipeline da migração, em linguagem de gente. Os códigos oficiais (resolução
  * CFC, Evento 232 do Redesim) ficam FORA da tela — são 🟡 pendência D, não
  * ratificados em fonte primária, e o cliente não precisa deles de qualquer jeito.
+ *
+ * 🆕 04/08 — cruzamento com `Fluxo Migração GEMINI.md`: o Gemini trata "trocar
+ * o responsável técnico na Prefeitura (CadWeb PBH)" como ação PRÓPRIA, separada
+ * da transferência no Conselho (CRC-MG) e da atualização federal/estadual
+ * (Redesim/DBE Evento 232). O pipeline tinha 4 etapas comprimindo os 2 —
+ * separei em 5 pra não fingir que "atualizar os órgãos" é um evento único
+ * quando pode ser 2 sistemas de fato. 🟡 segue fila-Larissa: se confirmar que
+ * é o MESMO mecanismo, volta pra 4.
  */
 const ETAPAS_MIGRACAO: Etapa[] = [
   { nome: "Encerramos com seu contador antigo" },
   { nome: "Transferindo a responsabilidade", orgao: "Conselho de Contabilidade" },
-  { nome: "Atualizando seus dados nos órgãos", orgao: "Receita, Estado e Prefeitura" },
+  { nome: "Atualizando no Redesim", orgao: "Receita Federal e Estado" },
+  { nome: "Trocando o responsável contábil", orgao: "Prefeitura de Belo Horizonte" },
   { nome: "Liberando o acesso pra gente cuidar" },
 ];
 

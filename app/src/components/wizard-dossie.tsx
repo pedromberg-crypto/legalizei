@@ -536,10 +536,14 @@ export function EmpresaView({
   preencher,
   onSeguir,
   onVoltar,
+  mei = false,
 }: {
   preencher?: number;
   onSeguir?: () => void;
   onVoltar?: () => void;
+  /** 🆕 03/08 — MEI não tem capital social formal (não é sociedade). Campo
+   *  some; o resto da tela (endereço, IPTU, tipo de imóvel) é igual pros dois. */
+  mei?: boolean;
 }) {
   const [usarProprio, setUsarProprio] = useState<boolean | null>(null);
   const [cep, setCep] = useState("");
@@ -572,6 +576,18 @@ export function EmpresaView({
   const capitalNum = Number(capital.replace(/\D/g, "")) || 0;
   const capitalBaixo = capitalNum > 0 && capitalNum < 1000;
 
+  /**
+   * 🆕 04/08 — cruzamento com pesquisa Gemini: o campo só checava "não vazio",
+   * deixava passar 1 dígito solto. O índice cadastral do IPTU varia 10-12
+   * dígitos dependendo do carnê (nosso mock usa 12 em `dossie/mock.ts`, o
+   * Gemini cravou 11 sem citar fonte) — sem confirmação de qual é o formato
+   * EXATO de BH, valida um piso (10 dígitos) em vez de travar num número que
+   * pode estar errado. 🟡 fila-Larissa: formato exato do índice.
+   */
+  const iptuDigitos = iptu.replace(/\D/g, "");
+  const iptuCurto = iptuDigitos.length > 0 && iptuDigitos.length < 10;
+  const iptuOk = iptuDigitos.length >= 10;
+
   const residenciaCompleta =
     SOCIOS === 1 || NOMES_SOCIOS.every((n) => n in residenciaSocios);
 
@@ -580,7 +596,7 @@ export function EmpresaView({
     (usarProprio === true &&
       cepCheio &&
       numero.trim() !== "" &&
-      iptu.trim() !== "" &&
+      iptuOk &&
       tipo !== "" &&
       residenciaCompleta);
 
@@ -592,7 +608,7 @@ export function EmpresaView({
    * renderizado, porque aparece nos DOIS caminhos. Capital social vai no
    * contrato social e a JUCEMG exige. O endereço é que é condicional, não ele.
    */
-  const completo = usarProprio !== null && enderecoOk && capitalNum > 0;
+  const completo = usarProprio !== null && enderecoOk && (mei || capitalNum > 0);
 
   return (
     <>
@@ -725,6 +741,7 @@ export function EmpresaView({
                   onChange={setIptu}
                   placeholder="000.000.000.000"
                   inputMode="numeric"
+                  erro={iptuCurto ? "Confira o número: o índice completo costuma ter mais dígitos que isso." : undefined}
                 />
               </Campo>
 
@@ -758,7 +775,7 @@ export function EmpresaView({
             </>
           )}
 
-          {usarProprio !== null && (
+          {usarProprio !== null && !mei && (
             <Campo
               rotulo="Capital social"
               dica="Quanto a empresa começa valendo. Pode ser um valor simbólico."

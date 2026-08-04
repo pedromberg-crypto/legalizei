@@ -1,7 +1,12 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { EmpresaView } from "@/components/wizard-dossie";
+import { ehMei, comRegime } from "@/lib/regime";
+
+/** 🆕 03/08 — ponto de REENCONTRO dos 2 caminhos: MEI cai aqui direto da C1
+ *  (pulou C2/C3); ME chega pela sequência normal via C3. Capital social some
+ *  pro MEI (não existe, não é sociedade) — ver prop `mei` no EmpresaView. */
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -44,6 +49,12 @@ import { EmpresaView } from "@/components/wizard-dossie";
  */
 export default function EmpresaPage() {
   const router = useRouter();
+  const mei = ehMei(useSearchParams());
 
-  return <EmpresaView onSeguir={() => router.push("/dossie/cnae-secundarios")} />;
+  return (
+    <EmpresaView
+      mei={mei}
+      onSeguir={() => router.push(comRegime("/dossie/cnae-secundarios", mei))}
+    />
+  );
 }

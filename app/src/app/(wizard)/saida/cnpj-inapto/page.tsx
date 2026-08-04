@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { SaidaView, type DadosSaida } from "@/components/saida";
 import { TelaHeader } from "@/components/ui/tela";
+import { Lottie } from "@/components/lottie";
 
 /**
  * A9 · SAÍDA — CNPJ INAPTO/SUSPENSO/BAIXADO · 🆕 04/08
@@ -18,6 +19,9 @@ import { TelaHeader } from "@/components/ui/tela";
  * produto, então a copy é mais prática (o que fazer) que educativa.
  */
 const D: DadosSaida = {
+  // 🆕 04/08 — mesmo teste do Pedro: ícone "Alert" (Lottie) recolorido pro
+  // nosso azul de status, no lugar do símbolo padrão de pessoa.
+  icone: <Lottie path="/lottie/alert-legalizei.json" fps={30} className="h-[125px] w-[125px]" />,
   tag: "CNPJ irregular",
   titulo: "Essa empresa precisa regularizar antes de migrar",
   explica:

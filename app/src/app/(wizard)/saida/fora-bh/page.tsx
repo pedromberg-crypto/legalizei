@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { SaidaView, type DadosSaida } from "@/components/saida";
 import { TelaHeader } from "@/components/ui/tela";
+import { Lottie } from "@/components/lottie";
 
 /**
  * A9 · SAÍDA — FORA DE BELO HORIZONTE · 🆕 28/07 (reunião Rua Satélite 9)
@@ -21,6 +22,9 @@ import { TelaHeader } from "@/components/ui/tela";
  * aqui (não existe conceito de "reiniciar demo" em produção).
  */
 const D: DadosSaida = {
+  // 🆕 04/08 — mesmo ícone "Alert" (Lottie) recolorido pro nosso azul de
+  // status, no lugar do símbolo padrão de pessoa. Estendendo pra E4.1.
+  icone: <Lottie path="/lottie/alert-legalizei.json" fps={30} className="h-[125px] w-[125px]" />,
   tag: "Outra cidade",
   titulo: "Por enquanto, só abrimos em Belo Horizonte",
   explica:

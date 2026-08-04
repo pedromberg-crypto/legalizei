@@ -40,7 +40,7 @@ export default function MigrarDiagnosticoPage() {
           mei ? `/migrar/plano?regime=mei&contador=${temContador ? "sim" : "nao"}` : "/migrar/plano"
         )
       }
-      onVoltar={() => router.push("/migrar/cnpj")}
+      onVoltar={() => router.push(mei ? "/migrar/cnpj" : "/migrar/tributario")}
     />
   );
 }

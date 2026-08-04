@@ -179,6 +179,11 @@ const GRUPOS: {
         nota: "04/08 — nasce do M1 (`/migrar/cnpj?cenario=inapto`, mock de demo): situação cadastral ≠ ativa. Diferente da auditoria de passivo (M4a, que pressupõe CNPJ ATIVO com dívida): aqui a Receita nem reconhece a empresa como ativa, então a regularização vem ANTES de qualquer migração.",
       },
       {
+        rota: "/migrar/tributario",
+        nome: "🆕 E4.2b · Simples Nacional ou Lucro Presumido? (só ME)",
+        nota: "04/08 — debate de custo com o Pedro: a API paga que confirma Simples×Presumido de verdade (`receita-federal/simples`, R$0,24) só roda DEPOIS que a pessoa virar cliente (M4a/ativação fiscal) — não faz sentido cobrar isso de um lead que ainda não converteu. Autodeclarado aqui, mesma doutrina da E3.2 (MEI×ME). Simples → segue pro M2; Presumido → `/saida/regime-nao-suportado`. MEI pula essa pergunta (vai direto do M1 pro M2 com `?regime=mei`).",
+      },
+      {
         rota: "/migrar/diagnostico",
         nome: "E4.3 · Migrar · Diagnóstico com o número REAL",
         nota: "🎯 A maior vantagem sobre o caminho abrir: empresa com 12+ meses tem histórico, então o Fator R sai do que DE FATO aconteceu — não de faixa declarada. Cenário padrão = Fator R abaixo do corte (paga Anexo V sem precisar), com a conta aberta: receita 12m, folha 12m, o % e o corte de 28%.",
@@ -619,7 +624,9 @@ const MAPA_EDGES: Conexao[] = [
   { de: "/entrada?intencao=migrar", para: "/entrada?intencao=abrir&regime=me" },
   { de: "/entrada?intencao=abrir&regime=me", para: "/migrar/cnpj" },
   { de: "/migrar/cnpj", para: "/migrar/cnpj?fase=achou", tracejado: true },
-  { de: "/migrar/cnpj", para: "/migrar/diagnostico" },
+  { de: "/migrar/cnpj", para: "/migrar/tributario" },
+  { de: "/migrar/tributario", para: "/migrar/diagnostico" },
+  { de: "/migrar/tributario", para: "/saida/regime-nao-suportado", tracejado: true },
   { de: "/migrar/cnpj", para: "/migrar/diagnostico?cenario=ja-otimo", tracejado: true },
   { de: "/migrar/cnpj", para: "/migrar/diagnostico?regime=mei", tracejado: true },
   { de: "/migrar/cnpj", para: "/veredito/waitlist", tracejado: true },

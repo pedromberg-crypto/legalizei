@@ -36,6 +36,11 @@ import {
  * ao lado do M1 — antes só dava pra ver digitando um CNPJ no fluxo real.
  * ⚠️ Pedido original do Pedro era ESTA tela, não a de loading — corrigido
  * depois de eu ter extraído a errada na 1ª tentativa.
+ *
+ * 🆕 04/08 (4ª rodada) — ME agora passa por `/migrar/tributario` (Simples ×
+ * Presumido, autodeclarado) ANTES do diagnóstico — não roda a API paga de
+ * Simples/SIMEI pra quem ainda não converteu. MEI pula essa pergunta (não
+ * existe pra quem já é MEI).
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function MigrarCnpjPage() {
@@ -56,7 +61,7 @@ export default function MigrarCnpjPage() {
         regimeOk={empresa.regime !== "presumido"}
         onVoltar={() => router.push("/migrar/cnpj")}
         onSeguir={() =>
-          router.push(cenario === "mei" ? "/migrar/diagnostico?regime=mei" : "/migrar/diagnostico")
+          router.push(cenario === "mei" ? "/migrar/diagnostico?regime=mei" : "/migrar/tributario")
         }
         onSaidaRegulada={() => router.push("/veredito/waitlist")}
         onSaidaNaoAtende={() => router.push("/veredito/nao-atende")}

@@ -447,6 +447,100 @@ function ChecagemLinha({ ok, titulo }: { ok: boolean; titulo: string }) {
   );
 }
 
+/* ═══════════════════ M1b · SIMPLES × PRESUMIDO (só ME) ═══════════════════ */
+
+/**
+ * M1b — 🆕 04/08 (debate Pedro): decisão de custo. Rodar a API paga de
+ * verdade (`receita-federal/simples`, R$0,24) pra confirmar Simples×Presumido
+ * ANTES do pagamento não faz sentido pra um lead que ainda não converteu —
+ * a API 1 (cadastro, R$0,20) já resolveu MEI×ME e situação cadastral no M1.
+ *
+ * Autodeclarado, igual a E3.2: quem confirma de verdade é a API 2, rodada
+ * DEPOIS que a pessoa virar cliente (M4a/ativação fiscal) — aqui só decide
+ * se a esteira segue (Simples) ou vira saída graciosa (Presumido, motor
+ * fiscal que ainda não temos). MEI não passa por aqui — a pergunta não
+ * existe pra quem já é MEI (`/migrar/diagnostico?regime=mei` direto).
+ */
+const OPCOES_TRIBUTARIO = [
+  {
+    id: "simples" as const,
+    nome: "Simples Nacional",
+    desc: "Uma guia só (DAS), com Anexo e Fator R. É o que a gente atende hoje.",
+  },
+  {
+    id: "presumido" as const,
+    nome: "Lucro Presumido",
+    desc: "IRPJ, CSLL, PIS/COFINS e ISS calculados separados. Ainda não temos esse motor pronto.",
+  },
+];
+
+export function MigrarRegimeTributarioView({
+  regime,
+  setRegime,
+  onSeguir,
+  onVoltar,
+}: {
+  regime: "simples" | "presumido" | null;
+  setRegime: (v: "simples" | "presumido") => void;
+  onSeguir?: () => void;
+  onVoltar?: () => void;
+}) {
+  return (
+    <>
+      <TelaHeader meta="Sobre o seu regime" onVoltar={onVoltar} />
+      <main className="app-main">
+        <div className="shrink-0">
+          <h1 className="text-h1 mb-2">
+            Seu CNPJ é Simples Nacional ou Lucro Presumido?
+          </h1>
+          <p className="text-body text-text-secondary mb-6">
+            A gente confirma isso de verdade mais pra frente — por enquanto,
+            o que você souber já ajuda a seguir certo.
+          </p>
+        </div>
+
+        <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="flex flex-col gap-3">
+            {OPCOES_TRIBUTARIO.map((o) => (
+              <button
+                key={o.id}
+                onClick={() => setRegime(o.id)}
+                className={`w-full rounded-md border p-4 text-left transition-colors
+                  ${
+                    regime === o.id
+                      ? "border-action-primary bg-action-primary text-text-on-brand"
+                      : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
+                  }`}
+              >
+                <span
+                  className={`text-body-strong font-bold ${regime === o.id ? "text-text-on-brand" : "text-text-primary"}`}
+                >
+                  {o.nome}
+                </span>
+                <p
+                  className={`mt-1 text-caption ${regime === o.id ? "text-text-on-brand/85" : "text-text-secondary"}`}
+                >
+                  {o.desc}
+                </p>
+              </button>
+            ))}
+          </div>
+          <p className="text-micro text-text-tertiary mt-4">
+            Se não souber de cabeça, escolhe o que parece mais provável —
+            confirmamos com a Receita antes de qualquer coisa virar definitiva.
+          </p>
+        </div>
+
+        <div className="app-footer-cta">
+          <Button full disabled={!regime} onClick={onSeguir}>
+            Continuar
+          </Button>
+        </div>
+      </main>
+    </>
+  );
+}
+
 /* ═══════════════════ M2 · DIAGNÓSTICO (o número REAL) ═══════════════════ */
 
 /**

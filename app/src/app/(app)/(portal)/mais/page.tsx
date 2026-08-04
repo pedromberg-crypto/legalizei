@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
-import { SecaoLista, SECOES } from "@/components/lab/mais-shell";
+import { SecaoLista, SECOES, type Secao } from "@/components/lab/mais-shell";
+import { CUSTOS, brl } from "@/lib/fiscal";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -19,6 +21,13 @@ import { SecaoLista, SECOES } from "@/components/lab/mais-shell";
  *
  * É ABA (raiz) → navbar flutuante; pb (100px+safe) limpa a barra.
  * ⚠️ Preços = FAROL/FAKE (preço deferido ao Mauro/custo real).
+ *
+ * 🆕 04/08 — Plano MEI (`?regime=mei`): troca o `PlanoCard` (preço/benefícios
+ * do plano limitado) e a seção "Sua empresa" (Sócios não existe pro MEI →
+ * vira "Meu colaborador"). Os avulsos NÃO somem — decisão do Pedro: MEI
+ * também é assinante, então também vê a oferta de avulsos depois da
+ * mensalidade, igual ao plano ME. Só quem NUNCA assina é que não vê nada
+ * disso (essa 3ª via foi descartada — mensalidade sempre vem antes).
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -38,7 +47,29 @@ const SERVICOS: Servico[] = [
   { label: "Recálculo de guia", preco: "R$ 15,90", Icone: IconeRefresh, popular: true },
 ];
 
+/** Sócios não existe pro MEI (nunca tem sócio) — vira Meu colaborador. Só
+ *  troca ESTE item; o resto da seção segue igual (mesma lógica de "Relatórios"
+ *  que fica, já que o MEI também recebe pagamento e pode querer ver o histórico). */
+function secoesParaRegime(mei: boolean): Secao[] {
+  if (!mei) return SECOES;
+  return SECOES.map((s) =>
+    s.nome === "Sua empresa"
+      ? {
+          ...s,
+          itens: s.itens.map((it) =>
+            it.label === "Sócios"
+              ? { label: "Meu colaborador", Icone: it.Icone, href: "/mais/colaborador" }
+              : it
+          ),
+        }
+      : s
+  );
+}
+
 export default function MaisPage() {
+  const searchParams = useSearchParams();
+  const mei = searchParams.get("regime") === "mei";
+
   return (
     <main className="app-main">
       <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -66,7 +97,7 @@ export default function MaisPage() {
           </Link>
 
           {/* 2. Seu plano */}
-          <PlanoCard />
+          <PlanoCard mei={mei} />
 
           {/* 3. Serviços avulsos (à-la-carte) — curado + "Ver todos" na loja */}
           <div>
@@ -91,9 +122,9 @@ export default function MaisPage() {
             </div>
           </div>
 
-          {/* 4. Atalhos por seção (reusados) */}
-          <SecaoLista secao={SECOES[0]} />
-          <SecaoLista secao={SECOES[1]} />
+          {/* 4. Atalhos por seção (reusados; MEI troca Sócios→Meu colaborador) */}
+          <SecaoLista secao={secoesParaRegime(mei)[0]} />
+          <SecaoLista secao={secoesParaRegime(mei)[1]} />
 
           {/* 5. Conta — subiu pra logo abaixo de Contabilidade (Sair fora do
               card, vermelho; Indicar = futuro) */}
@@ -153,16 +184,20 @@ export default function MaisPage() {
   );
 }
 
-/* ─── Card do plano/assinatura ─────────────────────────────────────────────── */
-function PlanoCard() {
+/* ─── Card do plano/assinatura ───────────────────────────────────────────────
+   🆕 04/08 — Plano MEI tem preço/escopo PRÓPRIOS (não é o plano ME com
+   desconto): `CUSTOS.MENSALIDADE_MEI` + benefícios do plano limitado
+   (emitir NF + colaborador + certificado incluso), fidelidade visível. */
+function PlanoCard({ mei = false }: { mei?: boolean }) {
+  const nome = mei ? "Plano MEI" : PLANO.nome;
+  const preco = mei ? brl(CUSTOS.MENSALIDADE_MEI, true) : PLANO.preco;
+
   return (
     <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-micro text-text-tertiary">Seu plano</p>
-          <p className="text-body-strong font-semibold text-text-primary">
-            {PLANO.nome}
-          </p>
+          <p className="text-body-strong font-semibold text-text-primary">{nome}</p>
         </div>
         <span className="shrink-0 rounded-full bg-state-success-tint px-2.5 py-1 text-micro font-semibold text-state-success-text">
           Ativo
@@ -170,19 +205,31 @@ function PlanoCard() {
       </div>
 
       <div className="mt-3 flex items-baseline gap-1">
-        <p className="text-h2 font-bold text-text-primary">{PLANO.preco}</p>
+        <p className="text-h2 font-bold text-text-primary">{preco}</p>
         <p className="text-caption text-text-tertiary">/mês</p>
       </div>
       <p className="mt-0.5 text-micro text-text-tertiary">
-        Próxima cobrança em {PLANO.proxima} · cartão {PLANO.cartao}
+        {mei
+          ? `Próxima cobrança em ${PLANO.proxima} · cartão ${PLANO.cartao} · fidelidade de ${CUSTOS.FIDELIDADE_MEI_MESES} meses`
+          : `Próxima cobrança em ${PLANO.proxima} · cartão ${PLANO.cartao}`}
       </p>
 
       <div className="mt-3 border-t border-border-hairline pt-3">
         <p className="mb-1.5 text-micro text-text-tertiary">Incluso no seu plano</p>
         <div className="flex flex-col gap-1.5">
-          <Beneficio>Contador humano no WhatsApp</Beneficio>
-          <Beneficio>Impostos calculados e no prazo</Beneficio>
-          <Beneficio>Débito automático do DAS</Beneficio>
+          {mei ? (
+            <>
+              <Beneficio>Emitir notas fiscais pelo app</Beneficio>
+              <Beneficio>Gerenciar seu 1 colaborador (FGTS/INSS incluso)</Beneficio>
+              <Beneficio>Certificado digital incluso</Beneficio>
+            </>
+          ) : (
+            <>
+              <Beneficio>Contador humano no WhatsApp</Beneficio>
+              <Beneficio>Impostos calculados e no prazo</Beneficio>
+              <Beneficio>Débito automático do DAS</Beneficio>
+            </>
+          )}
         </div>
       </div>
 

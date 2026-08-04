@@ -15,6 +15,14 @@ tags: [produto, ux, telas, fluxo, mermaid, mapa, mockup]
 >
 > **🆕 04/08** — 2 telas novas em `/migrar/cnpj`: [[cruzamento-gemini-fluxo-migracao]] achou 2 gaps reais (regime de origem não checado + CNPJ inapto sem rota) e viraram `/saida/regime-nao-suportado` + `/saida/cnpj-inapto` (demo via `?cenario=mei|presumido|inapto`). `/migrar/transferencia` também mudou: pipeline de 4 → 5 etapas (troca de responsável na Prefeitura separada da atualização Redesim). `/dossie/empresa` (IPTU) e `/mais/documentos` (Alvará + Termo Simples + variante Migrar) só mudaram por dentro, sem tela/rota nova — ver [[cruzamento-gemini-fluxo-abertura]].
 >
+> **🆕 04/08 (2ª rodada)** — decisão do Pedro: **MEI agora migra normalmente**, só Lucro Presumido segue em `/saida/regime-nao-suportado`. `/migrar/diagnostico?regime=mei` troca o diagnóstico de Fator R pelo subfluxo "você tem contador hoje?" (MEI não é obrigado a ter um); a resposta decide se o M4 (auditoria+TTRT) roda ou se pula direto pro M5. `/migrar/contrato` e `/migrar/ativa` também ganharam variantes MEI. Reabre e resolve pela metade [[legalize-escopo-mei-lucro-presumido-aberto]] — MEI sai da pendência, Lucro Presumido segue aberto (precisa de pesquisa fiscal dedicada antes de virar tela).
+>
+> **🆕 04/08 (3ª rodada) — Plano MEI travado.** Não é o plano ME com desconto: preço próprio (R$49,90/mês 🔴 FAKE, ponto de partida), fidelidade de 12 meses (contrapartida do certificado digital que a gente paga e precisa pra movimentar a empresa), escopo LIMITADO (emitir NF + gerenciar 1 colaborador, o teto legal do MEI). Descartada a ideia de servir quem nunca assina (avulso pra não-cliente) — mensalidade SEMPRE vem antes, avulso é upsell depois, igual ao plano ME. Nova tela `/mais/colaborador`; `/inicio`, `/mais` e o nav do portal ganharam variante reduzida via `?regime=mei`. Ver ADR em `marca/decisoes-marca.md` (2026-08-04).
+>
+> **🆕 04/08 (correção)** — a 1ª extração da E4.2 (pedido do Pedro de dividir a tela em 2) tirou a peça errada (loading). Corrigido: a tela extraída é `MigrarAchouView` ("Achamos sua empresa" — card+checagens+veredito), não o spinner.
+>
+> **🆕 04/08 (4ª rodada) — E3.2 reusada pro Migrar.** Decisão do Pedro: inverter a ordem que existia (perguntava cidade ANTES de saber MEI×ME). Agora Migrar ("Já tenho empresa") também passa pela E3.2 — mesma tela (`MeiOuMeView`), `contexto="migrar"` troca a copy de "qual devo escolher" (elegibilidade, faz sentido pra quem vai abrir) pra "qual eu já sou" (autodeclaração, o CNPJ já existe). MEI pula a cidade e vai direto pro M1 (`/migrar/cnpj?cenario=mei`); ME cai no mesmo gate de cidade de sempre. Autodeclarado, não trava — quem confirma de verdade é o M1, puxando da Receita.
+>
 > **Legenda:** seta cheia = fluxo principal · seta tracejada = ramo/alternativa/atalho (mais fino, menos frequente que o principal).
 
 ## 🖼️ Diagrama
@@ -27,12 +35,15 @@ flowchart LR
     n_splash["E1 · Splash<br/>/splash"]
     n_welcome["E2 · Welcome<br/>/welcome"]
     n_entrada["E3 · Fork de 3 rotas<br/>/entrada"]
-    n_entrada_abrir["E3.2 · MEI × ME<br/>/entrada?intencao=abrir"]
+    n_entrada_abrir["E3.2 · MEI × ME (Abrir)<br/>/entrada?intencao=abrir"]
+    n_entrada_migrar["🆕 E3.2 · MEI × ME (Migrar)<br/>/entrada?intencao=migrar"]
     n_entrada_abrir_me["E4 · Gate de cidade (BH-MG)<br/>/entrada?intencao=abrir&amp;regime=me"]
     n_saida_fora_bh["E4.1 · Saída · fora de BH<br/>/saida/fora-bh"]
     n_migrar_cnpj["E4.2 · Migrar · Seu CNPJ<br/>/migrar/cnpj"]
-    n_saida_regime["🆕 Saída · Regime não suportado<br/>/saida/regime-nao-suportado"]
+    n_migrar_achou["🆕 E4.2 · Achamos sua empresa<br/>/migrar/cnpj?fase=achou"]
+    n_saida_regime["🆕 Saída · Regime não suportado (Presumido)<br/>/saida/regime-nao-suportado"]
     n_saida_cnpj_inapto["🆕 Saída · CNPJ inapto/suspenso<br/>/saida/cnpj-inapto"]
+    n_migrar_diag_mei["🆕 E4.3 · Diagnóstico MEI (tem contador?)<br/>/migrar/diagnostico?regime=mei"]
     n_migrar_diag["E4.3 · Migrar · Diagnóstico<br/>/migrar/diagnostico"]
     n_migrar_diag_otimo["E4.3 · Guarda-corpo honestidade<br/>/migrar/diagnostico?cenario=ja-otimo"]
     n_migrar_plano["E4.4 · Migrar · A conta<br/>/migrar/plano"]
@@ -118,6 +129,7 @@ flowchart LR
     n_mais_servicos["P-MAIS4 · Loja de avulsos<br/>/mais/servicos"]
     n_mais_empresa["P-MAIS5 · Sua empresa<br/>/mais/empresa"]
     n_mais_socios["P-MAIS6 · Sócios<br/>/mais/socios"]
+    n_mais_colaborador["🆕 P-MAIS6b · Meu colaborador (Plano MEI)<br/>/mais/colaborador"]
     n_mais_documentos["P-MAIS7 · Documentos<br/>/mais/documentos"]
     n_mais_certificado["P-MAIS8 · Certificado<br/>/mais/certificado"]
     n_mais_em_dia["P-MAIS9 · Você está em dia<br/>/mais/em-dia"]
@@ -143,13 +155,19 @@ flowchart LR
   n_entrada_abrir --> n_entrada_abrir_me
   n_entrada_abrir_me --> n_gate
   n_entrada_abrir_me -.-> n_saida_fora_bh
-  n_entrada -.-> n_migrar_cnpj
+  n_entrada -.-> n_entrada_migrar
+  n_entrada_migrar -.->|MEI direto| n_migrar_cnpj
+  n_entrada_migrar --> n_entrada_abrir_me
+  n_entrada_abrir_me --> n_migrar_cnpj
+  n_migrar_cnpj -.-> n_migrar_achou
   n_migrar_cnpj --> n_migrar_diag
   n_migrar_cnpj -.-> n_migrar_diag_otimo
   n_migrar_cnpj -.-> n_veredito_waitlist
   n_migrar_cnpj -.-> n_veredito_nao_atende
   n_migrar_cnpj -.-> n_saida_regime
   n_migrar_cnpj -.-> n_saida_cnpj_inapto
+  n_migrar_cnpj -.-> n_migrar_diag_mei
+  n_migrar_diag_mei -.-> n_migrar_plano
   n_migrar_diag --> n_migrar_plano
   n_migrar_plano --> n_migrar_contrato
   n_migrar_contrato --> n_pagamento_migrar
@@ -217,6 +235,7 @@ flowchart LR
   n_notas --> n_notas_detalhe
   n_notas_detalhe -.-> n_emitir
   n_mais --> n_perfil
+  n_mais -.-> n_mais_colaborador
   n_mais --> n_mais_plano
   n_mais --> n_mais_servicos
   n_mais --> n_mais_empresa
@@ -242,13 +261,16 @@ flowchart LR
 | `/splash` | E1 · Splash |
 | `/welcome` | E2 · Welcome |
 | `/entrada` | E3 · Fork de 3 rotas |
-| `/entrada?intencao=abrir` | E3.2 · MEI × ME (só caminho abrir) |
+| `/entrada?intencao=abrir` | E3.2 · MEI × ME (variante Abrir) |
+| `/entrada?intencao=migrar` | 🆕 E3.2 · MEI × ME (variante Migrar) |
 | `/entrada?intencao=abrir&regime=me` | E4 · Gate de cidade (BH-MG) |
 | `/saida/fora-bh` | E4.1 · Saída · fora de BH |
-| `/migrar/cnpj` | E4.2 · Migrar · Seu CNPJ |
-| `/saida/regime-nao-suportado` | 🆕 Saída · Regime não suportado (MEI/Presumido) |
+| `/migrar/cnpj` | E4.2 · Migrar · Seu CNPJ (MEI passa; só Presumido bloqueia) |
+| `/migrar/cnpj?fase=achou` | 🆕 E4.2 · Achamos sua empresa (tela própria) |
+| `/saida/regime-nao-suportado` | 🆕 Saída · Regime não suportado (só Lucro Presumido) |
 | `/saida/cnpj-inapto` | 🆕 Saída · CNPJ inapto/suspenso |
 | `/migrar/diagnostico` | E4.3 · Migrar · Diagnóstico (número REAL) |
+| `/migrar/diagnostico?regime=mei` | 🆕 E4.3 · Diagnóstico MEI ("tem contador?") |
 | `/migrar/diagnostico?cenario=ja-otimo` | E4.3 · Guarda-corpo de honestidade |
 | `/migrar/plano` | E4.4 · Migrar · A conta da migração |
 | `/migrar/contrato` | E4.5 · Migrar · Contrato |
@@ -333,6 +355,7 @@ flowchart LR
 | `/mais/servicos` | P-MAIS4 · Loja de avulsos |
 | `/mais/empresa` | P-MAIS5 · Sua empresa · ficha |
 | `/mais/socios` | P-MAIS6 · Sócios |
+| `/mais/colaborador` | 🆕 P-MAIS6b · Meu colaborador (Plano MEI) |
 | `/mais/documentos` | P-MAIS7 · Documentos |
 | `/mais/certificado` | P-MAIS8 · Certificado (ativo) |
 | `/mais/em-dia` | P-MAIS9 · Você está em dia |

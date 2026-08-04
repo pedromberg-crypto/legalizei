@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { MigrarTransferenciaView } from "@/components/wizard-migrar";
+import { ehMei, comRegime } from "@/lib/regime";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -33,11 +34,12 @@ export default function MigrarTransferenciaPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const travado = searchParams.get("estado") === "travado";
+  const mei = ehMei(searchParams);
 
   return (
     <MigrarTransferenciaView
       travado={travado}
-      onSeguir={() => router.push("/migrar/ativa")}
+      onSeguir={() => router.push(comRegime("/migrar/ativa", mei))}
     />
   );
 }

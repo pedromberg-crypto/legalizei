@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, type ReactNode } from "react";
+import { comRegime } from "@/lib/regime";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -34,6 +35,11 @@ import { useEffect, type ReactNode } from "react";
  * ─── DOIS MODELOS DE "VOLTAR" ───────────────────────────────────────────────
  *   · entre seções = troca de aba.  · num detalhe = seta "voltar" (TelaHeader).
  * A barra aparece só nas telas-RAIZ; no detalhe some e o back assume.
+ *
+ * 🆕 04/08 — Plano MEI (`?regime=mei`) esconde a aba **Impostos**: não existe
+ * dashboard fiscal pro MEI (DAS-MEI é fixo, sem Anexo/Fator R pra vigiar) —
+ * o lembrete de guia já mora no Início. Sobra Início · Notas · Mais + o CTA
+ * central de emitir. A navegação entre abas preserva o `?regime=mei`.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -85,16 +91,20 @@ const RAIZES = new Set([
 
 export default function PortalLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const mei = searchParams.get("regime") === "mei";
   const mostrarAbas = RAIZES.has(pathname);
   return (
     <>
       {children}
-      {mostrarAbas && <BarraAbas pathname={pathname} />}
+      {mostrarAbas && <BarraAbas pathname={pathname} mei={mei} />}
     </>
   );
 }
 
-function BarraAbas({ pathname }: { pathname: string }) {
+function BarraAbas({ pathname, mei }: { pathname: string; mei: boolean }) {
+  // 🆕 04/08 — Plano MEI não tem dashboard de impostos (DAS-MEI é fixo).
+  const abas = mei ? ABAS.filter((a) => a.href !== "/impostos") : ABAS;
   // Lembra a ÚLTIMA rota visitada de cada aba (por iframe, via sessionStorage).
   // Sem isso, no laboratório trocar de aba e voltar caía na home canônica
   // (/inicio) em vez da VERSÃO que estava sendo revisada (ex: /inicio-ref6).
@@ -120,11 +130,13 @@ function BarraAbas({ pathname }: { pathname: string }) {
     } catch {
       destino = base;
     }
-    router.push(destino);
+    // Preserva o plano MEI ao trocar de aba — senão a 1ª troca perde o
+    // `?regime=mei` e o resto do portal volta a mostrar o plano ME.
+    router.push(comRegime(destino, mei));
   };
 
-  const esquerda = ABAS.slice(0, 2);
-  const direita = ABAS.slice(2);
+  const esquerda = abas.slice(0, Math.ceil(abas.length / 2));
+  const direita = abas.slice(Math.ceil(abas.length / 2));
   return (
     // Wrapper transparente: dá a margem lateral (flutua), reserva o topo pra o
     // CTA elevado (pt-7 = a protrusão) e respeita o home-indicator (var safe,
@@ -158,7 +170,7 @@ function BarraAbas({ pathname }: { pathname: string }) {
             print). → /emitir (P6, a tela de emissão em 1 passo). */}
         <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
           <Link
-            href="/emitir"
+            href={comRegime("/emitir", mei)}
             aria-label="Emitir nota fiscal"
             className="flex h-[62px] w-[62px] items-center justify-center rounded-[18px] bg-action-primary text-text-on-brand shadow-lg transition-colors hover:bg-action-primary-hover active:bg-action-primary-hover"
           >

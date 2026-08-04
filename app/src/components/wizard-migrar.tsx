@@ -63,7 +63,21 @@ import { CUSTOS, brl } from "@/lib/fiscal";
  * 🚧 Vem da consulta real por CNPJ (InfoSimples — validado 24/07: o CNPJ 🔓
  * puxa razão social, endereço, sócios, situação e CNAE). Aqui é farol.
  */
-export const EMPRESA_MIGRAR = {
+export interface EmpresaMigrar {
+  cnpj: string;
+  razao: string;
+  fantasia: string;
+  abertura: string;
+  situacao: string;
+  natureza: string;
+  porte: string;
+  regime: "simples" | "mei" | "presumido";
+  cnae: string;
+  cnaeHumano: string;
+  endereco: string;
+}
+
+export const EMPRESA_MIGRAR: EmpresaMigrar = {
   cnpj: "12.345.678/0001-90",
   razao: "Ana Beatriz Ramos Web Studio LTDA",
   fantasia: "Ramos Studio",
@@ -71,30 +85,34 @@ export const EMPRESA_MIGRAR = {
   situacao: "ATIVA",
   natureza: "Sociedade Limitada Unipessoal (SLU)",
   porte: "Microempresa (ME)",
-  noSimples: true,
+  regime: "simples",
   cnae: "6201-5/02",
   cnaeHumano: "Criação de sites e web design",
   endereco: "Rua dos Timbiras, 1200, Funcionários, Belo Horizonte/MG",
 };
 
 /**
- * 🆕 04/08 — cenários de demo pra exercitar os 2 gaps achados no cruzamento
- * com o `Fluxo Migração GEMINI.md`: hoje o M1 só sabia checar "situação ativa
- * + optante Simples + CNAE liso", sem nunca perguntar SE o regime de origem é
- * um dos que migramos (MEI e Lucro Presumido ainda não têm rota) nem tratar
- * CNPJ inapto/suspenso (hoje passaria batido ou cairia num veredito genérico).
- * Mesmo padrão de `?cenario=` já usado em `migrar/diagnostico` e
- * `migrar/passivo` — não é fonte de verdade fiscal nova, é só destravar as
- * telas de saída que ainda não existiam. 🟡 fila-Larissa: MEI e Presumido no
- * Migrar continuam sem decisão de escopo — aqui só param o cliente com
- * educação, não fingem que migramos os dois hoje.
+ * 🆕 04/08 — cenários de demo pra exercitar os gaps achados no cruzamento com
+ * o `Fluxo Migração GEMINI.md`: hoje o M1 só checava "situação ativa +
+ * optante Simples + CNAE liso", sem nunca perguntar SE o regime de origem é
+ * um dos que migramos, nem tratar CNPJ inapto/suspenso (hoje passaria batido
+ * ou cairia num veredito genérico). Mesmo padrão de `?cenario=` já usado em
+ * `migrar/diagnostico` e `migrar/passivo`.
+ *
+ * 🆕 04/08 (2ª rodada, decisão do Pedro) — **MEI entra no escopo do Migrar.**
+ * Reverte a leitura anterior desta mesma pendência: só Lucro Presumido segue
+ * bloqueado (`/saida/regime-nao-suportado`, sem decisão de motor fiscal
+ * próprio ainda). MEI ganha um subfluxo dedicado no M2 (ver
+ * `MigrarDiagnosticoView`) porque MEI não é obrigado a ter contador — a
+ * pergunta "você tem contador hoje?" decide se reusa o pipeline de
+ * transferência (TTRT/CRC-MG) ou pula direto pra M5.
  */
 export type CenarioM1 = "padrao" | "mei" | "presumido" | "inapto";
 
-export const EMPRESA_MIGRAR_CENARIOS: Record<CenarioM1, typeof EMPRESA_MIGRAR> = {
+export const EMPRESA_MIGRAR_CENARIOS: Record<CenarioM1, EmpresaMigrar> = {
   padrao: EMPRESA_MIGRAR,
-  mei: { ...EMPRESA_MIGRAR, porte: "Microempreendedor Individual (MEI)", noSimples: false },
-  presumido: { ...EMPRESA_MIGRAR, porte: "Microempresa (ME)", natureza: "Lucro Presumido", noSimples: false },
+  mei: { ...EMPRESA_MIGRAR, porte: "Microempreendedor Individual (MEI)", regime: "mei" },
+  presumido: { ...EMPRESA_MIGRAR, porte: "Microempresa (ME)", natureza: "Lucro Presumido", regime: "presumido" },
   inapto: { ...EMPRESA_MIGRAR, situacao: "SUSPENSA" },
 };
 
@@ -134,6 +152,166 @@ function mascaraCnpj(v: string) {
 type FaseM1 = "input" | "consultando" | "achou";
 
 /**
+ * M1' — VALIDANDO O CNPJ · tela própria (🆕 04/08, pedido do Pedro).
+ *
+ * Até 04/08 isto era um `if` interno do M1 (fase "consultando"), sem existir
+ * como tela catalogável — a prancheta só via através do fluxo interativo, não
+ * dava pra abrir direto nem listar ao lado do M1 no `/mockup`. Extraído como
+ * componente próprio pelo mesmo motivo do resto do arquivo: fonte única, zero
+ * cópia. `MigrarCnpjView` reusa isto na fase "consultando"; a rota
+ * `/migrar/cnpj?fase=validando` (ver page.tsx) renderiza isto sozinho, parado,
+ * pra virar tela catalogável sem correr contra o `setTimeout` de 1400ms.
+ */
+export function MigrarValidandoView({ onVoltar }: { onVoltar?: () => void }) {
+  return (
+    <>
+      <TelaHeader meta="Sua empresa" onVoltar={onVoltar} />
+      <main className="app-main">
+        <div className="flex-1 min-h-0 flex flex-col items-center justify-center text-center">
+          <span className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-surface-tint-brand">
+            <span className="h-6 w-6 animate-spin rounded-full border-2 border-action-primary border-t-transparent" />
+          </span>
+          <p className="text-h2 mb-1">Buscando sua empresa</p>
+          <p className="text-body text-text-secondary max-w-[34ch]">
+            Estamos consultando o CNPJ na Receita Federal pra ver o que já está
+            registrado.
+          </p>
+        </div>
+      </main>
+    </>
+  );
+}
+
+/**
+ * M1'' — ACHAMOS SUA EMPRESA · tela própria (🆕 04/08, correção do pedido do
+ * Pedro — ele queria ESTA tela separada, não o loading).
+ *
+ * Card com os dados puxados da Receita + as 4 checagens + veredito. Extraído
+ * do `if (fase === "achou")` de `MigrarCnpjView` pelo mesmo motivo de sempre:
+ * fonte única, reusada pelo fluxo interativo E pela rota estática
+ * `/migrar/cnpj?fase=achou` (ver page.tsx) — que existe pra catalogar esta
+ * tela ao lado do M1 no `/mockup`, sem precisar digitar um CNPJ pra ver.
+ */
+export function MigrarAchouView({
+  empresa,
+  situacaoOk,
+  regimeOk,
+  onVoltar,
+  onSeguir,
+  onSaidaRegulada,
+  onSaidaNaoAtende,
+  onSaidaRegimeNaoSuportado,
+  onSaidaInapto,
+}: {
+  empresa: EmpresaMigrar;
+  situacaoOk: boolean;
+  regimeOk: boolean;
+  onVoltar?: () => void;
+  onSeguir?: () => void;
+  onSaidaRegulada?: () => void;
+  onSaidaNaoAtende?: () => void;
+  onSaidaRegimeNaoSuportado?: () => void;
+  onSaidaInapto?: () => void;
+}) {
+  const e = empresa;
+  const podeSeguir = situacaoOk && regimeOk;
+  return (
+    <>
+      <TelaHeader meta="Sua empresa" onVoltar={onVoltar} />
+      <main className="app-main">
+        <Titulo sub="Confira se é essa mesmo. Puxamos tudo da Receita, você não digita nada.">
+          Achamos sua empresa
+        </Titulo>
+
+        <Corpo>
+          <Card>
+            <p className="text-body font-semibold text-text-primary">{e.razao}</p>
+            <p className="text-caption text-text-secondary mt-0.5">{e.cnpj}</p>
+            <div className="mt-3 flex flex-col gap-1.5 border-t border-border-hairline pt-3">
+              <LinhaFicha rotulo="Atividade principal" valor={`${e.cnaeHumano} (${e.cnae})`} />
+              <LinhaFicha rotulo="Tipo" valor={e.natureza} />
+              <LinhaFicha rotulo="Porte" valor={e.porte} />
+              <LinhaFicha rotulo="Aberta em" valor={e.abertura} />
+              <LinhaFicha rotulo="Endereço" valor={e.endereco} />
+            </div>
+          </Card>
+
+          {/* O veredito é consequência do que a consulta trouxe, não de uma
+              interpretação nossa. Por isso vem junto, sem tela extra.
+              🆕 04/08 — 4ª checagem (regime de origem): faltava distinguir
+              MEI/Presumido de ME-Simples. Achado do cruzamento com o
+              `Fluxo Migração GEMINI.md` — sem isso o app fingia migrar
+              qualquer CNPJ ativo, mesmo os 2 regimes que ainda não temos
+              rota pra assumir. */}
+          <div className="flex flex-col gap-2">
+            <ChecagemLinha ok={situacaoOk} titulo="Situação ativa na Receita" />
+            <ChecagemLinha ok={regimeOk} titulo="Regime dentro do que migramos hoje (Simples/ME ou MEI)" />
+            <ChecagemLinha ok titulo="Prestação de serviço, sem conselho de classe" />
+          </div>
+
+          {!situacaoOk ? (
+            <Aviso variante="danger" titulo="Essa empresa precisa regularizar antes">
+              A Receita mostra situação {e.situacao.toLowerCase()}, não ativa.
+              A gente não consegue assumir a contabilidade nesse estado — o
+              primeiro passo é regularizar o CNPJ.
+            </Aviso>
+          ) : !regimeOk ? (
+            <Aviso variante="warning" titulo="Esse regime ainda não migramos">
+              Hoje migramos MEI e Microempresa no Simples Nacional. {e.porte}{" "}
+              é um regime diferente — ainda não temos essa rota pronta.
+            </Aviso>
+          ) : e.regime === "mei" ? (
+            <Aviso variante="success" titulo="A gente cuida do seu MEI">
+              Sua atividade está dentro do que a gente atende. O próximo passo é
+              entender como você quer que a gente assuma a sua contabilidade.
+            </Aviso>
+          ) : (
+            <Aviso variante="success" titulo="A gente cuida dessa empresa">
+              Sua atividade está dentro do que a gente atende. O próximo passo é
+              ver quanto você paga hoje de imposto e se dá pra pagar menos.
+            </Aviso>
+          )}
+
+          {/* ⚠️ As saídas existem e são alcançáveis — não são botão morto.
+              No mock elas ficam como link discreto pra a prancheta conseguir
+              ver as telas de recusa sem precisar de outro CNPJ. */}
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={onSaidaRegulada}
+              className="text-micro text-text-tertiary underline underline-offset-4"
+            >
+              🚧 ver saída: atividade regulamentada
+            </button>
+            <button
+              onClick={onSaidaNaoAtende}
+              className="text-micro text-text-tertiary underline underline-offset-4"
+            >
+              🚧 ver saída: não atendemos
+            </button>
+          </div>
+        </Corpo>
+
+        <Rodape>
+          {podeSeguir ? (
+            <Button full onClick={onSeguir}>
+              É essa a minha empresa
+            </Button>
+          ) : !situacaoOk ? (
+            <Button full variant="dark" onClick={onSaidaInapto}>
+              Ver como regularizar
+            </Button>
+          ) : (
+            <Button full variant="dark" onClick={onSaidaRegimeNaoSuportado}>
+              Falar com o time sobre esse regime
+            </Button>
+          )}
+        </Rodape>
+      </main>
+    </>
+  );
+}
+
+/**
  * M1 — a porta do flow #2.
  *
  * ⚠️ Decisão de tela: consulta e veredito na MESMA tela, não em duas. No flow #1
@@ -161,10 +339,11 @@ export function MigrarCnpjView({
   preencher?: number;
   /** 🆕 04/08 — qual empresa mockada consultar. Ver `EMPRESA_MIGRAR_CENARIOS`. */
   cenario?: CenarioM1;
+  /** MEI passa direto (mesmo `onSeguir`); Presumido segue bloqueado. */
   onSeguir?: () => void;
   onSaidaRegulada?: () => void;
   onSaidaNaoAtende?: () => void;
-  /** 🆕 04/08 — CNPJ ativo, mas regime de origem (MEI ou Presumido) ainda sem rota de migração. */
+  /** 🆕 04/08 — CNPJ ativo, mas regime de origem (Lucro Presumido) ainda sem rota de migração. */
   onSaidaRegimeNaoSuportado?: () => void;
   /** 🆕 04/08 — CNPJ inapto/suspenso/baixado: precisa regularizar antes de migrar. */
   onSaidaInapto?: () => void;
@@ -175,7 +354,8 @@ export function MigrarCnpjView({
 
   const empresa = EMPRESA_MIGRAR_CENARIOS[cenario];
   const situacaoOk = empresa.situacao === "ATIVA";
-  const regimeOk = empresa.noSimples;
+  /** 🆕 04/08 — MEI agora migra igual ME; só Presumido segue sem rota. */
+  const regimeOk = empresa.regime !== "presumido";
 
   const feito = useRef<number | undefined>(undefined);
   useEffect(() => {
@@ -196,116 +376,22 @@ export function MigrarCnpjView({
   }
 
   if (fase === "consultando") {
-    return (
-      <>
-        <TelaHeader meta="Sua empresa" onVoltar={onVoltar} />
-        <main className="app-main">
-          <div className="flex-1 min-h-0 flex flex-col items-center justify-center text-center">
-            <span className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-surface-tint-brand">
-              <span className="h-6 w-6 animate-spin rounded-full border-2 border-action-primary border-t-transparent" />
-            </span>
-            <p className="text-h2 mb-1">Buscando sua empresa</p>
-            <p className="text-body text-text-secondary max-w-[34ch]">
-              Estamos consultando o CNPJ na Receita Federal pra ver o que já está
-              registrado.
-            </p>
-          </div>
-        </main>
-      </>
-    );
+    return <MigrarValidandoView onVoltar={onVoltar} />;
   }
 
   if (fase === "achou") {
-    const e = empresa;
-    const podeSeguir = situacaoOk && regimeOk;
     return (
-      <>
-        <TelaHeader meta="Sua empresa" onVoltar={() => setFase("input")} />
-        <main className="app-main">
-          <Titulo sub="Confira se é essa mesmo. Puxamos tudo da Receita, você não digita nada.">
-            Achamos sua empresa
-          </Titulo>
-
-          <Corpo>
-            <Card>
-              <p className="text-body font-semibold text-text-primary">{e.razao}</p>
-              <p className="text-caption text-text-secondary mt-0.5">{e.cnpj}</p>
-              <div className="mt-3 flex flex-col gap-1.5 border-t border-border-hairline pt-3">
-                <LinhaFicha rotulo="Atividade principal" valor={`${e.cnaeHumano} (${e.cnae})`} />
-                <LinhaFicha rotulo="Tipo" valor={e.natureza} />
-                <LinhaFicha rotulo="Porte" valor={e.porte} />
-                <LinhaFicha rotulo="Aberta em" valor={e.abertura} />
-                <LinhaFicha rotulo="Endereço" valor={e.endereco} />
-              </div>
-            </Card>
-
-            {/* O veredito é consequência do que a consulta trouxe, não de uma
-                interpretação nossa. Por isso vem junto, sem tela extra.
-                🆕 04/08 — 4ª checagem (regime de origem): faltava distinguir
-                MEI/Presumido de ME-Simples. Achado do cruzamento com o
-                `Fluxo Migração GEMINI.md` — sem isso o app fingia migrar
-                qualquer CNPJ ativo, mesmo os 2 regimes que ainda não temos
-                rota pra assumir. */}
-            <div className="flex flex-col gap-2">
-              <ChecagemLinha ok={situacaoOk} titulo="Situação ativa na Receita" />
-              <ChecagemLinha ok={regimeOk} titulo="Regime dentro do que migramos hoje (Simples/ME)" />
-              <ChecagemLinha ok titulo="Prestação de serviço, sem conselho de classe" />
-            </div>
-
-            {!situacaoOk ? (
-              <Aviso variante="danger" titulo="Essa empresa precisa regularizar antes">
-                A Receita mostra situação {e.situacao.toLowerCase()}, não ativa.
-                A gente não consegue assumir a contabilidade nesse estado — o
-                primeiro passo é regularizar o CNPJ.
-              </Aviso>
-            ) : !regimeOk ? (
-              <Aviso variante="warning" titulo="Esse regime ainda não migramos">
-                Hoje só migramos empresa no Simples Nacional (ME). {e.porte} é
-                um regime diferente — ainda não temos essa rota pronta.
-              </Aviso>
-            ) : (
-              <Aviso variante="success" titulo="A gente cuida dessa empresa">
-                Sua atividade está dentro do que a gente atende. O próximo passo é
-                ver quanto você paga hoje de imposto e se dá pra pagar menos.
-              </Aviso>
-            )}
-
-            {/* ⚠️ As saídas existem e são alcançáveis — não são botão morto.
-                No mock elas ficam como link discreto pra a prancheta conseguir
-                ver as telas de recusa sem precisar de outro CNPJ. */}
-            <div className="flex flex-wrap gap-3">
-              <button
-                onClick={onSaidaRegulada}
-                className="text-micro text-text-tertiary underline underline-offset-4"
-              >
-                🚧 ver saída: atividade regulamentada
-              </button>
-              <button
-                onClick={onSaidaNaoAtende}
-                className="text-micro text-text-tertiary underline underline-offset-4"
-              >
-                🚧 ver saída: não atendemos
-              </button>
-            </div>
-          </Corpo>
-
-          <Rodape>
-            {podeSeguir ? (
-              <Button full onClick={onSeguir}>
-                É essa a minha empresa
-              </Button>
-            ) : !situacaoOk ? (
-              <Button full variant="dark" onClick={onSaidaInapto}>
-                Ver como regularizar
-              </Button>
-            ) : (
-              <Button full variant="dark" onClick={onSaidaRegimeNaoSuportado}>
-                Falar com o time sobre esse regime
-              </Button>
-            )}
-          </Rodape>
-        </main>
-      </>
+      <MigrarAchouView
+        empresa={empresa}
+        situacaoOk={situacaoOk}
+        regimeOk={regimeOk}
+        onVoltar={() => setFase("input")}
+        onSeguir={onSeguir}
+        onSaidaRegulada={onSaidaRegulada}
+        onSaidaNaoAtende={onSaidaNaoAtende}
+        onSaidaRegimeNaoSuportado={onSaidaRegimeNaoSuportado}
+        onSaidaInapto={onSaidaInapto}
+      />
     );
   }
 
@@ -375,17 +461,108 @@ function ChecagemLinha({ ok, titulo }: { ok: boolean; titulo: string }) {
  * ⚖️ GUARDA-CORPO DE HONESTIDADE (m2.honestidade do motor): se o contador atual
  * já faz tudo certo, a tela DIZ ISSO e vende serviço, não economia inventada.
  * Vender economia pra quem não tem seria a promessa-quebrada do flow #2.
+ *
+ * 🆕 04/08 — SUBFLUXO MEI (decisão do Pedro: MEI entra no Migrar). MEI não tem
+ * Fator R (paga DAS-MEI fixo, sem Anexo) — então o "número real" que é o
+ * coração comercial desta tela pra ME **não existe** pra MEI. Em vez disso, a
+ * pergunta que decide tudo é "você tem contador hoje?": MEI não é OBRIGADO a
+ * ter um (DASN-SIMEI é autodeclaratório), então pode não haver TTRT/CRC-MG
+ * pra transferir. Resposta vira `temContador` e viaja via `onSeguir` pro M3+
+ * decidirem se reusam o pipeline de transferência ou pulam pra M5 direto.
  */
 export function MigrarDiagnosticoView({
   jaOtimo = false,
+  regime = "me",
   onSeguir,
   onVoltar,
 }: {
-  /** Alterna o guarda-corpo: `true` = o contador atual já acertou. */
+  /** Alterna o guarda-corpo: `true` = o contador atual já acertou. Só se aplica a `regime="me"`. */
   jaOtimo?: boolean;
-  onSeguir?: () => void;
+  /** 🆕 04/08 — MEI substitui o diagnóstico de Fator R pelo subfluxo "tem contador?". */
+  regime?: "me" | "mei";
+  /** Pro MEI, carrega se a pessoa tem contador hoje (decide se pula a transferência). */
+  onSeguir?: (temContador?: boolean) => void;
   onVoltar?: () => void;
 }) {
+  const [temContador, setTemContador] = useState<boolean | null>(null);
+
+  if (regime === "mei") {
+    if (temContador === null) {
+      return (
+        <>
+          <TelaHeader meta="Seu diagnóstico" onVoltar={onVoltar} />
+          <main className="app-main">
+            <Titulo sub="Isso muda como a gente assume sua contabilidade a partir de agora.">
+              Você tem contador hoje?
+            </Titulo>
+
+            <Corpo>
+              <Aviso variante="info" titulo="Por que a gente pergunta isso">
+                MEI não é obrigado a ter contador — muita gente cuida disso
+                sozinho. Se você já tem um, a gente faz a transferência
+                combinada com ele. Se não tem, a gente já assume direto, sem
+                burocracia extra.
+              </Aviso>
+            </Corpo>
+
+            <Rodape>
+              <div className="flex flex-col gap-2">
+                <Button full onClick={() => setTemContador(true)}>
+                  Sim, tenho contador
+                </Button>
+                <Button full variant="secondary" onClick={() => setTemContador(false)}>
+                  Não, cuido sozinho
+                </Button>
+              </div>
+            </Rodape>
+          </main>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <TelaHeader meta="Seu diagnóstico" onVoltar={() => setTemContador(null)} />
+        <main className="app-main">
+          <Titulo
+            sub={
+              temContador
+                ? "A gente combina a transferência com quem cuida de você hoje."
+                : "Sem contador pra transferir, a gente já assume direto — sem burocracia."
+            }
+          >
+            {temContador ? "Vamos assumir sua contabilidade" : "Vamos começar direto"}
+          </Titulo>
+
+          <Corpo>
+            <Card tom="sucesso">
+              <p className="text-body font-semibold text-text-primary mb-2">
+                O que muda pra você
+              </p>
+              <div className="flex flex-col gap-1.5">
+                <LinhaFicha rotulo="Guia mensal (DAS-MEI)" valor="calculada e paga por você, do jeito que já é" />
+                <LinhaFicha rotulo="Limite de faturamento" valor="a gente acompanha os R$ 81 mil/ano de perto" />
+                <LinhaFicha rotulo="Nota fiscal" valor="emissão pelo app, sem complicação" />
+              </div>
+            </Card>
+
+            <Aviso variante="info" titulo="O que a gente faz com isso">
+              {temContador
+                ? "A gente cuida da transferência com seu contador atual — você não precisa ligar pra ninguém."
+                : "Como você não tem contador hoje, a gente já assume sua contabilidade a partir do pagamento, sem etapa de transferência no meio."}
+            </Aviso>
+          </Corpo>
+
+          <Rodape>
+            <Button full onClick={() => onSeguir?.(temContador ?? undefined)}>
+              Quero continuar
+            </Button>
+          </Rodape>
+        </main>
+      </>
+    );
+  }
+
   const h = HISTORICO_12M;
   const calc = calcFatorR(jaOtimo ? 75000 : h.folha, h.receita);
   const pct = (calc.fr * 100).toFixed(1).replace(".", ",");
@@ -474,7 +651,7 @@ export function MigrarDiagnosticoView({
         </Corpo>
 
         <Rodape>
-          <Button full onClick={onSeguir}>
+          <Button full onClick={() => onSeguir?.()}>
             Quero trocar de contador
           </Button>
         </Rodape>
@@ -492,14 +669,26 @@ export function MigrarDiagnosticoView({
  * A empresa já existe, então não há DAE da Junta nem TFLF. O cliente paga só a
  * mensalidade. O "choque de custo" que o flow #1 tem na 3ª tela simplesmente
  * não acontece — e isso é argumento, não ausência.
+ *
+ * 🆕 04/08 — PLANO MEI (decisão do Pedro): MEI não é o plano ME com desconto,
+ * é um plano LIMITADO (emitir NF + gerenciar o 1 colaborador que a lei
+ * permite) — por isso preço próprio (`MENSALIDADE_MEI`), fidelidade de 12
+ * meses (contrapartida do certificado digital incluso, que a gente PAGA
+ * porque precisa dele pra movimentar em nome do cliente) e escopo menor no
+ * card "depois, todo mês".
  */
 export function MigrarPlanoView({
+  mei = false,
   onSeguir,
   onVoltar,
 }: {
+  /** 🆕 04/08 — troca o card de mensalidade+escopo pro Plano MEI (preço próprio, fidelidade, certificado incluso). */
+  mei?: boolean;
   onSeguir?: () => void;
   onVoltar?: () => void;
 }) {
+  const mensalidade = mei ? CUSTOS.MENSALIDADE_MEI : CUSTOS.MENSALIDADE;
+
   return (
     <>
       <TelaHeader meta="A conta da migração" onVoltar={onVoltar} />
@@ -524,12 +713,26 @@ export function MigrarPlanoView({
           </Card>
 
           <Card>
-            <p className="text-caption text-text-secondary mb-1">Depois, todo mês</p>
-            <p className="text-display text-text-primary">{brl(CUSTOS.MENSALIDADE)}</p>
+            <div className="flex items-baseline justify-between gap-3">
+              <p className="text-caption text-text-secondary">Depois, todo mês</p>
+              {mei && (
+                <span className="rounded-full bg-state-info-tint px-2.5 py-0.5 text-micro font-semibold text-state-info-text">
+                  Plano MEI
+                </span>
+              )}
+            </div>
+            <p className="text-display text-text-primary">{brl(mensalidade)}</p>
             <p className="text-caption text-text-secondary mt-2">
-              Suas guias todo mês, notas fiscais, obrigações do governo e contador
-              de verdade pra falar.
+              {mei
+                ? "Emitir suas notas fiscais e gerenciar o colaborador que a lei permite pro MEI."
+                : "Suas guias todo mês, notas fiscais, obrigações do governo e contador de verdade pra falar."}
             </p>
+            {mei && (
+              <div className="mt-3 flex flex-col gap-1.5 border-t border-border-hairline pt-3">
+                <LinhaFicha rotulo="Fidelidade" valor={`${CUSTOS.FIDELIDADE_MEI_MESES} meses`} />
+                <LinhaFicha rotulo="Certificado digital" valor="incluso, emitido por nós" />
+              </div>
+            )}
           </Card>
 
           {/* Não existe repasse de governo na migração — dizer isso é vantagem
@@ -544,6 +747,22 @@ export function MigrarPlanoView({
             </p>
           </div>
 
+          {mei && (
+            /* 🆕 04/08 — o certificado é PRÉ-REQUISITO nosso, não um extra: sem
+               ele a gente não consegue emitir nota nem mexer em nada em nome
+               do cliente. Fidelidade é a contrapartida de pagar por isso. */
+            <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
+              <p className="text-body font-semibold text-text-primary">
+                Por que a fidelidade de {CUSTOS.FIDELIDADE_MEI_MESES} meses
+              </p>
+              <p className="text-caption text-text-secondary mt-1">
+                A gente emite e paga o seu certificado digital, porque precisa
+                dele pra fazer as movimentações da sua empresa. A fidelidade é
+                a contrapartida desse custo.
+              </p>
+            </div>
+          )}
+
           <p className="text-micro text-text-tertiary">
             Valores de referência enquanto fechamos o preço final.
           </p>
@@ -552,9 +771,7 @@ export function MigrarPlanoView({
         <Rodape>
           <div className="mb-3 flex items-baseline justify-between gap-3">
             <span className="text-caption text-text-secondary">Você paga hoje</span>
-            <span className="text-h2 text-text-primary">
-              {brl(CUSTOS.MENSALIDADE, true)}
-            </span>
+            <span className="text-h2 text-text-primary">{brl(mensalidade, true)}</span>
           </div>
           <Button full onClick={onSeguir}>
             Continuar
@@ -576,16 +793,26 @@ export function MigrarPlanoView({
 export function MigrarContratoView({
   aceito,
   setAceito,
+  semTransferencia = false,
+  mei = false,
   onSeguir,
   onVoltar,
   onLerContrato,
 }: {
   aceito: boolean;
   setAceito: (v: boolean) => void;
+  /** 🆕 04/08 — MEI sem contador hoje: não há TTRT pra falhar, então a
+   *  cláusula de devolução vira uma promessa de início imediato em vez de
+   *  contrapartida de risco. */
+  semTransferencia?: boolean;
+  /** 🆕 04/08 — Plano MEI: preço próprio + fidelidade com número + certificado incluso. */
+  mei?: boolean;
   onSeguir?: () => void;
   onVoltar?: () => void;
   onLerContrato?: () => void;
 }) {
+  const mensalidade = mei ? CUSTOS.MENSALIDADE_MEI : CUSTOS.MENSALIDADE;
+
   return (
     <>
       <TelaHeader meta="Contrato de serviço" onVoltar={onVoltar} />
@@ -604,38 +831,55 @@ export function MigrarContratoView({
               <div className="flex items-baseline justify-between gap-3 px-4 pt-3.5">
                 <span className="text-caption text-text-secondary">Você paga hoje</span>
                 <span className="shrink-0 text-body font-semibold text-text-primary">
-                  {brl(CUSTOS.MENSALIDADE, true)}
+                  {brl(mensalidade, true)}
                 </span>
               </div>
               <p className="px-4 pb-3.5 text-micro text-text-tertiary">
-                só a 1ª mensalidade. A transferência não tem custo nem taxa de governo
+                {semTransferencia
+                  ? "só a 1ª mensalidade. Sem custo de transferência nem taxa de governo"
+                  : "só a 1ª mensalidade. A transferência não tem custo nem taxa de governo"}
               </p>
 
               <div className="border-t border-border-hairline">
                 <div className="flex items-baseline justify-between gap-3 px-4 pt-3.5">
                   <span className="text-caption text-text-secondary">Depois, todo mês</span>
                   <span className="shrink-0 text-body font-semibold text-text-primary">
-                    {brl(CUSTOS.MENSALIDADE)}
+                    {brl(mensalidade)}
                   </span>
                 </div>
                 <p className="px-4 pb-3.5 text-micro text-text-tertiary">
-                  sua contabilidade completa, a partir da data de corte combinada
+                  {mei
+                    ? "emitir notas fiscais e gerenciar seu colaborador, certificado digital incluso"
+                    : "sua contabilidade completa, a partir da data de corte combinada"}
                 </p>
               </div>
             </div>
 
             <ul className="mt-2 flex flex-col gap-2">
               <Bullet>
-                Como a transferência é gratuita, o plano tem um período mínimo de
-                permanência, descrito no contrato.
+                {mei
+                  ? `O certificado digital vem incluso — a gente precisa dele pra movimentar sua empresa. Em troca, o plano tem fidelidade de ${CUSTOS.FIDELIDADE_MEI_MESES} meses, descrita no contrato.`
+                  : semTransferencia
+                    ? "Como não há transferência de responsabilidade a esperar, o plano tem um período mínimo de permanência, descrito no contrato."
+                    : "Como a transferência é gratuita, o plano tem um período mínimo de permanência, descrito no contrato."}
               </Bullet>
-              {/* 🔴 A contrapartida de cobrar antes do TTRT. Sem isso, a decisão
-                  de 30/07 seria cobrar por algo que a gente não controla, sem
-                  dar saída ao cliente. */}
-              <Bullet>
-                Se a transferência não for concluída por algum motivo fora do seu
-                controle, você recebe tudo de volta.
-              </Bullet>
+              {semTransferencia ? (
+                /* 🆕 04/08 — MEI sem contador hoje: não existe TTRT pra
+                   falhar, então não faz sentido prometer devolução por algo
+                   que não vai acontecer. A promessa vira início imediato. */
+                <Bullet>
+                  Sua contabilidade começa a valer assim que o pagamento
+                  confirmar — sem etapa de transferência no meio.
+                </Bullet>
+              ) : (
+                /* 🔴 A contrapartida de cobrar antes do TTRT. Sem isso, a decisão
+                    de 30/07 seria cobrar por algo que a gente não controla, sem
+                    dar saída ao cliente. */
+                <Bullet>
+                  Se a transferência não for concluída por algum motivo fora do seu
+                  controle, você recebe tudo de volta.
+                </Bullet>
+              )}
             </ul>
           </div>
 
@@ -897,7 +1141,14 @@ export function MigrarTransferenciaView({
 
 /* ═══════════════════ M5 · EMPRESA MIGRADA ═══════════════════════════════ */
 
-export function MigrarAtivaView({ onSeguir }: { onSeguir?: () => void }) {
+export function MigrarAtivaView({
+  regime = "me",
+  onSeguir,
+}: {
+  /** 🆕 04/08 — MEI não tem Fator R: troca o "ganho" de economia por vigilância de limite. */
+  regime?: "me" | "mei";
+  onSeguir?: () => void;
+}) {
   const [entrou, setEntrou] = useState(false);
   useEffect(() => {
     const id = requestAnimationFrame(() => setEntrou(true));
@@ -905,12 +1156,19 @@ export function MigrarAtivaView({ onSeguir }: { onSeguir?: () => void }) {
   }, []);
 
   const calc = calcFatorR(HISTORICO_12M.folha, HISTORICO_12M.receita);
+  const mei = regime === "mei";
 
   return (
     <>
       <TelaHeader meta="Pronto" />
       <main className="app-main">
-        <Titulo sub="A contabilidade da sua empresa é nossa a partir de agora. Você não precisa fazer mais nada com o contador antigo.">
+        <Titulo
+          sub={
+            mei
+              ? "Sua contabilidade é nossa a partir de agora. A gente cuida da guia, das notas e do seu limite de faturamento."
+              : "A contabilidade da sua empresa é nossa a partir de agora. Você não precisa fazer mais nada com o contador antigo."
+          }
+        >
           Sua empresa é nossa cliente
         </Titulo>
 
@@ -938,39 +1196,58 @@ export function MigrarAtivaView({ onSeguir }: { onSeguir?: () => void }) {
             </Card>
           </div>
 
-          {/* Fecha o loop do M2: a economia que prometemos com número real vira
-              a 1ª tarefa concreta, não uma promessa que some depois da venda. */}
+          {/* Fecha o loop do M2: pra ME é a economia com número real; pra MEI
+              (plano limitado) são as 2 coisas que o plano de fato cobre —
+              emitir nota e gerenciar o colaborador — não uma promessa de
+              economia que MEI não tem (sem Fator R). */}
           <div>
             <p className="text-body-strong font-semibold text-text-primary mb-2">
-              O primeiro ganho já está na mesa
+              {mei ? "O que você já pode fazer" : "O primeiro ganho já está na mesa"}
             </p>
             <div className="flex flex-col gap-2">
-              <PassoCard
-                titulo={`Ajustar seu pró-labore e economizar ${brl(calc.ganhoMes)}/mês`}
-                texto="É o que a gente encontrou no seu diagnóstico. Leva uns minutos e vale a partir do mês que vem."
-                acao="Ver como fica"
-              />
+              {mei ? (
+                <>
+                  <PassoCard
+                    titulo="Emitir sua primeira nota fiscal"
+                    texto="Cliente e valor, o resto a gente já sabe do seu cadastro."
+                    acao="Emitir agora"
+                  />
+                  <PassoCard
+                    titulo="Cadastrar seu colaborador"
+                    texto="A lei permite 1 funcionário com carteira pro MEI. A gente cuida do que precisa."
+                    acao="Cadastrar"
+                  />
+                </>
+              ) : (
+                <PassoCard
+                  titulo={`Ajustar seu pró-labore e economizar ${brl(calc.ganhoMes)}/mês`}
+                  texto="É o que a gente encontrou no seu diagnóstico. Leva uns minutos e vale a partir do mês que vem."
+                  acao="Ver como fica"
+                />
+              )}
               <PassoCard
                 titulo="Sua próxima guia já é com a gente"
                 texto="A gente calcula, gera e te avisa. Você não precisa lembrar de nada."
                 acao="Ver o calendário"
               />
-              <PassoCard
-                titulo="Emitir nota pelo app"
-                texto="Cliente e valor, o resto a gente já sabe do seu cadastro."
-                acao="Emitir agora"
-              />
+              {!mei && (
+                <PassoCard
+                  titulo="Emitir nota pelo app"
+                  texto="Cliente e valor, o resto a gente já sabe do seu cadastro."
+                  acao="Emitir agora"
+                />
+              )}
             </div>
           </div>
 
           <Card tom="marca">
             <p className="text-caption font-semibold text-text-primary mb-1">
-              A gente fica de olho pra você pagar menos
+              {mei ? "A gente fica de olho no seu limite" : "A gente fica de olho pra você pagar menos"}
             </p>
             <p className="text-caption text-text-secondary">
-              Seu Fator R muda todo mês, conforme você fatura. A gente acompanha e
-              avisa antes de virar problema, que é exatamente o que não estava
-              acontecendo antes.
+              {mei
+                ? "Faturamento perto de R$ 81 mil/ano muda tudo pro MEI. A gente acompanha e avisa antes de virar problema."
+                : "Seu Fator R muda todo mês, conforme você fatura. A gente acompanha e avisa antes de virar problema, que é exatamente o que não estava acontecendo antes."}
             </p>
           </Card>
         </Corpo>

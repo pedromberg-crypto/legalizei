@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { MigrarPassivoView } from "@/components/wizard-migrar";
+import { ehMei, comRegime } from "@/lib/regime";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -29,11 +30,12 @@ export default function MigrarPassivoPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const comPassivo = searchParams.get("cenario") !== "limpo";
+  const mei = ehMei(searchParams);
 
   return (
     <MigrarPassivoView
       comPassivo={comPassivo}
-      onSeguir={() => router.push("/migrar/transferencia")}
+      onSeguir={() => router.push(comRegime("/migrar/transferencia", mei))}
     />
   );
 }

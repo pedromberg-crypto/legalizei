@@ -1,7 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AguardandoView } from "@/components/wizard-cauda";
+import { ehMei, comRegime } from "@/lib/regime";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -19,10 +20,17 @@ import { AguardandoView } from "@/components/wizard-cauda";
  * escolhe boleto passa por aqui. ⚠️ 29/07: o `/pagamento` de produção não
  * respeitava essa aresta (ia sempre direto pro dossiê, até por boleto);
  * corrigido junto com esta extração.
+ *
+ * 🆕 04/08 — `?regime=mei` corrige o valor do boleto (sem DAE, mensalidade
+ * própria) e repassa o regime adiante pro dossiê.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function AguardandoPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const mei = ehMei(searchParams);
 
-  return <AguardandoView onSeguir={() => router.push("/dossie/socio")} />;
+  return (
+    <AguardandoView mei={mei} onSeguir={() => router.push(comRegime("/dossie/socio", mei))} />
+  );
 }

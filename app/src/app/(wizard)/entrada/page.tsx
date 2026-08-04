@@ -34,6 +34,16 @@ import { comRegime } from "@/lib/regime";
  * 🔴 Risco assumido e não resolvido nesta rodada: se a pessoa disser "MEI"
  * aqui mas mais na frente (triagem, E5) aparecer 2+ sócios — incompatível
  * com MEI —, hoje NÃO existe correção automática. Fica registrado como gap.
+ *
+ * 🆕 04/08 — E3.2 agora TAMBÉM aparece no caminho Migrar ("Já tenho
+ * empresa"), não só no Abrir. Decisão do Pedro: inverter a ordem — hoje o
+ * app perguntava cidade ANTES de saber se é MEI ou ME, mas MEI não tem o
+ * limite geográfico (igual já valia pro Abrir). A copy muda de "qual devo
+ * escolher" pra "qual eu já sou" (ver `contexto` em `MeiOuMeView`) — é
+ * autodeclaração, quem confirma de verdade é o M1 puxando da Receita.
+ * MEI → pula cidade, vai direto pro M1 (`/migrar/cnpj?cenario=mei`). ME →
+ * cai no passo 2 de sempre (gate de cidade), que já mandava pro Migrar
+ * corretamente.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function EntradaPage() {
@@ -54,16 +64,21 @@ export default function EntradaPage() {
   // clique em "Continuar" resolve, senão a tela trocaria antes da confirmação.
   const [regimeResolvido, setRegimeResolvido] = useState(regimeParam === "me");
 
-  if (intencao === "abrir" && !regimeResolvido) {
+  if ((intencao === "abrir" || intencao === "migrar") && !regimeResolvido) {
     return (
       <MeiOuMeView
+        contexto={intencao}
         regime={regime}
         setRegime={setRegime}
         onSeguir={() => {
           setRegimeResolvido(true);
-          // MEI pula o gate de cidade — segue direto pro E5. ME cai no passo
-          // 2 do EntradaView (gate de cidade), como sempre.
-          if (regime === "mei") router.push(comRegime("/gate", true));
+          // MEI pula o gate de cidade nos 2 caminhos — Abrir vai direto pro
+          // E5 (gate-CNAE); Migrar vai direto pro M1, já sinalizando o
+          // cenário MEI pro mock (`cenario=mei`, mesma engine do M1 normal).
+          // ME em qualquer um dos dois cai no passo 2 (gate de cidade), como sempre.
+          if (regime === "mei") {
+            router.push(intencao === "abrir" ? comRegime("/gate", true) : "/migrar/cnpj?cenario=mei");
+          }
         }}
         // 🆕 03/08 — volta pro fork (E3), mesma página: reseta intenção, sem
         // navegar de rota (o fork é a MESMA rota /entrada, passo 1).

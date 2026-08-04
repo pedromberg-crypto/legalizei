@@ -66,6 +66,18 @@ export const CUSTOS = {
    */
   CUSTO_FUNCIONARIO: 39,
   COLABORADORES_INCLUSOS: 0,
+  /** 🔴 FAKE — ponto de partida do Pedro (04/08), não preço validado (mesma
+   *  disciplina do MENSALIDADE genérico). Plano MEI é LIMITADO (emitir NF +
+   *  gerenciar 1 colaborador, o teto legal do MEI) — não é o plano ME
+   *  completo com preço menor, é escopo menor mesmo.
+   */
+  MENSALIDADE_MEI: 49.9,
+  /** 🔴 FAKE — mesma origem do MENSALIDADE_MEI. Certificado digital incluso
+   *  (pago por nós) é a contrapartida da fidelidade: precisamos do
+   *  certificado pra fazer movimentações em nome do cliente (emitir NF,
+   *  etc.), então o custo do certificado é nosso, não repassado por fora.
+   */
+  FIDELIDADE_MEI_MESES: 12,
 } as const;
 
 export const FAIXA_MEDIA: Record<string, number> = {

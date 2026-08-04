@@ -696,31 +696,68 @@ export function elegivelParaMei(
   return faixa === "ate 10k";
 }
 
-const OPCOES_REGIME = [
-  {
-    id: "mei" as const,
-    nome: "MEI · Microempreendedor Individual",
-    // 🆕 03/08 — lista ÚNICA (era pontos + "Recomendado para" separados —
-    // duas listas com estilo diferente pra informação do mesmo tipo lia como
-    // inconsistência, não hierarquia). Concreto (número) primeiro.
-    checks: [
-      "Fatura (ou espera faturar) até ~R$6.750/mês (teto de R$81 mil/ano)",
-      "Abre em qualquer cidade do Brasil",
-      "Sem taxa da Junta — registro é praticamente na hora",
-      "Sem sócio · até 1 funcionário com carteira",
-    ],
-  },
-  {
-    id: "me" as const,
-    nome: "ME · Simples Nacional",
-    checks: [
-      "Fatura acima de ~R$6.750/mês, ou espera crescer rápido",
-      "Por enquanto, só empresas de Belo Horizonte/MG",
-      "Sem teto de R$81 mil — cresce sem trocar de regime depois",
-      "Pode ter sócio · mais de 1 funcionário sem limite do regime",
-    ],
-  },
-];
+/**
+ * 🆕 04/08 — E3.2 agora é reusada pelo Migrar também (decisão do Pedro:
+ * inverter a ordem — pergunta o regime ANTES da cidade, não só depois no M1).
+ * A copy muda de "qual devo ESCOLHER" (critério de elegibilidade, faz sentido
+ * pra quem ainda vai abrir) pra "qual eu JÁ SOU" (autoidentificação — o CNPJ
+ * já existe, não há escolha). Mesma estrutura de dados, conteúdo por contexto.
+ *
+ * ⚠️ Autodeclarado, não trava nada: pro Migrar, quem confirma de verdade o
+ * regime é o M1 (`/migrar/cnpj`), puxando da Receita. Esta tela só decide se
+ * pula ou não o gate de cidade — igual já fazia pro Abrir.
+ */
+function opcoesRegime(contexto: "abrir" | "migrar") {
+  if (contexto === "migrar") {
+    return [
+      {
+        id: "mei" as const,
+        nome: "MEI · Microempreendedor Individual",
+        checks: [
+          "Já é MEI (Microempreendedor Individual)",
+          "A gente atende MEI de qualquer cidade do Brasil",
+          "DAS fixo todo mês, sem Anexo nem Fator R",
+          "Sem sócio · até 1 funcionário com carteira",
+        ],
+      },
+      {
+        id: "me" as const,
+        nome: "ME · Simples Nacional",
+        checks: [
+          "Microempresa no Simples Nacional",
+          "Por enquanto, só atendemos empresas de Belo Horizonte/MG",
+          "Enquadramento por Anexo, com Fator R",
+          "Pode ter sócio · sem o teto de faturamento do MEI",
+        ],
+      },
+    ];
+  }
+  return [
+    {
+      id: "mei" as const,
+      nome: "MEI · Microempreendedor Individual",
+      // 🆕 03/08 — lista ÚNICA (era pontos + "Recomendado para" separados —
+      // duas listas com estilo diferente pra informação do mesmo tipo lia como
+      // inconsistência, não hierarquia). Concreto (número) primeiro.
+      checks: [
+        "Fatura (ou espera faturar) até ~R$6.750/mês (teto de R$81 mil/ano)",
+        "Abre em qualquer cidade do Brasil",
+        "Sem taxa da Junta — registro é praticamente na hora",
+        "Sem sócio · até 1 funcionário com carteira",
+      ],
+    },
+    {
+      id: "me" as const,
+      nome: "ME · Simples Nacional",
+      checks: [
+        "Fatura acima de ~R$6.750/mês, ou espera crescer rápido",
+        "Por enquanto, só empresas de Belo Horizonte/MG",
+        "Sem teto de R$81 mil — cresce sem trocar de regime depois",
+        "Pode ter sócio · mais de 1 funcionário sem limite do regime",
+      ],
+    },
+  ];
+}
 
 function CheckMiniRegime() {
   return (
@@ -731,17 +768,21 @@ function CheckMiniRegime() {
 }
 
 export function MeiOuMeView({
+  contexto = "abrir",
   regime,
   setRegime,
   onSeguir,
   onVoltar,
 }: {
+  /** 🆕 04/08 — "abrir" pergunta o que ESCOLHER (elegibilidade); "migrar" pergunta o que a pessoa JÁ É (autodeclaração, o CNPJ já existe). */
+  contexto?: "abrir" | "migrar";
   regime: "mei" | "me" | null;
   setRegime: (v: "mei" | "me") => void;
   onSeguir: () => void;
   /** Volta pro fork (E3) — quem chegou aqui pode ter errado abrir×migrar. */
   onVoltar?: () => void;
 }) {
+  const opcoes = opcoesRegime(contexto);
   return (
     <>
       {/* 🆕 03/08 — faltava até o chrome de página (esta tela é renderizada
@@ -750,16 +791,19 @@ export function MeiOuMeView({
       <TelaHeader meta="Sobre a sua empresa" onVoltar={onVoltar} />
       <main className="app-main">
       <div className="shrink-0">
-        <h1 className="text-h1 mb-2">Você já sabe se é MEI ou ME?</h1>
+        <h1 className="text-h1 mb-2">
+          {contexto === "migrar" ? "Sua empresa hoje é MEI ou ME?" : "Você já sabe se é MEI ou ME?"}
+        </h1>
         <p className="text-body text-text-secondary mb-6">
-          Se não souber, a diferença real é essa — dá pra trocar de ideia
-          depois, mas muda um pouco o que a gente pergunta a seguir.
+          {contexto === "migrar"
+            ? "Isso muda se a cidade importa e como a gente confirma seus dados."
+            : "Se não souber, a diferença real é essa — dá pra trocar de ideia depois, mas muda um pouco o que a gente pergunta a seguir."}
         </p>
       </div>
 
       <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <div className="flex flex-col gap-3">
-          {OPCOES_REGIME.map((o) => (
+          {opcoes.map((o) => (
             <button
               key={o.id}
               onClick={() => setRegime(o.id)}
@@ -804,8 +848,9 @@ export function MeiOuMeView({
           ))}
         </div>
         <p className="text-micro text-text-tertiary mt-4">
-          Sua atividade ainda precisa estar na lista permitida pro MEI —
-          confirmamos isso mais pra frente.
+          {contexto === "migrar"
+            ? "A gente confirma o regime de verdade puxando o CNPJ da Receita, no próximo passo."
+            : "Sua atividade ainda precisa estar na lista permitida pro MEI — confirmamos isso mais pra frente."}
         </p>
       </div>
 

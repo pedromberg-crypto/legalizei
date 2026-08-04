@@ -120,7 +120,7 @@ const GRUPOS: {
     id: "entrada",
     nome: "E1–E4 · Entrada (com Migrar fundido no fork)",
     descricao:
-      "As primeiras telas, antes de qualquer pergunta de negócio — e o ponto onde o flow bifurca em 2 caminhos (ADR 03/08: Migrar não é 'flow #2', é decimal DENTRO da Entrada). E1–E3 não mapeiam em nenhum arquétipo A1–A10: não perguntam, não julgam, não provam nada. 🆕 03/08: quem escolhe 'abrir' passa pela E3.2 (MEI×ME) ANTES do gate de cidade — MEI pula E4 inteiro (sem limite geográfico) e vai direto pro E5; só ME confirma cidade. Migrar não passa pela E3.2, vai direto pro gate de cidade e continua em E4.2–E4.5, reencontrando o tronco no pagamento (E9).",
+      "As primeiras telas, antes de qualquer pergunta de negócio — e o ponto onde o flow bifurca em 2 caminhos (ADR 03/08: Migrar não é 'flow #2', é decimal DENTRO da Entrada). E1–E3 não mapeiam em nenhum arquétipo A1–A10: não perguntam, não julgam, não provam nada. 🆕 03/08: quem escolhe 'abrir' passa pela E3.2 (MEI×ME) ANTES do gate de cidade — MEI pula E4 inteiro (sem limite geográfico) e vai direto pro E5; só ME confirma cidade. 🆕 04/08 (2ª rodada): Migrar TAMBÉM passa pela E3.2 agora (copy própria, autodeclaração em vez de critério de escolha) — MEI pula direto pro E4.2 (M1), só ME confirma cidade antes.",
     telas: [
       {
         rota: "/splash",
@@ -140,23 +140,33 @@ const GRUPOS: {
       },
       {
         rota: "/entrada?intencao=abrir",
-        nome: "🆕 E3.2 · MEI × ME — 🏷️ SÓ CAMINHO ABRIR",
-        nota: "03/08 — REALOCADA (morava no fim do E5, decisão revertida). Pergunta DIRETA logo após o fork, antes do gate de cidade — quem abre MEI geralmente já sabe. Recomendação, não trava. Escolher MEI pula o E4 inteiro e vai direto pro E5 (`/gate?regime=mei`) — MEI atende o Brasil todo, só o ME/Simples é que hoje só atende BH/MG. 🔴 Ainda não corrige se a pessoa disser MEI aqui e depois a triagem revelar 2+ sócios (gap conhecido). Migrar NÃO passa por esta tela.",
+        nome: "🆕 E3.2 · MEI × ME (variante Abrir)",
+        nota: "03/08 — REALOCADA (morava no fim do E5, decisão revertida). Pergunta DIRETA logo após o fork, antes do gate de cidade — quem abre MEI geralmente já sabe. Recomendação, não trava. Escolher MEI pula o E4 inteiro e vai direto pro E5 (`/gate?regime=mei`) — MEI atende o Brasil todo, só o ME/Simples é que hoje só atende BH/MG. 🔴 Ainda não corrige se a pessoa disser MEI aqui e depois a triagem revelar 2+ sócios (gap conhecido). Copy = critério de ELEGIBILIDADE (\"o que devo escolher\"), diferente da variante Migrar.",
+      },
+      {
+        rota: "/entrada?intencao=migrar",
+        nome: "🆕 E3.2 · MEI × ME (variante Migrar)",
+        nota: "04/08 — mesma tela (`MeiOuMeView`), `contexto=\"migrar\"`: copy vira AUTODECLARAÇÃO (\"Sua empresa hoje é MEI ou ME?\", não \"qual devo escolher\" — o CNPJ já existe, não há escolha). Decisão do Pedro: inverter a ordem que existia (perguntava cidade ANTES de saber o regime). Escolher MEI pula a cidade e vai DIRETO pro M1 (`/migrar/cnpj?cenario=mei`). Escolher ME cai no gate de cidade de sempre. Autodeclarado, não trava nada — quem confirma de verdade é o M1, puxando da Receita.",
       },
       {
         rota: "/entrada?intencao=abrir&regime=me",
-        nome: "E4 · Gate de cidade (BH-MG) · 🏷️ SÓ ME + MIGRAR",
-        nota: "✅ 28/07 (reunião Rua Satélite 9) — 2º passo do E3, mesma tela. MLP só atende Belo Horizonte/MG; trava 'abrir'/'migrar' até confirmar (login pula, já passou por isso). 03/08: MEI PULA esta tela inteira (sem limite geográfico) — só quem escolheu ME (ou Migrar, que nem passa pela E3.2) confirma cidade. Rota com `&regime=me` pula a pergunta pra revisão direta.",
+        nome: "E4 · Gate de cidade (BH-MG) · 🏷️ SÓ ME (abrir + migrar)",
+        nota: "✅ 28/07 (reunião Rua Satélite 9) — 2º passo do E3, mesma tela. MLP só atende Belo Horizonte/MG; trava 'abrir'/'migrar' até confirmar (login pula, já passou por isso). 03/08: MEI PULA esta tela inteira (sem limite geográfico) — vale pros 2 caminhos desde 04/08 (Migrar também passa pela E3.2 agora, antes desta tela). Rota com `&regime=me` pula a pergunta pra revisão direta.",
       },
       {
         rota: "/saida/fora-bh",
         nome: "E4.1 · Saída · fora de BH · 🏷️ SÓ ME + MIGRAR",
-        nota: "✅ 28/07 — nasce do gate de cidade (E4), não da triagem do E5. Mesmo template A9 das outras saídas (barra+explica+captura+roteia). MLP em fase de testes, só BH por enquanto. 03/08: MEI nunca cai aqui — pula o E4 inteiro.",
+        nota: "✅ 28/07 — nasce do gate de cidade (E4), não da triagem do E5. Mesmo template A9 das outras saídas (barra+explica+captura+roteia). MLP em fase de testes, só BH por enquanto. 03/08: MEI nunca cai aqui — pula o E4 inteiro (nos 2 caminhos).",
       },
       {
         rota: "/migrar/cnpj",
         nome: "E4.2 · Migrar · Seu CNPJ (consulta + veredito)",
-        nota: "Consulta e veredito na MESMA tela, de propósito: no caminho abrir o veredito é tela própria porque depende da IA interpretar texto livre (pode errar); aqui o CNAE é fato registrado. Digite qualquer CNPJ de 14 dígitos → loading que explica → cartão + as 4 checagens + veredito. 🆕 04/08 (2ª rodada): **MEI agora PASSA** (checagem de regime ok) — só Lucro Presumido segue bloqueado. `?cenario=mei|presumido|inapto` demonstra os 3 cenários.",
+        nota: "Consulta e veredito na MESMA tela, de propósito: no caminho abrir o veredito é tela própria porque depende da IA interpretar texto livre (pode errar); aqui o CNAE é fato registrado. Digite qualquer CNPJ de 14 dígitos → loading que explica → cartão + as 4 checagens + veredito. 🆕 04/08 (2ª rodada): **MEI agora PASSA** (checagem de regime ok) — só Lucro Presumido segue bloqueado. `?cenario=mei|presumido|inapto` demonstra os 3 cenários. 🆕 04/08 (3ª rodada): quem chega aqui vindo de MEI na E3.2 já pula direto com `?cenario=mei` — ME continua chegando 'limpo' (padrão) depois do gate de cidade.",
+      },
+      {
+        rota: "/migrar/cnpj?fase=achou",
+        nome: "🆕 E4.2 · Achamos sua empresa",
+        nota: "04/08 (pedido do Pedro) — extraída de dentro do M1 pra virar tela própria, catalogável ao lado dele: o card com os dados da Receita + as 4 checagens + veredito. `MigrarAchouView` agora é componente exportado, reusado pelo M1 de verdade E por esta rota estática. (Correção: a 1ª tentativa extraiu a tela de LOADING por engano — não era essa.)",
       },
       {
         rota: "/saida/regime-nao-suportado",
@@ -430,7 +440,7 @@ const GRUPOS: {
       {
         rota: "/inicio",
         nome: "P-INI1 · Início · Home (regime)",
-        nota: "Home Campeã: saudação+CNPJ-pill, próximo compromisso, atalhos, notas recentes, aprenda, quem cuida, vigília preditiva. Número-guru fora.",
+        nota: "Home Campeã: saudação+CNPJ-pill, próximo compromisso, atalhos, notas recentes, aprenda, quem cuida, vigília preditiva. Número-guru fora. 🆕 04/08: `?regime=mei` reduz \"Seu negócio\" de 4 pra 2 números (faturamento + limite anual) e troca os atalhos (emitir + colaborador, sem pró-labore/impostos completos) — Plano MEI não tem Fator R/Anexo pra vigiar.",
       },
       {
         rota: "/impostos",
@@ -475,7 +485,7 @@ const GRUPOS: {
       {
         rota: "/mais",
         nome: "P-MAIS1 · Mais · hub",
-        nota: "Ordem por praticidade: Você→Perfil · plano · serviços à-la-carte · seções (Empresa/Contabilidade) · WhatsApp · Conta.",
+        nota: "Ordem por praticidade: Você→Perfil · plano · serviços à-la-carte · seções (Empresa/Contabilidade) · WhatsApp · Conta. 🆕 04/08: `?regime=mei` troca o `PlanoCard` (Plano MEI, R$49,90, fidelidade 12m, certificado incluso) e o item \"Sócios\" vira \"Meu colaborador\" — MEI nunca tem sócio. Avulsos NÃO somem (decisão do Pedro: MEI também é assinante, também vê a oferta depois da mensalidade).",
       },
       {
         rota: "/perfil",
@@ -500,7 +510,12 @@ const GRUPOS: {
       {
         rota: "/mais/socios",
         nome: "P-MAIS6 · Sócios",
-        nota: "Lista de sócios da empresa e % de participação, herdados do dossiê (C3).",
+        nota: "Lista de sócios da empresa e % de participação, herdados do dossiê (C3). Não existe pro Plano MEI (some do hub, vira Meu colaborador).",
+      },
+      {
+        rota: "/mais/colaborador",
+        nome: "🆕 P-MAIS6b · Meu colaborador (Plano MEI)",
+        nota: "04/08 — a lei permite ao MEI 1 funcionário com carteira. Substitui Sócios no hub `/mais` quando `?regime=mei`. Cadastro não é self-serve de verdade (mexe com eSocial/FGTS/INSS patronal): o formulário aqui é a COLETA, o processamento é da gente, já incluso no plano (não é avulso). `?cenario=cadastrado` mostra o estado com colaborador ativo.",
       },
       {
         rota: "/mais/documentos",
@@ -595,9 +610,15 @@ const MAPA_EDGES: Conexao[] = [
   { de: "/entrada?intencao=abrir", para: "/entrada?intencao=abrir&regime=me" },
   { de: "/entrada?intencao=abrir&regime=me", para: "/gate" },
   { de: "/entrada?intencao=abrir&regime=me", para: "/saida/fora-bh", tracejado: true },
-  // Migrar não passa pela E3.2 — sai direto do fork, confirma cidade à parte
-  // (mesma tela E4, sem tile própria) e segue pro M1.
-  { de: "/entrada", para: "/migrar/cnpj", tracejado: true },
+  // 🆕 04/08 (2ª rodada) — Migrar TAMBÉM passa pela E3.2 agora (copy própria,
+  // autodeclaração). MEI pula a cidade e vai direto pro M1 já sinalizado
+  // (`?cenario=mei`); ME cai no MESMO tile de gate de cidade do Abrir (é a
+  // mesma tela reusada) e só depois segue pro M1.
+  { de: "/entrada", para: "/entrada?intencao=migrar", tracejado: true },
+  { de: "/entrada?intencao=migrar", para: "/migrar/cnpj?cenario=mei", tracejado: true },
+  { de: "/entrada?intencao=migrar", para: "/entrada?intencao=abrir&regime=me" },
+  { de: "/entrada?intencao=abrir&regime=me", para: "/migrar/cnpj" },
+  { de: "/migrar/cnpj", para: "/migrar/cnpj?fase=achou", tracejado: true },
   { de: "/migrar/cnpj", para: "/migrar/diagnostico" },
   { de: "/migrar/cnpj", para: "/migrar/diagnostico?cenario=ja-otimo", tracejado: true },
   { de: "/migrar/cnpj", para: "/migrar/diagnostico?regime=mei", tracejado: true },
@@ -677,6 +698,7 @@ const MAPA_EDGES: Conexao[] = [
   { de: "/mais", para: "/mais/servicos" },
   { de: "/mais", para: "/mais/empresa" },
   { de: "/mais", para: "/mais/socios" },
+  { de: "/mais", para: "/mais/colaborador", tracejado: true },
   { de: "/mais", para: "/mais/documentos" },
   { de: "/mais", para: "/mais/certificado" },
   { de: "/mais", para: "/mais/em-dia" },

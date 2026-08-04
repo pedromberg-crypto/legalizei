@@ -893,8 +893,18 @@ export function RetomarView({ onSeguir }: { onSeguir?: () => void }) {
 
 const BOLETO_P2 = { passosFeitos: 5 };
 
-export function AguardandoView({ onSeguir }: { onSeguir?: () => void }) {
+export function AguardandoView({
+  mei = false,
+  onSeguir,
+}: {
+  /** 🆕 04/08 — MEI não paga taxa da Junta e tem mensalidade própria
+   *  (`CUSTOS.MENSALIDADE_MEI`) — esta tela ainda cravava DAE+mensalidade
+   *  genérica no boleto, mesmo gap já corrigido em `wizard-dinheiro.tsx`. */
+  mei?: boolean;
+  onSeguir?: () => void;
+}) {
   const total = passosDoCliente().length;
+  const boleto = mei ? CUSTOS.MENSALIDADE_MEI : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
 
   return (
     <>
@@ -918,7 +928,7 @@ export function AguardandoView({ onSeguir }: { onSeguir?: () => void }) {
 
           <div className="flex flex-col gap-2">
             <Button variant="secondary" full>
-              Ver o boleto de {brl(CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE, true)}
+              Ver o boleto de {brl(boleto, true)}
             </Button>
             <Button variant="ghost">Prefiro pagar por Pix e adiantar</Button>
           </div>

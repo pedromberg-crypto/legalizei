@@ -41,6 +41,7 @@ export default function MigrarContratoPage() {
     <MigrarContratoView
       aceito={aceito}
       setAceito={setAceito}
+      mei={mei}
       semTransferencia={mei && semContador}
       onSeguir={() =>
         router.push(qs ? `/pagamento?fluxo=migrar&${qs}` : "/pagamento?fluxo=migrar")

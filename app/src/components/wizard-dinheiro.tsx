@@ -670,7 +670,12 @@ export function PlanoView({
    */
   semTaxaJunta?: boolean;
 }) {
-  const hoje = semTaxaJunta ? CUSTOS.MENSALIDADE : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
+  // 🆕 04/08 — Plano MEI tem preço PRÓPRIO (R$49,90, não o plano ME com
+  // desconto): `semTaxaJunta` só era usado pra tirar a taxa da Junta, mas
+  // esquecia de trocar a mensalidade também. Reusa o mesmo flag como sinal
+  // de MEI (já é assim em todo o resto do wizard).
+  const mensalidade = semTaxaJunta ? CUSTOS.MENSALIDADE_MEI : CUSTOS.MENSALIDADE;
+  const hoje = semTaxaJunta ? mensalidade : CUSTOS.DAE_JUCEMG + mensalidade;
 
   if (layout === "oferta") {
     return <PlanoOferta onSeguir={onSeguir} onVoltar={onVoltar} semTaxaJunta={semTaxaJunta} />;
@@ -700,14 +705,24 @@ export function PlanoView({
 
           {/* ═══ HERÓI 2 — O QUE ELE DE FATO COMPRA ═══ */}
           <Card>
-            <p className="text-caption text-text-secondary mb-1">Depois, todo mês</p>
-            <p className="text-display text-text-primary">{brl(CUSTOS.MENSALIDADE)}</p>
+            <div className="flex items-baseline justify-between gap-3">
+              <p className="text-caption text-text-secondary">Depois, todo mês</p>
+              {semTaxaJunta && (
+                <span className="rounded-full bg-state-info-tint px-2.5 py-0.5 text-micro font-semibold text-state-info-text">
+                  Plano MEI
+                </span>
+              )}
+            </div>
+            <p className="text-display text-text-primary">{brl(mensalidade)}</p>
             <p className="text-caption text-text-secondary mt-2">
-              Suas guias todo mês, notas fiscais, obrigações do governo e
-              contador de verdade pra falar. Certificado digital incluso.
+              {semTaxaJunta
+                ? "Emitir notas fiscais e gerenciar o colaborador que a lei permite pro MEI. Certificado digital incluso."
+                : "Suas guias todo mês, notas fiscais, obrigações do governo e contador de verdade pra falar. Certificado digital incluso."}
             </p>
             <p className="text-micro text-text-tertiary mt-2">
-              a 1ª mensalidade já é o seu 1º mês
+              {semTaxaJunta
+                ? `a 1ª mensalidade já é o seu 1º mês · fidelidade de ${CUSTOS.FIDELIDADE_MEI_MESES} meses`
+                : "a 1ª mensalidade já é o seu 1º mês"}
             </p>
           </Card>
 
@@ -728,19 +743,24 @@ export function PlanoView({
             </p>
           </div>
 
-          {/* 🆕 03/08 — COLABORADORES (mesma lógica da versão oferta). */}
+          {/* 🆕 03/08 — COLABORADORES (mesma lógica da versão oferta).
+              🆕 04/08 — Plano MEI já INCLUI o 1 colaborador que a lei
+              permite — não é add-on pago (isso só vale pro plano ME). */}
           <div className="rounded-md border border-border-hairline bg-surface-card p-4">
             <div className="flex items-baseline justify-between gap-3">
               <p className="text-body font-semibold text-text-primary">Colaboradores</p>
               <span className="shrink-0 text-body font-semibold text-text-primary">
-                {CUSTOS.COLABORADORES_INCLUSOS === 0
-                  ? "não incluso"
-                  : `${CUSTOS.COLABORADORES_INCLUSOS} incluso${CUSTOS.COLABORADORES_INCLUSOS > 1 ? "s" : ""}`}
+                {semTaxaJunta
+                  ? "1 incluso"
+                  : CUSTOS.COLABORADORES_INCLUSOS === 0
+                    ? "não incluso"
+                    : `${CUSTOS.COLABORADORES_INCLUSOS} incluso${CUSTOS.COLABORADORES_INCLUSOS > 1 ? "s" : ""}`}
               </span>
             </div>
             <p className="text-caption text-text-secondary mt-1">
-              Cada colaborador é {brl(CUSTOS.CUSTO_FUNCIONARIO, true)}/mês a mais na
-              mensalidade. Sem funcionário, sem custo extra.
+              {semTaxaJunta
+                ? "É o único funcionário que a lei permite ao MEI — já incluso no seu plano, sem custo extra."
+                : `Cada colaborador é ${brl(CUSTOS.CUSTO_FUNCIONARIO, true)}/mês a mais na mensalidade. Sem funcionário, sem custo extra.`}
             </p>
           </div>
         </Corpo>
@@ -828,6 +848,16 @@ const INCLUSO: { titulo: string; sub: string }[] = [
   { titulo: "Contador de verdade", sub: "Uma pessoa com nome, no WhatsApp." },
 ];
 
+/** 🆕 04/08 — Plano MEI é escopo LIMITADO (emitir NF + o 1 colaborador que a
+ *  lei permite), não o plano ME reduzido — por isso lista própria, não um
+ *  filtro do array acima (MEI não tem sócio, não tem Anexo/Fator R). */
+const INCLUSO_MEI: { titulo: string; sub: string }[] = [
+  { titulo: "Certificado digital", sub: "Incluso, sem custo extra — a gente precisa dele pra te representar." },
+  { titulo: "Notas fiscais sem limite", sub: "Emite pelo app, em segundos." },
+  { titulo: "1 colaborador", sub: "O único que a lei permite ao MEI — FGTS e INSS patronal inclusos." },
+  { titulo: "Contador de verdade", sub: "Uma pessoa com nome, no WhatsApp." },
+];
+
 function PlanoOferta({
   onSeguir,
   onVoltar,
@@ -837,7 +867,9 @@ function PlanoOferta({
   onVoltar?: () => void;
   semTaxaJunta?: boolean;
 }) {
-  const hoje = semTaxaJunta ? CUSTOS.MENSALIDADE : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
+  // 🆕 04/08 — mesma correção do PlanoView: Plano MEI tem mensalidade própria.
+  const mensalidade = semTaxaJunta ? CUSTOS.MENSALIDADE_MEI : CUSTOS.MENSALIDADE;
+  const hoje = semTaxaJunta ? mensalidade : CUSTOS.DAE_JUCEMG + mensalidade;
 
   return (
     <>
@@ -877,21 +909,25 @@ function PlanoOferta({
             </p>
           </Card>
 
-          {/* O PLANO COMO PRODUTO — card único (só existe 1 plano no MLP). */}
+          {/* O PLANO COMO PRODUTO — card único (só existe 1 plano no MLP).
+              🆕 04/08 — Plano MEI é OUTRO card (preço/lista próprios), não
+              o mesmo card com número trocado. */}
           <div className="overflow-hidden rounded-2xl bg-surface-dark text-text-on-dark">
             <div className="px-5 pt-5">
               <div className="flex items-center justify-between gap-3">
                 <p className="text-caption text-text-on-dark/70">Depois, todo mês</p>
                 <span className="rounded-full bg-white/15 px-2.5 py-1 text-micro font-bold">
-                  Plano único
+                  {semTaxaJunta ? "Plano MEI" : "Plano único"}
                 </span>
               </div>
               <div className="mt-1 flex items-baseline gap-1.5">
-                <p className="text-display font-bold">{brl(CUSTOS.MENSALIDADE)}</p>
+                <p className="text-display font-bold">{brl(mensalidade)}</p>
                 <span className="text-body text-text-on-dark/70">/mês</span>
               </div>
               <p className="text-micro text-text-on-dark/60 mt-1">
-                a 1ª mensalidade já é o seu 1º mês
+                {semTaxaJunta
+                  ? `a 1ª mensalidade já é o seu 1º mês · fidelidade de ${CUSTOS.FIDELIDADE_MEI_MESES} meses`
+                  : "a 1ª mensalidade já é o seu 1º mês"}
               </p>
               {/* 🔓 Era a FAQ "a mensalidade muda depois?", escondida num
                   acordeon. É a ÚNICA letra miúda real da tela — e o subtítulo
@@ -899,14 +935,16 @@ function PlanoOferta({
                   faturamento dentro de um acordeon é exatamente a pegadinha que
                   esta tela existe pra evitar. Então ela sobe, visível, colada no
                   preço que ela qualifica. */}
-              <p className="text-micro text-text-on-dark/60 mt-1">
-                O valor acompanha o seu faturamento. Se a empresa crescer muito,
-                a gente conversa antes.
-              </p>
+              {!semTaxaJunta && (
+                <p className="text-micro text-text-on-dark/60 mt-1">
+                  O valor acompanha o seu faturamento. Se a empresa crescer muito,
+                  a gente conversa antes.
+                </p>
+              )}
             </div>
 
             <div className="mt-4 flex flex-col gap-3 px-5 pb-5">
-              {INCLUSO.map((i) => (
+              {(semTaxaJunta ? INCLUSO_MEI : INCLUSO).map((i) => (
                 <div key={i.titulo} className="flex items-start gap-2.5">
                   <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-state-success text-text-on-dark">
                     <CheckMiniPlano />
@@ -941,21 +979,26 @@ function PlanoOferta({
           {/* 🆕 03/08 — COLABORADORES, visível desde já (achado da reunião com
               o Mauro: "quanto custa a mais" precisa aparecer cedo, não só
               depois de contratar). 🔴 Preço FAKE — referência de mercado
-              (Contabilizei Avançado, R$39/cabeça linear), não decisão nossa. */}
-          <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
-            <div className="flex items-baseline justify-between gap-3">
-              <p className="text-body font-semibold text-text-primary">Colaboradores</p>
-              <span className="shrink-0 text-body font-semibold text-text-primary">
-                {CUSTOS.COLABORADORES_INCLUSOS === 0
-                  ? "não incluso"
-                  : `${CUSTOS.COLABORADORES_INCLUSOS} incluso${CUSTOS.COLABORADORES_INCLUSOS > 1 ? "s" : ""}`}
-              </span>
+              (Contabilizei Avançado, R$39/cabeça linear), não decisão nossa.
+              🆕 04/08 — some pro Plano MEI: o INCLUSO_MEI acima já cobre o
+              único colaborador que a lei permite, card à parte seria
+              contradição (diria "não incluso" ou repetiria "1 incluso"). */}
+          {!semTaxaJunta && (
+            <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
+              <div className="flex items-baseline justify-between gap-3">
+                <p className="text-body font-semibold text-text-primary">Colaboradores</p>
+                <span className="shrink-0 text-body font-semibold text-text-primary">
+                  {CUSTOS.COLABORADORES_INCLUSOS === 0
+                    ? "não incluso"
+                    : `${CUSTOS.COLABORADORES_INCLUSOS} incluso${CUSTOS.COLABORADORES_INCLUSOS > 1 ? "s" : ""}`}
+                </span>
+              </div>
+              <p className="text-caption text-text-secondary mt-1">
+                Cada colaborador é {brl(CUSTOS.CUSTO_FUNCIONARIO, true)}/mês a mais na
+                mensalidade. Sem funcionário, sem custo extra.
+              </p>
             </div>
-            <p className="text-caption text-text-secondary mt-1">
-              Cada colaborador é {brl(CUSTOS.CUSTO_FUNCIONARIO, true)}/mês a mais na
-              mensalidade. Sem funcionário, sem custo extra.
-            </p>
-          </div>
+          )}
 
           {/* ─────────────────────────────────────────────────────────────────
               🪒 AQUI TERMINAVA A TELA — e não termina mais (lapidação 29/07).
@@ -1041,7 +1084,9 @@ export function ContratoView({
   /** 🆕 03/08 — MEI não paga taxa da Junta (não existe, não é cenário). */
   semTaxaJunta?: boolean;
 }) {
-  const hoje = semTaxaJunta ? CUSTOS.MENSALIDADE : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
+  // 🆕 04/08 — mesma correção das telas anteriores: Plano MEI tem mensalidade própria.
+  const mensalidade = semTaxaJunta ? CUSTOS.MENSALIDADE_MEI : CUSTOS.MENSALIDADE;
+  const hoje = semTaxaJunta ? mensalidade : CUSTOS.DAE_JUCEMG + mensalidade;
 
   return (
     <>
@@ -1084,23 +1129,27 @@ export function ContratoView({
                 <div className="flex items-baseline justify-between gap-3 px-4 pt-3.5">
                   <span className="text-caption text-text-secondary">Depois, todo mês</span>
                   <span className="shrink-0 text-body font-semibold text-text-primary">
-                    {brl(CUSTOS.MENSALIDADE)}
+                    {brl(mensalidade)}
                   </span>
                 </div>
                 <p className="px-4 pb-3.5 text-micro text-text-tertiary">
-                  sua contabilidade completa. As taxas do governo são sempre à parte
+                  {semTaxaJunta
+                    ? "emitir notas fiscais e gerenciar seu colaborador, certificado digital incluso"
+                    : "sua contabilidade completa. As taxas do governo são sempre à parte"}
                 </p>
               </div>
             </div>
 
             <ul className="mt-2 flex flex-col gap-2">
-              {/* 🟡 O PRAZO DA FIDELIDADE segue em aberto (Mauro/Larissa). Por
-                  decisão do Pedro (29/07) a copy fica GENÉRICA — sem número
-                  inventado e sem placeholder FAKE — e aponta pro contrato, que
-                  é onde o prazo vai estar quando existir. */}
+              {/* 🟡 O PRAZO DA FIDELIDADE segue em aberto pro plano ME
+                  (Mauro/Larissa). Por decisão do Pedro (29/07) a copy fica
+                  GENÉRICA ali — sem número inventado. 🆕 04/08 — o Plano MEI
+                  JÁ TEM número travado (12 meses, ADR `decisoes-marca.md`):
+                  contrapartida do certificado digital que a gente paga. */}
               <Bullet>
-                Como a abertura é gratuita, o plano tem um período mínimo de
-                permanência, descrito no contrato.
+                {semTaxaJunta
+                  ? `O certificado digital vem incluso — a gente precisa dele pra movimentar sua empresa. Em troca, o plano tem fidelidade de ${CUSTOS.FIDELIDADE_MEI_MESES} meses, descrita no contrato.`
+                  : "Como a abertura é gratuita, o plano tem um período mínimo de permanência, descrito no contrato."}
               </Bullet>
               <Bullet>
                 Nada é irreversível hoje: você tem 7 dias pra mudar de ideia e
@@ -1302,7 +1351,11 @@ export function PagamentoView({
   onVoltar?: () => void;
 }) {
   const migrar = fluxo === "migrar";
-  const total = migrar || semTaxaJunta ? CUSTOS.MENSALIDADE : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
+  // 🆕 04/08 — Plano MEI tem mensalidade própria (R$49,90) em qualquer fluxo
+  // (abrir OU migrar) — antes esta tela sempre usava `CUSTOS.MENSALIDADE`
+  // genérico mesmo quando `semTaxaJunta` (MEI) era true.
+  const mensalidade = semTaxaJunta ? CUSTOS.MENSALIDADE_MEI : CUSTOS.MENSALIDADE;
+  const total = migrar || semTaxaJunta ? mensalidade : CUSTOS.DAE_JUCEMG + mensalidade;
   const escolhido = METODOS.find((m) => m.id === metodo)!;
 
   const temCadastrado = Boolean(cpfCadastrado?.trim());
@@ -1311,7 +1364,7 @@ export function PagamentoView({
     <>
       <TelaHeader meta="Pagamento" onVoltar={onVoltar} />
       <main className="app-main">
-        <Titulo sub={`${brl(total, true)} hoje, e depois ${brl(CUSTOS.MENSALIDADE)} por mês.`}>
+        <Titulo sub={`${brl(total, true)} hoje, e depois ${brl(mensalidade)} por mês.`}>
           Falta só isso
         </Titulo>
 

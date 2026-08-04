@@ -1,7 +1,12 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { MigrarCnpjView, type CenarioM1 } from "@/components/wizard-migrar";
+import {
+  MigrarCnpjView,
+  MigrarAchouView,
+  EMPRESA_MIGRAR_CENARIOS,
+  type CenarioM1,
+} from "@/components/wizard-migrar";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -24,6 +29,13 @@ import { MigrarCnpjView, type CenarioM1 } from "@/components/wizard-migrar";
  * 🆕 04/08 (2ª rodada) — MEI agora SEGUE pro M2 (`/migrar/diagnostico?regime=
  * mei`), não bloqueia mais. Só Presumido segue pra `/saida/regime-nao-
  * suportado`.
+ *
+ * 🆕 04/08 (3ª rodada, corrigido) — `?fase=achou` renderiza SÓ o
+ * `MigrarAchouView` (a tela "Achamos sua empresa" — card + 4 checagens +
+ * veredito), parado. Existe pra virar tela catalogável própria no `/mockup`,
+ * ao lado do M1 — antes só dava pra ver digitando um CNPJ no fluxo real.
+ * ⚠️ Pedido original do Pedro era ESTA tela, não a de loading — corrigido
+ * depois de eu ter extraído a errada na 1ª tentativa.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function MigrarCnpjPage() {
@@ -34,6 +46,25 @@ export default function MigrarCnpjPage() {
     cenarioParam === "mei" || cenarioParam === "presumido" || cenarioParam === "inapto"
       ? cenarioParam
       : "padrao";
+
+  if (searchParams.get("fase") === "achou") {
+    const empresa = EMPRESA_MIGRAR_CENARIOS[cenario];
+    return (
+      <MigrarAchouView
+        empresa={empresa}
+        situacaoOk={empresa.situacao === "ATIVA"}
+        regimeOk={empresa.regime !== "presumido"}
+        onVoltar={() => router.push("/migrar/cnpj")}
+        onSeguir={() =>
+          router.push(cenario === "mei" ? "/migrar/diagnostico?regime=mei" : "/migrar/diagnostico")
+        }
+        onSaidaRegulada={() => router.push("/veredito/waitlist")}
+        onSaidaNaoAtende={() => router.push("/veredito/nao-atende")}
+        onSaidaRegimeNaoSuportado={() => router.push("/saida/regime-nao-suportado")}
+        onSaidaInapto={() => router.push("/saida/cnpj-inapto")}
+      />
+    );
+  }
 
   return (
     <MigrarCnpjView

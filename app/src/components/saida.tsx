@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CampoMunicipio } from "@/components/campo-municipio";
@@ -49,6 +49,11 @@ import { Selo } from "@/components/veredito";
  */
 
 export interface DadosSaida {
+  /**
+   * 🆕 04/08 — override pontual do selo azul do topo (ex: Lottie do "Alert").
+   * Opcional: sem isso, segue o símbolo padrão (pessoa traçada) de sempre.
+   */
+  icone?: ReactNode;
   /** O que aconteceu, em linguagem de gente. Vira o título do card. */
   titulo: string;
   /** Por que aconteceu. Uma frase, sem juridiquês. */
@@ -193,7 +198,7 @@ export function SaidaView({
         {/* BARRA — o selo. Mesmo componente do veredito: quem chega aqui pode
             ter visto aquela tela minutos antes, e dois vocabulários visuais
             pro mesmo tipo de desfecho fariam parecer erro do app. */}
-        <Selo tipo="humano" />
+        <Selo tipo="humano" simbolo={d.icone} />
 
         <Card>
           {/* A etiqueta do motivo aparece ANTES do título: quem chega aqui

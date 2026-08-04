@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 // ⚠️ `encaixe.tsx` importa daqui, mas só `import type` (apagado no build), então
@@ -590,7 +590,24 @@ const SELO: Record<SeloTipo, { fundo: string; texto: string; frase: string }> = 
   },
 };
 
-export function Selo({ tipo, frase }: { tipo: SeloTipo; frase?: string }) {
+export function Selo({
+  tipo,
+  frase,
+  simbolo,
+}: {
+  tipo: SeloTipo;
+  frase?: string;
+  /**
+   * 🆕 04/08 — override pontual do símbolo (ex: Lottie do "Alert", recolorido
+   * pro nosso azul de status). Quando presente, substitui o `<Simbolo>` E o
+   * fundo `bg-state-info` (o asset já traz o próprio círculo/cor) — pra não
+   * duplicar círculo azul dentro de círculo azul. Escopo deliberadamente
+   * pontual: só as telas que passam `simbolo` mudam; o resto do produto
+   * (`/saida/exterior`, `/veredito/nao-atende` etc.) segue com o símbolo
+   * padrão até decidirmos estender.
+   */
+  simbolo?: ReactNode;
+}) {
   const [entrou, setEntrou] = useState(false);
   useEffect(() => {
     const id = requestAnimationFrame(() => setEntrou(true));
@@ -605,7 +622,7 @@ export function Selo({ tipo, frase }: { tipo: SeloTipo; frase?: string }) {
     <div className="mt-2 mb-8 flex flex-col items-center text-center">
       <span
         className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-full
-                    text-text-on-dark ${s.fundo}`}
+                    text-text-on-dark ${simbolo ? "" : s.fundo}`}
         style={{
           transform: entrou ? "scale(1)" : "scale(.6)",
           opacity: entrou ? 1 : 0,
@@ -613,7 +630,7 @@ export function Selo({ tipo, frase }: { tipo: SeloTipo; frase?: string }) {
             "transform .42s cubic-bezier(.34,1.56,.64,1), opacity .22s ease",
         }}
       >
-        <Simbolo tipo={tipo} entrou={entrou} />
+        {simbolo ?? <Simbolo tipo={tipo} entrou={entrou} />}
       </span>
       {/* 🐛 FIX 29/07 — a frase era FIXA por tipo, e o tipo `sucesso` dizia
           "Achei o seu encaixe" em TODA confirmação: quem entrava na lista de

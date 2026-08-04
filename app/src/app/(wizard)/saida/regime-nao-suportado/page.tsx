@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { SaidaView, type DadosSaida } from "@/components/saida";
 import { TelaHeader } from "@/components/ui/tela";
+import { Lottie } from "@/components/lottie";
 
 /**
  * A9 · SAÍDA — REGIME NÃO SUPORTADO (Lucro Presumido) · 🆕 04/08
@@ -23,6 +24,10 @@ import { TelaHeader } from "@/components/ui/tela";
  * MLP ainda sem decisão de negócio.
  */
 const D: DadosSaida = {
+  // 🆕 04/08 — teste do Pedro: ícone "Alert" (Lottie) recolorido pro nosso
+  // azul de status (#3B82E0), no lugar do símbolo padrão de pessoa. Escopo
+  // pontual: só esta saída e `/saida/cnpj-inapto` por enquanto.
+  icone: <Lottie path="/lottie/alert-legalizei.json" fps={30} className="h-[125px] w-[125px]" />,
   tag: "Regime diferente",
   titulo: "Lucro Presumido a gente ainda não migra",
   explica:

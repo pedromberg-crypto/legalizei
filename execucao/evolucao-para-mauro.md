@@ -583,5 +583,27 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 - Próximo passo: configurar as contas de anúncio de fato
 ```
 
+## Semana 04/08/2026 — MEI entra de vez, e descobrimos que dá pra economizar consulta paga
+
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | **MEI entra de vez no produto** | Reverti a decisão antiga de deixar MEI fora do foco. Agora MEI pode **migrar de contador** com a gente também, não só abrir do zero. Achado no caminho: MEI não é obrigado a ter contador hoje — então a tela pergunta isso e decide se pula a parte de transferência | 🟢 |
+| 2 | **Plano MEI criado: R$49,90/mês** | Não é o plano normal (R$195) com desconto — é um plano **menor de propósito**: emitir nota fiscal + cuidar do único funcionário que a lei permite ao MEI. Certificado digital incluso, com fidelidade de 12 meses (a gente paga o certificado, por isso a fidelidade) | 🟢 (preço é ponto de partida, não travado com você ainda) |
+| 3 | **Lucro Presumido: decisão explícita de ficar de fora, por enquanto** | Diferente de MEI, Lucro Presumido usa uma conta de imposto totalmente diferente (não é só trocar 1 número) — decidimos não fingir que atendemos até termos isso pronto de verdade. Quem cai nesse caso vê uma tela honesta, não um erro | 🟢 |
+| 4 | **Achado que economiza dinheiro: 2 consultas pagas na Receita, não 1** | Testei as 2 consultas reais que a gente vai usar (uma confirma o cadastro da empresa, a outra confirma se é Simples ou Lucro Presumido). Rodar as duas em **todo mundo que só está testando, ainda sem pagar nada**, custaria dinheiro à toa. Decisão: a 2ª consulta (a mais cara) só roda depois que a pessoa **já é cliente** — antes disso, a gente pergunta direto pra pessoa (mesmo jeito que já fazíamos pra saber se é MEI ou ME) | 🟢 |
+| 5 | **Ícones animados — 1º teste** | Comecei a trocar alguns ícones do app por pequenas animações (mais vivo que ícone parado). Primeiro teste já aplicado em 3 telas de aviso/saída, pra você ver o estilo antes de estender pro resto | 🟡 em teste |
+
+**Próximo:** seguir trocando os ícones animados 1 por 1 com a sua validação; decidir se topa incluir Lucro Presumido no roadmap (exige uma pesquisa fiscal nova, do zero) e validar o preço do Plano MEI.
+
+### 📱 WhatsApp (04/08)
+```
+*Update Legalizei* 🧩
+- MEI agora pode migrar de contador com a gente também (antes só abria do zero)
+- Criei um plano específico pro MEI: R$49,90/mês (emitir nota + cuidar do funcionário que a lei permite), certificado digital incluso, fidelidade de 12 meses
+- Lucro Presumido: decidi deixar de fora por enquanto, de forma explícita — o cálculo de imposto é outro motor inteiro, não dá pra fingir que atendemos
+- Achado que economiza dinheiro: testei as 2 consultas pagas que vamos usar na Receita Federal. Rodar as duas em quem ainda nem virou cliente custaria à toa — a mais cara só roda depois que a pessoa já pagou
+- Comecei a trocar alguns ícones do app por animações, 1 por 1, pra você ir validando o estilo
+```
+
 ## Links
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]]

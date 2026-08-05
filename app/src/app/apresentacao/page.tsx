@@ -2071,16 +2071,6 @@ export default function ApresentacaoPage() {
                           <MigrarCnpjView
                             preencher={preenchimento}
                             onSeguir={() => setEtapa(depoisDoMigrar("m-cnpj"))}
-                            // As 2 saídas do veredito são as MESMAS do caminho abrir
-                            // (mesmo template A9) — reusa, não duplica.
-                            onSaidaRegulada={() => {
-                              setResultado(mapear("nutricionista"));
-                              setEtapa("veredito");
-                            }}
-                            onSaidaNaoAtende={() => {
-                              setResultado(mapear("loja de roupas"));
-                              setEtapa("veredito");
-                            }}
                             onVoltar={() => voltar(() => setEtapa(antesDoMigrar("m-cnpj")))}
                           />
                         )}

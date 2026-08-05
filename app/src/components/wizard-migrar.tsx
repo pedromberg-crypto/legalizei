@@ -201,16 +201,12 @@ export function MigrarAchouView({
   situacaoOk,
   onVoltar,
   onSeguir,
-  onSaidaRegulada,
-  onSaidaNaoAtende,
   onSaidaInapto,
 }: {
   empresa: EmpresaMigrar;
   situacaoOk: boolean;
   onVoltar?: () => void;
   onSeguir?: () => void;
-  onSaidaRegulada?: () => void;
-  onSaidaNaoAtende?: () => void;
   onSaidaInapto?: () => void;
 }) {
   const e = empresa;
@@ -271,23 +267,6 @@ export function MigrarAchouView({
             </Aviso>
           )}
 
-          {/* ⚠️ As saídas existem e são alcançáveis — não são botão morto.
-              No mock elas ficam como link discreto pra a prancheta conseguir
-              ver as telas de recusa sem precisar de outro CNPJ. */}
-          <div className="flex flex-wrap gap-3">
-            <button
-              onClick={onSaidaRegulada}
-              className="text-micro text-text-tertiary underline underline-offset-4"
-            >
-              🚧 ver saída: atividade regulamentada
-            </button>
-            <button
-              onClick={onSaidaNaoAtende}
-              className="text-micro text-text-tertiary underline underline-offset-4"
-            >
-              🚧 ver saída: não atendemos
-            </button>
-          </div>
         </Corpo>
 
         <Rodape>
@@ -319,8 +298,6 @@ export function MigrarCnpjView({
   preencher,
   cenario = "padrao",
   onSeguir,
-  onSaidaRegulada,
-  onSaidaNaoAtende,
   onSaidaInapto,
   onVoltar,
 }: {
@@ -335,8 +312,6 @@ export function MigrarCnpjView({
   cenario?: CenarioM1;
   /** MEI e ME seguem os dois direto: regime já foi autodeclarado na E3.2, não pergunta de novo aqui. */
   onSeguir?: () => void;
-  onSaidaRegulada?: () => void;
-  onSaidaNaoAtende?: () => void;
   /** 🆕 04/08 — CNPJ inapto/suspenso/baixado: precisa regularizar antes de migrar. */
   onSaidaInapto?: () => void;
   onVoltar?: () => void;
@@ -376,8 +351,6 @@ export function MigrarCnpjView({
         situacaoOk={situacaoOk}
         onVoltar={() => setFase("input")}
         onSeguir={onSeguir}
-        onSaidaRegulada={onSaidaRegulada}
-        onSaidaNaoAtende={onSaidaNaoAtende}
         onSaidaInapto={onSaidaInapto}
       />
     );

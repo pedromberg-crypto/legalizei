@@ -1,5 +1,6 @@
 # Memory Index — Legalize
 
+- [PR automático quando pedido](legalize-git-pr-automatico.md) — 05/08: commit+`gh pr create` sem confirmar/sem passo manual no GitHub; NÃO inclui merge automático (não autorizado).
 - [Pesquisa de mercado grande roda via Gemini](legalize-pesquisa-grande-via-gemini.md) — 05/08: prompt otimizado pro Google Search do Gemini, Pedro roda fora e cola de volta; não pesquisar direto na sessão.
 - [Estratégia de marketing/produto completa (14/14 slots)](legalize-estrategia-marketing-completa.md) — 05/08: template estrategia-digital preenchido; preço ME R$139; CAC-alvo corrigido (LTV, não mês); MEI fora de tráfego pago frio; 12 personas; Instagram+Meta travados como canal.
 - [Base de copy/tom-de-voz é PARCIAL](legalize-base-copy-insuficiente.md) — 05/08: só conceito-marca §5 (fino) + regras soltas + rubrica mecânica; falta glossário técnico + exemplos por tela; personas NÃO cobrem (são QA de fluxo, não copy).

@@ -171,7 +171,7 @@ const GRUPOS: {
       {
         rota: "/saida/regime-nao-suportado",
         nome: "🆕 E4.2 · Saída · Regime não suportado (só Lucro Presumido)",
-        nota: "04/08 — nasce do M1 (`/migrar/cnpj?cenario=presumido`, mock de demo): CNPJ ativo, mas Lucro Presumido usa motor fiscal totalmente diferente (IRPJ/CSLL/PIS-COFINS/ISS, não Anexo/Fator R) que ainda não temos. 🆕 04/08 (2ª rodada): MEI SAIU desta saída — decisão do Pedro, MEI migra normal agora. Só resta Presumido aqui, decisão de negócio aberta (`pesquisa/parking-lot.md` item I).",
+        nota: "🔴 05/08 — entrada mudou: quem diz \"Lucro Presumido\" já sai por aqui direto na E3.2 (CTA menor abaixo dos cards MEI/ME), antes mesmo de chegar no M1. Lucro Presumido usa motor fiscal totalmente diferente (IRPJ/CSLL/PIS-COFINS/ISS, não Anexo/Fator R) que ainda não temos, decisão de negócio aberta (`pesquisa/parking-lot.md` item I).",
       },
       {
         rota: "/saida/cnpj-inapto",
@@ -179,14 +179,9 @@ const GRUPOS: {
         nota: "04/08 — nasce do M1 (`/migrar/cnpj?cenario=inapto`, mock de demo): situação cadastral ≠ ativa. Diferente da auditoria de passivo (M4a, que pressupõe CNPJ ATIVO com dívida): aqui a Receita nem reconhece a empresa como ativa, então a regularização vem ANTES de qualquer migração.",
       },
       {
-        rota: "/migrar/tributario",
-        nome: "🆕 E4.2b · Simples Nacional ou Lucro Presumido? (só ME)",
-        nota: "04/08 — debate de custo com o Pedro: a API paga que confirma Simples×Presumido de verdade (`receita-federal/simples`, R$0,24) só roda DEPOIS que a pessoa virar cliente (M4a/ativação fiscal) — não faz sentido cobrar isso de um lead que ainda não converteu. Autodeclarado aqui, mesma doutrina da E3.2 (MEI×ME). Simples → segue direto pro M3 (plano); Presumido → `/saida/regime-nao-suportado`. MEI pula essa pergunta inteira (vai direto do M1 pro M2, o subfluxo 'tem contador?').",
-      },
-      {
         rota: "/migrar/diagnostico",
         nome: "E4.3 · Migrar · Diagnóstico MEI (\"tem contador?\")",
-        nota: "🔴 04/08 (3ª rodada, decisão do Pedro) — o diagnóstico de Fator R pra ME foi CORTADO: a única API pré-pagamento é a cadastral, não traz faturamento/folha (isso só existe pós-pagamento, via procuração). ME agora vai de `/migrar/tributario` direto pro M3, sem passar aqui. O que sobra é só MEI: não tem Fator R (paga DAS-MEI fixo) e não é obrigado a ter contador (DASN-SIMEI autodeclaratório) — a pergunta 'você tem contador hoje?' decide se pula M4 (auditoria+TTRT) inteiro.",
+        nota: "🔴 04/08 (3ª rodada, decisão do Pedro) — o diagnóstico de Fator R pra ME foi CORTADO: a única API pré-pagamento é a cadastral, não traz faturamento/folha (isso só existe pós-pagamento, via procuração). 🔴 05/08 — E4.2b (`/migrar/tributario`) foi DESCARTADA por duplicar a E3.2 (regime já autodeclarado antes). ME agora vai do M1 direto pro M3, sem passar aqui. O que sobra é só MEI: não tem Fator R (paga DAS-MEI fixo) e não é obrigado a ter contador (DASN-SIMEI autodeclaratório) — a pergunta 'você tem contador hoje?' decide se pula M4 (auditoria+TTRT) inteiro.",
       },
       {
         rota: "/migrar/plano",
@@ -613,14 +608,12 @@ const MAPA_EDGES: Conexao[] = [
   { de: "/entrada?intencao=migrar", para: "/migrar/cnpj?cenario=mei", tracejado: true },
   { de: "/entrada?intencao=migrar", para: "/entrada?intencao=abrir&regime=me" },
   { de: "/entrada?intencao=abrir&regime=me", para: "/migrar/cnpj" },
+  { de: "/entrada?intencao=migrar", para: "/saida/regime-nao-suportado", tracejado: true },
   { de: "/migrar/cnpj", para: "/migrar/cnpj?fase=achou", tracejado: true },
-  { de: "/migrar/cnpj", para: "/migrar/tributario" },
-  { de: "/migrar/tributario", para: "/migrar/plano" },
-  { de: "/migrar/tributario", para: "/saida/regime-nao-suportado", tracejado: true },
+  { de: "/migrar/cnpj", para: "/migrar/plano" },
   { de: "/migrar/cnpj", para: "/migrar/diagnostico", tracejado: true },
   { de: "/migrar/cnpj", para: "/veredito/waitlist", tracejado: true },
   { de: "/migrar/cnpj", para: "/veredito/nao-atende", tracejado: true },
-  { de: "/migrar/cnpj", para: "/saida/regime-nao-suportado", tracejado: true },
   { de: "/migrar/cnpj", para: "/saida/cnpj-inapto", tracejado: true },
   { de: "/migrar/diagnostico", para: "/migrar/plano", tracejado: true },
   { de: "/migrar/plano", para: "/migrar/contrato" },

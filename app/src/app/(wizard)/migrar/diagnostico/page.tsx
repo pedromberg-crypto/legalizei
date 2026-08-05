@@ -12,7 +12,7 @@ import { MigrarDiagnosticoView } from "@/components/wizard-migrar";
  * 🔴 04/08 (3ª rodada, decisão do Pedro) — o diagnóstico de Fator R pra ME
  * (número "real" dos 12 meses) foi CORTADO desta tela: a única API que roda
  * pré-pagamento é a cadastral, que não traz faturamento/folha. ME agora vai
- * de `/migrar/tributario` direto pro M3 (`/migrar/plano`), sem passar aqui.
+ * do M1 (`/migrar/cnpj`) direto pro M3 (`/migrar/plano`), sem passar aqui.
  *
  * O que sobra é só o subfluxo MEI: MEI não tem Fator R (paga DAS-MEI fixo) e
  * não é obrigado a ter contador (DASN-SIMEI autodeclaratório) — a pergunta

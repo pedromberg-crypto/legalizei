@@ -32,7 +32,7 @@ const D: DadosSaida = {
   origem: {
     rotulo: "Por que só BH",
     texto:
-      "É a fase de testes (MLP) do produto — preferimos fazer bem para uma cidade antes de abrir para mais.",
+      "É a fase de testes (MLP) do produto. Preferimos fazer bem para uma cidade antes de abrir para mais.",
   },
   saida:
     "Entra na lista de espera que a gente te avisa assim que abrir na sua cidade. Você é o primeiro a saber.",

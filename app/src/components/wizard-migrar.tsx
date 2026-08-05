@@ -199,31 +199,26 @@ export function MigrarValidandoView({ onVoltar }: { onVoltar?: () => void }) {
 export function MigrarAchouView({
   empresa,
   situacaoOk,
-  regimeOk,
   onVoltar,
   onSeguir,
   onSaidaRegulada,
   onSaidaNaoAtende,
-  onSaidaRegimeNaoSuportado,
   onSaidaInapto,
 }: {
   empresa: EmpresaMigrar;
   situacaoOk: boolean;
-  regimeOk: boolean;
   onVoltar?: () => void;
   onSeguir?: () => void;
   onSaidaRegulada?: () => void;
   onSaidaNaoAtende?: () => void;
-  onSaidaRegimeNaoSuportado?: () => void;
   onSaidaInapto?: () => void;
 }) {
   const e = empresa;
-  const podeSeguir = situacaoOk && regimeOk;
   return (
     <>
       <TelaHeader meta="Sua empresa" onVoltar={onVoltar} />
       <main className="app-main">
-        <Titulo sub="Confira se é essa mesmo. Puxamos tudo da Receita, você não digita nada.">
+        <Titulo sub="Confira se é essa mesmo. Puxamos da Receita com o seu CNPJ, você não digita nada.">
           Achamos sua empresa
         </Titulo>
 
@@ -242,15 +237,20 @@ export function MigrarAchouView({
 
           {/* O veredito é consequência do que a consulta trouxe, não de uma
               interpretação nossa. Por isso vem junto, sem tela extra.
-              🆕 04/08 — 4ª checagem (regime de origem): faltava distinguir
-              MEI/Presumido de ME-Simples. Achado do cruzamento com o
-              `Fluxo Migração GEMINI.md` — sem isso o app fingia migrar
-              qualquer CNPJ ativo, mesmo os 2 regimes que ainda não temos
-              rota pra assumir. */}
+              🔴 05/08 — a checagem de REGIME que existia aqui foi removida:
+              a consulta cadastral (R$0,20) não confirma Simples×Presumido
+              nem MEI (ver `pesquisa/integracoes-apis/infosimples-funcionalidades.md`
+              §CNPJ) — isso só vem da API paga separada, que só roda pós-
+              pagamento (decisão 04/08). Mostrar um check de "regime" aqui era
+              prometer uma confirmação que a consulta não faz. Regime já veio
+              autodeclarado lá na E3.2 (MEI · ME/Simples · Lucro Presumido, o
+              último já sai por lá) — não pergunta de novo aqui.
+              🔴 05/08 — a 2ª checagem ("Prestação de serviço, sem conselho de
+              classe") também saiu: era `ok` fixo, sem checar dado nenhum da
+              consulta. Ao lado de um check real (situação ativa), lia como se
+              os dois fossem confirmação da API — só um era. */}
           <div className="flex flex-col gap-2">
             <ChecagemLinha ok={situacaoOk} titulo="Situação ativa na Receita" />
-            <ChecagemLinha ok={regimeOk} titulo="Regime dentro do que migramos hoje (Simples/ME ou MEI)" />
-            <ChecagemLinha ok titulo="Prestação de serviço, sem conselho de classe" />
           </div>
 
           {!situacaoOk ? (
@@ -258,11 +258,6 @@ export function MigrarAchouView({
               A Receita mostra situação {e.situacao.toLowerCase()}, não ativa.
               A gente não consegue assumir a contabilidade nesse estado — o
               primeiro passo é regularizar o CNPJ.
-            </Aviso>
-          ) : !regimeOk ? (
-            <Aviso variante="warning" titulo="Esse regime ainda não migramos">
-              Hoje migramos MEI e Microempresa no Simples Nacional. {e.porte}{" "}
-              é um regime diferente — ainda não temos essa rota pronta.
             </Aviso>
           ) : e.regime === "mei" ? (
             <Aviso variante="success" titulo="A gente cuida do seu MEI">
@@ -272,7 +267,7 @@ export function MigrarAchouView({
           ) : (
             <Aviso variante="success" titulo="A gente cuida dessa empresa">
               Sua atividade está dentro do que a gente atende. O próximo passo é
-              ver quanto você paga hoje de imposto e se dá pra pagar menos.
+              ver o plano.
             </Aviso>
           )}
 
@@ -296,17 +291,13 @@ export function MigrarAchouView({
         </Corpo>
 
         <Rodape>
-          {podeSeguir ? (
+          {situacaoOk ? (
             <Button full onClick={onSeguir}>
               É essa a minha empresa
             </Button>
-          ) : !situacaoOk ? (
+          ) : (
             <Button full variant="dark" onClick={onSaidaInapto}>
               Ver como regularizar
-            </Button>
-          ) : (
-            <Button full variant="dark" onClick={onSaidaRegimeNaoSuportado}>
-              Falar com o time sobre esse regime
             </Button>
           )}
         </Rodape>
@@ -330,7 +321,6 @@ export function MigrarCnpjView({
   onSeguir,
   onSaidaRegulada,
   onSaidaNaoAtende,
-  onSaidaRegimeNaoSuportado,
   onSaidaInapto,
   onVoltar,
 }: {
@@ -343,12 +333,10 @@ export function MigrarCnpjView({
   preencher?: number;
   /** 🆕 04/08 — qual empresa mockada consultar. Ver `EMPRESA_MIGRAR_CENARIOS`. */
   cenario?: CenarioM1;
-  /** MEI passa direto (mesmo `onSeguir`); Presumido segue bloqueado. */
+  /** MEI e ME seguem os dois direto: regime já foi autodeclarado na E3.2, não pergunta de novo aqui. */
   onSeguir?: () => void;
   onSaidaRegulada?: () => void;
   onSaidaNaoAtende?: () => void;
-  /** 🆕 04/08 — CNPJ ativo, mas regime de origem (Lucro Presumido) ainda sem rota de migração. */
-  onSaidaRegimeNaoSuportado?: () => void;
   /** 🆕 04/08 — CNPJ inapto/suspenso/baixado: precisa regularizar antes de migrar. */
   onSaidaInapto?: () => void;
   onVoltar?: () => void;
@@ -358,8 +346,6 @@ export function MigrarCnpjView({
 
   const empresa = EMPRESA_MIGRAR_CENARIOS[cenario];
   const situacaoOk = empresa.situacao === "ATIVA";
-  /** 🆕 04/08 — MEI agora migra igual ME; só Presumido segue sem rota. */
-  const regimeOk = empresa.regime !== "presumido";
 
   const feito = useRef<number | undefined>(undefined);
   useEffect(() => {
@@ -388,12 +374,10 @@ export function MigrarCnpjView({
       <MigrarAchouView
         empresa={empresa}
         situacaoOk={situacaoOk}
-        regimeOk={regimeOk}
         onVoltar={() => setFase("input")}
         onSeguir={onSeguir}
         onSaidaRegulada={onSaidaRegulada}
         onSaidaNaoAtende={onSaidaNaoAtende}
-        onSaidaRegimeNaoSuportado={onSaidaRegimeNaoSuportado}
         onSaidaInapto={onSaidaInapto}
       />
     );
@@ -403,7 +387,7 @@ export function MigrarCnpjView({
     <>
       <TelaHeader meta="Sua empresa" onVoltar={onVoltar} />
       <main className="app-main">
-        <Titulo sub="Com o CNPJ a gente puxa tudo da Receita: atividade, sócios, endereço e regime. Você não preenche nada disso.">
+        <Titulo sub="Com o CNPJ a gente puxa da Receita: atividade, sócios e endereço. Você não preenche nada disso.">
           Qual é o CNPJ da sua empresa?
         </Titulo>
 
@@ -451,100 +435,6 @@ function ChecagemLinha({ ok, titulo }: { ok: boolean; titulo: string }) {
   );
 }
 
-/* ═══════════════════ M1b · SIMPLES × PRESUMIDO (só ME) ═══════════════════ */
-
-/**
- * M1b — 🆕 04/08 (debate Pedro): decisão de custo. Rodar a API paga de
- * verdade (`receita-federal/simples`, R$0,24) pra confirmar Simples×Presumido
- * ANTES do pagamento não faz sentido pra um lead que ainda não converteu —
- * a API 1 (cadastro, R$0,20) já resolveu MEI×ME e situação cadastral no M1.
- *
- * Autodeclarado, igual a E3.2: quem confirma de verdade é a API 2, rodada
- * DEPOIS que a pessoa virar cliente (M4a/ativação fiscal) — aqui só decide
- * se a esteira segue (Simples, direto pro M3/plano) ou vira saída graciosa
- * (Presumido, motor fiscal que ainda não temos). MEI não passa por aqui — a
- * pergunta não existe pra quem já é MEI (`/migrar/diagnostico` direto).
- */
-const OPCOES_TRIBUTARIO = [
-  {
-    id: "simples" as const,
-    nome: "Simples Nacional",
-    desc: "Uma guia só (DAS), com Anexo e Fator R. É o que a gente atende hoje.",
-  },
-  {
-    id: "presumido" as const,
-    nome: "Lucro Presumido",
-    desc: "IRPJ, CSLL, PIS/COFINS e ISS calculados separados. Ainda não temos esse motor pronto.",
-  },
-];
-
-export function MigrarRegimeTributarioView({
-  regime,
-  setRegime,
-  onSeguir,
-  onVoltar,
-}: {
-  regime: "simples" | "presumido" | null;
-  setRegime: (v: "simples" | "presumido") => void;
-  onSeguir?: () => void;
-  onVoltar?: () => void;
-}) {
-  return (
-    <>
-      <TelaHeader meta="Sobre o seu regime" onVoltar={onVoltar} />
-      <main className="app-main">
-        <div className="shrink-0">
-          <h1 className="text-h1 mb-2">
-            Seu CNPJ é Simples Nacional ou Lucro Presumido?
-          </h1>
-          <p className="text-body text-text-secondary mb-6">
-            A gente confirma isso de verdade mais pra frente — por enquanto,
-            o que você souber já ajuda a seguir certo.
-          </p>
-        </div>
-
-        <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <div className="flex flex-col gap-3">
-            {OPCOES_TRIBUTARIO.map((o) => (
-              <button
-                key={o.id}
-                onClick={() => setRegime(o.id)}
-                className={`w-full rounded-md border p-4 text-left transition-colors
-                  ${
-                    regime === o.id
-                      ? "border-action-primary bg-action-primary text-text-on-brand"
-                      : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
-                  }`}
-              >
-                <span
-                  className={`text-body-strong font-bold ${regime === o.id ? "text-text-on-brand" : "text-text-primary"}`}
-                >
-                  {o.nome}
-                </span>
-                <p
-                  className={`mt-1 text-caption ${regime === o.id ? "text-text-on-brand/85" : "text-text-secondary"}`}
-                >
-                  {o.desc}
-                </p>
-              </button>
-            ))}
-          </div>
-          <p className="text-micro text-text-tertiary mt-4">
-            Se não souber de cabeça, escolhe o que parece mais provável —
-            confirmamos com a Receita antes de qualquer coisa virar definitiva.
-          </p>
-        </div>
-
-        <div className="app-footer-cta">
-          <Button full disabled={!regime} onClick={onSeguir}>
-            Continuar
-          </Button>
-        </div>
-      </main>
-    </>
-  );
-}
-
 /* ═══════════════════ M2 · DIAGNÓSTICO ("tem contador?", só MEI) ═════════ */
 
 /**
@@ -555,7 +445,7 @@ export function MigrarRegimeTributarioView({
  * meses não existem em API pública nenhuma da Receita, só via procuração/
  * e-CAC (🔐), que só desbloqueia DEPOIS que a pessoa vira cliente. Pró-labore/
  * Fator R agora só entram na conversa pós-pagamento (reuso do motor de
- * `/impostos/aliquotas`, dia-2). ME segue de `/migrar/tributario` direto pro
+ * `/impostos/aliquotas`, dia-2). ME segue direto do M1 (`/migrar/cnpj`) pro
  * plano (M3), sem passar por aqui.
  *
  * O que sobra nesta rota é só o SUBFLUXO MEI: MEI não tem Fator R (paga
@@ -615,7 +505,7 @@ export function MigrarDiagnosticoView({
           sub={
             temContador
               ? "A gente combina a transferência com quem cuida de você hoje."
-              : "Sem contador pra transferir, a gente já assume direto — sem burocracia."
+              : "Sem contador pra transferir, a gente já assume direto, sem burocracia."
           }
         >
           {temContador ? "Vamos assumir sua contabilidade" : "Vamos começar direto"}
@@ -635,7 +525,7 @@ export function MigrarDiagnosticoView({
 
           <Aviso variante="info" titulo="O que a gente faz com isso">
             {temContador
-              ? "A gente cuida da transferência com seu contador atual — você não precisa ligar pra ninguém."
+              ? "A gente cuida da transferência com seu contador atual. Você não precisa ligar pra ninguém."
               : "Como você não tem contador hoje, a gente já assume sua contabilidade a partir do pagamento, sem etapa de transferência no meio."}
           </Aviso>
         </Corpo>
@@ -848,7 +738,7 @@ export function MigrarContratoView({
             <ul className="mt-2 flex flex-col gap-2">
               <Bullet>
                 {mei
-                  ? `O certificado digital vem incluso — a gente precisa dele pra movimentar sua empresa. Em troca, o plano tem fidelidade de ${CUSTOS.FIDELIDADE_MEI_MESES} meses, descrita no contrato.`
+                  ? `O certificado digital vem incluso: a gente precisa dele pra movimentar sua empresa. Em troca, o plano tem fidelidade de ${CUSTOS.FIDELIDADE_MEI_MESES} meses, descrita no contrato.`
                   : semTransferencia
                     ? "Como não há transferência de responsabilidade a esperar, o plano tem um período mínimo de permanência, descrito no contrato."
                     : "Como a transferência é gratuita, o plano tem um período mínimo de permanência, descrito no contrato."}
@@ -859,7 +749,7 @@ export function MigrarContratoView({
                    que não vai acontecer. A promessa vira início imediato. */
                 <Bullet>
                   Sua contabilidade começa a valer assim que o pagamento
-                  confirmar — sem etapa de transferência no meio.
+                  confirmar, sem etapa de transferência no meio.
                 </Bullet>
               ) : (
                 /* 🔴 A contrapartida de cobrar antes do TTRT. Sem isso, a decisão

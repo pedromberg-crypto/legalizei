@@ -27,25 +27,20 @@ import {
  * 🆕 04/08 — `?cenario=mei|presumido|inapto` demo os cenários achados no
  * cruzamento com `Fluxo Migração GEMINI.md` (ver `EMPRESA_MIGRAR_CENARIOS`).
  * 🆕 04/08 (2ª rodada) — MEI agora SEGUE pro M2 (`/migrar/diagnostico`), não
- * bloqueia mais. Só Presumido segue pra `/saida/regime-nao-suportado`.
+ * bloqueia mais.
  *
  * 🆕 04/08 (3ª rodada, corrigido) — `?fase=achou` renderiza SÓ o
- * `MigrarAchouView` (a tela "Achamos sua empresa" — card + 4 checagens +
+ * `MigrarAchouView` (a tela "Achamos sua empresa" — card + checagens +
  * veredito), parado. Existe pra virar tela catalogável própria no `/mockup`,
  * ao lado do M1 — antes só dava pra ver digitando um CNPJ no fluxo real.
  * ⚠️ Pedido original do Pedro era ESTA tela, não a de loading — corrigido
  * depois de eu ter extraído a errada na 1ª tentativa.
  *
- * 🆕 04/08 (4ª rodada) — ME agora passa por `/migrar/tributario` (Simples ×
- * Presumido, autodeclarado) ANTES do plano — não roda a API paga de
- * Simples/SIMEI pra quem ainda não converteu. MEI pula essa pergunta (não
- * existe pra quem já é MEI).
- *
- * 🔴 04/08 (5ª rodada, decisão do Pedro) — corrigido bug: o veredito ("achou")
- * já mandava ME pra `/migrar/tributario`, mas o handler de produção deste
- * componente mandava direto pro M2 (diagnóstico), pulando o M1b. Agora os
- * dois concordam. ME nunca mais visita `/migrar/diagnostico` (cortado, ver
- * `MigrarDiagnosticoView`) — só MEI passa por lá.
+ * 🔴 05/08 (pedido do Pedro) — `/migrar/tributario` (M1b, Simples×Presumido
+ * autodeclarado) foi DESCARTADA: era pergunta duplicada, o regime (MEI · ME/
+ * Simples · Lucro Presumido) já é autodeclarado antes disso, na E3.2 — quem
+ * escolhe Lucro Presumido lá nem chega até aqui. ME agora segue direto do M1
+ * pro M3 (`/migrar/plano`); MEI continua indo pro M2 (`/migrar/diagnostico`).
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function MigrarCnpjPage() {
@@ -63,14 +58,12 @@ export default function MigrarCnpjPage() {
       <MigrarAchouView
         empresa={empresa}
         situacaoOk={empresa.situacao === "ATIVA"}
-        regimeOk={empresa.regime !== "presumido"}
         onVoltar={() => router.push("/migrar/cnpj")}
         onSeguir={() =>
-          router.push(cenario === "mei" ? "/migrar/diagnostico" : "/migrar/tributario")
+          router.push(cenario === "mei" ? "/migrar/diagnostico" : "/migrar/plano")
         }
         onSaidaRegulada={() => router.push("/veredito/waitlist")}
         onSaidaNaoAtende={() => router.push("/veredito/nao-atende")}
-        onSaidaRegimeNaoSuportado={() => router.push("/saida/regime-nao-suportado")}
         onSaidaInapto={() => router.push("/saida/cnpj-inapto")}
       />
     );
@@ -80,11 +73,10 @@ export default function MigrarCnpjPage() {
     <MigrarCnpjView
       cenario={cenario}
       onSeguir={() =>
-        router.push(cenario === "mei" ? "/migrar/diagnostico" : "/migrar/tributario")
+        router.push(cenario === "mei" ? "/migrar/diagnostico" : "/migrar/plano")
       }
       onSaidaRegulada={() => router.push("/veredito/waitlist")}
       onSaidaNaoAtende={() => router.push("/veredito/nao-atende")}
-      onSaidaRegimeNaoSuportado={() => router.push("/saida/regime-nao-suportado")}
       onSaidaInapto={() => router.push("/saida/cnpj-inapto")}
       onVoltar={() => router.push("/entrada")}
     />

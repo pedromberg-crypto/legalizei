@@ -408,8 +408,9 @@ function naCauda(e: Etapa): e is EtapaCauda {
  *
  * 🔴 04/08 (3ª rodada) — `m-diagnostico` (M2, Fator R) SAIU da sequência: a
  * tela foi cortada pra ME (decisão do Pedro, ver `MigrarDiagnosticoView`).
- * ⚠️ Esta demo ainda não tem etapa própria pro M1b (`/migrar/tributario`,
- * Simples×Presumido) — gap pré-existente, fora do escopo deste corte.
+ * 🔴 05/08 — M1b (`/migrar/tributario`) foi DESCARTADA de vez (duplicava a
+ * E3.2, que já autodeclara o regime antes disso). Não é mais gap: a etapa
+ * simplesmente não existe no produto.
  */
 const ETAPAS_MIGRAR = [
   "m-cnpj",

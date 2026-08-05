@@ -25,11 +25,11 @@ const D: DadosSaida = {
   tag: "CNPJ irregular",
   titulo: "Essa empresa precisa regularizar antes de migrar",
   explica:
-    "A Receita mostra sua empresa com situação diferente de ativa (suspensa, inapta ou baixada). A gente não consegue assumir a contabilidade nesse estado — a regularização vem primeiro.",
+    "A Receita mostra sua empresa com situação diferente de ativa (suspensa, inapta ou baixada). A gente não consegue assumir a contabilidade nesse estado, a regularização vem primeiro.",
   origem: {
     rotulo: "Por que isso trava a migração",
     texto:
-      "Sem situação ativa na Receita não dá pra fazer a transferência de responsabilidade nem declarar nada em nome da empresa — é exigência dos próprios órgãos, não nossa.",
+      "Sem situação ativa na Receita não dá pra fazer a transferência de responsabilidade nem declarar nada em nome da empresa. É exigência dos próprios órgãos, não nossa.",
   },
   saida:
     "Deixa seu contato que a gente te ajuda a entender o que falta pra regularizar. Depois de ativa de novo, a migração segue normal.",

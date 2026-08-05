@@ -716,7 +716,7 @@ function opcoesRegime(contexto: "abrir" | "migrar") {
         checks: [
           "Já é MEI (Microempreendedor Individual)",
           "A gente atende MEI de qualquer cidade do Brasil",
-          "DAS fixo todo mês, sem Anexo nem Fator R",
+          "Imposto fixo todo mês, não depende do que você retira",
           "Sem sócio · até 1 funcionário com carteira",
         ],
       },
@@ -726,7 +726,7 @@ function opcoesRegime(contexto: "abrir" | "migrar") {
         checks: [
           "Microempresa no Simples Nacional",
           "Por enquanto, só atendemos empresas de Belo Horizonte/MG",
-          "Enquadramento por Anexo, com Fator R",
+          "Imposto pode variar conforme o que você retira pra você",
           "Pode ter sócio · sem o teto de faturamento do MEI",
         ],
       },
@@ -742,7 +742,7 @@ function opcoesRegime(contexto: "abrir" | "migrar") {
       checks: [
         "Fatura (ou espera faturar) até ~R$6.750/mês (teto de R$81 mil/ano)",
         "Abre em qualquer cidade do Brasil",
-        "Sem taxa da Junta — registro é praticamente na hora",
+        "Sem taxa da Junta, registro é praticamente na hora",
         "Sem sócio · até 1 funcionário com carteira",
       ],
     },
@@ -752,7 +752,7 @@ function opcoesRegime(contexto: "abrir" | "migrar") {
       checks: [
         "Fatura acima de ~R$6.750/mês, ou espera crescer rápido",
         "Por enquanto, só empresas de Belo Horizonte/MG",
-        "Sem teto de R$81 mil — cresce sem trocar de regime depois",
+        "Sem teto de R$81 mil, cresce sem trocar de regime depois",
         "Pode ter sócio · mais de 1 funcionário sem limite do regime",
       ],
     },
@@ -776,8 +776,11 @@ export function MeiOuMeView({
 }: {
   /** 🆕 04/08 — "abrir" pergunta o que ESCOLHER (elegibilidade); "migrar" pergunta o que a pessoa JÁ É (autodeclaração, o CNPJ já existe). */
   contexto?: "abrir" | "migrar";
-  regime: "mei" | "me" | null;
-  setRegime: (v: "mei" | "me") => void;
+  /** 🆕 05/08 — "presumido" é CTA menor, fora das 2 opções principais: a gente
+   *  ainda não migra/abre nesse regime, então não tem checklist nem card
+   *  igual aos outros dois, só reconhece a pessoa e desvia pra humano. */
+  regime: "mei" | "me" | "presumido" | null;
+  setRegime: (v: "mei" | "me" | "presumido") => void;
   onSeguir: () => void;
   /** Volta pro fork (E3) — quem chegou aqui pode ter errado abrir×migrar. */
   onVoltar?: () => void;
@@ -797,7 +800,7 @@ export function MeiOuMeView({
         <p className="text-body text-text-secondary mb-6">
           {contexto === "migrar"
             ? "Isso muda se a cidade importa e como a gente confirma seus dados."
-            : "Se não souber, a diferença real é essa — dá pra trocar de ideia depois, mas muda um pouco o que a gente pergunta a seguir."}
+            : "Se não souber, a diferença real é essa. Dá pra trocar de ideia depois, mas muda um pouco o que a gente pergunta a seguir."}
         </p>
       </div>
 
@@ -846,17 +849,45 @@ export function MeiOuMeView({
               </div>
             </button>
           ))}
+
+          {/* 🆕 05/08 (pedido do Pedro) — mesmo estilo/comportamento/fonte dos
+              2 cards acima (contínuo na mesma pilha, seleciona coral igual,
+              mesmo tamanho de texto): reconhece o regime sem prometer
+              checklist que a gente não cobre. Escolher troca o CTA do
+              rodapé pra "Falar com especialista" em vez de "Continuar". */}
+          <button
+            onClick={() => setRegime("presumido")}
+            className={`w-full rounded-md border p-4 text-left transition-colors
+              ${
+                regime === "presumido"
+                  ? "border-action-primary bg-action-primary text-text-on-brand"
+                  : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
+              }`}
+          >
+            <span
+              className={`text-body-strong font-bold ${regime === "presumido" ? "text-text-on-brand" : "text-text-primary"}`}
+            >
+              ME · Lucro Presumido
+            </span>
+            <p
+              className={`mt-2 text-caption ${regime === "presumido" ? "text-text-on-brand/85" : "text-text-secondary"}`}
+            >
+              Hoje esse regime passa por uma validação interna nossa. Fala com
+              um especialista que a gente te explica os próximos passos.
+            </p>
+          </button>
         </div>
+
         <p className="text-micro text-text-tertiary mt-4">
           {contexto === "migrar"
             ? "A gente confirma o regime de verdade puxando o CNPJ da Receita, no próximo passo."
-            : "Sua atividade ainda precisa estar na lista permitida pro MEI — confirmamos isso mais pra frente."}
+            : "Sua atividade ainda precisa estar na lista permitida pro MEI. Confirmamos isso mais pra frente."}
         </p>
       </div>
 
       <div className="app-footer-cta">
         <Button full disabled={!regime} onClick={onSeguir}>
-          Continuar
+          {regime === "presumido" ? "Falar com especialista" : "Continuar"}
         </Button>
       </div>
       </main>

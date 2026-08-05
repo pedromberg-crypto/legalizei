@@ -1,5 +1,6 @@
 # Memory Index — Legalize
 
+- [Base de copy/tom-de-voz é PARCIAL](legalize-base-copy-insuficiente.md) — 05/08: só conceito-marca §5 (fino) + regras soltas + rubrica mecânica; falta glossário técnico + exemplos por tela; personas NÃO cobrem (são QA de fluxo, não copy).
 - [Escopo MEI confirmado, Lucro Presumido segue fora](legalize-escopo-mei-lucro-presumido-aberto.md) — 04/08: MEI 🟢 entra (inclusive Migrar, subfluxo "tem contador?"); LP 🔴 fica na saída "não atendemos" até pesquisa fiscal dedicada.
 - [LP institucional + rebrand + páginas legais + deploy](legalize-lp-atualizada-rebrand-legal.md) — 03/08: LP+coming-soon NO AR no Vercel (legalizei-lp/legalizei-em-breve); rebrand Legalizai; CNPJ real; páginas legais; 2 bugs cross-projeto corrigidos.
 - [Rename Legalizei→Legalizai (agora DE FATO)](legalize-rename-legalizai.md) — 03/08: deixou de ser só-do-app; Pedro travou "essa daí não usamos mais". Domínio pago segue legalizei.app; INPI/IG/vault pendentes.

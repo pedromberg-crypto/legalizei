@@ -59,7 +59,9 @@ export default function EntradaPage() {
   // cidade direto, mesmo padrão do resto do /gate?etapa=). Não existe atalho
   // pra "mei": escolher mei já redireciona pra fora desta página.
   const regimeParam = searchParams.get("regime");
-  const [regime, setRegime] = useState<"mei" | "me" | null>(regimeParam === "me" ? "me" : null);
+  const [regime, setRegime] = useState<"mei" | "me" | "presumido" | null>(
+    regimeParam === "me" ? "me" : null,
+  );
   // Separado de `regime !== null`: escolher o card NÃO avança sozinho — só o
   // clique em "Continuar" resolve, senão a tela trocaria antes da confirmação.
   const [regimeResolvido, setRegimeResolvido] = useState(regimeParam === "me");
@@ -71,6 +73,14 @@ export default function EntradaPage() {
         regime={regime}
         setRegime={setRegime}
         onSeguir={() => {
+          // 🆕 05/08 — Lucro Presumido é CTA menor da MeiOuMeView: a gente
+          // ainda não abre/migra nesse regime, então nem entra no resto do
+          // flow. Sai direto pra mesma saída que o M1b (`/migrar/tributario`)
+          // já usa pra quem autodeclara Presumido lá na frente.
+          if (regime === "presumido") {
+            router.push("/saida/regime-nao-suportado");
+            return;
+          }
           setRegimeResolvido(true);
           // MEI pula o gate de cidade nos 2 caminhos — Abrir vai direto pro
           // E5 (gate-CNAE); Migrar vai direto pro M1, já sinalizando o

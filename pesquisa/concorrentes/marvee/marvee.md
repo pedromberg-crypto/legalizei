@@ -14,41 +14,35 @@ tags: [concorrente]
 # Teardown — Marvee
 
 ## Visão geral
-> Seed da desk research: BPO financeiro all-in-one · sob consulta (foco >R$30k/mês) · franquias · +700 empresas. Aprofundar na S3.
-- Posicionamento:
-- Clientes alegados (fonte + data):
-- Funding / tração:
+> ⚠️ **Não é concorrente direto** — BPO financeiro ticket alto, venda 100% consultiva, escala por franquia. Serve de contraste (o que o Legalizei NÃO é).
+- **Posicionamento:** "Quem vai cuidar da sua terceirização financeira?" — delegar um departamento inteiro, não só apuração fiscal
+- **Clientes alegados:** +700 empresas · 25 franquias, meta 1.000 até dez/2025 — [[PESQUISA-MERCADO]] §B
+- **Funding/tração:** R$1 mi captado
 
 ## 💰 Pricing & pacotes
-- Planos e preços:
-- O que escala o preço (faturamento? funcionários?):
-- Add-ons / taxas escondidas:
-- Transparência (mostra preço sem simulador?):
+- **Planos e preços:** nenhum público — `/planos` não existe. Precificação sob consulta, por complexidade da operação do cliente
+- **O que escala:** não é tabela — é negociação 1-a-1, ticket estimado na casa de milhares/mês
+- **Transparência:** ausência de preço = posicionamento deliberado (venda consultiva, ticket alto)
 
 ## 🚪 Onboarding (jornada de entrada)
-- Passos até virar cliente (contar cliques/telas):
-- Tempo total · fricções · o que pedem de documento:
-- Self-service ou humano no meio?
+- Todo caminho leva a "Fale com a gente" — zero autoatendimento
 
 ## 🎨 UI (visual)
-- Design system / cara geral:
-- Dashboard: o que mostra primeiro?
-- Prints salvos em: (colar imagens aqui — arrastar pro Obsidian)
+- **Cor dominante:** teal #5bc0be + navy #1c2541 — corporativo/sóbrio, sem vibe fintech casual
+- **Arquétipo:** Prestativo + Governante, BPO consultivo premium-morno
 
 ## 🧭 UX (fluxos)
-- Emissão de NF: passos, tempo, dor
-- Guias/DAS: como apresenta, avisa vencimento?
-- Suporte: canais, tempo de resposta, qualidade
-- Mobile: existe? funciona?
+🔴 não aplicável — não é produto self-service
 
 ## 📦 Entregas reais (vs prometido)
-- O que o plano de entrada REALMENTE inclui:
-- Onde empurram upsell:
+- BPO financeiro completo (contas a pagar/receber, conciliação, fluxo de caixa) + contabilidade como item **acessório**, não carro-chefe
+- Escala via **franquia**: playbook + tecnologia + marca licenciados a franqueado, não contratação direta
 
 ## ⚔️ Veredito
-- **Forças (não competir de frente):**
-- **Fraquezas (nossa cunha):**
-- **Copiar:** / **Evitar:**
+- **Forças (não competir de frente):** valida por oposição a tese self-service — se BPO alto valor exige venda humana, o inverso (preço público, ticket baixo, self-service) é o espaço livre que sobra
+- **Fraquezas:** não aplicável — modelo deliberadamente não-escalável-por-software, não é o mesmo jogo
+- **Copiar:** clareza de manifesto/voz de marca (não o tom, só a disciplina de ter uma voz)
+- **Evitar:** segmento de ticket alto/venda consultiva agora — mata a economia de um app de ticket baixo; não perseguir franquia como rota de escala (reimporta o problema que o software resolve)
 
 ## Links
-- [[PESQUISA-MERCADO]] · [[HOME]]
+- [[paginas-publicas]] · [[_sintese-paginas-publicas]] · [[PESQUISA-MERCADO]] · [[HOME]]

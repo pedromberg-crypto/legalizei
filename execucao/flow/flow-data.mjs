@@ -64,15 +64,14 @@ export const NODES = [
   // Fonte: components/wizard-migrar.tsx. Sem entrevista de CNAE (o cartão CNPJ
   // já traz) — diferença estrutural vs. o caminho "abrir". Rotas confirmadas
   // 30/07 rastreando router.push/onSeguir no código real, não inferidas.
-  { id: "E4_2", rota: "/migrar/cnpj", label: "E4.2 · Lê o cartão CNPJ", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "Autofill por CNPJ via InfoSimples (cadastro, R$0,20/consulta — API PAGA, não pública); sem entrevista de atividade — o CNAE já existe. Regime Simples×Presumido não vem desta API pra ME — decidido no E4.2b. Situação cadastral (ativa/inapta) e Presumido JÁ conhecido pelo cartão saem direto daqui (`?cenario=inapto|presumido`, demo)", dados: "CNPJ (consulta) · confirmação dos dados do cartão" },
+  { id: "E4_2", rota: "/migrar/cnpj", label: "E4.2 · Lê o cartão CNPJ", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "Autofill por CNPJ via InfoSimples (cadastro, R$0,20/consulta — API PAGA, não pública); sem entrevista de atividade — o CNAE já existe. 🔴 05/08: checagem de regime removida daqui (a API não confirma Simples×Presumido×MEI, ver infosimples-funcionalidades.md) — regime já vem autodeclarado da E3.2. Só confirma situação cadastral (ativa/inapta)", dados: "CNPJ (consulta) · confirmação dos dados do cartão" },
   { id: "E4_2_1", rota: "/saida/cnpj-inapto", label: "Saída · CNPJ inapto<br/>ou suspenso", forma: "terminal", classe: "saida", status: "construida", validado: "oficial", falta: "Situação cadastral ≠ ativa — diferente da auditoria de passivo (E9.2, que pressupõe CNPJ ATIVO com dívida): aqui a Receita nem reconhece a empresa como ativa, regularização vem ANTES de qualquer migração", dados: "— (saída, fora do caminho até a migração)" },
-  // 🆕 04/08 (4ª rodada) — E4.2b, só ME (MEI pula, a pergunta não existe pra
-  // quem já é MEI). Autodeclarado pra não rodar a API paga de confirmação
-  // (receita-federal/simples, R$0,24) num lead que ainda não converteu —
-  // confirma de verdade depois, pós-pagamento, mesma doutrina da E3.2.
-  { id: "E4_2B", rota: "/migrar/tributario", label: "E4.2b · Simples × Presumido<br/>(autodeclarado)", forma: "decisao", classe: "", status: "construida", validado: "oficial", falta: "Só ME passa aqui. Simples segue direto pro E4.4 (sem passar pelo E4.3, cortado pra ME); Presumido sai (fora de escopo, decisão explícita 04/08)", dados: "Regime tributário autodeclarado (Simples ou Presumido)" },
-  { id: "E4_2B_1", rota: "/saida/regime-nao-suportado", label: "Saída · Presumido<br/>fora de escopo", forma: "terminal", classe: "saida", status: "construida", validado: "oficial", falta: "Lucro Presumido segue fora do escopo (decisão explícita 04/08, sem pesquisa fiscal dedicada ainda)", dados: "— (saída, fora do caminho até a migração)" },
-  { id: "E4_3", rota: "/migrar/diagnostico", label: "E4.3 · Diagnóstico<br/>só MEI (\"tem contador?\")", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "🔴 04/08 (3ª rodada, decisão do Pedro): o diagnóstico de Fator R pra ME foi CORTADO — a única API pré-pagamento é a cadastral, não traz faturamento/folha (só via procuração, pós-pagamento). ME agora vai do E4.2b direto pro E4.4. Só sobrou o subfluxo MEI: 'você tem contador hoje?' decide se roda o TTRT ou pula pro E9.4", dados: "MEI: resposta sim/não (tem contador)" },
+  // 🔴 05/08 — E4_2B_1 (saída Presumido) agora é alcançada direto da E3.2
+  // (CTA menor abaixo dos cards MEI/ME): a tela intermediária E4.2b
+  // (`/migrar/tributario`, Simples×Presumido autodeclarado) foi DESCARTADA
+  // por duplicar a pergunta que a E3.2 já faz. Ver decisoes-marca.md 05/08.
+  { id: "E4_2B_1", rota: "/saida/regime-nao-suportado", label: "Saída · Presumido<br/>fora de escopo", forma: "terminal", classe: "saida", status: "construida", validado: "oficial", falta: "Lucro Presumido segue fora do escopo (decisão explícita 04/08, sem pesquisa fiscal dedicada ainda). Autodeclarado na E3.2, não confirmado por API", dados: "— (saída, fora do caminho até a migração)" },
+  { id: "E4_3", rota: "/migrar/diagnostico", label: "E4.3 · Diagnóstico<br/>só MEI (\"tem contador?\")", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "🔴 04/08 (3ª rodada, decisão do Pedro): o diagnóstico de Fator R pra ME foi CORTADO — a única API pré-pagamento é a cadastral, não traz faturamento/folha (só via procuração, pós-pagamento). ME agora vai do E4.2 direto pro E4.4. Só sobrou o subfluxo MEI: 'você tem contador hoje?' decide se roda o TTRT ou pula pro E9.4", dados: "MEI: resposta sim/não (tem contador)" },
   { id: "E4_4", rota: "/migrar/plano", label: "E4.4 · Plano", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "ME: mesma mensalidade do caminho abrir, sem taxa de governo (empresa já existe). 🆕 04/08: MEI tem plano PRÓPRIO — R$49,90/mês, fidelidade 12 meses, certificado incluso, escopo limitado (emitir NF + 1 colaborador) — não é o plano ME com desconto", dados: "" },
   { id: "E4_5", rota: "/migrar/contrato", label: "E4.5 · Contrato<br/>+ promessa de devolução", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "🔴 DECISÃO TRAVADA 30/07: cobra ANTES do TTRT, com contrapartida OBRIGATÓRIA no contrato ('se a transferência não sair por motivo fora do seu controle, devolve tudo'). Se essa linha sair do contrato, a decisão reabre (Mauro/Larissa redigem)", dados: "Aceite do contrato (com a cláusula de devolução)" },
   { id: "E9_2", rota: "/migrar/passivo", label: "E9.2 · Passivo herdado", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "🕓 Aberto com o Mauro: upsell ou fora de escopo? Variantes `?cenario=limpo` (persona migra-limpo, sem passivo) × com-passivo", dados: "" },
@@ -139,10 +138,8 @@ export const EDGES = [
   { de: "E4", para: "E4_1", label: "fora de BH" },
 
   { de: "E4_2", para: "E4_3", label: "MEI", tracejado: true },
-  { de: "E4_2", para: "E4_2B", label: "ME", tracejado: true },
-  { de: "E4_2B", para: "E4_4", label: "Simples" },
-  { de: "E4_2B", para: "E4_2B_1", label: "Presumido" },
-  { de: "E4_2", para: "E4_2B_1", label: "🔴 Presumido (já no cartão)", tracejado: true },
+  { de: "E4_2", para: "E4_4", label: "ME", tracejado: true },
+  { de: "E3_2", para: "E4_2B_1", label: "Lucro Presumido (CTA)" },
   { de: "E4_2", para: "E4_2_1", label: "CNPJ inapto/suspenso", tracejado: true },
   { de: "E4_2", para: "E5_1", label: "🟡 regulada" },
   { de: "E4_2", para: "E5_2", label: "🔴 Mauro atende" },

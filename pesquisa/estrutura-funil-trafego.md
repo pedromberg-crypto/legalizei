@@ -1,0 +1,63 @@
+---
+tipo: original
+status: vivo
+data: 2026-08-05
+assunto: estrutura-funil-trafego
+deriva_de: [trafego-pago-contabilidade-mercado, economia-preco-cac, metodologia-personas]
+tags: [pesquisa, marketing, trafego-pago]
+---
+
+# 💸 Tráfego pago — estrutura de funil de budget
+
+> Consome [[metodologia-personas]] (quem) + [[economia-preco-cac]] (quanto pode pagar) + [[trafego-pago-contabilidade-mercado]] (benchmark do nicho). Specs evergreen — cronograma de execução de campanha específica fica em `pesquisa/frente-1-captacao-meta-bh.md` e futuras.
+
+## Budget real
+
+**R$3.500/mês (V0, teste)** → **R$5.000/mês (V1)**, já travado em `BASE-ESTRATEGICA.md` §13. Breakeven/ROAS-alvo ainda dependem do gate empírico (§13, thresholds não travados — ver [[validacao-ideia]]).
+
+### Decisão de concentração (05/08, baseada em [[trafego-pago-contabilidade-mercado]] §2)
+
+Meta mínimo real R$800-2.000/mês · Google mínimo real R$1.500-3.000/mês. Rodar os dois ao mesmo tempo com R$3.500/mês deixa ambos abaixo do volume que a fase de aprendizado dos algoritmos precisa (Meta pede ~50 eventos de conversão/7 dias por conjunto). **Decisão: concentrar o V0 inteiro em Meta Ads** (melhor conversão B2B do nicho — 4,68% vs 3,46% Google — e CPM menor com geo local BH R$18-35). Google Search entra no V1, quando o budget (R$5.000/mês) sustenta os dois minimamente.
+
+## Frentes
+
+| Frente | Budget V0 | Objetivo | Onde |
+|---|---:|---|---|
+| **1 — Reconhecimento** | orgânico, sem verba paga na V0 | topo de funil via Instagram ([[estrategia-organica]]) | orgânico |
+| **2 — Captação** | R$3.500/mês (100% Meta) | fundo de funil, ad→WhatsApp, geo BH | Meta Ads |
+| **3 — Parcerias** | permuta/indicação, sem cash dedicado ainda | CAC efetivo baixo via indicação em comunidades profissionais (forte pra Persona B) | orgânico + relação |
+
+## Segmentos (Frente 2) × personas × oferta
+
+| Seg | Persona | Oferta | % budget | Racional |
+|---|---|---|---:|---|
+| S-1 | A — Direto (intelectual) | ME | 45% | maior conversão esperada (alta intenção, decide rápido), CAC-alvo mais folgado (R$982 em 24m, [[economia-preco-cac]] §9) |
+| S-2 | B — Construindo (estético) | ME (transição MEI→ME) | 40% | maior volume de mercado (setor beleza = 83% presença Instagram), mas resistência de preço maior |
+| S-3 | C — Precisa de mão na mão | — | 0% | **não roda tráfego pago frio** — decide por indicação/confiança pessoal, não por ad; alcançar via orgânico/indicação (ver [[metodologia-personas]]) |
+
+### 🔴 MEI não recebe campanha paga fria dedicada
+
+Cruzamento de 2 pesquisas independentes ([[economia-preco-cac]] §9 + [[trafego-pago-contabilidade-mercado]] §5) mostra que MEI precisaria de ~30% de conversão lead→cliente pra fechar CAC via tráfego frio — "irreal" nas palavras da própria pesquisa de mercado. **MEI entra só como upsell natural** de dentro do funil ME ou por canal orgânico/indicação, nunca como alvo de campanha paga fria isolada.
+
+## Apoio
+
+- [[funil-conversao]] — jornada completa + números-alvo por etapa
+- **Canais (decisão viva, 05/08):**
+  - ✅ **Meta Ads** — prioridade 1, geo BH, objetivo "Mensagens" (WhatsApp), não "Conversão de Formulário"
+  - 🟡 **Google Search** — só alta intenção ("contador online BH", "abrir empresa MG"), entra no V1
+  - ❌ **TikTok** — descartado (budget mínimo R$2.000-4.500 alto pra fase, demografia jovem incompatível com idade média 40,8 anos do público)
+  - ❌ **LinkedIn** — descartado por ora (CPC/CPM proibitivo pro ticket baixo, penetração só 6% no público geral); revisar só se Persona A justificar com dado real do V0
+- Calendário editorial sazonal — mora em doc separado quando o volume justificar
+
+## Regras travadas
+
+- **Objetivo de campanha = "Mensagens" (WhatsApp), não formulário** — mais barato pra sair da fase de aprendizado, quebra objeção em tempo real (ver [[funil-conversao]])
+- **Budget líquido considera o repasse tributário Meta de 12,15%** (jan/2026) — R$1.000 nominal = R$878,50 de mídia efetiva
+- **Geo restrito a BH/região metropolitana** — CPM menor (R$18-35 vs R$30-60 nacional) + evita leilão contra players nacionais bem financiados
+- **Não esperar infraestrutura de tracking perfeita pra rodar** — objetivo de mensagem/clique se pixel/CAPI não estiver pronto
+- **Nunca escalar budget >20%/semana** num conjunto
+- **Elemento de risco zero** (garantia 7 dias, CDC art.49) é hook no ad; termos completos ficam no site
+
+## Divisão de budget entre conjuntos
+
+R$3.500/mês ÷ 2 segmentos ativos (S-1, S-2) ≈ R$58/dia por segmento — no piso do mínimo viável de conjunto. Preferir 2 conjuntos bem alimentados a pulverizar mais. Reavaliar divisão quando o V1 (R$5.000/mês) permitir 3+ conjuntos saudáveis.

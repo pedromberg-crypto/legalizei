@@ -9,8 +9,25 @@ data: 2026-07-16
 > Status: ✅ negócio fechado com Mauro (2026-07-07) · V0/imersão em curso.
 
 ## 📍 Agora (torre de controle — mantida via `/fechar`)
-> **Última atualização:** 2026-08-05 (**25º flow: furo real de cobertura Storybook fechado + escopo/geografia MEI×ME reconfirmados + achado: base de copy/tom-de-voz é PARCIAL, não suficiente pra validar telas**) · Janela nova? rode `/boot`.
-> **Fase:** 🏁 os 2 flows do produto seguem prontos (abrir + migrar), MEI cobrindo os dois. **Nova frente aberta:** validação flow-por-flow E1→E4.5 (cruzar `fiscal-simples-bh-2026.md` + Gemini contra `mapa-flow-mermaid.md`, foco no mínimo de dados até migrar ME) — **pausada antes de gerar** porque o Pedro também quer checar copy contra a base da marca, e essa base tá fina. **O que falta:** fechar glossário técnico (CNAE/DAS/Fator R/pró-labore/TTRT→humano) + exemplos de copy por tipo de tela antes de validar E1-E4.5 sob essa lente · configurar de fato as contas Google Ads/Meta Ads · reorganização de docs (pergunta grande do Pedro) segue em aberto desde 31/07 · motor de testes segue desatualizado.
+> **Última atualização:** 2026-08-05 (**26º flow: estratégia de marketing/produto completa — template `estrategia-digital` 14/14 slots preenchidos, preço ME revisado pra R$139, MEI excluído de tráfego pago frio**) · Janela nova? rode `/boot`.
+> **Fase:** 🎯 estratégia de marketing/produto (pesquisa mercado + personas + orgânico + tráfego pago) fechada em `pesquisa/` — ver [[2026-08-05-estrategia-marketing-produto-completa]]. Os 2 flows do produto seguem prontos (abrir + migrar), MEI cobrindo os dois. Base de copy/tom-de-voz fechada (item K do parking-lot) — ver 27º flow abaixo. **O que falta:** honorário contábil real (Mauro) pra destravar CAC de verdade · thresholds numéricos do gate V0 (`BASE-ESTRATEGICA.md` §13) seguem sem travar · rodar a validação de copy E1-E4.5 usando o glossário/exemplos novos · configurar de fato as contas Google Ads/Meta Ads · reorganização de docs (pergunta grande do Pedro) segue em aberto desde 31/07 · motor de testes segue desatualizado.
+>
+> 🏁 **O QUE O 27º FLOW FEZ (05/08) — base de copy/tom-de-voz fechada**
+> Item **K** do `parking-lot.md` (achado 25º flow) resolvido: criados `marca/copy/glossario-tecnico-humano.md` (18 termos fiscais/jurídicos — CNAE/DAS/Fator R/pró-labore/TTRT/Anexo III-V/PGDAS-D/DASN-SIMEI/NFS-e/certificado A1/etc. — com tradução puxada de copy REAL já em produção, não inventada) + `marca/copy/exemplos-copy-por-tela.md` (padrão erro/vazio/sucesso/aviso legal, cada um citando o arquivo-fonte real: `aviso.stories.tsx`, `notas/page.tsx`, `wizard-cauda.tsx TermoView`). `conceito-marca.md` §5 (regra de ouro do tom) ganhou link operacional pros 2 docs novos. Próximo passo natural: rodar a validação de copy E1-E4.5 que ficou pausada no 25º flow, agora com régua pronta.
+>
+> 🔎 **O 26º flow (05/08, mais cedo) e anteriores continuam abaixo.**
+>
+> 🏁 **O QUE O 26º FLOW FEZ (05/08) — estratégia de marketing/produto completa** → [[2026-08-05-estrategia-marketing-produto-completa]]
+> **1. 🗺️ GAP-ANALYSIS + INSTANCIAÇÃO do template `pessoal/_templates/estrategia-digital`** (14 slots, 4 fases) dentro do vault: 4 slots já sólidos (benchmarking/matriz/insights/posicionamento), 3 esqueleto fraco (metodologia/go-no-go/personas), 7 buracos reais (economia, personas de marketing, orgânico inteiro, tráfego pago inteiro). Preenchidos os 14.
+> **2. 💰 PREÇO ME REVISADO PRA R$139,00** (era placeholder R$195,00) — `pesquisa/economia-preco-cac.md`, custo técnico simbólico rodado (API R$10 + sistema R$5/mês). **Honorário contábil real segue fora do cálculo.**
+> **3. 🔴 ACHADO CRÍTICO: CAC-alvo original estava matematicamente errado** (calculado sobre margem de 1 mês, não LTV) — corrigido pra R$982 (ME)/R$276 (MEI) em 24 meses. **MEI confirmado como oferta frágil por 2 pesquisas de mercado independentes** (rodadas via Gemini/Google Search sob prompt otimizado — nova forma de trabalho). Gate de validação rebaixou de 5/7 pra 4/7 verde.
+> **4. 🚫 DECISÃO: MEI não roda tráfego pago frio dedicado** — só upsell orgânico/indicação de dentro do funil ME.
+> **5. 👤 SISTEMA DE PERSONAS construído do zero:** 3 dorsais (A intelectual/tech, B estético/beleza, C baixa familiaridade digital) + 9 volantes derivadas, mecanismo `dorsal×volante` operacional pra crescer sozinho depois.
+> **6. 📱 ORGÂNICO: Instagram travado como canal primário** (64% presença geral, 83% no setor beleza — dado real, não achismo) + mecânica de engajamento "Pergunta que ninguém explica".
+> **7. 📣 TRÁFEGO PAGO: V0 concentra 100% em Meta Ads** (Google Search só no V1 — budget não sustenta os 2 mínimos reais simultâneos); momento decisivo da venda = conversa humana no WhatsApp, não landing page com formulário. Spec completa da 1ª frente de campanha pronta (`frente-1-captacao-meta-bh.md`).
+> **8. 📚 2 pesquisas de mercado externas arquivadas na íntegra** (`perfil-microempreendedor-mercado.md`, `trafego-pago-contabilidade-mercado.md`), fonte+data+confiança em cada dado.
+>
+> 🔎 **O 25º flow (05/08, mais cedo) e anteriores continuam abaixo.**
 >
 > 🏁 **O QUE O 25º FLOW FEZ (05/08)**
 > **1. 🔍 AUDITORIA DE COBERTURA Storybook↔produção.** 40 componentes em `src/components/`, 42 stories — 17 sem story pareada, mas só **1 era furo real** (`encaixe.tsx`, usado dentro de `VereditoView`; os outros 16 são `lab/*-blocks.tsx` de exploração ou primitivos já cobertos indireto). Fechado: `encaixe.stories.tsx` cobrindo `ConteudoCnae` (recomendado/alternativa/badge) + `OutrasOpcoes` (clicável/leitura). `tsc` limpo. Commit `636f8c3`.

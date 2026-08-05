@@ -36,7 +36,7 @@ O autônomo que virou PJ (marketing, TI, consultoria, beleza, saúde…). Não e
 ## 5. Tom de voz
 - **Fala:** claro, direto, tranquilizador, leve. "Sua empresa está em dia ✅" · "Falta só isso, vence dia 15".
 - **Não fala:** "Prezado contribuinte", "DARF Unificado disponível", "obrigação acessória pendente".
-- **Regra de ouro:** todo termo técnico vem traduzido OU escondido. O cliente nunca precisa saber o que é NBS pra emitir a nota.
+- **Regra de ouro:** todo termo técnico vem traduzido OU escondido. O cliente nunca precisa saber o que é NBS pra emitir a nota. Operacionalizada em [[glossario-tecnico-humano]] (lista termo→tradução) + [[exemplos-copy-por-tela]] (padrão erro/vazio/sucesso/aviso legal).
 - Bônus do nome: "legal" (jurídico + gíria de bacana) — dá licença pra um tom levemente otimista/celebrativo nos momentos de conquista ("Legalizei! 🎉").
 
 ## 6. A marca É / NÃO É (contraste com o líder)

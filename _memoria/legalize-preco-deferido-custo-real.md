@@ -5,6 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: 9ed32b22-c0c2-4d31-9354-2092b528a734
+  modified: 2026-08-05T17:53:03.907Z
 ---
 
 Decisão do Pedro em 2026-07-16: **o preço do nosso plano não se define agora**. Só volta à mesa depois de **testes reais de uso de banco de dados e API** — ou seja, com custo unitário medido (por empresa aberta / por mês ativo), não estimado.
@@ -17,3 +18,5 @@ Desdobramento travado na mesma conversa:
 **Why:** precificar sem custo unitário é chute; o Pedro barrou por coerência com o padrão anti-guru do vault (número sem fonte não entra) — aqui aplicado à própria precificação, não só à pesquisa.
 
 **How to apply:** não reabrir a discussão de preço nem cobrar "forçar a decisão com o Mauro" até o Pedro mencionar ou até existir dado de custo real. Ao construir/tocar B3, manter o R$195 sinalizado como placeholder no código/spec. Relacionado: [[legalize-benchmark-padrao-195]] · [[legalize-mlp-nao-mvp]].
+
+**⚠️ Atualização parcial (05/08):** Pedro decidiu destravar o preço do plano ME (R$139,00, revisado de R$195) rodando a planilha com custo técnico simbólico, SEM esperar o dado de honorário real do Mauro — ver [[legalize-estrategia-marketing-completa]] e `pesquisa/economia-preco-cac.md`. O placeholder de R$195 no código está desatualizado; o valor técnico atual é R$139 (ME) / R$49,90 (MEI, travado 04/08). Mas o núcleo da decisão original segue valendo: **margem real/CAC final ainda dependem do honorário contábil**, que segue 🔴 não calculado.

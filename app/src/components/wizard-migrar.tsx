@@ -117,7 +117,11 @@ export const EMPRESA_MIGRAR_CENARIOS: Record<CenarioM1, EmpresaMigrar> = {
 };
 
 /**
- * Histórico dos últimos 12 meses — o que torna o diagnóstico REAL.
+ * Histórico dos últimos 12 meses — o cálculo por trás do diagnóstico de
+ * Fator R. 🔴 04/08 (3ª rodada): não é mais usado na entrada (M2 pré-
+ * pagamento cortou o diagnóstico de ME — a API que puxaria isso não roda
+ * antes do pagamento). Fica de motor pronto pra quando o diagnóstico real
+ * pós-pagamento for construído (mesma doutrina de `/impostos/aliquotas`).
  * Cenário de propósito: Fator R ABAIXO do corte (a pessoa paga Anexo V sem
  * precisar). É o caso que prova o valor do produto.
  */
@@ -457,9 +461,9 @@ function ChecagemLinha({ ok, titulo }: { ok: boolean; titulo: string }) {
  *
  * Autodeclarado, igual a E3.2: quem confirma de verdade é a API 2, rodada
  * DEPOIS que a pessoa virar cliente (M4a/ativação fiscal) — aqui só decide
- * se a esteira segue (Simples) ou vira saída graciosa (Presumido, motor
- * fiscal que ainda não temos). MEI não passa por aqui — a pergunta não
- * existe pra quem já é MEI (`/migrar/diagnostico?regime=mei` direto).
+ * se a esteira segue (Simples, direto pro M3/plano) ou vira saída graciosa
+ * (Presumido, motor fiscal que ainda não temos). MEI não passa por aqui — a
+ * pergunta não existe pra quem já é MEI (`/migrar/diagnostico` direto).
  */
 const OPCOES_TRIBUTARIO = [
   {
@@ -541,212 +545,104 @@ export function MigrarRegimeTributarioView({
   );
 }
 
-/* ═══════════════════ M2 · DIAGNÓSTICO (o número REAL) ═══════════════════ */
+/* ═══════════════════ M2 · DIAGNÓSTICO ("tem contador?", só MEI) ═════════ */
 
 /**
- * M2 — o coração comercial do flow #2.
+ * M2 — 🔴 04/08 (3ª rodada, decisão do Pedro): o diagnóstico de Fator R com
+ * "número real" pra ME foi CORTADO desta tela. A premissa quebrou contra o
+ * levantamento de APIs: a única API que roda pré-pagamento é a cadastral
+ * (razão/endereço/CNAEs/sócios/situação) — faturamento e folha dos últimos 12
+ * meses não existem em API pública nenhuma da Receita, só via procuração/
+ * e-CAC (🔐), que só desbloqueia DEPOIS que a pessoa vira cliente. Pró-labore/
+ * Fator R agora só entram na conversa pós-pagamento (reuso do motor de
+ * `/impostos/aliquotas`, dia-2). ME segue de `/migrar/tributario` direto pro
+ * plano (M3), sem passar por aqui.
  *
- * 🎯 Aqui está a maior vantagem sobre o flow #1: o número é REAL. A empresa tem
- * 12+ meses de histórico, então o Fator R sai do que de fato aconteceu (CGSN
- * 140/18 art. 26), não de uma faixa declarada. A dívida `promessa-quebrada`, que
- * existe no flow #1 porque o teaser promete em cima de estimativa, **não se
- * aplica aqui**.
- *
- * ⚖️ GUARDA-CORPO DE HONESTIDADE (m2.honestidade do motor): se o contador atual
- * já faz tudo certo, a tela DIZ ISSO e vende serviço, não economia inventada.
- * Vender economia pra quem não tem seria a promessa-quebrada do flow #2.
- *
- * 🆕 04/08 — SUBFLUXO MEI (decisão do Pedro: MEI entra no Migrar). MEI não tem
- * Fator R (paga DAS-MEI fixo, sem Anexo) — então o "número real" que é o
- * coração comercial desta tela pra ME **não existe** pra MEI. Em vez disso, a
- * pergunta que decide tudo é "você tem contador hoje?": MEI não é OBRIGADO a
- * ter um (DASN-SIMEI é autodeclaratório), então pode não haver TTRT/CRC-MG
- * pra transferir. Resposta vira `temContador` e viaja via `onSeguir` pro M3+
- * decidirem se reusam o pipeline de transferência ou pulam pra M5 direto.
+ * O que sobra nesta rota é só o SUBFLUXO MEI: MEI não tem Fator R (paga
+ * DAS-MEI fixo, sem Anexo) e não é OBRIGADO a ter contador (DASN-SIMEI é
+ * autodeclaratório) — a pergunta que decide tudo é "você tem contador hoje?".
+ * Resposta vira `temContador` e viaja via `onSeguir` pro M3+ decidirem se
+ * reusam o pipeline de transferência ou pulam pra M5 direto.
  */
 export function MigrarDiagnosticoView({
-  jaOtimo = false,
-  regime = "me",
   onSeguir,
   onVoltar,
 }: {
-  /** Alterna o guarda-corpo: `true` = o contador atual já acertou. Só se aplica a `regime="me"`. */
-  jaOtimo?: boolean;
-  /** 🆕 04/08 — MEI substitui o diagnóstico de Fator R pelo subfluxo "tem contador?". */
-  regime?: "me" | "mei";
-  /** Pro MEI, carrega se a pessoa tem contador hoje (decide se pula a transferência). */
+  /** Carrega se a pessoa tem contador hoje (decide se pula a transferência). */
   onSeguir?: (temContador?: boolean) => void;
   onVoltar?: () => void;
 }) {
   const [temContador, setTemContador] = useState<boolean | null>(null);
 
-  if (regime === "mei") {
-    if (temContador === null) {
-      return (
-        <>
-          <TelaHeader meta="Seu diagnóstico" onVoltar={onVoltar} />
-          <main className="app-main">
-            <Titulo sub="Isso muda como a gente assume sua contabilidade a partir de agora.">
-              Você tem contador hoje?
-            </Titulo>
-
-            <Corpo>
-              <Aviso variante="info" titulo="Por que a gente pergunta isso">
-                MEI não é obrigado a ter contador — muita gente cuida disso
-                sozinho. Se você já tem um, a gente faz a transferência
-                combinada com ele. Se não tem, a gente já assume direto, sem
-                burocracia extra.
-              </Aviso>
-            </Corpo>
-
-            <Rodape>
-              <div className="flex flex-col gap-2">
-                <Button full onClick={() => setTemContador(true)}>
-                  Sim, tenho contador
-                </Button>
-                <Button full variant="secondary" onClick={() => setTemContador(false)}>
-                  Não, cuido sozinho
-                </Button>
-              </div>
-            </Rodape>
-          </main>
-        </>
-      );
-    }
-
+  if (temContador === null) {
     return (
       <>
-        <TelaHeader meta="Seu diagnóstico" onVoltar={() => setTemContador(null)} />
+        <TelaHeader meta="Seu diagnóstico" onVoltar={onVoltar} />
         <main className="app-main">
-          <Titulo
-            sub={
-              temContador
-                ? "A gente combina a transferência com quem cuida de você hoje."
-                : "Sem contador pra transferir, a gente já assume direto — sem burocracia."
-            }
-          >
-            {temContador ? "Vamos assumir sua contabilidade" : "Vamos começar direto"}
+          <Titulo sub="Isso muda como a gente assume sua contabilidade a partir de agora.">
+            Você tem contador hoje?
           </Titulo>
 
           <Corpo>
-            <Card tom="sucesso">
-              <p className="text-body font-semibold text-text-primary mb-2">
-                O que muda pra você
-              </p>
-              <div className="flex flex-col gap-1.5">
-                <LinhaFicha rotulo="Guia mensal (DAS-MEI)" valor="calculada e paga por você, do jeito que já é" />
-                <LinhaFicha rotulo="Limite de faturamento" valor="a gente acompanha os R$ 81 mil/ano de perto" />
-                <LinhaFicha rotulo="Nota fiscal" valor="emissão pelo app, sem complicação" />
-              </div>
-            </Card>
-
-            <Aviso variante="info" titulo="O que a gente faz com isso">
-              {temContador
-                ? "A gente cuida da transferência com seu contador atual — você não precisa ligar pra ninguém."
-                : "Como você não tem contador hoje, a gente já assume sua contabilidade a partir do pagamento, sem etapa de transferência no meio."}
+            <Aviso variante="info" titulo="Por que a gente pergunta isso">
+              MEI não é obrigado a ter contador — muita gente cuida disso
+              sozinho. Se você já tem um, a gente faz a transferência
+              combinada com ele. Se não tem, a gente já assume direto, sem
+              burocracia extra.
             </Aviso>
           </Corpo>
 
           <Rodape>
-            <Button full onClick={() => onSeguir?.(temContador ?? undefined)}>
-              Quero continuar
-            </Button>
+            <div className="flex flex-col gap-2">
+              <Button full onClick={() => setTemContador(true)}>
+                Sim, tenho contador
+              </Button>
+              <Button full variant="secondary" onClick={() => setTemContador(false)}>
+                Não, cuido sozinho
+              </Button>
+            </div>
           </Rodape>
         </main>
       </>
     );
   }
 
-  const h = HISTORICO_12M;
-  const calc = calcFatorR(jaOtimo ? 75000 : h.folha, h.receita);
-  const pct = (calc.fr * 100).toFixed(1).replace(".", ",");
-
   return (
     <>
-      <TelaHeader meta="Seu diagnóstico" onVoltar={onVoltar} />
+      <TelaHeader meta="Seu diagnóstico" onVoltar={() => setTemContador(null)} />
       <main className="app-main">
         <Titulo
           sub={
-            calc.jaOtimo
-              ? "Boa notícia: seu enquadramento está certo. Olha o que a gente encontrou."
-              : "Olhamos os seus últimos 12 meses de verdade. Não é estimativa."
+            temContador
+              ? "A gente combina a transferência com quem cuida de você hoje."
+              : "Sem contador pra transferir, a gente já assume direto — sem burocracia."
           }
         >
-          {calc.jaOtimo ? "Seu imposto já está certo" : "Você está pagando a mais"}
+          {temContador ? "Vamos assumir sua contabilidade" : "Vamos começar direto"}
         </Titulo>
 
         <Corpo>
-          {calc.jaOtimo ? (
-            /* ⚖️ O caminho honesto. Não inventa economia — troca o argumento
-               pra serviço, que é o que de fato falta pra ele. */
-            <>
-              <Card tom="sucesso">
-                <p className="text-caption text-state-success-text mb-1">
-                  Seu enquadramento
-                </p>
-                <p className="text-display text-state-success-text">Anexo III</p>
-                <p className="text-caption text-text-secondary mt-2">
-                  Com Fator R de {pct}%, você está na alíquota menor. Seu contador
-                  atual acertou nisso.
-                </p>
-              </Card>
+          <Card tom="sucesso">
+            <p className="text-body font-semibold text-text-primary mb-2">
+              O que muda pra você
+            </p>
+            <div className="flex flex-col gap-1.5">
+              <LinhaFicha rotulo="Guia mensal (DAS-MEI)" valor="calculada e paga por você, do jeito que já é" />
+              <LinhaFicha rotulo="Limite de faturamento" valor="a gente acompanha os R$ 81 mil/ano de perto" />
+              <LinhaFicha rotulo="Nota fiscal" valor="emissão pelo app, sem complicação" />
+            </div>
+          </Card>
 
-              <Aviso variante="info" titulo="Então por que trocar?">
-                Porque enquadramento certo é o mínimo. O que muda a sua vida é o
-                que vem depois: guia pronta todo mês sem você pedir, nota em 2
-                toques, e alguém olhando esse número quando ele mudar.
-              </Aviso>
-            </>
-          ) : (
-            <>
-              {/* O número grande é o que ele PERDE hoje — carimbo de dado real,
-                  não de projeção. */}
-              <Card tom="sucesso">
-                <p className="text-caption text-state-success-text mb-1">
-                  Dá pra economizar por mês
-                </p>
-                <p className="text-display text-state-success-text">
-                  {brl(calc.ganhoMes)}
-                </p>
-                <p className="text-caption text-text-secondary mt-2">
-                  Hoje você paga <b>15,5%</b> (Anexo V). Com o ajuste certo, cai
-                  pra <b>6%</b> (Anexo III).
-                </p>
-              </Card>
-
-              <Card>
-                <p className="text-body font-semibold text-text-primary mb-2">
-                  De onde saiu esse número
-                </p>
-                <div className="flex flex-col gap-1.5">
-                  <LinhaFicha
-                    rotulo="Seu faturamento (12 meses)"
-                    valor={brl(h.receita)}
-                  />
-                  <LinhaFicha rotulo="Sua folha (12 meses)" valor={brl(h.folha)} />
-                  <LinhaFicha
-                    rotulo="Seu Fator R hoje"
-                    valor={`${pct}% — abaixo do corte de 28%`}
-                  />
-                </div>
-                <p className="text-micro text-text-tertiary mt-3">
-                  Esses são os seus números reais, puxados dos últimos 12 meses.
-                  Não é simulação em cima de faixa.
-                </p>
-              </Card>
-
-              <Aviso variante="info" titulo="O que a gente faz com isso">
-                A gente ajusta o seu pró-labore pro ponto certo e acompanha esse
-                número todo mês. Ele muda sozinho quando o seu faturamento muda,
-                e é aí que a maioria perde dinheiro sem saber.
-              </Aviso>
-            </>
-          )}
+          <Aviso variante="info" titulo="O que a gente faz com isso">
+            {temContador
+              ? "A gente cuida da transferência com seu contador atual — você não precisa ligar pra ninguém."
+              : "Como você não tem contador hoje, a gente já assume sua contabilidade a partir do pagamento, sem etapa de transferência no meio."}
+          </Aviso>
         </Corpo>
 
         <Rodape>
-          <Button full onClick={() => onSeguir?.()}>
-            Quero trocar de contador
+          <Button full onClick={() => onSeguir?.(temContador ?? undefined)}>
+            Quero continuar
           </Button>
         </Rodape>
       </main>
@@ -1249,7 +1145,6 @@ export function MigrarAtivaView({
     return () => cancelAnimationFrame(id);
   }, []);
 
-  const calc = calcFatorR(HISTORICO_12M.folha, HISTORICO_12M.receita);
   const mei = regime === "mei";
 
   return (
@@ -1290,10 +1185,11 @@ export function MigrarAtivaView({
             </Card>
           </div>
 
-          {/* Fecha o loop do M2: pra ME é a economia com número real; pra MEI
-              (plano limitado) são as 2 coisas que o plano de fato cobre —
-              emitir nota e gerenciar o colaborador — não uma promessa de
-              economia que MEI não tem (sem Fator R). */}
+          {/* 🔴 04/08 (3ª rodada) — pra ME, NÃO promete número de economia
+              aqui: o Fator R real só sai depois que a procuração/API 2
+              desbloqueiam (pós-pagamento), não no instante da migração.
+              Pra MEI (plano limitado) são as 2 coisas que o plano de fato
+              cobre — emitir nota e gerenciar o colaborador. */}
           <div>
             <p className="text-body-strong font-semibold text-text-primary mb-2">
               {mei ? "O que você já pode fazer" : "O primeiro ganho já está na mesa"}
@@ -1314,9 +1210,9 @@ export function MigrarAtivaView({
                 </>
               ) : (
                 <PassoCard
-                  titulo={`Ajustar seu pró-labore e economizar ${brl(calc.ganhoMes)}/mês`}
-                  texto="É o que a gente encontrou no seu diagnóstico. Leva uns minutos e vale a partir do mês que vem."
-                  acao="Ver como fica"
+                  titulo="Ver seu Fator R real"
+                  texto="A gente confere seus últimos 12 meses de verdade e avisa se dá pra pagar menos. Leva uns dias, não uma tela."
+                  acao="Como funciona"
                 />
               )}
               <PassoCard

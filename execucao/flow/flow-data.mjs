@@ -46,10 +46,17 @@ export const NODES = [
   { id: "E3", rota: "/entrada", label: "E3 · Fork<br/>3 rotas", forma: "decisao", classe: "", status: "construida", validado: "oficial", falta: "3 rotas CONFIRMADAS 28/07 (reunião Rua Satélite 9): abrir · migrar · já sou cliente.", dados: "" },
   { id: "E3_1", rota: "/login", label: "E3.1 · Login / portal", forma: "terminal", classe: "feliz", status: "construida", validado: "ux", falta: "Rota feliz", dados: "" },
 
+  // 🆕 03/08 (ampliado 04/08) — E3.2 · MEI × ME, entre o fork (E3) e o gate de
+  // cidade (E4). Realocada aqui vindo do fim do E5 (decisão anterior,
+  // revertida). Vale pros 2 caminhos (abrir E migrar) desde 04/08. Fonte:
+  // app/(wizard)/entrada/page.tsx.
+  { id: "E3_2", rota: "/entrada", label: "E3.2 · MEI × ME<br/>(autodeclarado)", forma: "decisao", classe: "", status: "construida", validado: "oficial", falta: "MEI não tem o limite geográfico do MLP → pula o E4 inteiro (abrir vai direto pro E5A, migrar direto pro E4.2). ME cai no E4 como sempre. Autodeclarado — quem confirma de verdade é o E4.2/E4.2b puxando da Receita. 🔴 risco não resolvido: se disser MEI aqui mas depois aparecer 2+ sócios (incompatível com MEI), não há correção automática", dados: "Regime autodeclarado (MEI ou ME)" },
+
   // 🆕 28/07 · GATE DE CIDADE (reunião Rua Satélite 9) — MLP só atende Belo
-  // Horizonte/MG. Trava "quero abrir"/"migrar" até confirmar; "já sou cliente"
-  // pula (quem já é cliente já passou por isso). Bifurca em E5 (abrir) ou
-  // E4.2 (migrar, decimal — ver ADR 03/08).
+  // Horizonte/MG. Trava "quero abrir"/"migrar" até confirmar (depois do E3.2 —
+  // só quem é ME passa por aqui, MEI já pulou); "já sou cliente" pula (quem já
+  // é cliente já passou por isso). Bifurca em E5 (abrir) ou E4.2 (migrar,
+  // decimal — ver ADR 03/08).
   { id: "E4", rota: "/entrada", label: "E4 · Gate cidade<br/>(BH-MG)", forma: "decisao", classe: "", status: "construida", validado: "oficial", falta: "Construído 28/07 — 2º passo INLINE do E3, mesma rota (/entrada), sem rota própria.", dados: "Confirma cidade de abertura = Belo Horizonte/MG (único município atendido no MLP)" },
   { id: "E4_1", rota: "/saida/fora-bh", label: "E4.1 · Saída · fora de BH<br/>MLP só atende BH-MG", forma: "terminal", classe: "saida", status: "construida", validado: "oficial", falta: "", dados: "— (saída, fora do caminho até a constituição)" },
 
@@ -57,9 +64,16 @@ export const NODES = [
   // Fonte: components/wizard-migrar.tsx. Sem entrevista de CNAE (o cartão CNPJ
   // já traz) — diferença estrutural vs. o caminho "abrir". Rotas confirmadas
   // 30/07 rastreando router.push/onSeguir no código real, não inferidas.
-  { id: "E4_2", rota: "/migrar/cnpj", label: "E4.2 · Lê o cartão CNPJ", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "Autofill por CNPJ (API pública); sem entrevista de atividade — o CNAE já existe", dados: "CNPJ (consulta) · confirmação dos dados do cartão" },
-  { id: "E4_3", rota: "/migrar/diagnostico", label: "E4.3 · Diagnóstico<br/>Fator R real (12m)", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "⚖️ Guarda-corpo de honestidade (`?cenario=ja-otimo`): se o contador atual já acertou o enquadramento, a tela DIZ isso e vende serviço, não economia inventada. Usa histórico REAL (CGSN 140/18 art.26), não estimativa — dívida `promessa-quebrada` do caminho abrir NÃO se aplica aqui", dados: "Folha + receita dos últimos 12 meses (histórico real, não faixa)" },
-  { id: "E4_4", rota: "/migrar/plano", label: "E4.4 · Plano", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Mesma mensalidade do caminho abrir; sem taxa de governo (empresa já existe)", dados: "" },
+  { id: "E4_2", rota: "/migrar/cnpj", label: "E4.2 · Lê o cartão CNPJ", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "Autofill por CNPJ via InfoSimples (cadastro, R$0,20/consulta — API PAGA, não pública); sem entrevista de atividade — o CNAE já existe. Regime Simples×Presumido não vem desta API pra ME — decidido no E4.2b. Situação cadastral (ativa/inapta) e Presumido JÁ conhecido pelo cartão saem direto daqui (`?cenario=inapto|presumido`, demo)", dados: "CNPJ (consulta) · confirmação dos dados do cartão" },
+  { id: "E4_2_1", rota: "/saida/cnpj-inapto", label: "Saída · CNPJ inapto<br/>ou suspenso", forma: "terminal", classe: "saida", status: "construida", validado: "oficial", falta: "Situação cadastral ≠ ativa — diferente da auditoria de passivo (E9.2, que pressupõe CNPJ ATIVO com dívida): aqui a Receita nem reconhece a empresa como ativa, regularização vem ANTES de qualquer migração", dados: "— (saída, fora do caminho até a migração)" },
+  // 🆕 04/08 (4ª rodada) — E4.2b, só ME (MEI pula, a pergunta não existe pra
+  // quem já é MEI). Autodeclarado pra não rodar a API paga de confirmação
+  // (receita-federal/simples, R$0,24) num lead que ainda não converteu —
+  // confirma de verdade depois, pós-pagamento, mesma doutrina da E3.2.
+  { id: "E4_2B", rota: "/migrar/tributario", label: "E4.2b · Simples × Presumido<br/>(autodeclarado)", forma: "decisao", classe: "", status: "construida", validado: "oficial", falta: "Só ME passa aqui. Simples segue direto pro E4.4 (sem passar pelo E4.3, cortado pra ME); Presumido sai (fora de escopo, decisão explícita 04/08)", dados: "Regime tributário autodeclarado (Simples ou Presumido)" },
+  { id: "E4_2B_1", rota: "/saida/regime-nao-suportado", label: "Saída · Presumido<br/>fora de escopo", forma: "terminal", classe: "saida", status: "construida", validado: "oficial", falta: "Lucro Presumido segue fora do escopo (decisão explícita 04/08, sem pesquisa fiscal dedicada ainda)", dados: "— (saída, fora do caminho até a migração)" },
+  { id: "E4_3", rota: "/migrar/diagnostico", label: "E4.3 · Diagnóstico<br/>só MEI (\"tem contador?\")", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "🔴 04/08 (3ª rodada, decisão do Pedro): o diagnóstico de Fator R pra ME foi CORTADO — a única API pré-pagamento é a cadastral, não traz faturamento/folha (só via procuração, pós-pagamento). ME agora vai do E4.2b direto pro E4.4. Só sobrou o subfluxo MEI: 'você tem contador hoje?' decide se roda o TTRT ou pula pro E9.4", dados: "MEI: resposta sim/não (tem contador)" },
+  { id: "E4_4", rota: "/migrar/plano", label: "E4.4 · Plano", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "ME: mesma mensalidade do caminho abrir, sem taxa de governo (empresa já existe). 🆕 04/08: MEI tem plano PRÓPRIO — R$49,90/mês, fidelidade 12 meses, certificado incluso, escopo limitado (emitir NF + 1 colaborador) — não é o plano ME com desconto", dados: "" },
   { id: "E4_5", rota: "/migrar/contrato", label: "E4.5 · Contrato<br/>+ promessa de devolução", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "🔴 DECISÃO TRAVADA 30/07: cobra ANTES do TTRT, com contrapartida OBRIGATÓRIA no contrato ('se a transferência não sair por motivo fora do seu controle, devolve tudo'). Se essa linha sair do contrato, a decisão reabre (Mauro/Larissa redigem)", dados: "Aceite do contrato (com a cláusula de devolução)" },
   { id: "E9_2", rota: "/migrar/passivo", label: "E9.2 · Passivo herdado", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "🕓 Aberto com o Mauro: upsell ou fora de escopo? Variantes `?cenario=limpo` (persona migra-limpo, sem passivo) × com-passivo", dados: "" },
   { id: "E9_3", rota: "/migrar/transferencia", label: "E9.3 · Aguardando TTRT", forma: "tela", classe: "espera", status: "construida", validado: "oficial", falta: "🔴 A PAUSA MAIS PERIGOSA DO PRODUTO: quem libera é o CONTADOR ANTIGO (valida no CRC-MG) — único momento em que o dono da espera é um concorrente perdendo o cliente, não um órgão neutro nem o próprio cliente. Nº da resolução CFC / Evento 232 Redesim NÃO ratificados em fonte primária — por isso não aparecem na tela (🟡 pendência)", dados: "" },
@@ -116,15 +130,23 @@ export const EDGES = [
   { de: "E1", para: "E2" },
   { de: "E2", para: "E3" },
   { de: "E3", para: "E3_1", label: "já sou cliente" },
-  { de: "E3", para: "E4", label: "quero abrir / migrar" },
+  { de: "E3", para: "E3_2", label: "quero abrir / migrar" },
+  { de: "E3_2", para: "E4", label: "ME" },
+  { de: "E3_2", para: "E5A", label: "MEI, abrir (pula cidade)", tracejado: true },
+  { de: "E3_2", para: "E4_2", label: "MEI, migrar (pula cidade)", tracejado: true },
   { de: "E4", para: "E5A", label: "BH confirmado, abrir" },
   { de: "E4", para: "E4_2", label: "BH confirmado, migrar" },
   { de: "E4", para: "E4_1", label: "fora de BH" },
 
-  { de: "E4_2", para: "E4_3" },
+  { de: "E4_2", para: "E4_3", label: "MEI", tracejado: true },
+  { de: "E4_2", para: "E4_2B", label: "ME", tracejado: true },
+  { de: "E4_2B", para: "E4_4", label: "Simples" },
+  { de: "E4_2B", para: "E4_2B_1", label: "Presumido" },
+  { de: "E4_2", para: "E4_2B_1", label: "🔴 Presumido (já no cartão)", tracejado: true },
+  { de: "E4_2", para: "E4_2_1", label: "CNPJ inapto/suspenso", tracejado: true },
   { de: "E4_2", para: "E5_1", label: "🟡 regulada" },
   { de: "E4_2", para: "E5_2", label: "🔴 Mauro atende" },
-  { de: "E4_3", para: "E4_4" },
+  { de: "E4_3", para: "E4_4", tracejado: true },
   { de: "E4_4", para: "E4_5" },
   { de: "E4_5", para: "E9", label: "fluxo migrar" },
   { de: "E9", para: "E9_2", label: "fluxo migrar", tracejado: true },

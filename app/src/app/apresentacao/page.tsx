@@ -33,7 +33,6 @@ import {
 import { PainelView } from "@/components/painel";
 import {
   MigrarCnpjView,
-  MigrarDiagnosticoView,
   MigrarPlanoView,
   MigrarContratoView,
   MigrarPassivoView,
@@ -328,7 +327,6 @@ type Etapa =
   // Ramo decimal, não continuação: sai do fork E4 e reencontra o tronco só no
   // pagamento (E9). Por isso tem sequência própria, não entra em ETAPAS_CAUDA.
   | "m-cnpj"
-  | "m-diagnostico"
   | "m-plano"
   | "m-contrato"
   | "m-pagamento"
@@ -407,10 +405,14 @@ function naCauda(e: Etapa): e is EtapaCauda {
  *
  * `m-travado` fica FORA da sequência: é estado de exceção do `m-transferencia`
  * (persona `migra-refem`), alcançável por pill própria, não por "Continuar".
+ *
+ * 🔴 04/08 (3ª rodada) — `m-diagnostico` (M2, Fator R) SAIU da sequência: a
+ * tela foi cortada pra ME (decisão do Pedro, ver `MigrarDiagnosticoView`).
+ * ⚠️ Esta demo ainda não tem etapa própria pro M1b (`/migrar/tributario`,
+ * Simples×Presumido) — gap pré-existente, fora do escopo deste corte.
  */
 const ETAPAS_MIGRAR = [
   "m-cnpj",
-  "m-diagnostico",
   "m-plano",
   "m-contrato",
   "m-pagamento",
@@ -509,7 +511,6 @@ type Momento =
   // Ramo decimal, não continuação: sai do fork E4 e reencontra o tronco só no
   // pagamento (E9). Por isso tem sequência própria, não entra em ETAPAS_CAUDA.
   | "m-cnpj"
-  | "m-diagnostico"
   | "m-plano"
   | "m-contrato"
   | "m-pagamento"
@@ -850,7 +851,6 @@ const NOME_MOCKUP: Record<Momento, string> = {
   assinatura: "A4 · Assinatura (GOV.BR)",
   ativacao: "🔓 A5 · Home de ativação (dia-1)",
   "m-cnpj": "🆕 E4.2 · Seu CNPJ (migrar)",
-  "m-diagnostico": "🆕 E4.3 · Diagnóstico com número real",
   "m-plano": "🆕 E4.4 · A conta da migração",
   "m-contrato": "🆕 E4.5 · Contrato da migração",
   "m-pagamento": "🆕 E9 · Pagamento (migração)",
@@ -1147,14 +1147,6 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
       "Não interfere na constituição — a empresa já existe. O que se decide aqui é se a gente ATENDE essa empresa: atividade de serviço, no Simples, sem conselho de classe.",
     porque:
       "É a maior diferença em relação ao caminho abrir: aqui NÃO existe entrevista de atividade. O CNAE já está registrado, então a gente lê em vez de perguntar. Todo o E5 (pills, IA, desambiguação) desaparece — e com ele o risco de a IA errar a interpretação.",
-  },
-  "m-diagnostico": {
-    dono: "usuario",
-    faz: "Mostra quanto ele paga de imposto hoje e quanto poderia pagar, usando os 12 meses reais de faturamento e folha.",
-    interfere:
-      "Não muda a empresa, mas define a proposta comercial inteira. É aqui que a pessoa decide se vale trocar de contador.",
-    porque:
-      "🎯 O número é REAL, não estimativa. Empresa com 12+ meses tem histórico, então o Fator R sai do que de fato aconteceu. No caminho abrir o teaser promete em cima de faixa declarada, e é de lá que veio a dívida 'promessa quebrada' — aqui esse risco não existe. ⚖️ E tem guarda-corpo: se o contador atual já acertou, a tela diz isso e vende serviço, não economia inventada.",
   },
   "m-plano": {
     dono: "usuario",
@@ -1607,7 +1599,6 @@ export default function ApresentacaoPage() {
    */
   const PILLS_MIGRAR: { etapa: Etapa; label: string }[] = [
     { etapa: "m-cnpj", label: "E4.2 · Seu CNPJ" },
-    { etapa: "m-diagnostico", label: "E4.3 · Diagnóstico" },
     { etapa: "m-plano", label: "E4.4 · A conta" },
     { etapa: "m-contrato", label: "E4.5 · Contrato" },
     { etapa: "m-pagamento", label: "E9 · Pagamento" },
@@ -2090,14 +2081,6 @@ export default function ApresentacaoPage() {
                               setEtapa("veredito");
                             }}
                             onVoltar={() => voltar(() => setEtapa(antesDoMigrar("m-cnpj")))}
-                          />
-                        )}
-                        {etapa === "m-diagnostico" && (
-                          <MigrarDiagnosticoView
-                            onSeguir={() => setEtapa(depoisDoMigrar("m-diagnostico"))}
-                            onVoltar={() =>
-                              voltar(() => setEtapa(antesDoMigrar("m-diagnostico")))
-                            }
                           />
                         )}
                         {etapa === "m-plano" && (

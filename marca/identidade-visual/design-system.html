@@ -435,15 +435,15 @@ td .swatch-inline{display:inline-block;width:16px;height:16px;border-radius:4px;
     </svg>
   </div>
 
-  <div class="grp">Fundação</div>
-  <a href="#filosofia">Filosofia · 2 camadas</a>
-  <a href="#cor">Cor</a>
-  <a href="#tipografia">Tipografia</a>
-  <a href="#gradiente">Gradiente</a>
-  <a href="#raio">Raio</a>
-  <a href="#espaco">Espaçamento</a>
-  <a href="#elevacao">Elevação & Motion</a>
-  <a href="#escuro">Tema escuro</a>
+  <div class="grp">Fundação · histórico</div>
+  <a href="#filosofia">Filosofia · 2 camadas <span style="opacity:.5">· histórico</span></a>
+  <a href="#cor">Cor <span style="opacity:.5">· histórico</span></a>
+  <a href="#tipografia">Tipografia <span style="opacity:.5">· histórico</span></a>
+  <a href="#gradiente">Gradiente <span style="opacity:.5">· histórico</span></a>
+  <a href="#raio">Raio <span style="opacity:.5">· histórico</span></a>
+  <a href="#espaco">Espaçamento <span style="opacity:.5">· histórico</span></a>
+  <a href="#elevacao">Elevação & Motion <span style="opacity:.5">· histórico</span></a>
+  <a href="#escuro">Tema escuro <span style="opacity:.5">· histórico</span></a>
 
   <div class="grp">Componentes</div>
   <a href="#storybook-aviso">🟢 Storybook (ao vivo)</a>
@@ -480,9 +480,26 @@ td .swatch-inline{display:inline-block;width:16px;height:16px;border-radius:4px;
     </p>
   </header>
 
+  <!-- AVISO FUNDAÇÕES — 05/08: mesma virada de 31/07 (Componentes), agora pras
+       Fundações. As seções abaixo (Filosofia → Tema escuro) eram lidas via JS
+       de um <style> colado à mão aqui dentro — cópia de globals.css, com o
+       MESMO risco de divergir que motivou a virada dos Componentes (achamos
+       na prática: dark do surface-card já tinha divergido, scrim do
+       gradiente tinha 3 valores diferentes espalhados pelo código). A partir
+       de 05/08 as Fundações também viram Storybook (`Fundações/*`), lendo
+       `globals.css` ao vivo via getComputedStyle — zero cópia. -->
+  <section id="fundacoes-aviso">
+    <div class="eyebrow">Fundação · histórico</div>
+    <h2 class="sec">🟢 Vitrine ao vivo — Storybook</h2>
+    <p class="lead">As seções abaixo (Filosofia, Cor, Tipografia, Gradiente, Raio, Espaçamento, Elevação&Motion, Tema escuro) eram HTML com valores colados à mão — mesmo risco de divergência que os Componentes tinham antes de 31/07 (achamos na prática: o <code class="tok">surface-card</code> do dark já tinha divergido daqui pro `globals.css`, e o gradiente "scrim" tinha 3 valores diferentes espalhados pelo código real). <b>A partir de 05/08, a fonte de verdade das Fundações também é o Storybook</b> (categoria <code class="tok">Fundações/*</code>): lê <code class="tok">globals.css</code> ao vivo via <code class="tok">getComputedStyle</code>, zero cópia — se o CSS mudar, a página muda sozinha.</p>
+    <div class="callout" style="margin-top:16px">
+      <b>Storybook (ao vivo):</b> <code class="tok">npm run storybook</code> na pasta <code class="tok">app/</code> (porta 6006), categorias <code class="tok">Fundações/*</code> (tokens) e <code class="tok">Fundações/Sistema</code> (shells, arquétipos, governança). As seções abaixo continuam aqui como referência histórica/offline, não são mais atualizadas ativamente.
+    </div>
+  </section>
+
   <!-- FILOSOFIA -->
   <section id="filosofia">
-    <div class="eyebrow">Fundação</div>
+    <div class="eyebrow">Fundação · histórico</div>
     <h2 class="sec">A arquitetura em 2 camadas</h2>
     <p class="lead">A tela nunca escolhe uma cor. Ela pede um <b>papel</b>. Isso não é preferência estética — é governança mecânica.</p>
     <hr class="hr" style="margin-top:24px" />
@@ -504,7 +521,7 @@ td .swatch-inline{display:inline-block;width:16px;height:16px;border-radius:4px;
 
   <!-- COR -->
   <section id="cor">
-    <div class="eyebrow">Fundação</div>
+    <div class="eyebrow">Fundação · histórico</div>
     <h2 class="sec">Cor</h2>
     <p class="lead">Sistema de 2 cores disciplinado: <b>coral</b> = marca + ação · <b>ink</b> = seriedade + estrutura. Verdes/vermelhos/âmbar são só estado, nunca decoração.</p>
 
@@ -544,7 +561,7 @@ td .swatch-inline{display:inline-block;width:16px;height:16px;border-radius:4px;
 
   <!-- TIPOGRAFIA -->
   <section id="tipografia">
-    <div class="eyebrow">Fundação</div>
+    <div class="eyebrow">Fundação · histórico</div>
     <h2 class="sec">Tipografia — Sora</h2>
     <p class="lead">Sora pro sistema inteiro (display, corpo, UI). Escala em <code class="tok">rem</code>: fonte ampliável é requisito de acessibilidade (UX-12), nunca px travado.</p>
     <div style="margin-top:20px">
@@ -561,7 +578,7 @@ td .swatch-inline{display:inline-block;width:16px;height:16px;border-radius:4px;
 
   <!-- GRADIENTE -->
   <section id="gradiente">
-    <div class="eyebrow">Fundação</div>
+    <div class="eyebrow">Fundação · histórico</div>
     <h2 class="sec">Gradiente</h2>
     <p class="lead">Uma família <b>gráfica escura</b>, já usada nas telas — não é enfeite novo. Gradiente aqui é <b>acento</b> (hero, card de conteúdo, objeto físico, glow), <b>nunca</b> superfície de UI nem fill de botão. A regra do coral segue: coral cheio não vira fundo de ação.</p>
     <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:24px">
@@ -604,7 +621,7 @@ td .swatch-inline{display:inline-block;width:16px;height:16px;border-radius:4px;
 
   <!-- RAIO -->
   <section id="raio">
-    <div class="eyebrow">Fundação</div>
+    <div class="eyebrow">Fundação · histórico</div>
     <h2 class="sec">Raio — derivado do logo</h2>
     <p class="lead">O símbolo tem raio ≈ 0,27 × lado. Num ícone de 44px isso dá ~12 → vira o raio de input/botão. O logo governa o sistema, não é coincidência.</p>
     <div class="radii" style="margin-top:24px">
@@ -619,7 +636,7 @@ td .swatch-inline{display:inline-block;width:16px;height:16px;border-radius:4px;
 
   <!-- ESPACO -->
   <section id="espaco">
-    <div class="eyebrow">Fundação</div>
+    <div class="eyebrow">Fundação · histórico</div>
     <h2 class="sec">Espaçamento — base 4</h2>
     <p class="lead">Sem token novo, de propósito: a escala nativa do Tailwind já é base-4 e bate com a do DS. Criar <code class="tok">space-*</code> por cima seria abstração duplicada. Uma densidade só — compact/comfortable é aposta.</p>
     <div class="spaces" style="margin-top:22px">
@@ -636,7 +653,7 @@ td .swatch-inline{display:inline-block;width:16px;height:16px;border-radius:4px;
 
   <!-- ELEVACAO -->
   <section id="elevacao">
-    <div class="eyebrow">Fundação</div>
+    <div class="eyebrow">Fundação · histórico</div>
     <h2 class="sec">Elevação & Motion</h2>
     <div class="two">
       <div class="panel">
@@ -657,7 +674,7 @@ td .swatch-inline{display:inline-block;width:16px;height:16px;border-radius:4px;
 
   <!-- ESCURO -->
   <section id="escuro">
-    <div class="eyebrow">Fundação</div>
+    <div class="eyebrow">Fundação · histórico</div>
     <h2 class="sec">Tema escuro <span class="proposta-badge">CÓDIGO REAL — no CRM</span></h2>
     <p class="lead">🔓 31/07 — deixou de ser só proposta: <b>o CRM interno roda 100% no dark</b> (`index.html` trava <code class="tok">data-theme="dark"</code>, sem toggle — lá dark é o tema, não opção). Os valores viraram <b>fonte canônica no `legalizei/app/src/app/globals.css`</b>, e o `CRM_app/tokens.css` virou espelho declarado (sincroniza à mão, não é build-time ainda). ⚠️ Este app (<b>legalizei</b>, o wizard/portal mobile) <b>continua light-only</b> — o bloco existe como token disponível, nada liga sozinho aqui. Prova viva da arquitetura de 2 camadas: o escuro remapeia <b>só a camada 2</b> (os <code class="tok">--color-*</code>). Os primitivos e <b>todos os componentes ficam intactos</b>. Use o botão <b>Escuro</b> no canto pra alternar e ver o sistema inteiro virar sem nenhum componente mudar.</p>
     <div class="two" style="margin-top:24px">

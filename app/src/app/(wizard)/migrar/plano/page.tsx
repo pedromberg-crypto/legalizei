@@ -30,7 +30,7 @@ export default function MigrarPlanoPage() {
     <MigrarPlanoView
       mei={mei}
       onSeguir={() => router.push(qs ? `/migrar/contrato?${qs}` : "/migrar/contrato")}
-      onVoltar={() => router.push("/migrar/diagnostico")}
+      onVoltar={() => router.push(mei ? "/migrar/diagnostico" : "/migrar/tributario")}
     />
   );
 }

@@ -12,11 +12,16 @@ import {
 
 /**
  * 🟢 PRODUÇÃO REAL — FLOW #2, migrar de contador (M1-M6), construído 30/07.
- * 4 diferenças estruturais vs. flow #1: sem entrevista de atividade (lê o
- * cartão CNPJ) · diagnóstico com número REAL (12 meses, não estimativa) ·
- * sem taxa de governo · 🔴 pausa mais perigosa do produto (TTRT validado
- * pelo contador ANTIGO). DECISÃO: cobra antes do TTRT, com devolução
- * garantida em contrato se a transferência não sair por motivo alheio.
+ * Diferenças estruturais vs. flow #1: sem entrevista de atividade (lê o
+ * cartão CNPJ) · sem taxa de governo · 🔴 pausa mais perigosa do produto
+ * (TTRT validado pelo contador ANTIGO). DECISÃO: cobra antes do TTRT, com
+ * devolução garantida em contrato se a transferência não sair por motivo
+ * alheio.
+ *
+ * 🔴 04/08 (3ª rodada) — o diagnóstico de Fator R com "número real" pra ME
+ * foi CORTADO do M2 (a API que puxaria isso não roda pré-pagamento). M2
+ * agora é só o subfluxo MEI ("tem contador?"). Fator R/pró-labore só
+ * entram pós-pagamento — ver `MigrarDiagnosticoView`.
  */
 const meta = {
   title: "Telas/Migrar M1-M6 (flow #2)",
@@ -47,8 +52,7 @@ export const M1_AchouEmpresa: Story = {
   },
 };
 
-export const M2_DiagnosticoComGanho: Story = { render: () => <Shell><MigrarDiagnosticoView /></Shell> };
-export const M2_GuardaCorpoJaOtimo: Story = { render: () => <Shell><MigrarDiagnosticoView jaOtimo /></Shell> };
+export const M2_MEI_TemContador: Story = { render: () => <Shell><MigrarDiagnosticoView /></Shell> };
 
 export const M3_Plano: Story = { render: () => <Shell><MigrarPlanoView /></Shell> };
 

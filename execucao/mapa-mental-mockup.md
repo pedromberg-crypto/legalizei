@@ -21,6 +21,8 @@ tags: [produto, ux, telas, fluxo, mermaid, mapa, mockup]
 >
 > **🆕 04/08 (correção)** — a 1ª extração da E4.2 (pedido do Pedro de dividir a tela em 2) tirou a peça errada (loading). Corrigido: a tela extraída é `MigrarAchouView` ("Achamos sua empresa" — card+checagens+veredito), não o spinner.
 >
+> **🆕 04/08 (5ª rodada) — E4.2b nova (Simples × Presumido, autodeclarado).** Debate de custo: a API paga que confirma Simples×Presumido de verdade (`receita-federal/simples`, R$0,24) só roda DEPOIS que a pessoa virar cliente — cobrar isso de um lead que ainda não converteu não compensa. `/migrar/tributario` pergunta autodeclarado (mesma doutrina da E3.2 MEI×ME): Simples segue pro M2, Presumido vai pra `/saida/regime-nao-suportado`. Só existe no caminho ME — MEI pula direto pro M2 (não tem essa ambiguidade).
+>
 > **🆕 04/08 (4ª rodada) — E3.2 reusada pro Migrar.** Decisão do Pedro: inverter a ordem que existia (perguntava cidade ANTES de saber MEI×ME). Agora Migrar ("Já tenho empresa") também passa pela E3.2 — mesma tela (`MeiOuMeView`), `contexto="migrar"` troca a copy de "qual devo escolher" (elegibilidade, faz sentido pra quem vai abrir) pra "qual eu já sou" (autodeclaração, o CNPJ já existe). MEI pula a cidade e vai direto pro M1 (`/migrar/cnpj?cenario=mei`); ME cai no mesmo gate de cidade de sempre. Autodeclarado, não trava — quem confirma de verdade é o M1, puxando da Receita.
 >
 > **Legenda:** seta cheia = fluxo principal · seta tracejada = ramo/alternativa/atalho (mais fino, menos frequente que o principal).
@@ -43,6 +45,7 @@ flowchart LR
     n_migrar_achou["🆕 E4.2 · Achamos sua empresa<br/>/migrar/cnpj?fase=achou"]
     n_saida_regime["🆕 Saída · Regime não suportado (Presumido)<br/>/saida/regime-nao-suportado"]
     n_saida_cnpj_inapto["🆕 Saída · CNPJ inapto/suspenso<br/>/saida/cnpj-inapto"]
+    n_migrar_tributario["🆕 E4.2b · Simples ou Presumido? (só ME)<br/>/migrar/tributario"]
     n_migrar_diag_mei["🆕 E4.3 · Diagnóstico MEI (tem contador?)<br/>/migrar/diagnostico?regime=mei"]
     n_migrar_diag["E4.3 · Migrar · Diagnóstico<br/>/migrar/diagnostico"]
     n_migrar_diag_otimo["E4.3 · Guarda-corpo honestidade<br/>/migrar/diagnostico?cenario=ja-otimo"]
@@ -160,7 +163,9 @@ flowchart LR
   n_entrada_migrar --> n_entrada_abrir_me
   n_entrada_abrir_me --> n_migrar_cnpj
   n_migrar_cnpj -.-> n_migrar_achou
-  n_migrar_cnpj --> n_migrar_diag
+  n_migrar_cnpj --> n_migrar_tributario
+  n_migrar_tributario --> n_migrar_diag
+  n_migrar_tributario -.-> n_saida_regime
   n_migrar_cnpj -.-> n_migrar_diag_otimo
   n_migrar_cnpj -.-> n_veredito_waitlist
   n_migrar_cnpj -.-> n_veredito_nao_atende
@@ -270,6 +275,7 @@ flowchart LR
 | `/saida/regime-nao-suportado` | 🆕 Saída · Regime não suportado (só Lucro Presumido) |
 | `/saida/cnpj-inapto` | 🆕 Saída · CNPJ inapto/suspenso |
 | `/migrar/diagnostico` | E4.3 · Migrar · Diagnóstico (número REAL) |
+| `/migrar/tributario` | 🆕 E4.2b · Simples Nacional ou Lucro Presumido? (só ME) |
 | `/migrar/diagnostico?regime=mei` | 🆕 E4.3 · Diagnóstico MEI ("tem contador?") |
 | `/migrar/diagnostico?cenario=ja-otimo` | E4.3 · Guarda-corpo de honestidade |
 | `/migrar/plano` | E4.4 · Migrar · A conta da migração |

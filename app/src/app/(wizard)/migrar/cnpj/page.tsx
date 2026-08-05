@@ -26,9 +26,8 @@ import {
  *
  * 🆕 04/08 — `?cenario=mei|presumido|inapto` demo os cenários achados no
  * cruzamento com `Fluxo Migração GEMINI.md` (ver `EMPRESA_MIGRAR_CENARIOS`).
- * 🆕 04/08 (2ª rodada) — MEI agora SEGUE pro M2 (`/migrar/diagnostico?regime=
- * mei`), não bloqueia mais. Só Presumido segue pra `/saida/regime-nao-
- * suportado`.
+ * 🆕 04/08 (2ª rodada) — MEI agora SEGUE pro M2 (`/migrar/diagnostico`), não
+ * bloqueia mais. Só Presumido segue pra `/saida/regime-nao-suportado`.
  *
  * 🆕 04/08 (3ª rodada, corrigido) — `?fase=achou` renderiza SÓ o
  * `MigrarAchouView` (a tela "Achamos sua empresa" — card + 4 checagens +
@@ -36,6 +35,17 @@ import {
  * ao lado do M1 — antes só dava pra ver digitando um CNPJ no fluxo real.
  * ⚠️ Pedido original do Pedro era ESTA tela, não a de loading — corrigido
  * depois de eu ter extraído a errada na 1ª tentativa.
+ *
+ * 🆕 04/08 (4ª rodada) — ME agora passa por `/migrar/tributario` (Simples ×
+ * Presumido, autodeclarado) ANTES do plano — não roda a API paga de
+ * Simples/SIMEI pra quem ainda não converteu. MEI pula essa pergunta (não
+ * existe pra quem já é MEI).
+ *
+ * 🔴 04/08 (5ª rodada, decisão do Pedro) — corrigido bug: o veredito ("achou")
+ * já mandava ME pra `/migrar/tributario`, mas o handler de produção deste
+ * componente mandava direto pro M2 (diagnóstico), pulando o M1b. Agora os
+ * dois concordam. ME nunca mais visita `/migrar/diagnostico` (cortado, ver
+ * `MigrarDiagnosticoView`) — só MEI passa por lá.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function MigrarCnpjPage() {
@@ -56,7 +66,7 @@ export default function MigrarCnpjPage() {
         regimeOk={empresa.regime !== "presumido"}
         onVoltar={() => router.push("/migrar/cnpj")}
         onSeguir={() =>
-          router.push(cenario === "mei" ? "/migrar/diagnostico?regime=mei" : "/migrar/diagnostico")
+          router.push(cenario === "mei" ? "/migrar/diagnostico" : "/migrar/tributario")
         }
         onSaidaRegulada={() => router.push("/veredito/waitlist")}
         onSaidaNaoAtende={() => router.push("/veredito/nao-atende")}
@@ -70,7 +80,7 @@ export default function MigrarCnpjPage() {
     <MigrarCnpjView
       cenario={cenario}
       onSeguir={() =>
-        router.push(cenario === "mei" ? "/migrar/diagnostico?regime=mei" : "/migrar/diagnostico")
+        router.push(cenario === "mei" ? "/migrar/diagnostico" : "/migrar/tributario")
       }
       onSaidaRegulada={() => router.push("/veredito/waitlist")}
       onSaidaNaoAtende={() => router.push("/veredito/nao-atende")}

@@ -62,8 +62,6 @@ export default function MigrarCnpjPage() {
         onSeguir={() =>
           router.push(cenario === "mei" ? "/migrar/diagnostico" : "/migrar/plano")
         }
-        onSaidaRegulada={() => router.push("/veredito/waitlist")}
-        onSaidaNaoAtende={() => router.push("/veredito/nao-atende")}
         onSaidaInapto={() => router.push("/saida/cnpj-inapto")}
       />
     );
@@ -75,8 +73,6 @@ export default function MigrarCnpjPage() {
       onSeguir={() =>
         router.push(cenario === "mei" ? "/migrar/diagnostico" : "/migrar/plano")
       }
-      onSaidaRegulada={() => router.push("/veredito/waitlist")}
-      onSaidaNaoAtende={() => router.push("/veredito/nao-atende")}
       onSaidaInapto={() => router.push("/saida/cnpj-inapto")}
       onVoltar={() => router.push("/entrada")}
     />

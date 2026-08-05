@@ -1,5 +1,7 @@
 # Memory Index — Legalize
 
+- [Pesquisa de mercado grande roda via Gemini](legalize-pesquisa-grande-via-gemini.md) — 05/08: prompt otimizado pro Google Search do Gemini, Pedro roda fora e cola de volta; não pesquisar direto na sessão.
+- [Estratégia de marketing/produto completa (14/14 slots)](legalize-estrategia-marketing-completa.md) — 05/08: template estrategia-digital preenchido; preço ME R$139; CAC-alvo corrigido (LTV, não mês); MEI fora de tráfego pago frio; 12 personas; Instagram+Meta travados como canal.
 - [Base de copy/tom-de-voz é PARCIAL](legalize-base-copy-insuficiente.md) — 05/08: só conceito-marca §5 (fino) + regras soltas + rubrica mecânica; falta glossário técnico + exemplos por tela; personas NÃO cobrem (são QA de fluxo, não copy).
 - [Escopo MEI confirmado, Lucro Presumido segue fora](legalize-escopo-mei-lucro-presumido-aberto.md) — 04/08: MEI 🟢 entra (inclusive Migrar, subfluxo "tem contador?"); LP 🔴 fica na saída "não atendemos" até pesquisa fiscal dedicada.
 - [LP institucional + rebrand + páginas legais + deploy](legalize-lp-atualizada-rebrand-legal.md) — 03/08: LP+coming-soon NO AR no Vercel (legalizei-lp/legalizei-em-breve); rebrand Legalizai; CNPJ real; páginas legais; 2 bugs cross-projeto corrigidos.

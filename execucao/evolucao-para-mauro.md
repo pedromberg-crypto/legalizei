@@ -605,5 +605,27 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 - Comecei a trocar alguns ícones do app por animações, 1 por 1, pra você ir validando o estilo
 ```
 
+## Semana 05/08/2026 — montei a estratégia de marketing inteira, e um cálculo errado apareceu
+
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | **Estratégia de marketing completa** | Montei o guia inteiro de marketing e produto: quem são nossos clientes (personas), o que postar nas redes, como vamos anunciar, e a conta de quanto custa trazer cada cliente. Não é mais só o produto — agora tem o plano de como vender ele | 🟢 |
+| 2 | **Preço do plano ME revisado: R$139/mês** (era R$195 provisório) | Rodei a conta com o custo técnico que já sabemos (sem contar seu honorário ainda, isso segue pendente com você) | 🟢 (preço técnico, falta seu número real) |
+| 3 | **Achado importante: nosso cálculo de quanto podemos gastar pra trazer 1 cliente estava errado** | Eu tinha calculado em cima de 1 mês só; o certo é calcular em cima do tempo que o cliente fica com a gente (2 anos, por exemplo). Corrigi a conta. Resultado: o plano MEI (R$49,90) é frágil pra atrair cliente com anúncio pago — a margem é curta demais. Decisão: MEI não vai ter anúncio pago direto, só vem por indicação/orgânico ou de quem já é cliente ME | 🟢 |
+| 4 | **Descobri onde anunciar de verdade** | Pesquisei o mercado específico de contabilidade digital (não só "empresa em geral"): Instagram é a rede certa (63-83% do nosso público tá lá), e no anúncio pago o Meta (Instagram/Facebook) funciona melhor que Google pra esse público, no nosso orçamento inicial | 🟢 |
+| 5 | **Descobri o jeito certo de vender: WhatsApp, não formulário** | A decisão de comprar não acontece numa página com formulário — acontece numa conversa no WhatsApp com uma pessoa de verdade tirando a dúvida na hora. O anúncio vai levar direto pra conversa, não pra um site | 🟢 |
+
+**Próximo:** falta seu número de custo real (honorário por cliente) pra travar a margem de verdade — sem isso, os R$139 e o cálculo de anúncio ainda são só técnicos. E falta configurar de fato as contas de anúncio pra começar a testar.
+
+### 📱 WhatsApp (05/08)
+```
+*Update Legalizei* 📈
+- Montei a estratégia de marketing inteira: quem são nossos clientes, o que postar, como anunciar e quanto custa trazer cada um
+- Revisei o preço do plano ME pra R$139/mês (ainda sem contar seu honorário, isso segue pendente)
+- Achei um erro no cálculo de quanto podemos gastar pra trazer 1 cliente — corrigido. Descoberta: o plano MEI é frágil pra anúncio pago, então ele não vai ter anúncio direto, só vem por indicação
+- Descobri que Instagram é a rede certa pro nosso público, e que a venda de verdade acontece numa conversa de WhatsApp, não num formulário de site
+- Falta seu número de custo real pra travar a conta de vez
+```
+
 ## Links
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]]

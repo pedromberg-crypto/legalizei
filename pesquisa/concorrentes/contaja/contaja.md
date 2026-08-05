@@ -14,41 +14,37 @@ tags: [concorrente]
 # Teardown — Contajá
 
 ## Visão geral
-> Seed da desk research: R$137 entrada · único com plano MEI (R$49,90) · abertura 72h · ~850 clientes (2021). Aprofundar na S3.
-- Posicionamento:
-- Clientes alegados (fonte + data):
-- Funding / tração:
+> R$137 entrada · único com plano MEI (R$49,90) · abertura 72h · CRC MG (player mineiro de fato).
+- **Posicionamento:** techco — "Ser a maior empresa de tecnologia no mercado contábil", tom populista/parceria ("Vamos juntos?", "Vem com a gente!")
+- **Clientes alegados:** ~850 (2021, defasado) — [[PESQUISA-MERCADO]] §B
+- **Funding / tração:** R$1,2 mi via CapTable, valuation R$12 mi (early-stage) — conf. média (defasado)
 
 ## 💰 Pricing & pacotes
-- Planos e preços:
-- O que escala o preço (faturamento? funcionários?):
-- Add-ons / taxas escondidas:
-- Transparência (mostra preço sem simulador?):
+- **Planos:** MEI R$49,90 · Simples R$137 · Lucro Presumido/Construção/IE R$207,90 · Dropshipping R$279,90 (todos "a partir de")
+- **O que escala:** não é faturamento — é tipo de regime/atividade (tiers fixos por categoria)
+- **Add-ons/taxas escondidas:** IRPF sócio R$279 · admissão/rescisão R$129 · migração MEI→ME R$1.399 · baixa R$1.359 · alteração contratual R$1.239+taxas · reprocessamento R$399,90 · certificado R$150(PF)/R$250(PJ)
+- **Transparência:** preço na tabela sem simulador (bom), mas custo real da abertura (certificado+taxas) só aparece no FAQ, não na vitrine — "grátis" = "não cobramos honorários", taxas de terceiro continuam existindo
 
 ## 🚪 Onboarding (jornada de entrada)
-- Passos até virar cliente (contar cliques/telas):
-- Tempo total · fricções · o que pedem de documento:
-- Self-service ou humano no meio?
+🔴 não capturado nesta rodada (dado exige teardown de produto/trial, não só páginas públicas)
 
 ## 🎨 UI (visual)
-- Design system / cara geral:
-- Dashboard: o que mostra primeiro?
-- Prints salvos em: (colar imagens aqui — arrastar pro Obsidian)
+- **Cor dominante:** verde-limão #b1ce0b — território "budget/popular"
+- **Arquétipo:** Cara-comum (Everyman), tom informal 1ª pessoa do plural
+- Prints: `marca-img/{planos,sobre,faq}.png`
 
 ## 🧭 UX (fluxos)
-- Emissão de NF: passos, tempo, dor
-- Guias/DAS: como apresenta, avisa vencimento?
-- Suporte: canais, tempo de resposta, qualidade
-- Mobile: existe? funciona?
+🔴 não capturado — só páginas públicas de marketing, sem acesso a produto logado
 
 ## 📦 Entregas reais (vs prometido)
-- O que o plano de entrada REALMENTE inclui:
-- Onde empurram upsell:
+- **Plano base (R$137) inclui:** contabilidade completa, pró-labore/folha até 2 pessoas, conta PJ + cartão grátis, chat+WhatsApp
+- **Fica de fora (upsell disfarçado de "raramente necessário"):** IRPF do sócio, 3ª pessoa na folha, qualquer alteração/baixa/migração
 
 ## ⚔️ Veredito
-- **Forças (não competir de frente):**
-- **Fraquezas (nossa cunha):**
-- **Copiar:** / **Evitar:**
+- **Forças (não competir de frente):** preço-piso do mercado, único MEI+WhatsApp claro, CRC MG = legitimidade regional real
+- **Fraquezas (nossa cunha):** modelo à la carte esconde custo real (barato pra entrar, caríssimo pra sair — baixa R$1.359); inconsistência entre planos do FAQ e da tabela de preço (sem fonte única de verdade); culture-deck interno vazando pra página pública; cookie banner tapando conteúdo
+- **Copiar:** analogia "contrato social = certidão de nascimento da empresa" (didatismo real); tom 2ª pessoa/calor; CRC + responsáveis técnicos visíveis
+- **Evitar:** taxas escondidas no FAQ em vez da vitrine; eufemismo "raramente necessário" pra eventos previsíveis; ambiguidade de rótulo (toggle "PARA EMPRESAS/EMPRESAS")
 
 ## Links
-- [[PESQUISA-MERCADO]] · [[HOME]]
+- [[paginas-publicas]] · [[_sintese-paginas-publicas]] · [[PESQUISA-MERCADO]] · [[HOME]]

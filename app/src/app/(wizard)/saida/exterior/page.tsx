@@ -1,5 +1,6 @@
-import { SaidaView, type DadosSaida } from "@/components/saida";
+import { SaidaView } from "@/components/saida";
 import { TelaHeader } from "@/components/ui/tela";
+import { DADOS_SAIDA_EXTERIOR as D } from "@/lib/dados-saida";
 
 /**
  * A9 · SAÍDA — SÓCIO NO EXTERIOR · UX-07 · persona `bloq-exterior`
@@ -20,19 +21,10 @@ import { TelaHeader } from "@/components/ui/tela";
  * 🟡 Não cotamos Lucro Presumido aqui (UX-42): exige decisão de Mauro/Larissa
  * sobre atender esse caso e a que preço. Número sem fonte não entra, ainda
  * mais na tela em que a pessoa está decidindo se desiste.
+ *
+ * 🆕 06/08 — o conteúdo (`D`) virou `@/lib/dados-saida` (fonte única com a
+ * `/apresentacao`).
  */
-const D: DadosSaida = {
-  titulo: "Com sócio morando fora, o caminho é outro",
-  explica:
-    "A sua empresa pode existir normalmente. O que a lei não permite é ela entrar no Simples Nacional, que é o regime em que a gente abre empresa aqui pelo app.",
-  origem: {
-    rotulo: "De onde vem essa regra",
-    texto:
-      "Lei Complementar 123, artigo 17: empresa com sócio que mora no exterior não pode optar pelo Simples Nacional.",
-  },
-  saida:
-    "Existem outros regimes que atendem o seu caso, e o nosso time contábil faz esse tipo de abertura fora do app. Quer conversar com eles?",
-};
 
 export default function SaidaExteriorPage() {
   return (

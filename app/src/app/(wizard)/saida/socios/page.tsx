@@ -1,5 +1,6 @@
-import { SaidaView, type DadosSaida } from "@/components/saida";
+import { SaidaView } from "@/components/saida";
 import { TelaHeader } from "@/components/ui/tela";
+import { DADOS_SAIDA_SOCIOS as D } from "@/lib/dados-saida";
 
 /**
  * A9 · SAÍDA — 3 OU MAIS SÓCIOS · UX-09 · persona `bloq-3socios`
@@ -21,19 +22,10 @@ import { TelaHeader } from "@/components/ui/tela";
  *
  * 🟡 Sem UX-42 aqui também: modelar "2 sócios + 1 depois" ou "o escritório faz
  * os 3" como opções cotadas depende de decisão do Mauro.
+ *
+ * 🆕 06/08 — o conteúdo (`D`) virou `@/lib/dados-saida` (fonte única com a
+ * `/apresentacao`).
  */
-const D: DadosSaida = {
-  titulo: "Com três ou mais sócios, ainda não pelo app",
-  explica:
-    "Não tem nada de errado com a sua sociedade, e a lei permite. É o nosso app que hoje abre empresa com no máximo dois sócios.",
-  origem: {
-    rotulo: "De onde vem esse limite",
-    texto:
-      "É uma escolha nossa, não uma regra do governo. A cada sócio a mais mudam as assinaturas e o contrato, e a gente preferiu fazer bem para dois antes de abrir para mais.",
-  },
-  saida:
-    "O escritório que está por trás do app faz esse tipo de abertura todo dia, fora do aplicativo. Quer que a gente te apresente?",
-};
 
 export default function SaidaSociosPage() {
   return (

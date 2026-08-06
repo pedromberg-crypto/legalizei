@@ -10,6 +10,7 @@ import {
   FaixaView,
 } from "@/components/gate-telas";
 import { ehMei, comRegime } from "@/lib/regime";
+import { mapear } from "@/lib/mock-veredito";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -35,51 +36,13 @@ import { ehMei, comRegime } from "@/lib/regime";
  *
  * 🚧 IA dublada: no motor o mapeamento CNAE vem da persona; aqui vem de um
  * mock. A tela testa a LÓGICA do fluxo, não a IA.
+ *
+ * 🆕 06/08 — `mapear()` mudou de casa pra `@/lib/mock-veredito`: era cópia
+ * local (só 3 desfechos), divergente da versão usada em `/apresentacao` (4
+ * desfechos — 2 travessões só sobreviveram na cópia da demo). Fonte única
+ * agora, com os 4 desfechos nos dois lugares.
  * ═══════════════════════════════════════════════════════════════════════════
  */
-
-// Mock do b1.mapeamento (IA dublada). Espelha os vereditos do motor.
-// `Resultado` / `Veredito` vêm de @/components/veredito (fonte única A2).
-function mapear(texto: string): Resultado {
-  const t = texto.toLowerCase();
-  if (/nutri|dentist|médic|medic|advog|arquitet|psicó|psico/.test(t)) {
-    return {
-      humano: "Atividade regulamentada",
-      explica: "Sua área precisa de responsável técnico registrado no conselho.",
-      cnae: "8650-0/02",
-      veredito: "waitlist",
-    };
-  }
-  if (/loja|revend|estoque|vend[oa] produto|comérci|comerci|restaurante/.test(t)) {
-    return {
-      humano: "Comércio",
-      explica: "Você vende produtos, não serviço.",
-      cnae: "4713-0/02",
-      veredito: "nao-atende",
-    };
-  }
-  // Dados reais do 6201-5/02 (contabilizei-cnae-completo.json + CONCLA/IBGE).
-  // As `vizinhas` fazem DUAS coisas: guarda-corpo do falso-🟢 (quem tem outra
-  // atividade PRINCIPAL se corrige aqui, antes do pagamento) e porta de entrada
-  // dos CNAEs secundários (quem faz as duas coisas descobre que cabe).
-  return {
-    humano: "Criação de sites e web design",
-    explica: "Você entrega sites e presença digital pra outras empresas.",
-    cnae: "6201-5/02",
-    veredito: "atende",
-    compreende: [
-      "Criar e desenvolver sites, páginas e portais na internet",
-      "Desenhar a interface (o visual e a navegação) desses sites",
-    ],
-    vizinhas: [
-      { oque: "Sistema sob medida, customizável", cnae: "6202-3/00", comoSecundaria: "mesmo-imposto" },
-      { oque: "Software pronto, de prateleira", cnae: "6203-1/00", comoSecundaria: "mesmo-imposto" },
-      { oque: "Consultoria em tecnologia", cnae: "6204-0/00", comoSecundaria: "mesmo-imposto" },
-      { oque: "Design gráfico (logo, material impresso)", cnae: "7410-2/99", comoSecundaria: "mesmo-imposto" },
-    ],
-    fiscal: { entradas: [6, 15.5], dependeProLabore: true },
-  };
-}
 
 type Etapa = "perguntando" | "analisando" | "veredito" | "triagem" | "faixa";
 

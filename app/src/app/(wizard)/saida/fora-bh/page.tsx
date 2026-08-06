@@ -1,9 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { SaidaView, type DadosSaida } from "@/components/saida";
+import { SaidaView } from "@/components/saida";
 import { TelaHeader } from "@/components/ui/tela";
-import { Lottie } from "@/components/lottie";
+import { DADOS_SAIDA_FORA_BH as D } from "@/lib/dados-saida";
 
 /**
  * A9 · SAÍDA — FORA DE BELO HORIZONTE · 🆕 28/07 (reunião Rua Satélite 9)
@@ -20,35 +20,10 @@ import { Lottie } from "@/components/lottie";
  * capturar contato, e a confirmação promete só o que a gente cumpre (avisar
  * quando abrir), sem prazo de ligação inventado. "Voltar ao início" é real
  * aqui (não existe conceito de "reiniciar demo" em produção).
+ *
+ * 🆕 06/08 — o conteúdo (`D`) virou `@/lib/dados-saida` (fonte única com a
+ * `/apresentacao`, que reusa este mesmo objeto pra não copiar as 2 telas).
  */
-const D: DadosSaida = {
-  // 🆕 04/08 — mesmo ícone "Alert" (Lottie) recolorido pro nosso azul de
-  // status, no lugar do símbolo padrão de pessoa. Estendendo pra E4.1.
-  icone: <Lottie path="/lottie/alert-legalizei.json" fps={30} className="h-[125px] w-[125px]" />,
-  tag: "Outra cidade",
-  titulo: "Por enquanto, só abrimos em Belo Horizonte",
-  explica:
-    "Estamos testando o produto com foco total numa cidade antes de expandir. Hoje só abrimos empresa em Belo Horizonte/MG.",
-  origem: {
-    rotulo: "Por que só BH",
-    texto:
-      "É a fase de testes (MLP) do produto. Preferimos fazer bem para uma cidade antes de abrir para mais.",
-  },
-  saida:
-    "Entra na lista de espera que a gente te avisa assim que abrir na sua cidade. Você é o primeiro a saber.",
-  extra: {
-    rotulo: "Qual a sua cidade?",
-    placeholder: "Comece a digitar: Uberl…",
-    obrigatorio: true,
-    tipo: "municipio",
-  },
-  ctaEnviar: "Me avisem quando chegarem aqui",
-  confirmacao: {
-    titulo: "Você está na nossa lista especial",
-    texto:
-      "A gente te avisa assim que expandir as operações pra sua cidade. Enquanto isso, acompanha a gente por aqui: é onde a gente explica imposto sem contabilês.",
-  },
-};
 
 export default function SaidaForaBhPage() {
   const router = useRouter();

@@ -10,7 +10,7 @@ import {
   FaixaView,
 } from "@/components/gate-telas";
 import { MolduraAparelho } from "@/components/lab/versao-board";
-import { SaidaView, type DadosSaida } from "@/components/saida";
+import { SaidaView } from "@/components/saida";
 import { TelaHeader } from "@/components/ui/tela";
 import { VereditoView, type Resultado } from "@/components/veredito";
 import {
@@ -47,6 +47,13 @@ import {
   type DadosConta,
   type Metodo,
 } from "@/components/wizard-dinheiro";
+import { mapear } from "@/lib/mock-veredito";
+import {
+  DADOS_SAIDA_FORA_BH,
+  DADOS_SAIDA_EXTERIOR,
+  DADOS_SAIDA_SOCIOS,
+} from "@/lib/dados-saida";
+import { GRUPOS } from "@/lib/telas-flow";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -73,6 +80,16 @@ import {
  * ela **deslinka** da oficial → ganha selo visível + observação no painel, e o
  * flow de produção só muda depois que ele validar. Ver `DIVERGENCIAS`.
  *
+ * 🆕 06/08 — a fidelidade por construção tinha 2 furos: o mock da IA
+ * (`mapear`) e o conteúdo das 3 saídas (fora-BH/exterior/3+sócios) eram
+ * CÓPIA local, porque as rotas reais guardam esse dado solto dentro do
+ * próprio `page.tsx`, sem exportar. Os dois viraram fonte única —
+ * `@/lib/mock-veredito` e `@/lib/dados-saida`, importados aqui E nas rotas
+ * reais — depois de 2 travessões terem sobrevivido só na cópia da demo. Os
+ * RÓTULOS do painel (`NOME_MOCKUP`) também deixaram de ser digitados à mão:
+ * vêm de `@/lib/telas-flow` (o mesmo `GRUPOS` que o `/mockup` usa) — mudou o
+ * nome de uma tela lá, muda aqui também, sem tocar neste arquivo.
+ *
  * Mecanismo da demo:
  *   · Split-screen: aparelho (esquerda, SEM iframe pra o estado ficar
  *     sincronizado com o painel) + explicação (direita).
@@ -84,61 +101,6 @@ import {
  *   · Dono da pausa (🟧 usuário · 🟦 nossa) — taxonomia do kanban de leads.
  * ═══════════════════════════════════════════════════════════════════════════
  */
-
-/* ─────────────────────────────────────────────────────────────────────────
-   MOCK DA IA — estende o `mapear` do /gate com o 3º ramo 🔴.
-   ⚠️ DIVERGÊNCIA CONSCIENTE (registrada em DIVERGENCIAS): no /gate de
-   produção o split "Mauro atende" × "ninguém atende" ainda é mock estático
-   por página. Aqui os 3 desfechos precisam sair do MESMO campo, senão a
-   gestão não vê a causa. Quando o split real existir, isto some.
-   ───────────────────────────────────────────────────────────────────────── */
-function mapear(texto: string): Resultado {
-  const t = texto.toLowerCase();
-  if (/nutri|dentist|médic|medic|advog|arquitet|psicó|psico/.test(t)) {
-    return {
-      humano: "Atividade regulamentada",
-      explica: "Sua área precisa de responsável técnico registrado no conselho.",
-      cnae: "8650-0/02",
-      veredito: "waitlist",
-    };
-  }
-  if (/fazenda|gado|agropecu|planta[çc]|colheita|min[ée]rio|extra[çc][ãa]o|pesca/.test(t)) {
-    return {
-      humano: "Atividade fora do nosso escopo",
-      explica:
-        "Esse tipo de atividade não é regulamentado nem é comércio, mas também não é algo que a gente ou nosso parceiro atenda.",
-      cnae: "0000-0/00",
-      veredito: "nao-atende",
-      motivo: "descarta",
-    };
-  }
-  if (/loja|revend|estoque|vend[oa] produto|comérci|comerci|restaurante/.test(t)) {
-    return {
-      humano: "Comércio",
-      explica: "Você vende produtos, não serviço — a gente só atende quem presta serviço.",
-      cnae: "4713-0/02",
-      veredito: "nao-atende",
-      motivo: "mauro",
-    };
-  }
-  return {
-    humano: "Criação de sites e web design",
-    explica: "Você entrega sites e presença digital pra outras empresas.",
-    cnae: "6201-5/02",
-    veredito: "atende",
-    compreende: [
-      "Criar e desenvolver sites, páginas e portais na internet",
-      "Desenhar a interface (o visual e a navegação) desses sites",
-    ],
-    vizinhas: [
-      { oque: "Sistema sob medida, customizável", cnae: "6202-3/00", comoSecundaria: "mesmo-imposto" },
-      { oque: "Software pronto, de prateleira", cnae: "6203-1/00", comoSecundaria: "mesmo-imposto" },
-      { oque: "Consultoria em tecnologia", cnae: "6204-0/00", comoSecundaria: "mesmo-imposto" },
-      { oque: "Design gráfico (logo, material impresso)", cnae: "7410-2/99", comoSecundaria: "mesmo-imposto" },
-    ],
-    fiscal: { entradas: [6, 15.5], dependeProLabore: true },
-  };
-}
 
 /**
  * CENÁRIOS DE DEMO. Os botões só PREENCHEM a tela (pill + texto); quem dispara
@@ -210,78 +172,22 @@ const CENARIOS: Cenario[] = [
 
 /**
  * 🔓 UX-62 (29/07) — a saída de cidade vira LISTA DE ESPERA classificada.
- * Hoje `/saida/fora-bh` já captura contato, mas: (a) a demo não chegava lá,
- * (b) não pergunta QUAL cidade — e uma waitlist geográfica sem a cidade não
- * diz pra onde expandir, (c) a confirmação promete ligação em 1 dia útil, que
- * nesta saída não é verdade.
- */
-const SAIDA_FORA_BH: DadosSaida = {
-  tag: "Outra cidade",
-  titulo: "Por enquanto, só abrimos em Belo Horizonte",
-  explica:
-    "Estamos testando o produto com foco total numa cidade antes de expandir. Hoje só abrimos empresa em Belo Horizonte/MG.",
-  origem: {
-    rotulo: "Por que só BH",
-    texto:
-      "É a fase de testes (MLP) do produto — preferimos fazer bem para uma cidade antes de abrir para mais.",
-  },
-  saida:
-    "Entra na lista de espera que a gente te avisa assim que abrir na sua cidade. Você é o primeiro a saber.",
-  extra: {
-    rotulo: "Qual a sua cidade?",
-    placeholder: "Comece a digitar: Uberl…",
-    obrigatorio: true,
-    tipo: "municipio",
-  },
-  ctaEnviar: "Me avisem quando chegarem aqui",
-  confirmacao: {
-    titulo: "Você está na nossa lista especial",
-    texto:
-      "A gente te avisa assim que expandir as operações pra sua cidade. Enquanto isso, acompanha a gente por aqui: é onde a gente explica imposto sem contabilês.",
-    // 🚧 Blog público e site institucional ainda não existem como rota do app
-    // (o /blog de hoje é o do portal LOGADO). Ficam visíveis porque a decisão
-    // de produto é essa; o destino é pendência declarada. O "Voltar ao início"
-    // é injetado no JSX, porque depende do estado da demo.
-    acoes: [
-      // Coral (`primary` = text-lg bold, o que mantém AA sobre coral-600).
-      { label: "Ler o blog", variante: "primary", pendente: true },
-      { label: "Conhecer o site", variante: "primary", pendente: true },
-    ],
-  },
-};
-
-/**
  * 🆕 03/08 — GAP DE COBERTURA fechado: E5.4/E5.5 (saídas da triagem) existiam
  * em `/mockup` mas não eram alcançáveis na demo (TriagemView tinha
- * `onSaida={() => {}}`, um no-op). Conteúdo IDÊNTICO ao das rotas de
- * produção (`/saida/exterior`, `/saida/socios`) — fonte única, sem cópia
- * divergente.
+ * `onSaida={() => {}}`, um no-op).
+ *
+ * O CONTEÚDO das 3 (`DADOS_SAIDA_FORA_BH`/`_EXTERIOR`/`_SOCIOS`) vem de
+ * `@/lib/dados-saida` — mesma fonte das rotas reais (`/saida/fora-bh`,
+ * `/saida/exterior`, `/saida/socios`). As `acoes` da confirmação da
+ * fora-BH ficam de fora do conteúdo compartilhado de propósito: blog/site
+ * ainda não têm rota (🔴 pendente), então só a demo mostra esses 2 CTAs
+ * "pendente" — a rota real não promete link morto.
  */
-const DADOS_EXTERIOR: DadosSaida = {
-  titulo: "Com sócio morando fora, o caminho é outro",
-  explica:
-    "A sua empresa pode existir normalmente. O que a lei não permite é ela entrar no Simples Nacional, que é o regime em que a gente abre empresa aqui pelo app.",
-  origem: {
-    rotulo: "De onde vem essa regra",
-    texto:
-      "Lei Complementar 123, artigo 17: empresa com sócio que mora no exterior não pode optar pelo Simples Nacional.",
-  },
-  saida:
-    "Existem outros regimes que atendem o seu caso, e o nosso time contábil faz esse tipo de abertura fora do app. Quer conversar com eles?",
-};
-
-const DADOS_SOCIOS: DadosSaida = {
-  titulo: "Com três ou mais sócios, ainda não pelo app",
-  explica:
-    "Não tem nada de errado com a sua sociedade, e a lei permite. É o nosso app que hoje abre empresa com no máximo dois sócios.",
-  origem: {
-    rotulo: "De onde vem esse limite",
-    texto:
-      "É uma escolha nossa, não uma regra do governo. A cada sócio a mais mudam as assinaturas e o contrato, e a gente preferiu fazer bem para dois antes de abrir para mais.",
-  },
-  saida:
-    "O escritório que está por trás do app faz esse tipo de abertura todo dia, fora do aplicativo. Quer que a gente te apresente?",
-};
+const ACOES_PENDENTES_FORA_BH = [
+  // Coral (`primary` = text-lg bold, o que mantém AA sobre coral-600).
+  { label: "Ler o blog", variante: "primary" as const, pendente: true },
+  { label: "Conhecer o site", variante: "primary" as const, pendente: true },
+];
 
 type Etapa =
   | "fork"
@@ -292,8 +198,8 @@ type Etapa =
   | "veredito"
   | "triagem"
   | "faixa"
-  // 🆕 03/08 — E5.4/E5.5, saídas da triagem (gap fechado, ver DADOS_EXTERIOR/
-  // DADOS_SOCIOS). Alcançáveis só pela interação real (escolher exterior/3+
+  // 🆕 03/08 — E5.4/E5.5, saídas da triagem (gap fechado, ver DADOS_SAIDA_EXTERIOR/
+  // DADOS_SAIDA_SOCIOS). Alcançáveis só pela interação real (escolher exterior/3+
   // sócios na TriagemView), sem pill de atalho — mesmo padrão de veredito.
   | "saida-exterior"
   | "saida-socios"
@@ -806,63 +712,88 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
     },
     {
       id: "demo",
-      oque: "O 3º desfecho 🔴 ('ninguém atende') sai do mesmo campo que os outros. No /gate aprovado o split 'Mauro atende' × 'ninguém atende' ainda é mock estático por página.",
-      status: "🟡 depende da lista de CNAEs (fila Larissa)",
+      oque: "O 3º desfecho 🔴 ('ninguém atende') sai do mesmo campo que os outros.",
+      status: "✅ 06/08: mapear() virou fonte única (@/lib/mock-veredito) — /gate agora também tem os 4 desfechos, só o VALOR do split ainda é mock (a IA real depende da lista de CNAEs, fila Larissa)",
     },
   ],
 };
 
 /**
- * Nome da tela EXATAMENTE como aparece no `/mockup` — pra o Pedro apontar
- * alteração usando o mesmo vocabulário nos dois lugares.
+ * Rótulo de cada etapa — puxado DIRETO do `/mockup` (`@/lib/telas-flow`,
+ * FONTE ÚNICA de rota+rótulo+ordem), não mais digitado à mão aqui. 🆕 06/08:
+ * antes eram 2 dicionários gêmeos que só ficavam iguais por disciplina;
+ * agora renomear uma tela no mockup renomeia o painel da demo também.
+ *
+ * Só os poucos MOMENTOS sem linha própria no mockup (confirmações e o
+ * código de acesso — são sub-passo da MESMA tela, não uma tela nova) ganham
+ * um sufixo manual em `SUFIXO_MOMENTO`. `fim` não tem rota (é só desta
+ * demo) e fica de fora do gerador.
  */
-const NOME_MOCKUP: Record<Momento, string> = {
-  fork: "E3 · Fork de 3 rotas",
-  cidade: "🆕 E4 · Gate de cidade (BH-MG)",
-  "fora-bh": "🆕 E4.1 · Saída · fora de BH",
-  "fora-bh-enviado": "🆕 E4.1 · Saída · fora de BH (na lista)",
-  perguntando: "E5 · Gate-CNAE",
-  analisando: "E5 · Gate-CNAE (analisando)",
-  "veredito-atende": "🟢 Atende",
-  "veredito-waitlist": "🟡 E5.1 · Waitlist (regulada)",
-  "veredito-waitlist-enviado": "🟡 E5.1 · Waitlist · confirmada",
-  "veredito-mauro": "🔴 E5.2 · Contato especial (Mauro atende)",
-  "veredito-mauro-enviado": "🔴 E5.2 · Contato especial · confirmado",
-  "veredito-descarta": "🔴 E5.3 · Fora de escopo (descarta)",
-  triagem: "E5 · Triagem (sócios + exterior)",
-  faixa: "E5 · Faixa de faturamento",
-  "saida-exterior": "🆕 E5.4 · Saída · sócio no exterior",
-  "saida-socios": "🆕 E5.5 · Saída · 3+ sócios",
-  conta: "E6 · Criar conta",
-  "conta-codigo": "E6 · Confirmar acesso (código)",
-  plano: "E7 · A conta da abertura",
-  contrato: "E8 · Aceite do contrato",
-  pagamento: "E9 · Pagamento",
-  socio: "C1 · Seus dados",
-  vinculo: "C2 · Vínculo de INSS",
-  socios: "C3 · Sócios",
-  empresa: "C4 · Dados da empresa",
-  "cnae-secundarios": "C5 · Atividades secundárias",
-  natureza: "C6 · Tipo da empresa",
-  nome: "C7 · Nome da empresa",
-  revisar: "A1 · Revisar o dossiê",
-  termo: "A2 · Termo irreversível",
-  painel: "A3 · Painel de acompanhamento",
-  "painel-recusa": "🆕 A3.1 · Órgão recusa",
-  assinatura: "A4 · Assinatura (GOV.BR)",
-  ativacao: "🔓 A5 · Home de ativação (dia-1)",
-  "m-cnpj": "🆕 E4.2 · Seu CNPJ (migrar)",
-  "m-plano": "🆕 E4.4 · A conta da migração",
-  "m-contrato": "🆕 E4.5 · Contrato da migração",
-  "m-pagamento": "🆕 E9 · Pagamento (migração)",
-  "m-passivo": "🆕 E9.2 · Auditoria de passivo",
-  "m-transferencia": "🆕 E9.3 · A transferência",
-  "m-travado": "🆕 E9.3 · 🔴 TTRT travado",
-  "m-ativa": "🆕 E9.4 · Empresa migrada",
-  retomar: "🆕 C0.1 · Retomar de onde parou",
-  aguardando: "🆕 E9.1 · Aguardando o boleto",
-  fim: "— fim do piloto —",
+const LABEL_POR_ROTA: Record<string, string> = Object.fromEntries(
+  GRUPOS.flatMap((g) => g.telas.map((t) => [t.rota, t.nome] as const))
+);
+
+const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
+  fork: "/entrada",
+  cidade: "/entrada?intencao=abrir&regime=me",
+  "fora-bh": "/saida/fora-bh",
+  "fora-bh-enviado": "/saida/fora-bh",
+  perguntando: "/gate",
+  analisando: "/gate",
+  "veredito-atende": "/veredito/atende",
+  "veredito-waitlist": "/veredito/waitlist",
+  "veredito-waitlist-enviado": "/veredito/waitlist",
+  "veredito-mauro": "/veredito/nao-atende",
+  "veredito-mauro-enviado": "/veredito/nao-atende",
+  "veredito-descarta": "/veredito/descartado",
+  triagem: "/gate?etapa=triagem",
+  faixa: "/gate?etapa=faixa",
+  "saida-exterior": "/saida/exterior",
+  "saida-socios": "/saida/socios",
+  conta: "/conta",
+  "conta-codigo": "/conta",
+  plano: "/plano",
+  contrato: "/contrato",
+  pagamento: "/pagamento",
+  socio: "/dossie/socio",
+  vinculo: "/dossie/vinculo",
+  socios: "/dossie/socios",
+  empresa: "/dossie/empresa",
+  "cnae-secundarios": "/dossie/cnae-secundarios",
+  natureza: "/dossie/natureza",
+  nome: "/dossie/nome",
+  revisar: "/revisar",
+  termo: "/termo",
+  painel: "/painel",
+  "painel-recusa": "/painel/recusa",
+  assinatura: "/assinatura",
+  ativacao: "/home-dia1",
+  "m-cnpj": "/migrar/cnpj",
+  "m-plano": "/migrar/plano",
+  "m-contrato": "/migrar/contrato",
+  "m-pagamento": "/pagamento?fluxo=migrar",
+  "m-passivo": "/migrar/passivo",
+  "m-transferencia": "/migrar/transferencia",
+  "m-travado": "/migrar/transferencia?estado=travado",
+  "m-ativa": "/migrar/ativa",
+  retomar: "/retomar",
+  aguardando: "/aguardando",
 };
+
+const SUFIXO_MOMENTO: Partial<Record<Momento, string>> = {
+  "fora-bh-enviado": " · na lista",
+  "veredito-waitlist-enviado": " · confirmada",
+  "veredito-mauro-enviado": " · confirmado",
+  "conta-codigo": " · confirmar código",
+};
+
+const NOME_MOCKUP: Record<Momento, string> = Object.fromEntries(
+  (Object.keys(ROTA_POR_MOMENTO) as Momento[]).map((m) => [
+    m,
+    (LABEL_POR_ROTA[ROTA_POR_MOMENTO[m]!] ?? m) + (SUFIXO_MOMENTO[m] ?? ""),
+  ])
+) as Record<Momento, string>;
+NOME_MOCKUP.fim = "— fim do piloto —";
 
 const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; porque: string }> = {
   fork: {
@@ -2138,11 +2069,11 @@ export default function ApresentacaoPage() {
                             // `reiniciar` toca refs, e passá-lo a uma função
                             // executada no render acionaria a regra de refs.
                             d={{
-                              ...SAIDA_FORA_BH,
+                              ...DADOS_SAIDA_FORA_BH,
                               confirmacao: {
-                                ...SAIDA_FORA_BH.confirmacao!,
+                                ...DADOS_SAIDA_FORA_BH.confirmacao!,
                                 acoes: [
-                                  ...(SAIDA_FORA_BH.confirmacao?.acoes ?? []),
+                                  ...ACOES_PENDENTES_FORA_BH,
                                   {
                                     label: "Voltar ao início",
                                     variante: "ghost",
@@ -2168,7 +2099,7 @@ export default function ApresentacaoPage() {
                       <>
                         <TelaHeader meta="Sobre o seu caso" />
                         <main className="app-main">
-                          <SaidaView d={etapa === "saida-exterior" ? DADOS_EXTERIOR : DADOS_SOCIOS} />
+                          <SaidaView d={etapa === "saida-exterior" ? DADOS_SAIDA_EXTERIOR : DADOS_SAIDA_SOCIOS} />
                         </main>
                       </>
                     ) : (

@@ -42,6 +42,7 @@ Cruzamento de 2 pesquisas independentes ([[economia-preco-cac]] §9 + [[trafego-
 ## Apoio
 
 - [[funil-conversao]] — jornada completa + números-alvo por etapa
+- [[posicionamento]] §Arquétipos — todo criativo/copy dos segmentos S-1/S-2 segue o arquétipo Aliado/Parceiro (registro por dorsal em [[metodologia-personas]] §Tom de voz), não só a régua de budget/CAC deste doc
 - **Canais (decisão viva, 05/08):**
   - ✅ **Meta Ads** — prioridade 1, geo BH, objetivo "Mensagens" (WhatsApp), não "Conversão de Formulário"
   - 🟡 **Google Search** — só alta intenção ("contador online BH", "abrir empresa MG"), entra no V1

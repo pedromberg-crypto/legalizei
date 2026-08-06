@@ -41,6 +41,10 @@ Depoimento em vídeo simples e real (não produção sofisticada), conteúdo que
 
 Fonte grande, contraste alto, sem elementos decorativos que confundam — mesma diretriz já aplicada no design do app pra essa persona (ver `execucao/motor-testes/personas/cida.json`: "estressa com fonte pequena, termo técnico, formulário longo sem salvar")
 
+## Tom de voz
+
+Herda o arquétipo **Aliado/Parceiro de confiança** ([[posicionamento]] §Arquétipos) — mesmo aliado das outras 2 dorsais, registro de **paciência reforçada**: "eu fico do seu lado" em dose mais alta, porque a objeção dela É literalmente medo de ficar sem aliado no meio do caminho ("vou travar sozinha"). Zero linguagem "startup/disrupção" (já excluída em Ads acima) — isso soa Sábio distante pra quem se descreve como imigrante digital, não nativo. Detalhe completo: [[metodologia-personas]] §Tom de voz por dorsal.
+
 ## Objeção principal
 
 **"Vou travar sozinha e não vou ter quem me ajude"** → contorno: modo assistido + humano de verdade acessível (não chatbot) — reforça o mesmo diferencial estrutural das outras 2 personas, aqui em dose mais alta

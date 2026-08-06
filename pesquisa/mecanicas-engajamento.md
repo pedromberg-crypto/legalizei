@@ -10,6 +10,8 @@ tags: [pesquisa, marketing, organico]
 
 # 🎯 Mecânicas de engajamento — Instagram
 
+> 🆕 06/08 — todo prompt/CTA aqui responde ao arquétipo **Aliado/Parceiro de confiança** ([[posicionamento]] §Arquétipos, aplicado por dorsal em [[metodologia-personas]] §Tom de voz): fala de igual pra igual, nunca de cima ("ninguém explica isso direito mesmo" é literalmente o aliado do lado da pessoa contra o setor, não a marca ensinando de cima). Prompt novo audita contra isso antes de entrar no banco abaixo.
+
 ## Mecânica recorrente: "Pergunta que ninguém explica"
 
 Caixinha de pergunta semanal no Stories pedindo a dúvida de contabilidade/CNPJ mais constrangedora ou confusa que a pessoa tem. Curadoria vira post educativo (formato "Traduzindo o contabilês") respondendo as melhores, sempre anonimizado.
@@ -89,3 +91,4 @@ Prompts de interação. Prioridade de KPI: save > share/DM > comentário.
 
 - Estratégia e pilares: [[estrategia-organica]]
 - Personas: [[metodologia-personas]]
+- Arquétipo/tom-base: [[posicionamento]] §Arquétipos de marca

@@ -73,6 +73,20 @@ Seeds de QA que alimentaram as dorsais: `reta`/`reta-direto` (dev freelancer) �
 
 > Lacuna aberta: nenhuma dorsal cobre ainda o perfil **MEI puro que nunca vai virar ME** (baixo ticket, alto volume, já flagrado como oferta mais frágil em [[economia-preco-cac]] §9) — decisão de tratá-lo como volante ou 4ª dorsal fica pra quando o V0 trouxer dado de volume real.
 
+## Tom de voz por dorsal (herda o arquétipo, não troca de personalidade)
+
+> 🆕 06/08 — achado do Pedro: o arquétipo de marca (**Aliado leve/vitorioso** + **Parceiro de confiança**, [[posicionamento]] §Arquétipos) nunca tinha sido citado aqui, apesar das mensagens-âncora da matriz acima já seguirem ele por instinto. Registrado agora pra virar critério checável, não sorte.
+>
+> Mesma doutrina do produto (UX-48, `trilha-unica-ux48`): **densidade/registro muda por dorsal, a marca nunca muda quem é**. Nenhuma dorsal recebe um arquétipo diferente — todas ouvem o mesmo Aliado, só em registro diferente:
+
+| Dorsal | Registro (mesmo Aliado, volume diferente) | Prova já na matriz/persona |
+|---|---|---|
+| **A — Direto** | Eficiente, sem enrolação — o aliado que anda rápido porque sabe que ela já sabe o que faz | "Resolve rápido, sem enrolação, sem pagar imposto a mais" (mensagem-âncora acima); tom "direto, sem jargão contábil" já descrito em [[persona-a-servico-intelectual]] |
+| **B — Construindo** | Parceria/crescimento — o aliado que comemora ela crescer, não trata como upsell | "Cresça sem perder o atendimento pessoal"; "tom acolhedor sem infantilizar" já descrito em [[persona-b-servico-estetico]] |
+| **C — Precisa de mão na mão** | Paciência reforçada — o mesmo aliado, dose mais alta de "eu fico do seu lado" | "A gente explica cada passo, sem pressa"; objeção principal já é literalmente medo de ficar sem aliado ("vou travar sozinha") |
+
+**Regra de checagem:** copy nova pra qualquer dorsal responde "isso soa Sábio distante (contabilês, autoridade fria) ou Aliado (resolve, cuida, fala de igual pra igual)?" antes de publicar. Se soar Sábio distante, reescreve — é exatamente o espaço que a Contabilizei ocupa (ver [[posicionamento]] Categoria mental).
+
 ## Quem NÃO é público (anti-persona)
 
 - Empresas fora do nicho serviço/Simples (indústria, comércio pesado, Lucro Real) — fora do escopo fiscal do produto
@@ -87,7 +101,8 @@ Fonte: `marca/conceito/conceito-marca.md` §2-3 (propósito + "pra quem").
 
 ## Cross-refs
 
-- Pilares orgânicos: pendente
-- Estrutura de tráfego: pendente
+- Arquétipo/tom-base: [[posicionamento]] §Arquétipos de marca
+- Pilares orgânicos: [[estrategia-organica]] · [[mecanicas-engajamento]]
+- Estrutura de tráfego: [[estrutura-funil-trafego]] · [[frente-1-captacao-meta-bh]]
 - Economia: [[economia-preco-cac]]
 - Fixtures de QA (seed, não substituto): `execucao/motor-testes/personas/*.json`

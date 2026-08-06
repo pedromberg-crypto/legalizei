@@ -59,6 +59,8 @@ Nenhum concorrente precifica baixa/migração na vitrine (Contaja esconde R$1.35
 - **Aliado leve/vitorioso** (dominante) — o cliente é o herói, a marca é o aliado humano que carrega o chato. Responde direto à ferida "tem contador de verdade?" e ocupa a ponta quente-humana vazia no espectro de tom do setor (ver [[matriz-comparativa]] §4 tom dos FAQs).
 - **Parceiro de confiança** (secundário) — fala de igual pra igual, nunca de cima.
 
+> 🆕 06/08 — até aqui o arquétipo só vivia neste doc + `conceito-marca.md`; achado (Pedro): personas, mecânica de engajamento e frente de campanha rodaram sem citar isso. Conectado explicitamente em [[metodologia-personas]] §Tom de voz por dorsal (registro muda por dorsal, arquétipo não muda nunca), nas 3 personas dorsais, em [[mecanicas-engajamento]] e em [[frente-1-captacao-meta-bh]]. Daqui pra frente, copy nova de marketing audita contra ESTE arquétipo antes de publicar — não só contra a regra mecânica (sem travessão, número com fonte).
+
 ## Frases-gatilho por contexto
 
 | Contexto | Gatilho |
@@ -81,6 +83,7 @@ Decisão de 2026-08-03: nome de marca exibido virou **Legalizai** (não mais "Le
 
 ## Cross-refs
 
-- Personas: pendente (slot seguinte)
+- Personas: [[metodologia-personas]] (arquétipo aplicado por dorsal, §Tom de voz)
+- Orgânico: [[mecanicas-engajamento]] · Tráfego pago: [[frente-1-captacao-meta-bh]]
 - Benchmarking: [[matriz-comparativa]] · [[insights-estrategicos]]
 - Fonte primária: `marca/conceito/conceito-marca.md` · `marca/decisoes-marca.md` · `marca/naming/naming-defesa.md`

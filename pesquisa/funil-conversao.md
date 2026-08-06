@@ -134,3 +134,8 @@ Não é recompra clássica (é assinatura contínua). O evento equivalente é a 
 
 ### Conversão fim-a-fim
 Ainda não estimável com confiança — depende do V0 rodar. Os números acima são teto/piso de referência pra calibrar o gate empírico ([[validacao-ideia]]), não meta fechada.
+
+## Cross-refs
+
+- Estrutura de budget/segmento: [[estrutura-funil-trafego]] · Campanha real: [[frente-1-captacao-meta-bh]]
+- Arquétipo/tom-base (a "proposta de valor clara" da Etapa 2 e a "resposta humana" da Etapa 4 seguem o registro Aliado, não vendem tecnologia): [[posicionamento]] §Arquétipos

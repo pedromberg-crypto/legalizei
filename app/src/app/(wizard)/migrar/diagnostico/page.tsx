@@ -5,7 +5,7 @@ import { MigrarDiagnosticoView } from "@/components/wizard-migrar";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * M2 — DIAGNÓSTICO, SÓ MEI ("tem contador?") · rota de produção (shell WIZARD)
+ * M2 — DIAGNÓSTICO, SÓ MEI ("tem certificado?") · rota de produção (shell WIZARD)
  * ═══════════════════════════════════════════════════════════════════════════
  * ⚠️ A TELA vive em `components/wizard-migrar.tsx` (`MigrarDiagnosticoView`).
  *
@@ -14,10 +14,13 @@ import { MigrarDiagnosticoView } from "@/components/wizard-migrar";
  * pré-pagamento é a cadastral, que não traz faturamento/folha. ME agora vai
  * do M1 (`/migrar/cnpj`) direto pro M3 (`/migrar/plano`), sem passar aqui.
  *
- * O que sobra é só o subfluxo MEI: MEI não tem Fator R (paga DAS-MEI fixo) e
- * não é obrigado a ter contador (DASN-SIMEI autodeclaratório) — a pergunta
- * "você tem contador hoje?" decide se o M4 (auditoria+transferência) roda ou
- * se pula direto pro M5. Resposta vira `?contador=sim|nao` na URL do M3.
+ * 🔴 05/08 (pedido do Pedro) — pergunta trocou de "tem contador?" pra "tem
+ * certificado digital?". MEI não tem escrituração contábil obrigatória, então
+ * não existe TTRT (transferência de responsabilidade técnica) a fazer em
+ * nenhum dos dois casos — o que muda é só reaproveitar certificado existente
+ * × emitir um novo. MEI não passa mais por `/migrar/transferencia` (M4b, TTRT)
+ * de jeito nenhum (ver `wizard-migrar.tsx` pro racional completo). Resposta
+ * vira `?certificado=sim|nao` na URL do M3.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function MigrarDiagnosticoPage() {
@@ -25,8 +28,8 @@ export default function MigrarDiagnosticoPage() {
 
   return (
     <MigrarDiagnosticoView
-      onSeguir={(temContador) =>
-        router.push(`/migrar/plano?regime=mei&contador=${temContador ? "sim" : "nao"}`)
+      onSeguir={(temCertificado) =>
+        router.push(`/migrar/plano?regime=mei&certificado=${temCertificado ? "sim" : "nao"}`)
       }
       onVoltar={() => router.push("/migrar/cnpj")}
     />

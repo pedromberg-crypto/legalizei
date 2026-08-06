@@ -17,7 +17,7 @@ import { VereditoView, type Resultado } from "@/components/veredito";
  */
 const R: Resultado = {
   humano: "Comércio",
-  explica: "Você vende produtos, não serviço — a gente só atende quem presta serviço.",
+  explica: "Você vende produtos, não serviço. A gente só atende quem presta serviço.",
   cnae: "4713-0/02",
   veredito: "nao-atende",
   motivo: "mauro",

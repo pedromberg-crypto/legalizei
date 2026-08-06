@@ -627,5 +627,25 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 - Falta seu número de custo real pra travar a conta de vez
 ```
 
+## Semana 06/08/2026 — revisei o texto de todas as telas de entrada + achei que MEI não precisa da parte mais arriscada da migração
+
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | **PDF pro gestor de tráfego** | Compilei os 14 documentos da estratégia de marketing num PDF de leitura fácil pra ele e eu debatermos os próximos passos com calma | 🟢 |
+| 2 | **Revisão de texto ponta a ponta** (das telas iniciais até o veredito de "a gente atende você") | Reli cada tela procurando promessa que a gente não cumpre, termo técnico sem explicação e texto que não bate com o que a API de fato traz da Receita. Achei e corrigi vários pontos — nada que trocasse dinheiro de mão, só honestidade de tela | 🟢 |
+| 3 | **Simplificação real na migração de MEI** | Reparei que a pergunta "você tem contador?" confundia 2 coisas diferentes. Troquei pra "você já tem certificado digital?" — pergunta mais direta e que resolve o mesmo problema sem a parte mais arriscada do processo (a transferência formal com o contador antigo), que pesquisando direito, o MEI normalmente nem tem pra transferir | 🟡 (dedução minha, ainda não confirmada com a Larissa) |
+| 4 | **Tela nova pra quem escolhe o regime errado** | Adicionei uma opção "Lucro Presumido" na tela de MEI×ME, que hoje leva direto pra falar com um especialista — antes essa pessoa não tinha opção nenhuma que batesse com a realidade dela | 🟢 |
+
+**Próximo:** confirmar com a Larissa se todo MEI migrando realmente não tem contador registrado formalmente (pra travar o item 3 de vez). Pedro ainda vai revisar a tela seguinte da migração (o plano/preço), apontou que precisa de ajuste mas não detalhou o quê.
+
+### 📱 WhatsApp (06/08)
+```
+*Update Legalizei* 🔍
+- Montei um PDF de leitura da estratégia de marketing pra debater com o gestor de tráfego
+- Revisei o texto de todas as telas iniciais do app, corrigindo promessas que não batiam com o que a gente de fato entrega
+- Simplifiquei a migração de quem é MEI: em vez de perguntar sobre contador, agora pergunto sobre certificado digital — resolve o mesmo problema sem o passo mais arriscado (ainda preciso confirmar essa hipótese com a Larissa)
+- Criei um caminho novo pra quem é Lucro Presumido: antes não tinha pra onde ir, agora vai direto falar com um especialista
+```
+
 ## Links
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]]

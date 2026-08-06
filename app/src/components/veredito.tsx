@@ -265,10 +265,16 @@ export function VereditoView({
           )}
 
           {/* UX-14: em 1 linha, o que vem agora. Sem prometer número (o N5 é
-              quem promete, e em 3 modos calibrados). */}
+              quem promete, e em 3 modos calibrados).
+              🆕 05/08 (pedido do Pedro) — "com contador de verdade" planta a
+              prova de humano cedo, sem virar venda: a doutrina da tela segue
+              "reconhecimento, não venda" (ver comentário do arquivo, topo),
+              só reconhece o que o produto já é. Responde à ferida de confiança
+              nº1 do setor ("vocês têm contador de verdade?", insights-estrategicos
+              achado 1), mesma linha que o E4.5 do Migrar já usa. */}
           <p className="text-body text-text-secondary mt-4">
-            É disso que a gente cuida, do jeito certo, no Simples. Agora faltam
-            duas perguntas rápidas.
+            É disso que a gente cuida, do jeito certo, no Simples, com contador
+            de verdade acompanhando. Agora faltam duas perguntas rápidas.
           </p>
         </div>
 
@@ -402,9 +408,12 @@ export function VereditoView({
           )}
         </div>
 
-        {/* Saídas da tela terminal. Sem `acoesConfirmacao` fica o CTA único de
-            sempre (só waitlist) — as rotas de produção não mudam. */}
-        {acoesConfirmacao ? (
+        {/* Saídas da tela terminal.
+            🔴 05/08 — removido o branch sem `acoesConfirmacao`: as 2 pages de
+            produção (waitlist, nao-atende) e a /apresentacao sempre passam
+            `acoesConfirmacao`, então "Falar com um contador agora" nunca
+            renderizava — era dead code/copy. */}
+        {acoesConfirmacao && (
           <div className="app-footer-cta">
             <div className="flex flex-col gap-2">
               {acoesConfirmacao.map((a) => (
@@ -419,14 +428,6 @@ export function VereditoView({
               ))}
             </div>
           </div>
-        ) : (
-          waitlist && (
-            <div className="app-footer-cta">
-              <Button full variant="secondary">
-                Falar com um contador agora
-              </Button>
-            </div>
-          )
         )}
       </>
     );

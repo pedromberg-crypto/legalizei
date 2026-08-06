@@ -408,7 +408,7 @@ function ChecagemLinha({ ok, titulo }: { ok: boolean; titulo: string }) {
   );
 }
 
-/* ═══════════════════ M2 · DIAGNÓSTICO ("tem contador?", só MEI) ═════════ */
+/* ═══════════════════ M2 · DIAGNÓSTICO ("tem certificado?", só MEI) ══════ */
 
 /**
  * M2 — 🔴 04/08 (3ª rodada, decisão do Pedro): o diagnóstico de Fator R com
@@ -421,47 +421,61 @@ function ChecagemLinha({ ok, titulo }: { ok: boolean; titulo: string }) {
  * `/impostos/aliquotas`, dia-2). ME segue direto do M1 (`/migrar/cnpj`) pro
  * plano (M3), sem passar por aqui.
  *
- * O que sobra nesta rota é só o SUBFLUXO MEI: MEI não tem Fator R (paga
- * DAS-MEI fixo, sem Anexo) e não é OBRIGADO a ter contador (DASN-SIMEI é
- * autodeclaratório) — a pergunta que decide tudo é "você tem contador hoje?".
- * Resposta vira `temContador` e viaja via `onSeguir` pro M3+ decidirem se
- * reusam o pipeline de transferência ou pulam pra M5 direto.
+ * 🔴 05/08 (pedido do Pedro) — a pergunta trocou de "tem contador?" pra "tem
+ * certificado digital?". Motivo: TTRT (Termo de Transferência de
+ * Responsabilidade Técnica) transfere um contador REGISTRADO NO CRC-MG como
+ * responsável pela escrituração — e MEI não tem escrituração contábil
+ * obrigatória (DASN-SIMEI é autodeclaratório), então não existe, via de
+ * regra, registro nenhum no CRC pra transferir. "Tem contador" misturava 2
+ * coisas: ajuda informal (não muda nada aqui) × responsabilidade técnica
+ * formal (só isso dispara TTRT, e MEI normalmente não tem). O que o escopo
+ * do MEI no app precisa de verdade (emitir NF, gerir 1 colaborador, pagar a
+ * guia) é ACESSO OPERACIONAL — procuração e-CAC/eSocial/prefeitura via
+ * certificado digital — não responsabilidade técnica transferida. Por isso a
+ * pergunta certa é se a pessoa já tem certificado (reaproveita, mais rápido)
+ * ou não (a gente emite, sem depender de terceiro). 🟡 Hipótese assumida, não
+ * confirmada em fonte primária — fila-Larissa (ver `cruzamento-gemini-fluxo-
+ * migracao.md`, mesma pendência do nº da resolução CFC/Evento 232).
+ *
+ * Resposta vira `temCertificado` e viaja via `onSeguir` — MEI não passa mais
+ * pelo M4b (`/migrar/transferencia`, TTRT) em nenhum dos dois casos.
  */
 export function MigrarDiagnosticoView({
   onSeguir,
   onVoltar,
 }: {
-  /** Carrega se a pessoa tem contador hoje (decide se pula a transferência). */
-  onSeguir?: (temContador?: boolean) => void;
+  /** Carrega se a pessoa já tem certificado digital (decide reaproveitar × emitir novo). */
+  onSeguir?: (temCertificado?: boolean) => void;
   onVoltar?: () => void;
 }) {
-  const [temContador, setTemContador] = useState<boolean | null>(null);
+  const [temCertificado, setTemCertificado] = useState<boolean | null>(null);
 
-  if (temContador === null) {
+  if (temCertificado === null) {
     return (
       <>
         <TelaHeader meta="Seu diagnóstico" onVoltar={onVoltar} />
         <main className="app-main">
-          <Titulo sub="Isso muda como a gente assume sua contabilidade a partir de agora.">
-            Você tem contador hoje?
+          <Titulo sub="Isso muda se a gente reaproveita o que você já tem ou providencia um novo.">
+            Você já tem certificado digital?
           </Titulo>
 
           <Corpo>
-            <Aviso variante="info" titulo="Por que a gente pergunta isso">
-              MEI não é obrigado a ter contador — muita gente cuida disso
-              sozinho. Se você já tem um, a gente faz a transferência
-              combinada com ele. Se não tem, a gente já assume direto, sem
-              burocracia extra.
+            <Aviso variante="info" titulo="Por que a gente precisa disso">
+              É o certificado que libera a gente pra emitir sua nota,
+              gerenciar seu colaborador e pagar sua guia dentro do app. MEI
+              não tem transferência de responsabilidade técnica a fazer: com
+              certificado, a gente reaproveita o seu. Sem, a gente providencia
+              um novo pra você.
             </Aviso>
           </Corpo>
 
           <Rodape>
             <div className="flex flex-col gap-2">
-              <Button full onClick={() => setTemContador(true)}>
-                Sim, tenho contador
+              <Button full onClick={() => setTemCertificado(true)}>
+                Sim, já tenho
               </Button>
-              <Button full variant="secondary" onClick={() => setTemContador(false)}>
-                Não, cuido sozinho
+              <Button full variant="secondary" onClick={() => setTemCertificado(false)}>
+                Não tenho ainda
               </Button>
             </div>
           </Rodape>
@@ -472,16 +486,16 @@ export function MigrarDiagnosticoView({
 
   return (
     <>
-      <TelaHeader meta="Seu diagnóstico" onVoltar={() => setTemContador(null)} />
+      <TelaHeader meta="Seu diagnóstico" onVoltar={() => setTemCertificado(null)} />
       <main className="app-main">
         <Titulo
           sub={
-            temContador
-              ? "A gente combina a transferência com quem cuida de você hoje."
-              : "Sem contador pra transferir, a gente já assume direto, sem burocracia."
+            temCertificado
+              ? "A gente reaproveita o que você já tem, sem burocracia."
+              : "A gente providencia um novo pra você, sem depender de ninguém."
           }
         >
-          {temContador ? "Vamos assumir sua contabilidade" : "Vamos começar direto"}
+          {temCertificado ? "Vamos reaproveitar seu certificado" : "Vamos providenciar seu certificado"}
         </Titulo>
 
         <Corpo>
@@ -497,14 +511,27 @@ export function MigrarDiagnosticoView({
           </Card>
 
           <Aviso variante="info" titulo="O que a gente faz com isso">
-            {temContador
-              ? "A gente cuida da transferência com seu contador atual. Você não precisa ligar pra ninguém."
-              : "Como você não tem contador hoje, a gente já assume sua contabilidade a partir do pagamento, sem etapa de transferência no meio."}
+            {temCertificado
+              ? "A gente atualiza a procuração pro seu certificado atual. Você não precisa ligar pra ninguém."
+              : "A gente emite seu certificado digital a partir do pagamento, sem etapa de transferência no meio."}
           </Aviso>
+
+          {/* 🆕 05/08 (pedido do Pedro) — quem já tem certificado precisa
+              saber ANTES de continuar que vai subir os arquivos dentro do
+              app: sem isso, a promessa "a gente atualiza a procuração" soa
+              automática, e a pessoa só descobre o passo manual depois de já
+              ter pago. */}
+          {temCertificado && (
+            <Aviso variante="warning" titulo="Um passo depois que você entrar">
+              Assim que você entrar no app, vai precisar subir os arquivos do
+              seu certificado (o arquivo e a senha). É isso que libera emitir
+              nota, gerenciar seu colaborador e pagar sua guia.
+            </Aviso>
+          )}
         </Corpo>
 
         <Rodape>
-          <Button full onClick={() => onSeguir?.(temContador ?? undefined)}>
+          <Button full onClick={() => onSeguir?.(temCertificado ?? undefined)}>
             Quero continuar
           </Button>
         </Rodape>

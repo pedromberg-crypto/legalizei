@@ -24,6 +24,11 @@ import { ehMei, comRegime } from "@/lib/regime";
  * 🕓 Decisão em aberto (fila Mauro): passivo herdado é upsell (a gente
  * regulariza cobrando à parte) ou fica fora de escopo? A tela hoje oferece como
  * serviço à parte, que é a leitura menos comprometedora até ele decidir.
+ *
+ * 🔴 05/08 — MEI nunca segue pro M4b (`/migrar/transferencia`, TTRT): não tem
+ * responsabilidade técnica registrada pra transferir (ver `MigrarDiagnosticoView`).
+ * A auditoria de dívida aqui é independente disso (checa débito, não contador)
+ * e continua rodando pra MEI sem certificado — só o destino muda.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function MigrarPassivoPage() {
@@ -35,7 +40,9 @@ export default function MigrarPassivoPage() {
   return (
     <MigrarPassivoView
       comPassivo={comPassivo}
-      onSeguir={() => router.push(comRegime("/migrar/transferencia", mei))}
+      onSeguir={() =>
+        router.push(mei ? comRegime("/migrar/ativa", true) : "/migrar/transferencia")
+      }
     />
   );
 }

@@ -1,5 +1,6 @@
 # Memory Index — Legalize
 
+- [Auditoria copy E5 + MEI trocou contador por certificado](legalize-auditoria-copy-e5-e-mei-certificado.md) — 06/08: E4.2b descartada, M2 do Migrar (MEI) pergunta certificado digital em vez de contador (MEI nunca tem TTRT), 🟡 fila-Larissa.
 - [PR automático quando pedido](legalize-git-pr-automatico.md) — 05/08: commit+`gh pr create` sem confirmar/sem passo manual no GitHub; NÃO inclui merge automático (não autorizado).
 - [Pesquisa de mercado grande roda via Gemini](legalize-pesquisa-grande-via-gemini.md) — 05/08: prompt otimizado pro Google Search do Gemini, Pedro roda fora e cola de volta; não pesquisar direto na sessão.
 - [Estratégia de marketing/produto completa (14/14 slots)](legalize-estrategia-marketing-completa.md) — 05/08: template estrategia-digital preenchido; preço ME R$139; CAC-alvo corrigido (LTV, não mês); MEI fora de tráfego pago frio; 12 personas; Instagram+Meta travados como canal.

@@ -23,9 +23,11 @@ import { MigrarContratoView } from "@/components/wizard-migrar";
  *
  * 🟡 Redação jurídica final é do Mauro/Larissa (mesma fila do contrato do N8).
  *
- * 🆕 04/08 — MEI sem contador hoje (`?regime=mei&contador=nao`) não tem TTRT
- * pra falhar, então a cláusula de devolução vira promessa de início imediato
- * (`semTransferencia`). Params seguem pro pagamento e pro M4/M5.
+ * 🔴 05/08 — MEI NUNCA tem TTRT pra falhar (não tem responsabilidade técnica
+ * registrada pra transferir, ver `MigrarDiagnosticoView`), então `semTransferencia`
+ * agora é `mei` puro — deixou de depender de ter ou não certificado. A cláusula
+ * de devolução vira promessa de início imediato pra todo MEI, não só quem
+ * respondeu "não tenho certificado". Params seguem pro pagamento e pro M4/M5.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function MigrarContratoPage() {
@@ -34,7 +36,6 @@ export default function MigrarContratoPage() {
   const [aceito, setAceito] = useState(false);
 
   const mei = searchParams.get("regime") === "mei";
-  const semContador = searchParams.get("contador") === "nao";
   const qs = searchParams.toString();
 
   return (
@@ -42,7 +43,7 @@ export default function MigrarContratoPage() {
       aceito={aceito}
       setAceito={setAceito}
       mei={mei}
-      semTransferencia={mei && semContador}
+      semTransferencia={mei}
       onSeguir={() =>
         router.push(qs ? `/pagamento?fluxo=migrar&${qs}` : "/pagamento?fluxo=migrar")
       }

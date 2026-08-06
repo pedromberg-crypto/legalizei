@@ -64,15 +64,19 @@ export default function PagamentoPage() {
    */
   const fluxo = searchParams.get("fluxo") === "migrar" ? "migrar" : "abertura";
   const mei = ehMei(searchParams);
-  /** 🆕 04/08 — MEI sem contador hoje (M2) não tem passivo pra auditar nem
-   *  TTRT pra transferir: pula M4 inteiro e vai direto pro M5. */
-  const semContador = mei && searchParams.get("contador") === "nao";
+  /** 🔴 05/08 — MEI com certificado já em mãos (M2) pula direto pro M5: a
+   *  gente só precisa atualizar a procuração, sem passivo nem TTRT (MEI nunca
+   *  tem TTRT, ver `MigrarDiagnosticoView`). MEI sem certificado ainda passa
+   *  pelo M4a (passivo/dívida, checagem independente de certificado), mas
+   *  também nunca vê o M4b (TTRT) — a página de passivo já pula direto pra
+   *  ativa quando `mei`. */
+  const certificadoPronto = mei && searchParams.get("certificado") === "sim";
   const [cpf, setCpf] = useState("");
   const [metodo, setMetodo] = useState<Metodo>("cartao");
 
   function destino() {
     if (fluxo === "migrar") {
-      if (semContador) return comRegime("/migrar/ativa", true);
+      if (certificadoPronto) return comRegime("/migrar/ativa", true);
       return comRegime("/migrar/passivo", mei);
     }
     return comRegime(metodo === "boleto" ? "/aguardando" : "/dossie/socio", mei);

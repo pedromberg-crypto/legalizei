@@ -67,12 +67,14 @@ Tamanho estimado: medir no Gerenciador ao montar
 
 ## Criativos + ofertas
 
+> 🆕 06/08 — hooks abaixo auditados contra o arquétipo **Aliado/Parceiro de confiança** ([[posicionamento]] §Arquétipos, registro por dorsal em [[metodologia-personas]] §Tom de voz): nenhum vende tecnologia/autoridade (isso seria o registro Sábio distante que a Contabilizei ocupa), todos falam de igual pra igual e resolvem uma ferida específica. Hook novo passa pela mesma checagem antes de entrar na tabela.
+
 | Hook | Aplicação | Ancoragem |
 |---|---|---|
 | "Sem 'a partir de'. O preço que você vê é o que você paga." | S-1, S-2 | [[matriz-comparativa]] — nenhum concorrente crava preço fechado |
 | "Contador de verdade desde o primeiro plano." | S-1, S-2 | [[insights-estrategicos]] achado 1 — ferida de confiança do setor |
-| "Cresça sem perder o atendimento pessoal." | S-2 (transição MEI→ME) | [[persona-b-servico-estetico]] |
-| "CNPJ pronto rápido, sem perder o contrato." | S-1 (volante urgência) | [[a1-dev-freelancer-recem-clt]] |
+| "Cresça sem perder o atendimento pessoal." | S-2 (transição MEI→ME) | [[persona-b-servico-estetico]] — registro parceria/crescimento |
+| "CNPJ pronto rápido, sem perder o contrato." | S-1 (volante urgência) | [[a1-dev-freelancer-recem-clt]] — registro direto/eficiente |
 
 Variações por conjunto: 3 imagens estáticas + 2 vídeos curtos (formato "Traduzindo o contabilês", [[estrategia-organica]]) por segmento — evitar exaustão de público (geo BH é finito, giro de criativo mais rápido que campanha nacional).
 

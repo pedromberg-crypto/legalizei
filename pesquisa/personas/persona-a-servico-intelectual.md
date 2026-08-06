@@ -41,6 +41,10 @@ Educativo (Fator R, "quanto você tá pagando a mais"), utilidade prática (simu
 
 Sem persona/avatar fixo definido ainda — tom direto, sem jargão contábil, referência visual = interface do próprio app (screenshot honesto > stock photo)
 
+## Tom de voz
+
+Herda o arquétipo **Aliado/Parceiro de confiança** ([[posicionamento]] §Arquétipos) — não muda de personalidade, só de registro: **eficiente, sem enrolação**, porque ela já sabe o que faz e só quer que a burocracia não atrase (ver citação no topo). Fala de igual pra igual (é parceira técnica, não aluna): prova competência (Fator R, Anexo certo) na cara, nunca esconde atrás de "fale com um especialista" — isso soaria Sábio distante, o espaço que a Contabilizei ocupa. Detalhe completo: [[metodologia-personas]] §Tom de voz por dorsal.
+
 ## Objeção principal
 
 **"Contabilidade online não vai entender minha operação (freelas variados, clientes internacionais, etc)"** → contorno: mostrar profundidade fiscal real (Fator R, Anexo correto) na cara, não escondida atrás de "fale com especialista"

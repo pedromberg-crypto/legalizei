@@ -41,6 +41,10 @@ Prova social/depoimento (peso alto pro nicho — decisão de compra por confian�
 
 Imagem humana real (evitar stock corporativo — acerto da Facilite identificado em [[matriz-comparativa]]), tom acolhedor sem infantilizar
 
+## Tom de voz
+
+Herda o arquétipo **Aliado/Parceiro de confiança** ([[posicionamento]] §Arquétipos) — registro de **parceria/crescimento**: comemora ela crescer (transição MEI→ME), nunca trata isso como upsell empurrado. Acolhedor sem infantilizar (a objeção dela é virar "só mais um número" — o oposto de acolhedor-de-cima). Detalhe completo: [[metodologia-personas]] §Tom de voz por dorsal.
+
 ## Objeção principal
 
 **"Vou virar só mais um número, vou perder o atendimento pessoal que sempre tive"** → contorno: humano no plano de entrada é resposta direta — não é upsell como nos concorrentes ([[insights-estrategicos]] achado nº1)

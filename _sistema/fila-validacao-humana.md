@@ -45,7 +45,7 @@ tags: [sistema, fila, placeholder, decisao, meta]
 | **Rachadura do T18** (aceite N8 × termo irreversível N20) | 🕓 estrutura parece mais defensável que a atual (hoje a gente alega serviço exaurido quando nada foi executado) | **Larissa/Mauro** |
 | **Promessa quebrada** | 🕓 o que o produto faz quando o teaser não se cumpre? Hoje o motor só **marca** | **Pedro** |
 | **Flow #2: cobrar antes do TTRT?** | 🕓 é cobrar por algo que a gente **não controla** (quem destrava é o contador que ele demitiu). SLA? reembolso? | **Pedro + Mauro** |
-| **Flow #2: passivo herdado** | 🕓 DAS atrasado/dívida ativa é upsell ou fora do escopo? | **Mauro** |
+| **🆕 Flow #2: certificado digital pro ME sem certificado** | 🕓 06/08 — achado: certificado não é a TTRT, é passo independente que faltava pro ME (só existia pro MEI). Se providenciar carrega custo/fidelidade extra igual ao MEI, ou fica incluso (ME já tem a garantia de devolução do TTRT)? Pedro escolheu decidir depois — pergunta já está na tela (M2), preço não | **Mauro** |
 | **Prazo de fidelidade** | 🕓 12 meses como o líder, ou menos pra vender mais fácil? | **Pedro** |
 | **Certificado digital** | 🕓 terceirizar (Sete Minas) ou emitir? | **Mauro** |
 

@@ -44,6 +44,8 @@ export type ResumoNota = {
   servico: string;
   servicoMeta: string;
   valor: number;
+  /** 🆕 06/08 — data escolhida na tela de emitir (trava hoje/futuro), formatada pra exibição. */
+  dataLabel: string;
 };
 
 const HOME = "/home-campea"; // "voltar a navegar" = a home do portal (mesma seta de trás)
@@ -157,6 +159,12 @@ export function ResumoSheet({
                   </span>
                   <span className="block text-micro text-text-tertiary">
                     {dados.servicoMeta}
+                  </span>
+                </Linha>
+
+                <Linha rotulo="Data da nota">
+                  <span className="block font-semibold text-text-primary">
+                    {dados.dataLabel}
                   </span>
                 </Linha>
 

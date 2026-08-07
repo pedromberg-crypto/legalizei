@@ -196,6 +196,8 @@ Nossa 3ª rodada voltou rasa (só a procuração e-CAC). O Gemini entregou o ope
 
 ⚠️ **Verificar antes de codar:** (a) o **nº da resolução CFC** — Gemini escreve "1.590/2020" mas a própria lista de refs dele cita CFC 987/2003 e 1493/2015 → pode ser citação trocada; (b) o **código "Evento 232"** contra o Coletor Redesim oficial. → fila-Larissa/fonte primária.
 
+🔴 **GAP achado 06/08 (Pedro, revisando `/apresentacao`):** nem esta pesquisa nem o Gemini cobrem o **certificado digital** — TTRT move responsabilidade TÉCNICA, não o certificado (são artefatos diferentes), e a automação (item K, Serpro Integra Contador) exige certificado credenciado com a gente independente do TTRT estar resolvido. Não sabemos se o certificado costuma ser retido pelo contador antigo (mesmo bucket ético do "Acervo" acima) ou fica sempre com a empresa/legal-rep. Aplicado como hipótese-de-produto sem essa confirmação: `MigrarDiagnosticoView` agora pergunta "tem certificado?" pros 2 regimes (antes só MEI) e reaproveita/emite conforme a resposta. 🟡 fila-Larissa: como o antigo contador costuma tratar o certificado na prática.
+
 ## D-resíduo) INSS pró-labore + alíquotas — refutação do D RESOLVIDA (🟢 alta)
 | Fato | Regra | Fonte | Confiança |
 |---|---|---|---|

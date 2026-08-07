@@ -79,6 +79,7 @@ const SERVICOS: Servico[] = [
     preco: "R$ 89,00",
     categoria: "Certidões e documentos",
     Icone: IconeDoc,
+    instantaneo: true,
   },
   {
     id: "conta-pj",
@@ -103,6 +104,7 @@ const SERVICOS: Servico[] = [
     preco: "a partir de R$ 299",
     categoria: "Alterações societárias",
     Icone: IconeEditar,
+    instantaneo: true,
   },
   {
     id: "socio",
@@ -111,6 +113,7 @@ const SERVICOS: Servico[] = [
     preco: "a partir de R$ 399",
     categoria: "Alterações societárias",
     Icone: IconeSocios,
+    instantaneo: true,
   },
   {
     id: "baixa",
@@ -119,6 +122,7 @@ const SERVICOS: Servico[] = [
     preco: "sob consulta",
     categoria: "Alterações societárias",
     Icone: IconeXCirculo,
+    instantaneo: true,
   },
   {
     id: "renovacao-cert",
@@ -132,6 +136,7 @@ const SERVICOS: Servico[] = [
       "A gente instala e valida por você",
       "Zero interrupção pra emitir nota e gerar guia",
     ],
+    instantaneo: true,
   },
   {
     id: "relatorio-contabil",
@@ -145,6 +150,29 @@ const SERVICOS: Servico[] = [
       "DRE, balanço ou livro-caixa (você escolhe)",
       "Aceito por banco, licitação e investidor",
     ],
+    instantaneo: true,
+  },
+  {
+    /**
+     * 🆕 06/08 (reunião Rua Satélite 19, Léo) — item novo: reprocessar meses
+     * que o cliente emitiu nota FORA do app, retroativo, e bagunçou a média
+     * dos 12 meses do Simples. É o mesmo trabalho manual que Léo descrevia
+     * fazendo no escritório antigo (importar o período, ratificar a apuração
+     * mês a mês) — cobrado por período, sempre na hora (nunca sabe de
+     * antemão quantos meses vai precisar mexer).
+     */
+    id: "regularizacao",
+    nome: "Regularização de período retroativo",
+    desc: "Emitiu nota fora do app, num mês já fechado? A gente reprocessa e acerta a guia.",
+    preco: "a partir de R$ 120 por mês",
+    categoria: "Fiscal",
+    Icone: IconeRefresh,
+    inclui: [
+      "Reprocessa a apuração do(s) mês(es) afetado(s)",
+      "Gera a guia complementar, com juros e multa se houver",
+      "Cobrado por mês corrigido — a gente cota antes de começar",
+    ],
+    instantaneo: true,
   },
 ];
 
@@ -194,10 +222,10 @@ export default function ServicosPage() {
                 </span>
                 <p className="text-caption text-text-secondary">
                   <span className="font-semibold text-text-primary">
-                    Sem cobrança na hora.
+                    Serviço simples entra na próxima fatura.
                   </span>{" "}
-                  O que você pedir entra na sua próxima fatura. A gente confirma
-                  com você antes de começar.
+                  Os mais caros cobram na hora — a gente sempre avisa antes de
+                  começar.
                 </p>
               </div>
             </div>
@@ -241,8 +269,15 @@ export default function ServicosPage() {
                           {s.desc}
                         </span>
                       </span>
-                      <span className="shrink-0 text-caption font-semibold text-text-primary">
-                        {s.preco}
+                      <span className="shrink-0 text-right">
+                        <span className="block text-caption font-semibold text-text-primary">
+                          {s.preco}
+                        </span>
+                        {s.instantaneo && (
+                          <span className="block text-micro text-text-tertiary">
+                            cobra na hora
+                          </span>
+                        )}
                       </span>
                     </button>
                   ))}

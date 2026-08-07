@@ -1,0 +1,119 @@
+```mermaid
+flowchart TD
+  subgraph GATE["E5 · Gate-CNAE — uma tela"]
+    direction TB
+    E5A["Descreve atividade + pills"]
+    E5V{"Veredito CNAE"}
+    DESAMB["Desambiguação<br/>mini-loop"]:::inline
+    E5VA["🟢 Atende"]
+    E5T{"Triagem<br/>sócios? exterior?"}
+    E5F["Faixa de faturamento"]
+  end
+  E1["E1 · Splash"]
+  E2["E2 · Welcome"]
+  E3{"E3 · Fork<br/>3 rotas"}
+  E3_1(["E3.1 · Login / portal"]):::feliz
+  E3_2{"E3.2 · MEI × ME<br/>(autodeclarado)"}
+  E4{"E4 · Gate cidade<br/>(BH-MG)"}
+  E4_1(["E4.1 · Saída · fora de BH<br/>MLP só atende BH-MG"]):::saida
+  E4_2["E4.2 · Lê o cartão CNPJ"]
+  E4_2_1(["Saída · CNPJ inapto<br/>ou suspenso"]):::saida
+  E4_2B_1(["Saída · Presumido<br/>fora de escopo"]):::saida
+  E4_3["E4.3 · Diagnóstico<br/>só MEI ("tem contador?")"]
+  E4_4["E4.4 · Plano"]
+  E4_5["E4.5 · Contrato<br/>+ promessa de devolução"]
+  E9_3["E9.3 · Aguardando TTRT"]:::espera
+  E9_4(["✅ E9.4 · Migração concluída"]):::feliz
+  E5_1["E5.1 · 🟡 Waitlist"]:::saida
+  E5_2["E5.2 · 🔴 Contato especial<br/>(atendido pelo Mauro)"]:::saida
+  E5_3["E5.3 · 🔴 Fora de escopo<br/>(descarta)"]:::saida
+  E5_4["E5.4 · Saída · exterior<br/>LC 123 art.17"]:::saida
+  E5_5["E5.5 · Saída · 3+ sócios<br/>limite do produto"]:::saida
+  E6["E6 · Criar conta"]
+  E7["E7 · A conta da abertura"]
+  E8["E8 · Aceite contrato<br/>reversível, CDC 49"]
+  E9{"E9 · Pagamento"}
+  E9_1["E9.1 · Aguardando boleto<br/>dossiê já liberado"]:::espera
+  C1["C1 · Seus dados"]
+  C2["C2 · Vínculo INSS"]
+  C3{"C3 · Sócios?"}
+  C3_1["C3.1 · Coleta 2º sócio<br/>+ convite"]:::branch
+  C4["C4 · Dados da empresa<br/>+upsell endereço"]
+  C5["C5 · CNAE secundários"]
+  C6["C6 · Natureza jurídica"]
+  C7["C7 · Nome / razão social"]
+  C0_1["C0.1 · Retomar de onde parou"]:::espera
+  A1["A1 · Revisar dossiê"]
+  A2["A2 · Termo irreversível"]
+  A3["A3 · Painel<br/>3 status"]
+  A3_1["A3.1 · Órgão recusa<br/>'precisa de você'"]
+  A4["A4 · Assinatura dos sócios"]
+  A4G{"GOV.BR nível<br/>bronze→upgrade"}:::inline
+  REMOVIDO_N24(["'Empresa ativa'<br/>🗑️ REMOVIDO 30/07"]):::todo
+  A5(["✅ A5 · Home dia-1<br/>(ativação)"]):::feliz
+
+  E1 --> E2
+  E2 --> E3
+  E3 -->|"já sou cliente"| E3_1
+  E3 -->|"quero abrir / migrar"| E3_2
+  E3_2 -->|"ME"| E4
+  E3_2 -.->|"MEI, abrir (pula cidade)"| E5A
+  E3_2 -.->|"MEI, migrar (pula cidade)"| E4_2
+  E4 -->|"BH confirmado, abrir"| E5A
+  E4 -->|"BH confirmado, migrar"| E4_2
+  E4 -->|"fora de BH"| E4_1
+  E4_2 -.->|"MEI"| E4_3
+  E4_2 -.->|"ME"| E4_4
+  E3_2 -->|"Lucro Presumido (CTA)"| E4_2B_1
+  E4_2 -.->|"CNPJ inapto/suspenso"| E4_2_1
+  E4_2 -->|"🟡 regulada"| E5_1
+  E4_2 -->|"🔴 Mauro atende"| E5_2
+  E4_3 -.-> E4_4
+  E4_4 --> E4_5
+  E4_5 -->|"fluxo migrar"| E9
+  E9 -.->|"fluxo migrar"| E9_3
+  E9_3 -.-> E9_4
+  E9_4 -.-> A5
+  E5A --> E5V
+  E5V -->|"ambíguo"| DESAMB
+  DESAMB --> E5A
+  E5V -->|"🟢 atende"| E5VA
+  E5VA --> E5T
+  E5V -->|"🟡 regulada"| E5_1
+  E5V -->|"🔴 Mauro atende"| E5_2
+  E5V -->|"🔴 ninguém atende"| E5_3
+  E5T -->|"até 2 + Brasil"| E5F
+  E5T -->|"sócio no exterior"| E5_4
+  E5T -->|"3+ sócios"| E5_5
+  E5F --> E6
+  E6 --> E7
+  E7 --> E8
+  E8 --> E9
+  E9 -->|"cartão"| C1
+  E9 -->|"boleto"| E9_1
+  E9_1 --> C1
+  C1 --> C2
+  C2 --> C3
+  C3 -->|"2 sócios"| C3_1
+  C3_1 --> C4
+  C3 -->|"solo"| C4
+  C4 --> C5
+  C5 --> C6
+  C6 --> C7
+  C7 --> A1
+  A1 -.-> A2
+  A2 -.-> A3
+  A3 -.-> A3_1
+  A3_1 -.-> A3
+  A3 -.-> A4
+  A4 -.-> A4G
+  A4G -.-> A5
+  C0_1 -.->|"volta ao passo pausado"| C1
+
+  classDef saida fill:#fde8e4,stroke:#e0603f,color:#7a2d18;
+  classDef feliz fill:#e6f4ea,stroke:#2f9e5a,color:#1c5e37;
+  classDef espera fill:#fff4e0,stroke:#e0a03f,color:#7a5518;
+  classDef branch fill:#eef1ff,stroke:#5b6cf0,color:#2a338a;
+  classDef inline fill:#f1f1f3,stroke:#9aa0a6,color:#555;
+  classDef todo fill:#f7f7f8,stroke:#bcbcc2,stroke-dasharray:5 4,color:#888;
+```

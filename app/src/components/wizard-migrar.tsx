@@ -13,9 +13,13 @@ import { CUSTOS, brl } from "@/lib/fiscal";
  * ═══════════════════════════════════════════════════════════════════════════
  * FLOW #2 — MIGRAR DE CONTADOR (M1–M5) · construído 30/07
  * ═══════════════════════════════════════════════════════════════════════════
- * Fonte da lógica: `execucao/motor-testes/flow-migrar.js` (M0–M5, 15 passos,
- * 3 personas: migra-limpo · migra-passivo · migra-refem) + o bloco I da
- * `pesquisa/fiscal-simples-bh-2026.md` (🟢 alta confiança).
+ * Fonte da lógica: `execucao/motor-testes/flow-migrar.js` (M0–M5, 15 passos) +
+ * o bloco I da `pesquisa/fiscal-simples-bh-2026.md` (🟢 alta confiança).
+ * ⚠️ 06/08 — a persona `migra-passivo` e a tela M4a (auditoria de passivo,
+ * ex-`MigrarPassivoView`/`/migrar/passivo`) foram RETIRADAS do flow: a gente
+ * não sai buscando pendência do contador anterior antes de assumir. Isso vira
+ * serviço à parte, sob demanda, só depois que o cliente já está ativo no app.
+ * Decisão do Pedro — ver `decisoes-marca.md`.
  *
  * O flow #2 era o blind spot mais antigo do projeto — "metade do mercado, zero
  * testado" desde 15/07. A lógica estava modelada e testada; faltavam as telas.
@@ -75,6 +79,11 @@ export interface EmpresaMigrar {
   cnae: string;
   cnaeHumano: string;
   endereco: string;
+  /** 🆕 06/08 (reunião Rua Satélite 19, Léo) — contato do contador ATUAL, quando
+   *  o cartão CNPJ traz (não é garantido: só vem quando o escritório trocou o
+   *  e-mail cadastrado pro dele, o que é comum mas não universal). */
+  contadorEmail?: string;
+  contadorTelefone?: string;
 }
 
 export const EMPRESA_MIGRAR: EmpresaMigrar = {
@@ -89,6 +98,8 @@ export const EMPRESA_MIGRAR: EmpresaMigrar = {
   cnae: "6201-5/02",
   cnaeHumano: "Criação de sites e web design",
   endereco: "Rua dos Timbiras, 1200, Funcionários, Belo Horizonte/MG",
+  contadorEmail: "contato@ramoscontabil.com.br",
+  contadorTelefone: "(31) 3222-4455",
 };
 
 /**
@@ -97,7 +108,7 @@ export const EMPRESA_MIGRAR: EmpresaMigrar = {
  * optante Simples + CNAE liso", sem nunca perguntar SE o regime de origem é
  * um dos que migramos, nem tratar CNPJ inapto/suspenso (hoje passaria batido
  * ou cairia num veredito genérico). Mesmo padrão de `?cenario=` já usado em
- * `migrar/diagnostico` e `migrar/passivo`.
+ * `migrar/diagnostico`.
  *
  * 🆕 04/08 (2ª rodada, decisão do Pedro) — **MEI entra no escopo do Migrar.**
  * Reverte a leitura anterior desta mesma pendência: só Lucro Presumido segue
@@ -408,7 +419,7 @@ function ChecagemLinha({ ok, titulo }: { ok: boolean; titulo: string }) {
   );
 }
 
-/* ═══════════════════ M2 · DIAGNÓSTICO ("tem certificado?", só MEI) ══════ */
+/* ═══════════════════ M2 · DIAGNÓSTICO ("tem certificado?") ══════════════ */
 
 /**
  * M2 — 🔴 04/08 (3ª rodada, decisão do Pedro): o diagnóstico de Fator R com
@@ -418,8 +429,7 @@ function ChecagemLinha({ ok, titulo }: { ok: boolean; titulo: string }) {
  * meses não existem em API pública nenhuma da Receita, só via procuração/
  * e-CAC (🔐), que só desbloqueia DEPOIS que a pessoa vira cliente. Pró-labore/
  * Fator R agora só entram na conversa pós-pagamento (reuso do motor de
- * `/impostos/aliquotas`, dia-2). ME segue direto do M1 (`/migrar/cnpj`) pro
- * plano (M3), sem passar por aqui.
+ * `/impostos/aliquotas`, dia-2).
  *
  * 🔴 05/08 (pedido do Pedro) — a pergunta trocou de "tem contador?" pra "tem
  * certificado digital?". Motivo: TTRT (Termo de Transferência de
@@ -437,13 +447,30 @@ function ChecagemLinha({ ok, titulo }: { ok: boolean; titulo: string }) {
  * confirmada em fonte primária — fila-Larissa (ver `cruzamento-gemini-fluxo-
  * migracao.md`, mesma pendência do nº da resolução CFC/Evento 232).
  *
+ * 🔴 06/08 (achado do Pedro revisando a `/apresentacao`) — a tela vira "só
+ * MEI" ERA UM GAP: certificado digital não aparecia em NENHUM lugar do
+ * caminho ME. TTRT move responsabilidade TÉCNICA, não o certificado — são
+ * artefatos independentes, e nossa automação (DAS/PGDAS-D via Serpro) precisa
+ * do certificado credenciado com a gente de qualquer jeito. ME agora TAMBÉM
+ * passa por aqui (M1 → M2 → M3, não mais M1 → M3 direto), com copy própria:
+ * pra ME o certificado é ADICIONAL à transferência de responsabilidade (as
+ * duas rodam em paralelo, uma não trava a outra), não substituto dela como é
+ * pro MEI. 🟡 fila-Mauro: se sem-certificado-ME carrega custo/fidelidade
+ * extra (como já existe pro MEI) é decisão de preço/contrato NÃO tomada —
+ * ver `decisoes-marca.md` 06/08. Esta tela só COLETA o dado; não cobra nada.
+ *
  * Resposta vira `temCertificado` e viaja via `onSeguir` — MEI não passa mais
- * pelo M4b (`/migrar/transferencia`, TTRT) em nenhum dos dois casos.
+ * pelo M4b (`/migrar/transferencia`, TTRT) em nenhum dos dois casos. ME
+ * sempre passa pelo M4b, com ou sem certificado — a resposta só decide se o
+ * M4b ganha um passo técnico a mais (emitir certificado novo).
  */
 export function MigrarDiagnosticoView({
+  mei,
   onSeguir,
   onVoltar,
 }: {
+  /** 🆕 06/08 — vale pros 2 regimes agora; muda só a copy (ver comentário acima). */
+  mei: boolean;
   /** Carrega se a pessoa já tem certificado digital (decide reaproveitar × emitir novo). */
   onSeguir?: (temCertificado?: boolean) => void;
   onVoltar?: () => void;
@@ -461,11 +488,9 @@ export function MigrarDiagnosticoView({
 
           <Corpo>
             <Aviso variante="info" titulo="Por que a gente precisa disso">
-              É o certificado que libera a gente pra emitir sua nota,
-              gerenciar seu colaborador e pagar sua guia dentro do app. MEI
-              não tem transferência de responsabilidade técnica a fazer: com
-              certificado, a gente reaproveita o seu. Sem, a gente providencia
-              um novo pra você.
+              {mei
+                ? "É o certificado que libera a gente pra emitir sua nota, gerenciar seu colaborador e pagar sua guia dentro do app. MEI não tem transferência de responsabilidade técnica a fazer: com certificado, a gente reaproveita o seu. Sem, a gente providencia um novo pra você."
+                : "É o certificado que libera a gente pra emitir sua nota, pagar sua guia e automatizar sua contabilidade dentro do app. É diferente da transferência de responsabilidade técnica (isso a gente já cuida à parte, no próximo passo): com certificado, a gente reaproveita o seu. Sem, a gente providencia um novo pra você."}
             </Aviso>
           </Corpo>
 
@@ -499,21 +524,27 @@ export function MigrarDiagnosticoView({
         </Titulo>
 
         <Corpo>
-          <Card tom="sucesso">
-            <p className="text-body font-semibold text-text-primary mb-2">
-              O que muda pra você
-            </p>
-            <div className="flex flex-col gap-1.5">
-              <LinhaFicha rotulo="Guia mensal (DAS-MEI)" valor="calculada e paga por você, do jeito que já é" />
-              <LinhaFicha rotulo="Limite de faturamento" valor="a gente acompanha os R$ 81 mil/ano de perto" />
-              <LinhaFicha rotulo="Nota fiscal" valor="emissão pelo app, sem complicação" />
-            </div>
-          </Card>
+          {mei && (
+            <Card tom="sucesso">
+              <p className="text-body font-semibold text-text-primary mb-2">
+                O que muda pra você
+              </p>
+              <div className="flex flex-col gap-1.5">
+                <LinhaFicha rotulo="Guia mensal (DAS-MEI)" valor="calculada e paga por você, do jeito que já é" />
+                <LinhaFicha rotulo="Limite de faturamento" valor="a gente acompanha os R$ 81 mil/ano de perto" />
+                <LinhaFicha rotulo="Nota fiscal" valor="emissão pelo app, sem complicação" />
+              </div>
+            </Card>
+          )}
 
           <Aviso variante="info" titulo="O que a gente faz com isso">
-            {temCertificado
-              ? "A gente atualiza a procuração pro seu certificado atual. Você não precisa ligar pra ninguém."
-              : "A gente emite seu certificado digital a partir do pagamento, sem etapa de transferência no meio."}
+            {mei
+              ? temCertificado
+                ? "A gente atualiza a procuração pro seu certificado atual. Você não precisa ligar pra ninguém."
+                : "A gente emite seu certificado digital a partir do pagamento, sem etapa de transferência no meio."
+              : temCertificado
+                ? "A gente atualiza a procuração pro seu certificado atual, em paralelo à transferência de responsabilidade técnica."
+                : "A gente emite seu certificado digital em paralelo à transferência de responsabilidade técnica — uma coisa não trava a outra."}
           </Aviso>
 
           {/* 🆕 05/08 (pedido do Pedro) — quem já tem certificado precisa
@@ -808,131 +839,110 @@ function Bullet({ children }: { children: React.ReactNode }) {
   );
 }
 
-/* ═══════════════════ M4 · AUDITORIA DE PASSIVO ══════════════════════════ */
+/* ═══════════════════ M3c · SEU CONTADOR ATUAL ════════════════════════════ */
 
 /**
- * M4a — o risco EXCLUSIVO do flow #2: a empresa chega com passado.
+ * M3c — NOVA (06/08, reunião Rua Satélite 19 com Léo).
  *
- * 🔥 O consolidado fiscal (#14) diz que as obrigações do período antigo ficam
- * com o contador anterior — mas **o cliente não sabe disso, e a dívida é da
- * empresa, não do contador.** Assumir sem auditar é herdar problema que a gente
- * não criou e virar o culpado por ele.
+ * Pra abrir o TTRT a gente precisa saber quem é o contador atual: nome,
+ * e-mail, telefone e CRC. Não existe API pública que devolva "quem é o
+ * contador de um CNPJ" — o caminho real é o cartão CNPJ, que na MAIORIA das
+ * vezes traz o e-mail/telefone do escritório (é pra lá que a Receita manda
+ * intimação, por isso o contador costuma trocar o e-mail cadastrado pro
+ * dele — Léo, R19). Não vem sempre: a tela pré-preenche quando tem e deixa
+ * em branco quando não tem, mas em ambos os casos o campo é editável e o
+ * que a pessoa digitar VALE, mesmo se divergir do que veio da consulta (o
+ * dado dela é mais recente que o cadastro, que pode estar desatualizado).
  *
- * Por isso esta tela vem ANTES de qualquer transferência: mostra o que
- * encontramos, separa o que é responsabilidade de quem, e deixa o cliente
- * decidir sabendo. Persona: `migra-passivo`.
+ * Só ME passa por aqui — MEI nunca tem TTRT (ver `MigrarDiagnosticoView`),
+ * vai direto de pagamento pra `/migrar/ativa`.
+ *
+ * Sem trava de Continuar: nome/e-mail/telefone/CRC completos ajudam, mas
+ * "não sabe algum desses dados? segue mesmo assim — a gente confirma o
+ * resto direto com o conselho" (Pedro, mesma reunião) — travar aqui puniria
+ * quem genuinamente não tem a informação por um problema que não é dele.
  */
-export function MigrarPassivoView({
-  comPassivo = true,
+export function MigrarContadorAntigoView({
+  empresa,
   onSeguir,
   onVoltar,
 }: {
-  comPassivo?: boolean;
-  onSeguir?: () => void;
+  empresa: EmpresaMigrar;
+  onSeguir?: (dados: { nome: string; email: string; telefone: string; crc: string }) => void;
   onVoltar?: () => void;
 }) {
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState(empresa.contadorEmail ?? "");
+  const [telefone, setTelefone] = useState(empresa.contadorTelefone ?? "");
+  const [crc, setCrc] = useState("");
+
+  const veioAlgo = Boolean(empresa.contadorEmail || empresa.contadorTelefone);
+
   return (
     <>
-      <TelaHeader meta="Antes de assumir" onVoltar={onVoltar} />
+      <TelaHeader meta="Seu contador atual" onVoltar={onVoltar} />
       <main className="app-main">
-        <Titulo
-          sub={
-            comPassivo
-              ? "Olhamos a situação da sua empresa nos órgãos. Achamos coisas que precisam da sua atenção."
-              : "Olhamos a situação da sua empresa nos órgãos. Está tudo em ordem."
-          }
-        >
-          {comPassivo ? "O que encontramos" : "Sua empresa está limpa"}
+        <Titulo sub="A gente usa isso pra avisar seu contador atual e abrir a transferência. Você não precisa ligar pra ele.">
+          Quem cuida da sua empresa hoje?
         </Titulo>
 
         <Corpo>
-          {comPassivo ? (
-            <>
-              <div className="flex flex-col gap-2">
-                <ItemPassivo
-                  titulo="DAS em atraso"
-                  valor="R$ 1.840,00"
-                  detalhe="3 guias não pagas, referentes a jan, fev e mar deste ano."
-                />
-                <ItemPassivo
-                  titulo="Declaração anual pendente"
-                  detalhe="A DEFIS do ano passado não foi entregue."
-                />
-              </div>
-
-              {/* A separação que protege os dois lados. Sem isso, ou a gente
-                  herda culpa alheia, ou o cliente descobre depois e a culpa
-                  vira nossa de qualquer jeito. */}
-              <Aviso variante="warning" titulo="De quem é cada coisa">
-                A dívida é da empresa, então ela continua sendo sua. Mas a
-                responsabilidade por não ter entregue no prazo é de quem cuidava
-                da contabilidade naquele período.
-              </Aviso>
-
-              <Card>
-                <p className="text-body font-semibold text-text-primary mb-1">
-                  O que a gente faz
-                </p>
-                <p className="text-caption text-text-secondary">
-                  A gente assume daqui pra frente e te mostra o caminho pra
-                  regularizar o que ficou. Se quiser, a gente cuida disso também,
-                  como um serviço à parte.
-                </p>
-              </Card>
-            </>
-          ) : (
-            <>
-              <Card tom="sucesso">
-                <div className="flex items-center gap-2 mb-2">
-                  <StatusIcon estado="feito" />
-                  <span className="text-caption font-semibold text-state-success-text">
-                    Nada pendente
-                  </span>
-                </div>
-                <p className="text-caption text-text-secondary">
-                  Impostos em dia, declarações entregues, sem inscrição em dívida
-                  ativa. A migração é limpa.
-                </p>
-              </Card>
-              <Aviso variante="info" titulo="Por que a gente confere isso">
-                Porque a empresa chega com um passado, e você tem o direito de
-                saber o que está assumindo antes da gente encostar nela.
-              </Aviso>
-            </>
+          {veioAlgo && (
+            <Aviso variante="info" titulo="Já achamos parte disso">
+              Puxamos o contato do seu cartão CNPJ. Confira se ainda está certo —
+              se não estiver, é só corrigir.
+            </Aviso>
           )}
+
+          <Campo rotulo="Nome do contador ou escritório">
+            <Texto
+              valor={nome}
+              onChange={setNome}
+              placeholder="Ex: Contabilidade Ramos"
+            />
+          </Campo>
+
+          <Campo rotulo="E-mail de contato">
+            <Texto
+              valor={email}
+              onChange={setEmail}
+              placeholder="contato@escritorio.com.br"
+              inputMode="email"
+            />
+          </Campo>
+
+          <Campo rotulo="Telefone">
+            <Texto
+              valor={telefone}
+              onChange={setTelefone}
+              placeholder="(31) 90000-0000"
+              inputMode="tel"
+            />
+          </Campo>
+
+          <Campo
+            rotulo="CRC do contador, se você tiver"
+            dica="Fica no contrato que você assinou com ele, se ele te mandou. Opcional."
+          >
+            <Texto valor={crc} onChange={setCrc} placeholder="Opcional" />
+          </Campo>
+
+          <p className="text-micro text-text-tertiary">
+            Não sabe algum desses dados? Pode seguir assim mesmo — a gente
+            confirma o resto direto com o conselho.
+          </p>
         </Corpo>
 
         <Rodape>
-          <Button full onClick={onSeguir}>
-            {comPassivo ? "Entendi, pode continuar" : "Continuar"}
+          <Button
+            full
+            onClick={() => onSeguir?.({ nome, email, telefone, crc })}
+          >
+            Continuar
           </Button>
         </Rodape>
       </main>
     </>
-  );
-}
-
-function ItemPassivo({
-  titulo,
-  valor,
-  detalhe,
-}: {
-  titulo: string;
-  valor?: string;
-  detalhe: string;
-}) {
-  return (
-    <div className="rounded-2xl border border-state-warning bg-state-warning-tint p-4">
-      <div className="flex items-baseline justify-between gap-3">
-        <p className="text-body font-semibold text-state-warning-text">{titulo}</p>
-        {valor && (
-          <span className="shrink-0 text-body font-semibold text-state-warning-text">
-            {valor}
-          </span>
-        )}
-      </div>
-      <p className="text-caption text-text-secondary mt-1">{detalhe}</p>
-    </div>
   );
 }
 
@@ -950,6 +960,11 @@ function ItemPassivo({
  * separei em 5 pra não fingir que "atualizar os órgãos" é um evento único
  * quando pode ser 2 sistemas de fato. 🟡 segue fila-Larissa: se confirmar que
  * é o MESMO mecanismo, volta pra 4.
+ *
+ * 🆕 06/08 (achado do Pedro) — certificado digital não é responsabilidade
+ * técnica (TTRT não move ele), mas nossa automação precisa dele credenciado
+ * com a gente de qualquer jeito. Quando o M2 (`?certificado=nao`) diz que a
+ * pessoa não tem, entra um passo a mais aqui — ver `certificadoPendente`.
  */
 const ETAPAS_MIGRACAO: Etapa[] = [
   { nome: "Encerramos com seu contador antigo" },
@@ -961,18 +976,29 @@ const ETAPAS_MIGRACAO: Etapa[] = [
 
 export function MigrarTransferenciaView({
   travado = false,
+  certificadoPendente = false,
   onSeguir,
   onAcaoTravado,
 }: {
   /** `true` = o contador antigo não validou o TTRT (persona `migra-refem`). */
   travado?: boolean;
+  /** 🆕 06/08 — `true` = respondeu "não tenho" no M2: insere "Emitindo seu certificado digital" antes de liberar o acesso. */
+  certificadoPendente?: boolean;
   onSeguir?: () => void;
   onAcaoTravado?: () => void;
 }) {
+  const etapas = certificadoPendente
+    ? [
+        ...ETAPAS_MIGRACAO.slice(0, -1),
+        { nome: "Emitindo seu certificado digital" },
+        ETAPAS_MIGRACAO[ETAPAS_MIGRACAO.length - 1],
+      ]
+    : ETAPAS_MIGRACAO;
+
   if (travado) {
     return (
       <PainelView
-        etapas={ETAPAS_MIGRACAO}
+        etapas={etapas}
         eyebrow="Sua migração"
         concluidas={1}
         emAndamento={1}
@@ -999,7 +1025,7 @@ export function MigrarTransferenciaView({
 
   return (
     <PainelView
-      etapas={ETAPAS_MIGRACAO}
+      etapas={etapas}
       eyebrow="Sua migração"
       concluidas={2}
       emAndamento={2}

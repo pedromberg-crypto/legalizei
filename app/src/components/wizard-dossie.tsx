@@ -384,16 +384,23 @@ export function SociosView({
 }) {
   const [nome2, setNome2] = useState(TEM_SOCIO ? SOCIO_2.nome : "");
   const [parte1, setParte1] = useState(50);
+  const [tipoSocio, setTipoSocio] = useState<"cpf" | "cnpj" | null>(
+    TEM_SOCIO ? "cpf" : null,
+  );
 
   // Esta tela já nasce preenchida pelo mock; o botão serve pra DESFAZER o que
   // quem apresenta mexeu ao vivo e voltar pro estado canônico.
   usePreencher(preencher, () => {
     setNome2(TEM_SOCIO ? SOCIO_2.nome : "");
     setParte1(50);
+    setTipoSocio(TEM_SOCIO ? "cpf" : null);
   });
 
   const parte2 = 100 - parte1;
-  const completo = !TEM_SOCIO || nome2.trim().split(/\s+/).length >= 2;
+  const pjBloqueado = tipoSocio === "cnpj";
+  const completo =
+    !TEM_SOCIO ||
+    (!pjBloqueado && nome2.trim().split(/\s+/).length >= 2);
 
   return (
     <>
@@ -439,49 +446,90 @@ export function SociosView({
                 não da lei.
               </p>
 
-              {/* % de participação: soma 100, default 50/50 editável. */}
-              <Campo
-                rotulo="Como fica a divisão da empresa?"
-                dica="Precisa somar 100%. Toque num atalho ou arraste."
-              >
-                <div className="mb-3 flex gap-2">
-                  {[25, 50, 75].map((p) => {
-                    const on = parte1 === p;
-                    return (
-                      <button
-                        key={p}
-                        onClick={() => setParte1(p)}
-                        className={`min-h-10 flex-1 rounded-full border text-caption font-semibold transition-colors
-                          ${
-                            on
-                              ? "border-action-primary bg-action-primary text-text-on-brand"
-                              : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
-                          }`}
-                      >
-                        {p}%
-                      </button>
-                    );
-                  })}
-                </div>
-                <input
-                  type="range"
-                  min={5}
-                  max={95}
-                  step={5}
-                  value={parte1}
-                  onChange={(e) => setParte1(Number(e.target.value))}
-                  aria-label="Sua participação na empresa"
-                  className="w-full accent-[var(--color-action-primary)]"
+              {/* 🆕 06/08 (reunião Rua Satélite 19) — pessoa jurídica como sócia
+                  tira a empresa do Simples/MEI no ATO do contrato social (regra
+                  fiscal dura, confirmada por contador). Hoje o produto só atende
+                  Simples/MEI (Lucro Presumido ainda fila-decisão), então CNPJ
+                  aqui sempre bloqueia — quando LP entrar, isto vira condicional
+                  ao regime em vez de bloqueio fixo. */}
+              <Campo rotulo="Esse sócio é pessoa física ou jurídica?">
+                <OpcoesLinha
+                  opcoes={[
+                    { v: "cpf", label: "Pessoa física (CPF)" },
+                    { v: "cnpj", label: "Pessoa jurídica (CNPJ)" },
+                  ]}
+                  valor={tipoSocio}
+                  onChange={setTipoSocio}
                 />
-                <div className="mt-2 flex justify-between text-caption">
-                  <span className="font-semibold text-text-primary">
-                    Você: {parte1}%
-                  </span>
-                  <span className="font-semibold text-text-primary">
-                    {nome2.trim().split(/\s+/)[0] || "2º sócio"}: {parte2}%
-                  </span>
-                </div>
               </Campo>
+
+              {pjBloqueado && (
+                <Aviso variante="danger" titulo="Não atendemos esse caso ainda">
+                  Sócio pessoa jurídica tira a empresa do Simples Nacional (e do
+                  MEI) assim que o contrato social é registrado. Hoje a gente só
+                  atende empresas no Simples, então esse CNPJ não pode entrar
+                  como sócio por aqui.
+                </Aviso>
+              )}
+
+              {/* % de participação: soma 100, default 50/50, digitável de
+                  0,5% em 0,5% (pedido do Mauro, 06/08). */}
+              {!pjBloqueado && (
+                <Campo
+                  rotulo="Como fica a divisão da empresa?"
+                  dica="Precisa somar 100%. Toque num atalho ou digite o percentual exato, de 0,5 em 0,5."
+                >
+                  <div className="mb-3 flex gap-2">
+                    {[25, 50, 75].map((p) => {
+                      const on = parte1 === p;
+                      return (
+                        <button
+                          key={p}
+                          onClick={() => setParte1(p)}
+                          className={`min-h-10 flex-1 rounded-full border text-caption font-semibold transition-colors
+                            ${
+                              on
+                                ? "border-action-primary bg-action-primary text-text-on-brand"
+                                : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
+                            }`}
+                        >
+                          {p}%
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      inputMode="decimal"
+                      step={0.5}
+                      min={0.5}
+                      max={99.5}
+                      value={parte1}
+                      onChange={(e) => {
+                        const raw = e.target.value;
+                        if (raw === "") return;
+                        const n = Number(raw);
+                        if (Number.isNaN(n)) return;
+                        const preso = Math.min(99.5, Math.max(0.5, n));
+                        setParte1(Math.round(preso * 2) / 2);
+                      }}
+                      aria-label="Sua participação na empresa, em porcentagem"
+                      className="w-full min-h-12 rounded-md border border-border-hairline bg-surface-card px-3
+                                 text-body text-text-primary focus:border-border-focus focus:outline-none"
+                    />
+                    <span className="shrink-0 text-body font-semibold text-text-secondary">%</span>
+                  </div>
+                  <div className="mt-2 flex justify-between text-caption">
+                    <span className="font-semibold text-text-primary">
+                      Você: {parte1}%
+                    </span>
+                    <span className="font-semibold text-text-primary">
+                      {nome2.trim().split(/\s+/)[0] || "2º sócio"}: {parte2}%
+                    </span>
+                  </div>
+                </Campo>
+              )}
             </>
           ) : (
             <Aviso variante="info" titulo="Empresa só sua">
@@ -927,6 +975,21 @@ export function CnaeSecundariosView({
                         >
                           CNAE {s.cnae}
                         </p>
+                        {/* 🆕 06/08 (WA walkthrough, tag "PIL") — a curadoria já
+                            garante que nenhuma sugestão muda o anexo/enquadramento
+                            (ver comentário de `SUGESTOES` acima); o badge só torna
+                            essa garantia VISÍVEL por item, em vez de só uma frase
+                            genérica acima da lista. */}
+                        <span
+                          className={`mt-1 inline-block rounded-full px-2 py-0.5 text-micro font-semibold
+                            ${
+                              on
+                                ? "bg-surface-card/20 text-text-on-brand"
+                                : "bg-state-success-tint text-state-success-text"
+                            }`}
+                        >
+                          Mantém seu enquadramento
+                        </span>
                       </div>
                       {/* No selecionado o marcador inverte: círculo branco com
                           check coral, senão coral-sobre-coral desapareceria. */}
@@ -1113,11 +1176,13 @@ export function NomeView({
   onVoltar?: () => void;
 }) {
   const [ordem, setOrdem] = useState<string[]>(SUGESTOES_RAZAO);
+  const [propria, setPropria] = useState("");
   const [fantasia, setFantasia] = useState("");
   const [objeto, setObjeto] = useState(gerarObjetoSocial());
 
   usePreencher(preencher, () => {
     setOrdem(SUGESTOES_RAZAO);
+    setPropria("");
     setFantasia(PREENCHIMENTO.nome.fantasia);
     setObjeto(gerarObjetoSocial());
   });
@@ -1148,16 +1213,33 @@ export function NomeView({
               a gente é honesta sobre o que dá pra prometer — tentar em ordem. */}
           <div>
             <p className="text-caption font-semibold text-text-primary mb-2">
-              Suas 3 opções, na ordem que a gente vai tentar
+              {propria.trim()
+                ? "Sua opção entra primeiro. Depois, as sugestões da IA."
+                : "Suas 3 opções, na ordem que a gente vai tentar"}
             </p>
             <div className="flex flex-col gap-2">
+              {/* Sua opção digitada, se houver, é sempre a 1ª tentativa — sem
+                  setas de reordenar, porque já é prioridade máxima. */}
+              {propria.trim() && (
+                <div className="flex items-center gap-3 rounded-md border border-action-primary bg-surface-card p-3">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-action-primary text-caption font-bold text-text-on-brand">
+                    1
+                  </span>
+                  <div className="flex-1">
+                    <span className="block text-body font-semibold text-text-primary">
+                      {propria.trim()}
+                    </span>
+                    <span className="text-micro text-text-tertiary">Sua opção</span>
+                  </div>
+                </div>
+              )}
               {ordem.map((nome, i) => (
                 <div
                   key={nome}
                   className="flex items-center gap-3 rounded-md border border-border-hairline bg-surface-card p-3"
                 >
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-surface-tint-brand text-caption font-bold text-action-primary-sm">
-                    {i + 1}
+                    {i + 1 + (propria.trim() ? 1 : 0)}
                   </span>
                   <span className="flex-1 text-body font-semibold text-text-primary">
                     {nome}
@@ -1186,6 +1268,20 @@ export function NomeView({
               ))}
             </div>
           </div>
+
+          {/* 🆕 06/08 (WA walkthrough) — nem todo mundo quer as 3 sugestões da
+              IA; quem já sabe o nome que quer não devia ter que escolher entre
+              elas. */}
+          <Campo
+            rotulo="Nenhuma dessas? Digite a sua"
+            dica="Opcional. Se preencher, a gente tenta essa primeiro na Junta."
+          >
+            <Texto
+              valor={propria}
+              onChange={setPropria}
+              placeholder="Ex: Ana Ramos Consultoria Ltda"
+            />
+          </Campo>
 
           {/* ✍️ 29/07 — o título dizia "A ordem não muda nada na abertura",
               logo abaixo de um subtítulo que pede pra ORDENAR. Lidos em

@@ -60,6 +60,26 @@ function formatBRL(valor: number): string {
   return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
+/**
+ * 🆕 06/08 (reunião Rua Satélite 19) — TRAVA DE RETROATIVIDADE.
+ * Decisão travada: só emite de hoje pra frente dentro do app. Retroagir
+ * bagunça a média dos 12 meses (recalcula alíquota pra trás inteira) e não
+ * escala em suporte manual — cliente que perdeu o prazo é orientado a falar
+ * com a gente, não a forçar uma data velha por aqui.
+ */
+function hojeISO(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+function clampFutura(v: string): string {
+  const min = hojeISO();
+  return v && v < min ? min : v;
+}
+function formatDataLabel(iso: string): string {
+  if (!iso) return "";
+  const [ano, mes, dia] = iso.split("-");
+  return `${dia}/${mes}/${ano}`;
+}
+
 // Máscaras progressivas (formatam durante a digitação).
 function maskCNPJ(v: string): string {
   const d = v.replace(/\D/g, "").slice(0, 14);
@@ -96,6 +116,7 @@ function EmitirForm() {
     corrigir ? sp.get("cliente") : null,
   );
   const [valor, setValor] = useState(corrigir ? (sp.get("valor") ?? "") : "");
+  const [data, setData] = useState(hojeISO); // trava hoje/futuro — ver `clampFutura`
   const [resumoAberto, setResumoAberto] = useState(false); // sheet de revisão/emissão
   const [buscaAberta, setBuscaAberta] = useState(false); // sheet "ver todos" clientes
 
@@ -167,6 +188,7 @@ function EmitirForm() {
     servico: "Marketing e publicidade",
     servicoMeta: "CNAE 7319-0/04 · Alíquota 6%",
     valor: numero,
+    dataLabel: formatDataLabel(data),
   };
 
   // "Emitir outra": zera o formulário e fecha o sheet (fase enviada).
@@ -174,6 +196,7 @@ function EmitirForm() {
     setResumoAberto(false);
     setCliente(null);
     setValor("");
+    setData(hojeISO());
     trocarTipo("PJ");
     setSalvarNaBase(true);
   };
@@ -344,6 +367,28 @@ function EmitirForm() {
                   </div>
                 </div>
               ) : null}
+            </div>
+
+            {/* ── Data da nota: trava hoje/futuro (Rua Satélite 19, 06/08) ──
+                Retroagir bagunça a média dos 12 meses do Simples inteira pra
+                trás — a orientação pra quem perdeu o prazo é falar com a
+                gente, não forçar uma data velha por aqui. */}
+            <div>
+              <p className="mb-2 text-body-strong font-semibold text-text-primary">
+                Data da nota
+              </p>
+              <input
+                type="date"
+                value={data}
+                min={hojeISO()}
+                onChange={(e) => setData(clampFutura(e.target.value))}
+                aria-label="Data da nota"
+                className="w-full rounded-2xl border border-border-hairline bg-surface-card px-4 py-3 text-body text-text-primary outline-none focus:border-border-focus"
+              />
+              <p className="mt-2 text-caption text-text-secondary">
+                Só dá pra emitir de hoje pra frente. Perdeu o prazo de um mês
+                fechado? Fala com a gente antes de emitir.
+              </p>
             </div>
 
             {/* ── O serviço: TRAVADO no cadastro (decisão A, sem "Alterar") ── */}

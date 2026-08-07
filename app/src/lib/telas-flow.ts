@@ -92,12 +92,12 @@ export const GRUPOS: GrupoTelas[] = [
       {
         rota: "/saida/cnpj-inapto",
         nome: "🆕 E4.2 · Saída · CNPJ inapto/suspenso",
-        nota: "04/08 — nasce do M1 (`/migrar/cnpj?cenario=inapto`, mock de demo): situação cadastral ≠ ativa. Diferente da auditoria de passivo (M4a, que pressupõe CNPJ ATIVO com dívida): aqui a Receita nem reconhece a empresa como ativa, então a regularização vem ANTES de qualquer migração.",
+        nota: "04/08 — nasce do M1 (`/migrar/cnpj?cenario=inapto`, mock de demo): situação cadastral ≠ ativa — a Receita nem reconhece a empresa como ativa, então a regularização vem ANTES de qualquer migração. 🔴 06/08: diferente do que era 'auditoria de passivo' (M4a, empresa ATIVA com dívida) — essa tela foi retirada do flow.",
       },
       {
         rota: "/migrar/diagnostico",
-        nome: "E4.3 · Migrar · Diagnóstico MEI (\"tem certificado?\")",
-        nota: "🔴 04/08 (3ª rodada, decisão do Pedro) — o diagnóstico de Fator R pra ME foi CORTADO: a única API pré-pagamento é a cadastral, não traz faturamento/folha (isso só existe pós-pagamento, via procuração). 🔴 05/08 — E4.2b (`/migrar/tributario`) foi DESCARTADA por duplicar a E3.2 (regime já autodeclarado antes). ME agora vai do M1 direto pro M3, sem passar aqui. 🔴 06/08 — pergunta do MEI trocou de 'você tem contador?' pra 'você já tem certificado digital?': TTRT transfere um contador REGISTRADO NO CRC-MG, e MEI (DASN-SIMEI autodeclaratório) normalmente não tem registro nenhum pra transferir. MEI nunca passa pelo M4b (TTRT) — nos 2 casos.",
+        nome: "E4.3 · Migrar · Diagnóstico (\"tem certificado?\")",
+        nota: "🔴 04/08 (3ª rodada, decisão do Pedro) — o diagnóstico de Fator R pra ME foi CORTADO: a única API pré-pagamento é a cadastral, não traz faturamento/folha (isso só existe pós-pagamento, via procuração). 🔴 05/08 — E4.2b (`/migrar/tributario`) foi DESCARTADA por duplicar a E3.2 (regime já autodeclarado antes). 🔴 06/08 — pergunta do MEI trocou de 'você tem contador?' pra 'você já tem certificado digital?': TTRT transfere um contador REGISTRADO NO CRC-MG, e MEI (DASN-SIMEI autodeclaratório) normalmente não tem registro nenhum pra transferir — MEI nunca passa pelo M4b (TTRT), nos 2 casos. 🔴 06/08 (achado do Pedro) — ME TAMBÉM passa por aqui agora (antes ia do M1 direto pro M3): certificado é independente da TTRT pra ME, e não tinha pergunta nenhuma nesse caminho. 🟡 fila-Mauro: custo/fidelidade de emitir certificado pro ME (se não tiver) é decisão de preço não tomada.",
       },
       {
         rota: "/migrar/plano",
@@ -209,17 +209,12 @@ export const GRUPOS: GrupoTelas[] = [
     id: "migrar-pos-pagamento",
     nome: "Migrar · pós-pagamento (E9.2–E9.4)",
     descricao:
-      "Continuação decimal de E9, só de quem veio do caminho migrar. Depois de pagar, o passivo herdado + a transferência no conselho (CRC-MG) — a pausa mais perigosa do produto, porque quem libera é o contador ANTIGO, um concorrente perdendo o cliente. Termina em E9.4, que entrega direto pra A5 (Home dia-1), pulando Constituição e Aprovação inteiras — a empresa já existia, não há dossiê pra montar nem Junta pra aprovar.",
+      "Continuação decimal de E9, só de quem veio do caminho migrar. Depois de pagar, direto pra transferência no conselho (CRC-MG) — a pausa mais perigosa do produto, porque quem libera é o contador ANTIGO, um concorrente perdendo o cliente. Termina em E9.4, que entrega direto pra A5 (Home dia-1), pulando Constituição e Aprovação inteiras — a empresa já existia, não há dossiê pra montar nem Junta pra aprovar. 🔴 06/08: a E9.2 antiga (auditoria de passivo) foi RETIRADA — a gente não sai buscando pendência do contador anterior antes de assumir; isso vira serviço à parte, sob demanda, só depois que o cliente já está ativo no app. O NÚMERO da tela foi reaproveitado no mesmo flow (06/08, reunião Rua Satélite 19): agora é 'Seu contador atual', dado que a transferência (E9.3) precisa pra existir.",
     telas: [
       {
-        rota: "/migrar/passivo",
-        nome: "E9.2 · 🔥 Auditoria de passivo",
-        nota: "O risco EXCLUSIVO do caminho migrar: a empresa chega com passado. O consolidado fiscal diz que as obrigações do período antigo ficam com o contador anterior — mas o cliente não sabe disso, e a DÍVIDA é da empresa. Assumir sem auditar = herdar problema que a gente não criou e virar o culpado. Persona `migra-passivo`. 🕓 Se isso vira upsell é decisão do Mauro.",
-      },
-      {
-        rota: "/migrar/passivo?cenario=limpo",
-        nome: "E9.2 · Migração limpa",
-        nota: "Persona `migra-limpo`: nada pendente. A tela existe mesmo sem problema porque a auditoria é a promessa ('você tem o direito de saber o que está assumindo antes da gente encostar nela'), não o alarme.",
+        rota: "/migrar/contador",
+        nome: "🆕 E9.2 · Seu contador atual",
+        nota: "06/08 (reunião Rua Satélite 19, Léo) — só ME passa por aqui (MEI nunca tem TTRT, vai direto pro E9.4). Pede nome/e-mail/telefone/CRC do contador de hoje, pra abrir o TTRT. Pré-preenche e-mail/telefone quando a consulta cadastral trouxer (nem sempre vem — não existe API pública de 'quem é o contador de um CNPJ'); o que a pessoa digitar vale, mesmo se divergir. Sem trava de Continuar: quem não sabe algum dado segue mesmo assim.",
       },
       {
         rota: "/migrar/transferencia",

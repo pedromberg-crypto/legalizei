@@ -105,7 +105,7 @@ const BARRA_H: Record<Topo, number> = { island: 54, notch: 44, barra: 20 };
  * GRUPOS segue `flow/flow-data.mjs` + `portal/portal-data.mjs` (fontes-
  * únicas): Entrada (E1–E4, com Migrar fundido como decimal do fork E4) →
  * E5 porta+veredito → saídas da triagem → dinheiro (E6–E9) → Migrar
- * pós-pagamento (E9.2–E9.4, decimal de E9) → pausas (C0.1/E9.1) →
+ * pós-pagamento (E9.3–E9.4, decimal de E9) → pausas (C0.1/E9.1) →
  * Constituição/dossiê (C1–C7) → Aprovação (A1–A5) → Portal (P-INI/P-IMP/
  * P-NOT/P-EMI/P-MAIS/P-GER) → fora do flow. Onde o flow bifurca, o ramo
  * entra logo depois do nó que o gera — não no fim.
@@ -151,12 +151,11 @@ const MAPA_EDGES: Conexao[] = [
   { de: "/entrada?intencao=abrir&regime=me", para: "/migrar/cnpj" },
   { de: "/entrada?intencao=migrar", para: "/saida/regime-nao-suportado", tracejado: true },
   { de: "/migrar/cnpj", para: "/migrar/cnpj?fase=achou", tracejado: true },
-  { de: "/migrar/cnpj", para: "/migrar/plano" },
-  { de: "/migrar/cnpj", para: "/migrar/diagnostico", tracejado: true },
+  { de: "/migrar/cnpj", para: "/migrar/diagnostico" },
   { de: "/migrar/cnpj", para: "/veredito/waitlist", tracejado: true },
   { de: "/migrar/cnpj", para: "/veredito/nao-atende", tracejado: true },
   { de: "/migrar/cnpj", para: "/saida/cnpj-inapto", tracejado: true },
-  { de: "/migrar/diagnostico", para: "/migrar/plano", tracejado: true },
+  { de: "/migrar/diagnostico", para: "/migrar/plano" },
   { de: "/migrar/plano", para: "/migrar/contrato" },
   { de: "/migrar/contrato", para: "/pagamento?fluxo=migrar" },
 
@@ -177,9 +176,7 @@ const MAPA_EDGES: Conexao[] = [
   { de: "/contrato", para: "/pagamento" },
   { de: "/pagamento", para: "/dossie/socio" },
   { de: "/pagamento", para: "/aguardando", tracejado: true },
-  { de: "/pagamento?fluxo=migrar", para: "/migrar/passivo" },
-  { de: "/migrar/passivo", para: "/migrar/transferencia" },
-  { de: "/migrar/passivo?cenario=limpo", para: "/migrar/transferencia", tracejado: true },
+  { de: "/pagamento?fluxo=migrar", para: "/migrar/transferencia" },
   { de: "/migrar/transferencia", para: "/migrar/ativa" },
   { de: "/migrar/transferencia?estado=travado", para: "/migrar/ativa", tracejado: true },
   { de: "/migrar/ativa", para: "/home-dia1" },

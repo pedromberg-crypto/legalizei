@@ -8,12 +8,14 @@ import { Lottie } from "@/components/lottie";
 /**
  * A9 · SAÍDA — CNPJ INAPTO/SUSPENSO/BAIXADO · 🆕 04/08
  *
- * Nasce do M1 (`/migrar/cnpj`), não da auditoria de passivo (M4a). Achado do
- * cruzamento com o `Fluxo Migração GEMINI.md`: o Gemini trava isso já na
- * entrada (status cadastral ≠ ativo → regularização, não migração direta).
- * Nosso M1 hoje não tinha essa saída — o veredito só cobria "ativo com CNAE
- * aceito ou não". CNPJ suspenso/inapto é um problema DIFERENTE de "empresa
- * ativa com dívida" (isso já a M4a/auditoria de passivo cobre bem).
+ * Nasce do M1 (`/migrar/cnpj`). Achado do cruzamento com o `Fluxo Migração
+ * GEMINI.md`: o Gemini trava isso já na entrada (status cadastral ≠ ativo →
+ * regularização, não migração direta). Nosso M1 hoje não tinha essa saída — o
+ * veredito só cobria "ativo com CNAE aceito ou não". CNPJ suspenso/inapto é
+ * situação cadastral (a Receita nem reconhece a empresa como ativa) — problema
+ * DIFERENTE de "empresa ativa com dívida", que a gente não audita mais de
+ * propósito (🔴 06/08: M4a/auditoria de passivo retirada, vira serviço à
+ * parte sob demanda, só pós-ativação).
  *
  * Mesmo template A9 — aqui o motivo é regularização cadastral, não escopo do
  * produto, então a copy é mais prática (o que fazer) que educativa.

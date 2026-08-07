@@ -28,6 +28,10 @@ import { ehMei, comRegime } from "@/lib/regime";
  * 🟡 Os códigos oficiais (resolução CFC, Evento 232 do Redesim) ficam FORA da
  * tela: são pendência D, não ratificados em fonte primária. A copy fala em
  * linguagem de gente, e o cliente não precisa deles de qualquer jeito.
+ *
+ * 🔴 06/08 — como esta rota é só do caminho ME (MEI nunca chega aqui, ver
+ * `/pagamento`), o `?certificado=nao` vindo do M2 vira um passo a mais no
+ * pipeline: "Emitindo seu certificado digital".
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function MigrarTransferenciaPage() {
@@ -35,10 +39,12 @@ export default function MigrarTransferenciaPage() {
   const searchParams = useSearchParams();
   const travado = searchParams.get("estado") === "travado";
   const mei = ehMei(searchParams);
+  const certificadoPendente = searchParams.get("certificado") === "nao";
 
   return (
     <MigrarTransferenciaView
       travado={travado}
+      certificadoPendente={certificadoPendente}
       onSeguir={() => router.push(comRegime("/migrar/ativa", mei))}
     />
   );

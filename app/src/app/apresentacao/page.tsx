@@ -35,9 +35,10 @@ import {
   MigrarCnpjView,
   MigrarPlanoView,
   MigrarContratoView,
-  MigrarPassivoView,
+  MigrarContadorAntigoView,
   MigrarTransferenciaView,
   MigrarAtivaView,
+  EMPRESA_MIGRAR,
 } from "@/components/wizard-migrar";
 import {
   ContaView,
@@ -236,7 +237,7 @@ type Etapa =
   | "m-plano"
   | "m-contrato"
   | "m-pagamento"
-  | "m-passivo"
+  | "m-contador"
   | "m-transferencia"
   | "m-travado"
   | "m-ativa"
@@ -312,18 +313,31 @@ function naCauda(e: Etapa): e is EtapaCauda {
  * `m-travado` fica FORA da sequência: é estado de exceção do `m-transferencia`
  * (persona `migra-refem`), alcançável por pill própria, não por "Continuar".
  *
- * 🔴 04/08 (3ª rodada) — `m-diagnostico` (M2, Fator R) SAIU da sequência: a
- * tela foi cortada pra ME (decisão do Pedro, ver `MigrarDiagnosticoView`).
+ * 🔴 04/08 (3ª rodada) — `m-diagnostico` (M2, certificado) SAIU da sequência
+ * quando ainda era só "Fator R pra ME cortado". ⚠️ 06/08: a tela MUDOU DE
+ * ESCOPO (virou "tem certificado digital?", ver `MigrarDiagnosticoView`) e
+ * hoje roda pros 2 regimes no produto real — mas a demo NÃO foi atualizada
+ * pra incluir de volta. Gap conhecido, não corrigido nesta rodada (é sobre
+ * M2; o que entrou agora é o passo NOVO logo depois do pagamento, M3c).
  * 🔴 05/08 — M1b (`/migrar/tributario`) foi DESCARTADA de vez (duplicava a
  * E3.2, que já autodeclara o regime antes disso). Não é mais gap: a etapa
  * simplesmente não existe no produto.
+ * 🔴 06/08 — M4a (`/migrar/passivo`, auditoria de passivo) também foi
+ * RETIRADA: a gente não busca pendência do contador anterior antes de
+ * assumir.
+ * 🆕 06/08 — `m-contador` (M3c, "seu contador atual") entra entre pagamento e
+ * transferência: dados pro TTRT, novo achado da reunião Rua Satélite 19. No
+ * produto real só ME passa por aqui (MEI nunca tem TTRT) — a demo, que já
+ * não bifurca esta esteira por regime (`MigrarPlanoView`/`MigrarContratoView`
+ * aqui embaixo também não recebem `mei`), segue o mesmo nível de
+ * simplificação: mostra pra todo mundo que entra pelo Migrar.
  */
 const ETAPAS_MIGRAR = [
   "m-cnpj",
   "m-plano",
   "m-contrato",
   "m-pagamento",
-  "m-passivo",
+  "m-contador",
   "m-transferencia",
   "m-ativa",
 ] as const satisfies readonly Etapa[];
@@ -421,7 +435,7 @@ type Momento =
   | "m-plano"
   | "m-contrato"
   | "m-pagamento"
-  | "m-passivo"
+  | "m-contador"
   | "m-transferencia"
   | "m-travado"
   | "m-ativa"
@@ -772,7 +786,7 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   "m-plano": "/migrar/plano",
   "m-contrato": "/migrar/contrato",
   "m-pagamento": "/pagamento?fluxo=migrar",
-  "m-passivo": "/migrar/passivo",
+  "m-contador": "/migrar/contador",
   "m-transferencia": "/migrar/transferencia",
   "m-travado": "/migrar/transferencia?estado=travado",
   "m-ativa": "/migrar/ativa",
@@ -1104,13 +1118,13 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     porque:
       "💰 Decisão travada em 30/07: cobra ANTES da transferência, igual ao caminho abrir. O risco assumido está dito na cara — a gente cobra por algo cujo destravamento depende de terceiro. Por isso o contrato promete devolução e a tela de transferência tem um estado dedicado pra quando trava.",
   },
-  "m-passivo": {
-    dono: "nossa",
-    faz: "Mostra o que o contador anterior deixou pendente: imposto atrasado, declaração não entregue, dívida ativa.",
+  "m-contador": {
+    dono: "usuario",
+    faz: "Pede nome, e-mail, telefone e CRC do contador atual. Pré-preenche o e-mail/telefone quando o cartão CNPJ trouxe.",
     interfere:
-      "Define o que a gente assume e o que fica para trás. A data de corte do distrato separa a responsabilidade dos dois escritórios.",
+      "É o dado que abre a transferência: sem saber quem é o contador atual, a gente não consegue se indicar como novo responsável no CRC-MG.",
     porque:
-      "🔥 É o risco que a abertura não tem: a empresa chega com passado. A regra diz que as obrigações do período antigo ficam com o contador anterior — mas a DÍVIDA é da empresa, e o cliente não sabe disso. Assumir sem auditar seria herdar problema que a gente não criou e virar o culpado por ele.",
+      "🆕 06/08 (reunião Rua Satélite 19, Léo) — não existe API pública que devolva 'quem é o contador de um CNPJ'. O caminho real é o cartão CNPJ, que na maioria das vezes traz o e-mail/telefone do escritório (é pra lá que a Receita manda intimação). Não vem sempre — por isso não trava o Continuar: quem não sabe algum dado segue mesmo assim, a gente confirma o resto com o conselho.",
   },
   "m-transferencia": {
     dono: "nossa",
@@ -1534,7 +1548,7 @@ export default function ApresentacaoPage() {
     { etapa: "m-plano", label: "E4.4 · A conta" },
     { etapa: "m-contrato", label: "E4.5 · Contrato" },
     { etapa: "m-pagamento", label: "E9 · Pagamento" },
-    { etapa: "m-passivo", label: "E9.2 · Passivo" },
+    { etapa: "m-contador", label: "🆕 E9.2 · Seu contador" },
     { etapa: "m-transferencia", label: "E9.3 · Transferência" },
     { etapa: "m-travado", label: "🔴 E9.3 · TTRT travado" },
     { etapa: "m-ativa", label: "E9.4 · Migrada" },
@@ -1663,7 +1677,10 @@ export default function ApresentacaoPage() {
       etapa !== "aguardando" &&
       // Do Migrar, só estas 2 têm o que preencher: o CNPJ (input) e o aceite
       // (checkbox). Diagnóstico, plano, passivo, transferência, travado e
-      // migrada são leitura/status — botão ali seria inerte.
+      // migrada são leitura/status — botão ali seria inerte. `m-contador`
+      // (🆕 06/08) TEM campos livres, mas fica de fora de propósito: o ponto
+      // da tela é mostrar o prefill PARCIAL (e-mail/telefone às vezes vêm,
+      // nome/CRC nunca vêm) — um botão de preencher tudo escondia isso.
       (!noMigrar(etapa) || etapa === "m-cnpj" || etapa === "m-contrato"));
   const mostraSimularValidacao = momento === "veredito-waitlist" || momento === "veredito-mauro";
   // 🆕 03/08 — atalho pro A3.1 (gap fechado): produção só chega lá por retry
@@ -2035,12 +2052,10 @@ export default function ApresentacaoPage() {
                             }
                           />
                         )}
-                        {etapa === "m-passivo" && (
-                          <MigrarPassivoView
-                            onSeguir={() => setEtapa(depoisDoMigrar("m-passivo"))}
-                            onVoltar={() =>
-                              voltar(() => setEtapa(antesDoMigrar("m-passivo")))
-                            }
+                        {etapa === "m-contador" && (
+                          <MigrarContadorAntigoView
+                            empresa={EMPRESA_MIGRAR}
+                            onSeguir={() => setEtapa(depoisDoMigrar("m-contador"))}
                           />
                         )}
                         {etapa === "m-transferencia" && (
@@ -2289,6 +2304,7 @@ export default function ApresentacaoPage() {
               <Bloco titulo="🎯 O que essa tela faz">{desc.faz}</Bloco>
               <Bloco titulo="🏗️ O que interfere na constituição da empresa">{desc.interfere}</Bloco>
               <Bloco titulo="📋 Por que pede esses dados">{desc.porque}</Bloco>
+              {(momento === "m-transferencia" || momento === "m-travado") && <CardPipelineTecnico />}
             </div>
           </div>
         </div>
@@ -2393,6 +2409,97 @@ function Bloco({ titulo, children }: { titulo: string; children: ReactNode }) {
     <div className="rounded-2xl border border-border-hairline bg-surface-card p-5">
       <p className="text-caption font-bold text-text-primary mb-2">{titulo}</p>
       <p className="text-body text-text-secondary">{children}</p>
+    </div>
+  );
+}
+
+/**
+ * 🆕 06/08 — pedido do Pedro: card pra conferir com o time interno (Larissa)
+ * se o passo a passo TÉCNICO por trás do E9.3 está certo. NÃO é o que o
+ * cliente vê (a tela só mostra a timeline em linguagem de gente) — é o
+ * mapeamento real que essa timeline representa.
+ *
+ * Fonte: `pesquisa/fiscal-simples-bh-2026.md` §I (🟢 alta, tabela CONSOLIDADO
+ * #14) cruzado com `pesquisa/cruzamento-gemini-fluxo-migracao.md` achados
+ * #6-7. Os pontos ⚠️ abaixo são achados REAIS desse cruzamento, não
+ * enfeite — nenhum foi confirmado em fonte primária/oficial ainda.
+ *
+ * 🆕 06/08 (2ª rodada, achado do Pedro) — passo 5 (certificado) é NOVO: até
+ * hoje o certificado digital não aparecia em NENHUM lugar do caminho ME
+ * (só existia pergunta pro MEI, tela própria). TTRT move responsabilidade
+ * TÉCNICA, não o certificado — são artefatos independentes, e sem certificado
+ * credenciado com a gente a automação (DAS/PGDAS-D via Serpro) não roda pra
+ * ninguém. Já implementado: `MigrarDiagnosticoView` (M2) agora pergunta pros
+ * 2 regimes, `MigrarTransferenciaView` (M4b) ganha o passo quando a resposta
+ * é "não tenho". 🟡 fila-Mauro: se isso carrega custo/fidelidade extra pro
+ * ME (como já existe pro MEI) é decisão de preço NÃO tomada — Pedro escolheu
+ * decidir depois, mesmo padrão usado pro M2 do MEI.
+ */
+const PASSOS_TECNICOS_TRANSFERENCIA: { passo: string; oque: string; fonte: string; ressalva?: string }[] = [
+  {
+    passo: "1 · Distrato",
+    oque: "Encerramento do contrato com o contador antigo. Define a DATA DE CORTE — a competência que fica sob responsabilidade dele.",
+    fonte: "CFC (norma de transferência)",
+  },
+  {
+    passo: "2 · TTRT Eletrônico",
+    oque: "Termo de Transferência de Responsabilidade Técnica: o contador NOVO abre no portal do CRC-MG, o ANTIGO precisa validar. É aqui que mora a pausa mais arriscada (persona migra-refem).",
+    fonte: "CRC-MG",
+  },
+  {
+    passo: "3 · DBE Evento 232 \"Alteração do Contabilista\"",
+    oque: "Via Coletor Redesim, assinado com e-CNPJ da empresa. Nossa fonte de maior confiança diz que atualiza Receita Federal + Sefaz-MG + Prefeitura de BH numa cascata SÓ.",
+    fonte: "Redesim / RFB",
+    ressalva:
+      "O produto mostra isso como 2 passos separados (\"Atualizando no Redesim\" + \"Trocando o responsável · Prefeitura de BH\"), por precaução — não por confirmação de que são 2 trâmites reais. Se for 1 evento só, o pipeline volta de 6 pra 5 passos.",
+  },
+  {
+    passo: "4 · Procuração e-CAC nova",
+    oque: "Revoga a procuração do escritório antigo e emite uma nova pro nosso, direto no site da Receita.",
+    fonte: "gov.br / RFB",
+    ressalva:
+      "Ordem em disputa: a pesquisa cruzada (Gemini) diz que isso vem ANTES do distrato/TTRT — o contador novo precisaria de algum acesso pra sequer iniciar o processo. Nosso desenho tem isso por ÚLTIMO. Não decidido.",
+  },
+  {
+    passo: "5 · Certificado digital (se não tiver um) — NOVO",
+    oque: "Independente da TTRT (não é responsabilidade técnica) — roda em paralelo. Sem certificado credenciado com a gente, não dá pra automatizar DAS/PGDAS-D/NFe pra essa empresa, com ou sem TTRT resolvido.",
+    fonte: "achado 06/08 (Pedro) — sem pesquisa fiscal dedicada ainda",
+    ressalva:
+      "🟡 fila-Mauro: custo/fidelidade extra igual ao MEI, ou incluso sem custo (ME já tem a garantia de devolução do TTRT como contrapartida)? Decisão de preço não tomada de propósito.",
+  },
+  {
+    passo: "6 · Libera o acesso",
+    oque: "A partir daqui a gente já pode operar a empresa no app (emitir nota, ver guia, etc).",
+    fonte: "—",
+  },
+];
+
+function CardPipelineTecnico() {
+  return (
+    <div className="rounded-2xl border border-state-warning bg-state-warning-tint p-5">
+      <p className="text-caption font-bold text-state-warning-text mb-1">
+        🔧 Passo a passo técnico por trás (não aparece pro cliente)
+      </p>
+      <p className="text-caption text-text-secondary mb-4">
+        Confere com quem entende de contabilidade — os pontos ⚠️ abaixo ainda não têm fonte primária ou decisão travada.
+      </p>
+      <ol className="flex flex-col gap-4">
+        {PASSOS_TECNICOS_TRANSFERENCIA.map((p) => (
+          <li key={p.passo}>
+            <p className="text-body font-semibold text-text-primary">{p.passo}</p>
+            <p className="text-caption text-text-secondary mt-0.5">{p.oque}</p>
+            <p className="text-micro text-text-tertiary mt-1">Fonte: {p.fonte}</p>
+            {p.ressalva && (
+              <p className="text-caption font-semibold text-state-warning-text mt-1.5">
+                ⚠️ {p.ressalva}
+              </p>
+            )}
+          </li>
+        ))}
+      </ol>
+      <p className="text-micro text-text-tertiary mt-4 pt-3 border-t border-state-warning">
+        Fonte: `pesquisa/fiscal-simples-bh-2026.md` §I + `pesquisa/cruzamento-gemini-fluxo-migracao.md` achados #6-7.
+      </p>
     </div>
   );
 }

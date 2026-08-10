@@ -5,7 +5,6 @@ import {
   MigrarDiagnosticoView,
   MigrarPlanoView,
   MigrarContratoView,
-  MigrarPassivoView,
   MigrarTransferenciaView,
   MigrarAtivaView,
 } from "./wizard-migrar";
@@ -52,7 +51,8 @@ export const M1_AchouEmpresa: Story = {
   },
 };
 
-export const M2_MEI_TemContador: Story = { render: () => <Shell><MigrarDiagnosticoView /></Shell> };
+export const M2_MEI_TemCertificado: Story = { render: () => <Shell><MigrarDiagnosticoView mei /></Shell> };
+export const M2_ME_TemCertificado: Story = { render: () => <Shell><MigrarDiagnosticoView mei={false} /></Shell> };
 
 export const M3_Plano: Story = { render: () => <Shell><MigrarPlanoView /></Shell> };
 
@@ -62,10 +62,8 @@ function ContratoInterativo() {
 }
 export const M3b_ContratoComDevolucao: Story = { render: () => <Shell><ContratoInterativo /></Shell> };
 
-export const M4_PassivoEncontrado: Story = { render: () => <Shell><MigrarPassivoView /></Shell> };
-export const M4_EmpresaLimpa: Story = { render: () => <Shell><MigrarPassivoView comPassivo={false} /></Shell> };
-
 export const M5_TransferenciaEmAndamento: Story = { render: () => <Shell><MigrarTransferenciaView /></Shell> };
+export const M5_TransferenciaComCertificadoPendente: Story = { render: () => <Shell><MigrarTransferenciaView certificadoPendente /></Shell> };
 export const M5_TravadoContadorAntigo: Story = { render: () => <Shell><MigrarTransferenciaView travado /></Shell> };
 
 export const M6_MigracaoConcluida: Story = { render: () => <Shell><MigrarAtivaView /></Shell> };

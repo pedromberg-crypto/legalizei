@@ -59,25 +59,32 @@ export default function PagamentoPage() {
   /**
    * 30/07 — `?fluxo=migrar` reusa esta tela no FLOW #2. A tela é a mesma (CPF,
    * método, idempotência); o que muda é que não há taxa de governo a somar e o
-   * aviso fala de migração. Depois de pagar, o destino é o M4 (auditoria de
-   * passivo), não o dossiê.
+   * aviso fala de migração. Depois de pagar, o destino é o M4 (TTRT), não o
+   * dossiê.
    */
   const fluxo = searchParams.get("fluxo") === "migrar" ? "migrar" : "abertura";
   const mei = ehMei(searchParams);
-  /** 🔴 05/08 — MEI com certificado já em mãos (M2) pula direto pro M5: a
-   *  gente só precisa atualizar a procuração, sem passivo nem TTRT (MEI nunca
-   *  tem TTRT, ver `MigrarDiagnosticoView`). MEI sem certificado ainda passa
-   *  pelo M4a (passivo/dívida, checagem independente de certificado), mas
-   *  também nunca vê o M4b (TTRT) — a página de passivo já pula direto pra
-   *  ativa quando `mei`. */
-  const certificadoPronto = mei && searchParams.get("certificado") === "sim";
   const [cpf, setCpf] = useState("");
   const [metodo, setMetodo] = useState<Metodo>("cartao");
 
+  /**
+   * 🔴 06/08 — M4a (auditoria de passivo) foi RETIRADA: a gente não sai
+   * buscando pendência do contador anterior antes de assumir (vira serviço à
+   * parte, sob demanda, só depois de ativo). MEI nunca tem TTRT (ver
+   * `MigrarDiagnosticoView`) — com ou sem certificado, vai direto pra M5. Só
+   * ME segue pro M3c (dados do contador atual, novo 06/08) e depois pro M4
+   * (transferência/TTRT).
+   *
+   * 🐛 06/08 — pra ME, agora repassa o `qs` inteiro (não só `comRegime`), pra
+   * não perder o `?certificado=` que o M2 grava na URL. Antes ele se perdia
+   * aqui e o M4b nunca sabia se precisava emitir certificado no meio do
+   * pipeline — bug latente, achado ao encaixar o M3c nesta mesma cadeia.
+   */
   function destino() {
     if (fluxo === "migrar") {
-      if (certificadoPronto) return comRegime("/migrar/ativa", true);
-      return comRegime("/migrar/passivo", mei);
+      if (mei) return comRegime("/migrar/ativa", mei);
+      const qs = searchParams.toString();
+      return qs ? `/migrar/contador?${qs}` : "/migrar/contador";
     }
     return comRegime(metodo === "boleto" ? "/aguardando" : "/dossie/socio", mei);
   }

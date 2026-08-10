@@ -7,6 +7,7 @@ import {
   EMPRESA_MIGRAR_CENARIOS,
   type CenarioM1,
 } from "@/components/wizard-migrar";
+import { comRegime } from "@/lib/regime";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -39,8 +40,10 @@ import {
  * 🔴 05/08 (pedido do Pedro) — `/migrar/tributario` (M1b, Simples×Presumido
  * autodeclarado) foi DESCARTADA: era pergunta duplicada, o regime (MEI · ME/
  * Simples · Lucro Presumido) já é autodeclarado antes disso, na E3.2 — quem
- * escolhe Lucro Presumido lá nem chega até aqui. ME agora segue direto do M1
- * pro M3 (`/migrar/plano`); MEI continua indo pro M2 (`/migrar/diagnostico`).
+ * escolhe Lucro Presumido lá nem chega até aqui.
+ * 🔴 06/08 (achado do Pedro) — ME TAMBÉM segue pro M2 (`/migrar/diagnostico`)
+ * agora, não mais direto pro M3: certificado digital não tinha pergunta
+ * nenhuma no caminho ME (gap real, ver `MigrarDiagnosticoView`).
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function MigrarCnpjPage() {
@@ -59,9 +62,7 @@ export default function MigrarCnpjPage() {
         empresa={empresa}
         situacaoOk={empresa.situacao === "ATIVA"}
         onVoltar={() => router.push("/migrar/cnpj")}
-        onSeguir={() =>
-          router.push(cenario === "mei" ? "/migrar/diagnostico" : "/migrar/plano")
-        }
+        onSeguir={() => router.push(comRegime("/migrar/diagnostico", cenario === "mei"))}
         onSaidaInapto={() => router.push("/saida/cnpj-inapto")}
       />
     );
@@ -70,9 +71,7 @@ export default function MigrarCnpjPage() {
   return (
     <MigrarCnpjView
       cenario={cenario}
-      onSeguir={() =>
-        router.push(cenario === "mei" ? "/migrar/diagnostico" : "/migrar/plano")
-      }
+      onSeguir={() => router.push(comRegime("/migrar/diagnostico", cenario === "mei"))}
       onSaidaInapto={() => router.push("/saida/cnpj-inapto")}
       onVoltar={() => router.push("/entrada")}
     />

@@ -7,6 +7,7 @@ import {
   CabecalhoCampea,
   AprendaGradiente,
 } from "@/components/lab/campea-blocks";
+import { Vigilancia } from "@/components/lab/vigilancia-blocks";
 
 /**
  * HOME FINAL · CAMPEÃ — a home montada peça por peça com o Pedro (só visualização).
@@ -16,8 +17,12 @@ import {
  *   2. ProximoCompromisso (da versão A · ref9)
  *   3. AtalhosRapidos     (grid ref11 + título "Atalhos rápidos")
  *   4. NotasRecentesMov   (híbrido: notas ref11 + design mov. ref6)
- *   5. AprendaGradiente   (blog ref5 no design de card gradiente escuro)
- *   6. QuemCuida          (da versão A · ref9 · última dobra)
+ *   5. Vigilancia         (🆕 06/08 — teto do Simples + alíquota + Fator R; já
+ *                          existia como componente pronto, mas nunca tinha sido
+ *                          plugada aqui — só aparecia nas variantes de exploração
+ *                          `home-a`…`home-f` e na aba /impostos)
+ *   6. AprendaGradiente   (blog ref5 no design de card gradiente escuro)
+ *   7. QuemCuida          (da versão A · ref9 · última dobra)
  */
 export default function HomeCampeaPage() {
   return (
@@ -28,6 +33,7 @@ export default function HomeCampeaPage() {
           <ProximoCompromisso />
           <AtalhosRapidos />
           <NotasRecentesMov />
+          <Vigilancia />
           <AprendaGradiente />
           <QuemCuida />
         </div>

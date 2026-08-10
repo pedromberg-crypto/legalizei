@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { TelaHeader } from "@/components/ui/tela";
@@ -28,13 +29,22 @@ const RESUMO = [
   { rotulo: "Depois do imposto", valor: "R$ 36,1 mil" },
 ];
 
-type Relatorio = { nome: string; desc: string; periodo: string; Icone: () => ReactNode };
+type Relatorio = {
+  nome: string;
+  desc: string;
+  periodo: string;
+  Icone: () => ReactNode;
+  /** 🆕 06/08 (WA walkthrough) — o mês corrente é grátis; o detalhe mês a mês
+   *  do ano inteiro é upsell (R$ 19,90/mês, mesmo padrão do hero acima). */
+  bloqueado?: boolean;
+};
 const RELATORIOS: Relatorio[] = [
   {
     nome: "Faturamento mês a mês",
     desc: "Quanto você faturou em cada mês do ano.",
     periodo: "2026",
     Icone: IconeLinha,
+    bloqueado: true,
   },
   {
     nome: "Resultado do mês",
@@ -57,6 +67,10 @@ const RELATORIOS: Relatorio[] = [
 ];
 
 export default function RelatoriosPage() {
+  // 🆕 06/08 (WA walkthrough, ideia do Speaker 3) — o mês corrente (número +
+  // badge de tendência) sempre aparece. O HISTÓRICO mês a mês (gráfico + eixo)
+  // é o que fica atrás do blur — é o dado que o banco costuma pedir.
+  const [desbloqueado, setDesbloqueado] = useState(false);
   const ultimo = FATURAMENTO[FATURAMENTO.length - 1];
   const penultimo = FATURAMENTO[FATURAMENTO.length - 2];
   const subiu = ultimo >= penultimo;
@@ -101,12 +115,39 @@ export default function RelatoriosPage() {
                   {variacao}%
                 </span>
               </div>
-              <div className="mt-3 text-action-primary-sm">
-                <LineChart valores={FATURAMENTO} />
-              </div>
-              <div className="mt-1 flex justify-between text-micro text-text-on-dark/50">
-                <span>fev</span>
-                <span>jul</span>
+              <div className="relative mt-3">
+                <div
+                  className={
+                    desbloqueado
+                      ? "text-action-primary-sm"
+                      : "pointer-events-none select-none text-action-primary-sm blur-sm"
+                  }
+                  aria-hidden={!desbloqueado}
+                >
+                  <LineChart valores={FATURAMENTO} />
+                  <div className="mt-1 flex justify-between text-micro text-text-on-dark/50">
+                    <span>fev</span>
+                    <span>jul</span>
+                  </div>
+                </div>
+
+                {!desbloqueado && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-center">
+                    <span className="text-text-on-dark/90">
+                      <IconeCadeado />
+                    </span>
+                    <p className="max-w-[24ch] text-micro text-text-on-dark/80">
+                      Veja o histórico mês a mês por R$ 19,90/mês
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setDesbloqueado(true)}
+                      className="rounded-full bg-action-primary-sm px-3 py-1.5 text-micro font-semibold text-text-on-brand"
+                    >
+                      Desbloquear
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -131,29 +172,33 @@ export default function RelatoriosPage() {
                 Baixar relatório
               </p>
               <div className="flex flex-col gap-2">
-                {RELATORIOS.map((r) => (
-                  <button
-                    key={r.nome}
-                    type="button"
-                    className="flex items-center gap-3 rounded-2xl border border-border-hairline bg-surface-card p-3 text-left transition-colors hover:border-border-strong active:bg-surface-alt"
-                  >
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-surface-tint-brand text-action-primary-sm">
-                      <r.Icone />
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-caption font-semibold text-text-primary">
-                        {r.nome}
-                      </p>
-                      <p className="truncate text-micro text-text-tertiary">{r.desc}</p>
-                      <p className="mt-0.5 text-micro font-medium text-text-tertiary">
-                        {r.periodo}
-                      </p>
-                    </div>
-                    <span className="shrink-0 text-text-tertiary">
-                      <IconeBaixar />
-                    </span>
-                  </button>
-                ))}
+                {RELATORIOS.map((r) => {
+                  const travado = !!r.bloqueado && !desbloqueado;
+                  return (
+                    <button
+                      key={r.nome}
+                      type="button"
+                      onClick={travado ? () => setDesbloqueado(true) : undefined}
+                      className="flex items-center gap-3 rounded-2xl border border-border-hairline bg-surface-card p-3 text-left transition-colors hover:border-border-strong active:bg-surface-alt"
+                    >
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-surface-tint-brand text-action-primary-sm">
+                        <r.Icone />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-caption font-semibold text-text-primary">
+                          {r.nome}
+                        </p>
+                        <p className="truncate text-micro text-text-tertiary">{r.desc}</p>
+                        <p className="mt-0.5 text-micro font-medium text-text-tertiary">
+                          {travado ? "R$ 19,90/mês para desbloquear" : r.periodo}
+                        </p>
+                      </div>
+                      <span className="shrink-0 text-text-tertiary">
+                        {travado ? <IconeCadeado /> : <IconeBaixar />}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -198,6 +243,9 @@ function IconeSaida(): ReactNode {
 }
 function IconeBaixar(): ReactNode {
   return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M12 3v12M7 10l5 5 5-5" /><path d="M5 21h14" /></svg>;
+}
+function IconeCadeado(): ReactNode {
+  return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>;
 }
 function IconeTendencia({ sobe }: { sobe: boolean }): ReactNode {
   return (

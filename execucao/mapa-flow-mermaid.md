@@ -43,10 +43,10 @@ flowchart TD
   E4_2["E4.2 · Lê o cartão CNPJ"]
   E4_2_1(["Saída · CNPJ inapto<br/>ou suspenso"]):::saida
   E4_2B_1(["Saída · Presumido<br/>fora de escopo"]):::saida
-  E4_3["E4.3 · Diagnóstico<br/>só MEI ("tem contador?")"]
+  E4_3["E4.3 · Diagnóstico<br/>("tem certificado?")"]
   E4_4["E4.4 · Plano"]
   E4_5["E4.5 · Contrato<br/>+ promessa de devolução"]
-  E9_2["E9.2 · Passivo herdado"]
+  E9_2["E9.2 · Seu contador atual"]
   E9_3["E9.3 · Aguardando TTRT"]:::espera
   E9_4(["✅ E9.4 · Migração concluída"]):::feliz
   E5_1["E5.1 · 🟡 Waitlist"]:::saida
@@ -87,8 +87,7 @@ flowchart TD
   E4 -->|"BH confirmado, abrir"| E5A
   E4 -->|"BH confirmado, migrar"| E4_2
   E4 -->|"fora de BH"| E4_1
-  E4_2 -.->|"MEI"| E4_3
-  E4_2 -.->|"ME"| E4_4
+  E4_2 -.-> E4_3
   E3_2 -->|"Lucro Presumido (CTA)"| E4_2B_1
   E4_2 -.->|"CNPJ inapto/suspenso"| E4_2_1
   E4_2 -->|"🟡 regulada"| E5_1
@@ -97,7 +96,7 @@ flowchart TD
   E4_4 --> E4_5
   E4_5 -->|"fluxo migrar"| E9
   E9 -.->|"fluxo migrar"| E9_2
-  E9_2 --> E9_3
+  E9_2 -.-> E9_3
   E9_3 -.-> E9_4
   E9_4 -.-> A5
   E5A --> E5V
@@ -160,12 +159,12 @@ flowchart TD
 | 6 | E4 · Gate cidade · (BH-MG) | Confirma cidade de abertura = Belo Horizonte/MG (único município atendido no MLP) | ✅ | 🟢 | Construído 28/07 — 2º passo INLINE do E3, mesma rota (/entrada), sem rota própria. |
 | 7 | E4.1 · Saída · fora de BH · MLP só atende BH-MG | — (saída, fora do caminho até a constituição) | ✅ | 🟢 | — |
 | 8 | E4.2 · Lê o cartão CNPJ | CNPJ (consulta) · confirmação dos dados do cartão | ✅ | 🟢 | Autofill por CNPJ via InfoSimples (cadastro, R$0,20/consulta — API PAGA, não pública); sem entrevista de atividade — o CNAE já existe. 🔴 05/08: checagem de regime removida daqui (a API não confirma Simples×Presumido×MEI, ver infosimples-funcionalidades.md) — regime já vem autodeclarado da E3.2. Só confirma situação cadastral (ativa/inapta) |
-| 9 | Saída · CNPJ inapto · ou suspenso | — (saída, fora do caminho até a migração) | ✅ | 🟢 | Situação cadastral ≠ ativa — diferente da auditoria de passivo (E9.2, que pressupõe CNPJ ATIVO com dívida): aqui a Receita nem reconhece a empresa como ativa, regularização vem ANTES de qualquer migração |
+| 9 | Saída · CNPJ inapto · ou suspenso | — (saída, fora do caminho até a migração) | ✅ | 🟢 | Situação cadastral ≠ ativa: aqui a Receita nem reconhece a empresa como ativa, regularização vem ANTES de qualquer migração. 🔴 06/08: diferente do que era 'auditoria de passivo' (E9.2, empresa ATIVA com dívida) — essa tela foi retirada do flow |
 | 10 | Saída · Presumido · fora de escopo | — (saída, fora do caminho até a migração) | ✅ | 🟢 | Lucro Presumido segue fora do escopo (decisão explícita 04/08, sem pesquisa fiscal dedicada ainda). Autodeclarado na E3.2, não confirmado por API |
-| 11 | E4.3 · Diagnóstico · só MEI ("tem contador?") | MEI: resposta sim/não (tem contador) | ✅ | 🟢 | 🔴 04/08 (3ª rodada, decisão do Pedro): o diagnóstico de Fator R pra ME foi CORTADO — a única API pré-pagamento é a cadastral, não traz faturamento/folha (só via procuração, pós-pagamento). ME agora vai do E4.2 direto pro E4.4. Só sobrou o subfluxo MEI: 'você tem contador hoje?' decide se roda o TTRT ou pula pro E9.4 |
+| 11 | E4.3 · Diagnóstico · ("tem certificado?") | Resposta sim/não (tem certificado digital) | ✅ | 🟡 | 🔴 04/08 (3ª rodada): o diagnóstico de Fator R pra ME foi CORTADO — a única API pré-pagamento é a cadastral, não traz faturamento/folha (só via procuração, pós-pagamento). 🔴 05/08: pergunta virou 'tem certificado?' (MEI: decide se roda TTRT). 🔴 06/08 (achado do Pedro): ME TAMBÉM passa aqui agora (antes ia do E4.2 direto pro E4.4) — certificado é independente da TTRT pra ME (as duas rodam em paralelo), mas não tinha pergunta nenhuma no caminho ME. 🟡 fila-Mauro: se sem-certificado-ME carrega custo/fidelidade extra é decisão de preço não tomada |
 | 12 | E4.4 · Plano | — | ✅ | 🟡 | ME: mesma mensalidade do caminho abrir, sem taxa de governo (empresa já existe). 🆕 04/08: MEI tem plano PRÓPRIO — R$49,90/mês, fidelidade 12 meses, certificado incluso, escopo limitado (emitir NF + 1 colaborador) — não é o plano ME com desconto |
 | 13 | E4.5 · Contrato · + promessa de devolução | Aceite do contrato (com a cláusula de devolução) | ✅ | 🟢 | 🔴 DECISÃO TRAVADA 30/07: cobra ANTES do TTRT, com contrapartida OBRIGATÓRIA no contrato ('se a transferência não sair por motivo fora do seu controle, devolve tudo'). Se essa linha sair do contrato, a decisão reabre (Mauro/Larissa redigem) |
-| 14 | E9.2 · Passivo herdado | — | ✅ | 🟡 | 🕓 Aberto com o Mauro: upsell ou fora de escopo? Variantes `?cenario=limpo` (persona migra-limpo, sem passivo) × com-passivo |
+| 14 | E9.2 · Seu contador atual | Nome do contador/escritório atual · e-mail · telefone (pré-preenchidos quando o cartão CNPJ trouxer) · CRC (opcional) | ✅ | 🟡 | 🟡 fonte única (Léo, reunião Rua Satélite 19, 06/08) — sem 2ª fonte ainda. Não existe API pública que diga quem é o contador de um CNPJ; o cartão CNPJ traz e-mail/telefone NA MAIORIA das vezes, não sempre. Nome e CRC são sempre digitados. Sem trava de Continuar — quem não sabe algum dado segue mesmo assim, confirma o resto com o conselho na E9.3 |
 | 15 | E9.3 · Aguardando TTRT | — | ✅ | 🟢 | 🔴 A PAUSA MAIS PERIGOSA DO PRODUTO: quem libera é o CONTADOR ANTIGO (valida no CRC-MG) — único momento em que o dono da espera é um concorrente perdendo o cliente, não um órgão neutro nem o próprio cliente. Nº da resolução CFC / Evento 232 Redesim NÃO ratificados em fonte primária — por isso não aparecem na tela (🟡 pendência) |
 | 16 | ✅ E9.4 · Migração concluída | — | ✅ | ⚪ | Segue pro mesmo handoff do caminho abrir → A5 (home dia-1), autoridade #2 (portal-data.mjs) |
 | 17 | Descreve atividade + pills | Descrição da atividade (texto livre) → CNAE principal (derivado por IA) · OU o código já sabido (atalho 28/07, mesma engine) | ✅ | 🟡 | ✅ 28/07: CTA 'já sei o número do meu CNAE' construído (troca pra modo código, mesma engine). Lista CNAE furada na raiz: 124 não-refutados, 45 impossíveis, 91 duvidosos; IA real (hoje mock) — Larissa/Pedro/dev |
@@ -231,6 +230,9 @@ flowchart TD
 > Cada linha = um estado estrutural do mapa. Snapshots completos em `flow/versoes/` (`.json` p/ diff + `.mmd` legível). Mais recente no topo.
 
 <!-- FLOW:VERSOES:INI -->
+- **v19** · 2026-08-07 · +nós E9_2 · +conexões E9→E9_2,E9_2→E9_3 · -conexões E9→E9_3
+- **v18** · 2026-08-06 · renomeou E4_3 "E4.3 · Diagnóstico só MEI ("tem contador?")"→"E4.3 · Diagnóstico ("tem certificado?")" · validação E4_3 oficial→pendente · falta-validar em E4_3 · dados-coletados em E4_3 · -conexões E4_2→E4_4
+- **v17** · 2026-08-06 · -nós E9_2 · falta-validar em E4_2_1 · +conexões E9→E9_3 · -conexões E9→E9_2,E9_2→E9_3
 - **v16** · 2026-08-05 · -nós E4_2B · falta-validar em E4_2,E4_2B_1,E4_3 · +conexões E4_2→E4_4,E3_2→E4_2B_1 · -conexões E4_2→E4_2B,E4_2B→E4_4,E4_2B→E4_2B_1,E4_2→E4_2B_1
 - **v15** · 2026-08-05 · +nós E4_2_1 · falta-validar em E4_2 · +conexões E4_2→E4_2B_1,E4_2→E4_2_1
 - **v14** · 2026-08-05 · +nós E3_2,E4_2B,E4_2B_1 · renomeou E4_3 "E4.3 · Diagnóstico Fator R real (12m)"→"E4.3 · Diagnóstico só MEI ("tem contador?")" · falta-validar em E4_2,E4_3,E4_4 · dados-coletados em E4_3 · +conexões E3→E3_2,E3_2→E4,E3_2→E5A,E3_2→E4_2,E4_2→E4_2B,E4_2B→E4_4,E4_2B→E4_2B_1 · -conexões E3→E4

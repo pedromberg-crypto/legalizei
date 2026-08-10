@@ -31,6 +31,11 @@ export type ServicoBase = {
   preco: string;
   inclui?: string[];
   Icone: () => ReactNode;
+  /** 🆕 06/08 (WA walkthrough, pedido do Pedro) — itens baratos (até uns R$40,
+   *  o exemplo dado na reunião) entram na próxima fatura, sem cobrar na hora.
+   *  Itens caros ou sob consulta cobram AGORA — não dá pra deixar rodar um
+   *  serviço grande pra trás e só descobrir na fatura. */
+  instantaneo?: boolean;
 };
 
 export type GuiaRecalc = {
@@ -128,8 +133,10 @@ export function ServicoSheet({
               </h2>
               <p className="mx-auto mt-1 max-w-[19rem] text-body text-text-secondary">
                 <span className="font-semibold text-text-primary">{oQueFoi}</span>{" "}
-                já está com a gente. O valor de {servico.preco} entra na sua
-                próxima fatura, em {proximaFatura}.
+                já está com a gente.{" "}
+                {servico.instantaneo
+                  ? `O pagamento de ${servico.preco} já foi processado no seu cartão cadastrado.`
+                  : `O valor de ${servico.preco} entra na sua próxima fatura, em ${proximaFatura}.`}
               </p>
               {oRecalc && selecionada && (
                 <p className="mx-auto mt-3 max-w-[19rem] rounded-2xl bg-surface-tint-brand px-4 py-3 text-caption text-text-secondary">
@@ -161,8 +168,10 @@ export function ServicoSheet({
                   </span>
                   <p className="text-caption text-text-secondary">
                     Ao confirmar, a gente <span className="font-semibold text-text-primary">já começa o serviço</span>{" "}
-                    e o valor entra, efetivo, na sua fatura de {proximaFatura}.
-                    Depois de confirmar, não dá pra desfazer.
+                    {servico.instantaneo
+                      ? "e cobra agora, no seu cartão cadastrado."
+                      : `e o valor entra, efetivo, na sua fatura de ${proximaFatura}.`}
+                    {" "}Depois de confirmar, não dá pra desfazer.
                   </p>
                 </div>
                 {oRecalc && selecionada && (
@@ -269,6 +278,11 @@ export function ServicoSheet({
                   {servico.preco}
                 </span>
               </div>
+              <p className="mt-2 text-micro text-text-tertiary">
+                {servico.instantaneo
+                  ? "Cobrado na hora, no seu cartão cadastrado."
+                  : `Sem cobrança agora — entra na fatura de ${proximaFatura}.`}
+              </p>
             </>
           )}
         </div>
@@ -312,7 +326,7 @@ export function ServicoSheet({
           ) : (
             <>
               <Button full onClick={() => setFase("confirmar")}>
-                Solicitar serviço
+                {servico.instantaneo ? "Solicitar e pagar agora" : "Solicitar serviço"}
               </Button>
               <p className="mt-2 text-center text-micro text-text-tertiary">
                 A gente confirma com você antes de começar.

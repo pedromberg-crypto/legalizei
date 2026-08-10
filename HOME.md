@@ -18,6 +18,7 @@ data: 2026-07-16
 > **2. 📄 `execucao/roteiro-pitch-acelerador.md` criado** — framework fusão (Raskin abertura + StoryBrand meio + YC/Sequoia números + matriz local BR como filtro + cadência Wistia), cronometria 180s/9 blocos, rascunho de copy real usando dado já validado no vault (mercado BH 100-175k empresas ICP, preço ME R$139 travado, caso pessoal do CNPJ do Pedro, os 22 anos/~1000 clientes do Mauro) — todo número com fonte+confiança, nada inventado. Bloco 7 (Tração) ficou com 2 versões (pré/pós gate). Bloco 9 (Ask) fica explicitamente 🔴 pendente.
 > **3. 🎨 Artifact HTML publicado** — mesma fonte (Sora, único tipo do sistema) e paleta exata do `globals.css` (ink/coral, claro+escuro espelhando o tema do CRM), timeline vertical com os 9 blocos, diagrama de curva de retenção (Nose/Body/Tail) marcando onde o Ask deve entrar.
 > **4. 🔴 3 decisões deixadas pro Pedro** (não travadas, só meu palpite não vale aqui): timing de gravação, ask exato, aceleradora-alvo.
+> **5. 🎬 Pedro descartou a abordagem Gemini pro teaser** — quis algo com DNA próprio (arquétipo Aliado, sem Fator R, sem jargão de framework de VC). `marca/copy/roteiro-teaser-investidor.md` criado: 6 versões de 40-50s, tom "vem aí uma inovação" sem clichê, do divertido ao institucional (1 versão descartada por citar Fator R). 3 delas fecham com CTA "Vai, Legalizaí" (grafia com acento, diferente da oficial "Legalizai" — flagado, decisão só deste roteiro). Escolha da versão final ainda pendente.
 >
 > 🔎 **O 29º flow (06/08) e anteriores continuam abaixo.**
 >

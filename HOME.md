@@ -9,7 +9,7 @@ data: 2026-07-16
 > Status: ✅ negócio fechado com Mauro (2026-07-07) · V0/imersão em curso.
 
 ## 📍 Agora (torre de controle — mantida via `/fechar`)
-> **Última atualização:** 2026-08-10 (**30º flow: roteiro de pitch em vídeo pra aceleradora** — `execucao/roteiro-pitch-acelerador.md` + artifact HTML, 9 blocos cronometrados 180s com fonte+confiança em cada número, achado crítico de timing contra o Bloco 7/Tração) · Janela nova? rode `/boot`.
+> **Última atualização:** 2026-08-11 (**31º flow: refeito o PDF de leitura pro gestor de tráfego** — `pesquisa/2026-08-11-leitura-trafego-decisoes.pdf`, 8 páginas em cadeia de raciocínio, uma decisão por página, cada uma fechando com pergunta aberta pro debate ao vivo, não resposta pronta) · Janela nova? rode `/boot`.
 > **Fase:** 🎯 estratégia de marketing/produto fechada em `pesquisa/` — ver [[2026-08-05-estrategia-marketing-produto-completa]]. Base de copy/tom-de-voz fechada (item K do parking-lot). Auditoria de copy já rodou nos 2 primeiros pedaços do flow de entrada (E1-E4.5 abrir/migrar + E5 gate-CNAE), achados aplicados e commitados. **O que falta:** honorário contábil real (Mauro) pra destravar CAC de verdade · thresholds numéricos do gate V0 (`BASE-ESTRATEGICA.md` §13) seguem sem travar · precificação MEI (R$49,90) segue placeholder, precisa revisão · configurar de fato as contas Google Ads/Meta Ads · reorganização de docs (pergunta grande do Pedro) segue em aberto desde 31/07 · motor de testes segue desatualizado · auditoria de copy ainda não chegou no resto do flow interno (Constituição/Aprovação/Portal) · **hipótese MEI-sem-TTRT fila-Larissa** (não confirmada em fonte primária) · **M3 do Migrar (`/migrar/plano`) apontado pelo Pedro como precisando revisão — ele não detalhou o quê ainda, perguntar na próxima janela antes de mexer** · **NOVO: 3 decisões pendentes pro roteiro de pitch** — timing de gravação (agora × pós-gate V0), ask exato pra aceleradora, qual aceleradora-alvo (ver `execucao/roteiro-pitch-acelerador.md` §5).
 >
 > 🏁 **O QUE O 30º FLOW FEZ (10/08) — roteiro de pitch pra aceleradora**
@@ -19,6 +19,14 @@ data: 2026-07-16
 > **3. 🎨 Artifact HTML publicado** — mesma fonte (Sora, único tipo do sistema) e paleta exata do `globals.css` (ink/coral, claro+escuro espelhando o tema do CRM), timeline vertical com os 9 blocos, diagrama de curva de retenção (Nose/Body/Tail) marcando onde o Ask deve entrar.
 > **4. 🔴 3 decisões deixadas pro Pedro** (não travadas, só meu palpite não vale aqui): timing de gravação, ask exato, aceleradora-alvo.
 > **5. 🎬 Pedro descartou a abordagem Gemini pro teaser** — quis algo com DNA próprio (arquétipo Aliado, sem Fator R, sem jargão de framework de VC). `marca/copy/roteiro-teaser-investidor.md` criado: 6 versões de 40-50s, tom "vem aí uma inovação" sem clichê, do divertido ao institucional (1 versão descartada por citar Fator R). 3 delas fecham com CTA "Vai, Legalizaí" (grafia com acento, diferente da oficial "Legalizai" — flagado, decisão só deste roteiro). Escolha da versão final ainda pendente.
+>
+> 🔎 **O 30º flow (10/08) e anteriores continuam abaixo.**
+>
+> 🏁 **O QUE O 31º FLOW FEZ (11/08) — PDF de leitura pro gestor de tráfego, refeito do zero**
+> Pedro não gostou do PDF de 05/08 (`2026-08-05-estrategia-mkt-leitura-pedro-puntel.pdf`) — compilava os 14 docs por TIPO (produto/mercado, economia, personas, orgânico, tráfego), lia como relatório fechado. Pedido: reestruturar como **cadeia de raciocínio**, 1 decisão estratégica por página, cada uma com o porquê + o desdobramento prático + uma pergunta em aberto pra debater ao vivo com o Puntel, não uma resposta já fechada.
+> **1. 📋 Esqueleto de 8 decisões validado com o Pedro antes de escrever** (tabela no chat, aprovado sem ajuste): personas → brecha de mercado → correção de CAC/LTV → Meta×Google → mensagem por persona/budget → MEI fora do pago frio → thresholds do gate V0 → pauta de fechamento.
+> **2. 📄 `pesquisa/2026-08-11-leitura-trafego-decisoes.pdf` gerado** (Chrome headless, mesmo pipeline HTML→PDF do 28º flow) — capa + sumário + 8 páginas, cada uma fecha num box "Pergunta pro debate" destacado, não numa conclusão. Todo número reaproveitado das fontes já travadas (`economia-preco-cac.md`, `posicionamento.md`, `mercado-bh-regional.md`, `frente-1-captacao-meta-bh.md`) — nada novo calculado, só reordenado.
+> **3. ⚠️ Não consegui renderizar preview do PDF neste ambiente** (falta poppler) — Pedro precisa abrir e conferir layout antes de mandar pro Puntel.
 >
 > 🔎 **O 29º flow (06/08) e anteriores continuam abaixo.**
 >

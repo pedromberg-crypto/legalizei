@@ -22,18 +22,19 @@ tags: [marca, copy, pitch, video, mercado, escalada]
 | Antes | Depois | O que mudou |
 |---|---|---|
 | "Vinte e dois anos de contabilidade de verdade por baixo. Um produto novo por cima." | "Por baixo de tudo isso... vinte e dois anos de contabilidade de verdade. / Por cima... um produto novo." | **inversão**: o complemento vem primeiro, o valor cai no fim da frase, que é onde a voz apoia |
-| "O resto está com planilha, caderno, ou um contador que olha a empresa uma vez por ano." | "E o resto? / Planilha. Caderno. / Ou um contador que olha a empresa uma vez por ano." | vira **pergunta + staccato**: cada item ganha peso próprio |
+| "O resto está com planilha, caderno, ou um contador que olha a empresa uma vez por ano." | "E o resto? / O resto ainda é planilha. / Caderno. / E um contador que olha a empresa... uma vez por ano." | vira **pergunta + staccato**, e o "ainda" põe o desdém na palavra (ver princípio 4) |
 | "Vamos começar por Belo Horizonte, a terceira capital que mais abre empresa no país, onde uma empresa nasce em onze horas." | 3 frases separadas | 28 palavras numa respiração é fôlego de locutor profissional, não de peça épica |
 | "Primeiro Belo Horizonte. Depois Minas. Depois o Brasil inteiro." | "Primeiro... Belo Horizonte. / Depois... Minas. / Depois... o Brasil inteiro." | a suspensão **antes** do nome faz o mapa abrir junto |
 | "E estamos prontos para ser o maior aplicativo contábil do Brasil." | "E estamos prontos. / Prontos para ser o maior aplicativo contábil do Brasil." | **repetição** dá o peso que a frase única não tinha |
 
-**Os 3 princípios, pra aplicar em qualquer reescrita futura:**
+**Os 4 princípios, pra aplicar em qualquer reescrita futura:**
 
 1. **A palavra que carrega o peso vai no fim da frase**, com pausa antes dela. "Menos de uma... em cada cem" bate mais que "menos de uma em cada cem".
 2. **Lista vira staccato.** Ponto entre itens, não vírgula. Vírgula corre, ponto pesa.
 3. **Teto de fôlego: ~14 palavras por respiração.** Acima disso o locutor acelera pra chegar ao fim, e acelerar mata a solenidade.
+4. **Provocação mora na palavra, não na entonação.** Achado do teste real do Pedro no ElevenLabs (13/08): *"Planilha. Caderno."* saiu **seco, como lista de compras**, porque não existe nada no texto que peça desdém. Máquina não faz ironia por conta própria, e locutor humano faz por sorte. A correção foi semântica, não de pontuação: **"O resto ainda é planilha"**. O "ainda" julga sozinho, com qualquer voz, em qualquer take. Vale a regra geral: se o sentido depende do tom, ele **não** está no roteiro.
 
-**Duração subiu**, com autorização: **95s · 100s · 105s** (eram 78 · 83 · 88). O tempo extra é quase todo silêncio, não texto novo.
+**Duração subiu**, com autorização: **97s · 102s · 105s** (eram 78 · 83 · 88). O tempo extra é quase todo silêncio, não texto novo.
 
 ## Histórico das versões anteriores
 
@@ -56,7 +57,7 @@ tags: [marca, copy, pitch, video, mercado, escalada]
 
 ---
 
-# Proposta 1 · A ESCADA · ~95s
+# Proposta 1 · A ESCADA · ~97s
 
 **Mecânica:** escada de **consequência**. Começa numa pessoa só, invisível, e cada corte amplia o que está em jogo até virar país. O número entra pra revelar que a cena inicial não era exceção, era regra.
 **Curva de áudio:** pulso quase inaudível → baixo → percussão → cordas → **silêncio** → hit final.
@@ -71,12 +72,12 @@ tags: [marca, copy, pitch, video, mercado, escalada]
 | 36-46s | percussão entra | "São sete milhões e quatrocentas mil empresas no Simples Nacional... vivendo exatamente assim." | tela cheia: 7,4 MILHÕES |
 | 46-54s | suspende | "Sabe quanto o maior aplicativo contábil do país atende disso?" | pergunta no ar |
 | 54-64s | som quase some | "Zero vírgula sete por cento. / Menos de uma... em cada cem." | 0,7% ocupando a tela |
-| 64-74s | cordas entram | "E o resto? / Planilha. Caderno. / Ou um contador que olha a empresa uma vez por ano." | cortes rápidos, real, sem estética |
-| 74-88s | camada cheia | "Vamos começar por Belo Horizonte. / A terceira capital que mais abre empresa no país. Onde uma empresa nasce em onze horas. / Se funcionar no lugar mais rápido do Brasil... funciona em qualquer lugar." | BH acordando, relógio |
-| 88-96s | topo | "Por baixo de tudo isso... vinte e dois anos de contabilidade de verdade. / Por cima... um produto novo." | escritório real + app |
-| 96-102s | pico | "E estamos prontos. / Prontos para ser o maior aplicativo contábil do Brasil." | app na mão |
-| 102-104s | **silêncio** | (nada) | preto |
-| 104-107s | hit final | "Vai, legaliza **aí**." | logo entrando, **AI acende em coral** na sílaba tônica |
+| 64-76s | cordas entram | "E o resto? / O resto ainda é planilha. / Caderno. / E um contador que olha a empresa... uma vez por ano." | cortes rápidos, real, sem estética |
+| 76-90s | camada cheia | "Vamos começar por Belo Horizonte. / A terceira capital que mais abre empresa no país. Onde uma empresa nasce em onze horas. / Se funcionar no lugar mais rápido do Brasil... funciona em qualquer lugar." | BH acordando, relógio |
+| 90-98s | topo | "Por baixo de tudo isso... vinte e dois anos de contabilidade de verdade. / Por cima... um produto novo." | escritório real + app |
+| 98-104s | pico | "E estamos prontos. / Prontos para ser o maior aplicativo contábil do Brasil." | app na mão |
+| 104-106s | **silêncio** | (nada) | preto |
+| 106-109s | hit final | "Vai, legaliza **aí**." | logo entrando, **AI acende em coral** na sílaba tônica |
 
 ### Texto corrido (locução)
 
@@ -96,8 +97,9 @@ tags: [marca, copy, pitch, video, mercado, escalada]
 > Menos de uma... em cada cem.
 >
 > E o resto?
-> Planilha. Caderno.
-> Ou um contador que olha a empresa uma vez por ano.
+> O resto ainda é planilha.
+> Caderno.
+> E um contador que olha a empresa... uma vez por ano.
 >
 > Vamos começar por Belo Horizonte.
 > A terceira capital que mais abre empresa no país. Onde uma empresa nasce em onze horas.
@@ -118,7 +120,7 @@ tags: [marca, copy, pitch, video, mercado, escalada]
 
 ---
 
-# Proposta 2 · LOOPS ABERTOS · ~100s
+# Proposta 2 · LOOPS ABERTOS · ~102s
 
 **Mecânica:** pergunta e resposta. Cada bloco responde e abre outra maior. As perguntas ficam escritas na tela, então a peça **funciona no mudo**.
 **Curva de áudio:** cada pergunta **corta a trilha em seco**; cada resposta devolve uma camada a mais. Nunca volta ao nível anterior.
@@ -132,13 +134,13 @@ tags: [marca, copy, pitch, video, mercado, escalada]
 | 18-28s | **corta seco** | "Outra pergunta. / Quanto disso o maior aplicativo contábil do país atende?" | tela preta, pergunta escrita |
 | 28-38s | volta pesado | "Zero vírgula sete por cento. / Menos de uma... em cada cem." | 0,7% |
 | 38-45s | **corta seco** | "Então onde estão as outras noventa e nove?" | pergunta escrita |
-| 45-60s | camada nova, staccato | "Planilha. / Caderno. / Um contador que olha a empresa uma vez por ano. / Gente pagando imposto a mais... sem nunca saber." | cortes do real, um por item |
-| 60-78s | sobe firme | "A gente está construindo o contrário disso. / Preço fechado. / Contador de verdade desde o primeiro plano. / E um app que olha o seu número todo mês. Não uma vez por ano." | app rodando, um recurso por corte |
-| 78-88s | **corta seco** | "E onde vamos começar? / Por Belo Horizonte. Onde uma empresa abre em onze horas... e existem mais de cem mil empresas no nosso perfil." | BH, mapa aceso |
-| 88-92s | suspensão | "E por que parar aqui?" | pergunta escrita |
-| 92-100s | tudo entra | "A gente não vai parar. / Estamos prontos para ser o maior aplicativo contábil do Brasil." | mapa abrindo pro Brasil |
-| 100-102s | **silêncio** | (nada) | preto |
-| 102-105s | hit final | "Vai, legaliza **aí**." | logo entrando, **AI acende em coral** |
+| 45-62s | camada nova, staccato | "Ainda estão na planilha. / No caderno. / Num contador que olha a empresa... uma vez por ano. / Gente pagando imposto a mais... sem nunca saber." | cortes do real, um por item |
+| 62-80s | sobe firme | "A gente está construindo o contrário disso. / Preço fechado. / Contador de verdade desde o primeiro plano. / E um app que olha o seu número todo mês. Não uma vez por ano." | app rodando, um recurso por corte |
+| 80-90s | **corta seco** | "E onde vamos começar? / Por Belo Horizonte. Onde uma empresa abre em onze horas... e existem mais de cem mil empresas no nosso perfil." | BH, mapa aceso |
+| 90-94s | suspensão | "E por que parar aqui?" | pergunta escrita |
+| 94-102s | tudo entra | "A gente não vai parar. / Estamos prontos para ser o maior aplicativo contábil do Brasil." | mapa abrindo pro Brasil |
+| 102-104s | **silêncio** | (nada) | preto |
+| 104-107s | hit final | "Vai, legaliza **aí**." | logo entrando, **AI acende em coral** |
 
 ### Texto corrido (locução)
 
@@ -155,9 +157,9 @@ tags: [marca, copy, pitch, video, mercado, escalada]
 >
 > Então onde estão as outras noventa e nove?
 >
-> Planilha.
-> Caderno.
-> Um contador que olha a empresa uma vez por ano.
+> Ainda estão na planilha.
+> No caderno.
+> Num contador que olha a empresa... uma vez por ano.
 > Gente pagando imposto a mais... sem nunca saber.
 >
 > A gente está construindo o contrário disso.
@@ -253,7 +255,7 @@ tags: [marca, copy, pitch, video, mercado, escalada]
 | Regionais usados | 11h + 3ª capital | 11h + 100 mil no perfil | 11h + 3ª capital |
 | Responde "escala fora de BH?" | de raspão | não | **é a espinha** |
 | Carga emocional | **alta** (tem personagem) | média (tem tensão) | média-alta (tem épico) |
-| Duração | 95s | 100s | 105s |
+| Duração | 97s | 102s | 105s |
 | Risco | precisa de imagem boa nos 30s iniciais | soa publicitário numa banca seca | a mais longa |
 
 **Fusões que já dá pra ver:**

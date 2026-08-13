@@ -25,9 +25,49 @@ Regra nova, aplicada nas três: **uma ideia por respiração**. Na prática, pro
 
 1. **Quebra de linha é a ferramenta principal.** Cada linha do texto abaixo é uma respiração. O modelo respeita isso melhor do que qualquer tag.
 2. **A palavra de peso vai no fim, com pausa antes.** *"Menos de uma... em cada cem"* bate mais do que a mesma frase corrida.
-3. **Lista vira staccato.** `Planilha. Caderno.` em vez de `planilha, caderno`. Vírgula corre, ponto pesa.
+3. **Lista vira staccato.** `Caderno.` numa linha só, em vez de `planilha, caderno` corrido. Vírgula corre, ponto pesa.
 
 **Não junte as linhas ao colar.** A quebra é instrução de ritmo, não formatação.
+
+### 🔴 Achado do primeiro teste real: ironia não se pede, se escreve
+
+O Pedro gerou a Escada e o trecho *"Planilha. Caderno."* saiu **seco, como lista de compras**, sem a provocação que a cena pede.
+
+Não é defeito da voz nem da config. É que **nada no texto pedia desdém**: staccato dá peso, não sarcasmo. TTS não faz ironia por conta própria, e locutor humano faz por sorte.
+
+**A correção é semântica, não de pontuação:**
+
+| Antes (sai seco) | Agora (julga sozinho) |
+|---|---|
+| "Planilha. Caderno." | "O resto **ainda** é planilha. / Caderno." |
+| "Planilha. / Caderno. / Um contador..." (Loops) | "**Ainda estão** na planilha. / No caderno. / Num contador..." |
+
+O "ainda" carrega o julgamento com qualquer voz, em qualquer take, e ainda reforça a tese da peça (mercado parado no tempo). **Regra geral: se o sentido depende do tom, ele não está no roteiro.**
+
+**Se quiser testar variações de entonação por cima disso**, gere só este trecho nas 3 formas e compare:
+
+```
+E o resto?
+O resto ainda é planilha.
+Caderno.
+E um contador que olha a empresa... uma vez por ano.
+```
+
+```
+E o resto?
+Planilha?
+Caderno?
+E um contador que olha a empresa uma vez por ano.
+```
+
+```
+E o resto?
+O resto ainda é planilha...
+Caderno...
+E um contador que olha a empresa... uma vez por ano.
+```
+
+A primeira é a do roteiro, e a mais segura. A segunda troca desdém por **incredulidade** (a interrogação levanta a melodia, mas com voz errada vira dúvida genuína). A terceira **arrasta** o desdém com reticências, e é a que mais depende da voz escolhida.
 
 ---
 
@@ -93,7 +133,7 @@ Abra **"Exibir mais"** e filtre a Voice Library por **português brasileiro** an
 
 ---
 
-# Proposta 1 · A ESCADA · ~95s
+# Proposta 1 · A ESCADA · ~97s
 
 ```
 Agora, enquanto você assiste isso... alguém no Brasil está abrindo uma empresa.
@@ -112,8 +152,9 @@ Zero vírgula sete por cento.
 Menos de uma... em cada cem.
 
 E o resto?
-Planilha. Caderno.
-Ou um contador que olha a empresa uma vez por ano.
+O resto ainda é planilha.
+Caderno.
+E um contador que olha a empresa... uma vez por ano.
 
 Vamos começar por Belo Horizonte.
 A terceira capital que mais abre empresa no país. Onde uma empresa nasce em onze horas.
@@ -128,7 +169,7 @@ Prontos para ser o maior aplicativo contábil do Brasil.
 
 ---
 
-# Proposta 2 · LOOPS ABERTOS · ~100s
+# Proposta 2 · LOOPS ABERTOS · ~102s
 
 As pausas depois das perguntas **são o gancho da peça** e são grandes demais pra confiar na pontuação. Gere em **4 blocos** e monte os silêncios na edição.
 
@@ -156,9 +197,9 @@ Então onde estão as outras noventa e nove?
 
 **Bloco 4**
 ```
-Planilha.
-Caderno.
-Um contador que olha a empresa uma vez por ano.
+Ainda estão na planilha.
+No caderno.
+Num contador que olha a empresa... uma vez por ano.
 Gente pagando imposto a mais... sem nunca saber.
 
 A gente está construindo o contrário disso.
@@ -271,12 +312,12 @@ Vai... legaliza aí!
 
 **Escada**
 ```
-Agora, enquanto você assiste isso, <break time="0.5s" /> alguém no Brasil está abrindo uma empresa. <break time="0.8s" /> Ela não sabe qual imposto vai pagar. <break time="0.4s" /> Não sabe se escolheu o código certo. <break time="0.4s" /> E vai descobrir isso um ano depois. Quando não dá mais pra corrigir. <break time="1.0s" /> E não é uma pessoa. <break time="0.8s" /> São sete milhões e quatrocentas mil empresas no Simples Nacional, <break time="0.4s" /> vivendo exatamente assim. <break time="0.9s" /> Sabe quanto o maior aplicativo contábil do país atende disso? <break time="0.9s" /> Zero vírgula sete por cento. <break time="0.6s" /> Menos de uma <break time="0.4s" /> em cada cem. <break time="1.0s" /> E o resto? <break time="0.5s" /> Planilha. Caderno. <break time="0.4s" /> Ou um contador que olha a empresa uma vez por ano. <break time="0.9s" /> Vamos começar por Belo Horizonte. <break time="0.5s" /> A terceira capital que mais abre empresa no país. Onde uma empresa nasce em onze horas. <break time="0.6s" /> Se funcionar no lugar mais rápido do Brasil, <break time="0.4s" /> funciona em qualquer lugar. <break time="0.9s" /> Por baixo de tudo isso, <break time="0.5s" /> vinte e dois anos de contabilidade de verdade. <break time="0.6s" /> Por cima, <break time="0.4s" /> um produto novo. <break time="0.9s" /> E estamos prontos. <break time="0.6s" /> Prontos para ser o maior aplicativo contábil do Brasil.
+Agora, enquanto você assiste isso, <break time="0.5s" /> alguém no Brasil está abrindo uma empresa. <break time="0.8s" /> Ela não sabe qual imposto vai pagar. <break time="0.4s" /> Não sabe se escolheu o código certo. <break time="0.4s" /> E vai descobrir isso um ano depois. Quando não dá mais pra corrigir. <break time="1.0s" /> E não é uma pessoa. <break time="0.8s" /> São sete milhões e quatrocentas mil empresas no Simples Nacional, <break time="0.4s" /> vivendo exatamente assim. <break time="0.9s" /> Sabe quanto o maior aplicativo contábil do país atende disso? <break time="0.9s" /> Zero vírgula sete por cento. <break time="0.6s" /> Menos de uma <break time="0.4s" /> em cada cem. <break time="1.0s" /> E o resto? <break time="0.5s" /> O resto ainda é planilha. <break time="0.4s" /> Caderno. <break time="0.4s" /> E um contador que olha a empresa <break time="0.4s" /> uma vez por ano. <break time="0.9s" /> Vamos começar por Belo Horizonte. <break time="0.5s" /> A terceira capital que mais abre empresa no país. Onde uma empresa nasce em onze horas. <break time="0.6s" /> Se funcionar no lugar mais rápido do Brasil, <break time="0.4s" /> funciona em qualquer lugar. <break time="0.9s" /> Por baixo de tudo isso, <break time="0.5s" /> vinte e dois anos de contabilidade de verdade. <break time="0.6s" /> Por cima, <break time="0.4s" /> um produto novo. <break time="0.9s" /> E estamos prontos. <break time="0.6s" /> Prontos para ser o maior aplicativo contábil do Brasil.
 ```
 
 **Loops**
 ```
-Uma pergunta. <break time="0.5s" /> Quantas empresas brasileiras vivem hoje no Simples Nacional? <break time="1.2s" /> Sete milhões e quatrocentas mil. <break time="1.2s" /> Outra pergunta. <break time="0.5s" /> Quanto disso o maior aplicativo contábil do país atende? <break time="1.2s" /> Zero vírgula sete por cento. <break time="0.6s" /> Menos de uma <break time="0.4s" /> em cada cem. <break time="1.2s" /> Então onde estão as outras noventa e nove? <break time="1.2s" /> Planilha. <break time="0.5s" /> Caderno. <break time="0.5s" /> Um contador que olha a empresa uma vez por ano. <break time="0.6s" /> Gente pagando imposto a mais, <break time="0.5s" /> sem nunca saber. <break time="1.0s" /> A gente está construindo o contrário disso. <break time="0.6s" /> Preço fechado. <break time="0.5s" /> Contador de verdade desde o primeiro plano. <break time="0.5s" /> E um app que olha o seu número todo mês. Não uma vez por ano. <break time="1.0s" /> E onde vamos começar? <break time="0.6s" /> Por Belo Horizonte. Onde uma empresa abre em onze horas <break time="0.4s" /> e existem mais de cem mil empresas no nosso perfil. <break time="1.0s" /> E por que parar aqui? <break time="1.0s" /> A gente não vai parar. <break time="0.6s" /> Estamos prontos para ser o maior aplicativo contábil do Brasil.
+Uma pergunta. <break time="0.5s" /> Quantas empresas brasileiras vivem hoje no Simples Nacional? <break time="1.2s" /> Sete milhões e quatrocentas mil. <break time="1.2s" /> Outra pergunta. <break time="0.5s" /> Quanto disso o maior aplicativo contábil do país atende? <break time="1.2s" /> Zero vírgula sete por cento. <break time="0.6s" /> Menos de uma <break time="0.4s" /> em cada cem. <break time="1.2s" /> Então onde estão as outras noventa e nove? <break time="1.2s" /> Ainda estão na planilha. <break time="0.5s" /> No caderno. <break time="0.5s" /> Num contador que olha a empresa <break time="0.4s" /> uma vez por ano. <break time="0.6s" /> Gente pagando imposto a mais, <break time="0.5s" /> sem nunca saber. <break time="1.0s" /> A gente está construindo o contrário disso. <break time="0.6s" /> Preço fechado. <break time="0.5s" /> Contador de verdade desde o primeiro plano. <break time="0.5s" /> E um app que olha o seu número todo mês. Não uma vez por ano. <break time="1.0s" /> E onde vamos começar? <break time="0.6s" /> Por Belo Horizonte. Onde uma empresa abre em onze horas <break time="0.4s" /> e existem mais de cem mil empresas no nosso perfil. <break time="1.0s" /> E por que parar aqui? <break time="1.0s" /> A gente não vai parar. <break time="0.6s" /> Estamos prontos para ser o maior aplicativo contábil do Brasil.
 ```
 
 **Onda**

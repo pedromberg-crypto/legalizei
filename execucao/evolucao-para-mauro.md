@@ -647,5 +647,22 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 - Criei um caminho novo pra quem é Lucro Presumido: antes não tinha pra onde ir, agora vai direto falar com um especialista
 ```
 
+## Semana 13/08/2026 — vou levar a estratégia de marketing inteira pra uma segunda opinião
+
+| # | Frente | O que evoluiu | Status |
+|---|--------|---------------|--------|
+| 1 | **Estratégia de marketing vai passar por revisão externa** | Montei um documento com a estratégia inteira (mercado, concorrentes, posicionamento, jeito da marca falar, tipos de cliente, o que postar, preço e margem, como a venda acontece, riscos) pra sentar com o gestor de tráfego e ele conferir ponto a ponto. Ele não vai só cuidar de anúncio: vai dar a segunda opinião na estratégia toda, que até agora eu montei sozinho | 🟡 (documento pronto, reunião ainda não aconteceu) |
+| 2 | **Corrigi um arquivo quebrado que eu não tinha percebido** | O PDF de leitura que eu tinha gerado semana passada estava corrompido e ninguém tinha aberto ainda. Refiz e criei um jeito de conferir antes de dar por pronto, pra não repetir | 🟢 |
+
+**Próximo:** a reunião com o gestor de tráfego. O que sair dela ajusta a estratégia antes de a gente gastar o primeiro real em anúncio. Continuam pendentes com você: seu número de honorário por cliente (destrava a margem de verdade) e os números de corte pra decidir se o teste deu certo ou não.
+
+### 📱 WhatsApp (13/08)
+```
+*Update Legalizei* 🧭
+- Organizei a estratégia de marketing inteira num documento só pra levar pro gestor de tráfego revisar comigo ponto a ponto. Ele vai dar a segunda opinião na estratégia toda, não só na parte de anúncio
+- Achei e corrigi um arquivo quebrado da semana passada que tinha passado batido
+- Assim que a reunião acontecer eu te trago o que mudou
+```
+
 ## Links
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]]

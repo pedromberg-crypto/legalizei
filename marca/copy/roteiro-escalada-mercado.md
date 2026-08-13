@@ -7,13 +7,33 @@ deriva_de: [mercado-bh-regional, PESQUISA-MERCADO, posicionamento, naming-defesa
 tags: [marca, copy, pitch, video, mercado, escalada]
 ---
 
-# 🚀 Roteiro de escalada — 3 propostas (v2)
+# 🚀 Roteiro de escalada — 3 propostas (v3)
 
 > Substitui a abordagem de [[roteiro-marca-e-visao]] (que abria pela marca: nome, cor, AI). **Direção do Pedro, 13/08:** o apelo começa pela **possibilidade de mercado** e vai **escalando** até o fecho de prontidão. Áudio épico crescendo junto, cada corte precisa deixar o espectador querendo o próximo.
 >
 > Público: investidor / aceleradora. Formato: corte rápido, locução em cima de trilha que sobe e nunca decresce.
 
-## v2 — o que mudou da primeira rodada
+## v3 — o que mudou (13/08, tarde)
+
+**1. Tempo verbal: o app ainda não existe, e a peça precisa dizer isso.** Toda ação de operação virou futuro. A regra que apliquei, pra não misturar:
+
+| Tipo de frase | Tempo | Exemplo |
+|---|---|---|
+| O que a **empresa vai fazer** (praça, começo, expansão) | **futuro** | "vamos começar por Belo Horizonte" |
+| O que a empresa **está fazendo agora** | **presente contínuo** | "a gente está construindo o contrário disso" |
+| O que o **produto faz** (funcionalidade) | **presente** | "um app que olha o seu número todo mês" |
+| Condição de prova | **futuro do subjuntivo** | "se funcionar no lugar mais rápido do Brasil" |
+| Lastro que já existe (22 anos) | **presente** | "22 anos de contabilidade de verdade por baixo" |
+
+Presente na funcionalidade não é contradição: é como toda peça de lançamento descreve o que está por vir. O que não podia ficar era "a gente começou", que afirma operação em curso.
+
+**2. Fecho sem eco.** Saiu o "Legalizai." falado, que duplicava a assinatura. A ordem nova nas três é:
+
+> declaração de ambição → **beat de silêncio** → "Vai, legaliza aí." com o logo entrando, **entonação no AÍ** sincronizada com o **AI acendendo em coral** no wordmark.
+
+O nome deixa de ser dito e passa a ser **visto e ouvido ao mesmo tempo**, dentro do imperativo. É onde a cereja do AI trabalha sozinha, sem ninguém precisar explicar.
+
+## v2 — o que mudou na rodada anterior
 
 | Ajuste pedido | O que fiz |
 |---|---|
@@ -54,10 +74,10 @@ tags: [marca, copy, pitch, video, mercado, escalada]
 | 24-34s | **corte seco**, percussão | "E não é uma pessoa. São 7,4 milhões de empresas no Simples Nacional vivendo exatamente assim." | tela cheia: 7,4 MILHÕES |
 | 34-44s | pausa, som suspenso | "Sabe quanto o maior aplicativo contábil do país atende disso? Zero vírgula sete por cento. Menos de uma em cada cem." | 0,7% ocupando a tela |
 | 44-54s | cordas entram | "O resto está com planilha, caderno, ou um contador que olha a empresa uma vez por ano." | cortes rápidos, real, sem estética |
-| 54-66s | camada cheia | "A gente começou por Belo Horizonte, a terceira capital que mais abre empresa no país, onde uma empresa nasce em 11 horas. Se funciona no lugar mais rápido do Brasil, funciona em qualquer lugar." | BH acordando, relógio |
-| 66-72s | topo | "22 anos de contabilidade de verdade por baixo. Um produto novo por cima." | escritório real + app |
-| 72-74s | **silêncio** | (wordmark entrando, AI em coral) | wordmark |
-| 74-78s | hit final | "Legalizai. Vai, legaliza aí. Estamos prontos para ser o maior aplicativo contábil do Brasil." | assinatura |
+| 54-66s | camada cheia | "Vamos começar por Belo Horizonte, a terceira capital que mais abre empresa no país, onde uma empresa nasce em 11 horas. Se funcionar no lugar mais rápido do Brasil, funciona em qualquer lugar." | BH acordando, relógio |
+| 66-74s | topo | "22 anos de contabilidade de verdade por baixo. Um produto novo por cima. E estamos prontos para ser o maior aplicativo contábil do Brasil." | escritório real + app |
+| 74-76s | **silêncio** | (nada) | preto |
+| 76-78s | hit final | "Vai, legaliza **aí**." | logo entrando, **AI acende em coral** na sílaba tônica |
 
 ### Texto corrido (locução)
 
@@ -71,13 +91,13 @@ tags: [marca, copy, pitch, video, mercado, escalada]
 >
 > O resto está com planilha, caderno, ou um contador que olha a empresa uma vez por ano.
 >
-> A gente começou por Belo Horizonte, a terceira capital que mais abre empresa no país, onde uma empresa nasce em 11 horas. Se funciona no lugar mais rápido do Brasil, funciona em qualquer lugar.
+> Vamos começar por Belo Horizonte, a terceira capital que mais abre empresa no país, onde uma empresa nasce em 11 horas. Se funcionar no lugar mais rápido do Brasil, funciona em qualquer lugar.
 >
-> 22 anos de contabilidade de verdade por baixo. Um produto novo por cima.
+> 22 anos de contabilidade de verdade por baixo. Um produto novo por cima. E estamos prontos para ser o maior aplicativo contábil do Brasil.
 >
-> Legalizai. Vai, legaliza aí.
+> *(silêncio)*
 >
-> Estamos prontos para ser o maior aplicativo contábil do Brasil."
+> Vai, legaliza **aí**."
 
 **O gancho de retenção:** a peça começa como história de uma pessoa, e o espectador ainda não sabe que é um pitch. Quando o "7,4 milhões" entra aos 24s, ele reinterpreta tudo que viu. Esse é o corte que segura o resto.
 **Risco:** os 24 segundos iniciais sem número exigem imagem boa. Com stock genérico, morre.
@@ -88,7 +108,7 @@ tags: [marca, copy, pitch, video, mercado, escalada]
 
 **Mecânica:** pergunta e resposta. Cada bloco responde e abre outra maior. As perguntas ficam escritas na tela, então a peça **funciona no mudo**, que é como metade das pessoas assiste.
 **Curva de áudio:** cada pergunta **corta a trilha em seco**; cada resposta devolve uma camada a mais. Nunca volta ao nível anterior.
-**Duração:** ~76s.
+**Duração:** ~83s.
 
 ### Beats
 
@@ -100,11 +120,12 @@ tags: [marca, copy, pitch, video, mercado, escalada]
 | 24-32s | volta pesado | "Zero vírgula sete por cento. Menos de uma em cada cem." | 0,7% |
 | 32-38s | **corta seco** | "Então onde estão as outras noventa e nove?" | pergunta escrita |
 | 38-50s | camada nova | "Planilha. Caderno. Um contador que olha a empresa uma vez por ano. Gente pagando imposto a mais sem nunca saber." | cortes do real |
-| 50-62s | sobe firme | "A gente construiu o contrário disso. Preço fechado, contador de verdade desde o primeiro plano, e um app que olha o seu número todo mês, não uma vez por ano." | app rodando |
-| 62-68s | **corta seco** | "E onde a gente começou? Em Belo Horizonte, onde uma empresa abre em 11 horas e existem mais de cem mil no nosso perfil." | BH, mapa aceso |
-| 68-71s | suspensão | "E por que parar aqui?" | pergunta escrita |
-| 71-73s | tudo entra | "A gente não vai parar." | mapa abrindo pro Brasil |
-| 73-76s | hit final | "Legalizai. Vai, legaliza aí. Estamos prontos para ser o maior aplicativo contábil do Brasil." | wordmark, AI em coral |
+| 50-62s | sobe firme | "A gente está construindo o contrário disso. Preço fechado, contador de verdade desde o primeiro plano, e um app que olha o seu número todo mês, não uma vez por ano." | app rodando |
+| 62-70s | **corta seco** | "E onde vamos começar? Por Belo Horizonte, onde uma empresa abre em 11 horas e existem mais de cem mil no nosso perfil." | BH, mapa aceso |
+| 70-73s | suspensão | "E por que parar aqui?" | pergunta escrita |
+| 73-80s | tudo entra | "A gente não vai parar. Estamos prontos para ser o maior aplicativo contábil do Brasil." | mapa abrindo pro Brasil |
+| 80-81s | **silêncio** | (nada) | preto |
+| 81-83s | hit final | "Vai, legaliza **aí**." | logo entrando, **AI acende em coral** na sílaba tônica |
 
 ### Texto corrido (locução)
 
@@ -120,17 +141,17 @@ tags: [marca, copy, pitch, video, mercado, escalada]
 >
 > Planilha. Caderno. Um contador que olha a empresa uma vez por ano. Gente pagando imposto a mais sem nunca saber.
 >
-> A gente construiu o contrário disso. Preço fechado, contador de verdade desde o primeiro plano, e um app que olha o seu número todo mês, não uma vez por ano.
+> A gente está construindo o contrário disso. Preço fechado, contador de verdade desde o primeiro plano, e um app que olha o seu número todo mês, não uma vez por ano.
 >
-> E onde a gente começou? Em Belo Horizonte, onde uma empresa abre em 11 horas e existem mais de cem mil no nosso perfil.
+> E onde vamos começar? Por Belo Horizonte, onde uma empresa abre em 11 horas e existem mais de cem mil no nosso perfil.
 >
 > E por que parar aqui?
 >
-> A gente não vai parar."
+> A gente não vai parar. Estamos prontos para ser o maior aplicativo contábil do Brasil.
 >
-> "Legalizai. Vai, legaliza aí.
+> *(silêncio)*
 >
-> Estamos prontos para ser o maior aplicativo contábil do Brasil."
+> Vai, legaliza **aí**."
 
 **O gancho de retenção:** o silêncio. As três quebras secas param a trilha no meio, e som que some prende mais que som que cresce. A pergunta escrita segura quem está sem áudio.
 **Risco:** formato de pergunta é o mais "publicitário" dos três. Numa banca seca de aceleradora pode soar comercial de TV. Se for o caso, trocar "Uma pergunta." por "Um número." e manter o resto.
@@ -141,30 +162,30 @@ tags: [marca, copy, pitch, video, mercado, escalada]
 
 **Mecânica:** geografia. A câmera nunca volta pra trás: uma cidade, um estado, um país. A ambição do fim soa inevitável porque o movimento já aconteceu três vezes na tela. Minas e Brasil entram **sem número**, como movimento, não como dado.
 **Curva de áudio:** um instrumento por onda (piano → cordas → percussão cheia), sem nunca decrescer.
-**Duração:** ~84s.
+**Duração:** ~88s.
 
 ### Beats
 
 | Tempo | Áudio | Texto | Imagem |
 |---|---|---|---|
 | 0-10s | piano solo | "Belo Horizonte abre uma empresa em 11 horas. É a abertura mais rápida do Brasil." | relógio, rua de BH de manhã |
-| 10-22s | piano + baixo | "Na terceira capital que mais abre empresa no país. A gente não começou aqui porque é pequeno. Começou porque é o campo de prova mais rápido que existe." | BH aéreo, movimento |
-| 22-32s | cordas entram | "Se o produto aguenta a cidade que mais acelera, ele aguenta o país." | zoom out lento |
+| 10-22s | piano + baixo | "Na terceira capital que mais abre empresa no país. E a gente não vai começar aqui porque é pequeno. Vai começar porque é o campo de prova mais rápido que existe." | BH aéreo, movimento |
+| 22-32s | cordas entram | "Se o produto aguentar a cidade que mais acelera, ele aguenta o país." | zoom out lento |
 | 32-44s | cordas cheias | "E o país são 7,4 milhões de empresas no Simples Nacional." | mapa do Brasil acendendo |
 | 44-54s | pausa suspensa | "Com o maior aplicativo contábil do Brasil atendendo zero vírgula sete por cento delas." | 0,7% sobre o mapa |
 | 54-60s | percussão entra | "Esse mercado não está consolidado. Ele ainda está por ser servido." | mapa quase todo apagado |
 | 60-72s | sobe forte | "Primeiro Belo Horizonte. Depois Minas. Depois o Brasil inteiro. Mesmo motor, mesmo preço fechado, mesmo contador de verdade atrás. Com 22 anos de contabilidade real por baixo." | três ondas no mapa |
-| 72-78s | topo | "Não é uma contabilidade de bairro querendo crescer. É um produto nacional que escolheu onde nascer." | Brasil aceso inteiro |
-| 78-80s | **silêncio** | (wordmark entrando, AI em coral) | wordmark |
-| 80-84s | hit final | "Legalizai. Vai, legaliza aí. Estamos prontos para ser o maior aplicativo contábil do Brasil." | assinatura |
+| 72-84s | topo | "Não vai ser uma contabilidade de bairro querendo crescer. Vai ser um produto nacional que escolheu onde nascer. E estamos prontos para ser o maior aplicativo contábil do Brasil." | Brasil aceso inteiro |
+| 84-86s | **silêncio** | (nada) | preto |
+| 86-88s | hit final | "Vai, legaliza **aí**." | logo entrando, **AI acende em coral** na sílaba tônica |
 
 ### Texto corrido (locução)
 
 > "Belo Horizonte abre uma empresa em 11 horas. É a abertura mais rápida do Brasil.
 >
-> Na terceira capital que mais abre empresa no país. A gente não começou aqui porque é pequeno. Começou porque é o campo de prova mais rápido que existe.
+> Na terceira capital que mais abre empresa no país. E a gente não vai começar aqui porque é pequeno. Vai começar porque é o campo de prova mais rápido que existe.
 >
-> Se o produto aguenta a cidade que mais acelera, ele aguenta o país.
+> Se o produto aguentar a cidade que mais acelera, ele aguenta o país.
 >
 > E o país são 7,4 milhões de empresas no Simples Nacional.
 >
@@ -174,14 +195,14 @@ tags: [marca, copy, pitch, video, mercado, escalada]
 >
 > Primeiro Belo Horizonte. Depois Minas. Depois o Brasil inteiro. Mesmo motor, mesmo preço fechado, mesmo contador de verdade atrás. Com 22 anos de contabilidade real por baixo.
 >
-> Não é uma contabilidade de bairro querendo crescer. É um produto nacional que escolheu onde nascer.
+> Não vai ser uma contabilidade de bairro querendo crescer. Vai ser um produto nacional que escolheu onde nascer. E estamos prontos para ser o maior aplicativo contábil do Brasil.
 >
-> Legalizai. Vai, legaliza aí.
+> *(silêncio)*
 >
-> Estamos prontos para ser o maior aplicativo contábil do Brasil."
+> Vai, legaliza **aí**."
 
 **O gancho de retenção:** o mapa. É a única em que a escalada é **visível** sem depender da locução, e é a única que responde antes de perguntarem a objeção nº1 de investidor pra negócio regional: *"isso escala fora de BH?"*
-**Risco:** a mais longa. Se precisar cortar, o bloco de 22-32s ("se aguenta a cidade que mais acelera") é o que sai com menos perda, porque a ideia se repete no fecho.
+**Risco:** a mais longa. Se precisar cortar, o bloco de 22-32s ("se o produto aguentar a cidade que mais acelera") é o que sai com menos perda, porque a ideia se repete no fecho.
 
 ---
 
@@ -197,7 +218,7 @@ tags: [marca, copy, pitch, video, mercado, escalada]
 | Regionais usados | 11h + 3ª capital | 11h + 100 mil no perfil | 11h + 3ª capital |
 | Responde "escala fora de BH?" | de raspão | não | **é a espinha** |
 | Carga emocional | **alta** (tem personagem) | média (tem tensão) | média-alta (tem épico) |
-| Duração | 78s | 76s | 84s |
+| Duração | 78s | 83s | 88s |
 | Risco | precisa de imagem boa nos 24s iniciais | soa publicitário numa banca seca | a mais longa |
 
 **Fusões que já dá pra ver:**

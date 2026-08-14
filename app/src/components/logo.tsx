@@ -3,7 +3,7 @@
  * LOGO — Legalizai, em componente.
  * ═══════════════════════════════════════════════════════════════════════════
  * Fonte: marca/identidade-visual/ (3 SVGs recebidos 21/07: principal +
- * negativa-clara + negativa-escura). Wordmark passou de "Legalizei" pra
+ * negativa-clara + negativa-escura). Wordmark passou de "Legalizai Story Book" pra
  * "Legalizai" (o "ai" final vem em coral). O ícone é o mesmo quadrado coral com
  * check; o vetor foi reexportado numa construção nova (check em knockout).
  *

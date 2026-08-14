@@ -29,7 +29,7 @@ tags: [reuniao, produto, backend, escopo, fiscal, ux, decisao]
 | 6 | Prolabore padronizado (salário mínimo) + i-info | Produto |
 | 7 | Double check final + reforço positivo + resumo PDF (não passo a passo) c/ código de serviço | UX |
 | 8 | WhatsApp central (API Business); email backup | Comms |
-| 9 | legalizei.app oficial + 3 correlatos redirect | Infra |
+| 9 | legalizai-story-book.app oficial + 3 correlatos redirect | Infra |
 | 10 | Onboard antes do pagamento (só cobra após validar CNAE) | Produto |
 | 11 | Cancelamento mensal sem parcial; começar semestral (evitar anual/estorno); 30 dias sem multa | Pagamento |
 | 12 | Dashboard CRM/Kanban c/ automação condicional (card pula → WhatsApp) | Produto |
@@ -42,9 +42,9 @@ tags: [reuniao, produto, backend, escopo, fiscal, ux, decisao]
 | 19 | Contratar operador (branch→review→merge) | Time |
 
 ## 📋 Tarefas geradas
-Ver macro completo (abertas/criadas/finalizadas) no [[kanban-legalizei]] e a priorização espinha×enfeite no [[2026-07-13-plano-sequencia-pm]].
+Ver macro completo (abertas/criadas/finalizadas) no [[kanban-legalizai-story-book]] e a priorização espinha×enfeite no [[2026-07-13-plano-sequencia-pm]].
 
 > ✏️ **Nota de normalização (2026-07-14):** o termo "KINAE" (que aparecia nesta ata via transcrição Plaud) foi padronizado como **CNAE** em todo o vault — não era conceito distinto, era o CNAE atendido / CNAE principal. Termo aposentado.
 
 ## Links
-- [[2026-07-13-plano-sequencia-pm]] · [[kanban-legalizei]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[cnae-atendidos-e-nao-atendidos]] · [[evolucao-para-mauro]] · [[HOME]]
+- [[2026-07-13-plano-sequencia-pm]] · [[kanban-legalizai-story-book]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[cnae-atendidos-e-nao-atendidos]] · [[evolucao-para-mauro]] · [[HOME]]

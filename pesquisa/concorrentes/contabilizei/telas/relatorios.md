@@ -39,7 +39,7 @@ tags: [concorrente, ux]
 - **Sem orientação de uso**: qual relatório o banco pede pra crédito? Qual o contador externo precisa? Nenhuma pista.
 - **Sem feedback de geração** ("preparando seu relatório…") nem confirmação pós-download.
 
-## 🎯 Contraproposta Legalizei
+## 🎯 Contraproposta Legalizai Story Book
 - **Cada relatório com uma linha humana**: "DRE — quanto sua empresa lucrou no período", "Balancete — foto das contas do mês", "Razão — histórico detalhado de cada conta". Traduzir contabilês em resultado.
 - **Prévia na tela antes de baixar** (ao menos totais/gráfico-resumo), com opção de baixar PDF/Excel — não obrigar download às cegas.
 - **Etiquetas de uso**: "Peça este pro banco", "Este o contador precisa", "Este pra sócios" — orientar a decisão.

@@ -21,4 +21,4 @@ tags: []
 (decisões e surpresas durante — vira insumo do log)
 
 ## Links
-- [[kanban-legalizei]] · [[HOME]]
+- [[kanban-legalizai-story-book]] · [[HOME]]

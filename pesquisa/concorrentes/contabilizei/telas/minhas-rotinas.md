@@ -38,9 +38,9 @@ tags: [concorrente, ux]
 - Mesmo defeito de mobile da home: **nav inferior sobrepõe conteúdo**.
 - Jargão ("Competência", "DARF") no card que deveria ser o mais tranquilizador.
 
-## 🎯 Contraproposta Legalizei
-- **"Minhas Rotinas" = uma tela dedicada e focada**, não a home. Uma **timeline/checklist do mês**: cada obrigação com estado (✅ feito pela Legalizei / ⏳ aguardando você / ⚠️ vence dia X), valor e ação — sem redundância de "ir para a central".
-- **Inverter o ônus**: mostrar primeiro o que a Legalizei JÁ fez por você (proatividade visível), depois o que depende do cliente. Isso vira diferencial vs "aqui estão suas pendências".
+## 🎯 Contraproposta Legalizai Story Book
+- **"Minhas Rotinas" = uma tela dedicada e focada**, não a home. Uma **timeline/checklist do mês**: cada obrigação com estado (✅ feito pela Legalizai Story Book / ⏳ aguardando você / ⚠️ vence dia X), valor e ação — sem redundância de "ir para a central".
+- **Inverter o ônus**: mostrar primeiro o que a Legalizai Story Book JÁ fez por você (proatividade visível), depois o que depende do cliente. Isso vira diferencial vs "aqui estão suas pendências".
 - **Zero cross-sell** nesta tela — é o santuário do job "estou em dia?".
 - **Calendário + alertas mantidos** (são bons), com linguagem traduzida e mobile sem sobreposição. Superar os 6.3 é fácil: com tela dedicada + transparência do que já foi feito, alvo ~8.5.
 

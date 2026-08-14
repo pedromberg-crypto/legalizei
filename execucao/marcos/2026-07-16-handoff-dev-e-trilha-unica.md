@@ -55,9 +55,9 @@ tags: [produto, flow, handoff, dev, decisao, ux, motor, repo]
 
 **Consequência:** a coorte **não é condicional** — zero fork novo, zero tela nova. A contagem de 22/23 telas não muda.
 
-## 4. 📦 Handoff pro dev — repo `base-flow-legalizei`
+## 4. 📦 Handoff pro dev — repo `base-flow-legalizai-story-book`
 
-**https://github.com/pedromberg-crypto/base-flow-legalizei** · **privado** · 33 arquivos · sob a conta do Pedro.
+**https://github.com/pedromberg-crypto/base-flow-legalizai-story-book** · **privado** · 33 arquivos · sob a conta do Pedro.
 
 | Pasta | O que é |
 |---|---|

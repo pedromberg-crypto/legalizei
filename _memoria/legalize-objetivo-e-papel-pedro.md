@@ -9,7 +9,7 @@ metadata:
 
 **Objetivo final (declarado pelo Pedro em 2026-07-07):** criar MVP de app de contabilidade online similar à Contabilizei (mesmo modelo validado, executado melhor: UX + transparência de preço + nicho serviço PJ Simples).
 
-**Nome do produto: LEGALIZEI** (decidido 2026-07-07, pós-fechamento; antes era "Legalize Digital"). Pasta física continua `legalize/`. Projeto gerido em **vault Obsidian** = a própria pasta (HOME.md é o hub; templates em `_templates/`; Pedro nunca usou Obsidian — orientar no básico quando precisar).
+**Nome do produto: LEGALIZAI STORY BOOK** (decidido 2026-07-07, pós-fechamento; antes era "Legalize Digital"). Pasta física continua `legalize/`. Projeto gerido em **vault Obsidian** = a própria pasta (HOME.md é o hub; templates em `_templates/`; Pedro nunca usou Obsidian — orientar no básico quando precisar).
 
 **Papel do Pedro (esclarecido 2026-07-07):** sociedade desde o início (framework §8 da base mantido — equity não espera fase 0). "PM primeiro" = primeira FUNÇÃO operacional dele, não sequência de equity. CEO/Sócio consolida quando projeto robusto.
 

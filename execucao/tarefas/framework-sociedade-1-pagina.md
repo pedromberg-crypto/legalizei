@@ -15,4 +15,4 @@ Documento de 1 página na mão do Mauro (poste longo: entrega S1, cozinha S2–S
 - [ ] Entregar ao Mauro e abrir a conversa (sem pressão de resposta) 📅 2026-07-11
 
 ## Links
-- [[kanban-legalizei]] · [[BASE-ESTRATEGICA]]
+- [[kanban-legalizai-story-book]] · [[BASE-ESTRATEGICA]]

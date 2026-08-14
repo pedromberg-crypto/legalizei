@@ -110,7 +110,7 @@ Produto novo, sem base de clientes ainda → mais peso em prova/diferencial do q
 | Gatilho | Job emocional/funcional | Persona | Contexto sem data |
 |---|---|---|---|
 | Medo de errar com o fisco | ansiedade → alívio | A, B, C | qualquer momento pré/pós-abertura |
-| Alívio da conquista ("Legalizei!") | orgulho, celebração | todas | pós-abertura |
+| Alívio da conquista ("Legalizai Story Book!") | orgulho, celebração | todas | pós-abertura |
 | Vergonha de não entender contabilês | evitar humilhação | B, C principalmente | dúvida cotidiana |
 | Urgência de prazo bloqueado (contrato/cliente esperando CNPJ) | ansiedade de perder oportunidade | volante A1 | evento externo (contrato na mão) |
 | Orgulho de "virar PJ/empresária" | identidade, status | A, B | marco pessoal |

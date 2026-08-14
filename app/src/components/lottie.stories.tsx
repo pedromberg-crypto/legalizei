@@ -16,9 +16,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Paperplane: Story = {
-  args: { path: "/lottie/paperplane-legalizei.json", fps: 50, className: "w-40 h-40" },
+  args: { path: "/lottie/paperplane-legalizai-story-book.json", fps: 50, className: "w-40 h-40" },
 };
 
 export const ContentMod: Story = {
-  args: { path: "/lottie/content-mod-legalizei.json", fps: 30, className: "w-40 h-40" },
+  args: { path: "/lottie/content-mod-legalizai-story-book.json", fps: 30, className: "w-40 h-40" },
 };

@@ -7,7 +7,7 @@ metadata:
   originSessionId: d8a3e7a3-16ca-4581-bed7-1c454d019eb2
 ---
 
-**A lista do que a Legalizei atende nunca foi uma lista do que a Legalizei atende.** Descoberto 2026-07-17 → [[legalize-mvp-so-servico-cnae]] (que registra o corte de 15/07 feito **em cima desta base furada**).
+**A lista do que a Legalizai Story Book atende nunca foi uma lista do que a Legalizai Story Book atende.** Descoberto 2026-07-17 → [[legalize-mvp-so-servico-cnae]] (que registra o corte de 15/07 feito **em cima desta base furada**).
 
 **Causa-raiz — ausência de recusa lida como presença de atendimento:**
 1. **Não existe página de CNAEs atendidos na Contabilizei.** Só `suporte.contabilizei.com.br/.../204678699-Atividades-não-atendidas`: **17 categorias RECUSADAS**, por categoria, não por CNAE.

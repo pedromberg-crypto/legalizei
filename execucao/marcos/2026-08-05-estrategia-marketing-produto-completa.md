@@ -8,7 +8,7 @@ tags: [marco, marketing, estrategia]
 
 # 🏁 Marco — Estratégia de marketing/produto completa (14/14 slots)
 
-> 26º flow. Instanciado o template `pessoal/_templates/estrategia-digital` (14 documentos, 4 fases) inteiro dentro do vault Legalizei, primeiro fazendo gap-analysis do que já existia, depois preenchendo os 7 slots que faltavam e corrigindo 3 slots que existiam mas continham erro.
+> 26º flow. Instanciado o template `pessoal/_templates/estrategia-digital` (14 documentos, 4 fases) inteiro dentro do vault Legalizai Story Book, primeiro fazendo gap-analysis do que já existia, depois preenchendo os 7 slots que faltavam e corrigindo 3 slots que existiam mas continham erro.
 
 ## O que foi feito
 

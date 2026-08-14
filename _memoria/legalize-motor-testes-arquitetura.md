@@ -64,7 +64,7 @@ Reunião "Rua Satélite 9" (28/07) travou 12 decisões e todas foram implementad
 veredito 🔴 virou 3 vias (waitlist/Mauro/descarta, não 2) · N6 virou front-load de dados
 pessoais (N10 vira confirmação) · N13 IPTU obrigatório · REC ganhou retry automático. As 19
 personas continuam testando o flow ANTIGO. Reconciliar = revalidar persona por persona, não
-é find-replace. Ficou como dívida explícita no commit + PR #1 de `legalizei-app`. →
+é find-replace. Ficou como dívida explícita no commit + PR #1 de `legalizai-story-book-app`. →
 [[legalize-reuniao-rua-satelite-9]]
 
 ## 🔴 Buracos conhecidos (auditoria 16/07)
@@ -78,7 +78,7 @@ personas continuam testando o flow ANTIGO. Reconciliar = revalidar persona por p
   não na nossa (a Izabela estima **5 dias**; a JUCEMG não tem API).
 
 ## 📦 Contrato com o dev — DESATUALIZADO
-O motor foi pro repo privado `base-flow-legalizei` em 15/07, onde **"as 14 personas são o
+O motor foi pro repo privado `base-flow-legalizai-story-book` em 15/07, onde **"as 14 personas são o
 critério de aceite"**. Hoje são **19, a ordem é outra, e existe um flow #2**.
 🔴 **O dev precisa ser avisado.** → [[legalize-handoff-dev-repo]]
 **Anti-drift:** contradição motor × spec → **motor ganha**.

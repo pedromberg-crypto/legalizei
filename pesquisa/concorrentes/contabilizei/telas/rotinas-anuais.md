@@ -38,9 +38,9 @@ tags: [concorrente, ux]
 - **Espaço vazio** grande abaixo do card (mesma sensação de inacabado da tela mensal).
 - **Mobile aperta a tabela**: reflow em colunas espremidas com quebra de texto; abas superiores transbordam sem scroll claro.
 
-## 🎯 Contraproposta Legalizei
+## 🎯 Contraproposta Legalizai Story Book
 - **Manter e ampliar o padrão verde de confiança** — é o melhor da Contabilizei. "✅ Declaração anual (DEFIS) transmitida em DD/MM · Baixar comprovante".
-- **Explicar a obrigação inline**: "DEFIS — declaração anual obrigatória do Simples que informa seu faturamento à Receita. A Legalizei já transmitiu por você." Tooltip + 1 linha. Transparência real, não sigla seca.
+- **Explicar a obrigação inline**: "DEFIS — declaração anual obrigatória do Simples que informa seu faturamento à Receita. A Legalizai Story Book já transmitiu por você." Tooltip + 1 linha. Transparência real, não sigla seca.
 - **Mobile: virar cartão, não tabela espremida** — status, data e botão "Baixar" empilhados e tocáveis; abas em scroll horizontal.
 - **Preencher o vazio** com histórico dos anos anteriores (2024, 2023...) todos verdes = prova de continuidade. Empatar/superar os 6.5 é viável mirando ~8.5 só com tradução + mobile em cartão.
 

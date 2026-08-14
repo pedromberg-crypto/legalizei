@@ -8,7 +8,7 @@ etapa: design-system
 tags: [marca, design, design-system, tokens, shell, arquetipos, ux]
 ---
 
-# 🧱 Design System — Legalizei (fundação)
+# 🧱 Design System — Legalizai Story Book (fundação)
 
 > **O que é:** a fundação que vem ANTES das telas. Nasce do debate de 16/07 (método): construir tela por tela dá um amontoado; construir DS puro dá componente que ninguém usa. Como o protótipo (8 telas) + a LP já pagaram a fase de descoberta, o momento é de **extrair**, não recomeçar.
 >

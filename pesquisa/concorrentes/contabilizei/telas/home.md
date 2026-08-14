@@ -42,7 +42,7 @@ tags: [concorrente, ux]
 - Jargão sem tradução ("DARF UN...", "Competência", "Pró-labore ideal").
 - **Mobile com defeito**: barra de nav inferior flutuante sobrepõe conteúdo do card de Notas fiscais; ordem dos cards muda vs desktop sem lógica clara.
 
-## 🎯 Contraproposta Legalizei
+## 🎯 Contraproposta Legalizai Story Book
 - **Home = 1 pergunta respondida: "o que preciso fazer agora e quanto vou pagar?"** Um card-herói só: próxima obrigação, valor previsto, prazo e botão de ação. Zero banner de cobrança na entrada.
 - **Cortar cross-sell da home**: nenhum anúncio de app dentro do card do banco; mostrar saldo/extrato de verdade. Upsell vive numa aba separada, não competindo com o job.
 - **Traduzir tudo**: "DARF" → "Imposto federal (DARF)" com tooltip; "Pró-labore" → "Seu salário de sócio". Transparência = explicar, não só exibir.

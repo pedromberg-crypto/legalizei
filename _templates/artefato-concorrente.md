@@ -17,7 +17,7 @@ tags: [concorrente]
 
 ## 💡 Leitura estratégica
 - O que isso revela do playbook deles:
-- O que copiamos / evitamos no Legalizei: #insight
+- O que copiamos / evitamos no Legalizai Story Book: #insight
 
 ## Links
 - [[contabilizei]] (ou hub do concorrente) · [[HOME]]

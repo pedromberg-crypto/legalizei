@@ -8,7 +8,7 @@ tags: [produto, gestao-interna, operacao, kanban, leads, certificado, parceiro]
 
 # 🗂️ Spec — Kanban de leads (gestão operacional) + funil do parceiro do certificado
 
-> **O que é:** o board operacional que acompanha **cada lead/cliente** pelas etapas de abertura, do pagamento até a empresa ativa. ≠ do [[spec-dashboard-adm-metricas]] (que é métrica agregada), ≠ do [[kanban-time]] (tarefas do time dev), ≠ do [[kanban-legalizei]] (pessoal do Pedro). Este é o **pipeline vivo de clientes** que um **operador (contador)** trabalha.
+> **O que é:** o board operacional que acompanha **cada lead/cliente** pelas etapas de abertura, do pagamento até a empresa ativa. ≠ do [[spec-dashboard-adm-metricas]] (que é métrica agregada), ≠ do [[kanban-time]] (tarefas do time dev), ≠ do [[kanban-legalizai-story-book]] (pessoal do Pedro). Este é o **pipeline vivo de clientes** que um **operador (contador)** trabalha.
 >
 > **Princípio central — dividir por DONO DA PAUSA:** a única pergunta do operador o dia todo é *"a bola está no lado de quem?"*. A coluna responde isso; o passo do flow vai no card.
 >

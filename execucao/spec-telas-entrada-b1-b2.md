@@ -116,9 +116,9 @@ tags: [produto, ux, telas, spec, onboarding, entrada, b1, b2]
 |---|---|---|---|
 | Endereço da empresa | input + CEP | CEP válido; nº obrigatório | Guarda índice cadastral IPTU (p/ registro BH) |
 | Índice cadastral IPTU | input | Formato a validar; 🟡 opcional se não tem | Explica onde achar (carnê IPTU) |
-| **Upsell: endereço fiscal Legalizei** | oferta (toggle "usar endereço próprio" × "quero um endereço") | **Não bloqueia** — só oferece; seguir em frente independe da escolha | Se "não tenho / não quero usar o meu" → oferece add-on (~R$60/mês 🟡). **Salva flag no dossiê** + **injeta automático no plano do B3**. Resolve gargalo "sem endereço comercial" |
+| **Upsell: endereço fiscal Legalizai Story Book** | oferta (toggle "usar endereço próprio" × "quero um endereço") | **Não bloqueia** — só oferece; seguir em frente independe da escolha | Se "não tenho / não quero usar o meu" → oferece add-on (~R$60/mês 🟡). **Salva flag no dossiê** + **injeta automático no plano do B3**. Resolve gargalo "sem endereço comercial" |
 | Capital social | input R$ | > 0; valor real | IA sugere faixa coerente; alerta se muito baixo/alto |
-| Tipo de endereço | dropdown (próprio/coworking/virtual/fiscal-Legalizei) | — | Afeta viabilidade em BH (flag p/ blocos futuros) |
+| Tipo de endereço | dropdown (próprio/coworking/virtual/fiscal-Legalizai Story Book) | — | Afeta viabilidade em BH (flag p/ blocos futuros) |
 
 ### Tela 10 — 2.5 CNAE secundários
 | Campo/Elemento | Entrada | Validação & margem de erro | IA / sugestão / microdetalhe |
@@ -180,7 +180,7 @@ tags: [produto, ux, telas, spec, onboarding, entrada, b1, b2]
 | Resumo de tudo | leitura | Campos faltando → destaca e leva de volta ao passo | Cards por seção |
 | Editar por seção | tap | — | Deep-link pro passo, volta pra revisão |
 | Salvar & retomar | ação | Estado persistido (sobrevive dias) | Retoma idempotente. **Idempotência visível (UX-38):** ao retomar, dizer "seu progresso está salvo, nada foi cobrado nem aberto em duplicidade" — o motor já garante; a UI passa a comunicar |
-| **Dossiê exportável (UX-34)** | botão "baixar meu enquadramento" | — | Generaliza a prova do CNAE ótimo (UX-26) pra **todo o enquadramento**: PDF com CNAE + natureza + anexo estimado + **por que** cada escolha (Fator R, pró-labore, secundários). Vira defesa pra quem **sai de outro contador** e quer mostrar que a Legalizei fez certo. Reaproveita a trilha de auditoria do B2 |
+| **Dossiê exportável (UX-34)** | botão "baixar meu enquadramento" | — | Generaliza a prova do CNAE ótimo (UX-26) pra **todo o enquadramento**: PDF com CNAE + natureza + anexo estimado + **por que** cada escolha (Fator R, pró-labore, secundários). Vira defesa pra quem **sai de outro contador** e quer mostrar que a Legalizai Story Book fez certo. Reaproveita a trilha de auditoria do B2 |
 | "Está tudo certo" | tap | Só habilita com dossiê completo | Handoff pro B3; economia do Fator R vira gancho |
 
 ---
@@ -203,13 +203,13 @@ tags: [produto, ux, telas, spec, onboarding, entrada, b1, b2]
 - **🟡 Dia-2 / "e agora?" (UX-19 — vive no PORTAL, sem spec ainda):** o flow **não pode acabar no troféu** "empresa ativa". A ativação é uma **ponte**, não a linha de chegada: o cliente precisa saber **quando emite a 1ª nota, quando vence o 1º DAS, onde está o certificado**. Prever handoff ativo pro portal + (leigo/Cida) **tutorial guiado da 1ª nota**. Diretriz gravada; tela concreta = spec do portal.
 - **🟡 Co-founder / 2º sócio assina (UX-20 — vive no B4, sem spec ainda):** o fluxo é **single-user**, mas o 2º sócio **confirma dados e assina o contrato no GOV.BR** no registro. Prever **convite pro 2º sócio** (link próprio pra ele confirmar/assinar) e **estado visível pros dois** — senão trava no registro esperando quem nunca abriu o app. Diretriz gravada; tela concreta = B4.
 - **🟡 Modo assistido / ajuda de confiança (UX-28 — arquitetura de conta):** o comportamento real da persona leiga (Cida) é **passar o app pra filha terminar**. Prever handoff "**ajuda de alguém de confiança**": um parente continua de onde parou, **sem recomeçar e sem a titular perder o controle da conta**. Diretriz gravada; depende de decisão de arquitetura de conta.
-- **🟡 Procuração e-CAC explicada (UX-31 — vive no B4.5):** o ato é opaco pro leigo ("estou dando poderes pra quem?"). Uma linha antes do aceite: **"é o que deixa o Legalizei pagar seu DAS por você — com limite e revogável quando quiser"**. Diretriz gravada; tela concreta = B4.5.
+- **🟡 Procuração e-CAC explicada (UX-31 — vive no B4.5):** o ato é opaco pro leigo ("estou dando poderes pra quem?"). Uma linha antes do aceite: **"é o que deixa o Legalizai Story Book pagar seu DAS por você — com limite e revogável quando quiser"**. Diretriz gravada; tela concreta = B4.5.
 - **Re-entrada revalida (UX-23):** ao **salvar & retomar** após pausa longa, além de restaurar o estado, **revalidar dados perecíveis** (simulação fiscal, disponibilidade de nome, situação de CPF) e sinalizar o que mudou. Retomar não é só "voltar onde estava" — é "voltar com os números de hoje".
 
 ## 🟡 Pendências desta spec
 - ~~Limite de sócios: 3 ou 2?~~ ✅ **travado em 2** (15/07).
 - ~~Valores fiscais vigentes (salário mín, teto INSS)~~ ✅ **resolvido** em [[fiscal-simples-bh-2026]] CONSOLIDADO: mín R$1.621 · teto INSS R$8.475,55 · INSS máx R$932,31/mês · IRRF isento ~R$5k (reconferir jan/27).
-- Preço do endereço fiscal Legalizei (~R$60 benchmark, definir o nosso)
+- Preço do endereço fiscal Legalizai Story Book (~R$60 benchmark, definir o nosso)
 - Provider da validação de CPF/situação cadastral (mesmo pool do cartão CNPJ)
 - Política de senha do login
 - **Fila-Larissa (impacta o simulador 2.8):** (A) mecânica Fator R meses 2–12 · (B) **CPP-no-DAS entra no numerador?** (muda o pró-labore ótimo) · (C) FS12 regime de caixa (COSIT 17/2021). Ver tabela em [[perguntas-larissa-fiscal]].

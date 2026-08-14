@@ -23,7 +23,7 @@ import { Lottie } from "@/components/lottie";
 const D: DadosSaida = {
   // 🆕 04/08 — mesmo teste do Pedro: ícone "Alert" (Lottie) recolorido pro
   // nosso azul de status, no lugar do símbolo padrão de pessoa.
-  icone: <Lottie path="/lottie/alert-legalizei.json" fps={30} className="h-[125px] w-[125px]" />,
+  icone: <Lottie path="/lottie/alert-legalizai-story-book.json" fps={30} className="h-[125px] w-[125px]" />,
   tag: "CNPJ irregular",
   titulo: "Essa empresa precisa regularizar antes de migrar",
   explica:

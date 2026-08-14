@@ -38,7 +38,7 @@ tags: [concorrente, ux]
 - **Estado vazio desperdiçado**: uma conta e um oceano de branco. Nenhum próximo passo sugerido ("conectar outro banco?", "ver extrato?").
 - **Sem prévia de saldo/última sincronização** na própria linha — o dado mais útil (dinheiro e frescor) não aparece.
 
-## 🎯 Contraproposta Legalizei
+## 🎯 Contraproposta Legalizai Story Book
 - Tela de conta = **extrato de verdade na primeira dobra**, não só cadastro. Saldo, última sincronização ("atualizado há 2h") e últimos lançamentos visíveis sem clique.
 - Trocar "Data Saldo Inicial" por **"Conciliação começa em"** com tooltip humano ("a partir dessa data a gente concilia suas transações automaticamente").
 - Badge de integração com **microcopy de reforço** ("Integrada — extrato sincroniza sozinho, você não importa nada").

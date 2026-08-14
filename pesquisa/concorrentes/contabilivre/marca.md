@@ -84,12 +84,12 @@ tags: [concorrente, marca]
 - Excesso de verde sem hierarquia forte pode diluir qual CTA é o principal.
 - Página **longa** (7.816px) com muita repetição — risco de fadiga antes da conversão.
 
-## 🎯 Aprendizado pro Legalizei
-1. **VERDE ESTÁ LOTADO — e é sinal de "player pequeno" nesse mercado.** Cruzando o capture: ContaJá (`#b1ce0b` lima) **e** Contabilivre (`#57d300` verde) — os **dois challengers menores** — usam verde-limão. O **líder** (Contabilizei) usa **ciano+navy** = escala/confiança. Verde-limão vibrante virou, na prática, **cor de challenger orçamento**. Legalizei **não deve** entrar de verde-limão: cola visualmente com os menores e herda a percepção de porte pequeno.
-2. **Um motivo visual único pode carregar uma marca inteira — se sistematizado.** O "#" da Contabilivre é a melhor ideia da marca (nome→hashtag→movimento→comunidade). Legalizei deveria buscar **um device proprietário** desse tipo (idealmente saindo do próprio nome "Legaliz*e*i"), mas **executá-lo com rigor de sistema**, coisa que a Contabilivre não fez.
-3. **Polish = confiança, e em contabilidade isso não é negociável.** Azul-default e vermelho-puro custam credibilidade. Legalizei mexe com a vida fiscal/legal do cliente; a barra de acabamento tem que ser mais alta que a dos concorrentes menores — é aí que se ganha percepção de "grande/seguro".
+## 🎯 Aprendizado pro Legalizai Story Book
+1. **VERDE ESTÁ LOTADO — e é sinal de "player pequeno" nesse mercado.** Cruzando o capture: ContaJá (`#b1ce0b` lima) **e** Contabilivre (`#57d300` verde) — os **dois challengers menores** — usam verde-limão. O **líder** (Contabilizei) usa **ciano+navy** = escala/confiança. Verde-limão vibrante virou, na prática, **cor de challenger orçamento**. Legalizai Story Book **não deve** entrar de verde-limão: cola visualmente com os menores e herda a percepção de porte pequeno.
+2. **Um motivo visual único pode carregar uma marca inteira — se sistematizado.** O "#" da Contabilivre é a melhor ideia da marca (nome→hashtag→movimento→comunidade). Legalizai Story Book deveria buscar **um device proprietário** desse tipo (idealmente saindo do próprio nome "Legaliz*e*i"), mas **executá-lo com rigor de sistema**, coisa que a Contabilivre não fez.
+3. **Polish = confiança, e em contabilidade isso não é negociável.** Azul-default e vermelho-puro custam credibilidade. Legalizai Story Book mexe com a vida fiscal/legal do cliente; a barra de acabamento tem que ser mais alta que a dos concorrentes menores — é aí que se ganha percepção de "grande/seguro".
 4. **Poppins é o default do setor — fuja da tipografia genérica.** Contabilivre, e boa parte do mercado, terceiriza personalidade pra cor porque a fonte não diz nada. Uma escolha tipográfica com caráter (mantendo legibilidade) já diferencia de graça.
-5. **O ângulo emocional certo existe e está sub-explorado.** "Livre/leveza" prova que dá pra vender **emoção** (não débito/crédito) nessa categoria. Legalizei pode ficar com um território **adjacente e mais forte** — ex.: *tranquilidade/estar em dia/regularidade* ("legalizado, sem medo") — sem repetir "liberdade" nem a cor.
+5. **O ângulo emocional certo existe e está sub-explorado.** "Livre/leveza" prova que dá pra vender **emoção** (não débito/crédito) nessa categoria. Legalizai Story Book pode ficar com um território **adjacente e mais forte** — ex.: *tranquilidade/estar em dia/regularidade* ("legalizado, sem medo") — sem repetir "liberdade" nem a cor.
 
 ## Links
 - [[contabilivre]] · [[referencias]] · [[conceito-marca]]

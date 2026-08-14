@@ -42,7 +42,7 @@ tags: [concorrente, ux]
 - **Sem prova concreta**: promete "taxa zero em diversos serviços" mas quais? Tabela real de tarifas não aparece — fica na promessa.
 - **Mobile longuíssimo** e botão flutuante encosta no hero.
 
-## 🎯 Contraproposta Legalizei
+## 🎯 Contraproposta Legalizai Story Book
 - Se formos oferecer conta/parceria bancária, apresentar como **oferta honesta com tabela de tarifas real e comparativo** ("no seu banco hoje vs. aqui"), não como sermão de benefícios.
 - **Transparência radical**: mostrar exatamente o que é grátis e o que não é, sem "diversos serviços".
 - Manter o **bloco de segurança/anti-phishing** — é padrão-ouro de confiança e barato de copiar.

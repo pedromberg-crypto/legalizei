@@ -6,7 +6,7 @@ etapa: fases-0-1
 tags: [dev, design, cor, tipografia, tokens]
 ---
 
-# 🎨 Legalizei — Cores + Fonte (handoff pro protótipo)
+# 🎨 Legalizai Story Book — Cores + Fonte (handoff pro protótipo)
 
 > Pra iniciar as **fases 0 e 1** já no visual certo. São **tokens v1 de debate** — os valores finais entram no Design System, mas estes já servem pra prototipar. Logo/branding completo vem depois; aqui é só o que você pediu: **cor + fonte**.
 

@@ -15,7 +15,7 @@ Apresentações + descoberta do sistema interno + alinhamento de visão do app. 
 - **Mês 1 do Pedro Maia = imersão**: mapa de PROCESSOS (Pedro Maia) × mapa de TECNOLOGIAS (Pedro Dev) → cruzamento vira o **primeiro PRD**
 - **Mobile first** (com desktop)
 - Independência de terceiros (Domínio/Omie) como princípio de arquitetura
-- Reuniões: **sexta 10/07, 9h** (debate de tecnologias — ✅ na agenda Google "Legalizei") · ~~15/07 definição de tarefas~~ (cancelada em 08/07)
+- Reuniões: **sexta 10/07, 9h** (debate de tecnologias — ✅ na agenda Google "Legalizai Story Book") · ~~15/07 definição de tarefas~~ (cancelada em 08/07)
 - Contratação de novo membro no mês 2 (necessidade mapeada pelo Pedro Dev, alinhamento com Mauro)
 - Comunicação aberta sem restrição de horário; reuniões pontuais pra não sobrecarregar Pedro Dev
 
@@ -42,7 +42,7 @@ Apresentações + descoberta do sistema interno + alinhamento de visão do app. 
 1. **"Alvo inicial: autônomos e MEIs"** dito na reunião — 🟢 RESOLVIDO com Pedro (08/07): seguimos o líder, ICP = ME serviço/Simples, MEI fora do foco. Alinhar discurso da equipe na sexta 10/07
 2. **Correção factual pro time:** falaram "Contabilizei vendeu 25% por R$230 milhões" — o dado verificado ([[PESQUISA-MERCADO]] §G) é **Warburg Pincus ~R$700 mi por fatia minoritária (out/2024)** + SoftBank R$320 mi (2021). Ninguém repete o número errado na frente do Mauro
 3. **Infra "500–600 mil clientes, Azure/AWS"** = superdimensionado pro MLP (base/mercado: infra inicial R$250–800/mês). Escala se compra depois
-4. **Marca:** reunião usou "Legalize Digital"; decisão do Pedro (07/07) = **Legalizei**. Comunicar
+4. **Marca:** reunião usou "Legalize Digital"; decisão do Pedro (07/07) = **Legalizai Story Book**. Comunicar
 5. MLP 3 meses ≈ nosso V1, mas **sem mencionar o GATE do mês 2** — o gate é acordo com o Mauro, manter explícito com o time
 
 ## Relatório bruto (Plaud)

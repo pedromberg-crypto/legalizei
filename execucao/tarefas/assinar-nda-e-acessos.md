@@ -15,4 +15,4 @@ NDA assinado com a Legalize + lista de acessos (sistemas, Drive, dados de client
 - [ ] Lista de acessos combinada com Mauro/Léo (Leghub, Domínio, Drive, planilhas) 📅 2026-07-09
 
 ## Links
-- [[kanban-legalizei]] · [[CHECKLIST-IMERSAO-30-DIAS]]
+- [[kanban-legalizai-story-book]] · [[CHECKLIST-IMERSAO-30-DIAS]]

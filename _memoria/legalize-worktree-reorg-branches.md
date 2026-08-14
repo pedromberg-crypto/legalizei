@@ -1,6 +1,6 @@
 ---
 name: legalize-worktree-reorg-branches
-description: "layout dos worktrees do repo legalizei — branches viram irmãs do vault em _branches-legalizei/, nunca aninhadas (.obsidian é trackeado)"
+description: "layout dos worktrees do repo legalizai-story-book — branches viram irmãs do vault em _branches-legalizai-story-book/, nunca aninhadas (.obsidian é trackeado)"
 metadata: 
   node_type: memory
   type: reference
@@ -8,7 +8,7 @@ metadata:
   modified: 2026-07-23T11:53:28.675Z
 ---
 
-O repo `legalizei.git` tem 3 worktrees + 2 repos separados na pasta `pessoal/`. Reorg decidida 23/07 pra organizar.
+O repo `legalizai-story-book.git` tem 3 worktrees + 2 repos separados na pasta `pessoal/`. Reorg decidida 23/07 pra organizar.
 
 **Regra dura — `.obsidian` é TRACKEADO no git** → cada worktree carrega cópia completa do vault. Se aninhar um worktree de branch DENTRO da pasta do vault (main = `legalize`), o Obsidian indexa pra baixo e **duplica todas as notas** (`[[links]]` quebram). Então branches têm que ser **irmãs** do vault, nunca filhas.
 
@@ -16,11 +16,11 @@ O repo `legalizei.git` tem 3 worktrees + 2 repos separados na pasta `pessoal/`. 
 ```
 pessoal/
 ├── legalize/                 [main = VAULT, Obsidian abre aqui] ← intocado
-├── _branches-legalizei/      ← pasta dedicada (‗ ordena primeiro)
+├── _branches-legalizai-story-book/      ← pasta dedicada (‗ ordena primeiro)
 │      ├── debate/            [worktree debate/exploracao] ✓ movido 23/07
 │      └── dash-adm/          [worktree dash-adm] ← FALTA mover
-├── legalizei-app/            [repo SEPARADO do app UI]
-└── base-flow-legalizei/      [repo SEPARADO handoff dev]
+├── legalizai-story-book-app/            [repo SEPARADO do app UI]
+└── base-flow-legalizai-story-book/      [repo SEPARADO handoff dev]
 ```
 
 **Constraints de execução:**

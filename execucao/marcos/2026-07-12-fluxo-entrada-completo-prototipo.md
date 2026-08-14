@@ -22,7 +22,7 @@ tags: [produto, ux, prototipo, lottie, landing, decisao]
 - **Arquitetura de acesso separada:** primeiro acesso = splash → welcome → fork; retorno = login (nunca vê o welcome). "Criar conta" no login **pula o welcome** e vai direto pro fork (quem clicou já decidiu).
 - **Foto real fica pro welcome/prova ("contador de verdade"), não pro login** (login = sóbrio, alta frequência, velocidade > hero).
 - **Régua de layout sem scroll:** moldura `h-[100dvh]` + `overflow-hidden`; **`min-h-0` em TODA a cadeia flex**; um elemento `flex-1` absorve a sobra (o Lottie/avião encolhe — rubber-band). `dvh`, nunca `vh`.
-- **Lottie recolorido = trivial** quando se tem o `.json`: trocar as cores de marca (fills + effects Color Control) por coral; servir `lottie.min.js` + `*-legalizei.json` locais. Na pane do Claude o tab roda offscreen e congela o rAF → **driver manual** (`setInterval`+`goToAndStop`); no app real (RN, `lottie-react-native`) autoplay nativo. Ver [[legalize-prototipo-ux]].
+- **Lottie recolorido = trivial** quando se tem o `.json`: trocar as cores de marca (fills + effects Color Control) por coral; servir `lottie.min.js` + `*-legalizai-story-book.json` locais. Na pane do Claude o tab roda offscreen e congela o rAF → **driver manual** (`setInterval`+`goToAndStop`); no app real (RN, `lottie-react-native`) autoplay nativo. Ver [[legalize-prototipo-ux]].
 
 ## Landing page — prompt gerado
 Prompt sênior de **LP de alta conversão** pronto pra colar no **Fable** (janela limpa): validador de CNAE interativo (mesma lógica do app, dados reais), diferenciais reais, tom de voz travado, paleta+Sora+logo+gradiente, 4 Lottie por dobra, conversão pra **download App Store/Google Play**, **tudo local** (sem backend, lógica client-side). LP ainda **não construída**.

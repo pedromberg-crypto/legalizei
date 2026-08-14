@@ -55,7 +55,7 @@ TotalPass (20 mil academias) · Psicologia (4 consultas/mês) + nutrição (Cone
 | Experts R$369–869 | "Experts Essencial" R$395 na vitrine (tiers maiores não expostos aqui) |
 | Certificado só Padrão+ | Certificado grátis em TODOS |
 
-## 💡 Leitura estratégica pro Legalizei
+## 💡 Leitura estratégica pro Legalizai Story Book
 
 1. **O líder ABANDONOU a faixa abaixo de R$195.** Duas leituras possíveis (registrar as duas, decidir com dado): (a) espaço aberto embaixo pra nós; (b) SINAL de que ticket <R$195 não fecha conta com estrutura deles (nossa venda pro Mauro: nosso custo de estrutura é menor via Legalize — poderíamos viver onde eles não conseguem). O termômetro do mês 2 testa isso.
 2. **Âncora fake permanente** (~~R$280~~ → R$195, ~30% "off" nos 3 planos) — tática de vitrine deles; anti-tese da nossa transparência radical.

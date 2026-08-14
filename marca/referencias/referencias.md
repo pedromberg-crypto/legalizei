@@ -9,7 +9,7 @@ tags: [marca, design, concorrente]
 
 # 🎯 Mapa de posicionamento de marca — 6 concorrentes (síntese)
 
-> Teardown de marca dos 6 concorrentes (cores hex reais + fontes + tom + arquétipo), capturado com Playwright (CSS computado, não achismo). Teardowns completos: [[contabilizei|Contabilizei]] · [[agilize|Agilize]] · [[contaja|Contaja]] · [[facilite|Facilite]] · [[marvee|Marvee]] · [[contabilivre|Contabilivre]] (arquivo `marca.md` em cada pasta). **Esta é a síntese que arma o conceito de ID visual do Legalizei.**
+> Teardown de marca dos 6 concorrentes (cores hex reais + fontes + tom + arquétipo), capturado com Playwright (CSS computado, não achismo). Teardowns completos: [[contabilizei|Contabilizei]] · [[agilize|Agilize]] · [[contaja|Contaja]] · [[facilite|Facilite]] · [[marvee|Marvee]] · [[contabilivre|Contabilivre]] (arquivo `marca.md` em cada pasta). **Esta é a síntese que arma o conceito de ID visual do Legalizai Story Book.**
 
 ## 🎨 Mapa de COR (o dado que derrubou o "todos são azul")
 | Concorrente | Cor dominante (hex) | Território |
@@ -36,7 +36,7 @@ Todas sans-serif arredondadas/amigáveis: Lato · Museo Sans Rounded · effra ·
 | Marvee | Prestativo + Governante | BPO consultivo, premium-morno |
 | Contabilivre | Challenger ("#livre") | Comunidade, sub-executado |
 
-**Espaço vazio de arquétipo:** ninguém ocupa o **Aliado LEVE/VITORIOSO** — o tom de alívio e conquista. E "Legalizei" (1ª pessoa, passado = "eu já legalizei") é o ativo verbal perfeito pra isso — nenhum concorrente tem nome tão celebrativo.
+**Espaço vazio de arquétipo:** ninguém ocupa o **Aliado LEVE/VITORIOSO** — o tom de alívio e conquista. E "Legalizai Story Book" (1ª pessoa, passado = "eu já legalizai-story-book") é o ativo verbal perfeito pra isso — nenhum concorrente tem nome tão celebrativo.
 
 ## ⚙️ Achado transversal: a categoria é DESLEIXADA no acabamento
 Links azuis default (#0000ee) na Contaja/Contabilivre · paletas de preset do Coolors (Marvee) · fontes genéricas em todos · logos sem ideia. **Craft = confiança, e é onde os menores vazam credibilidade.** Polish impecável numa categoria de dinheiro = diferenciação quase de graça.
@@ -46,7 +46,7 @@ Self-service: Contabilizei, Agilize, Contaja. Consultivo ("fale com especialista
 
 ---
 
-## 🏆 O ESPAÇO EM BRANCO (a brecha do Legalizei)
+## 🏆 O ESPAÇO EM BRANCO (a brecha do Legalizai Story Book)
 Cruzando cor + arquétipo + craft, a recomendação de território pro conceito:
 
 1. **NÃO azul** (saturado: líder + Facilite + Contabilivre). **NÃO roxo** (Agilize é dono). **NÃO verde-limão** (importa percepção "budget/pequeno" de Contaja/Contabilivre).
@@ -55,7 +55,7 @@ Cruzando cor + arquétipo + craft, a recomendação de território pro conceito:
 4. **Craft impecável** — o diferenciador mais barato numa categoria desleixada.
 5. **Wordmark com caráter** + device proprietário com ideia (como o "." ciano do líder ou o "#" da Contabilivre, mas com rigor) — saído do nome/conceito.
 6. **Imagem humana REAL** (não stock corporativo) — a jogada certa da Facilite.
-7. **Dramatizar o momento "Legalizei"** (antes/depois, CNPJ na mão, alívio/conquista) — não planilha, não prédio.
+7. **Dramatizar o momento "Legalizai Story Book"** (antes/depois, CNPJ na mão, alívio/conquista) — não planilha, não prédio.
 
 ## Atualiza o conceito
 Isto refina [[conceito-marca]] §7 (território visual): confirma "fuja do azul" com DADO, e vai além — mapa exato do que evitar (azul/roxo/limão) e do vazio a ocupar (quente-coral ou esmeralda sério + craft + wordmark autoral).

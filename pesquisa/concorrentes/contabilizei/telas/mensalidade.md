@@ -36,7 +36,7 @@ tags: [concorrente, ux]
 - **Sem detalhamento**: nenhuma composição do valor, data de vencimento, status ou histórico visível.
 - **Momento crítico tratado como aviso passageiro** — cobrança merece uma tela dedicada e sólida, não um banner.
 
-## 🎯 Contraproposta Legalizei
+## 🎯 Contraproposta Legalizai Story Book
 - **Tela de Mensalidade dedicada e à prova de falha** (SSR/estado carregado antes de mostrar; skeleton nunca pode ser o estado final).
 - **Fatura acionável**: valor + o que compõe o plano + vencimento + status (paga/em aberto/vencida) + botões "Pagar" (Pix/cartão/boleto) + "Baixar recibo/NF" + histórico de pagamentos.
 - **Transparência total do que você paga**: "R$ X = contabilidade + emissão ilimitada de NF + apuração de impostos" — nada de valor solto.

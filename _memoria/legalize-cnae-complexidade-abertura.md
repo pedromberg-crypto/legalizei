@@ -7,7 +7,7 @@ metadata:
   originSessionId: 601a6913-bbd4-4193-878a-0bfa86ca2923
 ---
 
-Eixo de **complexidade de abertura** criado 2026-07-17 (3º flow). Responde "quais CNAEs a Legalizei abre sozinha × quais precisam de tato" — o "asterisco" da Contabilizei, reconstruído por **fonte oficial** (o dado NÃO existe no site dela).
+Eixo de **complexidade de abertura** criado 2026-07-17 (3º flow). Responde "quais CNAEs a Legalizai Story Book abre sozinha × quais precisam de tato" — o "asterisco" da Contabilizei, reconstruído por **fonte oficial** (o dado NÃO existe no site dela).
 
 **3 níveis, regra determinística re-executável** (prioridade: registro > licenciamento > liso):
 - `tato-registro` (97) = exige conselho de classe OU órgão setorial (~17 fechados: CRM/OAB/CRC/CREA/CADASTUR/PF/MEC/Bacen/CORE…).

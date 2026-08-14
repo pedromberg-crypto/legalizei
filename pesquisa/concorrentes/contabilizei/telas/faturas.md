@@ -45,7 +45,7 @@ tags: [concorrente, ux]
 - **Contabilês espalhado** (DARF, Competência) sem tooltip.
 - **Redundância**: "Rotinas Mensais" no rodapé repete ações já nos cards.
 
-## 🎯 Contraproposta Legalizei
+## 🎯 Contraproposta Legalizai Story Book
 - **Banner de fatura acionável**: "Sua mensalidade de R$ X venceu/vence dia Y" + botões "Pagar agora" e "Ver detalhes" no próprio banner (não só informar).
 - Manter e **turbinar a proatividade**: pendências críticas + previsão de imposto com explicação ("por que R$ 178,31?" → abre memória de cálculo). Transparência é nosso pilar.
 - **Zero cross-sell na primeira dobra** — dashboard é ferramenta de trabalho, não outdoor. Promo de app, se existir, vai pro rodapé.

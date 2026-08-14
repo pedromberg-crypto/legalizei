@@ -15,7 +15,7 @@ Posicionamento-âncora do site inteiro, repetido em rodapé: **"O maior escritó
 
 ## 💰 Pricing
 
-Preços **públicos e reais** (raro no setor — Facilite e outros escondem atrás de "fale com especialista"). Página `/como-funciona` traz a tabela com seletor **"Empresas de serviço | Empresas de comércio"** — e a aba default é *Empresas de serviço*, exatamente o ICP do Legalizei.
+Preços **públicos e reais** (raro no setor — Facilite e outros escondem atrás de "fale com especialista"). Página `/como-funciona` traz a tabela com seletor **"Empresas de serviço | Empresas de comércio"** — e a aba default é *Empresas de serviço*, exatamente o ICP do Legalizai Story Book.
 
 | Tier | Âncora (riscada) | Preço real | Posicionamento | Isca embutida |
 |---|---|---|---|---|
@@ -48,29 +48,29 @@ O maior aprendizado de linguagem está aqui. As perguntas do FAQ são escritas n
 - "Preciso **sair de casa** para abrir minha empresa?"
 - "Quanto em média custa um contador?" · "O que está incluso na mensalidade?"
 
-Antecipam ceticismo ("isso é real? são contadores reais?") e fricção física ("tenho que me deslocar?"). Explicam o "como funciona" em **3 passos numerados em linguagem de leigo** — (1) Orientamos você nas escolhas [CNAE, tipo de empresa, taxas]; (2) Realizamos a abertura; (3) Cuidamos da contabilidade mês a mês. Traduzem jargão (CNAE, certificado digital, Fator R) sem assumir que você sabe. Este é o modelo direto pra "linguagem humana" do Legalizei.
+Antecipam ceticismo ("isso é real? são contadores reais?") e fricção física ("tenho que me deslocar?"). Explicam o "como funciona" em **3 passos numerados em linguagem de leigo** — (1) Orientamos você nas escolhas [CNAE, tipo de empresa, taxas]; (2) Realizamos a abertura; (3) Cuidamos da contabilidade mês a mês. Traduzem jargão (CNAE, certificado digital, Fator R) sem assumir que você sabe. Este é o modelo direto pra "linguagem humana" do Legalizai Story Book.
 
 ## 🔎 Achados não solicitados (OLHO CRÍTICO)
 
 **1. O "grátis" é o cavalo de Troia do modelo de negócio — não é generosidade, é CAC.**
-"Abrir empresa grátis" está em TODO lugar. Eles dão de graça a abertura (serviço pontual, alta fricção, margem ruim) pra capturar a **assinatura mensal recorrente** (o motor de LTV). A abertura é lead-magnet/loss-leader. Toda a GTM gira nisso. Decisão obrigatória pro Legalizei: igualar o wedge do "abre grátis" ou diferenciar por outro eixo — porque contra o líder você não ganha o mesmo jogo pelo mesmo preço.
+"Abrir empresa grátis" está em TODO lugar. Eles dão de graça a abertura (serviço pontual, alta fricção, margem ruim) pra capturar a **assinatura mensal recorrente** (o motor de LTV). A abertura é lead-magnet/loss-leader. Toda a GTM gira nisso. Decisão obrigatória pro Legalizai Story Book: igualar o wedge do "abre grátis" ou diferenciar por outro eixo — porque contra o líder você não ganha o mesmo jogo pelo mesmo preço.
 
 **2. A contabilidade é só a praia de desembarque — o negócio real é virar o "SO financeiro" do PJ pequeno (e a margem está na corretagem, não nos R$195).**
-A página `/saude` revela que a Contabilizei virou marketplace: plano de saúde PJ, academias (tipo Gympass), psicologia/nutrição, Banco PJ, cobrança de clientes, certificado digital, emissor NF. A contabilidade é a porta; o dinheiro grande está na **comissão de corretagem de plano de saúde** (margem de corretor é gorda) e no bundle de benefícios. Por isso o tier destacado é o "Multibenefícios". Eles não competem por preço de mensalidade — subsidiam a mensalidade pra vender o resto. **Implicação estratégica:** brigar em R$/mês com a Contabilizei é brigar no terreno onde eles ganham dinheiro noutro lugar. O Legalizei precisa de tese própria de monetização OU aceitar competir num nicho onde escala de marketplace não importa (hiper-local, consultivo).
+A página `/saude` revela que a Contabilizei virou marketplace: plano de saúde PJ, academias (tipo Gympass), psicologia/nutrição, Banco PJ, cobrança de clientes, certificado digital, emissor NF. A contabilidade é a porta; o dinheiro grande está na **comissão de corretagem de plano de saúde** (margem de corretor é gorda) e no bundle de benefícios. Por isso o tier destacado é o "Multibenefícios". Eles não competem por preço de mensalidade — subsidiam a mensalidade pra vender o resto. **Implicação estratégica:** brigar em R$/mês com a Contabilizei é brigar no terreno onde eles ganham dinheiro noutro lugar. O Legalizai Story Book precisa de tese própria de monetização OU aceitar competir num nicho onde escala de marketplace não importa (hiper-local, consultivo).
 
 **3. Eles JÁ dominam o SEO do seu ICP exato — inclusive BH por nome.**
-A página `/contabilidade-online` não é "sobre nós": é um **hub de blog gigante** com centenas de artigos de cauda longa + calculadoras (PJ×CLT, Fator R, custo de abrir CNPJ, RPA, Reforma Tributária). E tem artigo dedicado **"Como abrir empresa em BH: tudo que você precisa saber"**, além de BH aparecer nas "cidades com condições especiais de abertura" e na lista de Minas Gerais. Ou seja: pra "abrir empresa BH" / "contador BH", a Contabilizei provavelmente já rankeia forte. **Isso é fosso.** O Legalizei não vence por SEO genérico de cauda curta contra um gigante com 10 anos de domínio — precisa de ângulo (geo-hiperlocal + conteúdo que a máquina nacional não faz: prefeitura de BH, Junta MG, alíquota ISS BH por CNAE, casos reais locais). As calculadoras deles também são captura de lead disfarçada de ferramenta grátis — padrão a copiar.
+A página `/contabilidade-online` não é "sobre nós": é um **hub de blog gigante** com centenas de artigos de cauda longa + calculadoras (PJ×CLT, Fator R, custo de abrir CNPJ, RPA, Reforma Tributária). E tem artigo dedicado **"Como abrir empresa em BH: tudo que você precisa saber"**, além de BH aparecer nas "cidades com condições especiais de abertura" e na lista de Minas Gerais. Ou seja: pra "abrir empresa BH" / "contador BH", a Contabilizei provavelmente já rankeia forte. **Isso é fosso.** O Legalizai Story Book não vence por SEO genérico de cauda curta contra um gigante com 10 anos de domínio — precisa de ângulo (geo-hiperlocal + conteúdo que a máquina nacional não faz: prefeitura de BH, Junta MG, alíquota ISS BH por CNAE, casos reais locais). As calculadoras deles também são captura de lead disfarçada de ferramenta grátis — padrão a copiar.
 
-**Bônus — fraqueza explorável:** "O maior" é escala, não intimidade. Apesar de mirar BH no SEO, não há rosto/presença local; o onboarding joga todo mundo no self-serve (escolha o plano → cadastro). Marca fria, nacional, impessoal. Sobra flanco pra um **BH-nativo, humano, que te chama pelo nome e faz onboarding consultivo** — transformando o "assessor dedicado" que eles cobram R$395 (premium) no *padrão* do Legalizei.
+**Bônus — fraqueza explorável:** "O maior" é escala, não intimidade. Apesar de mirar BH no SEO, não há rosto/presença local; o onboarding joga todo mundo no self-serve (escolha o plano → cadastro). Marca fria, nacional, impessoal. Sobra flanco pra um **BH-nativo, humano, que te chama pelo nome e faz onboarding consultivo** — transformando o "assessor dedicado" que eles cobram R$395 (premium) no *padrão* do Legalizai Story Book.
 
-## 🎯 Pro Legalizei
+## 🎯 Pro Legalizai Story Book
 
 - **Não brigue no wedge "abre grátis" pelo mesmo preço.** É a arma de aquisição do líder e ela é subsidiada por corretagem que você não tem. Escolha outro eixo: humano-por-padrão + local.
-- **Espelhe a honestidade de preço, mate o "a partir de".** A transparência (mostrar número) é força relativa da Contabilizei — mas o "ajustado conforme faturamento" ainda esconde. Legalizei pode ganhar prometendo **preço fechado, sem surpresa** ("o valor da tela é o valor da fatura").
+- **Espelhe a honestidade de preço, mate o "a partir de".** A transparência (mostrar número) é força relativa da Contabilizei — mas o "ajustado conforme faturamento" ainda esconde. Legalizai Story Book pode ganhar prometendo **preço fechado, sem surpresa** ("o valor da tela é o valor da fatura").
 - **Vire o premium deles em table stakes.** "Assessor e analista dedicados" é o tier de R$395. Faça do contato humano nomeado o baseline da marca — é o contraste mais nítido contra o gigante impessoal.
 - **Roube o padrão de FAQ na voz do medo.** Escreva o site inteiro respondendo "é confiável? são contadores de verdade? preciso me deslocar?" — não em contabilês.
 - **Ataque o SEO por geo-hiperlocal, não por cauda curta.** Conteúdo que a máquina nacional não produz: ISS por CNAE em BH, passo a passo Junta Comercial MG, alvará da prefeitura de BH. Copie o formato "calculadora grátis = captura de lead".
-- **Cuidado com o crachá CRC.** É prova de legitimidade barata e eficaz — o Legalizei precisa exibir registro CRC + rostos reais desde o dia 1, ou parece amador ao lado deles.
+- **Cuidado com o crachá CRC.** É prova de legitimidade barata e eficaz — o Legalizai Story Book precisa exibir registro CRC + rostos reais desde o dia 1, ou parece amador ao lado deles.
 
 ## Links
 - [[contabilizei]] · [[marca|referências]] · [[conceito-marca]]

@@ -1,6 +1,6 @@
 ---
 name: legalize-benchmark-padrao-195
-description: Plano Padrão R$195 da Contabilizei = régua do MLP Legalizei; doc travado com escopo + lacunas
+description: Plano Padrão R$195 da Contabilizei = régua do MLP Legalizai Story Book; doc travado com escopo + lacunas
 metadata: 
   node_type: memory
   type: reference
@@ -12,7 +12,7 @@ metadata:
 
 **O que o Padrão R$195 inclui** (benchmark do nosso mensal): contabilidade completa (guia/DAS + IRPJ/DIPJ/DEFIS + DRE/balanço + DCTF/SPED + docs assinados por contador) · abertura "grátis" (paga só taxas do governo) · certificado digital incluso · conta PJ · pró-labore 2 sócios · migração de contador grátis. **Fora:** folha (à parte) · benefícios (só planos superiores) · emissão de NF pela equipe (Experts).
 
-**Modelo de cobrança do líder:** abertura não se cobra; receita = mensalidade; guia de governo à parte. Legalizei adota igual (ver [[legalize-blocos-fluxo-abertura]] B3).
+**Modelo de cobrança do líder:** abertura não se cobra; receita = mensalidade; guia de governo à parte. Legalizai Story Book adota igual (ver [[legalize-blocos-fluxo-abertura]] B3).
 
 **Mecânica de pró-labore (UI deles, validar vs. lei/reforma 2026):** INSS 11% sobre pró-labore, teto R$932,31; IRRF só acima de R$5.000. Insumo do motor Fator R do B2.
 

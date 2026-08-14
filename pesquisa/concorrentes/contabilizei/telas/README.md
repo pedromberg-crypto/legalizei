@@ -9,7 +9,7 @@ Capturas da plataforma logada da Contabilizei (conta real do Pedro) pra auditori
 
 - `img/` — prints desktop (1440px)
 - `img-mobile/` — prints mobile (390px, mesmo UA, layout responsivo)
-- Notas de análise por tela: `<slug>.md` (rubrica 6 eixos + contraproposta Legalizei)
+- Notas de análise por tela: `<slug>.md` (rubrica 6 eixos + contraproposta Legalizai Story Book)
 - Relatório consolidado: `_relatorio-auditoria.md`
 
 ## ⚠️ Dados sensíveis (decisão Pedro, 2026-07-09)

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   DESIGN SYSTEM — LEGALIZEI
+   DESIGN SYSTEM — LEGALIZAI STORY BOOK
    Fonte da verdade: marca/identidade-visual/design-system.md
    Primitivos de cor:  marca/identidade-visual/paleta-cores.md
    Regras travadas:    marca/decisoes-marca.md
@@ -176,7 +176,7 @@
    com fonte única. `CRM_app/tokens.css` deixa de ser cópia independente:
    se um valor mudar, muda aqui e sincroniza lá.
 
-   ⚠️ Este app (legalizei, mobile wizard/portal) CONTINUA light-only — nada
+   ⚠️ Este app (legalizai-story-book, mobile wizard/portal) CONTINUA light-only — nada
    aqui liga sozinho. O bloco só ativa se algo setar `data-theme="dark"` no
    `<html>`, e isto não acontece em nenhuma rota hoje. É token disponível,
    não modo ligado. Contraste AA verificado por número (não estimado) —

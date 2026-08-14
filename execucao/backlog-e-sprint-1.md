@@ -6,7 +6,7 @@ assunto: backlog-produto
 tags: [scrum, backlog, sprint, devs, planejamento]
 ---
 
-# 🗂️ Backlog de produto + Sprint 1 — Legalizei
+# 🗂️ Backlog de produto + Sprint 1 — Legalizai Story Book
 
 > Gerado na branch `debate/exploracao` (22/07) cruzando kanban + BASE + spec-mvp + plano-sequencia + blocos-fluxo + mapa-ramificacoes + fila-humana + índice-autoridade + parking-lot + compilado-ux + código `app/`.
 > **Conteúdo pra portar pro Trello interno.** Não é o board — é o insumo priorizado.
@@ -36,7 +36,7 @@ tags: [scrum, backlog, sprint, devs, planejamento]
 | Tarefa | Raia | Dono | Por quê trava tudo | DoD |
 |---|---|---|---|---|
 | **Alinhar o backend do Dev-Pedro ao contrato atual** | PM-PEDRO | Pedro | Ele **já validou boa parte do E2E** — mas contra a spec de 15/07: ordem invertida (cobra no N9), 19 personas ≠ 14, flow #2 nasceu, `cnae-lookup-b1.json` responde "atende" pra DEFESA. Não é resgate, é **conferir o delta** pra não seguir validando o contrato errado | Dev-Pedro recebe motor v0.5.0 + 19 personas + ordem nova + dados corrigidos e aponta o que já cobre × o que mudou |
-| **Convidar `pedro.melodata` no `base-flow-legalizei`** | PM-PEDRO | Pedro | Acesso é seu; sem isso o repo-contrato não chega | Convite aceito |
+| **Convidar `pedro.melodata` no `base-flow-legalizai-story-book`** | PM-PEDRO | Pedro | Acesso é seu; sem isso o repo-contrato não chega | Convite aceito |
 | **Definir qual dev recebeu as páginas do flow** | PM-PEDRO | Pedro | Muda o onboarding do Jr no kanban (pendência aberta) | Dono carimbado |
 
 ---
@@ -90,9 +90,9 @@ tags: [scrum, backlog, sprint, devs, planejamento]
 | Prazo de fidelidade (ref. líder = 12m) | Could | — | Sua decisão |
 | Certificado digital: terceiro (Sete Minas)? | Should | Mauro | Reversível barato |
 | Decidir cobaia do E2E (a do Pedro já existe) | Must | — | 2ª empresa / outra pessoa / flow #2 |
-| DNS Vercel + email contato@legalizei.app | Should | domínios (pagos) | — |
+| DNS Vercel + email contato@legalizai-story-book.app | Should | domínios (pagos) | — |
 | INPI — busca de anterioridade → consultor do Mauro | Could | — | Doc pronto |
-| Rename brand-level (domínios/IG/INPI) Legalizei→Legalizai | Could | Mauro | Decisão de sócio; hoje só o app renomeou |
+| Rename brand-level (domínios/IG/INPI) Legalizai Story Book→Legalizai | Could | Mauro | Decisão de sócio; hoje só o app renomeou |
 
 ## 🕓 FILA-HUMANA (não bloqueia sprint; constrói com placeholder) → [[fila-validacao-humana]]
 - **Larissa:** 7 pontos fiscais · 91 CNAEs duvidosos (10 de conselho urgentes) · SLU×LTDA · anexos diferentes · ratificar CNAE ótimo
@@ -135,4 +135,4 @@ Certificado ──► portal mínimo (emitir nota)
 | Preço/contrato/certificado | **Pedro + Mauro** | Trava a cobrança |
 
 ## Links
-- [[kanban-legalizei]] · [[fila-validacao-humana]] · [[indice-autoridade]] · [[2026-07-13-plano-sequencia-pm]] · [[HOME]]
+- [[kanban-legalizai-story-book]] · [[fila-validacao-humana]] · [[indice-autoridade]] · [[2026-07-13-plano-sequencia-pm]] · [[HOME]]

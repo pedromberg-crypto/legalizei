@@ -44,21 +44,21 @@ import { Lottie } from "@/components/lottie";
 
 const SLIDES = [
   {
-    lottie: "/lottie/customer-need-legalizei.json",
+    lottie: "/lottie/customer-need-legalizai-story-book.json",
     fps: 30,
     titulo: ["Contador de verdade.", "Não robô."],
     texto:
       "Gente de BH que te atende de verdade e resolve. 22 anos de escritório por trás do app.",
   },
   {
-    lottie: "/lottie/content-mod-legalizei.json",
+    lottie: "/lottie/content-mod-legalizai-story-book.json",
     fps: 30,
     titulo: ["A parte chata", "é com a gente."],
     texto:
       "Impostos, guias, prazos, papelada do governo. Você toca o negócio. O resto voa pra cá.",
   },
   {
-    lottie: "/lottie/marketing-mgmt-legalizei.json",
+    lottie: "/lottie/marketing-mgmt-legalizai-story-book.json",
     // 25, não 30: é o `fr` do arquivo. Errar aqui roda em câmera lenta.
     fps: 25,
     titulo: ["Sem contabilês.", "Sem susto no boleto."],

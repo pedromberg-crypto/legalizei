@@ -5,7 +5,7 @@ import { carregarRuntime, type LottieAnim } from "@/components/lottie";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * CONFETE DE SUCESSO — Lottie da marca (success-confetti-legalizei.json, coral,
+ * CONFETE DE SUCESSO — Lottie da marca (success-confetti-legalizai-story-book.json, coral,
  * eco do logo). Colhido do protótipo, agora em código: micro-interação de "deu
  * certo" no aceite 🟢 do veredito. Régua MLP (craft no escopo).
  * ═══════════════════════════════════════════════════════════════════════════
@@ -64,7 +64,7 @@ export function Confetti({
           renderer: "svg",
           loop: false,
           autoplay: true,
-          path: "/lottie/success-confetti-legalizei.json",
+          path: "/lottie/success-confetti-legalizai-story-book.json",
         });
       })
       .catch(() => {

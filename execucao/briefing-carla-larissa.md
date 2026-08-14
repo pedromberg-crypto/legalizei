@@ -10,7 +10,7 @@ tags: [compliance, imersao]
 > Perguntas que a Izabela encaminhou. Como elas NÃO viram o passo a passo, cada bloco abre com contexto. ICP: **ME prestador de serviço, Simples, sem funcionário, BH.** Detalhe do fluxo: [[2026-07-09-conversa-izabela]].
 
 ## 📌 Contexto pra abrir com as duas (30 segundos)
-"Estou construindo com o Mauro o **Legalizei** — app de contabilidade digital que automatiza abrir empresa + a rotina fiscal, tipo Contabilizei mas melhor. Mapeei a abertura passo a passo com a Izabela; ela me mandou tirar com vocês algumas dúvidas específicas da área de vocês. É rápido, gravo pra registrar."
+"Estou construindo com o Mauro o **Legalizai Story Book** — app de contabilidade digital que automatiza abrir empresa + a rotina fiscal, tipo Contabilizei mas melhor. Mapeei a abertura passo a passo com a Izabela; ela me mandou tirar com vocês algumas dúvidas específicas da área de vocês. É rápido, gravo pra registrar."
 
 ---
 

@@ -13,8 +13,8 @@ Setup do Meta e Google Ads já iniciado pelo gestor. Pauta original do Pedro reo
 ## A. Setup técnico & legal
 - [ ] Como estão as configs das contas de anúncio? Meta e Google.
 - [ ] Resolver e debater a questão do CNPJ pra divulgação do produto. 🆕 já é conhecido: **Legalize Digital LTDA, 41.569.345/0001-48** (mesmo que consta nas páginas legais da LP) — confirmar que é esse mesmo que vai no Business Manager/Google Ads.
-- [ ] 🆕 Meta e Google exigem política de privacidade + termos pra aprovar a conta de anúncio — já temos as 2 publicadas (`legalizei-lp.vercel.app/privacidade` e `/termos`). Ele já tem esses links ou precisa que a gente mande?
-- [ ] 🆕 A marca exibida é **"Legalizai"**, mas o domínio pago é **`legalizei.app`** (e a LP hoje está em `legalizei-lp.vercel.app`, ainda não no domínio final). Alinhar qual URL entra nos anúncios agora, pra não ter dissonância marca×link no criativo. Ver [[legalize-dominios-infra]] · [[legalize-rename-legalizai]].
+- [ ] 🆕 Meta e Google exigem política de privacidade + termos pra aprovar a conta de anúncio — já temos as 2 publicadas (`legalizai-story-book-lp.vercel.app/privacidade` e `/termos`). Ele já tem esses links ou precisa que a gente mande?
+- [ ] 🆕 A marca exibida é **"Legalizai"**, mas o domínio pago é **`legalizai-story-book.app`** (e a LP hoje está em `legalizai-story-book-lp.vercel.app`, ainda não no domínio final). Alinhar qual URL entra nos anúncios agora, pra não ter dissonância marca×link no criativo. Ver [[legalize-dominios-infra]] · [[legalize-rename-legalizai]].
 
 ## B. Tracking & atribuição
 - [ ] Já conseguimos fazer desde o início o tagueamento das campanhas? Se sim, o que o Natan precisa pra configurar isso no nosso CRM (recepção das UTMs)? Essa conexão é "tranquila"?
@@ -34,7 +34,7 @@ Setup do Meta e Google Ads já iniciado pelo gestor. Pauta original do Pedro reo
 ## E. Conteúdo & calendário
 - [ ] O que precisamos de peças pra esse início que ele está construindo das redes? Meta e Google por enquanto.
 - [ ] Quando podemos começar as postagens orgânicas?
-- [ ] O que ele acha de uma campanha "Em breve" pra aquecer a conta e talvez fazermos uma lista de espera pro lançamento. 🆕 já existe pronta e no ar: `legalizei-em-breve.vercel.app`. Ele só precisa linkar, não construir do zero.
+- [ ] O que ele acha de uma campanha "Em breve" pra aquecer a conta e talvez fazermos uma lista de espera pro lançamento. 🆕 já existe pronta e no ar: `legalizai-story-book-em-breve.vercel.app`. Ele só precisa linkar, não construir do zero.
 
 ## Aberto
 - ⚠️ Bloco C aguardando confirmação do Pedro (ticket ME) antes de levar pra reunião.

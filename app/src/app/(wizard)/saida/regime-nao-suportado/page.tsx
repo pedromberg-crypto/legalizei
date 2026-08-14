@@ -28,7 +28,7 @@ const D: DadosSaida = {
   // 🆕 04/08 — teste do Pedro: ícone "Alert" (Lottie) recolorido pro nosso
   // azul de status (#3B82E0), no lugar do símbolo padrão de pessoa. Escopo
   // pontual: só esta saída e `/saida/cnpj-inapto` por enquanto.
-  icone: <Lottie path="/lottie/alert-legalizei.json" fps={30} className="h-[125px] w-[125px]" />,
+  icone: <Lottie path="/lottie/alert-legalizai-story-book.json" fps={30} className="h-[125px] w-[125px]" />,
   tag: "Regime diferente",
   titulo: "Seu regime pede um especialista",
   explica:

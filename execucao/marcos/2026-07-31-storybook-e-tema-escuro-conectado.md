@@ -10,7 +10,7 @@ tags: [storybook, design-system, reorganizacao, tema-escuro, crm]
 
 ## 1. Storybook — vitrine viva do design system
 
-Reorganização (pausada desde o 20º flow) **voltou a andar**: a `design-system.html` tinha virado risco de divergência (2 abas "Componentes"/"Sistema" hand-coded). Decisão: `@storybook/nextjs-vite`, mesmo repo `legalizei`, zero cópia de componente.
+Reorganização (pausada desde o 20º flow) **voltou a andar**: a `design-system.html` tinha virado risco de divergência (2 abas "Componentes"/"Sistema" hand-coded). Decisão: `@storybook/nextjs-vite`, mesmo repo `legalizai-story-book`, zero cópia de componente.
 
 **33+ arquivos de story**, cobrindo:
 - Todo o DS promovido (`Button`, `Card`, `StatusIcon`, `Aviso`, `Form/*`, `Esqueleto de tela`)
@@ -35,19 +35,19 @@ Dos 32 itens "validados", **só 4 são produção real**: `SecaoLista`, `Vigilan
 
 ⚠️ **Achado colateral, fora do acervo:** `/inicio` (a home REAL de produção) **não usa nenhum bloco do "Home Campeã"** — a decisão de qual home vencia já foi tomada e documentada (`portal-data.mjs`), mas o arquivo de produção nunca foi atualizado pra refletir ela.
 
-## 5. 🌗 Tema escuro conectado — legalizei ↔ CRM_app
+## 5. 🌗 Tema escuro conectado — legalizai-story-book ↔ CRM_app
 
 Pergunta do Pedro: "o dark que a gente usou pro CRM já não está aprovado?" — confirmado com código real: **sim, o CRM roda 100% dark** (`index.html` trava `data-theme="dark"`, sem toggle, é o tema fixo do sistema interno). Os valores batem exatamente com a proposta antiga da `design-system.html`.
 
-**Decisão: conectar pelo TOKEN, não pelo componente** (os 2 produtos têm componentes próprios — CRM é desktop denso, legalizei é mobile wizard/portal; só a paleta é espelho de verdade):
-- `legalizei/app/src/app/globals.css` ganha `:root[data-theme="dark"]` — vira **fonte canônica de claro e escuro**.
+**Decisão: conectar pelo TOKEN, não pelo componente** (os 2 produtos têm componentes próprios — CRM é desktop denso, legalizai-story-book é mobile wizard/portal; só a paleta é espelho de verdade):
+- `legalizai-story-book/app/src/app/globals.css` ganha `:root[data-theme="dark"]` — vira **fonte canônica de claro e escuro**.
 - `CRM_app/src/tokens.css` — comentário reescrito: deixa de ser cópia independente, vira **espelho declarado** (sincroniza à mão, sem build-time import ainda).
 - `design-system.html` §escuro: badge "PROPOSTA" → "CÓDIGO REAL — no CRM".
-- ⚠️ O app `legalizei` **continua light-only na prática** — nada seta `data-theme` nele. É token disponível, não modo ligado.
+- ⚠️ O app `legalizai-story-book` **continua light-only na prática** — nada seta `data-theme` nele. É token disponível, não modo ligado.
 
 ## 6. Pushes
 
-- `legalizei` (`main`): 4 commits — Storybook completo · 2 gaps do acervo/apresentação · tema escuro.
+- `legalizai-story-book` (`main`): 4 commits — Storybook completo · 2 gaps do acervo/apresentação · tema escuro.
 - `CRM_app` (`feat/ui-tema-escuro-e-dossie-cliente`): 1 commit — `tokens.css` vira espelho declarado.
 
 ## 7. ⚠️ Pergunta grande do Pedro — NÃO resolvida

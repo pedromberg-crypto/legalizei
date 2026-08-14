@@ -66,14 +66,14 @@ Não é Sábio (não performa autoridade/expertise), não é Herói (não promet
 - **Prova social**: seção "Contajá na mídia" (autoridade emprestada) e foto de equipe.
 - Fricções: banner de cookie cobre o hero; links azuis default sugerem acabamento amador; contraste branco-sobre-limão é limítrofe (legibilidade/acessibilidade WCAG).
 
-## 🎯 Aprendizado pro Legalizei
+## 🎯 Aprendizado pro Legalizai Story Book
 
-1. **Cor é território — e território é escasso.** O azul-confiança está saturado (Contabilizei, Facilite, Marvee). A Contaja provou que dá pra fugir do azul e ser lembrada. Legalizei pode ocupar um espaço vazio: **verde-esmeralda/teal sério, ou um azul-elétrico moderno, ou uma cor confiança-quente** — algo que diga "confiável E moderno" sem cair nem no azul-genérico nem no limão-budget.
-2. **Verde-limão é uma faca de dois gumes: adote a energia, recuse o "barato".** Se Legalizei NÃO quer competir por menor preço, evitar o limão puro. Se quiser sinalizar acessível/jovem, usar um verde vibrante mas **como acento pontual sobre base neutra sofisticada**, não como fundo de página inteira.
-3. **Contraste e craft = confiança percebida.** A Contaja perde autoridade em detalhes: links azuis default, três estilos de imagem, texto branco de baixo contraste no limão. Numa categoria de dinheiro, **acabamento impecável É proposta de valor**. Legalizei ganha diferenciação de graça só sendo visivelmente mais bem-feito.
-4. **Uma cor de acento dedicada pro CTA.** A Contaja não tem — resolve na gambiarra do botão escuro. Legalizei deve reservar uma cor exclusiva de ação (que não seja a cor de fundo) pra CTAs saltarem sempre.
+1. **Cor é território — e território é escasso.** O azul-confiança está saturado (Contabilizei, Facilite, Marvee). A Contaja provou que dá pra fugir do azul e ser lembrada. Legalizai Story Book pode ocupar um espaço vazio: **verde-esmeralda/teal sério, ou um azul-elétrico moderno, ou uma cor confiança-quente** — algo que diga "confiável E moderno" sem cair nem no azul-genérico nem no limão-budget.
+2. **Verde-limão é uma faca de dois gumes: adote a energia, recuse o "barato".** Se Legalizai Story Book NÃO quer competir por menor preço, evitar o limão puro. Se quiser sinalizar acessível/jovem, usar um verde vibrante mas **como acento pontual sobre base neutra sofisticada**, não como fundo de página inteira.
+3. **Contraste e craft = confiança percebida.** A Contaja perde autoridade em detalhes: links azuis default, três estilos de imagem, texto branco de baixo contraste no limão. Numa categoria de dinheiro, **acabamento impecável É proposta de valor**. Legalizai Story Book ganha diferenciação de graça só sendo visivelmente mais bem-feito.
+4. **Uma cor de acento dedicada pro CTA.** A Contaja não tem — resolve na gambiarra do botão escuro. Legalizai Story Book deve reservar uma cor exclusiva de ação (que não seja a cor de fundo) pra CTAs saltarem sempre.
 5. **Sistema tipográfico com hierarquia.** Effra em tudo é seguro mas raso. Um par (display forte + texto neutro legível) já eleva a percepção acima de todos os concorrentes analisados.
-6. **Humanizar sem amadorizar.** A foto de pessoa real e o WhatsApp da Contaja funcionam pra aproximar. Legalizei pode manter o humano (rosto real, contador acessível) num sistema visual coeso — resolvendo a tensão Everyman-x-confiança que a Contaja deixou aberta.
+6. **Humanizar sem amadorizar.** A foto de pessoa real e o WhatsApp da Contaja funcionam pra aproximar. Legalizai Story Book pode manter o humano (rosto real, contador acessível) num sistema visual coeso — resolvendo a tensão Everyman-x-confiança que a Contaja deixou aberta.
 
 ## Links
 - [[contaja]] · [[referencias]] · [[conceito-marca]]

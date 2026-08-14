@@ -75,10 +75,10 @@ O que **não** é: não é Herói/desafiante (não ataca a burocracia com raiva 
 - **Multicanal de contato:** WhatsApp flutuante + 0800 878 9603 + apps (iOS/Android) + social. Baixa barreira pra falar com humano.
 - Cookie banner LGPD, entidade S.A. com CNPJ exposto (confiança/formalidade).
 
-## 🎯 Aprendizado pro Legalizei
-1. **O mercado é um MAR AZUL — e isso é a maior oportunidade cromática.** Contabilizei (azul-navy+cyan), Facilite (azul-royal), Contabilivre (azul+verde) usam azul. Azul = default de "confiança fiscal" = **zero diferenciação e alto custo de memória**. Quem escapou — Agilize (roxo `#7537ae`) e ContaJá (verde-limão `#b1ce0b`) — ganhou distinção de graça. **O Legalizei NÃO deve nascer azul.** Uma cor-âncora ownável fora do azul é o diferenciador mais barato e de maior alavanca disponível.
+## 🎯 Aprendizado pro Legalizai Story Book
+1. **O mercado é um MAR AZUL — e isso é a maior oportunidade cromática.** Contabilizei (azul-navy+cyan), Facilite (azul-royal), Contabilivre (azul+verde) usam azul. Azul = default de "confiança fiscal" = **zero diferenciação e alto custo de memória**. Quem escapou — Agilize (roxo `#7537ae`) e ContaJá (verde-limão `#b1ce0b`) — ganhou distinção de graça. **O Legalizai Story Book NÃO deve nascer azul.** Uma cor-âncora ownável fora do azul é o diferenciador mais barato e de maior alavanca disponível.
 2. **Se diferenciação vem da cor, imagem e narrativa — não da fonte.** Facilite prova que dá pra "quebrar" o azul institucional com **foto humana lifestyle real** (empreendedora empoderada, acento amarelo complementar) e **um wedge de nicho** (Airbnb/temporada). Roubar a jogada: escolher imagem humana real (não stock corporativo) + um acento complementar quente que faça o azul-de-todos parecer velho.
-3. **Nome-verbo é ativo de marca.** "Facilite" (imperativo) vira a promessa inteira. "**Legalizei**" já é melhor: primeira pessoa no passado = "eu já legalizei minha empresa" = alívio + conquista + boca-a-boca ("legalizei com a Legalizei"). O conceito de ID visual deve *dramatizar esse momento de virada* (antes/depois, o CNPJ na mão) em vez de mostrar planilha/prédio.
+3. **Nome-verbo é ativo de marca.** "Facilite" (imperativo) vira a promessa inteira. "**Legalizai Story Book**" já é melhor: primeira pessoa no passado = "eu já legalizai-story-book minha empresa" = alívio + conquista + boca-a-boca ("legalizai-story-book com a Legalizai Story Book"). O conceito de ID visual deve *dramatizar esse momento de virada* (antes/depois, o CNPJ na mão) em vez de mostrar planilha/prédio.
 4. **Não copiar a fonte genérica.** Raleway+Nunito é competente e invisível. Um wordmark levemente desenhado (ou uma escolha tipográfica com mais caráter) dá assinatura que a Facilite não tem — barato e ownável.
 
 ## Links

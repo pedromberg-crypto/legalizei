@@ -7,7 +7,7 @@ etapa: paleta
 tags: [marca, design, cor, tokens]
 ---
 
-# 🎨 Paleta de cor — Legalizei (tokens v1)
+# 🎨 Paleta de cor — Legalizai Story Book (tokens v1)
 
 > Sistema de 2 cores disciplinado (lição da pesquisa): **coral = marca + ação**, **ink = seriedade/estrutura**. Neutros quentes + semânticos funcionais. Decisão de território em [[referencias]]; cor líder travada em [[decisoes-marca]] (Direção A, coral #F2643C). Estes hex são **v1 pra debate** — viram tokens finais no Design System.
 
@@ -56,7 +56,7 @@ tags: [marca, design, cor, tokens]
 - **Fundo é papel quente** (`#FAF8F5`), não branco puro — reforça o "humano/acolhedor".
 
 ## Próximo
-Símbolo/wordmark (direção "Legalizei = consegui") + tipografia, depois Design System (tokens finais + componentes).
+Símbolo/wordmark (direção "Legalizai Story Book = consegui") + tipografia, depois Design System (tokens finais + componentes).
 
 ## Links
 - [[conceito-marca]] · [[referencias]] · [[decisoes-marca]] · [[_sintese-paginas-publicas]] · [[HOME]]

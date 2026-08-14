@@ -96,4 +96,4 @@ Só dado de **entrada do usuário** = disponível imediato + diz QUEM é o merca
 - Confirmar overlap CRM × fila de homologação CRC × [[Leghub]] (pendência do doc2).
 
 ## Links
-- [[spec-instrumentacao-flow]] (coorte + eventos por tela) · [[spec-telas-entrada-b1-b2]] · [[compilado-ux-flow]] · [[kanban-legalizei]] · [[HOME]]
+- [[spec-instrumentacao-flow]] (coorte + eventos por tela) · [[spec-telas-entrada-b1-b2]] · [[compilado-ux-flow]] · [[kanban-legalizai-story-book]] · [[HOME]]

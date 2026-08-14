@@ -41,7 +41,7 @@ Prints da tabela comparativa de planos (aba **Serviço/Simples**) com os **toolt
 
 ## 💡 Leitura estratégica
 
-1. **Confirma o modelo de cobrança do [[blocos-fluxo-abertura|Bloco 3]] (D1):** abertura é **"grátis"** (não cobram o trabalho) — cliente paga **só as taxas do governo** à parte; a receita é a **mensalidade**. Mostram só o mensal na vitrine, guia de governo emitida separada. Legalizei **adota o mesmo** (decisão Pedro 14/07).
+1. **Confirma o modelo de cobrança do [[blocos-fluxo-abertura|Bloco 3]] (D1):** abertura é **"grátis"** (não cobram o trabalho) — cliente paga **só as taxas do governo** à parte; a receita é a **mensalidade**. Mostram só o mensal na vitrine, guia de governo emitida separada. Legalizai Story Book **adota o mesmo** (decisão Pedro 14/07).
 2. **"Contabilidade completa" = a lista de cima é o escopo mínimo do nosso mensal.** Cálculo/emissão de guia, IRPJ/DIPJ/DEFIS, DRE/balanço/balancete, DCTF/SPED, docs assinados por contador. É o piso pra "melhor que o Padrão R$195".
 3. **Certificado digital incluso** — norma de mercado, não diferencial. Nosso plano precisa incluir (custo real a repassar/absorver → decisão de B3/infra).
 4. **Folha "cobrada à parte" / funcionário fora do plano** — casa com nosso recorte MLP (funcionário/PJ = fora do MVP, Karla). Alívio: escopo do nosso mensal não precisa cobrir folha no v0.

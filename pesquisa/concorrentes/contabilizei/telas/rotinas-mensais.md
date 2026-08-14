@@ -38,9 +38,9 @@ tags: [concorrente, ux]
 - **Linguagem cartorial em caixa-alta**, distante do dono de negócio.
 - **Mobile: abas transbordam** e escondem "Declaração Anual/Informe" sem affordance de scroll.
 
-## 🎯 Contraproposta Legalizei
+## 🎯 Contraproposta Legalizai Story Book
 - **Trocar "Sem informações" por status humano e tranquilizador**: "✅ Este mês não há declaração mensal a transmitir — está tudo em dia." ou, se houver pendência, "⚠️ Falta transmitir X, prazo dia Y" com botão. Transparência = dizer o estado, não sumir.
-- **Preencher o vazio com uma timeline de obrigações do mês** (o que já foi feito pela Legalizei por você, com data e recibo) — proatividade visível: "nós cuidamos disto".
+- **Preencher o vazio com uma timeline de obrigações do mês** (o que já foi feito pela Legalizai Story Book por você, com data e recibo) — proatividade visível: "nós cuidamos disto".
 - **Linguagem de gente**, sem caixa-alta cartorial: "Suas declarações do mês".
 - **Mobile: abas em scroll horizontal com indicador** ou menu, nunca cortadas. Nota deles é 4.8 — é a tela mais fácil de superar; alvo ~8.0 só com empty state útil + timeline proativa.
 

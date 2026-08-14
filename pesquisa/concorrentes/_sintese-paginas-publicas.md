@@ -25,7 +25,7 @@ tags: [concorrente, pricing, posicionamento, marca]
 
 ## 🔑 5 padrões transversais (o que TODOS fazem — e a brecha)
 1. **Humano é upsell em 100% deles.** Contador/gerente nomeado só aparece no tier caro (Contabilizei R$395, Agilize R$450, Contabilivre R$359, Facilite Silver+). O que o ME mais quer (gente que atende) está atrás do paywall.
-   → **Brecha Legalizei: contato humano no plano de ENTRADA.**
+   → **Brecha Legalizai Story Book: contato humano no plano de ENTRADA.**
 2. **Transparência é semi em todos.** "A partir de" + "ajustado conforme faturamento" + forms gated + asteriscos. Nem a Agilize (número redondo) escapa — tem asterisco "fora do Simples, fale com especialista".
    → **Brecha: preço fechado de verdade — "o valor da tela é o valor da fatura, sem asterisco".**
 3. **Custo de SAÍDA é escondido.** Contaja: baixa **R$1.359**, migração MEI→ME **R$1.399**. Ninguém precifica a saída na vitrine. Barato pra entrar, caro pra sair.

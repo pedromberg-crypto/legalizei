@@ -15,7 +15,7 @@ tags: [pesquisa, concorrente, matriz]
 
 | Player | Origem | Tipo | Preço entrada | Prazo/entrega | Diferencial de modelo |
 |---|---|---|---:|---|---|
-| **Legalizei** | BH/MG (Legalize Digital, 22 anos) | Direto | R$139 ME · R$49,90 MEI | abertura digital, meta &lt;72h | preço fechado sem asterisco + humano no plano de entrada + hiperlocal BH |
+| **Legalizai Story Book** | BH/MG (Legalize Digital, 22 anos) | Direto | R$139 ME · R$49,90 MEI | abertura digital, meta &lt;72h | preço fechado sem asterisco + humano no plano de entrada + hiperlocal BH |
 | Contabilizei | Nacional (SP, 2013) | Direto | R$139–195 (escala p/ faturamento) | — | maior escala, SEO dominante, margem real em corretagem |
 | Agilize | Nacional | Direto | R$259 (fixo, 20% off permanente) | — | único preço fixo (por volume, não faturamento) |
 | Contaja | MG (CRC MG) | Direto | R$137 Simples · R$49,90 MEI | abertura 72h alegada | piso de preço do setor, à la carte agressivo |
@@ -29,16 +29,16 @@ tags: [pesquisa, concorrente, matriz]
 
 ## Posicionamento no "quadrante mágico"
 
-Legalizei ocupa espaço combinando **3 variáveis** que nenhum concorrente direto atende juntas:
+Legalizai Story Book ocupa espaço combinando **3 variáveis** que nenhum concorrente direto atende juntas:
 
 - **Preço fechado sem asterisco** — todos os 5 diretos usam "a partir de", simulador gated, ou ajuste pós-contato. Nenhum crava número final na tela.
-- **Humano no plano de ENTRADA** — em todos os 5, contador/gerente nomeado só aparece no tier caro (R$359–700). Legalizei propõe isso desde o primeiro plano.
+- **Humano no plano de ENTRADA** — em todos os 5, contador/gerente nomeado só aparece no tier caro (R$359–700). Legalizai Story Book propõe isso desde o primeiro plano.
 - **Hiperlocal BH operacional** — Contaja já é MG (CRC), mas nenhum trata ISS-BH/alvará PBH/Junta MG como produto; é onde a Legalize (22 anos de operação local) tem vantagem estrutural que nenhum digital-native nacional replica rápido.
 
 ## Dimensões de comparação
 
 ### 1. Preço e transparência
-Cluster de entrada R$137–259/mês. Contaja crava o piso, Agilize o teto de entrada. **Todos** têm opacidade em algum ponto (Contaja esconde custo real no FAQ; Facilite/Contabilivre gatekeepam com form/call; Agilize tem "fixo" com asterisco de regime). Legalizei: preço na tela = preço da fatura, sem exceção.
+Cluster de entrada R$137–259/mês. Contaja crava o piso, Agilize o teto de entrada. **Todos** têm opacidade em algum ponto (Contaja esconde custo real no FAQ; Facilite/Contabilivre gatekeepam com form/call; Agilize tem "fixo" com asterisco de regime). Legalizai Story Book: preço na tela = preço da fatura, sem exceção.
 
 ### 2. Humano no plano de entrada
 Zero dos 5 diretos oferece contador nomeado no tier barato — é sempre upsell (R$359+ Contabilizei, R$450+ Agilize, R$359 Contabilivre, R$1.249,90 Facilite Black). Achado nº1 do FAQ deles: "vocês têm contador DE VERDADE?" é a pergunta mais repetida — ferida de confiança da categoria inteira.

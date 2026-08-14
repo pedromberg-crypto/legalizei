@@ -1,6 +1,6 @@
 ---
 name: legalize-storybook-fonte-verdade
-description: "Storybook (@storybook/nextjs-vite) é a vitrine renderizada de componentes E telas do legalizei — 33+ stories, zero cópia"
+description: "Storybook (@storybook/nextjs-vite) é a vitrine renderizada de componentes E telas do legalizai-story-book — 33+ stories, zero cópia"
 metadata: 
   node_type: memory
   type: project
@@ -8,7 +8,7 @@ metadata:
   modified: 2026-08-03T12:02:29.954Z
 ---
 
-31/07: reorganização (categoria Design/Componentes) fechou com **Storybook**. Instalado no mesmo repo `legalizei` (`app/`, `@storybook/nextjs-vite`), zero componente duplicado — RSC quase não se aplica (29/37 arquivos de `components/` já são `"use client"`).
+31/07: reorganização (categoria Design/Componentes) fechou com **Storybook**. Instalado no mesmo repo `legalizai-story-book` (`app/`, `@storybook/nextjs-vite`), zero componente duplicado — RSC quase não se aplica (29/37 arquivos de `components/` já são `"use client"`).
 
 **33+ arquivos `.stories.tsx`**, organizados em 3 namespaces:
 - `DS/*` — os primitivos promovidos (Button, Card, StatusIcon, Aviso, Form/*, Esqueleto de tela, Logo)

@@ -9,8 +9,8 @@ tags: [cnae, escopo, ux, n4, mockup, achado]
 # 🔎 A lista de CNAE estava furada na raiz + as pills do N4
 
 > Flow longo, começou em 16/07 e virou a noite. Começou em "arruma o espaçamento do mockup"
-> e terminou achando que **a lista do que a Legalizei atende nunca foi uma lista do que a
-> Legalizei atende**.
+> e terminou achando que **a lista do que a Legalizai Story Book atende nunca foi uma lista do que a
+> Legalizai Story Book atende**.
 
 ## 🔥 O achado que manda em tudo: ausência de recusa lida como presença de atendimento
 

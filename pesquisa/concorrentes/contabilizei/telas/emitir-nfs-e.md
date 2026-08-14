@@ -38,7 +38,7 @@ tags: [concorrente, ux]
 - **Mobile aperta os filtros**: labels/valores truncam ("Filtro de busca" → "Nc", "Mês" → "Ju"), 4 campos apertados numa linha em vez de reflow full-width.
 - Nav inferior flutuante sobrepõe a transição entre conteúdo e "Dúvidas frequentes".
 
-## 🎯 Contraproposta Legalizei
+## 🎯 Contraproposta Legalizai Story Book
 - **Listagem = listagem**: tabela clara das notas do período (tomador, valor, data, status com cor) + total faturado no topo. O "Emitir nova nota" continua sendo o CTA primário, mas o histórico dá transparência.
 - **Manter o atalho de cliente recente** (bom) e somar "reemitir igual à última nota" em 1 toque — job do prestador ME de serviço recorrente.
 - **Mobile: filtros em reflow full-width** empilhados, nada de truncar valores; nav inferior fixa sem sobreposição.

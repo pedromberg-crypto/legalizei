@@ -653,6 +653,8 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 |---|--------|---------------|--------|
 | 1 | **Estratégia de marketing vai passar por revisão externa** | Montei um documento com a estratégia inteira (mercado, concorrentes, posicionamento, jeito da marca falar, tipos de cliente, o que postar, preço e margem, como a venda acontece, riscos) pra sentar com o gestor de tráfego e ele conferir ponto a ponto. Ele não vai só cuidar de anúncio: vai dar a segunda opinião na estratégia toda, que até agora eu montei sozinho | 🟡 (documento pronto, reunião ainda não aconteceu) |
 | 2 | **Corrigi um arquivo quebrado que eu não tinha percebido** | O PDF de leitura que eu tinha gerado semana passada estava corrompido e ninguém tinha aberto ainda. Refiz e criei um jeito de conferir antes de dar por pronto, pra não repetir | 🟢 |
+| 3 | **A estratégia virou um documento apresentável** | Transformei o documento em um PDF de 29 páginas com a nossa cara (nossa cor, nossa fonte, nossa marca na capa), pronto pra mandar pra qualquer pessoa de fora sem parecer rascunho. Serve pro gestor de tráfego agora e pra investidor depois | 🟢 |
+| 4 | **Comecei o roteiro do vídeo de apresentação da empresa** | Três versões diferentes de um vídeo curto (mais ou menos 1 minuto e meio) pra apresentar a Legalizai pra investidor ou aceleradora. Todas começam pelo tamanho do mercado, mostram por que começamos por Belo Horizonte e terminam dizendo que estamos prontos pra ser o maior aplicativo contábil do Brasil. Estou testando a narração antes de gravar | 🟡 (3 versões escritas, falta escolher uma) |
 
 **Próximo:** a reunião com o gestor de tráfego. O que sair dela ajusta a estratégia antes de a gente gastar o primeiro real em anúncio. Continuam pendentes com você: seu número de honorário por cliente (destrava a margem de verdade) e os números de corte pra decidir se o teste deu certo ou não.
 
@@ -662,6 +664,15 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 - Organizei a estratégia de marketing inteira num documento só pra levar pro gestor de tráfego revisar comigo ponto a ponto. Ele vai dar a segunda opinião na estratégia toda, não só na parte de anúncio
 - Achei e corrigi um arquivo quebrado da semana passada que tinha passado batido
 - Assim que a reunião acontecer eu te trago o que mudou
+```
+
+### 📱 WhatsApp (14/08)
+```
+*Update Legalizei* 🎬
+- A estratégia de marketing virou um PDF de 29 páginas com a nossa cara, pronto pra mandar pra gente de fora sem parecer rascunho
+- Comecei o roteiro do vídeo de apresentação da empresa pra investidor: 3 versões de mais ou menos 1 minuto e meio, todas fechando em "estamos prontos pra ser o maior aplicativo contábil do Brasil"
+- Todas usam os seus 22 anos de contabilidade como lastro e explicam por que a gente começa por BH (a capital que abre empresa mais rápido do país)
+- Falta escolher qual das 3 e gravar a narração
 ```
 
 ## Links

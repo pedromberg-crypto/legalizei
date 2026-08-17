@@ -37,6 +37,7 @@ assunto: estrategia
 - **Metodologia:** Lean/Customer Development antes de ágil. Build = Kanban / ciclos curtos, sem teatro ágil. Camada contábil ≠ ágil (presa a calendário fiscal / compliance).
 
 ## 4. Decisões tomadas
+- 🟢 **Escopo do V1 = SÓ SERVIÇO. Comércio não entra — nenhum, nem o leve** (15/07; reafirmado 17/08). Não é "recusamos comércio pesado": é comércio inteiro fora, por ora. Os 200 CNAEs de Anexo I ficam em [[cnae-comercio-standby]] pra reencaixe depois do V1. Quem chega com comércio vai pro **contato especial (Legalize Digital tradicional)**, que atende — a receita não se perde, só não entra no app.
 - 🟢 **Salário Pedro (fase inicial):** 12k PJ, declarado abaixo de mercado (= sweat equity). 🔴 gatilho de revisão a definir (marco de receita ou 6–12 meses).
 - 🟢 **Sociedade = salário + equity.** Travar FRAMEWORK de equity agora; % exato após fase 0 / estrutura do aporte.
 - 🟢 **Levar 3 cenários de fase 0** (enxuto / intermediário / robusto): mesmo objetivo e critério de sucesso; muda velocidade × carga do Pedro × custo. Todos << R$200k.
@@ -99,6 +100,8 @@ assunto: estrategia
 2. **Contra quem competimos de verdade** — status quo (55% planilha/caderno) + a sangria (multas, 1,8 mi excluídos do Simples). Agita a dor.
 3. **Tamanho do prêmio** — 24,2 mi empresas, 82% serviço+comércio, ~7,4 mi pagantes, líder <1% (não saturado).
 4. **Não reinventar a roda** — atender os mesmos CNAEs que a Contabilizei valida há 13 anos; a mesma roda, só melhor. (argumento central)
+
+> ⚠️ **Este deck é de 23/06 e envelheceu nos slides 3 e 4** (registro histórico, não reaproveitar cru). O 82% soma serviço **+ comércio**, e o slide 4 promete "os mesmos CNAEs do líder" — as duas coisas ficaram falsas com a decisão de 15/07 de cortar comércio do V1 (§4). Reapresentar exige refazer os dois: o mercado endereçável do V1 é a fatia de **serviço**, e o recorte é **mais apertado** que o do líder, de propósito.
 5. **Onde a gente se encaixa** — comparativo de preço × entrega (Contabilizei/Agilize/Facilite/LP atual/proposto).
 6. **Por que sai do papel** — Legalize como engine (22 anos, compliance, apoio). Produto 100% digital.
 7. **O caminho até o mercado** — maturação sutil: 5–6 meses p/ MVP sólido; vendas reais a partir do 3º mês; início = 2 meses de imersão. SEM custo/sociedade.
@@ -137,7 +140,8 @@ Mesmo objetivo (validar demanda/preço/ICP/gargalos) e mesmo gate. Muda: velocid
 ## 13. Estratégia de validação, V0 e V1 🟡
 **Mudança de direção (sessão 6 — Pedro corrigiu o beachhead):** a validação NÃO será na carteira existente da Legalize (clientes complexos, demandam folha/DP → não testam o produto simples). Validação = **mercado FRIO real, nicho apertado, via tráfego pago + assinaturas reais.** Prova que existe produto que ganha cliente, não só eficiência interna.
 
-- **Nicho V1 = ME prestador de serviço, Simples, baixa complexidade (caso do Pedro).** Precisão (ver §J da pesquisa): **serviço PJ no Simples, Anexos III/V, Fator R; evitar mercadoria/indústria/folha pesada/Lucro Real.** Espelha a **fronteira da automação** do líder — ele só atende o que dá pra automatizar com margem. Profissional liberal (médico/advogado) = alto LTV (fase posterior).
+- **Nicho V1 = ME prestador de serviço, Simples, baixa complexidade (caso do Pedro).** Precisão (ver §J da pesquisa): **serviço PJ no Simples, Anexos III/V, Fator R; fora indústria/folha pesada/Lucro Real.** Profissional liberal (médico/advogado) = alto LTV (fase posterior).
+  - ⚠️ **Comércio fica INTEIRO fora do V1 — nenhum, nem o leve** (decisão 15/07, [[cnae-comercio-standby]]). Nosso recorte é **mais apertado que a fronteira do líder**: ele atende serviço **+ comércio leve**, nós só serviço. Onde a pesquisa disser "espelhamos o sweet spot do líder", vale só pra metade de serviço. Os **200 CNAEs de comércio (Anexo I)** estão congelados pra reencaixe pós-V1, não descartados.
 - **North star do V1:** entregar **melhor UX + dashboard que o plano mais barato da Contabilizei (R$139–195)** faz, pro mesmo perfil. Concreto, comparável, testável.
 - **Papel da Legalize (sala de máquinas, NÃO fachada):** **contador responsável (CRC) + compliance** (obrigatório por lei p/ ME no Simples — ver abaixo) + conhecimento + backbone operacional + canal/receita futura. App = matriz; Legalize = engine room barato que de-risca.
 - **⚠️ Contador é OBRIGATÓRIO, não adiável.** ME no Simples exige escrituração + obrigações (SPED/ECF/DEFIS) assinadas por contador CRC. O print do plano R$195 confirma: "documentos assinados por contador especializado". Software faz o trabalho; contador assina a responsabilidade legal. Único isento = MEI (por isso o líder ignora MEI e foca ME). **Legalize fornece o contador responsável desde o V1 — barato, sem montar time do zero.**

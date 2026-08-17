@@ -63,7 +63,7 @@ tags: [concorrente, insight]
 ## 🔑 O cruzamento (o insight que importa)
 - **SEO diz "sim" pra quase tudo; a operação diz "não" pra 17 blocos inteiros.** A diferença = a §J provada com dado: o recorte de CNAE deles é a **fronteira da automação + proteção de margem**.
 - **O que eles cortam tem um padrão claro:** o que quebra a automação ou some com a margem — mercadoria pesada/ICMS-ST (material de construção, farmácia, indústria), folha/risco trabalhista (terceirização, Anexo IV), ICMS de transporte, e complexidade regulatória sem escala (cartório, cooperativa, ONG, financeira).
-- **O sweet spot deles (= nosso nicho):** serviço + comércio leve no Simples, Anexos I/III/V, apuração quase determinística, folha mínima. Profissional liberal (médico/advogado) = alto LTV, mas exige RT/conselho (fase posterior pra nós).
+- **O sweet spot deles:** serviço + comércio leve no Simples, Anexos I/III/V, apuração quase determinística, folha mínima. **Nosso nicho é um subconjunto disso, não igual:** o V1 pega só a parte de **serviço** (III/IV/V) e deixa o comércio (Anexo I) de fora inteiro — [[cnae-comercio-standby]]. Profissional liberal (médico/advogado) = alto LTV, mas exige RT/conselho (fase posterior pra nós).
 - **Oportunidade Legalizei:** (a) espelhar o recorte deles no MVP (não reinventar o filtro — 13 anos validaram); (b) a lista de 17 recusadas é o **mapa do que NÃO construir no V1** (economiza esforço); (c) transparência: mostrar upfront "atendemos X, não atendemos Y" (eles escondem no suporte) = confiança + qualificação de lead.
 
 ## 📌 Distinção de fontes (de onde veio cada dado)

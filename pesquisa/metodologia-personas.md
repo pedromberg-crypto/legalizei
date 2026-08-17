@@ -89,7 +89,8 @@ Seeds de QA que alimentaram as dorsais: `reta`/`reta-direto` (dev freelancer) �
 
 ## Quem NÃO é público (anti-persona)
 
-- Empresas fora do nicho serviço/Simples (indústria, comércio pesado, Lucro Real) — fora do escopo fiscal do produto
+- **Comércio inteiro — nenhum, nem o leve.** Varejo, loja, revenda, qualquer atividade de mercadoria fica fora do V1 (decisão 15/07, [[cnae-comercio-standby]]). Não é só "comércio pesado". Saída = contato especial → Legalize Digital tradicional.
+- Empresas fora do nicho serviço/Simples (indústria, construção, transporte, agro, Lucro Real) — fora do escopo fiscal do produto
 - Lucro Presumido — bloqueado no fluxo (`/saida/regime-nao-suportado`), motor fiscal diferente, sem pesquisa dedicada ainda
 - Comprador só-preço sem fit de valor — quem quer o Contaja de R$137 com à la carte, não o "preço fechado" do Legalizai
 

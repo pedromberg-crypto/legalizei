@@ -12,13 +12,15 @@ tags: [cnae, dev, escopo]
 
 # 🗂️ CNAEs mapeados — atendidos, condicionais e não atendidos (Legalizei)
 
-> Entregável pro programador. Universo = **1332 subclasses CNAE** (fonte-verdade: API oficial IBGE). Classificação de cobertura = espelho do **filtro operacional real da Contabilizei** (13 anos validando o que automatiza/protege margem) — nosso MVP mira o mesmo sweet spot: **serviço + comércio leve no Simples**.
+> Entregável pro programador. Universo = **1332 subclasses CNAE** (fonte-verdade: API oficial IBGE). Classificação de cobertura = espelho do **filtro operacional real da Contabilizei** (13 anos validando o que automatiza/protege margem): **serviço + comércio leve no Simples**.
+>
+> ⚠️ **Esta lista é a do LÍDER, não a do nosso V1.** Decisão de 15/07: o MVP atende **só serviço** — os **200 CNAEs de comércio (Anexo I)** que estão marcados ✅ aqui **saíram do V1** e vivem em [[cnae-comercio-standby]]. Quem implementa o flow usa **[[cnae-liso-servico]]** como whitelist, não os 460 daqui. Os 460 seguem valendo como mapa do mercado e como fila de reencaixe pós-V1.
 
 ## Resumo
 
 | Classe | Qtd | Regra |
 |---|---|---|
-| ✅ Atendidos | 460 | serviço + comércio leve no Simples (presumido) |
+| ✅ Atendidos | 460 | serviço + comércio leve no Simples (presumido) — **destes, só os ~260 de serviço entram no V1** |
 | ⚠️ Condicionais | 68 | regulamentadas — exigem responsável técnico (RT) + conselho |
 | ⛔ Não atendidos | 804 | 17 categorias que quebram automação/margem (indústria, agro, construção, transporte, etc.) |
 | **Total** | **1332** | universo IBGE |
@@ -104,7 +106,7 @@ tags: [cnae, dev, escopo]
 | 8690-9/99 | OUTRAS ATIVIDADES DE ATENÇÃO À SAÚDE HUMANA NÃO ESPECIFICADAS ANTERIORMENTE | Q | III/IV/V* | regulamentada — exige responsável técnico + conselho |
 
 ## ✅ Atendidos (460)
-> Serviço + comércio leve no Simples. Sweet spot do MVP.
+> Serviço + comércio leve no Simples. Sweet spot **do líder** — o V1 fica só com a parte de serviço ([[cnae-liso-servico]]); os de Anexo I aqui listados estão em standby.
 
 | CNAE | Descrição | Seção | Anexo |
 |---|---|---|---|

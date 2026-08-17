@@ -300,6 +300,11 @@ body {{
   font-size:9.6pt; line-height:1.55; font-weight:400;
 }}
 
+/* O creme das paginas de conteudo NAO sai daqui: o Chrome nunca pinta
+   dentro da margem de impressao (14/13/16/13mm), nem com position:fixed
+   nem via header/footer template — testados os dois, ambos clipam.
+   Quem pinta o papel inteiro e' `pintar-fundo.py`, depois do print. */
+
 /* ── CAPA ── */
 .capa {{
   height:297mm; padding:22mm 20mm 18mm; display:flex; flex-direction:column;

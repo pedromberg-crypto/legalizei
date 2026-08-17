@@ -60,7 +60,7 @@ Produto novo, sem base de clientes ainda → mais peso em prova/diferencial do q
 | Ângulo | Hook |
 |---|---|
 | Preço fechado | "Sem 'a partir de'. O preço que você vê é o que você paga." |
-| Humano na entrada | "Contador de verdade desde o primeiro plano, não só quando você paga mais." |
+| Humano na entrada | "Contador de verdade desde o primeiro plano do Simples. Não só quando você paga mais." (⚠️ o qualificador "do Simples" é obrigatório: MEI tem assistente virtual, ver [[posicionamento]] §2) |
 | Hiperlocal BH | "A gente sabe o que é ISS de BH sem você ter que explicar." |
 | Garantia | "7 dias pra mudar de ideia. Dinheiro de volta, sem letra miúda." |
 

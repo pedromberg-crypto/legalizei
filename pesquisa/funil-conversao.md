@@ -37,7 +37,7 @@ tags: [pesquisa, marketing, trafego-pago]
 
 ### O que precisa acontecer
 - Ad leva **direto pro WhatsApp**, não pra landing page pesada com formulário — reduz fricção e custo de aprendizado do algoritmo
-- Proposta de valor clara: preço fechado + humano de verdade
+- Proposta de valor clara: preço fechado + humano de verdade (contador CRC a partir do plano ME/Simples; no MEI, assistente virtual de contabilidade)
 
 ### Métrica-chave
 - CPL: R$40-80 (estimativa nicho contábil) — [[trafego-pago-contabilidade-mercado]] §1

@@ -32,7 +32,7 @@ tags: [pesquisa, concorrente, matriz]
 Legalizei ocupa espaço combinando **3 variáveis** que nenhum concorrente direto atende juntas:
 
 - **Preço fechado sem asterisco** — todos os 5 diretos usam "a partir de", simulador gated, ou ajuste pós-contato. Nenhum crava número final na tela.
-- **Humano no plano de ENTRADA** — em todos os 5, contador/gerente nomeado só aparece no tier caro (R$359–700). Legalizei propõe isso desde o primeiro plano.
+- **Humano no plano de ENTRADA** — em todos os 5, contador/gerente nomeado só aparece no tier caro (R$359–700). Legalizai propõe isso **desde o primeiro plano do Simples Nacional (R$139)**. No MEI (R$49,90) a camada é assistente virtual, não contador dedicado (decisão 17/08) — o que não afeta a comparação, porque a briga é em plano de Simples e o líder nem atende MEI.
 - **Hiperlocal BH operacional** — Contaja já é MG (CRC), mas nenhum trata ISS-BH/alvará PBH/Junta MG como produto; é onde a Legalize (22 anos de operação local) tem vantagem estrutural que nenhum digital-native nacional replica rápido.
 
 ## Dimensões de comparação

@@ -83,12 +83,22 @@ Fórmula: vendas p/ empatar = budget ÷ sobra técnica.
 
 MEI já mostra o problema: mesmo SEM contar honorário contábil, a sobra é curta. Se o honorário por cliente ficar perto ou acima de R$34,90, **o plano MEI pode não sustentar CAC nenhum** — sinal de alerta antecipado, não esperar dado real do Mauro pra suspeitar disso.
 
+> ✅ **Atacado em 17/08 — o MEI deixa de carregar honorário contábil.** Decisão de escopo: **contador CRC só a partir do plano ME/Simples (R$139)**; o MEI passa a ter **assistente virtual de contabilidade**. Sustentado por lei, não só por margem: **MEI é o único regime dispensado de contador** (sem escrituração obrigatória, DASN-SIMEI autodeclaratória).
+>
+> **O que isso muda de fato:** o alerta acima era "o honorário pode comer os R$34,90 inteiros". Com a decisão, o custo variável do MEI vira **custo de assistente (infra/IA), não hora de contador** — ordem de grandeza menor e que **não cresce por cliente** do mesmo jeito.
+>
+> ⚠️ **Não recalculei a tabela.** O custo do assistente ainda não foi medido, e trocar um número não-medido por outro não-medido não melhora nada. O que muda hoje é a **natureza** do custo, não o valor. Fica na fila junto do honorário do Mauro:
+> - [ ] medir custo unitário real do assistente virtual por cliente MEI/mês (tokens + infra)
+> - [ ] com esse número, refazer §6 e §9 **só pra linha MEI**
+>
+> ⚠️ Também **não reabre** a decisão de 05/08 de manter MEI fora de tráfego pago frio ([[decisoes-marca]]). Ela pendia do CAC-alvo, que segue sem número novo. Quando o custo do assistente for medido, é gatilho pra revisitar — não antes.
+
 ---
 
 ## 7. Leituras estratégicas
 
 - **Preço ME caiu 28,7%** (R$195 → R$139) — sai da faixa Contabilizei (R$195) e chega perto da Contaja (R$137, entrada mais barata do mercado mapeado). Reposiciona a régua de preço pra baixo, mais perto do challenger barato que do líder.
-- **MEI a R$49,90** segue ~2,8x mais barato que ME — coerente com plano simplificado, mas é a oferta que **primeiro vai quebrar** quando honorário real entrar na conta (ver §6).
+- **MEI a R$49,90** segue ~2,8x mais barato que ME — coerente com plano simplificado. Era a oferta que **primeiro ia quebrar** quando o honorário real entrasse na conta; a decisão de 17/08 (assistente virtual no lugar do contador dedicado, ver §6) tira o honorário dessa linha e ataca a causa. Custo do assistente ainda não medido.
 - **Pendência crítica única:** honorário contábil real (Mauro) é o próximo dado que destrava CAC-alvo de verdade. Até lá, qualquer decisão de escalar budget de ads usando os números deste doc corre risco de queimar caixa — use os CAC-alvo daqui só como teto de teste pequeno, não meta de escala.
 
 ---

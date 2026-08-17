@@ -850,12 +850,18 @@ const INCLUSO: { titulo: string; sub: string }[] = [
 
 /** 🆕 04/08 — Plano MEI é escopo LIMITADO (emitir NF + o 1 colaborador que a
  *  lei permite), não o plano ME reduzido — por isso lista própria, não um
- *  filtro do array acima (MEI não tem sócio, não tem Anexo/Fator R). */
+ *  filtro do array acima (MEI não tem sócio, não tem Anexo/Fator R).
+ *
+ *  🆕 17/08 — MEI NÃO tem contador dedicado: tem assistente virtual. O contador
+ *  CRC começa no plano ME/Simples. Base legal, não só margem: MEI é o único
+ *  regime dispensado de contador (sem escrituração obrigatória, DASN-SIMEI
+ *  autodeclaratória). Dizer "contador de verdade" aqui era a promessa vazia que
+ *  a marca acusa o setor de fazer. Ver `pesquisa/posicionamento.md` §2. */
 const INCLUSO_MEI: { titulo: string; sub: string }[] = [
   { titulo: "Certificado digital", sub: "Incluso, sem custo extra — a gente precisa dele pra te representar." },
   { titulo: "Notas fiscais sem limite", sub: "Emite pelo app, em segundos." },
   { titulo: "1 colaborador", sub: "O único que a lei permite ao MEI — FGTS e INSS patronal inclusos." },
-  { titulo: "Contador de verdade", sub: "Uma pessoa com nome, no WhatsApp." },
+  { titulo: "Assistente de contabilidade", sub: "Tira dúvida e resolve a rotina do MEI, a qualquer hora." },
 ];
 
 function PlanoOferta({

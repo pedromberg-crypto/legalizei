@@ -40,11 +40,22 @@ tags: [marketing, estrategia, validacao, reuniao]
 1. **Penetração de 0,7% do líder = mercado aberto, não saturado.** Mesmo com ~R$1 bilhão de capital de risco por trás (SoftBank R$320mi em 2021 + Warburg Pincus ~R$700mi em 2024), a Contabilizei não fechou o mercado. Isso não é mercado maduro em consolidação; é mercado ainda por ser servido.
 2. **Regionalizar não encolhe a oportunidade.** A meta do MVP é 25-30 clientes fundadores em 3 meses. BH sozinha tem ~100-175 mil empresas no ICP. **0,1% do ICP de BH já é 100-175 clientes** — múltiplo da meta.
 3. **BH valida por dois lados ao mesmo tempo:** tamanho (centenas de milhares no perfil) E facilidade operacional (abertura em 11h, a mais rápida do país). Não é "começar pequeno" — é começar no lugar mais fácil e grande o bastante.
-4. **As atividades-top de BH são exatamente o nosso perfil:** salão/beleza, varejo vestuário, apoio administrativo, treinamento. Não estamos forçando um ICP contra a realidade da cidade.
+4. **3 das 4 atividades-top de BH são o nosso perfil:** salão/beleza, apoio administrativo e treinamento entram; **varejo de vestuário é comércio e está fora do V1** (ver abaixo). Não estamos forçando um ICP contra a realidade da cidade, mas também não contamos o varejo a nosso favor.
 
 ### Ressalva honesta
 
 O recorte de ~100-175 mil é **estimativa por faixa**, não número cravado. O dado preciso sairia de puxar a base aberta da Receita (CNPJ) filtrando município=BH + CNAE do perfil + Simples + porte ME. Está mapeado como pendência técnica, não foi feito ainda.
+
+**E a faixa é otimista no teto.** Ela desceu por um degrau da conta que ainda continha comércio, e **o V1 não atende comércio nenhum** (ver abaixo). Enquanto a pendência acima não virar dado, a régua honesta é o **piso ~100 mil**. O argumento não muda: mesmo a 100 mil, 0,1% = 100 clientes, ainda múltiplo da meta de 25-30 fundadores.
+
+### ⚠️ O recorte é mais apertado que o do líder — de propósito
+
+A Contabilizei atende **serviço + comércio leve**. O nosso V1 atende **só serviço**: comércio fica inteiro de fora, não só o "pesado". São **200 CNAEs de Anexo I congelados** pra reencaixe depois do V1, não descartados.
+
+Duas consequências que valem pra leitura inteira deste documento:
+
+1. **Onde a pesquisa citar "82% serviço+comércio" ou "os mesmos CNAEs do líder", isso mede o mercado DELE.** O nosso parte dos **53,6% de serviço**. Todo número de mercado aqui deve ser lido pelo piso.
+2. **Comércio não é lead perdido, é lead desviado.** Quem chega com comércio vai pro atendimento tradicional da Legalize Digital, que atende há 22 anos. A receita fica na casa; só não entra no app.
 
 > **❓ Pergunta de validação**
 > A leitura "mercado aberto, não saturado" se sustenta na experiência dele? Ou estamos otimistas demais ao tratar 0,7% de penetração como espaço livre em vez de sinal de que o produto é difícil de vender?
@@ -59,7 +70,7 @@ Mapeamos 6 concorrentes diretos + indiretos + aspiracionais, com captura de pág
 
 | Player | Origem | Tipo | Preço entrada | Diferencial de modelo |
 |---|---|---|---:|---|
-| **Legalizai** | BH/MG (Legalize Digital, 22 anos) | — | R$139 ME · R$49,90 MEI | preço fechado + humano na entrada + hiperlocal BH |
+| **Legalizai** | BH/MG (Legalize Digital, 22 anos) | — | R$139 ME · R$49,90 MEI | preço fechado + humano já no 1º plano do Simples + hiperlocal BH |
 | Contabilizei | Nacional (SP, 2013) | Direto | R$139-195 (escala por faturamento) | maior escala, SEO dominante, margem real em corretagem |
 | Agilize | Nacional | Direto | R$259 (fixo, 20% off permanente) | único preço fixo (por volume, não faturamento) |
 | Contaja | MG (CRC MG) | Direto | R$137 Simples · R$49,90 MEI | piso de preço do setor, à la carte agressivo |
@@ -99,7 +110,7 @@ Craft impecável é diferenciação quase de graça — ninguém investe nisso h
 
 ### Statement
 
-> **Para o autônomo que virou PJ prestador de serviço** (marketing, TI, consultoria, beleza, saúde) **e vive com medo de errar e pagar imposto a mais**, a Legalizai é a **contabilidade digital que fala a sua língua e cuida do chato pra você** — ao contrário do escritório tradicional (lento, formal, distante) e do app frio dos concorrentes digitais (sem humano no plano de entrada, preço com asterisco), a Legalizai tem **contador de verdade desde o primeiro plano e preço fechado, sem surpresa.**
+> **Para o autônomo que virou PJ prestador de serviço** (marketing, TI, consultoria, beleza, saúde) **e vive com medo de errar e pagar imposto a mais**, a Legalizai é a **contabilidade digital que fala a sua língua e cuida do chato pra você** — ao contrário do escritório tradicional (lento, formal, distante) e do app frio dos concorrentes digitais (humano só no tier caro, preço com asterisco), a Legalizai tem **contador de verdade desde o primeiro plano do Simples Nacional e preço fechado, sem surpresa.**
 
 ### Categoria mental
 
@@ -108,14 +119,27 @@ Craft impecável é diferenciação quase de graça — ninguém investe nisso h
 - ❌ App de contabilidade frio/autoridade distante — a categoria que a Contabilizei ocupa, vitrine de cross-sell em vez de foco no job do cliente
 
 **É:**
-- ✅ **Contabilidade digital humana.** Tecnologia é o meio (agilidade, preço, clareza); o humano por trás (contador CRC real) é o fim que resolve a ansiedade nº1 da categoria: *"isso aqui tem gente de verdade?"*
+- ✅ **Contabilidade digital humana.** Tecnologia é o meio (agilidade, preço, clareza); o humano por trás (contador CRC real) é o fim que resolve a ansiedade nº1 da categoria: *"isso aqui tem gente de verdade?"* A partir do **primeiro plano do Simples**; no MEI o meio é o assistente virtual, e isso se diz na cara.
+
+### Onde a camada humana começa (decisão 17/08)
+
+| Plano | O que ele tem | Por quê |
+|---|---|---|
+| **MEI · R$49,90** | **Assistente virtual de contabilidade.** Resolve a rotina do MEI (DAS-SIMEI, DASN-SIMEI, nota fiscal) e tira dúvidas. Sem contador dedicado. | **MEI é o único regime que a lei dispensa de contador** (sem escrituração obrigatória, DASN-SIMEI autodeclaratória). Não estamos cortando algo prometido: é o escopo que a própria lei desenha. |
+| **ME/Simples · R$139 e acima** | **Contador CRC de verdade**, pessoa com nome no WhatsApp. | Aqui a lei **exige** contador (SPED/ECF/DEFIS assinados). É onde a ferida da categoria dói, e onde o concorrente cobra R$359+ pra curar. |
+
+**Isso não enfraquece o diferencial, torna ele defensável.** A briga sempre foi em planos de Simples: entregamos humano a **R$139** onde o mercado entrega **a partir de R$359**. O MEI nunca foi esse campo — a Contabilizei nem atende MEI.
+
+**Efeito colateral bom:** a economia já apontava o MEI como *"a oferta que primeiro vai quebrar quando o honorário real entrar na conta"* (sobra técnica de R$34,90, antes de honorário). Tirar o contador dedicado do MEI ataca exatamente esse custo.
+
+⚠️ **A frase curta "contador de verdade desde o primeiro plano" morre aqui.** Em peça pública ela vira promessa falsa na boca de quem assina MEI, que é o pecado que estamos acusando o setor de cometer. Sempre com o qualificador: **"do Simples Nacional"**.
 
 ### Os 5 diferenciais cravados
 
 | # | Diferencial | Por que ninguém tem |
 |---|---|---|
 | 1 | **Preço fechado, sem asterisco** | nenhum dos 5 diretos crava número final na tela; o valor da tela é o valor da fatura |
-| 2 | **Humano no plano de ENTRADA, não upsell** | nos 5, contador nomeado só no tier R$359-700+ |
+| 2 | **Humano no plano de entrada do SIMPLES, não upsell** | nos 5, contador nomeado só no tier R$359-700+; nós entregamos a R$139 (MEI = assistente virtual, ver acima) |
 | 3 | **Hiperlocal BH/MG operacional** | Contaja é mineira, mas ninguém trata ISS-BH, alvará PBH e Junta MG como parte do produto; 22 anos de operação local é vantagem que digital-native nacional não replica rápido |
 | 4 | **Mobile-first de verdade** | "mobile-first" é discurso em todo o setor, quebrado na prática |
 | 5 | **Custo de saída declarado** | ninguém precifica baixa/migração na vitrine; declarar de cara é fosso de confiança que ninguém abriu |
@@ -253,6 +277,10 @@ Duas camadas vivas: **dorsais** (personas canônicas, permanentes, mudam só por
 | **Exclusão de linguagem** | zero "startup"/"disrupção" — são imigrantes digitais, não nativos |
 | **LTV-hipótese** | potencialmente altíssima (baixíssimo churn) mas exige onboarding assistido |
 
+> ⚠️ **Atrito honesto entre a persona C e a decisão de 17/08.** O contorno dela é literalmente *"humano de verdade acessível, **não chatbot**"* — e ela é a persona com mais chance de cair no **MEI**, o único plano que passa a ter **assistente virtual** em vez de contador. As duas coisas foram decididas com razão e mesmo assim brigam.
+>
+> Não é motivo pra desfazer nenhuma das duas: o assistente do MEI existe pra resolver de fato, não pra empurrar o cliente pra FAQ, e a C se converte por indicação e WhatsApp, onde há gente. Mas é o ponto onde a decisão pode machucar na rua, e o teste é dela: **se a C achar que virou "só um robô", a decisão do MEI está errada pra ela** ainda que esteja certa na margem.
+
 ### Matriz mestre — ocasião × persona × oferta × mensagem
 
 | Ocasião/contexto | Persona | Oferta | Mensagem-âncora | Canal |
@@ -266,8 +294,9 @@ Duas camadas vivas: **dorsais** (personas canônicas, permanentes, mudam só por
 
 ### Quem NÃO é público (anti-persona)
 
-- Empresas fora do nicho serviço/Simples (indústria, comércio pesado, Lucro Real)
-- Lucro Presumido — bloqueado no fluxo, motor fiscal diferente, sem pesquisa dedicada
+- **Comércio inteiro — nenhum, nem o leve.** No V1 não atendemos varejo, loja, revenda ou qualquer atividade de mercadoria. Não é "só o comércio pesado que fica fora": é comércio todo, por ora. Vai pro atendimento tradicional da Legalize Digital.
+- Indústria, construção, transporte, agro — fora do escopo fiscal do produto
+- Lucro Real e **Lucro Presumido** — bloqueados no fluxo, motor fiscal diferente, sem pesquisa dedicada
 - Comprador só-preço sem fit de valor — quem quer o Contaja de R$137 com à la carte, não o "preço fechado"
 
 ### Lacuna assumida
@@ -294,7 +323,7 @@ Nenhuma dorsal cobre o **MEI puro que nunca vai virar ME** (baixo ticket, alto v
 | Ângulo | Hook | Ancorado em |
 |---|---|---|
 | Preço fechado | "Sem 'a partir de'. O preço que você vê é o que você paga." | nenhum concorrente crava preço final |
-| Humano na entrada | "Contador de verdade desde o primeiro plano, não só quando você paga mais." | ferida de confiança nº1 do setor |
+| Humano na entrada | "Contador de verdade desde o primeiro plano do Simples. Não só quando você paga mais." | ferida de confiança nº1 do setor · ⚠️ o qualificador "do Simples" é obrigatório, MEI tem assistente virtual |
 | Hiperlocal BH | "A gente sabe o que é ISS de BH sem você ter que explicar." | 22 anos de operação local |
 | Garantia | "7 dias pra mudar de ideia. Dinheiro de volta, sem letra miúda." | CDC art.49, já é contratual |
 | Crescimento (B) | "Cresça sem perder o atendimento pessoal." | objeção "virar só mais um número" |

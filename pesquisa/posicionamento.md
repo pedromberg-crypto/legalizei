@@ -13,7 +13,9 @@ tags: [pesquisa, marca, posicionamento]
 
 ## Statement de posicionamento
 
-> **Para o autônomo que virou PJ prestador de serviço (marketing, TI, consultoria, beleza, saúde) e vive com medo de errar e pagar imposto a mais, a Legalizai é a contabilidade digital que fala a sua língua e cuida do chato pra você — ao contrário do escritório tradicional (lento, formal, distante) e do app frio dos concorrentes digitais (sem humano no plano de entrada, preço com asterisco), a Legalizai tem contador de verdade desde o primeiro plano e preço fechado, sem surpresa.**
+> **Para o autônomo que virou PJ prestador de serviço (marketing, TI, consultoria, beleza, saúde) e vive com medo de errar e pagar imposto a mais, a Legalizai é a contabilidade digital que fala a sua língua e cuida do chato pra você — ao contrário do escritório tradicional (lento, formal, distante) e do app frio dos concorrentes digitais (humano só no tier caro, preço com asterisco), a Legalizai tem contador de verdade desde o primeiro plano do Simples Nacional e preço fechado, sem surpresa.**
+
+> ⚠️ **A precisão "do Simples Nacional" é obrigatória, não estilo** (decisão 17/08). O **MEI não tem contador dedicado** — tem **assistente virtual de contabilidade**. Escrever "desde o primeiro plano" seco vira promessa falsa na boca de quem assina MEI, e a ferida que estamos explorando é justamente a de promessa de humano que não se cumpre. Nunca soltar a frase curta em peça pública.
 
 ## Categoria mental
 
@@ -22,7 +24,7 @@ Legalizai NÃO é:
 - ❌ App de contabilidade frio/autoridade distante (a categoria que a Contabilizei ocupa) — vitrine de cross-sell em vez de foco no job do cliente
 
 Legalizai É:
-- ✅ **Contabilidade digital humana** — tecnologia é o meio (agilidade, preço, clareza), o humano por trás (contador CRC real) é o fim que resolve a ansiedade nº1 da categoria: "isso aqui tem gente de verdade?"
+- ✅ **Contabilidade digital humana** — tecnologia é o meio (agilidade, preço, clareza), o humano por trás (contador CRC real) é o fim que resolve a ansiedade nº1 da categoria: "isso aqui tem gente de verdade?" **A partir do primeiro plano do Simples**; no MEI o meio é o assistente virtual, e isso se diz na cara.
 
 > Claim de marketing travado (13/07): **"A única contabilidade 100% digital de verdade"** — guerrilha comparativa direta (cores dos rivais, sem citar nome/logo). É claim de posicionamento, não descrição operacional: internamente ~15-20% dos casos ainda exige intervenção humana ([[2026-07-10-teto-automacao-orgaos-sem-api]]). O diferencial real não é "zero humano" — é ser sincero desde a entrada e ter humano quando precisa, ao contrário de quem esconde isso atrás de tier caro.
 
@@ -31,8 +33,19 @@ Legalizai É:
 ### 1. Preço fechado, sem asterisco
 Nenhum dos 5 concorrentes diretos mapeados crava número final na tela — todos usam "a partir de", simulador gated, ou ajuste pós-contato ([[matriz-comparativa]]). O valor da tela é o valor da fatura.
 
-### 2. Humano no plano de ENTRADA, não upsell
-Nos 5 concorrentes, contador/gerente nomeado só aparece no tier caro (R$359-700+). A pergunta mais repetida nos FAQs do setor é "vocês têm contador DE VERDADE?" — Legalizai responde isso desde o primeiro plano, não como upgrade.
+### 2. Humano no plano de ENTRADA do Simples, não upsell
+Nos 5 concorrentes, contador/gerente nomeado só aparece no tier caro (R$359-700+). A pergunta mais repetida nos FAQs do setor é "vocês têm contador DE VERDADE?" — Legalizai responde isso **no primeiro plano do Simples Nacional (R$139)**, não a partir de R$359.
+
+**Onde a linha passa (17/08):**
+
+| Plano | Camada humana | Por quê |
+|---|---|---|
+| **MEI (R$49,90)** | **Assistente virtual de contabilidade** — resolve a rotina do MEI (DAS-SIMEI, DASN-SIMEI, nota fiscal) e tira dúvidas. Sem contador dedicado. | **MEI é o único regime que a lei dispensa de contador** (sem escrituração obrigatória; DASN-SIMEI é autodeclaratória). Não é corte de escopo prometido: é o escopo que a lei já desenha. |
+| **ME/Simples (R$139) e acima** | **Contador CRC de verdade**, pessoa com nome no WhatsApp | Aqui a lei EXIGE contador (SPED/ECF/DEFIS assinados). É onde a ferida da categoria dói, e é onde o concorrente cobra R$359+ pra curar. |
+
+**O diferencial não enfraquece, fica mais defensável.** A comparação sempre foi contra planos de Simples: entregamos humano a R$139 onde o mercado entrega a partir de R$359. O MEI nunca foi o campo dessa briga — o líder nem atende MEI.
+
+⚠️ **Risco de leitura a vigiar:** "contador de verdade" no MEI seria exatamente o tipo de promessa vazia que estamos acusando o setor de fazer. A honestidade aqui é parte do produto, não ressalva de rodapé. Ver [[legalize-portal-monetizacao-baldes]] (regra anti-dark-pattern).
 
 ### 3. Hiperlocal BH/MG operacional
 Contaja já é mineira (CRC-MG), mas nenhum concorrente trata ISS-BH, alvará PBH e particularidades da Junta MG como parte do produto. A Legalize (22 anos de operação real em BH) é vantagem estrutural que nenhum digital-native nacional replica rápido.

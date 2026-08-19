@@ -8,11 +8,11 @@ etapa: simbolo
 tags: [marca, design, simbolo, logo]
 ---
 
-# 🔣 Exploração de símbolo — Legalizei (rascunhos)
+# 🔣 Exploração de símbolo — Legalizai Story Book (rascunhos)
 
-> ✅ **RESOLVIDO em 2026-07-12** → ver [[2026-07-12-logo-fechado]] e master [[legalizei-logo-horizontal.svg]]. O caminho vencedor não foi nenhum destes puros: virou **selo quadrado (linha C1) com check vazado + sangrado**, mantendo o "-i" coral do wordmark como assinatura (eco do B1). Esta nota fica como histórico da exploração.
+> ✅ **RESOLVIDO em 2026-07-12** → ver [[2026-07-12-logo-fechado]] e master [[legalizai-story-book-logo-horizontal.svg]]. O caminho vencedor não foi nenhum destes puros: virou **selo quadrado (linha C1) com check vazado + sangrado**, mantendo o "-i" coral do wordmark como assinatura (eco do B1). Esta nota fica como histórico da exploração.
 >
-> Direção conceitual: **"Legalizei = consegui"** (1ª pessoa, passado = conquista). Rascunhos vetoriais (SVG mão-livre) pra provocar direção. Cor/arquétipo/tom já travados ([[decisoes-marca]], [[paleta-cores]], [[conceito-marca]]).
+> Direção conceitual: **"Legalizai Story Book = consegui"** (1ª pessoa, passado = conquista). Rascunhos vetoriais (SVG mão-livre) pra provocar direção. Cor/arquétipo/tom já travados ([[decisoes-marca]], [[paleta-cores]], [[conceito-marca]]).
 
 ## Caminhos rascunhados
 | Cód | Ideia | Leitura |

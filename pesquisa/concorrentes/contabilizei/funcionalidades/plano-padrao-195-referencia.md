@@ -128,7 +128,7 @@ Fonte: `pesquisa/concorrentes/contabilizei/2026-07-21-dossie-plataforma-logada.m
 3. **Preço transparente de verdade:** custo real do perfil, sem "a partir de", sem surcharge-surpresa, com **regra de reajuste explícita** (eles escondem o IGP-DI num chat).
 4. **Provavelmente 1 plano único** (mata a paralisia de 4 tiers + o downsell "Manutenção R$79"). Preço ainda **DEFERIDO até custo real** ([[legalize-preco-deferido-custo-real]]).
 
-## 🚨 Pontos de alerta / oportunidade pro Legalizei
+## 🚨 Pontos de alerta / oportunidade pro Legalizai Story Book
 1. **Prazo de abertura NÃO divulgado** 🔴 — Contabilizei não promete tempo. Nosso diferencial em potencial: **cravar prazo** (ex: "empresa em X dias").
 2. **App mobile fraco** — porta pra ganhar no mobile-first.
 3. **Emissão de NF ilimitada self-service** — barra baixa de custo; nosso MLP entrega igual sem sufoco.

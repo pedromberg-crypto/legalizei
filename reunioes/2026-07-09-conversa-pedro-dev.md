@@ -22,7 +22,7 @@ Conduzida pelo [[playbook-reuniao-pedro-dev]] (fluxo App×Leghub → stack → a
 - **Background jobs:** Workers Node + Trigger.dev (robôs fiscais, filas de deploy).
 
 ### App × Leghub → **CONSTRUIR DO ZERO** 🔑
-- **Legalizei = produto novo, do zero.** Leghub é **single-tenant interno** (outro propósito); Legalizei é **multi-tenant** pra comercializar. Não reaproveita.
+- **Legalizai Story Book = produto novo, do zero.** Leghub é **single-tenant interno** (outro propósito); Legalizai Story Book é **multi-tenant** pra comercializar. Não reaproveita.
 - **Multi-tenant TRAVADO** (visando venda; oposto do single-tenant interno).
 
 ### Integrações (build-vs-buy)
@@ -51,8 +51,8 @@ Conduzida pelo [[playbook-reuniao-pedro-dev]] (fluxo App×Leghub → stack → a
 
 ## 🟡 PENDENTE (V2 — Pedro Dev pesquisa e a gente resenta)
 - **Cloud: Supabase × AWS × Azure.** Pedro Maia empurrou: custo/margem em escala (pode dar R$15k/mês de diferença com 10k users) + é decisão "quase definitiva" (migrar depois = caos). AWS/Azure = mais barato/seguro/configurável mas complexo; Azure tem familiaridade dele (Windows Server). Pedro Dev traz **V2 das stacks** cruzando custo + **conectividade com IA/MCP**.
-- **Contratar dev React** (acelerar) — decidir com Mauro; poderia entrar como time Legalizei.
-- **Pedro Dev full-time no Legalizei** — hoje dividido com Leghub = risco de atraso. Pedro Maia vai bater na tecla com o Mauro.
+- **Contratar dev React** (acelerar) — decidir com Mauro; poderia entrar como time Legalizai Story Book.
+- **Pedro Dev full-time no Legalizai Story Book** — hoje dividido com Leghub = risco de atraso. Pedro Maia vai bater na tecla com o Mauro.
 
 ## ✅ Tarefas (viram cards)
 **Pedro Dev:** V2 cloud (Supabase/AWS/Azure + IA) · esgotar busca API JUCEMG · mapear API×RPA dos portais · estruturar 2FA · anti-robô + anti-print · protótipo de back-end "feião" testando conexões de API · consultar pastor (BB) segurança · pesquisar Asaas + conectividade IA.

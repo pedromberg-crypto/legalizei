@@ -243,7 +243,7 @@ module.exports = {
       deriva: (ctx) => ({
         resultado: ctx.respostas.govbr_nivel === 'bronze'
           ? 'GOV.BR upgrade bronze→prata/ouro → procuração antiga REVOGADA + nova emitida (5 anos) · 2FA intacto'
-          : 'procuração antiga REVOGADA + nova emitida ao Legalizei (5 anos) · 2FA intacto',
+          : 'procuração antiga REVOGADA + nova emitida ao Legalizai Story Book (5 anos) · 2FA intacto',
       }),
     },
 

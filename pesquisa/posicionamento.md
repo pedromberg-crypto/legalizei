@@ -67,7 +67,7 @@ Nenhum concorrente precifica baixa/migração na vitrine (Contaja esconde R$1.35
 ### Taglines testáveis
 - "Sua empresa em dia, sem dor de cabeça."
 - "A burocracia é com a gente."
-- "Legalizei — e pronto." *(nota: como verbo conjugado, distinto do nome de marca Legalizai — ver ressalva abaixo)*
+- "Legalizai Story Book — e pronto." *(nota: como verbo conjugado, distinto do nome de marca Legalizai — ver ressalva abaixo)*
 - "Contabilidade que fala a sua língua."
 
 ### Arquétipos de marca
@@ -82,7 +82,7 @@ Nenhum concorrente precifica baixa/migração na vitrine (Contaja esconde R$1.35
 |---|---|
 | Empresa em dia | "Sua empresa está em dia ✅" |
 | Vencimento próximo | "Falta só isso, vence dia 15" |
-| Conquista/marco (abertura, conclusão) | "Legalizei! 🎉" |
+| Conquista/marco (abertura, conclusão) | "Legalizai Story Book! 🎉" |
 
 ## Erros de posicionamento a evitar
 
@@ -94,7 +94,7 @@ Nenhum concorrente precifica baixa/migração na vitrine (Contaja esconde R$1.35
 
 ## ⚠️ Ressalva de nome (rebrand em curso)
 
-Decisão de 2026-08-03: nome de marca exibido virou **Legalizai** (não mais "Legalizei") em toda superfície nova — domínio pago continua `legalizei.app` (ativo, não muda). Este doc usa "Legalizai" como nome corrente; a tagline "Legalizei — e pronto" e a frase-gatilho "Legalizei! 🎉" seguem válidas como **verbo conjugado** ("eu legalizei minha empresa"), não como o nome da marca — os dois convivem de propósito (ver [[naming-defesa]] §2, a lógica de "1ª pessoa + pretérito" é exatamente essa). INPI/redes sociais/vault ainda dizem Legalizei em alguns pontos — pendência de arrumação, não confusão de estratégia.
+Decisão de 2026-08-03: nome de marca exibido virou **Legalizai** (não mais "Legalizai Story Book") em toda superfície nova — domínio pago continua `legalizai-story-book.app` (ativo, não muda). Este doc usa "Legalizai" como nome corrente; a tagline "Legalizai Story Book — e pronto" e a frase-gatilho "Legalizai Story Book! 🎉" seguem válidas como **verbo conjugado** ("eu legalizai-story-book minha empresa"), não como o nome da marca — os dois convivem de propósito (ver [[naming-defesa]] §2, a lógica de "1ª pessoa + pretérito" é exatamente essa). INPI/redes sociais/vault ainda dizem Legalizai Story Book em alguns pontos — pendência de arrumação, não confusão de estratégia.
 
 ## Cross-refs
 

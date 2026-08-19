@@ -249,7 +249,7 @@ Espelha o líder ([[2026-07-14-escopo-servico-mensalidade]]): **abertura "gráti
 **Boleto (D4):** aceito, mas **fora do happy path** — quem quer abrir rápido usa cartão/Pix (destrava na hora). Boleto só destrava B4 após compensação.
 
 ## D5 — Política de cancelamento (blindagem em 4 camadas) 🔒
-Problema resolvido: *"cliente cancela em 7 dias mas o CNPJ já foi aberto — ganha empresa de graça?"* A lei tem exceção pra serviço exaurido; os líderes já blindam. Regra Legalizei:
+Problema resolvido: *"cliente cancela em 7 dias mas o CNPJ já foi aberto — ganha empresa de graça?"* A lei tem exceção pra serviço exaurido; os líderes já blindam. Regra Legalizai Story Book:
 
 | Camada | O quê | Mata qual risco |
 |---|---|---|
@@ -284,7 +284,7 @@ Resultado: cancela **em 7 dias antes de abrir** → devolve mensalidade, sem pre
 - **Prazo da fidelidade** (12m como o líder? menos, pra vender mais fácil?) — Pedro validará **mais pra frente** (14/07).
 - **Redação jurídica** do contrato-como-produto + termo de início de serviço → Mauro/Larissa.
 - Custos reais de terceiros pra montar o repasse: taxa JUCEMG **~R$268,51 (LTDA padrão) / R$134,26 (EI)** ([[fiscal-simples-bh-2026]] #10; Izabela citou ~R$288 — reconciliar) · certificado A1 **R$209–229/ano** (Izabela). TFLF BH anual 🟡 valor exato.
-- Escopo exato do "mensal" Legalizei vs. guia à parte — refinar contra [[2026-07-14-escopo-servico-mensalidade]].
+- Escopo exato do "mensal" Legalizai Story Book vs. guia à parte — refinar contra [[2026-07-14-escopo-servico-mensalidade]].
 
 ---
 
@@ -297,4 +297,4 @@ Resultado: cancela **em 7 dias antes de abrir** → devolve mensalidade, sem pre
 - Nome definitivo do "Mapa de Confusão" (provisório).
 
 ## Links
-- [[2026-07-13-plano-sequencia-pm]] · [[processo-abertura-empresa-bh]] · [[2026-07-09-conversa-izabela]] · [[2026-07-13-conversa-karla]] · [[fluxo-abertura-portais-pedro-dev]] · [[cnae-atendidos-e-nao-atendidos]] · [[kanban-legalizei]] · [[HOME]]
+- [[2026-07-13-plano-sequencia-pm]] · [[processo-abertura-empresa-bh]] · [[2026-07-09-conversa-izabela]] · [[2026-07-13-conversa-karla]] · [[fluxo-abertura-portais-pedro-dev]] · [[cnae-atendidos-e-nao-atendidos]] · [[kanban-legalizai-story-book]] · [[HOME]]

@@ -278,7 +278,7 @@ function gerarNota() {
   L.push("## Por que esta nota existe");
   L.push("");
   L.push(
-    "Os **260 atendidos de serviço** nunca foram uma lista do que a Legalizei atende. São o resultado de **duas heurísticas por seção, empilhadas**, e nenhuma tinha sido amostrada até 16/07:"
+    "Os **260 atendidos de serviço** nunca foram uma lista do que a Legalizai Story Book atende. São o resultado de **duas heurísticas por seção, empilhadas**, e nenhuma tinha sido amostrada até 16/07:"
   );
   L.push("");
   L.push(

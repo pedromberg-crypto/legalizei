@@ -27,7 +27,7 @@ tags: [produto, ux, telas, spec, b3, b4, aterrissagem, dia-2, cobranca, constitu
 | Campo/Elemento | Entrada | Validação & margem | IA / microdetalhe |
 |---|---|---|---|
 | Recap do enquadramento | leitura | — | Puxa do B2: CNAE, natureza, anexo estimado, economia do Fator R/CNAE ótimo. Gancho: "por isso vale a pena" |
-| **A conta da abertura (UX-33)** | leitura | **obrigatório antes do aceite** | Bloco único, em R$, separando **3 baldes**: (1) **o que é grátis** — honorário de abertura Legalizei = R$0; (2) **taxas de governo** (passam direto, não é nossa margem): DAE JUCEMG **~R$268,51** 🟡 + eventuais; (3) **o que é recorrente** — 1ª mensalidade (nosso plano ~R$195 🟡 *a travar*) + endereço fiscal se marcou o upsell (~R$60/mês 🟡) + certificado A1 (via parceiro 🟡). **Nunca esconder o repasse de governo dentro do preço** — mostrar que é do Estado, não nosso |
+| **A conta da abertura (UX-33)** | leitura | **obrigatório antes do aceite** | Bloco único, em R$, separando **3 baldes**: (1) **o que é grátis** — honorário de abertura Legalizai Story Book = R$0; (2) **taxas de governo** (passam direto, não é nossa margem): DAE JUCEMG **~R$268,51** 🟡 + eventuais; (3) **o que é recorrente** — 1ª mensalidade (nosso plano ~R$195 🟡 *a travar*) + endereço fiscal se marcou o upsell (~R$60/mês 🟡) + certificado A1 (via parceiro 🟡). **Nunca esconder o repasse de governo dentro do preço** — mostrar que é do Estado, não nosso |
 | "O que vou pagar HOJE × recorrente" | leitura | — | Duas colunas: **hoje** (governo + 1ª mensal) × **todo mês** (mensalidade). O leigo precisa separar o gasto único do fixo |
 | Transparência do "grátis" | leitura | — | Explicar que "abertura grátis" = **honorário zero**, não "governo zero" — a taxa da junta existe e é do governo. Honestidade evita a sensação de pegadinha lá no B4 |
 
@@ -85,7 +85,7 @@ tags: [produto, ux, telas, spec, b3, b4, aterrissagem, dia-2, cobranca, constitu
 |---|---|---|---|
 | Nível da conta GOV.BR | verificação | Exige **prata/ouro** | Já **detectado e guiado no B1** (UX-29); aqui só confirma. Se ainda bronze → guia rápido de upgrade antes de assinar |
 | Assinatura do contrato social | ação (GOV.BR) | Assinatura válida dos sócios | Deep-link pro GOV.BR; volta idempotente |
-| **Procuração e-CAC explicada (UX-31)** | leitura + aceite | — | 1 linha antes do aceite: **"é o que deixa o Legalizei pagar seu DAS e cuidar das obrigações por você — com limite e revogável quando quiser."** Tira a opacidade do "estou dando poderes pra quem?" |
+| **Procuração e-CAC explicada (UX-31)** | leitura + aceite | — | 1 linha antes do aceite: **"é o que deixa o Legalizai Story Book pagar seu DAS e cuidar das obrigações por você — com limite e revogável quando quiser."** Tira a opacidade do "estou dando poderes pra quem?" |
 
 ---
 

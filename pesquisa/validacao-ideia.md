@@ -27,7 +27,7 @@ tags: [pesquisa, validacao, gate]
 
 ## Brecha de mercado
 
-Legalizei cruza **3 variáveis** que nenhum dos 5 concorrentes diretos atende ao mesmo tempo: (1) preço fechado sem asterisco — todos usam "a partir de", simulador gated ou ajuste pós-contato; (2) humano no plano de ENTRADA — nos 5, contador nomeado só aparece no tier caro (R$359-700); (3) hiperlocal BH operacional — nenhum trata ISS-BH/alvará PBH/Junta MG como produto, mesmo a Contaja (MG) tratando como origem, não operação. Detalhe completo em [[matriz-comparativa]].
+Legalizai Story Book cruza **3 variáveis** que nenhum dos 5 concorrentes diretos atende ao mesmo tempo: (1) preço fechado sem asterisco — todos usam "a partir de", simulador gated ou ajuste pós-contato; (2) humano no plano de ENTRADA — nos 5, contador nomeado só aparece no tier caro (R$359-700); (3) hiperlocal BH operacional — nenhum trata ISS-BH/alvará PBH/Junta MG como produto, mesmo a Contaja (MG) tratando como origem, não operação. Detalhe completo em [[matriz-comparativa]].
 
 ## Riscos principais
 

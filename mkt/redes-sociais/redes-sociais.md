@@ -5,7 +5,7 @@ data: 2026-07-16
 ---
 # 📣 Redes Sociais — hub
 
-Hub das redes da Legalizei. Cada rede = pasta própria com nota de perfil (contas/setup) + estratégia + posts datados. Regra: **uma nota = um assunto**.
+Hub das redes da Legalizai Story Book. Cada rede = pasta própria com nota de perfil (contas/setup) + estratégia + posts datados. Regra: **uma nota = um assunto**.
 
 > Parte de [[mkt/README|Marketing]]. Setup das redes = S4 do mês 1 · [[CHECKLIST-IMERSAO-30-DIAS]].
 
@@ -13,8 +13,8 @@ Hub das redes da Legalizei. Cada rede = pasta própria com nota de perfil (conta
 
 | Rede | Handle / URL | Status | Nota |
 |---|---|---|---|
-| Instagram | `@legalizei.app` | 🟢 criado | [[perfil-instagram]] |
-| LinkedIn (empresa) | `company/legalizei-app` | 🟢 criado + pré-config | [[perfil-linkedin]] |
+| Instagram | `@legalizai-story-book.app` | 🟢 criado | [[perfil-instagram]] |
+| LinkedIn (empresa) | `company/legalizai-story-book-app` | 🟢 criado + pré-config | [[perfil-linkedin]] |
 | TikTok | — | ⚪ futuro | — |
 | YouTube | — | ⚪ futuro | — |
 
@@ -28,7 +28,7 @@ Cada pasta (`instagram/`, `linkedin/`…) contém:
 - **posts/criativos datados** — `AAAA-MM-DD-*.md`.
 
 ## 🔗 Mapa
-- [[perfil-instagram]] — @legalizei.app
+- [[perfil-instagram]] — @legalizai-story-book.app
 - [[perfil-linkedin]] — página empresarial
 
 #mkt

@@ -29,7 +29,7 @@ tags: [concorrente, ux]
   - **Avançado (Plano atual) — R$ 195/mês**: certificado digital grátis; **folha de pagamento cobrada à parte**; pró-labore de sócios grátis até 2 sócios; atendimento por chat 9h–17h30 e WhatsApp/e-mail 9h–22h; conta digital PJ inclusa; faturamento até R$ 50 mil/mês; abertura grátis; compensação de boleto R$ 2,70; **atendimento por telefone NÃO incluso**; **contador exclusivo NÃO incluso**; emissor de NF grátis; contabilidade completa.
   - **Upgrade Multibenefícios (Recomendado) — +R$ 30/mês (Total R$ 225,00)**: todos os serviços do plano anterior + escolher 2 de: seguro de vida, plano odontológico, TotalPass, atendimento psicológico e nutricional, atendimento médico.
 - **"+ Benefícios"**: Plano de saúde da Contabilizei ("preços até 30% menores"; parceiros Unimed, Alice, Amil, SulAmérica, Sami, Bradesco; "Fazer simulação") e Educação ("cursos 100% gratuitos"; "Me Poupe! Eu, Chefe de Mim"; "Acessar plataforma").
-- **Intel de preço**: plano base "Avançado" = **R$ 195/mês** (bate com o alvo do posicionamento Legalizei); upgrade → R$ 225/mês. Banner da Home diverge ("Padrão R$ 210,90").
+- **Intel de preço**: plano base "Avançado" = **R$ 195/mês** (bate com o alvo do posicionamento Legalizai Story Book); upgrade → R$ 225/mês. Banner da Home diverge ("Padrão R$ 210,90").
 
 ## 👍 Forças (o que copiar)
 - **Comparativo de planos lado a lado** com o plano atual marcado é ótima UX de upgrade — claro o que ganho por +R$30.
@@ -43,7 +43,7 @@ tags: [concorrente, ux]
 - **Sem estado nem histórico**: nada de "você já economizou R$ X", "benefício ativo desde…", "consultas usadas".
 - **Asteriscos e "à parte"**: "folha à parte", "nf**" reintroduzem letrinha miúda numa página que se vende como generosa.
 
-## 🎯 Contraproposta Legalizei
+## 🎯 Contraproposta Legalizai Story Book
 - **Hub "Meus Benefícios" de verdade**: separar **incluídos no plano** (o que já ganha — emissão ilimitada de NF, suporte, relatórios) de **parcerias opcionais** (saúde, TotalPass) — rotuladas como parceria, nunca como "benefício" genérico.
 - Cada item com **valor e estado concretos**: "Ativo desde 03/2026 · você já economizou R$ X" / "Plano de saúde a partir de R$ Y/vida".
 - **Herdar o comparativo lado-a-lado** e o "escolha 2 dos 7" — são bons; só que dentro de um hub honesto, não como a tela inteira.

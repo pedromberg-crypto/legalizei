@@ -8,7 +8,7 @@ metadata:
   modified: 2026-08-05T17:52:58.071Z
 ---
 
-05/08 (26º flow): instanciado o template `pessoal/_templates/estrategia-digital` (14 documentos, 4 fases — pesquisa mercado/personas/orgânico/tráfego pago) inteiro dentro de `pesquisa/` no vault Legalizei. Gap-analysis primeiro (4 sólidos, 3 fracos, 7 buracos), depois preenchimento completo. Marco: [[2026-08-05-estrategia-marketing-produto-completa]] (arquivo real em `execucao/marcos/`).
+05/08 (26º flow): instanciado o template `pessoal/_templates/estrategia-digital` (14 documentos, 4 fases — pesquisa mercado/personas/orgânico/tráfego pago) inteiro dentro de `pesquisa/` no vault Legalizai Story Book. Gap-analysis primeiro (4 sólidos, 3 fracos, 7 buracos), depois preenchimento completo. Marco: [[2026-08-05-estrategia-marketing-produto-completa]] (arquivo real em `execucao/marcos/`).
 
 **Fatos-chave que mudam decisão real:**
 - **Preço ME travado em R$139,00** (era placeholder R$195,00) — decisão rodada com custo técnico simbólico, sem esperar o dado de custo real do Mauro. Honorário contábil segue 🔴 fora do cálculo.

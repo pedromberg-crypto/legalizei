@@ -41,7 +41,7 @@ tags: [concorrente, ux]
 - **Mobile aperta filtros** (labels/valores truncam, 4 campos numa linha) e a **nav inferior flutuante sobrepõe** o conteúdo.
 - Dropdown de dados sobreposto (nesta captura) mostra como painéis flutuantes competem com a tela principal.
 
-## 🎯 Contraproposta Legalizei
+## 🎯 Contraproposta Legalizai Story Book
 - **Listagem = listagem de verdade**: tabela clara das notas do período (tomador, valor, data, **status com cor**) + **total faturado no topo**. "Emitir nova nota" continua CTA primário; o histórico dá transparência.
 - **Manter o atalho de cliente recente** e somar "reemitir igual à última nota" em 1 toque — job do prestador ME de serviço recorrente.
 - **Mobile: filtros em reflow full-width** empilhados (nada de truncar), nav inferior fixa sem sobreposição.

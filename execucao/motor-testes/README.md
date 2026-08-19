@@ -1,4 +1,4 @@
-# Motor de testes de fluxo — Legalizei
+# Motor de testes de fluxo — Legalizai Story Book
 
 Testa a **lógica** dos fluxos do app (abertura de CNPJ e, depois, portal) rápido e barato: sem UI, sem gastar token de IA. Node puro, zero dependência.
 

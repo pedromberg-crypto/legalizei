@@ -45,7 +45,7 @@ Minha primeira proposta pro item 9 (cenário B) inventava uma **tela nova de pag
 ## Fontes
 - `execucao/flow/flow-data.mjs` (fonte-única, campo `dados` + `falta` de cada nó, buscar `28/07`)
 - `execucao/mapa-flow-mermaid.md` v9 (diagrama + tabela regenerados)
-- PR #1 em `legalizei-app` (branch `sync/28-07-portal-e-jucemg`)
+- PR #1 em `legalizai-story-book-app` (branch `sync/28-07-portal-e-jucemg`)
 
 ## Links
 [[mapa-flow-mermaid]] · [[legalize-motor-testes-arquitetura]] · [[HOME]]

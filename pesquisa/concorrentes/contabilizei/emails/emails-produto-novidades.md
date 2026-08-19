@@ -42,7 +42,7 @@ Mecânica já existente que o email relembra (isso é o ouro):
 3. **Inconsistência de naming.** Assunto diz "Gestão Inteligente", corpo diz "Central do Sócio" e "Gestão Inteligente". Dois nomes pra mesma coisa = a caixa-preta que a gente pode vencer com transparência.
 4. **Novo gatilho de CRM:** anúncio de feature pra reter/engajar (nem fiscal, nem upsell, nem nurture de medo). Régua a observar: eles comunicam evolução de produto pra base.
 
-### 🎯 Gancho Legalizei
+### 🎯 Gancho Legalizai Story Book
 - Reforça a contraproposta já escrita em [[socios-e-pro-labore]]: **simulador transparente** de pró-labore (slider → "você recebe R$ X, empresa paga R$ Y") em vez de "cálculo inteligente" caixa-preta. Agora sabemos exatamente o que o simulador precisa expor: piso mínimo, zeragem por ausência de NF, compensação de imposto.
 - Conecta ao benchmark [[plano-padrao-195-referencia]] (mecânica pró-labore: INSS 11% teto R$ 932,31, IRRF > R$ 5k).
 

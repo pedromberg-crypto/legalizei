@@ -18,4 +18,4 @@ Mapa do processo atual (1 página): onboarding → NFS-e → DAS → obrigaçõe
 - [ ] Júnior (Pedro Dev) participando como par 📅 2026-07-15
 
 ## Links
-- [[kanban-legalizei]] · [[CHECKLIST-IMERSAO-30-DIAS]] · [[2026-07-08-conversa-leo]]
+- [[kanban-legalizai-story-book]] · [[CHECKLIST-IMERSAO-30-DIAS]] · [[2026-07-08-conversa-leo]]

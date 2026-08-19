@@ -14,7 +14,7 @@ tags: [concorrente]
 # Teardown — Marvee
 
 ## Visão geral
-> ⚠️ **Não é concorrente direto** — BPO financeiro ticket alto, venda 100% consultiva, escala por franquia. Serve de contraste (o que o Legalizei NÃO é).
+> ⚠️ **Não é concorrente direto** — BPO financeiro ticket alto, venda 100% consultiva, escala por franquia. Serve de contraste (o que o Legalizai Story Book NÃO é).
 - **Posicionamento:** "Quem vai cuidar da sua terceirização financeira?" — delegar um departamento inteiro, não só apuração fiscal
 - **Clientes alegados:** +700 empresas · 25 franquias, meta 1.000 até dez/2025 — [[PESQUISA-MERCADO]] §B
 - **Funding/tração:** R$1 mi captado

@@ -8,7 +8,7 @@ tags: [concorrente, marca]
 ---
 # Páginas públicas — Agilize (foco: Pricing)
 
-> Fonte: print `marca-img/planos.png` (página `/contabilidade-online/`, 1440×11417) + texto/hex extraídos (`_brand_capture2.json` › `agilize`). Toggle capturado em **Serviço** (relevante pro ICP Legalizei = ME serviço Simples). Nada aqui é inventado — preços, limites e copy vêm da captura.
+> Fonte: print `marca-img/planos.png` (página `/contabilidade-online/`, 1440×11417) + texto/hex extraídos (`_brand_capture2.json` › `agilize`). Toggle capturado em **Serviço** (relevante pro ICP Legalizai Story Book = ME serviço Simples). Nada aqui é inventado — preços, limites e copy vêm da captura.
 
 ## 💰 Pricing
 
@@ -47,7 +47,7 @@ Todos: **desconto "20%" permanente** (badge idêntico nos três) + botão **"Con
 - **Verde-menta no botão "Contratar" sobre card lilás/branco** = contraste de ação altíssimo e disciplinado (o verde só aparece em CTA). Sistema de 2 cores (roxo = marca, verde = ação) confirmado também na página de planos.
 - **Página `/contabilidade-online/` é uma landing de "trocar de contador"**, não a home — headline e passos ("Análise → Envio de documentações → Tudo pronto") são todos sobre **migração de escritório**, não abertura. O motor de aquisição aqui é **roubar cliente de contador tradicional**, não pegar quem abre empresa.
 
-## 🎯 Pro Legalizei
+## 🎯 Pro Legalizai Story Book
 
 1. **Preço fixo e único é a arma de aquisição certa pro ICP ME Serviço Simples** — remove a fricção nº1 ("quanto vou pagar / vou ter surpresa?"). Mas fazer o que a Agilize **não** faz: fixo **de verdade**, sem asterisco de regime e sem desconto-âncora permanente. Posicionamento de honestidade radical — *"R$X/mês, sempre. Sem asterisco, sem 'fale com especialista'."* — ataca exatamente a brecha da Agilize.
 2. **Escalar por custo-de-servir (nº de notas / folha), não por faturamento, é o modelo correto** — copiar isso da Agilize. Mas comunicar os limites com clareza brutal na vitrine, pra não recriar a "surpresa de upgrade" que o setor promete matar.

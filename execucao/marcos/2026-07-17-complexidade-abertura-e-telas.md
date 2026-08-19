@@ -10,7 +10,7 @@ tags: [cnae, ux, telas, design-system, decisao]
 > Descobertas e decisões travadas no 3º flow do dia. Fonte com link quando é dado.
 
 ## 1. Eixo de complexidade de abertura (NOVO, ortogonal ao fiscal)
-Pergunta do Pedro: *quais CNAEs a Legalizei abre sozinha (passa liso) × quais precisam de tato/humano?* — o "asterisco" da Contabilizei, reconstruído por **dado oficial** (não raspado dela: o dado não existe no site).
+Pergunta do Pedro: *quais CNAEs a Legalizai Story Book abre sozinha (passa liso) × quais precisam de tato/humano?* — o "asterisco" da Contabilizei, reconstruído por **dado oficial** (não raspado dela: o dado não existe no site).
 - **3 níveis** (regra determinística, re-executável): `tato-registro` (conselho/setorial) > `verificar-licenciamento` (fora do baixo-risco CGSIM) > `liso`.
 - **387 → 170 liso / 120 verificar / 97 tato.** Fonte do risco: **CGSIM Res 51/2019 Anexo I** (baixo risco A, red. Res 57/2020); fonte regulamentado: conjunto **fechado** de ~17 conselhos/órgãos.
 - **Direção segura do erro travada:** falso-liso é o pecado (cobra antes de barrar), falso-tato é conservador → só marca liso quem está na lista oficial; ausência nunca vira "presumido liso".

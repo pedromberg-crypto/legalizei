@@ -42,7 +42,7 @@ tags: [concorrente, ux]
 - **Mobile quebra** (nav inferior sobre o form) — inaceitável na tela mais usada.
 - Antes de chegar aqui, um **modal de cobrança por medo** bloqueia (ver [[nf-emissao-1]]).
 
-## 🎯 Contraproposta Legalizei
+## 🎯 Contraproposta Legalizai Story Book
 - **Emissão em 1 toque pro caso recorrente:** mesmo cliente + mesmo serviço do mês passado → botão "Repetir última nota", só confirma valor.
 - **Auto-gerar a descrição** a partir de serviço + período (eles já têm o formato — só não usam).
 - **Preview da nota** antes de emitir (some com o medo de errar melhor que texto).

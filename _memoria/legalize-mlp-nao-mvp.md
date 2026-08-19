@@ -1,6 +1,6 @@
 ---
 name: legalize-mlp-nao-mvp
-description: "Legalizei é MLP (mínimo LOVABLE), não MVP — craft/encanto (animação, micro-interação) estão no escopo, não são luxo."
+description: "Legalizai Story Book é MLP (mínimo LOVABLE), não MVP — craft/encanto (animação, micro-interação) estão no escopo, não são luxo."
 metadata: 
   node_type: memory
   type: feedback

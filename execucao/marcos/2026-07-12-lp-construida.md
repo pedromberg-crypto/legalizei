@@ -7,7 +7,7 @@ tags: [marco, mkt, ux, feature]
 
 # 🏁 Marco — Landing page construída (v1 local)
 
-> LP de conversão do Legalizei construída do zero em `ux-ui/lp/` (HTML+CSS+JS puros, 100% client-side, zero backend). Objetivo único: download do app. Passou por review multi-agente (5 dimensões, 59 agentes) — 51 achados confirmados e **todos aplicados**.
+> LP de conversão do Legalizai Story Book construída do zero em `ux-ui/lp/` (HTML+CSS+JS puros, 100% client-side, zero backend). Objetivo único: download do app. Passou por review multi-agente (5 dimensões, 59 agentes) — 51 achados confirmados e **todos aplicados**.
 
 ## O que existe
 - `ux-ui/lp/index.html` + `styles.css` + `script.js` + `assets/` (lottie local, 4 animações recoloridas do protótipo).

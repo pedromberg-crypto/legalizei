@@ -15,7 +15,7 @@ tags:
 
 ## 📋 Como usar
 
-- [ ] **Board do TIME** (Dev-Pedro · Dev-Novo · Pedro-PO). Separado do [[kanban-legalizei]] (pessoal do Pedro). Fonte do raciocínio: [[backlog-e-sprint-1]]
+- [ ] **Board do TIME** (Dev-Pedro · Dev-Novo · Pedro-PO). Separado do [[kanban-legalizai-story-book]] (pessoal do Pedro). Fonte do raciocínio: [[backlog-e-sprint-1]]
 - [ ] **Tags:** `#dev-pedro` `#dev-novo` `#pedro-po` · épico: `#backend` `#telas` `#dado` `#negocio` · `#bloqueador`
 - [ ] **Prio:** ⏫ Must · 🔼 Should · 🔽 Could
 - [ ] **Cada card leva:** dono + épico + dependência + DoD (definição de pronto)
@@ -24,7 +24,7 @@ tags:
 ## 🔴 Gate 0 (antes do Sprint)
 
 - [ ] **Alinhar backend ao contrato atual** #pedro-po #dev-pedro #bloqueador ⏫ — Pedro já validou boa parte do E2E, mas contra a spec velha. Conferir o delta: ordem invertida, 19 personas, `cnae-lookup` furado. DoD: Dev-Pedro recebe motor v0.5.0 + aponta o que já cobre × o que mudou
-- [ ] **Convidar `pedro.melodata` no repo base-flow-legalizei** #pedro-po #bloqueador ⏫ — DoD: convite aceito
+- [ ] **Convidar `pedro.melodata` no repo base-flow-legalizai-story-book** #pedro-po #bloqueador ⏫ — DoD: convite aceito
 - [ ] **Carimbar qual dev recebeu as páginas do flow** #pedro-po ⏫ — muda o onboarding do Dev-Novo
 
 

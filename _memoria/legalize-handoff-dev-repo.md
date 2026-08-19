@@ -1,6 +1,6 @@
 ---
 name: legalize-handoff-dev-repo
-description: Repo privado base-flow-legalizei = contrato entregue ao dev em 15/07 com 14 personas. 🔴 DESATUALIZADO desde 16/07: hoje sao 19 personas, a ORDEM inverteu (cobranca subiu) e existe um flow #2. O dev esta em E2E contra um contrato que nao existe mais e PRECISA SER AVISADO.
+description: Repo privado base-flow-legalizai-story-book = contrato entregue ao dev em 15/07 com 14 personas. 🔴 DESATUALIZADO desde 16/07: hoje sao 19 personas, a ORDEM inverteu (cobranca subiu) e existe um flow #2. O dev esta em E2E contra um contrato que nao existe mais e PRECISA SER AVISADO.
 metadata: 
   node_type: memory
   type: reference
@@ -15,7 +15,7 @@ metadata:
 > → [[fila-validacao-humana]]. O resto abaixo descreve o snapshot de 15/07, que continua
 > historicamente correto.
 
-**Criado 2026-07-16.** **https://github.com/pedromberg-crypto/base-flow-legalizei** — **privado**, conta pessoal do Pedro, 33 arquivos. É o handoff pro **Pedro Dev (`pedro.melodata`)** construir o backend de entrada→B4.
+**Criado 2026-07-16.** **https://github.com/pedromberg-crypto/base-flow-legalizai-story-book** — **privado**, conta pessoal do Pedro, 33 arquivos. É o handoff pro **Pedro Dev (`pedro.melodata`)** construir o backend de entrada→B4.
 
 **Estrutura:**
 - `motor/` — **fonte viva** (flow-schema.js + run.js + 14 personas). Testado **14/14 PASS standalone** no repo.

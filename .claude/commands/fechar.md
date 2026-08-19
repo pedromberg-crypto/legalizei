@@ -1,8 +1,8 @@
 ---
-description: Ritual de fecho de flow no vault Legalizei — atualiza estado, registra decisões, commita e empurra
+description: Ritual de fecho de flow no vault Legalizai Story Book — atualiza estado, registra decisões, commita e empurra
 ---
 
-Ritual de FECHO de flow no vault do Legalizei. Faça, nesta ordem, só o que de fato aconteceu no flow (não invente estado):
+Ritual de FECHO de flow no vault do Legalizai Story Book. Faça, nesta ordem, só o que de fato aconteceu no flow (não invente estado):
 
 1. **`HOME.md` → `## 📍 Agora`:** atualize o estado das frentes que mudaram, o que ficou aberto / o próximo passo, e a linha "Última atualização: <data de hoje>".
 2. **Decisão travada?** Registre no ADR `marca/decisoes-marca.md` e/ou crie um marco em `execucao/marcos/AAAA-MM-DD-<slug>.md`.

@@ -210,7 +210,7 @@ export function EntradaView({
             baixa: nada aqui é informação, então é a primeira a ceder espaço. */}
         <div className="flex min-h-0 flex-1 items-center justify-center py-2">
           <Lottie
-            path="/lottie/paperplane-legalizei.json"
+            path="/lottie/paperplane-legalizai-story-book.json"
             fps={50}
             className="h-full max-h-[240px] w-full max-w-[380px]"
           />

@@ -8,13 +8,13 @@ tags: [pesquisa, pitch, captacao, video, roteiro]
 
 # 🎬 Roteiro de pitch em vídeo pra acelerador — arquitetura e rascunho
 
-> Fonte externa: `Roteiros De Pitch Para Investidores.md` (pesquisa Gemini trazida pelo Pedro, 10/08) — cruzada aqui com o estado real do Legalizei. **Público-alvo: aceleradora brasileira (perfil Baita/ACE/Endeavor Scale-up), não VC internacional puro.** Isso muda o que conta como prova — ver §0.
+> Fonte externa: `Roteiros De Pitch Para Investidores.md` (pesquisa Gemini trazida pelo Pedro, 10/08) — cruzada aqui com o estado real do Legalizai Story Book. **Público-alvo: aceleradora brasileira (perfil Baita/ACE/Endeavor Scale-up), não VC internacional puro.** Isso muda o que conta como prova — ver §0.
 
 ## 0. Achado crítico antes de escrever 1 linha — TIMING
 
 A pesquisa (§6.2 do documento-fonte) descreve o filtro real das aceleradoras "top tier" brasileiras: **MVP ativo na rua + clientes pagantes reais (baseline 5-10) + crescimento mensal de 15-20%** — bem mais rígido que o padrão Vale do Silício (equipe forte + protótipo já financia).
 
-Hoje o Legalizei está em **V0** — 2 meses de "provar + escopar + fundar", **sem produto no ar**, rodando smoke test de tráfego pago (ver `BASE-ESTRATEGICA.md` §13). Isso cria uma fricção direta com o Bloco 7 (Tração) do roteiro-padrão: **não tem MRR, não tem cliente pagante ainda.**
+Hoje o Legalizai Story Book está em **V0** — 2 meses de "provar + escopar + fundar", **sem produto no ar**, rodando smoke test de tráfego pago (ver `BASE-ESTRATEGICA.md` §13). Isso cria uma fricção direta com o Bloco 7 (Tração) do roteiro-padrão: **não tem MRR, não tem cliente pagante ainda.**
 
 Duas saídas, sem fingir dado que não existe (regra anti-guru):
 
@@ -28,7 +28,7 @@ Duas saídas, sem fingir dado que não existe (regra anti-guru):
 | Camada | Framework | Papel aqui |
 |---|---|---|
 | Abertura | Raskin (Zuora) | Nomear a mudança de mundo, não o "problema" — evita colocar o investidor na defensiva |
-| Meio | StoryBrand (Donald Miller) | Cliente = herói, Legalizei = guia, plano em passos simples, sem jargão |
+| Meio | StoryBrand (Donald Miller) | Cliente = herói, Legalizai Story Book = guia, plano em passos simples, sem jargão |
 | Números | YC / Sequoia | Bottom-up, "unique insight" real e não-óbvio, teste das 2 frases |
 | Filtro de aprovação | Matriz local (doc-fonte §6.2) | MVP + tração + governança — é o que decide se a aceleradora brasileira sequer termina de assistir |
 | Cadência | Wistia (retenção) | Nose/Body/Tail — Ask antes de qualquer sinal de encerramento |
@@ -60,7 +60,7 @@ Duas saídas, sem fingir dado que não existe (regra anti-guru):
 Base: [[legalize-cobaia-cnpj-pedro]] — caso real, verificado por dupla checagem, não hipotético.
 
 ### Bloco 3 — Terra prometida (0:35–0:55)
-> "A Legalizei transforma o CNPJ de cada cliente num número vivo — monitorado todo mês, não uma vez por ano. Quem abre ou migra empresa recebe o enquadramento fiscal mais barato pro que já faz, e nunca mais paga imposto a mais por decisão de contador ausente."
+> "A Legalizai Story Book transforma o CNPJ de cada cliente num número vivo — monitorado todo mês, não uma vez por ano. Quem abre ou migra empresa recebe o enquadramento fiscal mais barato pro que já faz, e nunca mais paga imposto a mais por decisão de contador ausente."
 
 Ancorado no framework StoryBrand: cliente = herói, "número vivo" = a Terra Prometida (contraste direto com "número morto" do escritório tradicional).
 
@@ -70,7 +70,7 @@ Ancorado no framework StoryBrand: cliente = herói, "número vivo" = a Terra Pro
 Base: gate CNAE (`gate-telas.tsx`) + engine de CNAE fiscalmente ótimo — feature-âncora já construída e testada.
 
 ### Bloco 5 — Unique insight + fosso competitivo (1:15–1:45)
-> "Esse insight não veio de fora. Meu sócio dirige a Legalize Digital há 22 anos, quase mil clientes em Belo Horizonte e Minas. O que ele viu de dentro: nenhum concorrente digital monitora o Fator R depois do primeiro enquadramento — todos vendem abertura barata e cobram caro depois, serviço avulso por serviço avulso. A Legalizei fecha esse buraco com monitoramento contínuo, não abertura descartável."
+> "Esse insight não veio de fora. Meu sócio dirige a Legalize Digital há 22 anos, quase mil clientes em Belo Horizonte e Minas. O que ele viu de dentro: nenhum concorrente digital monitora o Fator R depois do primeiro enquadramento — todos vendem abertura barata e cobram caro depois, serviço avulso por serviço avulso. A Legalizai Story Book fecha esse buraco com monitoramento contínuo, não abertura descartável."
 
 Base: `BASE-ESTRATEGICA.md` (Mauro, 22 anos, ~1000 clientes BH/MG) + [[legalize-contabilizei-dossie-coverage]] (camada à-la-carte do líder = receita oculta, ~45 serviços).
 
@@ -93,7 +93,7 @@ Base: `BASE-ESTRATEGICA.md` (Mauro, 22 anos, ~1000 clientes BH/MG) + [[legalize-
 > "Eu sou o desenvolvedor e PM que construiu esse produto sozinho, do zero. Meu sócio já resolve essa dor pra quase mil empresários há 22 anos. Ele traz a confiança e o compliance que levam décadas pra construir; eu trago o produto digital que ele nunca teve tempo de construir."
 
 ### Bloco 9 — Ask + fecho visionário (2:50–3:00)
-> "[ASK A DEFINIR]. Com isso, levamos o Legalizei da validação ao produto real no ar em 5 meses — e começamos a substituir a contabilidade reativa por uma que nunca para de olhar pro seu negócio."
+> "[ASK A DEFINIR]. Com isso, levamos o Legalizai Story Book da validação ao produto real no ar em 5 meses — e começamos a substituir a contabilidade reativa por uma que nunca para de olhar pro seu negócio."
 
 🔴 **Pendente:** o "ask" exato pra uma aceleradora não é necessariamente dinheiro (pode ser vaga em edital, mentoria, ou capital semente do próprio programa) — não decidido ainda qual aceleradora nem o que pedir dela. Ver §5.
 

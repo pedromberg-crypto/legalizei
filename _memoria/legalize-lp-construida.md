@@ -7,7 +7,7 @@ metadata:
   originSessionId: 98ee247a-6c37-4e9f-8a6b-ea2646eed978
 ---
 
-LP do Legalizei **construída 2026-07-12** em `ux-ui/lp/` (index.html + styles.css + script.js + assets/) — 100% client-side, zero backend. 9 dobras; validador CNAE concierge com whitelist real. Servir com `npx serve ux-ui/lp -l 4173` (config `lp` em `.claude/launch.json`).
+LP do Legalizai Story Book **construída 2026-07-12** em `ux-ui/lp/` (index.html + styles.css + script.js + assets/) — 100% client-side, zero backend. 9 dobras; validador CNAE concierge com whitelist real. Servir com `npx serve ux-ui/lp -l 4173` (config `lp` em `.claude/launch.json`).
 
 Decisões que valem além da LP:
 - **Regra AA do coral (ADR):** branco+coral-600 = 4,04:1 → AA só texto grande (≥1,2rem bold). Botão pequeno = coral-700. Hover escurece, nunca clareia. ink-400 proibido como texto sobre fundo claro (mín. ink-500).

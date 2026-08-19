@@ -15,7 +15,7 @@ tags: [cnae, escopo, mvp, fila]
 
 ## Por que esta nota existe
 
-Os **260 atendidos de serviço** nunca foram uma lista do que a Legalizei atende. São o resultado de **duas heurísticas por seção, empilhadas**, e nenhuma tinha sido amostrada até 16/07:
+Os **260 atendidos de serviço** nunca foram uma lista do que a Legalizai Story Book atende. São o resultado de **duas heurísticas por seção, empilhadas**, e nenhuma tinha sido amostrada até 16/07:
 
 1. `contabilizei_atende` = espelho do filtro do concorrente, aplicado por seção/divisão. [[cnae-atendidos-e-nao-atendidos]] carimba **confiança MÉDIA, validar por amostragem**.
 2. `anexo_base` = regra por seção (`I`=comércio, `II`=indústria, resto=serviço). A mesma nota diz que o anexo exato **"NÃO está resolvido por código ainda"**.

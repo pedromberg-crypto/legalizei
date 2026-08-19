@@ -7,7 +7,7 @@ deriva_de: [BASE-ESTRATEGICA]
 tags: [produto, spec]
 ---
 
-# 🧩 Spec-cunha do MVP Legalizei (v0 — rascunho pré-imersão)
+# 🧩 Spec-cunha do MVP Legalizai Story Book (v0 — rascunho pré-imersão)
 
 > Síntese de tudo que levantamos (auditoria UX, playbook CRM, matriz CNAE, base estratégica) em direção de produto. **Rascunho** — vira spec de verdade na S4 da imersão, com dado de campo. Norteia a pauta técnica com o Pedro Dev.
 
@@ -22,7 +22,7 @@ tags: [produto, spec]
 ## 2. Núcleo do MVP (escopo — só o job)
 > = o que o plano R$195 entrega, feito melhor. Ramifica pra cima depois.
 
-| Módulo | O que o líder faz | 🎯 Como o Legalizei ganha (do ranking da auditoria) |
+| Módulo | O que o líder faz | 🎯 Como o Legalizai Story Book ganha (do ranking da auditoria) |
 |---|---|---|
 | **Onboarding/abertura** | ~23 dias, senha por "esqueci senha", atrito GOV.BR terceirizado ([[onboarding-jornada-completa]]) | Conta nativa no 1º acesso; back-end Legalize absorve GOV.BR/E-CNPJ com acompanhamento humano; progress bar honesta |
 | **Emissão de NFS-e** | Auto-preenche NBS (bom), mas descrição manual, sem preview, **mobile quebra** ([[nf-emissao-2]]) | **Emissão em 1 toque** (repetir última nota); auto-gerar descrição; preview; mobile em foco sem nav flutuante por cima |
@@ -44,7 +44,7 @@ tags: [produto, spec]
 
 ## 3.5. Stack técnica (decidida com Pedro Dev 2026-07-09 → [[2026-07-09-conversa-pedro-dev]])
 - **Linguagem:** TypeScript/JavaScript (front + back). **Front:** React Native + Expo (mobile-first; desktop = réplica). **Back:** TS/JS na Vercel. **Banco:** Supabase/Postgres (🟡 cloud sob revisão vs AWS/Azure). **Design:** Tailwind + Cloud Design. **Jobs:** Workers Node + Trigger.dev. **IA:** Fable (build) + Opus 4.8 (operação/OCR).
-- **Arquitetura:** multi-tenant (comercialização) · **Legalizei construído do zero** (não reaproveita o Leghub, que é single-tenant interno).
+- **Arquitetura:** multi-tenant (comercialização) · **Legalizai Story Book construído do zero** (não reaproveita o Leghub, que é single-tenant interno).
 - **Segurança:** 2FA obrigatório · anti-robô + anti-print · RLS + OWASP · certificado A1 no Supabase com dupla camada + rastreamento · backup em HD físico.
 
 ## 4. Build-vs-buy (não construir do zero)

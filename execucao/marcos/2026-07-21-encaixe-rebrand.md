@@ -10,12 +10,12 @@ tags: [marco, marca, produto, flow, cnae, fiscal, rebrand]
 
 8º flow. Três frentes: rebrand no app, lapidação de copy, e a reordenação do cluster fiscal (debate → decisão → build stage 1+2).
 
-## 1. Rebrand Legalizei → Legalizai
+## 1. Rebrand Legalizai Story Book → Legalizai
 - Wordmark novo: a 8ª letra mudou de **e → a** (o "ai" final vem em **coral**). O ícone não mudou (mesmo quadrado coral com check; vetor reexportado).
 - `app/src/components/logo.tsx` reescrito: viewBox 659.73×130, wordmark em 2 grupos (ink + coral), 3 variantes. **Negativos agora MONO-brancos** (decisão do Pedro: no fundo escuro a marca vai toda branca, perde o símbolo coral). O **wipe da splash** foi preservado usando quadrado SÓLIDO + check endereçável (o knockout do arquivo o quebraria).
-- Copy: "Legalizei" → "Legalizai" em 8 arquivos (`<title>`, mockup, contrato, 3 veredito, gate, empresa). Assets Lottie (`*-legalizei.json`) e comentário-histórico do logo **intactos**.
+- Copy: "Legalizai Story Book" → "Legalizai" em 8 arquivos (`<title>`, mockup, contrato, 3 veredito, gate, empresa). Assets Lottie (`*-legalizai-story-book.json`) e comentário-histórico do logo **intactos**.
 - 3 SVGs-fonte no vault: `marca/identidade-visual/legalizai-{horizontal,negativa-clara,negativa-escura}.svg`.
-- ⚠️ **Escopo = só o app.** Docs do vault, domínio `legalizei.app` e IG `@legalizei.app` seguem "Legalizei". O rename brand-level (domínios/INPI) é decisão aberta → [[legalize-rename-legalizai]].
+- ⚠️ **Escopo = só o app.** Docs do vault, domínio `legalizai-story-book.app` e IG `@legalizai-story-book.app` seguem "Legalizai Story Book". O rename brand-level (domínios/INPI) é decisão aberta → [[legalize-rename-legalizai]].
 
 ## 2. F-round + varredura pesada (2ª passada)
 - **F1–F6** (frases negativas → positivas) aplicados no flow. Ex: N24 "não some" → "continua com você"; N6 "ainda não cobrando" → "criar conta é de graça".

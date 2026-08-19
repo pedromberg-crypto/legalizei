@@ -7,7 +7,7 @@ tags: [gestao]
 
 # 🅿️ Parking Lot — decisões e frentes adiadas
 
-> Onde mora o que "está ficando pra trás": decisões, direções e ideias que surgiram mas foram adiadas de propósito. Diferente do [[kanban-legalizei]] (tarefas concretas em execução) e da §5 da [[BASE-ESTRATEGICA]] (dúvidas estratégicas travadas).
+> Onde mora o que "está ficando pra trás": decisões, direções e ideias que surgiram mas foram adiadas de propósito. Diferente do [[kanban-legalizai-story-book]] (tarefas concretas em execução) e da §5 da [[BASE-ESTRATEGICA]] (dúvidas estratégicas travadas).
 > **Peça a qualquer momento: "o que está ficando pra trás?"** que eu consolido isto + Triagem do kanban + §5 da base.
 
 ## Frentes adiadas (ativas)
@@ -31,7 +31,7 @@ tags: [gestao]
 | H | **Jessica** | Abrir empresa do Mauro em 4 concorrentes (mapear onboarding — só temos o da Contabilizei) |
 
 ## Como isto se conecta
-- Tarefas concretas dessas frentes → viram cards no [[kanban-legalizei]] quando a gente pega.
+- Tarefas concretas dessas frentes → viram cards no [[kanban-legalizai-story-book]] quando a gente pega.
 - Dúvidas estratégicas travadas (preço, aporte do Mauro, banda do sênior) → [[BASE-ESTRATEGICA]] §5.
 - Ideias de produto adiadas → [[spec-mvp-v0]] §6.
 

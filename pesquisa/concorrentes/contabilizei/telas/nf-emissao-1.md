@@ -33,7 +33,7 @@ tags: [concorrente, ux]
 - **Cobrança por medo no meio da tarefa** — pressiona no pior momento (quando o cliente quer trabalhar).
 - Passo de seleção separado adiciona atrito ao caso recorrente.
 
-## 🎯 Contraproposta Legalizei
+## 🎯 Contraproposta Legalizai Story Book
 - **Cobrança com dignidade:** aviso discreto e não-bloqueante ("sua fatura venceu — regularize quando puder"); NUNCA bloquear/assustar no meio da emissão. Coerente com nosso princípio de confiança = produto.
 - Pular a seleção de tomador no caso recorrente (lembrar o último cliente).
 

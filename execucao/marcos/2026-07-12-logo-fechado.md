@@ -5,15 +5,15 @@ data: 2026-07-12
 tags: [marco, marca, design, simbolo, logo]
 ---
 
-# 🧱 Marco — logo do Legalizei fechado
+# 🧱 Marco — logo do Legalizai Story Book fechado
 
-> Símbolo + logotipo travados por Pedro (designer/sócio) em 2026-07-12, após iteração guiada por régua de proporção. Fecha a frente que estava 🟡 desde 2026-07-10. Master vetorial no vault: [[legalizei-logo-horizontal.svg]] (check branco) + variante negativa [[legalizei-logo-horizontal-check-negativo.svg]].
+> Símbolo + logotipo travados por Pedro (designer/sócio) em 2026-07-12, após iteração guiada por régua de proporção. Fecha a frente que estava 🟡 desde 2026-07-10. Master vetorial no vault: [[legalizai-story-book-logo-horizontal.svg]] (check branco) + variante negativa [[legalizai-story-book-logo-horizontal-check-negativo.svg]].
 
 ## O que ficou
 
 **Símbolo:** quadrado coral (`#F2643C`, raio ~0,27× lado) com **check vazado** — recorte negativo que **sangra pelo canto superior-direito** (a conquista "não cabe na caixa"). Terminais arredondados. Fundo do check preenchido em **branco sólido** (`#FFF`) pra robustez sobre foto/fundo escuro; a versão transparente (check herda o fundo) fica derivável do mesmo arquivo apagando o path branco.
 
-**Logotipo:** wordmark "Legalizei" em **Sora** estilizada (terminais suaves do "z", i-stems consistentes), ink `#1B1E24`. **Três pontos de coral** intencionais — ícone + pingo dos dois "i" (ritmo coral ícone → i → i). Pingos como círculos r13,24 (~1,77× a haste do i).
+**Logotipo:** wordmark "Legalizai Story Book" em **Sora** estilizada (terminais suaves do "z", i-stems consistentes), ink `#1B1E24`. **Três pontos de coral** intencionais — ícone + pingo dos dois "i" (ritmo coral ícone → i → i). Pingos como círculos r13,24 (~1,77× a haste do i).
 
 ## Specs travadas (verificadas no SVG)
 - **Proporção ícone = 1,4× H** (H = altura da capitular "L"). Ícone ≈ 211px / cap ≈ 151px.

@@ -41,7 +41,7 @@ tags: [concorrente, ux]
 - **"Até 30%" sem lastro**: número de marketing sem fonte enfraquece a confiança que os logos constroem.
 - Simulador pede dados demais para um primeiro passo.
 
-## 🎯 Contraproposta Legalizei
+## 🎯 Contraproposta Legalizai Story Book
 - Oferecer benefícios (saúde, etc.) como **valor agregado discreto**, não landing agressiva: um card "Benefícios" com 1 pergunta ("quantas vidas?") → estimativa, sem muro de inputs.
 - **Nunca interromper** com NPS durante uma tarefa; coletar feedback passivo (thumbs no fim, não modal por cima).
 - Se prometer economia, **mostrar a conta** ("plano X: R$ Y/mês PJ vs R$ Z PF") — transparência como diferencial vs. "até 30%".

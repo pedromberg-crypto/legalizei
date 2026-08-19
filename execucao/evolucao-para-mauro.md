@@ -6,7 +6,7 @@ etapa: evolucao-semanal
 tags: [reporte, evolucao, sociedade]
 ---
 
-# 📊 Evolução do Legalizei — reporte pro sócio (doc vivo)
+# 📊 Evolução do Legalizai Story Book — reporte pro sócio (doc vivo)
 
 > Log vivo da evolução, atualizado ao fim de cada sessão produtiva. Base pra pauta/reporte com o Mauro. **Versão WhatsApp (grupo ampliado) omite o item de sociedade** — ver bloco no fim.
 
@@ -20,7 +20,7 @@ tags: [reporte, evolucao, sociedade]
 | 5 | **Teto de automação** | Validado pelos 3: o processo **não é 100% digital** (~15–20% exige humano) — JUCEMG e Gov.br não têm API e exigem login manual. **Os concorrentes também não são**: todo "abrir empresa grátis" vira formulário → "um consultor entra em contato". Ver [[2026-07-10-teto-automacao-orgaos-sem-api]] | 🟢 |
 | 6 | CNAEs | Mapa completo do que o app atende x não atende (460 sim / 68 condicional / 804 não) | 🟢 |
 | 7 | Tecnologia | Base técnica do app definida (stack, MLP, multi-tenant) | 🟢 |
-| 8 | Marca | Nome aprovado (Legalizei); tom de voz, personalidade e cor principal (coral) definidos; **logo fechado** (símbolo + logotipo, arquivos vetoriais) | 🟢 |
+| 8 | Marca | Nome aprovado (Legalizai Story Book); tom de voz, personalidade e cor principal (coral) definidos; **logo fechado** (símbolo + logotipo, arquivos vetoriais) | 🟢 |
 | 9 | Domínios e e-mail | Escolhidos + carrinho montado na Hostinger (R$186/ano), no CNPJ da Legalize Digital | ⏳ aguarda autorização de compra |
 | 10 | Organização | Todo o conhecimento do projeto centralizado, versionado e seguro | 🟢 |
 
@@ -42,7 +42,7 @@ tags: [reporte, evolucao, sociedade]
 
 ### 📱 WhatsApp (11–12/07)
 ```
-*Update Legalizei* 🎨
+*Update Legalizai Story Book* 🎨
 - Definimos a fonte do app e passamos as cores prontas pro dev começar as telas
 - Desenhamos como o cliente entra no app: quem já tem empresa migra puxando os dados do CNPJ na hora; quem vai abrir do zero é guiado; e a gente já filtra logo na entrada se atende a atividade dele
 - Montamos o protótipo visual de TODO o fluxo de entrada (abertura → boas-vindas → abrir/migrar → validador de atividade → login), já com a nossa marca e animações
@@ -65,7 +65,7 @@ tags: [reporte, evolucao, sociedade]
 
 ### 📱 WhatsApp (13/07)
 ```
-*Update Legalizei* 🚀
+*Update Legalizai Story Book* 🚀
 - Travamos o modelo do app com o time: foco só em serviço, cobrança só depois de validar a atividade, WhatsApp como canal central e cadastro em blocos que fluem até a assinatura
 - As dores do escritório digital antigo (nota emitida por fora, prolabore, cancelamento) viraram requisito e vão pro contrato
 - Priorizei tudo num plano enxuto: a meta das próximas semanas é abrir 1 empresa REAL de ponta a ponta pelo app (cobaia = meu próprio CNPJ)
@@ -78,25 +78,25 @@ Sexta (17/07): teste E2E + 1ª versão da tela + apresentação do progresso
 | # | Frente | O que evoluiu | Status |
 |---|--------|---------------|--------|
 | 1 | Regras de negócio (DP) | **Karla (Depto Pessoal)** respondeu as dúvidas em aberto: pró-labore/INSS (mín. 1 salário, custo líquido explícito), sócio não pode ser CLT da própria empresa, sócio com CLT em outra empresa (LGPD: informa manual), eSocial "sem movimento", **Fator R** (folha ≥28% → cai de 15,5% pra 6%), funcionário/PJ fica fora do 1º produto, obrigações acessórias por tributação | 🟢 → [[2026-07-13-conversa-karla]] |
-| 2 | Handoff pro dev | Repositório privado **base-ds-legalizei** com todas as telas + site + animações entregue; Pedro Dev já convidado | 🟢 |
-| 3 | Redes sociais | **Instagram e LinkedIn da Legalizei criados** (pegada "estamos chegando"); descrição/marca aplicadas; organização das redes montada no projeto | 🟢 (config em curso) |
-| 4 | Domínios | **Valores enviados pro Miguel aprovar contigo**: Hostinger R$312,11 + Registro.br R$76,00 (blindagem legalizei.app.br) | ⏳ aguarda pagamento |
+| 2 | Handoff pro dev | Repositório privado **base-ds-legalizai-story-book** com todas as telas + site + animações entregue; Pedro Dev já convidado | 🟢 |
+| 3 | Redes sociais | **Instagram e LinkedIn da Legalizai Story Book criados** (pegada "estamos chegando"); descrição/marca aplicadas; organização das redes montada no projeto | 🟢 (config em curso) |
+| 4 | Domínios | **Valores enviados pro Miguel aprovar contigo**: Hostinger R$312,11 + Registro.br R$76,00 (blindagem legalizai-story-book.app.br) | ⏳ aguarda pagamento |
 
 **Próximo (13/07 2º):** fechar as perguntas de **fiscal com a Larissa** (obrigações acessórias/prazos/multa); banner final do LinkedIn; **aprovar o pagamento dos domínios**.
 
 ### 📱 WhatsApp (13/07 — 2º)
 ```
-*Update Legalizei* 📣
+*Update Legalizai Story Book* 📣
 - Sentei com a Karla (DP) e travamos as regras que faltavam: pró-labore/INSS, sócio CLT, eSocial sem movimento, Fator R e o que fica pra depois (funcionário/PJ). Falta só a Larissa (fiscal)
 - Entreguei pro nosso dev o pacote com todas as telas, o site e as animações, num repositório próprio
-- Criamos o Instagram e o LinkedIn da Legalizei no clima "estamos chegando"
+- Criamos o Instagram e o LinkedIn da Legalizai Story Book no clima "estamos chegando"
 - Mandei pro Miguel os valores dos domínios pra aprovação (Hostinger + Registro.br)
 ```
 
 ## Semana 14/07/2026 — domínios pagos + especificação do cadastro em blocos
 | # | Frente | O que evoluiu | Status |
 |---|--------|---------------|--------|
-| 1 | Domínios | **Mauro pagou tudo** (Hostinger R$312,11 + Registro.br R$76,00). Próximo = registrar de fato + apontar DNS + e-mail contato@legalizei.app | 🟢 pago |
+| 1 | Domínios | **Mauro pagou tudo** (Hostinger R$312,11 + Registro.br R$76,00). Próximo = registrar de fato + apontar DNS + e-mail contato@legalizai-story-book.app | 🟢 pago |
 | 2 | Produto (cadastro) | **Especificamos os 2 primeiros blocos do cadastro** (contrato com o dev): entrada/qualificação (descobre na hora se atende, e quem não atende vira lead pro escritório tradicional) + coleta/enquadramento (simulador de economia fiscal, dados do sócio, tudo pra abrir). Base pra o dev construir sem vai-e-volta | 🟡 em curso (faltam blocos de cobrança→constituição) |
 
 **Próximo (14/07):** especificar os blocos seguintes (cobrança → constituição → certificado → portal); fechar fiscal com a Larissa; registrar/apontar os domínios.
@@ -112,7 +112,7 @@ Sexta (17/07): teste E2E + 1ª versão da tela + apresentação do progresso
 
 ### 📱 WhatsApp (14/07 — 3º)
 ```
-*Update Legalizei* 💳
+*Update Legalizai Story Book* 💳
 - Fechamos como o cliente vai pagar: a 1ª mensalidade já é o 1º mês (a abertura em si a gente não cobra, igual ao mercado; ele paga só as taxas do governo). Gateway = Asaas, com cartão, Pix e boleto
 - Resolvemos o risco do cancelamento: montamos uma política em 4 camadas pra ninguém cancelar e sair com o CNPJ aberto de graça (autorização antes de abrir, taxas não reembolsáveis, fidelidade com multa e só abrir depois de pago)
 - Documentamos o plano mais barato da Contabilizei (R$195) como nossa régua, incluindo onde eles deixam a desejar
@@ -122,15 +122,15 @@ Falta decidir: prazo de fidelidade e redigir o contrato
 ## Semana 15/07/2026 — marca no INPI + monitoramento do líder
 | # | Frente | O que evoluiu | Status |
 |---|--------|---------------|--------|
-| 1 | Marca (INPI) | **Levantamos que precisamos registrar a marca "Legalizei" no INPI** — não é obrigatório pra operar, mas protege o nome (domínio e rede social não garantem nada; no Brasil quem registra primeiro leva). Dois pontos de atenção: o nome é "descritivo" (pode dar exigência) e é parecido com "Contabilizei" (precisa de busca prévia). **Decisão que depende de nós dois: em qual CNPJ registrar** (proposta: Legalize Digital). Próximo = busca de anterioridade | 🟡 a decidir |
+| 1 | Marca (INPI) | **Levantamos que precisamos registrar a marca "Legalizai Story Book" no INPI** — não é obrigatório pra operar, mas protege o nome (domínio e rede social não garantem nada; no Brasil quem registra primeiro leva). Dois pontos de atenção: o nome é "descritivo" (pode dar exigência) e é parecido com "Contabilizei" (precisa de busca prévia). **Decisão que depende de nós dois: em qual CNPJ registrar** (proposta: Legalize Digital). Próximo = busca de anterioridade | 🟡 a decidir |
 | 2 | Monitoramento do líder | Seguimos acompanhando a Contabilizei por dentro (caixa de cliente): mapeamos o e-mail de uma **função nova deles ("teto mínimo" de pró-labore)**, que revela como a automação de pró-labore deles funciona por baixo — insumo direto pro nosso simulador ser mais transparente | 🟢 |
 
 **Próximo (15/07):** [Pedro/Mauro] decidir titular da marca + autorizar busca/registro no INPI; seguir com a construção do motor de testes e os blocos seguintes do cadastro.
 
 ### 📱 WhatsApp (15/07)
 ```
-*Update Legalizei* ™️
-- Levantei que a gente precisa registrar a marca "Legalizei" no INPI pra proteger o nome (domínio e rede social não garantem). Não é obrigatório pra funcionar, mas é importante: no Brasil quem registra primeiro leva
+*Update Legalizai Story Book* ™️
+- Levantei que a gente precisa registrar a marca "Legalizai Story Book" no INPI pra proteger o nome (domínio e rede social não garantem). Não é obrigatório pra funcionar, mas é importante: no Brasil quem registra primeiro leva
 - Dois cuidados: o nome é meio "descritivo" e parecido com "Contabilizei", então dá pra ter exigência. Vou rodar a busca prévia
 - Decisão nossa: registrar em qual CNPJ (penso na Legalize Digital)
 - Continuo acompanhando a Contabilizei por dentro: mapeei uma função nova deles (teto mínimo de pró-labore) que ajuda a gente a fazer melhor
@@ -147,7 +147,7 @@ Falta decidir: prazo de fidelidade e redigir o contrato
 
 ### 📱 WhatsApp (15/07 — 2º)
 ```
-*Update Legalizei* 🧪
+*Update Legalizai Story Book* 🧪
 - Montamos um "robô testador" do cadastro: ele roda o fluxo inteiro com 7 clientes fictícios (do mais leigo ao mais avançado) e mostra num relatório onde cada um travaria. Assim a gente valida a experiência rápido, antes de programar as telas
 - Fizemos uma pesquisa fiscal pesada só em fontes oficiais (Receita, lei do Simples, Junta de MG, Prefeitura de BH) e confirmamos o que faltava: abertura em BH em cerca de 1 dia, guias (DAS) que dá pra emitir de forma automática pela API oficial, e os valores de 2026
 - Decidimos focar o 1º produto só em serviço (comércio fica pra depois)
@@ -164,7 +164,7 @@ Falta confirmar 2 pontos fiscais com a Larissa (Fator R no 1º ano e troca de co
 
 ### 📱 WhatsApp (15/07 — 3º)
 ```
-*Update Legalizei* 💡
+*Update Legalizai Story Book* 💡
 - A função-chave do app (recomendar o enquadramento que faz o cliente pagar menos imposto, dentro da lei) agora está com dado fiscal firme: cruzamos uma pesquisa pesada de BH com nossas fontes e bateu. Exemplo real: quem dá treinamento pode economizar ~R$1.400/mês, com respaldo da Receita
 - O "robô testador" apontou 16 melhorias de clareza no cadastro (tudo em reais e não em jargão, telas que explicam em vez de só bloquear, acessibilidade) e já registramos todas
 - Regra que adotamos: primeiro deixamos a experiência redonda, o visual vem numa 2ª etapa
@@ -183,7 +183,7 @@ Falta o carimbo final da Larissa no fiscal
 
 ### 📱 WhatsApp (15/07 — 4º)
 ```
-*Update Legalizei* ✅
+*Update Legalizai Story Book* ✅
 - O cadastro do app está redondo de ponta a ponta: testamos com 11 clientes fictícios, da 1ª tela até a empresa aberta e operando. Criamos uma nota de "quão redonda" está a experiência de cada perfil e ela subiu em todos
 - Especificamos a parte final que faltava: pagamento, constituição e os primeiros dias (1ª nota, 1º imposto, certificado)
 - Corrigimos uma trava: quem confundia pró-labore com "ser CLT da própria empresa" era barrado; agora o app explica e deixa seguir
@@ -203,7 +203,7 @@ Tem 1 ponto que precisa de uma decisão nossa (com a Larissa): o que oferecer pr
 
 ### 📱 WhatsApp (16/07)
 ```
-*Update Legalizei* 📦
+*Update Legalizai Story Book* 📦
 - Entreguei o cadastro inteiro pro nosso dev construir o backend, num repositório próprio: o robô testador, a especificação de todas as telas e a lista de CNAEs pronta pro sistema
 - O pulo do gato: os 14 clientes fictícios viraram a PROVA DE ACEITE. Se o sistema dele rodar os 14 e der o mesmo resultado, está certo por construção. Vale mais que qualquer documento
 - Fizemos o raio-X do cadastro: 22 telas, 5 momentos de espera e todos os caminhos alternativos mapeados
@@ -248,7 +248,7 @@ Preciso de você: fechar o preço do nosso plano. Sem ele não fecho as telas de
 
 ### 📱 WhatsApp (17/07)
 ```
-*Update Legalizei* 🔎
+*Update Legalizai Story Book* 🔎
 - Achado importante: nossa lista de "quais atividades a gente atende" nunca tinha sido verificada. Ela foi montada de trás pra frente: a Contabilizei não publica o que atende, só as 17 categorias que RECUSA. A gente tirou essas 17 da lista do IBGE e presumiu que todo o resto era atendido
 - Na prática o sistema dizia que a gente atende "Defesa", "Justiça" e "Casas de Bingo". E "Cartórios", que está escrito na lista de recusados
 - Já separei tudo: 45 impossíveis (eu resolvo), 91 que precisam da Larissa (com pergunta objetiva em cada um) e 124 que sobreviveram. Em script que roda de novo e trava sozinho se errar
@@ -267,7 +267,7 @@ Preciso da Larissa: 91 casos. O mais urgente são 10 atividades que exigem conse
 
 ### 📱 WhatsApp (17/07 — 2º)
 ```
-*Update Legalizei* 📱
+*Update Legalizai Story Book* 📱
 - Construí as 7 telas onde o cliente preenche os dados pra abrir a empresa (sócio, INSS, sócios, empresa, atividades, tipo, nome), já com a nossa cara e com as regras embutidas: avisa o cônjuge cedo, explica o INSS, limita 2 sócios, oferece endereço fiscal sem empurrar. Todas navegáveis
 - A tela do "sim/não" da atividade ficou pronta nos 3 casos (a gente abre / fila / caso pro escritório), com uma animação de comemoração quando o cliente confirma
 - Lapidei tela a tela: menu de opções com a nossa cara, atalhos na divisão entre sócios, dica visual de rolagem
@@ -288,7 +288,7 @@ Próximo: as telas de resultado (economia de imposto) e depois rodar tudo contra
 
 ### 📱 WhatsApp (19/07)
 ```
-*Update Legalizei* 🔍
+*Update Legalizai Story Book* 🔍
 - Fomos na fonte oficial e corrigimos o custo de abertura: a taxa da Junta é R$ 268,51, não R$ 288 como a gente usava. Custo total de governo fica em ~R$ 437
 - A Receita Federal já respondeu (numa consulta oficial) a dúvida que travava nosso simulador de economia. Resultado: o valor que o sócio precisa se pagar pra cair no imposto menor é MENOR do que a gente calculava. Fechamos mais 7 números com fonte
 - Analisei as guias do MEU CNPJ (aberto pela Contabilizei). Boa notícia: eu pago 6%, então não fui mal enquadrado, minha suspeita inicial estava errada
@@ -324,7 +324,7 @@ Preciso de você: o plano era testar abrindo o MEU CNPJ, mas ele já existe. Tem
 
 ### 📱 WhatsApp (21/07)
 ```
-*Update Legalizei* 🗺️
+*Update Legalizai Story Book* 🗺️
 - Montei um mapa visual do app inteiro (as 26 telas + todos os caminhos), com uma tabela de o que já está validado e o que ainda depende da Larissa/de você. Ele se atualiza sozinho a partir do código e guarda versões
 - Decisão sobre sociedade: mantenho até 2 sócios grátis na abertura, igual à Contabilizei. Adicionar sócio depois é uma alteração cara, então não compensa cobrar "simbólico" e empurrar pra depois
 - Confirmei na fonte como o líder trata isso: a abertura é grátis (paga só as taxas do governo) com fidelidade de 12 meses; o "até 2 sócios grátis" que aparece é do serviço mensal, não da abertura. Serve de referência pro nosso prazo de fidelidade
@@ -342,7 +342,7 @@ Preciso de você: o plano era testar abrindo o MEU CNPJ, mas ele já existe. Tem
 
 ### 📱 WhatsApp (21/07 — 2º)
 ```
-*Update Legalizei* 🏁
+*Update Legalizai Story Book* 🏁
 - Construí a parte final que faltava do app: revisar antes de abrir, autorizar o início, o painel que mostra a abertura andando nos órgãos (com o que fazer se algo for recusado), a assinatura no GOV.BR e a tela de "empresa aberta, e agora". Agora o app existe do início ao fim
 - Montei uma máquina de revisão de texto: um robô varre todas as telas atrás de repetição, excesso e frase negativa, e eu reviso o que precisa de olho humano. Passei o app inteiro por ela e enxuguei dezenas de pontos. Ela melhora sozinha a cada uso
 Falta 1 ponto pra Larissa: no aceite da abertura, o texto deve dizer que a taxa da Junta já paga não é reembolsável
@@ -360,7 +360,7 @@ Falta 1 ponto pra Larissa: no aceite da abertura, o texto deve dizer que a taxa 
 
 ### 📱 WhatsApp (22/07)
 ```
-*Update Legalizei* 💰
+*Update Legalizai Story Book* 💰
 - Continuei o raio-X da Contabilizei por dentro (minha conta de cliente, só olhando) e achei o que faltava sobre o preço deles: o "R$195" é só a fachada
 - A conta real do cliente é: plano + um adicional que sobe com faturamento/funcionários (escondido) + uma prateleira de ~45 serviços cobrados à parte. E a mensalidade reajusta todo ano por índice, vendido como conversa amigável no chat
 - Os números da prateleira (da tela real): fechar a empresa R$1.406 a 1.999, mudar a empresa/adicionar sócio depois a partir de R$1.299, comprovante de renda do sócio R$713, declaração pra abrir conta no banco R$68. Tem até uma isca de R$24,90 pra gerar orçamento de regularização
@@ -382,7 +382,7 @@ Próximo: sentar com você pra decidir o que a gente faz com essa inteligência 
 
 ### 📱 WhatsApp (22/07 — 2º)
 ```
-*Update Legalizei* 🧩
+*Update Legalizai Story Book* 🧩
 - Definimos a parte interna do app (o que o cliente vê depois que a empresa abre): a tela inicial, a navegação e o que cada tela mostra. Antes eram telas soltas, agora é um mapa fechado
 - Peguei tudo que a Contabilizei oferece por dentro e separei em 4 caixas: o que entra no nosso plano, o que a gente vende à parte (a prateleira que eles escondem), o que fica pra depois, e o que a gente recusa fazer (vender por medo, pegadinha de preço)
 - Uma decisão fica pra nossa conversa: os serviços que o cliente novo precisa cedo (certidão, declaração pra abrir conta, liberação de nota) eu deixei como vendáveis por ora, mas o preço e o que incluir de graça é decisão nossa
@@ -403,7 +403,7 @@ Próximo: sentar com você pra decidir o que a gente faz com essa inteligência 
 
 ### 📱 WhatsApp (24/07)
 ```
-*Update Legalizei* 📱
+*Update Legalizai Story Book* 📱
 - Montamos a tela inicial final do app: escolhi as peças com você aprovando trecho a trecho, e ela já fica de pé (resumo do negócio, imposto do mês, atalhos, notas, dicas, "quem cuida de você")
 - Construímos a tela de perfil da empresa (um currículo do CNPJ, não um cadastro chato) e a tela de emitir nota fiscal, que puxa tudo do cliente só pelo CNPJ e mostra o imposto na hora
 - Definimos a gestão interna do app: um painel pra acompanhar cada cliente pelas etapas + como o parceiro do certificado trabalha dentro do nosso sistema. Já entreguei pro dev
@@ -427,7 +427,7 @@ Precisa de você: fechar o modelo/preço do parceiro do certificado e dos servi�
 
 ### 📱 WhatsApp (27/07)
 ```
-*Update Legalizei* 📱
+*Update Legalizai Story Book* 📱
 - Terminei o app por dentro (a parte do cliente depois que a empresa abre): emitir nota, a área de notas, os impostos, o perfil e a área "Mais" com o plano. Tudo navegável
 - Emitir nota: pede só cliente + valor, sobe um resumo pra confirmar, e se a nota é recusada leva o cliente de volta pra corrigir. Status automático, sem o cliente marcar nada na mão (diferente do líder)
 - Impostos: como a gente não intermedia o pagamento por ora, o app mostra/baixa a guia e deixa copiar o código de barras — a pessoa paga do jeito dela
@@ -438,7 +438,7 @@ Preciso de você (sem pressa): preço do plano e dos avulsos, e o modelo do parc
 
 ## 📱 Versão WhatsApp (copiar/colar — grupo ampliado, sem item de sociedade)
 ```
-*Relatório semanal — Legalizei* 📊
+*Relatório semanal — Legalizai Story Book* 📊
 _07 a 10/07_
 
 1️⃣ *Imersão* — conversas com o time (incl. Izabela) viraram decisões ✅
@@ -471,7 +471,7 @@ Semana que vem: reavaliar a rota do produto com essas descobertas (o dev já est
 
 ### 📱 WhatsApp (28/07)
 ```
-*Update Legalizei* 🗺️
+*Update Legalizai Story Book* 🗺️
 - Travamos 12 decisões do fluxo de entrada numa reunião: o app só abre empresa em Belo Horizonte por enquanto (avisa e captura contato se não for); separamos melhor quem a gente não atende (regulamentado vai pra fila, quem seu escritório atende vai pra vocês, e quem ninguém atende recebe resposta honesta)
 - Nome, CPF, telefone e endereço agora são pedidos já na criação da conta, com confirmação por código
 - Corrigi um erro: o índice do IPTU estava como opcional, mas sem ele a Junta recusa a documentação — já travei como obrigatório
@@ -499,7 +499,7 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 
 ### 📱 WhatsApp (29/07)
 ```
-*Update Legalizei* 🎤
+*Update Legalizai Story Book* 🎤
 - Montei uma *apresentação* do app pra mostrar pra equipe de vocês: de um lado o celular com a tela real, do outro a explicação do que cada passo faz e o que ele interfere na constituição da empresa
 - Ela também mostra *de quem é a espera* em cada momento: do cliente, nossa, ou do órgão público
 - Preparar isso já achou e corrigiu 2 erros reais: quem escolhia "já tenho empresa" e voltava via a tela errada, e a confirmação dizia "achei o seu encaixe" até pra quem entrou na lista de espera
@@ -529,7 +529,7 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 
 ### 📱 WhatsApp (30/07)
 ```
-*Update Legalizei* 🔁
+*Update Legalizai Story Book* 🔁
 - O caminho de quem *já tem empresa e quer trocar de contador* agora existe de verdade: 9 telas do começo ao fim. Antes esbarrava num "ainda não disponível" (e isso é metade do mercado)
 - Aqui a promessa é mais forte que na abertura: como a empresa já fatura, mostramos o *número real* dos 12 meses dele, não uma estimativa
 - E se o contador atual já fez certo, a tela *diz isso* e vende serviço, não economia inventada
@@ -555,7 +555,7 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 
 ### 📱 WhatsApp (31/07)
 ```
-*Update Legalizei* 🧰
+*Update Legalizai Story Book* 🧰
 - Montei um catálogo vivo de todas as telas e peças do app — renderizado do código de verdade, não um documento que pode ficar desatualizado
 - Isso já achou e corrigiu 3 bugs pequenos (um botão que não levava a lugar nenhum, 2 telas que a gente achava catalogadas e não estavam)
 - Limpei 3 rotas que sobraram de uma versão antiga e não iam a lugar nenhum
@@ -566,7 +566,7 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 
 | # | Frente | O que evoluiu | Status |
 |---|--------|---------------|--------|
-| 1 | **Rebrand Legalizai valeu pra valer** | A marca virou Legalizai (não mais Legalizei) no site também, não só no app — logo, textos, tudo trocado | 🟢 |
+| 1 | **Rebrand Legalizai valeu pra valer** | A marca virou Legalizai (não mais Legalizai Story Book) no site também, não só no app — logo, textos, tudo trocado | 🟢 |
 | 2 | **Site (landing page) e página "em breve" no ar** | Publiquei os dois no ar de verdade (não é mais rascunho local): o site principal e uma página simples de "chegando em breve" que já captura nome, e-mail, WhatsApp e cidade de quem quiser ser avisado no lançamento | 🟢 |
 | 3 | **Política de Privacidade e Termos de Uso publicados** | O Google e o Meta (Instagram/Facebook) exigem essas 2 páginas pra aprovar conta de anúncio — já estão no ar com os dados reais da Legalize Digital | 🟢 |
 | 4 | **2 bugs achados e corrigidos ao publicar** | Coisas que só aparecem quando o site vai pro ar de verdade (link quebrado entre as páginas, estilo não carregando) — achei e corrigi na hora | 🟢 |
@@ -575,7 +575,7 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 
 ### 📱 WhatsApp (03/08)
 ```
-*Update Legalizei* 🚀
+*Update Legalizai Story Book* 🚀
 - O site saiu do papel: publiquei o site principal e uma página de "chegando em breve" (já captura nome, e-mail, WhatsApp e cidade de quem quiser ser avisado)
 - A marca virou Legalizai também no site, não só no app
 - Publiquei Política de Privacidade e Termos de Uso — o Google e o Meta exigem isso pra aprovar conta de anúncio
@@ -597,7 +597,7 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 
 ### 📱 WhatsApp (04/08)
 ```
-*Update Legalizei* 🧩
+*Update Legalizai Story Book* 🧩
 - MEI agora pode migrar de contador com a gente também (antes só abria do zero)
 - Criei um plano específico pro MEI: R$49,90/mês (emitir nota + cuidar do funcionário que a lei permite), certificado digital incluso, fidelidade de 12 meses
 - Lucro Presumido: decidi deixar de fora por enquanto, de forma explícita — o cálculo de imposto é outro motor inteiro, não dá pra fingir que atendemos
@@ -619,7 +619,7 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 
 ### 📱 WhatsApp (05/08)
 ```
-*Update Legalizei* 📈
+*Update Legalizai Story Book* 📈
 - Montei a estratégia de marketing inteira: quem são nossos clientes, o que postar, como anunciar e quanto custa trazer cada um
 - Revisei o preço do plano ME pra R$139/mês (ainda sem contar seu honorário, isso segue pendente)
 - Achei um erro no cálculo de quanto podemos gastar pra trazer 1 cliente — corrigido. Descoberta: o plano MEI é frágil pra anúncio pago, então ele não vai ter anúncio direto, só vem por indicação
@@ -640,7 +640,7 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 
 ### 📱 WhatsApp (06/08)
 ```
-*Update Legalizei* 🔍
+*Update Legalizai Story Book* 🔍
 - Montei um PDF de leitura da estratégia de marketing pra debater com o gestor de tráfego
 - Revisei o texto de todas as telas iniciais do app, corrigindo promessas que não batiam com o que a gente de fato entrega
 - Simplifiquei a migração de quem é MEI: em vez de perguntar sobre contador, agora pergunto sobre certificado digital — resolve o mesmo problema sem o passo mais arriscado (ainda preciso confirmar essa hipótese com a Larissa)

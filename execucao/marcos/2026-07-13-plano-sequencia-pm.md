@@ -57,4 +57,4 @@ Maior risco da espinha = o pedaço que ninguém controla: JUCEMG/Gov.br sem API 
 Corte tudo que não seja abrir 1 empresa real. Semana 1: prove o backend E2E + entregue o spec de blocos. Semana 2: contrato-como-produto + 3 decisões caras. Semana 3: abra o CNPJ do Pedro pelo app. O resto é backlog.
 
 ## Links
-- [[2026-07-13-alinhamento-pedro-dev-leonam]] · [[kanban-legalizei]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[spec-mvp-v0]] · [[HOME]]
+- [[2026-07-13-alinhamento-pedro-dev-leonam]] · [[kanban-legalizai-story-book]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[spec-mvp-v0]] · [[HOME]]

@@ -1,6 +1,6 @@
 ---
 name: legalize-preco-deferido-custo-real
-description: Preço do plano Legalizei DEFERIDO até ter custo unitário real (DB+API); B3 constrói com placeholder ~R$195 marcado FAKE.
+description: Preço do plano Legalizai Story Book DEFERIDO até ter custo unitário real (DB+API); B3 constrói com placeholder ~R$195 marcado FAKE.
 metadata: 
   node_type: memory
   type: project

@@ -102,7 +102,7 @@ tags: [pesquisa, marketing, trafego-pago]
 
 ### Experiência ideal
 - Onboarding guiado (certificado digital, documentos, CNPJ) já mapeado no flow interno do produto
-- Confirmação clara e celebrativa ("Legalizei! 🎉") no marco de conquista
+- Confirmação clara e celebrativa ("Legalizai Story Book! 🎉") no marco de conquista
 
 ### Por que importa
 Entrega memorável = matéria-prima pro pilar 6 (prova/reação) do orgânico, uma vez que existir base real de clientes.

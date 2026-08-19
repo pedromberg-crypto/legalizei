@@ -11,13 +11,13 @@ tags: [meta]
 
 ## O que está configurado
 - **Conta conectada:** pedromberg@gmail.com (pessoal — a do celular)
-- **Agenda do projeto:** "Legalizei" (agenda própria dentro da conta, cor separada)
+- **Agenda do projeto:** "Legalizai Story Book" (agenda própria dentro da conta, cor separada)
 - **Escopos autorizados:** calendar, gmail (modify), drive, sheets, docs
 - **Credenciais:** `C:\Users\pedro\.config\gws\` — client_secret.json + token criptografado no keyring do Windows. **FORA do repo git** ✓
 - **OAuth app:** projeto Google Cloud próprio, publicado "Em produção" (token não expira em 7 dias)
 
 ## Como usar (em conversa com Claude nesta pasta)
-- "marca reunião X sexta 14h na agenda" → evento criado na agenda Legalizei
+- "marca reunião X sexta 14h na agenda" → evento criado na agenda Legalizai Story Book
 - "o que tenho na agenda essa semana?" → leitura via `gws calendar events list`
 - Plaud ingerido com reunião futura mencionada → Claude pergunta se agenda
 

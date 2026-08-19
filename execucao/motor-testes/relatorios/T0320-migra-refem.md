@@ -2,7 +2,7 @@
 
 > flow **migrar** v0.1.0 · 2026-07-16 · **PASS ✅**
 
-**Perfil (medio):** Decidiu sair porque o contador some. Ironia: o mesmo sumiço que motivou a saída agora bloqueia a saída. Já pagou o Legalizei, está sem contador de fato e com o antigo ainda formalmente responsável. Vai cobrar de NÓS, não do contador antigo.
+**Perfil (medio):** Decidiu sair porque o contador some. Ironia: o mesmo sumiço que motivou a saída agora bloqueia a saída. Já pagou o Legalizai Story Book, está sem contador de fato e com o antigo ainda formalmente responsável. Vai cobrar de NÓS, não do contador antigo.
 
 **Cobertura:** Entrada(M0) + M1 diagnóstico do CNPJ + M2 proposta + M3 cobrança + M4 transferência + M5 ativação
 

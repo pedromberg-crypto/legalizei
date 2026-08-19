@@ -46,11 +46,11 @@ tags: [concorrente, ux]
 - **Copiar só o bloco**: não dá pra copiar CNPJ isolado (o caso de uso nº1) — só o pacote bancário tem botão.
 - **Documentos atrás de aba**: contrato social / cartão CNPJ não têm download óbvio de 1 clique na superfície.
 
-## 🎯 Contraproposta Legalizei
+## 🎯 Contraproposta Legalizai Story Book
 - **"Minha Empresa" como item fixo do menu principal** (não link de canto). Abre num **cartão-resumo copiável campo a campo**: CNPJ, razão social, nome fantasia, CNAE, regime, IE, Inscrição Municipal, data de abertura — cada um com "copiar" (herdando o que a Contabilizei já faz bem no banco).
 - **Manter e ampliar o status do Certificado Digital** (Ativo + validade + alerta proativo "vence em 30 dias") — eles acertam aqui; a gente melhora com aviso antecipado.
 - **Documentos em 1 clique, sem "Área de Documentos" escondida**: contrato social, cartão CNPJ, certificado e comprovantes pra download imediato, sempre atualizados.
-- **Busca global** ("digite: CNPJ") que leva ao dado em 1 passo. Onde a líder faz caçar no canto, a Legalizei entrega no menu, copiável. Diferencial barato, óbvio e demonstrável.
+- **Busca global** ("digite: CNPJ") que leva ao dado em 1 passo. Onde a líder faz caçar no canto, a Legalizai Story Book entrega no menu, copiável. Diferencial barato, óbvio e demonstrável.
 
 ## Links
 - [[contabilizei]] · [[_relatorio-auditoria]] · [[HOME]]

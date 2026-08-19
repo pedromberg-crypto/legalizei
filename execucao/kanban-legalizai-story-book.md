@@ -12,7 +12,7 @@ data: 2026-07-19
 - [ ] **[Dev] IACA** — entrevista → CNAE principal + 3 secundários + projeção de alíquota + prolabore
 - [ ] **[Dev] Infra própria** (banco/nuvem) — em curso
 - [ ] **[Dev] Bitwarden "Legalize"** + centralizar credenciais — em curso
-- [ ] **[Pedro] Convidar `pedro.melodata`** no repo `base-flow-legalizei` (acesso é do Pedro)
+- [ ] **[Pedro] Convidar `pedro.melodata`** no repo `base-flow-legalizai-story-book` (acesso é do Pedro)
 - [ ] **[Pedro/Dev] Mapa de Confusão CNAE** — pares traiçoeiros de desambiguação (treino IA + guarda-corpo do falso 🔴); deferido de propósito → [[blocos-fluxo-abertura]]
 - [ ] **[Dev] Portal mínimo:** emitir nota + ver vencimentos — semana 3
 
@@ -73,7 +73,7 @@ data: 2026-07-19
 - [ ] Contratar **operador** (amigo do Pedro Dev: CC + IA + assistentes WhatsApp) + onboarding sob instrução
 - [ ] Definir fluxo **branch → review → merge** pro operador (agora vale pros 2 devs + operador)
 - [ ] Abrir conta **API WhatsApp Business** + treinar assistente em número simbólico → oficial
-- [ ] **Registrar domínios de fato** (Hostinger 3 + registro.br legalizei.app.br) — Mauro pagou ✅; depois DNS→Vercel + email contato@legalizei.app
+- [ ] **Registrar domínios de fato** (Hostinger 3 + registro.br legalizai-story-book.app.br) — Mauro pagou ✅; depois DNS→Vercel + email contato@legalizai-story-book.app
 - [ ] **Repo/Vercel do app** `app/` — decisão do Pedro, depois
 - [ ] **Banner PNG final do LinkedIn** + linktree waitlist → [[redes-sociais]]
 - [ ] **Review visual da LP** pelo Pedro (`npx serve ux-ui/lp -l 4173`) + Sora local + links reais das lojas
@@ -103,12 +103,12 @@ data: 2026-07-19
 - [x] **Eixo de complexidade de abertura** (170 liso/120 verificar/97 tato) — 17/07 → [[cnae-complexidade-abertura]]
 - [x] **Motor v0.4.0** — 19 personas, 2 flows (abertura + migrar), 19/19 PASS
 - [x] **Ordem do app invertida** — cobra no N9, não no fim
-- [x] **HANDOFF pro dev — repo `base-flow-legalizei`** (motor + spec + contrato + dados) — 16/07
+- [x] **HANDOFF pro dev — repo `base-flow-legalizai-story-book`** (motor + spec + contrato + dados) — 16/07
 - [x] **UX-48 trilha única + coorte instrumentada** travada — 16/07
 - [x] **4 rodadas de UX** (45 ✅/1 🟡); % por persona convergiu 76-92 → 88-95 — 15/07
 - [x] **CNAE fiscalmente ótimo** — dado Gemini cruzado, ISS BH mapeado — 15/07
-- [x] **Instagram @legalizei.app + LinkedIn** criados — 13/07
-- [x] Handoff Git → Dev: repo **base-ds-legalizei** (8 telas + LP v1 + Lotties) — 13/07
+- [x] **Instagram @legalizai-story-book.app + LinkedIn** criados — 13/07
+- [x] Handoff Git → Dev: repo **base-ds-legalizai-story-book** (8 telas + LP v1 + Lotties) — 13/07
 - [x] **Mauro PAGOU domínios** (Hostinger R$312,11 + Registro.br R$76,00) — 13/07
 - [x] Landing page v1 construída (local) · [[2026-07-12-lp-construida]]
 - [x] Protótipo do fluxo de entrada inteiro navegável · [[2026-07-12-fluxo-entrada-completo-prototipo]]

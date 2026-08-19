@@ -8,7 +8,7 @@ metadata:
   modified: 2026-07-22T12:57:07.257Z
 ---
 
-A janela de contexto **neste ambiente** (Claude Code desktop, projeto Legalizei) só compacta perto de **1M de tokens**. O Pedro gosta de encerrar por volta de **85% da janela**, não antes.
+A janela de contexto **neste ambiente** (Claude Code desktop, projeto Legalizai Story Book) só compacta perto de **1M de tokens**. O Pedro gosta de encerrar por volta de **85% da janela**, não antes.
 
 **Why:** em 2026-07-16 eu emiti 🟡 "aquecendo" e 🔴 "pesada" três vezes numa sessão que estava confortavelmente dentro do orçamento, e sugeri `/fechar` no meio de um raciocínio bom. O Pedro corrigiu: há muito mais espaço do que eu estava assumindo. A régua de saúde de janela do `CLAUDE.md` (que fala em "unidade segura = FLOW" e "nunca entrar numa 2ª compactação") continua valendo — o que estava errado era a minha **calibragem do tamanho**, não a regra.
 

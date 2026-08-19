@@ -1,6 +1,6 @@
 # Lotties originais (antes de recolorir)
 
-Os `.json` **originais baixados do LottieFiles**, renomeados limpo. Fonte de verdade das animações. As versões coral (`*-legalizei.json`) em `ux-ui/prototipo/` e `ux-ui/lp/assets/` derivam destes.
+Os `.json` **originais baixados do LottieFiles**, renomeados limpo. Fonte de verdade das animações. As versões coral (`*-legalizai-story-book.json`) em `ux-ui/prototipo/` e `ux-ui/lp/assets/` derivam destes.
 
 Rastreados de `~/Downloads` em 2026-07-14.
 

@@ -17,13 +17,13 @@ tags: [tech, produto]
 | 4 | **🔐 Segurança do dado fiscal + chave A1** | O forte dele (2,5a segurança). Vamos guardar a chave privada do CNPJ dos clientes | O ponto mais crítico/arriscado — vazamento = fim | Desenhar arquitetura de guarda/uso do certificado A1 |
 | 5 | **Filtro CNAE por regime** (feature validada Izabela) | Matriz CNAE 1332 IBGE + anexo pronta ([[cnae-matriz-governo]]) | Feature-chave do onboarding (resolve "escolhi anexo errado") | Usar a matriz pra montar filtro regime→CNAE |
 | 6 | **Modelo de dados multi-tenant + LGPD** | Muitos clientes/empresas, dado fiscal sensível | Fundação — decidir agora, caro mudar depois | Debater esquema multi-tenant + LGPD |
-| 7 | **App Legalizei × Leghub** | Leghub já automatiza ~50% da operação interna | Compartilham código/dados? App novo separado? | Debater relação/arquitetura app cliente × back-office |
+| 7 | **App Legalizai Story Book × Leghub** | Leghub já automatiza ~50% da operação interna | Compartilham código/dados? App novo separado? | Debater relação/arquitetura app cliente × back-office |
 | 8 | **Direção de UX do MVP** | Auditoria de 15 telas + wizard ([[_relatorio-auditoria]]): mobile-first real, emissão 1-toque, sem cross-sell, dados-empresa 1ª classe, linguagem humana | Base dos wireframes; complementa a análise tech dele da Contabilizei | Cruzar nossa auditoria UX com o teardown tech dele |
 | 9 | **Stack** | Modelo pleno-core + guardrail sênior (§13 base). É a pauta principal | Ele propõe (React/Node?); debatemos com olhar de segurança/escala | Apresentar stack candidata + justificativa |
 | 10 | **Motor de compliance / acessórias** | Matriz de responsabilidades (DES-BH, DEFIS, DCTFWeb...) — pendente Larissa | Flag de arquitetura: app precisa orquestrar/lembrar acessórias | (aguardar Larissa) desenho preliminar do motor |
 
 ## Como usar
-Avaliar com Pedro quais debater na sexta × quais viram tarefa já. Aprovados → viram cards no [[kanban-legalizei]] (Triagem) com origem nesta pauta.
+Avaliar com Pedro quais debater na sexta × quais viram tarefa já. Aprovados → viram cards no [[kanban-legalizai-story-book]] (Triagem) com origem nesta pauta.
 
 ## Links
 - [[_relatorio-auditoria]] · [[cnae-matriz-governo]] · [[2026-07-09-conversa-izabela]] · [[spec-mvp-v0]] · [[orgaos-sistemas-abertura-bh]] · [[HOME]]

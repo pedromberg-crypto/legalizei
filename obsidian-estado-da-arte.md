@@ -10,7 +10,7 @@ tags: [meta]
 
 > **Última verificação: 2026-07-07** (fontes no fim). Check mensal agendado atualiza esta nota.
 
-## Decisões de stack do vault Legalizei 🟢
+## Decisões de stack do vault Legalizai Story Book 🟢
 
 | Camada | Decisão | Por quê (verificado) |
 |---|---|---|

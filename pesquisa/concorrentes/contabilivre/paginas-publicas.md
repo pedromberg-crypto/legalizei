@@ -57,14 +57,14 @@ Dois planos **visíveis** na tabela, ambos "**A partir de**" (âncora de piso, n
 2. **O contador humano é upsell, não base.** Combinando com o pricing: no R$209 **não há** reunião com contador, relatório nem alguém emitindo tua NF. Quem paga barato fica **sozinho com o app**. A relação humana — justamente o que ME-serviço mais quer — é a alavanca de R$359.
 3. **Empresa de SP interior servindo nacional — sem pegada local.** Rodapé: **CNPJ 22.934.193/0001-90**, **CRC 2SP033617** (registro SP), telefones **DDD 14** (região de Bauru/interior-SP). Zero presença em BH/MG. Também: disclaimer *"empresa privada... não possui vínculo com órgãos governamentais"* (anti-confusão) e link **"File for LLMs"** no rodapé (têm arquivo AEO/llms para IA — jogada moderna de SEO). Prova social: **+150 avaliações Google, ~4 estrelas**, selos Sectigo + ReclameAQUI + badges App Store/Google Play.
 
-## 🎯 Pro Legalizei
+## 🎯 Pro Legalizai Story Book
 
-1. **Preço sem pedágio de lead.** O maior atrito deles é obrigar form pra ver preço. Legalizei ganha com **um número claro na tela em 30s** (calculadora sem captura obrigatória de contato). Honestidade "sem asterisco" é território livre — eles poluíram tudo de `*`.
+1. **Preço sem pedágio de lead.** O maior atrito deles é obrigar form pra ver preço. Legalizai Story Book ganha com **um número claro na tela em 30s** (calculadora sem captura obrigatória de contato). Honestidade "sem asterisco" é território livre — eles poluíram tudo de `*`.
 2. **Coloque o contador humano NA BASE (ou um check-in humano periódico já no plano de entrada).** É o buraco declarado do R$209. ME-serviço não quer só software, quer não se sentir abandonado. Esse é o eixo de diferenciação de produto **e** de marca.
-3. **Transforme a isca deles em ferramenta pública.** O e-book Fator R é gated e datado (2024). Legalizei pode ter um **simulador Fator R aberto e gratuito** (Anexo III vs V, quanto você economiza) → capta por **utilidade/SEO**, não por muro de form. Vira autoridade onde eles só coletam e-mail.
-4. **Ângulo local BH como fosso.** Eles são genéricos/SP. Legalizei: onboarding BH-específico (Junta MG, ISS-BH, alvará PBH), número/atendimento regional. Presença local = confiança que firma nacional-online não replica barato.
+3. **Transforme a isca deles em ferramenta pública.** O e-book Fator R é gated e datado (2024). Legalizai Story Book pode ter um **simulador Fator R aberto e gratuito** (Anexo III vs V, quanto você economiza) → capta por **utilidade/SEO**, não por muro de form. Vira autoridade onde eles só coletam e-mail.
+4. **Ângulo local BH como fosso.** Eles são genéricos/SP. Legalizai Story Book: onboarding BH-específico (Junta MG, ISS-BH, alvará PBH), número/atendimento regional. Presença local = confiança que firma nacional-online não replica barato.
 5. **Table-stakes a igualar (não são diferenciais):** app iOS/Android, Conta PJ, Open Finance, emissor de NF, abertura grátis, selos SSL/ReclameAQUI, "File for LLMs"/AEO. Já é baseline do setor — entregar isso só te põe no jogo.
-6. **Não brigue por "liberdade/verde".** Contabilivre já é dona de "**livre**" + verde-limão (device `#` forte). Território adjacente e mais forte pra Legalizei: **regularidade/estar em dia/tranquilidade** ("legalizado, sem medo") — ver aprendizado 5 do `marca.md`.
+6. **Não brigue por "liberdade/verde".** Contabilivre já é dona de "**livre**" + verde-limão (device `#` forte). Território adjacente e mais forte pra Legalizai Story Book: **regularidade/estar em dia/tranquilidade** ("legalizado, sem medo") — ver aprendizado 5 do `marca.md`.
 
 ## ⏳ Ressalvas (páginas mislabeled)
 

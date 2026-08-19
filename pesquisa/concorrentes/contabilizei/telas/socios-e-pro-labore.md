@@ -39,7 +39,7 @@ tags: [concorrente, ux]
 - **PIS "-" sem explicação**: campo vazio gera dúvida ("falta algo meu?").
 - Sem simulação "e se eu mudar o pró-labore?" na própria tela.
 
-## 🎯 Contraproposta Legalizei
+## 🎯 Contraproposta Legalizai Story Book
 - Mostrar **bruto E líquido lado a lado** já no primeiro olhar, com breakdown expansível (INSS, IRRF, líquido) — zero cliques para a dúvida principal.
 - Substituir "cálculo inteligente" por um **simulador transparente**: slider de pró-labore → mostra em tempo real "você recebe R$ X, empresa paga R$ Y de imposto, economia Z". Transparência > jargão.
 - Explicar cada campo (PIS vazio → "não obrigatório para o seu caso") com microcopy humana.

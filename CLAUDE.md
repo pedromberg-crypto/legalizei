@@ -1,9 +1,9 @@
-# CLAUDE.md — Legalizei (vault + projeto)
+# CLAUDE.md — Legalizai Story Book (vault + projeto)
 
 Constituição desta janela. O `CLAUDE.md` da raiz `Projetos/` continua valendo acima deste.
 
 ## O que é
-**Legalizei** — app de contabilidade digital (MVP tipo Contabilizei, melhor). Sociedade **Pedro** (PM/sócio, dev solo) + **Mauro** (dono da Legalize Digital, escritório 22 anos BH). Negócio fechado 2026-07-07. Nicho: ME serviço no Simples, geo BH/MG. Fonte-verdade estratégica: `BASE-ESTRATEGICA.md`.
+**Legalizai Story Book** — app de contabilidade digital (MVP tipo Contabilizei, melhor). Sociedade **Pedro** (PM/sócio, dev solo) + **Mauro** (dono da Legalize Digital, escritório 22 anos BH). Negócio fechado 2026-07-07. Nicho: ME serviço no Simples, geo BH/MG. Fonte-verdade estratégica: `BASE-ESTRATEGICA.md`.
 
 Este diretório **é o vault do Obsidian** — todo `.md` é nota viva (`[[links]]`, properties, Bases). Git = backup/histórico. Auto-memória (`.claude/.../memory/`) = cache cross-sessão que carrega sozinho.
 
@@ -25,7 +25,7 @@ Nunca encerre um flow sem: (1) atualizar `HOME §Agora`; (2) registrar decisão 
 ## Onde as coisas vivem
 - `HOME.md` — hub + §Agora (estado corrente). `BASE-ESTRATEGICA.md` — teses/custo/equity/roadmap.
 - `marca/` — `decisoes-marca.md` (ADR, log de decisões travadas), `conceito/`, `identidade-visual/` (`paleta-cores.md`), `naming/`, `referencias/`.
-- `execucao/` — `spec-mvp-v0.md`, `marcos/` (descobertas datadas), `evolucao-para-mauro.md` (reporte sócio), `kanban-legalizei.md`, `parking-lot.md`.
+- `execucao/` — `spec-mvp-v0.md`, `marcos/` (descobertas datadas), `evolucao-para-mauro.md` (reporte sócio), `kanban-legalizai-story-book.md`, `parking-lot.md`.
 - `pesquisa/` — `concorrentes/` (teardowns), `cnae-matriz/`, `mercado-*`, `PESQUISA-MERCADO.md`.
 - `reunioes/` — atas Plaud (1 nota/reunião). Auto-memória — fatos duráveis cross-sessão.
 

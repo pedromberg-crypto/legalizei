@@ -10,7 +10,7 @@ metadata:
 
 **A linha divisória é CHECAGEM, não a ferramenta** (precisado por ele em 2026-07-19):
 
-- ✅ **Subir o servidor local quando ele pede** ("abre o mockup pra mim") — é serviço, faz sem hesitar: `preview_start` com `legalizei-app`, e pronto.
+- ✅ **Subir o servidor local quando ele pede** ("abre o mockup pra mim") — é serviço, faz sem hesitar: `preview_start` com `legalizai-story-book-app`, e pronto.
 - ❌ **Abrir o navegador pra "ver se ficou bom"** — screenshot, contar elementos, confirmar que renderizou. Isso é review, e review é dele.
 
 Instrução original 2026-07-16. Em 19/07 eu subi o server (certo) e emendei screenshot + `javascript_tool` contando iframes pra "confirmar que carregou" (errado) — a entrega termina no servidor no ar.

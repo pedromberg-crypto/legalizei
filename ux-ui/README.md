@@ -1,6 +1,6 @@
 # UX / UI
 
-Estudos de experiência e interface pro desenvolvimento do Legalizei.
+Estudos de experiência e interface pro desenvolvimento do Legalizai Story Book.
 
 - Benchmarks visuais (prints dos concorrentes → arrastar pra cá, linkar do teardown)
 - Fluxos-alvo do produto (onboarding, emissão NF, guias, dashboard)

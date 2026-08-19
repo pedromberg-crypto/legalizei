@@ -40,8 +40,8 @@ tags: [concorrente]
 ## ⚔️ Veredito
 - **Forças (não competir de frente):** device de marca "#livre" forte e consistente; prova social real (+150 avaliações Google, ~4★, selos ReclameAQUI)
 - **Fraquezas (nossa cunha):** pedágio de lead em TUDO (não dá pra ver preço sem entregar contato); contador humano ausente no plano barato; zero pegada local BH/MG (SP-interior, DDD 14)
-- **Copiar:** simulador Fator R como ímã de lead — mas Legalizei pode fazer ABERTO/grátis (sem gate) e ganhar por utilidade/SEO em vez de muro
-- **Evitar:** formulário obrigatório antes de qualquer preço; "sobre" fake (isca disfarçada de institucional); território "livre/verde" já é dela — Legalizei mira "regularidade/tranquilidade" em vez disso
+- **Copiar:** simulador Fator R como ímã de lead — mas Legalizai Story Book pode fazer ABERTO/grátis (sem gate) e ganhar por utilidade/SEO em vez de muro
+- **Evitar:** formulário obrigatório antes de qualquer preço; "sobre" fake (isca disfarçada de institucional); território "livre/verde" já é dela — Legalizai Story Book mira "regularidade/tranquilidade" em vez disso
 
 ## Links
 - [[paginas-publicas]] · [[_sintese-paginas-publicas]] · [[PESQUISA-MERCADO]] · [[HOME]]

@@ -41,4 +41,4 @@ tags: [marco, produto, spec, blocos, onboarding, decisao]
 - 🟡 Confirmar com Izabela que nenhum doc de abertura captura receita estimada.
 
 ## Links
-- [[blocos-fluxo-abertura]] · [[2026-07-13-plano-sequencia-pm]] · [[kanban-legalizei]] · [[HOME]]
+- [[blocos-fluxo-abertura]] · [[2026-07-13-plano-sequencia-pm]] · [[kanban-legalizai-story-book]] · [[HOME]]

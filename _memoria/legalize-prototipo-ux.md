@@ -1,6 +1,6 @@
 ---
 name: legalize-prototipo-ux
-description: Protótipo UI do Legalizei = HTML+Tailwind throwaway em ux-ui/prototipo/ (método página-primeiro); fluxo de entrada completo (splash→welcome→fork→gate→login) + wizard; padrões de layout sem scroll e Lottie local.
+description: Protótipo UI do Legalizai Story Book = HTML+Tailwind throwaway em ux-ui/prototipo/ (método página-primeiro); fluxo de entrada completo (splash→welcome→fork→gate→login) + wizard; padrões de layout sem scroll e Lottie local.
 metadata: 
   node_type: memory
   type: project
@@ -16,11 +16,11 @@ Arquivos (fluxo de entrada COMPLETO, 2026-07-12): `splash.html` (coral, logo neg
 **Padrões travados:**
 - **Layout sem scroll:** moldura `h-[100dvh]` + `overflow-hidden`; `min-h-0` em TODA a cadeia flex; um elemento `flex-1` absorve a sobra (encolhe = rubber-band). `dvh`, nunca `vh`.
 - **Splash = único momento de marca animado; fork entra com logo estático** (não repete montagem).
-- **Lottie local:** servir `lottie.min.js` + `*-legalizei.json` da pasta; recolorir cor de marca → coral (fills + effects). Na pane do Claude o tab roda offscreen e congela o `requestAnimationFrame` → **driver manual** (`setInterval`+`goToAndStop`); no app real (RN) autoplay nativo. Screenshot da pane trava com o loop (não é bug do código) — Pedro valida no Chrome dele por F5.
+- **Lottie local:** servir `lottie.min.js` + `*-legalizai-story-book.json` da pasta; recolorir cor de marca → coral (fills + effects). Na pane do Claude o tab roda offscreen e congela o `requestAnimationFrame` → **driver manual** (`setInterval`+`goToAndStop`); no app real (RN) autoplay nativo. Screenshot da pane trava com o loop (não é bug do código) — Pedro valida no Chrome dele por F5.
 
 **gate-cnae — micro-interações (2026-07-12):**
-- **Loading = lottie arquivos+lupa** (`loading-legalizei.json` / `window.LOADING`) no lugar dos 3 dots; toca no estado "pensando", pausa no resultado.
-- **Confirmação de CNAE = confete** (`success-confetti-legalizei.json` / `window.CONFETTI`): botão "É isso mesmo" encolhe (scale .18) e explode círculo coral + check branco (eco do logo) → navega `login.html`.
+- **Loading = lottie arquivos+lupa** (`loading-legalizai-story-book.json` / `window.LOADING`) no lugar dos 3 dots; toca no estado "pensando", pausa no resultado.
+- **Confirmação de CNAE = confete** (`success-confetti-legalizai-story-book.json` / `window.CONFETTI`): botão "É isso mesmo" encolhe (scale .18) e explode círculo coral + check branco (eco do logo) → navega `login.html`.
 - **Placeholder animado (typewriter):** ghost overlay digita 15 atividades CNAE populares letra por letra (~42ms), segura nos "...", troca random; cor ink-400; some ao digitar (classe `.gh-hide`); reduced-motion = 1 exemplo estático.
 - **CTA no rodapé:** na tela de resultado o CTA primário cola no rodapé (`mt-auto`, padrão da 1ª aba), secundário "refazer" acima. Princípio "CTA em baixo" pra boa parte do app.
 - **Validador:** atividade regulamentada SEMPRE vence match verde (advogado/consultoria → waitlist); word boundaries `\bapp\b`/`\bbar\b`/`marcas?\b`; "não entendi" preserva o texto.

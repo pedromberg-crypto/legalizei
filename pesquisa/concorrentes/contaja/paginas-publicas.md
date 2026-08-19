@@ -99,13 +99,13 @@ tags: [concorrente, marca]
 
 ---
 
-## 🎯 Pro Legalizei
+## 🎯 Pro Legalizai Story Book
 
 - **Não brigar em preço de tabela — brigar em preço FECHADO.** Contaja é o piso (R$137 / R$49,90 / "até 90%"). Copiar isso é perder no jogo dela. Vencer virando a fraqueza dela em bandeira: **"preço fechado, sem serviço avulso surpresa"** / **"tudo que sua ME precisa no mês, incluso"**. Transparência > âncora baixa.
 - **Bundlar o que a Contaja cobra à parte:** IRPF do sócio, admissão de 1 funcionário, folha — dentro do plano base, pra a ME se sentir *coberta*. Diferenciador concreto e sentido no bolso.
 - **Abertura honestamente grátis:** dizer o custo real (certificado + taxas) de cara, na página de preço, não escondido no FAQ. Confiança por transparência é o fosso que a Contaja deixou aberto.
 - **Manter MEI + WhatsApp** (é table stakes — Contaja é a única com os dois; pro ICP ME/BH, WhatsApp é esperado). Ir além com **contador nomeado/dedicado** vs a "equipe" genérica da Contaja.
-- **Ângulo regional é disputado, não vago.** Contaja **já é Minas (CRC MG)**. "Online de BH" genérico não diferencia. Legalizei precisa de **hiper-local real** — prefeitura de BH, ISS, alvará/particularidades BH — não só "somos daqui".
+- **Ângulo regional é disputado, não vago.** Contaja **já é Minas (CRC MG)**. "Online de BH" genérico não diferencia. Legalizai Story Book precisa de **hiper-local real** — prefeitura de BH, ISS, alvará/particularidades BH — não só "somos daqui".
 - **Roubar o didatismo, evitar os erros:** adotar o estilo "contrato social = certidão de nascimento da empresa"; e **não** repetir os deslizes da Contaja (fonte única de nomes de plano, culture-deck fora do site público, corrigir cookie/seção vazia).
 
 ---

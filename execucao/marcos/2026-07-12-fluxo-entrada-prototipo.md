@@ -33,7 +33,7 @@ Sequência: **Splash → Fork → Gate CNAE → Login → Wizard Fase 0/1**.
 - `ux-ui/prototipo/fluxo-entrada.html` — splash animada + fork (logo real, montagem centro→header).
 - `ux-ui/prototipo/fase-0-dados-socio.html` — 1ª tela do wizard (dados do sócio).
 - `ux-ui/prototipo/entrada.html` — welcome/landing v1.
-- `ux-ui/prototipo/legalizei-simbolo.svg` + logo horizontal (versão fundo composto).
+- `ux-ui/prototipo/legalizai-story-book-simbolo.svg` + logo horizontal (versão fundo composto).
 
 ## Links
 - [[spec-mvp-v0]] · [[fluxo-abertura-portais-pedro-dev]] · [[cnae-atendidos-e-nao-atendidos]] · [[decisoes-marca]] · [[2026-07-12-logo-fechado]] · [[legalize-prototipo-ux]] · [[HOME]]

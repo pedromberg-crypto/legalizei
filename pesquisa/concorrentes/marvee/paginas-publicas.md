@@ -9,7 +9,7 @@ tags: [concorrente, marca]
 
 # Marvee — páginas públicas (sobre + franquia)
 
-> Marvee **não é concorrente direto** do Legalizei. É um contraste útil: BPO/terceirização financeira B2B de ticket alto, escalando por **franquia**, com venda 100% consultiva. Serve pra marcar por oposição o que o Legalizei NÃO é.
+> Marvee **não é concorrente direto** do Legalizai Story Book. É um contraste útil: BPO/terceirização financeira B2B de ticket alto, escalando por **franquia**, com venda 100% consultiva. Serve pra marcar por oposição o que o Legalizai Story Book NÃO é.
 
 ## 💰 Pricing (SEM preço público — o que a venda consultiva + modelo franquia comunicam)
 
@@ -17,9 +17,9 @@ tags: [concorrente, marca]
 
 - **Venda consultiva, ticket alto, sem autoatendimento.** Quem vende BPO financeiro (contas a pagar/receber, conciliação bancária, fluxo de caixa, relatórios gerenciais) precifica por complexidade da operação do cliente, não por tabela. O CTA da página sobre é **"Fale com a gente"** / **"Conte com nossa terceirização financeira"** — todo caminho leva a conversa, não a checkout.
 - **Público = empresa que já tem dor de gestão financeira**, não o ME que só quer sair do MEI. O rodapé lista os verticais que eles miram: *Agências de Publicidade e Marketing, Infoprodutores, Escritórios de Advocacia, Escritórios de Engenharia, Fábricas de Software, Prestadores de Serviços*. É empresa em operação, com faturamento e movimentação bancária que justifica terceirizar o financeiro inteiro.
-- **Ticket estimado alto (ordem de milhares/mês).** BPO financeiro terceiriza um departamento, não só a apuração fiscal. Precificação por operação sob medida ⇒ ancoragem de valor por resultado, não por preço. É o oposto do jogo do Legalizei (preço na cara, mensalidade fixa, entra sozinho).
+- **Ticket estimado alto (ordem de milhares/mês).** BPO financeiro terceiriza um departamento, não só a apuração fiscal. Precificação por operação sob medida ⇒ ancoragem de valor por resultado, não por preço. É o oposto do jogo do Legalizai Story Book (preço na cara, mensalidade fixa, entra sozinho).
 
-**Sinal forte pro Legalizei:** preço escondido = fricção proposital = escala baixa por natureza. Marvee troca volume por margem/ticket. O Legalizei quer o inverso.
+**Sinal forte pro Legalizai Story Book:** preço escondido = fricção proposital = escala baixa por natureza. Marvee troca volume por margem/ticket. O Legalizai Story Book quer o inverso.
 
 ## 📖 Marca / história (BPO + terceirização financeira, tom)
 
@@ -48,17 +48,17 @@ A página `/como-funciona-uma-franquia-de-bpo-financeiro` é o achado central: *
 
 ## 🔎 Achados não solicitados (OLHO CRÍTICO)
 
-1. **A ausência de `/planos` é o achado mais barato e mais valioso.** Confirma empiricamente que este segmento (BPO alto valor) é *venda humana obrigatória*. Isso valida por contraste a tese do Legalizei: se você quer volume/self-service, precisa estar no extremo oposto — preço público, onboarding sozinho, ticket baixo. Marvee é o "controle" do experimento.
-2. **Marvee vende BPO para o cliente E vende o negócio de BPO para o empreendedor — dois funis na mesma marca.** A página de franquia diz que o mercado deles não é só PME faminta por gestão financeira; é também gente querendo *montar* uma operação de BPO. Alerta: parte dessas franquias vira concorrente pulverizado de contabilidade/BPO regional. Não é ameaça ao Legalizei (públicos distintos), mas mapeia quem povoa o mercado.
-3. **Tom de manifesto ("a média é uma merda", "dinheiro não aceita desaforo") mira B2B jovem/agências/infoprodutores — não o dono de ME tradicional.** É brand de nicho premium-descolado, deliberadamente filtra público. O Legalizei fala com o ME do Simples que quer simplicidade e preço, não com quem se identifica com credo de alta performance. Vozes de marca opostas.
-4. **Contabilidade aparece como item de rodapé, subordinada ao financeiro.** Marvee não disputa o "abrir/regularizar empresa + apuração do Simples" — disputa o financeiro operacional de quem já roda. Espaço do Legalizei está livre desse lado.
+1. **A ausência de `/planos` é o achado mais barato e mais valioso.** Confirma empiricamente que este segmento (BPO alto valor) é *venda humana obrigatória*. Isso valida por contraste a tese do Legalizai Story Book: se você quer volume/self-service, precisa estar no extremo oposto — preço público, onboarding sozinho, ticket baixo. Marvee é o "controle" do experimento.
+2. **Marvee vende BPO para o cliente E vende o negócio de BPO para o empreendedor — dois funis na mesma marca.** A página de franquia diz que o mercado deles não é só PME faminta por gestão financeira; é também gente querendo *montar* uma operação de BPO. Alerta: parte dessas franquias vira concorrente pulverizado de contabilidade/BPO regional. Não é ameaça ao Legalizai Story Book (públicos distintos), mas mapeia quem povoa o mercado.
+3. **Tom de manifesto ("a média é uma merda", "dinheiro não aceita desaforo") mira B2B jovem/agências/infoprodutores — não o dono de ME tradicional.** É brand de nicho premium-descolado, deliberadamente filtra público. O Legalizai Story Book fala com o ME do Simples que quer simplicidade e preço, não com quem se identifica com credo de alta performance. Vozes de marca opostas.
+4. **Contabilidade aparece como item de rodapé, subordinada ao financeiro.** Marvee não disputa o "abrir/regularizar empresa + apuração do Simples" — disputa o financeiro operacional de quem já roda. Espaço do Legalizai Story Book está livre desse lado.
 
-## 🎯 Pro Legalizei
+## 🎯 Pro Legalizai Story Book
 
 - **Segmento a NÃO mirar agora:** BPO financeiro de ticket alto (>R$ milhares/mês), venda consultiva, cliente com departamento financeiro pra terceirizar. Exige time humano, playbook e venda 1-a-1 — mata a economia de um app de contabilidade de baixo ticket para ME do Simples. É o oposto de escalável-por-software.
-- **Marvee valida a tese do Legalizei por oposição:** onde eles escondem preço e vendem por gente, o Legalizei ganha mostrando preço, deixando entrar sozinho e mantendo ticket baixo com margem no volume + automação (RPA/API). Preço público não é só marketing — é a declaração de que o modelo escala sem vendedor.
-- **Aprendizado transferível de marca:** o único elemento "roubável" é a *clareza de manifesto* — Marvee tem uma voz. O Legalizei pode ter voz forte também, só que apontada pro ME que quer paz com o fisco e simplicidade, não performance. Nunca copiar o tom (agressivo/exclusivo) nem o modelo (franquia/consultivo).
-- **Não perseguir franquia como rota de escala.** Franquia resolve a inescalabilidade do BPO *humano*; o Legalizei já nasce escalável via software. Adicionar franquia seria importar o problema (rede física, royalties, padronização de gente) que o produto digital foi feito pra eliminar.
+- **Marvee valida a tese do Legalizai Story Book por oposição:** onde eles escondem preço e vendem por gente, o Legalizai Story Book ganha mostrando preço, deixando entrar sozinho e mantendo ticket baixo com margem no volume + automação (RPA/API). Preço público não é só marketing — é a declaração de que o modelo escala sem vendedor.
+- **Aprendizado transferível de marca:** o único elemento "roubável" é a *clareza de manifesto* — Marvee tem uma voz. O Legalizai Story Book pode ter voz forte também, só que apontada pro ME que quer paz com o fisco e simplicidade, não performance. Nunca copiar o tom (agressivo/exclusivo) nem o modelo (franquia/consultivo).
+- **Não perseguir franquia como rota de escala.** Franquia resolve a inescalabilidade do BPO *humano*; o Legalizai Story Book já nasce escalável via software. Adicionar franquia seria importar o problema (rede física, royalties, padronização de gente) que o produto digital foi feito pra eliminar.
 
 ## Links
 - [[marvee]] · [[marca|referências]] · [[conceito-marca]]

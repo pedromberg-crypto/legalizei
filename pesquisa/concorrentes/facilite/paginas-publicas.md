@@ -51,23 +51,23 @@ Todos os planos: Contabilidade Completa + ERP integrado com OpenFinance + Atendi
 
 1. **Preço "transparente" que não é self-serve.** Números na página + todo CTA "Falar com especialista" + "ajustado conforme faturamento" = âncora de lead-gen disfarçada de transparência. Os add-ons (Folha R$50/func, Certificado "à parte", Facilite Prime "à parte") escondem o ticket real — o R$199,90 do Blue quase nunca é o que se paga. O "a partir de" é a licença pra discriminar preço por faturamento na call.
 
-2. **Narrativa tech >> time tech (o achado mais acionável pro Legalizei).** A marca vende "plataforma inovadora, TouchTech, IA, OpenFinance, APIs, arquitetura aberta" — mas o time exibido no /sobre tem **1 desenvolvedor (Levi)** e 1 CTO. A promessa de produto-tecnologia é desproporcional à engenharia visível. Leitura honesta: mais **camada de contabilidade + SaaS de terceiro** do que engenharia proprietária profunda. Um concorrente com PM+dev próprios (Legalizei) pode superar isso de fato, não só na copy.
+2. **Narrativa tech >> time tech (o achado mais acionável pro Legalizai Story Book).** A marca vende "plataforma inovadora, TouchTech, IA, OpenFinance, APIs, arquitetura aberta" — mas o time exibido no /sobre tem **1 desenvolvedor (Levi)** e 1 CTO. A promessa de produto-tecnologia é desproporcional à engenharia visível. Leitura honesta: mais **camada de contabilidade + SaaS de terceiro** do que engenharia proprietária profunda. Um concorrente com PM+dev próprios (Legalizai Story Book) pode superar isso de fato, não só na copy.
 
 3. **Métricas de vaidade quebradas — tiro no pé de craft.** No print de /sobre os contadores aparecem **zerados: "0+ Clientes · 0+ NPS · 0+ BI Impostos Processados"** (os números não renderizaram na captura). Numa página cujo único trabalho é construir confiança, exibir *"0+ Clientes"* é autodestrutivo. Mesma categoria dos "links azuis default" da Contaja — acabamento vaza autoridade.
 
 4. **Cookie banner em INGLÊS cobrindo o hero em AMBAS as páginas.** "Cookie Settings / We use cookies to enhance..." — em inglês, num site PT-BR, sobreposto ao conteúdo principal. Fricção + tell de i18n/template mal configurado (coerente com a leitura de "SaaS de terceiro" do #2).
 
-## 🎯 Pro Legalizei
+## 🎯 Pro Legalizai Story Book
 
-1. **Mostre preço-âncora, mas ganhe sendo self-serve de verdade.** Pôr número na página (mesmo "a partir de") já bate quem esconde atrás de "fale conosco". Mas o ICP ME-Simples-BH quer **resolver rápido e barato, sem call obrigatória** — a venda 100% consultiva da Facilite é fricção que esse ticket baixo não tolera. Legalizei pode ocupar o espaço vazio: **o mais transparente E self-serve da praça** (preço fechado por faixa de faturamento, checkout sem ligação). Diferenciação de graça contra Facilite (consultiva) e paridade+ contra Contabilizei.
+1. **Mostre preço-âncora, mas ganhe sendo self-serve de verdade.** Pôr número na página (mesmo "a partir de") já bate quem esconde atrás de "fale conosco". Mas o ICP ME-Simples-BH quer **resolver rápido e barato, sem call obrigatória** — a venda 100% consultiva da Facilite é fricção que esse ticket baixo não tolera. Legalizai Story Book pode ocupar o espaço vazio: **o mais transparente E self-serve da praça** (preço fechado por faixa de faturamento, checkout sem ligação). Diferenciação de graça contra Facilite (consultiva) e paridade+ contra Contabilizei.
 
 2. **Escada de 3 com decoy funciona — mas dimensione pro ICP.** Manter o gap pequeno no centro + rótulo "Mais escolhido" no plano-alvo. Pra ME Simples pequeno, provavelmente **2 planos + 1 âncora premium** basta; não precisa do Black-BPO no MVP. Mas *nomear* um teto premium (mesmo sem vender muito) reancora a tabela pra baixo e sinaliza pra-onde-crescer.
 
-3. **Naming por estágio de vida embute upsell e vira jornada.** "Começando → Crescimento → Consolidada" transforma preço em trajetória e cria LTV expansível. Legalizei pode nomear planos pelo **momento do empreendedor** (ex.: abertura → operação → escala), não por feature seca.
+3. **Naming por estágio de vida embute upsell e vira jornada.** "Começando → Crescimento → Consolidada" transforma preço em trajetória e cria LTV expansível. Legalizai Story Book pode nomear planos pelo **momento do empreendedor** (ex.: abertura → operação → escala), não por feature seca.
 
-4. **Wedge de nicho > "contabilidade genérica de BH".** Facilite provou o modelo com Airbnb/temporada. Legalizei tem espaço pra um **wedge BH-específico** — um CNAE/setor dominante local, ou "abertura de ME de serviço em BH em X dias" — beachhead defensável por comunidade + SEO local, depois expande. Território barato de possuir; feature é copiável, nicho+comunidade não.
+4. **Wedge de nicho > "contabilidade genérica de BH".** Facilite provou o modelo com Airbnb/temporada. Legalizai Story Book tem espaço pra um **wedge BH-específico** — um CNAE/setor dominante local, ou "abertura de ME de serviço em BH em X dias" — beachhead defensável por comunidade + SEO local, depois expande. Território barato de possuir; feature é copiável, nicho+comunidade não.
 
-5. **Coerência tech = confiança real, não copy.** Se Legalizei tem produto/dev próprio (Pedro Dev), **mostrar isso** é diferenciação que a Facilite finge ter (narrativa tech sem lastro, 1 dev). E: **nunca exibir "0+ clientes"** — só mostrar métrica quando real. Na categoria dinheiro, acabamento impecável É proposta de valor.
+5. **Coerência tech = confiança real, não copy.** Se Legalizai Story Book tem produto/dev próprio (Pedro Dev), **mostrar isso** é diferenciação que a Facilite finge ter (narrativa tech sem lastro, 1 dev). E: **nunca exibir "0+ clientes"** — só mostrar métrica quando real. Na categoria dinheiro, acabamento impecável É proposta de valor.
 
 ## ⏳ Pendente (faq)
 

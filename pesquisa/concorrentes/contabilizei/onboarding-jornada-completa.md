@@ -46,7 +46,7 @@ tags: [concorrente, insight, ux]
 9. **Multicanal com humano nos momentos críticos** (WhatsApp pra assinatura) — validam nossa tese: humano onde dói, software no resto.
 10. **~23 dias do cadastro ao CNPJ+dispensas em BH** (com feriados no meio) — **este é o benchmark a bater.** Contajá promete 72h pra partes do fluxo; a régua real do líder é semanas.
 
-## O que o Legalizei copia × corrige
+## O que o Legalizai Story Book copia × corrige
 
 | Copiar | Corrigir |
 |---|---|

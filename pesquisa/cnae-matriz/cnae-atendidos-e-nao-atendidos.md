@@ -10,7 +10,7 @@ data: 2026-07-10
 tags: [cnae, dev, escopo]
 ---
 
-# 🗂️ CNAEs mapeados — atendidos, condicionais e não atendidos (Legalizei)
+# 🗂️ CNAEs mapeados — atendidos, condicionais e não atendidos (Legalizai Story Book)
 
 > Entregável pro programador. Universo = **1332 subclasses CNAE** (fonte-verdade: API oficial IBGE). Classificação de cobertura = espelho do **filtro operacional real da Contabilizei** (13 anos validando o que automatiza/protege margem): **serviço + comércio leve no Simples**.
 >

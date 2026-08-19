@@ -38,7 +38,7 @@ tags: [concorrente, ux]
 - **Zero empty-state educativo** pra quem nunca teve funcionário: perde-se a chance de educar + captar intenção de contratar.
 - **Mobile solta o submenu no limbo**: sem título, no topo de um scroll gigante.
 
-## 🎯 Contraproposta Legalizei
+## 🎯 Contraproposta Legalizai Story Book
 - **Menu adaptativo ao perfil**: ME de serviço sem funcionários vê "Folha" como item secundário com estado explícito — "Ative quando contratar seu 1º funcionário". Menu = espelho do negócio, não catálogo genérico.
 - Se clicar, **abrir uma tela de verdade** (não flyout sobre a Home) com **empty-state útil**: "Você ainda não tem funcionários. Contratar alguém? A gente cuida de admissão, holerite e eSocial." — educar + captar intenção.
 - **Manter os rótulos humanos** ("Gerenciar funcionários", "Consultar folha mensal") — nisso a Contabilizei acerta; herdar o tom.

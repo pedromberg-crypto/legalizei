@@ -23,7 +23,7 @@ tags: [concorrente, marca]
 | `#db923b` | Laranja/âmbar | Único accent **quente** da paleta, pontual (7x). Traz calor a um esquema todo frio. |
 | `#25d366` | Verde WhatsApp | Funcional, não é cor de marca — convenção de canal (botão WhatsApp). |
 
-**Achado honesto e ancorável:** navy + slate + teal (`#1c2541` / `#3a506b` / `#5bc0be`) são **3 das 5 cores de uma das paletas mais compartilhadas do Coolors** (a sequência `0B132B → 1C2541 → 3A506B → 5BC0BE → 6FFFE9`). A paleta *parece* premium e autoral, mas é atalho de designer — não é hue proprietário. Isso importa pro Legalizei (ver Aprendizado).
+**Achado honesto e ancorável:** navy + slate + teal (`#1c2541` / `#3a506b` / `#5bc0be`) são **3 das 5 cores de uma das paletas mais compartilhadas do Coolors** (a sequência `0B132B → 1C2541 → 3A506B → 5BC0BE → 6FFFE9`). A paleta *parece* premium e autoral, mas é atalho de designer — não é hue proprietário. Isso importa pro Legalizai Story Book (ver Aprendizado).
 
 ### Tipografia
 - **Palanquin, sans-serif** em H1, H2 e corpo — tipo único pra tudo.
@@ -79,12 +79,12 @@ tags: [concorrente, marca]
 - **Empilhamento de prova:** "700 empresas", depoimentos, cards "VOCÊ SABIA QUE", FAQ "Marvee responde" com objeções reais. Rostos humanos sustentam a relação de alto toque.
 - **Momentum visual:** seta ↗ em todo CTA sinaliza ação/avanço.
 
-## 🎯 Aprendizado pro Legalizei
-1. **Roube a estratégia de cor, não a cor.** Base escura de autoridade + 1 accent fresco e vivo *funciona* pra sinalizar "tech confiável" e sustentar ticket. Mas `#5bc0be` é preset de Coolors dividido com meia-categoria — Legalizei deve pegar o **movimento** (navy/escuro + accent único + foto humana) e **escolher um hue não-lotado**, fugindo do teal/azul-verde de todo mundo.
+## 🎯 Aprendizado pro Legalizai Story Book
+1. **Roube a estratégia de cor, não a cor.** Base escura de autoridade + 1 accent fresco e vivo *funciona* pra sinalizar "tech confiável" e sustentar ticket. Mas `#5bc0be` é preset de Coolors dividido com meia-categoria — Legalizai Story Book deve pegar o **movimento** (navy/escuro + accent único + foto humana) e **escolher um hue não-lotado**, fugindo do teal/azul-verde de todo mundo.
 2. **Foto humana casada com a marca é o truque barato e distintivo.** É o que mais destaca a Marvee dos concorrentes (que usam ilustração/gradiente). Vale copiar o *movimento*.
-3. **Voz de CTA segue o ticket.** "Fale com…" serve alto-toque/consultivo. Se o Legalizei é self-service tipo Contabilizei, o CTA tem que ser instantâneo ("Abra grátis", "Comece agora") — **não** copiar o "Fale com" da Marvee.
-4. **Tenha sua palavra-cunha.** Contabilizei = "economia/maior"; Marvee = "completa"; Agilize = "sem burocracia". Legalizei precisa da sua (uma só) e da cor+tom que a encarnam.
-5. **Distinção não vem do hue — vem da execução.** A categoria é um mar de azul-verde. Fonte única + paleta-preset deixam a Marvee reconhecível pela cor mas não pela letra nem pelo logo. Legalizei ganha distinção onde a Marvee deixou na mesa: **pareamento tipográfico com voz + logo com ideia + movimento/motion**.
+3. **Voz de CTA segue o ticket.** "Fale com…" serve alto-toque/consultivo. Se o Legalizai Story Book é self-service tipo Contabilizei, o CTA tem que ser instantâneo ("Abra grátis", "Comece agora") — **não** copiar o "Fale com" da Marvee.
+4. **Tenha sua palavra-cunha.** Contabilizei = "economia/maior"; Marvee = "completa"; Agilize = "sem burocracia". Legalizai Story Book precisa da sua (uma só) e da cor+tom que a encarnam.
+5. **Distinção não vem do hue — vem da execução.** A categoria é um mar de azul-verde. Fonte única + paleta-preset deixam a Marvee reconhecível pela cor mas não pela letra nem pelo logo. Legalizai Story Book ganha distinção onde a Marvee deixou na mesa: **pareamento tipográfico com voz + logo com ideia + movimento/motion**.
 
 ## Links
 - [[marvee]] · [[referencias]] · [[conceito-marca]]

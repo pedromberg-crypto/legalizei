@@ -34,7 +34,7 @@ Alinhar objetivo (MVP tipo Contabilizei, ICP ME serviço Simples BH) e mostrar o
 
 **4. Produto:** **spec-cunha do MVP v0** (núcleo + princípios + o que NÃO fazer).
 
-**5. Marca:** frente iniciada — defesa do naming **Legalizei**.
+**5. Marca:** frente iniciada — defesa do naming **Legalizai Story Book**.
 
 **6. Infra:** vault Obsidian versionado no **git** — tudo rastreável, nada se perde.
 > Mensagem: "temos o mapa do líder, das regras e do produto. Agora precisamos do trilho técnico — é o que vim fechar com você."
@@ -129,4 +129,4 @@ As 17 categorias CNAE recusadas ([[cnae-cobertura]]) · banco próprio · benef�
 - **Carla** (DP) · **Jessica** (abrir em 4 concorrentes) · **sênior guardrail** (validar arquitetura/segurança).
 
 ## Links
-- [[pauta-reuniao-pedro-dev]] · [[spec-mvp-v0]] · [[_relatorio-auditoria]] · [[cnae-matriz-governo]] · [[2026-07-09-conversa-izabela]] · [[kanban-legalizei]] · [[HOME]]
+- [[pauta-reuniao-pedro-dev]] · [[spec-mvp-v0]] · [[_relatorio-auditoria]] · [[cnae-matriz-governo]] · [[2026-07-09-conversa-izabela]] · [[kanban-legalizai-story-book]] · [[HOME]]

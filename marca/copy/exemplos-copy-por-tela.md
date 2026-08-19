@@ -50,7 +50,7 @@ Ao escrever ou auditar uma tela nova, identifique o tipo (pode ser mais de um) e
 
 ## 3. Sucesso (confirmação, conquista)
 
-**Padrão:** confirma o fato em 1 frase → se houver economia/vantagem, mostra ela explícita → tom leve, licença pro "Legalizei! 🎉" nos marcos grandes (abertura, 1ª nota), tom mais contido nas confirmações recorrentes (guia paga, dado salvo).
+**Padrão:** confirma o fato em 1 frase → se houver economia/vantagem, mostra ela explícita → tom leve, licença pro "Legalizai Story Book! 🎉" nos marcos grandes (abertura, 1ª nota), tom mais contido nas confirmações recorrentes (guia paga, dado salvo).
 
 > "Abertura grátis. A gente não cobra honorário pra abrir. Você paga só as taxas de governo."
 > — `ui/aviso.stories.tsx`

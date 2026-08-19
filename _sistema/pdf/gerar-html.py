@@ -90,19 +90,32 @@ def limpa_links_wiki(html: str) -> str:
     return re.sub(r"\[\[([^\]|]+)(?:\|[^\]]+)?\]\]", r'<span class="ref">\1</span>', html)
 
 
+# Caixas coral de fechamento de bloco. A chave e' o texto em negrito na 1a
+# linha do blockquote; o rotulo e' o que aparece impresso na tampa da caixa.
+# "Pergunta de validação" serve doc que vai pra terceiro validar; "Decisão a
+# tomar" serve doc de decisao interna, onde o bloco fecha numa escolha.
+FECHOS = {
+    "Pergunta de validação": "Pergunta de validação",
+    "Decisão a tomar": "Decisão a tomar",
+}
+
+
 def realca(html: str) -> str:
     """Classifica blockquotes e paragrafos de ressalva."""
     def _bq(m):
         interno = m.group(1)
-        if "Pergunta de validação" in interno:
-            corpo_ = re.sub(
-                r"<strong>❓ Pergunta de validação</strong>\s*(<br\s*/?>)?", "", interno
-            )
-            return (
-                '<div class="pergunta">'
-                '<div class="pergunta-tag">Pergunta de validação</div>'
-                f'<div class="pergunta-corpo">{corpo_}</div></div>'
-            )
+        for chave, rotulo in FECHOS.items():
+            if chave in interno:
+                corpo_ = re.sub(
+                    rf"<strong>[❓🎯]?\s*{re.escape(chave)}</strong>\s*(<br\s*/?>)?",
+                    "",
+                    interno,
+                )
+                return (
+                    '<div class="pergunta">'
+                    f'<div class="pergunta-tag">{rotulo}</div>'
+                    f'<div class="pergunta-corpo">{corpo_}</div></div>'
+                )
         if "⚠️" in interno:
             # o emoji sai AQUI: se sobrasse, a regra de paragrafo abaixo o
             # pegaria de novo e desenharia uma caixa amarela dentro da outra
@@ -212,9 +225,24 @@ SUBTITULOS_POR_DOC = {
     "10": "o mapa de canais e o porquê de cada corte",
     "11": "os 2 gates, o placar honesto e o que falta travar",
     "12": "os 8 riscos e a defesa atual de cada um",
-    }
+    },
+    "2026-08-18-custos-margem-decisao": {
+    "1": "onde cada player está e por que o preço anunciado não é a conta",
+    "2": "as duas contas do vault somadas pela primeira vez",
+    "3": "a régua travada: R$30–100, custo único, contra 12 meses",
+    "4": "o CPC do Puntel virando CPL na nossa régua",
+    "5": "o que fecha, o que não fecha e onde está o gargalo real",
+    "6": "o cenário de lançamento a R$99 e o que ele custa",
+    "7": "o que R$3.500/mês entrega de verdade contra a meta",
+    "8": "as 5 escolhas que a aritmética já autoriza",
+    "9": "os 3 números que ainda seguram tudo",
+    },
 }
 SUBTITULOS = SUBTITULOS_POR_DOC.get(MD.stem, {})
+
+# A capa anuncia como cada bloco fecha. Sai do proprio texto pra nao precisar
+# de flag: doc de decisao fecha em decisao, doc de validacao fecha em pergunta.
+fecho_capa = "decisão" if "Decisão a tomar" in bruto else "pergunta"
 
 sumario_itens = "\n".join(
     f'<li><span class="sum-num">{n}</span>'
@@ -510,7 +538,7 @@ hr {{ border:none; border-top:1px solid var(--ink-200); margin:6mm 0; }}
     <div class="capa-regra"></div>
     <dl class="capa-meta">
       <div><dt>Data</dt><dd>{args.data}</dd></div>
-      <div><dt>Blocos</dt><dd>{len(secoes)}, cada um com pergunta</dd></div>
+      <div><dt>Blocos</dt><dd>{len(secoes)}, cada um com {fecho_capa}</dd></div>
       <div><dt>Leitura com</dt><dd>{args.para}</dd></div>
       <div><dt>Papel dele</dt><dd>{args.papel}</dd></div>
     </dl>

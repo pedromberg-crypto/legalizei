@@ -15,7 +15,20 @@ tags: [pesquisa, marketing, trafego-pago]
 [Descoberta] → [Interesse] → [Consideração] → [Momento decisivo] → [Compra] → [Entrega] → [Compartilhamento] → [Recompra/Upsell]
 ```
 
-**Momento decisivo = a conversa com humano no WhatsApp**, não uma etapa de trial/prévia. Confirmado pelo padrão do nicho ([[trafego-pago-contabilidade-mercado]] §3): a dúvida específica ("vocês fazem folha de 1 funcionário no plano de R$139?") é resolvida em tempo real, e é ali que a decisão de fato acontece — não na landing page.
+> 🔄 **Corrigido 18/08 — o parágrafo abaixo (versão de 05/08) foi derrubado por Pedro na reunião.** *"A gente não quer que a pessoa chame no WhatsApp. A gente quer que ela tire a dúvida o suficiente pra baixar o aplicativo e pagar."* **O WhatsApp é apoio, não destino:** existe pra desbloquear quem travou, não pra ser o palco da decisão. **O fundo do funil não é o download, é o pagamento** — baixar sem pagar é custo, não conversão. Ver correção completa abaixo (Etapa 2 e Etapa 4) e [[2026-08-12-estrategia-mkt-para-validacao]] bloco 9.
+>
+> ~~**Momento decisivo = a conversa com humano no WhatsApp**, não uma etapa de trial/prévia. Confirmado pelo padrão do nicho ([[trafego-pago-contabilidade-mercado]] §3): a dúvida específica ("vocês fazem folha de 1 funcionário no plano de R$139?") é resolvida em tempo real, e é ali que a decisão de fato acontece — não na landing page.~~ (superado)
+
+### 🔄 O momento decisivo, corrigido — depende da altura do funil
+
+| Altura | Onde a objeção morre |
+|---|---|
+| Topo | Instagram orgânico, conteúdo educativo |
+| Meio | blog, página do simulador de Fator R, glossário |
+| **Fundo A** | **landing page de venda**, pra quem ainda considera |
+| **Fundo B** | **download direto + pagamento**, pra quem já decidiu |
+
+**Consequência de mídia:** duas campanhas de fundo separadas, não uma. A de LP recolhe objeção que as etapas anteriores não mataram; a de download fala com quem já está pronto. WhatsApp segue existindo, mas como ferramenta de desbloqueio pontual — cada conversa que ele absorve é uma conversa que o conteúdo deveria ter resolvido antes.
 
 ---
 
@@ -36,7 +49,7 @@ tags: [pesquisa, marketing, trafego-pago]
 ## Etapa 2 — Interesse
 
 ### O que precisa acontecer
-- Ad leva **direto pro WhatsApp**, não pra landing page pesada com formulário — reduz fricção e custo de aprendizado do algoritmo
+- 🔄 **Corrigido 18/08.** Ad **não leva mais direto pro WhatsApp** por padrão — leva pra landing page de venda (quem ainda considera) ou direto pro app/download (quem já decidiu), conforme a altura do funil (ver correção no topo do doc). WhatsApp fica disponível como apoio pra quem trava, não como destino do clique
 - Proposta de valor clara: preço fechado + humano de verdade (contador CRC a partir do plano ME/Simples; no MEI, assistente virtual de contabilidade)
 
 ### Métrica-chave
@@ -62,14 +75,13 @@ tags: [pesquisa, marketing, trafego-pago]
 ## Etapa 4 — Momento decisivo
 
 ### O que determina a conversão aqui
-- Qualidade da resposta humana na conversa de WhatsApp
+- 🔄 **Corrigido 18/08.** Não é mais "a conversa de WhatsApp" — é a **landing page de venda** (Fundo A, quem ainda considera) ou o **próprio download+pagamento** (Fundo B, quem já decidiu). O fundo do funil é o pagamento, não o download sozinho — baixar sem pagar é custo, não conversão
 - Prova de humano real (nome, CRC) — responde à ferida "vocês têm contador de verdade?" ([[insights-estrategicos]] achado 1)
-- Garantia 7 dias (CDC art.49) reduz risco percebido de decidir rápido
+- Garantia 7 dias, **sem o adjetivo "incondicional"** — corrigido 18/08 por pesquisa jurídica (CDC art.30 vinculação de oferta): custos irreversíveis (certificado, taxas públicas) são descontados no estorno, não devolvidos junto
 
 ### Métricas-chave
-- **Taxa de conversão lead→cliente-alvo:**
-  - ME: ~10,8% (compatível com CPA de mídia teto R$556, CPL R$60) — [[trafego-pago-contabilidade-mercado]] §5
-  - MEI: **não perseguir via tráfego frio** — precisaria de ~30%, irreal (ver [[estrutura-funil-trafego]])
+- **Taxa de conversão lead→cliente-alvo:** 🔄 base de cálculo mudou 18/08. O "~10,8% ME / ~30% MEI irreal" citava um funil **consultivo** (lead→contato→qualificação→proposta→fechamento, equipe comercial), que não é o nosso — nosso funil não tem etapa de lead (anúncio→app→pagamento). CAC-alvo agora é medido direto contra LTV 12m (R$30–100), não por essa taxa — ver [[economia-preco-cac]] §6 e [[estrutura-funil-trafego]]
+  - MEI: deixou de estar excluído do tráfego pago por aritmética (18/08) — ver [[estrutura-funil-trafego]]
 - Ciclo de venda: 15-45 dias (padrão B2B financeiro) · exceção: abertura urgente (contrato na mão, volante [[a1-dev-freelancer-recem-clt]]) pode fechar em dias
 
 ---
@@ -124,12 +136,14 @@ Não é recompra clássica (é assinatura contínua). O evento equivalente é a 
 
 ## Funil completo — números-alvo (parcial, falta dado próprio)
 
+> 🔄 **Tabela corrigida 18/08** — a métrica-farol deixou de ser "conversa→cliente" (base consultiva) e virou **clique→pagante** direto, medido contra a régua de CAC (R$30–100 vs LTV 12m). Ver [[economia-preco-cac]] §6.
+
 | Etapa | Métrica | Meta inicial | Fonte |
 |---|---|---:|---|
-| Descoberta → Mensagem WhatsApp | CPL | R$40-80 | [[trafego-pago-contabilidade-mercado]] (estimativa nicho) |
-| Mensagem → Conversa qualificada | taxa de resposta | sem benchmark próprio | medir no V0 |
-| Conversa → Cliente (ME) | conversão | ~10,8% (compatível com CAC-alvo) | cruzamento [[economia-preco-cac]] §9 + pesquisa externa |
-| Conversa → Cliente (MEI) | conversão | **não perseguir via tráfego frio** | ver §12 |
+| Descoberta → Interesse (LP ou app) | CPL | R$40-80 | [[trafego-pago-contabilidade-mercado]] (estimativa nicho) |
+| Clique → conversa qualificada (quando passa por WhatsApp de apoio) | taxa de resposta | sem benchmark próprio | medir no V0 |
+| **Clique → cliente pagante (ME)** | conversão | 2–8% (implícito na régua CAC R$30–100 c/ CPC R$2–8) | [[economia-preco-cac]] §6 |
+| **Clique → cliente pagante (MEI)** | conversão | mesma faixa — **deixou de estar barrado**, condicionado a seguir sem atendente humano | [[estrutura-funil-trafego]] |
 | Ciclo de venda | tempo | 15-45 dias (exceção: urgência) | [[trafego-pago-contabilidade-mercado]] §3 |
 
 ### Conversão fim-a-fim

@@ -1845,7 +1845,8 @@ export default function ApresentacaoPage() {
               {/* Mesmo aparelho dos outros mockups (15 Pro Max, insets 59/34) —
                   sem iframe: aqui o painel da direita precisa reagir ao estado. */}
               <div className="origin-top-left" style={{ transform: "scale(.82)", width: 478 * 0.82, height: 980 * 0.82 }}>
-                <MolduraAparelho>
+                {/* Status bar clara só na splash: é a única tela de fundo coral. */}
+                <MolduraAparelho statusClaro={etapa === "splash"}>
                   {/* `.app-page` usa height:100dvh (viewport). Dentro da moldura
                       o teto é a altura DELA, então sobrescreve pra 100%. */}
                   <div className="app-page" style={{ height: "100%" }}>
@@ -1858,11 +1859,21 @@ export default function ApresentacaoPage() {
                       // containing block pra fixed, senão ele escapa do recorte
                       // arredondado do aparelho (`overflow-hidden` do MolduraAparelho
                       // só clipa quem está na cadeia de containing block).
+                      //
+                      // 🆕 18/08 — `absolute inset-0` em vez de `h-full w-full`.
+                      // A splash é a ÚNICA tela que sangra até o vidro, e como
+                      // filha normal ela herdava o recuo do `.app-page`
+                      // (padding-inline 24px + padding-top do safe-top): o coral
+                      // ficava numa ilha branca. Absoluto resolve contra a caixa
+                      // de PADDING do `.app-page` (que é `position:relative`),
+                      // então cobre os 430×932 inteiros. Sem z-index de propósito:
+                      // a status bar (z-10) e a Dynamic Island (z-20) continuam
+                      // pintando por cima, que é o que o aparelho real faz.
                       <button
                         type="button"
                         onClick={() => setEtapa("welcome")}
                         aria-label="Continuar"
-                        className="block h-full w-full text-left"
+                        className="absolute inset-0 block text-left"
                         style={{ transform: "translateZ(0)" }}
                       >
                         <SplashView />

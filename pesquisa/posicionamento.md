@@ -26,7 +26,9 @@ Legalizai NÃO é:
 Legalizai É:
 - ✅ **Contabilidade digital humana** — tecnologia é o meio (agilidade, preço, clareza), o humano por trás (contador CRC real) é o fim que resolve a ansiedade nº1 da categoria: "isso aqui tem gente de verdade?" **A partir do primeiro plano do Simples**; no MEI o meio é o assistente virtual, e isso se diz na cara.
 
-> Claim de marketing travado (13/07): **"A única contabilidade 100% digital de verdade"** — guerrilha comparativa direta (cores dos rivais, sem citar nome/logo). É claim de posicionamento, não descrição operacional: internamente ~15-20% dos casos ainda exige intervenção humana ([[2026-07-10-teto-automacao-orgaos-sem-api]]). O diferencial real não é "zero humano" — é ser sincero desde a entrada e ter humano quando precisa, ao contrário de quem esconde isso atrás de tier caro.
+> 🔄 **Claim trocado em 18/08, com o Puntel:** **"A única contabilidade 100% humana e digital."** Substitui o claim de 13/07 (abaixo, riscado). O Puntel apontou que "100% digital" afasta em contabilidade — quem entrega a legalização da própria empresa quer saber a quem recorrer. Inverter o eixo puxa o 100% pra humano e pra digital ao mesmo tempo, sem negar o humano. Registrar como ADR em [[decisoes-marca]].
+>
+> ~~Claim de marketing travado (13/07): **"A única contabilidade 100% digital de verdade"**~~ — guerrilha comparativa direta (cores dos rivais, sem citar nome/logo). Era claim de posicionamento, não descrição operacional: internamente ~15-20% dos casos ainda exige intervenção humana ([[2026-07-10-teto-automacao-orgaos-sem-api]]). O diferencial real não é "zero humano" — é ser sincero desde a entrada e ter humano quando precisa, ao contrário de quem esconde isso atrás de tier caro. Essa leitura de fundo continua valendo com o claim novo.
 
 ## Diferenciais cravados
 

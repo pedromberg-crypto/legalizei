@@ -40,7 +40,7 @@ tags: [marketing, estrategia, validacao, reuniao]
 1. **Penetração de 0,7% do líder = mercado aberto, não saturado.** Mesmo com ~R$1 bilhão de capital de risco por trás (SoftBank R$320mi em 2021 + Warburg Pincus ~R$700mi em 2024), a Contabilizei não fechou o mercado. Isso não é mercado maduro em consolidação; é mercado ainda por ser servido.
 2. **Regionalizar não encolhe a oportunidade.** A meta do MVP é 25-30 clientes fundadores em 3 meses. BH sozinha tem ~100-175 mil empresas no ICP. **0,1% do ICP de BH já é 100-175 clientes** — múltiplo da meta.
 3. **BH valida por dois lados ao mesmo tempo:** tamanho (centenas de milhares no perfil) E facilidade operacional (abertura em 11h, a mais rápida do país). Não é "começar pequeno" — é começar no lugar mais fácil e grande o bastante.
-4. **3 das 4 atividades-top de BH são o nosso perfil:** salão/beleza, apoio administrativo e treinamento entram; **varejo de vestuário é comércio e está fora do V1** (ver abaixo). Não estamos forçando um ICP contra a realidade da cidade, mas também não contamos o varejo a nosso favor.
+4. **Estética é a categoria que mais abre em BH** (barbearia, salão, beleza). Confirmado na reunião de 18/08 e coerente com a Persona B. É onde o Instagram como canal primário deixa de ser preferência e vira consequência. **3 das 4 atividades-top de BH são o nosso perfil:** salão/beleza, apoio administrativo e treinamento entram; **varejo de vestuário é comércio e está fora do V1** (ver abaixo). Não estamos forçando um ICP contra a realidade da cidade, mas também não contamos o varejo a nosso favor.
 
 ### Ressalva honesta
 
@@ -74,7 +74,7 @@ Mapeamos 6 concorrentes diretos + indiretos + aspiracionais, com captura de pág
 | Contabilizei | Nacional (SP, 2013) | Direto | R$139-195 (escala por faturamento) | maior escala, SEO dominante, margem real em corretagem |
 | Agilize | Nacional | Direto | R$259 (fixo, 20% off permanente) | único preço fixo (por volume, não faturamento) |
 | Contaja | MG (CRC MG) | Direto | R$137 Simples · R$49,90 MEI | piso de preço do setor, à la carte agressivo |
-| Facilite | Nacional + Estônia | Direto | R$199,90 | wedge nicho Airbnb/temporada, venda consultiva |
+| Facilite | Nacional | Direto | R$199,90 | wedge nicho Airbnb/temporada, venda consultiva |
 | Contabilivre | SP-interior | Direto | R$209 (gated) | device de marca "#livre", tudo formulário |
 | Marvee | SC (Blumenau) | Indireto | sob consulta (ticket alto) | BPO financeiro, escala por franquia |
 | **Planilha/caderno/contador tradicional** | — | **Indireto** | R$0 direto, custo oculto | **o concorrente real** ([[PESQUISA-MERCADO]] §K) |
@@ -112,6 +112,14 @@ Craft impecável é diferenciação quase de graça — ninguém investe nisso h
 
 > **Para o autônomo que virou PJ prestador de serviço** (marketing, TI, consultoria, beleza, saúde) **e vive com medo de errar e pagar imposto a mais**, a Legalizai é a **contabilidade digital que fala a sua língua e cuida do chato pra você** — ao contrário do escritório tradicional (lento, formal, distante) e do app frio dos concorrentes digitais (humano só no tier caro, preço com asterisco), a Legalizai tem **contador de verdade desde o primeiro plano do Simples Nacional e preço fechado, sem surpresa.**
 
+### O claim travado (18/08, com o Puntel)
+
+> # A única contabilidade 100% humana e digital.
+
+Substitui *"a única contabilidade 100% digital de verdade"* (ADR 13/07). O Puntel apontou que **"100% digital" afasta em contabilidade**: quem entrega a legalização da própria empresa quer saber a quem recorrer. Inverter o eixo resolve os dois lados: puxa o 100% pra **humano** e pra **digital** ao mesmo tempo, em vez de negar o humano.
+
+**Elevator pitch (30s), aprovado na mesma conversa:** contabilidade digital pra quem vive de prestar serviço. Você cuida do negócio pelo celular e a gente cuida da papelada. Nativo digital, apoiado por um escritório com mais de 20 anos.
+
 ### Categoria mental
 
 **NÃO é:**
@@ -139,7 +147,9 @@ Craft impecável é diferenciação quase de graça — ninguém investe nisso h
 | # | Diferencial | Por que ninguém tem |
 |---|---|---|
 | 1 | **Preço fechado, sem asterisco** | nenhum dos 5 diretos crava número final na tela; o valor da tela é o valor da fatura |
+| 1b | **Transparência declarada** (tabela pública de taxas e avulsos, custo de saída visível) | 🆕 travado 18/08 com o Puntel: *"nós somos claros no que a gente cobra"*. Os concorrentes escondem baixa de empresa, alteração contratual e surcharge de headcount. Nenhum publica |
 | 2 | **Humano no plano de entrada do SIMPLES, não upsell** | nos 5, contador nomeado só no tier R$359-700+; nós entregamos a R$139 (MEI = assistente virtual, ver acima) |
+| 2b | **BH já terminou a migração fiscal que o Brasil só fará em 01/11/2026** | 🆕 Portaria SMFA nº 075/2025: ME/EPP de BH migraram pro Emissor Nacional entre out–nov/2025, e **todas as PJ da cidade desde fev/2026**. Nota em papel (AIDF) extinta em jan/2026. Prova de que o pilar hiperlocal é fato, não discurso |
 | 3 | **Hiperlocal BH/MG operacional** | Contaja é mineira, mas ninguém trata ISS-BH, alvará PBH e Junta MG como parte do produto; 22 anos de operação local é vantagem que digital-native nacional não replica rápido |
 | 4 | **Mobile-first de verdade** | "mobile-first" é discurso em todo o setor, quebrado na prática |
 | 5 | **Custo de saída declarado** | ninguém precifica baixa/migração na vitrine; declarar de cara é fosso de confiança que ninguém abriu |
@@ -173,7 +183,7 @@ Craft impecável é diferenciação quase de graça — ninguém investe nisso h
 |---|---|
 | **Humano** | fala como gente, não como órgão público |
 | **Transparente** | mostra custo e prazo na cara, sem surpresa |
-| **Proativo** | avisa antes, resolve antes, não empurra o problema pro cliente |
+| **Proativo (com o Vigia Fiscal)** 🆕 | avisa antes, resolve antes, não empurra o problema pro cliente |
 | **Descomplicado** | traduz o contabilês; 1 toque em vez de 6 cliques |
 | **Confiável** | segurança séria por trás da leveza — leve na cara, sólido no motor |
 
@@ -285,18 +295,29 @@ Duas camadas vivas: **dorsais** (personas canônicas, permanentes, mudam só por
 
 | Ocasião/contexto | Persona | Oferta | Mensagem-âncora | Canal |
 |---|---|---|---|---|
-| Virando PJ pela 1ª vez | A | ME | "Resolve rápido, sem enrolação, sem pagar imposto a mais" | Google Search |
-| Batendo no teto do MEI | B | ME (transição) | "Cresça sem perder o atendimento pessoal" | Instagram + indicação |
+| Virando PJ pela 1ª vez | A | **MEI ou ME** 🔄 | "Resolve rápido, sem enrolação, sem pagar imposto a mais" | Google Search |
+| Batendo no teto do MEI | B | ME (transição) | 🔴 **"Cresça sem perder o atendimento pessoal" quebrou.** O plano MEI não tem atendimento pessoal, então a frase promete manter algo que a pessoa nunca teve. Reescrever pro que de fato acontece: **ela ganha um contador que antes não tinha** | Instagram + indicação |
 | Formalizando por exigência externa, insegura com tecnologia | C | MEI/ME simples | "A gente explica cada passo, sem pressa" | WhatsApp/indicação |
 | Já tem CNPJ, contador atual falhou | A, B ou C | ME (flow migrar) | "Troque sem dor de cabeça, sem perder nada" | indicação + Search |
 
 **Nota:** o "migrante insatisfeito" **não virou dorsal própria** — é contexto/ocasião que cruza as 3, não um segmento demográfico à parte.
 
+### 🆕 A persona que falta (levantada em 18/08)
+
+**Nenhuma das 3 dorsais cobre quem tem ~20 anos.** É quem entra formalizando cedo (criador de conteúdo, dev júnior, prestador de serviço digital), nasceu dentro do celular e tem tolerância zero a fluxo burocrático. As 3 dorsais atuais partem de 25+ e uma delas é 50+.
+
+As dorsais A, B e C serão reconstruídas, não remendadas. Até lá esta lacuna fica declarada em vez de escondida.
+
 ### Quem NÃO é público (anti-persona)
 
 - **Comércio inteiro — nenhum, nem o leve.** No V1 não atendemos varejo, loja, revenda ou qualquer atividade de mercadoria. Não é "só o comércio pesado que fica fora": é comércio todo, por ora. Vai pro atendimento tradicional da Legalize Digital.
 - Indústria, construção, transporte, agro — fora do escopo fiscal do produto
-- Lucro Real e **Lucro Presumido** — bloqueados no fluxo, motor fiscal diferente, sem pesquisa dedicada
+
+**🆕 Escopo fiscal preciso do V1 (travado 18/08):** entram os **Anexos III, IV e V** do Simples. Os Anexos I e II (comércio e indústria) ficam fora.
+
+⚠️ **O Anexo IV não é só mais uma linha na lista.** Nele a **CPP (INSS patronal) fica FORA do DAS**: o cliente recolhe em guia separada. Isso muda o motor fiscal (não é mais "uma guia só"), muda a tela de impostos e muda a copy, que hoje promete guia única. Mapeado como pendência operacional com a Larissa antes de anunciar o Anexo IV como atendido.
+- **Lucro Real** — fora, motor fiscal muito mais pesado
+- **Lucro Presumido** — 🔄 **adiado, não descartado** (revisão 18/08). Sai do fluxo hoje por complexidade (mais de uma guia por mês, escrituração completa), mas **volta à mesa depois de sentir o mercado**. Preço estimado: +30% sobre o base, ≈ R$179–189
 - Comprador só-preço sem fit de valor — quem quer o Contaja de R$137 com à la carte, não o "preço fechado"
 
 ### Lacuna assumida
@@ -328,6 +349,25 @@ Nenhuma dorsal cobre o **MEI puro que nunca vai virar ME** (baixo ticket, alto v
 | Garantia | "7 dias pra mudar de ideia. Dinheiro de volta, sem letra miúda." | CDC art.49, já é contratual |
 | Crescimento (B) | "Cresça sem perder o atendimento pessoal." | objeção "virar só mais um número" |
 | Urgência (A) | "CNPJ pronto rápido, sem perder o contrato." | volante dev-freelancer com contrato na mão |
+
+### 🆕 O que o plano MEI de fato vende (definido 18/08)
+
+O MEI não compra volume de função. Ele compra **a saída do portal de governo**: uma tela simples pra ver a guia do DAS e emitir a nota quando precisar, sem navegar em sistema público que é confuso pra leigo.
+
+⚠️ **E o escopo real é menor do que parece.** A NFS-e só é obrigatória quando o tomador é **pessoa jurídica**; pra pessoa física é **facultativa**. Como estética e beleza (a categoria que mais abre em BH) atende quase só pessoa física, boa parte desses MEIs pode passar o ano sem emitir nota nenhuma. **A mensagem do MEI não pode se apoiar na emissão de nota** — ela se apoia em estar em dia sem precisar entender nada.
+
+### 🆕 Glossário técnico no app (~40 termos)
+
+Regra de ouro travada: **todo termo técnico vem traduzido ou fica escondido.** O cliente nunca precisa saber o que é NBS pra emitir uma nota. Amostra do padrão de tradução:
+
+| Termo | Como o produto fala |
+|---|---|
+| Fator R | o número que decide se você paga menos imposto |
+| DAS | sua guia do mês |
+| Anexo III | a tabela mais barata pra prestador de serviço |
+| Pró-labore | o que você tira pra você todo mês |
+| JUCEMG | a junta comercial |
+| Situação cadastral | se a sua empresa está ativa hoje |
 
 ### Frases-gatilho por contexto de produto
 
@@ -420,6 +460,10 @@ Stories: "qual sua dúvida que você tem vergonha de perguntar pro contador?"
 ### Gatilhos emocionais (70% evergreen · 30% sazonal)
 
 **Evergreen:** medo de errar com o fisco · alívio da conquista ("Legalizei!") · vergonha de não entender contabilês · urgência de prazo bloqueado · orgulho de virar PJ.
+**🔄 Sazonais corrigidos (pesquisa regulatória, 18/08).** A reunião registrou "NF obrigatória pro MEI a partir de 01/09/2026". **Está errado:** o MEI está obrigado **desde 01/09/2023** (Res. CGSN nº 172). A notícia de 2026 é de **ME/EPP**, adiada de 01/09 para **01/11/2026** (Res. CGSN nº 191/2026). E em BH isso já aconteceu: ME/EPP migraram em out–nov/2025 e todas as PJ desde fev/2026.
+
+**O que sobra de sazonal de verdade:** ME/EPP nacional em **01/11/2026** · campos de **IBS/CBS obrigatórios em 01/01/2027** (Ato Conjunto RFB/CGIBS nº 4/2026) · e o cruzamento NFS-e × DASN-SIMEI, que virou automático e agora gera **desenquadramento de ofício** de quem estoura o teto.
+
 **Sazonais:** DASN-SIMEI (maio) · IRPF (mar-mai) · virada de ano · Dia do Empreendedor · votação do PLP 108/2021 (reativo).
 
 ### Cadência e produção — o gargalo declarado
@@ -474,6 +518,21 @@ O primeiro cálculo (05/08) errou de conceito: comparou CAC-alvo contra a sobra 
 | 12 meses | R$491,04 | R$138,20 |
 | **24 meses** | **R$982,08** | **R$276,41** |
 
+### 🟢 A régua travada em 18/08
+
+> **CAC-alvo = R$30 a R$100 por cliente. Custo ÚNICO, medido contra o LTV de 12 meses** (o prazo da fidelidade).
+
+| Plano | LTV 12m | CAC R$30 | CAC R$100 | Payback a R$100 |
+|---|---:|---:|---:|---:|
+| **ME R$139** | R$ 1.279,00 | 2,3% | 7,8% | **0,9 mês** |
+| **MEI R$49,90** (com assistente virtual) | R$ 209,80 | 14,3% | 47,7% | **5,7 meses** |
+| ME com atendente 1:63 | R$ 547,49 | 5,5% | 18,3% | 2,2 meses |
+| ME com atendente 1:40 | R$ 164,16 | 18,3% | 60,9% | 7,3 meses |
+
+**O que a régua pressupõe:** com CPC de mercado (R$2–8), um CAC de R$30–100 exige que **2% a 8% dos cliques virem cliente pagante**. É meta, não medição: o V0 existe pra descobrir o número real.
+
+⚠️ **Correção de leitura.** Circulou nesta análise um "CAC real de R$500 a R$1.666". Aquele número vem de um funil **consultivo** (lead → contato → qualificação → proposta → fechamento, 6% ponta a ponta), com equipe comercial trabalhando o lead. **O nosso funil não tem etapa de lead:** o anúncio leva ao app e o pagamento acontece dentro dele. O que se aproveita da pesquisa de mercado é o CPC (R$2–8) e o CPL (R$30–100); a taxa de conversão tem que ser a nossa.
+
 ### Confronto com o mercado real
 
 | Benchmark | Valor | Fonte |
@@ -508,20 +567,31 @@ O primeiro cálculo (05/08) errou de conceito: comparou CAC-alvo contra a sobra 
 → [Compra] → [Entrega] → [Compartilhamento] → [Upsell]
 ```
 
-### O achado que define o desenho: o momento decisivo é a conversa humana
+### 🔄 Corrigido em 18/08: o momento decisivo depende da altura do funil
 
-**Não é trial, não é prévia, não é landing page.** É a conversa no WhatsApp. Confirmado pelo padrão do nicho: a dúvida específica (*"vocês fazem folha de 1 funcionário no plano de R$139?"*) se resolve em tempo real, e é ali que a decisão acontece.
+A versão anterior deste bloco cravava que o momento decisivo era **a conversa no WhatsApp**, e que o anúncio deveria levar direto pra lá. **Pedro derrubou isso na reunião:** *"a gente não quer que a pessoa chame no WhatsApp. A gente quer que ela tire a dúvida o suficiente pra baixar o aplicativo e pagar."*
 
-**Consequência prática:** o anúncio leva **direto pro WhatsApp**, não pra landing com formulário pesado. Reduz fricção e barateia a fase de aprendizado do algoritmo.
+**O WhatsApp é apoio, não destino.** Ele existe pra desbloquear quem travou, não pra ser o palco da decisão. Cada conversa que ele absorve é uma conversa que o conteúdo deveria ter resolvido antes.
+
+**O fundo do funil não é o download. É o pagamento.** Baixar sem pagar não é conversão, é custo. Toda a régua de medição muda com isso.
+
+| Altura | Onde a objeção morre |
+|---|---|
+| Topo | Instagram orgânico, conteúdo educativo |
+| Meio | blog, **página do simulador de Fator R**, glossário |
+| **Fundo A** | **landing page de venda** pra quem ainda considera |
+| **Fundo B** | download direto + pagamento pra quem já decidiu |
+
+**Consequência de mídia:** duas campanhas de fundo separadas, não uma. A de LP recolhe as objeções que as etapas anteriores não mataram; a de download fala com quem já está pronto.
 
 ### Etapa a etapa
 
 | Etapa | O que precisa acontecer | Métrica | Referência |
 |---|---|---|---|
 | **Descoberta** | Meta geo BH, Instagram orgânico, indicação, Search (V1) | CPM | R$18-35 geo BH |
-| **Interesse** | ad → WhatsApp direto; proposta clara: preço fechado + humano real | CPL | R$40-80 (estimativa nicho) |
+| **Interesse** | ad → app ou landing page; proposta clara: preço fechado + humano real. WhatsApp é apoio, não destino | CPL | R$40-80 (estimativa nicho) |
 | **Consideração** | quebra de objeção em tempo real; resposta humana rápida | taxa de resposta | sem benchmark próprio |
-| **Momento decisivo** | qualidade da resposta humana + prova de CRC + garantia 7 dias | conversão lead→cliente | ~10,8% ME · MEI não perseguir |
+| **Momento decisivo** | depende da altura: LP de venda (considera) ou download direto (decidiu). Prova de CRC + custo de saída visível | conversão lead→cliente | **6%** (P1, benchmark do nicho) |
 | **Compra** | assinatura cartão/PIX, sem cadastro redundante | abandono de checkout | medir no V0 |
 | **Entrega** | onboarding guiado + confirmação celebrativa ("Legalizei! 🎉") | — | vira matéria-prima do pilar 6 |
 | **Compartilhamento** | indicação em comunidade profissional (B) e de freelancers (A) | taxa de referral | só após base real |
@@ -533,9 +603,18 @@ O primeiro cálculo (05/08) errou de conceito: comparou CAC-alvo contra a sobra 
 
 O produto recusa na própria tela: fora de BH/MG (ME), CNAE não atendido ou regulamentado, 3+ sócios, sócio no exterior, Lucro Presumido. Isso é feature de honestidade, mas **muda como se mede CPL** — lead bruto ≠ lead que o produto aceita.
 
-### O elemento de risco zero
+### 🔴 O elemento de risco zero foi reescrito (pesquisa jurídica, 18/08)
 
-Garantia de 7 dias (CDC art.49) citada no anúncio e reafirmada na conversa. **Já é contratual, não é promessa de marketing.**
+A versão anterior anunciava *"7 dias pra mudar de ideia. Dinheiro de volta, sem letra miúda."* **A pesquisa jurídica mostrou que essa frase é o risco, não a proteção.**
+
+| O que a lei diz | Consequência |
+|---|---|
+| O art. 49 do CDC **vale para serviço**, não só produto. Contratação por app equipara-se a venda fora do estabelecimento | 7 dias, incondicionado, sem exigir justificativa |
+| O que já foi **efetivamente executado e fruído** pode ser retido (art. 884 do CC, vedação ao enriquecimento sem causa) | devolve-se o trato mensal não fruído |
+| **Taxa de junta e certificado digital podem ser deduzidos** do estorno: a taxa vira receita do erário e o certificado ICP-Brasil é personalíssimo e irreversível | recuperamos o custo duro |
+| ⚠️ **Mas anunciar "incondicional, dinheiro de volta, sem letra miúda" apaga tudo isso** (art. 30 do CDC, vinculação da oferta) | expõe a **restituição em dobro** e a multa da Senacon |
+
+**A regra que fica:** anunciar o direito de arrependimento **sem** o adjetivo "incondicional" e **sem** a promessa de devolução integral. O que se comunica é *"7 dias pra mudar de ideia"*, e o contrato explicita, na primeira dobra, que custos irreversíveis já incorridos (certificado e taxas públicas) são descontados. Prometer mais do que a lei exige transforma uma defesa em passivo.
 
 > **❓ Pergunta de validação**
 > Apostar a conversão na conversa humana está certo, ou perdemos gente por não ter caminho self-service pra quem não quer falar com ninguém? (Persona A é justamente quem tende a preferir resolver sozinha.)
@@ -550,15 +629,31 @@ Garantia de 7 dias (CDC art.49) citada no anúncio e reafirmada na conversa. **J
 |---|---|---|
 | **Instagram orgânico** | ✅ prioridade 1 | 83% de presença no setor da Persona B; sustenta e converte no tempo certo |
 | **Meta Ads** (objetivo Mensagens) | ✅ prioridade 1 paga | melhor conversão B2B do nicho (4,68% vs 3,46% Google), CPM geo BH menor |
-| **WhatsApp / indicação** | ✅ estrutural | domina 72-74% das vendas desse público; único caminho da Persona C |
-| **Google Search alta intenção** | 🟡 V1 | CPL R$15-50 (o mais barato do mapa) mas mínimo real R$1.500-3.000/mês não cabe junto no budget V0 |
-| **SEO/conteúdo** | 🟡 estrutural, longo prazo | ganha peso pela economia (canal barato), mas não entrega no horizonte do V0 |
+| **Google Search alta intenção** | ✅ **prioridade 2** 🔄 | **subiu em 18/08.** *"O Google tende a ser o principal canal"* — a busca é o gesto natural de quem quer contabilidade online. ⚠️ O CPL está em conflito aberto: R$15,50 (Puntel) × R$80–200 (pesquisa do nicho, P1). Ver bloco 8 |
+| **SEO/conteúdo** | ✅ **estrutural** 🔄 | subiu junto com o Search. A P1 mostra que ticket baixo sobrevive por canal barato, não por mídia paga |
+| **WhatsApp / indicação** | 🔄 **rebaixado a apoio** | **corrigido em 18/08.** A indicação segue estrutural; o **WhatsApp deixa de ser destino de anúncio** e vira ferramenta de desbloqueio. O objetivo é o pagamento, não a conversa |
 | **TikTok Ads** | ❌ descartado | budget mínimo R$2.000-4.500 alto pra fase; demografia jovem incompatível (idade média do público 40,8 anos) |
 | **LinkedIn Ads** | ❌ descartado por ora | CPC/CPM proibitivo pro ticket R$139; penetração de só 6% no público geral; revisar só se Persona A justificar com dado real |
 
 ### Por que concentrar em vez de espalhar
 
 Meta pede ~50 eventos de conversão por conjunto a cada 7 dias pra sair da fase de aprendizado. Com R$3.500/mês (V0), rodar Meta + Google ao mesmo tempo deixa **os dois abaixo do mínimo de aprendizado.** Decisão: V0 inteiro em Meta; Google entra no V1 (R$5.000/mês).
+
+### 🆕 Ativos e parcerias definidos em 18/08
+
+| Ativo | O que é | Estágio |
+|---|---|---|
+| **Simulador de Fator R** | já existe, falta a página pública. Topo/meio, captura por utilidade | pronto, sem página |
+| **Simulador de abertura de MEI** | imita o portal do empreendedor, valida dado em tempo real pra pessoa não errar, e no fim oferece **2 meses grátis do plano MEI**. Ataca o medo nº1 de quem abre sozinho: *"se eu errar aqui, perco a empresa"* | ideia travada |
+| **Caixinha de perguntas semanal** | story pedindo a dúvida contábil mais constrangedora. Quem pergunta vira lead quente; quem não foi respondido em público vira lista pra DM | ideia travada |
+| **Campanha de UGC** | meses grátis em troca de depoimento real gravado. Kit com telas do app | ideia travada |
+| **Parcerias** | faculdades (formandos de direito e administração precisam abrir CNPJ) e **Sebrae Conecta**, com a calculadora de Fator R como contrapartida | a sondar |
+
+⚠️ **Autoridade é pré-requisito das parcerias.** Nenhuma faculdade ou o Sebrae fecha com quem ainda não está rodando. Sequência obrigatória: rodar → provar → parceria.
+
+### 🔴 A cadência atual é baixa demais
+
+Três posts por semana foi declarado insuficiente na revisão de 18/08. O gargalo real é edição, não pauta. **Aumentar a cadência é pré-condição do orgânico** — e a P1 mostra que o orgânico deixou de ser complemento: com CAC de mídia paga na casa dos R$500, ele vira a espinha da aquisição.
 
 ### As 3 frentes
 
@@ -577,9 +672,13 @@ Meta pede ~50 eventos de conversão por conjunto a cada 7 dias pra sair da fase 
 | S-3 | C — Mão na mão | **0%** | **não roda pago frio** — decide por indicação/confiança pessoal, não por anúncio |
 | reserva | teste de criativo | 15% | ângulo novo sem comprometer o conjunto principal |
 
-### 🔴 MEI não recebe campanha paga fria dedicada
+### 🔄 MEI e tráfego pago — revisto em 18/08
 
-Cruzamento de 2 pesquisas independentes: MEI precisaria de **~30% de conversão lead→cliente** pra fechar CAC via tráfego frio — *"irreal"* nas palavras da própria pesquisa de mercado. **MEI entra só como upsell natural de dentro do funil ME, ou por orgânico/indicação.**
+A versão anterior barrava o MEI do tráfego frio com base num cálculo que comparava o nosso funil com o de uma operação **consultiva**. Com a régua correta (CAC de R$30–100, custo único, contra LTV de 12 meses), **o MEI consome 14,3% a 47,7% do LTV e paga em 1,7 a 5,7 meses** — dentro da fidelidade.
+
+⚠️ **Isso só é verdade porque o MEI tem assistente virtual, não atendente humano.** Com atendente, a margem do MEI é negativa e nenhum CAC fecha. A viabilidade do MEI em mídia paga **depende inteiramente** de a operação dele continuar sem toque humano dedicado.
+
+**Split proposto na reunião:** 30% MEI / 70% ME.
 
 ### Restrições operacionais que amarram canal
 
@@ -605,10 +704,11 @@ Cruzamento de 2 pesquisas independentes: MEI precisaria de **~30% de conversão 
 |---|---|---|
 | Mercado existe | 🟢 | 7,4mi ME/EPP, líder em 0,7% |
 | Brecha real | 🟢 | 3 variáveis que ninguém atende juntas |
-| **Ticket viável** | **🔴** | **CAC-alvo na ponta baixa do mercado, antes do honorário entrar** |
+| **Ticket viável** | **🔴** | 🔄 **reavaliado em 18/08 e piorou.** A reunião pediu pra virar 🟢 supondo CAC digital baixo. A pesquisa P1 fez o contrário: **o CAC é cego ao ticket** e o CAC realista é **R$500 no melhor cenário**. Com mão de obra na conta, o CAC-alvo do ME cai pra **R$54,17**. Fica vermelho, agora com fonte |
 | Concorrência batível | 🟢 | Legalize já tem contador/compliance montados |
 | Canal de aquisição | 🟡 | canal claro, mas mais restrito que antes |
 | Produção viável | 🟢 | R$186k/5 meses, dentro da faixa de mercado |
+| 🆕 **Custo de operação por cliente** | **🔴** | mão de obra entrou na conta em 18/08: breakeven do ME em **1:35 usuários por atendente**, e a faixa estimada (1:30–40) atravessa esse ponto |
 | Ticket de teste | 🟢 | V0 = R$40-46k, 2 meses, sem software |
 
 **Veredito: 🟡 GO com ressalva forte — 4 verde · 2 amarelo · 1 vermelho.** Foi rebaixado em 05/08 (era 5/7 verde) depois do achado do CAC. Não derruba a ideia; **derruba a estratégia de canal caro de topo.**
@@ -643,15 +743,21 @@ Prioridade declarada: **save > share/DM > comentário.** Post de topo não forç
 
 ## 12. Riscos & pontos frágeis
 
-### Risco 1 — Economia do MEI pode não fechar 🔴
+### Risco 1 — Economia do MEI 🔴 (agravado em 18/08)
 
-A oferta MEI (R$49,90) tem sobra técnica de R$34,90 **antes** do honorário contábil. Se o honorário por cliente chegar perto disso, o plano não sustenta CAC nenhum. Já flagrado por 2 fontes independentes.
-**Defesa atual:** MEI fora do tráfego pago frio; entra por orgânico/indicação e como upsell do funil ME.
+Com o certificado digital (R$209/ano) e o custo técnico na conta, o MEI sobra **R$209,80 em 12 meses**, e o CAC-alvo cai pra **R$69,23**. A pesquisa P1 mostrou que **o CAC é cego ao ticket**: vender um plano de R$49,90 custa o mesmo clique que vender um de R$139. Ticket de R$50 em tráfego frio é declarado **inviável como produto isolado**.
 
-### Risco 2 — Honorário contábil real ainda fora da conta 🔴
+E o certificado **não sai da conta**: a dispensa legal vale pro MEI emitir sozinho, não pra nós emitirmos por ele.
 
-É o maior custo variável de um negócio de contabilidade e **não está em nenhum cálculo deste doc.** Toda margem, todo CAC-alvo e todo ponto de equilíbrio aqui são **teto inflado**.
-**Defesa atual:** usar os números como teto de teste pequeno, nunca meta de escala. Destrava quando o Mauro entregar o dado.
+**Defesa atual (revista 18/08):** com CAC de R$30–100 contra LTV de 12 meses, o MEI **se paga** (payback de 1,7 a 5,7 meses). O risco deixa de ser "não fecha" e passa a ser "só fecha enquanto não tiver atendente humano". Sustentado por consumo baixíssimo (muitos MEIs de BH atendem pessoa física e quase não emitem nota) e por assistente virtual em vez de atendente humano — que a aritmética confirma ser a única saída: **o MEI só empataria com 1 atendente pra 290 usuários.**
+
+### Risco 2 — 🔄 O honorário chegou, e a mão de obra é pior
+
+O honorário contábil foi respondido em 18/08: **1 salário mínimo (R$1.621/mês)** como custo fixo. Diluído em 300 clientes dá **R$5,40 por cliente** — ruído.
+
+**O problema real é outro:** o atendente contábil custa **R$3.500/mês** e cobre **30 a 40 usuários**, ou seja **R$87,50 a R$116,67 por cliente/mês**. Com isso o ME sai de 76,7% de margem para **9,8% (a 1:40)** ou **prejuízo (a 1:30)**. O breakeven é **1:35**.
+
+**Defesa atual:** a razão usuários por atendente é a variável de maior alavancagem do negócio e foi estimada de cabeça. Descobrir a razão real vale mais que qualquer negociação de preço. Até lá, todo CAC-alvo deste doc é teto, não meta.
 
 ### Risco 3 — Líder bem financiado 🟡
 
@@ -688,23 +794,42 @@ Contabilidade lida com dinheiro e com risco legal do cliente. Marca desconhecida
 
 ---
 
-## 📌 Fechamento — o que precisa sair desta conversa
+## 📌 O que ainda precisa ser decidido
 
-| Saída esperada | Status hoje |
+> **Esta página é o pedido.** Tudo que veio antes já foi revisado, cruzado com 4 pesquisas de fonte primária e atualizado depois da reunião de 18/08. O que sobra aqui são as decisões que **não se resolvem sozinhas** e os pontos onde a leitura de fora vale mais que a nossa.
+
+### 🔴 Direto pro Pedro Puntel
+
+| # | O que precisa da sua leitura |
 |---|---|
-| Posicionamento e tom validados ou ajustados | 🟢 escrito, aguardando olhar externo |
-| Personas confirmadas ou corrigidas | 🟡 3 dorsais fechadas, volumes são hipótese |
-| Pilares de conteúdo aprovados | 🟢 escrito |
-| Mix de canais validado | 🟡 concentração em Meta é decisão de budget, não de convicção |
-| Thresholds do gate V0 travados (X/Y/Z/M/K) | 🔴 **pendência mais antiga aberta** |
-| Riscos priorizados | 🟡 8 mapeados, sem ranking de gravidade |
+| **1** | **O conflito do CPL de Google.** Você trouxe **R$15,50** para Search de alta intenção. A pesquisa de nicho contábil que rodamos depois crava **R$80 a R$200**. E o vault já tinha uma terceira versão (R$15–50). São três números em duas ordens de grandeza. Qual é o recorte do seu: nicho, geografia, termos, tipo de campanha? Sem isso o bloco de canais não fecha |
+| **2** | **A régua de CAC de R$30 a R$100** pressupõe que **2% a 8% dos cliques virem cliente pagante** num funil self-service (anúncio → app → pagamento, sem etapa de lead trabalhado). Isso é realista na sua experiência, ou estamos otimistas? |
+| **3** | **O split de 30% MEI / 70% ME** foi acordado na reunião. Ele se sustenta sabendo que o MEI só fecha a conta enquanto não tiver atendimento humano dedicado? |
+| **4** | **A cadência de conteúdo.** Três posts por semana foi declarado insuficiente, mas ninguém cravou o número novo. Qual é a cadência mínima pra o orgânico sustentar o pago nesse nicho? |
+| **5** | **O gatilho de parada do V0.** Se depois de 30 dias o CAC real estabilizar acima de R$100, o que muda primeiro: criativo, canal, ou a meta de 25–30 fundadores? |
+| **6** | **Qualquer bloco onde você discorde.** Cada um dos 12 fecha numa pergunta de validação. Elas são o convite, não formalidade |
 
-### Pendências que não dependem desta reunião
+### 🟡 Depende do Mauro
 
-- **Honorário contábil real (Mauro)** — destrava CAC de verdade
-- **Precificação MEI (R$49,90)** — segue placeholder, precisa revisão
-- **Contas Google Ads / Meta Ads** — setup técnico ainda pendente
-- **Tracking de UTM no CRM** — backfill é impossível; se a campanha subir antes, a atribuição do período se perde pra sempre
+| # | O que |
+|---|---|
+| **7** | **Preço final do ME.** R$139,00, R$139,50 ou R$139,90. Os três circularam; o vault tem R$139,00 |
+| **8** | **A razão de usuários por atendente.** Estimamos 1:30 a 1:40 de cabeça. O breakeven do ME é **1:35** e a margem saudável exige **1:63**. É a variável de maior alavancagem do negócio inteiro |
+| **9** | **Negociação do certificado digital.** Hoje R$209. No MEI ele sozinho pesa 34,9% da receita anual |
+
+### 🟡 Depende da Larissa (contadora)
+
+| # | O que |
+|---|---|
+| **10** | **Impacto operacional do Anexo IV.** Ele entra no escopo, mas nele a CPP fica fora do DAS: o cliente recolhe INSS patronal em guia separada. Isso quebra a promessa de guia única e muda motor fiscal, telas e copy |
+
+### 🟢 Já respondido, só falta executar
+
+Redação da cláusula de arrependimento sem promessa incondicional (a pesquisa jurídica mostrou que anunciar "dinheiro de volta sem letra miúda" apaga o direito de deduzir certificado e taxas) · reconstrução das personas com a faixa de ~20 anos · página pública do simulador de Fator R · glossário de 40 termos no app.
+
+### ❌ Fechado como "não fazer"
+
+**Cobrar a guia do Simples junto da mensalidade.** A pesquisa regulatória foi conclusiva: receber dinheiro do cliente para repassar a órgão público cai em atividade de instituição de pagamento (Res. BCB nº 80/2021), a isenção por volume acaba em 31/03/2029, há risco de o repasse virar receita tributável nossa, e os líderes do setor não fazem isso. Se um dia for necessário, o caminho legal é split de pagamento ou BaaS por instituição autorizada.
 
 ---
 

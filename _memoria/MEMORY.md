@@ -1,5 +1,8 @@
 # Memory Index — Legalize
 
+- [Video de investidor: 3 propostas de escalada](legalize-video-investidor-escalada.md) — 13-14/08: frente nova (roteiro-escalada-mercado v4 + narracao ElevenLabs); direcao travada em 4 rodadas (mercado primeiro, 4 numeros, verbo de lancamento, fecho sem dizer o nome); regra dura: provocacao mora na palavra, nao na entonacao.
+- [Puntel valida a estratégia INTEIRA (doc de 12 blocos)](legalize-doc-estrategia-mkt-validacao.md) — 12/08: ele é par de validação estratégica, não fornecedor de mídia; `.md` escrito, apresentação só depois da revisão do Pedro; 8 riscos e tabela de fechamento foram invenção minha.
+- [Armadilha do PDF via Chrome headless](legalize-pdf-chrome-headless-armadilha.md) — 12/08: gera PDF "com sucesso" imprimindo a tela de erro se o HTML sumir; precisa `--user-data-dir`; SEMPRE validar páginas/texto com `pypdf` antes de commitar.
 - [Auditoria copy E5 + MEI trocou contador por certificado](legalize-auditoria-copy-e5-e-mei-certificado.md) — 06/08: E4.2b descartada, M2 do Migrar (MEI) pergunta certificado digital em vez de contador (MEI nunca tem TTRT), 🟡 fila-Larissa.
 - [PR automático quando pedido](legalize-git-pr-automatico.md) — 05/08: commit+`gh pr create` sem confirmar/sem passo manual no GitHub; NÃO inclui merge automático (não autorizado).
 - [Pesquisa de mercado grande roda via Gemini](legalize-pesquisa-grande-via-gemini.md) — 05/08: prompt otimizado pro Google Search do Gemini, Pedro roda fora e cola de volta; não pesquisar direto na sessão.

@@ -145,7 +145,7 @@ assunto: mercado
 - **Atende:** Simples Nacional + Lucro Presumido (até ~R$ 4,8 mi). Anexos **I** (comércio), **III/IV/V** (serviços). **NÃO faz Lucro Real.** Indústria (Anexo II) fora.
 - **NÃO atende:** indústria/fábricas, construção civil, material de construção/móveis, gráficas, farmácias, transporte, hospedagem, segurança, instituições financeiras, terceirização de mão de obra (Anexo IV), rural, cooperativas/cartórios/condomínios, ONGs/igrejas. Restaurante/bar = sinal misto (não confirmado).
 - **Atende com condições:** atividades reguladas (médico, dentista, advogado, eng/arq, corretor) — exige responsável técnico/conselho; OAB não mistura atividades; reguladas não podem ser EI.
-- **🔑 INSIGHT-CHAVE:** o recorte de CNAE = **fronteira da automação + proteção de margem.** Cortam tudo que quebra o software ou exige contador sênior: ICMS-ST/IPI (mercadoria), folha pesada/risco trabalhista (Anexo IV), Lucro Real. Sweet spot = **serviço + comércio leve no Simples/LP** (apuração quase determinística, folha mínima). Profissionais liberais (médico/advogado) = alto LTV, baixo conflito fiscal = dinheiro premium. Tabela pública = SEO/aquisição, não triagem.
+- **🔑 INSIGHT-CHAVE:** o recorte de CNAE = **fronteira da automação + proteção de margem.** Cortam tudo que quebra o software ou exige contador sênior: ICMS-ST/IPI (mercadoria), folha pesada/risco trabalhista (Anexo IV), Lucro Real. Sweet spot **deles** = **serviço + comércio leve no Simples/LP** (apuração quase determinística, folha mínima). **O nosso V1 é só a metade de serviço** — comércio leve fica fora até depois do V1. Profissionais liberais (médico/advogado) = alto LTV, baixo conflito fiscal = dinheiro premium. Tabela pública = SEO/aquisição, não triagem.
 - **Implicação p/ Legalize:** nosso nicho deve espelhar a fronteira deles — serviço PJ no Simples (Anexo III/V, Fator R), **evitar mercadoria/indústria/folha pesada**. É onde a automação é viável e a margem existe.
 - Fontes: contabilizei.com.br/contabilidade-online/cnae/ · suporte.contabilizei.com.br (Atividades não atendidas; Atividades Regulamentadas). Conf. alta (suporte), média (landings JS não extraíveis).
 
@@ -189,7 +189,8 @@ Fontes: Receita Federal, SEBRAE (Hábitos Financeiros 2025/26; Sobrevivência; C
 **Distribuição setorial (Mapa de Empresas, 2º quad/2025) — conf. alta no agregado:**
 - Estoque de ativas: **Serviços 53,6% + Comércio 28,6% = 82,2%.** Indústria+construção+demais ≈ 17,8%.
 - (Atenção: aberturas NOVAS têm split diferente — serviços 37,6% + comércio 32,9%. Pra mercado endereçável use o ESTOQUE = 82%.)
-- **Perfil endereçável** (serviço + comércio leve no Simples, menos exclusões da Contabilizei) = teto 82%, faixa estimada ~60–75% (estimativa, conf. média).
+- **Perfil endereçável DO LÍDER** (serviço + comércio leve no Simples, menos exclusões da Contabilizei) = teto 82%, faixa estimada ~60–75% (estimativa, conf. média).
+- **⚠️ O nosso é menor:** o V1 corta comércio inteiro (decisão 15/07), então nosso endereçável parte dos **53,6% de serviço**, não dos 82%. Os 28,6% de comércio ficam em [[cnae-comercio-standby]] pra depois. Não confundir os dois números — o de 82% mede o mercado do concorrente, não o nosso.
 - Split exato ME×EPP e optantes-Simples-por-setor = não publicado.
 Fontes: legalizedigital.com.br · gov.br Mapa de Empresas 2º quad/2025 · suporte.contabilizei.com.br.
 

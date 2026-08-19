@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { EntradaView, type Intencao } from "@/components/entrada";
+import { SplashView } from "@/components/splash";
+import { WelcomeView } from "@/components/welcome";
 import {
   PerguntaView,
   AnalisandoView,
@@ -60,9 +62,10 @@ import { GRUPOS } from "@/lib/telas-flow";
  * ═══════════════════════════════════════════════════════════════════════════
  * /apresentacao — DEMO PRA GESTÃO INTERNA (Legalize Digital), 28–29/07.
  * ═══════════════════════════════════════════════════════════════════════════
- * COBERTURA: E3 (fork + gate de cidade E4) · E5 inteiro (descrever · analisar ·
- * veredito 3 vias · triagem · faixa) · **a travessia do dinheiro**
- * (E6 conta → E7 a conta da abertura → E8 contrato → E9 pagamento).
+ * COBERTURA: E1–E2 (splash + welcome, 🆕 11/08) · E3 (fork + gate de cidade E4) ·
+ * E5 inteiro (descrever · analisar · veredito 3 vias · triagem · faixa) ·
+ * **a travessia do dinheiro** (E6 conta → E7 a conta da abertura → E8 contrato →
+ * E9 pagamento).
  *
  * ⚠️ O ENCAIXE saiu da demo em 29/07: depois que o veredito 🟢 ganhou os cards
  * clicáveis (UX-65), as duas telas passaram a fazer a mesma pergunta. 🆕 31/07:
@@ -100,6 +103,11 @@ import { GRUPOS } from "@/lib/telas-flow";
  *   · "Simular validação": só nas pausas que dependem do usuário.
  *   · Seta externa: volta um passo (restaura o snapshot inteiro).
  *   · Dono da pausa (🟧 usuário · 🟦 nossa) — taxonomia do kanban de leads.
+ *   · 🆕 11/08 — E1 (splash) não tem CTA nem em produção (`SplashView` não
+ *     auto-navega, por decisão registrada no próprio componente) e nada liga
+ *     a rota `/splash → /welcome` hoje. Pra avançar aqui, a tela inteira vira
+ *     área de toque — affordance SÓ da demo, igual a seta externa. Não é
+ *     divergência da TELA (o componente é o mesmo, intocado).
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -191,6 +199,8 @@ const ACOES_PENDENTES_FORA_BH = [
 ];
 
 type Etapa =
+  | "splash"
+  | "welcome"
   | "fork"
   | "cidade"
   | "fora-bh"
@@ -394,6 +404,8 @@ type Snapshot = {
 type Dono = "usuario" | "nossa" | null;
 
 type Momento =
+  | "splash"
+  | "welcome"
   | "fork"
   | "cidade"
   | "fora-bh"
@@ -748,6 +760,8 @@ const LABEL_POR_ROTA: Record<string, string> = Object.fromEntries(
 );
 
 const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
+  splash: "/splash",
+  welcome: "/welcome",
   fork: "/entrada",
   cidade: "/entrada?intencao=abrir&regime=me",
   "fora-bh": "/saida/fora-bh",
@@ -810,6 +824,21 @@ const NOME_MOCKUP: Record<Momento, string> = Object.fromEntries(
 NOME_MOCKUP.fim = "— fim do piloto —";
 
 const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; porque: string }> = {
+  splash: {
+    dono: null,
+    faz: "A marca se apresenta em tela cheia — o único momento do produto inteiro em que o coral cobre o vidro todo.",
+    interfere: "Não pede nem grava nenhum dado. É pura apresentação de marca, antes de qualquer pergunta.",
+    porque:
+      "Logo negativa com o check em wipe: o mesmo gesto de 'conferido' que o confete do veredito 🟢 ecoa lá na frente. Não auto-navega por escolha, nem aqui nem em produção — a ponte /splash→/welcome ainda não foi ligada a lugar nenhum, então a demo precisa de um toque próprio pra seguir.",
+  },
+  welcome: {
+    dono: "usuario",
+    faz: "3 slides puláveis com as teses da marca: contador de verdade (não robô) · a parte chata é com a gente · sem contabilês, sem susto no boleto.",
+    interfere:
+      "Não pede dado nenhum — é posicionamento, não passo de flow. Pular ou terminar os 3 slides levam pro mesmo lugar (o fork, E3).",
+    porque:
+      "Onboarding que prende é o que a persona reta-direto odeia (guarda-corpo da trilha única, UX-48) — por isso 'Pular' fica visível desde o slide 1, longe do polegar pra não competir com o CTA.",
+  },
   fork: {
     dono: "usuario",
     faz: "Divide o produto em dois caminhos: quem ainda não tem CNPJ vai pro fluxo de abertura; quem já tem vai pro fluxo de migração. Quem já é cliente entra na conta.",
@@ -1179,7 +1208,7 @@ const DONO_LABEL: Record<Exclude<Dono, null>, { label: string; cor: string }> = 
 };
 
 export default function ApresentacaoPage() {
-  const [etapa, setEtapa] = useState<Etapa>("fork");
+  const [etapa, setEtapa] = useState<Etapa>("splash");
   const [intencao, setIntencao] = useState<Intencao | null>(null);
   const [texto, setTexto] = useState("");
   const [categoria, setCategoria] = useState<string | null>(null);
@@ -1327,7 +1356,7 @@ export default function ApresentacaoPage() {
   }
 
   function reiniciar() {
-    setEtapa("fork");
+    setEtapa("splash");
     setIntencao(null);
     setTexto("");
     setCategoria(null);
@@ -1501,6 +1530,8 @@ export default function ApresentacaoPage() {
 
   /** Ordem real do flow — a mesma ordem das pills no rodapé. */
   const PILLS: { etapa: Etapa; label: string }[] = [
+    { etapa: "splash", label: "E1 · Splash" },
+    { etapa: "welcome", label: "E2 · Welcome" },
     { etapa: "fork", label: "E3 · Fork" },
     { etapa: "cidade", label: "E4 · Cidade" },
     { etapa: "perguntando", label: "E5 · Gate-CNAE" },
@@ -1555,7 +1586,11 @@ export default function ApresentacaoPage() {
   ];
 
   const momento: Momento =
-    etapa === "fork"
+    etapa === "splash"
+      ? "splash"
+      : etapa === "welcome"
+        ? "welcome"
+        : etapa === "fork"
       ? "fork"
       : etapa === "cidade"
         ? "cidade"
@@ -1698,7 +1733,7 @@ export default function ApresentacaoPage() {
             </p>
             <h1 className="text-h1 text-text-primary">Onboarding — como funciona por dentro</h1>
             <p className="text-body text-text-secondary mt-1 max-w-[70ch]">
-              Do fork (E3) ao pagamento (E9). As telas são as aprovadas (mesmo componente
+              Da splash (E1) ao pagamento (E9). As telas são as aprovadas (mesmo componente
               do app), não maquete. Escolha um cenário pra preencher o campo e avance
               pelos botões de dentro do aparelho.
             </p>
@@ -1810,11 +1845,47 @@ export default function ApresentacaoPage() {
               {/* Mesmo aparelho dos outros mockups (15 Pro Max, insets 59/34) —
                   sem iframe: aqui o painel da direita precisa reagir ao estado. */}
               <div className="origin-top-left" style={{ transform: "scale(.82)", width: 478 * 0.82, height: 980 * 0.82 }}>
-                <MolduraAparelho>
+                {/* Status bar clara só na splash: é a única tela de fundo coral. */}
+                <MolduraAparelho statusClaro={etapa === "splash"}>
                   {/* `.app-page` usa height:100dvh (viewport). Dentro da moldura
                       o teto é a altura DELA, então sobrescreve pra 100%. */}
                   <div className="app-page" style={{ height: "100%" }}>
-                    {naEntrada ? (
+                    {etapa === "splash" ? (
+                      // 🆕 11/08 — SplashView não tem CTA (produção também não
+                      // liga a próxima rota, ver nota no cabeçalho do arquivo).
+                      // A tela inteira vira botão SÓ na demo, pra dar pra seguir.
+                      // ⚠️ `transform` aqui não é estético: o `fixed inset-0` da
+                      // SplashView precisa de um ancestral próximo que crie
+                      // containing block pra fixed, senão ele escapa do recorte
+                      // arredondado do aparelho (`overflow-hidden` do MolduraAparelho
+                      // só clipa quem está na cadeia de containing block).
+                      //
+                      // 🆕 18/08 — `absolute inset-0` em vez de `h-full w-full`.
+                      // A splash é a ÚNICA tela que sangra até o vidro, e como
+                      // filha normal ela herdava o recuo do `.app-page`
+                      // (padding-inline 24px + padding-top do safe-top): o coral
+                      // ficava numa ilha branca. Absoluto resolve contra a caixa
+                      // de PADDING do `.app-page` (que é `position:relative`),
+                      // então cobre os 430×932 inteiros. Sem z-index de propósito:
+                      // a status bar (z-10) e a Dynamic Island (z-20) continuam
+                      // pintando por cima, que é o que o aparelho real faz.
+                      <button
+                        type="button"
+                        onClick={() => setEtapa("welcome")}
+                        aria-label="Continuar"
+                        className="absolute inset-0 block text-left"
+                        style={{ transform: "translateZ(0)" }}
+                      >
+                        <SplashView />
+                      </button>
+                    ) : etapa === "welcome" ? (
+                      // WelcomeView traz o próprio header+main. Pular e terminar
+                      // os 3 slides levam pro mesmo lugar que em produção: /entrada.
+                      <WelcomeView
+                        onPular={() => setEtapa("fork")}
+                        onSeguir={() => setEtapa("fork")}
+                      />
+                    ) : naEntrada ? (
                       // EntradaView traz o próprio header+main (é a tela inteira).
                       <EntradaView
                         intencao={intencao}

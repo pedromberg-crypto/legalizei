@@ -72,7 +72,7 @@ Tamanho estimado: medir no Gerenciador ao montar
 | Hook | Aplicação | Ancoragem |
 |---|---|---|
 | "Sem 'a partir de'. O preço que você vê é o que você paga." | S-1, S-2 | [[matriz-comparativa]] — nenhum concorrente crava preço fechado |
-| "Contador de verdade desde o primeiro plano." | S-1, S-2 | [[insights-estrategicos]] achado 1 — ferida de confiança do setor |
+| "Contador de verdade desde o primeiro plano do Simples." | S-1, S-2 | [[insights-estrategicos]] achado 1 — ferida de confiança do setor |
 | "Cresça sem perder o atendimento pessoal." | S-2 (transição MEI→ME) | [[persona-b-servico-estetico]] — registro parceria/crescimento |
 | "CNPJ pronto rápido, sem perder o contrato." | S-1 (volante urgência) | [[a1-dev-freelancer-recem-clt]] — registro direto/eficiente |
 

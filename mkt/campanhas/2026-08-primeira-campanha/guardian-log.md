@@ -1,12 +1,107 @@
 ---
 tipo: campanha
-status: rascunho
+status: auditado
 data: 2026-08-20
-tags: [marketing, campanhas, primeira-campanha, guardian]
+tags: [marketing, campanhas, primeira-campanha, guardian, auditoria]
 ---
 
-# Primeira campanha — guardian log
+# Guardian log — primeira campanha (auditoria de copy)
 
-> Auditoria do `legalizai-guardian` sobre [[copy]]. Uma entrada por rodada de revisão.
+> Auditoria do `legalizai-guardian` sobre [[copy]] (9 peças, 3 motes). Fontes: `marca/personagem-leo.md`, `pesquisa/posicionamento.md`, `pesquisa/estrategia-organica.md` §Regras travadas, `pesquisa/mecanicas-engajamento.md` §Escada de CTA, `marca/decisoes-marca.md`, `brief.md`.
 
-_(vazio até copy existir)_
+## Resumo
+
+| Peça | Veredito |
+|---|---|
+| MOTE A1 | ✅ APROVADO |
+| MOTE A2 | ✅ APROVADO |
+| MOTE A3 | ✅ APROVADO |
+| MOTE B1 | ✅ APROVADO |
+| MOTE B2 | 🟡 CORRIGIR |
+| MOTE B3 | ✅ APROVADO (nota de targeting) |
+| MOTE C1 | ✅ APROVADO |
+| MOTE C2 | ✅ APROVADO |
+| MOTE C3 | 🟡 CORRIGIR |
+
+**7 aprovadas, 2 corrigir, 0 reprovadas.** Nenhuma reprovação — nenhuma peça viola regra dura (travessão zero confirmado em varredura completa do arquivo; concorrente nunca citado por nome; qualificador "do Simples Nacional" presente nas 3 peças que citam contador; garantia "incondicional"/"sem letra miúda" ausente nas 9; escassez sempre real, ancorada em ADR 20/08).
+
+---
+
+## MOTE A — institucional (3 peças)
+
+### A1 — "por quem entende"
+**VEREDITO: APROVADO**
+
+Sem violação. 1ª pessoa consistente, zero ironia (dial baixo correto para peça institucional geral), zero travessão, zero concorrente, não promete humano (qualificador corretamente ausente porque não se aplica), CTA da escada correta (`"Entra na lista: rápido, poucas perguntas."` bate com o banco de `brief.md` §Fecho/CTA).
+
+### A2 — "por quem entende de verdade"
+**VEREDITO: APROVADO**
+
+"Todo app de contabilidade jura que é simples" passa no teste do alvo da piada — mira o setor genérico (`personagem-leo.md` §3, "formalidade de fachada"/teatro do setor), não cliente específico nem concorrente nomeado. Dial médio compatível com registro geral/institucional. Sem violação.
+
+### A3 — "por quem tem história"
+**VEREDITO: APROVADO**
+
+Nomeia os dois públicos (1º CNPJ e migração) sem presumir vocabulário, alinhado ao brief §Público-alvo. Sem piada, sem violação. (Nota do próprio copywriter sobre não derivar "desde 2004" já foi corretamente resolvida no texto — não aparece ano fabricado, nada a corrigir aqui.)
+
+---
+
+## MOTE B — oferta MEI (3 peças)
+
+### B1 — "o preço de depois não é castigo"
+**VEREDITO: APROVADO**
+
+Mecânica de reserva explícita, escassez real (data + "o que vier primeiro" = lógica clara), dial baixo correto para mote que mira Persona C majoritariamente, sem promessa de contador (correto para MEI, `posicionamento.md` §Diferencial 2). CTA correto. Sem violação.
+
+### B2 — "dor concreta nomeada (prazo)"
+**VEREDITO: CORRIGIR → aplicado**
+
+**Violação/risco:** acúmulo de referências temporais no mesmo parágrafo — guia mensal + declaração anual + "lista tá de pé" + "31 de dezembro de 2026" — sem hierarquia clara entre elas. Mistura rotina futura do produto × prazo da oferta no mesmo bloco, e apresenta dois limites de prazo (lista aberta / data fixa) **sem** a lógica "o que vier primeiro" que B1 usa pra evitar ambiguidade. Peça de **dial baixo mirando Persona C** (`personagem-leo.md` §5: objeção dela é medo de ficar sem aliado; brief §Público-alvo pede clareza sobre pressão) — densidade maior que o necessário, risco real de confusão sobre quantos prazos existem.
+
+Não é violação de regra dura (nenhum prazo é falso), é problema de clareza/carga cognitiva pro público-alvo desta peça.
+
+**Correção aplicada ao CORPO** (removida "a declaração que vence uma vez por ano", unidos os dois limites reais numa frase só com a lógica "o que vier primeiro", igual B1). HEADLINE e CTA sem alteração.
+
+### B3 — "a partir de" (Léo mais solto)
+**VEREDITO: APROVADO (com nota de targeting, não de texto)**
+
+Piada mira o sistema e o próprio Léo (origem §13, "eu já caí nessa uma vez"), nunca o cliente. Zero travessão, zero concorrente nomeado. Texto não viola regra dura.
+
+**Nota de atenção (não bloqueia):** dial médio é o mais alto dos 3 do MOTE B, que mira majoritariamente Persona C (`personagem-leo.md` §5 é sugestão, não regra travada). O próprio copywriter já sinalizou isso no auto-check. Concordo: é decisão de **targeting de conjunto de anúncios**, não de reescrita — se o conjunto for majoritariamente Persona C, preferir B1/B2; se for misto ou mais A/B, B3 fica como está.
+
+---
+
+## MOTE C — oferta ME/Simples Nacional (3 peças)
+
+### C1 — "humano no plano de entrada"
+**VEREDITO: APROVADO**
+
+Qualificador "do Simples Nacional" presente e colado em "contador de verdade". "CRC" vem explicada em linguagem corrente, funciona como selo de credibilidade, não jargão fechado. Ironia ("não só quando você paga mais") mira alvo legítimo (`personagem-leo.md` §3, esconder humano atrás de tier caro). Escassez enxuta, sem ambiguidade. Preço R$79 nunca confundido com R$99 (R$99 não aparece em nenhuma peça, confirmado por busca no arquivo inteiro). Sem violação.
+
+### C2 — "migração"
+**VEREDITO: APROVADO**
+
+"Cansou de mandar mensagem e ficar no vácuo" nomeia falha de serviço concreta sem apontar concorrente por nome e sem ironizar a pessoa (§3). Único uso da data como folga em vez de pressão ("dá tempo de pensar") — coerente com a dor de quem migra e precisa de tempo pra encerrar com o contador atual. Qualificador presente. Um só prazo mencionado (31/12/2026, sem "lista aberta" competindo) — mais claro que B2 e C3 nesse quesito. Sem violação.
+
+### C3 — "preço sem asterisco"
+**VEREDITO: CORRIGIR → aplicado**
+
+**Ponto 1 — "não tem contagem regressiva piscando na sua cara":** não lê como cutucada em concorrente específico — é crítica a uma prática genérica de mercado, já registrada como alvo legítimo em `personagem-leo.md` §3 e como regra geral em `estrategia-organica.md` §Regras travadas ("nunca simular prazo falso"), sem nome/cor/silhueta de ninguém. Passa.
+
+**Ponto 2 — risco real encontrado:** as duas menções de prazo na peça competiam de fato. O texto dizia primeiro "quem preenche o formulário **enquanto a lista tá aberta** chega no lançamento com esse valor" e depois "o prazo tem data e tá escrito, **31 de dezembro de 2026**" — sem conectar os dois. Isso minava o próprio argumento da peça (que vende "prazo real, escrito, sem joguinho de urgência") ao deixar um segundo limite solto. Não é violação de regra dura (nenhuma data é falsa), é inconsistência de clareza que enfraquecia o ponto que a peça tenta provar.
+
+**Correção aplicada ao CORPO** (juntei os dois limites reais numa única frase com "o que vier primeiro", mesma lógica de B1 — agora consistente nas 6 peças de oferta). Linha da contagem regressiva e "Vai, legaliza aí." seguem intactos.
+
+**Notas:**
+- "Vai, legaliza aí." (única das 9 peças) segue como pendência aberta pra validação do Pedro em contexto de lista de espera — não é violação de regra (a frase é travada em `personagem-leo.md` §6 como fecho de convite/ação, e a campanha é literalmente um convite), mas o brief pede confirmação humana antes de arte.
+- Confirmado: nenhuma ambiguidade entre R$79 (campanha) e R$99 (lançamento) em nenhuma das 9 peças.
+
+---
+
+## Riscos fora do escopo da copy (não bloqueiam esta auditoria, seguem abertos)
+
+1. **Mecânica de reserva ainda não implementada na LP** (onde o texto "garante sua condição" fica escrito na página, o que acontece com quem demora a assinar pós-lançamento) — pendência #3 do `copy.md`, correta em não bloquear a copy, mas bloqueia a página. O enquadramento textual das 9 peças está seguro *desde que* a LP reproduza a mesma mecânica ("reserva pro lançamento", não "desconto de uso imediato") — se a LP disser algo diferente, vira violação de coerência ad↔LP (exigência do Meta).
+2. **Garantia de 7 dias ausente nas 9 peças** — `estrategia-organica.md` §Regras travadas pede garantia visível "em todo post de venda", mas o objetivo real desta campanha é lista de espera, não venda (brief §Objetivo). Não trato como violação porque a peça não é tecnicamente "post de venda" no sentido que a regra cobre — mas segue pendência #6 do `copy.md`, decidir explicitamente se basta viver só na LP.
+
+## Links
+[[copy]] · [[brief]] · [[../../marca/personagem-leo|personagem-leo]] · [[../../pesquisa/posicionamento|posicionamento]] · [[../../marca/decisoes-marca|decisoes-marca]]

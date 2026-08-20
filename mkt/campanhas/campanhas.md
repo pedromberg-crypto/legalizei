@@ -1,0 +1,21 @@
+---
+tipo: hub
+status: vivo
+data: 2026-08-20
+tags: [marketing, campanhas]
+---
+
+# Campanhas — índice
+
+Uma linha por campanha. Pasta cheia em `mkt/campanhas/<pasta>/`.
+
+| Campanha | Tipo | Período | Status | Resultado |
+|---|---|---|---|---|
+| [[2026-08-primeira-campanha/brief\|Primeira campanha]] | tráfego (Meta/Instagram) | a definir | 🟡 copy em ajuste — mote+oferta travados, 9 peças estáticas escritas, guardian ainda não rodou | — |
+
+## Como abrir campanha nova
+1. Copiar estrutura de `2026-08-primeira-campanha/` (brief · copy · guardian-log · prompts-imagem · resultados).
+2. Nomear pasta `AAAA-MM-slug-curto`.
+3. Preencher `brief.md` primeiro, sempre. Copy só nasce depois do mote travado.
+4. Acionar `legalizai-copywriter` (lê `marca/personagem-leo.md` + `pesquisa/posicionamento.md` + `pesquisa/estrategia-organica.md` + `pesquisa/mecanicas-engajamento.md` + `pesquisa/metodologia-personas.md`), depois `legalizai-guardian` antes de publicar.
+5. Adicionar linha nesta tabela.

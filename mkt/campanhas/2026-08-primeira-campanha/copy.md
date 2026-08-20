@@ -11,6 +11,8 @@ tags: [marketing, campanhas, primeira-campanha, copy]
 >
 > ✅ **Auditado pelo `legalizai-guardian` em 20/08** — 7 aprovadas, 2 corrigidas (B2 e C3, ambas por ambiguidade de prazo duplo, nenhuma violação de regra dura). Ver [[guardian-log]] pro veredito completo peça a peça. Correções já aplicadas no texto abaixo.
 >
+> ➕ **Rodada 4 (20/08, dial de ironia alto):** a pedido do Pedro, entrou **1 variação nova por mote** (A4, B4, C4), puxando pro lado divertido/astuto do Léo. Nenhuma das 9 originais foi tocada. As 3 novas rodam com **dial alto**, registro Persona A. **Guardian auditou (20/08): 3/3 aprovadas** — ver [[guardian-log]] §Rodada 4. B4 saiu com nota de risco de funil (não de voz): o autodeboche da headline ("de um app que nem abriu ainda") é leitura de julgamento — sugestão é tratar como teste A/B contra B1/B3 e monitorar conversão, não reescrever a priori.
+>
 > 🔄 **Revisão 20/08 (rodada 3, validade da promoção):** as **6 peças de oferta** passaram a dizer a data **31 de dezembro de 2026** como prazo da condição (ADR 20/08, fechado por telefone com o Mauro). Cada uma encaixa a data de um jeito diferente, pra 6 criativos não rodarem com a mesma frase. As 3 do MOTE A seguem sem alteração (não têm oferta). Nenhum preço foi tocado nesta rodada (MEI R$19→R$49, ME R$79→R$139).
 >
 > 🔄 **Revisão 20/08 (rodada 2, mecânica da reserva):** as 6 peças de oferta (MOTE B e MOTE C) foram reescritas no corpo pra explicitar a mecânica travada em `decisoes-marca.md` (20/08): a condição é **reserva pro lançamento oficial**, não preço de uso imediato, e vale **pra quem entra enquanto a campanha/lista estiver aberta**. As 3 do MOTE A não mudaram (não têm preço nem oferta). A revisão **não substitui a auditoria**: o guardian ainda não passou em nenhuma das 9.
@@ -35,7 +37,7 @@ tags: [marketing, campanhas, primeira-campanha, copy]
 > Nenhuma peça deste mote cita plano nem preço, de propósito: sem rótulo MEI×ME, não há risco de promessa cruzada, e por isso também não há promessa de contador (o qualificador "do Simples Nacional" só é obrigatório quando o humano é prometido).
 
 **PERSONA-ALVO / REGISTRO:** geral (fala pros dois públicos, 1º CNPJ e migração)
-**DIAL DE IRONIA:** baixo (A1) a médio (A2/A3) — institucional, Léo é 🟡 meio-dono aqui (`personagem-leo.md` §11)
+**DIAL DE IRONIA:** baixo (A1) a médio (A2/A3) — institucional, Léo é 🟡 meio-dono aqui (`personagem-leo.md` §11). **A4 (rodada 4) roda alto**, de propósito, e por isso troca o registro geral por Persona A.
 
 ### Variação 1 — candidata "por quem entende" · ângulo: honestidade da idade
 
@@ -110,6 +112,33 @@ Basta responder poucas perguntas pra garantir seu lugar.
 ⚠️ Nenhum ano de fundação na arte. "22 anos" é o dado travado; derivar "desde 2004" seria número sem fonte (o CNPJ da Legalize Digital LTDA é de 2021, a operação é que tem 22 anos).
 </details>
 
+### Variação 4 (rodada 4, dial alto) — ângulo: a história é a letra miúda que ele já comeu
+
+> Escrita depois das 3 acima, a pedido do Pedro: mesma estrutura de headline, corpo mais solto. É a única do MOTE A que assume o fio de origem do Léo (`personagem-leo.md` §13) como argumento institucional, e não só como tempero. **Registro Persona A** (`personagem-leo.md` §5).
+
+**HEADLINE**
+22 anos de contabilidade. Um app em construção por quem tem história.
+
+**CORPO**
+História minha tem uma só, e ela é curtinha: eu caí numa letra miúda uma vez. Uma. De lá pra cá virei aquele chato que lê o contrato até o fim, inclusive a parte que escrevem pequenininho torcendo pra ninguém ler. Já a história da contabilidade que tá atrás de mim é bem maior: 22 anos abrindo e cuidando de empresa em Belo Horizonte. As duas coisas estão indo pra dentro desse app, que ainda tá em construção. Quem entra na lista de espera fica sabendo do lançamento antes de todo mundo.
+
+**CTA**
+Cadastro rápido, só algumas perguntas.
+
+<details><summary>AUTO-CHECK</summary>
+
+✅ 1ª pessoa do Léo ("eu caí", "virei aquele chato", "atrás de mim")
+✅ A piada é sobre ELE mesmo e sobre quem escreve pequenininho (§13 + §3, teatro do setor). Nada mira a pessoa que lê nem a dúvida dela
+✅ Dial alto, coerente com Persona A (§5). ⚠️ É a peça mais solta do MOTE A; se o conjunto pesar pra Persona C, rodar A1 ou A3 no lugar
+✅ Zero travessão
+✅ Zero nome de concorrente (a acusação é de prática genérica de mercado, sem cor, silhueta ou nome)
+✅ Não cita plano nem humano → qualificador "do Simples Nacional" não se aplica
+✅ Zero termo técnico ("letra miúda" e "contrato" são palavras correntes nos dois públicos, leigo e migrante)
+✅ CTA = fecho de baixa fricção do brief, nível 2 adaptado a waitlist. É o único fecho da lista ainda não usado no MOTE A
+✅ Não é peça de garantia; "incondicional" e "sem letra miúda" ausentes. ⚠️ Atenção: a peça FALA de letra miúda, mas como história pessoal do Léo, nunca como promessa de garantia (a expressão proibida pela decisão 18/08 é a promessa "sem letra miúda", não a palavra)
+⚠️ Repete a segunda frase da A3 ("por quem tem história"), de propósito: aqui ela vira gancho literal do corpo. Se o teste de headline precisar ser 3-way limpo, A4 concorre com A3, não com as outras duas. Ver Pendências.
+</details>
+
 ---
 
 ## MOTE B — oferta MEI (R$19 nos 3 primeiros meses, R$49 depois)
@@ -119,9 +148,10 @@ Basta responder poucas perguntas pra garantir seu lugar.
 > ⚠️ Nenhuma sugere que R$49 é quando "fica sério": a empresa é real desde o primeiro mês, e o texto diz isso.
 > ✅ **As 3 dizem a mecânica na cara (20/08):** app ainda não lançou, o R$19 é condição guardada pro lançamento, e tem prazo. Ângulo diferente em cada uma pra não repetir a mesma frase nos 3 criativos.
 > ✅ **Validade 31/12/2026 aplicada nas 3 (ADR 20/08).** Encaixe diferente em cada uma: B1 soma data + lista com "o que vier primeiro", B2 põe a data no calendário do próprio Léo, B3 usa a data como prova de que prazo aqui é número escrito.
+> ➕ **B4 entrou na rodada 4 (20/08).** Tudo acima vale igual pra ela (rótulo na headline, nada de contador/humano, mecânica e data no corpo). O que muda é só o dial: B4 é dial alto e assume registro Persona A, então **não é a peça default do mote**, é o criativo de teste mais solto. B1 continua sendo a mais segura pra Persona C.
 
 **PERSONA-ALVO / REGISTRO:** B (Construindo) e C (mão na mão) em maioria, com A de passagem
-**DIAL DE IRONIA:** B1 baixo · B2 baixo · B3 médio (só a B3 tem piada, e ela ri do mercado e do próprio Léo)
+**DIAL DE IRONIA:** B1 baixo · B2 baixo · B3 médio (ri do mercado e do próprio Léo) · **B4 alto** (rodada 4, registro Persona A, ri da própria oferta antes que alguém ria)
 
 ### Variação 1 — ângulo: "o preço de depois não é castigo"
 
@@ -208,6 +238,36 @@ Entra na lista: rápido, poucas perguntas.
 ✅ **Escassez real:** o texto nega explicitamente a urgência fabricada ("corre que acaba hoje") e entrega prazo verdadeiro, travado com o Mauro em 20/08
 </details>
 
+### Variação 4 (rodada 4, dial alto) — ângulo: a piada é a própria oferta (preço de um app que ainda não abriu)
+
+> Ângulo novo, não repete o "a partir de" da B3. Aqui a mecânica de reserva **é** a piada: em vez de esconder que o app não existe ainda, o Léo põe isso na headline e usa a estranheza como prova de que aqui ninguém enfeita. **Registro Persona A** (`personagem-leo.md` §5).
+
+**HEADLINE**
+Plano MEI: R$19 nos 3 primeiros meses, R$49 depois. De um app que nem abriu ainda.
+
+**CORPO**
+Pois é. Tô te oferecendo o preço de uma coisa que ainda tá sendo construída, e resolvi escrever isso na frente em vez de deixar você descobrir depois. Se soou estranho, ótimo, era pra soar. Funciona assim: você deixa seu nome na lista hoje e não paga nada hoje. Quando o app abrir, os R$19 já estão te esperando nos 3 primeiros meses, e depois vira R$49 e para de mudar, sem novidade escondida no meio do caminho. Prazo aqui é um só e tá escrito: 31 de dezembro de 2026, ou o dia em que a lista fechar, se ela fechar antes.
+
+**CTA**
+Quer garantir? Leva menos de 1 minuto.
+
+<details><summary>AUTO-CHECK</summary>
+
+✅ 1ª pessoa do Léo ("tô te oferecendo", "resolvi escrever isso na frente")
+✅ A piada é sobre a PRÓPRIA oferta e sobre o costume do setor de enfeitar o que ainda não existe. Ninguém ri da pessoa nem da dúvida dela (§3)
+✅ Dial alto. ⚠️ É a peça mais solta do MOTE B; MEI puxa muito Persona C, então em conjunto com peso de C usar B1 ou B2 (§5 manda pender pra "não encaixa" na dúvida). Esta é criativo de teste pra Persona A, não default do mote
+✅ Zero travessão
+✅ Zero nome de concorrente
+✅ Não promete contador/humano em nenhum ponto (decisão 17/08). A voz é a do Léo/marca, e nada no texto sugere pessoa dedicada
+✅ Zero termo técnico
+✅ CTA = fecho de baixa fricção do brief, nível 2 adaptado a waitlist
+✅ Não é peça de garantia
+✅ Rótulo "Plano MEI" na headline; nenhum preço de ME no texto
+✅ **Mecânica explícita (decisão 20/08):** é o eixo inteiro da peça. Diz que o app não abriu, que não há cobrança hoje e que o valor fica reservado pro lançamento
+✅ **Validade 31/12/2026 presente (ADR 20/08):** construção exclusiva desta peça ("prazo aqui é um só e tá escrito"), com hierarquia clara entre os dois limites ("ou o dia em que a lista fechar, se ela fechar antes") — evita o problema de prazo duplo ambíguo que o guardian corrigiu em B2 e C3
+✅ **Escassez real:** data travada com o Mauro em 20/08 + fechamento real da lista. Sem contagem de vaga, sem countdown, sem "últimas unidades"
+</details>
+
 ---
 
 ## MOTE C — oferta ME / Simples Nacional (R$79 nos 3 primeiros meses, R$139 depois)
@@ -216,10 +276,11 @@ Entra na lista: rápido, poucas perguntas.
 > ⚠️ **Rótulo "ME"/"Simples Nacional" na headline em todas as 3.**
 > ✅ Aqui o contador CRC pode aparecer, sempre com o qualificador **"do Simples Nacional"** colado (decisão 17/08).
 > ✅ **As 3 dizem a mecânica na cara (20/08):** R$79 é reserva pro lançamento, não cobrança de hoje, e tem prazo. C1 usa o ângulo "não começa a correr hoje", C2 o "você não precisa trocar nada agora" (migração), C3 nomeia o gatilho e nega a pressão fabricada.
+> ➕ **C4 entrou na rodada 4 (20/08).** Mesmas regras das 3 acima (rótulo na headline, qualificador "do Simples Nacional" colado, mecânica e data no corpo, preço R$79 e nunca R$99). Muda só o dial: alto, registro Persona A, criativo de teste e não default do mote.
 > ✅ **Validade 31/12/2026 aplicada nas 3 (ADR 20/08).** Encaixe diferente em cada uma: C1 usa a forma mais enxuta ("até [data], enquanto o formulário estiver no ar"), C2 usa a data como folga pra quem precisa encerrar com o contador atual, C3 troca o gatilho antigo pela data e transforma isso no próprio argumento contra countdown falso.
 
 **PERSONA-ALVO / REGISTRO:** A (Direto) e B (Construindo); C1 e C2 fala com quem migra
-**DIAL DE IRONIA:** C1 baixo · C2 baixo/médio · C3 médio
+**DIAL DE IRONIA:** C1 baixo · C2 baixo/médio · C3 médio · **C4 alto** (rodada 4, registro Persona A, ironiza a formalidade de fachada do setor)
 
 ### Variação 1 — ângulo: humano no plano de entrada
 
@@ -307,6 +368,37 @@ Entra na lista: rápido, poucas perguntas.
 ✅ **Auditado pelo guardian (20/08):** "não tem contagem regressiva piscando na sua cara" avaliado especificamente — mira prática genérica de mercado (alvo legítimo §3), não concorrente identificável. Passa.
 </details>
 
+### Variação 4 (rodada 4, dial alto) — ângulo: linguagem de cartório nunca fez guia chegar mais barata
+
+> Ângulo cômico novo, não repete o "sem asterisco" da C3: aqui o alvo é a **formalidade de fachada** (`personagem-leo.md` §3, alvo legítimo explícito: "linguagem de banco pra vender contabilidade de R$139"). A peça vende o preço zoando o jeito de falar do setor, não o preço dos outros. **Registro Persona A** (`personagem-leo.md` §5).
+
+**HEADLINE**
+ME no Simples Nacional: R$79 agora, R$139 depois. Escrito em português.
+
+**CORPO**
+Ninguém aqui vai te mandar "prezado cliente, vimos por meio desta". Linguagem de cartório nunca fez guia nenhuma chegar mais barata nem mais cedo, então eu prefiro falar igual gente: R$79 por mês nos 3 primeiros meses, R$139 depois, sem novidade escondida no meio do caminho, com contador de verdade do Simples Nacional cuidando da sua empresa e eu no meu turno de vigia, que é onde eu gosto de ficar. O app ainda tá em construção, ou seja, ninguém tá te cobrando nada hoje: a lista serve pra guardar esse valor no seu nome até o lançamento. E isso tem data, dá pra entrar até 31 de dezembro de 2026. Se a lista fechar antes, vale até lá.
+
+**CTA**
+Cadastro rápido, só algumas perguntas.
+
+<details><summary>AUTO-CHECK</summary>
+
+✅ 1ª pessoa do Léo ("eu prefiro falar igual gente", "eu no meu turno de vigia", §13)
+✅ A ironia mira a formalidade de fachada do setor, alvo legítimo nomeado em §3. Não ri de quem não entende contabilês: ri de quem escreve assim de propósito
+✅ Dial alto, cabe em Persona A. ⚠️ É a mais solta do MOTE C; se o conjunto pesar pra Persona C, usar C1 (a mais acolhedora das quatro)
+✅ Zero travessão
+✅ Zero nome de concorrente. "Prezado cliente, vimos por meio desta" é fórmula genérica de português formal, não assinatura identificável de ninguém
+✅ Qualificador "do Simples Nacional" presente e colado no "contador de verdade" (decisão 17/08)
+✅ Zero termo técnico. "Guia" é palavra corrente e serve aos dois públicos (quem abre o 1º CNPJ e quem migra)
+✅ CTA = fecho de baixa fricção do brief, nível 2 adaptado a waitlist
+✅ Não é peça de garantia
+✅ Rótulo "ME no Simples Nacional" na headline; nenhum preço de MEI no texto. Preço de campanha R$79, nunca R$99 (ADR 20/08)
+✅ **Mecânica explícita (decisão 20/08):** "ninguém tá te cobrando nada hoje" + "guardar esse valor no seu nome até o lançamento"
+✅ **Validade 31/12/2026 presente (ADR 20/08):** construção exclusiva desta peça ("isso tem data" + frase curta separada pro segundo limite), diferente das outras cinco. Hierarquia clara entre os dois prazos, sem ambiguidade
+✅ **Escassez real:** data fechada com o Mauro em 20/08 + fechamento real da lista. Sem countdown, sem vaga fake
+⚠️ A peça promete jeito de falar. Se a LP ou o e-mail de confirmação vierem em linguagem formal padrão, ela se desmente sozinha. Vale como nota pra quem escrever a LP.
+</details>
+
 
 ---
 
@@ -323,13 +415,18 @@ Entra na lista: rápido, poucas perguntas.
 8. 🟡 **Nenhuma peça usa asset de tela do app** (o brief cita as telas do Storybook como prova disponível). A copy foi escrita como texto autônomo; se a arte trouxer print de tela, o MOTE A ganha uma linha de "é assim que fica na palma da mão" sem reescrita.
 9. ✅ **Preço do MOTE C corrigido de R$99 para R$79 (Pedro + Mauro, 20/08, por telefone).** Fechado por telefone: R$99→R$139 vira preço de LANÇAMENTO (fora desta campanha); a campanha usa R$79→R$139, exclusivo de quem entra na lista antes. As 3 peças foram atualizadas.
 10. ✅ **Validade 31/12/2026 aplicada (Pedro + Mauro, 20/08, por telefone).** Prazo real, registrado como ADR em `decisoes-marca.md` e no `brief.md` §Oferta. Entrou nas **6 peças de oferta** (MOTE B 1/2/3 e MOTE C 1/2/3), com construção de frase diferente em cada uma pra não repetir a mesma linha em 6 criativos. As 3 do MOTE A ficaram de fora porque não têm oferta nem preço. _Histórico: era 🟡 "prazo real disponível, não usado em nenhuma peça"._
-    ⚠️ **Sobra pro guardian/LP:** a data precisa aparecer também na LP e no regulamento da promoção (Meta cobra coerência ad↔LP, e prazo anunciado sem lastro na página é risco). Formato escrito por extenso ("31 de dezembro de 2026") em todas as 6, pra evitar leitura ambígua de data numérica; se a arte precisar da versão curta, usar "31/12/2026" sem misturar os dois na mesma peça.
+    ⚠️ **Sobra pro guardian/LP:** a data precisa aparecer também na LP e no regulamento da promoção (Meta cobra coerência ad↔LP, e prazo anunciado sem lastro na página é risco). Formato escrito por extenso ("31 de dezembro de 2026") nas **8 peças de oferta** (as 6 originais + B4 e C4 da rodada 4), pra evitar leitura ambígua de data numérica; se a arte precisar da versão curta, usar "31/12/2026" sem misturar os dois na mesma peça.
+11. 🟡 **A4 divide a headline com a A3** ("por quem tem história"). Foi de propósito, o corpo da A4 é a história literal. Consequência prática: o teste de headline do MOTE A deixa de ser 3 frases × 1 peça cada. Se o Pedro quiser comparação limpa de frase, A3 e A4 viram o par "mesma headline, dois corpos" e as outras duas candidatas seguem sozinhas. Se preferir 4 peças com 4 frases distintas, é só trocar a segunda frase da A4 por uma das outras duas, sem mexer no corpo.
+12. 🟡 **As 3 peças da rodada 4 rodam dial alto e ainda não têm veredito do guardian.** Enquanto isso não acontece, elas não são substitutas das 9 originais: são criativos de teste pra Persona A. O default de cada mote segue sendo A1/A3, B1 e C1 quando o conjunto pesar pra Persona C.
+13. 🟡 **C4 promete jeito de falar, não só preço.** Se a LP e o e-mail de confirmação da lista saírem em linguagem formal padrão, a peça se contradiz na chegada. Vale como requisito de copy da LP, não como pendência desta copy.
 
 ---
 
 ## Próximo passo obrigatório
 
-▶️ **Guardian rodou (20/08), 9/9 aprovadas** (2 com correção já aplicada). Falta só: (1) Pedro validar "Vai, legaliza aí." em contexto de lista de espera (pendência 4) e (2) a LP existir de fato com a mesma mecânica prometida no texto (pendência 3) antes de produzir arte/publicar.
+▶️ ✅ **Guardian rodou nas 3 peças novas (20/08): 3/3 aprovadas** (A4, B4 com nota de funil não-bloqueante, C4). **12/12 peças auditadas no total.**
+
+▶️ Segue valendo pras 12: (1) Pedro validar "Vai, legaliza aí." em contexto de lista de espera (pendência 4) e (2) a LP existir de fato com a mesma mecânica prometida no texto (pendência 3) antes de produzir arte/publicar.
 
 ## Links
 [[brief]] · [[../../marca/personagem-leo|personagem-leo]] · [[../../pesquisa/posicionamento|posicionamento]] · [[../../marca/decisoes-marca|decisoes-marca]] · [[../../marca/copy/roteiro-teaser-investidor|roteiro-teaser-investidor]]

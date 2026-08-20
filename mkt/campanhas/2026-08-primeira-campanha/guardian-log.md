@@ -103,5 +103,48 @@ Qualificador "do Simples Nacional" presente e colado em "contador de verdade". "
 1. **Mecânica de reserva ainda não implementada na LP** (onde o texto "garante sua condição" fica escrito na página, o que acontece com quem demora a assinar pós-lançamento) — pendência #3 do `copy.md`, correta em não bloquear a copy, mas bloqueia a página. O enquadramento textual das 9 peças está seguro *desde que* a LP reproduza a mesma mecânica ("reserva pro lançamento", não "desconto de uso imediato") — se a LP disser algo diferente, vira violação de coerência ad↔LP (exigência do Meta).
 2. **Garantia de 7 dias ausente nas 9 peças** — `estrategia-organica.md` §Regras travadas pede garantia visível "em todo post de venda", mas o objetivo real desta campanha é lista de espera, não venda (brief §Objetivo). Não trato como violação porque a peça não é tecnicamente "post de venda" no sentido que a regra cobre — mas segue pendência #6 do `copy.md`, decidir explicitamente se basta viver só na LP.
 
+---
+
+## Rodada 4 — dial alto (auditoria 20/08)
+
+> Auditoria das 3 peças novas (A4, B4, C4), pedido do Pedro: 1 variação extra por mote com dial de ironia mais alto, registro Persona A, ainda não auditadas na rodada anterior. As 9 originais não foram tocadas nesta rodada.
+
+### Resumo
+
+| Peça | Veredito |
+|---|---|
+| A4 | ✅ APROVADO |
+| B4 | ✅ APROVADO (nota de risco de funil, não bloqueia) |
+| C4 | ✅ APROVADO |
+
+**3 aprovadas, 0 corrigir, 0 reprovadas.** Travessão zero confirmado (varredura completa do arquivo — os únicos travessões existentes ficam em títulos de seção/comentários de bastidor, nunca dentro de HEADLINE/CORPO/CTA das 3 peças). Nenhum concorrente citado. Qualificador "do Simples Nacional" presente e colado em C4 (única das 3 que menciona contador). Escassez real e hierarquizada corretamente em B4/C4 desde a primeira versão (já nascem aplicando a lição de B2/C3 da rodada anterior).
+
+### A4 — "a história é a letra miúda que ele já comeu"
+**VEREDITO: APROVADO**
+
+**Ponto de atenção do copywriter (genérico de mercado × alguém específico):** "a parte que escrevem pequenininho torcendo pra ninguém ler" usa sujeito genérico em 3ª pessoa plural, sem nome, cor ou silhueta — cai no alvo legítimo já listado em `personagem-leo.md` §3 ("Preço com 'a partir de', letra miúda, ajuste pós-contato"). Nenhuma leitura plausível mira o cliente ou a dúvida dele. Passa no teste do alvo da piada.
+
+A piada prova um ponto real (§2): a origem dele (§13, já travada — "já caí numa letra miúda uma vez") vira argumento institucional de produto ("de lá pra cá virei aquele chato que lê o contrato até o fim"). Não é deboche vazio, é vigilância com humor. 1ª pessoa consistente, zero travessão, zero concorrente, qualificador não se aplica (mote não cita plano/contador), CTA da escada certa (fecho de baixa fricção do brief). Sem violação.
+
+**Nota (não bloqueia):** A4 repete a segunda frase da headline com A3 ("por quem tem história"), de propósito — questão de desenho de teste (pendência #11 do próprio `copy.md`), não de voz/regra de marca.
+
+### B4 — "a piada é a própria oferta"
+**VEREDITO: APROVADO (com nota de risco de funil)**
+
+**Ponto de atenção do copywriter (transparência × fragilidade da oferta):** avaliado com atenção porque é o caso mais sensível das 3. Leitura: **lê como transparência**, não como fragilidade, por três razões. (1) O fato "app ainda não lançou" já está exposto em texto simples em todas as outras 8 peças aprovadas na rodada anterior — B4 não introduz informação nova, só muda onde ela mora (headline em vez de corpo) e o tom. (2) "Resolvi escrever isso na frente em vez de deixar você descobrir depois" ancora o autodeboche contra um comportamento de mercado implícito (esconder o que não está pronto) — enquadra dentro do alvo legítimo §3, não como fraqueza gratuita da oferta. (3) A fusão vigilante+astuto (§2) acontece dentro do próprio corpo: a piada da headline é seguida de reasseguro concreto e imediato (zero cobrança hoje, mecânica explicada, prazo real e hierarquizado) — não fica deboche solto sem propósito.
+
+Resto do checklist limpo: 1ª pessoa, rótulo "Plano MEI" na headline, nenhuma promessa de contador/humano (correto pra MEI), zero travessão, zero concorrente, escassez real com hierarquia clara ("31 de dezembro de 2026, ou o dia em que a lista fechar, se ela fechar antes" — já nasce sem a ambiguidade que motivou a correção de B2 na rodada anterior), CTA da escada certa. Sem violação de regra dura.
+
+**Nota de risco (não é violação de voz, é consideração de funil/conversão):** é leitura de julgamento, não regra escrita cumprida à risca. Como é criativo de teste, dial alto, Persona A, não default do mote, sugiro tratar como hipótese de teste A/B contra B1/B3: se a métrica de conversão de formulário cair nesta variação, é sinal prático de que a leitura "fragilidade" venceu a leitura "transparência" no público real — não precisa reescrever o texto agora, só monitorar.
+
+### C4 — "linguagem de cartório nunca fez guia chegar mais barata"
+**VEREDITO: APROVADO**
+
+Combinação exemplar de §2+§3: "linguagem de cartório nunca fez guia nenhuma chegar mais barata nem mais cedo" ironiza literalmente a "formalidade de fachada" citada como exemplo textual em `personagem-leo.md` §3 ("linguagem de banco pra vender contabilidade de R$139"). Prova o ponto com precisão. "Prezado cliente, vimos por meio desta" é fórmula de português formal genérica, sem assinatura identificável de nenhum concorrente — passa no teste do alvo.
+
+Qualificador "do Simples Nacional" presente e colado em "contador de verdade" (decisão 17/08). Rótulo "ME no Simples Nacional" na headline. Preço R$79 correto, R$99 nunca aparece. Escassez real e hierarquizada ("isso tem data, dá pra entrar até 31 de dezembro de 2026. Se a lista fechar antes, vale até lá."). Zero travessão, zero concorrente, CTA da escada certa. Sem violação.
+
+**Nota fora de escopo (já sinalizada pelo próprio copywriter):** a peça promete "jeito de falar" como diferencial — se a LP/e-mail de confirmação da lista saírem em linguagem formal padrão, a peça se contradiz na entrega. Requisito pra quem escrever a LP, não bloqueia esta copy.
+
 ## Links
 [[copy]] · [[brief]] · [[../../marca/personagem-leo|personagem-leo]] · [[../../pesquisa/posicionamento|posicionamento]] · [[../../marca/decisoes-marca|decisoes-marca]]

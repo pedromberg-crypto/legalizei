@@ -11,7 +11,7 @@ Uma linha por campanha. Pasta cheia em `mkt/campanhas/<pasta>/`.
 
 | Campanha | Tipo | Período | Status | Resultado |
 |---|---|---|---|---|
-| [[2026-08-primeira-campanha/brief\|Primeira campanha]] | tráfego (Meta/Instagram) | a definir | 🟡 copy em ajuste — mote+oferta travados, 9 peças estáticas escritas, guardian ainda não rodou | — |
+| [[2026-08-primeira-campanha/brief\|Primeira campanha]] | tráfego (Meta/Instagram) | até 31/12/2026 | 🟡 preço final fechado com Mauro (MEI R$19→49, ME campanha R$79→139), copy corrigida, guardian ainda não rodou | — |
 
 ## Como abrir campanha nova
 1. Copiar estrutura de `2026-08-primeira-campanha/` (brief · copy · guardian-log · prompts-imagem · resultados).

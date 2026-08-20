@@ -19,7 +19,7 @@ tags: [marketing, campanhas, primeira-campanha]
 
 **MOTE B/C — oferta early-bird, por plano (sempre segregado MEI × ME, nunca no mesmo texto sem rótulo)**
 - MEI: "Garante R$19 agora. R$49 depois, sem novidade escondida." / "R$19 nos 3 primeiros meses, depois R$49 é o preço que fica."
-- ME/Simples: "Garante R$99 agora. R$139 depois, sem novidade escondida." / "R$99 nos 3 primeiros meses, depois R$139 é o preço que fica."
+- ME/Simples **(preço de CAMPANHA, não o de lançamento — ver §Oferta abaixo)**: "Garante R$79 agora. R$139 depois, sem novidade escondida." / "R$79 nos 3 primeiros meses, depois R$139 é o preço que fica."
 
 ❌ **Descartados 20/08:** eixo transparência ("sem letra miúda"/"sem a partir de"), eixo mobile ("cabe no bolso"), eixo transição CLT→PJ, eixo vigilância ("tem alguém de olho"). Fora do banco desta campanha — podem voltar em campanha futura.
 
@@ -58,15 +58,22 @@ _(a definir — volume de criativos ainda em aberto até 21/08 fim do dia)_
 ## Orçamento
 _(a definir — referência antiga: R$3.500/mês V0 em `frente-1-captacao-meta-bh`, CAC-alvo teto R$556 ME. Revalidar, não presumir que segue igual.)_
 
-## Oferta (preço-âncora da campanha) — 🟢 travado (Pedro, 20/08, ver `decisoes-marca.md`)
-| Plano | 3 primeiros meses | Depois |
+## Oferta — 🟢 fechado com Mauro por telefone (20/08, ver `decisoes-marca.md`)
+
+⚠️ **ME tem 2 preços diferentes, de propósito — não confundir:**
+
+| Plano | Preço da PEÇA DE ANÚNCIO (esta campanha) | Preço de LANÇAMENTO (fora desta campanha) |
 |---|---|---|
-| **MEI** | R$19/mês | R$49/mês (redondo, sem centavos — substitui placeholder R$49,90 de 04/08) |
-| **ME — Simples Nacional** | R$99/mês | R$139/mês (sem mudança, já travado 17/08) |
+| **MEI** | R$19/mês (3 primeiros meses), depois R$49/mês | mesmo — MEI só tem 1 cenário aprovado |
+| **ME — Simples Nacional** | **R$79/mês** (3 primeiros meses), depois R$139/mês | R$99/mês (3 primeiros meses), depois R$139/mês |
+
+Toda copy desta campanha usa **ME R$79**, nunca R$99 — R$99 é reservado pro preço de lançamento fora da campanha (ex: página de preço do app quando existir). Simulação de suporte: `pesquisa/2026-08-20-simulacao-oferta-lancamento.md` (Cenário C pra campanha, Cenário A pra lançamento).
+
+**Validade:** todas as promoções valem **até 31/12/2026**. Pode virar gatilho de escassez concreto na copy (mais forte que "enquanto a lista estiver aberta").
 
 **Mecânica:** quem preenche o formulário na LP **enquanto a campanha estiver no ar e a LP ativa** garante essa condição pra quando o app lançar oficialmente. Não é desconto de uso imediato (app não existe ainda) — é reserva de condição futura.
 
-**Gatilho de escassez:** o próprio período da campanha/LP ativa é o limite — real, não inventado (regra dura `legalizai-copywriter.md` proíbe escassez/prazo falso). Sem contagem de vaga fake, sem countdown fictício.
+**Gatilho de escassez:** período da campanha/LP ativa **+ prazo fixo 31/12/2026** — os dois reais, não inventados (regra dura `legalizai-copywriter.md` proíbe escassez/prazo falso). Sem contagem de vaga fake, sem countdown fictício.
 
 ## Ângulo de paridade competitiva
 Oferecer o **mesmo escopo** do plano Padrão R$195 da Contabilizei (`pesquisa/concorrentes/contabilizei/funcionalidades/plano-padrao-195-referencia.md`) — contabilidade completa, DAS, abertura, certificado, pró-labore 2 sócios, conta PJ — só que:

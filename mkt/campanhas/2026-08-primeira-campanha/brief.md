@@ -84,12 +84,12 @@ Oferecer o **mesmo escopo** do plano Padrão R$195 da Contabilizei (`pesquisa/co
 ## Prova social / lastro institucional
 Por trás do app tem escritório de contabilidade de **22 anos, atuação real em BH** (Legalize Digital) — diferencial já travado (`posicionamento.md` §Diferencial 3, hiperlocal BH/MG). **Nome do escritório NÃO é obrigatório na peça** — fica a critério do Pedro, caso a caso.
 
-## Volume de criativos (V1, revisável até 21/08 EOD)
+## Volume de criativos (revisado 20/08, banco maior que o mínimo pra escolher)
 | Formato | Qtd |
 |---|---|
-| Estático | 5 |
-| Carrossel | 2 |
-| Vídeo | 4 — 2 pares (mesma pegada cortada em 15s/30s), portanto **2 roteiros-base** |
+| Estático | 12 (3 motes × 4 variações — ver `copy.md`) |
+| Carrossel | 2 (pendente) |
+| Vídeo | 12 roteiros (3 motes × sóbrio/cômico × 15s/30s — ver `roteiros-video.md`), banco pra escolher; se o volume final voltar a 4, priorizar 1 par sóbrio de oferta + 1 par institucional |
 
 ## CTA-alvo
 Nível 2 funil (preencher formulário) — ver `mecanicas-engajamento.md` §Escada de CTA. Fecho de peça pode reaproveitar o travado de marca "Vai, legaliza aí." se couber no Léo (`personagem-leo.md` §6).

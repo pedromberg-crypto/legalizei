@@ -146,5 +146,66 @@ Qualificador "do Simples Nacional" presente e colado em "contador de verdade" (d
 
 **Nota fora de escopo (já sinalizada pelo próprio copywriter):** a peça promete "jeito de falar" como diferencial — se a LP/e-mail de confirmação da lista saírem em linguagem formal padrão, a peça se contradiz na entrega. Requisito pra quem escrever a LP, não bloqueia esta copy.
 
+---
+
+## Rodada 5 — roteiros de vídeo (auditoria 20/08)
+
+> Auditoria dos 12 roteiros de vídeo em [[roteiros-video]] (3 motes × 2 tons × 2 durações), derivados das 12 peças estáticas já auditadas em [[copy]] (rodadas 1-4). Fontes: `marca/personagem-leo.md` inteiro, `pesquisa/posicionamento.md`, `pesquisa/estrategia-organica.md` §Regras travadas, `pesquisa/mecanicas-engajamento.md` §Escada de CTA, `marca/decisoes-marca.md`, `brief.md`.
+
+### Resumo
+
+| Roteiro | Veredito |
+|---|---|
+| A-SOB 15s | ✅ APROVADO |
+| A-SOB 30s | ✅ APROVADO |
+| A-COM 15s | ✅ APROVADO |
+| A-COM 30s | ✅ APROVADO |
+| B-SOB 15s | ✅ APROVADO |
+| B-SOB 30s | 🟡 CORRIGIDO (nota de produção) |
+| B-COM 15s | ✅ APROVADO (nota de funil, herdada) |
+| B-COM 30s | ✅ APROVADO (nota de funil, herdada) |
+| C-SOB 15s | 🟡 CORRIGIDO (direção de arte) |
+| C-SOB 30s | 🟡 CORRIGIDO (direção de arte) |
+| C-COM 15s | 🟡 CORRIGIDO (direção de arte) |
+| C-COM 30s | 🟡 CORRIGIDO (direção de arte + prazo ausente na voz) |
+
+**7 aprovados direto, 5 corrigidos, 0 reprovados.** Nenhuma REJEIÇÃO: zero travessão confirmado por varredura completa (os únicos `—` do arquivo ficam em títulos de seção, nunca dentro de célula de tempo/visual/áudio/texto-na-tela); zero concorrente citado por nome; qualificador "do Simples Nacional" presente e colado em todo roteiro que menciona contador (os 4 do MOTE C); nenhum dos 4 roteiros MOTE B promete contador/humano; escassez real e hierarquizada ("o que vier primeiro") em todas as 8 peças de oferta. **Nenhuma correção desta rodada é por violação de regra dura já cometida no texto** — são riscos de execução (direção de arte insuficientemente travada) que o copywriter já tinha sinalizado em auto-check, promovidos aqui pra instrução explícita na célula de produção, porque é essa célula que vai pra quem filma/anima.
+
+### MOTE A — institucional (4 roteiros)
+
+**A-SOB 15s / 30s — APROVADO.** Sem violação. Ironia leve em A-SOB 30s ("todo app jura que é simples") mira o setor, mesmo alvo já aprovado na A2 estática. Hook mudo funciona (texto grande + gesto do Léo).
+
+**A-COM 15s / 30s — APROVADO.** Piada é do Léo sobre si mesmo (§13) e sobre "quem escreve pequenininho" — sujeito genérico, cai no alvo legítimo §3. Dial alto compatível com Persona A (§5); o próprio roteiro já recomenda A-SOB se o conjunto pesar pra Persona C.
+
+### MOTE B — oferta MEI (4 roteiros)
+
+**B-SOB 15s — APROVADO.** Rótulo, mecânica de reserva e escassez hierarquizada corretos desde a primeira versão.
+
+**B-SOB 30s — CORRIGIDO.** Risco real no quadro 8-14s ("cartão de CNPJ com carimbo batendo"): o gesto de "carimbo batendo" pode sugerir celeridade de abertura numa peça regida pela regra "nenhuma promessa/prazo falso" (`estrategia-organica.md` §Regras travadas). O texto não afirma prazo de abertura, mas a instrução de produção não impedia essa leitura visual. **Correção aplicada:** célula agora trava explícito "o carimbo ilustra empresa real desde o mês 1, nunca velocidade, sem cronômetro/contagem no visual".
+
+**B-COM 15s / 30s — APROVADO (nota de funil herdada de B4).** Autodeboche "de um app que nem abriu ainda" lê como transparência, não fragilidade — mesma leitura já validada na Rodada 4. Mecânica de reserva é o eixo visual inteiro (andaime vazio, "hoje R$0,00"). Sem violação de regra dura; nota de funil é sugestão de teste A/B, não correção de voz.
+
+### MOTE C — oferta ME/Simples Nacional (4 roteiros)
+
+**C-SOB 15s — CORRIGIDO.** Quadro 0-3s (card de contador com foto e nome) precisava travar "pessoa real autorizada ou ilustração equivalente, nunca banco de imagem genérico" — a peça inteira vende "contador de verdade" (`posicionamento.md` §Diferencial 2); um contador de banco de imagem contradiz o próprio argumento. **Correção aplicada.**
+
+**C-SOB 30s — CORRIGIDO, 2 pontos.** (1) Mesmo risco do card de contador, quadro 8-14s, mesma correção. (2) Achado adicional do guardian: quadro 0-3s (tela de mensagens sem resposta) precisava travar "UI neutra, sem identidade visual de app de mensagem reconhecível de concorrente" (`estrategia-organica.md` §Regras travadas, zero concorrente). **Correções aplicadas nas duas células.**
+
+**C-COM 15s — CORRIGIDO.** Quadro 0-3s (papel timbrado) precisava travar "neutro, cinza, sem cor/logo/silhueta de concorrente" — papel timbrado tem muito mais superfície pra carregar identidade visual acidental do que texto. A frase "prezado cliente, vimos por meio desta" em si é fórmula genérica, passa sem ressalva. **Correção aplicada.**
+
+**C-COM 30s — CORRIGIDO, 2 pontos.** (1) Mesmo risco do papel timbrado, quadro 0-3s, mesma correção. (2) Único dos 4 pares de 30s que não falava o prazo em voz (só em tela) — inconsistência com a convenção que o próprio documento declara valer pros 12 ("30s sempre ganha o prazo falado"). Não é violação de regra dura (a data não é falsa, só ausente da voz), mas quebra a convenção estrutural. **Correção aplicada:** cortado "e eu no meu turno de vigia", quadro 14-20s agora fala "até trinta e um de dezembro de vinte e seis".
+
+### Ponto a ponto do que o copywriter pediu pra julgar
+
+**1. "Vai, legaliza aí." fora dos 12 — a leitura do copywriter está certa?** Não é violação de regra dura, mas é tensão real: `decisoes-marca.md` (13/08) trava frase falada + visual como **par indivisível** pra peça audiovisual — aplicar só a metade visual é aplicação parcial de um ADR 🟢 já travado, não decisão de tom em aberto. O `brief.md` §Pegada de comunicação já sabia disso ao ser escrito ("pede validação se cabe pra contexto de lista de espera"). Mérito do argumento do copywriter é bom (legalizar aí sem produto pra legalizar esbarra na mesma honestidade que rege a mecânica de reserva) — tendo a concordar com a omissão, mas **recomendo validação explícita do Pedro antes de produção**, porque colide com ADR travado, não proposta 🟡.
+
+**2. Prazo só em tela nos 4 roteiros de 15s — basta?** Sim. A convenção do próprio documento ("nunca vive só no áudio: preço, rótulo, prazo, CTA") protege contra o risco oposto — texto cobre quem assiste mudo (maioria no Meta). Nenhuma fonte exige redundância áudio+tela pra escassez, só que ela seja real.
+
+**3. C-COM 30s sem prazo falado — problema?** Sim, de consistência interna com a convenção do próprio documento, não de regra dura. Corrigido (ver acima).
+
+**4. Formato de data por extenso nos 12 — bate com a pendência 10 de `copy.md`?** Bate, sem exceção, confirmado por varredura completa.
+
+**5. Direções de arte de risco (papel timbrado, card de contador)** — reais, não só estéticas. Corrigidas nas 5 células afetadas (B-SOB 30s, C-SOB 15s/30s, C-COM 15s/30s). Estendido também (achado adicional) pra UI de mensagens do C-SOB 30s, mesma família de risco.
+
 ## Links
-[[copy]] · [[brief]] · [[../../marca/personagem-leo|personagem-leo]] · [[../../pesquisa/posicionamento|posicionamento]] · [[../../marca/decisoes-marca|decisoes-marca]]
+[[copy]] · [[roteiros-video]] · [[brief]] · [[../../marca/personagem-leo|personagem-leo]] · [[../../pesquisa/posicionamento|posicionamento]] · [[../../marca/decisoes-marca|decisoes-marca]]

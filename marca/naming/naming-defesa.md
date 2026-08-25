@@ -8,6 +8,8 @@ etapa: naming
 tags: [marca, naming]
 ---
 
+> ⚠️ **DESATUALIZADO (25/08).** Este doc defende a grafia "Legaliz**ai** Story Book" como pretérito 1ª pessoa ("eu legalizei"). O rebrand de 2026-08-03 (ver [[decisoes-marca]] linha "Rebrand Legalizai Story Book→Legalizai vira DE FATO") travou o nome exibido como **"Legalizai"** sem acento, mas **sem racional de naming escrito** — a leitura "AI = inteligência artificial" cogitada depois (`HOME.md`, 33º flow) nunca virou ADR formal, e o acento que esta defesa pressupõe ("ei" pretérito) briga com a leitura "AI" como sigla. **Decisão de mérito em aberto, é do Pedro/sócio — não resolvida aqui.**
+
 # 🏷️ Defesa do nome: **LEGALIZAI STORY BOOK**
 
 > Defesa embasada pra debater com o Pedro. Tese: "Legalizai Story Book" não é só auto-explicativo — é **estrategicamente o nome certo**, por 5 razões que se reforçam. No fim: riscos honestos + validações pendentes (INPI, domínio).

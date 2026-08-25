@@ -1,5 +1,8 @@
 # Memory Index — Legalize
 
+- [Reorg repo inteiro, 25/08](legalize-reorg-repo-inteiro-25-08.md) — 6 achados inventário real + 6 passos priorizados; retoma pergunta grande de 31/07 como PM.
+- [Mockup 3D do iPhone no Blender](legalize-blender-iphone-mockup-pipeline.md) — 21/08: asset, UV dedicado+flip, resolução mín. 432dpi, render 2K transparente, Poly Haven HDRI.
+- [Doutrina do pipeline vetor Illustrator](legalize-illustrator-vector-pipeline-doutrina.md) — 21/08: autoridade em `edicao_video/CLAUDE.md` §3.4; MCP não cria geometria; scripts `tela-*-para-svg.mjs`; ponte entre docs é Ctrl+C/V manual.
 - [Primeira campanha fechada ponta a ponta](legalize-primeira-campanha-fechada.md) — 20-21/08: `mkt/campanhas/` criado, preço fechado c/ Mauro, 24 peças auditadas 0 reprovações, handoff de LP entregue.
 - [Video de investidor: 3 propostas de escalada](legalize-video-investidor-escalada.md) — 13-14/08: roteiro-escalada-mercado v4 + ElevenLabs; regra: provocação mora na palavra, não na entonação.
 - [Puntel valida a estratégia INTEIRA](legalize-doc-estrategia-mkt-validacao.md) — 12/08: par de validação estratégica, não fornecedor de mídia; 8 riscos e tabela de fechamento foram invenção minha.

@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: 08f36f5b-e369-47bd-8358-547022ddfc18
-  modified: 2026-08-03T12:03:15.245Z
+  modified: 2026-08-25T17:40:00.272Z
 ---
 
 **Frente aberta 2026-07-30, retomada 2026-07-31: reorganização das fontes de flow/telas/design system**, motivada por múltiplas representações paralelas do flow e do design system espalhadas por 3 repos: `legalize` (este vault), `legalizeiapp` (produto real, parado em 21/07) e `CRM_app` (painel interno).
@@ -21,5 +21,7 @@ metadata:
 **Why:** sensação de "entregas desconexas" — múltiplas cópias/versões do mapa de flow e do design system sem link cruzado, apesar de substância parecida.
 
 **How to apply:** primeiro ler `reorganizacao-flow-design/HOME-reorganizacao.md` pra saber o estado atual. Não presumir a resposta da pergunta grande do Pedro — perguntar ou esperar ele trazer. Achado ainda pendente: path `C:\Obsidian Legalizai Story Book` (citado pelo `legalizeiapp/CLAUDE.md`) não existe nesta máquina — fechado como "não é item nosso, vira pergunta ao dev".
+
+**25/08 — Pedro respondeu.** Retomou como PM, pediu reorg do repo inteiro (não só flow/telas/design). Ver [[legalize-reorg-repo-inteiro-25-08]] pro estado vigente.
 
 Ver [[legalize-objetivo-e-papel-pedro]] · [[legalize-storybook-fonte-verdade]] · [[legalize-tema-escuro-legalizai-story-book-crm]].

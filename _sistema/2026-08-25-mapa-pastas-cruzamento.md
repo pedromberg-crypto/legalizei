@@ -152,6 +152,15 @@ Registrados como histórico — `75a860d`, `18f5072`. #2 e #3 resolveram só loc
 3. 🟡 **`marca/naming/` ↔ `marca/decisoes-marca.md`** — flag posto (linkar), mérito -ai/-ei segue decisão aberta.
 4. ✅ **`execucao/` raiz (pautas/PDFs) ↔ `reunioes/`** — virou `reunioes/preparacao/` (mover).
 
+## `financeiro/` (NOVO, ✅ 25/08 — pasta de domínio, não estava no mapa original)
+
+Criada a partir de um gap achado testando o próprio mapa: `mkt/estrategia/` misturava análise financeira (CAC, margem, custo) com tática de marketing (funil, posicionamento) — 2 assuntos, não 1.
+
+| Área | Conteúdo geral | Cruza com | Ação sugerida | Justificativa |
+|---|---|---|---|---|
+| `estado-atual.md` | Arquivo MÃE — TL;DR de preço/CAC/margem, editado no lugar (não é log). Fonte para `indice-autoridade.md`. | `marca/decisoes-marca.md` | linkar (feito) | ADR é cronológico (log), este é o snapshot do estado corrente — os 2 se complementam, não competem. |
+| `pesquisa/` | 6 arquivos vindos de `mkt/estrategia/`: economia-preço-CAC, custos-margem, simulação de oferta, rascunho de apresentação. | `mkt/estrategia/` (o que ficou) | ✅ feito (mover) | Análise financeira separada de tática de marketing. |
+
 ## Rodada pasta a pasta — FECHADA (25/08)
 
 Todas as 11 pastas validadas com o Pedro. Commits: `17b366d` (execucao/), `38475e8` (marca/), `31a7a2a` (pesquisa/), `5d08789` (ux-ui/).

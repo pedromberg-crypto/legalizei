@@ -675,5 +675,27 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 - Falta escolher qual das 3 e gravar a narração
 ```
 
+## Semana 20-21/08/2026 — a primeira campanha de anúncio ficou pronta, e fechamos o preço de lançamento por telefone
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | **Primeira campanha de tráfego pago montada inteira** | É uma campanha de lista de espera: a pessoa deixa o contato e garante a condição de lançamento antes do app existir de verdade. Criei um jeito organizado de guardar toda campanha futura (não só essa), pra não se perder quando vierem a 2ª, 3ª campanha | 🟢 |
+| 2 | **Preço de lançamento fechado com você por telefone** | Ficou assim: MEI entra a R$19/mês nos 3 primeiros meses, depois R$49. ME/Simples entra a R$99/mês nos 3 primeiros, depois R$139 (esse é o preço de quando o app já estiver no ar). **Só nesta campanha**, quem entrar na lista antes do lançamento garante o ME por R$79 nos 3 primeiros meses, em vez de R$99 — é o prêmio de quem chegou primeiro. Vale até 31/12/2026 | 🟢 |
+| 3 | **Simulei o pior cenário antes de assinar embaixo** | Fiz a conta de "e se o cliente cancelar já no primeiro mês, com a multa que o contrato prevê?" pros dois planos. Nos dois, mesmo no pior caso, a conta fecha positiva — não corre risco de prejuízo por causa do preço de entrada baixo | 🟢 |
+| 4 | **24 peças de anúncio escritas e revisadas** | 12 posts estáticos + 12 roteiros de vídeo curto (15 e 30 segundos), sempre em 2 tons (um mais sério, um mais brincalhão) pra testar o que funciona melhor. Passaram por uma revisão própria antes de eu considerar prontas — nenhuma foi reprovada, algumas ganharam ajuste fino | 🟢 |
+| 5 | **A página que recebe o anúncio (formulário) foi corrigida** | Ela ainda dizia "1º mês grátis", que não é mais a oferta real, e prometia "contador de verdade" pro MEI sem deixar claro que no MEI quem atende é o assistente virtual, não um contador dedicado (isso é assim desde 17/07). Mandei a correção pra quem tá mexendo no site agora; falta eu conferir se ficou certo | 🟡 |
+
+**Próximo:** revisar o resultado da página corrigida, decidir orçamento/período/meta da campanha e colocar o anúncio no ar. Continua pendente com você: seu número de honorário por cliente (é o dado que mais muda a conta de margem, ainda estimado).
+
+### 📱 WhatsApp (20-21/08)
+```
+*Update Legalizai* 📣
+- Montei a primeira campanha de anúncio (Instagram/Meta): é lista de espera, quem entra antes garante a condição de lançamento
+- Fechamos por telefone: MEI R$19 nos 3 primeiros meses (depois R$49), ME/Simples R$99 (depois R$139) como preço padrão, e R$79 como prêmio exclusivo de quem entra na lista antes, válido até 31/12
+- Testei a conta do pior caso (cliente cancela rápido, com multa) e fecha positiva nos dois planos
+- 24 peças de anúncio prontas e revisadas (posts + vídeos curtos), nenhuma reprovada
+- Corrigi 2 erros na página do formulário (oferta desatualizada + promessa que não valia pro MEI) e já mandei ajustar
+```
+
 ## Links
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]]

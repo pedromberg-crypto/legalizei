@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { SociosView } from "@/components/wizard-dossie";
 import { ehMei, comRegime } from "@/lib/regime";
+import { ehEnderecoFiscal, comEndereco } from "@/lib/endereco";
 
 /** 🆕 03/08 — só alcançável pelo caminho ME (MEI não pode ter sócio, pula
  *  esta tela; ver `/dossie/socio`, C1, onde bifurca). */
@@ -18,7 +19,9 @@ import { ehMei, comRegime } from "@/lib/regime";
  * Motor: b2.coleta (sócios) · afeta natureza jurídica (N15)
  *
  * Regras da spec:
- *   · Limite MÁXIMO 2 sócios no total (decisão 15/07, era 3). Passou → barra.
+ *   · Limite MÁXIMO 4 sócios no total (subiu de 2 pra 4 em 24/08, reunião
+ *     Leonan 19/08 — o que trava é a assinatura de todos, não o número em
+ *     si). Passou de 4 → barra.
  *   · O bloqueio é do PRODUTO, não da lei — dizer isso, não é um "não" seco.
  *   · UX-21: o "quantos sócios?" já foi na triagem do N4. Aqui o limite é só a
  *     trava de segurança, não a 1ª notícia ruim. ⚠️ 29/07: por isso mesmo ele
@@ -34,7 +37,13 @@ import { ehMei, comRegime } from "@/lib/regime";
  */
 export default function SociosPage() {
   const router = useRouter();
-  const mei = ehMei(useSearchParams());
+  const searchParams = useSearchParams();
+  const mei = ehMei(searchParams);
+  const enderecoFiscal = ehEnderecoFiscal(searchParams);
 
-  return <SociosView onSeguir={() => router.push(comRegime("/dossie/empresa", mei))} />;
+  return (
+    <SociosView
+      onSeguir={() => router.push(comEndereco(comRegime("/dossie/empresa", mei), enderecoFiscal))}
+    />
+  );
 }

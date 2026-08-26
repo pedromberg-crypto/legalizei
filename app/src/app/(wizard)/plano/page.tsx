@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { PlanoView } from "@/components/wizard-dinheiro";
 import { ehMei, comRegime } from "@/lib/regime";
+import { ehEnderecoFiscal, comEndereco } from "@/lib/endereco";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -35,10 +36,12 @@ import { ehMei, comRegime } from "@/lib/regime";
  * Total de hoje = **rodapé, colado no CTA**: conferível no instante da decisão,
  * sem ser o maior.
  *
- * ─── 🔴 PENDÊNCIA REAL DE SPEC ────────────────────────────────────────────
- * O **add-on de endereço fiscal** não aparece aqui (o N13 vem depois do
- * pagamento) e reaparece como upsell cobrado "a partir da 2ª parcela". Ou
- * seja: a "conta total" desta tela **não é total**.
+ * ─── ✅ RESOLVIDO 26/08 (reunião Rua Satélite 36, item 2) ─────────────────
+ * Era: "o add-on de endereço fiscal não aparece aqui (o N13 vem depois do
+ * pagamento)... a 'conta total' desta tela não é total." Agora não é mais —
+ * a pergunta "endereço próprio × fiscal Legalizai" saiu do C4 e subiu pro
+ * `/gate` (`FaixaView`, antes do cadastro), e o valor já soma aqui na
+ * mensalidade, com explicação sucinta (`?endereco=fiscal`, `lib/endereco.ts`).
  *
  * 💸 Preço é PLACEHOLDER declarado (ver `CUSTOS.MENSALIDADE`).
  *
@@ -48,15 +51,18 @@ import { ehMei, comRegime } from "@/lib/regime";
  */
 export default function PlanoPage() {
   const router = useRouter();
-  const mei = ehMei(useSearchParams());
+  const searchParams = useSearchParams();
+  const mei = ehMei(searchParams);
+  const enderecoFiscal = ehEnderecoFiscal(searchParams);
 
   // 🆕 03/08 — UX-74 mesclado (versão "oferta": card escuro, âncora de
   // honorário). Fonte: /apresentacao. `semTaxaJunta` = MEI, ver /gate.
   return (
     <PlanoView
-      onSeguir={() => router.push(comRegime("/contrato", mei))}
+      onSeguir={() => router.push(comEndereco(comRegime("/contrato", mei), enderecoFiscal))}
       layout="oferta"
       semTaxaJunta={mei}
+      enderecoFiscal={enderecoFiscal}
     />
   );
 }

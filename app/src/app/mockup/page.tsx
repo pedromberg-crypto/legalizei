@@ -168,6 +168,7 @@ const MAPA_EDGES: Conexao[] = [
   { de: "/gate?etapa=triagem", para: "/gate?etapa=faixa" },
   { de: "/gate?etapa=triagem", para: "/saida/exterior", tracejado: true },
   { de: "/gate?etapa=triagem", para: "/saida/socios", tracejado: true },
+  { de: "/gate?etapa=triagem", para: "/saida/socio-pj", tracejado: true },
   { de: "/gate?etapa=faixa", para: "/conta" },
 
   // ── Dinheiro + Migrar pós-pagamento ────────────────────────────────────────
@@ -176,7 +177,15 @@ const MAPA_EDGES: Conexao[] = [
   { de: "/contrato", para: "/pagamento" },
   { de: "/pagamento", para: "/dossie/socio" },
   { de: "/pagamento", para: "/aguardando", tracejado: true },
-  { de: "/pagamento?fluxo=migrar", para: "/migrar/transferencia" },
+  // 🔄 26/08 — a cadeia real (`flow-data.mjs`, E9_2→E9_2A→E9_2B→E9_2C→E9_3)
+  // pulava direto pro /migrar/transferencia aqui, desde 24/08 (reunião
+  // Leonan 19/08 criou o contador+dados+sócios+gov no meio). Corrigido —
+  // "herança manual", o próprio risco que este comentário já avisava.
+  { de: "/pagamento?fluxo=migrar", para: "/migrar/contador" },
+  { de: "/migrar/contador", para: "/migrar/dados" },
+  { de: "/migrar/dados", para: "/migrar/socios" },
+  { de: "/migrar/socios", para: "/migrar/gov" },
+  { de: "/migrar/gov", para: "/migrar/transferencia" },
   { de: "/migrar/transferencia", para: "/migrar/ativa" },
   { de: "/migrar/transferencia?estado=travado", para: "/migrar/ativa", tracejado: true },
   { de: "/migrar/ativa", para: "/home-dia1" },
@@ -199,7 +208,10 @@ const MAPA_EDGES: Conexao[] = [
   { de: "/termo", para: "/painel" },
   { de: "/painel", para: "/painel/recusa", tracejado: true },
   { de: "/painel/recusa", para: "/painel", tracejado: true },
-  { de: "/painel", para: "/assinatura" },
+  // 🔄 26/08 (reunião Rua Satélite 36, item 7) — certificado passou a ser
+  // validado ANTES da assinatura, não depois (ver flow-data.mjs, nó A3_2).
+  { de: "/painel", para: "/certificado" },
+  { de: "/certificado", para: "/assinatura" },
   { de: "/assinatura", para: "/home-dia1" },
 
   // ── Portal (grafo de navegação) ────────────────────────────────────────────

@@ -245,24 +245,11 @@ export function ContaView({
             </>
           )}
 
-          {/* ───── UX-48: coorte. Dado puro, opcional, sem rótulo ───── */}
-          <div>
-            <p className="text-caption font-semibold text-text-primary">
-              É a primeira empresa que você abre?
-            </p>
-            <p className="text-micro text-text-tertiary mt-0.5">
-              Só pra gente entender quem usa o app. Não muda nada no seu
-              processo, e dá pra pular.
-            </p>
-            <div className="mt-2 flex gap-2">
-              <BotaoCoorte on={d.coorte === "primeira"} onClick={() => set("coorte", "primeira")}>
-                É a primeira
-              </BotaoCoorte>
-              <BotaoCoorte on={d.coorte === "ja-abri"} onClick={() => set("coorte", "ja-abri")}>
-                Já abri antes
-              </BotaoCoorte>
-            </div>
-          </div>
+          {/* 🔴 24/08 (reunião Rua Satélite 35) — coorte SAIU daqui, realocada
+              pra `FaixaView` (E5F, `gate-telas.tsx`). Este `layout="classico"`
+              não é o usado em produção (`/conta` usa `layout="painel"`, ver
+              `ContaPainel`), mas mantido consistente pra não sobrar pergunta
+              duplicada em nenhuma variante. */}
         </Corpo>
 
         <Rodape>
@@ -329,13 +316,6 @@ function ContaPainel({
   const telefoneCheio = d.telefone.replace(/\D/g, "").length >= 10;
   const cepDigitos = d.cep.replace(/\D/g, "");
   const endereco = buscarCep(cepDigitos);
-  /**
-   * 🔴 UX-73 NÃO mesclado (03/08) — a tentativa de tornar a coorte
-   * OBRIGATÓRIA contraria a UX-48 já travada ("dado puro, pulável sem
-   * custo"). Ao ligar `layout="painel"` em produção (03/08), a coorte segue
-   * OPCIONAL — a regra que já está travada — até o Pedro decidir contra a
-   * UX-48 de propósito, não como efeito colateral de outra mesclagem.
-   */
   const completo =
     nomeOk &&
     cpfCheio &&
@@ -518,25 +498,13 @@ function ContaPainel({
           )}
         </div>
 
-        {/* 🔓 UX-73 — coorte OBRIGATÓRIA, inclusive no cadastro social.
-            ⚠️ Contraria o UX-48 ("dado puro, pulável sem custo"). Ver a nota
-            no cálculo de `completo`, acima. */}
-        <div className="mt-6">
-          <p className="text-caption font-semibold text-text-primary">
-            É a primeira empresa que você abre?
-          </p>
-          <p className="text-micro text-text-tertiary mt-0.5">
-            Ajuda a gente a te acompanhar do jeito certo.
-          </p>
-          <div className="mt-2 flex gap-2">
-            <BotaoCoorte on={d.coorte === "primeira"} onClick={() => set("coorte", "primeira")}>
-              É a primeira
-            </BotaoCoorte>
-            <BotaoCoorte on={d.coorte === "ja-abri"} onClick={() => set("coorte", "ja-abri")}>
-              Já abri antes
-            </BotaoCoorte>
-          </div>
-        </div>
+        {/* 🔴 24/08 (reunião Rua Satélite 35) — a pergunta "é a primeira
+            empresa que você abre?" SAIU daqui. Realocada pra `FaixaView`
+            (E5F, `gate-telas.tsx`), abaixo da faixa de faturamento — dado
+            puro de log/marketing, não precisa estar junto do cadastro
+            (Tiagão/Natanael Dev: "isso aí não interfere em nada no
+            processo dele"). A antiga nota UX-73 (coorte obrigatória, contra
+            UX-48) fica sem efeito: a pergunta nem mora mais aqui. */}
 
         {/* Social só faz sentido antes de conectar. */}
         {!social && (
@@ -622,33 +590,9 @@ function IconeLocal() {
   return <svg {...ic20()}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z" /><circle cx="12" cy="10" r="3" /></svg>;
 }
 
-/**
- * Local, não DS: parece o `OpcoesLinha` do dossiê, mas aqui **desmarcar é
- * válido** (a pergunta é opcional) e nenhuma validação depende da resposta.
- */
-function BotaoCoorte({
-  on,
-  onClick,
-  children,
-}: {
-  on: boolean;
-  onClick: () => void;
-  children: ReactNode;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      aria-pressed={on}
-      className={`min-h-12 flex-1 rounded-md border px-3 text-body transition-colors ${
-        on
-          ? "border-action-primary bg-action-primary font-semibold text-text-on-brand"
-          : "border-border-hairline bg-surface-card text-text-secondary hover:bg-surface-alt"
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
+// 🔴 24/08 (reunião Rua Satélite 35) — `BotaoCoorte` removido daqui (ficou
+// sem uso: a pergunta de coorte saiu do E6 e foi pra `FaixaView`, que tem o
+// próprio botão inline no padrão de `gate-telas.tsx`).
 
 /* ═══════════════════ N7 · A CONTA DA ABERTURA ═══════════════════════════ */
 
@@ -657,6 +601,7 @@ export function PlanoView({
   onVoltar,
   layout = "classico",
   semTaxaJunta = false,
+  enderecoFiscal = false,
 }: {
   onSeguir?: () => void;
   onVoltar?: () => void;
@@ -669,16 +614,31 @@ export function PlanoView({
    * alguém absorvia; aqui a taxa simplesmente NÃO EXISTE pro MEI.
    */
   semTaxaJunta?: boolean;
+  /**
+   * 🆕 26/08 (reunião Rua Satélite 36, item 2) — a pessoa já escolheu lá no
+   * `/gate` (antes do cadastro) usar o endereço fiscal da Legalizai. Antes
+   * esse custo só aparecia no C4 (dossiê), pós-pagamento — era a "pendência
+   * real de spec" documentada em `plano/page.tsx`. Agora soma aqui, visível.
+   */
+  enderecoFiscal?: boolean;
 }) {
   // 🆕 04/08 — Plano MEI tem preço PRÓPRIO (R$49,90, não o plano ME com
   // desconto): `semTaxaJunta` só era usado pra tirar a taxa da Junta, mas
   // esquecia de trocar a mensalidade também. Reusa o mesmo flag como sinal
   // de MEI (já é assim em todo o resto do wizard).
-  const mensalidade = semTaxaJunta ? CUSTOS.MENSALIDADE_MEI : CUSTOS.MENSALIDADE;
+  const mensalidadeBase = semTaxaJunta ? CUSTOS.MENSALIDADE_MEI : CUSTOS.MENSALIDADE;
+  const mensalidade = mensalidadeBase + (enderecoFiscal ? CUSTOS.ENDERECO_FISCAL : 0);
   const hoje = semTaxaJunta ? mensalidade : CUSTOS.DAE_JUCEMG + mensalidade;
 
   if (layout === "oferta") {
-    return <PlanoOferta onSeguir={onSeguir} onVoltar={onVoltar} semTaxaJunta={semTaxaJunta} />;
+    return (
+      <PlanoOferta
+        onSeguir={onSeguir}
+        onVoltar={onVoltar}
+        semTaxaJunta={semTaxaJunta}
+        enderecoFiscal={enderecoFiscal}
+      />
+    );
   }
 
   return (
@@ -724,6 +684,14 @@ export function PlanoView({
                 ? `a 1ª mensalidade já é o seu 1º mês · fidelidade de ${CUSTOS.FIDELIDADE_MEI_MESES} meses`
                 : "a 1ª mensalidade já é o seu 1º mês"}
             </p>
+            {/* 🆕 26/08 (item 2) — some no total porque você escolheu o
+                endereço fiscal lá atrás, no gate. */}
+            {enderecoFiscal && (
+              <p className="text-micro text-text-tertiary mt-1">
+                Inclui {brl(CUSTOS.ENDERECO_FISCAL, true)}/mês de endereço
+                fiscal, porque você optou por usar o nosso.
+              </p>
+            )}
           </Card>
 
           {/* ═══ A TAXA — honesta, sem holofote ═══ */}
@@ -868,13 +836,17 @@ function PlanoOferta({
   onSeguir,
   onVoltar,
   semTaxaJunta = false,
+  enderecoFiscal = false,
 }: {
   onSeguir?: () => void;
   onVoltar?: () => void;
   semTaxaJunta?: boolean;
+  /** 🆕 26/08 (item 2) — ver `PlanoView` acima, mesma origem/mecânica. */
+  enderecoFiscal?: boolean;
 }) {
   // 🆕 04/08 — mesma correção do PlanoView: Plano MEI tem mensalidade própria.
-  const mensalidade = semTaxaJunta ? CUSTOS.MENSALIDADE_MEI : CUSTOS.MENSALIDADE;
+  const mensalidadeBase = semTaxaJunta ? CUSTOS.MENSALIDADE_MEI : CUSTOS.MENSALIDADE;
+  const mensalidade = mensalidadeBase + (enderecoFiscal ? CUSTOS.ENDERECO_FISCAL : 0);
   const hoje = semTaxaJunta ? mensalidade : CUSTOS.DAE_JUCEMG + mensalidade;
 
   return (
@@ -945,6 +917,14 @@ function PlanoOferta({
                 <p className="text-micro text-text-on-dark/60 mt-1">
                   O valor acompanha o seu faturamento. Se a empresa crescer muito,
                   a gente conversa antes.
+                </p>
+              )}
+              {/* 🆕 26/08 (item 2) — mesma explicação da versão clássica,
+                  cor invertida (card escuro). */}
+              {enderecoFiscal && (
+                <p className="text-micro text-text-on-dark/60 mt-1">
+                  Inclui {brl(CUSTOS.ENDERECO_FISCAL, true)}/mês de endereço
+                  fiscal, porque você optou por usar o nosso.
                 </p>
               )}
             </div>

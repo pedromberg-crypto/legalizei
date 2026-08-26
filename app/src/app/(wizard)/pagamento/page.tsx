@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PagamentoView, type Metodo } from "@/components/wizard-dinheiro";
 import { ehMei, comRegime } from "@/lib/regime";
+import { ehEnderecoFiscal, comEndereco } from "@/lib/endereco";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -64,6 +65,7 @@ export default function PagamentoPage() {
    */
   const fluxo = searchParams.get("fluxo") === "migrar" ? "migrar" : "abertura";
   const mei = ehMei(searchParams);
+  const enderecoFiscal = ehEnderecoFiscal(searchParams);
   const [cpf, setCpf] = useState("");
   const [metodo, setMetodo] = useState<Metodo>("cartao");
 
@@ -86,7 +88,10 @@ export default function PagamentoPage() {
       const qs = searchParams.toString();
       return qs ? `/migrar/contador?${qs}` : "/migrar/contador";
     }
-    return comRegime(metodo === "boleto" ? "/aguardando" : "/dossie/socio", mei);
+    return comEndereco(
+      comRegime(metodo === "boleto" ? "/aguardando" : "/dossie/socio", mei),
+      enderecoFiscal,
+    );
   }
 
   return (

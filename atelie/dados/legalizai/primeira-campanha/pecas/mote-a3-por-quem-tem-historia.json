@@ -3,7 +3,7 @@
   "titulo": "A3 — por quem tem história (os dois públicos nomeados)",
   "campanha": "primeira-campanha",
   "mote": "A",
-  "pilar": 5,
+  "pilar": 10,
   "personaAlvo": "geral",
   "dialIronia": "baixo",
   "dialIroniaDetalhe": "documento original diz 'baixo/médio' — enum reduziu pro mais próximo, ver texto",

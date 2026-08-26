@@ -31,10 +31,14 @@ import {
   HomeAtivacaoView,
   RetomarView,
   AguardandoView,
+  CertificadoGateView,
 } from "@/components/wizard-cauda";
 import { PainelView } from "@/components/painel";
 import {
   MigrarCnpjView,
+  MigrarDiagnosticoView,
+  MigrarDadosBaseView,
+  MigrarGovView,
   MigrarPlanoView,
   MigrarContratoView,
   MigrarContadorAntigoView,
@@ -55,6 +59,8 @@ import {
   DADOS_SAIDA_FORA_BH,
   DADOS_SAIDA_EXTERIOR,
   DADOS_SAIDA_SOCIOS,
+  DADOS_SAIDA_SOCIO_PJ,
+  DADOS_SAIDA_CNPJ_INAPTO,
 } from "@/lib/dados-saida";
 import { GRUPOS } from "@/lib/telas-flow";
 
@@ -214,6 +220,7 @@ type Etapa =
   // sócios na TriagemView), sem pill de atalho — mesmo padrão de veredito.
   | "saida-exterior"
   | "saida-socios"
+  | "saida-socio-pj"
   | "conta"
   | "conta-codigo"
   | "plano"
@@ -244,15 +251,21 @@ type Etapa =
   // Ramo decimal, não continuação: sai do fork E4 e reencontra o tronco só no
   // pagamento (E9). Por isso tem sequência própria, não entra em ETAPAS_CAUDA.
   | "m-cnpj"
+  | "m-diagnostico"
+  | "m-cnpj-inapto"
   | "m-plano"
   | "m-contrato"
   | "m-pagamento"
   | "m-contador"
+  | "m-dados"
+  | "m-socios"
+  | "m-gov"
   | "m-transferencia"
   | "m-travado"
   | "m-ativa"
   | "retomar"
   | "aguardando"
+  | "certificado"
   | "fim";
 
 /**
@@ -302,6 +315,10 @@ const ETAPAS_CAUDA = [
   "termo",
   "painel",
   "painel-recusa",
+  // 🆕 26/08 (reunião Rua Satélite 36, item 7) — A3.2, entre painel e
+  // assinatura. Certificado agora é validado ANTES de assinar (a procuração
+  // que sai junto da assinatura exige o certificado já pronto).
+  "certificado",
   "assinatura",
   "ativacao",
 ] as const satisfies readonly Etapa[];
@@ -341,13 +358,32 @@ function naCauda(e: Etapa): e is EtapaCauda {
  * não bifurca esta esteira por regime (`MigrarPlanoView`/`MigrarContratoView`
  * aqui embaixo também não recebem `mei`), segue o mesmo nível de
  * simplificação: mostra pra todo mundo que entra pelo Migrar.
+ * 🆕 24/08 (reunião Leonan 19/08, achado tardio — Pedro re-lendo a reunião)
+ * — TRÊS etapas novas entre `m-contador` e `m-transferencia`: `m-dados`
+ * (E9.2b, CPF/RG/estado civil que o cartão CNPJ não traz), `m-socios` (E9.2c,
+ * MESMA tela do C3 reusada com `contexto="migrar"`) e `m-gov` (E9.2d, GOV.BR
+ * + procuração, reusa `CodigoGovView` do A4 com `soProcuracao`). A reunião
+ * foi explícita sobre a ORDEM: "durante essa migração, eu preciso que [...]
+ * ele preencha TODOS os dados base de uma constituição [...] a gente vem
+ * para a parte de estamos encerrando lá, transferindo a responsabilidade" —
+ * dados base (incl. sociedade) e procuração vêm DEPOIS do contador atual e
+ * ANTES do pipeline de transferência, não antes do pagamento (1ª tentativa
+ * desta rodada colocou errado, logo depois de `m-cnpj` — corrigido).
  */
 const ETAPAS_MIGRAR = [
   "m-cnpj",
+  // 🆕 26/08 — E4.3 (`MigrarDiagnosticoView`, "tem certificado?") faltava na
+  // sequência da demo desde 06/08 (a tela mudou de escopo — de "Fator R
+  // cortado" pra "tem certificado?" — mas ninguém trouxe de volta pra cá).
+  // GRUPOS/telas-flow.ts já documentava; a demo é que ficou defasada.
+  "m-diagnostico",
   "m-plano",
   "m-contrato",
   "m-pagamento",
   "m-contador",
+  "m-dados",
+  "m-socios",
+  "m-gov",
   "m-transferencia",
   "m-ativa",
 ] as const satisfies readonly Etapa[];
@@ -357,6 +393,14 @@ type EtapaMigrar = (typeof ETAPAS_MIGRAR)[number];
 function noMigrar(e: Etapa): e is EtapaMigrar | "m-travado" {
   return (ETAPAS_MIGRAR as readonly string[]).includes(e) || e === "m-travado";
 }
+/**
+ * 🆕 26/08 — "m-cnpj-inapto" é saída terminal do M1 (`onSaidaInapto`), FORA
+ * de `noMigrar` de propósito: ela precisa do shell próprio de saída (header
+ * "Sobre a situação do CNPJ" + `SaidaView`), não o shell genérico de
+ * travessia que `noMigrar` (via `naTravessia`) dá pras telas sequenciais do
+ * Migrar. Mesmo padrão de "saida-exterior"/"saida-socios"/"saida-socio-pj",
+ * que também ficam fora dos guards de sequência.
+ */
 
 function depoisDoMigrar(e: EtapaMigrar): Etapa {
   const i = ETAPAS_MIGRAR.indexOf(e);
@@ -395,6 +439,7 @@ type Snapshot = {
   enviadoS: boolean;
   socios: number | null;
   exterior: boolean | null;
+  socioTipo: "cpf" | "cnpj" | null;
   faixaEsc: string | null;
   modoExato: boolean;
   exato: string;
@@ -422,6 +467,7 @@ type Momento =
   | "faixa"
   | "saida-exterior"
   | "saida-socios"
+  | "saida-socio-pj"
   | "conta"
   | "conta-codigo"
   | "plano"
@@ -444,15 +490,21 @@ type Momento =
   // Ramo decimal, não continuação: sai do fork E4 e reencontra o tronco só no
   // pagamento (E9). Por isso tem sequência própria, não entra em ETAPAS_CAUDA.
   | "m-cnpj"
+  | "m-diagnostico"
+  | "m-cnpj-inapto"
   | "m-plano"
   | "m-contrato"
   | "m-pagamento"
   | "m-contador"
+  | "m-dados"
+  | "m-socios"
+  | "m-gov"
   | "m-transferencia"
   | "m-travado"
   | "m-ativa"
   | "retomar"
   | "aguardando"
+  | "certificado"
   | "fim";
 
 /**
@@ -532,6 +584,11 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
       oque: "A comparação com a contabilidade tradicional sobrevive como UMA linha no card verde, sem número: 'costuma custar em torno de um salário mínimo de honorário'. O card comparativo com o R$ 1.621 riscado saiu junto na lapidação. Sem número exposto, some também o risco de fingir precisão estatística numa régua que é referência de mercado.",
       status: "✅ resolvido pela UX-75 (não depende mais de valor)",
     },
+    {
+      id: "✅ RESOLVIDO 26/08",
+      oque: "Era a 'pendência real de spec' documentada há semanas: o add-on de endereço fiscal não aparecia aqui, e a 'conta total' desta tela não era total. Reunião Rua Satélite 36 (item 2) resolveu na raiz: a escolha 'endereço próprio × fiscal Legalizai' saiu do C4 (pós-pagamento) e subiu pro E5F (`FaixaView`, antes do cadastro) — quando escolhido, o valor já soma na mensalidade mostrada aqui, com 1 linha de explicação ('Inclui R$60/mês de endereço fiscal, porque você optou por usar o nosso').",
+      status: "✅ aplicado em PlanoView + PlanoOferta (prop `enderecoFiscal`, `wizard-dinheiro.tsx`)",
+    },
   ],
   contrato: [
     {
@@ -608,6 +665,11 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
       status: "✅ corrigido — 🟡 preço final segue com o Mauro",
     },
     {
+      id: "🔄 26/08 — escolha saiu daqui",
+      oque: "A pergunta 'próprio × fiscal Legalizai' e o aviso de cobrança recorrente SAÍRAM desta tela (reunião Rua Satélite 36, item 2) — moram no E5F desde antes do cadastro, e o valor já vem confirmado do E7. Esta tela agora só CONFIRMA a escolha (card read-only, mesma doutrina do C3 pra sócios) e coleta os detalhes de endereço (CEP/IPTU/tipo) quando for próprio.",
+      status: "✅ aplicado — prop `enderecoProprio` em `EmpresaView` (`wizard-dossie.tsx`)",
+    },
+    {
       id: "✍️ título",
       oque: "'Onde a empresa fica?' numa tela que também coleta capital social, que não é lugar nenhum. Virou 'Os dados da empresa'.",
       status: "✅ aplicado",
@@ -658,6 +720,11 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
       oque: "'Conferir o nome' + 'Montar o contrato social' — os 2 passos ANTES da análise — eram trabalho NOSSO nos bastidores, não algo que o cliente reconhece ter feito. Viraram 1 status só: 'Documentação completa preenchida', já verde ao chegar no painel. Lista caiu de 4 pra 3.",
       status: "✅ aplicado — índices de `concluidas`/`emAndamento` ajustados em /painel, /painel/recusa e na demo (2/2 → 1/1)",
     },
+    {
+      id: "🔄 26/08 (3ª passada) — item 6",
+      oque: "O pagamento da DAE (taxa da Junta), que desde 28/07 era timing de BACKEND (paga no E9 junto da mensalidade, a gente segura e repassa depois), voltou a ser etapa VISÍVEL: reunião Rua Satélite 36 decidiu que o cliente só paga DEPOIS que a viabilidade sai, com um CTA coral inline aqui no painel ('Pagar a guia agora' — 'pagardar', literal da reunião). 'Agora é só assinar' passa a depender dessa etapa nova, não só do deferimento. Lista voltou de 3 pra 4.",
+      status: "✅ aplicado — `Etapa.acaoCliente` + `onPagarDae` (`components/painel.tsx`)",
+    },
   ],
   assinatura: [
     {
@@ -665,12 +732,22 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
       oque: "Nenhum dos 3 CTAs (convidar sócio · assinar direto · assinar no GOV.BR) navegava. ⚠️ Sem estado real de consenso multi-sócio (mock pra farol): qualquer CTA habilitado avança — simular a espera assíncrona de verdade é trabalho de painel/CRM, não desta apresentação.",
       status: "✅ corrigido — segue pro A5 (home de ativação)",
     },
+    {
+      id: "🔄 26/08 — item 7",
+      oque: "Reunião Rua Satélite 36: o certificado digital agora é validado ANTES desta assinatura (tela nova, A3.2 `CertificadoGateView`, `/certificado`), não depois — a procuração que sai junto da assinatura EXIGE o certificado já validado, e a ordem antiga (certificado só na home de ativação, depois de já ter assinado) era uma inconsistência real, não só preferência de ordenação. Não está mesclado nesta timeline de carrossel (fica como rota própria, fora do passo-a-passo guiado) — só a documentação e o componente real existem por enquanto.",
+      status: "🟡 componente/rota real existem (`/certificado`); NÃO entrou no carrossel guiado desta apresentação",
+    },
   ],
   ativacao: [
     {
       id: "🔓 SWAP",
       oque: "O que vem depois da assinatura NÃO é a antiga 'empresa ativa' (3 primeiros passos genéricos, removida 30/07): é esta home de dia-1 (A5), que trata o certificado como item 'agora' de uma trilha (1 de 3), não como coisa já liberada. ⚠️ Autocrítica: a 1ª tentativa desta correção trouxe a tela ERRADA (`/certificado`, um gate isolado que também existe, também chamado de 'A5' num doc antigo) — o Pedro mandou o print da tela real pra corrigir.",
       status: "✅ corrigido — HomeAtivacaoView substitui o que era CertificadoView na sequência",
+    },
+    {
+      id: "🔄 26/08 — item 7 (segue do achado acima)",
+      oque: "Desde que o certificado passou a ser validado ANTES da assinatura (A3.2, ver scene 'assinatura'), o item 'certificado' desta trilha deixou de ser 'agora' e virou 'feito' — quem vira 'agora' é 'Conferir os dados da empresa'. `/mais/certificado` (Portal) continua existindo, só que agora é pra RENOVAR/trocar, não pra validar a 1ª vez.",
+      status: "✅ aplicado em `PASSOS_ATIVACAO` (`wizard-cauda.tsx`)",
     },
     {
       id: "✍️ sem confete",
@@ -778,6 +855,7 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   faixa: "/gate?etapa=faixa",
   "saida-exterior": "/saida/exterior",
   "saida-socios": "/saida/socios",
+  "saida-socio-pj": "/saida/socio-pj",
   conta: "/conta",
   "conta-codigo": "/conta",
   plano: "/plano",
@@ -797,15 +875,21 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   assinatura: "/assinatura",
   ativacao: "/home-dia1",
   "m-cnpj": "/migrar/cnpj",
+  "m-diagnostico": "/migrar/diagnostico",
+  "m-cnpj-inapto": "/saida/cnpj-inapto",
   "m-plano": "/migrar/plano",
   "m-contrato": "/migrar/contrato",
   "m-pagamento": "/pagamento?fluxo=migrar",
   "m-contador": "/migrar/contador",
+  "m-dados": "/migrar/dados",
+  "m-socios": "/migrar/socios",
+  "m-gov": "/migrar/gov",
   "m-transferencia": "/migrar/transferencia",
   "m-travado": "/migrar/transferencia?estado=travado",
   "m-ativa": "/migrar/ativa",
   retomar: "/retomar",
   aguardando: "/aguardando",
+  certificado: "/certificado",
 };
 
 const SUFIXO_MOMENTO: Partial<Record<Momento, string>> = {
@@ -920,8 +1004,8 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   },
   triagem: {
     dono: "usuario",
-    faz: "Duas perguntas rápidas: quantos sócios, e se alguém mora fora do Brasil.",
-    interfere: "Mais de 2 sócios ou sócio no exterior barra o MLP/Simples — descobrir isso aqui evita cobrar de quem não pode abrir.",
+    faz: "Perguntas rápidas: quantos sócios, se o sócio é CPF ou CNPJ (🆕 24/08), e se alguém mora fora do Brasil.",
+    interfere: "Mais de 4 sócios, sócio pessoa jurídica ou sócio no exterior barra o MLP/Simples — descobrir isso aqui evita cobrar de quem não pode abrir.",
     porque: "Fail-fast (UX-21): com a cobrança logo depois, o que mata elegibilidade tem que ser perguntado ANTES do dinheiro.",
   },
   faixa: {
@@ -938,9 +1022,15 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   },
   "saida-socios": {
     dono: null,
-    faz: "Explica que o limite de 2 sócios é do PRODUTO, não da lei — a sociedade é legal, só o app que ainda não abre com 3+.",
-    interfere: "Encerra o funil do app. 'Ainda' porque o limite pode cair (decisão de 15/07, não é regra externa).",
+    faz: "Explica que o limite de 4 sócios é do PRODUTO, não da lei — a sociedade é legal, só o app que ainda não abre com 5+.",
+    interfere: "Encerra o funil do app. 'Ainda' porque o limite pode cair (subiu de 2 pra 4 em 24/08, reunião Leonan — não é regra externa).",
     porque: "Dizer que o limite é nosso custa orgulho e compra confiança — mesma escolha da doutrina anti-guru. Roteia pro escritório, que já faz esse tipo de abertura fora do app.",
+  },
+  "saida-socio-pj": {
+    dono: null,
+    faz: "Explica que sócio pessoa jurídica tira a empresa do Simples Nacional no ato do contrato social — regra fiscal, não limite nosso.",
+    interfere: "Encerra o funil do app (só atende Simples hoje). Diferente do limite de sócios: aqui é a LEI que empurra pro Presumido/Real, não uma escolha nossa.",
+    porque: "🆕 24/08 (reunião Leonan 19/08 + pedido do Pedro) — bloqueia na TRIAGEM, antes do dinheiro, em vez de deixar a pessoa avançar e travar só lá no C3 do dossiê. Roteia pro escritório, que atende Presumido fora do app.",
   },
   conta: {
     dono: "usuario",
@@ -1093,6 +1183,16 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     interfere: "A constituição PARA até o cliente sugerir 3 novos nomes — é a única pausa da Aprovação que volta a depender dele, não do órgão.",
     porque: "Vermelho legítimo (um órgão externo parou a fila mesmo) + 'precisa de você' + a ação, tudo DENTRO do pipeline — nunca um limbo mudo (UX-40). Produção tenta as 3 opções sozinha antes de chegar aqui; a demo pula direto pro pior caso.",
   },
+  // 🆕 26/08 (reunião Rua Satélite 36, item 7) — A3.2, entre painel-recusa e
+  // assinatura. Certificado passou a ser validado ANTES de assinar.
+  certificado: {
+    dono: "usuario",
+    faz: "Pergunta se a pessoa já tem certificado digital: quem tem, sobe arquivo (.pfx/.p12) + senha; quem não tem, agenda entrevista com a certificadora parceira.",
+    interfere:
+      "A assinatura que vem em seguida inclui a procuração eletrônica, e a procuração EXIGE certificado já validado. Sem essa tela antes, a assinatura ficaria pela metade.",
+    porque:
+      "Existia um `/certificado` antigo (N24), removido como órfão em 30/07 — nada navegava até lá, porque vinha DEPOIS da assinatura (ordem que a própria reunião apontou como inconsistente). Este é novo, na posição certa: antes, não depois.",
+  },
   assinatura: {
     dono: "usuario",
     faz: "Pede a assinatura via GOV.BR (todos os sócios, quando há mais de um) e explica a procuração eletrônica que acompanha.",
@@ -1103,9 +1203,9 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   },
   ativacao: {
     dono: "usuario",
-    faz: "A home do dia-1: celebra o CNPJ nascido e vira uma trilha de ativação — 1 de 3, com o certificado como passo 'agora' (girando).",
+    faz: "A home do dia-1: celebra o CNPJ nascido e vira uma trilha de ativação. 🔄 26/08: certificado já vem 'feito' (validado antes de assinar, na A3.2) — quem vira o passo 'agora' é conferir os dados da empresa.",
     interfere:
-      "O certificado é pré-requisito pra emitir nota e acessar a Receita — sem ele, o app não abre por completo. É por isso que a home NÃO é a de regime: empresa recém-nascida ainda não tem o que vigiar (faturamento zero).",
+      "Antes o certificado era pré-requisito verificado AQUI; agora essa verificação já aconteceu na A3.2, antes da assinatura. Empresa recém-nascida ainda não tem o que vigiar de imposto (faturamento zero) — por isso a home não é a de regime.",
     porque:
       "🔓 SWAP validado (29/07): é ESTA tela que vem depois da assinatura, não a antiga 'empresa ativa' (3 primeiros passos, removida 30/07) nem o gate isolado de certificado. Sem confete no hero de nascimento, por pedido explícito — mesmo padrão do dia (a celebração saiu do CTA do veredito 🟢 e a materialização saiu da tela antiga).",
   },
@@ -1122,6 +1222,23 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
       "Não interfere na constituição — a empresa já existe. O que se decide aqui é se a gente ATENDE essa empresa: atividade de serviço, no Simples, sem conselho de classe.",
     porque:
       "É a maior diferença em relação ao caminho abrir: aqui NÃO existe entrevista de atividade. O CNAE já está registrado, então a gente lê em vez de perguntar. Todo o E5 (pills, IA, desambiguação) desaparece — e com ele o risco de a IA errar a interpretação.",
+  },
+  // 🆕 26/08 — E4.3 estava faltando na sequência da demo (ver ETAPAS_MIGRAR).
+  "m-diagnostico": {
+    dono: "usuario",
+    faz: "Pergunta se a pessoa já tem certificado digital — decide se a gente reaproveita o que ela tem ou providencia um novo.",
+    interfere:
+      "Define o resto do pipeline pós-pagamento: com certificado, a procuração é só atualizada; sem, a gente emite um novo em paralelo à transferência (uma coisa não trava a outra).",
+    porque:
+      "🔄 06/08: a tela mudou de escopo (era sobre Fator R, cortado por falta de API pré-pagamento; virou 'tem certificado?') e passou a valer pros 2 regimes — mas ninguém trouxe a mudança de volta pra sequência da demo até agora.",
+  },
+  "m-cnpj-inapto": {
+    dono: "nossa",
+    faz: "Saída do M1 quando a Receita mostra a empresa com situação diferente de ativa (suspensa, inapta, baixada).",
+    interfere:
+      "A migração para inteiramente: sem situação ativa não dá pra transferir responsabilidade nem declarar nada em nome da empresa. Regularização vem antes de qualquer coisa.",
+    porque:
+      "O componente (`onSaidaInapto`) existe desde 04/08, mas a demo nunca ligou o callback — CNPJ inapto simplesmente não tinha pra onde ir aqui até esta correção.",
   },
   "m-plano": {
     dono: "usuario",
@@ -1154,6 +1271,30 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
       "É o dado que abre a transferência: sem saber quem é o contador atual, a gente não consegue se indicar como novo responsável no CRC-MG.",
     porque:
       "🆕 06/08 (reunião Rua Satélite 19, Léo) — não existe API pública que devolva 'quem é o contador de um CNPJ'. O caminho real é o cartão CNPJ, que na maioria das vezes traz o e-mail/telefone do escritório (é pra lá que a Receita manda intimação). Não vem sempre — por isso não trava o Continuar: quem não sabe algum dado segue mesmo assim, a gente confirma o resto com o conselho.",
+  },
+  "m-dados": {
+    dono: "usuario",
+    faz: "Pede CPF, RG e estado civil — os únicos dados de pessoa física que o cartão CNPJ não traz.",
+    interfere:
+      "Sem isso, a procuração não tem como sair: são dados de pessoa física, não de empresa, e o e-CAC só libera com o GOV.BR do próprio cliente.",
+    porque:
+      "🆕 24/08 (reunião Leonan 19/08, achado tardio) — 'fica até disponível, mas fica lá dentro do e-CAC' (Leonan). Entra DEPOIS do contador atual e ANTES da transferência — a reunião foi explícita sobre essa ordem, corrigido de uma 1ª tentativa que colocou logo depois do CNPJ.",
+  },
+  "m-socios": {
+    dono: "usuario",
+    faz: "MESMA tela do C3 (dossiê de constituição), reusada aqui: nome + % de cada sócio extra, se a empresa tiver mais de um.",
+    interfere:
+      "Sem os dados de TODOS os sócios, a procuração e a assinatura ficam incompletas — quem assina precisa estar identificado.",
+    porque:
+      "🆕 24/08 (reunião Leonan 19/08) — Leonan foi explícito: 'ele terminou de preencher a sociedade' é parte de 'preencher TODOS os dados base de uma constituição'. Essa tela simplesmente não existia na migração até esta rodada, apesar da reunião ter travado que precisa.",
+  },
+  "m-gov": {
+    dono: "usuario",
+    faz: "Código de 6 dígitos do GOV.BR (janela de 10min) — o mesmo mecanismo do A4 (`CodigoGovView`), mas só pra procuração: não tem protocolo de registro pra assinar, a empresa já existe.",
+    interfere:
+      "É a procuração que destrava a gente agir em nome do cliente — sem ela, a transferência (m-transferencia) não pode começar.",
+    porque:
+      "🆕 24/08 (reunião Leonan 19/08) — Léo foi direto: 'mesma coisa, procuração, GOV, acesso ao GOV, mesma coisa do outro [caminho abrir]'. Reusa o componente do A4 em vez de duplicar a lógica do código/janela/tentativas.",
   },
   "m-transferencia": {
     dono: "nossa",
@@ -1233,12 +1374,23 @@ export default function ApresentacaoPage() {
   const [cidadeS, setCidadeS] = useState("");
   const [enviadoS, setEnviadoS] = useState(false);
 
+  // 🆕 26/08 — captura da saída "CNPJ inapto" (m-cnpj-inapto), mesmo padrão
+  // do fora-bh acima (nome+contato próprios, sem `extra`).
+  const [nomeCnpjInapto, setNomeCnpjInapto] = useState("");
+  const [contatoCnpjInapto, setContatoCnpjInapto] = useState("");
+  const [enviadoCnpjInapto, setEnviadoCnpjInapto] = useState(false);
+
   const [socios, setSocios] = useState<number | null>(null);
   const [exterior, setExterior] = useState<boolean | null>(null);
+  // 🆕 24/08 (reunião Leonan 19/08 + pedido do Pedro) — CPF/CNPJ do sócio.
+  const [socioTipo, setSocioTipo] = useState<"cpf" | "cnpj" | null>(null);
 
   const [faixaEsc, setFaixaEsc] = useState<string | null>(null);
   const [modoExato, setModoExato] = useState(false);
   const [exato, setExato] = useState("");
+  // 🆕 26/08 (reunião Rua Satélite 36, item 2) — escolha de endereço, realocada
+  // do C4 (dossiê) pro E5F (faixa), antes até do cadastro.
+  const [enderecoProprioDemo, setEnderecoProprioDemo] = useState<boolean | null>(null);
 
   // Qual cenário está armado no campo (só pra o painel antecipar o desfecho
   // antes de validar). null = campo livre / digitado na mão.
@@ -1303,6 +1455,7 @@ export default function ApresentacaoPage() {
     enviadoS,
     socios,
     exterior,
+    socioTipo,
     faixaEsc,
     modoExato,
     exato,
@@ -1325,6 +1478,7 @@ export default function ApresentacaoPage() {
     setEnviadoS(s.enviadoS);
     setSocios(s.socios);
     setExterior(s.exterior);
+    setSocioTipo(s.socioTipo);
     setFaixaEsc(s.faixaEsc);
     setModoExato(s.modoExato);
     setExato(s.exato);
@@ -1372,6 +1526,7 @@ export default function ApresentacaoPage() {
     setEnviadoS(false);
     setSocios(null);
     setExterior(null);
+    setSocioTipo(null);
     setFaixaEsc(null);
     setModoExato(false);
     setExato("");
@@ -1553,6 +1708,7 @@ export default function ApresentacaoPage() {
     { etapa: "revisar", label: "A1 · Revisar" },
     { etapa: "termo", label: "A2 · Termo" },
     { etapa: "painel", label: "A3 · Painel" },
+    { etapa: "certificado", label: "🆕 A3.2 · Certificado" },
     { etapa: "assinatura", label: "A4 · Assinatura" },
     { etapa: "ativacao", label: "🔓 A5 · Ativação" },
     { etapa: "fim", label: "Fim" },
@@ -1576,10 +1732,14 @@ export default function ApresentacaoPage() {
    */
   const PILLS_MIGRAR: { etapa: Etapa; label: string }[] = [
     { etapa: "m-cnpj", label: "E4.2 · Seu CNPJ" },
+    { etapa: "m-diagnostico", label: "🆕 E4.3 · Tem certificado?" },
     { etapa: "m-plano", label: "E4.4 · A conta" },
     { etapa: "m-contrato", label: "E4.5 · Contrato" },
     { etapa: "m-pagamento", label: "E9 · Pagamento" },
     { etapa: "m-contador", label: "🆕 E9.2 · Seu contador" },
+    { etapa: "m-dados", label: "🆕 E9.2b · Seus dados" },
+    { etapa: "m-socios", label: "🆕 E9.2c · Sócios" },
+    { etapa: "m-gov", label: "🆕 E9.2d · GOV + procuração" },
     { etapa: "m-transferencia", label: "E9.3 · Transferência" },
     { etapa: "m-travado", label: "🔴 E9.3 · TTRT travado" },
     { etapa: "m-ativa", label: "E9.4 · Migrada" },
@@ -1610,6 +1770,10 @@ export default function ApresentacaoPage() {
                     ? "saida-exterior"
                     : etapa === "saida-socios"
                       ? "saida-socios"
+                      : etapa === "saida-socio-pj"
+                        ? "saida-socio-pj"
+                        : etapa === "m-cnpj-inapto"
+                          ? "m-cnpj-inapto"
                   : etapa === "conta"
                     ? "conta"
                     : etapa === "conta-codigo"
@@ -1671,7 +1835,8 @@ export default function ApresentacaoPage() {
   const mostraCenarios = etapa === "perguntando";
   const naEntrada = etapa === "fork" || etapa === "cidade";
   const naSaidaCidade = etapa === "fora-bh";
-  const naSaidaTriagem = etapa === "saida-exterior" || etapa === "saida-socios";
+  const naSaidaTriagem =
+    etapa === "saida-exterior" || etapa === "saida-socios" || etapa === "saida-socio-pj";
   const naTravessia =
     etapa === "conta" ||
     etapa === "conta-codigo" ||
@@ -2000,6 +2165,14 @@ export default function ApresentacaoPage() {
                             onVoltar={() =>
                               voltar(() => setEtapa(antesDoDossie("cnae-secundarios")))
                             }
+                            // 🆕 24/08 — busca livre pode escolher secundária que
+                            // muda enquadramento; na rota real isso navega pra
+                            // `/veredito/nao-atende`. Gap conhecido, não corrigido
+                            // nesta rodada: a demo não tem um estado equivalente
+                            // alcançável a partir do meio do dossiê sem reconstruir
+                            // o `momento` da etapa "veredito" — no-op documentado
+                            // em vez de mapear pra uma tela com copy errada.
+                            onFalarAtendente={() => {}}
                           />
                         )}
                         {etapa === "natureza" && (
@@ -2039,9 +2212,23 @@ export default function ApresentacaoPage() {
                           // não tem seta própria — é status assíncrono, não
                           // passo de wizard. A seta EXTERNA do aparelho segue
                           // funcionando (lê o histórico, não este prop).
-                          // ⚠️ 29/07: índices 1/1, não mais 2/2 — `ETAPAS` caiu
-                          // de 4 pra 3 (ver `components/painel.tsx`).
-                          <PainelView concluidas={1} emAndamento={1} socios={socios ?? 1} />
+                          // 🔄 26/08 (item 6): índices 2/2 — `ETAPAS` voltou a
+                          // ter 4 (a DAE virou etapa visível com CTA próprio,
+                          // ver `components/painel.tsx`). CTA coral ("Pagar a
+                          // guia agora") agora avança pra A3.2 (certificado).
+                          <PainelView
+                            concluidas={2}
+                            emAndamento={2}
+                            socios={socios ?? 1}
+                            onPagarDae={() => setEtapa("certificado")}
+                          />
+                        )}
+                        {/* 🆕 26/08 (item 7) — A3.2, entre painel e assinatura. */}
+                        {etapa === "certificado" && (
+                          <CertificadoGateView
+                            onSeguir={() => setEtapa("assinatura")}
+                            onVoltar={() => voltar(() => setEtapa("painel"))}
+                          />
                         )}
                         {/* 🆕 03/08 — A3.1, gap fechado. Sem interação natural pra
                             chegar aqui (produção retry-automático mockado); estado
@@ -2063,7 +2250,15 @@ export default function ApresentacaoPage() {
                         {etapa === "assinatura" && (
                           <AssinaturaView
                             onSeguir={() => setEtapa("ativacao")}
-                            onVoltar={() => voltar(() => setEtapa("painel"))}
+                            // 🔄 26/08 (item 7) — voltava pro painel; agora
+                            // volta pro certificado (A3.2), que é quem precede
+                            // a assinatura desde a reunião Rua Satélite 36.
+                            onVoltar={() => voltar(() => setEtapa("certificado"))}
+                            // 🆕 24/08 — código GOV expirado/sem tentativas navega
+                            // pra `/veredito/nao-atende` na rota real. Mesmo gap
+                            // documentado do onFalarAtendente acima: sem estado
+                            // equivalente na demo, no-op em vez de tela errada.
+                            onEscalar={() => {}}
                           />
                         )}
                         {/* 🔓 SWAP validado (29/07): a home de ativação (A5)
@@ -2091,6 +2286,22 @@ export default function ApresentacaoPage() {
                             preencher={preenchimento}
                             onSeguir={() => setEtapa(depoisDoMigrar("m-cnpj"))}
                             onVoltar={() => voltar(() => setEtapa(antesDoMigrar("m-cnpj")))}
+                            // 🆕 26/08 — saída existia no componente
+                            // (`onSaidaInapto`) desde 04/08, mas a demo nunca
+                            // ligou o callback: CNPJ inapto/suspenso não tinha
+                            // pra onde ir aqui.
+                            onSaidaInapto={() => setEtapa("m-cnpj-inapto")}
+                          />
+                        )}
+                        {/* 🆕 26/08 — E4.3, faltava na sequência (ver ETAPAS_MIGRAR). */}
+                        {etapa === "m-diagnostico" && (
+                          <MigrarDiagnosticoView
+                            // A demo não bifurca esta esteira por regime
+                            // (mesma simplificação de MigrarPlanoView/
+                            // MigrarContratoView, que também não recebem `mei`).
+                            mei={false}
+                            onSeguir={() => setEtapa(depoisDoMigrar("m-diagnostico"))}
+                            onVoltar={() => voltar(() => setEtapa(antesDoMigrar("m-diagnostico")))}
                           />
                         )}
                         {etapa === "m-plano" && (
@@ -2127,6 +2338,28 @@ export default function ApresentacaoPage() {
                           <MigrarContadorAntigoView
                             empresa={EMPRESA_MIGRAR}
                             onSeguir={() => setEtapa(depoisDoMigrar("m-contador"))}
+                          />
+                        )}
+                        {/* 🆕 24/08 (reunião Leonan 19/08, achado tardio) — E9.2b/c/d.
+                            Dados base + sociedade + GOV/procuração, na ordem que a
+                            reunião travou: depois do contador atual, antes da
+                            transferência (não antes do pagamento — 1ª tentativa
+                            desta rodada colocou errado, corrigido). */}
+                        {etapa === "m-dados" && (
+                          <MigrarDadosBaseView
+                            onSeguir={() => setEtapa(depoisDoMigrar("m-dados"))}
+                          />
+                        )}
+                        {etapa === "m-socios" && (
+                          <SociosView
+                            contexto="migrar"
+                            onSeguir={() => setEtapa(depoisDoMigrar("m-socios"))}
+                          />
+                        )}
+                        {etapa === "m-gov" && (
+                          <MigrarGovView
+                            onSeguir={() => setEtapa(depoisDoMigrar("m-gov"))}
+                            onEscalar={() => {}}
                           />
                         )}
                         {etapa === "m-transferencia" && (
@@ -2185,7 +2418,38 @@ export default function ApresentacaoPage() {
                       <>
                         <TelaHeader meta="Sobre o seu caso" />
                         <main className="app-main">
-                          <SaidaView d={etapa === "saida-exterior" ? DADOS_SAIDA_EXTERIOR : DADOS_SAIDA_SOCIOS} />
+                          <SaidaView
+                            d={
+                              etapa === "saida-exterior"
+                                ? DADOS_SAIDA_EXTERIOR
+                                : etapa === "saida-socio-pj"
+                                  ? DADOS_SAIDA_SOCIO_PJ
+                                  : DADOS_SAIDA_SOCIOS
+                            }
+                          />
+                        </main>
+                      </>
+                    ) : etapa === "m-cnpj-inapto" ? (
+                      // 🆕 26/08 — saída do M1 (`onSaidaInapto`), mesmo padrão
+                      // das outras saídas: shell próprio, sem header genérico.
+                      <>
+                        <TelaHeader meta="Sobre a situação do CNPJ" />
+                        <main className="app-main">
+                          <SaidaView
+                            d={DADOS_SAIDA_CNPJ_INAPTO}
+                            captura={{
+                              nome: nomeCnpjInapto,
+                              setNome: setNomeCnpjInapto,
+                              contato: contatoCnpjInapto,
+                              setContato: setContatoCnpjInapto,
+                              // Sem pergunta extra nesta saída (`d.extra` não
+                              // existe) — campos aqui só pra satisfazer o tipo.
+                              extra: "",
+                              setExtra: () => {},
+                              enviado: enviadoCnpjInapto,
+                              setEnviado: setEnviadoCnpjInapto,
+                            }}
+                          />
                         </main>
                       </>
                     ) : (
@@ -2260,9 +2524,17 @@ export default function ApresentacaoPage() {
                               setSocios={setSocios}
                               exterior={exterior}
                               setExterior={setExterior}
+                              socioTipo={socioTipo}
+                              setSocioTipo={setSocioTipo}
                               onSeguir={() => setEtapa("faixa")}
                               onSaida={(rota) =>
-                                setEtapa(rota === "/saida/exterior" ? "saida-exterior" : "saida-socios")
+                                setEtapa(
+                                  rota === "/saida/exterior"
+                                    ? "saida-exterior"
+                                    : rota === "/saida/socio-pj"
+                                      ? "saida-socio-pj"
+                                      : "saida-socios",
+                                )
                               }
                               exteriorSoComSocio
                             />
@@ -2275,6 +2547,16 @@ export default function ApresentacaoPage() {
                               setModoExato={setModoExato}
                               exato={exato}
                               setExato={setExato}
+                              // 🆕 24/08 (reunião Rua Satélite 35) — reusa o
+                              // mesmo `dadosConta.coorte` que o ContaView já
+                              // usava (a UI de coorte saiu de lá, o dado
+                              // continua no mesmo objeto de snapshot).
+                              coorte={dadosConta.coorte}
+                              setCoorte={(v) => setDadosConta((p) => ({ ...p, coorte: v }))}
+                              // 🆕 26/08 (item 2) — mesma mecânica da coorte
+                              // acima, mas esta TRAVA o Continuar.
+                              enderecoProprio={enderecoProprioDemo}
+                              setEnderecoProprio={setEnderecoProprioDemo}
                               onSeguir={() => setEtapa("conta")}
                               autoFocus={false}
                               exatoInline

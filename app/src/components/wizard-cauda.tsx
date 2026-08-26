@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { type ReactNode } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
-import { Checkbox } from "@/components/ui/form";
+import { Checkbox, Campo, Texto, OpcoesLinha } from "@/components/ui/form";
 import { PillCnpj, AprendaGradiente } from "@/components/lab/campea-blocks";
 import { QuemCuida } from "@/components/lab/ref9-blocks";
 import { CUSTOS, brl } from "@/lib/fiscal";
@@ -349,6 +349,157 @@ function Camada({ children }: { children: ReactNode }) {
   );
 }
 
+/* ═══════════════════ CERTIFICADO DIGITAL — ANTES da assinatura ══════════
+ * 🆕 26/08 (reunião Rua Satélite 36, item 7) — REINTRODUZIDO, MAS REORDENADO.
+ * Existia antes uma `CertificadoView`/`/certificado` no N24 antigo (removida
+ * como órfã em 30/07, ver comentário mais abaixo — nada navegava até lá). Não
+ * é a mesma coisa: aquela vinha DEPOIS da assinatura, esta vem ANTES, por um
+ * motivo estrutural apontado na reunião: a PROCURAÇÃO eletrônica (que sai
+ * junto da assinatura, `CodigoGovView` abaixo) EXIGE o certificado digital já
+ * validado — não dá pra assinar procuração com um certificado que ainda não
+ * existe no sistema. Antes disso ser corrigido, a ordem documentada (A4→A5)
+ * tinha o certificado como item "agora" da home dia-1, ou seja, DEPOIS de já
+ * ter assinado — uma inconsistência real, não só reordenação por preferência.
+ *
+ * Reusa o MESMO padrão visual/copy de `/mais/certificado?status=pendente`
+ * (upload arquivo+senha), que continua existindo no Portal pra RENOVAÇÃO/
+ * troca depois — aqui é a PRIMEIRA vez, então soma a pergunta "já tem ou não"
+ * que lá não precisa (lá já se sabe que tem, é troca).
+ */
+export function CertificadoGateView({
+  onSeguir,
+  onVoltar,
+}: {
+  onSeguir?: () => void;
+  onVoltar?: () => void;
+}) {
+  const [caminho, setCaminho] = useState<"pergunta" | "tenho" | "nao-tenho">("pergunta");
+  const [arquivo, setArquivo] = useState<File | null>(null);
+  const [senha, setSenha] = useState("");
+  const [enviando, setEnviando] = useState(false);
+  const completo = arquivo !== null && senha.trim() !== "";
+
+  function enviar() {
+    setEnviando(true);
+    // 🌾 mesmo padrão do "Analisando" já usado no resto da cauda: loading
+    // que explica, não trava sem feedback.
+    setTimeout(() => {
+      setEnviando(false);
+      onSeguir?.();
+    }, 1200);
+  }
+
+  if (caminho === "pergunta") {
+    return (
+      <>
+        <TelaHeader meta="Certificado digital" onVoltar={onVoltar} />
+        <main className="app-main">
+          <Titulo sub="A procuração eletrônica que vai junto da sua assinatura precisa dele. É rápido de resolver, dos dois jeitos.">
+            Você já tem certificado digital (e-CNPJ)?
+          </Titulo>
+          <Corpo>
+            <Aviso variante="info" titulo="Pra que serve isso">
+              É o que autoriza a gente a emitir nota, pagar guia e assinar
+              coisas em nome da sua empresa depois. Sem ele, a procuração não
+              sai — por isso resolve antes de assinar, não depois.
+            </Aviso>
+          </Corpo>
+          <Rodape>
+            <Button full onClick={() => setCaminho("tenho")}>
+              Já tenho certificado
+            </Button>
+            <div className="mt-2 flex justify-center">
+              <Button variant="ghost" onClick={() => setCaminho("nao-tenho")}>
+                Não tenho, preciso de um
+              </Button>
+            </div>
+          </Rodape>
+        </main>
+      </>
+    );
+  }
+
+  if (caminho === "nao-tenho") {
+    return (
+      <>
+        <TelaHeader meta="Certificado digital" onVoltar={() => setCaminho("pergunta")} />
+        <main className="app-main">
+          <Titulo sub="Nossa certificadora parceira agenda uma videochamada rápida com você e providencia um novo, por nossa conta.">
+            A gente providencia um novo pra você
+          </Titulo>
+          <Corpo>
+            <Aviso variante="info" titulo="Como funciona">
+              Alguém do nosso time entra em contato pelo WhatsApp pra marcar o
+              melhor horário. A entrevista é por vídeo, leva poucos minutos, e
+              ao final o certificado já sai anexado no seu cadastro.
+            </Aviso>
+          </Corpo>
+          <Rodape>
+            <Button full onClick={onSeguir}>
+              Entendi, vou aguardar o contato
+            </Button>
+          </Rodape>
+        </main>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <TelaHeader meta="Certificado digital" onVoltar={() => setCaminho("pergunta")} />
+      <main className="app-main">
+        <Titulo sub="Sobe o arquivo e a senha. A gente confere e libera em minutos.">
+          Envie seu certificado
+        </Titulo>
+        <Corpo>
+          <label className="block">
+            <span className="text-micro text-text-tertiary">
+              Arquivo do certificado (.pfx ou .p12)
+            </span>
+            <div className="mt-1.5 flex items-center gap-3 rounded-xl border border-dashed border-border-strong bg-surface-alt px-3 py-3">
+              <span className="min-w-0 flex-1 text-caption text-text-secondary">
+                {arquivo ? (
+                  <span className="truncate font-semibold text-text-primary">
+                    {arquivo.name}
+                  </span>
+                ) : (
+                  "Toque pra escolher o arquivo"
+                )}
+              </span>
+              <input
+                type="file"
+                accept=".pfx,.p12"
+                onChange={(e) => setArquivo(e.target.files?.[0] ?? null)}
+                className="absolute h-0 w-0 opacity-0"
+                aria-label="Arquivo do certificado"
+              />
+            </div>
+          </label>
+
+          <Campo rotulo="Senha do certificado">
+            <Texto
+              valor={senha}
+              onChange={setSenha}
+              placeholder="A mesma que você usa pra assinar"
+              type="password"
+            />
+          </Campo>
+
+          <p className="text-micro text-text-tertiary">
+            A senha fica guardada só pra assinar em seu nome — a gente nunca
+            usa pra mais nada.
+          </p>
+        </Corpo>
+        <Rodape>
+          <Button full disabled={!completo || enviando} onClick={enviar}>
+            {enviando ? "Conferindo..." : "Enviar certificado"}
+          </Button>
+        </Rodape>
+      </main>
+    </>
+  );
+}
+
 /* ═══════════════════ N22 · ASSINATURA (GOV.BR + N23 dobrado) ═══════════ */
 
 type StatusSocio = "voce" | "convidar" | "aguardando" | "assinou";
@@ -366,19 +517,168 @@ const NIVEL_GOVBR: "bronze" | "prata" | "ouro" = "prata";
  * avança a demo pro N24 — simular a espera assíncrona de verdade é trabalho de
  * outro momento (painel/CRM), não desta apresentação.
  */
+/**
+ * ═══════════════════ CÓDIGO GOV (2FA da procuração + assinatura) ═════════
+ * 🆕 24/08 (reunião Leonan 19/08) — o achado mais técnico da reunião. Pra
+ * abrir a procuração E assinar o protocolo de registro, o GOV.BR manda um
+ * código pro APARELHO do cliente (não pra gente) — a gente pede esse código
+ * de volta e tem só **10 minutos** pra usar, senão expira. É a única "trava"
+ * de verdade do fluxo GOV inteiro (Leonan: "tem que ter alguém ali, gerou,
+ * tem que digitar na hora e validar, senão depois de 10 minutos o código
+ * respira").
+ *
+ * Decisão da reunião: concentrar procuração + assinatura no MESMO pedido de
+ * código (antes a procuração vinha antes; virou "joga tudo pra depois",
+ * mesmo código serve pros dois) — por isso este componente não separa as
+ * duas coisas, é 1 código só pros 2.
+ *
+ * Até 3 tentativas dentro da janela de 10 minutos; estourou tentativa ou
+ * tempo, escala pra atendimento humano (Léo, R19: "o próximo, quando ele
+ * entrar de novo, tem que chamar o mano").
+ */
+export function CodigoGovView({
+  onValidar,
+  onEscalar,
+  onVoltar,
+  soProcuracao = false,
+}: {
+  onValidar?: () => void;
+  onEscalar?: () => void;
+  onVoltar?: () => void;
+  /** 🆕 24/08 (achado da reunião Leonan 19/08, aplicado à MIGRAÇÃO) — na
+   *  migração a empresa já existe: não tem protocolo de registro pra assinar,
+   *  só a procuração (que dá acesso ao e-CAC/GOV.BR do cliente). Mesmo
+   *  código, mesma janela de 10min — só a copy muda. */
+  soProcuracao?: boolean;
+}) {
+  const JANELA_SEGUNDOS = 10 * 60;
+  const MAX_TENTATIVAS = 3;
+
+  const [codigo, setCodigo] = useState("");
+  const [tentativas, setTentativas] = useState(0);
+  const [erro, setErro] = useState(false);
+  const [restante, setRestante] = useState(JANELA_SEGUNDOS);
+
+  useEffect(() => {
+    if (restante <= 0) return;
+    const id = setInterval(() => setRestante((s) => Math.max(0, s - 1)), 1000);
+    return () => clearInterval(id);
+  }, [restante]);
+
+  const expirou = restante <= 0;
+  const semTentativas = tentativas >= MAX_TENTATIVAS;
+  const precisaEscalar = expirou || semTentativas;
+  const min = String(Math.floor(restante / 60)).padStart(2, "0");
+  const seg = String(restante % 60).padStart(2, "0");
+
+  // 🚧 Mock: qualquer código de 6 dígitos "valida". No app real, a API do
+  // GOV.BR confirma ou recusa.
+  function validar() {
+    if (codigo.trim().length < 6) {
+      setErro(true);
+      return;
+    }
+    setErro(false);
+    setTentativas((t) => t + 1);
+    onValidar?.();
+  }
+
+  return (
+    <>
+      <TelaHeader meta="Código do GOV.BR" onVoltar={onVoltar} />
+      <main className="app-main">
+        <Titulo
+          sub={
+            soProcuracao
+              ? "É o código que chegou no seu app ou celular cadastrado no GOV.BR. Serve pra fazer a procuração — sua empresa já existe, não tem registro novo pra assinar."
+              : "É o código que chegou no seu app ou celular cadastrado no GOV.BR. Serve pra procuração e pra assinatura, de uma vez só."
+          }
+        >
+          Digite o código que chegou pra você
+        </Titulo>
+
+        <Corpo>
+          {!precisaEscalar && (
+            <div className="rounded-md border border-border-hairline bg-surface-alt px-3 py-2.5 text-center">
+              <span className="text-caption text-text-secondary">Expira em </span>
+              <span className="text-body font-semibold text-text-primary tabular-nums">
+                {min}:{seg}
+              </span>
+            </div>
+          )}
+
+          {precisaEscalar ? (
+            <Aviso variante="warning" titulo={expirou ? "O código expirou" : "As tentativas acabaram"}>
+              {expirou
+                ? "Passaram os 10 minutos da janela do GOV.BR. Sem problema — um atendente nosso te ajuda a gerar um novo agora."
+                : "Foram 3 tentativas sem validar. Pra não te travar sozinho nisso, um atendente nosso assume daqui."}
+            </Aviso>
+          ) : (
+            <>
+              <Campo rotulo="Código de 6 dígitos">
+                <Texto
+                  valor={codigo}
+                  onChange={(v) => setCodigo(v.replace(/\D/g, "").slice(0, 6))}
+                  placeholder="000000"
+                  inputMode="numeric"
+                  erro={erro ? "Confira o código: precisa ter 6 dígitos." : undefined}
+                />
+              </Campo>
+              <p className="text-micro text-text-tertiary">
+                Tentativa {tentativas + 1} de {MAX_TENTATIVAS}. Se travar,
+                a gente chama um atendente pra te ajudar ao vivo.
+              </p>
+            </>
+          )}
+        </Corpo>
+
+        <Rodape>
+          {precisaEscalar ? (
+            <Button full variant="dark" onClick={onEscalar}>
+              Falar com atendente agora
+            </Button>
+          ) : (
+            <Button full onClick={validar}>
+              Validar código
+            </Button>
+          )}
+        </Rodape>
+      </main>
+    </>
+  );
+}
+
 export function AssinaturaView({
   onSeguir,
   onVoltar,
+  onEscalar,
   mei = false,
 }: {
   onSeguir?: () => void;
   onVoltar?: () => void;
+  /** 🆕 24/08 — código do GOV expirou ou estourou tentativas: escala pra
+   *  atendimento humano em vez de travar o cliente sozinho. */
+  onEscalar?: () => void;
   /** 🆕 03/08 — MEI assina no Portal do Empreendedor, não na Junta. Sócio já
    *  não se aplica (MEI é sempre solo, `sociedade` abaixo já cobre isso). */
   mei?: boolean;
 }) {
   const sociedade = SOCIOS_ASSINATURA.length > 1;
   const bronze = NIVEL_GOVBR === "bronze";
+  // 🆕 24/08 — depois de "Assinar no GOV.BR", entra o código único
+  // (procuração + assinatura concentrados, ver `CodigoGovView`).
+  const [fase, setFase] = useState<"assinar" | "codigo">("assinar");
+  const [canalConvite, setCanalConvite] = useState<"whatsapp" | "email">("whatsapp");
+
+  if (fase === "codigo") {
+    return (
+      <CodigoGovView
+        onVoltar={() => setFase("assinar")}
+        onValidar={onSeguir}
+        onEscalar={onEscalar}
+      />
+    );
+  }
 
   return (
     <>
@@ -432,6 +732,23 @@ export function AssinaturaView({
                 confirma os próprios dados e aprova o custo antes, ninguém assina
                 pelo outro.
               </p>
+
+              {/* 🆕 24/08 (reunião Leonan 19/08) — link de convite rastreável
+                  por canal. O status ("Falta convidar" → "Aguardando" →
+                  "Assinou") já existe em `SocioLinha`; isto só torna
+                  explícito POR ONDE o convite sai. */}
+              {SOCIOS_ASSINATURA[1].status === "convidar" && (
+                <Campo rotulo="Enviar convite por">
+                  <OpcoesLinha
+                    opcoes={[
+                      { v: "whatsapp", label: "WhatsApp" },
+                      { v: "email", label: "E-mail" },
+                    ]}
+                    valor={canalConvite}
+                    onChange={setCanalConvite}
+                  />
+                </Campo>
+              )}
             </div>
           )}
 
@@ -444,17 +761,17 @@ export function AssinaturaView({
         <Rodape>
           {sociedade && SOCIOS_ASSINATURA[1].status === "convidar" ? (
             <>
-              <Button full onClick={onSeguir}>
-                Enviar convite pro Bruno
+              <Button full onClick={() => setFase("codigo")}>
+                {canalConvite === "whatsapp" ? "Enviar convite pro Bruno no WhatsApp" : "Enviar convite pro Bruno por e-mail"}
               </Button>
               <div className="mt-2 flex justify-center">
-                <Button variant="ghost" onClick={onSeguir}>
+                <Button variant="ghost" onClick={() => setFase("codigo")}>
                   Assinar a minha parte agora
                 </Button>
               </div>
             </>
           ) : (
-            <Button full disabled={bronze} onClick={onSeguir}>
+            <Button full disabled={bronze} onClick={() => setFase("codigo")}>
               {bronze ? "Subir de nível no GOV.BR" : "Assinar no GOV.BR"}
             </Button>
           )}
@@ -558,6 +875,21 @@ type PassoAtivacao = {
   status?: string;
 };
 
+/**
+ * 🆕 24/08 (reunião Leonan 19/08) — status "Procuração" virou explícito na
+ * trilha, entre CNPJ e certificado. Conclusão da própria reunião: a
+ * procuração some junto do MESMO código GOV da assinatura (ver
+ * `CodigoGovView` em `AssinaturaView`) — é instantânea, não é uma espera à
+ * parte, mas o cliente merece ver que aconteceu, não só presumir.
+ *
+ * 🆕 26/08 (reunião Rua Satélite 36, item 7) — "certificado" deixou de ser
+ * "agora" e virou "feito": o certificado passou a ser validado ANTES da
+ * assinatura (`CertificadoGateView`, novo, entre `/painel` e `/assinatura`),
+ * não depois. Por isso, ao chegar nesta trilha pós-assinatura, ele já está
+ * pronto — "dados" (conferir a empresa) é quem vira "agora". Rota
+ * `/mais/certificado` continua existindo (Portal), mas agora só pra
+ * RENOVAR/trocar depois, não pra validar pela 1ª vez.
+ */
 const PASSOS_ATIVACAO: PassoAtivacao[] = [
   {
     id: "cnpj",
@@ -566,17 +898,23 @@ const PASSOS_ATIVACAO: PassoAtivacao[] = [
     sub: "Sua empresa já está ativa na Receita Federal.",
   },
   {
+    id: "procuracao",
+    estado: "feito",
+    titulo: "Procuração assinada",
+    sub: "Junto da assinatura do registro. É o que deixa a gente cuidar do DAS e das obrigações por você.",
+  },
+  {
     id: "certificado",
-    estado: "agora",
-    titulo: "Validação do certificado digital",
-    sub: "Nossa certificadora parceira vai te chamar pra agendar a videochamada de validação. A gente conduz, você só participa.",
-    status: "Em andamento",
+    estado: "feito",
+    titulo: "Certificado digital validado",
+    sub: "Você já resolveu isso antes de assinar. Pra renovar ou trocar depois, é só entrar em Mais.",
   },
   {
     id: "dados",
-    estado: "depois",
+    estado: "agora",
     titulo: "Conferir os dados da empresa",
     sub: "Dê uma olhada se está tudo certo no seu cadastro.",
+    status: "Em andamento",
     href: "/mais/empresa",
   },
   {
@@ -660,8 +998,8 @@ export function HomeAtivacaoView() {
               />
             </div>
             <p className="mt-1.5 text-micro text-text-tertiary">
-              A parceira vai te chamar pra validar o certificado. Terminou de
-              conferir os dados? Seu app abre por completo.
+              Terminou de conferir os dados da empresa? Seu app abre por
+              completo.
             </p>
 
             <div className="mt-4">

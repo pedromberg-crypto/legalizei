@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ContratoView } from "@/components/wizard-dinheiro";
 import { ehMei, comRegime } from "@/lib/regime";
+import { ehEnderecoFiscal, comEndereco } from "@/lib/endereco";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -50,14 +51,16 @@ import { ehMei, comRegime } from "@/lib/regime";
  */
 export default function ContratoPage() {
   const router = useRouter();
-  const mei = ehMei(useSearchParams());
+  const searchParams = useSearchParams();
+  const mei = ehMei(searchParams);
+  const enderecoFiscal = ehEnderecoFiscal(searchParams);
   const [aceito, setAceito] = useState(false);
 
   return (
     <ContratoView
       aceito={aceito}
       setAceito={setAceito}
-      onSeguir={() => router.push(comRegime("/pagamento", mei))}
+      onSeguir={() => router.push(comEndereco(comRegime("/pagamento", mei), enderecoFiscal))}
       semTaxaJunta={mei}
     />
   );

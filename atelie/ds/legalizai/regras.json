@@ -24,10 +24,16 @@
     },
     {
       "id": "qualificador-simples-nacional",
-      "descricao": "se aparece 'contador de verdade' ou 'contador' + 'humano' sem 'Simples Nacional' num raio de ~15 palavras, alertar",
-      "logica": "contémAlgumDe(['contador de verdade','contador','humano de verdade']) E NÃO contémPerto('Simples Nacional', raioPalavras: 15)",
-      "severidade": "alerta",
-      "fonte": "posicionamento.md §2, decisoes-marca.md 2026-08-17"
+      "descricao": "RELAXADA 26/08 — deixou de ser obrigatória. Citar 'contador'/'humano' sem a frase exata 'do Simples Nacional' não é mais alerta automático; fica a critério editorial.",
+      "severidade": "desativada",
+      "fonte": "validação item 13, 26/08 (Pedro) — substituída pela regra `mei-sem-contador-humano` abaixo"
+    },
+    {
+      "id": "mei-sem-contador-humano",
+      "descricao": "JAMAIS prometer/insinuar contador humano dedicado especificamente no contexto do plano MEI — MEI tem assistente virtual, não contador. Dispara se 'MEI' aparecer perto (raio ~20 palavras) de 'contador'/'humano de verdade'/'contador de verdade' sem menção a 'assistente virtual'.",
+      "logica": "contémPerto(['MEI'], ['contador','contador de verdade','humano de verdade'], raioPalavras: 20) E NÃO contémPerto('assistente virtual', raioPalavras: 20)",
+      "severidade": "bloqueante",
+      "fonte": "voz.json > glossario.regraDuraNova_meiSemContadorHumano, validação item 13, 26/08"
     },
     {
       "id": "marca-nome-antigo",
@@ -41,7 +47,7 @@
       "descricao": "zero concorrente citado por nome",
       "logica": "contémAlgumDe(voz.json > glossario.concorrentesNomeados.lista)",
       "severidade": "bloqueante",
-      "status": "INATIVA — lista de concorrentes está vazia (FALTA, ver voz.json). Regra não roda até a lista existir."
+      "status": "ATIVA desde 26/08 — lista populada em voz.json > glossario.concorrentesNomeados (Contabilizei, Agilize, Contaja, Facilite, Contabilivre, Marvee, ContaAzul, Nubank), trazida de pesquisa/concorrentes/matriz-comparativa.md. Uso interno de QA apenas — nunca publicar estes nomes."
     },
     {
       "id": "escassez-simulada",

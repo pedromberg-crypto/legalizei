@@ -14,11 +14,12 @@
     },
     "nivel2_funil": {
       "onde": "fim da legenda + bio",
+      "_notaNumeracao": "pilares renumerados v3 (26/08) — ver estrategia-organica.md §Camada 1",
       "porEstagio": [
         { "estagio": "topo (emocional puro)", "cta": "nenhum funil — só engajamento", "pilares": [1, 2, 3] },
-        { "estagio": "topo/meio", "cta": "simule seu Fator R grátis (link bio)", "pilares": [8, "educativos"] },
-        { "estagio": "prova", "cta": "veja como funciona, sem compromisso", "pilares": [6] },
-        { "estagio": "meio→fundo", "cta": "assine sem fidelidade-surpresa", "pilares": [5] },
+        { "estagio": "topo/meio", "cta": "simule seu Fator R grátis (link bio)", "pilares": [5, 6, 7] },
+        { "estagio": "prova", "cta": "veja como funciona, sem compromisso", "pilares": [13] },
+        { "estagio": "meio→fundo", "cta": "assine sem fidelidade-surpresa", "pilares": [10] },
         { "estagio": "fundo (oferta direta)", "cta": "garantia de 7 dias, comece agora", "quando": "só sazonal/promo/vagas fundador" }
       ]
     },

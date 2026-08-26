@@ -40,7 +40,12 @@ export const CLIENTE = {
   endereco: "Rua dos Timbiras, 1200, Funcionários, Belo Horizonte/MG",
 };
 
-/** Vem da triagem do N4 e é confirmado no N12. 2 é o teto do MLP. */
+/**
+ * Vem da triagem do N4 e é confirmado no N12. 4 é o teto do MLP (subiu de 2
+ * pra 4 em 24/08, reunião Leonan 19/08 — o que trava lá na frente não é o
+ * número, é que todo mundo assina). O mock demonstra o caso com 1 sócio
+ * extra (o mais comum); o N12 agora suporta adicionar até 3 sócios extras.
+ */
 export const TEM_SOCIO = true;
 export const SOCIO_2 = { nome: "Carlos Eduardo Silva" };
 

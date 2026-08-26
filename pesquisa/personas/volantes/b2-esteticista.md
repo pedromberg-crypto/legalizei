@@ -25,5 +25,19 @@ tags: [pesquisa, personas, volante]
 ## O que NÃO muda (herdado da dorsal)
 Idade 35-50, canal Instagram, transição por crescimento — ver [[persona-b-servico-estetico]].
 
+## Pesquisa real (Google Search, 26/08) 🆕
+
+Fonte: `Pesquisa Perfis Microempreendedores Belo Horizonte.md` (Downloads).
+
+| Critério | Dado real |
+|---|---|
+| Idade real | 25-45 |
+| Gênero | **Feminino 88,4%** do setor ampliado de beleza/tratamentos (Observatório SEBRAE RAIS 2025) |
+| Renda real | Formal R$1.827; dona de estúdio R$4.000-15.000 (margens altas de procedimento) |
+| Canais reais | Instagram (essencial pra antes/depois), TikTok, WhatsApp |
+| Reclamação real documentada | Angústia com burocracia da Vigilância Sanitária municipal (alvará, laudo de equipamento); dúvida sobre limite MEI (ex: limpeza de pele) × procedimento invasivo que exige Responsabilidade Técnica |
+| Vocabulário real | Protocolo, Anamnese, Radiofrequência, Criolipólise, Dermo, "home care", Microagulhamento, Flacidez, Drenagem |
+| Ambiente real | Estúdio clean, macas com papel lençol descartável, armários MDF, aparelho de ultrassom/laser, jaleco/scrubs |
+
 ## Status
-🟡 hipótese sem pesquisa dedicada.
+🟡 hipótese enriquecida com pesquisa real (26/08) — ainda sem validação de campo direta do Pedro (já aprovada por Pedro pra USO, ver `metodologia-personas.md`).

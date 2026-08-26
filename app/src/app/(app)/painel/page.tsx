@@ -1,14 +1,16 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { PainelView, type Etapa } from "@/components/painel";
 import { ehMei } from "@/lib/regime";
 
 /**
  * N21 · PAINEL (andamento) — shell APP · spec T20.
- * Mock pra farol: documentação feita (índice 0), análise de viabilidade
- * girando (índice 1). ⚠️ 29/07: os índices mudaram — a lista de `ETAPAS`
- * caiu de 4 pra 3 (ver `components/painel.tsx`).
+ * Mock pra farol: documentação feita + viabilidade deferida (índices 0-1),
+ * DAE aguardando pagamento (índice 2, CTA visível). 🆕 26/08 (reunião Rua
+ * Satélite 36, item 6): voltou a ter 4 etapas — o pagamento da DAE, que era
+ * timing de backend (paga no checkout, some tela), agora tem CTA próprio
+ * aqui, depois que a viabilidade sai. Ver `components/painel.tsx`.
  *
  * 🆕 03/08 — MEI reusa a MESMA máquina parametrizada que o flow #2 (migrar)
  * já usa (`etapas`/`titulo`/`sub`/`prazo`) — não é tela nova, é outro
@@ -20,6 +22,7 @@ import { ehMei } from "@/lib/regime";
 const ETAPAS_MEI: Etapa[] = [{ nome: "Registrando no Portal do Empreendedor" }];
 
 export default function PainelPage() {
+  const router = useRouter();
   const mei = ehMei(useSearchParams());
 
   if (mei) {
@@ -44,5 +47,12 @@ export default function PainelPage() {
     );
   }
 
-  return <PainelView concluidas={1} emAndamento={1} socios={1} />;
+  return (
+    <PainelView
+      concluidas={2}
+      emAndamento={2}
+      socios={1}
+      onPagarDae={() => router.push("/certificado")}
+    />
+  );
 }

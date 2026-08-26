@@ -25,5 +25,19 @@ tags: [pesquisa, personas, volante]
 ## O que NÃO muda (herdado da dorsal)
 Idade 35-50, canal Instagram, resistência inicial de preço — ver [[persona-b-servico-estetico]].
 
+## Pesquisa real (Google Search, 26/08) 🆕
+
+Fonte: `Pesquisa Perfis Microempreendedores Belo Horizonte.md` (Downloads).
+
+| Critério | Dado real |
+|---|---|
+| Idade real | 22-40 |
+| Gênero | Leve predomínio masculino, mulheres ganhando espaço rápido em musculação/funcional |
+| Renda real | R$3.000-12.000+/mês; retenção PF pode chegar a 27,5% via IRPF + INSS |
+| Canais reais | Instagram (persona "fitness"), TikTok, WhatsApp |
+| Reclamação real documentada | **Maior fonte de ira do grupo B inteiro**: desenquadramento punitivo do MEI pela Receita Federal (considerado profissão intelectual regulamentada via CREF); Fator R (28% de folha) ou mordida de IRPF se não formalizar |
+| Vocabulário real | Shape, "Falha concêntrica", Hipertrofia, Periodização, Cardio, Bi-set, PR (Personal Record), Drop-set |
+| Ambiente real | Academia: espelhos grandes, máquinas metálicas, anilhas emborrachadas, roupa dry-fit, tripé de celular |
+
 ## Status
-🟡 hipótese sem pesquisa dedicada.
+🟡 hipótese enriquecida com pesquisa real (26/08) — confirma e aprofunda o gap de regulamentação já registrado (CREF, tier "tato"). Já aprovada por Pedro pra USO, ver `metodologia-personas.md`.

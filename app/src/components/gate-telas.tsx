@@ -8,8 +8,8 @@ import {
   useSyncExternalStore,
 } from "react";
 import { Button } from "@/components/ui/button";
-import { TelaHeader } from "@/components/ui/tela";
-import { FISCAL } from "@/lib/fiscal";
+import { TelaHeader, Aviso } from "@/components/ui/tela";
+import { FISCAL, CUSTOS, brl } from "@/lib/fiscal";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -312,12 +312,29 @@ export function AnalisandoView() {
    saída (as telas /saida/exterior e /saida/socios existiam mas nada linkava
    pra elas). Exterior tem precedência (bloqueio legal, LC 123 art.17) sobre
    3+ sócios (limite do produto) — mesma ordem que já dava o texto do aviso.
+
+   🔓 24/08 (reunião Leonan 19/08) — LIMITE SUBIU DE 2 PRA 4. O Leonan validou
+   que empresa pequena com 3-4 sócios acontece (raro acima disso); o que trava
+   de verdade lá na frente não é o número em si, é que TODOS precisam assinar
+   (GOV.BR/e-CAC) na Constituição. Por isso: até 4 sócios segue no fluxo, com
+   um aviso PROATIVO (não bloqueio) avisando da assinatura de todos; só 5+ vai
+   pra atendimento humano.
+
+   🆕 24/08 (pedido do Pedro, em cima da reunião Leonan) — NOVA pergunta
+   condicional: se o sócio é CPF ou CNPJ. Sócio pessoa jurídica tira a empresa
+   do Simples no ATO do contrato social (regra fiscal), e hoje o produto só
+   atende Simples — então CNPJ bloqueia igual exterior/5+ sócios, e barra
+   ANTES do dinheiro (mesma doutrina fail-fast). Isso também simplifica o C3
+   (dossiê): como o tipo já foi decidido aqui, o C3 nem pergunta de novo —
+   pede só CPF, direto.
    ───────────────────────────────────────────────────────────────────────── */
 export function TriagemView({
   socios,
   setSocios,
   exterior,
   setExterior,
+  socioTipo,
+  setSocioTipo,
   onSeguir,
   onSaida,
   exteriorSoComSocio = false,
@@ -326,6 +343,10 @@ export function TriagemView({
   setSocios: (n: number) => void;
   exterior: boolean | null;
   setExterior: (b: boolean) => void;
+  /** 🆕 24/08 — CPF/CNPJ do sócio. `null` = ainda não respondeu; só existe
+   *  pergunta quando há sócio (não aparece pra quem abre sozinho). */
+  socioTipo: "cpf" | "cnpj" | null;
+  setSocioTipo: (t: "cpf" | "cnpj") => void;
   onSeguir: () => void;
   /** Recebe a rota da saída graciosa; a demo pode só sinalizar. */
   onSaida: (rota: string) => void;
@@ -360,16 +381,39 @@ export function TriagemView({
       : exteriorSoComSocio && socios !== null && socios > 2
         ? "Algum sócio mora fora do Brasil?"
         : "Alguém mora fora do Brasil?";
-  const bloqueado = (socios !== null && socios > 2) || exterior === true;
+  // 🆕 24/08 — pergunta de tipo só existe com sócio (mesma lógica do exterior,
+  // mas SEMPRE pergunta quando há sócio — não tem variante "toggle off" porque
+  // sem isso o C3 não sabe se pode travar em CPF).
+  const perguntaTipo = socios !== null && !solo;
+  const tituloTipo =
+    socios === 2
+      ? "Seu sócio será vinculado via CPF ou CNPJ?"
+      : "Seus sócios serão vinculados via CPF ou CNPJ?";
+  // 5 representa "5 ou mais" no seletor — o mesmo padrão do antigo "3 ou mais".
+  const bloqueado = (socios !== null && socios > 4) || exterior === true || socioTipo === "cnpj";
+  // Aviso proativo, não bloqueio: 3-4 sócios seguem no fluxo, mas precisam
+  // saber cedo que a assinatura de todos vai aparecer lá na frente.
+  const avisaAssinaturas = socios !== null && socios >= 3 && !bloqueado;
   const completo =
-    socios !== null && (perguntaExterior ? exterior !== null : true);
-  const rotaSaida = exterior === true ? "/saida/exterior" : "/saida/socios";
+    socios !== null &&
+    (perguntaTipo ? socioTipo !== null : true) &&
+    (perguntaExterior ? exterior !== null : true);
+  // Exterior tem precedência sobre sócio-PJ, que tem precedência sobre o
+  // limite de sócios — mesma ordem que já dava o texto do aviso.
+  const rotaSaida =
+    exterior === true
+      ? "/saida/exterior"
+      : socioTipo === "cnpj"
+        ? "/saida/socio-pj"
+        : "/saida/socios";
 
   return (
     <>
-      {/* Título FIXO (padrão de 3 partes: título fixo / corpo rola / CTA fixo) */}
+      {/* Título FIXO (padrão de 3 partes: título fixo / corpo rola / CTA fixo).
+          🆕 24/08 — "Duas" virou genérico: com a pergunta de tipo (CPF/CNPJ)
+          nova, pode ser 1, 2 ou 3 perguntas dependendo do caso. */}
       <div className="shrink-0">
-        <h1 className="text-h1 mb-6">Duas perguntas rápidas</h1>
+        <h1 className="text-h1 mb-6">Perguntas rápidas</h1>
       </div>
 
       <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -377,7 +421,7 @@ export function TriagemView({
           Quantas pessoas vão ser donas da empresa?
         </p>
         <div className="flex gap-2 mb-8">
-          {[1, 2, 3].map((n) => (
+          {[1, 2, 3, 4, 5].map((n) => (
             <button
               key={n}
               onClick={() => setSocios(n)}
@@ -388,10 +432,37 @@ export function TriagemView({
                     : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
                 }`}
             >
-              {n === 3 ? "3 ou mais" : n === 1 ? "Só eu" : "2"}
+              {n === 5 ? "5+" : n === 1 ? "Só eu" : String(n)}
             </button>
           ))}
         </div>
+
+        {/* 🆕 24/08 — pergunta nova, entre a quantidade e o exterior (mesma
+            posição sugerida na reunião: "bem antes de tudo, do sócio"). */}
+        {perguntaTipo && (
+          <>
+            <p className="text-body-strong font-semibold mb-3">{tituloTipo}</p>
+            <div className="flex gap-2 mb-8">
+              {[
+                { v: "cpf" as const, label: "CPF" },
+                { v: "cnpj" as const, label: "CNPJ" },
+              ].map((o) => (
+                <button
+                  key={o.v}
+                  onClick={() => setSocioTipo(o.v)}
+                  className={`flex-1 min-h-12 rounded-md border text-body font-semibold transition-colors
+                    ${
+                      socioTipo === o.v
+                        ? "border-action-primary bg-action-primary text-text-on-brand"
+                        : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
+                    }`}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
 
         {perguntaExterior && (
           <>
@@ -418,6 +489,22 @@ export function TriagemView({
           </>
         )}
 
+        {/* 🆕 24/08 (reunião Leonan) — aviso PROATIVO, não bloqueio: 3-4
+            sócios seguem no fluxo normal, mas precisam saber cedo que a
+            assinatura de todo mundo vai aparecer lá na Constituição. */}
+        {avisaAssinaturas && (
+          <div className="mt-6 rounded-md bg-state-info-tint p-4">
+            <p className="text-body-strong font-semibold text-state-info-text mb-1">
+              Um aviso pra mais na frente
+            </p>
+            <p className="text-caption text-text-secondary">
+              Com {socios} sócios, vai chegar um momento em que a gente vai
+              precisar da assinatura (GOV.BR) de todos eles, com documentação
+              de cada um. Dá pra seguir tranquilo — é só saber disso desde já.
+            </p>
+          </div>
+        )}
+
         {/* Bloqueio que EDUCA (UX-07/09) e oferece saída, sem crash.
             ⚠️ danger, nunca coral: coral não é erro. */}
         {bloqueado && (
@@ -428,7 +515,9 @@ export function TriagemView({
             <p className="text-caption text-text-secondary">
               {exterior
                 ? "Com sócio morando fora, a empresa até existe, mas fica fora do Simples. Nosso time te explica as opções."
-                : "Acima de 2 sócios é limite do nosso produto, não da lei. Nosso time abre pra você."}
+                : socioTipo === "cnpj"
+                  ? "Sócio pessoa jurídica tira a empresa do Simples Nacional. Hoje a gente só atende Simples — nosso time te explica as opções."
+                  : "Acima de 4 sócios é limite do nosso produto, não da lei. Nosso time explica a complexidade de assinaturas e abre pra você."}
             </p>
           </div>
         )}
@@ -480,6 +569,10 @@ export function FaixaView({
   setModoExato,
   exato,
   setExato,
+  coorte,
+  setCoorte,
+  enderecoProprio,
+  setEnderecoProprio,
   onSeguir,
   autoFocus = true,
   exatoInline = false,
@@ -500,6 +593,24 @@ export function FaixaView({
    * número que vai cair numa delas).
    */
   exatoInline?: boolean;
+  /**
+   * 🆕 24/08 (reunião Rua Satélite 35) — a pergunta "é a primeira empresa que
+   * você abre?" saiu do E6 (criar conta) e veio pra cá, abaixo da faixa, por
+   * enquanto (Natanael Dev/Tiagão: log da coorte é puro dado de marketing, não
+   * interfere no processo — não precisa estar junto do cadastro). `null` =
+   * ainda não respondeu; opcional (UX-48, "dado puro, pulável sem custo").
+   */
+  coorte: "primeira" | "ja-abri" | null;
+  setCoorte: (v: "primeira" | "ja-abri") => void;
+  /**
+   * 🆕 26/08 (reunião Rua Satélite 36, item 2) — a escolha "endereço próprio ×
+   * fiscal Legalizai" saiu do C4 (dossiê, pós-pagamento) e veio pra cá, ANTES
+   * até do cadastro (E6). Diferente da coorte (opcional, log puro), esta
+   * TRAVA o Continuar — afeta o preço mostrado lá no `/plano` (E7), então não
+   * dá pra deixar em aberto. `null` = ainda não escolheu.
+   */
+  enderecoProprio: boolean | null;
+  setEnderecoProprio: (v: boolean) => void;
 }) {
   const valor = Number(exato.replace(/\D/g, "")) || 0;
   const faixaExata = faixaDoValor(valor);
@@ -647,12 +758,113 @@ export function FaixaView({
             </button>
           </div>
         )}
+
+        {/* 🆕 24/08 (reunião Rua Satélite 35) — realocada do E6 pra cá. Dado
+            puro de marketing/log, opcional, não interfere no processo. */}
+        <div className="mt-6">
+          <p className="text-body-strong font-semibold mb-1">
+            É a primeira empresa que você abre?
+          </p>
+          <p className="text-caption text-text-secondary mb-3">
+            Ajuda a gente a te acompanhar do jeito certo.
+          </p>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setCoorte("primeira")}
+              aria-pressed={coorte === "primeira"}
+              className={`min-h-12 flex-1 rounded-md border text-body font-semibold transition-colors
+                ${
+                  coorte === "primeira"
+                    ? "border-action-primary bg-action-primary text-text-on-brand"
+                    : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
+                }`}
+            >
+              É a primeira
+            </button>
+            <button
+              onClick={() => setCoorte("ja-abri")}
+              aria-pressed={coorte === "ja-abri"}
+              className={`min-h-12 flex-1 rounded-md border text-body font-semibold transition-colors
+                ${
+                  coorte === "ja-abri"
+                    ? "border-action-primary bg-action-primary text-text-on-brand"
+                    : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
+                }`}
+            >
+              Já abri antes
+            </button>
+          </div>
+        </div>
+
+        {/* 🆕 26/08 (reunião Rua Satélite 36, item 2) — realocada do C4 (dossiê,
+            pós-pagamento) pra cá. Diferente da coorte acima, esta TRAVA o
+            Continuar: o valor entra na conta mostrada no /plano daqui a pouco. */}
+        <div className="mt-6">
+          <p className="text-body-strong font-semibold mb-1">
+            Você tem um endereço comercial pra usar?
+          </p>
+          <p className="text-caption text-text-secondary mb-3">
+            Isso já entra na conta que a gente vai te mostrar daqui a pouco.
+          </p>
+          <div className="flex flex-col gap-2">
+            <button
+              onClick={() => setEnderecoProprio(true)}
+              aria-pressed={enderecoProprio === true}
+              className={`min-h-12 rounded-md border px-4 text-left text-body font-semibold transition-colors
+                ${
+                  enderecoProprio === true
+                    ? "border-action-primary bg-action-primary text-text-on-brand"
+                    : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
+                }`}
+            >
+              Uso um endereço meu
+            </button>
+            <button
+              onClick={() => setEnderecoProprio(false)}
+              aria-pressed={enderecoProprio === false}
+              className={`rounded-md border p-4 text-left transition-colors
+                ${
+                  enderecoProprio === false
+                    ? "border-action-primary bg-action-primary"
+                    : "border-border-strong bg-surface-card hover:border-border-focus"
+                }`}
+            >
+              <div className="flex items-center justify-between gap-3">
+                <span
+                  className={`text-body font-semibold ${
+                    enderecoProprio === false ? "text-text-on-brand" : "text-text-primary"
+                  }`}
+                >
+                  Quero um endereço fiscal da Legalizai
+                </span>
+                <span className="shrink-0 rounded-full bg-surface-dark px-2.5 py-1 text-micro font-semibold text-text-on-dark">
+                  {brl(CUSTOS.ENDERECO_FISCAL, true)}/mês
+                </span>
+              </div>
+              <p
+                className={`text-caption mt-1.5 ${
+                  enderecoProprio === false ? "text-text-on-brand/80" : "text-text-secondary"
+                }`}
+              >
+                Um endereço comercial pronto pra receber a empresa, sem usar o
+                seu. A gente cuida da regularização.
+              </p>
+            </button>
+          </div>
+
+          {enderecoProprio === false && (
+            <Aviso variante="warning" titulo="Essa cobrança é mensal, recorrente">
+              Não é cobrança única — entra somada na sua mensalidade todo mês,
+              a partir de agora. Você confirma o valor total no próximo passo.
+            </Aviso>
+          )}
+        </div>
       </div>
       <div className="app-footer-cta">
         {/* 28/07: N5' (Resumo de valor) foi REMOVIDO — segue direto pro N6.
             Copy trocada: "ver o que eu ganho" prometia uma revelação que só
             existia no N5'; sem ele, a promessa vira mentira. */}
-        <Button full disabled={!escolhida} onClick={onSeguir}>
+        <Button full disabled={!escolhida || enderecoProprio === null} onClick={onSeguir}>
           Continuar
         </Button>
       </div>

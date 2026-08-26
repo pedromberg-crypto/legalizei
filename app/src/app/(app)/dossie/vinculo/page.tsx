@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { VinculoView } from "@/components/wizard-dossie";
 import { ehMei, comRegime } from "@/lib/regime";
+import { ehEnderecoFiscal, comEndereco } from "@/lib/endereco";
 
 /**
  * 🆕 03/08 — só alcançável pelo caminho ME (MEI pula esta tela: Fator R não
@@ -44,7 +45,13 @@ import { ehMei, comRegime } from "@/lib/regime";
  */
 export default function VinculoPage() {
   const router = useRouter();
-  const mei = ehMei(useSearchParams());
+  const searchParams = useSearchParams();
+  const mei = ehMei(searchParams);
+  const enderecoFiscal = ehEnderecoFiscal(searchParams);
 
-  return <VinculoView onSeguir={() => router.push(comRegime("/dossie/socios", mei))} />;
+  return (
+    <VinculoView
+      onSeguir={() => router.push(comEndereco(comRegime("/dossie/socios", mei), enderecoFiscal))}
+    />
+  );
 }

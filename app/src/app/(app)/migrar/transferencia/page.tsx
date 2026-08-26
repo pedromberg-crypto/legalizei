@@ -46,6 +46,9 @@ export default function MigrarTransferenciaPage() {
       travado={travado}
       certificadoPendente={certificadoPendente}
       onSeguir={() => router.push(comRegime("/migrar/ativa", mei))}
+      // 🐛 24/08 — `onAcaoTravado` faltava: "Falar com quem está cuidando"
+      // (persona `migra-refem`) não ia pra lugar nenhum.
+      onAcaoTravado={() => router.push("/veredito/nao-atende")}
     />
   );
 }

@@ -41,6 +41,14 @@ import { StatusIcon, type StatusEstado } from "@/components/ui/status";
 export interface Etapa {
   nome: string;
   orgao?: string;
+  /**
+   * 🆕 26/08 (reunião Rua Satélite 36, item 6) — presente quando a etapa é a
+   * VEZ DO CLIENTE agir (não do órgão, não é recusa) — hoje só o pagamento da
+   * DAE usa isto. Ao chegar nesta etapa (`i === emAndamento`), em vez do anel
+   * girando aparece um bloco com CTA. Ícone segue "a-fazer" (não é estado novo
+   * — coral nunca é estado, ver `ui/status.tsx`); o que muda é o texto+botão.
+   */
+  acaoCliente?: { label: string; onClick?: () => void };
 }
 
 /**
@@ -70,10 +78,22 @@ export interface Etapa {
  *   nos bastidores, não passos que ela reconhece ter feito — a granularidade
  *   servia à spec, não à leitura do cliente. Um check único diz "o que era seu
  *   já está feito", sem fingir que ela participou de "montar contrato".
+ *
+ *   3ª passada (🆕 26/08, reunião Rua Satélite 36, item 6) — voltou a ter 4.
+ *   Até aqui o pagamento da DAE (taxa da Junta) era timing de BACKEND: o
+ *   cliente pagava lá atrás, no checkout (E9), junto da mensalidade, e a
+ *   Legalizaí segurava o valor até a viabilidade sair — sem tela nova. A
+ *   reunião de 25/08 mudou isso: **o cliente só paga a DAE DEPOIS que a
+ *   viabilidade é deferida**, através de um CTA visível aqui no painel
+ *   ("pagardar", coral, literal da reunião). Por isso "Agora é só assinar"
+ *   não libera mais sozinho quando a Junta defere — libera depois que ESSA
+ *   etapa nova ("Pague a guia da Junta") for concluída. Ver `acaoCliente` na
+ *   interface `Etapa` acima e o bloco de render mais abaixo.
  */
 const ETAPAS_ABERTURA: Etapa[] = [
   { nome: "Documentação completa preenchida" },
   { nome: "Analisando viabilidade", orgao: "Junta Comercial" },
+  { nome: "Pague a guia da Junta (DAE)", acaoCliente: { label: "Pagar a guia agora" } },
   { nome: "Agora é só assinar" },
 ];
 
@@ -92,7 +112,8 @@ export function PainelView({
   emAndamento,
   recusa,
   socios = 1,
-  etapas = ETAPAS_ABERTURA,
+  etapas,
+  onPagarDae,
   eyebrow = "Sua abertura",
   titulo,
   sub,
@@ -119,6 +140,12 @@ export function PainelView({
    * antigo valida o TTRT), não por um órgão neutro. Mesma UI, tensão diferente.
    */
   etapas?: Etapa[];
+  /**
+   * 🆕 26/08 (item 6) — chamado quando o cliente clica "Pagar a guia agora"
+   * na etapa da DAE. Só é usado quando `etapas` NÃO é passado (default =
+   * pipeline de abertura) — a migração não tem DAE, então nunca precisa disto.
+   */
+  onPagarDae?: () => void;
   eyebrow?: string;
   titulo?: { normal: string; recusa: string };
   sub?: { normal: string; recusa: string };
@@ -130,7 +157,14 @@ export function PainelView({
   ctaNormal?: { label: string; onClick?: () => void };
   onAcaoRecusa?: () => void;
 }) {
-  const ETAPAS = etapas;
+  // 🆕 26/08 (item 6) — se `etapas` não veio (caso da abertura), usa o default
+  // COM o callback do CTA de DAE já ligado (a migração, que passa `etapas`
+  // próprio, nunca cai aqui — não tem DAE).
+  const ETAPAS =
+    etapas ??
+    ETAPAS_ABERTURA.map((e) =>
+      e.acaoCliente ? { ...e, acaoCliente: { ...e.acaoCliente, onClick: onPagarDae } } : e,
+    );
   const t = titulo ?? {
     normal: "Estamos abrindo sua empresa",
     recusa: "Precisamos de você num ponto",
@@ -185,7 +219,14 @@ export function PainelView({
             {ETAPAS.map((e, i) => {
               const feito = i < concluidas;
               const recusada = recusa?.etapa === i;
-              const girando = !recusa && i === emAndamento;
+              const ehAVez = !recusa && i === emAndamento;
+              // 🆕 26/08 (item 6): quando a etapa-da-vez é do CLIENTE agir
+              // (acaoCliente presente), mostra CTA em vez do anel girando —
+              // girando é "vez do órgão", isso aqui é "vez do cliente, sem
+              // problema nenhum" (diferente de recusa, que é vez do cliente
+              // POR TER DADO ERRADO).
+              const aguardaAcaoCliente = ehAVez && !!e.acaoCliente;
+              const girando = ehAVez && !e.acaoCliente;
               const ultima = i === ETAPAS.length - 1;
               // PainelView usa {feito, girando, a-fazer, recusa} do StatusIcon.
               const estado: StatusEstado = recusada
@@ -239,6 +280,22 @@ export function PainelView({
                       <p className="text-micro text-state-info-text mt-1">
                         Em andamento agora. Te avisaremos quando terminar.
                       </p>
+                    )}
+
+                    {/* 🆕 26/08 (item 6): vez do cliente, sem ser problema —
+                        CTA coral inline ("pagardar", literal da reunião Rua
+                        Satélite 36). Tinta de marca (surface-tint-brand), não
+                        de estado — reforça que isto não é um alerta. */}
+                    {aguardaAcaoCliente && e.acaoCliente && (
+                      <div className="mt-2 rounded-md bg-surface-tint-brand p-3">
+                        <p className="text-micro font-semibold text-text-primary mb-2">
+                          A Junta aprovou. Falta só pagar a guia pra liberar a
+                          assinatura.
+                        </p>
+                        <Button onClick={e.acaoCliente.onClick}>
+                          {e.acaoCliente.label}
+                        </Button>
+                      </div>
                     )}
 
                     {/* ── O 4º ESTADO (UX-40): recuperação inline, aqui mesmo. ── */}

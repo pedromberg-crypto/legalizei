@@ -4,11 +4,11 @@ import type { DadosSaida } from "@/components/saida";
 import { Lottie } from "@/components/lottie";
 
 /**
- * Conteúdo das 3 telas de saída fora do veredito (E4.1 fora-BH · E5.4 exterior
- * · E5.5 3+ sócios) — FONTE ÚNICA usada pelas rotas reais (`/saida/*`) e pela
- * `/apresentacao`. Só o CONTEÚDO mora aqui; as `acoes` da confirmação (que
- * variam por contexto — a rota real navega de verdade, a demo reinicia o
- * snapshot) continuam montadas no lugar que consome.
+ * Conteúdo das telas de saída fora do veredito (E4.1 fora-BH · E5.4 exterior
+ * · E5.5 5+ sócios · E5.6 sócio PJ) — FONTE ÚNICA usada pelas rotas reais
+ * (`/saida/*`) e pela `/apresentacao`. Só o CONTEÚDO mora aqui; as `acoes` da
+ * confirmação (que variam por contexto — a rota real navega de verdade, a
+ * demo reinicia o snapshot) continuam montadas no lugar que consome.
  */
 
 export const DADOS_SAIDA_FORA_BH: DadosSaida = {
@@ -54,14 +54,62 @@ export const DADOS_SAIDA_EXTERIOR: DadosSaida = {
 };
 
 export const DADOS_SAIDA_SOCIOS: DadosSaida = {
-  titulo: "Com três ou mais sócios, ainda não pelo app",
+  titulo: "Com cinco ou mais sócios, ainda não pelo app",
   explica:
-    "Não tem nada de errado com a sua sociedade, e a lei permite. É o nosso app que hoje abre empresa com no máximo dois sócios.",
+    "Não tem nada de errado com a sua sociedade, e a lei permite. É o nosso app que hoje abre empresa com no máximo quatro sócios.",
   origem: {
     rotulo: "De onde vem esse limite",
     texto:
-      "É uma escolha nossa, não uma regra do governo. A cada sócio a mais mudam as assinaturas e o contrato, e a gente preferiu fazer bem para dois antes de abrir para mais.",
+      "É uma escolha nossa, não uma regra do governo. A cada sócio a mais mudam as assinaturas e o contrato, e a gente preferiu fazer bem até quatro antes de abrir para mais.",
   },
   saida:
     "O escritório que está por trás do app faz esse tipo de abertura todo dia, fora do aplicativo. Quer que a gente te apresente?",
+};
+
+/**
+ * 🆕 24/08 (reunião Leonan 19/08 + pedido do Pedro) — sócio pessoa jurídica
+ * tira a empresa do Simples Nacional (regra fiscal: contrato social com sócio
+ * PJ vai automático pro Presumido ou Real). Hoje o produto só atende Simples
+ * (Lucro Presumido segue fora do MVP), então esse caso vira atendimento
+ * interno em vez de deixar a pessoa avançar e travar mais na frente.
+ */
+export const DADOS_SAIDA_SOCIO_PJ: DadosSaida = {
+  titulo: "Com sócio pessoa jurídica, ainda não pelo app",
+  explica:
+    "Sócio CNPJ tira a empresa do Simples Nacional assim que o contrato social é registrado — ela vai automático pro Lucro Presumido ou Real. Hoje o nosso produto só atende empresas no Simples.",
+  origem: {
+    rotulo: "De onde vem essa regra",
+    texto:
+      "É regra fiscal, não escolha nossa: empresa com sócio pessoa jurídica não pode optar pelo Simples Nacional.",
+  },
+  saida:
+    "O escritório que está por trás do app atende Lucro Presumido todo dia, fora do aplicativo. Quer que a gente te apresente?",
+};
+
+/**
+ * 🆕 26/08 (fonte: `/saida/cnpj-inapto/page.tsx`, 04/08) — nasce do M1
+ * (`/migrar/cnpj`, `MigrarCnpjView`'s `onSaidaInapto`). Situação cadastral ≠
+ * ativa: a Receita nem reconhece a empresa como ativa, então a regularização
+ * vem ANTES de qualquer migração. Diferente das 3 saídas acima, a rota real
+ * TEM formulário de captura (nome+contato) — trazido junto pra fidelidade.
+ */
+export const DADOS_SAIDA_CNPJ_INAPTO: DadosSaida = {
+  icone: <Lottie path="/lottie/alert-legalizai-story-book.json" fps={30} className="h-[125px] w-[125px]" />,
+  tag: "CNPJ irregular",
+  titulo: "Essa empresa precisa regularizar antes de migrar",
+  explica:
+    "A Receita mostra sua empresa com situação diferente de ativa (suspensa, inapta ou baixada). A gente não consegue assumir a contabilidade nesse estado, a regularização vem primeiro.",
+  origem: {
+    rotulo: "Por que isso trava a migração",
+    texto:
+      "Sem situação ativa na Receita não dá pra fazer a transferência de responsabilidade nem declarar nada em nome da empresa. É exigência dos próprios órgãos, não nossa.",
+  },
+  saida:
+    "Deixa seu contato que a gente te ajuda a entender o que falta pra regularizar. Depois de ativa de novo, a migração segue normal.",
+  ctaEnviar: "Quero ajuda pra regularizar",
+  confirmacao: {
+    titulo: "Recebemos seu contato",
+    texto:
+      "Nosso time entra em contato pra entender o que está pendente na sua empresa e como regularizar. Assim que resolver, você volta e migra com a gente.",
+  },
 };

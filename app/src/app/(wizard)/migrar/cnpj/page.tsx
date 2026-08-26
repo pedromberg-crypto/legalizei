@@ -44,6 +44,16 @@ import { comRegime } from "@/lib/regime";
  * 🔴 06/08 (achado do Pedro) — ME TAMBÉM segue pro M2 (`/migrar/diagnostico`)
  * agora, não mais direto pro M3: certificado digital não tinha pergunta
  * nenhuma no caminho ME (gap real, ver `MigrarDiagnosticoView`).
+ *
+ * 🆕 24/08 (reunião Leonan 19/08) — CPF/RG/estado civil + sociedade (M1b/
+ * E4.2b/E4.2c, `MigrarDadosBaseView`/`SociosView`) e o acesso ao GOV.BR +
+ * procuração (`MigrarGovView`) NÃO entram aqui — a reunião foi explícita
+ * sobre a ORDEM: isso acontece DEPOIS do pagamento, entre `/migrar/contador`
+ * (M3c) e `/migrar/transferencia` (M4b), não entre o CNPJ e o diagnóstico.
+ * "Durante a migração... [ele] preencha todos os dados base... [depois]
+ * a gente vem para a parte de estamos encerrando lá, transferindo a
+ * responsabilidade" — dados base primeiro, pipeline de transferência depois.
+ * Ver `/migrar/contador/page.tsx` (shell APP) pra sequência completa.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function MigrarCnpjPage() {

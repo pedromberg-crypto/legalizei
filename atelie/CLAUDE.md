@@ -32,19 +32,30 @@ motor trabalha com regra desatualizada sem ninguém perceber.
 2. `../marca/personagem-leo.md` — quem é o Léo, voz, dial de ironia por persona (§5), o que nunca
    vira piada (§3). **Sem isso lido, não escreva nada.**
 3. `../mkt/estrategia/posicionamento.md` — claim, qualificador obrigatório "do Simples Nacional".
-4. `../mkt/estrategia/estrategia-organica.md` — pilares 1-9, blocos 40/40/20, regras travadas
-   (nunca simular escassez, garantia 7 dias em post de venda).
+4. `../mkt/estrategia/estrategia-organica.md` — pilares 1-15 (13 ativos + 2 standby, numeração v3
+   26/08), 4 blocos de pauta (20/30/25/25), regras travadas (nunca simular escassez, garantia 7
+   dias em post de venda).
 5. `../mkt/estrategia/mecanicas-engajamento.md` — escada de CTA (nível 1 engajamento / nível 2
    funil), banco de prompts, mecânica "Pergunta que ninguém explica".
-6. `../pesquisa/metodologia-personas.md` — dorsais A/B/C.
+6. `../pesquisa/metodologia-personas.md` — 5 dorsais (A/B/C/D/E) + 18 volantes (26/08). Pra copy
+   calibrada de verdade, leia também o arquivo da persona específica em `../pesquisa/personas/` —
+   é lá que mora o banco de calibragem, mapeamento de pilar, reação a crítica, voz própria e
+   referência visual de cada dorsal (não está resumido em lugar nenhum além do próprio arquivo).
 7. `ds/legalizai/regras.json` — rode o QA determinístico mentalmente contra o que você escreveu
    (travessão, qualificador, garantia, nome antigo de marca) antes de entregar.
-8. **Anti-repetição:** leia `dados/legalizai/*/campanha.json` + as peças já existentes em
-   `dados/legalizai/*/pecas/*.json` — não repita pilar/headline/ângulo já usado. Pilar 5 (oferta) já
-   tem 12 peças na campanha de lançamento; prefira outro pilar salvo pedido explícito.
+8. **Anti-repetição (alerta, não bloqueio — decisão 26/08):** leia `dados/legalizai/*/campanha.json` +
+   as peças já existentes em `dados/legalizai/*/pecas/*.json` — evite repetir pilar/headline/ângulo já
+   usado. Pilar 5 (oferta) já tem 12 peças na campanha de lançamento; prefira outro pilar salvo pedido
+   explícito. Se decidir repetir mesmo assim (ou o Pedro pedir), **não bloqueie** — sinalize
+   explicitamente no output e preencha `excecaoAntiRepeticao` na peça.
 
-`ds/legalizai/*.json` (voz, tokens, ctas, personas, personagem, templates) seguem sendo lidos daqui
-mesmo — são extração estruturada MINHA, não têm original solto em outro lugar do vault.
+`ds/legalizai/*.json` (voz, tokens, ctas, personagem, templates) seguem sendo lidos daqui mesmo —
+são extração estruturada MINHA, não têm original solto em outro lugar do vault. **Exceção:
+`ds/legalizai/personas.json` NÃO é assim** — desde 26/08 ele é só um ÍNDICE (id, perfil curto, dial
+de partida, mensagem-âncora) das 5 dorsais + 18 volantes; a profundidade real (banco de calibragem,
+mapeamento de pilar, reação a crítica, voz própria, referência visual, pesquisa real) mora só em
+`../pesquisa/personas/*.md` e `../pesquisa/personas/volantes/*.md` — leia esses direto pra qualquer
+copy que precise de nuance de persona.
 
 ## Formato de saída
 
@@ -54,15 +65,18 @@ arquivo `.json` sozinho** — só depois que o Pedro confirmar. O schema exato p
 está em `dados/legalizai/tipos.md`; a peça vai pra
 `dados/legalizai/<campanha>/pecas/<id>.json` + atualiza o `campanha.json` correspondente.
 
-## Regras duras (idênticas às do agente antigo, não afrouxar)
+## Regras duras (atualizadas 26/08 — ver ADR em decisoes-marca.md pra histórico)
 
 - Zero travessão (— ou –).
-- Zero concorrente citado por nome (lista de concorrentes ainda não existe — ver `ds/legalizai/voz.json > glossario.concorrentesNomeados`, está vazia de propósito, não inventar nome).
+- Zero concorrente citado por nome — lista ATIVA em `ds/legalizai/voz.json > glossario.concorrentesNomeados` (Contabilizei, Agilize, Contaja, Facilite, Contabilivre, Marvee, ContaAzul, Nubank), uso 100% interno de QA, nunca publicar.
 - Ironia mira o SISTEMA, nunca a dúvida/erro do cliente.
-- "Contador de verdade"/"humano" sem o qualificador "do Simples Nacional" = proibido.
+- **JAMAIS prometer/insinuar contador humano dedicado no plano MEI** (MEI tem assistente virtual, não contador). Substitui a exigência antiga de citar sempre "do Simples Nacional" — essa virou critério editorial, não regra dura.
 - Garantia nunca "incondicional" nem "sem letra miúda" como promessa.
 - Escassez só se real.
 - CTA preso à escada do estágio de funil (`ds/legalizai/ctas.json`).
+- **Se a copy fala na voz do Léo em 1ª pessoa, ele precisa aparecer visualmente na peça.**
+- Cadência de publicação NÃO está travada nesta fase (decisão 26/08) — respeitar anti-repetição e blocos 40/40/20, frequência fica por sessão.
+- Anti-repetição é alerta, não bloqueio — Pedro pode repetir pilar/ângulo de propósito, mas o motor tem que sinalizar isso antes de entregar (ver campo `excecaoAntiRepeticao` em `tipos.md`).
 
 ## O que este projeto NÃO tem ainda (não fingir que tem)
 

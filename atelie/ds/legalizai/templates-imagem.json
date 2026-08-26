@@ -1,5 +1,22 @@
 {
-  "_nota": "10 receitas de enquadramento PORTADAS de lib/enquadramento.ts (Ateliê/PS), campo 'plano' copiado literal (é instrução técnica de câmera, em inglês, marca-agnóstica). Mesmos 10 IDs de templates-texto.json, de propósito — no PS o mesmo templateId decide layout de texto E enquadramento de foto juntos.",
+  "_nota": "v2 (26/08) — brief de humano-IA travado (ver `briefHumanoIA` abaixo), decidido na validação item 10 do mapa-itens-travados-criacao-post.md. Ainda NÃO existe componente/prompt de geração real — isto é o REQUISITO travado, não a implementação (mesma realidade do item 9: construir de verdade fica pra quando o Pedro voltar nessa parte).",
+
+  "briefHumanoIA": {
+    "estilo": "FOTORREALISTA (não estilizado/ilustrativo) — decisão travada 26/08",
+    "tensaoComRegraDoContador": "roteiros-video.md (correção do guardian, 20/08) trava que o card do CONTADOR precisa ser foto real autorizada ou ilustração equivalente, nunca banco de imagem genérico — humano-IA fotorrealista fingindo ser O contador contradiria essa regra. Fotorrealista serve bem pra representar CLIENTE/cena de uso; representar o contador específico continua exigindo foto real ou ilustração.",
+    "comboDeVariacoes": ["cliente/empreendedor sozinho", "contador sozinho", "ambos juntos", "ambos separados", "ambiente escritório", "ambiente rua (MEI prestador de serviço que atende fora)"],
+    "diversidade": {
+      "idade": "18+ sem teto",
+      "tomDePele": "amplo",
+      "genero": "todos",
+      "etnia": "TRAVADA em características brasileiras, com atenção ao sudeste (praça de ataque inicial) — decisão deliberada, não diversidade genérica global"
+    },
+    "referenciaDePersona": "pesquisa/personas/persona-a/b/c-*.md + pesquisa/personas/volantes/*.md (ex.: a1-dev-freelancer-recem-clt, c1-professor-autonomo-aposentado — bate com o exemplo do Pedro de professora de meia-idade)",
+    "referenciaDeCnae": "124 CNAEs 'Real' confirmados em pesquisa/cnae-matriz/limpeza-260-servico.md — base de contexto de serviço (nunca comércio/varejo), cresce conforme o escopo de CNAEs atendidos aumentar",
+    "fonte": "decisoes-marca.md 2026-08-26, mapa-itens-travados-criacao-post.md §10"
+  },
+
+  "_notaOriginal": "10 receitas de enquadramento PORTADAS de lib/enquadramento.ts (Ateliê/PS), campo 'plano' copiado literal (é instrução técnica de câmera, em inglês, marca-agnóstica). Mesmos 10 IDs de templates-texto.json, de propósito — no PS o mesmo templateId decide layout de texto E enquadramento de foto juntos.",
 
   "AVISO_DE_COMPATIBILIDADE_REAL": "BAIXA, e isso não dá pra maquiar. O PS fotografa uma PESSOA REAL (cliente/modelo) — todo campo 'plano' abaixo é instrução de câmera pra rosto humano. O Legalizai, conferido em prompts-imagem.md (campanha real), NÃO fotografa pessoa nenhuma: usa (a) o personagem Léo ilustrado, (b) device 3D renderizado (iPhone via Blender), ou (c) card 3D coral com preço. Os 10 templates abaixo são o ESQUELETO TÉCNICO (como travar câmera↔zona de texto) — o campo 'plano' de cada um SÓ serve como está pra um cenário hipotético onde o Legalizai decida fotografar um contador real (pilar 7, bastidor). Pros outros 9, alguém (você, numa sessão de design) precisa escrever a receita equivalente pra 'onde o Léo/device fica', não eu inventando agora.",
 

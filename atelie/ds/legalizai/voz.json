@@ -1,0 +1,44 @@
+{
+  "_nota": "Extraído por LEITURA das regras em prosa (legalizai-copywriter.md, legalizai-guardian.md, personagem-leo.md, posicionamento.md, decisoes-marca.md) — não é lista pronta que já existia. Usar ESTE arquivo JUNTO com ds/legalizai/personagem-leo.md (prosa): aqui vai só o que reduz a termo/frase literal, checável por string match. O julgamento de tom (ex: teste do alvo da piada, dial de ironia por persona) NÃO reduz a lista de palavra — fica documentado em 'regrasComportamentais' abaixo, só como ponteiro pro doc de prosa, e continua exigindo agente (LLM), não regex.",
+
+  "glossario": {
+    "proibidas": [
+      { "termo": "incondicional", "contexto": "só proibido em GARANTIA", "fonte": "legalizai-copywriter.md §Regras duras; decisoes-marca.md 2026-07-27/18-08" },
+      { "termo": "sem letra miúda", "contexto": "só proibido como PROMESSA de garantia — usar 'letra miúda' como assunto/história (ex: peça A4, autodeboche do Léo) é PERMITIDO", "fonte": "legalizai-copywriter.md §Regras duras + AUTO-CHECK da peça A4 em copy.md, que já testou esse limite na prática" },
+      { "termo": "Legalizai Story Book", "contexto": "nome de marca ANTIGO — rebrand fechado 2026-08-03, usar só 'Legalizai' em copy nova", "fonte": "decisoes-marca.md 2026-08-03", "ressalva": "a frase-gatilho 'Legalizai Story Book — e pronto' e 'Legalizai Story Book! 🎉' seguem válidas como VERBO conjugado (não nome de marca) — ver posicionamento.md §Ressalva de nome. Ou seja: como SUBSTANTIVO (nome da empresa) é proibido; como VERBO é permitido. String match sozinho não distingue os dois — precisa de revisão humana quando aparecer." }
+    ],
+    "preferidas_travadas": [
+      { "frase": "Fica esperto que eu já fiquei.", "uso": "fechar alerta/prazo", "fonte": "personagem-leo.md §6" },
+      { "frase": "De olho, sempre, Léo", "uso": "assinatura no fim de post longo", "fonte": "personagem-leo.md §6, aprovada 19/08" },
+      { "frase": "Vai, legaliza aí.", "uso": "fecho de CTA de convite/ação — É O TRAVADO REAL de marca (não 'Legalizai!')", "fonte": "personagem-leo.md §6", "ressalva": "decisoes-marca.md 13/08 trava esta frase + o visual do AI acendendo como PAR INDIVISÍVEL em peça audiovisual — usar só a metade textual em peça estática é aplicação parcial de ADR já travado. copy.md pendência #4: Pedro ainda não validou se cabe em contexto de lista de espera." },
+      { "frase": "Ói, deixa eu te contar uma que ninguém conta.", "uso": "abertura de post educativo", "fonte": "personagem-leo.md §6" },
+      { "frase": "Sua empresa está em dia ✅", "uso": "frase-gatilho, empresa em dia", "fonte": "posicionamento.md §Frases-gatilho" },
+      { "frase": "Falta só isso, vence dia 15", "uso": "frase-gatilho, vencimento próximo", "fonte": "posicionamento.md §Frases-gatilho" }
+    ],
+    "inconsistencia_encontrada_nao_resolvida": {
+      "descricao": "posicionamento.md §Frases-gatilho lista 'Legalizai Story Book! 🎉' pra conquista/marco. personagem-leo.md §6 diz que a marca REAPROVEITA a frase-gatilho já travada como 'Legalizai! 🎉' (sem 'Story Book'). Os dois docs discordam sobre a grafia exata da frase de celebração pós-rebrand (2026-08-03).",
+      "acao": "não resolvi sozinho — Pedro decide qual das 2 grafias vale, eu só sinalizo a divergência."
+    },
+    "qualificadoresObrigatorios": [
+      {
+        "regra": "Toda vez que a copy cita 'contador de verdade' / 'contador' / 'humano' em contexto de plano ou atendimento, precisa vir com o qualificador colado",
+        "qualificador": "do Simples Nacional",
+        "motivo": "MEI (R$49) tem assistente virtual, não contador dedicado — só ME/Simples (R$139+) tem contador CRC de verdade. Soltar a frase sem qualificador vira promessa falsa pra quem lê pensando em MEI.",
+        "fonte": "posicionamento.md §2, decisoes-marca.md 2026-08-17"
+      }
+    ],
+    "concorrentesNomeados": {
+      "lista": [],
+      "status": "FALTA — não veio em nenhum dos documentos fornecidos. A REGRA existe (zero concorrente citado por nome, guerrilha só por cor/silhueta), mas a LISTA de quem são os concorrentes (pra eu poder checar por string match automático) não está nestes arquivos — deve viver em `matriz-comparativa.md`, que não foi copiado pra esta pasta. Pedro completa ou eu leio o arquivo de origem se disser onde fica."
+    }
+  },
+
+  "caracteresProibidos": ["—", "–"],
+
+  "regrasComportamentais_naoRedutiveisAPalavra": [
+    { "regra": "Teste do alvo da piada: ironia mira o SISTEMA (jargão, opacidade, engessamento), nunca a pessoa/dúvida/erro do cliente.", "fonte": "personagem-leo.md §3", "checavelPorRegex": false },
+    { "regra": "Dial de ironia varia por persona — baixíssimo/zero em Persona C, é sugestão de encaixe do agente, decisão final humana.", "fonte": "personagem-leo.md §5", "checavelPorRegex": false },
+    { "regra": "Escassez/urgência só se real (vaga/data verdadeira), nunca simulada.", "fonte": "estrategia-organica.md §Regras travadas", "checavelPorRegex": "parcial — dá pra alertar se aparecer 'só hoje'/'últimas vagas'/contagem regressiva sem uma data real declarada em outro campo da peça" },
+    { "regra": "CTA preso à escada de funil do estágio da peça — nunca CTA de venda em post de topo puro.", "fonte": "mecanicas-engajamento.md §Escada de CTA", "checavelPorRegex": "parcial — dá pra validar contra ds/legalizai/ctas.json se o campo estagioFunil da peça estiver preenchido" }
+  ]
+}

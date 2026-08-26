@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Legalizai · Ateliê (demo local)</title>
+<style>
+  :root{
+    --coral:#F2643C; --coral-700:#d8502c; --coral-soft:#fdece6;
+    --ink-900:#20140f; --ink-700:#4a3830; --ink-500:#7a655c; --ink-200:#e8ddd6; --ink-50:#faf6f3;
+    --ok:#1f8a5c; --alerta:#c47a12; --bloq:#c1352b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ink-50);color:var(--ink-900);font-family:"Sora",system-ui,-apple-system,Segoe UI,sans-serif;}
+  header{display:flex;align-items:center;gap:12px;padding:16px 24px;background:#fff;border-bottom:1px solid var(--ink-200);position:sticky;top:0;z-index:10}
+  .logo{width:34px;height:34px;border-radius:12px;background:var(--coral);display:grid;place-items:center;color:#fff;font-weight:800}
+  header h1{font-size:15px;margin:0}
+  header p{margin:0;font-size:11px;color:var(--ink-500)}
+  .aviso{margin-left:auto;font-size:11px;background:var(--coral-soft);color:var(--coral-700);padding:6px 12px;border-radius:999px;font-weight:600}
+  nav{display:flex;gap:4px;padding:10px 24px;background:#fff;border-bottom:1px solid var(--ink-200)}
+  nav button{border:0;background:none;padding:8px 14px;border-radius:10px;font-family:inherit;font-size:13px;font-weight:600;color:var(--ink-500);cursor:pointer}
+  nav button.on{background:var(--coral-soft);color:var(--coral-700)}
+  main{max-width:1100px;margin:0 auto;padding:24px}
+  .tab{display:none} .tab.on{display:block}
+  .card{background:#fff;border:1px solid var(--ink-200);border-radius:14px;padding:16px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:14px}
+  .chip{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:3px 9px;border-radius:999px;background:var(--ink-200);color:var(--ink-700);margin:0 5px 5px 0}
+  .chip.mote-A{background:#e7f0ff;color:#2a5db0}
+  .chip.mote-B{background:#fff3d6;color:#9a6a00}
+  .chip.mote-C{background:#eafaf0;color:#1f8a5c}
+  .badge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px}
+  .badge.ok{background:#eafaf0;color:var(--ok)}
+  .badge.alerta{background:#fff3e0;color:var(--alerta)}
+  .badge.na{background:var(--ink-200);color:var(--ink-500)}
+  .peca-titulo{font-weight:700;font-size:14px;margin:8px 0 4px}
+  .peca-headline{font-size:13px;font-style:italic;color:var(--ink-700);margin-bottom:8px}
+  .peca-corpo{font-size:12px;color:var(--ink-500);line-height:1.5;max-height:0;overflow:hidden;transition:max-height .25s}
+  .peca-corpo.aberto{max-height:400px;margin-top:8px}
+  .peca-cta{font-size:12px;font-weight:700;color:var(--coral-700);margin-top:8px}
+  .toggle{font-size:11px;color:var(--coral-700);cursor:pointer;font-weight:600;margin-top:6px;display:inline-block}
+  .filtros{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+  .filtros select{font-family:inherit;font-size:12px;padding:6px 10px;border-radius:8px;border:1px solid var(--ink-200);background:#fff}
+  .stat{background:#fff;border:1px solid var(--ink-200);border-radius:14px;padding:14px;text-align:center}
+  .stat b{display:block;font-size:24px;color:var(--coral-700)}
+  .stat span{font-size:11px;color:var(--ink-500)}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:18px}
+  .log-linha{font-size:12.5px;padding:8px 0;border-bottom:1px solid var(--ink-200);color:var(--ink-700)}
+  .log-linha b{color:var(--ink-900)}
+  .chat-msg{max-width:82%;padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.5;margin-bottom:10px}
+  .chat-msg.user{margin-left:auto;background:var(--coral-soft);border-bottom-right-radius:4px}
+  .chat-msg.assistant{background:#fff;border:1px solid var(--ink-200);border-bottom-left-radius:4px}
+  .nota{font-size:11px;color:var(--ink-500);background:var(--ink-200);padding:8px 12px;border-radius:10px;margin-bottom:14px}
+  .veredito{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;margin-left:6px}
+  .veredito.APROVADO{background:#eafaf0;color:var(--ok)}
+  .veredito.CORRIGIR{background:#fff3e0;color:var(--alerta)}
+  h2{font-size:16px;margin:0 0 4px}
+  .sub{font-size:12px;color:var(--ink-500);margin:0 0 16px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">L</div>
+  <div><h1>Legalizai · Ateliê (demo local)</h1><p>sem chamada de API — dado real migrado de mkt/campanhas/2026-08-primeira-campanha</p></div>
+  <div class="aviso">modo demonstração</div>
+</header>
+
+<nav>
+  <button class="on" data-tab="criar">💬 Criar</button>
+  <button data-tab="planejamento">🗂 Planejamento</button>
+  <button data-tab="log">📊 Log · Estado</button>
+</nav>
+
+<main>
+
+  <!-- ===== TAB CRIAR ===== -->
+  <section id="criar" class="tab on">
+    <h2>Criar</h2>
+    <p class="sub">Exemplo de conversa — este trecho é HISTÓRICO real (as 12 peças da campanha nasceram assim, pelo agente <code>legalizai-copywriter</code>), não é geração ao vivo desta página. Pra gerar peça nova, dê o prompt direto no Claude Code — ele lê os mesmos docs desta pasta.</p>
+    <div class="card">
+      <div class="chat-msg user">Preciso de 3 ideias de MEI pra campanha de lista de espera</div>
+      <div class="chat-msg assistant">
+        3 ideias, mote B (MEI, R$19→R$49), auditadas pelo guardian — todas aprovadas.
+      </div>
+      <div class="grid" id="chatIdeias"></div>
+    </div>
+  </section>
+
+  <!-- ===== TAB PLANEJAMENTO ===== -->
+  <section id="planejamento" class="tab">
+    <h2>Planejamento — primeira-campanha</h2>
+    <p class="sub">12 peças migradas do <code>copy.md</code>. QA calculado AO VIVO nesta página (mesma lógica de <code>ds/legalizai/regras.json</code>) — não é o que o modelo autodeclarou, é checagem real por código, igual o <code>lib/qa.ts</code> do Ateliê.</p>
+    <div class="filtros">
+      <select id="fMote"><option value="">Todos os motes</option><option value="A">Mote A</option><option value="B">Mote B</option><option value="C">Mote C</option></select>
+      <select id="fPersona"><option value="">Toda persona</option><option value="A">Persona A</option><option value="B">Persona B</option><option value="C">Persona C</option><option value="geral">Geral</option></select>
+    </div>
+    <div class="grid" id="pecasGrid"></div>
+  </section>
+
+  <!-- ===== TAB LOG ===== -->
+  <section id="log" class="tab">
+    <h2>Log · Estado calculado</h2>
+    <p class="sub">Equivalente a <code>lib/resumo-estado.ts::resumoEstado()</code> do Ateliê — calculado agora, ao vivo, lendo o array de peças embutido nesta página, não um arquivo estático salvo à parte.</p>
+    <div class="stats" id="statsGrid"></div>
+    <div class="card">
+      <b style="font-size:12px">Anti-repetição — o que já foi usado</b>
+      <div id="antiRep"></div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+// ===================================================================
+// DADO EMBUTIDO — snapshot das 12 peças reais em dados/legalizai/primeira-campanha/pecas/*.json
+// Numa versão com API, isso viria de fetch() nos arquivos; aqui é local/sem servidor, então embuto.
+// ===================================================================
+const PECAS = [
+  {id:"mote-a1-por-quem-entende",titulo:"A1 — por quem entende",mote:"A",pilar:5,personaAlvo:"geral",dialIronia:"baixo",
+   copy:{headline:"22 anos de contabilidade. Um app em construção por quem entende.",
+   corpo:"Eu sou novo. A contabilidade atrás de mim não é: são 22 anos abrindo e cuidando de empresa em Belo Horizonte. O app tá sendo construído agora, com essa bagagem toda dentro dele, e quem entra na lista de espera fica sabendo do lançamento antes de todo mundo.",
+   cta:"Entra na lista: rápido, poucas perguntas."}, guardian:{veredito:"APROVADO"}},
+  {id:"mote-a2-por-quem-entende-de-verdade",titulo:"A2 — por quem entende de verdade",mote:"A",pilar:5,personaAlvo:"geral",dialIronia:"medio",
+   copy:{headline:"22 anos de contabilidade. Um app em construção por quem entende de verdade.",
+   corpo:"Todo app de contabilidade jura que é simples. Eu prefiro mostrar de onde eu venho: escritório de verdade em BH, empresa aberta, guia paga, prazo cumprido, 22 anos disso. Agora essa rotina tá virando app, e a lista de espera do lançamento já tá aberta.",
+   cta:"Quer garantir? Leva menos de 1 minuto."}, guardian:{veredito:"APROVADO"}},
+  {id:"mote-a3-por-quem-tem-historia",titulo:"A3 — por quem tem história",mote:"A",pilar:5,personaAlvo:"geral",dialIronia:"baixo",
+   copy:{headline:"22 anos de contabilidade. Um app em construção por quem tem história.",
+   corpo:"Começar do zero é fácil. Difícil é começar com 22 anos de estrada nas costas, que é o meu caso: escritório de verdade em Belo Horizonte, agora virando app na palma da sua mão. Tô montando isso pra quem vai abrir o primeiro CNPJ e pra quem já tem um e quer trocar de lugar.",
+   cta:"Basta responder poucas perguntas pra garantir seu lugar."}, guardian:{veredito:"APROVADO"}},
+  {id:"mote-a4-letra-miuda-que-ele-comeu",titulo:"A4 — a letra miúda que ele já comeu",mote:"A",pilar:5,personaAlvo:"A",dialIronia:"alto",
+   copy:{headline:"22 anos de contabilidade. Um app em construção por quem tem história.",
+   corpo:"História minha tem uma só, e ela é curtinha: eu caí numa letra miúda uma vez. Uma. De lá pra cá virei aquele chato que lê o contrato até o fim, inclusive a parte que escrevem pequenininho torcendo pra ninguém ler. Já a história da contabilidade que tá atrás de mim é bem maior: 22 anos abrindo e cuidando de empresa em Belo Horizonte. As duas coisas estão indo pra dentro desse app, que ainda tá em construção. Quem entra na lista de espera fica sabendo do lançamento antes de todo mundo.",
+   cta:"Cadastro rápido, só algumas perguntas."}, guardian:{veredito:"APROVADO"}},
+  {id:"mote-b1-preco-de-depois-nao-e-castigo",titulo:"B1 — o preço de depois não é castigo",mote:"B",pilar:5,personaAlvo:"C",dialIronia:"baixo",
+   copy:{headline:"MEI: R$19 por mês nos 3 primeiros meses.",
+   corpo:"Depois, R$49, sem novidade escondida no meio do caminho. Sua empresa é de verdade desde o primeiro mês, o que muda lá na frente é só um valor que você já sabia hoje. O app ainda tá em construção, então isso não é cobrança de hoje: quem preenche o formulário guarda os R$19 pro dia em que a gente lançar. Essa condição vale até 31 de dezembro de 2026, ou enquanto a lista estiver aberta, o que vier primeiro.",
+   cta:"Cadastro rápido, só algumas perguntas."}, guardian:{veredito:"APROVADO"}},
+  {id:"mote-b2-dor-concreta-prazo",titulo:"B2 — dor concreta nomeada (prazo)",mote:"B",pilar:5,personaAlvo:"C",dialIronia:"baixo",
+   copy:{headline:"Plano MEI: garante R$19 agora. R$49 depois.",
+   corpo:"Sem novidade escondida no meio do caminho: R$19 por mês nos 3 primeiros meses, depois fica R$49 e pronto. Quando o app lançar, eu fico de olho no calendário pra você não descobrir prazo em cima da hora, tipo a guia que vence todo mês. O que dá pra fazer hoje é deixar seu nome enquanto a lista tá de pé: os R$19 já ficam reservados pro seu primeiro mês lá dentro. Essa condição vale até 31 de dezembro de 2026, ou enquanto a lista estiver aberta, o que vier primeiro.",
+   cta:"Basta responder poucas perguntas pra garantir seu lugar."}, guardian:{veredito:"CORRIGIR"}},
+  {id:"mote-b3-a-partir-de",titulo:"B3 — 'a partir de' (Léo mais solto)",mote:"B",pilar:5,personaAlvo:"geral",dialIronia:"medio",
+   copy:{headline:"MEI: R$19 nos 3 primeiros meses, depois R$49 é o preço que fica.",
+   corpo:"Repara que não tem 'a partir de' em lugar nenhum aí em cima. Preço 'a partir de' é aquele que nunca chega em você, e eu já caí nessa uma vez. Foi a última. Aqui é R$19 nos 3 primeiros meses, R$49 depois, e acabou a história. O app ainda vai lançar, então hoje você não paga nada: você guarda esse valor pro dia que ele abrir. Prazo aqui também é número escrito, não 'corre que acaba hoje': vale pra quem entra na lista até 31 de dezembro de 2026.",
+   cta:"Entra na lista: rápido, poucas perguntas."}, guardian:{veredito:"APROVADO"}},
+  {id:"mote-b4-piada-e-a-propria-oferta",titulo:"B4 — a piada é a própria oferta",mote:"B",pilar:5,personaAlvo:"A",dialIronia:"alto",
+   copy:{headline:"Plano MEI: R$19 nos 3 primeiros meses, R$49 depois. De um app que nem abriu ainda.",
+   corpo:"Pois é. Tô te oferecendo o preço de uma coisa que ainda tá sendo construída, e resolvi escrever isso na frente em vez de deixar você descobrir depois. Se soou estranho, ótimo, era pra soar. Funciona assim: você deixa seu nome na lista hoje e não paga nada hoje. Quando o app abrir, os R$19 já estão te esperando nos 3 primeiros meses, e depois vira R$49 e para de mudar, sem novidade escondida no meio do caminho. Prazo aqui é um só e tá escrito: 31 de dezembro de 2026, ou o dia em que a lista fechar, se ela fechar antes.",
+   cta:"Quer garantir? Leva menos de 1 minuto."}, guardian:{veredito:"APROVADO"}},
+  {id:"mote-c1-humano-no-plano-de-entrada",titulo:"C1 — humano no plano de entrada",mote:"C",pilar:5,personaAlvo:"A",dialIronia:"baixo",
+   copy:{headline:"ME no Simples Nacional: R$79 por mês nos 3 primeiros meses.",
+   corpo:"Depois, R$139, sem novidade escondida no meio do caminho. Nesse valor tem contador de verdade do Simples Nacional, com registro no CRC e nome pra você chamar, já no plano de entrada e não só quando você paga mais. O app ainda tá sendo construído, então o R$79 não começa a correr hoje: ele fica reservado pro seu primeiro mês, no lançamento. Dá pra garantir até 31 de dezembro de 2026, enquanto esse formulário estiver no ar.",
+   cta:"Quer garantir? Leva menos de 1 minuto."}, guardian:{veredito:"APROVADO"}},
+  {id:"mote-c2-migracao",titulo:"C2 — migração",mote:"C",pilar:5,personaAlvo:"B",dialIronia:"baixo",
+   copy:{headline:"ME do Simples: garante R$79 agora. R$139 depois.",
+   corpo:"Se você já tem CNPJ e cansou de mandar mensagem e ficar no vácuo, essa aqui é pra você também. R$79 nos 3 primeiros meses, R$139 depois, sem novidade escondida, com contador de verdade do Simples Nacional acompanhando o seu mês e eu de olho nos prazos. Você não precisa trocar nada hoje: o app lança em breve e a lista é justamente pra isso. E dá tempo de pensar, a condição vale até 31 de dezembro de 2026. Quem entra na lista até lá chega no lançamento com o R$79 já garantido.",
+   cta:"Basta responder poucas perguntas pra garantir seu lugar."}, guardian:{veredito:"APROVADO"}},
+  {id:"mote-c3-preco-sem-asterisco",titulo:"C3 — preço sem asterisco",mote:"C",pilar:5,personaAlvo:"A",dialIronia:"medio",
+   copy:{headline:"ME no Simples: R$79 nos 3 primeiros meses, depois R$139 é o preço que fica.",
+   corpo:"Sem asterisco, sem 'a partir de', sem valor que muda depois que você fala com alguém. R$79 nos 3 primeiros meses, R$139 depois, com contador de verdade do Simples Nacional cuidando da sua empresa e eu de olho no calendário. O app tá vindo, e quem preenche o formulário chega no lançamento com esse valor no nome. Não tem contagem regressiva piscando na sua cara: o prazo tem data e tá escrito, até 31 de dezembro de 2026 ou enquanto a lista estiver aberta, o que vier primeiro. Vai, legaliza aí.",
+   cta:"Entra na lista: rápido, poucas perguntas."}, guardian:{veredito:"CORRIGIR"}},
+  {id:"mote-c4-linguagem-de-cartorio",titulo:"C4 — linguagem de cartório",mote:"C",pilar:5,personaAlvo:"A",dialIronia:"alto",
+   copy:{headline:"ME no Simples Nacional: R$79 agora, R$139 depois. Escrito em português.",
+   corpo:"Ninguém aqui vai te mandar 'prezado cliente, vimos por meio desta'. Linguagem de cartório nunca fez guia nenhuma chegar mais barata nem mais cedo, então eu prefiro falar igual gente: R$79 por mês nos 3 primeiros meses, R$139 depois, sem novidade escondida no meio do caminho, com contador de verdade do Simples Nacional cuidando da sua empresa e eu no meu turno de vigia, que é onde eu gosto de ficar. O app ainda tá em construção, ou seja, ninguém tá te cobrando nada hoje: a lista serve pra guardar esse valor no seu nome até o lançamento. E isso tem data, dá pra entrar até 31 de dezembro de 2026. Se a lista fechar antes, vale até lá.",
+   cta:"Cadastro rápido, só algumas perguntas."}, guardian:{veredito:"APROVADO"}},
+];
+
+// ===================================================================
+// QA DETERMINÍSTICO — equivalente a lib/qa.ts do Ateliê, regras de ds/legalizai/regras.json
+// ===================================================================
+function avaliar(p){
+  const t = (p.copy.headline+" "+p.copy.corpo+" "+p.copy.cta);
+  const alertas = [];
+  const travessao = /[—–]/.test(t) ? "alerta" : "ok";
+  if(travessao==="alerta") alertas.push("travessão encontrado");
+  const incond = /incondicional/i.test(t) ? "alerta" : "ok";
+  if(incond==="alerta") alertas.push("'incondicional' em contexto de garantia");
+  const citaContador = /contador( de verdade)?|humano de verdade/i.test(t);
+  const temQualificador = /Simples Nacional/i.test(t);
+  const qualificador = citaContador ? (temQualificador ? "ok" : "alerta") : "na";
+  if(qualificador==="alerta") alertas.push("cita contador/humano sem qualificador 'do Simples Nacional'");
+  const nomeAntigo = /Legalizai Story Book/i.test(t) ? "alerta" : "ok";
+  if(nomeAntigo==="alerta") alertas.push("nome de marca antigo (Legalizai Story Book)");
+  return {travessao, incond, qualificador, nomeAntigo, alertas};
+}
+
+function badge(status,label){
+  const cls = status==="ok"?"ok":status==="na"?"na":"alerta";
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+function pecaCard(p){
+  const v = avaliar(p);
+  const badges = [
+    badge(v.travessao, "travessão"),
+    badge(v.qualificador, "qualificador"),
+    badge(v.incond, "garantia"),
+  ].join(" ");
+  return `<div class="card">
+    <span class="chip mote-${p.mote}">Mote ${p.mote}</span>
+    <span class="chip">Pilar ${p.pilar}</span>
+    <span class="chip">Persona ${p.personaAlvo}</span>
+    <span class="chip">Dial ${p.dialIronia}</span>
+    <span class="veredito ${p.guardian.veredito}">${p.guardian.veredito}</span>
+    <div class="peca-titulo">${p.titulo}</div>
+    <div class="peca-headline">"${p.copy.headline}"</div>
+    <div style="margin:6px 0">${badges}</div>
+    <div class="peca-corpo" id="corpo-${p.id}">${p.copy.corpo}<div class="peca-cta">→ ${p.copy.cta}</div></div>
+    <span class="toggle" onclick="document.getElementById('corpo-${p.id}').classList.toggle('aberto')">ver corpo + CTA ↓</span>
+  </div>`;
+}
+
+function render(){
+  const mote = document.getElementById('fMote').value;
+  const persona = document.getElementById('fPersona').value;
+  const filtradas = PECAS.filter(p => (!mote || p.mote===mote) && (!persona || p.personaAlvo===persona));
+  document.getElementById('pecasGrid').innerHTML = filtradas.map(pecaCard).join("");
+}
+document.getElementById('fMote').onchange = render;
+document.getElementById('fPersona').onchange = render;
+render();
+
+// chat de exemplo (mote B, 3 peças)
+document.getElementById('chatIdeias').innerHTML = PECAS.filter(p=>p.mote==="B" && p.id!=="mote-b4-piada-e-a-propria-oferta").map(pecaCard).join("");
+
+// ===================================================================
+// LOG / ESTADO — equivalente a lib/resumo-estado.ts::resumoEstado() — calculado AO VIVO
+// ===================================================================
+function calcularEstado(){
+  const total = PECAS.length;
+  const porMote = {}; PECAS.forEach(p=>porMote[p.mote]=(porMote[p.mote]||0)+1);
+  const porVeredito = {}; PECAS.forEach(p=>porVeredito[p.guardian.veredito]=(porVeredito[p.guardian.veredito]||0)+1);
+  const pilares = {}; PECAS.forEach(p=>pilares[p.pilar]=(pilares[p.pilar]||0)+1);
+  const headlines = [...new Set(PECAS.map(p=>p.copy.headline))];
+  return {total, porMote, porVeredito, pilares, headlines};
+}
+const estado = calcularEstado();
+document.getElementById('statsGrid').innerHTML = `
+  <div class="stat"><b>${estado.total}</b><span>peças no total</span></div>
+  <div class="stat"><b>${estado.porMote.A||0}</b><span>mote A</span></div>
+  <div class="stat"><b>${estado.porMote.B||0}</b><span>mote B</span></div>
+  <div class="stat"><b>${estado.porMote.C||0}</b><span>mote C</span></div>
+  <div class="stat"><b>${estado.porVeredito.APROVADO||0}</b><span>aprovadas direto</span></div>
+  <div class="stat"><b>${estado.porVeredito.CORRIGIR||0}</b><span>corrigidas p/ guardian</span></div>
+`;
+document.getElementById('antiRep').innerHTML = `
+  <div class="log-linha"><b>Pilar usado:</b> P5 (Oferta/conversão) = ${estado.total}× — TODA a campanha é do mesmo pilar (é a natureza da campanha de lançamento). Próxima peça FORA desta campanha deveria puxar outro pilar (ex: P2 dor educativa, P7 bastidor) pra não repetir.</div>
+  <div class="log-linha"><b>Headlines já usadas (não repetir tom/frase):</b> ${estado.headlines.map(h=>`"${h}"`).join(" · ")}</div>
+  <div class="log-linha"><b>'Vai, legaliza aí.' usado:</b> 1× (C3) — pendência de validação humana antes de reusar (ver copy.md #4)</div>
+</div>
+`;
+
+// navegação de abas
+document.querySelectorAll('nav button').forEach(btn=>{
+  btn.onclick = () => {
+    document.querySelectorAll('nav button').forEach(b=>b.classList.remove('on'));
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+    btn.classList.add('on');
+    document.getElementById(btn.dataset.tab).classList.add('on');
+  };
+});
+</script>
+</body>
+</html>

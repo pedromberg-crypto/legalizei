@@ -697,5 +697,23 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 - Corrigi 2 erros na página do formulário (oferta desatualizada + promessa que não valia pro MEI) e já mandei ajustar
 ```
 
+## Semana 25/08/2026 — arrumei toda a organização do projeto e criei um lugar único pro preço
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | **Organização geral dos documentos** | O projeto já tinha bastante coisa documentada, mas espalhada de um jeito que dificultava achar rápido (ex: estratégia de marketing misturada com pesquisa pura, pauta de reunião longe da ata). Reorganizei tudo por assunto, sem perder nada (histórico do git preservado) | 🟢 |
+| 2 | **Achei e resolvi um risco real: preço espalhado em vários lugares** | Testei perguntando "qual é o preço decidido hoje?" e descobri que o número certo só aparecia se eu soubesse exatamente onde procurar — em pelo menos 3 documentos ainda ficou o preço antigo do MEI (R$49,90 em vez de R$49). Criei 1 arquivo único ("estado atual") que sempre tem o preço/CAC/margem certo e atualizado, pra nunca mais depender de eu lembrar onde está | 🟢 |
+| 3 | **Arquivei o que já morreu** | Protótipo antigo (já substituído pelo app de verdade), diário da imersão e uma reorganização que tinha ficado travada desde julho — tudo virou histórico organizado em vez de ficar solto confundindo | 🟢 |
+
+**Próximo:** nenhuma pendência nova pra você aqui — foi organização interna. Continua pendente: seu número de honorário por cliente.
+
+### 📱 WhatsApp (25/08)
+```
+*Update Legalizai* 📣
+- Reorganizei toda a documentação do projeto por assunto (nada foi perdido, só arrumado)
+- Achei um risco real: o preço do MEI ainda aparecia errado (R$49,90 velho) em 3 lugares diferentes — criei 1 arquivo único que sempre tem o preço/custo certo e atualizado
+- Arquivei o que já não serve mais (protótipo antigo, diário da imersão) pra não confundir mais ninguém
+```
+
 ## Links
-- [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]]
+- [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]] · [[estado-atual]] · [[indice-autoridade]]

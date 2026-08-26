@@ -52,6 +52,7 @@ Então a pergunta nunca é *"esse doc está vivo?"*. É sempre **"esse doc manda
 | **PERSONAS / critério de aceite** | `motor-testes/personas/*.json` (19: 16 flow #1 + 3 flow #2) | ❌ [[casos-teste-fluxo-cnae]] tem as 11 originais |
 | **Flow #2 MIGRAR** | `motor-testes/flow-migrar.js` | (novo em 16/07; não há doc antigo) |
 | **NÚMEROS fiscais** | [[fiscal-simples-bh-2026]] bloco **CONSOLIDADO** | derivados: `flow-schema.js` FISCAL · `app/src/lib/fiscal.ts` |
+| **PREÇO de plano · CAC-alvo · margem/custo** | [[estado-atual]] (`financeiro/estado-atual.md`) — não é log, é o estado corrente | ❌ `posicionamento.md`/`estrategia-organica.md`/`frente-1-captacao-meta-bh.md` ainda citam MEI R$49,90 velho; `decisoes-marca.md` tem a história completa mas é cronológico, não cite direto de lá |
 | **CNAE atendido / não atendido** | [[cnae-atendidos-e-nao-atendidos]] | [[cnae-comercio-standby]] = os 200 cortados |
 | **CNAE fiscalmente ótimo** | [[cnae-fiscalmente-otimo]] | 🕓 famílias 🟡 esperam Larissa |
 | **Consultas de órgãos · autofill (o que uma API de fato entrega)** | [[infosimples-funcionalidades]] + [[orgaos-e-cobertura-infosimples]] | ⚠️ **regra dura 24/07:** antes de criar QUALQUER campo de autofill/consulta, checar aqui. Não assumir o que um número (CNPJ/CPF/CEP) puxa — já erramos supondo |

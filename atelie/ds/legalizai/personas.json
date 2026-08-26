@@ -1,0 +1,38 @@
+{
+  "_nota": "Campo NOVO — o Ateliê/Presente Sonoro não tem equivalente a persona por peça. Extraído de metodologia-personas.md + personagem-leo.md §5. Enriquecimento confirmado por Pedro (mantido, não é buraco).",
+  "dorsais": [
+    {
+      "id": "A",
+      "nome": "Direto",
+      "perfil": "32-42a, serviço intelectual (dev/consultor), alta familiaridade digital",
+      "canal": "Google Search + indicação",
+      "registro": "Eficiente, sem enrolação — aliado que anda rápido porque sabe que ela já sabe o que faz",
+      "dialIroniaPontoDePartida": "alto",
+      "mensagemAncora": "Resolve rápido, sem enrolação, sem pagar imposto a mais",
+      "fonte": "metodologia-personas.md Camada 1 + Tom de voz por dorsal"
+    },
+    {
+      "id": "B",
+      "nome": "Construindo",
+      "perfil": "35-50a, serviço estético/manual, transição MEI→ME por teto de faturamento",
+      "canal": "Instagram (83% do setor)",
+      "registro": "Parceria/crescimento — aliado que comemora ela crescer, não trata como upsell",
+      "dialIroniaPontoDePartida": "medio",
+      "mensagemAncora": "Cresça sem perder o atendimento pessoal",
+      "fonte": "metodologia-personas.md Camada 1 + Tom de voz por dorsal"
+    },
+    {
+      "id": "C",
+      "nome": "Precisa de mão na mão",
+      "perfil": "50+a, baixa familiaridade digital",
+      "canal": "WhatsApp/indicação familiar",
+      "registro": "Paciência reforçada — mesmo aliado, dose mais alta de 'eu fico do seu lado'",
+      "dialIroniaPontoDePartida": "baixissimo_a_zero",
+      "mensagemAncora": "A gente explica cada passo, sem pressa",
+      "fonte": "metodologia-personas.md Camada 1 + Tom de voz por dorsal",
+      "atencao": "objeção principal é medo de ficar sem aliado ('vou travar sozinha') — piada sobre termo técnico pode soar como rir DELA mesmo mirando o sistema. Na dúvida, sugestão do agente pende pra 'Léo não encaixa aqui', decisão final humana."
+    }
+  ],
+  "regraDeChecagem": "copy nova pra qualquer dorsal responde 'isso soa Sábio distante (contabilês, autoridade fria) ou Aliado (resolve, cuida, fala de igual pra igual)?' antes de publicar — mesma pergunta vale pro dial de ironia do Léo.",
+  "dialNaoETravaFixa": "personagem-leo.md §5: a tabela de dial é PONTO DE PARTIDA, não regra travada. Papel do agente é sugerir encaixe ('cabe o Léo aqui' / 'não encaixa bem'), decisão final é humana (Pedro), post a post."
+}

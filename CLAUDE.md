@@ -14,6 +14,9 @@ Antes de QUALQUER ação num assunto novo:
 3. Devolva um briefing curto (onde estamos + o que está aberto) e pergunte qual flow tocar. Só então execute.
 Atalho: comando `/boot`.
 
+## 🎨 Exceção de prioridade — motor de posts (`atelie/`)
+Pedido de post/peça/copy de marketing **dentro da pasta `atelie/`**: quem manda é `atelie/CLAUDE.md`, não a Regra de BOOT acima (não precisa ler `HOME.md`/checar `git log` pra pedir 3 posts). Fora de `atelie/`, ou se o pedido for sobre produto/roadmap/negócio, o BOOT deste arquivo volta a valer normalmente. Motor migrado 25/08 pra `atelie/` (peça vira JSON com schema); agentes antigos `legalizai-copywriter`/`legalizai-guardian` foram **arquivados** (`_arquivo/agentes-antigos-marketing/`) — não recriar em `.claude/agents/`. ADR completo: `marca/decisoes-marca.md` 2026-08-25.
+
 ## 🪟 Regra de SAÚDE DA JANELA (proativa — Claude dispara, Pedro não monitora)
 Ao **fim de cada flow**, emita uma linha:
 - 🟢 saudável (segue) · 🟡 aquecendo (bom pra `/fechar`) · 🔴 pesada (fecha já).

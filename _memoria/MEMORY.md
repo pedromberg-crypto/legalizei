@@ -1,6 +1,7 @@
 # Memory Index — Legalize
 
-- [Reorg repo inteiro, 25/08](legalize-reorg-repo-inteiro-25-08.md) — 6 achados inventário real + 6 passos priorizados; retoma pergunta grande de 31/07 como PM.
+- [Reorg repo inteiro, 25/08](legalize-reorg-repo-inteiro-25-08.md) — FECHADO: 8 commits, validação pasta-a-pasta + `financeiro/` novo (arquivo mãe de preço/CAC/margem).
+- [Ateliê substitui agentes copywriter/guardian](legalize-atelie-substitui-agentes-copywriter-guardian.md) — 25/08: engine `atelie/` no vault troca os 2 subagentes arquivados; NÃO commitado ainda.
 - [Mockup 3D do iPhone no Blender](legalize-blender-iphone-mockup-pipeline.md) — 21/08: asset, UV dedicado+flip, resolução mín. 432dpi, render 2K transparente, Poly Haven HDRI.
 - [Doutrina do pipeline vetor Illustrator](legalize-illustrator-vector-pipeline-doutrina.md) — 21/08: autoridade em `edicao_video/CLAUDE.md` §3.4; MCP não cria geometria; scripts `tela-*-para-svg.mjs`; ponte entre docs é Ctrl+C/V manual.
 - [Primeira campanha fechada ponta a ponta](legalize-primeira-campanha-fechada.md) — 20-21/08: `mkt/campanhas/` criado, preço fechado c/ Mauro, 24 peças auditadas 0 reprovações, handoff de LP entregue.

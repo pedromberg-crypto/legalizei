@@ -30,7 +30,7 @@ flowchart TD
     E5V{"Veredito CNAE"}
     DESAMB["Desambiguação<br/>mini-loop"]:::inline
     E5VA["🟢 Atende"]
-    E5T{"Triagem<br/>sócios? exterior?"}
+    E5T{"Triagem<br/>sócios? CPF/CNPJ? exterior?"}
     E5F["Faixa de faturamento"]
   end
   E1["E1 · Splash"]
@@ -47,13 +47,17 @@ flowchart TD
   E4_4["E4.4 · Plano"]
   E4_5["E4.5 · Contrato<br/>+ promessa de devolução"]
   E9_2["E9.2 · Seu contador atual"]
-  E9_3["E9.3 · Aguardando TTRT"]:::espera
+  E9_2A["E9.2b · Dados que o<br/>cartão CNPJ não traz"]
+  E9_2B["E9.2c · Dados dos sócios"]
+  E9_2C["E9.2d · GOV.BR + procuração"]
+  E9_3["E9.3 · Iniciando transferência"]:::espera
   E9_4(["✅ E9.4 · Migração concluída"]):::feliz
   E5_1["E5.1 · 🟡 Waitlist"]:::saida
   E5_2["E5.2 · 🔴 Contato especial<br/>(atendido pelo Mauro)"]:::saida
   E5_3["E5.3 · 🔴 Fora de escopo<br/>(descarta)"]:::saida
   E5_4["E5.4 · Saída · exterior<br/>LC 123 art.17"]:::saida
-  E5_5["E5.5 · Saída · 3+ sócios<br/>limite do produto"]:::saida
+  E5_5["E5.5 · Saída · 5+ sócios<br/>limite do produto"]:::saida
+  E5_6["E5.6 · Saída · sócio PJ<br/>tira do Simples"]:::saida
   E6["E6 · Criar conta"]
   E7["E7 · A conta da abertura"]
   E8["E8 · Aceite contrato<br/>reversível, CDC 49"]
@@ -62,7 +66,7 @@ flowchart TD
   C1["C1 · Seus dados"]
   C2["C2 · Vínculo INSS"]
   C3{"C3 · Sócios?"}
-  C3_1["C3.1 · Coleta 2º sócio<br/>+ convite"]:::branch
+  C3_1["C3.1 · Preenche sócios extras"]:::branch
   C4["C4 · Dados da empresa<br/>+upsell endereço"]
   C5["C5 · CNAE secundários"]
   C6["C6 · Natureza jurídica"]
@@ -96,7 +100,10 @@ flowchart TD
   E4_4 --> E4_5
   E4_5 -->|"fluxo migrar"| E9
   E9 -.->|"fluxo migrar"| E9_2
-  E9_2 -.-> E9_3
+  E9_2 --> E9_2A
+  E9_2A --> E9_2B
+  E9_2B --> E9_2C
+  E9_2C --> E9_3
   E9_3 -.-> E9_4
   E9_4 -.-> A5
   E5A --> E5V
@@ -107,9 +114,10 @@ flowchart TD
   E5V -->|"🟡 regulada"| E5_1
   E5V -->|"🔴 Mauro atende"| E5_2
   E5V -->|"🔴 ninguém atende"| E5_3
-  E5T -->|"até 2 + Brasil"| E5F
+  E5T -->|"até 4 + CPF + Brasil"| E5F
   E5T -->|"sócio no exterior"| E5_4
-  E5T -->|"3+ sócios"| E5_5
+  E5T -->|"5+ sócios"| E5_5
+  E5T -->|"sócio via CNPJ"| E5_6
   E5F --> E6
   E6 --> E7
   E7 --> E8
@@ -164,40 +172,44 @@ flowchart TD
 | 11 | E4.3 · Diagnóstico · ("tem certificado?") | Resposta sim/não (tem certificado digital) | ✅ | 🟡 | 🔴 04/08 (3ª rodada): o diagnóstico de Fator R pra ME foi CORTADO — a única API pré-pagamento é a cadastral, não traz faturamento/folha (só via procuração, pós-pagamento). 🔴 05/08: pergunta virou 'tem certificado?' (MEI: decide se roda TTRT). 🔴 06/08 (achado do Pedro): ME TAMBÉM passa aqui agora (antes ia do E4.2 direto pro E4.4) — certificado é independente da TTRT pra ME (as duas rodam em paralelo), mas não tinha pergunta nenhuma no caminho ME. 🟡 fila-Mauro: se sem-certificado-ME carrega custo/fidelidade extra é decisão de preço não tomada |
 | 12 | E4.4 · Plano | — | ✅ | 🟡 | ME: mesma mensalidade do caminho abrir, sem taxa de governo (empresa já existe). 🆕 04/08: MEI tem plano PRÓPRIO — R$49,90/mês, fidelidade 12 meses, certificado incluso, escopo limitado (emitir NF + 1 colaborador) — não é o plano ME com desconto |
 | 13 | E4.5 · Contrato · + promessa de devolução | Aceite do contrato (com a cláusula de devolução) | ✅ | 🟢 | 🔴 DECISÃO TRAVADA 30/07: cobra ANTES do TTRT, com contrapartida OBRIGATÓRIA no contrato ('se a transferência não sair por motivo fora do seu controle, devolve tudo'). Se essa linha sair do contrato, a decisão reabre (Mauro/Larissa redigem) |
-| 14 | E9.2 · Seu contador atual | Nome do contador/escritório atual · e-mail · telefone (pré-preenchidos quando o cartão CNPJ trouxer) · CRC (opcional) | ✅ | 🟡 | 🟡 fonte única (Léo, reunião Rua Satélite 19, 06/08) — sem 2ª fonte ainda. Não existe API pública que diga quem é o contador de um CNPJ; o cartão CNPJ traz e-mail/telefone NA MAIORIA das vezes, não sempre. Nome e CRC são sempre digitados. Sem trava de Continuar — quem não sabe algum dado segue mesmo assim, confirma o resto com o conselho na E9.3 |
-| 15 | E9.3 · Aguardando TTRT | — | ✅ | 🟢 | 🔴 A PAUSA MAIS PERIGOSA DO PRODUTO: quem libera é o CONTADOR ANTIGO (valida no CRC-MG) — único momento em que o dono da espera é um concorrente perdendo o cliente, não um órgão neutro nem o próprio cliente. Nº da resolução CFC / Evento 232 Redesim NÃO ratificados em fonte primária — por isso não aparecem na tela (🟡 pendência) |
-| 16 | ✅ E9.4 · Migração concluída | — | ✅ | ⚪ | Segue pro mesmo handoff do caminho abrir → A5 (home dia-1), autoridade #2 (portal-data.mjs) |
-| 17 | Descreve atividade + pills | Descrição da atividade (texto livre) → CNAE principal (derivado por IA) · OU o código já sabido (atalho 28/07, mesma engine) | ✅ | 🟡 | ✅ 28/07: CTA 'já sei o número do meu CNAE' construído (troca pra modo código, mesma engine). Lista CNAE furada na raiz: 124 não-refutados, 45 impossíveis, 91 duvidosos; IA real (hoje mock) — Larissa/Pedro/dev |
-| 18 | Veredito CNAE | — | ✅ | 🟢 | 🆕 28/07: veredito 🔴 virou 3 vias (travado na reunião), hoje o mock só faz 2 — falta implementar o split: regulamentado→waitlist (já existe) · atendido pelo Mauro (comércio etc)→contato especial · genuinamente ninguém atende→descarta (novo). Depende da lista CNAE; dev cnae-lookup responde 'atende' pra DEFESA. 🆕 31/07: veredito 🟢 ganhou cards clicáveis (UX-65) e travar o CNAE via ENCAIXE virou redundante — ENCAIXE removido, o veredito trava direto |
-| 19 | 🟢 Atende | — | ✅ | 🟡 | Depende da lista CNAE |
-| 20 | Triagem · sócios? exterior? | Quantidade de sócios (1 / 2 / 3+) · mora fora do Brasil (sim/não) | ✅ | 🟢 | Exterior = LC 123 art.17 (oficial); limite 2 travado. Abertos: debate 3+→waitlist, UX-42 (Mauro/Larissa) |
-| 21 | Faixa de faturamento | Faixa de faturamento mensal (ou valor exato, se souber) | ✅ | ⚪ | Faixas sem âncora fiscal |
-| 22 | E5.1 · 🟡 Waitlist | Nome + contato · CNAE pretendido (✅ campo construído 28/07) | ✅ | 🟢 | ✅ 28/07: campo CNAE pretendido construído (read-only, junto do nome+contato). Tags de CRM ficam pra depois, não travam. Waitlist decidido 16/07; líder atende regulada (Mauro reavaliar) |
-| 23 | E5.2 · 🔴 Contato especial · (atendido pelo Mauro) | — (saída, fora do caminho até a constituição) | ✅ | 🟢 | ✅ 28/07: relabel construído — é quem NÃO atendemos mas a Legalize Digital (Mauro) atende (ex: comércio). Falta só o split real no mapear() do E5 (hoje é mock estático por página). |
-| 24 | E5.3 · 🔴 Fora de escopo · (descarta) | — (saída, fora do caminho até a constituição) | ✅ | 🟢 | mapear() do E5 ainda não decide entre E5.2/E5.3 de verdade (mock estático) — falta o split real na IA/lista de CNAEs |
-| 25 | E5.4 · Saída · exterior · LC 123 art.17 | — (saída, fora do caminho até a constituição) | ✅ | 🟡 | 🟡 28/07: Pedro cogitou 'de fato descartar' essa saída dedicada (juntar no genérico) — dito na MESMA frase tentativa do E5.5, NÃO travado. Tela já tem conteúdo jurídico revisado (LC123 art.17) — não apagar sem confirmação final. UX-42 Lucro Presumido (Mauro); debate de tom |
-| 26 | E5.5 · Saída · 3+ sócios · limite do produto | — (saída, fora do caminho até a constituição) | ✅ | 🟡 | 🟡 28/07: Pedro cogitou juntar essa saída com a Waitlist (regulamentados) — 'estou pensando', NÃO travado. Debate 3+→waitlist |
-| 27 | E6 · Criar conta | E-mail · senha · 'é a 1ª empresa que abre?' (opcional) · nome completo · CPF · telefone · endereço (front-load 28/07) · código de verificação (mock) | ✅ | 🟢 | ✅ 28/07: FRONT-LOAD construído — nome/CPF/telefone/endereço (autofill CEP) + etapa de validação por código (mock). Provider de validação CPF/situação real (Pedro) |
-| 28 | E7 · A conta da abertura | — | ✅ | 🟡 | Preço ~R$195 FAKE (Mauro+custo); DAE R$268,51×R$288 em disputa; certificado A1 (Mauro) |
-| 29 | E8 · Aceite contrato · reversível, CDC 49 | Aceite do contrato de serviço (checkbox) | ✅ | 🟡 | Redação jurídica do contrato (Mauro/Larissa); rachadura T18 |
-| 30 | E9 · Pagamento | CPF (cobrança + elegibilidade) · método de pagamento (cartão/Pix/boleto) | ✅ | 🟡 | Asaas travado; falta provider cartão CNPJ + chave de idempotência (Pedro) |
-| 31 | E9.1 · Aguardando boleto · dossiê já liberado | — | ✅ | ⚪ | Dunning revisado |
-| 32 | C1 · Seus dados | CONFIRMA nome/CPF/endereço já captados no E6 (não recoleta) · RG + órgão emissor (novo aqui) · estado civil (+ regime de bens se casado) · confirma se mora fora do Brasil | ✅ | 🟢 | ✅ 28/07: reconstruída como CONFIRMAÇÃO — card read-only do que veio do E6 (mock, sem estado real compartilhado ainda) + só pede o que faltou. CPF valida situação (provider do E6); regime de bens (casado) |
-| 33 | C2 · Vínculo INSS | Já contribui INSS por fora? (sim/não) · valor do vínculo (CLT/aposentadoria/autônomo/sócio de outro CNPJ) | ✅ | 🟢 | INSS 11% direto + teto folga = consolidado fiscal fechado |
-| 34 | C3 · Sócios? | Confirma se terá 2º sócio | ✅ | 🟡 | Re-pergunta o E5T (carry-forward pendente); limite 2 ok |
-| 35 | C3.1 · Coleta 2º sócio · + convite | Nome completo do 2º sócio · % de participação de cada um (soma 100%) | ✅ | 🟡 | Convite depende do A3 planejado |
-| 36 | C4 · Dados da empresa · +upsell endereço | Endereço próprio ou fiscal Legalizai · CEP (autofill logradouro/bairro/município/UF) + número + complemento · índice cadastral IPTU (OBRIGATÓRIO, JUCEMG exige) · tipo de endereço · residência de sócio (dinâmico pelo E5T — pula se solo) · capital social | ✅ | 🟢 | ✅ 28/07: IPTU corrigido pra OBRIGATÓRIO travado (JUCEMG exige). Capital social mantém input livre por ora (faixas sugeridas aguardam validação com mais técnicos contábeis). Endereço ~R$60/mês = nosso preço (Mauro); custo do líder já confirmado |
-| 37 | C5 · CNAE secundários | CNAEs secundários (seleção múltipla, opcional) | ✅ | 🟡 | Só sugere secundárias mesmo-imposto (mesmo anexo + Fator R); regime-changer nunca aparece (decisão 21/07). Depende do anexo-por-CNAE (dataset/Larissa) |
-| 38 | C6 · Natureza jurídica | Escolha da natureza jurídica (SLU ou LTDA — sugerida, editável) | ✅ | 🟡 | SLU × LTDA: regra solo→SLU vs LTDA solo real (Larissa) |
-| 39 | C7 · Nome / razão social | 3 opções de razão social por ordem de prioridade (sugeridas por IA) · objeto social (sugerido por CNAE+secundárias, editável) · nome fantasia (opcional) | ✅ | 🟡 | Viabilidade JUCEMG (RPA, não API); nome≠empresa (dev/Izabela); 3 opções por prioridade (28/07) |
-| 40 | C0.1 · Retomar de onde parou | — | ✅ | ⚪ | UX-23 fechado — mora em /pro-labore pós-constituição |
-| 41 | A1 · Revisar dossiê | — (leitura + confirmação; enquadramento e pró-labore são SUGERIDOS pelo sistema, 28/07 — não digitados) | ✅ | ⚪ | Recap read-only; carry-forward dos passos = estado do wizard (dev) |
-| 42 | A2 · Termo irreversível | Aceite do termo irreversível (checkbox) | ✅ | 🟡 | Redação jurídica do termo + 4 camadas de cancelamento (Mauro/Larissa); racha T18 |
-| 43 | A3 · Painel · 3 status | — | ✅ | 🟢 | 🆕 30/07: reduzido de 9→3 status (2 passadas). 'Registrar a empresa'→'Analisando viabilidade'; novo 'Documentação completa preenchida' (check, acima) + 'Agora é só assinar' (cinza, depende do deferimento da Junta). 🆕 28/07: DAE (taxa da Junta) — cliente paga no E9 junto com a mensalidade; a gente SEGURA e só repassa à JUCEMG depois da viabilidade aprovar — timing de backend, SEM tela nova. 🆕 30/07: NÃO absorvemos a taxa (alinhado ao líder, contrato Contabilizei 4.3"h"). Timeline real depende do pipeline do dev; prazo ~8d é placeholder |
-| 44 | A3.1 · Órgão recusa · 'precisa de você' | Retry automático pelas 3 opções priorizadas (C7) antes de pedir novas sugestões ao cliente | ✅ | 🟢 | ✅ 28/07: retry automático construído — tenta as 3 opções do C7 em sequência (mock sempre falha as 3, pra provar o pior caso); só aí pede novas sugestões. Testado no motor (nome recusado); faltam DAE-volta e doc-pendência como casos |
-| 45 | A4 · Assinatura dos sócios | Assinatura via GOV.BR/e-CAC (ação, não campo de texto) | ✅ | 🟡 | GOV.BR/e-CAC deep-link (dev); convite 2º sócio + arquitetura multi-usuário (Pedro) |
-| 46 | 'Empresa ativa' · 🗑️ REMOVIDO 30/07 | — | 🚧 | 🟢 | Era órfão desde o swap A4→A5 (nenhuma rota navegava mais até aqui) — arquivo `/ativa` e a view apagados de vez 30/07, confirmado pelo Pedro. Fica só como marca histórica no mapa |
-| 47 | ✅ A5 · Home dia-1 · (ativação) | — | ✅ | 🟢 | 🔓 SWAP validado 30/07 (confirmado no código: assinatura empurra direto pra cá). Trata o certificado como item 2/3 da própria trilha, não gate isolado. Sem confete nem selo coral no hero. Handoff pro flow Portal (letra P) → autoridade portal-data.mjs |
+| 14 | E9.2 · Seu contador atual | Nome do contador/escritório atual · e-mail · telefone (pré-preenchidos quando o cartão CNPJ trouxer, opcionais) · CRC (OBRIGATÓRIO) | ✅ | 🟢 | 🔒 24/08 (reunião Leonan 19/08, CONFLITO RESOLVIDO): CRC agora é OBRIGATÓRIO, trava o Continuar — 'eu preciso do número do CRC de qualquer forma' (Leonan). Antes o doc dizia 'opcional', estava errado/desatualizado. Nome/e-mail/telefone continuam opcionais — só o CRC não tem contorno |
+| 15 | E9.2b · Dados que o · cartão CNPJ não traz | CPF · RG + órgão emissor · estado civil | ✅ | 🟢 | Reusa os mesmos campos do C1 (abertura) — CPF/RG/órgão/estado civil, digitação manual. 🔴 24/08 (reunião Rua Satélite 35): upload/leitura de IA que tinha entrado aqui foi REMOVIDO do MVP (custo/velocidade) |
+| 16 | E9.2c · Dados dos sócios | Nome completo + % de participação de cada sócio extra (CPF implícito, quantidade fixa) | ✅ | 🟢 | MESMA tela do C3 (`SociosView`), reusada com `contexto="migrar"` — só a copy muda. Não existe triagem prévia perguntando quantos sócios no caminho migrar (diferente do E5T no abrir), então a tela se sustenta sozinha |
+| 17 | E9.2d · GOV.BR + procuração | Código de validação de 6 dígitos (janela 10min) | ✅ | 🟢 | Reusa `CodigoGovView` (mesmo componente do A4, caminho abrir) com `soProcuracao` — não existe protocolo de registro pra assinar (empresa já existe), só a procuração. Mesma janela de 10min/3 tentativas/escala pra atendente |
+| 18 | E9.3 · Iniciando transferência | — | ✅ | 🟢 | 🔴 A PAUSA MAIS PERIGOSA DO PRODUTO: quem libera é o CONTADOR ANTIGO (valida no CRC-MG). 🆕 24/08 (reunião Leonan): copy do status trocou pra 'Iniciando o processo de transferência' + 'Estamos entrando em contato para encerrar o vínculo com a contabilidade antiga' — diferente do status de constituição ('empresa foi constituída'), antes os dois diziam a mesma coisa. Nº da resolução CFC / Evento 232 Redesim NÃO ratificados em fonte primária (🟡 pendência) |
+| 19 | ✅ E9.4 · Migração concluída | — | ✅ | ⚪ | Segue pro mesmo handoff do caminho abrir → A5 (home dia-1), autoridade #2 (portal-data.mjs) |
+| 20 | Descreve atividade + pills | Descrição da atividade (texto livre) → CNAE principal (derivado por IA) · OU o código já sabido (atalho 28/07, mesma engine) | ✅ | 🟡 | ✅ 28/07: CTA 'já sei o número do meu CNAE' construído (troca pra modo código, mesma engine). Lista CNAE furada na raiz: 124 não-refutados, 45 impossíveis, 91 duvidosos; IA real (hoje mock) — Larissa/Pedro/dev |
+| 21 | Veredito CNAE | — | ✅ | 🟢 | 🆕 28/07: veredito 🔴 virou 3 vias (travado na reunião), hoje o mock só faz 2 — falta implementar o split: regulamentado→waitlist (já existe) · atendido pelo Mauro (comércio etc)→contato especial · genuinamente ninguém atende→descarta (novo). Depende da lista CNAE; dev cnae-lookup responde 'atende' pra DEFESA. 🆕 31/07: veredito 🟢 ganhou cards clicáveis (UX-65) e travar o CNAE via ENCAIXE virou redundante — ENCAIXE removido, o veredito trava direto |
+| 22 | 🟢 Atende | — | ✅ | 🟡 | Depende da lista CNAE |
+| 23 | Triagem · sócios? CPF/CNPJ? exterior? | Quantidade de sócios (1 / 2 / 3 / 4 / 5+) · sócio via CPF ou CNPJ (quando há sócio) · mora fora do Brasil (sim/não) | ✅ | 🟢 | 🆕 24/08 (reunião Leonan 19/08): limite subiu de 2 pra 4 sócios; aviso proativo (não bloqueio) de assinatura múltipla nos 3-4; só 5+ bloqueia. 🆕 24/08 (pedido do Pedro): nova pergunta condicional — sócio CPF ou CNPJ? CNPJ bloqueia (regra fiscal: tira do Simples), rota /saida/socio-pj. Como o tipo já é decidido aqui, o C3 (dossiê) nem pergunta de novo. Exterior = LC 123 art.17 (oficial) |
+| 24 | Faixa de faturamento | Faixa de faturamento mensal (ou valor exato, se souber) · é a 1ª empresa que abre? (opcional) | ✅ | ⚪ | Faixas sem âncora fiscal. 🆕 24/08 (reunião Rua Satélite 35): ganhou a pergunta de coorte ('é a 1ª empresa que você abre?'), realocada do E6 — dado puro de log/marketing, opcional, não interfere no processo |
+| 25 | E5.1 · 🟡 Waitlist | Nome + contato · CNAE pretendido (✅ campo construído 28/07) | ✅ | 🟢 | ✅ 28/07: campo CNAE pretendido construído (read-only, junto do nome+contato). Tags de CRM ficam pra depois, não travam. Waitlist decidido 16/07; líder atende regulada (Mauro reavaliar) |
+| 26 | E5.2 · 🔴 Contato especial · (atendido pelo Mauro) | — (saída, fora do caminho até a constituição) | ✅ | 🟢 | ✅ 28/07: relabel construído — é quem NÃO atendemos mas a Legalize Digital (Mauro) atende (ex: comércio). Falta só o split real no mapear() do E5 (hoje é mock estático por página). |
+| 27 | E5.3 · 🔴 Fora de escopo · (descarta) | — (saída, fora do caminho até a constituição) | ✅ | 🟢 | mapear() do E5 ainda não decide entre E5.2/E5.3 de verdade (mock estático) — falta o split real na IA/lista de CNAEs |
+| 28 | E5.4 · Saída · exterior · LC 123 art.17 | — (saída, fora do caminho até a constituição) | ✅ | 🟡 | 🟡 28/07: Pedro cogitou 'de fato descartar' essa saída dedicada (juntar no genérico) — dito na MESMA frase tentativa do E5.5, NÃO travado. Tela já tem conteúdo jurídico revisado (LC123 art.17) — não apagar sem confirmação final. UX-42 Lucro Presumido (Mauro); debate de tom |
+| 29 | E5.5 · Saída · 5+ sócios · limite do produto | — (saída, fora do caminho até a constituição) | ✅ | 🟡 | 🆕 24/08: limite subiu de 2 pra 4 sócios (reunião Leonan 19/08) — esta saída só dispara em 5+ agora, não mais 3+ |
+| 30 | E5.6 · Saída · sócio PJ · tira do Simples | — (saída, fora do caminho até a constituição) | ✅ | 🟢 | 🆕 24/08 (pedido do Pedro, em cima da reunião Leonan) — NOVO. Sócio pessoa jurídica tira a empresa do Simples no ato do contrato social (regra fiscal, não limite nosso — diferente de E5.5). Bloqueia na triagem, antes do dinheiro |
+| 31 | E6 · Criar conta | E-mail · senha · nome completo · CPF · telefone · endereço (front-load 28/07) · código de verificação (mock) | ✅ | 🟢 | ✅ 28/07: FRONT-LOAD construído — nome/CPF/telefone/endereço (autofill CEP) + etapa de validação por código (mock). Provider de validação CPF/situação real (Pedro). 🔴 24/08 (reunião Rua Satélite 35): pergunta de coorte SAIU daqui, foi pra E5F (Faixa) — não precisa estar junto do cadastro |
+| 32 | E7 · A conta da abertura | — | ✅ | 🟡 | Preço ~R$195 FAKE (Mauro+custo); DAE R$268,51×R$288 em disputa; certificado A1 (Mauro) |
+| 33 | E8 · Aceite contrato · reversível, CDC 49 | Aceite do contrato de serviço (checkbox) | ✅ | 🟡 | Redação jurídica do contrato (Mauro/Larissa); rachadura T18 |
+| 34 | E9 · Pagamento | CPF (cobrança + elegibilidade) · método de pagamento (cartão/Pix/boleto) | ✅ | 🟡 | Asaas travado; falta provider cartão CNPJ + chave de idempotência (Pedro) |
+| 35 | E9.1 · Aguardando boleto · dossiê já liberado | — | ✅ | ⚪ | Dunning revisado |
+| 36 | C1 · Seus dados | CONFIRMA nome/CPF/endereço já captados no E6 (não recoleta) · RG + órgão emissor (digitação manual) · estado civil (+ regime de bens se casado) · confirma se mora fora do Brasil | ✅ | 🟢 | ✅ 28/07: reconstruída como CONFIRMAÇÃO — card read-only do que veio do E6 (mock, sem estado real compartilhado ainda) + só pede o que faltou. CPF valida situação (provider do E6); regime de bens (casado). 🔴 24/08 (reunião Rua Satélite 35): upload/leitura de IA que tinha entrado aqui (reunião Leonan, mesmo dia) foi REMOVIDO do MVP (custo/velocidade de leitura de imagem) |
+| 37 | C2 · Vínculo INSS | Já contribui INSS por fora? (sim/não) · valor do vínculo (CLT/aposentadoria/autônomo/sócio de outro CNPJ) | ✅ | 🟢 | INSS 11% direto + teto folga = consolidado fiscal fechado |
+| 38 | C3 · Sócios? | Confirma se terá mais sócios (sem reperguntar quantidade/tipo) | ✅ | 🟢 | Re-pergunta o E5T (carry-forward pendente); limite subiu de 2 pra 4 (24/08). 🔒 24/08 (pedido do Pedro): não pergunta MAIS nada — quantidade e tipo (CPF) já vêm travados da triagem (E5T) |
+| 39 | C3.1 · Preenche sócios extras | Nome completo + % de participação de cada sócio extra (quantidade fixa, CPF implícito) | ✅ | 🟢 | 🔒 24/08 (pedido do Pedro, em cima da reunião Leonan): DOIS travamentos — (1) quantidade de slots FIXA, vinda do que a triagem (E5T) já decidiu, sem botão de adicionar/remover; (2) CPF travado, sem pergunta de tipo (CNPJ já foi bloqueado na E5T/E5.6). Só falta nome + % de cada sócio extra. Card completo por sócio (endereço/documentos) ainda não entrou — Pedro deixou como 'talvez vale a pena', não travado |
+| 40 | C4 · Dados da empresa · +upsell endereço | Endereço próprio, coworking, virtual ou fiscal Legalizai (com confirmação de valor total mensal) · CEP (autofill) + número + complemento · índice cadastral IPTU (obrigatório) · tipo de endereço · residência de sócio (trava duplicidade) · capital social | ✅ | 🟢 | ✅ 28/07: IPTU obrigatório travado. 🆕 24/08 (reunião Leonan): alerta de IPTU pode subir quando é residência de sócio; trava duplicidade (só 1 sócio por endereço); chips de capital social simbólico (R$1k/5k/10k). 🆕 24/08 (reunião Rua Satélite 35): endereço fiscal ganhou aviso explícito de cobrança RECORRENTE mensal, com o valor total do plano somado (mensalidade+R$60) — antes só dizia 'fechado, entra no plano', sem valor nem deixar claro que repete todo mês. Endereço ~R$60/mês = nosso preço (Mauro); custo do líder já confirmado |
+| 41 | C5 · CNAE secundários | CNAEs secundários (seleção múltipla + busca, opcional, até 15) | ✅ | 🟡 | 🆕 24/08 (reunião Leonan): ganhou busca livre (restrita ao que a gente atende, pedido original da Jéssica 19/07) além das 4 sugestões curadas mesmo-imposto; até 15 no total; secundária que muda enquadramento mostra aviso e troca CTA por 'Falar com atendente' em vez de bloquear silenciosamente |
+| 42 | C6 · Natureza jurídica | Escolha da natureza jurídica (SLU ou LTDA — sugerida, editável) | ✅ | 🟡 | SLU × LTDA confirmado pelo Leonan (24/08): SLU pra individual (proteção patrimonial — bens não se misturam), LTDA pra sociedade, sem outra opção nos dois casos |
+| 43 | C7 · Nome / razão social | 3 opções de razão social, editáveis inline, por ordem de prioridade (sugeridas por IA) · objeto social (gerado automaticamente, travado) · nome fantasia (opcional) | ✅ | 🟢 | Viabilidade JUCEMG (RPA, não API); 3 opções por prioridade (28/07). 🔒 24/08 (reunião Leonan, CONFLITO RESOLVIDO): objeto social virou TRAVADO/read-only — erro de grafia do cliente gerava reclamação real no escritório antigo dele. 🆕 24/08 (pedido do Pedro): cada sugestão ganhou lápis de edição inline (reescreve a sugestão da IA no lugar); campo separado 'Digite a sua' foi removido; seta de reordenar 1/2/3 mantida |
+| 44 | C0.1 · Retomar de onde parou | — | ✅ | ⚪ | UX-23 fechado — mora em /pro-labore pós-constituição |
+| 45 | A1 · Revisar dossiê | — (leitura + confirmação; enquadramento e pró-labore são SUGERIDOS pelo sistema, 28/07 — não digitados) | ✅ | ⚪ | Recap read-only; carry-forward dos passos = estado do wizard (dev) |
+| 46 | A2 · Termo irreversível | Aceite do termo irreversível (checkbox) | ✅ | 🟡 | Redação jurídica do termo + 4 camadas de cancelamento (Mauro/Larissa); racha T18 |
+| 47 | A3 · Painel · 3 status | — | ✅ | 🟢 | 🆕 30/07: reduzido de 9→3 status (2 passadas). 'Registrar a empresa'→'Analisando viabilidade'; novo 'Documentação completa preenchida' (check, acima) + 'Agora é só assinar' (cinza, depende do deferimento da Junta). 🆕 28/07: DAE (taxa da Junta) — cliente paga no E9 junto com a mensalidade; a gente SEGURA e só repassa à JUCEMG depois da viabilidade aprovar — timing de backend, SEM tela nova. 🆕 30/07: NÃO absorvemos a taxa (alinhado ao líder, contrato Contabilizei 4.3"h"). Timeline real depende do pipeline do dev; prazo ~8d é placeholder |
+| 48 | A3.1 · Órgão recusa · 'precisa de você' | Retry automático pelas 3 opções priorizadas (C7) antes de pedir novas sugestões ao cliente | ✅ | 🟢 | ✅ 28/07: retry automático construído — tenta as 3 opções do C7 em sequência (mock sempre falha as 3, pra provar o pior caso); só aí pede novas sugestões. Testado no motor (nome recusado); faltam DAE-volta e doc-pendência como casos |
+| 49 | A4 · Assinatura dos sócios | Assinatura via GOV.BR/e-CAC · código de validação de 6 dígitos (janela 10min) · canal do convite ao sócio (WhatsApp/e-mail) | ✅ | 🟡 | GOV.BR/e-CAC deep-link (dev). 🆕 24/08 (reunião Leonan): código 2FA único concentra procuração+assinatura (`CodigoGovView` — janela 10min, 3 tentativas, escala pra atendente se estourar); convite de sócio ganhou seletor de canal (WhatsApp/e-mail) |
+| 50 | 'Empresa ativa' · 🗑️ REMOVIDO 30/07 | — | 🚧 | 🟢 | Era órfão desde o swap A4→A5 (nenhuma rota navegava mais até aqui) — arquivo `/ativa` e a view apagados de vez 30/07, confirmado pelo Pedro. Fica só como marca histórica no mapa |
+| 51 | ✅ A5 · Home dia-1 · (ativação) | — | ✅ | 🟢 | 🔓 SWAP validado 30/07 (confirmado no código: assinatura empurra direto pra cá). 🆕 24/08 (reunião Leonan): trilha agora mostra 3 status explícitos — Procuração (feito, instantâneo com o código) → Validação do certificado digital (agora, linka pra /mais/certificado upload+oferta) → Acesso completo. Sem confete nem selo coral no hero. Handoff pro flow Portal (letra P) → autoridade portal-data.mjs |
 <!-- FLOW:TABELA:FIM -->
 
 ## 🚪 Saídas terminais (7) — sai do flow, não volta
@@ -230,6 +242,12 @@ flowchart TD
 > Cada linha = um estado estrutural do mapa. Snapshots completos em `flow/versoes/` (`.json` p/ diff + `.mmd` legível). Mais recente no topo.
 
 <!-- FLOW:VERSOES:INI -->
+- **v25** · 2026-08-24 · falta-validar em E9_2A,E5F,E6,C1,C4 · dados-coletados em E9_2A,E5F,E6,C1,C4
+- **v24** · 2026-08-24 · +nós E9_2A,E9_2B,E9_2C · -nós E4_2A · +conexões E4_2→E4_3,E9_2→E9_2A,E9_2A→E9_2B,E9_2B→E9_2C,E9_2C→E9_3 · -conexões E4_2→E4_2A,E4_2A→E4_3,E9_2→E9_3
+- **v23** · 2026-08-24 · falta-validar em E4_2A · dados-coletados em E4_2A
+- **v22** · 2026-08-24 · falta-validar em C7 · dados-coletados em C7
+- **v21** · 2026-08-24 · +nós E5_6 · renomeou E5T "Triagem sócios? exterior?"→"Triagem sócios? CPF/CNPJ? exterior?"; C3_1 "C3.1 · Coleta sócios extras + convite"→"C3.1 · Preenche sócios extras" · validação C3 pendente→oficial; C3_1 pendente→oficial · falta-validar em E4_2A,E5T,C3,C3_1 · dados-coletados em E4_2A,E5T,C3,C3_1 · +conexões E5T→E5_6
+- **v20** · 2026-08-24 · +nós E4_2A · renomeou E9_3 "E9.3 · Aguardando TTRT"→"E9.3 · Iniciando transferência"; E5_5 "E5.5 · Saída · 3+ sócios limite do produto"→"E5.5 · Saída · 5+ sócios limite do produto"; C3_1 "C3.1 · Coleta 2º sócio + convite"→"C3.1 · Coleta sócios extras + convite" · validação E9_2 pendente→oficial; C7 pendente→oficial · falta-validar em E9_2,E9_3,E5T,E5_5,C1,C3,C3_1,C4,C5,C6,C7,A4,A5 · dados-coletados preenchido em 9 nós · +conexões E4_2→E4_2A,E4_2A→E4_3 · -conexões E4_2→E4_3
 - **v19** · 2026-08-07 · +nós E9_2 · +conexões E9→E9_2,E9_2→E9_3 · -conexões E9→E9_3
 - **v18** · 2026-08-06 · renomeou E4_3 "E4.3 · Diagnóstico só MEI ("tem contador?")"→"E4.3 · Diagnóstico ("tem certificado?")" · validação E4_3 oficial→pendente · falta-validar em E4_3 · dados-coletados em E4_3 · -conexões E4_2→E4_4
 - **v17** · 2026-08-06 · -nós E9_2 · falta-validar em E4_2_1 · +conexões E9→E9_3 · -conexões E9→E9_2,E9_2→E9_3

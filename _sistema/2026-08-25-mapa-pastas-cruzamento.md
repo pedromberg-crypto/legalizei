@@ -8,7 +8,13 @@ tags: [reorganizacao, meta, validacao]
 
 # Mapa de pastas — o que cada uma é e onde eu acho que cruza
 
-Isso é validação humana pasta a pasta. **Não é veredito, é ponto de partida.** Cada linha da tabela é minha opinião sobre conteúdo real (li os arquivos, não só o nome) e onde vejo sobreposição com outra pasta. Concorde, discorde, ou peça ajuste linha a linha.
+Isso é validação humana pasta a pasta. **Não é veredito, é ponto de partida.** Cada linha é minha opinião sobre conteúdo real (li os arquivos, não só o nome), onde vejo sobreposição, e **que tipo de ação isso pede**:
+
+- **mover** — mecânico, `git mv`, baixo risco. Sempre digo de-onde-pra-onde.
+- **fundir** — edição de conteúdo de verdade (2+ docs com autoridade sobreposta viram 1, ou um passa a mandar sobre o outro). Não é mecânico, exige leitura/reescrita.
+- **linkar** — os 2 ficam onde estão, só ganham referência cruzada. Não muda conteúdo nem local.
+- **decisão aberta** — não é sobre organizar arquivo, é mérito que só você (ou você+Mauro) resolve. Eu só sinalizo.
+- **nenhuma** — achei o cruzamento digno de nota, mas não acho que pede ação nenhuma agora.
 
 Fora de escopo: `app/` (código do produto, não é doc de vault).
 
@@ -22,123 +28,149 @@ Fora de escopo: `app/` (código do produto, não é doc de vault).
 
 ---
 
-## `_arquivo/`
+## `_arquivo/` ✅ validado (Pedro, 25/08)
 
 Pastas mortas/congeladas, guardadas por valor histórico, tiradas da raiz ativa nesta sessão.
 
-| Subpasta | Conteúdo geral | Cruza com | Justificativa curta |
-|---|---|---|---|
-| `diario/` | Diário da imersão, 1 nota/dia. Congelado 16/07, só 1 entrada real (08/07). | `execucao/marcos/` | Os marcos datados viraram o registro real de progresso diário; o diário foi abandonado em favor deles. |
-| `reorganizacao-flow-design/` | Reorg travada de 30/07 sobre flow/telas/design system, nunca fechou veredito. | `_sistema/indice-autoridade.md` | É literalmente a mesma pergunta que o índice de autoridade tenta responder; o veredito dela devia ter virado atualização do índice e não virou. |
+| Subpasta | Conteúdo geral | Cruza com | Ação sugerida | Justificativa |
+|---|---|---|---|---|
+| `diario/` | Diário da imersão, 1 nota/dia. Congelado 16/07, só 1 entrada real (08/07). | `execucao/marcos/` | nenhuma | Os marcos datados viraram o registro real de progresso; o diário foi abandonado em favor deles, mas não tem conteúdo pra fundir — é só contexto de por que morreu. |
+| `reorganizacao-flow-design/` | Reorg travada de 30/07 sobre flow/telas/design system, nunca fechou veredito. | `_sistema/indice-autoridade.md` | decisão aberta → depois fundir | É literalmente a mesma pergunta que o índice de autoridade tenta responder. Precisa primeiro você fechar o veredito (mérito), só depois eu incorporo o resultado dentro do `indice-autoridade.md`. |
 
 ---
 
-## `_memoria/`
+## `_memoria/` ✅ validado (Pedro, 25/08)
 
-| Área | Conteúdo geral | Cruza com | Justificativa curta |
-|---|---|---|---|
-| `_memoria/*.md` (65 arquivos) + `MEMORY.md` | Mirror git-tracked do auto-memory real da sessão (fora do repo). Fatos duráveis cross-sessão. | `execucao/marcos/` | Os dois registram "o que aconteceu e por quê" de forma datada; marco é mais formal/estruturado, memória é mais granular e operacional. Overlap de propósito, não de conteúdo linha a linha. |
-
----
-
-## `_sistema/`
-
-| Subpasta/Área | Conteúdo geral | Cruza com | Justificativa curta |
-|---|---|---|---|
-| `indice-autoridade.md` | Árbitro de "quem manda em cada assunto" no vault. Desatualizado desde 16/07 (já era 🔴 em 28/07). | `_arquivo/reorganizacao-flow-design/` | Ver acima. |
-| `fila-validacao-humana.md` | Fila de valores/decisões que esperam confirmação do Pedro, não bloqueia trabalho. | `execucao/tarefas/` | Ambas são "coisas pendentes"; a fila é validação de dado, tarefas é trabalho a fazer. Cruzam em propósito de tracking, vale unificar visão. |
-| `pdf/` | Pipeline nota→PDF (gerar-html.py, gerar-pdf.mjs, validar-pdf.py) + fontes Sora. | `pesquisa/` (raiz) | Os PDFs gerados por esse pipeline vivem soltos na raiz de `pesquisa/` hoje; o pipeline e o output que ele produz estão em pastas diferentes. |
+| Área | Conteúdo geral | Cruza com | Ação sugerida | Justificativa |
+|---|---|---|---|---|
+| `_memoria/*.md` (65 arquivos) + `MEMORY.md` | Mirror git-tracked do auto-memory real da sessão (fora do repo). Fatos duráveis cross-sessão. | `execucao/marcos/` | nenhuma | Overlap de propósito ("o que aconteceu e por quê"), não de conteúdo linha a linha — marco é mais formal, memória é mais granular. Fundir juntaria coisas de granularidade incompatível. |
 
 ---
 
-## `_templates/`
+## `_sistema/` ✅ validado (Pedro, 25/08)
 
-| Área | Conteúdo geral | Cruza com | Justificativa curta |
-|---|---|---|---|
-| `_templates/*.md` (7) | Modelos de nota: reunião, teardown-concorrente, artefato-concorrente, diário, entrevista-shadowing, marco, tarefa. | `pesquisa/concorrentes/`, `reunioes/`, `execucao/marcos/`, `execucao/tarefas/` | Cada template alimenta uma pasta específica 1:1 — não é sobreposição de conteúdo, é dependência direta (o template define a estrutura que a pasta usa). |
-
----
-
-## `apresentacao/`
-
-| Área | Conteúdo geral | Cruza com | Justificativa curta |
-|---|---|---|---|
-| `apresentacao/*` (3 arquivos) | Deck de apoio a reunião + gerador (`build-deck.js`) + proposta `.pptx` da Legalize Digital. | `_sistema/pdf/` | Os dois são "pipeline que transforma nota em material apresentável" — gerador diferente, mesmo propósito. Vale avaliar se convergem num só pipeline de output. |
+| Subpasta/Área | Conteúdo geral | Cruza com | Ação sugerida | Justificativa |
+|---|---|---|---|---|
+| `indice-autoridade.md` | Árbitro de "quem manda em cada assunto" no vault. Desatualizado desde 16/07 (já era 🔴 em 28/07). | `_arquivo/reorganizacao-flow-design/` | decisão aberta → depois fundir | Ver acima. |
+| `fila-validacao-humana.md` | Fila de valores/decisões que esperam confirmação do Pedro, não bloqueia trabalho. | `execucao/tarefas/` | linkar | Propósitos parecidos ("coisas pendentes") mas naturezas diferentes — fila é validação de dado, tarefas é trabalho a fazer. Fundir misturaria 2 tipos de pendência; um link cruzado no topo de cada já resolve o "esqueci que isso existia". |
+| `pdf/` | Pipeline nota→PDF (gerar-html.py, gerar-pdf.mjs, validar-pdf.py) + fontes Sora. | `pesquisa/` raiz, `mkt/estrategia/` (outputs) | linkar | Os PDFs gerados por esse pipeline vivem no assunto de negócio deles (pesquisa/mkt), não no `_sistema/`. Certo ficarem separados — só falta o README do pipeline linkar pra onde os outputs moram. |
 
 ---
 
-## `execucao/`
+## `_templates/` ✅ validado (Pedro, 25/08)
 
-| Subpasta/Área | Conteúdo geral | Cruza com | Justificativa curta |
-|---|---|---|---|
-| `flow/` | `flow-data.mjs` (fonte única do flow de onboarding) + geradores + `versoes/` (25 snapshots datados). Autoridade #1 do flow. | `execucao/portal/` | Mesma gramática (nó/rota/status), mesmo mecanismo gerador+versionamento; são as 2 autoridades irmãs declaradas no reorg travado de 30/07. |
-| `portal/` | `portal-data.mjs` + gerador do mapa do portal (dia-2, pós-ativação). Autoridade #2 do flow. | `execucao/flow/` | Ver acima. |
-| `marcos/` (40) | Descobertas datadas, 1 marco por achado relevante desde 07/07. | `_memoria/` | Ver seção `_memoria/`. |
-| `motor-testes/` (406, maioria em `relatorios/`) | Motor Node de teste de lógica do flow (sem UI). `relatorios/` = 382 outputs de rodadas de teste, provável artefato regenerável. | `execucao/flow/` | O motor testa exatamente a lógica que `flow-data.mjs` declara; hoje desatualizado (regra dura: ordem mudou, motor não acompanhou). |
-| `tarefas/` (4) | To-dos pontuais (NDA, framework de sociedade, raio-x de fluxo). | `_sistema/fila-validacao-humana.md` | Ver seção `_sistema/`. |
-| `specs/` (NOVO) | Specs de tela por bloco (`spec-mvp-v0`, `spec-telas-entrada-b1-b2`, `spec-telas-b3-b4-aterrissagem`, `spec-dashboard-adm-metricas`, `spec-instrumentacao-flow`, `spec-kanban-leads`). | `execucao/` raiz (`blocos-fluxo-abertura.md`, `mapa-ramificacoes-flow.md`, `mapa-telas-mobile.md`) | São a mesma camada de conteúdo (conteúdo/campo/condicional das telas) fragmentada em vários arquivos com autoridade sobreposta e parcialmente morta (numeração T velha). Candidato forte a fusão, não só a categorização. |
-| `handoffs/` (NOVO) | Handoffs técnicos pro dev (cores/fonte, dashboard adm, sistema de gestão). | `marca/handoff-dna-marca-sistema-ads.md` | Mesmo gênero de documento (handoff pra outra sessão/pessoa executar), hoje em pastas diferentes por acidente de onde foi escrito, não por categoria. |
-| `operacional/` (NOVO) | Kanban (2 versões), parking-lot, checklist de imersão 30 dias, pipeline de leads, setup GWS. | `execucao/tarefas/` | Ambos são gestão de trabalho/estado operacional do projeto; kanban e tarefas fazem perguntas parecidas ("o que falta fazer"). |
-| `pitch-investidor/` (NOVO) | Roteiro de pitch pra aceleradora + mapa mental do mockup pro pitch. | `marca/copy/roteiro-escalada-mercado.md`, `marca/copy/roteiro-teaser-investidor.md` | Todo o material voltado a investidor/aceleradora está fragmentado entre `execucao/` (estratégia do pitch) e `marca/copy/` (o roteiro em si) — mesma audiência final, mesmo momento de uso. |
-| raiz solta (30 arquivos, não categorizados nesta Fase A) | Mistura de: mapas gerados (`mapa-portal-mermaid`, `mapa-ramificacoes-flow`, `mapa-telas-mobile`), specs de flow ainda soltas (`blocos-fluxo-abertura`, `compilado-ux-flow`, `casos-teste-fluxo-cnae`), PDFs de reunião (`ABERTURA-EMPRESA-BH`, `BRIEFING-CARLA-LARISSA`, `PLAYBOOK-REUNIAO-PEDRO-DEV`), pautas/perguntas de reunião com Larissa/Carla/Pedro-dev, achados de reordenação fiscal. | `reunioes/`, `execucao/specs/` | Os PDFs+pautas de reunião deviam estar perto de `reunioes/` (mesmo gênero, hoje separado); os mapas/specs deviam juntar com `execucao/specs/` (mesma autoridade fragmentada citada acima). |
+| Área | Conteúdo geral | Cruza com | Ação sugerida | Justificativa |
+|---|---|---|---|---|
+| `_templates/*.md` (7) | Modelos de nota: reunião, teardown-concorrente, artefato-concorrente, diário, entrevista-shadowing, marco, tarefa. | `pesquisa/concorrentes/`, `reunioes/`, `execucao/marcos/`, `execucao/tarefas/` | nenhuma | Dependência 1:1 normal (o template define a estrutura que a pasta usa), não é sobreposição de conteúdo. |
 
 ---
 
-## `marca/`
+## `apresentacao/` ✅ validado (Pedro, 25/08) — decisão aberta fica como está, não converge por ora
 
-| Subpasta/Área | Conteúdo geral | Cruza com | Justificativa curta |
-|---|---|---|---|
-| `conceito/` | `conceito-marca.md` — arquétipo, essência, territórios de marca. | `marca/naming/` | Naming deriva direto do conceito (defesa do nome parte da essência definida aqui). |
-| `copy/` | Roteiros de vídeo (escalada-mercado, teaser-investidor, marca-e-visão), exemplos de copy por tela, glossário técnico→humano, narração ElevenLabs. | `execucao/pitch-investidor/` | Ver seção `execucao/pitch-investidor/`. |
-| `identidade-visual/` | Design system (html+md), paleta de cores, logos (svg), símbolo de exploração. | `ux-ui/` | O design system é a fonte de token visual que `ux-ui/` deveria consumir pra prototipar; hoje são pastas irmãs sem link explícito de dependência. |
-| `naming/` | `naming-defesa.md` — defende "Legalizei" (pretérito), desatualizado desde o rebrand de 03/08 pra "Legalizai" sem racional escrito (achado aberto em `HOME.md §Agora`). | `marca/decisoes-marca.md` | O ADR do rebrand devia ter atualizado esse doc e não atualizou; é o mesmo tipo de "autoridade que ficou pra trás" do achado #1/#2 do inventário geral. |
-| `referencias/` | Benchmarks de marca/visual de fora. | `pesquisa/concorrentes/` | Referências de marca e teardown de concorrente são o mesmo tipo de insumo (olhar pra fora), só que um foca em posicionamento/visual e outro em produto/preço. |
-| raiz solta (`marca.md`, `decisoes-marca.md`, `personagem-leo.md`, `handoff-dna-marca-sistema-ads.md`) | Hub geral + ADR de decisões + personagem Léo (voz da marca) + handoff de sistema de ads. | `marca/conceito/` | `marca.md` é hub genérico que provavelmente devia estar dentro de `conceito/` ou ser o índice que aponta pras subpastas, não ficar solto no mesmo nível delas. |
+| Área | Conteúdo geral | Cruza com | Ação sugerida | Justificativa |
+|---|---|---|---|---|
+| `apresentacao/*` (3 arquivos) | Deck de apoio a reunião + gerador (`build-deck.js`) + proposta `.pptx` da Legalize Digital. | `_sistema/pdf/` | decisão aberta (não executar agora) | Os dois são "pipeline que transforma nota em material apresentável" com geradores diferentes. Convergir num só pipeline é call de arquitetura, não de pasta — sinalizado, sem ação por ora. |
 
 ---
 
-## `mkt/`
+## `execucao/` ✅ validado (Pedro, 25/08) — ações executadas em `17b366d`
 
-| Subpasta/Área | Conteúdo geral | Cruza com | Justificativa curta |
-|---|---|---|---|
-| `campanhas/2026-08-primeira-campanha/` | Brief, copy, guardian-log, prompts de imagem, roteiros de vídeo, handoff de LP, resultados, mais os artefatos visuais (.ai/.psd/.png) da campanha. | `marca/copy/` | Copy de campanha e roteiros de vídeo institucionais nascem do mesmo personagem/voz (Léo) definido em `marca/`; hoje uma pasta é "produto final publicável" e a outra é "fonte de voz", separação faz sentido mas falta link explícito. |
-| `redes-sociais/instagram/`, `redes-sociais/linkedin/` | Perfil/posicionamento de cada rede (1 arquivo cada). | `mkt/campanhas/` | Mesma frente de marketing, granularidade diferente (canal vs campanha específica); praticamente vazio hoje, pode crescer junto com `campanhas/`. |
-
----
-
-## `pesquisa/`
-
-| Subpasta/Área | Conteúdo geral | Cruza com | Justificativa curta |
-|---|---|---|---|
-| `anexos-simples/` | Anexos III/IV/V do Simples Nacional (tabela fiscal, fonte LC 123). | `pesquisa/cnae-matriz/` | CNAE determina qual anexo se aplica; são duas metades do mesmo cálculo fiscal, hoje em pastas separadas sem link cruzado explícito. |
-| `cnae-matriz/` (23) | Matriz completa de CNAE (atendidos/não atendidos, complexidade de abertura, dados extraídos da Contabilizei, taxonomia de pills). | `pesquisa/anexos-simples/` | Ver acima. |
-| `concorrentes/` (129, Contabilizei = 91) | Teardown por concorrente (emails, social, funcionalidades, pricing). Contabilizei tem estrutura de domínio própria por ser o líder. | `marca/referencias/` | Ver seção `marca/referencias/`. |
-| `integracoes-apis/` (4) | O que uma API de órgão (Infosimples etc) de fato entrega — regra dura antes de criar campo de autofill. | `execucao/` (specs de tela que usam autofill) | Toda spec de tela com campo de autofill depende diretamente desse doc pra não assumir dado que a API não entrega; hoje a dependência é só de memória, não linkada. |
-| `personas/` (13, + `volantes/`) | 3 personas dorsais (A/B/C por tipo de serviço) + 9 personas volantes (casos concretos por dorsal) + template. | `pesquisa/PESQUISA-MERCADO.md`, `mkt/` | Personas alimentam tanto a pesquisa de mercado quanto a segmentação de copy/campanha de `mkt/`; é insumo compartilhado, não duplicação. |
-| raiz solta (27 arquivos) | Mistura pesada: estratégia de mkt/tráfego (`economia-preco-cac`, `estrutura-funil-trafego`, `posicionamento`, `mercado-bh-regional`, `funil-conversao`, `mecanicas-engajamento`, `frente-1-captacao-meta-bh`), decisões de custo/margem, PDFs gerados, INPI, fiscal consolidado. | `mkt/` | **Este é o cruzamento mais forte que achei no vault inteiro.** Pelo menos 8-10 desses arquivos são estratégia de marketing/produto pronta pra decisão, não "pesquisa" no sentido de desk research bruto — deviam estar em `mkt/` ou pelo menos numa subpasta `pesquisa/estrategia-mkt/` separada do resto. |
+| Subpasta/Área | Conteúdo geral | Cruza com | Ação sugerida | Justificativa |
+|---|---|---|---|---|
+| `flow/` | `flow-data.mjs` (fonte única do flow de onboarding) + geradores + `versoes/` (25 snapshots). Autoridade #1 do flow. | `execucao/portal/` | nenhuma | São pares intencionais (mesma gramática, mesmo mecanismo) declarados assim no reorg de 30/07 — a separação é a decisão certa, não um problema. |
+| `portal/` | `portal-data.mjs` + gerador do mapa do portal (dia-2). Autoridade #2 do flow. Ganhou 4 arquivos ✅ 25/08. | `execucao/flow/` | ✅ feito (mover) | `cruzamento-portal-interno.md`, `matriz-portal-interno.md`, `backlog-telas-portal.md`, `home-candidatos-modulos.md` vieram da raiz solta. |
+| `marcos/` (40) | Descobertas datadas, 1 marco por achado relevante desde 07/07. | `_memoria/` | nenhuma | Ver seção `_memoria/`. |
+| `motor-testes/` (406, maioria em `relatorios/`) | Motor Node de teste de lógica do flow (sem UI). `relatorios/` = 382 outputs de teste. | `execucao/flow/` | decisão aberta (não executada) | Dívida técnica (motor desatualizado), não reorg de pasta. Fica pendente. |
+| `specs/` (ampliada 25/08) | Specs de tela por bloco + `blocos-fluxo-abertura.md`, `compilado-ux-flow.md`, `casos-teste-fluxo-cnae.md`, `mapa-ramificacoes-flow.md`, `mapa-telas-mobile.md` (co-localizados). | (interno, entre os arquivos da própria pasta) | fundir (não executado) | Co-locação já feita. Mérito de conteúdo (numeração T velha) segue pendente — pede leitura linha a linha. |
+| `handoffs/` (novo) | Handoffs técnicos pro dev. Ganhou o de marca ✅ 25/08. | `marca/handoff-dna-marca-sistema-ads.md` | ✅ feito (mover) | Mesmo gênero de documento, só estava em `marca/` por acidente de onde foi escrito. |
+| `operacional/` (novo) | Kanban (2), parking-lot, checklist, pipeline de leads, setup GWS + agora os 4 antigos `tarefas/*` ✅ 25/08. | — | ✅ feito (fundir = co-locação de pasta) | `execucao/tarefas/` deixou de existir. **Achado no processo:** `parking-lot.md` já se declara explicitamente diferente do kanban ("tarefas concretas em execução" vs "adiado de propósito") — por isso a fusão foi só de pasta, não reescrita de conteúdo do kanban/parking-lot. |
+| `pitch-investidor/` (novo) | Roteiro de pitch pra aceleradora + mapa mental do mockup. | `marca/copy/roteiro-escalada-mercado.md`, `marca/copy/roteiro-teaser-investidor.md` | linkar (não executado) | Gêneros diferentes (estratégia vs copy final), mesma audiência. |
+| raiz solta (✅ 25/08: 18 → 14 arquivos) | `mapa-flow-mermaid.md`+`mapa-portal-mermaid.md` (gerados, ficam), `marcos.base`+`tarefas.base` (ficam), e 10 sem categoria ainda: `achados-apresentacao`, `apresentacao-mauro.html`, `backlog-e-sprint-1`, `cnae-fiscalmente-otimo`, `evolucao-para-mauro`, `fluxo-abertura-portais-pedro-dev`, `orgaos-sistemas-abertura-bh`, `processo-abertura-empresa-bh`, `reordenacao-cluster-fiscal-encaixe`, `reordenacao-flow-cobranca-cedo`. | — | decisão aberta, item a item | Os 4 de portal já saíram (✅). O resto não tem lar óbvio — prefiro perguntar depois do que forçar categoria errada. |
 
 ---
 
-## `reunioes/`
+## `marca/` ✅ validado (Pedro, 25/08) — `marca.md` movido em `38475e8`
 
-| Área | Conteúdo geral | Cruza com | Justificativa curta |
-|---|---|---|---|
-| `reunioes/*.md` (10) | 1 nota por reunião (Plaud), regra de ouro: relatório bruto sempre na seção final, decisões extraídas pro topo. Ativa até 19/08 (README diz "congelado" mas é só o processo, não a pasta). | `execucao/` raiz (pautas soltas: `pauta-reuniao-pedro-dev.md`, `perguntas-larissa-fiscal.md`, `briefing-carla-larissa.md` + PDFs) | Pautas e briefings pré-reunião estão em `execucao/`, atas pós-reunião estão aqui — mesmo evento, split artificial entre antes/depois. |
-
----
-
-## `ux-ui/`
-
-| Subpasta/Área | Conteúdo geral | Cruza com | Justificativa curta |
-|---|---|---|---|
-| `prototipo/` | Protótipo HTML standalone (splash, login, gate-cnae, fluxo-entrada) com Lottie embarcado. | `app/` (fora de escopo, mas relevante) | É um protótipo pré-código do que hoje já existe implementado no app real — provável candidato a arquivar como histórico, não como referência viva. |
-| `lotties-originais/` (+ `.zip`) | Assets de animação Lottie fonte (confetti, loading, steps etc). | `ux-ui/prototipo/` | São o asset-fonte que o protótipo consome; deviam estar mais explicitamente linkados como par fonte→uso. |
+| Subpasta/Área | Conteúdo geral | Cruza com | Ação sugerida | Justificativa |
+|---|---|---|---|---|
+| `conceito/` | `conceito-marca.md` — arquétipo, essência, territórios de marca. | `marca/naming/` | nenhuma | Dependência natural (naming deriva do conceito), não sobreposição. |
+| `copy/` | Roteiros de vídeo, exemplos de copy por tela, glossário técnico→humano, narração ElevenLabs. | `execucao/pitch-investidor/` | linkar | Ver seção `execucao/pitch-investidor/`. |
+| `identidade-visual/` | Design system (html+md), paleta de cores, logos (svg), símbolo de exploração. | `ux-ui/` | linkar | Design system é a fonte de token visual que `ux-ui/` deveria consumir — não faz sentido mover (públicos diferentes: marca define, ux-ui prototipa), mas falta o link de dependência explícito. |
+| `naming/` | ✅ 25/08: `naming-defesa.md` ganhou banner de desatualizado, apontando pro ADR de 03/08. | `marca/decisoes-marca.md` | ✅ feito (linkar) | Mérito -ai/-ei segue em aberto — decisão de sócio, não resolvida aqui. |
+| `referencias/` | Benchmarks de marca/visual de fora. | `pesquisa/concorrentes/` | linkar | Mesmo tipo de insumo (olhar pra fora), focos diferentes (visual/posicionamento vs produto/preço) — não fundir, só cruzar referência. |
+| raiz solta (`marca.md`, `decisoes-marca.md`, `personagem-leo.md`) | Hub geral + ADR de decisões + personagem Léo. `handoff-dna-marca-sistema-ads.md` saiu ✅ 25/08 pra `execucao/handoffs/`. | `marca/conceito/` | decisão aberta: mover `marca.md` → `marca/conceito/` OU virar hub-índice que aponta pras subpastas | `marca.md` hoje é hub genérico solto no mesmo nível das subpastas que deveria organizar — 2 caminhos possíveis, prefiro você escolher qual em vez de forçar um. |
 
 ---
 
-## Os 3-4 cruzamentos que eu destacaria primeiro
+## `mkt/` ✅ validado (Pedro, 25/08)
 
-1. **`pesquisa/` raiz ↔ `mkt/`** — o mais forte de todos. Tem estratégia de marketing pronta (funil, posicionamento, economia de CAC/LTV) vivendo dentro de "pesquisa" em vez de "marketing".
-2. **`execucao/specs/` ↔ `execucao/` raiz (mapas e specs remanescentes)** — autoridade de conteúdo de tela fragmentada em 3-4 arquivos com sobreposição parcial e numeração antiga viva em alguns.
-3. **`marca/naming/` ↔ `marca/decisoes-marca.md`** — doc de naming desatualizado desde o rebrand de 03/08, mesmo padrão do achado #1/#2 do inventário geral (autoridade que não acompanhou a decisão nova).
-4. **`execucao/` raiz (pautas/PDFs de reunião) ↔ `reunioes/`** — split artificial entre pré e pós reunião do mesmo evento.
+| Subpasta/Área | Conteúdo geral | Cruza com | Ação sugerida | Justificativa |
+|---|---|---|---|---|
+| `campanhas/2026-08-primeira-campanha/` | Brief, copy, guardian-log, prompts de imagem, roteiros de vídeo, handoff de LP, resultados, artefatos visuais. | `marca/copy/` | linkar | Copy de campanha nasce da voz do Léo definida em `marca/` — pastas certas de ficarem separadas (produto final vs fonte de voz), falta só o link. |
+| `redes-sociais/instagram/`, `redes-sociais/linkedin/` | Perfil/posicionamento de cada rede. | `mkt/campanhas/` | nenhuma | Mesma frente, granularidade diferente, sem conflito. |
+| `estrategia/` (novo, ✅ 25/08) | 17 arquivos vindos de `pesquisa/` raiz: funil, CAC/LTV, posicionamento, custos de tráfego, simulação de oferta. | `pesquisa/` | ✅ feito (mover) | Ver seção `pesquisa/`. |
+
+---
+
+## `pesquisa/` ✅ validado (Pedro, 25/08) — anexos-simples movido em `31a7a2a`
+
+| Subpasta/Área | Conteúdo geral | Cruza com | Ação sugerida | Justificativa |
+|---|---|---|---|---|
+| `cnae-matriz/anexos-simples/` (✅ movida) | Anexos III/IV/V do Simples Nacional (tabela fiscal, fonte LC 123). | `pesquisa/cnae-matriz/` | ✅ feito | Agora é subpasta de dentro da matriz, não irmã separada. |
+| `cnae-matriz/` (23) | Matriz completa de CNAE (atendidos/não atendidos, complexidade, dados Contabilizei, taxonomia). | `pesquisa/anexos-simples/` | (destino do move acima) | — |
+| `concorrentes/` (129, Contabilizei = 91) | Teardown por concorrente (emails, social, funcionalidades, pricing). | `marca/referencias/` | linkar | Ver seção `marca/referencias/`. |
+| `integracoes-apis/` (4) | O que uma API de órgão de fato entrega — regra dura antes de criar autofill. | `execucao/` (specs com autofill) | linkar | Dependência de leitura, não de local — specs deviam citar essa pasta, não morar perto dela. |
+| `personas/` (13, + `volantes/`) | 3 personas dorsais + 9 volantes + template. | `pesquisa/PESQUISA-MERCADO.md`, `mkt/` | nenhuma | Insumo compartilhado por natureza, não duplicação — fundir quebraria a separação pesquisa-de-base vs uso-tático. |
+| raiz solta (✅ 25/08: 27 → 11 arquivos) | `fiscal-simples-bh-2026.md` (fonte-verdade fiscal), `PESQUISA-MERCADO.md`, `mercado-bh-regional.md`, `metodologia-descoberta.md`, `metodologia-personas.md`, `perfil-microempreendedor-mercado.md`, `validacao-ideia.md`, `cruzamento-gemini-fluxo-*.md` (2), `pesquisa-inpi-marca-legalizei.md`+`.pdf`. | `mkt/estrategia/` | ✅ feito (mover) | Cruzamento #1 executado. O que sobrou é pesquisa de base coerente. |
+
+---
+
+## `reunioes/` ✅ validado (Pedro, 25/08)
+
+| Área | Conteúdo geral | Cruza com | Ação sugerida | Justificativa |
+|---|---|---|---|---|
+| `reunioes/*.md` (10) | 1 nota por reunião (Plaud), relatório bruto sempre na seção final. Ativa até 19/08. | — | — | — |
+| `preparacao/` (novo, ✅ 25/08) | 8 arquivos vindos de `execucao/` raiz: pautas, briefings, playbook, PDFs pré-reunião. | `reunioes/` raiz | ✅ feito (mover) | Mesmo evento, split antes/depois resolvido pela co-locação. |
+
+---
+
+## `ux-ui/` ✅ validado (Pedro, 25/08) — prototipo movido em `5d08789`
+
+| Subpasta/Área | Conteúdo geral | Cruza com | Ação sugerida | Justificativa |
+|---|---|---|---|---|
+| `prototipo/` (✅ movida) | Protótipo HTML standalone, virou `_arquivo/prototipo-pre-codigo/`. | `app/` (fora de escopo) | ✅ feito (mover) | Já substituído pelo app real, virou histórico. |
+| `lotties-originais/` (+ `.zip`) | Assets de animação Lottie fonte (confetti, loading, steps etc). Fica em `ux-ui/`. | — | nenhuma (decidido) | Pedro confirmou que pretende reutilizar — fica como asset reaproveitável, não vai junto pro arquivo morto. |
+
+---
+
+## Os 4 cruzamentos já executados (fase A+B, 25/08)
+
+Registrados como histórico — `75a860d`, `18f5072`. #2 e #3 resolveram só localização/aviso, ainda pedem rodada de mérito.
+
+1. ✅ **`pesquisa/` raiz ↔ `mkt/`** — virou `mkt/estrategia/` (mover).
+2. 🟡 **`execucao/specs/` ↔ conteúdo interno** — co-localizado (mover), mérito de conteúdo ainda por fundir.
+3. 🟡 **`marca/naming/` ↔ `marca/decisoes-marca.md`** — flag posto (linkar), mérito -ai/-ei segue decisão aberta.
+4. ✅ **`execucao/` raiz (pautas/PDFs) ↔ `reunioes/`** — virou `reunioes/preparacao/` (mover).
+
+## `financeiro/` (NOVO, ✅ 25/08 — pasta de domínio, não estava no mapa original)
+
+Criada a partir de um gap achado testando o próprio mapa: `mkt/estrategia/` misturava análise financeira (CAC, margem, custo) com tática de marketing (funil, posicionamento) — 2 assuntos, não 1.
+
+| Área | Conteúdo geral | Cruza com | Ação sugerida | Justificativa |
+|---|---|---|---|---|
+| `estado-atual.md` | Arquivo MÃE — TL;DR de preço/CAC/margem, editado no lugar (não é log). Fonte para `indice-autoridade.md`. | `marca/decisoes-marca.md` | linkar (feito) | ADR é cronológico (log), este é o snapshot do estado corrente — os 2 se complementam, não competem. |
+| `pesquisa/` | 6 arquivos vindos de `mkt/estrategia/`: economia-preço-CAC, custos-margem, simulação de oferta, rascunho de apresentação. | `mkt/estrategia/` (o que ficou) | ✅ feito (mover) | Análise financeira separada de tática de marketing. |
+
+## Rodada pasta a pasta — FECHADA (25/08)
+
+Todas as 11 pastas validadas com o Pedro. Commits: `17b366d` (execucao/), `38475e8` (marca/), `31a7a2a` (pesquisa/), `5d08789` (ux-ui/).
+
+**Fica em aberto pra depois** (mérito de conteúdo, não mecânico):
+- `_arquivo/reorganizacao-flow-design/` ↔ `_sistema/indice-autoridade.md` — fechar veredito e fundir.
+- `execucao/motor-testes/` — dívida técnica, motor desatualizado.
+- `execucao/specs/` — mérito de conteúdo (numeração T velha).
+- `execucao/operacional/` ↔ `execucao/tarefas/` — já fundido por pasta; avaliar se kanban vira 1 sistema só com parking-lot é outro assunto, não decidido.
+- `execucao/` raiz — 10 arquivos ainda sem categoria (`achados-apresentacao`, `apresentacao-mauro.html`, etc).
+- `marca/marca.md` raiz — decisão entre virar hub-índice ou ficar como está dentro de `conceito/`.
+- `apresentacao/` ↔ `_sistema/pdf/` — convergência de pipeline, recusada por ora.
+- Vários `linkar` sugeridos ao longo do doc — nenhum foi executado como edição de arquivo ainda, só sinalizados.

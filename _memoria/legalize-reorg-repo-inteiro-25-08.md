@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: 8ff9f927-e2e8-43a2-a26f-6d75d139b96a
-  modified: 2026-08-25T17:39:52.423Z
+  modified: 2026-08-25T19:27:55.350Z
 ---
 
 **25/08 — Pedro respondeu "do jeito dele" a pergunta grande deixada aberta em [[legalize-reorganizacao-flow-design-em-curso]] (31/07).** Pediu inventário do repo inteiro e debate de reorganização agindo explicitamente como Product Manager, "tocando" a reorg com Claude.
@@ -25,5 +25,7 @@ metadata:
 **Why:** mesmo padrão do achado de 31/07 — múltiplas representações/pastas sem hierarquia clara de autoridade, crescendo sem taxonomia.
 
 **How to apply:** antes de qualquer execução de reorg nesta frente, checar se este plano ainda é o vigente (pode ter avançado passos em janelas seguintes). Árvore de pastas alvo foi desenhada nesta mesma sessão pra aprovação do Pedro — se não achar registrada aqui ainda, procurar marco mais recente em `execucao/marcos/` ou decisão em `marca/decisoes-marca.md`.
+
+**FECHADO 25/08.** Todas as fases executadas e pushadas (`75a860d`→`e158a41`, 8 commits): reorg de `execucao/`+`pesquisa/` (fase A/B), validação pasta-a-pasta com o Pedro de todas as 11 pastas (fase C-F), e criação de `financeiro/` (domínio novo, não previsto no plano original — surgiu de um achado real testando o próprio resultado: preço só saía certo se soubesse ler `decisoes-marca.md` até o fim; 3 docs + `wizard-dinheiro.tsx` ainda citavam MEI R$49,90 velho). `financeiro/estado-atual.md` é o arquivo mãe (não é log) pra preço/CAC/margem daqui pra frente. Marco completo em `execucao/marcos/2026-08-25-reorg-vault-completa.md`.
 
 Ver [[legalize-reorganizacao-flow-design-em-curso]] · [[legalize-vault-organizado]].

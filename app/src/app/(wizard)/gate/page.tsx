@@ -10,6 +10,7 @@ import {
   FaixaView,
 } from "@/components/gate-telas";
 import { ehMei, comRegime } from "@/lib/regime";
+import { comEndereco } from "@/lib/endereco";
 import { mapear } from "@/lib/mock-veredito";
 
 /**
@@ -77,9 +78,15 @@ export default function GatePage() {
   const [resultado, setResultado] = useState<Resultado | null>(resultadoInicial);
   const [socios, setSocios] = useState<number | null>(null);
   const [exterior, setExterior] = useState<boolean | null>(null);
+  // 🆕 24/08 (reunião Leonan 19/08 + pedido do Pedro) — CPF/CNPJ do sócio.
+  const [socioTipo, setSocioTipo] = useState<"cpf" | "cnpj" | null>(null);
   const [faixa, setFaixa] = useState<string | null>(null);
   const [modoExato, setModoExato] = useState(false);
   const [exato, setExato] = useState("");
+  // 🆕 24/08 (reunião Rua Satélite 35) — coorte saiu do E6, mora aqui agora.
+  const [coorte, setCoorte] = useState<"primeira" | "ja-abri" | null>(null);
+  // 🆕 26/08 (reunião Rua Satélite 36, item 2) — endereço saiu do C4, mora aqui.
+  const [enderecoProprio, setEnderecoProprio] = useState<boolean | null>(null);
 
   function validar() {
     setEtapa("analisando");
@@ -129,6 +136,8 @@ export default function GatePage() {
             setSocios={setSocios}
             exterior={exterior}
             setExterior={setExterior}
+            socioTipo={socioTipo}
+            setSocioTipo={setSocioTipo}
             onSeguir={() => setEtapa("faixa")}
             onSaida={(rota) => router.push(rota)}
           />
@@ -141,7 +150,11 @@ export default function GatePage() {
             setModoExato={setModoExato}
             exato={exato}
             setExato={setExato}
-            onSeguir={() => router.push(comRegime("/conta", mei))}
+            coorte={coorte}
+            setCoorte={setCoorte}
+            enderecoProprio={enderecoProprio}
+            setEnderecoProprio={setEnderecoProprio}
+            onSeguir={() => router.push(comEndereco(comRegime("/conta", mei), enderecoProprio === false))}
             // 🆕 03/08 — UX-68 mesclado: revela o campo inline em vez de
             // trocar a tela inteira. Fonte: /apresentacao.
             exatoInline

@@ -14,19 +14,19 @@ import { ehMei, comRegime } from "@/lib/regime";
  * Spec: spec-telas-entrada-b1-b2.md → Tela 10 (2.5) · mapa T10→N14
  * Motor: b2.coleta (cnae secundários)
  *
- * ─── REGRA ESTRUTURAL (decisão do Pedro, 2026-07-21) ─────────────────────
- * SÓ sugere secundárias **similares** e de **MESMO IMPOSTO** que a principal:
- * mesmo Anexo do Simples + mesma dependência de Fator R. Assim, incluir uma
- * secundária NUNCA muda o que o cliente paga.
+ * ─── REGRA ESTRUTURAL (decisão do Pedro, 2026-07-21; revisada 24/08) ─────
+ * As SUGESTÕES curadas continuam **mesmo-imposto** que a principal: mesmo
+ * Anexo do Simples + mesma dependência de Fator R. Incluir uma sugestão
+ * curada NUNCA muda o que o cliente paga.
  *
- * Isto REVERTE a regra antiga ("secundário que quebra o recorte entra com
- * aviso"). O que muda o regime **não aparece aqui — nem com aviso.** Dois
- * motivos:
- *   1. Quem revende produto é COMÉRCIO, e comércio é barrado lá no N4 (🔴
- *      comercial Mauro). Sugerir um CNAE de comércio numa tela do fluxo
- *      só-serviço contradiz o próprio escopo do produto.
- *   2. Oferecer uma opção que silenciosamente troca o Anexo/Fator R é o
- *      oposto da feature-âncora (que existe pra BAIXAR imposto, não subir).
+ * 🆕 24/08 (reunião Leonan 19/08) — a BUSCA abre além da lista curada: a
+ * pessoa pode procurar qualquer atividade que a gente ATENDE (restrito à
+ * mesma lista da entrevista principal), mesmo que mude o enquadramento. Nesse
+ * caso a tela avisa e troca "Continuar" por "Falar com atendente" — a gente
+ * não deixa a pessoa mudar o próprio imposto sozinha, sem saber, mas também
+ * não esconde a opção dela existir (era essa a queixa original da Jéssica,
+ * 19/07: só a busca livre é o suficiente, o enquadramento é resolvido com
+ * aviso + humano, não com uma 2ª lista escondida).
  *
  * ─── DE ONDE SAEM AS SUGESTÕES ───────────────────────────────────────────
  * No app real: dataset de CNAE filtrado por `anexo == principal.anexo` E
@@ -48,6 +48,12 @@ export default function CnaeSecundariosPage() {
   // 🆕 03/08 — MEI pula C6 (Natureza jurídica): natureza é sempre fixa
   // (Empresário Individual - MEI), sem escolha SLU/LTDA. Vai direto pro C7.
   return (
-    <CnaeSecundariosView onSeguir={() => router.push(comRegime(mei ? "/dossie/nome" : "/dossie/natureza", mei))} />
+    <CnaeSecundariosView
+      onSeguir={() => router.push(comRegime(mei ? "/dossie/nome" : "/dossie/natureza", mei))}
+      // 🆕 24/08 (reunião Leonan 19/08) — secundária de busca pode mudar o
+      // enquadramento; mesma rota de "atendido pelo Mauro" que o resto do
+      // produto usa quando precisa de um humano no meio.
+      onFalarAtendente={() => router.push("/veredito/nao-atende")}
+    />
   );
 }

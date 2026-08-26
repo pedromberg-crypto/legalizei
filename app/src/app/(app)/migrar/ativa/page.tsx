@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { MigrarAtivaView } from "@/components/wizard-migrar";
 import { ehMei } from "@/lib/regime";
 
@@ -26,8 +26,12 @@ import { ehMei } from "@/lib/regime";
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function MigrarAtivaPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const mei = ehMei(searchParams);
 
-  return <MigrarAtivaView regime={mei ? "mei" : "me"} />;
+  // 🐛 24/08 — `onSeguir` faltava: "Ir pro meu painel" não ia pra lugar
+  // nenhum. Vai pro portal (`/inicio`), não pro `/home-dia1` do caminho
+  // abrir — essa empresa já existia e já fatura, não é "empresa nasceu agora".
+  return <MigrarAtivaView regime={mei ? "mei" : "me"} onSeguir={() => router.push("/inicio")} />;
 }

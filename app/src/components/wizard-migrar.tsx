@@ -4,10 +4,15 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
-import { Campo, Texto, Checkbox } from "@/components/ui/form";
+import { Campo, Texto, Checkbox, Select } from "@/components/ui/form";
 import { StatusIcon } from "@/components/ui/status";
 import { PainelView, type Etapa } from "@/components/painel";
 import { CUSTOS, brl } from "@/lib/fiscal";
+// 🆕 24/08 (reunião Leonan 19/08) — a migração passa pelo MESMO acesso ao
+// GOV.BR + procuração que a constituição. `CodigoGovView` é reusado direto
+// daqui, com `soProcuracao` ajustando a copy (não há registro novo pra
+// assinar, a empresa já existe). Ver `MigrarGovView` abaixo.
+import { CodigoGovView } from "@/components/wizard-cauda";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -416,6 +421,98 @@ function ChecagemLinha({ ok, titulo }: { ok: boolean; titulo: string }) {
       <StatusIcon estado={ok ? "feito" : "recusa"} />
       <p className="text-caption text-text-secondary">{titulo}</p>
     </div>
+  );
+}
+
+/* ═══════════════════ M1b · DADOS QUE O CARTÃO CNPJ NÃO TRAZ ═════════════ */
+
+/**
+ * M1b — NOVA (24/08, reunião Leonan 19/08).
+ *
+ * Achado da reunião: o cartão CNPJ traz razão social, endereço, CNAE e
+ * situação — mas NÃO traz CPF, RG, estado civil nem sócios ("fica até
+ * disponível, mas fica lá dentro do e-CAC, aí eu preciso do GOV" — Leonan).
+ * Antes desta tela, o flow de migração ia direto do M1 (achou a empresa) pro
+ * M2 (certificado), como se o resto dos dados de constituição não fizesse
+ * falta — mas eles fazem: procuração, assinatura e o TTRT em nome de quem
+ * precisam de pessoa física identificada, igual na abertura do zero.
+ *
+ * Mesmos campos do C1 (`SocioView`, abertura) — dossiê reusa o padrão, não
+ * inventa um novo. Sem sócio adicional aqui: quem migra sozinho preenche só
+ * os próprios dados; sócios adicionais (se a empresa já tiver) entram depois,
+ * mesma tela do caminho abrir.
+ *
+ * 🔴 24/08 (reunião Rua Satélite 35, Natanael Dev) — upload/leitura de
+ * documento por IA (que tinha entrado aqui horas antes) foi REMOVIDO do MVP.
+ * Mesmo motivo do C1: custo/velocidade de leitura de imagem por IA. Campos
+ * voltam a ser só digitação manual.
+ */
+const ESTADO_CIVIL_MIGRAR = [
+  { v: "solteiro", label: "Solteiro(a)" },
+  { v: "casado", label: "Casado(a)" },
+  { v: "uniao", label: "União estável" },
+  { v: "divorciado", label: "Divorciado(a)" },
+  { v: "viuvo", label: "Viúvo(a)" },
+];
+
+export function MigrarDadosBaseView({
+  onSeguir,
+  onVoltar,
+}: {
+  onSeguir?: (dados: { cpf: string; rg: string; orgao: string; civil: string }) => void;
+  onVoltar?: () => void;
+}) {
+  const [cpf, setCpf] = useState("");
+  const [rg, setRg] = useState("");
+  const [orgao, setOrgao] = useState("");
+  const [civil, setCivil] = useState("");
+
+  const completo = cpf.replace(/\D/g, "").length === 11 && rg.trim() !== "" && orgao.trim() !== "" && civil !== "";
+
+  return (
+    <>
+      <TelaHeader meta="Seus dados" onVoltar={onVoltar} />
+      <main className="app-main">
+        <Titulo sub="O cartão CNPJ não traz isso — a gente precisa pra fazer a procuração e a transferência em seu nome.">
+          Falta só o seu CPF e mais 3 dados
+        </Titulo>
+
+        <Corpo>
+          <Campo rotulo="CPF">
+            <Texto
+              valor={cpf}
+              onChange={(v) => setCpf(v.replace(/\D/g, "").slice(0, 11))}
+              placeholder="000.000.000-00"
+              inputMode="numeric"
+            />
+          </Campo>
+
+          <div className="grid grid-cols-2 gap-3">
+            <Campo rotulo="RG">
+              <Texto valor={rg} onChange={setRg} placeholder="00.000.000" />
+            </Campo>
+            <Campo rotulo="Órgão emissor">
+              <Texto valor={orgao} onChange={setOrgao} placeholder="SSP/MG" />
+            </Campo>
+          </div>
+
+          <Campo rotulo="Estado civil">
+            <Select valor={civil} onChange={setCivil} opcoes={ESTADO_CIVIL_MIGRAR} />
+          </Campo>
+
+          <p className="text-micro text-text-tertiary">
+            Se a empresa tiver mais sócios, os dados deles a gente coleta na
+            sequência, do mesmo jeito de quem abre do zero.
+          </p>
+        </Corpo>
+
+        <Rodape>
+          <Button full disabled={!completo} onClick={() => onSeguir?.({ cpf, rg, orgao, civil })}>
+            Continuar
+          </Button>
+        </Rodape>
+      </main>
+    </>
   );
 }
 
@@ -857,10 +954,11 @@ function Bullet({ children }: { children: React.ReactNode }) {
  * Só ME passa por aqui — MEI nunca tem TTRT (ver `MigrarDiagnosticoView`),
  * vai direto de pagamento pra `/migrar/ativa`.
  *
- * Sem trava de Continuar: nome/e-mail/telefone/CRC completos ajudam, mas
- * "não sabe algum desses dados? segue mesmo assim — a gente confirma o
- * resto direto com o conselho" (Pedro, mesma reunião) — travar aqui puniria
- * quem genuinamente não tem a informação por um problema que não é dele.
+ * 🔒 24/08 (reunião Leonan 19/08) — CRC agora é OBRIGATÓRIO, trava o
+ * Continuar. Sem o CRC não dá pra abrir o TTRT de jeito nenhum ("eu preciso
+ * do número do CRC de qualquer forma" — Leonan). Nome/e-mail/telefone
+ * continuam opcionais: quem não sabe segue assim mesmo, a gente confirma o
+ * resto direto com o conselho — só o CRC não tem contorno.
  */
 export function MigrarContadorAntigoView({
   empresa,
@@ -921,24 +1019,124 @@ export function MigrarContadorAntigoView({
           </Campo>
 
           <Campo
-            rotulo="CRC do contador, se você tiver"
-            dica="Fica no contrato que você assinou com ele, se ele te mandou. Opcional."
+            rotulo="CRC do contador"
+            dica="Fica no contrato que você assinou com ele. É obrigatório: sem o CRC a gente não consegue abrir a transferência no conselho."
           >
-            <Texto valor={crc} onChange={setCrc} placeholder="Opcional" />
+            <Texto valor={crc} onChange={setCrc} placeholder="Ex: CRC-MG 123456/O-0" />
           </Campo>
 
           <p className="text-micro text-text-tertiary">
-            Não sabe algum desses dados? Pode seguir assim mesmo — a gente
-            confirma o resto direto com o conselho.
+            Não sabe nome, e-mail ou telefone? Pode seguir sem eles — a gente
+            confirma o resto direto com o conselho. Só o CRC é obrigatório.
           </p>
         </Corpo>
 
         <Rodape>
           <Button
             full
+            disabled={!crc.trim()}
             onClick={() => onSeguir?.({ nome, email, telefone, crc })}
           >
             Continuar
+          </Button>
+        </Rodape>
+      </main>
+    </>
+  );
+}
+
+/* ═══════════════════ M3d · ACESSO AO GOV.BR + PROCURAÇÃO ════════════════ */
+
+/**
+ * M3d — NOVA (24/08, reunião Leonan 19/08). Achado do Pedro revisando o
+ * que já tinha sido construído: faltava esta tela na migração. A reunião
+ * debateu isso explicitamente:
+ *
+ * > Léo: "Só que aí, por exemplo, a gente está migrando essa empresa. A
+ * > gente vai ter que pegar desse cara também [o] Gov[.br]." "Vai ter que
+ * > pegar Gov. Vai ter que pegar procuração. Repetir todo o processo [d]as
+ * > forças de uma Constituição."
+ * > Pedro: "Aí vem no meio do caminho aqui a parte do que a gente acabou de
+ * > falar?" Léo: "Mesma coisa, procuração, GOV, acesso ao GOV, mesma coisa
+ * > do outro." Pedro: "Só que o outro, quando constituir final, esse aqui
+ * > vai cair na parte de..." Léo: "De transferência concluída."
+ *
+ * DUAS DIFERENÇAS em relação ao caminho abrir (A4, `AssinaturaView`):
+ *   1. Sem sócios pra coordenar assinatura — a procuração aqui é sempre só
+ *      do titular (dados coletados no M1b/E4.2b).
+ *   2. `soProcuracao` no `CodigoGovView`: não existe "assinar protocolo de
+ *      registro" (a empresa já existe) — o código serve só pra abrir a
+ *      procuração, que é o que dá acesso ao e-CAC/GOV.BR do cliente.
+ *
+ * Entra DEPOIS do M3c (contador atual, que fecha os dados pro TTRT) e ANTES
+ * do M4b (pipeline de transferência) — é a procuração que destrava a gente
+ * agir em nome do cliente pra tocar a transferência.
+ */
+const NIVEL_GOVBR_MIGRAR: "bronze" | "prata" | "ouro" = "prata";
+
+export function MigrarGovView({
+  onSeguir,
+  onEscalar,
+  onVoltar,
+}: {
+  onSeguir?: () => void;
+  onEscalar?: () => void;
+  onVoltar?: () => void;
+}) {
+  const bronze = NIVEL_GOVBR_MIGRAR === "bronze";
+  const [fase, setFase] = useState<"acesso" | "codigo">("acesso");
+
+  if (fase === "codigo") {
+    return (
+      <CodigoGovView
+        soProcuracao
+        onVoltar={() => setFase("acesso")}
+        onValidar={onSeguir}
+        onEscalar={onEscalar}
+      />
+    );
+  }
+
+  return (
+    <>
+      <TelaHeader meta="Acesso ao GOV.BR" onVoltar={onVoltar} />
+      <main className="app-main">
+        <Titulo sub="A gente usa isso pra abrir a procuração e cuidar da sua empresa — DAS, obrigações, e a transferência que vem a seguir.">
+          Falta só o seu acesso ao GOV.BR
+        </Titulo>
+
+        <Corpo>
+          {bronze ? (
+            <Aviso variante="warning" titulo="Sua conta GOV.BR precisa subir de nível">
+              Pra fazer a procuração, o GOV.BR exige nível prata ou ouro, e o
+              seu está bronze. A gente te mostra como subir em 2 minutos,
+              aqui mesmo.
+            </Aviso>
+          ) : (
+            <Card tom="sucesso">
+              <div className="flex items-center gap-2">
+                <StatusIcon estado="feito" />
+                <span className="text-caption font-semibold text-state-success-text">
+                  Sua conta GOV.BR está no nível prata
+                </span>
+              </div>
+              <p className="text-micro text-text-secondary mt-1">
+                É o nível que o e-CAC aceita pra abrir a procuração. Pode
+                seguir.
+              </p>
+            </Card>
+          )}
+
+          <Aviso variante="info" titulo="Uma procuração eletrônica, com limite">
+            Ela serve só pra cuidar da sua contabilidade — pagar DAS, resolver
+            obrigações, tocar a transferência. Tem limite, e você revoga
+            quando quiser.
+          </Aviso>
+        </Corpo>
+
+        <Rodape>
+          <Button full disabled={bronze} onClick={() => setFase("codigo")}>
+            {bronze ? "Subir de nível no GOV.BR" : "Fazer a procuração no GOV.BR"}
           </Button>
         </Rodape>
       </main>
@@ -1003,7 +1201,11 @@ export function MigrarTransferenciaView({
         concluidas={1}
         emAndamento={1}
         titulo={{
-          normal: "Estamos migrando sua empresa",
+          // 🆕 24/08 (reunião Leonan 19/08) — copy validada com ele: migração
+          // usa status próprio ("iniciando transferência" + "encerrando com o
+          // contador antigo"), diferente de constituição ("empresa foi
+          // constituída"). Antes os dois caminhos diziam a mesma coisa.
+          normal: "Iniciando o processo de transferência",
           recusa: "A gente assumiu esse problema",
         }}
         sub={{
@@ -1030,12 +1232,12 @@ export function MigrarTransferenciaView({
       concluidas={2}
       emAndamento={2}
       titulo={{
-        normal: "Estamos migrando sua empresa",
+        normal: "Iniciando o processo de transferência",
         recusa: "A gente assumiu esse problema",
       }}
       sub={{
         normal:
-          "A parte chata é com a gente. Você não precisa falar com seu contador antigo — a gente faz isso.",
+          "Estamos entrando em contato para encerrar o vínculo com a contabilidade antiga. Você não precisa falar com seu contador — a gente faz isso.",
         recusa: "",
       }}
       prazo="Costuma levar alguns dias, e depende do aceite do seu contador anterior."

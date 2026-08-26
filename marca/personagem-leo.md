@@ -120,22 +120,30 @@ Referência de calibragem pro `legalizai-copywriter`. Não é fórmula de substi
 | Troll/hate sem argumento | Não entra em troca de farpa pessoal (ironia é DO sistema, nunca DA pessoa, §3) | Resposta curta, sem se abaixar ao nível, sem ignorar (ignorar público lê como "não tem resposta") |
 | Crítica de concorrente disfarçada | Não cita concorrente por nome (regra dura já travada) | Fala do problema genérico do mercado, nunca do nome — mesma régua de sempre |
 
-## 11. Pilares de conteúdo — quem é dono — 🟢 travado (Pedro, 19/08)
+## 11. Pilares de conteúdo — onde ele encaixa — 🟢 travado (Pedro, 19/08), **revisado 26/08 (não é mais exclusividade, numeração v3)**
 
-Mapeamento contra os pilares já travados em `estrategia-organica.md` §Camada 1. Só 2 e 3 são 100% dele — resto é presença parcial ou ausência, condizente com §5 (ele navega, não domina tudo).
+Mapeamento contra os pilares travados em `estrategia-organica.md` §Camada 1 (v3, 26/08 — renumeração completa liberada por Pedro, 2 pilares novos: 3-Nossa origem, 5-Mitos).
+
+> **Mudança 26/08 (Pedro):** "🟢 Dono" deixa de significar exclusividade. Léo é o encaixe MAIS FORTE nos pilares 4 e 2 (numeração v3), mas o Pedro ou a equipe podem perfeitamente postar dor-educativa ou cultural/leve sem o Léo — não é mais trava, é preferência de encaixe. Vale pros pilares novos também: o brief de humano-IA (imagem fotorrealista) não é exclusivo de nenhum pilar específico — pode ser usado em qualquer pilar que fizer sentido.
 
 | # | Pilar | Léo | Por quê |
 |---|---|---|---|
 | 1 | Bastidor fundador | ❌ Fora | Voz é do Pedro-pessoa, §7 já trava isso |
-| 2 | Dor educativa relatable | 🟢 Dono | Vigilância + tradução de susto fiscal é o core dele |
-| 3 | Cultural/relatable (piada leve) | 🟢 Dono | Ironia é a ferramenta dele por definição (§2) |
-| 4 | Diferencial vs mercado | 🟡 Meio | Ângulo ironiza o teatro (dele), mas dado/comparação dura pode pedir tom mais institucional |
-| 5 | Oferta/conversão | 🟡 Meio | CTA final ("Vai, legaliza aí") é dele; corpo do post com preço/condição pode ser institucional |
-| 6 | Prova/reação (founder-made, CNPJ do Pedro) | ❌ Fora | É prova pessoal do Pedro, não personagem — mistura quebraria credibilidade |
-| 7 | Bastidor/processo (contador CRC real) | 🟡 Meio | Léo pode abrir gancho ("o contador que cuida disso é de verdade") mas quem sustenta é a pessoa real, não ele |
-| 8 | Simulador Fator R (formato assinatura) | 🟡 Meio | Léo convida a usar a ferramenta; resultado/dado sai sério, sem ironia |
-| 9 | Participativo/UGC | 🟡 Meio | Pode comentar/reagir a conteúdo de usuário, não protagoniza |
-| Momentâneo | Lançamento/promoção | 🟡 Meio | Mesmo padrão do 5 — CTA dele, condição comercial institucional |
+| 2 | Cultural/relatable (piada leve) | 🟢 Encaixe forte (não exclusivo) | Ironia é a ferramenta dele por definição (§2) |
+| 3 | Nossa origem 🆕 | ❌ Fora | É a história institucional da fusão Legalize+tech, voz de marca/Pedro-fundador, não do Léo |
+| 4 | Dor educativa relatable | 🟢 Encaixe forte (não exclusivo) | Vigilância + tradução de susto fiscal é o core dele, mas time/Pedro também podem postar aqui |
+| 5 | Mitos/crenças erradas 🆕 | 🟢 Encaixe forte (não exclusivo) | Desmontar mito é ironia com propósito, exatamente o que ele faz (§2) |
+| 6 | Calendário/prazo fiscal 🆕 | 🟢 Encaixe forte (não exclusivo) | Extensão direta do pilar 4 (vigilância de prazo é o core dele) |
+| 7 | Educação fiscal/enquadramento 🆕 | 🟡 Meio | Léo convida a usar a ferramenta/entender o tema; dado técnico sai sério, sem ironia (herda a regra do antigo pilar Fator R) |
+| 8 | Diferencial vs mercado | 🟡 Meio | Ângulo ironiza o teatro (dele), mas dado/comparação dura pode pedir tom mais institucional |
+| 9 | Bastidor/processo (contador CRC real) | 🟡 Meio | Léo pode abrir gancho ("o contador que cuida disso é de verdade") mas quem sustenta é a pessoa real, não ele |
+| 10 | Oferta/conversão | 🟡 Meio | CTA final ("Vai, legaliza aí") é dele; corpo do post com preço/condição pode ser institucional |
+| 11 | Migração/troca de contador 🆕 | 🟡 Meio | Léo pode abrir com "eu vi contrato pior que o seu" tipo de gancho, corpo com detalhe do flow é institucional |
+| 12 | Gestão do dinheiro do dono 🆕 | 🟡 Meio | Pode abrir gancho, mas é funcionalidade de produto, tom mais institucional |
+| 13 | Documentação/regularização em dia 🆕 | 🟢 Encaixe forte (não exclusivo) | "Eu confiro isso pra você" é literalmente vigilância, core do Léo |
+| 14 | Prova/reação (standby, 26/08) | ❌ Fora | É prova pessoal do Pedro, não personagem — mistura quebraria credibilidade |
+| 15 | Participativo/UGC (standby, 26/08) | 🟡 Meio | Pode comentar/reagir a conteúdo de usuário, não protagoniza |
+| Momentâneo | Lançamento/promoção | 🟡 Meio | Mesmo padrão do 10 — CTA dele, condição comercial institucional |
 
 ## 12. Descrição física — 🟢 travado (Pedro, 19/08), lido de asset visual já existente
 

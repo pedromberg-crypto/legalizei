@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { AguardandoView } from "@/components/wizard-cauda";
 import { ehMei, comRegime } from "@/lib/regime";
+import { ehEnderecoFiscal, comEndereco } from "@/lib/endereco";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -29,8 +30,12 @@ export default function AguardandoPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const mei = ehMei(searchParams);
+  const enderecoFiscal = ehEnderecoFiscal(searchParams);
 
   return (
-    <AguardandoView mei={mei} onSeguir={() => router.push(comRegime("/dossie/socio", mei))} />
+    <AguardandoView
+      mei={mei}
+      onSeguir={() => router.push(comEndereco(comRegime("/dossie/socio", mei), enderecoFiscal))}
+    />
   );
 }

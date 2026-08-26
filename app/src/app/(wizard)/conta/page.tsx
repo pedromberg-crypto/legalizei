@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ContaView, type DadosConta } from "@/components/wizard-dinheiro";
 import { ehMei, comRegime } from "@/lib/regime";
+import { ehEnderecoFiscal, comEndereco } from "@/lib/endereco";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -48,7 +49,9 @@ import { ehMei, comRegime } from "@/lib/regime";
  */
 export default function ContaPage() {
   const router = useRouter();
-  const mei = ehMei(useSearchParams());
+  const searchParams = useSearchParams();
+  const mei = ehMei(searchParams);
+  const enderecoFiscal = ehEnderecoFiscal(searchParams);
   const [etapa, setEtapa] = useState<"form" | "codigo">("form");
   const [dados, setDados] = useState<DadosConta>({
     nome: "",
@@ -68,7 +71,7 @@ export default function ContaPage() {
       set={(k, v) => setDados((p) => ({ ...p, [k]: v }))}
       etapa={etapa}
       onCriarConta={() => setEtapa("codigo")}
-      onConfirmar={() => router.push(comRegime("/plano", mei))}
+      onConfirmar={() => router.push(comEndereco(comRegime("/plano", mei), enderecoFiscal))}
       // 🆕 03/08 — UX-71 mesclado (painel escuro + folha sobreposta + login
       // social). UX-73 (coorte obrigatória) NÃO veio junto — decisão em
       // aberto, ver comentário em `ContaPainel`. Fonte: /apresentacao.

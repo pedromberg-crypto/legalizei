@@ -25,5 +25,19 @@ tags: [pesquisa, personas, volante]
 ## O que NÃO muda (herdado da dorsal)
 Idade 32-42 (pode estender um pouco pra cima, perfil mais sênior), alta familiaridade digital, indicação forte — ver [[persona-a-servico-intelectual]].
 
+## Pesquisa real (Google Search, 26/08) 🆕
+
+Fonte: `Pesquisa Perfis Microempreendedores Belo Horizonte.md` (Downloads).
+
+| Critério | Dado real |
+|---|---|
+| Idade real | 40-60 |
+| Gênero | Historicamente masculino, paridade crescente e acelerada em gestão |
+| Renda real | R$15.000-40.000+/mês, precificado por hora ou success fee |
+| Canais reais | LinkedIn (central B2B), e-mail corporativo, WhatsApp com stakeholders |
+| Reclamação real documentada | Risco de exclusão do Simples por sublimite (R$3,6mi municipal/estadual, R$4,8mi federal); Fator R; transição Simples↔Lucro Presumido sem perder rentabilidade |
+| Vocabulário real | Assessment, Bottom-line, M&A, Due Diligence, Turnaround, Sinergia, Core business, KPIs, EBITDA |
+| Ambiente real | Coworkings executivos de alto padrão (em BH: Savassi/Lourdes), salas envidraçadas, home office minimalista com livros de negócio |
+
 ## Status
-🟡 hipótese sem pesquisa dedicada.
+🟡 hipótese enriquecida com pesquisa real (26/08) — ainda sem validação de campo direta do Pedro.

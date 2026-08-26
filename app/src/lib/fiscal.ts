@@ -78,6 +78,11 @@ export const CUSTOS = {
    *  etc.), então o custo do certificado é nosso, não repassado por fora.
    */
   FIDELIDADE_MEI_MESES: 12,
+  /** 🔴 FAKE — valor de referência (`plano-padrao-195-referencia.md`, custo do
+   *  líder), não preço nosso fechado. Cobrança RECORRENTE mensal (não é taxa
+   *  única): quem escolhe endereço fiscal paga isso TODO mês, somado à
+   *  mensalidade do plano. */
+  ENDERECO_FISCAL: 60,
 } as const;
 
 export const FAIXA_MEDIA: Record<string, number> = {

@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { EmpresaView } from "@/components/wizard-dossie";
 import { ehMei, comRegime } from "@/lib/regime";
+import { ehEnderecoFiscal } from "@/lib/endereco";
 
 /** 🆕 03/08 — ponto de REENCONTRO dos 2 caminhos: MEI cai aqui direto da C1
  *  (pulou C2/C3); ME chega pela sequência normal via C3. Capital social some
@@ -49,11 +50,16 @@ import { ehMei, comRegime } from "@/lib/regime";
  */
 export default function EmpresaPage() {
   const router = useRouter();
-  const mei = ehMei(useSearchParams());
+  const searchParams = useSearchParams();
+  const mei = ehMei(searchParams);
+  // 🆕 26/08 (item 2) — a escolha já veio do /gate (FaixaView); esta tela não
+  // pergunta de novo, só confirma (ver `jaDecidido` em `EmpresaView`).
+  const enderecoFiscal = ehEnderecoFiscal(searchParams);
 
   return (
     <EmpresaView
       mei={mei}
+      enderecoProprio={!enderecoFiscal}
       onSeguir={() => router.push(comRegime("/dossie/cnae-secundarios", mei))}
     />
   );

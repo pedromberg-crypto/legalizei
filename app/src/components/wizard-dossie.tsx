@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
 import { Campo, Texto, Select, OpcoesLinha } from "@/components/ui/form";
-import { FISCAL, brl } from "@/lib/fiscal";
+import { FISCAL, CUSTOS, brl } from "@/lib/fiscal";
 import {
   CLIENTE,
   TEM_SOCIO,
@@ -85,6 +85,14 @@ function usePreencher(nonce: number | undefined, aplicar: () => void) {
 
 /* ═══════════════════ N10 · SEUS DADOS (confirmação) ═════════════════════ */
 
+/**
+ * 🔴 24/08 (reunião Rua Satélite 35, Natanael Dev) — upload/leitura de
+ * documento por IA foi REMOVIDO do MVP (tinha entrado nesta mesma tela horas
+ * antes, na reunião do Leonan). Motivo: custo e velocidade de leitura de
+ * imagem por IA, e "o cara já pagou, tem interesse em preencher manualmente
+ * 4 campos" (Pedro, R35). Fica como feature pra depois, não removida por
+ * engano — se reaparecer, é decisão nova, não reversão de bug.
+ */
 const ESTADO_CIVIL = [
   { v: "solteiro", label: "Solteiro(a)" },
   { v: "casado", label: "Casado(a)" },
@@ -373,34 +381,84 @@ export function VinculoView({
  *   · !TEM_SOCIO → mostra direto a confirmação "Empresa só sua", sem pergunta.
  * Nos dois casos não sobra escolha pra fazer aqui — só CONFIRMAR e completar.
  */
+/**
+ * 🆕 24/08 (reunião Leonan 19/08) — SÓCIOS EXTRAS VIRARAM LISTA, não mais um
+ * campo fixo de "2º sócio". Limite subiu de 2 pra 4 sócios totais (titular +
+ * até 3 extras) — ver `TriagemView` em `gate-telas.tsx`.
+ *
+ * 🔒 24/08 (pedido do Pedro, em cima da reunião) — DOIS TRAVAMENTOS NOVOS:
+ *   1. **Quantidade travada.** A pergunta "quantos sócios" já foi respondida
+ *      lá atrás, na triagem (E5T). Esta tela não oferece mais adicionar/
+ *      remover — ela renderiza exatamente os slots que faltam (`SOCIOS - 1`,
+ *      vindo do mock que representa a resposta da triagem) e só pede pra
+ *      PREENCHER, não pra decidir de novo quantos são.
+ *   2. **CPF travado, sem pergunta.** O tipo (CPF/CNPJ) também já foi
+ *      perguntado na triagem (E5T) — CNPJ já bloqueou lá, antes do dinheiro
+ *      (ver `/saida/socio-pj`). Quem chega aqui só pode ser CPF, então nem
+ *      aparece a pergunta "pessoa física ou jurídica?" — seria reperguntar o
+ *      que já foi respondido, mesma doutrina do resto do dossiê (não
+ *      reconfirmar "mora fora do Brasil?" no C1, não repetir CNAE no C5).
+ */
+interface SocioExtra {
+  id: string;
+  nome: string;
+  participacao: number;
+}
+
+function novoSocioExtra(nome = "", participacao = 0): SocioExtra {
+  return { id: `s${Math.random().toString(36).slice(2, 8)}`, nome, participacao };
+}
+
 export function SociosView({
   preencher,
   onSeguir,
   onVoltar,
+  contexto = "abrir",
 }: {
   preencher?: number;
   onSeguir?: () => void;
   onVoltar?: () => void;
+  /**
+   * 🆕 24/08 (reunião Leonan 19/08, "durante essa migração... ele preencha
+   * TODOS os dados base de uma constituição... [inclusive] a sociedade") —
+   * esta MESMA tela é reusada no caminho migrar (`/migrar/socios`, depois do
+   * E4.2b). Só a copy muda: no caminho abrir, "Você disse" se refere à
+   * triagem (E5T); no migrar não existe essa triagem prévia, então a tela
+   * precisa se sustentar sozinha, sem fingir uma resposta anterior que não
+   * existiu.
+   */
+  contexto?: "abrir" | "migrar";
 }) {
-  const [nome2, setNome2] = useState(TEM_SOCIO ? SOCIO_2.nome : "");
-  const [parte1, setParte1] = useState(50);
-  const [tipoSocio, setTipoSocio] = useState<"cpf" | "cnpj" | null>(
-    TEM_SOCIO ? "cpf" : null,
-  );
+  // 🔒 24/08 — quantidade FIXA, vinda do que a triagem já decidiu (`SOCIOS`,
+  // fonte única em `dossie/mock.ts`). Divide 100% em partes iguais entre os
+  // extras como ponto de partida; a pessoa ajusta.
+  const qtdExtras = Math.max(0, SOCIOS - 1);
+  const inicial = () =>
+    qtdExtras === 0
+      ? []
+      : qtdExtras === 1
+        ? [novoSocioExtra(SOCIO_2.nome, 50)]
+        : Array.from({ length: qtdExtras }, (_, i) =>
+            novoSocioExtra(i === 0 ? SOCIO_2.nome : "", Math.round((100 / (qtdExtras + 1)) * 2) / 2),
+          );
+
+  const [extras, setExtras] = useState<SocioExtra[]>(inicial);
 
   // Esta tela já nasce preenchida pelo mock; o botão serve pra DESFAZER o que
   // quem apresenta mexeu ao vivo e voltar pro estado canônico.
   usePreencher(preencher, () => {
-    setNome2(TEM_SOCIO ? SOCIO_2.nome : "");
-    setParte1(50);
-    setTipoSocio(TEM_SOCIO ? "cpf" : null);
+    setExtras(inicial());
   });
 
-  const parte2 = 100 - parte1;
-  const pjBloqueado = tipoSocio === "cnpj";
-  const completo =
-    !TEM_SOCIO ||
-    (!pjBloqueado && nome2.trim().split(/\s+/).length >= 2);
+  const somaExtras = extras.reduce((acc, s) => acc + s.participacao, 0);
+  const parte1 = 100 - somaExtras; // participação do titular, derivada
+  const nomesOk = extras.every((s) => s.nome.trim().split(/\s+/).length >= 2);
+  const somaOk = somaExtras > 0 && somaExtras < 100;
+  const completo = !TEM_SOCIO || (nomesOk && somaOk);
+
+  function atualizar(id: string, patch: Partial<SocioExtra>) {
+    setExtras((atual) => atual.map((s) => (s.id === id ? { ...s, ...patch } : s)));
+  }
 
   return (
     <>
@@ -411,130 +469,124 @@ export function SociosView({
       <main className="app-main">
         <Titulo
           sub={
-            TEM_SOCIO
-              ? "Você disse que teria sócio. Complete os dados dele."
-              : "Você disse que abriria sozinho. É só confirmar."
+            contexto === "migrar"
+              ? TEM_SOCIO
+                ? "Pra fazer a procuração e a transferência, a gente precisa dos dados de todos os sócios da empresa."
+                : "Confirma: sua empresa é só sua, sem outros sócios?"
+              : TEM_SOCIO
+                ? "Você disse que teria sócio. Complete os dados dele."
+                : "Você disse que abriria sozinho. É só confirmar."
           }
         >
-          {TEM_SOCIO ? "Seu sócio" : "Empresa só sua"}
+          {contexto === "migrar"
+            ? TEM_SOCIO
+              ? "Sua empresa tem sócio"
+              : "Empresa só sua"
+            : TEM_SOCIO
+              ? "Seu sócio"
+              : "Empresa só sua"}
         </Titulo>
 
         <Corpo>
           {TEM_SOCIO ? (
             <>
-              {/* ✍️ 29/07 — o limite de 2 era um `Aviso` de bloco, com título, e
+              {/* ✍️ 29/07 — o limite era um `Aviso` de bloco, com título, e
                   aparecia pra 100% de quem chega aqui: a triagem do N4 já barrou
-                  3+ lá atrás, então todo mundo que lê está DENTRO do limite. Dar
-                  peso de notícia ruim a quem não foi barrado gasta atenção
-                  contra o usuário. Virou nota de rodapé do campo. */}
-              <Campo rotulo="Nome completo do 2º sócio">
-                <Texto
-                  valor={nome2}
-                  onChange={setNome2}
-                  placeholder="Como está no documento dele"
-                  erro={
-                    nome2.length > 0 && nome2.trim().split(/\s+/).length < 2
-                      ? "Escreva o nome completo."
-                      : undefined
-                  }
-                />
-              </Campo>
-
-              <p className="text-micro text-text-tertiary -mt-3">
-                Os outros dados dele a gente coleta igual aos seus, na sequência.
-                Aqui a gente abre com até 2 sócios: é limite do nosso produto,
-                não da lei.
+                  quem excede lá atrás, então todo mundo que lê está DENTRO do
+                  limite. Dar peso de notícia ruim a quem não foi barrado gasta
+                  atenção contra o usuário. Virou nota de rodapé.
+                  🔒 24/08 — quantidade e tipo (CPF) já foram travados na
+                  triagem; aqui só falta preencher nome + participação. */}
+              <p className="text-micro text-text-tertiary">
+                Os outros dados de cada sócio a gente coleta igual aos seus, na
+                sequência.
               </p>
 
-              {/* 🆕 06/08 (reunião Rua Satélite 19) — pessoa jurídica como sócia
-                  tira a empresa do Simples/MEI no ATO do contrato social (regra
-                  fiscal dura, confirmada por contador). Hoje o produto só atende
-                  Simples/MEI (Lucro Presumido ainda fila-decisão), então CNPJ
-                  aqui sempre bloqueia — quando LP entrar, isto vira condicional
-                  ao regime em vez de bloqueio fixo. */}
-              <Campo rotulo="Esse sócio é pessoa física ou jurídica?">
-                <OpcoesLinha
-                  opcoes={[
-                    { v: "cpf", label: "Pessoa física (CPF)" },
-                    { v: "cnpj", label: "Pessoa jurídica (CNPJ)" },
-                  ]}
-                  valor={tipoSocio}
-                  onChange={setTipoSocio}
-                />
-              </Campo>
-
-              {pjBloqueado && (
-                <Aviso variante="danger" titulo="Não atendemos esse caso ainda">
-                  Sócio pessoa jurídica tira a empresa do Simples Nacional (e do
-                  MEI) assim que o contrato social é registrado. Hoje a gente só
-                  atende empresas no Simples, então esse CNPJ não pode entrar
-                  como sócio por aqui.
-                </Aviso>
-              )}
-
-              {/* % de participação: soma 100, default 50/50, digitável de
-                  0,5% em 0,5% (pedido do Mauro, 06/08). */}
-              {!pjBloqueado && (
-                <Campo
-                  rotulo="Como fica a divisão da empresa?"
-                  dica="Precisa somar 100%. Toque num atalho ou digite o percentual exato, de 0,5 em 0,5."
-                >
-                  <div className="mb-3 flex gap-2">
-                    {[25, 50, 75].map((p) => {
-                      const on = parte1 === p;
-                      return (
-                        <button
-                          key={p}
-                          onClick={() => setParte1(p)}
-                          className={`min-h-10 flex-1 rounded-full border text-caption font-semibold transition-colors
-                            ${
-                              on
-                                ? "border-action-primary bg-action-primary text-text-on-brand"
-                                : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
-                            }`}
-                        >
-                          {p}%
-                        </button>
-                      );
-                    })}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="number"
-                      inputMode="decimal"
-                      step={0.5}
-                      min={0.5}
-                      max={99.5}
-                      value={parte1}
-                      onChange={(e) => {
-                        const raw = e.target.value;
-                        if (raw === "") return;
-                        const n = Number(raw);
-                        if (Number.isNaN(n)) return;
-                        const preso = Math.min(99.5, Math.max(0.5, n));
-                        setParte1(Math.round(preso * 2) / 2);
-                      }}
-                      aria-label="Sua participação na empresa, em porcentagem"
-                      className="w-full min-h-12 rounded-md border border-border-hairline bg-surface-card px-3
-                                 text-body text-text-primary focus:border-border-focus focus:outline-none"
-                    />
-                    <span className="shrink-0 text-body font-semibold text-text-secondary">%</span>
-                  </div>
-                  <div className="mt-2 flex justify-between text-caption">
-                    <span className="font-semibold text-text-primary">
-                      Você: {parte1}%
+              <div className="flex flex-col gap-3">
+                {extras.map((s, i) => (
+                  <div
+                    key={s.id}
+                    className="flex flex-col gap-3 rounded-md border border-border-hairline bg-surface-card p-3"
+                  >
+                    <span className="text-caption font-semibold text-text-primary">
+                      {i + 2}º sócio
                     </span>
-                    <span className="font-semibold text-text-primary">
-                      {nome2.trim().split(/\s+/)[0] || "2º sócio"}: {parte2}%
-                    </span>
+
+                    <Campo rotulo="Nome completo">
+                      <Texto
+                        valor={s.nome}
+                        onChange={(v) => atualizar(s.id, { nome: v })}
+                        placeholder="Como está no documento dele"
+                        erro={
+                          s.nome.length > 0 && s.nome.trim().split(/\s+/).length < 2
+                            ? "Escreva o nome completo."
+                            : undefined
+                        }
+                      />
+                    </Campo>
+
+                    <Campo
+                      rotulo="Participação dele"
+                      dica="De 0,5 em 0,5%. A soma de todos os sócios extras não pode chegar a 100%."
+                    >
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="number"
+                          inputMode="decimal"
+                          step={0.5}
+                          min={0.5}
+                          max={99.5}
+                          value={s.participacao || ""}
+                          onChange={(e) => {
+                            const raw = e.target.value;
+                            if (raw === "") {
+                              atualizar(s.id, { participacao: 0 });
+                              return;
+                            }
+                            const n = Number(raw);
+                            if (Number.isNaN(n)) return;
+                            const preso = Math.min(99.5, Math.max(0, n));
+                            atualizar(s.id, { participacao: Math.round(preso * 2) / 2 });
+                          }}
+                          aria-label={`Participação do ${i + 2}º sócio, em porcentagem`}
+                          className="w-full min-h-12 rounded-md border border-border-hairline bg-surface-card px-3
+                                     text-body text-text-primary focus:border-border-focus focus:outline-none"
+                        />
+                        <span className="shrink-0 text-body font-semibold text-text-secondary">%</span>
+                      </div>
+                    </Campo>
                   </div>
-                </Campo>
-              )}
+                ))}
+              </div>
+
+              <div className="rounded-md border border-border-hairline bg-surface-alt p-3">
+                <p className="text-caption font-semibold text-text-primary mb-1.5">
+                  Como fica a divisão da empresa
+                </p>
+                <div className="flex flex-col gap-1">
+                  <span className="text-caption text-text-primary">
+                    Você: {parte1}%
+                  </span>
+                  {extras.map((s, i) => (
+                    <span key={s.id} className="text-caption text-text-primary">
+                      {s.nome.trim().split(/\s+/)[0] || `${i + 2}º sócio`}: {s.participacao}%
+                    </span>
+                  ))}
+                </div>
+                {!somaOk && (
+                  <p className="text-micro text-state-warning-text mt-1.5">
+                    {somaExtras === 0
+                      ? "Preencha a participação de cada sócio."
+                      : "A soma dos sócios extras precisa ficar abaixo de 100% — você, como titular, não pode ficar com 0%."}
+                  </p>
+                )}
+              </div>
             </>
           ) : (
             <Aviso variante="info" titulo="Empresa só sua">
-              Sem sócios, a gente abre no formato certo pra dono único. Você
-              confirma o tipo na próxima etapa.
+              {contexto === "migrar"
+                ? "Sem sócios, é só seguir — a gente já tem o que precisa."
+                : "Sem sócios, a gente abre no formato certo pra dono único. Você confirma o tipo na próxima etapa."}
             </Aviso>
           )}
         </Corpo>
@@ -585,6 +637,7 @@ export function EmpresaView({
   onSeguir,
   onVoltar,
   mei = false,
+  enderecoProprio,
 }: {
   preencher?: number;
   onSeguir?: () => void;
@@ -592,8 +645,23 @@ export function EmpresaView({
   /** 🆕 03/08 — MEI não tem capital social formal (não é sociedade). Campo
    *  some; o resto da tela (endereço, IPTU, tipo de imóvel) é igual pros dois. */
   mei?: boolean;
+  /**
+   * 🆕 26/08 (reunião Rua Satélite 36, item 2) — a escolha "próprio × fiscal
+   * Legalizai" saiu daqui e subiu pro `/gate` (`FaixaView`), antes até do
+   * cadastro. Quando vem preenchido (`true`/`false`), esta tela NÃO pergunta
+   * de novo — mesma doutrina do C3 (sócios, `SociosView`): mostra confirmação
+   * read-only em vez do picker. `undefined` = ninguém decidiu ainda (fallback
+   * pro comportamento antigo — usado quando esta view é chamada sem o carry
+   * forward, ex.: alguma tela solta da demo).
+   */
+  enderecoProprio?: boolean;
 }) {
-  const [usarProprio, setUsarProprio] = useState<boolean | null>(null);
+  const jaDecidido = enderecoProprio !== undefined;
+  const [usarProprioState, setUsarProprioState] = useState<boolean | null>(
+    jaDecidido ? enderecoProprio : null,
+  );
+  const usarProprio = jaDecidido ? enderecoProprio : usarProprioState;
+  const setUsarProprio = setUsarProprioState;
   const [cep, setCep] = useState("");
   const [numero, setNumero] = useState("");
   const [complemento, setComplemento] = useState("");
@@ -670,67 +738,109 @@ export function EmpresaView({
         </Titulo>
 
         <Corpo>
-          {/* Upsell: oferece, não obriga. A oferta tem MAIS peso que a opção
-              neutra sem pré-selecionar. 🕓 R$60 é FAKE. */}
-          <Campo rotulo="Você tem um endereço comercial pra usar?">
-            <div className="flex flex-col gap-2">
-              <button
-                onClick={() => setUsarProprio(true)}
-                className={`min-h-12 rounded-md border px-4 text-left text-body font-semibold transition-colors
-                  ${
-                    usarProprio === true
-                      ? "border-action-primary bg-action-primary text-text-on-brand"
-                      : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
-                  }`}
-              >
-                Uso um endereço meu
-              </button>
-              {/* Card rico: quando selecionado vira coral sólido igual aos
-                  botões simples, então o texto interno inverte junto — senão o
-                  cinza-secundário sumiria dentro do coral. */}
-              <button
-                onClick={() => setUsarProprio(false)}
-                className={`rounded-md border p-4 text-left transition-colors
-                  ${
-                    usarProprio === false
-                      ? "border-action-primary bg-action-primary"
-                      : "border-border-strong bg-surface-card hover:border-border-focus"
-                  }`}
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <span
-                    className={`text-body font-semibold ${
-                      usarProprio === false ? "text-text-on-brand" : "text-text-primary"
+          {/* 🆕 26/08 (item 2) — se já veio decidido lá do gate, não pergunta
+              de novo: confirmação read-only, mesma doutrina do C3 (sócios). */}
+          {jaDecidido ? (
+            <Card>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-micro text-text-tertiary">Endereço comercial</p>
+                  <p className="text-caption font-semibold text-text-primary">
+                    {usarProprio
+                      ? "Você vai usar um endereço seu"
+                      : "Você escolheu o endereço fiscal da Legalizai"}
+                  </p>
+                </div>
+                <span className="shrink-0 text-caption font-semibold text-action-primary-sm underline underline-offset-4">
+                  Já decidido lá atrás
+                </span>
+              </div>
+            </Card>
+          ) : (
+            /* Fallback (esta tela chamada sem o carry-forward do gate) —
+                mesmo picker de antes. Upsell: oferece, não obriga. */
+            <Campo rotulo="Você tem um endereço comercial pra usar?">
+              <div className="flex flex-col gap-2">
+                <button
+                  onClick={() => setUsarProprio(true)}
+                  className={`min-h-12 rounded-md border px-4 text-left text-body font-semibold transition-colors
+                    ${
+                      usarProprio === true
+                        ? "border-action-primary bg-action-primary text-text-on-brand"
+                        : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
+                    }`}
+                >
+                  Uso um endereço meu
+                </button>
+                {/* Card rico: quando selecionado vira coral sólido igual aos
+                    botões simples, então o texto interno inverte junto — senão o
+                    cinza-secundário sumiria dentro do coral. */}
+                <button
+                  onClick={() => setUsarProprio(false)}
+                  className={`rounded-md border p-4 text-left transition-colors
+                    ${
+                      usarProprio === false
+                        ? "border-action-primary bg-action-primary"
+                        : "border-border-strong bg-surface-card hover:border-border-focus"
+                    }`}
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <span
+                      className={`text-body font-semibold ${
+                        usarProprio === false ? "text-text-on-brand" : "text-text-primary"
+                      }`}
+                    >
+                      Quero um endereço fiscal da Legalizai
+                    </span>
+                    <span className="shrink-0 rounded-full bg-surface-dark px-2.5 py-1 text-micro font-semibold text-text-on-dark">
+                      R$ 60/mês
+                    </span>
+                  </div>
+                  <p
+                    className={`text-caption mt-1.5 ${
+                      usarProprio === false ? "text-text-on-brand/80" : "text-text-secondary"
                     }`}
                   >
-                    Quero um endereço fiscal da Legalizai
-                  </span>
-                  <span className="shrink-0 rounded-full bg-surface-dark px-2.5 py-1 text-micro font-semibold text-text-on-dark">
-                    R$ 60/mês
-                  </span>
-                </div>
-                <p
-                  className={`text-caption mt-1.5 ${
-                    usarProprio === false ? "text-text-on-brand/80" : "text-text-secondary"
-                  }`}
-                >
-                  Um endereço comercial pronto pra receber a empresa, sem usar o
-                  seu. A gente cuida da regularização.
+                    Um endereço comercial pronto pra receber a empresa, sem usar o
+                    seu. A gente cuida da regularização.
+                  </p>
+                </button>
+              </div>
+              {/* 🕓 29/07 — o chip mostrava "R$ 60/mês" sem marcação nenhuma, e o
+                  doc afirmava "Marcado na UI". Não estava. */}
+              {usarProprio === false && (
+                <p className="text-micro text-text-tertiary mt-2">
+                  Valor de referência enquanto fechamos o preço final.
                 </p>
-              </button>
-            </div>
-            {/* 🕓 29/07 — o chip mostrava "R$ 60/mês" sem marcação nenhuma, e o
-                doc afirmava "Marcado na UI". Não estava. */}
-            {usarProprio === false && (
-              <p className="text-micro text-text-tertiary mt-2">
-                Valor de referência enquanto fechamos o preço final.
-              </p>
-            )}
-          </Campo>
+              )}
+            </Campo>
+          )}
 
-          {querFiscal && (
-            <Aviso variante="success" titulo="A gente cuida do endereço">
-              Fechado. Ele entra junto no seu plano.
+          {/* 🆕 24/08 (reunião Rua Satélite 35) — confirmação explícita de
+              cobrança RECORRENTE, não só "fechado, entra no plano". A pessoa
+              precisa ver o valor total mensal antes de continuar, porque essa
+              cobrança se repete todo mês (Tiagão, R35: "se ele chegar, clicar
+              aí, só apertar continuar, vai cobrar sem avisar, sem nada, ele
+              não vai entender nada").
+              🆕 26/08 (item 2) — quando já veio decidido do gate, o valor JÁ
+              apareceu somado lá no /plano (checkout) — repetir o aviso
+              inteiro aqui seria eco. Fica só uma linha leve de lembrete. */}
+          {querFiscal && jaDecidido && (
+            <p className="text-micro text-text-tertiary">
+              Endereço fiscal já incluído na sua mensalidade, como combinado
+              no checkout.
+            </p>
+          )}
+          {querFiscal && !jaDecidido && (
+            <Aviso variante="warning" titulo="Essa cobrança é mensal, recorrente">
+              O endereço fiscal entra na sua fatura TODO mês, não é cobrança
+              única. Com essa escolha, seu plano passa de{" "}
+              {brl(mei ? CUSTOS.MENSALIDADE_MEI : CUSTOS.MENSALIDADE, true)} para{" "}
+              <strong>
+                {brl((mei ? CUSTOS.MENSALIDADE_MEI : CUSTOS.MENSALIDADE) + CUSTOS.ENDERECO_FISCAL, true)}
+                /mês
+              </strong>
+              .
             </Aviso>
           )}
 
@@ -812,7 +922,17 @@ export function EmpresaView({
                           ]}
                           valor={residenciaSocios[nome] ?? null}
                           onChange={(v) =>
-                            setResidenciaSocios((r) => ({ ...r, [nome]: v }))
+                            // 🔒 24/08 (reunião Leonan) — não pode ser "sim" pra
+                            // dois sócios ao mesmo tempo (não faz sentido: um
+                            // endereço é residência de no máximo 1 sócio). Marcar
+                            // "sim" pra um desmarca automaticamente os outros.
+                            setResidenciaSocios((r) =>
+                              v
+                                ? Object.fromEntries(
+                                    NOMES_SOCIOS.map((n) => [n, n === nome]),
+                                  )
+                                : { ...r, [nome]: false },
+                            )
                           }
                         />
                       </Campo>
@@ -820,14 +940,50 @@ export function EmpresaView({
                   </div>
                 </div>
               )}
+
+              {/* 🆕 24/08 (reunião Leonan 19/08) — quando o endereço é
+                  residência de um sócio, o IPTU pode subir na prefeitura (às
+                  vezes dobra) por causa da mudança de uso residencial→comercial.
+                  Ninguém alerta isso normalmente; a gente alerta. */}
+              {Object.values(residenciaSocios).some(Boolean) && (
+                <Aviso variante="warning" titulo="O IPTU desse endereço pode subir">
+                  Quando um CNPJ usa o endereço residencial de um sócio, algumas
+                  prefeituras reclassificam o imóvel e o IPTU sobe (às vezes
+                  bastante). Vale confirmar com a prefeitura antes de usar esse
+                  endereço.
+                </Aviso>
+              )}
             </>
           )}
 
           {usarProprio !== null && !mei && (
             <Campo
               rotulo="Capital social"
-              dica="Quanto a empresa começa valendo. Pode ser um valor simbólico."
+              dica="Quanto a empresa começa valendo no papel. Dá pra ajustar mais pra frente — comece com um valor simbólico."
             >
+              {/* 🆕 24/08 (reunião Leonan 19/08) — atalho de valor simbólico,
+                  mesmo padrão dos chips de % de sócio. Reduz o "quanto eu
+                  coloco?" de decisão em branco pra 1 toque. */}
+              <div className="mb-2 flex gap-2">
+                {[1000, 5000, 10000].map((v) => {
+                  const on = capitalNum === v;
+                  return (
+                    <button
+                      key={v}
+                      type="button"
+                      onClick={() => setCapital(v.toLocaleString("pt-BR"))}
+                      className={`min-h-10 flex-1 rounded-full border text-caption font-semibold transition-colors
+                        ${
+                          on
+                            ? "border-action-primary bg-action-primary text-text-on-brand"
+                            : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
+                        }`}
+                    >
+                      {brl(v)}
+                    </button>
+                  );
+                })}
+              </div>
               <Texto
                 valor={capital}
                 onChange={(v) => setCapital(mascaraReais(v))}
@@ -861,10 +1017,14 @@ interface Sugestao {
   cnae: string;
   humano: string;
   prova: string;
+  /** 🆕 24/08 (reunião Leonan) — nem todo CNAE atendido é mesmo-imposto. A
+   *  maioria das curadas continua sendo (decisão 21/07); a busca abre pra
+   *  qualquer CNAE que a gente ATENDE, mesmo mudando o anexo. */
+  mudaEnquadramento?: boolean;
 }
 
 // Todas MESMO-IMPOSTO que a principal (Anexo III/V com Fator R). Nenhuma muda o
-// enquadramento — é a condição pra estar nesta lista (decisão 21/07).
+// enquadramento — é a condição pra estar nesta lista curada (decisão 21/07).
 const SUGESTOES: Sugestao[] = [
   {
     id: "s1",
@@ -892,23 +1052,83 @@ const SUGESTOES: Sugestao[] = [
   },
 ];
 
+/**
+ * 🆕 24/08 (reunião Leonan 19/08) — banco de BUSCA: mesma lista de CNAEs que a
+ * entrevista principal (E5A) já sabe se atende ou não. Restrito aos que a
+ * gente atende — se a pessoa digitar um que a gente não atende, ela não acha
+ * (mesma régua da entrevista principal, não uma segunda lista solta). Alguns
+ * itens aqui MUDAM o enquadramento — é o caso que dispara o aviso + rota pro
+ * atendente em vez de deixar continuar sozinho.
+ */
+const BANCO_BUSCA: Sugestao[] = [
+  ...SUGESTOES,
+  {
+    id: "b1",
+    cnae: "8599-6/04",
+    humano: "Treinamento em desenvolvimento profissional",
+    prova: "Fora do segmento de web, mas a gente atende.",
+    mudaEnquadramento: true,
+  },
+  {
+    id: "b2",
+    cnae: "7020-4/00",
+    humano: "Consultoria em gestão empresarial",
+    prova: "Atividade diferente da principal, sem problema — é só complemento.",
+    mudaEnquadramento: true,
+  },
+  {
+    id: "b3",
+    cnae: "8230-0/01",
+    humano: "Organização de eventos",
+    prova: "Exemplo de secundária de outro segmento que mantém o mesmo imposto.",
+  },
+];
+
 export function CnaeSecundariosView({
   preencher,
   onSeguir,
   onVoltar,
+  onFalarAtendente,
 }: {
   preencher?: number;
   onSeguir?: () => void;
   onVoltar?: () => void;
+  /** 🆕 24/08 — quando alguma secundária escolhida muda o enquadramento, o
+   *  CTA principal troca de "Continuar" pra "Falar com atendente" (mesma
+   *  lógica já usada no gate de CNAE principal). */
+  onFalarAtendente?: () => void;
 }) {
   const [ativos, setAtivos] = useState<Record<string, boolean>>({});
+  const [busca, setBusca] = useState("");
 
   usePreencher(preencher, () => {
     setAtivos(Object.fromEntries(PREENCHIMENTO.cnaeSecundarios.map((id) => [id, true])));
+    setBusca("");
   });
 
+  const TODAS = [...SUGESTOES, ...BANCO_BUSCA.filter((s) => !SUGESTOES.some((x) => x.id === s.id))];
+  const idsAtivos = Object.entries(ativos).filter(([, v]) => v).map(([id]) => id);
+  // Limite do produto: até 15 secundárias (reunião Leonan 19/08).
+  const noLimite = idsAtivos.length >= 15;
+  const algumaMudaEnquadramento = idsAtivos.some(
+    (id) => TODAS.find((s) => s.id === id)?.mudaEnquadramento,
+  );
+
+  const resultadosBusca = busca.trim()
+    ? BANCO_BUSCA.filter(
+        (s) =>
+          !SUGESTOES.some((x) => x.id === s.id) &&
+          (s.humano.toLowerCase().includes(busca.toLowerCase()) ||
+            s.cnae.includes(busca)),
+      )
+    : [];
+
   function alterna(id: string) {
-    setAtivos((a) => ({ ...a, [id]: !a[id] }));
+    setAtivos((a) => {
+      const ligado = !a[id];
+      if (ligado && noLimite) return a; // trava em 15
+      return { ...a, [id]: ligado };
+    });
   }
 
   return (
@@ -936,13 +1156,89 @@ export function CnaeSecundariosView({
             </Card>
           </div>
 
+          {/* 🆕 24/08 (reunião Leonan) — reformulado: secundária NÃO precisa
+              ser do mesmo segmento da principal. Até 15, é só complemento e
+              é opcional. */}
+          <p className="text-caption text-text-secondary -mt-2">
+            Não precisa ser do mesmo ramo da sua atividade principal — pode ser
+            qualquer coisa a mais que você faça. É complemento, é opcional, e
+            dá pra incluir até 15.
+          </p>
+
+          {/* 🆕 24/08 — busca restrita ao que a gente atende (mesma lista da
+              entrevista principal), pedido original da Jéssica (reunião 19/07)
+              e reforçado pelo Leonan. */}
+          <Campo rotulo="Não achou na lista? Busque outra atividade">
+            <Texto
+              valor={busca}
+              onChange={setBusca}
+              placeholder="Ex: consultoria, eventos, treinamento..."
+            />
+          </Campo>
+
+          {busca.trim() && (
+            <div className="flex flex-col gap-2">
+              {resultadosBusca.length === 0 ? (
+                <p className="text-caption text-text-secondary">
+                  Nenhuma atividade encontrada que a gente atenda com esse termo.
+                </p>
+              ) : (
+                resultadosBusca.map((s) => {
+                  const on = !!ativos[s.id];
+                  return (
+                    <button
+                      key={s.id}
+                      onClick={() => alterna(s.id)}
+                      className={`rounded-md border p-3 text-left transition-colors
+                        ${
+                          on
+                            ? "border-action-primary bg-action-primary"
+                            : "border-border-hairline bg-surface-card hover:border-border-strong"
+                        }`}
+                    >
+                      <p className={`text-body font-semibold ${on ? "text-text-on-brand" : "text-text-primary"}`}>
+                        {s.humano}
+                      </p>
+                      <p className={`text-caption mt-0.5 ${on ? "text-text-on-brand/80" : "text-text-secondary"}`}>
+                        CNAE {s.cnae}
+                      </p>
+                      <span
+                        className={`mt-1 inline-block rounded-full px-2 py-0.5 text-micro font-semibold
+                          ${
+                            s.mudaEnquadramento
+                              ? on
+                                ? "bg-surface-card/20 text-text-on-brand"
+                                : "bg-state-warning-tint text-state-warning-text"
+                              : on
+                                ? "bg-surface-card/20 text-text-on-brand"
+                                : "bg-state-success-tint text-state-success-text"
+                          }`}
+                      >
+                        {s.mudaEnquadramento ? "Muda seu enquadramento" : "Mantém seu enquadramento"}
+                      </span>
+                    </button>
+                  );
+                })
+              )}
+            </div>
+          )}
+
+          {algumaMudaEnquadramento && (
+            <Aviso variante="warning" titulo="Uma dessas muda seu enquadramento">
+              Pelo menos uma atividade que você escolheu muda o imposto que sua
+              empresa paga. Isso a gente prefere acertar com você, não sozinho —
+              por isso o próximo passo é falar com um atendente em vez de
+              continuar direto.
+            </Aviso>
+          )}
+
           <div>
             <p className="text-micro text-text-tertiary mb-1.5">
               Sugestões pra você (toque pra incluir)
             </p>
             {/* A garantia vira argumento: incluir não muda o imposto. */}
             <p className="text-caption text-text-secondary mb-2.5">
-              Todas ficam no mesmo imposto da sua atividade principal, então
+              Estas ficam no mesmo imposto da sua atividade principal, então
               incluir não muda o que você paga.
             </p>
             <div className="flex flex-col gap-2">
@@ -1024,9 +1320,15 @@ export function CnaeSecundariosView({
         </Corpo>
 
         <Rodape>
-          <Button full onClick={onSeguir}>
-            Continuar
-          </Button>
+          {algumaMudaEnquadramento ? (
+            <Button full variant="dark" onClick={onFalarAtendente}>
+              Falar com atendente
+            </Button>
+          ) : (
+            <Button full onClick={onSeguir}>
+              Continuar
+            </Button>
+          )}
         </Rodape>
       </main>
     </>
@@ -1166,6 +1468,40 @@ function gerarObjetoSocial(): string {
   return `Prestação de serviços de ${CNAE_PRINCIPAL.humano.toLowerCase()}, podendo também exercer ${secs}.`;
 }
 
+// Ícones minimalistas (stroke, `currentColor`) — pedido do Pedro pra não usar
+// emoji nos botões de editar/salvar (emoji vem colorido, ignora o texto).
+function IconeLapis() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+    </svg>
+  );
+}
+
+function IconeCheckMini() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="m5 12 5 5L20 7" />
+    </svg>
+  );
+}
+
+/**
+ * 🆕 24/08 (pedido do Pedro) — cada sugestão ganha lápis de edição: a pessoa
+ * reescreve a sugestão da IA no lugar em vez de digitar uma opção À PARTE
+ * ("Nenhuma dessas? Digite a sua", removido). Objeto usa `id` estável (não o
+ * texto) porque o texto agora MUDA quando editado — usar o próprio nome como
+ * key quebraria a lista.
+ */
+interface SugestaoNome {
+  id: string;
+  valor: string;
+}
+
+function sugestoesIniciais(): SugestaoNome[] {
+  return SUGESTOES_RAZAO.map((valor, i) => ({ id: `n${i}`, valor }));
+}
+
 export function NomeView({
   preencher,
   onSeguir,
@@ -1175,19 +1511,23 @@ export function NomeView({
   onSeguir?: () => void;
   onVoltar?: () => void;
 }) {
-  const [ordem, setOrdem] = useState<string[]>(SUGESTOES_RAZAO);
-  const [propria, setPropria] = useState("");
+  const [ordem, setOrdem] = useState<SugestaoNome[]>(sugestoesIniciais);
+  const [editandoId, setEditandoId] = useState<string | null>(null);
   const [fantasia, setFantasia] = useState("");
-  const [objeto, setObjeto] = useState(gerarObjetoSocial());
+  // 🔒 24/08 (reunião Leonan 19/08) — TRAVADO, não editável. Erro de grafia
+  // do cliente (S↔Z etc) subia pro contrato e virava reclamação real no
+  // escritório antigo do Leonan. Objeto social é 100% gerado a partir das
+  // atividades (CNAE principal + secundárias) — se as atividades mudam, o
+  // objeto se regenera sozinho; a pessoa não digita nele.
+  const objeto = gerarObjetoSocial();
 
   usePreencher(preencher, () => {
-    setOrdem(SUGESTOES_RAZAO);
-    setPropria("");
+    setOrdem(sugestoesIniciais());
+    setEditandoId(null);
     setFantasia(PREENCHIMENTO.nome.fantasia);
-    setObjeto(gerarObjetoSocial());
   });
 
-  const completo = objeto.trim().length >= 10;
+  const completo = ordem.every((o) => o.valor.trim().length > 0);
 
   function mover(i: number, dir: -1 | 1) {
     const j = i + dir;
@@ -1199,89 +1539,96 @@ export function NomeView({
     });
   }
 
+  function editarValor(id: string, valor: string) {
+    setOrdem((o) => o.map((s) => (s.id === id ? { ...s, valor } : s)));
+  }
+
   return (
     <>
       <TelaHeader meta="Nome da empresa" onVoltar={onVoltar} />
 
       <main className="app-main">
-        <Titulo sub="A gente sugeriu 3 nomes. Escolha a ORDEM que quer que a gente tente registrar.">
+        <Titulo sub="A gente sugeriu 3 nomes. Edite o que quiser e escolha a ORDEM que quer que a gente tente registrar.">
           Qual nome você prefere?
         </Titulo>
 
         <Corpo>
           {/* Sem API de disponibilidade: em vez de fingir "disponível na Junta",
-              a gente é honesta sobre o que dá pra prometer — tentar em ordem. */}
+              a gente é honesta sobre o que dá pra prometer — tentar em ordem.
+              🆕 24/08 (pedido do Pedro) — lápis de edição por sugestão, no
+              lugar do campo separado "Digite a sua". A pessoa reescreve a
+              sugestão da IA direto, mantendo a seta pra reordenar prioridade. */}
           <div>
             <p className="text-caption font-semibold text-text-primary mb-2">
-              {propria.trim()
-                ? "Sua opção entra primeiro. Depois, as sugestões da IA."
-                : "Suas 3 opções, na ordem que a gente vai tentar"}
+              Suas 3 opções, na ordem que a gente vai tentar
             </p>
             <div className="flex flex-col gap-2">
-              {/* Sua opção digitada, se houver, é sempre a 1ª tentativa — sem
-                  setas de reordenar, porque já é prioridade máxima. */}
-              {propria.trim() && (
-                <div className="flex items-center gap-3 rounded-md border border-action-primary bg-surface-card p-3">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-action-primary text-caption font-bold text-text-on-brand">
-                    1
-                  </span>
-                  <div className="flex-1">
-                    <span className="block text-body font-semibold text-text-primary">
-                      {propria.trim()}
+              {ordem.map((s, i) => {
+                const emEdicao = editandoId === s.id;
+                return (
+                  <div
+                    key={s.id}
+                    className="flex items-center gap-3 rounded-md border border-border-hairline bg-surface-card p-3"
+                  >
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-surface-tint-brand text-caption font-bold text-action-primary-sm">
+                      {i + 1}
                     </span>
-                    <span className="text-micro text-text-tertiary">Sua opção</span>
-                  </div>
-                </div>
-              )}
-              {ordem.map((nome, i) => (
-                <div
-                  key={nome}
-                  className="flex items-center gap-3 rounded-md border border-border-hairline bg-surface-card p-3"
-                >
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-surface-tint-brand text-caption font-bold text-action-primary-sm">
-                    {i + 1 + (propria.trim() ? 1 : 0)}
-                  </span>
-                  <span className="flex-1 text-body font-semibold text-text-primary">
-                    {nome}
-                  </span>
-                  <div className="flex shrink-0 flex-col gap-0.5">
+                    {emEdicao ? (
+                      <input
+                        autoFocus
+                        value={s.valor}
+                        onChange={(e) => editarValor(s.id, e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && setEditandoId(null)}
+                        aria-label={`Editar sugestão ${i + 1}`}
+                        className="min-w-0 flex-1 rounded-md border border-border-focus bg-surface-card px-2 py-1.5
+                                   text-body font-semibold text-text-primary focus:outline-none"
+                      />
+                    ) : (
+                      <span className="min-w-0 flex-1 truncate text-body font-semibold text-text-primary">
+                        {s.valor.trim() || "—"}
+                      </span>
+                    )}
+                    {/* 🐛 24/08 — o check "travava": o input tinha `onBlur` fechando
+                        a edição, e o clique no botão dispara blur ANTES do onClick
+                        (mousedown tira o foco, blur roda, só depois o click chega).
+                        O botão reabria com `emEdicao` antigo, capturado no closure
+                        de antes do re-render do blur. Tirar o onBlur mata a corrida
+                        — só Enter ou o próprio botão fecham a edição agora.
+                        Ícone SVG monocromático (não emoji): emoji renderiza colorido
+                        sempre, não respeita `currentColor`. */}
                     <button
                       type="button"
-                      onClick={() => mover(i, -1)}
-                      disabled={i === 0}
-                      aria-label="Subir prioridade"
-                      className="flex h-6 w-6 items-center justify-center rounded text-text-secondary transition-colors hover:bg-surface-alt disabled:opacity-30"
+                      onClick={() => setEditandoId(emEdicao ? null : s.id)}
+                      aria-label={emEdicao ? "Salvar edição" : "Editar sugestão"}
+                      className="flex h-7 w-7 shrink-0 items-center justify-center rounded text-text-tertiary transition-colors hover:bg-surface-alt hover:text-action-primary-sm"
                     >
-                      ▲
+                      {emEdicao ? <IconeCheckMini /> : <IconeLapis />}
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => mover(i, 1)}
-                      disabled={i === ordem.length - 1}
-                      aria-label="Descer prioridade"
-                      className="flex h-6 w-6 items-center justify-center rounded text-text-secondary transition-colors hover:bg-surface-alt disabled:opacity-30"
-                    >
-                      ▼
-                    </button>
+                    <div className="flex shrink-0 flex-col gap-0.5">
+                      <button
+                        type="button"
+                        onClick={() => mover(i, -1)}
+                        disabled={i === 0}
+                        aria-label="Subir prioridade"
+                        className="flex h-6 w-6 items-center justify-center rounded text-text-secondary transition-colors hover:bg-surface-alt disabled:opacity-30"
+                      >
+                        ▲
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => mover(i, 1)}
+                        disabled={i === ordem.length - 1}
+                        aria-label="Descer prioridade"
+                        className="flex h-6 w-6 items-center justify-center rounded text-text-secondary transition-colors hover:bg-surface-alt disabled:opacity-30"
+                      >
+                        ▼
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
-
-          {/* 🆕 06/08 (WA walkthrough) — nem todo mundo quer as 3 sugestões da
-              IA; quem já sabe o nome que quer não devia ter que escolher entre
-              elas. */}
-          <Campo
-            rotulo="Nenhuma dessas? Digite a sua"
-            dica="Opcional. Se preencher, a gente tenta essa primeiro na Junta."
-          >
-            <Texto
-              valor={propria}
-              onChange={setPropria}
-              placeholder="Ex: Ana Ramos Consultoria Ltda"
-            />
-          </Campo>
 
           {/* ✍️ 29/07 — o título dizia "A ordem não muda nada na abertura",
               logo abaixo de um subtítulo que pede pra ORDENAR. Lidos em
@@ -1294,16 +1641,14 @@ export function NomeView({
 
           <Campo
             rotulo="Objeto social"
-            dica="O que a empresa faz, em texto oficial. Já sugerimos a partir das suas atividades."
+            dica="Gerado automaticamente a partir das suas atividades. Não dá pra editar aqui — assim evitamos erro de grafia indo pro contrato."
           >
-            <textarea
-              value={objeto}
-              onChange={(e) => setObjeto(e.target.value)}
-              rows={3}
-              className="w-full resize-none rounded-md border border-border-hairline bg-surface-card p-3
-                         text-body text-text-primary placeholder:text-text-muted
-                         focus:border-border-focus focus:outline-none"
-            />
+            <div
+              className="w-full rounded-md border border-border-hairline bg-surface-alt p-3
+                         text-body text-text-secondary"
+            >
+              {objeto}
+            </div>
           </Campo>
 
           <Campo rotulo="Nome fantasia" dica="Opcional. É a marca que aparece pro cliente.">

@@ -47,12 +47,15 @@ export const Analisando: Story = { render: () => <Shell><AnalisandoView /></Shel
 function TriagemInterativo() {
   const [socios, setSocios] = useState<number | null>(null);
   const [exterior, setExterior] = useState<boolean | null>(null);
+  const [socioTipo, setSocioTipo] = useState<"cpf" | "cnpj" | null>(null);
   return (
     <TriagemView
       socios={socios}
       setSocios={setSocios}
       exterior={exterior}
       setExterior={setExterior}
+      socioTipo={socioTipo}
+      setSocioTipo={setSocioTipo}
       onSeguir={() => {}}
       onSaida={() => {}}
     />
@@ -65,6 +68,8 @@ function FaixaInterativo() {
   const [faixa, setFaixa] = useState<string | null>(null);
   const [modoExato, setModoExato] = useState(false);
   const [exato, setExato] = useState("");
+  const [coorte, setCoorte] = useState<"primeira" | "ja-abri" | null>(null);
+  const [enderecoProprio, setEnderecoProprio] = useState<boolean | null>(null);
   return (
     <FaixaView
       faixa={faixa}
@@ -73,6 +78,10 @@ function FaixaInterativo() {
       setModoExato={setModoExato}
       exato={exato}
       setExato={setExato}
+      coorte={coorte}
+      setCoorte={setCoorte}
+      enderecoProprio={enderecoProprio}
+      setEnderecoProprio={setEnderecoProprio}
       onSeguir={() => {}}
       autoFocus={false}
     />

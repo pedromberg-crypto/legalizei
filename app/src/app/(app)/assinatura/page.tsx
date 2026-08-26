@@ -35,5 +35,13 @@ export default function AssinaturaPage() {
 
   // 🆕 03/08 — regime PARA aqui de propósito: A5 (home dia-1) e o Portal são
   // iguais pros dois caminhos, escopo desta rodada não foi até lá.
-  return <AssinaturaView mei={mei} onSeguir={() => router.push("/home-dia1")} />;
+  // 🆕 24/08 (reunião Leonan) — código GOV expirado/sem tentativas escala
+  // pra atendimento humano em vez de travar sozinho.
+  return (
+    <AssinaturaView
+      mei={mei}
+      onSeguir={() => router.push("/home-dia1")}
+      onEscalar={() => router.push("/veredito/nao-atende")}
+    />
+  );
 }

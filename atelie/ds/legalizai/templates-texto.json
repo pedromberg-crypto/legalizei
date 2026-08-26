@@ -1,5 +1,9 @@
 {
-  "_nota": "10 templates PORTADOS DO PRESENTE SONORO (Ateliê) — lib/chat-templates.ts + components/templates/registry.tsx + comentários de código, citados linha a linha. Servem de ESQUELETO DE TESTE, como você pediu — não foram redesenhados pro Legalizai. Onde o template original é específico de música/PS (SoundWave, card de música), sinalizei — isso é o que 'não dá pra fazer sem inventar': a composição visual final pro Legalizai é decisão de design sua, não extração de arquivo.",
+  "_nota": "v2 (26/08) — decisão de escopo: construir componentes visuais PRÓPRIOS do Legalizai é trabalho futuro (Pedro vai pedir orientação quando voltar nisso, ver `mkt/estrategia/catalogo-templates-texto-avaliacao.md` §Guia). Por ora, NENHUM componente novo foi codado — o que existe abaixo em `hierarquiasSugeridas_20` é só ESTRUTURA DE TEXTO (headline/subhead/CTA/lista/preço, na ordem/hierarquia certa), extraída de 20 templates do Presente Sonoro escolhidos de forma variada entre as categorias mais transferíveis. Servem de SUGESTÃO de hierarquia quando o Léo/agente propõe uma peça — o Pedro monta cada peça manualmente por enquanto, isto não vira render automático.",
+  "diversidadeCompletaSalva": {
+    "onde": "Projetos/atelie/metodo-replicavel/CATALOGO-TEMPLATES-TEXTO.md (90 templates, só nomes+categoria) + mkt/estrategia/catalogo-templates-texto-avaliacao.md (34 detalhados: Oferta/Oferta claros/Prova social/Identidade, com nota de adaptação cada um)",
+    "decisao_26-08": "70 dos 90 ficam DESCARTADOS por ora (não vão virar hierarquiaSugerida nem componente) — Pedro decidiu não gastar tempo decidindo template por template sem ter componente visual próprio pra testar de verdade. Nada foi apagado, o catálogo completo continua acessível nos 2 arquivos acima."
+  },
   "templates": [
     {
       "id": "T01",
@@ -81,5 +85,31 @@
       "candidatoLegalizaiPara": "MOTE B/C (peças de preço) — alternativa ao T07, versão com card 3D físico em vez de texto simples",
       "fonte": "lib/enquadramento.ts comentário linha ~88"
     }
-  ]
+  ],
+
+  "hierarquiasSugeridas_20": {
+    "_nota": "20 templates escolhidos de forma variada (não só os 'melhores encaixes') entre Oferta(9)/Oferta claros(2)/Prova social(3)/Identidade(2)/Novos(4) — pra TESTAR nas próximas postagens. Cada entrada é a HIERARQUIA DE TEXTO (ordem dos elementos), não o visual (cor/textura/3D do PS, que não se aplica). Status de todos: sugestão, não componente pronto — Pedro monta manualmente.",
+    "lista": [
+      { "id": "garantia", "categoria": "Oferta", "hierarquia": "selo circular '7 dias' + headline curta + CTA", "notaLegalizai": "encaixe direto — Legalizai já tem garantia real de 7 dias (CDC art.49)" },
+      { "id": "beneficios", "categoria": "Oferta", "hierarquia": "kicker 'tudo incluso' + lista de 4 itens (check) + preço + CTA", "notaLegalizai": "listar diferenciais reais (preço fechado, contador humano, garantia)" },
+      { "id": "ancora-valor", "categoria": "Oferta", "hierarquia": "preço-âncora riscado + label + preço grande + headline curta + CTA", "notaLegalizai": "mecanismo de ancoragem já usado no posicionamento (preço de/por)" },
+      { "id": "cta-gigante", "categoria": "Oferta", "hierarquia": "ícone + headline-pergunta grande + CTA grande, sem preço", "notaLegalizai": "bom pra CTA institucional de topo/meio de funil" },
+      { "id": "cupom", "categoria": "Oferta", "hierarquia": "ícone tag + label 'use o cupom' + código em destaque + texto de desconto + CTA", "notaLegalizai": "oferta de lançamento tipo 'condição de fundador'" },
+      { "id": "tres-passos", "categoria": "Oferta", "hierarquia": "kicker 'em 3 passos' + lista numerada (3 itens) + CTA", "notaLegalizai": "processo de abertura/migração em 3 passos" },
+      { "id": "urgencia", "categoria": "Oferta", "hierarquia": "kicker de prazo + número/desconto grande + headline curta + CTA", "notaLegalizai": "⚠️ só com prazo REAL (regra dura de escassez, ex.: 31/12/2026)" },
+      { "id": "prova-escassez", "categoria": "Oferta", "hierarquia": "ícone + número grande + headline + texto de escassez + CTA", "notaLegalizai": "número precisa ser real (anti-guru) antes de usar" },
+      { "id": "link-na-bio", "categoria": "Oferta", "hierarquia": "ícone QR + headline + texto 'link na bio' + preço + CTA", "notaLegalizai": "bom pra Stories/bio" },
+      { "id": "beneficios-claro", "categoria": "Oferta claros", "hierarquia": "igual `beneficios`, fundo claro", "notaLegalizai": "variante clara pra alternar com peças escuras" },
+      { "id": "ancora-clara", "categoria": "Oferta claros", "hierarquia": "igual `ancora-valor`, fundo claro", "notaLegalizai": "variante clara" },
+      { "id": "print-conversa", "categoria": "Prova social", "hierarquia": "avatar+nome+estrelas + 3 bolhas de chat + legenda de contexto", "notaLegalizai": "founder-made (Pedro) até ter depoimento real de cliente" },
+      { "id": "nota-cheia", "categoria": "Prova social", "hierarquia": "estrelas + citação grande centralizada + nome/contexto", "notaLegalizai": "depoimento clássico" },
+      { "id": "mural-provas", "categoria": "Prova social", "hierarquia": "kicker 'o que dizem' + 2 blocos de citação com borda lateral (nome+contexto cada)", "notaLegalizai": "mostra 2 provas de uma vez" },
+      { "id": "marca-centrada", "categoria": "Identidade", "hierarquia": "logo vertical + tagline pequena", "notaLegalizai": "fácil adaptar pro rebrand coral" },
+      { "id": "foto-assinatura", "categoria": "Identidade", "hierarquia": "foto + linha divisória + logo + tagline centralizado na base", "notaLegalizai": "bom pra fechar carrossel" },
+      { "id": "comparativo", "categoria": "Novos", "hierarquia": "kicker + split 2 colunas (❌ riscado à esquerda vs ✅ solução à direita)", "notaLegalizai": "'contabilidade tradicional × Legalizaí' — pilar 4 (diferencial)" },
+      { "id": "poster-citacao", "categoria": "Novos", "hierarquia": "ícone aspas + pill + citação em destaque (itálico) + kicker de marca", "notaLegalizai": "bom pra frase-gatilho ou citação do Léo" },
+      { "id": "spotlight", "categoria": "Novos", "hierarquia": "foto com vinheta central + pill + headline curta centralizada", "notaLegalizai": "genérico, fácil reaproveitar" },
+      { "id": "linha-do-tempo", "categoria": "Novos", "hierarquia": "kicker 'em 3 passos' + headline + linha do tempo com 3 pontos numerados", "notaLegalizai": "alternativa visual ao `tres-passos`, mais gráfica" }
+    ]
+  }
 }

@@ -33,7 +33,9 @@ ds/legalizai/
   tokens.json             paleta/fonte/raio — de decisoes-marca.md
   regras.json             QA determinístico (equivalente a lib/qa.ts) — o que é checável por código
   ctas.json               escada de CTA (mecanicas-engajamento.md) + os CTAs reais de waitlist já usados
-  personas.json           🆕 dorsais A/B/C + dial de ironia — Legalizai tem isso, Ateliê não
+  personas.json           🆕 índice de 5 dorsais (A/B/C/D/E) + 18 volantes + dial de ironia — Legalizai
+                          tem isso, Ateliê não. Só índice (26/08); profundidade real fica em
+                          ../../pesquisa/personas/*.md
   templates-texto.json    10 templates de TEXTO portados do Presente Sonoro, com nota honesta de adaptação
   templates-imagem.json   10 receitas de enquadramento portadas — ⚠️ compatibilidade BAIXA, ver arquivo
 

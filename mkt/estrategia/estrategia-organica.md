@@ -30,46 +30,69 @@ PILAR (sobre o quê)  ×  GATILHO EMOCIONAL (por que mexe)  ×  GATILHO PSICOLÓ
 
 ## Camada 1 — Pilares de conteúdo por bloco de funil
 
-Produto novo, sem base de clientes ainda → mais peso em prova/diferencial do que marca madura levaria.
+> **v3 (26/08)** — Pedro liberou renumeração completa ("as 12 peças nem subiram, não teria problema nenhum uma sugestão que alterasse elas") — os números NÃO são mais estáveis do jeito que a v2 dizia, foram reorganizados sem gaps. As 12 peças da primeira campanha foram atualizadas de `pilar: 5` (numeração v2) pra `pilar: 10` (numeração v3, mesmo pilar "Oferta/conversão", só renumerado). 2 pilares novos entraram nesta rodada (3-Nossa origem, 5-Mitos/crenças erradas), além dos 5 já criados na v2. Total: **13 pilares ativos + 2 em standby = 15**.
 
-| Bloco | % pauta | Função | Tom |
+| Bloco | % pauta | Função | Pilares ativos |
 |---|---:|---|---|
-| **Afeto/Marca** | 40% | conexão, marca, topo de funil | leve, humano, relatable |
-| **Diferencial/Prova/Oferta** | 40% | quebra objeção + prova + venda | direto, dado na cara |
-| **Comunidade/UGC** | 20% | participação, prova social nascente | acolhedor |
+| **Afeto/Marca** | 20% | conexão, marca, topo de funil | 1, 2, 3 |
+| **Educação/Dor** | 30% | ensinar, ser útil, evergreen+sazonal | 4, 5, 6, 7 |
+| **Diferencial/Confiança** | 25% | quebra objeção + prova | 8, 9 |
+| **Conversão/Produto** | 25% | ação concreta, uso real do produto, venda | 10, 11, 12, 13 |
+| *(Comunidade — standby)* | 0% por ora | participação | 15 (pausado) |
 
 ### Bloco Afeto/Marca — pilares
 
-| # | Pilar | Funil | Persona afim |
+| # | Pilar | Funil | Detalhe |
 |---|---|---|---|
-| 1 | Bastidor fundador ("building in public") | Topo | A (identifica com quem constrói) |
-| 2 | Dor educativa relatable (momento "aquele susto com o DAS") | Topo — salvável | B, C |
-| 3 | Cultural/relatable (piada leve sobre burocracia, sem ser genérico) | Topo — share/alcance | todas |
+| 1 | Bastidor fundador ("building in public") | Topo | Voz do Pedro-pessoa. Persona afim: A |
+| 2 | Cultural/relatable (piada leve sobre burocracia, sem ser genérico) | Topo — share/alcance | Persona afim: todas |
+| 3 | Nossa origem 🆕 | Topo — conexão de marca | A história da parceria: 22 anos de Legalize (escritório físico, Mauro) unindo com produto novo (Pedro, tech). Distinto do pilar 1 — ali é Pedro sozinho construindo; aqui é a FUSÃO institucional, a origem da empresa |
 
-### Bloco Diferencial/Prova/Oferta — pilares
+### Bloco Educação/Dor — pilares
 
 | # | Pilar | Funil | Detalhe |
 |---|---|---|---|
-| 4 | Diferencial vs mercado | Meio — quebra objeção | ângulos rotativos abaixo, nunca cita concorrente por nome |
-| 5 | Oferta/conversão | Fundo — vende | sempre com garantia 7 dias visível (CDC art.49, já travada no produto) |
-| 6 | Prova/reação | Fundo — confiança | **realismo do início:** sem base de clientes ainda → founder-made (Pedro mostrando o próprio CNPJ, [[legalize-cobaia-cnpj-pedro]]) até ter depoimento real |
-| 7 | Bastidor/processo | Meio — diferencial | mostrar contador CRC real, não esconder atrás de app — responde direto à "ferida de confiança" ([[insights-estrategicos]] achado 1) |
+| 4 | Dor educativa relatable (momento "aquele susto com o DAS") | Topo — salvável | Não é pilar exclusivo do Léo — qualquer voz (Léo, Pedro, institucional) pode postar aqui, Léo só é o encaixe mais natural |
+| 5 | Mitos/crenças erradas 🆕 | Topo — salvável | Mito-busting específico (ex.: "MEI não paga imposto nenhum", "abrir empresa é caro e demorado") — diferente do pilar 4: dor é sofrimento real, mito é crença errada a corrigir |
+| 6 | Calendário/prazo fiscal 🆕 | Topo — salvável, evergreen+sazonal | DAS mensal, DASN-SIMEI (maio), IRPF (mar-mai), virada de ano — já documentados em Camada 2 abaixo, agora vira pauta recorrente própria em vez de só "gatilho" solto |
+| 7 | Educação fiscal/enquadramento 🆕 | Topo/meio — prova de produto | Absorve o antigo pilar Fator R (v1) como sub-tema, mais Anexo III/IV/V, CNAE certo — dado riquíssimo já mapeado em `pesquisa/cnae-matriz/`, embalado como educação, não como formato isolado |
 
-**Pilar de diferencial — ângulos rotativos (ataca sem citar concorrente por nome):**
-
-| Ângulo | Hook |
-|---|---|
-| Preço fechado | "Sem 'a partir de'. O preço que você vê é o que você paga." |
-| Humano na entrada | "Contador de verdade desde o primeiro plano do Simples. Não só quando você paga mais." (⚠️ o qualificador "do Simples" é obrigatório: MEI tem assistente virtual, ver [[posicionamento]] §2) |
-| Hiperlocal BH | "A gente sabe o que é ISS de BH sem você ter que explicar." |
-| Garantia | "7 dias pra mudar de ideia. Dinheiro de volta, sem letra miúda." |
-
-### Bloco Comunidade/UGC — pilares
+### Bloco Diferencial/Confiança — pilares
 
 | # | Pilar | Funil | Detalhe |
 |---|---|---|---|
-| 8 | Formato assinatura: simulador Fator R aberto | Topo/meio — prova de produto | ferramenta pública e grátis, wedge já mapeado contra Contabilivre |
-| 9 | Participativo | Meio — comunidade | ligado à mecânica de engajamento, [[mecanicas-engajamento]] |
+| 8 | Diferencial vs mercado | Meio — quebra objeção | Ângulos rotativos abaixo (9, era 4), nunca cita concorrente por nome |
+| 9 | Bastidor/processo | Meio — diferencial | Mostrar contador CRC real — Pedro confirma "rola demais de fazer" (26/08), mantido ativo e valorizado. Responde à "ferida de confiança" ([[insights-estrategicos]] achado 1) |
+
+**Pilar de diferencial (8) — ângulos rotativos (ataca sem citar concorrente por nome), enriquecido 26/08:**
+
+| Ângulo | Hook | Fonte |
+|---|---|---|
+| Preço fechado | "Sem 'a partir de'. O preço que você vê é o que você paga." | `posicionamento.md` |
+| Humano na entrada | "Contador de verdade desde o primeiro plano do Simples. Não só quando você paga mais." (qualificador "do Simples" recomendado, não mais obrigatório — ver `decisoes-marca.md` 26/08) | `posicionamento.md` §2 |
+| Hiperlocal BH | "A gente sabe o que é ISS de BH sem você ter que explicar." | `posicionamento.md` |
+| Garantia | "7 dias pra mudar de ideia. Dinheiro de volta, sem letra miúda." | produto real, CDC art.49 |
+| 🆕 Sem custo de saída escondido | "Migração e baixa, sem custo escondido que só aparece na hora de sair." | `matriz-comparativa.md` §3 — nenhum concorrente precifica saída na vitrine |
+| 🆕 Craft/acabamento | "A gente não deixa '0+ clientes' escrito no site. Detalhe que mostra o resto." | `matriz-comparativa.md` §4 — concorrentes com site quebrado/vazio |
+| 🆕 Onboarding rápido | "CNPJ pronto rápido, sem enrolar." | `BASE-ESTRATEGICA.md` — meta <72h |
+| 🆕 Preço redondo | "R$49. Não R$49,90. Preço de gente grande, não de vitrine." | `decisoes-marca.md` 20/08 — valor redondo travado |
+| 🆕 Fator R aberto e grátis | "Simulador de Fator R aberto, sem pedir e-mail antes. Nenhum concorrente faz isso de graça." | contraste com Contabilivre (gated) |
+
+### Bloco Conversão/Produto — pilares
+
+| # | Pilar | Funil | Detalhe |
+|---|---|---|---|
+| 10 | Oferta/conversão | Fundo — vende | Sempre com garantia 7 dias visível. **Cap próprio mantido: máx 20% da pauta TOTAL fora de janela de promoção.** As 12 peças da primeira campanha são deste pilar (`pilar: 10` na numeração v3) |
+| 11 | Migração/troca de contador 🆕 | Fundo — conversão de quem já tem CNPJ | Dor específica de quem já tem empresa e o contador atual falhou — produto já tem flow dedicado ("Migrar"), mensagem-âncora já existe na matriz de personas: "Troque sem dor de cabeça, sem perder nada" |
+| 12 | Gestão do dinheiro do dono 🆕 | Meio/fundo — diferencial de produto | Pró-labore automático, retirada, planejamento — funcionalidade real do produto, puxado da revisão do calendário editorial de 25/08 |
+| 13 | Documentação/regularização em dia 🆕 | Meio/fundo — confiança + produto | Alvará, CND, certificado digital — a frase-gatilho "Sua empresa está em dia ✅" já é travada em `posicionamento.md`, agora ganha pilar próprio |
+
+### Pilares em standby (não removidos)
+
+| # | Pilar | Motivo do standby |
+|---|---|---|
+| 14 | Prova/reação | "precisamos amadurecer no decorrer do andamento das redes sociais" (Pedro, 26/08). Quando reativar: founder-made (Pedro mostrando o próprio CNPJ) até ter depoimento real |
+| 15 | Participativo/UGC | "precisamos amadurecer" (Pedro, 26/08) — mecânica de engajamento (`mecanicas-engajamento.md`) ainda não foi validada a fundo (item #7 do mapa de itens travados, também pendente) |
 
 ---
 

@@ -25,5 +25,19 @@ tags: [pesquisa, personas, volante]
 ## O que NÃO muda (herdado da dorsal)
 Idade 32-42, renda, alta familiaridade digital, LTV-hipótese alta — ver [[persona-a-servico-intelectual]].
 
+## Pesquisa real (Google Search, 26/08) 🆕
+
+Fonte: `Pesquisa Perfis Microempreendedores Belo Horizonte.md` (Downloads, pesquisa com Google Search grounding).
+
+| Critério | Dado real |
+|---|---|
+| Idade real | 25-35 (⚠️ mais jovem que os 32-42 herdados da dorsal A — nuance real, não contradição forte) |
+| Gênero | Majoritariamente masculino (Pesquisa Salarial Código Fonte 2025) |
+| Renda real | Pleno R$7.840 · Sênior R$15.635 · média PJ nacional R$13.344 · remoto exterior R$25.000+ |
+| Canais reais | LinkedIn, GitHub, Discord, Reddit (r/brdev), StackOverflow |
+| Reclamação real documentada | Frustração com a obrigatoriedade de retirar pró-labore pra atingir 28% do Fator R (evitar Anexo V); dúvidas sobre isenção ISS/PIS/COFINS em exportação de serviço |
+| Vocabulário real | Deploy, Commit, Refatorar, Sprint, Bug, Tech Lead, Stack, Daily, "PJtinha" |
+| Ambiente real | Home office ergonômico: múltiplos monitores (ultrawide), cadeira high-end, teclado mecânico, LED suave, isolamento acústico pra calls |
+
 ## Status
-🟡 hipótese sem pesquisa dedicada.
+🟡 hipótese enriquecida com pesquisa real (26/08) — ainda sem validação de campo direta do Pedro.

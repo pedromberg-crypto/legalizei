@@ -170,6 +170,11 @@ export const GRUPOS: GrupoTelas[] = [
         nome: "E5.5 · 3 ou mais sócios",
         nota: '🟡 28/07: UX-09: "limite do PRODUTO, não da lei". Pedro cogitou juntar esta saída com a Waitlist (regulamentados) — "estou pensando", NÃO travado.',
       },
+      {
+        rota: "/saida/socio-pj",
+        nome: "🆕 E5.6 · Saída · sócio via CNPJ",
+        nota: "24/08 (pedido do Pedro, em cima da reunião Leonan 19/08) — sócio pessoa jurídica tira a empresa do Simples Nacional no ato do contrato social (regra fiscal, diferente do limite de produto da E5.5). Bloqueia na triagem, antes do dinheiro. ⚠️ Existia como rota real e no `flow-data.mjs`, mas não estava catalogada aqui — não aparecia como tile no /mockup até esta correção (26/08).",
+      },
     ],
   },
   {
@@ -215,6 +220,21 @@ export const GRUPOS: GrupoTelas[] = [
         rota: "/migrar/contador",
         nome: "🆕 E9.2 · Seu contador atual",
         nota: "06/08 (reunião Rua Satélite 19, Léo) — só ME passa por aqui (MEI nunca tem TTRT, vai direto pro E9.4). Pede nome/e-mail/telefone/CRC do contador de hoje, pra abrir o TTRT. Pré-preenche e-mail/telefone quando a consulta cadastral trouxer (nem sempre vem — não existe API pública de 'quem é o contador de um CNPJ'); o que a pessoa digitar vale, mesmo se divergir. Sem trava de Continuar: quem não sabe algum dado segue mesmo assim.",
+      },
+      {
+        rota: "/migrar/dados",
+        nome: "🆕 E9.2b · Dados que o cartão CNPJ não traz",
+        nota: "24/08 (reunião Leonan 19/08, achado tardio) — reusa os mesmos campos do C1 (CPF/RG/órgão emissor/estado civil), digitação manual. Fica DEPOIS do contador atual e ANTES da transferência (1ª tentativa desta correção colocou errado, entre CNPJ e diagnóstico). ⚠️ Existia como rota real, mas não estava catalogada aqui até esta correção (26/08) — não aparecia no /mockup.",
+      },
+      {
+        rota: "/migrar/socios",
+        nome: "🆕 E9.2c · Dados dos sócios",
+        nota: "24/08 (reunião Leonan 19/08) — MESMA tela do C3 (`SociosView`), reusada com `contexto=\"migrar\"`, só a copy muda. Não existe triagem prévia perguntando quantos sócios no caminho migrar, então a tela se sustenta sozinha. ⚠️ Mesmo gap de catalogação do `/migrar/dados` acima, corrigido em 26/08.",
+      },
+      {
+        rota: "/migrar/gov",
+        nome: "🆕 E9.2d · GOV.BR + procuração",
+        nota: "24/08 (reunião Leonan 19/08) — reusa `CodigoGovView` (mesmo componente do A4, caminho abrir) com `soProcuracao`: não existe protocolo de registro pra assinar (empresa já existe), só a procuração. Mesma janela de 10min/3 tentativas/escala pra atendente. ⚠️ Mesmo gap de catalogação, corrigido em 26/08.",
       },
       {
         rota: "/migrar/transferencia",
@@ -319,6 +339,11 @@ export const GRUPOS: GrupoTelas[] = [
         rota: "/painel/recusa",
         nome: "A3.1 · Órgão recusa · 🏷️ SÓ ME (não existe pro MEI)",
         nota: "O 4º estado (UX-40): a Junta reprovou o nome apesar da prévia (persona `erro-orgao` do motor). Vermelho + 'precisa de você' + a ação, recuperação DENTRO do pipeline. Aqui o danger é legítimo: um órgão externo parou a fila mesmo. ✅ 28/07: RETRY AUTOMÁTICO — tenta as 3 opções do C7 em sequência (~1.4s cada), sem ação do cliente; só pede 3 novas sugestões se as 3 falharem. Mock sempre esgota as 3, pra provar o pior caso. 03/08: MEI não passa pela Junta, então esse tipo de disputa de nome não existe do mesmo jeito — não implementado pro MEI.",
+      },
+      {
+        rota: "/certificado",
+        nome: "🆕 A3.2 · Certificado digital (antes de assinar)",
+        nota: "26/08 (reunião Rua Satélite 36, item 7) — REINTRODUZIDO, mas reordenado. Existia um `/certificado` antigo (N24), removido como órfão em 30/07 (nada navegava até lá) — este é NOVO, não a mesma tela ressuscitada. Motivo estrutural: a procuração que sai junto da assinatura (A4) EXIGE o certificado já validado, então não dá pra deixar pra depois (era a ordem antiga, documentada como inconsistência). Pergunta 'já tem?' → upload arquivo+senha (sim) ou agenda entrevista com certificadora parceira (não).",
       },
       {
         rota: "/assinatura",

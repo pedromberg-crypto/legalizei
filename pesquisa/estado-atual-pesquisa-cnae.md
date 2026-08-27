@@ -29,15 +29,27 @@ Cruzamento feito:
 - `fundamentos-cnae.md` → **v2, ratificado** (🟢). As 2 hipóteses 🔑 do V1 confirmaram: (1) não existe lista oficial de "sempre Anexo V" (é penalidade condicional, não destino fixo); (2) MEI É filtro jurídico separado do Simples ME (Art. 966 CC), não o mesmo filtro com teto menor — contabilidade é o exemplo mais didático (Anexo III privilegiado, mas vedada ao MEI).
 - `execucao/cnae-fiscalmente-otimo.md` → **bate, sem contradição.** Grupos A/B/C do motor continuam válidos; pesquisa não cobriu §5º-C (Anexo IV) que o motor já usa pro Grupo C, então não havia como contradizer aí — é escopo pra rodada futura, não pendência travada.
 
+## ✅ Camada tributária dos 4 dados — FECHADA (27/08)
+
+Depois do cruzamento acima, fomos atrás dos 4 dados que faltavam na matriz (nenhum vem do IBGE). Todos feitos, nessa ordem (escolhida por tratabilidade):
+
+1. ✅ **MEI** (Anexo XI CGSN140) — 351/1332 CNAEs permitem MEI. PDF oficial parseado, 0 gap.
+2. ✅ **Risco municipal** (CGSIM Anexo I, Res. 51/2019) — 284/1332 baixo risco. 2 órfãos documentados (CNAE renumerado).
+3. ✅ **Anexo III/IV/V + Fator R** — o grande. Confirmado (a pedido do Pedro) que **não existe crosswalk oficial em lugar nenhum** — nem lei, nem CGSN140, nem PGDAS-D (o próprio sistema da Receita pede pro contador escolher manualmente). Classificado via regex contra a descrição oficial IBGE + os 5 grupos taxativos da LC123 ([[lc123-art18-anexos-taxativo]]). 481 III-fixo · 47 Fator R dinâmico · 51 Anexo IV · 62 `requer-revisao` (ambíguo, não chutado). ⚠️ **Não ratificado por contador** — precisa do mesmo tratamento que `cnae-fiscalmente-otimo.md` já exige (Larissa assina) antes de virar verdade de produto.
+4. ✅ **ISS por CNAE (BH)** — surpresa boa: aqui EXISTE crosswalk oficial (BH estrutura a lei municipal direto por CNAE). Planilha oficial `fazenda.pbh.gov.br`, 524/1332 CNAEs com alíquota. 2 órfãos documentados.
+
+**Achado bônus no caminho:** CGSN140 Anexo VI/VII (101 CNAEs vedados ao Simples inteiro + 21 ambíguos) — não era um dos 4, mas achamos procurando o crosswalk do #3 e vale de segurança (nenhum CNAE vedado deve virar recomendação).
+
+Detalhe completo de cada um em `cnae-matriz-governo.md` §2a-2d.
+
 ## Próximo passo
 
-Ainda não feito — cruzar o fundamento ratificado contra o resto da `cnae-matriz/`:
-- `cnae-matriz.csv/json` (matriz original)
+Ainda não feito — cruzar tudo isso contra o resto da `cnae-matriz/`:
 - `contabilizei-cnae-completo.*` (tabela do líder)
 - `cnae-complexidade-abertura.*`
 - `cnae-liso-servico.md`
 
-Foco prático: identificar CNAEs marcados como "atende MEI" na matriz atual que na verdade são atividade intelectual/regulamentada (deviam estar barrados pelo Art. 966 CC) — é o ponto de maior risco de erro herdado do V1, já que a distinção MEI×ME só ficou clara agora. Além disso, `fundamentos-cnae.md` ficou com 2 lacunas de dado bruto (lista completa Anexo XI CGSN140 e lista completa Anexo I Res. CGSIM 51/2019) que podem virar prompt de pesquisa dedicado se o produto precisar filtrar CNAE-a-CNAE.
+Foco prático: identificar CNAEs marcados como "atende MEI" na matriz atual (dado antigo, herdado) que contradizem a coluna `mei_permitido` nova (fonte primária). Além disso, os 62 `requer-revisao` do Anexo/Fator R e os 2+2 órfãos (CGSIM + ISS BH) são pendências pontuais que ficam pra quando o Pedro/Larissa quiser fechar.
 
 ## Pendência separada, não travada ainda
 

@@ -54,7 +54,7 @@ Então a pergunta nunca é *"esse doc está vivo?"*. É sempre **"esse doc manda
 | **NÚMEROS fiscais** | [[fiscal-simples-bh-2026]] bloco **CONSOLIDADO** | derivados: `flow-schema.js` FISCAL · `app/src/lib/fiscal.ts` |
 | **PREÇO de plano · CAC-alvo · margem/custo** | [[estado-atual]] (`financeiro/estado-atual.md`) — não é log, é o estado corrente | ❌ `posicionamento.md`/`estrategia-organica.md`/`frente-1-captacao-meta-bh.md` ainda citam MEI R$49,90 velho; `decisoes-marca.md` tem a história completa mas é cronológico, não cite direto de lá |
 | **CNAE atendido / não atendido** (mapa de mercado, espelho do LÍDER) | [[cnae-atendidos-e-nao-atendidos]] | [[cnae-comercio-standby]] = os 200 cortados. ⚠️ NÃO é a whitelist do nosso V1 — ver linha abaixo |
-| **CNAE que ATENDEMOS de verdade no V1** (96 ME · 58 MEI, fonte primária) | [[cnae-liso-servico]] | v1 antiga (103, herdada da Contabilizei) superada 27/08 — não usar |
+| **CNAE que ATENDEMOS de verdade no V1** (92 ME · 55 MEI, fonte primária) | [[cnae-liso-servico]] | v1 antiga (103, herdada da Contabilizei) superada 27/08 — não usar |
 | **CNAE fiscalmente ótimo** | [[cnae-fiscalmente-otimo]] | 🕓 famílias 🟡 esperam Larissa |
 | **CNAE fiscalmente ótimo** | [[cnae-fiscalmente-otimo]] | 🕓 famílias 🟡 esperam Larissa |
 | **Dados oficiais por CNAE** (IBGE + Anexo/Fator R + MEI + risco municipal + ISS BH) | [[cnae-matriz-governo]] (descreve `cnae-matriz.csv`/`.json`, 1332 códigos) | ⚠️ `contabilizei-cnae-completo.csv` tem `pode_mei`/`anexos_romano`/`fator_r` **próprios da Contabilizei** (o que o CONCORRENTE assume) — não são nossa verdade, útil só pra comparar. 🕓 coluna `anexo_fator_r_grupo` (62 `requer-revisao` + tudo) espera Larissa ratificar antes de virar produto |

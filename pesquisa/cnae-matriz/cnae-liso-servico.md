@@ -3,29 +3,33 @@ tipo: verdade
 status: vivo
 data: 2026-08-27
 assunto: cnae-atendemos-com-certeza
-deriva_de: [cnae-matriz-governo, lc123-art18-anexos-taxativo, profissoes-regulamentadas-conselhos, mei-risco-e-simplificacao-abertura]
+deriva_de: [cnae-matriz-governo, lc123-art18-anexos-taxativo, profissoes-regulamentadas-conselhos, mei-risco-e-simplificacao-abertura, cnae-complexidade-abertura]
 superado_por:
 tags: [cnae, mei, simples-nacional, escopo, fonte-primaria]
 ---
 
-# 🟢 CNAEs que atendemos com certeza (96 ME · 58 MEI)
+# 🟢 CNAEs que atendemos com certeza (92 ME · 55 MEI)
 
 > Substitui a v1 de 17/07 (103 CNAEs, herdada da Contabilizei, não ratificada). Esta versão é **fonte primária em toda a linha**: cada critério tem lei/resolução citada, nenhum dado vem de concorrente. Colunas `atende_me_certeza` e `atende_mei_certeza` já estão gravadas em `cnae-matriz.csv`/`.json` — este doc é a leitura humana da mesma verdade.
 
-## Critério (5 filtros, todos com fonte)
+## Critério (6 filtros, todos com fonte)
 ```
 641 CNAEs de serviço (IBGE, seções J/M/N/P/R/S predominantes)
 → 549 não vedados ao Simples Nacional (CGSN140 Anexo VI)
 → 532 não ambíguos (CGSN140 Anexo VII)
 → 122 baixo risco — dispensa vistoria/alvará (CGSIM Resolução 51/2019, Anexo I)
 →  96 não exigem registro em conselho profissional (Lei 6.839/1980 + leis de cada conselho)
+→  92 não exigem registro setorial federal (CADASTUR/Polícia Federal/Bacen-CVM-SUSEP — cruzado contra [[cnae-complexidade-abertura]])
 ```
-Dos 96, **58 também permitem MEI** (Anexo XI CGSN140) — MEI segue o mesmo filtro de risco do ME (confirmado em [[mei-risco-e-simplificacao-abertura]], Art. 18-A §18 da LC123), não existe atalho.
+Dos 92, **55 também permitem MEI** (Anexo XI CGSN140) — MEI segue o mesmo filtro de risco do ME (confirmado em [[mei-risco-e-simplificacao-abertura]], Art. 18-A §18 da LC123), não existe atalho.
 
 ## O que mudou vs a v1 (103, herdada)
 - **80 confirmados** — os dois métodos concordam, núcleo sólido.
-- **23 saíram**: 21 eram na verdade comércio/indústria pelo IBGE (violavam "MVP só serviço" — a curadoria de julho errou a seção); 2 eram regulamentados que passaram batido (`7020-4/00` consultoria em gestão/CRA, `7490-1/03` agronomia/CREA).
-- **16 entraram**: batiam nos 5 critérios e não estavam na lista velha.
+- **23 saíram na 1ª rodada** (5 critérios): 21 eram na verdade comércio/indústria pelo IBGE (violavam "MVP só serviço" — a curadoria de julho errou a seção); 2 eram regulamentados que passaram batido (`7020-4/00` consultoria em gestão/CRA, `7490-1/03` agronomia/CREA).
+- **+4 saíram na 2ª rodada** (cruzamento com [[cnae-complexidade-abertura]], 27/08 — eixo de **registro setorial federal**, diferente de conselho profissional, que a pesquisa original do 5º dado não cobriu): `6621-5/02` auditoria/consultoria atuarial → Bacen/CVM/SUSEP; `7911-2/00` agências de viagens → CADASTUR; `7912-1/00` operadores turísticos → CADASTUR; `8011-1/02` adestramento de cães de guarda → Polícia Federal.
+- **16 entraram**: batiam nos critérios e não estavam na lista velha.
+
+⚠️ **O eixo de registro setorial só foi cruzado pra 387 dos 1332 CNAEs** (cobertura do arquivo antigo, que só mapeia o footprint da Contabilizei). Pra CNAEs fora desses 387, `exige_registro_setorial` fica `nao-verificado` na matriz — não é garantia de que não precisam, é lacuna de pesquisa ainda aberta.
 
 ## ⚠️ Casos deixados de fora por segurança (não classificados, não é "não atende")
 `8660-7/00` apoio à gestão de saúde · `8030-7/00` investigação particular · `8020-0/01` monitoramento de segurança eletrônica — ver [[profissoes-regulamentadas-conselhos]] pelo motivo de cada um. E 62 CNAEs de serviço ficaram `requer-revisao` no Anexo/Fator R (ambíguo demais pra classificar sem humano) — nenhum deles entra aqui por definição.
@@ -58,7 +62,7 @@ Dos 96, **58 também permitem MEI** (Anexo XI CGSN140) — MEI segue o mesmo fil
 | 9329-8/03 | Exploração de jogos de sinuca, bilhar e similares | III-fixo | ✅ | 5% |
 | 9329-8/04 | Exploração de jogos eletrônicos recreativos | Fator R dinâmico | ✅ | 5% |
 
-### Atividades Administrativas e Serviços Complementares (20)
+### Atividades Administrativas e Serviços Complementares (17)
 | CNAE | Descrição | Anexo/Fator R | MEI | ISS BH |
 |---|---|---|---|---|
 | 7721-7/00 | Aluguel de equipamentos recreativos e esportivos | III-fixo | ✅ | — |
@@ -69,9 +73,6 @@ Dos 96, **58 também permitem MEI** (Anexo XI CGSN140) — MEI segue o mesmo fil
 | 7729-2/03 | Aluguel de material médico | III-fixo | ✅ | — |
 | 7729-2/99 | Aluguel de outros objetos pessoais e domésticos NE | `requer-revisao` | ✅ | — |
 | 7733-1/00 | Aluguel de máquinas e equipamentos para escritórios | III-fixo | ✅ | — |
-| 7911-2/00 | Agências de viagens | III-fixo | ✅ | 2% |
-| 7912-1/00 | Operadores turísticos | III-fixo | ✅ | 2% |
-| 8011-1/02 | Serviços de adestramento de cães de guarda | III-fixo | ✅ | 5% |
 | 8211-3/00 | Serviços combinados de escritório e apoio administrativo | `requer-revisao` | — | 5% |
 | 8219-9/01 | Fotocópias | III-fixo | ✅ | 5% |
 | 8219-9/99 | Preparação de documentos e serviços especializados de apoio administrativo NE | `requer-revisao` | ✅ | 5% |
@@ -81,11 +82,6 @@ Dos 96, **58 também permitem MEI** (Anexo XI CGSN140) — MEI segue o mesmo fil
 | 8292-0/00 | Envasamento e empacotamento sob contrato | III-fixo | ✅ | 5% |
 | 8299-7/03 | Serviços de gravação de carimbos, exceto confecção | III-fixo | ✅ | 5% |
 | 8299-7/07 | Salas de acesso à internet | III-fixo | ✅ | 5% |
-
-### Atividades Financeiras, de Seguros e Serviços Relacionados (1)
-| CNAE | Descrição | Anexo/Fator R | MEI | ISS BH |
-|---|---|---|---|---|
-| 6621-5/02 | Auditoria e consultoria atuarial | Fator R dinâmico | — | 5% |
 
 ### Atividades Profissionais, Científicas e Técnicas (19)
 | CNAE | Descrição | Anexo/Fator R | MEI | ISS BH |

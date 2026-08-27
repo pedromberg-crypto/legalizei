@@ -11,8 +11,9 @@ tags: [cnae, matriz, reference]
 > Espinha canônica de CNAE (IBGE oficial) + camadas cruzáveis (tributário + cobertura por concorrente). Base pra relatórios ricos: "quem atende o quê". Arquivos: `cnae-matriz.csv` (Bases/Excel) e `cnae-matriz.json` (scripts).
 
 ## Camada 1 — Espinha (fonte-verdade) ✅
-- **Fonte:** API oficial IBGE `servicodados.ibge.gov.br/api/v2/cnae/subclasses` (o IBGE é o dono da classificação CNAE).
-- **1332 subclasses**, 21 seções. Campos: `cnae` (id), `descricao`, `secao`/`secao_id`, `divisao_id`, `classe_id`.
+- **Fonte:** API oficial IBGE `servicodados.ibge.gov.br/api/v2/cnae/subclasses` (o IBGE é o dono da classificação CNAE). Pull completo (bulk, 1 chamada, todos os 1332 de uma vez) em **27/08/2026**.
+- **1332 subclasses**, 21 seções. Campos completos capturados: `cnae` (id), `descricao`, `secao`/`secao_id`, `divisao_id`, **`grupo_id`/`grupo_descricao`** (nível 3, faltava antes), `classe_id`, **`classe_observacoes`** (o que a classe compreende/NÃO compreende, com exclusões cruzadas pra outros CNAEs), **`subclasse_observacoes`** (mesma coisa no nível fino da subclasse), **`atividades`** (exemplos de negócio real que caem naquele código — ótimo pro motor de matching descrição→CNAE).
+- Antes só tínhamos 6 campos de taxonomia pura; `observacoes`+`atividades` cobrem os 1332 códigos direto da fonte oficial (antes só 387 via scrape da Contabilizei, ver Camada 3).
 - Confiança: **ALTA** (oficial). Não precisa cruzar — cruzar seria comparar com cópias do IBGE.
 
 ## Camada 2 — Overlay tributário (anexo / Fator R / alíquota) ⚠️

@@ -1,5 +1,6 @@
 # Memory Index — Legalize
 
+- [Fundamentos CNAE ratificados: MEI≠ME, sem lista "sempre V", sem margem 28%](legalize-cnae-fundamentos-ratificados-mei-vs-me.md) — 27/08: pesquisa fonte-primária fecha 3 gaps; matriz.csv já tem 1332 CNAEs (IBGE completo).
 - [Reorg repo inteiro, 25/08](legalize-reorg-repo-inteiro-25-08.md) — FECHADO: 8 commits, validação pasta-a-pasta + `financeiro/` novo (arquivo mãe de preço/CAC/margem).
 - [Ateliê substitui agentes copywriter/guardian](legalize-atelie-substitui-agentes-copywriter-guardian.md) — 25/08: engine `atelie/` no vault troca os 2 subagentes arquivados; NÃO commitado ainda.
 - [Mockup 3D do iPhone no Blender](legalize-blender-iphone-mockup-pipeline.md) — 21/08: asset, UV dedicado+flip, resolução mín. 432dpi, render 2K transparente, Poly Haven HDRI.

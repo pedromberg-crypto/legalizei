@@ -1,185 +1,188 @@
 ---
-tipo: referencia
+tipo: verdade
 status: vivo
-data: 2026-07-17
-fonte: derivado de cnae-complexidade-abertura (CGSIM + conselhos/setorial) + filtro fiscal de serviço
-confianca: liso-confirmado-por-nos (lista-base herdada, nao-ratificada por contador)
-cobertura: 103
+data: 2026-08-27
+assunto: cnae-atendemos-com-certeza
+deriva_de: [cnae-matriz-governo, lc123-art18-anexos-taxativo, profissoes-regulamentadas-conselhos, mei-risco-e-simplificacao-abertura]
+superado_por:
+tags: [cnae, mei, simples-nacional, escopo, fonte-primaria]
 ---
-# CNAEs SERVIÇO-LISO — happy path do MVP (103)
 
-> Os **103 CNAEs** que são **🟢 liso** (baixo risco A + sem conselho + sem setorial) **E serviço puro** (Anexo III/IV/V, sem Anexo I comércio nem II indústria).
-> **Início conservador e deliberado das telas.** Abertura 100% automatizável, sem etapa humana, dentro do "MVP só serviço".
-> Recorte de [[cnae-complexidade-abertura]] · [[cnae-atendidos-hub]].
+# 🟢 CNAEs que atendemos com certeza (96 ME · 58 MEI)
 
-**Flag de honestidade:** "liso" = confirmado **por nós** no eixo complexidade, sobre fonte oficial (CGSIM). A afirmação "atende" é **herdada da Contabilizei**, não ratificada por contador.
+> Substitui a v1 de 17/07 (103 CNAEs, herdada da Contabilizei, não ratificada). Esta versão é **fonte primária em toda a linha**: cada critério tem lei/resolução citada, nenhum dado vem de concorrente. Colunas `atende_me_certeza` e `atende_mei_certeza` já estão gravadas em `cnae-matriz.csv`/`.json` — este doc é a leitura humana da mesma verdade.
 
-## 🔭 OBSERVAÇÃO — este número CRESCE (caminho de volta aos 387)
-Começamos com 103 de propósito (afunilamento seguro). Dá pra **expandir por camadas até os 387 da Contabilizei** — cada camada é um estudo, e pode virar **feature de produto** ("abrimos mais CNAEs"):
+## Critério (5 filtros, todos com fonte)
+```
+641 CNAEs de serviço (IBGE, seções J/M/N/P/R/S predominantes)
+→ 549 não vedados ao Simples Nacional (CGSN140 Anexo VI)
+→ 532 não ambíguos (CGSN140 Anexo VII)
+→ 122 baixo risco — dispensa vistoria/alvará (CGSIM Resolução 51/2019, Anexo I)
+→  96 não exigem registro em conselho profissional (Lei 6.839/1980 + leis de cada conselho)
+```
+Dos 96, **58 também permitem MEI** (Anexo XI CGSN140) — MEI segue o mesmo filtro de risco do ME (confirmado em [[mei-risco-e-simplificacao-abertura]], Art. 18-A §18 da LC123), não existe atalho.
 
-| camada de expansão | +nº | acumulado | o que falta estudar |
-|---|---|---|---|
-| **serviço-liso (agora)** | 103 | **103** | nada — pronto |
-| + comércio/indústria liso | +67 | 170 | reabrir "MVP só serviço" (Anexo I/II) |
-| + verificar-licenciamento | +120 | 290 | split médio×alto (fonte setorial BH/Bombeiros/Vigilância) |
-| + tato-registro | +97 | 387 | atendimento humano/RT (Mauro ou parceiro) por conselho |
-| **total Contabilizei** | | **387** | |
+## O que mudou vs a v1 (103, herdada)
+- **80 confirmados** — os dois métodos concordam, núcleo sólido.
+- **23 saíram**: 21 eram na verdade comércio/indústria pelo IBGE (violavam "MVP só serviço" — a curadoria de julho errou a seção); 2 eram regulamentados que passaram batido (`7020-4/00` consultoria em gestão/CRA, `7490-1/03` agronomia/CREA).
+- **16 entraram**: batiam nos 5 critérios e não estavam na lista velha.
 
-> Ordem sugerida de crescimento: serviço-liso → verificar (quando tiver a fonte de risco BH) → comércio → tato-registro (quando o modelo comportar humano). **Nada aqui é descarte — é backlog priorizado.**
+## ⚠️ Casos deixados de fora por segurança (não classificados, não é "não atende")
+`8660-7/00` apoio à gestão de saúde · `8030-7/00` investigação particular · `8020-0/01` monitoramento de segurança eletrônica — ver [[profissoes-regulamentadas-conselhos]] pelo motivo de cada um. E 62 CNAEs de serviço ficaram `requer-revisao` no Anexo/Fator R (ambíguo demais pra classificar sem humano) — nenhum deles entra aqui por definição.
 
-## Resumo por seção
-| seção | nome | nº |
-|---|---|---|
-| C | Indústria de transformação | 12 |
-| G | Comércio/reparação | 9 |
-| I | Alojamento/alimentação | 2 |
-| J | Informação/comunicação | 13 |
-| M | Atividades profissionais/científicas/técnicas | 21 |
-| N | Atividades administrativas/serviços | 16 |
-| P | Educação | 9 |
-| R | Artes/cultura/esporte/recreação | 10 |
-| S | Outras atividades de serviços | 11 |
+---
 
-> Colunas: **Anexo** (III/IV/V) · **FR** = sujeito a Fator R · **MEI** = pode ser MEI.
+## Lista completa (96), por seção
 
-### C — Indústria de transformação (12)
-| CNAE | Atividade | Anexo | FR | MEI |
+**Colunas:** CNAE · Descrição · Anexo/Fator R · MEI · ISS BH
+
+### Alojamento e Alimentação (4)
+| CNAE | Descrição | Anexo/Fator R | MEI | ISS BH |
 |---|---|---|---|---|
-| `3250-7/06` | SERVIÇOS DE PRÓTESE DENTÁRIA | III/V | ✔ |  |
-| `3312-1/02` | MANUTENÇÃO E REPARAÇÃO DE APARELHOS E INSTRUMENTOS DE MEDIDA, TESTE E CONTROLE | III |  |  |
-| `3312-1/04` | MANUTENÇÃO E REPARAÇÃO DE EQUIPAMENTOS E INSTRUMENTOS ÓPTICOS | III |  |  |
-| `3313-9/02` | MANUTENÇÃO E REPARAÇÃO DE BATERIAS E ACUMULADORES ELÉTRICOS, EXCETO PARA VEÍCULOS | III |  | ✔ |
-| `3314-7/01` | MANUTENÇÃO E REPARAÇÃO DE MÁQUINAS MOTRIZES NÃO ELÉTRICAS | III |  | ✔ |
-| `3314-7/02` | MANUTENÇÃO E REPARAÇÃO DE EQUIPAMENTOS HIDRÁULICOS E PNEUMÁTICOS, EXCETO VÁLVULAS | III |  | ✔ |
-| `3314-7/03` | MANUTENÇÃO E REPARAÇÃO DE VÁLVULAS INDUSTRIAIS | III |  |  |
-| `3314-7/06` | MANUTENÇÃO E REPARAÇÃO DE MÁQUINAS, APARELHOS E EQUIPAMENTOS PARA INSTALAÇÕES TÉRMICAS | III |  | ✔ |
-| `3314-7/07` | MANUTENÇÃO E REPARAÇÃO DE MÁQUINAS E APARELHOS DE REFRIGERAÇÃO E VENTILAÇÃO PARA USO INDUSTRIAL E COMERCIAL | III |  | ✔ |
-| `3314-7/09` | MANUTENÇÃO E REPARAÇÃO DE MÁQUINAS DE ESCREVER, CALCULAR E DE OUTROS EQUIPAMENTOS NÃO ELETRÔNICOS PARA ESCRITÓRIO | III |  | ✔ |
-| `3314-7/12` | MANUTENÇÃO E REPARAÇÃO DE TRATORES AGRÍCOLAS | III |  | ✔ |
-| `3314-7/13` | MANUTENÇÃO E REPARAÇÃO DE MÁQUINAS FERRAMENTA | III |  |  |
+| 5590-6/01 | Albergues, exceto assistenciais | III-fixo | ✅ | 5% |
+| 5590-6/03 | Pensões (alojamento) | III-fixo | ✅ | 5% |
+| 5611-2/01 | Restaurantes e similares | III-fixo | ✅ | — |
+| 5611-2/03 | Lanchonetes, casas de chá, de sucos e similares | III-fixo | ✅ | — |
 
-### G — Comércio/reparação (9)
-| CNAE | Atividade | Anexo | FR | MEI |
+### Artes, Cultura, Esporte e Recreação (10)
+| CNAE | Descrição | Anexo/Fator R | MEI | ISS BH |
 |---|---|---|---|---|
-| `4520-0/01` | SERVIÇOS DE MANUTENÇÃO E REPARAÇÃO MECÂNICA DE VEÍCULOS AUTOMOTORES | III |  | ✔ |
-| `4520-0/02` | SERVIÇOS DE LANTERNAGEM OU FUNILARIA E PINTURA DE VEÍCULOS AUTOMOTORES | III |  | ✔ |
-| `4520-0/03` | SERVIÇOS DE MANUTENÇÃO E REPARAÇÃO ELÉTRICA DE VEÍCULOS AUTOMOTORES | III |  | ✔ |
-| `4520-0/04` | SERVIÇOS DE ALINHAMENTO E BALANCEAMENTO DE VEÍCULOS AUTOMOTORES | III |  |  |
-| `4520-0/05` | SERVIÇOS DE LAVAGEM, LUBRIFICAÇÃO E POLIMENTO DE VEÍCULOS AUTOMOTORES | III/IV |  | ✔ |
-| `4520-0/06` | SERVIÇOS DE BORRACHARIA PARA VEÍCULOS AUTOMOTORES | III |  | ✔ |
-| `4520-0/07` | SERVIÇOS DE INSTALAÇÃO, MANUTENÇÃO E REPARAÇÃO DE ACESSÓRIOS PARA VEÍCULOS AUTOMOTORES | III |  | ✔ |
-| `4520-0/08` | SERVIÇOS DE CAPOTARIA | III |  | ✔ |
-| `4543-9/00` | MANUTENÇÃO E REPARAÇÃO DE MOTOCICLETAS E MOTONETAS | III |  | ✔ |
+| 9001-9/01 | Produção teatral | III-fixo | ✅ | 2%/5% |
+| 9001-9/02 | Produção musical | III-fixo | ✅ | 2%/5% |
+| 9001-9/03 | Produção de espetáculos de dança | III-fixo | — | 2%/5% |
+| 9001-9/04 | Produção de espetáculos circenses, de marionetes e similares | III-fixo | — | 2%/5% |
+| 9002-7/01 | Atividades de artistas plásticos, jornalistas independentes e escritores | III-fixo | — | 2%/5% |
+| 9002-7/02 | Restauração de obras de arte | III-fixo | ✅ | 5% |
+| 9102-3/02 | Restauração e conservação de lugares e prédios históricos | III-fixo | — | 2% |
+| 9319-1/01 | Produção e promoção de eventos esportivos | III-fixo | — | 5% |
+| 9329-8/03 | Exploração de jogos de sinuca, bilhar e similares | III-fixo | ✅ | 5% |
+| 9329-8/04 | Exploração de jogos eletrônicos recreativos | Fator R dinâmico | ✅ | 5% |
 
-### I — Alojamento/alimentação (2)
-| CNAE | Atividade | Anexo | FR | MEI |
+### Atividades Administrativas e Serviços Complementares (20)
+| CNAE | Descrição | Anexo/Fator R | MEI | ISS BH |
 |---|---|---|---|---|
-| `5590-6/01` | ALBERGUES, EXCETO ASSISTENCIAIS | III |  | ✔ |
-| `5590-6/03` | PENSÕES(ALOJAMENTO) | III |  | ✔ |
+| 7721-7/00 | Aluguel de equipamentos recreativos e esportivos | III-fixo | ✅ | — |
+| 7722-5/00 | Aluguel de fitas de vídeo, DVDs e similares | III-fixo | ✅ | — |
+| 7723-3/00 | Aluguel de objetos do vestuário, jóias e acessórios | III-fixo | ✅ | — |
+| 7729-2/01 | Aluguel de aparelhos de jogos eletrônicos | Fator R dinâmico | ✅ | — |
+| 7729-2/02 | Aluguel de móveis, utensílios e aparelhos de uso doméstico e pessoal; instrumentos musicais | III-fixo | ✅ | — |
+| 7729-2/03 | Aluguel de material médico | III-fixo | ✅ | — |
+| 7729-2/99 | Aluguel de outros objetos pessoais e domésticos NE | `requer-revisao` | ✅ | — |
+| 7733-1/00 | Aluguel de máquinas e equipamentos para escritórios | III-fixo | ✅ | — |
+| 7911-2/00 | Agências de viagens | III-fixo | ✅ | 2% |
+| 7912-1/00 | Operadores turísticos | III-fixo | ✅ | 2% |
+| 8011-1/02 | Serviços de adestramento de cães de guarda | III-fixo | ✅ | 5% |
+| 8211-3/00 | Serviços combinados de escritório e apoio administrativo | `requer-revisao` | — | 5% |
+| 8219-9/01 | Fotocópias | III-fixo | ✅ | 5% |
+| 8219-9/99 | Preparação de documentos e serviços especializados de apoio administrativo NE | `requer-revisao` | ✅ | 5% |
+| 8220-2/00 | Atividades de teleatendimento | III-fixo | — | 2%/5% |
+| 8230-0/01 | Serviços de organização de feiras, congressos, exposições e festas | III-fixo | ✅ | 5% |
+| 8291-1/00 | Atividades de cobranças e informações cadastrais | III-fixo | ✅ | 5% |
+| 8292-0/00 | Envasamento e empacotamento sob contrato | III-fixo | ✅ | 5% |
+| 8299-7/03 | Serviços de gravação de carimbos, exceto confecção | III-fixo | ✅ | 5% |
+| 8299-7/07 | Salas de acesso à internet | III-fixo | ✅ | 5% |
 
-### J — Informação/comunicação (13)
-| CNAE | Atividade | Anexo | FR | MEI |
+### Atividades Financeiras, de Seguros e Serviços Relacionados (1)
+| CNAE | Descrição | Anexo/Fator R | MEI | ISS BH |
 |---|---|---|---|---|
-| `5911-1/02` | PRODUÇÃO DE FILMES PARA PUBLICIDADE | III |  |  |
-| `5912-0/01` | SERVIÇOS DE DUBLAGEM | III |  | ✔ |
-| `5912-0/02` | SERVIÇOS DE MIXAGEM SONORA EM PRODUÇÃO AUDIOVISUAL | III |  |  |
-| `5920-1/00` | ATIVIDADES DE GRAVAÇÃO DE SOM E DE EDIÇÃO DE MÚSICA | III |  |  |
-| `6201-5/01` | DESENVOLVIMENTO DE PROGRAMAS DE COMPUTADOR SOB ENCOMENDA | III/V | ✔ |  |
-| `6201-5/02` | WEB DESIGN | III/V | ✔ |  |
-| `6202-3/00` | DESENVOLVIMENTO E LICENCIAMENTO DE PROGRAMAS DE COMPUTADOR CUSTOMIZÁVEIS | III/V | ✔ |  |
-| `6203-1/00` | DESENVOLVIMENTO E LICENCIAMENTO DE PROGRAMAS DE COMPUTADOR NÃO CUSTOMIZÁVEIS | III/V | ✔ |  |
-| `6204-0/00` | CONSULTORIA EM TECNOLOGIA DA INFORMAÇÃO | III/V | ✔ |  |
-| `6209-1/00` | SUPORTE TÉCNICO, MANUTENÇÃO E OUTROS SERVIÇOS EM TECNOLOGIA DA INFORMAÇÃO | III/V | ✔ |  |
-| `6311-9/00` | TRATAMENTO DE DADOS, PROVEDORES DE SERVIÇOS DE APLICAÇÃO E SERVIÇOS DE HOSPEDAGEM NA INTERNET | III/V | ✔ |  |
-| `6319-4/00` | PORTAIS, PROVEDORES DE CONTEÚDO E OUTROS SERVIÇOS DE INFORMAÇÃO NA INTERNET | III/V | ✔ |  |
-| `6391-7/00` | AGÊNCIAS DE NOTÍCIAS | III |  |  |
+| 6621-5/02 | Auditoria e consultoria atuarial | Fator R dinâmico | — | 5% |
 
-### M — Atividades profissionais/científicas/técnicas (21)
-| CNAE | Atividade | Anexo | FR | MEI |
+### Atividades Profissionais, Científicas e Técnicas (19)
+| CNAE | Descrição | Anexo/Fator R | MEI | ISS BH |
 |---|---|---|---|---|
-| `7020-4/00` | ATIVIDADES DE CONSULTORIA EM GESTÃO EMPRESARIAL, EXCETO CONSULTORIA TÉCNICA ESPECÍFICA | III/V | ✔ |  |
-| `7210-0/00` | PESQUISA E DESENVOLVIMENTO EXPERIMENTAL EM CIÊNCIAS FÍSICAS E NATURAIS | III/V | ✔ |  |
-| `7220-7/00` | PESQUISA E DESENVOLVIMENTO EXPERIMENTAL EM CIÊNCIAS SOCIAIS E HUMANAS | III/V | ✔ |  |
-| `7311-4/00` | AGÊNCIAS DE PUBLICIDADE | III/V | ✔ |  |
-| `7312-2/00` | AGENCIAMENTO DE ESPAÇOS PARA PUBLICIDADE, EXCETO EM VEÍCULOS DE COMUNICAÇÃO | III/V | ✔ |  |
-| `7319-0/02` | PROMOÇÃO DE VENDAS | III |  | ✔ |
-| `7319-0/03` | MARKETING DIRETO | III |  |  |
-| `7319-0/04` | CONSULTORIA EM PUBLICIDADE | III/V | ✔ |  |
-| `7320-3/00` | PESQUISAS DE MERCADO E DE OPINIÃO PÚBLICA | III/V | ✔ |  |
-| `7410-2/02` | DESIGN DE INTERIORES | III/IV/V | ✔ |  |
-| `7410-2/03` | DESIGN DE PRODUTO | III/V | ✔ |  |
-| `7410-2/99` | ATIVIDADES DE DESIGN NÃO ESPECIFICADAS ANTERIORMENTE | III/V | ✔ |  |
-| `7420-0/01` | ATIVIDADES DE PRODUÇÃO DE FOTOGRAFIAS, EXCETO AÉREA E SUBMARINA | III |  | ✔ |
-| `7420-0/03` | LABORATÓRIOS FOTOGRÁFICOS | III |  | ✔ |
-| `7420-0/04` | FILMAGEM DE FESTAS E EVENTOS | III |  | ✔ |
-| `7420-0/05` | SERVIÇOS DE MICROFILMAGEM | III |  |  |
-| `7490-1/01` | SERVIÇOS DE TRADUÇÃO, INTERPRETAÇÃO E SIMILARES | III/V | ✔ |  |
-| `7490-1/03` | SERVIÇOS DE AGRONOMIA E DE CONSULTORIA ÀS ATIVIDADES AGRÍCOLAS E PECUÁRIAS | III/V | ✔ |  |
-| `7490-1/04` | ATIVIDADES DE INTERMEDIAÇÃO E AGENCIAMENTO DE SERVIÇOS E NEGÓCIOS EM GERAL, EXCETO IMOBILIÁRIOS | III/V | ✔ |  |
-| `7490-1/05` | AGENCIAMENTO DE PROFISSIONAIS PARA ATIVIDADES ESPORTIVAS, CULTURAIS E ARTÍSTICAS | III/V | ✔ |  |
-| `7490-1/99` | OUTRAS ATIVIDADES PROFISSIONAIS, CIENTÍFICAS E TÉCNICAS NÃO ESPECIFICADAS ANTERIORMENTE | III/V | ✔ |  |
+| 7210-0/00 | Pesquisa e desenvolvimento experimental em ciências físicas e naturais | III-fixo | — | 5% |
+| 7220-7/00 | Pesquisa e desenvolvimento experimental em ciências sociais e humanas | III-fixo | — | 5% |
+| 7311-4/00 | Agências de publicidade | Fator R dinâmico | — | 2% |
+| 7312-2/00 | Agenciamento de espaços para publicidade, exceto em veículos de comunicação | Fator R dinâmico | — | 2% |
+| 7319-0/02 | Promoção de vendas | III-fixo | ✅ | 2% |
+| 7319-0/03 | Marketing direto | III-fixo | — | 2% |
+| 7319-0/04 | Consultoria em publicidade | Fator R dinâmico | — | 5% |
+| 7320-3/00 | Pesquisas de mercado e de opinião pública | III-fixo | — | 2% |
+| 7410-2/02 | Design de interiores | Fator R dinâmico | — | 2% |
+| 7410-2/03 | Design de produto | Fator R dinâmico | — | — |
+| 7410-2/99 | Atividades de design NE | `requer-revisao` | — | — |
+| 7420-0/01 | Atividades de produção de fotografias, exceto aérea e submarina | III-fixo | ✅ | 5% |
+| 7420-0/03 | Laboratórios fotográficos | III-fixo | ✅ | 5% |
+| 7420-0/04 | Filmagem de festas e eventos | III-fixo | ✅ | 5% |
+| 7420-0/05 | Serviços de microfilmagem | III-fixo | — | 5% |
+| 7490-1/01 | Serviços de tradução, interpretação e similares | Fator R dinâmico | — | 5% |
+| 7490-1/04 | Atividades de intermediação e agenciamento de serviços e negócios em geral, exceto imobiliários | Fator R dinâmico | — | 2% |
+| 7490-1/05 | Agenciamento de profissionais para atividades esportivas, culturais e artísticas | Fator R dinâmico | — | 2% |
+| 7490-1/99 | Outras atividades profissionais, científicas e técnicas NE | `requer-revisao` | — | 2%/5% |
 
-### N — Atividades administrativas/serviços (16)
-| CNAE | Atividade | Anexo | FR | MEI |
+### Educação (9)
+| CNAE | Descrição | Anexo/Fator R | MEI | ISS BH |
 |---|---|---|---|---|
-| `7721-7/00` | ALUGUEL DE EQUIPAMENTOS RECREATIVOS E ESPORTIVOS | III |  | ✔ |
-| `7722-5/00` | ALUGUEL DE FITAS DE VÍDEO, DVDS E SIMILARES | III |  | ✔ |
-| `7723-3/00` | ALUGUEL DE OBJETOS DO VESTUÁRIO, JÓIAS E ACESSÓRIOS | III |  | ✔ |
-| `7729-2/01` | ALUGUEL DE APARELHOS DE JOGOS ELETRÔNICOS | III |  | ✔ |
-| `7729-2/02` | ALUGUEL DE MÓVEIS, UTENSÍLIOS E APARELHOS DE USO DOMÉSTICO E PESSOAL; INSTRUMENTOS MUSICAIS | III |  | ✔ |
-| `7729-2/03` | ALUGUEL DE MATERIAL MÉDICO | III |  | ✔ |
-| `7729-2/99` | ALUGUEL DE OUTROS OBJETOS PESSOAIS E DOMÉSTICOS NÃO ESPECIFICADOS ANTERIORMENTE | III |  | ✔ |
-| `7733-1/00` | ALUGUEL DE MÁQUINAS E EQUIPAMENTOS PARA ESCRITÓRIOS | III |  | ✔ |
-| `8211-3/00` | SERVIÇOS COMBINADOS DE ESCRITÓRIO E APOIO ADMINISTRATIVO | III |  |  |
-| `8219-9/01` | FOTOCÓPIAS | III |  | ✔ |
-| `8219-9/99` | PREPARAÇÃO DE DOCUMENTOS E SERVIÇOS ESPECIALIZADOS DE APOIO ADMINISTRATIVO NÃO ESPECIFICADOS ANTERIORMENTE | III |  | ✔ |
-| `8220-2/00` | ATIVIDADES DE TELEATENDIMENTO | III |  |  |
-| `8230-0/01` | SERVIÇOS DE ORGANIZAÇÃO DE FEIRAS, CONGRESSOS, EXPOSIÇÕES E FESTAS | III |  | ✔ |
-| `8291-1/00` | ATIVIDADES DE COBRANÇAS E INFORMAÇÕES CADASTRAIS | III |  | ✔ |
-| `8299-7/03` | SERVIÇOS DE GRAVAÇÃO DE CARIMBOS, EXCETO CONFECÇÃO | III |  | ✔ |
-| `8299-7/07` | SALAS DE ACESSO À INTERNET | III |  | ✔ |
+| 8591-1/00 | Ensino de esportes | III-fixo | — | 2% |
+| 8592-9/01 | Ensino de dança | III-fixo | — | 2% |
+| 8592-9/02 | Ensino de artes cênicas, exceto dança | III-fixo | ✅ | 2% |
+| 8592-9/03 | Ensino de música | III-fixo | ✅ | 2% |
+| 8592-9/99 | Ensino de arte e cultura NE | `requer-revisao` | ✅ | 2% |
+| 8593-7/00 | Ensino de idiomas | III-fixo | ✅ | 2% |
+| 8599-6/03 | Treinamento em informática | III-fixo | ✅ | 2% |
+| 8599-6/04 | Treinamento em desenvolvimento profissional e gerencial | III-fixo | ✅ | 2% |
+| 8599-6/05 | Cursos preparatórios para concursos | III-fixo | ✅ | 2% |
 
-### P — Educação (9)
-| CNAE | Atividade | Anexo | FR | MEI |
+### Informação e Comunicação (18)
+| CNAE | Descrição | Anexo/Fator R | MEI | ISS BH |
 |---|---|---|---|---|
-| `8591-1/00` | ENSINO DE ESPORTES | III | ✔ |  |
-| `8592-9/01` | ENSINO DE DANÇA | III/V | ✔ |  |
-| `8592-9/02` | ENSINO DE ARTES CÊNICAS, EXCETO DANÇA | III |  | ✔ |
-| `8592-9/03` | ENSINO DE MÚSICA | III |  | ✔ |
-| `8592-9/99` | ENSINO DE ARTE E CULTURA NÃO ESPECIFICADO ANTERIORMENTE | III |  | ✔ |
-| `8593-7/00` | ENSINO DE IDIOMAS | III |  | ✔ |
-| `8599-6/03` | TREINAMENTO EM INFORMÁTICA | III |  | ✔ |
-| `8599-6/04` | TREINAMENTO EM DESENVOLVIMENTO PROFISSIONAL E GERENCIAL | III |  | ✔ |
-| `8599-6/05` | CURSOS PREPARATÓRIOS PARA CONCURSOS | III |  | ✔ |
+| 5811-5/00 | Edição de livros | III-fixo | ✅ | 5% |
+| 5812-3/01 | Edição de jornais diários | III-fixo | ✅ | 5% |
+| 5812-3/02 | Edição de jornais não diários | III-fixo | ✅ | 5% |
+| 5813-1/00 | Edição de revistas | III-fixo | ✅ | 5% |
+| 5819-1/00 | Edição de cadastros, listas e de outros produtos gráficos | III-fixo | ✅ | 5% |
+| 5911-1/02 | Produção de filmes para publicidade | `requer-revisao` | — | 2% |
+| 5912-0/01 | Serviços de dublagem | III-fixo | ✅ | 5% |
+| 5912-0/02 | Serviços de mixagem sonora em produção audiovisual | III-fixo | — | 5% |
+| 5920-1/00 | Atividades de gravação de som e de edição de música | III-fixo | — | 5% |
+| 6201-5/01 | Desenvolvimento de programas de computador sob encomenda | Fator R dinâmico | — | 2% |
+| 6201-5/02 | Web design | Fator R dinâmico | — | 2% |
+| 6202-3/00 | Desenvolvimento e licenciamento de programas de computador customizáveis | Fator R dinâmico | — | 2% |
+| 6203-1/00 | Desenvolvimento e licenciamento de programas de computador não customizáveis | Fator R dinâmico | — | 2% |
+| 6204-0/00 | Consultoria em tecnologia da informação | Fator R dinâmico | — | 2% |
+| 6209-1/00 | Suporte técnico, manutenção e outros serviços em tecnologia da informação | III-fixo | — | 2% |
+| 6311-9/00 | Tratamento de dados, provedores de serviços de aplicação e serviços de hospedagem na internet | III-fixo | — | 2% |
+| 6319-4/00 | Portais, provedores de conteúdo e outros serviços de informação na internet | III-fixo | — | 2% |
+| 6391-7/00 | Agências de notícias | III-fixo | — | 5% |
 
-### R — Artes/cultura/esporte/recreação (10)
-| CNAE | Atividade | Anexo | FR | MEI |
+### Outras Atividades de Serviços (12)
+| CNAE | Descrição | Anexo/Fator R | MEI | ISS BH |
 |---|---|---|---|---|
-| `9001-9/01` | PRODUÇÃO TEATRAL | III |  | ✔ |
-| `9001-9/02` | PRODUÇÃO MUSICAL | III |  | ✔ |
-| `9001-9/03` | PRODUÇÃO DE ESPETÁCULOS DE DANÇA | III |  |  |
-| `9001-9/04` | PRODUÇÃO DE ESPETÁCULOS CIRCENSES, DE MARIONETES E SIMILARES | III |  |  |
-| `9002-7/01` | ATIVIDADES DE ARTISTAS PLÁSTICOS, JORNALISTAS INDEPENDENTES E ESCRITORES | III/V | ✔ |  |
-| `9002-7/02` | RESTAURAÇÃO DE OBRAS DE ARTE | III |  | ✔ |
-| `9102-3/02` | RESTAURAÇÃO E CONSERVAÇÃO DE LUGARES E PRÉDIOS HISTÓRICOS | III |  |  |
-| `9319-1/01` | PRODUÇÃO E PROMOÇÃO DE EVENTOS ESPORTIVOS | III |  |  |
-| `9329-8/03` | EXPLORAÇÃO DE JOGOS DE SINUCA, BILHAR E SIMILARES | III |  | ✔ |
-| `9329-8/04` | EXPLORAÇÃO DE JOGOS ELETRÔNICOS RECREATIVOS | III |  | ✔ |
+| 9511-8/00 | Reparação e manutenção de computadores e de equipamentos periféricos | III-fixo | ✅ | 5% |
+| 9512-6/00 | Reparação e manutenção de equipamentos de comunicação | III-fixo | ✅ | 5% |
+| 9521-5/00 | Reparação e manutenção de equipamentos eletroeletrônicos de uso pessoal e doméstico | III-fixo | ✅ | 5% |
+| 9529-1/01 | Reparação de calçados, de bolsas e artigos de viagem | III-fixo | ✅ | 5% |
+| 9529-1/02 | Chaveiros | III-fixo | ✅ | 5% |
+| 9529-1/03 | Reparação de relógios | III-fixo | ✅ | 5% |
+| 9529-1/04 | Reparação de bicicletas, triciclos e outros veículos não motorizados | III-fixo | ✅ | 5% |
+| 9529-1/05 | Reparação de artigos do mobiliário | III-fixo | ✅ | 5% |
+| 9529-1/06 | Reparação de jóias | III-fixo | ✅ | 5% |
+| 9529-1/99 | Reparação e manutenção de outros objetos e equipamentos pessoais e domésticos NE | III-fixo | ✅ | 5% |
+| 9602-5/01 | Cabeleireiros, manicure e pedicure | III-fixo | ✅ | 5% |
+| 9609-2/02 | Agências matrimoniais | III-fixo | ✅ | 5% |
 
-### S — Outras atividades de serviços (11)
-| CNAE | Atividade | Anexo | FR | MEI |
+### Transporte, Armazenagem e Correio (1)
+| CNAE | Descrição | Anexo/Fator R | MEI | ISS BH |
 |---|---|---|---|---|
-| `9511-8/00` | REPARAÇÃO E MANUTENÇÃO DE COMPUTADORES E DE EQUIPAMENTOS PERIFÉRICOS | III |  | ✔ |
-| `9512-6/00` | REPARAÇÃO E MANUTENÇÃO DE EQUIPAMENTOS DE COMUNICAÇÃO | III |  | ✔ |
-| `9521-5/00` | REPARAÇÃO E MANUTENÇÃO DE EQUIPAMENTOS ELETROELETRÔNICOS DE USO PESSOAL E DOMÉSTICO | III |  | ✔ |
-| `9529-1/01` | REPARAÇÃO DE CALÇADOS, DE BOLSAS E ARTIGOS DE VIAGEM | III |  | ✔ |
-| `9529-1/02` | CHAVEIROS | III |  | ✔ |
-| `9529-1/03` | REPARAÇÃO DE RELÓGIOS | III |  | ✔ |
-| `9529-1/05` | REPARAÇÃO DE ARTIGOS DO MOBILIÁRIO | III |  | ✔ |
-| `9529-1/06` | REPARAÇÃO DE JÓIAS | III |  | ✔ |
-| `9529-1/99` | REPARAÇÃO E MANUTENÇÃO DE OUTROS OBJETOS E EQUIPAMENTOS PESSOAIS E DOMÉSTICOS NÃO ESPECIFICADOS ANTERIORMENTE | III |  | ✔ |
-| `9602-5/01` | CABELEIREIROS, MANICURE E PEDICURE | III |  | ✔ |
-| `9609-2/02` | AGÊNCIAS MATRIMONIAIS | III |  | ✔ |
+| 5232-0/00 | Atividades de agenciamento marítimo | Fator R dinâmico | — | 2% |
 
-## Ligações
-[[cnae-complexidade-abertura]] · [[cnae-atendidos-hub]] · [[taxonomia-pills-n4]] · [[legalize-mvp-so-servico-cnae]] · [[fila-validacao-humana]]
+### Água, Esgoto, Gestão de Resíduos e Descontaminação (2)
+| CNAE | Descrição | Anexo/Fator R | MEI | ISS BH |
+|---|---|---|---|---|
+| 3831-9/99 | Recuperação de materiais metálicos, exceto alumínio | III-fixo | ✅ | — |
+| 3832-7/00 | Recuperação de materiais plásticos | III-fixo | ✅ | — |
+
+---
+
+## Roadmap de expansão (backlog, não construído)
+Igual v1: dá pra crescer por camadas até paridade com o mercado (~387 CNAEs de serviço da Contabilizei). Cada camada é um estudo, pode virar feature ("abrimos mais CNAEs"):
+
+| camada | o que falta estudar |
+|---|---|
+| **96 atual** | pronto |
+| + risco médio (verificar-licenciamento) | fonte setorial BH/Bombeiros/Vigilância por atividade específica |
+| + regulamentados com RT terceirizável | modelo de atendimento humano (Mauro/parceiro) por conselho |
+| + comércio/indústria leve | reabrir decisão "MVP só serviço" |
+
+## Links
+- [[cnae-matriz-governo]] · [[lc123-art18-anexos-taxativo]] · [[profissoes-regulamentadas-conselhos]] · [[mei-risco-e-simplificacao-abertura]] · `pesquisa/cnae-matriz/cnae-complexidade-abertura.md` · [[cnae-atendidos-hub]]

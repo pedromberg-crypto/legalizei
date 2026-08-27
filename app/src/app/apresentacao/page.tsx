@@ -2537,6 +2537,12 @@ export default function ApresentacaoPage() {
                                 )
                               }
                               exteriorSoComSocio
+                              // 🆕 26/08 — 3ª realocação da coorte (Veredito →
+                              // aqui, dentro da própria Triagem). Mesmo
+                              // `dadosConta.coorte` de sempre, só muda quem
+                              // renderiza a UI.
+                              coorte={dadosConta.coorte}
+                              setCoorte={(v) => setDadosConta((p) => ({ ...p, coorte: v }))}
                             />
                           )}
                           {etapa === "faixa" && (
@@ -2547,14 +2553,9 @@ export default function ApresentacaoPage() {
                               setModoExato={setModoExato}
                               exato={exato}
                               setExato={setExato}
-                              // 🆕 24/08 (reunião Rua Satélite 35) — reusa o
-                              // mesmo `dadosConta.coorte` que o ContaView já
-                              // usava (a UI de coorte saiu de lá, o dado
-                              // continua no mesmo objeto de snapshot).
-                              coorte={dadosConta.coorte}
-                              setCoorte={(v) => setDadosConta((p) => ({ ...p, coorte: v }))}
-                              // 🆕 26/08 (item 2) — mesma mecânica da coorte
-                              // acima, mas esta TRAVA o Continuar.
+                              // 🆕 26/08 (item 2) — TRAVA o Continuar (a
+                              // coorte que morava aqui foi realocada pra
+                              // VereditoView, ver acima).
                               enderecoProprio={enderecoProprioDemo}
                               setEnderecoProprio={setEnderecoProprioDemo}
                               onSeguir={() => setEtapa("conta")}

@@ -338,6 +338,8 @@ export function TriagemView({
   onSeguir,
   onSaida,
   exteriorSoComSocio = false,
+  coorte,
+  setCoorte,
 }: {
   socios: number | null;
   setSocios: (n: number) => void;
@@ -350,6 +352,15 @@ export function TriagemView({
   onSeguir: () => void;
   /** Recebe a rota da saída graciosa; a demo pode só sinalizar. */
   onSaida: (rota: string) => void;
+  /**
+   * 🆕 26/08 (pedido do Pedro) — 3ª realocação da pergunta "é a primeira
+   * empresa que você abre?": E6 → E5F (24/08) → Veredito (26/08, 1ª tentativa)
+   * → aqui, dentro da própria Triagem, junto das outras "perguntas rápidas"
+   * (era isso que o Pedro queria desde o início — "na verdade eu queria nela
+   * e não no veredito"). Opcional (dado puro de log/marketing, UX-48).
+   */
+  coorte?: "primeira" | "ja-abri" | null;
+  setCoorte?: (v: "primeira" | "ja-abri") => void;
   /**
    * 🔓 UX-67 (29/07) — esconde a pergunta do exterior quando é solo.
    *
@@ -489,6 +500,46 @@ export function TriagemView({
           </>
         )}
 
+        {/* 🆕 26/08 — 3ª realocação da coorte (Veredito → aqui, junto das
+            outras perguntas rápidas). Dado puro de marketing/log, opcional,
+            não interfere no processo. */}
+        {setCoorte && (
+          <div className="mt-8">
+            <p className="text-body-strong font-semibold mb-1">
+              É a primeira empresa que você abre?
+            </p>
+            <p className="text-caption text-text-secondary mb-3">
+              Ajuda a gente a te acompanhar do jeito certo.
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setCoorte("primeira")}
+                aria-pressed={coorte === "primeira"}
+                className={`min-h-12 flex-1 rounded-md border text-body font-semibold transition-colors
+                  ${
+                    coorte === "primeira"
+                      ? "border-action-primary bg-action-primary text-text-on-brand"
+                      : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
+                  }`}
+              >
+                É a primeira
+              </button>
+              <button
+                onClick={() => setCoorte("ja-abri")}
+                aria-pressed={coorte === "ja-abri"}
+                className={`min-h-12 flex-1 rounded-md border text-body font-semibold transition-colors
+                  ${
+                    coorte === "ja-abri"
+                      ? "border-action-primary bg-action-primary text-text-on-brand"
+                      : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
+                  }`}
+              >
+                Já abri antes
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* 🆕 24/08 (reunião Leonan) — aviso PROATIVO, não bloqueio: 3-4
             sócios seguem no fluxo normal, mas precisam saber cedo que a
             assinatura de todo mundo vai aparecer lá na Constituição. */}
@@ -569,8 +620,6 @@ export function FaixaView({
   setModoExato,
   exato,
   setExato,
-  coorte,
-  setCoorte,
   enderecoProprio,
   setEnderecoProprio,
   onSeguir,
@@ -593,15 +642,6 @@ export function FaixaView({
    * número que vai cair numa delas).
    */
   exatoInline?: boolean;
-  /**
-   * 🆕 24/08 (reunião Rua Satélite 35) — a pergunta "é a primeira empresa que
-   * você abre?" saiu do E6 (criar conta) e veio pra cá, abaixo da faixa, por
-   * enquanto (Natanael Dev/Tiagão: log da coorte é puro dado de marketing, não
-   * interfere no processo — não precisa estar junto do cadastro). `null` =
-   * ainda não respondeu; opcional (UX-48, "dado puro, pulável sem custo").
-   */
-  coorte: "primeira" | "ja-abri" | null;
-  setCoorte: (v: "primeira" | "ja-abri") => void;
   /**
    * 🆕 26/08 (reunião Rua Satélite 36, item 2) — a escolha "endereço próprio ×
    * fiscal Legalizai" saiu do C4 (dossiê, pós-pagamento) e veio pra cá, ANTES
@@ -758,43 +798,6 @@ export function FaixaView({
             </button>
           </div>
         )}
-
-        {/* 🆕 24/08 (reunião Rua Satélite 35) — realocada do E6 pra cá. Dado
-            puro de marketing/log, opcional, não interfere no processo. */}
-        <div className="mt-6">
-          <p className="text-body-strong font-semibold mb-1">
-            É a primeira empresa que você abre?
-          </p>
-          <p className="text-caption text-text-secondary mb-3">
-            Ajuda a gente a te acompanhar do jeito certo.
-          </p>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setCoorte("primeira")}
-              aria-pressed={coorte === "primeira"}
-              className={`min-h-12 flex-1 rounded-md border text-body font-semibold transition-colors
-                ${
-                  coorte === "primeira"
-                    ? "border-action-primary bg-action-primary text-text-on-brand"
-                    : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
-                }`}
-            >
-              É a primeira
-            </button>
-            <button
-              onClick={() => setCoorte("ja-abri")}
-              aria-pressed={coorte === "ja-abri"}
-              className={`min-h-12 flex-1 rounded-md border text-body font-semibold transition-colors
-                ${
-                  coorte === "ja-abri"
-                    ? "border-action-primary bg-action-primary text-text-on-brand"
-                    : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
-                }`}
-            >
-              Já abri antes
-            </button>
-          </div>
-        </div>
 
         {/* 🆕 26/08 (reunião Rua Satélite 36, item 2) — realocada do C4 (dossiê,
             pós-pagamento) pra cá. Diferente da coorte acima, esta TRAVA o

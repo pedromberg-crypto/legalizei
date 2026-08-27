@@ -119,12 +119,16 @@ export function SocioView({
 }) {
   const [rg, setRg] = useState("");
   const [orgao, setOrgao] = useState("");
+  const [nascimento, setNascimento] = useState("");
+  const [nomeMae, setNomeMae] = useState("");
   const [civil, setCivil] = useState("");
   const [regime, setRegime] = useState("");
 
   usePreencher(preencher, () => {
     setRg(PREENCHIMENTO.socio.rg);
     setOrgao(PREENCHIMENTO.socio.orgao);
+    setNascimento(PREENCHIMENTO.socio.nascimento);
+    setNomeMae(PREENCHIMENTO.socio.nomeMae);
     setCivil(PREENCHIMENTO.socio.civil);
     setRegime(PREENCHIMENTO.socio.regime);
   });
@@ -132,6 +136,8 @@ export function SocioView({
   const completo =
     rg.trim() !== "" &&
     orgao.trim() !== "" &&
+    nascimento.trim() !== "" &&
+    nomeMae.trim() !== "" &&
     civil !== "" &&
     (civil !== "casado" || regime !== "");
 
@@ -178,6 +184,23 @@ export function SocioView({
               <Texto valor={orgao} onChange={setOrgao} placeholder="SSP/MG" />
             </Campo>
           </div>
+
+          {/* 🆕 26/08 (achado do cruzamento com a pesquisa JUCEMG/DBE) — data
+              de nascimento e nome da mãe são campo padrão do DBE (Receita
+              Federal) e não existiam em nenhuma tela do dossiê. */}
+          <Campo rotulo="Data de nascimento">
+            <Texto
+              valor={nascimento}
+              onChange={setNascimento}
+              placeholder="DD/MM/AAAA"
+              inputMode="numeric"
+              maxLength={10}
+            />
+          </Campo>
+
+          <Campo rotulo="Nome da mãe">
+            <Texto valor={nomeMae} onChange={setNomeMae} placeholder="Nome completo" />
+          </Campo>
 
           <Campo rotulo="Estado civil">
             <Select valor={civil} onChange={setCivil} opcoes={ESTADO_CIVIL} />
@@ -501,6 +524,21 @@ export function SociosView({
                 Os outros dados de cada sócio a gente coleta igual aos seus, na
                 sequência.
               </p>
+
+              {/* 🆕 26/08 (pedido do Pedro) — card travado do 1º sócio (você),
+                  em TODAS as telas de sócios: mostra que você já É um sócio
+                  (não uma pergunta em aberto) e que só falta preencher o
+                  resto. Sem campo, sem edição — mesmo padrão do card
+                  read-only "Já preenchido no cadastro" do `SocioView`. */}
+              <div className="flex flex-col gap-3 rounded-md border border-border-hairline bg-surface-alt p-3">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-caption font-semibold text-text-primary">1º sócio</span>
+                  <span className="rounded-full bg-surface-card px-2 py-0.5 text-micro font-semibold text-text-tertiary">
+                    Você
+                  </span>
+                </div>
+                <span className="text-body text-text-primary">{CLIENTE.nome}</span>
+              </div>
 
               <div className="flex flex-col gap-3">
                 {extras.map((s, i) => (

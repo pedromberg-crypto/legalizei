@@ -68,7 +68,6 @@ function FaixaInterativo() {
   const [faixa, setFaixa] = useState<string | null>(null);
   const [modoExato, setModoExato] = useState(false);
   const [exato, setExato] = useState("");
-  const [coorte, setCoorte] = useState<"primeira" | "ja-abri" | null>(null);
   const [enderecoProprio, setEnderecoProprio] = useState<boolean | null>(null);
   return (
     <FaixaView
@@ -78,8 +77,6 @@ function FaixaInterativo() {
       setModoExato={setModoExato}
       exato={exato}
       setExato={setExato}
-      coorte={coorte}
-      setCoorte={setCoorte}
       enderecoProprio={enderecoProprio}
       setEnderecoProprio={setEnderecoProprio}
       onSeguir={() => {}}

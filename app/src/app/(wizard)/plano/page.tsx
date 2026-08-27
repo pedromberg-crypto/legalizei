@@ -43,7 +43,9 @@ import { ehEnderecoFiscal, comEndereco } from "@/lib/endereco";
  * `/gate` (`FaixaView`, antes do cadastro), e o valor já soma aqui na
  * mensalidade, com explicação sucinta (`?endereco=fiscal`, `lib/endereco.ts`).
  *
- * 💸 Preço é PLACEHOLDER declarado (ver `CUSTOS.MENSALIDADE`).
+ * 💸 Preço é o REAL da fase de lançamento — R$139/mês (ver `CUSTOS.MENSALIDADE`,
+ *  decisão 20/08 em `marca/decisoes-marca.md`). Não reflete ainda a promoção
+ *  dos 3 primeiros meses (R$79) — só o valor estável pós-promoção.
  *
  * 🔴 03/08 (Pedro): DESCARTADO o cenário `?cenario=empresa-paga` — decisão
  * definitiva e única é o cliente pagar a taxa da Junta (padrão acima).

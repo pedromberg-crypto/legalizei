@@ -85,7 +85,16 @@ export const NOME_EMPRESARIAL = (() => {
  */
 export const PREENCHIMENTO = {
   /** N10 — o que o N6 não coletou. */
-  socio: { rg: "MG-14.892.331", orgao: "SSP/MG", civil: "casado", regime: "parcial" },
+  socio: {
+    rg: "MG-14.892.331",
+    orgao: "SSP/MG",
+    // 🆕 26/08 — campo padrão de DBE (Receita), achado no cruzamento com a
+    // pesquisa JUCEMG/DBE.
+    nascimento: "14/03/1988",
+    nomeMae: "Maria Aparecida Silva",
+    civil: "casado",
+    regime: "parcial",
+  },
   /** N11 — abaixo do teto de propósito, pra renderizar o cálculo da folga. */
   vinculo: { contribui: true, valor: "4.500" },
   /** N13 — endereço da CLIENTE, com o IPTU que a JUCEMG exige. */

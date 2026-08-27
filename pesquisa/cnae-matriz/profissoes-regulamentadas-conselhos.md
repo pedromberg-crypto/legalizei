@@ -70,7 +70,7 @@ Funil aplicado sobre os 641 CNAEs de serviço:
 - **23 saem**: 21 eram na verdade comércio/indústria pelo IBGE (violavam "MVP só serviço" — a curadoria de julho errou a seção); 2 eram regulamentados que passaram batido (`7020-4/00` consultoria em gestão/CRA, `7490-1/03` agronomia/CREA).
 - **16 entram**: batiam nos 5 critérios e não estavam na lista velha (restaurantes/lanchonetes, edição de livro/jornal/revista, agência de viagem/operador turístico, atividades veterinárias, testes técnicos, agenciamento marítimo, recuperação de materiais metálicos/plásticos, envasamento sob contrato, reparação de bicicletas, adestramento de cães de guarda).
 
-**Ainda não decidido:** se isso vira o novo `cnae-liso-servico.md` (substituindo o antigo) — combinado com o Pedro fazer isso numa próxima rodada, junto com a fusão pedida de [[cnae-liso-servico]] + `cnae-complexidade-abertura.md`.
+✅ **Feito em 27/08** (mesmo dia): virou o novo [[cnae-liso-servico]] (substituiu o antigo), depois cruzado com o eixo de registro setorial de `cnae-complexidade-abertura` (4 códigos saíram, final 92 ME/55 MEI) e fundido no mesmo doc.
 
 ## Links
-- [[cnae-matriz-governo]] · [[lc123-art18-anexos-taxativo]] · [[cnae-liso-servico]] · `pesquisa/cnae-matriz/cnae-complexidade-abertura.md`
+- [[cnae-matriz-governo]] · [[lc123-art18-anexos-taxativo]] · [[cnae-liso-servico]]

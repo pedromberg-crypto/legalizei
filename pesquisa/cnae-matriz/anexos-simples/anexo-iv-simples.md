@@ -52,4 +52,4 @@ Lista **fechada** de serviços específicos. Alíquota **4,5% → 33%**. **Sem F
 - **(*) Teto de ISS = 5%:** na 5ª faixa, efetiva > 12,5% → ISS trava em 5%. · **6ª faixa:** ISS fora do DAS.
 
 ## Ligações
-[[fiscal-simples-bh-2026]] · [[anexo-iii-simples]] · [[anexo-v-simples]] · [[cnae-complexidade-abertura]]
+[[fiscal-simples-bh-2026]] · [[anexo-iii-simples]] · [[anexo-v-simples]] · [[cnae-liso-servico]]

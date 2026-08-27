@@ -171,14 +171,61 @@ Dos 92, **55 também permitem MEI** (Anexo XI CGSN140) — MEI segue o mesmo fil
 ---
 
 ## Roadmap de expansão (backlog, não construído)
-Igual v1: dá pra crescer por camadas até paridade com o mercado (~387 CNAEs de serviço da Contabilizei). Cada camada é um estudo, pode virar feature ("abrimos mais CNAEs"):
+Dá pra crescer por camadas até paridade com o mercado (~387 CNAEs de serviço da Contabilizei). Cada camada é um estudo, pode virar feature ("abrimos mais CNAEs"):
 
 | camada | o que falta estudar |
 |---|---|
-| **96 atual** | pronto |
+| **92 atual** | pronto |
 | + risco médio (verificar-licenciamento) | fonte setorial BH/Bombeiros/Vigilância por atividade específica |
 | + regulamentados com RT terceirizável | modelo de atendimento humano (Mauro/parceiro) por conselho |
 | + comércio/indústria leve | reabrir decisão "MVP só serviço" |
 
+---
+
+## 📚 Contexto mais amplo — a complexidade de abertura nos 387 (fundiu com `cnae-complexidade-abertura.md`, 17/07)
+
+> Esta seção veio de uma nota separada (`cnae-complexidade-abertura.md`) fundida aqui em 27/08 a pedido do Pedro — os 92 acima são o recorte "liso + serviço puro" do universo abaixo. Cobertura: **387 CNAEs** (footprint completo da Contabilizei, comércio+indústria+serviço), não só os 641 de serviço do IBGE.
+
+Responde a pergunta original do Pedro (17/07): *"quais CNAEs de fato são simples e quais dependem de mais atenção até de atendimento humano?"* — o eixo é **ortogonal ao fiscal** (Anexo/Fator R): um CNAE pode ser Anexo III barato **e** precisar de vistoria.
+
+### Veredito (387)
+| balde | nº | % | o que é | roteamento de produto |
+|---|---|---|---|---|
+| 🟢 **liso** | 170 | 44% | baixo risco A (CGSIM) **e** sem conselho/setorial | abertura 100% automatizável (happy path MVP) |
+| 🟡 **verificar-licenciamento** | 120 | 31% | fora do baixo-risco-A, sem conselho | precisa licença municipal — médio (provisório) OU alto (vistoria); nível é **municipal/BH** |
+| 🔴 **tato-registro** | 97 | 25% | exige conselho de classe **ou** órgão setorial | quase sempre humano/RT → Mauro ou waitlist |
+
+> Dos 170 liso, **103 eram serviço puro** na conta original de 17/07 — reduzido pra **92** depois do cruzamento fonte-primária de 27/08 (ver seção acima). Os outros 67 do 170 são comércio/indústria liso (Anexo I/II), fora do "MVP só serviço".
+
+### Os 3 eixos (regra determinística, re-executável)
+`veredito = tato-registro` se tem conselho/setorial · senão `verificar-licenciamento` se fora do baixo-risco-A · senão `liso`. Prioridade: **registro > licenciamento > liso**. Direção segura do erro travada: **falso-liso é o pecado** (cobra antes de barrar), **falso-tato é conservador** → só marca `liso` quem está na lista oficial; ausência nunca vira "presumido liso".
+
+- **Eixo A — risco** (CGSIM Res 51/2019, Anexo I): 212/387 na lista de baixo risco A · 175 fora. "Fora da lista" ≠ alto risco — é médio **ou** alto, e o alto é definido por cada município.
+- **Eixo B — profissão regulamentada** (conselho + RT): conjunto fechado de conselhos → classes CNAE. Ver versão fonte-primária mais recente em [[profissoes-regulamentadas-conselhos]] (27/08).
+- **Eixo C — registro setorial** (órgão, sem conselho): CADASTUR, Polícia Federal, MEC/Conselho de Educação, Bacen/CVM/SUSEP, ANATEL, ANTT, IBAMA. **Este é o eixo que faltava na pesquisa do 5º dado** — foi cruzado em 27/08 e tirou 4 códigos dos 92 (ver acima). Prova de que os eixos são independentes: advogado e agência de viagem são baixo-risco no eixo A mas tato no B/C.
+
+### tato-registro (97) por órgão
+| nº | órgão | confiança |
+|---|---|---|
+| 44 | Conselhos de saúde (CRM/CRO/COREN/CRN/CRP/CREFITO/CRF) | alta |
+| 15 | CORE (representação comercial, Lei 4.886/65) | média-alta |
+| 9 | MEC/Conselho de Educação (ensino regular 851-854) | alta |
+| 8 | CREA/CAU (engenharia/arquitetura) | alta |
+| 6 | Bacen/CVM/SUSEP (financeiro/seguros) | alta |
+| 3+3+3 | CRECI (corretor imóveis) · OAB/INPI · CADASTUR · Polícia Federal | alta |
+| 1+1+1 | CRF · CRMV · CREF | alta/média |
+
+### verificar-licenciamento (120) — perfil por divisão
+Puxado por: divisão 33 reparação de máquinas (25, tende médio) · 47 comércio varejo (14) · 43 obras/instalações (12, tende alto) · 77 aluguel (9, médio) · 96 serviços pessoais (9, misto) · 55/56 alojamento/comida (7, alto — Vigilância). Divisões pesadas (obra, comida, alojamento) puxam alto; reparação/aluguel puxam médio. Split exato médio×alto = municipal, **deferido** (REDESIM-MG bloqueado por período eleitoral em 17/07; decreto de risco de BH é a próxima fonte).
+
+### Caveats originais (17/07, ainda válidos)
+1. Baixo-risco-A tem entradas condicionais no Anexo I (ex: "desde que artesanal / área < X") — não parseadas, impacto baixo pro nosso recorte de serviço puro.
+2. Conselho→CNAE é construção nossa, sem tabela oficial única — mesma ressalva que [[profissoes-regulamentadas-conselhos]] já carrega.
+3. Correções já aplicadas na revisão original: +CORE nos 461x (era falso-liso) · −CRF em cosméticos 4772-5 (era falso-tato) · 6911-7/03 = INPI, não OAB.
+
+### Arquivos de dados (mantidos, não fundidos)
+- `cnae-complexidade-abertura.json` / `.csv` — os 387 completos com risco_cgsim, orgaos_conselho/setorial, veredito, motivos, confiança.
+- `cgsim-res51-baixo-risco.pdf` — fonte primária do eixo A (mesmo PDF usado na pesquisa de 27/08).
+
 ## Links
-- [[cnae-matriz-governo]] · [[lc123-art18-anexos-taxativo]] · [[profissoes-regulamentadas-conselhos]] · [[mei-risco-e-simplificacao-abertura]] · `pesquisa/cnae-matriz/cnae-complexidade-abertura.md` · [[cnae-atendidos-hub]]
+- [[cnae-matriz-governo]] · [[lc123-art18-anexos-taxativo]] · [[profissoes-regulamentadas-conselhos]] · [[mei-risco-e-simplificacao-abertura]] · [[cnae-atendidos-hub]] · [[contabilizei-cnae-completo-relatorio]] · [[fila-validacao-humana]]

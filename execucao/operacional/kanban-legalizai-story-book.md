@@ -62,7 +62,7 @@ data: 2026-07-19
 - [ ] **Anti-scraping** (bloquear bots de concorrente; acesso manual liberado)
 - [ ] Lembrete WhatsApp p/ assinatura pendente (cadência 1x/dia, anti-spam)
 - [ ] Dashboard CRM/Kanban c/ automação condicional (card pula → WhatsApp) + conexão Leghub p/ leads não atendidos
-- [ ] **Escada de expansão CNAE** — do happy path (103 serviço-liso) até os 387; médio×alto = municipal, deferido → [[cnae-complexidade-abertura]]
+- [ ] **Escada de expansão CNAE** — do happy path (92 serviço-liso) até os 387; médio×alto = municipal, deferido → [[cnae-liso-servico]]
 
 ## 👥 Time / paralelo (fora do caminho crítico)
 
@@ -100,7 +100,7 @@ data: 2026-07-19
 - [x] **Cobaia analisada** — Pedro paga 6%, tese virou monitoramento (Fator R vivo) — 19/07
 - [x] **CNAE furada na raiz** achado + limpeza 45/91/124 (script re-executável) — 17/07 → [[limpeza-260-servico]]
 - [x] **Tabela CNAE do líder extraída** (387, com anexo/Fator R/faixa) — 17/07 → [[cnae-atendidos-hub]]
-- [x] **Eixo de complexidade de abertura** (170 liso/120 verificar/97 tato) — 17/07 → [[cnae-complexidade-abertura]]
+- [x] **Eixo de complexidade de abertura** (170 liso/120 verificar/97 tato) — 17/07, fundido+atualizado 27/08 → [[cnae-liso-servico]]
 - [x] **Motor v0.4.0** — 19 personas, 2 flows (abertura + migrar), 19/19 PASS
 - [x] **Ordem do app invertida** — cobra no N9, não no fim
 - [x] **HANDOFF pro dev — repo `base-flow-legalizai-story-book`** (motor + spec + contrato + dados) — 16/07

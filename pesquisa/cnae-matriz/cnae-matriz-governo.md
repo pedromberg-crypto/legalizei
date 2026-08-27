@@ -38,6 +38,12 @@ Nenhum dos 4 abaixo é dado do IBGE — são outros órgãos, cada um com tratab
 - Sanity check: contabilidade (6920-6/01) e treinamento (8599-6/04) = `risco_baixo_cgsim: sim` — plausível (atividade de escritório, sem risco físico).
 - Confiança: **ALTA** (fonte primária, 284/286 = 99,3% de match direto; 2 pendências documentadas, não escondidas).
 
+### 2b-bis. Vedação/ambiguidade ao Simples (CGSN140 Anexo VI/VII) ✅ feito (27/08, achado bônus)
+- Não é anexo III/IV/V — é ANTES disso: quais CNAEs são **proibidos** de optar pelo Simples Nacional (banco, corretora, seguradora, cigarro, armas, sindicato/associação, etc.) e quais são **ambíguos** (o código mistura atividade proibida + permitida, ex: fabricar cerveja vs vender cerveja).
+- **Fonte:** Anexo VI e VII da Resolução CGSN 140/2018 (PDFs oficiais, gov.br/DREI e normas.receita.fazenda.gov.br, arquivados no repo). Achado ao procurar se existia crosswalk CNAE→Anexo (não existe, ver §2c) — mas esses dois anexos SÃO listas fechadas por CNAE.
+- Parseado: **101 CNAEs vedados** (`vedado_simples_cgsn_anexo_vi`) + **21 CNAEs ambíguos** (`ambiguo_simples_cgsn_anexo_vii`). 100% de match com a matriz IBGE, 0 órfão.
+- Relevância pro nosso nicho: baixa direta (nosso MVP já é só serviço, esses 122 códigos são majoritariamente indústria pesada/financeiro/comércio de item controlado), mas é filtro de segurança — nenhum CNAE vedado deve aparecer como recomendação em produto nenhum.
+
 ### 2c. Anexo III/V + Fator R por CNAE — pendente, é o grande
 - `anexo_base`: **nível confiável por regra** — Comércio (seção G) = **Anexo I** (226); Indústria (B/C) = **Anexo II** (465); Serviços = **III/IV/V*** (641, asterisco = anexo exato depende da atividade + Fator R).
 - `fator_r` e `aliquota_inicial`: **VAZIOS de propósito.** Realidade honesta: **NÃO existe dataset único oficial e limpo** de anexo/Fator R por CNAE — a lei (LC 123 / Res. CGSN 140) define por regra/atividade (§5º-B lista taxativa Anexo III, §5º-D/§5º-I lista taxativa Fator R), não num mapa plano código→anexo. Maior esforço dos 4: precisa mapear as listas taxativas da lei contra os 1332 códigos.

@@ -3,6 +3,11 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { EntradaView, type Intencao } from "@/components/entrada";
+import {
+  DadosPessoaisView,
+  EnderecoCategoriaView,
+  type DadosLead,
+} from "@/components/entrada-lead";
 import { SplashView } from "@/components/splash";
 import { WelcomeView } from "@/components/welcome";
 import {
@@ -208,7 +213,10 @@ type Etapa =
   | "splash"
   | "welcome"
   | "fork"
-  | "cidade"
+  // 🆕 27/08 — E3.1 e E3.3, telas NOVAS da captura de lead. Substituem a
+  // "cidade" (E4, gate autodeclarado), que foi removida do flow.
+  | "dados"
+  | "endereco"
   | "fora-bh"
   | "perguntando"
   | "analisando"
@@ -298,10 +306,14 @@ function depoisDoDossie(e: EtapaDossie): Etapa {
   return ETAPAS_DOSSIE[i + 1] ?? "revisar";
 }
 
-/** A etapa anterior. A primeira (`socio`) volta pro pagamento. */
+/**
+ * A etapa anterior. 🔄 27/08 — a primeira (`socio`) volta pro **veredito**, não
+ * mais pro pagamento: descrever a atividade e achar o CNAE atravessaram o
+ * pagamento e agora são a C0, primeira tela do dossiê.
+ */
 function antesDoDossie(e: EtapaDossie): Etapa {
   const i = ETAPAS_DOSSIE.indexOf(e);
-  return i === 0 ? "pagamento" : ETAPAS_DOSSIE[i - 1];
+  return i === 0 ? "veredito" : ETAPAS_DOSSIE[i - 1];
 }
 
 /**
@@ -409,8 +421,9 @@ function depoisDoMigrar(e: EtapaMigrar): Etapa {
 
 function antesDoMigrar(e: EtapaMigrar): Etapa {
   const i = ETAPAS_MIGRAR.indexOf(e);
-  // O 1º passo do Migrar volta pro gate de cidade, que é de onde ele veio.
-  return i === 0 ? "cidade" : ETAPAS_MIGRAR[i - 1];
+  // 🔄 27/08 — o 1º passo do Migrar volta pro E3.1 (`dados`), que é de onde
+  // ele vem agora: o gate de cidade (E4) foi removido do flow.
+  return i === 0 ? "dados" : ETAPAS_MIGRAR[i - 1];
 }
 
 /** C0.1 (retomar) e E9.1 (aguardando) — pausas de pagamento, fora da sequência. */
@@ -452,7 +465,8 @@ type Momento =
   | "splash"
   | "welcome"
   | "fork"
-  | "cidade"
+  | "dados"
+  | "endereco"
   | "fora-bh"
   | "fora-bh-enviado"
   | "perguntando"
@@ -840,11 +854,13 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   splash: "/splash",
   welcome: "/welcome",
   fork: "/entrada",
-  cidade: "/entrada?intencao=abrir&regime=me",
+  dados: "/dados",
+  endereco: "/endereco",
   "fora-bh": "/saida/fora-bh",
   "fora-bh-enviado": "/saida/fora-bh",
-  perguntando: "/gate",
-  analisando: "/gate",
+  // 🔄 27/08 — atravessaram o pagamento: viraram a C0 (`/dossie/atividade`).
+  perguntando: "/dossie/atividade",
+  analisando: "/dossie/atividade",
   "veredito-atende": "/veredito/atende",
   "veredito-waitlist": "/veredito/waitlist",
   "veredito-waitlist-enviado": "/veredito/waitlist",
@@ -930,13 +946,21 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     porque:
       "A copy pergunta pelo FATO ('já tenho empresa'), nunca pela operação ('migrar'). 'Migrar' é jargão e excluiria quem não tem contador nenhum — que é justamente o caso mais fácil pra gente, porque não existe distrato nem transferência de responsabilidade técnica.",
   },
-  cidade: {
+  dados: {
     dono: "usuario",
-    faz: "Confirma que a empresa será aberta em Belo Horizonte antes de deixar seguir. Fora de BH, cai numa saída dedicada.",
+    faz: "Pede nome, e-mail e telefone logo depois do fork, antes de qualquer pergunta de negócio. Não cria conta: só identifica quem está do outro lado.",
     interfere:
-      "O município define a Prefeitura que emite inscrição municipal e NFS-e, e a Junta é estadual (JUCEMG). Todo o processo é regionalizado.",
+      "Nada no processo da Junta. Interfere no NOSSO lado: sem isso, quem desiste no meio do funil é anônimo e não dá pra retomar contato.",
     porque:
-      "Decisão da reunião de 28/07: o MLP atende só BH/MG. Perguntar aqui evita levar alguém de outra cidade por todo o fluxo pra barrar no fim. Quem já é cliente pula esse passo.",
+      "Reordenação de 27/08, em cima do cruzamento com o funil da Contabilizei: eles pedem esses 3 campos na PRIMEIRA tela, e a gente só pedia depois de 6 telas de gate. A frase do Pedro resume: 'se a gente não capta isso rápido, não sabe nem quem é dono dos próximos cliques'. O aceite formal continua no E8, antes do pagamento; aqui vai só o consentimento mínimo de privacidade, em 1 linha.",
+  },
+  endereco: {
+    dono: "usuario",
+    faz: "Duas perguntas numa tela: onde a empresa vai ficar (endereço em BH, validado por CEP, ou o endereço fiscal da Legalizai) e o que a pessoa faz (categoria de atividade).",
+    interfere:
+      "Define o município da empresa, que decide a Junta (JUCEMG) e a Prefeitura que emite inscrição municipal e NFS-e. E a categoria é o que filtra quem a gente atende: a lista só tem atividade atendida.",
+    porque:
+      "Substitui o E4 (gate de cidade), que perguntava 'é em BH?' e acreditava no clique — era a única checagem de cidade do produto inteiro, e não checava nada. Aqui o CEP valida de verdade, e quem não tem endereço em BH recebe o endereço fiscal como SOLUÇÃO em vez de porta na cara (o município segue a sede, não onde a pessoa mora). A categoria é a peça que permitiu mover o CNAE pra depois do pagamento: como ela só oferece o que atendemos, o veredito lá na frente não pode mais dizer não.",
   },
   "fora-bh": {
     dono: "usuario",
@@ -1391,6 +1415,14 @@ export default function ApresentacaoPage() {
   // 🆕 26/08 (reunião Rua Satélite 36, item 2) — escolha de endereço, realocada
   // do C4 (dossiê) pro E5F (faixa), antes até do cadastro.
   const [enderecoProprioDemo, setEnderecoProprioDemo] = useState<boolean | null>(null);
+  // 🆕 27/08 — estado das 2 telas novas de captura de lead (E3.1 e E3.3).
+  const [dadosLead, setDadosLead] = useState<DadosLead>({
+    nome: "",
+    email: "",
+    telefone: "",
+  });
+  const [cepDemo, setCepDemo] = useState("");
+  const [numeroDemo, setNumeroDemo] = useState("");
 
   // Qual cenário está armado no campo (só pra o painel antecipar o desfecho
   // antes de validar). null = campo livre / digitado na mão.
@@ -1688,9 +1720,8 @@ export default function ApresentacaoPage() {
     { etapa: "splash", label: "E1 · Splash" },
     { etapa: "welcome", label: "E2 · Welcome" },
     { etapa: "fork", label: "E3 · Fork" },
-    { etapa: "cidade", label: "E4 · Cidade" },
-    { etapa: "perguntando", label: "E5 · Gate-CNAE" },
-    { etapa: "veredito", label: "🟢 Veredito" },
+    { etapa: "dados", label: "🆕 E3.1 · Seus dados" },
+    { etapa: "endereco", label: "🆕 E3.3 · Endereço + categoria" },
     { etapa: "triagem", label: "E5 · Triagem" },
     { etapa: "faixa", label: "E5 · Faixa" },
     { etapa: "conta", label: "E6 · Conta" },
@@ -1698,6 +1729,10 @@ export default function ApresentacaoPage() {
     { etapa: "plano", label: "E7 · Plano" },
     { etapa: "contrato", label: "E8 · Contrato" },
     { etapa: "pagamento", label: "E9 · Pagamento" },
+    // 🔄 27/08 — atividade + veredito ATRAVESSARAM o pagamento: viraram a C0,
+    // primeira tela do dossiê. Ver `app/(app)/dossie/atividade/page.tsx`.
+    { etapa: "perguntando", label: "🔄 C0 · Sua atividade" },
+    { etapa: "veredito", label: "🔄 C0 · CNAE encontrado" },
     { etapa: "socio", label: "C1 · Seus dados" },
     { etapa: "vinculo", label: "C2 · Vínculo" },
     { etapa: "socios", label: "C3 · Sócios" },
@@ -1752,8 +1787,10 @@ export default function ApresentacaoPage() {
         ? "welcome"
         : etapa === "fork"
       ? "fork"
-      : etapa === "cidade"
-        ? "cidade"
+      : etapa === "dados"
+        ? "dados"
+        : etapa === "endereco"
+        ? "endereco"
         : etapa === "fora-bh"
           ? enviadoS
             ? "fora-bh-enviado"
@@ -1833,11 +1870,15 @@ export default function ApresentacaoPage() {
   const desc = DESCRICOES[momento];
   const divergencias = DIVERGENCIAS[momento];
   const mostraCenarios = etapa === "perguntando";
-  const naEntrada = etapa === "fork" || etapa === "cidade";
+  const naEntrada = etapa === "fork";
   const naSaidaCidade = etapa === "fora-bh";
   const naSaidaTriagem =
     etapa === "saida-exterior" || etapa === "saida-socios" || etapa === "saida-socio-pj";
   const naTravessia =
+    // 🆕 27/08 — E3.1/E3.3 trazem o próprio header+main (TelaHeader), igual às
+    // telas do dinheiro. Por isso entram aqui, não no bloco genérico.
+    etapa === "dados" ||
+    etapa === "endereco" ||
     etapa === "conta" ||
     etapa === "conta-codigo" ||
     etapa === "plano" ||
@@ -2053,26 +2094,14 @@ export default function ApresentacaoPage() {
                     ) : naEntrada ? (
                       // EntradaView traz o próprio header+main (é a tela inteira).
                       <EntradaView
-                        intencao={intencao}
+                        // 🔄 27/08 — o fork não tem mais passo 2 (gate de
+                        // cidade removido): escolher já leva pro E3.1, que é a
+                        // captura de lead nova. O Migrar reencontra a sua
+                        // esteira depois do E3.1, igual em produção.
                         onIntencao={(i) => {
-                          // `null` = o "Voltar" interno da tela (passo 2 → 1).
-                          // Vai pela MESMA porta de volta que a seta externa.
-                          if (i === null) {
-                            voltar(() => {
-                              setIntencao(null);
-                              setEtapa("fork");
-                            });
-                            return;
-                          }
                           setIntencao(i);
-                          setEtapa("cidade");
+                          setEtapa("dados");
                         }}
-                        onSeguir={() => setEtapa("perguntando")}
-                        // ✅ 30/07 — a porta do Migrar. Era aqui que "metade
-                        // do mercado" batia num card "essa parte ainda não
-                        // existe" (achado M0 do motor de testes).
-                        onMigrar={() => setEtapa("m-cnpj")}
-                        onForaBh={() => setEtapa("fora-bh")}
                         onLogin={() => {}}
                         destaqueCoral600
                       />
@@ -2081,6 +2110,42 @@ export default function ApresentacaoPage() {
                          o próprio header+main — por isso ficam fora do bloco
                          genérico abaixo. */
                       <>
+                        {/* 🆕 27/08 — E3.1 · dados pessoais (captura de lead). */}
+                        {etapa === "dados" && (
+                          <DadosPessoaisView
+                            d={dadosLead}
+                            set={(k, v) => setDadosLead((p) => ({ ...p, [k]: v }))}
+                            contexto={intencao === "migrar" ? "migrar" : "abrir"}
+                            onSeguir={() =>
+                              setEtapa(intencao === "migrar" ? "m-cnpj" : "endereco")
+                            }
+                            onVoltar={() => voltar(() => setEtapa("fork"))}
+                          />
+                        )}
+                        {/* 🆕 27/08 — E3.3 · endereço (gate de BH real) +
+                            categoria (o gate de elegibilidade novo). */}
+                        {etapa === "endereco" && (
+                          <EnderecoCategoriaView
+                            enderecoProprio={enderecoProprioDemo}
+                            setEnderecoProprio={setEnderecoProprioDemo}
+                            cep={cepDemo}
+                            setCep={setCepDemo}
+                            numero={numeroDemo}
+                            setNumero={setNumeroDemo}
+                            categoria={categoria}
+                            setCategoria={setCategoria}
+                            onSeguir={() => setEtapa("triagem")}
+                            // A waitlist não é Etapa própria: é o MOMENTO
+                            // derivado de um resultado com veredito
+                            // "waitlist". Arma o resultado e cai na tela de
+                            // veredito, igual à interação real faria.
+                            onForaDeEscopo={() => {
+                              setResultado(mapear("nutricionista"));
+                              setEtapa("veredito");
+                            }}
+                            onVoltar={() => voltar(() => setEtapa("dados"))}
+                          />
+                        )}
                         {(etapa === "conta" || etapa === "conta-codigo") && (
                           <ContaView
                             d={dadosConta}
@@ -2120,7 +2185,7 @@ export default function ApresentacaoPage() {
                             cpfCadastrado={dadosConta.cpf}
                             // O pagamento aprovado não é mais o fim da demo:
                             // ele abre a casa e começa o dossiê (C1).
-                            onPagar={() => setEtapa("socio")}
+                            onPagar={() => setEtapa("perguntando")}
                             onVoltar={() => voltar(() => setEtapa("contrato"))}
                           />
                         )}
@@ -2272,10 +2337,10 @@ export default function ApresentacaoPage() {
                             Fora da sequência linear: alcançadas só pela pill
                             própria (não pelo botão Continuar de outra tela). */}
                         {etapa === "retomar" && (
-                          <RetomarView onSeguir={() => setEtapa("socio")} />
+                          <RetomarView onSeguir={() => setEtapa("perguntando")} />
                         )}
                         {etapa === "aguardando" && (
-                          <AguardandoView onSeguir={() => setEtapa("socio")} />
+                          <AguardandoView onSeguir={() => setEtapa("perguntando")} />
                         )}
 
                         {/* ═══ MIGRAR (E4.2–E9.4) ════════════════════════════
@@ -2463,9 +2528,16 @@ export default function ApresentacaoPage() {
                           {etapa !== "analisando" && (
                             <button
                               onClick={() =>
+                                // 🔄 27/08 — o voltar depende de que lado do
+                                // pagamento a tela está: a atividade (C0) volta
+                                // pro pagamento; triagem/faixa voltam pro E3.3.
                                 voltar(() => {
                                   setIntencao("abrir");
-                                  setEtapa("cidade");
+                                  setEtapa(
+                                    etapa === "perguntando" || etapa === "veredito"
+                                      ? "pagamento"
+                                      : "endereco",
+                                  );
                                 })
                               }
                               aria-label="Voltar"
@@ -2494,7 +2566,10 @@ export default function ApresentacaoPage() {
                             <VereditoView
                               r={resultado}
                               onRefazer={() => voltar(() => setEtapa("perguntando"))}
-                              onSeguir={() => setEtapa("triagem")}
+                              // 🔄 27/08 — daqui segue pro C1 (dossiê), não
+                              // mais pra triagem: a triagem ficou lá atrás,
+                              // antes do pagamento.
+                              onSeguir={() => setEtapa("socio")}
                               captura={{
                                 nome: nomeV,
                                 setNome: setNomeV,
@@ -2553,11 +2628,8 @@ export default function ApresentacaoPage() {
                               setModoExato={setModoExato}
                               exato={exato}
                               setExato={setExato}
-                              // 🆕 26/08 (item 2) — TRAVA o Continuar (a
-                              // coorte que morava aqui foi realocada pra
-                              // VereditoView, ver acima).
-                              enderecoProprio={enderecoProprioDemo}
-                              setEnderecoProprio={setEnderecoProprioDemo}
+                              // 🔴 27/08 — a escolha de endereço saiu daqui e
+                              // foi pro E3.3 (`endereco`), junto do gate de BH.
                               onSeguir={() => setEtapa("conta")}
                               autoFocus={false}
                               exatoInline

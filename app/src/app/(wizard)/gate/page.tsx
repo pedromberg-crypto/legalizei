@@ -2,80 +2,53 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { VereditoView, type Resultado } from "@/components/veredito";
-import {
-  PerguntaView,
-  AnalisandoView,
-  TriagemView,
-  FaixaView,
-} from "@/components/gate-telas";
+import { TriagemView, FaixaView } from "@/components/gate-telas";
 import { ehMei, comRegime } from "@/lib/regime";
-import { comEndereco } from "@/lib/endereco";
-import { mapear } from "@/lib/mock-veredito";
+import { ehEnderecoFiscal, comEndereco } from "@/lib/endereco";
+import { categoriaDe, comCategoria } from "@/lib/categoria";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * N4 — GATE-CNAE  ·  rota de produção (shell: WIZARD, fora do app)
+ * E5 — TRIAGEM + FAIXA · rota de produção (shell: WIZARD, fora do app)
  * ═══════════════════════════════════════════════════════════════════════════
- * Spec: execucao/reordenacao-flow-cobranca-cedo.md (N4)
- * Motor: execucao/motor-testes/flow-schema.js → b1.descricao · b1.mapeamento
- *        · b1.desambiguacao · b1.filtro · b1.veredito · b1.triagem · b1.faturamento
+ * ⚠️ AS TELAS vivem em `components/gate-telas.tsx` (`TriagemView`,
+ * `FaixaView`). Esta page é o ORQUESTRADOR: guarda o estado e liga a
+ * navegação real. Mexeu no visual/copy? Mexe no componente.
  *
- * ⚠️ AS TELAS vivem em `components/gate-telas.tsx` desde 29/07 (`PerguntaView`,
- * `AnalisandoView`, `TriagemView`, `FaixaView`) — mesma extração que
- * `VereditoView` já tinha. Esta page é o ORQUESTRADOR: guarda o
- * estado do gate, chama o mock da IA e liga a navegação real.
+ * ─── 🔄 27/08 — ESTA ROTA ENCOLHEU (reordenação do flow de entrada) ─────────
+ * O `/gate` era a "porta" inteira: descrever atividade (E5A) → veredito de
+ * CNAE (E5V) → desambiguação → triagem (E5T) → faixa (E5F), tudo antes do
+ * dinheiro. As duas primeiras **saíram daqui** e viraram a C0
+ * (`/dossie/atividade`), DEPOIS do pagamento — porque o gate de elegibilidade
+ * virou a categoria escolhida no E3.3, que só lista o que a gente atende.
+ * Racional completo em `app/(app)/dossie/atividade/page.tsx`.
  *
- * 🆕 31/07 — ENCAIXE REMOVIDO (era `components/encaixe.tsx` → `EncaixeView`,
- * entre veredito e triagem). Ficou redundante desde que o veredito 🟢 ganhou
- * cards clicáveis (UX-65, 29/07): as duas telas faziam a mesma pergunta.
- * Confirmado pelo Pedro que a tela não é mais usada. `ConteudoCnae` e
- * `OutrasOpcoes` (o miolo visual) continuam vivos — `VereditoView` os usa
- * direto. Ver flow-data.mjs (nó ENC removido) e HOME-reorganizacao.md.
- * Motivo da extração: a `/apresentacao` precisa renderizar a tela APROVADA, e
- * cópia diverge em silêncio. Mexeu no visual/copy? Mexe no componente.
+ * ⚠️ **Triagem e faixa NÃO foram junto, e isso é decisão, não esquecimento.**
+ * Elas bloqueiam por motivos que a categoria não cobre:
+ *   · sócio via CNPJ tira a empresa do Simples no ato do contrato social;
+ *   · sócio domiciliado fora do Brasil derruba o Simples (LC 123 art. 17);
+ *   · 5+ sócios é limite do produto.
+ * Nenhum desses é previsível pela atividade. Movê-los pra depois do pagamento
+ * criaria pedido de reembolso pra um caso que hoje não existe: a gente nunca
+ * cobra de quem já sabe que não pode ser atendido.
  *
- * 🚧 IA dublada: no motor o mapeamento CNAE vem da persona; aqui vem de um
- * mock. A tela testa a LÓGICA do fluxo, não a IA.
- *
- * 🆕 06/08 — `mapear()` mudou de casa pra `@/lib/mock-veredito`: era cópia
- * local (só 3 desfechos), divergente da versão usada em `/apresentacao` (4
- * desfechos — 2 travessões só sobreviveram na cópia da demo). Fonte única
- * agora, com os 4 desfechos nos dois lugares.
+ * ⚠️ 28/07 — DEEP-LINK por `?etapa=` (mesmo padrão de /notas/detalhe?s=).
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-type Etapa = "perguntando" | "analisando" | "veredito" | "triagem" | "faixa";
-
-/**
- * ⚠️ 28/07 — DEEP-LINK por `?etapa=`. As etapas do gate viviam presas dentro
- * de UM SPA: a prancheta (/mockup) só sabia carregar `/gate` do zero, então
- * nunca mostrava veredito/triagem/faixa sem clicar através de tudo —
- * a triagem (sócios+exterior) passou batida numa revisão inteira por causa
- * disso. Mesmo padrão já usado em /notas/detalhe?s= e /blog/post?id=.
- */
-const ETAPAS_LINKAVEIS: Etapa[] = ["veredito", "triagem", "faixa"];
+type Etapa = "triagem" | "faixa";
 
 export default function GatePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  // 🆕 03/08 — MEI×ME agora decide ANTES do gate, em /entrada (E3.2), logo
-  // depois do fork. Chega aqui só como flag pra repassar adiante — o /gate
-  // não pergunta mais nada sobre isso.
+  // Flags que atravessam o wizard (RF-01: querystring, sem persistência real).
   const mei = ehMei(searchParams);
-  const etapaParam = searchParams.get("etapa") as Etapa | null;
-  const etapaInicial: Etapa =
-    etapaParam && ETAPAS_LINKAVEIS.includes(etapaParam) ? etapaParam : "perguntando";
-  // veredito precisa de um resultado pra renderizar — usa o caso 🟢 atende
-  // (o default de `mapear("")`), o mesmo caminho feliz que /veredito/atende
-  // já usa como demo.
-  const resultadoInicial = etapaInicial === "veredito" ? mapear("") : null;
+  const enderecoFiscal = ehEnderecoFiscal(searchParams);
+  const categoria = categoriaDe(searchParams);
 
-  const [etapa, setEtapa] = useState<Etapa>(etapaInicial);
-  const [texto, setTexto] = useState("");
-  const [categoria, setCategoria] = useState<string | null>(null);
-  const [sabeCodigo, setSabeCodigo] = useState(false);
-  const [resultado, setResultado] = useState<Resultado | null>(resultadoInicial);
+  const etapaParam = searchParams.get("etapa");
+  const [etapa, setEtapa] = useState<Etapa>(etapaParam === "faixa" ? "faixa" : "triagem");
+
   const [socios, setSocios] = useState<number | null>(null);
   const [exterior, setExterior] = useState<boolean | null>(null);
   // 🆕 24/08 (reunião Leonan 19/08 + pedido do Pedro) — CPF/CNPJ do sócio.
@@ -83,19 +56,8 @@ export default function GatePage() {
   const [faixa, setFaixa] = useState<string | null>(null);
   const [modoExato, setModoExato] = useState(false);
   const [exato, setExato] = useState("");
-  // 🆕 24/08 (reunião Rua Satélite 35) — coorte saiu do E6, mora aqui agora.
+  // 🆕 26/08 (reunião Rua Satélite 36) — coorte pousou na Triagem de vez.
   const [coorte, setCoorte] = useState<"primeira" | "ja-abri" | null>(null);
-  // 🆕 26/08 (reunião Rua Satélite 36, item 2) — endereço saiu do C4, mora aqui.
-  const [enderecoProprio, setEnderecoProprio] = useState<boolean | null>(null);
-
-  function validar() {
-    setEtapa("analisando");
-    // 🌾 colhido: o loading não é decorativo, ele EXPLICA o que está acontecendo
-    setTimeout(() => {
-      setResultado(mapear(texto));
-      setEtapa("veredito");
-    }, 1400);
-  }
 
   return (
     <>
@@ -104,32 +66,6 @@ export default function GatePage() {
       </header>
 
       <main className="app-main">
-        {etapa === "perguntando" && (
-          <PerguntaView
-            texto={texto}
-            setTexto={setTexto}
-            categoria={categoria}
-            setCategoria={setCategoria}
-            sabeCodigo={sabeCodigo}
-            setSabeCodigo={setSabeCodigo}
-            onValidar={validar}
-          />
-        )}
-        {etapa === "analisando" && <AnalisandoView />}
-        {etapa === "veredito" && resultado && (
-          // 🆕 03/08 — mostrarAlternativas (UX-65) + acoesConfirmacao (UX-64
-          // parcial) mesclados aqui também: é o fluxo AO VIVO, separado da
-          // página-mock /veredito/*. Fonte: /apresentacao.
-          <VereditoView
-            r={resultado}
-            onRefazer={() => setEtapa("perguntando")}
-            onSeguir={() => setEtapa("triagem")}
-            mostrarAlternativas
-            acoesConfirmacao={[
-              { label: "Voltar ao início", variante: "ghost", onClick: () => router.push("/entrada") },
-            ]}
-          />
-        )}
         {etapa === "triagem" && (
           <TriagemView
             socios={socios}
@@ -152,9 +88,14 @@ export default function GatePage() {
             setModoExato={setModoExato}
             exato={exato}
             setExato={setExato}
-            enderecoProprio={enderecoProprio}
-            setEnderecoProprio={setEnderecoProprio}
-            onSeguir={() => router.push(comEndereco(comRegime("/conta", mei), enderecoProprio === false))}
+            onSeguir={() =>
+              router.push(
+                comCategoria(
+                  comEndereco(comRegime("/conta", mei), enderecoFiscal),
+                  categoria,
+                ),
+              )
+            }
             // 🆕 03/08 — UX-68 mesclado: revela o campo inline em vez de
             // trocar a tela inteira. Fonte: /apresentacao.
             exatoInline

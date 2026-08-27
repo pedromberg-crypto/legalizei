@@ -64,11 +64,15 @@ function TriagemInterativo() {
 
 export const Triagem: Story = { render: () => <Shell><TriagemInterativo /></Shell> };
 
+/**
+ * 🔴 27/08 — a escolha de endereço (próprio × fiscal Legalizai) SAIU desta
+ * tela e foi pro E3.3 (`/endereco`, `EnderecoCategoriaView`), junto do gate de
+ * cidade. A faixa voltou a fazer só uma pergunta.
+ */
 function FaixaInterativo() {
   const [faixa, setFaixa] = useState<string | null>(null);
   const [modoExato, setModoExato] = useState(false);
   const [exato, setExato] = useState("");
-  const [enderecoProprio, setEnderecoProprio] = useState<boolean | null>(null);
   return (
     <FaixaView
       faixa={faixa}
@@ -77,8 +81,6 @@ function FaixaInterativo() {
       setModoExato={setModoExato}
       exato={exato}
       setExato={setExato}
-      enderecoProprio={enderecoProprio}
-      setEnderecoProprio={setEnderecoProprio}
       onSeguir={() => {}}
       autoFocus={false}
     />

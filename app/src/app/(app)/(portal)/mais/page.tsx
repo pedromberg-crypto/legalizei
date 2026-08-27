@@ -210,7 +210,7 @@ function PlanoCard({ mei = false }: { mei?: boolean }) {
       </div>
       <p className="mt-0.5 text-micro text-text-tertiary">
         {mei
-          ? `Próxima cobrança em ${PLANO.proxima} · cartão ${PLANO.cartao} · fidelidade de ${CUSTOS.FIDELIDADE_MEI_MESES} meses`
+          ? `Próxima cobrança em ${PLANO.proxima} · cartão ${PLANO.cartao} · fidelidade de ${CUSTOS.FIDELIDADE_MESES} meses`
           : `Próxima cobrança em ${PLANO.proxima} · cartão ${PLANO.cartao}`}
       </p>
 

@@ -17,7 +17,7 @@ import { MigrarPlanoView } from "@/components/wizard-migrar";
  *
  * 🆕 04/08 (2ª rodada) — Plano MEI tem preço e escopo PRÓPRIOS (`?regime=mei`):
  * `MENSALIDADE_MEI` + fidelidade de 12 meses + certificado incluso, não é o
- * plano ME com desconto — ver `CUSTOS.MENSALIDADE_MEI`/`FIDELIDADE_MEI_MESES`.
+ * plano ME com desconto — ver `CUSTOS.MENSALIDADE_MEI`/`FIDELIDADE_MESES`.
  * 🔴 06/08 — ME agora também vem do M2 (`/migrar/diagnostico`), não mais
  * direto do M1: o "voltar" passou a apontar pra lá nos 2 regimes.
  * ═══════════════════════════════════════════════════════════════════════════

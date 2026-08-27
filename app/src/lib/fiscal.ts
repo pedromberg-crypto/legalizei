@@ -73,16 +73,23 @@ export const CUSTOS = {
    *  completo com preço menor, é escopo menor mesmo.
    */
   MENSALIDADE_MEI: 49.9,
-  /** 🔴 FAKE — mesma origem do MENSALIDADE_MEI. Certificado digital incluso
-   *  (pago por nós) é a contrapartida da fidelidade: precisamos do
-   *  certificado pra fazer movimentações em nome do cliente (emitir NF,
-   *  etc.), então o custo do certificado é nosso, não repassado por fora.
+  /** 🟢 Decisão 27/08 (`marca/decisoes-marca.md`): MESMA régua pros dois
+   *  regimes, não só MEI. Certificado digital incluso (pago por nós) é a
+   *  contrapartida da fidelidade: precisamos do certificado pra fazer
+   *  movimentações em nome do cliente (emitir NF, etc.), então o custo do
+   *  certificado é nosso, não repassado por fora. Contada da EMISSÃO DO
+   *  CNPJ, igual à Contabilizei (cláusula 2.1-b do contrato deles).
    */
-  FIDELIDADE_MEI_MESES: 12,
+  FIDELIDADE_MESES: 12,
+  /** 🟢 Decisão 27/08 — mesma régua da Contabilizei (cláusula 7.1-b: "30%
+   *  sobre as parcelas que ainda estiverem por vencer"), pros dois regimes.
+   *  Multa é sobre o SALDO restante da fidelidade, não sobre o total pago. */
+  MULTA_CANCELAMENTO_PCT: 0.3,
   /** 🔴 FAKE — valor de referência (`plano-padrao-195-referencia.md`, custo do
    *  líder), não preço nosso fechado. Cobrança RECORRENTE mensal (não é taxa
    *  única): quem escolhe endereço fiscal paga isso TODO mês, somado à
-   *  mensalidade do plano. */
+   *  mensalidade do plano. Aprovação AUTOMÁTICA (decisão 27/08) — diferente
+   *  da Contabilizei, que sujeita a aprovação manual. */
   ENDERECO_FISCAL: 60,
 } as const;
 

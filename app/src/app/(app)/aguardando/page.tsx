@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { AguardandoView } from "@/components/wizard-cauda";
 import { ehMei, comRegime } from "@/lib/regime";
 import { ehEnderecoFiscal, comEndereco } from "@/lib/endereco";
+import { categoriaDe, comCategoria } from "@/lib/categoria";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -31,11 +32,21 @@ export default function AguardandoPage() {
   const searchParams = useSearchParams();
   const mei = ehMei(searchParams);
   const enderecoFiscal = ehEnderecoFiscal(searchParams);
+  const categoria = categoriaDe(searchParams);
 
   return (
     <AguardandoView
       mei={mei}
-      onSeguir={() => router.push(comEndereco(comRegime("/dossie/socio", mei), enderecoFiscal))}
+      // 🔄 27/08 — a 1ª tela do dossiê virou a C0 (`/dossie/atividade`), não
+      // mais o C1. Mesma mudança do `/pagamento` (racional lá).
+      onSeguir={() =>
+        router.push(
+          comCategoria(
+            comEndereco(comRegime("/dossie/atividade", mei), enderecoFiscal),
+            categoria,
+          ),
+        )
+      }
     />
   );
 }

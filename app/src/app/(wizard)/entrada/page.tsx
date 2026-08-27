@@ -4,108 +4,91 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { EntradaView, type Intencao } from "@/components/entrada";
 import { MeiOuMeView } from "@/components/gate-telas";
-import { comRegime } from "@/lib/regime";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * N3 — ENTRADA · rota de produção (shell WIZARD)
+ * E3 — ENTRADA (fork) + E3.2 (MEI × ME) · rota de produção (shell WIZARD)
  * ═══════════════════════════════════════════════════════════════════════════
- * ⚠️ A TELA vive em `components/entrada.tsx` (`EntradaView`) desde 29/07 —
- * mesma extração que `VereditoView`/`EncaixeView` já tinham. Esta page é só o
- * wrapper: mantém o estado do passo e liga a navegação real (router).
- * A `/apresentacao` consome o MESMO `EntradaView`, então a demo não pode
- * divergir da tela aprovada. Mexeu no visual/copy? Mexe no componente.
+ * ⚠️ As TELAS vivem em `components/entrada.tsx` (`EntradaView`) e
+ * `components/gate-telas.tsx` (`MeiOuMeView`). Esta page é o wrapper: guarda o
+ * estado do passo e liga a navegação real. A `/apresentacao` consome os MESMOS
+ * componentes, então a demo não pode divergir da tela aprovada.
  *
- * Todo o racional da tela (UX-55, hierarquia das 3 saídas, gate de cidade,
- * por que "migrar" não aparece) está documentado lá.
+ * ─── 🔄 A ORDEM MUDOU (27/08, reordenação do flow de entrada) ───────────────
+ * Antes:  fork → MEI×ME → gate de cidade → gate-CNAE → triagem → faixa → conta
+ * Agora:  fork → **dados pessoais** → MEI×ME → **endereço + categoria** →
+ *         triagem → faixa → conta → plano → contrato → pagamento →
+ *         **atividade/CNAE (já dentro do dossiê)**
  *
- * 🆕 03/08 — E3.2 · MEI × ME, entre o fork (E3) e o gate de cidade (E4).
- * REALOCADA aqui vindo do fim do E5 (decisão anterior, revertida). Motivo do
- * Pedro: (1) quem abre MEI GERALMENTE já sabe que é MEI — pergunta direta em
- * vez de inferir de sócio+faturamento lá na frente; (2) **MEI não tem o
- * limite geográfico do MLP** — a Legalizai consegue abrir MEI do Brasil
- * inteiro, só o ME/Simples é que hoje só atende BH/MG. Por isso MEI PULA o
- * gate de cidade inteiro; só ME (e Migrar, que nem passa por aqui) confirma
- * cidade.
+ * O que motivou (ADR completo em `marca/decisoes-marca.md` 27/08):
+ *   1. **Captura de lead cedo.** Nome/e-mail/telefone eram pedidos só no E6,
+ *      depois de 6 telas de gate. Quem desistia antes disso era anônimo. O
+ *      líder (Contabilizei) pede na 1ª tela do wizard, e isso é copiável sem
+ *      custo nenhum de posicionamento.
+ *   2. **O gate de cidade não validava nada.** Virou o E3.3 (`/endereco`), com
+ *      CEP de verdade.
+ *   3. **A categoria virou o gate de elegibilidade**, no lugar do veredito de
+ *      CNAE. Como a lista de categorias só oferece o que a gente atende, o
+ *      CNAE detalhado pôde ir pra depois do pagamento sem criar o risco de
+ *      "pagou e a gente não atende" (o veredito lá não pode mais dar 🔴).
  *
- * Só pergunta pra quem escolheu ABRIR — Migrar não é abertura nova, não faz
- * sentido perguntar regime de quem já tem CNPJ.
+ * ⚠️ O que NÃO se moveu, de propósito: **triagem (E5T) e faixa (E5F) seguem
+ * antes do pagamento.** Elas bloqueiam por motivos que a categoria não cobre
+ * (sócio via CNPJ e sócio no exterior tiram a empresa do Simples; 5+ sócios é
+ * limite do produto). Movê-las junto criaria reembolso pra um caso que hoje
+ * simplesmente não existe.
  *
- * 🔴 Risco assumido e não resolvido nesta rodada: se a pessoa disser "MEI"
- * aqui mas mais na frente (triagem, E5) aparecer 2+ sócios — incompatível
- * com MEI —, hoje NÃO existe correção automática. Fica registrado como gap.
- *
- * 🆕 04/08 — E3.2 agora TAMBÉM aparece no caminho Migrar ("Já tenho
- * empresa"), não só no Abrir. Decisão do Pedro: inverter a ordem — hoje o
- * app perguntava cidade ANTES de saber se é MEI ou ME, mas MEI não tem o
- * limite geográfico (igual já valia pro Abrir). A copy muda de "qual devo
- * escolher" pra "qual eu já sou" (ver `contexto` em `MeiOuMeView`) — é
- * autodeclaração, quem confirma de verdade é o M1 puxando da Receita.
- * MEI → pula cidade, vai direto pro M1 (`/migrar/cnpj?cenario=mei`). ME →
- * cai no passo 2 de sempre (gate de cidade), que já mandava pro Migrar
- * corretamente.
+ * 🔴 Risco assumido e não resolvido: se a pessoa disser "MEI" na E3.2 e a
+ * triagem depois revelar 2+ sócios (incompatível com MEI), não há correção
+ * automática. Gap conhecido desde 03/08.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function EntradaPage() {
   const router = useRouter();
-  // ⚠️ 28/07: deep-link pro passo 2 (mesmo padrão do /gate?etapa=) — sem
-  // isso o /mockup só conseguia mostrar o passo 1 do gate de cidade.
   const searchParams = useSearchParams();
   const intencaoParam = searchParams.get("intencao");
-  const intencaoInicial: Intencao | null =
+  const intencao: Intencao | null =
     intencaoParam === "abrir" || intencaoParam === "migrar" ? intencaoParam : null;
-  const [intencao, setIntencao] = useState<Intencao | null>(intencaoInicial);
-  // ⚠️ Deep-link `&regime=me` PULA a pergunta (pra /mockup revisar o gate de
-  // cidade direto, mesmo padrão do resto do /gate?etapa=). Não existe atalho
-  // pra "mei": escolher mei já redireciona pra fora desta página.
-  const regimeParam = searchParams.get("regime");
-  const [regime, setRegime] = useState<"mei" | "me" | "presumido" | null>(
-    regimeParam === "me" ? "me" : null,
-  );
-  // Separado de `regime !== null`: escolher o card NÃO avança sozinho — só o
-  // clique em "Continuar" resolve, senão a tela trocaria antes da confirmação.
-  const [regimeResolvido, setRegimeResolvido] = useState(regimeParam === "me");
 
-  if ((intencao === "abrir" || intencao === "migrar") && !regimeResolvido) {
+  const [regime, setRegime] = useState<"mei" | "me" | null>(null);
+
+  /**
+   * Passo 2 (E3.2 · MEI × ME) — só aparece quando a intenção já veio na URL,
+   * o que só acontece voltando do E3.1 (`/dados`). O fork puro fica no else.
+   *
+   * 🔴 27/08 — o card "ME · Lucro Presumido" SAIU (`MeiOuMeView`). Decisão do
+   * Pedro: "não vale o desgaste da dúvida agora". Como captar quem é Lucro
+   * Presumido ficou parqueado de propósito (volume conhecidamente mínimo);
+   * `/saida/regime-nao-suportado` continua existindo, alcançada só pelo M1.
+   */
+  if (intencao) {
     return (
       <MeiOuMeView
         contexto={intencao}
         regime={regime}
         setRegime={setRegime}
         onSeguir={() => {
-          // 🆕 05/08 — Lucro Presumido é CTA menor da MeiOuMeView: a gente
-          // ainda não abre/migra nesse regime, então nem entra no resto do
-          // flow. Sai direto pra mesma saída que o M1b (`/migrar/tributario`)
-          // já usa pra quem autodeclara Presumido lá na frente.
-          if (regime === "presumido") {
-            router.push("/saida/regime-nao-suportado");
+          if (intencao === "migrar") {
+            // Migrar não abre endereço novo (a empresa já existe), então pula
+            // o E3.3 inteiro e vai direto pro M1.
+            router.push(regime === "mei" ? "/migrar/cnpj?cenario=mei" : "/migrar/cnpj");
             return;
           }
-          setRegimeResolvido(true);
-          // MEI pula o gate de cidade nos 2 caminhos — Abrir vai direto pro
-          // E5 (gate-CNAE); Migrar vai direto pro M1, já sinalizando o
-          // cenário MEI pro mock (`cenario=mei`, mesma engine do M1 normal).
-          // ME em qualquer um dos dois cai no passo 2 (gate de cidade), como sempre.
-          if (regime === "mei") {
-            router.push(intencao === "abrir" ? comRegime("/gate", true) : "/migrar/cnpj?cenario=mei");
-          }
+          // Abrir: os dois regimes passam pelo E3.3 — o gate de BH só vale pro
+          // ME (`?regime=mei` desliga a exigência lá), mas a CATEGORIA vale
+          // pros dois, e é ela que autoriza o CNAE a ir pra pós-pagamento.
+          router.push(regime === "mei" ? "/endereco?regime=mei" : "/endereco");
         }}
-        // 🆕 03/08 — volta pro fork (E3), mesma página: reseta intenção, sem
-        // navegar de rota (o fork é a MESMA rota /entrada, passo 1).
-        onVoltar={() => setIntencao(null)}
+        onVoltar={() => router.push("/dados")}
       />
     );
   }
 
   return (
     <EntradaView
-      intencao={intencao}
-      onIntencao={setIntencao}
-      onSeguir={() => router.push("/gate")}
-      // ✅ 30/07 — o flow #2 existe. Era aqui que "metade do mercado" batia
-      // num card "essa parte ainda não existe" (achado M0 do motor).
-      onMigrar={() => router.push("/migrar/cnpj")}
-      onForaBh={() => router.push("/saida/fora-bh")}
+      // 🔄 27/08 — o fork não tem mais passo 2 (gate de cidade removido):
+      // escolher já navega pro E3.1, que é a captura de lead nova.
+      onIntencao={(i) => router.push(`/dados?intencao=${i}`)}
       onLogin={() => router.push("/login")}
       // 🆕 03/08 — UX-63 mesclado (Pedro): card de destaque com coral-600,
       // igual aos outros CTAs. ⚠️ trade-off já registrado: branco sobre

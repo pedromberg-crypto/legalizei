@@ -8,8 +8,10 @@ import {
   useSyncExternalStore,
 } from "react";
 import { Button } from "@/components/ui/button";
-import { TelaHeader, Aviso } from "@/components/ui/tela";
-import { FISCAL, CUSTOS, brl } from "@/lib/fiscal";
+import { TelaHeader } from "@/components/ui/tela";
+// 🔄 27/08 — `Aviso`/`CUSTOS`/`brl` saíram junto com a escolha de endereço, que
+// migrou da `FaixaView` pro E3.3 (`components/entrada-lead.tsx`).
+import { FISCAL } from "@/lib/fiscal";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -109,6 +111,7 @@ export function PerguntaView({
   sabeCodigo,
   setSabeCodigo,
   onValidar,
+  jaCliente = false,
 }: {
   texto: string;
   setTexto: (v: string) => void;
@@ -121,6 +124,15 @@ export function PerguntaView({
   sabeCodigo: boolean;
   setSabeCodigo: (v: boolean) => void;
   onValidar: () => void;
+  /**
+   * 🆕 27/08 — a tela atravessou o pagamento (agora é C0, `/dossie/atividade`).
+   * O CONTEÚDO é o mesmo, mas o enquadramento não pode ser: antes a gente
+   * estava decidindo SE atende, e a copy dizia "validar minha atividade". Quem
+   * chega aqui já é cliente e já passou pelo gate (a categoria do E3.3), então
+   * prometer validação seria mentir sobre o que a tela faz. Aqui a gente está
+   * ACHANDO O CÓDIGO da pessoa, não julgando se ela entra.
+   */
+  jaCliente?: boolean;
 }) {
   const sel = PILLS.find((p) => p.id === categoria);
   const tw = useTypewriter(EXEMPLOS, texto.length > 0 || categoria !== null);
@@ -172,8 +184,12 @@ export function PerguntaView({
         </h1>
         <p className="text-body text-text-secondary mb-4">
           {sabeCodigo
-            ? "A gente confere se ele está na nossa lista de atendidos."
-            : "Acha o que mais parece. Depois conta do seu jeito."}
+            ? jaCliente
+              ? "A gente confirma se é esse mesmo e segue com ele."
+              : "A gente confere se ele está na nossa lista de atendidos."
+            : jaCliente
+              ? "Conta do seu jeito. A gente acha o código que combina com isso."
+              : "Acha o que mais parece. Depois conta do seu jeito."}
         </p>
 
         {/* Painel único (rounded-3xl bg-surface-alt, mesmo container do timeline
@@ -265,7 +281,7 @@ export function PerguntaView({
       {/* 🌾 CTA no rodapé = thumb zone (design-system.md §6) */}
       <div className="app-footer-cta">
         <Button full onClick={onValidar} disabled={!podeValidar}>
-          Validar minha atividade
+          {jaCliente ? "Achar meu CNAE" : "Validar minha atividade"}
         </Button>
       </div>
     </>
@@ -620,8 +636,6 @@ export function FaixaView({
   setModoExato,
   exato,
   setExato,
-  enderecoProprio,
-  setEnderecoProprio,
   onSeguir,
   autoFocus = true,
   exatoInline = false,
@@ -643,14 +657,13 @@ export function FaixaView({
    */
   exatoInline?: boolean;
   /**
-   * 🆕 26/08 (reunião Rua Satélite 36, item 2) — a escolha "endereço próprio ×
-   * fiscal Legalizai" saiu do C4 (dossiê, pós-pagamento) e veio pra cá, ANTES
-   * até do cadastro (E6). Diferente da coorte (opcional, log puro), esta
-   * TRAVA o Continuar — afeta o preço mostrado lá no `/plano` (E7), então não
-   * dá pra deixar em aberto. `null` = ainda não escolheu.
+   * 🔴 27/08 — a escolha "endereço próprio × fiscal Legalizai" SAIU daqui.
+   * Ela morou nesta tela entre 26/08 e 27/08 (tinha vindo do C4), e agora vive
+   * no **E3.3** (`/endereco`, `EnderecoCategoriaView`), junto do gate de
+   * cidade que ela sempre foi parte: as duas respondem "onde a empresa fica",
+   * e faturamento não tem nada a ver com isso. O valor continua somando na
+   * mensalidade do E7 pelo mesmo mecanismo (`?endereco=fiscal`).
    */
-  enderecoProprio: boolean | null;
-  setEnderecoProprio: (v: boolean) => void;
 }) {
   const valor = Number(exato.replace(/\D/g, "")) || 0;
   const faixaExata = faixaDoValor(valor);
@@ -799,75 +812,12 @@ export function FaixaView({
           </div>
         )}
 
-        {/* 🆕 26/08 (reunião Rua Satélite 36, item 2) — realocada do C4 (dossiê,
-            pós-pagamento) pra cá. Diferente da coorte acima, esta TRAVA o
-            Continuar: o valor entra na conta mostrada no /plano daqui a pouco. */}
-        <div className="mt-6">
-          <p className="text-body-strong font-semibold mb-1">
-            Você tem um endereço comercial pra usar?
-          </p>
-          <p className="text-caption text-text-secondary mb-3">
-            Isso já entra na conta que a gente vai te mostrar daqui a pouco.
-          </p>
-          <div className="flex flex-col gap-2">
-            <button
-              onClick={() => setEnderecoProprio(true)}
-              aria-pressed={enderecoProprio === true}
-              className={`min-h-12 rounded-md border px-4 text-left text-body font-semibold transition-colors
-                ${
-                  enderecoProprio === true
-                    ? "border-action-primary bg-action-primary text-text-on-brand"
-                    : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
-                }`}
-            >
-              Uso um endereço meu
-            </button>
-            <button
-              onClick={() => setEnderecoProprio(false)}
-              aria-pressed={enderecoProprio === false}
-              className={`rounded-md border p-4 text-left transition-colors
-                ${
-                  enderecoProprio === false
-                    ? "border-action-primary bg-action-primary"
-                    : "border-border-strong bg-surface-card hover:border-border-focus"
-                }`}
-            >
-              <div className="flex items-center justify-between gap-3">
-                <span
-                  className={`text-body font-semibold ${
-                    enderecoProprio === false ? "text-text-on-brand" : "text-text-primary"
-                  }`}
-                >
-                  Quero um endereço fiscal da Legalizai
-                </span>
-                <span className="shrink-0 rounded-full bg-surface-dark px-2.5 py-1 text-micro font-semibold text-text-on-dark">
-                  {brl(CUSTOS.ENDERECO_FISCAL, true)}/mês
-                </span>
-              </div>
-              <p
-                className={`text-caption mt-1.5 ${
-                  enderecoProprio === false ? "text-text-on-brand/80" : "text-text-secondary"
-                }`}
-              >
-                Um endereço comercial pronto pra receber a empresa, sem usar o
-                seu. A gente cuida da regularização.
-              </p>
-            </button>
-          </div>
-
-          {enderecoProprio === false && (
-            <Aviso variante="warning" titulo="Essa cobrança é mensal, recorrente">
-              Não é cobrança única — entra somada na sua mensalidade todo mês,
-              a partir de agora. Você confirma o valor total no próximo passo.
-            </Aviso>
-          )}
-        </div>
       </div>
       <div className="app-footer-cta">
         {/* 28/07: N5' (Resumo de valor) foi REMOVIDO — segue direto pro N6.
             Copy trocada: "ver o que eu ganho" prometia uma revelação que só
             existia no N5'; sem ele, a promessa vira mentira. */}
-        <Button full disabled={!escolhida || enderecoProprio === null} onClick={onSeguir}>
+        <Button full disabled={!escolhida} onClick={onSeguir}>
           Continuar
         </Button>
       </div>
@@ -991,11 +941,10 @@ export function MeiOuMeView({
 }: {
   /** 🆕 04/08 — "abrir" pergunta o que ESCOLHER (elegibilidade); "migrar" pergunta o que a pessoa JÁ É (autodeclaração, o CNPJ já existe). */
   contexto?: "abrir" | "migrar";
-  /** 🆕 05/08 — "presumido" é CTA menor, fora das 2 opções principais: a gente
-   *  ainda não migra/abre nesse regime, então não tem checklist nem card
-   *  igual aos outros dois, só reconhece a pessoa e desvia pra humano. */
-  regime: "mei" | "me" | "presumido" | null;
-  setRegime: (v: "mei" | "me" | "presumido") => void;
+  /** 🔴 27/08 — "presumido" saiu do tipo junto com o card (ver comentário no
+   *  JSX). A tela agora tem exatamente 2 saídas, MEI e ME. */
+  regime: "mei" | "me" | null;
+  setRegime: (v: "mei" | "me") => void;
   onSeguir: () => void;
   /** Volta pro fork (E3) — quem chegou aqui pode ter errado abrir×migrar. */
   onVoltar?: () => void;
@@ -1065,32 +1014,19 @@ export function MeiOuMeView({
             </button>
           ))}
 
-          {/* 🆕 05/08 (pedido do Pedro) — mesmo estilo/comportamento/fonte dos
-              2 cards acima (contínuo na mesma pilha, seleciona coral igual,
-              mesmo tamanho de texto): reconhece o regime sem prometer
-              checklist que a gente não cobre. Escolher troca o CTA do
-              rodapé pra "Falar com especialista" em vez de "Continuar". */}
-          <button
-            onClick={() => setRegime("presumido")}
-            className={`w-full rounded-md border p-4 text-left transition-colors
-              ${
-                regime === "presumido"
-                  ? "border-action-primary bg-action-primary text-text-on-brand"
-                  : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
-              }`}
-          >
-            <span
-              className={`text-body-strong font-bold ${regime === "presumido" ? "text-text-on-brand" : "text-text-primary"}`}
-            >
-              ME · Lucro Presumido
-            </span>
-            <p
-              className={`mt-2 text-caption ${regime === "presumido" ? "text-text-on-brand/85" : "text-text-secondary"}`}
-            >
-              Hoje esse regime passa por uma validação interna nossa. Fala com
-              um especialista que a gente te explica os próximos passos.
-            </p>
-          </button>
+          {/* 🔴 27/08 — o card "ME · Lucro Presumido" foi REMOVIDO daqui.
+              Decisão do Pedro na reordenação do flow de entrada: "não vale o
+              desgaste da dúvida agora" — a 3ª opção fazia mais gente parar pra
+              pensar num regime que ela provavelmente não tem do que
+              genuinamente reconhecia alguém (volume conhecidamente mínimo no
+              ICP: ME de serviço no Simples).
+
+              ⚠️ Como captar quem É Lucro Presumido ficou PARQUEADO de
+              propósito, não resolvido. `/saida/regime-nao-suportado` continua
+              existindo e alcançada pelo M1 (`/migrar/cnpj`), que confirma o
+              regime pela Receita — ou seja, no caminho MIGRAR a pessoa ainda é
+              reconhecida. Só o caminho ABRIR ficou sem porta pra ela.
+              Ver `marca/decisoes-marca.md` 27/08. */}
         </div>
 
         <p className="text-micro text-text-tertiary mt-4">
@@ -1102,7 +1038,7 @@ export function MeiOuMeView({
 
       <div className="app-footer-cta">
         <Button full disabled={!regime} onClick={onSeguir}>
-          {regime === "presumido" ? "Falar com especialista" : "Continuar"}
+          Continuar
         </Button>
       </div>
       </main>

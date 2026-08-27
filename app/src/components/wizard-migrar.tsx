@@ -737,7 +737,7 @@ export function MigrarPlanoView({
             </p>
             {mei && (
               <div className="mt-3 flex flex-col gap-1.5 border-t border-border-hairline pt-3">
-                <LinhaFicha rotulo="Fidelidade" valor={`${CUSTOS.FIDELIDADE_MEI_MESES} meses`} />
+                <LinhaFicha rotulo="Fidelidade" valor={`${CUSTOS.FIDELIDADE_MESES} meses`} />
                 <LinhaFicha rotulo="Certificado digital" valor="incluso, emitido por nós" />
               </div>
             )}
@@ -761,7 +761,7 @@ export function MigrarPlanoView({
                do cliente. Fidelidade é a contrapartida de pagar por isso. */
             <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
               <p className="text-body font-semibold text-text-primary">
-                Por que a fidelidade de {CUSTOS.FIDELIDADE_MEI_MESES} meses
+                Por que a fidelidade de {CUSTOS.FIDELIDADE_MESES} meses
               </p>
               <p className="text-caption text-text-secondary mt-1">
                 A gente emite e paga o seu certificado digital, porque precisa
@@ -866,7 +866,7 @@ export function MigrarContratoView({
             <ul className="mt-2 flex flex-col gap-2">
               <Bullet>
                 {mei
-                  ? `O certificado digital vem incluso: a gente precisa dele pra movimentar sua empresa. Em troca, o plano tem fidelidade de ${CUSTOS.FIDELIDADE_MEI_MESES} meses, descrita no contrato.`
+                  ? `O certificado digital vem incluso: a gente precisa dele pra movimentar sua empresa. Em troca, o plano tem fidelidade de ${CUSTOS.FIDELIDADE_MESES} meses, descrita no contrato.`
                   : semTransferencia
                     ? "Como não há transferência de responsabilidade a esperar, o plano tem um período mínimo de permanência, descrito no contrato."
                     : "Como a transferência é gratuita, o plano tem um período mínimo de permanência, descrito no contrato."}

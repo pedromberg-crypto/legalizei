@@ -44,9 +44,23 @@ Nenhum dos 4 abaixo é dado do IBGE — são outros órgãos, cada um com tratab
 - Parseado: **101 CNAEs vedados** (`vedado_simples_cgsn_anexo_vi`) + **21 CNAEs ambíguos** (`ambiguo_simples_cgsn_anexo_vii`). 100% de match com a matriz IBGE, 0 órfão.
 - Relevância pro nosso nicho: baixa direta (nosso MVP já é só serviço, esses 122 códigos são majoritariamente indústria pesada/financeiro/comércio de item controlado), mas é filtro de segurança — nenhum CNAE vedado deve aparecer como recomendação em produto nenhum.
 
-### 2c. Anexo III/V + Fator R por CNAE — pendente, é o grande
+### 2c. Anexo III/V + Fator R por CNAE ✅ feito (27/08) — ⚠️ NÃO ratificado por profissional ainda
 - `anexo_base`: **nível confiável por regra** — Comércio (seção G) = **Anexo I** (226); Indústria (B/C) = **Anexo II** (465); Serviços = **III/IV/V*** (641, asterisco = anexo exato depende da atividade + Fator R).
-- `fator_r` e `aliquota_inicial`: **VAZIOS de propósito.** Realidade honesta: **NÃO existe dataset único oficial e limpo** de anexo/Fator R por CNAE — a lei (LC 123 / Res. CGSN 140) define por regra/atividade (§5º-B lista taxativa Anexo III, §5º-D/§5º-I lista taxativa Fator R), não num mapa plano código→anexo. Maior esforço dos 4: precisa mapear as listas taxativas da lei contra os 1332 códigos.
+- **Confirmado ao procurar mais (a pedido do Pedro):** não existe crosswalk oficial CNAE→Anexo em lugar nenhum — nem na lei, nem na Res. CGSN140, nem no PGDAS-D (o próprio sistema da Receita: manual oficial diz que **o contador seleciona manualmente** o grupo de atividade na tela, não deriva do CNAE). Então o método abaixo replica o mesmo julgamento que um contador faz hoje — não é atalho.
+- **Método:** extraí o texto vigente do Art. 18 LC123 (redação LC155/2016, ver [[lc123-art18-anexos-taxativo]]) em 5 grupos. Cruzei `descricao` de cada CNAE de serviço (só descrição oficial, não `atividades`/`observacoes` — essas poluem o match com referências cruzadas a OUTROS códigos citados como exclusão) contra termos específicos de cada grupo. 1 override estrutural: toda a seção F (Construção) = Anexo IV (a lei fala "obras de engenharia em geral", mas a descrição de cada CNAE usa termo técnico específico — demolição, terraplanagem, obras de arte especiais — que keyword sozinho não pega).
+- **Achado que simplifica o dado:** Grupo 2 (§5º-B XVI/XVIII-XXI + §5º-D) e Grupo 3 (§5º-I) têm o **mesmo resultado prático** — Fator R dinâmico, ≥28%→III e <28%→V, só citam parágrafos-base diferentes da lei. Unifiquei o rótulo (`fator-r-dinamico(III<->V, limiar 28%)`) pra não sugerir cálculo diferente; a fonte guarda o inciso exato pra auditoria.
+- **Resultado (641 códigos de serviço):**
+  | `anexo_fator_r_grupo` | Qtd | Confiança |
+  |---|---|---|
+  | `III-fixo` (sem Fator R — inclui Grupo 1 explícito + Grupo 5 residual por eliminação) | 481 | alta (explícito) / média (residual) |
+  | `fator-r-dinamico(III<->V, limiar 28%)` | 47 | alta/média |
+  | `IV` | 51 | alta |
+  | `requer-revisao` (ambíguo — bateu em >1 grupo, ou descrição genérica tipo "outras atividades... não especificadas") | 62 | baixa, propositalmente não classificado |
+- Colunas novas: `anexo_fator_r_grupo`, `anexo_fator_r_fonte` (cita o inciso exato), `anexo_fator_r_confianca`.
+- **Limitações conhecidas, documentadas de propósito (anti-guru):**
+  - Não cobre §5º-E (transporte intermunicipal/comunicação — ajuste de alíquota ISS↔ICMS dentro do próprio Anexo III, mecânica diferente, baixa relevância pro nosso nicho).
+  - `anexo_base` "III/IV/V*" inclui seção A (Agropecuária) por causa da regra de seção original — pecuária/cultivo caindo em "serviço" é herança do desenho inicial da matriz, não deste passo; sinalizado aqui, não corrigido agora (fora do escopo dos 4 dados).
+  - **Isto é output de regex determinístico contra texto oficial, não é IA advinhando E não foi revisado por contador.** Antes de virar verdade de produto (ex: dentro do motor `cnae-fiscalmente-otimo.md`), precisa do mesmo tratamento que as famílias de lá já têm: **Larissa assina**.
 - **É federal, NÃO varia por cidade** (BH = SP = qualquer lugar). Construído uma vez, serve pra sempre.
 
 ### 2d. ISS por CNAE — pendente, menor prioridade

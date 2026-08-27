@@ -1,8 +1,9 @@
 ---
-tipo: derivado
+tipo: verdade
 status: vivo
-data: 2026-07-09
-assunto: matriz-cnae
+data: 2026-08-27
+assunto: dados-oficiais-por-cnae
+deriva_de: [lc123-art18-anexos-taxativo, resultado-pesquisa-fundamentos-cnae-27-08]
 tags: [cnae, matriz, reference]
 ---
 
@@ -11,15 +12,67 @@ tags: [cnae, matriz, reference]
 > Espinha canônica de CNAE (IBGE oficial) + camadas cruzáveis (tributário + cobertura por concorrente). Base pra relatórios ricos: "quem atende o quê". Arquivos: `cnae-matriz.csv` (Bases/Excel) e `cnae-matriz.json` (scripts).
 
 ## Camada 1 — Espinha (fonte-verdade) ✅
-- **Fonte:** API oficial IBGE `servicodados.ibge.gov.br/api/v2/cnae/subclasses` (o IBGE é o dono da classificação CNAE).
-- **1332 subclasses**, 21 seções. Campos: `cnae` (id), `descricao`, `secao`/`secao_id`, `divisao_id`, `classe_id`.
+- **Fonte:** API oficial IBGE `servicodados.ibge.gov.br/api/v2/cnae/subclasses` (o IBGE é o dono da classificação CNAE). Pull completo (bulk, 1 chamada, todos os 1332 de uma vez) em **27/08/2026**.
+- **1332 subclasses**, 21 seções. Campos completos capturados: `cnae` (id), `descricao`, `secao`/`secao_id`, `divisao_id`, **`grupo_id`/`grupo_descricao`** (nível 3, faltava antes), `classe_id`, **`classe_observacoes`** (o que a classe compreende/NÃO compreende, com exclusões cruzadas pra outros CNAEs), **`subclasse_observacoes`** (mesma coisa no nível fino da subclasse), **`atividades`** (exemplos de negócio real que caem naquele código — ótimo pro motor de matching descrição→CNAE).
+- Antes só tínhamos 6 campos de taxonomia pura; `observacoes`+`atividades` cobrem os 1332 códigos direto da fonte oficial (antes só 387 via scrape da Contabilizei, ver Camada 3).
 - Confiança: **ALTA** (oficial). Não precisa cruzar — cruzar seria comparar com cópias do IBGE.
 
-## Camada 2 — Overlay tributário (anexo / Fator R / alíquota) ⚠️
+## Camada 2 — Overlay tributário (4 dados que faltam, fora do IBGE)
+Nenhum dos 4 abaixo é dado do IBGE — são outros órgãos, cada um com tratabilidade diferente. Ordem de ataque combinada com Pedro 27/08: MEI → risco municipal → Anexo/Fator R → ISS.
+
+### 2a. Elegibilidade MEI ✅ feito (27/08)
+- **Fonte:** Anexo XI da Resolução CGSN 140/2018 (PDF oficial Receita Federal, arquivado em `cgsn140-anexo-xi-mei-ocupacoes.pdf`). Lista fechada, 471 linhas de ocupação, 43 páginas.
+- Parseado (regex, 0 gaps, 100% das linhas capturadas) → **351 dos 1332 CNAEs permitem MEI** (~26%). Colunas novas na matriz: `mei_permitido` (sim/nao), `mei_ocupacoes` (nome oficial da ocupação, pode ter mais de uma por CNAE), `mei_iss_fixo_das`/`mei_icms_fixo_das` (S/N — se aquele código soma R$5/R$1 na guia fixa do Simei; **não é a alíquota municipal de ISS**, é só o adicional fixo do DAS-MEI).
+- Sanity check: contabilidade (6920-6/01) = `mei_permitido: nao` — bate com o que a pesquisa fonte-primária ratificou em [[fundamentos-cnae]] (MEI é filtro jurídico Art. 966 CC, não "Simples ME com teto menor").
+- 1 CNAE (2532201) tem 2 ocupações com ISS/ICMS-fixo diferentes entre si — marcado `varia-por-ocupacao`, não é erro de parsing.
+- Confiança: **ALTA** (fonte primária, parsing validado sem gaps).
+
+### 2b. Risco municipal (CGSIM Anexo I) ✅ feito (27/08)
+- ⚠️ **Não confundir com o Anexo I do Simples Nacional (comércio).** Este é o Anexo I da **Resolução CGSIM 51/2019** (atualizada por 57/2020, 59/2020, 68/2022) — "Nível de Risco I / baixo risco A", dispensa vistoria/alvará prévio. Atravessa TODAS as seções (serviço, comércio, indústria), não é exclusivo de comércio.
+- **Fonte:** PDF oficial já estava no vault (`cgsim-res51-baixo-risco.pdf`, 42 páginas, já na versão consolidada com as 3 alterações). Tabela do Anexo I nas páginas 11-42, 287 itens numerados em romano.
+- Parseado via âncora `(Código CNAE:NNNNNNN)` — regex sem gap real (1 item, nº 186 "Horticultura, exceto morango", tinha CNAE grafado errado no PDF `1211-0/1`; corrigido manualmente pra `0121-1/01` cruzando com a descrição na matriz IBGE, único match).
+- **284 dos 287 itens bateram certo com os 1332 CNAEs atuais.** 2 ficaram órfãos — a resolução usa código CNAE de versão anterior, renumerado depois pelo IBGE:
+  - `5611-2/02` "Bares..." → hoje provavelmente `5611-2/04` (bares sem entretenimento) ou `5611-2/05` (com entretenimento); resolução não distinguia essa cisão.
+  - `4541-2/05` "Comércio a varejo de peças e acessórios para motocicletas" → hoje provavelmente `4541-2/06` (peças novas) ou `4541-2/07` (usadas); mesma situação.
+  - **Não mapeei esses 2 automaticamente** (seria chute) — ficam como pendência se algum dia entrarem no nosso nicho (hoje são fora de escopo, comércio/motocicleta).
+- Colunas novas na matriz: `risco_baixo_cgsim` (sim/nao), `risco_cgsim_desc_oficial` (texto exato da resolução, quando sim).
+- Sanity check: contabilidade (6920-6/01) e treinamento (8599-6/04) = `risco_baixo_cgsim: sim` — plausível (atividade de escritório, sem risco físico).
+- Confiança: **ALTA** (fonte primária, 284/286 = 99,3% de match direto; 2 pendências documentadas, não escondidas).
+
+### 2b-bis. Vedação/ambiguidade ao Simples (CGSN140 Anexo VI/VII) ✅ feito (27/08, achado bônus)
+- Não é anexo III/IV/V — é ANTES disso: quais CNAEs são **proibidos** de optar pelo Simples Nacional (banco, corretora, seguradora, cigarro, armas, sindicato/associação, etc.) e quais são **ambíguos** (o código mistura atividade proibida + permitida, ex: fabricar cerveja vs vender cerveja).
+- **Fonte:** Anexo VI e VII da Resolução CGSN 140/2018 (PDFs oficiais, gov.br/DREI e normas.receita.fazenda.gov.br, arquivados no repo). Achado ao procurar se existia crosswalk CNAE→Anexo (não existe, ver §2c) — mas esses dois anexos SÃO listas fechadas por CNAE.
+- Parseado: **101 CNAEs vedados** (`vedado_simples_cgsn_anexo_vi`) + **21 CNAEs ambíguos** (`ambiguo_simples_cgsn_anexo_vii`). 100% de match com a matriz IBGE, 0 órfão.
+- Relevância pro nosso nicho: baixa direta (nosso MVP já é só serviço, esses 122 códigos são majoritariamente indústria pesada/financeiro/comércio de item controlado), mas é filtro de segurança — nenhum CNAE vedado deve aparecer como recomendação em produto nenhum.
+
+### 2c. Anexo III/V + Fator R por CNAE ✅ feito (27/08) — ⚠️ NÃO ratificado por profissional ainda
 - `anexo_base`: **nível confiável por regra** — Comércio (seção G) = **Anexo I** (226); Indústria (B/C) = **Anexo II** (465); Serviços = **III/IV/V*** (641, asterisco = anexo exato depende da atividade + Fator R).
-- `fator_r` e `aliquota_inicial`: **VAZIOS de propósito.** Realidade honesta: **NÃO existe dataset único oficial e limpo** de anexo/Fator R por CNAE — a lei (LC 123 / Res. CGSN 140) define por regra/atividade, não num mapa plano.
+- **Confirmado ao procurar mais (a pedido do Pedro):** não existe crosswalk oficial CNAE→Anexo em lugar nenhum — nem na lei, nem na Res. CGSN140, nem no PGDAS-D (o próprio sistema da Receita: manual oficial diz que **o contador seleciona manualmente** o grupo de atividade na tela, não deriva do CNAE). Então o método abaixo replica o mesmo julgamento que um contador faz hoje — não é atalho.
+- **Método:** extraí o texto vigente do Art. 18 LC123 (redação LC155/2016, ver [[lc123-art18-anexos-taxativo]]) em 5 grupos. Cruzei `descricao` de cada CNAE de serviço (só descrição oficial, não `atividades`/`observacoes` — essas poluem o match com referências cruzadas a OUTROS códigos citados como exclusão) contra termos específicos de cada grupo. 1 override estrutural: toda a seção F (Construção) = Anexo IV (a lei fala "obras de engenharia em geral", mas a descrição de cada CNAE usa termo técnico específico — demolição, terraplanagem, obras de arte especiais — que keyword sozinho não pega).
+- **Achado que simplifica o dado:** Grupo 2 (§5º-B XVI/XVIII-XXI + §5º-D) e Grupo 3 (§5º-I) têm o **mesmo resultado prático** — Fator R dinâmico, ≥28%→III e <28%→V, só citam parágrafos-base diferentes da lei. Unifiquei o rótulo (`fator-r-dinamico(III<->V, limiar 28%)`) pra não sugerir cálculo diferente; a fonte guarda o inciso exato pra auditoria.
+- **Resultado (641 códigos de serviço):**
+  | `anexo_fator_r_grupo` | Qtd | Confiança |
+  |---|---|---|
+  | `III-fixo` (sem Fator R — inclui Grupo 1 explícito + Grupo 5 residual por eliminação) | 481 | alta (explícito) / média (residual) |
+  | `fator-r-dinamico(III<->V, limiar 28%)` | 47 | alta/média |
+  | `IV` | 51 | alta |
+  | `requer-revisao` (ambíguo — bateu em >1 grupo, ou descrição genérica tipo "outras atividades... não especificadas") | 62 | baixa, propositalmente não classificado |
+- Colunas novas: `anexo_fator_r_grupo`, `anexo_fator_r_fonte` (cita o inciso exato), `anexo_fator_r_confianca`.
+- **Limitações conhecidas, documentadas de propósito (anti-guru):**
+  - Não cobre §5º-E (transporte intermunicipal/comunicação — ajuste de alíquota ISS↔ICMS dentro do próprio Anexo III, mecânica diferente, baixa relevância pro nosso nicho).
+  - `anexo_base` "III/IV/V*" inclui seção A (Agropecuária) por causa da regra de seção original — pecuária/cultivo caindo em "serviço" é herança do desenho inicial da matriz, não deste passo; sinalizado aqui, não corrigido agora (fora do escopo dos 4 dados).
+  - **Isto é output de regex determinístico contra texto oficial, não é IA advinhando E não foi revisado por contador.** Antes de virar verdade de produto (ex: dentro do motor `cnae-fiscalmente-otimo.md`), precisa do mesmo tratamento que as famílias de lá já têm: **Larissa assina**.
 - **É federal, NÃO varia por cidade** (BH = SP = qualquer lugar). Construído uma vez, serve pra sempre.
-- **Como preencher (on-demand, pelo nosso nicho):** cruzar 2 fontes por CNAE relevante — (a) contabilidade.com/blog (tem página por CNAE com anexo/Fator R/alíquota), (b) tabela da própria Contabilizei — e registrar divergências. Precisão fina = entregável da **camada fiscal / spike da imersão** (§13 da base). Anti-guru: não inventamos anexo pra 1332 códigos.
+
+### 2d. ISS por CNAE (BH) ✅ feito (27/08) — o 4º e último dos 4
+- ⚠️ **Diferente dos outros 3: aqui EXISTE crosswalk oficial CNAE-indexado** — porque ISS é municipal, e BH optou por estruturar o Anexo Único da Lei 8.725/2003 direto por CNAE (não por atividade genérica como a lei federal). Achado direto: `fazenda.pbh.gov.br/iss/cnae/tabelactiss.xls`, planilha oficial da Secretaria Municipal de Fazenda — colunas `CTISS` (código de tributação do ISS), `Descrição`, `CNAEbh Vinculados` (lista, um CTISS pode cobrir vários CNAEs), `Subitem LC 116/2003` (item da lei federal), `Alíquota`.
+- 668 linhas CTISS → **570 CNAEs únicos referenciados**, **524 bateram direto ou por expansão de classe** com a matriz IBGE.
+- **66 CNAEs têm MAIS DE UMA alíquota** (`iss_bh_varia: sim`) — não é erro, é real: um CNAE amplo (ex. `8299-7/99` "outras atividades... não especificadas", `8630-5/03` atividade médica) cobre serviços concretos diferentes que BH tributa em alíquotas diferentes (2%/3%/5% etc). Guardei todas em `iss_bh_detalhe` (CTISS + item LC116 + % de cada uma).
+- ~48 códigos da coluna "CNAEbh Vinculados" são **auto-referência do próprio CTISS** (ex. `0101-0/00-01` no CTISS `0101-0/01`) — não são CNAE de verdade, são a numeração interna de BH espelhando o item LC116 (`01xx` = TI = subitens `1.0x`). Filtrados automaticamente (não batem com nenhum CNAE real, então não contaminam nada).
+- **2 órfãos reais** (mesmo padrão do CGSIM #2: BH referencia CNAE renumerado pelo IBGE depois): `7410-2/01` "desenho industrial" → família migrou pra `7410-2/02`/`03`; `9609-2/03` "guarda de animais" → família migrou pra `9609-2/07`. Documentados, não mapeados por chute.
+- Colunas novas: `iss_bh_aliquota` (% ou lista de %s), `iss_bh_varia` (sim/nao), `iss_bh_detalhe` (CTISS+LC116+% de cada entrada).
+- Sanity check: contabilidade 5% · dev software sob encomenda 2% · advocacia 5% · limpeza 2% — bate com o que já sabíamos do motor `cnae-fiscalmente-otimo.md`.
+- Fonte arquivada: `pbh-fazenda-tabela-ctiss-cnae-aliquota.xls`.
 
 ## Camada 3 — Cobertura por concorrente (cruzável) 
 - `contabilizei_atende`: **atende / nao / condicao** — derivado das listas de suporte da [[contabilizei]] mapeadas p/ divisões/classes CNAE (17 recusadas → `nao`; 7 regulamentadas → `condicao`; resto → `atende` presumido).

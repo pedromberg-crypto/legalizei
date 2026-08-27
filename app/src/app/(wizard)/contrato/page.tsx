@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ContratoView } from "@/components/wizard-dinheiro";
 import { ehMei, comRegime } from "@/lib/regime";
 import { ehEnderecoFiscal, comEndereco } from "@/lib/endereco";
+import { categoriaDe, comCategoria } from "@/lib/categoria";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -54,13 +55,20 @@ export default function ContratoPage() {
   const searchParams = useSearchParams();
   const mei = ehMei(searchParams);
   const enderecoFiscal = ehEnderecoFiscal(searchParams);
+  // 🆕 27/08 — a categoria escolhida no E3.3 precisa sobreviver até a C0
+  // (`/dossie/atividade`, pós-pagamento), que é quem a consome de verdade.
+  const categoria = categoriaDe(searchParams);
   const [aceito, setAceito] = useState(false);
 
   return (
     <ContratoView
       aceito={aceito}
       setAceito={setAceito}
-      onSeguir={() => router.push(comEndereco(comRegime("/pagamento", mei), enderecoFiscal))}
+      onSeguir={() =>
+        router.push(
+          comCategoria(comEndereco(comRegime("/pagamento", mei), enderecoFiscal), categoria),
+        )
+      }
       semTaxaJunta={mei}
     />
   );

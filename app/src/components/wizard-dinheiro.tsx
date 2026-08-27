@@ -79,6 +79,7 @@ export function ContaView({
   onConfirmar,
   onVoltar,
   layout = "classico",
+  leadJaCaptado = false,
 }: {
   d: DadosConta;
   set: <K extends keyof DadosConta>(k: K, v: DadosConta[K]) => void;
@@ -94,9 +95,20 @@ export function ContaView({
    * formulário. Default `classico` mantém a tela aprovada intacta.
    */
   layout?: "classico" | "painel";
+  /** 🆕 27/08 — ver `ContaPainel`: nome/e-mail/telefone/endereço já vieram do
+   *  E3.1 e do E3.3, então esta tela só pede senha e CPF. */
+  leadJaCaptado?: boolean;
 }) {
   if (layout === "painel" && etapa === "form") {
-    return <ContaPainel d={d} set={set} onCriarConta={onCriarConta} onVoltar={onVoltar} />;
+    return (
+      <ContaPainel
+        d={d}
+        set={set}
+        onCriarConta={onCriarConta}
+        onVoltar={onVoltar}
+        leadJaCaptado={leadJaCaptado}
+      />
+    );
   }
   const nomeOk = d.nome.trim().split(/\s+/).length >= 2;
   const cpfCheio = d.cpf.replace(/\D/g, "").length === 11;
@@ -287,11 +299,23 @@ function ContaPainel({
   set,
   onCriarConta,
   onVoltar,
+  leadJaCaptado = false,
 }: {
   d: DadosConta;
   set: <K extends keyof DadosConta>(k: K, v: DadosConta[K]) => void;
   onCriarConta: () => void;
   onVoltar?: () => void;
+  /**
+   * 🆕 27/08 — nome, e-mail e telefone agora vêm do **E3.1** (`/dados`), e o
+   * endereço do **E3.3** (`/endereco`), lá no comecinho do flow. Esta tela
+   * deixa de coletar tudo de novo e vira o que sobrou de verdade: **senha e
+   * CPF**, que é o que transforma um lead em conta.
+   *
+   * É o mesmo conserto que o N9 (pagamento) recebeu em 29/07 quando o CPF
+   * passou a ser pedido 2×: dado já digitado e validado não se repergunta,
+   * se CONFIRMA. Repetir não vira segurança, vira desconfiança.
+   */
+  leadJaCaptado?: boolean;
 }) {
   /**
    * 🔓 UX-72 — cadastro por Google/Apple. O provedor já entrega nome e e-mail
@@ -316,14 +340,17 @@ function ContaPainel({
   const telefoneCheio = d.telefone.replace(/\D/g, "").length >= 10;
   const cepDigitos = d.cep.replace(/\D/g, "");
   const endereco = buscarCep(cepDigitos);
-  const completo =
-    nomeOk &&
-    cpfCheio &&
-    telefoneCheio &&
-    /@/.test(d.email) &&
-    d.senha.length >= 8 &&
-    cepDigitos.length === 8 &&
-    d.numero.trim() !== "";
+  // Com o lead já captado (E3.1 + E3.3), o que falta pra virar conta é só CPF
+  // e senha — os outros campos nem aparecem, então não podem travar o CTA.
+  const completo = leadJaCaptado
+    ? cpfCheio && (d.senha.length >= 8 || social !== null)
+    : nomeOk &&
+      cpfCheio &&
+      telefoneCheio &&
+      /@/.test(d.email) &&
+      d.senha.length >= 8 &&
+      cepDigitos.length === 8 &&
+      d.numero.trim() !== "";
 
   return (
     <main className="app-main">
@@ -355,10 +382,13 @@ function ContaPainel({
         </div>
 
         <div className="mt-10">
-          <h1 className="text-h1 text-text-on-dark">Vamos criar seu acesso.</h1>
+          <h1 className="text-h1 text-text-on-dark">
+            {leadJaCaptado ? "Falta só criar seu acesso." : "Vamos criar seu acesso."}
+          </h1>
           <p className="text-caption text-text-on-dark/70 mt-1.5">
-            Assim seu progresso fica salvo, e a gente já adianta o que precisa
-            pra Junta.
+            {leadJaCaptado
+              ? "A gente já tem seus dados. Agora é só a senha e o CPF pra proteger sua conta."
+              : "Assim seu progresso fica salvo, e a gente já adianta o que precisa pra Junta."}
           </p>
         </div>
       </div>
@@ -392,10 +422,30 @@ function ContaPainel({
           </div>
         )}
 
+        {/* 🆕 27/08 — RECAP do que já veio do E3.1/E3.3, read-only. Sem isso a
+            tela pareceria ter "esquecido" o que a pessoa acabou de digitar 4
+            telas atrás. "Editar" é mock (mesmo padrão do C1/A1): no app real
+            abre só aquele campo e volta pra cá. */}
+        {leadJaCaptado && (
+          <div className="mb-4 rounded-lg border border-border-hairline bg-surface-card p-4">
+            <div className="flex items-start justify-between gap-3">
+              <p className="text-caption font-semibold text-text-primary">
+                Seus dados
+              </p>
+              <button className="shrink-0 text-micro font-semibold text-text-secondary underline underline-offset-4">
+                Editar
+              </button>
+            </div>
+            <p className="mt-1.5 text-caption text-text-secondary">{d.nome}</p>
+            <p className="text-caption text-text-secondary">{d.email}</p>
+            <p className="text-caption text-text-secondary">{d.telefone}</p>
+          </div>
+        )}
+
         {/* Um campo por linha: CPF e telefone lado a lado cortavam o valor
             mascarado (000.000.000-00 não cabe em meia largura no SE). */}
         <div className="flex flex-col gap-3.5">
-          {!social && (
+          {!social && !leadJaCaptado && (
             <CampoIconeConta icone={<IconePessoaConta />}>
               <input
                 value={d.nome}
@@ -419,31 +469,35 @@ function ContaPainel({
             />
           </CampoIconeConta>
 
-          <CampoIconeConta icone={<IconeTelefone />}>
-            <input
-              value={d.telefone}
-              onChange={(e) => set("telefone", mascaraTelefone(e.target.value))}
-              placeholder="Telefone"
-              aria-label="Telefone"
-              inputMode="tel"
-              className="min-h-12 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
-            />
-          </CampoIconeConta>
+          {!leadJaCaptado && (
+            <CampoIconeConta icone={<IconeTelefone />}>
+              <input
+                value={d.telefone}
+                onChange={(e) => set("telefone", mascaraTelefone(e.target.value))}
+                placeholder="Telefone"
+                aria-label="Telefone"
+                inputMode="tel"
+                className="min-h-12 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
+              />
+            </CampoIconeConta>
+          )}
 
           {!social && (
             <>
-              <CampoIconeConta icone={<IconeEmailConta />}>
-                <input
-                  value={d.email}
-                  onChange={(e) => set("email", e.target.value)}
-                  type="email"
-                  inputMode="email"
-                  autoComplete="email"
-                  placeholder="E-mail"
-                  aria-label="E-mail"
-                  className="min-h-12 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
-                />
-              </CampoIconeConta>
+              {!leadJaCaptado && (
+                <CampoIconeConta icone={<IconeEmailConta />}>
+                  <input
+                    value={d.email}
+                    onChange={(e) => set("email", e.target.value)}
+                    type="email"
+                    inputMode="email"
+                    autoComplete="email"
+                    placeholder="E-mail"
+                    aria-label="E-mail"
+                    className="min-h-12 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
+                  />
+                </CampoIconeConta>
+              )}
 
               <CampoIconeConta icone={<IconeCadeadoConta />}>
                 <input
@@ -459,41 +513,50 @@ function ContaPainel({
             </>
           )}
 
-          <CampoIconeConta icone={<IconeLocal />}>
-            <input
-              value={d.cep}
-              onChange={(e) => set("cep", mascaraCep(e.target.value))}
-              placeholder="CEP"
-              aria-label="CEP"
-              inputMode="numeric"
-              autoComplete="postal-code"
-              className="min-h-12 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
-            />
-          </CampoIconeConta>
-
-          {/* Endereço em LINHA PRÓPRIA, sem truncate: cortar o logradouro
-              esconde justamente o que a pessoa precisa conferir. O número vem
-              abaixo, com largura inteira. */}
-          {endereco && (
+          {/* 🔴 27/08 — CEP e número saíram daqui: o endereço da EMPRESA agora
+              é perguntado no E3.3 (`/endereco`), que também é onde o gate de
+              BH acontece. Pedir de novo aqui reperguntaria o mesmo dado com
+              outra pergunta implícita ("é o seu endereço ou o da empresa?"),
+              que era ambíguo desde o front-load de 28/07. */}
+          {!leadJaCaptado && (
             <>
-              <div className="rounded-lg bg-surface-alt px-4 py-3">
-                <p className="text-caption text-text-secondary">
-                  {endereco.logradouro}, {endereco.bairro}
-                </p>
-                <p className="text-caption text-text-secondary">
-                  {endereco.municipio}/{endereco.uf}
-                </p>
-              </div>
-              <CampoIconeConta>
+              <CampoIconeConta icone={<IconeLocal />}>
                 <input
-                  value={d.numero}
-                  onChange={(e) => set("numero", e.target.value)}
-                  placeholder="Número"
-                  aria-label="Número"
+                  value={d.cep}
+                  onChange={(e) => set("cep", mascaraCep(e.target.value))}
+                  placeholder="CEP"
+                  aria-label="CEP"
                   inputMode="numeric"
+                  autoComplete="postal-code"
                   className="min-h-12 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
                 />
               </CampoIconeConta>
+
+              {/* Endereço em LINHA PRÓPRIA, sem truncate: cortar o logradouro
+                  esconde justamente o que a pessoa precisa conferir. O número
+                  vem abaixo, com largura inteira. */}
+              {endereco && (
+                <>
+                  <div className="rounded-lg bg-surface-alt px-4 py-3">
+                    <p className="text-caption text-text-secondary">
+                      {endereco.logradouro}, {endereco.bairro}
+                    </p>
+                    <p className="text-caption text-text-secondary">
+                      {endereco.municipio}/{endereco.uf}
+                    </p>
+                  </div>
+                  <CampoIconeConta>
+                    <input
+                      value={d.numero}
+                      onChange={(e) => set("numero", e.target.value)}
+                      placeholder="Número"
+                      aria-label="Número"
+                      inputMode="numeric"
+                      className="min-h-12 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
+                    />
+                  </CampoIconeConta>
+                </>
+              )}
             </>
           )}
         </div>
@@ -694,7 +757,7 @@ export function PlanoView({
             </p>
             <p className="text-micro text-text-tertiary mt-2">
               {semTaxaJunta
-                ? `a 1ª mensalidade já é o seu 1º mês · fidelidade de ${CUSTOS.FIDELIDADE_MEI_MESES} meses`
+                ? `a 1ª mensalidade já é o seu 1º mês · fidelidade de ${CUSTOS.FIDELIDADE_MESES} meses`
                 : "a 1ª mensalidade já é o seu 1º mês"}
             </p>
             {/* 🆕 26/08 (item 2) — some no total porque você escolheu o
@@ -727,6 +790,17 @@ export function PlanoView({
                 : "Vai direto pro Estado, a gente não fica com nada. Só é cobrada depois, quando a viabilidade sair aprovada — não entra na conta de hoje."}
             </p>
           </div>
+
+          {/* 🆕 27/08 — achado do cruzamento com a Contabilizei: eles citam a
+              base legal (Lei 10.406/02, art. 1.179 do Código Civil) pra
+              justificar por que se paga algo. A nossa versão é mais exata:
+              a lei obriga contabilidade regular, não a abertura em si — é
+              por isso que a MENSALIDADE existe mesmo com abertura grátis. */}
+          <p className="text-micro text-text-tertiary px-1">
+            Por lei (Código Civil, art. 1.179), toda empresa precisa de
+            contabilidade regular. É esse serviço contínuo que vira a sua
+            mensalidade, não a abertura.
+          </p>
 
           {/* 🆕 03/08 — COLABORADORES (mesma lógica da versão oferta).
               🆕 04/08 — Plano MEI já INCLUI o 1 colaborador que a lei
@@ -936,7 +1010,7 @@ function PlanoOferta({
               </div>
               <p className="text-micro text-text-on-dark/60 mt-1">
                 {semTaxaJunta
-                  ? `a 1ª mensalidade já é o seu 1º mês · fidelidade de ${CUSTOS.FIDELIDADE_MEI_MESES} meses`
+                  ? `a 1ª mensalidade já é o seu 1º mês · fidelidade de ${CUSTOS.FIDELIDADE_MESES} meses`
                   : "a 1ª mensalidade já é o seu 1º mês"}
               </p>
               {/* 🔓 Era a FAQ "a mensalidade muda depois?", escondida num
@@ -993,6 +1067,13 @@ function PlanoOferta({
                 : "Cobrada uma vez, e vai direto pro Estado: a gente não fica com nada. Você pagaria essa taxa abrindo com qualquer um."}
             </p>
           </div>
+
+          {/* 🆕 27/08 — mesma citação legal da versão clássica (ver PlanoView). */}
+          <p className="text-micro text-text-tertiary px-1">
+            Por lei (Código Civil, art. 1.179), toda empresa precisa de
+            contabilidade regular. É esse serviço contínuo que vira a sua
+            mensalidade, não a abertura.
+          </p>
 
           {/* 🆕 03/08 — COLABORADORES, visível desde já (achado da reunião com
               o Mauro: "quanto custa a mais" precisa aparecer cedo, não só
@@ -1169,7 +1250,7 @@ export function ContratoView({
                   contrapartida do certificado digital que a gente paga. */}
               <Bullet>
                 {semTaxaJunta
-                  ? `O certificado digital vem incluso — a gente precisa dele pra movimentar sua empresa. Em troca, o plano tem fidelidade de ${CUSTOS.FIDELIDADE_MEI_MESES} meses, descrita no contrato.`
+                  ? `O certificado digital vem incluso — a gente precisa dele pra movimentar sua empresa. Em troca, o plano tem fidelidade de ${CUSTOS.FIDELIDADE_MESES} meses, descrita no contrato.`
                   : "Como a abertura é gratuita, o plano tem um período mínimo de permanência, descrito no contrato."}
               </Bullet>
               <Bullet>

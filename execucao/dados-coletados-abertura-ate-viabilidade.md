@@ -27,43 +27,33 @@ tags: [execucao, flow, dados, abertura]
 ### E3 · Fork 3 rotas
 - _(sem dado novo — contexto, confirmação ou decisão do sistema)_
 
+### E3.3 · Seus dados (nome · e-mail · telefone)
+- Nome completo
+- e-mail
+- telefone
+- consentimento de privacidade (implícito, ao continuar)
+
 ### E3.2 · MEI × ME (variante Abrir)
 - Regime autodeclarado (MEI ou ME)
 
-### E4 · Gate cidade (BH-MG)
-- Confirma cidade de abertura = Belo Horizonte/MG (único município atendido no MLP)
-
-### Descreve atividade + pills
-- Descrição da atividade (texto livre) → CNAE principal (derivado por IA)
-- OU o código já sabido (atalho 28/07, mesma engine)
-
-### Veredito CNAE
-- _(sem dado novo — contexto, confirmação ou decisão do sistema)_
-
-### Desambiguação mini-loop
-- _(sem dado novo — contexto, confirmação ou decisão do sistema)_
-
-### 🟢 Atende
-- _(sem dado novo — contexto, confirmação ou decisão do sistema)_
+### E3.4 · Endereço + categoria (os 2 gates)
+- Endereço da empresa (CEP validado BH + número) OU endereço fiscal Legalizai (+R$60/mês)
+- categoria de atividade (1 das 17 pills)
 
 ### Triagem sócios? CPF/CNPJ? exterior?
 - Quantidade de sócios (1 / 2 / 3 / 4 / 5+)
 - sócio via CPF ou CNPJ (quando há sócio)
 - mora fora do Brasil (sim/não)
+- é a 1ª empresa que abre? (opcional)
 
 ### Faixa de faturamento
 - Faixa de faturamento mensal (ou valor exato, se souber)
-- é a 1ª empresa que abre? (opcional)
-- endereço próprio ou fiscal Legalizai (obrigatório)
 
 ### E6 · Criar conta
-- E-mail
-- senha
-- nome completo
+- Senha
 - CPF
-- telefone
-- endereço (front-load 28/07)
 - código de verificação (mock)
+- CONFIRMA nome/e-mail/telefone já captados no E3.3 (não recoleta)
 
 ### E7 · A conta da abertura
 - _(sem dado novo — contexto, confirmação ou decisão do sistema)_
@@ -76,6 +66,20 @@ tags: [execucao, flow, dados, abertura]
 - método de pagamento (cartão/Pix/boleto)
 
 ### E9.1 · Aguardando boleto dossiê já liberado
+- _(sem dado novo — contexto, confirmação ou decisão do sistema)_
+
+### C0 · Sua atividade (descreve + pills)
+- Descrição da atividade (texto livre) → CNAE principal (derivado por IA)
+- OU o código já sabido (atalho 28/07, mesma engine)
+- categoria já vem pré-selecionada do E3.4
+
+### C0.2 · CNAE encontrado
+- _(sem dado novo — contexto, confirmação ou decisão do sistema)_
+
+### Desambiguação mini-loop
+- _(sem dado novo — contexto, confirmação ou decisão do sistema)_
+
+### 🟢 CNAE confirmado
 - _(sem dado novo — contexto, confirmação ou decisão do sistema)_
 
 ### C1 · Seus dados

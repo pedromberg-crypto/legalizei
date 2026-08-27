@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { PagamentoView, type Metodo } from "@/components/wizard-dinheiro";
 import { ehMei, comRegime } from "@/lib/regime";
 import { ehEnderecoFiscal, comEndereco } from "@/lib/endereco";
+import { categoriaDe, comCategoria } from "@/lib/categoria";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -66,6 +67,7 @@ export default function PagamentoPage() {
   const fluxo = searchParams.get("fluxo") === "migrar" ? "migrar" : "abertura";
   const mei = ehMei(searchParams);
   const enderecoFiscal = ehEnderecoFiscal(searchParams);
+  const categoria = categoriaDe(searchParams);
   const [cpf, setCpf] = useState("");
   const [metodo, setMetodo] = useState<Metodo>("cartao");
 
@@ -88,9 +90,19 @@ export default function PagamentoPage() {
       const qs = searchParams.toString();
       return qs ? `/migrar/contador?${qs}` : "/migrar/contador";
     }
-    return comEndereco(
-      comRegime(metodo === "boleto" ? "/aguardando" : "/dossie/socio", mei),
-      enderecoFiscal,
+    // 🔄 27/08 — a 1ª tela do dossiê deixou de ser o C1 (`/dossie/socio`) e
+    // passou a ser a **C0** (`/dossie/atividade`): descrever a atividade e
+    // achar o CNAE atravessou o pagamento na reordenação do flow de entrada.
+    // Pôde atravessar porque o gate de elegibilidade virou a CATEGORIA (E3.3),
+    // que só oferece o que a gente atende — então o veredito lá na frente não
+    // pode mais devolver "não atendemos". A categoria viaja junto (`?cat=`)
+    // porque é ela que pré-seleciona a pill e prova que o gate rodou.
+    return comCategoria(
+      comEndereco(
+        comRegime(metodo === "boleto" ? "/aguardando" : "/dossie/atividade", mei),
+        enderecoFiscal,
+      ),
+      categoria,
     );
   }
 

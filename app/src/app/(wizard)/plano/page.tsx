@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { PlanoView } from "@/components/wizard-dinheiro";
 import { ehMei, comRegime } from "@/lib/regime";
 import { ehEnderecoFiscal, comEndereco } from "@/lib/endereco";
+import { categoriaDe, comCategoria } from "@/lib/categoria";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -56,12 +57,19 @@ export default function PlanoPage() {
   const searchParams = useSearchParams();
   const mei = ehMei(searchParams);
   const enderecoFiscal = ehEnderecoFiscal(searchParams);
+  // 🆕 27/08 — a categoria escolhida no E3.3 precisa sobreviver até a C0
+  // (`/dossie/atividade`, pós-pagamento), que é quem a consome de verdade.
+  const categoria = categoriaDe(searchParams);
 
   // 🆕 03/08 — UX-74 mesclado (versão "oferta": card escuro, âncora de
   // honorário). Fonte: /apresentacao. `semTaxaJunta` = MEI, ver /gate.
   return (
     <PlanoView
-      onSeguir={() => router.push(comEndereco(comRegime("/contrato", mei), enderecoFiscal))}
+      onSeguir={() =>
+        router.push(
+          comCategoria(comEndereco(comRegime("/contrato", mei), enderecoFiscal), categoria),
+        )
+      }
       layout="oferta"
       semTaxaJunta={mei}
       enderecoFiscal={enderecoFiscal}

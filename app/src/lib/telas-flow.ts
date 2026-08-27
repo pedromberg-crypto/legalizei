@@ -34,9 +34,9 @@ export interface GrupoTelas {
 export const GRUPOS: GrupoTelas[] = [
   {
     id: "entrada",
-    nome: "E1–E4 · Entrada (com Migrar fundido no fork)",
+    nome: "E1–E3.4 · Entrada (com Migrar fundido no fork)",
     descricao:
-      "As primeiras telas, antes de qualquer pergunta de negócio — e o ponto onde o flow bifurca em 2 caminhos (ADR 03/08: Migrar não é 'flow #2', é decimal DENTRO da Entrada). E1–E3 não mapeiam em nenhum arquétipo A1–A10: não perguntam, não julgam, não provam nada. 🆕 03/08: quem escolhe 'abrir' passa pela E3.2 (MEI×ME) ANTES do gate de cidade — MEI pula E4 inteiro (sem limite geográfico) e vai direto pro E5; só ME confirma cidade. 🆕 04/08 (2ª rodada): Migrar TAMBÉM passa pela E3.2 agora (copy própria, autodeclaração em vez de critério de escolha) — MEI pula direto pro E4.2 (M1), só ME confirma cidade antes.",
+      "As primeiras telas, antes de qualquer pergunta de negócio — e o ponto onde o flow bifurca em 2 caminhos (ADR 03/08: Migrar não é 'flow #2', é decimal DENTRO da Entrada). 🔄 27/08 (REORDENAÇÃO): a ordem virou E3 (fork) → E3.3 (dados pessoais, NOVA) → E3.2 (MEI×ME) → E3.4 (endereço + categoria, NOVA). O E4 (gate de cidade) foi REMOVIDO: perguntava 'é em BH?' e acreditava no clique, sendo a única checagem de cidade do produto — quem valida agora é o CEP, no E3.4. Motivo da captura de lead cedo: antes disso o funil inteiro era anônimo até o E6, e o líder (Contabilizei) pede nome/e-mail/telefone na 1ª tela. ⚠️ A numeração decimal deste bloco NÃO é cronológica (E3.1 é a saída de login, E3.3 vem antes do E3.2): renumerar quebraria referência histórica em docs e memórias.",
     telas: [
       {
         rota: "/splash",
@@ -57,7 +57,7 @@ export const GRUPOS: GrupoTelas[] = [
       {
         rota: "/entrada?intencao=abrir",
         nome: "🆕 E3.2 · MEI × ME (variante Abrir)",
-        nota: "03/08 — REALOCADA (morava no fim do E5, decisão revertida). Pergunta DIRETA logo após o fork, antes do gate de cidade — quem abre MEI geralmente já sabe. Recomendação, não trava. Escolher MEI pula o E4 inteiro e vai direto pro E5 (`/gate?regime=mei`) — MEI atende o Brasil todo, só o ME/Simples é que hoje só atende BH/MG. 🔴 Ainda não corrige se a pessoa disser MEI aqui e depois a triagem revelar 2+ sócios (gap conhecido). Copy = critério de ELEGIBILIDADE (\"o que devo escolher\"), diferente da variante Migrar.",
+        nota: "03/08 — REALOCADA (morava no fim do E5). Recomendação, não trava. 🔄 27/08: agora vem DEPOIS do E3.3 (dados pessoais) e antes do E3.4 (endereço + categoria). 🔴 27/08: o card 'ME · Lucro Presumido' foi REMOVIDO — decisão do Pedro, 'não vale o desgaste da dúvida agora' (volume mínimo no ICP). Consequência assumida e parqueada: quem É Lucro Presumido não tem mais porta no caminho ABRIR (no Migrar continua sendo reconhecido pelo M1, que confirma na Receita). MEI e ME agora passam os dois pelo E3.4 — o gate de BH não vale pro MEI, mas o de CATEGORIA vale pros dois. 🔴 Ainda não corrige se a pessoa disser MEI aqui e depois a triagem revelar 2+ sócios (gap conhecido).",
       },
       {
         rota: "/entrada?intencao=migrar",
@@ -65,14 +65,19 @@ export const GRUPOS: GrupoTelas[] = [
         nota: "04/08 — mesma tela (`MeiOuMeView`), `contexto=\"migrar\"`: copy vira AUTODECLARAÇÃO (\"Sua empresa hoje é MEI ou ME?\", não \"qual devo escolher\" — o CNPJ já existe, não há escolha). Decisão do Pedro: inverter a ordem que existia (perguntava cidade ANTES de saber o regime). Escolher MEI pula a cidade e vai DIRETO pro M1 (`/migrar/cnpj?cenario=mei`). Escolher ME cai no gate de cidade de sempre. Autodeclarado, não trava nada — quem confirma de verdade é o M1, puxando da Receita.",
       },
       {
-        rota: "/entrada?intencao=abrir&regime=me",
-        nome: "E4 · Gate de cidade (BH-MG) · 🏷️ SÓ ME (abrir + migrar)",
-        nota: "✅ 28/07 (reunião Rua Satélite 9) — 2º passo do E3, mesma tela. MLP só atende Belo Horizonte/MG; trava 'abrir'/'migrar' até confirmar (login pula, já passou por isso). 03/08: MEI PULA esta tela inteira (sem limite geográfico) — vale pros 2 caminhos desde 04/08 (Migrar também passa pela E3.2 agora, antes desta tela). Rota com `&regime=me` pula a pergunta pra revisão direta.",
+        rota: "/dados",
+        nome: "🆕 E3.3 · Seus dados (captura de lead)",
+        nota: "27/08 — tela NOVA, primeira coisa depois do fork. Nome, e-mail e telefone, igual à 1ª tela do funil da Contabilizei. NÃO cria conta (isso segue no E6): só identifica quem está do outro lado. Motivo (Pedro): 'se a gente não capta isso rápido, não sabe nem quem é dono dos próximos cliques' — antes, quem desistia antes do E6 era anônimo. LGPD: consentimento mínimo em 1 linha com link, sem checkbox; o aceite contratual continua no E8. Vale pros 2 caminhos (abrir e migrar), só muda a copy.",
+      },
+      {
+        rota: "/endereco",
+        nome: "🆕 E3.4 · Endereço + categoria (os 2 gates)",
+        nota: "27/08 — tela NOVA, e a peça central da reordenação. (1) ENDEREÇO: substitui o E4 (gate de cidade, REMOVIDO), que perguntava e acreditava no clique — aqui o CEP valida de verdade (faixa 30000-000 a 31999-999). Quem não tem endereço em BH recebe o endereço fiscal da Legalizai como SOLUÇÃO, não porta na cara: o município segue a sede, não o domicílio do dono, e a nossa sede fica em BH. Herdou a escolha 'próprio × fiscal' que morava no E5F. (2) CATEGORIA: assume o papel de gate de elegibilidade que era do veredito de CNAE — como a lista só oferece atividade atendida, escolher já É passar pelo filtro. É isso que autorizou o CNAE a ir pra depois do pagamento (C0). Quem não se acha na lista sai pela waitlist, antes de qualquer cobrança.",
       },
       {
         rota: "/saida/fora-bh",
         nome: "E4.1 · Saída · fora de BH · 🏷️ SÓ ME + MIGRAR",
-        nota: "✅ 28/07 — nasce do gate de cidade (E4), não da triagem do E5. Mesmo template A9 das outras saídas (barra+explica+captura+roteia). MLP em fase de testes, só BH por enquanto. 03/08: MEI nunca cai aqui — pula o E4 inteiro (nos 2 caminhos).",
+        nota: "✅ 28/07 — mesmo template A9 das outras saídas (barra+explica+captura+roteia). 🔄 27/08: a entrada mudou. Nascia do E4 (gate de cidade), que foi removido; agora é alcançada do E3.4 e SÓ por quem recusa também o endereço fiscal (que resolveria o caso mantendo a sede em BH). O volume aqui deve cair bastante. MEI nunca cai aqui.",
       },
       {
         rota: "/migrar/cnpj",
@@ -113,44 +118,44 @@ export const GRUPOS: GrupoTelas[] = [
   },
   {
     id: "n4-veredito",
-    nome: "E5 · Porta + veredito",
+    nome: "E5 · Triagem + faixa (e a C0, que atravessou o pagamento)",
     descricao:
-      "A porta do flow, numa tela só (pills, veredito, triagem, faixa). Do veredito 🟢/🟡/🔴 saem 3 desfechos — regra de ouro: nunca dar veredito com baixa confiança. O 🟢 Atende trava o CNAE direto (cards clicáveis, UX-65); 🟡 e 🔴 saem pelo template de saída graciosa (A9). Fonte única VereditoView. As saídas E5.1/E5.2 também são reusadas pelo Migrar (E4.2, esteira anterior). O `regime` (MEI×ME, decidido lá na Entrada — E3.2) atravessa esta esteira inteira e o resto do flow (🏷️ tags mostram onde MEI difere).",
+      "🔄 27/08 (REORDENAÇÃO) — este bloco RACHOU no pagamento. O CNAE (descrever → veredito) virou a **C0** (`/dossie/atividade`), DEPOIS do dinheiro; triagem e faixa ficaram ANTES. Por que o CNAE pôde atravessar: o gate de elegibilidade mudou de lugar, não sumiu — era o veredito (que podia dizer 🔴), agora é a CATEGORIA do E3.4, que só oferece atividade atendida. Quem chega na C0 já passou pelo filtro, então lá o veredito não pode mais dizer não. Por que triagem e faixa NÃO foram junto: elas bloqueiam por motivos que a categoria não cobre (sócio via CNPJ e sócio no exterior tiram do Simples; 5+ sócios é limite do produto) — movê-las criaria reembolso pra um caso que hoje não existe. As saídas E5.1/E5.2 seguem reusadas pelo Migrar.",
     telas: [
       {
-        rota: "/gate",
-        nome: "E5 · Gate-CNAE",
-        nota: "A porta. Pills + veredito 🟢/🟡/🔴 + triagem + faixa. ✅ 28/07: ganhou o atalho 'já sei o número do meu CNAE' (troca pra modo código, mesma engine, pula descrição+pills).",
+        rota: "/dossie/atividade",
+        nome: "🔄 C0 · Sua atividade (era E5, agora PÓS-pagamento)",
+        nota: "27/08 — era o E5A (`/gate`, antes do dinheiro) e virou a primeira tela do dossiê. Copy reenquadrada: não promete mais 'validar minha atividade' (a validação já aconteceu no E3.4), agora é 'achar meu CNAE' — quem chega aqui já é cliente. A categoria escolhida no E3.4 chega pré-selecionada (`?cat=`) e afunila a busca. Mantém o atalho 'já sei o número do meu CNAE'.",
       },
       {
         rota: "/veredito/atende",
-        nome: "🟢 Atende",
-        nota: "Happy path. Linguagem humana ANTES do código (UX-05). CTA 'É isso mesmo' + refazer acima sem perder texto.",
+        nome: "🟢 CNAE confirmado (C0.3)",
+        nota: "Happy path. Linguagem humana ANTES do código (UX-05). CTA 'É isso mesmo' + refazer acima sem perder texto. 🔄 27/08: agora é pós-pagamento, e é o único desfecho possível no caminho abrir (a categoria do E3.4 já garantiu que a atividade é atendida).",
       },
       {
         rota: "/gate?etapa=triagem",
         nome: "E5 · Triagem (sócios + exterior)",
-        nota: "🔎 SEPARADA 28/07 — vivia presa dentro do SPA do gate, invisível na prancheta (só dava pra ver clicando através de tudo). É o fail-fast do UX-21: sócios (máx. 2 no MLP) + exterior, perguntado logo após travar o CNAE, ANTES do dinheiro. Bloqueado → 'Falar com o time' agora navega de verdade pra /saida/exterior ou /saida/socios (era beco sem saída até 28/07).",
+        nota: "🔎 SEPARADA 28/07 — vivia presa dentro do SPA do gate. É o fail-fast do UX-21: sócios + exterior, ANTES do dinheiro. 🔄 27/08: agora é a PRIMEIRA tela do `/gate` (o CNAE saiu daqui e foi pra C0, pós-pagamento). Ela FICOU antes do dinheiro de propósito: bloqueia por motivos que a categoria não prevê. Bloqueado → 'Falar com o time' agora navega de verdade pra /saida/exterior ou /saida/socios (era beco sem saída até 28/07).",
       },
       {
         rota: "/gate?etapa=faixa",
         nome: "E5 · Faixa de faturamento",
-        nota: "🔎 SEPARADA 28/07 — mesma amarração do SPA. Última etapa do gate; segue direto pro E6 (o resumo intermediário foi removido). Faixa guiada por padrão + 'sei o valor exato' pra quem já sabe o número (UX-51).",
+        nota: "🔎 SEPARADA 28/07 — mesma amarração do SPA. Última etapa do gate; segue direto pro E6. Faixa guiada por padrão + 'sei o valor exato' (UX-51). 🔴 27/08: a escolha de endereço (próprio × fiscal) SAIU daqui e foi pro E3.4, junto do gate de cidade — ela nunca teve a ver com faturamento. Voltou a fazer uma pergunta só.",
       },
       {
         rota: "/veredito/waitlist",
         nome: "E5.1 · 🟡 Waitlist (regulada)",
-        nota: "Não é 'não', é 'ainda não'. UX-22: dar o enquanto isso. Captura contato, não fecha a porta. Template A9. ✅ 28/07: ganhou campo CNAE pretendido (read-only, junto do nome+contato).",
+        nota: "Não é 'não', é 'ainda não'. UX-22: dar o enquanto isso. Captura contato, não fecha a porta. Template A9. 🔄 27/08: virou a ÚNICA porta de 'não atendo' do caminho abrir, e ela acontece ANTES do dinheiro — alcançada pelo 'minha atividade não está na lista' do E3.4, não mais pelo veredito.",
       },
       {
         rota: "/veredito/nao-atende",
         nome: "E5.2 · 🔴 Contato especial (Mauro)",
-        nota: "✅ 28/07: RELABEL — era 'Comercial'. É quem NÃO atendemos mas a Legalize Digital (escritório do Mauro) atende do jeito tradicional. Mesmo template A9. Coral nunca é erro: token de estado.",
+        nota: "✅ 28/07: RELABEL — era 'Comercial'. É quem NÃO atendemos mas a Legalize Digital (escritório do Mauro) atende do jeito tradicional. Mesmo template A9. 🔄 27/08: no caminho ABRIR ficou órfã (o veredito não decide mais elegibilidade); segue viva e alcançável pelo Migrar (E4.2).",
       },
       {
         rota: "/veredito/descartado",
         nome: "E5.3 · 🔴 Fora de escopo (descarta)",
-        nota: "✅ 28/07 (reunião Rua Satélite 9) — 3ª via do veredito 🔴, antes inexistente. Ninguém atende (nem a gente, nem regulamentado, nem o Mauro) — decisão explícita de descartar. SEM formulário de captura: não tem pra onde rotear, é decline limpo dentro do VereditoView (`motivo: 'descarta'`).",
+        nota: "✅ 28/07 — 3ª via do veredito 🔴. Decline limpo, sem captura. 🔄 27/08: ficou ÓRFÃ no caminho abrir (o gate virou a categoria do E3.4, e quem não se acha na lista vai pra waitlist, que captura contato — melhor desfecho). Mantida catalogada porque a rota existe e o mock ainda produz esse desfecho.",
       },
     ],
   },

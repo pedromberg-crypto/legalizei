@@ -1,10 +1,8 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { Logo } from "@/components/logo";
 import { Lottie } from "@/components/lottie";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -45,46 +43,35 @@ import { Card } from "@/components/ui/card";
  * texto normal). A regra travada em 12/07 diz que texto menor exige fill mais
  * escuro. É o mesmo motivo do variant `primarySm` do Button.
  *
- * ─── 🆕 GATE DE CIDADE (28/07, reunião Rua Satélite 9) ──────────────────────
- * MLP só atende Belo Horizonte/MG — nenhum outro município ainda. "Abrir" e
- * "já tenho empresa" passam por uma confirmação de cidade ANTES de navegar
- * (mesma tela, 2º passo — não é rota nova, é etapa). "Entrar na conta" pula
- * o gate: quem já é cliente já passou por isso. Fora de BH → saída graciosa
- * dedicada (`/saida/fora-bh`), mesmo template A9 das outras saídas.
+ * ─── 🔴 O GATE DE CIDADE SAIU DAQUI (27/08) ────────────────────────────────
+ * O 2º passo desta tela ("Onde ficará a sua empresa?" → "Sim, é em BH" / "Não
+ * é em BH") foi **REMOVIDO** na reordenação do flow de entrada (ADR
+ * `marca/decisoes-marca.md` 27/08). Motivo: ele não validava nada. Perguntava
+ * e acreditava no clique, e era a ÚNICA checagem de cidade do produto inteiro.
  *
- * Migrar (flow #2) confirma a cidade igual, mas não tem pra onde navegar
- * ainda (flow #2 não construído) — mostra um estado "em breve" honesto em
- * vez de 404 ou clique morto.
+ * Quem faz esse trabalho agora é o **E3.3** (`/endereco`,
+ * `EnderecoCategoriaView`), que valida o CEP de verdade (`ehCepBh`) e oferece
+ * o endereço fiscal da Legalizai pra quem não tem endereço em BH, em vez de
+ * mandar embora. A saída `/saida/fora-bh` continua existindo, alcançada de lá.
+ *
+ * Com isso o fork voltou a ser o que era: uma tela, uma decisão, 3 saídas.
+ * `EntradaView` não tem mais estado interno nem passo 2.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
 export type Intencao = "abrir" | "migrar";
 
 export function EntradaView({
-  intencao,
   onIntencao,
-  onSeguir,
-  onMigrar,
-  onForaBh,
   onLogin,
   destaqueCoral600 = false,
 }: {
-  /** null = passo 1 (fork). Preenchido = passo 2 (gate de cidade). */
-  intencao: Intencao | null;
-  onIntencao: (i: Intencao | null) => void;
-  /** BH confirmado + intenção "abrir" → segue pro N4. */
-  onSeguir: () => void;
   /**
-   * ✅ 30/07 — BH confirmado + intenção "migrar" → **segue pro flow #2 (M1)**.
-   *
-   * Até hoje esta porta batia num card "essa parte ainda não existe". Era o
-   * achado M0 do motor: *"o flow #1 não tem porta pra cá — metade do mercado
-   * bate numa porta escrita 'faça login'"*. As telas M1–M5 existem agora, então
-   * o beco virou caminho. Opcional de propósito: quem não passar `onMigrar`
-   * (nenhum consumidor hoje) volta ao comportamento honesto de "em breve".
+   * 🔄 27/08 — agora NAVEGA direto, sem passo 2. Recebe a intenção escolhida
+   * ("abrir" ou "migrar") e o consumidor decide o destino: em produção, os
+   * dois vão pro E3.1 (`/dados`), que é a captura de lead nova.
    */
-  onMigrar?: () => void;
-  onForaBh: () => void;
+  onIntencao: (i: Intencao) => void;
   onLogin: () => void;
   /**
    * 🔓 UX-63 (29/07, pedido do Pedro na validação tela a tela) — usa o coral-600
@@ -101,102 +88,7 @@ export function EntradaView({
    */
   destaqueCoral600?: boolean;
 }) {
-  const [migrarEmBreve, setMigrarEmBreve] = useState(false);
-
-  /**
-   * 🐛 FIX 29/07 — o "em breve" do migrar VAZAVA entre escolhas.
-   * `migrarEmBreve` é estado interno e ninguém o zerava ao trocar de intenção.
-   * Repro: "Já tenho empresa" → "Sim, é em BH" → card "essa parte ainda não
-   * existe" → voltar → "Quero abrir minha empresa" → **aparecia o card do
-   * migrar**. Ou seja: quem escolheu ABRIR via a tela de MIGRAR.
-   *
-   * Padrão oficial do React pra "ajustar estado quando a prop muda": comparar
-   * com o valor anterior durante o render (não em effect — effect deixaria um
-   * frame com a tela errada pintada, que é exatamente o bug).
-   */
-  const [intencaoAnterior, setIntencaoAnterior] = useState(intencao);
-  if (intencao !== intencaoAnterior) {
-    setIntencaoAnterior(intencao);
-    setMigrarEmBreve(false);
-  }
-
-  function confirmarCidade(bh: boolean) {
-    if (!bh) {
-      onForaBh();
-      return;
-    }
-    if (intencao === "abrir") {
-      onSeguir();
-    } else if (onMigrar) {
-      // ✅ 30/07: o flow #2 existe. A porta que era beco virou caminho.
-      onMigrar();
-    } else {
-      // Fallback honesto pra quem ainda não ligou o flow #2 (sem clique morto).
-      setMigrarEmBreve(true);
-    }
-  }
-
-  // ─── PASSO 2: confirma cidade (só depois de escolher abrir/migrar) ───────
-  if (intencao) {
-    return (
-      <>
-        <header className="pt-6 pb-2">
-          <Logo className="h-8 w-auto" />
-        </header>
-        <main className="app-main">
-          <div className="flex-1 min-h-0 flex flex-col justify-center">
-            {migrarEmBreve ? (
-              <Card>
-                <h2 className="text-h2 mb-1">Essa parte ainda não existe</h2>
-                <p className="text-body text-text-secondary">
-                  Migrar de contador é um fluxo que ainda estamos construindo.
-                  Fala com a gente no WhatsApp que a gente te ajuda na mão
-                  enquanto isso.
-                </p>
-              </Card>
-            ) : (
-              <>
-                {/* ✍️ 30/07 — o título conjuga pela INTENÇÃO, não é fixo.
-                    Quem vem de "quero abrir" ainda NÃO tem empresa: perguntar
-                    "onde fica" pressupõe uma que não existe. Quem vem de "já
-                    tenho empresa" (migrar) tem, e aí o presente é o certo. */}
-                <h1 className="text-h1 mb-2">
-                  {intencao === "abrir"
-                    ? "Onde ficará a sua empresa?"
-                    : "Onde fica a sua empresa?"}
-                </h1>
-                <p className="text-body text-text-secondary mb-6">
-                  Hoje a gente só abre em Belo Horizonte/MG — é a fase de
-                  testes do produto.
-                </p>
-                <div className="flex gap-2">
-                  <Button full onClick={() => confirmarCidade(true)}>
-                    Sim, é em BH
-                  </Button>
-                  <Button
-                    full
-                    variant="secondary"
-                    onClick={() => confirmarCidade(false)}
-                  >
-                    Não é em BH
-                  </Button>
-                </div>
-              </>
-            )}
-          </div>
-          {!migrarEmBreve && (
-            <div className="app-footer-cta">
-              <Button full variant="ghost" onClick={() => onIntencao(null)}>
-                Voltar
-              </Button>
-            </div>
-          )}
-        </main>
-      </>
-    );
-  }
-
-  // ─── PASSO 1: as 3 rotas ──────────────────────────────────────────────────
+  // ─── AS 3 ROTAS (única coisa que esta tela faz desde 27/08) ───────────────
   return (
     <>
       <header className="pt-6 pb-2">

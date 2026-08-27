@@ -28,3 +28,33 @@ export function comEndereco(rota: string, fiscal: boolean): string {
   if (!fiscal) return rota;
   return `${rota}${rota.includes("?") ? "&" : "?"}endereco=fiscal`;
 }
+
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🆕 27/08 — VALIDAÇÃO REAL DE BH (substitui o gate de cidade E4).
+ * ═══════════════════════════════════════════════════════════════════════════
+ * O E4 perguntava "é em BH?" e confiava na resposta. Autodeclaração não é
+ * validação: a única checagem de cidade que existia no produto inteiro era um
+ * clique em "Sim, é em BH". Com o E4 removido (ADR 27/08), o gate vira o CEP
+ * de verdade, no E3.3.
+ *
+ * ─── A REGRA FISCAL QUE SUSTENTA ISSO ──────────────────────────────────────
+ * O município da empresa segue o ENDEREÇO DA SEDE, não o domicílio pessoal do
+ * dono. Quem mora fora de BH pode ter empresa sediada em BH, desde que exista
+ * um endereço válido em BH pra ser a sede. Por isso a tela não pergunta onde a
+ * pessoa mora: pergunta onde a EMPRESA vai ficar, e aceita duas respostas
+ * (endereço próprio em BH, ou o endereço fiscal da Legalizai, que é a sede
+ * física da Legalize Digital em BH).
+ *
+ * ⚠️ Faixa oficial de CEP de Belo Horizonte: 30000-000 a 31999-999 (Correios).
+ * Contagem começa em 32000-000 e NÃO entra: municípios da região
+ * metropolitana são JUCEMG igual, mas prefeitura/ISS diferentes, e o MLP só
+ * atende BH. 🟡 Faixa não ratificada em fonte primária nesta rodada.
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+export function ehCepBh(cep: string): boolean {
+  const d = cep.replace(/\D/g, "");
+  if (d.length !== 8) return false;
+  const n = Number(d);
+  return n >= 30000000 && n <= 31999999;
+}

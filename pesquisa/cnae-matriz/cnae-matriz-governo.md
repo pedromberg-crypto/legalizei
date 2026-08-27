@@ -63,8 +63,15 @@ Nenhum dos 4 abaixo é dado do IBGE — são outros órgãos, cada um com tratab
   - **Isto é output de regex determinístico contra texto oficial, não é IA advinhando E não foi revisado por contador.** Antes de virar verdade de produto (ex: dentro do motor `cnae-fiscalmente-otimo.md`), precisa do mesmo tratamento que as famílias de lá já têm: **Larissa assina**.
 - **É federal, NÃO varia por cidade** (BH = SP = qualquer lugar). Construído uma vez, serve pra sempre.
 
-### 2d. ISS por CNAE — pendente, menor prioridade
-- Municipal (só importa BH no nosso escopo hoje — Lei 8.725/2003 + item LC 116). Parcial em `execucao/cnae-fiscalmente-otimo.md` pra um punhado de códigos do nicho; não cobre os 1332.
+### 2d. ISS por CNAE (BH) ✅ feito (27/08) — o 4º e último dos 4
+- ⚠️ **Diferente dos outros 3: aqui EXISTE crosswalk oficial CNAE-indexado** — porque ISS é municipal, e BH optou por estruturar o Anexo Único da Lei 8.725/2003 direto por CNAE (não por atividade genérica como a lei federal). Achado direto: `fazenda.pbh.gov.br/iss/cnae/tabelactiss.xls`, planilha oficial da Secretaria Municipal de Fazenda — colunas `CTISS` (código de tributação do ISS), `Descrição`, `CNAEbh Vinculados` (lista, um CTISS pode cobrir vários CNAEs), `Subitem LC 116/2003` (item da lei federal), `Alíquota`.
+- 668 linhas CTISS → **570 CNAEs únicos referenciados**, **524 bateram direto ou por expansão de classe** com a matriz IBGE.
+- **66 CNAEs têm MAIS DE UMA alíquota** (`iss_bh_varia: sim`) — não é erro, é real: um CNAE amplo (ex. `8299-7/99` "outras atividades... não especificadas", `8630-5/03` atividade médica) cobre serviços concretos diferentes que BH tributa em alíquotas diferentes (2%/3%/5% etc). Guardei todas em `iss_bh_detalhe` (CTISS + item LC116 + % de cada uma).
+- ~48 códigos da coluna "CNAEbh Vinculados" são **auto-referência do próprio CTISS** (ex. `0101-0/00-01` no CTISS `0101-0/01`) — não são CNAE de verdade, são a numeração interna de BH espelhando o item LC116 (`01xx` = TI = subitens `1.0x`). Filtrados automaticamente (não batem com nenhum CNAE real, então não contaminam nada).
+- **2 órfãos reais** (mesmo padrão do CGSIM #2: BH referencia CNAE renumerado pelo IBGE depois): `7410-2/01` "desenho industrial" → família migrou pra `7410-2/02`/`03`; `9609-2/03` "guarda de animais" → família migrou pra `9609-2/07`. Documentados, não mapeados por chute.
+- Colunas novas: `iss_bh_aliquota` (% ou lista de %s), `iss_bh_varia` (sim/nao), `iss_bh_detalhe` (CTISS+LC116+% de cada entrada).
+- Sanity check: contabilidade 5% · dev software sob encomenda 2% · advocacia 5% · limpeza 2% — bate com o que já sabíamos do motor `cnae-fiscalmente-otimo.md`.
+- Fonte arquivada: `pbh-fazenda-tabela-ctiss-cnae-aliquota.xls`.
 
 ## Camada 3 — Cobertura por concorrente (cruzável) 
 - `contabilizei_atende`: **atende / nao / condicao** — derivado das listas de suporte da [[contabilizei]] mapeadas p/ divisões/classes CNAE (17 recusadas → `nao`; 7 regulamentadas → `condicao`; resto → `atende` presumido).

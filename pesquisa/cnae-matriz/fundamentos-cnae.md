@@ -68,7 +68,7 @@ O MVP hoje só atende serviço; CNAEs de comércio ficam de fora por decisão de
 ## O que ainda está em aberto
 
 - ✅ **Lista COMPLETA do Anexo XI CGSN140 (MEI) — feita 27/08.** 351 dos 1332 CNAEs permitem MEI, já na matriz (`mei_permitido`/`mei_ocupacoes`/`mei_iss_fixo_das`/`mei_icms_fixo_das`). Ver `cnae-matriz-governo.md` §2a.
-- Lista COMPLETA do Anexo I da Res. CGSIM 51/2019 (Nível de Risco I) — mesma situação, só o conceito confirmado, não a tabela inteira. Próximo da fila.
+- ✅ **Lista COMPLETA do Anexo I da Res. CGSIM 51/2019 (Nível de Risco I) — feita 27/08.** 284 dos 1332 CNAEs mapeados como baixo risco (2 itens da resolução ficaram órfãos por código CNAE desatualizado — documentado, não é bloqueante). Já na matriz (`risco_baixo_cgsim`/`risco_cgsim_desc_oficial`). Ver `cnae-matriz-governo.md` §2b.
 - Buffer de segurança do Fator R pro simulador (ver acima) — decisão de produto, não de pesquisa.
 - Esta pesquisa não cobriu o **§ 5º-C (Anexo IV, CPP fora do DAS — advocacia, construção, limpeza/vigilância)**, que o motor `cnae-fiscalmente-otimo.md` já usa (Grupo C). Não é contradição, é escopo que a pesquisa não pediu — vale rodada futura se o produto for expandir aí.
 

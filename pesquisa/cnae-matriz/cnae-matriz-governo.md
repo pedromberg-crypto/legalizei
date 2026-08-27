@@ -26,8 +26,17 @@ Nenhum dos 4 abaixo é dado do IBGE — são outros órgãos, cada um com tratab
 - 1 CNAE (2532201) tem 2 ocupações com ISS/ICMS-fixo diferentes entre si — marcado `varia-por-ocupacao`, não é erro de parsing.
 - Confiança: **ALTA** (fonte primária, parsing validado sem gaps).
 
-### 2b. Risco municipal (CGSIM Anexo I) — próximo
-- Lista fechada também (Res. CGSIM 51/2019), formato provável PDF/tabela. Ainda não puxado.
+### 2b. Risco municipal (CGSIM Anexo I) ✅ feito (27/08)
+- ⚠️ **Não confundir com o Anexo I do Simples Nacional (comércio).** Este é o Anexo I da **Resolução CGSIM 51/2019** (atualizada por 57/2020, 59/2020, 68/2022) — "Nível de Risco I / baixo risco A", dispensa vistoria/alvará prévio. Atravessa TODAS as seções (serviço, comércio, indústria), não é exclusivo de comércio.
+- **Fonte:** PDF oficial já estava no vault (`cgsim-res51-baixo-risco.pdf`, 42 páginas, já na versão consolidada com as 3 alterações). Tabela do Anexo I nas páginas 11-42, 287 itens numerados em romano.
+- Parseado via âncora `(Código CNAE:NNNNNNN)` — regex sem gap real (1 item, nº 186 "Horticultura, exceto morango", tinha CNAE grafado errado no PDF `1211-0/1`; corrigido manualmente pra `0121-1/01` cruzando com a descrição na matriz IBGE, único match).
+- **284 dos 287 itens bateram certo com os 1332 CNAEs atuais.** 2 ficaram órfãos — a resolução usa código CNAE de versão anterior, renumerado depois pelo IBGE:
+  - `5611-2/02` "Bares..." → hoje provavelmente `5611-2/04` (bares sem entretenimento) ou `5611-2/05` (com entretenimento); resolução não distinguia essa cisão.
+  - `4541-2/05` "Comércio a varejo de peças e acessórios para motocicletas" → hoje provavelmente `4541-2/06` (peças novas) ou `4541-2/07` (usadas); mesma situação.
+  - **Não mapeei esses 2 automaticamente** (seria chute) — ficam como pendência se algum dia entrarem no nosso nicho (hoje são fora de escopo, comércio/motocicleta).
+- Colunas novas na matriz: `risco_baixo_cgsim` (sim/nao), `risco_cgsim_desc_oficial` (texto exato da resolução, quando sim).
+- Sanity check: contabilidade (6920-6/01) e treinamento (8599-6/04) = `risco_baixo_cgsim: sim` — plausível (atividade de escritório, sem risco físico).
+- Confiança: **ALTA** (fonte primária, 284/286 = 99,3% de match direto; 2 pendências documentadas, não escondidas).
 
 ### 2c. Anexo III/V + Fator R por CNAE — pendente, é o grande
 - `anexo_base`: **nível confiável por regra** — Comércio (seção G) = **Anexo I** (226); Indústria (B/C) = **Anexo II** (465); Serviços = **III/IV/V*** (641, asterisco = anexo exato depende da atividade + Fator R).

@@ -34,6 +34,14 @@ export interface OpcaoCnae {
   cnae: string;
   /** Fit ao que a pessoa descreveu (IA cruza pill + texto). 0–100. Regra 2. */
   adequacao: number;
+  /**
+   * 🆕 26/08 (achado do Pedro: promover uma vizinha ao topo — UX-65 — perdia
+   * a descrição e o "o que cobre", card ficava pobre comparado ao
+   * recomendado). Opcionais aqui porque nem toda `vizinha` da fonte tem esse
+   * dado ainda — ausente = card enxuto (comportamento antigo, sem quebrar).
+   */
+  descricao?: string;
+  cobre?: string[];
 }
 
 export interface EncaixeData {
@@ -55,6 +63,8 @@ export function encaixeDeResultado(r: Resultado): EncaixeData {
       humano: v.oque,
       cnae: v.cnae,
       adequacao: 72 - i * 8,
+      descricao: v.descricao,
+      cobre: v.cobre,
     })),
   };
 }

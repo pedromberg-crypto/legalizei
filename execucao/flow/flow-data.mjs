@@ -39,25 +39,87 @@ export const SUBGRAFOS = [
   { id: "GATE", titulo: "E5 · Gate-CNAE — uma tela" },
 ];
 
+/**
+ * 🆕 26/08 — campos que a viabilidade/DBE exigem mas NÃO viram pergunta ao
+ * cliente: a Legalizai preenche por conta própria. Decisões travadas em
+ * `marca/decisoes-marca.md` (26/08), cruzamento em
+ * `gap-analise-dados-abertura-vs-pesquisa-gemini.md`. Lido por
+ * `gerar-mapa.mjs` pra montar a seção "preenchidos por nós" do
+ * `dados-coletados-abertura-ate-viabilidade.md` — mesma régua do resto do
+ * arquivo, editar AQUI, nunca direto na nota gerada.
+ */
+export const PREENCHIDOS_INTERNAMENTE = [
+  {
+    campo: "Forma de atuação (JUCEMG)",
+    valor: '"Internet" / atividade fora do estabelecimento',
+    contexto: "C4 · Dados da empresa",
+    status: "🟡 travado internamente, pendente de validação técnica",
+    porque: "Não gera dúvida útil pro cliente nem interfere na atuação dele — vale enquanto o escopo for serviço 100% remoto. Reabrir se o produto passar a atender CNAEs com atendimento físico (cabeleireira, personal trainer etc.)",
+  },
+  {
+    campo: "Tipo de unidade (JUCEMG)",
+    valor: '"Sede"',
+    contexto: "C4 · Dados da empresa",
+    status: "🟢 travado",
+    porque: "Toda abertura nova (1 endereço só) é sempre Sede — não existe cenário no MVP onde seria Unidade Administrativa (só valeria numa 2ª filial de empresa já aberta)",
+  },
+  {
+    campo: "Metragem (m² do imóvel + m² da operação)",
+    valor: "— (não implementado)",
+    contexto: "C4 · Dados da empresa",
+    status: "🟡 pendente, sem decisão",
+    porque: "Nenhuma fonte confirma esse campo além do índice cadastral IPTU (já coletado) — não implementar até aparecer confirmação real",
+  },
+];
+
 export const NODES = [
   // ── ENTRADA (E) · E1–E3 ──────────────────────────────────────────────────
   { id: "E1", rota: "/splash", label: "E1 · Splash", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "", dados: "" },
-  { id: "E2", rota: "/welcome", label: "E2 · Welcome", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "", dados: "" },
-  { id: "E3", rota: "/entrada", label: "E3 · Fork<br/>3 rotas", forma: "decisao", classe: "", status: "construida", validado: "oficial", falta: "3 rotas CONFIRMADAS 28/07 (reunião Rua Satélite 9): abrir · migrar · já sou cliente.", dados: "" },
+  // 🆕 26/08 (pedido do Pedro: "não podemos ter telas camufladas") — E2 era 1
+  // nó só escondendo 3 slides de carrossel (`components/welcome.tsx`, `SLIDES`).
+  // Virou 3 nós, 1 por slide, via `/welcome?slide=N` (mesmo padrão de deep-link
+  // de `/entrada`/`/gate?etapa=`) — cada um agora tem prévia ao vivo própria.
+  { id: "E2_1", rota: "/welcome?slide=0", label: "E2.1 · Welcome<br/>(1/3 · Contador de verdade)", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "", dados: "" },
+  { id: "E2_2", rota: "/welcome?slide=1", label: "E2.2 · Welcome<br/>(2/3 · Parte chata)", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "", dados: "" },
+  { id: "E2_3", rota: "/welcome?slide=2", label: "E2.3 · Welcome<br/>(3/3 · Sem susto no boleto)", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "", dados: "" },
+  // 🆕 26/08 (pedido do Pedro: "linka o CTA no caminho dele, não a tela
+  // inteira") — 3 pontos de saída nomeados, 1 por CTA real da tela
+  // (`components/entrada.tsx` passo 1): botão coral "Quero abrir minha
+  // empresa", card branco "Já tenho empresa", link "Entrar na minha conta".
+  { id: "E3", rota: "/entrada", label: "E3 · Fork<br/>3 rotas", forma: "decisao", classe: "", status: "construida", validado: "oficial", falta: "3 rotas CONFIRMADAS 28/07 (reunião Rua Satélite 9): abrir · migrar · já sou cliente.", dados: "", handles: [
+    { id: "abrir", yPercent: 78 },
+    { id: "migrar", yPercent: 88 },
+    { id: "login", yPercent: 96 },
+  ] },
   { id: "E3_1", rota: "/login", label: "E3.1 · Login / portal", forma: "terminal", classe: "feliz", status: "construida", validado: "ux", falta: "Rota feliz", dados: "" },
 
   // 🆕 03/08 (ampliado 04/08) — E3.2 · MEI × ME, entre o fork (E3) e o gate de
   // cidade (E4). Realocada aqui vindo do fim do E5 (decisão anterior,
   // revertida). Vale pros 2 caminhos (abrir E migrar) desde 04/08. Fonte:
   // app/(wizard)/entrada/page.tsx.
-  { id: "E3_2", rota: "/entrada", label: "E3.2 · MEI × ME<br/>(autodeclarado)", forma: "decisao", classe: "", status: "construida", validado: "oficial", falta: "MEI não tem o limite geográfico do MLP → pula o E4 inteiro (abrir vai direto pro E5A, migrar direto pro E4.2). ME cai no E4 como sempre. Autodeclarado — quem confirma de verdade é o E4.2/E4.2b puxando da Receita. 🔴 risco não resolvido: se disser MEI aqui mas depois aparecer 2+ sócios (incompatível com MEI), não há correção automática", dados: "Regime autodeclarado (MEI ou ME)" },
+  // 🆕 26/08 (pedido do Pedro: "temos 2 páginas aprovadas, por que só 1 no
+  // mapa?") — E3.2 tem 2 VARIANTES DE COPY aprovadas (`telas-flow.ts`),
+  // não 1 tela só: "variante Abrir" (critério de elegibilidade, "o que devo
+  // escolher") e "variante Migrar" (autodeclaração, "o que eu já sou" —
+  // CNPJ já existe, não há escolha). Copy genuinamente diferente por
+  // `contexto` (`MeiOuMeView`), então vira 2 nós — mesmo tratamento do E2.
+  { id: "E3_2", rota: "/entrada?intencao=abrir", label: "E3.2 · MEI × ME<br/>(variante Abrir)", forma: "decisao", classe: "", status: "construida", validado: "oficial", falta: "MEI não tem o limite geográfico do MLP → pula o E4 inteiro, vai direto pro E5A. 🔴 risco não resolvido: se disser MEI aqui mas depois aparecer 2+ sócios (incompatível com MEI), não há correção automática", dados: "Regime autodeclarado (MEI ou ME)" },
+  { id: "E3_2_M", rota: "/entrada?intencao=migrar", label: "E3.2 · MEI × ME<br/>(variante Migrar)", forma: "decisao", classe: "", status: "construida", validado: "oficial", falta: "Mesma tela (`MeiOuMeView`), `contexto=\"migrar\"`: copy vira autodeclaração (\"sua empresa hoje é MEI ou ME?\"), não critério de escolha. MEI pula E4 inteiro, vai direto pro M1 (`/migrar/cnpj?cenario=mei`)", dados: "Regime autodeclarado (MEI ou ME)" },
 
   // 🆕 28/07 · GATE DE CIDADE (reunião Rua Satélite 9) — MLP só atende Belo
   // Horizonte/MG. Trava "quero abrir"/"migrar" até confirmar (depois do E3.2 —
   // só quem é ME passa por aqui, MEI já pulou); "já sou cliente" pula (quem já
   // é cliente já passou por isso). Bifurca em E5 (abrir) ou E4.2 (migrar,
   // decimal — ver ADR 03/08).
-  { id: "E4", rota: "/entrada", label: "E4 · Gate cidade<br/>(BH-MG)", forma: "decisao", classe: "", status: "construida", validado: "oficial", falta: "Construído 28/07 — 2º passo INLINE do E3, mesma rota (/entrada), sem rota própria.", dados: "Confirma cidade de abertura = Belo Horizonte/MG (único município atendido no MLP)" },
+  // 🆕 26/08 — 2 CTAs lado a lado ("Sim, é em BH" / "Não é em BH",
+  // `components/entrada.tsx` passo 2). 🔄 26/08 (achado do Pedro: "linha
+  // saindo do meio da tela") — `xPercent` no MEIO do card fazia a linha
+  // nascer de dentro da prévia, não da borda. Saída sempre na borda direita
+  // (padrão, sem `xPercent`); só a Y muda pra distinguir os 2 botões.
+  { id: "E4", rota: "/entrada?intencao=abrir&regime=me", label: "E4 · Gate cidade<br/>(BH-MG)", forma: "decisao", classe: "", status: "construida", validado: "oficial", falta: "Construído 28/07 — 2º passo INLINE do E3, mesma rota (/entrada), sem rota própria.", dados: "Confirma cidade de abertura = Belo Horizonte/MG (único município atendido no MLP)", handles: [
+    { id: "sim", yPercent: 85 },
+    { id: "nao", yPercent: 91 },
+  ] },
   { id: "E4_1", rota: "/saida/fora-bh", label: "E4.1 · Saída · fora de BH<br/>MLP só atende BH-MG", forma: "terminal", classe: "saida", status: "construida", validado: "oficial", falta: "", dados: "— (saída, fora do caminho até a constituição)" },
 
   // ── MIGRAR DE CONTADOR — ramo decimal de E4 (construído 30/07) ────────────
@@ -96,11 +158,11 @@ export const NODES = [
 
   // ── E5 · GATE (uma tela, várias etapas) ──────────────────────────────────
   { id: "E5A", rota: "/gate", label: "Descreve atividade + pills", forma: "tela", classe: "", status: "construida", validado: "pendente", grupo: "GATE", falta: "✅ 28/07: CTA 'já sei o número do meu CNAE' construído (troca pra modo código, mesma engine). Lista CNAE furada na raiz: 124 não-refutados, 45 impossíveis, 91 duvidosos; IA real (hoje mock) — Larissa/Pedro/dev", dados: "Descrição da atividade (texto livre) → CNAE principal (derivado por IA) · OU o código já sabido (atalho 28/07, mesma engine)" },
-  { id: "E5V", label: "Veredito CNAE", forma: "decisao", classe: "", status: "construida", validado: "oficial", grupo: "GATE", falta: "🆕 28/07: veredito 🔴 virou 3 vias (travado na reunião), hoje o mock só faz 2 — falta implementar o split: regulamentado→waitlist (já existe) · atendido pelo Mauro (comércio etc)→contato especial · genuinamente ninguém atende→descarta (novo). Depende da lista CNAE; dev cnae-lookup responde 'atende' pra DEFESA. 🆕 31/07: veredito 🟢 ganhou cards clicáveis (UX-65) e travar o CNAE via ENCAIXE virou redundante — ENCAIXE removido, o veredito trava direto", dados: "" },
-  { id: "DESAMB", label: "Desambiguação<br/>mini-loop", forma: "tela", classe: "inline", status: "construida", validado: "ux", grupo: "GATE", falta: "", naTabela: false, dados: "" },
+  { id: "E5V", rota: "/gate?etapa=veredito", label: "Veredito CNAE", forma: "decisao", classe: "", status: "construida", validado: "oficial", grupo: "GATE", falta: "🆕 28/07: veredito 🔴 virou 3 vias (travado na reunião), hoje o mock só faz 2 — falta implementar o split: regulamentado→waitlist (já existe) · atendido pelo Mauro (comércio etc)→contato especial · genuinamente ninguém atende→descarta (novo). Depende da lista CNAE; dev cnae-lookup responde 'atende' pra DEFESA. 🆕 31/07: veredito 🟢 ganhou cards clicáveis (UX-65) e travar o CNAE via ENCAIXE virou redundante — ENCAIXE removido, o veredito trava direto", dados: "" },
+  { id: "DESAMB", rota: "/gate", label: "Desambiguação<br/>mini-loop", forma: "tela", classe: "inline", status: "construida", validado: "ux", grupo: "GATE", falta: "Mini-loop conceitual (reformula a pergunta) — sem etapa própria, mesma tela do E5A", naTabela: false, dados: "" },
   { id: "E5VA", rota: "/veredito/atende", label: "🟢 Atende", forma: "tela", classe: "", status: "construida", validado: "pendente", grupo: "GATE", falta: "Depende da lista CNAE", dados: "" },
-  { id: "E5T", label: "Triagem<br/>sócios? CPF/CNPJ? exterior?", forma: "decisao", classe: "", status: "construida", validado: "oficial", grupo: "GATE", falta: "🆕 24/08 (reunião Leonan 19/08): limite subiu de 2 pra 4 sócios; aviso proativo (não bloqueio) de assinatura múltipla nos 3-4; só 5+ bloqueia. 🆕 24/08 (pedido do Pedro): nova pergunta condicional — sócio CPF ou CNPJ? CNPJ bloqueia (regra fiscal: tira do Simples), rota /saida/socio-pj. Como o tipo já é decidido aqui, o C3 (dossiê) nem pergunta de novo. Exterior = LC 123 art.17 (oficial)", dados: "Quantidade de sócios (1 / 2 / 3 / 4 / 5+) · sócio via CPF ou CNPJ (quando há sócio) · mora fora do Brasil (sim/não)" },
-  { id: "E5F", label: "Faixa de faturamento", forma: "tela", classe: "", status: "construida", validado: "ux", grupo: "GATE", falta: "Faixas sem âncora fiscal. 🆕 24/08 (reunião Rua Satélite 35): ganhou a pergunta de coorte ('é a 1ª empresa que você abre?'), realocada do E6 — dado puro de log/marketing, opcional, não interfere no processo. 🆕 26/08 (reunião Rua Satélite 36, item 2): ganhou TAMBÉM a escolha de endereço (próprio × fiscal Legalizai), realocada do C4 (`/dossie/empresa`) — essa, diferente da coorte, TRAVA o Continuar (afeta o preço mostrado no E7 daqui a pouco). Fonte: `components/gate-telas.tsx` (`FaixaView`) + `lib/endereco.ts`", dados: "Faixa de faturamento mensal (ou valor exato, se souber) · é a 1ª empresa que abre? (opcional) · endereço próprio ou fiscal Legalizai (obrigatório)" },
+  { id: "E5T", rota: "/gate?etapa=triagem", label: "Triagem<br/>sócios? CPF/CNPJ? exterior?", forma: "decisao", classe: "", status: "construida", validado: "oficial", grupo: "GATE", falta: "🆕 24/08 (reunião Leonan 19/08): limite subiu de 2 pra 4 sócios; aviso proativo (não bloqueio) de assinatura múltipla nos 3-4; só 5+ bloqueia. 🆕 24/08 (pedido do Pedro): nova pergunta condicional — sócio CPF ou CNPJ? CNPJ bloqueia (regra fiscal: tira do Simples), rota /saida/socio-pj. Como o tipo já é decidido aqui, o C3 (dossiê) nem pergunta de novo. Exterior = LC 123 art.17 (oficial)", dados: "Quantidade de sócios (1 / 2 / 3 / 4 / 5+) · sócio via CPF ou CNPJ (quando há sócio) · mora fora do Brasil (sim/não)" },
+  { id: "E5F", rota: "/gate?etapa=faixa", label: "Faixa de faturamento", forma: "tela", classe: "", status: "construida", validado: "ux", grupo: "GATE", falta: "Faixas sem âncora fiscal. 🆕 24/08 (reunião Rua Satélite 35): ganhou a pergunta de coorte ('é a 1ª empresa que você abre?'), realocada do E6 — dado puro de log/marketing, opcional, não interfere no processo. 🆕 26/08 (reunião Rua Satélite 36, item 2): ganhou TAMBÉM a escolha de endereço (próprio × fiscal Legalizai), realocada do C4 (`/dossie/empresa`) — essa, diferente da coorte, TRAVA o Continuar (afeta o preço mostrado no E7 daqui a pouco). Fonte: `components/gate-telas.tsx` (`FaixaView`) + `lib/endereco.ts`", dados: "Faixa de faturamento mensal (ou valor exato, se souber) · é a 1ª empresa que abre? (opcional) · endereço próprio ou fiscal Legalizai (obrigatório)" },
 
   // ── SAÍDAS/EXITS do veredito e da triagem — decimal de E5 ─────────────────
   { id: "E5_1", rota: "/veredito/waitlist", label: "E5.1 · 🟡 Waitlist", forma: "tela", classe: "saida", status: "construida", validado: "oficial", falta: "✅ 28/07: campo CNAE pretendido construído (read-only, junto do nome+contato). Tags de CRM ficam pra depois, não travam. Waitlist decidido 16/07; líder atende regulada (Mauro reavaliar)", dados: "Nome + contato · CNAE pretendido (✅ campo construído 28/07)" },
@@ -115,14 +177,25 @@ export const NODES = [
   { id: "E6", rota: "/conta", label: "E6 · Criar conta", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "✅ 28/07: FRONT-LOAD construído — nome/CPF/telefone/endereço (autofill CEP) + etapa de validação por código (mock). Provider de validação CPF/situação real (Pedro). 🔴 24/08 (reunião Rua Satélite 35): pergunta de coorte SAIU daqui, foi pra E5F (Faixa) — não precisa estar junto do cadastro", dados: "E-mail · senha · nome completo · CPF · telefone · endereço (front-load 28/07) · código de verificação (mock)" },
   { id: "E7", rota: "/plano", label: "E7 · A conta da abertura", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Preço ~R$195 FAKE (Mauro+custo); DAE R$268,51×R$288 em disputa; certificado A1 (Mauro). ✅ RESOLVIDO 26/08 (reunião Rua Satélite 36, item 2): a antiga 'pendência real de spec' ('conta total não é total', endereço fiscal só aparecia no C4 pós-pagamento) foi corrigida — a mensalidade mostrada aqui já soma o endereço fiscal quando escolhido lá no E5F, com 1 linha de explicação", dados: "" },
   { id: "E8", rota: "/contrato", label: "E8 · Aceite contrato<br/>reversível, CDC 49", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Redação jurídica do contrato (Mauro/Larissa); rachadura T18", dados: "Aceite do contrato de serviço (checkbox)" },
-  { id: "E9", rota: "/pagamento", label: "E9 · Pagamento", forma: "decisao", classe: "", status: "construida", validado: "pendente", falta: "Asaas travado; falta provider cartão CNPJ + chave de idempotência (Pedro)", dados: "CPF (cobrança + elegibilidade) · método de pagamento (cartão/Pix/boleto)" },
+  // 🆕 26/08 (mesmo achado do E3.2: "2 páginas aprovadas, só 1 no mapa") —
+  // E9 também tem variante Migrar aprovada (`telas-flow.ts`): `?fluxo=migrar`
+  // muda o total (sem taxa de governo) e o aviso ("sua migração começa
+  // hoje" / aciona contador anterior). "Não valia uma tela nova" (mesmo
+  // componente), mas o CONTEÚDO é diferente — mesma régua do E3.2, vira nó.
+  { id: "E9", rota: "/pagamento", label: "E9 · Pagamento<br/>(variante Abrir)", forma: "decisao", classe: "", status: "construida", validado: "pendente", falta: "Asaas travado; falta provider cartão CNPJ + chave de idempotência (Pedro)", dados: "CPF (cobrança + elegibilidade) · método de pagamento (cartão/Pix/boleto)" },
+  { id: "E9_M", rota: "/pagamento?fluxo=migrar", label: "E9 · Pagamento<br/>(variante Migrar)", forma: "decisao", classe: "", status: "construida", validado: "pendente", falta: "Mesmo componente, `?fluxo=migrar`: total não soma taxa de governo, aviso fala de migração (não abertura). CPF/métodos/idempotência idênticos ao componente base", dados: "CPF (cobrança + elegibilidade) · método de pagamento (cartão/Pix/boleto)" },
   { id: "E9_1", rota: "/aguardando", label: "E9.1 · Aguardando boleto<br/>dossiê já liberado", forma: "tela", classe: "espera", status: "construida", validado: "ux", falta: "Dunning revisado", dados: "" },
 
   // ── CONSTITUIÇÃO (C) · dossiê · C1–C7 ────────────────────────────────────
-  { id: "C1", rota: "/dossie/socio", label: "C1 · Seus dados", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "✅ 28/07: reconstruída como CONFIRMAÇÃO — card read-only do que veio do E6 (mock, sem estado real compartilhado ainda) + só pede o que faltou. CPF valida situação (provider do E6); regime de bens (casado). 🔴 24/08 (reunião Rua Satélite 35): upload/leitura de IA que tinha entrado aqui (reunião Leonan, mesmo dia) foi REMOVIDO do MVP (custo/velocidade de leitura de imagem)", dados: "CONFIRMA nome/CPF/endereço já captados no E6 (não recoleta) · RG + órgão emissor (digitação manual) · estado civil (+ regime de bens se casado) · confirma se mora fora do Brasil" },
+  { id: "C1", rota: "/dossie/socio", label: "C1 · Seus dados", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "✅ 28/07: reconstruída como CONFIRMAÇÃO — card read-only do que veio do E6 (mock, sem estado real compartilhado ainda) + só pede o que faltou. CPF valida situação (provider do E6); regime de bens (casado). 🔴 24/08 (reunião Rua Satélite 35): upload/leitura de IA que tinha entrado aqui (reunião Leonan, mesmo dia) foi REMOVIDO do MVP (custo/velocidade de leitura de imagem). 🆕 26/08 (achado do cruzamento com pesquisa JUCEMG/DBE, ver `gap-analise-dados-abertura-vs-pesquisa-gemini.md`): data de nascimento e nome da mãe ganharam campo — eram exigência de DBE ausente do dossiê", dados: "CONFIRMA nome/CPF/endereço já captados no E6 (não recoleta) · RG + órgão emissor (digitação manual) · data de nascimento · nome da mãe · estado civil (+ regime de bens se casado) · confirma se mora fora do Brasil" },
   { id: "C2", rota: "/dossie/vinculo", label: "C2 · Vínculo INSS", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "INSS 11% direto + teto folga = consolidado fiscal fechado", dados: "Já contribui INSS por fora? (sim/não) · valor do vínculo (CLT/aposentadoria/autônomo/sócio de outro CNPJ)" },
-  { id: "C3", rota: "/dossie/socios", label: "C3 · Sócios?", forma: "decisao", classe: "", status: "construida", validado: "oficial", falta: "Re-pergunta o E5T (carry-forward pendente); limite subiu de 2 pra 4 (24/08). 🔒 24/08 (pedido do Pedro): não pergunta MAIS nada — quantidade e tipo (CPF) já vêm travados da triagem (E5T)", dados: "Confirma se terá mais sócios (sem reperguntar quantidade/tipo)" },
-  { id: "C3_1", label: "C3.1 · Preenche sócios extras", forma: "tela", classe: "branch", status: "construida", validado: "oficial", falta: "🔒 24/08 (pedido do Pedro, em cima da reunião Leonan): DOIS travamentos — (1) quantidade de slots FIXA, vinda do que a triagem (E5T) já decidiu, sem botão de adicionar/remover; (2) CPF travado, sem pergunta de tipo (CNPJ já foi bloqueado na E5T/E5.6). Só falta nome + % de cada sócio extra. Card completo por sócio (endereço/documentos) ainda não entrou — Pedro deixou como 'talvez vale a pena', não travado", dados: "Nome completo + % de participação de cada sócio extra (quantidade fixa, CPF implícito)" },
+  // 🆕 26/08 (achado do Pedro, olhando o /mapa: "C3 parece duplicada com
+  // C3.1") — CONFIRMADO no código: `SociosView` é 1 componente só, 1 rota só
+  // (`/dossie/socios`), com 1 único `onSeguir` que sempre vai pro C4 direto
+  // (`app/(app)/dossie/socios/page.tsx`). Quando TEM_SOCIO, a mesma tela JÁ
+  // mostra o formulário de preencher os sócios extras — não existe uma "C3.1"
+  // separada no código, era um nó fantasma no flow (antigo `C3_1`, removido).
+  { id: "C3", rota: "/dossie/socios", label: "C3 · Sócios?", forma: "decisao", classe: "", status: "construida", validado: "oficial", falta: "Re-pergunta o E5T (carry-forward pendente); limite subiu de 2 pra 4 (24/08). 🔒 24/08 (pedido do Pedro): não pergunta MAIS nada — quantidade e tipo (CPF) já vêm travados da triagem (E5T). Quando TEM_SOCIO, a MESMA tela já mostra o formulário de completar os sócios extras (sem passo/rota separada)", dados: "Confirma se terá mais sócios (sem reperguntar quantidade/tipo) · se houver, nome completo + % de participação de cada sócio extra (quantidade fixa, CPF implícito)" },
   { id: "C4", rota: "/dossie/empresa", label: "C4 · Dados da empresa", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "✅ 28/07: IPTU obrigatório travado. 🆕 24/08 (reunião Leonan): alerta de IPTU pode subir quando é residência de sócio; trava duplicidade (só 1 sócio por endereço); chips de capital social simbólico (R$1k/5k/10k). 🔄 26/08 (reunião Rua Satélite 36, item 2): a escolha 'próprio × fiscal Legalizai' e o aviso de cobrança recorrente SAÍRAM daqui — moraram no E5F desde 24/08 até virarem o gate oficial de decisão, e o valor já vem confirmado do E7. Esta tela agora só CONFIRMA a escolha (card read-only, mesma doutrina do C3) e coleta os detalhes de endereço (CEP/IPTU/tipo) quando for próprio", dados: "CEP (autofill) + número + complemento · índice cadastral IPTU (obrigatório, só se próprio) · tipo de endereço · residência de sócio (trava duplicidade) · capital social" },
   { id: "C5", rota: "/dossie/cnae-secundarios", label: "C5 · CNAE secundários", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "🆕 24/08 (reunião Leonan): ganhou busca livre (restrita ao que a gente atende, pedido original da Jéssica 19/07) além das 4 sugestões curadas mesmo-imposto; até 15 no total; secundária que muda enquadramento mostra aviso e troca CTA por 'Falar com atendente' em vez de bloquear silenciosamente", dados: "CNAEs secundários (seleção múltipla + busca, opcional, até 15)" },
   { id: "C6", rota: "/dossie/natureza", label: "C6 · Natureza jurídica", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "SLU × LTDA confirmado pelo Leonan (24/08): SLU pra individual (proteção patrimonial — bens não se misturam), LTDA pra sociedade, sem outra opção nos dois casos", dados: "Escolha da natureza jurídica (SLU ou LTDA — sugerida, editável)" },
@@ -146,32 +219,37 @@ export const NODES = [
   // segue existindo pra RENOVAR/trocar depois).
   { id: "A3_2", rota: "/certificado", label: "A3.2 · Certificado digital<br/>(antes de assinar)", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Componente `CertificadoGateView` (`components/wizard-cauda.tsx`). Pergunta 'já tem?' → upload arquivo+senha (sim) ou agenda entrevista com certificadora parceira (não). Mock: ambos caminhos avançam direto (sem espera assíncrona real)", dados: "Sim/não tem certificado próprio · se sim: arquivo (.pfx/.p12) + senha" },
   { id: "A4", rota: "/assinatura", label: "A4 · Assinatura dos sócios", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "GOV.BR/e-CAC deep-link (dev). 🆕 24/08 (reunião Leonan): código 2FA único concentra procuração+assinatura (`CodigoGovView` — janela 10min, 3 tentativas, escala pra atendente se estourar); convite de sócio ganhou seletor de canal (WhatsApp/e-mail). 🆕 26/08 (item 7): certificado já vem validado da A3.2 — a procuração que sai junto desta assinatura agora tem o que precisa", dados: "Assinatura via GOV.BR/e-CAC · código de validação de 6 dígitos (janela 10min) · canal do convite ao sócio (WhatsApp/e-mail)" },
-  { id: "A4G", label: "GOV.BR nível<br/>bronze→upgrade", forma: "decisao", classe: "inline", status: "construida", validado: "pendente", falta: "Dobrado inline no A4", naTabela: false, dados: "" },
+  { id: "A4G", rota: "/assinatura", label: "GOV.BR nível<br/>bronze→upgrade", forma: "decisao", classe: "inline", status: "construida", validado: "pendente", falta: "Dobrado inline no A4 — sem query própria (nenhum toggle de demo separa o sub-estado), a prévia mostra a mesma tela do A4", naTabela: false, dados: "" },
   { id: "REMOVIDO_N24", label: "'Empresa ativa'<br/>🗑️ REMOVIDO 30/07", forma: "terminal", classe: "todo", status: "planejada", validado: "oficial", falta: "Era órfão desde o swap A4→A5 (nenhuma rota navegava mais até aqui) — arquivo `/ativa` e a view apagados de vez 30/07, confirmado pelo Pedro. Fica só como marca histórica no mapa", dados: "" },
   { id: "A5", rota: "/home-dia1", label: "✅ A5 · Home dia-1<br/>(ativação)", forma: "terminal", classe: "feliz", status: "construida", validado: "oficial", falta: "🔓 SWAP validado 30/07 (confirmado no código: assinatura empurra direto pra cá). 🆕 24/08 (reunião Leonan): trilha agora mostra 3 status explícitos — Procuração (feito, instantâneo com o código) → Validação do certificado digital (agora, linka pra /mais/certificado upload+oferta) → Acesso completo. 🔄 26/08 (item 7): certificado deixou de ser 'agora' e virou 'feito' — já foi validado antes da assinatura (A3.2). Quem vira 'agora' é 'Conferir os dados da empresa' (`/mais/empresa`). `/mais/certificado` segue existindo, só que agora é pra RENOVAR/trocar, não pra validar a 1ª vez. Sem confete nem selo coral no hero. Handoff pro flow Portal (letra P) → autoridade portal-data.mjs", dados: "" },
 ];
 
 export const EDGES = [
-  { de: "E1", para: "E2" },
-  { de: "E2", para: "E3" },
-  { de: "E3", para: "E3_1", label: "já sou cliente" },
-  { de: "E3", para: "E3_2", label: "quero abrir / migrar" },
-  { de: "E3_2", para: "E4", label: "ME" },
+  { de: "E1", para: "E2_1" },
+  { de: "E2_1", para: "E2_2" },
+  { de: "E2_2", para: "E2_3" },
+  { de: "E2_3", para: "E3" },
+  { de: "E3", para: "E3_1", label: "já sou cliente", deHandle: "login" },
+  { de: "E3", para: "E3_2", label: "quero abrir", deHandle: "abrir" },
+  { de: "E3", para: "E3_2_M", label: "já tenho empresa", deHandle: "migrar" },
+  { de: "E3_2", para: "E4", label: "ME, abrir" },
   { de: "E3_2", para: "E5A", label: "MEI, abrir (pula cidade)", tracejado: true },
-  { de: "E3_2", para: "E4_2", label: "MEI, migrar (pula cidade)", tracejado: true },
-  { de: "E4", para: "E5A", label: "BH confirmado, abrir" },
-  { de: "E4", para: "E4_2", label: "BH confirmado, migrar" },
-  { de: "E4", para: "E4_1", label: "fora de BH" },
+  { de: "E3_2_M", para: "E4", label: "ME, migrar" },
+  { de: "E3_2_M", para: "E4_2", label: "MEI, migrar (pula cidade)", tracejado: true },
+  { de: "E4", para: "E5A", label: "BH confirmado, abrir", deHandle: "sim" },
+  { de: "E4", para: "E4_2", label: "BH confirmado, migrar", deHandle: "sim" },
+  { de: "E4", para: "E4_1", label: "fora de BH", deHandle: "nao" },
 
   { de: "E4_2", para: "E4_3", tracejado: true },
   { de: "E3_2", para: "E4_2B_1", label: "Lucro Presumido (CTA)" },
+  { de: "E3_2_M", para: "E4_2B_1", label: "Lucro Presumido (CTA)" },
   { de: "E4_2", para: "E4_2_1", label: "CNPJ inapto/suspenso", tracejado: true },
   { de: "E4_2", para: "E5_1", label: "🟡 regulada" },
   { de: "E4_2", para: "E5_2", label: "🔴 Mauro atende" },
   { de: "E4_3", para: "E4_4", tracejado: true },
   { de: "E4_4", para: "E4_5" },
-  { de: "E4_5", para: "E9", label: "fluxo migrar" },
-  { de: "E9", para: "E9_2", label: "fluxo migrar", tracejado: true },
+  { de: "E4_5", para: "E9_M" },
+  { de: "E9_M", para: "E9_2", tracejado: true },
   { de: "E9_2", para: "E9_2A" },
   { de: "E9_2A", para: "E9_2B" },
   { de: "E9_2B", para: "E9_2C" },
@@ -202,9 +280,7 @@ export const EDGES = [
 
   { de: "C1", para: "C2" },
   { de: "C2", para: "C3" },
-  { de: "C3", para: "C3_1", label: "2 sócios" },
-  { de: "C3_1", para: "C4" },
-  { de: "C3", para: "C4", label: "solo" },
+  { de: "C3", para: "C4" },
   { de: "C4", para: "C5" },
   { de: "C5", para: "C6" },
   { de: "C6", para: "C7" },

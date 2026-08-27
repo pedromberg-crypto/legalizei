@@ -50,10 +50,11 @@ export const CUSTOS = {
    *  desde 09/07 estava errado — era o número mais citado e menos verificado
    *  do projeto. Repasse ao Estado: não é margem nossa e não é reembolsável. */
   DAE_JUCEMG: 268.51,
-  /** 🔴 FAKE. Placeholder de benchmark (plano Padrão da Contabilizei), NÃO o
-   *  nosso preço. Travado como deferido até haver custo unitário real (DB+API).
-   *  Não reabrir sem o Pedro puxar. Aparece na tela com marca de provisório. */
-  MENSALIDADE: 195,
+  /** 🟢 Preço real ME (fase de lançamento), decisão 20/08 (`marca/decisoes-marca.md`):
+   *  R$79/mês nos 3 primeiros meses, depois R$139/mês — este valor é o
+   *  ESTÁVEL pós-promoção. Substituiu o placeholder de benchmark (R$195,
+   *  Contabilizei) usado até 26/08. */
+  MENSALIDADE: 139,
   /** 🟢 Decisão D1 (14/07): não se cobra o trabalho de abrir. A receita é a
    *  mensalidade. "Grátis" = honorário zero, NUNCA "governo zero". */
   HONORARIO_ABERTURA: 0,

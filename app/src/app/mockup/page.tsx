@@ -111,324 +111,14 @@ const BARRA_H: Record<Topo, number> = { island: 54, notch: 44, barra: 20 };
  * entra logo depois do nó que o gera — não no fim.
  */
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   MAPA MENTAL — visão panorâmica de TODAS as telas + conexões reais.
-   ═══════════════════════════════════════════════════════════════════════════
-   🆕 03/08 — CTA no header abre este overlay. Reusa `GRUPOS` (mesma fonte das
-   esteiras, zero cópia de dado) como colunas do mapa. As CONEXÕES abaixo são
-   a tradução manual pra `rota` das arestas reais de `flow/flow-data.mjs` +
-   `portal/portal-data.mjs` (que usam `id`, não `rota` — por isso não dá pra
-   importar direto). ⚠️ Herança manual: se o flow mudar de novo, este mapa
-   pode ficar defasado até alguém atualizar as duas listas juntas.
-   ─────────────────────────────────────────────────────────────────────────── */
-
-interface Conexao {
-  de: string;
-  para: string;
-  /** Ramo/alternativa/atalho de navbar — mais fino e claro que o fluxo principal. */
-  tracejado?: boolean;
-}
-
-const MAPA_EDGES: Conexao[] = [
-  // ── Entrada + Migrar fundido ──────────────────────────────────────────────
-  { de: "/splash", para: "/welcome" },
-  { de: "/welcome", para: "/entrada" },
-  { de: "/entrada", para: "/entrada?intencao=abrir" },
-  { de: "/entrada", para: "/login", tracejado: true },
-  // 🆕 03/08 — E3.2 (MEI×ME) fica ENTRE o fork e o gate de cidade. MEI pula
-  // o E4 inteiro (sem limite geográfico); só ME confirma cidade.
-  { de: "/entrada?intencao=abrir", para: "/gate?regime=mei", tracejado: true },
-  { de: "/entrada?intencao=abrir", para: "/entrada?intencao=abrir&regime=me" },
-  { de: "/entrada?intencao=abrir&regime=me", para: "/gate" },
-  { de: "/entrada?intencao=abrir&regime=me", para: "/saida/fora-bh", tracejado: true },
-  // 🆕 04/08 (2ª rodada) — Migrar TAMBÉM passa pela E3.2 agora (copy própria,
-  // autodeclaração). MEI pula a cidade e vai direto pro M1 já sinalizado
-  // (`?cenario=mei`); ME cai no MESMO tile de gate de cidade do Abrir (é a
-  // mesma tela reusada) e só depois segue pro M1.
-  { de: "/entrada", para: "/entrada?intencao=migrar", tracejado: true },
-  { de: "/entrada?intencao=migrar", para: "/migrar/cnpj?cenario=mei", tracejado: true },
-  { de: "/entrada?intencao=migrar", para: "/entrada?intencao=abrir&regime=me" },
-  { de: "/entrada?intencao=abrir&regime=me", para: "/migrar/cnpj" },
-  { de: "/entrada?intencao=migrar", para: "/saida/regime-nao-suportado", tracejado: true },
-  { de: "/migrar/cnpj", para: "/migrar/cnpj?fase=achou", tracejado: true },
-  { de: "/migrar/cnpj", para: "/migrar/diagnostico" },
-  { de: "/migrar/cnpj", para: "/veredito/waitlist", tracejado: true },
-  { de: "/migrar/cnpj", para: "/veredito/nao-atende", tracejado: true },
-  { de: "/migrar/cnpj", para: "/saida/cnpj-inapto", tracejado: true },
-  { de: "/migrar/diagnostico", para: "/migrar/plano" },
-  { de: "/migrar/plano", para: "/migrar/contrato" },
-  { de: "/migrar/contrato", para: "/pagamento?fluxo=migrar" },
-
-  // ── E5 porta+veredito ──────────────────────────────────────────────────────
-  { de: "/gate", para: "/veredito/atende" },
-  { de: "/veredito/atende", para: "/gate?etapa=triagem" },
-  { de: "/gate", para: "/veredito/waitlist", tracejado: true },
-  { de: "/gate", para: "/veredito/nao-atende", tracejado: true },
-  { de: "/gate", para: "/veredito/descartado", tracejado: true },
-  { de: "/gate?etapa=triagem", para: "/gate?etapa=faixa" },
-  { de: "/gate?etapa=triagem", para: "/saida/exterior", tracejado: true },
-  { de: "/gate?etapa=triagem", para: "/saida/socios", tracejado: true },
-  { de: "/gate?etapa=triagem", para: "/saida/socio-pj", tracejado: true },
-  { de: "/gate?etapa=faixa", para: "/conta" },
-
-  // ── Dinheiro + Migrar pós-pagamento ────────────────────────────────────────
-  { de: "/conta", para: "/plano" },
-  { de: "/plano", para: "/contrato" },
-  { de: "/contrato", para: "/pagamento" },
-  { de: "/pagamento", para: "/dossie/socio" },
-  { de: "/pagamento", para: "/aguardando", tracejado: true },
-  // 🔄 26/08 — a cadeia real (`flow-data.mjs`, E9_2→E9_2A→E9_2B→E9_2C→E9_3)
-  // pulava direto pro /migrar/transferencia aqui, desde 24/08 (reunião
-  // Leonan 19/08 criou o contador+dados+sócios+gov no meio). Corrigido —
-  // "herança manual", o próprio risco que este comentário já avisava.
-  { de: "/pagamento?fluxo=migrar", para: "/migrar/contador" },
-  { de: "/migrar/contador", para: "/migrar/dados" },
-  { de: "/migrar/dados", para: "/migrar/socios" },
-  { de: "/migrar/socios", para: "/migrar/gov" },
-  { de: "/migrar/gov", para: "/migrar/transferencia" },
-  { de: "/migrar/transferencia", para: "/migrar/ativa" },
-  { de: "/migrar/transferencia?estado=travado", para: "/migrar/ativa", tracejado: true },
-  { de: "/migrar/ativa", para: "/home-dia1" },
-
-  // ── Pausas → dossiê ────────────────────────────────────────────────────────
-  { de: "/aguardando", para: "/dossie/socio", tracejado: true },
-  { de: "/retomar", para: "/dossie/socio", tracejado: true },
-
-  // ── Constituição (dossiê, sequencial) ──────────────────────────────────────
-  { de: "/dossie/socio", para: "/dossie/vinculo" },
-  { de: "/dossie/vinculo", para: "/dossie/socios" },
-  { de: "/dossie/socios", para: "/dossie/empresa" },
-  { de: "/dossie/empresa", para: "/dossie/cnae-secundarios" },
-  { de: "/dossie/cnae-secundarios", para: "/dossie/natureza" },
-  { de: "/dossie/natureza", para: "/dossie/nome" },
-  { de: "/dossie/nome", para: "/revisar" },
-
-  // ── Aprovação ───────────────────────────────────────────────────────────────
-  { de: "/revisar", para: "/termo" },
-  { de: "/termo", para: "/painel" },
-  { de: "/painel", para: "/painel/recusa", tracejado: true },
-  { de: "/painel/recusa", para: "/painel", tracejado: true },
-  // 🔄 26/08 (reunião Rua Satélite 36, item 7) — certificado passou a ser
-  // validado ANTES da assinatura, não depois (ver flow-data.mjs, nó A3_2).
-  { de: "/painel", para: "/certificado" },
-  { de: "/certificado", para: "/assinatura" },
-  { de: "/assinatura", para: "/home-dia1" },
-
-  // ── Portal (grafo de navegação) ────────────────────────────────────────────
-  { de: "/home-dia1", para: "/inicio" },
-  { de: "/inicio", para: "/impostos", tracejado: true },
-  { de: "/inicio", para: "/impostos/aliquotas", tracejado: true },
-  { de: "/inicio", para: "/pro-labore", tracejado: true },
-  { de: "/inicio", para: "/avisos", tracejado: true },
-  { de: "/inicio", para: "/blog", tracejado: true },
-  { de: "/inicio", para: "/notas", tracejado: true },
-  { de: "/inicio", para: "/mais", tracejado: true },
-  { de: "/inicio", para: "/emitir", tracejado: true },
-  { de: "/impostos", para: "/impostos/guias" },
-  { de: "/impostos", para: "/impostos/pagar" },
-  { de: "/impostos", para: "/impostos/aliquotas" },
-  { de: "/impostos", para: "/obrigacoes" },
-  { de: "/impostos/guias", para: "/impostos/pagar" },
-  { de: "/notas", para: "/notas/detalhe" },
-  { de: "/notas/detalhe", para: "/emitir", tracejado: true },
-  { de: "/mais", para: "/perfil" },
-  { de: "/mais", para: "/mais/plano" },
-  { de: "/mais", para: "/mais/servicos" },
-  { de: "/mais", para: "/mais/empresa" },
-  { de: "/mais", para: "/mais/socios" },
-  { de: "/mais", para: "/mais/colaborador", tracejado: true },
-  { de: "/mais", para: "/mais/documentos" },
-  { de: "/mais", para: "/mais/certificado" },
-  { de: "/mais", para: "/mais/em-dia" },
-  { de: "/mais", para: "/mais/relatorios" },
-  { de: "/mais", para: "/mais/declaracoes" },
-  { de: "/mais", para: "/avisos" },
-  { de: "/mais", para: "/blog" },
-  { de: "/mais/empresa", para: "/mais/servicos", tracejado: true },
-  { de: "/mais/certificado", para: "/mais/servicos", tracejado: true },
-  { de: "/mais/servicos", para: "/impostos/guias", tracejado: true },
-  { de: "/blog", para: "/blog/post" },
-];
-
-const CORES_GRUPO = [
-  "#e0603f", "#5b6cf0", "#2f9e5a", "#e0a03f", "#9a5bd0",
-  "#3f8fe0", "#d05b8f", "#6ba03f", "#c26b2f", "#4fa0a0", "#8a5b3f",
-];
-
-type Rect = { x: number; y: number; w: number; h: number };
-
-function MapaMental({ onClose }: { onClose: () => void }) {
-  const canvasRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const nodeRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
-  const [pos, setPos] = useState<Record<string, Rect>>({});
-  const [tamanho, setTamanho] = useState({ w: 0, h: 0 });
-
-  const recalcular = useCallback(() => {
-    const base = contentRef.current;
-    if (!base) return;
-    const baseRect = base.getBoundingClientRect();
-    const proximo: Record<string, Rect> = {};
-    for (const [rota, el] of Object.entries(nodeRefs.current)) {
-      if (!el) continue;
-      const r = el.getBoundingClientRect();
-      proximo[rota] = {
-        x: r.left - baseRect.left,
-        y: r.top - baseRect.top,
-        w: r.width,
-        h: r.height,
-      };
-    }
-    setPos(proximo);
-    setTamanho({ w: base.scrollWidth, h: base.scrollHeight });
-  }, []);
-
-  useEffect(() => {
-    recalcular();
-    window.addEventListener("resize", recalcular);
-    return () => window.removeEventListener("resize", recalcular);
-  }, [recalcular]);
-
-  useEffect(() => {
-    const onEsc = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", onEsc);
-    return () => window.removeEventListener("keydown", onEsc);
-  }, [onClose]);
-
-  // Arrasto 2D (pan) — mesma ideia do useDragScroll das esteiras, nas 2 direções.
-  useEffect(() => {
-    const el = canvasRef.current;
-    if (!el) return;
-    let down = false;
-    let sx = 0;
-    let sy = 0;
-    let sl = 0;
-    let st = 0;
-    const onDown = (e: PointerEvent) => {
-      down = true;
-      sx = e.clientX;
-      sy = e.clientY;
-      sl = el.scrollLeft;
-      st = el.scrollTop;
-      el.style.cursor = "grabbing";
-    };
-    const onMove = (e: PointerEvent) => {
-      if (!down) return;
-      el.scrollLeft = sl - (e.clientX - sx);
-      el.scrollTop = st - (e.clientY - sy);
-    };
-    const stop = () => {
-      down = false;
-      el.style.cursor = "grab";
-    };
-    el.addEventListener("pointerdown", onDown);
-    window.addEventListener("pointermove", onMove);
-    window.addEventListener("pointerup", stop);
-    return () => {
-      el.removeEventListener("pointerdown", onDown);
-      window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerup", stop);
-    };
-  }, []);
-
-  function caminho(de: Rect, para: Rect): string {
-    const dx = para.x + para.w / 2 - (de.x + de.w / 2);
-    const dy = para.y + para.h / 2 - (de.y + de.h / 2);
-    // Colunas (mesmo grupo) tendem a empilhar verticalmente; entre grupos o
-    // salto é mais horizontal. Escolhe o par de âncoras pela direção dominante.
-    if (Math.abs(dy) >= Math.abs(dx)) {
-      const x1 = de.x + de.w / 2;
-      const y1 = de.y + de.h;
-      const x2 = para.x + para.w / 2;
-      const y2 = para.y;
-      const my = (y1 + y2) / 2;
-      return `M ${x1} ${y1} C ${x1} ${my}, ${x2} ${my}, ${x2} ${y2}`;
-    }
-    const x1 = dx >= 0 ? de.x + de.w : de.x;
-    const y1 = de.y + de.h / 2;
-    const x2 = dx >= 0 ? para.x : para.x + para.w;
-    const y2 = para.y + para.h / 2;
-    const mx = (x1 + x2) / 2;
-    return `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`;
-  }
-
-  return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-surface-page/98 backdrop-blur-sm">
-      <div className="flex shrink-0 items-center justify-between border-b border-border-hairline px-6 py-4">
-        <div>
-          <p className="text-micro font-semibold tracking-wide text-text-tertiary">
-            Legalizai · mapa mental
-          </p>
-          <h2 className="text-h2 text-text-primary">Todas as telas, todas as conexões</h2>
-        </div>
-        <div className="flex items-center gap-3">
-          <p className="text-caption text-text-tertiary">Arraste pra navegar · Esc pra fechar</p>
-          <button
-            onClick={onClose}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-border-hairline bg-surface-card text-text-secondary transition-colors hover:border-border-strong"
-            aria-label="Fechar mapa"
-          >
-            ✕
-          </button>
-        </div>
-      </div>
-
-      <div ref={canvasRef} className="flex-1 cursor-grab select-none overflow-auto">
-        <div ref={contentRef} className="relative inline-flex gap-16 p-16">
-          <svg
-            width={tamanho.w}
-            height={tamanho.h}
-            className="pointer-events-none absolute left-0 top-0"
-          >
-            {MAPA_EDGES.map((e, i) => {
-              const de = pos[e.de];
-              const para = pos[e.para];
-              if (!de || !para) return null;
-              return (
-                <path
-                  key={i}
-                  d={caminho(de, para)}
-                  fill="none"
-                  stroke={e.tracejado ? "#c9ccd6" : "#9aa0ac"}
-                  strokeWidth={e.tracejado ? 1.25 : 1.75}
-                  strokeDasharray={e.tracejado ? "4 4" : undefined}
-                />
-              );
-            })}
-          </svg>
-
-          {GRUPOS.map((g, gi) => (
-            <div key={g.id} className="relative z-10 flex w-[190px] shrink-0 flex-col gap-3">
-              <p
-                className="sticky top-0 mb-1 rounded-md bg-surface-page/95 px-1 py-0.5 text-micro font-bold uppercase tracking-wide"
-                style={{ color: CORES_GRUPO[gi % CORES_GRUPO.length] }}
-              >
-                {g.nome}
-              </p>
-              {g.telas.map((t) => (
-                <a
-                  key={t.rota}
-                  ref={(el) => {
-                    nodeRefs.current[t.rota] = el;
-                  }}
-                  href={t.rota}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title={t.nota}
-                  className="block rounded-lg border bg-surface-card px-3 py-2.5 text-caption shadow-sm transition-colors hover:border-border-strong"
-                  style={{ borderLeftWidth: 3, borderLeftColor: CORES_GRUPO[gi % CORES_GRUPO.length] }}
-                >
-                  <p className="font-semibold text-text-primary leading-snug">{t.nome}</p>
-                  <p className="mt-0.5 truncate text-micro text-text-tertiary">{t.rota}</p>
-                </a>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
+/**
+ * 🔄 26/08 (pedido do Pedro) — o "mapa mental" que morava aqui (SVG desenhado
+ * à mão sobre `MAPA_EDGES`, uma lista traduzida à mão de `flow-data.mjs` e
+ * que ficava desatualizada) foi APOSENTADO. Virou `/mapa`: board interativo
+ * de verdade (React Flow + dagre), lendo `flow-graph.json` — gerado por
+ * `execucao/flow/gerar-mapa.mjs`, nunca editado à mão. Zero lista pra ficar
+ * velha de novo. Ver `app/src/app/mapa/page.tsx`.
+ */
 
 export default function MockupPage() {
   const [nonce, setNonce] = useState(0);
@@ -439,7 +129,6 @@ export default function MockupPage() {
   // revisa muda de tamanho relativo — só cabe mais na mesa.
   const [escala, setEscala] = useState(0.75);
   const [insets, setInsets] = useState(true);
-  const [mapaAberto, setMapaAberto] = useState(false);
 
   const ap = APARELHOS.find((a) => a.id === apId) ?? APARELHOS[0];
 
@@ -455,15 +144,15 @@ export default function MockupPage() {
             Ordem real do flow, por esteira. Arraste pra passar tela por tela.
           </p>
           <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2">
-            {/* 🆕 03/08 — visão panorâmica: todas as telas menores + conexões
-                reais, estilo mapa mental. Pro programador enxergar o flow
-                inteiro de uma vez, sem rolar esteira por esteira. */}
-            <button
-              onClick={() => setMapaAberto(true)}
+            {/* 🔄 26/08 — visão panorâmica virou rota própria (`/mapa`), board
+                interativo de verdade (zoom/arrastar/clicar), não mais overlay
+                que abria por cima desta página. Ver comentário acima. */}
+            <a
+              href="/mapa"
               className="rounded-xl bg-action-primary px-4 py-2.5 text-caption font-bold text-text-on-brand transition-colors hover:bg-action-primary-hover"
             >
-              🗺️ Ver mapa mental (todas as telas + conexões)
-            </button>
+              🗺️ Ver mapa do flow (todas as telas + conexões)
+            </a>
             {/* Laboratório de VERSÕES de página (todas as explorações num board). */}
             <p className="text-caption">
               <a
@@ -475,8 +164,6 @@ export default function MockupPage() {
             </p>
           </div>
         </header>
-
-        {mapaAberto && <MapaMental onClose={() => setMapaAberto(false)} />}
 
         {/* ── Controles da prancheta ── */}
         <div className="mb-10 flex flex-wrap items-end gap-x-8 gap-y-5">

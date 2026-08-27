@@ -11,6 +11,10 @@
  *      a versão, grava um snapshot em `versoes/` (.json p/ diff + .mmd legível)
  *      e prepende uma linha no histórico da nota, com o RESUMO do que mudou.
  *      Igual não muda → não versiona (não polui o histórico).
+ *   3. 🆕 26/08 — EXPORTA `app/src/lib/flow-graph.json`, consumido pelo board
+ *      interativo `/mapa` (React Flow). Sempre reescrito (não é versionado
+ *      como o resto): é uma TRADUÇÃO 1:1 de NODES/EDGES, nunca diverge porque
+ *      nunca é editado à mão — só nasce daqui.
  *
  * Rodar:  node execucao/flow/gerar-mapa.mjs
  * ═══════════════════════════════════════════════════════════════════════════
@@ -20,12 +24,15 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
-import { NODES, EDGES, SUBGRAFOS } from "./flow-data.mjs";
+import { NODES, EDGES, SUBGRAFOS, PREENCHIDOS_INTERNAMENTE } from "./flow-data.mjs";
 
 const DIR = path.dirname(fileURLToPath(import.meta.url)); // execucao/flow
 const NOTA = path.join(DIR, "..", "mapa-flow-mermaid.md"); // execucao/mapa-flow-mermaid.md
 const VERSOES = path.join(DIR, "versoes");
 const APP = path.join(DIR, "..", "..", "app", "src", "app");
+const FLOW_GRAPH_JSON = path.join(DIR, "..", "..", "app", "src", "lib", "flow-graph.json");
+const DADOS_MD = path.join(DIR, "..", "dados-coletados-abertura-ate-viabilidade.md");
+const DADOS_TS = path.join(DIR, "..", "..", "app", "src", "lib", "dados-constituicao.ts");
 
 const hoje = new Date().toISOString().slice(0, 10);
 
@@ -120,22 +127,214 @@ function rotasReais(dir, segs = [], acc = new Set()) {
   return acc;
 }
 
+// Deep-link (`?slide=0`, `?intencao=abrir`...) aponta pro MESMO page.tsx da
+// rota base — a query só seleciona um estado interno (mesmo padrão de
+// `/entrada?intencao=`, `/gate?etapa=`). O drift-check compara a rota BASE,
+// senão todo nó com query acusaria "não há page.tsx" pra sempre.
+const base = (rota) => rota.split("?")[0];
+
 function checarDrift() {
   const reais = rotasReais(APP);
   const doMapa = new Set();
   for (const n of NODES) {
-    if (n.rota) doMapa.add(n.rota);
-    if (n.rotasCobre) for (const r of n.rotasCobre) doMapa.add(r); // 1 nó cobre N rotas
+    if (n.rota) doMapa.add(base(n.rota));
+    if (n.rotasCobre) for (const r of n.rotasCobre) doMapa.add(base(r)); // 1 nó cobre N rotas
   }
   const msgs = [];
   for (const n of NODES.filter((x) => x.rota)) {
-    if (!reais.has(n.rota)) msgs.push(`${n.id} cita ${n.rota} mas não há page.tsx`);
+    if (!reais.has(base(n.rota))) msgs.push(`${n.id} cita ${n.rota} mas não há page.tsx`);
   }
   const ignora = new Set(["/", "/mockup"]); // raiz + ferramenta de review
   for (const r of reais) {
     if (!ignora.has(r) && !doMapa.has(r)) msgs.push(`rota ${r} existe mas não está no mapa`);
   }
   return msgs;
+}
+
+/* ─── 3b. EXPORT: flow-graph.json (pro board /mapa) ─────────────────────── */
+
+/**
+ * 🆕 26/08 — nós com `classe: "todo"` são marcadores HISTÓRICOS (ex.: `REMOVIDO_N24`,
+ * "tela removida, fica só como marca no mapa") — não são passo de flow real,
+ * então ficam de fora do board interativo (o Mermaid ainda os mostra, é
+ * registro; o board é ferramenta de trabalho do dev, não precisa do museu).
+ */
+function exportarFlowGraph() {
+  const nodes = NODES.filter((n) => n.classe !== "todo").map((n) => ({
+    id: n.id,
+    rota: n.rota || null,
+    label: n.label,
+    forma: n.forma,
+    classe: n.classe || "",
+    status: n.status,
+    validado: n.validado,
+    falta: n.falta || "",
+    dados: n.dados || "",
+    // 🆕 26/08 (pedido do Pedro: "linka o CTA no caminho dele, não a tela
+    // inteira") — pontos de saída nomeados, 1 por CTA visível na tela, cada
+    // aresta escolhe de qual sai via `deHandle`. Ausente = comportamento
+    // antigo (1 saída genérica do nó inteiro), sem quebrar nada.
+    handles: n.handles || undefined,
+  }));
+  const idsValidos = new Set(nodes.map((n) => n.id));
+  const edges = EDGES.filter((e) => idsValidos.has(e.de) && idsValidos.has(e.para)).map((e) => ({
+    de: e.de,
+    para: e.para,
+    label: e.label || "",
+    tracejado: !!e.tracejado,
+    deHandle: e.deHandle || undefined,
+  }));
+  fs.mkdirSync(path.dirname(FLOW_GRAPH_JSON), { recursive: true });
+  fs.writeFileSync(FLOW_GRAPH_JSON, JSON.stringify({ nodes, edges }, null, 2));
+}
+
+/* ─── 3c. EXPORT: dados-coletados-abertura-ate-viabilidade.md ───────────── */
+
+/**
+ * 🆕 26/08 (pedido do Pedro: "se alterarmos algo no flow que envolva campos
+ * captados do usuário, o .md se atualiza sozinho") — GERADO a partir de
+ * NODES/EDGES, nunca editado à mão (mesma régua do `flow-graph.json`).
+ *
+ * Preâmbulo fixo (E1→E3, sempre mostrado antes do fork) + o caminho Abrir
+ * calculado por alcançabilidade — MESMO algoritmo do `app/src/lib/trilhas.ts`
+ * (forward BFS a partir de `E3, deHandle:"abrir"`, podando arestas rotuladas
+ * "migrar", cruzado com alcançabilidade reversa a partir do nó de corte).
+ * Duplicado aqui de propósito: este script roda em Node puro fora do Next,
+ * não importa `.ts` da app. Mudou o algoritmo lá? muda aqui igual.
+ */
+const PREAMBULO_ABRIR = ["E1", "E2_1", "E2_2", "E2_3", "E3"];
+const CORTE_VIABILIDADE = "C7"; // 1ª tentativa de viabilidade (JUCEMG)
+
+function calcularCaminhoAbrir(deId, deHandle, ateId, excluir) {
+  const porOrigem = new Map();
+  const porDestino = new Map();
+  for (const e of EDGES) {
+    (porOrigem.get(e.de) ?? porOrigem.set(e.de, []).get(e.de)).push(e);
+    (porDestino.get(e.para) ?? porDestino.set(e.para, []).get(e.para)).push(e);
+  }
+  const alcancadas = new Set();
+  const visitados = new Set();
+  const primeira = (porOrigem.get(deId) ?? []).filter((e) => e.deHandle === deHandle);
+  const fila = [...primeira];
+  primeira.forEach((e) => alcancadas.add(e));
+  while (fila.length) {
+    const e = fila.shift();
+    if (visitados.has(e.para)) continue;
+    visitados.add(e.para);
+    if (e.para === ateId) continue;
+    for (const prox of porOrigem.get(e.para) ?? []) {
+      if (excluir && prox.label?.toLowerCase().includes(excluir)) continue;
+      if (!alcancadas.has(prox)) {
+        alcancadas.add(prox);
+        fila.push(prox);
+      }
+    }
+  }
+  const alcancaDestino = new Set([ateId]);
+  const filaR = [ateId];
+  while (filaR.length) {
+    const id = filaR.shift();
+    for (const e of porDestino.get(id) ?? []) {
+      if (!alcancadas.has(e)) continue;
+      if (!alcancaDestino.has(e.de)) {
+        alcancaDestino.add(e.de);
+        filaR.push(e.de);
+      }
+    }
+  }
+  const nosNoTrajeto = new Set();
+  for (const e of alcancadas) {
+    if (alcancaDestino.has(e.de) && alcancaDestino.has(e.para)) {
+      nosNoTrajeto.add(e.de);
+      nosNoTrajeto.add(e.para);
+    }
+  }
+  // Ordem estável = ordem de declaração em NODES (já é sequencial por
+  // construção do arquivo-fonte) — evita reimplementar sort topológico
+  // pra um grafo com ramos/loop (DESAMB) que não tem 1 ordem "certa" única.
+  return NODES.filter((n) => nosNoTrajeto.has(n.id)).map((n) => n.id);
+}
+
+function gerarDadosConstituicaoMd() {
+  const byId = new Map(NODES.map((n) => [n.id, n]));
+  // `E3` é o `deId` do cálculo (sempre entra no trajeto) E já está no
+  // preâmbulo fixo — dedup pra não listar a mesma tela 2x.
+  const vistos = new Set();
+  const caminho = [...PREAMBULO_ABRIR, ...calcularCaminhoAbrir("E3", "abrir", CORTE_VIABILIDADE, "migrar")].filter(
+    (id) => (vistos.has(id) ? false : (vistos.add(id), true)),
+  );
+
+  const linhas = [];
+  linhas.push("---");
+  linhas.push("tipo: verdade");
+  linhas.push("status: GERADO — não editar à mão, nasce de `execucao/flow/gerar-mapa.mjs`");
+  linhas.push(`data: ${hoje}`);
+  linhas.push("assunto: dados-coletados-abertura");
+  linhas.push("tags: [execucao, flow, dados, abertura]");
+  linhas.push("---");
+  linhas.push("");
+  linhas.push("# 📋 Dados coletados — Abertura de CNPJ, até a 1ª tentativa de viabilidade");
+  linhas.push("");
+  linhas.push(
+    "> ⚠️ **Nota gerada** — roda `node execucao/flow/gerar-mapa.mjs` pra atualizar depois de mexer em `flow-data.mjs`. " +
+      "Escopo: só o caminho **Abrir** (não Migrar). Do primeiro toque no app até o clique que dispara a 1ª tentativa de viabilidade " +
+      `na Junta (\`${CORTE_VIABILIDADE}\`, CTA que envia a razão social pra JUCEMG). Ver [[mapa-flow-mermaid]] pro diagrama completo, ` +
+      "[[gap-analise-dados-abertura-vs-pesquisa-gemini]] pro cruzamento com pesquisa externa.",
+  );
+  linhas.push("");
+  linhas.push("## Telas do caminho, em ordem");
+  linhas.push("");
+  for (const id of caminho) {
+    const n = byId.get(id);
+    if (!n) continue;
+    const titulo = n.label.replace(/<br\/>/g, " ");
+    linhas.push(`### ${titulo}`);
+    if (n.dados && n.dados.trim()) {
+      for (const item of n.dados.split(" · ")) linhas.push(`- ${item}`);
+    } else {
+      linhas.push("- _(sem dado novo — contexto, confirmação ou decisão do sistema)_");
+    }
+    if (id === CORTE_VIABILIDADE) {
+      linhas.push("");
+      linhas.push(
+        "🔴 **É aqui que o CTA dispara a 1ª tentativa de viabilidade na Junta (JUCEMG)** — os campos acima são exatamente o que vai pro pedido de viabilidade.",
+      );
+    }
+    linhas.push("");
+  }
+
+  if (PREENCHIDOS_INTERNAMENTE?.length) {
+    linhas.push("## Preenchidos por nós, não pelo cliente");
+    linhas.push("");
+    linhas.push("> Campos que a viabilidade/DBE exigem, mas a Legalizai preenche internamente — decisões travadas em `marca/decisoes-marca.md`.");
+    linhas.push("");
+    linhas.push("| Campo | Valor | Onde entraria | Status | Por quê |");
+    linhas.push("|---|---|---|---|---|");
+    for (const p of PREENCHIDOS_INTERNAMENTE) {
+      linhas.push(`| ${p.campo} | ${p.valor} | ${p.contexto} | ${p.status} | ${p.porque} |`);
+    }
+    linhas.push("");
+  }
+
+  linhas.push("## Nota de fonte");
+  linhas.push("");
+  linhas.push(
+    "Gerado direto do campo `dados` de `flow-data.mjs` — reflete o que está **documentado como construído**, não necessariamente o que está " +
+      "validado em produção (ver campo `validado` de cada nó). Qualquer mudança de campo nessas telas precisa entrar em `flow-data.mjs` primeiro; " +
+      "rodar o gerador de novo atualiza esta nota sozinho.",
+  );
+  linhas.push("");
+  return linhas.join("\n");
+}
+
+function exportarDadosConstituicao() {
+  const md = gerarDadosConstituicaoMd();
+  fs.writeFileSync(DADOS_MD, md);
+  const ts =
+    "// 🆕 26/08 — GERADO por `execucao/flow/gerar-mapa.mjs`, não editar à mão.\n" +
+    "// Consumido pelo botão \"Baixar dados coletados\" do `/mapa`.\n" +
+    `export const DADOS_CONSTITUICAO_MD = ${JSON.stringify(md)};\n`;
+  fs.writeFileSync(DADOS_TS, ts);
 }
 
 /* ─── 4. VERSIONAMENTO ──────────────────────────────────────────────────── */
@@ -152,8 +351,15 @@ function estruturaAtual() {
       validado: n.validado,
       falta: n.falta || "",
       dados: n.dados || "",
+      handles: n.handles || null, // 🆕 26/08 — CTA por handle também é estrutural
     })),
-    edges: EDGES.map((e) => ({ de: e.de, para: e.para, label: e.label || "", tracejado: !!e.tracejado })),
+    edges: EDGES.map((e) => ({
+      de: e.de,
+      para: e.para,
+      label: e.label || "",
+      tracejado: !!e.tracejado,
+      deHandle: e.deHandle || null,
+    })),
   };
 }
 
@@ -254,9 +460,13 @@ if (mudou) {
 }
 
 fs.writeFileSync(NOTA, nota);
+exportarFlowGraph();
+exportarDadosConstituicao();
 if (drift.length) {
   console.log(`⚠️  drift: ${drift.join(" · ")}`);
 } else {
   console.log("✓ sem drift (mapa bate com as rotas reais)");
 }
 console.log(`✓ nota atualizada: ${path.relative(path.join(DIR, "..", ".."), NOTA)}`);
+console.log(`✓ flow-graph.json exportado: ${path.relative(path.join(DIR, "..", ".."), FLOW_GRAPH_JSON)}`);
+console.log(`✓ dados-coletados exportado: ${path.relative(path.join(DIR, "..", ".."), DADOS_MD)} + dados-constituicao.ts`);

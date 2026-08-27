@@ -628,7 +628,10 @@ export function PlanoView({
   // de MEI (já é assim em todo o resto do wizard).
   const mensalidadeBase = semTaxaJunta ? CUSTOS.MENSALIDADE_MEI : CUSTOS.MENSALIDADE;
   const mensalidade = mensalidadeBase + (enderecoFiscal ? CUSTOS.ENDERECO_FISCAL : 0);
-  const hoje = semTaxaJunta ? mensalidade : CUSTOS.DAE_JUCEMG + mensalidade;
+  // 🔄 26/08 (pedido do Pedro) — a DAE NÃO soma mais no "você paga hoje". Só
+  // vira cobrança de verdade depois que a viabilidade voltar deferida (A3,
+  // `components/painel.tsx`, "Pague a guia da Junta").
+  const hoje = mensalidade;
 
   if (layout === "oferta") {
     return (
@@ -674,10 +677,20 @@ export function PlanoView({
               )}
             </div>
             <p className="text-display text-text-primary">{brl(mensalidade)}</p>
+            {/* 🆕 26/08 (pedido do Pedro: "destacar o certificado digital
+                grátis também na página do plano") — antes só vivia no fim da
+                frase de baixo, fácil de passar batido. Badge próprio, mesmo
+                token verde do "Grátis" do card de cima — mesma linguagem
+                visual pra "isso não custa nada". */}
+            <div className="mt-1.5 flex items-center gap-1.5">
+              <span className="rounded-full bg-state-success-tint px-2.5 py-0.5 text-micro font-semibold text-state-success-text">
+                Certificado digital grátis
+              </span>
+            </div>
             <p className="text-caption text-text-secondary mt-2">
               {semTaxaJunta
-                ? "Emitir notas fiscais e gerenciar o colaborador que a lei permite pro MEI. Certificado digital incluso."
-                : "Suas guias todo mês, notas fiscais, obrigações do governo e contador de verdade pra falar. Certificado digital incluso."}
+                ? "Emitir notas fiscais e gerenciar o colaborador que a lei permite pro MEI."
+                : "Suas guias todo mês, notas fiscais, obrigações do governo e contador de verdade pra falar."}
             </p>
             <p className="text-micro text-text-tertiary mt-2">
               {semTaxaJunta
@@ -694,7 +707,11 @@ export function PlanoView({
             )}
           </Card>
 
-          {/* ═══ A TAXA — honesta, sem holofote ═══ */}
+          {/* ═══ A TAXA — honesta, sem holofote ═══
+              🔄 26/08 (pedido do Pedro) — não soma mais em "você paga hoje":
+              só vira cobrança de verdade depois que a viabilidade voltar
+              deferida (A3, "Pague a guia da Junta"). Valor continua visível
+              aqui — sem letra miúda — só o TIMING mudou. */}
           <div className="rounded-md border border-border-hairline bg-surface-card p-4">
             <div className="flex items-baseline justify-between gap-3">
               <p className="text-body font-semibold text-text-primary">
@@ -707,7 +724,7 @@ export function PlanoView({
             <p className="text-caption text-text-secondary mt-1">
               {semTaxaJunta
                 ? "MEI não passa pela Junta Comercial — o registro é direto no Portal do Empreendedor, sem essa taxa."
-                : "Cobrada uma vez, e vai direto pro Estado: a gente não fica com nada. Você pagaria essa taxa abrindo com qualquer um."}
+                : "Vai direto pro Estado, a gente não fica com nada. Só é cobrada depois, quando a viabilidade sair aprovada — não entra na conta de hoje."}
             </p>
           </div>
 
@@ -761,9 +778,8 @@ export function PlanoView({
    · "Grátis" = **honorário zero, não governo zero**. A taxa da Junta continua
      visível, com o valor, e o total do dia continua conferível no rodapé.
      Esconder viraria a pegadinha que esta tela existe pra evitar.
-   · Preço é **placeholder declarado** (`CUSTOS.MENSALIDADE`, marcado FAKE no
-     lib/fiscal): a tela avisa, porque número provisório sem aviso é igual a
-     número sem fonte.
+   · Preço é o **valor real** da fase de lançamento, R$139/mês
+     (`CUSTOS.MENSALIDADE`, decisão 20/08 — não é mais placeholder desde 26/08).
    · Nada de contagem regressiva, vaga limitada ou desconto inventado. Escassez
      falsa numa tela de contabilidade queima a confiança que os 22 anos do
      escritório constroem.
@@ -847,7 +863,10 @@ function PlanoOferta({
   // 🆕 04/08 — mesma correção do PlanoView: Plano MEI tem mensalidade própria.
   const mensalidadeBase = semTaxaJunta ? CUSTOS.MENSALIDADE_MEI : CUSTOS.MENSALIDADE;
   const mensalidade = mensalidadeBase + (enderecoFiscal ? CUSTOS.ENDERECO_FISCAL : 0);
-  const hoje = semTaxaJunta ? mensalidade : CUSTOS.DAE_JUCEMG + mensalidade;
+  // 🔄 26/08 (pedido do Pedro) — a DAE NÃO soma mais no "você paga hoje". Só
+  // vira cobrança de verdade depois que a viabilidade voltar deferida (A3,
+  // `components/painel.tsx`, "Pague a guia da Junta").
+  const hoje = mensalidade;
 
   return (
     <>
@@ -901,6 +920,19 @@ function PlanoOferta({
               <div className="mt-1 flex items-baseline gap-1.5">
                 <p className="text-display font-bold">{brl(mensalidade)}</p>
                 <span className="text-body text-text-on-dark/70">/mês</span>
+              </div>
+              {/* 🆕 26/08 (pedido do Pedro: "destacar o certificado digital
+                  grátis também na página do plano") — achado ao conferir a
+                  /apresentacao: `/plano` de produção usa `layout="oferta"`
+                  (este componente), não o clássico — o badge tinha ido pro
+                  componente errado (não usado em produção). Corrigido aqui:
+                  o certificado já aparecia na lista `INCLUSO` (item 1), mas
+                  enterrado como 1 bullet entre 5 — ganha destaque próprio,
+                  colado no preço. */}
+              <div className="mt-1.5">
+                <span className="inline-flex items-center rounded-full bg-state-success/20 px-2.5 py-0.5 text-micro font-semibold text-state-success">
+                  Certificado digital grátis
+                </span>
               </div>
               <p className="text-micro text-text-on-dark/60 mt-1">
                 {semTaxaJunta
@@ -1072,7 +1104,10 @@ export function ContratoView({
 }) {
   // 🆕 04/08 — mesma correção das telas anteriores: Plano MEI tem mensalidade própria.
   const mensalidade = semTaxaJunta ? CUSTOS.MENSALIDADE_MEI : CUSTOS.MENSALIDADE;
-  const hoje = semTaxaJunta ? mensalidade : CUSTOS.DAE_JUCEMG + mensalidade;
+  // 🔄 26/08 (pedido do Pedro) — a DAE NÃO soma mais no "você paga hoje". Só
+  // vira cobrança de verdade depois que a viabilidade voltar deferida (A3,
+  // `components/painel.tsx`, "Pague a guia da Junta").
+  const hoje = mensalidade;
 
   return (
     <>
@@ -1108,7 +1143,7 @@ export function ContratoView({
               <p className="px-4 pb-3.5 text-micro text-text-tertiary">
                 {semTaxaJunta
                   ? "só a 1ª mensalidade — MEI não paga taxa da Junta. Abrir não tem honorário"
-                  : "taxa da Junta Comercial + a 1ª mensalidade. Abrir não tem honorário"}
+                  : "só a 1ª mensalidade. Abrir não tem honorário — a taxa da Junta é cobrada depois, quando a viabilidade sair aprovada"}
               </p>
 
               <div className="border-t border-border-hairline">
@@ -1341,7 +1376,10 @@ export function PagamentoView({
   // (abrir OU migrar) — antes esta tela sempre usava `CUSTOS.MENSALIDADE`
   // genérico mesmo quando `semTaxaJunta` (MEI) era true.
   const mensalidade = semTaxaJunta ? CUSTOS.MENSALIDADE_MEI : CUSTOS.MENSALIDADE;
-  const total = migrar || semTaxaJunta ? mensalidade : CUSTOS.DAE_JUCEMG + mensalidade;
+  // 🔄 26/08 (pedido do Pedro) — a DAE não soma mais aqui. Ela só vira
+  // cobrança de verdade depois que a viabilidade voltar deferida (A3),
+  // então cobrar agora seria cobrar por algo que ainda não foi emitido.
+  const total = mensalidade;
   const escolhido = METODOS.find((m) => m.id === metodo)!;
 
   const temCadastrado = Boolean(cpfCadastrado?.trim());

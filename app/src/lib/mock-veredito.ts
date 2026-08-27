@@ -48,11 +48,52 @@ export function mapear(texto: string): Resultado {
       "Criar e desenvolver sites, páginas e portais na internet",
       "Desenhar a interface (o visual e a navegação) desses sites",
     ],
+    // 🆕 26/08 (achado do Pedro: "outras opções compatíveis" ficava com card
+    // pobre ao promover — sem descrição, sem "o que cobre") — `descricao`/
+    // `cobre` de cada vizinha, mesmo padrão de fidelidade do 6201-5/02 acima
+    // (CONCLA/IBGE). 🟡 Não ratificado em fonte primária linha a linha —
+    // mesma régua de confiança do resto deste mock.
     vizinhas: [
-      { oque: "Sistema sob medida, customizável", cnae: "6202-3/00", comoSecundaria: "mesmo-imposto" },
-      { oque: "Software pronto, de prateleira", cnae: "6203-1/00", comoSecundaria: "mesmo-imposto" },
-      { oque: "Consultoria em tecnologia", cnae: "6204-0/00", comoSecundaria: "mesmo-imposto" },
-      { oque: "Design gráfico (logo, material impresso)", cnae: "7410-2/99", comoSecundaria: "mesmo-imposto" },
+      {
+        oque: "Sistema sob medida, customizável",
+        cnae: "6202-3/00",
+        comoSecundaria: "mesmo-imposto",
+        descricao: "Você desenvolve sistemas sob encomenda, feitos do jeito que o cliente pede.",
+        cobre: [
+          "Criar sistemas customizados pra necessidade específica de cada cliente",
+          "Adaptar e configurar o sistema conforme o negócio do cliente muda",
+        ],
+      },
+      {
+        oque: "Software pronto, de prateleira",
+        cnae: "6203-1/00",
+        comoSecundaria: "mesmo-imposto",
+        descricao: "Você cria e vende programas prontos, do jeito que estão, sem sob medida.",
+        cobre: [
+          "Desenvolver programas padronizados, iguais pra todo mundo que compra",
+          "Licenciar o uso do software, sem customização por cliente",
+        ],
+      },
+      {
+        oque: "Consultoria em tecnologia",
+        cnae: "6204-0/00",
+        comoSecundaria: "mesmo-imposto",
+        descricao: "Você orienta empresas sobre qual solução de tecnologia usar, sem construir o sistema.",
+        cobre: [
+          "Analisar e planejar qual solução de TI faz sentido pro cliente",
+          "Assessorar projetos de tecnologia, sem entregar o código pronto",
+        ],
+      },
+      {
+        oque: "Design gráfico (logo, material impresso)",
+        cnae: "7410-2/99",
+        comoSecundaria: "mesmo-imposto",
+        descricao: "Você cria identidade visual e peças gráficas, sem entrar em sites ou sistemas.",
+        cobre: [
+          "Criar logo, papelaria e identidade visual da marca",
+          "Desenvolver peças gráficas pra divulgação, impressa ou digital",
+        ],
+      },
     ],
     fiscal: { entradas: [6, 15.5], dependeProLabore: true },
   };

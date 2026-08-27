@@ -109,6 +109,14 @@ export interface Resultado {
      *  · `fora`          — não atendida / regulada / comércio → conversa outra
      */
     comoSecundaria: "mesmo-imposto" | "muda-imposto" | "fora";
+    /**
+     * 🆕 26/08 (achado do Pedro: promover uma vizinha ao topo — UX-65 — perdia
+     * a descrição e o "o que esse CNAE cobre", porque só o recomendado tinha
+     * esse dado. Opcional: sem isto, a promovida cai pro card enxuto de antes
+     * (sem quebrar quem já preenche `vizinhas` sem esses 2 campos).
+     */
+    descricao?: string;
+    cobre?: string[];
   }[];
   /**
    * Tributação. `entradas` = alíquota de ENTRADA de cada tabela possível (%).
@@ -203,14 +211,19 @@ export function VereditoView({
    */
   const [cnaePromovido, setCnaePromovido] = useState<string | null>(null);
   const dadosEncaixe = encaixeDeResultado(r);
+  // 🆕 26/08 (achado do Pedro: promover uma vizinha esvaziava o card —
+  // "explica" e "cobre" só existiam pro recomendado) — agora cada opção
+  // carrega o PRÓPRIO `descricao`/`cobre` (vem de `vizinhas[].descricao/cobre`
+  // no mock, `lib/mock-veredito.ts`), então promover não perde conteúdo.
   const opcoes = [
     {
       humano: dadosEncaixe.recomendado.humano,
       cnae: dadosEncaixe.recomendado.cnae,
       adequacao: dadosEncaixe.recomendado.adequacao,
       explica: r.explica,
+      cobre: dadosEncaixe.recomendado.cobre,
     },
-    ...dadosEncaixe.alternativas.map((a) => ({ ...a, explica: undefined as string | undefined })),
+    ...dadosEncaixe.alternativas.map((a) => ({ ...a, explica: a.descricao })),
   ].sort((a, b) => b.adequacao - a.adequacao);
   const emCima = opcoes.find((o) => o.cnae === cnaePromovido) ?? opcoes[0];
   const outras = opcoes.filter((o) => o.cnae !== emCima.cnae);
@@ -230,7 +243,7 @@ export function VereditoView({
                 humano={emCima.humano}
                 cnae={emCima.cnae}
                 descricao={emCima.explica}
-                cobre={emCima.cnae === r.cnae ? (r.compreende ?? []) : []}
+                cobre={emCima.cobre ?? []}
                 adequacao={emCima.adequacao}
                 adequacaoModo="badge"
                 recomendado={emCima.cnae === opcoes[0].cnae}

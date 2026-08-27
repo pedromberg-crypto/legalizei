@@ -140,6 +140,8 @@ export default function GatePage() {
             setSocioTipo={setSocioTipo}
             onSeguir={() => setEtapa("faixa")}
             onSaida={(rota) => router.push(rota)}
+            coorte={coorte}
+            setCoorte={setCoorte}
           />
         )}
         {etapa === "faixa" && (
@@ -150,8 +152,6 @@ export default function GatePage() {
             setModoExato={setModoExato}
             exato={exato}
             setExato={setExato}
-            coorte={coorte}
-            setCoorte={setCoorte}
             enderecoProprio={enderecoProprio}
             setEnderecoProprio={setEnderecoProprio}
             onSeguir={() => router.push(comEndereco(comRegime("/conta", mei), enderecoProprio === false))}

@@ -1,8 +1,9 @@
 ---
-tipo: aprendizado
-status: vivo — v2, ratificado por pesquisa dedicada 27/08
+tipo: derivado
+status: vivo
 data: 2026-08-27
 assunto: fundamentos-cnae
+deriva_de: [lc123-art18-anexos-taxativo, resultado-pesquisa-fundamentos-cnae-27-08]
 tags: [pesquisa, cnae, fiscal, simples-nacional, mei]
 ---
 

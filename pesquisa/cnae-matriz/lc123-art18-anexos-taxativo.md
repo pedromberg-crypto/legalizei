@@ -1,6 +1,6 @@
 ---
-tipo: fonte-primaria
-status: vivo — texto atual (redação LC 155/2016), extraído direto do Planalto
+tipo: fato
+status: vivo
 data: 2026-08-27
 assunto: lc123-art18-classificacao-anexos
 tags: [pesquisa, cnae, fiscal, simples-nacional, fonte-primaria, lc123]

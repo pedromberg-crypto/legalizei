@@ -1,6 +1,6 @@
 ---
-tipo: estado
-status: vivo — atualizar sempre que este processo avançar
+tipo: operacao
+status: vivo
 data: 2026-08-27
 assunto: estado-pesquisa-cnae
 tags: [pesquisa, cnae, torre-de-controle]

@@ -1,8 +1,9 @@
 ---
-tipo: derivado
+tipo: verdade
 status: vivo
-data: 2026-07-09
-assunto: matriz-cnae
+data: 2026-08-27
+assunto: dados-oficiais-por-cnae
+deriva_de: [lc123-art18-anexos-taxativo, resultado-pesquisa-fundamentos-cnae-27-08]
 tags: [cnae, matriz, reference]
 ---
 

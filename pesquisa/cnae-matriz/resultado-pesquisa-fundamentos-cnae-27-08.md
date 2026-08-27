@@ -1,6 +1,6 @@
 ---
-tipo: pesquisa-externa
-status: vivo — resultado cru + cruzado, ratificou fundamentos-cnae.md
+tipo: fato
+status: vivo
 data: 2026-08-27
 assunto: resultado-pesquisa-cnae-anexos-mei
 tags: [pesquisa, cnae, fiscal, simples-nacional, mei, fonte-primaria]

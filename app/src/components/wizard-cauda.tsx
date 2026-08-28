@@ -1340,7 +1340,12 @@ export function RetomarView({ onSeguir }: { onSeguir?: () => void }) {
         <div className="min-h-0 flex-1 overflow-y-auto pt-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <div className="flex flex-col gap-4 pb-[calc(24px+var(--safe-bottom))]">
             <div className="rounded-2xl bg-surface-dark p-5 text-text-on-dark">
-              <p className="text-h2 font-bold leading-tight">Bem-vindo de volta</p>
+              {/* 🆕 28/08 (pedido do Pedro) — maior que o resto dos títulos
+                  do hero escuro: é saudação, não título de tarefa (o A5 usa
+                  text-h1 pra "Vamos ativar sua empresa"; aqui sobe 1 degrau,
+                  text-display, porque é a ÚNICA linha do hero — sem 2ª linha
+                  de contexto disputando espaço). */}
+              <p className="text-display font-bold leading-tight">Bem-vindo de volta</p>
               <p className="mt-1 text-caption text-text-on-dark/70">
                 Você saiu há {ESTADO_P1.diasFora} dias e está tudo salvo, do
                 jeitinho que deixou. Vamos continuar?

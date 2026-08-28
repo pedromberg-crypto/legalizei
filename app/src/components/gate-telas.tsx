@@ -54,8 +54,13 @@ export const EXEMPLOS = [
 ];
 
 /**
- * Pills de reconhecimento do N4 (17) — derivadas dos 103 CNAEs serviço-liso
- * (pesquisa/cnae-matriz/cnae-liso-servico.md). Cobrem 103/103.
+ * Pills de reconhecimento do N4 (15) — derivadas dos 90 CNAEs "atendemos com
+ * certeza" (pesquisa/cnae-matriz/cnae-liso-servico.md, fonte primária, 27/08).
+ * 🔄 27/08: substitui a v1 (17 categorias/103 CNAEs herdados da Contabilizei,
+ * não ratificados). Detalhe completo, CNAE por categoria, e o que mudou vs a
+ * v1 (Conserto de veículos e Manutenção de máquinas SAÍRAM — não têm CNAE
+ * `liso` na base atual, caem em `verificar-licenciamento`) em
+ * `pesquisa/cnae-matriz/taxonomia-pills-n4.md`.
  *
  * ⚠️ A pill ESTREITA, não valida (decisão 17/07 → legalize-pill-estreita-nao-valida).
  * Clicar não dá veredito: só afunila o universo pra IA e troca o exemplo do
@@ -64,22 +69,20 @@ export const EXEMPLOS = [
  */
 export const PILLS = [
   { id: "tech", label: "Tecnologia e software", ex: "Desenvolvo sites, apps ou sistemas sob encomenda" },
-  { id: "mkt", label: "Marketing e publicidade", ex: "Cuido das redes sociais e faço publicidade pra clientes" },
   { id: "design", label: "Design", ex: "Crio design gráfico, de interiores ou de produto" },
-  { id: "foto", label: "Foto e vídeo", ex: "Fotografo, filmo e edito vídeo e áudio" },
-  { id: "consult", label: "Consultoria e gestão", ex: "Dou consultoria de gestão pra pequenas empresas" },
+  { id: "foto", label: "Foto, vídeo e áudio", ex: "Fotografo, filmo e edito vídeo ou áudio" },
+  { id: "mkt", label: "Marketing e publicidade", ex: "Cuido das redes sociais e faço publicidade pra clientes" },
+  { id: "edicao", label: "Edição e mídia", ex: "Edito livros, jornais ou revistas" },
+  { id: "consult", label: "Consultoria, pesquisa e tradução", ex: "Faço consultoria, pesquisa ou tradução pra empresas" },
+  { id: "cursos", label: "Ensino e cursos", ex: "Dou aula de idioma, música, dança ou curso profissionalizante" },
+  { id: "arte", label: "Arte, cultura e patrimônio", ex: "Produzo teatro, música, ou represento artista e atleta" },
+  { id: "eventos", label: "Eventos e entretenimento", ex: "Organizo eventos, festas ou casas de jogos" },
   { id: "admin", label: "Apoio administrativo", ex: "Faço serviços de escritório, cobrança e teleatendimento" },
-  { id: "cursos", label: "Cursos e treinamentos", ex: "Dou curso de idioma, informática ou preparatório" },
-  { id: "ensino", label: "Ensino de arte e esporte", ex: "Ensino dança, música ou esporte" },
-  { id: "eventos", label: "Eventos e festas", ex: "Organizo festas, feiras e eventos" },
-  { id: "arte", label: "Arte e cultura", ex: "Sou artista ou produzo espetáculos e shows" },
-  { id: "veiculos", label: "Conserto de veículos", ex: "Faço mecânica, funilaria ou borracharia" },
-  { id: "eletronicos", label: "Conserto de eletrônicos", ex: "Conserto celular, computador e eletrônicos" },
-  { id: "reparos", label: "Reparos em geral", ex: "Sou chaveiro ou conserto relógio, calçado e móvel" },
-  { id: "maquinas", label: "Manutenção de máquinas", ex: "Faço manutenção de máquinas e equipamentos" },
-  { id: "aluguel", label: "Aluguel de equipamentos", ex: "Alugo equipamentos e objetos" },
-  { id: "hospedagem", label: "Hospedagem", ex: "Tenho pousada, albergue ou pensão" },
-  { id: "salao", label: "Salão e beleza", ex: "Trabalho com salão, cabelo e beleza" },
+  { id: "aluguel", label: "Aluguel de equipamentos", ex: "Alugo equipamentos, móveis ou objetos" },
+  { id: "reparos", label: "Reparos e manutenção", ex: "Conserto computador, celular, bicicleta ou relógio" },
+  { id: "salao", label: "Salão e beleza", ex: "Trabalho com cabelo, manicure e pedicure" },
+  { id: "hospedagem", label: "Hospedagem", ex: "Tenho albergue ou pensão" },
+  { id: "materiais", label: "Recuperação de materiais", ex: "Recupero metal ou plástico pra reciclagem" },
 ];
 
 /**

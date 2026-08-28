@@ -1,7 +1,7 @@
 ---
 tipo: verdade
 status: GERADO — não editar à mão, nasce de `execucao/flow/gerar-mapa.mjs`
-data: 2026-08-27
+data: 2026-08-28
 assunto: dados-coletados-abertura
 tags: [execucao, flow, dados, abertura]
 ---
@@ -38,7 +38,7 @@ tags: [execucao, flow, dados, abertura]
 
 ### E3.4 · Endereço + categoria (os 2 gates)
 - Endereço da empresa (CEP validado BH + número) OU endereço fiscal Legalizai (+R$60/mês)
-- categoria de atividade (1 das 17 pills)
+- categoria de atividade (1 das 15 categorias, `pesquisa/cnae-matriz/taxonomia-pills-n4.md`, v2 27/08 -- 90 CNAEs certeza)
 
 ### Triagem sócios? CPF/CNPJ? exterior?
 - Quantidade de sócios (1 / 2 / 3 / 4 / 5+)

@@ -51,9 +51,12 @@ Depois da camada tributária, construímos a lista real de CNAEs que o produto a
 - **3 rodadas de correção**, cada uma achando um bug real: (1) 21 códigos eram comércio/indústria disfarçados de serviço + 2 regulamentados que passaram batido; (2) cruzamento com `cnae-complexidade-abertura` achou 4 códigos que exigem **registro setorial federal** (CADASTUR/Polícia Federal/Bacen-CVM-SUSEP — eixo que a pesquisa de conselho profissional não cobria); (3) Pedro pegou que **restaurante/lanchonete é comércio (Anexo I), não serviço** — Decreto 7.212/2010 RIPI, corrigido na matriz inteira (9 CNAEs da divisão 56 recodificados), não só na lista dos 90.
 - `cnae-complexidade-abertura.md` foi **fundido** dentro de `cnae-liso-servico.md` (pedido do Pedro) — não existe mais como arquivo separado, só os datasets `.csv/.json` continuam.
 
-## 🎨 Em andamento — categorias de UX (NÃO persistido ainda)
+## ✅ Categorias de UX — FECHADA e implementada (27/08, mesmo dia)
 
-Pedro pediu uma taxonomia de categorias tipo Contabilizei, pra usuário achar seu CNAE intuitivamente. Proposta feita e aprovada em conversa (17 categorias, 90 CNAEs, web design duplicado de propósito em Tecnologia+Design) — **mas nunca virou arquivo**. Só existe na conversa. Se for retomar, checar se o Pedro ainda quer isso persistido, e já usar o número corrigido (90, pós-correção do restaurante).
+Taxonomia de categorias tipo Contabilizei, pra usuário achar seu CNAE intuitivamente, agora com **15 categorias** (não 17 — 2 saíram no debate: "Conserto de veículos" e "Manutenção de máquinas" não têm CNAE `liso` na base atual, caem em `verificar-licenciamento`). Debate achou e corrigiu um "saco" (categoria "Agenciamento" forçando 3 CNAEs sem relação) e uma confusão de rótulo ("agências matrimoniais" ≠ "cerimonialista de casamento" — são profissões diferentes).
+
+- **Doc**: [[taxonomia-pills-n4]] (v2, substitui a v1 de 16/07 arquivada) — 15 categorias, CNAE por categoria, o que mudou vs v1.
+- **Implementado**: `PILLS` em `app/src/components/gate-telas.tsx` — usado na tela E3.4 (`/endereco`) do flow de produção, dropdown de categoria.
 
 ## ⏸️ Pedro sinalizou "alguns passos para trás" (27/08, fim da sessão)
 

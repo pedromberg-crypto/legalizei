@@ -75,8 +75,6 @@ export const ConfirmacaoEnviada: Story = {
       <SaidaView
         d={SOCIO_EXTERIOR}
         captura={{
-          nome: "Ana", setNome: () => {},
-          contato: "ana@email.com", setContato: () => {},
           extra: "", setExtra: () => {},
           enviado: true, setEnviado: () => {},
         }}

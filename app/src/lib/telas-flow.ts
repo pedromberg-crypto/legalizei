@@ -224,6 +224,11 @@ export const GRUPOS: GrupoTelas[] = [
         nota: "🔄 28/08 — o pipeline MEI foi REESCRITO. A versão de 03/08 tinha 1 etapa, 'Registrando no Portal do Empreendedor', que PROMETIA O QUE NÃO DÁ PRA ENTREGAR. Agora são 4: recebemos → nosso time está conferindo → próximos passos prontos (ação do cliente, CTA) → empresa aberta. Reusa a mesma máquina parametrizada do Migrar, sem tela nova. ✍️ A palavra 'contador' não aparece: o plano MEI (R$49) tem atendente; contador CRC é o que sustenta o preço do ME (R$139), ver `financeiro/estado-atual.md`.",
       },
       {
+        rota: "/certificado?regime=mei",
+        nome: "🆕 A3.2' · Certificado digital (variante MEI)",
+        nota: "🆕 28/08 (decisão do Pedro) — MESMA tela do ME, 2 diferenças. (1) MOTIVO: no ME o certificado destrava a procuração que acompanha a assinatura; no MEI não existe assinatura nem procuração de abertura (a abertura DISPENSA certificado — gov.br Prata/Ouro supre), então o que ele destrava é OPERAR: puxar guia, FGTS Digital, agir em nome da empresa sem pedir senha toda vez. (2) QUEM PAGA: no ME vem incluso (contrapartida da fidelidade, ADR 04/08); no MEI NÃO vem — o cliente providencia, e a tela diz isso antes da escolha. Fica ANTES da A5: tem que estar resolvido antes de a pessoa cair dentro do app, mesma régua do ME.",
+      },
+      {
         rota: "/mei/proximos-passos",
         nome: "🆕 M-S · Próximos passos (a 'cola')",
         nota: "A tela que FECHA o ramo, e existe por razão jurídica, não de UX: como não dá pra registrar pelo cliente, a entrega é o passo a passo com os valores DELE prontos, na ordem exata dos campos do Portal, com botão de copiar. Inclui a checagem do nível da conta gov.br (Prata/Ouro é obrigatório e a maioria não sabe qual tem) e o link pro Portal. ✍️ REGRA DE COPY DURA: nunca dizer 'a gente abre pra você' neste ramo — é promessa que não dá pra cumprir e vira reembolso.",

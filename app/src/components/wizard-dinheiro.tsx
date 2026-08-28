@@ -764,10 +764,20 @@ export function PlanoView({
                 frase de baixo, fácil de passar batido. Badge próprio, mesmo
                 token verde do "Grátis" do card de cima — mesma linguagem
                 visual pra "isso não custa nada". */}
+            {/* 🔴 28/08 (decisão do Pedro) — o certificado deixou de vir
+                incluso NO PLANO MEI. No ME continua grátis (contrapartida da
+                fidelidade, ADR 04/08). Mostrar "grátis" pro MEI seria vender
+                algo que ele vai ter que comprar depois. */}
             <div className="mt-1.5 flex items-center gap-1.5">
-              <span className="rounded-full bg-state-success-tint px-2.5 py-0.5 text-micro font-semibold text-state-success-text">
-                Certificado digital grátis
-              </span>
+              {semTaxaJunta ? (
+                <span className="rounded-full bg-state-info-tint px-2.5 py-0.5 text-micro font-semibold text-state-info-text">
+                  Certificado digital: você providencia
+                </span>
+              ) : (
+                <span className="rounded-full bg-state-success-tint px-2.5 py-0.5 text-micro font-semibold text-state-success-text">
+                  Certificado digital grátis
+                </span>
+              )}
             </div>
             <p className="text-caption text-text-secondary mt-2">
               {semTaxaJunta
@@ -935,7 +945,10 @@ const INCLUSO: { titulo: string; sub: string }[] = [
  *  autodeclaratória). Dizer "contador de verdade" aqui era a promessa vazia que
  *  a marca acusa o setor de fazer. Ver `pesquisa/posicionamento.md` §2. */
 const INCLUSO_MEI: { titulo: string; sub: string }[] = [
-  { titulo: "Certificado digital", sub: "Incluso, sem custo extra — a gente precisa dele pra te representar." },
+  // 🔴 28/08 (decisão do Pedro) — o certificado SAIU da lista de incluso do
+  // MEI. Ele continua sendo o que destrava a operação otimizada, mas o custo é
+  // do cliente. Fica logo abaixo da lista, num bloco próprio de "não incluso" —
+  // esconder seria o oposto da doutrina de honestidade antes do toque.
   { titulo: "Notas fiscais sem limite", sub: "Emite pelo app, em segundos." },
   { titulo: "1 colaborador", sub: "O único que a lei permite ao MEI — FGTS e INSS patronal inclusos." },
   { titulo: "Assistente de contabilidade", sub: "Tira dúvida e resolve a rotina do MEI, a qualquer hora." },
@@ -1022,10 +1035,18 @@ function PlanoOferta({
                   o certificado já aparecia na lista `INCLUSO` (item 1), mas
                   enterrado como 1 bullet entre 5 — ganha destaque próprio,
                   colado no preço. */}
+              {/* 🔴 28/08 — ver o comentário gêmeo no layout clássico: no MEI
+                  o certificado NÃO vem incluso. */}
               <div className="mt-1.5">
-                <span className="inline-flex items-center rounded-full bg-state-success/20 px-2.5 py-0.5 text-micro font-semibold text-state-success">
-                  Certificado digital grátis
-                </span>
+                {semTaxaJunta ? (
+                  <span className="inline-flex items-center rounded-full bg-white/15 px-2.5 py-0.5 text-micro font-semibold text-text-on-dark/90">
+                    Certificado digital: você providencia
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center rounded-full bg-state-success/20 px-2.5 py-0.5 text-micro font-semibold text-state-success">
+                    Certificado digital grátis
+                  </span>
+                )}
               </div>
               <p className="text-micro text-text-on-dark/60 mt-1">
                 {semTaxaJunta
@@ -1066,6 +1087,31 @@ function PlanoOferta({
                   </div>
                 </div>
               ))}
+
+              {/* 🔴 28/08 — O QUE NÃO ESTÁ INCLUSO, dito na mesma lista onde a
+                  pessoa lê o que está. Mesma doutrina do card da taxa da Junta
+                  logo abaixo: custo que existe aparece com nome, não some.
+                  Sem valor de propósito — não temos preço fechado com a
+                  certificadora, e número sem fonte não entra em tela. */}
+              {semTaxaJunta && (
+                <div className="flex items-start gap-2.5 border-t border-white/10 pt-3">
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/15 text-text-on-dark/80">
+                    <span className="text-micro font-bold" aria-hidden>
+                      !
+                    </span>
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-caption font-semibold">
+                      Certificado digital: por sua conta
+                    </p>
+                    <p className="text-micro text-text-on-dark/60">
+                      Não precisa dele pra abrir. Precisa pra gente cuidar do
+                      dia a dia sem te pedir senha. Se não tiver, a gente te
+                      conecta com a certificadora e te passa o valor.
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -1267,11 +1313,24 @@ export function ContratoView({
                   GENÉRICA ali — sem número inventado. 🆕 04/08 — o Plano MEI
                   JÁ TEM número travado (12 meses, ADR `decisoes-marca.md`):
                   contrapartida do certificado digital que a gente paga. */}
+              {/* 🔴 28/08 — o texto do MEI dizia "o certificado vem incluso...
+                  em troca, fidelidade de 12 meses". O Pedro decidiu que o MEI
+                  NÃO ganha certificado, então a contrapartida escrita caiu. A
+                  copy abaixo NÃO inventa uma nova: usa a mesma formulação
+                  genérica do ME (permanência mínima), e a justificativa de
+                  verdade fica pendente de decisão (ver `CUSTOS.FIDELIDADE_MESES`
+                  e `execucao/flow/rastreio-mei.md`). */}
               <Bullet>
                 {semTaxaJunta
-                  ? `O certificado digital vem incluso — a gente precisa dele pra movimentar sua empresa. Em troca, o plano tem fidelidade de ${CUSTOS.FIDELIDADE_MESES} meses, descrita no contrato.`
+                  ? "Abrir o MEI é gratuito, e o certificado digital fica por sua conta. O plano tem um período mínimo de permanência, descrito no contrato."
                   : "Como a abertura é gratuita, o plano tem um período mínimo de permanência, descrito no contrato."}
               </Bullet>
+              {semTaxaJunta && (
+                <Bullet>
+                  O certificado não é obrigatório pra abrir, mas é o que deixa a
+                  gente cuidar do seu dia a dia sem te pedir senha toda hora.
+                </Bullet>
+              )}
               <Bullet>
                 Nada é irreversível hoje: você tem 7 dias pra mudar de ideia e
                 receber tudo de volta.

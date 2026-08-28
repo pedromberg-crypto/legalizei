@@ -88,6 +88,7 @@ flowchart TD
   M_T_1["M-T.1 · 🔴 Já tem CNPJ"]:::saida
   M_T_2["M-T.2 · 🔴 Servidor federal"]:::saida
   M_O["M-O · Ocupação<br/>(Anexo XI + limite interno)"]:::branch
+  M_CERT["A3.2' · Certificado<br/>(operar, não abrir)"]:::branch
   M_S["M-S · Próximos passos<br/>(a "cola")"]:::branch
   A5(["✅ A5 · Home dia-1<br/>(ativação)"]):::feliz
 
@@ -156,7 +157,8 @@ flowchart TD
   A3_1 -.-> A3
   A3 -.->|"ME · DAE paga"| A3_2
   A3 -.->|"MEI · time conferiu"| M_S
-  M_S -.->|"voltou com o CNPJ"| A5
+  M_S -.->|"voltou com o CNPJ"| M_CERT
+  M_CERT -->|"certificado resolvido"| A5
   A3_2 -.-> A4
   A4 -.-> A4G
   A4G -.-> A5
@@ -237,8 +239,9 @@ flowchart TD
 | 57 | M-T.1 · 🔴 Já tem CNPJ | Nome + contato | ✅ | 🟢 | Saída de bloqueio do governo, não do produto. Oferece os 2 caminhos reais (baixar a antiga OU abrir como ME) em vez de waitlist — a Legalizai atende essa pessoa hoje, só não como MEI. Conteúdo em `lib/dados-saida.tsx` |
 | 58 | M-T.2 · 🔴 Servidor federal | Nome + contato | ✅ | 🟢 | Vedação do art. 117 da Lei 8.112/90, só pra FEDERAL na ativa. A saída não fecha a porta pra estadual/municipal de propósito: lá a regra vem do estatuto de cada ente e em muitos casos é permitido. Conteúdo em `lib/dados-saida.tsx` |
 | 59 | M-O · Ocupação · (Anexo XI + limite interno) | Ocupação principal (1 da lista do Anexo XI) · até 15 ocupações secundárias | ✅ | 🟢 | 🆕 28/08 — a C0 do ramo MEI, 1ª tela do dossiê. NÃO é o C0 adaptado: o Portal do Empreendedor não aceita CNAE livre, só OCUPAÇÃO de lista fechada (Anexo XI, Res. CGSN 140/2018), então não há 'descrever com suas palavras'. 🎯 Carrega o **limite interno** (Solução de Consulta Cosit nº 27/2021): a ocupação é mais estrita que o CNAE que ela mapeia — quem escolhe 'Reparador(a) de bicicleta' não pode consertar moto, e descobre numa fiscalização. É o erro que só contador pega, e é parte do que vendemos. Secundárias (até 15) também saem daqui, por isso o ramo pula o C5. Dados de `lib/mei.ts`, derivados dos 51 CNAEs certeza que aceitam MEI |
-| 60 | M-S · Próximos passos · (a "cola") | Confirmação de que a conta gov.br é Prata/Ouro · (devolve o CNPJ gerado) | ✅ | 🟢 | 🆕 28/08 — a tela que FECHA o ramo, e existe por razão jurídica, não de UX: como não dá pra registrar pelo cliente, a entrega é o passo a passo com os valores DELE prontos, na ordem dos campos do Portal. Inclui a checagem do nível da conta gov.br (Prata/Ouro obrigatório) e o link pro Portal. ✍️ REGRA DE COPY DURA: nunca dizer 'a gente abre pra você' neste ramo. 🔴 Falta: definir se o 'copiar tudo' vira PDF/WhatsApp; e o M-S é a tela mais cara de evoluir se um dia a automação for possível. Componente: `components/mei-telas.tsx` (`ProximosPassosView`) |
-| 61 | ✅ A5 · Home dia-1 · (ativação) | — | ✅ | 🟢 | 🔓 SWAP validado 30/07 (confirmado no código: assinatura empurra direto pra cá). 🆕 24/08 (reunião Leonan): trilha agora mostra 3 status explícitos — Procuração (feito, instantâneo com o código) → Validação do certificado digital (agora, linka pra /mais/certificado upload+oferta) → Acesso completo. 🔄 26/08 (item 7): certificado deixou de ser 'agora' e virou 'feito' — já foi validado antes da assinatura (A3.2). Quem vira 'agora' é 'Conferir os dados da empresa' (`/mais/empresa`). `/mais/certificado` segue existindo, só que agora é pra RENOVAR/trocar, não pra validar a 1ª vez. Sem confete nem selo coral no hero. Handoff pro flow Portal (letra P) → autoridade portal-data.mjs |
+| 60 | A3.2' · Certificado · (operar, não abrir) | Certificado digital (upload .pfx/.p12 + senha) OU aceite de contato da certificadora parceira | ✅ | 🟢 | 🆕 28/08 (decisão do Pedro) — o MEI passa pelo MESMO gate de certificado do ME, com 2 diferenças: (1) o MOTIVO — no ME o certificado destrava a procuração da assinatura; no MEI não existe assinatura nem procuração de abertura (a abertura DISPENSA certificado, gov.br Prata/Ouro supre), então o que ele destrava é a OPERAÇÃO: puxar guia, FGTS Digital, agir sem pedir senha do cliente toda vez; (2) QUEM PAGA — no ME vem incluso (contrapartida da fidelidade, ADR 04/08); no MEI **não vem**, o cliente providencia. Fica ANTES da A5 a pedido do Pedro: 'tem que ser efetivado antes da pessoa cair pra dentro do app com as funcionalidades, da mesma forma do ME'. 🔴 Consequência aberta: a fidelidade de 12 meses do MEI perdeu a contrapartida escrita — precisa de justificativa nova antes de virar cláusula (Pedro/Mauro) |
+| 61 | M-S · Próximos passos · (a "cola") | Confirmação de que a conta gov.br é Prata/Ouro · (devolve o CNPJ gerado) | ✅ | 🟢 | 🆕 28/08 — a tela que FECHA o ramo, e existe por razão jurídica, não de UX: como não dá pra registrar pelo cliente, a entrega é o passo a passo com os valores DELE prontos, na ordem dos campos do Portal. Inclui a checagem do nível da conta gov.br (Prata/Ouro obrigatório) e o link pro Portal. ✍️ REGRA DE COPY DURA: nunca dizer 'a gente abre pra você' neste ramo. 🔴 Falta: definir se o 'copiar tudo' vira PDF/WhatsApp; e o M-S é a tela mais cara de evoluir se um dia a automação for possível. Componente: `components/mei-telas.tsx` (`ProximosPassosView`) |
+| 62 | ✅ A5 · Home dia-1 · (ativação) | — | ✅ | 🟢 | 🔓 SWAP validado 30/07 (confirmado no código: assinatura empurra direto pra cá). 🆕 24/08 (reunião Leonan): trilha agora mostra 3 status explícitos — Procuração (feito, instantâneo com o código) → Validação do certificado digital (agora, linka pra /mais/certificado upload+oferta) → Acesso completo. 🔄 26/08 (item 7): certificado deixou de ser 'agora' e virou 'feito' — já foi validado antes da assinatura (A3.2). Quem vira 'agora' é 'Conferir os dados da empresa' (`/mais/empresa`). `/mais/certificado` segue existindo, só que agora é pra RENOVAR/trocar, não pra validar a 1ª vez. Sem confete nem selo coral no hero. Handoff pro flow Portal (letra P) → autoridade portal-data.mjs |
 <!-- FLOW:TABELA:FIM -->
 
 ## 🚪 Saídas terminais (7) — sai do flow, não volta
@@ -271,6 +274,7 @@ flowchart TD
 > Cada linha = um estado estrutural do mapa. Snapshots completos em `flow/versoes/` (`.json` p/ diff + `.mmd` legível). Mais recente no topo.
 
 <!-- FLOW:VERSOES:INI -->
+- **v42** · 2026-08-28 · +nós M_CERT · +conexões M_S→M_CERT,M_CERT→A5 · -conexões M_S→A5
 - **v41** · 2026-08-28 · +nós M_T,M_T_1,M_T_2,M_O,M_S · +conexões E3_4→M_T,M_T→E5F,M_T→M_T_1,M_T→M_T_2,E9→M_O,M_O→C1,A3→M_S,M_S→A5
 - **v40** · 2026-08-28 · dados-coletados em E3_4
 <!-- FLOW:VERSOES:FIM -->

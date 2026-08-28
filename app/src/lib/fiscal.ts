@@ -72,13 +72,18 @@ export const CUSTOS = {
    *  gerenciar 1 colaborador, o teto legal do MEI) — não é o plano ME
    *  completo com preço menor, é escopo menor mesmo.
    */
-  MENSALIDADE_MEI: 49.9,
+  MENSALIDADE_MEI: 49,
   /** 🟢 Decisão 27/08 (`marca/decisoes-marca.md`): MESMA régua pros dois
-   *  regimes, não só MEI. Certificado digital incluso (pago por nós) é a
-   *  contrapartida da fidelidade: precisamos do certificado pra fazer
-   *  movimentações em nome do cliente (emitir NF, etc.), então o custo do
-   *  certificado é nosso, não repassado por fora. Contada da EMISSÃO DO
-   *  CNPJ, igual à Contabilizei (cláusula 2.1-b do contrato deles).
+   *  regimes. Contada da EMISSÃO DO CNPJ, igual à Contabilizei (cláusula
+   *  2.1-b do contrato deles).
+   *
+   *  🔴 28/08 — A JUSTIFICATIVA DESTA FIDELIDADE MUDOU NO MEI, e a nova ainda
+   *  não existe. Até aqui a contrapartida declarada era "o certificado digital
+   *  vem incluso, pago por nós" (ADR 04/08). O Pedro decidiu em 28/08 que **o
+   *  plano MEI NÃO inclui certificado** — quem quiser um, providencia. Isso
+   *  deixa a fidelidade de 12 meses do MEI **sem contrapartida escrita**.
+   *  O número segue valendo (não foi revogado), mas precisa de justificativa
+   *  nova antes de virar cláusula de contrato. Decisão do Pedro/Mauro.
    */
   FIDELIDADE_MESES: 12,
   /** 🟢 Decisão 27/08 — mesma régua da Contabilizei (cláusula 7.1-b: "30%
@@ -91,6 +96,21 @@ export const CUSTOS = {
    *  mensalidade do plano. Aprovação AUTOMÁTICA (decisão 27/08) — diferente
    *  da Contabilizei, que sujeita a aprovação manual. */
   ENDERECO_FISCAL: 60,
+  /**
+   * 🔴 SEM VALOR — de propósito.
+   *
+   * 28/08: o certificado digital deixou de vir incluso no plano MEI. Ele
+   * continua sendo o que destrava a operação otimizada (a gente puxar guia,
+   * mexer no FGTS Digital e agir por procuração sem pedir senha do cliente a
+   * cada vez), mas o custo passa a ser do cliente.
+   *
+   * Não existe constante de preço aqui porque **não temos preço fechado com a
+   * certificadora parceira** — o ADR de 30/07 cita "~R$200" dentro de uma
+   * SIMULAÇÃO de custo, não como tabela. Regra anti-guru do vault: número sem
+   * fonte não entra em tela. Enquanto não fechar, a UI fala em "a gente te
+   * passa o valor", nunca um número.
+   */
+  CERTIFICADO_PRECO: null,
 } as const;
 
 export const FAIXA_MEDIA: Record<string, number> = {

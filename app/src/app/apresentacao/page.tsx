@@ -247,6 +247,7 @@ type Etapa =
   | "m-impedimento"
   | "m-ocupacao"
   | "m-proximos-passos"
+  | "m-certificado"
   | "saida-mei-outra-empresa"
   | "saida-mei-servidor"
   | "conta"
@@ -549,6 +550,7 @@ type Momento =
   | "m-impedimento"
   | "m-ocupacao"
   | "m-proximos-passos"
+  | "m-certificado"
   | "saida-mei-outra-empresa"
   | "saida-mei-servidor"
   | "conta"
@@ -944,6 +946,7 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   "m-impedimento": "/gate?etapa=triagem&regime=mei",
   "m-ocupacao": "/dossie/ocupacao",
   "m-proximos-passos": "/mei/proximos-passos",
+  "m-certificado": "/certificado?regime=mei",
   "saida-mei-outra-empresa": "/saida/mei-outra-empresa",
   "saida-mei-servidor": "/saida/mei-servidor",
   conta: "/conta",
@@ -1145,6 +1148,14 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
       "É a C0 do ramo MEI, mas NÃO é o C0 adaptado: o Portal do Empreendedor não aceita CNAE livre. E a tela avisa do LIMITE INTERNO (Solução de Consulta Cosit nº 27/2021) — a ocupação é mais estrita que o CNAE que ela mapeia.",
     porque:
       "🎯 É onde mora parte do que a gente vende. Quem escolhe 'Reparador(a) de bicicleta' não pode consertar moto, mesmo o CNAE parecendo permitir — e descobriria isso numa fiscalização, não no cadastro. É exatamente o erro que só contador pega.",
+  },
+  "m-certificado": {
+    dono: "usuario",
+    faz: "O gate do certificado digital, com a variante do MEI: explica que a ABERTURA não precisou dele, mas o dia a dia precisa — e que ele NÃO vem no plano.",
+    interfere:
+      "É a mesma tela do ME (`CertificadoGateView`), com 2 diferenças. O MOTIVO: no ME o certificado destrava a procuração da assinatura; no MEI não existe assinatura nem procuração de abertura, então o que ele destrava é OPERAR (puxar guia, FGTS Digital, agir sem pedir senha). E QUEM PAGA: no ME vem incluso; no MEI é do cliente.",
+    porque:
+      "🆕 28/08 (decisão do Pedro) — fica ANTES da home dia-1 de propósito: 'tem que ser efetivado antes da pessoa cair pra dentro do app com as funcionalidades, da mesma forma do ME'. E o custo aparece desde o card de escolha MEI×ME, não como surpresa no contrato.",
   },
   "m-proximos-passos": {
     dono: "usuario",
@@ -1939,6 +1950,7 @@ export default function ApresentacaoPage() {
                           : etapa === "m-impedimento" ||
                               etapa === "m-ocupacao" ||
                               etapa === "m-proximos-passos" ||
+                              etapa === "m-certificado" ||
                               etapa === "saida-mei-outra-empresa" ||
                               etapa === "saida-mei-servidor"
                             ? etapa
@@ -2704,12 +2716,21 @@ export default function ApresentacaoPage() {
                         onSeguir={() => setEtapa("socio")}
                         onVoltar={() => setEtapa("pagamento")}
                       />
+                    ) : etapa === "m-certificado" ? (
+                      // 🆕 28/08 — MESMA view do ME (fidelidade por construção),
+                      // com a variante `mei`: motivo é OPERAR, e o custo é do
+                      // cliente (não vem no plano).
+                      <CertificadoGateView
+                        mei
+                        onSeguir={() => setEtapa("fim")}
+                        onVoltar={() => setEtapa("m-proximos-passos")}
+                      />
                     ) : etapa === "m-proximos-passos" ? (
                       <ProximosPassosView
                         campos={CAMPOS_COLA_DEMO}
                         nivelGovBrOk={govBrOkDemo}
                         setNivelGovBrOk={setGovBrOkDemo}
-                        onConfirmarCnpj={() => setEtapa("fim")}
+                        onConfirmarCnpj={() => setEtapa("m-certificado")}
                         onVoltar={() => setEtapa("painel")}
                       />
                     ) : (

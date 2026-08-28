@@ -64,6 +64,7 @@ export const CADEIA_MEI = [
   { etapa: "A2", rota: "/termo?regime=mei", componente: "wizard-cauda.tsx", compartilhada: true },
   { etapa: "A3", rota: "/painel?regime=mei", componente: "painel.tsx", compartilhada: true },
   { etapa: "M-S", rota: "/mei/proximos-passos", componente: "mei-telas.tsx", compartilhada: false },
+  { etapa: "A3.2'", rota: "/certificado?regime=mei", componente: "wizard-cauda.tsx", compartilhada: true },
   { etapa: "A5", rota: "/home-dia1", componente: "wizard-cauda.tsx", compartilhada: true },
 ];
 
@@ -79,7 +80,6 @@ export const PULADAS = [
   { etapa: "C3", rota: "/dossie/socios", porque: "MEI não pode ter sócio." },
   { etapa: "C5", rota: "/dossie/cnae-secundarios", porque: "As ocupações secundárias (até 15) já foram escolhidas na M-O." },
   { etapa: "C6", rota: "/dossie/natureza", porque: "Natureza jurídica é sempre 213-5, automática." },
-  { etapa: "A3.2", rota: "/certificado", porque: "Certificado digital é DISPENSADO na abertura do MEI (gov.br Prata/Ouro supre)." },
   { etapa: "A4", rota: "/assinatura", porque: "Não existe assinatura de sócios — o aceite acontece dentro do gov.br." },
 ];
 
@@ -117,18 +117,19 @@ const REVISADOS = {
 
   // ── gate-telas.tsx (E3.2 fork MEI×ME + E5F faixa) ────────────────────────
   "gate-telas.tsx:socios": { max: 33, nota: "Tudo dentro de TriagemView (que o MEI NÃO renderiza — o /gate bifurca pra ImpedimentoView) ou em comentário." },
+  "gate-telas.tsx:certificado": { max: 2, nota: "🆕 28/08 — o card MEI do fork avisa, desde a escolha, que o certificado é necessário pro dia a dia e NÃO vem no plano. É o 'dizer desde o início' que o Pedro pediu." },
   "gate-telas.tsx:junta": { max: 1, nota: "Comentário." },
   "gate-telas.tsx:contrato-social": { max: 1, nota: "Comentário sobre sócio PJ, na TriagemView (não alcançável pelo MEI)." },
   "gate-telas.tsx:taxa-junta": { max: 1, nota: "Comentário." },
 
   // ── wizard-dinheiro.tsx (E6 conta · E7 plano · E8 contrato · E9 pagamento)
-  "wizard-dinheiro.tsx:junta": { max: 21, nota: "Todas guardadas por `semTaxaJunta`/`mei`, ou comentário. O subtítulo do E6 virou `subConta(mei)` em 28/08." },
-  "wizard-dinheiro.tsx:taxa-junta": { max: 19, nota: "Guardadas por `semTaxaJunta` — no MEI o card mostra 'Não tem'." },
+  "wizard-dinheiro.tsx:junta": { max: 22, nota: "Todas guardadas por `semTaxaJunta`/`mei`, ou comentário. O subtítulo do E6 virou `subConta(mei)` em 28/08." },
+  "wizard-dinheiro.tsx:taxa-junta": { max: 20, nota: "Guardadas por `semTaxaJunta` — no MEI o card mostra 'Não tem'." },
   "wizard-dinheiro.tsx:viabilidade": { max: 7, nota: "Guardadas por `semTaxaJunta` no PlanoView/ContratoView, ou comentário." },
   "wizard-dinheiro.tsx:socios": { max: 2, nota: "Comentário." },
   "wizard-dinheiro.tsx:fator-r": { max: 1, nota: "Comentário." },
   "wizard-dinheiro.tsx:pro-labore": { max: 1, nota: "Comentário." },
-  "wizard-dinheiro.tsx:certificado": { max: 9, nota: "🟡 DECISÃO DE NEGÓCIO, não bug: o ramo `semTaxaJunta` do E8 diz 'certificado digital vem incluso' como contrapartida da fidelidade de 12 meses (ADR 04/08). É verdade pra OPERAR (procuração e-CAC, FGTS Digital), mas o cliente acabou de ler que a ABERTURA dispensa certificado. Pedro precisa decidir se a copy separa os dois momentos." },
+  "wizard-dinheiro.tsx:certificado": { max: 14, nota: "🔄 28/08 — RESOLVIDO pelo Pedro: o plano MEI NÃO inclui certificado. E7 mostra 'você providencia' (nos 2 layouts) + bloco de não-incluso; E8 tirou 'vem incluso'; E3.2 avisa desde o card de escolha. No ME segue incluso." },
 
   // ── wizard-dossie.tsx (C1 socio · C4 empresa · C7 nome) ──────────────────
   "wizard-dossie.tsx:socios": { max: 47, nota: "SociosView (C3) inteira, que o MEI PULA; a pergunta de residência no C4 virou `!mei` em 28/08; o resto é comentário." },
@@ -142,9 +143,10 @@ const REVISADOS = {
   "wizard-dossie.tsx:taxa-junta": { max: 9, nota: "Comentários + copy guardada por `!mei`." },
 
   // ── wizard-cauda.tsx (A1 revisar · A2 termo · A5 home dia-1) ─────────────
+  "wizard-cauda.tsx:contrato-social": { max: 1, nota: "Comentário da CertificadoGateView explicando que, ao contrário do ME, o MEI não tem contrato social pra assinar." },
   "wizard-cauda.tsx:junta": { max: 13, nota: "Revisar e Termo corrigidos em 28/08 (ramo `mei` próprio). O resto vive em CertificadoGateView/AssinaturaView, que o MEI PULA." },
   "wizard-cauda.tsx:socios": { max: 5, nota: "AssinaturaView (A4), que o MEI PULA, + comentários." },
-  "wizard-cauda.tsx:certificado": { max: 7, nota: "CertificadoGateView (A3.2), que o MEI PULA." },
+  "wizard-cauda.tsx:certificado": { max: 12, nota: "🔄 28/08 — o MEI PASSA pela CertificadoGateView agora (decisão do Pedro), com variante `mei`: motivo é OPERAR (não a procuração da assinatura) e o custo é do cliente (não vem incluso)." },
   "wizard-cauda.tsx:taxa-junta": { max: 8, nota: "Recap do A1 e Termo, guardados por `!mei`." },
   "wizard-cauda.tsx:capital-social": { max: 2, nota: "Recap do A1, guardado por `!mei`." },
   "wizard-cauda.tsx:alvara": { max: 2, nota: "No Termo, dentro do bloco `mei`, e é o texto CORRETO (dispensa de alvará, Res. CGSIM 59/2020)." },

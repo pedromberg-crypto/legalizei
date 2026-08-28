@@ -108,9 +108,11 @@ export default function MeiProximosPassosPage() {
           "noopener,noreferrer",
         )
       }
-      // Fecha o loop: com o CNPJ na mão, a gente assume a operação (guias,
-      // notas, DASN-SIMEI, monitor de teto). Por ora cai na home dia-1.
-      onConfirmarCnpj={() => router.push("/home-dia1?regime=mei")}
+      // 🔄 28/08 (decisão do Pedro) — com o CNPJ na mão vem o CERTIFICADO,
+      // não a home. Ele é o que destrava a operação otimizada (guias, FGTS
+      // Digital, procuração), e tem que estar resolvido ANTES da pessoa cair
+      // dentro do app com as funcionalidades — mesma régua do ME.
+      onConfirmarCnpj={() => router.push("/certificado?regime=mei")}
     />
   );
 }

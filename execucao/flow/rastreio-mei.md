@@ -13,7 +13,7 @@ tags: [mei, flow, telas, auditoria, trava]
 >
 > Trava automática: `node execucao/flow/verificar-mei.mjs`.
 
-## A cadeia real — 21 etapas
+## A cadeia real — 22 etapas
 
 | # | Etapa | Rota | Componente | Natureza |
 |---|---|---|---|---|
@@ -37,11 +37,12 @@ tags: [mei, flow, telas, auditoria, trava]
 | 18 | A2 | `/termo?regime=mei` | `wizard-cauda.tsx` | 🔧 variante MEI |
 | 19 | A3 | `/painel?regime=mei` | `painel.tsx` | 🔧 variante MEI |
 | 20 | **M-S** | `/mei/proximos-passos` | `mei-telas.tsx` | 🆕 só MEI |
-| 21 | A5 | `/home-dia1` | `wizard-cauda.tsx` | compartilhada |
+| 21 | **A3.2′** | `/certificado?regime=mei` | `wizard-cauda.tsx` | 🔧 variante MEI |
+| 22 | A5 | `/home-dia1` | `wizard-cauda.tsx` | compartilhada |
 
 Saídas alcançáveis: `/saida/mei-outra-empresa` · `/saida/mei-servidor` (da M-T) · `/veredito/waitlist` (do E3.4).
 
-## As 8 telas que o MEI NÃO usa — e por quê
+## As 7 telas que o MEI NÃO usa — e por quê
 
 > Documentar o que ele **não** usa é tão importante quanto o que usa: foi exatamente aqui que os erros de dedução nasceram.
 
@@ -53,7 +54,6 @@ Saídas alcançáveis: `/saida/mei-outra-empresa` · `/saida/mei-servidor` (da M
 | C3 | `/dossie/socios` | MEI não pode ter sócio |
 | C5 | `/dossie/cnae-secundarios` | As ocupações secundárias (até 15) já vieram na M-O |
 | C6 | `/dossie/natureza` | Natureza jurídica é sempre 213-5, automática |
-| A3.2 | `/certificado` | Certificado digital é **dispensado** na abertura (gov.br Prata/Ouro supre) |
 | A4 | `/assinatura` | Não existe assinatura de sócios — o aceite acontece dentro do gov.br |
 
 ## Os 8 erros que a auditoria achou (28/08) — todos corrigidos
@@ -76,17 +76,43 @@ Roda em 1 segundo e faz **uma coisa só**: acha todo termo que só existe no mun
 - Termo novo não registrado → **erro**.
 - Contagem que cresceu → **erro** (a linha nova não passou por ninguém).
 
-Hoje: **276 ocorrências, todas revisadas**. Não substitui ler a tela — substitui o esquecimento.
+Hoje: **283 ocorrências, todas revisadas**. Não substitui ler a tela — substitui o esquecimento.
 
 > ⚠️ O que a trava **não** pega: erro semântico com vocabulário certo (ex: uma tela que pede um dado que o MEI não tem, sem usar nenhuma dessas palavras). Pra isso não há atalho: é ler a cadeia acima contra a lista campo a campo de [[abertura-mei-processo]].
 
-## 🟡 Aberto pro Pedro — 1 decisão, não é bug
+## ✅ RESOLVIDO 28/08 — o certificado digital no MEI
 
-**O certificado digital no contrato do MEI (E8).** A copy diz *"O certificado digital vem incluso — a gente precisa dele pra movimentar sua empresa"*, e ele é a contrapartida declarada da fidelidade de 12 meses (ADR 04/08).
+O Pedro decidiu: **separar os dois momentos E não incluir o certificado no plano MEI.**
 
-Isso é **verdade pra operar** (procuração e-CAC, FGTS Digital via InfoSimples exige pkcs12), mas o cliente acabou de ler, duas telas antes, que a **abertura** dispensa certificado. Não mexi porque é decisão travada com implicação de preço.
+> *"na abertura n precisa, mas para operar de fato precisa e o MEI a gente n vai dar esse certificado n... precisamos dizer desde sempre... e é um passo tb que tem que ser efetivado antes da pessoa cair pra dentro do app, da mesma forma do ME"*
 
-**Sugestão:** separar os dois momentos na copy — *"a abertura não precisa de certificado; o dia a dia sim, e ele vem incluso"*. Resolve a contradição sem mexer no preço nem na fidelidade.
+**O que mudou, tela por tela:**
+
+| Onde | Antes | Agora |
+|---|---|---|
+| E3.2 (card MEI no fork) | não falava de certificado | 5º check: *"Pro dia a dia, você vai precisar de um certificado digital (não vem no plano)"* — é o **"desde o início"** |
+| E7 plano · badge | "Certificado digital grátis" (nos 2 layouts) | "Certificado digital: você providencia" |
+| E7 plano · lista INCLUSO_MEI | 1º item era "Certificado digital · incluso, sem custo extra" | item removido + **bloco próprio de não-incluso** abaixo da lista, com o motivo |
+| E8 contrato | *"vem incluso — em troca, fidelidade de 12 meses"* | *"o certificado fica por sua conta"* + bullet explicando pra que serve |
+| A3.2′ `/certificado` | MEI pulava | **MEI passa**, com variante: motivo é OPERAR (não a procuração da assinatura), e *"a gente te passa o valor"* no lugar de *"por nossa conta"* |
+| Posição no flow | — | entre a M-S (voltou com o CNPJ) e a A5 (home dia-1) |
+
+**No ME nada mudou:** lá o certificado segue incluso e grátis, e a tela segue com o motivo da procuração.
+
+### 🔴 A consequência que ficou aberta — decisão de negócio
+
+O ADR de 04/08 dizia, com todas as letras: *"O certificado é pré-requisito nosso... **a fidelidade de 12 meses é a contrapartida de pagar por ele**."*
+
+Tirando o certificado do plano MEI, **a fidelidade de 12 meses ficou sem contrapartida escrita**. O número segue valendo (não foi revogado), mas hoje o contrato pediria 12 meses de permanência sem dizer em troca de quê.
+
+Não inventei justificativa nova: a copy do E8 usa a mesma formulação genérica do ME ("período mínimo de permanência"), e o `CUSTOS.FIDELIDADE_MESES` carrega o alerta. **Precisa de decisão Pedro/Mauro antes de virar cláusula.**
+
+Três saídas possíveis, sem recomendação forte de minha parte:
+1. **Manter 12 meses** com outra contrapartida declarada (ex: o preço de R$49 só se sustenta com permanência).
+2. **Reduzir ou zerar** a fidelidade do MEI, já que o custo que ela cobria saiu.
+3. **Oferecer o certificado como upsell** com desconto pra quem aceita fidelidade — vira escolha do cliente.
+
+Também sem preço fechado: `CUSTOS.CERTIFICADO_PRECO` está `null` de propósito. O ADR de 30/07 cita "~R$200", mas dentro de uma simulação — não é tabela da certificadora. Enquanto não fechar, a UI diz *"a gente te passa o valor"* e nunca um número.
 
 ## Links
 - [[cruzamento-flow-mei-vs-me]] — o desenho do ramo.

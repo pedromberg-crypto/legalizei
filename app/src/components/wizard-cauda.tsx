@@ -449,9 +449,26 @@ function Camada({ children }: { children: ReactNode }) {
 export function CertificadoGateView({
   onSeguir,
   onVoltar,
+  mei = false,
 }: {
   onSeguir?: () => void;
   onVoltar?: () => void;
+  /**
+   * 🆕 28/08 (decisão do Pedro) — o MEI TAMBÉM passa por esta tela, e ela muda
+   * em dois pontos:
+   *
+   * 1. **O motivo.** No ME o certificado destrava a PROCURAÇÃO que acompanha a
+   *    assinatura do contrato social. No MEI não existe assinatura nem
+   *    procuração de abertura — a abertura dispensa certificado por completo
+   *    (gov.br Prata/Ouro supre). O que ele destrava é a OPERAÇÃO: puxar guia,
+   *    mexer no FGTS Digital, agir por procuração sem pedir a senha do cliente
+   *    toda vez.
+   *
+   * 2. **Quem paga.** No ME o certificado vem incluso (contrapartida da
+   *    fidelidade, ADR 04/08). No MEI **não vem** — decisão de 28/08. Dizer
+   *    "por nossa conta" aqui seria promessa falsa.
+   */
+  mei?: boolean;
 }) {
   const [caminho, setCaminho] = useState<"pergunta" | "tenho" | "nao-tenho">("pergunta");
   const [arquivo, setArquivo] = useState<File | null>(null);
@@ -474,15 +491,39 @@ export function CertificadoGateView({
       <>
         <TelaHeader meta="Certificado digital" onVoltar={onVoltar} />
         <main className="app-main">
-          <Titulo sub="A procuração eletrônica que vai junto da sua assinatura precisa dele. É rápido de resolver, dos dois jeitos.">
+          <Titulo
+            sub={
+              mei
+                ? "Abrir o MEI não precisou dele. Cuidar da empresa no dia a dia precisa, e é rápido de resolver."
+                : "A procuração eletrônica que vai junto da sua assinatura precisa dele. É rápido de resolver, dos dois jeitos."
+            }
+          >
             Você já tem certificado digital (e-CNPJ)?
           </Titulo>
           <Corpo>
-            <Aviso variante="info" titulo="Pra que serve isso">
-              É o que autoriza a gente a emitir nota, pagar guia e assinar
-              coisas em nome da sua empresa depois. Sem ele, a procuração não
-              sai — por isso resolve antes de assinar, não depois.
-            </Aviso>
+            {mei ? (
+              <>
+                <Aviso variante="info" titulo="Pra que serve isso">
+                  É o que deixa a gente puxar suas guias, cuidar do FGTS do seu
+                  colaborador e agir em nome da empresa sem te pedir senha toda
+                  vez. Sem ele a gente ainda te atende, mas cada passo vira uma
+                  ida sua ao portal do governo.
+                </Aviso>
+                {/* 🔴 28/08 — honestidade antes do toque (mesma doutrina do
+                    portal): o custo aparece ANTES da escolha, não depois. */}
+                <Aviso variante="warning" titulo="O certificado não vem no plano MEI">
+                  Ele é seu, não nosso — diferente da mensalidade. Se você não
+                  tiver um, a gente te conecta com a nossa certificadora
+                  parceira e te passa o valor antes de qualquer coisa.
+                </Aviso>
+              </>
+            ) : (
+              <Aviso variante="info" titulo="Pra que serve isso">
+                É o que autoriza a gente a emitir nota, pagar guia e assinar
+                coisas em nome da sua empresa depois. Sem ele, a procuração não
+                sai — por isso resolve antes de assinar, não depois.
+              </Aviso>
+            )}
           </Corpo>
           <Rodape>
             <Button full onClick={() => setCaminho("tenho")}>
@@ -504,8 +545,14 @@ export function CertificadoGateView({
       <>
         <TelaHeader meta="Certificado digital" onVoltar={() => setCaminho("pergunta")} />
         <main className="app-main">
-          <Titulo sub="Nossa certificadora parceira agenda uma videochamada rápida com você e providencia um novo, por nossa conta.">
-            A gente providencia um novo pra você
+          <Titulo
+            sub={
+              mei
+                ? "Nossa certificadora parceira agenda uma videochamada rápida com você. A gente te passa o valor antes de fechar."
+                : "Nossa certificadora parceira agenda uma videochamada rápida com você e providencia um novo, por nossa conta."
+            }
+          >
+            {mei ? "A gente te conecta com a certificadora" : "A gente providencia um novo pra você"}
           </Titulo>
           <Corpo>
             <Aviso variante="info" titulo="Como funciona">
@@ -513,6 +560,12 @@ export function CertificadoGateView({
               melhor horário. A entrevista é por vídeo, leva poucos minutos, e
               ao final o certificado já sai anexado no seu cadastro.
             </Aviso>
+            {mei && (
+              <p className="text-caption text-text-secondary">
+                Você também pode comprar de qualquer certificadora que preferir
+                e subir o arquivo aqui depois. Não precisa ser a nossa.
+              </p>
+            )}
           </Corpo>
           <Rodape>
             <Button full onClick={onSeguir}>

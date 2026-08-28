@@ -974,11 +974,16 @@ function opcoesRegime(contexto: "abrir" | "migrar") {
       // 🆕 03/08 — lista ÚNICA (era pontos + "Recomendado para" separados —
       // duas listas com estilo diferente pra informação do mesmo tipo lia como
       // inconsistência, não hierarquia). Concreto (número) primeiro.
+      // 🆕 28/08 (decisão do Pedro) — o certificado digital entra AQUI, na
+      // primeira tela em que a pessoa escolhe ser MEI, e não lá no fim. Ele
+      // deixou de vir incluso no plano MEI, e descobrir isso só no contrato
+      // seria a surpresa que a marca inteira existe pra não dar.
       checks: [
         "Fatura (ou espera faturar) até ~R$6.750/mês (teto de R$81 mil/ano)",
         "Abre em qualquer cidade do Brasil",
         "Sem taxa da Junta, registro é praticamente na hora",
         "Sem sócio · até 1 funcionário com carteira",
+        "Pro dia a dia, você vai precisar de um certificado digital (não vem no plano)",
       ],
     },
     {

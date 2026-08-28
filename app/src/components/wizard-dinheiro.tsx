@@ -1275,7 +1275,7 @@ function PlanoOferta({
             <span className="text-h2 text-text-primary">{brl(hoje, true)}</span>
           </div>
           <Button full onClick={onSeguir}>
-            Continuar
+            Ótimo, continuar
           </Button>
         </Rodape>
       </main>

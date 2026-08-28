@@ -6,7 +6,6 @@ import { ContaView, type DadosConta } from "@/components/wizard-dinheiro";
 import { ehMei, comRegime } from "@/lib/regime";
 import { ehEnderecoFiscal, comEndereco } from "@/lib/endereco";
 import { categoriaDe, comCategoria } from "@/lib/categoria";
-import { CLIENTE } from "@/app/(app)/dossie/mock";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -59,18 +58,15 @@ export default function ContaPage() {
   const categoria = categoriaDe(searchParams);
   const [etapa, setEtapa] = useState<"form" | "codigo">("form");
   /**
-   * 🚧 27/08 — nome/e-mail/telefone vêm PRÉ-PREENCHIDOS do E3.1 (`/dados`).
-   * Como não existe estado real entre telas (RF-01, dívida do projeto inteiro)
-   * e dado pessoal não pode viajar por querystring, a page usa o mock `CLIENTE`
-   * — exatamente a mesma doutrina que o C1 (`/dossie/socio`) já usa pra
-   * "confirmar o que veio do E6". Quando o estado real existir, os 3 campos
-   * passam a vir de lá e este mock morre junto com `dossie/mock.ts`.
+   * 🔄 28/08 (pedido do Pedro) — a tela volta a coletar tudo aqui mesmo
+   * (`leadJaCaptado` removido abaixo), então o form começa em branco: não há
+   * mais dado pré-capturado do E3.1 pra confirmar nesta etapa.
    */
   const [dados, setDados] = useState<DadosConta>({
-    nome: CLIENTE.nome,
+    nome: "",
     cpf: "",
-    telefone: CLIENTE.telefone,
-    email: "ana.beatriz@gmail.com",
+    telefone: "",
+    email: "",
     senha: "",
     cep: "",
     numero: "",
@@ -94,10 +90,10 @@ export default function ContaPage() {
       // social). UX-73 (coorte obrigatória) NÃO veio junto — decisão em
       // aberto, ver comentário em `ContaPainel`. Fonte: /apresentacao.
       layout="painel"
-      // 🆕 27/08 — a tela deixou de coletar identidade (já veio do E3.1/E3.3):
-      // agora só pede senha e CPF, com recap read-only do que já temos.
+      // 🔄 28/08 (pedido do Pedro, reposição no /mapa) — volta a ser o form
+      // completo (nome/CPF/telefone/e-mail/senha/CEP/número), sem o recap
+      // read-only. `leadJaCaptado` omitido = false (default).
       mei={mei}
-      leadJaCaptado
     />
   );
 }

@@ -348,6 +348,10 @@ function ContaPainel({
    * `null` = ainda não conectou (cadastro por e-mail).
    */
   const [social, setSocial] = useState<"google" | "apple" | null>(null);
+  // 🆕 28/08 (sugestão minha, pedido do Pedro) — mostrar/ocultar senha. Campo
+  // de senha cego numa tela sem confirmação (não tem "repita a senha") é onde
+  // esse toggle mais compensa: erro de digitação só aparece no próximo login.
+  const [mostrarSenha, setMostrarSenha] = useState(false);
 
   function conectar(provedor: "google" | "apple") {
     setSocial(provedor);
@@ -524,12 +528,20 @@ function ContaPainel({
                 <input
                   value={d.senha}
                   onChange={(e) => set("senha", e.target.value)}
-                  type="password"
+                  type={mostrarSenha ? "text" : "password"}
                   autoComplete="new-password"
                   placeholder="Senha (mín. 8 caracteres)"
                   aria-label="Senha"
                   className="min-h-12 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
                 />
+                <button
+                  type="button"
+                  onClick={() => setMostrarSenha((v) => !v)}
+                  aria-label={mostrarSenha ? "Ocultar senha" : "Mostrar senha"}
+                  className="shrink-0 text-text-tertiary transition-colors hover:text-text-secondary"
+                >
+                  {mostrarSenha ? <IconeOlhoFechado /> : <IconeOlhoAberto />}
+                </button>
               </CampoIconeConta>
             </>
           )}
@@ -642,6 +654,27 @@ function ContaPainel({
           </>
         )}
 
+        {/* 🆕 28/08 (sugestão minha, pedido do Pedro) — consentimento LGPD.
+            Mesma linha do E3.1 (`entrada-lead.tsx`), que existia lá porque
+            aquela era, até então, a 1ª tela a coletar dado pessoal de
+            verdade. Com a tela voltando a coletar tudo aqui (reposição no
+            /mapa), o consentimento precisa estar ONDE o dado é digitado —
+            não deixar essa linha só em E3.1 seria dado pessoal sem aviso
+            visível no ponto de coleta real. */}
+        {!leadJaCaptado && (
+          <p className="mt-4 text-micro text-text-tertiary">
+            Ao continuar, você concorda que a gente use esses dados pra te
+            atender, como está na nossa{" "}
+            <a
+              href="/privacidade"
+              className="font-semibold text-text-secondary underline underline-offset-4"
+            >
+              política de privacidade
+            </a>
+            . Nada de vender seus dados pra ninguém.
+          </p>
+        )}
+
         <div className="h-6 shrink-0" />
       </div>
 
@@ -702,6 +735,12 @@ function IconeCadeadoConta() {
 }
 function IconeLocal() {
   return <svg {...ic20()}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z" /><circle cx="12" cy="10" r="3" /></svg>;
+}
+function IconeOlhoAberto() {
+  return <svg {...ic20()}><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>;
+}
+function IconeOlhoFechado() {
+  return <svg {...ic20()}><path d="M3 3l18 18" /><path d="M10.6 10.6a3 3 0 0 0 4.2 4.2" /><path d="M9.9 5.1A11 11 0 0 1 12 4c7 0 11 8 11 8a18.4 18.4 0 0 1-4 5.1M6.1 6.1A18.6 18.6 0 0 0 1 12s4 8 11 8a10.6 10.6 0 0 0 4.2-.9" /></svg>;
 }
 
 // 🔴 24/08 (reunião Rua Satélite 35) — `BotaoCoorte` removido daqui (ficou

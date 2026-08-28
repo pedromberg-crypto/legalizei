@@ -1000,12 +1000,23 @@ export function PlanoView({
  * acima. Listar "abertura do CNPJ" aqui dentro misturaria os baldes — a regra
  * dura que esta tela existe pra proteger — e repetiria o card de cima.
  */
-const INCLUSO: { titulo: string; sub: string }[] = [
-  { titulo: "Certificado digital", sub: "Incluso, sem custo extra." },
-  { titulo: "Imposto e declarações", sub: "Guia pronta todo mês e obrigação entregue no prazo." },
-  { titulo: "Notas fiscais sem limite", sub: "Emite pelo app, em segundos." },
-  { titulo: "Pró-labore de até 2 sócios", sub: "Calculado junto com o seu imposto." },
-  { titulo: "Contador de verdade", sub: "Uma pessoa com nome, no WhatsApp." },
+/**
+ * 🔄 28/08 (pedido do Pedro) — o card verde "Nosso honorário de abertura"
+ * (design antigo) parou de ser card próprio: virou o 1º item desta lista,
+ * com ícone e peso igual aos outros. Ficar solto no topo, sozinho, lia como
+ * sobra da fusão preview→produção, não como conteúdo.
+ */
+const INCLUSO: { titulo: string; sub: string; icone: ReactNode }[] = [
+  {
+    titulo: "Abertura completa da empresa",
+    sub: "Documentação, contrato social, protocolo e CNPJ, sem honorário. Em escritório tradicional, isso custa em torno de um salário mínimo.",
+    icone: <IconePredio />,
+  },
+  { titulo: "Certificado digital", sub: "Incluso, sem custo extra.", icone: <IconeCadeado /> },
+  { titulo: "Imposto e declarações", sub: "Guia pronta todo mês e obrigação entregue no prazo.", icone: <IconeDocPlano /> },
+  { titulo: "Notas fiscais sem limite", sub: "Emite pelo app, em segundos.", icone: <IconeRaioPlano /> },
+  { titulo: "Pró-labore de até 2 sócios", sub: "Calculado junto com o seu imposto.", icone: <IconePessoasPlano /> },
+  { titulo: "Contador de verdade", sub: "Uma pessoa com nome, no WhatsApp.", icone: <IconeChatPlano /> },
 ];
 
 /** 🆕 04/08 — Plano MEI é escopo LIMITADO (emitir NF + o 1 colaborador que a
@@ -1017,14 +1028,20 @@ const INCLUSO: { titulo: string; sub: string }[] = [
  *  regime dispensado de contador (sem escrituração obrigatória, DASN-SIMEI
  *  autodeclaratória). Dizer "contador de verdade" aqui era a promessa vazia que
  *  a marca acusa o setor de fazer. Ver `pesquisa/posicionamento.md` §2. */
-const INCLUSO_MEI: { titulo: string; sub: string }[] = [
+const INCLUSO_MEI: { titulo: string; sub: string; icone: ReactNode }[] = [
+  // A abertura grátis vale pros dois regimes — mesmo item do array ME acima.
+  {
+    titulo: "Abertura completa da empresa",
+    sub: "Registro direto no Portal do Empreendedor, sem honorário nenhum.",
+    icone: <IconePredio />,
+  },
   // 🔴 28/08 (decisão do Pedro) — o certificado SAIU da lista de incluso do
   // MEI. Ele continua sendo o que destrava a operação otimizada, mas o custo é
-  // do cliente. Fica logo abaixo da lista, num bloco próprio de "não incluso" —
+  // do cliente. Fica logo abaixo da lista, num bloco próprio de "não incluso":
   // esconder seria o oposto da doutrina de honestidade antes do toque.
-  { titulo: "Notas fiscais sem limite", sub: "Emite pelo app, em segundos." },
-  { titulo: "1 colaborador", sub: "O único que a lei permite ao MEI — FGTS e INSS patronal inclusos." },
-  { titulo: "Assistente de contabilidade", sub: "Tira dúvida e resolve a rotina do MEI, a qualquer hora." },
+  { titulo: "Notas fiscais sem limite", sub: "Emite pelo app, em segundos.", icone: <IconeRaioPlano /> },
+  { titulo: "1 colaborador", sub: "O único que a lei permite ao MEI. FGTS e INSS patronal inclusos.", icone: <IconePessoasPlano /> },
+  { titulo: "Assistente de contabilidade", sub: "Tira dúvida e resolve a rotina do MEI, a qualquer hora.", icone: <IconeChatPlano /> },
 ];
 
 function PlanoOferta({
@@ -1071,40 +1088,21 @@ function PlanoOferta({
             </span>
           </div>
 
-          <h1 className="text-[1.75rem] leading-[1.1] tracking-tight">
-            <span className="block font-bold text-text-primary">Quanto custa</span>
-            <span className="block font-bold text-text-tertiary">manter em dia</span>
+          {/* 🆕 28/08 (pedido do Pedro) — título e subtítulo em LINHA ÚNICA.
+              O título deixa de empilhar em 2 blocos (era `block`+`block`) e
+              vira 1 span inline, com fonte menor pra caber; o subtítulo foi
+              encurtado, não só diminuído — copy comprida encolhida fica
+              ilegível antes de caber numa linha só. */}
+          <h1 className="text-[1.375rem] leading-tight tracking-tight whitespace-nowrap">
+            <span className="font-bold text-text-primary">Quanto custa</span>{" "}
+            <span className="font-bold text-text-tertiary">manter em dia</span>
           </h1>
-          <p className="text-body text-text-secondary mt-2">
-            Tudo que você vai pagar, num lugar só. Sem letra miúda depois.
+          <p className="text-body text-text-secondary mt-2 whitespace-nowrap">
+            Sem letra miúda, sem surpresa depois.
           </p>
         </div>
 
         <div className="mt-5 flex-1 min-h-0 overflow-y-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {/* HERÓI DO GRÁTIS — mesmo conteúdo de sempre (os 3 baldes não
-              mudam), só com profundidade real (raio+sombra) em vez de borda
-              fina. ⚠️ Regra travada: a copy não pode listar "Junta" aqui — o
-              que é grátis é o TRABALHO, não o repasse ao Estado. */}
-          <Card tom="sucesso" className="rounded-[28px] p-6 shadow-lg">
-            <p className="text-caption text-state-success-text">
-              Nosso honorário de abertura
-            </p>
-            <div className="mt-1 flex items-center gap-2.5">
-              <CheckGrande />
-              <p className="text-display text-state-success-text">Grátis</p>
-            </div>
-            <p className="text-caption text-text-secondary mt-2">
-              Todo o trabalho de abrir é por nossa conta: documentação, contrato
-              social, protocolo, CNPJ e enquadramento no Simples.
-            </p>
-            {/* ⚓ A âncora qualitativa (sem número, sem preço riscado — vício de
-                varejo já cortado em 29/07). */}
-            <p className="text-micro text-text-tertiary mt-2">
-              Em escritório tradicional, esse mesmo trabalho costuma custar em
-              torno de um salário mínimo de honorário.
-            </p>
-          </Card>
-
           {/* O PLANO COMO PRODUTO — card-herói escuro, profundidade real.
               🔴 28/08 — o badge "certificado grátis/você providencia" que
               vivia aqui SAIU: ele já aparece embaixo (na lista de inclusos
@@ -1167,7 +1165,7 @@ function PlanoOferta({
                 className="flex items-center gap-3 rounded-2xl border border-border-hairline bg-surface-card p-3.5 shadow-sm"
               >
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-state-success-tint text-state-success-text">
-                  <CheckMiniPlano />
+                  {i.icone}
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="text-body font-semibold text-text-primary">{i.titulo}</p>
@@ -1219,12 +1217,9 @@ function PlanoOferta({
             </p>
           </div>
 
-          {/* 🆕 27/08 — mesma citação legal da versão clássica (ver PlanoView). */}
-          <p className="mt-4 text-micro text-text-tertiary px-1">
-            Por lei (Código Civil, art. 1.179), toda empresa precisa de
-            contabilidade regular. É esse serviço contínuo que vira a sua
-            mensalidade, não a abertura.
-          </p>
+          {/* 🔴 28/08 (pedido do Pedro: "achei desnecessário") — a citação
+              legal (CC art. 1.179) foi REMOVIDA. Segue existindo na versão
+              clássica (`PlanoView`), que não é a usada em produção. */}
 
           {/* 🆕 03/08 — COLABORADORES, visível desde já. 🔴 Preço FAKE —
               referência de mercado, não decisão nossa. Some pro Plano MEI:
@@ -1247,11 +1242,6 @@ function PlanoOferta({
             </div>
           )}
 
-          {/* Preço é placeholder declarado: número provisório sem aviso é igual
-              a número sem fonte. */}
-          <p className="mt-4 text-micro text-text-tertiary">
-            Valores de referência enquanto fechamos o preço final.
-          </p>
         </div>
 
         {/* CTA FLUTUANTE — ecoa a navbar escura flutuante da referência.
@@ -1275,19 +1265,83 @@ function PlanoOferta({
   );
 }
 
-function CheckMiniPlano() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="m5 12 4 4 8-9" />
-    </svg>
-  );
-}
 /** Check preenchido, 28px. Local: só o card do grátis usa. */
 function CheckGrande() {
   return (
     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" className="shrink-0 text-state-success" aria-hidden>
       <circle cx="12" cy="12" r="11" fill="currentColor" />
       <path d="m7.5 12.4 3.1 3.1 6-6.2" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+/**
+ * 🆕 28/08 (pedido do Pedro: "quero os ícones que validamos") — o mesmo
+ * conjunto de ícones por item validado no preview `/plano-premium`,
+ * restaurado aqui. Na 1ª fusão pra produção eu tinha simplificado pra um
+ * checkmark genérico repetido — o Pedro pediu de volta a distinção por item.
+ */
+function ic18Plano() {
+  return {
+    width: 18,
+    height: 18,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 2,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    "aria-hidden": true,
+  };
+}
+function IconePredio() {
+  return (
+    <svg {...ic18Plano()}>
+      <path d="M3 21h18" />
+      <path d="M5 21V7l8-4v18" />
+      <path d="M19 21V11l-6-4" />
+      <path d="M9 9v.01M9 12v.01M9 15v.01" />
+    </svg>
+  );
+}
+function IconeCadeado() {
+  return (
+    <svg {...ic18Plano()}>
+      <rect x="3" y="11" width="18" height="11" rx="2" />
+      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+    </svg>
+  );
+}
+function IconeDocPlano() {
+  return (
+    <svg {...ic18Plano()}>
+      <path d="M7 3h7l4 4v14H7z" />
+      <path d="M14 3v4h4" />
+      <path d="M10 13h5M10 17h3" />
+    </svg>
+  );
+}
+function IconeRaioPlano() {
+  return (
+    <svg {...ic18Plano()}>
+      <path d="M13 2 3 14h7l-1 8 10-12h-7z" />
+    </svg>
+  );
+}
+function IconePessoasPlano() {
+  return (
+    <svg {...ic18Plano()}>
+      <circle cx="8" cy="8" r="3" />
+      <circle cx="17" cy="9" r="2.5" />
+      <path d="M2 20c0-3.5 2.7-6 6-6s6 2.5 6 6" />
+      <path d="M14.5 14.2c2.5.3 4.5 2.4 4.5 5.8" />
+    </svg>
+  );
+}
+function IconeChatPlano() {
+  return (
+    <svg {...ic18Plano()}>
+      <path d="M4 4h16v12H8l-4 4z" />
     </svg>
   );
 }

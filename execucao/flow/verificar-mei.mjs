@@ -143,6 +143,7 @@ const REVISADOS = {
   "wizard-dossie.tsx:taxa-junta": { max: 9, nota: "Comentários + copy guardada por `!mei`." },
 
   // ── wizard-cauda.tsx (A1 revisar · A2 termo · A5 home dia-1) ─────────────
+  "wizard-dinheiro.tsx:contrato-social": { max: 1, nota: "No item 'Abertura completa da empresa' do array INCLUSO (só ME) -- o array irmao INCLUSO_MEI tem sub texto proprio, sem contrato social, entao o MEI nunca ve essa linha." },
   "wizard-cauda.tsx:contrato-social": { max: 1, nota: "Comentário da CertificadoGateView explicando que, ao contrário do ME, o MEI não tem contrato social pra assinar." },
   "wizard-cauda.tsx:junta": { max: 13, nota: "Revisar e Termo corrigidos em 28/08 (ramo `mei` próprio). O resto vive em CertificadoGateView/AssinaturaView, que o MEI PULA." },
   "wizard-cauda.tsx:socios": { max: 5, nota: "AssinaturaView (A4), que o MEI PULA, + comentários." },

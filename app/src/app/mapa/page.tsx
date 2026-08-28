@@ -18,7 +18,7 @@ import grafo from "@/lib/flow-graph.json";
 import { calcularLayout, type NoFlow, type Orientacao } from "@/lib/flow-layout";
 import { TIPOS_DE_NO } from "@/components/mapa/tela-node";
 import { TIPOS_DE_ARESTA } from "@/components/mapa/flow-edge";
-import { TRILHAS, calcularArestasTrilha } from "@/lib/trilhas";
+import { TRILHAS, calcularArestasTrilha, nosDaTrilha } from "@/lib/trilhas";
 import { DADOS_CONSTITUICAO_MD } from "@/lib/dados-constituicao";
 
 /**
@@ -52,6 +52,15 @@ const LEGENDA_COR: { classe: string; nome: string; cor: string }[] = [
 
 const ORIENTACAO: Orientacao = "LR";
 
+// 🆕 28/08 (pedido do Pedro) — `TRILHAS` cresceu de 3 pra 8 (abrir/migrar/
+// login genéricas + 4 por regime). As 3 genéricas continuam disparando pelo
+// pontinho do E3 no canvas (`onCtaClick`); as 4 de regime só disparam pelo
+// botão da legenda (ver `TRILHAS_REGIME` abaixo) — por isso ficam em listas
+// separadas na legenda, não misturadas na mesma.
+const IDS_CANVAS = new Set(["abrir", "migrar", "login"]);
+const TRILHAS_CANVAS = TRILHAS.filter((t) => IDS_CANVAS.has(t.id));
+const TRILHAS_REGIME = TRILHAS.filter((t) => !IDS_CANVAS.has(t.id));
+
 export default function MapaPage() {
   const [selecionado, setSelecionado] = useState<NoFlow | null>(null);
   // 🆕 26/08 (pedido do Pedro) — clicar um CTA do E3 acende a trilha inteira
@@ -75,16 +84,32 @@ export default function MapaPage() {
     setTrilhaAtivaId((atual) => (atual === trilha.id ? null : trilha.id));
   }, []);
 
-  const nodes = useMemo(
-    () => nodesBase.map((n) => ({ ...n, data: { ...n.data, onCtaClick, trilhaAtivaId } })),
-    [nodesBase, onCtaClick, trilhaAtivaId],
-  );
-
   const arestasDaTrilha = useMemo(() => {
     if (!trilhaAtivaId) return null;
     const trilha = TRILHAS.find((t) => t.id === trilhaAtivaId);
     return trilha ? calcularArestasTrilha(grafo as Parameters<typeof calcularLayout>[0], trilha) : null;
   }, [trilhaAtivaId]);
+
+  // 🆕 28/08 (pedido do Pedro) — as TELAS que não pertencem à trilha ativa
+  // ficam "desativadas" (cinza-padrão, ver `tela-node.tsx`), não só as linhas.
+  const nosAtivos = useMemo(
+    () => (arestasDaTrilha ? nosDaTrilha(arestasDaTrilha) : null),
+    [arestasDaTrilha],
+  );
+
+  const nodes = useMemo(
+    () =>
+      nodesBase.map((n) => ({
+        ...n,
+        data: {
+          ...n.data,
+          onCtaClick,
+          trilhaAtivaId,
+          apagado: !!nosAtivos && !nosAtivos.has(n.id),
+        },
+      })),
+    [nodesBase, onCtaClick, trilhaAtivaId, nosAtivos],
+  );
 
   const edges = useMemo(() => {
     const cor = trilhaAtivaId ? TRILHAS.find((t) => t.id === trilhaAtivaId)?.cor : undefined;
@@ -243,13 +268,42 @@ export default function MapaPage() {
           {/* 🆕 26/08 (pedido do Pedro) — legenda das 3 trilhas clicáveis do
               E3 · Fork, mesma cor da bolinha/linha que cada CTA acende. */}
           <p className="mb-2 text-caption font-semibold text-text-primary">Trilhas (clique no CTA do E3)</p>
-          <div className="flex flex-col gap-1.5">
-            {TRILHAS.map((t) => (
+          <div className="mb-3 flex flex-col gap-1.5">
+            {TRILHAS_CANVAS.map((t) => (
               <div key={t.id} className="flex items-center gap-2">
                 <span className="h-3 w-3 shrink-0 rounded-full" style={{ background: t.cor }} />
                 <span className="text-micro text-text-secondary">{t.nome}</span>
               </div>
             ))}
+          </div>
+
+          {/* 🆕 28/08 (pedido do Pedro) — 4 CTAs de verdade, um por
+              flow×regime. Clicáveis AQUI (não pelo pontinho do canvas, que
+              é 1:1 por handle): clicar acende a trilha inteira em cor + apaga
+              (cinza padrão) todas as telas de fora dela. Clicar de novo, ou
+              no canvas vazio, desliga. */}
+          <p className="mb-2 text-caption font-semibold text-text-primary">Fluxos (clique aqui)</p>
+          <div className="mb-3 flex flex-col gap-1.5">
+            {TRILHAS_REGIME.map((t) => {
+              const ativa = t.id === trilhaAtivaId;
+              return (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => setTrilhaAtivaId((atual) => (atual === t.id ? null : t.id))}
+                  className="flex items-center gap-2 rounded-md px-1.5 py-1 text-left transition-colors hover:bg-surface-alt"
+                  style={ativa ? { background: `${t.cor}1a` } : undefined}
+                >
+                  <span className="h-3 w-3 shrink-0 rounded-full" style={{ background: t.cor }} />
+                  <span
+                    className="text-micro font-semibold"
+                    style={{ color: ativa ? t.cor : "var(--color-text-secondary)" }}
+                  >
+                    {t.nome}
+                  </span>
+                </button>
+              );
+            })}
           </div>
 
           {/* 🆕 26/08 (pedido do Pedro) — baixa o .md gerado (dados coletados

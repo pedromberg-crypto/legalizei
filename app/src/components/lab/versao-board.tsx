@@ -130,6 +130,101 @@ function VersaoPhone({
   );
 }
 
+/**
+ * 🆕 28/08 (pedido do Pedro) — versão SOLTA: em vez de `rota` (iframe pra uma
+ * página de produção, ainda navegável de verdade), recebe a VIEW já
+ * desconectada — sem router, sem `onSeguir`/`onVoltar` reais, só a casca
+ * visual pra olhar. Pra grupos de telas DIFERENTES lado a lado (não variações
+ * da mesma tela), que é o caso da seção "Teste".
+ */
+export type VersaoSolta = {
+  titulo: string;
+  nota: string;
+  /** true = já lapidada (componentes salvos no acervo) → ✓ verde no nome. */
+  feito?: boolean;
+  render: () => ReactNode;
+};
+
+/** Como `BoardSecao`, mas cada versão é renderizada solta (ver `VersaoSolta`). */
+export function BoardSecaoSolta({
+  titulo,
+  extra,
+  subtitulo,
+  versoes,
+  statusClaro = false,
+  escala = 0.75,
+}: {
+  titulo: string;
+  /** 🆕 28/08 — acessório ao lado do título (ex: indicador claro/escuro). */
+  extra?: ReactNode;
+  subtitulo?: ReactNode;
+  versoes: VersaoSolta[];
+  statusClaro?: boolean;
+  escala?: number;
+}) {
+  return (
+    <section>
+      <div className="mb-5">
+        <div className="flex items-center gap-3">
+          <h2 className="text-h2 text-text-primary">{titulo}</h2>
+          {extra}
+        </div>
+        {subtitulo && (
+          <p className="text-caption text-text-secondary mt-1 max-w-[72ch]">
+            {subtitulo}
+          </p>
+        )}
+      </div>
+      <div className="flex flex-wrap gap-x-10 gap-y-8">
+        {versoes.map((ver, i) => (
+          <VersaoSoltaPhone key={i} ver={ver} statusClaro={statusClaro} escala={escala} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function VersaoSoltaPhone({
+  ver,
+  statusClaro,
+  escala,
+}: {
+  ver: VersaoSolta;
+  statusClaro: boolean;
+  escala: number;
+}) {
+  return (
+    <figure className="flex shrink-0 flex-col items-center gap-4">
+      <div style={{ width: (W + 24) * escala, height: (H + 24) * escala }}>
+        <div
+          style={{
+            width: W + 24,
+            height: H + 24,
+            transform: `scale(${escala})`,
+            transformOrigin: "top left",
+          }}
+        >
+          <MolduraAparelho statusClaro={statusClaro}>
+            {/* `.app-page` usa height:100dvh (viewport) — aqui vira 100% da
+                moldura, mesmo truque do /apresentacao. */}
+            <div className="app-page" style={{ height: "100%" }}>
+              {ver.render()}
+            </div>
+          </MolduraAparelho>
+        </div>
+      </div>
+
+      <figcaption className="max-w-[300px] text-center">
+        <p className="flex items-center justify-center gap-1.5 text-body font-semibold text-text-primary">
+          {ver.feito && <CheckVerde />}
+          {ver.titulo}
+        </p>
+        <p className="text-caption text-text-secondary mt-2">{ver.nota}</p>
+      </figcaption>
+    </figure>
+  );
+}
+
 /** ✓ verde = versão já lapidada (componentes salvos no acervo). */
 function CheckVerde() {
   return (

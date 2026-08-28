@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { Handle, Position, type NodeProps } from "@xyflow/react";
 import type { HandleFlow, NoFlow } from "@/lib/flow-layout";
 import { PREVIEW_W, PREVIEW_H, ESCALA_PREVIEW, CARD_PAD_BORDA } from "@/lib/flow-layout";
@@ -46,6 +46,18 @@ function labelLinhas(label: string) {
 function corDe(classe: string) {
   return CORES[classe] ?? CORES[""];
 }
+
+/**
+ * 🆕 28/08 (pedido do Pedro) — nó "desativado" (fora da trilha ativa) usa a
+ * cor PADRÃO da legenda (cinza), não a cor real da `classe`, mais um filtro
+ * de dessaturação por cima da prévia ao vivo — sem isso o iframe colorido
+ * continuaria gritando por baixo do card cinza. `classe` real só volta
+ * quando não há trilha ativa OU a tela pertence a ela.
+ */
+function corEfetiva(classe: string, apagado?: boolean) {
+  return apagado ? CORES[""] : corDe(classe);
+}
+const ESTILO_APAGADO: CSSProperties = { filter: "grayscale(1) opacity(0.5)" };
 
 /** Largura TOTAL do card (prévia + padding + borda) — a prévia é `w-full` por
  *  dentro, então quem define o tamanho de verdade é este valor no wrapper. */
@@ -263,7 +275,7 @@ function PreviaTela({
 
 /** Retângulo com prévia ao vivo — a maioria das telas reais (`forma: "tela"`). */
 export function TelaNode({ data, selected }: NodeProps & { data: NoFlow }) {
-  const c = corDe(data.classe);
+  const c = corEfetiva(data.classe, data.apagado);
   return (
     <div
       className="flex flex-col gap-1.5 rounded-xl border-2 bg-white p-2 shadow-sm transition-shadow"
@@ -271,6 +283,7 @@ export function TelaNode({ data, selected }: NodeProps & { data: NoFlow }) {
         width: CARD_LARGURA,
         borderColor: selected ? "#F2643C" : c.borda,
         boxShadow: selected ? "0 0 0 3px rgba(242,100,60,0.25)" : undefined,
+        ...(data.apagado ? ESTILO_APAGADO : null),
       }}
     >
       <HandlesEntrada total={data.entradas} />
@@ -320,7 +333,7 @@ export function TelaNode({ data, selected }: NodeProps & { data: NoFlow }) {
  * é o badge losango no canto, não o formato do nó inteiro.
  */
 export function DecisaoNode({ data, selected }: NodeProps & { data: NoFlow }) {
-  const c = corDe(data.classe);
+  const c = corEfetiva(data.classe, data.apagado);
   return (
     <div
       className="relative flex flex-col gap-1.5 rounded-xl border-2 bg-white p-2 shadow-sm transition-shadow"
@@ -328,6 +341,7 @@ export function DecisaoNode({ data, selected }: NodeProps & { data: NoFlow }) {
         width: CARD_LARGURA,
         borderColor: selected ? "#F2643C" : c.borda,
         boxShadow: selected ? "0 0 0 3px rgba(242,100,60,0.25)" : undefined,
+        ...(data.apagado ? ESTILO_APAGADO : null),
       }}
     >
       <HandlesEntrada total={data.entradas} />
@@ -377,7 +391,7 @@ export function DecisaoNode({ data, selected }: NodeProps & { data: NoFlow }) {
 
 /** Pílula com prévia ao vivo — início/fim de trilha (`forma: "terminal"`). */
 export function TerminalNode({ data, selected }: NodeProps & { data: NoFlow }) {
-  const c = corDe(data.classe || "feliz");
+  const c = corEfetiva(data.classe || "feliz", data.apagado);
   return (
     <div
       className="flex flex-col gap-1.5 rounded-[28px] border-2 bg-white p-2 shadow-sm"
@@ -385,6 +399,7 @@ export function TerminalNode({ data, selected }: NodeProps & { data: NoFlow }) {
         width: CARD_LARGURA,
         borderColor: selected ? "#F2643C" : c.borda,
         boxShadow: selected ? "0 0 0 3px rgba(242,100,60,0.25)" : undefined,
+        ...(data.apagado ? ESTILO_APAGADO : null),
       }}
     >
       <HandlesEntrada total={data.entradas} />

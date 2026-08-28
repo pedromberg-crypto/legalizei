@@ -74,6 +74,7 @@ export default function ContaPage() {
     senha: "",
     cep: "",
     numero: "",
+    complemento: "",
     coorte: null,
     codigo: "",
   });

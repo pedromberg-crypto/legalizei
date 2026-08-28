@@ -1579,6 +1579,7 @@ export default function ApresentacaoPage() {
     senha: "",
     cep: "",
     numero: "",
+    complemento: "",
     coorte: null,
     codigo: "",
   });
@@ -1706,6 +1707,7 @@ export default function ApresentacaoPage() {
       senha: "",
       cep: "",
       numero: "",
+    complemento: "",
       coorte: null,
       codigo: "",
     });
@@ -1760,6 +1762,7 @@ export default function ApresentacaoPage() {
         senha: "legalizai2026",
         cep: "30140-060",
         numero: "1000",
+        complemento: "",
         coorte: "primeira",
         codigo: "",
       });
@@ -1830,6 +1833,7 @@ export default function ApresentacaoPage() {
         senha: "legalizai2026",
         cep: "30140-060",
         numero: "1000",
+        complemento: "",
         coorte: "primeira",
         codigo: "482913",
       });

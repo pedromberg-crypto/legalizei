@@ -67,6 +67,8 @@ export type DadosConta = {
   senha: string;
   cep: string;
   numero: string;
+  /** 🆕 28/08 (pedido do Pedro) — opcional, mesmo padrão do resto do form. */
+  complemento: string;
   coorte: "primeira" | "ja-abri" | null;
   codigo: string;
 };
@@ -564,16 +566,46 @@ function ContaPainel({
                       {endereco.municipio}/{endereco.uf}
                     </p>
                   </div>
-                  <CampoIconeConta>
-                    <input
-                      value={d.numero}
-                      onChange={(e) => set("numero", e.target.value)}
-                      placeholder="Número"
-                      aria-label="Número"
-                      inputMode="numeric"
-                      className="min-h-12 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
-                    />
-                  </CampoIconeConta>
+                  {/* Número + Complemento na mesma linha: complemento é curto
+                      (apto/bloco/sala) e não merece a largura inteira que o
+                      resto do form usa — economiza altura de tela num form
+                      já longo. */}
+                  <div className="flex gap-3">
+                    <div className="flex-1">
+                      <CampoIconeConta>
+                        <input
+                          value={d.numero}
+                          onChange={(e) => set("numero", e.target.value)}
+                          placeholder="Número"
+                          aria-label="Número"
+                          inputMode="numeric"
+                          className="min-h-12 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
+                        />
+                      </CampoIconeConta>
+                    </div>
+                    <div className="flex-1">
+                      <CampoIconeConta>
+                        <input
+                          value={d.complemento}
+                          onChange={(e) => set("complemento", e.target.value)}
+                          placeholder="Complemento (opcional)"
+                          aria-label="Complemento"
+                          className="min-h-12 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
+                        />
+                      </CampoIconeConta>
+                    </div>
+                  </div>
+
+                  {/* 🆕 28/08 (pedido do Pedro) — nota discreta: este CEP e
+                      endereço são os DO TITULAR (pessoa física), não da
+                      empresa (esse já foi resolvido no E3.3/`/endereco`, ou
+                      será perguntado depois se a pessoa chegar direto aqui).
+                      Existe pra fechar a ambiguidade que o comentário de
+                      27/08 acima já registrava por escrito, mas nunca tinha
+                      virado copy visível pro usuário. */}
+                  <p className="text-micro text-text-tertiary -mt-1">
+                    Esse é o seu endereço pessoal, não o da empresa.
+                  </p>
                 </>
               )}
             </>

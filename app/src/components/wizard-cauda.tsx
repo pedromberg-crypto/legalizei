@@ -1316,11 +1316,12 @@ function IconeChevronAtivacao() {
 
 /* ═══════════════════ P1 · RETOMAR DE ONDE PAROU ═════════════════════════ */
 
-// 🔄 28/08 — `concluidos` recalibrado pra nova ordem (dados base → plano e
-// pago → CNAE principal → CNAE secundário → ... ). 4 = os 2 passos de
-// pré-pagamento + os 2 CNAEs já feitos, parado bem no início do dossiê de
-// verdade ("Dados pessoais complementares" é a vez agora).
-const ESTADO_P1 = { diasFora: 6, concluidos: 4 };
+// 🔄 28/08 (correção do Pedro) — `concluidos` era 4 (contava os 2 CNAEs como
+// feitos), mas o destino real do retomar é a C0 (`/retomar/page.tsx` manda
+// pra `/dossie/atividade` ou `/dossie/ocupacao`) — quem volta aqui ainda NÃO
+// escolheu CNAE nenhum. 2 = só os 2 passos de pré-pagamento (dados base +
+// plano escolhido e pago); "CNAE principal da empresa" é a vez agora.
+const ESTADO_P1 = { diasFora: 6, concluidos: 2 };
 
 export function RetomarView({
   mei = false,
@@ -1403,11 +1404,14 @@ export function RetomarView({
 
 /* ═══════════════════ P2 · AGUARDANDO O BOLETO ═══════════════════════════ */
 
-// 🔄 28/08 — recalibrado pra nova ordem/contagem (10 passos, era 8). 7 =
-// dados base, plano e pago, CNAE principal, CNAE secundário, dados pessoais
-// complementares, INSS e sócios já feitos; "Endereço fiscal" é a vez agora;
-// "Revisar e confirmar" travado (é o único passo que o boleto pendente retém).
-const BOLETO_P2 = { passosFeitos: 7 };
+// 🔄 28/08 (correção do Pedro) — era 7 (contava até "Sócios" como feito), mas
+// o destino real do "Continuar" desta tela é a C0 (`/aguardando/page.tsx`
+// manda pra `/dossie/atividade` ou `/dossie/ocupacao`), o mesmo ponto do
+// retomar: quem está aqui pagou por boleto e ainda NÃO escolheu CNAE nenhum.
+// 2 = dados base + plano escolhido e pago; "CNAE principal da empresa" é a
+// vez agora. O boleto pendente não trava nada além disso — só "Revisar e
+// confirmar" (o desfecho) fica retido até compensar.
+const BOLETO_P2 = { passosFeitos: 2 };
 
 export function AguardandoView({
   mei = false,

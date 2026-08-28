@@ -75,5 +75,13 @@ Pedro perguntou se faz sentido mover pra dentro de `cnae-matriz/` alguns arquivo
 
 A pasta trocou de branch algumas vezes nessa sessão (outra janela mexendo em `feat/reordenacao-entrada-lead-gate-bh` no mesmo diretório físico, sem worktree própria). **Fechado de vez:** os 4 commits que ficaram presos em `feat/mapa-interativo-e-ajustes-constituicao` (reorganização legado/fontes-oficiais, inclusive) foram mergeados no `main` e empurrados. A pasta agora vive só no `main`, sem branch de trabalho separada pra CNAE. Se abrir sessão nova aqui, já está tudo num lugar só.
 
+## ✅ Script de classificação independente — `cnae-verifica-atende.js` (27/08)
+
+Novo: `node pesquisa/cnae-matriz/cnae-verifica-atende.js <cnae>` (1 CNAE) ou `--auditoria` (os 1332). Recalcula o veredito atende/não-atende **do zero**, critério por critério (não lê `atende_me_certeza` como atalho — deriva e SÓ DEPOIS compara), pra pegar divergência entre a lógica documentada e o campo precomputado.
+
+**Achado real na 1ª rodada:** 5 dos 90 "atendemos com certeza" têm `exige_registro_setorial: nao-verificado` (não `nao`) — foram aprovados sem essa checagem específica ter rodado neles (`3831999` recuperação de metal · `3832700` recuperação de plástico · `5232000` agenciamento marítimo · `8292000` envasamento sob contrato · `9529104` reparação de bicicletas). Não é erro de dado, é lacuna de pesquisa real: o eixo de registro setorial só foi cruzado pra 387/1332 CNAEs (footprint do concorrente), e esses 5 caíram fora dessa amostra mas entraram nos 90 mesmo assim.
+
+🕓 **Fila, não bloqueia**: verificar manualmente se esses 5 exigem registro setorial de fato (nenhum parece óbvio — metal/plástico reciclagem, agenciamento marítimo, envasamento, bicicleta — mas "não parece" não é fonte primária). Não travou nada até aqui, mas fica registrado.
+
 ## Links
 - [[fundamentos-cnae]] · [[lc123-art18-anexos-taxativo]] · [[profissoes-regulamentadas-conselhos]] · [[mei-risco-e-simplificacao-abertura]] · [[cnae-liso-servico]] · [[cnae-matriz-governo]] · [[resultado-pesquisa-fundamentos-cnae-27-08]]

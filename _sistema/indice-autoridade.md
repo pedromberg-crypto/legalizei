@@ -59,6 +59,7 @@ Então a pergunta nunca é *"esse doc está vivo?"*. É sempre **"esse doc manda
 | **CNAE fiscalmente ótimo** | [[cnae-fiscalmente-otimo]] | 🕓 famílias 🟡 esperam Larissa |
 | **Dados oficiais por CNAE** (IBGE + Anexo/Fator R + MEI + risco municipal + ISS BH) | [[cnae-matriz-governo]] (descreve `cnae-matriz.csv`/`.json`, 1332 códigos) | ⚠️ `contabilizei-cnae-completo.csv` tem `pode_mei`/`anexos_romano`/`fator_r` **próprios da Contabilizei** (o que o CONCORRENTE assume) — não são nossa verdade, útil só pra comparar. 🕓 coluna `anexo_fator_r_grupo` (62 `requer-revisao` + tudo) espera Larissa ratificar antes de virar produto |
 | **Consultas de órgãos · autofill (o que uma API de fato entrega)** | [[infosimples-funcionalidades]] + [[orgaos-e-cobertura-infosimples]] | ⚠️ **regra dura 24/07:** antes de criar QUALQUER campo de autofill/consulta, checar aqui. Não assumir o que um número (CNPJ/CPF/CEP) puxa — já erramos supondo |
+| **Obrigações operacionais do MEI** (DAS, NF/NFS-e, DASN-SIMEI, teto, funcionário) | [[mei-obrigacoes-operacionais]] (fonte primária, 28/08) | ME/Simples Nacional geral ainda não pesquisado — só a base compartilhada (§7 do doc) já existe. Mapeamento de funcionalidade em [[mei-mapeamento-funcionalidades]] |
 | **Cor · tipo · espaço · shell · arquétipo** | [[design-system]] | derivado: `app/src/app/globals.css` |
 | **Primitivos de cor** | [[paleta-cores]] | as **regras** em prosa lá viraram token no [[design-system]] §2 |
 | **Decisões de marca** | [[decisoes-marca]] (ADR) | — |

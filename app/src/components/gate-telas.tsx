@@ -888,7 +888,7 @@ export function FaixaView({
             Copy trocada: "ver o que eu ganho" prometia uma revelação que só
             existia no N5'; sem ele, a promessa vira mentira. */}
         <Button full disabled={!escolhida || estouraTeto} onClick={onSeguir}>
-          Continuar
+          Continuar e cadastrar
         </Button>
       </div>
     </>

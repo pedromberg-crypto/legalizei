@@ -1,5 +1,7 @@
 # Memory Index — Legalize
 
+- [Mapa é estático, reposição precisa entrar na apresentação junto](legalize-mapa-estatico-apresentacao-junto.md) — 28/08: pedido de reordenar/layout "no mapa" mexe em `flow-data.mjs` E na `/apresentacao` sempre juntos; `/mockup` fica de fora.
+
 - [Portal tem flow salvo, mas defasado e sem MEI](legalize-portal-drift-mei.md) — 27/08: `portal-data.mjs` congelou 28/07; variante Plano MEI existe no código desde 04/08 e não está no mapa; portal foi desenhado pra ME/Simples.
 - [MEI: obrigações operacionais + cobertura de API](legalize-mei-obrigacoes-e-apis.md) — 27/08: NFS-e nacional via API federal única; zero monitor oficial de teto (diferencial); InfoSimples é quase só consulta, não emite.
 

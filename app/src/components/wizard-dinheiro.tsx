@@ -681,12 +681,14 @@ function ContaPainel({
       {/* CTA no rodapé (thumb zone). No login ele mora dentro da folha porque
           lá nada rola; aqui rolaria pra fora da vista. */}
       <Rodape>
+        {/* 🆕 28/08 (pedido do Pedro) — CTA renomeado e a micro-copy "criar
+            conta é de graça" removida: com o form voltando a coletar tudo
+            aqui (reposição de 28/08), o próximo passo real do funil é pagar
+            (E7 plano → E9 pagamento), não só "criar conta" — o texto agora
+            avisa isso. */}
         <Button full disabled={!completo} onClick={onCriarConta}>
-          Criar minha conta
+          Criar conta e efetuar pagamento
         </Button>
-        <p className="text-micro text-text-tertiary mt-3 text-center">
-          Criar conta é de graça. Você só paga quando decidir abrir.
-        </p>
       </Rodape>
     </main>
   );

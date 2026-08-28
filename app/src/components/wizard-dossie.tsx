@@ -774,7 +774,10 @@ export function EmpresaView({
     (usarProprio === true &&
       cepCheio &&
       numero.trim() !== "" &&
-      iptuOk &&
+      // 🆕 28/08 — IPTU não é campo do formulário do MEI (ver o comentário no
+      // render). Exigir aqui travava o Continuar por um documento que ele não
+      // precisa ter.
+      (mei || iptuOk) &&
       tipo !== "" &&
       residenciaCompleta);
 
@@ -956,7 +959,14 @@ export function EmpresaView({
               )}
 
               {/* ⚠️ 28/07 (reunião Rua Satélite 9): OBRIGATÓRIO — sem ele a
-                  documentação não passa na JUCEMG. */}
+                  documentação não passa na JUCEMG.
+                  🆕 28/08 — some no MEI, e não é simplificação: o formulário do
+                  Portal do Empreendedor **não pede índice cadastral do IPTU**
+                  (ver a lista campo a campo em `abertura-mei-processo.md`), e a
+                  justificativa que o campo dá ("não passa na Junta") não vale
+                  pra ele, que nem vai à Junta. Era um bloqueio real pedindo um
+                  documento que ele não precisa ter em mãos. */}
+              {!mei && (
               <Campo
                 rotulo="Índice cadastral do IPTU"
                 dica="Está no carnê do IPTU. Obrigatório — sem ele a documentação não passa na Junta."
@@ -969,12 +979,18 @@ export function EmpresaView({
                   erro={iptuCurto ? "Confira o número: o índice completo costuma ter mais dígitos que isso." : undefined}
                 />
               </Campo>
+              )}
 
               <Campo rotulo="Como é esse endereço?">
                 <Select valor={tipo} onChange={setTipo} opcoes={TIPO_ENDERECO} />
               </Campo>
 
-              {SOCIOS > 1 && (
+              {/* 🆕 28/08 — guarda explícita: MEI é unipessoal (art. 966 do CC),
+                  então a pergunta de residência de sócio nunca pode aparecer.
+                  Hoje `SOCIOS` vem do mock e vale 1, mas depender disso seria
+                  frágil: quando o estado real existir (RF-01), o MEI não pode
+                  herdar a pergunta por acidente. */}
+              {!mei && SOCIOS > 1 && (
                 <div>
                   <p className="text-caption font-semibold text-text-primary mb-2">
                     Esse endereço é residência de algum sócio?

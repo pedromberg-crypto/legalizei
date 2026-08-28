@@ -90,7 +90,18 @@ export function RevisarView({
       <TelaHeader meta="Revisar" onVoltar={onVoltar} />
 
       <main className="app-main">
-        <Titulo sub="Confira com calma. Depois que você autoriza, a gente já começa a registrar isso na Junta com o seu nome.">
+        {/* 🆕 28/08 — o subtítulo era único e dizia "a gente já começa a
+            registrar isso na Junta com o seu nome". Duas coisas falsas no MEI:
+            ele não passa pela Junta Comercial (o registro é no Portal do
+            Empreendedor), e não somos nós que registramos — é o titular, com a
+            conta gov.br dele. Ver `abertura-mei-processo.md` §Bloco 1. */}
+        <Titulo
+          sub={
+            mei
+              ? "Confira com calma. É com esses dados que a gente monta o seu registro, e é você quem vai finalizar no Portal do Empreendedor."
+              : "Confira com calma. Depois que você autoriza, a gente já começa a registrar isso na Junta com o seu nome."
+          }
+        >
           Está tudo certo?
         </Titulo>
 
@@ -102,7 +113,13 @@ export function RevisarView({
           </Bloco>
 
           <Bloco titulo="A empresa" passo="Dados da empresa">
-            <Linha rotulo="Nome" valor={d.empresa.razao} />
+            {/* No MEI a razão social não é escolhida: sai automática do CNPJ +
+                nome civil (Lei 14.195/2021). Mostrar um nome aqui daria a
+                entender que houve escolha — e que ela pode ser recusada. */}
+            <Linha
+              rotulo="Nome"
+              valor={mei ? "Sai automático: seu CNPJ + seu nome" : d.empresa.razao}
+            />
             <Linha rotulo="Tipo" valor={mei ? "MEI" : d.empresa.natureza} />
             <Linha rotulo="Endereço" valor={d.empresa.endereco} />
             {!mei && <Linha rotulo="Capital social" valor={brl(d.empresa.capital)} />}

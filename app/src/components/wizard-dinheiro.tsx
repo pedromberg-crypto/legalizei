@@ -71,6 +71,20 @@ export type DadosConta = {
   codigo: string;
 };
 
+/**
+ * 🆕 28/08 — subtítulo do E6 por regime. "a gente já adianta o que precisa pra
+ * Junta" é FALSO no MEI: ele não passa pela Junta Comercial (o registro é
+ * direto no Portal do Empreendedor, e quem registra é o próprio titular).
+ * Ver `pesquisa/abertura-mei/abertura-mei-processo.md`.
+ */
+function subConta(mei: boolean, leadJaCaptado: boolean) {
+  if (leadJaCaptado)
+    return "A gente já tem seus dados. Agora é só a senha e o CPF pra proteger sua conta.";
+  return mei
+    ? "Assim seu progresso fica salvo, e a gente já adianta o que precisa pro seu registro."
+    : "Assim seu progresso fica salvo, e a gente já adianta o que precisa pra Junta.";
+}
+
 export function ContaView({
   d,
   set,
@@ -80,6 +94,7 @@ export function ContaView({
   onVoltar,
   layout = "classico",
   leadJaCaptado = false,
+  mei = false,
 }: {
   d: DadosConta;
   set: <K extends keyof DadosConta>(k: K, v: DadosConta[K]) => void;
@@ -98,6 +113,8 @@ export function ContaView({
   /** 🆕 27/08 — ver `ContaPainel`: nome/e-mail/telefone/endereço já vieram do
    *  E3.1 e do E3.3, então esta tela só pede senha e CPF. */
   leadJaCaptado?: boolean;
+  /** 🆕 28/08 — só troca o subtítulo (MEI não passa pela Junta). */
+  mei?: boolean;
 }) {
   if (layout === "painel" && etapa === "form") {
     return (
@@ -107,6 +124,7 @@ export function ContaView({
         onCriarConta={onCriarConta}
         onVoltar={onVoltar}
         leadJaCaptado={leadJaCaptado}
+        mei={mei}
       />
     );
   }
@@ -161,7 +179,7 @@ export function ContaView({
     <>
       <TelaHeader meta="Sua conta" onVoltar={onVoltar} />
       <main className="app-main">
-        <Titulo sub="Assim seu progresso fica salvo, e a gente já adianta o que precisa pra Junta.">
+        <Titulo sub={subConta(mei, false)}>
           Vamos criar seu acesso
         </Titulo>
 
@@ -300,11 +318,14 @@ function ContaPainel({
   onCriarConta,
   onVoltar,
   leadJaCaptado = false,
+  mei = false,
 }: {
   d: DadosConta;
   set: <K extends keyof DadosConta>(k: K, v: DadosConta[K]) => void;
   onCriarConta: () => void;
   onVoltar?: () => void;
+  /** 🆕 28/08 — só troca o subtítulo (MEI não passa pela Junta). */
+  mei?: boolean;
   /**
    * 🆕 27/08 — nome, e-mail e telefone agora vêm do **E3.1** (`/dados`), e o
    * endereço do **E3.3** (`/endereco`), lá no comecinho do flow. Esta tela
@@ -386,9 +407,7 @@ function ContaPainel({
             {leadJaCaptado ? "Falta só criar seu acesso." : "Vamos criar seu acesso."}
           </h1>
           <p className="text-caption text-text-on-dark/70 mt-1.5">
-            {leadJaCaptado
-              ? "A gente já tem seus dados. Agora é só a senha e o CPF pra proteger sua conta."
-              : "Assim seu progresso fica salvo, e a gente já adianta o que precisa pra Junta."}
+            {subConta(mei, leadJaCaptado)}
           </p>
         </div>
       </div>

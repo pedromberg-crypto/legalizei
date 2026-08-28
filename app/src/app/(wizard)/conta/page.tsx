@@ -95,6 +95,7 @@ export default function ContaPage() {
       layout="painel"
       // 🆕 27/08 — a tela deixou de coletar identidade (já veio do E3.1/E3.3):
       // agora só pede senha e CPF, com recap read-only do que já temos.
+      mei={mei}
       leadJaCaptado
     />
   );

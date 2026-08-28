@@ -222,9 +222,12 @@ export function EnderecoCategoriaView({
   const categoriaSemMei =
     regimeMei && categoria !== null && !categoriaTemMei(categoria);
 
-  const enderecoResolvido =
-    enderecoProprio === false ||
-    (enderecoProprio === true && cepValido && numero.trim() !== "");
+  const enderecoResolvido = regimeMei
+    ? // MEI: não há escolha de endereço (ver o bloco do card fiscal abaixo),
+      // então basta o CEP válido + número.
+      cepValido && numero.trim() !== ""
+    : enderecoProprio === false ||
+      (enderecoProprio === true && cepValido && numero.trim() !== "");
   const completo = enderecoResolvido && categoria !== null && !categoriaSemMei;
 
   return (
@@ -245,10 +248,15 @@ export function EnderecoCategoriaView({
             <p className="text-caption text-text-secondary mb-3">
               {exigeBh
                 ? "Por enquanto a gente só abre empresa em Belo Horizonte/MG. Isso é sobre o endereço da empresa, não sobre onde você mora."
-                : "É o endereço que vai ficar registrado no seu CNPJ. Como MEI, você pode abrir de qualquer cidade do Brasil."}
+                : "É o endereço que vai ficar no seu CNPJ, e pode ser o da sua casa. Como MEI, você abre de qualquer cidade do Brasil."}
             </p>
 
+            {/* 🆕 28/08 — no MEI sobrou UMA opção (o endereço fiscal saiu, ver
+                abaixo), e oferecer escolha de um item só é teatro: a tela pede
+                o CEP direto. O `enderecoProprio` é marcado por efeito colateral
+                do próprio render pra não quebrar o `completo`. */}
             <div className="flex flex-col gap-2">
+              {!regimeMei && (
               <button
                 onClick={() => setEnderecoProprio(true)}
                 aria-pressed={enderecoProprio === true}
@@ -259,9 +267,21 @@ export function EnderecoCategoriaView({
                       : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
                   }`}
               >
-                {exigeBh ? "Tenho um endereço em BH" : "Uso um endereço meu"}
+                Tenho um endereço em BH
               </button>
+              )}
 
+              {/* 🆕 28/08 — o endereço fiscal SOME no MEI, e não é economia de
+                  tela: ele existe pra resolver o gate de BH ("não tenho
+                  endereço em BH, e a empresa precisa ficar em BH"). O MEI não
+                  tem gate de BH — abre de qualquer cidade — então o card
+                  perderia a razão de existir e viraria upsell de algo que ele
+                  não precisa. Some também o argumento legal: o MEI pode usar o
+                  próprio endereço residencial como comercial (LC 123/2006), e
+                  como não há análise de viabilidade, ninguém confere zoneamento
+                  antes. Vender endereço a R$60/mês nesse cenário seria vender
+                  solução pra problema que ele não tem. */}
+              {!regimeMei && (
               <button
                 onClick={() => setEnderecoProprio(false)}
                 aria-pressed={enderecoProprio === false}
@@ -294,11 +314,12 @@ export function EnderecoCategoriaView({
                   outra cidade.
                 </p>
               </button>
+              )}
             </div>
 
             {/* Endereço próprio → pede o CEP de verdade. É AQUI que o gate de
                 cidade acontece agora, com dado em vez de autodeclaração. */}
-            {enderecoProprio === true && (
+            {(enderecoProprio === true || regimeMei) && (
               <div className="mt-4 flex flex-col gap-4">
                 <Campo rotulo="CEP da empresa" dica="A gente puxa o resto do endereço.">
                   <Texto
@@ -341,11 +362,27 @@ export function EnderecoCategoriaView({
                 {/* 🆕 27/08 (achado do cruzamento com a Contabilizei): eles
                     avisam do risco de zoneamento, a gente não avisava em lugar
                     nenhum. O aviso mora aqui agora, junto do endereço. */}
-                {cepValido && (
+                {/* 🆕 28/08 — este aviso era único e é FALSO no MEI: a consulta
+                    prévia de viabilidade foi EXTINTA pro MEI (Res. CGSIM
+                    61/2020, adequação à Lei da Liberdade Econômica), e em BH o
+                    alvará é dispensado pras atividades de baixo risco (Decreto
+                    PBH 17.245/2019). Não existe prefeitura conferindo antes —
+                    a responsabilidade é assumida pelo titular no Termo de
+                    Ciência. Dizer "a gente confirma na viabilidade" prometeria
+                    uma checagem que ninguém vai fazer. */}
+                {cepValido && !regimeMei && (
                   <Aviso variante="info" titulo="A prefeitura confirma na viabilidade">
                     A maioria dos endereços residenciais é aceita, mas depende
                     do zoneamento e da sua atividade. A gente confirma quando a
                     viabilidade sair, e se não der você troca sem custo.
+                  </Aviso>
+                )}
+                {cepValido && regimeMei && (
+                  <Aviso variante="info" titulo="Pode ser o seu endereço de casa">
+                    No MEI não existe consulta prévia de viabilidade, e em BH o
+                    alvará é dispensado pras atividades de baixo risco. Você
+                    declara o endereço e assume o compromisso de seguir as
+                    regras do município, sem análise antes.
                   </Aviso>
                 )}
               </div>

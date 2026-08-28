@@ -45,6 +45,10 @@ export interface NoFlow extends Record<string, unknown> {
    *  clique num CTA nomeado ativa a trilha correspondente (`trilhas.ts`). */
   onCtaClick?: (handleId: string) => void;
   trilhaAtivaId?: string | null;
+  /** 🆕 28/08 (injetado por `/mapa/page.tsx`) — true quando uma trilha está
+   *  ativa e esta tela NÃO pertence a ela. `tela-node.tsx` renderiza cinza
+   *  padrão nesse caso ("desativada"), independente da `classe` real. */
+  apagado?: boolean;
 }
 
 export interface ArestaFlow {

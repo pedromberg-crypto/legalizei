@@ -38,6 +38,24 @@ Catálogo checado ponto a ponto (https://infosimples.com/consultas/). Quase tudo
 - **Gap confirmado**: eSocial (Dataprev descontinuou consulta individual/lote) e emissão de NFS-e nova (InfoSimples só consulta, emitir exige integração direta com a API oficial gov.br/nfse ou parceiro tipo Focus NFe).
 - Boa parte das consultas InfoSimples que envolvem RPA (DAS-MEI, FGTS) **exige credencial do próprio cliente** (CPF+senha gov.br, ou certificado digital pkcs12) — não é "puxar de graça sem o cliente", precisa ele autorizar/ceder acesso.
 
+### URLs exatas dos produtos checados (pra não repesquisar)
+
+| Produto | URL | Parâmetros de entrada |
+|---|---|---|
+| RF/Simples (Emissão de DAS de MEI) | infosimples.com/consultas/receita-federal-simples-das/ | `cnpj`, `data_pagamento`, `periodo` |
+| RF/Simei/MEI — Emissão de Guia de Parcelamento | infosimples.com/consultas/receita-federal-simei-mei-eg/ | `cnpj`, `codigo_acesso`, `cpf`, `mes_ano` |
+| RF/Simples (DASN-SIMEI) | infosimples.com/consultas/receita-federal-simples-dasn/ | `cnpj` |
+| RF/SIMEI (Declaração Anual) | infosimples.com/consultas/receita-federal-simei-dasn/ | (produto irmão do acima, não abrimos a fundo) |
+| RF/NFS-e (consulta por chave) | infosimples.com/consultas/receita-federal-nfse/ | `chave` |
+| RF/NFS-e/Notas Emitidas | infosimples.com/consultas/receita-federal-nfse-emitidas/ | (não abrimos a fundo) |
+| FGTS/Guia de Arrecadação | infosimples.com/consultas/fgts-guia/ | `login_cpf`, `login_senha`, `pagina`, `periodo`, `pkcs12_cert`, `pkcs12_pass`, `representado` |
+| Caixa/Regularidade do Empregador (FGTS/CRF) | infosimples.com/consultas/caixa-regularidade/ | (não abrimos a fundo) |
+| RF/Listagem de Períodos p/ Emissão de DAS | infosimples.com/consultas/receita-federal-listar-das/ | (não abrimos a fundo) |
+| RF/PGFN/Lista de Devedores | infosimples.com/consultas/receita-federal-pgfn-devedores/ | (não abrimos a fundo, útil pra due-diligence, não MEI direto) |
+| Dataprev/Qualificação cadastral (eSocial) | infosimples.com/consultas/dataprev-qualificacao/ | ⚠️ **descontinuado** pelo próprio portal eSocial |
+
+Catálogo completo pra revisitar: https://infosimples.com/consultas/
+
 ## Princípios de design (herdados do resto do produto)
 
 - **Nunca surpreender** — todo cálculo de teto/desenquadramento mostra o "porquê", não só o número (mesma doutrina do card verde/DAE do flow de abertura).

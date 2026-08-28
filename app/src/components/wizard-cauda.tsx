@@ -1321,34 +1321,56 @@ const ESTADO_P1 = { diasFora: 6, concluidos: 3 };
 export function RetomarView({ onSeguir }: { onSeguir?: () => void }) {
   const passos = passosDoCliente();
   const feito = ESTADO_P1.concluidos;
+  // ⚠️ O destino ("Empresa constituída") NÃO entra no denominador — mesma
+  // régua de sempre (`lista-passos.tsx`): passo é o que o cliente FAZ, o
+  // destino é o que ele RECEBE. A barra de progresso é chrome novo (A5), o
+  // número "X de Y" continua exatamente o de antes.
   const total = passos.length;
+  const pct = Math.round((feito / total) * 100);
 
   return (
     <>
       <TelaHeader meta="Continuando" />
 
       <main className="app-main">
-        <Titulo
-          sub={`Você saiu há ${ESTADO_P1.diasFora} dias e está tudo salvo, do jeitinho que deixou. Vamos continuar?`}
-        >
-          Bem-vindo de volta
-        </Titulo>
-
-        <Corpo>
-          <div>
-            <div className="mb-2 flex items-baseline justify-between">
-              <p className="text-body font-semibold text-text-primary">Onde você está</p>
-              <span className="text-caption text-text-tertiary">
-                {feito} de {total}
-              </span>
+        {/* 🔄 28/08 (pedido do Pedro: "layout da A5, só layout") — mesma
+            estrutura da Home dia-1: hero escuro com o título, depois um card
+            branco com barra de progresso + trilha conectada. Conteúdo e
+            estados não mudaram, só a casca. */}
+        <div className="min-h-0 flex-1 overflow-y-auto pt-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="flex flex-col gap-4 pb-[calc(24px+var(--safe-bottom))]">
+            <div className="rounded-2xl bg-surface-dark p-5 text-text-on-dark">
+              <p className="text-h2 font-bold leading-tight">Bem-vindo de volta</p>
+              <p className="mt-1 text-caption text-text-on-dark/70">
+                Você saiu há {ESTADO_P1.diasFora} dias e está tudo salvo, do
+                jeitinho que deixou. Vamos continuar?
+              </p>
             </div>
-            <ListaPassos concluidos={feito} mostrarDestino />
-          </div>
 
-          <p className="text-micro text-text-tertiary">
-            Seu pagamento está registrado. Nada é cobrado nem aberto duas vezes.
-          </p>
-        </Corpo>
+            <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
+              <div className="flex items-center justify-between">
+                <p className="text-body-strong font-semibold text-text-primary">Onde você está</p>
+                <span className="text-caption font-semibold text-text-secondary">
+                  {feito} de {total}
+                </span>
+              </div>
+              <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface-alt">
+                <div
+                  className="h-full rounded-full bg-action-primary transition-all"
+                  style={{ width: `${pct}%` }}
+                />
+              </div>
+
+              <div className="mt-4">
+                <ListaPassos concluidos={feito} mostrarDestino />
+              </div>
+            </div>
+
+            <p className="text-micro text-text-tertiary px-1">
+              Seu pagamento está registrado. Nada é cobrado nem aberto duas vezes.
+            </p>
+          </div>
+        </div>
 
         <Rodape>
           <Button full onClick={onSeguir}>
@@ -1375,6 +1397,7 @@ export function AguardandoView({
   onSeguir?: () => void;
 }) {
   const total = passosDoCliente().length;
+  const pct = Math.round((BOLETO_P2.passosFeitos / total) * 100);
   const boleto = mei ? CUSTOS.MENSALIDADE_MEI : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
 
   return (
@@ -1382,32 +1405,58 @@ export function AguardandoView({
       <TelaHeader meta="Seu pagamento" />
 
       <main className="app-main">
-        <Titulo sub="Boleto leva de 1 a 3 dias úteis pra cair. Enquanto isso, vamos adiantar algumas informações?">
-          Seu boleto está a caminho
-        </Titulo>
-
-        <Corpo>
-          <div>
-            <div className="mb-2 flex items-baseline justify-between">
-              <p className="text-body font-semibold text-text-primary">Onde você está</p>
-              <span className="text-caption text-text-tertiary">
-                {BOLETO_P2.passosFeitos} de {total}
-              </span>
+        {/* 🔄 28/08 (pedido do Pedro: "layout da A5, só layout") — mesma
+            estrutura da Home dia-1: hero escuro (com os 2 CTAs de boleto
+            virando chips, no idioma do CNPJ-copiar/Cartão-CNPJ do A5), card
+            branco com progresso + trilha. Conteúdo e estados intactos. */}
+        <div className="min-h-0 flex-1 overflow-y-auto pt-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="flex flex-col gap-4 pb-[calc(24px+var(--safe-bottom))]">
+            <div className="rounded-2xl bg-surface-dark p-5 text-text-on-dark">
+              <p className="text-h2 font-bold leading-tight">Seu boleto está a caminho</p>
+              <p className="mt-1 text-caption text-text-on-dark/70">
+                Boleto leva de 1 a 3 dias úteis pra cair. Enquanto isso, vamos
+                adiantar algumas informações?
+              </p>
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  className="flex items-center gap-1.5 rounded-full bg-surface-card px-3 py-1.5 text-caption font-semibold text-text-primary transition-colors active:bg-surface-alt"
+                >
+                  Ver o boleto de {brl(boleto, true)}
+                </button>
+                <button
+                  type="button"
+                  className="flex items-center gap-1.5 rounded-full border border-border-hairline px-3 py-1.5 text-caption font-medium text-text-on-dark/80 transition-colors active:bg-white/10"
+                >
+                  Prefiro pagar por Pix
+                </button>
+              </div>
             </div>
-            <ListaPassos concluidos={BOLETO_P2.passosFeitos} pagamentoPendente mostrarDestino />
-          </div>
 
-          <div className="flex flex-col gap-2">
-            <Button variant="secondary" full>
-              Ver o boleto de {brl(boleto, true)}
-            </Button>
-            <Button variant="ghost">Prefiro pagar por Pix e adiantar</Button>
-          </div>
+            <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
+              <div className="flex items-center justify-between">
+                <p className="text-body-strong font-semibold text-text-primary">Onde você está</p>
+                <span className="text-caption font-semibold text-text-secondary">
+                  {BOLETO_P2.passosFeitos} de {total}
+                </span>
+              </div>
+              <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface-alt">
+                <div
+                  className="h-full rounded-full bg-action-primary transition-all"
+                  style={{ width: `${pct}%` }}
+                />
+              </div>
 
-          <p className="text-micro text-text-tertiary">
-            Seu progresso está salvo. Se você já pagou, não cobramos de novo.
-          </p>
-        </Corpo>
+              <div className="mt-4">
+                <ListaPassos concluidos={BOLETO_P2.passosFeitos} pagamentoPendente mostrarDestino />
+              </div>
+            </div>
+
+            <p className="text-micro text-text-tertiary px-1">
+              Seu progresso está salvo. Se você já pagou, não cobramos de novo.
+            </p>
+          </div>
+        </div>
 
         <Rodape>
           <Button full onClick={onSeguir}>

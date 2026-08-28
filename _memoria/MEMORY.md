@@ -1,5 +1,8 @@
 # Memory Index — Legalize
 
+- [Portal tem flow salvo, mas defasado e sem MEI](legalize-portal-drift-mei.md) — 27/08: `portal-data.mjs` congelou 28/07; variante Plano MEI existe no código desde 04/08 e não está no mapa; portal foi desenhado pra ME/Simples.
+- [MEI: obrigações operacionais + cobertura de API](legalize-mei-obrigacoes-e-apis.md) — 27/08: NFS-e nacional via API federal única; zero monitor oficial de teto (diferencial); InfoSimples é quase só consulta, não emite.
+
 - [DER modelagem-cnae: cruzamento pausado, achados](legalize-der-cnae-cruzamento-achados.md) — 27/08: fiscal.ts sem Anexo IV (bug real), refs fantasma no DER, fusão complexidade+liso ainda pendente.
 - [Equação fiscal viva: camadas CNAE (estática+vigia) + CNPJ (dinâmica mensal)](legalize-equacao-fiscal-camadas-cnae-cnpj.md) — 27/08: provocação do Pedro em andamento, ainda sem desenho final; próximo passo = mapear vars do CNPJ que o app controla.
 - [Camada tributária CNAE: os 4 dados fechados](legalize-cnae-camada-tributaria-4-dados-completa.md) — 27/08: MEI+risco+Anexo/FatorR+ISS BH mapeados nos 1332 CNAEs; Anexo/FatorR NÃO ratificado por contador ainda.

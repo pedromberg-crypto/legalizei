@@ -14,12 +14,13 @@ tags: [pesquisa, mei, torre-de-controle]
 
 Depois de fechar a pesquisa de CNAE (fonte confiável, 90→87 certeza), o Pedro pediu a próxima fase: mapear o que o produto precisa OFERECER de funcionalidade pro cliente já constituído — o que ele tem que fazer todo mês/ano pra continuar regular. Começa por **MEI** (mais simples), **ME/Simples Nacional fica pra depois**.
 
-## O que já está feito (28/08)
+## O que já está feito (29/08)
 
 1. ✅ **Pesquisa própria** (3 frentes, WebSearch/WebFetch): contábil/DAS-MEI/NF · DASN-SIMEI/desenquadramento · MEI-empregador + base pro ME.
 2. ✅ **Prompt Gemini** rodado pelo Pedro, resultado em 2 arquivos (`Downloads/Obrigações Fiscais MEI e ME.md` + `Downloads/Obrigatoriedade NFS-e Nacional MEI.md`), arquivado em [[resultado-pesquisa-mei-obrigacoes-28-08]].
 3. ✅ **Cruzamento fechado** — [[mei-obrigacoes-operacionais]] é o doc fonte-verdade resultante, com confiança marcada linha a linha.
-4. ✅ **Mapeamento de funcionalidade** — [[mei-mapeamento-funcionalidades]], rascunho de o que cada obrigação vira de tela/cálculo/lembrete.
+4. ✅ **Primeiro mapeamento oficial de funcionalidades** — [[mei-mapeamento-funcionalidades]], 14 itens classificados imprescindível×sugestão, com justificativa e dependência de órgão externo × ajuste interno.
+5. ✅ **Cobertura InfoSimples checada** (29/08, https://infosimples.com/consultas/): confirma DAS-MEI/FGTS/DASN-SIMEI/CNPJ/situação fiscal via consulta (boa parte RPA, exige credencial do cliente); confirma GAP em emissão de NFS-e nova (exige integração direta gov.br/nfse ou parceiro) e em eSocial (sem cobertura, Dataprev descontinuou).
 
 ## O achado que mais importa
 
@@ -35,7 +36,7 @@ Segundo achado grande: **não existe nenhuma ferramenta oficial de monitoramento
 
 ## Próximo passo
 
-Debater as 3 perguntas abertas de [[mei-mapeamento-funcionalidades]] (monitor de teto no V1 ou fase 2? módulo de folha vale a pena agora? limites da API de NFS-e) e, depois de fechado, começar a fase **ME/Simples Nacional geral** — a seção 7 de [[mei-obrigacoes-operacionais]] já é o ponto de partida (reaproveitada, não pesquisa do zero).
+Debater as 4 perguntas abertas de [[mei-mapeamento-funcionalidades]] (monitor de teto no V1 ou fase 2? módulo de folha vale a pena sem API de eSocial? emissor de NF — credenciamento direto ou parceiro tipo Focus NFe? DASN-SIMEI fica manual mesmo?) e, depois de fechado, começar a fase **ME/Simples Nacional geral** — a seção 7 de [[mei-obrigacoes-operacionais]] já é o ponto de partida (reaproveitada, não pesquisa do zero).
 
 ## Links
 - [[mei-obrigacoes-operacionais]] · [[mei-mapeamento-funcionalidades]] · [[resultado-pesquisa-mei-obrigacoes-28-08]]

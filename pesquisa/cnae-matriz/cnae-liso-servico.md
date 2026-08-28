@@ -8,15 +8,17 @@ superado_por:
 tags: [cnae, mei, simples-nacional, escopo, fonte-primaria]
 ---
 
-# 🟢 CNAEs que atendemos com certeza (90 ME · 53 MEI)
+# 🟢 CNAEs que atendemos com certeza (87 ME · 51 MEI)
 
 > Substitui a v1 de 17/07 (103 CNAEs, herdada da Contabilizei, não ratificada). Esta versão é **fonte primária em toda a linha**: cada critério tem lei/resolução citada, nenhum dado vem de concorrente.
+>
+> 🔄 **Correção 28/08** (investigação do eixo de registro setorial, disparada pelo `cnae-verifica-atende.js`): eram 90/53. 5 CNAEs tinham `exige_registro_setorial: nao-verificado` (não `nao`) — aprovados sem essa checagem rodar neles especificamente. Investigado com fonte primária: 1 saiu de vez (agenciamento marítimo exige habilitação federal), 2 confirmaram "não exige" (ficam), 2 seguem pendentes (recuperação de metal/plástico — indício de CTF/APP IBAMA, não confirmado contra o Anexo oficial). Detalhe completo abaixo.
 
 ## 🛠️ Pro desenvolvedor — dado completo, não só este `.md`
 
-Este documento é a **leitura humana curada** (tabela enxuta, 6 colunas, pra entender o critério). Pra implementar de verdade, use o **export dedicado**, que tem as **40 colunas** da matriz só pra estes 90 códigos (sem precisar filtrar os 1332 inteiros):
+Este documento é a **leitura humana curada** (tabela enxuta, 6 colunas, pra entender o critério). Pra implementar de verdade, use o **export dedicado**, que tem as **40 colunas** da matriz só pra estes 87 códigos (sem precisar filtrar os 1332 inteiros):
 
-- **`cnae-atendemos-certeza.json`** / **`cnae-atendemos-certeza.csv`** — todas as colunas: `atividades` (exemplos reais de negócio do IBGE), `subclasse_observacoes` (o que compreende/NÃO compreende, com exclusões cruzadas pra outros CNAEs), `anexo_fator_r_fonte` (o inciso exato da lei, não só o resultado), `mei_ocupacoes` (nome oficial da ocupação MEI), `iss_bh_detalhe` (quando a alíquota varia por sub-atividade), `risco_cgsim_desc_oficial`, `conselho_qual`/`conselho_fonte`, `registro_setorial_qual`/`registro_setorial_fonte`, etc. — a mesma coluna a coluna que `cnae-matriz.csv` tem pros 1332, só que filtrado (hoje 90 linhas).
+- **`cnae-atendemos-certeza.json`** / **`cnae-atendemos-certeza.csv`** — todas as colunas: `atividades` (exemplos reais de negócio do IBGE), `subclasse_observacoes` (o que compreende/NÃO compreende, com exclusões cruzadas pra outros CNAEs), `anexo_fator_r_fonte` (o inciso exato da lei, não só o resultado), `mei_ocupacoes` (nome oficial da ocupação MEI), `iss_bh_detalhe` (quando a alíquota varia por sub-atividade), `risco_cgsim_desc_oficial`, `conselho_qual`/`conselho_fonte`, `registro_setorial_qual`/`registro_setorial_fonte`, etc. — a mesma coluna a coluna que `cnae-matriz.csv` tem pros 1332, só que filtrado (hoje 87 linhas).
 
 **Dado vivo:** cada fato aqui tem a fonte junto (inciso de lei, resolução, artigo) — não é só um valor solto. Isso é o que permite, quando o governo mudar uma regra, saber exatamente qual linha reavaliar e por quê. Ainda não existe mecanismo de versionamento/notificação automática (ver [[legalize-equacao-fiscal-camadas-cnae-cnpj]] na memória — provocação em aberto do Pedro, não construída), mas o dado já nasce rastreável pra quando isso for desenhado.
 
@@ -29,7 +31,8 @@ Este documento é a **leitura humana curada** (tabela enxuta, 6 colunas, pra ent
 →  94 não exigem registro em conselho profissional (Lei 6.839/1980 + leis de cada conselho)
 →  90 não exigem registro setorial federal (CADASTUR/Polícia Federal/Bacen-CVM-SUSEP — cruzado contra a seção de complexidade abaixo)
 ```
-Dos 90, **53 também permitem MEI** (Anexo XI CGSN140) — MEI segue o mesmo filtro de risco do ME (confirmado em [[mei-risco-e-simplificacao-abertura]], Art. 18-A §18 da LC123), não existe atalho.
+4ª rodada (28/08, [[cnae-verifica-atende]]): dos 90, **5 tinham o eixo nao-verificado** (não checado nessa subclasse específica, não "nao" de verdade) — investigado com fonte primária. 1 confirmou exigência (saiu) · 2 confirmaram "não exige" (ficam) · 2 seguem pendentes. **87 restam certeza.**
+Dos 87, **51 também permitem MEI** (Anexo XI CGSN140) — MEI segue o mesmo filtro de risco do ME (confirmado em [[mei-risco-e-simplificacao-abertura]], Art. 18-A §18 da LC123), não existe atalho.
 
 ## O que mudou vs a v1 (103, herdada)
 - **80 confirmados** — os dois métodos concordam, núcleo sólido.
@@ -45,7 +48,7 @@ Dos 90, **53 também permitem MEI** (Anexo XI CGSN140) — MEI segue o mesmo fil
 
 ---
 
-## Lista completa (90), por seção
+## Lista completa (87), por seção
 
 **Colunas:** CNAE · Descrição · Anexo/Fator R · Fonte legal · MEI · ISS BH. Atividades/observações completas → export dedicado (ver acima).
 
@@ -166,16 +169,19 @@ Dos 90, **53 também permitem MEI** (Anexo XI CGSN140) — MEI segue o mesmo fil
 | 9602-5/01 | Cabeleireiros, manicure e pedicure | III-fixo | LC123 art18 5º-F (residual) | ✅ | 5% |
 | 9609-2/02 | Agências matrimoniais | III-fixo | LC123 art18 5º-F (residual) | ✅ | 5% |
 
-### Transporte, Armazenagem e Correio (1)
-| CNAE | Descrição | Anexo/Fator R | Fonte legal | MEI | ISS BH |
-|---|---|---|---|---|---|
-| 5232-0/00 | Atividades de agenciamento marítimo | Fator R dinâmico | LC123 art18 5º-I, XI | — | 2% |
+---
 
-### Água, Esgoto, Gestão de Resíduos e Descontaminação (2)
-| CNAE | Descrição | Anexo/Fator R | Fonte legal | MEI | ISS BH |
-|---|---|---|---|---|---|
-| 3831-9/99 | Recuperação de materiais metálicos, exceto alumínio | III-fixo | LC123 art18 5º-F (residual) | ✅ | — |
-| 3832-7/00 | Recuperação de materiais plásticos | III-fixo | LC123 art18 5º-F (residual) | ✅ | — |
+## ⚠️ Saíram na correção do eixo de registro setorial (28/08)
+
+**Transporte, Armazenagem e Correio** e **Água, Esgoto, Gestão de Resíduos e Descontaminação** existiam como seções só por causa dos CNAEs abaixo — as duas desapareceram da lista "certeza" nesta correção:
+
+| CNAE | Descrição | Status novo | Motivo |
+|---|---|---|---|
+| 5232-0/00 | Atividades de agenciamento marítimo | 🔴 **Não atende** (saiu de vez) | Exige habilitação federal (Receita Federal — Siscomex/RADAR aduaneiro; ANTAQ registra o agente estrangeiro, Res. ANTAQ 18/2017). Fonte confirmada 28/08. |
+| 3831-9/99 | Recuperação de materiais metálicos, exceto alumínio | 🟡 **Pendente** (fora da certeza, não descartado) | Indício de exigência de CTF/APP (IBAMA, Lei 6.938/1981, gestão de resíduos) — não confirmado contra o Anexo I/II oficial pra esta subclasse específica. |
+| 3832-7/00 | Recuperação de materiais plásticos | 🟡 **Pendente** (fora da certeza, não descartado) | Mesmo motivo do 3831-9/99. |
+
+Os outros 2 CNAEs investigados na mesma rodada **confirmaram "não exige registro setorial"** e continuam na lista (ficaram nas seções de origem, sem mudar de lugar): `8292-0/00` (envasamento sob contrato — o que existe é licença sanitária municipal/estadual, eixo diferente) e `9529-1/04` (reparação de bicicletas — nenhuma exigência federal encontrada).
 
 ---
 
@@ -184,7 +190,7 @@ Dá pra crescer por camadas até paridade com o mercado (~387 CNAEs de serviço 
 
 | camada | o que falta estudar |
 |---|---|
-| **90 atual** | pronto |
+| **87 atual** | pronto |
 | + risco médio (verificar-licenciamento) | fonte setorial BH/Bombeiros/Vigilância por atividade específica |
 | + regulamentados com RT terceirizável | modelo de atendimento humano (Mauro/parceiro) por conselho |
 | + comércio/indústria leve | reabrir decisão "MVP só serviço" |
@@ -193,7 +199,7 @@ Dá pra crescer por camadas até paridade com o mercado (~387 CNAEs de serviço 
 
 ## 📚 Contexto mais amplo — a complexidade de abertura nos 387 (fundiu com `cnae-complexidade-abertura.md`, 17/07)
 
-> Esta seção veio de uma nota separada (`cnae-complexidade-abertura.md`) fundida aqui em 27/08 a pedido do Pedro — os 90 acima são o recorte "liso + serviço puro" do universo abaixo. Cobertura: **387 CNAEs** (footprint completo da Contabilizei, comércio+indústria+serviço), não só os 632 de serviço do IBGE.
+> Esta seção veio de uma nota separada (`cnae-complexidade-abertura.md`) fundida aqui em 27/08 a pedido do Pedro — os 87 acima são o recorte "liso + serviço puro" do universo abaixo. Cobertura: **387 CNAEs** (footprint completo da Contabilizei, comércio+indústria+serviço), não só os 632 de serviço do IBGE.
 
 Responde a pergunta original do Pedro (17/07): *"quais CNAEs de fato são simples e quais dependem de mais atenção até de atendimento humano?"* — o eixo é **ortogonal ao fiscal** (Anexo/Fator R): um CNAE pode ser Anexo III barato **e** precisar de vistoria.
 
@@ -204,7 +210,7 @@ Responde a pergunta original do Pedro (17/07): *"quais CNAEs de fato são simple
 | 🟡 **verificar-licenciamento** | 120 | 31% | fora do baixo-risco-A, sem conselho | precisa licença municipal — médio (provisório) OU alto (vistoria); nível é **municipal/BH** |
 | 🔴 **tato-registro** | 97 | 25% | exige conselho de classe **ou** órgão setorial | quase sempre humano/RT → Mauro ou waitlist |
 
-> Dos 170 liso, **103 eram serviço puro** na conta original de 17/07 — reduzido pra **90** depois do cruzamento fonte-primária de 27/08 (ver seção acima, 3 rodadas de correção). Os outros do 170 são comércio/indústria liso (Anexo I/II), fora do "MVP só serviço" — inclusive restaurante/lanchonete, que a conta original de 17/07 também classificava errado como serviço.
+> Dos 170 liso, **103 eram serviço puro** na conta original de 17/07 — reduzido pra **87** depois do cruzamento fonte-primária de 27/08-28/08 (ver seção acima, 4 rodadas de correção). Os outros do 170 são comércio/indústria liso (Anexo I/II), fora do "MVP só serviço" — inclusive restaurante/lanchonete, que a conta original de 17/07 também classificava errado como serviço.
 
 ### Os 3 eixos (regra determinística, re-executável)
 `veredito = tato-registro` se tem conselho/setorial · senão `verificar-licenciamento` se fora do baixo-risco-A · senão `liso`. Prioridade: **registro > licenciamento > liso**. Direção segura do erro travada: **falso-liso é o pecado** (cobra antes de barrar), **falso-tato é conservador** → só marca `liso` quem está na lista oficial; ausência nunca vira "presumido liso".
@@ -235,7 +241,7 @@ Puxado por: divisão 33 reparação de máquinas (25, tende médio) · 47 comér
 ### Arquivos de dados (mantidos, não fundidos)
 - `cnae-complexidade-abertura.json` / `.csv` — os 387 completos com risco_cgsim, orgaos_conselho/setorial, veredito, motivos, confiança.
 - `cgsim-res51-baixo-risco.pdf` — fonte primária do eixo A (mesmo PDF usado na pesquisa de 27/08).
-- `cnae-atendemos-certeza.json` / `.csv` — export dedicado dos 90 (todas as 40 colunas da matriz, pro desenvolvedor — ver seção "Pro desenvolvedor" no topo).
+- `cnae-atendemos-certeza.json` / `.csv` — export dedicado dos 87 (todas as 40 colunas da matriz, pro desenvolvedor — ver seção "Pro desenvolvedor" no topo).
 
 ## Links
 - [[cnae-matriz-governo]] · [[lc123-art18-anexos-taxativo]] · [[profissoes-regulamentadas-conselhos]] · [[mei-risco-e-simplificacao-abertura]] · [[cnae-atendidos-hub]] · [[contabilizei-cnae-completo-relatorio]] · [[fila-validacao-humana]]

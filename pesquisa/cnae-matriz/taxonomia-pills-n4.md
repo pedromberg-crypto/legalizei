@@ -1,19 +1,21 @@
 ---
 tipo: derivado
 status: vivo
-data: 2026-08-27
+data: 2026-08-28
 assunto: taxonomia-pills-n4
 deriva_de: [cnae-liso-servico]
 tags: [cnae, ux, n4, pills]
 ---
 
-# 🏷️ Taxonomia de pills do N4 — v2 (90 CNAEs certeza)
+# 🏷️ Taxonomia de pills do N4 — v2 (87 CNAEs certeza)
 
-> Substitui a v1 de 16/07 (`_arquivo/taxonomia-pills-n4.md`, 9 categorias, 124 CNAEs herdados da Contabilizei, não ratificados). Esta versão agrupa os **90 CNAEs "atendemos com certeza"** de [[cnae-liso-servico]] (fonte primária, 27/08) em categorias que um leigo reconhece.
+> Substitui a v1 de 16/07 (`_arquivo/taxonomia-pills-n4.md`, 9 categorias, 124 CNAEs herdados da Contabilizei, não ratificados). Esta versão agrupa os **CNAEs "atendemos com certeza"** de [[cnae-liso-servico]] (fonte primária, 27/08) em categorias que um leigo reconhece.
 >
-> ⚠️ **Curada manualmente em conversa (Pedro + Claude, 27/08), não gerada por script** — diferente da v1, que saía de `taxonomia-pills.js`. Se o dataset dos 90 mudar, esta nota precisa de revisão manual, não só re-rodar um gerador.
+> 🔄 **28/08:** eram 90/15 categorias. Investigação do eixo de registro setorial ([[cnae-liso-servico]] §"Saíram na correção") tirou `5232-0/00` (agenciamento marítimo, confirmado exige registro federal) e pendurou `3831-9/99`/`3832-7/00` fora da certeza (indício não confirmado). Como os 2 únicos CNAEs da categoria "Recuperação de materiais" eram exatamente esses, a categoria inteira SOME. **87 certeza, 14 categorias.**
+>
+> ⚠️ **Curada manualmente em conversa (Pedro + Claude, 27/08), não gerada por script** — diferente da v1, que saía de `taxonomia-pills.js`. Se o dataset mudar, esta nota precisa de revisão manual, não só re-rodar um gerador.
 
-## As 15 categorias
+## As 14 categorias
 
 | # | Categoria | CNAEs | Exemplo (1ª pessoa) |
 |---|---|---|---|
@@ -31,8 +33,7 @@ tags: [cnae, ux, n4, pills]
 | 12 | Reparos e manutenção | 10 | "Conserto computador, celular, bicicleta ou relógio" |
 | 13 | Salão e beleza | 1 | "Trabalho com cabelo, manicure e pedicure" |
 | 14 | Hospedagem | 2 | "Tenho albergue ou pensão" |
-| 15 | Recuperação de materiais | 2 | "Recupero metal ou plástico pra reciclagem" |
-| | **89 slots** (90 CNAEs + 1 duplicata − 2 sem pill) | |
+| | **87 slots** (87 CNAEs + 1 duplicata − 1 sem pill) | |
 
 *Design conta 4 pela duplicata proposital de `6201-5/02` (Web design) — aparece em Tecnologia **e** Design.
 
@@ -80,11 +81,12 @@ tags: [cnae, ux, n4, pills]
 ### 14. Hospedagem (2)
 `5590-6/01` · `5590-6/03`
 
-### 15. Recuperação de materiais (2)
-`3831-9/99` · `3832-7/00`
+## Fora de pill, achados só pelo textarea (1)
+`9609-2/02` (agências matrimoniais/matchmaking) — continua nos 87 atendidos, mas não justifica pill própria: nicho demais e sem categoria vizinha honesta. Mesma doutrina "pill estreita, não valida" (17/07) — a pessoa ainda descreve no textarea, é lá que a IA cruza.
 
-## Fora de pill, achados só pelo textarea (2)
-`5232-0/00` (agenciamento marítimo) e `9609-2/02` (agências matrimoniais/matchmaking) — continuam nos 90 atendidos, mas não justificam pill própria: nicho demais e sem categoria vizinha honesta. Mesma doutrina "pill estreita, não valida" (17/07) — a pessoa ainda descreve no textarea, é lá que a IA cruza.
+> 🔴 **Agenciamento marítimo (era 5232-0/00) SAIU DE VEZ, não é mais "fora de pill" — é "não atende".** Confirmado 28/08: exige habilitação federal (Receita Federal, Siscomex/RADAR aduaneiro). Ver [[cnae-liso-servico]].
+>
+> 🟡 **Recuperação de metal e de plástico (eram 2 CNAEs da divisão 38) também saíram**, mas por motivo diferente: pendentes, não descartados. Indício de exigência de CTF/APP (IBAMA), não confirmado. Por isso a categoria "Recuperação de materiais" inteira sumiu da lista acima — reaparece se a pesquisa confirmar "não exige" pros dois.
 
 ## O que mudou vs a v1 (16/07, arquivada)
 
@@ -94,9 +96,10 @@ tags: [cnae, ux, n4, pills]
 4. **"Conserto de eletrônicos" sobrevive**, fundido dentro de "Reparos e manutenção".
 5. Achado no debate (27/08): categoria "Agenciamento" inicial forçava 3 CNAEs sem relação (marítimo · esportivo/cultural · matrimonial) só pela palavra em comum. Corrigido: agenciamento esportivo/cultural foi pra "Arte, cultura e patrimônio" (combina); marítimo e matrimonial saíram de pill (ver seção acima).
 6. **"Cerimonialista de casamento" não é "agência matrimonial"** — são profissões diferentes (matchmaking × organização do evento). Cerimonialista já tem casa: `8230-0/01`, dentro de "Eventos e entretenimento".
+7. **28/08 — categoria "Recuperação de materiais" SOME.** O eixo de registro setorial (`cnae-verifica-atende.js`) achou que os 2 CNAEs dessa categoria nunca tiveram essa checagem específica rodada neles. Investigado: `3831-9/99`/`3832-7/00` seguem pendentes (indício de CTF/APP IBAMA, não confirmado), e `5232-0/00` (marítimo, que já estava fora de pill) confirmou exigência real e foi descartado de vez. 15→14 categorias.
 
 ## Próximo passo (não feito ainda)
-Atualizar `PILLS` em `app/src/components/gate-telas.tsx` pra refletir esta taxonomia (era a v1, 17 categorias/103 CNAEs herdados, sem `ids`/CNAEs reais associados).
+Se a pesquisa confirmar "não exige registro setorial" pros 2 pendentes, a categoria "Recuperação de materiais" volta (2 CNAEs, mesma composição de antes) — atualizar `PILLS` em `app/src/components/gate-telas.tsx` nesse momento.
 
 ## Links
 - [[cnae-liso-servico]] · [[fundamentos-cnae]] · [[cnae-matriz-governo]]

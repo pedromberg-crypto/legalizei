@@ -54,13 +54,19 @@ export const EXEMPLOS = [
 ];
 
 /**
- * Pills de reconhecimento do N4 (15) — derivadas dos 90 CNAEs "atendemos com
+ * Pills de reconhecimento do N4 (14) — derivadas dos 87 CNAEs "atendemos com
  * certeza" (pesquisa/cnae-matriz/cnae-liso-servico.md, fonte primária, 27/08).
  * 🔄 27/08: substitui a v1 (17 categorias/103 CNAEs herdados da Contabilizei,
  * não ratificados). Detalhe completo, CNAE por categoria, e o que mudou vs a
  * v1 (Conserto de veículos e Manutenção de máquinas SAÍRAM — não têm CNAE
  * `liso` na base atual, caem em `verificar-licenciamento`) em
  * `pesquisa/cnae-matriz/taxonomia-pills-n4.md`.
+ *
+ * 🔴 28/08 — categoria "Recuperação de materiais" (2 CNAEs) SAIU: o eixo de
+ * registro setorial nunca tinha rodado nesses 2 códigos especificamente
+ * (achado do `cnae-verifica-atende.js`). Seguem pendentes de pesquisa, não
+ * descartados — volta se confirmar "não exige registro federal". Ver
+ * `pesquisa/cnae-matriz/taxonomia-pills-n4.md` item 7.
  *
  * ⚠️ A pill ESTREITA, não valida (decisão 17/07 → legalize-pill-estreita-nao-valida).
  * Clicar não dá veredito: só afunila o universo pra IA e troca o exemplo do
@@ -82,7 +88,6 @@ export const PILLS = [
   { id: "reparos", label: "Reparos e manutenção", ex: "Conserto computador, celular, bicicleta ou relógio" },
   { id: "salao", label: "Salão e beleza", ex: "Trabalho com cabelo, manicure e pedicure" },
   { id: "hospedagem", label: "Hospedagem", ex: "Tenho albergue ou pensão" },
-  { id: "materiais", label: "Recuperação de materiais", ex: "Recupero metal ou plástico pra reciclagem" },
 ];
 
 /**

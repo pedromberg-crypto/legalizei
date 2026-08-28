@@ -126,7 +126,7 @@ const certezaSet = new Set(certeza.map((r) => norm(r.cnae)));
 let fantasma = 0;
 for (const cod of new Set(todosCodigosDoc)) {
   if (!certezaSet.has(norm(cod))) {
-    falha(`CNAE ${cod} citado em taxonomia-pills-n4.md mas NÃO está nos 90 certeza`);
+    falha(`CNAE ${cod} citado em taxonomia-pills-n4.md mas NÃO está nos ${certeza.length} certeza`);
     fantasma++;
   }
 }

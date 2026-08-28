@@ -1,7 +1,7 @@
 ---
 tipo: operacao
 status: vivo
-data: 2026-08-27
+data: 2026-08-28
 assunto: estado-pesquisa-cnae
 tags: [pesquisa, cnae, torre-de-controle]
 ---
@@ -77,11 +77,27 @@ A pasta trocou de branch algumas vezes nessa sessão (outra janela mexendo em `f
 
 ## ✅ Script de classificação independente — `cnae-verifica-atende.js` (27/08)
 
-Novo: `node pesquisa/cnae-matriz/cnae-verifica-atende.js <cnae>` (1 CNAE) ou `--auditoria` (os 1332). Recalcula o veredito atende/não-atende **do zero**, critério por critério (não lê `atende_me_certeza` como atalho — deriva e SÓ DEPOIS compara), pra pegar divergência entre a lógica documentada e o campo precomputado.
+`node pesquisa/cnae-matriz/cnae-verifica-atende.js <cnae>` (1 CNAE) ou `--auditoria` (os 1332). Recalcula o veredito atende/não-atende **do zero**, critério por critério (não lê `atende_me_certeza` como atalho — deriva e SÓ DEPOIS compara), pra pegar divergência entre a lógica documentada e o campo precomputado.
 
-**Achado real na 1ª rodada:** 5 dos 90 "atendemos com certeza" têm `exige_registro_setorial: nao-verificado` (não `nao`) — foram aprovados sem essa checagem específica ter rodado neles (`3831999` recuperação de metal · `3832700` recuperação de plástico · `5232000` agenciamento marítimo · `8292000` envasamento sob contrato · `9529104` reparação de bicicletas). Não é erro de dado, é lacuna de pesquisa real: o eixo de registro setorial só foi cruzado pra 387/1332 CNAEs (footprint do concorrente), e esses 5 caíram fora dessa amostra mas entraram nos 90 mesmo assim.
+**Achado real na 1ª rodada:** 5 dos 90 "atendemos com certeza" tinham `exige_registro_setorial: nao-verificado` (não `nao`) — aprovados sem essa checagem específica ter rodado neles.
 
-🕓 **Fila, não bloqueia**: verificar manualmente se esses 5 exigem registro setorial de fato (nenhum parece óbvio — metal/plástico reciclagem, agenciamento marítimo, envasamento, bicicleta — mas "não parece" não é fonte primária). Não travou nada até aqui, mas fica registrado.
+## ✅ Investigação dos 5 pendentes — FECHADA parcialmente (28/08)
+
+Pesquisado com WebSearch/WebFetch, fonte primária onde deu:
+
+| CNAE | Resultado | Fonte | Confiança |
+|---|---|---|---|
+| `5232000` agenciamento marítimo | 🔴 **Exige registro** — Receita Federal (habilitação Siscomex/RADAR aduaneiro) + ANTAQ registra o agente estrangeiro (Res. ANTAQ 18/2017) | RFB (manual habilitação Siscomex) + Res. ANTAQ 18/2017 | 🟢 alta |
+| `8292000` envasamento sob contrato | 🟢 **Não exige** registro federal — o que existe é licença sanitária municipal/estadual (eixo diferente, já coberto por risco CGSIM) | Guia de serviços municipal (São Bernardo do Campo) confirma que é licença **municipal**, não federal | 🟢 alta |
+| `9529104` reparação de bicicletas | 🟢 **Não exige** registro federal — nenhuma exigência encontrada além de possível Inscrição Estadual (se vender peças, eixo estadual) | Busca ampla, nenhuma fonte aponta exigência federal | 🟡 média (ausência de evidência, não prova formal de ausência) |
+| `3831999` recuperação de metal | 🟡 **PENDENTE** — indício de CTF/APP (IBAMA, Lei 6.938/1981, gestão de resíduos), não confirmado contra o Anexo I/II oficial pra esta subclasse específica (PDF oficial bloqueado, páginas espelho divergem) | — | 🔴 baixa, precisa fonte melhor |
+| `3832700` recuperação de plástico | 🟡 **PENDENTE**, mesmo motivo do 3831999 | — | 🔴 baixa |
+
+**Resultado**: lista "atendemos com certeza" **caiu de 90 para 87 ME** (51 MEI, era 53) — `5232000` saiu de vez, `3831999`/`3832700` saíram até confirmar (não descartados, só não contam mais como certeza). `8292000`/`9529104` ficaram, agora com o eixo genuinamente resolvido (era assumido, virou confirmado).
+
+**Arquivos atualizados**: `cnae-matriz.json/csv` (mestre, 1332), `cnae-atendemos-certeza.json/csv` (regenerado do mestre), `cnae-liso-servico.md`, `taxonomia-pills-n4.md` (categoria "Recuperação de materiais" saiu — só tinha esses 2 CNAEs pendentes —, 15→14 categorias), `PILLS` em `gate-telas.tsx`, `_sistema/indice-autoridade.md`. `cnae-verifica-atende.js --auditoria` confirma zero divergência pós-correção.
+
+🕓 **Fila, não bloqueia**: achar o Anexo I/II oficial do CTF/APP (IBAMA) pra confirmar `3831999`/`3832700` de vez. PDF oficial (`ibama.gov.br/phocadownload/...`) bloqueou fetch (403) — precisa acesso direto ou pedido formal.
 
 ## Links
 - [[fundamentos-cnae]] · [[lc123-art18-anexos-taxativo]] · [[profissoes-regulamentadas-conselhos]] · [[mei-risco-e-simplificacao-abertura]] · [[cnae-liso-servico]] · [[cnae-matriz-governo]] · [[resultado-pesquisa-fundamentos-cnae-27-08]]

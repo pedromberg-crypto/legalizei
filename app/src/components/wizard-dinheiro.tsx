@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
@@ -1064,6 +1064,40 @@ function PlanoOferta({
   // `components/painel.tsx`, "Pague a guia da Junta").
   const hoje = mensalidade;
 
+  // 🔧 28/08 (correção do Pedro: "essa tela não herdou o fade do topo/rodapé
+  // que as outras têm") — esta tela rola num `<div>` próprio (não usa o
+  // `Corpo` do DS, porque o espaçamento aqui é por `mt-*` em cada bloco, não
+  // por `gap-6`), então nunca ganhou a mesma mask de scroll do `Corpo`
+  // (`ui/tela.tsx`). Mesma técnica, copiada 1:1: afordância "tem mais pra
+  // ver", nunca gate.
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const conteudoRef = useRef<HTMLDivElement>(null);
+  const [fade, setFade] = useState({ topo: false, base: false });
+  useEffect(() => {
+    const vp = viewportRef.current;
+    const ct = conteudoRef.current;
+    if (!vp || !ct) return;
+    const recompute = () => {
+      const topo = vp.scrollTop > 2;
+      const base = vp.scrollTop + vp.clientHeight < vp.scrollHeight - 2;
+      setFade((f) => (f.topo === topo && f.base === base ? f : { topo, base }));
+    };
+    recompute();
+    vp.addEventListener("scroll", recompute, { passive: true });
+    const ro = new ResizeObserver(recompute);
+    ro.observe(ct);
+    ro.observe(vp);
+    return () => {
+      vp.removeEventListener("scroll", recompute);
+      ro.disconnect();
+    };
+  }, []);
+  const topStop = fade.topo ? "transparent 0, #000 20px" : "#000 0";
+  const baseStop = fade.base
+    ? "#000 calc(100% - 28px), transparent 100%"
+    : "#000 100%";
+  const maskScroll = `linear-gradient(to bottom, ${topStop}, ${baseStop})`;
+
   return (
     <>
       <TelaHeader meta="A conta da abertura" onVoltar={onVoltar} />
@@ -1102,7 +1136,12 @@ function PlanoOferta({
           </p>
         </div>
 
-        <div className="mt-5 flex-1 min-h-0 overflow-y-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div
+          ref={viewportRef}
+          style={{ maskImage: maskScroll, WebkitMaskImage: maskScroll }}
+          className="mt-5 flex-1 min-h-0 overflow-y-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+        <div ref={conteudoRef}>
           {/* O PLANO COMO PRODUTO — card-herói escuro, profundidade real.
               🔴 28/08 — o badge "certificado grátis/você providencia" que
               vivia aqui SAIU: ele já aparece embaixo (na lista de inclusos
@@ -1244,7 +1283,7 @@ function PlanoOferta({
               </p>
             </div>
           )}
-
+        </div>
         </div>
 
         {/* CTA FLUTUANTE — ecoa a navbar escura flutuante da referência.

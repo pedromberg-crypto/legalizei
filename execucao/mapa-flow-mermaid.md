@@ -143,12 +143,12 @@ flowchart TD
   C0_2 -->|"ambíguo"| DESAMB
   DESAMB --> C0
   C0_2 -->|"🟢 confirmado"| C0_3
-  C0_3 --> C1
+  C0_3 --> C5
+  C5 --> C1
   C1 --> C2
   C2 --> C3
   C3 --> C4
-  C4 --> C5
-  C5 --> C6
+  C4 --> C6
   C6 --> C7
   C7 --> A1
   A1 -.-> A2
@@ -224,7 +224,7 @@ flowchart TD
 | 42 | C2 · Vínculo INSS | Já contribui INSS por fora? (sim/não) · valor do vínculo (CLT/aposentadoria/autônomo/sócio de outro CNPJ) | ✅ | 🟢 | INSS 11% direto + teto folga = consolidado fiscal fechado |
 | 43 | C3 · Sócios? | Confirma se terá mais sócios (sem reperguntar quantidade/tipo) · se houver, nome completo + % de participação de cada sócio extra (quantidade fixa, CPF implícito) | ✅ | 🟢 | Re-pergunta o E5T (carry-forward pendente); limite subiu de 2 pra 4 (24/08). 🔒 24/08 (pedido do Pedro): não pergunta MAIS nada — quantidade e tipo (CPF) já vêm travados da triagem (E5T). Quando TEM_SOCIO, a MESMA tela já mostra o formulário de completar os sócios extras (sem passo/rota separada) |
 | 44 | C4 · Dados da empresa | CEP (autofill) + número + complemento · índice cadastral IPTU (obrigatório, só se próprio) · tipo de endereço · residência de sócio (trava duplicidade) · capital social | ✅ | 🟢 | ✅ 28/07: IPTU obrigatório travado. 🆕 24/08 (reunião Leonan): alerta de IPTU pode subir quando é residência de sócio; trava duplicidade (só 1 sócio por endereço); chips de capital social simbólico (R$1k/5k/10k). 🔄 26/08 (reunião Rua Satélite 36, item 2): a escolha 'próprio × fiscal Legalizai' e o aviso de cobrança recorrente SAÍRAM daqui — moraram no E5F desde 24/08 até virarem o gate oficial de decisão, e o valor já vem confirmado do E7. Esta tela agora só CONFIRMA a escolha (card read-only, mesma doutrina do C3) e coleta os detalhes de endereço (CEP/IPTU/tipo) quando for próprio |
-| 45 | C5 · CNAE secundários | CNAEs secundários (seleção múltipla + busca, opcional, até 15) | ✅ | 🟡 | 🆕 24/08 (reunião Leonan): ganhou busca livre (restrita ao que a gente atende, pedido original da Jéssica 19/07) além das 4 sugestões curadas mesmo-imposto; até 15 no total; secundária que muda enquadramento mostra aviso e troca CTA por 'Falar com atendente' em vez de bloquear silenciosamente |
+| 45 | C5 · CNAE secundários | CNAEs secundários (seleção múltipla + busca, opcional, até 15) | ✅ | 🟡 | 🆕 24/08 (reunião Leonan): ganhou busca livre (restrita ao que a gente atende, pedido original da Jéssica 19/07) além das 4 sugestões curadas mesmo-imposto; até 15 no total; secundária que muda enquadramento mostra aviso e troca CTA por 'Falar com atendente' em vez de bloquear silenciosamente. 🔄 28/08 (pedido do Pedro) — MUDOU DE LUGAR: vinha depois de C4 (dados da empresa), agora vem logo depois de C0.3 (CNAE principal confirmado) — sequência mais natural de quem acabou de escolher o CNAE. `lib/passos.ts` reflete a ordem nova ('CNAE secundário' é o 4º passo, não mais o 5º) |
 | 46 | C6 · Natureza jurídica | Escolha da natureza jurídica (SLU ou LTDA — sugerida, editável) | ✅ | 🟡 | SLU × LTDA confirmado pelo Leonan (24/08): SLU pra individual (proteção patrimonial — bens não se misturam), LTDA pra sociedade, sem outra opção nos dois casos |
 | 47 | C7 · Nome / razão social | 3 opções de razão social, editáveis inline, por ordem de prioridade (sugeridas por IA) · objeto social (gerado automaticamente, travado) · nome fantasia (opcional) | ✅ | 🟢 | Viabilidade JUCEMG (RPA, não API); 3 opções por prioridade (28/07). 🔒 24/08 (reunião Leonan, CONFLITO RESOLVIDO): objeto social virou TRAVADO/read-only — erro de grafia do cliente gerava reclamação real no escritório antigo dele. 🆕 24/08 (pedido do Pedro): cada sugestão ganhou lápis de edição inline (reescreve a sugestão da IA no lugar); campo separado 'Digite a sua' foi removido; seta de reordenar 1/2/3 mantida |
 | 48 | C0.1 · Retomar de onde parou | — | ✅ | ⚪ | UX-23 fechado — mora em /pro-labore pós-constituição |
@@ -274,6 +274,7 @@ flowchart TD
 > Cada linha = um estado estrutural do mapa. Snapshots completos em `flow/versoes/` (`.json` p/ diff + `.mmd` legível). Mais recente no topo.
 
 <!-- FLOW:VERSOES:INI -->
+- **v44** · 2026-08-28 · falta-validar em C5 · +conexões C0_3→C5,C5→C1,C4→C6 · -conexões C0_3→C1,C4→C5,C5→C6
 - **v43** · 2026-08-28 · falta-validar em E7
 - **v42** · 2026-08-28 · +nós M_CERT · +conexões M_S→M_CERT,M_CERT→A5 · -conexões M_S→A5
 - **v41** · 2026-08-28 · +nós M_T,M_T_1,M_T_2,M_O,M_S · +conexões E3_4→M_T,M_T→E5F,M_T→M_T_1,M_T→M_T_2,E9→M_O,M_O→C1,A3→M_S,M_S→A5

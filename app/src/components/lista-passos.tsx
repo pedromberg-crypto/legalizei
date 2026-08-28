@@ -40,14 +40,20 @@ export function ListaPassos({
   concluidos,
   pagamentoPendente = false,
   mostrarDestino = false,
+  mei = false,
+  temSocios = true,
 }: {
   concluidos: number;
   /** Boleto emitido e ainda não compensado. Só isso liga o estado travado. */
   pagamentoPendente?: boolean;
   /** Fecha a lista com "Empresa constituída". Ver `Destino` abaixo. */
   mostrarDestino?: boolean;
+  /** MEI nunca tem "Sócios" na lista (repassa pra `passosDoCliente`). */
+  mei?: boolean;
+  /** ME que respondeu "Só eu" na Triagem também não tem "Sócios" na lista. */
+  temSocios?: boolean;
 }) {
-  const passos = passosDoCliente();
+  const passos = passosDoCliente({ mei, temSocios });
   const ultimoIndex = mostrarDestino ? passos.length : passos.length - 1;
 
   return (
@@ -178,7 +184,7 @@ function No({
 /**
  * O DESTINO — "Empresa constituída".
  *
- * ⚠️ NÃO é um passo, e por isso não entra em `PASSOS_DOSSIE` nem na contagem:
+ * ⚠️ NÃO é um passo, e por isso não entra em `PASSOS_CLIENTE` nem na contagem:
  * continua "3 de 10". Passo é coisa que o cliente FAZ; isto é o que ele
  * recebe. Somá-lo inflaria o denominador com trabalho que não é dele.
  *

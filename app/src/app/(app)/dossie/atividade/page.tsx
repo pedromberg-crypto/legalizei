@@ -70,8 +70,12 @@ export default function AtividadePage() {
     }, 1400);
   }
 
+  // 🔄 28/08 (pedido do Pedro) — CNAE secundário deixou de vir depois de
+  // "Dados da empresa" (C4) e passou pra logo aqui, na sequência natural de
+  // quem acabou de escolher a atividade principal. Ver `dossie/cnae-secundarios`
+  // (próximo destino) e `dossie/empresa` (que perdeu esse destino).
   const seguir = () =>
-    router.push(comEndereco(comRegime("/dossie/socio", mei), enderecoFiscal));
+    router.push(comEndereco(comRegime("/dossie/cnae-secundarios", mei), enderecoFiscal));
 
   return (
     <>

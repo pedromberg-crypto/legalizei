@@ -302,12 +302,15 @@ type Etapa =
  * `momento`, o shell de tela cheia e a sequência de "Continuar" leem daqui, em
  * vez de repetir a lista em três `||` diferentes.
  */
+// 🔄 28/08 (pedido do Pedro) — C5 saiu de entre C4/C6, virou a 1ª do dossiê,
+// logo após o veredito da C0. `depoisDoDossie`/`antesDoDossie` já são
+// genéricas (leem por índice), então só a ordem aqui muda o roteamento real.
 const ETAPAS_DOSSIE = [
+  "cnae-secundarios",
   "socio",
   "vinculo",
   "socios",
   "empresa",
-  "cnae-secundarios",
   "natureza",
   "nome",
 ] as const satisfies readonly Etapa[];
@@ -1873,11 +1876,13 @@ export default function ApresentacaoPage() {
     // primeira tela do dossiê. Ver `app/(app)/dossie/atividade/page.tsx`.
     { etapa: "perguntando", label: "🔄 C0 · Sua atividade" },
     { etapa: "veredito", label: "🔄 C0 · CNAE encontrado" },
+    // 🔄 28/08 (pedido do Pedro) — C5 mudou de lugar: era a 5ª tela do
+    // dossiê (entre C4 e C6), agora é a 1ª, logo após o veredito da C0.
+    { etapa: "cnae-secundarios", label: "C5 · Secundários" },
     { etapa: "socio", label: "C1 · Seus dados" },
     { etapa: "vinculo", label: "C2 · Vínculo" },
     { etapa: "socios", label: "C3 · Sócios" },
     { etapa: "empresa", label: "C4 · Empresa" },
-    { etapa: "cnae-secundarios", label: "C5 · Secundários" },
     { etapa: "natureza", label: "C6 · Natureza" },
     { etapa: "nome", label: "C7 · Nome" },
     { etapa: "revisar", label: "A1 · Revisar" },
@@ -2786,10 +2791,11 @@ export default function ApresentacaoPage() {
                             <VereditoView
                               r={resultado}
                               onRefazer={() => voltar(() => setEtapa("perguntando"))}
-                              // 🔄 27/08 — daqui segue pro C1 (dossiê), não
-                              // mais pra triagem: a triagem ficou lá atrás,
-                              // antes do pagamento.
-                              onSeguir={() => setEtapa("socio")}
+                              // 🔄 27/08 — daqui segue pro dossiê, não mais
+                              // pra triagem: a triagem ficou lá atrás, antes
+                              // do pagamento. 🔄 28/08 — a 1ª tela do dossiê
+                              // virou C5 (secundárias), não mais C1.
+                              onSeguir={() => setEtapa(ETAPAS_DOSSIE[0])}
                               captura={{
                                 nome: nomeV,
                                 setNome: setNomeV,

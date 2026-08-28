@@ -1316,10 +1316,24 @@ function IconeChevronAtivacao() {
 
 /* ═══════════════════ P1 · RETOMAR DE ONDE PAROU ═════════════════════════ */
 
-const ESTADO_P1 = { diasFora: 6, concluidos: 3 };
+// 🔄 28/08 — `concluidos` recalibrado pra nova ordem (dados base → plano e
+// pago → CNAE principal → CNAE secundário → ... ). 4 = os 2 passos de
+// pré-pagamento + os 2 CNAEs já feitos, parado bem no início do dossiê de
+// verdade ("Dados pessoais complementares" é a vez agora).
+const ESTADO_P1 = { diasFora: 6, concluidos: 4 };
 
-export function RetomarView({ onSeguir }: { onSeguir?: () => void }) {
-  const passos = passosDoCliente();
+export function RetomarView({
+  mei = false,
+  temSocios = true,
+  onSeguir,
+}: {
+  /** MEI não tem "Sócios" na lista (repassa pra `ListaPassos`). */
+  mei?: boolean;
+  /** ME "Só eu" também não tem "Sócios" na lista. */
+  temSocios?: boolean;
+  onSeguir?: () => void;
+}) {
+  const passos = passosDoCliente({ mei, temSocios });
   const feito = ESTADO_P1.concluidos;
   // ⚠️ O destino ("Empresa constituída") NÃO entra no denominador — mesma
   // régua de sempre (`lista-passos.tsx`): passo é o que o cliente FAZ, o
@@ -1367,7 +1381,7 @@ export function RetomarView({ onSeguir }: { onSeguir?: () => void }) {
               </div>
 
               <div className="mt-4">
-                <ListaPassos concluidos={feito} mostrarDestino />
+                <ListaPassos concluidos={feito} mostrarDestino mei={mei} temSocios={temSocios} />
               </div>
             </div>
 
@@ -1389,19 +1403,27 @@ export function RetomarView({ onSeguir }: { onSeguir?: () => void }) {
 
 /* ═══════════════════ P2 · AGUARDANDO O BOLETO ═══════════════════════════ */
 
-const BOLETO_P2 = { passosFeitos: 5 };
+// 🔄 28/08 — recalibrado pra nova ordem/contagem (10 passos, era 8). 7 =
+// dados base, plano e pago, CNAE principal, CNAE secundário, dados pessoais
+// complementares, INSS e sócios já feitos; "Endereço fiscal" é a vez agora;
+// "Revisar e confirmar" travado (é o único passo que o boleto pendente retém).
+const BOLETO_P2 = { passosFeitos: 7 };
 
 export function AguardandoView({
   mei = false,
+  temSocios = true,
   onSeguir,
 }: {
   /** 🆕 04/08 — MEI não paga taxa da Junta e tem mensalidade própria
    *  (`CUSTOS.MENSALIDADE_MEI`) — esta tela ainda cravava DAE+mensalidade
-   *  genérica no boleto, mesmo gap já corrigido em `wizard-dinheiro.tsx`. */
+   *  genérica no boleto, mesmo gap já corrigido em `wizard-dinheiro.tsx`.
+   *  Também: MEI não tem "Sócios" na lista (repassa pra `ListaPassos`). */
   mei?: boolean;
+  /** ME "Só eu" também não tem "Sócios" na lista. */
+  temSocios?: boolean;
   onSeguir?: () => void;
 }) {
-  const total = passosDoCliente().length;
+  const total = passosDoCliente({ mei, temSocios }).length;
   const pct = Math.round((BOLETO_P2.passosFeitos / total) * 100);
   const boleto = mei ? CUSTOS.MENSALIDADE_MEI : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
 
@@ -1453,7 +1475,13 @@ export function AguardandoView({
               </div>
 
               <div className="mt-4">
-                <ListaPassos concluidos={BOLETO_P2.passosFeitos} pagamentoPendente mostrarDestino />
+                <ListaPassos
+                  concluidos={BOLETO_P2.passosFeitos}
+                  pagamentoPendente
+                  mostrarDestino
+                  mei={mei}
+                  temSocios={temSocios}
+                />
               </div>
             </div>
 

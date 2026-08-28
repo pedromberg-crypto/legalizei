@@ -5,6 +5,7 @@ import { AguardandoView } from "@/components/wizard-cauda";
 import { ehMei, comRegime } from "@/lib/regime";
 import { ehEnderecoFiscal, comEndereco } from "@/lib/endereco";
 import { categoriaDe, comCategoria } from "@/lib/categoria";
+import { TEM_SOCIO } from "@/app/(app)/dossie/mock";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -37,12 +38,19 @@ export default function AguardandoPage() {
   return (
     <AguardandoView
       mei={mei}
+      temSocios={TEM_SOCIO}
       // 🔄 27/08 — a 1ª tela do dossiê virou a C0 (`/dossie/atividade`), não
       // mais o C1. Mesma mudança do `/pagamento` (racional lá).
+      // 🐛 28/08 — faltava o ramo MEI: ia sempre pra C0 (ME), mesmo quando
+      // `mei=true`. MEI não usa a C0 (não aceita CNAE livre) — vai pra M-O
+      // (`/dossie/ocupacao`), mesmo destino que `/pagamento` já usa.
       onSeguir={() =>
         router.push(
           comCategoria(
-            comEndereco(comRegime("/dossie/atividade", mei), enderecoFiscal),
+            comEndereco(
+              comRegime(mei ? "/dossie/ocupacao" : "/dossie/atividade", mei),
+              enderecoFiscal,
+            ),
             categoria,
           ),
         )

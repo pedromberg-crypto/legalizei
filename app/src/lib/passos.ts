@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * OS PASSOS DO DOSSIÊ — fonte única de "quantos passos faltam".
+ * OS PASSOS DO CLIENTE — fonte única de "quantos passos faltam".
  * ═══════════════════════════════════════════════════════════════════════════
  * Nasceu de um bug achado pelo Pedro em 19/07: a P2 dizia "5 de 9 passos" e a
  * P1, na esteira ao lado, dizia "3 de 6". Eu tinha inventado os dois números
@@ -12,57 +12,66 @@
  * telas do MESMO app dando contagens diferentes destrói a confiança no resto
  * dos números (inclusive nos fiscais, que são os que importam).
  *
+ * ─── 🔴 28/08 — REESCRITO DO ZERO (pedido do Pedro: "essa ordem está
+ * desatualizada") ───────────────────────────────────────────────────────────
+ * A lista antiga só cobria o dossiê pós-pagamento (C1-C7, com numeração N10-
+ * N20 de antes da reordenação de 27/08) e tinha 2 problemas reais:
+ *
+ *   1. **Faltava tudo ANTES do pagamento.** A pessoa front-load já preenche
+ *      dados base (E3.1) e escolhe+paga o plano (E7-E9) antes de entrar no
+ *      dossiê — nenhum dos dois aparecia na lista, e "3 de 8" mentia sobre
+ *      quanto trabalho já tinha sido feito de verdade.
+ *   2. **Faltava a C0 (CNAE principal).** Ela nasceu em 27/08 (moveu de
+ *      antes do pagamento pra depois) e este arquivo nunca foi atualizado —
+ *      exatamente o aviso que o header antigo já dava: "ao remover tela do
+ *      flow, revisitar este arquivo" — aqui foi o oposto, uma tela NASCEU e
+ *      ninguém avisou este arquivo.
+ *
+ * A ORDEM também mudou de verdade no código (não só na lista): CNAE
+ * secundário (C5) saiu de depois de "Dados da empresa" (C4) e passou pra
+ * logo depois da atividade principal (C0) — sequência mais natural pra quem
+ * acabou de escolher o CNAE. Ver `dossie/atividade`, `dossie/cnae-
+ * secundarios` e `dossie/empresa` (page.tsx de cada um, onde a navegação real
+ * mudou junto).
+ *
  * ─── O QUE CONTA COMO PASSO ──────────────────────────────────────────────
- * Tudo que exige AÇÃO do cliente até a empresa entrar na máquina.
+ * Tudo que exige AÇÃO do cliente até a empresa entrar na máquina — do
+ * primeiro dado que ele digita (E3.1) até autorizar a abertura (A2).
  *
- * ⚠️ O CNAE ótimo NÃO é mais passo do dossiê: virou o ENCAIXE, pré-pagamento
- * (reordenacao-cluster-fiscal-encaixe, 21/07). Saiu daqui e a contagem caiu 1.
+ * ⚠️ "Plano escolhido e pago" conta como FEITO assim que o cliente submeteu o
+ * pagamento (cartão aprovado OU boleto emitido) — não espera o boleto
+ * compensar. A ação dele (escolher + pagar) já aconteceu; o banco compensar é
+ * problema de BACKEND, não passo do cliente. É por isso que existe a tela de
+ * "Aguardando boleto" (E9.1) sem duplicar essa espera dentro da lista.
  *
- * ─── 🐛 29/07 — O CONTADOR VOLTOU A MENTIR, E PELO MOTIVO OPOSTO ──────────
- * O **N18 (pró-labore) foi DISSOLVIDO do wizard em 28/07**: o enquadramento
- * deixou de ser escolhido num simulador manual antes de a empresa existir e
- * passou a ser SUGERIDO no N19, com o refino de verdade acontecendo depois da
- * constituição (`/pro-labore`, mesma engine). A tela sumiu; o passo ficou.
+ * ⚠️ "Sócios" é CONDICIONAL, de verdade agora (antes o campo existia mas
+ * `passosDoCliente()` nunca filtrava nada — comentário antigo dizia "desde
+ * 21/07 não há mais passo condicional"). Duas razões pra sumir:
+ *   · **MEI nunca tem sócio** (unipessoal por definição, art. 966 CC) — some
+ *     sempre que `mei` for `true`.
+ *   · **ME solo também não tem** — a pessoa respondeu isso na Triagem (E5T /
+ *     M-T, "Quantas pessoas vão ser donas da empresa?"), e "Só eu" tira o
+ *     passo da lista. Só aparece pra quem indicou 2+ sócios lá atrás.
  *
- * Resultado: a lista prometia 9 passos e um deles não existia mais — o cliente
- * ia esperar um "Quanto você se paga" que nunca chegaria. É o mesmo dano de
- * 19/07 pela porta oposta: lá o contador parava cedo demais, aqui ele contava
- * um passo fantasma. **Saiu daqui, e a contagem caiu de 9 pra 8.**
+ * ─── O QUE FICOU FORA, E POR QUÊ ──────────────────────────────────────────
+ * **"Tipo de empresa" (C6, natureza jurídica) não é mais item da lista.**
+ * Pedido explícito do Pedro (28/08): a lista nova tem 9 passos antes de
+ * "Revisar e confirmar", e C6 não está entre eles. A tela continua existindo
+ * no flow real (`dossie/natureza`) — só parou de ser contada como passo
+ * separado. 🟡 Não sei se foi omissão ou decisão deliberada; fica registrado
+ * aqui pra não virar surpresa se alguém notar a tela sem contraparte na lista.
  *
- * A lição do arquivo continua valendo, e agora com um adendo: fonte única não
- * basta se ninguém a revisita quando uma tela morre. Ao remover tela do flow,
- * este arquivo é parada obrigatória.
- *
- * ─── ⚠️ A CORREÇÃO DE 19/07 — O CONTADOR MENTIA NO FIM ───────────────────
- * A v1 parava no N18, com esta justificativa: N19 e N20 travam enquanto o
- * boleto não compensa, então contá-los faria a barra da P2 prometer progresso
- * que o próprio pagamento bloqueia.
- *
- * O raciocínio otimizava a P2 e quebrava a P1. Quem paga de CARTÃO não tem
- * trava nenhuma: ele chegava em "9 de 9" achando que tinha acabado, e ainda
- * precisava revisar o dossiê, assinar o termo e assinar no GOV.BR. Mesma
- * mentira do rótulo "o próximo passo é só esse", que o Pedro pegou na mesma
- * rodada — corrigida no texto e deixada viva no número.
- *
- * Por isso entrou o **N19+N20 como UM passo** ("Revisar e confirmar"): pro
- * cliente é um ato só — conferir o que foi montado e autorizar a abertura. São
- * duas telas por razão jurídica (o racha do T18), não por razão de tarefa.
- *
- * ─── O QUE CONTINUA FORA, E POR QUÊ ──────────────────────────────────────
- * O **N23 (assinatura GOV.BR)** é ação dele, mas acontece DEPOIS de dias de
- * espera de órgão. Misturar "preencha isto agora" com "assine daqui a uma
- * semana" na mesma barra faria a contagem parar de andar sem ninguém entender
- * por quê — a culpa seria da JUCEMG, não do cliente. Ele vive na timeline do
- * painel (N21, arquétipo A8), que existe justamente pra mostrar espera.
- * 🟡 Se a decisão for que o cliente precisa ver uma barra única do começo ao
- * fim, isto muda — mas aí a barra tem que distinguir "sua vez" de "nossa vez".
+ * O **N23 (assinatura GOV.BR)** continua fora pelo mesmo motivo de sempre:
+ * acontece DEPOIS de dias de espera de órgão, e misturar "preencha agora" com
+ * "assine daqui a uma semana" na mesma barra faria a contagem parar de andar
+ * sem ninguém entender por quê. Ele vive na timeline do painel (A3).
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
 export interface Passo {
-  /** Rótulo humano. O cliente nunca vê "N14". */
+  /** Rótulo humano. O cliente nunca vê o código interno. */
   nome: string;
-  /** Referência interna, pra rastrear até a tela. */
+  /** Referência interna, pra rastrear até a tela (código do flow-data.mjs). */
   tela: string;
   /** Só existe pra parte dos clientes — muda o TOTAL, não a ordem. */
   condicional?: boolean;
@@ -70,38 +79,32 @@ export interface Passo {
   travaSemPagamento?: boolean;
 }
 
-export const PASSOS_DOSSIE: Passo[] = [
-  { nome: "Seus dados", tela: "N10" },
-  { nome: "Vínculo de trabalho", tela: "N11" },
-  { nome: "Sócios", tela: "N12" },
-  { nome: "Dados da empresa", tela: "N13" },
-  { nome: "Atividades secundárias", tela: "N14" },
-  { nome: "Tipo de empresa", tela: "N15" },
-  // 🔑 DIGITAR É GRÁTIS, CHECAR É CARO (decisão do Pedro, 19/07).
-  // O cliente escolhe o nome e a gente salva. A consulta na JUCEMG — que
-  // provavelmente é RPA, não API ("JUCEMG não tem API conhecida", fluxo-
-  // abertura-portais) — roda quando o pagamento cair, e volta com veredito
-  // MAIS alternativas sugeridas por IA. Ninguém espera robô, e nenhum robô
-  // roda por quem não pagou. De quebra a devolutiva fica melhor: ele recebe
-  // opções filtradas em vez de tentar às cegas.
-  // ⚠️ NÃO leva `travaSemPagamento`: o passo fica aberto, porque digitar o nome
-  // é o trabalho dele e é grátis. O que espera o pagamento é só a checagem, e
-  // isso é comportamento DO N16 — se explica lá dentro, na hora em que ele
-  // digita, não como legenda na lista (que é mapa, não manual).
-  { nome: "Nome da empresa", tela: "N16" },
-  // 🐛 Aqui vivia { nome: "Quanto você se paga", tela: "N18" }. O N18 foi
-  // dissolvido em 28/07 (ver header) e o passo virou promessa vazia.
-  // N19 + N20 num passo só: pro cliente é um ato (conferir e autorizar). São
-  // duas telas por razão jurídica, não por razão de tarefa.
-  { nome: "Revisar e confirmar", tela: "N19+N20", travaSemPagamento: true },
+export const PASSOS_CLIENTE: Passo[] = [
+  { nome: "Dados base preenchidos", tela: "E3.1" },
+  { nome: "Plano escolhido e pago", tela: "E7+E9" },
+  { nome: "CNAE principal da empresa", tela: "C0" },
+  { nome: "CNAE secundário da empresa", tela: "C5" },
+  { nome: "Dados pessoais complementares", tela: "C1" },
+  { nome: "Dados do INSS", tela: "C2" },
+  { nome: "Sócios", tela: "C3", condicional: true },
+  { nome: "Endereço fiscal da empresa", tela: "C4" },
+  { nome: "Nome da empresa e razão social", tela: "C7" },
+  // N19+N20 num passo só: pro cliente é um ato (conferir e autorizar). São
+  // duas telas por razão jurídica (o racha do T18), não por razão de tarefa.
+  { nome: "Revisar e confirmar", tela: "A1+A2", travaSemPagamento: true },
 ];
 
 /**
- * Os passos que ESTE cliente vai ver. Desde 21/07 não há mais passo
- * condicional (o CNAE ótimo virou o ENCAIXE, pré-pagamento), então todos veem
- * a mesma lista. A função e o campo `condicional` ficam pra manter a fonte
- * única, caso volte a haver ramificação de passos.
+ * Os passos que ESTE cliente vai ver.
+ *
+ * `mei` — some com "Sócios" (MEI não tem, art. 966 CC).
+ * `temSocios` — some com "Sócios" pra ME que respondeu "Só eu" na Triagem.
+ *   Default `true` (mostra) por segurança: melhor mostrar um passo a mais
+ *   pra quem não passou o dado ainda do que esconder um passo real.
  */
-export function passosDoCliente(): Passo[] {
-  return PASSOS_DOSSIE.filter((p) => !p.condicional);
+export function passosDoCliente({
+  mei = false,
+  temSocios = true,
+}: { mei?: boolean; temSocios?: boolean } = {}): Passo[] {
+  return PASSOS_CLIENTE.filter((p) => !p.condicional || (!mei && temSocios));
 }

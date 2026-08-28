@@ -223,7 +223,7 @@ export const NODES = [
   // separada no código, era um nó fantasma no flow (antigo `C3_1`, removido).
   { id: "C3", rota: "/dossie/socios", label: "C3 · Sócios?", forma: "decisao", classe: "", status: "construida", validado: "oficial", falta: "Re-pergunta o E5T (carry-forward pendente); limite subiu de 2 pra 4 (24/08). 🔒 24/08 (pedido do Pedro): não pergunta MAIS nada — quantidade e tipo (CPF) já vêm travados da triagem (E5T). Quando TEM_SOCIO, a MESMA tela já mostra o formulário de completar os sócios extras (sem passo/rota separada)", dados: "Confirma se terá mais sócios (sem reperguntar quantidade/tipo) · se houver, nome completo + % de participação de cada sócio extra (quantidade fixa, CPF implícito)" },
   { id: "C4", rota: "/dossie/empresa", label: "C4 · Dados da empresa", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "✅ 28/07: IPTU obrigatório travado. 🆕 24/08 (reunião Leonan): alerta de IPTU pode subir quando é residência de sócio; trava duplicidade (só 1 sócio por endereço); chips de capital social simbólico (R$1k/5k/10k). 🔄 26/08 (reunião Rua Satélite 36, item 2): a escolha 'próprio × fiscal Legalizai' e o aviso de cobrança recorrente SAÍRAM daqui — moraram no E5F desde 24/08 até virarem o gate oficial de decisão, e o valor já vem confirmado do E7. Esta tela agora só CONFIRMA a escolha (card read-only, mesma doutrina do C3) e coleta os detalhes de endereço (CEP/IPTU/tipo) quando for próprio", dados: "CEP (autofill) + número + complemento · índice cadastral IPTU (obrigatório, só se próprio) · tipo de endereço · residência de sócio (trava duplicidade) · capital social" },
-  { id: "C5", rota: "/dossie/cnae-secundarios", label: "C5 · CNAE secundários", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "🆕 24/08 (reunião Leonan): ganhou busca livre (restrita ao que a gente atende, pedido original da Jéssica 19/07) além das 4 sugestões curadas mesmo-imposto; até 15 no total; secundária que muda enquadramento mostra aviso e troca CTA por 'Falar com atendente' em vez de bloquear silenciosamente", dados: "CNAEs secundários (seleção múltipla + busca, opcional, até 15)" },
+  { id: "C5", rota: "/dossie/cnae-secundarios", label: "C5 · CNAE secundários", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "🆕 24/08 (reunião Leonan): ganhou busca livre (restrita ao que a gente atende, pedido original da Jéssica 19/07) além das 4 sugestões curadas mesmo-imposto; até 15 no total; secundária que muda enquadramento mostra aviso e troca CTA por 'Falar com atendente' em vez de bloquear silenciosamente. 🔄 28/08 (pedido do Pedro) — MUDOU DE LUGAR: vinha depois de C4 (dados da empresa), agora vem logo depois de C0.3 (CNAE principal confirmado) — sequência mais natural de quem acabou de escolher o CNAE. `lib/passos.ts` reflete a ordem nova ('CNAE secundário' é o 4º passo, não mais o 5º)", dados: "CNAEs secundários (seleção múltipla + busca, opcional, até 15)" },
   { id: "C6", rota: "/dossie/natureza", label: "C6 · Natureza jurídica", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "SLU × LTDA confirmado pelo Leonan (24/08): SLU pra individual (proteção patrimonial — bens não se misturam), LTDA pra sociedade, sem outra opção nos dois casos", dados: "Escolha da natureza jurídica (SLU ou LTDA — sugerida, editável)" },
   { id: "C7", rota: "/dossie/nome", label: "C7 · Nome / razão social", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "Viabilidade JUCEMG (RPA, não API); 3 opções por prioridade (28/07). 🔒 24/08 (reunião Leonan, CONFLITO RESOLVIDO): objeto social virou TRAVADO/read-only — erro de grafia do cliente gerava reclamação real no escritório antigo dele. 🆕 24/08 (pedido do Pedro): cada sugestão ganhou lápis de edição inline (reescreve a sugestão da IA no lugar); campo separado 'Digite a sua' foi removido; seta de reordenar 1/2/3 mantida", dados: "3 opções de razão social, editáveis inline, por ordem de prioridade (sugeridas por IA) · objeto social (gerado automaticamente, travado) · nome fantasia (opcional)" },
 
@@ -346,13 +346,17 @@ export const EDGES = [
   { de: "C0_2", para: "DESAMB", label: "ambíguo" },
   { de: "DESAMB", para: "C0" },
   { de: "C0_2", para: "C0_3", label: "🟢 confirmado" },
-  { de: "C0_3", para: "C1" },
+  // 🔄 28/08 (pedido do Pedro) — C5 (CNAE secundários) MOVEU: antes vinha
+  // depois de C4 (dados da empresa); agora vem logo depois da atividade
+  // principal confirmada, sequência mais natural de quem acabou de escolher
+  // o CNAE. `lib/passos.ts` reflete a mesma ordem nova.
+  { de: "C0_3", para: "C5" },
+  { de: "C5", para: "C1" },
 
   { de: "C1", para: "C2" },
   { de: "C2", para: "C3" },
   { de: "C3", para: "C4" },
-  { de: "C4", para: "C5" },
-  { de: "C5", para: "C6" },
+  { de: "C4", para: "C6" },
   { de: "C6", para: "C7" },
   { de: "C7", para: "A1" },
 

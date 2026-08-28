@@ -146,7 +146,7 @@ const REVISADOS = {
   "wizard-dinheiro.tsx:contrato-social": { max: 1, nota: "No item 'Abertura completa da empresa' do array INCLUSO (só ME) -- o array irmao INCLUSO_MEI tem sub texto proprio, sem contrato social, entao o MEI nunca ve essa linha." },
   "wizard-cauda.tsx:contrato-social": { max: 1, nota: "Comentário da CertificadoGateView explicando que, ao contrário do ME, o MEI não tem contrato social pra assinar." },
   "wizard-cauda.tsx:junta": { max: 13, nota: "Revisar e Termo corrigidos em 28/08 (ramo `mei` próprio). O resto vive em CertificadoGateView/AssinaturaView, que o MEI PULA." },
-  "wizard-cauda.tsx:socios": { max: 5, nota: "AssinaturaView (A4), que o MEI PULA, + comentários." },
+  "wizard-cauda.tsx:socios": { max: 10, nota: "AssinaturaView (A4), que o MEI PULA, + comentários. 🆕 28/08: +5 da prop `temSocios` (RetomarView/AguardandoView, repassada pra `ListaPassos`/`passosDoCliente`) — é a MESMA guarda que já existia (`mei`), só nomeada; MEI sempre cai em `mei=true` e nunca vê 'Sócios' na lista, guarda continua funcionando." },
   "wizard-cauda.tsx:certificado": { max: 12, nota: "🔄 28/08 — o MEI PASSA pela CertificadoGateView agora (decisão do Pedro), com variante `mei`: motivo é OPERAR (não a procuração da assinatura) e o custo é do cliente (não vem incluso)." },
   "wizard-cauda.tsx:taxa-junta": { max: 8, nota: "Recap do A1 e Termo, guardados por `!mei`." },
   "wizard-cauda.tsx:capital-social": { max: 2, nota: "Recap do A1, guardado por `!mei`." },

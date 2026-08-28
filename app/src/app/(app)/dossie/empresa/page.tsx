@@ -60,11 +60,12 @@ export default function EmpresaPage() {
     <EmpresaView
       mei={mei}
       enderecoProprio={!enderecoFiscal}
-      // 🆕 28/08 — MEI pula o C5: as ocupações secundárias (até 15) já foram
-      // escolhidas na M-O (`/dossie/ocupacao`), junto da principal. Perguntar
-      // de novo seria a mesma duplicação que o dossiê já corrigiu em C1 e C3.
+      // 🔄 28/08 (pedido do Pedro) — C5 (CNAE secundários) SAIU daqui: agora
+      // vem logo depois do C0, antes até do C1. Quem chega em "Dados da
+      // empresa" já resolveu atividade principal E secundária, então o
+      // próximo passo do ME é direto o C6 (natureza jurídica).
       onSeguir={() =>
-        router.push(comRegime(mei ? "/dossie/nome" : "/dossie/cnae-secundarios", mei))
+        router.push(comRegime(mei ? "/dossie/nome" : "/dossie/natureza", mei))
       }
     />
   );

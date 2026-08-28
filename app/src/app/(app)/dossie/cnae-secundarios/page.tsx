@@ -45,11 +45,15 @@ export default function CnaeSecundariosPage() {
   const router = useRouter();
   const mei = ehMei(useSearchParams());
 
-  // 🆕 03/08 — MEI pula C6 (Natureza jurídica): natureza é sempre fixa
-  // (Empresário Individual - MEI), sem escolha SLU/LTDA. Vai direto pro C7.
+  // 🔄 28/08 (pedido do Pedro) — moveu de lugar: antes vinha depois de "Dados
+  // da empresa" (C4), agora vem logo depois da atividade principal (C0), na
+  // sequência natural de quem acabou de escolher o CNAE. Segue pro C1 (Seus
+  // dados), não mais pro C6. 🆕 03/08 — MEI nunca chega aqui (a M-O já
+  // resolve secundárias junto da principal), mas o ramo fica pra
+  // deep-link/segurança.
   return (
     <CnaeSecundariosView
-      onSeguir={() => router.push(comRegime(mei ? "/dossie/nome" : "/dossie/natureza", mei))}
+      onSeguir={() => router.push(comRegime(mei ? "/dossie/nome" : "/dossie/socio", mei))}
       // 🆕 24/08 (reunião Leonan 19/08) — secundária de busca pode mudar o
       // enquadramento; mesma rota de "atendido pelo Mauro" que o resto do
       // produto usa quando precisa de um humano no meio.

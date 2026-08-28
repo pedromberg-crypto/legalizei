@@ -331,10 +331,15 @@ export const GRUPOS: GrupoTelas[] = [
   },
   {
     id: "dossie",
-    nome: "C1–C7 · Constituição (o dossiê)",
+    nome: "C5,C1–C4,C6,C7 · Constituição (o dossiê)",
     descricao:
-      "A coleta do dossiê, logada e paga. C1 é a mais longa (testa o corpo rolável); dali em diante cada tela herda o que já foi dito antes — CNAE principal já travado no E5, limite de sócios já filtrado na triagem. 🆕 03/08: MEI e ME divergem AQUI — MEI pula C2/C3 (direto C1→C4) e C6 (C5→C7), ME segue a sequência cheia. C4 e C7 são pontos de reencontro (🏷️ tags marcam cada tela).",
+      "A coleta do dossiê, logada e paga. 🔄 28/08 (pedido do Pedro): C5 (secundárias) MUDOU DE LUGAR — saiu de entre C4 e C6, virou a PRIMEIRA tela do grupo, direto após a C0 confirmar o CNAE principal (mesmo raciocínio, sem trocar de assunto). Ordem agora: C5→C1→C2→C3→C4→C6→C7. Dali em diante cada tela herda o que já foi dito antes — limite de sócios já filtrado na triagem (`?cat=`, tela em [Image #78]). 🟡 a frase antiga aqui ('MEI pula C2/C3 direto C1→C4') é de 03/08, ANTES da C0 e da M-O existirem — MEI hoje nem entra neste grupo, segue o próprio caminho (`/dossie/ocupacao` em diante, grupo acima); não foi reverificado se algum resquício de MEI ainda cai aqui. C4 e C7 seguem pontos de reencontro (🏷️ tags marcam cada tela).",
     telas: [
+      {
+        rota: "/dossie/cnae-secundarios",
+        nome: "C5 · CNAE secundários",
+        nota: "🔄 28/08: MUDOU DE LUGAR — era a 5ª tela do grupo (entre C4 e C6), agora é a 1ª, logo após a C0 confirmar o principal. Nota antiga dizia 'herdado do E5'; hoje é herdado da própria C0 (E5 não existe mais nesse ponto do flow desde 27/08). Sugestões com prova social. Comércio entra com aviso, nunca some silencioso.",
+      },
       {
         rota: "/dossie/socio",
         nome: "C1 · Seus dados (confirmação)",
@@ -343,32 +348,27 @@ export const GRUPOS: GrupoTelas[] = [
       {
         rota: "/dossie/vinculo",
         nome: "C2 · Vínculo INSS · 🏷️ SÓ ME (MEI pula)",
-        nota: "Coleta o CLT que alimenta a sugestão de enquadramento (UX-24, hoje um card no A1 — o simulador dedicado foi dissolvido 28/07). Teto é FOLGA, não binário. Pró-labore reenquadrado como ganho (UX-27). 03/08: Fator R não existe pra MEI (DAS já é fixo) — MEI pula direto de C1 pra C4.",
+        nota: "Coleta o CLT que alimenta a sugestão de enquadramento (UX-24, hoje um card no A1 — o simulador dedicado foi dissolvido 28/07). Teto é FOLGA, não binário. Pró-labore reenquadrado como ganho (UX-27).",
       },
       {
         rota: "/dossie/socios",
-        nome: "C3 · +Sócios · 🏷️ SÓ ME (MEI pula)",
-        nota: "Limite 2 (trava, não 1ª notícia — E5 já filtrou). Divisão soma 100%, default 50/50. 03/08: MEI não pode ter sócio (fato legal) — pulada junto com C2.",
+        nome: "C3 · +Sócios · 🏷️ SÓ ME e só quem disse que teria sócio na Triagem",
+        nota: "Limite 2 (trava, não 1ª notícia — E5/Triagem já filtrou). Divisão soma 100%, default 50/50. 🔄 28/08 (pedido do Pedro): não é mais 'MEI pula' apenas — ME que respondeu 'Só eu' na Triagem [Image #78] também não vê esta tela (`passosDoCliente({mei, temSocios})` em `lib/passos.ts` filtra de verdade agora).",
       },
       {
         rota: "/dossie/empresa",
         nome: "C4 · Dados da empresa · 🏷️ AMBOS — reencontro (MEI: sem capital social)",
-        nota: "Upsell endereço fiscal (oferece, não obriga; preço FAKE ~R$60). ✅ 28/07: IPTU virou OBRIGATÓRIO travado (JUCEMG exige, era opcional). Residência de sócio dinâmica pelo E5 (pula se solo). Alerta capital baixo. 03/08: os 2 caminhos se reencontram aqui (MEI vem direto de C1, ME vem de C3); capital social some pro MEI (não é sociedade formal). 🆕 04/08: campo do IPTU ganhou validação de dígito mínimo (10) — antes aceitava qualquer string não-vazia; 🟡 formato exato (10-12 dígitos) segue fila-Larissa.",
-      },
-      {
-        rota: "/dossie/cnae-secundarios",
-        nome: "C5 · CNAE secundários",
-        nota: "Principal herdado do E5, travado. Sugestões com prova social. Comércio entra com aviso, nunca some silencioso.",
+        nota: "Upsell endereço fiscal (oferece, não obriga; preço FAKE ~R$60). ✅ 28/07: IPTU virou OBRIGATÓRIO travado (JUCEMG exige, era opcional). Residência de sócio dinâmica pelo E5 (pula se solo). Alerta capital baixo. 🆕 04/08: campo do IPTU ganhou validação de dígito mínimo (10) — antes aceitava qualquer string não-vazia; 🟡 formato exato (10-12 dígitos) segue fila-Larissa.",
       },
       {
         rota: "/dossie/natureza",
         nome: "C6 · Natureza jurídica · 🏷️ SÓ ME (MEI pula)",
-        nota: "Recomenda (solo→SLU), não trava. LTDA solo permitido (fato do CNPJ do Pedro). SLU+sócio = incoerência barrada. 03/08: natureza do MEI é sempre fixa (Empresário Individual - MEI), sem escolha — pula direto de C5 pra C7.",
+        nota: "Recomenda (solo→SLU), não trava. LTDA solo permitido (fato do CNPJ do Pedro). SLU+sócio = incoerência barrada.",
       },
       {
         rota: "/dossie/nome",
         nome: "C7 · Razão social · 🏷️ AMBOS — reencontro final",
-        nota: "IA sugere a razão. Checagem de viabilidade: nome em uso → variações (evita reprova JUCEMG). 03/08: reencontro dos 2 caminhos (MEI vem de C5, ME vem de C6) antes de seguir pra Aprovação.",
+        nota: "IA sugere a razão. Checagem de viabilidade: nome em uso → variações (evita reprova JUCEMG).",
       },
     ],
   },

@@ -1051,14 +1051,41 @@ function PlanoOferta({
     <>
       <TelaHeader meta="A conta da abertura" onVoltar={onVoltar} />
       <main className="app-main">
-        <Titulo sub="Tudo que você vai pagar, num lugar só. Sem letra miúda depois.">
-          Quanto custa abrir
-        </Titulo>
+        {/* ═══════════════════════════════════════════════════════════════════
+            🆕 28/08 (pedido do Pedro: "essa tela do preço tá feia, quero algo
+            mais premium") — REDESIGN validado em `/plano-premium` (preview
+            isolado) e aplicado aqui, na tela oficial. Referência: print de
+            app de viagem, TRADUZIDO pros nossos tokens (não copiada a
+            paleta) — título bicolor/bipeso, card-herói com profundidade real
+            (`shadow`, raio grande), lista de inclusos como cartões-linha, CTA
+            como barra flutuante. Nenhum conteúdo/ramo (MEI×ME, colaboradores,
+            citação legal, endereço fiscal) foi cortado — só a casca mudou.
+            ═══════════════════════════════════════════════════════════════════ */}
+        <div className="shrink-0">
+          {/* Eyebrow — o resumo mais forte da tela ("é grátis") sobe pra cima
+              do título, no lugar de repetir isso 2x mais embaixo. */}
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-state-success-tint px-4 py-2">
+            <span className="h-2 w-2 rounded-full bg-state-success" aria-hidden />
+            <span className="text-caption font-semibold text-state-success-text">
+              Abrir sua empresa é 100% grátis
+            </span>
+          </div>
 
-        <Corpo>
-          {/* HERÓI — o grátis é o argumento mais forte do produto, e a âncora
-              é verdadeira: abrir em escritório tradicional custa honorário. */}
-          <Card tom="sucesso">
+          <h1 className="text-[1.75rem] leading-[1.1] tracking-tight">
+            <span className="block font-bold text-text-primary">Quanto custa</span>
+            <span className="block font-bold text-text-tertiary">manter em dia</span>
+          </h1>
+          <p className="text-body text-text-secondary mt-2">
+            Tudo que você vai pagar, num lugar só. Sem letra miúda depois.
+          </p>
+        </div>
+
+        <div className="mt-5 flex-1 min-h-0 overflow-y-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {/* HERÓI DO GRÁTIS — mesmo conteúdo de sempre (os 3 baldes não
+              mudam), só com profundidade real (raio+sombra) em vez de borda
+              fina. ⚠️ Regra travada: a copy não pode listar "Junta" aqui — o
+              que é grátis é o TRABALHO, não o repasse ao Estado. */}
+          <Card tom="sucesso" className="rounded-[28px] p-6 shadow-lg">
             <p className="text-caption text-state-success-text">
               Nosso honorário de abertura
             </p>
@@ -1066,162 +1093,145 @@ function PlanoOferta({
               <CheckGrande />
               <p className="text-display text-state-success-text">Grátis</p>
             </div>
-            {/* ⚠️ A copy NÃO pode listar "Junta" aqui: a taxa da Junta é cobrada
-                logo abaixo. O que é grátis é o nosso TRABALHO, não o repasse ao
-                Estado. Dizer "Junta por nossa conta" e cobrar a taxa depois é a
-                contradição que esta tela existe pra evitar. */}
             <p className="text-caption text-text-secondary mt-2">
               Todo o trabalho de abrir é por nossa conta: documentação, contrato
               social, protocolo, CNPJ e enquadramento no Simples.
             </p>
-            {/* ⚓ A ÂNCORA, em UMA linha. Era um card comparativo inteiro com
-                preço riscado — e preço riscado é linguagem de varejo, o mesmo
-                vício cortado do card verde do N4 em 29/07. Aqui a comparação
-                vive como referência qualitativa: sem número, sem risco, sem
-                fingir precisão estatística que a régua não tem. */}
+            {/* ⚓ A âncora qualitativa (sem número, sem preço riscado — vício de
+                varejo já cortado em 29/07). */}
             <p className="text-micro text-text-tertiary mt-2">
               Em escritório tradicional, esse mesmo trabalho costuma custar em
               torno de um salário mínimo de honorário.
             </p>
           </Card>
 
-          {/* O PLANO COMO PRODUTO — card único (só existe 1 plano no MLP).
-              🆕 04/08 — Plano MEI é OUTRO card (preço/lista próprios), não
-              o mesmo card com número trocado. */}
-          <div className="overflow-hidden rounded-2xl bg-surface-dark text-text-on-dark">
-            <div className="px-5 pt-5">
-              <div className="flex items-center justify-between gap-3">
-                <p className="text-caption text-text-on-dark/70">Depois, todo mês</p>
-                <span className="rounded-full bg-white/15 px-2.5 py-1 text-micro font-bold">
-                  {semTaxaJunta ? "Plano MEI" : "Plano único"}
-                </span>
-              </div>
-              <div className="mt-1 flex items-baseline gap-1.5">
-                <p className="text-display font-bold">{brl(mensalidade)}</p>
-                <span className="text-body text-text-on-dark/70">/mês</span>
-              </div>
-              {/* 🆕 26/08 (pedido do Pedro: "destacar o certificado digital
-                  grátis também na página do plano") — achado ao conferir a
-                  /apresentacao: `/plano` de produção usa `layout="oferta"`
-                  (este componente), não o clássico — o badge tinha ido pro
-                  componente errado (não usado em produção). Corrigido aqui:
-                  o certificado já aparecia na lista `INCLUSO` (item 1), mas
-                  enterrado como 1 bullet entre 5 — ganha destaque próprio,
-                  colado no preço. */}
-              {/* 🔴 28/08 — ver o comentário gêmeo no layout clássico: no MEI
-                  o certificado NÃO vem incluso. */}
-              <div className="mt-1.5">
-                {semTaxaJunta ? (
-                  <span className="inline-flex items-center rounded-full bg-white/15 px-2.5 py-0.5 text-micro font-semibold text-text-on-dark/90">
-                    Certificado digital: você providencia
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center rounded-full bg-state-success/20 px-2.5 py-0.5 text-micro font-semibold text-state-success">
-                    Certificado digital grátis
-                  </span>
-                )}
-              </div>
-              <p className="text-micro text-text-on-dark/60 mt-1">
-                {semTaxaJunta
-                  ? `a 1ª mensalidade já é o seu 1º mês · fidelidade de ${CUSTOS.FIDELIDADE_MESES} meses`
-                  : "a 1ª mensalidade já é o seu 1º mês"}
+          {/* O PLANO COMO PRODUTO — card-herói escuro, profundidade real.
+              🔴 28/08 — o badge "certificado grátis/você providencia" que
+              vivia aqui SAIU: ele já aparece embaixo (na lista de inclusos
+              pro ME, no bloco de "não incluso" pro MEI) — duplicar a mesma
+              informação em 2 lugares da mesma tela é ruído, não reforço. */}
+          <div
+            className="relative mt-4 overflow-hidden rounded-[28px] p-6 shadow-2xl"
+            style={{
+              backgroundColor: "var(--color-surface-dark)",
+              backgroundImage:
+                "radial-gradient(120% 90% at 85% -10%, color-mix(in srgb, var(--color-brand) 30%, transparent), transparent 60%)",
+            }}
+          >
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-caption text-text-on-dark/60">Depois, todo mês</p>
+              <span className="rounded-full bg-white/12 px-4 py-1.5 text-caption font-semibold text-text-on-dark backdrop-blur-sm">
+                {semTaxaJunta ? "Plano MEI" : "Plano único"}
+              </span>
+            </div>
+            {/* Preço sem centavos aqui em cima (mesma decisão de 28/08 do
+                preview): "R$ 139", não "R$ 139,00". O valor COM centavos
+                continua no rodapé ("Você paga hoje"), que é onde precisão
+                de centavo importa de verdade. */}
+            <div className="mt-1 flex items-baseline gap-2">
+              <p className="text-[3.5rem] font-bold leading-none text-text-on-dark">
+                {brl(mensalidade)}
               </p>
-              {/* 🔓 Era a FAQ "a mensalidade muda depois?", escondida num
-                  acordeon. É a ÚNICA letra miúda real da tela — e o subtítulo
-                  promete "sem letra miúda depois". Esconder a variação por
-                  faturamento dentro de um acordeon é exatamente a pegadinha que
-                  esta tela existe pra evitar. Então ela sobe, visível, colada no
-                  preço que ela qualifica. */}
-              {!semTaxaJunta && (
-                <p className="text-micro text-text-on-dark/60 mt-1">
-                  O valor acompanha o seu faturamento. Se a empresa crescer muito,
-                  a gente conversa antes.
-                </p>
-              )}
-              {/* 🆕 26/08 (item 2) — mesma explicação da versão clássica,
-                  cor invertida (card escuro). */}
-              {enderecoFiscal && (
-                <p className="text-micro text-text-on-dark/60 mt-1">
-                  Inclui {brl(CUSTOS.ENDERECO_FISCAL, true)}/mês de endereço
-                  fiscal, porque você optou por usar o nosso.
-                </p>
-              )}
+              <span className="text-h2 text-text-on-dark/60">/mês</span>
             </div>
+            <p className="mt-3 text-caption text-text-on-dark/70">
+              {semTaxaJunta
+                ? `A 1ª mensalidade já é o seu 1º mês. Fidelidade de ${CUSTOS.FIDELIDADE_MESES} meses.`
+                : "A 1ª mensalidade já é o seu 1º mês."}
+            </p>
+            {/* 🔓 A única letra miúda real da tela (variação por faturamento) —
+                visível, colada no preço, nunca em acordeon (decisão 29/07). */}
+            {!semTaxaJunta && (
+              <p className="mt-1 text-caption text-text-on-dark/70">
+                O valor acompanha o seu faturamento. Se a empresa crescer muito,
+                a gente conversa antes.
+              </p>
+            )}
+            {enderecoFiscal && (
+              <p className="mt-1 text-caption text-text-on-dark/70">
+                Inclui {brl(CUSTOS.ENDERECO_FISCAL, true)}/mês de endereço
+                fiscal, porque você optou por usar o nosso.
+              </p>
+            )}
+          </div>
 
-            <div className="mt-4 flex flex-col gap-3 px-5 pb-5">
-              {(semTaxaJunta ? INCLUSO_MEI : INCLUSO).map((i) => (
-                <div key={i.titulo} className="flex items-start gap-2.5">
-                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-state-success text-text-on-dark">
-                    <CheckMiniPlano />
-                  </span>
-                  <div className="min-w-0">
-                    <p className="text-caption font-semibold">{i.titulo}</p>
-                    <p className="text-micro text-text-on-dark/60">{i.sub}</p>
-                  </div>
+          {/* LISTA DE INCLUSOS — cartões-linha elevados (idioma "Nearby
+              Destination" da referência), fora do card escuro. */}
+          <p className="mb-2.5 mt-6 text-caption font-semibold text-text-primary">
+            O que está incluso
+          </p>
+          <div className="flex flex-col gap-2.5">
+            {(semTaxaJunta ? INCLUSO_MEI : INCLUSO).map((i) => (
+              <div
+                key={i.titulo}
+                className="flex items-center gap-3 rounded-2xl border border-border-hairline bg-surface-card p-3.5 shadow-sm"
+              >
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-state-success-tint text-state-success-text">
+                  <CheckMiniPlano />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-body font-semibold text-text-primary">{i.titulo}</p>
+                  <p className="text-micro text-text-tertiary">{i.sub}</p>
                 </div>
-              ))}
+              </div>
+            ))}
 
-              {/* 🔴 28/08 — O QUE NÃO ESTÁ INCLUSO, dito na mesma lista onde a
-                  pessoa lê o que está. Mesma doutrina do card da taxa da Junta
-                  logo abaixo: custo que existe aparece com nome, não some.
-                  Sem valor de propósito — não temos preço fechado com a
-                  certificadora, e número sem fonte não entra em tela. */}
-              {semTaxaJunta && (
-                <div className="flex items-start gap-2.5 border-t border-white/10 pt-3">
-                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/15 text-text-on-dark/80">
-                    <span className="text-micro font-bold" aria-hidden>
-                      !
-                    </span>
+            {/* 🔴 28/08 — O QUE NÃO ESTÁ INCLUSO, na mesma lista onde a pessoa
+                lê o que está. Sem valor de propósito — não temos preço
+                fechado com a certificadora. */}
+            {semTaxaJunta && (
+              <div className="flex items-center gap-3 rounded-2xl border border-border-hairline bg-surface-card p-3.5 shadow-sm">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-surface-alt text-text-tertiary">
+                  <span className="text-body font-bold" aria-hidden>
+                    !
                   </span>
-                  <div className="min-w-0">
-                    <p className="text-caption font-semibold">
-                      Certificado digital: por sua conta
-                    </p>
-                    <p className="text-micro text-text-on-dark/60">
-                      Não precisa dele pra abrir. Precisa pra gente cuidar do
-                      dia a dia sem te pedir senha. Se não tiver, a gente te
-                      conecta com a certificadora e te passa o valor.
-                    </p>
-                  </div>
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-body font-semibold text-text-primary">
+                    Certificado digital: por sua conta
+                  </p>
+                  <p className="text-micro text-text-tertiary">
+                    Não precisa dele pra abrir. Precisa pra gente cuidar do dia
+                    a dia sem te pedir senha. Se não tiver, a gente te conecta
+                    com a certificadora e te passa o valor.
+                  </p>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
           {/* A TAXA — honesta, com valor, sem holofote. Regra dura: o repasse
-              de governo NUNCA se esconde dentro do preço. */}
-          <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
+              de governo NUNCA se esconde dentro do preço.
+              🆕 28/08 (pedido do Pedro) — o card sozinho, sem dizer o QUANDO,
+              parecia mais cobrança do que aviso. Adicionada a frase que
+              esclarece o timing (só cobra depois da viabilidade). */}
+          <div className="mt-4 rounded-2xl bg-surface-alt px-4 py-3">
             <div className="flex items-baseline justify-between gap-3">
-              <p className="text-body font-semibold text-text-primary">
-                Taxa da Junta Comercial
-              </p>
-              <span className="shrink-0 text-body font-semibold text-text-primary">
+              <p className="text-caption text-text-secondary">Taxa da Junta Comercial</p>
+              <p className="text-caption font-semibold text-text-primary">
                 {semTaxaJunta ? "Não tem" : brl(CUSTOS.DAE_JUCEMG, true)}
-              </span>
+              </p>
             </div>
-            <p className="text-caption text-text-secondary mt-1">
+            <p className="mt-1 text-micro text-text-tertiary">
               {semTaxaJunta
-                ? "MEI não passa pela Junta Comercial — o registro é direto no Portal do Empreendedor, sem essa taxa."
-                : "Cobrada uma vez, e vai direto pro Estado: a gente não fica com nada. Você pagaria essa taxa abrindo com qualquer um."}
+                ? "MEI não passa pela Junta Comercial. O registro é direto no Portal do Empreendedor, sem essa taxa."
+                : "Vai direto pro Estado, a gente não fica com nada. Não é cobrada agora, é só um aviso pra não virar surpresa depois."}
             </p>
           </div>
 
           {/* 🆕 27/08 — mesma citação legal da versão clássica (ver PlanoView). */}
-          <p className="text-micro text-text-tertiary px-1">
+          <p className="mt-4 text-micro text-text-tertiary px-1">
             Por lei (Código Civil, art. 1.179), toda empresa precisa de
             contabilidade regular. É esse serviço contínuo que vira a sua
             mensalidade, não a abertura.
           </p>
 
-          {/* 🆕 03/08 — COLABORADORES, visível desde já (achado da reunião com
-              o Mauro: "quanto custa a mais" precisa aparecer cedo, não só
-              depois de contratar). 🔴 Preço FAKE — referência de mercado
-              (Contabilizei Avançado, R$39/cabeça linear), não decisão nossa.
-              🆕 04/08 — some pro Plano MEI: o INCLUSO_MEI acima já cobre o
-              único colaborador que a lei permite, card à parte seria
-              contradição (diria "não incluso" ou repetiria "1 incluso"). */}
+          {/* 🆕 03/08 — COLABORADORES, visível desde já. 🔴 Preço FAKE —
+              referência de mercado, não decisão nossa. Some pro Plano MEI:
+              o INCLUSO_MEI acima já cobre o único colaborador que a lei
+              permite. */}
           {!semTaxaJunta && (
-            <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
+            <div className="mt-3 rounded-2xl border border-border-hairline bg-surface-card p-4 shadow-sm">
               <div className="flex items-baseline justify-between gap-3">
                 <p className="text-body font-semibold text-text-primary">Colaboradores</p>
                 <span className="shrink-0 text-body font-semibold text-text-primary">
@@ -1237,46 +1247,28 @@ function PlanoOferta({
             </div>
           )}
 
-          {/* ─────────────────────────────────────────────────────────────────
-              🪒 AQUI TERMINAVA A TELA — e não termina mais (lapidação 29/07).
-              Saíram daqui 3 blocos, por 3 motivos diferentes:
-
-              1. **COMPARATIVO** (tradicional R$ 1.621 riscado × "Aqui R$ 0") —
-                 era o 3º lugar da tela dizendo "grátis", depois do card verde e
-                 da FAQ. Argumento forte repetido não soma, dilui. E o preço
-                 riscado é linguagem de varejo, o mesmo vício cortado do N4 no
-                 mesmo dia. A âncora sobreviveu como 1 linha no card verde.
-
-              2. **FAQ (4 acordeões)** — era pré-eco do N8. A tela seguinte abre
-                 com "Em quatro linhas" e responde 3 das 4 melhor e no lugar
-                 certo (honorário zero · período mínimo · 7 dias pra desistir).
-                 Antecipar o N8 aqui gastava 4 blocos pra dizer o que o usuário
-                 leria um toque depois. A 4ª (variação por faturamento) o N8 NÃO
-                 cobre: virou micro-linha visível sob o preço.
-
-              3. **CARD DOS 22 ANOS** — aparecia em N2, N7 e N8. No N8 ele é card
-                 completo, com 2 pontos, e nasce onde a dúvida "com quem eu
-                 assino?" de fato aparece. Aqui era a terceira repetição.
-
-              A tela voltou a responder 2 perguntas: quanto pago hoje, e o que
-              levo todo mês. O resto é do N8.
-              ───────────────────────────────────────────────────────────────── */}
-
           {/* Preço é placeholder declarado: número provisório sem aviso é igual
               a número sem fonte. */}
-          <p className="text-micro text-text-tertiary">
+          <p className="mt-4 text-micro text-text-tertiary">
             Valores de referência enquanto fechamos o preço final.
           </p>
-        </Corpo>
+        </div>
 
+        {/* CTA FLUTUANTE — ecoa a navbar escura flutuante da referência.
+            Reusa o `Rodape` compartilhado (fundo sólido + safe-area): a
+            pill é o CONTEÚDO decorativo dentro do rodapé de verdade, não o
+            rodapé em si — sem isso o corner da pill vaza o que tem atrás
+            (bug já corrigido no preview). */}
         <Rodape>
-          <div className="mb-3 flex items-baseline justify-between gap-3">
-            <span className="text-caption text-text-secondary">Você paga hoje</span>
-            <span className="text-h2 text-text-primary">{brl(hoje, true)}</span>
+          <div className="flex items-center justify-between gap-4 rounded-full bg-surface-dark py-2.5 pl-6 pr-2.5 shadow-2xl">
+            <div className="min-w-0">
+              <p className="text-micro text-text-on-dark/60">Você paga hoje</p>
+              <p className="text-h2 font-bold text-text-on-dark">{brl(hoje, true)}</p>
+            </div>
+            <Button full={false} onClick={onSeguir} className="!rounded-full shrink-0 !px-6 !py-3.5">
+              Ótimo, continuar
+            </Button>
           </div>
-          <Button full onClick={onSeguir}>
-            Ótimo, continuar
-          </Button>
         </Rodape>
       </main>
     </>

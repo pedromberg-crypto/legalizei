@@ -1108,57 +1108,52 @@ function PlanoOferta({
               vivia aqui SAIU: ele já aparece embaixo (na lista de inclusos
               pro ME, no bloco de "não incluso" pro MEI) — duplicar a mesma
               informação em 2 lugares da mesma tela é ruído, não reforço. */}
-          {/* 🔧 28/08 (correção do Pedro) — `overflow-hidden` e `shadow-2xl`
-              no MESMO elemento cortavam a própria sombra em linha reta nas
-              bordas (overflow-hidden recorta tudo pela caixa do elemento,
-              sombra inclusa). Sombra sobe pro wrapper de fora (sem
-              overflow-hidden, então nada corta); o recorte arredondado +
-              gradiente ficam só no wrapper de dentro. */}
-          <div className="relative mt-4 rounded-[28px] shadow-2xl">
-            <div
-              className="overflow-hidden rounded-[28px] p-6"
-              style={{
-                backgroundColor: "var(--color-surface-dark)",
-                backgroundImage:
-                  "radial-gradient(120% 90% at 85% -10%, color-mix(in srgb, var(--color-brand) 30%, transparent), transparent 60%)",
-              }}
-            >
-              <div className="flex items-center justify-between gap-3">
-                <p className="text-caption text-text-on-dark/60">Depois, todo mês</p>
-                <span className="rounded-full bg-white/12 px-4 py-1.5 text-caption font-semibold text-text-on-dark backdrop-blur-sm">
-                  {semTaxaJunta ? "Plano MEI" : "Plano único"}
-                </span>
-              </div>
-              {/* Preço sem centavos aqui em cima (mesma decisão de 28/08 do
-                  preview): "R$ 139", não "R$ 139,00". O valor COM centavos
-                  continua no rodapé ("Você paga hoje"), que é onde precisão
-                  de centavo importa de verdade. */}
-              <div className="mt-1 flex items-baseline gap-2">
-                <p className="text-[3.5rem] font-bold leading-none text-text-on-dark">
-                  {brl(mensalidade)}
-                </p>
-                <span className="text-h2 text-text-on-dark/60">/mês</span>
-              </div>
-              <p className="mt-3 text-caption text-text-on-dark/70">
-                {semTaxaJunta
-                  ? `A 1ª mensalidade já é o seu 1º mês. Fidelidade de ${CUSTOS.FIDELIDADE_MESES} meses.`
-                  : "A 1ª mensalidade já é o seu 1º mês."}
-              </p>
-              {/* 🔓 A única letra miúda real da tela (variação por faturamento) —
-                  visível, colada no preço, nunca em acordeon (decisão 29/07). */}
-              {!semTaxaJunta && (
-                <p className="mt-1 text-caption text-text-on-dark/70">
-                  O valor acompanha o seu faturamento. Se a empresa crescer muito,
-                  a gente conversa antes.
-                </p>
-              )}
-              {enderecoFiscal && (
-                <p className="mt-1 text-caption text-text-on-dark/70">
-                  Inclui {brl(CUSTOS.ENDERECO_FISCAL, true)}/mês de endereço
-                  fiscal, porque você optou por usar o nosso.
-                </p>
-              )}
+          {/* 🔧 28/08 (correção do Pedro) — a sombra (`shadow-2xl`) seguia
+              ruim mesmo depois do wrapper separado (visível demais, sem
+              ganho real); removida. Volta a ser um único elemento. */}
+          <div
+            className="relative mt-4 overflow-hidden rounded-[28px] p-6"
+            style={{
+              backgroundColor: "var(--color-surface-dark)",
+              backgroundImage:
+                "radial-gradient(120% 90% at 85% -10%, color-mix(in srgb, var(--color-brand) 30%, transparent), transparent 60%)",
+            }}
+          >
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-caption text-text-on-dark/60">Depois, todo mês</p>
+              <span className="rounded-full bg-white/12 px-4 py-1.5 text-caption font-semibold text-text-on-dark backdrop-blur-sm">
+                {semTaxaJunta ? "Plano MEI" : "Plano único"}
+              </span>
             </div>
+            {/* Preço sem centavos aqui em cima (mesma decisão de 28/08 do
+                preview): "R$ 139", não "R$ 139,00". O valor COM centavos
+                continua no rodapé ("Você paga hoje"), que é onde precisão
+                de centavo importa de verdade. */}
+            <div className="mt-1 flex items-baseline gap-2">
+              <p className="text-[3.5rem] font-bold leading-none text-text-on-dark">
+                {brl(mensalidade)}
+              </p>
+              <span className="text-h2 text-text-on-dark/60">/mês</span>
+            </div>
+            <p className="mt-3 text-caption text-text-on-dark/70">
+              {semTaxaJunta
+                ? `A 1ª mensalidade já é o seu 1º mês. Fidelidade de ${CUSTOS.FIDELIDADE_MESES} meses.`
+                : "A 1ª mensalidade já é o seu 1º mês."}
+            </p>
+            {/* 🔓 A única letra miúda real da tela (variação por faturamento) —
+                visível, colada no preço, nunca em acordeon (decisão 29/07). */}
+            {!semTaxaJunta && (
+              <p className="mt-1 text-caption text-text-on-dark/70">
+                O valor acompanha o seu faturamento. Se a empresa crescer muito,
+                a gente conversa antes.
+              </p>
+            )}
+            {enderecoFiscal && (
+              <p className="mt-1 text-caption text-text-on-dark/70">
+                Inclui {brl(CUSTOS.ENDERECO_FISCAL, true)}/mês de endereço
+                fiscal, porque você optou por usar o nosso.
+              </p>
+            )}
           </div>
 
           {/* LISTA DE INCLUSOS — cartões-linha elevados (idioma "Nearby

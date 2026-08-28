@@ -120,6 +120,8 @@ flowchart TD
 ## ✅ Validação tela por tela
 
 <!-- PORTAL:TABELA:INI -->
+> ⚠️ **Drift detectado:** rota /mais/colaborador existe mas não está no mapa
+
 | # | Tela | Rota | Construída | Validado | Falta validar |
 |---|---|---|:--:|:--:|---|
 | 1 | ✅ A5 · Home dia-1 · (ativação) | `/home-dia1` | ✅ | 🟢 | 🔓 SWAP validado 30/07: substitui a 'empresa ativa' antiga, sem confete nem selo coral no hero. Trilha de ativação (1 de 3) trata o certificado como item PASSIVO da própria trilha, não gate isolado. SEM navbar até liberar acesso; download do Cartão CNPJ. Mesma tela do A5 em flow-data.mjs (handoff Aprovação→Portal). |

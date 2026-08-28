@@ -42,7 +42,9 @@ import { passosDoCliente } from "@/lib/passos";
  * 🆕 28/08 — o 1º passo NÃO concluído e NÃO travado ganha destaque de "é a
  * vez dele agora" (anel coral + pill "Agora" pulsando), mesmo idioma da A5
  * ("Em andamento"). Antes todo "a fazer" era visualmente idêntico; agora o
- * PRÓXIMO passo se distingue dos que ainda estão mais à frente.
+ * PRÓXIMO passo se distingue dos que ainda estão mais à frente. 🔄 correção
+ * do Pedro no mesmo dia: enquanto algum passo estiver "girando" (boleto não
+ * compensou), NENHUM passo seguinte ganha "Agora" — a vez ainda é do banco.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export function ListaPassos({
@@ -64,6 +66,12 @@ export function ListaPassos({
 }) {
   const passos = passosDoCliente({ mei, temSocios });
   const ultimoIndex = mostrarDestino ? passos.length : passos.length - 1;
+  // 🔄 28/08 (correção do Pedro) — enquanto ALGUM passo estiver "girando", a
+  // vez ainda é do banco, não do cliente: nenhum passo seguinte pode ganhar
+  // o destaque "Agora" (soaria como "pode preencher o próximo" quando na
+  // verdade o boleto nem compensou o anterior).
+  const temPendenciaGirando =
+    pagamentoPendente && passos.some((p) => !!p.aguardaCompensacao);
 
   return (
     <div className="flex flex-col">
@@ -74,12 +82,12 @@ export function ListaPassos({
         // no total, mas enquanto o boleto não compensa o visual dele é
         // "girando" (azul), não check verde: o banco ainda não confirmou.
         const girando = pagamentoPendente && feito && !!p.aguardaCompensacao;
-        const agora = !feito && !travado && i === concluidos;
+        const agora = !feito && !travado && i === concluidos && !temPendenciaGirando;
         return (
           <Linha
             key={p.tela}
             n={i + 1}
-            nome={p.nome}
+            nome={girando && p.nomeEnquantoGirando ? p.nomeEnquantoGirando : p.nome}
             feito={feito && !girando}
             travado={travado}
             girando={girando}

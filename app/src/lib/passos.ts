@@ -84,11 +84,20 @@ export interface Passo {
   /** Já é "feito" no total, mas o boleto pendente pinta de "girando" (azul),
    *  não de check verde — o banco ainda não confirmou. */
   aguardaCompensacao?: boolean;
+  /** 🆕 28/08 (correção do Pedro) — nome a mostrar ENQUANTO `girando`. "Plano
+   *  escolhido e PAGO" mente enquanto o boleto não caiu (nada foi pago de
+   *  verdade ainda); vira o nome cheio assim que compensa. */
+  nomeEnquantoGirando?: string;
 }
 
 export const PASSOS_CLIENTE: Passo[] = [
   { nome: "Dados base preenchidos", tela: "E3.1" },
-  { nome: "Plano escolhido e pago", tela: "E7+E9", aguardaCompensacao: true },
+  {
+    nome: "Plano escolhido e pago",
+    tela: "E7+E9",
+    aguardaCompensacao: true,
+    nomeEnquantoGirando: "Plano escolhido",
+  },
   { nome: "CNAE principal da empresa", tela: "C0" },
   { nome: "CNAE secundário da empresa", tela: "C5" },
   { nome: "Dados pessoais complementares", tela: "C1" },

@@ -38,11 +38,15 @@
  * Tudo que exige AÇÃO do cliente até a empresa entrar na máquina — do
  * primeiro dado que ele digita (E3.1) até autorizar a abertura (A2).
  *
- * ⚠️ "Plano escolhido e pago" conta como FEITO assim que o cliente submeteu o
- * pagamento (cartão aprovado OU boleto emitido) — não espera o boleto
- * compensar. A ação dele (escolher + pagar) já aconteceu; o banco compensar é
- * problema de BACKEND, não passo do cliente. É por isso que existe a tela de
- * "Aguardando boleto" (E9.1) sem duplicar essa espera dentro da lista.
+ * ⚠️ "Plano escolhido e pago" conta como FEITO no denominador assim que o
+ * cliente submeteu o pagamento (cartão aprovado OU boleto emitido) — não
+ * espera o boleto compensar. A ação dele (escolher + pagar) já aconteceu.
+ * 🔄 28/08 (correção do Pedro): mas o VISUAL desse item específico ("Feito" +
+ * check verde) mentiria enquanto o boleto não caiu — parece pagamento
+ * confirmado, e não é. Enquanto `pagamentoPendente`, esse item mostra o
+ * mesmo idioma "girando" do `StatusIcon` (anel azul, info): a vez é do
+ * banco, não do cliente. Vira check verde de verdade assim que compensa.
+ * Marcado via `aguardaCompensacao` abaixo — só ele reage a isso.
  *
  * ⚠️ "Sócios" é CONDICIONAL, de verdade agora (antes o campo existia mas
  * `passosDoCliente()` nunca filtrava nada — comentário antigo dizia "desde
@@ -77,11 +81,14 @@ export interface Passo {
   condicional?: boolean;
   /** Fica retido enquanto o boleto não compensa. */
   travaSemPagamento?: boolean;
+  /** Já é "feito" no total, mas o boleto pendente pinta de "girando" (azul),
+   *  não de check verde — o banco ainda não confirmou. */
+  aguardaCompensacao?: boolean;
 }
 
 export const PASSOS_CLIENTE: Passo[] = [
   { nome: "Dados base preenchidos", tela: "E3.1" },
-  { nome: "Plano escolhido e pago", tela: "E7+E9" },
+  { nome: "Plano escolhido e pago", tela: "E7+E9", aguardaCompensacao: true },
   { nome: "CNAE principal da empresa", tela: "C0" },
   { nome: "CNAE secundário da empresa", tela: "C5" },
   { nome: "Dados pessoais complementares", tela: "C1" },

@@ -16,9 +16,18 @@ import { passosDoCliente } from "@/lib/passos";
  * `pagamentoPendente`, `mostrarDestino`), a mesma régua de quando cada um
  * aparece. Só a casca virou trilha.
  *
- * ─── TRÊS ESTADOS, E O TERCEIRO É O QUE IMPORTA AQUI ─────────────────────
+ * ─── QUATRO ESTADOS ───────────────────────────────────────────────────────
  *   ✅ **feito**    — nó verde preenchido, texto apagado. Já era.
  *   ⬜ **a fazer**  — nó numerado (ou destacado, se for a VEZ dele agora).
+ *   🔵 **girando**  — nó com anel azul girando, pill "Aguardando compensar".
+ *                     🆕 28/08 (correção do Pedro): só "Plano escolhido e
+ *                     pago" ganha isto, e só enquanto o boleto não caiu — o
+ *                     cliente já agiu (escolheu + pagou), mas o BANCO ainda
+ *                     não confirmou, e um check verde ali diria "confirmado"
+ *                     antes da hora. Mesmo idioma do `StatusIcon` "girando"
+ *                     (`ui/status.tsx`): a vez é do órgão/banco, não do
+ *                     cliente. Conta como feito no denominador ("2 de 10")
+ *                     — só o VISUAL desse item muda.
  *   🔒 **travado**  — nó com cadeado, texto em `text-muted`. Existe, está no
  *                     caminho, e **não some**: sumir esconderia o tamanho
  *                     real do processo; cinza mostra que existe e que ainda
@@ -61,14 +70,19 @@ export function ListaPassos({
       {passos.map((p, i) => {
         const feito = i < concluidos;
         const travado = pagamentoPendente && !!p.travaSemPagamento && !feito;
+        // 🔄 28/08 (correção do Pedro) — "Plano escolhido e pago" já é FEITO
+        // no total, mas enquanto o boleto não compensa o visual dele é
+        // "girando" (azul), não check verde: o banco ainda não confirmou.
+        const girando = pagamentoPendente && feito && !!p.aguardaCompensacao;
         const agora = !feito && !travado && i === concluidos;
         return (
           <Linha
             key={p.tela}
             n={i + 1}
             nome={p.nome}
-            feito={feito}
+            feito={feito && !girando}
             travado={travado}
+            girando={girando}
             agora={agora}
             ultimo={i === ultimoIndex}
           />
@@ -89,6 +103,7 @@ function Linha({
   nome,
   feito,
   travado,
+  girando = false,
   agora,
   ultimo,
 }: {
@@ -96,13 +111,15 @@ function Linha({
   nome: string;
   feito: boolean;
   travado: boolean;
+  /** A vez é do banco (boleto emitido, ainda não compensado), não do cliente. */
+  girando?: boolean;
   agora: boolean;
   ultimo: boolean;
 }) {
   return (
     <div className="flex gap-3">
       <div className="flex flex-col items-center">
-        <No n={n} feito={feito} travado={travado} agora={agora} />
+        <No n={n} feito={feito} travado={travado} girando={girando} agora={agora} />
         {!ultimo && <div className="my-1 w-0.5 flex-1 rounded-full bg-border-hairline" />}
       </div>
       <div className={`flex-1 ${ultimo ? "" : "pb-5"}`}>
@@ -111,7 +128,7 @@ function Linha({
             className={`text-body ${
               travado
                 ? "text-text-muted"
-                : feito || agora
+                : feito || agora || girando
                   ? "text-text-primary"
                   : "text-text-secondary"
             }`}
@@ -121,6 +138,12 @@ function Linha({
           {feito && (
             <span className="shrink-0 text-micro font-semibold text-state-success-text">
               Feito
+            </span>
+          )}
+          {girando && (
+            <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-state-info-tint px-2.5 py-1 text-micro font-semibold text-state-info-text">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-state-info-text" />
+              Aguardando compensar
             </span>
           )}
           {agora && (
@@ -146,17 +169,27 @@ function No({
   n,
   feito,
   travado,
+  girando = false,
   agora,
 }: {
   n: number;
   feito: boolean;
   travado: boolean;
+  /** A vez é do banco (boleto emitido, ainda não compensado), não do cliente. */
+  girando?: boolean;
   agora: boolean;
 }) {
   if (feito) {
     return (
       <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-state-success text-text-on-dark">
         <IconeCheckTrilha />
+      </span>
+    );
+  }
+  if (girando) {
+    return (
+      <span className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-state-info-tint">
+        <span className="absolute h-8 w-8 animate-spin rounded-full border-2 border-state-info-tint border-t-[color:var(--color-state-info)]" />
       </span>
     );
   }

@@ -467,11 +467,7 @@ type Snapshot = {
   categoria: string | null;
   sabeCodigo: boolean;
   resultado: Resultado | null;
-  nomeV: string;
-  contatoV: string;
   enviadoV: boolean;
-  nomeS: string;
-  contatoS: string;
   cidadeS: string;
   enviadoS: boolean;
   socios: number | null;
@@ -1508,8 +1504,6 @@ export default function ApresentacaoPage() {
   const [sabeCodigo, setSabeCodigo] = useState(false);
   const [resultado, setResultado] = useState<Resultado | null>(null);
 
-  const [nomeV, setNomeV] = useState("");
-  const [contatoV, setContatoV] = useState("");
   const [enviadoV, setEnviadoV] = useState(false);
 
   /**
@@ -1521,15 +1515,12 @@ export default function ApresentacaoPage() {
 
   // Captura da saída de cidade (separada da do veredito: são telas distintas
   // e preencher uma não pode contaminar a outra).
-  const [nomeS, setNomeS] = useState("");
-  const [contatoS, setContatoS] = useState("");
+  // 🔴 28/08 (pedido do Pedro) — `nomeS`/`contatoS` SAÍRAM: já vêm do E3.1.
   const [cidadeS, setCidadeS] = useState("");
   const [enviadoS, setEnviadoS] = useState(false);
 
-  // 🆕 26/08 — captura da saída "CNPJ inapto" (m-cnpj-inapto), mesmo padrão
-  // do fora-bh acima (nome+contato próprios, sem `extra`).
-  const [nomeCnpjInapto, setNomeCnpjInapto] = useState("");
-  const [contatoCnpjInapto, setContatoCnpjInapto] = useState("");
+  // 🆕 26/08 — captura da saída "CNPJ inapto" (m-cnpj-inapto).
+  // 🔴 28/08 (pedido do Pedro) — `nomeCnpjInapto`/`contatoCnpjInapto` SAÍRAM.
   const [enviadoCnpjInapto, setEnviadoCnpjInapto] = useState(false);
 
   // ── 🆕 28/08 · estado do RAMO MEI ────────────────────────────────────────
@@ -1618,11 +1609,7 @@ export default function ApresentacaoPage() {
     categoria,
     sabeCodigo,
     resultado,
-    nomeV,
-    contatoV,
     enviadoV,
-    nomeS,
-    contatoS,
     cidadeS,
     enviadoS,
     socios,
@@ -1641,11 +1628,7 @@ export default function ApresentacaoPage() {
     setCategoria(s.categoria);
     setSabeCodigo(s.sabeCodigo);
     setResultado(s.resultado);
-    setNomeV(s.nomeV);
-    setContatoV(s.contatoV);
     setEnviadoV(s.enviadoV);
-    setNomeS(s.nomeS);
-    setContatoS(s.contatoS);
     setCidadeS(s.cidadeS);
     setEnviadoS(s.enviadoS);
     setSocios(s.socios);
@@ -1689,11 +1672,7 @@ export default function ApresentacaoPage() {
     setSabeCodigo(false);
     setResultado(null);
     setCenarioArmado(null);
-    setNomeV("");
-    setContatoV("");
     setEnviadoV(false);
-    setNomeS("");
-    setContatoS("");
     setCidadeS("");
     setEnviadoS(false);
     setSocios(null);
@@ -1751,9 +1730,8 @@ export default function ApresentacaoPage() {
       setModoExato(false);
       setFaixaEsc("20-30k");
     } else if (etapa === "fora-bh") {
-      setNomeS("Ana Beatriz Ramos");
-      setContatoS("ana.beatriz@email.com");
       // Cidade canônica do IBGE — o mesmo formato que o autocomplete devolve.
+      // 🔴 28/08 — nome/contato SAÍRAM daqui junto com o campo (já vêm do E3.1).
       setCidadeS("Uberlândia - Minas Gerais");
     } else if (etapa === "conta") {
       // Mesma pessoa do resto da demo: o dado precisa ser coeso até o fim.
@@ -1802,8 +1780,7 @@ export default function ApresentacaoPage() {
   }
 
   function simularValidacao() {
-    setNomeV("Ana Beatriz Ramos");
-    setContatoV("ana.beatriz@email.com");
+    // 🔴 28/08 — nome/contato SAÍRAM (já vêm do E3.1); só resta "enviado".
     setEnviadoV(true);
   }
 
@@ -2625,10 +2602,6 @@ export default function ApresentacaoPage() {
                               },
                             }}
                             captura={{
-                              nome: nomeS,
-                              setNome: setNomeS,
-                              contato: contatoS,
-                              setContato: setContatoS,
                               extra: cidadeS,
                               setExtra: setCidadeS,
                               enviado: enviadoS,
@@ -2661,10 +2634,6 @@ export default function ApresentacaoPage() {
                           <SaidaView
                             d={DADOS_SAIDA_CNPJ_INAPTO}
                             captura={{
-                              nome: nomeCnpjInapto,
-                              setNome: setNomeCnpjInapto,
-                              contato: contatoCnpjInapto,
-                              setContato: setContatoCnpjInapto,
                               // Sem pergunta extra nesta saída (`d.extra` não
                               // existe) — campos aqui só pra satisfazer o tipo.
                               extra: "",
@@ -2797,10 +2766,6 @@ export default function ApresentacaoPage() {
                               // virou C5 (secundárias), não mais C1.
                               onSeguir={() => setEtapa(ETAPAS_DOSSIE[0])}
                               captura={{
-                                nome: nomeV,
-                                setNome: setNomeV,
-                                contato: contatoV,
-                                setContato: setContatoV,
                                 enviado: enviadoV,
                                 setEnviado: setEnviadoV,
                               }}

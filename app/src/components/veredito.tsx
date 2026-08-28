@@ -178,28 +178,24 @@ export function VereditoView({
   /**
    * 🆕 29/07 — captura CONTROLADA (opcional). Sem isto, a tela segue com o
    * estado interno de sempre e ninguém fora precisa saber que ele existe.
-   * Existe pra a `/apresentacao` conseguir "Simular validação" (preencher
-   * nome+contato e pular pra confirmação) SEM clonar a tela: cópia divergia
-   * em silêncio, que é o problema que a extração de 29/07 veio resolver.
+   * Existe pra a `/apresentacao` conseguir "Simular validação" SEM clonar a
+   * tela: cópia divergia em silêncio, que é o problema que a extração de
+   * 29/07 veio resolver.
+   *
+   * 🔴 28/08 (pedido do Pedro) — `nome`/`contato` SAÍRAM. Quem chega no
+   * veredito 🟡/🔴 já passou pelo E3.1 (`/dados`), que coleta nome+e-mail+
+   * telefone — pedir de novo repetiria o que a pessoa já digitou. Sobra só
+   * `enviado`: aqui não tem pergunta extra nenhuma (sem `extra`, diferente
+   * do `SaidaView`).
    */
   captura?: {
-    nome: string;
-    setNome: (v: string) => void;
-    contato: string;
-    setContato: (v: string) => void;
     enviado: boolean;
     setEnviado: (v: boolean) => void;
   };
 }) {
   // Captura das saídas 🟡/🔴 (spec T4 + UX-35). Hooks no topo: não podem viver
   // dentro do ramo, e o caminho feliz simplesmente não usa.
-  const [nomeI, setNomeI] = useState("");
-  const [contatoI, setContatoI] = useState("");
   const [enviadoI, setEnviadoI] = useState(false);
-  const nome = captura?.nome ?? nomeI;
-  const setNome = captura?.setNome ?? setNomeI;
-  const contato = captura?.contato ?? contatoI;
-  const setContato = captura?.setContato ?? setContatoI;
   const enviado = captura?.enviado ?? enviadoI;
   const setEnviado = captura?.setEnviado ?? setEnviadoI;
 
@@ -324,9 +320,6 @@ export function VereditoView({
   // 🆕 28/07: o 🔴 virou 2 destinos. `descarta` não tem pra onde rotear —
   // não passa pelo formulário de captura, é um decline limpo.
   const descarta = r.veredito === "nao-atende" && r.motivo === "descarta";
-  // Baixa fricção de propósito: quem foi recusado não preenche formulário longo.
-  const contatoOk = /@/.test(contato) || contato.replace(/\D/g, "").length >= 10;
-  const podeEnviar = nome.trim().length >= 2 && contatoOk;
 
   /* ── DESCARTA — não tem template de captura, é decline limpo (28/07) ────
      Ninguém atende (nem a gente, nem regulado, nem o Mauro). Não é beco
@@ -473,20 +466,10 @@ export function VereditoView({
             : "A gente cuida de quem vive de prestar serviço. O seu caso a Legalize Digital, nosso escritório parceiro, resolve do jeito tradicional. Quer que a gente te conecte?"}
         </p>
 
-        {/* Captura na PRÓPRIA tela (spec T4): 2 campos, sem conta, sem senha. */}
+        {/* Captura na PRÓPRIA tela (spec T4). 🔴 28/08 (pedido do Pedro):
+            nome/e-mail/telefone SAÍRAM — já vieram do E3.1 e estão salvos
+            no lead, pedir de novo repetiria o que a pessoa já digitou. */}
         <div className="flex flex-col gap-3">
-          <CampoSaida
-            rotulo="Seu nome"
-            valor={nome}
-            onChange={setNome}
-            placeholder="Como a gente te chama"
-          />
-          <CampoSaida
-            rotulo="WhatsApp ou e-mail"
-            valor={contato}
-            onChange={setContato}
-            placeholder="(31) 90000-0000"
-          />
           {/* 🆕 28/07: campo "CNAE pretendido" — só waitlist. É read-only (a
               gente já derivou, não faz sentido pedir de novo); vira dado
               explícito pro CRM em vez de só texto de confirmação depois. */}
@@ -503,8 +486,9 @@ export function VereditoView({
           {/* 🕓 LGPD: opt-in pela ação + aviso. Se o jurídico exigir checkbox
               explícito, vira checkbox (decisão Mauro/Larissa). */}
           <p className="text-micro text-text-tertiary">
-            A gente usa isso só pra te avisar sobre isso aqui. Sem spam, e você
-            pode pedir pra sair quando quiser.
+            Já temos seu nome e contato. A gente usa isso só pra te avisar
+            sobre isso aqui — sem spam, e você pode pedir pra sair quando
+            quiser.
           </p>
         </div>
       </div>
@@ -515,45 +499,11 @@ export function VereditoView({
             Não é bem isso, refazer
           </Button>
         </div>
-        <Button
-          full
-          variant="dark"
-          disabled={!podeEnviar}
-          onClick={() => setEnviado(true)}
-        >
+        <Button full variant="dark" onClick={() => setEnviado(true)}>
           {waitlist ? "Me avisa quando abrir" : "Falar com o time"}
         </Button>
       </div>
     </>
-  );
-}
-
-/** Campo mínimo das telas de saída. Local: não é o form do dossiê. */
-function CampoSaida({
-  rotulo,
-  valor,
-  onChange,
-  placeholder,
-}: {
-  rotulo: string;
-  valor: string;
-  onChange: (v: string) => void;
-  placeholder?: string;
-}) {
-  return (
-    <div>
-      <p className="text-caption font-semibold text-text-primary mb-1.5">
-        {rotulo}
-      </p>
-      <input
-        value={valor}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className="min-h-12 w-full rounded-md border border-border-hairline bg-surface-card
-                   px-3 text-body text-text-primary placeholder:text-text-muted
-                   focus:border-border-focus focus:outline-none"
-      />
-    </div>
   );
 }
 

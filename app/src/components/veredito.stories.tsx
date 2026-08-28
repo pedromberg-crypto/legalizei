@@ -83,10 +83,6 @@ export const WaitlistConfirmada: Story = {
         onRefazer={() => {}}
         onSeguir={() => {}}
         captura={{
-          nome: "Ana",
-          setNome: () => {},
-          contato: "ana@email.com",
-          setContato: () => {},
           enviado: true,
           setEnviado: () => {},
         }}

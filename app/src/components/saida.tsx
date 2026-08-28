@@ -118,32 +118,27 @@ export function SaidaView({
    * 🆕 29/07 — captura CONTROLADA (opcional), mesmo padrão do `VereditoView`.
    * Sem isto a tela segue com o estado interno de sempre. Existe pra a
    * `/apresentacao` conseguir "Preencher automático" sem clonar a tela.
+   *
+   * 🔴 28/08 (pedido do Pedro) — `nome`/`contato` SAÍRAM daqui. Quem chega
+   * numa saída já passou pelo E3.1 (`/dados`, `DadosPessoaisView`), que
+   * coleta exatamente nome+e-mail+telefone — pedir de novo repetiria o que a
+   * pessoa já digitou. O lead sai daqui já identificado; só falta o `extra`
+   * (quando a saída tem uma pergunta própria, tipo cidade).
    */
   captura?: {
-    nome: string;
-    setNome: (v: string) => void;
-    contato: string;
-    setContato: (v: string) => void;
     extra: string;
     setExtra: (v: string) => void;
     enviado: boolean;
     setEnviado: (v: boolean) => void;
   };
 }) {
-  const [nomeI, setNomeI] = useState("");
-  const [contatoI, setContatoI] = useState("");
   const [extraI, setExtraI] = useState("");
   const [enviadoI, setEnviadoI] = useState(false);
-  const nome = captura?.nome ?? nomeI;
-  const setNome = captura?.setNome ?? setNomeI;
-  const contato = captura?.contato ?? contatoI;
-  const setContato = captura?.setContato ?? setContatoI;
   const extra = captura?.extra ?? extraI;
   const setExtra = captura?.setExtra ?? setExtraI;
   const enviado = captura?.enviado ?? enviadoI;
   const setEnviado = captura?.setEnviado ?? setEnviadoI;
-  const extraOk = !d.extra?.obrigatorio || extra.trim().length > 1;
-  const podeEnviar = nome.trim().length > 1 && contato.trim().length > 5 && extraOk;
+  const podeEnviar = !d.extra?.obrigatorio || extra.trim().length > 1;
 
   if (enviado) {
     return (
@@ -224,21 +219,10 @@ export function SaidaView({
         {/* ROTEIA — o "enquanto isso" do UX-22: nenhuma saída é beco. */}
         <p className="text-body text-text-secondary mt-4 mb-4">{d.saida}</p>
 
-        {/* CAPTURA — 2 campos, sem conta e sem senha. Quem foi barrado não vai
-            criar login pra ser atendido. */}
+        {/* CAPTURA — 28/08 (pedido do Pedro): nome/e-mail/telefone SAÍRAM.
+            Já vieram do E3.1 e estão salvos no lead; só sobra a pergunta
+            própria da saída (`d.extra`), quando ela existe. */}
         <div className="flex flex-col gap-3">
-          <CampoSaida
-            rotulo="Seu nome"
-            valor={nome}
-            onChange={setNome}
-            placeholder="Como a gente te chama"
-          />
-          <CampoSaida
-            rotulo="WhatsApp ou e-mail"
-            valor={contato}
-            onChange={setContato}
-            placeholder="(31) 90000-0000"
-          />
           {d.extra?.tipo === "municipio" ? (
             <CampoMunicipio
               rotulo={d.extra.rotulo}
@@ -259,8 +243,9 @@ export function SaidaView({
           {/* UX-35: o diferencial em uma linha. Sem isso o handoff é um
               e-mail solto e o cliente recomeça a conversa do zero. */}
           <p className="text-micro text-text-tertiary">
-            O que você já preencheu vai junto, pra você não ter que repetir
-            nada. A gente usa isso só pra falar do seu caso.
+            Já temos seu nome e contato — e o que você já preencheu vai junto,
+            pra você não ter que repetir nada. A gente usa isso só pra falar
+            do seu caso.
           </p>
         </div>
       </div>

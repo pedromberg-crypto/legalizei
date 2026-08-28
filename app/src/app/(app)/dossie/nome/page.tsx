@@ -46,5 +46,11 @@ export default function NomePage() {
   const router = useRouter();
   const mei = ehMei(useSearchParams());
 
-  return <NomeView onSeguir={() => router.push(comRegime("/revisar", mei))} />;
+  // 🆕 28/08 — no MEI a razão social é GERADA por lei (Lei 14.195/2021: 8
+  // primeiros dígitos do CNPJ + nome civil). A tela some com as 3 sugestões e
+  // o objeto social, e mantém só o nome fantasia — que é o único campo de nome
+  // que o formulário do MEI oferece de verdade.
+  return (
+    <NomeView mei={mei} onSeguir={() => router.push(comRegime("/revisar", mei))} />
+  );
 }

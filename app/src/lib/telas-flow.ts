@@ -183,6 +183,54 @@ export const GRUPOS: GrupoTelas[] = [
     ],
   },
   {
+    id: "ramo-mei",
+    nome: "🆕 M · Ramo MEI (abertura de MEI)",
+    descricao:
+      "🆕 28/08 — o ramo que atende quem quer abrir MEI, construído em cima de `pesquisa/abertura-mei/abertura-mei-processo.md` (70 refs oficiais). ⚠️ O achado que define tudo: **não existe API nem procuração que permita abrir MEI por terceiro** — o Portal do Empreendedor exige a conta gov.br (Prata/Ouro) DO TITULAR, não tem login por representação, e a procuração do e-CAC só cobre atos posteriores. Usar a senha do cliente violaria os Termos de Uso. Por isso o modelo é CONCIERGE: a gente coleta tudo, um atendente interno confere, e o cliente finaliza no gov.br com a nossa 'cola'. A abertura em si é gratuita e sai em minutos (sem viabilidade, sem Junta, sem contrato social, sem certificado digital, sem alvará em BH). O ramo só bifurca onde a lei obriga: E6→E9 (dinheiro) e A5 (home dia-1) são COMPARTILHADOS com o ME, e o C1/C4/C7 são as mesmas telas com prop `mei`.",
+    telas: [
+      {
+        rota: "/endereco?regime=mei",
+        nome: "E3.4 · Endereço + categoria (variante MEI)",
+        nota: "Mesma tela do ME, 2 diferenças: (1) SEM gate de BH — a Legalizai abre MEI do Brasil inteiro; (2) COM gate de categoria — 3 das 14 (tecnologia, design, consultoria) não existem como MEI, porque o art. 966 do CC não considera profissão intelectual como atividade de empresário, e elas nem constam do Anexo XI. Decisão: elas NÃO somem da lista, aparecem marcadas '(só como ME)' e quem escolhe uma delas ganha a explicação real + a porta pro ME. Esconder faria a pessoa achar que não atendemos a atividade dela — quando atendemos, só não como MEI.",
+      },
+      {
+        rota: "/gate?etapa=triagem&regime=mei",
+        nome: "🆕 M-T · Impedimentos (no lugar da triagem)",
+        nota: "Substitui a triagem de sócios (E5T), que não faz sentido pro MEI (unipessoal por definição). São 3 impedimentos que o PRÓPRIO GOVERNO checa: (1) já ser sócio/titular/admin de outra PJ — a RFB cruza o CPF e bloqueia, LC 123 art. 18-A; (2) servidor público federal na ativa — Lei 8.112/90 art. 117; (3) receber aposentadoria por invalidez / salário-maternidade / seguro-desemprego — este NÃO bloqueia, mas a formalização cancela o benefício de forma irreversível, então vira escolha informada com confirmação explícita. Fica ANTES do pagamento pelo mesmo motivo da triagem do ME.",
+      },
+      {
+        rota: "/saida/mei-outra-empresa",
+        nome: "🆕 M-T.1 · 🔴 Já tem outra empresa",
+        nota: "Saída de bloqueio do GOVERNO, não do produto — por isso não é waitlist: oferece os 2 caminhos reais (baixar a empresa antiga OU abrir como ME), que a Legalizai faz hoje.",
+      },
+      {
+        rota: "/saida/mei-servidor",
+        nome: "🆕 M-T.2 · 🔴 Servidor federal",
+        nota: "A vedação do art. 117 da Lei 8.112/90 vale só pra servidor FEDERAL na ativa. A saída não fecha a porta pra estadual/municipal de propósito: lá a regra vem do estatuto de cada ente e em muitos casos é permitido — mandar essa pessoa embora seria perder cliente por regra que não se aplica a ela.",
+      },
+      {
+        rota: "/gate?etapa=faixa&regime=mei",
+        nome: "E5 · Faixa (variante MEI: gate de teto)",
+        nota: "Mesma tela, mas no MEI ela vira GATE: o teto é R$81.000/ano (LC 123 art. 18-A), ou R$6.750/mês. Acima disso o Continuar trava e a saída é o ME. A faixa 'até R$10 mil' CONTÉM o teto, então ali não dá pra afirmar nada — vira aviso, não porta fechada, com convite pra informar o valor exato. Descobrir depois de aberto custa caro: acima de 20% de excesso o desenquadramento é retroativo, com juros e multa.",
+      },
+      {
+        rota: "/dossie/ocupacao",
+        nome: "🆕 M-O · Ocupação (Anexo XI + limite interno)",
+        nota: "A C0 do ramo MEI, 1ª tela do dossiê. NÃO é o C0 adaptado: o Portal não aceita CNAE livre, só OCUPAÇÃO de lista fechada (Anexo XI, Res. CGSN 140/2018), então não existe 'descrever com suas palavras'. 🎯 Carrega o LIMITE INTERNO (Solução de Consulta Cosit nº 27/2021): a ocupação é mais estrita que o CNAE que ela mapeia — quem escolhe 'Reparador(a) de bicicleta' não pode consertar moto, e descobriria numa fiscalização. É o erro que só contador pega, e é parte do que vendemos. As secundárias (até 15) saem daqui, por isso o ramo pula o C5.",
+      },
+      {
+        rota: "/painel?regime=mei",
+        nome: "A3 · Painel (variante MEI: o atendente)",
+        nota: "🔄 28/08 — o pipeline MEI foi REESCRITO. A versão de 03/08 tinha 1 etapa, 'Registrando no Portal do Empreendedor', que PROMETIA O QUE NÃO DÁ PRA ENTREGAR. Agora são 4: recebemos → nosso time está conferindo → próximos passos prontos (ação do cliente, CTA) → empresa aberta. Reusa a mesma máquina parametrizada do Migrar, sem tela nova. ✍️ A palavra 'contador' não aparece: o plano MEI (R$49) tem atendente; contador CRC é o que sustenta o preço do ME (R$139), ver `financeiro/estado-atual.md`.",
+      },
+      {
+        rota: "/mei/proximos-passos",
+        nome: "🆕 M-S · Próximos passos (a 'cola')",
+        nota: "A tela que FECHA o ramo, e existe por razão jurídica, não de UX: como não dá pra registrar pelo cliente, a entrega é o passo a passo com os valores DELE prontos, na ordem exata dos campos do Portal, com botão de copiar. Inclui a checagem do nível da conta gov.br (Prata/Ouro é obrigatório e a maioria não sabe qual tem) e o link pro Portal. ✍️ REGRA DE COPY DURA: nunca dizer 'a gente abre pra você' neste ramo — é promessa que não dá pra cumprir e vira reembolso.",
+      },
+    ],
+  },
+  {
     id: "dinheiro",
     nome: "💰 E6–E9 · O dinheiro",
     descricao:

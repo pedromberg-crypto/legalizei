@@ -23,8 +23,16 @@ import { comCategoria } from "@/lib/categoria";
  *   categoria só lista o que a gente atende, então ela filtra aqui e o CNAE
  *   pode ir pra depois do pagamento (`/dossie/atividade`).
  *
- * Só chega aqui quem é **ME abrindo**: MEI não tem limite geográfico (pula
- * direto pro `/gate`), e Migrar não abre endereço novo (a empresa já existe).
+ * Migrar não passa por aqui (a empresa já existe, com endereço próprio).
+ *
+ * ─── 🆕 28/08 — O MEI TAMBÉM PASSA, com 2 diferenças ───────────────────────
+ * · **Sem gate de BH** (`exigeBh={false}`): a Legalizai abre MEI do Brasil
+ *   inteiro. Só o ME tem o limite geográfico do MLP.
+ * · **Com gate de categoria** (`regimeMei`): 3 das 14 categorias não existem
+ *   como MEI (tecnologia, design e consultoria são profissão intelectual, art.
+ *   966 do CC). Elas continuam na lista, marcadas, e quem escolhe uma delas
+ *   ganha a explicação real e a porta pro ME — em vez de sumirem da lista e
+ *   parecer que a gente não atende a atividade.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function EnderecoPage() {
@@ -47,6 +55,12 @@ export default function EnderecoPage() {
       setNumero={setNumero}
       categoria={categoria}
       setCategoria={setCategoria}
+      // 🆕 28/08 — MEI não tem limite de cidade, mas tem limite de atividade.
+      exigeBh={!mei}
+      regimeMei={mei}
+      // Categoria sem ocupação de MEI: reentra no MESMO passo como ME (perde
+      // o `?regime=mei`), preservando o que ela já preencheu de endereço.
+      onTrocarParaMe={() => router.push("/endereco")}
       // Os 3 flags que atravessam o wizard viajam por querystring (RF-01):
       // regime (MEI×ME), endereço fiscal (soma no preço do E7) e categoria
       // (alimenta a busca de CNAE lá no /dossie/atividade, pós-pagamento).
@@ -62,7 +76,7 @@ export default function EnderecoPage() {
       // fechar a porta. É a única saída de "não atendo" que sobra no caminho
       // abrir, e ela acontece ANTES de qualquer cobrança.
       onForaDeEscopo={() => router.push("/veredito/waitlist")}
-      onVoltar={() => router.push("/entrada?intencao=abrir")}
+      onVoltar={() => router.push(comRegime("/entrada?intencao=abrir", mei))}
     />
   );
 }

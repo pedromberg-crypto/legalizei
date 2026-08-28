@@ -99,7 +99,17 @@ export default function PagamentoPage() {
     // porque é ela que pré-seleciona a pill e prova que o gate rodou.
     return comCategoria(
       comEndereco(
-        comRegime(metodo === "boleto" ? "/aguardando" : "/dossie/atividade", mei),
+        // 🆕 28/08 — MEI entra no dossiê pela M-O (ocupação do Anexo XI), não
+        // pela C0 (descrever atividade + CNAE): o Portal do Empreendedor não
+        // aceita CNAE livre, só ocupação de lista fechada.
+        comRegime(
+          metodo === "boleto"
+            ? "/aguardando"
+            : mei
+              ? "/dossie/ocupacao"
+              : "/dossie/atividade",
+          mei,
+        ),
         enderecoFiscal,
       ),
       categoria,

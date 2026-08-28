@@ -6,6 +6,7 @@ import { Campo, Texto, Select } from "@/components/ui/form";
 import { PILLS } from "@/components/gate-telas";
 import { mascaraTelefone, mascaraCep, buscarCep } from "@/components/wizard-dinheiro";
 import { ehCepBh } from "@/lib/endereco";
+import { categoriaTemMei } from "@/lib/mei";
 import { CUSTOS, brl } from "@/lib/fiscal";
 
 /**
@@ -164,6 +165,8 @@ export function EnderecoCategoriaView({
   onForaDeEscopo,
   onVoltar,
   exigeBh = true,
+  regimeMei = false,
+  onTrocarParaMe,
 }: {
   /** `null` = ainda não escolheu. `true` = endereço próprio. `false` = fiscal. */
   enderecoProprio: boolean | null;
@@ -189,6 +192,23 @@ export function EnderecoCategoriaView({
    * MEI (como o E4 fazia) deixaria o `/dossie/atividade` sem filtro nenhum.
    */
   exigeBh?: boolean;
+  /**
+   * 🆕 28/08 — o caminho MEI usa a MESMA lista de categorias, mas 3 delas não
+   * existem como MEI (`CATEGORIAS_SEM_MEI` em `lib/mei.ts`): tecnologia,
+   * design e consultoria são profissão intelectual, e o art. 966 do Código
+   * Civil não considera isso atividade de empresário — nem existe a ocupação
+   * pra escolher no Anexo XI.
+   *
+   * ⚠️ A decisão (com o Pedro) foi **não esconder** essas 3 no caminho MEI.
+   * Sumir com elas faria a pessoa achar que a Legalizai não atende a atividade
+   * dela — quando atende, só não como MEI. Então ela escolhe, lê o motivo real
+   * e ganha a porta pro ME. Porta fechada vira upsell honesto.
+   *
+   * `false` (default) = caminho ME, comportamento idêntico ao de sempre.
+   */
+  regimeMei?: boolean;
+  /** Só no MEI: leva pro caminho ME quando a categoria escolhida não tem MEI. */
+  onTrocarParaMe?: () => void;
 }) {
   const cepDigitos = cep.replace(/\D/g, "");
   const cepCheio = cepDigitos.length === 8;
@@ -198,10 +218,14 @@ export function EnderecoCategoriaView({
   // resolve o caso em vez de mandar a pessoa embora.
   const foraDeBh = cepCheio && exigeBh && !ehCepBh(cep);
 
+  // Só no MEI: a categoria escolhida existe como ocupação do Anexo XI?
+  const categoriaSemMei =
+    regimeMei && categoria !== null && !categoriaTemMei(categoria);
+
   const enderecoResolvido =
     enderecoProprio === false ||
     (enderecoProprio === true && cepValido && numero.trim() !== "");
-  const completo = enderecoResolvido && categoria !== null;
+  const completo = enderecoResolvido && categoria !== null && !categoriaSemMei;
 
   return (
     <>
@@ -359,9 +383,37 @@ export function EnderecoCategoriaView({
             <Select
               valor={categoria ?? ""}
               onChange={(v) => setCategoria(v || null)}
-              opcoes={PILLS.map((p) => ({ v: p.id, label: p.label }))}
+              opcoes={PILLS.map((p) => ({
+                v: p.id,
+                // No MEI, as 3 sem ocupação ganham o rótulo na própria lista —
+                // a pessoa já lê o limite antes de escolher, e quem escolhe
+                // mesmo assim encontra a explicação completa logo abaixo.
+                label:
+                  regimeMei && !categoriaTemMei(p.id)
+                    ? `${p.label} (só como ME)`
+                    : p.label,
+              }))}
               placeholder="Escolhe uma categoria"
             />
+
+            {/* 🔴 A porta fechada que vira porta aberta. Só existe no MEI. */}
+            {categoriaSemMei && (
+              <div className="mt-3 flex flex-col gap-3">
+                <Aviso variante="info" titulo="Essa atividade não pode ser MEI">
+                  A lei não considera empresário quem exerce profissão
+                  intelectual (art. 966 do Código Civil), então tecnologia,
+                  design e consultoria não entram na lista do MEI. Não é
+                  escolha nossa, e não tem exceção.
+                </Aviso>
+                <p className="text-caption text-text-secondary">
+                  A boa notícia: a gente atende essa atividade como ME no
+                  Simples Nacional, que é o caminho certo pro seu caso.
+                </p>
+                <Button full onClick={onTrocarParaMe}>
+                  Continuar como ME
+                </Button>
+              </div>
+            )}
 
             <button
               onClick={onForaDeEscopo}

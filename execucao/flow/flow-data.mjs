@@ -247,6 +247,31 @@ export const NODES = [
   { id: "A4", rota: "/assinatura", label: "A4 · Assinatura dos sócios", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "GOV.BR/e-CAC deep-link (dev). 🆕 24/08 (reunião Leonan): código 2FA único concentra procuração+assinatura (`CodigoGovView` — janela 10min, 3 tentativas, escala pra atendente se estourar); convite de sócio ganhou seletor de canal (WhatsApp/e-mail). 🆕 26/08 (item 7): certificado já vem validado da A3.2 — a procuração que sai junto desta assinatura agora tem o que precisa", dados: "Assinatura via GOV.BR/e-CAC · código de validação de 6 dígitos (janela 10min) · canal do convite ao sócio (WhatsApp/e-mail)" },
   { id: "A4G", rota: "/assinatura", label: "GOV.BR nível<br/>bronze→upgrade", forma: "decisao", classe: "inline", status: "construida", validado: "pendente", falta: "Dobrado inline no A4 — sem query própria (nenhum toggle de demo separa o sub-estado), a prévia mostra a mesma tela do A4", naTabela: false, dados: "" },
   { id: "REMOVIDO_N24", label: "'Empresa ativa'<br/>🗑️ REMOVIDO 30/07", forma: "terminal", classe: "todo", status: "planejada", validado: "oficial", falta: "Era órfão desde o swap A4→A5 (nenhuma rota navegava mais até aqui) — arquivo `/ativa` e a view apagados de vez 30/07, confirmado pelo Pedro. Fica só como marca histórica no mapa", dados: "" },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 🆕 28/08 · RAMO MEI (letra M) — abertura de MEI, do gate ao CNPJ.
+  // ═══════════════════════════════════════════════════════════════════════════
+  // Fonte: `pesquisa/abertura-mei/abertura-mei-processo.md` (70 refs oficiais)
+  // e o cruzamento `execucao/flow/cruzamento-flow-mei-vs-me.md`.
+  //
+  // ⚠️ O ACHADO QUE DEFINE ESTE RAMO INTEIRO: **não existe API nem procuração
+  // que permita abrir MEI por terceiro.** O Portal do Empreendedor exige a
+  // conta gov.br (Prata/Ouro) DO TITULAR, não tem login por representação, e a
+  // procuração do e-CAC só cobre atos posteriores (PGMEI, DARF, DCTFWeb).
+  // Usar a senha do cliente viola os Termos de Uso do gov.br e é risco LGPD.
+  //
+  // Consequência: o modelo é **concierge**. A gente coleta tudo, um ATENDENTE
+  // INTERNO confere (não contador — contador CRC é do plano ME, ver
+  // `financeiro/estado-atual.md`), e o cliente finaliza no gov.br com a nossa
+  // "cola". A abertura em si é gratuita e sai em minutos.
+  //
+  // O ramo só bifurca onde a lei obriga: E6→E9 (dinheiro) e A5 (home dia-1)
+  // são COMPARTILHADOS com o ME.
+  { id: "M_T", rota: "/gate?etapa=triagem", label: "M-T · Impedimentos<br/>(no lugar da triagem)", forma: "decisao", classe: "branch", status: "construida", validado: "oficial", falta: "🆕 28/08 — substitui o E5T no ramo MEI (MEI é unipessoal por definição, art. 966 CC: as perguntas de sócio não existem pra ele). São 3 impedimentos que o PRÓPRIO GOVERNO checa e bloqueia: (1) ser sócio/titular/admin de outra PJ — a RFB cruza o CPF, LC 123 art. 18-A; (2) servidor público federal na ativa — Lei 8.112/90 art. 117; (3) receber aposentadoria por invalidez / salário-maternidade / seguro-desemprego — este NÃO bloqueia, mas a formalização cancela o benefício de forma irreversível, então vira escolha informada com confirmação explícita. Fica ANTES do pagamento pelo mesmo motivo da triagem do ME: não cobramos de quem já sabe que não pode. Componente: `components/mei-telas.tsx` (`ImpedimentoView`)", dados: "Já tem outra empresa? (sim/não) · é servidor federal? (sim/não) · recebe benefício? (sim/não) + ciência explícita se sim" },
+  { id: "M_T_1", rota: "/saida/mei-outra-empresa", label: "M-T.1 · 🔴 Já tem CNPJ", forma: "tela", classe: "saida", status: "construida", validado: "oficial", falta: "Saída de bloqueio do governo, não do produto. Oferece os 2 caminhos reais (baixar a antiga OU abrir como ME) em vez de waitlist — a Legalizai atende essa pessoa hoje, só não como MEI. Conteúdo em `lib/dados-saida.tsx`", dados: "Nome + contato" },
+  { id: "M_T_2", rota: "/saida/mei-servidor", label: "M-T.2 · 🔴 Servidor federal", forma: "tela", classe: "saida", status: "construida", validado: "oficial", falta: "Vedação do art. 117 da Lei 8.112/90, só pra FEDERAL na ativa. A saída não fecha a porta pra estadual/municipal de propósito: lá a regra vem do estatuto de cada ente e em muitos casos é permitido. Conteúdo em `lib/dados-saida.tsx`", dados: "Nome + contato" },
+  { id: "M_O", rota: "/dossie/ocupacao", label: "M-O · Ocupação<br/>(Anexo XI + limite interno)", forma: "tela", classe: "branch", status: "construida", validado: "oficial", falta: "🆕 28/08 — a C0 do ramo MEI, 1ª tela do dossiê. NÃO é o C0 adaptado: o Portal do Empreendedor não aceita CNAE livre, só OCUPAÇÃO de lista fechada (Anexo XI, Res. CGSN 140/2018), então não há 'descrever com suas palavras'. 🎯 Carrega o **limite interno** (Solução de Consulta Cosit nº 27/2021): a ocupação é mais estrita que o CNAE que ela mapeia — quem escolhe 'Reparador(a) de bicicleta' não pode consertar moto, e descobre numa fiscalização. É o erro que só contador pega, e é parte do que vendemos. Secundárias (até 15) também saem daqui, por isso o ramo pula o C5. Dados de `lib/mei.ts`, derivados dos 51 CNAEs certeza que aceitam MEI", dados: "Ocupação principal (1 da lista do Anexo XI) · até 15 ocupações secundárias" },
+  { id: "M_S", rota: "/mei/proximos-passos", label: "M-S · Próximos passos<br/>(a \"cola\")", forma: "tela", classe: "branch", status: "construida", validado: "oficial", falta: "🆕 28/08 — a tela que FECHA o ramo, e existe por razão jurídica, não de UX: como não dá pra registrar pelo cliente, a entrega é o passo a passo com os valores DELE prontos, na ordem dos campos do Portal. Inclui a checagem do nível da conta gov.br (Prata/Ouro obrigatório) e o link pro Portal. ✍️ REGRA DE COPY DURA: nunca dizer 'a gente abre pra você' neste ramo. 🔴 Falta: definir se o 'copiar tudo' vira PDF/WhatsApp; e o M-S é a tela mais cara de evoluir se um dia a automação for possível. Componente: `components/mei-telas.tsx` (`ProximosPassosView`)", dados: "Confirmação de que a conta gov.br é Prata/Ouro · (devolve o CNPJ gerado)" },
   { id: "A5", rota: "/home-dia1", label: "✅ A5 · Home dia-1<br/>(ativação)", forma: "terminal", classe: "feliz", status: "construida", validado: "oficial", falta: "🔓 SWAP validado 30/07 (confirmado no código: assinatura empurra direto pra cá). 🆕 24/08 (reunião Leonan): trilha agora mostra 3 status explícitos — Procuração (feito, instantâneo com o código) → Validação do certificado digital (agora, linka pra /mais/certificado upload+oferta) → Acesso completo. 🔄 26/08 (item 7): certificado deixou de ser 'agora' e virou 'feito' — já foi validado antes da assinatura (A3.2). Quem vira 'agora' é 'Conferir os dados da empresa' (`/mais/empresa`). `/mais/certificado` segue existindo, só que agora é pra RENOVAR/trocar, não pra validar a 1ª vez. Sem confete nem selo coral no hero. Handoff pro flow Portal (letra P) → autoridade portal-data.mjs", dados: "" },
 ];
 
@@ -271,7 +296,9 @@ export const EDGES = [
   // Migrar não abre endereço novo (a empresa já existe) → pula o E3.4 inteiro.
   { de: "E3_2_M", para: "E4_2", label: "ME, migrar" },
   { de: "E3_2_M", para: "E4_2", label: "MEI, migrar", tracejado: true },
-  { de: "E3_4", para: "E5T", label: "endereço BH + categoria ok", deHandle: "segue" },
+  { de: "E3_4", para: "E5T", label: "ME · endereço BH + categoria ok", deHandle: "segue" },
+  // 🆕 28/08 — MEI segue pro M-T (impedimentos), não pra triagem de sócios.
+  { de: "E3_4", para: "M_T", label: "MEI · categoria com ocupação", deHandle: "segue", tracejado: true },
   { de: "E3_4", para: "E4_1", label: "sem endereço em BH", deHandle: "fora" },
   { de: "E3_4", para: "E5_1", label: "atividade fora da lista", deHandle: "fora" },
 
@@ -298,11 +325,19 @@ export const EDGES = [
   { de: "E5T", para: "E5_6", label: "sócio via CNPJ" },
 
   { de: "E5F", para: "E6" },
+
+  // ── 🆕 28/08 · RAMO MEI ────────────────────────────────────────────────
+  { de: "M_T", para: "E5F", label: "sem impedimento", tracejado: true },
+  { de: "M_T", para: "M_T_1", label: "já tem outra empresa" },
+  { de: "M_T", para: "M_T_2", label: "servidor federal" },
   { de: "E6", para: "E7" },
   { de: "E7", para: "E8" },
   { de: "E8", para: "E9" },
   // 🔄 27/08 — a 1ª tela do dossiê virou a C0 (atividade + CNAE), não mais o C1.
-  { de: "E9", para: "C0", label: "cartão" },
+  { de: "E9", para: "C0", label: "ME · cartão" },
+  // MEI entra no dossiê pela ocupação, não pela descrição de atividade.
+  { de: "E9", para: "M_O", label: "MEI · cartão", tracejado: true },
+  { de: "M_O", para: "C1", label: "MEI reusa o C1", tracejado: true },
   { de: "E9", para: "E9_1", label: "boleto" },
   { de: "E9_1", para: "C0" },
 
@@ -324,7 +359,11 @@ export const EDGES = [
   { de: "A2", para: "A3", tracejado: true },
   { de: "A3", para: "A3_1", tracejado: true },
   { de: "A3_1", para: "A3", tracejado: true },
-  { de: "A3", para: "A3_2", tracejado: true, label: "DAE paga" },
+  { de: "A3", para: "A3_2", tracejado: true, label: "ME · DAE paga" },
+  // No MEI o painel não espera órgão: espera o ATENDENTE conferir. Quando ele
+  // libera, a etapa vira ação do cliente e abre o M-S.
+  { de: "A3", para: "M_S", label: "MEI · time conferiu", tracejado: true },
+  { de: "M_S", para: "A5", label: "voltou com o CNPJ", tracejado: true },
   { de: "A3_2", para: "A4", tracejado: true },
   { de: "A4", para: "A4G", tracejado: true },
   { de: "A4G", para: "A5", tracejado: true },

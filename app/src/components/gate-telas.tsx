@@ -8,10 +8,12 @@ import {
   useSyncExternalStore,
 } from "react";
 import { Button } from "@/components/ui/button";
-import { TelaHeader } from "@/components/ui/tela";
-// 🔄 27/08 — `Aviso`/`CUSTOS`/`brl` saíram junto com a escolha de endereço, que
-// migrou da `FaixaView` pro E3.3 (`components/entrada-lead.tsx`).
-import { FISCAL } from "@/lib/fiscal";
+import { TelaHeader, Aviso } from "@/components/ui/tela";
+// 🔄 27/08 — `CUSTOS` saiu junto com a escolha de endereço, que migrou da
+// `FaixaView` pro E3.3 (`components/entrada-lead.tsx`).
+// 🔁 28/08 — `Aviso` e `brl` voltaram, agora a serviço do gate de teto do MEI.
+import { FISCAL, brl } from "@/lib/fiscal";
+import { TETO_MEI_ANUAL, TETO_MEI_MENSAL } from "@/lib/mei";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -647,6 +649,8 @@ export function FaixaView({
   onSeguir,
   autoFocus = true,
   exatoInline = false,
+  regimeMei = false,
+  onTrocarParaMe,
 }: {
   faixa: string | null;
   setFaixa: (v: string | null) => void;
@@ -657,6 +661,18 @@ export function FaixaView({
   onSeguir: () => void;
   /** A demo desliga: roubar o foco dentro da moldura rola a página do board. */
   autoFocus?: boolean;
+  /**
+   * 🆕 28/08 — no caminho MEI esta tela deixa de ser só enquadramento e vira
+   * **gate de teto**. O MEI tem limite de R$81.000/ano (LC 123 art. 18-A), ou
+   * R$6.750/mês — quem passa disso não pode ser MEI, e descobrir depois do
+   * pagamento seria o pior caso possível (desenquadramento retroativo, com
+   * juros e multa, se o excesso passar de 20%).
+   *
+   * `false` (default) = caminho ME, tela idêntica ao que sempre foi.
+   */
+  regimeMei?: boolean;
+  /** Só no MEI: leva pro caminho ME quando o faturamento estoura o teto. */
+  onTrocarParaMe?: () => void;
   /**
    * 🔓 UX-68 (29/07) — "sei o valor exato" REVELA o campo abaixo das faixas,
    * em vez de trocar a tela inteira. Trocar fazia parecer que a pessoa saiu
@@ -682,6 +698,19 @@ export function FaixaView({
       ? faixaExata
       : faixa;
   const rotuloEscolhida = FAIXAS.find((f) => f.id === escolhida)?.label;
+
+  // ─── GATE DE TETO (só MEI) ────────────────────────────────────────────────
+  // Duas certezas diferentes, e a tela trata cada uma como ela é:
+  //   · valor exato acima de R$6.750 → estoura, ponto final.
+  //   · faixa acima de "até R$10 mil" → estoura em qualquer ponto dela.
+  //   · faixa "até R$10 mil" → PODE estourar (R$6.750 cai dentro dela). Não dá
+  //     pra bloquear sem saber, então vira aviso, não porta fechada.
+  const estouraTeto =
+    regimeMei &&
+    (valor > TETO_MEI_MENSAL ||
+      (valor === 0 && escolhida !== null && escolhida !== "ate 10k"));
+  const tetoIncerto =
+    regimeMei && !estouraTeto && valor === 0 && escolhida === "ate 10k";
 
   return (
     <>
@@ -820,12 +849,45 @@ export function FaixaView({
           </div>
         )}
 
+        {/* ─── O GATE DE TETO DO MEI (não existe no caminho ME) ───────────
+            Estourar o teto não é "erro do cliente": é a empresa dele crescendo
+            além do que esse regime comporta. A copy trata assim, e a saída é
+            o ME — nunca um beco. */}
+        {estouraTeto && (
+          <div className="mt-4 flex flex-col gap-3">
+            <Aviso variante="info" titulo="Com esse faturamento, o MEI não serve">
+              O MEI tem teto de {brl(TETO_MEI_ANUAL, true)} por ano, que dá{" "}
+              {brl(TETO_MEI_MENSAL, true)} por mês. Passar disso não é
+              impedimento pra abrir empresa: é só sinal de que o seu caso é ME
+              no Simples Nacional.
+            </Aviso>
+            <p className="text-caption text-text-secondary">
+              Melhor descobrir agora. Quem estoura o teto depois de aberto paga
+              a diferença como ME, e acima de 20% ainda entra juros e multa.
+            </p>
+            <Button full onClick={onTrocarParaMe}>
+              Continuar como ME
+            </Button>
+          </div>
+        )}
+
+        {/* A faixa "até R$10 mil" contém o teto (R$6.750), então não dá pra
+            afirmar nada — avisa sem bloquear, e oferece o campo exato. */}
+        {tetoIncerto && (
+          <div className="mt-4">
+            <Aviso variante="warning" titulo="Fica de olho no teto do MEI">
+              O limite do MEI é {brl(TETO_MEI_MENSAL, true)} por mês (
+              {brl(TETO_MEI_ANUAL, true)} no ano), e ele cai dentro dessa faixa.
+              Se quiser ter certeza agora, informa o valor exato aqui em cima.
+            </Aviso>
+          </div>
+        )}
       </div>
       <div className="app-footer-cta">
         {/* 28/07: N5' (Resumo de valor) foi REMOVIDO — segue direto pro N6.
             Copy trocada: "ver o que eu ganho" prometia uma revelação que só
             existia no N5'; sem ele, a promessa vira mentira. */}
-        <Button full disabled={!escolhida} onClick={onSeguir}>
+        <Button full disabled={!escolhida || estouraTeto} onClick={onSeguir}>
           Continuar
         </Button>
       </div>

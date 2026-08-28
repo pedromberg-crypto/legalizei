@@ -255,22 +255,85 @@ export function TermoView({
             <p className="text-body-strong font-semibold text-text-primary mb-2">
               Quando você autoriza, a gente começa agora:
             </p>
+            {/* 🔴 28/08 — a copy do MEI dizia "Registra sua empresa no Portal
+                do Empreendedor", o que é uma PROMESSA QUE NÃO DÁ PRA CUMPRIR:
+                não existe API nem procuração que cubra o registro, e a senha
+                gov.br é intransferível por Termo de Uso. Ver
+                `pesquisa/abertura-mei/abertura-mei-processo.md` §Bloco 1.
+                O que a gente faz de verdade é conferir e deixar pronto. */}
             <ul className="flex flex-col gap-2">
-              <Item>
-                {mei
-                  ? "Registra sua empresa no Portal do Empreendedor."
-                  : "Protocola sua empresa na Junta Comercial de Minas."}
-              </Item>
-              {!mei && <Item>A taxa que você já pagou cobre esse registro.</Item>}
-              <Item>Segue com Receita, Simples e Prefeitura até o CNPJ ativar.</Item>
+              {mei ? (
+                <>
+                  <Item>
+                    Nosso time confere seus dados e a ocupação que você
+                    escolheu.
+                  </Item>
+                  <Item>
+                    A gente deixa cada campo pronto, na ordem do Portal do
+                    Empreendedor.
+                  </Item>
+                  <Item>
+                    Você finaliza o registro com a sua conta gov.br, e o CNPJ
+                    sai na hora.
+                  </Item>
+                  <Item>
+                    Com o CNPJ na mão, a gente assume guias, notas e
+                    declarações.
+                  </Item>
+                </>
+              ) : (
+                <>
+                  <Item>Protocola sua empresa na Junta Comercial de Minas.</Item>
+                  <Item>A taxa que você já pagou cobre esse registro.</Item>
+                  <Item>
+                    Segue com Receita, Simples e Prefeitura até o CNPJ ativar.
+                  </Item>
+                </>
+              )}
             </ul>
           </div>
 
-          <Aviso variante="warning" titulo="A partir daqui, não dá pra desfazer">
+          <Aviso
+            variante="warning"
+            titulo={
+              mei
+                ? "O registro em si é você quem faz"
+                : "A partir daqui, não dá pra desfazer"
+            }
+          >
             {mei
-              ? "É o ponto sem volta: o que for registrado a partir de agora não tem como ser desfeito. Vale conferir tudo antes de autorizar."
+              ? "O governo não permite que ninguém abra um MEI no lugar de outra pessoa: o Portal exige a sua conta gov.br, e ela é pessoal. A gente faz todo o resto, e te acompanha nesse passo. Depois de registrado, não tem como desfazer."
               : "É o ponto sem volta: o que a Junta registrar a partir de agora não tem como ser desfeito. Vale conferir tudo antes de autorizar."}
           </Aviso>
+
+          {/* 🆕 28/08 — as 3 declarações do formulário oficial. No MEI elas
+              não são letra miúda: a de dispensa de alvará (Res. CGSIM 59/2020)
+              transfere responsabilidade cível e penal pro titular, e é ele que
+              vai marcar o aceite lá no Portal. Chegar nessa tela sem nunca ter
+              lido o que está aceitando seria o oposto da nossa doutrina de
+              honestidade antes do toque. */}
+          {mei && (
+            <div>
+              <p className="text-body-strong font-semibold text-text-primary mb-2">
+                O que você vai declarar no Portal
+              </p>
+              <div className="flex flex-col gap-2.5">
+                <Camada>
+                  Que não é impedido por lei de ser empresário, e que não tem
+                  outra empresa ativa no seu nome.
+                </Camada>
+                <Camada>
+                  Que opta pelo Simples Nacional na forma do SIMEI, o regime de
+                  valor fixo mensal.
+                </Camada>
+                <Camada>
+                  Que sua atividade é de baixo risco, assumindo o compromisso de
+                  seguir as normas municipais. É esse termo que dispensa o
+                  alvará em Belo Horizonte.
+                </Camada>
+              </div>
+            </div>
+          )}
 
           <div>
             <p className="text-body-strong font-semibold text-text-primary mb-2">
@@ -300,7 +363,7 @@ export function TermoView({
 
           <Checkbox checked={aceito} onChange={setAceito}>
             {mei
-              ? "Autorizo o início da abertura, ciente de que ela não pode ser desfeita."
+              ? "Autorizo a Legalizai a preparar minha abertura, e entendo que o registro final é feito por mim no Portal do Empreendedor."
               : "Autorizo o início da abertura, ciente de que ela não pode ser desfeita e de que a taxa da Junta já paga não é reembolsável."}
           </Checkbox>
         </Corpo>

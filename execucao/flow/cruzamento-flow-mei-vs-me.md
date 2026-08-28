@@ -1,6 +1,6 @@
 ---
 tipo: derivado
-status: proposta
+status: vivo
 data: 2026-08-28
 assunto: cruzamento-flow-mei-vs-me
 deriva_de: [abertura-mei-processo]
@@ -9,7 +9,9 @@ tags: [mei, flow, telas, produto, constituicao, proposta]
 
 # 🔀 Flow de MEI × flow de ME — o que aproveita, o que muda, o que nasce
 
-> Cruzamento de [[abertura-mei-processo]] (o que a lei e o Portal exigem) com `execucao/flow/flow-data.mjs` (o flow de ME que já existe, E1→C7→A5). **Proposta pra aprovação do Pedro** — nada implementado.
+> Cruzamento de [[abertura-mei-processo]] (o que a lei e o Portal exigem) com `execucao/flow/flow-data.mjs` (o flow de ME que já existe, E1→C7→A5).
+>
+> ✅ **IMPLEMENTADO em 28/08** (aprovado pelo Pedro com 3 ajustes, ver §"O que mudou na implementação"). `flow-data.mjs` está em **v41**.
 
 ## A pergunta que muda tudo
 
@@ -138,6 +140,52 @@ E1 → E2.1-2.3 → E3 (fork) → E3.1 dados pessoais
 2. **Depois as 3 telas de gate** (M-T, E3.4 adaptada, E5F): são as que impedem venda errada. Maior valor por linha de código.
 3. **Depois o dossiê** (M-O, C1', C2', C4'): reaproveitam componentes existentes.
 4. **Por último a sessão guiada** (M-S) — é a mais cara de desenhar e a que mais depende da decisão nº 4.
+
+## O que mudou na implementação (28/08)
+
+O Pedro aprovou o desenho com **uma adaptação que barateou o ramo inteiro**: em vez de construir a sessão guiada (M-S) como tela cara de automação, o modelo vira **concierge** — a gente capta todos os dados igual ao ME, e a pessoa cai num painel de status dizendo que o time está conferindo. Um **atendente interno** (não contador) assume a conferência.
+
+**3 ajustes que eu propus e ele aceitou:**
+
+1. **A palavra "contador" não aparece no ramo MEI.** O plano MEI (R$49) tem atendente; contador CRC é o que sustenta o preço do ME (R$139), conforme `financeiro/estado-atual.md`. Usar "contador" no MEI entregaria de graça o argumento do upsell.
+2. **Nada de loading falso.** Spinner que espera humano mente sobre tempo. Reusamos o **A3 (painel de 4 status)** que já existia e já era parametrizado — ganho grande: a tela mais cara do desenho original (M-S automatizada) saiu do V1, e o A3 ficou quase como estava.
+3. **A entrega final é a "cola"** — os valores dele prontos, na ordem dos campos do Portal, com botão de copiar. Barato de construir (é render de dado que já temos) e é o protótipo do M-S automatizado, se um dia a automação for possível.
+
+### ⚠️ A exceção econômica que isso abre (registrar no ADR)
+
+`financeiro/estado-atual.md` diz, travado em 18/08: *"MEI (R$49) tem assistente virtual"* e *"sem atendente humano dedicado, a margem vira negativa"* (MEI só empataria em 1:290).
+
+**A abertura assistida é exceção justificada a essa regra, e a conta fecha** porque a simulação de 1:290 é sobre **atendimento contínuo** (todo mês, pra sempre), e a abertura é **evento único**:
+
+| | |
+|---|---|
+| LTV MEI 12m (com oferta de lançamento) | 3×R$19 + 9×R$49 = **R$498** |
+| Custo-hora do atendente (R$3.500 ÷ ~160h) | ~R$22/h |
+| Abertura assistida (~45 min) | **~R$17** = **3,4% do LTV** |
+| Caso ruim (3h de suporte) | ~R$66 = 13% do LTV |
+
+🔴 **O risco real não é a abertura, é a cauda de suporte:** o cliente que trava no gov.br e volta 5 vezes. Se isso virar maioria, o custo único vira recorrente disfarçado e a conta de 1:290 volta a valer. **Medir isso é a primeira métrica do ramo.**
+
+## O que foi construído (28/08)
+
+**Novo:**
+- `app/src/lib/mei.ts` — ocupações do Anexo XI (recorte dos 51 CNAEs certeza), as 3 categorias sem MEI, os 3 impedimentos, formas de atuação, teto.
+- `app/src/components/mei-telas.tsx` — `ImpedimentoView` (M-T) · `OcupacaoView` (M-O) · `ProximosPassosView` (M-S). Com stories.
+- Rotas: `/dossie/ocupacao` · `/mei/proximos-passos` · `/saida/mei-outra-empresa` · `/saida/mei-servidor`.
+
+**Adaptado com prop (o caminho ME não perdeu nada — `mei` sempre tem default `false`):**
+- `EnderecoCategoriaView` — `regimeMei` marca as 3 categorias sem MEI e abre a porta pro ME.
+- `FaixaView` — `regimeMei` liga o gate de teto (R$81.000/ano).
+- `SocioView` — `mei` esconde estado civil/regime de bens (são do contrato social, que o MEI não tem). **RG, órgão emissor, nascimento e nome da mãe continuam nos dois** — são campo obrigatório do formulário do MEI também.
+- `EmpresaView` — `mei` troca capital social por **forma de atuação** (7 opções, multi-seleção do formulário oficial).
+- `NomeView` — `mei` esconde as 3 sugestões e o objeto social (razão social é gerada por lei), mantém o nome fantasia.
+- `TermoView` — 🔴 **corrigi uma promessa falsa**: a copy dizia *"Registra sua empresa no Portal do Empreendedor"*, que é exatamente o que não podemos prometer. Agora descreve o modelo real e lista as 3 declarações oficiais.
+- `/painel` — pipeline MEI reescrito de 1 pra 4 etapas (a versão de 03/08 também prometia que a gente registrava).
+
+**Cadeia final do ramo MEI:**
+`E1→E2→E3→E3.1→E3.2→E3.4′→M-T→E5F′→E6→E7→E8→E9→M-O→C1′→C4′→C7′→A1→A2′→A3′→M-S→A5`
+
+Pula: E5T (triagem de sócios), C2 (vínculo INSS), C3 (sócios), C5 (CNAE secundários — já vieram na M-O), C6 (natureza), A3.2 (certificado), A4 (assinatura).
 
 ## Links
 - [[abertura-mei-processo]] — a fonte dos fatos.

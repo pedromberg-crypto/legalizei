@@ -65,8 +65,19 @@ import {
   DADOS_SAIDA_EXTERIOR,
   DADOS_SAIDA_SOCIOS,
   DADOS_SAIDA_SOCIO_PJ,
+  DADOS_SAIDA_MEI_OUTRA_EMPRESA,
+  DADOS_SAIDA_MEI_SERVIDOR,
   DADOS_SAIDA_CNPJ_INAPTO,
 } from "@/lib/dados-saida";
+// 🆕 28/08 — as 3 telas exclusivas do ramo MEI (fidelidade por construção: a
+// demo renderiza os MESMOS componentes que as rotas de produção).
+import {
+  ImpedimentoView,
+  OcupacaoView,
+  ProximosPassosView,
+  type CampoCola,
+} from "@/components/mei-telas";
+import { IMPEDIMENTOS } from "@/lib/mei";
 import { GRUPOS } from "@/lib/telas-flow";
 
 /**
@@ -229,6 +240,15 @@ type Etapa =
   | "saida-exterior"
   | "saida-socios"
   | "saida-socio-pj"
+  // 🆕 28/08 — RAMO MEI. As 3 telas exclusivas + as 2 saídas de impedimento.
+  // Nascem de `pesquisa/abertura-mei/abertura-mei-processo.md`: não existe API
+  // nem procuração que permita abrir MEI por terceiro, então o ramo é
+  // concierge (a gente prepara, o titular finaliza no gov.br).
+  | "m-impedimento"
+  | "m-ocupacao"
+  | "m-proximos-passos"
+  | "saida-mei-outra-empresa"
+  | "saida-mei-servidor"
   | "conta"
   | "conta-codigo"
   | "plano"
@@ -461,6 +481,50 @@ type Snapshot = {
 
 type Dono = "usuario" | "nossa" | null;
 
+/**
+ * 🆕 28/08 — a "cola" do M-S na demo: os campos do formulário oficial do MEI,
+ * na ORDEM em que aparecem no Portal do Empreendedor (não na ordem do nosso
+ * dossiê — quem está com o Portal aberto na outra aba segue de cima pra baixo).
+ *
+ * Nome, CPF e data de nascimento não entram de propósito: o gov.br preenche
+ * sozinho e não são editáveis. Listá-los faria a pessoa procurar campo que não
+ * existe. Espelha `app/(app)/mei/proximos-passos/page.tsx`.
+ */
+const CAMPOS_COLA_DEMO: CampoCola[] = [
+  { rotulo: "RG", valor: "MG-12.345.678", nota: "Órgão emissor: SSP/MG" },
+  { rotulo: "Telefone", valor: "(31) 99999-0000" },
+  { rotulo: "E-mail", valor: "ana.ramos@email.com" },
+  {
+    rotulo: "Ocupação principal",
+    valor: "Técnico(a) de manutenção de computador",
+    nota: "Escolhe exatamente essa na lista. É a que corresponde ao que você faz.",
+  },
+  {
+    rotulo: "Forma de atuação",
+    valor: "Pela internet",
+    nota: "Pode marcar mais de uma se for o seu caso.",
+  },
+  {
+    rotulo: "Endereço comercial",
+    valor: "Rua dos Timbiras, 1200, Funcionários, Belo Horizonte/MG",
+  },
+  {
+    rotulo: "Endereço residencial",
+    valor: "Rua dos Timbiras, 1200, Funcionários, Belo Horizonte/MG",
+    nota: "Se for o mesmo do comercial, marca a opção de repetir.",
+  },
+  {
+    rotulo: "Capital social",
+    valor: "R$ 1.000",
+    nota: "Não existe valor mínimo por lei. Esse é o que você declarou com a gente.",
+  },
+  {
+    rotulo: "Nome fantasia",
+    valor: "—",
+    nota: "Opcional. A razão social sai automática: seu CNPJ + seu nome.",
+  },
+];
+
 type Momento =
   | "splash"
   | "welcome"
@@ -482,6 +546,11 @@ type Momento =
   | "saida-exterior"
   | "saida-socios"
   | "saida-socio-pj"
+  | "m-impedimento"
+  | "m-ocupacao"
+  | "m-proximos-passos"
+  | "saida-mei-outra-empresa"
+  | "saida-mei-servidor"
   | "conta"
   | "conta-codigo"
   | "plano"
@@ -872,6 +941,11 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   "saida-exterior": "/saida/exterior",
   "saida-socios": "/saida/socios",
   "saida-socio-pj": "/saida/socio-pj",
+  "m-impedimento": "/gate?etapa=triagem&regime=mei",
+  "m-ocupacao": "/dossie/ocupacao",
+  "m-proximos-passos": "/mei/proximos-passos",
+  "saida-mei-outra-empresa": "/saida/mei-outra-empresa",
+  "saida-mei-servidor": "/saida/mei-servidor",
   conta: "/conta",
   "conta-codigo": "/conta",
   plano: "/plano",
@@ -1055,6 +1129,46 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     faz: "Explica que sócio pessoa jurídica tira a empresa do Simples Nacional no ato do contrato social — regra fiscal, não limite nosso.",
     interfere: "Encerra o funil do app (só atende Simples hoje). Diferente do limite de sócios: aqui é a LEI que empurra pro Presumido/Real, não uma escolha nossa.",
     porque: "🆕 24/08 (reunião Leonan 19/08 + pedido do Pedro) — bloqueia na TRIAGEM, antes do dinheiro, em vez de deixar a pessoa avançar e travar só lá no C3 do dossiê. Roteia pro escritório, que atende Presumido fora do app.",
+  },
+  "m-impedimento": {
+    dono: "nossa",
+    faz: "Faz as 3 perguntas que o próprio governo checa no registro do MEI: já tem outra empresa? é servidor federal? recebe benefício (invalidez, salário-maternidade, seguro-desemprego)?",
+    interfere:
+      "Substitui a triagem de sócios no ramo MEI — que não faz sentido, porque MEI é unipessoal por definição (art. 966 do CC). As duas primeiras BLOQUEIAM (a Receita cruza o CPF e barra sozinha); a terceira não bloqueia, mas a formalização cancela o benefício de forma irreversível.",
+    porque:
+      "🆕 28/08 — fica ANTES do pagamento pelo mesmo motivo da triagem do ME: a gente não cobra de quem já sabe que não pode ser atendido. E aqui isso pesa mais, porque o modelo do MEI usa hora de atendente — descobrir o impedimento depois é reembolso + trabalho humano gasto à toa.",
+  },
+  "m-ocupacao": {
+    dono: "usuario",
+    faz: "Escolhe a ocupação principal numa lista fechada (Anexo XI da Res. CGSN 140/2018) e, se quiser, até 15 secundárias. Não existe campo de texto livre.",
+    interfere:
+      "É a C0 do ramo MEI, mas NÃO é o C0 adaptado: o Portal do Empreendedor não aceita CNAE livre. E a tela avisa do LIMITE INTERNO (Solução de Consulta Cosit nº 27/2021) — a ocupação é mais estrita que o CNAE que ela mapeia.",
+    porque:
+      "🎯 É onde mora parte do que a gente vende. Quem escolhe 'Reparador(a) de bicicleta' não pode consertar moto, mesmo o CNAE parecendo permitir — e descobriria isso numa fiscalização, não no cadastro. É exatamente o erro que só contador pega.",
+  },
+  "m-proximos-passos": {
+    dono: "usuario",
+    faz: "Entrega os dados dele prontos, na ordem exata dos campos do Portal do Empreendedor, com botão de copiar. Confere o nível da conta gov.br (Prata ou Ouro) e abre o Portal.",
+    interfere:
+      "É a tela que FECHA o ramo MEI, e existe por razão jurídica: não há API, não há procuração que cubra o registro (a do e-CAC só vale pra atos posteriores), e a senha gov.br é intransferível por Termo de Uso. Não dá pra registrar pelo cliente.",
+    porque:
+      "🆕 28/08 — ✍️ REGRA DE COPY DURA deste ramo: **nunca dizer 'a gente abre pra você'**. O que a gente promete é conferir, escolher a ocupação certa e deixar pronto — que já é o trabalho difícil. Promessa que não dá pra cumprir vira reembolso.",
+  },
+  "saida-mei-outra-empresa": {
+    dono: null,
+    faz: "Explica que quem já é sócio, titular ou administrador de outra empresa ativa não consegue abrir MEI — inclusive empresa parada que nunca foi baixada.",
+    interfere:
+      "Bloqueio do GOVERNO, não do produto: é a LC 123 art. 18-A, e a Receita cruza o CPF dentro do próprio Portal. Não há exceção nem negociação.",
+    porque:
+      "Por isso a saída NÃO é waitlist: oferece os 2 caminhos reais (dar baixa na antiga ou abrir como ME), que a Legalizai faz hoje. Porta fechada vira encaminhamento.",
+  },
+  "saida-mei-servidor": {
+    dono: null,
+    faz: "Explica a vedação do art. 117 da Lei 8.112/90, que vale pra servidor público FEDERAL na ativa.",
+    interfere:
+      "Encerra o caminho MEI pra quem é federal. Mas não fecha a porta pra estadual/municipal: lá a regra vem do estatuto de cada ente, e em muitos casos é permitido.",
+    porque:
+      "Mandar embora todo servidor seria perder cliente por regra que não se aplica a ele. A saída convida a conferir o estatuto junto com a gente.",
   },
   conta: {
     dono: "usuario",
@@ -1403,6 +1517,17 @@ export default function ApresentacaoPage() {
   const [nomeCnpjInapto, setNomeCnpjInapto] = useState("");
   const [contatoCnpjInapto, setContatoCnpjInapto] = useState("");
   const [enviadoCnpjInapto, setEnviadoCnpjInapto] = useState(false);
+
+  // ── 🆕 28/08 · estado do RAMO MEI ────────────────────────────────────────
+  // Mesma doutrina do resto da demo: o estado das telas novas mora aqui, e os
+  // componentes são os mesmos que a produção renderiza.
+  const [impedimentosDemo, setImpedimentosDemo] = useState<
+    Record<string, boolean | null>
+  >(Object.fromEntries(IMPEDIMENTOS.map((i) => [i.id, null])));
+  const [cienteBeneficioDemo, setCienteBeneficioDemo] = useState(false);
+  const [ocupacaoDemo, setOcupacaoDemo] = useState<string | null>(null);
+  const [secundariasDemo, setSecundariasDemo] = useState<string[]>([]);
+  const [govBrOkDemo, setGovBrOkDemo] = useState(false);
 
   const [socios, setSocios] = useState<number | null>(null);
   const [exterior, setExterior] = useState<boolean | null>(null);
@@ -1811,6 +1936,12 @@ export default function ApresentacaoPage() {
                         ? "saida-socio-pj"
                         : etapa === "m-cnpj-inapto"
                           ? "m-cnpj-inapto"
+                          : etapa === "m-impedimento" ||
+                              etapa === "m-ocupacao" ||
+                              etapa === "m-proximos-passos" ||
+                              etapa === "saida-mei-outra-empresa" ||
+                              etapa === "saida-mei-servidor"
+                            ? etapa
                   : etapa === "conta"
                     ? "conta"
                     : etapa === "conta-codigo"
@@ -1874,6 +2005,12 @@ export default function ApresentacaoPage() {
   const naSaidaCidade = etapa === "fora-bh";
   const naSaidaTriagem =
     etapa === "saida-exterior" || etapa === "saida-socios" || etapa === "saida-socio-pj";
+  // 🆕 28/08 — as 2 saídas de impedimento do ramo MEI. As 3 telas exclusivas
+  // (m-impedimento, m-ocupacao, m-proximos-passos) são checadas inline no
+  // render: cada uma tem props próprias e não compartilha shell como estas.
+  const naSaidaMei =
+    etapa === "saida-mei-outra-empresa" || etapa === "saida-mei-servidor";
+
   const naTravessia =
     // 🆕 27/08 — E3.1/E3.3 trazem o próprio header+main (TelaHeader), igual às
     // telas do dinheiro. Por isso entram aqui, não no bloco genérico.
@@ -2517,6 +2654,64 @@ export default function ApresentacaoPage() {
                           />
                         </main>
                       </>
+                    ) : naSaidaMei ? (
+                      // 🆕 28/08 — as 2 saídas de impedimento do ramo MEI.
+                      // Bloqueio do GOVERNO, não do produto: por isso elas
+                      // encaminham (baixar a antiga / abrir como ME / conferir
+                      // o estatuto) em vez de virarem lista de espera.
+                      <>
+                        <TelaHeader meta="Sobre o seu caso" />
+                        <main className="app-main">
+                          <SaidaView
+                            d={
+                              etapa === "saida-mei-outra-empresa"
+                                ? DADOS_SAIDA_MEI_OUTRA_EMPRESA
+                                : DADOS_SAIDA_MEI_SERVIDOR
+                            }
+                          />
+                        </main>
+                      </>
+                    ) : etapa === "m-impedimento" ? (
+                      <ImpedimentoView
+                        respostas={impedimentosDemo}
+                        setResposta={(id, v) =>
+                          setImpedimentosDemo((r) => ({ ...r, [id]: v }))
+                        }
+                        cienteBeneficio={cienteBeneficioDemo}
+                        setCienteBeneficio={setCienteBeneficioDemo}
+                        onSeguir={() => setEtapa("faixa")}
+                        // A demo navega pra saída de verdade: é justamente o
+                        // desfecho que precisa ser mostrado na apresentação.
+                        onSaida={() =>
+                          setEtapa(
+                            impedimentosDemo["outra-empresa"] === true
+                              ? "saida-mei-outra-empresa"
+                              : "saida-mei-servidor",
+                          )
+                        }
+                        onVoltar={() => setEtapa("endereco")}
+                      />
+                    ) : etapa === "m-ocupacao" ? (
+                      <OcupacaoView
+                        // A demo fixa "reparos": é a categoria com mais
+                        // ocupações (20) e a que melhor mostra o limite
+                        // interno na tela.
+                        categoria="reparos"
+                        principal={ocupacaoDemo}
+                        setPrincipal={setOcupacaoDemo}
+                        secundarias={secundariasDemo}
+                        setSecundarias={setSecundariasDemo}
+                        onSeguir={() => setEtapa("socio")}
+                        onVoltar={() => setEtapa("pagamento")}
+                      />
+                    ) : etapa === "m-proximos-passos" ? (
+                      <ProximosPassosView
+                        campos={CAMPOS_COLA_DEMO}
+                        nivelGovBrOk={govBrOkDemo}
+                        setNivelGovBrOk={setGovBrOkDemo}
+                        onConfirmarCnpj={() => setEtapa("fim")}
+                        onVoltar={() => setEtapa("painel")}
+                      />
                     ) : (
                       <>
                         {/* 🔓 UX-60 aplicado AQUI (deslinkado): o E5 aprovado

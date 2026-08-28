@@ -113,3 +113,60 @@ export const DADOS_SAIDA_CNPJ_INAPTO: DadosSaida = {
       "Nosso time entra em contato pra entender o que está pendente na sua empresa e como regularizar. Assim que resolver, você volta e migra com a gente.",
   },
 };
+
+/* ═══════════════════ SAÍDAS DO RAMO MEI (M-T · impedimento) ══════════════ */
+
+/**
+ * 🆕 28/08 — as 2 saídas do `ImpedimentoView` (M-T, `components/mei-telas.tsx`).
+ *
+ * ⚠️ Elas são de natureza diferente das saídas de triagem do ME. Lá o bloqueio
+ * é do PRODUTO ("a gente ainda não atende esse caso"). Aqui é do GOVERNO: o
+ * Portal do Empreendedor cruza o CPF e barra sozinho. Não existe negociação,
+ * exceção nem "vou falar com o time" — o que existe é caminho alternativo.
+ *
+ * Por isso as duas terminam oferecendo o ME, que é solução de verdade, e não
+ * lista de espera: a Legalizai atende essas pessoas hoje, só não como MEI.
+ *
+ * Fonte: `pesquisa/abertura-mei/abertura-mei-processo.md` §Elegibilidade.
+ */
+export const DADOS_SAIDA_MEI_OUTRA_EMPRESA: DadosSaida = {
+  icone: <Lottie path="/lottie/alert-legalizai-story-book.json" fps={30} className="h-[125px] w-[125px]" />,
+  tag: "MEI · já tem CNPJ",
+  titulo: "Com outra empresa no seu nome, o MEI não sai",
+  explica:
+    "Quem já é sócio, titular ou administrador de uma empresa ativa não pode abrir MEI. Vale até pra empresa parada que nunca foi baixada, e pra outro MEI.",
+  origem: {
+    rotulo: "De onde vem essa regra",
+    texto:
+      "É a LC 123, art. 18-A. A Receita Federal cruza o seu CPF no momento do registro e barra automaticamente, dentro do próprio Portal do Empreendedor.",
+  },
+  saida:
+    "Tem dois caminhos, e os dois a gente faz: dar baixa na empresa antiga, ou abrir a nova como ME no Simples Nacional. Deixa seu contato que a gente te mostra qual compensa no seu caso.",
+  ctaEnviar: "Quero entender meu caso",
+  confirmacao: {
+    titulo: "Recebemos seu contato",
+    texto:
+      "Nosso time vai olhar a situação da empresa que já está no seu nome e te dizer o que faz mais sentido: baixar aquela ou abrir esta como ME.",
+  },
+};
+
+export const DADOS_SAIDA_MEI_SERVIDOR: DadosSaida = {
+  icone: <Lottie path="/lottie/alert-legalizai-story-book.json" fps={30} className="h-[125px] w-[125px]" />,
+  tag: "MEI · servidor federal",
+  titulo: "Servidor público federal não pode ser MEI",
+  explica:
+    "A vedação vale pra quem está na ativa no serviço público federal. Servidor estadual ou municipal depende do estatuto de cada um, e aí a regra pode ser outra.",
+  origem: {
+    rotulo: "De onde vem essa regra",
+    texto:
+      "É o art. 117 da Lei 8.112/90, que proíbe o servidor federal de participar de gerência ou administração de empresa. O Portal do Empreendedor bloqueia no ato do registro.",
+  },
+  saida:
+    "Se você é estadual ou municipal, vale conferir o seu estatuto antes de descartar: em muitos casos é permitido. Deixa seu contato que a gente confere junto com você.",
+  ctaEnviar: "Quero conferir meu caso",
+  confirmacao: {
+    titulo: "Recebemos seu contato",
+    texto:
+      "Nosso time vai te ajudar a ler o que o seu estatuto permite. Se houver caminho, a gente segue daí.",
+  },
+};

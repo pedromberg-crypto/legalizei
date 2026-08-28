@@ -84,6 +84,11 @@ flowchart TD
   A4["A4 · Assinatura dos sócios"]
   A4G{"GOV.BR nível<br/>bronze→upgrade"}:::inline
   REMOVIDO_N24(["'Empresa ativa'<br/>🗑️ REMOVIDO 30/07"]):::todo
+  M_T{"M-T · Impedimentos<br/>(no lugar da triagem)"}:::branch
+  M_T_1["M-T.1 · 🔴 Já tem CNPJ"]:::saida
+  M_T_2["M-T.2 · 🔴 Servidor federal"]:::saida
+  M_O["M-O · Ocupação<br/>(Anexo XI + limite interno)"]:::branch
+  M_S["M-S · Próximos passos<br/>(a "cola")"]:::branch
   A5(["✅ A5 · Home dia-1<br/>(ativação)"]):::feliz
 
   E1 --> E2_1
@@ -99,7 +104,8 @@ flowchart TD
   E3_2 -.->|"MEI, abrir (sem gate de BH)"| E3_4
   E3_2_M -->|"ME, migrar"| E4_2
   E3_2_M -.->|"MEI, migrar"| E4_2
-  E3_4 -->|"endereço BH + categoria ok"| E5T
+  E3_4 -->|"ME · endereço BH + categoria ok"| E5T
+  E3_4 -.->|"MEI · categoria com ocupação"| M_T
   E3_4 -->|"sem endereço em BH"| E4_1
   E3_4 -->|"atividade fora da lista"| E5_1
   E4_2 -.-> E4_3
@@ -121,10 +127,15 @@ flowchart TD
   E5T -->|"5+ sócios"| E5_5
   E5T -->|"sócio via CNPJ"| E5_6
   E5F --> E6
+  M_T -.->|"sem impedimento"| E5F
+  M_T -->|"já tem outra empresa"| M_T_1
+  M_T -->|"servidor federal"| M_T_2
   E6 --> E7
   E7 --> E8
   E8 --> E9
-  E9 -->|"cartão"| C0
+  E9 -->|"ME · cartão"| C0
+  E9 -.->|"MEI · cartão"| M_O
+  M_O -.->|"MEI reusa o C1"| C1
   E9 -->|"boleto"| E9_1
   E9_1 --> C0
   C0 --> C0_2
@@ -143,7 +154,9 @@ flowchart TD
   A2 -.-> A3
   A3 -.-> A3_1
   A3_1 -.-> A3
-  A3 -.->|"DAE paga"| A3_2
+  A3 -.->|"ME · DAE paga"| A3_2
+  A3 -.->|"MEI · time conferiu"| M_S
+  M_S -.->|"voltou com o CNPJ"| A5
   A3_2 -.-> A4
   A4 -.-> A4G
   A4G -.-> A5
@@ -220,7 +233,12 @@ flowchart TD
 | 53 | A3.2 · Certificado digital · (antes de assinar) | Sim/não tem certificado próprio · se sim: arquivo (.pfx/.p12) + senha | ✅ | 🟡 | Componente `CertificadoGateView` (`components/wizard-cauda.tsx`). Pergunta 'já tem?' → upload arquivo+senha (sim) ou agenda entrevista com certificadora parceira (não). Mock: ambos caminhos avançam direto (sem espera assíncrona real) |
 | 54 | A4 · Assinatura dos sócios | Assinatura via GOV.BR/e-CAC · código de validação de 6 dígitos (janela 10min) · canal do convite ao sócio (WhatsApp/e-mail) | ✅ | 🟡 | GOV.BR/e-CAC deep-link (dev). 🆕 24/08 (reunião Leonan): código 2FA único concentra procuração+assinatura (`CodigoGovView` — janela 10min, 3 tentativas, escala pra atendente se estourar); convite de sócio ganhou seletor de canal (WhatsApp/e-mail). 🆕 26/08 (item 7): certificado já vem validado da A3.2 — a procuração que sai junto desta assinatura agora tem o que precisa |
 | 55 | 'Empresa ativa' · 🗑️ REMOVIDO 30/07 | — | 🚧 | 🟢 | Era órfão desde o swap A4→A5 (nenhuma rota navegava mais até aqui) — arquivo `/ativa` e a view apagados de vez 30/07, confirmado pelo Pedro. Fica só como marca histórica no mapa |
-| 56 | ✅ A5 · Home dia-1 · (ativação) | — | ✅ | 🟢 | 🔓 SWAP validado 30/07 (confirmado no código: assinatura empurra direto pra cá). 🆕 24/08 (reunião Leonan): trilha agora mostra 3 status explícitos — Procuração (feito, instantâneo com o código) → Validação do certificado digital (agora, linka pra /mais/certificado upload+oferta) → Acesso completo. 🔄 26/08 (item 7): certificado deixou de ser 'agora' e virou 'feito' — já foi validado antes da assinatura (A3.2). Quem vira 'agora' é 'Conferir os dados da empresa' (`/mais/empresa`). `/mais/certificado` segue existindo, só que agora é pra RENOVAR/trocar, não pra validar a 1ª vez. Sem confete nem selo coral no hero. Handoff pro flow Portal (letra P) → autoridade portal-data.mjs |
+| 56 | M-T · Impedimentos · (no lugar da triagem) | Já tem outra empresa? (sim/não) · é servidor federal? (sim/não) · recebe benefício? (sim/não) + ciência explícita se sim | ✅ | 🟢 | 🆕 28/08 — substitui o E5T no ramo MEI (MEI é unipessoal por definição, art. 966 CC: as perguntas de sócio não existem pra ele). São 3 impedimentos que o PRÓPRIO GOVERNO checa e bloqueia: (1) ser sócio/titular/admin de outra PJ — a RFB cruza o CPF, LC 123 art. 18-A; (2) servidor público federal na ativa — Lei 8.112/90 art. 117; (3) receber aposentadoria por invalidez / salário-maternidade / seguro-desemprego — este NÃO bloqueia, mas a formalização cancela o benefício de forma irreversível, então vira escolha informada com confirmação explícita. Fica ANTES do pagamento pelo mesmo motivo da triagem do ME: não cobramos de quem já sabe que não pode. Componente: `components/mei-telas.tsx` (`ImpedimentoView`) |
+| 57 | M-T.1 · 🔴 Já tem CNPJ | Nome + contato | ✅ | 🟢 | Saída de bloqueio do governo, não do produto. Oferece os 2 caminhos reais (baixar a antiga OU abrir como ME) em vez de waitlist — a Legalizai atende essa pessoa hoje, só não como MEI. Conteúdo em `lib/dados-saida.tsx` |
+| 58 | M-T.2 · 🔴 Servidor federal | Nome + contato | ✅ | 🟢 | Vedação do art. 117 da Lei 8.112/90, só pra FEDERAL na ativa. A saída não fecha a porta pra estadual/municipal de propósito: lá a regra vem do estatuto de cada ente e em muitos casos é permitido. Conteúdo em `lib/dados-saida.tsx` |
+| 59 | M-O · Ocupação · (Anexo XI + limite interno) | Ocupação principal (1 da lista do Anexo XI) · até 15 ocupações secundárias | ✅ | 🟢 | 🆕 28/08 — a C0 do ramo MEI, 1ª tela do dossiê. NÃO é o C0 adaptado: o Portal do Empreendedor não aceita CNAE livre, só OCUPAÇÃO de lista fechada (Anexo XI, Res. CGSN 140/2018), então não há 'descrever com suas palavras'. 🎯 Carrega o **limite interno** (Solução de Consulta Cosit nº 27/2021): a ocupação é mais estrita que o CNAE que ela mapeia — quem escolhe 'Reparador(a) de bicicleta' não pode consertar moto, e descobre numa fiscalização. É o erro que só contador pega, e é parte do que vendemos. Secundárias (até 15) também saem daqui, por isso o ramo pula o C5. Dados de `lib/mei.ts`, derivados dos 51 CNAEs certeza que aceitam MEI |
+| 60 | M-S · Próximos passos · (a "cola") | Confirmação de que a conta gov.br é Prata/Ouro · (devolve o CNPJ gerado) | ✅ | 🟢 | 🆕 28/08 — a tela que FECHA o ramo, e existe por razão jurídica, não de UX: como não dá pra registrar pelo cliente, a entrega é o passo a passo com os valores DELE prontos, na ordem dos campos do Portal. Inclui a checagem do nível da conta gov.br (Prata/Ouro obrigatório) e o link pro Portal. ✍️ REGRA DE COPY DURA: nunca dizer 'a gente abre pra você' neste ramo. 🔴 Falta: definir se o 'copiar tudo' vira PDF/WhatsApp; e o M-S é a tela mais cara de evoluir se um dia a automação for possível. Componente: `components/mei-telas.tsx` (`ProximosPassosView`) |
+| 61 | ✅ A5 · Home dia-1 · (ativação) | — | ✅ | 🟢 | 🔓 SWAP validado 30/07 (confirmado no código: assinatura empurra direto pra cá). 🆕 24/08 (reunião Leonan): trilha agora mostra 3 status explícitos — Procuração (feito, instantâneo com o código) → Validação do certificado digital (agora, linka pra /mais/certificado upload+oferta) → Acesso completo. 🔄 26/08 (item 7): certificado deixou de ser 'agora' e virou 'feito' — já foi validado antes da assinatura (A3.2). Quem vira 'agora' é 'Conferir os dados da empresa' (`/mais/empresa`). `/mais/certificado` segue existindo, só que agora é pra RENOVAR/trocar, não pra validar a 1ª vez. Sem confete nem selo coral no hero. Handoff pro flow Portal (letra P) → autoridade portal-data.mjs |
 <!-- FLOW:TABELA:FIM -->
 
 ## 🚪 Saídas terminais (7) — sai do flow, não volta
@@ -253,6 +271,7 @@ flowchart TD
 > Cada linha = um estado estrutural do mapa. Snapshots completos em `flow/versoes/` (`.json` p/ diff + `.mmd` legível). Mais recente no topo.
 
 <!-- FLOW:VERSOES:INI -->
+- **v41** · 2026-08-28 · +nós M_T,M_T_1,M_T_2,M_O,M_S · +conexões E3_4→M_T,M_T→E5F,M_T→M_T_1,M_T→M_T_2,E9→M_O,M_O→C1,A3→M_S,M_S→A5
 - **v40** · 2026-08-28 · dados-coletados em E3_4
 <!-- FLOW:VERSOES:FIM -->
 

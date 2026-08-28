@@ -118,6 +118,15 @@ tags: [execucao, flow, dados, abertura]
 
 🔴 **É aqui que o CTA dispara a 1ª tentativa de viabilidade na Junta (JUCEMG)** — os campos acima são exatamente o que vai pro pedido de viabilidade.
 
+### M-T · Impedimentos (no lugar da triagem)
+- Já tem outra empresa? (sim/não)
+- é servidor federal? (sim/não)
+- recebe benefício? (sim/não) + ciência explícita se sim
+
+### M-O · Ocupação (Anexo XI + limite interno)
+- Ocupação principal (1 da lista do Anexo XI)
+- até 15 ocupações secundárias
+
 ## Preenchidos por nós, não pelo cliente
 
 > Campos que a viabilidade/DBE exigem, mas a Legalizai preenche internamente — decisões travadas em `marca/decisoes-marca.md`.

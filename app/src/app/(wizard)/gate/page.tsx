@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { TriagemView, FaixaView } from "@/components/gate-telas";
+import { ImpedimentoView } from "@/components/mei-telas";
+import { IMPEDIMENTOS } from "@/lib/mei";
 import { ehMei, comRegime } from "@/lib/regime";
 import { ehEnderecoFiscal, comEndereco } from "@/lib/endereco";
 import { categoriaDe, comCategoria } from "@/lib/categoria";
@@ -33,6 +35,19 @@ import { categoriaDe, comCategoria } from "@/lib/categoria";
  * cobra de quem já sabe que não pode ser atendido.
  *
  * ⚠️ 28/07 — DEEP-LINK por `?etapa=` (mesmo padrão de /notas/detalhe?s=).
+ *
+ * ─── 🆕 28/08 — A BIFURCAÇÃO MEI ───────────────────────────────────────────
+ * O 1º passo desta rota agora depende do regime:
+ *   · **ME** → `TriagemView` (sócios: quantos, CPF×CNPJ, exterior). Inalterada.
+ *   · **MEI** → `ImpedimentoView` (outra empresa, servidor federal, benefício).
+ *
+ * A troca não é cosmética: o MEI **não tem sócio** (é unipessoal por
+ * definição, art. 966 do CC), então as 3 perguntas da triagem do ME não
+ * existem pra ele. Em compensação, ele tem 3 impedimentos que o ME não tem, e
+ * que o próprio governo checa e bloqueia no ato do registro.
+ *
+ * As duas bifurcações compartilham o 2º passo (`FaixaView`), mas lá o MEI
+ * ganha o **gate de teto** (R$81.000/ano, LC 123 art. 18-A) via `regimeMei`.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -59,6 +74,18 @@ export default function GatePage() {
   // 🆕 26/08 (reunião Rua Satélite 36) — coorte pousou na Triagem de vez.
   const [coorte, setCoorte] = useState<"primeira" | "ja-abri" | null>(null);
 
+  // 🆕 28/08 — estado do M-T (só usado no ramo MEI).
+  const [impedimentos, setImpedimentos] = useState<Record<string, boolean | null>>(
+    Object.fromEntries(IMPEDIMENTOS.map((i) => [i.id, null])),
+  );
+  const [cienteBeneficio, setCienteBeneficio] = useState(false);
+
+  /** Qual saída o impedimento respondido "sim" leva. */
+  function saidaDoImpedimento() {
+    if (impedimentos["outra-empresa"] === true) return "/saida/mei-outra-empresa";
+    return "/saida/mei-servidor";
+  }
+
   return (
     <>
       <header className="pt-6 pb-4">
@@ -66,7 +93,20 @@ export default function GatePage() {
       </header>
 
       <main className="app-main">
-        {etapa === "triagem" && (
+        {/* 1º passo · ME = triagem de sócios · MEI = impedimentos legais */}
+        {etapa === "triagem" && mei && (
+          <ImpedimentoView
+            respostas={impedimentos}
+            setResposta={(id, v) =>
+              setImpedimentos((r) => ({ ...r, [id]: v }))
+            }
+            cienteBeneficio={cienteBeneficio}
+            setCienteBeneficio={setCienteBeneficio}
+            onSeguir={() => setEtapa("faixa")}
+            onSaida={() => router.push(saidaDoImpedimento())}
+          />
+        )}
+        {etapa === "triagem" && !mei && (
           <TriagemView
             socios={socios}
             setSocios={setSocios}
@@ -99,6 +139,13 @@ export default function GatePage() {
             // 🆕 03/08 — UX-68 mesclado: revela o campo inline em vez de
             // trocar a tela inteira. Fonte: /apresentacao.
             exatoInline
+            // 🆕 28/08 — só no MEI: vira gate do teto de R$81.000/ano.
+            regimeMei={mei}
+            onTrocarParaMe={() =>
+              router.push(
+                comCategoria(comEndereco("/gate?etapa=faixa", enderecoFiscal), categoria),
+              )
+            }
           />
         )}
       </main>

@@ -48,6 +48,7 @@ export default function SocioPage() {
   // normal. Ver mapa em `/mockup` — grupo "Constituição".
   return (
     <SocioView
+      mei={mei}
       onSeguir={() =>
         router.push(
           comEndereco(comRegime(mei ? "/dossie/empresa" : "/dossie/vinculo", mei), enderecoFiscal),

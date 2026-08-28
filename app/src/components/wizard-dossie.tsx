@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
 import { Campo, Texto, Select, OpcoesLinha } from "@/components/ui/form";
 import { FISCAL, CUSTOS, brl } from "@/lib/fiscal";
+import { FORMAS_ATUACAO } from "@/lib/mei";
 import {
   CLIENTE,
   TEM_SOCIO,
@@ -112,10 +113,27 @@ export function SocioView({
   preencher,
   onSeguir,
   onVoltar,
+  mei = false,
 }: {
   preencher?: number;
   onSeguir?: () => void;
   onVoltar?: () => void;
+  /**
+   * 🆕 28/08 — MEI esconde estado civil e regime de bens.
+   *
+   * Esses dois campos existem por causa do CONTRATO SOCIAL: a JUCEMG precisa
+   * saber o regime pra saber se o cônjuge assina (por isso o aviso de comunhão
+   * universal aqui embaixo). O MEI **não tem contrato social** — o documento
+   * constitutivo é o CCMEI, e o formulário do Portal do Empreendedor não
+   * pergunta estado civil em lugar nenhum.
+   *
+   * ⚠️ Tudo o mais nesta tela CONTINUA valendo pros dois: RG, órgão emissor,
+   * data de nascimento e nome da mãe são campo obrigatório do formulário do
+   * MEI também. Nada foi retirado do caminho ME.
+   *
+   * `false` (default) = ME, tela idêntica ao que sempre foi.
+   */
+  mei?: boolean;
 }) {
   const [rg, setRg] = useState("");
   const [orgao, setOrgao] = useState("");
@@ -138,8 +156,8 @@ export function SocioView({
     orgao.trim() !== "" &&
     nascimento.trim() !== "" &&
     nomeMae.trim() !== "" &&
-    civil !== "" &&
-    (civil !== "casado" || regime !== "");
+    // Estado civil/regime só entram no ME (vão pro contrato social).
+    (mei || (civil !== "" && (civil !== "casado" || regime !== "")));
 
   return (
     <>
@@ -202,12 +220,16 @@ export function SocioView({
             <Texto valor={nomeMae} onChange={setNomeMae} placeholder="Nome completo" />
           </Campo>
 
-          <Campo rotulo="Estado civil">
-            <Select valor={civil} onChange={setCivil} opcoes={ESTADO_CIVIL} />
-          </Campo>
+          {/* 🆕 28/08 — os 2 campos abaixo são do CONTRATO SOCIAL, que o MEI
+              não tem. Some no MEI, intacto no ME. */}
+          {!mei && (
+            <Campo rotulo="Estado civil">
+              <Select valor={civil} onChange={setCivil} opcoes={ESTADO_CIVIL} />
+            </Campo>
+          )}
 
           {/* Condicional: só casado revela o regime (spec Tela 6). */}
-          {civil === "casado" && (
+          {!mei && civil === "casado" && (
             <Campo rotulo="Regime de bens">
               <Select
                 valor={regime}
@@ -706,6 +728,8 @@ export function EmpresaView({
   const [iptu, setIptu] = useState("");
   const [tipo, setTipo] = useState("");
   const [capital, setCapital] = useState("");
+  // 🆕 28/08 — só o MEI usa (ver o bloco "Como você atende?" mais abaixo).
+  const [atuacao, setAtuacao] = useState<string[]>([]);
   const [residenciaSocios, setResidenciaSocios] = useState<Record<string, boolean>>({});
 
   // A tela mais pesada da constituição — e por isso a que mais precisa do
@@ -762,7 +786,12 @@ export function EmpresaView({
    * renderizado, porque aparece nos DOIS caminhos. Capital social vai no
    * contrato social e a JUCEMG exige. O endereço é que é condicional, não ele.
    */
-  const completo = usarProprio !== null && enderecoOk && (mei || capitalNum > 0);
+  const completo =
+    usarProprio !== null &&
+    enderecoOk &&
+    // ME exige capital social (vai pro contrato); MEI exige forma de atuação
+    // (o formulário oficial não deixa passar sem).
+    (mei ? atuacao.length > 0 : capitalNum > 0);
 
   return (
     <>
@@ -1034,6 +1063,53 @@ export function EmpresaView({
                   pegar mal com banco e fornecedor.
                 </p>
               )}
+            </Campo>
+          )}
+
+          {/* ─── FORMA DE ATUAÇÃO — só MEI ──────────────────────────────────
+              No ME a gente PREENCHE isso internamente ("Internet", decisão de
+              26/08 em `decisoes-marca.md`): lá não gera dúvida útil, porque o
+              cliente é serviço remoto e a JUCEMG só quer o campo preenchido.
+
+              No MEI é diferente e por isso a pergunta existe: a forma de
+              atuação interage com a **dispensa de alvará** (o Termo de Ciência
+              declara atividade de baixo risco no endereço declarado) e com a
+              validade de usar o endereço residencial como comercial. Quem
+              atende porta a porta e quem monta loja não têm o mesmo risco, e
+              quem responde isso é o titular, não a gente.
+
+              Multi-seleção porque o formulário oficial é multi-seleção. */}
+          {mei && (
+            <Campo
+              rotulo="Como você atende?"
+              dica="Pode marcar mais de uma. É o mesmo campo que o Portal do Empreendedor pede."
+            >
+              <div className="flex flex-col gap-2">
+                {FORMAS_ATUACAO.map((f) => {
+                  const on = atuacao.includes(f.id);
+                  return (
+                    <button
+                      key={f.id}
+                      type="button"
+                      onClick={() =>
+                        setAtuacao(
+                          on
+                            ? atuacao.filter((a) => a !== f.id)
+                            : [...atuacao, f.id],
+                        )
+                      }
+                      aria-pressed={on}
+                      className={`min-h-12 rounded-md border px-4 text-left text-body transition-colors ${
+                        on
+                          ? "border-action-primary bg-action-primary font-semibold text-text-on-brand"
+                          : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
+                      }`}
+                    >
+                      {f.label}
+                    </button>
+                  );
+                })}
+              </div>
             </Campo>
           )}
         </Corpo>
@@ -1544,10 +1620,27 @@ export function NomeView({
   preencher,
   onSeguir,
   onVoltar,
+  mei = false,
 }: {
   preencher?: number;
   onSeguir?: () => void;
   onVoltar?: () => void;
+  /**
+   * 🆕 28/08 — no MEI a razão social NÃO É ESCOLHIDA.
+   *
+   * A Lei 14.195/2021 mandou gerar automaticamente: os 8 primeiros dígitos do
+   * CNPJ + o nome civil do titular (ex.: "12.345.678 JOAO DA SILVA"). Não há
+   * consulta de colidência, não há 3 tentativas na Junta, não há objeto social
+   * (que existe pro contrato). Oferecer as 3 sugestões pro MEI seria pedir uma
+   * escolha que o governo não aceita.
+   *
+   * O que SOBRA e continua importando: o **nome fantasia**, que é opcional e
+   * livre nos dois regimes.
+   *
+   * ⚠️ Nada disso muda o caminho ME: com `mei` ausente, a tela é exatamente a
+   * de sempre (3 sugestões + reordenar + objeto social + fantasia).
+   */
+  mei?: boolean;
 }) {
   const [ordem, setOrdem] = useState<SugestaoNome[]>(sugestoesIniciais);
   const [editandoId, setEditandoId] = useState<string | null>(null);
@@ -1565,7 +1658,7 @@ export function NomeView({
     setFantasia(PREENCHIMENTO.nome.fantasia);
   });
 
-  const completo = ordem.every((o) => o.valor.trim().length > 0);
+  const completo = mei || ordem.every((o) => o.valor.trim().length > 0);
 
   function mover(i: number, dir: -1 | 1) {
     const j = i + dir;
@@ -1586,16 +1679,49 @@ export function NomeView({
       <TelaHeader meta="Nome da empresa" onVoltar={onVoltar} />
 
       <main className="app-main">
-        <Titulo sub="A gente sugeriu 3 nomes. Edite o que quiser e escolha a ORDEM que quer que a gente tente registrar.">
-          Qual nome você prefere?
+        <Titulo
+          sub={
+            mei
+              ? "No MEI o nome oficial é definido por lei. O que você escolhe é a marca que aparece pro cliente."
+              : "A gente sugeriu 3 nomes. Edite o que quiser e escolha a ORDEM que quer que a gente tente registrar."
+          }
+        >
+          {mei ? "O nome da sua empresa" : "Qual nome você prefere?"}
         </Titulo>
 
         <Corpo>
+          {/* ─── VARIANTE MEI ────────────────────────────────────────────────
+              Razão social gerada (Lei 14.195/2021): não há o que escolher, e
+              fingir escolha seria pior que explicar a regra. */}
+          {mei && (
+            <>
+              <Campo
+                rotulo="Razão social"
+                dica="Definida por lei: os 8 primeiros dígitos do seu CNPJ + seu nome completo. Sai automático quando o CNPJ é gerado."
+              >
+                <div
+                  className="w-full rounded-md border border-border-hairline bg-surface-alt p-3
+                             text-body text-text-secondary"
+                >
+                  00.000.000 {CLIENTE.nome.toUpperCase()}
+                </div>
+              </Campo>
+
+              <Aviso variante="info" titulo="Ninguém escolhe o nome de um MEI">
+                Diferente do ME, o MEI não passa por consulta de nome na Junta
+                Comercial. A razão social é montada pelo próprio sistema, e por
+                isso não existe risco de ter o nome recusado.
+              </Aviso>
+            </>
+          )}
+
           {/* Sem API de disponibilidade: em vez de fingir "disponível na Junta",
               a gente é honesta sobre o que dá pra prometer — tentar em ordem.
               🆕 24/08 (pedido do Pedro) — lápis de edição por sugestão, no
               lugar do campo separado "Digite a sua". A pessoa reescreve a
-              sugestão da IA direto, mantendo a seta pra reordenar prioridade. */}
+              sugestão da IA direto, mantendo a seta pra reordenar prioridade.
+              🆕 28/08 — daqui até o objeto social é EXCLUSIVO do ME. */}
+          {!mei && (
           <div>
             <p className="text-caption font-semibold text-text-primary mb-2">
               Suas 3 opções, na ordem que a gente vai tentar
@@ -1667,16 +1793,20 @@ export function NomeView({
               })}
             </div>
           </div>
+          )}
 
           {/* ✍️ 29/07 — o título dizia "A ordem não muda nada na abertura",
               logo abaixo de um subtítulo que pede pra ORDENAR. Lidos em
               sequência, o segundo esvaziava o primeiro. */}
+          {!mei && (
           <Aviso variante="info" titulo="Nenhuma tentativa atrasa a sua abertura">
             A gente tenta registrar a 1ª opção na Junta. Se ela não passar, já
             seguimos pra 2ª, e depois a 3ª — sem te avisar toda vez nem travar
             o processo.
           </Aviso>
+          )}
 
+          {!mei && (
           <Campo
             rotulo="Objeto social"
             dica="Gerado automaticamente a partir das suas atividades. Não dá pra editar aqui — assim evitamos erro de grafia indo pro contrato."
@@ -1688,7 +1818,10 @@ export function NomeView({
               {objeto}
             </div>
           </Campo>
+          )}
 
+          {/* Nome fantasia vale pros DOIS regimes — é o único campo de nome
+              que o formulário do MEI realmente oferece. */}
           <Campo rotulo="Nome fantasia" dica="Opcional. É a marca que aparece pro cliente.">
             <Texto
               valor={fantasia}

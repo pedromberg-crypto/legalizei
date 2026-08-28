@@ -42,20 +42,35 @@ Depois do cruzamento acima, fomos atrás dos 4 dados que faltavam na matriz (nen
 
 Detalhe completo de cada um em `cnae-matriz-governo.md` §2a-2d.
 
-## Próximo passo
+## ✅ Lista "atendemos com certeza" — FECHADA, 3 rodadas de correção (27/08, mesmo dia)
 
-Ainda não feito — cruzar tudo isso contra o resto da `cnae-matriz/`:
-- `contabilizei-cnae-completo.*` (tabela do líder)
-- `cnae-complexidade-abertura.*`
-- `cnae-liso-servico.md`
+Depois da camada tributária, construímos a lista real de CNAEs que o produto atende no V1 (substitui a v1 de 103 herdada da Contabilizei):
 
-Foco prático: identificar CNAEs marcados como "atende MEI" na matriz atual (dado antigo, herdado) que contradizem a coluna `mei_permitido` nova (fonte primária). Além disso, os 62 `requer-revisao` do Anexo/Fator R e os 2+2 órfãos (CGSIM + ISS BH) são pendências pontuais que ficam pra quando o Pedro/Larissa quiser fechar.
+- **90 ME / 53 MEI** — critério de 7 filtros, todos com fonte, ver [[cnae-liso-servico]] (agora `tipo: verdade`, registrado no índice de autoridade).
+- **Export dedicado pro dev:** `cnae-atendemos-certeza.csv/json` — os 90, com as 40 colunas completas da matriz (atividades, observações, fonte legal do enquadramento, etc.), não só as 6 colunas do `.md`.
+- **3 rodadas de correção**, cada uma achando um bug real: (1) 21 códigos eram comércio/indústria disfarçados de serviço + 2 regulamentados que passaram batido; (2) cruzamento com `cnae-complexidade-abertura` achou 4 códigos que exigem **registro setorial federal** (CADASTUR/Polícia Federal/Bacen-CVM-SUSEP — eixo que a pesquisa de conselho profissional não cobria); (3) Pedro pegou que **restaurante/lanchonete é comércio (Anexo I), não serviço** — Decreto 7.212/2010 RIPI, corrigido na matriz inteira (9 CNAEs da divisão 56 recodificados), não só na lista dos 90.
+- `cnae-complexidade-abertura.md` foi **fundido** dentro de `cnae-liso-servico.md` (pedido do Pedro) — não existe mais como arquivo separado, só os datasets `.csv/.json` continuam.
+
+## 🎨 Em andamento — categorias de UX (NÃO persistido ainda)
+
+Pedro pediu uma taxonomia de categorias tipo Contabilizei, pra usuário achar seu CNAE intuitivamente. Proposta feita e aprovada em conversa (17 categorias, 90 CNAEs, web design duplicado de propósito em Tecnologia+Design) — **mas nunca virou arquivo**. Só existe na conversa. Se for retomar, checar se o Pedro ainda quer isso persistido, e já usar o número corrigido (90, pós-correção do restaurante).
+
+## ⏸️ Pedro sinalizou "alguns passos para trás" (27/08, fim da sessão)
+
+Depois de fechar a correção do restaurante, o Pedro disse que ia dar passos pra trás — **não detalhado o quê ainda**. Não presumir o que significa; perguntar antes de continuar a expandir escopo.
+
+## Decisões já tomadas, não reabrir sem o Pedro trazer de novo
+
+- **Não cruzar com `contabilizei-cnae-completo.csv`** — decisão explícita do Pedro (27/08): nosso dado é fonte primária, cruzar com dado do concorrente de origem incerta só gera dúvida, não confiança.
+- Os 62 `requer-revisao` do Anexo/Fator R e os órfãos documentados (CGSIM, ISS BH — CNAE renumerado pelo IBGE) são pendências pontuais conhecidas, não bloqueiam nada.
 
 ## Pendência separada, não travada ainda
 
-Pedro perguntou se faz sentido mover pra dentro de `cnae-matriz/` alguns arquivos CNAE que hoje vivem espalhados (`execucao/cnae-fiscalmente-otimo.md`, alguns marcos datados em `execucao/marcos/`). **Ainda não decidido** — acho que os marcos datados (`execucao/marcos/*cnae*`) devem ficar onde estão (são "descobertas datadas", tipo de nota diferente de dado de referência), mas `cnae-fiscalmente-otimo.md` é candidato real a vir pra cá. Retomar essa conversa depois que a pesquisa fechar — não é bloqueante.
+Pedro perguntou se faz sentido mover pra dentro de `cnae-matriz/` alguns arquivos CNAE que hoje vivem espalhados (`execucao/cnae-fiscalmente-otimo.md`, alguns marcos datados em `execucao/marcos/`). **Ainda não decidido** — acho que os marcos datados (`execucao/marcos/*cnae*`) devem ficar onde estão (são "descobertas datadas", tipo de nota diferente de dado de referência), mas `cnae-fiscalmente-otimo.md` é candidato real a vir pra cá.
+
+## ⚠️ Nota técnica pra quem reabrir
+
+Nessa sessão a pasta acabou trocando de branch no meio (outra janela mexendo em `feat/reordenacao-entrada-lead-gate-bh`) — **nada foi perdido**, mas se ao reabrir você notar `cnae-matriz.csv` sem as colunas novas (`atende_me_certeza`, `exige_conselho`, etc.), é sinal que a pasta está de novo na branch errada. Confirma com `git branch --show-current` — tem que ser `feat/mapa-interativo-e-ajustes-constituicao`.
 
 ## Links
-- [[fundamentos-cnae]]
-- [[prompt-pesquisa-fundamentos-cnae-anexos-mei]]
-- [[resultado-pesquisa-fundamentos-cnae-27-08]]
+- [[fundamentos-cnae]] · [[lc123-art18-anexos-taxativo]] · [[profissoes-regulamentadas-conselhos]] · [[mei-risco-e-simplificacao-abertura]] · [[cnae-liso-servico]] · [[cnae-matriz-governo]] · [[resultado-pesquisa-fundamentos-cnae-27-08]]

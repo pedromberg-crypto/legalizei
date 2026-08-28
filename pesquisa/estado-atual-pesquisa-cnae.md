@@ -68,9 +68,9 @@ Depois de fechar a correção do restaurante, o Pedro disse que ia dar passos pr
 
 Pedro perguntou se faz sentido mover pra dentro de `cnae-matriz/` alguns arquivos CNAE que hoje vivem espalhados (`execucao/cnae-fiscalmente-otimo.md`, alguns marcos datados em `execucao/marcos/`). **Ainda não decidido** — acho que os marcos datados (`execucao/marcos/*cnae*`) devem ficar onde estão (são "descobertas datadas", tipo de nota diferente de dado de referência), mas `cnae-fiscalmente-otimo.md` é candidato real a vir pra cá.
 
-## ⚠️ Nota técnica pra quem reabrir
+## ⚠️ Nota técnica — RESOLVIDA (27/08, fecho)
 
-Nessa sessão a pasta acabou trocando de branch no meio (outra janela mexendo em `feat/reordenacao-entrada-lead-gate-bh`) — **nada foi perdido**, mas se ao reabrir você notar `cnae-matriz.csv` sem as colunas novas (`atende_me_certeza`, `exige_conselho`, etc.), é sinal que a pasta está de novo na branch errada. Confirma com `git branch --show-current` — tem que ser `feat/mapa-interativo-e-ajustes-constituicao`.
+A pasta trocou de branch algumas vezes nessa sessão (outra janela mexendo em `feat/reordenacao-entrada-lead-gate-bh` no mesmo diretório físico, sem worktree própria). **Fechado de vez:** os 4 commits que ficaram presos em `feat/mapa-interativo-e-ajustes-constituicao` (reorganização legado/fontes-oficiais, inclusive) foram mergeados no `main` e empurrados. A pasta agora vive só no `main`, sem branch de trabalho separada pra CNAE. Se abrir sessão nova aqui, já está tudo num lugar só.
 
 ## Links
 - [[fundamentos-cnae]] · [[lc123-art18-anexos-taxativo]] · [[profissoes-regulamentadas-conselhos]] · [[mei-risco-e-simplificacao-abertura]] · [[cnae-liso-servico]] · [[cnae-matriz-governo]] · [[resultado-pesquisa-fundamentos-cnae-27-08]]

@@ -14,12 +14,24 @@ import { PlanoView } from "@/components/wizard-dinheiro";
 import { RetomarView } from "@/components/wizard-cauda";
 import { EntradaView } from "@/components/entrada";
 import { SocioView } from "@/components/wizard-dossie";
+// 🆕 28/08 (pedido do Pedro) — Home Campeã entrou no grupo de testes: página
+// importante o suficiente pra também levar as referências de redesign.
+// Sem componente próprio em `components/` (a composição vive direto no
+// `page.tsx`, sem wrapper de rota — não recebe props) — import direto do
+// arquivo de rota, mesmo padrão de qualquer outro componente React.
+import HomeCampeaPage from "@/app/(app)/(portal)/home-campea/page";
+// 🔄 28/08 (pedido do Pedro) — "Aplicação da referência" trocou de fonte DE
+// NOVO: era `referencia-wallet-v11` (removida), agora é
+// `referencia-fintech-v12`. Regra travada: cada referência nova SUBSTITUI a
+// anterior inteira, nunca acumula. v1-v11 seguem no repo, desconectadas.
 import {
   ReferenciaPlano,
   ReferenciaRetomar,
   ReferenciaFork,
   ReferenciaDadosPessoais,
-} from "@/components/lab/referencia-interior-v1";
+  ReferenciaHomeCampea,
+} from "@/components/lab/referencia-fintech-v12";
+import { Validados } from "@/components/lab/validados";
 
 /**
  * /mockup-v2 — COMPARAÇÃO página a página do redesign (28/07 em diante).
@@ -112,6 +124,11 @@ const TESTE: VersaoSolta[] = [
     nota: "O /dossie/socio de hoje, solto — sem router. `onSeguir`/`onVoltar` são no-op. Tela de inputs, faltava no grupo.",
     render: () => <SocioView onSeguir={() => {}} onVoltar={() => {}} />,
   },
+  {
+    titulo: "Home Campeã (dia-1)",
+    nota: "O /home-campea de hoje, solto. Página importante o bastante pra também levar as referências de redesign — 7 blocos (saudação, próximo compromisso, atalhos, notas, vigilância fiscal, blog, quem cuida).",
+    render: () => <HomeCampeaPage />,
+  },
 ];
 
 /**
@@ -127,43 +144,78 @@ const TESTE: VersaoSolta[] = [
 const APLICACAO_REFERENCIA: VersaoSolta[] = [
   {
     titulo: "N7 · A conta da abertura · Claro",
-    nota: "Referência 1 (interior design app): hero claro em vez de escuro, lista agrupada, CTA em pílula.",
+    nota: "Referência 12 (financial overview dashboard): cartão-herói escuro com brilho laranja (mensalidade+rodapé Detalhes/Continuar), 2 cartões-estatística sem delta (taxa/honorário), inclusos em linha estilo watchlist.",
     render: () => <ReferenciaPlano />,
+    semAppPage: true,
   },
   {
     titulo: "N7 · A conta da abertura · Escuro",
-    nota: "Mesmo componente, só `escuro`. A superfície escura vira a base; o coral segue idêntico.",
+    nota: "Mesmo componente, só `escuro`.",
     render: () => <ReferenciaPlano escuro />,
+    semAppPage: true,
   },
   {
     titulo: "C0.1 · Retomar de onde parou · Claro",
-    nota: "Referência 1: anel percentual no lugar da barra, trilha vira lista agrupada com hairline.",
+    nota: "Referência 12: anel percentual cheio com o % real de progresso, passos em linha watchlist — 'Revisar e confirmar' (o único que REALMENTE trava até o pagamento) vira cartão-vault, com cadeado.",
     render: () => <ReferenciaRetomar />,
+    semAppPage: true,
   },
   {
     titulo: "C0.1 · Retomar de onde parou · Escuro",
     nota: "Mesmo componente, só `escuro`.",
     render: () => <ReferenciaRetomar escuro />,
+    semAppPage: true,
   },
   {
     titulo: "E3 · Fork · 3 rotas · Claro",
-    nota: "Referência 1: cartão-herói com ilustração ao lado do texto + CTA dentro do cartão.",
+    nota: "Referência 12: 'Quero abrir' vira cartão-herói escuro com 1 ação (Começar), 'Já tenho empresa' e Legalize Digital viram linha watchlist.",
     render: () => <ReferenciaFork />,
+    semAppPage: true,
   },
   {
     titulo: "E3 · Fork · 3 rotas · Escuro",
-    nota: "Mesmo componente, só `escuro` (logo troca pra variante `escura`).",
+    nota: "Mesmo componente, só `escuro`.",
     render: () => <ReferenciaFork escuro />,
+    semAppPage: true,
   },
   {
     titulo: "C1 · Seus dados · Claro",
-    nota: "🆕 tela de inputs (faltava no grupo): campo sem borda dura, preenchido em `bgAlt` — mesma família visual dos círculos de ícone.",
+    nota: "Referência 12: confirmação vira linha watchlist (ícone+dado), campos seguem cartõezinhos com sombra — mesma família do resto da referência.",
     render: () => <ReferenciaDadosPessoais />,
+    semAppPage: true,
   },
   {
     titulo: "C1 · Seus dados · Escuro",
     nota: "Mesmo componente, só `escuro`.",
     render: () => <ReferenciaDadosPessoais escuro />,
+    semAppPage: true,
+  },
+  {
+    titulo: "Home Campeã (dia-1) · Claro",
+    nota: "Referência 12: badge circular com a data real na saudação, DAS vira cartão-herói escuro, 2 cartões-estatística (mensalidade/notas), anel percentual do progresso, notas recentes em linha watchlist.",
+    render: () => <ReferenciaHomeCampea />,
+    semAppPage: true,
+  },
+  {
+    titulo: "Home Campeã (dia-1) · Escuro",
+    nota: "Mesmo componente, só `escuro`.",
+    render: () => <ReferenciaHomeCampea escuro />,
+    semAppPage: true,
+  },
+];
+
+/**
+ * 🆕 28/08 (pedido do Pedro: "crie uma tela... pra gente ir colocando os
+ * assets que eu gostar, os que são validados") — 1 aparelho só, cresce peça
+ * por peça. Não é par claro/escuro (não é comparação de referência inteira,
+ * é coleção de pedaços aprovados) — por isso `VALIDADOS` tem 1 item só.
+ */
+const VALIDADOS: VersaoSolta[] = [
+  {
+    titulo: "Validados",
+    nota: "Começa vazio de propósito. Cada asset aprovado entra aqui, um de cada vez.",
+    render: () => <Validados />,
+    semAppPage: true,
   },
 ];
 
@@ -188,13 +240,21 @@ export default function MockupV2Page() {
       titulo="Comparação página a página"
       subtitulo="Original × contido × robusto, lado a lado. Aprovando uma versão, ela sobe pro /mockup de verdade e a seção some daqui. Toca dentro do aparelho pra navegar."
     >
-      {/* 🔄 28/08 (pedido do Pedro) — "Aplicação da referência" subiu pra 1ª
-          seção da página inteira, "Teste" logo abaixo. N6/N7 (comparação
-          original × contido × robusto) seguem depois. */}
+      {/* 🆕 28/08 (pedido do Pedro) — "Validados" é a 1ª seção da página:
+          onde os pedaços aprovados se acumulam, o destino final de tudo que
+          as outras seções abaixo exploram. */}
+      <BoardSecaoSolta
+        titulo="Validados"
+        subtitulo="1 aparelho só — a coleção dos assets que o Pedro aprovou, peça por peça. Não compara nada, só acumula."
+        versoes={VALIDADOS}
+      />
+      {/* 🔄 28/08 (pedido do Pedro) — "Aplicação da referência" é a 2ª seção,
+          "Teste" logo abaixo. N6/N7 (comparação original × contido ×
+          robusto) seguem depois. */}
       <BoardSecaoSolta
         titulo="Aplicação da referência"
         extra={<IndicadorClaroEscuro />}
-        subtitulo="Mesmas telas de 'Teste', reconstruídas com a referência (interior design app) — sempre em par claro + escuro, lado a lado (não é toggle)."
+        subtitulo="Mesmas telas de 'Teste', reconstruídas com a referência 12 (financial overview dashboard: cartão-herói escuro com brilho laranja + cartão-vault pro passo que realmente trava + anel percentual + linha watchlist sem delta) — sempre em par claro + escuro, lado a lado (não é toggle). Veio em mockup de desktop — extraí só a linguagem visual. Sem gráfico de fluxo de caixa, sem watchlist de ações, sem % de crescimento inventado. Regra travada: cada referência nova SUBSTITUI a anterior inteira (v1-v11 seguem no repo, desconectadas)."
         versoes={APLICACAO_REFERENCIA}
       />
       <BoardSecaoSolta

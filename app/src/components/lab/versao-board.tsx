@@ -143,6 +143,18 @@ export type VersaoSolta = {
   /** true = já lapidada (componentes salvos no acervo) → ✓ verde no nome. */
   feito?: boolean;
   render: () => ReactNode;
+  /**
+   * 🔧 28/08 (correção do Pedro: "borda estranha" nas telas de referência) —
+   * `.app-page` tem `padding-inline: 24px` + `padding-top: var(--safe-top)`
+   * embutidos (globals.css), pensados pra views de PRODUÇÃO que NÃO pintam
+   * o próprio fundo (confiam no `body` por trás). Views que JÁ implementam
+   * casca própria full-bleed (fundo, header e safe-area tratados por conta
+   * própria — caso de `referencia-interior-v1.tsx`) ficavam com uma faixa do
+   * fundo ERRADO (o `bg-surface-page` da moldura) vazando nesse padding, à
+   * mostra como uma borda. `semAppPage: true` pula o wrapper `.app-page` e
+   * deixa a view ocupar o aparelho inteiro, sem inset nenhum por fora.
+   */
+  semAppPage?: boolean;
 };
 
 /** Como `BoardSecao`, mas cada versão é renderizada solta (ver `VersaoSolta`). */
@@ -205,11 +217,15 @@ function VersaoSoltaPhone({
           }}
         >
           <MolduraAparelho statusClaro={statusClaro}>
-            {/* `.app-page` usa height:100dvh (viewport) — aqui vira 100% da
-                moldura, mesmo truque do /apresentacao. */}
-            <div className="app-page" style={{ height: "100%" }}>
-              {ver.render()}
-            </div>
+            {ver.semAppPage ? (
+              ver.render()
+            ) : (
+              /* `.app-page` usa height:100dvh (viewport) — aqui vira 100% da
+                 moldura, mesmo truque do /apresentacao. */
+              <div className="app-page" style={{ height: "100%" }}>
+                {ver.render()}
+              </div>
+            )}
           </MolduraAparelho>
         </div>
       </div>

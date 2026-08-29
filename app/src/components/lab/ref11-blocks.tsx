@@ -83,33 +83,136 @@ export function SearchMic() {
   );
 }
 
-/* ─── 3. Grid de ações (card ativo) ───────────────────────────────────────── */
+/* ─── 3. Grid de ações — formato "pasta" (28/08, aprovado com o Pedro em
+   `components/lab/validados.tsx`, promovido pra produção aqui). Canto
+   superior direito cortado por um chanfro reto (não curva), com as 2 pontas
+   da diagonal arredondadas no MESMO raio dos outros 3 cantos — geometria
+   traçada a partir de um export do Illustrator do Pedro, não estimada a
+   olho. Card "ativo" usa o degradê da marca (mesmos 2 stops do CTA de
+   `CartaoStatus`); os outros 3, fundo branco liso.
+   CSS `linear-gradient`/clip-path não servem de contorno pra um SVG `fill`
+   — por isso o path é desenhado à mão (`contornoPasta`) e o degradê vira um
+   `<linearGradient>` nativo. O cartão fica num container com `aspect-ratio`
+   travado na proporção do desenho (168:132) pra caber fluido no grid de 2
+   colunas sem distorcer a curva. */
+function fileteCantoPasta(
+  vx: number,
+  vy: number,
+  dirVoltaX: number,
+  dirVoltaY: number,
+  dirFrenteX: number,
+  dirFrenteY: number,
+  r: number,
+) {
+  const cos = dirVoltaX * dirFrenteX + dirVoltaY * dirFrenteY;
+  const angulo = Math.acos(Math.max(-1, Math.min(1, cos)));
+  const t = r / Math.tan(angulo / 2);
+  return {
+    inicio: { x: vx + dirVoltaX * t, y: vy + dirVoltaY * t },
+    fim: { x: vx + dirFrenteX * t, y: vy + dirFrenteY * t },
+  };
+}
+
+function contornoPasta({
+  w,
+  h,
+  r,
+  chanfroTopo,
+  chanfroLateral,
+  rChanfro,
+}: {
+  w: number;
+  h: number;
+  r: number;
+  chanfroTopo: number;
+  chanfroLateral: number;
+  rChanfro: number;
+}) {
+  const v1x = w - chanfroTopo;
+  const v1y = 0;
+  const v2x = w;
+  const v2y = chanfroLateral;
+  const dx = v2x - v1x;
+  const dy = v2y - v1y;
+  const len = Math.hypot(dx, dy);
+  const ux = dx / len;
+  const uy = dy / len;
+
+  const filete1 = fileteCantoPasta(v1x, v1y, -1, 0, ux, uy, rChanfro);
+  const filete2 = fileteCantoPasta(v2x, v2y, -ux, -uy, 0, 1, rChanfro);
+
+  const n = (v: number) => Math.round(v * 100) / 100;
+
+  return [
+    `M0,${n(r)}`,
+    `A${n(r)},${n(r)} 0 0 1 ${n(r)},0`,
+    `L${n(filete1.inicio.x)},${n(filete1.inicio.y)}`,
+    `A${n(rChanfro)},${n(rChanfro)} 0 0 1 ${n(filete1.fim.x)},${n(filete1.fim.y)}`,
+    `L${n(filete2.inicio.x)},${n(filete2.inicio.y)}`,
+    `A${n(rChanfro)},${n(rChanfro)} 0 0 1 ${n(filete2.fim.x)},${n(filete2.fim.y)}`,
+    `L${n(w)},${n(h - r)}`,
+    `A${n(r)},${n(r)} 0 0 1 ${n(w - r)},${n(h)}`,
+    `L${n(r)},${n(h)}`,
+    `A${n(r)},${n(r)} 0 0 1 0,${n(h - r)}`,
+    "Z",
+  ].join(" ");
+}
+
+/* 🔄 28/08 (correção do Pedro, `pasta3.png` com linha vermelha sobre os
+   cards reais) — proporção mais larga/curta (era 168:104 ≈1.6:1, ficou
+   180:110 ≈1.64:1, bate com o traçado) e chanfro mais curto nas 2 bordas
+   (20% da largura / 27% da altura, não 30%/34%). */
+const PASTA_W = 180;
+const PASTA_H = 110;
+const PASTA_R = 24;
+const CAMINHO_PASTA = contornoPasta({
+  w: PASTA_W,
+  h: PASTA_H,
+  r: PASTA_R,
+  chanfroTopo: PASTA_W * 0.2,
+  chanfroLateral: PASTA_H * 0.27,
+  rChanfro: PASTA_R,
+});
+
+/* ─── 3. Grid de ações (card ativo, formato pasta) ────────────────────────── */
 export function AcoesRapidas() {
   return (
     <div className="grid grid-cols-2 gap-3">
-      {ACOES.map((a) => (
-        <button key={a.titulo} className="text-left">
-          <div
-            className={`h-[112px] rounded-2xl p-4 ${
-              a.ativo
-                ? "bg-action-primary text-text-on-brand"
-                : "border border-border-hairline bg-surface-card text-text-primary"
-            }`}
-          >
-            <span
-              className={`flex h-9 w-9 items-center justify-center rounded-xl ${
-                a.ativo ? "bg-white/20" : "bg-surface-alt text-action-primary-sm"
-              }`}
-            >
-              <a.Icone />
-            </span>
-            <p className="mt-3 text-caption font-bold">{a.titulo}</p>
-            <p className={`text-micro ${a.ativo ? "text-text-on-brand/80" : "text-text-tertiary"}`}>
-              {a.sub}
-            </p>
-          </div>
-        </button>
-      ))}
+      {ACOES.map((a, i) => {
+        const filtroId = `sombra-acao-${i}`;
+        const gradienteId = `gradiente-acao-${i}`;
+        return (
+          <button key={a.titulo} className="relative text-left" style={{ aspectRatio: `${PASTA_W} / ${PASTA_H}` }}>
+            <svg viewBox={`0 0 ${PASTA_W} ${PASTA_H}`} className="absolute inset-0 h-full w-full overflow-visible">
+              <defs>
+                <filter id={filtroId} x="-30%" y="-30%" width="160%" height="160%">
+                  <feDropShadow dx="0" dy="8" stdDeviation="9" floodColor="rgba(20,23,18,0.10)" />
+                </filter>
+                <linearGradient id={gradienteId} x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="var(--color-action-primary)" />
+                  <stop offset="100%" stopColor="var(--color-action-primary-hover)" />
+                </linearGradient>
+              </defs>
+              <path d={CAMINHO_PASTA} style={{ fill: a.ativo ? `url(#${gradienteId})` : "#FFFFFF" }} filter={`url(#${filtroId})`} />
+            </svg>
+            <div className={`relative flex h-full flex-col px-4 py-3 ${a.ativo ? "text-text-on-brand" : "text-text-primary"}`}>
+              <span
+                className={`flex h-9 w-9 items-center justify-center rounded-xl ${
+                  a.ativo ? "bg-white/20" : "bg-surface-alt text-action-primary-sm"
+                }`}
+              >
+                <a.Icone />
+              </span>
+              <div className="mt-auto">
+                <p className="text-caption font-bold">{a.titulo}</p>
+                <p className={`text-micro ${a.ativo ? "text-text-on-brand/80" : "text-text-tertiary"}`}>
+                  {a.sub}
+                </p>
+              </div>
+            </div>
+          </button>
+        );
+      })}
     </div>
   );
 }

@@ -1098,8 +1098,18 @@ export function HomeAtivacaoView() {
           </div>
 
           {/* Hero de nascimento — SEM confete (decisão do Pedro, 29/07) e SEM
-              o selo coral no topo (removido a pedido, mesma data). */}
-          <div className="relative overflow-hidden rounded-2xl bg-surface-dark p-5 text-text-on-dark">
+              o selo coral no topo (removido a pedido, mesma data).
+              🔄 28/08 (pedido do Pedro) — brilho coral sutil no canto via
+              `radial-gradient`, mesmo tratamento aplicado nos 3 heróis
+              escuros da cauda (não é o selo sólido removido em 29/07, é um
+              degradê de fundo, bem mais discreto). */}
+          <div
+            className="relative overflow-hidden rounded-2xl p-5 text-text-on-dark"
+            style={{
+              background:
+                "radial-gradient(120% 100% at 0% 0%, color-mix(in srgb, var(--color-action-primary) 45%, transparent) 0%, transparent 55%), var(--color-surface-dark)",
+            }}
+          >
             <p className="text-h2 font-bold leading-tight">Sua empresa nasceu.</p>
             <p className="mt-1 text-caption text-text-on-dark/70">
               Ativa há 3 dias. Agora é deixar tudo pronto pra você faturar.
@@ -1323,6 +1333,91 @@ function IconeChevronAtivacao() {
 // plano escolhido e pago); "CNAE principal da empresa" é a vez agora.
 const ESTADO_P1 = { diasFora: 6, concluidos: 2 };
 
+/** Cartão-resumo do progresso — badge "Constituição"+%, "Você está em/X de Y
+ *  passos", meta "Agora"+2ª info à direita. Origem: `components/lab/
+ *  validados.tsx` (asset "Cartão de saldo — progresso"), promovido pra
+ *  produção aqui — usado nas 2 telas da cauda que retomam o cliente
+ *  (Retomar de onde parou / Boleto a caminho). */
+function CartaoResumoPassos({
+  titulo,
+  pct,
+  feito,
+  total,
+  agora,
+  metaDirRotulo,
+  metaDirValor,
+  escuro = false,
+}: {
+  /** 🔄 28/08 (pedido do Pedro) — "coloque o bem-vindo dentro desse card,
+   *  ficando 1 só": funde o hero de saudação com o resumo de progresso. */
+  titulo?: string;
+  pct: number;
+  feito: number;
+  total: number;
+  agora: string;
+  metaDirRotulo: string;
+  metaDirValor: string;
+  /** 🧪 28/08 (pedido do Pedro) — "só pra eu ver", preview em modo escuro.
+   *  Não é decisão travada, `false` continua o padrão (light-only). */
+  escuro?: boolean;
+}) {
+  return (
+    <div
+      className={`rounded-[24px] p-5 ${escuro ? "text-text-on-dark" : "border border-border-hairline bg-surface-card"}`}
+      style={
+        escuro
+          ? {
+              background:
+                "radial-gradient(120% 100% at 0% 0%, color-mix(in srgb, var(--color-action-primary) 45%, transparent) 0%, transparent 55%), var(--color-surface-dark)",
+            }
+          : undefined
+      }
+    >
+      {titulo && <p className="mb-4 text-display font-bold leading-tight">{titulo}</p>}
+      <div className="flex items-center justify-between">
+        <span className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 ${escuro ? "bg-white/10" : "bg-surface-alt"}`}>
+          <IconeBandeiraPasso />
+          <span className={`text-micro font-semibold ${escuro ? "" : "text-text-primary"}`}>Constituição</span>
+        </span>
+        <span className={`text-caption font-bold ${escuro ? "text-text-on-dark/60" : "text-text-tertiary"}`}>{pct}%</span>
+      </div>
+      <p className={`mt-4 text-caption ${escuro ? "text-text-on-dark/60" : "text-text-tertiary"}`}>Você está em</p>
+      <p className={`text-h1 font-bold leading-tight ${escuro ? "" : "text-text-primary"}`}>
+        {feito} de {total} passos
+      </p>
+      <div className="mt-4 flex items-center justify-between">
+        <div>
+          <p className={`text-micro ${escuro ? "text-text-on-dark/60" : "text-text-tertiary"}`}>Agora</p>
+          <p className={`text-caption font-semibold ${escuro ? "" : "text-text-primary"}`}>{agora}</p>
+        </div>
+        <div className="text-right">
+          <p className={`text-micro ${escuro ? "text-text-on-dark/60" : "text-text-tertiary"}`}>{metaDirRotulo}</p>
+          <p className={`text-caption font-semibold ${escuro ? "" : "text-text-primary"}`}>{metaDirValor}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function IconeBandeiraPasso() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M4 21V4" />
+      <path d="M4 5h13l-2 4 2 4H4" />
+    </svg>
+  );
+}
+
 export function RetomarView({
   mei = false,
   temSocios = true,
@@ -1354,36 +1449,22 @@ export function RetomarView({
             estados não mudaram, só a casca. */}
         <div className="min-h-0 flex-1 overflow-y-auto pt-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <div className="flex flex-col gap-4 pb-[calc(24px+var(--safe-bottom))]">
-            <div className="rounded-2xl bg-surface-dark p-5 text-text-on-dark">
-              {/* 🆕 28/08 (pedido do Pedro) — maior que o resto dos títulos
-                  do hero escuro: é saudação, não título de tarefa (o A5 usa
-                  text-h1 pra "Vamos ativar sua empresa"; aqui sobe 1 degrau,
-                  text-display, porque é a ÚNICA linha do hero — sem 2ª linha
-                  de contexto disputando espaço). */}
-              <p className="text-display font-bold leading-tight">Bem-vindo de volta</p>
-              <p className="mt-1 text-caption text-text-on-dark/70">
-                Você saiu há {ESTADO_P1.diasFora} dias e está tudo salvo, do
-                jeitinho que deixou. Vamos continuar?
-              </p>
-            </div>
+            {/* 🔄 28/08 (pedido do Pedro: "coloque o bem-vindo dentro desse
+                card, ficando 1 só") — hero de saudação + resumo de progresso
+                fundidos num cartão só (era 2 cartões separados). */}
+            <CartaoResumoPassos
+              titulo="Bem-vindo de volta"
+              pct={pct}
+              feito={feito}
+              total={total}
+              agora={passos[feito]?.nome ?? "—"}
+              metaDirRotulo="Saiu há"
+              metaDirValor={`${ESTADO_P1.diasFora} dias`}
+              escuro
+            />
 
             <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
-              <div className="flex items-center justify-between">
-                <p className="text-body-strong font-semibold text-text-primary">Onde você está</p>
-                <span className="text-caption font-semibold text-text-secondary">
-                  {feito} de {total}
-                </span>
-              </div>
-              <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface-alt">
-                <div
-                  className="h-full rounded-full bg-action-primary transition-all"
-                  style={{ width: `${pct}%` }}
-                />
-              </div>
-
-              <div className="mt-4">
-                <ListaPassos concluidos={feito} mostrarDestino mei={mei} temSocios={temSocios} />
-              </div>
+              <ListaPassos concluidos={feito} mostrarDestino mei={mei} temSocios={temSocios} />
             </div>
 
             <p className="text-micro text-text-tertiary px-1">
@@ -1427,7 +1508,8 @@ export function AguardandoView({
   temSocios?: boolean;
   onSeguir?: () => void;
 }) {
-  const total = passosDoCliente({ mei, temSocios }).length;
+  const passos = passosDoCliente({ mei, temSocios });
+  const total = passos.length;
   const pct = Math.round((BOLETO_P2.passosFeitos / total) * 100);
   const boleto = mei ? CUSTOS.MENSALIDADE_MEI : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
 
@@ -1442,7 +1524,13 @@ export function AguardandoView({
             branco com progresso + trilha. Conteúdo e estados intactos. */}
         <div className="min-h-0 flex-1 overflow-y-auto pt-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <div className="flex flex-col gap-4 pb-[calc(24px+var(--safe-bottom))]">
-            <div className="rounded-2xl bg-surface-dark p-5 text-text-on-dark">
+            <div
+              className="rounded-2xl p-5 text-text-on-dark"
+              style={{
+                background:
+                  "radial-gradient(120% 100% at 0% 0%, color-mix(in srgb, var(--color-action-primary) 45%, transparent) 0%, transparent 55%), var(--color-surface-dark)",
+              }}
+            >
               <p className="text-h2 font-bold leading-tight">Seu boleto está a caminho</p>
               <p className="mt-1 text-caption text-text-on-dark/70">
                 Boleto leva de 1 a 3 dias úteis pra cair. Enquanto isso, vamos
@@ -1464,29 +1552,23 @@ export function AguardandoView({
               </div>
             </div>
 
-            <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
-              <div className="flex items-center justify-between">
-                <p className="text-body-strong font-semibold text-text-primary">Onde você está</p>
-                <span className="text-caption font-semibold text-text-secondary">
-                  {BOLETO_P2.passosFeitos} de {total}
-                </span>
-              </div>
-              <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface-alt">
-                <div
-                  className="h-full rounded-full bg-action-primary transition-all"
-                  style={{ width: `${pct}%` }}
-                />
-              </div>
+            <CartaoResumoPassos
+              pct={pct}
+              feito={BOLETO_P2.passosFeitos}
+              total={total}
+              agora={passos[BOLETO_P2.passosFeitos]?.nome ?? "—"}
+              metaDirRotulo="Boleto"
+              metaDirValor="1 a 3 dias úteis"
+            />
 
-              <div className="mt-4">
-                <ListaPassos
-                  concluidos={BOLETO_P2.passosFeitos}
-                  pagamentoPendente
-                  mostrarDestino
-                  mei={mei}
-                  temSocios={temSocios}
-                />
-              </div>
+            <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
+              <ListaPassos
+                concluidos={BOLETO_P2.passosFeitos}
+                pagamentoPendente
+                mostrarDestino
+                mei={mei}
+                temSocios={temSocios}
+              />
             </div>
 
             <p className="text-micro text-text-tertiary px-1">

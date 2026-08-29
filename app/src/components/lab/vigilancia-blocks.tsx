@@ -50,7 +50,7 @@ export function Vigilancia() {
         <div className="mt-4 flex items-stretch gap-2">
           <Link
             href="/impostos/aliquotas"
-            className="flex-1 rounded-2xl bg-[#F4F4F4] p-3.5 transition-colors hover:bg-[#E0E0E0] active:bg-[#E0E0E0]"
+            className="flex-1 rounded-2xl bg-surface-alt p-3.5 transition-colors hover:bg-[#E0E0E0] active:bg-[#E0E0E0]"
           >
             <div className="flex items-center justify-between">
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-surface-card text-text-primary">
@@ -65,7 +65,7 @@ export function Vigilancia() {
           </Link>
           <Link
             href="/impostos/aliquotas"
-            className="flex-1 rounded-2xl bg-[#F4F4F4] p-3.5 transition-colors hover:bg-[#E0E0E0] active:bg-[#E0E0E0]"
+            className="flex-1 rounded-2xl bg-surface-alt p-3.5 transition-colors hover:bg-[#E0E0E0] active:bg-[#E0E0E0]"
           >
             <div className="flex items-center justify-between">
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-surface-card text-text-primary">
@@ -79,7 +79,7 @@ export function Vigilancia() {
         </div>
 
         {/* alerta preditivo — o coração da vigília */}
-        <div className="mt-3 flex gap-2.5 rounded-2xl bg-[#F4F4F4] p-3">
+        <div className="mt-3 flex gap-2.5 rounded-2xl bg-surface-alt p-3">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface-card text-text-primary">
             <Olho />
           </span>

@@ -65,9 +65,6 @@ export default function ImpostosPage() {
                 <CardImposto key={i.titulo} i={i} />
               ))}
             </div>
-            <p className="mt-2 text-micro text-text-tertiary">
-              A gente acompanha o pagamento. Sem marcar “paguei” na mão.
-            </p>
           </div>
 
           {/* ── Guias anteriores (status AUTOMÁTICO — anti-líder) ── */}
@@ -114,10 +111,6 @@ export default function ImpostosPage() {
                 </Link>
               ))}
             </div>
-            <p className="mt-2 text-micro text-text-tertiary">
-              A gente acompanha o pagamento pra você. Nada de marcar “paguei” na
-              mão.
-            </p>
           </div>
 
           {/* ── Vigília fiscal (o diferencial — componente aprovado) ── */}
@@ -150,16 +143,24 @@ function CardImposto({ i }: { i: Imposto }) {
     `&de=${encodeURIComponent("/impostos")}`;
   return (
     <div className="w-[72%] shrink-0 snap-start">
-      <div className="flex h-full flex-col rounded-2xl border border-border-hairline bg-surface-card p-5">
+      {/* 28/08 (pedido do Pedro) — estilo escuro + brilho coral, mesma
+         técnica validada no cartão do DAS (Home Campeã) e nos heróis da
+         cauda: `radial-gradient` sutil saindo do canto superior esquerdo
+         sobre `var(--color-surface-dark)`. */}
+      <div
+        className="flex h-full flex-col rounded-2xl p-5 text-text-on-dark"
+        style={{
+          background:
+            "radial-gradient(120% 100% at 0% 0%, color-mix(in srgb, var(--color-action-primary) 45%, transparent) 0%, transparent 55%), var(--color-surface-dark)",
+        }}
+      >
         <div className="flex-1">
-          <div className="flex items-center justify-between gap-2">
-            <p className="truncate text-caption text-text-secondary">{i.titulo}</p>
-            <span className="shrink-0 rounded-full bg-state-info-tint px-2.5 py-1 text-micro font-semibold text-state-info-text">
-              Vence {i.vence}
-            </span>
-          </div>
-          <p className="mt-1 text-display font-bold text-text-primary">{i.valor}</p>
-          <p className="mt-1 text-micro text-text-tertiary">{i.origem}</p>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5">
+            <IconeCalendarioImposto />
+            <span className="text-micro font-semibold">Vence {i.vence}</span>
+          </span>
+          <p className="mt-3 truncate text-caption text-text-on-dark/60">{i.titulo}</p>
+          <p className="mt-1 text-display font-bold">{i.valor}</p>
         </div>
         <Link
           href={href}
@@ -169,6 +170,25 @@ function CardImposto({ i }: { i: Imposto }) {
         </Link>
       </div>
     </div>
+  );
+}
+
+function IconeCalendarioImposto() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <rect x="3" y="5" width="18" height="16" rx="2" />
+      <path d="M3 10h18M8 3v4M16 3v4" />
+    </svg>
   );
 }
 

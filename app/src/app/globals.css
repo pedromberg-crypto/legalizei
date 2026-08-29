@@ -90,9 +90,18 @@
    ───────────────────────────────────────────────────────────────────────── */
 @theme {
   /* ── Superfície ── */
-  --color-surface-page: var(--p-ink-50);
+  /* 🔄 28/08 (experimento do Pedro, "background branco em todas as nossas
+     telas") — era `var(--p-ink-50)` (creme #FAF8F5). Muda AQUI, no token
+     global: /mapa mostra prévia ao vivo via IFRAME (documento separado, não
+     herda CSS var de página pai), então só um override escopado não chegava
+     lá. Pra reverter: volta pra `var(--p-ink-50)`. */
+  --color-surface-page: var(--p-white);
   --color-surface-card: var(--p-white);
-  --color-surface-alt: var(--p-ink-100);
+  /* 🔄 28/08 (pedido do Pedro) — era `var(--p-ink-100)` (creme #F1EEE9,
+     mesma família quente do resto da paleta ink). Vira um cinza neutro
+     literal, fora da escala ink — todo card que usava `bg-surface-alt`
+     muda junto (mesmo token, um valor só). */
+  --color-surface-alt: #F4F4F4;
   --color-surface-dark: var(--p-ink-800);
   --color-surface-tint-brand: var(--p-coral-50);
 

@@ -669,6 +669,68 @@ function AssetAtalhosPasta({ escuro = false }: { escuro?: boolean }) {
   );
 }
 
+/* ─── ASSET 10 · Cartão de saldo — DAS (versão final, promovida à produção) ─
+   Substitui em espírito o Asset 3 (mantido, é outra execução/momento
+   aprovado) — este aqui é o estado FINAL, o mesmo que está ao vivo em
+   `ref9-blocks.tsx`/Home Campeã hoje: pill "Vence 20/07" (sem o "Hoje"
+   redundante/contraditório removido a pedido do Pedro), "Status" e o botão
+   "Pagar" (menor, dentro do cartão) dividindo a mesma linha, embaixo. Cores
+   via CSS var real do produto (não o objeto `Paleta` do lab) — é cópia fiel
+   da produção, light-only. */
+function AssetCartaoDASFinal() {
+  return (
+    <div>
+      <p className="mb-2.5 text-caption font-semibold text-text-tertiary">Seu próximo compromisso</p>
+      <div className="rounded-[24px] border border-border-hairline bg-surface-card p-5">
+        <div className="flex items-center justify-between">
+          <span className="flex items-center gap-1.5 rounded-full bg-surface-alt px-3 py-1.5">
+            <IconeCalendario />
+            <span className="text-micro font-semibold text-text-primary">Vence 20/07</span>
+          </span>
+          <span className="text-caption font-bold text-text-tertiary">DAS</span>
+        </div>
+        <p className="mt-4 text-caption text-text-tertiary">DAS de junho</p>
+        <p className="text-h1 font-bold leading-tight text-text-primary">R$ 178,31</p>
+        <div className="mt-4 flex items-center justify-between">
+          <div>
+            <p className="text-micro text-text-tertiary">Status</p>
+            <p className="text-caption font-semibold text-text-primary">Gerado</p>
+          </div>
+          <span className="rounded-xl bg-action-primary px-5 py-2.5 text-caption font-bold text-text-on-brand">
+            Pagar
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── ASSET 11 · Herói escuro com brilho coral (degradê) ───────────────────
+   Técnica aprovada 28/08: `radial-gradient` sutil (coral, `color-mix` a 45%)
+   saindo do canto superior esquerdo sobre `var(--color-surface-dark)` — ao
+   vivo em 4 lugares: o cartão do DAS na Home Campeã e os 3 heróis escuros
+   da cauda (`Bem-vindo de volta`/`Seu boleto está a caminho`/`Sua empresa
+   nasceu`, em `wizard-cauda.tsx`). Aqui um exemplar representativo. */
+function AssetHeroiEscuroCoral() {
+  return (
+    <div>
+      <p className="mb-2.5 text-body-strong font-bold text-text-primary">Herói escuro com brilho coral</p>
+      <div
+        className="rounded-2xl p-5 text-text-on-dark"
+        style={{
+          background:
+            "radial-gradient(120% 100% at 0% 0%, color-mix(in srgb, var(--color-action-primary) 45%, transparent) 0%, transparent 55%), var(--color-surface-dark)",
+        }}
+      >
+        <p className="text-display font-bold leading-tight">Bem-vindo de volta</p>
+        <p className="mt-1 text-caption text-text-on-dark/70">
+          Você saiu há 6 dias e está tudo salvo, do jeitinho que deixou. Vamos continuar?
+        </p>
+      </div>
+    </div>
+  );
+}
+
 /* ─── A COLEÇÃO — o `escuro` de cada chamada É a cor aprovada, guardada
    diretamente no código (não um campo separado que podia divergir do que
    de fato renderiza). ─────────────────────────────────────────────────── */
@@ -682,6 +744,8 @@ const ASSETS: { titulo: string; render: () => React.ReactNode }[] = [
   { titulo: "Título + grade do Fork", render: () => <AssetGradeFork escuro={false} /> },
   { titulo: "Cartão-status (CTA gradiente)", render: () => <AssetCartaoStatus escuro={false} /> },
   { titulo: "Atalhos rápidos (formato pasta)", render: () => <AssetAtalhosPasta escuro={false} /> },
+  { titulo: "Cartão de saldo — DAS (versão final, produção)", render: () => <AssetCartaoDASFinal /> },
+  { titulo: "Herói escuro com brilho coral", render: () => <AssetHeroiEscuroCoral /> },
 ];
 
 export function Validados() {

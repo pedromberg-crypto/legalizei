@@ -5,25 +5,42 @@
  * próximo-compromisso (featured dark) · quem-cuida-de-você (time + avatars).
  */
 
-/* ─── 1. Próximo compromisso (featured dark) ──────────────────────────────── */
+/* ─── 1. Próximo compromisso (cartão de saldo, aprovado 28/08) ─────────────
+   Substitui o antigo "featured dark". Origem: `components/lab/validados.tsx`
+   (asset "Cartão de saldo — DAS + Pagar", `CartaoSaldo`+`BotaoLaranja`),
+   promovido pra produção aqui — cópia própria em Tailwind puro, sem o objeto
+   `Paleta` do lab (esta tela é light-only). */
 export function ProximoCompromisso() {
   return (
     <div>
       <Cabecalho titulo="Seu próximo compromisso" />
-      <div className="rounded-2xl bg-surface-dark p-5 text-text-on-dark">
-        <p className="text-caption text-text-on-dark/70">Hoje · vence 20/07</p>
-        <p className="mt-1 text-h2">DAS de junho</p>
-        <div className="mt-5 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-action-primary text-body font-bold text-text-on-brand">
-              L
-            </span>
-            <div>
-              <p className="text-caption font-semibold">R$ 178,31</p>
-              <p className="text-micro text-text-on-dark/60">A gente já gerou pra você</p>
-            </div>
+      {/* 🧪 28/08 (pedido do Pedro) — "só pra eu ver", preview em modo escuro.
+         Fora do padrão light-only desta tela — não é decisão travada, só
+         experimento visual pontual neste card. Brilho coral sutil no canto,
+         igual à referência (radial-gradient com a cor de marca, baixa
+         opacidade, sobre o fundo escuro do DS). */}
+      <div
+        className="rounded-[24px] border border-white/10 p-5"
+        style={{
+          background:
+            "radial-gradient(120% 100% at 0% 0%, color-mix(in srgb, var(--color-action-primary) 45%, transparent) 0%, transparent 55%), var(--color-surface-dark)",
+        }}
+      >
+        <div className="flex items-center justify-between">
+          <span className="flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-text-on-dark">
+            <IconeCalendario />
+            <span className="text-micro font-semibold text-text-on-dark">Vence 20/07</span>
+          </span>
+          <span className="text-caption font-bold text-text-on-dark/60">DAS</span>
+        </div>
+        <p className="mt-4 text-caption text-text-on-dark/60">DAS de junho</p>
+        <p className="text-h1 font-bold leading-tight text-text-on-dark">R$ 178,31</p>
+        <div className="mt-4 flex items-center justify-between">
+          <div>
+            <p className="text-micro text-text-on-dark/60">Status</p>
+            <p className="text-caption font-semibold text-text-on-dark">Gerado</p>
           </div>
-          <button className="rounded-xl bg-white px-4 py-2 text-caption font-semibold text-text-primary">
+          <button className="rounded-xl bg-action-primary px-5 py-2.5 text-caption font-bold text-text-on-brand">
             Pagar
           </button>
         </div>
@@ -53,6 +70,25 @@ export function QuemCuida() {
         </div>
       </div>
     </div>
+  );
+}
+
+function IconeCalendario() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <rect x="3" y="5" width="18" height="16" rx="2" />
+      <path d="M3 10h18M8 3v4M16 3v4" />
+    </svg>
   );
 }
 

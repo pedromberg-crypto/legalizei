@@ -97,20 +97,17 @@ export const CUSTOS = {
    *  da Contabilizei, que sujeita a aprovação manual. */
   ENDERECO_FISCAL: 60,
   /**
-   * 🔴 SEM VALOR — de propósito.
+   * 🟢 FECHADO (Pedro, 30/08) — R$209/ano. Antes ficava `null` de propósito
+   * (regra anti-guru: o ADR de 30/07 só citava "~R$200" dentro de uma
+   * SIMULAÇÃO de custo, sem fonte fechada com a certificadora parceira).
+   * Preço confirmado pelo Pedro, entra em tela como valor real agora.
    *
    * 28/08: o certificado digital deixou de vir incluso no plano MEI. Ele
    * continua sendo o que destrava a operação otimizada (a gente puxar guia,
    * mexer no FGTS Digital e agir por procuração sem pedir senha do cliente a
    * cada vez), mas o custo passa a ser do cliente.
-   *
-   * Não existe constante de preço aqui porque **não temos preço fechado com a
-   * certificadora parceira** — o ADR de 30/07 cita "~R$200" dentro de uma
-   * SIMULAÇÃO de custo, não como tabela. Regra anti-guru do vault: número sem
-   * fonte não entra em tela. Enquanto não fechar, a UI fala em "a gente te
-   * passa o valor", nunca um número.
    */
-  CERTIFICADO_PRECO: null,
+  CERTIFICADO_PRECO: 209,
 } as const;
 
 export const FAIXA_MEDIA: Record<string, number> = {

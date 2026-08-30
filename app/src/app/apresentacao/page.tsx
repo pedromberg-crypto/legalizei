@@ -15,6 +15,7 @@ import {
   AnalisandoView,
   TriagemView,
   FaixaView,
+  MeiOuMeView,
 } from "@/components/gate-telas";
 import { MolduraAparelho } from "@/components/lab/versao-board";
 import { SaidaView } from "@/components/saida";
@@ -227,6 +228,9 @@ type Etapa =
   // 🆕 27/08 — E3.1 e E3.3, telas NOVAS da captura de lead. Substituem a
   // "cidade" (E4, gate autodeclarado), que foi removida do flow.
   | "dados"
+  // 🆕 29/08 — E3.2 (MEI×ME) faltava na demo: o caminho abrir pulava direto
+  // de "dados" pra "endereco", achado do Pedro testando no iPhone.
+  | "mei-ou-me"
   | "endereco"
   | "fora-bh"
   | "perguntando"
@@ -530,6 +534,7 @@ type Momento =
   | "welcome"
   | "fork"
   | "dados"
+  | "mei-ou-me"
   | "endereco"
   | "fora-bh"
   | "fora-bh-enviado"
@@ -925,6 +930,7 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   welcome: "/welcome",
   fork: "/entrada",
   dados: "/dados",
+  "mei-ou-me": "/entrada?intencao=abrir",
   endereco: "/endereco",
   "fora-bh": "/saida/fora-bh",
   "fora-bh-enviado": "/saida/fora-bh",
@@ -998,6 +1004,10 @@ const NOME_MOCKUP: Record<Momento, string> = Object.fromEntries(
   ])
 ) as Record<Momento, string>;
 NOME_MOCKUP.fim = "— fim do piloto —";
+// 🆕 29/08 — a rota real leva query string (`/entrada?intencao=abrir`), que
+// não bate com a chave exata de `LABEL_POR_ROTA` (keyed pela rota base
+// listada em `GRUPOS`). Sobrescreve manual, mesmo padrão do `fim` acima.
+NOME_MOCKUP["mei-ou-me"] = "E3.2 · MEI × ME";
 
 const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; porque: string }> = {
   splash: {
@@ -1029,6 +1039,14 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
       "Nada no processo da Junta. Interfere no NOSSO lado: sem isso, quem desiste no meio do funil é anônimo e não dá pra retomar contato.",
     porque:
       "Reordenação de 27/08, em cima do cruzamento com o funil da Contabilizei: eles pedem esses 3 campos na PRIMEIRA tela, e a gente só pedia depois de 6 telas de gate. A frase do Pedro resume: 'se a gente não capta isso rápido, não sabe nem quem é dono dos próximos cliques'. O aceite formal continua no E8, antes do pagamento; aqui vai só o consentimento mínimo de privacidade, em 1 linha.",
+  },
+  "mei-ou-me": {
+    dono: "usuario",
+    faz: "Pergunta direto se a pessoa é MEI ou ME, com os critérios de cada regime lado a lado (teto de faturamento, cidade, sócio, funcionário).",
+    interfere:
+      "Decide o Anexo/regime que o resto do wizard segue: MEI não passa pelo gate de cidade (abre em qualquer lugar do Brasil), ME sim.",
+    porque:
+      "🔄 29/08 (pedido do Pedro) — o título deixou de perguntar 'você já sabe' e virou direto 'você é MEI ou ME'; o subtítulo tirou 'dá pra trocar de ideia depois' (a escolha aqui não é reversível de graça lá na frente). Ganhou um link de escape ('Estou com dúvida, preciso de ajuda') pra quem trava, e a ordem dos cards inverteu (ME em cima, MEI embaixo).",
   },
   endereco: {
     dono: "usuario",
@@ -1548,11 +1566,15 @@ export default function ApresentacaoPage() {
   // 🆕 27/08 — estado das 2 telas novas de captura de lead (E3.1 e E3.3).
   const [dadosLead, setDadosLead] = useState<DadosLead>({
     nome: "",
+    sobrenome: "",
     email: "",
     telefone: "",
   });
+  // 🆕 29/08 — E3.2 (MEI×ME), faltava na demo.
+  const [regimeDemo, setRegimeDemo] = useState<"mei" | "me" | null>(null);
   const [cepDemo, setCepDemo] = useState("");
   const [numeroDemo, setNumeroDemo] = useState("");
+  const [complementoDemo, setComplementoDemo] = useState("");
 
   // Qual cenário está armado no campo (só pra o painel antecipar o desfecho
   // antes de validar). null = campo livre / digitado na mão.
@@ -1571,6 +1593,7 @@ export default function ApresentacaoPage() {
     telefone: "",
     email: "",
     senha: "",
+    confirmarSenha: "",
     cep: "",
     numero: "",
     complemento: "",
@@ -1687,6 +1710,7 @@ export default function ApresentacaoPage() {
       telefone: "",
       email: "",
       senha: "",
+      confirmarSenha: "",
       cep: "",
       numero: "",
     complemento: "",
@@ -1741,6 +1765,7 @@ export default function ApresentacaoPage() {
         telefone: "(31) 98888-7766",
         email: "ana.beatriz@email.com",
         senha: "legalizai2026",
+        confirmarSenha: "legalizai2026",
         cep: "30140-060",
         numero: "1000",
         complemento: "",
@@ -1811,6 +1836,7 @@ export default function ApresentacaoPage() {
         telefone: "(31) 98888-7766",
         email: "ana.beatriz@email.com",
         senha: "legalizai2026",
+        confirmarSenha: "legalizai2026",
         cep: "30140-060",
         numero: "1000",
         complemento: "",
@@ -1841,6 +1867,7 @@ export default function ApresentacaoPage() {
     { etapa: "welcome", label: "E2 · Welcome" },
     { etapa: "fork", label: "E3 · Fork" },
     { etapa: "dados", label: "🆕 E3.1 · Seus dados" },
+    { etapa: "mei-ou-me", label: "🆕 E3.2 · MEI × ME" },
     { etapa: "endereco", label: "🆕 E3.3 · Endereço + categoria" },
     { etapa: "triagem", label: "E5 · Triagem" },
     { etapa: "faixa", label: "E5 · Faixa" },
@@ -1911,6 +1938,8 @@ export default function ApresentacaoPage() {
       ? "fork"
       : etapa === "dados"
         ? "dados"
+        : etapa === "mei-ou-me"
+          ? "mei-ou-me"
         : etapa === "endereco"
         ? "endereco"
         : etapa === "fora-bh"
@@ -2013,6 +2042,7 @@ export default function ApresentacaoPage() {
     // 🆕 27/08 — E3.1/E3.3 trazem o próprio header+main (TelaHeader), igual às
     // telas do dinheiro. Por isso entram aqui, não no bloco genérico.
     etapa === "dados" ||
+    etapa === "mei-ou-me" ||
     etapa === "endereco" ||
     etapa === "conta" ||
     etapa === "conta-codigo" ||
@@ -2222,6 +2252,12 @@ export default function ApresentacaoPage() {
                     ) : etapa === "welcome" ? (
                       // WelcomeView traz o próprio header+main. Pular e terminar
                       // os 3 slides levam pro mesmo lugar que em produção: /entrada.
+                      // 🐛 29/08 — o fundo full-bleed do slide "card" chegou a
+                      // usar `fixed inset-0`, o que exigia um wrapper com
+                      // `transform` aqui igual à Splash (2 comentários acima).
+                      // Trocado por `absolute inset-0` (ancorado no próprio
+                      // `.app-page`, já `position:relative`) dentro do
+                      // `welcome.tsx` — não precisa mais de wrapper nenhum aqui.
                       <WelcomeView
                         onPular={() => setEtapa("fork")}
                         onSeguir={() => setEtapa("fork")}
@@ -2252,9 +2288,23 @@ export default function ApresentacaoPage() {
                             set={(k, v) => setDadosLead((p) => ({ ...p, [k]: v }))}
                             contexto={intencao === "migrar" ? "migrar" : "abrir"}
                             onSeguir={() =>
-                              setEtapa(intencao === "migrar" ? "m-cnpj" : "endereco")
+                              setEtapa(intencao === "migrar" ? "m-cnpj" : "mei-ou-me")
                             }
                             onVoltar={() => voltar(() => setEtapa("fork"))}
+                          />
+                        )}
+                        {/* 🆕 29/08 — E3.2 · MEI × ME, achado do Pedro
+                            (faltava na demo, o caminho abrir pulava direto de
+                            "dados" pra "endereco"). Só existe no caminho abrir
+                            aqui: migrar já reencontra sua própria esteira via
+                            "m-cnpj" logo depois de "dados". */}
+                        {etapa === "mei-ou-me" && (
+                          <MeiOuMeView
+                            contexto="abrir"
+                            regime={regimeDemo}
+                            setRegime={setRegimeDemo}
+                            onSeguir={() => setEtapa("endereco")}
+                            onVoltar={() => voltar(() => setEtapa("dados"))}
                           />
                         )}
                         {/* 🆕 27/08 — E3.3 · endereço (gate de BH real) +
@@ -2267,18 +2317,12 @@ export default function ApresentacaoPage() {
                             setCep={setCepDemo}
                             numero={numeroDemo}
                             setNumero={setNumeroDemo}
+                            complemento={complementoDemo}
+                            setComplemento={setComplementoDemo}
                             categoria={categoria}
                             setCategoria={setCategoria}
                             onSeguir={() => setEtapa("triagem")}
-                            // A waitlist não é Etapa própria: é o MOMENTO
-                            // derivado de um resultado com veredito
-                            // "waitlist". Arma o resultado e cai na tela de
-                            // veredito, igual à interação real faria.
-                            onForaDeEscopo={() => {
-                              setResultado(mapear("nutricionista"));
-                              setEtapa("veredito");
-                            }}
-                            onVoltar={() => voltar(() => setEtapa("dados"))}
+                            onVoltar={() => voltar(() => setEtapa("mei-ou-me"))}
                           />
                         )}
                         {(etapa === "conta" || etapa === "conta-codigo") && (
@@ -2740,7 +2784,18 @@ export default function ApresentacaoPage() {
                               <SetaVoltarDemo />
                             </button>
                           )}
-                          <p className="text-micro text-text-tertiary">Legalizai</p>
+                          {/* 🐛 29/08 (achado do Pedro) — triagem/faixa
+                              mostravam "Legalizai" fixo, igual ao bug que já
+                              tinha corrigido na rota real (`/gate`). Mesmo
+                              rótulo usado lá: `meta` é o destino do voltar,
+                              não o nome desta tela. */}
+                          <p className="text-micro text-text-tertiary">
+                            {etapa === "faixa"
+                              ? "Perguntas rápidas"
+                              : etapa === "triagem"
+                                ? "Sobre sua empresa"
+                                : "Legalizai"}
+                          </p>
                         </header>
 
                         <main className="app-main">
@@ -2788,21 +2843,7 @@ export default function ApresentacaoPage() {
                             <TriagemView
                               socios={socios}
                               setSocios={setSocios}
-                              exterior={exterior}
-                              setExterior={setExterior}
-                              socioTipo={socioTipo}
-                              setSocioTipo={setSocioTipo}
                               onSeguir={() => setEtapa("faixa")}
-                              onSaida={(rota) =>
-                                setEtapa(
-                                  rota === "/saida/exterior"
-                                    ? "saida-exterior"
-                                    : rota === "/saida/socio-pj"
-                                      ? "saida-socio-pj"
-                                      : "saida-socios",
-                                )
-                              }
-                              exteriorSoComSocio
                               // 🆕 26/08 — 3ª realocação da coorte (Veredito →
                               // aqui, dentro da própria Triagem). Mesmo
                               // `dadosConta.coorte` de sempre, só muda quem

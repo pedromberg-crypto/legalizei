@@ -48,9 +48,20 @@ interface EnderecoCep {
   municipio: string;
   uf: string;
 }
-/** 🚧 Mock do autofill por CEP — mesmo padrão do N13 (sem API real ainda). */
+/** 🚧 Mock do autofill por CEP — mesmo padrão do N13 (sem API real ainda).
+ *  🆕 29/08 (pedido do Pedro, testes do gate de cidade) — 39560-000 (Salinas,
+ *  MG, de cabeça pra teste) devolve a cidade real em vez do fallback BH, pra
+ *  testar o "cidade travada" do fora-de-BH sem precisar de API de verdade. */
 export function buscarCep(cepDigitos: string): EnderecoCep | null {
   if (cepDigitos.length !== 8) return null;
+  if (cepDigitos === "39560000") {
+    return {
+      logradouro: "Rua Comércio",
+      bairro: "Centro",
+      municipio: "Salinas",
+      uf: "MG",
+    };
+  }
   return {
     logradouro: "Rua dos Timbiras",
     bairro: "Funcionários",
@@ -65,6 +76,8 @@ export type DadosConta = {
   telefone: string;
   email: string;
   senha: string;
+  /** 🆕 30/08 (pedido do Pedro) — confirmação de senha, padrão de sempre. */
+  confirmarSenha: string;
   cep: string;
   numero: string;
   /** 🆕 28/08 (pedido do Pedro) — opcional, mesmo padrão do resto do form. */
@@ -118,6 +131,22 @@ export function ContaView({
   /** 🆕 28/08 — só troca o subtítulo (MEI não passa pela Junta). */
   mei?: boolean;
 }) {
+  // 🆕 30/08 (pedido do Pedro) — contador de reenvio do código (E6.1), 60s
+  // (era 30s, só na copy, sem contador de verdade nenhum). Declarado ANTES de
+  // qualquer `return` condicional: hook tem que rodar em toda renderização,
+  // mesmo quando `etapa` ainda é "form" (regra dos hooks — o componente troca
+  // de etapa sem desmontar).
+  const [segundosReenvio, setSegundosReenvio] = useState(60);
+  useEffect(() => {
+    if (etapa !== "codigo" || segundosReenvio <= 0) return;
+    const t = setTimeout(() => setSegundosReenvio((s) => s - 1), 1000);
+    return () => clearTimeout(t);
+  }, [etapa, segundosReenvio]);
+  // 🚧 mock (RF-01): sem reenvio real de código ainda, só reseta o contador.
+  function reenviarCodigo() {
+    setSegundosReenvio(60);
+  }
+
   if (layout === "painel" && etapa === "form") {
     return (
       <ContaPainel
@@ -151,7 +180,24 @@ export function ContaView({
       <>
         <TelaHeader meta="Confirme seu acesso" onVoltar={onVoltar} />
         <main className="app-main">
-          <Titulo sub={`Mandamos um código de 6 dígitos pro ${d.email || "seu e-mail"} e por SMS.`}>
+          {/* 🔄 30/08 (pedido do Pedro) — explicita PRA ONDE foi cada envio
+              (e-mail e telefone, os dois em coral+negrito), não só "e por
+              SMS" genérico. */}
+          <Titulo
+            sub={
+              <>
+                Mandamos um código de 6 dígitos pro{" "}
+                <strong className="font-bold text-action-primary-sm">
+                  {d.email || "seu e-mail"}
+                </strong>{" "}
+                e por SMS pro{" "}
+                <strong className="font-bold text-action-primary-sm">
+                  {d.telefone || "seu telefone"}
+                </strong>
+                .
+              </>
+            }
+          >
             Digite o código
           </Titulo>
           <Corpo>
@@ -163,9 +209,23 @@ export function ContaView({
                 inputMode="numeric"
               />
             </Campo>
-            <p className="text-micro text-text-tertiary">
-              Não chegou? Confere o spam ou pede um novo em 30s.
-            </p>
+            {/* 🔄 30/08 (pedido do Pedro) — era só copy estática ("...em
+                30s"), sem contador nem CTA de reenvio de verdade. Agora conta
+                de 60 em 60 pra baixo e vira botão quando zera. */}
+            {segundosReenvio > 0 ? (
+              <p className="text-micro text-text-tertiary">
+                Não chegou? Confere o spam ou pede um novo em{" "}
+                <strong className="font-bold text-action-primary-sm">{segundosReenvio}s</strong>.
+              </p>
+            ) : (
+              <button
+                type="button"
+                onClick={reenviarCodigo}
+                className="self-start text-micro font-semibold text-text-secondary underline underline-offset-4"
+              >
+                Reenviar código
+              </button>
+            )}
           </Corpo>
           <Rodape>
             <Button full disabled={d.codigo.length !== 6} onClick={onConfirmar}>
@@ -360,6 +420,7 @@ function ContaPainel({
     set("email", provedor === "apple" ? "ana.b@privaterelay.appleid.com" : "ana.beatriz@gmail.com");
     // Senha não existe em conta social: satisfaz a regra sem pedir nada.
     set("senha", "__social__");
+    set("confirmarSenha", "__social__");
   }
 
   const nomeOk = d.nome.trim().split(/\s+/).length >= 2;
@@ -367,15 +428,21 @@ function ContaPainel({
   const telefoneCheio = d.telefone.replace(/\D/g, "").length >= 10;
   const cepDigitos = d.cep.replace(/\D/g, "");
   const endereco = buscarCep(cepDigitos);
+  // 🆕 30/08 (pedido do Pedro) — senha forte de verdade (maiúscula + minúscula
+  // + número, mín. 8), e confirmação tem que bater com a senha. Conta social
+  // nunca passa por aqui: `senha` vira o valor mock `__social__`.
+  const senhaForte =
+    d.senha.length >= 8 && /[a-z]/.test(d.senha) && /[A-Z]/.test(d.senha) && /[0-9]/.test(d.senha);
+  const senhaOk = social !== null || (senhaForte && d.senha === d.confirmarSenha);
   // Com o lead já captado (E3.1 + E3.3), o que falta pra virar conta é só CPF
   // e senha — os outros campos nem aparecem, então não podem travar o CTA.
   const completo = leadJaCaptado
-    ? cpfCheio && (d.senha.length >= 8 || social !== null)
+    ? cpfCheio && senhaOk
     : nomeOk &&
       cpfCheio &&
       telefoneCheio &&
       /@/.test(d.email) &&
-      d.senha.length >= 8 &&
+      senhaOk &&
       cepDigitos.length === 8 &&
       d.numero.trim() !== "";
 
@@ -407,20 +474,22 @@ function ContaPainel({
           )}
           <Logo variante="escura" className="h-8 w-auto shrink-0" />
         </div>
-
-        <div className="mt-10">
-          <h1 className="text-h1 text-text-on-dark">
-            {leadJaCaptado ? "Falta só criar seu acesso." : "Vamos criar seu acesso."}
-          </h1>
-          <p className="text-caption text-text-on-dark/70 mt-1.5">
-            {subConta(mei, leadJaCaptado)}
-          </p>
-        </div>
       </div>
 
       {/* FOLHA CLARA — sobrepõe o painel (o canto arredondado "monta" na cor).
           Diferente do login, ela ROLA: é a região elástica da tela. */}
       <div className="-mx-6 -mt-5 flex min-h-0 flex-1 flex-col overflow-y-auto rounded-t-xl bg-surface-page px-7 pt-7 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {/* 🔄 30/08 (pedido do Pedro) — título e subtítulo migraram do painel
+            escuro pra dentro da folha clara, como título do próprio card. */}
+        <div className="mb-5">
+          <h1 className="text-h1 text-text-primary">
+            {leadJaCaptado ? "Falta só criar seu acesso." : "Vamos criar seu acesso."}
+          </h1>
+          <p className="text-caption text-text-secondary mt-1.5">
+            {subConta(mei, leadJaCaptado)}
+          </p>
+        </div>
+
         {/* 🔓 UX-72 — conectado por Google/Apple: nome e e-mail vêm do provedor,
             então em vez de repetir os campos a tela CONFIRMA quem entrou e pede
             só o que falta. */}
@@ -439,6 +508,7 @@ function ContaPainel({
                 set("nome", "");
                 set("email", "");
                 set("senha", "");
+                set("confirmarSenha", "");
               }}
               className="shrink-0 text-micro font-semibold text-text-secondary underline underline-offset-4"
             >
@@ -543,6 +613,40 @@ function ContaPainel({
                   {mostrarSenha ? <IconeOlhoFechado /> : <IconeOlhoAberto />}
                 </button>
               </CampoIconeConta>
+              {/* 🆕 30/08 (pedido do Pedro) — orientação de força da senha,
+                  logo abaixo do campo (a regra é checada de verdade em
+                  `senhaForte`, isso não é só decoração). */}
+              <p className="text-micro text-text-tertiary -mt-2">
+                Use letras maiúsculas, minúsculas e números.
+              </p>
+
+              {/* 🆕 30/08 (pedido do Pedro) — confirmar senha, padrão de
+                  sempre. Reusa o mesmo toggle de mostrar/ocultar da senha
+                  (os dois campos viram texto/senha juntos). */}
+              <CampoIconeConta icone={<IconeCadeadoConta />}>
+                <input
+                  value={d.confirmarSenha}
+                  onChange={(e) => set("confirmarSenha", e.target.value)}
+                  type={mostrarSenha ? "text" : "password"}
+                  autoComplete="new-password"
+                  placeholder="Confirmar senha"
+                  aria-label="Confirmar senha"
+                  className="min-h-12 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
+                />
+                <button
+                  type="button"
+                  onClick={() => setMostrarSenha((v) => !v)}
+                  aria-label={mostrarSenha ? "Ocultar senha" : "Mostrar senha"}
+                  className="shrink-0 text-text-tertiary transition-colors hover:text-text-secondary"
+                >
+                  {mostrarSenha ? <IconeOlhoFechado /> : <IconeOlhoAberto />}
+                </button>
+              </CampoIconeConta>
+              {d.confirmarSenha.length > 0 && d.senha !== d.confirmarSenha && (
+                <p className="text-micro text-state-danger-text -mt-2">
+                  As senhas não são iguais.
+                </p>
+              )}
             </>
           )}
 
@@ -583,7 +687,7 @@ function ContaPainel({
                       resto do form usa — economiza altura de tela num form
                       já longo. */}
                   <div className="flex gap-3">
-                    <div className="flex-1">
+                    <div className="min-w-0 flex-1">
                       <CampoIconeConta>
                         <input
                           value={d.numero}
@@ -591,18 +695,18 @@ function ContaPainel({
                           placeholder="Número"
                           aria-label="Número"
                           inputMode="numeric"
-                          className="min-h-12 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
+                          className="min-h-12 min-w-0 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
                         />
                       </CampoIconeConta>
                     </div>
-                    <div className="flex-1">
+                    <div className="min-w-0 flex-1">
                       <CampoIconeConta>
                         <input
                           value={d.complemento}
                           onChange={(e) => set("complemento", e.target.value)}
-                          placeholder="Complemento (opcional)"
+                          placeholder="Complemento"
                           aria-label="Complemento"
-                          className="min-h-12 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
+                          className="min-h-12 min-w-0 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
                         />
                       </CampoIconeConta>
                     </div>
@@ -683,11 +787,12 @@ function ContaPainel({
       <Rodape>
         {/* 🆕 28/08 (pedido do Pedro) — CTA renomeado e a micro-copy "criar
             conta é de graça" removida: com o form voltando a coletar tudo
-            aqui (reposição de 28/08), o próximo passo real do funil é pagar
-            (E7 plano → E9 pagamento), não só "criar conta" — o texto agora
-            avisa isso. */}
+            aqui (reposição de 28/08), o próximo passo real do funil é o
+            plano (E7), não só "criar conta" — o texto avisa isso.
+            🔄 30/08 (pedido do Pedro) — "efetuar pagamento" virou "ver
+            plano": o pagamento em si só acontece na E9, depois do E7/E8. */}
         <Button full disabled={!completo} onClick={onCriarConta}>
-          Criar conta e efetuar pagamento
+          Criar conta e ver plano
         </Button>
       </Rodape>
     </main>
@@ -726,8 +831,16 @@ function IconePessoaConta() {
 function IconeDoc() {
   return <svg {...ic20()}><path d="M7 3h7l4 4v14H7z" /><path d="M14 3v4h4" /><path d="M10 13h5M10 17h3" /></svg>;
 }
+// 🔄 30/08 (pedido do Pedro) — era o fone de gancho clássico ("ligação"), virou
+// celular de verdade (retângulo + indicador de home), mais coerente com o
+// resto do app (o mesmo traço já usado no ícone "mobile-first").
 function IconeTelefone() {
-  return <svg {...ic20()}><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z" /></svg>;
+  return (
+    <svg {...ic20()}>
+      <rect x="7" y="2" width="10" height="20" rx="2" />
+      <path d="M11 18h2" />
+    </svg>
+  );
 }
 function IconeEmailConta() {
   return <svg {...ic20()}><rect x="2" y="4" width="20" height="16" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg>;
@@ -1012,7 +1125,11 @@ const INCLUSO: { titulo: string; sub: string; icone: ReactNode }[] = [
     sub: "Documentação, contrato social, protocolo e CNPJ, sem honorário. Em escritório tradicional, isso custa em torno de um salário mínimo.",
     icone: <IconePredio />,
   },
-  { titulo: "Certificado digital", sub: "Incluso, sem custo extra.", icone: <IconeCadeado /> },
+  {
+    titulo: "Certificado digital",
+    sub: `Incluso, sem custo extra. Fora daqui, certificadoras cobram em torno de ${brl(CUSTOS.CERTIFICADO_PRECO, true)}/ano.`,
+    icone: <IconeCadeado />,
+  },
   { titulo: "Imposto e declarações", sub: "Guia pronta todo mês e obrigação entregue no prazo.", icone: <IconeDocPlano /> },
   { titulo: "Notas fiscais sem limite", sub: "Emite pelo app, em segundos.", icone: <IconeRaioPlano /> },
   { titulo: "Pró-labore de até 2 sócios", sub: "Calculado junto com o seu imposto.", icone: <IconePessoasPlano /> },
@@ -1117,8 +1234,11 @@ function PlanoOferta({
               do título, no lugar de repetir isso 2x mais embaixo. */}
           <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-state-success-tint px-4 py-2">
             <span className="h-2 w-2 rounded-full bg-state-success" aria-hidden />
+            {/* 🔄 30/08 (pedido do Pedro) — mais explícito sobre O QUE é
+                grátis (o processo contábil de abertura, não a mensalidade
+                nem o produto inteiro), enxuto pra caber numa linha só. */}
             <span className="text-caption font-semibold text-state-success-text">
-              Abrir sua empresa é 100% grátis
+              O processo contábil de abertura é 100% grátis
             </span>
           </div>
 
@@ -1158,8 +1278,10 @@ function PlanoOferta({
                 "radial-gradient(120% 90% at 85% -10%, color-mix(in srgb, var(--color-brand) 30%, transparent), transparent 60%)",
             }}
           >
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-caption text-text-on-dark/60">Depois, todo mês</p>
+            {/* 🔴 30/08 (pedido do Pedro) — "Depois, todo mês" saiu: soltinha
+                do jeito que estava, confundia mais que explicava. O pill do
+                nome do plano fica sozinho agora. */}
+            <div className="flex items-center justify-end gap-3">
               <span className="rounded-full bg-white/12 px-4 py-1.5 text-caption font-semibold text-text-on-dark backdrop-blur-sm">
                 {semTaxaJunta ? "Plano MEI" : "Plano único"}
               </span>
@@ -1179,14 +1301,9 @@ function PlanoOferta({
                 ? `A 1ª mensalidade já é o seu 1º mês. Fidelidade de ${CUSTOS.FIDELIDADE_MESES} meses.`
                 : "A 1ª mensalidade já é o seu 1º mês."}
             </p>
-            {/* 🔓 A única letra miúda real da tela (variação por faturamento) —
-                visível, colada no preço, nunca em acordeon (decisão 29/07). */}
-            {!semTaxaJunta && (
-              <p className="mt-1 text-caption text-text-on-dark/70">
-                O valor acompanha o seu faturamento. Se a empresa crescer muito,
-                a gente conversa antes.
-              </p>
-            )}
+            {/* 🔴 30/08 (pedido do Pedro) — subtítulo "O valor acompanha o seu
+                faturamento..." saiu: pesado demais pra essa altura da tela,
+                a variação por faturamento já fica clara no resto do fluxo. */}
             {enderecoFiscal && (
               <p className="mt-1 text-caption text-text-on-dark/70">
                 Inclui {brl(CUSTOS.ENDERECO_FISCAL, true)}/mês de endereço

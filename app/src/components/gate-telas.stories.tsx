@@ -46,18 +46,11 @@ export const Analisando: Story = { render: () => <Shell><AnalisandoView /></Shel
 
 function TriagemInterativo() {
   const [socios, setSocios] = useState<number | null>(null);
-  const [exterior, setExterior] = useState<boolean | null>(null);
-  const [socioTipo, setSocioTipo] = useState<"cpf" | "cnpj" | null>(null);
   return (
     <TriagemView
       socios={socios}
       setSocios={setSocios}
-      exterior={exterior}
-      setExterior={setExterior}
-      socioTipo={socioTipo}
-      setSocioTipo={setSocioTipo}
       onSeguir={() => {}}
-      onSaida={() => {}}
     />
   );
 }

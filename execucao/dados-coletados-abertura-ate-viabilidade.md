@@ -1,7 +1,7 @@
 ---
 tipo: verdade
 status: GERADO — não editar à mão, nasce de `execucao/flow/gerar-mapa.mjs`
-data: 2026-08-28
+data: 2026-08-29
 assunto: dados-coletados-abertura
 tags: [execucao, flow, dados, abertura]
 ---
@@ -15,10 +15,10 @@ tags: [execucao, flow, dados, abertura]
 ### E1 · Splash
 - _(sem dado novo — contexto, confirmação ou decisão do sistema)_
 
-### E2.1 · Welcome (1/3 · Contador de verdade)
+### E2.1 · Welcome (1/3 · Léo vigia, contador é gente)
 - _(sem dado novo — contexto, confirmação ou decisão do sistema)_
 
-### E2.2 · Welcome (2/3 · Parte chata)
+### E2.2 · Welcome (2/3 · Aquece o fork)
 - _(sem dado novo — contexto, confirmação ou decisão do sistema)_
 
 ### E2.3 · Welcome (3/3 · Sem susto no boleto)
@@ -37,23 +37,28 @@ tags: [execucao, flow, dados, abertura]
 - Regime autodeclarado (MEI ou ME)
 
 ### E3.4 · Endereço + categoria (os 2 gates)
-- Endereço da empresa (CEP validado BH + número) OU endereço fiscal Legalizai (+R$60/mês)
-- categoria de atividade (1 das 15 categorias, `pesquisa/cnae-matriz/taxonomia-pills-n4.md`, v2 27/08 -- 90 CNAEs certeza)
+- Endereço da empresa (CEP validado BH + número) OU endereço fiscal Legalizai (+R$60/mês) OU cidade pra fila de espera
+- categoria de atividade (1 das 15 categorias, `pesquisa/cnae-matriz/taxonomia-pills-n4.md`, v2 27/08 -- 90 CNAEs certeza) OU atividade regulamentada (≤12 opções) pra quem não se encontrou
 
-### Triagem sócios? CPF/CNPJ? exterior?
-- Quantidade de sócios (1 / 2 / 3 / 4 / 5+)
-- sócio via CPF ou CNPJ (quando há sócio)
-- mora fora do Brasil (sim/não)
+### Triagem quantos sócios?
+- Quantidade de sócios (1 / 2 / 3 / 4)
 - é a 1ª empresa que abre? (opcional)
+- sócio que não se encaixa no card informativo (opcional, texto livre via 'Falar com o time')
 
 ### Faixa de faturamento
 - Faixa de faturamento mensal (ou valor exato, se souber)
 
 ### E6 · Criar conta
-- Senha
+- Nome
 - CPF
+- telefone
+- e-mail
+- senha
+- CEP
+- número
+- complemento
+- coorte (opcional)
 - código de verificação (mock)
-- CONFIRMA nome/e-mail/telefone já captados no E3.3 (não recoleta)
 
 ### E7 · A conta da abertura
 - _(sem dado novo — contexto, confirmação ou decisão do sistema)_

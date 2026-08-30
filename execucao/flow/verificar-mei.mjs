@@ -116,7 +116,7 @@ const REVISADOS = {
   "entrada-lead.tsx:alvara": { max: 2, nota: "Só dentro do aviso `regimeMei`, e é o texto CORRETO (alvará dispensado em BH pra baixo risco)." },
 
   // ── gate-telas.tsx (E3.2 fork MEI×ME + E5F faixa) ────────────────────────
-  "gate-telas.tsx:socios": { max: 33, nota: "Tudo dentro de TriagemView (que o MEI NÃO renderiza — o /gate bifurca pra ImpedimentoView) ou em comentário." },
+  "gate-telas.tsx:socios": { max: 37, nota: "Tudo dentro de TriagemView (que o MEI NÃO renderiza — o /gate bifurca pra ImpedimentoView) ou em comentário. 29/08: +3 da resolução inline do gate '5+ sócios'; +1 do comentário explicando o label 'Eu + N' do seletor de quantidade." },
   "gate-telas.tsx:certificado": { max: 2, nota: "🆕 28/08 — o card MEI do fork avisa, desde a escolha, que o certificado é necessário pro dia a dia e NÃO vem no plano. É o 'dizer desde o início' que o Pedro pediu." },
   "gate-telas.tsx:junta": { max: 1, nota: "Comentário." },
   "gate-telas.tsx:contrato-social": { max: 1, nota: "Comentário sobre sócio PJ, na TriagemView (não alcançável pelo MEI)." },

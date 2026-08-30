@@ -7,6 +7,7 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { TelaHeader, Aviso } from "@/components/ui/tela";
 // 🔄 27/08 — `CUSTOS` saiu junto com a escolha de endereço, que migrou da
@@ -107,8 +108,133 @@ export const FAIXAS = [
   { id: "ate 10k", label: "Até R$ 10 mil" },
   { id: "10-20k", label: "R$ 10 a 20 mil" },
   { id: "20-30k", label: "R$ 20 a 30 mil" },
-  { id: "30k+", label: "Mais de R$ 30 mil" },
+  { id: "30k+", label: "+ R$ 30 mil" },
 ];
+
+/* ─── 🆕 29/08 (pedido do Pedro) — grade de cartões ilustrados pra Faixa de
+   faturamento, layout ficava vazio como lista de pills finas. Ícone é PNG
+   exportado pelo Pedro (Photoshop), 1 par (coral/creme) por faixa — cédulas
+   empilhadas, 1 maço na faixa 1 até 4 maços na faixa 4, canvas/proporção
+   travados no Photoshop pra bater entre si. Coral no card claro (fundo
+   card-alt), creme no card selecionado (fundo coral sólido). ────────────── */
+const ICONES_FAIXA = [
+  { coral: "/icones/faixa-1-coral.png", creme: "/icones/faixa-1-creme.png" },
+  { coral: "/icones/faixa-2-coral.png", creme: "/icones/faixa-2-creme.png" },
+  { coral: "/icones/faixa-3-coral.png", creme: "/icones/faixa-3-creme.png" },
+  { coral: "/icones/faixa-4-coral.png", creme: "/icones/faixa-4-creme.png" },
+];
+
+function CheckBadgeFaixa() {
+  return (
+    <span className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-white text-action-primary-sm">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        <path d="m5 12 4 4 8-9" />
+      </svg>
+    </span>
+  );
+}
+
+function CardFaixa({
+  label,
+  nivel,
+  selecionado,
+  onClick,
+}: {
+  label: string;
+  nivel: number;
+  selecionado: boolean;
+  onClick: () => void;
+}) {
+  const icone = ICONES_FAIXA[nivel - 1];
+  return (
+    <button
+      onClick={onClick}
+      className={`relative flex flex-col items-center gap-3 rounded-2xl border p-5 text-center transition-colors
+        ${
+          selecionado
+            ? "border-action-primary bg-action-primary"
+            : "border-border-hairline bg-surface-card hover:border-border-strong"
+        }`}
+    >
+      {selecionado && <CheckBadgeFaixa />}
+      <Image
+        src={selecionado ? icone.creme : icone.coral}
+        alt=""
+        width={67}
+        height={67}
+        aria-hidden
+      />
+      <span className={`text-body font-semibold ${selecionado ? "text-text-on-brand" : "text-text-primary"}`}>{label}</span>
+    </button>
+  );
+}
+
+/** 🆕 29/08 — mesma estrutura visual da `CardFaixa` (ícone direto no fundo,
+ *  badge de check no canto quando selecionado, troca coral/creme), genérico
+ *  pra qualquer par de opções fixas (coorte, regime MEI×ME, etc.) em vez de
+ *  uma lista indexada por nível. */
+function CardIconeSelecao({
+  label,
+  iconeCoral,
+  iconeCreme,
+  selecionado,
+  onClick,
+  // 🆕 29/08 (pedido do Pedro) — os prédios de MEI×ME pareciam pequenos perto
+  // da prancheta (que usa o padrão de 67px). Fica ajustável por chamada em
+  // vez de mudar o default global (a prancheta continua 67).
+  tamanho = 67,
+}: {
+  label: string;
+  iconeCoral: string;
+  iconeCreme: string;
+  selecionado: boolean;
+  onClick: () => void;
+  tamanho?: number;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`relative flex flex-col items-center gap-3 rounded-2xl border p-5 text-center transition-colors
+        ${
+          selecionado
+            ? "border-action-primary bg-action-primary"
+            : "border-border-hairline bg-surface-card hover:border-border-strong"
+        }`}
+    >
+      {selecionado && <CheckBadgeFaixa />}
+      <Image
+        src={selecionado ? iconeCreme : iconeCoral}
+        alt=""
+        width={tamanho}
+        height={tamanho}
+        aria-hidden
+      />
+      <span className={`text-body font-semibold ${selecionado ? "text-text-on-brand" : "text-text-primary"}`}>{label}</span>
+    </button>
+  );
+}
+
+function GradeFaixas({
+  selecionada,
+  onSelecionar,
+}: {
+  selecionada: string | null;
+  onSelecionar: (id: string) => void;
+}) {
+  return (
+    <div className="grid grid-cols-2 gap-3">
+      {FAIXAS.map((f, i) => (
+        <CardFaixa
+          key={f.id}
+          label={f.label}
+          nivel={i + 1}
+          selecionado={selecionada === f.id}
+          onClick={() => onSelecionar(f.id)}
+        />
+      ))}
+    </div>
+  );
+}
 
 /* ─────────────────────────────────────────────────────────────────────────
    ARQUÉTIPO A1 — PERGUNTA (o mais comum do flow; N4, N10–N16)
@@ -332,52 +458,42 @@ export function AnalisandoView() {
 /* ─────────────────────────────────────────────────────────────────────────
    🆕 TRIAGEM (UX-21 fail-fast) — não existia no protótipo.
    Nasce da reordenação: com cobrança no N9, o que mata a elegibilidade tem
-   que ser perguntado ANTES do dinheiro. Barrar depois = cobrar de quem não
-   pode abrir. Espelha b1.triagem do motor.
-   ⚠️ 28/07: a saída AGORA navega de verdade — "Falar com o time" era beco sem
-   saída (as telas /saida/exterior e /saida/socios existiam mas nada linkava
-   pra elas). Exterior tem precedência (bloqueio legal, LC 123 art.17) sobre
-   3+ sócios (limite do produto) — mesma ordem que já dava o texto do aviso.
+   que ser perguntado ANTES do dinheiro. Espelha b1.triagem do motor.
 
    🔓 24/08 (reunião Leonan 19/08) — LIMITE SUBIU DE 2 PRA 4. O Leonan validou
    que empresa pequena com 3-4 sócios acontece (raro acima disso); o que trava
    de verdade lá na frente não é o número em si, é que TODOS precisam assinar
-   (GOV.BR/e-CAC) na Constituição. Por isso: até 4 sócios segue no fluxo, com
-   um aviso PROATIVO (não bloqueio) avisando da assinatura de todos; só 5+ vai
-   pra atendimento humano.
+   (GOV.BR/e-CAC) na Constituição. Aviso PROATIVO (não bloqueio) avisa da
+   assinatura de todos quando são 3-4 sócios.
 
-   🆕 24/08 (pedido do Pedro, em cima da reunião Leonan) — NOVA pergunta
-   condicional: se o sócio é CPF ou CNPJ. Sócio pessoa jurídica tira a empresa
-   do Simples no ATO do contrato social (regra fiscal), e hoje o produto só
-   atende Simples — então CNPJ bloqueia igual exterior/5+ sócios, e barra
-   ANTES do dinheiro (mesma doutrina fail-fast). Isso também simplifica o C3
-   (dossiê): como o tipo já foi decidido aqui, o C3 nem pergunta de novo —
-   pede só CPF, direto.
+   🔒 29/08 (pedido do Pedro, decisão de negócio travada) — os 3 gates que
+   existiam aqui (5+ sócios · sócio via CNPJ · sócio no exterior) DEIXARAM DE
+   SER PERGUNTA. Viraram fato/lembrete, sem bloqueio nenhum:
+     · Sócio via CPF/CNPJ e sócio no exterior nunca foram ESCOLHA de verdade
+       — quem chegou até aqui já escolheu Simples Nacional lá atrás (E3.2), e
+       o Simples só aceita sócio pessoa física domiciliado no Brasil. Não é
+       uma pergunta que pode dar 2 respostas úteis: é consequência de uma
+       decisão anterior. Por isso virou 1 aviso sutil só, não 2 perguntas.
+     · O seletor de quantidade passou a ir só até 4 ("Eu + 3") — a opção "5+"
+       foi REMOVIDA do produto, não só escondida. Sem ela, o gate de 5+ sócios
+       fica estruturalmente inalcançável (não existe input que dispare).
+   ⚠️ Efeito colateral ACEITO pelo Pedro: a checagem ativa de "sócio no
+   exterior" (fail-fast, UX-21) deixa de existir. Antes, dizer "sim" aqui
+   bloqueava ANTES do pagamento; agora é só um lembrete, e ninguém confere a
+   resposta. Se um sócio no exterior passar batido, só aparece como problema
+   real mais na frente (contrato social/CRC). Risco assumido conscientemente,
+   não descoberto depois.
    ───────────────────────────────────────────────────────────────────────── */
 export function TriagemView({
   socios,
   setSocios,
-  exterior,
-  setExterior,
-  socioTipo,
-  setSocioTipo,
   onSeguir,
-  onSaida,
-  exteriorSoComSocio = false,
   coorte,
   setCoorte,
 }: {
   socios: number | null;
   setSocios: (n: number) => void;
-  exterior: boolean | null;
-  setExterior: (b: boolean) => void;
-  /** 🆕 24/08 — CPF/CNPJ do sócio. `null` = ainda não respondeu; só existe
-   *  pergunta quando há sócio (não aparece pra quem abre sozinho). */
-  socioTipo: "cpf" | "cnpj" | null;
-  setSocioTipo: (t: "cpf" | "cnpj") => void;
   onSeguir: () => void;
-  /** Recebe a rota da saída graciosa; a demo pode só sinalizar. */
-  onSaida: (rota: string) => void;
   /**
    * 🆕 26/08 (pedido do Pedro) — 3ª realocação da pergunta "é a primeira
    * empresa que você abre?": E6 → E5F (24/08) → Veredito (26/08, 1ª tentativa)
@@ -387,70 +503,31 @@ export function TriagemView({
    */
   coorte?: "primeira" | "ja-abri" | null;
   setCoorte?: (v: "primeira" | "ja-abri") => void;
-  /**
-   * 🔓 UX-67 (29/07) — esconde a pergunta do exterior quando é solo.
-   *
-   * ⚠️ RESSALVA IMPORTANTE, e ela é fiscal: o gate do N3 confirma onde fica a
-   * EMPRESA (BH), não onde a pessoa MORA. Um sócio único domiciliado fora do
-   * Brasil derruba o Simples do mesmo jeito (LC 123 art.17), e é justamente o
-   * que esta pergunta existe pra pegar ANTES do dinheiro (fail-fast, UX-21).
-   * Escondendo, o caso "moro em Portugal e abro empresa em BH" passa direto e
-   * só quebra depois de pagar. Por isso é opcional e está deslinkada: alternativa
-   * sem furo seria REESCREVER a pergunta ("Você mora fora do Brasil?") em vez
-   * de removê-la.
-   */
-  exteriorSoComSocio?: boolean;
 }) {
   const solo = socios === 1;
-  // Com a condicional ligada, a pergunta do exterior só existe DEPOIS de saber
-  // quantos sócios são — antes disso ela não teria como se dirigir a ninguém.
-  const perguntaExterior = exteriorSoComSocio
-    ? socios !== null && !solo
-    : true;
-  /**
-   * O título se dirige a QUEM existe na sociedade. "Alguém mora fora?" com
-   * exatamente um sócio soa como se a gente não tivesse lido a resposta
-   * anterior — e a tela acabou de perguntar isso.
-   */
-  const tituloExterior =
-    exteriorSoComSocio && socios === 2
-      ? "Seu sócio mora fora do Brasil?"
-      : exteriorSoComSocio && socios !== null && socios > 2
-        ? "Algum sócio mora fora do Brasil?"
-        : "Alguém mora fora do Brasil?";
-  // 🆕 24/08 — pergunta de tipo só existe com sócio (mesma lógica do exterior,
-  // mas SEMPRE pergunta quando há sócio — não tem variante "toggle off" porque
-  // sem isso o C3 não sabe se pode travar em CPF).
-  const perguntaTipo = socios !== null && !solo;
-  const tituloTipo =
-    socios === 2
-      ? "Seu sócio será vinculado via CPF ou CNPJ?"
-      : "Seus sócios serão vinculados via CPF ou CNPJ?";
-  // 5 representa "5 ou mais" no seletor — o mesmo padrão do antigo "3 ou mais".
-  const bloqueado = (socios !== null && socios > 4) || exterior === true || socioTipo === "cnpj";
-  // Aviso proativo, não bloqueio: 3-4 sócios seguem no fluxo, mas precisam
-  // saber cedo que a assinatura de todos vai aparecer lá na frente.
-  const avisaAssinaturas = socios !== null && socios >= 3 && !bloqueado;
-  const completo =
-    socios !== null &&
-    (perguntaTipo ? socioTipo !== null : true) &&
-    (perguntaExterior ? exterior !== null : true);
-  // Exterior tem precedência sobre sócio-PJ, que tem precedência sobre o
-  // limite de sócios — mesma ordem que já dava o texto do aviso.
-  const rotaSaida =
-    exterior === true
-      ? "/saida/exterior"
-      : socioTipo === "cnpj"
-        ? "/saida/socio-pj"
-        : "/saida/socios";
+  const temSocio = socios !== null && !solo;
+  // 🆕 29/08 (pedido do Pedro) — escape hatch pra quem NÃO se encaixa nos
+  // checks de "Vale saber" (sócio no exterior, via CNPJ, etc.): não é mais
+  // pergunta obrigatória, mas quem sabe que o próprio caso foge da regra
+  // ainda consegue avisar e falar com um humano, em vez de só continuar
+  // como se nada fosse.
+  const [socioNaoAtende, setSocioNaoAtende] = useState(false);
+  const [resolvidoInline, setResolvidoInline] = useState(false);
+  // 🔄 29/08 (pedido do Pedro) — "é a primeira empresa que você abre?" vira
+  // obrigatória. Só entra na conta quando a pergunta de fato aparece (função
+  // recebeu `setCoorte`) — sem isso, quem não usa essa prop nunca travaria.
+  const completo = socios !== null && (!setCoorte || coorte !== null);
 
   return (
     <>
       {/* Título FIXO (padrão de 3 partes: título fixo / corpo rola / CTA fixo).
-          🆕 24/08 — "Duas" virou genérico: com a pergunta de tipo (CPF/CNPJ)
-          nova, pode ser 1, 2 ou 3 perguntas dependendo do caso. */}
+          🔒 29/08 — voltou a ser só 1 pergunta de verdade (quantidade); o
+          resto virou lembrete, não pergunta. */}
       <div className="shrink-0">
-        <h1 className="text-h1 mb-6">Perguntas rápidas</h1>
+        <h1 className="text-h1 mb-2">Perguntas rápidas</h1>
+        <p className="text-body text-text-secondary mb-6">
+          Rápido, só o essencial antes da gente continuar.
+        </p>
       </div>
 
       <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -458,7 +535,10 @@ export function TriagemView({
           Quantas pessoas vão ser donas da empresa?
         </p>
         <div className="flex gap-2 mb-8">
-          {[1, 2, 3, 4, 5].map((n) => (
+          {/* 🔒 29/08 (pedido do Pedro, decisão travada) — teto vira 4
+              (era 1-5 com "5+"). A opção de 5+ sócios SAI do produto, não só
+              da tela — sem ela, o gate de 5+ sócios não tem como disparar. */}
+          {[1, 2, 3, 4].map((n) => (
             <button
               key={n}
               onClick={() => setSocios(n)}
@@ -469,66 +549,114 @@ export function TriagemView({
                     : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
                 }`}
             >
-              {n === 5 ? "5+" : n === 1 ? "Só eu" : String(n)}
+              {/* 🔄 29/08 (pedido do Pedro) — "2" sozinho confundia (parecia
+                  "eu + 2 pessoas", quando na verdade a pessoa JÁ conta como
+                  1 sócio). "Eu + N" deixa claro que o número é o TOTAL,
+                  incluindo quem está respondendo. */}
+              {n === 1 ? "Só eu" : `Eu + ${n - 1}`}
             </button>
           ))}
         </div>
 
-        {/* 🆕 24/08 — pergunta nova, entre a quantidade e o exterior (mesma
-            posição sugerida na reunião: "bem antes de tudo, do sócio"). */}
-        {perguntaTipo && (
-          <>
-            <p className="text-body-strong font-semibold mb-3">{tituloTipo}</p>
-            <div className="flex gap-2 mb-8">
-              {[
-                { v: "cpf" as const, label: "CPF" },
-                { v: "cnpj" as const, label: "CNPJ" },
-              ].map((o) => (
-                <button
-                  key={o.v}
-                  onClick={() => setSocioTipo(o.v)}
-                  className={`flex-1 min-h-12 rounded-md border text-body font-semibold transition-colors
-                    ${
-                      socioTipo === o.v
-                        ? "border-action-primary bg-action-primary text-text-on-brand"
-                        : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
-                    }`}
-                >
-                  {o.label}
-                </button>
-              ))}
+        {/* 🔒 29/08 (pedido do Pedro, decisão travada) — substitui as 2
+            perguntas antigas (CPF×CNPJ + mora fora do Brasil). Não é mais
+            pergunta: quem chegou aqui já escolheu Simples Nacional lá atrás
+            (E3.2), e o Simples só aceita sócio pessoa física domiciliado no
+            Brasil — não tem 2ª resposta possível, é consequência da escolha
+            anterior, não uma decisão nova. Vira lembrete sutil, sem bloqueio. */}
+        {/* 🆕 29/08 (pedido do Pedro) — mesmo cartão do lado "tem sócio",
+            reassegurando quem escolheu "Só eu": sozinho é a norma, não a
+            exceção. */}
+        {solo && (
+          <div className="mb-8 rounded-md border border-border-hairline bg-surface-card p-4">
+            <div className="flex items-start gap-2.5">
+              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-state-success-tint text-state-success-text">
+                <CheckMiniRegime />
+              </span>
+              <p className="text-caption text-text-secondary">
+                É o mais comum entre os prestadores de serviço. Se um dia você
+                quiser ter sócio, dá pra incluir depois, já com a empresa em
+                pé.
+              </p>
             </div>
-          </>
+          </div>
         )}
 
-        {perguntaExterior && (
-          <>
-            <p className="text-body-strong font-semibold mb-3">{tituloExterior}</p>
-            <div className="flex gap-2">
+        {/* 🔄 29/08 (pedido do Pedro) — mesmo padrão visual do card de
+            check-list usado em `MeiOuMeView` (ícone verde + texto), não mais
+            um bloco de aviso solto. */}
+        {temSocio && (
+          <div className="mb-8 rounded-md border border-border-hairline bg-surface-card p-4">
+            <p className="text-body-strong font-bold text-text-primary mb-2">
+              Vale saber
+            </p>
+            <div className="flex flex-col gap-1.5">
               {[
-                { v: false, label: "Não" },
-                { v: true, label: "Sim" },
-              ].map((o) => (
-                <button
-                  key={String(o.v)}
-                  onClick={() => setExterior(o.v)}
-                  className={`flex-1 min-h-12 rounded-md border text-body font-semibold transition-colors
-                    ${
-                      exterior === o.v
-                        ? "border-action-primary bg-action-primary text-text-on-brand"
-                        : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
-                    }`}
-                >
-                  {o.label}
-                </button>
+                socios === 2 ? "Seu sócio precisa morar no Brasil" : "Seus sócios precisam morar no Brasil",
+                socios === 2
+                  ? "Seu sócio entra só com CPF, não CNPJ"
+                  : "Seus sócios entram só com CPF, não CNPJ",
+                // 🔄 29/08 (pedido do Pedro) — era um aviso separado, só a
+                // partir de 3 sócios. Vale desde o 1º sócio (a assinatura de
+                // todos é sempre necessária, não só com grupo maior), então
+                // virou 3º check da mesma lista.
+                socios === 2
+                  ? "Seu sócio vai assinar (GOV.BR) na hora de constituir a empresa"
+                  : "Seus sócios vão assinar (GOV.BR) na hora de constituir a empresa",
+              ].map((texto) => (
+                <div key={texto} className="flex items-start gap-2.5">
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-state-success-tint text-state-success-text">
+                    <CheckMiniRegime />
+                  </span>
+                  <p className="text-caption text-text-secondary">{texto}</p>
+                </div>
               ))}
             </div>
-          </>
+
+            {/* 🆕 29/08 (pedido do Pedro) — mesmo padrão de link do gate de
+                atividade (E3.4, "Minha atividade não está na lista"): quem
+                não se encaixa em algum dos checks avisa aqui, sem precisar
+                de pergunta obrigatória pra todo mundo. */}
+            {!socioNaoAtende && (
+              <button
+                onClick={() => setSocioNaoAtende(true)}
+                className="mt-3 self-start text-caption font-medium text-text-secondary underline underline-offset-4"
+              >
+                Meu sócio não atende um dos critérios
+              </button>
+            )}
+
+            {socioNaoAtende && !resolvidoInline && (
+              <div className="mt-3 rounded-md bg-state-info-tint p-4">
+                <p className="text-caption text-text-secondary">
+                  Sem problema. Esse caso a Legalize Digital atende pela
+                  contabilidade tradicional, fora do produto automatizado.
+                </p>
+              </div>
+            )}
+
+            {resolvidoInline && (
+              <div className="mt-3 rounded-md bg-state-success-tint p-4">
+                <p className="text-body-strong font-semibold text-state-success-text mb-1">
+                  Combinado, já anotamos
+                </p>
+                <p className="text-caption text-text-secondary">
+                  Nosso time da Legalize Digital vai entrar em contato pra
+                  seguir pela contabilidade tradicional.
+                </p>
+              </div>
+            )}
+          </div>
         )}
 
         {/* 🆕 26/08 — 3ª realocação da coorte (Veredito → aqui, junto das
             outras perguntas rápidas). Dado puro de marketing/log, opcional,
-            não interfere no processo. */}
+            não interfere no processo.
+            🔄 29/08 (pedido do Pedro) — ganhou ilustração (mesmo padrão da
+            `GradeFaixas`: ícone direto no fundo do card, sem círculo, troca
+            coral/creme conforme seleção, badge de check no canto). Prancheta
+            rala (1 check) = primeira vez; prancheta cheia (3 checks) = já
+            abriu antes. */}
         {setCoorte && (
           <div className="mt-8">
             <p className="text-body-strong font-semibold mb-1">
@@ -537,73 +665,36 @@ export function TriagemView({
             <p className="text-caption text-text-secondary mb-3">
               Ajuda a gente a te acompanhar do jeito certo.
             </p>
-            <div className="flex gap-2">
-              <button
+            <div className="grid grid-cols-2 gap-3">
+              <CardIconeSelecao
+                label="É a primeira"
+                iconeCoral="/icones/coorte-primeira-coral.png"
+                iconeCreme="/icones/coorte-primeira-creme.png"
+                selecionado={coorte === "primeira"}
                 onClick={() => setCoorte("primeira")}
-                aria-pressed={coorte === "primeira"}
-                className={`min-h-12 flex-1 rounded-md border text-body font-semibold transition-colors
-                  ${
-                    coorte === "primeira"
-                      ? "border-action-primary bg-action-primary text-text-on-brand"
-                      : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
-                  }`}
-              >
-                É a primeira
-              </button>
-              <button
+              />
+              <CardIconeSelecao
+                label="Já abri antes"
+                iconeCoral="/icones/coorte-ja-abri-coral.png"
+                iconeCreme="/icones/coorte-ja-abri-creme.png"
+                selecionado={coorte === "ja-abri"}
                 onClick={() => setCoorte("ja-abri")}
-                aria-pressed={coorte === "ja-abri"}
-                className={`min-h-12 flex-1 rounded-md border text-body font-semibold transition-colors
-                  ${
-                    coorte === "ja-abri"
-                      ? "border-action-primary bg-action-primary text-text-on-brand"
-                      : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
-                  }`}
-              >
-                Já abri antes
-              </button>
+              />
             </div>
           </div>
         )}
 
-        {/* 🆕 24/08 (reunião Leonan) — aviso PROATIVO, não bloqueio: 3-4
-            sócios seguem no fluxo normal, mas precisam saber cedo que a
-            assinatura de todo mundo vai aparecer lá na Constituição. */}
-        {avisaAssinaturas && (
-          <div className="mt-6 rounded-md bg-state-info-tint p-4">
-            <p className="text-body-strong font-semibold text-state-info-text mb-1">
-              Um aviso pra mais na frente
-            </p>
-            <p className="text-caption text-text-secondary">
-              Com {socios} sócios, vai chegar um momento em que a gente vai
-              precisar da assinatura (GOV.BR) de todos eles, com documentação
-              de cada um. Dá pra seguir tranquilo — é só saber disso desde já.
-            </p>
-          </div>
-        )}
-
-        {/* Bloqueio que EDUCA (UX-07/09) e oferece saída, sem crash.
-            ⚠️ danger, nunca coral: coral não é erro. */}
-        {bloqueado && (
-          <div className="mt-6 rounded-md bg-state-danger-tint p-4">
-            <p className="text-body-strong font-semibold text-state-danger-text mb-1">
-              Esse caso a gente resolve com uma pessoa
-            </p>
-            <p className="text-caption text-text-secondary">
-              {exterior
-                ? "Com sócio morando fora, a empresa até existe, mas fica fora do Simples. Nosso time te explica as opções."
-                : socioTipo === "cnpj"
-                  ? "Sócio pessoa jurídica tira a empresa do Simples Nacional. Hoje a gente só atende Simples — nosso time te explica as opções."
-                  : "Acima de 4 sócios é limite do nosso produto, não da lei. Nosso time explica a complexidade de assinaturas e abre pra você."}
-            </p>
-          </div>
-        )}
       </div>
 
       <div className="app-footer-cta">
-        {bloqueado ? (
-          <Button full variant="dark" onClick={() => onSaida(rotaSaida)}>
-            Falar com o time
+        {socioNaoAtende ? (
+          <Button
+            full
+            variant="dark"
+            disabled={resolvidoInline}
+            onClick={() => setResolvidoInline(true)}
+          >
+            {resolvidoInline ? "Combinado" : "Falar com o time"}
           </Button>
         ) : (
           <Button full onClick={onSeguir} disabled={!completo}>
@@ -733,48 +824,43 @@ export function FaixaView({
       <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {exatoInline ? (
           /* 🔓 UX-68 — as faixas FICAM; o campo exato aparece abaixo. */
-          <div className="flex flex-col gap-2">
-            {FAIXAS.map((f) => (
-              <button
-                key={f.id}
-                onClick={() => {
-                  setFaixa(f.id);
-                  // Tocar numa faixa desfaz o valor digitado: senão o número
-                  // continuaria mandando e a seleção visual mentiria.
-                  setExato("");
-                  setModoExato(false);
-                }}
-                className={`w-full min-h-12 rounded-md border px-4 text-left text-body font-semibold transition-colors
-                  ${
-                    valor === 0 && faixa === f.id
-                      ? "border-action-primary bg-action-primary text-text-on-brand"
-                      : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
-                  }`}
-              >
-                {f.label}
-              </button>
-            ))}
+          <div className="flex flex-col gap-4">
+            <GradeFaixas
+              selecionada={valor === 0 ? faixa : faixaExata}
+              onSelecionar={(id) => {
+                setFaixa(id);
+                // Tocar numa faixa desfaz o valor digitado: senão o número
+                // continuaria mandando e a seleção visual mentiria.
+                setExato("");
+                setModoExato(false);
+              }}
+            />
 
             {modoExato ? (
               <div className="mt-2 flex flex-col gap-2">
                 <p className="text-caption font-semibold text-text-primary">
                   Valor exato por mês
                 </p>
-                <input
-                  value={exato}
-                  onChange={(e) =>
-                    setExato(
-                      (Number(e.target.value.replace(/\D/g, "")) || "").toLocaleString("pt-BR")
-                    )
-                  }
-                  placeholder="R$ 0"
-                  inputMode="numeric"
-                  autoFocus={autoFocus}
-                  aria-label="Quanto você vai receber por mês"
-                  className="w-full min-h-12 rounded-md border border-border-hairline bg-surface-card
-                             px-3 text-body text-text-primary placeholder:text-text-muted
-                             focus:border-border-focus focus:outline-none"
-                />
+                <div className="relative">
+                  <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-body text-text-secondary">
+                    R$
+                  </span>
+                  <input
+                    value={exato}
+                    onChange={(e) =>
+                      setExato(
+                        (Number(e.target.value.replace(/\D/g, "")) || "").toLocaleString("pt-BR")
+                      )
+                    }
+                    placeholder="0"
+                    inputMode="numeric"
+                    autoFocus={autoFocus}
+                    aria-label="Quanto você vai receber por mês"
+                    className="w-full min-h-12 rounded-md border border-border-hairline bg-surface-card
+                               py-3 pl-10 pr-3 text-body text-text-primary placeholder:text-text-muted
+                               focus:border-border-focus focus:outline-none"
+                  />
+                </div>
                 {/* Devolve o enquadramento na hora: mostra que o número foi
                     entendido, e liga o valor à faixa que ficou logo acima. */}
                 {valor > 0 && rotuloEscolhida && (
@@ -825,24 +911,11 @@ export function FaixaView({
             </button>
           </div>
         ) : (
-          <div className="flex flex-col gap-2">
-            {FAIXAS.map((f) => (
-              <button
-                key={f.id}
-                onClick={() => setFaixa(f.id)}
-                className={`w-full min-h-12 rounded-md border px-4 text-left text-body font-semibold transition-colors
-                  ${
-                    faixa === f.id
-                      ? "border-action-primary bg-action-primary text-text-on-brand"
-                      : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
-                  }`}
-              >
-                {f.label}
-              </button>
-            ))}
+          <div className="flex flex-col gap-4">
+            <GradeFaixas selecionada={faixa} onSelecionar={setFaixa} />
             <button
               onClick={() => setModoExato(true)}
-              className="mt-2 self-start text-caption font-medium text-text-secondary underline underline-offset-4"
+              className="self-start text-caption font-medium text-text-secondary underline underline-offset-4"
             >
               Sei o valor exato
             </button>
@@ -968,6 +1041,18 @@ function opcoesRegime(contexto: "abrir" | "migrar") {
     ];
   }
   return [
+    // 🔄 29/08 (pedido do Pedro) — ME vem primeiro agora (era MEI). Sem
+    // motivo de negócio pra MEI abrir a lista; o pedido foi só inverter.
+    {
+      id: "me" as const,
+      nome: "ME · Simples Nacional",
+      checks: [
+        "Fatura acima de ~R$6.750/mês, ou espera crescer rápido",
+        "Por enquanto, só empresas de Belo Horizonte/MG",
+        "Sem teto de R$81 mil, cresce sem trocar de regime depois",
+        "Pode ter sócio · mais de 1 funcionário sem limite do regime",
+      ],
+    },
     {
       id: "mei" as const,
       nome: "MEI · Microempreendedor Individual",
@@ -986,20 +1071,10 @@ function opcoesRegime(contexto: "abrir" | "migrar") {
         "Pro dia a dia, você vai precisar de um certificado digital (não vem no plano)",
       ],
     },
-    {
-      id: "me" as const,
-      nome: "ME · Simples Nacional",
-      checks: [
-        "Fatura acima de ~R$6.750/mês, ou espera crescer rápido",
-        "Por enquanto, só empresas de Belo Horizonte/MG",
-        "Sem teto de R$81 mil, cresce sem trocar de regime depois",
-        "Pode ter sócio · mais de 1 funcionário sem limite do regime",
-      ],
-    },
   ];
 }
 
-function CheckMiniRegime() {
+export function CheckMiniRegime() {
   return (
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
       <path d="m5 12 4 4 8-9" />
@@ -1025,69 +1100,86 @@ export function MeiOuMeView({
   onVoltar?: () => void;
 }) {
   const opcoes = opcoesRegime(contexto);
+  // 🆕 29/08 (pedido do Pedro) — link de escape pra quem trava na escolha:
+  // "Falar com o time" no MESMO padrão mock já usado no gate de sócios
+  // (TriagemView) — ainda não existe canal real (WhatsApp/chat) ligado em
+  // lugar nenhum do app, então fica resolução inline até existir um de
+  // verdade.
+  const [duvida, setDuvida] = useState(false);
   return (
     <>
       {/* 🆕 03/08 — faltava até o chrome de página (esta tela é renderizada
           sozinha, sem `/gate` ao redor pra fornecer header+main). Seta de
-          voltar em CIMA, mesmo padrão de todas as outras telas (ex: E4.2). */}
-      <TelaHeader meta="Sobre a sua empresa" onVoltar={onVoltar} />
+          voltar em CIMA, mesmo padrão de todas as outras telas (ex: E4.2).
+          🐛 29/08 — `meta` é o rótulo do DESTINO do voltar, não desta tela.
+          Estava "Sobre a sua empresa" (nome da tela SEGUINTE). */}
+      <TelaHeader meta="Primeiros dados" onVoltar={onVoltar} />
       <main className="app-main">
       <div className="shrink-0">
         <h1 className="text-h1 mb-2">
-          {contexto === "migrar" ? "Sua empresa hoje é MEI ou ME?" : "Você já sabe se é MEI ou ME?"}
+          {contexto === "migrar" ? "Sua empresa hoje é MEI ou ME?" : "Você será MEI ou ME?"}
         </h1>
+        {/* 🔄 29/08 (pedido do Pedro) — tirou o "se não souber"/"dá pra trocar
+            de ideia depois": a escolha aqui não é reversível de graça lá na
+            frente, então o tom não pode soar leve/opcional. */}
         <p className="text-body text-text-secondary mb-6">
           {contexto === "migrar"
             ? "Isso muda se a cidade importa e como a gente confirma seus dados."
-            : "Se não souber, a diferença real é essa. Dá pra trocar de ideia depois, mas muda um pouco o que a gente pergunta a seguir."}
+            : "A diferença real é essa. Escolha com atenção: ela define o que vem a seguir."}
         </p>
       </div>
 
       <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <div className="flex flex-col gap-3">
-          {opcoes.map((o) => (
-            <button
-              key={o.id}
-              onClick={() => setRegime(o.id)}
-              className={`w-full rounded-md border p-4 text-left transition-colors
-                ${
-                  regime === o.id
-                    ? "border-action-primary bg-action-primary text-text-on-brand"
-                    : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
-                }`}
-            >
-              <span
-                className={`text-body-strong font-bold ${regime === o.id ? "text-text-on-brand" : "text-text-primary"}`}
-              >
-                {o.nome}
-              </span>
+          {/* 🔄 29/08 (pedido do Pedro) — vira o mesmo padrão de card
+              ilustrado (prédio MEI menor × prédio ME maior, mesma família dos
+              ícones de faixa/coorte). Antes cada opção já vinha com a lista de
+              checks dentro do próprio botão; agora os checks só aparecem
+              embaixo, depois de escolher — os 2 cards ficam lado a lado, só
+              ícone + rótulo. */}
+          <div className="grid grid-cols-2 gap-3">
+            {opcoes.map((o) => (
+              <CardIconeSelecao
+                key={o.id}
+                label={o.id === "mei" ? "MEI" : "ME"}
+                iconeCoral={
+                  o.id === "mei" ? "/icones/regime-mei-coral.png" : "/icones/regime-me-coral.png"
+                }
+                iconeCreme={
+                  o.id === "mei" ? "/icones/regime-mei-creme.png" : "/icones/regime-me-creme.png"
+                }
+                selecionado={regime === o.id}
+                onClick={() => setRegime(o.id)}
+                tamanho={90}
+              />
+            ))}
+          </div>
 
-              {/* 🆕 03/08 — lista única de checks (mesmo padrão visual do "O
-                  que esse CNAE cobre", ConteudoCnae/tela Atende). Era 2 listas
-                  com estilo diferente (bullet + check) pra informação do
-                  mesmo tipo — lia como inconsistência, não hierarquia. */}
-              <div className="mt-2 flex flex-col gap-1.5">
-                {o.checks.map((c) => (
-                  <div key={c} className="flex items-start gap-2.5">
-                    <span
-                      className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${
-                        regime === o.id
-                          ? "bg-white/20 text-text-on-brand"
-                          : "bg-state-success-tint text-state-success-text"
-                      }`}
-                    >
-                      <CheckMiniRegime />
-                    </span>
-                    <p
-                      className={`text-caption ${regime === o.id ? "text-text-on-brand/85" : "text-text-secondary"}`}
-                    >
-                      {c}
-                    </p>
-                  </div>
-                ))}
+          {/* 🆕 03/08 — lista única de checks (mesmo padrão visual do "O que
+              esse CNAE cobre", ConteudoCnae/tela Atende). Era 2 listas com
+              estilo diferente (bullet + check) pra informação do mesmo tipo —
+              lia como inconsistência, não hierarquia.
+              🔄 29/08 — passou pra FORA do card, só aparece depois de
+              escolher o regime. */}
+          {regime && (
+            <div className="rounded-md border border-border-hairline bg-surface-card p-4">
+              <p className="text-body-strong font-bold text-text-primary mb-2">
+                {opcoes.find((o) => o.id === regime)?.nome}
+              </p>
+              <div className="flex flex-col gap-1.5">
+                {opcoes
+                  .find((o) => o.id === regime)
+                  ?.checks.map((c) => (
+                    <div key={c} className="flex items-start gap-2.5">
+                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-state-success-tint text-state-success-text">
+                        <CheckMiniRegime />
+                      </span>
+                      <p className="text-caption text-text-secondary">{c}</p>
+                    </div>
+                  ))}
               </div>
-            </button>
-          ))}
+            </div>
+          )}
 
           {/* 🔴 27/08 — o card "ME · Lucro Presumido" foi REMOVIDO daqui.
               Decisão do Pedro na reordenação do flow de entrada: "não vale o
@@ -1104,14 +1196,33 @@ export function MeiOuMeView({
               Ver `marca/decisoes-marca.md` 27/08. */}
         </div>
 
-        <p className="text-micro text-text-tertiary mt-4">
-          {contexto === "migrar"
-            ? "A gente confirma o regime de verdade puxando o CNPJ da Receita, no próximo passo."
-            : "Sua atividade ainda precisa estar na lista permitida pro MEI. Confirmamos isso mais pra frente."}
-        </p>
+        {/* 🔄 29/08 (pedido do Pedro) — a versão "abrir" desse aviso saiu:
+            "sua atividade ainda precisa estar na lista..." é redundante, a
+            pessoa vê isso naturalmente na tela seguinte (E3.4). */}
+        {contexto === "migrar" && (
+          <p className="text-micro text-text-tertiary mt-4">
+            A gente confirma o regime de verdade puxando o CNPJ da Receita, no
+            próximo passo.
+          </p>
+        )}
       </div>
 
       <div className="app-footer-cta">
+        {/* 🆕 29/08 (pedido do Pedro) — escape hatch pra quem trava na
+            escolha, acima do CTA principal. */}
+        {!duvida ? (
+          <button
+            type="button"
+            onClick={() => setDuvida(true)}
+            className="mb-3 block text-center w-full text-caption font-medium text-text-secondary underline underline-offset-4"
+          >
+            Estou com dúvida, preciso de ajuda
+          </button>
+        ) : (
+          <p className="mb-3 text-center text-caption text-state-success-text">
+            Combinado, nosso time vai entrar em contato.
+          </p>
+        )}
         <Button full disabled={!regime} onClick={onSeguir}>
           Continuar
         </Button>

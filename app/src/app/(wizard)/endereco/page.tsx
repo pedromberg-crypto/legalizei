@@ -43,6 +43,7 @@ export default function EnderecoPage() {
   const [enderecoProprio, setEnderecoProprio] = useState<boolean | null>(null);
   const [cep, setCep] = useState("");
   const [numero, setNumero] = useState("");
+  const [complemento, setComplemento] = useState("");
   const [categoria, setCategoria] = useState<string | null>(null);
 
   return (
@@ -53,6 +54,8 @@ export default function EnderecoPage() {
       setCep={setCep}
       numero={numero}
       setNumero={setNumero}
+      complemento={complemento}
+      setComplemento={setComplemento}
       categoria={categoria}
       setCategoria={setCategoria}
       // 🆕 28/08 — MEI não tem limite de cidade, mas tem limite de atividade.
@@ -72,10 +75,6 @@ export default function EnderecoPage() {
           ),
         )
       }
-      // Não achou a atividade na lista: waitlist captura o contato em vez de
-      // fechar a porta. É a única saída de "não atendo" que sobra no caminho
-      // abrir, e ela acontece ANTES de qualquer cobrança.
-      onForaDeEscopo={() => router.push("/veredito/waitlist")}
       onVoltar={() => router.push(comRegime("/entrada?intencao=abrir", mei))}
     />
   );

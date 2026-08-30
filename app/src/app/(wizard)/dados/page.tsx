@@ -29,6 +29,7 @@ export default function DadosPage() {
 
   const [dados, setDados] = useState<DadosLead>({
     nome: "",
+    sobrenome: "",
     email: "",
     telefone: "",
   });

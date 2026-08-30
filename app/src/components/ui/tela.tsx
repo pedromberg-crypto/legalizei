@@ -96,7 +96,7 @@ function SetaVoltar() {
 }
 
 /** Título + subtítulo FIXOS (shrink-0): não rolam com o corpo. */
-export function Titulo({ children, sub }: { children: ReactNode; sub?: string }) {
+export function Titulo({ children, sub }: { children: ReactNode; sub?: ReactNode }) {
   return (
     <div className="shrink-0">
       <h1 className="text-h1 mb-2">{children}</h1>

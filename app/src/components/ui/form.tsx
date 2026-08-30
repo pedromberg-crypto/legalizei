@@ -257,7 +257,10 @@ export function Select({
 }: {
   valor: string;
   onChange: (v: string) => void;
-  opcoes: { v: string; label: string }[];
+  /** 🆕 29/08 (pedido do Pedro) — `destaque: "coral"` pinta a opção (e o
+   *  rótulo quando selecionada) na cor de marca, pra opções tipo "não
+   *  encontrei o que procuro" se destacarem das demais na lista. */
+  opcoes: { v: string; label: string; destaque?: "coral" }[];
   placeholder?: string;
 }) {
   const [aberto, setAberto] = useState(false);
@@ -321,7 +324,7 @@ export function Select({
         className={`flex min-h-12 w-full items-center justify-between gap-2 rounded-md border
           bg-surface-card pl-3 pr-3.5 text-left text-body transition-colors focus:outline-none
           ${aberto ? "border-border-focus" : "border-border-hairline hover:border-border-strong"}
-          ${selecionado ? "text-text-primary" : "text-text-muted"}`}
+          ${selecionado ? (selecionado.destaque === "coral" ? "text-action-primary-sm" : "text-text-primary") : "text-text-muted"}`}
       >
         <span className="truncate">
           {selecionado ? selecionado.label : placeholder}
@@ -364,7 +367,7 @@ export function Select({
                 onPointerEnter={() => setFoco(i)}
                 onClick={() => escolher(o.v)}
                 className={`flex min-h-11 cursor-pointer items-center justify-between gap-2 rounded-sm px-3 text-body
-                  ${on ? "bg-surface-tint-brand text-text-primary" : "text-text-secondary"}
+                  ${o.destaque === "coral" ? "font-semibold text-action-primary-sm" : on ? "bg-surface-tint-brand text-text-primary" : "text-text-secondary"}
                   ${!on && foco === i ? "bg-surface-alt" : ""}`}
               >
                 <span className="truncate">{o.label}</span>

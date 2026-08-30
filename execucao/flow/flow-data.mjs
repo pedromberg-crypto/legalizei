@@ -79,8 +79,8 @@ export const NODES = [
   // nó só escondendo 3 slides de carrossel (`components/welcome.tsx`, `SLIDES`).
   // Virou 3 nós, 1 por slide, via `/welcome?slide=N` (mesmo padrão de deep-link
   // de `/entrada`/`/gate?etapa=`) — cada um agora tem prévia ao vivo própria.
-  { id: "E2_1", rota: "/welcome?slide=0", label: "E2.1 · Welcome<br/>(1/3 · Contador de verdade)", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "", dados: "" },
-  { id: "E2_2", rota: "/welcome?slide=1", label: "E2.2 · Welcome<br/>(2/3 · Parte chata)", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "", dados: "" },
+  { id: "E2_1", rota: "/welcome?slide=0", label: "E2.1 · Welcome<br/>(1/3 · Léo vigia, contador é gente)", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "", dados: "" },
+  { id: "E2_2", rota: "/welcome?slide=1", label: "E2.2 · Welcome<br/>(2/3 · Aquece o fork)", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "", dados: "" },
   { id: "E2_3", rota: "/welcome?slide=2", label: "E2.3 · Welcome<br/>(3/3 · Sem susto no boleto)", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "", dados: "" },
   // 🆕 26/08 (pedido do Pedro: "linka o CTA no caminho dele, não a tela
   // inteira") — 3 pontos de saída nomeados, 1 por CTA real da tela
@@ -116,11 +116,9 @@ export const NODES = [
   // pesada em docs/memórias. Renumerar quebraria mais do que resolve. A ordem
   // REAL do flow é: E3 → E3.3 → E3.2 → E3.4. O mapa desenha por aresta, então
   // o desenho fica certo; só o número é fora de ordem.
-  { id: "E3_4", rota: "/endereco", label: "E3.4 · Endereço + categoria<br/>(os 2 gates)", forma: "decisao", classe: "", status: "construida", validado: "pendente", falta: "🆕 27/08 — reúne os DOIS gates do produto antes do dinheiro. (1) ENDEREÇO: substitui o E4 (gate de cidade, REMOVIDO), que perguntava 'é em BH?' e acreditava no clique — aqui o CEP valida de verdade (`ehCepBh`, faixa 30000-000 a 31999-999, 🟡 não ratificada em fonte primária). Quem não tem endereço em BH recebe o endereço fiscal da Legalizai como SOLUÇÃO (a sede fica em BH de qualquer jeito, porque o município segue o endereço da sede, não o domicílio do dono). Herdou também a escolha 'próprio × fiscal' que morava no E5F. (2) CATEGORIA: assume o papel de gate de elegibilidade que era do veredito de CNAE — como a lista só oferece o que a gente atende, escolher já É passar pelo filtro, e é isso que autorizou o CNAE a ir pra depois do pagamento. MEI passa por aqui também (sem exigir BH): o gate geográfico não vale pra ele, mas o de categoria vale", dados: "Endereço da empresa (CEP validado BH + número) OU endereço fiscal Legalizai (+R$60/mês) · categoria de atividade (1 das 15 categorias, `pesquisa/cnae-matriz/taxonomia-pills-n4.md`, v2 27/08 -- 90 CNAEs certeza)", handles: [
+  { id: "E3_4", rota: "/endereco", label: "E3.4 · Endereço + categoria<br/>(os 2 gates)", forma: "decisao", classe: "", status: "construida", validado: "pendente", falta: "🆕 27/08 — reúne os DOIS gates do produto antes do dinheiro. (1) ENDEREÇO: substitui o E4 (gate de cidade, REMOVIDO), que perguntava 'é em BH?' e acreditava no clique — aqui o CEP valida de verdade (`ehCepBh`, faixa 30000-000 a 31999-999, 🟡 não ratificada em fonte primária). Herdou também a escolha 'próprio × fiscal' que morava no E5F. (2) CATEGORIA: assume o papel de gate de elegibilidade que era do veredito de CNAE — como a lista só oferece o que a gente atende, escolher já É passar pelo filtro, e é isso que autorizou o CNAE a ir pra depois do pagamento. MEI passa por aqui também (sem exigir BH): o gate geográfico não vale pra ele, mas o de categoria vale. 🔒 29/08 (decisão do Pedro) — os 2 gates deixaram de EXPULSAR: fora de BH e atividade fora da lista resolvem AGORA na própria tela (endereço fiscal ou fila da cidade/atividade, com CTA 'Me inscrever e garantir condição'). O handle 'fora' e as saídas E4.1/E5.1 dedicadas ao caminho abrir foram removidas — `/saida/fora-bh` foi deletada (zero uso restante); `/veredito/waitlist` (E5.1) segue viva só pelo Migrar", dados: "Endereço da empresa (CEP validado BH + número) OU endereço fiscal Legalizai (+R$60/mês) OU cidade pra fila de espera · categoria de atividade (1 das 15 categorias, `pesquisa/cnae-matriz/taxonomia-pills-n4.md`, v2 27/08 -- 90 CNAEs certeza) OU atividade regulamentada (≤12 opções) pra quem não se encontrou", handles: [
     { id: "segue", yPercent: 85 },
-    { id: "fora", yPercent: 92 },
   ] },
-  { id: "E4_1", rota: "/saida/fora-bh", label: "E4.1 · Saída · fora de BH<br/>MLP só atende BH-MG", forma: "terminal", classe: "saida", status: "construida", validado: "oficial", falta: "🔄 27/08 — a entrada mudou: nascia do E4 (gate de cidade), que foi removido. Agora é alcançada do E3.4, e só por quem recusa TAMBÉM o endereço fiscal (que resolveria o caso). Por isso o volume aqui deve cair muito", dados: "— (saída, fora do caminho até a constituição)" },
 
   // ── MIGRAR DE CONTADOR — ramo decimal de E4 (construído 30/07) ────────────
   // Fonte: components/wizard-migrar.tsx. Sem entrevista de CNAE (o cartão CNPJ
@@ -161,25 +159,32 @@ export const NODES = [
   // daqui e virou a **C0** (`/dossie/atividade`), DEPOIS do pagamento. Ver os
   // nós C0/C0_2/C0_3 na seção de Constituição.
   //
-  // ⚠️ Triagem e faixa NÃO foram junto, e isso é decisão: elas bloqueiam por
-  // motivos que a categoria (o gate novo) não cobre — sócio via CNPJ e sócio
-  // no exterior tiram do Simples, 5+ sócios é limite do produto. Nenhum é
-  // previsível pela atividade, e movê-los criaria reembolso pra um caso que
-  // hoje não existe (a gente nunca cobra de quem já sabe que não atende).
-  { id: "E5T", rota: "/gate?etapa=triagem", label: "Triagem<br/>sócios? CPF/CNPJ? exterior?", forma: "decisao", classe: "", status: "construida", validado: "oficial", grupo: "GATE", falta: "🆕 24/08 (reunião Leonan 19/08): limite subiu de 2 pra 4 sócios; aviso proativo (não bloqueio) de assinatura múltipla nos 3-4; só 5+ bloqueia. 🆕 24/08 (pedido do Pedro): nova pergunta condicional — sócio CPF ou CNPJ? CNPJ bloqueia (regra fiscal: tira do Simples), rota /saida/socio-pj. Como o tipo já é decidido aqui, o C3 (dossiê) nem pergunta de novo. Exterior = LC 123 art.17 (oficial). 🆕 26/08: coorte ('é a 1ª empresa que você abre?') pousou aqui de vez — 3ª realocação (Veredito → Faixa → aqui), dado puro de log/marketing, opcional", dados: "Quantidade de sócios (1 / 2 / 3 / 4 / 5+) · sócio via CPF ou CNPJ (quando há sócio) · mora fora do Brasil (sim/não) · é a 1ª empresa que abre? (opcional)" },
+  // 🔒 29/08 (decisão de negócio do Pedro) — os 3 critérios que bloqueavam
+  // aqui (5+ sócios · sócio via CNPJ · sócio no exterior) DEIXARAM DE SER
+  // PERGUNTA/GATE. Quem chega na Triagem já escolheu Simples Nacional lá
+  // atrás (E3.2), então CPF-only e domicílio no Brasil não são escolha, são
+  // consequência — viraram um card informativo ("Vale saber", 3 checks) com
+  // 1 link de escape ("Meu sócio não atende um dos critérios") pra quem
+  // sabe que foge da regra. O seletor de quantidade também mudou: teto vira
+  // 4 ("Eu + 3"), a opção 5+ foi REMOVIDA do produto, não só escondida.
+  // Efeito: as 3 saídas dedicadas (E5.4/E5.5/E5.6) e suas rotas foram
+  // apagadas — zero uso restante, e o gate de exterior deixa de ser
+  // fail-fast ativo (risco aceito conscientemente, documentado em
+  // `components/gate-telas.tsx`).
+  { id: "E5T", rota: "/gate?etapa=triagem", label: "Triagem<br/>quantos sócios?", forma: "decisao", classe: "", status: "construida", validado: "oficial", grupo: "GATE", falta: "🔒 29/08 — só 1 pergunta de verdade agora (quantidade, até 4). CPF-only/domicílio Brasil/assinatura GOV.BR viraram card informativo com link de escape ('Falar com o time', resolve inline, sem navegar pra fora). 🆕 26/08: coorte ('é a 1ª empresa que você abre?') pousou aqui de vez — 3ª realocação (Veredito → Faixa → aqui), dado puro de log/marketing, opcional", dados: "Quantidade de sócios (1 / 2 / 3 / 4) · é a 1ª empresa que abre? (opcional) · sócio que não se encaixa no card informativo (opcional, texto livre via 'Falar com o time')" },
   { id: "E5F", rota: "/gate?etapa=faixa", label: "Faixa de faturamento", forma: "tela", classe: "", status: "construida", validado: "ux", grupo: "GATE", falta: "Faixas sem âncora fiscal. 🔴 27/08: a escolha de endereço (próprio × fiscal Legalizai) SAIU daqui — morou nesta tela entre 26/08 e 27/08 e foi pro E3.4, junto do gate de cidade, que é a pergunta de que ela sempre foi parte (faturamento não decide onde a empresa fica). O valor continua somando no E7 pelo mesmo `?endereco=fiscal`. Fonte: `components/gate-telas.tsx` (`FaixaView`)", dados: "Faixa de faturamento mensal (ou valor exato, se souber)" },
 
-  // ── SAÍDAS/EXITS do veredito e da triagem — decimal de E5 ─────────────────
-  { id: "E5_1", rota: "/veredito/waitlist", label: "E5.1 · 🟡 Waitlist", forma: "tela", classe: "saida", status: "construida", validado: "oficial", falta: "✅ 28/07: campo CNAE pretendido construído (read-only, junto do nome+contato). Tags de CRM ficam pra depois, não travam. Waitlist decidido 16/07; líder atende regulada (Mauro reavaliar)", dados: "Nome + contato · CNAE pretendido (✅ campo construído 28/07)" },
+  // ── SAÍDAS/EXITS do veredito — decimal de E5 ──────────────────────────────
+  // 🔒 29/08 — E4.1 (fora de BH) e E5.4/E5.5/E5.6 (exterior/5+ sócios/sócio
+  // PJ) foram REMOVIDOS deste arquivo: resolvem inline na E3.4/Triagem agora,
+  // zero edge restante apontando pra eles. Rotas deletadas do app.
+  { id: "E5_1", rota: "/veredito/waitlist", label: "E5.1 · 🟡 Waitlist", forma: "tela", classe: "saida", status: "construida", validado: "oficial", falta: "✅ 28/07: campo CNAE pretendido construído (read-only, junto do nome+contato). Tags de CRM ficam pra depois, não travam. Waitlist decidido 16/07; líder atende regulada (Mauro reavaliar). 🔒 29/08: no caminho ABRIR a E3.4 resolve inline agora (não navega mais pra cá) — esta tela segue viva só pelo Migrar (E4.2 → 🟡 regulada)", dados: "Nome + contato · CNAE pretendido (✅ campo construído 28/07)" },
   { id: "E5_2", rota: "/veredito/nao-atende", label: "E5.2 · 🔴 Contato especial<br/>(atendido pelo Mauro)", forma: "tela", classe: "saida", status: "construida", validado: "oficial", falta: "✅ 28/07: relabel construído — é quem NÃO atendemos mas a Legalize Digital (Mauro) atende (ex: comércio). Falta só o split real no mapear() do E5 (hoje é mock estático por página).", dados: "— (saída, fora do caminho até a constituição)" },
   // 🆕 28/07 (reunião Rua Satélite 9): 3ª via do veredito 🔴, antes inexistente.
   { id: "E5_3", rota: "/veredito/descartado", label: "E5.3 · 🔴 Fora de escopo<br/>(descarta)", forma: "tela", classe: "saida", status: "construida", validado: "oficial", falta: "mapear() do E5 ainda não decide entre E5.2/E5.3 de verdade (mock estático) — falta o split real na IA/lista de CNAEs", dados: "— (saída, fora do caminho até a constituição)" },
-  { id: "E5_4", rota: "/saida/exterior", label: "E5.4 · Saída · exterior<br/>LC 123 art.17", forma: "tela", classe: "saida", status: "construida", validado: "pendente", falta: "🟡 28/07: Pedro cogitou 'de fato descartar' essa saída dedicada (juntar no genérico) — dito na MESMA frase tentativa do E5.5, NÃO travado. Tela já tem conteúdo jurídico revisado (LC123 art.17) — não apagar sem confirmação final. UX-42 Lucro Presumido (Mauro); debate de tom", dados: "— (saída, fora do caminho até a constituição)" },
-  { id: "E5_5", rota: "/saida/socios", label: "E5.5 · Saída · 5+ sócios<br/>limite do produto", forma: "tela", classe: "saida", status: "construida", validado: "pendente", falta: "🆕 24/08: limite subiu de 2 pra 4 sócios (reunião Leonan 19/08) — esta saída só dispara em 5+ agora, não mais 3+", dados: "— (saída, fora do caminho até a constituição)" },
-  { id: "E5_6", rota: "/saida/socio-pj", label: "E5.6 · Saída · sócio PJ<br/>tira do Simples", forma: "tela", classe: "saida", status: "construida", validado: "oficial", falta: "🆕 24/08 (pedido do Pedro, em cima da reunião Leonan) — NOVO. Sócio pessoa jurídica tira a empresa do Simples no ato do contrato social (regra fiscal, não limite nosso — diferente de E5.5). Bloqueia na triagem, antes do dinheiro", dados: "— (saída, fora do caminho até a constituição)" },
 
   // ── ENTRADA (E) · DINHEIRO · E6–E9 ───────────────────────────────────────
-  { id: "E6", rota: "/conta", label: "E6 · Criar conta", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "🔄 27/08 — a tela ENCOLHEU: nome/e-mail/telefone vieram do E3.3 e o endereço do E3.4, então ela deixou de coletar identidade e virou o que sobrou de verdade (senha + CPF), com recap read-only do que já temos. Mesmo conserto do CPF pedido 2× (29/07): dado já digitado se CONFIRMA, não se repergunta. Provider de validação CPF/situação real (Pedro). 🔴 RF-01: sem estado real entre telas, o recap usa o mock `CLIENTE`", dados: "Senha · CPF · código de verificação (mock) · CONFIRMA nome/e-mail/telefone já captados no E3.3 (não recoleta)" },
+  { id: "E6", rota: "/conta", label: "E6 · Criar conta", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "🔄 28/08 (pedido do Pedro) — reverteu o encolhimento de 27/08: a tela volta a coletar o form INTEIRO aqui mesmo (nome/CPF/telefone/e-mail/senha/CEP/número/complemento), sem recap read-only, `leadJaCaptado` removido do código. Form começa em branco. Provider de validação CPF/situação real (Pedro). 🔴 RF-01: sem estado real entre telas, hoje é só estado local do componente. 🐛 29/08 — vazamento de layout no campo Complemento corrigido (`min-w-0` faltava no flex), placeholder simplificado pra só \"Complemento\".", dados: "Nome · CPF · telefone · e-mail · senha · CEP · número · complemento · coorte (opcional) · código de verificação (mock)" },
   { id: "E7", rota: "/plano", label: "E7 · A conta da abertura", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Preço ~R$195 FAKE (Mauro+custo); DAE R$268,51×R$288 em disputa; certificado A1 (Mauro). ✅ RESOLVIDO 26/08 (reunião Rua Satélite 36, item 2): a antiga 'pendência real de spec' ('conta total não é total', endereço fiscal só aparecia no C4 pós-pagamento) foi corrigida — a mensalidade mostrada aqui já soma o endereço fiscal quando escolhido lá no E5F, com 1 linha de explicação. 🆕 28/08 — REDESIGN 'premium' (pedido do Pedro, validado em preview isolado `/plano-premium` antes de aplicar): título bicolor, card-herói com profundidade real (raio+sombra), lista de inclusos como cartões-linha, CTA como barra flutuante escura. Nenhum conteúdo/ramo cortado (MEI×ME, colaboradores, citação legal, endereço fiscal seguem intactos) — só a casca mudou. `PlanoOferta` em `wizard-dinheiro.tsx`", dados: "" },
   { id: "E8", rota: "/contrato", label: "E8 · Aceite contrato<br/>reversível, CDC 49", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Redação jurídica do contrato (Mauro/Larissa); rachadura T18", dados: "Aceite do contrato de serviço (checkbox)" },
   // 🆕 26/08 (mesmo achado do E3.2: "2 páginas aprovadas, só 1 no mapa") —
@@ -300,8 +305,6 @@ export const EDGES = [
   { de: "E3_4", para: "E5T", label: "ME · endereço BH + categoria ok", deHandle: "segue" },
   // 🆕 28/08 — MEI segue pro M-T (impedimentos), não pra triagem de sócios.
   { de: "E3_4", para: "M_T", label: "MEI · categoria com ocupação", deHandle: "segue", tracejado: true },
-  { de: "E3_4", para: "E4_1", label: "sem endereço em BH", deHandle: "fora" },
-  { de: "E3_4", para: "E5_1", label: "atividade fora da lista", deHandle: "fora" },
 
   { de: "E4_2", para: "E4_3", tracejado: true },
   { de: "E4_2", para: "E4_2_1", label: "CNPJ inapto/suspenso", tracejado: true },
@@ -320,10 +323,9 @@ export const EDGES = [
 
   // 🔄 27/08 — o bloco de CNAE saiu daqui (virou C0, pós-pagamento). A esteira
   // pré-dinheiro agora começa direto na triagem.
-  { de: "E5T", para: "E5F", label: "até 4 + CPF + Brasil" },
-  { de: "E5T", para: "E5_4", label: "sócio no exterior" },
-  { de: "E5T", para: "E5_5", label: "5+ sócios" },
-  { de: "E5T", para: "E5_6", label: "sócio via CNPJ" },
+  // 🔒 29/08 — a Triagem não bifurca mais: os 3 critérios viraram card
+  // informativo, não pergunta com saída própria.
+  { de: "E5T", para: "E5F" },
 
   { de: "E5F", para: "E6" },
 

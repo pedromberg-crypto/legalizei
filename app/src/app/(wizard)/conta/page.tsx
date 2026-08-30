@@ -68,6 +68,7 @@ export default function ContaPage() {
     telefone: "",
     email: "",
     senha: "",
+    confirmarSenha: "",
     cep: "",
     numero: "",
     complemento: "",

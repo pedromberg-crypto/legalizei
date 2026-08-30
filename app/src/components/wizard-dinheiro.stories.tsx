@@ -24,7 +24,7 @@ function Shell({ children }: { children: React.ReactNode }) {
 }
 
 const DADOS_VAZIOS: DadosConta = {
-  nome: "", cpf: "", telefone: "", email: "", senha: "", cep: "", numero: "", complemento: "", coorte: null, codigo: "",
+  nome: "", cpf: "", telefone: "", email: "", senha: "", confirmarSenha: "", cep: "", numero: "", complemento: "", coorte: null, codigo: "",
 };
 
 function ContaInterativo({

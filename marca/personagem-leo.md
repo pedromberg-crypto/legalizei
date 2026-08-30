@@ -153,7 +153,7 @@ Já existe arte de referência (imagem gerada, ver histórico da sessão 19/08) 
 |---|---|
 | Porte | Suricato de tamanho/proporção **normal da espécie** — sem cabeça grande estilo cartoon nem miniaturização. Registro é realista. |
 | Pelagem | Tom natural creme-castanho com máscara escura ao redor dos olhos — traço real do suricato, não escolha de paleta de marca. |
-| Cor de marca | Coral (`#F2643C`) entra pelo **figurino**, não pela pelagem — camisa polo com "L" no peito é onde a identidade visual da Legalizai encosta nele. |
+| Cor de marca | Coral (`#F2643C`) entra pelo **figurino**, não pela pelagem — camisa polo com o **símbolo da Legalizai** (badge branco arredondado com o check, `logo.tsx` `SIMBOLO_PATH`+`CHECK_PATH`) no peito, pequeno e discreto. 🔄 29/08: corrigido de "L" pra check — confusão minha em rodadas de prompt anteriores, Pedro confirmou que é o check que já usa nas referências. |
 | Acessório-assinatura | Óculos redondos de aro fino (atento/observador, sem virar Sábio distante — §7); gravata-borboleta preta (classe leve, não executivo engessado). |
 | Expressão padrão | Olhos atentos, leve sorriso de canto — nunca boca aberta/espalhafatoso. |
 | Gesto/pose | Em aberto, desenvolve junto com o personagem. Biblioteca já tem variações (mão na cintura, mão apresentando algo ao lado) — cada gesto novo entra como referência reusável, não precisa travar hoje. |
@@ -204,6 +204,7 @@ Léo não "evolui emocionalmente" — não é esse tipo de personagem (adulto/re
 
 ## Cross-refs
 
+- Doutrina de render 3D (estilo/paleta/composição pra imagens estáticas do Léo): [[leo-render-3d-doutrina]] (`marca/identidade-visual/leo-render-3d-doutrina.md`)
 - Arquétipo-base: `pesquisa/posicionamento.md` §Arquétipos de marca
 - Registro por dorsal: `pesquisa/metodologia-personas.md` §Tom de voz por dorsal
 - Pilares/CTAs de orgânico: `pesquisa/estrategia-organica.md` · `pesquisa/mecanicas-engajamento.md`

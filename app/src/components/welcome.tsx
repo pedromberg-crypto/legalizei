@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/logo";
-import { Lottie } from "@/components/lottie";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -27,6 +26,19 @@ import { Lottie } from "@/components/lottie";
  *   2. **A parte chata é com a gente** — nomeia a dor sem contabilês
  *   3. **Sem susto no boleto** — preço claro, a ferida da categoria
  *
+ * 🔄 29/08 (pedido do Pedro) — copy revisada, mesma ordem/tese, agora na voz
+ * do Léo (1ª pessoa, `marca/personagem-leo.md`). Slide 2 mudou de "nomear a
+ * dor" pra "aquecer o fork que vem logo depois" (E3, `/entrada` — abrir ×
+ * migrar × já-cliente), plantando a identificação sem virar pergunta seca.
+ *
+ * 🧪 29/08 (teste do Pedro, "ficou 100%") — os 3 slides viraram a composição
+ * do carrossel de diferenciais do `legalizai-site` (`lp/_lab/index.html`,
+ * `.dif-card`): foto full-bleed + gradiente escuro subindo + título/corpo
+ * brancos embaixo, sangrando atrás de header/footer também (ver comentário
+ * de `absolute inset-0` mais abaixo). Fotos ainda são as de referência do
+ * carrossel original (`legalizai-site/lp/_lab/assets/dif-cenas/`), o Pedro
+ * vai gerar as definitivas com o Léo depois de aprovar a composição.
+ *
  * ─── DECISÕES ─────────────────────────────────────────────────────────────
  * · **Pular é visível desde o slide 1** (spec: "pulável"). Onboarding que
  *   prende é onboarding que o `reta-direto` odeia. A saída fica no topo, longe
@@ -42,28 +54,27 @@ import { Lottie } from "@/components/lottie";
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-const SLIDES = [
+type Slide = { titulo: [string, string]; texto: string; imagemFundo: string };
+
+const SLIDES: Slide[] = [
   {
-    lottie: "/lottie/customer-need-legalizai-story-book.json",
-    fps: 30,
-    titulo: ["Contador de verdade.", "Não robô."],
-    texto:
-      "Gente de BH que te atende de verdade e resolve. 22 anos de escritório por trás do app.",
+    // referência: card 02 "Contador de verdade no WhatsApp" (gente de
+    // verdade por trás do app — mesma tese do slide).
+    imagemFundo: "/leo/card-teste-welcome-1.jpg",
+    titulo: ["Eu fico de vigia.", "Quem resolve é gente de verdade."],
+    texto: "Sou o Léo. 22 anos de escritório contábil em BH, não só um app.",
   },
   {
-    lottie: "/lottie/content-mod-legalizai-story-book.json",
-    fps: 30,
-    titulo: ["A parte chata", "é com a gente."],
-    texto:
-      "Impostos, guias, prazos, papelada do governo. Você toca o negócio. O resto voa pra cá.",
+    // referência: card 05 "Fala a sua língua".
+    imagemFundo: "/leo/card-teste-welcome-2.jpg",
+    titulo: ["Abrindo do zero ou", "já com CNPJ rodando."],
+    texto: "Empresa nova ou já rodando com outro contador, eu vigio do mesmo jeito.",
   },
   {
-    lottie: "/lottie/marketing-mgmt-legalizai-story-book.json",
-    // 25, não 30: é o `fr` do arquivo. Errar aqui roda em câmera lenta.
-    fps: 25,
-    titulo: ["Sem contabilês.", "Sem susto no boleto."],
-    texto:
-      "A gente fala a sua língua e o preço é um só, claro desde o primeiro dia.",
+    // referência: card 01 "Preço fechado, sem asterisco".
+    imagemFundo: "/leo/card-teste-welcome-3.jpg",
+    titulo: ["Contabilês eu ironizo.", "Susto no boleto eu não deixo passar."],
+    texto: "Preço único e claro desde o dia 1, sem pegadinha na letra miúda.",
   },
 ];
 
@@ -117,17 +128,41 @@ export function WelcomeView({
     el.scrollTo({ left: (i + 1) * el.clientWidth, behavior: "smooth" });
   };
 
+  // Foto+gradiente sangram atrás de header/footer também. `.app-page`
+  // (globals.css) já é `position:relative`: um filho `absolute inset-0` dela
+  // ignora o `padding-inline`/`padding-top` da PÁGINA (preenche a PADDING BOX,
+  // não só a content box — mesma lógica que a Splash documenta pra dela,
+  // `splash.tsx`), sem precisar de `fixed`.
+  //
+  // ⚠️ Por que `absolute`, não `fixed`: `fixed` só bleeda até o VIEWPORT real
+  // (ou até o ancestral com `transform` mais próximo, se houver um no meio —
+  // no `/apresentacao`, que embrulha o app-page dentro de um mock de aparelho
+  // com `transform: scale()`, esse ancestral vira o bezel inteiro, não a tela,
+  // e o fundo saía cortado/desalinhado). `absolute` ignora esse problema
+  // inteiro: o containing block é sempre o `.app-page` mais próximo, ponto,
+  // igual em produção, no `/apresentacao` e no iframe do `/mapa`.
+  const slideAtual = SLIDES[i];
+
   return (
     <>
-      <header className="flex items-center justify-between pt-6 pb-2">
-        <Logo className="h-[26px] w-auto" />
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: `linear-gradient(180deg, rgba(12,8,6,0), rgba(12,8,6,.72) 62%, rgba(12,8,6,.9)), url(${slideAtual.imagemFundo})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center 10%",
+        }}
+      />
+
+      <header className="relative flex items-center justify-between pt-6 pb-2">
+        <Logo variante="escura" className="h-[26px] w-auto" />
         {/* Saída sempre disponível. `ghost` porque escapar não é ação primária. */}
-        <Button variant="ghost" onClick={onPular}>
+        <Button variant="ghost" onClick={onPular} style={{ color: "#fff" }}>
           Pular
         </Button>
       </header>
 
-      <main className="app-main">
+      <main className="app-main relative">
         <div
           ref={trilho}
           className="-mx-6 flex min-h-0 flex-1 snap-x snap-mandatory overflow-x-auto
@@ -136,37 +171,28 @@ export function WelcomeView({
           {SLIDES.map((s) => (
             <section
               key={s.texto}
-              className="flex w-full shrink-0 snap-center flex-col items-center
-                         justify-center px-8 text-center"
+              className="flex w-full shrink-0 snap-center flex-col justify-end
+                         px-8 pb-10 text-left"
             >
-              {/* min-h-0 + flex-1: a ilustração ABSORVE a sobra e encolhe no SE
-                  (667px), onde a regra "sem scroll" morre primeiro. */}
-              <div className="flex min-h-0 w-full flex-1 items-center justify-center">
-                <Lottie
-                  path={s.lottie}
-                  fps={s.fps}
-                  className="h-full max-h-[340px] w-full max-w-[340px]"
-                />
-              </div>
-              <h2 className="text-h1 mt-4 shrink-0">
+              <h2 className="text-h1 text-white">
                 {s.titulo[0]}
                 <br />
                 {s.titulo[1]}
               </h2>
-              <p className="text-body text-text-secondary mt-3 max-w-[300px] shrink-0">
+              <p className="text-body mt-3 max-w-[300px] text-[color:var(--p-coral-100)]">
                 {s.texto}
               </p>
             </section>
           ))}
         </div>
 
-        <div className="app-footer-cta">
+        <div className="app-footer-cta" style={{ background: "transparent" }}>
           <div className="mb-6 flex items-center justify-center gap-2">
             {SLIDES.map((s, k) => (
               <span
                 key={s.texto}
                 className={`h-2 rounded-full transition-all ${
-                  k === i ? "w-6 bg-action-primary" : "w-2 bg-border-strong"
+                  k === i ? "w-6 bg-action-primary" : "w-2 bg-white/40"
                 }`}
               />
             ))}

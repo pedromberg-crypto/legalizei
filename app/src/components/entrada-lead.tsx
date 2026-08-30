@@ -1,9 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
 import { Campo, Texto, Select } from "@/components/ui/form";
-import { PILLS } from "@/components/gate-telas";
+import { PILLS, CheckMiniRegime } from "@/components/gate-telas";
 import { mascaraTelefone, mascaraCep, buscarCep } from "@/components/wizard-dinheiro";
 import { ehCepBh } from "@/lib/endereco";
 import { categoriaTemMei } from "@/lib/mei";
@@ -52,6 +53,7 @@ import { CUSTOS, brl } from "@/lib/fiscal";
 
 export type DadosLead = {
   nome: string;
+  sobrenome: string;
   email: string;
   telefone: string;
 };
@@ -73,34 +75,53 @@ export function DadosPessoaisView({
   /** Muda só o subtítulo: quem migra já tem empresa, quem abre ainda não. */
   contexto?: "abrir" | "migrar";
 }) {
-  const nomeOk = d.nome.trim().split(/\s+/).length >= 2;
+  const nomeOk = d.nome.trim().length > 0;
+  const sobrenomeOk = d.sobrenome.trim().length > 0;
   const emailOk = /@/.test(d.email) && /\./.test(d.email.split("@")[1] ?? "");
   const telefoneOk = d.telefone.replace(/\D/g, "").length >= 10;
-  const completo = nomeOk && emailOk && telefoneOk;
+  const completo = nomeOk && sobrenomeOk && emailOk && telefoneOk;
 
   return (
     <>
-      <TelaHeader meta="Seus dados" onVoltar={onVoltar} />
+      {/* 🐛 29/08 (achado do Pedro testando no iPhone) — `meta` é o rótulo do
+          DESTINO do voltar, não o nome da própria tela (mesmo padrão em todo
+          o resto do wizard). Estava mostrando "Seus dados" (o assunto DESTA
+          tela), quando o voltar daqui leva pro fork (`/entrada`). */}
+      <TelaHeader meta="Página inicial" onVoltar={onVoltar} />
       <main className="app-main">
         <Titulo
           sub={
             contexto === "migrar"
               ? "Pra gente falar com você sobre a sua empresa e acompanhar a migração."
-              : "Pra gente conseguir te acompanhar daqui em diante e guardar o seu progresso."
+              : "Pra gente te acompanhar daqui em diante e guardar o seu progresso."
           }
         >
           Como a gente te chama?
         </Titulo>
 
         <Corpo>
-          <Campo rotulo="Nome completo">
-            <Texto
-              valor={d.nome}
-              onChange={(v) => set("nome", v)}
-              placeholder="Como está no seu documento"
-              erro={d.nome.length > 0 && !nomeOk ? "Escreva o nome completo." : undefined}
-            />
-          </Campo>
+          {/* 🆕 29/08 (pedido do Pedro) — nome e sobrenome viram 2 campos,
+              não mais 1 "nome completo" só. Os dois obrigatórios. */}
+          <div className="flex gap-3">
+            <div className="min-w-0 flex-1">
+              <Campo rotulo="Nome">
+                <Texto
+                  valor={d.nome}
+                  onChange={(v) => set("nome", v)}
+                  placeholder="Primeiro nome"
+                />
+              </Campo>
+            </div>
+            <div className="min-w-0 flex-1">
+              <Campo rotulo="Sobrenome">
+                <Texto
+                  valor={d.sobrenome}
+                  onChange={(v) => set("sobrenome", v)}
+                  placeholder="Sobrenome"
+                />
+              </Campo>
+            </div>
+          </div>
 
           <Campo rotulo="Seu e-mail">
             <Texto
@@ -132,7 +153,7 @@ export function DadosPessoaisView({
             >
               política de privacidade
             </a>
-            . Nada de vender seus dados pra ninguém.
+            .
           </p>
         </Corpo>
 
@@ -149,6 +170,35 @@ export function DadosPessoaisView({
   );
 }
 
+/** Sentinela da opção coral "Não encontrei minha categoria" no dropdown —
+ *  não é um id de `PILLS`, de propósito, pra nunca colidir com uma categoria
+ *  real. */
+const FORA_LISTA_ID = "fora-lista";
+/** Última opção da lista de regulamentadas: abre um campo livre pra pessoa
+ *  escrever a própria atividade, quando nem essas 11 servem. */
+const REGULAMENTADA_OUTRA_ID = "outra";
+
+/** 🆕 29/08 (pedido do Pedro) — lista CURTA (≤12) das atividades
+ *  regulamentadas mais comuns entre PJ do Simples, pra quem não se encontrou
+ *  nas categorias. "Comércio" primeiro, de propósito: abrange bastante coisa
+ *  sozinho e não é "regulamentada" (é o catch-all mais comum). O resto é
+ *  profissão regulamentada de verdade — nada de nicho, se não a lista fica
+ *  enorme. */
+const REGULAMENTADAS = [
+  { v: "comercio", label: "Comércio" },
+  { v: "engenharia", label: "Engenharia" },
+  { v: "medicina", label: "Medicina" },
+  { v: "odontologia", label: "Odontologia" },
+  { v: "advocacia", label: "Advocacia" },
+  { v: "contabilidade", label: "Contabilidade" },
+  { v: "psicologia", label: "Psicologia" },
+  { v: "nutricao", label: "Nutrição" },
+  { v: "fisioterapia", label: "Fisioterapia" },
+  { v: "arquitetura", label: "Arquitetura" },
+  { v: "corretagem", label: "Corretagem de imóveis" },
+  { v: REGULAMENTADA_OUTRA_ID, label: "É outra atividade" },
+];
+
 /* ─────────────────────────────────────────────────────────────────────────
    E3.3 · ENDEREÇO + CATEGORIA — os 2 gates do produto, numa tela
    ───────────────────────────────────────────────────────────────────────── */
@@ -159,10 +209,11 @@ export function EnderecoCategoriaView({
   setCep,
   numero,
   setNumero,
+  complemento,
+  setComplemento,
   categoria,
   setCategoria,
   onSeguir,
-  onForaDeEscopo,
   onVoltar,
   exigeBh = true,
   regimeMei = false,
@@ -175,12 +226,13 @@ export function EnderecoCategoriaView({
   setCep: (v: string) => void;
   numero: string;
   setNumero: (v: string) => void;
+  /** 🆕 29/08 (achado do Pedro) — faltava o campo, só tinha número. */
+  complemento: string;
+  setComplemento: (v: string) => void;
   /** id de uma das `PILLS`. `null` = ainda não escolheu. */
   categoria: string | null;
   setCategoria: (v: string | null) => void;
   onSeguir: () => void;
-  /** "Minha atividade não está na lista" → waitlist, captura o lead. */
-  onForaDeEscopo: () => void;
   onVoltar?: () => void;
   /**
    * 🆕 27/08 — o gate de BH só vale pro **ME**. MEI não tem o limite
@@ -218,59 +270,230 @@ export function EnderecoCategoriaView({
   // resolve o caso em vez de mandar a pessoa embora.
   const foraDeBh = cepCheio && exigeBh && !ehCepBh(cep);
 
+  // 🔄 29/08 (pedido do Pedro) — o gate "fora de BH" deixou de expulsar pra
+  // uma tela de saída (`/saida/fora-bh`, E4.1): agora resolve AQUI mesmo, com
+  // 2 saídas positivas — usar o endereço fiscal (já existia) ou entrar na
+  // fila da própria cidade (nova). Local, não viaja por querystring: nada
+  // fora desta tela precisa saber que a pessoa escolheu essa opção.
+  const [filaCidade, setFilaCidade] = useState(false);
+
+  // 🆕 29/08 (pedido do Pedro) — "Não encontrei minha categoria" (opção coral
+  // do dropdown) pede a atividade REGULAMENTADA de verdade em vez de deixar
+  // solto. `atividadeForaLista` já vira `true` no clique da 1ª pergunta (o
+  // campo de cidade tem que aparecer JUNTO, não só depois de escolher a
+  // regulamentada) — só o `completo` (gate de submissão) exige a
+  // regulamentada (e, se for "outra", a descrição livre) também.
+  const [regulamentada, setRegulamentada] = useState<string | null>(null);
+  const [outraAtividade, setOutraAtividade] = useState("");
+  const atividadeForaLista = categoria === FORA_LISTA_ID;
+  const precisaDescreverOutra = regulamentada === REGULAMENTADA_OUTRA_ID;
+  const regulamentadaOk =
+    regulamentada !== null && (!precisaDescreverOutra || outraAtividade.trim() !== "");
+
+  // Combina as 2 saídas positivas (cidade fora de BH + atividade fora do
+  // escopo) num modo só: ambas terminam do MESMO jeito, capturando cidade +
+  // condição especial, com o mesmo CTA no rodapé.
+  const modoEspera = filaCidade || atividadeForaLista;
+
   // Só no MEI: a categoria escolhida existe como ocupação do Anexo XI?
   const categoriaSemMei =
-    regimeMei && categoria !== null && !categoriaTemMei(categoria);
+    regimeMei && categoria !== null && !atividadeForaLista && !categoriaTemMei(categoria);
 
-  const enderecoResolvido = regimeMei
-    ? // MEI: não há escolha de endereço (ver o bloco do card fiscal abaixo),
-      // então basta o CEP válido + número.
-      cepValido && numero.trim() !== ""
-    : enderecoProprio === false ||
-      (enderecoProprio === true && cepValido && numero.trim() !== "");
-  const completo = enderecoResolvido && categoria !== null && !categoriaSemMei;
+  const enderecoResolvido = atividadeForaLista
+    ? cepCheio // só precisa saber a cidade, não validar/escolher endereço
+    : regimeMei
+      ? // MEI: não há escolha de endereço (ver o bloco do card fiscal abaixo),
+        // então basta o CEP válido + número.
+        cepValido && numero.trim() !== ""
+      : filaCidade ||
+        enderecoProprio === false ||
+        (enderecoProprio === true && cepValido && numero.trim() !== "");
+  // 🔒 29/08 (pedido do Pedro) — `categoria !== null` é OBRIGATÓRIO em
+  // qualquer caminho de endereço, inclusive `filaCidade`: é dado importante
+  // pra estratégia de mkt quando a Legalizai chegar na cidade da pessoa.
+  // Nunca tornar a categoria opcional só pra quem entrar na fila. Quando é
+  // "não encontrei minha categoria", precisa TAMBÉM da regulamentada real
+  // (e da descrição livre, se for "outra").
+  const completo =
+    enderecoResolvido &&
+    categoria !== null &&
+    !categoriaSemMei &&
+    (!atividadeForaLista || regulamentadaOk);
 
   return (
     <>
-      <TelaHeader meta="Sua empresa" onVoltar={onVoltar} />
+      {/* 🐛 29/08 — `meta` é o rótulo do DESTINO do voltar (a tela MEI×ME),
+          não desta tela. Estava "Sua empresa" (nome da tela ATUAL). */}
+      <TelaHeader meta="Enquadramento" onVoltar={onVoltar} />
       <main className="app-main">
-        <Titulo sub="Duas coisas rápidas: onde ela vai ficar e o que você faz.">
+        {/* 🔄 29/08 (pedido do Pedro) — subtítulo cortado pro essencial: as
+            perguntas já vêm logo abaixo, "o que você faz e onde ela vai
+            ficar" virou redundante. */}
+        <Titulo sub="Duas perguntas rápidas">
           Sobre a sua empresa
         </Titulo>
 
         <Corpo>
+          {/* ═══ GATE 2 · O QUE A PESSOA FAZ ═══
+              🔄 29/08 (pedido do Pedro) — passou a vir ANTES do endereço: quem
+              cai no gate de cidade (fora de BH) já preencheu a categoria, dado
+              importante pra estratégia de mkt quando a Legalizai chegar na
+              cidade dela — antes ficava sujeito a alguém abandonar sem
+              escolher, mesmo com o "completo" já exigindo os dois.
+              🔑 Esta é a peça que permitiu mover o CNAE pra depois do
+              pagamento. A lista só tem o que a gente ATENDE, então escolher já
+              é passar pelo gate: lá no `/dossie/atividade` (pós-pagamento) a
+              pessoa só refina DENTRO da categoria, e por construção não existe
+              mais "não atendemos" naquele ponto. Quem não se encontra aqui sai
+              pela waitlist, antes de qualquer cobrança. */}
+          <div>
+            <p className="text-body-strong font-semibold mb-1">
+              O que você faz?
+            </p>
+            <p className="text-caption text-text-secondary mb-3">
+              Escolhe o que mais se parece. Depois você conta com as suas
+              palavras e a gente acha o código certo.
+            </p>
+
+            {/* 🔄 27/08 (pedido do Pedro: "quero as categorias em dropdown,
+                traga um bonito") — eram pills (mesmo estilo do E5A/pré-27/08).
+                17 opções em pill quebra em várias linhas e pesa a tela; o
+                `Select` do DS (já usado em estado civil/tipo) resolve com 1
+                gatilho + lista flutuante, sem perder teclado/a11y básica. */}
+            <Select
+              valor={categoria ?? ""}
+              onChange={(v) => {
+                setCategoria(v || null);
+                if (v !== FORA_LISTA_ID) setRegulamentada(null);
+              }}
+              opcoes={[
+                ...PILLS.map((p) => ({
+                  v: p.id,
+                  // No MEI, as 3 sem ocupação ganham o rótulo na própria lista —
+                  // a pessoa já lê o limite antes de escolher, e quem escolhe
+                  // mesmo assim encontra a explicação completa logo abaixo.
+                  label:
+                    regimeMei && !categoriaTemMei(p.id)
+                      ? `${p.label} (só como ME)`
+                      : p.label,
+                })),
+                // 🔄 29/08 (pedido do Pedro) — substitui o link "Minha
+                // atividade não está na lista" (que saía direto pra waitlist
+                // genérica): agora é a última opção do próprio dropdown, em
+                // coral, e escolher ela abre a pergunta de qual atividade
+                // regulamentada de verdade — dado valioso pra mkt.
+                { v: FORA_LISTA_ID, label: "Não encontrei minha categoria", destaque: "coral" },
+              ]}
+              placeholder="Escolhe uma categoria"
+            />
+
+            {/* 🔴 A porta fechada que vira porta aberta. Só existe no MEI. */}
+            {categoriaSemMei && (
+              <div className="mt-3 flex flex-col gap-3">
+                <Aviso variante="info" titulo="Essa atividade não pode ser MEI">
+                  A lei não considera empresário quem exerce profissão
+                  intelectual (art. 966 do Código Civil), então tecnologia,
+                  design e consultoria não entram na lista do MEI. Não é
+                  escolha nossa, e não tem exceção.
+                </Aviso>
+                <p className="text-caption text-text-secondary">
+                  A boa notícia: a gente atende essa atividade como ME no
+                  Simples Nacional, que é o caminho certo pro seu caso.
+                </p>
+                <Button full onClick={onTrocarParaMe}>
+                  Continuar como ME
+                </Button>
+              </div>
+            )}
+
+            {/* 🔄 29/08 (pedido do Pedro) — atividade fora do escopo: pede a
+                atividade REGULAMENTADA de verdade (lista curta, só as mais
+                comuns, ≤12) em vez de deixar o dado solto. Isso vira lead
+                qualificado pra mkt, não só um "não sei". Logo em seguida (SEM
+                título "Onde você está?" próprio, pra não somar mais um campo
+                à toa) já vem o CEP: é a mesma pergunta de sempre, só que
+                incorporada aqui embaixo pra reduzir seção. */}
+            {atividadeForaLista && (
+              <div className="mt-3 flex flex-col gap-3">
+                <Select
+                  valor={regulamentada ?? ""}
+                  onChange={(v) => setRegulamentada(v || null)}
+                  opcoes={REGULAMENTADAS}
+                  placeholder="Qual é a sua atividade?"
+                />
+                {precisaDescreverOutra && (
+                  <Campo rotulo="Qual é a sua atividade?">
+                    <Texto
+                      valor={outraAtividade}
+                      onChange={setOutraAtividade}
+                      placeholder="Descreve com suas palavras"
+                    />
+                  </Campo>
+                )}
+                <Campo rotulo="CEP" dica="A gente usa só pra identificar sua cidade.">
+                  <Texto
+                    valor={cep}
+                    onChange={(v) => setCep(mascaraCep(v))}
+                    placeholder="00000-000"
+                    inputMode="numeric"
+                  />
+                </Campo>
+                {endereco && (
+                  <div className="rounded-md border border-border-hairline bg-surface-card p-3">
+                    <p className="text-body font-semibold text-text-primary">
+                      {endereco.municipio} · {endereco.uf}
+                    </p>
+                    <p className="text-caption text-text-tertiary">
+                      É essa cidade que entra na fila.
+                    </p>
+                  </div>
+                )}
+                {/* 🔄 29/08 (pedido do Pedro) — título e corpo agora se
+                    adaptam ao que falta atender (só categoria, ou categoria +
+                    cidade), incorporando o texto que antes vinha numa
+                    mensagem própria ("Onde você está?"). */}
+                {cepCheio && (
+                  <Aviso
+                    variante="success"
+                    titulo={
+                      ehCepBh(cep)
+                        ? "Ainda não atendemos essa categoria"
+                        : "Ainda não atendemos sua categoria e cidade"
+                    }
+                  >
+                    A gente está em expansão. Clicando abaixo, você já
+                    garante uma condição especial pra quando a gente passar a
+                    te atender. Te avisaremos!
+                  </Aviso>
+                )}
+              </div>
+            )}
+          </div>
+
           {/* ═══ GATE 1 · ONDE A EMPRESA FICA ═══
-              Substitui o E4 (gate de cidade), que era autodeclarado. */}
+              Substitui o E4 (gate de cidade), que era autodeclarado.
+              🔄 29/08 (pedido do Pedro) — o caminho "não encontrei minha
+              categoria" (`atividadeForaLista`) SAIU inteiro daqui: o CEP dele
+              virou parte do bloco de categoria logo acima, pra reduzir seção.
+              Esse bloco agora só existe pro caminho normal. */}
+          {!atividadeForaLista && (
           <div>
             <p className="text-body-strong font-semibold mb-1">
               Onde ela vai ficar?
             </p>
+            {/* 🔄 29/08 (pedido do Pedro) — texto enxuto, o anterior tinha
+                repetição desnecessária ("é sobre o endereço da empresa, não
+                sobre onde você mora"). */}
             <p className="text-caption text-text-secondary mb-3">
               {exigeBh
-                ? "Por enquanto a gente só abre empresa em Belo Horizonte/MG. Isso é sobre o endereço da empresa, não sobre onde você mora."
+                ? "O endereço da sua empresa precisa ser em Belo Horizonte. Se mora fora, você pode utilizar o nosso."
                 : "É o endereço que vai ficar no seu CNPJ, e pode ser o da sua casa. Como MEI, você abre de qualquer cidade do Brasil."}
             </p>
 
-            {/* 🆕 28/08 — no MEI sobrou UMA opção (o endereço fiscal saiu, ver
-                abaixo), e oferecer escolha de um item só é teatro: a tela pede
-                o CEP direto. O `enderecoProprio` é marcado por efeito colateral
-                do próprio render pra não quebrar o `completo`. */}
+            {/* 🔄 29/08 (pedido do Pedro) — "Quero um endereço da Legalizai"
+                sobe pra cima, "Tenho um endereço em BH" desce. Só ordem
+                visual, nenhuma lógica muda. */}
             <div className="flex flex-col gap-2">
-              {!regimeMei && (
-              <button
-                onClick={() => setEnderecoProprio(true)}
-                aria-pressed={enderecoProprio === true}
-                className={`min-h-12 rounded-md border px-4 text-left text-body font-semibold transition-colors
-                  ${
-                    enderecoProprio === true
-                      ? "border-action-primary bg-action-primary text-text-on-brand"
-                      : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
-                  }`}
-              >
-                Tenho um endereço em BH
-              </button>
-              )}
-
               {/* 🆕 28/08 — o endereço fiscal SOME no MEI, e não é economia de
                   tela: ele existe pra resolver o gate de BH ("não tenho
                   endereço em BH, e a empresa precisa ficar em BH"). O MEI não
@@ -304,14 +527,74 @@ export function EnderecoCategoriaView({
                     {brl(CUSTOS.ENDERECO_FISCAL, true)}/mês
                   </span>
                 </div>
+                {/* 🔄 29/08 (pedido do Pedro) — cortou "Serve inclusive pra
+                    quem mora em outra cidade", redundante com o subtítulo
+                    logo acima. */}
                 <p
                   className={`text-caption mt-1.5 ${
                     enderecoProprio === false ? "text-text-on-brand/80" : "text-text-secondary"
                   }`}
                 >
                   O endereço do nosso escritório em BH vira a sede da sua
-                  empresa, sem usar o seu. Serve inclusive pra quem mora em
-                  outra cidade.
+                  empresa.
+                </p>
+              </button>
+              )}
+
+              {/* 🔄 29/08 (pedido do Pedro) — mora logo abaixo do card
+                  Legalizai agora (antes aparecia lá embaixo, depois do card
+                  de BH, porque vinha só no final do bloco condicional). Trocou
+                  o `Aviso variante="warning"` (laranja, assustador pra uma
+                  informação que não é problema) pelo mesmo card branco/
+                  amigável do "Vale saber" (TriagemView). */}
+              {enderecoProprio === false && (
+                <div className="rounded-md border border-border-hairline bg-surface-card p-4">
+                  <div className="flex items-start gap-2.5">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-state-success-tint text-state-success-text">
+                      <CheckMiniRegime />
+                    </span>
+                    <p className="text-caption text-text-secondary">
+                      Essa será uma cobrança recorrente junto da sua
+                      mensalidade. Quando chegar na parte do plano, você vai
+                      identificar.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* 🔄 29/08 (pedido do Pedro) — mesmo formato do card Legalizai
+                  (título + pill + subtítulo), estavam com cara muito
+                  diferente um do outro. Pill mostra "Sem custo" no lugar do
+                  preço. */}
+              {!regimeMei && (
+              <button
+                onClick={() => setEnderecoProprio(true)}
+                aria-pressed={enderecoProprio === true}
+                className={`rounded-md border p-4 text-left transition-colors
+                  ${
+                    enderecoProprio === true
+                      ? "border-action-primary bg-action-primary"
+                      : "border-border-hairline bg-surface-card hover:border-border-strong"
+                  }`}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <span
+                    className={`text-body font-semibold ${
+                      enderecoProprio === true ? "text-text-on-brand" : "text-text-primary"
+                    }`}
+                  >
+                    Tenho um endereço em Belo Horizonte
+                  </span>
+                  <span className="shrink-0 rounded-full bg-surface-dark px-2.5 py-1 text-micro font-semibold text-text-on-dark">
+                    Sem custo
+                  </span>
+                </div>
+                <p
+                  className={`text-caption mt-1.5 ${
+                    enderecoProprio === true ? "text-text-on-brand/80" : "text-text-secondary"
+                  }`}
+                >
+                  Não acrescenta nada na sua mensalidade.
                 </p>
               </button>
               )}
@@ -331,11 +614,48 @@ export function EnderecoCategoriaView({
                 </Campo>
 
                 {foraDeBh ? (
-                  <Aviso variante="warning" titulo="Esse CEP não é de Belo Horizonte">
-                    Hoje a gente só abre empresa com sede em BH. Dá pra
-                    resolver usando o endereço da Legalizai aqui em cima: a
-                    empresa fica em BH e você continua morando onde mora.
-                  </Aviso>
+                  filaCidade ? (
+                    <>
+                      {/* 🆕 29/08 (pedido do Pedro) — cidade travada, só pra
+                          visualização: já veio do CEP validado, não edita
+                          de novo aqui. */}
+                      {endereco && (
+                        <div className="rounded-md border border-border-hairline bg-surface-card p-3">
+                          <p className="text-body font-semibold text-text-primary">
+                            {endereco.municipio} · {endereco.uf}
+                          </p>
+                          <p className="text-caption text-text-tertiary">
+                            É essa cidade que entra na fila.
+                          </p>
+                        </div>
+                      )}
+                      <Aviso variante="success" titulo="Falta só confirmar aqui embaixo">
+                        Clicando abaixo, você garante oferta especial quando a
+                        gente conseguir te atender.
+                      </Aviso>
+                    </>
+                  ) : (
+                    <div className="rounded-md bg-state-success-tint p-4">
+                      <p className="mb-1 text-body font-semibold text-state-success-text">
+                        Ainda não chegamos na sua cidade
+                      </p>
+                      <p className="text-caption text-text-secondary">
+                        Mas isso não te trava: clica em{" "}
+                        <span className="font-semibold text-text-primary">
+                          &ldquo;Quero um endereço da Legalizai&rdquo;
+                        </span>{" "}
+                        aqui em cima, e a empresa nasce em BH do mesmo jeito,
+                        sem custo extra na abertura.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setFilaCidade(true)}
+                        className="mt-3 block text-caption font-semibold text-text-primary underline underline-offset-4"
+                      >
+                        Quero abrir na minha cidade mesmo assim
+                      </button>
+                    </div>
+                  )
                 ) : (
                   endereco && (
                     <>
@@ -347,36 +667,40 @@ export function EnderecoCategoriaView({
                           {endereco.municipio} · {endereco.uf}
                         </p>
                       </div>
-                      <Campo rotulo="Número">
-                        <Texto
-                          valor={numero}
-                          onChange={setNumero}
-                          placeholder="123"
-                          inputMode="numeric"
-                        />
-                      </Campo>
+                      {/* 🆕 29/08 (achado do Pedro) — faltava o campo,
+                          só tinha Número. Mesmo padrão do E6 (`/conta`):
+                          lado a lado, `min-w-0` pra não vazar o
+                          placeholder mais longo. */}
+                      <div className="flex gap-3">
+                        <div className="min-w-0 flex-1">
+                          <Campo rotulo="Número">
+                            <Texto
+                              valor={numero}
+                              onChange={setNumero}
+                              placeholder="123"
+                              inputMode="numeric"
+                            />
+                          </Campo>
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <Campo rotulo="Complemento">
+                            <Texto
+                              valor={complemento}
+                              onChange={setComplemento}
+                              placeholder="Complemento"
+                            />
+                          </Campo>
+                        </div>
+                      </div>
                     </>
                   )
                 )}
 
-                {/* 🆕 27/08 (achado do cruzamento com a Contabilizei): eles
-                    avisam do risco de zoneamento, a gente não avisava em lugar
-                    nenhum. O aviso mora aqui agora, junto do endereço. */}
-                {/* 🆕 28/08 — este aviso era único e é FALSO no MEI: a consulta
-                    prévia de viabilidade foi EXTINTA pro MEI (Res. CGSIM
-                    61/2020, adequação à Lei da Liberdade Econômica), e em BH o
-                    alvará é dispensado pras atividades de baixo risco (Decreto
-                    PBH 17.245/2019). Não existe prefeitura conferindo antes —
-                    a responsabilidade é assumida pelo titular no Termo de
-                    Ciência. Dizer "a gente confirma na viabilidade" prometeria
-                    uma checagem que ninguém vai fazer. */}
-                {cepValido && !regimeMei && (
-                  <Aviso variante="info" titulo="A prefeitura confirma na viabilidade">
-                    A maioria dos endereços residenciais é aceita, mas depende
-                    do zoneamento e da sua atividade. A gente confirma quando a
-                    viabilidade sair, e se não der você troca sem custo.
-                  </Aviso>
-                )}
+                {/* 🔴 29/08 (pedido do Pedro) — o aviso "a prefeitura confirma
+                    na viabilidade" saiu: fica pra depois quando a viabilidade
+                    de verdade existir, mas o texto criava expectativa de
+                    checagem que ninguém faz agora (mesmo racional do aviso
+                    que já não existe no MEI, ver comentário abaixo). */}
                 {cepValido && regimeMei && (
                   <Aviso variante="info" titulo="Pode ser o seu endereço de casa">
                     No MEI não existe consulta prévia de viabilidade, e em BH o
@@ -387,83 +711,13 @@ export function EnderecoCategoriaView({
                 )}
               </div>
             )}
-
-            {enderecoProprio === false && (
-              <Aviso variante="warning" titulo="Essa cobrança é mensal, recorrente">
-                Não é cobrança única. Entra somada na sua mensalidade todo mês,
-                a partir de agora. Você confirma o valor total no próximo passo.
-              </Aviso>
-            )}
           </div>
-
-          {/* ═══ GATE 2 · O QUE A PESSOA FAZ ═══
-              🔑 Esta é a peça que permitiu mover o CNAE pra depois do
-              pagamento. A lista só tem o que a gente ATENDE, então escolher já
-              é passar pelo gate: lá no `/dossie/atividade` (pós-pagamento) a
-              pessoa só refina DENTRO da categoria, e por construção não existe
-              mais "não atendemos" naquele ponto. Quem não se encontra aqui sai
-              pela waitlist, antes de qualquer cobrança. */}
-          <div>
-            <p className="text-body-strong font-semibold mb-1">
-              O que você faz?
-            </p>
-            <p className="text-caption text-text-secondary mb-3">
-              Escolhe o que mais se parece. Depois você conta com as suas
-              palavras e a gente acha o código certo.
-            </p>
-
-            {/* 🔄 27/08 (pedido do Pedro: "quero as categorias em dropdown,
-                traga um bonito") — eram pills (mesmo estilo do E5A/pré-27/08).
-                17 opções em pill quebra em várias linhas e pesa a tela; o
-                `Select` do DS (já usado em estado civil/tipo) resolve com 1
-                gatilho + lista flutuante, sem perder teclado/a11y básica. */}
-            <Select
-              valor={categoria ?? ""}
-              onChange={(v) => setCategoria(v || null)}
-              opcoes={PILLS.map((p) => ({
-                v: p.id,
-                // No MEI, as 3 sem ocupação ganham o rótulo na própria lista —
-                // a pessoa já lê o limite antes de escolher, e quem escolhe
-                // mesmo assim encontra a explicação completa logo abaixo.
-                label:
-                  regimeMei && !categoriaTemMei(p.id)
-                    ? `${p.label} (só como ME)`
-                    : p.label,
-              }))}
-              placeholder="Escolhe uma categoria"
-            />
-
-            {/* 🔴 A porta fechada que vira porta aberta. Só existe no MEI. */}
-            {categoriaSemMei && (
-              <div className="mt-3 flex flex-col gap-3">
-                <Aviso variante="info" titulo="Essa atividade não pode ser MEI">
-                  A lei não considera empresário quem exerce profissão
-                  intelectual (art. 966 do Código Civil), então tecnologia,
-                  design e consultoria não entram na lista do MEI. Não é
-                  escolha nossa, e não tem exceção.
-                </Aviso>
-                <p className="text-caption text-text-secondary">
-                  A boa notícia: a gente atende essa atividade como ME no
-                  Simples Nacional, que é o caminho certo pro seu caso.
-                </p>
-                <Button full onClick={onTrocarParaMe}>
-                  Continuar como ME
-                </Button>
-              </div>
-            )}
-
-            <button
-              onClick={onForaDeEscopo}
-              className="mt-3 self-start text-caption font-medium text-text-secondary underline underline-offset-4"
-            >
-              Minha atividade não está na lista
-            </button>
-          </div>
+          )}
         </Corpo>
 
         <Rodape>
           <Button full disabled={!completo} onClick={onSeguir}>
-            Continuar
+            {modoEspera ? "Me inscrever e garantir condição" : "Continuar"}
           </Button>
         </Rodape>
       </main>

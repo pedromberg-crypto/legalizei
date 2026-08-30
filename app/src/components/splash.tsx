@@ -31,14 +31,22 @@ import { Logo } from "@/components/logo";
  *    PARA. Motivo: no `/mockup` cada tela é um iframe, e uma splash que se
  *    substitui sozinha vira uma segunda cópia do N2 na prancheta — o Pedro
  *    perderia justamente a tela que veio revisar. O handoff N1→N2 é transição
- *    entre rotas, responsabilidade do router, não da tela. Quando o flow for
- *    ligado de ponta a ponta, é uma linha (router.push) que volta.
+ *    entre rotas, responsabilidade do router, não da tela.
+ *
+ * 🐛 29/08 — achado testando no iPhone real: a rota `/splash` de PRODUÇÃO
+ * nunca ligou o toque de verdade (`onContinuar` não existia). Só o
+ * `/apresentacao` tinha o avanço, só que por FORA (`<button>` embrulhando
+ * `<SplashView/>`, mudando o `etapa` local da demo, não a rota real). Corrigido:
+ * `onContinuar` opcional — a page real passa `router.push("/welcome")`, a
+ * demo continua com o próprio wrapper (não passa a prop, nada muda lá).
  * ═══════════════════════════════════════════════════════════════════════════
  */
-export function SplashView() {
+export function SplashView({ onContinuar }: { onContinuar?: () => void }) {
   return (
     <div
       id="splash-frame"
+      role={onContinuar ? "button" : undefined}
+      onClick={onContinuar}
       className="fixed inset-0 z-50 flex items-center justify-center bg-brand"
     >
       <Logo variante="negativa" checkId="splash-check" className="w-[220px] max-w-[64%]" />

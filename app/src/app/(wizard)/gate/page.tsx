@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { TriagemView, FaixaView } from "@/components/gate-telas";
+import { TelaHeader } from "@/components/ui/tela";
 import { ImpedimentoView } from "@/components/mei-telas";
 import { IMPEDIMENTOS } from "@/lib/mei";
 import { ehMei, comRegime } from "@/lib/regime";
@@ -64,10 +65,11 @@ export default function GatePage() {
   const etapaParam = searchParams.get("etapa");
   const [etapa, setEtapa] = useState<Etapa>(etapaParam === "faixa" ? "faixa" : "triagem");
 
-  const [socios, setSocios] = useState<number | null>(null);
-  const [exterior, setExterior] = useState<boolean | null>(null);
-  // 🆕 24/08 (reunião Leonan 19/08 + pedido do Pedro) — CPF/CNPJ do sócio.
-  const [socioTipo, setSocioTipo] = useState<"cpf" | "cnpj" | null>(null);
+  // 🐛 29/08 (achado do Pedro testando no iPhone) — a demo (`/apresentacao`)
+  // já vinha com "Só eu" pré-selecionado, a rota real não. É o mais comum
+  // entre os prestadores de serviço (mesma copy do card de reforço logo
+  // abaixo em `gate-telas.tsx`), faz sentido como ponto de partida.
+  const [socios, setSocios] = useState<number | null>(1);
   const [faixa, setFaixa] = useState<string | null>(null);
   const [modoExato, setModoExato] = useState(false);
   const [exato, setExato] = useState("");
@@ -86,36 +88,51 @@ export default function GatePage() {
     return "/saida/mei-servidor";
   }
 
+  /** 🆕 29/08 — comum às 2 rotas de voltar reais (endereço) e local (faixa→triagem). */
+  function onVoltarComum() {
+    if (etapa === "faixa") {
+      setEtapa("triagem");
+      return;
+    }
+    router.push(comRegime("/endereco", mei));
+  }
+
   return (
     <>
-      <header className="pt-6 pb-4">
-        <p className="text-micro text-text-tertiary">Legalizai</p>
-      </header>
-
-      <main className="app-main">
-        {/* 1º passo · ME = triagem de sócios · MEI = impedimentos legais */}
-        {etapa === "triagem" && mei && (
-          <ImpedimentoView
-            respostas={impedimentos}
-            setResposta={(id, v) =>
-              setImpedimentos((r) => ({ ...r, [id]: v }))
-            }
-            cienteBeneficio={cienteBeneficio}
-            setCienteBeneficio={setCienteBeneficio}
-            onSeguir={() => setEtapa("faixa")}
-            onSaida={() => router.push(saidaDoImpedimento())}
+      {/* 🐛 29/08 (achado do Pedro testando no iPhone) — a rota real não tinha
+          seta de voltar nenhuma, só um header estático "Legalizai". A que
+          aparecia na `/apresentacao` era chrome do PRÓPRIO demo (botão fora
+          da moldura do aparelho), não algo desta tela.
+          ⚠️ `ImpedimentoView` (ramo MEI) já traz o PRÓPRIO header+main —
+          renderizar ele aqui dentro aninhava `<main>` dentro de `<main>` e
+          duplicava o header. Ele fica de fora deste wrapper, com seu próprio
+          `onVoltar`. */}
+      {etapa === "triagem" && mei ? (
+        <ImpedimentoView
+          respostas={impedimentos}
+          setResposta={(id, v) => setImpedimentos((r) => ({ ...r, [id]: v }))}
+          cienteBeneficio={cienteBeneficio}
+          setCienteBeneficio={setCienteBeneficio}
+          onSeguir={() => setEtapa("faixa")}
+          onSaida={() => router.push(saidaDoImpedimento())}
+          onVoltar={onVoltarComum}
+        />
+      ) : (
+        <>
+          {/* `meta` segue o mesmo padrão do resto do wizard (nome do DESTINO
+              do voltar, não desta tela): "faixa" volta pro passo interno
+              "triagem"; "triagem" volta pro E3.3 (`/endereco`). */}
+          <TelaHeader
+            meta={etapa === "faixa" ? "Perguntas rápidas" : "Sobre sua empresa"}
+            onVoltar={onVoltarComum}
           />
-        )}
+
+          <main className="app-main">
         {etapa === "triagem" && !mei && (
           <TriagemView
             socios={socios}
             setSocios={setSocios}
-            exterior={exterior}
-            setExterior={setExterior}
-            socioTipo={socioTipo}
-            setSocioTipo={setSocioTipo}
             onSeguir={() => setEtapa("faixa")}
-            onSaida={(rota) => router.push(rota)}
             coorte={coorte}
             setCoorte={setCoorte}
           />
@@ -148,7 +165,9 @@ export default function GatePage() {
             }
           />
         )}
-      </main>
+          </main>
+        </>
+      )}
     </>
   );
 }

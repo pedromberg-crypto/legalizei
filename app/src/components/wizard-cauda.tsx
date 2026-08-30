@@ -1546,6 +1546,7 @@ const BOLETO_P2 = { passosFeitos: 2 };
 export function AguardandoView({
   mei = false,
   temSocios = true,
+  pago = false,
   onSeguir,
 }: {
   /** 🆕 04/08 — MEI não paga taxa da Junta e tem mensalidade própria
@@ -1555,6 +1556,15 @@ export function AguardandoView({
   mei?: boolean;
   /** ME "Só eu" também não tem "Sócios" na lista. */
   temSocios?: boolean;
+  /**
+   * 🆕 30/08 (pedido do Pedro) — E9.1P do mapa: variante "pago" desta MESMA
+   * tela, pra quem pagou por método instantâneo (cartão/Pix) via E9.S
+   * (splash "pagamento confirmado"). Antes esses métodos pulavam direto pro
+   * C0; agora passam por aqui também, só que já com o pagamento resolvido —
+   * `ListaPassos` já sabia fazer essa distinção (`pagamentoPendente=false`),
+   * só faltava a tela de cima (hero + microtexto) saber contar a diferença.
+   */
+  pago?: boolean;
   onSeguir?: () => void;
 }) {
   const passos = passosDoCliente({ mei, temSocios });
@@ -1580,25 +1590,30 @@ export function AguardandoView({
                   "radial-gradient(120% 100% at 0% 0%, color-mix(in srgb, var(--color-action-primary) 45%, transparent) 0%, transparent 55%), var(--color-surface-dark)",
               }}
             >
-              <p className="text-h2 font-bold leading-tight">Seu boleto está a caminho</p>
-              <p className="mt-1 text-caption text-text-on-dark/70">
-                Boleto leva de 1 a 3 dias úteis pra cair. Enquanto isso, vamos
-                adiantar algumas informações?
+              <p className="text-h2 font-bold leading-tight">
+                {pago ? "Pagamento confirmado" : "Seu boleto está a caminho"}
               </p>
-              <div className="mt-4 flex flex-wrap items-center gap-2">
-                <button
-                  type="button"
-                  className="flex items-center gap-1.5 rounded-full bg-surface-card px-3 py-1.5 text-caption font-semibold text-text-primary transition-colors active:bg-surface-alt"
-                >
-                  Ver o boleto de {brl(boleto, true)}
-                </button>
-                <button
-                  type="button"
-                  className="flex items-center gap-1.5 rounded-full border border-border-hairline px-3 py-1.5 text-caption font-medium text-text-on-dark/80 transition-colors active:bg-white/10"
-                >
-                  Prefiro pagar por Pix
-                </button>
-              </div>
+              <p className="mt-1 text-caption text-text-on-dark/70">
+                {pago
+                  ? "Tudo certo por aqui. Bora continuar de onde você parou?"
+                  : "Boleto leva de 1 a 3 dias úteis pra cair. Enquanto isso, vamos adiantar algumas informações?"}
+              </p>
+              {!pago && (
+                <div className="mt-4 flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    className="flex items-center gap-1.5 rounded-full bg-surface-card px-3 py-1.5 text-caption font-semibold text-text-primary transition-colors active:bg-surface-alt"
+                  >
+                    Ver o boleto de {brl(boleto, true)}
+                  </button>
+                  <button
+                    type="button"
+                    className="flex items-center gap-1.5 rounded-full border border-border-hairline px-3 py-1.5 text-caption font-medium text-text-on-dark/80 transition-colors active:bg-white/10"
+                  >
+                    Prefiro pagar por Pix
+                  </button>
+                </div>
+              )}
             </div>
 
             <CartaoResumoPassos
@@ -1606,14 +1621,14 @@ export function AguardandoView({
               feito={BOLETO_P2.passosFeitos}
               total={total}
               agora={passos[BOLETO_P2.passosFeitos]?.nome ?? "—"}
-              metaDirRotulo="Boleto"
-              metaDirValor="1 a 3 dias úteis"
+              metaDirRotulo={pago ? "Pagamento" : "Boleto"}
+              metaDirValor={pago ? "Confirmado" : "1 a 3 dias úteis"}
             />
 
             <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
               <ListaPassos
                 concluidos={BOLETO_P2.passosFeitos}
-                pagamentoPendente
+                pagamentoPendente={!pago}
                 mostrarDestino
                 mei={mei}
                 temSocios={temSocios}
@@ -1621,7 +1636,9 @@ export function AguardandoView({
             </div>
 
             <p className="text-micro text-text-tertiary px-1">
-              Seu progresso está salvo. Se você já pagou, não cobramos de novo.
+              {pago
+                ? "Seu progresso está salvo. Pode sair e voltar quando quiser."
+                : "Seu progresso está salvo. Se você já pagou, não cobramos de novo."}
             </p>
           </div>
         </div>

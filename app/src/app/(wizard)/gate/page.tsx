@@ -145,14 +145,16 @@ export default function GatePage() {
             setModoExato={setModoExato}
             exato={exato}
             setExato={setExato}
-            onSeguir={() =>
-              router.push(
-                comCategoria(
-                  comEndereco(comRegime("/conta", mei), enderecoFiscal),
-                  categoria,
-                ),
-              )
-            }
+            // 🆕 30/08 (pedido do Pedro) — não vai mais direto pro E6: passa
+            // pelo splash "conseguimos te atender" (E5F.1) primeiro. O
+            // destino de sempre (E6 + flags) viaja como `next`.
+            onSeguir={() => {
+              const destino = comCategoria(
+                comEndereco(comRegime("/conta", mei), enderecoFiscal),
+                categoria,
+              );
+              router.push(`/splash-atendido?next=${encodeURIComponent(destino)}`);
+            }}
             // 🆕 03/08 — UX-68 mesclado: revela o campo inline em vez de
             // trocar a tela inteira. Fonte: /apresentacao.
             exatoInline

@@ -19,10 +19,15 @@ import { TEM_SOCIO } from "@/app/(app)/dossie/mock";
  * Persona-guarda: `knife` (paga por boleto e some por 3 dias).
  *
  * ─── ESTA TELA EXISTE PORQUE O BOLETO FICOU (decisão do Pedro) ────────────
- * `N9 --boleto--> P2 --> N10`. Cartão e Pix pulam direto pro N10 — só quem
- * escolhe boleto passa por aqui. ⚠️ 29/07: o `/pagamento` de produção não
+ * `N9 --boleto--> P2 --> N10`. ⚠️ 29/07: o `/pagamento` de produção não
  * respeitava essa aresta (ia sempre direto pro dossiê, até por boleto);
  * corrigido junto com esta extração.
+ *
+ * 🔴 30/08 (pedido do Pedro) — REVOGADO "cartão/Pix pulam direto pro N10". No
+ * caminho ME, todo método passa por aqui agora: boleto chega direto
+ * (pendente), cartão/Pix chegam via `/splash-pagamento` com `?pago=1` (prop
+ * `pago`, ver `AguardandoView`). MEI segue com o comportamento antigo por
+ * ora (fora do escopo desta rodada).
  *
  * 🆕 04/08 — `?regime=mei` corrige o valor do boleto (sem DAE, mensalidade
  * própria) e repassa o regime adiante pro dossiê.
@@ -34,11 +39,17 @@ export default function AguardandoPage() {
   const mei = ehMei(searchParams);
   const enderecoFiscal = ehEnderecoFiscal(searchParams);
   const categoria = categoriaDe(searchParams);
+  // 🆕 30/08 — E9.1P do mapa: quem pagou por método instantâneo (cartão/Pix)
+  // chega aqui vindo do splash "pagamento confirmado" (`/splash-pagamento`),
+  // com `?pago=1`. Boleto continua sem o flag (pendente, comportamento de
+  // sempre).
+  const pago = searchParams.get("pago") === "1";
 
   return (
     <AguardandoView
       mei={mei}
       temSocios={TEM_SOCIO}
+      pago={pago}
       // 🔄 27/08 — a 1ª tela do dossiê virou a C0 (`/dossie/atividade`), não
       // mais o C1. Mesma mudança do `/pagamento` (racional lá).
       // 🐛 28/08 — faltava o ramo MEI: ia sempre pra C0 (ME), mesmo quando

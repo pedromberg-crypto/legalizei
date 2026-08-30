@@ -9,6 +9,7 @@ import {
   type DadosLead,
 } from "@/components/entrada-lead";
 import { SplashView } from "@/components/splash";
+import { SplashMensagemView } from "@/components/splash-mensagem";
 import { WelcomeView } from "@/components/welcome";
 import {
   PerguntaView,
@@ -254,10 +255,13 @@ type Etapa =
   | "m-certificado"
   | "saida-mei-outra-empresa"
   | "saida-mei-servidor"
+  | "splash-atendido"
   | "conta"
   | "conta-codigo"
   | "plano"
   | "pagamento"
+  | "splash-pagamento"
+  | "aguardando-pago"
   // ─── CONSTITUIÇÃO · o dossiê (29/07) ─────────────────────────────────────
   // Depois do dinheiro, a coleta. Estas 7 só puderam entrar na demo junto com
   // a extração pra `components/wizard-dossie.tsx`: antes eram `page.tsx` com
@@ -455,7 +459,19 @@ function antesDoMigrar(e: EtapaMigrar): Etapa {
 }
 
 /** C0.1 (retomar) e E9.1 (aguardando) — pausas de pagamento, fora da sequência. */
-const ETAPAS_ESPERA = ["retomar-cpf", "retomar", "aguardando"] as const satisfies readonly Etapa[];
+const ETAPAS_ESPERA = [
+  "retomar-cpf",
+  "retomar",
+  "aguardando",
+  // 🆕 30/08 — splashes transitórios (E5F.1/E9.S) e a variante "pago" do
+  // E9.1 (E9.1P). Nenhum tem campo livre nem é passo com CTA de avançar por
+  // clique (os 2 splashes auto-avançam sozinhos), então entram no mesmo
+  // grupo das outras pausas/status — ganham momento=etapa automaticamente
+  // (`naEspera`) e ficam fora do `mostraPreencher`.
+  "splash-atendido",
+  "splash-pagamento",
+  "aguardando-pago",
+] as const satisfies readonly Etapa[];
 
 type EtapaEspera = (typeof ETAPAS_ESPERA)[number];
 
@@ -557,10 +573,13 @@ type Momento =
   | "m-certificado"
   | "saida-mei-outra-empresa"
   | "saida-mei-servidor"
+  | "splash-atendido"
   | "conta"
   | "conta-codigo"
   | "plano"
   | "pagamento"
+  | "splash-pagamento"
+  | "aguardando-pago"
   | "socio"
   | "vinculo"
   | "socios"
@@ -942,10 +961,13 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   "m-certificado": "/certificado?regime=mei",
   "saida-mei-outra-empresa": "/saida/mei-outra-empresa",
   "saida-mei-servidor": "/saida/mei-servidor",
+  "splash-atendido": "/splash-atendido",
   conta: "/conta",
   "conta-codigo": "/conta",
   plano: "/plano",
   pagamento: "/pagamento",
+  "splash-pagamento": "/splash-pagamento",
+  "aguardando-pago": "/aguardando?pago=1",
   socio: "/dossie/socio",
   vinculo: "/dossie/vinculo",
   socios: "/dossie/socios",
@@ -1000,6 +1022,9 @@ NOME_MOCKUP["mei-ou-me"] = "E3.2 · MEI × ME";
 // página real tem 2 passos, CPF depois status); sem override os dois
 // herdariam o mesmo nome do `Object.fromEntries` acima.
 NOME_MOCKUP["retomar-cpf"] = "C0.1 · Voltar de onde parei (CPF)";
+// 🆕 30/08 — "aguardando-pago" divide a mesma rota (`/aguardando`) com
+// "aguardando" (boleto pendente × pago via instantâneo).
+NOME_MOCKUP["aguardando-pago"] = "E9.1P · Status (pago)";
 
 const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; porque: string }> = {
   splash: {
@@ -1190,6 +1215,14 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     porque:
       "Mandar embora todo servidor seria perder cliente por regra que não se aplica a ele. A saída convida a conferir o estatuto junto com a gente.",
   },
+  "splash-atendido": {
+    dono: null,
+    faz: "🆕 30/08 — TELA NOVA (E5F.1 do mapa). Splash transitório, sem CTA, confirma que a faixa informada é atendida antes de pedir a conta.",
+    interfere:
+      "Não coleta nada, não decide nada — é só reforço emocional antes de pedir um dado mais pesado (conta). Auto-avança pro E6 sozinho.",
+    porque:
+      "Pedido do Pedro: fechar o gate de faturamento com uma confirmação clara, em vez da pessoa ir direto de 'escolhi minha faixa' pra 'agora crie uma conta' sem transição nenhuma.",
+  },
   conta: {
     dono: "usuario",
     faz: "Cria o acesso e já coleta os dados pessoais: nome, CPF, telefone e endereço. Antes isso só era pedido depois do pagamento.",
@@ -1221,6 +1254,22 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
       "O CPF faz dois trabalhos: cobrança e elegibilidade. Situação irregular na Receita significa que a pessoa não pode abrir empresa, então a gente não cobra. O aceite é o que vira a pessoa cliente — ainda NÃO é o ponto sem volta (CDC art. 49, 7 dias, vale limpo). Depois daqui nasce a casa (o portal).",
     porque:
       "Um campo, dois usos, sem gastar uma tela a mais. O termo irreversível é outra tela (A2), depois do dossiê — separar os dois atos é o que mantém cada um juridicamente sólido. E a copy precisa distinguir 'CPF suspenso' de 'cartão recusado': trocar de cartão não resolve o primeiro.",
+  },
+  "splash-pagamento": {
+    dono: null,
+    faz: "🆕 30/08 — TELA NOVA (E9.S do mapa). Splash transitório, sem CTA, confirma o pagamento antes de cair no status. Fica no shell APP — o pagamento já caiu, a casa já nasceu.",
+    interfere:
+      "🔴 REVOGA a regra antiga 'cartão/Pix pulam direto pro C0'. Agora todo método passa por uma tela de status antes de seguir — ninguém pula direto.",
+    porque:
+      "Pedido do Pedro: reforçar 'dá pra sair e voltar, está tudo certo' antes de jogar a pessoa direto no dossiê. Auto-avança pro E9.1P sozinho.",
+  },
+  "aguardando-pago": {
+    dono: "usuario",
+    faz: "🆕 30/08 — variante 'pago' do E9.1 (`AguardandoView`, prop `pago`). Mesma lista de passos, mesmo CTA 'Continuar preenchendo'; só o topo muda (check verde, não pill de espera).",
+    interfere:
+      "Nenhuma — é status, não coleta. Existe só pra reforçar que o pagamento foi confirmado antes de seguir pro dossiê.",
+    porque:
+      "Reusar a MESMA tela do E9.1 (em vez de criar uma 3ª) evita duplicar componente pra uma diferença que já era só de estado — `ListaPassos` já sabia fazer essa distinção (`pagamentoPendente=false`).",
   },
 
   /* ═══════════════════ CONSTITUIÇÃO · O DOSSIÊ (C1–C7) ═══════════════════
@@ -1907,6 +1956,9 @@ export default function ApresentacaoPage() {
     { etapa: "retomar-cpf", label: "🆕 C0.1 · Voltar de onde parei" },
     { etapa: "retomar", label: "🆕 C0.1 · Retomar" },
     { etapa: "aguardando", label: "🆕 E9.1 · Aguardando boleto" },
+    { etapa: "aguardando-pago", label: "🆕 E9.1P · Status (pago)" },
+    { etapa: "splash-atendido", label: "🆕 E5F.1 · Splash atendido" },
+    { etapa: "splash-pagamento", label: "🆕 E9.S · Splash pagamento" },
   ];
 
   /**
@@ -2193,6 +2245,22 @@ export default function ApresentacaoPage() {
                   🔴 Simular recusa de nome
                 </button>
               )}
+              {/* 🆕 30/08 (pedido do Pedro) — E3.4.1 do mapa: o gate "CEP fora
+                  de BH" só aparecia digitando um CEP específico à mão, sem
+                  nenhuma affordance visível avisando que existe. Atalho
+                  direto, mesmo padrão do "Simular recusa de nome". */}
+              {etapa === "endereco" && (
+                <button
+                  onClick={() => {
+                    setEnderecoProprioDemo(true);
+                    setCepDemo("39560-000");
+                    setNumeroDemo("100");
+                  }}
+                  className="rounded-xl bg-surface-dark px-4 py-2.5 text-caption font-bold text-text-on-dark transition-colors hover:opacity-90"
+                >
+                  📍 Simular CEP fora de BH
+                </button>
+              )}
             </div>
           </div>
 
@@ -2342,6 +2410,11 @@ export default function ApresentacaoPage() {
                             onSeguir={() => setEtapa("pagamento")}
                             onVoltar={() => voltar(() => setEtapa("conta"))}
                             layout="oferta"
+                            // 🆕 30/08 (pedido do Pedro) — E7.1 do mapa: a
+                            // escolha do endereço fiscal (E3.4) NUNCA
+                            // atravessava até aqui na demo (gap real, mesmo
+                            // que o componente já suportasse a prop).
+                            enderecoFiscal={enderecoProprioDemo === false}
                           />
                         )}
                         {/* 🔴 30/08 (pedido do Pedro) — E8 (`ContratoView`) foi
@@ -2364,13 +2437,14 @@ export default function ApresentacaoPage() {
                             aceito={aceite}
                             setAceito={setAceite}
                             // O pagamento aprovado não é mais o fim da demo:
-                            // ele abre a casa e começa o dossiê (C1). 🔄 30/08
-                            // (pedido do Pedro) — boleto NÃO vai direto pro
-                            // dossiê: passa pela pausa E9.1 (aguardando
-                            // compensar) primeiro, igual à produção real
-                            // (`/pagamento/page.tsx`, função `destino()`).
+                            // ele abre a casa e começa o dossiê (C1). 🔴 30/08
+                            // (pedido do Pedro) — REVOGADO "cartão/Pix pulam
+                            // direto pro dossiê". Boleto vai pro E9.1
+                            // (aguardando, pendente); cartão/Pix passam pelo
+                            // splash E9.S antes de cair no E9.1P (pago) — igual
+                            // à produção real (`/pagamento/page.tsx`, `destino()`).
                             onPagar={() =>
-                              setEtapa(metodo === "boleto" ? "aguardando" : "perguntando")
+                              setEtapa(metodo === "boleto" ? "aguardando" : "splash-pagamento")
                             }
                             onVoltar={() => voltar(() => setEtapa("plano"))}
                           />
@@ -2539,6 +2613,30 @@ export default function ApresentacaoPage() {
                         )}
                         {etapa === "aguardando" && (
                           <AguardandoView onSeguir={() => setEtapa("perguntando")} />
+                        )}
+                        {/* 🆕 30/08 (pedido do Pedro) — E9.1P: variante "pago"
+                            da MESMA tela, pra quem pagou por cartão/Pix. */}
+                        {etapa === "aguardando-pago" && (
+                          <AguardandoView pago onSeguir={() => setEtapa("perguntando")} />
+                        )}
+
+                        {/* ═══ SPLASHES DE MENSAGEM (E5F.1 · E9.S) ═══════════
+                            Transitórios, sem CTA, auto-avançam sozinhos —
+                            mesmo mecanismo de produção (`onAutoAvancar` com
+                            `setTimeout`). Arte provisória, Pedro revisa. */}
+                        {etapa === "splash-atendido" && (
+                          <SplashMensagemView
+                            titulo="Conseguimos te atender."
+                            sub="Falta só criar sua conta pra ver o plano."
+                            onAutoAvancar={() => setEtapa("conta")}
+                          />
+                        )}
+                        {etapa === "splash-pagamento" && (
+                          <SplashMensagemView
+                            titulo="Pagamento confirmado."
+                            sub="Sua abertura já começou."
+                            onAutoAvancar={() => setEtapa("aguardando-pago")}
+                          />
                         )}
 
                         {/* ═══ MIGRAR (E4.2–E9.4) ════════════════════════════
@@ -2881,7 +2979,10 @@ export default function ApresentacaoPage() {
                               setExato={setExato}
                               // 🔴 27/08 — a escolha de endereço saiu daqui e
                               // foi pro E3.3 (`endereco`), junto do gate de BH.
-                              onSeguir={() => setEtapa("conta")}
+                              // 🆕 30/08 (pedido do Pedro) — não vai mais
+                              // direto pro E6: passa pelo splash "conseguimos
+                              // te atender" (E5F.1) primeiro.
+                              onSeguir={() => setEtapa("splash-atendido")}
                               autoFocus={false}
                               exatoInline
                             />

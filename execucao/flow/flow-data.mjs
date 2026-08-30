@@ -120,9 +120,17 @@ export const NODES = [
   // pesada em docs/memórias. Renumerar quebraria mais do que resolve. A ordem
   // REAL do flow é: E3 → E3.3 → E3.2 → E3.4. O mapa desenha por aresta, então
   // o desenho fica certo; só o número é fora de ordem.
-  { id: "E3_4", rota: "/endereco", label: "E3.4 · Endereço + categoria<br/>(os 2 gates)", forma: "decisao", classe: "", status: "construida", validado: "pendente", falta: "🆕 27/08 — reúne os DOIS gates do produto antes do dinheiro. (1) ENDEREÇO: substitui o E4 (gate de cidade, REMOVIDO), que perguntava 'é em BH?' e acreditava no clique — aqui o CEP valida de verdade (`ehCepBh`, faixa 30000-000 a 31999-999, 🟡 não ratificada em fonte primária). Herdou também a escolha 'próprio × fiscal' que morava no E5F. (2) CATEGORIA: assume o papel de gate de elegibilidade que era do veredito de CNAE — como a lista só oferece o que a gente atende, escolher já É passar pelo filtro, e é isso que autorizou o CNAE a ir pra depois do pagamento. MEI passa por aqui também (sem exigir BH): o gate geográfico não vale pra ele, mas o de categoria vale. 🔒 29/08 (decisão do Pedro) — os 2 gates deixaram de EXPULSAR: fora de BH e atividade fora da lista resolvem AGORA na própria tela (endereço fiscal ou fila da cidade/atividade, com CTA 'Me inscrever e garantir condição'). O handle 'fora' e as saídas E4.1/E5.1 dedicadas ao caminho abrir foram removidas — `/saida/fora-bh` foi deletada (zero uso restante); `/veredito/waitlist` (E5.1) segue viva só pelo Migrar", dados: "Endereço da empresa (CEP validado BH + número) OU endereço fiscal Legalizai (+R$60/mês) OU cidade pra fila de espera · categoria de atividade (1 das 15 categorias, `pesquisa/cnae-matriz/taxonomia-pills-n4.md`, v2 27/08 -- 90 CNAEs certeza) OU atividade regulamentada (≤12 opções) pra quem não se encontrou", handles: [
+  { id: "E3_4", rota: "/endereco", label: "E3.4 · Endereço + categoria<br/>(os 2 gates)", forma: "decisao", classe: "", status: "construida", validado: "pendente", falta: "🆕 27/08 — reúne os DOIS gates do produto antes do dinheiro. (1) ENDEREÇO: substitui o E4 (gate de cidade, REMOVIDO), que perguntava 'é em BH?' e acreditava no clique — aqui o CEP valida de verdade (`ehCepBh`, faixa 30000-000 a 31999-999, 🟡 não ratificada em fonte primária). Herdou também a escolha 'próprio × fiscal' que morava no E5F. (2) CATEGORIA: assume o papel de gate de elegibilidade que era do veredito de CNAE — como a lista só oferece o que a gente atende, escolher já É passar pelo filtro, e é isso que autorizou o CNAE a ir pra depois do pagamento. MEI passa por aqui também (sem exigir BH): o gate geográfico não vale pra ele, mas o de categoria vale. 🔒 29/08 (decisão do Pedro) — os 2 gates deixaram de EXPULSAR: fora de BH e atividade fora da lista resolvem AGORA na própria tela (endereço fiscal ou fila da cidade/atividade, com CTA 'Me inscrever e garantir condição'). O handle 'fora' e as saídas E4.1/E5.1 dedicadas ao caminho abrir foram removidas — `/saida/fora-bh` foi deletada (zero uso restante); `/veredito/waitlist` (E5.1) segue viva só pelo Migrar. 🆕 30/08 — ver E3.4.1 pro detalhe do estado 'CEP fora de BH'. Ganhou atalho na `/apresentacao` ('📍 Simular CEP fora de BH', antes só descobria digitando um CEP específico à mão).", dados: "Endereço da empresa (CEP validado BH + número) OU endereço fiscal Legalizai (+R$60/mês) OU cidade pra fila de espera · categoria de atividade (1 das 15 categorias, `pesquisa/cnae-matriz/taxonomia-pills-n4.md`, v2 27/08 -- 90 CNAEs certeza) OU atividade regulamentada (≤12 opções) pra quem não se encontrou", handles: [
     { id: "segue", yPercent: 85 },
   ] },
+  // 🆕 30/08 (pedido do Pedro: "o programador não vê isso se não preencher") —
+  // estado JÁ CONSTRUÍDO (`EnderecoCategoriaView`, testado no e2e), mas
+  // invisível no mapa até agora: quem digita um CEP fora de BH vê o gate
+  // virar 2 saídas resolvidas NA PRÓPRIA tela (nenhuma navega pra fora):
+  //   (a) troca pro endereço fiscal Legalizai (segue o fluxo normal, soma no E7)
+  //   (b) mantém a cidade própria → CTA principal vira "Me inscrever e
+  //       garantir condição" (fila de espera, MAS segue no app normalmente)
+  { id: "E3_4_1", label: "E3.4.1 · CEP fora de BH<br/>(gate resolvido inline)", forma: "decisao", classe: "branch", status: "construida", validado: "ux", falta: "Sem rota própria — é um ESTADO da mesma tela E3.4 (`/endereco`), não navegação. As 2 saídas (endereço fiscal · fila de espera) continuam no fluxo normal, nenhuma é dead-end.", dados: "Confirma: usa endereço fiscal Legalizai OU entra na fila da própria cidade" },
 
   // ── MIGRAR DE CONTADOR — ramo decimal de E4 (construído 30/07) ────────────
   // Fonte: components/wizard-migrar.tsx. Sem entrevista de CNAE (o cartão CNPJ
@@ -175,8 +183,20 @@ export const NODES = [
   // apagadas — zero uso restante, e o gate de exterior deixa de ser
   // fail-fast ativo (risco aceito conscientemente, documentado em
   // `components/gate-telas.tsx`).
-  { id: "E5T", rota: "/gate?etapa=triagem", label: "Triagem<br/>quantos sócios?", forma: "decisao", classe: "", status: "construida", validado: "oficial", grupo: "GATE", falta: "🔒 29/08 — só 1 pergunta de verdade agora (quantidade, até 4). CPF-only/domicílio Brasil/assinatura GOV.BR viraram card informativo com link de escape ('Falar com o time', resolve inline, sem navegar pra fora). 🆕 26/08: coorte ('é a 1ª empresa que você abre?') pousou aqui de vez — 3ª realocação (Veredito → Faixa → aqui), dado puro de log/marketing, opcional", dados: "Quantidade de sócios (1 / 2 / 3 / 4) · é a 1ª empresa que abre? (opcional) · sócio que não se encaixa no card informativo (opcional, texto livre via 'Falar com o time')" },
+  { id: "E5T", rota: "/gate?etapa=triagem", label: "Triagem<br/>quantos sócios?", forma: "decisao", classe: "", status: "construida", validado: "oficial", grupo: "GATE", falta: "🔒 29/08 — só 1 pergunta de verdade agora (quantidade, até 4). CPF-only/domicílio Brasil/assinatura GOV.BR viraram card informativo com link de escape ('Falar com o time', resolve inline, sem navegar pra fora). 🆕 26/08: coorte ('é a 1ª empresa que você abre?') pousou aqui de vez — 3ª realocação (Veredito → Faixa → aqui), dado puro de log/marketing, opcional. 🆕 30/08 — ver E5T.1 pro detalhe do gate de saída 'sócio não se encaixa', invisível no mapa até agora.", dados: "Quantidade de sócios (1 / 2 / 3 / 4) · é a 1ª empresa que abre? (opcional) · sócio que não se encaixa no card informativo (opcional, texto livre via 'Falar com o time')" },
+  // 🆕 30/08 (pedido do Pedro) — mesma lógica do E3.4.1: gate de saída JÁ
+  // CONSTRUÍDO (link "Meu sócio não atende um dos critérios" → resolve
+  // inline, mostra "Combinado, nosso time vai entrar em contato" — mesmo
+  // padrão da MeiOuMeView), mas invisível no mapa. NÃO navega pra fora, é
+  // fim de linha desta tentativa (a pessoa fica esperando contato humano).
+  { id: "E5T_1", label: "E5T.1 · Sócio não se encaixa<br/>(gate de saída inline)", forma: "terminal", classe: "inline", status: "construida", validado: "ux", falta: "Sem rota própria — estado da mesma tela E5T (`/gate?etapa=triagem`). Resolve com 'Falar com a equipe', sem navegar. Dead-end de propósito: quem cai aqui não segue sozinho no produto.", dados: "Texto livre (opcional) descrevendo o critério que não encaixa" },
   { id: "E5F", rota: "/gate?etapa=faixa", label: "Faixa de faturamento", forma: "tela", classe: "", status: "construida", validado: "ux", grupo: "GATE", falta: "Faixas sem âncora fiscal. 🔴 27/08: a escolha de endereço (próprio × fiscal Legalizai) SAIU daqui — morou nesta tela entre 26/08 e 27/08 e foi pro E3.4, junto do gate de cidade, que é a pergunta de que ela sempre foi parte (faturamento não decide onde a empresa fica). O valor continua somando no E7 pelo mesmo `?endereco=fiscal`. Fonte: `components/gate-telas.tsx` (`FaixaView`)", dados: "Faixa de faturamento mensal (ou valor exato, se souber)" },
+  // 🆕 30/08 (pedido do Pedro) — NOVA, ainda não construída. Splash
+  // transitório (poucos segundos, SEM CTA, auto-avança pro E6) confirmando
+  // que a faixa informada é atendida, antes de pedir conta. Copy sugerida
+  // (rascunho, ajustar com o Pedro): título "Conseguimos te atender." ·
+  // subtítulo "Falta só criar sua conta pra ver o plano."
+  { id: "E5F_S", rota: "/splash-atendido", label: "E5F.1 · Splash<br/>'conseguimos te atender'", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "🟢 30/08 — CONSTRUÍDA (`SplashMensagemView`, `components/splash-mensagem.tsx`). Arte provisória, Pedro revisa. `page.tsx` lê `?next=` e auto-navega (`router.replace`) depois do timeout.", dados: "" },
 
   // ── SAÍDAS/EXITS do veredito — decimal de E5 ──────────────────────────────
   // 🔒 29/08 — E4.1 (fora de BH) e E5.4/E5.5/E5.6 (exterior/5+ sócios/sócio
@@ -189,7 +209,13 @@ export const NODES = [
 
   // ── ENTRADA (E) · DINHEIRO · E6–E9 ───────────────────────────────────────
   { id: "E6", rota: "/conta", label: "E6 · Criar conta", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "🔄 28/08 (pedido do Pedro) — reverteu o encolhimento de 27/08: a tela volta a coletar o form INTEIRO aqui mesmo (nome/CPF/telefone/e-mail/senha/CEP/número/complemento), sem recap read-only, `leadJaCaptado` removido do código. Form começa em branco. Provider de validação CPF/situação real (Pedro). 🔴 RF-01: sem estado real entre telas, hoje é só estado local do componente. 🐛 29/08 — vazamento de layout no campo Complemento corrigido (`min-w-0` faltava no flex), placeholder simplificado pra só \"Complemento\".", dados: "Nome · CPF · telefone · e-mail · senha · CEP · número · complemento · coorte (opcional) · código de verificação (mock)" },
-  { id: "E7", rota: "/plano", label: "E7 · A conta da abertura", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Preço ~R$195 FAKE (Mauro+custo); DAE R$268,51×R$288 em disputa; certificado A1 (Mauro). ✅ RESOLVIDO 26/08 (reunião Rua Satélite 36, item 2): a antiga 'pendência real de spec' ('conta total não é total', endereço fiscal só aparecia no C4 pós-pagamento) foi corrigida — a mensalidade mostrada aqui já soma o endereço fiscal quando escolhido lá no E5F, com 1 linha de explicação. 🆕 28/08 — REDESIGN 'premium' (pedido do Pedro, validado em preview isolado `/plano-premium` antes de aplicar): título bicolor, card-herói com profundidade real (raio+sombra), lista de inclusos como cartões-linha, CTA como barra flutuante escura. Nenhum conteúdo/ramo cortado (MEI×ME, colaboradores, citação legal, endereço fiscal seguem intactos) — só a casca mudou. `PlanoOferta` em `wizard-dinheiro.tsx`", dados: "" },
+  { id: "E7", rota: "/plano", label: "E7 · A conta da abertura", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Preço ~R$195 FAKE (Mauro+custo); DAE R$268,51×R$288 em disputa; certificado A1 (Mauro). ✅ RESOLVIDO 26/08 (reunião Rua Satélite 36, item 2): a antiga 'pendência real de spec' ('conta total não é total', endereço fiscal só aparecia no C4 pós-pagamento) foi corrigida — a mensalidade mostrada aqui já soma o endereço fiscal quando escolhido lá no E5F, com 1 linha de explicação. 🆕 28/08 — REDESIGN 'premium' (pedido do Pedro, validado em preview isolado `/plano-premium` antes de aplicar): título bicolor, card-herói com profundidade real (raio+sombra), lista de inclusos como cartões-linha, CTA como barra flutuante escura. Nenhum conteúdo/ramo cortado (MEI×ME, colaboradores, citação legal, endereço fiscal seguem intactos) — só a casca mudou. `PlanoOferta` em `wizard-dinheiro.tsx`. 🆕 30/08 — ver E7.1 pra variante 'escolheu endereço fiscal'. Fechado o gap real na `/apresentacao`: a escolha do E3.4 nunca atravessava até o E7 na demo, mesmo o componente já suportando a prop.", dados: "" },
+  // 🆕 30/08 (pedido do Pedro) — variante JÁ CONSTRUÍDA (card "O que você
+  // adicionou", ícone 3D + valor explícito) pra quem escolheu endereço fiscal
+  // Legalizai lá no E3.4, mas invisível no mapa: só se vê acessando
+  // `/plano?endereco=fiscal` direto, ninguém navegava até ela sem saber que
+  // existia. Mesmo componente do E7 (`PlanoOferta`), prop `enderecoFiscal`.
+  { id: "E7_1", rota: "/plano?endereco=fiscal", label: "E7.1 · A conta da abertura<br/>(variante endereço fiscal)", forma: "tela", classe: "branch", status: "construida", validado: "pendente", falta: "Mesmo componente do E7, só a prop `enderecoFiscal` muda. Card 'O que você adicionou' com o ícone de GPS e o valor (+R$60/mês) explícito, construído 30/08.", dados: "" },
   // 🔴 30/08 (pedido do Pedro) — E8 (Aceite contrato, `/contrato`) foi
   // ELIMINADO do fluxo: igual à Contabilizei, o aceite acontece no ATO DO
   // PAGAMENTO, não numa tela própria antes dele. O checkbox de aceite +
@@ -200,9 +226,20 @@ export const NODES = [
   // muda o total (sem taxa de governo) e o aviso ("sua migração começa
   // hoje" / aciona contador anterior). "Não valia uma tela nova" (mesmo
   // componente), mas o CONTEÚDO é diferente — mesma régua do E3.2, vira nó.
-  { id: "E9", rota: "/pagamento", label: "E9 · Pagamento + contrato<br/>(variante Abrir)", forma: "decisao", classe: "", status: "construida", validado: "pendente", falta: "Asaas travado; falta provider cartão CNPJ + chave de idempotência (Pedro); redação jurídica do contrato (Mauro/Larissa)", dados: "CPF (cobrança + elegibilidade) · método de pagamento (cartão/Pix/boleto) · aceite do contrato de serviço (checkbox)" },
+  { id: "E9", rota: "/pagamento", label: "E9 · Pagamento + contrato<br/>(variante Abrir)", forma: "decisao", classe: "", status: "construida", validado: "pendente", falta: "Asaas travado; falta provider cartão CNPJ + chave de idempotência (Pedro); redação jurídica do contrato (Mauro/Larissa). 🟢 30/08 (pedido do Pedro) — REVOGADO E IMPLEMENTADO: cartão/Pix não pulam mais direto pra C0 (código real em `/pagamento/page.tsx`, função `destino()`). Todo mundo (cartão, Pix, boleto) passa por uma tela de status antes — ver E9.S/E9.1P/E9.1. Reforça 'dá pra sair e voltar, está tudo certo'. MEI segue com o comportamento antigo (fora do escopo desta rodada).", dados: "CPF (cobrança + elegibilidade) · método de pagamento (cartão/Pix/boleto) · aceite do contrato de serviço (checkbox)" },
   { id: "E9_M", rota: "/pagamento?fluxo=migrar", label: "E9 · Pagamento<br/>(variante Migrar)", forma: "decisao", classe: "", status: "construida", validado: "pendente", falta: "Mesmo componente, `?fluxo=migrar`: total não soma taxa de governo, aviso fala de migração (não abertura). CPF/métodos/idempotência idênticos ao componente base", dados: "CPF (cobrança + elegibilidade) · método de pagamento (cartão/Pix/boleto)" },
+  // 🆕 30/08 (pedido do Pedro) — NOVA, ainda não construída. Splash
+  // transitório (poucos segundos, SEM CTA, auto-avança) só pra quem pagou por
+  // método instantâneo (cartão/Pix) — antes ia direto pro C0, agora passa
+  // por aqui e cai no E9.1P (status "pago"). Copy rascunho: "Pagamento
+  // confirmado." / "Sua abertura já começou."
+  { id: "E9_S", rota: "/splash-pagamento", label: "E9.S · Splash<br/>'pagamento confirmado'", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "🟢 30/08 — CONSTRUÍDA (`SplashMensagemView`, mesmo componente do E5F.1). Fica no shell APP (`(app)/splash-pagamento`), não WIZARD — o pagamento já caiu. Arte provisória, Pedro revisa.", dados: "" },
   { id: "E9_1", rota: "/aguardando", label: "E9.1 · Aguardando boleto<br/>dossiê já liberado", forma: "tela", classe: "espera", status: "construida", validado: "ux", falta: "Dunning revisado", dados: "" },
+  // 🆕 30/08 (pedido do Pedro) — variante "pago" do E9.1, pra quem chega pelo
+  // E9.S (pagou instantâneo). MESMO componente (`AguardandoView`), MESMO CTA
+  // "Continuar preenchendo", só troca o estado do topo: check de pago em vez
+  // do pill "aguardando compensar". Prop nova a construir no componente.
+  { id: "E9_1P", rota: "/aguardando?pago=1", label: "E9.1P · Status<br/>(pago, via instantâneo)", forma: "tela", classe: "espera", status: "construida", validado: "ux", falta: "🟢 30/08 — CONSTRUÍDA. `AguardandoView` ganhou prop `pago` (`wizard-cauda.tsx`): mesma lista de passos, CTA 'Continuar preenchendo' idêntico, só o topo muda (check verde, não pill de espera). `page.tsx` lê `?pago=1`.", dados: "" },
 
   // ── CONSTITUIÇÃO (C) · dossiê · C0–C7 ────────────────────────────────────
   // 🆕 27/08 — a C0 é o antigo E5A+E5V (descrever atividade → veredito de
@@ -241,7 +278,7 @@ export const NODES = [
   { id: "C7", rota: "/dossie/nome", label: "C7 · Nome / razão social", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "Viabilidade JUCEMG (RPA, não API); 3 opções por prioridade (28/07). 🔒 24/08 (reunião Leonan, CONFLITO RESOLVIDO): objeto social virou TRAVADO/read-only — erro de grafia do cliente gerava reclamação real no escritório antigo dele. 🆕 24/08 (pedido do Pedro): cada sugestão ganhou lápis de edição inline (reescreve a sugestão da IA no lugar); campo separado 'Digite a sua' foi removido; seta de reordenar 1/2/3 mantida", dados: "3 opções de razão social, editáveis inline, por ordem de prioridade (sugeridas por IA) · objeto social (gerado automaticamente, travado) · nome fantasia (opcional)" },
 
   // ── ESPERA — decimal de entrada em Constituição ──────────────────────────
-  { id: "C0_1", rota: "/retomar", label: "C0.1 · Retomar de onde parou", forma: "tela", classe: "espera", status: "construida", validado: "ux", falta: "UX-23 fechado — mora em /pro-labore pós-constituição. 🆕 30/08 — deixou de ser órfão: o E3 aponta pra cá agora, via porta de CPF (mock, RF-01).", dados: "CPF (mock, decide se mostra o status ou manda pro E9.1)" },
+  { id: "C0_1", rota: "/retomar", label: "C0.1 · Retomar de onde parou", forma: "tela", classe: "espera", status: "construida", validado: "ux", falta: "UX-23 fechado — mora em /pro-labore pós-constituição. 🆕 30/08 — deixou de ser órfão: o E3 aponta pra cá agora, via porta de CPF (mock, RF-01). 🆕 30/08 (pedido do Pedro) — É ESTA a tela pra quem pagou por método instantâneo (E9.S/E9.1P) e mesmo assim fechou o app: 'Bem-vindo de volta' com o status mostrando 'Plano escolhido e pago' já como Feito (verde). Tela RESGATADA — já existia construída, só não estava clara no mapa como o destino desse caso específico.", dados: "CPF (mock, decide se mostra o status ou manda pro E9.1)" },
 
   // ── APROVAÇÃO (A) · cauda · A1–A5 (construído 21/07) ─────────────────────
   { id: "A1", rota: "/revisar", label: "A1 · Revisar dossiê", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "Recap read-only; carry-forward dos passos = estado do wizard (dev)", dados: "— (leitura + confirmação; enquadramento e pró-labore são SUGERIDOS pelo sistema, 28/07 — não digitados)" },
@@ -316,6 +353,11 @@ export const EDGES = [
   { de: "E3_4", para: "E5T", label: "ME · endereço BH + categoria ok", deHandle: "segue" },
   // 🆕 28/08 — MEI segue pro M-T (impedimentos), não pra triagem de sócios.
   { de: "E3_4", para: "M_T", label: "MEI · categoria com ocupação", deHandle: "segue", tracejado: true },
+  // 🆕 30/08 — estado inline (mesma tela), não navegação de verdade. As 2
+  // saídas do E3.4.1 (endereço fiscal · fila de espera) continuam pro E5T
+  // normalmente, nenhuma é dead-end.
+  { de: "E3_4", para: "E3_4_1", label: "CEP fora de BH", tracejado: true },
+  { de: "E3_4_1", para: "E5T", label: "resolvido (fiscal ou fila)", tracejado: true },
 
   { de: "E4_2", para: "E4_3", tracejado: true },
   { de: "E4_2", para: "E4_2_1", label: "CNPJ inapto/suspenso", tracejado: true },
@@ -337,23 +379,36 @@ export const EDGES = [
   // 🔒 29/08 — a Triagem não bifurca mais: os 3 critérios viraram card
   // informativo, não pergunta com saída própria.
   { de: "E5T", para: "E5F" },
+  // 🆕 30/08 — estado inline (mesma tela), dead-end de propósito.
+  { de: "E5T", para: "E5T_1", label: "sócio não se encaixa", tracejado: true },
 
-  { de: "E5F", para: "E6" },
+  { de: "E5F", para: "E5F_S" },
+  { de: "E5F_S", para: "E6", tracejado: true },
 
   // ── 🆕 28/08 · RAMO MEI ────────────────────────────────────────────────
   { de: "M_T", para: "E5F", label: "sem impedimento", tracejado: true },
   { de: "M_T", para: "M_T_1", label: "já tem outra empresa" },
   { de: "M_T", para: "M_T_2", label: "servidor federal" },
   { de: "E6", para: "E7" },
+  // 🆕 30/08 — variante do E7 pra quem escolheu endereço fiscal lá no E3.4
+  // (a escolha atravessa 3 telas até aparecer aqui, mesmo padrão do E9_M).
+  { de: "E6", para: "E7_1", label: "escolheu endereço fiscal no E3.4", tracejado: true },
   // 🔴 30/08 — E8 eliminado (ver nota no node E9). E7 vai direto pra E9.
   { de: "E7", para: "E9" },
-  // 🔄 27/08 — a 1ª tela do dossiê virou a C0 (atividade + CNAE), não mais o C1.
-  { de: "E9", para: "C0", label: "ME · cartão" },
+  { de: "E7_1", para: "E9", tracejado: true },
+  // 🔴 30/08 (pedido do Pedro) — REVOGADO o "cartão pula direto pra C0". Todo
+  // mundo passa por uma tela de status antes de seguir (ver nota no node E9).
+  { de: "E9", para: "E9_S", label: "ME · cartão/Pix" },
+  { de: "E9_S", para: "E9_1P", tracejado: true },
+  { de: "E9_1P", para: "C0", label: "Continuar preenchendo" },
   // MEI entra no dossiê pela ocupação, não pela descrição de atividade.
+  // 🟡 30/08 — MEI segue direto por ora (fora do escopo desta rodada, que é
+  // só ME Simples Nacional); revisitar quando o splash/status universal
+  // expandir pro MEI também.
   { de: "E9", para: "M_O", label: "MEI · cartão", tracejado: true },
   { de: "M_O", para: "C1", label: "MEI reusa o C1", tracejado: true },
-  { de: "E9", para: "E9_1", label: "boleto" },
-  { de: "E9_1", para: "C0" },
+  { de: "E9", para: "E9_1", label: "ME · boleto" },
+  { de: "E9_1", para: "C0", label: "Continuar preenchendo" },
 
   { de: "C0", para: "C0_2" },
   { de: "C0_2", para: "DESAMB", label: "ambíguo" },

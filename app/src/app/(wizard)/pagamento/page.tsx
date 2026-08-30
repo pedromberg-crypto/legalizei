@@ -98,30 +98,31 @@ export default function PagamentoPage() {
       const qs = searchParams.toString();
       return qs ? `/migrar/contador?${qs}` : "/migrar/contador";
     }
-    // 🔄 27/08 — a 1ª tela do dossiê deixou de ser o C1 (`/dossie/socio`) e
-    // passou a ser a **C0** (`/dossie/atividade`): descrever a atividade e
-    // achar o CNAE atravessou o pagamento na reordenação do flow de entrada.
-    // Pôde atravessar porque o gate de elegibilidade virou a CATEGORIA (E3.3),
-    // que só oferece o que a gente atende — então o veredito lá na frente não
-    // pode mais devolver "não atendemos". A categoria viaja junto (`?cat=`)
-    // porque é ela que pré-seleciona a pill e prova que o gate rodou.
-    return comCategoria(
-      comEndereco(
-        // 🆕 28/08 — MEI entra no dossiê pela M-O (ocupação do Anexo XI), não
-        // pela C0 (descrever atividade + CNAE): o Portal do Empreendedor não
-        // aceita CNAE livre, só ocupação de lista fechada.
-        comRegime(
-          metodo === "boleto"
-            ? "/aguardando"
-            : mei
-              ? "/dossie/ocupacao"
-              : "/dossie/atividade",
-          mei,
+    // 🆕 28/08 — MEI entra no dossiê pela M-O (ocupação do Anexo XI), não
+    // pela C0 (descrever atividade + CNAE): o Portal do Empreendedor não
+    // aceita CNAE livre, só ocupação de lista fechada.
+    // 🟡 30/08 — MEI fica FORA do escopo da reestruturação abaixo (pedido do
+    // Pedro: essa rodada é só ME Simples Nacional). Mantém o comportamento
+    // antigo — cartão pula direto, só boleto passa pelo E9.1.
+    if (mei) {
+      return comCategoria(
+        comEndereco(
+          comRegime(metodo === "boleto" ? "/aguardando" : "/dossie/ocupacao", mei),
+          enderecoFiscal,
         ),
-        enderecoFiscal,
-      ),
-      categoria,
-    );
+        categoria,
+      );
+    }
+    // 🔴 30/08 (pedido do Pedro) — REVOGADO "cartão/Pix pulam direto pro C0".
+    // Todo método de pagamento passa por uma tela de status antes de seguir:
+    // boleto vai pro E9.1 (aguardando, pendente); cartão/Pix passam pelo
+    // splash E9.S ("pagamento confirmado") e caem no E9.1P (aguardando, já
+    // pago) — mesma tela do E9.1, só o topo muda (`?pago=1`).
+    if (metodo === "boleto") {
+      return comCategoria(comEndereco("/aguardando", enderecoFiscal), categoria);
+    }
+    const statusPago = comCategoria(comEndereco("/aguardando?pago=1", enderecoFiscal), categoria);
+    return `/splash-pagamento?next=${encodeURIComponent(statusPago)}`;
   }
 
   return (

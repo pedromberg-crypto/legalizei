@@ -40,6 +40,9 @@ tags: [execucao, flow, dados, abertura]
 - Endereço da empresa (CEP validado BH + número) OU endereço fiscal Legalizai (+R$60/mês) OU cidade pra fila de espera
 - categoria de atividade (1 das 15 categorias, `pesquisa/cnae-matriz/taxonomia-pills-n4.md`, v2 27/08 -- 90 CNAEs certeza) OU atividade regulamentada (≤12 opções) pra quem não se encontrou
 
+### E3.4.1 · CEP fora de BH (gate resolvido inline)
+- Confirma: usa endereço fiscal Legalizai OU entra na fila da própria cidade
+
 ### Triagem quantos sócios?
 - Quantidade de sócios (1 / 2 / 3 / 4)
 - é a 1ª empresa que abre? (opcional)
@@ -47,6 +50,9 @@ tags: [execucao, flow, dados, abertura]
 
 ### Faixa de faturamento
 - Faixa de faturamento mensal (ou valor exato, se souber)
+
+### E5F.1 · Splash 'conseguimos te atender'
+- _(sem dado novo — contexto, confirmação ou decisão do sistema)_
 
 ### E6 · Criar conta
 - Nome
@@ -63,12 +69,21 @@ tags: [execucao, flow, dados, abertura]
 ### E7 · A conta da abertura
 - _(sem dado novo — contexto, confirmação ou decisão do sistema)_
 
+### E7.1 · A conta da abertura (variante endereço fiscal)
+- _(sem dado novo — contexto, confirmação ou decisão do sistema)_
+
 ### E9 · Pagamento + contrato (variante Abrir)
 - CPF (cobrança + elegibilidade)
 - método de pagamento (cartão/Pix/boleto)
 - aceite do contrato de serviço (checkbox)
 
+### E9.S · Splash 'pagamento confirmado'
+- _(sem dado novo — contexto, confirmação ou decisão do sistema)_
+
 ### E9.1 · Aguardando boleto dossiê já liberado
+- _(sem dado novo — contexto, confirmação ou decisão do sistema)_
+
+### E9.1P · Status (pago, via instantâneo)
 - _(sem dado novo — contexto, confirmação ou decisão do sistema)_
 
 ### C0 · Sua atividade (descreve + pills)

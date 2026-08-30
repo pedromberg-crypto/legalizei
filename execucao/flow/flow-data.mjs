@@ -86,9 +86,13 @@ export const NODES = [
   // inteira") — 3 pontos de saída nomeados, 1 por CTA real da tela
   // (`components/entrada.tsx` passo 1): botão coral "Quero abrir minha
   // empresa", card branco "Já tenho empresa", link "Entrar na minha conta".
-  { id: "E3", rota: "/entrada", label: "E3 · Fork<br/>3 rotas", forma: "decisao", classe: "", status: "construida", validado: "oficial", falta: "3 rotas CONFIRMADAS 28/07 (reunião Rua Satélite 9): abrir · migrar · já sou cliente.", dados: "", handles: [
-    { id: "abrir", yPercent: 78 },
-    { id: "migrar", yPercent: 88 },
+  // 🆕 30/08 (pedido do Pedro) — 4ª rota: "Voltar de onde parei", card cheio
+  // mesmo peso de "Já tenho empresa" (ver `entrada.tsx`). Fecha o C0_1
+  // (`/retomar`), que até aqui era nó ÓRFÃO no mapa (ninguém apontava pra ele).
+  { id: "E3", rota: "/entrada", label: "E3 · Fork<br/>4 rotas", forma: "decisao", classe: "", status: "construida", validado: "oficial", falta: "4 rotas: abrir · migrar · já sou cliente · voltar de onde parei (🆕 30/08, fecha o C0_1 órfão).", dados: "", handles: [
+    { id: "abrir", yPercent: 74 },
+    { id: "migrar", yPercent: 82 },
+    { id: "retomar", yPercent: 90 },
     { id: "login", yPercent: 96 },
   ] },
   { id: "E3_1", rota: "/login", label: "E3.1 · Login / portal", forma: "terminal", classe: "feliz", status: "construida", validado: "ux", falta: "Rota feliz", dados: "" },
@@ -186,13 +190,17 @@ export const NODES = [
   // ── ENTRADA (E) · DINHEIRO · E6–E9 ───────────────────────────────────────
   { id: "E6", rota: "/conta", label: "E6 · Criar conta", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "🔄 28/08 (pedido do Pedro) — reverteu o encolhimento de 27/08: a tela volta a coletar o form INTEIRO aqui mesmo (nome/CPF/telefone/e-mail/senha/CEP/número/complemento), sem recap read-only, `leadJaCaptado` removido do código. Form começa em branco. Provider de validação CPF/situação real (Pedro). 🔴 RF-01: sem estado real entre telas, hoje é só estado local do componente. 🐛 29/08 — vazamento de layout no campo Complemento corrigido (`min-w-0` faltava no flex), placeholder simplificado pra só \"Complemento\".", dados: "Nome · CPF · telefone · e-mail · senha · CEP · número · complemento · coorte (opcional) · código de verificação (mock)" },
   { id: "E7", rota: "/plano", label: "E7 · A conta da abertura", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Preço ~R$195 FAKE (Mauro+custo); DAE R$268,51×R$288 em disputa; certificado A1 (Mauro). ✅ RESOLVIDO 26/08 (reunião Rua Satélite 36, item 2): a antiga 'pendência real de spec' ('conta total não é total', endereço fiscal só aparecia no C4 pós-pagamento) foi corrigida — a mensalidade mostrada aqui já soma o endereço fiscal quando escolhido lá no E5F, com 1 linha de explicação. 🆕 28/08 — REDESIGN 'premium' (pedido do Pedro, validado em preview isolado `/plano-premium` antes de aplicar): título bicolor, card-herói com profundidade real (raio+sombra), lista de inclusos como cartões-linha, CTA como barra flutuante escura. Nenhum conteúdo/ramo cortado (MEI×ME, colaboradores, citação legal, endereço fiscal seguem intactos) — só a casca mudou. `PlanoOferta` em `wizard-dinheiro.tsx`", dados: "" },
-  { id: "E8", rota: "/contrato", label: "E8 · Aceite contrato<br/>reversível, CDC 49", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Redação jurídica do contrato (Mauro/Larissa); rachadura T18", dados: "Aceite do contrato de serviço (checkbox)" },
+  // 🔴 30/08 (pedido do Pedro) — E8 (Aceite contrato, `/contrato`) foi
+  // ELIMINADO do fluxo: igual à Contabilizei, o aceite acontece no ATO DO
+  // PAGAMENTO, não numa tela própria antes dele. O checkbox de aceite +
+  // "Ler o contrato completo" desceram pro E9, que vira "Pagamento + contrato".
+  //
   // 🆕 26/08 (mesmo achado do E3.2: "2 páginas aprovadas, só 1 no mapa") —
   // E9 também tem variante Migrar aprovada (`telas-flow.ts`): `?fluxo=migrar`
   // muda o total (sem taxa de governo) e o aviso ("sua migração começa
   // hoje" / aciona contador anterior). "Não valia uma tela nova" (mesmo
   // componente), mas o CONTEÚDO é diferente — mesma régua do E3.2, vira nó.
-  { id: "E9", rota: "/pagamento", label: "E9 · Pagamento<br/>(variante Abrir)", forma: "decisao", classe: "", status: "construida", validado: "pendente", falta: "Asaas travado; falta provider cartão CNPJ + chave de idempotência (Pedro)", dados: "CPF (cobrança + elegibilidade) · método de pagamento (cartão/Pix/boleto)" },
+  { id: "E9", rota: "/pagamento", label: "E9 · Pagamento + contrato<br/>(variante Abrir)", forma: "decisao", classe: "", status: "construida", validado: "pendente", falta: "Asaas travado; falta provider cartão CNPJ + chave de idempotência (Pedro); redação jurídica do contrato (Mauro/Larissa)", dados: "CPF (cobrança + elegibilidade) · método de pagamento (cartão/Pix/boleto) · aceite do contrato de serviço (checkbox)" },
   { id: "E9_M", rota: "/pagamento?fluxo=migrar", label: "E9 · Pagamento<br/>(variante Migrar)", forma: "decisao", classe: "", status: "construida", validado: "pendente", falta: "Mesmo componente, `?fluxo=migrar`: total não soma taxa de governo, aviso fala de migração (não abertura). CPF/métodos/idempotência idênticos ao componente base", dados: "CPF (cobrança + elegibilidade) · método de pagamento (cartão/Pix/boleto)" },
   { id: "E9_1", rota: "/aguardando", label: "E9.1 · Aguardando boleto<br/>dossiê já liberado", forma: "tela", classe: "espera", status: "construida", validado: "ux", falta: "Dunning revisado", dados: "" },
 
@@ -233,7 +241,7 @@ export const NODES = [
   { id: "C7", rota: "/dossie/nome", label: "C7 · Nome / razão social", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "Viabilidade JUCEMG (RPA, não API); 3 opções por prioridade (28/07). 🔒 24/08 (reunião Leonan, CONFLITO RESOLVIDO): objeto social virou TRAVADO/read-only — erro de grafia do cliente gerava reclamação real no escritório antigo dele. 🆕 24/08 (pedido do Pedro): cada sugestão ganhou lápis de edição inline (reescreve a sugestão da IA no lugar); campo separado 'Digite a sua' foi removido; seta de reordenar 1/2/3 mantida", dados: "3 opções de razão social, editáveis inline, por ordem de prioridade (sugeridas por IA) · objeto social (gerado automaticamente, travado) · nome fantasia (opcional)" },
 
   // ── ESPERA — decimal de entrada em Constituição ──────────────────────────
-  { id: "C0_1", rota: "/retomar", label: "C0.1 · Retomar de onde parou", forma: "tela", classe: "espera", status: "construida", validado: "ux", falta: "UX-23 fechado — mora em /pro-labore pós-constituição", dados: "" },
+  { id: "C0_1", rota: "/retomar", label: "C0.1 · Retomar de onde parou", forma: "tela", classe: "espera", status: "construida", validado: "ux", falta: "UX-23 fechado — mora em /pro-labore pós-constituição. 🆕 30/08 — deixou de ser órfão: o E3 aponta pra cá agora, via porta de CPF (mock, RF-01).", dados: "CPF (mock, decide se mostra o status ou manda pro E9.1)" },
 
   // ── APROVAÇÃO (A) · cauda · A1–A5 (construído 21/07) ─────────────────────
   { id: "A1", rota: "/revisar", label: "A1 · Revisar dossiê", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "Recap read-only; carry-forward dos passos = estado do wizard (dev)", dados: "— (leitura + confirmação; enquadramento e pró-labore são SUGERIDOS pelo sistema, 28/07 — não digitados)" },
@@ -292,6 +300,9 @@ export const EDGES = [
   // cliente já deu esses dados.
   { de: "E3", para: "E3_3", label: "quero abrir", deHandle: "abrir" },
   { de: "E3", para: "E3_3", label: "já tenho empresa", deHandle: "migrar" },
+  // 🆕 30/08 — pede CPF antes (mock, RF-01): a ramificação real pro E9.1
+  // (boleto pendente) acontece dentro do próprio C0_1, não aqui no mapa.
+  { de: "E3", para: "C0_1", label: "voltar de onde parei", deHandle: "retomar", tracejado: true },
   { de: "E3_3", para: "E3_2", label: "abrir" },
   { de: "E3_3", para: "E3_2_M", label: "migrar" },
   // Abrir: os DOIS regimes passam pelo E3.4 — o gate de BH só vale pro ME,
@@ -334,8 +345,8 @@ export const EDGES = [
   { de: "M_T", para: "M_T_1", label: "já tem outra empresa" },
   { de: "M_T", para: "M_T_2", label: "servidor federal" },
   { de: "E6", para: "E7" },
-  { de: "E7", para: "E8" },
-  { de: "E8", para: "E9" },
+  // 🔴 30/08 — E8 eliminado (ver nota no node E9). E7 vai direto pra E9.
+  { de: "E7", para: "E9" },
   // 🔄 27/08 — a 1ª tela do dossiê virou a C0 (atividade + CNAE), não mais o C1.
   { de: "E9", para: "C0", label: "ME · cartão" },
   // MEI entra no dossiê pela ocupação, não pela descrição de atividade.

@@ -53,6 +53,13 @@ import { categoriaDe, comCategoria } from "@/lib/categoria";
  *
  * Gateway = **Asaas** (D2, travado 14/07). Webhook idempotente: nunca cobra
  * nem abre duas vezes.
+ *
+ * ─── 4. 🔄 30/08 — VIROU "PAGAMENTO + CONTRATO" (pedido do Pedro) ─────────
+ * O antigo E8 (`/contrato`, `ContratoView`) foi ELIMINADO do fluxo: igual à
+ * Contabilizei, o aceite do contrato de serviço acontece no ATO DO PAGAMENTO,
+ * não numa tela própria antes dele. O checkbox "Li e aceito" + "Ler o
+ * contrato completo" desceram pra dentro do `PagamentoView`. Só no fluxo de
+ * abertura — `migrar` continua com seu próprio `MigrarContratoView`.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function PagamentoPage() {
@@ -70,6 +77,7 @@ export default function PagamentoPage() {
   const categoria = categoriaDe(searchParams);
   const [cpf, setCpf] = useState("");
   const [metodo, setMetodo] = useState<Metodo>("cartao");
+  const [aceito, setAceito] = useState(false);
 
   /**
    * 🔴 06/08 — M4a (auditoria de passivo) foi RETIRADA: a gente não sai
@@ -124,6 +132,8 @@ export default function PagamentoPage() {
       setMetodo={setMetodo}
       fluxo={fluxo}
       semTaxaJunta={mei}
+      aceito={aceito}
+      setAceito={setAceito}
       onPagar={() => router.push(destino())}
     />
   );

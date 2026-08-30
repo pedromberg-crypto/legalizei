@@ -35,6 +35,7 @@ import {
   TermoView,
   AssinaturaView,
   HomeAtivacaoView,
+  RetomarCpfView,
   RetomarView,
   AguardandoView,
   CertificadoGateView,
@@ -55,7 +56,6 @@ import {
 import {
   ContaView,
   PlanoView,
-  ContratoView,
   PagamentoView,
   type DadosConta,
   type Metodo,
@@ -257,7 +257,6 @@ type Etapa =
   | "conta"
   | "conta-codigo"
   | "plano"
-  | "contrato"
   | "pagamento"
   // ─── CONSTITUIÇÃO · o dossiê (29/07) ─────────────────────────────────────
   // Depois do dinheiro, a coleta. Estas 7 só puderam entrar na demo junto com
@@ -296,6 +295,7 @@ type Etapa =
   | "m-transferencia"
   | "m-travado"
   | "m-ativa"
+  | "retomar-cpf"
   | "retomar"
   | "aguardando"
   | "certificado"
@@ -455,7 +455,7 @@ function antesDoMigrar(e: EtapaMigrar): Etapa {
 }
 
 /** C0.1 (retomar) e E9.1 (aguardando) — pausas de pagamento, fora da sequência. */
-const ETAPAS_ESPERA = ["retomar", "aguardando"] as const satisfies readonly Etapa[];
+const ETAPAS_ESPERA = ["retomar-cpf", "retomar", "aguardando"] as const satisfies readonly Etapa[];
 
 type EtapaEspera = (typeof ETAPAS_ESPERA)[number];
 
@@ -560,7 +560,6 @@ type Momento =
   | "conta"
   | "conta-codigo"
   | "plano"
-  | "contrato"
   | "pagamento"
   | "socio"
   | "vinculo"
@@ -591,6 +590,7 @@ type Momento =
   | "m-transferencia"
   | "m-travado"
   | "m-ativa"
+  | "retomar-cpf"
   | "retomar"
   | "aguardando"
   | "certificado"
@@ -679,23 +679,6 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
       status: "✅ aplicado em PlanoView + PlanoOferta (prop `enderecoFiscal`, `wizard-dinheiro.tsx`)",
     },
   ],
-  contrato: [
-    {
-      id: "UX-76",
-      oque: "As '4 linhas' eram 2 novas e 2 ecos: 'abre sem honorário' e 'mensalidade; taxas à parte' RE-EXPLICAVAM com palavras o que o E7 tinha mostrado com números um toque antes. E a tela do aceite não exibia um único valor: você assinava sem ver na tela quanto paga. As duas primeiras linhas viraram os NÚMEROS (paga hoje, com a composição · depois todo mês) e as duas com informação nova de verdade (período mínimo · 7 dias) seguem como bullet. Continua sendo quatro linhas.",
-      status: "✅ aplicado no ContratoView (29/07)",
-    },
-    {
-      id: "🐛 BUG-03",
-      oque: "'Ler o contrato completo' era `<a href=\"#\">` — âncora morta que sequestra a URL e joga a página pro topo no meio do aceite. Mesma classe do 'Falar com o time' sem onClick pego em 28/07, e aqui é O link da tela. Virou botão de verdade com prop `onLerContrato`.",
-      status: "✅ corrigido — ⚠️ segue INERTE até existir o documento (Mauro/Larissa)",
-    },
-    {
-      id: "🟡 fidelidade",
-      oque: "O período mínimo não tem prazo declarado: a pessoa aceita um lock-in de duração não informada. Por decisão do Pedro (29/07) a copy fica GENÉRICA — sem número inventado, sem placeholder FAKE — e aponta pro contrato, que é onde o prazo vai estar.",
-      status: "🟡 prazo da fidelidade pendente (Mauro/Larissa)",
-    },
-  ],
   pagamento: [
     {
       id: "🐛 BUG-04",
@@ -706,6 +689,11 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
       id: "UX-77",
       oque: "'Acelere seu processo' era imperativo de varejo numa tela onde não há mais nada a vender: a pessoa já decidiu, só falta pagar. O título agora AFIRMA o fato ('Sua abertura começa hoje'). E o aviso repetia a pill do botão a 3 cm de distância: agora a pill diz quando o DINHEIRO cai e o aviso diz o que acontece com a EMPRESA. ⚠️ A decisão de fundo não mudou (o cartão é empurrado porque destrava a abertura na hora, e a vantagem é real do cliente); mudou só a redação.",
       status: "✅ aplicado no PagamentoView (29/07)",
+    },
+    {
+      id: "🔄 E8 eliminado",
+      oque: "30/08 (pedido do Pedro) — igual à Contabilizei, o aceite do contrato acontece no ATO DO PAGAMENTO, não numa tela própria antes dele. O E8 (`ContratoView`) foi removido do fluxo; o checkbox 'Li e aceito' e o botão 'Ler o contrato completo' subiram pra dentro do E9.",
+      status: "✅ aplicado — E9 vira 'Pagamento + contrato'",
     },
   ],
   /* ═══ B4 · o dossiê — 29/07 ═══════════════════════════════════════════
@@ -957,7 +945,6 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   conta: "/conta",
   "conta-codigo": "/conta",
   plano: "/plano",
-  contrato: "/contrato",
   pagamento: "/pagamento",
   socio: "/dossie/socio",
   vinculo: "/dossie/vinculo",
@@ -985,6 +972,7 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   "m-transferencia": "/migrar/transferencia",
   "m-travado": "/migrar/transferencia?estado=travado",
   "m-ativa": "/migrar/ativa",
+  "retomar-cpf": "/retomar",
   retomar: "/retomar",
   aguardando: "/aguardando",
   certificado: "/certificado",
@@ -1008,6 +996,10 @@ NOME_MOCKUP.fim = "— fim do piloto —";
 // não bate com a chave exata de `LABEL_POR_ROTA` (keyed pela rota base
 // listada em `GRUPOS`). Sobrescreve manual, mesmo padrão do `fim` acima.
 NOME_MOCKUP["mei-ou-me"] = "E3.2 · MEI × ME";
+// 🆕 30/08 — "retomar-cpf" divide a mesma rota (`/retomar`) com "retomar" (a
+// página real tem 2 passos, CPF depois status); sem override os dois
+// herdariam o mesmo nome do `Object.fromEntries` acima.
+NOME_MOCKUP["retomar-cpf"] = "C0.1 · Voltar de onde parei (CPF)";
 
 const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; porque: string }> = {
   splash: {
@@ -1038,7 +1030,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     interfere:
       "Nada no processo da Junta. Interfere no NOSSO lado: sem isso, quem desiste no meio do funil é anônimo e não dá pra retomar contato.",
     porque:
-      "Reordenação de 27/08, em cima do cruzamento com o funil da Contabilizei: eles pedem esses 3 campos na PRIMEIRA tela, e a gente só pedia depois de 6 telas de gate. A frase do Pedro resume: 'se a gente não capta isso rápido, não sabe nem quem é dono dos próximos cliques'. O aceite formal continua no E8, antes do pagamento; aqui vai só o consentimento mínimo de privacidade, em 1 linha.",
+      "Reordenação de 27/08, em cima do cruzamento com o funil da Contabilizei: eles pedem esses 3 campos na PRIMEIRA tela, e a gente só pedia depois de 6 telas de gate. A frase do Pedro resume: 'se a gente não capta isso rápido, não sabe nem quem é dono dos próximos cliques'. 🔄 30/08 — o aceite formal do contrato subiu pro E9 (junto do pagamento, o E8 foi eliminado); aqui vai só o consentimento mínimo de privacidade, em 1 linha.",
   },
   "mei-ou-me": {
     dono: "usuario",
@@ -1222,21 +1214,13 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     porque:
       "Os 3 baldes não podem se misturar: 'abertura grátis' significa honorário zero, NUNCA governo zero. Esconder o repasse dentro do preço viraria pegadinha lá na frente. Por isso o total do dia fica no rodapé, conferível, mas quem é herói na tela é o 'Grátis'.",
   },
-  contrato: {
-    dono: "usuario",
-    faz: "Aceite do contrato de serviço, com resumo humano em 4 linhas acima do jurídico.",
-    interfere:
-      "É aqui que a pessoa vira cliente. Ainda NÃO é o ponto sem volta: nada foi executado, e o CDC art. 49 (7 dias) vale limpo.",
-    porque:
-      "O termo irreversível é outra tela (A2), depois do dossiê. Separar os dois atos é o que mantém cada um juridicamente sólido. Conteúdo legal nunca fica atrás de expander.",
-  },
   pagamento: {
     dono: "usuario",
-    faz: "Última tela do wizard. Pede o CPF e o método de pagamento; o método define QUANDO a abertura começa.",
+    faz: "Última tela do wizard: pede o CPF, o método de pagamento e o aceite do contrato de serviço (resumo humano + checkbox). 🔄 30/08 — o aceite subiu pra cá; o E8 (`ContratoView`) foi eliminado, igual à Contabilizei (aceita no ato do pagamento, não numa tela própria antes).",
     interfere:
-      "O CPF faz dois trabalhos: cobrança e elegibilidade. Situação irregular na Receita significa que a pessoa não pode abrir empresa, então a gente não cobra. Depois daqui nasce a casa (o portal).",
+      "O CPF faz dois trabalhos: cobrança e elegibilidade. Situação irregular na Receita significa que a pessoa não pode abrir empresa, então a gente não cobra. O aceite é o que vira a pessoa cliente — ainda NÃO é o ponto sem volta (CDC art. 49, 7 dias, vale limpo). Depois daqui nasce a casa (o portal).",
     porque:
-      "Um campo, dois usos, sem gastar uma tela a mais. E a copy precisa distinguir 'CPF suspenso' de 'cartão recusado': trocar de cartão não resolve o primeiro.",
+      "Um campo, dois usos, sem gastar uma tela a mais. O termo irreversível é outra tela (A2), depois do dossiê — separar os dois atos é o que mantém cada um juridicamente sólido. E a copy precisa distinguir 'CPF suspenso' de 'cartão recusado': trocar de cartão não resolve o primeiro.",
   },
 
   /* ═══════════════════ CONSTITUIÇÃO · O DOSSIÊ (C1–C7) ═══════════════════
@@ -1491,6 +1475,14 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
      ⚠️ NÃO ficam entre C7 e A1. Vivem entre E9 e C1 (mapa: `flow-data.mjs`):
      E9.1 só existe pra quem pagou boleto; C0.1 é reentrada de quem fechou o app. */
 
+  "retomar-cpf": {
+    dono: "usuario",
+    faz: "Porta de entrada da reentrada (C0.1): pede o CPF antes de mostrar qualquer status. Sem isso, `/retomar` era rota órfã — só alcançável digitando a URL.",
+    interfere:
+      "É o CPF que decide o resto: se o boleto ainda não compensou, manda pro E9.1 (aguardando); se já pagou, mostra o `retomar` de status normal.",
+    porque:
+      "🔴 MOCK, RF-01 — não existe backend real de 'status de pagamento por CPF' ainda. O dígito final do CPF decide a ramificação, documentado como mock no código (não é lógica de produção real).",
+  },
   retomar: {
     dono: "usuario",
     faz: "Reorienta quem fechou o app e voltou depois: o que já fez, o que falta, e UM próximo passo só.",
@@ -1604,10 +1596,18 @@ export default function ApresentacaoPage() {
   const [cpfPag, setCpfPag] = useState("");
   const [metodo, setMetodo] = useState<Metodo>("cartao");
 
+  // ── "Voltar de onde parei" (30/08, pedido do Pedro) ────────────────────
+  // 4ª saída do fork (`EntradaView`, prop `onRetomar`), real em produção
+  // também: pede CPF (`RetomarCpfView`) e ramifica: dígito final PAR → já
+  // pagou, cai no C0.1 (retomar de onde parou); ÍMPAR → boleto ainda não
+  // compensou, cai no E9.1 (aguardando). 🔴 MOCK, RF-01 — mesma regra do
+  // wrapper de produção `/retomar/page.tsx`.
+  const [cpfRetomar, setCpfRetomar] = useState("");
+
   // ── Aprovação (A2) ─────────────────────────────────────────────────────
-  // Estado PRÓPRIO, separado do `aceite` do E8: são dois consentimentos
+  // Estado PRÓPRIO, separado do aceite do contrato (E9): são dois consentimentos
   // jurídicos distintos (reversível × irreversível). Reusar o mesmo booleano
-  // faria o A2 nascer pré-marcado só porque o E8 foi aceito antes.
+  // faria o A2 nascer pré-marcado só porque o contrato já foi aceito antes.
   const [aceiteTermo, setAceiteTermo] = useState(false);
 
   // ── Migrar (decimal de Entrada) ────────────────────────────────────────
@@ -1774,9 +1774,10 @@ export default function ApresentacaoPage() {
       });
     } else if (etapa === "conta-codigo") {
       setDadosConta((p) => ({ ...p, codigo: "482913" }));
-    } else if (etapa === "contrato") {
-      setAceite(true);
     } else if (etapa === "pagamento") {
+      // 🔄 30/08 (pedido do Pedro) — E8 (Contrato) foi ELIMINADO do fluxo; o
+      // aceite (`aceite`/`setAceite`) subiu pra dentro do E9 (Pagamento).
+      setAceite(true);
       setCpfPag("123.456.789-00");
       setMetodo("cartao");
     } else if (etapa === "termo") {
@@ -1874,8 +1875,7 @@ export default function ApresentacaoPage() {
     { etapa: "conta", label: "E6 · Conta" },
     { etapa: "conta-codigo", label: "E6 · Código" },
     { etapa: "plano", label: "E7 · Plano" },
-    { etapa: "contrato", label: "E8 · Contrato" },
-    { etapa: "pagamento", label: "E9 · Pagamento" },
+    { etapa: "pagamento", label: "🔄 E9 · Pagamento + contrato" },
     // 🔄 27/08 — atividade + veredito ATRAVESSARAM o pagamento: viraram a C0,
     // primeira tela do dossiê. Ver `app/(app)/dossie/atividade/page.tsx`.
     { etapa: "perguntando", label: "🔄 C0 · Sua atividade" },
@@ -1904,6 +1904,7 @@ export default function ApresentacaoPage() {
    * no `type Etapa`).
    */
   const PILLS_PAUSA: { etapa: Etapa; label: string }[] = [
+    { etapa: "retomar-cpf", label: "🆕 C0.1 · Voltar de onde parei" },
     { etapa: "retomar", label: "🆕 C0.1 · Retomar" },
     { etapa: "aguardando", label: "🆕 E9.1 · Aguardando boleto" },
   ];
@@ -1975,10 +1976,8 @@ export default function ApresentacaoPage() {
                       ? "conta-codigo"
                       : etapa === "plano"
                         ? "plano"
-                        : etapa === "contrato"
-                          ? "contrato"
-                          : etapa === "pagamento"
-                            ? "pagamento"
+                        : etapa === "pagamento"
+                          ? "pagamento"
                             : noDossie(etapa) ||
                                 naCauda(etapa) ||
                                 naEspera(etapa) ||
@@ -2047,7 +2046,6 @@ export default function ApresentacaoPage() {
     etapa === "conta" ||
     etapa === "conta-codigo" ||
     etapa === "plano" ||
-    etapa === "contrato" ||
     etapa === "pagamento" ||
     // O dossiê usa o mesmo shell de tela cheia da travessia do dinheiro: são
     // telas de coleta, sem navbar, dentro do aparelho.
@@ -2274,6 +2272,9 @@ export default function ApresentacaoPage() {
                           setEtapa("dados");
                         }}
                         onLogin={() => {}}
+                        // 🆕 30/08 — 4ª saída do fork, real em produção também
+                        // (ver `entrada.tsx`, `onRetomar`).
+                        onRetomar={() => setEtapa("retomar-cpf")}
                         destaqueCoral600
                       />
                     ) : naTravessia ? (
@@ -2338,19 +2339,17 @@ export default function ApresentacaoPage() {
                         )}
                         {etapa === "plano" && (
                           <PlanoView
-                            onSeguir={() => setEtapa("contrato")}
+                            onSeguir={() => setEtapa("pagamento")}
                             onVoltar={() => voltar(() => setEtapa("conta"))}
                             layout="oferta"
                           />
                         )}
-                        {etapa === "contrato" && (
-                          <ContratoView
-                            aceito={aceite}
-                            setAceito={setAceite}
-                            onSeguir={() => setEtapa("pagamento")}
-                            onVoltar={() => voltar(() => setEtapa("plano"))}
-                          />
-                        )}
+                        {/* 🔴 30/08 (pedido do Pedro) — E8 (`ContratoView`) foi
+                            ELIMINADO do fluxo: igual à Contabilizei, o aceite
+                            do contrato acontece no ato do pagamento, não numa
+                            tela própria antes dele. O checkbox + "Ler o
+                            contrato completo" subiram pro E9 (`PagamentoView`
+                            abaixo). */}
                         {etapa === "pagamento" && (
                           <PagamentoView
                             cpf={cpfPag}
@@ -2362,10 +2361,18 @@ export default function ApresentacaoPage() {
                             // duas telas, então é aqui que dá pra provar o
                             // reuso: o E9 confirma em vez de pedir de novo.
                             cpfCadastrado={dadosConta.cpf}
+                            aceito={aceite}
+                            setAceito={setAceite}
                             // O pagamento aprovado não é mais o fim da demo:
-                            // ele abre a casa e começa o dossiê (C1).
-                            onPagar={() => setEtapa("perguntando")}
-                            onVoltar={() => voltar(() => setEtapa("contrato"))}
+                            // ele abre a casa e começa o dossiê (C1). 🔄 30/08
+                            // (pedido do Pedro) — boleto NÃO vai direto pro
+                            // dossiê: passa pela pausa E9.1 (aguardando
+                            // compensar) primeiro, igual à produção real
+                            // (`/pagamento/page.tsx`, função `destino()`).
+                            onPagar={() =>
+                              setEtapa(metodo === "boleto" ? "aguardando" : "perguntando")
+                            }
+                            onVoltar={() => voltar(() => setEtapa("plano"))}
                           />
                         )}
 
@@ -2513,8 +2520,20 @@ export default function ApresentacaoPage() {
                         {etapa === "ativacao" && <HomeAtivacaoView />}
 
                         {/* ═══ C0.1 · E9.1 — pausas de pagamento ════════════
-                            Fora da sequência linear: alcançadas só pela pill
-                            própria (não pelo botão Continuar de outra tela). */}
+                            Fora da sequência linear: alcançadas pelo E3
+                            ("Voltar de onde parei") ou pela pill própria. */}
+                        {etapa === "retomar-cpf" && (
+                          <RetomarCpfView
+                            cpf={cpfRetomar}
+                            setCpf={setCpfRetomar}
+                            onContinuar={() => {
+                              const digitos = cpfRetomar.replace(/\D/g, "");
+                              const ultimo = Number(digitos[digitos.length - 1] ?? "0");
+                              setEtapa(ultimo % 2 !== 0 ? "aguardando" : "retomar");
+                            }}
+                            onVoltar={() => voltar(() => setEtapa("fork"))}
+                          />
+                        )}
                         {etapa === "retomar" && (
                           <RetomarView onSeguir={() => setEtapa("perguntando")} />
                         )}

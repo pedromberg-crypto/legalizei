@@ -1,7 +1,7 @@
 ---
 tipo: verdade
 status: GERADO — não editar à mão, nasce de `execucao/flow/gerar-mapa.mjs`
-data: 2026-08-29
+data: 2026-08-30
 assunto: dados-coletados-abertura
 tags: [execucao, flow, dados, abertura]
 ---
@@ -24,7 +24,7 @@ tags: [execucao, flow, dados, abertura]
 ### E2.3 · Welcome (3/3 · Sem susto no boleto)
 - _(sem dado novo — contexto, confirmação ou decisão do sistema)_
 
-### E3 · Fork 3 rotas
+### E3 · Fork 4 rotas
 - _(sem dado novo — contexto, confirmação ou decisão do sistema)_
 
 ### E3.3 · Seus dados (nome · e-mail · telefone)
@@ -63,12 +63,10 @@ tags: [execucao, flow, dados, abertura]
 ### E7 · A conta da abertura
 - _(sem dado novo — contexto, confirmação ou decisão do sistema)_
 
-### E8 · Aceite contrato reversível, CDC 49
-- Aceite do contrato de serviço (checkbox)
-
-### E9 · Pagamento (variante Abrir)
+### E9 · Pagamento + contrato (variante Abrir)
 - CPF (cobrança + elegibilidade)
 - método de pagamento (cartão/Pix/boleto)
+- aceite do contrato de serviço (checkbox)
 
 ### E9.1 · Aguardando boleto dossiê já liberado
 - _(sem dado novo — contexto, confirmação ou decisão do sistema)_

@@ -30,13 +30,18 @@ import { Lottie } from "@/components/lottie";
  *      gente tem — e a copy velha o mandava embora.
  * A copy pergunta pelo FATO ("já tenho empresa"), nunca pela operação.
  *
- * ─── HIERARQUIA DAS 3 SAÍDAS (não é estética) ─────────────────────────────
+ * ─── HIERARQUIA DAS SAÍDAS (não é estética) ────────────────────────────────
  * · **Abrir** = card coral, primário. É o flow que o MVP resolve inteiro.
  * · **Já tenho empresa** = card branco, secundário. Existe e é legível, mas
  *   não compete: o flow #2 ainda tem 3 personas contra 16.
+ * · **Voltar de onde parei** (🆕 30/08) = card branco, mesmo peso de "Já
+ *   tenho empresa". Fecha o gap do C0_1 (`/retomar`), que até aqui era nó
+ *   ÓRFÃO no mapa — ninguém apontava pra ele. Pede CPF antes de mostrar
+ *   status (`RetomarCpfView`, `wizard-cauda.tsx`) — mock, RF-01, sem
+ *   backend real de status de pagamento ainda.
  * · **Entrar na conta** = LINK, não botão (spec). Quem já é cliente procura
- *   ativamente; dar peso de botão roubaria atenção dos dois de cima, que são
- *   os que trazem receita nova.
+ *   ativamente; dar peso de botão roubaria atenção dos 2 cards de cima, que
+ *   são os que trazem receita nova.
  *
  * ⚠️ Fill dos cards = `action-primary-sm` (coral-700), não coral-600: o texto
  * aqui é menor que 18,66px bold, e sobre coral-600 daria 4,04:1 (falha AA em
@@ -54,8 +59,9 @@ import { Lottie } from "@/components/lottie";
  * o endereço fiscal da Legalizai pra quem não tem endereço em BH, em vez de
  * mandar embora. A saída `/saida/fora-bh` continua existindo, alcançada de lá.
  *
- * Com isso o fork voltou a ser o que era: uma tela, uma decisão, 3 saídas.
- * `EntradaView` não tem mais estado interno nem passo 2.
+ * O fork continua sendo uma tela, uma decisão — sem passo 2, sem estado
+ * interno próprio. `onRetomar` (🆕 30/08) é só mais uma prop de navegação,
+ * igual `onIntencao`/`onLogin`: a decisão de pra onde ir é do consumidor.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -64,6 +70,7 @@ export type Intencao = "abrir" | "migrar";
 export function EntradaView({
   onIntencao,
   onLogin,
+  onRetomar,
   destaqueCoral600 = false,
 }: {
   /**
@@ -73,6 +80,14 @@ export function EntradaView({
    */
   onIntencao: (i: Intencao) => void;
   onLogin: () => void;
+  /**
+   * 🆕 30/08 (pedido do Pedro) — 4ª saída do fork: quem começou o cadastro
+   * (abrir OU migrar), fechou o app no meio, e volta. Antes o `/retomar`
+   * (C0_1) era nó ÓRFÃO no mapa — ninguém apontava pra ele. Opcional: só
+   * aparece quando o consumidor passa a prop (produção e demo passam; um
+   * botão inerte é pior que ausente, mesma regra do resto do wizard).
+   */
+  onRetomar?: () => void;
   /**
    * 🔓 UX-63 (29/07, pedido do Pedro na validação tela a tela) — usa o coral-600
    * do botão primário no card de destaque, em vez do coral-700.
@@ -129,33 +144,116 @@ export function EntradaView({
           </div>
         </div>
 
+        {/* 🧪 30/08 (teste do Pedro) — restilo com o cartão do componente já
+            aprovado (`CardIconeSelecao`, ícone-em-cima/rótulo-embaixo em vez
+            de ícone-esquerda/texto-direita/chevron). "Entrar na minha conta"
+            deixou de ser link e virou card, igual aos outros 3 — 4 CTAs no
+            total agora. Reversível: `Escolha`/`Chevron` (estilo antigo)
+            seguem no arquivo, comentar de volta desfaz. */}
         <div className="app-footer-cta">
-          <Escolha
+          <CardFork
             destaque
-            coral600={destaqueCoral600}
+            horizontal
             icone={<Mais />}
             titulo="Quero abrir minha empresa"
-            sub="Ainda não tenho CNPJ. Quero começar do zero."
+            sub="Não tenho CNPJ. Começar do zero."
             onClick={() => onIntencao("abrir")}
           />
-          <Escolha
-            icone={<Predio />}
-            titulo="Já tenho empresa"
-            sub="Tenho CNPJ e quero que vocês cuidem da contabilidade."
-            onClick={() => onIntencao("migrar")}
-          />
-          <p className="text-caption text-text-tertiary mt-5 text-center">
-            Já é cliente?{" "}
-            <button
-              onClick={onLogin}
-              className="font-semibold text-text-primary underline underline-offset-4"
-            >
-              Entrar na minha conta
-            </button>
-          </p>
+          <div className="mt-3">
+            <CardFork
+              horizontal
+              icone={<Predio />}
+              titulo="Já tenho empresa"
+              sub="Quero migrar para a Legalizai."
+              onClick={() => onIntencao("migrar")}
+            />
+          </div>
+          <div className="mt-3 grid grid-cols-2 gap-3">
+            {onRetomar && (
+              <CardFork icone={<Retomar />} titulo="Voltar de onde parei" onClick={onRetomar} />
+            )}
+            <CardFork cinza icone={<PessoaLogin />} titulo="Entrar na minha conta" onClick={onLogin} />
+          </div>
         </div>
       </main>
     </>
+  );
+}
+
+/**
+ * 🧪 30/08 (teste do Pedro) — mesmo idioma visual do `CardIconeSelecao`
+ * (`gate-telas.tsx`): ícone EM CIMA, rótulo embaixo, sem chevron. Difere do
+ * original por não ter estado de seleção (aqui é navegação, não escolha
+ * persistida) e por aceitar `sub` opcional (só o card de destaque usa).
+ */
+function CardFork({
+  icone,
+  titulo,
+  sub,
+  destaque = false,
+  cinza = false,
+  horizontal = false,
+  onClick,
+}: {
+  icone: ReactNode;
+  titulo: string;
+  sub?: string;
+  destaque?: boolean;
+  /** 🧪 30/08 — cinza claro, sem borda: diferencia "Entrar na minha conta"
+   *  dos cards brancos-com-borda (é ação de outra natureza, não navegação
+   *  de flow). */
+  cinza?: boolean;
+  /** 🧪 30/08 (teste do Pedro) — os 2 cards de cima viram LINHA (ícone na
+   *  lateral esquerda, texto do lado, como o antigo `Escolha`); os 2 de
+   *  baixo mantêm a coluna (ícone em cima, default). */
+  horizontal?: boolean;
+  onClick?: () => void;
+}) {
+  const iconeEl = (
+    <span
+      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${
+        destaque ? "bg-white/20" : cinza ? "bg-white" : "bg-surface-tint-brand"
+      }`}
+    >
+      {icone}
+    </span>
+  );
+  const textoEl = (
+    <span>
+      <span
+        className={`block text-body font-bold ${
+          destaque ? "text-text-on-brand" : "text-text-primary"
+        }`}
+      >
+        {titulo}
+      </span>
+      {sub && (
+        <span
+          className={`mt-0.5 block text-caption ${
+            destaque ? "text-text-on-brand" : "text-text-secondary"
+          }`}
+        >
+          {sub}
+        </span>
+      )}
+    </span>
+  );
+  return (
+    <button
+      onClick={onClick}
+      className={`flex w-full rounded-2xl p-4 text-left transition-colors ${
+        horizontal ? "flex-row items-center gap-3" : "flex-col items-start gap-2"
+      } ${
+        destaque
+          ? "bg-action-primary-sm text-text-on-brand hover:bg-action-primary-hover"
+          : cinza
+            ? "bg-surface-alt hover:opacity-80"
+            : "border border-border-hairline bg-surface-card hover:bg-surface-alt"
+      }`}
+    >
+      {iconeEl}
+      {textoEl}
+    </button>
   );
 }
 
@@ -165,6 +263,10 @@ export function EntradaView({
  *
  * Alvo de toque enorme de propósito — a tela inteira tem 2 decisões, e errar
  * aqui joga o lead no flow errado.
+ *
+ * 🧪 30/08 — SEM USO no momento (teste do Pedro trocou pro `CardFork` acima).
+ * Fica no arquivo de propósito: reverter é só voltar a chamar este em vez
+ * do outro, sem reescrever nada.
  */
 function Escolha({
   icone,
@@ -280,6 +382,50 @@ function Predio() {
       <path d="M4 21V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v16" />
       <path d="M15 9h4a1 1 0 0 1 1 1v11" />
       <path d="M2 21h20M8 8h2M8 12h2M8 16h2" />
+    </svg>
+  );
+}
+
+/** Seta circular (retomar), não relógio: "continuar de onde parou", não
+    "está atrasado" — mesma lógica de escolha de ícone do Prédio acima. */
+function Retomar() {
+  return (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="text-action-primary"
+      aria-hidden
+    >
+      <path d="M3 12a9 9 0 1 0 3-6.7" />
+      <path d="M3 4v5h5" />
+    </svg>
+  );
+}
+
+/** 🧪 30/08 — "Entrar na minha conta" era link puro, sem ícone. Este só existe
+    pro teste do `CardFork` (todo card pede um ícone). */
+function PessoaLogin() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="text-action-primary"
+      aria-hidden
+    >
+      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
     </svg>
   );
 }

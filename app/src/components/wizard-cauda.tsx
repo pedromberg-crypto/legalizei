@@ -1418,6 +1418,55 @@ function IconeBandeiraPasso() {
   );
 }
 
+/**
+ * 🆕 30/08 (pedido do Pedro) — PORTA DE ENTRADA da reentrada (P1). Antes o
+ * `/retomar` (C0_1) só existia como rota isolada, sem ninguém apontando pra
+ * ela (órfã no mapa). Agora o E3 (`EntradaView`, "Voltar de onde parei")
+ * manda pra cá primeiro: confirma QUEM é (CPF) antes de mostrar o status.
+ *
+ * 🔴 MOCK, RF-01: não existe backend real de "status de pagamento por CPF"
+ * ainda. A ramificação (boleto pendente → E9.1 · já pago → C0.1) é decidida
+ * pelo CONSUMIDOR (`onContinuar`), não por esta view — ela só coleta o CPF,
+ * igual ao resto do wizard.
+ */
+export function RetomarCpfView({
+  cpf,
+  setCpf,
+  onContinuar,
+  onVoltar,
+}: {
+  cpf: string;
+  setCpf: (v: string) => void;
+  onContinuar?: () => void;
+  onVoltar?: () => void;
+}) {
+  const cpfOk = cpf.replace(/\D/g, "").length === 11;
+  return (
+    <>
+      <TelaHeader meta="Página inicial" onVoltar={onVoltar} />
+      <main className="app-main">
+        <Titulo sub="A gente confirma onde você parou.">Voltar de onde parei</Titulo>
+        <Corpo>
+          <Campo rotulo="Seu CPF" dica="É o mesmo que você usou pra começar o cadastro.">
+            <Texto
+              valor={cpf}
+              onChange={setCpf}
+              inputMode="numeric"
+              maxLength={14}
+              placeholder="000.000.000-00"
+            />
+          </Campo>
+        </Corpo>
+        <Rodape>
+          <Button full disabled={!cpfOk} onClick={onContinuar}>
+            Continuar
+          </Button>
+        </Rodape>
+      </main>
+    </>
+  );
+}
+
 export function RetomarView({
   mei = false,
   temSocios = true,

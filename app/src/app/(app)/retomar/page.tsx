@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { RetomarView } from "@/components/wizard-cauda";
+import { RetomarCpfView, RetomarView } from "@/components/wizard-cauda";
 import { ehMei, comRegime } from "@/lib/regime";
 import { TEM_SOCIO } from "@/app/(app)/dossie/mock";
 
@@ -25,11 +26,39 @@ import { TEM_SOCIO } from "@/app/(app)/dossie/mock";
  * (`/dossie/atividade`) pro ME ou a M-O (`/dossie/ocupacao`) pro MEI —
  * ninguém tinha atualizado esta rota. Corrigido junto da reordenação de
  * 28/08 (CNAE secundário movido pra logo após a principal).
+ *
+ * 🆕 30/08 (pedido do Pedro) — ganhou uma PORTA antes do status: o E3 (fork,
+ * "Voltar de onde parei") manda pra cá agora, mas ninguém sabe QUEM é a
+ * pessoa até ela digitar o CPF (`RetomarCpfView`). 🔴 MOCK, RF-01 — sem
+ * backend real de status de pagamento, o dígito final do CPF decide: ÍMPAR
+ * = boleto ainda não compensou (manda pro E9.1, `/aguardando`) · PAR = já
+ * pago (mostra o `RetomarView` de sempre).
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function RetomarPage() {
   const router = useRouter();
   const mei = ehMei(useSearchParams());
+  const [cpf, setCpf] = useState("");
+  const [confirmado, setConfirmado] = useState(false);
+
+  if (!confirmado) {
+    return (
+      <RetomarCpfView
+        cpf={cpf}
+        setCpf={setCpf}
+        onContinuar={() => {
+          const digitos = cpf.replace(/\D/g, "");
+          const ultimo = Number(digitos[digitos.length - 1] ?? "0");
+          if (ultimo % 2 !== 0) {
+            router.push("/aguardando");
+            return;
+          }
+          setConfirmado(true);
+        }}
+        onVoltar={() => router.push("/entrada")}
+      />
+    );
+  }
 
   return (
     <RetomarView

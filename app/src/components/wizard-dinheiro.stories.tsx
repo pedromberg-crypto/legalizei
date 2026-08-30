@@ -1,11 +1,14 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { ContaView, PlanoView, ContratoView, PagamentoView, type DadosConta, type Metodo } from "./wizard-dinheiro";
+import { ContaView, PlanoView, PagamentoView, type DadosConta, type Metodo } from "./wizard-dinheiro";
 
 /**
  * 🟢 PRODUÇÃO REAL — B3, a travessia do dinheiro (N6→N9). Fonte única das
- * rotas `/conta`, `/plano`, `/contrato`, `/pagamento`. 3 baldes SEMPRE
- * separados: grátis (honorário) · taxa de governo (repasse) · mensalidade.
+ * rotas `/conta`, `/plano`, `/pagamento`. 3 baldes SEMPRE separados: grátis
+ * (honorário) · taxa de governo (repasse) · mensalidade.
+ *
+ * 🔄 30/08 — o E8 (`ContratoView`/`/contrato`) foi ELIMINADO do fluxo: o
+ * aceite do contrato desceu pro E9 (`PagamentoView`), no ato do pagamento.
  */
 const meta = {
   title: "Telas/Dinheiro B3 (N6-N9)",
@@ -46,15 +49,10 @@ export const N6_CodigoDeVerificacao: Story = { render: () => <Shell><ContaIntera
 export const N7_Classico: Story = { render: () => <Shell><PlanoView onSeguir={() => {}} /></Shell> };
 export const N7_Oferta: Story = { render: () => <Shell><PlanoView layout="oferta" onSeguir={() => {}} /></Shell> };
 
-function ContratoInterativo() {
-  const [aceito, setAceito] = useState(false);
-  return <ContratoView aceito={aceito} setAceito={setAceito} onSeguir={() => {}} />;
-}
-export const N8_Contrato: Story = { render: () => <Shell><ContratoInterativo /></Shell> };
-
 function PagamentoInterativo({ cpfCadastrado, fluxo }: { cpfCadastrado?: string; fluxo?: "abertura" | "migrar" }) {
   const [cpf, setCpf] = useState("");
   const [metodo, setMetodo] = useState<Metodo>("cartao");
+  const [aceito, setAceito] = useState(false);
   return (
     <PagamentoView
       cpf={cpf}
@@ -63,6 +61,8 @@ function PagamentoInterativo({ cpfCadastrado, fluxo }: { cpfCadastrado?: string;
       setMetodo={setMetodo}
       cpfCadastrado={cpfCadastrado}
       fluxo={fluxo}
+      aceito={aceito}
+      setAceito={setAceito}
       onPagar={() => {}}
     />
   );

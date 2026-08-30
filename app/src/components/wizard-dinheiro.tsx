@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
@@ -1119,21 +1120,46 @@ export function PlanoView({
  * com ícone e peso igual aos outros. Ficar solto no topo, sozinho, lia como
  * sobra da fusão preview→produção, não como conteúdo.
  */
-const INCLUSO: { titulo: string; sub: string; icone: ReactNode }[] = [
+const INCLUSO: { titulo: string; sub: string; icone: ReactNode; semBadge?: boolean }[] = [
   {
     titulo: "Abertura completa da empresa",
     sub: "Documentação, contrato social, protocolo e CNPJ, sem honorário. Em escritório tradicional, isso custa em torno de um salário mínimo.",
-    icone: <IconePredio />,
+    icone: <IconeTesteGlossy src="/icones/certificado-predio-teste.png" />,
+    semBadge: true,
   },
   {
     titulo: "Certificado digital",
     sub: `Incluso, sem custo extra. Fora daqui, certificadoras cobram em torno de ${brl(CUSTOS.CERTIFICADO_PRECO, true)}/ano.`,
-    icone: <IconeCadeado />,
+    // 🧪 30/08 (teste do Pedro) — todos os 5 ícones trocados por PNG glossy
+    // (mesma referência/ângulo do cadeado). `semBadge`: já vem com cor/sombra
+    // próprias, sai do círculo verde-claro padrão (redundante nele).
+    icone: <IconeTesteGlossy src="/icones/certificado-cadeado-teste.png" />,
+    semBadge: true,
   },
-  { titulo: "Imposto e declarações", sub: "Guia pronta todo mês e obrigação entregue no prazo.", icone: <IconeDocPlano /> },
-  { titulo: "Notas fiscais sem limite", sub: "Emite pelo app, em segundos.", icone: <IconeRaioPlano /> },
-  { titulo: "Pró-labore de até 2 sócios", sub: "Calculado junto com o seu imposto.", icone: <IconePessoasPlano /> },
-  { titulo: "Contador de verdade", sub: "Uma pessoa com nome, no WhatsApp.", icone: <IconeChatPlano /> },
+  {
+    titulo: "Imposto e declarações",
+    sub: "Guia pronta todo mês e obrigação entregue no prazo.",
+    icone: <IconeTesteGlossy src="/icones/certificado-papel-teste.png" />,
+    semBadge: true,
+  },
+  {
+    titulo: "Notas fiscais sem limite",
+    sub: "Emite pelo app, em segundos.",
+    icone: <IconeTesteGlossy src="/icones/certificado-raio-teste.png" />,
+    semBadge: true,
+  },
+  {
+    titulo: "Pró-labore de até 2 sócios",
+    sub: "Calculado junto com o seu imposto.",
+    icone: <IconeTesteGlossy src="/icones/certificado-pessoas-teste.png" />,
+    semBadge: true,
+  },
+  {
+    titulo: "Contador de verdade",
+    sub: "Uma pessoa com nome, no WhatsApp.",
+    icone: <IconeTesteGlossy src="/icones/certificado-balao-teste.png" />,
+    semBadge: true,
+  },
 ];
 
 /** 🆕 04/08 — Plano MEI é escopo LIMITADO (emitir NF + o 1 colaborador que a
@@ -1145,7 +1171,7 @@ const INCLUSO: { titulo: string; sub: string; icone: ReactNode }[] = [
  *  regime dispensado de contador (sem escrituração obrigatória, DASN-SIMEI
  *  autodeclaratória). Dizer "contador de verdade" aqui era a promessa vazia que
  *  a marca acusa o setor de fazer. Ver `pesquisa/posicionamento.md` §2. */
-const INCLUSO_MEI: { titulo: string; sub: string; icone: ReactNode }[] = [
+const INCLUSO_MEI: { titulo: string; sub: string; icone: ReactNode; semBadge?: boolean }[] = [
   // A abertura grátis vale pros dois regimes — mesmo item do array ME acima.
   {
     titulo: "Abertura completa da empresa",
@@ -1230,18 +1256,9 @@ function PlanoOferta({
             citação legal, endereço fiscal) foi cortado — só a casca mudou.
             ═══════════════════════════════════════════════════════════════════ */}
         <div className="shrink-0">
-          {/* Eyebrow — o resumo mais forte da tela ("é grátis") sobe pra cima
-              do título, no lugar de repetir isso 2x mais embaixo. */}
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-state-success-tint px-4 py-2">
-            <span className="h-2 w-2 rounded-full bg-state-success" aria-hidden />
-            {/* 🔄 30/08 (pedido do Pedro) — mais explícito sobre O QUE é
-                grátis (o processo contábil de abertura, não a mensalidade
-                nem o produto inteiro), enxuto pra caber numa linha só. */}
-            <span className="text-caption font-semibold text-state-success-text">
-              O processo contábil de abertura é 100% grátis
-            </span>
-          </div>
-
+          {/* 🔄 30/08 (pedido do Pedro) — o eyebrow verde saiu daqui: desceu
+              pra virar o 1º item de "O que está incluso", em vez de repetir
+              a mesma mensagem 2x na tela. */}
           {/* 🆕 28/08 (pedido do Pedro) — título e subtítulo em LINHA ÚNICA.
               O título deixa de empilhar em 2 blocos (era `block`+`block`) e
               vira 1 span inline, com fonte menor pra caber; o subtítulo foi
@@ -1304,13 +1321,33 @@ function PlanoOferta({
             {/* 🔴 30/08 (pedido do Pedro) — subtítulo "O valor acompanha o seu
                 faturamento..." saiu: pesado demais pra essa altura da tela,
                 a variação por faturamento já fica clara no resto do fluxo. */}
-            {enderecoFiscal && (
-              <p className="mt-1 text-caption text-text-on-dark/70">
-                Inclui {brl(CUSTOS.ENDERECO_FISCAL, true)}/mês de endereço
-                fiscal, porque você optou por usar o nosso.
-              </p>
-            )}
           </div>
+
+          {/* 🔄 30/08 (pedido do Pedro) — o aviso do endereço fiscal era 1
+              linha de texto solta dentro do card escuro: "pouco visual e
+              entendível" que aquele valor já está somado na mensalidade.
+              Virou seção própria, mesmo formato de card das outras (ícone +
+              texto), com o valor explícito à direita — só aparece se a
+              pessoa escolheu o endereço fiscal lá no E5F. */}
+          {enderecoFiscal && (
+            <>
+              <p className="mb-2.5 mt-6 text-caption font-semibold text-text-primary">
+                O que você adicionou
+              </p>
+              <div className="flex items-center gap-3 rounded-2xl border border-border-hairline bg-surface-card p-3.5">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full">
+                  <IconeTesteGlossy src="/icones/certificado-gps-teste.png" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-body font-semibold text-text-primary">Endereço fiscal Legalizai</p>
+                  <p className="text-micro text-text-tertiary">Escolhido lá atrás, na tela do faturamento.</p>
+                </div>
+                <span className="shrink-0 text-body font-semibold text-text-primary">
+                  +{brl(CUSTOS.ENDERECO_FISCAL)}/mês
+                </span>
+              </div>
+            </>
+          )}
 
           {/* LISTA DE INCLUSOS — cartões-linha elevados (idioma "Nearby
               Destination" da referência), fora do card escuro. */}
@@ -1318,12 +1355,26 @@ function PlanoOferta({
             O que está incluso
           </p>
           <div className="flex flex-col gap-2.5">
+            <div className="flex items-center gap-3 rounded-2xl border border-border-hairline bg-surface-card p-3.5">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full">
+                <IconeTesteGlossy src="/icones/certificado-check-teste.png" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="text-body font-semibold text-text-primary">
+                  Processo contábil 100% grátis
+                </p>
+              </div>
+            </div>
             {(semTaxaJunta ? INCLUSO_MEI : INCLUSO).map((i) => (
               <div
                 key={i.titulo}
-                className="flex items-center gap-3 rounded-2xl border border-border-hairline bg-surface-card p-3.5 shadow-sm"
+                className="flex items-center gap-3 rounded-2xl border border-border-hairline bg-surface-card p-3.5"
               >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-state-success-tint text-state-success-text">
+                <span
+                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${
+                    i.semBadge ? "" : "bg-state-success-tint text-state-success-text"
+                  }`}
+                >
                   {i.icone}
                 </span>
                 <div className="min-w-0 flex-1">
@@ -1337,7 +1388,7 @@ function PlanoOferta({
                 lê o que está. Sem valor de propósito — não temos preço
                 fechado com a certificadora. */}
             {semTaxaJunta && (
-              <div className="flex items-center gap-3 rounded-2xl border border-border-hairline bg-surface-card p-3.5 shadow-sm">
+              <div className="flex items-center gap-3 rounded-2xl border border-border-hairline bg-surface-card p-3.5">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-surface-alt text-text-tertiary">
                   <span className="text-body font-bold" aria-hidden>
                     !
@@ -1359,10 +1410,16 @@ function PlanoOferta({
 
           {/* A TAXA — honesta, com valor, sem holofote. Regra dura: o repasse
               de governo NUNCA se esconde dentro do preço.
-              🆕 28/08 (pedido do Pedro) — o card sozinho, sem dizer o QUANDO,
-              parecia mais cobrança do que aviso. Adicionada a frase que
-              esclarece o timing (só cobra depois da viabilidade). */}
-          <div className="mt-4 rounded-2xl bg-surface-alt px-4 py-3">
+              🔄 30/08 (pedido do Pedro) — ganhou título próprio de seção, pra
+              separar visualmente "o que ainda custa pra abrir" do resto (que
+              já é só mensalidade). Copy reforça que é taxa de QUALQUER
+              contabilidade (órgão estadual, não é markup nosso), não só um
+              aviso solto. Card de Colaboradores (03/08) foi REMOVIDO daqui —
+              não fazia parte do custo de abertura. */}
+          <p className="mb-2.5 mt-6 text-caption font-semibold text-text-primary">
+            O que ainda tem de custo pra abrir o CNPJ
+          </p>
+          <div className="rounded-2xl bg-surface-alt px-4 py-3">
             <div className="flex items-baseline justify-between gap-3">
               <p className="text-caption text-text-secondary">Taxa da Junta Comercial</p>
               <p className="text-caption font-semibold text-text-primary">
@@ -1372,52 +1429,27 @@ function PlanoOferta({
             <p className="mt-1 text-micro text-text-tertiary">
               {semTaxaJunta
                 ? "MEI não passa pela Junta Comercial. O registro é direto no Portal do Empreendedor, sem essa taxa."
-                : "Vai direto pro Estado, a gente não fica com nada. Não é cobrada agora, é só um aviso pra não virar surpresa depois."}
+                : "Qualquer contabilidade também repassaria essa taxa: é o custo de registro na Junta Comercial de Minas Gerais, o órgão estadual da abertura. A guia é da Junta, a gente só emite o boleto. Depois disso, o único custo é a sua mensalidade."}
             </p>
           </div>
 
           {/* 🔴 28/08 (pedido do Pedro: "achei desnecessário") — a citação
               legal (CC art. 1.179) foi REMOVIDA. Segue existindo na versão
               clássica (`PlanoView`), que não é a usada em produção. */}
-
-          {/* 🆕 03/08 — COLABORADORES, visível desde já. 🔴 Preço FAKE —
-              referência de mercado, não decisão nossa. Some pro Plano MEI:
-              o INCLUSO_MEI acima já cobre o único colaborador que a lei
-              permite. */}
-          {!semTaxaJunta && (
-            <div className="mt-3 rounded-2xl border border-border-hairline bg-surface-card p-4 shadow-sm">
-              <div className="flex items-baseline justify-between gap-3">
-                <p className="text-body font-semibold text-text-primary">Colaboradores</p>
-                <span className="shrink-0 text-body font-semibold text-text-primary">
-                  {CUSTOS.COLABORADORES_INCLUSOS === 0
-                    ? "não incluso"
-                    : `${CUSTOS.COLABORADORES_INCLUSOS} incluso${CUSTOS.COLABORADORES_INCLUSOS > 1 ? "s" : ""}`}
-                </span>
-              </div>
-              <p className="text-caption text-text-secondary mt-1">
-                Cada colaborador é {brl(CUSTOS.CUSTO_FUNCIONARIO, true)}/mês a mais na
-                mensalidade. Sem funcionário, sem custo extra.
-              </p>
-            </div>
-          )}
         </div>
         </div>
 
-        {/* CTA FLUTUANTE — ecoa a navbar escura flutuante da referência.
-            Reusa o `Rodape` compartilhado (fundo sólido + safe-area): a
-            pill é o CONTEÚDO decorativo dentro do rodapé de verdade, não o
-            rodapé em si — sem isso o corner da pill vaza o que tem atrás
-            (bug já corrigido no preview). */}
+        {/* 🔄 30/08 (pedido do Pedro) — o CTA flutuante escuro (pill) destoava
+            do padrão das outras telas. Voltou pro Rodape padrão: total à
+            esquerda, botão full-width embaixo. */}
         <Rodape>
-          <div className="flex items-center justify-between gap-4 rounded-full bg-surface-dark py-2.5 pl-6 pr-2.5 shadow-2xl">
-            <div className="min-w-0">
-              <p className="text-micro text-text-on-dark/60">Você paga hoje</p>
-              <p className="text-h2 font-bold text-text-on-dark">{brl(hoje, true)}</p>
-            </div>
-            <Button full={false} onClick={onSeguir} className="!rounded-full shrink-0 !px-6 !py-3.5">
-              Ótimo, continuar
-            </Button>
+          <div className="mb-3 flex items-baseline justify-between gap-3">
+            <span className="text-caption text-text-secondary">Você paga hoje</span>
+            <span className="text-h2 text-text-primary">{brl(hoje, true)}</span>
           </div>
+          <Button full onClick={onSeguir}>
+            Ótimo, continuar
+          </Button>
         </Rodape>
       </main>
     </>
@@ -1453,6 +1485,10 @@ function ic18Plano() {
     "aria-hidden": true,
   };
 }
+/** 🧪 30/08 (teste do Pedro) — PNG glossy 3D, mesmo tratamento do cadeado. */
+function IconeTesteGlossy({ src }: { src: string }) {
+  return <Image src={src} alt="" width={26} height={26} aria-hidden />;
+}
 function IconePredio() {
   return (
     <svg {...ic18Plano()}>
@@ -1460,6 +1496,13 @@ function IconePredio() {
       <path d="M5 21V7l8-4v18" />
       <path d="M19 21V11l-6-4" />
       <path d="M9 9v.01M9 12v.01M9 15v.01" />
+    </svg>
+  );
+}
+function IconeCheckPlano() {
+  return (
+    <svg {...ic18Plano()}>
+      <path d="m5 12.5 4.5 4.5L19 7" />
     </svg>
   );
 }
@@ -1501,205 +1544,6 @@ function IconeChatPlano() {
   return (
     <svg {...ic18Plano()}>
       <path d="M4 4h16v12H8l-4 4z" />
-    </svg>
-  );
-}
-
-/* ═══════════════════ N8 · ACEITE DO CONTRATO ════════════════════════════ */
-
-export function ContratoView({
-  aceito,
-  setAceito,
-  onSeguir,
-  onVoltar,
-  onLerContrato,
-  semTaxaJunta = false,
-}: {
-  aceito: boolean;
-  setAceito: (v: boolean) => void;
-  onSeguir?: () => void;
-  onVoltar?: () => void;
-  /** 🚧 O documento jurídico não existe ainda (Mauro/Larissa). Enquanto não
-      existir, o botão fica inerte — mas NÃO é mais um `href="#"`, que sequestra
-      a URL e rola a página pro topo no meio do aceite. */
-  onLerContrato?: () => void;
-  /** 🆕 03/08 — MEI não paga taxa da Junta (não existe, não é cenário). */
-  semTaxaJunta?: boolean;
-}) {
-  // 🆕 04/08 — mesma correção das telas anteriores: Plano MEI tem mensalidade própria.
-  const mensalidade = semTaxaJunta ? CUSTOS.MENSALIDADE_MEI : CUSTOS.MENSALIDADE;
-  // 🔄 26/08 (pedido do Pedro) — a DAE NÃO soma mais no "você paga hoje". Só
-  // vira cobrança de verdade depois que a viabilidade voltar deferida (A3,
-  // `components/painel.tsx`, "Pague a guia da Junta").
-  const hoje = mensalidade;
-
-  return (
-    <>
-      <TelaHeader meta="Contrato de serviço" onVoltar={onVoltar} />
-      <main className="app-main">
-        <Titulo sub="O que a gente faz por você e o que você paga.">
-          Está tudo combinado
-        </Titulo>
-
-        <Corpo>
-          {/* ═══ RESUMO HUMANO, ACIMA DO JURÍDICO ═══════════════════════════
-              🪒 29/07 — as 4 linhas eram 2 novas e 2 ecos. "Abre sem honorário
-              e cuida todo mês" e "mensalidade; taxas à parte" RE-EXPLICAVAM com
-              palavras o que o N7 tinha acabado de mostrar com números, um toque
-              antes. Enquanto isso, a tela do ACEITE não exibia um único valor:
-              você assinava o contrato sem ver na tela quanto paga.
-
-              Então as duas primeiras linhas viraram os NÚMEROS (é o que um
-              recap-antes-de-assinar deve fazer) e as duas que carregam
-              informação nova de verdade — período mínimo e os 7 dias —
-              continuam como bullet. Seguem sendo quatro linhas.
-              ════════════════════════════════════════════════════════════════ */}
-          <div>
-            <p className="text-body font-semibold text-text-primary mb-2">Em quatro linhas</p>
-
-            <div className="rounded-2xl border border-border-hairline bg-surface-card">
-              <div className="flex items-baseline justify-between gap-3 px-4 pt-3.5">
-                <span className="text-caption text-text-secondary">Você paga hoje</span>
-                <span className="shrink-0 text-body font-semibold text-text-primary">
-                  {brl(hoje, true)}
-                </span>
-              </div>
-              <p className="px-4 pb-3.5 text-micro text-text-tertiary">
-                {semTaxaJunta
-                  ? "só a 1ª mensalidade — MEI não paga taxa da Junta. Abrir não tem honorário"
-                  : "só a 1ª mensalidade. Abrir não tem honorário — a taxa da Junta é cobrada depois, quando a viabilidade sair aprovada"}
-              </p>
-
-              <div className="border-t border-border-hairline">
-                <div className="flex items-baseline justify-between gap-3 px-4 pt-3.5">
-                  <span className="text-caption text-text-secondary">Depois, todo mês</span>
-                  <span className="shrink-0 text-body font-semibold text-text-primary">
-                    {brl(mensalidade)}
-                  </span>
-                </div>
-                <p className="px-4 pb-3.5 text-micro text-text-tertiary">
-                  {semTaxaJunta
-                    ? "emitir notas fiscais e gerenciar seu colaborador, certificado digital incluso"
-                    : "sua contabilidade completa. As taxas do governo são sempre à parte"}
-                </p>
-              </div>
-            </div>
-
-            <ul className="mt-2 flex flex-col gap-2">
-              {/* 🟡 O PRAZO DA FIDELIDADE segue em aberto pro plano ME
-                  (Mauro/Larissa). Por decisão do Pedro (29/07) a copy fica
-                  GENÉRICA ali — sem número inventado. 🆕 04/08 — o Plano MEI
-                  JÁ TEM número travado (12 meses, ADR `decisoes-marca.md`):
-                  contrapartida do certificado digital que a gente paga. */}
-              {/* 🔴 28/08 — o texto do MEI dizia "o certificado vem incluso...
-                  em troca, fidelidade de 12 meses". O Pedro decidiu que o MEI
-                  NÃO ganha certificado, então a contrapartida escrita caiu. A
-                  copy abaixo NÃO inventa uma nova: usa a mesma formulação
-                  genérica do ME (permanência mínima), e a justificativa de
-                  verdade fica pendente de decisão (ver `CUSTOS.FIDELIDADE_MESES`
-                  e `execucao/flow/rastreio-mei.md`). */}
-              <Bullet>
-                {semTaxaJunta
-                  ? "Abrir o MEI é gratuito, e o certificado digital fica por sua conta. O plano tem um período mínimo de permanência, descrito no contrato."
-                  : "Como a abertura é gratuita, o plano tem um período mínimo de permanência, descrito no contrato."}
-              </Bullet>
-              {semTaxaJunta && (
-                <Bullet>
-                  O certificado não é obrigatório pra abrir, mas é o que deixa a
-                  gente cuidar do seu dia a dia sem te pedir senha toda hora.
-                </Bullet>
-              )}
-              <Bullet>
-                Nada é irreversível hoje: você tem 7 dias pra mudar de ideia e
-                receber tudo de volta.
-              </Bullet>
-            </ul>
-          </div>
-
-          {/* 🐛 Era `<a href="#">` — âncora morta: sequestra a URL e joga a
-              página pro topo bem no meio do aceite. Mesma classe do "Falar com
-              o time" sem `onClick` pego em 28/07. Agora é botão de verdade,
-              esperando o documento do Mauro/Larissa. */}
-          <button
-            type="button"
-            onClick={onLerContrato}
-            className="flex min-h-12 w-full items-center justify-center rounded-md border
-                       border-border-strong bg-surface-card px-4 text-body font-semibold
-                       text-text-primary transition-colors hover:bg-surface-alt"
-          >
-            Ler o contrato completo
-          </button>
-
-          {/* QUEM ESTÁ DO OUTRO LADO — o instante do aceite é o de maior dúvida
-              sobre COM QUEM se assina. */}
-          <Card tom="marca">
-            <p className="text-body font-semibold text-text-primary mb-3">
-              Você está abrindo com um escritório de verdade
-            </p>
-            <div className="flex flex-col gap-3">
-              <Ponto
-                icone={<IconeEscudo />}
-                titulo="22 anos de estrada"
-                texto="Contabilidade em Belo Horizonte, de antes de existir app pra isso."
-              />
-              <Ponto
-                icone={<IconePessoa />}
-                titulo="Contador com nome e telefone"
-                texto="Quem cuida da sua empresa é uma pessoa, e você fala direto com ela."
-              />
-            </div>
-          </Card>
-
-          {/* CHECKBOX EXPLÍCITO: nunca pré-marcado. */}
-          <Checkbox checked={aceito} onChange={setAceito}>
-            Li e aceito o contrato de serviço da Legalizai.
-          </Checkbox>
-        </Corpo>
-
-        <Rodape>
-          <Button full disabled={!aceito} onClick={onSeguir}>
-            Aceitar e continuar
-          </Button>
-        </Rodape>
-      </main>
-    </>
-  );
-}
-
-function Ponto({ icone, titulo, texto }: { icone: ReactNode; titulo: string; texto: string }) {
-  return (
-    <div className="flex gap-3">
-      <span className="mt-0.5 shrink-0 text-action-primary">{icone}</span>
-      <div>
-        <p className="text-caption font-semibold text-text-primary">{titulo}</p>
-        <p className="text-caption text-text-secondary mt-0.5">{texto}</p>
-      </div>
-    </div>
-  );
-}
-
-function Bullet({ children }: { children: ReactNode }) {
-  return (
-    <li className="flex gap-2.5">
-      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-action-primary" />
-      <span className="text-body text-text-secondary">{children}</span>
-    </li>
-  );
-}
-
-function IconeEscudo() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
-      <path d="m9 12 2 2 4-4" />
-    </svg>
-  );
-}
-function IconePessoa() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
     </svg>
   );
 }
@@ -1775,6 +1619,9 @@ export function PagamentoView({
   semTaxaJunta = false,
   onPagar,
   onVoltar,
+  aceito,
+  setAceito,
+  onLerContrato,
 }: {
   cpf: string;
   setCpf: (v: string) => void;
@@ -1807,6 +1654,16 @@ export function PagamentoView({
   semTaxaJunta?: boolean;
   onPagar?: () => void;
   onVoltar?: () => void;
+  /**
+   * 🔄 30/08 (pedido do Pedro) — igual à Contabilizei: o aceite do contrato
+   * acontece no ATO DO PAGAMENTO, não numa tela própria antes dele. O antigo
+   * E8 (`ContratoView`) foi ELIMINADO do fluxo; o checkbox "Li e aceito" +
+   * "Ler o contrato completo" desceram pra cá. Só aparecem em `fluxo="abertura"`
+   * — o `migrar` continua com seu próprio `MigrarContratoView`, intocado.
+   */
+  aceito?: boolean;
+  setAceito?: (v: boolean) => void;
+  onLerContrato?: () => void;
 }) {
   const migrar = fluxo === "migrar";
   // 🆕 04/08 — Plano MEI tem mensalidade própria (R$49,90) em qualquer fluxo
@@ -1823,7 +1680,7 @@ export function PagamentoView({
 
   return (
     <>
-      <TelaHeader meta="Pagamento" onVoltar={onVoltar} />
+      <TelaHeader meta={migrar ? "Pagamento" : "Pagamento e contrato"} onVoltar={onVoltar} />
       <main className="app-main">
         <Titulo sub={`${brl(total, true)} hoje, e depois ${brl(mensalidade)} por mês.`}>
           Falta só isso
@@ -1907,10 +1764,29 @@ export function PagamentoView({
           <p className="text-micro text-text-tertiary">
             Você paga uma vez só, mesmo que o app feche na hora do pagamento.
           </p>
+
+          {/* 🔄 30/08 (pedido do Pedro) — aceite do contrato, realocado do
+              extinto E8 (`ContratoView`). Só no fluxo de abertura. */}
+          {!migrar && (
+            <>
+              <button
+                type="button"
+                onClick={onLerContrato}
+                className="flex min-h-12 w-full items-center justify-center rounded-md border
+                           border-border-strong bg-surface-card px-4 text-body font-semibold
+                           text-text-primary transition-colors hover:bg-surface-alt"
+              >
+                Ler o contrato completo
+              </button>
+              <Checkbox checked={aceito ?? false} onChange={setAceito ?? (() => {})}>
+                Li e aceito o contrato de serviço da Legalizai.
+              </Checkbox>
+            </>
+          )}
         </Corpo>
 
         <Rodape>
-          <Button full onClick={onPagar}>
+          <Button full disabled={!migrar && !aceito} onClick={onPagar}>
             Pagar {brl(total, true)}
           </Button>
         </Rodape>

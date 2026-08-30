@@ -90,6 +90,8 @@ export default function EntradaPage() {
       // escolher já navega pro E3.1, que é a captura de lead nova.
       onIntencao={(i) => router.push(`/dados?intencao=${i}`)}
       onLogin={() => router.push("/login")}
+      // 🆕 30/08 — fecha o gap do C0_1 (`/retomar`), órfão no mapa até aqui.
+      onRetomar={() => router.push("/retomar")}
       // 🆕 03/08 — UX-63 mesclado (Pedro): card de destaque com coral-600,
       // igual aos outros CTAs. ⚠️ trade-off já registrado: branco sobre
       // coral-600 dá 4,04:1 e o título é 16px bold (abaixo do piso de texto

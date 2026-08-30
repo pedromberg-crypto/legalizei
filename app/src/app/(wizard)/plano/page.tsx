@@ -63,11 +63,15 @@ export default function PlanoPage() {
 
   // 🆕 03/08 — UX-74 mesclado (versão "oferta": card escuro, âncora de
   // honorário). Fonte: /apresentacao. `semTaxaJunta` = MEI, ver /gate.
+  // 🔄 30/08 (pedido do Pedro) — o E8 (`/contrato`) foi ELIMINADO do fluxo:
+  // igual à Contabilizei, o aceite do contrato acontece no ato do pagamento
+  // (`PagamentoView`), não numa tela própria antes dele. Segue direto pra
+  // `/pagamento`.
   return (
     <PlanoView
       onSeguir={() =>
         router.push(
-          comCategoria(comEndereco(comRegime("/contrato", mei), enderecoFiscal), categoria),
+          comCategoria(comEndereco(comRegime("/pagamento", mei), enderecoFiscal), categoria),
         )
       }
       layout="oferta"

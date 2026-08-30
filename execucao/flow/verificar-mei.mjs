@@ -123,8 +123,8 @@ const REVISADOS = {
   "gate-telas.tsx:taxa-junta": { max: 1, nota: "Comentário." },
 
   // ── wizard-dinheiro.tsx (E6 conta · E7 plano · E8 contrato · E9 pagamento)
-  "wizard-dinheiro.tsx:junta": { max: 22, nota: "Todas guardadas por `semTaxaJunta`/`mei`, ou comentário. O subtítulo do E6 virou `subConta(mei)` em 28/08." },
-  "wizard-dinheiro.tsx:taxa-junta": { max: 20, nota: "Guardadas por `semTaxaJunta` — no MEI o card mostra 'Não tem'." },
+  "wizard-dinheiro.tsx:junta": { max: 24, nota: "Todas guardadas por `semTaxaJunta`/`mei`, ou comentário. O subtítulo do E6 virou `subConta(mei)` em 28/08. 30/08: +2 de comentários (não copy nova) explicando a realocação do checkbox/botão de aceite pra logo abaixo da taxa da Junta." },
+  "wizard-dinheiro.tsx:taxa-junta": { max: 21, nota: "Guardadas por `semTaxaJunta` — no MEI o card mostra 'Não tem'. 30/08: +1 de comentário sobre a realocação do checkbox/botão de aceite, mesma linha do item acima." },
   "wizard-dinheiro.tsx:viabilidade": { max: 8, nota: "Guardadas por `semTaxaJunta` no PlanoView/ContratoView, ou comentário." },
   "wizard-dinheiro.tsx:socios": { max: 2, nota: "Comentário." },
   "wizard-dinheiro.tsx:fator-r": { max: 1, nota: "Comentário." },

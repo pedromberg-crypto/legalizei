@@ -247,9 +247,18 @@ test.describe("constituição ME — carry-forward do endereço (E3.4 → C4)", 
 
     // Pula a travessia do dinheiro (mock) e vai direto pro C4, como o flow faz.
     await page.goto("/dossie/empresa");
-    await expect(page.getByPlaceholder("00000-000")).toHaveValue("30140-060");
-    await expect(page.getByPlaceholder("Nº")).toHaveValue("1000");
-    await expect(page.getByPlaceholder("Bloco, sala...")).toHaveValue("Sala 302");
+
+    // 🔄 01/09 (decisão do Pedro) — o endereço que veio do gate aparece
+    // TRAVADO, não editável: redigitar convidaria divergência entre o que foi
+    // pra viabilidade e o que vai pro DBE.
+    await expect(page.getByText("Endereço da empresa, informado no começo")).toBeVisible();
+    await expect(page.getByText(/Rua dos Timbiras, 1000 · Sala 302/)).toBeVisible();
+    await expect(page.getByText("🔒 travado")).toBeVisible();
+    await expect(page.getByPlaceholder("00000-000")).toHaveCount(0);
+    await expect(page.getByPlaceholder("Bloco, sala...")).toHaveCount(0);
+
+    // E o upsell do endereço fiscal não existe mais nesta tela.
+    await expect(page.getByText(/Quero um endereço fiscal da Legalizai/)).toHaveCount(0);
 
     // 🆕 01/09 — a resposta sobre o imóvel também atravessa, e vira CONFIRMAÇÃO
     // read-only: quem já respondeu não responde de novo depois de pagar.
@@ -351,32 +360,41 @@ test.describe("constituição ME — gates de rota e ordem", () => {
 });
 
 test.describe("constituição ME — aprovação A1→A5", () => {
-  test("A1 · recap read-only com o que foi coletado, e segue pro termo", async ({ page }) => {
+  test("A1 · recap + aceite na MESMA tela, com o CTA travado até marcar", async ({ page }) => {
     await page.goto("/revisar");
     // Os 3 blocos do recap: quem é, qual empresa, o que ela faz.
     await expect(page.getByText("Você", { exact: true })).toBeVisible();
     await expect(page.getByText("Nome", { exact: true }).first()).toBeVisible();
     await expect(page.getByText("CPF", { exact: true }).first()).toBeVisible();
-    await expect(page.getByText("Endereço", { exact: true }).first()).toBeVisible();
 
-    await page.getByRole("button", { name: "Confirmar e seguir" }).click();
-    await expect(page).toHaveURL(/\/termo/);
-  });
-
-  test("A2 · o aceite é o gate do irreversível", async ({ page }) => {
-    await page.goto("/termo");
+    // 🆕 01/09 — o aceite que era a tela A2 inteira vive aqui, no fim.
     const cta = page.getByRole("button", { name: "Autorizo, pode abrir" });
-
-    // Gate: sem marcar o checkbox, não autoriza.
     await expect(cta).toBeDisabled();
-    // A copy precisa dizer as 2 coisas que tornam o passo irreversível.
-    await expect(page.getByText(/não pode ser desfeita/)).toBeVisible();
-    await expect(page.getByText(/não é reembolsável/).first()).toBeVisible();
-
     await page.getByText(/Autorizo o início da abertura/).click();
     await expect(cta).toBeEnabled();
+
     await cta.click();
     await expect(page).toHaveURL(/\/aguardando\?fase=junta/);
+  });
+
+  test("A1 · 'não é reembolsável' abre popup e NÃO marca o aceite sem querer", async ({ page }) => {
+    await page.goto("/revisar");
+    const cta = page.getByRole("button", { name: "Autorizo, pode abrir" });
+
+    await page.getByRole("button", { name: "não é reembolsável" }).click();
+    await expect(page.getByRole("dialog")).toBeVisible();
+    await expect(page.getByText("Por que a taxa da Junta não volta")).toBeVisible();
+    // O link vive DENTRO do label do checkbox: clicar nele não pode autorizar.
+    await expect(cta).toBeDisabled();
+
+    await page.getByRole("button", { name: "Entendi" }).click();
+    await expect(page.getByRole("dialog")).toHaveCount(0);
+    await expect(cta).toBeDisabled();
+  });
+
+  test("A2 · a tela do termo não existe mais", async ({ page }) => {
+    const resposta = await page.goto("/termo");
+    expect(resposta?.status()).toBe(404);
   });
 
   test("A3 · fusão A3+E9: /painel (ME) redireciona pra tela de status única", async ({ page }) => {
@@ -438,6 +456,58 @@ test.describe("constituição ME — aprovação A1→A5", () => {
     await expect(
       page.getByRole("button", { name: /Enviar convite pro Carlos/ }),
     ).toBeEnabled();
+  });
+});
+
+test.describe("constituição ME — E5 faixa e E6 conta", () => {
+  test("E5 · faixas terminam no teto do ME (R$30 mil/mês), sem '+30k'", async ({ page }) => {
+    await page.goto("/gate?etapa=faixa");
+    for (const faixa of ["Até R$ 5 mil", "R$ 5 a 10 mil", "R$ 10 a 20 mil", "R$ 20 a 30 mil"]) {
+      await expect(page.getByRole("button", { name: faixa })).toBeVisible();
+    }
+    // 🔄 01/09 — a faixa "+ R$ 30 mil" saiu: acima disso é EPP, fora do escopo,
+    // e a gente decidiu não barrar por faturamento (acompanha e propõe depois).
+    await expect(page.getByRole("button", { name: /\+ R\$ 30 mil/ })).toHaveCount(0);
+  });
+
+  test("E5 · o gate do MEI acompanhou a grade nova", async ({ page }) => {
+    await page.goto("/gate?etapa=faixa&regime=mei");
+    // Teto do MEI (R$6.750) cai DENTRO de "R$ 5 a 10 mil": avisa, não bloqueia.
+    await page.getByRole("button", { name: "R$ 5 a 10 mil" }).click();
+    await expect(page.getByText("Fica de olho no teto do MEI")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Continuar" })).toBeEnabled();
+
+    // Faixa acima do teto: bloqueia e oferece o ME, sem beco.
+    await page.getByRole("button", { name: "R$ 20 a 30 mil" }).click();
+    await expect(page.getByText("Com esse faturamento, o MEI não serve")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Continuar como ME" })).toBeVisible();
+  });
+
+  test("E6 · sem login social, e o código tem 8 dígitos", async ({ page }) => {
+    await page.goto("/conta");
+    // 🗑️ 01/09 — Google/Apple saíram: não teremos por enquanto.
+    await expect(page.getByText("Google")).toHaveCount(0);
+    await expect(page.getByText("Apple")).toHaveCount(0);
+    await expect(page.getByText(/ou crie com|ou com e-mail/)).toHaveCount(0);
+
+    // Placeholders do layout "painel", que é o de produção em `/conta`.
+    await page.getByPlaceholder("Nome completo").fill("Ana Beatriz Ramos");
+    await page.getByPlaceholder("CPF").fill("12345678900");
+    await page.getByPlaceholder("Telefone").fill("31988887766");
+    await page.getByPlaceholder("E-mail").fill("ana@email.com");
+    await page.getByPlaceholder("Senha (mín. 8 caracteres)").fill("Legalizai2026");
+    await page.getByPlaceholder("Confirmar senha").fill("Legalizai2026");
+    await page.getByRole("button", { name: "Criar conta e ver plano" }).click();
+
+    // 🔄 01/09 — era 6; agora são 8, e os 4 lugares que citam o número batem.
+    await expect(page.getByText(/código de 8 dígitos/)).toBeVisible();
+    const campo = page.getByPlaceholder("00000000");
+    await expect(campo).toBeVisible();
+    const cta = page.getByRole("button", { name: "Confirmar" });
+    await campo.fill("482913");
+    await expect(cta).toBeDisabled();
+    await campo.fill("48291374");
+    await expect(cta).toBeEnabled();
   });
 });
 

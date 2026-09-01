@@ -5,7 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
 import { Campo, Texto, Select, OpcoesLinha } from "@/components/ui/form";
-import { FISCAL, CUSTOS, brl } from "@/lib/fiscal";
+// 🗑️ 01/09 — `CUSTOS` saiu junto do upsell de endereço fiscal do C4: a única
+// coisa que lia preço aqui era aquele card, e ele deixou de existir.
+import { FISCAL, brl } from "@/lib/fiscal";
 import { FORMAS_ATUACAO } from "@/lib/mei";
 // 🆕 01/09 — mesma máscara do E6, pro CPF do sócio extra (C3).
 import { mascaraCpf } from "@/components/wizard-dinheiro";
@@ -1098,12 +1100,14 @@ export function EmpresaView({
     resideNoEndereco: boolean | null;
   };
 }) {
-  const jaDecidido = enderecoProprio !== undefined;
-  const [usarProprioState, setUsarProprioState] = useState<boolean | null>(
-    jaDecidido ? enderecoProprio : null,
-  );
-  const usarProprio = jaDecidido ? enderecoProprio : usarProprioState;
-  const setUsarProprio = setUsarProprioState;
+  /**
+   * 🔄 01/09 (decisão do Pedro) — não existe mais escolha de endereço AQUI.
+   * Quem escolheu o endereço fiscal da Legalizai nem chega nesta tela (o
+   * `dossie/empresa/page.tsx` redireciona); quem chega tem endereço próprio,
+   * ponto. Sem prop (deep-link, `/mockup`, apresentação), assume próprio —
+   * que é o único caso que esta tela atende.
+   */
+  const usarProprio = enderecoProprio ?? true;
   const [cep, setCep] = useState(inicial?.cep ?? "");
   const [numero, setNumero] = useState(inicial?.numero ?? "");
   const [complemento, setComplemento] = useState(inicial?.complemento ?? "");
@@ -1141,12 +1145,21 @@ export function EmpresaView({
   const respostaImovelVeioDoGate =
     (inicial?.tipoImovel ?? "") !== "" && inicial?.resideNoEndereco !== null;
 
+  /**
+   * 🆕 01/09 — o endereço em si (CEP + número) veio do E3.4? Então ele aparece
+   * TRAVADO aqui: a pessoa já digitou, e redigitar convida divergência entre o
+   * que foi para a viabilidade e o que vai para o DBE.
+   */
+  const enderecoVeioDoGate =
+    (inicial?.cep ?? "").replace(/\D/g, "").length === 8 && (inicial?.numero ?? "") !== "";
+
   // A tela mais pesada da constituição — e por isso a que mais precisa do
   // automático numa apresentação. Preenche o caminho "endereço próprio", que é
   // o que exercita IPTU, tipo de imóvel e residência.
   usePreencher(preencher, () => {
     const p = PREENCHIMENTO.empresa;
-    setUsarProprio(true);
+    // 🔄 01/09 — `setUsarProprio` saiu: não há mais escolha de endereço nesta
+    // tela (quem usa o fiscal não chega aqui).
     setCep(p.cep);
     setNumero(p.numero);
     setComplemento(p.complemento);
@@ -1239,114 +1252,51 @@ export function EmpresaView({
         </Titulo>
 
         <Corpo>
-          {/* 🆕 26/08 (item 2) — se já veio decidido lá do gate, não pergunta
-              de novo: confirmação read-only, mesma doutrina do C3 (sócios). */}
-          {jaDecidido ? (
-            <Card>
-              <div className="flex items-center justify-between gap-3">
+          {/* 🗑️ 01/09 (decisão do Pedro) — O UPSELL DE ENDEREÇO FISCAL SAIU
+              DAQUI, e com ele o card de "já decidido lá atrás".
+
+              A regra ficou binária e sem zona cinzenta: ou a pessoa escolheu o
+              endereço fiscal da Legalizai lá no E3.4 (e aí **esta tela não
+              existe pra ela**, ver o redirect em `dossie/empresa/page.tsx`), ou
+              ela informou um endereço próprio — e aqui a gente só TERMINA de
+              coletar o que faltou. Oferecer o endereço fiscal neste ponto seria
+              vender depois do pagamento uma coisa que muda a mensalidade, o
+              oposto da doutrina de "honestidade antes do toque".
+
+              O que veio do gate (CEP, número, complemento) aparece TRAVADO: é
+              confirmação, não recoleta. O que falta continua editável. */}
+          {enderecoVeioDoGate && (
+            <div className="rounded-md border border-border-hairline bg-surface-alt p-3">
+              <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="text-micro text-text-tertiary">Endereço comercial</p>
-                  <p className="text-caption font-semibold text-text-primary">
-                    {usarProprio
-                      ? "Você vai usar um endereço seu"
-                      : "Você escolheu o endereço fiscal da Legalizai"}
+                  <p className="text-micro text-text-tertiary">
+                    Endereço da empresa, informado no começo
+                  </p>
+                  {endereco && (
+                    <p className="text-caption font-semibold text-text-primary mt-0.5">
+                      {endereco.logradouro}, {numero}
+                      {complemento ? ` · ${complemento}` : ""}
+                    </p>
+                  )}
+                  <p className="text-caption text-text-secondary">
+                    {endereco ? `${endereco.bairro} — ` : ""}
+                    {cep}
                   </p>
                 </div>
-                <span className="shrink-0 text-caption font-semibold text-action-primary-sm underline underline-offset-4">
-                  Já decidido lá atrás
+                {/* Um cadeado explícito vale mais que campo cinza: cinza a
+                    pessoa tenta clicar, cadeado ela entende de primeira. */}
+                <span className="shrink-0 text-micro font-semibold text-text-tertiary">
+                  🔒 travado
                 </span>
               </div>
-            </Card>
-          ) : (
-            /* Fallback (esta tela chamada sem o carry-forward do gate) —
-                mesmo picker de antes. Upsell: oferece, não obriga. */
-            <Campo rotulo="Você tem um endereço comercial pra usar?">
-              <div className="flex flex-col gap-2">
-                <button
-                  onClick={() => setUsarProprio(true)}
-                  className={`min-h-12 rounded-md border px-4 text-left text-body font-semibold transition-colors
-                    ${
-                      usarProprio === true
-                        ? "border-action-primary bg-action-primary text-text-on-brand"
-                        : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
-                    }`}
-                >
-                  Uso um endereço meu
-                </button>
-                {/* Card rico: quando selecionado vira coral sólido igual aos
-                    botões simples, então o texto interno inverte junto — senão o
-                    cinza-secundário sumiria dentro do coral. */}
-                <button
-                  onClick={() => setUsarProprio(false)}
-                  className={`rounded-md border p-4 text-left transition-colors
-                    ${
-                      usarProprio === false
-                        ? "border-action-primary bg-action-primary"
-                        : "border-border-strong bg-surface-card hover:border-border-focus"
-                    }`}
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <span
-                      className={`text-body font-semibold ${
-                        usarProprio === false ? "text-text-on-brand" : "text-text-primary"
-                      }`}
-                    >
-                      Quero um endereço fiscal da Legalizai
-                    </span>
-                    <span className="shrink-0 rounded-full bg-surface-dark px-2.5 py-1 text-micro font-semibold text-text-on-dark">
-                      R$ 60/mês
-                    </span>
-                  </div>
-                  <p
-                    className={`text-caption mt-1.5 ${
-                      usarProprio === false ? "text-text-on-brand/80" : "text-text-secondary"
-                    }`}
-                  >
-                    Um endereço comercial pronto pra receber a empresa, sem usar o
-                    seu. A gente cuida da regularização.
-                  </p>
-                </button>
-              </div>
-              {/* 🕓 29/07 — o chip mostrava "R$ 60/mês" sem marcação nenhuma, e o
-                  doc afirmava "Marcado na UI". Não estava. */}
-              {usarProprio === false && (
-                <p className="text-micro text-text-tertiary mt-2">
-                  Valor de referência enquanto fechamos o preço final.
-                </p>
-              )}
-            </Campo>
+            </div>
           )}
-
-          {/* 🆕 24/08 (reunião Rua Satélite 35) — confirmação explícita de
-              cobrança RECORRENTE, não só "fechado, entra no plano". A pessoa
-              precisa ver o valor total mensal antes de continuar, porque essa
-              cobrança se repete todo mês (Tiagão, R35: "se ele chegar, clicar
-              aí, só apertar continuar, vai cobrar sem avisar, sem nada, ele
-              não vai entender nada").
-              🆕 26/08 (item 2) — quando já veio decidido do gate, o valor JÁ
-              apareceu somado lá no /plano (checkout) — repetir o aviso
-              inteiro aqui seria eco. Fica só uma linha leve de lembrete. */}
-          {querFiscal && jaDecidido && (
-            <p className="text-micro text-text-tertiary">
-              Endereço fiscal já incluído na sua mensalidade, como combinado
-              no checkout.
-            </p>
-          )}
-          {querFiscal && !jaDecidido && (
-            <Aviso variante="warning" titulo="Essa cobrança é mensal, recorrente">
-              O endereço fiscal entra na sua fatura TODO mês, não é cobrança
-              única. Com essa escolha, seu plano passa de{" "}
-              {brl(mei ? CUSTOS.MENSALIDADE_MEI : CUSTOS.MENSALIDADE, true)} para{" "}
-              <strong>
-                {brl((mei ? CUSTOS.MENSALIDADE_MEI : CUSTOS.MENSALIDADE) + CUSTOS.ENDERECO_FISCAL, true)}
-                /mês
-              </strong>
-              .
-            </Aviso>
-          )}
-
           {usarProprio === true && (
             <>
+              {/* 🔄 01/09 — os campos de endereço só aparecem quando NÃO vieram
+                  do gate. Vindo de lá, o card travado acima já mostra tudo. */}
+              {!enderecoVeioDoGate && (
+                <>
               <Campo
                 rotulo="CEP da empresa"
                 dica="A gente puxa o resto do endereço, você só completa."
@@ -1386,6 +1336,8 @@ export function EmpresaView({
                       />
                     </Campo>
                   </div>
+                </>
+              )}
                 </>
               )}
 

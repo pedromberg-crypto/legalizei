@@ -121,11 +121,20 @@ export const CUSTOS = {
   CERTIFICADO_PRECO: 209,
 } as const;
 
+/**
+ * Ponto médio de cada faixa, usado quando a pessoa não deu o valor exato.
+ *
+ * 🔄 01/09 — reescrito junto com o redesenho das faixas (`FAIXAS` em
+ * `gate-telas.tsx`), que passou a terminar no teto real do ME (R$30 mil/mês).
+ * ⚠️ As CHAVES precisam bater com os ids de `FAIXAS`: uma chave órfã aqui não
+ * quebra build nem teste, só devolve `undefined` e faz o cálculo de pró-labore
+ * sair errado em silêncio. Mexeu numa lista, confere a outra.
+ */
 export const FAIXA_MEDIA: Record<string, number> = {
-  "ate 10k": 7000,
+  "ate 5k": 3500,
+  "5-10k": 7500,
   "10-20k": 15000,
   "20-30k": 25000,
-  "30k+": 40000,
 };
 
 /** Pró-labore ótimo mira a MARGEM (30%), não o limiar (28%) — UX-39. */

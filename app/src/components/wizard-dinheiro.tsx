@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
 import { Campo, Texto, Checkbox } from "@/components/ui/form";
-import { IconeApple, IconeGoogle } from "@/components/marcas-sociais";
+// 🗑️ 01/09 — ícones Google/Apple saíram junto do login social.
 import { Logo } from "@/components/logo";
 import { CUSTOS, brl } from "@/lib/fiscal";
 
@@ -86,6 +86,16 @@ export type DadosConta = {
   coorte: "primeira" | "ja-abri" | null;
   codigo: string;
 };
+
+/**
+ * 🔄 01/09 (pedido do Pedro) — o código de verificação do E6 passou de 6 pra
+ * **8 dígitos**. Fica numa constante porque o número aparece em 4 lugares
+ * (copy do subtítulo, máscara do input, placeholder e a trava do CTA) e, em
+ * 6 dígitos, esses 4 já tinham vivido desalinhados: mudar num lugar só deixa
+ * um campo que aceita mais do que o botão libera, e a pessoa fica travada sem
+ * entender por quê.
+ */
+const DIGITOS_CODIGO = 8;
 
 /**
  * 🆕 28/08 — subtítulo do E6 por regime. "a gente já adianta o que precisa pra
@@ -178,7 +188,7 @@ export function ContaView({
           <Titulo
             sub={
               <>
-                Mandamos um código de 6 dígitos pro{" "}
+                Mandamos um código de 8 dígitos pro{" "}
                 <strong className="font-bold text-action-primary-sm">
                   {d.email || "seu e-mail"}
                 </strong>{" "}
@@ -196,8 +206,8 @@ export function ContaView({
             <Campo rotulo="Código de verificação">
               <Texto
                 valor={d.codigo}
-                onChange={(v) => set("codigo", v.replace(/\D/g, "").slice(0, 6))}
-                placeholder="000000"
+                onChange={(v) => set("codigo", v.replace(/\D/g, "").slice(0, DIGITOS_CODIGO))}
+                placeholder="00000000"
                 inputMode="numeric"
               />
             </Campo>
@@ -220,7 +230,7 @@ export function ContaView({
             )}
           </Corpo>
           <Rodape>
-            <Button full disabled={d.codigo.length !== 6} onClick={onConfirmar}>
+            <Button full disabled={d.codigo.length !== DIGITOS_CODIGO} onClick={onConfirmar}>
               Confirmar
             </Button>
           </Rodape>
@@ -238,25 +248,10 @@ export function ContaView({
         </Titulo>
 
         <Corpo>
-          {/* Social primeiro: caminho de menos atrito, e quem tem Google não
-              precisa inventar mais uma senha. */}
-          <div className="flex flex-col gap-2">
-            <Button variant="secondary" full>
-              <IconeGoogle />
-              Continuar com o Google
-            </Button>
-            <Button variant="secondary" full>
-              <IconeApple />
-              Continuar com a Apple
-            </Button>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <span className="h-px flex-1 bg-border-hairline" />
-            <span className="text-micro text-text-tertiary">ou com e-mail</span>
-            <span className="h-px flex-1 bg-border-hairline" />
-          </div>
-
+          {/* 🗑️ 01/09 (decisão do Pedro) — LOGIN SOCIAL (Google/Apple) SAIU.
+              Não teremos por enquanto: manter os botões prometia um caminho
+              que não existe, e o pior tipo de fricção é o botão que decepciona
+              quem clica. Volta quando a integração existir de verdade. */}
           <Campo rotulo="Nome completo">
             <Texto
               valor={d.nome}
@@ -377,21 +372,15 @@ function ContaPainel({
    * falta**: CPF, telefone e endereço, que nenhum provedor fornece.
    * `null` = ainda não conectou (cadastro por e-mail).
    */
-  const [social, setSocial] = useState<"google" | "apple" | null>(null);
+  // 🗑️ 01/09 — sem botões sociais, `social` é sempre null; fica como const
+  // pra não espalhar `false` nas 3 condições que ainda leem esse estado.
+  const social: "google" | "apple" | null = null;
   // 🆕 28/08 (sugestão minha, pedido do Pedro) — mostrar/ocultar senha. Campo
   // de senha cego numa tela sem confirmação (não tem "repita a senha") é onde
   // esse toggle mais compensa: erro de digitação só aparece no próximo login.
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
-  function conectar(provedor: "google" | "apple") {
-    setSocial(provedor);
-    // 🚧 Mock do retorno do provedor. No real vem do OAuth.
-    set("nome", "Ana Beatriz Ramos");
-    set("email", provedor === "apple" ? "ana.b@privaterelay.appleid.com" : "ana.beatriz@gmail.com");
-    // Senha não existe em conta social: satisfaz a regra sem pedir nada.
-    set("senha", "__social__");
-    set("confirmarSenha", "__social__");
-  }
+  // 🗑️ 01/09 — `conectar()` removida junto dos botões sociais.
 
   const nomeOk = d.nome.trim().split(/\s+/).length >= 2;
   const cpfCheio = d.cpf.replace(/\D/g, "").length === 11;
@@ -454,32 +443,9 @@ function ContaPainel({
           </p>
         </div>
 
-        {/* 🔓 UX-72 — conectado por Google/Apple: nome e e-mail vêm do provedor,
-            então em vez de repetir os campos a tela CONFIRMA quem entrou e pede
-            só o que falta. */}
-        {social && (
-          <div className="mb-4 flex items-center gap-3 rounded-lg border border-border-hairline bg-surface-card p-3">
-            <span className="shrink-0">
-              {social === "google" ? <IconeGoogle /> : <IconeApple />}
-            </span>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-caption font-semibold text-text-primary">{d.nome}</p>
-              <p className="truncate text-micro text-text-tertiary">{d.email}</p>
-            </div>
-            <button
-              onClick={() => {
-                setSocial(null);
-                set("nome", "");
-                set("email", "");
-                set("senha", "");
-                set("confirmarSenha", "");
-              }}
-              className="shrink-0 text-micro font-semibold text-text-secondary underline underline-offset-4"
-            >
-              Trocar
-            </button>
-          </div>
-        )}
+        {/* 🗑️ 01/09 — o card "conectado por Google/Apple" saiu junto do login
+            social: sem os botões, `social` nunca vira diferente de null e este
+            bloco era inalcançável. Recuperável no git quando o OAuth existir. */}
 
         {/* 🆕 27/08 — RECAP do que já veio do E3.1/E3.3, read-only. Sem isso a
             tela pareceria ter "esquecido" o que a pessoa acabou de digitar 4
@@ -635,27 +601,12 @@ function ContaPainel({
             processo dele"). A antiga nota UX-73 (coorte obrigatória, contra
             UX-48) fica sem efeito: a pergunta nem mora mais aqui. */}
 
-        {/* Social só faz sentido antes de conectar. */}
-        {!social && (
-          <>
-            <div className="my-6 flex items-center gap-3">
-              <span className="h-px flex-1 bg-border-hairline" />
-              <span className="text-micro text-text-tertiary">ou crie com</span>
-              <span className="h-px flex-1 bg-border-hairline" />
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <Button variant="secondary" onClick={() => conectar("google")}>
-                <IconeGoogle />
-                Google
-              </Button>
-              <Button variant="secondary" onClick={() => conectar("apple")}>
-                <IconeApple />
-                Apple
-              </Button>
-            </div>
-          </>
-        )}
+        {/* 🗑️ 01/09 (decisão do Pedro) — o bloco "ou crie com" (Google/Apple)
+            SAIU deste layout também. A maquinaria de conta social (`social`,
+            `conectar`) fica no componente: ela é o que faz a senha deixar de
+            ser exigida, e vai ser reusada quando a integração existir. Sem
+            botão, nenhum caminho leva até ela — é código dormindo, não código
+            morto. */}
 
         {/* 🆕 28/08 (sugestão minha, pedido do Pedro) — consentimento LGPD.
             Mesma linha do E3.1 (`entrada-lead.tsx`), que existia lá porque

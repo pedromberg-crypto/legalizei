@@ -39,7 +39,7 @@ E3.1 dados → E3.2 MEI×ME → E3.4 endereço+categoria (2 gates)
    → [E9.S pago | E9.SB boleto] → status
    → C0 atividade → C5 secundários → C1 seus dados → C2 INSS
    → C3 sócios → C4 dados da empresa* → C7 nome
-   → A1 revisar → A2 termo → A3 status (Junta) → A4 assinatura → A5 dia-1
+   → A1 revisar + autorizar → A3 status (Junta) → A4 assinatura → A5 dia-1
 ```
 
 `*` **C4 não existe** pra quem escolheu o endereço fiscal da Legalizai (vai de C3 direto pro C7). Ver §4.2.
@@ -123,6 +123,29 @@ Entrou em 26/08 com a justificativa "a procuração exige certificado já valida
 | 🔄 Tipo de unidade | "Sede" → "Produtiva" |
 | 🔄 Taxa da Junta | R$268,51 → **R$281,08** |
 | 🔄 Regime de bens | 4 opções no app; a Junta tem 5. "Separação total" mapeia pra **"Separação Convencional de Bens"**. Separação Obrigatória não é oferecida (decisão do Pedro) |
+
+### 4.7 Segunda rodada de 01/09 (telas, depois do Playwright)
+
+| Mudança | Detalhe pro dev |
+|---|---|
+| **A2 eliminada** | A rota `/termo` não existe mais. O aceite irreversível é o último bloco do A1 (`/revisar`) e trava o CTA "Autorizo, pode abrir"; o detalhe do não-reembolso abre num bottom-sheet. A1 vai direto pro status da Junta. |
+| **C4 sem upsell** | Nenhuma oferta de endereço fiscal nesta tela. Quem tem endereço próprio vê CEP/número/complemento **read-only** (vindos do E3.4) + IPTU e tipo de endereço editáveis. Quem usa o nosso endereço não chega aqui. |
+| **Faixas do E5** | ids novos: `ate 5k`, `5-10k`, `10-20k`, `20-30k` (o `30k+` sumiu). `FAIXAS` agora carrega `min`/`max` e é a fonte de `faixaDoValor`, do gate do MEI e de `FAIXA_MEDIA` (`lib/fiscal.ts`) — as chaves das duas listas precisam bater. |
+| **E6** | Sem OAuth: os botões Google/Apple e a máquina de conta social saíram. Código de verificação com **8 dígitos** (`DIGITOS_CODIGO` em `wizard-dinheiro.tsx`). |
+
+### 4.8 Aceites do fluxo (auditoria 01/09)
+
+São 5 hoje, e cada um existe por um motivo diferente:
+
+| Onde | Texto | Necessário? |
+|---|---|---|
+| E9 · pagamento (abrir) | "Li e aceito o contrato de serviço da Legalizai." | ✅ contrato de adesão: sustenta cobrança, fidelidade e a cláusula de não-reembolso |
+| A1 · revisar (abrir) | "Autorizo o início da abertura…" | ✅ autorização do ato irreversível — é outro ato: um contrata, o outro manda protocolar |
+| E4.5 · contrato (migrar) | "Li e aceito o contrato de serviço da Legalizai." | ✅ é o equivalente do E9 no ramo migrar (lá o pagamento não repete o aceite) |
+| MEI · benefício | "Entendi que abrir MEI encerra esse benefício…" | ✅ ciência de consequência grave e específica (BPC/bolsa), que o contrato não cobre |
+| MEI · nível gov.br | "Minha conta gov.br já é Prata ou Ouro" | 🟡 **discutível**: é autodeclaração operacional, não aceite jurídico — e é verificável. Candidato a virar pergunta/checagem |
+
+O E3.1 traz o consentimento LGPD em 1 linha com link, **sem checkbox**, de propósito: bloquear captura de lead com aceite formal mataria o topo do funil, e o aceite contratual vem depois, no E9.
 
 ## 5. Decisões que o dev precisa respeitar
 

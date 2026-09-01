@@ -160,11 +160,14 @@ export const PASSOS_CLIENTE: Passo[] = [
     tela: "C7",
     descricao: "3 opções de nome, sugeridas por IA. Leva cerca de 2 minutos.",
   },
-  // N19+N20 num passo só: pro cliente é um ato (conferir e autorizar). São
-  // duas telas por razão jurídica (o racha do T18), não por razão de tarefa.
+  // N19+N20 num passo só: pro cliente é um ato (conferir e autorizar). Eram
+  // duas telas por razão jurídica (o racha do T18).
+  // 🔄 01/09 — agora é uma tela só de verdade: a A2 (`/termo`) foi eliminada e
+  // o aceite virou o último bloco do A1. O passo já era único pro cliente,
+  // então a contagem não muda — só a referência interna.
   {
     nome: "Revisar e confirmar",
-    tela: "A1+A2",
+    tela: "A1",
     travaSemPagamento: true,
     descricao: "Confere tudo e autoriza a abertura. Leva cerca de 2 minutos.",
   },

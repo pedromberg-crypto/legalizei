@@ -104,11 +104,31 @@ const RITMO = {
   apaga: 20, // ms por caractere apagado (ninguém lê apagando; some rápido)
 };
 
+/**
+ * 🔄 01/09 (pedido do Pedro) — AS FAIXAS FORAM REDESENHADAS PRO TETO DO ME.
+ *
+ * A grade antiga (até 10k · 10-20k · 20-30k · **+30k**) tinha um problema de
+ * premissa: a última faixa oferecia justamente o que a Legalizai não atende
+ * hoje. O limite do ME é **R$360.000/ano = R$30.000/mês** (LC 123 art. 3º II);
+ * acima disso a empresa é EPP, que está fora do escopo. Deixar "+ R$ 30 mil"
+ * como opção era convidar alguém a se declarar fora do produto no meio do
+ * funil — e a gente decidiu em 01/09 NÃO barrar por faturamento (a ideia é
+ * acompanhar o crescimento e propor o desenquadramento depois), então a
+ * pergunta não pode ter uma resposta que não leva a lugar nenhum.
+ *
+ * A grade nova cobre a faixa REAL do ME e termina exatamente no teto. Quem
+ * fatura mais que isso usa "Sei o valor exato", que aceita qualquer número —
+ * ninguém fica sem resposta possível.
+ *
+ * `min`/`max` (em R$/mês) não são decoração: é com eles que o gate de teto do
+ * MEI se calcula sozinho, em vez de comparar id de faixa na mão — se a grade
+ * mudar de novo, o gate acompanha.
+ */
 export const FAIXAS = [
-  { id: "ate 10k", label: "Até R$ 10 mil" },
-  { id: "10-20k", label: "R$ 10 a 20 mil" },
-  { id: "20-30k", label: "R$ 20 a 30 mil" },
-  { id: "30k+", label: "+ R$ 30 mil" },
+  { id: "ate 5k", label: "Até R$ 5 mil", min: 0, max: 5000 },
+  { id: "5-10k", label: "R$ 5 a 10 mil", min: 5000, max: 10000 },
+  { id: "10-20k", label: "R$ 10 a 20 mil", min: 10000, max: 20000 },
+  { id: "20-30k", label: "R$ 20 a 30 mil", min: 20000, max: 30000 },
 ];
 
 /* ─── 🆕 29/08 (pedido do Pedro) — grade de cartões ilustrados pra Faixa de
@@ -758,13 +778,19 @@ export function TriagemView({
        resto do flow continua recebendo o mesmo dado de sempre.
    ───────────────────────────────────────────────────────────────────────── */
 
-/** Deriva a faixa a partir do valor exato: quem sabe o número não repete a escolha. */
+/**
+ * Deriva a faixa a partir do valor exato: quem sabe o número não repete a
+ * escolha. Sai direto do `FAIXAS`, então acompanha qualquer redesenho da grade.
+ *
+ * 🔄 01/09 — quem digita ACIMA do teto do ME (R$30 mil/mês) cai na última
+ * faixa, não em `null`: não existe mais a opção "+30k" e a gente decidiu não
+ * barrar por faturamento. O dado exato fica registrado, e é ele que vai
+ * alimentar a vigília de desenquadramento pra EPP quando ela existir.
+ */
 export function faixaDoValor(v: number): string | null {
   if (v <= 0) return null;
-  if (v < 10000) return "ate 10k";
-  if (v < 20000) return "10-20k";
-  if (v <= 30000) return "20-30k";
-  return "30k+";
+  const faixa = FAIXAS.find((f) => v > f.min && v <= f.max);
+  return faixa ? faixa.id : FAIXAS[FAIXAS.length - 1].id;
 }
 
 export function FaixaView({
@@ -833,12 +859,20 @@ export function FaixaView({
   //   · faixa acima de "até R$10 mil" → estoura em qualquer ponto dela.
   //   · faixa "até R$10 mil" → PODE estourar (R$6.750 cai dentro dela). Não dá
   //     pra bloquear sem saber, então vira aviso, não porta fechada.
+  // 🔄 01/09 — calculado a partir do `min`/`max` da faixa, não de um id fixo:
+  // a grade mudou (teto do ME) e o gate do MEI passou a acompanhar sozinho.
+  // Com a grade atual, o teto do MEI (R$6.750) cai dentro de "R$ 5 a 10 mil".
+  const faixaEscolhida = FAIXAS.find((f) => f.id === escolhida);
   const estouraTeto =
     regimeMei &&
     (valor > TETO_MEI_MENSAL ||
-      (valor === 0 && escolhida !== null && escolhida !== "ate 10k"));
+      (valor === 0 && !!faixaEscolhida && faixaEscolhida.min >= TETO_MEI_MENSAL));
   const tetoIncerto =
-    regimeMei && !estouraTeto && valor === 0 && escolhida === "ate 10k";
+    regimeMei &&
+    !estouraTeto &&
+    valor === 0 &&
+    !!faixaEscolhida &&
+    faixaEscolhida.max > TETO_MEI_MENSAL;
 
   return (
     <>
@@ -1035,10 +1069,13 @@ export function elegivelParaMei(
   if (socios !== 1) return false;
   const valor = Number(exato.replace(/\D/g, "")) || 0;
   if (modoExato && valor > 0) return valor <= FISCAL.MEI_TETO_MENSAL;
-  // Sem valor exato: só a faixa "até 10 mil" é compatível com o teto de
-  // R$6.750/mês — as demais já excedem. Ambíguo dentro da própria faixa
-  // (pode estar acima ou abaixo do teto); a tela deixa a pessoa decidir.
-  return faixa === "ate 10k";
+  // Sem valor exato: compatível com o MEI é qualquer faixa que COMECE abaixo
+  // do teto (R$6.750/mês) — dentro dela pode estar acima ou abaixo, e a tela
+  // deixa a pessoa decidir (o aviso `tetoIncerto`).
+  // 🔄 01/09 — era `faixa === "ate 10k"` fixo; com a grade nova (que termina
+  // no teto do ME) as faixas compatíveis são "até 5 mil" e "5 a 10 mil".
+  const f = FAIXAS.find((x) => x.id === faixa);
+  return !!f && f.min < FISCAL.MEI_TETO_MENSAL;
 }
 
 /**

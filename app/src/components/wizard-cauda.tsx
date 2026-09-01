@@ -86,9 +86,31 @@ export function RevisarView({
   onSeguir,
   onVoltar,
   mei = false,
+  aceito: aceitoProp,
+  setAceito: setAceitoProp,
 }: {
   onSeguir?: () => void;
   onVoltar?: () => void;
+  /**
+   * 🆕 01/09 (decisão do Pedro) — o aceite irreversível, que era a tela A2
+   * inteira (`/termo`), virou o ÚLTIMO bloco desta tela.
+   *
+   * ─── POR QUE A A2 DEIXOU DE EXISTIR ────────────────────────────────────
+   * A tela inteira existia pra dizer uma coisa só: a taxa da Junta não volta
+   * depois que a gente registra. Isso já está no contrato aceito no pagamento
+   * (E9) — aqui é REFORÇO, e reforço não merece uma tela própria depois de a
+   * pessoa já ter atravessado 9 passos de dossiê. O texto miúdo que explicava
+   * o não-reembolso virou link ("não é reembolsável") que abre um popup pra
+   * quem quiser ler: quem já entendeu segue, quem quer detalhe tem onde ler.
+   *
+   * O aceite continua sendo EXPRESSO e continua travando o CTA — a garantia
+   * jurídica não mudou de lugar, só a moldura.
+   *
+   * Estado controlado (opcional): a página passa `aceito`/`setAceito` quando
+   * quer guardar a resposta; sem props, a tela controla sozinha.
+   */
+  aceito?: boolean;
+  setAceito?: (v: boolean) => void;
   /** 🆕 03/08 — MEI: some capital social (não existe), a taxa da Junta
    *  (não passa por lá) e o enquadramento Simples/Anexo (MEI é DAS fixo, não
    *  Anexo/Fator R). 🔴 valor exato do DAS-MEI 2026 NÃO está ratificado no
@@ -96,6 +118,10 @@ export function RevisarView({
   mei?: boolean;
 }) {
   const d = useRevisao();
+  const [aceitoLocal, setAceitoLocal] = useState(false);
+  const aceito = aceitoProp ?? aceitoLocal;
+  const setAceito = setAceitoProp ?? setAceitoLocal;
+  const [popupAberto, setPopupAberto] = useState(false);
   return (
     <>
       <TelaHeader meta="Revisar" onVoltar={onVoltar} />
@@ -209,13 +235,31 @@ export function RevisarView({
               </p>
             </Card>
           )}
+
+          {/* 🆕 01/09 — o aceite que era a tela A2 inteira. Fica no FIM, depois
+              de todo o recap: autorizar é a última coisa que se faz, e agora
+              acontece na mesma tela em que se confere. */}
+          {mei ? (
+            <Checkbox checked={aceito} onChange={setAceito}>
+              Autorizo a Legalizai a preparar minha abertura, e entendo que o
+              registro final é feito por mim no Portal do Empreendedor.
+            </Checkbox>
+          ) : (
+            <AceiteIrreversivel
+              aceito={aceito}
+              setAceito={setAceito}
+              onAbrirDetalhe={() => setPopupAberto(true)}
+            />
+          )}
         </Corpo>
 
         <Rodape>
-          <Button full onClick={onSeguir}>
-            Confirmar e seguir
+          <Button full disabled={!aceito} onClick={onSeguir}>
+            Autorizo, pode abrir
           </Button>
         </Rodape>
+
+        {popupAberto && <SheetNaoReembolsavel onFechar={() => setPopupAberto(false)} />}
       </main>
     </>
   );
@@ -257,6 +301,164 @@ function Linha({ rotulo, valor }: { rotulo: string; valor: string }) {
 
 /* ═══════════════════ N20 · TERMO DE INÍCIO (IRREVERSÍVEL) ═══════════════ */
 
+/**
+ * 🆕 01/09 — o aceite irreversível do ME, com "não é reembolsável" clicável.
+ *
+ * ⚠️ POR QUE NÃO USA O `Checkbox` DO DS AQUI. A 1ª versão colocou o link
+ * DENTRO do `<label>` do componente padrão, e quebrou duas coisas de verdade
+ * (não só no teste): o Chrome poda o botão da árvore de acessibilidade quando
+ * ele vira parte do nome acessível do checkbox (leitor de tela nunca alcança o
+ * link), e o próprio toggle parava de responder ao clique no rótulo.
+ *
+ * Aqui o `<input>` é irmão do texto, o rótulo clicável é `<label htmlFor>` e o
+ * link fica FORA dele. Resultado: clicar no texto marca o aceite, clicar no
+ * link abre o detalhe, e os dois existem pra quem navega por teclado/leitor.
+ * A moldura visual é a mesma do DS (mesmo card, mesma caixa coral).
+ */
+function AceiteIrreversivel({
+  aceito,
+  setAceito,
+  onAbrirDetalhe,
+}: {
+  aceito: boolean;
+  setAceito: (v: boolean) => void;
+  onAbrirDetalhe: () => void;
+}) {
+  return (
+    <div className="flex items-start gap-3 rounded-md border border-border-hairline bg-surface-card p-3">
+      <input
+        id="aceite-irreversivel"
+        type="checkbox"
+        checked={aceito}
+        onChange={(e) => setAceito(e.target.checked)}
+        className="sr-only"
+      />
+      <label
+        htmlFor="aceite-irreversivel"
+        aria-hidden
+        className={`mt-0.5 flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center rounded border-2 transition-colors ${
+          aceito
+            ? "border-action-primary bg-action-primary"
+            : "border-border-strong bg-surface-card"
+        }`}
+      >
+        {aceito && (
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M4 12.5 9.5 18 20 6"
+              stroke="#fff"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        )}
+      </label>
+      <p className="text-caption text-text-secondary">
+        <label htmlFor="aceite-irreversivel" className="cursor-pointer">
+          Autorizo o início da abertura, ciente de que ela não pode ser desfeita
+          e de que a taxa da Junta já paga{" "}
+        </label>
+        <button
+          type="button"
+          onClick={onAbrirDetalhe}
+          className="font-semibold text-action-primary-sm underline underline-offset-4"
+        >
+          não é reembolsável
+        </button>
+        .
+      </p>
+    </div>
+  );
+}
+
+/**
+ * 🆕 01/09 — o detalhe que morava na tela A2, agora sob demanda.
+ *
+ * Mesmo bottom-sheet do DS (`EnviarSheet`): overlay que escurece, folha que
+ * sobe, fecha no toque fora ou no botão. Só o conteúdo muda — quem quiser
+ * entender o não-reembolso lê aqui, sem custar uma tela a mais pra quem já
+ * entendeu.
+ */
+function SheetNaoReembolsavel({ onFechar }: { onFechar: () => void }) {
+  const [entrou, setEntrou] = useState(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setEntrou(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  const sair = () => {
+    setEntrou(false);
+    window.setTimeout(onFechar, 240);
+  };
+
+  return (
+    <div className="absolute inset-0 z-[60]">
+      <button
+        type="button"
+        aria-label="Fechar"
+        onClick={sair}
+        className={`absolute inset-0 bg-[#10151b] transition-opacity duration-300 ${
+          entrou ? "opacity-45" : "opacity-0"
+        }`}
+      />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Sobre a taxa da Junta"
+        className="absolute inset-x-0 bottom-0 flex flex-col rounded-t-3xl bg-surface-page px-5"
+        style={{
+          transform: entrou ? "translateY(0)" : "translateY(100%)",
+          transition: "transform .34s cubic-bezier(.22,1,.36,1)",
+          boxShadow: "0 -14px 44px -14px rgba(20,23,28,.32)",
+          paddingBottom: "calc(16px + var(--safe-bottom))",
+        }}
+      >
+        <div className="shrink-0 pt-2.5">
+          <div className="mx-auto h-1 w-9 rounded-full bg-border-strong" />
+        </div>
+
+        <p className="mt-4 text-body-strong font-semibold text-text-primary">
+          Por que a taxa da Junta não volta
+        </p>
+
+        <div className="mt-3 flex flex-col gap-2.5">
+          <Camada>
+            A taxa é do <strong>governo</strong>, não nossa: ela paga o registro
+            na Junta Comercial de Minas e é repassada inteira.
+          </Camada>
+          <Camada>
+            Depois que o processo é protocolado, o Estado já prestou o serviço —
+            é por isso que não existe devolução, nem por nós nem por eles.
+          </Camada>
+          <Camada>
+            <strong>Antes de você autorizar, nada disso aconteceu.</strong> Se
+            desistir agora, você recebe de volta tudo o que pagou, inclusive a
+            taxa.
+          </Camada>
+          <Camada>
+            A nossa mensalidade é outra história: essa você cancela quando
+            quiser, respeitando o prazo do plano.
+          </Camada>
+        </div>
+
+        <div className="mt-5">
+          <Button full variant="secondary" onClick={sair}>
+            Entendi
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * ⚠️ 01/09 — `TermoView` (a tela A2, `/termo`) foi APOSENTADA: o aceite virou
+ * o último bloco do A1 (`RevisarView`), com o detalhe do não-reembolso em
+ * popup. O componente segue aqui só pra não quebrar o Storybook e o histórico
+ * de review; nenhuma rota navega mais pra ele. Se em algum momento a decisão
+ * voltar atrás, é este componente que volta — não reescrever do zero.
+ */
 export function TermoView({
   aceito,
   setAceito,

@@ -49,7 +49,7 @@ tags: [execucao, flow, dados, abertura]
 - sócio que não se encaixa no card informativo (opcional, texto livre via 'Falar com o time')
 
 ### Faixa de faturamento
-- Faixa de faturamento mensal (ou valor exato, se souber)
+- Faixa de faturamento mensal (4 faixas até R$30 mil, o teto do ME) ou valor exato, se souber
 
 ### E5F.1 · Splash 'conseguimos te atender'
 - _(sem dado novo — contexto, confirmação ou decisão do sistema)_
@@ -60,11 +60,7 @@ tags: [execucao, flow, dados, abertura]
 - telefone
 - e-mail
 - senha
-- CEP
-- número
-- complemento
-- coorte (opcional)
-- código de verificação (mock)
+- código de verificação de 8 dígitos (mock)
 
 ### E7 · A conta da abertura
 - _(sem dado novo — contexto, confirmação ou decisão do sistema)_

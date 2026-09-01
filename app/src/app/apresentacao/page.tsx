@@ -32,7 +32,7 @@ import {
 } from "@/components/wizard-dossie";
 import {
   RevisarView,
-  TermoView,
+  // 🗑️ 01/09 — `TermoView` saiu: a A2 foi eliminada (aceite absorvido pelo A1).
   AssinaturaView,
   HomeAtivacaoView,
   RetomarCpfView,
@@ -280,7 +280,6 @@ type Etapa =
   // `C0.1--reentrada-->C1`), alcançáveis por pill própria, não pelo botão
   // Continuar de nenhuma tela do meio.
   | "revisar"
-  | "termo"
   | "painel"
   | "painel-recusa"
   | "assinatura"
@@ -356,7 +355,6 @@ function antesDoDossie(e: EtapaDossie): Etapa {
  */
 const ETAPAS_CAUDA = [
   "revisar",
-  "termo",
   "painel",
   "painel-recusa",
   // 🗑️ 01/09 (decisão do Pedro) — "certificado" (A3.2) SAIU do caminho ME. O
@@ -593,7 +591,6 @@ type Momento =
   | "cnae-secundarios"
   | "nome"
   | "revisar"
-  | "termo"
   | "painel"
   | "painel-recusa"
   | "assinatura"
@@ -795,13 +792,6 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
       status: "✅ corrigido — segue pro A2",
     },
   ],
-  termo: [
-    {
-      id: "🐛 BUG-10",
-      oque: "Mesmo defeito do A1: 'Autorizo, pode abrir' não navegava.",
-      status: "✅ corrigido — segue pro A3 (painel)",
-    },
-  ],
   painel: [
     {
       id: "✍️ reduzido (1ª passada)",
@@ -983,7 +973,6 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   "cnae-secundarios": "/dossie/cnae-secundarios",
   nome: "/dossie/nome",
   revisar: "/revisar",
-  termo: "/termo",
   painel: "/painel",
   "painel-recusa": "/painel/recusa",
   assinatura: "/assinatura",
@@ -1153,7 +1142,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     dono: "usuario",
     faz: "Pergunta quanto a pessoa espera faturar por mês — faixa guiada ou valor exato.",
     interfere: "Alimenta o cálculo de enquadramento e Fator R nas telas seguintes (a conta da abertura e o pró-labore).",
-    porque: "Base necessária pra estimar corretamente o que a empresa vai pagar — sem isso o resto do fluxo chuta.",
+    porque: "Base necessária pra estimar corretamente o que a empresa vai pagar — sem isso o resto do fluxo chuta. 🔄 01/09: as faixas foram redesenhadas pro teto real do ME (R$30 mil/mês = R$360 mil/ano). A opção +R$30 mil saiu: oferecia justamente o que a Legalizai não atende, e a decisão de 01/09 foi não barrar por faturamento — quem fatura mais informa o valor exato e segue, pra ser acompanhado e desenquadrado pra EPP quando fizer sentido.",
   },
   "saida-exterior": {
     dono: null,
@@ -1235,7 +1224,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     interfere:
       "São exatamente os dados que a Junta exige pra constituir: quem é o sócio, com que documento e onde ele mora. Coletar aqui adianta o dossiê inteiro.",
     porque:
-      "Front-load decidido em 28/07: captar num lugar só, com validação por código logo na entrada. Assim o C1 vira confirmação, não recoleta. Criar conta é grátis; o dinheiro só aparece na tela seguinte.",
+      "Front-load decidido em 28/07: captar num lugar só, com validação por código logo na entrada. Assim o C1 vira confirmação, não recoleta. Criar conta é grátis; o dinheiro só aparece na tela seguinte. 🔄 01/09: Google/Apple saíram (não teremos por enquanto — botão que promete caminho inexistente é a pior fricção) e o código de verificação passou de 6 pra 8 dígitos.",
   },
   "conta-codigo": {
     dono: "usuario",
@@ -1323,7 +1312,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     interfere:
       "É a tela mais pesada da constituição. O índice do IPTU é OBRIGATÓRIO: sem ele a documentação não passa na JUCEMG. E a residência do titular é o que a Prefeitura de BH usa pra deferir ou indeferir quando o endereço é apartamento — vimos a mesma empresa mudar de indeferida pra deferida só trocando essa resposta.",
     porque:
-      "Área utilizada, atividade inócua, forma de atuação, capital social (R$10.000 fixo desde 31/08) e \"edificação nova\" a gente resolve por dentro, sem perguntar. Só pedimos o que ninguém consegue adivinhar — e \"edificação nova\" é justamente o oposto: termo técnico da Prefeitura que o cliente responderia errado com confiança. Quem não tem endereço comercial compra o nosso aqui, em vez de travar.",
+      "Área utilizada, atividade inócua, forma de atuação, capital social (R$10.000 fixo desde 31/08) e \"edificação nova\" a gente resolve por dentro, sem perguntar. Só pedimos o que ninguém consegue adivinhar — e \"edificação nova\" é justamente o oposto: termo técnico da Prefeitura que o cliente responderia errado com confiança. Quem não tem endereço comercial compra o nosso aqui, em vez de travar. 🗑️ 01/09: o upsell de endereço fiscal saiu daqui. Ou a pessoa escolheu o nosso endereço lá no E3.4 (e esta tela não existe pra ela), ou informou o dela — e aqui o que já foi respondido vem TRAVADO, com só os campos que faltam editáveis. Vender endereço depois do pagamento seria mexer na mensalidade fora de hora.",
   },
   "cnae-secundarios": {
     dono: "usuario",
@@ -1360,19 +1349,11 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
 
   revisar: {
     dono: "usuario",
-    faz: "Mostra tudo que foi preenchido, bloco por bloco, com 'ajustar' em cada um. É leitura, não formulário.",
+    faz: "Mostra tudo que foi preenchido, bloco por bloco, com 'ajustar' em cada um — e termina com o aceite que autoriza a abertura.",
     interfere:
-      "É o último ponto em que corrigir é de graça. A tela seguinte (A2) é irreversível: depois dela, a Junta já está sendo protocolada com esses dados.",
+      "É o último ponto em que corrigir é de graça. Marcar o aceite é irreversível: a partir dele a Junta já está sendo protocolada com esses dados.",
     porque:
-      "Ninguém deveria autorizar um registro que nunca viu inteiro. O enquadramento aparece como SUGESTÃO (não escolha manual): o antigo simulador pré-empresa foi dissolvido em 28/07, porque gerava mais dúvida que clareza antes de a empresa existir.",
-  },
-  termo: {
-    dono: "usuario",
-    faz: "Pede autorização explícita pra começar o registro de verdade. É o ponto sem volta do fluxo inteiro.",
-    interfere:
-      "A partir do aceite o protocolo começa e a taxa da Junta é gasta. 🔄 26/08: essa taxa NÃO é mais paga lá atrás no E9 — o cliente paga a guia (DAE) depois que a viabilidade é deferida, pelo CTA que aparece na tela de status. Antes do aceite, tudo ainda é reversível (CDC art. 49).",
-    porque:
-      "O antigo T18 juntava contrato reversível e autorização irreversível na mesma tela — problema jurídico e de tom. Racharam em duas: E8 (contrato, não assusta) e este A2 (autorização, existe pra assustar exatamente o necessário, nem mais nem menos).",
+      "Ninguém deveria autorizar um registro que nunca viu inteiro. 🔄 01/09: a A2 (tela só de termo) foi ELIMINADA e o aceite virou o último bloco daqui — a tela inteira existia pra reforçar que a taxa da Junta não volta, e isso já está no contrato aceito no pagamento. O detalhe do não-reembolso virou link com popup: quem já entendeu segue, quem quer ler tem onde. O enquadramento aparece como SUGESTÃO (não escolha manual): o simulador pré-empresa foi dissolvido em 28/07.",
   },
   painel: {
     dono: "nossa",
@@ -1824,15 +1805,13 @@ export default function ApresentacaoPage() {
         codigo: "",
       });
     } else if (etapa === "conta-codigo") {
-      setDadosConta((p) => ({ ...p, codigo: "482913" }));
+      setDadosConta((p) => ({ ...p, codigo: "48291374" }));
     } else if (etapa === "pagamento") {
       // 🔄 30/08 (pedido do Pedro) — E8 (Contrato) foi ELIMINADO do fluxo; o
       // aceite (`aceite`/`setAceite`) subiu pra dentro do E9 (Pagamento).
       setAceite(true);
       setCpfPag("123.456.789-00");
       setMetodo("cartao");
-    } else if (etapa === "termo") {
-      setAceiteTermo(true);
     } else if (etapa === "m-contrato") {
       setAceiteMigrar(true);
     } else if (etapa === "m-cnpj") {
@@ -1893,7 +1872,7 @@ export default function ApresentacaoPage() {
         numero: "1000",
         complemento: "",
         coorte: "primeira",
-        codigo: "482913",
+        codigo: "48291374",
       });
     }
     if (!aceite) setAceite(true);
@@ -1941,7 +1920,6 @@ export default function ApresentacaoPage() {
     // 🗑️ 01/09 — "C6 · Natureza" saiu do carrossel: rota removida em 31/08.
     { etapa: "nome", label: "C7 · Nome" },
     { etapa: "revisar", label: "A1 · Revisar" },
-    { etapa: "termo", label: "A2 · Termo" },
     { etapa: "painel", label: "A3 · Painel" },
     // 🗑️ 01/09 — "A3.2 · Certificado" saiu do carrossel do ME.
     { etapa: "assinatura", label: "A4 · Assinatura" },
@@ -2520,18 +2498,16 @@ export default function ApresentacaoPage() {
                             Mesmas telas de `/revisar` · `/termo` · `/painel` ·
                             `/assinatura` · `/ativa` — moram em
                             `components/wizard-cauda.tsx` desde 29/07. */}
+                        {/* 🔄 01/09 — a A2 (`/termo`) foi eliminada: o aceite
+                            irreversível virou o último bloco do A1, com o
+                            detalhe do não-reembolso em popup. Daqui vai direto
+                            pro status da Junta. */}
                         {etapa === "revisar" && (
                           <RevisarView
-                            onSeguir={() => setEtapa("termo")}
-                            onVoltar={() => voltar(() => setEtapa("nome"))}
-                          />
-                        )}
-                        {etapa === "termo" && (
-                          <TermoView
                             aceito={aceiteTermo}
                             setAceito={setAceiteTermo}
                             onSeguir={() => setEtapa("painel")}
-                            onVoltar={() => voltar(() => setEtapa("revisar"))}
+                            onVoltar={() => voltar(() => setEtapa("nome"))}
                           />
                         )}
                         {etapa === "painel" && (

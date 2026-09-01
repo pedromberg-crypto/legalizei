@@ -30,5 +30,12 @@ export default function RevisarPage() {
   const router = useRouter();
   const mei = ehMei(useSearchParams());
 
-  return <RevisarView mei={mei} onSeguir={() => router.push(comRegime("/termo", mei))} />;
+  /**
+   * 🔄 01/09 (decisão do Pedro) — ia pro `/termo` (A2). A tela A2 foi
+   * ELIMINADA: existia só pra reforçar que a taxa da Junta não volta, o que
+   * já está no contrato aceito no pagamento (E9). O aceite virou o último
+   * bloco DESTA tela, com o detalhe em popup — então daqui vai direto pro
+   * status da Junta, que é o que a A2 fazia depois do aceite.
+   */
+  return <RevisarView mei={mei} onSeguir={() => router.push(comRegime("/painel", mei))} />;
 }

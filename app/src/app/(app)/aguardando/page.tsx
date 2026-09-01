@@ -60,6 +60,14 @@ export default function AguardandoPage() {
   // 🆕 01/09 — pagou a guia por BOLETO: a etapa segue em andamento, mas
   // esperando o banco (ver `guiaBoleto` em AguardandoView).
   const guiaBoleto = guiaParam === "boleto";
+  /**
+   * 🆕 01/09 (pedido do Pedro) — volta da 2ª rodada de nomes (C7′): a jornada
+   * RECUA pra "Analisando viabilidade". É o único ponto do flow em que uma
+   * etapa já concluída volta a ser a atual, e é honesto: os nomes novos vão
+   * pra Junta de novo, então a viabilidade recomeça. Mostrar "Pague a guia"
+   * aqui seria dizer que a análise já passou, quando ela nem começou.
+   */
+  const reanalisando = searchParams.get("viabilidade") === "1";
 
   return (
     <AguardandoView
@@ -67,7 +75,13 @@ export default function AguardandoPage() {
       temSocios={TEM_SOCIO}
       pago={pago}
       fase={fase}
-      junta={guiaPaga ? { concluidas: 2, emAndamento: 2 } : undefined}
+      junta={
+        reanalisando
+          ? { concluidas: 0, emAndamento: 0 }
+          : guiaPaga
+            ? { concluidas: 2, emAndamento: 2 }
+            : undefined
+      }
       guiaBoleto={guiaBoleto}
       /**
        * 🗑️ 01/09 (decisão do Pedro) — ia pro gate de certificado (A3.2). A

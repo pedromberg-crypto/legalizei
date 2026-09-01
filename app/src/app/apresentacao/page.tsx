@@ -286,6 +286,7 @@ type Etapa =
   | "guia-boleto"
   // 🆕 01/09 — C7′ (2ª rodada de nomes), aberta pelo CTA do A3.1.
   | "nome-rodada2"
+  | "status-viabilidade"
   | "guia-paga"
   | "painel-recusa"
   | "assinatura"
@@ -367,6 +368,9 @@ const ETAPAS_CAUDA = [
   "painel-recusa",
   // 🆕 01/09 — C7′: a 2ª rodada de nomes, aberta pelo CTA do A3.1.
   "nome-rodada2",
+  // 🆕 01/09 — A3‴: status recuado pra "Analisando viabilidade" depois dos
+  // nomes novos.
+  "status-viabilidade",
   // 🗑️ 01/09 (decisão do Pedro) — "certificado" (A3.2) SAIU do caminho ME. O
   // certificado é incluso no plano e emitido pela Legalizai quando for preciso,
   // e a justificativa que a colocou aqui em 26/08 ("a procuração exige
@@ -606,6 +610,7 @@ type Momento =
   | "cnae-secundarios"
   | "nome"
   | "nome-rodada2"
+  | "status-viabilidade"
   | "revisar"
   | "painel"
   | "guia"
@@ -993,6 +998,7 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   "cnae-secundarios": "/dossie/cnae-secundarios",
   nome: "/dossie/nome",
   "nome-rodada2": "/dossie/nome?rodada=2",
+  "status-viabilidade": "/aguardando?fase=junta&viabilidade=1",
   revisar: "/revisar",
   painel: "/painel",
   "painel-recusa": "/painel/recusa",
@@ -1419,6 +1425,14 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
       "É o desbloqueio do registro: sem nome aprovado a Junta não avança. Os 3 novos entram na mesma fila de tentativa automática.",
     porque:
       "Campos VAZIOS, não novas sugestões da IA: as 3 dela acabaram de ser reprovadas, então sugerir mais do mesmo tipo seria oferecer o que já falhou. O 1º campo abre em edição porque a pessoa veio escrever, não escolher.",
+  },
+  "status-viabilidade": {
+    dono: "nossa",
+    faz: "🆕 01/09 — o status depois de mandar os 3 nomes novos: a jornada RECUA e \"Analisando viabilidade\" volta a ser a etapa da vez.",
+    interfere:
+      "A Junta vai testar os nomes novos na ordem escolhida. Enquanto isso, guia e assinatura ficam para trás na fila de novo — nada além da análise pode andar.",
+    porque:
+      "É o único ponto do flow em que uma etapa concluída volta a ser a atual, e é honestidade: mostrar \"Pague a guia\" aqui diria que a análise já passou, quando ela nem começou. Recuar a barra é pior de ver e melhor de confiar.",
   },
   painel: {
     dono: "nossa",
@@ -2647,10 +2661,17 @@ export default function ApresentacaoPage() {
                             onPagarDae={() => setEtapa("guia")}
                           />
                         )}
+                        {etapa === "status-viabilidade" && (
+                          <AguardandoView
+                            fase="junta"
+                            junta={{ concluidas: 0, emAndamento: 0 }}
+                            temSocios={socios === 2}
+                          />
+                        )}
                         {etapa === "nome-rodada2" && (
                           <NomeView
                             novaRodada
-                            onSeguir={() => setEtapa("painel")}
+                            onSeguir={() => setEtapa("status-viabilidade")}
                             onVoltar={() => voltar(() => setEtapa("painel-recusa"))}
                           />
                         )}

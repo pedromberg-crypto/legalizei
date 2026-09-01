@@ -2211,7 +2211,10 @@ export function NomeView({
           {/* ✍️ 29/07 — o título dizia "A ordem não muda nada na abertura",
               logo abaixo de um subtítulo que pede pra ORDENAR. Lidos em
               sequência, o segundo esvaziava o primeiro. */}
-          {!mei && (
+          {/* 🔄 01/09 — some na 2ª rodada: dizer "nenhuma tentativa atrasa"
+              pra quem acabou de ter as 3 recusadas seria desmentir o que ela
+              acabou de viver. */}
+          {!mei && !novaRodada && (
           <Aviso variante="info" titulo="Nenhuma tentativa atrasa a sua abertura">
             A gente tenta registrar a 1ª opção na Junta. Se ela não passar, já
             seguimos pra 2ª, e depois a 3ª — sem te avisar toda vez nem travar
@@ -2235,19 +2238,23 @@ export function NomeView({
 
           {/* Nome fantasia vale pros DOIS regimes — é o único campo de nome
               que o formulário do MEI realmente oferece. */}
-          <Campo rotulo="Nome fantasia" dica="Opcional. É a marca que aparece pro cliente.">
-            <Texto
-              valor={fantasia}
-              onChange={setFantasia}
-              placeholder="Como o público vai te conhecer"
-            />
-          </Campo>
+          {!novaRodada && (
+            <Campo rotulo="Nome fantasia" dica="Opcional. É a marca que aparece pro cliente.">
+              <Texto
+                valor={fantasia}
+                onChange={setFantasia}
+                placeholder="Como o público vai te conhecer"
+              />
+            </Campo>
+          )}
         </Corpo>
 
         <Rodape>
-          {/* Última tela da coleta: daqui o cliente vai pro N19 (revisar). */}
+          {/* Última tela da coleta: daqui o cliente vai pro N19 (revisar).
+              🔄 01/09 (pedido do Pedro) — na 2ª rodada o CTA nomeia o que
+              acontece de verdade: os nomes voltam pra Junta, não pro dossiê. */}
           <Button full disabled={!completo} onClick={onSeguir}>
-            Continuar
+            {novaRodada ? "Mandar para a viabilidade" : "Continuar"}
           </Button>
         </Rodape>
       </main>

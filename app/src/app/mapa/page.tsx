@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
   ReactFlow,
@@ -97,17 +97,32 @@ export default function MapaPage() {
     [arestasDaTrilha],
   );
 
+  /**
+   * 🔄 01/09 (pedido do Pedro) — com uma trilha ativa, as telas de fora dela
+   * SOMEM do canvas em vez de ficarem cinzas. O cinza ainda deixava tudo na
+   * tela e continuava gerando confusão ("qual é o caminho mesmo?"): a leitura
+   * boa é o flow escolhido sozinho, sem ruído em volta.
+   *
+   * `hidden` é do próprio React Flow — o nó sai do render E do cálculo de
+   * arestas, então não sobra linha solta apontando pra lugar nenhum.
+   * `apagado` continua sendo passado pra manter o contrato do `tela-node`
+   * (nada mais o usa quando o nó está escondido, mas o tipo segue válido).
+   */
   const nodes = useMemo(
     () =>
-      nodesBase.map((n) => ({
-        ...n,
-        data: {
-          ...n.data,
-          onCtaClick,
-          trilhaAtivaId,
-          apagado: !!nosAtivos && !nosAtivos.has(n.id),
-        },
-      })),
+      nodesBase.map((n) => {
+        const foraDaTrilha = !!nosAtivos && !nosAtivos.has(n.id);
+        return {
+          ...n,
+          hidden: foraDaTrilha,
+          data: {
+            ...n.data,
+            onCtaClick,
+            trilhaAtivaId,
+            apagado: foraDaTrilha,
+          },
+        };
+      }),
     [nodesBase, onCtaClick, trilhaAtivaId, nosAtivos],
   );
 
@@ -122,8 +137,10 @@ export default function MapaPage() {
       // zIndex maior pra aresta (mesmo só a da trilha) faz o TRAÇADO desenhar
       // por cima do card. A cor/destaque já vem só de `corTrilha`/`clicada` —
       // o traçado continua sempre atrás, sempre, sem exceção pra ninguém.
+      // 🔄 01/09 — mesma regra dos nós: fora da trilha, some (não fica cinza).
       return {
         ...e,
+        hidden: !!arestasDaTrilha && !emTrilha,
         data: {
           ...e.data,
           corTrilha: emTrilha ? cor : undefined,
@@ -133,6 +150,28 @@ export default function MapaPage() {
       };
     });
   }, [edgesBase, arestasDaTrilha, trilhaAtivaId, arestaClicadaChave]);
+
+  /**
+   * 🆕 01/09 — reenquadra quando a trilha liga/desliga. Sem isso, esconder as
+   * telas de fora deixa o flow escolhido pequeno num canto (o zoom continua o
+   * do mapa inteiro) e a pessoa tem que caçar o que sobrou.
+   *
+   * Guardo a instância pelo `onInit` em vez de usar `useReactFlow()`: o hook
+   * exige que o componente esteja DENTRO de um `<ReactFlowProvider>`, e aqui
+   * o `<ReactFlow>` é filho desta mesma página. `requestAnimationFrame` dá o
+   * frame que a lib precisa pra aplicar o `hidden` antes de medir.
+   */
+  // Guardo só o que uso: tipar como `ReactFlowInstance` puxa os genéricos de
+  // Node/Edge inferidos do nosso grafo e briga com a assinatura da lib.
+  const fluxoRef = useRef<{
+    fitView: (opcoes?: { duration?: number; padding?: number }) => void;
+  } | null>(null);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      fluxoRef.current?.fitView({ duration: 400, padding: 0.15 });
+    });
+    return () => cancelAnimationFrame(id);
+  }, [trilhaAtivaId]);
 
   const onNodeClick: NodeMouseHandler = useCallback((_, node: Node) => {
     setSelecionado((node.data as NoFlow) ?? null);
@@ -210,11 +249,23 @@ export default function MapaPage() {
           edges={edges}
           nodeTypes={TIPOS_DE_NO}
           edgeTypes={TIPOS_DE_ARESTA}
+          onInit={(inst) => {
+            fluxoRef.current = inst;
+          }}
           onNodeClick={onNodeClick}
           onEdgeClick={onEdgeClick}
+          /**
+           * 🔄 01/09 (pedido do Pedro) — clicar no canvas vazio NÃO desliga
+           * mais a trilha. Com a trilha filtrando o mapa (as outras telas
+           * somem), desligar por clique acidental fazia o mapa inteiro voltar
+           * do nada, no meio de uma leitura. A trilha agora só sai clicando de
+           * novo no MESMO botão que a ligou — o mesmo lugar, o mesmo gesto.
+           *
+           * O painel de detalhe e o destaque de aresta continuam fechando
+           * aqui: esses são leitura pontual, não filtro do mapa.
+           */
           onPaneClick={() => {
             setSelecionado(null);
-            setTrilhaAtivaId(null);
             setArestaClicadaChave(null);
           }}
           fitView
@@ -279,9 +330,11 @@ export default function MapaPage() {
 
           {/* 🆕 28/08 (pedido do Pedro) — 4 CTAs de verdade, um por
               flow×regime. Clicáveis AQUI (não pelo pontinho do canvas, que
-              é 1:1 por handle): clicar acende a trilha inteira em cor + apaga
-              (cinza padrão) todas as telas de fora dela. Clicar de novo, ou
-              no canvas vazio, desliga. */}
+              é 1:1 por handle): clicar acende a trilha inteira em cor.
+              🔄 01/09 (pedido do Pedro) — as telas de fora da trilha agora
+              SOMEM (antes ficavam cinzas, e o cinza ainda confundia), e a
+              trilha só desliga clicando DE NOVO no mesmo botão: clique no
+              canvas vazio não desliga mais. */}
           <p className="mb-2 text-caption font-semibold text-text-primary">Fluxos (clique aqui)</p>
           <div className="mb-3 flex flex-col gap-1.5">
             {TRILHAS_REGIME.map((t) => {

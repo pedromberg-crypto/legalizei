@@ -195,7 +195,8 @@ test.describe("abrir ME — todas as variáveis até a E6", () => {
     await page.getByPlaceholder("00000-000").fill(CEP_BH);
     await expect(page.getByText("Ainda não atendemos essa categoria")).toBeVisible();
     await expect(page.getByText("Ainda não atendemos sua categoria e cidade")).toHaveCount(0);
-    await expect(page.getByText("Te avisaremos!")).toBeVisible();
+    // ✍️ 01/09 — copy enxugada: o aviso da waitlist perdeu o "Te avisaremos!".
+    await expect(page.getByText("você garante condição especial")).toBeVisible();
 
     const cta = page.getByRole("button", { name: "Me inscrever e garantir condição" });
     await expect(cta).toBeVisible();

@@ -402,9 +402,11 @@ export function EnderecoCategoriaView({
             <p className="text-body-strong font-semibold mb-1">
               O que você faz?
             </p>
+            {/* ✍️ 01/09 (enxugada de copy) — mesma promessa (aproximado
+                serve), sem narrar o passo futuro inteiro. */}
             <p className="text-caption text-text-secondary mb-3">
-              Escolhe o que mais se parece. Depois você conta com as suas
-              palavras e a gente acha o código certo.
+              Escolhe o que mais se parece. O código certo a gente encontra
+              depois.
             </p>
 
             {/* 🔄 27/08 (pedido do Pedro: "quero as categorias em dropdown,
@@ -473,8 +475,11 @@ export function EnderecoCategoriaView({
                   opcoes={REGULAMENTADAS}
                   placeholder="Qual é a sua atividade?"
                 />
+                {/* ✍️ 01/09 — rótulo era IGUAL ao placeholder do select logo
+                    acima ("Qual é a sua atividade?"), dois vizinhos com a
+                    mesma pergunta. */}
                 {precisaDescreverOutra && (
-                  <Campo rotulo="Qual é a sua atividade?">
+                  <Campo rotulo="Sua atividade">
                     <Texto
                       valor={outraAtividade}
                       onChange={setOutraAtividade}
@@ -513,9 +518,8 @@ export function EnderecoCategoriaView({
                         : "Ainda não atendemos sua categoria e cidade"
                     }
                   >
-                    A gente está em expansão. Clicando abaixo, você já
-                    garante uma condição especial pra quando a gente passar a
-                    te atender. Te avisaremos!
+                    A gente está em expansão. Confirma aqui embaixo e você
+                    garante condição especial quando a gente te atender.
                   </Aviso>
                 )}
               </div>
@@ -538,7 +542,7 @@ export function EnderecoCategoriaView({
                 sobre onde você mora"). */}
             <p className="text-caption text-text-secondary mb-3">
               {exigeBh
-                ? "O endereço da sua empresa precisa ser em Belo Horizonte. Se mora fora, você pode utilizar o nosso."
+                ? "A empresa precisa ficar em Belo Horizonte. Se você mora fora, dá pra usar o nosso."
                 : "É o endereço que vai ficar no seu CNPJ, e pode ser o da sua casa. Como MEI, você abre de qualquer cidade do Brasil."}
             </p>
 
@@ -606,9 +610,8 @@ export function EnderecoCategoriaView({
                       <CheckMiniRegime />
                     </span>
                     <p className="text-caption text-text-secondary">
-                      Essa será uma cobrança recorrente junto da sua
-                      mensalidade. Quando chegar na parte do plano, você vai
-                      identificar.
+                      Cobrança recorrente, junto da mensalidade. O valor
+                      aparece somado na tela do plano.
                     </p>
                   </div>
                 </div>
@@ -646,7 +649,9 @@ export function EnderecoCategoriaView({
                     enderecoProprio === true ? "text-text-on-brand/80" : "text-text-secondary"
                   }`}
                 >
-                  Não acrescenta nada na sua mensalidade.
+                  {/* ✍️ 01/09 — o sub só repetia a pill "Sem custo" do lado;
+                      agora responde a dúvida real que só o MEI ouvia. */}
+                  Pode ser o endereço da sua casa.
                 </p>
               </button>
               )}
@@ -696,8 +701,9 @@ export function EnderecoCategoriaView({
                         <span className="font-semibold text-text-primary">
                           &ldquo;Quero um endereço da Legalizai&rdquo;
                         </span>{" "}
-                        aqui em cima, e a empresa nasce em BH do mesmo jeito,
-                        sem custo extra na abertura.
+                        {/* ✍️ 01/09 — cortado "sem custo extra na abertura":
+                            meia-verdade (são R$60/mês). */}
+                        aqui em cima, e a empresa nasce em BH do mesmo jeito.
                       </p>
                       <button
                         type="button"
@@ -795,10 +801,9 @@ export function EnderecoCategoriaView({
                             >
                               A Prefeitura de Belo Horizonte indefere empresa em
                               apartamento quando nenhum sócio mora no endereço. Dá
-                              pra resolver de dois jeitos: usar outro endereço seu,
-                              ou usar o endereço da Legalizai por{" "}
-                              {brl(CUSTOS.ENDERECO_FISCAL)}/mês, que já entra na
-                              conta antes de você pagar qualquer coisa.
+                              pra resolver usando outro endereço seu, ou o da
+                              Legalizai por {brl(CUSTOS.ENDERECO_FISCAL)}/mês (o
+                              valor já aparece somado no plano).
                             </CardNota>
                           )}
                         </>

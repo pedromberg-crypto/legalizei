@@ -33,6 +33,8 @@ Nunca encerre um flow sem: (1) atualizar `HOME §Agora`; (2) registrar decisão 
 - `reunioes/` — atas Plaud (1 nota/reunião). Auto-memória — fatos duráveis cross-sessão.
 
 ## Regras de trabalho
+- 🔴 **Playwright/E2E só quando o Pedro PEDIR.** Nunca rodar por iniciativa própria, nem "pra conferir", nem no fim de uma leva de alterações. Padrão de verificação é `tsc` + `eslint`. Se achar que vale rodar, **pergunta** — não roda. (Travado 30/08, reforçado 01/09.)
+- 🔴 **Escopo padrão = flow ME "abrir empresa".** MEI e Migração estão FORA de qualquer alteração, salvo pedido explícito. Quando uma tela é compartilhada (mesmo componente serve ME e MEI), a mudança tem que ser **guardada por regime** pra não vazar; se não der pra guardar, avisar antes de mexer.
 - **Anti-guru:** número sem fonte não entra. Sempre valor + fonte + confiança.
 - **Uma nota = um assunto.** Linkar sempre (`[[ ]]`). kebab-case, datas `AAAA-MM-DD`.
 - **Commit ao fim de cada flow** (Co-Authored-By). Push quando fechar. Sem force em `main` sem ok.

@@ -53,6 +53,9 @@ export default function AguardandoPage() {
   // 🆕 31/08 — fase pós-dossiê (era `/painel`, caminho ME). Mock por query:
   // `?fase=junta` (farol: documentação+viabilidade ok, DAE aguardando).
   const fase = searchParams.get("fase") === "junta" ? "junta" : "dossie";
+  // 🆕 01/09 — volta do pagamento da guia (`/guia`): a etapa da DAE fecha e
+  // "Agora é só assinar" vira a vez. Mock por query, mesmo padrão de `?pago`.
+  const guiaPaga = searchParams.get("guia") === "paga";
 
   return (
     <AguardandoView
@@ -60,6 +63,7 @@ export default function AguardandoPage() {
       temSocios={TEM_SOCIO}
       pago={pago}
       fase={fase}
+      junta={guiaPaga ? { concluidas: 2, emAndamento: 2 } : undefined}
       /**
        * 🗑️ 01/09 (decisão do Pedro) — ia pro gate de certificado (A3.2). A
        * tela SAIU do caminho de constituição de ME: o certificado digital é
@@ -72,7 +76,13 @@ export default function AguardandoPage() {
        * ponto do flow. Segue viva pro MEI (`/certificado?regime=mei`) e pro
        * caminho migrar, onde a empresa já existe.
        */
-      onPagarDae={() => router.push("/assinatura")}
+      /**
+       * 🔄 01/09 (pedido do Pedro) — o CTA da etapa "Pague a guia da Junta"
+       * agora leva pra TELA DE PAGAMENTO DA GUIA (`/guia`), que é o mesmo
+       * PagamentoView do E9 no modo guia. Antes ia direto pra assinatura,
+       * como se a guia se pagasse sozinha.
+       */
+      onPagarDae={() => router.push("/guia")}
       // 🔄 27/08 — a 1ª tela do dossiê virou a C0 (`/dossie/atividade`), não
       // mais o C1. Mesma mudança do `/pagamento` (racional lá).
       // 🐛 28/08 — faltava o ramo MEI: ia sempre pra C0 (ME), mesmo quando

@@ -313,7 +313,12 @@ export function PainelView({
               // problema nenhum" (diferente de recusa, que é vez do cliente
               // POR TER DADO ERRADO).
               const aguardaAcaoCliente = ehAVez && !!e.acaoCliente;
-              const girando = ehAVez && !e.acaoCliente;
+              // 🔄 01/09 (pedido do Pedro) — a etapa-da-vez GIRA mesmo quando
+              // a ação é do cliente. Antes o CTA suprimia o anel e a etapa
+              // ficava com cara de "a-fazer" (cinza), igual às que nem
+              // começaram — sendo que ela é justamente onde a jornada parou.
+              // O anel diz "é aqui"; o card embaixo diz o que fazer.
+              const girando = ehAVez;
               const ultima = i === ETAPAS.length - 1;
               // PainelView usa {feito, girando, a-fazer, recusa} do StatusIcon.
               const estado: StatusEstado = recusada

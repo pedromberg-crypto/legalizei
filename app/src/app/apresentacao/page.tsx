@@ -281,6 +281,7 @@ type Etapa =
   // Continuar de nenhuma tela do meio.
   | "revisar"
   | "painel"
+  | "guia"
   | "painel-recusa"
   | "assinatura"
   | "ativacao"
@@ -356,6 +357,8 @@ function antesDoDossie(e: EtapaDossie): Etapa {
 const ETAPAS_CAUDA = [
   "revisar",
   "painel",
+  // 🆕 01/09 — A3.P: pagamento da guia da Junta, aberto pelo CTA do status.
+  "guia",
   "painel-recusa",
   // 🗑️ 01/09 (decisão do Pedro) — "certificado" (A3.2) SAIU do caminho ME. O
   // certificado é incluso no plano e emitido pela Legalizai quando for preciso,
@@ -592,6 +595,7 @@ type Momento =
   | "nome"
   | "revisar"
   | "painel"
+  | "guia"
   | "painel-recusa"
   | "assinatura"
   | "ativacao"
@@ -993,6 +997,7 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   "retomar-cpf": "/retomar",
   retomar: "/retomar",
   aguardando: "/aguardando",
+  guia: "/guia",
 };
 
 const SUFIXO_MOMENTO: Partial<Record<Momento, string>> = {
@@ -1354,6 +1359,14 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
       "É o último ponto em que corrigir é de graça. Marcar o aceite é irreversível: a partir dele a Junta já está sendo protocolada com esses dados.",
     porque:
       "Ninguém deveria autorizar um registro que nunca viu inteiro. 🔄 01/09: a A2 (tela só de termo) foi ELIMINADA e o aceite virou o último bloco daqui — a tela inteira existia pra reforçar que a taxa da Junta não volta, e isso já está no contrato aceito no pagamento. O detalhe do não-reembolso virou link com popup: quem já entendeu segue, quem quer ler tem onde. O enquadramento aparece como SUGESTÃO (não escolha manual): o simulador pré-empresa foi dissolvido em 28/07.",
+  },
+  guia: {
+    dono: "usuario",
+    faz: "🆕 01/09 — TELA NOVA (A3.P). Pagamento da taxa da Junta (R$ 281,08), aberta pelo CTA que nasce embaixo do passo \"Pague a guia\" no status. É o MESMO PagamentoView do E9, no modo guia.",
+    interfere:
+      "Sem a guia paga, a Junta não registra e a assinatura não libera. É também onde mora o ACEITE irreversível, que antes ficava no A1: é neste clique que a taxa vira gasto que não volta.",
+    porque:
+      "Reusa a tela de pagamento em vez de criar outra: pagar duas coisas em momentos diferentes já é confuso o bastante sem duas gramáticas visuais. Muda o valor, a copy e o aceite; CPF, métodos e a linha de idempotência ficam idênticos de propósito.",
   },
   painel: {
     dono: "nossa",
@@ -1921,6 +1934,7 @@ export default function ApresentacaoPage() {
     { etapa: "nome", label: "C7 · Nome" },
     { etapa: "revisar", label: "A1 · Revisar" },
     { etapa: "painel", label: "A3 · Painel" },
+    { etapa: "guia", label: "🆕 A3.P · Guia da Junta" },
     // 🗑️ 01/09 — "A3.2 · Certificado" saiu do carrossel do ME.
     { etapa: "assinatura", label: "A4 · Assinatura" },
     { etapa: "ativacao", label: "🔓 A5 · Ativação" },
@@ -2523,7 +2537,9 @@ export default function ApresentacaoPage() {
                             concluidas={2}
                             emAndamento={2}
                             socios={socios ?? 1}
-                            onPagarDae={() => setEtapa("assinatura")}
+                            // 🔄 01/09 — o CTA da guia abre a tela de
+                            // pagamento da taxa (A3.P), não pula pra assinatura.
+                            onPagarDae={() => setEtapa("guia")}
                           />
                         )}
                         {/* 🗑️ 01/09 — A3.2 (CertificadoGateView) saiu daqui: a
@@ -2532,6 +2548,22 @@ export default function ApresentacaoPage() {
                         {/* 🆕 03/08 — A3.1, gap fechado. Sem interação natural pra
                             chegar aqui (produção retry-automático mockado); estado
                             'esgotado' fixo, idêntico ao de `/painel/recusa`. */}
+                        {/* 🆕 01/09 — A3.P: mesma tela de pagamento do E9, no
+                            modo guia (valor da taxa, copy e aceite próprios). */}
+                        {etapa === "guia" && (
+                          <PagamentoView
+                            guia
+                            cpf={cpfPag}
+                            setCpf={setCpfPag}
+                            cpfCadastrado={dadosConta.cpf}
+                            metodo={metodo}
+                            setMetodo={setMetodo}
+                            aceito={aceiteTermo}
+                            setAceito={setAceiteTermo}
+                            onPagar={() => setEtapa("assinatura")}
+                            onVoltar={() => voltar(() => setEtapa("painel"))}
+                          />
+                        )}
                         {etapa === "painel-recusa" && (
                           <PainelView
                             concluidas={1}

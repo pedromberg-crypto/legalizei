@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
 import { Campo, Texto, Checkbox } from "@/components/ui/form";
+// 🆕 01/09 — o mesmo bottom-sheet que explicava o não-reembolso no A1 vem pra
+// cá junto do aceite: a explicação deve morar ao lado do gesto que ela explica.
+import { SheetNaoReembolsavel } from "@/components/wizard-cauda";
 // 🗑️ 01/09 — ícones Google/Apple saíram junto do login social.
 import { Logo } from "@/components/logo";
 import { CUSTOS, brl } from "@/lib/fiscal";
@@ -1457,6 +1460,79 @@ export const METODOS: {
   },
 ];
 
+/**
+ * 🆕 01/09 (pedido do Pedro) — o aceite irreversível, que estava na A1, veio
+ * pra tela de pagamento da guia.
+ *
+ * Por que aqui é o lugar certo: é NESTE clique que a taxa da Junta deixa de
+ * ser reembolsável, porque é aqui que ela é efetivamente paga. Na A1 a frase
+ * "a taxa já paga não é reembolsável" era descolada do gesto — a pessoa
+ * autorizava numa tela e pagava na outra.
+ *
+ * Mesma estrutura do aceite do A1 (input irmão do texto, nunca dentro do
+ * label): nesting de botão em label some da árvore de acessibilidade e quebra
+ * o toggle — problema real, achado em 01/09.
+ */
+function AceiteIrreversivelGuia({
+  aceito,
+  setAceito,
+}: {
+  aceito: boolean;
+  setAceito: (v: boolean) => void;
+}) {
+  const [popupAberto, setPopupAberto] = useState(false);
+  return (
+    <div className="flex items-start gap-3 rounded-md border border-border-hairline bg-surface-card p-3">
+      <input
+        id="aceite-guia"
+        type="checkbox"
+        checked={aceito}
+        onChange={(e) => setAceito(e.target.checked)}
+        className="sr-only"
+      />
+      <label
+        htmlFor="aceite-guia"
+        aria-hidden
+        className={`mt-0.5 flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center rounded border-2 transition-colors ${
+          aceito
+            ? "border-action-primary bg-action-primary"
+            : "border-border-strong bg-surface-card"
+        }`}
+      >
+        {aceito && (
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M4 12.5 9.5 18 20 6"
+              stroke="#fff"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        )}
+      </label>
+      <p className="text-caption text-text-secondary">
+        <label htmlFor="aceite-guia" className="cursor-pointer">
+          Autorizo o início da abertura. Depois que a guia é paga, a Junta
+          começa o registro, e essa taxa{" "}
+        </label>
+        {/* O link fica FORA do label de propósito: dentro dele, o Chrome poda
+            o botão da árvore de acessibilidade e o toggle para de responder
+            (achado de 01/09, ao construir a versão anterior no A1). */}
+        <button
+          type="button"
+          onClick={() => setPopupAberto(true)}
+          className="font-semibold text-action-primary-sm underline underline-offset-4"
+        >
+          não é reembolsável
+        </button>
+        .
+      </p>
+      {popupAberto && <SheetNaoReembolsavel onFechar={() => setPopupAberto(false)} />}
+    </div>
+  );
+}
+
 export function PagamentoView({
   cpf,
   setCpf,
@@ -1465,6 +1541,7 @@ export function PagamentoView({
   cpfCadastrado,
   fluxo = "abertura",
   semTaxaJunta = false,
+  guia = false,
   onPagar,
   onVoltar,
   aceito,
@@ -1497,6 +1574,16 @@ export function PagamentoView({
    * idêntico, então não vale uma tela nova.
    */
   fluxo?: "abertura" | "migrar";
+  /**
+   * 🆕 01/09 (pedido do Pedro) — modo GUIA DA JUNTA (DAE). Mesma tela de
+   * pagamento, outro objeto: aqui não se paga mensalidade, se paga a taxa
+   * do Estado, DEPOIS que a viabilidade foi deferida (a pessoa chega pelo
+   * CTA da tela de status). Muda o valor, a copy e o aceite; o resto — CPF,
+   * métodos, efeito da escolha, idempotência — é idêntico de propósito:
+   * pagar duas coisas em telas diferentes já é confuso o bastante sem duas
+   * gramáticas visuais.
+   */
+  guia?: boolean;
   /** 🆕 03/08 — MEI não paga taxa da Junta. Só se aplica a `fluxo="abertura"`
    *  (migrar já não soma DAE por natureza, empresa já existe). */
   semTaxaJunta?: boolean;
@@ -1521,17 +1608,27 @@ export function PagamentoView({
   // 🔄 26/08 (pedido do Pedro) — a DAE não soma mais aqui. Ela só vira
   // cobrança de verdade depois que a viabilidade voltar deferida (A3),
   // então cobrar agora seria cobrar por algo que ainda não foi emitido.
-  const total = mensalidade;
+  // 🆕 01/09 — no modo guia o valor é a taxa da Junta, não a mensalidade.
+  const total = guia ? CUSTOS.DAE_JUCEMG : mensalidade;
   const escolhido = METODOS.find((m) => m.id === metodo)!;
 
   const temCadastrado = Boolean(cpfCadastrado?.trim());
 
   return (
     <>
-      <TelaHeader meta={migrar ? "Pagamento" : "Pagamento e contrato"} onVoltar={onVoltar} />
+      <TelaHeader
+        meta={guia ? "Taxa da Junta" : migrar ? "Pagamento" : "Pagamento e contrato"}
+        onVoltar={onVoltar}
+      />
       <main className="app-main">
-        <Titulo sub={`${brl(total, true)} hoje, e depois ${brl(mensalidade)} por mês.`}>
-          Falta só isso
+        <Titulo
+          sub={
+            guia
+              ? `${brl(total, true)}, uma vez só. É a taxa que a Junta cobra pra registrar, e ela vai inteira pro Estado.`
+              : `${brl(total, true)} hoje, e depois ${brl(mensalidade)} por mês.`
+          }
+        >
+          {guia ? "Pague a guia da Junta" : "Falta só isso"}
         </Titulo>
 
         <Corpo>
@@ -1614,28 +1711,39 @@ export function PagamentoView({
           </p>
 
           {/* 🔄 30/08 (pedido do Pedro) — aceite do contrato, realocado do
-              extinto E8 (`ContratoView`). Só no fluxo de abertura. */}
-          {!migrar && (
-            <>
-              <button
-                type="button"
-                onClick={onLerContrato}
-                className="flex min-h-12 w-full items-center justify-center rounded-md border
-                           border-border-strong bg-surface-card px-4 text-body font-semibold
-                           text-text-primary transition-colors hover:bg-surface-alt"
-              >
-                Ler o contrato completo
-              </button>
-              <Checkbox checked={aceito ?? false} onChange={setAceito ?? (() => {})}>
-                Li e aceito o contrato de serviço da Legalizai.
-              </Checkbox>
-            </>
+              extinto E8 (`ContratoView`). Só no fluxo de abertura.
+              🔄 01/09 — no modo GUIA o aceite é outro: não é o contrato de
+              serviço (esse já foi aceito no E9), é a autorização do ato
+              irreversível, que veio da A1. Faz mais sentido aqui: é neste
+              clique que a taxa vira gasto e o registro começa. */}
+          {guia ? (
+            <AceiteIrreversivelGuia
+              aceito={aceito ?? false}
+              setAceito={setAceito ?? (() => {})}
+            />
+          ) : (
+            !migrar && (
+              <>
+                <button
+                  type="button"
+                  onClick={onLerContrato}
+                  className="flex min-h-12 w-full items-center justify-center rounded-md border
+                             border-border-strong bg-surface-card px-4 text-body font-semibold
+                             text-text-primary transition-colors hover:bg-surface-alt"
+                >
+                  Ler o contrato completo
+                </button>
+                <Checkbox checked={aceito ?? false} onChange={setAceito ?? (() => {})}>
+                  Li e aceito o contrato de serviço da Legalizai.
+                </Checkbox>
+              </>
+            )
           )}
         </Corpo>
 
         <Rodape>
           <Button full disabled={!migrar && !aceito} onClick={onPagar}>
-            Pagar {brl(total, true)}
+            {guia ? `Pagar a guia · ${brl(total, true)}` : `Pagar ${brl(total, true)}`}
           </Button>
         </Rodape>
       </main>

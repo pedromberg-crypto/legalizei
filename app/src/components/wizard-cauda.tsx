@@ -121,7 +121,6 @@ export function RevisarView({
   const [aceitoLocal, setAceitoLocal] = useState(false);
   const aceito = aceitoProp ?? aceitoLocal;
   const setAceito = setAceitoProp ?? setAceitoLocal;
-  const [popupAberto, setPopupAberto] = useState(false);
   return (
     <>
       <TelaHeader meta="Revisar" onVoltar={onVoltar} />
@@ -217,49 +216,35 @@ export function RevisarView({
             )}
           </Card>
 
-          {/* A taxa dura como LINHA de recap: já foi paga no N9, o N7 já é o
-              dono da explicação. Aqui não re-argumenta, só confirma o valor.
-              MEI não tem essa taxa — o card some (não faz sentido "R$0"). */}
-          {!mei && (
-            <Card>
-              <div className="flex items-baseline justify-between">
-                <span className="text-body font-semibold text-text-primary">
-                  Taxa da Junta (já paga)
-                </span>
-                <span className="text-body font-semibold text-text-primary">
-                  {brl(d.taxaJunta)}
-                </span>
-              </div>
-              <p className="text-micro text-text-tertiary mt-1">
-                Repasse ao governo, já incluído no que você pagou.
-              </p>
-            </Card>
-          )}
+          {/* 🗑️ 01/09 (decisão do Pedro) — o card "Taxa da Junta (já paga)"
+              SAIU. Ele estava mentindo desde 26/08: a DAE deixou de ser cobrada
+              no checkout e passou a ser paga DEPOIS, quando a viabilidade volta
+              deferida — ou seja, neste ponto da jornada ela ainda não foi paga.
+              O lugar dela agora é a tela da guia (`/guia`), que é onde ela de
+              fato é cobrada. */}
 
-          {/* 🆕 01/09 — o aceite que era a tela A2 inteira. Fica no FIM, depois
-              de todo o recap: autorizar é a última coisa que se faz, e agora
-              acontece na mesma tela em que se confere. */}
-          {mei ? (
+          {/* 🔄 01/09, 2ª rodada (decisão do Pedro) — o aceite do ME MUDOU DE
+              TELA de novo, e desta vez pro lugar onde o gesto acontece: a tela
+              de pagamento da guia (`/guia`). É lá que a taxa vira gasto
+              irreversível; aqui a frase "a taxa já paga não é reembolsável"
+              ficava descolada, porque nada tinha sido pago ainda.
+              O MEI mantém o aceite aqui: ele não paga guia nenhuma, então não
+              existe uma tela de pagamento depois desta pra carregar o aceite. */}
+          {mei && (
             <Checkbox checked={aceito} onChange={setAceito}>
               Autorizo a Legalizai a preparar minha abertura, e entendo que o
               registro final é feito por mim no Portal do Empreendedor.
             </Checkbox>
-          ) : (
-            <AceiteIrreversivel
-              aceito={aceito}
-              setAceito={setAceito}
-              onAbrirDetalhe={() => setPopupAberto(true)}
-            />
           )}
         </Corpo>
 
         <Rodape>
-          <Button full disabled={!aceito} onClick={onSeguir}>
-            Autorizo, pode abrir
+          {/* 🔄 01/09 — no ME o CTA não depende mais de aceite: o aceite mudou
+              pra tela da guia. No MEI (que não paga guia) ele continua travando. */}
+          <Button full disabled={mei && !aceito} onClick={onSeguir}>
+            {mei ? "Autorizo, pode abrir" : "Confirmar e seguir"}
           </Button>
         </Rodape>
-
-        {popupAberto && <SheetNaoReembolsavel onFechar={() => setPopupAberto(false)} />}
       </main>
     </>
   );
@@ -302,76 +287,12 @@ function Linha({ rotulo, valor }: { rotulo: string; valor: string }) {
 /* ═══════════════════ N20 · TERMO DE INÍCIO (IRREVERSÍVEL) ═══════════════ */
 
 /**
- * 🆕 01/09 — o aceite irreversível do ME, com "não é reembolsável" clicável.
- *
- * ⚠️ POR QUE NÃO USA O `Checkbox` DO DS AQUI. A 1ª versão colocou o link
- * DENTRO do `<label>` do componente padrão, e quebrou duas coisas de verdade
- * (não só no teste): o Chrome poda o botão da árvore de acessibilidade quando
- * ele vira parte do nome acessível do checkbox (leitor de tela nunca alcança o
- * link), e o próprio toggle parava de responder ao clique no rótulo.
- *
- * Aqui o `<input>` é irmão do texto, o rótulo clicável é `<label htmlFor>` e o
- * link fica FORA dele. Resultado: clicar no texto marca o aceite, clicar no
- * link abre o detalhe, e os dois existem pra quem navega por teclado/leitor.
- * A moldura visual é a mesma do DS (mesmo card, mesma caixa coral).
+ * 🗑️ 01/09 (2ª rodada) — `AceiteIrreversivel` foi removido daqui: o aceite
+ * do ME mudou pra tela de pagamento da guia (`/guia`), onde a taxa de fato
+ * vira gasto. O componente equivalente vive agora em `wizard-dinheiro.tsx`
+ * (`AceiteIrreversivelGuia`), com a mesma estrutura (input irmão do texto) e
+ * reusando o `SheetNaoReembolsavel` daqui.
  */
-function AceiteIrreversivel({
-  aceito,
-  setAceito,
-  onAbrirDetalhe,
-}: {
-  aceito: boolean;
-  setAceito: (v: boolean) => void;
-  onAbrirDetalhe: () => void;
-}) {
-  return (
-    <div className="flex items-start gap-3 rounded-md border border-border-hairline bg-surface-card p-3">
-      <input
-        id="aceite-irreversivel"
-        type="checkbox"
-        checked={aceito}
-        onChange={(e) => setAceito(e.target.checked)}
-        className="sr-only"
-      />
-      <label
-        htmlFor="aceite-irreversivel"
-        aria-hidden
-        className={`mt-0.5 flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center rounded border-2 transition-colors ${
-          aceito
-            ? "border-action-primary bg-action-primary"
-            : "border-border-strong bg-surface-card"
-        }`}
-      >
-        {aceito && (
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M4 12.5 9.5 18 20 6"
-              stroke="#fff"
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        )}
-      </label>
-      <p className="text-caption text-text-secondary">
-        <label htmlFor="aceite-irreversivel" className="cursor-pointer">
-          Autorizo o início da abertura, ciente de que ela não pode ser desfeita
-          e de que a taxa da Junta já paga{" "}
-        </label>
-        <button
-          type="button"
-          onClick={onAbrirDetalhe}
-          className="font-semibold text-action-primary-sm underline underline-offset-4"
-        >
-          não é reembolsável
-        </button>
-        .
-      </p>
-    </div>
-  );
-}
-
 /**
  * 🆕 01/09 — o detalhe que morava na tela A2, agora sob demanda.
  *
@@ -380,7 +301,7 @@ function AceiteIrreversivel({
  * entender o não-reembolso lê aqui, sem custar uma tela a mais pra quem já
  * entendeu.
  */
-function SheetNaoReembolsavel({ onFechar }: { onFechar: () => void }) {
+export function SheetNaoReembolsavel({ onFechar }: { onFechar: () => void }) {
   const [entrou, setEntrou] = useState(false);
   useEffect(() => {
     const id = requestAnimationFrame(() => setEntrou(true));

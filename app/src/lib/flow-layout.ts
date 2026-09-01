@@ -129,6 +129,19 @@ export function calcularLayout(
     edgesep: 40,
     marginx: 40,
     marginy: 40,
+    /**
+     * 🆕 01/09 (pedido do Pedro: "a E7 está lá em cima à toa") — `align`
+     * amarra os nós de um caminho na MESMA linha, em vez de deixar cada um
+     * cair no baricentro dos vizinhos. Sem isso a E7 flutuava ~1440px acima
+     * da E6 e da E9, que são as únicas vizinhas dela, com a variante E7.1
+     * ocupando a linha do meio.
+     *
+     * Medido antes de escolher, e a 1ª hipótese estava errada: mexer no PESO
+     * das arestas não movia nada (o lugar vinha da ordenação de rank, não da
+     * força da aresta). Com `DL` a diferença E6↔E7↔E9 foi a zero **e** o mapa
+     * inteiro encurtou (3414px → 3117px), o oposto do trade-off esperado.
+     */
+    align: "DL",
   });
   g.setDefaultEdgeLabel(() => ({}));
 

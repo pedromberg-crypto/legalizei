@@ -7,6 +7,8 @@ import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
 import { Campo, Texto, Select, OpcoesLinha } from "@/components/ui/form";
 import { FISCAL, CUSTOS, brl } from "@/lib/fiscal";
 import { FORMAS_ATUACAO } from "@/lib/mei";
+// 🆕 01/09 — mesma máscara do E6, pro CPF do sócio extra (C3).
+import { mascaraCpf } from "@/components/wizard-dinheiro";
 import {
   CLIENTE,
   TEM_SOCIO,
@@ -126,18 +128,32 @@ export function SocioView({
    * constitutivo é o CCMEI, e o formulário do Portal do Empreendedor não
    * pergunta estado civil em lugar nenhum.
    *
-   * ⚠️ Tudo o mais nesta tela CONTINUA valendo pros dois: RG, órgão emissor,
-   * data de nascimento e nome da mãe são campo obrigatório do formulário do
-   * MEI também. Nada foi retirado do caminho ME.
+   * ⚠️ Tudo o mais nesta tela CONTINUA valendo pros dois: RG, órgão emissor e
+   * data de nascimento. Nada foi retirado do caminho ME.
    *
    * `false` (default) = ME, tela idêntica ao que sempre foi.
    */
   mei?: boolean;
 }) {
+  /**
+   * 🗑️ 01/09 (auditoria 1-a-1, item 7) — **nome da mãe REMOVIDO**. Ele entrou
+   * em 26/08 como "exigência de DBE ausente do dossiê", por raciocínio. A
+   * gravação real derrubou isso: em 141 prints não existe campo de filiação em
+   * lugar nenhum — nem no DBE (a Identificação do Representante, tela 54, é
+   * nome + CPF + qualificação, o resto vem do CPF na base da Receita), nem no
+   * Integrador (Dados do Sócio, telas 102-104), nem na qualificação do contrato
+   * social (preview da tela 117).
+   *
+   * O MEI também não precisa: `pesquisa/abertura-mei/abertura-mei-processo.md`
+   * (linha 98) diz que nome da mãe é **puxado do gov.br e não editável**. Era
+   * campo obrigatório na 1ª tela pós-pagamento, sem consumidor conhecido.
+   *
+   * Se a certificadora parceira pedir na emissão do certificado, o lugar é lá
+   * (A3.2), com o motivo à vista — não aqui.
+   */
   const [rg, setRg] = useState("");
   const [orgao, setOrgao] = useState("");
   const [nascimento, setNascimento] = useState("");
-  const [nomeMae, setNomeMae] = useState("");
   const [civil, setCivil] = useState("");
   const [regime, setRegime] = useState("");
 
@@ -145,7 +161,6 @@ export function SocioView({
     setRg(PREENCHIMENTO.socio.rg);
     setOrgao(PREENCHIMENTO.socio.orgao);
     setNascimento(PREENCHIMENTO.socio.nascimento);
-    setNomeMae(PREENCHIMENTO.socio.nomeMae);
     setCivil(PREENCHIMENTO.socio.civil);
     setRegime(PREENCHIMENTO.socio.regime);
   });
@@ -154,7 +169,6 @@ export function SocioView({
     rg.trim() !== "" &&
     orgao.trim() !== "" &&
     nascimento.trim() !== "" &&
-    nomeMae.trim() !== "" &&
     // Estado civil/regime só entram no ME (vão pro contrato social).
     (mei || (civil !== "" && (civil !== "casado" || regime !== "")));
 
@@ -213,10 +227,6 @@ export function SocioView({
               inputMode="numeric"
               maxLength={10}
             />
-          </Campo>
-
-          <Campo rotulo="Nome da mãe">
-            <Texto valor={nomeMae} onChange={setNomeMae} placeholder="Nome completo" />
           </Campo>
 
           {/* 🆕 28/08 — os 2 campos abaixo são do CONTRATO SOCIAL, que o MEI
@@ -450,9 +460,26 @@ export function VinculoView({
  * FICA DE FORA de propósito: é preenchida internamente como "Empresário" pra
  * todo mundo (titular e extras), decisão validada 31/08 — não é campo.
  */
+/**
+ * 🆕 01/09 (auditoria 1-a-1 campo-do-órgão × campo-do-app, itens 1 e 2) — CPF e
+ * endereço do sócio extra faltavam. Os dois são exigência direta:
+ *
+ * · **CPF** é a CHAVE do sócio nos 3 sistemas (Viabilidade tela 14, QSA do DBE
+ *   telas 63-70, Integrador tela 102). O RG entra na qualificação do contrato,
+ *   mas não identifica a linha do sócio em lugar nenhum. O `dados` do C3 dizia
+ *   "(CPF implícito)" — o que a triagem (E5T) trava é o TIPO (só pessoa
+ *   física), nunca o número.
+ * · **Endereço** entra na qualificação do contrato social (art. 997 CC, visto
+ *   no preview real da JUCEMG, print 117) e tem ficha própria no DBE
+ *   ("Endereço do Sócio/Administrador", telas 67-69). Na gravação ele veio
+ *   preenchido sozinho porque a empresa era SOLO: o sócio era o representante,
+ *   e o sistema manda usar a ficha do representante nesse caso (popup da tela
+ *   66). Com 2 sócios não existe de onde herdar.
+ */
 interface SocioExtra {
   id: string;
   nome: string;
+  cpf: string;
   participacao: number;
   nascimento: string;
   nacionalidade: string;
@@ -460,12 +487,16 @@ interface SocioExtra {
   orgao: string;
   civil: string;
   regime: string;
+  cep: string;
+  numero: string;
+  complemento: string;
 }
 
 function novoSocioExtra(nome = "", participacao = 0): SocioExtra {
   return {
     id: `s${Math.random().toString(36).slice(2, 8)}`,
     nome,
+    cpf: "",
     participacao,
     nascimento: "",
     nacionalidade: "Brasileira",
@@ -473,6 +504,9 @@ function novoSocioExtra(nome = "", participacao = 0): SocioExtra {
     orgao: "",
     civil: "",
     regime: "",
+    cep: "",
+    numero: "",
+    complemento: "",
   };
 }
 
@@ -557,14 +591,19 @@ export function SociosView({
   // 🆕 31/08 — mesma qualificação exigida do titular (C1), agora também do
   // sócio extra: nascimento, nacionalidade, RG+órgão, estado civil (+regime
   // se casado). Profissão não entra — preenchida internamente.
+  // 🆕 01/09 — CPF (chave do sócio no QSA) e endereço (qualificação do contrato,
+  // art. 997 CC) entraram na conta. Complemento fica opcional, como no E6.
   const qualificacaoOk = extras.every(
     (s) =>
+      s.cpf.replace(/\D/g, "").length === 11 &&
       s.nascimento.trim() !== "" &&
       s.nacionalidade.trim() !== "" &&
       s.rg.trim() !== "" &&
       s.orgao.trim() !== "" &&
       s.civil !== "" &&
-      (s.civil !== "casado" || s.regime !== ""),
+      (s.civil !== "casado" || s.regime !== "") &&
+      s.cep.replace(/\D/g, "").length === 8 &&
+      s.numero.trim() !== "",
   );
   const completo = !TEM_SOCIO || (nomesOk && somaOk && qualificacaoOk);
 
@@ -680,6 +719,24 @@ export function SociosView({
                       />
                     </Campo>
 
+                    {/* 🆕 01/09 — CPF é o que identifica o sócio no QSA do DBE
+                        e no Integrador. Vem logo depois do nome porque são o
+                        par que forma a identidade da pessoa. */}
+                    <Campo rotulo="CPF dele">
+                      <Texto
+                        valor={s.cpf}
+                        onChange={(v) => atualizar(s.id, { cpf: mascaraCpf(v) })}
+                        placeholder="000.000.000-00"
+                        inputMode="numeric"
+                        erro={
+                          s.cpf.replace(/\D/g, "").length > 0 &&
+                          s.cpf.replace(/\D/g, "").length < 11
+                            ? "CPF incompleto."
+                            : undefined
+                        }
+                      />
+                    </Campo>
+
                     <Campo
                       rotulo="Participação dele"
                       dica="De 0,5 em 0,5%. A soma de todos os sócios extras não pode chegar a 100%."
@@ -768,6 +825,47 @@ export function SociosView({
                           placeholder="Como está na certidão de casamento"
                         />
                       </Campo>
+                    )}
+
+                    {/* 🆕 01/09 — endereço do sócio. Entra na qualificação do
+                        contrato social (art. 997 CC) e tem ficha própria no
+                        DBE. Mesmo autofill por CEP do C4/E6; complemento
+                        opcional, igual ao resto do app. */}
+                    <Campo rotulo="CEP dele" dica="A gente puxa o resto do endereço.">
+                      <Texto
+                        valor={s.cep}
+                        onChange={(v) => atualizar(s.id, { cep: mascaraCep(v) })}
+                        placeholder="00000-000"
+                        inputMode="numeric"
+                      />
+                    </Campo>
+
+                    {buscarCep(s.cep.replace(/\D/g, "")) && (
+                      <>
+                        <div className="-mt-1 rounded-md border border-border-hairline bg-surface-alt px-3 py-2.5 text-caption text-text-secondary">
+                          {(() => {
+                            const e = buscarCep(s.cep.replace(/\D/g, ""))!;
+                            return `${e.logradouro}, ${e.bairro} — ${e.municipio}/${e.uf}`;
+                          })()}
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <Campo rotulo="Número">
+                            <Texto
+                              valor={s.numero}
+                              onChange={(v) => atualizar(s.id, { numero: v })}
+                              placeholder="Nº"
+                              inputMode="numeric"
+                            />
+                          </Campo>
+                          <Campo rotulo="Complemento">
+                            <Texto
+                              valor={s.complemento}
+                              onChange={(v) => atualizar(s.id, { complemento: v })}
+                              placeholder="Bloco, apto..."
+                            />
+                          </Campo>
+                        </div>
+                      </>
                     )}
                   </div>
                 ))}

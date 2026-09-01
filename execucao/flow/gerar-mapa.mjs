@@ -426,8 +426,19 @@ function setBloco(txt, nome, inner) {
   return txt.replace(re, `${ini}\n${inner}\n${fim}`);
 }
 
+/**
+ * 🐛→🔒 01/09 — o `\r?` NÃO é decoração. O regex antigo exigia `\n` colado no
+ * marcador; quando a nota vem fresca de um `git checkout` no Windows ela está
+ * em CRLF, o match falhava, `blocoAtual` devolvia "" e o histórico de versões
+ * era APAGADO na gravação seguinte (aconteceu de verdade: a v59 zerou as 19
+ * versões anteriores, restauradas na mão). Só apareceu agora porque, entre
+ * gerações, quem escreve a nota é este script (LF) — o CRLF só entra quando o
+ * git toca no arquivo.
+ */
 function blocoAtual(txt, nome) {
-  const m = txt.match(new RegExp(`<!-- FLOW:${nome}:INI -->\\n([\\s\\S]*?)\\n<!-- FLOW:${nome}:FIM -->`));
+  const m = txt.match(
+    new RegExp(`<!-- FLOW:${nome}:INI -->\\r?\\n([\\s\\S]*?)\\r?\\n<!-- FLOW:${nome}:FIM -->`),
+  );
   return m ? m[1].trim() : "";
 }
 

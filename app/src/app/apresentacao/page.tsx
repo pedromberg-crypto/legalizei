@@ -1296,19 +1296,19 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   },
   socios: {
     dono: "usuario",
-    faz: "Confirma se a empresa tem 2º sócio e, se tiver, coleta o nome e a divisão de participação.",
+    faz: "Confirma se a empresa tem mais sócios e, se tiver, coleta a qualificação completa de cada um: nome, CPF, participação, nascimento, nacionalidade, RG + órgão, estado civil (+ regime) e endereço.",
     interfere:
-      "A divisão em % vai literalmente no contrato social, e o número de sócios determina a natureza jurídica da tela seguinte. Também define quantas assinaturas o GOV.BR vai exigir no fim.",
+      "A divisão em % vai literalmente no contrato social, e o número de sócios determina a natureza jurídica (SLU × LTDA, decidida por dentro). Também define quantas assinaturas o GOV.BR vai exigir no fim.",
     porque:
-      "O produto abre com até 2 sócios: é limite nosso, não da lei, e a copy diz isso. A triagem do E5 já barrou 3+ lá atrás, então aqui é só trava de segurança — por isso deixou de ter peso de alerta.",
+      "O produto abre com até 4 sócios: é limite nosso, não da lei. A qualificação completa não é zelo, é o art. 997 do Código Civil — sem ela o contrato não é lavrado. CPF e endereço entraram em 01/09, na auditoria contra os 141 prints da JUCEMG: o CPF é a chave do sócio no QSA, e o endereço só veio automático na gravação porque a empresa era de um dono só. Profissão a gente preenche por dentro (\"Empresário\", igual pra todos).",
   },
   empresa: {
     dono: "usuario",
-    faz: "Endereço da empresa (CEP puxa o resto), índice do IPTU, tipo do imóvel, residência de sócio e capital social.",
+    faz: "Endereço da empresa (CEP puxa o resto), índice do IPTU, tipo do imóvel (casa ou apartamento) e se o titular mora no local.",
     interfere:
-      "É a tela mais pesada da constituição. O índice do IPTU é OBRIGATÓRIO: sem ele a documentação não passa na JUCEMG. O capital social vai no contrato. E se o endereço é residência de sócio, muda a análise de viabilidade da prefeitura.",
+      "É a tela mais pesada da constituição. O índice do IPTU é OBRIGATÓRIO: sem ele a documentação não passa na JUCEMG. E a residência do titular é o que a Prefeitura de BH usa pra deferir ou indeferir quando o endereço é apartamento — vimos a mesma empresa mudar de indeferida pra deferida só trocando essa resposta.",
     porque:
-      "Área utilizada e atividade inócua a gente resolve por dentro, sem perguntar — são dados que derivamos do CNAE. Só pedimos o que ninguém consegue adivinhar. E quem não tem endereço comercial compra o nosso aqui, em vez de travar.",
+      "Área utilizada, atividade inócua, forma de atuação, capital social (R$10.000 fixo desde 31/08) e \"edificação nova\" a gente resolve por dentro, sem perguntar. Só pedimos o que ninguém consegue adivinhar — e \"edificação nova\" é justamente o oposto: termo técnico da Prefeitura que o cliente responderia errado com confiança. Quem não tem endereço comercial compra o nosso aqui, em vez de travar.",
   },
   "cnae-secundarios": {
     dono: "usuario",
@@ -1480,7 +1480,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   },
   "m-socios": {
     dono: "usuario",
-    faz: "MESMA tela do C3 (dossiê de constituição), reusada aqui: nome + % de cada sócio extra, se a empresa tiver mais de um.",
+    faz: "MESMA tela do C3 (dossiê de constituição), reusada aqui: a qualificação completa de cada sócio extra (nome, CPF, %, nascimento, nacionalidade, RG + órgão, estado civil e endereço).",
     interfere:
       "Sem os dados de TODOS os sócios, a procuração e a assinatura ficam incompletas — quem assina precisa estar identificado.",
     porque:

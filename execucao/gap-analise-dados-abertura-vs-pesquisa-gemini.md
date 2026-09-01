@@ -15,10 +15,12 @@ tags: [execucao, flow, dados, abertura, fiscal, pendencia]
 | # | Campo (pesquisa Gemini) | Onde deveria estar | Achado no código | Severidade |
 |---|---|---|---|---|
 | 1 | **Data de nascimento** | C1 · Seus dados | ✅ **Implementado 26/08** — campo novo em `SocioView` (`wizard-dossie.tsx`) | Alta — é campo padrão de DBE (Receita Federal) |
-| 2 | **Nome da mãe** | C1 | ✅ **Implementado 26/08** — campo novo, mesmo componente | Alta — mesmo motivo, campo clássico de DBE |
-| 3 | **Forma de atuação** — "Internet" / "atividades fora do estabelecimento" × "Estabelecimento Fixo" | C4 · Dados da empresa | 🟡 **Decisão travada 26/08** (`marca/decisoes-marca.md`) — preenchido por nós como "Internet", NÃO vira pergunta ao cliente. Pendente de validação técnica contra o portal real | Alta — segundo a pesquisa, é o que garante dispensa de fiscalização física pra home office |
-| 4 | **Tipo de unidade** — "Sede" / "Unidade Administrativa" | C4 | 🟢 **Decisão travada 26/08** — sempre "Sede", preenchido por nós. Não vira pergunta, mas fica documentado que a equipe/sistema precisa responder isso pelo usuário na viabilidade | Média |
-| 5 | **Metragem (m²)** — área total do imóvel + área da operação | C4 | 🟡 **Mantido como pendente 26/08** — Pedro confirmou não ter visto essa exigência em lugar nenhum além do índice cadastral IPTU (já coletado em C4). Sem decisão até aparecer fonte | Alta na teoria, mas **fonte não ratificada** — ver explicação |
+| 2 | **Nome da mãe** | C1 | 🗑️ **REVERTIDO 01/09** — implementado em 26/08, removido depois da auditoria contra os 141 prints: não existe campo de filiação em nenhum dos 3 sistemas (DBE tela 54, Integrador 102-104, contrato 117), e no MEI vem do gov.br. A "exigência de DBE" era inferida | ~~Alta~~ → **falso positivo desta pesquisa** |
+| 3 | **Forma de atuação** — "Internet" / "atividades fora do estabelecimento" × "Estabelecimento Fixo" | C4 · Dados da empresa | 🔴→🟢 **CORRIGIDO 01/09** — a decisão de 26/08 fixou "Internet"; o valor real, visto 2x nos prints (tela 14 Viabilidade, tela 48 DBE), é **"Atividade Desenvolvida Fora do Estabelecimento"**, e "Internet" aparece na mesma lista NÃO marcada | Alta — a pesquisa acertou o campo e errou o valor |
+| 4 | **Tipo de unidade** — "Sede" / "Unidade Administrativa" | C4 | 🔴→🟢 **CORRIGIDO 31/08** — a decisão de 26/08 fixou "Sede"; o valor real dos prints é **"Produtiva"** | Média — mesmo padrão do item 3 |
+| 5 | **Metragem (m²)** — área total do imóvel + área da operação | C4 | 🟢 **RESOLVIDO 31/08** — o print da Viabilidade (tela 13) mostra Área Total e Área Utilizada sempre em **20,00**; virou valor fixo preenchido por nós. A pesquisa estava certa, faltava fonte | Alta — a exigência existia mesmo |
+
+> 🔍 **Nota de método (01/09).** Três dos cinco itens desta pesquisa foram corrigidos ou revertidos pela gravação real. O padrão é o mesmo nos três: a pesquisa **acertou quais campos existem** e **errou os valores**, porque descrevia o formulário sem tê-lo visto preenchido. Serve de régua: pesquisa externa é boa pra descobrir que um campo existe, não pra decidir o que vai dentro dele.
 
 ## Explicação — itens 3, 4 e 5 (26/08)
 
@@ -54,11 +56,21 @@ tags: [execucao, flow, dados, abertura, fiscal, pendencia]
 | Vínculo contábil (CPF/CNPJ do contador + CRC-MG) | É a Legalizai que assume a contabilidade — esse dado é preenchido internamente (o CRC é NOSSO), não coletado do cliente no caminho Abrir. Só existe pergunta de contador no caminho **Migrar** (`E9_2`, contador ANTERIOR do cliente) |
 | Contatos públicos da PJ (e-mail/telefone que ficam no Cartão CNPJ) | Provavelmente reaproveita e-mail/telefone já captados no E6 — **não confirmado** se é reuso automático ou se falta uma tela de confirmação/edição desses contatos como "públicos". Fica como pergunta aberta, não gap fechado |
 
-## Estado final (26/08)
+## Estado final (26/08) — SUPERADO, ver bloco de 01/09 abaixo
 
 - **#1/#2** (nascimento, nome da mãe) — ✅ implementados em C1.
 - **#3** (forma de atuação) — 🟡 travado como "Internet" fixo, sem pergunta ao cliente, **pendente de validação técnica**. Reabrir se o produto passar a atender CNAEs com atendimento físico.
 - **#4** (tipo de unidade) — 🟢 travado como "Sede" fixo, sem pergunta ao cliente. Documentado que a equipe/sistema responde isso pelo usuário na viabilidade — sem pendência.
 - **#5** (metragem) — 🟡 segue pendente, sem decisão. Nenhuma fonte além do IPTU já coletado. Não implementar até aparecer confirmação real.
+
+## Estado final (01/09) — depois da gravação real
+
+- **#1** (nascimento) — ✅ segue válido, confirmado nos prints.
+- **#2** (nome da mãe) — 🗑️ **revertido**: campo removido do C1. Não existe em nenhum dos 3 sistemas; era inferência da pesquisa.
+- **#3** (forma de atuação) — 🟢 **fechado com valor certo**: "Atividade Desenvolvida Fora do Estabelecimento", não "Internet".
+- **#4** (tipo de unidade) — 🟢 **fechado com valor certo**: "Produtiva", não "Sede".
+- **#5** (metragem) — 🟢 **fechado**: 20 m² fixos, vistos no print da Viabilidade.
+
+Nenhum item desta pesquisa segue pendente. O que sobrou de aberto migrou pra auditoria 1-a-1 de 01/09 (ver `decisoes-marca.md`) e pra fila da especialista: "edificação nova" como suposição, e o endereço PF do contabilista.
 
 Nenhum dos 3 (#3/#4/#5) virou pergunta na UI — são valores internos que a Legalizai preenche em nome do cliente na hora de submeter a viabilidade.

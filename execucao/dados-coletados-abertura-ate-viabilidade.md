@@ -107,7 +107,6 @@ tags: [execucao, flow, dados, abertura]
 - CONFIRMA nome/CPF/endereço já captados no E6 (não recoleta)
 - RG + órgão emissor (digitação manual)
 - data de nascimento
-- nome da mãe
 - estado civil (+ regime de bens se casado)
 - confirma se mora fora do Brasil
 
@@ -117,7 +116,7 @@ tags: [execucao, flow, dados, abertura]
 
 ### C3 · Sócios?
 - Confirma se terá mais sócios (sem reperguntar quantidade/tipo)
-- se houver, de cada sócio extra: nome completo + % de participação (CPF implícito) + data de nascimento + nacionalidade + RG + órgão emissor + estado civil (+ regime de bens se casado)
+- se houver, de cada sócio extra: nome completo + CPF + % de participação + data de nascimento + nacionalidade + RG + órgão emissor + estado civil (+ regime de bens se casado) + endereço (CEP com autofill + número + complemento)
 
 ### C4 · Dados da empresa
 - CEP (autofill) + número + complemento
@@ -152,7 +151,7 @@ tags: [execucao, flow, dados, abertura]
 
 | Campo | Valor | Onde entraria | Status | Por quê |
 |---|---|---|---|---|
-| Forma de atuação (JUCEMG) | "Internet" / atividade fora do estabelecimento | C4 · Dados da empresa | 🟡 travado internamente, pendente de validação técnica | Não gera dúvida útil pro cliente nem interfere na atuação dele — vale enquanto o escopo for serviço 100% remoto. Reabrir se o produto passar a atender CNAEs com atendimento físico (cabeleireira, personal trainer etc.) |
+| Forma de atuação (JUCEMG) | "Atividade Desenvolvida Fora do Estabelecimento" | C4 · Dados da empresa | 🟢 travado, corrigido 01/09 | 🔴 Estava documentado como "Internet" — ERRADO, valor decidido em 26/08 por raciocínio, antes de existir gravação. Os prints mostram "Atividade Desenvolvida Fora do Estabelecimento" marcada 2x, em 2 sistemas (tela 14 Viabilidade, tela 48 DBE), e a tela 48 exibe as 8 opções do campo com "Internet" entre elas, NÃO marcada: são opções distintas da mesma lista, não sinônimos. 3ª correção desta mesma família (as outras 2: "Sede"→Produtiva e metragem). Segue valendo enquanto o escopo for serviço 100% remoto |
 | Tipo de unidade (JUCEMG) | "Produtiva" | C4 · Dados da empresa | 🟢 travado, corrigido 31/08 | 🔴 Estava documentado como "Sede" — ERRADO. Prints reais (Viabilidade e Integrador) confirmam "Produtiva": Sede/Filial nem aparece como opção fixa relevante pra uma constituição nova. Toda abertura nova (matriz) usa Produtiva |
 | Metragem (m² do imóvel + m² da operação) | 20 m² (fixo) | C4 · Dados da empresa | 🟢 travado, resolvido 31/08 | 🔴 Estava "não implementado, sem decisão" — RESOLVIDO. Print real da Viabilidade mostra Área Total e Área Utilizada sempre preenchidas com 20,00 — mesmo valor usado em toda a gravação, virou padrão |
 | Profissão (titular E qualquer sócio) | "Empresário" | C1 · Seus dados / C3 · Sócios | 🟢 travado, validado 31/08 pelo Pedro | Campo obrigatório no Integrador (Dados do Sócio/Administrador) pra qualquer sócio — nunca varia por atividade, então não gera dúvida útil pro cliente. Preenchido igual pra titular e sócio extra |
@@ -163,6 +162,9 @@ tags: [execucao, flow, dados, abertura]
 | Acesso ao endereço | "Pedestre" | C4 · Dados da empresa | 🟢 travado | Campo da Prefeitura de BH (Dados Adicionais), sempre Pedestre pro nosso perfil de prestador de serviço remoto — nunca veículo leve/pesado |
 | "Atividade exercida no local?" (principal e secundárias) | Não (sempre) | C0 · Sua atividade / C5 · CNAE secundários | 🟢 travado | Marcar Não em TODAS as atividades é o que habilita a opção "Escritório/sede administrativa" — se qualquer uma virasse Sim, a Prefeitura entenderia como comércio/loja física, errado pro nosso perfil |
 | "Atividade é inócua ou virtual?" | Sim (sempre) | C4 · Dados da empresa | 🟢 travado | Pergunta do Licenciamento (Corpo de Bombeiros): atividade sem circulação de pessoas no local, sempre verdade pro nosso perfil 100% remoto/administrativo |
+| "Edificação nova?" (regulação urbana, Prefeitura de BH) | Não (sempre) | C4 · Dados da empresa | 🟡 travado 01/09, é SUPOSIÇÃO — fila-Izabela | 3ª pergunta do Questionário de Regulação Urbana (tela 16), na MESMA tela que já produziu o indeferimento real. As outras 2 (apartamento, sócio reside) a gente já capta; esta não existia em nenhuma fonte. Fica interna e não vira pergunta porque "edificação nova" tem sentido técnico na Prefeitura (imóvel recém-construído, questão de habite-se) que o cliente não sabe responder — perguntar convida erro confiante, que é pior modo de falhar que errar sempre igual num caso raro. Risco residual: cliente em prédio novo sem habite-se cai em exigência. Validado por Pedro 01/09; confirmar com a especialista |
+| Valor da participação de cada sócio (R$) e quantidade de quotas | % informado × R$10.000 (o valor em R$ é também o nº de quotas, porque a quota é R$1) | C3 · Sócios (derivado, não perguntado) | 🟢 travado, documentado 01/09 | O app pergunta PERCENTUAL; os órgãos pedem VALOR EM REAIS (DBE tela 65: R$10.000,00 pro sócio único; QSA tela 70) e o Integrador pede o valor nominal da quota, R$1,00 (tela 95). A conversão existia na prática e não estava escrita. Como o passo do campo é 0,5%, o menor incremento dá 50 quotas exatas: nenhum percentual selecionável gera fração de quota, então não há arredondamento a tratar. ⚠️ Isso quebra se o capital deixar de ser R$10.000 ou o passo mudar |
+| Regime de bens — tradução do rótulo pro valor da JUCEMG | "Separação total de bens" (nosso rótulo) → "Separação Convencional de Bens" (valor da Junta) | C1 · Seus dados / C3 · Sócios | 🟡 travado 01/09, com lacuna conhecida e aceita | O dropdown real do Integrador (tela 103) tem 5 regimes; o app oferece 4, por decisão do Pedro em 01/09 ("esse quinto, casamento acima de 70 anos, não faz sentido pra gente"). Falta a Separação Obrigatória, que é imposta por lei e não escolhida. Consequência aceita: quem estiver nesse regime marca "Separação total" e o contrato sai com a qualificação errada — caso raro, sem tela, resolvido no atendimento se aparecer |
 | Sociedade de Propósito Específico? | Não (sempre) | C6 · Natureza jurídica | 🟢 travado | Cláusula do Contrato Núcleo — nenhuma empresa do nosso escopo (ME prestador de serviço comum) é SPE. Campo do contrato, não pergunta ao cliente |
 | Capital Totalmente Integralizado em Moeda Corrente? | Sim (sempre) | C4 · Dados da empresa | 🟢 travado | Cláusula do Contrato Núcleo — o capital social (R$10.000, também travado) já entra integralizado, sem parcelamento |
 | Tipo de contrato (Integrador) | Padrão · 15 cláusulas obrigatórias (sem anexo, sem cláusula extra) | Pós-C7 · Geração do contrato (RPA/Integrador) | 🟢 travado | 🔴 ACHADO-CHAVE (31/08): incluir anexo/procuração/cláusula extra no processo DERRUBA a elegibilidade ao Registro Automático (aviso visto ao vivo no print da JUCEMG) — por isso a opção de 15 cláusulas sem anexo é a única que usamos, nunca a de 7 cláusulas nem o contrato personalizado (upload) |

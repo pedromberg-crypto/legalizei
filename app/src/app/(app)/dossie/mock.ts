@@ -91,7 +91,9 @@ export const PREENCHIMENTO = {
     // 🆕 26/08 — campo padrão de DBE (Receita), achado no cruzamento com a
     // pesquisa JUCEMG/DBE.
     nascimento: "14/03/1988",
-    nomeMae: "Maria Aparecida Silva",
+    // 🗑️ 01/09 — `nomeMae` removido junto do campo (auditoria 1-a-1, item 7):
+    // nenhum dos 141 prints da JUCEMG/DBE/Integrador tem filiação, e no MEI o
+    // dado vem do gov.br, não editável.
     civil: "casado",
     regime: "parcial",
   },
@@ -101,12 +103,19 @@ export const PREENCHIMENTO = {
    *  (art. 997 CC). 🆕 31/08 — profissão fica de fora: preenchida internamente
    *  como "Empresário" pra qualquer sócio, não é campo. */
   socioExtra: {
+    // 🆕 01/09 — CPF e endereço entraram (auditoria 1-a-1, itens 1 e 2): CPF é
+    // a chave do sócio no QSA do DBE; endereço entra na qualificação do
+    // contrato social (art. 997 CC) e tem ficha própria no DBE.
+    cpf: "045.221.876-30",
     nascimento: "22/11/1985",
     nacionalidade: "Brasileira",
     rg: "MG-15.887.222",
     orgao: "SSP/MG",
     civil: "casado",
     regime: "parcial",
+    cep: "30310-000",
+    numero: "412",
+    complemento: "Apto 501",
   },
   /** N13 — endereço da CLIENTE, com o IPTU que a JUCEMG exige.
    *  🆕 31/08 — `tipoImovel: "apartamento"` de propósito: exercita a trava

@@ -627,7 +627,6 @@
     "c1-confirma-dados": { texto: "Confirma nome / CPF / endereço já captados no cadastro (E6) — não recoleta", status: "oficial", justificativa: "Sem isso a Junta não identifica quem é o titular da empresa." },
     "c1-rg": { texto: "RG + órgão emissor", status: "oficial", justificativa: "Documento de identificação exigido em qualquer registro na Junta." },
     "c1-nascimento": { texto: "Data de nascimento", status: "oficial", justificativa: "Confirma maioridade e integra a qualificação exigida (art. 997 CC)." },
-    "c1-mae": { texto: "Nome da mãe", status: "oficial", justificativa: "Exigência do DBE/Receita Federal pra qualificação do titular." },
     "c1-estado-civil": { texto: "Estado civil (+ regime de bens, se casado)", status: "oficial", justificativa: "Define se precisa de regime de bens e se há vedação a sócios (só marido/mulher).", opcoes: ["Solteiro(a)", "Casado(a)", "União estável", "Divorciado(a)", "Viúvo(a)"], opcoesCondicional: { titulo: "Se casado(a) — regime de bens", opcoes: ["Comunhão parcial de bens", "Comunhão universal de bens", "Separação total de bens", "Participação final nos aquestos"] } },
     "c1-mora-fora": { texto: "Confirma se mora fora do Brasil", status: "oficial", justificativa: "Muda documentação e representação (procuração) se residir fora do Brasil.", opcoes: ["Não", "Sim"] },
     "c2-inss-fora": { texto: "Já contribui INSS por fora? (sim / não)", status: "oficial", justificativa: "Define se o pró-labore pode ser menor (já contribui em outro lugar).", opcoes: ["Não", "Sim"] },
@@ -644,9 +643,9 @@
     "c7-razao-social": { texto: "3 opções de razão social, editáveis, por ordem de prioridade", status: "oficial", justificativa: "É o dado que dispara a Consulta de Viabilidade (Passo 2)." },
     "c7-objeto-social": { texto: "Objeto social (gerado por IA, travado/read-only)", status: "oficial", justificativa: "Descreve a atividade que sustenta o CNAE e o enquadramento." },
     "c7-nome-fantasia": { texto: "Nome fantasia (opcional)", status: "oficial", justificativa: "Não afeta o registro na Junta, só a marca pro público." },
-    "int-forma-atuacao": { texto: "Forma de atuação (JUCEMG) — fixado como \"Internet\" / fora do estabelecimento", status: "interno", justificativa: "Fixamos 'Internet' porque hoje só atendemos serviço 100% remoto.", opcoes: ["Internet (fixado hoje)", "Estabelecimento fixo", "Ambulante", "Porta a porta", "Feira/feirinha/exposição", "Correio", "Outros"] },
-    "int-tipo-unidade": { texto: "Tipo de unidade (JUCEMG) — fixado como \"Sede\"", status: "interno", justificativa: "Toda abertura nova é Sede — Unidade só existiria numa 2ª filial.", opcoes: ["Sede (fixado hoje)", "Filial / Unidade Administrativa"] },
-    "int-metragem": { texto: "Metragem (m² do imóvel + m² da operação) — não implementado ainda", status: "interno", justificativa: "Ainda não implementado; hoje só o índice IPTU é coletado." },
+    "int-forma-atuacao": { texto: "Forma de atuação (JUCEMG) — fixado como \"Atividade Desenvolvida Fora do Estabelecimento\"", status: "interno", justificativa: "🔴 CORRIGIDO 01/09 (auditoria 1-a-1, item 5): estava documentado como 'Internet', valor decidido por raciocínio em 26/08. Os prints reais mostram 'Atividade Desenvolvida Fora do Estabelecimento' marcada 2x (tela 14 Viabilidade, tela 48 DBE) — e a tela 48 exibe 'Internet' na lista, NÃO marcada. São opções distintas da mesma lista, não sinônimos.", opcoes: ["Atividade Desenvolvida Fora do Estabelecimento (fixado hoje)", "Internet", "Estabelecimento fixo", "Ambulante", "Porta a porta", "Feira/feirinha/exposição", "Correio", "Outros"] },
+    "int-tipo-unidade": { texto: "Tipo de unidade (JUCEMG) — fixado como \"Produtiva\"", status: "interno", justificativa: "🔴 CORRIGIDO 31/08 pelos prints (Viabilidade tela 14 + DBE tela 48): o valor real é 'Unidade Produtiva', não 'Sede'. Toda abertura nova (matriz) usa Produtiva. Este checklist ainda dizia 'Sede' — atualizado em 01/09.", opcoes: ["Produtiva (fixado hoje)", "Sede", "Escritório Administrativo", "Filial / Unidade Administrativa"] },
+    "int-metragem": { texto: "Metragem (m² do imóvel + m² da operação) — fixado em 20 m²", status: "interno", justificativa: "🔴 RESOLVIDO 31/08: estava como 'não implementado'. O print da Viabilidade (tela 13) mostra Área Total e Área Utilizada sempre em 20,00 — virou valor padrão, preenchido por nós. Este checklist ainda dizia 'não implementado' — atualizado em 01/09." },
 
     /**
      * 🟡 31/08 (pedido do Pedro) — lista ADICIONAL, prática padrão de
@@ -663,6 +662,7 @@
     "int-administracao": { texto: "Administração da sociedade — fixado como \"exercida pelo(s) sócio(s) nomeados no contrato\"", status: "interno", justificativa: "Ainda não existe sócio-administrador distinto no produto.", opcoes: ["Sócio(s) nomeados no contrato (fixado hoje)", "Administrador não-sócio (terceiro contratado)"] },
     "int-codigo-ato": { texto: "Código do Ato (JUCEMG) — fixado como \"090 – Contrato\" (constituição)", status: "interno", justificativa: "Código fixo da Junta pra qualquer constituição de contrato.", opcoes: ["090 – Contrato / constituição (fixado hoje)", "Outros códigos (alteração, distrato — não se aplicam à abertura)"] },
     "int-uf-registro": { texto: "UF de registro — fixado como \"MG\" (JUCEMG)", status: "interno", justificativa: "Sempre MG porque hoje só atendemos BH/Minas Gerais.", opcoes: ["MG (fixado hoje — único estado atendido)", "Outros 26 estados (fora do nosso escopo)"] },
+    "int-edificacao-nova": { texto: "\"Edificação nova?\" (Questionário de Regulação Urbana, Prefeitura de BH) — fixado como \"Não\"", status: "interno", justificativa: "🆕 01/09 (auditoria 1-a-1, item 4): é a 3ª pergunta da tela 16, a MESMA que produziu o indeferimento real. As outras 2 (apartamento, sócio reside) já são captadas; esta não existia em nenhuma fonte. Fica interna porque 'edificação nova' é termo técnico da Prefeitura (imóvel recém-construído, habite-se) que o cliente responderia errado com confiança. ⚠️ É SUPOSIÇÃO tirada de 1 caso observado — confirmar com a especialista.", opcoes: ["Não (fixado hoje)", "Sim"] },
     "int-desimpedimento": { texto: "Declaração de desimpedimento para administração (art. 1.011 §1º CC) — cláusula-padrão no contrato, não é pergunta", status: "interno", justificativa: "Cláusula legal obrigatória, não depende de resposta do cliente.", opcoes: ["Cláusula presente no contrato (fixado hoje)", "Declaração em documento separado (menos comum)"] },
 
     /**
@@ -672,13 +672,13 @@
      * tudo isso; o C3 (`SocioExtra`, wizard-dossie.tsx) só pega nome + %.
      * Com 2+ sócios, falta dado pra montar o contrato de verdade.
      */
-    "socio-extra-nacionalidade": { texto: "Nacionalidade de cada sócio extra", status: "faltante", justificativa: "Falta hoje — a Junta exige em qualquer sócio, não só no titular." },
-    "socio-extra-estado-civil": { texto: "Estado civil (+ regime de bens) de cada sócio extra", status: "faltante", justificativa: "Mesma exigência do titular (C1), ainda sem campo pro sócio extra.", opcoes: ["Solteiro(a)", "Casado(a)", "União estável", "Divorciado(a)", "Viúvo(a)"], opcoesCondicional: { titulo: "Se casado(a) — regime de bens", opcoes: ["Comunhão parcial de bens", "Comunhão universal de bens", "Separação total de bens", "Participação final nos aquestos"] } },
-    "socio-extra-nascimento": { texto: "Data de nascimento de cada sócio extra", status: "faltante", justificativa: "Compõe a qualificação legal do sócio, hoje só pedida pro titular." },
-    "socio-extra-profissao": { texto: "Profissão de cada sócio extra", status: "faltante", justificativa: "Exigência do art. 997 CC, ainda sem campo no produto." },
-    "socio-extra-cpf": { texto: "CPF de cada sócio extra", status: "faltante", justificativa: "Sem o CPF do sócio extra, o contrato social não pode ser lavrado." },
-    "socio-extra-rg": { texto: "RG + órgão emissor + UF de cada sócio extra", status: "faltante", justificativa: "Mesma exigência de identificação do titular, faltando pro sócio extra." },
-    "socio-extra-endereco": { texto: "Endereço completo (logradouro/número/bairro/município/UF/CEP) de cada sócio extra", status: "faltante", justificativa: "Endereço do sócio é exigido no contrato, ainda não coletado." },
+    "socio-extra-nacionalidade": { texto: "Nacionalidade de cada sócio extra", status: "oficial", justificativa: "✅ construído 31/08 (C3) — a Junta exige em qualquer sócio, não só no titular." },
+    "socio-extra-estado-civil": { texto: "Estado civil (+ regime de bens) de cada sócio extra", status: "oficial", justificativa: "✅ construído 31/08 (C3), mesma exigência do titular. ⚠️ o dropdown real do Integrador (print 103) tem 5 regimes; o app oferece 4 por decisão do Pedro (01/09) — falta a Separação Obrigatória, e \"Separação total\" mapeia pra \"Separação Convencional de Bens\" na JUCEMG.", opcoes: ["Solteiro(a)", "Casado(a)", "União estável", "Divorciado(a)", "Viúvo(a)"], opcoesCondicional: { titulo: "Se casado(a) — regime de bens", opcoes: ["Comunhão parcial de bens", "Comunhão universal de bens", "Separação total de bens", "Participação final nos aquestos"] } },
+    "socio-extra-nascimento": { texto: "Data de nascimento de cada sócio extra", status: "oficial", justificativa: "✅ construído 31/08 (C3) — compõe a qualificação legal do sócio." },
+    "socio-extra-profissao": { texto: "Profissão de cada sócio extra", status: "oficial", justificativa: "Não vira campo: preenchida internamente como \"Empresário\" pra titular e sócios (decisão 31/08). Print 104 confirma o valor." },
+    "socio-extra-cpf": { texto: "CPF de cada sócio extra", status: "oficial", justificativa: "✅ construído 01/09 (auditoria 1-a-1, item 1) — é a CHAVE do sócio nos 3 sistemas (Viabilidade tela 14, QSA do DBE telas 63-70, Integrador tela 102). O \"CPF implícito\" que o flow-data dizia vinha da triagem E5T, que trava só o TIPO (pessoa física), nunca o número." },
+    "socio-extra-rg": { texto: "RG + órgão emissor + UF de cada sócio extra", status: "oficial", justificativa: "✅ construído 31/08 (C3) — mesma identificação exigida do titular." },
+    "socio-extra-endereco": { texto: "Endereço completo (logradouro/número/bairro/município/UF/CEP) de cada sócio extra", status: "oficial", justificativa: "✅ construído 01/09 (auditoria 1-a-1, item 2) — CEP com autofill + número + complemento. Entra na qualificação do contrato (art. 997 CC, preview real na tela 117) e tem ficha própria no DBE (telas 67-69): na gravação veio automático só porque a empresa era SOLO e o sócio era o representante (popup da tela 66)." },
 
     /**
      * 🆕 31/08 (pedido do Pedro) — Passos 15-18 do PDF oficial JUCEMG.
@@ -732,7 +732,7 @@
 
   var ORDEM_APP = [
     { tela: "C0", nome: "Sua atividade", nota: "antes do C1 — CNAE principal", campos: ["c0-cnae-principal"] },
-    { tela: "C1", nome: "Seus dados", campos: ["c1-confirma-dados", "c1-rg", "c1-nascimento", "c1-mae", "c1-estado-civil", "c1-mora-fora"] },
+    { tela: "C1", nome: "Seus dados", campos: ["c1-confirma-dados", "c1-rg", "c1-nascimento", "c1-estado-civil", "c1-mora-fora"] },
     { tela: "C2", nome: "Vínculo INSS", campos: ["c2-inss-fora", "c2-valor-vinculo"] },
     { tela: "C3", nome: "Sócios", campos: ["c3-confirma-socios", "c3-socios-percentual"] },
     { tela: "C4", nome: "Dados da empresa", campos: ["c4-cep-numero", "c4-iptu", "c4-tipo-endereco", "c4-residencia-socio", "c4-capital-social"] },
@@ -741,7 +741,7 @@
     { tela: "C7", nome: "Nome / razão social", nota: "dispara a viabilidade JUCEMG", campos: ["c7-razao-social", "c7-objeto-social", "c7-nome-fantasia"] },
     { tela: "Interno", nome: "Preenchido pela Legalizai, sem perguntar", nota: "não passa pela tela do cliente", campos: [
       "int-forma-atuacao", "int-tipo-unidade", "int-metragem",
-      "int-prazo-duracao", "int-foro", "int-encerramento-exercicio", "int-optante-simples", "int-administracao", "int-codigo-ato", "int-uf-registro", "int-desimpedimento"
+      "int-edificacao-nova", "int-prazo-duracao", "int-foro", "int-encerramento-exercicio", "int-optante-simples", "int-administracao", "int-codigo-ato", "int-uf-registro", "int-desimpedimento"
     ] }
   ];
 
@@ -757,7 +757,7 @@
    */
   var ORDEM_OFICIAL = [
     { tela: "Passo 2", nome: "Consulta de Viabilidade", nota: "nome empresarial + endereço, antes de qualquer outro dado", campos: ["c7-razao-social", "c4-cep-numero", "c4-tipo-endereco"] },
-    { tela: "Passo 4", nome: "DBE — Coleta Web (Receita Federal)", nota: "ficha cadastral completa da PJ + do titular — 1ª vez que o CNAE entra de verdade", campos: ["c0-cnae-principal", "c1-confirma-dados", "c1-rg", "c1-nascimento", "c1-mae", "c1-estado-civil", "c1-mora-fora", "c6-natureza-juridica", "c4-capital-social", "c7-objeto-social", "c7-nome-fantasia", "int-forma-atuacao", "int-tipo-unidade", "int-optante-simples", "int-uf-registro"] },
+    { tela: "Passo 4", nome: "DBE — Coleta Web (Receita Federal)", nota: "ficha cadastral completa da PJ + do titular — 1ª vez que o CNAE entra de verdade", campos: ["c0-cnae-principal", "c1-confirma-dados", "c1-rg", "c1-nascimento", "c1-estado-civil", "c1-mora-fora", "c6-natureza-juridica", "c4-capital-social", "c7-objeto-social", "c7-nome-fantasia", "int-forma-atuacao", "int-tipo-unidade", "int-optante-simples", "int-uf-registro"] },
     { tela: "Passo 8-9", nome: "Integrador — Novo FCN/REMP", nota: "detalhamento societário e do imóvel", campos: [
       "c5-cnae-secundarios", "c3-confirma-socios", "c3-socios-percentual",
       "socio-extra-nacionalidade", "socio-extra-estado-civil", "socio-extra-nascimento", "socio-extra-profissao", "socio-extra-cpf", "socio-extra-rg", "socio-extra-endereco",
@@ -940,7 +940,6 @@
       case "c1-confirma-dados": return p.titular + " (CPF e endereço já confirmados no cadastro)";
       case "c1-rg": return "RG " + p.rg + " — " + p.orgaoRg;
       case "c1-nascimento": return p.nascimento;
-      case "c1-mae": return p.nomeMae;
       case "c1-estado-civil": return p.estadoCivilLabel + (p.regimeBensLabel ? " — " + p.regimeBensLabel : "");
       case "c1-mora-fora": return p.moraFora ? "Sim" : "Não";
       case "c2-inss-fora": return p.inss.contribui ? "Sim" : "Não";
@@ -957,8 +956,9 @@
       case "c7-razao-social": return ex.razaoSocial + " (1ª opção)";
       case "c7-objeto-social": return ex.objetoSocial;
       case "c7-nome-fantasia": return ex.nomeFantasia;
-      case "int-forma-atuacao": return "Internet — igual pra qualquer CNAE liso";
-      case "int-tipo-unidade": return "Sede — igual pra qualquer CNAE liso";
+      case "int-forma-atuacao": return "Atividade Desenvolvida Fora do Estabelecimento — igual pra qualquer CNAE liso";
+      case "int-tipo-unidade": return "Produtiva — igual pra qualquer CNAE liso";
+      case "int-edificacao-nova": return "Não — igual pra qualquer CNAE liso (suposição, fila-Izabela)";
       case "int-metragem": return "Não implementado — igual pra qualquer CNAE liso";
       case "int-prazo-duracao": return "Indeterminado — igual pra qualquer CNAE liso";
       case "int-foro": return "Comarca de Belo Horizonte/MG — igual pra qualquer CNAE liso";
@@ -968,13 +968,13 @@
       case "int-codigo-ato": return "090 – Contrato — igual pra qualquer CNAE liso";
       case "int-uf-registro": return "MG — igual pra qualquer CNAE liso";
       case "int-desimpedimento": return "Cláusula presente no contrato — igual pra qualquer CNAE liso";
-      case "socio-extra-nacionalidade": return p.sociosExtras > 0 ? "Brasileira (ainda não coletado hoje)" : "Não se aplica (sócio único)";
-      case "socio-extra-estado-civil": return p.sociosExtras > 0 ? "Ainda não coletado hoje" : "Não se aplica (sócio único)";
-      case "socio-extra-nascimento": return p.sociosExtras > 0 ? "Ainda não coletado hoje" : "Não se aplica (sócio único)";
-      case "socio-extra-profissao": return p.sociosExtras > 0 ? "Ainda não coletado hoje" : "Não se aplica (sócio único)";
-      case "socio-extra-cpf": return p.sociosExtras > 0 ? "Ainda não coletado hoje" : "Não se aplica (sócio único)";
-      case "socio-extra-rg": return p.sociosExtras > 0 ? "Ainda não coletado hoje" : "Não se aplica (sócio único)";
-      case "socio-extra-endereco": return p.sociosExtras > 0 ? "Ainda não coletado hoje" : "Não se aplica (sócio único)";
+      case "socio-extra-nacionalidade": return p.sociosExtras > 0 ? "Brasileira (coletado no C3, 31/08)" : "Não se aplica (sócio único)";
+      case "socio-extra-estado-civil": return p.sociosExtras > 0 ? "Coletado no C3 (31/08) — 4 regimes, sem a Separação Obrigatória" : "Não se aplica (sócio único)";
+      case "socio-extra-nascimento": return p.sociosExtras > 0 ? "Coletado no C3 (31/08)" : "Não se aplica (sócio único)";
+      case "socio-extra-profissao": return p.sociosExtras > 0 ? "\"Empresário\" — preenchido internamente, não é campo" : "Não se aplica (sócio único)";
+      case "socio-extra-cpf": return p.sociosExtras > 0 ? "Coletado no C3 (01/09)" : "Não se aplica (sócio único)";
+      case "socio-extra-rg": return p.sociosExtras > 0 ? "Coletado no C3 (31/08)" : "Não se aplica (sócio único)";
+      case "socio-extra-endereco": return p.sociosExtras > 0 ? "Coletado no C3 (01/09) — CEP + número + complemento" : "Não se aplica (sócio único)";
       case "passo15-dae": case "passo16-protocolo": case "passo17-decisao": case "passo18-cnpj":
         return "Igual pra qualquer CNAE liso — é etapa de processo (nós×cliente), não dado da pessoa.";
       default: return "—";

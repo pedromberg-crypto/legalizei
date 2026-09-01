@@ -125,7 +125,7 @@ export const PASSOS_CLIENTE: Passo[] = [
   {
     nome: "Dados pessoais complementares",
     tela: "C1",
-    descricao: "RG, data de nascimento e nome da mãe. Leva cerca de 2 minutos.",
+    descricao: "RG, data de nascimento e estado civil. Leva cerca de 2 minutos.",
   },
   {
     nome: "Dados do INSS",

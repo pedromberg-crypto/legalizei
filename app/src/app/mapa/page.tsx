@@ -52,6 +52,10 @@ const LEGENDA_COR: { classe: string; nome: string; cor: string }[] = [
 
 const ORIENTACAO: Orientacao = "LR";
 
+/** Chave do arranjo manual (🆕 01/09). Versionada: se o formato mudar, um
+ *  sufixo novo evita ler posição velha em formato incompatível. */
+const CHAVE_POSICOES = "legalizai:mapa-posicoes-v1";
+
 // 🆕 28/08 (pedido do Pedro) — `TRILHAS` cresceu de 3 pra 8 (abrir/migrar/
 // login genéricas + 4 por regime). As 3 genéricas continuam disparando pelo
 // pontinho do E3 no canvas (`onCtaClick`); as 4 de regime só disparam pelo
@@ -72,6 +76,65 @@ export default function MapaPage() {
   // Clique de aresta agora é estado NOSSO, mesmo padrão já validado da
   // trilha — garante que funciona, não depende de mecanismo interno da lib.
   const [arestaClicadaChave, setArestaClicadaChave] = useState<string | null>(null);
+
+  /**
+   * 🆕 01/09 (pedido do Pedro) — ARRASTAR E SOLTAR os cards.
+   *
+   * O React Flow já sabe arrastar; o que faltava era a posição SOBREVIVER.
+   * Aqui os nós são derivados (`nodesBase` do dagre + `hidden`/`apagado` da
+   * trilha), então qualquer re-render — ligar um fluxo, abrir o painel de
+   * detalhe, clicar numa aresta — reconstruía o array e devolvia o card pro
+   * lugar calculado. Por isso arrastar "não funcionava": funcionava por meio
+   * segundo.
+   *
+   * A solução é guardar SÓ o que a pessoa moveu, num mapa id → posição, e
+   * aplicar por cima do layout automático. Quem não foi movido continua onde
+   * o dagre pôs, e o rearranjo do dagre (quando o flow muda) segue valendo
+   * pro resto do mapa.
+   *
+   * Persistido em `localStorage`: o arranjo é trabalho manual do Pedro pra
+   * apresentar, e perder isso num F5 seria pior que não ter. É por navegador
+   * — não viaja pro dev nem pro Mauro (pra isso, o layout automático é a
+   * fonte comum).
+   */
+  const [posicoes, setPosicoes] = useState<Record<string, { x: number; y: number }>>({});
+
+  useEffect(() => {
+    let salvo: Record<string, { x: number; y: number }> | null = null;
+    try {
+      const bruto = localStorage.getItem(CHAVE_POSICOES);
+      if (bruto) salvo = JSON.parse(bruto);
+    } catch {
+      // localStorage bloqueado (aba anônima, política do navegador): o mapa
+      // funciona igual, só não lembra o arranjo.
+    }
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- store client-only (localStorage), lido após a montagem
+    if (salvo) setPosicoes(salvo);
+  }, []);
+
+  const salvarPosicoes = useCallback((novo: Record<string, { x: number; y: number }>) => {
+    setPosicoes(novo);
+    try {
+      localStorage.setItem(CHAVE_POSICOES, JSON.stringify(novo));
+    } catch {
+      // idem: guardar é conveniência, nunca requisito.
+    }
+  }, []);
+
+  // Tipo próprio (e não `NodeMouseHandler`): o evento de arrasto do React Flow
+  // é mouse OU touch, e o handler de clique só aceita mouse.
+  const onNodeDragStop = useCallback(
+    (_: unknown, node: { id: string; position: { x: number; y: number } }) => {
+      // Só no fim do arrasto: salvar a cada pixel escreveria centenas de vezes
+      // no localStorage por gesto.
+      salvarPosicoes({ ...posicoes, [node.id]: { x: node.position.x, y: node.position.y } });
+    },
+    [posicoes, salvarPosicoes],
+  );
+
+  const reorganizar = useCallback(() => {
+    salvarPosicoes({});
+  }, [salvarPosicoes]);
 
   const { nodes: nodesBase, edges: edgesBase } = useMemo(
     () => calcularLayout(grafo as Parameters<typeof calcularLayout>[0], ORIENTACAO),
@@ -112,8 +175,12 @@ export default function MapaPage() {
     () =>
       nodesBase.map((n) => {
         const foraDaTrilha = !!nosAtivos && !nosAtivos.has(n.id);
+        // 🆕 01/09 — posição arrastada pela pessoa ganha do dagre; quem nunca
+        // foi movido segue no lugar calculado.
+        const manual = posicoes[n.id];
         return {
           ...n,
+          position: manual ?? n.position,
           hidden: foraDaTrilha,
           data: {
             ...n.data,
@@ -123,7 +190,7 @@ export default function MapaPage() {
           },
         };
       }),
-    [nodesBase, onCtaClick, trilhaAtivaId, nosAtivos],
+    [nodesBase, onCtaClick, trilhaAtivaId, nosAtivos, posicoes],
   );
 
   const edges = useMemo(() => {
@@ -253,6 +320,7 @@ export default function MapaPage() {
             fluxoRef.current = inst;
           }}
           onNodeClick={onNodeClick}
+          onNodeDragStop={onNodeDragStop}
           onEdgeClick={onEdgeClick}
           /**
            * 🔄 01/09 (pedido do Pedro) — clicar no canvas vazio NÃO desliga
@@ -358,6 +426,28 @@ export default function MapaPage() {
               );
             })}
           </div>
+
+          {/* 🆕 01/09 (pedido do Pedro) — arrastar e soltar. Este bloco só
+              aparece quando existe arranjo manual: botão de desfazer sem nada
+              pra desfazer é ruído, e o contador diz o tamanho do estrago antes
+              de a pessoa clicar. */}
+          {Object.keys(posicoes).length > 0 && (
+            <div className="mb-3 rounded-md border border-border-hairline bg-surface-alt p-2.5">
+              <p className="text-micro text-text-secondary">
+                {Object.keys(posicoes).length === 1
+                  ? "1 tela movida por você"
+                  : Object.keys(posicoes).length + " telas movidas por você"}
+                . O arranjo fica salvo neste navegador.
+              </p>
+              <button
+                type="button"
+                onClick={reorganizar}
+                className="mt-1.5 text-micro font-semibold text-action-primary-sm underline underline-offset-4"
+              >
+                Voltar ao layout automático
+              </button>
+            </div>
+          )}
 
           {/* 🆕 26/08 (pedido do Pedro) — baixa o .md gerado (dados coletados
               até a 1ª tentativa de viabilidade), sempre em dia com o flow. */}

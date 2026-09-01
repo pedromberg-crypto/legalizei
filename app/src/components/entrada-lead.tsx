@@ -579,7 +579,17 @@ export function EnderecoCategoriaView({
                   >
                     Quero um endereço da Legalizai
                   </span>
-                  <span className="shrink-0 rounded-full bg-surface-dark px-2.5 py-1 text-micro font-semibold text-text-on-dark">
+                  <span
+                    // 🔄 01/09 (pedido do Pedro) — a pill escura ganha o
+                    // MESMO gradiente escuro-com-brilho-coral do hero do
+                    // status (painel.tsx) e dos splashes: coral irradiando do
+                    // canto superior esquerdo sobre o surface-dark.
+                    className="shrink-0 rounded-full px-2.5 py-1 text-micro font-semibold text-text-on-dark"
+                    style={{
+                      background:
+                        "radial-gradient(120% 100% at 0% 0%, color-mix(in srgb, var(--color-action-primary) 45%, transparent) 0%, transparent 55%), var(--color-surface-dark)",
+                    }}
+                  >
                     {brl(CUSTOS.ENDERECO_FISCAL, true)}/mês
                   </span>
                 </div>
@@ -640,7 +650,17 @@ export function EnderecoCategoriaView({
                   >
                     Tenho um endereço em Belo Horizonte
                   </span>
-                  <span className="shrink-0 rounded-full bg-surface-dark px-2.5 py-1 text-micro font-semibold text-text-on-dark">
+                  <span
+                    // 🔄 01/09 (pedido do Pedro) — a pill escura ganha o
+                    // MESMO gradiente escuro-com-brilho-coral do hero do
+                    // status (painel.tsx) e dos splashes: coral irradiando do
+                    // canto superior esquerdo sobre o surface-dark.
+                    className="shrink-0 rounded-full px-2.5 py-1 text-micro font-semibold text-text-on-dark"
+                    style={{
+                      background:
+                        "radial-gradient(120% 100% at 0% 0%, color-mix(in srgb, var(--color-action-primary) 45%, transparent) 0%, transparent 55%), var(--color-surface-dark)",
+                    }}
+                  >
                     Sem custo
                   </span>
                 </div>

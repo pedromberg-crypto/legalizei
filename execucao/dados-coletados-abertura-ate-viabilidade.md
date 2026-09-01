@@ -72,6 +72,9 @@ tags: [execucao, flow, dados, abertura]
 - CPF (cobrança + elegibilidade)
 - método de pagamento (cartão/Pix/boleto)
 - aceite do contrato de serviço (checkbox)
+- cartão: número + nome impresso + validade + CVV
+- titular do cartão: nome + CPF + e-mail + telefone (pré-preenchidos, editáveis)
+- endereço da fatura: CEP + número + complemento (pré-preenchidos do E3.4, editáveis)
 
 ### E9.S · Splash 'pagamento confirmado'
 - _(sem dado novo — contexto, confirmação ou decisão do sistema)_
@@ -150,6 +153,8 @@ tags: [execucao, flow, dados, abertura]
 
 | Campo | Valor | Onde entraria | Status | Por quê |
 |---|---|---|---|---|
+| IP do dispositivo de quem paga (`remoteIp`) | capturado na requisição do pagamento | E9 · Pagamento | 🔴 não implementado — depende da integração Asaas | Obrigatório na criação de cobrança por cartão no Asaas, e a doc é explícita: é o IP do DISPOSITIVO do pagador, não o do nosso servidor. Mandar o IP do servidor passa no schema e derruba a análise antifraude, que é o pior tipo de bug (silencioso e só visível na taxa de recusa). |
+| Tipo de cobrança enviado ao Asaas (`billingType`) | CREDIT_CARD · PIX · BOLETO (o que a pessoa escolheu) | E9 · Pagamento | 🔴 não implementado — depende da integração Asaas | Débito NÃO entra: o enum de criação de cobrança do Asaas aceita BOLETO, CREDIT_CARD, PIX e UNDEFINED (DEBIT_CARD só aparece em resposta). Pra débito a doc manda redirecionar pro `invoiceUrl`, o que significaria tirar a pessoa do nosso app no meio do pagamento. |
 | Forma de atuação (JUCEMG) | "Atividade Desenvolvida Fora do Estabelecimento" | C4 · Dados da empresa | 🟢 travado, corrigido 01/09 | 🔴 Estava documentado como "Internet" — ERRADO, valor decidido em 26/08 por raciocínio, antes de existir gravação. Os prints mostram "Atividade Desenvolvida Fora do Estabelecimento" marcada 2x, em 2 sistemas (tela 14 Viabilidade, tela 48 DBE), e a tela 48 exibe as 8 opções do campo com "Internet" entre elas, NÃO marcada: são opções distintas da mesma lista, não sinônimos. 3ª correção desta mesma família (as outras 2: "Sede"→Produtiva e metragem). Segue valendo enquanto o escopo for serviço 100% remoto |
 | Tipo de unidade (JUCEMG) | "Produtiva" | C4 · Dados da empresa | 🟢 travado, corrigido 31/08 | 🔴 Estava documentado como "Sede" — ERRADO. Prints reais (Viabilidade e Integrador) confirmam "Produtiva": Sede/Filial nem aparece como opção fixa relevante pra uma constituição nova. Toda abertura nova (matriz) usa Produtiva |
 | Metragem (m² do imóvel + m² da operação) | 20 m² (fixo) | C4 · Dados da empresa | 🟢 travado, resolvido 31/08 | 🔴 Estava "não implementado, sem decisão" — RESOLVIDO. Print real da Viabilidade mostra Área Total e Área Utilizada sempre preenchidas com 20,00 — mesmo valor usado em toda a gravação, virou padrão |

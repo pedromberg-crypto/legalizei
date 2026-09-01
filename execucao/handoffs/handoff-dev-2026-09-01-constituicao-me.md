@@ -147,6 +147,47 @@ São 5 hoje, e cada um existe por um motivo diferente:
 
 O E3.1 traz o consentimento LGPD em 1 linha com link, **sem checkbox**, de propósito: bloquear captura de lead com aceite formal mataria o topo do funil, e o aceite contratual vem depois, no E9.
 
+### 4.9 Tela de conferência do dev (`/conferencia`) — 🆕 01/09
+
+Rota nova, **fora do caminho do cliente**: mesmo layout de cards da A1, com a lista de tudo que a constituição de ME coleta, na ordem em que coleta, cada campo etiquetado por origem.
+
+- `USUÁRIO` — a pessoa digita ou escolhe na tela.
+- `AUTOMÁTICO` — a Legalizai preenche (constante nossa, decisão travada).
+- `API` — vem de integração externa (tem latência, erro e precisa de fallback).
+
+A lista é **gerada**: `execucao/flow/flow-data.mjs` → `node execucao/flow/gerar-mapa.mjs` → `app/src/lib/conferencia-dados.ts`. Não editar a tela pra corrigir campo: corrige na fonte e roda o gerador. Campo cujo `contexto` não é tela do caminho (RPA, pós-C7) cai num card final "Fora de tela · preenchido no processo".
+
+### 4.10 Pagamento: os campos reais do Asaas (E9 e A3.P) — 🆕 01/09
+
+Até 01/09 as duas telas de pagamento escolhiam o método e mandavam pagar, sem nunca pedir cartão. Agora carregam o formulário na forma que o gateway espera. Fonte: `docs.asaas.com`, consultada em 01/09/2026.
+
+**Cartão de crédito** (`POST /v3/payments`, `billingType: CREDIT_CARD`):
+
+| Objeto | Campo | Obrigatório | Vem de onde na tela |
+|---|---|:--:|---|
+| (topo) | `customer`, `value`, `dueDate` | ✅ | backend |
+| (topo) | `remoteIp` | ✅ | backend — **IP do dispositivo do pagador**, não do nosso servidor |
+| `creditCard` | `holderName` | ✅ | "Nome impresso no cartão" |
+| `creditCard` | `number` | ✅ | "Número do cartão" |
+| `creditCard` | `expiryMonth` / `expiryYear` | ✅ | campo único "MM/AA", o backend parte em 2 |
+| `creditCard` | `ccv` | ✅ | "CVV" |
+| `creditCardHolderInfo` | `name`, `email`, `cpfCnpj`, `postalCode`, `addressNumber`, `phone` | ✅ | bloco "Titular do cartão" + "Endereço da fatura" |
+| `creditCardHolderInfo` | `addressComplement`, `mobilePhone` | ⬜ | "Complemento" |
+
+**Pix e boleto**: nenhum campo a mais. Pro Asaas os dois só precisam de um `customer`, e em `POST /v3/customers` só `name` e `cpfCnpj` são obrigatórios (`email`, `mobilePhone`, `postalCode`, `addressNumber`, `complement`, `province` são opcionais; informar `postalCode` já preenche o resto do endereço, e CEP inválido devolve 400). Pedir CEP pra pagar um Pix seria burocracia inventada por nós.
+
+🔴 **Cartão de débito não existe na tela, e não é esquecimento.** O enum de criação de cobrança do Asaas é `BOLETO`, `CREDIT_CARD`, `PIX`, `UNDEFINED` — `DEBIT_CARD` só aparece em resposta, por histórico. A orientação da doc pra débito é redirecionar pro `invoiceUrl` (checkout hospedado do Asaas), o que significaria tirar a pessoa do nosso app no meio do pagamento. **Decisão de produto pendente (Pedro/Mauro), não bug de implementação.**
+
+**Prefill x edição.** Nome, CPF, e-mail e telefone já foram coletados (E3.3 e E6) e o endereço no E3.4, então os campos nascem preenchidos. Nada é travado: a fatura do cartão pode ser de outra pessoa e de outro endereço, e a doc do Asaas avisa que divergência com o cadastro do emissor derruba a transação por suspeita de fraude. Prefill acelera; trava reprova.
+
+⚠️ Dois CPFs diferentes na mesma tela, de propósito: o do topo é de **quem abre a empresa** (é o que a Receita checa); o do bloco do cartão é de **quem paga**. Podem divergir legitimamente — a copy diz isso.
+
+⚠️ Quem escolheu **endereço fiscal da Legalizai** no E3.4 não tem endereço próprio no rascunho: nesse caso os campos de endereço da fatura nascem vazios (prop `enderecoFiscal`). Prefilar com o nosso endereço seria pedir recusa por divergência.
+
+🔒 Dado de cartão é estado **local** do componente: não sobe pro estado do wizard, não vai pra `sessionStorage`, não viaja em querystring. No app real vai direto pro Asaas, idealmente tokenizado (`creditCardToken`; a doc diz que tokenização está liberada no Sandbox e precisa de habilitação em Produção).
+
+O CTA agora também espera esses campos: sem eles a cobrança volta 400 do gateway, e erro de gateway depois do clique é a pior hora de descobrir campo faltando.
+
 ## 5. Decisões que o dev precisa respeitar
 
 - **Sem gate de faturamento**: quem marca "+R$30 mil/mês" segue no fluxo normal. A ideia é acompanhar o crescimento e propor desenquadramento/EPP depois — funcionalidade de pós-venda, ainda não construída.
@@ -165,6 +206,8 @@ O E3.1 traz o consentimento LGPD em 1 linha com link, **sem checkbox**, de prop�
 | 🟡 5 | "Edificação nova = Não" é suposição de 1 caso | fila-Izabela |
 | 🟡 6 | Prints param na escolha de assinatura (falta 2FA → deferimento → CNPJ) | produto |
 | 🟡 7 | `Campo`/`Select` do DS sem `<label>` e sem nome acessível (A11Y-01) | design system |
+| 🟡 8 | Cartão de **débito**: o Asaas não aceita pela API (só via `invoiceUrl`). Oferecer significa sair do app no meio do pagamento | produto |
+| 🟡 9 | Tokenização de cartão (`creditCardToken`): liberada no Sandbox, precisa habilitação em Produção | dev/produto |
 
 ## 7. Testes que já existem (e o que eles garantem)
 

@@ -221,6 +221,41 @@ export const CONFERENCIA: TelaConferencia[] = [
         "status": ""
       },
       {
+        "nome": "cartão: número + nome impresso + validade + CVV",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "titular do cartão: nome + CPF + e-mail + telefone (pré-preenchidos, editáveis)",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "endereço da fatura: CEP + número + complemento (pré-preenchidos do E3.4, editáveis)",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "IP do dispositivo de quem paga (`remoteIp`)",
+        "valor": "capturado na requisição do pagamento",
+        "origem": "automatico",
+        "porque": "Obrigatório na criação de cobrança por cartão no Asaas, e a doc é explícita: é o IP do DISPOSITIVO do pagador, não o do nosso servidor. Mandar o IP do servidor passa no schema e derruba a análise antifraude, que é o pior tipo de bug (silencioso e só visível na taxa de recusa).",
+        "status": "🔴 não implementado — depende da integração Asaas"
+      },
+      {
+        "nome": "Tipo de cobrança enviado ao Asaas (`billingType`)",
+        "valor": "CREDIT_CARD · PIX · BOLETO (o que a pessoa escolheu)",
+        "origem": "automatico",
+        "porque": "Débito NÃO entra: o enum de criação de cobrança do Asaas aceita BOLETO, CREDIT_CARD, PIX e UNDEFINED (DEBIT_CARD só aparece em resposta). Pra débito a doc manda redirecionar pro `invoiceUrl`, o que significaria tirar a pessoa do nosso app no meio do pagamento.",
+        "status": "🔴 não implementado — depende da integração Asaas"
+      },
+      {
         "nome": "Situação do CPF na Receita Federal",
         "valor": "consulta no ato do pagamento",
         "origem": "api",

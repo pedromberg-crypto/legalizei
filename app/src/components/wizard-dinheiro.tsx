@@ -12,6 +12,10 @@ import { SheetNaoReembolsavel } from "@/components/wizard-cauda";
 // 🗑️ 01/09 — ícones Google/Apple saíram junto do login social.
 import { Logo } from "@/components/logo";
 import { CUSTOS, brl } from "@/lib/fiscal";
+// 🆕 01/09 — o pagamento agora pré-preenche o que já foi coletado: identidade
+// (mock da conta criada no E6) e endereço (rascunho do E3.4).
+import { CLIENTE } from "@/app/(app)/dossie/mock";
+import { lerRascunhoEndereco } from "@/lib/rascunho";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -1543,6 +1547,7 @@ export function PagamentoView({
   semTaxaJunta = false,
   guia = false,
   recusado = false,
+  enderecoFiscal = false,
   onPagar,
   onVoltar,
   aceito,
@@ -1592,6 +1597,14 @@ export function PagamentoView({
    * já está frustrado, refazer o formulário inteiro seria punir duas vezes.
    */
   recusado?: boolean;
+  /**
+   * 🆕 01/09 — a pessoa escolheu ENDEREÇO FISCAL da Legalizai no E3.4. Só serve
+   * pro pré-preenchimento do endereço de cobrança: nesse caso o endereço da
+   * empresa é o NOSSO, e usá-lo na fatura do cartão é pedir recusa por
+   * divergência com o emissor. Vem da mesma query que o resto do flow lê
+   * (`?endereco=fiscal`, `lib/regime.ts`).
+   */
+  enderecoFiscal?: boolean;
   /** 🆕 03/08 — MEI não paga taxa da Junta. Só se aplica a `fluxo="abertura"`
    *  (migrar já não soma DAE por natureza, empresa já existe). */
   semTaxaJunta?: boolean;
@@ -1621,6 +1634,51 @@ export function PagamentoView({
   const escolhido = METODOS.find((m) => m.id === metodo)!;
 
   const temCadastrado = Boolean(cpfCadastrado?.trim());
+
+  /**
+   * 🆕 01/09 (pedido do Pedro) — OS DADOS QUE O ASAAS EXIGE PRA COBRAR.
+   *
+   * Até aqui a tela escolhia o método e mandava pagar, sem nunca pedir cartão:
+   * era maquete de decisão, não de pagamento. Agora carrega o formulário real,
+   * campo a campo, na forma que o Asaas espera (ver `dadosAsaasVazios` pro
+   * mapeamento com a doc).
+   *
+   * Estado LOCAL de propósito: dado de cartão não sobe pro estado do wizard,
+   * não vai pra sessionStorage e não viaja em querystring — no app real ele vai
+   * direto pro Asaas (idealmente tokenizado) e nunca encosta no nosso banco.
+   */
+  const [dados, setDados] = useState<DadosAsaas>(() => dadosAsaasVazios(cpfCadastrado ?? cpf));
+  const set = <K extends keyof DadosAsaas>(k: K, v: DadosAsaas[K]) =>
+    setDados((p) => ({ ...p, [k]: v }));
+
+  /**
+   * PRÉ-PREENCHIMENTO (pedido do Pedro: "não fazer a pessoa repetir o que já
+   * coletamos"). Roda no cliente, uma vez: `sessionStorage` não existe no SSR.
+   *
+   * ⚠️ O endereço vem do E3.4, que é o endereço da EMPRESA. Quando a pessoa
+   * escolheu endereço fiscal, esse endereço é o NOSSO, não o dela — prefilar
+   * a fatura do cartão com ele levaria a recusa por divergência com o emissor
+   * (ver a regra de `creditCardHolderInfo` na doc do Asaas). Nesse caso os
+   * campos de endereço nascem vazios, de propósito.
+   */
+  useEffect(() => {
+    const r = enderecoFiscal ? null : lerRascunhoEndereco();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- store client-only (sessionStorage), lido após a montagem
+    setDados((p) => ({
+      ...p,
+      titularNome: p.titularNome || CLIENTE_PAGAMENTO.nome,
+      titularCpf: p.titularCpf || cpfCadastrado || cpf || CLIENTE_PAGAMENTO.cpf,
+      titularEmail: p.titularEmail || CLIENTE_PAGAMENTO.email,
+      titularTelefone: p.titularTelefone || CLIENTE_PAGAMENTO.telefone,
+      cep: p.cep || r?.cep || "",
+      numero: p.numero || r?.numero || "",
+      complemento: p.complemento || r?.complemento || "",
+    }));
+    // Só no monte: depois disso quem manda é o que a pessoa digitou.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const dadosOk = dadosAsaasCompletos(dados, metodo);
 
   return (
     <>
@@ -1722,6 +1780,14 @@ export function PagamentoView({
             {migrar ? escolhido.efeitoMigrar : escolhido.efeito}
           </Aviso>
 
+          {/* 🆕 01/09 — o formulário de verdade, na forma que o Asaas exige. */}
+          <DadosAsaasForm
+            metodo={metodo}
+            dados={dados}
+            set={set}
+            enderecoFiscal={enderecoFiscal}
+          />
+
           {/* IDEMPOTÊNCIA VISÍVEL (UX-38): mata o medo de quem paga e some. */}
           <p className="text-micro text-text-tertiary">
             Você paga uma vez só, mesmo que o app feche na hora do pagamento.
@@ -1759,11 +1825,306 @@ export function PagamentoView({
         </Corpo>
 
         <Rodape>
-          <Button full disabled={!migrar && !aceito} onClick={onPagar}>
+          {/* 🆕 01/09 — o CTA agora também espera os dados do Asaas. Sem eles a
+              cobrança volta erro 400 do gateway, e erro de gateway depois do
+              clique é a pior hora possível pra descobrir campo faltando. */}
+          <Button full disabled={(!migrar && !aceito) || !dadosOk} onClick={onPagar}>
             {guia ? `Pagar a guia · ${brl(total, true)}` : `Pagar ${brl(total, true)}`}
           </Button>
         </Rodape>
       </main>
     </>
   );
+}
+
+/* ═══════════ E9/A3.P · OS DADOS QUE O ASAAS EXIGE PRA COBRAR ═══════════════
+ *
+ * 🆕 01/09 (pedido do Pedro) — "puxe da documentação do Asaas o que a pessoa
+ * precisa preencher pra pagar". Fonte: docs.asaas.com, consultada em 01/09/2026:
+ *
+ *   · POST /v3/payments (cartão)  — `customer`, `billingType`, `value`,
+ *     `dueDate` e **`remoteIp`** obrigatórios. `remoteIp` é o IP do DISPOSITIVO
+ *     do pagador, não do nosso servidor (a doc é explícita) — logo é campo de
+ *     backend, invisível na tela.
+ *   · `creditCard` — `holderName`, `number`, `expiryMonth`, `expiryYear`,
+ *     `ccv`. Todos obrigatórios.
+ *   · `creditCardHolderInfo` — `name`, `email`, `cpfCnpj`, `postalCode`,
+ *     `addressNumber` e `phone` OBRIGATÓRIOS; `addressComplement` e
+ *     `mobilePhone` opcionais.
+ *   · POST /v3/customers — só `name` e `cpfCnpj` são obrigatórios; `email`,
+ *     `mobilePhone`, `postalCode`, `addressNumber`, `complement`, `province`
+ *     são opcionais, e informar `postalCode` já preenche o resto do endereço
+ *     (CEP inválido devolve 400).
+ *
+ * 🔴 CARTÃO DE DÉBITO NÃO EXISTE nesta tela, e não é esquecimento: o Asaas não
+ * aceita dado de débito pela API. O enum de criação de cobrança é BOLETO,
+ * CREDIT_CARD, PIX e UNDEFINED (DEBIT_CARD só aparece em resposta, histórico),
+ * e a orientação da doc pra débito é mandar a pessoa pro `invoiceUrl` (checkout
+ * hospedado do Asaas). Oferecer débito aqui significaria sair do nosso app no
+ * meio do pagamento — decisão de produto, não de código, então fica registrada
+ * e não implementada.
+ *
+ * ─── POR QUE O FORMULÁRIO NASCE PREENCHIDO E MESMO ASSIM EDITÁVEL ──────────
+ * Nome, CPF, e-mail e telefone já foram coletados (E3.3 e E6) e o endereço no
+ * E3.4: repetir os quatro na hora de pagar é atrito puro. Mas nada disso é
+ * travado, porque a fatura do cartão pode ser de OUTRA pessoa e de outro
+ * endereço — e a doc do Asaas avisa que divergência com o cadastro do emissor
+ * derruba a transação por suspeita de fraude. Prefill acelera; trava reprova.
+ * ═════════════════════════════════════════════════════════════════════════ */
+
+/**
+ * Mock do que já foi coletado antes desta tela (E3.3 nome/e-mail/telefone, E6
+ * CPF). No app real vem da conta criada no E6, não daqui.
+ */
+const CLIENTE_PAGAMENTO = {
+  nome: CLIENTE.nome,
+  cpf: CLIENTE.cpf,
+  email: "ana.ramos@email.com",
+  telefone: CLIENTE.telefone,
+};
+
+export interface DadosAsaas {
+  /* creditCard */
+  numeroCartao: string;
+  nomeImpresso: string;
+  validade: string;
+  cvv: string;
+  /* creditCardHolderInfo / customer */
+  titularNome: string;
+  titularCpf: string;
+  titularEmail: string;
+  titularTelefone: string;
+  cep: string;
+  numero: string;
+  complemento: string;
+}
+
+export function dadosAsaasVazios(cpf = ""): DadosAsaas {
+  return {
+    numeroCartao: "",
+    nomeImpresso: "",
+    validade: "",
+    cvv: "",
+    titularNome: "",
+    titularCpf: cpf,
+    titularEmail: "",
+    titularTelefone: "",
+    cep: "",
+    numero: "",
+    complemento: "",
+  };
+}
+
+/**
+ * O que o gateway precisa ter em mãos pra cobrança não voltar 400.
+ *
+ * Pix e boleto pedem MENOS que cartão de propósito: pro Asaas, os dois só
+ * precisam de um `customer` (nome + CPF), e o resto é conveniência nossa
+ * (e-mail pra mandar o link, telefone pra avisar). Exigir endereço pra pagar
+ * um Pix seria burocracia inventada por nós.
+ */
+export function dadosAsaasCompletos(d: DadosAsaas, metodo: Metodo): boolean {
+  const base =
+    d.titularNome.trim().length > 2 &&
+    d.titularCpf.replace(/\D/g, "").length === 11 &&
+    /.+@.+\..+/.test(d.titularEmail.trim());
+  if (metodo !== "cartao") return base;
+  return (
+    base &&
+    d.numeroCartao.replace(/\D/g, "").length >= 13 &&
+    d.nomeImpresso.trim().length > 2 &&
+    /^\d{2}\/\d{2}$/.test(d.validade) &&
+    d.cvv.replace(/\D/g, "").length >= 3 &&
+    // Obrigatórios do `creditCardHolderInfo`, os 3 que faltavam:
+    d.titularTelefone.replace(/\D/g, "").length >= 10 &&
+    d.cep.replace(/\D/g, "").length === 8 &&
+    d.numero.trim() !== ""
+  );
+}
+
+function DadosAsaasForm({
+  metodo,
+  dados,
+  set,
+  enderecoFiscal,
+}: {
+  metodo: Metodo;
+  dados: DadosAsaas;
+  set: <K extends keyof DadosAsaas>(k: K, v: DadosAsaas[K]) => void;
+  enderecoFiscal: boolean;
+}) {
+  const cartao = metodo === "cartao";
+  return (
+    <div className="flex flex-col gap-4">
+      {cartao && (
+        <Card>
+          <p className="text-body font-semibold text-text-primary mb-3">Dados do cartão</p>
+          <div className="flex flex-col gap-3">
+            <Campo rotulo="Número do cartão">
+              <Texto
+                valor={dados.numeroCartao}
+                onChange={(v) => set("numeroCartao", mascaraCartao(v))}
+                inputMode="numeric"
+                maxLength={19}
+                placeholder="0000 0000 0000 0000"
+              />
+            </Campo>
+            <Campo
+              rotulo="Nome impresso no cartão"
+              dica="Igualzinho ao que está no plástico, sem acento se lá não tiver."
+            >
+              <Texto
+                valor={dados.nomeImpresso}
+                onChange={(v) => set("nomeImpresso", v.toUpperCase())}
+                placeholder="ANA B RAMOS"
+              />
+            </Campo>
+            <div className="grid grid-cols-2 gap-3">
+              <Campo rotulo="Validade">
+                <Texto
+                  valor={dados.validade}
+                  onChange={(v) => set("validade", mascaraValidade(v))}
+                  inputMode="numeric"
+                  maxLength={5}
+                  placeholder="MM/AA"
+                />
+              </Campo>
+              <Campo rotulo="CVV">
+                <Texto
+                  valor={dados.cvv}
+                  onChange={(v) => set("cvv", v.replace(/\D/g, "").slice(0, 4))}
+                  inputMode="numeric"
+                  maxLength={4}
+                  placeholder="123"
+                />
+              </Campo>
+            </div>
+          </div>
+        </Card>
+      )}
+
+      <Card>
+        <p className="text-body font-semibold text-text-primary">
+          {cartao ? "Titular do cartão" : "Quem vai pagar"}
+        </p>
+        {/* Diz de onde veio o que já está escrito, e que dá pra trocar. Sem
+            isso, campo preenchido sozinho parece dado travado. */}
+        <p className="text-micro text-text-tertiary mt-1 mb-3">
+          {cartao
+            ? "Já preenchemos com o que você informou. Se o cartão for de outra pessoa, é só trocar aqui: o banco compara esses dados com o cadastro dele."
+            : "Já preenchemos com o que você informou. Dá pra corrigir qualquer campo."}
+        </p>
+        <div className="flex flex-col gap-3">
+          <Campo rotulo={cartao ? "Nome do titular do cartão" : "Nome completo"}>
+            <Texto
+              valor={dados.titularNome}
+              onChange={(v) => set("titularNome", v)}
+              placeholder="Nome de quem paga"
+            />
+          </Campo>
+          {/* ⚠️ NÃO é duplicata do CPF do topo, e a copy tem que deixar isso
+              claro. Aquele é o CPF de QUEM ABRE a empresa (vale a checagem na
+              Receita); este é o de QUEM PAGA, e pode ser outra pessoa — a doc
+              do Asaas trata `creditCardHolderInfo.cpfCnpj` como o dado do
+              titular do cartão, comparado com o cadastro do emissor. */}
+          <Campo
+            rotulo={cartao ? "CPF do titular do cartão" : "CPF de quem paga"}
+            dica="Pode ser diferente do seu, se quem paga for outra pessoa."
+          >
+            <Texto
+              valor={dados.titularCpf}
+              onChange={(v) => set("titularCpf", v)}
+              inputMode="numeric"
+              maxLength={14}
+              placeholder="000.000.000-00"
+            />
+          </Campo>
+          <Campo
+            rotulo="E-mail"
+            dica={cartao ? undefined : "É pra onde vai o link do pagamento e o comprovante."}
+          >
+            <Texto
+              valor={dados.titularEmail}
+              onChange={(v) => set("titularEmail", v)}
+              placeholder="voce@email.com"
+            />
+          </Campo>
+          <Campo rotulo={cartao ? "Telefone" : "Telefone (opcional)"}>
+            <Texto
+              valor={dados.titularTelefone}
+              onChange={(v) => set("titularTelefone", v)}
+              inputMode="numeric"
+              maxLength={16}
+              placeholder="(31) 90000-0000"
+            />
+          </Campo>
+        </div>
+      </Card>
+
+      {/* Endereço só no cartão: é exigência do `creditCardHolderInfo`. Pix e
+          boleto do Asaas se viram com nome + CPF, então pedir CEP ali seria
+          formulário que a gente inventou. */}
+      {cartao && (
+        <Card>
+          <p className="text-body font-semibold text-text-primary">Endereço da fatura</p>
+          <p className="text-micro text-text-tertiary mt-1 mb-3">
+            {enderecoFiscal
+              ? "Como você escolheu o endereço fiscal da Legalizai, este a gente não tem: preencha o endereço da fatura do seu cartão."
+              : "Veio do endereço que você já informou. Se a fatura do cartão vai pra outro lugar, troque aqui."}
+          </p>
+          <div className="flex flex-col gap-3">
+            <Campo rotulo="CEP">
+              <Texto
+                valor={dados.cep}
+                onChange={(v) => set("cep", v)}
+                inputMode="numeric"
+                maxLength={9}
+                placeholder="00000-000"
+              />
+            </Campo>
+            <div className="grid grid-cols-2 gap-3">
+              <Campo rotulo="Número">
+                <Texto
+                  valor={dados.numero}
+                  onChange={(v) => set("numero", v)}
+                  inputMode="numeric"
+                  maxLength={6}
+                  placeholder="1200"
+                />
+              </Campo>
+              <Campo rotulo="Complemento">
+                <Texto
+                  valor={dados.complemento}
+                  onChange={(v) => set("complemento", v)}
+                  maxLength={40}
+                  placeholder="Apto 302"
+                />
+              </Campo>
+            </div>
+          </div>
+        </Card>
+      )}
+
+      {/* O que o Asaas exige e a pessoa NÃO digita: fica dito, não escondido. */}
+      <p className="text-micro text-text-tertiary">
+        {cartao
+          ? "Não guardamos o número do seu cartão: ele vai direto pro nosso meio de pagamento."
+          : metodo === "pix"
+            ? "O QR Code e o copia-e-cola aparecem na próxima tela, com seu nome e CPF já na cobrança."
+            : "O boleto sai no seu nome e CPF, e o link chega no seu e-mail."}
+      </p>
+    </div>
+  );
+}
+
+/** 0000 0000 0000 0000 — só visual; o que vai pro Asaas é `replace(/\D/g,"")`. */
+function mascaraCartao(v: string): string {
+  const so = v.replace(/\D/g, "").slice(0, 16);
+  return so.replace(/(\d{4})(?=\d)/g, "$1 ").trim();
+}
+
+/** MM/AA — o Asaas recebe `expiryMonth` e `expiryYear` separados (backend parte). */
+function mascaraValidade(v: string): string {
+  const so = v.replace(/\D/g, "").slice(0, 4);
+  return so.length <= 2 ? so : `${so.slice(0, 2)}/${so.slice(2)}`;
 }

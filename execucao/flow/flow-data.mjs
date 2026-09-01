@@ -117,6 +117,23 @@ export const PREENCHIDOS_API = [
 
 export const PREENCHIDOS_INTERNAMENTE = [
   {
+    campo: "IP do dispositivo de quem paga (`remoteIp`)",
+    valor: "capturado na requisição do pagamento",
+    contexto: "E9 · Pagamento",
+    status: "🔴 não implementado — depende da integração Asaas",
+    porque:
+      "Obrigatório na criação de cobrança por cartão no Asaas, e a doc é explícita: é o IP do DISPOSITIVO do pagador, não o do nosso servidor. Mandar o IP do servidor passa no schema e derruba a análise antifraude, que é o pior tipo de bug (silencioso e só visível na taxa de recusa).",
+  },
+  {
+    campo: "Tipo de cobrança enviado ao Asaas (`billingType`)",
+    valor: "CREDIT_CARD · PIX · BOLETO (o que a pessoa escolheu)",
+    contexto: "E9 · Pagamento",
+    status: "🔴 não implementado — depende da integração Asaas",
+    porque:
+      "Débito NÃO entra: o enum de criação de cobrança do Asaas aceita BOLETO, CREDIT_CARD, PIX e UNDEFINED (DEBIT_CARD só aparece em resposta). Pra débito a doc manda redirecionar pro `invoiceUrl`, o que significaria tirar a pessoa do nosso app no meio do pagamento.",
+  },
+
+  {
     campo: "Forma de atuação (JUCEMG)",
     valor: '"Atividade Desenvolvida Fora do Estabelecimento"',
     contexto: "C4 · Dados da empresa",
@@ -440,7 +457,7 @@ export const NODES = [
   // muda o total (sem taxa de governo) e o aviso ("sua migração começa
   // hoje" / aciona contador anterior). "Não valia uma tela nova" (mesmo
   // componente), mas o CONTEÚDO é diferente — mesma régua do E3.2, vira nó.
-  { id: "E9", rota: "/pagamento", label: "E9 · Pagamento + contrato<br/>(variante Abrir)", forma: "decisao", classe: "", status: "construida", validado: "pendente", falta: "Asaas travado; falta provider cartão CNPJ + chave de idempotência (Pedro); redação jurídica do contrato (Mauro/Larissa). 🟢 30/08 (pedido do Pedro) — REVOGADO E IMPLEMENTADO: cartão/Pix não pulam mais direto pra C0 (código real em `/pagamento/page.tsx`, função `destino()`). Todo mundo (cartão, Pix, boleto) passa por uma tela de status antes — ver E9.S/E9.1P/E9.1. Reforça 'dá pra sair e voltar, está tudo certo'. MEI segue com o comportamento antigo (fora do escopo desta rodada).", dados: "CPF (cobrança + elegibilidade) · método de pagamento (cartão/Pix/boleto) · aceite do contrato de serviço (checkbox)" },
+  { id: "E9", rota: "/pagamento", label: "E9 · Pagamento + contrato<br/>(variante Abrir)", forma: "decisao", classe: "", status: "construida", validado: "pendente", falta: "Asaas travado; falta provider cartão CNPJ + chave de idempotência (Pedro); redação jurídica do contrato (Mauro/Larissa). 🟢 30/08 (pedido do Pedro) — REVOGADO E IMPLEMENTADO: cartão/Pix não pulam mais direto pra C0 (código real em `/pagamento/page.tsx`, função `destino()`). Todo mundo (cartão, Pix, boleto) passa por uma tela de status antes — ver E9.S/E9.1P/E9.1. Reforça 'dá pra sair e voltar, está tudo certo'. MEI segue com o comportamento antigo (fora do escopo desta rodada).", dados: "CPF (cobrança + elegibilidade) · método de pagamento (cartão/Pix/boleto) · aceite do contrato de serviço (checkbox) · cartão: número + nome impresso + validade + CVV · titular do cartão: nome + CPF + e-mail + telefone (pré-preenchidos, editáveis) · endereço da fatura: CEP + número + complemento (pré-preenchidos do E3.4, editáveis)" },
   { id: "E9_M", rota: "/pagamento?fluxo=migrar", label: "E9 · Pagamento<br/>(variante Migrar)", forma: "decisao", classe: "", status: "construida", validado: "pendente", falta: "Mesmo componente, `?fluxo=migrar`: total não soma taxa de governo, aviso fala de migração (não abertura). CPF/métodos/idempotência idênticos ao componente base", dados: "CPF (cobrança + elegibilidade) · método de pagamento (cartão/Pix/boleto)" },
   // 🆕 30/08 (pedido do Pedro) — NOVA, ainda não construída. Splash
   // transitório (poucos segundos, SEM CTA, auto-avança) só pra quem pagou por
@@ -546,7 +563,7 @@ export const NODES = [
   // 🆕 01/09 (pedido do Pedro) — tela NOVA: pagamento da guia da Junta. Não é
   // componente novo: é o MESMO PagamentoView do E9 no modo `guia` (muda valor,
   // copy e aceite; CPF, métodos e idempotência são idênticos de propósito).
-  { id: "A3_P", rota: "/guia", label: "A3.P · Pagar a guia<br/>da Junta (DAE)", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Reusa `PagamentoView` com a prop `guia`. Carrega o ACEITE irreversível (veio do A1) porque é aqui que a taxa vira gasto. Mock: pagar volta pro status com `?guia=paga` e a etapa fecha; no app real quem fecha é o webhook do provedor.", dados: "CPF (confirmado do cadastro) · método de pagamento (cartão/Pix/boleto) · aceite irreversível" },
+  { id: "A3_P", rota: "/guia", label: "A3.P · Pagar a guia<br/>da Junta (DAE)", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Reusa `PagamentoView` com a prop `guia`. Carrega o ACEITE irreversível (veio do A1) porque é aqui que a taxa vira gasto. Mock: pagar volta pro status com `?guia=paga` e a etapa fecha; no app real quem fecha é o webhook do provedor.", dados: "CPF (confirmado do cadastro) · método de pagamento (cartão/Pix/boleto) · aceite irreversível · cartão: número + nome impresso + validade + CVV · titular do cartão: nome + CPF + e-mail + telefone (pré-preenchidos, editáveis) · endereço da fatura: CEP + número + complemento (pré-preenchidos do E3.4, editáveis)" },
   // 🆕 01/09 (pedido do Pedro) — as 2 variantes de splash DA GUIA, espelhando
   // o par que o E9 já tinha (E9.S/E9.SB). Mesmo componente, `next` diferente:
   // quem paga por boleto volta pro status com a etapa AGUARDANDO COMPENSAÇÃO,

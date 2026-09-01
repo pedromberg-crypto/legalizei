@@ -150,6 +150,7 @@ export default function PagamentoPage() {
       setMetodo={setMetodo}
       fluxo={fluxo}
       semTaxaJunta={mei}
+      enderecoFiscal={enderecoFiscal}
       aceito={aceito}
       setAceito={setAceito}
       onPagar={() => router.push(destino())}

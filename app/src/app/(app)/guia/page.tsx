@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PagamentoView } from "@/components/wizard-dinheiro";
 import { CLIENTE } from "@/app/(app)/dossie/mock";
+import { ehEnderecoFiscal } from "@/lib/endereco";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -46,6 +47,9 @@ export default function GuiaPage() {
   const [cpf, setCpf] = useState("");
   const [metodo, setMetodo] = useState<"cartao" | "pix" | "boleto">("cartao");
   const [aceito, setAceito] = useState(false);
+  // 🆕 01/09 — só pro pré-preenchimento do endereço de cobrança do cartão:
+  // quem escolheu endereço fiscal não tem endereço próprio no rascunho.
+  const enderecoFiscal = ehEnderecoFiscal(searchParams);
 
   return (
     <PagamentoView
@@ -58,6 +62,7 @@ export default function GuiaPage() {
       aceito={aceito}
       setAceito={setAceito}
       recusado={retry}
+      enderecoFiscal={enderecoFiscal}
       onVoltar={() => router.push("/aguardando?fase=junta")}
       /**
        * 🆕 01/09 (pedido do Pedro) — as 2 variantes de splash, iguais às do

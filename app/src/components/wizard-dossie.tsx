@@ -2222,7 +2222,11 @@ export function NomeView({
           </Aviso>
           )}
 
-          {!mei && (
+          {/* 🔄 01/09 (pedido do Pedro) — na 2ª rodada a tela é SÓ os 3 nomes:
+              objeto social já foi definido e não muda por causa de um nome
+              recusado. (A 1ª tentativa de gate pegou o bloco errado — este é
+              o que de fato renderiza.) */}
+          {!mei && !novaRodada && (
           <Campo
             rotulo="Objeto social"
             dica="Gerado automaticamente a partir das suas atividades. Não dá pra editar aqui — assim evitamos erro de grafia indo pro contrato."

@@ -79,6 +79,13 @@ tags: [execucao, flow, dados, abertura]
 ### E9.SB · Splash 'boleto gerado'
 - _(sem dado novo — contexto, confirmação ou decisão do sistema)_
 
+### E9.SR · Splash pagamento recusado
+- _(sem dado novo — contexto, confirmação ou decisão do sistema)_
+
+### E9.R · Pagamento (nova tentativa)
+- Método de pagamento (nova tentativa)
+- CPF já confirmado
+
 ### E9.1 · Aguardando boleto dossiê já liberado
 - _(sem dado novo — contexto, confirmação ou decisão do sistema)_
 

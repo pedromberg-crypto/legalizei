@@ -1542,6 +1542,7 @@ export function PagamentoView({
   fluxo = "abertura",
   semTaxaJunta = false,
   guia = false,
+  recusado = false,
   onPagar,
   onVoltar,
   aceito,
@@ -1584,6 +1585,13 @@ export function PagamentoView({
    * gramáticas visuais.
    */
   guia?: boolean;
+  /**
+   * 🆕 01/09 (pedido do Pedro) — a pessoa volta do splash de recusa. A tela é
+   * a MESMA, com um aviso no topo dizendo o que houve e pedindo outra forma
+   * de pagar. Não zera nada do que ela preencheu: quem teve o cartão recusado
+   * já está frustrado, refazer o formulário inteiro seria punir duas vezes.
+   */
+  recusado?: boolean;
   /** 🆕 03/08 — MEI não paga taxa da Junta. Só se aplica a `fluxo="abertura"`
    *  (migrar já não soma DAE por natureza, empresa já existe). */
   semTaxaJunta?: boolean;
@@ -1632,6 +1640,15 @@ export function PagamentoView({
         </Titulo>
 
         <Corpo>
+          {/* 🆕 01/09 — volta da recusa: explica ANTES de qualquer campo, com
+              o caminho concreto (outro cartão ou Pix), sem culpar a pessoa. */}
+          {recusado && (
+            <Aviso variante="warning" titulo="O pagamento não passou">
+              O banco recusou a cobrança, e isso raramente é problema seu. Dá
+              pra tentar outro cartão, ou trocar pra Pix, que cai na hora.
+            </Aviso>
+          )}
+
           {/* CPF: cobrança + elegibilidade no mesmo dado (decisão nº 5).
               Já veio do N6 → confirma. Não veio → coleta, como antes. */}
           {temCadastrado ? (

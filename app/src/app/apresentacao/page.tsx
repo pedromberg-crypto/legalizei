@@ -287,6 +287,10 @@ type Etapa =
   // 🆕 01/09 — C7′ (2ª rodada de nomes), aberta pelo CTA do A3.1.
   | "nome-rodada2"
   | "status-viabilidade"
+  | "pagamento-recusado"
+  | "pagamento-retry"
+  | "guia-recusada"
+  | "guia-retry"
   | "guia-paga"
   | "painel-recusa"
   | "assinatura"
@@ -371,6 +375,9 @@ const ETAPAS_CAUDA = [
   // 🆕 01/09 — A3‴: status recuado pra "Analisando viabilidade" depois dos
   // nomes novos.
   "status-viabilidade",
+  // 🆕 01/09 — o mesmo par de recusa, na cobrança da guia (A3.SR/A3.R).
+  "guia-recusada",
+  "guia-retry",
   // 🗑️ 01/09 (decisão do Pedro) — "certificado" (A3.2) SAIU do caminho ME. O
   // certificado é incluso no plano e emitido pela Legalizai quando for preciso,
   // e a justificativa que a colocou aqui em 26/08 ("a procuração exige
@@ -487,6 +494,9 @@ const ETAPAS_ESPERA = [
   // 31/08 e nunca tinha entrado aqui: quem paga por BOLETO via este splash,
   // não o de "pagamento confirmado" (nada foi pago ainda).
   "splash-boleto",
+  // 🆕 01/09 — o par de recusa do pagamento do plano (E9.SR/E9.R).
+  "pagamento-recusado",
+  "pagamento-retry",
   // 🆕 01/09 — os 2 splashes DA GUIA (A3.PS/A3.PSB), espelho do par do E9.
   "guia-splash",
   "guia-boleto",
@@ -611,6 +621,10 @@ type Momento =
   | "nome"
   | "nome-rodada2"
   | "status-viabilidade"
+  | "pagamento-recusado"
+  | "pagamento-retry"
+  | "guia-recusada"
+  | "guia-retry"
   | "revisar"
   | "painel"
   | "guia"
@@ -990,6 +1004,10 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   pagamento: "/pagamento",
   "splash-pagamento": "/splash-pagamento",
   "splash-boleto": "/splash-boleto",
+  "pagamento-recusado": "/splash-recusado",
+  "pagamento-retry": "/pagamento?retry=1",
+  "guia-recusada": "/splash-recusado?next=/guia%3Fretry%3D1",
+  "guia-retry": "/guia?retry=1",
   "aguardando-pago": "/aguardando?pago=1",
   socio: "/dossie/socio",
   vinculo: "/dossie/vinculo",
@@ -997,7 +1015,7 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   empresa: "/dossie/empresa",
   "cnae-secundarios": "/dossie/cnae-secundarios",
   nome: "/dossie/nome",
-  "nome-rodada2": "/dossie/nome?rodada=2",
+  "nome-rodada2": "/dossie/nome/rodada-2",
   "status-viabilidade": "/aguardando?fase=junta&viabilidade=1",
   revisar: "/revisar",
   painel: "/painel",
@@ -1433,6 +1451,38 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
       "A Junta vai testar os nomes novos na ordem escolhida. Enquanto isso, guia e assinatura ficam para trás na fila de novo — nada além da análise pode andar.",
     porque:
       "É o único ponto do flow em que uma etapa concluída volta a ser a atual, e é honestidade: mostrar \"Pague a guia\" aqui diria que a análise já passou, quando ela nem começou. Recuar a barra é pior de ver e melhor de confiar.",
+  },
+  "pagamento-recusado": {
+    dono: null,
+    faz: "🆕 01/09 — splash de PAGAMENTO RECUSADO. Mesmo layout dos outros splashes, com a pele escura + gradiente coral do hero do status, e um x no lugar do check.",
+    interfere:
+      "Nada foi cobrado e nada foi perdido: a abertura não começou. O que muda é a rota — em vez de seguir, a pessoa volta pra tela de pagamento.",
+    porque:
+      "Recusa não pode ter a MESMA cara de sucesso: com o layout idêntico em coral, a pessoa lê a forma antes da palavra e comemora errado. A copy tira o peso de cima dela (\"não foi você: acontece com o banco\") porque recusa de cartão raramente é culpa de quem paga.",
+  },
+  "pagamento-retry": {
+    dono: "usuario",
+    faz: "🆕 01/09 — a MESMA tela do E9, com um aviso no topo explicando a recusa e oferecendo outro cartão ou Pix.",
+    interfere:
+      "É a segunda chance da cobrança. Sem ela, uma recusa de banco viraria fim de funil silencioso.",
+    porque:
+      "Nada do que foi preenchido é zerado. Quem teve o cartão recusado já está frustrado; refazer o formulário inteiro puniria a pessoa duas vezes pelo erro do banco.",
+  },
+  "guia-recusada": {
+    dono: null,
+    faz: "🆕 01/09 — o mesmo splash de recusa, agora na cobrança da GUIA da Junta.",
+    interfere:
+      "A guia não foi paga, então a Junta não registra e a assinatura segue travada. A etapa continua esperando.",
+    porque:
+      "Uma família de splashes que só sabe dizer \"deu certo\" mente por omissão. O par escuro existe pros dois pontos de cobrança do flow, não só pro primeiro.",
+  },
+  "guia-retry": {
+    dono: "usuario",
+    faz: "🆕 01/09 — a tela da guia de novo, com o aviso da recusa no topo.",
+    interfere:
+      "O aceite irreversível continua obrigatório aqui: é o mesmo ato de autorizar, e ele não fica \"já dado\" por causa de uma tentativa que não passou.",
+    porque:
+      "Mesma doutrina do E9.R: explica, oferece outro caminho e não apaga nada do que a pessoa já fez.",
   },
   painel: {
     dono: "nossa",
@@ -2023,6 +2073,8 @@ export default function ApresentacaoPage() {
     { etapa: "splash-atendido", label: "🆕 E5F.1 · Splash atendido" },
     { etapa: "splash-pagamento", label: "🆕 E9.S · Splash pagamento" },
     { etapa: "splash-boleto", label: "🆕 E9.SB · Splash boleto" },
+    { etapa: "pagamento-recusado", label: "🆕 E9.SR · Recusado" },
+    { etapa: "pagamento-retry", label: "🆕 E9.R · Nova tentativa" },
   ];
 
   /**
@@ -2659,6 +2711,51 @@ export default function ApresentacaoPage() {
                             guiaBoleto
                             temSocios={socios === 2}
                             onPagarDae={() => setEtapa("guia")}
+                          />
+                        )}
+                        {etapa === "pagamento-recusado" && (
+                          <SplashMensagemView
+                            variante="recusado"
+                            titulo="Pagamento não aprovado."
+                            sub="Não foi você: acontece com o banco. Vamos tentar de outro jeito."
+                            onAutoAvancar={() => setEtapa("pagamento-retry")}
+                          />
+                        )}
+                        {etapa === "guia-recusada" && (
+                          <SplashMensagemView
+                            variante="recusado"
+                            titulo="Pagamento não aprovado."
+                            sub="A guia não foi paga. Dá pra tentar de novo agora."
+                            onAutoAvancar={() => setEtapa("guia-retry")}
+                          />
+                        )}
+                        {etapa === "pagamento-retry" && (
+                          <PagamentoView
+                            recusado
+                            cpf={cpfPag}
+                            setCpf={setCpfPag}
+                            cpfCadastrado={dadosConta.cpf}
+                            metodo={metodo}
+                            setMetodo={setMetodo}
+                            aceito={aceite}
+                            setAceito={setAceite}
+                            onPagar={() => setEtapa("splash-pagamento")}
+                            onVoltar={() => voltar(() => setEtapa("pagamento"))}
+                          />
+                        )}
+                        {etapa === "guia-retry" && (
+                          <PagamentoView
+                            guia
+                            recusado
+                            cpf={cpfPag}
+                            setCpf={setCpfPag}
+                            cpfCadastrado={dadosConta.cpf}
+                            metodo={metodo}
+                            setMetodo={setMetodo}
+                            aceito={aceiteTermo}
+                            setAceito={setAceiteTermo}
+                            onPagar={() => setEtapa("guia-splash")}
+                            onVoltar={() => voltar(() => setEtapa("guia"))}
                           />
                         )}
                         {etapa === "status-viabilidade" && (

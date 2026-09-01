@@ -1804,7 +1804,15 @@ export function AguardandoView({
               ? { label: "Pagar a guia agora", onClick: onPagarDae }
               : emAndamento === etapasCombinadas.length - 1
                 ? { label: "Ir para a assinatura", onClick: onAssinar }
-                : undefined
+                : {
+                    // 🆕 01/09 (pedido do Pedro) — quando a vez é do ÓRGÃO, o
+                    // CTA não some: fica no mesmo lugar, travado, dizendo o
+                    // que está sendo esperado. Some o CTA = a tela perde o
+                    // rodapé e muda de anatomia no meio da jornada, que é
+                    // justamente o que a padronização veio resolver.
+                    label: "Aguardando viabilidade",
+                    desabilitado: true,
+                  }
       }
       prazo={
         naFaseJunta

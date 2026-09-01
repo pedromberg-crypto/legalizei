@@ -32,13 +32,26 @@ export function SplashMensagemView({
   sub,
   onAutoAvancar,
   duracaoMs = 1800,
+  variante = "sucesso",
 }: {
   titulo: string;
   sub?: string;
   /** Ausente = não navega sozinho (útil no Storybook/preview estático). */
   onAutoAvancar?: () => void;
   duracaoMs?: number;
+  /**
+   * 🆕 01/09 (pedido do Pedro) — 2ª variante: pagamento RECUSADO.
+   *
+   * Mesmo layout (logo, ícone grande, título, sub, auto-avanço), outra pele:
+   * fundo escuro com o gradiente coral no canto, o mesmo do hero do status.
+   * Coral cheio ("sucesso") pra confirmar e escuro pra recusar não é decoração:
+   * a tela de recusa não pode ter a MESMA cara da de sucesso, senão a pessoa
+   * lê o layout antes de ler a palavra e comemora errado. E o ícone vira um
+   * "x" — check em tela de falha seria o pior tipo de ruído.
+   */
+  variante?: "sucesso" | "recusado";
 }) {
+  const recusado = variante === "recusado";
   useEffect(() => {
     if (!onAutoAvancar) return;
     if (typeof window !== "undefined" && window.self !== window.top) return;
@@ -51,14 +64,54 @@ export function SplashMensagemView({
     // `.app-page` (já `position:relative`) em vez de `fixed inset-0` —
     // sangra até o vidro do aparelho sem precisar de wrapper com `transform`
     // pra criar containing block (o que a SplashView/N1 ainda precisa).
-    <div className="absolute inset-0 z-50 flex flex-col items-center justify-center gap-5 bg-brand px-10 text-center">
+    <div
+      className={`absolute inset-0 z-50 flex flex-col items-center justify-center gap-5 px-10 text-center ${
+        recusado ? "bg-surface-dark" : "bg-brand"
+      }`}
+      style={
+        recusado
+          ? {
+              // Mesmo gradiente do hero escuro do status (painel.tsx): coral
+              // no canto, escuro no resto — a família visual do "estamos
+              // cuidando disso", não a do "deu certo".
+              background:
+                "radial-gradient(120% 100% at 0% 0%, color-mix(in srgb, var(--color-action-primary) 45%, transparent) 0%, transparent 55%), var(--color-surface-dark)",
+            }
+          : undefined
+      }
+    >
       <Logo variante="negativa" className="absolute top-8 h-7 w-auto" />
-      <CheckGrandeSplash />
+      {recusado ? <XGrandeSplash /> : <CheckGrandeSplash />}
       <div>
-        <h1 className="text-h1 text-text-on-brand">{titulo}</h1>
-        {sub && <p className="text-body text-text-on-brand/80 mt-2">{sub}</p>}
+        <h1 className={`text-h1 ${recusado ? "text-text-on-dark" : "text-text-on-brand"}`}>
+          {titulo}
+        </h1>
+        {sub && (
+          <p
+            className={`text-body mt-2 ${
+              recusado ? "text-text-on-dark/80" : "text-text-on-brand/80"
+            }`}
+          >
+            {sub}
+          </p>
+        )}
       </div>
     </div>
+  );
+}
+
+/** O par do check, pra variante de recusa. Mesmo peso visual, outro sinal. */
+function XGrandeSplash() {
+  return (
+    <svg width="56" height="56" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <circle cx="12" cy="12" r="11" fill="#fff" fillOpacity="0.16" />
+      <path
+        d="M8.5 8.5 15.5 15.5M15.5 8.5 8.5 15.5"
+        stroke="#fff"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+      />
+    </svg>
   );
 }
 

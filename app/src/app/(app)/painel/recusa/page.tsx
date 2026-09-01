@@ -73,7 +73,7 @@ export default function RecusaPage() {
         }}
         // 🆕 01/09 (pedido do Pedro) — o CTA agora LEVA a algum lugar: a mesma
         // tela do C7, com os campos vazios, pra pessoa escrever as 3 novas.
-        onAcaoRecusa={() => router.push("/dossie/nome?rodada=2")}
+        onAcaoRecusa={() => router.push("/dossie/nome/rodada-2")}
       />
     );
   }

@@ -92,7 +92,20 @@ export default function PagamentoPage() {
    * aqui e o M4b nunca sabia se precisava emitir certificado no meio do
    * pipeline — bug latente, achado ao encaixar o M3c nesta mesma cadeia.
    */
+  /**
+   * 🆕 01/09 (pedido do Pedro) — recusa de pagamento, o par que faltava.
+   * · `?retry=1` — volta do splash de recusa (a tela explica e pede outra
+   *   forma de pagar, sem zerar nada do que já foi preenchido).
+   * · `?simular=recusa` — deixa o caminho alcançável no mapa e na demo, mesmo
+   *   padrão de `/endereco?simular=fora-bh`, sem inventar falha em produção.
+   */
+  const retry = searchParams.get("retry") === "1";
+  const simularRecusa = searchParams.get("simular") === "recusa";
+
   function destino() {
+    if (simularRecusa) {
+      return "/splash-recusado?next=" + encodeURIComponent("/pagamento?retry=1");
+    }
     if (fluxo === "migrar") {
       if (mei) return comRegime("/migrar/ativa", mei);
       const qs = searchParams.toString();

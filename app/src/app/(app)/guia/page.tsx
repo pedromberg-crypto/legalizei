@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { PagamentoView } from "@/components/wizard-dinheiro";
 import { CLIENTE } from "@/app/(app)/dossie/mock";
 
@@ -32,6 +32,17 @@ import { CLIENTE } from "@/app/(app)/dossie/mock";
  */
 export default function GuiaPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  /**
+   * 🆕 01/09 (pedido do Pedro) — 2 estados novos:
+   * · `?retry=1` — volta do splash de recusa: a tela explica o que houve e
+   *   pede outra forma de pagar (nada é zerado).
+   * · `?simular=recusa` — mesmo padrão de `/endereco?simular=fora-bh`: deixa
+   *   o caminho da recusa alcançável no mapa e na demo sem inventar falha
+   *   aleatória em produção.
+   */
+  const retry = searchParams.get("retry") === "1";
+  const simularRecusa = searchParams.get("simular") === "recusa";
   const [cpf, setCpf] = useState("");
   const [metodo, setMetodo] = useState<"cartao" | "pix" | "boleto">("cartao");
   const [aceito, setAceito] = useState(false);
@@ -46,6 +57,7 @@ export default function GuiaPage() {
       setMetodo={setMetodo}
       aceito={aceito}
       setAceito={setAceito}
+      recusado={retry}
       onVoltar={() => router.push("/aguardando?fase=junta")}
       /**
        * 🆕 01/09 (pedido do Pedro) — as 2 variantes de splash, iguais às do
@@ -56,7 +68,9 @@ export default function GuiaPage() {
        */
       onPagar={() =>
         router.push(
-          metodo === "boleto"
+          simularRecusa
+            ? "/splash-recusado?next=" + encodeURIComponent("/guia?retry=1")
+            : metodo === "boleto"
             ? "/splash-boleto?next=" + encodeURIComponent("/aguardando?fase=junta&guia=boleto")
             : "/splash-pagamento?next=" + encodeURIComponent("/aguardando?fase=junta&guia=paga"),
         )

@@ -393,6 +393,12 @@ export const NODES = [
   // ganhavam a confirmação — assimetria sem motivo. Copy é outra de propósito:
   // "Boleto gerado" (nada foi pago ainda), não "Pagamento confirmado".
   { id: "E9_SB", rota: "/splash-boleto", label: "E9.SB · Splash<br/>'boleto gerado'", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "🟢 31/08 — CONSTRUÍDA (`SplashMensagemView`, mesmo componente do E9.S/E5F.1). Transitória, sem CTA, auto-avança pro E9.1 (sem `?pago=1` — o boleto ainda não compensou). Arte provisória, Pedro revisa.", dados: "" },
+  // 🆕 01/09 (pedido do Pedro) — o par que faltava na família de splashes: ela
+  // só sabia dizer que deu certo. Mesmo layout, pele ESCURA com gradiente
+  // coral (a do hero do status) — recusa com a mesma cara do sucesso faz a
+  // pessoa ler o layout antes da palavra e comemorar errado.
+  { id: "E9_SR", rota: "/splash-recusado?next=/pagamento%3Fretry%3D1", label: "E9.SR · Splash<br/>pagamento recusado", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Reusa `SplashMensagemView` com `variante=\"recusado\"` (fundo escuro + gradiente coral, ícone x). Transitório e sem CTA: a decisão (outro cartão, trocar pra Pix) é da tela seguinte. Alcançável por `/pagamento?simular=recusa`.", dados: "" },
+  { id: "E9_R", rota: "/pagamento?retry=1", label: "E9.R · Pagamento<br/>(nova tentativa)", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "MESMA tela do E9 com aviso no topo explicando a recusa e oferecendo outro cartão ou Pix. Não zera o que foi preenchido: quem teve o cartão recusado já está frustrado, refazer o formulário puniria duas vezes.", dados: "Método de pagamento (nova tentativa) · CPF já confirmado" },
   { id: "E9_1", rota: "/aguardando", label: "E9.1 · Aguardando boleto<br/>dossiê já liberado", forma: "tela", classe: "espera", status: "construida", validado: "ux", falta: "Dunning revisado", dados: "" },
   // 🆕 30/08 (pedido do Pedro) — variante "pago" do E9.1, pra quem chega pelo
   // E9.S (pagou instantâneo). MESMO componente (`AguardandoView`), MESMO CTA
@@ -449,7 +455,7 @@ export const NODES = [
   // quando as 3 primeiras opções são recusadas pela Junta. MESMA tela do C7,
   // com os campos vazios (a IA já sugeriu e as 3 falharam — repetir o mesmo
   // tipo de sugestão seria oferecer o que acabou de ser reprovado).
-  { id: "C7_2", rota: "/dossie/nome?rodada=2", label: "C7′ · Sugerir mais<br/>3 nomes (2ª rodada)", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Reusa `NomeView` com `novaRodada`: 3 campos vazios, 1º já em edição, reordenação e objeto social iguais. Volta pro STATUS (não pro dossiê, que já acabou) pra Junta testar os nomes novos.", dados: "3 novas opções de razão social, na ordem de prioridade" },
+  { id: "C7_2", rota: "/dossie/nome/rodada-2", label: "C7′ · Sugerir mais<br/>3 nomes (2ª rodada)", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Reusa `NomeView` com `novaRodada`: 3 campos vazios, 1º já em edição, reordenação e objeto social iguais. Volta pro STATUS (não pro dossiê, que já acabou) pra Junta testar os nomes novos.", dados: "3 novas opções de razão social, na ordem de prioridade" },
   { id: "A1", rota: "/revisar", label: "A1 · Revisar + autorizar", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "🔄 01/09 (2ª rodada, pedido do Pedro) — saiu o card 'Taxa da Junta (já paga)', que mentia desde 26/08 (a DAE passou a ser paga DEPOIS, quando a viabilidade volta deferida), e saiu o ACEITE, que foi pra tela da guia (`/guia`) — é lá que a taxa de fato vira gasto irreversível. No ME a tela voltou a ser recap puro, com CTA 'Confirmar e seguir'. No MEI o aceite CONTINUA aqui: ele não paga guia nenhuma, então não existe tela depois desta pra carregá-lo. Recap read-only; carry-forward dos passos = estado do wizard (dev). 🆕 01/09 (decisão do Pedro): **absorveu o aceite da A2**, que foi eliminada. O checkbox irreversível é o último bloco da tela e trava o CTA (\"Autorizo, pode abrir\"); a explicação do não-reembolso virou LINK na própria frase, abrindo bottom-sheet (`SheetNaoReembolsavel`). Redação jurídica segue pendente (Mauro/Larissa)", dados: "Leitura + confirmação (enquadramento e pró-labore são SUGERIDOS, 28/07) · aceite do termo irreversível (checkbox)" },
   // 🗑️ 01/09 (decisão do Pedro) — A2 (`/termo`) ELIMINADA. A tela inteira
   // existia pra reforçar UMA coisa: a taxa da Junta não volta depois do
@@ -485,6 +491,9 @@ export const NODES = [
   // o par que o E9 já tinha (E9.S/E9.SB). Mesmo componente, `next` diferente:
   // quem paga por boleto volta pro status com a etapa AGUARDANDO COMPENSAÇÃO,
   // quem paga por cartão/Pix volta com ela fechada.
+  // 🆕 01/09 — o mesmo par de recusa, agora na cobrança da GUIA.
+  { id: "A3_SR", rota: "/splash-recusado?next=/guia%3Fretry%3D1", label: "A3.SR · Splash<br/>guia recusada", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Mesmo componente do E9.SR, outro `next`. Alcançável por `/guia?simular=recusa`.", dados: "" },
+  { id: "A3_R", rota: "/guia?retry=1", label: "A3.R · Guia<br/>(nova tentativa)", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "MESMA tela da guia com o aviso da recusa no topo. O aceite irreversível continua obrigatório na retentativa.", dados: "Método de pagamento (nova tentativa) · aceite irreversível" },
   { id: "A3_PS", rota: "/splash-pagamento?next=/aguardando%3Ffase%3Djunta%26guia%3Dpaga", label: "A3.PS · Splash<br/>guia paga", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Reusa `/splash-pagamento` (SplashMensagemView) com `?next` — transitório, sem CTA. Volta pro status com a etapa da guia concluída e a assinatura liberada.", dados: "" },
   { id: "A3_PSB", rota: "/splash-boleto?next=/aguardando%3Ffase%3Djunta%26guia%3Dboleto", label: "A3.PSB · Splash<br/>boleto da guia", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Reusa `/splash-boleto` com `?next`. Volta pro status com a etapa virando **Guia da Junta · aguardando compensação**: segue girando, e as ações passam a ser ver o boleto e adiantar por Pix (mesmo par do hero do E9.1).", dados: "" },
   // 🆕 01/09 (pedido do Pedro) — os 2 ESTADOS do status depois de pagar a guia.
@@ -605,6 +614,10 @@ export const EDGES = [
   // 🔴 30/08 (pedido do Pedro) — REVOGADO o "cartão pula direto pra C0". Todo
   // mundo passa por uma tela de status antes de seguir (ver nota no node E9).
   { de: "E9", para: "E9_S", label: "ME · cartão/Pix" },
+  // 🆕 01/09 — o caminho da RECUSA no pagamento do plano (espelha o da guia).
+  { de: "E9", para: "E9_SR", tracejado: true, label: "recusado" },
+  { de: "E9_SR", para: "E9_R", tracejado: true },
+  { de: "E9_R", para: "E9_S", tracejado: true, label: "passou" },
   { de: "E9_S", para: "E9_1P", tracejado: true },
   { de: "E9_1P", para: "C0", label: "Continuar preenchendo" },
   // MEI entra no dossiê pela ocupação, não pela descrição de atividade.
@@ -657,6 +670,9 @@ export const EDGES = [
   // 🔄 01/09 — era A3 → A3_2 → A4. Com a A3.2 fora do caminho ME, a DAE paga
   // libera a assinatura direto.
   { de: "A3", para: "A3_P", tracejado: true, label: "ME · pagar guia" },
+  { de: "A3_P", para: "A3_SR", tracejado: true, label: "recusado" },
+  { de: "A3_SR", para: "A3_R", tracejado: true },
+  { de: "A3_R", para: "A3_PS", tracejado: true, label: "passou" },
   { de: "A3_P", para: "A3_PS", tracejado: true, label: "cartão/Pix" },
   { de: "A3_P", para: "A3_PSB", tracejado: true, label: "boleto" },
   { de: "A3_PS", para: "A3_GP", tracejado: true, label: "guia paga" },

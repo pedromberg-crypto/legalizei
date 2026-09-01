@@ -55,7 +55,11 @@ export default function AguardandoPage() {
   const fase = searchParams.get("fase") === "junta" ? "junta" : "dossie";
   // 🆕 01/09 — volta do pagamento da guia (`/guia`): a etapa da DAE fecha e
   // "Agora é só assinar" vira a vez. Mock por query, mesmo padrão de `?pago`.
-  const guiaPaga = searchParams.get("guia") === "paga";
+  const guiaParam = searchParams.get("guia");
+  const guiaPaga = guiaParam === "paga";
+  // 🆕 01/09 — pagou a guia por BOLETO: a etapa segue em andamento, mas
+  // esperando o banco (ver `guiaBoleto` em AguardandoView).
+  const guiaBoleto = guiaParam === "boleto";
 
   return (
     <AguardandoView
@@ -64,6 +68,7 @@ export default function AguardandoPage() {
       pago={pago}
       fase={fase}
       junta={guiaPaga ? { concluidas: 2, emAndamento: 2 } : undefined}
+      guiaBoleto={guiaBoleto}
       /**
        * 🗑️ 01/09 (decisão do Pedro) — ia pro gate de certificado (A3.2). A
        * tela SAIU do caminho de constituição de ME: o certificado digital é

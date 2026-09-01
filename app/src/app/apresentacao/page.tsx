@@ -282,6 +282,8 @@ type Etapa =
   | "revisar"
   | "painel"
   | "guia"
+  | "guia-splash"
+  | "guia-boleto"
   | "painel-recusa"
   | "assinatura"
   | "ativacao"
@@ -476,6 +478,9 @@ const ETAPAS_ESPERA = [
   // 31/08 e nunca tinha entrado aqui: quem paga por BOLETO via este splash,
   // não o de "pagamento confirmado" (nada foi pago ainda).
   "splash-boleto",
+  // 🆕 01/09 — os 2 splashes DA GUIA (A3.PS/A3.PSB), espelho do par do E9.
+  "guia-splash",
+  "guia-boleto",
   "aguardando-pago",
 ] as const satisfies readonly Etapa[];
 
@@ -596,6 +601,8 @@ type Momento =
   | "revisar"
   | "painel"
   | "guia"
+  | "guia-splash"
+  | "guia-boleto"
   | "painel-recusa"
   | "assinatura"
   | "ativacao"
@@ -998,6 +1005,8 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   retomar: "/retomar",
   aguardando: "/aguardando",
   guia: "/guia",
+  "guia-splash": "/splash-pagamento",
+  "guia-boleto": "/aguardando?fase=junta&guia=boleto",
 };
 
 const SUFIXO_MOMENTO: Partial<Record<Momento, string>> = {
@@ -1367,6 +1376,22 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
       "Sem a guia paga, a Junta não registra e a assinatura não libera. É também onde mora o ACEITE irreversível, que antes ficava no A1: é neste clique que a taxa vira gasto que não volta.",
     porque:
       "Reusa a tela de pagamento em vez de criar outra: pagar duas coisas em momentos diferentes já é confuso o bastante sem duas gramáticas visuais. Muda o valor, a copy e o aceite; CPF, métodos e a linha de idempotência ficam idênticos de propósito.",
+  },
+  "guia-splash": {
+    dono: null,
+    faz: "🆕 01/09 — splash da guia paga por cartão ou Pix. Transitório, sem CTA, auto-avança pro status.",
+    interfere:
+      "Fecha a etapa da guia: a Junta pode registrar e a assinatura libera. É o mesmo componente do E9.S, com outro destino.",
+    porque:
+      "Pagar e cair direto numa lista de 12 passos não dá o respiro de \"deu certo\". O splash existe pra isso, e some sozinho.",
+  },
+  "guia-boleto": {
+    dono: "nossa",
+    faz: "🆕 01/09 — status DEPOIS de pagar a guia por boleto: a etapa vira \"Guia da Junta · aguardando compensação\", segue girando, e oferece ver o boleto ou adiantar por Pix.",
+    interfere:
+      "A Junta só registra com a guia compensada, o que leva de 1 a 3 dias úteis. A etapa não pode voltar a pedir pagamento (a pessoa já pagou) nem fingir que está resolvida.",
+    porque:
+      "Mesmo par de ações que o hero do E9.1 já usava pro boleto da mensalidade: o boleto à mão pra quem perdeu o e-mail, e o Pix pra quem não quer esperar. Conveniência, não cobrança.",
   },
   painel: {
     dono: "nossa",
@@ -1935,6 +1960,8 @@ export default function ApresentacaoPage() {
     { etapa: "revisar", label: "A1 · Revisar" },
     { etapa: "painel", label: "A3 · Painel" },
     { etapa: "guia", label: "🆕 A3.P · Guia da Junta" },
+    { etapa: "guia-splash", label: "🆕 A3.PS · Guia paga" },
+    { etapa: "guia-boleto", label: "🆕 A3.PSB · Guia no boleto" },
     // 🗑️ 01/09 — "A3.2 · Certificado" saiu do carrossel do ME.
     { etapa: "assinatura", label: "A4 · Assinatura" },
     { etapa: "ativacao", label: "🔓 A5 · Ativação" },
@@ -2560,8 +2587,29 @@ export default function ApresentacaoPage() {
                             setMetodo={setMetodo}
                             aceito={aceiteTermo}
                             setAceito={setAceiteTermo}
-                            onPagar={() => setEtapa("assinatura")}
+                            // 🆕 01/09 — mesma bifurcação da produção: boleto
+                            // volta pro status aguardando compensar; cartão/Pix
+                            // passam pelo splash de confirmação.
+                            onPagar={() =>
+                              setEtapa(metodo === "boleto" ? "guia-boleto" : "guia-splash")
+                            }
                             onVoltar={() => voltar(() => setEtapa("painel"))}
+                          />
+                        )}
+                        {/* 🆕 01/09 — as 2 variantes de splash da guia. */}
+                        {etapa === "guia-splash" && (
+                          <SplashMensagemView
+                            titulo="Pagamento confirmado."
+                            sub="A guia foi paga. A Junta já pode registrar."
+                            onAutoAvancar={() => setEtapa("assinatura")}
+                          />
+                        )}
+                        {etapa === "guia-boleto" && (
+                          <AguardandoView
+                            fase="junta"
+                            guiaBoleto
+                            temSocios={socios === 2}
+                            onPagarDae={() => setEtapa("guia")}
                           />
                         )}
                         {etapa === "painel-recusa" && (

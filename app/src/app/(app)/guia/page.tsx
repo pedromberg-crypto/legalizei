@@ -47,7 +47,20 @@ export default function GuiaPage() {
       aceito={aceito}
       setAceito={setAceito}
       onVoltar={() => router.push("/aguardando?fase=junta")}
-      onPagar={() => router.push("/aguardando?fase=junta&guia=paga")}
+      /**
+       * 🆕 01/09 (pedido do Pedro) — as 2 variantes de splash, iguais às do
+       * E9: boleto vê "Boleto gerado" e volta pro status com a etapa da guia
+       * AGUARDANDO COMPENSAÇÃO; cartão/Pix veem "Pagamento confirmado" e
+       * voltam com a etapa fechada. O splash é o mesmo componente das duas
+       * rotas já existentes — só o `next` muda.
+       */
+      onPagar={() =>
+        router.push(
+          metodo === "boleto"
+            ? "/splash-boleto?next=" + encodeURIComponent("/aguardando?fase=junta&guia=boleto")
+            : "/splash-pagamento?next=" + encodeURIComponent("/aguardando?fase=junta&guia=paga"),
+        )
+      }
     />
   );
 }

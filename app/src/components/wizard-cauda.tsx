@@ -1570,6 +1570,7 @@ export function AguardandoView({
   temSocios = true,
   pago = false,
   fase = "dossie",
+  guiaBoleto = false,
   dossieFeitos,
   junta = JUNTA_MOCK,
   recusa,
@@ -1595,6 +1596,15 @@ export function AguardandoView({
    * copy do hero e se existe CTA fixo no rodapé.
    */
   fase?: "dossie" | "junta";
+  /**
+   * 🆕 01/09 (pedido do Pedro) — a guia da Junta foi paga por BOLETO e está
+   * esperando compensar. A etapa da DAE muda de "sua vez de pagar" pra
+   * "aguardando compensação": segue girando, e as ações viram ver o boleto e
+   * adiantar por Pix (mesmo par que o hero do E9.1 já oferecia pro boleto da
+   * mensalidade). Sem isto, quem pagou por boleto voltava pro status vendo o
+   * mesmo CTA de pagar, como se nada tivesse acontecido.
+   */
+  guiaBoleto?: boolean;
   /** Quantos dos 9 passos do dossiê já foram feitos (fase "dossie"). Default
    *  = mock de sempre (`BOLETO_P2`). */
   dossieFeitos?: number;
@@ -1647,12 +1657,31 @@ export function AguardandoView({
   // dentro do passo era redundante (ele viu ao vivo, "está redundante"). Só a
   // fase JUNTA usa CTA inline, porque lá NÃO há rodapé fixo (K6) e a ação é
   // pontual daquela etapa (pagar a guia).
+  /**
+   * 🆕 01/09 (pedido do Pedro) — a etapa da guia tem 2 estados agora:
+   *
+   * · **a pagar** (default): "Pague a guia da Junta (DAE)" + CTA que abre a
+   *   tela de pagamento da taxa (`/guia`).
+   * · **aguardando compensação** (`guiaBoleto`): quem pagou por boleto volta
+   *   pra cá e vê a etapa esperando o banco, com o boleto à mão e o atalho do
+   *   Pix pra quem não quer esperar 1-3 dias. Mesmo par de ações que o hero do
+   *   E9.1 já usava pro boleto da mensalidade.
+   */
   const etapas = naFaseJunta
-    ? etapasCombinadas.map((e, i) =>
-        i === emAndamento && e.acaoCliente
-          ? { ...e, acaoCliente: { ...e.acaoCliente, onClick: onPagarDae } }
-          : e,
-      )
+    ? etapasCombinadas.map((e, i) => {
+        if (i !== emAndamento || !e.acaoCliente) return e;
+        if (guiaBoleto) {
+          return {
+            ...e,
+            nome: "Guia da Junta · aguardando compensação",
+            detalhe: undefined,
+            aguardando: true,
+            acaoCliente: { label: `Ver o boleto de ${brl(CUSTOS.DAE_JUCEMG, true)}`, onClick: onPagarDae },
+            acaoSecundaria: { label: "Prefiro pagar por Pix", onClick: onPagarDae },
+          };
+        }
+        return { ...e, acaoCliente: { ...e.acaoCliente, onClick: onPagarDae } };
+      })
     : etapasCombinadas;
 
   const t = naFaseJunta

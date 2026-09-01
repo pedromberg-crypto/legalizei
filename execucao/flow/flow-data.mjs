@@ -476,6 +476,12 @@ export const NODES = [
   // componente novo: é o MESMO PagamentoView do E9 no modo `guia` (muda valor,
   // copy e aceite; CPF, métodos e idempotência são idênticos de propósito).
   { id: "A3_P", rota: "/guia", label: "A3.P · Pagar a guia<br/>da Junta (DAE)", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Reusa `PagamentoView` com a prop `guia`. Carrega o ACEITE irreversível (veio do A1) porque é aqui que a taxa vira gasto. Mock: pagar volta pro status com `?guia=paga` e a etapa fecha; no app real quem fecha é o webhook do provedor.", dados: "CPF (confirmado do cadastro) · método de pagamento (cartão/Pix/boleto) · aceite irreversível" },
+  // 🆕 01/09 (pedido do Pedro) — as 2 variantes de splash DA GUIA, espelhando
+  // o par que o E9 já tinha (E9.S/E9.SB). Mesmo componente, `next` diferente:
+  // quem paga por boleto volta pro status com a etapa AGUARDANDO COMPENSAÇÃO,
+  // quem paga por cartão/Pix volta com ela fechada.
+  { id: "A3_PS", rota: "/splash-pagamento?next=/aguardando%3Ffase%3Djunta%26guia%3Dpaga", label: "A3.PS · Splash<br/>guia paga", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Reusa `/splash-pagamento` (SplashMensagemView) com `?next` — transitório, sem CTA. Volta pro status com a etapa da guia concluída e a assinatura liberada.", dados: "" },
+  { id: "A3_PSB", rota: "/splash-boleto?next=/aguardando%3Ffase%3Djunta%26guia%3Dboleto", label: "A3.PSB · Splash<br/>boleto da guia", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Reusa `/splash-boleto` com `?next`. Volta pro status com a etapa virando **Guia da Junta · aguardando compensação**: segue girando, e as ações passam a ser ver o boleto e adiantar por Pix (mesmo par do hero do E9.1).", dados: "" },
   { id: "A4", rota: "/assinatura", label: "A4 · Assinatura dos sócios", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "GOV.BR/e-CAC deep-link (dev). 🆕 24/08 (reunião Leonan): código 2FA único concentra procuração+assinatura (`CodigoGovView` — janela 10min, 3 tentativas, escala pra atendente se estourar); convite de sócio ganhou seletor de canal (WhatsApp/e-mail). 🆕 26/08 (item 7): certificado já vem validado da A3.2 — a procuração que sai junto desta assinatura agora tem o que precisa. 🗑️→🔴 01/09: **a A3.2 saiu do caminho ME**, então essa premissa caiu junto (o certificado é e-CNPJ, e o CNPJ ainda não existe aqui). Continua aberto o que fazer com a procuração e-CAC nesta tela: ela só pode ser assinada DEPOIS do CNPJ sair, e as 2 decisões de 01/09 (corrigir a cadeia toda + procuração sempre) ainda não foram construídas", dados: "Assinatura via GOV.BR/e-CAC · código de validação de 6 dígitos (janela 10min) · canal do convite ao sócio (WhatsApp/e-mail)" },
   { id: "A4G", rota: "/assinatura", label: "GOV.BR nível<br/>bronze→upgrade", forma: "decisao", classe: "inline", status: "construida", validado: "pendente", falta: "Dobrado inline no A4 — sem query própria (nenhum toggle de demo separa o sub-estado), a prévia mostra a mesma tela do A4", naTabela: false, dados: "" },
   { id: "REMOVIDO_N24", label: "'Empresa ativa'<br/>🗑️ REMOVIDO 30/07", forma: "terminal", classe: "todo", status: "planejada", validado: "oficial", falta: "Era órfão desde o swap A4→A5 (nenhuma rota navegava mais até aqui) — arquivo `/ativa` e a view apagados de vez 30/07, confirmado pelo Pedro. Fica só como marca histórica no mapa", dados: "" },
@@ -629,7 +635,10 @@ export const EDGES = [
   // 🔄 01/09 — era A3 → A3_2 → A4. Com a A3.2 fora do caminho ME, a DAE paga
   // libera a assinatura direto.
   { de: "A3", para: "A3_P", tracejado: true, label: "ME · pagar guia" },
-  { de: "A3_P", para: "A3", tracejado: true, label: "guia paga" },
+  { de: "A3_P", para: "A3_PS", tracejado: true, label: "cartão/Pix" },
+  { de: "A3_P", para: "A3_PSB", tracejado: true, label: "boleto" },
+  { de: "A3_PS", para: "A3", tracejado: true, label: "guia paga" },
+  { de: "A3_PSB", para: "A3", tracejado: true, label: "aguardando compensar" },
   { de: "A3", para: "A4", tracejado: true, label: "ME · DAE paga" },
   // No MEI o painel não espera órgão: espera o ATENDENTE conferir. Quando ele
   // libera, a etapa vira ação do cliente e abre o M-S.

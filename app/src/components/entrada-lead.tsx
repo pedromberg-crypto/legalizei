@@ -101,33 +101,57 @@ export function DadosPessoaisView({
             `public/leo/leo-espiando.png` (tratado do @2x do Pedro: ruído
             semitransparente limpo e recorte no bbox). */}
         {contexto === "abrir" && (
-          <div className="shrink-0">
+          <div className="relative shrink-0">
             {/* ═══ O MURO QUE NÃO EXISTE ═══════════════════════════════════
                 🆕 01/09 (ideia do Pedro) — o Léo espia por cima de um muro que
                 a gente nunca desenha: o "muro" É a superfície da interface.
 
                 Como funciona: o asset vem com o rosto cortado RETO onde o
                 parapeito estava (84,4% da altura da imagem) e as garras
-                descendo POR BAIXO desse corte. A faixa branca abaixo é
-                posicionada exatamente nessa altura, e o Léo fica acima dela no
-                empilhamento — o rosto some atrás, as garras aparecem por cima,
-                agarrando. Gap maior que 0 entre imagem e faixa mata o efeito.
+                descendo POR BAIXO desse corte. A faixa branca fica exatamente
+                nessa altura e o Léo fica acima dela no empilhamento — o rosto
+                some atrás, as garras aparecem por cima, agarrando.
 
-                Empilhamento: coral (fundo) → faixa branca (muro) → Léo.
+                Empilhamento: coral (z-0) → faixa branca (z-20) → Léo (z-30).
+
+                ⚠️ O CORAL É UMA CAMADA SÓ, e isso não é detalhe: ela vai do
+                topo do vidro até o FIM da faixa, e a faixa branca é que fica
+                por cima. Quando o coral era pintado em dois lugares (fundo +
+                faixa), os dois tons nunca batiam e aparecia uma emenda coral
+                nítida logo acima da quina, além de cor diferente nos cantos.
+
                 Medidas saem do asset, não do olho: 565px de altura, corte em
-                477px. `h-52` (208px) × 15,6% = ~32px de garra abaixo da linha,
-                que é exatamente o `-mt-8` da faixa. */}
-            <div className="relative flex justify-center">
-              {/* 🧪 01/09 — TESTE (pedido do Pedro: "só pra eu ver"): fundo
-                  coral. Sangra pros lados e sobe até atrás do header (a seta
-                  de voltar fica sobre o coral). Termina na linha do muro
-                  (`bottom-8`): quem continua o coral abaixo dela é a moldura
-                  da faixa, logo abaixo — assim ele aparece dentro das quinas
-                  arredondadas sem vazar por baixo do muro. */}
-              <div
-                aria-hidden
-                className="absolute -left-5 -right-5 -top-24 bottom-8 bg-action-primary"
+                477px → `h-52` (208px) × 15,6% ≈ 32px de garra abaixo da linha,
+                que é exatamente o `-mt-8` da faixa. Gap > 0 mata o efeito. */}
+            {/* 🆕 01/09 (pedido do Pedro) — FUNDO ÚNICO: coral + folhas
+                voando já ACHATADOS numa imagem só (composição que o próprio
+                Pedro montou no Photoshop).
+
+                Por que assim e não 2 camadas: o PNG das folhas tem alfa
+                PREMULTIPLICADO (a cor já vem multiplicada pelo alfa, resquício
+                de ter sido renderizado sobre preto). Navegador compõe alfa
+                STRAIGHT — e a diferença entre os dois modelos vira exatamente
+                uma borda escura em volta de cada folha. Medido: no fundo dele,
+                a borda tem cor média (63,66,69); o sólido, (224,227,232). Com
+                a imagem achatada esse problema deixa de existir, porque não há
+                mais alfa nenhum pra interpretar.
+
+                Papelada no ar é a burocracia que ele vigia. `object-cover` +
+                largura total do aparelho, como pedido. */}
+            <div aria-hidden className="absolute -left-6 -right-6 -top-[200px] bottom-0 z-10">
+              <Image
+                src="/leo/hero-folhas.jpg"
+                alt=""
+                fill
+                priority
+                // `scale-125` aproxima a papelada (o enquadramento original é
+                // largo demais pra uma faixa estreita de tela) e o `origin-
+                // center` mantém o miolo da composição no eixo do Léo.
+                className="scale-125 object-cover object-center origin-center"
               />
+            </div>
+
+            <div className="relative flex justify-center">
               <Image
                 src="/leo/leo-espiando.png"
                 alt=""
@@ -139,27 +163,36 @@ export function DadosPessoaisView({
               />
             </div>
 
-            {/* A FAIXA = o muro. Duas camadas: a de fora é coral (é ela que
-                aparece dentro das quinas), a de dentro é a superfície branca
-                com as PONTAS ARREDONDADAS.
-
-                ⚠️ 32px de raio é valor FORA da escala do DS (o maior é
-                `--radius-xl`, 24px) — exceção consciente, escolhida no olho
-                pelo Pedro: aqui o raio não é de componente, é curvatura de
-                superfície cenográfica. Se virar padrão, promove pra token.
-
-                A altura fixa (40px) é o que impede o coral de vazar pro resto
-                da tela: ele existe só dentro desta faixa. */}
-            <div className="relative z-20 -mx-5 -mt-8 mb-6 h-10 bg-action-primary">
-              <div className="h-full overflow-hidden rounded-t-[32px] border-t border-border-hairline bg-surface-page">
-                {/* Sombra por dentro da quina: a face do muro pegando a luz de
-                    cima. Sutil (7%) — sombra forte viraria faixa cinza e
-                    denunciaria o truque. */}
-                <div aria-hidden className="h-3 bg-gradient-to-b from-black/[0.07] to-transparent" />
-              </div>
-            </div>
           </div>
         )}
+
+        {/* A FOLHA BRANCA = o muro, e ela vai até o FIM DA TELA.
+            🔄 01/09 (3ª rodada) — era uma faixa de 40px, e por isso o coral
+            reaparecia logo abaixo dela nas laterais, com um corte horizontal
+            que lia como "linha coral dividindo a tela". Folha inteira resolve
+            na origem: abaixo da quina não existe coral em lugar nenhum, e o
+            único coral visível é o de cima e o de dentro das curvas.
+
+            ⚠️ 32px de raio é valor FORA da escala do DS (o maior é
+            `--radius-xl`, 24px) — exceção consciente, escolhida no olho pelo
+            Pedro: aqui o raio não é de componente, é curvatura de superfície
+            cenográfica. Se virar padrão, promove pra token.
+
+            🔄 A linha de 1px SAIU: traço nítido cortando o personagem
+            denunciava o recorte. Quem separa os planos é a sombra que a folha
+            PROJETA pra cima sobre o coral, como um plano na frente de outro. */}
+        <div
+          className={
+            contexto === "abrir"
+              ? "relative z-20 -mx-6 -mt-8 flex min-h-0 flex-1 flex-col rounded-t-[32px] bg-surface-page px-6 pt-9"
+              : "flex min-h-0 flex-1 flex-col"
+          }
+          style={
+            contexto === "abrir"
+              ? { boxShadow: "0 -10px 22px -6px rgba(0,0,0,.28)" }
+              : undefined
+          }
+        >
         <Titulo
           sub={
             contexto === "migrar"
@@ -236,6 +269,7 @@ export function DadosPessoaisView({
             Concordo, continuar
           </Button>
         </Rodape>
+        </div>
       </main>
     </>
   );

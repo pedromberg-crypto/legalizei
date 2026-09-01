@@ -2428,8 +2428,10 @@ export default function ApresentacaoPage() {
               {/* Mesmo aparelho dos outros mockups (15 Pro Max, insets 59/34) —
                   sem iframe: aqui o painel da direita precisa reagir ao estado. */}
               <div className="origin-top-left" style={{ transform: "scale(.82)", width: 478 * 0.82, height: 980 * 0.82 }}>
-                {/* Status bar clara só na splash: é a única tela de fundo coral. */}
-                <MolduraAparelho statusClaro={etapa === "splash"}>
+                {/* 🔄 01/09 — a splash deixou de ser a única tela de fundo
+                    coral: a E3.3 ganhou o hero do Léo sobre coral, e o relógio
+                    preto ficava ilegível em cima dele. */}
+                <MolduraAparelho statusClaro={etapa === "splash" || etapa === "dados"}>
                   {/* `.app-page` usa height:100dvh (viewport). Dentro da moldura
                       o teto é a altura DELA, então sobrescreve pra 100%. */}
                   <div className="app-page" style={{ height: "100%" }}>

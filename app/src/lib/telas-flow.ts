@@ -67,6 +67,9 @@ export const GRUPOS: GrupoTelas[] = [
       {
         rota: "/dados",
         nome: "🆕 E3.3 · Seus dados (captura de lead)",
+        // 🆕 01/09 — ganhou hero coral com o Léo espiando: relógio preto ficava
+        // ilegível em cima dele.
+        statusClaro: true,
         nota: "27/08 — tela NOVA, primeira coisa depois do fork. Nome, e-mail e telefone, igual à 1ª tela do funil da Contabilizei. NÃO cria conta (isso segue no E6): só identifica quem está do outro lado. Motivo (Pedro): 'se a gente não capta isso rápido, não sabe nem quem é dono dos próximos cliques' — antes, quem desistia antes do E6 era anônimo. LGPD: consentimento mínimo em 1 linha com link, sem checkbox; o aceite contratual continua no E8. Vale pros 2 caminhos (abrir e migrar), só muda a copy.",
       },
       {

@@ -715,5 +715,35 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 - Arquivei o que já não serve mais (protótipo antigo, diário da imersão) pra não confundir mais ninguém
 ```
 
+## Semana 31/08/2026 — gravamos uma abertura de verdade na Junta e o app tinha erro que teria travado cliente
+
+> Esta é a semana mais importante do produto até aqui em termos de "o que a gente achava × o que é". Sentamos com a Izabela e **abrimos uma empresa de verdade na JUCEMG**, gravando a tela campo a campo, da consulta de viabilidade até a hora de assinar. Depois comparei tudo com o que o app fazia.
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | **Achamos um erro que teria travado cliente de verdade** | Em Belo Horizonte, se o endereço da empresa é **apartamento**, a Prefeitura só aprova se o sócio morar lá. Vimos isso ao vivo: a mesma empresa foi **indeferida e depois deferida** só mudando essa resposta. O nosso app **nem perguntava isso** pra quem abre sozinho — que é justamente o caso mais comum. Corrigido | 🟢 |
+| 2 | **Faltavam os dados do sócio** | O app pedia só nome e percentual do sócio. A Junta exige o mesmo tanto de dado do sócio e do titular (nascimento, RG, estado civil, regime de bens). Com 2 sócios, o contrato **não poderia ser feito** com o que a gente coletava. Corrigido | 🟢 |
+| 3 | **Descoberta que economiza tempo em toda abertura** | Se a gente anexar procuração no processo, a Junta **tira a empresa da aprovação automática** e joga pra análise manual. Isso responde de vez a dúvida que estava aberta desde julho: **não vale pedir procuração da Junta** | 🟢 |
+| 4 | **Tiramos 1 tela e 1 pergunta do caminho do cliente** | "Tipo de empresa" (SLU × LTDA) virou decisão nossa, automática, dos dois lados. Capital social também: fixo em R$10 mil, a gente preenche. Menos coisa pra pessoa decidir, mais rápido pra ela chegar no fim | 🟢 |
+| 5 | **Documentei os 20 campos que a gente preenche sem perguntar** | Eram 3 documentados, e **2 estavam errados**. Agora são 20, cada um com o valor certo e o porquê — serve tanto pra mim desenhar tela quanto pro desenvolvedor programar o robô sem adivinhar nada | 🟢 |
+| 6 | **Juntei 2 telas de acompanhamento numa só** | Quem sai do app e volta agora cai sempre no mesmo lugar, vendo a jornada inteira (do primeiro dado até o CNPJ sair). Antes eram 2 telas parecidas, e a pessoa não sabia em qual estava | 🟢 |
+| 7 | **141 prints da Junta guardados e organizados** | Cada tela do processo real, com a explicação da Izabela do lado. Vira material de treinamento e referência pro desenvolvedor não errar campo | 🟢 |
+
+**Próximo (preciso de você / da Izabela):**
+1. **Assinatura**: os documentos oficiais (DBE e a guia DAE) têm campo de "assinatura com firma reconhecida". Na prática a gente assina pelo GOV.BR. **Vale confirmar com a Izabela** se o eletrônico substitui mesmo, ou se em algum caso precisa do cartório.
+2. **Endereço do contador**: no formulário, no campo de endereço da *pessoa física* do contador, a gente coloca o endereço do escritório. A Izabela disse que não tem impedimento, mas ninguém confirmou isso numa fonte. Vale checar.
+3. **Procuração do e-CAC** (a que deixa a gente pagar guia e cuidar das obrigações): ela só pode ser feita **depois** que o CNPJ sai. Preciso reposicionar isso no fluxo — e vale decidir se a gente emite certificado digital pro cliente (aí a procuração nem seria necessária).
+
+### 📱 WhatsApp (31/08)
+```
+*Update Legalizai* 📣
+- Sentamos com a Izabela e abrimos uma empresa DE VERDADE na Junta, gravando tela por tela (141 prints guardados)
+- Achamos um erro sério no nosso app: em apartamento, a Prefeitura de BH exige que o sócio more no local — e a gente nem perguntava isso pra quem abre sozinho. Vimos ao vivo a empresa ser indeferida e depois deferida só por causa dessa resposta. Já corrigido
+- Faltavam dados obrigatórios do sócio (RG, nascimento, estado civil) — com 2 sócios o contrato não sairia. Corrigido
+- Descoberta boa: anexar procuração no processo TIRA a empresa da aprovação automática da Junta. Ou seja, não vale a pena pedir procuração da Junta pro cliente
+- Tirei 1 tela e 1 pergunta do caminho: tipo de empresa e capital social agora a gente preenche sozinho
+- 3 coisas pra confirmar com a Izabela: se assinatura GOV.BR substitui firma reconhecida, se pode usar o endereço do escritório no campo pessoal do contador, e quando exatamente fazer a procuração do e-CAC
+```
+
 ## Links
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]] · [[estado-atual]] · [[indice-autoridade]]

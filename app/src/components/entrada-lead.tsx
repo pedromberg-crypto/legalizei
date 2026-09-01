@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
 import { CardNota } from "@/components/ui/card-nota";
@@ -90,6 +91,75 @@ export function DadosPessoaisView({
           tela), quando o voltar daqui leva pro fork (`/entrada`). */}
       <TelaHeader meta="Página inicial" onVoltar={onVoltar} />
       <main className="app-main">
+        {/* 🆕 01/09 (pedido do Pedro) — o Léo abre a tela, olhando POR CIMA
+            dos óculos direto pra quem está preenchendo ("reparando" no
+            usuário), e a captação desce. É a 1ª vez que o personagem aparece
+            DENTRO do wizard, não só no Welcome — e é de propósito nesta tela:
+            é o momento em que a pessoa se apresenta, então ele "olha" pra ela.
+            🔒 Guardado por regime: só no caminho ABRIR (a tela é compartilhada
+            com o migrar; escopo travado em 01/09 é o ME abrir). Asset:
+            `public/leo/leo-espiando.png` (tratado do @2x do Pedro: ruído
+            semitransparente limpo e recorte no bbox). */}
+        {contexto === "abrir" && (
+          <div className="shrink-0">
+            {/* ═══ O MURO QUE NÃO EXISTE ═══════════════════════════════════
+                🆕 01/09 (ideia do Pedro) — o Léo espia por cima de um muro que
+                a gente nunca desenha: o "muro" É a superfície da interface.
+
+                Como funciona: o asset vem com o rosto cortado RETO onde o
+                parapeito estava (84,4% da altura da imagem) e as garras
+                descendo POR BAIXO desse corte. A faixa branca abaixo é
+                posicionada exatamente nessa altura, e o Léo fica acima dela no
+                empilhamento — o rosto some atrás, as garras aparecem por cima,
+                agarrando. Gap maior que 0 entre imagem e faixa mata o efeito.
+
+                Empilhamento: coral (fundo) → faixa branca (muro) → Léo.
+                Medidas saem do asset, não do olho: 565px de altura, corte em
+                477px. `h-52` (208px) × 15,6% = ~32px de garra abaixo da linha,
+                que é exatamente o `-mt-8` da faixa. */}
+            <div className="relative flex justify-center">
+              {/* 🧪 01/09 — TESTE (pedido do Pedro: "só pra eu ver"): fundo
+                  coral. Sangra pros lados e sobe até atrás do header (a seta
+                  de voltar fica sobre o coral). Termina na linha do muro
+                  (`bottom-8`): quem continua o coral abaixo dela é a moldura
+                  da faixa, logo abaixo — assim ele aparece dentro das quinas
+                  arredondadas sem vazar por baixo do muro. */}
+              <div
+                aria-hidden
+                className="absolute -left-5 -right-5 -top-24 bottom-8 bg-action-primary"
+              />
+              <Image
+                src="/leo/leo-espiando.png"
+                alt=""
+                aria-hidden
+                width={893}
+                height={565}
+                priority
+                className="relative z-30 block h-52 w-auto"
+              />
+            </div>
+
+            {/* A FAIXA = o muro. Duas camadas: a de fora é coral (é ela que
+                aparece dentro das quinas), a de dentro é a superfície branca
+                com as PONTAS ARREDONDADAS.
+
+                ⚠️ 32px de raio é valor FORA da escala do DS (o maior é
+                `--radius-xl`, 24px) — exceção consciente, escolhida no olho
+                pelo Pedro: aqui o raio não é de componente, é curvatura de
+                superfície cenográfica. Se virar padrão, promove pra token.
+
+                A altura fixa (40px) é o que impede o coral de vazar pro resto
+                da tela: ele existe só dentro desta faixa. */}
+            <div className="relative z-20 -mx-5 -mt-8 mb-6 h-10 bg-action-primary">
+              <div className="h-full overflow-hidden rounded-t-[32px] border-t border-border-hairline bg-surface-page">
+                {/* Sombra por dentro da quina: a face do muro pegando a luz de
+                    cima. Sutil (7%) — sombra forte viraria faixa cinza e
+                    denunciaria o truque. */}
+                <div aria-hidden className="h-3 bg-gradient-to-b from-black/[0.07] to-transparent" />
+              </div>
+            </div>
+          </div>
+        )}
         <Titulo
           sub={
             contexto === "migrar"

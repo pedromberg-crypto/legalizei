@@ -643,6 +643,18 @@ export function SociosView({
 
   const [extras, setExtras] = useState<SocioExtra[]>(inicial);
 
+  /**
+   * 🆕 01/09 (reunião Rua Satélite 42) — QUEM ADMINISTRA.
+   *
+   * `null` = ainda não respondeu, e é diferente de "só eu": a resposta define
+   * a qualificação de cada sócio no DBE (49 sócio-administrador × 22 sócio) e
+   * quem sai na cláusula de administração do contrato. Deixar o default valendo
+   * como resposta escolheria pelo cliente um contrato que ele nunca leu.
+   */
+  const [administracao, setAdministracao] = useState<"so-eu" | "com-socios" | null>(null);
+  /** Ids dos sócios extras que também administram (só usado com 2+ extras). */
+  const [admins, setAdmins] = useState<string[]>([]);
+
   // Esta tela já nasce preenchida pelo mock; o botão serve pra DESFAZER o que
   // quem apresenta mexeu ao vivo e voltar pro estado canônico.
   usePreencher(preencher, () => {
@@ -695,7 +707,19 @@ export function SociosView({
       s.cep.replace(/\D/g, "").length === 8 &&
       s.numero.trim() !== "",
   );
-  const completo = !TEM_SOCIO || (nomesOk && somaOk && qualificacaoOk);
+  /**
+   * 🆕 01/09 — com sócio, a administração é obrigatória no caminho ABRIR: sem
+   * ela o RPA não sabe qual qualificação mandar pro DBE. Com 2+ extras e a
+   * opção "eu e sócio(s)", pelo menos 1 tem que estar marcado — senão a
+   * resposta é, na prática, "só eu", e aí é isso que a pessoa deveria ter
+   * escolhido.
+   */
+  const administracaoOk =
+    contexto !== "abrir" ||
+    !TEM_SOCIO ||
+    administracao === "so-eu" ||
+    (administracao === "com-socios" && (extras.length === 1 || admins.length > 0));
+  const completo = (!TEM_SOCIO || (nomesOk && somaOk && qualificacaoOk)) && administracaoOk;
 
   function atualizar(id: string, patch: Partial<SocioExtra>) {
     setExtras((atual) => atual.map((s) => (s.id === id ? { ...s, ...patch } : s)));
@@ -983,6 +1007,119 @@ export function SociosView({
                   </p>
                 )}
               </div>
+
+              {/* ═══════════ 🆕 01/09 · QUEM ADMINISTRA A EMPRESA ═════════════
+                  Reunião Rua Satélite 42 (simulação de DBE + contrato real com
+                  2 sócios, feita ao vivo). Toda a discussão de administração,
+                  assinatura isolada × conjunta e cláusula 8ª desaguou em UM
+                  campo só, e é este.
+
+                  ─── AS 3 REGRAS QUE ESTE CAMPO CARREGA ────────────────────
+                  1. Quem começa o cadastro JÁ É o administrador, sempre. É ele
+                     que vai como representante perante a Receita no DBE, e daí
+                     o sistema puxa a qualificação sozinho. Por isso o titular
+                     aparece travado, sem opção de tirar: se quem administra é
+                     outra pessoa, é essa outra pessoa que abre o app.
+                  2. A pergunta é binária: só o titular, ou o titular + o(s)
+                     sócio(s) marcado(s). Quem NÃO for marcado entra no DBE como
+                     sócio (código 22) e não aparece na cláusula de
+                     administração; quem for marcado entra como
+                     sócio-administrador (código 49).
+                  3. 🔴 NÃO existe pergunta de "assinatura isolada × conjunta", e
+                     isso é decisão, não esquecimento: o contrato PADRÃO da Junta
+                     não tem campo pra isso, e inserir cláusula própria tira o
+                     processo do padrão → cai em ANÁLISE HUMANA (mesma família do
+                     achado da procuração em 31/08, que derruba o Registro
+                     Automático). Os 2 caminhos daqui passam automático.
+
+                  ⚠️ Só no caminho ABRIR: na migração a empresa já existe e a
+                  administração já está definida no contrato dela — perguntar
+                  ali sugeriria que a resposta muda alguma coisa. */}
+              {contexto === "abrir" && (
+                <Card>
+                  <p className="text-body font-semibold text-text-primary">
+                    Quem vai administrar a empresa?
+                  </p>
+                  <p className="text-caption text-text-secondary mt-1 mb-3">
+                    Administrar é assinar pela empresa no dia a dia: abrir conta
+                    em banco, transferir um veículo, assinar em cartório. Quem
+                    não administra continua sócio e continua participando dos
+                    resultados.
+                  </p>
+
+                  <OpcoesLinha
+                    opcoes={[
+                      { v: "so-eu" as const, label: "Só eu" },
+                      { v: "com-socios" as const, label: "Eu e sócio(s)" },
+                    ]}
+                    valor={administracao}
+                    onChange={(v) => {
+                      setAdministracao(v);
+                      // Marcar "eu e sócio(s)" com 1 extra só não tem o que
+                      // escolher: o extra é o sócio. Já entra marcado.
+                      if (v === "com-socios" && extras.length === 1) {
+                        setAdmins([extras[0].id]);
+                      }
+                      if (v === "so-eu") setAdmins([]);
+                    }}
+                  />
+
+                  {/* Com 2+ extras a pergunta deixa de ser sim/não: dá pra
+                      escolher QUAIS administram (o caso "eu e o Ademar, mas não
+                      os outros dois" apareceu literalmente na reunião). */}
+                  {administracao === "com-socios" && extras.length > 1 && (
+                    <div className="mt-3 flex flex-col gap-2">
+                      <p className="text-caption font-semibold text-text-primary">
+                        Quais sócios também administram?
+                      </p>
+                      {extras.map((s, i) => {
+                        const marcado = admins.includes(s.id);
+                        return (
+                          <label
+                            key={s.id}
+                            className="flex min-h-12 cursor-pointer items-center gap-3 rounded-md border
+                                       border-border-hairline bg-surface-card p-3"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={marcado}
+                              onChange={() =>
+                                setAdmins((atual) =>
+                                  marcado ? atual.filter((id) => id !== s.id) : [...atual, s.id],
+                                )
+                              }
+                              className="h-5 w-5 shrink-0 accent-[var(--color-action-primary)]"
+                            />
+                            <span className="text-caption text-text-primary">
+                              {s.nome.trim() || `${i + 2}º sócio`}
+                            </span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* A consequência prática, na hora da escolha — e só a da
+                      opção escolhida. Explicar as duas ao mesmo tempo era o
+                      caminho pra transformar 1 pergunta em aula de direito
+                      societário, que foi exatamente o risco levantado. */}
+                  {administracao === "so-eu" && (
+                    <p className="text-micro text-text-tertiary mt-3">
+                      Você resolve tudo sozinho, sem depender da assinatura de
+                      ninguém. Seus sócios não assinam pela empresa.
+                    </p>
+                  )}
+                  {administracao === "com-socios" && (
+                    <p className="text-micro text-text-tertiary mt-3">
+                      Cada administrador pode assinar sozinho o dia a dia da
+                      empresa. Só atos grandes (vender ou dar em garantia um
+                      imóvel da empresa, por exemplo) precisam da assinatura de
+                      todos. Alguns bancos pedem todos os administradores pra
+                      abrir a conta.
+                    </p>
+                  )}
+                </Card>
+              )}
             </>
           ) : (
             <Aviso variante="info" titulo="Empresa só sua">

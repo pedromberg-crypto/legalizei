@@ -284,6 +284,14 @@ export const CONFERENCIA: TelaConferencia[] = [
         "status": "🔴 não implementado — depende da integração Asaas"
       },
       {
+        "nome": "CPF com MEI ativo (impedimento de DBE)",
+        "codigo": "",
+        "valor": "consulta antes de gerar o DBE",
+        "origem": "api",
+        "porque": "Na simulação da Rua Satélite 42 a transmissão do DBE foi REJEITADA porque o CPF do titular já tinha MEI ativo. Hoje o cliente descobriria isso depois de pagar, no meio do processo. É o mesmo endpoint da checagem de regularidade que o E9 já promete: dá pra pegar antes do dinheiro.",
+        "status": "🔴 não implementado — achado novo de 01/09"
+      },
+      {
         "nome": "Situação do CPF na Receita Federal",
         "codigo": "",
         "valor": "consulta no ato do pagamento",
@@ -386,6 +394,14 @@ export const CONFERENCIA: TelaConferencia[] = [
         "status": ""
       },
       {
+        "nome": "Representante perante a Receita Federal (DBE)",
+        "codigo": "",
+        "valor": "sempre quem iniciou o cadastro no app",
+        "origem": "automatico",
+        "porque": "Não é escolha e não é pergunta: quem preenche é o representante, e o DBE puxa a qualificação a partir disso. Se quem vai administrar é outra pessoa, é ela que precisa abrir a conta e conduzir a abertura — permitir 'indicar outro' criaria um caso em que o dono da conta não é o dono do processo.",
+        "status": "🟢 travado 01/09"
+      },
+      {
         "nome": "Profissão (titular E qualquer sócio)",
         "codigo": "",
         "valor": "\"Empresário\"",
@@ -462,6 +478,22 @@ export const CONFERENCIA: TelaConferencia[] = [
         "origem": "usuario",
         "porque": "",
         "status": ""
+      },
+      {
+        "nome": "quem administra a empresa (só o titular × titular + sócio(s) marcados)",
+        "codigo": "",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "Qualificação de cada sócio no DBE (49 × 22)",
+        "codigo": "49 - Sócio-Administrador · 22 - Sócio",
+        "valor": "derivada da resposta do C3 (quem administra)",
+        "origem": "automatico",
+        "porque": "É a ÚNICA coisa que a pergunta nova do C3 muda no processo: sócio marcado como administrador vai ao DBE com 49 e sai na cláusula de administração do contrato; sócio não marcado vai com 22 e só aparece no quadro societário. O titular é sempre 49 — quem inicia o cadastro é o representante perante a Receita, e o sistema puxa a qualificação dele sozinho.",
+        "status": "🟢 travado 01/09 (Rua Satélite 42, simulação de DBE ao vivo)"
       },
       {
         "nome": "Valor da participação de cada sócio (R$) e quantidade de quotas",
@@ -643,6 +675,24 @@ export const CONFERENCIA: TelaConferencia[] = [
     "titulo": "Fora de tela · preenchido no processo (RPA)",
     "rota": null,
     "campos": [
+      {
+        "nome": "Forma de assinatura (isolada × conjunta)",
+        "codigo": "",
+        "valor": "NÃO enviada — o contrato padrão não tem esse campo",
+        "origem": "automatico",
+        "porque": "🔴 Regra dura: inserir cláusula de assinatura tira o processo do contrato PADRÃO e manda pra análise humana (mesma família do achado da procuração, 31/08). O contrato padrão gerado não fala em forma de assinatura, e a cláusula 8ª do modelo dá a cada administrador representação ativa e passiva pra praticar todos os atos do objeto social; a assinatura de todos só é exigida em atos extraordinários (onerar/alienar imóvel da sociedade, obrigações em favor de cotistas ou terceiros). 🟡 Leitura conferida por IA sobre o contrato real da simulação; falta ratificação da contadora e teste em banco.",
+        "status": "🟢 travado 01/09, com o contrato real na tela",
+        "contexto": "Pós-C7 · Geração do contrato (RPA/Integrador)"
+      },
+      {
+        "nome": "Telas de conferência do DBE (dados vindos da viabilidade)",
+        "codigo": "",
+        "valor": "puladas pelo RPA — nome empresarial, natureza, nome fantasia, CNAEs, objeto social, endereço da PJ, porte ME e dados do contador vêm importados",
+        "origem": "automatico",
+        "porque": "Tudo isso já foi decidido na viabilidade e chega preenchido: reconferir campo a campo só gastaria tempo de robô.",
+        "status": "🟢 observado na simulação 01/09",
+        "contexto": "Pós-C7 · DBE (RPA)"
+      },
       {
         "nome": "Tipo de evento (Viabilidade JUCEMG)",
         "codigo": "101",

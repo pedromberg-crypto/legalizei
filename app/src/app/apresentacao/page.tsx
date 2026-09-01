@@ -1357,11 +1357,11 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   },
   socios: {
     dono: "usuario",
-    faz: "Confirma se a empresa tem mais sócios e, se tiver, coleta a qualificação completa de cada um: nome, CPF, participação, nascimento, nacionalidade, RG + órgão, estado civil (+ regime) e endereço.",
+    faz: "🆕 01/09 — ganhou a pergunta \"Quem vai administrar a empresa?\" (só o titular × titular + sócio(s) marcados), logo depois dos dados do sócio. Confirma se a empresa tem mais sócios e, se tiver, coleta a qualificação completa de cada um: nome, CPF, participação, nascimento, nacionalidade, RG + órgão, estado civil (+ regime) e endereço.",
     interfere:
       "A divisão em % vai literalmente no contrato social, e o número de sócios determina a natureza jurídica (SLU × LTDA, decidida por dentro). Também define quantas assinaturas o GOV.BR vai exigir no fim.",
     porque:
-      "O produto abre com até 4 sócios: é limite nosso, não da lei. A qualificação completa não é zelo, é o art. 997 do Código Civil — sem ela o contrato não é lavrado. CPF e endereço entraram em 01/09, na auditoria contra os 141 prints da JUCEMG: o CPF é a chave do sócio no QSA, e o endereço só veio automático na gravação porque a empresa era de um dono só. Profissão a gente preenche por dentro (\"Empresário\", igual pra todos).",
+      "🆕 01/09 (Rua Satélite 42, simulação de DBE ao vivo): a administração muda UMA coisa no processo — a qualificação de cada sócio no DBE (49 sócio-administrador × 22 sócio) e quem sai na cláusula de administração. Quem inicia o cadastro é sempre administrador (é o representante perante a Receita), por isso o titular aparece travado. 🔴 Não existe pergunta de assinatura isolada × conjunta de propósito: o contrato PADRÃO não tem esse campo, e inserir cláusula tira o processo do padrão e manda pra análise humana. O produto abre com até 4 sócios: é limite nosso, não da lei. A qualificação completa não é zelo, é o art. 997 do Código Civil — sem ela o contrato não é lavrado. CPF e endereço entraram em 01/09, na auditoria contra os 141 prints da JUCEMG: o CPF é a chave do sócio no QSA, e o endereço só veio automático na gravação porque a empresa era de um dono só. Profissão a gente preenche por dentro (\"Empresário\", igual pra todos).",
   },
   empresa: {
     dono: "usuario",

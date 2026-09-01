@@ -200,6 +200,30 @@ Até 01/09 as duas telas de pagamento escolhiam o método e mandavam pagar, sem 
 
 O CTA agora também espera esses campos: sem eles a cobrança volta 400 do gateway, e erro de gateway depois do clique é a pior hora de descobrir campo faltando.
 
+### 4.11 Administração da sociedade: 1 campo novo no C3 — 🆕 01/09
+
+Origem: Rua Satélite 42 (simulação de DBE + Integrador com 2 sócios, contrato padrão gerado e lido na tela). Toda a discussão societária desaguou em **um campo só**.
+
+**A pergunta**, no C3, depois dos dados do sócio: *"Quem vai administrar a empresa?"* → **só o titular** × **titular + o(s) sócio(s) marcado(s)**. Com 1 sócio extra é binária; com 2+ abre a seleção de quais administram. Obrigatória (trava o CTA) no caminho **abrir** — sem ela o RPA não sabe qual qualificação mandar. **Não aparece no migrar**: a empresa já existe e a administração já está no contrato dela.
+
+**O que muda no processo** (e é só isso):
+
+| Situação | Qualificação no DBE | Contrato |
+|---|---|---|
+| Titular (quem inicia o cadastro) | `49` Sócio-Administrador, sempre | sai na cláusula de administração |
+| Sócio marcado como administrador | `49` Sócio-Administrador | sai na cláusula de administração |
+| Sócio não marcado | `22` Sócio | só no quadro societário; participa dos resultados, não assina pela empresa |
+
+**Quem inicia o cadastro é o administrador, e isso não é pergunta.** Ele é o representante perante a Receita no DBE, e o sistema puxa a qualificação a partir daí. Não existe "indicar outra pessoa": se quem administra é o sócio, é o sócio que abre o app.
+
+🔴 **Não implementar pergunta de assinatura isolada × conjunta.** O contrato **padrão** da Junta não tem esse campo; inserir cláusula própria tira o processo do padrão e manda pra **análise humana** (mesma família do achado da procuração em 31/08). Os dois caminhos acima passam liso, testado na simulação.
+
+**O que o contrato padrão diz** (cláusula 8ª, lida no documento real): cada administrador tem representação ativa e passiva e pode praticar sozinho todos os atos do objeto social; assinatura conjunta só em atos extraordinários (onerar/alienar imóvel da sociedade, obrigações em favor de cotistas ou terceiros). Logo, 2 administradores **não** significa "tudo com duas assinaturas". 🟡 Leitura apoiada por IA sobre o contrato real — falta ratificação contábil e teste em banco.
+
+**Exceção fora do MVP:** quem quiser 2 administradores com assinatura isolada declarada precisa de alteração contratual (análise humana). Isso **não trava a esteira**: o app segue até a cobrança e o atendimento humano resolve depois.
+
+🐛 **Achado operacional novo:** **CPF com MEI ativo impede a emissão do DBE** — a 1ª transmissão da simulação foi rejeitada por isso. Hoje o cliente descobriria depois de pagar. É a mesma checagem de regularidade que o E9 já promete na copy. Registrado em `PREENCHIDOS_API` como 🔴 não implementado.
+
 ## 5. Decisões que o dev precisa respeitar
 
 - **Sem gate de faturamento**: quem marca "+R$30 mil/mês" segue no fluxo normal. A ideia é acompanhar o crescimento e propor desenquadramento/EPP depois — funcionalidade de pós-venda, ainda não construída.
@@ -220,6 +244,9 @@ O CTA agora também espera esses campos: sem eles a cobrança volta 400 do gatew
 | 🟡 7 | `Campo`/`Select` do DS sem `<label>` e sem nome acessível (A11Y-01) | design system |
 | 🟡 8 | Cartão de **débito**: o Asaas não aceita pela API (só via `invoiceUrl`). Oferecer significa sair do app no meio do pagamento | produto |
 | 🟡 9 | Tokenização de cartão (`creditCardToken`): liberada no Sandbox, precisa habilitação em Produção | dev/produto |
+| 🔴 10 | Checagem de **MEI ativo no CPF** antes do pagamento (hoje o DBE só falha depois) | dev |
+| 🟡 11 | Ratificar com a contadora se declarar assinatura isolada tira o contrato do padrão | contábil |
+| 🟡 12 | Validar o contrato padrão com banco (conta com 2 administradores) | operacional |
 
 ## 7. Testes que já existem (e o que eles garantem)
 

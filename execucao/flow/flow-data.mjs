@@ -68,6 +68,15 @@ export const SUBGRAFOS = [
  */
 export const PREENCHIDOS_API = [
   {
+    campo: "CPF com MEI ativo (impedimento de DBE)",
+    valor: "consulta antes de gerar o DBE",
+    contexto: "E9 · Pagamento",
+    status: "🔴 não implementado — achado novo de 01/09",
+    porque:
+      "Na simulação da Rua Satélite 42 a transmissão do DBE foi REJEITADA porque o CPF do titular já tinha MEI ativo. Hoje o cliente descobriria isso depois de pagar, no meio do processo. É o mesmo endpoint da checagem de regularidade que o E9 já promete: dá pra pegar antes do dinheiro.",
+  },
+
+  {
     campo: "Logradouro, bairro, município e UF (da empresa)",
     valor: "derivados do CEP digitado",
     contexto: "E3.4 · Endereço + categoria",
@@ -116,6 +125,39 @@ export const PREENCHIDOS_API = [
 ];
 
 export const PREENCHIDOS_INTERNAMENTE = [
+  {
+    campo: "Qualificação de cada sócio no DBE (49 × 22)",
+    codigo: "49 - Sócio-Administrador · 22 - Sócio",
+    valor: "derivada da resposta do C3 (quem administra)",
+    contexto: "C3 · Sócios",
+    status: "🟢 travado 01/09 (Rua Satélite 42, simulação de DBE ao vivo)",
+    porque:
+      "É a ÚNICA coisa que a pergunta nova do C3 muda no processo: sócio marcado como administrador vai ao DBE com 49 e sai na cláusula de administração do contrato; sócio não marcado vai com 22 e só aparece no quadro societário. O titular é sempre 49 — quem inicia o cadastro é o representante perante a Receita, e o sistema puxa a qualificação dele sozinho.",
+  },
+  {
+    campo: "Forma de assinatura (isolada × conjunta)",
+    valor: "NÃO enviada — o contrato padrão não tem esse campo",
+    contexto: "Pós-C7 · Geração do contrato (RPA/Integrador)",
+    status: "🟢 travado 01/09, com o contrato real na tela",
+    porque:
+      "🔴 Regra dura: inserir cláusula de assinatura tira o processo do contrato PADRÃO e manda pra análise humana (mesma família do achado da procuração, 31/08). O contrato padrão gerado não fala em forma de assinatura, e a cláusula 8ª do modelo dá a cada administrador representação ativa e passiva pra praticar todos os atos do objeto social; a assinatura de todos só é exigida em atos extraordinários (onerar/alienar imóvel da sociedade, obrigações em favor de cotistas ou terceiros). 🟡 Leitura conferida por IA sobre o contrato real da simulação; falta ratificação da contadora e teste em banco.",
+  },
+  {
+    campo: "Representante perante a Receita Federal (DBE)",
+    valor: "sempre quem iniciou o cadastro no app",
+    contexto: "C1 · Seus dados",
+    status: "🟢 travado 01/09",
+    porque:
+      "Não é escolha e não é pergunta: quem preenche é o representante, e o DBE puxa a qualificação a partir disso. Se quem vai administrar é outra pessoa, é ela que precisa abrir a conta e conduzir a abertura — permitir 'indicar outro' criaria um caso em que o dono da conta não é o dono do processo.",
+  },
+  {
+    campo: "Telas de conferência do DBE (dados vindos da viabilidade)",
+    valor: "puladas pelo RPA — nome empresarial, natureza, nome fantasia, CNAEs, objeto social, endereço da PJ, porte ME e dados do contador vêm importados",
+    contexto: "Pós-C7 · DBE (RPA)",
+    status: "🟢 observado na simulação 01/09",
+    porque: "Tudo isso já foi decidido na viabilidade e chega preenchido: reconferir campo a campo só gastaria tempo de robô.",
+  },
+
   {
     campo: "Tipo de evento (Viabilidade JUCEMG)",
     codigo: "101",
@@ -545,7 +587,7 @@ export const NODES = [
   // (`app/(app)/dossie/socios/page.tsx`). Quando TEM_SOCIO, a mesma tela JÁ
   // mostra o formulário de preencher os sócios extras — não existe uma "C3.1"
   // separada no código, era um nó fantasma no flow (antigo `C3_1`, removido).
-  { id: "C3", rota: "/dossie/socios", label: "C3 · Sócios?", forma: "decisao", classe: "", status: "construida", validado: "oficial", falta: "Re-pergunta o E5T (carry-forward pendente); limite subiu de 2 pra 4 (24/08). 🔒 24/08 (pedido do Pedro): não pergunta MAIS nada além de nome/%; quantidade e tipo (CPF) já vêm travados da triagem (E5T). Quando TEM_SOCIO, a MESMA tela já mostra o formulário de completar os sócios extras (sem passo/rota separada). 🔴→🟢 31/08 (gap-analysis contra a gravação real JUCEMG): faltava TODA a qualificação do sócio extra — só tinha nome+%, mas a JUCEMG/DBE exige a MESMA qualificação do titular (art. 997 CC) pra qualquer sócio. Adicionado nascimento, nacionalidade, RG+órgão, estado civil+regime de bens. Profissão fica de fora — preenchida internamente como \"Empresário\" pra todo mundo (ver PREENCHIDOS_INTERNAMENTE). 🔴→🟢 01/09 (auditoria 1-a-1): faltavam ainda **CPF e endereço do sócio extra**. O CPF é a CHAVE do sócio nos 3 sistemas (Viabilidade tela 14, QSA do DBE telas 63-70, Integrador tela 102) — o \"(CPF implícito)\" que este campo dizia vinha da triagem E5T, que trava o TIPO (só pessoa física), nunca o número. O endereço entra na qualificação do contrato (art. 997 CC, preview real na tela 117) e tem ficha própria no DBE (telas 67-69): na gravação veio automático só porque a empresa era SOLO e o sócio era o representante (popup da tela 66), o que não se repete com 2 sócios", dados: "Confirma se terá mais sócios (sem reperguntar quantidade/tipo) · se houver, de cada sócio extra: nome completo + CPF + % de participação + data de nascimento + nacionalidade + RG + órgão emissor + estado civil (+ regime de bens se casado) + endereço (CEP com autofill + número + complemento)" },
+  { id: "C3", rota: "/dossie/socios", label: "C3 · Sócios?", forma: "decisao", classe: "", status: "construida", validado: "oficial", falta: "Re-pergunta o E5T (carry-forward pendente); limite subiu de 2 pra 4 (24/08). 🔒 24/08 (pedido do Pedro): não pergunta MAIS nada além de nome/%; quantidade e tipo (CPF) já vêm travados da triagem (E5T). Quando TEM_SOCIO, a MESMA tela já mostra o formulário de completar os sócios extras (sem passo/rota separada). 🔴→🟢 31/08 (gap-analysis contra a gravação real JUCEMG): faltava TODA a qualificação do sócio extra — só tinha nome+%, mas a JUCEMG/DBE exige a MESMA qualificação do titular (art. 997 CC) pra qualquer sócio. Adicionado nascimento, nacionalidade, RG+órgão, estado civil+regime de bens. Profissão fica de fora — preenchida internamente como \"Empresário\" pra todo mundo (ver PREENCHIDOS_INTERNAMENTE). 🔴→🟢 01/09 (auditoria 1-a-1): faltavam ainda **CPF e endereço do sócio extra**. O CPF é a CHAVE do sócio nos 3 sistemas (Viabilidade tela 14, QSA do DBE telas 63-70, Integrador tela 102) — o \"(CPF implícito)\" que este campo dizia vinha da triagem E5T, que trava o TIPO (só pessoa física), nunca o número. O endereço entra na qualificação do contrato (art. 997 CC, preview real na tela 117) e tem ficha própria no DBE (telas 67-69): na gravação veio automático só porque a empresa era SOLO e o sócio era o representante (popup da tela 66), o que não se repete com 2 sócios", dados: "Confirma se terá mais sócios (sem reperguntar quantidade/tipo) · se houver, de cada sócio extra: nome completo + CPF + % de participação + data de nascimento + nacionalidade + RG + órgão emissor + estado civil (+ regime de bens se casado) + endereço (CEP com autofill + número + complemento) · quem administra a empresa (só o titular × titular + sócio(s) marcados)" },
   { id: "C4", rota: "/dossie/empresa", label: "C4 · Dados da empresa", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "🔒 01/09, 2ª rodada (pedido do Pedro) — a tela ficou com UM campo só. CEP, número e complemento aparecem TRAVADOS (vieram do E3.4 e não podem mais mudar aqui: já foram pra viabilidade); a pergunta 'Como é esse endereço?' foi REMOVIDA (o E3.4 já resolve endereço-dele × o nosso, e o tipo de imóvel responde o resto); e o aviso 'o IPTU desse endereço pode subir' saiu — chegava tarde, com a pessoa já tendo pago e já tendo mandado o endereço, então não mudava decisão nenhuma. Se voltar, o lugar é o E3.4, antes do dinheiro. Sobra o índice cadastral do IPTU. Sem `inicial` (deep-link, /mockup, prévia do /mapa) a tela cai no MOCK em vez de mostrar formulário vazio: formulário vazio é um estado que não existe no flow real. 🗑️ 01/09 (pedido do Pedro) — o **upsell de endereço fiscal saiu desta tela**. A regra virou binária: ou a pessoa escolheu o endereço fiscal no E3.4 (e a tela não existe pra ela), ou informou endereço próprio e aqui só TERMINA de preencher. O que veio do gate (CEP, número, complemento) aparece **travado**, com cadeado; o que falta (IPTU, tipo de endereço, imóvel) segue editável. Vender o endereço fiscal aqui seria oferecer, depois do pagamento, algo que muda a mensalidade. ✅ 28/07: IPTU obrigatório travado. 🔄 26/08 (reunião Rua Satélite 36, item 2): a escolha 'próprio × fiscal Legalizai' e o aviso de cobrança recorrente SAÍRAM daqui — moraram no E5F desde 24/08 até virarem o gate oficial de decisão, e o valor já vem confirmado do E7. Esta tela agora só CONFIRMA a escolha (card read-only, mesma doutrina do C3) e coleta os detalhes de endereço (CEP/IPTU/tipo) quando for próprio. 🔒 31/08 (gap-analysis + reunião Rua Satélite 38-40, tudo validado pelo Pedro): capital social deixou de ser pergunta — travado em R$10.000, nem aparece mais na tela (ver PREENCHIDOS_INTERNAMENTE). 'Endereço virtual' saiu do seletor 'tipo de endereço' — vira valor fixo só quando é o endereço fiscal da Legalizai (nunca opção de quem usa endereço próprio). 🐛→🔒 campo NOVO 'tipo de imóvel' (casa/apartamento/outro) — faltava por completo (zero ocorrência no código antes). A pergunta de residência, que só aparecia com 2+ sócios (bug: dono único nunca via essa pergunta, mesmo sendo a regra que decide deferimento/indeferimento na Prefeitura), agora vale sempre — e é SEMPRE sobre o titular (quem constitui), nunca sobre sócio extra. Se apartamento, resposta é automática 'sim' (travada); se o titular não reside ali, informa o endereço pessoal (com o mesmo tipo de imóvel). 🆕 01/09 (2 pedidos do Pedro, ambos construídos): **(1) a tela DEIXA DE EXISTIR pra quem usa o endereço fiscal da Legalizai** — antes ela abria só pra 'confirmar' uma escolha já feita no E3.4 e já somada no preço do E7, sem nada pra responder (endereço/IPTU/tipo de imóvel/residência são todos sobre um imóvel que não é dele). O C3 passa direto pro C7 e a rota redireciona sozinha em deep-link. ⚠️ **O MEI é exceção e continua vendo a tela**: lá existe 'Como você atende?' (forma de atuação), que é dele. O passo também some da lista de `lib/passos.ts` (`soEnderecoProprio`). **(2) carry-forward do endereço**: CEP, número e complemento respondidos no E3.4 chegam PREENCHIDOS aqui — a pessoa completa o que falta (IPTU, tipo de imóvel, residência) em vez de redigitar. Trafega por `sessionStorage` (`lib/rascunho.ts`), NÃO por querystring: endereço é dado pessoal, mesma regra do RF-01 que tirou nome/CPF/telefone da URL", dados: "Índice cadastral do IPTU (único campo do cliente) · CEP + número + complemento + tipo de imóvel + residência aparecem TRAVADOS, vindos do E3.4" },
   { id: "C5", rota: "/dossie/cnae-secundarios", label: "C5 · CNAE secundários", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "🆕 24/08 (reunião Leonan): ganhou busca livre (restrita ao que a gente atende, pedido original da Jéssica 19/07) além das 4 sugestões curadas mesmo-imposto; até 15 no total; secundária que muda enquadramento mostra aviso e troca CTA por 'Falar com atendente' em vez de bloquear silenciosamente. 🔄 28/08 (pedido do Pedro) — MUDOU DE LUGAR: vinha depois de C4 (dados da empresa), agora vem logo depois de C0.3 (CNAE principal confirmado) — sequência mais natural de quem acabou de escolher o CNAE. `lib/passos.ts` reflete a ordem nova ('CNAE secundário' é o 4º passo, não mais o 5º)", dados: "CNAEs secundários (seleção múltipla + busca, opcional, até 15)" },
   // 🔴→🟢 31/08 (validado pelo Pedro, reunião Rua Satélite 38-40) — C6 SAIU do

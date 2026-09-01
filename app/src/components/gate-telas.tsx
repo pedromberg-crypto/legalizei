@@ -124,6 +124,13 @@ const RITMO = {
  * MEI se calcula sozinho, em vez de comparar id de faixa na mão — se a grade
  * mudar de novo, o gate acompanha.
  */
+/**
+ * 🆕 01/09 — teto do ME em R$/mês: R$360 mil/ano (LC 123 art. 3º II) ÷ 12.
+ * É o mesmo número que fecha a última faixa e que trava o campo de valor
+ * exato — declarar os dois em lugares diferentes seria pedir divergência.
+ */
+export const TETO_ME_MENSAL = 30000;
+
 export const FAIXAS = [
   /**
    * 🔄 01/09 (pedido do Pedro) — a faixa "Até R$ 5 mil" virou **"Não sei
@@ -932,11 +939,23 @@ export function FaixaView({
                   </span>
                   <input
                     value={exato}
-                    onChange={(e) =>
-                      setExato(
-                        (Number(e.target.value.replace(/\D/g, "")) || "").toLocaleString("pt-BR")
-                      )
-                    }
+                    onChange={(e) => {
+                      /**
+                       * 🔄 01/09 (pedido do Pedro) — o campo NÃO é livre: para
+                       * no teto do ME (R$30 mil/mês = R$360 mil/ano, LC 123
+                       * art. 3º II). Digitar acima disso descrevia uma empresa
+                       * que a Legalizai não atende hoje, e ainda contradizia a
+                       * própria grade de faixas, que termina exatamente aí.
+                       *
+                       * Trava por CLAMP, não por rejeição: quem digita 50000
+                       * vê 30.000 no campo e o aviso logo abaixo explicando. Um
+                       * campo que simplesmente ignora a tecla deixa a pessoa
+                       * achando que o app travou.
+                       */
+                      const digitado = Number(e.target.value.replace(/\D/g, "")) || 0;
+                      const preso = Math.min(digitado, TETO_ME_MENSAL);
+                      setExato(preso ? preso.toLocaleString("pt-BR") : "");
+                    }}
                     placeholder="0"
                     inputMode="numeric"
                     autoFocus={autoFocus}
@@ -946,6 +965,13 @@ export function FaixaView({
                                focus:border-border-focus focus:outline-none"
                   />
                 </div>
+                {valor >= TETO_ME_MENSAL && (
+                  <p className="text-micro text-text-tertiary">
+                    Esse é o teto do ME: {brl(TETO_ME_MENSAL)} por mês
+                    ({brl(TETO_ME_MENSAL * 12)} por ano). Acima disso a empresa
+                    vira EPP, e aí a gente conversa antes de abrir.
+                  </p>
+                )}
                 {/* Devolve o enquadramento na hora: mostra que o número foi
                     entendido, e liga o valor à faixa que ficou logo acima. */}
                 {valor > 0 && rotuloEscolhida && (
@@ -968,11 +994,13 @@ export function FaixaView({
           <div className="flex flex-col gap-2">
             <input
               value={exato}
-              onChange={(e) =>
-                setExato(
-                  (Number(e.target.value.replace(/\D/g, "")) || "").toLocaleString("pt-BR")
-                )
-              }
+              onChange={(e) => {
+                // Mesmo teto da outra variante desta tela (comentário longo
+                // lá em cima): o campo para em R$30 mil/mês, o limite do ME.
+                const digitado = Number(e.target.value.replace(/\D/g, "")) || 0;
+                const preso = Math.min(digitado, TETO_ME_MENSAL);
+                setExato(preso ? preso.toLocaleString("pt-BR") : "");
+              }}
               placeholder="R$ 0"
               inputMode="numeric"
               autoFocus={autoFocus}

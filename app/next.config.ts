@@ -9,7 +9,9 @@ const nextConfig: NextConfig = {
   // bloqueado, a tela carrega mas fica sem interação — hidratação nunca
   // completa). Libera os IPs da LAN usados pra abrir `http://<ip>:3000` do
   // celular. Sem efeito em produção (só existe em `next dev`).
-  allowedDevOrigins: ["192.168.0.68", "192.168.0.67"],
+  // 01/09 — máquina mudou de IP na LAN (agora .241); sem ele aqui o teste
+  // pelo celular volta a travar sem hidratação.
+  allowedDevOrigins: ["192.168.0.68", "192.168.0.67", "192.168.0.241"],
 };
 
 export default nextConfig;

@@ -1576,6 +1576,7 @@ export function AguardandoView({
   recusa,
   onSeguir,
   onPagarDae,
+  onAssinar,
   onAcaoRecusa,
 }: {
   /** 🆕 04/08 — MEI não tem "Sócios" na lista (repassa pra `passosDoCliente`). */
@@ -1605,6 +1606,12 @@ export function AguardandoView({
    * mesmo CTA de pagar, como se nada tivesse acontecido.
    */
   guiaBoleto?: boolean;
+  /**
+   * 🆕 01/09 — com o CTA da fase Junta no rodapé, o último passo ("Agora é só
+   * assinar") precisava de destino: sem isso a tela virava beco depois da guia
+   * paga. Leva pro A4.
+   */
+  onAssinar?: () => void;
   /** Quantos dos 9 passos do dossiê já foram feitos (fase "dossie"). Default
    *  = mock de sempre (`BOLETO_P2`). */
   dossieFeitos?: number;
@@ -1671,29 +1678,42 @@ export function AguardandoView({
     ? etapasCombinadas.map((e, i) => {
         if (i !== emAndamento || !e.acaoCliente) return e;
         if (guiaBoleto) {
+          // 🔄 01/09 (correção do Pedro) — SEM card de ação aqui embaixo. As 2
+          // ações (ver boleto / adiantar por Pix) sobem pro hero, como chips,
+          // igual ao status do boleto da mensalidade: embaixo a etapa fica só
+          // girando, dizendo que está esperando. Duplicar a ação nos dois
+          // lugares faria a lista disputar atenção com o hero.
           return {
             ...e,
             nome: "Guia da Junta · aguardando compensação",
-            detalhe: undefined,
-            aguardando: true,
-            acaoCliente: { label: `Ver o boleto de ${brl(CUSTOS.DAE_JUCEMG, true)}`, onClick: onPagarDae },
-            acaoSecundaria: { label: "Prefiro pagar por Pix", onClick: onPagarDae },
+            detalhe: "Em andamento agora. Te avisaremos quando terminar.",
+            acaoCliente: undefined,
           };
         }
-        return { ...e, acaoCliente: { ...e.acaoCliente, onClick: onPagarDae } };
+        // 🔄 01/09 (pedido do Pedro) — o CTA de pagar a guia SAIU de dentro da
+        // etapa e virou o CTA fixo do rodapé, igual ao "Continuar preenchendo"
+        // do status do dossiê. Padroniza o gesto: ação principal da tela mora
+        // sempre no mesmo lugar, não ora no meio da lista, ora embaixo.
+        return { ...e, acaoCliente: undefined };
       })
     : etapasCombinadas;
 
   const t = naFaseJunta
-    ? { normal: "Estamos abrindo sua empresa", recusa: "Precisamos de você num ponto" }
+    ? {
+        // 🔄 01/09 — com a guia paga por boleto o hero fala do boleto, igual
+        // ao status da mensalidade: o que prende a jornada agora é o banco.
+        normal: guiaBoleto ? "Seu boleto está a caminho" : "Estamos abrindo sua empresa",
+        recusa: "Precisamos de você num ponto",
+      }
     : {
         normal: pago ? "Pagamento confirmado" : "Seu boleto está a caminho",
         recusa: "Precisamos de você num ponto",
       };
   const s = naFaseJunta
     ? {
-        normal:
-          "A parte chata é com a gente. Você acompanha por aqui e a gente avisa no WhatsApp a cada passo.",
+        normal: guiaBoleto
+          ? "Boleto da Junta leva de 1 a 3 dias úteis pra cair. Assim que compensar, a gente segue."
+          : "A parte chata é com a gente. Você acompanha por aqui e a gente avisa no WhatsApp a cada passo.",
         recusa: "A abertura seguiu bem até aqui. Um órgão pediu um ajuste, e é rápido de resolver.",
       }
     : {
@@ -1718,13 +1738,24 @@ export function AguardandoView({
       // o hero ficava "cru".
       escuro
       heroExtra={
-        !naFaseJunta && !pago ? (
+        // 🔄 01/09 (pedido do Pedro) — os chips do hero também aparecem quando
+        // a GUIA foi paga por boleto: mesma configuração do status do boleto
+        // da mensalidade, só muda o valor (a taxa da Junta).
+        (!naFaseJunta && !pago) || guiaBoleto ? (
           <div className="mt-4 flex flex-wrap items-center gap-2">
             <button
               type="button"
               className="flex items-center gap-1.5 rounded-full bg-surface-card px-3 py-1.5 text-caption font-semibold text-text-primary transition-colors active:bg-surface-alt"
             >
-              Ver o boleto de {brl(mei ? CUSTOS.MENSALIDADE_MEI : CUSTOS.MENSALIDADE, true)}
+              Ver o boleto de{" "}
+              {brl(
+                guiaBoleto
+                  ? CUSTOS.DAE_JUCEMG
+                  : mei
+                    ? CUSTOS.MENSALIDADE_MEI
+                    : CUSTOS.MENSALIDADE,
+                true,
+              )}
             </button>
             <button
               type="button"
@@ -1741,9 +1772,12 @@ export function AguardandoView({
       socios={temSocios ? 2 : 1}
       recusa={recusa ? { ...recusa, etapa: dossieTotal + recusa.etapa } : undefined}
       onAcaoRecusa={onAcaoRecusa}
-      // K6: status puro não inventa ação — só existe CTA fixo enquanto o
-      // dossiê não fechou ("Continuar preenchendo"). Na fase Junta, a ação (se
-      // houver) já mora inline na etapa (DAE) ou na recusa — nada no rodapé.
+      // K6 dizia: status puro não inventa ação, e na fase Junta a ação morava
+      // inline na etapa. 🔄 01/09 (pedido do Pedro) — a ação da fase Junta
+      // (pagar a guia) passou pro RODAPÉ, no mesmo lugar do "Continuar
+      // preenchendo" do dossiê. O princípio do K6 continua: o CTA só existe
+      // quando há ação de verdade — na espera da Junta ou com o boleto da guia
+      // pendente ele fica desabilitado, dizendo POR QUE.
       // 🔒 31/08 (correção do Pedro) — enquanto o boleto não compensa, o
       // dossiê fica TRAVADO: o CTA continua visível (a pessoa vê que existe
       // próximo passo) mas desabilitado, senão prometeria uma ação que o
@@ -1758,7 +1792,19 @@ export function AguardandoView({
               onClick: onSeguir,
               desabilitado: !pago,
             }
-          : undefined
+          : guiaBoleto
+            ? {
+                // Pagou por boleto: nada a fazer até o banco confirmar. O CTA
+                // continua visível (existe próximo passo) mas travado, com o
+                // motivo no rótulo — mesma regra do boleto da mensalidade.
+                label: "Aguardando compensar",
+                desabilitado: true,
+              }
+            : etapasCombinadas[emAndamento]?.acaoCliente
+              ? { label: "Pagar a guia agora", onClick: onPagarDae }
+              : emAndamento === etapasCombinadas.length - 1
+                ? { label: "Ir para a assinatura", onClick: onAssinar }
+                : undefined
       }
       prazo={
         naFaseJunta
@@ -1767,7 +1813,12 @@ export function AguardandoView({
       }
       idempotencia={
         naFaseJunta
-          ? undefined
+          ? // 🆕 01/09 — a linha do cadeado também aqui: com CTA no rodapé, a
+            // tela ganhou a mesma anatomia do status do dossiê (lista → aviso
+            // → ação), e a promessa de idempotência vale igual.
+            guiaBoleto
+            ? "Você paga uma vez só. Se o boleto já foi pago, não cobramos de novo."
+            : "A abertura roda uma vez só. Pode fechar o app que o processo segue sozinho, de onde parou."
           : pago
             ? "Seu progresso está salvo. Pode sair e voltar quando quiser."
             : "Seu progresso está salvo. Se você já pagou, não cobramos de novo."

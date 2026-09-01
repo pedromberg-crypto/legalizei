@@ -445,6 +445,11 @@ export const NODES = [
   { id: "C0_1", rota: "/retomar", label: "C0.1 · Retomar<br/>(porta de CPF)", forma: "tela", classe: "espera", status: "construida", validado: "ux", falta: "UX-23 fechado — mora em /pro-labore pós-constituição. 🆕 30/08 — deixou de ser órfão: o E3 aponta pra cá, via porta de CPF (mock, RF-01). 🔒 31/08 (fusão A3+E9, pedido do Pedro: 'uma tela única de retorno, que é a E9') — ENCOLHEU pra só a porta de CPF: a tela de status própria que vinha depois (`RetomarView`, 'Bem-vindo de volta') foi RETIRADA do código. Agora, confirmado o CPF, SEMPRE cai no E9.1/E9.1P — é a mesma tela de status que já cobre boleto pendente, pago e fase Junta, então não fazia sentido ter uma 2ª versão só pra reentrada.", dados: "CPF (identifica quem está voltando; o status em si é da tela seguinte)" },
 
   // ── APROVAÇÃO (A) · cauda · A1–A5 (construído 21/07) ─────────────────────
+  // 🆕 01/09 (pedido do Pedro) — 2ª rodada de nomes, aberta pelo CTA do A3.1
+  // quando as 3 primeiras opções são recusadas pela Junta. MESMA tela do C7,
+  // com os campos vazios (a IA já sugeriu e as 3 falharam — repetir o mesmo
+  // tipo de sugestão seria oferecer o que acabou de ser reprovado).
+  { id: "C7_2", rota: "/dossie/nome?rodada=2", label: "C7′ · Sugerir mais<br/>3 nomes (2ª rodada)", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Reusa `NomeView` com `novaRodada`: 3 campos vazios, 1º já em edição, reordenação e objeto social iguais. Volta pro STATUS (não pro dossiê, que já acabou) pra Junta testar os nomes novos.", dados: "3 novas opções de razão social, na ordem de prioridade" },
   { id: "A1", rota: "/revisar", label: "A1 · Revisar + autorizar", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "🔄 01/09 (2ª rodada, pedido do Pedro) — saiu o card 'Taxa da Junta (já paga)', que mentia desde 26/08 (a DAE passou a ser paga DEPOIS, quando a viabilidade volta deferida), e saiu o ACEITE, que foi pra tela da guia (`/guia`) — é lá que a taxa de fato vira gasto irreversível. No ME a tela voltou a ser recap puro, com CTA 'Confirmar e seguir'. No MEI o aceite CONTINUA aqui: ele não paga guia nenhuma, então não existe tela depois desta pra carregá-lo. Recap read-only; carry-forward dos passos = estado do wizard (dev). 🆕 01/09 (decisão do Pedro): **absorveu o aceite da A2**, que foi eliminada. O checkbox irreversível é o último bloco da tela e trava o CTA (\"Autorizo, pode abrir\"); a explicação do não-reembolso virou LINK na própria frase, abrindo bottom-sheet (`SheetNaoReembolsavel`). Redação jurídica segue pendente (Mauro/Larissa)", dados: "Leitura + confirmação (enquadramento e pró-labore são SUGERIDOS, 28/07) · aceite do termo irreversível (checkbox)" },
   // 🗑️ 01/09 (decisão do Pedro) — A2 (`/termo`) ELIMINADA. A tela inteira
   // existia pra reforçar UMA coisa: a taxa da Junta não volta depois do
@@ -460,7 +465,7 @@ export const NODES = [
   // concierge próprio, 4 etapas, copy que NUNCA diz que a gente registra).
   // Mesmo padrão de variante do E9/E9_M. Sem isso `/painel` virava rota órfã.
   { id: "A3_M", rota: "/painel?regime=mei", label: "A3 · Status<br/>(variante MEI)", forma: "tela", classe: "branch", status: "construida", validado: "oficial", falta: "Pipeline PRÓPRIO (`ETAPAS_MEI` em `painel/page.tsx`): recebemos seus dados → time conferindo → próximos passos prontos (CTA) → empresa aberta. ✍️ REGRA DE COPY: nenhuma etapa pode dizer que a Legalizai registra o MEI (não há API nem procuração que permita — ver `abertura-mei-processo.md`). Ficou FORA da fusão A3+E9 de 31/08 de propósito: o MEI não tem dossiê de 9 passos nem etapa de Junta, então fundir as listas não faria sentido.", dados: "" },
-  { id: "A3_1", rota: "/painel/recusa", label: "A3.1 · Órgão recusa<br/>'precisa de você'", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "✅ 28/07: retry automático construído — tenta as 3 opções do C7 em sequência (mock sempre falha as 3, pra provar o pior caso); só aí pede novas sugestões. Testado no motor (nome recusado); faltam DAE-volta e doc-pendência como casos", dados: "Retry automático pelas 3 opções priorizadas (C7) antes de pedir novas sugestões ao cliente" },
+  { id: "A3_1", rota: "/painel/recusa", label: "A3.1 · Órgão recusa<br/>'precisa de você'", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "🔄 01/09 (pedido do Pedro) — passou a ser A MESMA TELA do A3 (`AguardandoView` na fase junta), no estado de alerta: hero escuro + a jornada inteira, com a recusa inline na etapa que travou. Antes era um `PainelView` cru, só com as 3 etapas da cauda e sem hero — parecia outro app justo onde a confiança está mais frágil. O CTA de sugerir mais 3 nomes agora leva pro C7′. ✅ 28/07: retry automático construído — tenta as 3 opções do C7 em sequência (mock sempre falha as 3, pra provar o pior caso); só aí pede novas sugestões. Testado no motor (nome recusado); faltam DAE-volta e doc-pendência como casos", dados: "Retry automático pelas 3 opções priorizadas (C7) antes de pedir novas sugestões ao cliente" },
   // 🗑️ 01/09 (decisão do Pedro) — A3.2 (gate de certificado antes de assinar)
   // REMOVIDA do caminho de constituição de ME. Entrou em 26/08 por um motivo
   // que não se sustenta: "a procuração eletrônica exige certificado já
@@ -637,7 +642,9 @@ export const EDGES = [
   { de: "A1", para: "A3", tracejado: true, label: "ME" },
   // 🆕 31/08 — o MEI segue pro painel PRÓPRIO (não entrou na fusão A3+E9).
   { de: "A1", para: "A3_M", tracejado: true, label: "MEI" },
-  { de: "A3", para: "A3_1", tracejado: true },
+  { de: "A3", para: "A3_1", tracejado: true, label: "nome recusado" },
+  { de: "A3_1", para: "C7_2", tracejado: true, label: "sugerir mais 3" },
+  { de: "C7_2", para: "A3", tracejado: true, label: "novos nomes" },
   { de: "A3_1", para: "A3", tracejado: true },
   // 🔄 01/09 — era A3 → A3_2 → A4. Com a A3.2 fora do caminho ME, a DAE paga
   // libera a assinatura direto.

@@ -2012,6 +2012,7 @@ export function NomeView({
   onSeguir,
   onVoltar,
   mei = false,
+  novaRodada = false,
 }: {
   preencher?: number;
   onSeguir?: () => void;
@@ -2032,9 +2033,24 @@ export function NomeView({
    * de sempre (3 sugestões + reordenar + objeto social + fantasia).
    */
   mei?: boolean;
+  /**
+   * 🆕 01/09 (pedido do Pedro) — 2ª rodada de nomes, aberta pelo CTA "Sugerir
+   * mais 3 nomes" do A3.1 (as 3 primeiras não passaram na Junta).
+   *
+   * É a MESMA tela, adaptada em 3 pontos: os campos nascem VAZIOS (a IA já deu
+   * as sugestões dela e as 3 foram recusadas — sugerir de novo seria oferecer
+   * o mesmo tipo de nome que acabou de falhar), começam em modo de edição (a
+   * pessoa veio aqui pra escrever, não pra escolher) e a copy diz por que ela
+   * está aqui. Reordenar, objeto social e nome fantasia continuam iguais.
+   */
+  novaRodada?: boolean;
 }) {
-  const [ordem, setOrdem] = useState<SugestaoNome[]>(sugestoesIniciais);
-  const [editandoId, setEditandoId] = useState<string | null>(null);
+  const [ordem, setOrdem] = useState<SugestaoNome[]>(() =>
+    novaRodada ? [0, 1, 2].map((i) => ({ id: `r${i}`, valor: "" })) : sugestoesIniciais(),
+  );
+  // Na 2ª rodada o 1º campo já abre em edição: sem isso a pessoa cai numa
+  // lista de 3 vazios e precisa descobrir que o lápis é o caminho.
+  const [editandoId, setEditandoId] = useState<string | null>(novaRodada ? "r0" : null);
   const [fantasia, setFantasia] = useState("");
   // 🔒 24/08 (reunião Leonan 19/08) — TRAVADO, não editável. Erro de grafia
   // do cliente (S↔Z etc) subia pro contrato e virava reclamação real no
@@ -2067,17 +2083,23 @@ export function NomeView({
 
   return (
     <>
-      <TelaHeader meta="Nome da empresa" onVoltar={onVoltar} />
+      <TelaHeader meta={novaRodada ? "Novos nomes" : "Nome da empresa"} onVoltar={onVoltar} />
 
       <main className="app-main">
         <Titulo
           sub={
             mei
               ? "No MEI o nome oficial é definido por lei. O que você escolhe é a marca que aparece pro cliente."
-              : "A gente sugeriu 3 nomes. Edite o que quiser e escolha a ORDEM que quer que a gente tente registrar."
+              : novaRodada
+                ? "As 3 primeiras não passaram na Junta. Escreva outras 3 e escolha a ORDEM que quer que a gente tente."
+                : "A gente sugeriu 3 nomes. Edite o que quiser e escolha a ORDEM que quer que a gente tente registrar."
           }
         >
-          {mei ? "O nome da sua empresa" : "Qual nome você prefere?"}
+          {mei
+            ? "O nome da sua empresa"
+            : novaRodada
+              ? "Sugira mais 3 nomes"
+              : "Qual nome você prefere?"}
         </Titulo>
 
         <Corpo>

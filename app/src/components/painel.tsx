@@ -50,19 +50,12 @@ export interface Etapa {
    */
   acaoCliente?: { label: string; onClick?: () => void };
   /**
-   * 🆕 01/09 (pedido do Pedro) — 2ª ação da MESMA etapa, em peso menor.
-   * Nasce do boleto da guia da Junta: enquanto ele não compensa, a etapa
-   * oferece "ver o boleto" (ação principal) e "prefiro pagar por Pix"
-   * (atalho pra quem não quer esperar 1-3 dias). São 2 caminhos pro mesmo
-   * objetivo, não 2 tarefas — por isso dividem a etapa em vez de virarem duas.
+   * 🗑️ 01/09 — `acaoSecundaria` e `aguardando` existiram por algumas horas
+   * (guia paga por boleto mostrava "ver boleto"/"Pix" dentro da etapa).
+   * Saíram na correção do Pedro: as 2 ações subiram pro hero como chips, e a
+   * etapa embaixo ficou só girando. Sem consumidor, o campo sai — capacidade
+   * dormindo no DS é dívida, não preparo.
    */
-  acaoSecundaria?: { label: string; onClick?: () => void };
-  /**
-   * 🆕 01/09 — a etapa está esperando algo de FORA (banco compensando, órgão
-   * analisando) mesmo tendo ação do cliente disponível. Mantém o anel girando
-   * e troca o tom do bloco: não é "sua vez", é "estamos esperando".
-   */
-  aguardando?: boolean;
   /**
    * 🆕 31/08 (pedido do Pedro) — sub-descrição mostrada SÓ quando a etapa é a
    * atual: o que ela envolve + quanto tempo costuma levar ("leva cerca de 2
@@ -404,24 +397,12 @@ export function PainelView({
                     {aguardaAcaoCliente && e.acaoCliente && (
                       <div className="mt-2 rounded-md bg-surface-tint-brand p-3">
                         <p className="text-micro font-semibold text-text-primary mb-2">
-                          {/* 🆕 01/09 — com o boleto da guia pendente o bloco
-                              muda de tom: não é "sua vez", é "esperando o
-                              banco" — e as ações viram conveniência (ver o
-                              boleto, adiantar por Pix), não obrigação. */}
-                          {e.aguardando
-                            ? "O boleto leva de 1 a 3 dias úteis pra cair. Assim que compensar, a gente segue."
-                            : "A Junta aprovou. Falta só pagar a guia pra liberar a assinatura."}
+                          A Junta aprovou. Falta só pagar a guia pra liberar a
+                          assinatura.
                         </p>
-                        <div className="flex flex-wrap items-center gap-2">
-                          <Button onClick={e.acaoCliente.onClick}>
-                            {e.acaoCliente.label}
-                          </Button>
-                          {e.acaoSecundaria && (
-                            <Button variant="ghost" onClick={e.acaoSecundaria.onClick}>
-                              {e.acaoSecundaria.label}
-                            </Button>
-                          )}
-                        </div>
+                        <Button onClick={e.acaoCliente.onClick}>
+                          {e.acaoCliente.label}
+                        </Button>
                       </div>
                     )}
 

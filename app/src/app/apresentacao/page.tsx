@@ -284,6 +284,8 @@ type Etapa =
   | "guia"
   | "guia-splash"
   | "guia-boleto"
+  // 🆕 01/09 — C7′ (2ª rodada de nomes), aberta pelo CTA do A3.1.
+  | "nome-rodada2"
   | "guia-paga"
   | "painel-recusa"
   | "assinatura"
@@ -363,6 +365,8 @@ const ETAPAS_CAUDA = [
   // 🆕 01/09 — A3.P: pagamento da guia da Junta, aberto pelo CTA do status.
   "guia",
   "painel-recusa",
+  // 🆕 01/09 — C7′: a 2ª rodada de nomes, aberta pelo CTA do A3.1.
+  "nome-rodada2",
   // 🗑️ 01/09 (decisão do Pedro) — "certificado" (A3.2) SAIU do caminho ME. O
   // certificado é incluso no plano e emitido pela Legalizai quando for preciso,
   // e a justificativa que a colocou aqui em 26/08 ("a procuração exige
@@ -601,6 +605,7 @@ type Momento =
   | "empresa"
   | "cnae-secundarios"
   | "nome"
+  | "nome-rodada2"
   | "revisar"
   | "painel"
   | "guia"
@@ -987,6 +992,7 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   empresa: "/dossie/empresa",
   "cnae-secundarios": "/dossie/cnae-secundarios",
   nome: "/dossie/nome",
+  "nome-rodada2": "/dossie/nome?rodada=2",
   revisar: "/revisar",
   painel: "/painel",
   "painel-recusa": "/painel/recusa",
@@ -1405,6 +1411,14 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
       "É o destravamento da assinatura: sem a guia compensada a Junta não registra, então esta é a fronteira entre esperar e agir.",
     porque:
       "Virou tela própria no mapa (A3′) porque é OUTRO estado da mesma rota, e estado que muda o que a pessoa pode fazer merece nó — mesma régua que já separa E9.1 de E9.1P.",
+  },
+  "nome-rodada2": {
+    dono: "usuario",
+    faz: "🆕 01/09 — a MESMA tela do C7, aberta pelo CTA do A3.1 quando as 3 opções de nome são recusadas pela Junta. Campos vazios pra pessoa escrever outras 3, na ordem que quiser.",
+    interfere:
+      "É o desbloqueio do registro: sem nome aprovado a Junta não avança. Os 3 novos entram na mesma fila de tentativa automática.",
+    porque:
+      "Campos VAZIOS, não novas sugestões da IA: as 3 dela acabaram de ser reprovadas, então sugerir mais do mesmo tipo seria oferecer o que já falhou. O 1º campo abre em edição porque a pessoa veio escrever, não escolher.",
   },
   painel: {
     dono: "nossa",
@@ -2631,6 +2645,13 @@ export default function ApresentacaoPage() {
                             guiaBoleto
                             temSocios={socios === 2}
                             onPagarDae={() => setEtapa("guia")}
+                          />
+                        )}
+                        {etapa === "nome-rodada2" && (
+                          <NomeView
+                            novaRodada
+                            onSeguir={() => setEtapa("painel")}
+                            onVoltar={() => voltar(() => setEtapa("painel-recusa"))}
                           />
                         )}
                         {etapa === "painel-recusa" && (

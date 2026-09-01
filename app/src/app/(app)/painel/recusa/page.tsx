@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { PainelView } from "@/components/painel";
+import { useRouter } from "next/navigation";
+// 🔄 01/09 (pedido do Pedro) — A3.1 passou a ser A MESMA TELA do A3, no estado
+// de alerta: hero escuro + a jornada inteira (9 passos do dossiê + 3 da Junta),
+// com a recusa inline na etapa que travou. Antes era um `PainelView` cru, com
+// só as 3 etapas da cauda e sem hero — parecia outro app justo no momento em
+// que a confiança está mais frágil, que é o oposto da doutrina da UX-40.
+import { AguardandoView } from "@/components/wizard-cauda";
+import { TEM_SOCIO } from "@/app/(app)/dossie/mock";
 
 /**
  * REC · RECUSA DE ÓRGÃO — o 4º estado do painel (UX-40) · shell APP.
@@ -28,6 +35,7 @@ const OPCOES = [
 type Fase = "tentando" | "recusado" | "esgotado";
 
 export default function RecusaPage() {
+  const router = useRouter();
   const [tentativa, setTentativa] = useState(0); // índice em OPCOES
   const [fase, setFase] = useState<Fase>("tentando");
 
@@ -51,17 +59,21 @@ export default function RecusaPage() {
 
   if (fase === "esgotado") {
     return (
-      <PainelView
-        concluidas={1}
-        emAndamento={1}
-        socios={1}
+      <AguardandoView
+        fase="junta"
+        temSocios={TEM_SOCIO}
         recusa={{
+          // Índice relativo às 3 etapas da Junta (o AguardandoView soma os 9
+          // passos do dossiê sozinho) — 1 = "Pague a guia da Junta".
           etapa: 1,
           titulo: "As 3 opções de nome não passaram",
           motivo:
             "Testamos automaticamente as 3 que você priorizou, e nenhuma passou na Junta. Precisamos de mais 3 sugestões suas pra tentar de novo.",
           acao: "Sugerir mais 3 nomes",
         }}
+        // 🆕 01/09 (pedido do Pedro) — o CTA agora LEVA a algum lugar: a mesma
+        // tela do C7, com os campos vazios, pra pessoa escrever as 3 novas.
+        onAcaoRecusa={() => router.push("/dossie/nome?rodada=2")}
       />
     );
   }
@@ -71,10 +83,9 @@ export default function RecusaPage() {
   // está rodando agora. ⚠️ 29/07: índice mudou de 2 pra 1 (ETAPAS caiu de 4
   // pra 3 — ver `components/painel.tsx`).
   return (
-    <PainelView
-      concluidas={1}
-      emAndamento={1}
-      socios={1}
+    <AguardandoView
+      fase="junta"
+      temSocios={TEM_SOCIO}
       recusa={{
         etapa: 1,
         titulo:

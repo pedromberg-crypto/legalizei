@@ -88,6 +88,8 @@ export default function AguardandoPage() {
        * como se a guia se pagasse sozinha.
        */
       onPagarDae={() => router.push("/guia")}
+      // 🆕 01/09 — último passo da fase Junta: o CTA do rodapé leva pro A4.
+      onAssinar={() => router.push("/assinatura")}
       // 🔄 27/08 — a 1ª tela do dossiê virou a C0 (`/dossie/atividade`), não
       // mais o C1. Mesma mudança do `/pagamento` (racional lá).
       // 🐛 28/08 — faltava o ramo MEI: ia sempre pra C0 (ME), mesmo quando

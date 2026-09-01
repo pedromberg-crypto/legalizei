@@ -39,6 +39,7 @@ import {
   AguardandoView,
   CertificadoGateView,
 } from "@/components/wizard-cauda";
+import { ConferenciaView } from "@/components/conferencia";
 import { PainelView } from "@/components/painel";
 import {
   MigrarCnpjView,
@@ -314,6 +315,9 @@ type Etapa =
   | "retomar-cpf"
   | "retomar"
   | "aguardando"
+  // 🆕 01/09 — REFERÊNCIA DO DEV, fora de toda sequência: não é passo do
+  // cliente, não tem "antes" nem "depois". Só alcançável pela pill própria.
+  | "conferencia"
   | "fim";
 
 /**
@@ -653,6 +657,9 @@ type Momento =
   | "retomar-cpf"
   | "retomar"
   | "aguardando"
+  // 🆕 01/09 — REFERÊNCIA DO DEV, fora de toda sequência: não é passo do
+  // cliente, não tem "antes" nem "depois". Só alcançável pela pill própria.
+  | "conferencia"
   | "fim";
 
 /**
@@ -1017,6 +1024,7 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   nome: "/dossie/nome",
   "nome-rodada2": "/dossie/nome/rodada-2",
   "status-viabilidade": "/aguardando?fase=junta&viabilidade=1",
+  conferencia: "/conferencia",
   revisar: "/revisar",
   painel: "/painel",
   "painel-recusa": "/painel/recusa",
@@ -1396,6 +1404,14 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
      "dono da pausa" vira 🟦 nossa (ou "espera de terceiro"): não há mais
      formulário pra avançar, só status. */
 
+  conferencia: {
+    dono: "nossa",
+    faz: "🛠️ 01/09 — TELA NOVA, e a única que NÃO é do cliente: é a referência do dev. Lista todo campo que a constituição de ME coleta, na ordem em que coleta, com etiqueta de origem (USUÁRIO · AUTOMÁTICO · API).",
+    interfere:
+      "Nada, diretamente: ninguém navega pra cá e nenhum CTA leva aqui. Interfere no que é CONSTRUÍDO — metade do que a JUCEMG/DBE exige nunca aparece na tela do cliente (forma de atuação, metragem, capital, natureza jurídica, tipo de contrato), e sem a etiqueta o dev implementaria só o formulário e o RPA chegaria na Junta com campo vazio.",
+    porque:
+      "Porque a lista é GERADA da fonte-única (`flow-data.mjs` → `lib/conferencia-dados.ts`), não escrita à mão: mudou o campo no flow, roda o gerador e a tela acompanha. Toda tabela de campos copiada à mão vira documento velho em duas semanas — esta não tem como divergir.",
+  },
   revisar: {
     dono: "usuario",
     faz: "Mostra tudo que foi preenchido, bloco por bloco, com 'ajustar' em cada um — e termina com o aceite que autoriza a abertura.",
@@ -2065,6 +2081,16 @@ export default function ApresentacaoPage() {
    * isso ficam numa barra separada, não na `PILLS` principal (ver comentário
    * no `type Etapa`).
    */
+  /**
+   * 🆕 01/09 (pedido do Pedro) — fileira própria, ao lado de "ir direto",
+   * "migrar" e "pausas". Categoria separada porque a natureza é outra: as
+   * outras três são telas de CLIENTE em pontos diferentes do flow; esta é
+   * documentação viva pro dev, que não pertence a sequência nenhuma.
+   */
+  const PILLS_DEV: { etapa: Etapa; label: string }[] = [
+    { etapa: "conferencia", label: "🛠️ Conferência · campos por origem" },
+  ];
+
   const PILLS_PAUSA: { etapa: Etapa; label: string }[] = [
     { etapa: "retomar-cpf", label: "🆕 C0.1 · Voltar de onde parei" },
     { etapa: "retomar", label: "🆕 C0.1 · Retomar" },
@@ -2149,6 +2175,9 @@ export default function ApresentacaoPage() {
                             : noDossie(etapa) ||
                                 naCauda(etapa) ||
                                 naEspera(etapa) ||
+                                // 🆕 01/09 — a referência do dev vira momento
+                                // com o próprio nome (tem DESCRICOES própria).
+                                etapa === "conferencia" ||
                                 noMigrar(etapa)
                               ? etapa
                               : etapa === "fim"
@@ -2222,6 +2251,8 @@ export default function ApresentacaoPage() {
     // todas trazem o próprio header+main, igual às de cima.
     naCauda(etapa) ||
     naEspera(etapa) ||
+    // 🆕 01/09 — a referência do dev também traz TelaHeader + main próprios.
+    etapa === "conferencia" ||
     // Migrar inteiro também: são telas de tela-cheia, sem navbar.
     noMigrar(etapa);
   const mostraPreencher =
@@ -2637,6 +2668,9 @@ export default function ApresentacaoPage() {
                             irreversível virou o último bloco do A1, com o
                             detalhe do não-reembolso em popup. Daqui vai direto
                             pro status da Junta. */}
+                        {etapa === "conferencia" && (
+                          <ConferenciaView onVoltar={() => voltar(() => setEtapa("revisar"))} />
+                        )}
                         {etapa === "revisar" && (
                           <RevisarView
                             aceito={aceiteTermo}
@@ -3377,6 +3411,32 @@ export default function ApresentacaoPage() {
           </p>
           <div className="flex flex-wrap gap-2">
             {PILLS_PAUSA.map((p) => {
+              const atual = etapa === p.etapa;
+              return (
+                <button
+                  key={p.etapa}
+                  onClick={() => pularPara(p.etapa)}
+                  aria-current={atual}
+                  className={`rounded-full px-3.5 py-1.5 text-caption font-semibold transition-colors
+                    ${
+                      atual
+                        ? "bg-action-primary text-text-on-brand"
+                        : "border border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
+                    }`}
+                >
+                  {p.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* 🛠️ REFERÊNCIA DO DEV — não é tela de cliente, por isso não entra
+              em nenhuma das fileiras acima. */}
+          <p className="text-micro font-semibold tracking-wide text-text-tertiary mt-4 mb-2.5">
+            🛠️ REFERÊNCIA DO DEV (não é tela de cliente)
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {PILLS_DEV.map((p) => {
               const atual = etapa === p.etapa;
               return (
                 <button

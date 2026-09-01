@@ -104,6 +104,7 @@ flowchart TD
   M_O["M-O · Ocupação<br/>(Anexo XI + limite interno)"]:::branch
   M_CERT["A3.2' · Certificado<br/>(operar, não abrir)"]:::branch
   M_S["M-S · Próximos passos<br/>(a "cola")"]:::branch
+  CONF["🛠️ Conferência do dev<br/>(campos por origem)"]:::inline
   A5(["✅ A5 · Home dia-1<br/>(ativação)"]):::feliz
 
   E1 --> E2_1
@@ -173,6 +174,7 @@ flowchart TD
   C4 --> C7
   C7 --> A1
   A1 -.->|"ME"| A3
+  A1 -.-> CONF
   A1 -.->|"MEI"| A3_M
   A3 -.->|"nome recusado"| A3_1
   A3_1 -.->|"sugerir mais 3"| C7_2
@@ -322,6 +324,7 @@ flowchart TD
 > Cada linha = um estado estrutural do mapa. Snapshots completos em `flow/versoes/` (`.json` p/ diff + `.mmd` legível). Mais recente no topo.
 
 <!-- FLOW:VERSOES:INI -->
+- **v76** · 2026-09-01 · +nós CONF · +conexões A1→CONF
 - **v75** · 2026-09-01 · falta-validar em E5F
 - **v74** · 2026-09-01 · falta-validar em E5F
 - **v73** · 2026-09-01 · falta-validar em C4 · dados-coletados em C4

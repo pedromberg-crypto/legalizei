@@ -24,7 +24,7 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
-import { NODES, EDGES, SUBGRAFOS, PREENCHIDOS_INTERNAMENTE } from "./flow-data.mjs";
+import { NODES, EDGES, SUBGRAFOS, PREENCHIDOS_INTERNAMENTE, PREENCHIDOS_API } from "./flow-data.mjs";
 
 const DIR = path.dirname(fileURLToPath(import.meta.url)); // execucao/flow
 const NOTA = path.join(DIR, "..", "mapa-flow-mermaid.md"); // execucao/mapa-flow-mermaid.md
@@ -33,6 +33,8 @@ const APP = path.join(DIR, "..", "..", "app", "src", "app");
 const FLOW_GRAPH_JSON = path.join(DIR, "..", "..", "app", "src", "lib", "flow-graph.json");
 const DADOS_MD = path.join(DIR, "..", "dados-coletados-abertura-ate-viabilidade.md");
 const DADOS_TS = path.join(DIR, "..", "..", "app", "src", "lib", "dados-constituicao.ts");
+// 🆕 01/09 — alimenta a tela /conferencia (referência do dev).
+const CONFERENCIA_TS = path.join(DIR, "..", "..", "app", "src", "lib", "conferencia-dados.ts");
 
 const hoje = new Date().toISOString().slice(0, 10);
 
@@ -188,6 +190,129 @@ function exportarFlowGraph() {
   fs.writeFileSync(FLOW_GRAPH_JSON, JSON.stringify({ nodes, edges }, null, 2));
 }
 
+/* ─── 3d. EXPORT: conferencia-dados.ts (tela /conferencia, referência do dev) ─
+ *
+ * 🆕 01/09 (pedido do Pedro) — a tela de conferência do dev NÃO tem lista
+ * própria: ela nasce daqui, das MESMAS fontes que o mapa e a nota gerada.
+ *
+ *   · `dados` de cada nó do caminho Abrir  → o que o USUÁRIO preenche
+ *   · `PREENCHIDOS_INTERNAMENTE`           → o que o BACKEND preenche por ele
+ *   · `PREENCHIDOS_API`                    → o que vem de integração externa
+ *
+ * Os internos e os de API carregam `contexto` ("C4 · Dados da empresa"), e é
+ * por ele que cada campo cai no card da tela certa: assim o dev vê, no mesmo
+ * passo, o que chega do formulário e o que ele tem que gerar naquele momento.
+ * Campo cujo contexto não bate com nenhuma tela do caminho (RPA, pós-C7) vai
+ * pro card final — sumir com ele seria pior que agrupar.
+ */
+function gerarConferencia() {
+  const byId = new Map(NODES.map((n) => [n.id, n]));
+  const vistos = new Set();
+  // ESCOPO: constituicao de ME, so. O calculo do caminho segue aresta por
+  // aresta e alcanca o ramo MEI (M-T, M-O) e os gates de saida - uteis no mapa,
+  // ruido aqui: esta tela e a lista de coleta do ME, na ordem em que ela roda.
+  // `branch`/`saida` = desvio; E9_R = a MESMA coleta do E9, so que na 2a
+  // tentativa (repetir os campos dobraria a lista sem ensinar nada ao dev).
+  const foraDoEscopo = (n) => !n || n.classe === "branch" || n.classe === "saida" || n.id === "E9_R";
+  const caminho = [
+    ...PREAMBULO_ABRIR,
+    ...calcularCaminhoAbrir("E3", "abrir", CORTE_VIABILIDADE, "migrar"),
+  ]
+    .filter((id) => (vistos.has(id) ? false : (vistos.add(id), true)))
+    .filter((id) => !foraDoEscopo(byId.get(id)));
+
+  // "C4 · Dados da empresa" → "C4". O código é o que liga o campo interno à
+  // tela; o resto do texto é descrição pra humano.
+  const codigoDoContexto = (ctx = "") => (ctx.split("·")[0] || "").trim();
+
+  // Índice: código da tela (C4, C1, E6…) → id do nó. O label começa com o
+  // código, então dá pra casar sem lista manual.
+  const porCodigo = new Map();
+  for (const id of caminho) {
+    const n = byId.get(id);
+    if (!n) continue;
+    const cod = (n.label.replace(/<br\/>/g, " ").split("·")[0] || "").trim();
+    if (cod) porCodigo.set(cod, id);
+  }
+
+  const extras = new Map(); // id do nó → campos automáticos/API
+  const orfaos = [];
+  const registrar = (lista, origem) => {
+    for (const p of lista ?? []) {
+      const cod = codigoDoContexto(p.contexto);
+      const alvo = porCodigo.get(cod);
+      const campo = { nome: p.campo, valor: p.valor, origem, porque: p.porque || "", status: p.status || "" };
+      if (alvo) {
+        if (!extras.has(alvo)) extras.set(alvo, []);
+        extras.get(alvo).push(campo);
+      } else {
+        orfaos.push({ ...campo, contexto: p.contexto });
+      }
+    }
+  };
+  registrar(PREENCHIDOS_INTERNAMENTE, "automatico");
+  registrar(PREENCHIDOS_API, "api");
+
+  const telas = caminho
+    .map((id) => {
+      const n = byId.get(id);
+      if (!n) return null;
+      const doUsuario =
+        n.dados && n.dados.trim()
+          ? n.dados.split(" · ").map((nome) => ({ nome, valor: "", origem: "usuario", porque: "", status: "" }))
+          : [];
+      const campos = [...doUsuario, ...(extras.get(id) ?? [])];
+      if (!campos.length) return null; // tela sem dado nenhum não vira card
+      return { id, titulo: n.label.replace(/<br\/>/g, " "), rota: n.rota || null, campos };
+    })
+    .filter(Boolean);
+
+  if (orfaos.length) {
+    telas.push({
+      id: "RPA",
+      titulo: "Fora de tela · preenchido no processo (RPA)",
+      rota: null,
+      campos: orfaos,
+    });
+  }
+
+  const ts = [
+    "/**",
+    " * ═══════════════════════════════════════════════════════════════════════════",
+    " * GERADO por `execucao/flow/gerar-mapa.mjs` — NÃO EDITAR À MÃO.",
+    " * ═══════════════════════════════════════════════════════════════════════════",
+    " * Alimenta a tela `/conferencia` (referência do dev): cada tela do caminho",
+    " * Abrir, na ordem de preenchimento, com os campos etiquetados por origem.",
+    " * Mexeu em `flow-data.mjs`? Roda o gerador e esta lista acompanha.",
+    " */",
+    "export type OrigemCampo = \"usuario\" | \"automatico\" | \"api\";",
+    "",
+    "export interface CampoConferencia {",
+    "  nome: string;",
+    "  valor: string;",
+    "  origem: OrigemCampo;",
+    "  porque: string;",
+    "  status: string;",
+    "  /** So nos campos orfaos (card RPA): a tela citada no `contexto` da fonte. */",
+    "  contexto?: string;",
+    "}",
+    "",
+    "export interface TelaConferencia {",
+    "  id: string;",
+    "  titulo: string;",
+    "  rota: string | null;",
+    "  campos: CampoConferencia[];",
+    "}",
+    "",
+    `export const CONFERENCIA: TelaConferencia[] = ${JSON.stringify(telas, null, 2)};`,
+    "",
+  ].join("\n");
+
+  fs.writeFileSync(CONFERENCIA_TS, ts);
+  console.log(`✓ conferencia exportada: app/src/lib/conferencia-dados.ts (${telas.length} cards)`);
+  return telas.length;
+}
+
 /* ─── 3c. EXPORT: dados-coletados-abertura-ate-viabilidade.md ───────────── */
 
 /**
@@ -328,6 +453,7 @@ function gerarDadosConstituicaoMd() {
 }
 
 function exportarDadosConstituicao() {
+  const telasConferencia = gerarConferencia();
   const md = gerarDadosConstituicaoMd();
   fs.writeFileSync(DADOS_MD, md);
   const ts =

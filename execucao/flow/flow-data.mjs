@@ -55,6 +55,66 @@ export const SUBGRAFOS = [
  * Metragem — corrigidas com valor real visto no print) e 16 campos novos
  * entraram, todos verificados contra print + transcrição, não inferidos.
  */
+/**
+ * 🆕 01/09 (pedido do Pedro) — CAMPOS QUE VÊM DE INTEGRAÇÃO EXTERNA.
+ *
+ * Terceira categoria, ao lado de "o usuário digita" e "a Legalizai preenche":
+ * dado que chega de uma API de terceiro. Pro dev a diferença é de trabalho,
+ * não de rótulo — API tem latência, tem erro, tem indisponibilidade e precisa
+ * de fallback; campo interno é constante nossa e nunca falha.
+ *
+ * Alimenta a tela `/conferencia` junto com `PREENCHIDOS_INTERNAMENTE`, pelo
+ * mesmo mecanismo (`contexto` diz em qual tela o campo aparece).
+ */
+export const PREENCHIDOS_API = [
+  {
+    campo: "Logradouro, bairro, município e UF (da empresa)",
+    valor: "derivados do CEP digitado",
+    contexto: "E3.4 · Endereço + categoria",
+    status: "🟡 mock hoje (`buscarCep`), API real pendente",
+    porque:
+      "A pessoa digita só CEP e número; o resto do endereço vem da consulta. Precisa de fallback: CEP inexistente, API fora do ar e endereço sem logradouro (zona rural) são casos reais, e nenhum deles pode travar o gate de BH.",
+  },
+  {
+    campo: "Logradouro, bairro, município e UF (endereço pessoal do titular)",
+    valor: "derivados do CEP digitado",
+    contexto: "C1 · Seus dados",
+    status: "🟡 mock hoje (`buscarCep`), API real pendente",
+    porque: "Mesma consulta do endereço da empresa, outro campo — é a ficha do Representante no DBE.",
+  },
+  {
+    campo: "Logradouro, bairro, município e UF (endereço do sócio extra)",
+    valor: "derivados do CEP digitado",
+    contexto: "C3 · Sócios",
+    status: "🟡 mock hoje (`buscarCep`), API real pendente",
+    porque: "Idem, por sócio. Entra na qualificação do contrato (art. 997 CC) e na ficha do sócio no DBE.",
+  },
+  {
+    campo: "Situação do CPF na Receita Federal",
+    valor: "consulta no ato do pagamento",
+    contexto: "E9 · Pagamento",
+    status: "🔴 não implementado — hoje a tela só promete a checagem",
+    porque:
+      "A copy do E9 já diz 'a gente confere na Receita se ele está regular pra abrir empresa'. Enquanto a consulta não existir, isso é promessa sem lastro: CPF irregular só apareceria como recusa da Junta, semanas depois.",
+  },
+  {
+    campo: "CNAE principal sugerido pela descrição da atividade",
+    valor: "IA cruza o texto livre + a categoria escolhida no E3.4",
+    contexto: "C0 · Sua atividade",
+    status: "🟡 mock hoje (`mapear()`), motor real pendente",
+    porque:
+      "É o único campo do flow em que a máquina PROPÕE e a pessoa confirma. O veredito não pode responder 'não atendemos' (a categoria já filtrou isso antes do pagamento), então o fallback de erro é pedir mais descrição, nunca fechar a porta.",
+  },
+  {
+    campo: "Situação do protocolo na JUCEMG / Receita (viabilidade, DBE, registro)",
+    valor: "polling do protocolo",
+    contexto: "A3 · Status",
+    status: "🔴 não implementado — a timeline hoje é mock",
+    porque:
+      "Todo o status pós-dossiê depende disso: é o que move as etapas, dispara a recusa de nome (A3.1) e libera a assinatura. Sem polling, a tela é um enfeite bonito que nunca muda de estado.",
+  },
+];
+
 export const PREENCHIDOS_INTERNAMENTE = [
   {
     campo: "Forma de atuação (JUCEMG)",
@@ -538,6 +598,12 @@ export const NODES = [
   { id: "M_O", rota: "/dossie/ocupacao", label: "M-O · Ocupação<br/>(Anexo XI + limite interno)", forma: "tela", classe: "branch", status: "construida", validado: "oficial", falta: "🆕 28/08 — a C0 do ramo MEI, 1ª tela do dossiê. NÃO é o C0 adaptado: o Portal do Empreendedor não aceita CNAE livre, só OCUPAÇÃO de lista fechada (Anexo XI, Res. CGSN 140/2018), então não há 'descrever com suas palavras'. 🎯 Carrega o **limite interno** (Solução de Consulta Cosit nº 27/2021): a ocupação é mais estrita que o CNAE que ela mapeia — quem escolhe 'Reparador(a) de bicicleta' não pode consertar moto, e descobre numa fiscalização. É o erro que só contador pega, e é parte do que vendemos. Secundárias (até 15) também saem daqui, por isso o ramo pula o C5. Dados de `lib/mei.ts`, derivados dos 51 CNAEs certeza que aceitam MEI", dados: "Ocupação principal (1 da lista do Anexo XI) · até 15 ocupações secundárias" },
   { id: "M_CERT", rota: "/certificado?regime=mei", label: "A3.2' · Certificado<br/>(operar, não abrir)", forma: "tela", classe: "branch", status: "construida", validado: "oficial", falta: "🆕 28/08 (decisão do Pedro) — o MEI passa pelo MESMO gate de certificado do ME, com 2 diferenças: (1) o MOTIVO — no ME o certificado destrava a procuração da assinatura; no MEI não existe assinatura nem procuração de abertura (a abertura DISPENSA certificado, gov.br Prata/Ouro supre), então o que ele destrava é a OPERAÇÃO: puxar guia, FGTS Digital, agir sem pedir senha do cliente toda vez; (2) QUEM PAGA — no ME vem incluso (contrapartida da fidelidade, ADR 04/08); no MEI **não vem**, o cliente providencia. Fica ANTES da A5 a pedido do Pedro: 'tem que ser efetivado antes da pessoa cair pra dentro do app com as funcionalidades, da mesma forma do ME'. 🔴 Consequência aberta: a fidelidade de 12 meses do MEI perdeu a contrapartida escrita — precisa de justificativa nova antes de virar cláusula (Pedro/Mauro)", dados: "Certificado digital (upload .pfx/.p12 + senha) OU aceite de contato da certificadora parceira" },
   { id: "M_S", rota: "/mei/proximos-passos", label: "M-S · Próximos passos<br/>(a \"cola\")", forma: "tela", classe: "branch", status: "construida", validado: "oficial", falta: "🆕 28/08 — a tela que FECHA o ramo, e existe por razão jurídica, não de UX: como não dá pra registrar pelo cliente, a entrega é o passo a passo com os valores DELE prontos, na ordem dos campos do Portal. Inclui a checagem do nível da conta gov.br (Prata/Ouro obrigatório) e o link pro Portal. ✍️ REGRA DE COPY DURA: nunca dizer 'a gente abre pra você' neste ramo. 🔴 Falta: definir se o 'copiar tudo' vira PDF/WhatsApp; e o M-S é a tela mais cara de evoluir se um dia a automação for possível. Componente: `components/mei-telas.tsx` (`ProximosPassosView`)", dados: "Confirmação de que a conta gov.br é Prata/Ouro · (devolve o CNPJ gerado)" },
+  // 🆕 01/09 (pedido do Pedro) — NÃO é passo do cliente: é a tela de
+  // referência do DEV, pendurada no mapa pra ficar achável junto do flow que
+  // ela documenta. `classe: "inline"` (cinza) e aresta tracejada saindo da A1
+  // dizem isso visualmente: ninguém navega pra cá, e nada depois dela.
+  // `naTabela: false` — a tabela de validação lista telas de produto.
+  { id: "CONF", rota: "/conferencia", label: "🛠️ Conferência do dev<br/>(campos por origem)", forma: "tela", classe: "inline", status: "construida", validado: "ux", naTabela: false, falta: "Lista GERADA (`lib/conferencia-dados.ts` ← este arquivo): cada passo da constituição de ME, na ordem, com todo campo etiquetado USUÁRIO / AUTOMÁTICO / API. Existe porque metade do que a JUCEMG/DBE exige nunca aparece na tela do cliente, e sem a etiqueta o dev implementaria só o formulário. Mexeu em `dados`/`PREENCHIDOS_INTERNAMENTE`/`PREENCHIDOS_API`? Roda `gerar-mapa.mjs` e a tela acompanha", dados: "" },
   { id: "A5", rota: "/home-dia1", label: "✅ A5 · Home dia-1<br/>(ativação)", forma: "terminal", classe: "feliz", status: "construida", validado: "oficial", falta: "🔓 SWAP validado 30/07 (confirmado no código: assinatura empurra direto pra cá). 🆕 24/08 (reunião Leonan): trilha agora mostra 3 status explícitos — Procuração (feito, instantâneo com o código) → Validação do certificado digital (agora, linka pra /mais/certificado upload+oferta) → Acesso completo. 🔄 26/08 (item 7): certificado deixou de ser 'agora' e virou 'feito' — já foi validado antes da assinatura (A3.2). Quem vira 'agora' é 'Conferir os dados da empresa' (`/mais/empresa`). 🔄 01/09 (decisão do Pedro, com a A3.2 fora do caminho ME): o passo do certificado continua 'feito', mas o texto mudou de 'você já resolveu antes de assinar' pra **'Certificado digital por nossa conta'** — é incluso no plano e emitido pela Legalizai quando for necessário, não tarefa do cliente. `/mais/certificado` segue existindo, só que agora é pra RENOVAR/trocar, não pra validar a 1ª vez. Sem confete nem selo coral no hero. Handoff pro flow Portal (letra P) → autoridade portal-data.mjs", dados: "" },
 ];
 
@@ -659,6 +725,9 @@ export const EDGES = [
   // 🔄 01/09 — era A1 → A2 → A3. Com a A2 eliminada (aceite absorvido pelo
   // A1), o "Autorizo, pode abrir" leva direto pro status.
   { de: "A1", para: "A3", tracejado: true, label: "ME" },
+  // Aresta de DOCUMENTAÇÃO, não de navegação: liga a referência do dev ao
+  // ponto do flow em que o dossiê fecha. Tracejada e sem label de propósito.
+  { de: "A1", para: "CONF", tracejado: true },
   // 🆕 31/08 — o MEI segue pro painel PRÓPRIO (não entrou na fusão A3+E9).
   { de: "A1", para: "A3_M", tracejado: true, label: "MEI" },
   { de: "A3", para: "A3_1", tracejado: true, label: "nome recusado" },

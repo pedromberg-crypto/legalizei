@@ -1,6 +1,9 @@
 # Memory Index — Legalize
 
-- [Não rodar e2e sem pedir](legalize-nao-rodar-e2e-sem-pedir.md) — 30/08: Pedro cortou o hábito de rodar Playwright após todo ajuste pequeno; padrão vira só tsc+eslint.
+- [Escrever arquivo só via Edit/Write](legalize-escrita-arquivo-so-edit-write.md) — 01/09: script Python truncou 2 arquivos do vault (emoji + `open('w')`); node só com texto vindo de arquivo, nunca backtick inline.
+- [Gravação da JUCEMG é a fonte-verdade do flow](legalize-gravacao-jucemg-fonte-primaria.md) — 31/08: 141 prints da constituição real; matou o debate da procuração (derruba Registro Automático) e achou o bug do apartamento.
+- [Não rodar e2e sem pedir](legalize-nao-rodar-e2e-sem-pedir.md) — 30/08, reforçado 01/09: um "pode rodar" vale só pra aquela rodada; padrão é tsc+eslint. Travado no CLAUDE.md.
+- [Escopo é só o ME abrir empresa](legalize-escopo-so-me-abrir.md) — 01/09: MEI e Migração fora, salvo pedido; tela compartilhada exige guarda por regime, senão avisar antes.
 - [Mapa é estático, reposição precisa entrar na apresentação junto](legalize-mapa-estatico-apresentacao-junto.md) — 28/08: pedido de reordenar/layout "no mapa" mexe em `flow-data.mjs` E na `/apresentacao` sempre juntos; `/mockup` fica de fora.
 
 - [Portal tem flow salvo, mas defasado e sem MEI](legalize-portal-drift-mei.md) — 27/08: `portal-data.mjs` congelou 28/07; variante Plano MEI existe no código desde 04/08 e não está no mapa; portal foi desenhado pra ME/Simples.

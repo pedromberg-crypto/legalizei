@@ -1,0 +1,619 @@
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * GERADO por `execucao/flow/gerar-mapa.mjs` — NÃO EDITAR À MÃO.
+ * ═══════════════════════════════════════════════════════════════════════════
+ * Alimenta a tela `/conferencia` (referência do dev): cada tela do caminho
+ * Abrir, na ordem de preenchimento, com os campos etiquetados por origem.
+ * Mexeu em `flow-data.mjs`? Roda o gerador e esta lista acompanha.
+ */
+export type OrigemCampo = "usuario" | "automatico" | "api";
+
+export interface CampoConferencia {
+  nome: string;
+  valor: string;
+  origem: OrigemCampo;
+  porque: string;
+  status: string;
+  /** So nos campos orfaos (card RPA): a tela citada no `contexto` da fonte. */
+  contexto?: string;
+}
+
+export interface TelaConferencia {
+  id: string;
+  titulo: string;
+  rota: string | null;
+  campos: CampoConferencia[];
+}
+
+export const CONFERENCIA: TelaConferencia[] = [
+  {
+    "id": "E3_3",
+    "titulo": "E3.3 · Seus dados (nome · e-mail · telefone)",
+    "rota": "/dados",
+    "campos": [
+      {
+        "nome": "Nome completo",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "e-mail",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "telefone",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "consentimento de privacidade (implícito, ao continuar)",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      }
+    ]
+  },
+  {
+    "id": "E3_2",
+    "titulo": "E3.2 · MEI × ME (variante Abrir)",
+    "rota": "/entrada?intencao=abrir",
+    "campos": [
+      {
+        "nome": "Regime autodeclarado (MEI ou ME)",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      }
+    ]
+  },
+  {
+    "id": "E3_4",
+    "titulo": "E3.4 · Endereço + categoria (os 2 gates)",
+    "rota": "/endereco",
+    "campos": [
+      {
+        "nome": "Endereço da empresa (CEP validado BH + número) OU endereço fiscal Legalizai (+R$60/mês) OU cidade pra fila de espera",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "categoria de atividade (1 das 15 categorias, `pesquisa/cnae-matriz/taxonomia-pills-n4.md`, v2 27/08 -- 90 CNAEs certeza) OU atividade regulamentada (≤12 opções) pra quem não se encontrou",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "Logradouro, bairro, município e UF (da empresa)",
+        "valor": "derivados do CEP digitado",
+        "origem": "api",
+        "porque": "A pessoa digita só CEP e número; o resto do endereço vem da consulta. Precisa de fallback: CEP inexistente, API fora do ar e endereço sem logradouro (zona rural) são casos reais, e nenhum deles pode travar o gate de BH.",
+        "status": "🟡 mock hoje (`buscarCep`), API real pendente"
+      }
+    ]
+  },
+  {
+    "id": "E5T",
+    "titulo": "Triagem quantos sócios?",
+    "rota": "/gate?etapa=triagem",
+    "campos": [
+      {
+        "nome": "Quantidade de sócios (1 / 2 / 3 / 4)",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "é a 1ª empresa que abre? (opcional)",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "sócio que não se encaixa no card informativo (opcional, texto livre via 'Falar com o time')",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      }
+    ]
+  },
+  {
+    "id": "E5F",
+    "titulo": "Faixa de faturamento",
+    "rota": "/gate?etapa=faixa",
+    "campos": [
+      {
+        "nome": "Faixa de faturamento mensal (4 faixas até R$30 mil, o teto do ME) ou valor exato, se souber",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      }
+    ]
+  },
+  {
+    "id": "E6",
+    "titulo": "E6 · Criar conta",
+    "rota": "/conta",
+    "campos": [
+      {
+        "nome": "Nome",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "CPF",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "telefone",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "e-mail",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "senha",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "código de verificação de 8 dígitos (mock)",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      }
+    ]
+  },
+  {
+    "id": "E9",
+    "titulo": "E9 · Pagamento + contrato (variante Abrir)",
+    "rota": "/pagamento",
+    "campos": [
+      {
+        "nome": "CPF (cobrança + elegibilidade)",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "método de pagamento (cartão/Pix/boleto)",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "aceite do contrato de serviço (checkbox)",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "Situação do CPF na Receita Federal",
+        "valor": "consulta no ato do pagamento",
+        "origem": "api",
+        "porque": "A copy do E9 já diz 'a gente confere na Receita se ele está regular pra abrir empresa'. Enquanto a consulta não existir, isso é promessa sem lastro: CPF irregular só apareceria como recusa da Junta, semanas depois.",
+        "status": "🔴 não implementado — hoje a tela só promete a checagem"
+      }
+    ]
+  },
+  {
+    "id": "C0",
+    "titulo": "C0 · Sua atividade (descreve + pills)",
+    "rota": "/dossie/atividade",
+    "campos": [
+      {
+        "nome": "Descrição da atividade (texto livre) → CNAE principal (derivado por IA)",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "OU o código já sabido (atalho 28/07, mesma engine)",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "categoria já vem pré-selecionada do E3.4",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "\"Atividade exercida no local?\" (principal e secundárias)",
+        "valor": "Não (sempre)",
+        "origem": "automatico",
+        "porque": "Marcar Não em TODAS as atividades é o que habilita a opção \"Escritório/sede administrativa\" — se qualquer uma virasse Sim, a Prefeitura entenderia como comércio/loja física, errado pro nosso perfil",
+        "status": "🟢 travado"
+      },
+      {
+        "nome": "CNAE principal sugerido pela descrição da atividade",
+        "valor": "IA cruza o texto livre + a categoria escolhida no E3.4",
+        "origem": "api",
+        "porque": "É o único campo do flow em que a máquina PROPÕE e a pessoa confirma. O veredito não pode responder 'não atendemos' (a categoria já filtrou isso antes do pagamento), então o fallback de erro é pedir mais descrição, nunca fechar a porta.",
+        "status": "🟡 mock hoje (`mapear()`), motor real pendente"
+      }
+    ]
+  },
+  {
+    "id": "C1",
+    "titulo": "C1 · Seus dados",
+    "rota": "/dossie/socio",
+    "campos": [
+      {
+        "nome": "CONFIRMA nome/CPF/endereço já captados no E6 (não recoleta)",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "RG + órgão emissor (digitação manual)",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "data de nascimento",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "nacionalidade (pré-preenchida \"Brasileira\")",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "estado civil (+ regime de bens se casado)",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "Profissão (titular E qualquer sócio)",
+        "valor": "\"Empresário\"",
+        "origem": "automatico",
+        "porque": "Campo obrigatório no Integrador (Dados do Sócio/Administrador) pra qualquer sócio — nunca varia por atividade, então não gera dúvida útil pro cliente. Preenchido igual pra titular e sócio extra",
+        "status": "🟢 travado, validado 31/08 pelo Pedro"
+      },
+      {
+        "nome": "Qualificação do representante (JUCEMG/DBE)",
+        "valor": "\"49 - Sócio-Administrador\"",
+        "origem": "automatico",
+        "porque": "Sempre o mesmo código no DBE (Identificação do Representante) — não existe outra qualificação possível pra quem está constituindo a própria empresa",
+        "status": "🟢 travado"
+      },
+      {
+        "nome": "Regime de bens — tradução do rótulo pro valor da JUCEMG",
+        "valor": "\"Separação total de bens\" (nosso rótulo) → \"Separação Convencional de Bens\" (valor da Junta)",
+        "origem": "automatico",
+        "porque": "O dropdown real do Integrador (tela 103) tem 5 regimes; o app oferece 4, por decisão do Pedro em 01/09 (\"esse quinto, casamento acima de 70 anos, não faz sentido pra gente\"). Falta a Separação Obrigatória, que é imposta por lei e não escolhida. Consequência aceita: quem estiver nesse regime marca \"Separação total\" e o contrato sai com a qualificação errada — caso raro, sem tela, resolvido no atendimento se aparecer",
+        "status": "🟡 travado 01/09, com lacuna conhecida e aceita"
+      },
+      {
+        "nome": "Logradouro, bairro, município e UF (endereço pessoal do titular)",
+        "valor": "derivados do CEP digitado",
+        "origem": "api",
+        "porque": "Mesma consulta do endereço da empresa, outro campo — é a ficha do Representante no DBE.",
+        "status": "🟡 mock hoje (`buscarCep`), API real pendente"
+      }
+    ]
+  },
+  {
+    "id": "C2",
+    "titulo": "C2 · Vínculo INSS",
+    "rota": "/dossie/vinculo",
+    "campos": [
+      {
+        "nome": "Já contribui INSS por fora? (sim/não)",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "valor do vínculo (CLT/aposentadoria/autônomo/sócio de outro CNPJ)",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      }
+    ]
+  },
+  {
+    "id": "C3",
+    "titulo": "C3 · Sócios?",
+    "rota": "/dossie/socios",
+    "campos": [
+      {
+        "nome": "Confirma se terá mais sócios (sem reperguntar quantidade/tipo)",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "se houver, de cada sócio extra: nome completo + CPF + % de participação + data de nascimento + nacionalidade + RG + órgão emissor + estado civil (+ regime de bens se casado) + endereço (CEP com autofill + número + complemento)",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "Valor da participação de cada sócio (R$) e quantidade de quotas",
+        "valor": "% informado × R$10.000 (o valor em R$ é também o nº de quotas, porque a quota é R$1)",
+        "origem": "automatico",
+        "porque": "O app pergunta PERCENTUAL; os órgãos pedem VALOR EM REAIS (DBE tela 65: R$10.000,00 pro sócio único; QSA tela 70) e o Integrador pede o valor nominal da quota, R$1,00 (tela 95). A conversão existia na prática e não estava escrita. Como o passo do campo é 0,5%, o menor incremento dá 50 quotas exatas: nenhum percentual selecionável gera fração de quota, então não há arredondamento a tratar. ⚠️ Isso quebra se o capital deixar de ser R$10.000 ou o passo mudar",
+        "status": "🟢 travado, documentado 01/09"
+      },
+      {
+        "nome": "Logradouro, bairro, município e UF (endereço do sócio extra)",
+        "valor": "derivados do CEP digitado",
+        "origem": "api",
+        "porque": "Idem, por sócio. Entra na qualificação do contrato (art. 997 CC) e na ficha do sócio no DBE.",
+        "status": "🟡 mock hoje (`buscarCep`), API real pendente"
+      }
+    ]
+  },
+  {
+    "id": "C4",
+    "titulo": "C4 · Dados da empresa",
+    "rota": "/dossie/empresa",
+    "campos": [
+      {
+        "nome": "Índice cadastral do IPTU (único campo do cliente)",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "CEP + número + complemento + tipo de imóvel + residência aparecem TRAVADOS, vindos do E3.4",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "Forma de atuação (JUCEMG)",
+        "valor": "\"Atividade Desenvolvida Fora do Estabelecimento\"",
+        "origem": "automatico",
+        "porque": "🔴 Estava documentado como \"Internet\" — ERRADO, valor decidido em 26/08 por raciocínio, antes de existir gravação. Os prints mostram \"Atividade Desenvolvida Fora do Estabelecimento\" marcada 2x, em 2 sistemas (tela 14 Viabilidade, tela 48 DBE), e a tela 48 exibe as 8 opções do campo com \"Internet\" entre elas, NÃO marcada: são opções distintas da mesma lista, não sinônimos. 3ª correção desta mesma família (as outras 2: \"Sede\"→Produtiva e metragem). Segue valendo enquanto o escopo for serviço 100% remoto",
+        "status": "🟢 travado, corrigido 01/09"
+      },
+      {
+        "nome": "Tipo de unidade (JUCEMG)",
+        "valor": "\"Produtiva\"",
+        "origem": "automatico",
+        "porque": "🔴 Estava documentado como \"Sede\" — ERRADO. Prints reais (Viabilidade e Integrador) confirmam \"Produtiva\": Sede/Filial nem aparece como opção fixa relevante pra uma constituição nova. Toda abertura nova (matriz) usa Produtiva",
+        "status": "🟢 travado, corrigido 31/08"
+      },
+      {
+        "nome": "Metragem (m² do imóvel + m² da operação)",
+        "valor": "20 m² (fixo)",
+        "origem": "automatico",
+        "porque": "🔴 Estava \"não implementado, sem decisão\" — RESOLVIDO. Print real da Viabilidade mostra Área Total e Área Utilizada sempre preenchidas com 20,00 — mesmo valor usado em toda a gravação, virou padrão",
+        "status": "🟢 travado, resolvido 31/08"
+      },
+      {
+        "nome": "Capital social",
+        "valor": "R$ 10.000,00 (fixo)",
+        "origem": "automatico",
+        "porque": "🔴 ATÉ 31/08 era campo editável (chips R$1k/5k/10k + valor livre) — a reunião Rua Satélite 38-40 decidiu travar em R$10.000 pra prestador de serviço. Deixou de ser pergunta: o app mostra o valor, não pede mais",
+        "status": "🔒 travado, validado 31/08 pelo Pedro"
+      },
+      {
+        "nome": "Valor nominal de cotas",
+        "valor": "R$ 1,00",
+        "origem": "automatico",
+        "porque": "Campo do Integrador (Dados da Matriz) sempre preenchido como R$1,00 — o capital social é dividido em quotas de R$1, nunca outro valor nominal",
+        "status": "🟢 travado"
+      },
+      {
+        "nome": "Acesso ao endereço",
+        "valor": "\"Pedestre\"",
+        "origem": "automatico",
+        "porque": "Campo da Prefeitura de BH (Dados Adicionais), sempre Pedestre pro nosso perfil de prestador de serviço remoto — nunca veículo leve/pesado",
+        "status": "🟢 travado"
+      },
+      {
+        "nome": "\"Atividade é inócua ou virtual?\"",
+        "valor": "Sim (sempre)",
+        "origem": "automatico",
+        "porque": "Pergunta do Licenciamento (Corpo de Bombeiros): atividade sem circulação de pessoas no local, sempre verdade pro nosso perfil 100% remoto/administrativo",
+        "status": "🟢 travado"
+      },
+      {
+        "nome": "\"Edificação nova?\" (regulação urbana, Prefeitura de BH)",
+        "valor": "Não (sempre)",
+        "origem": "automatico",
+        "porque": "3ª pergunta do Questionário de Regulação Urbana (tela 16), na MESMA tela que já produziu o indeferimento real. As outras 2 (apartamento, sócio reside) a gente já capta; esta não existia em nenhuma fonte. Fica interna e não vira pergunta porque \"edificação nova\" tem sentido técnico na Prefeitura (imóvel recém-construído, questão de habite-se) que o cliente não sabe responder — perguntar convida erro confiante, que é pior modo de falhar que errar sempre igual num caso raro. Risco residual: cliente em prédio novo sem habite-se cai em exigência. Validado por Pedro 01/09; confirmar com a especialista",
+        "status": "🟡 travado 01/09, é SUPOSIÇÃO — fila-Izabela"
+      },
+      {
+        "nome": "Capital Totalmente Integralizado em Moeda Corrente?",
+        "valor": "Sim (sempre)",
+        "origem": "automatico",
+        "porque": "Cláusula do Contrato Núcleo — o capital social (R$10.000, também travado) já entra integralizado, sem parcelamento",
+        "status": "🟢 travado"
+      },
+      {
+        "nome": "Tipo de endereço (JUCEMG) — endereço fiscal Legalizai",
+        "valor": "\"Endereço virtual\" (fixo)",
+        "origem": "automatico",
+        "porque": "Confirmado na gravação real (RS38): quando a empresa usa o endereço fiscal da Legalizai (não o do cliente), o valor sempre enviado à JUCEMG é \"Endereço virtual\" — nunca aparece como opção pro usuário, só se aplica ao caminho endereço-próprio (\"proprio\"/\"coworking\")",
+        "status": "🟢 travado, validado 31/08 pelo Pedro"
+      }
+    ]
+  },
+  {
+    "id": "C5",
+    "titulo": "C5 · CNAE secundários",
+    "rota": "/dossie/cnae-secundarios",
+    "campos": [
+      {
+        "nome": "CNAEs secundários (seleção múltipla + busca, opcional, até 15)",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      }
+    ]
+  },
+  {
+    "id": "C7",
+    "titulo": "C7 · Nome / razão social",
+    "rota": "/dossie/nome",
+    "campos": [
+      {
+        "nome": "3 opções de razão social, editáveis inline, por ordem de prioridade (sugeridas por IA)",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "objeto social (gerado automaticamente, travado)",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "nome fantasia (opcional)",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "Data de assinatura da declaração / início das atividades",
+        "valor": "dia do preenchimento (nunca retroativa)",
+        "origem": "automatico",
+        "porque": "Integrador não aceita data retroativa — sempre o dia em que o RPA roda o processo, pros dois campos (mesma data)",
+        "status": "🟢 travado"
+      }
+    ]
+  },
+  {
+    "id": "RPA",
+    "titulo": "Fora de tela · preenchido no processo (RPA)",
+    "rota": null,
+    "campos": [
+      {
+        "nome": "Telefone enviado aos órgãos — SEM o 9º dígito (8 dígitos)",
+        "valor": "o telefone captado com 9 dígitos é enviado ao DBE/Integrador sem o 9 inicial do celular",
+        "origem": "automatico",
+        "porque": "Regra dita pela Izabela na gravação (ata, item 13) e confirmada nos prints (tela 51: telefone 94054307, 8 dígitos). Decisão do Pedro: **a captação continua com o 9 normal** — pedir telefone sem o 9 pro cliente seria estranho e daria erro de digitação. Quem tira o dígito é o robô, na hora de preencher o formulário oficial. Fica aqui porque é transformação de dado nossa, invisível pro cliente, e o dev precisa dela escrita",
+        "status": "🟢 travado 01/09 (Pedro) — regra de RPA, não de tela",
+        "contexto": "RPA · envio ao DBE/Integrador (a captação no E6 não muda)"
+      },
+      {
+        "nome": "Sociedade de Propósito Específico?",
+        "valor": "Não (sempre)",
+        "origem": "automatico",
+        "porque": "Cláusula do Contrato Núcleo — nenhuma empresa do nosso escopo (ME prestador de serviço comum) é SPE. Campo do contrato, não pergunta ao cliente",
+        "status": "🟢 travado",
+        "contexto": "C6 · Natureza jurídica"
+      },
+      {
+        "nome": "Tipo de contrato (Integrador)",
+        "valor": "Padrão · 15 cláusulas obrigatórias (sem anexo, sem cláusula extra)",
+        "origem": "automatico",
+        "porque": "🔴 ACHADO-CHAVE (31/08): incluir anexo/procuração/cláusula extra no processo DERRUBA a elegibilidade ao Registro Automático (aviso visto ao vivo no print da JUCEMG) — por isso a opção de 15 cláusulas sem anexo é a única que usamos, nunca a de 7 cláusulas nem o contrato personalizado (upload)",
+        "status": "🟢 travado",
+        "contexto": "Pós-C7 · Geração do contrato (RPA/Integrador)"
+      },
+      {
+        "nome": "Testemunhas (Contrato Núcleo)",
+        "valor": "Nenhuma (sempre)",
+        "origem": "automatico",
+        "porque": "Contrato padrão de 15 cláusulas não exige testemunha — campo sempre vazio, nunca preenchido",
+        "status": "🟢 travado",
+        "contexto": "Pós-C7 · Geração do contrato (RPA/Integrador)"
+      },
+      {
+        "nome": "E-mail e telefone de contato (DBE/Integrador)",
+        "valor": "sempre o nosso (Legalizai), nunca o do cliente",
+        "origem": "automatico",
+        "porque": "Evita que boletim de ocorrência (BO) ou notificação oficial da Receita/Junta chegue direto pro cliente por e-mail — a gente centraliza e repassa o que for relevante",
+        "status": "🟢 travado",
+        "contexto": "DBE/Integrador · Dados para Contato"
+      },
+      {
+        "nome": "Endereço de correspondência",
+        "valor": "sempre igual ao do estabelecimento",
+        "origem": "automatico",
+        "porque": "Checkbox \"igual ao do Estabelecimento\" sempre marcado — nenhum caso do nosso escopo precisa de endereço de correspondência diferente",
+        "status": "🟢 travado",
+        "contexto": "DBE/Integrador · Dados para Contato"
+      },
+      {
+        "nome": "Natureza jurídica (SLU × LTDA)",
+        "valor": "SLU se sem sócio · LTDA se com sócio (automático, sem pergunta)",
+        "origem": "automatico",
+        "porque": "🔴 ATÉ 31/08 era pergunta ao cliente (recomendação editável, Leonan 24/08) — a reunião Rua Satélite 38-40 decidiu tirar a pergunta de vez: a regra (sem sócio→SLU, com sócio→LTDA) não tem exceção real no nosso escopo, então virou decisão de backend nos dois casos. Tela e rota `/dossie/natureza` removidas do app",
+        "status": "🟢 travado, validado 31/08 pelo Pedro",
+        "contexto": "C6 · Natureza jurídica (REMOVIDA 31/08)"
+      },
+      {
+        "nome": "Requerente (emissão do DAE)",
+        "valor": "sempre o titular (sócio-administrador)",
+        "origem": "automatico",
+        "porque": "Quem solicita a taxa no Integrador é sempre a pessoa que está constituindo a empresa — não existe cenário de \"outro requerente\" no nosso fluxo",
+        "status": "🟢 travado",
+        "contexto": "Pós-C7 · Emissão do DAE (RPA)"
+      },
+      {
+        "nome": "Situação do protocolo na JUCEMG / Receita (viabilidade, DBE, registro)",
+        "valor": "polling do protocolo",
+        "origem": "api",
+        "porque": "Todo o status pós-dossiê depende disso: é o que move as etapas, dispara a recusa de nome (A3.1) e libera a assinatura. Sem polling, a tela é um enfeite bonito que nunca muda de estado.",
+        "status": "🔴 não implementado — a timeline hoje é mock",
+        "contexto": "A3 · Status"
+      }
+    ]
+  }
+];

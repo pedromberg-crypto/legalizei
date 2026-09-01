@@ -14,6 +14,7 @@ import { TelaHeader, Aviso } from "@/components/ui/tela";
 // `FaixaView` pro E3.3 (`components/entrada-lead.tsx`).
 // 🔁 28/08 — `Aviso` e `brl` voltaram, agora a serviço do gate de teto do MEI.
 import { FISCAL, brl } from "@/lib/fiscal";
+import { linkWhatsApp } from "@/lib/contato";
 import { TETO_MEI_ANUAL, TETO_MEI_MENSAL } from "@/lib/mei";
 
 /**
@@ -1221,7 +1222,6 @@ export function MeiOuMeView({
   // (TriagemView) — ainda não existe canal real (WhatsApp/chat) ligado em
   // lugar nenhum do app, então fica resolução inline até existir um de
   // verdade.
-  const [duvida, setDuvida] = useState(false);
   return (
     <>
       {/* 🆕 03/08 — faltava até o chrome de página (esta tela é renderizada
@@ -1325,20 +1325,21 @@ export function MeiOuMeView({
 
       <div className="app-footer-cta">
         {/* 🆕 29/08 (pedido do Pedro) — escape hatch pra quem trava na
-            escolha, acima do CTA principal. */}
-        {!duvida ? (
-          <button
-            type="button"
-            onClick={() => setDuvida(true)}
-            className="mb-3 block text-center w-full text-caption font-medium text-text-secondary underline underline-offset-4"
-          >
-            Estou com dúvida, preciso de ajuda
-          </button>
-        ) : (
-          <p className="mb-3 text-center text-caption text-state-success-text">
-            Combinado, nosso time vai entrar em contato.
-          </p>
-        )}
+            escolha, acima do CTA principal.
+            🔄 01/09 (pedido do Pedro) — deixou de ser mensagem morta ("nosso
+            time vai entrar em contato", que não levava a lugar nenhum) e
+            passou a ABRIR o WhatsApp com a dúvida já contextualizada. O
+            número é placeholder em `lib/contato.ts` até existir o real. */}
+        <a
+          href={linkWhatsApp(
+            "Oi! Estou abrindo minha empresa no app da Legalizai e travei na escolha entre MEI e ME. Podem me ajudar?",
+          )}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mb-3 block text-center w-full text-caption font-medium text-text-secondary underline underline-offset-4"
+        >
+          Estou com dúvida, preciso de ajuda
+        </a>
         <Button full disabled={!regime} onClick={onSeguir}>
           Continuar
         </Button>

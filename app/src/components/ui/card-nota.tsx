@@ -63,25 +63,28 @@ export function CardNota({
   children,
 }: {
   variante?: VarianteCardNota;
-  /** Opcional: 1ª linha em negrito, mesmo corpo de texto (não é o título tingido do Aviso). */
+  /** Opcional: 1ª linha do cartão, no estilo do card de checklist do E3.2 (body-strong bold). */
   titulo?: string;
   children: ReactNode;
 }) {
   const icone = ICONE[variante];
   return (
     <div className="rounded-md border border-border-hairline bg-surface-card p-4">
+      {/* 🔄 01/09 (2ª rodada, pedido do Pedro) — padronizado com o card de
+          checklist do regime (E3.2, "ME · Simples Nacional"): o título sai da
+          coluna ao lado do ícone e vira a 1ª linha do cartão, no MESMO estilo
+          de lá (body-strong bold); o ícone fica alinhado com a mensagem, como
+          os checks ficam alinhados com cada item. Um cartão, uma gramática. */}
+      {titulo && (
+        <p className="text-body-strong font-bold text-text-primary mb-2">{titulo}</p>
+      )}
       <div className="flex items-start gap-2.5">
         <span
           className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${icone.classe}`}
         >
           {icone.glifo}
         </span>
-        <div className="flex flex-col gap-0.5">
-          {titulo && (
-            <p className="text-caption font-semibold text-text-primary">{titulo}</p>
-          )}
-          <p className="text-caption text-text-secondary">{children}</p>
-        </div>
+        <p className="text-caption text-text-secondary">{children}</p>
       </div>
     </div>
   );

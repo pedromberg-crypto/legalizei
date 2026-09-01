@@ -1,0 +1,1398 @@
+<title>Checklist JUCEMG</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Karla:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+  :root {
+    --bg: #faf6f1;
+    --surface: #ffffff;
+    --surface-sunk: #f3ede5;
+    --ink: #221b14;
+    --ink-soft: #756a5c;
+    --ink-faint: #a89c8c;
+    --border: #e7ddd0;
+    --accent: #ea5a34;
+    --accent-ink: #ffffff;
+    --accent-tint: #fce9e2;
+
+    --ok: #1f7a52;
+    --ok-tint: #e3f3ea;
+    --ok-border: #b7ddc7;
+    --warn: #a3690f;
+    --warn-tint: #fbf0dc;
+    --warn-border: #edd39d;
+    --bad: #b7402f;
+    --bad-tint: #fbe9e4;
+    --bad-border: #eec3b7;
+
+    --shadow: 0 1px 2px rgba(34, 27, 20, 0.04), 0 8px 24px -12px rgba(34, 27, 20, 0.18);
+    --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
+    --font-body: "Karla", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1a1510;
+      --surface: #241d16;
+      --surface-sunk: #1f1911;
+      --ink: #f3eadd;
+      --ink-soft: #b8a993;
+      --ink-faint: #786a59;
+      --border: #3a3025;
+      --accent: #ff7a50;
+      --accent-ink: #241108;
+      --accent-tint: #3a2015;
+
+      --ok: #6fd6a3;
+      --ok-tint: #17301f;
+      --ok-border: #2c5439;
+      --warn: #f0c05f;
+      --warn-tint: #382b12;
+      --warn-border: #5c481f;
+      --bad: #f19a86;
+      --bad-tint: #3a1e17;
+      --bad-border: #5e3226;
+
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 28px -12px rgba(0, 0, 0, 0.55);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1a1510;
+    --surface: #241d16;
+    --surface-sunk: #1f1911;
+    --ink: #f3eadd;
+    --ink-soft: #b8a993;
+    --ink-faint: #786a59;
+    --border: #3a3025;
+    --accent: #ff7a50;
+    --accent-ink: #241108;
+    --accent-tint: #3a2015;
+
+    --ok: #6fd6a3;
+    --ok-tint: #17301f;
+    --ok-border: #2c5439;
+    --warn: #f0c05f;
+    --warn-tint: #382b12;
+    --warn-border: #5c481f;
+    --bad: #f19a86;
+    --bad-tint: #3a1e17;
+    --bad-border: #5e3226;
+
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 28px -12px rgba(0, 0, 0, 0.55);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); }
+
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 20px 96px;
+  }
+
+  /* ── topo fixo, compacto ───────────────────────────────── */
+  .topo {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 20px;
+    margin: 0 0 20px;
+  }
+  .topo-inner { max-width: 760px; margin: 0 auto; }
+  .titulo-linha {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin: 0 0 8px;
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 16px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+
+  .barra-controles {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .resumo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 5px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .chip b { font-size: 12px; color: var(--ink); }
+  .chip.ok { border-color: var(--ok-border); background: var(--ok-tint); color: var(--ok); }
+  .chip.ok b { color: var(--ok); }
+  .chip.warn { border-color: var(--warn-border); background: var(--warn-tint); color: var(--warn); }
+  .chip.warn b { color: var(--warn); }
+  .chip.bad { border-color: var(--bad-border); background: var(--bad-tint); color: var(--bad); }
+  .chip.bad b { color: var(--bad); }
+
+  /* ── seções ────────────────────────────────────────────── */
+  .secao { margin: 0 0 36px; }
+  .secao-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin: 0 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .secao-tela {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 12.5px;
+    color: var(--accent);
+    background: var(--accent-tint);
+    padding: 2px 8px;
+    border-radius: 5px;
+    letter-spacing: 0.02em;
+  }
+  .secao-nome {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 16.5px;
+  }
+  .secao-nota {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--ink-faint);
+    font-style: italic;
+  }
+
+  /* ── nav de ordem ──────────────────────────────────────── */
+  .nav-ordem {
+    display: flex;
+    gap: 6px;
+  }
+  .nav-btn {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 11.5px;
+    padding: 5px 11px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.12s ease;
+  }
+  .nav-btn:hover { border-color: var(--ink-faint); color: var(--ink); }
+  .nav-btn.ativo {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+  }
+  .fonte-oficial {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    background: var(--surface-sunk);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin: 4px 0 24px;
+    line-height: 1.5;
+  }
+  .fonte-oficial b { color: var(--ink); }
+
+  .lista { display: flex; flex-direction: column; gap: 12px; }
+
+  /* ── card de item ──────────────────────────────────────── */
+  .item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    box-shadow: var(--shadow);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    cursor: pointer;
+  }
+  .item[data-estado="validado"] { border-color: var(--ok-border); }
+  .item[data-estado="correcao"] { border-color: var(--warn-border); }
+  .item[data-estado="recusado"] { border-color: var(--bad-border); }
+  .item.selecionado { border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent); }
+
+  .item-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+  .item-campo {
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1.4;
+  }
+  .item-badge {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+  .item-badge.oficial { background: var(--surface-sunk); color: var(--ink-soft); }
+  .item-badge.pendente { background: var(--warn-tint); color: var(--warn); }
+  .item-badge.interno { background: var(--accent-tint); color: var(--accent); }
+  .item-badge.faltante { background: var(--bad-tint); color: var(--bad); }
+
+  .opcoes-bloco { margin: 0 0 12px; }
+  .opcoes-titulo {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 6px;
+  }
+  .opcoes-lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .opcao-pill {
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface-sunk);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.12s ease;
+  }
+  .opcao-pill:hover { border-color: var(--ink-faint); color: var(--ink); }
+  .opcao-pill:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .opcao-pill.ativa {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 600;
+  }
+  .opcao-campo { margin-top: 8px; }
+  .opcao-campo-rotulo {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin: 0 0 4px;
+  }
+  .opcoes-obs {
+    margin-top: 0;
+    min-height: 36px;
+    font-size: 12.5px;
+  }
+
+  .segmentado {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .seg-btn {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 13px;
+    padding: 8px 10px;
+    border-radius: 9px;
+    border: 1px solid var(--border);
+    background: var(--surface-sunk);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.12s ease;
+    text-align: center;
+  }
+  .seg-btn:hover { border-color: var(--ink-faint); }
+  .seg-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .seg-btn.validado.ativo { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .seg-btn.correcao.ativo { background: var(--warn); border-color: var(--warn); color: #241a05; }
+  .seg-btn.recusado.ativo { background: var(--bad); border-color: var(--bad); color: #fff; }
+
+  .subpassos { display: flex; flex-direction: column; gap: 8px; margin: 4px 0 12px; }
+  .subitem {
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-sunk);
+    padding: 8px 10px;
+    transition: border-color 0.15s ease;
+  }
+  .subitem[data-estado="validado"] { border-left-color: var(--ok-border); }
+  .subitem[data-estado="correcao"] { border-left-color: var(--warn-border); }
+  .subitem[data-estado="recusado"] { border-left-color: var(--bad-border); }
+  .subitem-linha { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; }
+  .subitem-tag {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 1px 6px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .subitem-tag.nos { background: var(--accent-tint); color: var(--accent); }
+  .subitem-tag.cliente { background: var(--warn-tint); color: var(--warn); }
+  .subitem-texto { font-size: 12.5px; color: var(--ink-soft); line-height: 1.4; }
+  .segmentado.mini { gap: 4px; margin-bottom: 6px; }
+  .segmentado.mini .seg-btn { font-size: 11px; padding: 5px 6px; border-radius: 7px; }
+  .subitem-obs { min-height: 32px; font-size: 12px; margin-bottom: 0; }
+
+  .obs {
+    width: 100%;
+    resize: vertical;
+    min-height: 44px;
+    border: 1px solid var(--border);
+    background: var(--surface-sunk);
+    color: var(--ink);
+    border-radius: 9px;
+    padding: 9px 11px;
+    font-family: var(--font-body);
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+  .obs::placeholder { color: var(--ink-faint); }
+  .obs:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  .rodape {
+    margin-top: 8px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    color: var(--ink-faint);
+    font-size: 12.5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .btn-reset {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-soft);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 6px 10px;
+    cursor: pointer;
+  }
+  .btn-reset:hover { border-color: var(--bad-border); color: var(--bad); }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 22px; }
+    .item-head { flex-direction: column; }
+    .item-badge { margin-top: 0; }
+  }
+
+  /* ── layout com sidebar de exemplos ──────────────────────── */
+  .layout-principal {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 24px;
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  .layout-principal .wrap { padding: 0 0 96px; margin: 0; }
+
+  .sidebar-cnae {
+    width: 250px;
+    flex-shrink: 0;
+    position: sticky;
+    /* 🆕 31/08 — offset dinâmico: --topo-h é medido em JS (medirTopo()),
+       porque a altura do header muda (pills de resumo podem quebrar linha). */
+    top: calc(var(--topo-h, 96px) + 14px);
+  }
+  .sidebar-inner {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: var(--shadow);
+    max-height: calc(100dvh - var(--topo-h, 96px) - 34px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--ink-faint) transparent;
+  }
+  .sidebar-inner::-webkit-scrollbar { width: 6px; }
+  .sidebar-inner::-webkit-scrollbar-track { background: transparent; }
+  .sidebar-inner::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 999px;
+  }
+  .sidebar-inner::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); }
+  .sidebar-titulo {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 1.3;
+    margin: 0 0 6px;
+  }
+  .sidebar-dica {
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    margin: 0 0 10px;
+    line-height: 1.4;
+  }
+  .lista-cnaes {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 12px;
+  }
+  .cnae-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    padding: 7px 9px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface-sunk);
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.12s ease;
+  }
+  .cnae-item:hover { border-color: var(--ink-faint); }
+  .cnae-item b {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-faint);
+    font-weight: 600;
+  }
+  .cnae-item.ativo {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+  .cnae-item.ativo b { color: var(--accent-ink); opacity: 0.85; }
+
+  .card-exemplo {
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+    margin-top: 4px;
+  }
+  .card-exemplo-vazio {
+    font-size: 12px;
+    color: var(--ink-faint);
+    line-height: 1.5;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+    margin-top: 4px;
+  }
+  .card-exemplo-campo {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+    margin: 0 0 4px;
+  }
+  .card-exemplo-cnae {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 13px;
+    margin: 0 0 8px;
+  }
+  .card-exemplo-valor {
+    background: var(--surface-sunk);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0 0 8px;
+  }
+  .card-exemplo-justificativa {
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  .btn-ver-exemplo {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--ink-faint);
+    cursor: pointer;
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+  .btn-ver-exemplo:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-ver-exemplo.ativo { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+
+  @media (max-width: 1020px) {
+    .layout-principal { flex-direction: column; padding: 0; }
+    .layout-principal .wrap { padding: 0 20px 96px; }
+    .sidebar-cnae { width: 100%; position: static; order: -1; padding: 0 20px; box-sizing: border-box; }
+    .sidebar-inner { max-height: none; }
+  }
+</style>
+
+<div class="topo">
+  <div class="topo-inner">
+    <div class="titulo-linha" title="Todo campo que a Legalizai coleta (ou preenche sozinha) até a 1ª tentativa de viabilidade. Valide item a item na chamada — o que ficar salvo aqui fica só neste navegador.">
+      <h1>Checklist JUCEMG</h1>
+      <span class="eyebrow">Legalizai · ME Simples Nacional</span>
+    </div>
+    <div class="barra-controles">
+      <div class="resumo" id="resumo"></div>
+      <div class="nav-ordem" id="navOrdem"></div>
+    </div>
+  </div>
+</div>
+
+<div class="layout-principal">
+  <aside class="sidebar-cnae">
+    <div class="sidebar-inner">
+      <p class="sidebar-titulo">Exemplos · CNAE "liso"<br/>ME Simples Nacional</p>
+      <p class="sidebar-dica" id="sidebarDica"></p>
+      <div id="listaCnaes" class="lista-cnaes"></div>
+      <div id="cardExemplo"></div>
+    </div>
+  </aside>
+
+  <div class="wrap">
+    <div id="fonteOficial"></div>
+    <div id="secoes"></div>
+
+    <div class="rodape">
+      <span id="contagem-rodape"></span>
+      <button class="btn-reset" id="btnReset" type="button">↺ Limpar tudo</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /**
+   * Cada campo tem um ID FIXO — as 2 ordens abaixo só referenciam esses IDs
+   * em agrupamentos diferentes. Validar/anotar um campo vale nas 2 visões
+   * (é o MESMO campo, só reorganizado).
+   */
+  var CAMPOS = {
+    "c0-cnae-principal": { texto: "CNAE principal (derivado por IA a partir da descrição da atividade, ou atalho por código já sabido)", status: "oficial", justificativa: "É a atividade-base que define Anexo/Fator R e todo o resto do enquadramento fiscal." },
+    "c1-confirma-dados": { texto: "Confirma nome / CPF / endereço já captados no cadastro (E6) — não recoleta", status: "oficial", justificativa: "Sem isso a Junta não identifica quem é o titular da empresa." },
+    "c1-rg": { texto: "RG + órgão emissor", status: "oficial", justificativa: "Documento de identificação exigido em qualquer registro na Junta." },
+    "c1-nascimento": { texto: "Data de nascimento", status: "oficial", justificativa: "Confirma maioridade e integra a qualificação exigida (art. 997 CC)." },
+    "c1-mae": { texto: "Nome da mãe", status: "oficial", justificativa: "Exigência do DBE/Receita Federal pra qualificação do titular." },
+    "c1-estado-civil": { texto: "Estado civil (+ regime de bens, se casado)", status: "oficial", justificativa: "Define se precisa de regime de bens e se há vedação a sócios (só marido/mulher).", opcoes: ["Solteiro(a)", "Casado(a)", "União estável", "Divorciado(a)", "Viúvo(a)"], opcoesCondicional: { titulo: "Se casado(a) — regime de bens", opcoes: ["Comunhão parcial de bens", "Comunhão universal de bens", "Separação total de bens", "Participação final nos aquestos"] } },
+    "c1-mora-fora": { texto: "Confirma se mora fora do Brasil", status: "oficial", justificativa: "Muda documentação e representação (procuração) se residir fora do Brasil.", opcoes: ["Não", "Sim"] },
+    "c2-inss-fora": { texto: "Já contribui INSS por fora? (sim / não)", status: "oficial", justificativa: "Define se o pró-labore pode ser menor (já contribui em outro lugar).", opcoes: ["Não", "Sim"] },
+    "c2-valor-vinculo": { texto: "Valor do vínculo (CLT / aposentadoria / autônomo / sócio de outro CNPJ)", status: "oficial", justificativa: "Usado pra calcular a folga até o teto do INSS." },
+    "c3-confirma-socios": { texto: "Confirma se terá mais sócios (quantidade e tipo já vêm da triagem)", status: "oficial", justificativa: "Sócio a mais muda de SLU pra LTDA — é outro tipo de contrato." },
+    "c3-socios-percentual": { texto: "Nome completo + % de participação de cada sócio extra", status: "oficial", justificativa: "O percentual de cada sócio é cláusula obrigatória do contrato social." },
+    "c4-cep-numero": { texto: "CEP + número + complemento", status: "oficial", justificativa: "Define o município da sede — só CEP de BH atende ao nosso escopo." },
+    "c4-iptu": { texto: "Índice cadastral IPTU (obrigatório, só se endereço próprio)", status: "oficial", justificativa: "Exigido só quando o endereço é próprio, não em fiscal/coworking." },
+    "c4-tipo-endereco": { texto: "Tipo de endereço", status: "oficial", justificativa: "Comercial × residencial × virtual muda a exigência documental na Junta.", opcoes: ["Endereço próprio (casa ou ponto)", "Coworking", "Endereço virtual"] },
+    "c4-residencia-socio": { texto: "Residência de sócio (trava duplicidade de endereço)", status: "oficial", justificativa: "A Junta não aceita 2 empresas novas no mesmo endereço residencial." },
+    "c4-capital-social": { texto: "Capital social", status: "oficial", justificativa: "Cláusula obrigatória de qualquer contrato social (art. 997 CC)." },
+    "c5-cnae-secundarios": { texto: "CNAEs secundários (seleção múltipla, busca livre, até 15)", status: "pendente", justificativa: "Um CNAE secundário errado pode mudar Anexo/Fator R do Simples." },
+    "c6-natureza-juridica": { texto: "SLU (individual) ou LTDA (sociedade) — sugerida, editável", status: "pendente", justificativa: "É a 1ª decisão jurídica do contrato — muda o modelo inteiro.", opcoes: ["SLU — dono único", "LTDA — sociedade entre sócios"] },
+    "c7-razao-social": { texto: "3 opções de razão social, editáveis, por ordem de prioridade", status: "oficial", justificativa: "É o dado que dispara a Consulta de Viabilidade (Passo 2)." },
+    "c7-objeto-social": { texto: "Objeto social (gerado por IA, travado/read-only)", status: "oficial", justificativa: "Descreve a atividade que sustenta o CNAE e o enquadramento." },
+    "c7-nome-fantasia": { texto: "Nome fantasia (opcional)", status: "oficial", justificativa: "Não afeta o registro na Junta, só a marca pro público." },
+    "int-forma-atuacao": { texto: "Forma de atuação (JUCEMG) — fixado como \"Internet\" / fora do estabelecimento", status: "interno", justificativa: "Fixamos 'Internet' porque hoje só atendemos serviço 100% remoto.", opcoes: ["Internet (fixado hoje)", "Estabelecimento fixo", "Ambulante", "Porta a porta", "Feira/feirinha/exposição", "Correio", "Outros"] },
+    "int-tipo-unidade": { texto: "Tipo de unidade (JUCEMG) — fixado como \"Sede\"", status: "interno", justificativa: "Toda abertura nova é Sede — Unidade só existiria numa 2ª filial.", opcoes: ["Sede (fixado hoje)", "Filial / Unidade Administrativa"] },
+    "int-metragem": { texto: "Metragem (m² do imóvel + m² da operação) — não implementado ainda", status: "interno", justificativa: "Ainda não implementado; hoje só o índice IPTU é coletado." },
+
+    /**
+     * 🟡 31/08 (pedido do Pedro) — lista ADICIONAL, prática padrão de
+     * contrato social/DBE (não é fonte do nosso vault ainda — validar com
+     * a especialista, igual o Pedro pediu). Cláusulas/campos que TODO
+     * contrato social simples tem, mas que a Legalizai decidiria sozinha em
+     * vez de perguntar ao cliente. `opcoes` aqui = alternativas que EXISTEM
+     * no órgão mas que a gente não usa hoje (pro debate com a especialista).
+     */
+    "int-prazo-duracao": { texto: "Prazo de duração da sociedade — fixado como \"indeterminado\"", status: "interno", justificativa: "Padrão de mercado pra ME de serviço, sem motivo pra ter prazo fixo.", opcoes: ["Indeterminado (fixado hoje)", "Determinado (com data de encerramento)"] },
+    "int-foro": { texto: "Foro contratual — fixado como \"Comarca de Belo Horizonte/MG\"", status: "interno", justificativa: "Segue a sede da empresa, que hoje é sempre BH.", opcoes: ["Comarca de Belo Horizonte/MG (fixado hoje)", "Comarca de outro município (fora do nosso escopo)"] },
+    "int-encerramento-exercicio": { texto: "Encerramento do exercício social — fixado como \"31 de dezembro\"", status: "interno", justificativa: "Data-calendário padrão, sem exceção pro nosso ICP de serviço.", opcoes: ["31 de dezembro (fixado hoje)", "Outra data (incomum, exigiria justificativa)"] },
+    "int-optante-simples": { texto: "Optante pelo Simples Nacional — fixado como \"Sim\" (premissa do produto)", status: "interno", justificativa: "É a premissa do produto inteiro — não atendemos fora do Simples.", opcoes: ["Sim — Simples Nacional (fixado hoje)", "Não — Lucro Presumido/Real (fora do nosso escopo)"] },
+    "int-administracao": { texto: "Administração da sociedade — fixado como \"exercida pelo(s) sócio(s) nomeados no contrato\"", status: "interno", justificativa: "Ainda não existe sócio-administrador distinto no produto.", opcoes: ["Sócio(s) nomeados no contrato (fixado hoje)", "Administrador não-sócio (terceiro contratado)"] },
+    "int-codigo-ato": { texto: "Código do Ato (JUCEMG) — fixado como \"090 – Contrato\" (constituição)", status: "interno", justificativa: "Código fixo da Junta pra qualquer constituição de contrato.", opcoes: ["090 – Contrato / constituição (fixado hoje)", "Outros códigos (alteração, distrato — não se aplicam à abertura)"] },
+    "int-uf-registro": { texto: "UF de registro — fixado como \"MG\" (JUCEMG)", status: "interno", justificativa: "Sempre MG porque hoje só atendemos BH/Minas Gerais.", opcoes: ["MG (fixado hoje — único estado atendido)", "Outros 26 estados (fora do nosso escopo)"] },
+    "int-desimpedimento": { texto: "Declaração de desimpedimento para administração (art. 1.011 §1º CC) — cláusula-padrão no contrato, não é pergunta", status: "interno", justificativa: "Cláusula legal obrigatória, não depende de resposta do cliente.", opcoes: ["Cláusula presente no contrato (fixado hoje)", "Declaração em documento separado (menos comum)"] },
+
+    /**
+     * 🔴 31/08 (achado do Pedro) — GAP real, não coletado hoje. Art. 997 do
+     * Código Civil + modelo padrão DREI/JUCEMG exigem qualificação completa
+     * de CADA sócio pessoa física no contrato social. O C1 (titular) coleta
+     * tudo isso; o C3 (`SocioExtra`, wizard-dossie.tsx) só pega nome + %.
+     * Com 2+ sócios, falta dado pra montar o contrato de verdade.
+     */
+    "socio-extra-nacionalidade": { texto: "Nacionalidade de cada sócio extra", status: "faltante", justificativa: "Falta hoje — a Junta exige em qualquer sócio, não só no titular." },
+    "socio-extra-estado-civil": { texto: "Estado civil (+ regime de bens) de cada sócio extra", status: "faltante", justificativa: "Mesma exigência do titular (C1), ainda sem campo pro sócio extra.", opcoes: ["Solteiro(a)", "Casado(a)", "União estável", "Divorciado(a)", "Viúvo(a)"], opcoesCondicional: { titulo: "Se casado(a) — regime de bens", opcoes: ["Comunhão parcial de bens", "Comunhão universal de bens", "Separação total de bens", "Participação final nos aquestos"] } },
+    "socio-extra-nascimento": { texto: "Data de nascimento de cada sócio extra", status: "faltante", justificativa: "Compõe a qualificação legal do sócio, hoje só pedida pro titular." },
+    "socio-extra-profissao": { texto: "Profissão de cada sócio extra", status: "faltante", justificativa: "Exigência do art. 997 CC, ainda sem campo no produto." },
+    "socio-extra-cpf": { texto: "CPF de cada sócio extra", status: "faltante", justificativa: "Sem o CPF do sócio extra, o contrato social não pode ser lavrado." },
+    "socio-extra-rg": { texto: "RG + órgão emissor + UF de cada sócio extra", status: "faltante", justificativa: "Mesma exigência de identificação do titular, faltando pro sócio extra." },
+    "socio-extra-endereco": { texto: "Endereço completo (logradouro/número/bairro/município/UF/CEP) de cada sócio extra", status: "faltante", justificativa: "Endereço do sócio é exigido no contrato, ainda não coletado." },
+
+    /**
+     * 🆕 31/08 (pedido do Pedro) — Passos 15-18 do PDF oficial JUCEMG.
+     * NÃO são dado a coletar, são ETAPAS DE PROCESSO (quem faz, dentro ou
+     * fora da JUCEMG, o que o cliente precisa executar). Reaproveita o
+     * mesmo mecanismo de validação (3 botões + observação) pra debater
+     * responsabilidade nós×cliente com a especialista.
+     * Fonte: mesmo PDF oficial já citado acima (16º/17º/18º Passo + tabela
+     * "Documentação" do 16º Passo). Assinatura eletrônica (GOV.BR) NÃO
+     * aparece no PDF — era suposição minha numa resposta anterior, agora
+     * corrigida: o documento só fala em assinatura/rubrica + reconhecimento
+     * de firma quando por procurador analfabeto.
+     */
+    "passo15-dae": { texto: "Passo 15 · Gerar o DAE (ou DAE Consolidado) — [NÓS, dentro da JUCEMG: Portal de Serviços → Integrador → DAE ONLINE]. Temos os dados do processo e acesso à página. 🆕 31/08: NÃO é cobrado no checkout (E9) — emitimos a guia e mostramos ela simplificada dentro de uma tela de Status (ainda não construída). Ação do cliente: pagar essa guia (DAE) nesse momento.", status: "pendente", justificativa: "Confirmar com a especialista: usamos DAE simples ou DAE Consolidado (já inclui SEF/Bombeiros)? Pro nosso caso — serviço liso, sem licença de bombeiro — faz diferença. Além disso: essa tela de Status ainda não existe no produto — vira item de roadmap.",
+      subpassos: [
+        { texto: "Acessar Portal de Serviços → Integrador (mesma sessão do Passo 8-9)", cor: "nos" },
+        { texto: "Escolher DAE simples ou DAE Consolidado", cor: "nos", justificativa: "Depende da resposta da dúvida acima — qual usamos pro nosso caso." },
+        { texto: "Conferir se os dados do processo (razão social, CNPJ provisório) batem antes de gerar", cor: "nos" },
+        { texto: "Gerar e baixar o PDF da guia", cor: "nos" },
+        { texto: "Subir a guia simplificada na tela de Status do app", cor: "nos", justificativa: "Tela de Status ainda não existe — depende do roadmap." },
+        { texto: "Cliente paga a guia (DAE)", cor: "cliente" }
+      ]
+    },
+    "passo16-protocolo": { texto: "Passo 16 · Protocolar a documentação numa unidade da JUCEMG (Capa de Processo, Contrato Social, Declaração de Desimpedimento, DBE, identidade, DAE quitado, Checklist) — [MISTO]. Cliente precisa: assinar/rubricar o Contrato Social e assinar a Declaração de Desimpedimento (se não estiver em cláusula própria) + ter documento de identidade. Nós: com procuração específica assinada pelo sócio, protocolamos em nome dele — dispensa ida física do cliente à Junta. 🆕 31/08: assinatura é via GOV.BR (não físico) — já decidido em [[spec-telas-b3-b4-aterrissagem]] Tela 22 (T22)/UX-31, correção da minha resposta anterior (o PDF da JUCEMG não fala em GOV.BR, mas o método de assinatura é nossa decisão de produto, não da Junta).", status: "oficial", justificativa: "Confirmar com a especialista: assinatura eletrônica via GOV.BR no Contrato Social e na procuração tem validade plena pro registro (deve ter, é ICP-Brasil), só formalizar isso na chamada.",
+      subpassos: [
+        { texto: "Reunir documentos (Capa de Processo, Contrato Social, Declaração de Desimpedimento, DBE, identidade, DAE quitado, Checklist em branco)", cor: "nos" },
+        { texto: "Confirmar conta GOV.BR do cliente em nível prata/ouro (detectado cedo, UX-29) — se bronze, upgrade guiado antes de assinar", cor: "cliente", justificativa: "Se o cliente não tiver prata/ouro, trava a assinatura no fim — por isso detectamos isso lá no B1, não aqui." },
+        { texto: "Cliente assina/rubrica o Contrato Social via GOV.BR (todas as vias)", cor: "cliente" },
+        { texto: "Cliente assina a Declaração de Desimpedimento, se não estiver em cláusula própria do contrato", cor: "cliente" },
+        { texto: "Cliente assina a Capa de Processo/Requerimento OU assina procuração específica pra nós assinarmos por ele", cor: "cliente" },
+        { texto: "🔑 Cliente assina a Procuração e-CAC (UX-31), na MESMA sessão GOV.BR — autoriza a Legalizai a pagar DAS e cuidar de obrigações fiscais recorrentes, com limite e revogável quando quiser", cor: "cliente", justificativa: "É OUTRA procuração, separada da de cima — essa não é da JUCEMG, é da Receita Federal (e-CAC), pra depois do CNPJ sair. Junta no mesmo momento de assinatura só pra não pingar o cliente de novo depois (achado real: Contabilizei pede login+senha do GOV.BR e manda desabilitar 2FA pra resolver isso — ticket #26994688, 15/12 — a gente resolve igual sem tocar na segurança de ninguém)." },
+        { texto: "Conferir se o DAE (Passo 15) já foi pago pelo cliente", cor: "nos" },
+        { texto: "Protocolar tudo numa unidade da JUCEMG", cor: "nos" }
+      ]
+    },
+    "passo17-decisao": { texto: "Passo 17 · Consultar a decisão do registro (Consulta de Protocolo) — [NÓS, dentro da JUCEMG]. Temos acesso ao protocolo. Ação do cliente: nenhuma — avisamos assim que sair.", status: "oficial", justificativa: "Sem dúvida grande aqui — só confirmar o prazo médio de análise da JUCEMG hoje, pra avisar o cliente com expectativa certa.",
+      subpassos: [
+        { texto: "Acompanhar prazo no Consulta de Protocolo", cor: "nos" },
+        { texto: "Se aparecer exigência/pendência, resolver e reenviar", cor: "nos" },
+        { texto: "Avisar o cliente do resultado (deferido ou não)", cor: "nos" }
+      ]
+    },
+    "passo18-cnpj": { texto: "Passo 18 · Emitir/imprimir o CNPJ — [NÓS, fora da JUCEMG: site da Receita Federal]. Temos acesso pra baixar assim que sair. Ação do cliente: nenhuma.", status: "oficial", justificativa: "Confirmar se usamos o mesmo acesso/procuração do Passo 16 pra puxar o CNPJ, ou se é outro cadastro (Receita Federal é órgão separado da Junta).",
+      subpassos: [
+        { texto: "Acessar o site da Receita Federal", cor: "nos" },
+        { texto: "Consultar/baixar o CNPJ assim que a Junta defere", cor: "nos" },
+        { texto: "Entregar o CNPJ pro cliente dentro do app", cor: "nos" }
+      ]
+    }
+  };
+
+  var ORDEM_APP = [
+    { tela: "C0", nome: "Sua atividade", nota: "antes do C1 — CNAE principal", campos: ["c0-cnae-principal"] },
+    { tela: "C1", nome: "Seus dados", campos: ["c1-confirma-dados", "c1-rg", "c1-nascimento", "c1-mae", "c1-estado-civil", "c1-mora-fora"] },
+    { tela: "C2", nome: "Vínculo INSS", campos: ["c2-inss-fora", "c2-valor-vinculo"] },
+    { tela: "C3", nome: "Sócios", campos: ["c3-confirma-socios", "c3-socios-percentual"] },
+    { tela: "C4", nome: "Dados da empresa", campos: ["c4-cep-numero", "c4-iptu", "c4-tipo-endereco", "c4-residencia-socio", "c4-capital-social"] },
+    { tela: "C5", nome: "CNAE secundários", campos: ["c5-cnae-secundarios"] },
+    { tela: "C6", nome: "Natureza jurídica", campos: ["c6-natureza-juridica"] },
+    { tela: "C7", nome: "Nome / razão social", nota: "dispara a viabilidade JUCEMG", campos: ["c7-razao-social", "c7-objeto-social", "c7-nome-fantasia"] },
+    { tela: "Interno", nome: "Preenchido pela Legalizai, sem perguntar", nota: "não passa pela tela do cliente", campos: [
+      "int-forma-atuacao", "int-tipo-unidade", "int-metragem",
+      "int-prazo-duracao", "int-foro", "int-encerramento-exercicio", "int-optante-simples", "int-administracao", "int-codigo-ato", "int-uf-registro", "int-desimpedimento"
+    ] }
+  ];
+
+  /**
+   * 🔗 Fonte: JUCEMG, "PASSO-A-PASSO Sociedade Limitada — Registro de
+   * Contrato Social" (jucemg.mg.gov.br/arquivos/file/passo-a-passo-contituicao-ltda.pdf).
+   * 19 passos oficiais; só os passos que RECEBEM dado novo viram seção aqui
+   * (os de puro clique/impressão — checklist, protocolo — ficam de fora).
+   * 🟡 31/08 — Passo 14 (Contrato Núcleo) e as cláusulas do Passo 10 (Capa de
+   * Processo) GANHARAM seção: são as cláusulas padrão que a Legalizai decide
+   * sozinha (prazo, foro, administração etc). Prática comum de contrato
+   * social, NÃO é fonte do vault ainda — validar com a especialista.
+   */
+  var ORDEM_OFICIAL = [
+    { tela: "Passo 2", nome: "Consulta de Viabilidade", nota: "nome empresarial + endereço, antes de qualquer outro dado", campos: ["c7-razao-social", "c4-cep-numero", "c4-tipo-endereco"] },
+    { tela: "Passo 4", nome: "DBE — Coleta Web (Receita Federal)", nota: "ficha cadastral completa da PJ + do titular — 1ª vez que o CNAE entra de verdade", campos: ["c0-cnae-principal", "c1-confirma-dados", "c1-rg", "c1-nascimento", "c1-mae", "c1-estado-civil", "c1-mora-fora", "c6-natureza-juridica", "c4-capital-social", "c7-objeto-social", "c7-nome-fantasia", "int-forma-atuacao", "int-tipo-unidade", "int-optante-simples", "int-uf-registro"] },
+    { tela: "Passo 8-9", nome: "Integrador — Novo FCN/REMP", nota: "detalhamento societário e do imóvel", campos: [
+      "c5-cnae-secundarios", "c3-confirma-socios", "c3-socios-percentual",
+      "socio-extra-nacionalidade", "socio-extra-estado-civil", "socio-extra-nascimento", "socio-extra-profissao", "socio-extra-cpf", "socio-extra-rg", "socio-extra-endereco",
+      "c2-inss-fora", "c2-valor-vinculo", "c4-iptu", "c4-residencia-socio", "int-metragem"
+    ] },
+    { tela: "Passo 10/14", nome: "Capa de Processo + Contrato Núcleo", nota: "cláusulas-padrão que a Legalizai decide sozinha", campos: [
+      "int-codigo-ato", "int-prazo-duracao", "int-foro", "int-administracao", "int-desimpedimento", "int-encerramento-exercicio"
+    ] },
+    { tela: "Passo 15-18", nome: "Pagamento das taxas até o CNPJ sair", nota: "não é mais dado a coletar — é responsabilidade (nós × cliente), dentro ou fora da JUCEMG", campos: [
+      "passo15-dae", "passo16-protocolo", "passo17-decisao", "passo18-cnpj"
+    ] }
+  ];
+
+  /**
+   * ═══════════════════════════════════════════════════════════════════════
+   * EXEMPLOS · CNAE "liso" (ME Simples Nacional, prestação de serviço)
+   * ═══════════════════════════════════════════════════════════════════════
+   * 🔗 Fonte dos CNAEs: `pesquisa/cnae-matriz/cnae-liso-servico.md` (87 CNAEs
+   * "atende com certeza", fonte primária, 28/08) — 10 escolhidos aqui, cobrindo
+   * 5 das 6 categorias do doc (TI/software, Design, Marketing, Consultoria,
+   * Educação, Adm./apoio). Todos sem conselho/RT, sem registro setorial.
+   *
+   * 🟡 As PESSOAS (nome/estado civil/sócios/endereço/capital) são fictícias,
+   * escolhidas só pra cobrir combinações DIFERENTES do checklist — não são
+   * dado real de cliente nenhum.
+   *
+   * Escopo travado (pedido do Pedro, 31/08): só ME Simples Nacional, serviço
+   * NÃO regulamentado. MEI e regulamentada ficam de fora deste exercício.
+   */
+  var EXEMPLOS_CNAE = [
+    {
+      codigo: "6204-0/00", nome: "Consultoria em TI", categoria: "TI/software",
+      notaFiscal: "Fator R dinâmico (Anexo III se pró-labore ≥28% da receita, senão V)",
+      persona: {
+        titular: "Rafael Andrade", rg: "MG-18.222.111", orgaoRg: "PC-MG", nascimento: "14/03/1990", nomeMae: "Sônia Andrade",
+        estadoCivilLabel: "Solteiro(a)", regimeBensLabel: null, moraFora: false,
+        inss: { contribui: false }, sociosExtras: 0, participacoes: "—",
+        tipoEnderecoLabel: "Endereço próprio (casa ou ponto)", enderecoResumo: "Rua dos Andradas, 500 — Savassi, Belo Horizonte/MG", iptu: "Índice 04.123.456-7",
+        capitalSocial: "R$ 5.000,00"
+      },
+      secundarios: "6202-3/00 (Cloud computing) — mesmo Anexo/Fator R do principal",
+      objetoSocial: "Prestação de serviços de consultoria em tecnologia da informação.",
+      razaoSocial: "Rafael Andrade Consultoria em TI", nomeFantasia: "RA Tech"
+    },
+    {
+      codigo: "6201-5/02", nome: "Web design", categoria: "TI/software",
+      notaFiscal: "Fator R dinâmico (Anexo III se pró-labore ≥28% da receita, senão V)",
+      persona: {
+        titular: "Camila Ferraz", rg: "MG-22.111.987", orgaoRg: "PC-MG", nascimento: "02/07/1993", nomeMae: "Rita Ferraz",
+        estadoCivilLabel: "União estável", regimeBensLabel: "Comunhão parcial de bens", moraFora: false,
+        inss: { contribui: true, tipo: "Autônoma (contribuinte individual)", valor: "R$ 2.500,00" }, sociosExtras: 0, participacoes: "—",
+        tipoEnderecoLabel: "Endereço virtual", enderecoResumo: "Endereço fiscal Legalizai (sem CEP próprio)", iptu: "—",
+        capitalSocial: "R$ 2.000,00"
+      },
+      secundarios: "7410-2/02 (Design de interiores) — Fator R dinâmico também",
+      objetoSocial: "Prestação de serviços de criação e desenvolvimento de websites.",
+      razaoSocial: "Camila Ferraz Web Design", nomeFantasia: "Ferraz Design"
+    },
+    {
+      codigo: "6209-1/00", nome: "Suporte técnico e manutenção de TI", categoria: "TI/software",
+      notaFiscal: "Anexo III fixo (residual, sem Fator R)",
+      persona: {
+        titular: "Marcos Vieira", rg: "MG-15.887.222", orgaoRg: "PC-MG", nascimento: "22/11/1985", nomeMae: "Luzia Vieira",
+        estadoCivilLabel: "Casado(a)", regimeBensLabel: "Comunhão parcial de bens", moraFora: false,
+        inss: { contribui: false }, sociosExtras: 1, participacoes: "Marcos 60% · sócio extra 40%",
+        tipoEnderecoLabel: "Coworking", enderecoResumo: "Coworking Sede BH — Funcionários, Belo Horizonte/MG", iptu: "—",
+        capitalSocial: "R$ 10.000,00"
+      },
+      secundarios: "6204-0/00 (Consultoria em TI) — mesma categoria, sem mudar Anexo",
+      objetoSocial: "Prestação de serviços de suporte técnico e manutenção em informática.",
+      razaoSocial: "Vieira & Sócio Suporte em TI LTDA", nomeFantasia: "VS Suporte"
+    },
+    {
+      codigo: "7410-2/02", nome: "Design de interiores", categoria: "Design",
+      notaFiscal: "Fator R dinâmico (Anexo III se pró-labore ≥28% da receita, senão V)",
+      persona: {
+        titular: "Beatriz Salles", rg: "MG-30.556.444", orgaoRg: "PC-MG", nascimento: "09/05/1988", nomeMae: "Célia Salles",
+        estadoCivilLabel: "Divorciado(a)", regimeBensLabel: null, moraFora: false,
+        inss: { contribui: true, tipo: "CLT (emprego de carteira)", valor: "R$ 3.000,00" }, sociosExtras: 0, participacoes: "—",
+        tipoEnderecoLabel: "Endereço próprio (casa ou ponto)", enderecoResumo: "Rua Pium-í, 220 — Serra, Belo Horizonte/MG", iptu: "Índice 09.887.222-1",
+        capitalSocial: "R$ 3.000,00"
+      },
+      secundarios: "7420-0/01 (Fotografia) — só se atender fotografia de ambientes",
+      objetoSocial: "Prestação de serviços de design de interiores.",
+      razaoSocial: "Beatriz Salles Design de Interiores", nomeFantasia: "Salles Design"
+    },
+    {
+      codigo: "7319-0/04", nome: "Consultoria em publicidade", categoria: "Marketing",
+      notaFiscal: "Fator R dinâmico (Anexo III se pró-labore ≥28% da receita, senão V)",
+      persona: {
+        titular: "Lucas Prado", rg: "MG-27.334.998", orgaoRg: "PC-MG", nascimento: "30/01/1996", nomeMae: "Vânia Prado",
+        estadoCivilLabel: "Solteiro(a)", regimeBensLabel: null, moraFora: false,
+        inss: { contribui: false }, sociosExtras: 0, participacoes: "—",
+        tipoEnderecoLabel: "Endereço virtual", enderecoResumo: "Endereço fiscal Legalizai (sem CEP próprio)", iptu: "—",
+        capitalSocial: "R$ 1.000,00"
+      },
+      secundarios: "7311-4/00 (Agências de publicidade) — só se também executar campanhas",
+      objetoSocial: "Prestação de serviços de consultoria em publicidade e marketing.",
+      razaoSocial: "Lucas Prado Consultoria", nomeFantasia: "Prado Marketing"
+    },
+    {
+      codigo: "7490-1/01", nome: "Tradução e interpretação", categoria: "Consultoria",
+      notaFiscal: "Fator R dinâmico (Anexo III se pró-labore ≥28% da receita, senão V)",
+      persona: {
+        titular: "Helena Duarte", rg: "MG-11.223.556", orgaoRg: "PC-MG", nascimento: "18/09/1970", nomeMae: "Aparecida Duarte",
+        estadoCivilLabel: "Viúvo(a)", regimeBensLabel: null, moraFora: true,
+        inss: { contribui: true, tipo: "Aposentadoria", valor: "R$ 1.800,00" }, sociosExtras: 0, participacoes: "—",
+        tipoEnderecoLabel: "Endereço próprio (casa ou ponto)", enderecoResumo: "Rua Grão Pará, 800 — Funcionários, Belo Horizonte/MG (titular reside fora do Brasil)", iptu: "Índice 02.445.667-3",
+        capitalSocial: "R$ 2.000,00"
+      },
+      secundarios: "7490-1/04 (Intermediação de negócios) — se também agenciar contratos",
+      objetoSocial: "Prestação de serviços de tradução e interpretação.",
+      razaoSocial: "Helena Duarte Traduções", nomeFantasia: "HD Traduções"
+    },
+    {
+      codigo: "7490-1/04", nome: "Intermediação e agenciamento de negócios", categoria: "Consultoria",
+      notaFiscal: "Fator R dinâmico (Anexo III se pró-labore ≥28% da receita, senão V)",
+      persona: {
+        titular: "João Bittencourt", rg: "MG-19.887.333", orgaoRg: "PC-MG", nascimento: "05/12/1982", nomeMae: "Marlene Bittencourt",
+        estadoCivilLabel: "Casado(a)", regimeBensLabel: "Separação total de bens", moraFora: false,
+        inss: { contribui: false }, sociosExtras: 1, participacoes: "João 50% · sócio extra 50%",
+        tipoEnderecoLabel: "Coworking", enderecoResumo: "Coworking Sede BH — Lourdes, Belo Horizonte/MG", iptu: "—",
+        capitalSocial: "R$ 15.000,00"
+      },
+      secundarios: "7490-1/01 (Tradução) — só se também traduzir contratos",
+      objetoSocial: "Prestação de serviços de intermediação e agenciamento de negócios.",
+      razaoSocial: "Bittencourt & Sócio Negócios LTDA", nomeFantasia: "BN Negócios"
+    },
+    {
+      codigo: "8599-6/04", nome: "Treinamento profissional/gerencial", categoria: "Educação",
+      notaFiscal: "Anexo III fixo (residual, sem Fator R)",
+      persona: {
+        titular: "Fernanda Lopes", rg: "MG-25.667.111", orgaoRg: "PC-MG", nascimento: "27/02/1991", nomeMae: "Ione Lopes",
+        estadoCivilLabel: "Solteiro(a)", regimeBensLabel: null, moraFora: false,
+        inss: { contribui: false }, sociosExtras: 0, participacoes: "—",
+        tipoEnderecoLabel: "Endereço virtual", enderecoResumo: "Endereço fiscal Legalizai (sem CEP próprio)", iptu: "—",
+        capitalSocial: "R$ 1.000,00"
+      },
+      secundarios: "8593-7/00 (Ensino de idiomas) — mesmo Anexo III fixo",
+      objetoSocial: "Prestação de serviços de treinamento profissional e gerencial.",
+      razaoSocial: "Fernanda Lopes Treinamentos", nomeFantasia: "FL Treinamentos"
+    },
+    {
+      codigo: "8593-7/00", nome: "Ensino de idiomas", categoria: "Educação",
+      notaFiscal: "Anexo III fixo (residual, sem Fator R)",
+      persona: {
+        titular: "Paula Antunes", rg: "MG-31.445.887", orgaoRg: "PC-MG", nascimento: "11/06/1994", nomeMae: "Cristina Antunes",
+        estadoCivilLabel: "União estável", regimeBensLabel: "Comunhão parcial de bens", moraFora: false,
+        inss: { contribui: true, tipo: "Sócia de outro CNPJ", valor: "R$ 1.500,00" }, sociosExtras: 0, participacoes: "—",
+        tipoEnderecoLabel: "Endereço próprio (casa ou ponto)", enderecoResumo: "Rua Bahia, 1200 — Centro, Belo Horizonte/MG", iptu: "Índice 07.998.221-4",
+        capitalSocial: "R$ 1.000,00"
+      },
+      secundarios: "8599-6/04 (Treinamento profissional) — mesmo Anexo III fixo",
+      objetoSocial: "Prestação de serviços de ensino de idiomas.",
+      razaoSocial: "Paula Antunes Idiomas", nomeFantasia: "PA Idiomas"
+    },
+    {
+      codigo: "8220-2/00", nome: "Teleatendimento", categoria: "Adm./apoio",
+      notaFiscal: "Anexo III fixo (residual, sem Fator R)",
+      persona: {
+        titular: "Diego Nogueira", rg: "MG-14.556.998", orgaoRg: "PC-MG", nascimento: "03/08/1980", nomeMae: "Regina Nogueira",
+        estadoCivilLabel: "Casado(a)", regimeBensLabel: "Comunhão universal de bens", moraFora: false,
+        inss: { contribui: false }, sociosExtras: 2, participacoes: "Diego 34% · sócio extra A 33% · sócio extra B 33%",
+        tipoEnderecoLabel: "Coworking", enderecoResumo: "Coworking Sede BH — Buritis, Belo Horizonte/MG", iptu: "—",
+        capitalSocial: "R$ 20.000,00"
+      },
+      secundarios: "8220-2/00 é o único CNAE deste exemplo — sem secundário sugerido",
+      objetoSocial: "Prestação de serviços de teleatendimento.",
+      razaoSocial: "Nogueira & Sócios Teleatendimento LTDA", nomeFantasia: "NS Contact"
+    }
+  ];
+
+  /** Valor de exemplo pra um campo, dado o exemplo de CNAE/pessoa escolhido.
+   *  Campos "fixado hoje" (interno) devolvem o MESMO valor pra qualquer
+   *  exemplo — é isso mesmo, o ponto é mostrar que não muda por CNAE. */
+  function valorParaExemplo(campoId, ex) {
+    var p = ex.persona;
+    switch (campoId) {
+      case "c0-cnae-principal": return ex.codigo + " — " + ex.nome;
+      case "c1-confirma-dados": return p.titular + " (CPF e endereço já confirmados no cadastro)";
+      case "c1-rg": return "RG " + p.rg + " — " + p.orgaoRg;
+      case "c1-nascimento": return p.nascimento;
+      case "c1-mae": return p.nomeMae;
+      case "c1-estado-civil": return p.estadoCivilLabel + (p.regimeBensLabel ? " — " + p.regimeBensLabel : "");
+      case "c1-mora-fora": return p.moraFora ? "Sim" : "Não";
+      case "c2-inss-fora": return p.inss.contribui ? "Sim" : "Não";
+      case "c2-valor-vinculo": return p.inss.contribui ? p.inss.tipo + " — " + p.inss.valor : "Não se aplica (não contribui)";
+      case "c3-confirma-socios": return p.sociosExtras > 0 ? "Sim, mais " + p.sociosExtras + " sócio(s)" : "Não — sócio único";
+      case "c3-socios-percentual": return p.participacoes;
+      case "c4-cep-numero": return p.enderecoResumo;
+      case "c4-iptu": return p.iptu;
+      case "c4-tipo-endereco": return p.tipoEnderecoLabel;
+      case "c4-residencia-socio": return p.sociosExtras > 0 ? "Nenhum sócio mora no mesmo endereço da sede" : "Não se aplica (sócio único)";
+      case "c4-capital-social": return p.capitalSocial;
+      case "c5-cnae-secundarios": return ex.secundarios;
+      case "c6-natureza-juridica": return p.sociosExtras > 0 ? "LTDA — sociedade entre sócios" : "SLU — dono único";
+      case "c7-razao-social": return ex.razaoSocial + " (1ª opção)";
+      case "c7-objeto-social": return ex.objetoSocial;
+      case "c7-nome-fantasia": return ex.nomeFantasia;
+      case "int-forma-atuacao": return "Internet — igual pra qualquer CNAE liso";
+      case "int-tipo-unidade": return "Sede — igual pra qualquer CNAE liso";
+      case "int-metragem": return "Não implementado — igual pra qualquer CNAE liso";
+      case "int-prazo-duracao": return "Indeterminado — igual pra qualquer CNAE liso";
+      case "int-foro": return "Comarca de Belo Horizonte/MG — igual pra qualquer CNAE liso";
+      case "int-encerramento-exercicio": return "31 de dezembro — igual pra qualquer CNAE liso";
+      case "int-optante-simples": return "Sim — igual pra qualquer CNAE liso";
+      case "int-administracao": return p.sociosExtras > 0 ? "Exercida por todos os sócios nomeados no contrato" : "Exercida pelo sócio único";
+      case "int-codigo-ato": return "090 – Contrato — igual pra qualquer CNAE liso";
+      case "int-uf-registro": return "MG — igual pra qualquer CNAE liso";
+      case "int-desimpedimento": return "Cláusula presente no contrato — igual pra qualquer CNAE liso";
+      case "socio-extra-nacionalidade": return p.sociosExtras > 0 ? "Brasileira (ainda não coletado hoje)" : "Não se aplica (sócio único)";
+      case "socio-extra-estado-civil": return p.sociosExtras > 0 ? "Ainda não coletado hoje" : "Não se aplica (sócio único)";
+      case "socio-extra-nascimento": return p.sociosExtras > 0 ? "Ainda não coletado hoje" : "Não se aplica (sócio único)";
+      case "socio-extra-profissao": return p.sociosExtras > 0 ? "Ainda não coletado hoje" : "Não se aplica (sócio único)";
+      case "socio-extra-cpf": return p.sociosExtras > 0 ? "Ainda não coletado hoje" : "Não se aplica (sócio único)";
+      case "socio-extra-rg": return p.sociosExtras > 0 ? "Ainda não coletado hoje" : "Não se aplica (sócio único)";
+      case "socio-extra-endereco": return p.sociosExtras > 0 ? "Ainda não coletado hoje" : "Não se aplica (sócio único)";
+      case "passo15-dae": case "passo16-protocolo": case "passo17-decisao": case "passo18-cnpj":
+        return "Igual pra qualquer CNAE liso — é etapa de processo (nós×cliente), não dado da pessoa.";
+      default: return "—";
+    }
+  }
+
+  var STORAGE_KEY = "legalizai-checklist-jucemg-v1";
+  var MODO_KEY = "legalizai-checklist-jucemg-modo";
+  var ESTADOS = ["validado", "correcao", "recusado"];
+  var LABEL = { validado: "Validado", correcao: "Correção", recusado: "Recusado" };
+
+  function carregarEstado() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) { return {}; }
+  }
+  function salvarEstado(estado) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(estado)); } catch (e) {}
+  }
+  function carregarModo() {
+    try { return localStorage.getItem(MODO_KEY) || "app"; } catch (e) { return "app"; }
+  }
+  function salvarModo(m) {
+    try { localStorage.setItem(MODO_KEY, m); } catch (e) {}
+  }
+
+  var estado = carregarEstado();
+  var modo = carregarModo();
+
+  /**
+   * 🆕 31/08 (pedido do Pedro) — sidebar de exemplos CNAE "liso". Clica no
+   * campo do checklist → clica no CNAE da lateral → aparece card mostrando
+   * como aquele CNAE/pessoa preencheria o campo selecionado + justificativa.
+   * Escopo travado: só ME Simples Nacional, serviço não regulamentado.
+   */
+  var CAMPO_SEL_KEY = "legalizai-checklist-jucemg-campo-sel";
+  var CNAE_SEL_KEY = "legalizai-checklist-jucemg-cnae-sel";
+  function carregarCampoSelecionado() {
+    try { return localStorage.getItem(CAMPO_SEL_KEY) || null; } catch (e) { return null; }
+  }
+  function salvarCampoSelecionado(id) {
+    try { id ? localStorage.setItem(CAMPO_SEL_KEY, id) : localStorage.removeItem(CAMPO_SEL_KEY); } catch (e) {}
+  }
+  function carregarCnaeSelecionado() {
+    try { return localStorage.getItem(CNAE_SEL_KEY) || null; } catch (e) { return null; }
+  }
+  function salvarCnaeSelecionado(codigo) {
+    try { codigo ? localStorage.setItem(CNAE_SEL_KEY, codigo) : localStorage.removeItem(CNAE_SEL_KEY); } catch (e) {}
+  }
+  var campoSelecionado = carregarCampoSelecionado();
+  var cnaeSelecionado = carregarCnaeSelecionado();
+
+  /**
+   * 🆕 31/08 (pedido do Pedro) — clicar na pill NÃO é só marcar: abre um
+   * campo de digitação livre PRÓPRIO daquela opção. Clicar em OUTRA pill
+   * abre outro campo independente, sem fechar o anterior — cada pill
+   * clicada mantém seu próprio campo aberto ao mesmo tempo.
+   * Estado: `estado[id].opcoesEstado[chave] = { abertos: {idx:true}, textos: {idx:string} }`.
+   */
+  function criarGrupoOpcoes(id, chave, titulo, opcoes) {
+    var atual = estado[id] || {};
+    var grupoEstado = (atual.opcoesEstado && atual.opcoesEstado[chave]) || {};
+    var abertos = grupoEstado.abertos || {};
+    var textos = grupoEstado.textos || {};
+
+    var bloco = document.createElement("div");
+    bloco.className = "opcoes-bloco";
+
+    var tituloEl = document.createElement("p");
+    tituloEl.className = "opcoes-titulo";
+    tituloEl.textContent = titulo;
+    bloco.appendChild(tituloEl);
+
+    // Linha compacta com TODAS as pills, sempre visível.
+    var lista = document.createElement("div");
+    lista.className = "opcoes-lista";
+    opcoes.forEach(function (texto, idx) {
+      var pill = document.createElement("button");
+      pill.type = "button";
+      pill.className = "opcao-pill" + (abertos[idx] ? " ativa" : "");
+      pill.textContent = texto;
+      pill.addEventListener("click", function () {
+        var novo = estado[id] || {};
+        novo.opcoesEstado = novo.opcoesEstado || {};
+        var g = novo.opcoesEstado[chave] || { abertos: {}, textos: {} };
+        g.abertos = g.abertos || {};
+        g.abertos[idx] = !g.abertos[idx];
+        novo.opcoesEstado[chave] = g;
+        estado[id] = novo;
+        salvarEstado(estado);
+        montar();
+      });
+      lista.appendChild(pill);
+    });
+    bloco.appendChild(lista);
+
+    // Um campo de texto PRÓPRIO empilhado por baixo, pra cada pill aberta.
+    opcoes.forEach(function (texto, idx) {
+      if (!abertos[idx]) return;
+      var campoWrap = document.createElement("div");
+      campoWrap.className = "opcao-campo";
+
+      var rotulo = document.createElement("p");
+      rotulo.className = "opcao-campo-rotulo";
+      rotulo.textContent = texto;
+      campoWrap.appendChild(rotulo);
+
+      var campoObs = document.createElement("textarea");
+      campoObs.className = "obs opcoes-obs";
+      campoObs.placeholder = "Observação sobre essa opção...";
+      campoObs.value = textos[idx] || "";
+      campoObs.addEventListener("input", function () {
+        var novo = estado[id] || {};
+        novo.opcoesEstado = novo.opcoesEstado || {};
+        var g = novo.opcoesEstado[chave] || { abertos: {}, textos: {} };
+        g.textos = g.textos || {};
+        g.textos[idx] = campoObs.value;
+        novo.opcoesEstado[chave] = g;
+        estado[id] = novo;
+        salvarEstado(estado);
+      });
+      campoWrap.appendChild(campoObs);
+
+      bloco.appendChild(campoWrap);
+    });
+
+    return bloco;
+  }
+
+  /**
+   * 🆕 31/08 (pedido do Pedro) — Passos 15-18 são grandes demais pra validar
+   * como 1 campo só. Cada um vira uma lista de sub-passos, e CADA sub-passo
+   * tem seu próprio validado/correção/recusado + observação — igual ao
+   * campo principal, só que menor e aninhado.
+   */
+  function criarSubpassos(id, subpassos) {
+    var bloco = document.createElement("div");
+    bloco.className = "subpassos";
+
+    subpassos.forEach(function (sub, idx) {
+      var atual = estado[id] || {};
+      var subEstado = (atual.sub && atual.sub[idx]) || {};
+
+      var item = document.createElement("div");
+      item.className = "subitem";
+      item.setAttribute("data-estado", subEstado.status || "");
+      item.setAttribute("data-cor", sub.cor || "nos");
+
+      var linha = document.createElement("div");
+      linha.className = "subitem-linha";
+      linha.innerHTML =
+        '<span class="subitem-tag ' + (sub.cor || "nos") + '">' + (sub.cor === "cliente" ? "cliente" : "nós") + '</span>' +
+        '<span class="subitem-texto">' + sub.texto + '</span>';
+      item.appendChild(linha);
+
+      var seg = document.createElement("div");
+      seg.className = "segmentado mini";
+      ESTADOS.forEach(function (opt) {
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "seg-btn " + opt + (subEstado.status === opt ? " ativo" : "");
+        btn.textContent = LABEL[opt];
+        btn.addEventListener("click", function () {
+          var novo = estado[id] || {};
+          novo.sub = novo.sub || {};
+          var s = novo.sub[idx] || {};
+          s.status = s.status === opt ? "" : opt;
+          novo.sub[idx] = s;
+          estado[id] = novo;
+          salvarEstado(estado);
+          montar();
+        });
+        seg.appendChild(btn);
+      });
+      item.appendChild(seg);
+
+      var obs = document.createElement("textarea");
+      obs.className = "obs subitem-obs";
+      obs.placeholder = sub.justificativa || "Observação sobre esse sub-passo...";
+      obs.value = subEstado.obs || "";
+      obs.addEventListener("input", function () {
+        var novo = estado[id] || {};
+        novo.sub = novo.sub || {};
+        var s = novo.sub[idx] || {};
+        s.obs = obs.value;
+        novo.sub[idx] = s;
+        estado[id] = novo;
+        salvarEstado(estado);
+      });
+      item.appendChild(obs);
+
+      bloco.appendChild(item);
+    });
+
+    return bloco;
+  }
+
+  function montarNav() {
+    var nav = document.getElementById("navOrdem");
+    nav.innerHTML =
+      '<button type="button" class="nav-btn' + (modo === "app" ? " ativo" : "") + '" data-modo="app">Nossa ordem</button>' +
+      '<button type="button" class="nav-btn' + (modo === "oficial" ? " ativo" : "") + '" data-modo="oficial">Ordem oficial (JUCEMG)</button>';
+    Array.prototype.forEach.call(nav.querySelectorAll(".nav-btn"), function (btn) {
+      btn.addEventListener("click", function () {
+        modo = btn.getAttribute("data-modo");
+        salvarModo(modo);
+        montar();
+      });
+    });
+
+    var fonte = document.getElementById("fonteOficial");
+    if (modo === "oficial") {
+      fonte.innerHTML =
+        '<div class="fonte-oficial"><b>Fonte:</b> JUCEMG, <i>Passo-a-Passo Sociedade Limitada — Registro de Contrato Social</i> ' +
+        '(<a href="https://www.jucemg.mg.gov.br/arquivos/file/passo-a-passo-contituicao-ltda.pdf" target="_blank" rel="noopener">PDF oficial</a>), 19 passos. ' +
+        'Só entram aqui os passos que recebem dado novo — os de clique/impressão pura ficam de fora. ' +
+        '<b>Por isso começa no Passo 2:</b> o Passo 1 é só acessar o site e clicar em "Consulta de Viabilidade" — não coleta nada ainda.</div>';
+    } else {
+      fonte.innerHTML = "";
+    }
+  }
+
+  function montar() {
+    montarNav();
+    var DADOS = modo === "oficial" ? ORDEM_OFICIAL : ORDEM_APP;
+    var idsAtivos = [];
+    DADOS.forEach(function (s) { idsAtivos = idsAtivos.concat(s.campos); });
+    var host = document.getElementById("secoes");
+    host.innerHTML = "";
+
+    DADOS.forEach(function (secao) {
+      var wrapSecao = document.createElement("section");
+      wrapSecao.className = "secao";
+
+      var head = document.createElement("div");
+      head.className = "secao-head";
+      head.innerHTML =
+        '<span class="secao-tela">' + secao.tela + '</span>' +
+        '<span class="secao-nome">' + secao.nome + '</span>' +
+        (secao.nota ? '<span class="secao-nota">' + secao.nota + '</span>' : "");
+      wrapSecao.appendChild(head);
+
+      var lista = document.createElement("div");
+      lista.className = "lista";
+
+      secao.campos.forEach(function (id) {
+        var def = CAMPOS[id];
+        var campo = def.texto;
+        var atual = estado[id] || {};
+
+        var card = document.createElement("div");
+        card.className = "item" + (campoSelecionado === id ? " selecionado" : "");
+        card.setAttribute("data-estado", atual.status || "");
+        card.addEventListener("click", function (e) {
+          if (e.target.closest("button, textarea, .opcao-pill, .subitem")) return;
+          campoSelecionado = campoSelecionado === id ? null : id;
+          salvarCampoSelecionado(campoSelecionado);
+          montar();
+        });
+
+        var badgeClasse = def.status;
+        var badgeTexto = def.status === "interno" ? "preenchido por nós" : (def.status === "pendente" ? "sem validação oficial" : (def.status === "faltante" ? "não coletado ainda" : "oficial"));
+
+        var headItem = document.createElement("div");
+        headItem.className = "item-head";
+        headItem.innerHTML =
+          '<span class="item-campo">' + campo + '</span>' +
+          '<span class="item-badge ' + badgeClasse + '">' + badgeTexto + '</span>';
+        card.appendChild(headItem);
+
+        if (def.opcoes) {
+          card.appendChild(criarGrupoOpcoes(id, "principal", "Opções hoje no app", def.opcoes));
+          if (def.opcoesCondicional) {
+            card.appendChild(criarGrupoOpcoes(id, "condicional", def.opcoesCondicional.titulo, def.opcoesCondicional.opcoes));
+          }
+        }
+
+        if (def.subpassos) {
+          card.appendChild(criarSubpassos(id, def.subpassos));
+        }
+
+        var seg = document.createElement("div");
+        seg.className = "segmentado";
+        ESTADOS.forEach(function (opt) {
+          var btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "seg-btn " + opt + (atual.status === opt ? " ativo" : "");
+          btn.textContent = LABEL[opt];
+          btn.addEventListener("click", function () {
+            var novo = estado[id] || {};
+            novo.status = novo.status === opt ? "" : opt; // clique de novo desmarca
+            estado[id] = novo;
+            salvarEstado(estado);
+            montar();
+          });
+          seg.appendChild(btn);
+        });
+        card.appendChild(seg);
+
+        var obs = document.createElement("textarea");
+        obs.className = "obs";
+        obs.placeholder = def.justificativa || "Observação (o que a diretora falou, ajuste combinado, justificativa...)";
+        obs.value = atual.obs || "";
+        obs.addEventListener("input", function () {
+          var novo = estado[id] || {};
+          novo.obs = obs.value;
+          estado[id] = novo;
+          salvarEstado(estado);
+        });
+        card.appendChild(obs);
+
+        lista.appendChild(card);
+      });
+
+      wrapSecao.appendChild(lista);
+      host.appendChild(wrapSecao);
+    });
+
+    atualizarResumo(idsAtivos);
+    montarSidebar();
+    medirTopo();
+  }
+
+  function montarSidebar() {
+    var dica = document.getElementById("sidebarDica");
+    if (campoSelecionado) {
+      dica.textContent = "Campo selecionado. Agora clica num CNAE abaixo.";
+    } else {
+      dica.textContent = "Clica num campo do checklist, depois num CNAE aqui.";
+    }
+
+    var lista = document.getElementById("listaCnaes");
+    lista.innerHTML = "";
+    EXEMPLOS_CNAE.forEach(function (ex) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "cnae-item" + (cnaeSelecionado === ex.codigo ? " ativo" : "");
+      btn.innerHTML = "<b>" + ex.codigo + "</b>" + ex.nome;
+      btn.addEventListener("click", function () {
+        cnaeSelecionado = cnaeSelecionado === ex.codigo ? null : ex.codigo;
+        salvarCnaeSelecionado(cnaeSelecionado);
+        montarSidebar();
+      });
+      lista.appendChild(btn);
+    });
+
+    var host = document.getElementById("cardExemplo");
+    host.innerHTML = "";
+    if (!campoSelecionado) {
+      var vazio = document.createElement("p");
+      vazio.className = "card-exemplo-vazio";
+      vazio.textContent = "Selecione um campo no checklist pra começar.";
+      host.appendChild(vazio);
+      return;
+    }
+    if (!cnaeSelecionado) {
+      var vazio2 = document.createElement("p");
+      vazio2.className = "card-exemplo-vazio";
+      vazio2.textContent = "Campo selecionado: \"" + CAMPOS[campoSelecionado].texto + "\". Agora escolhe um CNAE ao lado.";
+      host.appendChild(vazio2);
+      return;
+    }
+
+    var ex = EXEMPLOS_CNAE.filter(function (e) { return e.codigo === cnaeSelecionado; })[0];
+    var def = CAMPOS[campoSelecionado];
+    var valor = valorParaExemplo(campoSelecionado, ex);
+
+    var card = document.createElement("div");
+    card.className = "card-exemplo";
+    card.innerHTML =
+      '<p class="card-exemplo-campo">' + def.texto + '</p>' +
+      '<p class="card-exemplo-cnae">' + ex.codigo + ' · ' + ex.nome + '</p>' +
+      '<p class="card-exemplo-valor">' + valor + '</p>' +
+      '<p class="card-exemplo-justificativa">' + ex.notaFiscal + '</p>' +
+      '<p class="card-exemplo-justificativa" style="font-style:italic;">🟡 Pessoa/exemplo fictício, criado só pra cobrir combinação diferente do checklist — não é dado real de cliente.</p>';
+    host.appendChild(card);
+  }
+
+  function atualizarResumo(idsAtivos) {
+    var total = idsAtivos.length;
+    var cont = { validado: 0, correcao: 0, recusado: 0 };
+    idsAtivos.forEach(function (id) {
+      var s = estado[id] && estado[id].status;
+      if (s && cont.hasOwnProperty(s)) cont[s]++;
+    });
+    var pendentes = total - cont.validado - cont.correcao - cont.recusado;
+
+    var resumo = document.getElementById("resumo");
+    resumo.innerHTML =
+      '<span class="chip"><b>' + total + '</b>&nbsp;campos</span>' +
+      '<span class="chip ok"><b>' + cont.validado + '</b>&nbsp;validados</span>' +
+      '<span class="chip warn"><b>' + cont.correcao + '</b>&nbsp;correção</span>' +
+      '<span class="chip bad"><b>' + cont.recusado + '</b>&nbsp;recusados</span>' +
+      '<span class="chip"><b>' + pendentes + '</b>&nbsp;pendentes</span>';
+
+    document.getElementById("contagem-rodape").textContent =
+      "Salvo automaticamente neste navegador · " + total + " campos ao todo";
+  }
+
+  document.getElementById("btnReset").addEventListener("click", function () {
+    if (!confirm("Limpar todas as validações e observações desta checklist?")) return;
+    estado = {};
+    salvarEstado(estado);
+    montar();
+  });
+
+  /**
+   * 🆕 31/08 — mede a altura real do header sticky (.topo) e publica em
+   * --topo-h, pra sidebar nunca colar nele mesmo quando as pills de resumo
+   * quebram linha (mobile, zoom, etc).
+   */
+  function medirTopo() {
+    var topo = document.querySelector(".topo");
+    if (topo) document.documentElement.style.setProperty("--topo-h", topo.offsetHeight + "px");
+  }
+  window.addEventListener("resize", medirTopo);
+
+  montar();
+})();
+</script>

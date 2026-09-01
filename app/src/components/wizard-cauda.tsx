@@ -11,7 +11,14 @@ import { QuemCuida } from "@/components/lab/ref9-blocks";
 import { CUSTOS, brl } from "@/lib/fiscal";
 import { passosDoCliente } from "@/lib/passos";
 import { PainelView, ETAPAS_ABERTURA, type Etapa, type Recusa } from "@/components/painel";
-import { CLIENTE, TEM_SOCIO, NOME_EMPRESARIAL, CNAE_PRINCIPAL, CNAES_SECUNDARIAS } from "@/app/(app)/dossie/mock";
+import {
+  CLIENTE,
+  TEM_SOCIO,
+  SOCIO_2,
+  NOME_EMPRESARIAL,
+  CNAE_PRINCIPAL,
+  CNAES_SECUNDARIAS,
+} from "@/app/(app)/dossie/mock";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -126,7 +133,11 @@ export function RevisarView({
             />
             <Linha rotulo="Tipo" valor={mei ? "MEI" : d.empresa.natureza} />
             <Linha rotulo="Endereço" valor={d.empresa.endereco} />
-            {!mei && <Linha rotulo="Capital social" valor={brl(d.empresa.capital)} />}
+            {/* 🗑️ 01/09 (decisão do Pedro) — "Capital social" SAIU do recap.
+                O ADR de 31/08 já dizia que o capital sai da tela "por completo
+                (nem card informativo)" quando virou valor travado em R$10.000
+                no backend; o C4 foi limpo naquele dia e este recap ficou pra
+                trás, mostrando um dado que a pessoa nunca informou. */}
           </Bloco>
 
           <Bloco titulo="O que a empresa faz" passo="Atividades">
@@ -641,10 +652,25 @@ export function CertificadoGateView({
 
 type StatusSocio = "voce" | "convidar" | "aguardando" | "assinou";
 
+/**
+ * 🐛→🔒 01/09 (achado pelo E2E da constituição) — esta lista tinha mock PRÓPRIO,
+ * com o 2º sócio chamado "Bruno Costa", enquanto o dossiê inteiro (fonte única
+ * `dossie/mock.ts`, desde 29/07) chama o mesmo sócio de "Carlos Eduardo Silva".
+ * Na demo pra gestão a pessoa preenchia o C3 nomeando Carlos e, 4 telas depois,
+ * o app convidava Bruno. É exatamente o bug de nome trocado que a fonte única
+ * resolveu no dossiê e que tinha sobrevivido aqui na cauda.
+ *
+ * Também respeita `TEM_SOCIO` agora: com empresa solo, esta lista tem 1 linha
+ * só, e o bloco de consenso multi-sócio some (antes o mock forçava sociedade,
+ * independente do que a triagem tinha respondido).
+ */
 const SOCIOS_ASSINATURA: { nome: string; status: StatusSocio }[] = [
   { nome: "Você", status: "voce" },
-  { nome: "Bruno Costa", status: "convidar" },
+  ...(TEM_SOCIO ? [{ nome: SOCIO_2.nome, status: "convidar" as StatusSocio }] : []),
 ];
+
+/** Primeiro nome do sócio, pro CTA do convite ("Enviar convite pro Carlos"). */
+const PRIMEIRO_NOME_SOCIO = SOCIO_2.nome.trim().split(/\s+/)[0];
 
 const NIVEL_GOVBR: "bronze" | "prata" | "ouro" = "prata";
 
@@ -899,7 +925,9 @@ export function AssinaturaView({
           {sociedade && SOCIOS_ASSINATURA[1].status === "convidar" ? (
             <>
               <Button full onClick={() => setFase("codigo")}>
-                {canalConvite === "whatsapp" ? "Enviar convite pro Bruno no WhatsApp" : "Enviar convite pro Bruno por e-mail"}
+                {canalConvite === "whatsapp"
+                  ? `Enviar convite pro ${PRIMEIRO_NOME_SOCIO} no WhatsApp`
+                  : `Enviar convite pro ${PRIMEIRO_NOME_SOCIO} por e-mail`}
               </Button>
               <div className="mt-2 flex justify-center">
                 <Button variant="ghost" onClick={() => setFase("codigo")}>
@@ -1041,10 +1069,17 @@ const PASSOS_ATIVACAO: PassoAtivacao[] = [
     sub: "Junto da assinatura do registro. É o que deixa a gente cuidar do DAS e das obrigações por você.",
   },
   {
+    /**
+     * 🔄 01/09 (decisão do Pedro) — deixou de ser "você já resolveu antes de
+     * assinar": o gate de certificado SAIU do caminho de constituição de ME.
+     * O certificado é incluso no plano e emitido POR NÓS quando for preciso
+     * (promessa que já está escrita na tela do plano), então aqui ele deixa de
+     * ser tarefa do cliente e vira aviso do que a gente faz por ele.
+     */
     id: "certificado",
     estado: "feito",
-    titulo: "Certificado digital validado",
-    sub: "Você já resolveu isso antes de assinar. Pra renovar ou trocar depois, é só entrar em Mais.",
+    titulo: "Certificado digital por nossa conta",
+    sub: "Está incluso no seu plano. A gente emite quando for necessário, sem cobrar nada a mais e sem você precisar resolver isso agora.",
   },
   {
     id: "dados",

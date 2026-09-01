@@ -91,6 +91,8 @@ export const PREENCHIMENTO = {
     // 🆕 26/08 — campo padrão de DBE (Receita), achado no cruzamento com a
     // pesquisa JUCEMG/DBE.
     nascimento: "14/03/1988",
+    // 🆕 01/09 — nacionalidade do TITULAR (o sócio extra já tinha desde 31/08).
+    nacionalidade: "Brasileira",
     // 🗑️ 01/09 — `nomeMae` removido junto do campo (auditoria 1-a-1, item 7):
     // nenhum dos 141 prints da JUCEMG/DBE/Integrador tem filiação, e no MEI o
     // dado vem do gov.br, não editável.

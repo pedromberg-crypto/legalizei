@@ -625,7 +625,8 @@
   var CAMPOS = {
     "c0-cnae-principal": { texto: "CNAE principal (derivado por IA a partir da descrição da atividade, ou atalho por código já sabido)", status: "oficial", justificativa: "É a atividade-base que define Anexo/Fator R e todo o resto do enquadramento fiscal." },
     "c1-confirma-dados": { texto: "Confirma nome / CPF / endereço já captados no cadastro (E6) — não recoleta", status: "oficial", justificativa: "Sem isso a Junta não identifica quem é o titular da empresa." },
-    "c1-rg": { texto: "RG + órgão emissor", status: "oficial", justificativa: "Documento de identificação exigido em qualquer registro na Junta." },
+    "c1-rg": { texto: "RG + órgão emissor", status: "oficial", justificativa: "Compõe a qualificação do sócio no contrato (art. 997 CC). 🟡 A ata da Izabela (item 2) registra que o RG **deixou de ser obrigatório** na Junta, porque o CPF virou o identificador principal. Decisão do Pedro (01/09): **continuamos pedindo** — o dado entra no contrato e o custo de pedir é baixo." },
+    "c1-nacionalidade": { texto: "Nacionalidade do titular", status: "oficial", justificativa: "🆕 01/09 — gap assimétrico: o sócio extra já tinha o campo (31/08), o titular não. O contrato social qualifica TODO sócio com nacionalidade (art. 997 CC, visível no preview real, print 117). Nasce como \"Brasileira\", editável." },
     "c1-nascimento": { texto: "Data de nascimento", status: "oficial", justificativa: "Confirma maioridade e integra a qualificação exigida (art. 997 CC)." },
     "c1-estado-civil": { texto: "Estado civil (+ regime de bens, se casado)", status: "oficial", justificativa: "Define se precisa de regime de bens e se há vedação a sócios (só marido/mulher).", opcoes: ["Solteiro(a)", "Casado(a)", "União estável", "Divorciado(a)", "Viúvo(a)"], opcoesCondicional: { titulo: "Se casado(a) — regime de bens", opcoes: ["Comunhão parcial de bens", "Comunhão universal de bens", "Separação total de bens", "Participação final nos aquestos"] } },
     "c1-mora-fora": { texto: "Confirma se mora fora do Brasil", status: "oficial", justificativa: "Muda documentação e representação (procuração) se residir fora do Brasil.", opcoes: ["Não", "Sim"] },
@@ -636,7 +637,7 @@
     "c4-cep-numero": { texto: "CEP + número + complemento", status: "oficial", justificativa: "Define o município da sede — só CEP de BH atende ao nosso escopo." },
     "c4-iptu": { texto: "Índice cadastral IPTU (obrigatório, só se endereço próprio)", status: "oficial", justificativa: "Exigido só quando o endereço é próprio, não em fiscal/coworking." },
     "c4-tipo-endereco": { texto: "Tipo de endereço", status: "oficial", justificativa: "Comercial × residencial × virtual muda a exigência documental na Junta.", opcoes: ["Endereço próprio (casa ou ponto)", "Coworking", "Endereço virtual"] },
-    "c4-residencia-socio": { texto: "Residência de sócio (trava duplicidade de endereço)", status: "oficial", justificativa: "A Junta não aceita 2 empresas novas no mesmo endereço residencial." },
+    "c4-residencia-socio": { texto: "Você mora nesse endereço? (residência do TITULAR no endereço da empresa)", status: "oficial", justificativa: "🔴 JUSTIFICATIVA CORRIGIDA 01/09 (ata da Izabela, item 6): não é regra de duplicidade de endereço, é regra de DEFERIMENTO da Prefeitura de BH — se o endereço é apartamento, o titular TEM que residir lá, senão indefere. Visto ao vivo: a mesma empresa foi de indeferida (protocolo MGP2600862474, cancelado) pra deferida só trocando essa resposta. Por isso, quando o imóvel é apartamento, a resposta é travada em \"Sim\" na tela." },
     "c4-capital-social": { texto: "Capital social", status: "oficial", justificativa: "Cláusula obrigatória de qualquer contrato social (art. 997 CC)." },
     "c5-cnae-secundarios": { texto: "CNAEs secundários (seleção múltipla, busca livre, até 15)", status: "pendente", justificativa: "Um CNAE secundário errado pode mudar Anexo/Fator R do Simples." },
     "c6-natureza-juridica": { texto: "SLU (individual) ou LTDA (sociedade) — sugerida, editável", status: "pendente", justificativa: "É a 1ª decisão jurídica do contrato — muda o modelo inteiro.", opcoes: ["SLU — dono único", "LTDA — sociedade entre sócios"] },
@@ -732,7 +733,7 @@
 
   var ORDEM_APP = [
     { tela: "C0", nome: "Sua atividade", nota: "antes do C1 — CNAE principal", campos: ["c0-cnae-principal"] },
-    { tela: "C1", nome: "Seus dados", campos: ["c1-confirma-dados", "c1-rg", "c1-nascimento", "c1-estado-civil", "c1-mora-fora"] },
+    { tela: "C1", nome: "Seus dados", campos: ["c1-confirma-dados", "c1-rg", "c1-nascimento", "c1-nacionalidade", "c1-estado-civil", "c1-mora-fora"] },
     { tela: "C2", nome: "Vínculo INSS", campos: ["c2-inss-fora", "c2-valor-vinculo"] },
     { tela: "C3", nome: "Sócios", campos: ["c3-confirma-socios", "c3-socios-percentual"] },
     { tela: "C4", nome: "Dados da empresa", campos: ["c4-cep-numero", "c4-iptu", "c4-tipo-endereco", "c4-residencia-socio", "c4-capital-social"] },
@@ -757,7 +758,7 @@
    */
   var ORDEM_OFICIAL = [
     { tela: "Passo 2", nome: "Consulta de Viabilidade", nota: "nome empresarial + endereço, antes de qualquer outro dado", campos: ["c7-razao-social", "c4-cep-numero", "c4-tipo-endereco"] },
-    { tela: "Passo 4", nome: "DBE — Coleta Web (Receita Federal)", nota: "ficha cadastral completa da PJ + do titular — 1ª vez que o CNAE entra de verdade", campos: ["c0-cnae-principal", "c1-confirma-dados", "c1-rg", "c1-nascimento", "c1-estado-civil", "c1-mora-fora", "c6-natureza-juridica", "c4-capital-social", "c7-objeto-social", "c7-nome-fantasia", "int-forma-atuacao", "int-tipo-unidade", "int-optante-simples", "int-uf-registro"] },
+    { tela: "Passo 4", nome: "DBE — Coleta Web (Receita Federal)", nota: "ficha cadastral completa da PJ + do titular — 1ª vez que o CNAE entra de verdade", campos: ["c0-cnae-principal", "c1-confirma-dados", "c1-rg", "c1-nascimento", "c1-nacionalidade", "c1-estado-civil", "c1-mora-fora", "c6-natureza-juridica", "c4-capital-social", "c7-objeto-social", "c7-nome-fantasia", "int-forma-atuacao", "int-tipo-unidade", "int-optante-simples", "int-uf-registro"] },
     { tela: "Passo 8-9", nome: "Integrador — Novo FCN/REMP", nota: "detalhamento societário e do imóvel", campos: [
       "c5-cnae-secundarios", "c3-confirma-socios", "c3-socios-percentual",
       "socio-extra-nacionalidade", "socio-extra-estado-civil", "socio-extra-nascimento", "socio-extra-profissao", "socio-extra-cpf", "socio-extra-rg", "socio-extra-endereco",
@@ -940,6 +941,7 @@
       case "c1-confirma-dados": return p.titular + " (CPF e endereço já confirmados no cadastro)";
       case "c1-rg": return "RG " + p.rg + " — " + p.orgaoRg;
       case "c1-nascimento": return p.nascimento;
+      case "c1-nacionalidade": return "Brasileira (pré-preenchida, editável)";
       case "c1-estado-civil": return p.estadoCivilLabel + (p.regimeBensLabel ? " — " + p.regimeBensLabel : "");
       case "c1-mora-fora": return p.moraFora ? "Sim" : "Não";
       case "c2-inss-fora": return p.inss.contribui ? "Sim" : "Não";

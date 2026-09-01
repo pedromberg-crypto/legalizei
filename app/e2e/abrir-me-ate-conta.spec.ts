@@ -94,6 +94,17 @@ test.describe("abrir ME — todas as variáveis até a E6", () => {
     await expect(page.getByPlaceholder("Complemento")).toBeVisible();
     // Endereço de verdade (BH) tem que aparecer, confirmando que o CEP resolveu.
     await expect(page.getByText("Belo Horizonte · MG", { exact: true })).toBeVisible();
+
+    // 🆕 01/09 — tipo de imóvel + residência subiram do C4 pra cá: a regra de
+    // deferimento da Prefeitura passou a ser resolvida ANTES do pagamento.
+    await expect(page.getByRole("button", { name: "Continuar" })).toBeDisabled();
+    const campoImovel = page
+      .getByText("Esse endereço é casa ou apartamento?", { exact: true })
+      .locator("xpath=..");
+    await campoImovel.getByRole("button").first().click();
+    await page.getByRole("option", { name: "Casa" }).click();
+    await page.getByRole("button", { name: "Sim", exact: true }).click();
+
     await page.getByRole("button", { name: "Continuar" }).click();
     await expect(page).toHaveURL(/\/gate/);
 

@@ -6,6 +6,7 @@ import { EnderecoCategoriaView } from "@/components/entrada-lead";
 import { ehMei, comRegime } from "@/lib/regime";
 import { comEndereco } from "@/lib/endereco";
 import { comCategoria } from "@/lib/categoria";
+import { salvarRascunhoEndereco, limparRascunhoEndereco } from "@/lib/rascunho";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -53,6 +54,10 @@ export default function EnderecoPage() {
   const [cep, setCep] = useState(simulaForaBh ? "39560-000" : "");
   const [numero, setNumero] = useState("");
   const [complemento, setComplemento] = useState("");
+  // 🆕 01/09 — tipo de imóvel + residência subiram do C4 (ver o comentário na
+  // prop `tipoImovel` de `EnderecoCategoriaView`).
+  const [tipoImovel, setTipoImovel] = useState("");
+  const [resideNoEndereco, setResideNoEndereco] = useState<boolean | null>(null);
   const [categoria, setCategoria] = useState<string | null>(null);
 
   return (
@@ -65,6 +70,10 @@ export default function EnderecoPage() {
       setNumero={setNumero}
       complemento={complemento}
       setComplemento={setComplemento}
+      tipoImovel={tipoImovel}
+      setTipoImovel={setTipoImovel}
+      resideNoEndereco={resideNoEndereco}
+      setResideNoEndereco={setResideNoEndereco}
       categoria={categoria}
       setCategoria={setCategoria}
       // 🆕 28/08 — MEI não tem limite de cidade, mas tem limite de atividade.
@@ -77,14 +86,27 @@ export default function EnderecoPage() {
       // Os 3 flags que atravessam o wizard viajam por querystring (RF-01):
       // regime (MEI×ME), endereço fiscal (soma no preço do E7) e categoria
       // (alimenta a busca de CNAE lá no /dossie/atividade, pós-pagamento).
-      onSeguir={() =>
+      onSeguir={() => {
+        // 🆕 01/09 (pedido do Pedro) — o endereço respondido aqui atravessa o
+        // flow e chega PREENCHIDO no C4: a pessoa completa o que falta (IPTU,
+        // tipo de imóvel, residência), não redigita o que já disse. Vai por
+        // `sessionStorage`, não por querystring — endereço é dado pessoal
+        // (mesma regra do RF-01 que tirou nome/CPF/telefone da URL).
+        if (enderecoProprio) {
+          salvarRascunhoEndereco({ cep, numero, complemento, tipoImovel, resideNoEndereco });
+        } else {
+          // Escolheu o endereço fiscal da Legalizai: não existe endereço
+          // próprio pra lembrar, e um rascunho velho (de quem voltou e trocou
+          // a resposta) precisa sumir.
+          limparRascunhoEndereco();
+        }
         router.push(
           comCategoria(
             comEndereco(comRegime("/gate", mei), enderecoProprio === false),
             categoria,
           ),
-        )
-      }
+        );
+      }}
       onVoltar={() => router.push(comRegime("/entrada?intencao=abrir", mei))}
     />
   );

@@ -41,9 +41,21 @@ export default function SociosPage() {
   const mei = ehMei(searchParams);
   const enderecoFiscal = ehEnderecoFiscal(searchParams);
 
+  /**
+   * 🆕 01/09 (pedido do Pedro) — quem usa o endereço fiscal da Legalizai PULA
+   * o C4: não sobra nada pra responder lá (endereço, IPTU, tipo de imóvel e
+   * residência são todos sobre um imóvel que não é dele). Vai direto pro C7.
+   * O MEI segue passando pelo C4 mesmo com endereço fiscal — lá tem a pergunta
+   * "Como você atende?", que é dele.
+   *
+   * O redirect também existe DENTRO do C4 (deep-link, voltar do C7), mas o
+   * salto tem que nascer aqui: melhor não navegar do que navegar e corrigir.
+   */
+  const proxima = enderecoFiscal && !mei ? "/dossie/nome" : "/dossie/empresa";
+
   return (
     <SociosView
-      onSeguir={() => router.push(comEndereco(comRegime("/dossie/empresa", mei), enderecoFiscal))}
+      onSeguir={() => router.push(comEndereco(comRegime(proxima, mei), enderecoFiscal))}
     />
   );
 }

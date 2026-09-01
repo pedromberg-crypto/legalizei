@@ -80,6 +80,9 @@ export interface Passo {
   tela: string;
   /** Só existe pra parte dos clientes — muda o TOTAL, não a ordem. */
   condicional?: boolean;
+  /** 🆕 01/09 — some pra quem usa o endereço fiscal da Legalizai (o C4 inteiro
+   *  deixa de existir pra essa pessoa; MEI é exceção e continua vendo). */
+  soEnderecoProprio?: boolean;
   /** Fica retido enquanto o boleto não compensa. */
   travaSemPagamento?: boolean;
   /** Já é "feito" no total, mas o boleto pendente pinta de "girando" (azul),
@@ -141,7 +144,16 @@ export const PASSOS_CLIENTE: Passo[] = [
   {
     nome: "Endereço fiscal da empresa",
     tela: "C4",
-    descricao: "CEP, IPTU e capital social. Leva cerca de 3 minutos.",
+    /**
+     * 🆕 01/09 (pedido do Pedro) — some pra quem escolheu o endereço fiscal
+     * da Legalizai no E3.4: a tela inteira deixa de existir pra essa pessoa
+     * (nada ali é sobre um imóvel dela), então contar o passo seria prometer
+     * um trabalho que ela não vai ter.
+     */
+    soEnderecoProprio: true,
+    // ✍️ 01/09 — a descrição prometia capital social, que saiu da tela em
+    // 31/08 (travado em R$10.000 no backend).
+    descricao: "CEP, IPTU e tipo do imóvel. Leva cerca de 3 minutos.",
   },
   {
     nome: "Nome da empresa e razão social",
@@ -169,6 +181,13 @@ export const PASSOS_CLIENTE: Passo[] = [
 export function passosDoCliente({
   mei = false,
   temSocios = true,
-}: { mei?: boolean; temSocios?: boolean } = {}): Passo[] {
-  return PASSOS_CLIENTE.filter((p) => !p.condicional || (!mei && temSocios));
+  enderecoFiscal = false,
+}: { mei?: boolean; temSocios?: boolean; enderecoFiscal?: boolean } = {}): Passo[] {
+  return PASSOS_CLIENTE.filter((p) => {
+    if (p.condicional && (mei || !temSocios)) return false;
+    // 🆕 01/09 — C4 some pra ME com endereço fiscal nosso. O MEI mantém a tela
+    // (a pergunta "Como você atende?" é dele), então mantém o passo.
+    if (p.soEnderecoProprio && enderecoFiscal && !mei) return false;
+    return true;
+  });
 }

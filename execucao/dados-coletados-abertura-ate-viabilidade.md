@@ -107,8 +107,8 @@ tags: [execucao, flow, dados, abertura]
 - CONFIRMA nome/CPF/endereço já captados no E6 (não recoleta)
 - RG + órgão emissor (digitação manual)
 - data de nascimento
+- nacionalidade (pré-preenchida "Brasileira")
 - estado civil (+ regime de bens se casado)
-- confirma se mora fora do Brasil
 
 ### C2 · Vínculo INSS
 - Já contribui INSS por fora? (sim/não)
@@ -119,7 +119,7 @@ tags: [execucao, flow, dados, abertura]
 - se houver, de cada sócio extra: nome completo + CPF + % de participação + data de nascimento + nacionalidade + RG + órgão emissor + estado civil (+ regime de bens se casado) + endereço (CEP com autofill + número + complemento)
 
 ### C4 · Dados da empresa
-- CEP (autofill) + número + complemento
+- CEP + número + complemento (JÁ PREENCHIDOS do E3.4, editáveis)
 - índice cadastral IPTU (obrigatório, só se próprio)
 - tipo de endereço (próprio/coworking)
 - tipo de imóvel (casa/apartamento/outro, só se próprio)
@@ -163,6 +163,7 @@ tags: [execucao, flow, dados, abertura]
 | "Atividade exercida no local?" (principal e secundárias) | Não (sempre) | C0 · Sua atividade / C5 · CNAE secundários | 🟢 travado | Marcar Não em TODAS as atividades é o que habilita a opção "Escritório/sede administrativa" — se qualquer uma virasse Sim, a Prefeitura entenderia como comércio/loja física, errado pro nosso perfil |
 | "Atividade é inócua ou virtual?" | Sim (sempre) | C4 · Dados da empresa | 🟢 travado | Pergunta do Licenciamento (Corpo de Bombeiros): atividade sem circulação de pessoas no local, sempre verdade pro nosso perfil 100% remoto/administrativo |
 | "Edificação nova?" (regulação urbana, Prefeitura de BH) | Não (sempre) | C4 · Dados da empresa | 🟡 travado 01/09, é SUPOSIÇÃO — fila-Izabela | 3ª pergunta do Questionário de Regulação Urbana (tela 16), na MESMA tela que já produziu o indeferimento real. As outras 2 (apartamento, sócio reside) a gente já capta; esta não existia em nenhuma fonte. Fica interna e não vira pergunta porque "edificação nova" tem sentido técnico na Prefeitura (imóvel recém-construído, questão de habite-se) que o cliente não sabe responder — perguntar convida erro confiante, que é pior modo de falhar que errar sempre igual num caso raro. Risco residual: cliente em prédio novo sem habite-se cai em exigência. Validado por Pedro 01/09; confirmar com a especialista |
+| Telefone enviado aos órgãos — SEM o 9º dígito (8 dígitos) | o telefone captado com 9 dígitos é enviado ao DBE/Integrador sem o 9 inicial do celular | RPA · envio ao DBE/Integrador (a captação no E6 não muda) | 🟢 travado 01/09 (Pedro) — regra de RPA, não de tela | Regra dita pela Izabela na gravação (ata, item 13) e confirmada nos prints (tela 51: telefone 94054307, 8 dígitos). Decisão do Pedro: **a captação continua com o 9 normal** — pedir telefone sem o 9 pro cliente seria estranho e daria erro de digitação. Quem tira o dígito é o robô, na hora de preencher o formulário oficial. Fica aqui porque é transformação de dado nossa, invisível pro cliente, e o dev precisa dela escrita |
 | Valor da participação de cada sócio (R$) e quantidade de quotas | % informado × R$10.000 (o valor em R$ é também o nº de quotas, porque a quota é R$1) | C3 · Sócios (derivado, não perguntado) | 🟢 travado, documentado 01/09 | O app pergunta PERCENTUAL; os órgãos pedem VALOR EM REAIS (DBE tela 65: R$10.000,00 pro sócio único; QSA tela 70) e o Integrador pede o valor nominal da quota, R$1,00 (tela 95). A conversão existia na prática e não estava escrita. Como o passo do campo é 0,5%, o menor incremento dá 50 quotas exatas: nenhum percentual selecionável gera fração de quota, então não há arredondamento a tratar. ⚠️ Isso quebra se o capital deixar de ser R$10.000 ou o passo mudar |
 | Regime de bens — tradução do rótulo pro valor da JUCEMG | "Separação total de bens" (nosso rótulo) → "Separação Convencional de Bens" (valor da Junta) | C1 · Seus dados / C3 · Sócios | 🟡 travado 01/09, com lacuna conhecida e aceita | O dropdown real do Integrador (tela 103) tem 5 regimes; o app oferece 4, por decisão do Pedro em 01/09 ("esse quinto, casamento acima de 70 anos, não faz sentido pra gente"). Falta a Separação Obrigatória, que é imposta por lei e não escolhida. Consequência aceita: quem estiver nesse regime marca "Separação total" e o contrato sai com a qualificação errada — caso raro, sem tela, resolvido no atendimento se aparecer |
 | Sociedade de Propósito Específico? | Não (sempre) | C6 · Natureza jurídica | 🟢 travado | Cláusula do Contrato Núcleo — nenhuma empresa do nosso escopo (ME prestador de serviço comum) é SPE. Campo do contrato, não pergunta ao cliente |

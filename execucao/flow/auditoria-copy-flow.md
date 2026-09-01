@@ -190,7 +190,7 @@ _32 telas navegáveis · gerado de `flow-data.mjs`._
 **N5 teaser** — 3 modos: swap ("Você economiza por mês" + "Não é malandragem"), fator-r ("R$ 0 a X" + "começa em zero"), serviço ("já entra na tabela mais barata"). Carimbo de estimativa.
 **Veredito (VA/VW/VC)** — selo + card reconhecimento + recibo "Sua atividade na Receita / CNAE" · 🟢 expander "E se eu faço mais de uma coisa?" · 🟡/🔴 captura + "Você não vai repetir nada".
 **N6 conta** — "Vamos criar seu acesso" · Google/Apple/e-mail · "É a primeira empresa que você abre?" · microcopy "Ainda não estamos cobrando nada."
-**N7 plano** — "Quanto custa abrir": card Grátis · card R$195/mês · card taxa R$268,51 "vai direto pro Estado" · rodapé "Você paga hoje R$463,51".
+**N7 plano** — "Quanto custa abrir": card Grátis · card R$195/mês · card taxa **R$281,08** "vai direto pro Estado" · rodapé "Você paga hoje" (soma taxa + mensalidade). 🔄 01/09: a taxa era R$268,51 (tabela de 19/07); o valor real da guia emitida no processo é R$281,08 (prints 125 e 127). Os cards leem `CUSTOS.DAE_JUCEMG`, então o número acompanha sozinho.
 **N8 contrato** — "Está tudo combinado" · 4 bullets ("taxas do governo à parte", "permanência mínima", "7 dias pra desistir") · card "escritório de verdade" (22 anos + contador + "nada acontece sem você") · aceite.
 **N9 pagamento** — "Falta só isso" (R$463,51 hoje) · CPF (cobrança+elegibilidade) · método (cartão/pix/boleto) · idempotência "nunca cobra duas vezes".
 **N10 socio** — "Seus dados" · CPF/RG/civil/regime (cônjuge comunhão universal) · endereço · "mora fora do Brasil?" + bloqueio exterior.
@@ -202,7 +202,7 @@ _32 telas navegáveis · gerado de `flow-data.mjs`._
 **N16 nome** — "O nome da empresa" · razão social (disponível/em uso) · variações · aviso "confere antes... evitar reprovado".
 **N17 cnae-ótimo** — "Achamos um jeito de pagar menos" · a troca (atual × ótimo) · "Não é malandragem" · "dois caminhos" (pré-explica N18) · warning "antes de trocar" · PDF.
 **N18 simulador** — "Quanto você se paga?" · número + slider + sugestão · aviso borda · custo por sócio · expander "Ver a conta".
-**N19 revisar** 🆕 — "Está tudo certo?" · blocos Você/Empresa/Atividades/Enquadramento + "Ajustar" · card taxa R$268,51 · carimbo estimativa.
+**N19 revisar** 🆕 — "Está tudo certo?" · blocos Você/Empresa/Atividades/Enquadramento + "Ajustar" · card taxa **R$281,08** (01/09, valor real da guia) · carimbo estimativa.
 **N20 termo** 🆕 — "Pode começar a abrir?" · 3 itens · Aviso "não dá pra desfazer" · 4 camadas cancelamento · checkbox.
 **N21 painel / REC** 🆕 — "Estamos abrindo sua empresa" · previsão ~8d · timeline 9 etapas · idempotência · REC "O nome não passou na Junta" + ação.
 **N22 assinatura** 🆕 — "Hora de assinar" · nível GOV.BR (bronze→upgrade) · quem assina (consenso 2 sócios) · procuração e-CAC.

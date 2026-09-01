@@ -154,13 +154,41 @@ export function SocioView({
   const [rg, setRg] = useState("");
   const [orgao, setOrgao] = useState("");
   const [nascimento, setNascimento] = useState("");
+  /**
+   * 🆕 01/09 (2ª passada da auditoria, contra a ata da Izabela) — GAP ASSIMÉTRICO
+   * fechado: o sócio extra tinha nacionalidade desde 31/08, o titular não — e o
+   * contrato social qualifica TODO sócio com nacionalidade (art. 997 CC, visível
+   * no preview real da JUCEMG, print 117: "brasileiro, Empresário, Solteiro…").
+   * Nasce preenchido com "Brasileira", igual ao card do sócio: quem é brasileiro
+   * não digita nada, e quem não é corrige. Fricção perto de zero, e evita
+   * contrato errado pra estrangeiro (que existe no nosso escopo: o gate barra
+   * domicílio fora do Brasil, não nacionalidade).
+   */
+  const [nacionalidade, setNacionalidade] = useState("Brasileira");
   const [civil, setCivil] = useState("");
   const [regime, setRegime] = useState("");
+  /**
+   * 🆕 01/09 (pedido do Pedro) — ENDEREÇO PESSOAL, que era pedido no E6.
+   * Migrou porque lá ele não tinha moldura: a pessoa acabava de responder o
+   * endereço da EMPRESA no E3.4 e o cadastro pedia outro endereço sem dizer
+   * de quem era (pior ainda pra quem escolheu o endereço fiscal da Legalizai).
+   * Aqui a tela toda já se chama "Seus dados", e ele fica junto do resto da
+   * qualificação que o contrato exige (art. 997 CC).
+   *
+   * É o endereço do REPRESENTANTE no DBE (telas 55-58 da gravação): CEP,
+   * número e complemento, com o complemento estruturado (tipo APARTAMENTO +
+   * descrição) sendo trabalho do RPA, não pergunta a mais aqui.
+   */
+  const [cepPessoal, setCepPessoal] = useState("");
+  const [numeroPessoal, setNumeroPessoal] = useState("");
+  const [complementoPessoal, setComplementoPessoal] = useState("");
+  const enderecoPessoal = buscarCep(cepPessoal.replace(/\D/g, ""));
 
   usePreencher(preencher, () => {
     setRg(PREENCHIMENTO.socio.rg);
     setOrgao(PREENCHIMENTO.socio.orgao);
     setNascimento(PREENCHIMENTO.socio.nascimento);
+    setNacionalidade(PREENCHIMENTO.socio.nacionalidade);
     setCivil(PREENCHIMENTO.socio.civil);
     setRegime(PREENCHIMENTO.socio.regime);
   });
@@ -169,6 +197,11 @@ export function SocioView({
     rg.trim() !== "" &&
     orgao.trim() !== "" &&
     nascimento.trim() !== "" &&
+    nacionalidade.trim() !== "" &&
+    // 🆕 01/09 — endereço pessoal (vindo do E6) é obrigatório: é a ficha do
+    // Representante no DBE. Complemento segue opcional.
+    cepPessoal.replace(/\D/g, "").length === 8 &&
+    numeroPessoal.trim() !== "" &&
     // Estado civil/regime só entram no ME (vão pro contrato social).
     (mei || (civil !== "" && (civil !== "casado" || regime !== "")));
 
@@ -202,7 +235,9 @@ export function SocioView({
               <LinhaConfirma rotulo="Nome" valor={CLIENTE.nome} />
               <LinhaConfirma rotulo="CPF" valor={CLIENTE.cpf} />
               <LinhaConfirma rotulo="Telefone" valor={CLIENTE.telefone} />
-              <LinhaConfirma rotulo="Endereço" valor={CLIENTE.endereco} />
+              {/* 🗑️ 01/09 — "Endereço" saiu do card de confirmação: o cadastro
+                  (E6) não coleta mais endereço nenhum. Ele agora é PERGUNTADO
+                  aqui embaixo, com o rótulo dizendo de quem é. */}
             </div>
           </Card>
 
@@ -219,15 +254,26 @@ export function SocioView({
           {/* 🆕 26/08 (achado do cruzamento com a pesquisa JUCEMG/DBE) — data
               de nascimento e nome da mãe são campo padrão do DBE (Receita
               Federal) e não existiam em nenhuma tela do dossiê. */}
-          <Campo rotulo="Data de nascimento">
-            <Texto
-              valor={nascimento}
-              onChange={setNascimento}
-              placeholder="DD/MM/AAAA"
-              inputMode="numeric"
-              maxLength={10}
-            />
-          </Campo>
+          <div className="grid grid-cols-2 gap-3">
+            <Campo rotulo="Data de nascimento">
+              <Texto
+                valor={nascimento}
+                onChange={setNascimento}
+                placeholder="DD/MM/AAAA"
+                inputMode="numeric"
+                maxLength={10}
+              />
+            </Campo>
+            {/* 🆕 01/09 — mesma dupla do card do sócio extra (nascimento +
+                nacionalidade lado a lado), agora também pro titular. */}
+            <Campo rotulo="Nacionalidade">
+              <Texto
+                valor={nacionalidade}
+                onChange={setNacionalidade}
+                placeholder="Brasileira"
+              />
+            </Campo>
+          </div>
 
           {/* 🆕 28/08 — os 2 campos abaixo são do CONTRATO SOCIAL, que o MEI
               não tem. Some no MEI, intacto no ME. */}
@@ -256,6 +302,48 @@ export function SocioView({
                 </div>
               )}
             </Campo>
+          )}
+
+          {/* 🆕 01/09 — ENDEREÇO PESSOAL (migrado do E6). O rótulo diz de quem
+              é, que era exatamente o que faltava lá: no cadastro a pessoa
+              tinha acabado de informar o endereço da EMPRESA e não sabia se
+              estava repetindo. */}
+          <Campo
+            rotulo="Onde você mora"
+            dica="Seu endereço pessoal, não o da empresa. A gente puxa o resto pelo CEP."
+          >
+            <Texto
+              valor={cepPessoal}
+              onChange={(v) => setCepPessoal(mascaraCep(v))}
+              placeholder="00000-000"
+              inputMode="numeric"
+            />
+          </Campo>
+
+          {enderecoPessoal && (
+            <>
+              <div className="-mt-1 rounded-md border border-border-hairline bg-surface-alt px-3 py-2.5 text-caption text-text-secondary">
+                {enderecoPessoal.logradouro}, {enderecoPessoal.bairro} —{" "}
+                {enderecoPessoal.municipio}/{enderecoPessoal.uf}
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <Campo rotulo="Número">
+                  <Texto
+                    valor={numeroPessoal}
+                    onChange={setNumeroPessoal}
+                    placeholder="Nº"
+                    inputMode="numeric"
+                  />
+                </Campo>
+                <Campo rotulo="Complemento">
+                  <Texto
+                    valor={complementoPessoal}
+                    onChange={setComplementoPessoal}
+                    placeholder="Bloco, apto..."
+                  />
+                </Campo>
+              </div>
+            </>
           )}
 
           {/* ─────────────────────────────────────────────────────────────────
@@ -973,6 +1061,7 @@ export function EmpresaView({
   onVoltar,
   mei = false,
   enderecoProprio,
+  inicial,
 }: {
   preencher?: number;
   onSeguir?: () => void;
@@ -990,6 +1079,24 @@ export function EmpresaView({
    * forward, ex.: alguma tela solta da demo).
    */
   enderecoProprio?: boolean;
+  /**
+   * 🆕 01/09 (pedido do Pedro) — o endereço que a pessoa já respondeu no gate
+   * (E3.4, `/endereco`) chega aqui PREENCHIDO: ela completa o que falta (IPTU,
+   * tipo de imóvel, residência) em vez de redigitar CEP e número. Mesma
+   * doutrina que tirou o CPF duplicado do E9 e virou o C1 em confirmação: não
+   * reperguntar o que já foi respondido.
+   *
+   * Vem do `sessionStorage` (ver `lib/rascunho.ts`), não da URL — é dado
+   * pessoal. Ausente (deep-link, `/mockup`, aba nova) = campos vazios, tela
+   * funciona igual.
+   */
+  inicial?: {
+    cep: string;
+    numero: string;
+    complemento: string;
+    tipoImovel: string;
+    resideNoEndereco: boolean | null;
+  };
 }) {
   const jaDecidido = enderecoProprio !== undefined;
   const [usarProprioState, setUsarProprioState] = useState<boolean | null>(
@@ -997,9 +1104,9 @@ export function EmpresaView({
   );
   const usarProprio = jaDecidido ? enderecoProprio : usarProprioState;
   const setUsarProprio = setUsarProprioState;
-  const [cep, setCep] = useState("");
-  const [numero, setNumero] = useState("");
-  const [complemento, setComplemento] = useState("");
+  const [cep, setCep] = useState(inicial?.cep ?? "");
+  const [numero, setNumero] = useState(inicial?.numero ?? "");
+  const [complemento, setComplemento] = useState(inicial?.complemento ?? "");
   const [iptu, setIptu] = useState("");
   const [tipo, setTipo] = useState("");
   // 🔒 31/08 (validado pelo Pedro) — capital social TRAVADO em R$10.000 pra
@@ -1009,7 +1116,9 @@ export function EmpresaView({
   const capital = "10.000";
   // 🆕 31/08 — tipo de imóvel (casa/apartamento/outro), só quando o endereço é
   // PRÓPRIO. Dirige a regra de residência logo abaixo.
-  const [tipoImovel, setTipoImovel] = useState("");
+  // 🔄 01/09 — nasce do que foi respondido no E3.4 (a pergunta subiu pra lá,
+  // pré-pagamento); aqui vira confirmação.
+  const [tipoImovel, setTipoImovel] = useState(inicial?.tipoImovel ?? "");
   // 🆕 28/08 — só o MEI usa (ver o bloco "Como você atende?" mais abaixo).
   const [atuacao, setAtuacao] = useState<string[]>([]);
   /**
@@ -1019,15 +1128,18 @@ export function EmpresaView({
    * responsável" auto-preenchendo do Representante — não existe pergunta
    * separada por sócio extra nesse ponto do fluxo.
    */
-  const [resideNoEndereco, setResideNoEndereco] = useState<boolean | null>(null);
-  // 🆕 31/08 — endereço pessoal do titular, só existe se ele NÃO reside no
-  // endereço fiscal da empresa (usado no DBE/contrato).
-  const [enderecoPessoal, setEnderecoPessoal] = useState({
-    cep: "",
-    numero: "",
-    complemento: "",
-    tipoImovel: "",
-  });
+  const [resideNoEndereco, setResideNoEndereco] = useState<boolean | null>(
+    inicial?.resideNoEndereco ?? null,
+  );
+  /**
+   * 🆕 01/09 — a resposta sobre o imóvel veio do gate (E3.4)? Então esta tela
+   * CONFIRMA em vez de perguntar. Sem isso a pessoa responderia a mesma coisa
+   * duas vezes, com a segunda vez chegando depois de já ter pago.
+   * 🗑️ E o bloco "Onde você mora" saiu daqui: endereço pessoal virou pergunta
+   * fixa do C1, pra todo mundo.
+   */
+  const respostaImovelVeioDoGate =
+    (inicial?.tipoImovel ?? "") !== "" && inicial?.resideNoEndereco !== null;
 
   // A tela mais pesada da constituição — e por isso a que mais precisa do
   // automático numa apresentação. Preenche o caminho "endereço próprio", que é
@@ -1042,7 +1154,6 @@ export function EmpresaView({
     setTipo(p.tipo);
     setTipoImovel(p.tipoImovel);
     setResideNoEndereco(true);
-    setEnderecoPessoal({ cep: "", numero: "", complemento: "", tipoImovel: "" });
   });
 
   const querFiscal = usarProprio === false;
@@ -1078,12 +1189,12 @@ export function EmpresaView({
 
   const tipoImovelOk = !precisaResidencia || tipoImovel !== "";
 
-  const enderecoPessoalCompleto =
-    resideEfetivo !== false ||
-    (enderecoPessoal.cep.replace(/\D/g, "").length === 8 &&
-      enderecoPessoal.numero.trim() !== "" &&
-      enderecoPessoal.tipoImovel !== "");
-
+  /**
+   * 🔄 01/09 (pedido do Pedro) — o endereço PESSOAL saiu daqui: ele agora é
+   * perguntado no C1 pra todo mundo, sempre, com rótulo próprio ("Onde você
+   * mora"). Antes só era pedido no ramo "não moro no endereço da empresa", o
+   * que deixava o DBE sem a ficha do Representante em todos os outros casos.
+   */
   const enderecoOk =
     querFiscal ||
     (usarProprio === true &&
@@ -1095,8 +1206,7 @@ export function EmpresaView({
       (mei || iptuOk) &&
       tipo !== "" &&
       tipoImovelOk &&
-      (!precisaResidencia || resideEfetivo !== null) &&
-      enderecoPessoalCompleto);
+      (!precisaResidencia || resideEfetivo !== null));
 
   /**
    * 🐛 29/07 — O CAPITAL SOCIAL ESCAPAVA. A condição era
@@ -1119,8 +1229,12 @@ export function EmpresaView({
 
       <main className="app-main">
         {/* ✍️ 29/07 — o título era "Onde a empresa fica?", mas a tela também
-            coleta capital social, que não é lugar nenhum. */}
-        <Titulo sub="O endereço vai no CNPJ, e o capital social entra no contrato.">
+            coletava capital social, que não é lugar nenhum.
+            🐛→✍️ 01/09 (achado pelo E2E) — o SUBTÍTULO continuou prometendo
+            capital social depois que o campo saiu (31/08, valor travado em
+            R$10.000 no backend). Trocado pelo que a tela de fato faz: é o
+            endereço que a Prefeitura analisa pra deferir ou indeferir. */}
+        <Titulo sub="O endereço vai no CNPJ, e é ele que a Prefeitura analisa pra liberar a empresa.">
           Os dados da empresa
         </Titulo>
 
@@ -1304,8 +1418,34 @@ export function EmpresaView({
 
               {/* 🆕 31/08 (achado da gravação real JUCEMG) — só existe quando o
                   endereço é PRÓPRIO: coworking/virtual não têm essa ambiguidade
-                  residencial. MEI segue de fora — mesma guarda de sempre. */}
-              {precisaResidencia && (
+                  residencial. MEI segue de fora — mesma guarda de sempre.
+                  🔄 01/09 — quando a resposta JÁ VEIO do E3.4 (o normal no flow
+                  real), vira confirmação read-only: a regra do apartamento
+                  agora é decidida antes do pagamento, e reperguntar aqui seria
+                  o mesmo eco que o C1 já deixou de fazer com nome/CPF. O campo
+                  editável sobrevive pro deep-link/mockup, onde não há resposta
+                  anterior nenhuma. */}
+              {/* A confirmação read-only não depende do "Como é esse endereço?"
+                  (próprio × coworking), que é pergunta DESTA tela: se a
+                  resposta sobre o imóvel já veio do gate, ela vale desde o
+                  primeiro render — senão a pessoa veria um vazio até escolher
+                  algo que ela já respondeu de outro jeito lá atrás. */}
+              {!mei && usarProprio === true && respostaImovelVeioDoGate && (
+                <div className="rounded-md border border-border-hairline bg-surface-alt p-3">
+                  <p className="text-caption font-semibold text-text-primary">
+                    Sobre o imóvel, você já respondeu
+                  </p>
+                  <p className="text-caption text-text-secondary mt-0.5">
+                    {TIPO_IMOVEL.find((t) => t.v === tipoImovel)?.label} ·{" "}
+                    {resideEfetivo ? "você mora nele" : "você não mora nele"}
+                  </p>
+                </div>
+              )}
+
+              {/* Fallback editável: deep-link, `/mockup` e apresentação, onde
+                  não existe resposta anterior. Segue preso ao endereço PRÓPRIO
+                  (coworking não tem ambiguidade residencial). */}
+              {precisaResidencia && !respostaImovelVeioDoGate && (
                 <Campo rotulo="Esse endereço é casa ou apartamento?">
                   <Select valor={tipoImovel} onChange={setTipoImovel} opcoes={TIPO_IMOVEL} />
                 </Campo>
@@ -1316,7 +1456,7 @@ export function EmpresaView({
                   único (SLU) — visto ao vivo indo de indeferido pra deferido
                   só mudando essa resposta. 🔒 validado pelo Pedro: é sempre
                   sobre o TITULAR (quem constitui), nunca sobre sócio extra. */}
-              {precisaResidencia && (
+              {precisaResidencia && !respostaImovelVeioDoGate && (
                 <div>
                   <p className="text-caption font-semibold text-text-primary mb-2">
                     Você mora nesse endereço?
@@ -1338,54 +1478,10 @@ export function EmpresaView({
                       onChange={setResideNoEndereco}
                     />
                   )}
-
-                  {/* 🆕 31/08 — se você NÃO reside aqui, precisa informar onde
-                      mora (endereço pessoal), pra constar no DBE/contrato. */}
-                  {resideEfetivo === false && (
-                    <div className="mt-2 flex flex-col gap-3 rounded-md border border-border-hairline bg-surface-alt p-3">
-                      <p className="text-caption font-semibold text-text-primary">
-                        Onde você mora
-                      </p>
-                      <div className="grid grid-cols-2 gap-3">
-                        <Campo rotulo="CEP">
-                          <Texto
-                            valor={enderecoPessoal.cep}
-                            onChange={(v) =>
-                              setEnderecoPessoal((e) => ({ ...e, cep: mascaraCep(v) }))
-                            }
-                            placeholder="00000-000"
-                            inputMode="numeric"
-                          />
-                        </Campo>
-                        <Campo rotulo="Número">
-                          <Texto
-                            valor={enderecoPessoal.numero}
-                            onChange={(v) => setEnderecoPessoal((e) => ({ ...e, numero: v }))}
-                            placeholder="Nº"
-                            inputMode="numeric"
-                          />
-                        </Campo>
-                      </div>
-                      <Campo rotulo="Complemento">
-                        <Texto
-                          valor={enderecoPessoal.complemento}
-                          onChange={(v) =>
-                            setEnderecoPessoal((e) => ({ ...e, complemento: v }))
-                          }
-                          placeholder="Bloco, apto..."
-                        />
-                      </Campo>
-                      <Campo rotulo="É casa ou apartamento?">
-                        <Select
-                          valor={enderecoPessoal.tipoImovel}
-                          onChange={(v) =>
-                            setEnderecoPessoal((e) => ({ ...e, tipoImovel: v }))
-                          }
-                          opcoes={TIPO_IMOVEL}
-                        />
-                      </Campo>
-                    </div>
-                  )}
+                  {/* 🗑️ 01/09 — o bloco "Onde você mora" saiu daqui: o endereço
+                      pessoal virou pergunta fixa do C1, pra TODO mundo (antes
+                      só existia neste ramo, e o DBE ficava sem a ficha do
+                      Representante em todos os outros casos). */}
                 </div>
               )}
 

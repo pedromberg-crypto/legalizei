@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
-import { Campo, Texto, Select } from "@/components/ui/form";
+import { Campo, Texto, Select, OpcoesLinha } from "@/components/ui/form";
 import { PILLS, CheckMiniRegime } from "@/components/gate-telas";
 import { mascaraTelefone, mascaraCep, buscarCep } from "@/components/wizard-dinheiro";
 import { ehCepBh } from "@/lib/endereco";
@@ -211,6 +211,10 @@ export function EnderecoCategoriaView({
   setNumero,
   complemento,
   setComplemento,
+  tipoImovel,
+  setTipoImovel,
+  resideNoEndereco,
+  setResideNoEndereco,
   categoria,
   setCategoria,
   onSeguir,
@@ -230,6 +234,28 @@ export function EnderecoCategoriaView({
   /** 🆕 29/08 (achado do Pedro) — faltava o campo, só tinha número. */
   complemento: string;
   setComplemento: (v: string) => void;
+  /**
+   * 🆕 01/09 (pedido do Pedro, achado da reunião com a Izabela) — tipo de
+   * imóvel e residência SUBIRAM do C4 (pós-pagamento) pra cá (pré-pagamento).
+   *
+   * ─── POR QUE ELES MUDARAM DE LUGAR ───────────────────────────────────────
+   * A regra é da Prefeitura de BH e decide deferimento: **se o endereço da
+   * EMPRESA é apartamento, um sócio precisa residir nele** — vimos ao vivo a
+   * mesma empresa ir de indeferida pra deferida só trocando essa resposta.
+   *
+   * No C4 isso acontecia DEPOIS do pagamento, e o app travava a resposta em
+   * "Sim" quando era apartamento — quem tem apartamento onde NÃO mora ficava
+   * sem caminho honesto: declarar algo falso ou abandonar, já tendo pago. Aqui
+   * a mesma pessoa descobre antes de pagar e ganha a saída de verdade (usar o
+   * endereço fiscal da Legalizai), que já entra somada no preço do E7.
+   *
+   * `tipoImovel`: "" (não respondeu) · "casa" · "apartamento" · "outro".
+   * `resideNoEndereco`: `null` (não respondeu) · `true` · `false`.
+   */
+  tipoImovel: string;
+  setTipoImovel: (v: string) => void;
+  resideNoEndereco: boolean | null;
+  setResideNoEndereco: (v: boolean) => void;
   /** id de uma das `PILLS`. `null` = ainda não escolheu. */
   categoria: string | null;
   setCategoria: (v: string | null) => void;
@@ -308,6 +334,22 @@ export function EnderecoCategoriaView({
   const categoriaSemMei =
     regimeMei && categoria !== null && !atividadeForaLista && !categoriaTemMei(categoria);
 
+  /**
+   * 🆕 01/09 — regra do imóvel, aplicada ANTES do pagamento (subiu do C4).
+   *
+   * · O MEI não passa por Junta nem por análise da Prefeitura na abertura
+   *   (declara e abre), então a regra não vale pra ele: `imovelOk` é sempre
+   *   verdadeiro no caminho MEI, e os campos nem aparecem.
+   * · Pro ME: precisa dizer o tipo de imóvel e, se for apartamento, precisa
+   *   residir nele — senão a Prefeitura indefere. "Não moro" não trava a
+   *   pessoa numa tela sem saída: revela a rota do endereço fiscal.
+   */
+  const exigeImovel = !regimeMei && enderecoProprio === true && cepValido;
+  const apartamentoSemResidencia = tipoImovel === "apartamento" && resideNoEndereco === false;
+  const imovelOk =
+    regimeMei ||
+    (tipoImovel !== "" && resideNoEndereco !== null && !apartamentoSemResidencia);
+
   const enderecoResolvido = atividadeForaLista
     ? cepCheio // só precisa saber a cidade, não validar/escolher endereço
     : regimeMei
@@ -316,7 +358,7 @@ export function EnderecoCategoriaView({
         cepValido && numero.trim() !== ""
       : filaCidade ||
         enderecoProprio === false ||
-        (enderecoProprio === true && cepValido && numero.trim() !== "");
+        (enderecoProprio === true && cepValido && numero.trim() !== "" && imovelOk);
   // 🔒 29/08 (pedido do Pedro) — `categoria !== null` é OBRIGATÓRIO em
   // qualquer caminho de endereço, inclusive `filaCidade`: é dado importante
   // pra estratégia de mkt quando a Legalizai chegar na cidade da pessoa.
@@ -701,6 +743,60 @@ export function EnderecoCategoriaView({
                           </Campo>
                         </div>
                       </div>
+
+                      {/* 🆕 01/09 — a regra de deferimento da Prefeitura, agora
+                          ANTES do dinheiro. Ver o comentário grande na prop
+                          `tipoImovel` pra o porquê da mudança de lugar. */}
+                      {exigeImovel && (
+                        <>
+                          <Campo rotulo="Esse endereço é casa ou apartamento?">
+                            <Select
+                              valor={tipoImovel}
+                              onChange={setTipoImovel}
+                              opcoes={[
+                                { v: "casa", label: "Casa" },
+                                { v: "apartamento", label: "Apartamento" },
+                                { v: "outro", label: "Outro (sala, loja, galpão)" },
+                              ]}
+                            />
+                          </Campo>
+
+                          {tipoImovel !== "" && (
+                            <div>
+                              <p className="text-caption font-semibold text-text-primary mb-2">
+                                Você mora nesse endereço?
+                              </p>
+                              {/* Mesmo componente que a C4 usava pra esta
+                                  pergunta — a tela mudou, o padrão não. */}
+                              <OpcoesLinha
+                                opcoes={[
+                                  { v: false, label: "Não" },
+                                  { v: true, label: "Sim" },
+                                ]}
+                                valor={resideNoEndereco}
+                                onChange={setResideNoEndereco}
+                              />
+                            </div>
+                          )}
+
+                          {/* 🔴 A saída honesta que faltava. Antes (no C4, pós-
+                              pagamento) o app travava a resposta em "Sim" e
+                              quem não morava lá não tinha caminho. */}
+                          {apartamentoSemResidencia && (
+                            <Aviso
+                              variante="warning"
+                              titulo="Apartamento só serve se você morar nele"
+                            >
+                              A Prefeitura de Belo Horizonte indefere empresa em
+                              apartamento quando nenhum sócio mora no endereço. Dá
+                              pra resolver de dois jeitos: usar outro endereço seu,
+                              ou usar o endereço da Legalizai por{" "}
+                              {brl(CUSTOS.ENDERECO_FISCAL)}/mês, que já entra na
+                              conta antes de você pagar qualquer coisa.
+                            </Aviso>
+                          )}
+                        </>
+                      )}
                     </>
                   )
                 )}

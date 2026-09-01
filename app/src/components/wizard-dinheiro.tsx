@@ -163,18 +163,9 @@ export function ContaView({
   const nomeOk = d.nome.trim().split(/\s+/).length >= 2;
   const cpfCheio = d.cpf.replace(/\D/g, "").length === 11;
   const telefoneCheio = d.telefone.replace(/\D/g, "").length >= 10;
-  const cepDigitos = d.cep.replace(/\D/g, "");
-  const cepCheio = cepDigitos.length === 8;
-  const endereco = buscarCep(cepDigitos);
-
+  // 🗑️ 01/09 — idem layout "classico": endereço pessoal migrou pro C1.
   const completo =
-    nomeOk &&
-    cpfCheio &&
-    telefoneCheio &&
-    /@/.test(d.email) &&
-    d.senha.length >= 8 &&
-    cepCheio &&
-    d.numero.trim() !== "";
+    nomeOk && cpfCheio && telefoneCheio && /@/.test(d.email) && d.senha.length >= 8;
 
   if (etapa === "codigo") {
     return (
@@ -313,30 +304,8 @@ export function ContaView({
             />
           </Campo>
 
-          {/* 🆕 Endereço — mesmo autofill do N13, front-load 28/07. */}
-          <Campo rotulo="Seu CEP" dica="A gente puxa o resto do endereço.">
-            <Texto
-              valor={d.cep}
-              onChange={(v) => set("cep", mascaraCep(v))}
-              placeholder="00000-000"
-              inputMode="numeric"
-            />
-          </Campo>
-          {endereco && (
-            <>
-              <div className="-mt-3 rounded-md border border-border-hairline bg-surface-alt px-3 py-2.5 text-caption text-text-secondary">
-                {endereco.logradouro}, {endereco.bairro} — {endereco.municipio}/{endereco.uf}
-              </div>
-              <div className="-mt-3 w-24">
-                <Texto
-                  valor={d.numero}
-                  onChange={(v) => set("numero", v)}
-                  placeholder="Nº"
-                  inputMode="numeric"
-                />
-              </div>
-            </>
-          )}
+          {/* 🗑️ 01/09 — endereço pessoal saiu do cadastro e foi pro C1 (ver a
+              nota longa no layout "painel", que é o de produção). */}
 
           {/* 🔴 24/08 (reunião Rua Satélite 35) — coorte SAIU daqui, realocada
               pra `FaixaView` (E5F, `gate-telas.tsx`). Este `layout="classico"`
@@ -427,8 +396,6 @@ function ContaPainel({
   const nomeOk = d.nome.trim().split(/\s+/).length >= 2;
   const cpfCheio = d.cpf.replace(/\D/g, "").length === 11;
   const telefoneCheio = d.telefone.replace(/\D/g, "").length >= 10;
-  const cepDigitos = d.cep.replace(/\D/g, "");
-  const endereco = buscarCep(cepDigitos);
   // 🆕 30/08 (pedido do Pedro) — senha forte de verdade (maiúscula + minúscula
   // + número, mín. 8), e confirmação tem que bater com a senha. Conta social
   // nunca passa por aqui: `senha` vira o valor mock `__social__`.
@@ -437,15 +404,11 @@ function ContaPainel({
   const senhaOk = social !== null || (senhaForte && d.senha === d.confirmarSenha);
   // Com o lead já captado (E3.1 + E3.3), o que falta pra virar conta é só CPF
   // e senha — os outros campos nem aparecem, então não podem travar o CTA.
+  // 🗑️ 01/09 — CEP/número saíram da conta (viraram o endereço pessoal do C1),
+  // então não travam mais o CTA.
   const completo = leadJaCaptado
     ? cpfCheio && senhaOk
-    : nomeOk &&
-      cpfCheio &&
-      telefoneCheio &&
-      /@/.test(d.email) &&
-      senhaOk &&
-      cepDigitos.length === 8 &&
-      d.numero.trim() !== "";
+    : nomeOk && cpfCheio && telefoneCheio && /@/.test(d.email) && senhaOk;
 
   return (
     <main className="app-main">
@@ -651,82 +614,17 @@ function ContaPainel({
             </>
           )}
 
-          {/* 🔴 27/08 — CEP e número saíram daqui: o endereço da EMPRESA agora
-              é perguntado no E3.3 (`/endereco`), que também é onde o gate de
-              BH acontece. Pedir de novo aqui reperguntaria o mesmo dado com
-              outra pergunta implícita ("é o seu endereço ou o da empresa?"),
-              que era ambíguo desde o front-load de 28/07. */}
-          {!leadJaCaptado && (
-            <>
-              <CampoIconeConta icone={<IconeLocal />}>
-                <input
-                  value={d.cep}
-                  onChange={(e) => set("cep", mascaraCep(e.target.value))}
-                  placeholder="CEP"
-                  aria-label="CEP"
-                  inputMode="numeric"
-                  autoComplete="postal-code"
-                  className="min-h-12 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
-                />
-              </CampoIconeConta>
-
-              {/* Endereço em LINHA PRÓPRIA, sem truncate: cortar o logradouro
-                  esconde justamente o que a pessoa precisa conferir. O número
-                  vem abaixo, com largura inteira. */}
-              {endereco && (
-                <>
-                  <div className="rounded-lg bg-surface-alt px-4 py-3">
-                    <p className="text-caption text-text-secondary">
-                      {endereco.logradouro}, {endereco.bairro}
-                    </p>
-                    <p className="text-caption text-text-secondary">
-                      {endereco.municipio}/{endereco.uf}
-                    </p>
-                  </div>
-                  {/* Número + Complemento na mesma linha: complemento é curto
-                      (apto/bloco/sala) e não merece a largura inteira que o
-                      resto do form usa — economiza altura de tela num form
-                      já longo. */}
-                  <div className="flex gap-3">
-                    <div className="min-w-0 flex-1">
-                      <CampoIconeConta>
-                        <input
-                          value={d.numero}
-                          onChange={(e) => set("numero", e.target.value)}
-                          placeholder="Número"
-                          aria-label="Número"
-                          inputMode="numeric"
-                          className="min-h-12 min-w-0 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
-                        />
-                      </CampoIconeConta>
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <CampoIconeConta>
-                        <input
-                          value={d.complemento}
-                          onChange={(e) => set("complemento", e.target.value)}
-                          placeholder="Complemento"
-                          aria-label="Complemento"
-                          className="min-h-12 min-w-0 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
-                        />
-                      </CampoIconeConta>
-                    </div>
-                  </div>
-
-                  {/* 🆕 28/08 (pedido do Pedro) — nota discreta: este CEP e
-                      endereço são os DO TITULAR (pessoa física), não da
-                      empresa (esse já foi resolvido no E3.3/`/endereco`, ou
-                      será perguntado depois se a pessoa chegar direto aqui).
-                      Existe pra fechar a ambiguidade que o comentário de
-                      27/08 acima já registrava por escrito, mas nunca tinha
-                      virado copy visível pro usuário. */}
-                  <p className="text-micro text-text-tertiary -mt-1">
-                    Esse é o seu endereço pessoal, não o da empresa.
-                  </p>
-                </>
-              )}
-            </>
-          )}
+          {/* 🗑️ 01/09 (pedido do Pedro) — O ENDEREÇO PESSOAL SAIU DAQUI.
+              Duas telas antes (E3.4) a pessoa responde o endereço da EMPRESA;
+              pedir outro endereço no cadastro, sem moldura, fazia parecer que
+              era o mesmo dado de novo — e ficava pior pra quem escolheu o
+              endereço fiscal da Legalizai ("eu já disse que uso o de vocês").
+              A nota discreta de 28/08 ("esse é o seu endereço pessoal") não
+              resolvia: chegava depois da dúvida. Agora o endereço pessoal é
+              perguntado no C1 (`/dossie/socio`), junto do resto da
+              qualificação da pessoa (RG, nascimento, nacionalidade, estado
+              civil), onde a moldura da tela já diz de quem é. Efeito colateral
+              bom: o E6 fica mais curto, e ele é PRÉ-pagamento. */}
         </div>
 
         {/* 🔴 24/08 (reunião Rua Satélite 35) — a pergunta "é a primeira
@@ -849,9 +747,8 @@ function IconeEmailConta() {
 function IconeCadeadoConta() {
   return <svg {...ic20()}><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>;
 }
-function IconeLocal() {
-  return <svg {...ic20()}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z" /><circle cx="12" cy="10" r="3" /></svg>;
-}
+// 🗑️ 01/09 — `IconeLocal` (pin de endereço) saiu junto do bloco de endereço
+// pessoal, que migrou pro C1.
 function IconeOlhoAberto() {
   return <svg {...ic20()}><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>;
 }

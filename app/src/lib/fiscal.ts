@@ -46,10 +46,21 @@ export const FISCAL = {
  * é exatamente o pecado anti-guru que o vault proíbe.
  */
 export const CUSTOS = {
-  /** 🟢 RATIFICADO 19/07 em fonte primária. O "~R$288" que a gente repetia
-   *  desde 09/07 estava errado — era o número mais citado e menos verificado
-   *  do projeto. Repasse ao Estado: não é margem nossa e não é reembolsável. */
-  DAE_JUCEMG: 268.51,
+  /**
+   * 🟢 VALOR REAL, visto na guia emitida no processo de verdade (01/09):
+   * **R$281,08** (JUCEMG R$281,08 + CNE R$0,00 — print 125), confirmado pelo
+   * PDF do DAE (print 127). Repasse ao Estado: não é margem nossa e não é
+   * reembolsável.
+   *
+   * 🔄 Substitui os R$268,51 ratificados em 19/07 na tabela de preços da
+   * JUCEMG. Os dois números provavelmente não se contradizem: a tela de
+   * conferência (print 124) cobra **2 atos** — Contrato ×1 **e** Enquadramento
+   * de ME ×1 (evento 315) — e a diferença de R$12,57 bate com um 2º ato
+   * pequeno. Ou seja: a tabela dava o preço do contrato, e toda constituição
+   * nossa paga contrato + enquadramento. 🟡 A decomposição é hipótese (não
+   * conferi linha a linha na tabela vigente); o TOTAL é fato observado.
+   */
+  DAE_JUCEMG: 281.08,
   /** 🟢 Preço real ME (fase de lançamento), decisão 20/08 (`marca/decisoes-marca.md`):
    *  R$79/mês nos 3 primeiros meses, depois R$139/mês — este valor é o
    *  ESTÁVEL pós-promoção. Substituiu o placeholder de benchmark (R$195,

@@ -60,7 +60,19 @@ export default function AguardandoPage() {
       temSocios={TEM_SOCIO}
       pago={pago}
       fase={fase}
-      onPagarDae={() => router.push("/certificado")}
+      /**
+       * 🗑️ 01/09 (decisão do Pedro) — ia pro gate de certificado (A3.2). A
+       * tela SAIU do caminho de constituição de ME: o certificado digital é
+       * incluso no plano e emitido por nós "quando chegar a hora", o que a
+       * própria tela do plano (E7) já promete. Pedir upload/entrevista de
+       * certificado no meio da abertura era cobrar do cliente uma coisa que a
+       * gente faz por ele — e o motivo documentado pra ela existir aqui
+       * (a procuração eletrônica exigiria certificado já validado) não se
+       * sustenta: o certificado é e-CNPJ, e o CNPJ ainda nem existe neste
+       * ponto do flow. Segue viva pro MEI (`/certificado?regime=mei`) e pro
+       * caminho migrar, onde a empresa já existe.
+       */
+      onPagarDae={() => router.push("/assinatura")}
       // 🔄 27/08 — a 1ª tela do dossiê virou a C0 (`/dossie/atividade`), não
       // mais o C1. Mesma mudança do `/pagamento` (racional lá).
       // 🐛 28/08 — faltava o ramo MEI: ia sempre pra C0 (ME), mesmo quando

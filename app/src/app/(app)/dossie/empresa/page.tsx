@@ -1,9 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { EmpresaView } from "@/components/wizard-dossie";
 import { ehMei, comRegime } from "@/lib/regime";
 import { ehEnderecoFiscal } from "@/lib/endereco";
+import { lerRascunhoEndereco, type RascunhoEndereco } from "@/lib/rascunho";
 
 /** 🆕 03/08 — ponto de REENCONTRO dos 2 caminhos: MEI cai aqui direto da C1
  *  (pulou C2/C3); ME chega pela sequência normal via C3. Capital social some
@@ -56,8 +58,55 @@ export default function EmpresaPage() {
   // pergunta de novo, só confirma (ver `jaDecidido` em `EmpresaView`).
   const enderecoFiscal = ehEnderecoFiscal(searchParams);
 
+  /**
+   * 🆕 01/09 (pedido do Pedro) — PRA QUEM USA O NOSSO ENDEREÇO, ESTA TELA NÃO
+   * EXISTE. Quem escolheu o endereço fiscal da Legalizai lá no E3.4 não tem
+   * nada pra responder aqui: CEP/número/complemento são NOSSOS, IPTU é nosso,
+   * tipo de imóvel e residência do titular não se aplicam (o endereço não é
+   * dele), metragem e forma de atuação são internas. Sobrava uma tela só pra
+   * confirmar uma escolha que a pessoa já fez e já viu somada no preço (E7).
+   *
+   * O MEI é exceção e continua vendo a tela mesmo com endereço fiscal: lá
+   * existe a pergunta "Como você atende?" (forma de atuação multi-seleção),
+   * que interage com a dispensa de alvará e não tem como ser preenchida por
+   * nós (ver bloco `mei` em `EmpresaView`).
+   *
+   * O `replace` (não `push`) é de propósito: a tela não pode entrar no
+   * histórico, senão o "voltar" do C7 cai numa tela que não existe pra ela.
+   */
+  const pula = enderecoFiscal && !mei;
+
+  useEffect(() => {
+    if (pula) router.replace(comRegime("/dossie/nome", mei));
+  }, [pula, mei, router]);
+
+  /**
+   * Rascunho do endereço respondido no E3.4 — lido DEPOIS da montagem porque
+   * `sessionStorage` não existe no servidor. Ler no initializer do `useState`
+   * faria o HTML do servidor (campos vazios) divergir do cliente (campos
+   * preenchidos), que é erro de hidratação.
+   *
+   * O `set` dentro do efeito é o caso legítimo da regra (sincronizar um store
+   * externo que só existe no cliente), não estado derivado de props — por isso
+   * o disable pontual, com o motivo à vista.
+   */
+  const [inicial, setInicial] = useState<RascunhoEndereco | null>(null);
+  useEffect(() => {
+    if (pula) return;
+    const rascunho = lerRascunhoEndereco();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- store client-only (sessionStorage), lido após a montagem
+    if (rascunho) setInicial(rascunho);
+  }, [pula]);
+
+  if (pula) return null;
+
   return (
     <EmpresaView
+      // 🔑 `key` força o remount quando o rascunho chega: os campos do
+      // EmpresaView nascem do estado inicial, e sem isso a leitura tardia
+      // (pós-montagem) não apareceria na tela.
+      key={inicial ? "com-rascunho" : "sem-rascunho"}
+      inicial={inicial ?? undefined}
       mei={mei}
       enderecoProprio={!enderecoFiscal}
       // 🔄 28/08 (pedido do Pedro) — C5 (CNAE secundários) SAIU daqui: agora

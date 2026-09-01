@@ -28,7 +28,6 @@ import {
   SociosView,
   EmpresaView,
   CnaeSecundariosView,
-  NaturezaView,
   NomeView,
 } from "@/components/wizard-dossie";
 import {
@@ -260,6 +259,7 @@ type Etapa =
   | "plano"
   | "pagamento"
   | "splash-pagamento"
+  | "splash-boleto"
   | "aguardando-pago"
   // ─── CONSTITUIÇÃO · o dossiê (29/07) ─────────────────────────────────────
   // Depois do dinheiro, a coleta. Estas 7 só puderam entrar na demo junto com
@@ -270,7 +270,10 @@ type Etapa =
   | "socios"
   | "empresa"
   | "cnae-secundarios"
-  | "natureza"
+  // 🗑️ 01/09 — "natureza" (C6) saiu daqui. A rota `/dossie/natureza` foi
+  // apagada em 31/08 (SLU × LTDA virou decisão interna), mas a apresentação
+  // continuava importando, listando e renderizando a tela: quem passasse a
+  // demo mostraria pra gestão um passo que não existe mais no produto.
   | "nome"
   // ─── APROVAÇÃO (A1–A5) + as 2 pausas de pagamento (C0.1, E9.1) — 29/07 ──
   // C0.1/E9.1 NÃO são sequenciais: são pausas de pagamento (`E9--boleto-->E9.1`,
@@ -301,7 +304,6 @@ type Etapa =
   | "retomar-cpf"
   | "retomar"
   | "aguardando"
-  | "certificado"
   | "fim";
 
 /**
@@ -318,7 +320,6 @@ const ETAPAS_DOSSIE = [
   "vinculo",
   "socios",
   "empresa",
-  "natureza",
   "nome",
 ] as const satisfies readonly Etapa[];
 
@@ -358,10 +359,11 @@ const ETAPAS_CAUDA = [
   "termo",
   "painel",
   "painel-recusa",
-  // 🆕 26/08 (reunião Rua Satélite 36, item 7) — A3.2, entre painel e
-  // assinatura. Certificado agora é validado ANTES de assinar (a procuração
-  // que sai junto da assinatura exige o certificado já pronto).
-  "certificado",
+  // 🗑️ 01/09 (decisão do Pedro) — "certificado" (A3.2) SAIU do caminho ME. O
+  // certificado é incluso no plano e emitido pela Legalizai quando for preciso,
+  // e a justificativa que a colocou aqui em 26/08 ("a procuração exige
+  // certificado validado") não se sustenta: certificado é e-CNPJ, e o CNPJ
+  // ainda não existe neste ponto do flow. Segue no MEI ("m-certificado").
   "assinatura",
   "ativacao",
 ] as const satisfies readonly Etapa[];
@@ -469,6 +471,10 @@ const ETAPAS_ESPERA = [
   // (`naEspera`) e ficam fora do `mostraPreencher`.
   "splash-atendido",
   "splash-pagamento",
+  // 🆕 01/09 (auditoria mapa × apresentação) — E9.SB existia no mapa desde
+  // 31/08 e nunca tinha entrado aqui: quem paga por BOLETO via este splash,
+  // não o de "pagamento confirmado" (nada foi pago ainda).
+  "splash-boleto",
   "aguardando-pago",
 ] as const satisfies readonly Etapa[];
 
@@ -578,13 +584,13 @@ type Momento =
   | "plano"
   | "pagamento"
   | "splash-pagamento"
+  | "splash-boleto"
   | "aguardando-pago"
   | "socio"
   | "vinculo"
   | "socios"
   | "empresa"
   | "cnae-secundarios"
-  | "natureza"
   | "nome"
   | "revisar"
   | "termo"
@@ -611,7 +617,6 @@ type Momento =
   | "retomar-cpf"
   | "retomar"
   | "aguardando"
-  | "certificado"
   | "fim";
 
 /**
@@ -768,13 +773,6 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
       id: "✍️ título",
       oque: "'Onde a empresa fica?' numa tela que também coleta capital social, que não é lugar nenhum. Virou 'Os dados da empresa'.",
       status: "✅ aplicado",
-    },
-  ],
-  natureza: [
-    {
-      id: "🐛 BUG-07",
-      oque: "O GUARD-RAIL NUNCA TINHA RODADO. `TEM_SOCIO` era um const false local, e a condição de incoerência é 'escolheu dono único E tem sócio' — sempre falsa. O bloco de bloqueio jamais renderizou, nem uma vez, em review nenhuma, e o doc da tela afirmava que o mock existia justamente 'pra provar o guard-rail'. Com a fonte única (hoje com sócio) o caminho virou alcançável. E apareceu que a copy mentiria: dizia 'A gente já ajustou pra você' e nada ajustava, só desabilitava o botão — agora o aviso traz o botão que faz o que ele promete.",
-      status: "✅ corrigido no NaturezaView (29/07)",
     },
   ],
   nome: [
@@ -938,8 +936,13 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   dados: "/dados",
   "mei-ou-me": "/entrada?intencao=abrir",
   endereco: "/endereco",
-  "fora-bh": "/saida/fora-bh",
-  "fora-bh-enviado": "/saida/fora-bh",
+  // 🐛→🔒 01/09 (auditoria mapa × apresentação) — apontavam pra
+  // `/saida/fora-bh`, rota que NÃO EXISTE (a pasta `(wizard)/saida/` só tem
+  // cnpj-inapto, mei-outra-empresa, mei-servidor e regime-nao-suportado). O
+  // gate virou INLINE no E3.4 em 30/08 (nó E3.4.1 do mapa) e o link de "abrir
+  // a tela real" ficou 404 desde então. Agora aponta pro simulador do gate.
+  "fora-bh": "/endereco?simular=fora-bh",
+  "fora-bh-enviado": "/endereco?simular=fora-bh",
   // 🔄 27/08 — atravessaram o pagamento: viraram a C0 (`/dossie/atividade`).
   perguntando: "/dossie/atividade",
   analisando: "/dossie/atividade",
@@ -951,9 +954,14 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   "veredito-descarta": "/veredito/descartado",
   triagem: "/gate?etapa=triagem",
   faixa: "/gate?etapa=faixa",
-  "saida-exterior": "/saida/exterior",
-  "saida-socios": "/saida/socios",
-  "saida-socio-pj": "/saida/socio-pj",
+  // 🐛→🔒 01/09 (auditoria mapa × apresentação) — as 3 apontavam pra rotas que
+  // NÃO EXISTEM (`/saida/exterior`, `/saida/socios`, `/saida/socio-pj`). Em
+  // 29/08 as três saídas viraram UM card informativo com escape inline dentro
+  // da triagem (nó E5T.1 do mapa, "sócio não se encaixa"); as telas dedicadas
+  // deixaram de existir e ninguém corrigiu o link. Apontam pro gate real.
+  "saida-exterior": "/gate?etapa=triagem&simular=socio-nao-encaixa",
+  "saida-socios": "/gate?etapa=triagem&simular=socio-nao-encaixa",
+  "saida-socio-pj": "/gate?etapa=triagem&simular=socio-nao-encaixa",
   "m-impedimento": "/gate?etapa=triagem&regime=mei",
   "m-ocupacao": "/dossie/ocupacao",
   "m-proximos-passos": "/mei/proximos-passos",
@@ -966,13 +974,13 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   plano: "/plano",
   pagamento: "/pagamento",
   "splash-pagamento": "/splash-pagamento",
+  "splash-boleto": "/splash-boleto",
   "aguardando-pago": "/aguardando?pago=1",
   socio: "/dossie/socio",
   vinculo: "/dossie/vinculo",
   socios: "/dossie/socios",
   empresa: "/dossie/empresa",
   "cnae-secundarios": "/dossie/cnae-secundarios",
-  natureza: "/dossie/natureza",
   nome: "/dossie/nome",
   revisar: "/revisar",
   termo: "/termo",
@@ -996,7 +1004,6 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   "retomar-cpf": "/retomar",
   retomar: "/retomar",
   aguardando: "/aguardando",
-  certificado: "/certificado",
 };
 
 const SUFIXO_MOMENTO: Partial<Record<Momento, string>> = {
@@ -1244,7 +1251,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     interfere:
       "Não interfere na constituição em si, mas é o que separa nossa receita do repasse ao Estado. A taxa da Junta passa direto pra JUCEMG.",
     porque:
-      "Os 3 baldes não podem se misturar: 'abertura grátis' significa honorário zero, NUNCA governo zero. Esconder o repasse dentro do preço viraria pegadinha lá na frente. Por isso o total do dia fica no rodapé, conferível, mas quem é herói na tela é o 'Grátis'.",
+      "Os 3 baldes não podem se misturar: 'abertura grátis' significa honorário zero, NUNCA governo zero. Esconder o repasse dentro do preço viraria pegadinha lá na frente. Por isso o total do dia fica no rodapé, conferível, mas quem é herói na tela é o 'Grátis'. 🔄 01/09: a taxa exibida virou R$281,08, o valor da guia real emitida no processo de verdade — antes era R$268,51, tirado da tabela oficial, e a conta saía R$12,57 curta em toda abertura (a JUCEMG cobra 2 atos: contrato e enquadramento de ME).",
   },
   pagamento: {
     dono: "usuario",
@@ -1261,6 +1268,14 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
       "🔴 REVOGA a regra antiga 'cartão/Pix pulam direto pro C0'. Agora todo método passa por uma tela de status antes de seguir — ninguém pula direto.",
     porque:
       "Pedido do Pedro: reforçar 'dá pra sair e voltar, está tudo certo' antes de jogar a pessoa direto no dossiê. Auto-avança pro E9.1P sozinho.",
+  },
+  "splash-boleto": {
+    dono: null,
+    faz: "🆕 31/08 — TELA NOVA (E9.SB do mapa). Splash transitório, par simétrico do E9.S: quem escolhe BOLETO vê 'Boleto gerado', não 'Pagamento confirmado'.",
+    interfere:
+      "Nada foi pago ainda quando o boleto é gerado. Dizer 'pagamento confirmado' aqui seria mentira de tela, e é o tipo de mentira que a pessoa só descobre quando o acesso não abre.",
+    porque:
+      "Cai no status SEM o flag `pago`: a jornada aparece inteira, mas o CTA de seguir fica travado em 'Aguardando compensar' até o banco confirmar. 🆕 01/09: esta tela existia no mapa desde 31/08 e faltava nesta apresentação — achado da auditoria mapa × apresentação.",
   },
   "aguardando-pago": {
     dono: "usuario",
@@ -1280,11 +1295,11 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
 
   socio: {
     dono: "usuario",
-    faz: "Confirma o que já foi preenchido no cadastro e completa o que falta: RG, órgão emissor, estado civil e regime de bens.",
+    faz: "Confirma o que já foi preenchido no cadastro e completa o que falta: RG, órgão emissor, data de nascimento, nacionalidade, estado civil e regime de bens.",
     interfere:
-      "Estado civil e regime de bens vão no contrato social e podem CONVOCAR outra pessoa: na comunhão universal, o cônjuge assina esta abertura. Descobrir isso no cartório trava tudo; descobrir aqui é só um aviso.",
+      "Estado civil e regime de bens vão no contrato social e podem CONVOCAR outra pessoa: na comunhão universal, o cônjuge assina esta abertura. Descobrir isso no cartório trava tudo; descobrir aqui é só um aviso. O resto é a qualificação que o art. 997 do Código Civil exige de todo sócio — sem ela o contrato não é lavrado.",
     porque:
-      "Nome, CPF, telefone e endereço não são pedidos de novo — eles subiram pro E6 no front-load de 28/07. Esta tela vira CONFIRMAÇÃO. É a mesma regra que tirou o CPF duplicado do E9.",
+      "Nome, CPF, telefone e endereço não são pedidos de novo — eles subiram pro E6 no front-load de 28/07. Esta tela vira CONFIRMAÇÃO. Nome da mãe SAIU em 01/09: não existe em nenhum dos 141 prints da JUCEMG/DBE, era campo obrigatório sem consumidor. Nacionalidade ENTROU no mesmo dia, já preenchida com \"Brasileira\" — o sócio extra tinha, o titular não. O RG a Junta já não exige mais (o CPF virou o identificador); mantemos porque entra no contrato e custa pouco perguntar.",
   },
   vinculo: {
     dono: "usuario",
@@ -1317,14 +1332,6 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
       "Os CNAEs secundários entram no CNPJ e no objeto social. Errar aqui é o que faz a empresa nascer impedida de faturar algo que ela de fato faz.",
     porque:
       "A regra dura: só sugerimos secundárias de MESMO IMPOSTO que a principal (mesmo Anexo, mesma dependência de Fator R). O que trocaria o regime não aparece nem com aviso — a feature-âncora existe pra baixar imposto, não pra subir sem a pessoa perceber.",
-  },
-  natureza: {
-    dono: "usuario",
-    faz: "Sugere o formato jurídico (dono único ou sociedade) a partir do número de sócios, e deixa mudar.",
-    interfere:
-      "Define o tipo do registro na Junta e o modelo de contrato social. Escolher dono único tendo sócio é impossível, e a tela bloqueia com a correção na mão.",
-    porque:
-      "A recomendação nunca é uma trava: só a incoerência é. O CNPJ real do Pedro saiu LTDA num caso solo, então o produto sugere, explica, e deixa a pessoa decidir.",
   },
   nome: {
     dono: "usuario",
@@ -1363,7 +1370,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     dono: "usuario",
     faz: "Pede autorização explícita pra começar o registro de verdade. É o ponto sem volta do fluxo inteiro.",
     interfere:
-      "A partir do aceite, a taxa da Junta (já paga no E9) é gasta e o protocolo começa. Antes disso, tudo ainda é reversível (CDC art. 49).",
+      "A partir do aceite o protocolo começa e a taxa da Junta é gasta. 🔄 26/08: essa taxa NÃO é mais paga lá atrás no E9 — o cliente paga a guia (DAE) depois que a viabilidade é deferida, pelo CTA que aparece na tela de status. Antes do aceite, tudo ainda é reversível (CDC art. 49).",
     porque:
       "O antigo T18 juntava contrato reversível e autorização irreversível na mesma tela — problema jurídico e de tom. Racharam em duas: E8 (contrato, não assusta) e este A2 (autorização, existe pra assustar exatamente o necessário, nem mais nem menos).",
   },
@@ -1383,14 +1390,6 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   },
   // 🆕 26/08 (reunião Rua Satélite 36, item 7) — A3.2, entre painel-recusa e
   // assinatura. Certificado passou a ser validado ANTES de assinar.
-  certificado: {
-    dono: "usuario",
-    faz: "Pergunta se a pessoa já tem certificado digital: quem tem, sobe arquivo (.pfx/.p12) + senha; quem não tem, agenda entrevista com a certificadora parceira.",
-    interfere:
-      "A assinatura que vem em seguida inclui a procuração eletrônica, e a procuração EXIGE certificado já validado. Sem essa tela antes, a assinatura ficaria pela metade.",
-    porque:
-      "Existia um `/certificado` antigo (N24), removido como órfão em 30/07 — nada navegava até lá, porque vinha DEPOIS da assinatura (ordem que a própria reunião apontou como inconsistente). Este é novo, na posição certa: antes, não depois.",
-  },
   assinatura: {
     dono: "usuario",
     faz: "Pede a assinatura via GOV.BR (todos os sócios, quando há mais de um) e explica a procuração eletrônica que acompanha.",
@@ -1615,6 +1614,10 @@ export default function ApresentacaoPage() {
   const [cepDemo, setCepDemo] = useState("");
   const [numeroDemo, setNumeroDemo] = useState("");
   const [complementoDemo, setComplementoDemo] = useState("");
+  // 🆕 01/09 — tipo de imóvel + residência subiram do C4 pro E3.4 (regra de
+  // deferimento da Prefeitura resolvida antes do pagamento).
+  const [tipoImovelDemo, setTipoImovelDemo] = useState("");
+  const [resideDemo, setResideDemo] = useState<boolean | null>(null);
 
   // Qual cenário está armado no campo (só pra o painel antecipar o desfecho
   // antes de validar). null = campo livre / digitado na mão.
@@ -1935,12 +1938,12 @@ export default function ApresentacaoPage() {
     { etapa: "vinculo", label: "C2 · Vínculo" },
     { etapa: "socios", label: "C3 · Sócios" },
     { etapa: "empresa", label: "C4 · Empresa" },
-    { etapa: "natureza", label: "C6 · Natureza" },
+    // 🗑️ 01/09 — "C6 · Natureza" saiu do carrossel: rota removida em 31/08.
     { etapa: "nome", label: "C7 · Nome" },
     { etapa: "revisar", label: "A1 · Revisar" },
     { etapa: "termo", label: "A2 · Termo" },
     { etapa: "painel", label: "A3 · Painel" },
-    { etapa: "certificado", label: "🆕 A3.2 · Certificado" },
+    // 🗑️ 01/09 — "A3.2 · Certificado" saiu do carrossel do ME.
     { etapa: "assinatura", label: "A4 · Assinatura" },
     { etapa: "ativacao", label: "🔓 A5 · Ativação" },
     { etapa: "fim", label: "Fim" },
@@ -1958,6 +1961,7 @@ export default function ApresentacaoPage() {
     { etapa: "aguardando-pago", label: "🆕 E9.1P · Status (pago)" },
     { etapa: "splash-atendido", label: "🆕 E5F.1 · Splash atendido" },
     { etapa: "splash-pagamento", label: "🆕 E9.S · Splash pagamento" },
+    { etapa: "splash-boleto", label: "🆕 E9.SB · Splash boleto" },
   ];
 
   /**
@@ -2111,9 +2115,9 @@ export default function ApresentacaoPage() {
     etapa === "triagem" ||
     etapa === "faixa" ||
     (etapa === "fora-bh" && !enviadoS) ||
-    // ⚠️ 29/07 — "natureza" saiu daqui. A tela virou condicional (só existe o
-    // formato que bate com o nº de sócios, já selecionado): não sobrou campo
-    // nenhum pra preencher. Botão sem função é pior que botão ausente.
+    // ⚠️ 29/07 — "natureza" saiu daqui: a tela virou condicional e não sobrou
+    // campo nenhum pra preencher. 🗑️ 01/09 — e agora saiu da apresentação
+    // inteira (rota apagada em 31/08), então nem exceção precisa mais.
     // "revisar", "painel", "assinatura", "ativacao", "retomar",
     // "aguardando" nunca entram: são recap/status/home/aceite sem campo
     // livre — só "termo" tem um checkbox (o aceite irreversível).
@@ -2123,7 +2127,6 @@ export default function ApresentacaoPage() {
     // exceção (que foi o que deixou o bug passar da 1ª vez), a regra agora é
     // POSITIVA: só mostra onde existe campo livre pra preencher.
     (naTravessia &&
-      etapa !== "natureza" &&
       etapa !== "revisar" &&
       etapa !== "painel" &&
       etapa !== "assinatura" &&
@@ -2387,6 +2390,10 @@ export default function ApresentacaoPage() {
                             setNumero={setNumeroDemo}
                             complemento={complementoDemo}
                             setComplemento={setComplementoDemo}
+                            tipoImovel={tipoImovelDemo}
+                            setTipoImovel={setTipoImovelDemo}
+                            resideNoEndereco={resideDemo}
+                            setResideNoEndereco={setResideDemo}
                             categoria={categoria}
                             setCategoria={setCategoria}
                             onSeguir={() => setEtapa("triagem")}
@@ -2442,8 +2449,10 @@ export default function ApresentacaoPage() {
                             // (aguardando, pendente); cartão/Pix passam pelo
                             // splash E9.S antes de cair no E9.1P (pago) — igual
                             // à produção real (`/pagamento/page.tsx`, `destino()`).
+                            // 🔄 01/09 — boleto passou a ter splash próprio
+                            // (E9.SB), igual à produção: ia direto pro status.
                             onPagar={() =>
-                              setEtapa(metodo === "boleto" ? "aguardando" : "splash-pagamento")
+                              setEtapa(metodo === "boleto" ? "splash-boleto" : "splash-pagamento")
                             }
                             onVoltar={() => voltar(() => setEtapa("plano"))}
                           />
@@ -2499,12 +2508,6 @@ export default function ApresentacaoPage() {
                             onFalarAtendente={() => {}}
                           />
                         )}
-                        {etapa === "natureza" && (
-                          <NaturezaView
-                            onSeguir={() => setEtapa(depoisDoDossie("natureza"))}
-                            onVoltar={() => voltar(() => setEtapa(antesDoDossie("natureza")))}
-                          />
-                        )}
                         {etapa === "nome" && (
                           <NomeView
                             preencher={preenchimento}
@@ -2544,16 +2547,12 @@ export default function ApresentacaoPage() {
                             concluidas={2}
                             emAndamento={2}
                             socios={socios ?? 1}
-                            onPagarDae={() => setEtapa("certificado")}
+                            onPagarDae={() => setEtapa("assinatura")}
                           />
                         )}
-                        {/* 🆕 26/08 (item 7) — A3.2, entre painel e assinatura. */}
-                        {etapa === "certificado" && (
-                          <CertificadoGateView
-                            onSeguir={() => setEtapa("assinatura")}
-                            onVoltar={() => voltar(() => setEtapa("painel"))}
-                          />
-                        )}
+                        {/* 🗑️ 01/09 — A3.2 (CertificadoGateView) saiu daqui: a
+                            DAE paga libera a assinatura direto no caminho ME.
+                            O componente segue vivo pro MEI ("m-certificado"). */}
                         {/* 🆕 03/08 — A3.1, gap fechado. Sem interação natural pra
                             chegar aqui (produção retry-automático mockado); estado
                             'esgotado' fixo, idêntico ao de `/painel/recusa`. */}
@@ -2574,10 +2573,10 @@ export default function ApresentacaoPage() {
                         {etapa === "assinatura" && (
                           <AssinaturaView
                             onSeguir={() => setEtapa("ativacao")}
-                            // 🔄 26/08 (item 7) — voltava pro painel; agora
-                            // volta pro certificado (A3.2), que é quem precede
-                            // a assinatura desde a reunião Rua Satélite 36.
-                            onVoltar={() => voltar(() => setEtapa("certificado"))}
+                            // 🔄 01/09 — volta pro painel de novo: a A3.2
+                            // (certificado) saiu do caminho ME, então quem
+                            // precede a assinatura é o status da Junta.
+                            onVoltar={() => voltar(() => setEtapa("painel"))}
                             // 🆕 24/08 — código GOV expirado/sem tentativas navega
                             // pra `/veredito/nao-atende` na rota real. Mesmo gap
                             // documentado do onFalarAtendente acima: sem estado
@@ -2638,6 +2637,16 @@ export default function ApresentacaoPage() {
                             titulo="Pagamento confirmado."
                             sub="Sua abertura já começou."
                             onAutoAvancar={() => setEtapa("aguardando-pago")}
+                          />
+                        )}
+                        {/* 🆕 01/09 — E9.SB, o par do E9.S pra quem paga por
+                            boleto. Cai no status SEM `pago`, então o CTA fica
+                            travado até compensar. */}
+                        {etapa === "splash-boleto" && (
+                          <SplashMensagemView
+                            titulo="Boleto gerado."
+                            sub="Assim que o pagamento cair, a abertura começa."
+                            onAutoAvancar={() => setEtapa("aguardando")}
                           />
                         )}
 

@@ -135,6 +135,11 @@ export default function GatePage() {
             onSeguir={() => setEtapa("faixa")}
             coorte={coorte}
             setCoorte={setCoorte}
+            // 🆕 31/08 (pedido do Pedro) — `?simular=socio-nao-encaixa`
+            // pré-abre o escape hatch (E5T.1) só pra prévia ao vivo do
+            // `/mapa`, mesmo mecanismo do `?simular=fora-bh` no E3.4.1.
+            // Não é fluxo real.
+            simularSocioNaoAtende={searchParams.get("simular") === "socio-nao-encaixa"}
           />
         )}
         {etapa === "faixa" && (

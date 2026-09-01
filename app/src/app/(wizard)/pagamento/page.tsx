@@ -118,8 +118,12 @@ export default function PagamentoPage() {
     // boleto vai pro E9.1 (aguardando, pendente); cartão/Pix passam pelo
     // splash E9.S ("pagamento confirmado") e caem no E9.1P (aguardando, já
     // pago) — mesma tela do E9.1, só o topo muda (`?pago=1`).
+    // 🆕 31/08 (pedido do Pedro) — boleto ganhou splash PRÓPRIO, simétrico ao
+    // do cartão/Pix: "Boleto gerado" (não "Pagamento confirmado" — nada foi
+    // pago ainda) e cai no mesmo E9.1 de sempre, sem `?pago=1`.
     if (metodo === "boleto") {
-      return comCategoria(comEndereco("/aguardando", enderecoFiscal), categoria);
+      const statusPendente = comCategoria(comEndereco("/aguardando", enderecoFiscal), categoria);
+      return `/splash-boleto?next=${encodeURIComponent(statusPendente)}`;
     }
     const statusPago = comCategoria(comEndereco("/aguardando?pago=1", enderecoFiscal), categoria);
     return `/splash-pagamento?next=${encodeURIComponent(statusPago)}`;

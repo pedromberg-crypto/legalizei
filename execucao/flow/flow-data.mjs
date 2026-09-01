@@ -48,6 +48,13 @@ export const SUBGRAFOS = [
  * `dados-coletados-abertura-ate-viabilidade.md` — mesma régua do resto do
  * arquivo, editar AQUI, nunca direto na nota gerada.
  */
+/**
+ * 🔄 31/08 — cruzamento contra a gravação real da JUCEMG (Rua Satélite 38-40,
+ * 141 prints reais, [[2026-08-31-rua-satelite-38-40-constituicao-jucemg-campo-a-campo]]).
+ * 2 entradas que já existiam estavam DESATUALIZADAS/ERRADAS (Tipo de unidade,
+ * Metragem — corrigidas com valor real visto no print) e 16 campos novos
+ * entraram, todos verificados contra print + transcrição, não inferidos.
+ */
 export const PREENCHIDOS_INTERNAMENTE = [
   {
     campo: "Forma de atuação (JUCEMG)",
@@ -58,17 +65,136 @@ export const PREENCHIDOS_INTERNAMENTE = [
   },
   {
     campo: "Tipo de unidade (JUCEMG)",
-    valor: '"Sede"',
+    valor: '"Produtiva"',
     contexto: "C4 · Dados da empresa",
-    status: "🟢 travado",
-    porque: "Toda abertura nova (1 endereço só) é sempre Sede — não existe cenário no MVP onde seria Unidade Administrativa (só valeria numa 2ª filial de empresa já aberta)",
+    status: "🟢 travado, corrigido 31/08",
+    porque: "🔴 Estava documentado como \"Sede\" — ERRADO. Prints reais (Viabilidade e Integrador) confirmam \"Produtiva\": Sede/Filial nem aparece como opção fixa relevante pra uma constituição nova. Toda abertura nova (matriz) usa Produtiva",
   },
   {
     campo: "Metragem (m² do imóvel + m² da operação)",
-    valor: "— (não implementado)",
+    valor: "20 m² (fixo)",
     contexto: "C4 · Dados da empresa",
-    status: "🟡 pendente, sem decisão",
-    porque: "Nenhuma fonte confirma esse campo além do índice cadastral IPTU (já coletado) — não implementar até aparecer confirmação real",
+    status: "🟢 travado, resolvido 31/08",
+    porque: "🔴 Estava \"não implementado, sem decisão\" — RESOLVIDO. Print real da Viabilidade mostra Área Total e Área Utilizada sempre preenchidas com 20,00 — mesmo valor usado em toda a gravação, virou padrão",
+  },
+  {
+    campo: "Profissão (titular E qualquer sócio)",
+    valor: '"Empresário"',
+    contexto: "C1 · Seus dados / C3 · Sócios",
+    status: "🟢 travado, validado 31/08 pelo Pedro",
+    porque: "Campo obrigatório no Integrador (Dados do Sócio/Administrador) pra qualquer sócio — nunca varia por atividade, então não gera dúvida útil pro cliente. Preenchido igual pra titular e sócio extra",
+  },
+  {
+    campo: "Qualificação do representante (JUCEMG/DBE)",
+    valor: '"49 - Sócio-Administrador"',
+    contexto: "C1 · Seus dados",
+    status: "🟢 travado",
+    porque: "Sempre o mesmo código no DBE (Identificação do Representante) — não existe outra qualificação possível pra quem está constituindo a própria empresa",
+  },
+  {
+    campo: "Capital social",
+    valor: "R$ 10.000,00 (fixo)",
+    contexto: "C4 · Dados da empresa",
+    status: "🔒 travado, validado 31/08 pelo Pedro",
+    porque: "🔴 ATÉ 31/08 era campo editável (chips R$1k/5k/10k + valor livre) — a reunião Rua Satélite 38-40 decidiu travar em R$10.000 pra prestador de serviço. Deixou de ser pergunta: o app mostra o valor, não pede mais",
+  },
+  {
+    campo: "Valor nominal de cotas",
+    valor: "R$ 1,00",
+    contexto: "C4 · Dados da empresa",
+    status: "🟢 travado",
+    porque: "Campo do Integrador (Dados da Matriz) sempre preenchido como R$1,00 — o capital social é dividido em quotas de R$1, nunca outro valor nominal",
+  },
+  {
+    campo: "Data de assinatura da declaração / início das atividades",
+    valor: "dia do preenchimento (nunca retroativa)",
+    contexto: "C7 · Nome / razão social (dispara a viabilidade)",
+    status: "🟢 travado",
+    porque: "Integrador não aceita data retroativa — sempre o dia em que o RPA roda o processo, pros dois campos (mesma data)",
+  },
+  {
+    campo: "Acesso ao endereço",
+    valor: '"Pedestre"',
+    contexto: "C4 · Dados da empresa",
+    status: "🟢 travado",
+    porque: "Campo da Prefeitura de BH (Dados Adicionais), sempre Pedestre pro nosso perfil de prestador de serviço remoto — nunca veículo leve/pesado",
+  },
+  {
+    campo: '"Atividade exercida no local?" (principal e secundárias)',
+    valor: "Não (sempre)",
+    contexto: "C0 · Sua atividade / C5 · CNAE secundários",
+    status: "🟢 travado",
+    porque: "Marcar Não em TODAS as atividades é o que habilita a opção \"Escritório/sede administrativa\" — se qualquer uma virasse Sim, a Prefeitura entenderia como comércio/loja física, errado pro nosso perfil",
+  },
+  {
+    campo: '"Atividade é inócua ou virtual?"',
+    valor: "Sim (sempre)",
+    contexto: "C4 · Dados da empresa",
+    status: "🟢 travado",
+    porque: "Pergunta do Licenciamento (Corpo de Bombeiros): atividade sem circulação de pessoas no local, sempre verdade pro nosso perfil 100% remoto/administrativo",
+  },
+  {
+    campo: "Sociedade de Propósito Específico?",
+    valor: "Não (sempre)",
+    contexto: "C6 · Natureza jurídica",
+    status: "🟢 travado",
+    porque: "Cláusula do Contrato Núcleo — nenhuma empresa do nosso escopo (ME prestador de serviço comum) é SPE. Campo do contrato, não pergunta ao cliente",
+  },
+  {
+    campo: "Capital Totalmente Integralizado em Moeda Corrente?",
+    valor: "Sim (sempre)",
+    contexto: "C4 · Dados da empresa",
+    status: "🟢 travado",
+    porque: "Cláusula do Contrato Núcleo — o capital social (R$10.000, também travado) já entra integralizado, sem parcelamento",
+  },
+  {
+    campo: "Tipo de contrato (Integrador)",
+    valor: "Padrão · 15 cláusulas obrigatórias (sem anexo, sem cláusula extra)",
+    contexto: "Pós-C7 · Geração do contrato (RPA/Integrador)",
+    status: "🟢 travado",
+    porque: "🔴 ACHADO-CHAVE (31/08): incluir anexo/procuração/cláusula extra no processo DERRUBA a elegibilidade ao Registro Automático (aviso visto ao vivo no print da JUCEMG) — por isso a opção de 15 cláusulas sem anexo é a única que usamos, nunca a de 7 cláusulas nem o contrato personalizado (upload)",
+  },
+  {
+    campo: "Testemunhas (Contrato Núcleo)",
+    valor: "Nenhuma (sempre)",
+    contexto: "Pós-C7 · Geração do contrato (RPA/Integrador)",
+    status: "🟢 travado",
+    porque: "Contrato padrão de 15 cláusulas não exige testemunha — campo sempre vazio, nunca preenchido",
+  },
+  {
+    campo: "E-mail e telefone de contato (DBE/Integrador)",
+    valor: "sempre o nosso (Legalizai), nunca o do cliente",
+    contexto: "DBE/Integrador · Dados para Contato",
+    status: "🟢 travado",
+    porque: "Evita que boletim de ocorrência (BO) ou notificação oficial da Receita/Junta chegue direto pro cliente por e-mail — a gente centraliza e repassa o que for relevante",
+  },
+  {
+    campo: "Endereço de correspondência",
+    valor: "sempre igual ao do estabelecimento",
+    contexto: "DBE/Integrador · Dados para Contato",
+    status: "🟢 travado",
+    porque: "Checkbox \"igual ao do Estabelecimento\" sempre marcado — nenhum caso do nosso escopo precisa de endereço de correspondência diferente",
+  },
+  {
+    campo: "Natureza jurídica (SLU × LTDA)",
+    valor: "SLU se sem sócio · LTDA se com sócio (automático, sem pergunta)",
+    contexto: "C6 · Natureza jurídica (REMOVIDA 31/08)",
+    status: "🟢 travado, validado 31/08 pelo Pedro",
+    porque: "🔴 ATÉ 31/08 era pergunta ao cliente (recomendação editável, Leonan 24/08) — a reunião Rua Satélite 38-40 decidiu tirar a pergunta de vez: a regra (sem sócio→SLU, com sócio→LTDA) não tem exceção real no nosso escopo, então virou decisão de backend nos dois casos. Tela e rota `/dossie/natureza` removidas do app",
+  },
+  {
+    campo: "Tipo de endereço (JUCEMG) — endereço fiscal Legalizai",
+    valor: '"Endereço virtual" (fixo)',
+    contexto: "C4 · Dados da empresa",
+    status: "🟢 travado, validado 31/08 pelo Pedro",
+    porque: "Confirmado na gravação real (RS38): quando a empresa usa o endereço fiscal da Legalizai (não o do cliente), o valor sempre enviado à JUCEMG é \"Endereço virtual\" — nunca aparece como opção pro usuário, só se aplica ao caminho endereço-próprio (\"proprio\"/\"coworking\")",
+  },
+  {
+    campo: "Requerente (emissão do DAE)",
+    valor: "sempre o titular (sócio-administrador)",
+    contexto: "Pós-C7 · Emissão do DAE (RPA)",
+    status: "🟢 travado",
+    porque: "Quem solicita a taxa no Integrador é sempre a pessoa que está constituindo a empresa — não existe cenário de \"outro requerente\" no nosso fluxo",
   },
 ];
 
@@ -130,7 +256,7 @@ export const NODES = [
   //   (a) troca pro endereço fiscal Legalizai (segue o fluxo normal, soma no E7)
   //   (b) mantém a cidade própria → CTA principal vira "Me inscrever e
   //       garantir condição" (fila de espera, MAS segue no app normalmente)
-  { id: "E3_4_1", label: "E3.4.1 · CEP fora de BH<br/>(gate resolvido inline)", forma: "decisao", classe: "branch", status: "construida", validado: "ux", falta: "Sem rota própria — é um ESTADO da mesma tela E3.4 (`/endereco`), não navegação. As 2 saídas (endereço fiscal · fila de espera) continuam no fluxo normal, nenhuma é dead-end.", dados: "Confirma: usa endereço fiscal Legalizai OU entra na fila da própria cidade" },
+  { id: "E3_4_1", rota: "/endereco?simular=fora-bh", label: "E3.4.1 · CEP fora de BH<br/>(gate resolvido inline)", forma: "decisao", classe: "branch", status: "construida", validado: "ux", falta: "🆕 31/08 — ganhou `rota` só pra prévia ao vivo do `/mapa` (`?simular=fora-bh` pré-preenche o estado, ver `endereco/page.tsx` + prop `simularFilaCidade`). NÃO é navegação real — é o MESMO estado do E3.4 (`/endereco`), resolvido inline. As 2 saídas (endereço fiscal · fila de espera) continuam no fluxo normal, nenhuma é dead-end.", dados: "Confirma: usa endereço fiscal Legalizai OU entra na fila da própria cidade" },
 
   // ── MIGRAR DE CONTADOR — ramo decimal de E4 (construído 30/07) ────────────
   // Fonte: components/wizard-migrar.tsx. Sem entrevista de CNAE (o cartão CNPJ
@@ -189,7 +315,7 @@ export const NODES = [
   // inline, mostra "Combinado, nosso time vai entrar em contato" — mesmo
   // padrão da MeiOuMeView), mas invisível no mapa. NÃO navega pra fora, é
   // fim de linha desta tentativa (a pessoa fica esperando contato humano).
-  { id: "E5T_1", label: "E5T.1 · Sócio não se encaixa<br/>(gate de saída inline)", forma: "terminal", classe: "inline", status: "construida", validado: "ux", falta: "Sem rota própria — estado da mesma tela E5T (`/gate?etapa=triagem`). Resolve com 'Falar com a equipe', sem navegar. Dead-end de propósito: quem cai aqui não segue sozinho no produto.", dados: "Texto livre (opcional) descrevendo o critério que não encaixa" },
+  { id: "E5T_1", rota: "/gate?etapa=triagem&simular=socio-nao-encaixa", label: "E5T.1 · Sócio não se encaixa<br/>(gate de saída inline)", forma: "terminal", classe: "inline", status: "construida", validado: "ux", falta: "🆕 31/08 — ganhou `rota` só pra prévia ao vivo do `/mapa` (`?simular=socio-nao-encaixa` pré-abre o escape hatch, ver `gate/page.tsx` + prop `simularSocioNaoAtende`). NÃO é navegação real — é o MESMO estado da E5T (`/gate?etapa=triagem`), resolvido inline pelo link 'Meu sócio não atende um dos critérios'. Resolve com 'Falar com o time', sem navegar. Dead-end de propósito: quem cai aqui não segue sozinho no produto.", dados: "Texto livre (opcional) descrevendo o critério que não encaixa" },
   { id: "E5F", rota: "/gate?etapa=faixa", label: "Faixa de faturamento", forma: "tela", classe: "", status: "construida", validado: "ux", grupo: "GATE", falta: "Faixas sem âncora fiscal. 🔴 27/08: a escolha de endereço (próprio × fiscal Legalizai) SAIU daqui — morou nesta tela entre 26/08 e 27/08 e foi pro E3.4, junto do gate de cidade, que é a pergunta de que ela sempre foi parte (faturamento não decide onde a empresa fica). O valor continua somando no E7 pelo mesmo `?endereco=fiscal`. Fonte: `components/gate-telas.tsx` (`FaixaView`)", dados: "Faixa de faturamento mensal (ou valor exato, se souber)" },
   // 🆕 30/08 (pedido do Pedro) — NOVA, ainda não construída. Splash
   // transitório (poucos segundos, SEM CTA, auto-avança pro E6) confirmando
@@ -234,6 +360,11 @@ export const NODES = [
   // por aqui e cai no E9.1P (status "pago"). Copy rascunho: "Pagamento
   // confirmado." / "Sua abertura já começou."
   { id: "E9_S", rota: "/splash-pagamento", label: "E9.S · Splash<br/>'pagamento confirmado'", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "🟢 30/08 — CONSTRUÍDA (`SplashMensagemView`, mesmo componente do E5F.1). Fica no shell APP (`(app)/splash-pagamento`), não WIZARD — o pagamento já caiu. Arte provisória, Pedro revisa.", dados: "" },
+  // 🆕 31/08 (pedido do Pedro) — par simétrico do E9.S pro caminho BOLETO.
+  // Antes o boleto caía direto no E9.1 (sem splash), enquanto cartão/Pix
+  // ganhavam a confirmação — assimetria sem motivo. Copy é outra de propósito:
+  // "Boleto gerado" (nada foi pago ainda), não "Pagamento confirmado".
+  { id: "E9_SB", rota: "/splash-boleto", label: "E9.SB · Splash<br/>'boleto gerado'", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "🟢 31/08 — CONSTRUÍDA (`SplashMensagemView`, mesmo componente do E9.S/E5F.1). Transitória, sem CTA, auto-avança pro E9.1 (sem `?pago=1` — o boleto ainda não compensou). Arte provisória, Pedro revisa.", dados: "" },
   { id: "E9_1", rota: "/aguardando", label: "E9.1 · Aguardando boleto<br/>dossiê já liberado", forma: "tela", classe: "espera", status: "construida", validado: "ux", falta: "Dunning revisado", dados: "" },
   // 🆕 30/08 (pedido do Pedro) — variante "pago" do E9.1, pra quem chega pelo
   // E9.S (pagou instantâneo). MESMO componente (`AguardandoView`), MESMO CTA
@@ -271,19 +402,29 @@ export const NODES = [
   // (`app/(app)/dossie/socios/page.tsx`). Quando TEM_SOCIO, a mesma tela JÁ
   // mostra o formulário de preencher os sócios extras — não existe uma "C3.1"
   // separada no código, era um nó fantasma no flow (antigo `C3_1`, removido).
-  { id: "C3", rota: "/dossie/socios", label: "C3 · Sócios?", forma: "decisao", classe: "", status: "construida", validado: "oficial", falta: "Re-pergunta o E5T (carry-forward pendente); limite subiu de 2 pra 4 (24/08). 🔒 24/08 (pedido do Pedro): não pergunta MAIS nada — quantidade e tipo (CPF) já vêm travados da triagem (E5T). Quando TEM_SOCIO, a MESMA tela já mostra o formulário de completar os sócios extras (sem passo/rota separada)", dados: "Confirma se terá mais sócios (sem reperguntar quantidade/tipo) · se houver, nome completo + % de participação de cada sócio extra (quantidade fixa, CPF implícito)" },
-  { id: "C4", rota: "/dossie/empresa", label: "C4 · Dados da empresa", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "✅ 28/07: IPTU obrigatório travado. 🆕 24/08 (reunião Leonan): alerta de IPTU pode subir quando é residência de sócio; trava duplicidade (só 1 sócio por endereço); chips de capital social simbólico (R$1k/5k/10k). 🔄 26/08 (reunião Rua Satélite 36, item 2): a escolha 'próprio × fiscal Legalizai' e o aviso de cobrança recorrente SAÍRAM daqui — moraram no E5F desde 24/08 até virarem o gate oficial de decisão, e o valor já vem confirmado do E7. Esta tela agora só CONFIRMA a escolha (card read-only, mesma doutrina do C3) e coleta os detalhes de endereço (CEP/IPTU/tipo) quando for próprio", dados: "CEP (autofill) + número + complemento · índice cadastral IPTU (obrigatório, só se próprio) · tipo de endereço · residência de sócio (trava duplicidade) · capital social" },
+  { id: "C3", rota: "/dossie/socios", label: "C3 · Sócios?", forma: "decisao", classe: "", status: "construida", validado: "oficial", falta: "Re-pergunta o E5T (carry-forward pendente); limite subiu de 2 pra 4 (24/08). 🔒 24/08 (pedido do Pedro): não pergunta MAIS nada além de nome/%; quantidade e tipo (CPF) já vêm travados da triagem (E5T). Quando TEM_SOCIO, a MESMA tela já mostra o formulário de completar os sócios extras (sem passo/rota separada). 🔴→🟢 31/08 (gap-analysis contra a gravação real JUCEMG): faltava TODA a qualificação do sócio extra — só tinha nome+%, mas a JUCEMG/DBE exige a MESMA qualificação do titular (art. 997 CC) pra qualquer sócio. Adicionado nascimento, nacionalidade, RG+órgão, estado civil+regime de bens. Profissão fica de fora — preenchida internamente como \"Empresário\" pra todo mundo (ver PREENCHIDOS_INTERNAMENTE)", dados: "Confirma se terá mais sócios (sem reperguntar quantidade/tipo) · se houver, de cada sócio extra: nome completo + % de participação (CPF implícito) + data de nascimento + nacionalidade + RG + órgão emissor + estado civil (+ regime de bens se casado)" },
+  { id: "C4", rota: "/dossie/empresa", label: "C4 · Dados da empresa", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "✅ 28/07: IPTU obrigatório travado. 🔄 26/08 (reunião Rua Satélite 36, item 2): a escolha 'próprio × fiscal Legalizai' e o aviso de cobrança recorrente SAÍRAM daqui — moraram no E5F desde 24/08 até virarem o gate oficial de decisão, e o valor já vem confirmado do E7. Esta tela agora só CONFIRMA a escolha (card read-only, mesma doutrina do C3) e coleta os detalhes de endereço (CEP/IPTU/tipo) quando for próprio. 🔒 31/08 (gap-analysis + reunião Rua Satélite 38-40, tudo validado pelo Pedro): capital social deixou de ser pergunta — travado em R$10.000, nem aparece mais na tela (ver PREENCHIDOS_INTERNAMENTE). 'Endereço virtual' saiu do seletor 'tipo de endereço' — vira valor fixo só quando é o endereço fiscal da Legalizai (nunca opção de quem usa endereço próprio). 🐛→🔒 campo NOVO 'tipo de imóvel' (casa/apartamento/outro) — faltava por completo (zero ocorrência no código antes). A pergunta de residência, que só aparecia com 2+ sócios (bug: dono único nunca via essa pergunta, mesmo sendo a regra que decide deferimento/indeferimento na Prefeitura), agora vale sempre — e é SEMPRE sobre o titular (quem constitui), nunca sobre sócio extra. Se apartamento, resposta é automática 'sim' (travada); se o titular não reside ali, informa o endereço pessoal (com o mesmo tipo de imóvel)", dados: "CEP (autofill) + número + complemento · índice cadastral IPTU (obrigatório, só se próprio) · tipo de endereço (próprio/coworking) · tipo de imóvel (casa/apartamento/outro, só se próprio) · você mora nesse endereço? (obrigatório se apartamento, JUCEMG indefere sem isso) · seu endereço pessoal, se não reside no local" },
   { id: "C5", rota: "/dossie/cnae-secundarios", label: "C5 · CNAE secundários", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "🆕 24/08 (reunião Leonan): ganhou busca livre (restrita ao que a gente atende, pedido original da Jéssica 19/07) além das 4 sugestões curadas mesmo-imposto; até 15 no total; secundária que muda enquadramento mostra aviso e troca CTA por 'Falar com atendente' em vez de bloquear silenciosamente. 🔄 28/08 (pedido do Pedro) — MUDOU DE LUGAR: vinha depois de C4 (dados da empresa), agora vem logo depois de C0.3 (CNAE principal confirmado) — sequência mais natural de quem acabou de escolher o CNAE. `lib/passos.ts` reflete a ordem nova ('CNAE secundário' é o 4º passo, não mais o 5º)", dados: "CNAEs secundários (seleção múltipla + busca, opcional, até 15)" },
-  { id: "C6", rota: "/dossie/natureza", label: "C6 · Natureza jurídica", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "SLU × LTDA confirmado pelo Leonan (24/08): SLU pra individual (proteção patrimonial — bens não se misturam), LTDA pra sociedade, sem outra opção nos dois casos", dados: "Escolha da natureza jurídica (SLU ou LTDA — sugerida, editável)" },
+  // 🔴→🟢 31/08 (validado pelo Pedro, reunião Rua Satélite 38-40) — C6 SAIU do
+  // fluxo do cliente. Era pergunta (SLU × LTDA, sugerida/editável); virou
+  // decisão 100% interna, tanto pra quem tem sócio quanto pra quem não tem
+  // (ver PREENCHIDOS_INTERNAMENTE). Rota `/dossie/natureza` DELETADA — nó sem
+  // `rota` fica só como marca histórica no mapa, mesmo tratamento do N24.
+  { id: "C6", label: "'C6 · Natureza jurídica'<br/>🗑️ REMOVIDO 31/08", forma: "terminal", classe: "todo", status: "planejada", validado: "oficial", falta: "Era pergunta ao cliente (SLU × LTDA, Leonan 24/08). 31/08: virou decisão interna automática (SLU se sem sócio, LTDA se com sócio) — sem tela, sem pergunta. Rota `/dossie/natureza` apagada do app", dados: "" },
   { id: "C7", rota: "/dossie/nome", label: "C7 · Nome / razão social", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "Viabilidade JUCEMG (RPA, não API); 3 opções por prioridade (28/07). 🔒 24/08 (reunião Leonan, CONFLITO RESOLVIDO): objeto social virou TRAVADO/read-only — erro de grafia do cliente gerava reclamação real no escritório antigo dele. 🆕 24/08 (pedido do Pedro): cada sugestão ganhou lápis de edição inline (reescreve a sugestão da IA no lugar); campo separado 'Digite a sua' foi removido; seta de reordenar 1/2/3 mantida", dados: "3 opções de razão social, editáveis inline, por ordem de prioridade (sugeridas por IA) · objeto social (gerado automaticamente, travado) · nome fantasia (opcional)" },
 
   // ── ESPERA — decimal de entrada em Constituição ──────────────────────────
-  { id: "C0_1", rota: "/retomar", label: "C0.1 · Retomar de onde parou", forma: "tela", classe: "espera", status: "construida", validado: "ux", falta: "UX-23 fechado — mora em /pro-labore pós-constituição. 🆕 30/08 — deixou de ser órfão: o E3 aponta pra cá agora, via porta de CPF (mock, RF-01). 🆕 30/08 (pedido do Pedro) — É ESTA a tela pra quem pagou por método instantâneo (E9.S/E9.1P) e mesmo assim fechou o app: 'Bem-vindo de volta' com o status mostrando 'Plano escolhido e pago' já como Feito (verde). Tela RESGATADA — já existia construída, só não estava clara no mapa como o destino desse caso específico.", dados: "CPF (mock, decide se mostra o status ou manda pro E9.1)" },
+  { id: "C0_1", rota: "/retomar", label: "C0.1 · Retomar<br/>(porta de CPF)", forma: "tela", classe: "espera", status: "construida", validado: "ux", falta: "UX-23 fechado — mora em /pro-labore pós-constituição. 🆕 30/08 — deixou de ser órfão: o E3 aponta pra cá, via porta de CPF (mock, RF-01). 🔒 31/08 (fusão A3+E9, pedido do Pedro: 'uma tela única de retorno, que é a E9') — ENCOLHEU pra só a porta de CPF: a tela de status própria que vinha depois (`RetomarView`, 'Bem-vindo de volta') foi RETIRADA do código. Agora, confirmado o CPF, SEMPRE cai no E9.1/E9.1P — é a mesma tela de status que já cobre boleto pendente, pago e fase Junta, então não fazia sentido ter uma 2ª versão só pra reentrada.", dados: "CPF (identifica quem está voltando; o status em si é da tela seguinte)" },
 
   // ── APROVAÇÃO (A) · cauda · A1–A5 (construído 21/07) ─────────────────────
   { id: "A1", rota: "/revisar", label: "A1 · Revisar dossiê", forma: "tela", classe: "", status: "construida", validado: "ux", falta: "Recap read-only; carry-forward dos passos = estado do wizard (dev)", dados: "— (leitura + confirmação; enquadramento e pró-labore são SUGERIDOS pelo sistema, 28/07 — não digitados)" },
   { id: "A2", rota: "/termo", label: "A2 · Termo irreversível", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Redação jurídica do termo + 4 camadas de cancelamento (Mauro/Larissa); racha T18", dados: "Aceite do termo irreversível (checkbox)" },
-  { id: "A3", rota: "/painel", label: "A3 · Painel<br/>4 status", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "🆕 30/07: reduzido de 9→3 status (2 passadas). 'Registrar a empresa'→'Analisando viabilidade'; novo 'Documentação completa preenchida' (check, acima) + 'Agora é só assinar' (cinza, depende do deferimento da Junta). 🔄 26/08 (reunião Rua Satélite 36, item 6): voltou a ter 4. O pagamento da DAE, que era timing de BACKEND desde 28/07 (cliente paga no E9 junto da mensalidade, a gente segura e repassa depois), virou etapa VISÍVEL e acionável aqui: 'Pague a guia da Junta (DAE)', com CTA coral inline, só depois que a viabilidade sai — 'Agora é só assinar' passa a depender dessa etapa, não só do deferimento. NÃO absorvemos a taxa (alinhado ao líder, contrato Contabilizei 4.3\"h\"). Timeline real depende do pipeline do dev; prazo ~8d é placeholder. Componente: `components/painel.tsx` (`acaoCliente`, `onPagarDae`)", dados: "" },
+  { id: "A3", rota: "/aguardando?fase=junta", label: "A3 · Status<br/>(fase Junta)", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "🔒 31/08 (reunião Rua Satélite 38-40, pedido do Pedro) — **FUNDIDA COM O E9.1**: era tela própria (`/painel`), virou a FASE 'junta' da MESMA tela de status. Motivo: 'quando as pessoas clicarem em retomar processo teremos uma tela única de retorno, que é a E9'. Efeitos: (1) `/painel` no caminho ME agora só redireciona pra cá — a rota segue viva só pro MEI (pipeline concierge próprio) e pro Migrar; (2) a lista é ÚNICA, 12 passos: os 9 do dossiê (`lib/passos.ts`) + as 3 da Junta; (3) 'Documentação completa preenchida' SAIU (era redundante com os 9 passos já concluídos logo acima) — de 4 etapas voltou a 3. 🆕 cada passo mostra sub-descrição (o que envolve + tempo estimado) quando é o passo da vez. Histórico: 30/07 reduziu de 9→3; 26/08 (Rua Satélite 36, item 6) voltou a 4 com a DAE virando etapa visível e acionável ('Pague a guia da Junta', CTA coral inline depois que a viabilidade sai). NÃO absorvemos a taxa (alinhado ao líder). Componentes: `components/painel.tsx` (motor de render, `ETAPAS_ABERTURA`) + `wizard-cauda.tsx` (`AguardandoView`, monta a lista combinada)", dados: "" },
+  // 🆕 31/08 — nó explícito do MEI, que a fusão A3+E9 separou: o ME migrou pra
+  // `/aguardando?fase=junta`, mas o MEI continua em `/painel` (pipeline
+  // concierge próprio, 4 etapas, copy que NUNCA diz que a gente registra).
+  // Mesmo padrão de variante do E9/E9_M. Sem isso `/painel` virava rota órfã.
+  { id: "A3_M", rota: "/painel?regime=mei", label: "A3 · Status<br/>(variante MEI)", forma: "tela", classe: "branch", status: "construida", validado: "oficial", falta: "Pipeline PRÓPRIO (`ETAPAS_MEI` em `painel/page.tsx`): recebemos seus dados → time conferindo → próximos passos prontos (CTA) → empresa aberta. ✍️ REGRA DE COPY: nenhuma etapa pode dizer que a Legalizai registra o MEI (não há API nem procuração que permita — ver `abertura-mei-processo.md`). Ficou FORA da fusão A3+E9 de 31/08 de propósito: o MEI não tem dossiê de 9 passos nem etapa de Junta, então fundir as listas não faria sentido.", dados: "" },
   { id: "A3_1", rota: "/painel/recusa", label: "A3.1 · Órgão recusa<br/>'precisa de você'", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "✅ 28/07: retry automático construído — tenta as 3 opções do C7 em sequência (mock sempre falha as 3, pra provar o pior caso); só aí pede novas sugestões. Testado no motor (nome recusado); faltam DAE-volta e doc-pendência como casos", dados: "Retry automático pelas 3 opções priorizadas (C7) antes de pedir novas sugestões ao cliente" },
   // 🆕 26/08 (reunião Rua Satélite 36, item 7) — nó NOVO, decimal de A3 (é
   // sequencial, não condicional — mesmo espírito de E9_2A/B/C na migração).
@@ -407,8 +548,13 @@ export const EDGES = [
   // expandir pro MEI também.
   { de: "E9", para: "M_O", label: "MEI · cartão", tracejado: true },
   { de: "M_O", para: "C1", label: "MEI reusa o C1", tracejado: true },
-  { de: "E9", para: "E9_1", label: "ME · boleto" },
-  { de: "E9_1", para: "C0", label: "Continuar preenchendo" },
+  // 🆕 31/08 — boleto passa pelo splash próprio (E9.SB) antes do E9.1, igual
+  // cartão/Pix passam pelo E9.S. Antes ia direto do E9 pro E9.1.
+  { de: "E9", para: "E9_SB", label: "ME · boleto" },
+  { de: "E9_SB", para: "E9_1", tracejado: true },
+  // 🔒 31/08 (fusão A3+E9) — o "Continuar preenchendo" do E9.1 fica TRAVADO
+  // até o boleto compensar; quem paga por cartão/Pix (E9.1P) segue na hora.
+  { de: "E9_1", para: "C0", label: "Continuar (após compensar)" },
 
   { de: "C0", para: "C0_2" },
   { de: "C0_2", para: "DESAMB", label: "ambíguo" },
@@ -424,23 +570,29 @@ export const EDGES = [
   { de: "C1", para: "C2" },
   { de: "C2", para: "C3" },
   { de: "C3", para: "C4" },
-  { de: "C4", para: "C6" },
-  { de: "C6", para: "C7" },
+  // 🔒 31/08 — C4 vai direto pro C7: C6 (natureza jurídica) saiu do fluxo do
+  // cliente, virou decisão interna automática (ver nó C6, marca histórica).
+  { de: "C4", para: "C7" },
   { de: "C7", para: "A1" },
 
   { de: "A1", para: "A2", tracejado: true },
-  { de: "A2", para: "A3", tracejado: true },
+  { de: "A2", para: "A3", tracejado: true, label: "ME" },
+  // 🆕 31/08 — o MEI segue pro painel PRÓPRIO (não entrou na fusão A3+E9).
+  { de: "A2", para: "A3_M", tracejado: true, label: "MEI" },
   { de: "A3", para: "A3_1", tracejado: true },
   { de: "A3_1", para: "A3", tracejado: true },
   { de: "A3", para: "A3_2", tracejado: true, label: "ME · DAE paga" },
   // No MEI o painel não espera órgão: espera o ATENDENTE conferir. Quando ele
   // libera, a etapa vira ação do cliente e abre o M-S.
-  { de: "A3", para: "M_S", label: "MEI · time conferiu", tracejado: true },
+  { de: "A3_M", para: "M_S", label: "MEI · time conferiu", tracejado: true },
   { de: "M_S", para: "M_CERT", label: "voltou com o CNPJ", tracejado: true },
   { de: "M_CERT", para: "A5", label: "certificado resolvido" },
   { de: "A3_2", para: "A4", tracejado: true },
   { de: "A4", para: "A4G", tracejado: true },
   { de: "A4G", para: "A5", tracejado: true },
 
-  { de: "C0_1", para: "C0", label: "volta ao passo pausado", tracejado: true },
+  // 🔒 31/08 (fusão A3+E9) — o retomar não aterrissa mais direto no dossiê:
+  // confirma o CPF e cai na TELA DE STATUS (E9.1P), que é quem sabe dizer em
+  // que ponto a pessoa parou e se ela já pode continuar.
+  { de: "C0_1", para: "E9_1P", label: "CPF confirmado", tracejado: true },
 ];

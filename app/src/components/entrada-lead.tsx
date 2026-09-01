@@ -218,6 +218,7 @@ export function EnderecoCategoriaView({
   exigeBh = true,
   regimeMei = false,
   onTrocarParaMe,
+  simularFilaCidade = false,
 }: {
   /** `null` = ainda não escolheu. `true` = endereço próprio. `false` = fiscal. */
   enderecoProprio: boolean | null;
@@ -261,6 +262,14 @@ export function EnderecoCategoriaView({
   regimeMei?: boolean;
   /** Só no MEI: leva pro caminho ME quando a categoria escolhida não tem MEI. */
   onTrocarParaMe?: () => void;
+  /**
+   * 🆕 31/08 (pedido do Pedro) — seed de `filaCidade` pra PRÉVIA AO VIVO do
+   * `/mapa` (E3.4.1): o clique em "Quero abrir na minha cidade mesmo assim"
+   * é estado interno, sem prop pra acionar de fora. Sem isso o iframe do
+   * board só mostraria o 1º card (fora de BH), não o CTA final resolvido.
+   * Não é fluxo real — só a `endereco/page.tsx` lê `?simular=fora-bh` e passa.
+   */
+  simularFilaCidade?: boolean;
 }) {
   const cepDigitos = cep.replace(/\D/g, "");
   const cepCheio = cepDigitos.length === 8;
@@ -275,7 +284,7 @@ export function EnderecoCategoriaView({
   // 2 saídas positivas — usar o endereço fiscal (já existia) ou entrar na
   // fila da própria cidade (nova). Local, não viaja por querystring: nada
   // fora desta tela precisa saber que a pessoa escolheu essa opção.
-  const [filaCidade, setFilaCidade] = useState(false);
+  const [filaCidade, setFilaCidade] = useState(simularFilaCidade);
 
   // 🆕 29/08 (pedido do Pedro) — "Não encontrei minha categoria" (opção coral
   // do dropdown) pede a atividade REGULAMENTADA de verdade em vez de deixar

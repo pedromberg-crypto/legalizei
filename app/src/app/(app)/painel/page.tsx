@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PainelView, type Etapa } from "@/components/painel";
 import { ehMei } from "@/lib/regime";
@@ -43,9 +44,18 @@ const ETAPAS_MEI: Etapa[] = [
   { nome: "Empresa aberta" },
 ];
 
+// 🔒 31/08 (reunião Rua Satélite 38-40, pedido do Pedro) — fusão A3+E9: o
+// caminho ME não usa mais `/painel` isolado — virou a fase "junta" da MESMA
+// tela de status (`/aguardando?fase=junta`). Esta rota segue viva só pro MEI
+// (pipeline concierge, abaixo) e é reusada pelo Migrar (`components/painel.tsx`
+// direto, ver `wizard-migrar.tsx`) — nenhum dos dois muda.
 export default function PainelPage() {
   const router = useRouter();
   const mei = ehMei(useSearchParams());
+
+  useEffect(() => {
+    if (!mei) router.replace("/aguardando?fase=junta");
+  }, [mei, router]);
 
   if (mei) {
     return (
@@ -73,12 +83,5 @@ export default function PainelPage() {
     );
   }
 
-  return (
-    <PainelView
-      concluidas={2}
-      emAndamento={2}
-      socios={1}
-      onPagarDae={() => router.push("/certificado")}
-    />
-  );
+  return null;
 }

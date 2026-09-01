@@ -61,12 +61,12 @@ export default function EmpresaPage() {
       mei={mei}
       enderecoProprio={!enderecoFiscal}
       // 🔄 28/08 (pedido do Pedro) — C5 (CNAE secundários) SAIU daqui: agora
-      // vem logo depois do C0, antes até do C1. Quem chega em "Dados da
-      // empresa" já resolveu atividade principal E secundária, então o
-      // próximo passo do ME é direto o C6 (natureza jurídica).
-      onSeguir={() =>
-        router.push(comRegime(mei ? "/dossie/nome" : "/dossie/natureza", mei))
-      }
+      // vem logo depois do C0, antes até do C1.
+      // 🔒 31/08 (validado pelo Pedro, reunião Rua Satélite 38-40) — C6
+      // (natureza jurídica) SUMIU do fluxo do cliente: SLU × LTDA passou a
+      // ser decisão 100% interna (conforme TEM_SOCIO), tanto pra quem tem
+      // sócio quanto pra quem não tem. ME e MEI vão direto pro C7 (nome).
+      onSeguir={() => router.push(comRegime("/dossie/nome", mei))}
     />
   );
 }

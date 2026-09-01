@@ -39,9 +39,18 @@ export default function EnderecoPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const mei = ehMei(searchParams);
+  /**
+   * 🆕 31/08 (pedido do Pedro) — `?simular=fora-bh` PRÉ-PREENCHE o estado pra
+   * já nascer no gate "CEP fora de BH" (E3.4.1). Existe só pra prévia ao vivo
+   * do `/mapa` (`components/mapa/tela-node.tsx`, iframe sem jeito de simular
+   * digitação) — não é fluxo real, não navega por aqui em produção.
+   */
+  const simulaForaBh = searchParams.get("simular") === "fora-bh";
 
-  const [enderecoProprio, setEnderecoProprio] = useState<boolean | null>(null);
-  const [cep, setCep] = useState("");
+  const [enderecoProprio, setEnderecoProprio] = useState<boolean | null>(
+    simulaForaBh ? true : null,
+  );
+  const [cep, setCep] = useState(simulaForaBh ? "39560-000" : "");
   const [numero, setNumero] = useState("");
   const [complemento, setComplemento] = useState("");
   const [categoria, setCategoria] = useState<string | null>(null);
@@ -61,6 +70,7 @@ export default function EnderecoPage() {
       // 🆕 28/08 — MEI não tem limite de cidade, mas tem limite de atividade.
       exigeBh={!mei}
       regimeMei={mei}
+      simularFilaCidade={simulaForaBh}
       // Categoria sem ocupação de MEI: reentra no MESMO passo como ME (perde
       // o `?regime=mei`), preservando o que ela já preencheu de endereço.
       onTrocarParaMe={() => router.push("/endereco")}

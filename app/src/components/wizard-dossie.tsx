@@ -12,7 +12,6 @@ import {
   TEM_SOCIO,
   SOCIO_2,
   SOCIOS,
-  NOMES_SOCIOS,
   NOME_EMPRESARIAL,
   CNAE_PRINCIPAL,
   CNAES_SECUNDARIAS,
@@ -444,14 +443,37 @@ export function VinculoView({
  *      que já foi respondido, mesma doutrina do resto do dossiê (não
  *      reconfirmar "mora fora do Brasil?" no C1, não repetir CNAE no C5).
  */
+/**
+ * 🆕 31/08 (achado da reunião Rua Satélite 38-40 + gap-analysis contra o flow)
+ * — sócio extra só tinha nome+%. A JUCEMG/DBE exige a MESMA qualificação do
+ * titular (art. 997 CC) pra qualquer sócio, não só quem cadastra. Profissão
+ * FICA DE FORA de propósito: é preenchida internamente como "Empresário" pra
+ * todo mundo (titular e extras), decisão validada 31/08 — não é campo.
+ */
 interface SocioExtra {
   id: string;
   nome: string;
   participacao: number;
+  nascimento: string;
+  nacionalidade: string;
+  rg: string;
+  orgao: string;
+  civil: string;
+  regime: string;
 }
 
 function novoSocioExtra(nome = "", participacao = 0): SocioExtra {
-  return { id: `s${Math.random().toString(36).slice(2, 8)}`, nome, participacao };
+  return {
+    id: `s${Math.random().toString(36).slice(2, 8)}`,
+    nome,
+    participacao,
+    nascimento: "",
+    nacionalidade: "Brasileira",
+    rg: "",
+    orgao: "",
+    civil: "",
+    regime: "",
+  };
 }
 
 export function SociosView({
@@ -478,13 +500,21 @@ export function SociosView({
   // fonte única em `dossie/mock.ts`). Divide 100% em partes iguais entre os
   // extras como ponto de partida; a pessoa ajusta.
   const qtdExtras = Math.max(0, SOCIOS - 1);
+  // 🆕 31/08 — só o 1º extra (SOCIO_2) nasce com a qualificação de exemplo;
+  // extras além dele nascem em branco, igual sempre foi com nome.
+  const socioExtraPreenchido = () => ({
+    ...novoSocioExtra(SOCIO_2.nome, 0),
+    ...PREENCHIMENTO.socioExtra,
+  });
   const inicial = () =>
     qtdExtras === 0
       ? []
       : qtdExtras === 1
-        ? [novoSocioExtra(SOCIO_2.nome, 50)]
+        ? [{ ...socioExtraPreenchido(), participacao: 50 }]
         : Array.from({ length: qtdExtras }, (_, i) =>
-            novoSocioExtra(i === 0 ? SOCIO_2.nome : "", Math.round((100 / (qtdExtras + 1)) * 2) / 2),
+            i === 0
+              ? { ...socioExtraPreenchido(), participacao: Math.round((100 / (qtdExtras + 1)) * 2) / 2 }
+              : novoSocioExtra("", Math.round((100 / (qtdExtras + 1)) * 2) / 2),
           );
 
   const [extras, setExtras] = useState<SocioExtra[]>(inicial);
@@ -497,9 +527,46 @@ export function SociosView({
 
   const somaExtras = extras.reduce((acc, s) => acc + s.participacao, 0);
   const parte1 = 100 - somaExtras; // participação do titular, derivada
+
+  /**
+   * 🆕 31/08 (pedido do Pedro) — o card do titular ganhou campo editável de %.
+   * `parte1` continua DERIVADO (100 - soma dos extras), pra não ter 2 fontes
+   * de verdade — editar o titular aqui redistribui os extras proporcionalmente
+   * pra fechar 100% nos dois sentidos ("muda a dele, muda a do sócio abaixo, e
+   * vice-versa"). Com 1 extra só, vira o espelho direto (extra = 100 - titular).
+   */
+  function onChangeParte1(novoParte1: number) {
+    const alvoExtras = Math.max(0, Math.min(99.5, 100 - novoParte1));
+    setExtras((atual) => {
+      if (atual.length === 0) return atual;
+      const somaAtual = atual.reduce((acc, s) => acc + s.participacao, 0);
+      if (somaAtual <= 0) {
+        const cada = Math.round((alvoExtras / atual.length) * 2) / 2;
+        return atual.map((s) => ({ ...s, participacao: cada }));
+      }
+      const fator = alvoExtras / somaAtual;
+      return atual.map((s) => ({
+        ...s,
+        participacao: Math.round(s.participacao * fator * 2) / 2,
+      }));
+    });
+  }
+
   const nomesOk = extras.every((s) => s.nome.trim().split(/\s+/).length >= 2);
   const somaOk = somaExtras > 0 && somaExtras < 100;
-  const completo = !TEM_SOCIO || (nomesOk && somaOk);
+  // 🆕 31/08 — mesma qualificação exigida do titular (C1), agora também do
+  // sócio extra: nascimento, nacionalidade, RG+órgão, estado civil (+regime
+  // se casado). Profissão não entra — preenchida internamente.
+  const qualificacaoOk = extras.every(
+    (s) =>
+      s.nascimento.trim() !== "" &&
+      s.nacionalidade.trim() !== "" &&
+      s.rg.trim() !== "" &&
+      s.orgao.trim() !== "" &&
+      s.civil !== "" &&
+      (s.civil !== "casado" || s.regime !== ""),
+  );
+  const completo = !TEM_SOCIO || (nomesOk && somaOk && qualificacaoOk);
 
   function atualizar(id: string, patch: Partial<SocioExtra>) {
     setExtras((atual) => atual.map((s) => (s.id === id ? { ...s, ...patch } : s)));
@@ -549,9 +616,12 @@ export function SociosView({
 
               {/* 🆕 26/08 (pedido do Pedro) — card travado do 1º sócio (você),
                   em TODAS as telas de sócios: mostra que você já É um sócio
-                  (não uma pergunta em aberto) e que só falta preencher o
-                  resto. Sem campo, sem edição — mesmo padrão do card
-                  read-only "Já preenchido no cadastro" do `SocioView`. */}
+                  (não uma pergunta em aberto). Nome sem edição, mesmo padrão
+                  do card read-only "Já preenchido no cadastro" do `SocioView`.
+                  🆕 31/08 (pedido do Pedro) — % agora é EDITÁVEL aqui também:
+                  mudar a sua % redistribui os sócios extras proporcionalmente
+                  (e mudar a de um extra já recalculava a sua, como sempre) —
+                  o vínculo passou a valer nos dois sentidos. */}
               <div className="flex flex-col gap-3 rounded-md border border-border-hairline bg-surface-alt p-3">
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-caption font-semibold text-text-primary">1º sócio</span>
@@ -560,6 +630,31 @@ export function SociosView({
                   </span>
                 </div>
                 <span className="text-body text-text-primary">{CLIENTE.nome}</span>
+
+                <Campo rotulo="Sua participação">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      inputMode="decimal"
+                      step={0.5}
+                      min={0.5}
+                      max={99.5}
+                      value={parte1 || ""}
+                      onChange={(e) => {
+                        const raw = e.target.value;
+                        if (raw === "") return;
+                        const n = Number(raw);
+                        if (Number.isNaN(n)) return;
+                        const preso = Math.min(99.5, Math.max(0.5, n));
+                        onChangeParte1(Math.round(preso * 2) / 2);
+                      }}
+                      aria-label="Sua participação, em porcentagem"
+                      className="w-full min-h-12 rounded-md border border-border-hairline bg-surface-card px-3
+                                 text-body text-text-primary focus:border-border-focus focus:outline-none"
+                    />
+                    <span className="shrink-0 text-body font-semibold text-text-secondary">%</span>
+                  </div>
+                </Campo>
               </div>
 
               <div className="flex flex-col gap-3">
@@ -615,6 +710,65 @@ export function SociosView({
                         <span className="shrink-0 text-body font-semibold text-text-secondary">%</span>
                       </div>
                     </Campo>
+
+                    {/* 🆕 31/08 — mesma qualificação exigida do titular (C1):
+                        a JUCEMG/DBE não distingue "quem cadastrou" de "quem é
+                        sócio". Profissão fica de fora, preenchida internamente
+                        como "Empresário" pra todo mundo. */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <Campo rotulo="Data de nascimento">
+                        <Texto
+                          valor={s.nascimento}
+                          onChange={(v) => atualizar(s.id, { nascimento: v })}
+                          placeholder="DD/MM/AAAA"
+                          inputMode="numeric"
+                          maxLength={10}
+                        />
+                      </Campo>
+                      <Campo rotulo="Nacionalidade">
+                        <Texto
+                          valor={s.nacionalidade}
+                          onChange={(v) => atualizar(s.id, { nacionalidade: v })}
+                          placeholder="Brasileira"
+                        />
+                      </Campo>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <Campo rotulo="RG">
+                        <Texto
+                          valor={s.rg}
+                          onChange={(v) => atualizar(s.id, { rg: v })}
+                          placeholder="00.000.000"
+                        />
+                      </Campo>
+                      <Campo rotulo="Órgão emissor">
+                        <Texto
+                          valor={s.orgao}
+                          onChange={(v) => atualizar(s.id, { orgao: v })}
+                          placeholder="SSP/MG"
+                        />
+                      </Campo>
+                    </div>
+
+                    <Campo rotulo="Estado civil">
+                      <Select
+                        valor={s.civil}
+                        onChange={(v) => atualizar(s.id, { civil: v })}
+                        opcoes={ESTADO_CIVIL}
+                      />
+                    </Campo>
+
+                    {s.civil === "casado" && (
+                      <Campo rotulo="Regime de bens">
+                        <Select
+                          valor={s.regime}
+                          onChange={(v) => atualizar(s.id, { regime: v })}
+                          opcoes={REGIME_BENS}
+                          placeholder="Como está na certidão de casamento"
+                        />
+                      </Campo>
+                    )}
                   </div>
                 ))}
               </div>
@@ -663,10 +817,33 @@ export function SociosView({
 
 /* ═══════════════════ N13 · DADOS DA EMPRESA ═════════════════════════════ */
 
+/**
+ * 🔒 31/08 (validado pelo Pedro contra a transcrição real, RS38 linha 14/20:
+ * "Endereço próprio, casa ou ponto, coworking, endereço virtual") — "Endereço
+ * virtual" SAI daqui. Confirmado na gravação: "virtual" é o valor que a
+ * própria JUCEMG usa quando a empresa está no endereço FISCAL da Legalizai
+ * (não é escolha de quem usa endereço próprio) — por isso virou fixo/interno
+ * (ver PREENCHIDOS_INTERNAMENTE), nunca opção pro usuário aqui. O parêntese
+ * "(casa ou ponto)" bate com a fala real da especialista — não é "casa ou
+ * apartamento" (isso é outro campo, ver TIPO_IMOVEL abaixo).
+ */
 const TIPO_ENDERECO = [
   { v: "proprio", label: "Endereço próprio (casa ou ponto)" },
   { v: "coworking", label: "Coworking" },
-  { v: "virtual", label: "Endereço virtual" },
+];
+
+/**
+ * 🆕 31/08 (achado da reunião Rua Satélite 38-40 + prints reais da JUCEMG) —
+ * campo que NUNCA existiu no produto: quando o endereço é PRÓPRIO da pessoa,
+ * a Prefeitura de BH pergunta se é apartamento, e se for, EXIGE que o sócio
+ * resida no local (senão a viabilidade é indeferida — visto ao vivo na
+ * gravação). "Tipo de endereço" (acima) é outro eixo (próprio × coworking) —
+ * não resolve essa pergunta, que é sobre o IMÓVEL em si.
+ */
+const TIPO_IMOVEL = [
+  { v: "casa", label: "Casa" },
+  { v: "apartamento", label: "Apartamento" },
+  { v: "outro", label: "Outro" },
 ];
 
 function mascaraCep(v: string) {
@@ -727,14 +904,36 @@ export function EmpresaView({
   const [complemento, setComplemento] = useState("");
   const [iptu, setIptu] = useState("");
   const [tipo, setTipo] = useState("");
-  const [capital, setCapital] = useState("");
+  // 🔒 31/08 (validado pelo Pedro) — capital social TRAVADO em R$10.000 pra
+  // prestador de serviço, preenchido por nós. Deixou de ser campo editável
+  // (antes tinha chips de 1k/5k/10k + input livre — a decisão da reunião
+  // Rua Satélite 38-40 foi travar, não sugerir).
+  const capital = "10.000";
+  // 🆕 31/08 — tipo de imóvel (casa/apartamento/outro), só quando o endereço é
+  // PRÓPRIO. Dirige a regra de residência logo abaixo.
+  const [tipoImovel, setTipoImovel] = useState("");
   // 🆕 28/08 — só o MEI usa (ver o bloco "Como você atende?" mais abaixo).
   const [atuacao, setAtuacao] = useState<string[]>([]);
-  const [residenciaSocios, setResidenciaSocios] = useState<Record<string, boolean>>({});
+  /**
+   * 🔒 31/08 (validado pelo Pedro contra a reunião real) — a pergunta de
+   * residência é SEMPRE sobre o TITULAR (quem está constituindo), nunca sobre
+   * sócio extra. A gravação real mostrou o campo "endereço do sócio
+   * responsável" auto-preenchendo do Representante — não existe pergunta
+   * separada por sócio extra nesse ponto do fluxo.
+   */
+  const [resideNoEndereco, setResideNoEndereco] = useState<boolean | null>(null);
+  // 🆕 31/08 — endereço pessoal do titular, só existe se ele NÃO reside no
+  // endereço fiscal da empresa (usado no DBE/contrato).
+  const [enderecoPessoal, setEnderecoPessoal] = useState({
+    cep: "",
+    numero: "",
+    complemento: "",
+    tipoImovel: "",
+  });
 
   // A tela mais pesada da constituição — e por isso a que mais precisa do
   // automático numa apresentação. Preenche o caminho "endereço próprio", que é
-  // o que exercita IPTU, tipo de imóvel e residência de sócio.
+  // o que exercita IPTU, tipo de imóvel e residência.
   usePreencher(preencher, () => {
     const p = PREENCHIMENTO.empresa;
     setUsarProprio(true);
@@ -743,8 +942,9 @@ export function EmpresaView({
     setComplemento(p.complemento);
     setIptu(p.iptu);
     setTipo(p.tipo);
-    setCapital(p.capital);
-    setResidenciaSocios(Object.fromEntries(NOMES_SOCIOS.map((n) => [n, false])));
+    setTipoImovel(p.tipoImovel);
+    setResideNoEndereco(true);
+    setEnderecoPessoal({ cep: "", numero: "", complemento: "", tipoImovel: "" });
   });
 
   const querFiscal = usarProprio === false;
@@ -752,7 +952,14 @@ export function EmpresaView({
   const cepCheio = cepDigitos.length === 8;
   const endereco = buscarCep(cepDigitos);
   const capitalNum = Number(capital.replace(/\D/g, "")) || 0;
-  const capitalBaixo = capitalNum > 0 && capitalNum < 1000;
+  // 🔒 31/08 — apartamento OBRIGA o titular a residir no local (senão a
+  // Prefeitura de BH indefere a viabilidade — visto ao vivo na gravação real).
+  const ehApartamento = tipoImovel === "apartamento";
+  // 🔒 se é apartamento, a lei não dá opção: a resposta é implícita "Sim"
+  // (mesma lógica que a gravação real mostrou: índice cadastral de apartamento
+  // já vem com residência marcada como sim, sem perguntar).
+  const residenciaImplicita = ehApartamento;
+  const resideEfetivo = residenciaImplicita ? true : resideNoEndereco;
 
   /**
    * 🆕 04/08 — cruzamento com pesquisa Gemini: o campo só checava "não vazio",
@@ -766,8 +973,18 @@ export function EmpresaView({
   const iptuCurto = iptuDigitos.length > 0 && iptuDigitos.length < 10;
   const iptuOk = iptuDigitos.length >= 10;
 
-  const residenciaCompleta =
-    SOCIOS === 1 || NOMES_SOCIOS.every((n) => n in residenciaSocios);
+  // 🐛→🔒 31/08 — CORRIGIDO: antes só perguntava residência com SOCIOS > 1
+  // (`grep` confirmou zero pergunta pro caso mais comum — dono único). A
+  // regra da Prefeitura vale igual, é sempre sobre o titular.
+  const precisaResidencia = !mei && tipo === "proprio";
+
+  const tipoImovelOk = !precisaResidencia || tipoImovel !== "";
+
+  const enderecoPessoalCompleto =
+    resideEfetivo !== false ||
+    (enderecoPessoal.cep.replace(/\D/g, "").length === 8 &&
+      enderecoPessoal.numero.trim() !== "" &&
+      enderecoPessoal.tipoImovel !== "");
 
   const enderecoOk =
     querFiscal ||
@@ -779,7 +996,9 @@ export function EmpresaView({
       // precisa ter.
       (mei || iptuOk) &&
       tipo !== "" &&
-      residenciaCompleta);
+      tipoImovelOk &&
+      (!precisaResidencia || resideEfetivo !== null) &&
+      enderecoPessoalCompleto);
 
   /**
    * 🐛 29/07 — O CAPITAL SOCIAL ESCAPAVA. A condição era
@@ -985,52 +1204,100 @@ export function EmpresaView({
                 <Select valor={tipo} onChange={setTipo} opcoes={TIPO_ENDERECO} />
               </Campo>
 
-              {/* 🆕 28/08 — guarda explícita: MEI é unipessoal (art. 966 do CC),
-                  então a pergunta de residência de sócio nunca pode aparecer.
-                  Hoje `SOCIOS` vem do mock e vale 1, mas depender disso seria
-                  frágil: quando o estado real existir (RF-01), o MEI não pode
-                  herdar a pergunta por acidente. */}
-              {!mei && SOCIOS > 1 && (
+              {/* 🆕 31/08 (achado da gravação real JUCEMG) — só existe quando o
+                  endereço é PRÓPRIO: coworking/virtual não têm essa ambiguidade
+                  residencial. MEI segue de fora — mesma guarda de sempre. */}
+              {precisaResidencia && (
+                <Campo rotulo="Esse endereço é casa ou apartamento?">
+                  <Select valor={tipoImovel} onChange={setTipoImovel} opcoes={TIPO_IMOVEL} />
+                </Campo>
+              )}
+
+              {/* 🐛→🔒 31/08 — CORRIGIDO: antes só aparecia com 2+ sócios. A
+                  Prefeitura de BH exige essa resposta sempre, inclusive dono
+                  único (SLU) — visto ao vivo indo de indeferido pra deferido
+                  só mudando essa resposta. 🔒 validado pelo Pedro: é sempre
+                  sobre o TITULAR (quem constitui), nunca sobre sócio extra. */}
+              {precisaResidencia && (
                 <div>
                   <p className="text-caption font-semibold text-text-primary mb-2">
-                    Esse endereço é residência de algum sócio?
+                    Você mora nesse endereço?
                   </p>
-                  <div className="flex flex-col gap-2">
-                    {NOMES_SOCIOS.map((nome) => (
-                      <Campo key={nome} rotulo={nome}>
-                        <OpcoesLinha
-                          opcoes={[
-                            { v: false, label: "Não" },
-                            { v: true, label: "Sim" },
-                          ]}
-                          valor={residenciaSocios[nome] ?? null}
+                  {/* 🔒 se é apartamento, a lei não dá opção. */}
+                  {residenciaImplicita ? (
+                    <Aviso variante="info" titulo='Marcado como "Sim" automaticamente'>
+                      Como o endereço é um apartamento, a Prefeitura de Belo
+                      Horizonte só aprova se você residir no local — não dá
+                      pra continuar com “não” aqui.
+                    </Aviso>
+                  ) : (
+                    <OpcoesLinha
+                      opcoes={[
+                        { v: false, label: "Não" },
+                        { v: true, label: "Sim" },
+                      ]}
+                      valor={resideNoEndereco}
+                      onChange={setResideNoEndereco}
+                    />
+                  )}
+
+                  {/* 🆕 31/08 — se você NÃO reside aqui, precisa informar onde
+                      mora (endereço pessoal), pra constar no DBE/contrato. */}
+                  {resideEfetivo === false && (
+                    <div className="mt-2 flex flex-col gap-3 rounded-md border border-border-hairline bg-surface-alt p-3">
+                      <p className="text-caption font-semibold text-text-primary">
+                        Onde você mora
+                      </p>
+                      <div className="grid grid-cols-2 gap-3">
+                        <Campo rotulo="CEP">
+                          <Texto
+                            valor={enderecoPessoal.cep}
+                            onChange={(v) =>
+                              setEnderecoPessoal((e) => ({ ...e, cep: mascaraCep(v) }))
+                            }
+                            placeholder="00000-000"
+                            inputMode="numeric"
+                          />
+                        </Campo>
+                        <Campo rotulo="Número">
+                          <Texto
+                            valor={enderecoPessoal.numero}
+                            onChange={(v) => setEnderecoPessoal((e) => ({ ...e, numero: v }))}
+                            placeholder="Nº"
+                            inputMode="numeric"
+                          />
+                        </Campo>
+                      </div>
+                      <Campo rotulo="Complemento">
+                        <Texto
+                          valor={enderecoPessoal.complemento}
                           onChange={(v) =>
-                            // 🔒 24/08 (reunião Leonan) — não pode ser "sim" pra
-                            // dois sócios ao mesmo tempo (não faz sentido: um
-                            // endereço é residência de no máximo 1 sócio). Marcar
-                            // "sim" pra um desmarca automaticamente os outros.
-                            setResidenciaSocios((r) =>
-                              v
-                                ? Object.fromEntries(
-                                    NOMES_SOCIOS.map((n) => [n, n === nome]),
-                                  )
-                                : { ...r, [nome]: false },
-                            )
+                            setEnderecoPessoal((e) => ({ ...e, complemento: v }))
                           }
+                          placeholder="Bloco, apto..."
                         />
                       </Campo>
-                    ))}
-                  </div>
+                      <Campo rotulo="É casa ou apartamento?">
+                        <Select
+                          valor={enderecoPessoal.tipoImovel}
+                          onChange={(v) =>
+                            setEnderecoPessoal((e) => ({ ...e, tipoImovel: v }))
+                          }
+                          opcoes={TIPO_IMOVEL}
+                        />
+                      </Campo>
+                    </div>
+                  )}
                 </div>
               )}
 
-              {/* 🆕 24/08 (reunião Leonan 19/08) — quando o endereço é
-                  residência de um sócio, o IPTU pode subir na prefeitura (às
-                  vezes dobra) por causa da mudança de uso residencial→comercial.
-                  Ninguém alerta isso normalmente; a gente alerta. */}
-              {Object.values(residenciaSocios).some(Boolean) && (
+              {/* 🆕 24/08 (reunião Leonan 19/08) — quando o endereço é a sua
+                  residência, o IPTU pode subir na prefeitura (às vezes dobra)
+                  por causa da mudança de uso residencial→comercial. Ninguém
+                  alerta isso normalmente; a gente alerta. */}
+              {resideEfetivo === true && (
                 <Aviso variante="warning" titulo="O IPTU desse endereço pode subir">
-                  Quando um CNPJ usa o endereço residencial de um sócio, algumas
+                  Quando um CNPJ usa seu endereço residencial, algumas
                   prefeituras reclassificam o imóvel e o IPTU sobe (às vezes
                   bastante). Vale confirmar com a prefeitura antes de usar esse
                   endereço.
@@ -1039,48 +1306,10 @@ export function EmpresaView({
             </>
           )}
 
-          {usarProprio !== null && !mei && (
-            <Campo
-              rotulo="Capital social"
-              dica="Quanto a empresa começa valendo no papel. Dá pra ajustar mais pra frente — comece com um valor simbólico."
-            >
-              {/* 🆕 24/08 (reunião Leonan 19/08) — atalho de valor simbólico,
-                  mesmo padrão dos chips de % de sócio. Reduz o "quanto eu
-                  coloco?" de decisão em branco pra 1 toque. */}
-              <div className="mb-2 flex gap-2">
-                {[1000, 5000, 10000].map((v) => {
-                  const on = capitalNum === v;
-                  return (
-                    <button
-                      key={v}
-                      type="button"
-                      onClick={() => setCapital(v.toLocaleString("pt-BR"))}
-                      className={`min-h-10 flex-1 rounded-full border text-caption font-semibold transition-colors
-                        ${
-                          on
-                            ? "border-action-primary bg-action-primary text-text-on-brand"
-                            : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
-                        }`}
-                    >
-                      {brl(v)}
-                    </button>
-                  );
-                })}
-              </div>
-              <Texto
-                valor={capital}
-                onChange={(v) => setCapital(mascaraReais(v))}
-                placeholder="R$ 1.000"
-                inputMode="numeric"
-              />
-              {capitalBaixo && (
-                <p className="text-micro text-state-warning-text mt-1">
-                  Costuma ser pelo menos R$ 1.000. Valores muito baixos podem
-                  pegar mal com banco e fornecedor.
-                </p>
-              )}
-            </Campo>
-          )}
+          {/* 🔒 31/08 (validado pelo Pedro, reunião Rua Satélite 38-40) —
+              capital social TRAVADO em R$10.000 pra prestador de serviço,
+              preenchido 100% no backend. Não aparece na tela nem como card —
+              o cliente nunca vê esse dado (ver PREENCHIDOS_INTERNAMENTE). */}
 
           {/* ─── FORMA DE ATUAÇÃO — só MEI ──────────────────────────────────
               No ME a gente PREENCHE isso internamente ("Internet", decisão de

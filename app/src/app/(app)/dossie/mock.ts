@@ -97,14 +97,29 @@ export const PREENCHIMENTO = {
   },
   /** N11 — abaixo do teto de propósito, pra renderizar o cálculo da folga. */
   vinculo: { contribui: true, valor: "4.500" },
-  /** N13 — endereço da CLIENTE, com o IPTU que a JUCEMG exige. */
+  /** N12 — qualificação do 2º sócio (SOCIO_2), mesma exigência do titular
+   *  (art. 997 CC). 🆕 31/08 — profissão fica de fora: preenchida internamente
+   *  como "Empresário" pra qualquer sócio, não é campo. */
+  socioExtra: {
+    nascimento: "22/11/1985",
+    nacionalidade: "Brasileira",
+    rg: "MG-15.887.222",
+    orgao: "SSP/MG",
+    civil: "casado",
+    regime: "parcial",
+  },
+  /** N13 — endereço da CLIENTE, com o IPTU que a JUCEMG exige.
+   *  🆕 31/08 — `tipoImovel: "apartamento"` de propósito: exercita a trava
+   *  automática de residência (a lei exige que o titular resida no local).
+   *  Capital social saiu daqui — virou valor fixo (R$10.000), preenchido no
+   *  backend, nem aparece mais na tela. */
   empresa: {
     cep: "30140-060",
     numero: "1000",
     complemento: "Sala 302",
     iptu: "001.234.567.890",
     tipo: "proprio",
-    capital: "10.000",
+    tipoImovel: "apartamento",
   },
   /** N14 — 2 secundárias, não as 4: marcar tudo não parece escolha. */
   cnaeSecundarios: ["s1", "s3"],

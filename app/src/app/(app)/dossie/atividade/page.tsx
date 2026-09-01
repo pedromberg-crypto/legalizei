@@ -54,11 +54,13 @@ export default function AtividadePage() {
   );
   const [texto, setTexto] = useState("");
   // A categoria vem PRÉ-SELECIONADA do E3.3 — a pessoa já respondeu isso antes
-  // de pagar. Continua editável: trocar aqui é refinar, não reabrir o gate
-  // (todas as pills são categorias atendidas).
-  const [categoria, setCategoria] = useState<string | null>(
-    catInicial && PILLS.some((p) => p.id === catInicial) ? catInicial : null,
-  );
+  // de pagar.
+  // 🔒 31/08 (pedido do Pedro) — deixou de ser editável aqui: quando veio do
+  // gate, aparece como CHIP CONFIRMADO e a pessoa só descreve o que faz (a
+  // descrição + a categoria é o que cruza pra achar a atividade principal).
+  // Sem `?cat=` (demo/entrada direta), a lista de pills volta como antes.
+  const categoriaDoGate = catInicial && PILLS.some((p) => p.id === catInicial) ? catInicial : null;
+  const [categoria, setCategoria] = useState<string | null>(categoriaDoGate);
   const [sabeCodigo, setSabeCodigo] = useState(false);
   const [resultado, setResultado] = useState<Resultado | null>(null);
 
@@ -97,6 +99,9 @@ export default function AtividadePage() {
             // cliente, já passou pelo gate. Não estamos decidindo se atendemos,
             // estamos achando o código certo dela.
             jaCliente
+            // 🔒 31/08 — categoria veio do gate: mostra confirmada, não
+            // repergunta (ver `categoriaDoGate` acima).
+            categoriaTravada={categoriaDoGate !== null}
           />
         )}
         {etapa === "analisando" && <AnalisandoView />}

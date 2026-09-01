@@ -1,11 +1,13 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { RevisarView, TermoView, AssinaturaView, HomeAtivacaoView, RetomarView, AguardandoView } from "./wizard-cauda";
+import { RevisarView, TermoView, AssinaturaView, HomeAtivacaoView, AguardandoView } from "./wizard-cauda";
 
 /**
- * 🟢 PRODUÇÃO REAL — A CAUDA (N19-N22) + P0 (home dia-1) + as 2 pausas de
- * pagamento (P1, P2). `PainelView` (N21) NÃO está aqui — vive em
- * `components/painel.tsx` desde antes. P0 substitui o N24 (SWAP 29/07).
+ * 🟢 PRODUÇÃO REAL — A CAUDA (N19-N22) + P0 (home dia-1) + a pausa de
+ * pagamento/status (P2). `PainelView` NÃO está aqui — vive em
+ * `components/painel.tsx`, mas `AguardandoView` delega pra ela (fusão A3+E9,
+ * 31/08). P0 substitui o N24 (SWAP 29/07). P1 (`RetomarView`) foi retirada:
+ * retomar é sempre o P2 (`AguardandoView`, `pago`).
  */
 const meta = {
   title: "Telas/Cauda N19-N22 + P0",
@@ -37,6 +39,20 @@ export const P0_HomeDia1Ativacao: Story = {
   render: () => <Shell><HomeAtivacaoView /></Shell>,
 };
 
-export const P1_RetomarDeOndeParou: Story = { render: () => <Shell><RetomarView onSeguir={() => {}} /></Shell> };
+export const P1_RetomarDeOndeParou: Story = {
+  render: () => <Shell><AguardandoView pago onSeguir={() => {}} /></Shell>,
+};
 
 export const P2_AguardandoBoleto: Story = { render: () => <Shell><AguardandoView onSeguir={() => {}} /></Shell> };
+
+export const P2_AguardandoBoletoPago: Story = {
+  render: () => <Shell><AguardandoView pago onSeguir={() => {}} /></Shell>,
+};
+
+export const P2_StatusFaseJunta: Story = {
+  render: () => (
+    <Shell>
+      <AguardandoView fase="junta" onPagarDae={() => {}} />
+    </Shell>
+  ),
+};

@@ -49,6 +49,14 @@ export interface Etapa {
    * — coral nunca é estado, ver `ui/status.tsx`); o que muda é o texto+botão.
    */
   acaoCliente?: { label: string; onClick?: () => void };
+  /**
+   * 🆕 31/08 (pedido do Pedro) — sub-descrição mostrada SÓ quando a etapa é a
+   * atual: o que ela envolve + quanto tempo costuma levar ("leva cerca de 2
+   * minutos"). Orienta pro que vem pela frente em vez de deixar a pessoa
+   * adivinhar o tamanho do passo. Nas outras etapas fica escondida, senão a
+   * timeline vira parede de texto.
+   */
+  detalhe?: string;
 }
 
 /**
@@ -89,12 +97,33 @@ export interface Etapa {
  *   não libera mais sozinho quando a Junta defere — libera depois que ESSA
  *   etapa nova ("Pague a guia da Junta") for concluída. Ver `acaoCliente` na
  *   interface `Etapa` acima e o bloco de render mais abaixo.
+ *
+ *   4ª passada (🔒 31/08, reunião Rua Satélite 38-40, pedido do Pedro) — voltou
+ *   a 3: **"Documentação completa preenchida" SAIU**. O painel (A3) fundiu
+ *   com a tela de status do E9 (`AguardandoView`, `wizard-cauda.tsx`) numa
+ *   ÚNICA jornada: os 9 passos do dossiê (`PASSOS_CLIENTE`, `lib/passos.ts`)
+ *   agora vêm ANTES destas 3 etapas, na MESMA lista/tela — dizer de novo
+ *   "documentação completa" logo depois de mostrar os 9 já concluídos seria
+ *   repetir a mesma informação duas vezes. Quem monta a lista combinada é
+ *   `AguardandoView`; esta constante virou só a CAUDA (pós-dossiê) do
+ *   pipeline, exportada pra ele importar. `/painel` (rota isolada, caminho
+ *   ME) foi RETIRADA — só sobrevive pro MEI (`etapas` próprio) e pro Migrar.
  */
-const ETAPAS_ABERTURA: Etapa[] = [
-  { nome: "Documentação completa preenchida" },
-  { nome: "Analisando viabilidade", orgao: "Junta Comercial" },
-  { nome: "Pague a guia da Junta (DAE)", acaoCliente: { label: "Pagar a guia agora" } },
-  { nome: "Agora é só assinar" },
+export const ETAPAS_ABERTURA: Etapa[] = [
+  {
+    nome: "Analisando viabilidade",
+    orgao: "Junta Comercial",
+    detalhe: "A Junta confere nome e endereço. Não precisa fazer nada, a gente te avisa.",
+  },
+  {
+    nome: "Pague a guia da Junta (DAE)",
+    acaoCliente: { label: "Pagar a guia agora" },
+    detalhe: "Taxa obrigatória da Junta. Pagamento leva cerca de 1 minuto.",
+  },
+  {
+    nome: "Agora é só assinar",
+    detalhe: "Assinatura pelo GOV.BR, no seu celular. Leva cerca de 3 minutos.",
+  },
 ];
 
 export interface Recusa {
@@ -121,6 +150,8 @@ export function PainelView({
   idempotencia,
   ctaNormal,
   onAcaoRecusa,
+  escuro = false,
+  heroExtra,
 }: {
   /** Quantas etapas já fecharam (verde). */
   concluidas: number;
@@ -154,8 +185,26 @@ export function PainelView({
   /** Faixa de idempotência (UX-38). Default fala de "abertura". */
   idempotencia?: string;
   /** Rodapé fixo quando NÃO há recusa (a abertura não tem; a migração tem). */
-  ctaNormal?: { label: string; onClick?: () => void };
+  /** 🆕 31/08 — `desabilitado` trava o CTA sem escondê-lo (o cliente precisa
+   *  VER que existe um próximo passo, só não pode agir ainda). Usado enquanto
+   *  o boleto não compensa. */
+  ctaNormal?: { label: string; onClick?: () => void; desabilitado?: boolean };
   onAcaoRecusa?: () => void;
+  /**
+   * 🆕 31/08 (pedido do Pedro, fusão A3+E9) — hero escuro (gradiente coral no
+   * canto, fundo `surface-dark`), o mesmo do antigo `AguardandoView`. Opt-in:
+   * MEI e Migrar continuam com o header claro de sempre, só quem pede vê o
+   * escuro. Troca SÓ a casca do eyebrow+título+subtítulo — timeline, prazo e
+   * rodapé não mudam nada.
+   */
+  escuro?: boolean;
+  /**
+   * 🆕 31/08 — conteúdo extra DENTRO do hero escuro (só renderiza com
+   * `escuro`). Existe pros chips de boleto/Pix que o antigo `AguardandoView`
+   * tinha: eles pertencem ao hero, não à timeline, e só fazem sentido na fase
+   * de pagamento pendente.
+   */
+  heroExtra?: ReactNode;
 }) {
   // 🆕 26/08 (item 6) — se `etapas` não veio (caso da abertura), usa o default
   // COM o callback do CTA de DAE já ligado (a migração, que passa `etapas`
@@ -178,16 +227,48 @@ export function PainelView({
 
   return (
     <>
-      <header className="pt-6 pb-4">
-        <p className="text-micro text-text-tertiary">{eyebrow}</p>
-      </header>
+      {!escuro && (
+        <header className="pt-6 pb-4">
+          <p className="text-micro text-text-tertiary">{eyebrow}</p>
+        </header>
+      )}
 
       <main className="app-main">
         <div className="shrink-0">
-          <h1 className="text-h1 mb-2">{recusa ? t.recusa : t.normal}</h1>
-          <p className="text-body text-text-secondary mb-4">
-            {recusa ? s.recusa : s.normal}
-          </p>
+          {escuro ? (
+            // 🆕 31/08 — hero escuro (mesmo gradiente do antigo AguardandoView):
+            // eyebrow some sozinho (o título já carrega o contexto), título
+            // maior e branco, subtítulo em baixa opacidade.
+            // 🔒 31/08 (correções do Pedro, ao vivo): título maior (`text-h1`,
+            // "precisa de mais destaque"), respiro maior embaixo (`mb-5`) pra
+            // não colar na timeline, e a linha do WhatsApp absorvida do card
+            // claro que sumiu (ver comentário logo abaixo).
+            <div
+              className="mt-4 mb-5 rounded-2xl p-5 text-text-on-dark"
+              style={{
+                background:
+                  "radial-gradient(120% 100% at 0% 0%, color-mix(in srgb, var(--color-action-primary) 45%, transparent) 0%, transparent 55%), var(--color-surface-dark)",
+              }}
+            >
+              <p className="text-h1 font-bold leading-tight">{recusa ? t.recusa : t.normal}</p>
+              <p className="mt-1.5 text-caption text-text-on-dark/70">
+                {recusa ? s.recusa : s.normal}
+              </p>
+              {!recusa && heroExtra}
+              {!recusa && (
+                <p className="mt-3 text-micro text-text-on-dark/50">
+                  Assim que um passo anda, a gente atualiza aqui e te avisa no WhatsApp.
+                </p>
+              )}
+            </div>
+          ) : (
+            <>
+              <h1 className="text-h1 mb-2">{recusa ? t.recusa : t.normal}</h1>
+              <p className="text-body text-text-secondary mb-4">
+                {recusa ? s.recusa : s.normal}
+              </p>
+            </>
+          )}
         </div>
 
         <div className="flex-1 min-h-0 overflow-y-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -197,8 +278,14 @@ export function PainelView({
               concorrente não divulga (oportunidade nossa), então cravar um e
               furar destruiria confiança onde ela é mais frágil. Fica qualitativo
               e honesto até o pipeline do dev devolver tempo real por órgão — aí
-              volta como estimativa COM fonte, não chute. */}
-          {!recusa && (
+              volta como estimativa COM fonte, não chute.
+
+              🐛→🔒 31/08 (correção do Pedro, viu ao vivo: "esses 2 cards
+              parecem brigar entre si") — com o hero ESCURO, este card branco
+              repetia o mesmo prazo que o subtítulo do hero já dava. Sumiu:
+              no modo escuro o hero absorve a informação (subtítulo + a linha
+              do WhatsApp), e só o modo claro (MEI/Migrar) mantém o card. */}
+          {!recusa && !escuro && (
             <Card className="mb-4">
               <p className="text-caption text-text-secondary">Quanto tempo leva</p>
               <p className="text-body text-text-primary mt-0.5">
@@ -271,12 +358,21 @@ export function PainelView({
                       </p>
                     )}
 
+                    {/* 🆕 31/08 (pedido do Pedro) — sub-descrição do passo
+                        ATUAL: o que ele envolve + tempo estimado. Só na etapa
+                        da vez (nas outras vira parede de texto). Quando existe,
+                        substitui o genérico "Em andamento agora" — é mais
+                        específico e diz a mesma coisa melhor. */}
+                    {ehAVez && e.detalhe && (
+                      <p className="text-micro text-text-secondary mt-1">{e.detalhe}</p>
+                    )}
+
                     {/* Girando: diz que a bola está com o órgão, não travou.
                         ✍️ 29/07 — "Não precisa fazer nada" descrevia ausência
                         de ação; "Te avisaremos quando terminar" promete o quê
                         vem a seguir (o WhatsApp), que é o que tranquiliza de
                         verdade quem está esperando. */}
-                    {girando && (
+                    {girando && !e.detalhe && (
                       <p className="text-micro text-state-info-text mt-1">
                         Em andamento agora. Te avisaremos quando terminar.
                       </p>
@@ -357,7 +453,7 @@ export function PainelView({
              aí o botão não é decorativo. Só aparece se quem chama passar. */
           ctaNormal && (
             <Rodape>
-              <Button full onClick={ctaNormal.onClick}>
+              <Button full disabled={ctaNormal.desabilitado} onClick={ctaNormal.onClick}>
                 {ctaNormal.label}
               </Button>
             </Rodape>

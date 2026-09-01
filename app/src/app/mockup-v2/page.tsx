@@ -11,7 +11,7 @@ import {
   type VersaoSolta,
 } from "@/components/lab/versao-board";
 import { PlanoView } from "@/components/wizard-dinheiro";
-import { RetomarView } from "@/components/wizard-cauda";
+import { AguardandoView } from "@/components/wizard-cauda";
 import { EntradaView } from "@/components/entrada";
 import { SocioView } from "@/components/wizard-dossie";
 // 🆕 28/08 (pedido do Pedro) — Home Campeã entrou no grupo de testes: página
@@ -109,8 +109,8 @@ const TESTE: VersaoSolta[] = [
   },
   {
     titulo: "C0.1 · Retomar de onde parou",
-    nota: "O /retomar de hoje, solto — sem router. `onSeguir` é no-op.",
-    render: () => <RetomarView onSeguir={() => {}} />,
+    nota: "🔒 31/08 — RetomarView foi retirada (fusão A3+E9): retomar hoje é sempre o AguardandoView, `pago`. Solto — sem router. `onSeguir` é no-op.",
+    render: () => <AguardandoView pago onSeguir={() => {}} />,
   },
   {
     titulo: "E3 · Fork · 3 rotas",

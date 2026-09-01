@@ -248,6 +248,7 @@ export function PerguntaView({
   setSabeCodigo,
   onValidar,
   jaCliente = false,
+  categoriaTravada = false,
 }: {
   texto: string;
   setTexto: (v: string) => void;
@@ -269,6 +270,15 @@ export function PerguntaView({
    * ACHANDO O CÓDIGO da pessoa, não julgando se ela entra.
    */
   jaCliente?: boolean;
+  /**
+   * 🆕 31/08 (pedido do Pedro) — a categoria já foi escolhida no gate (E3.4) e
+   * viaja por `?cat=`. Aqui ela NÃO é pergunta de novo: vira chip confirmado
+   * (read-only), e a pessoa só descreve o que faz — a descrição é o que cruza
+   * com a categoria pra achar a atividade principal mais adequada.
+   * `false` (default) = comportamento antigo (lista de pills escolhível),
+   * usado quando a view é chamada sem carry-forward (demo/story).
+   */
+  categoriaTravada?: boolean;
 }) {
   const sel = PILLS.find((p) => p.id === categoria);
   const tw = useTypewriter(EXEMPLOS, texto.length > 0 || categoria !== null);
@@ -334,7 +344,23 @@ export function PerguntaView({
             = coral, action-primary — só aqui; o CategoriaChips do resto do app
             segue dark quando ativo). Somem no modo código. */}
         <div className="flex min-h-0 flex-1 flex-col rounded-3xl bg-surface-alt p-4">
-          {!sabeCodigo && (
+          {/* 🔒 31/08 (pedido do Pedro) — quando a categoria JÁ VEIO do gate
+              (E3.4, `?cat=`), ela não é mais pergunta: vira CHIP CONFIRMADO,
+              read-only. A lista inteira de pills sumia o ponto da tela — a
+              pessoa já escolheu lá atrás, e o que falta aqui é só a DESCRIÇÃO
+              livre (que é o que cruza com a categoria pra achar o CNAE certo).
+              Mesma doutrina do C3/C4: o que já foi decidido só se confirma. */}
+          {!sabeCodigo && categoriaTravada && sel && (
+            <div className="shrink-0">
+              <p className="text-micro text-text-tertiary mb-1.5">Sua categoria</p>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-action-primary px-4 py-2 text-caption font-semibold text-text-on-brand">
+                <CheckMiniRegime />
+                {sel.label}
+              </span>
+            </div>
+          )}
+
+          {!sabeCodigo && !categoriaTravada && (
             <div
               ref={scRef}
               onScroll={recompute}
@@ -406,7 +432,9 @@ export function PerguntaView({
           onClick={() => {
             setSabeCodigo(!sabeCodigo);
             setTexto("");
-            setCategoria(null);
+            // 🔒 31/08 — categoria travada veio do gate, não é escolha desta
+            // tela: alternar pro modo código não pode apagá-la.
+            if (!categoriaTravada) setCategoria(null);
           }}
           className="mt-2 self-start text-caption font-medium text-text-secondary underline underline-offset-4"
         >
@@ -490,6 +518,7 @@ export function TriagemView({
   onSeguir,
   coorte,
   setCoorte,
+  simularSocioNaoAtende = false,
 }: {
   socios: number | null;
   setSocios: (n: number) => void;
@@ -503,6 +532,14 @@ export function TriagemView({
    */
   coorte?: "primeira" | "ja-abri" | null;
   setCoorte?: (v: "primeira" | "ja-abri") => void;
+  /**
+   * 🆕 31/08 (pedido do Pedro) — `?simular=socio-nao-encaixa` PRÉ-ABRE o
+   * escape hatch (E5T.1) pra prévia ao vivo do `/mapa`. Mesmo mecanismo do
+   * E3.4.1 (`simularFilaCidade`): o estado JÁ existia e era alcançável no app
+   * real (link "Meu sócio não atende um dos critérios"), mas o nó do mapa não
+   * tinha `rota`, então a prévia renderizava um card vazio. NÃO é fluxo real.
+   */
+  simularSocioNaoAtende?: boolean;
 }) {
   const solo = socios === 1;
   const temSocio = socios !== null && !solo;
@@ -511,7 +548,7 @@ export function TriagemView({
   // pergunta obrigatória, mas quem sabe que o próprio caso foge da regra
   // ainda consegue avisar e falar com um humano, em vez de só continuar
   // como se nada fosse.
-  const [socioNaoAtende, setSocioNaoAtende] = useState(false);
+  const [socioNaoAtende, setSocioNaoAtende] = useState(!!simularSocioNaoAtende);
   const [resolvidoInline, setResolvidoInline] = useState(false);
   // 🔄 29/08 (pedido do Pedro) — "é a primeira empresa que você abre?" vira
   // obrigatória. Só entra na conta quando a pergunta de fato aparece (função

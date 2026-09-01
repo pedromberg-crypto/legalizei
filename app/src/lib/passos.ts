@@ -60,10 +60,11 @@
  * ─── O QUE FICOU FORA, E POR QUÊ ──────────────────────────────────────────
  * **"Tipo de empresa" (C6, natureza jurídica) não é mais item da lista.**
  * Pedido explícito do Pedro (28/08): a lista nova tem 9 passos antes de
- * "Revisar e confirmar", e C6 não está entre eles. A tela continua existindo
- * no flow real (`dossie/natureza`) — só parou de ser contada como passo
- * separado. 🟡 Não sei se foi omissão ou decisão deliberada; fica registrado
- * aqui pra não virar surpresa se alguém notar a tela sem contraparte na lista.
+ * "Revisar e confirmar", e C6 não está entre eles. 🔒 31/08 (reunião Rua
+ * Satélite 38-40): ficou confirmado que era decisão deliberada — a tela
+ * inteira (`dossie/natureza`) foi REMOVIDA do flow real (rota deletada). SLU
+ * × LTDA virou decisão 100% interna (ver `PREENCHIDOS_INTERNAMENTE` em
+ * `execucao/flow/flow-data.mjs`), então nem fazia sentido continuar contada.
  *
  * O **N23 (assinatura GOV.BR)** continua fora pelo mesmo motivo de sempre:
  * acontece DEPOIS de dias de espera de órgão, e misturar "preencha agora" com
@@ -88,26 +89,73 @@ export interface Passo {
    *  escolhido e PAGO" mente enquanto o boleto não caiu (nada foi pago de
    *  verdade ainda); vira o nome cheio assim que compensa. */
   nomeEnquantoGirando?: string;
+  /**
+   * 🆕 31/08 (pedido do Pedro, fusão A3+E9) — sub-descrição mostrada só
+   * quando o passo é o ATUAL: o que ele envolve + quanto tempo costuma levar
+   * (orienta pro que vem, tira a ansiedade do "quanto falta"). Pro passo que
+   * `aguardaCompensacao`, esta descrição SUBSTITUI o "Em andamento agora..."
+   * genérico enquanto girando.
+   */
+  descricao?: string;
 }
 
 export const PASSOS_CLIENTE: Passo[] = [
-  { nome: "Dados base preenchidos", tela: "E3.1" },
+  {
+    nome: "Dados base preenchidos",
+    tela: "E3.1",
+    descricao: "Nome, e-mail e telefone. Leva menos de 1 minuto.",
+  },
   {
     nome: "Plano escolhido e pago",
     tela: "E7+E9",
     aguardaCompensacao: true,
     nomeEnquantoGirando: "Plano escolhido",
+    descricao: "Aguardando o banco confirmar o boleto. Costuma cair em 1 a 3 dias úteis.",
   },
-  { nome: "CNAE principal da empresa", tela: "C0" },
-  { nome: "CNAE secundário da empresa", tela: "C5" },
-  { nome: "Dados pessoais complementares", tela: "C1" },
-  { nome: "Dados do INSS", tela: "C2" },
-  { nome: "Sócios", tela: "C3", condicional: true },
-  { nome: "Endereço fiscal da empresa", tela: "C4" },
-  { nome: "Nome da empresa e razão social", tela: "C7" },
+  {
+    nome: "CNAE principal da empresa",
+    tela: "C0",
+    descricao: "Descreve o que sua empresa faz e a gente encontra o código certo. Leva cerca de 2 minutos.",
+  },
+  {
+    nome: "CNAE secundário da empresa",
+    tela: "C5",
+    descricao: "Opcional: outras atividades que você também exerce. Leva cerca de 1 minuto.",
+  },
+  {
+    nome: "Dados pessoais complementares",
+    tela: "C1",
+    descricao: "RG, data de nascimento e nome da mãe. Leva cerca de 2 minutos.",
+  },
+  {
+    nome: "Dados do INSS",
+    tela: "C2",
+    descricao: "Se você já contribui por fora. Leva menos de 1 minuto.",
+  },
+  {
+    nome: "Sócios",
+    tela: "C3",
+    condicional: true,
+    descricao: "Nome e participação de cada sócio extra. Leva cerca de 2 minutos.",
+  },
+  {
+    nome: "Endereço fiscal da empresa",
+    tela: "C4",
+    descricao: "CEP, IPTU e capital social. Leva cerca de 3 minutos.",
+  },
+  {
+    nome: "Nome da empresa e razão social",
+    tela: "C7",
+    descricao: "3 opções de nome, sugeridas por IA. Leva cerca de 2 minutos.",
+  },
   // N19+N20 num passo só: pro cliente é um ato (conferir e autorizar). São
   // duas telas por razão jurídica (o racha do T18), não por razão de tarefa.
-  { nome: "Revisar e confirmar", tela: "A1+A2", travaSemPagamento: true },
+  {
+    nome: "Revisar e confirmar",
+    tela: "A1+A2",
+    travaSemPagamento: true,
+    descricao: "Confere tudo e autoriza a abertura. Leva cerca de 2 minutos.",
+  },
 ];
 
 /**

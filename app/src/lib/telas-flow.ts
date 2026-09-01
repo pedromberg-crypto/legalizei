@@ -360,11 +360,10 @@ export const GRUPOS: GrupoTelas[] = [
         nome: "C4 · Dados da empresa · 🏷️ AMBOS — reencontro (MEI: sem capital social)",
         nota: "Upsell endereço fiscal (oferece, não obriga; preço FAKE ~R$60). ✅ 28/07: IPTU virou OBRIGATÓRIO travado (JUCEMG exige, era opcional). Residência de sócio dinâmica pelo E5 (pula se solo). Alerta capital baixo. 🆕 04/08: campo do IPTU ganhou validação de dígito mínimo (10) — antes aceitava qualquer string não-vazia; 🟡 formato exato (10-12 dígitos) segue fila-Larissa.",
       },
-      {
-        rota: "/dossie/natureza",
-        nome: "C6 · Natureza jurídica · 🏷️ SÓ ME (MEI pula)",
-        nota: "Recomenda (solo→SLU), não trava. LTDA solo permitido (fato do CNPJ do Pedro). SLU+sócio = incoerência barrada.",
-      },
+      // 🗑️ 31/08 (validado pelo Pedro, reunião Rua Satélite 38-40) — C6
+      // (natureza jurídica, `/dossie/natureza`) REMOVIDA do flow real: SLU ×
+      // LTDA virou decisão 100% interna, sem tela nem rota. Ver
+      // PREENCHIDOS_INTERNAMENTE em `execucao/flow/flow-data.mjs`.
       {
         rota: "/dossie/nome",
         nome: "C7 · Razão social · 🏷️ AMBOS — reencontro final",

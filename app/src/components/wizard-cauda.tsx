@@ -10,7 +10,7 @@ import { PillCnpj, AprendaGradiente } from "@/components/lab/campea-blocks";
 import { QuemCuida } from "@/components/lab/ref9-blocks";
 import { CUSTOS, brl } from "@/lib/fiscal";
 import { passosDoCliente } from "@/lib/passos";
-import { ListaPassos } from "@/components/lista-passos";
+import { PainelView, ETAPAS_ABERTURA, type Etapa, type Recusa } from "@/components/painel";
 import { CLIENTE, TEM_SOCIO, NOME_EMPRESARIAL, CNAE_PRINCIPAL, CNAES_SECUNDARIAS } from "@/app/(app)/dossie/mock";
 
 /**
@@ -22,9 +22,13 @@ import { CLIENTE, TEM_SOCIO, NOME_EMPRESARIAL, CNAE_PRINCIPAL, CNAES_SECUNDARIAS
  * na extração — só ganharam `onSeguir`/`onVoltar` (a maioria não tinha CTA
  * ligado a lugar nenhum, porque nenhuma delas tinha sido apresentada ainda).
  *
- * ⚠️ `PainelView` (N21 + REC) **não está aqui** — já era componente
- * compartilhado em `components/painel.tsx` desde antes de hoje (`/painel` e
- * `/painel/recusa` já reusavam). A demo importa de lá direto.
+ * ⚠️ `PainelView` (N21 + REC) **não está aqui** — mora em `components/painel.tsx`.
+ * 🔒 31/08 (reunião Rua Satélite 38-40, pedido do Pedro) — deixou de ser só do
+ * MEI/Migrar: `AguardandoView` (P2/E9, logo abaixo) agora DELEGA pra ela. A2
+ * fundiu com E9 — os 9 passos do dossiê + as 3 etapas pós-dossiê (Junta) viraram
+ * UMA jornada só, na MESMA tela, e é essa tela que `/retomar` sempre mostra.
+ * `RetomarView` (a tela própria de "bem-vindo de volta") foi RETIRADA — reentrada
+ * agora é sempre `/aguardando` (só a CPF-gate, `RetomarCpfView`, continua aqui).
  *
  * ─── AS 2 PAUSAS NÃO SÃO "DEPOIS DO N16" — ENTRAM ANTES DO DOSSIÊ ─────────
  * P1 (retomar) e P2 (aguardando boleto) vivem no mapa como:
@@ -1326,97 +1330,6 @@ function IconeChevronAtivacao() {
 
 /* ═══════════════════ P1 · RETOMAR DE ONDE PAROU ═════════════════════════ */
 
-// 🔄 28/08 (correção do Pedro) — `concluidos` era 4 (contava os 2 CNAEs como
-// feitos), mas o destino real do retomar é a C0 (`/retomar/page.tsx` manda
-// pra `/dossie/atividade` ou `/dossie/ocupacao`) — quem volta aqui ainda NÃO
-// escolheu CNAE nenhum. 2 = só os 2 passos de pré-pagamento (dados base +
-// plano escolhido e pago); "CNAE principal da empresa" é a vez agora.
-const ESTADO_P1 = { diasFora: 6, concluidos: 2 };
-
-/** Cartão-resumo do progresso — badge "Constituição"+%, "Você está em/X de Y
- *  passos", meta "Agora"+2ª info à direita. Origem: `components/lab/
- *  validados.tsx` (asset "Cartão de saldo — progresso"), promovido pra
- *  produção aqui — usado nas 2 telas da cauda que retomam o cliente
- *  (Retomar de onde parou / Boleto a caminho). */
-function CartaoResumoPassos({
-  titulo,
-  pct,
-  feito,
-  total,
-  agora,
-  metaDirRotulo,
-  metaDirValor,
-  escuro = false,
-}: {
-  /** 🔄 28/08 (pedido do Pedro) — "coloque o bem-vindo dentro desse card,
-   *  ficando 1 só": funde o hero de saudação com o resumo de progresso. */
-  titulo?: string;
-  pct: number;
-  feito: number;
-  total: number;
-  agora: string;
-  metaDirRotulo: string;
-  metaDirValor: string;
-  /** 🧪 28/08 (pedido do Pedro) — "só pra eu ver", preview em modo escuro.
-   *  Não é decisão travada, `false` continua o padrão (light-only). */
-  escuro?: boolean;
-}) {
-  return (
-    <div
-      className={`rounded-[24px] p-5 ${escuro ? "text-text-on-dark" : "border border-border-hairline bg-surface-card"}`}
-      style={
-        escuro
-          ? {
-              background:
-                "radial-gradient(120% 100% at 0% 0%, color-mix(in srgb, var(--color-action-primary) 45%, transparent) 0%, transparent 55%), var(--color-surface-dark)",
-            }
-          : undefined
-      }
-    >
-      {titulo && <p className="mb-4 text-display font-bold leading-tight">{titulo}</p>}
-      <div className="flex items-center justify-between">
-        <span className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 ${escuro ? "bg-white/10" : "bg-surface-alt"}`}>
-          <IconeBandeiraPasso />
-          <span className={`text-micro font-semibold ${escuro ? "" : "text-text-primary"}`}>Constituição</span>
-        </span>
-        <span className={`text-caption font-bold ${escuro ? "text-text-on-dark/60" : "text-text-tertiary"}`}>{pct}%</span>
-      </div>
-      <p className={`mt-4 text-caption ${escuro ? "text-text-on-dark/60" : "text-text-tertiary"}`}>Você está em</p>
-      <p className={`text-h1 font-bold leading-tight ${escuro ? "" : "text-text-primary"}`}>
-        {feito} de {total} passos
-      </p>
-      <div className="mt-4 flex items-center justify-between">
-        <div>
-          <p className={`text-micro ${escuro ? "text-text-on-dark/60" : "text-text-tertiary"}`}>Agora</p>
-          <p className={`text-caption font-semibold ${escuro ? "" : "text-text-primary"}`}>{agora}</p>
-        </div>
-        <div className="text-right">
-          <p className={`text-micro ${escuro ? "text-text-on-dark/60" : "text-text-tertiary"}`}>{metaDirRotulo}</p>
-          <p className={`text-caption font-semibold ${escuro ? "" : "text-text-primary"}`}>{metaDirValor}</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function IconeBandeiraPasso() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M4 21V4" />
-      <path d="M4 5h13l-2 4 2 4H4" />
-    </svg>
-  );
-}
 
 /**
  * 🆕 30/08 (pedido do Pedro) — PORTA DE ENTRADA da reentrada (P1). Antes o
@@ -1467,72 +1380,20 @@ export function RetomarCpfView({
   );
 }
 
-export function RetomarView({
-  mei = false,
-  temSocios = true,
-  onSeguir,
-}: {
-  /** MEI não tem "Sócios" na lista (repassa pra `ListaPassos`). */
-  mei?: boolean;
-  /** ME "Só eu" também não tem "Sócios" na lista. */
-  temSocios?: boolean;
-  onSeguir?: () => void;
-}) {
-  const passos = passosDoCliente({ mei, temSocios });
-  const feito = ESTADO_P1.concluidos;
-  // ⚠️ O destino ("Empresa constituída") NÃO entra no denominador — mesma
-  // régua de sempre (`lista-passos.tsx`): passo é o que o cliente FAZ, o
-  // destino é o que ele RECEBE. A barra de progresso é chrome novo (A5), o
-  // número "X de Y" continua exatamente o de antes.
-  const total = passos.length;
-  const pct = Math.round((feito / total) * 100);
+// 🗑️ 31/08 (validado pelo Pedro, reunião Rua Satélite 38-40) — RetomarView
+// REMOVIDA. "Bem-vindo de volta" virou o mesmo `AguardandoView` de sempre
+// (com `pago=true`, que já lê como "voltando" — "Tudo certo por aqui. Bora
+// continuar de onde você parou?"). Retomar (`/retomar`) hoje só faz a
+// CPF-gate (`RetomarCpfView`, abaixo) e manda pra `/aguardando` sempre —
+// uma tela única de reentrada, não duas.
 
-  return (
-    <>
-      <TelaHeader meta="Continuando" />
-
-      <main className="app-main">
-        {/* 🔄 28/08 (pedido do Pedro: "layout da A5, só layout") — mesma
-            estrutura da Home dia-1: hero escuro com o título, depois um card
-            branco com barra de progresso + trilha conectada. Conteúdo e
-            estados não mudaram, só a casca. */}
-        <div className="min-h-0 flex-1 overflow-y-auto pt-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <div className="flex flex-col gap-4 pb-[calc(24px+var(--safe-bottom))]">
-            {/* 🔄 28/08 (pedido do Pedro: "coloque o bem-vindo dentro desse
-                card, ficando 1 só") — hero de saudação + resumo de progresso
-                fundidos num cartão só (era 2 cartões separados). */}
-            <CartaoResumoPassos
-              titulo="Bem-vindo de volta"
-              pct={pct}
-              feito={feito}
-              total={total}
-              agora={passos[feito]?.nome ?? "—"}
-              metaDirRotulo="Saiu há"
-              metaDirValor={`${ESTADO_P1.diasFora} dias`}
-              escuro
-            />
-
-            <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
-              <ListaPassos concluidos={feito} mostrarDestino mei={mei} temSocios={temSocios} />
-            </div>
-
-            <p className="text-micro text-text-tertiary px-1">
-              Seu pagamento está registrado. Nada é cobrado nem aberto duas vezes.
-            </p>
-          </div>
-        </div>
-
-        <Rodape>
-          <Button full onClick={onSeguir}>
-            Continuar de onde parei
-          </Button>
-        </Rodape>
-      </main>
-    </>
-  );
-}
-
-/* ═══════════════════ P2 · AGUARDANDO O BOLETO ═══════════════════════════ */
+/* ═══════════════════ P2 · AGUARDANDO O BOLETO / STATUS DA ABERTURA ══════
+   🔒 31/08 (reunião Rua Satélite 38-40, pedido do Pedro) — fundida com o
+   antigo A3 (Painel, `components/painel.tsx`). Uma jornada só: os 9 passos
+   do dossiê (`passosDoCliente`) primeiro, depois as 3 etapas da Junta
+   (`ETAPAS_ABERTURA`, importado de `painel.tsx`). `PainelView` é o motor de
+   render (StatusIcon 4-estados); esta função só monta os dados e adapta a
+   copy/CTA conforme a fase. ═══════════════════════════════════════════ */
 
 // 🔄 28/08 (correção do Pedro) — era 7 (contava até "Sócios" como feito), mas
 // o destino real do "Continuar" desta tela é a C0 (`/aguardando/page.tsx`
@@ -1542,113 +1403,188 @@ export function RetomarView({
 // vez agora. O boleto pendente não trava nada além disso — só "Revisar e
 // confirmar" (o desfecho) fica retido até compensar.
 const BOLETO_P2 = { passosFeitos: 2 };
+// 🆕 31/08 — mock da fase pós-dossiê (era o default de `/painel`, ME):
+// documentação+viabilidade já ok, DAE aguardando pagamento.
+const JUNTA_MOCK = { concluidas: 1, emAndamento: 1 };
 
 export function AguardandoView({
   mei = false,
   temSocios = true,
   pago = false,
+  fase = "dossie",
+  dossieFeitos,
+  junta = JUNTA_MOCK,
+  recusa,
   onSeguir,
+  onPagarDae,
+  onAcaoRecusa,
 }: {
-  /** 🆕 04/08 — MEI não paga taxa da Junta e tem mensalidade própria
-   *  (`CUSTOS.MENSALIDADE_MEI`) — esta tela ainda cravava DAE+mensalidade
-   *  genérica no boleto, mesmo gap já corrigido em `wizard-dinheiro.tsx`.
-   *  Também: MEI não tem "Sócios" na lista (repassa pra `ListaPassos`). */
+  /** 🆕 04/08 — MEI não tem "Sócios" na lista (repassa pra `passosDoCliente`). */
   mei?: boolean;
   /** ME "Só eu" também não tem "Sócios" na lista. */
   temSocios?: boolean;
   /**
-   * 🆕 30/08 (pedido do Pedro) — E9.1P do mapa: variante "pago" desta MESMA
-   * tela, pra quem pagou por método instantâneo (cartão/Pix) via E9.S
-   * (splash "pagamento confirmado"). Antes esses métodos pulavam direto pro
-   * C0; agora passam por aqui também, só que já com o pagamento resolvido —
-   * `ListaPassos` já sabia fazer essa distinção (`pagamentoPendente=false`),
-   * só faltava a tela de cima (hero + microtexto) saber contar a diferença.
+   * 🆕 30/08 (pedido do Pedro) — E9.1P do mapa: variante "pago" pra quem pagou
+   * por método instantâneo (cartão/Pix) via E9.S. Só importa enquanto
+   * `fase === "dossie"` — na fase "junta" o pagamento já é passado.
    */
   pago?: boolean;
+  /**
+   * 🔒 31/08 (fusão A3+E9, pedido do Pedro) — a MESMA tela cobre 2 fases da
+   * jornada: "dossie" (preenchendo C0-C7, era o `AguardandoView` de sempre) e
+   * "junta" (dossiê fechado, era o `PainelView`/A3 isolado). Uma única rota
+   * (`/aguardando`) e um único destino de "retomar" — a fase é que muda a
+   * copy do hero e se existe CTA fixo no rodapé.
+   */
+  fase?: "dossie" | "junta";
+  /** Quantos dos 9 passos do dossiê já foram feitos (fase "dossie"). Default
+   *  = mock de sempre (`BOLETO_P2`). */
+  dossieFeitos?: number;
+  /** Progresso dentro das 3 etapas pós-dossiê (fase "junta"). */
+  junta?: { concluidas: number; emAndamento: number };
+  /** Recusa de nome na Junta — etapa é relativa às 3 etapas pós-dossiê (0-2). */
+  recusa?: Omit<Recusa, "etapa"> & { etapa: number };
   onSeguir?: () => void;
+  onPagarDae?: () => void;
+  onAcaoRecusa?: () => void;
 }) {
   const passos = passosDoCliente({ mei, temSocios });
-  const total = passos.length;
-  const pct = Math.round((BOLETO_P2.passosFeitos / total) * 100);
-  const boleto = mei ? CUSTOS.MENSALIDADE_MEI : CUSTOS.DAE_JUCEMG + CUSTOS.MENSALIDADE;
+  const dossieTotal = passos.length;
+  const feitos = dossieFeitos ?? BOLETO_P2.passosFeitos;
+
+  const naFaseJunta = fase === "junta";
+
+  /**
+   * 🐛→🔒 31/08 (correção do Pedro, viu ao vivo) — com o boleto pendente, o
+   * anel girando estava no passo do CNAE, dando a entender que a espera era
+   * pelo CNAE. A espera é pelo BANCO: quem gira é o passo "Plano escolhido e
+   * pago" (i=1), e o nome dele vira só "Plano escolhido" enquanto isso
+   * (`nomeEnquantoGirando` — "e pago" mentiria, nada compensou ainda). Os
+   * passos do dossiê ficam todos a-fazer, porque estão travados mesmo.
+   */
+  const indiceGirandoBoleto = passos.findIndex((p) => p.aguardaCompensacao);
+  const boletoPendente = !naFaseJunta && !pago && indiceGirandoBoleto >= 0;
+
+  // A lista combinada: os 9 passos do dossiê primeiro, depois as 3 etapas da
+  // Junta — UMA jornada só, do 1º dado digitado ao CNPJ sair.
+  // 🆕 31/08 (pedido do Pedro) — cada passo carrega `descricao` (o que envolve
+  // + quanto tempo leva, ver `lib/passos.ts`); o PainelView só mostra a do
+  // passo ATUAL, como orientação do que vem pela frente.
+  const etapasDossie: Etapa[] = passos.map((p, i) => ({
+    nome: boletoPendente && i === indiceGirandoBoleto ? (p.nomeEnquantoGirando ?? p.nome) : p.nome,
+    detalhe: p.descricao,
+  }));
+  const etapasCombinadas: Etapa[] = [...etapasDossie, ...ETAPAS_ABERTURA];
+
+  const emAndamentoDossie = boletoPendente ? indiceGirandoBoleto : feitos;
+  const concluidas = naFaseJunta
+    ? dossieTotal + junta.concluidas
+    : boletoPendente
+      ? indiceGirandoBoleto
+      : feitos;
+  const emAndamento = naFaseJunta ? dossieTotal + junta.emAndamento : emAndamentoDossie;
+
+  // 🐛→🔒 31/08 (correção do Pedro) — a fase DOSSIÊ não ganha `acaoCliente`
+  // inline: o CTA "Continuar preenchendo" já existe fixo no rodapé, e repetir
+  // dentro do passo era redundante (ele viu ao vivo, "está redundante"). Só a
+  // fase JUNTA usa CTA inline, porque lá NÃO há rodapé fixo (K6) e a ação é
+  // pontual daquela etapa (pagar a guia).
+  const etapas = naFaseJunta
+    ? etapasCombinadas.map((e, i) =>
+        i === emAndamento && e.acaoCliente
+          ? { ...e, acaoCliente: { ...e.acaoCliente, onClick: onPagarDae } }
+          : e,
+      )
+    : etapasCombinadas;
+
+  const t = naFaseJunta
+    ? { normal: "Estamos abrindo sua empresa", recusa: "Precisamos de você num ponto" }
+    : {
+        normal: pago ? "Pagamento confirmado" : "Seu boleto está a caminho",
+        recusa: "Precisamos de você num ponto",
+      };
+  const s = naFaseJunta
+    ? {
+        normal:
+          "A parte chata é com a gente. Você acompanha por aqui e a gente avisa no WhatsApp a cada passo.",
+        recusa: "A abertura seguiu bem até aqui. Um órgão pediu um ajuste, e é rápido de resolver.",
+      }
+    : {
+        // 🐛→🔒 31/08 (correção do Pedro) — "enquanto isso, vamos adiantar
+        // algumas informações?" era MENTIRA: com o boleto pendente o dossiê
+        // fica travado, não dá pra adiantar nada. Ficou só o fato.
+        normal: pago
+          ? "Tudo certo por aqui. Bora continuar de onde você parou?"
+          : "Boleto leva de 1 a 3 dias úteis pra cair.",
+        recusa: "",
+      };
 
   return (
-    <>
-      <TelaHeader meta="Seu pagamento" />
-
-      <main className="app-main">
-        {/* 🔄 28/08 (pedido do Pedro: "layout da A5, só layout") — mesma
-            estrutura da Home dia-1: hero escuro (com os 2 CTAs de boleto
-            virando chips, no idioma do CNPJ-copiar/Cartão-CNPJ do A5), card
-            branco com progresso + trilha. Conteúdo e estados intactos. */}
-        <div className="min-h-0 flex-1 overflow-y-auto pt-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <div className="flex flex-col gap-4 pb-[calc(24px+var(--safe-bottom))]">
-            <div
-              className="rounded-2xl p-5 text-text-on-dark"
-              style={{
-                background:
-                  "radial-gradient(120% 100% at 0% 0%, color-mix(in srgb, var(--color-action-primary) 45%, transparent) 0%, transparent 55%), var(--color-surface-dark)",
-              }}
+    <PainelView
+      eyebrow={naFaseJunta ? "Sua abertura" : "Seu pagamento"}
+      titulo={t}
+      sub={s}
+      // 🆕 31/08 (pedido do Pedro, ao ver a fusão ao vivo) — hero escuro, o
+      // mesmo do antigo AguardandoView. Curtiu o status+timeline do Painel,
+      // mas quis de volta o "menu superior" escuro por cima, COM os 2 chips
+      // de pagamento (valor do boleto + "prefiro pagar por Pix") — sem eles
+      // o hero ficava "cru".
+      escuro
+      heroExtra={
+        !naFaseJunta && !pago ? (
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              className="flex items-center gap-1.5 rounded-full bg-surface-card px-3 py-1.5 text-caption font-semibold text-text-primary transition-colors active:bg-surface-alt"
             >
-              <p className="text-h2 font-bold leading-tight">
-                {pago ? "Pagamento confirmado" : "Seu boleto está a caminho"}
-              </p>
-              <p className="mt-1 text-caption text-text-on-dark/70">
-                {pago
-                  ? "Tudo certo por aqui. Bora continuar de onde você parou?"
-                  : "Boleto leva de 1 a 3 dias úteis pra cair. Enquanto isso, vamos adiantar algumas informações?"}
-              </p>
-              {!pago && (
-                <div className="mt-4 flex flex-wrap items-center gap-2">
-                  <button
-                    type="button"
-                    className="flex items-center gap-1.5 rounded-full bg-surface-card px-3 py-1.5 text-caption font-semibold text-text-primary transition-colors active:bg-surface-alt"
-                  >
-                    Ver o boleto de {brl(boleto, true)}
-                  </button>
-                  <button
-                    type="button"
-                    className="flex items-center gap-1.5 rounded-full border border-border-hairline px-3 py-1.5 text-caption font-medium text-text-on-dark/80 transition-colors active:bg-white/10"
-                  >
-                    Prefiro pagar por Pix
-                  </button>
-                </div>
-              )}
-            </div>
-
-            <CartaoResumoPassos
-              pct={pct}
-              feito={BOLETO_P2.passosFeitos}
-              total={total}
-              agora={passos[BOLETO_P2.passosFeitos]?.nome ?? "—"}
-              metaDirRotulo={pago ? "Pagamento" : "Boleto"}
-              metaDirValor={pago ? "Confirmado" : "1 a 3 dias úteis"}
-            />
-
-            <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
-              <ListaPassos
-                concluidos={BOLETO_P2.passosFeitos}
-                pagamentoPendente={!pago}
-                mostrarDestino
-                mei={mei}
-                temSocios={temSocios}
-              />
-            </div>
-
-            <p className="text-micro text-text-tertiary px-1">
-              {pago
-                ? "Seu progresso está salvo. Pode sair e voltar quando quiser."
-                : "Seu progresso está salvo. Se você já pagou, não cobramos de novo."}
-            </p>
+              Ver o boleto de {brl(mei ? CUSTOS.MENSALIDADE_MEI : CUSTOS.MENSALIDADE, true)}
+            </button>
+            <button
+              type="button"
+              className="flex items-center gap-1.5 rounded-full border border-border-hairline px-3 py-1.5 text-caption font-medium text-text-on-dark/80 transition-colors active:bg-white/10"
+            >
+              Prefiro pagar por Pix
+            </button>
           </div>
-        </div>
-
-        <Rodape>
-          <Button full onClick={onSeguir}>
-            Continuar preenchendo
-          </Button>
-        </Rodape>
-      </main>
-    </>
+        ) : undefined
+      }
+      concluidas={concluidas}
+      emAndamento={emAndamento}
+      etapas={etapas}
+      socios={temSocios ? 2 : 1}
+      recusa={recusa ? { ...recusa, etapa: dossieTotal + recusa.etapa } : undefined}
+      onAcaoRecusa={onAcaoRecusa}
+      // K6: status puro não inventa ação — só existe CTA fixo enquanto o
+      // dossiê não fechou ("Continuar preenchendo"). Na fase Junta, a ação (se
+      // houver) já mora inline na etapa (DAE) ou na recusa — nada no rodapé.
+      // 🔒 31/08 (correção do Pedro) — enquanto o boleto não compensa, o
+      // dossiê fica TRAVADO: o CTA continua visível (a pessoa vê que existe
+      // próximo passo) mas desabilitado, senão prometeria uma ação que o
+      // backend recusa.
+      // 🆕 31/08 (pedido do Pedro) — o rótulo muda junto: desabilitado diz
+      // POR QUE está travado ("Aguardando compensar"), não repete a ação que
+      // não dá pra fazer.
+      ctaNormal={
+        !naFaseJunta
+          ? {
+              label: pago ? "Continuar preenchendo" : "Aguardando compensar",
+              onClick: onSeguir,
+              desabilitado: !pago,
+            }
+          : undefined
+      }
+      prazo={
+        naFaseJunta
+          ? undefined
+          : "Boleto leva de 1 a 3 dias úteis. Se já pagou, o próximo passo libera assim que compensar."
+      }
+      idempotencia={
+        naFaseJunta
+          ? undefined
+          : pago
+            ? "Seu progresso está salvo. Pode sair e voltar quando quiser."
+            : "Seu progresso está salvo. Se você já pagou, não cobramos de novo."
+      }
+    />
   );
 }

@@ -31,6 +31,12 @@ import { TEM_SOCIO } from "@/app/(app)/dossie/mock";
  *
  * 🆕 04/08 — `?regime=mei` corrige o valor do boleto (sem DAE, mensalidade
  * própria) e repassa o regime adiante pro dossiê.
+ *
+ * 🔒 31/08 (reunião Rua Satélite 38-40, pedido do Pedro) — FUSÃO A3+E9: esta
+ * rota deixou de ser só "aguardando boleto" e virou A TELA DE STATUS única da
+ * abertura inteira. `?fase=junta` mostra a fase pós-dossiê (era `/painel`,
+ * agora aposentado pro caminho ME — MEI e Migrar continuam lá, pipelines
+ * diferentes). `/retomar` sempre cai aqui.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function AguardandoPage() {
@@ -44,12 +50,17 @@ export default function AguardandoPage() {
   // com `?pago=1`. Boleto continua sem o flag (pendente, comportamento de
   // sempre).
   const pago = searchParams.get("pago") === "1";
+  // 🆕 31/08 — fase pós-dossiê (era `/painel`, caminho ME). Mock por query:
+  // `?fase=junta` (farol: documentação+viabilidade ok, DAE aguardando).
+  const fase = searchParams.get("fase") === "junta" ? "junta" : "dossie";
 
   return (
     <AguardandoView
       mei={mei}
       temSocios={TEM_SOCIO}
       pago={pago}
+      fase={fase}
+      onPagarDae={() => router.push("/certificado")}
       // 🔄 27/08 — a 1ª tela do dossiê virou a C0 (`/dossie/atividade`), não
       // mais o C1. Mesma mudança do `/pagamento` (racional lá).
       // 🐛 28/08 — faltava o ramo MEI: ia sempre pra C0 (ME), mesmo quando

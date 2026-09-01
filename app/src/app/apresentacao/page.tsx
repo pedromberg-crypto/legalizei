@@ -37,7 +37,6 @@ import {
   AssinaturaView,
   HomeAtivacaoView,
   RetomarCpfView,
-  RetomarView,
   AguardandoView,
   CertificadoGateView,
 } from "@/components/wizard-cauda";
@@ -2608,8 +2607,11 @@ export default function ApresentacaoPage() {
                             onVoltar={() => voltar(() => setEtapa("fork"))}
                           />
                         )}
+                        {/* 🔒 31/08 (fusão A3+E9) — RetomarView foi retirada:
+                            retomar agora é sempre o mesmo AguardandoView
+                            (`pago`, que já lê como "voltando"). */}
                         {etapa === "retomar" && (
-                          <RetomarView onSeguir={() => setEtapa("perguntando")} />
+                          <AguardandoView pago onSeguir={() => setEtapa("perguntando")} />
                         )}
                         {etapa === "aguardando" && (
                           <AguardandoView onSeguir={() => setEtapa("perguntando")} />

@@ -284,6 +284,7 @@ type Etapa =
   | "guia"
   | "guia-splash"
   | "guia-boleto"
+  | "guia-paga"
   | "painel-recusa"
   | "assinatura"
   | "ativacao"
@@ -481,6 +482,8 @@ const ETAPAS_ESPERA = [
   // 🆕 01/09 — os 2 splashes DA GUIA (A3.PS/A3.PSB), espelho do par do E9.
   "guia-splash",
   "guia-boleto",
+  // 🆕 01/09 — o estado "guia paga" do status (A3′), par do "guia-boleto".
+  "guia-paga",
   "aguardando-pago",
 ] as const satisfies readonly Etapa[];
 
@@ -603,6 +606,7 @@ type Momento =
   | "guia"
   | "guia-splash"
   | "guia-boleto"
+  | "guia-paga"
   | "painel-recusa"
   | "assinatura"
   | "ativacao"
@@ -1007,6 +1011,7 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   guia: "/guia",
   "guia-splash": "/splash-pagamento",
   "guia-boleto": "/aguardando?fase=junta&guia=boleto",
+  "guia-paga": "/aguardando?fase=junta&guia=paga",
 };
 
 const SUFIXO_MOMENTO: Partial<Record<Momento, string>> = {
@@ -1392,6 +1397,14 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
       "A Junta só registra com a guia compensada, o que leva de 1 a 3 dias úteis. A etapa não pode voltar a pedir pagamento (a pessoa já pagou) nem fingir que está resolvida.",
     porque:
       "Mesmo par de ações que o hero do E9.1 já usava pro boleto da mensalidade: o boleto à mão pra quem perdeu o e-mail, e o Pix pra quem não quer esperar. Conveniência, não cobrança.",
+  },
+  "guia-paga": {
+    dono: "nossa",
+    faz: "🆕 01/09 — o status DEPOIS que a guia foi paga por cartão ou Pix: a etapa da DAE fecha em verde e \"Agora é só assinar\" vira a vez.",
+    interfere:
+      "É o destravamento da assinatura: sem a guia compensada a Junta não registra, então esta é a fronteira entre esperar e agir.",
+    porque:
+      "Virou tela própria no mapa (A3′) porque é OUTRO estado da mesma rota, e estado que muda o que a pessoa pode fazer merece nó — mesma régua que já separa E9.1 de E9.1P.",
   },
   painel: {
     dono: "nossa",
@@ -1962,6 +1975,7 @@ export default function ApresentacaoPage() {
     { etapa: "guia", label: "🆕 A3.P · Guia da Junta" },
     { etapa: "guia-splash", label: "🆕 A3.PS · Guia paga" },
     { etapa: "guia-boleto", label: "🆕 A3.PSB · Guia no boleto" },
+    { etapa: "guia-paga", label: "🆕 A3′ · Guia paga" },
     // 🗑️ 01/09 — "A3.2 · Certificado" saiu do carrossel do ME.
     { etapa: "assinatura", label: "A4 · Assinatura" },
     { etapa: "ativacao", label: "🔓 A5 · Ativação" },
@@ -2602,6 +2616,13 @@ export default function ApresentacaoPage() {
                             titulo="Pagamento confirmado."
                             sub="A guia foi paga. A Junta já pode registrar."
                             onAutoAvancar={() => setEtapa("assinatura")}
+                          />
+                        )}
+                        {etapa === "guia-paga" && (
+                          <AguardandoView
+                            fase="junta"
+                            junta={{ concluidas: 2, emAndamento: 2 }}
+                            temSocios={socios === 2}
                           />
                         )}
                         {etapa === "guia-boleto" && (

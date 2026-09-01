@@ -131,7 +131,11 @@ export const CUSTOS = {
  * sair errado em silêncio. Mexeu numa lista, confere a outra.
  */
 export const FAIXA_MEDIA: Record<string, number> = {
-  "ate 5k": 3500,
+  // 🔄 01/09 — "Não sei ainda" (era "Até R$ 5 mil"): sem estimativa, o valor
+  // é ZERO de propósito. `proLaboreOtimo` tem piso no salário mínimo, então o
+  // resultado vira o mínimo legal em vez de um número inventado a partir de um
+  // chute que a pessoa disse não ter.
+  "nao-sei": 0,
   "5-10k": 7500,
   "10-20k": 15000,
   "20-30k": 25000,

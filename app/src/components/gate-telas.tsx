@@ -125,7 +125,19 @@ const RITMO = {
  * mudar de novo, o gate acompanha.
  */
 export const FAIXAS = [
-  { id: "ate 5k", label: "Até R$ 5 mil", min: 0, max: 5000 },
+  /**
+   * 🔄 01/09 (pedido do Pedro) — a faixa "Até R$ 5 mil" virou **"Não sei
+   * ainda"**. Quem abre a 1ª empresa muitas vezes não tem estimativa, e
+   * forçar um número faz a pessoa chutar — chute que depois vira base do
+   * pró-labore sugerido e do enquadramento. Resposta honesta vale mais que
+   * número inventado.
+   *
+   * `desconhecida` marca que este cartão não é uma faixa de valor, é a
+   * ausência de resposta. Por isso `min`/`max` cobrem tudo o que atendemos
+   * (0 a 30k): não dá pra afirmar nada sobre o teto do MEI a partir dela, e o
+   * gate precisa ler "incerto", nunca "seguro".
+   */
+  { id: "nao-sei", label: "Não sei ainda", min: 0, max: 30000, desconhecida: true },
   { id: "5-10k", label: "R$ 5 a 10 mil", min: 5000, max: 10000 },
   { id: "10-20k", label: "R$ 10 a 20 mil", min: 10000, max: 20000 },
   { id: "20-30k", label: "R$ 20 a 30 mil", min: 20000, max: 30000 },
@@ -789,7 +801,9 @@ export function TriagemView({
  */
 export function faixaDoValor(v: number): string | null {
   if (v <= 0) return null;
-  const faixa = FAIXAS.find((f) => v > f.min && v <= f.max);
+  // Pula a opção "Não sei ainda": ela cobre 0-30k de propósito (pro gate do
+  // MEI ler incerteza), mas quem digitou um valor exato NUNCA deve cair nela.
+  const faixa = FAIXAS.find((f) => !f.desconhecida && v > f.min && v <= f.max);
   return faixa ? faixa.id : FAIXAS[FAIXAS.length - 1].id;
 }
 

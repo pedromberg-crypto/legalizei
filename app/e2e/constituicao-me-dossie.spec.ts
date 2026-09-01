@@ -462,7 +462,7 @@ test.describe("constituição ME — aprovação A1→A5", () => {
 test.describe("constituição ME — E5 faixa e E6 conta", () => {
   test("E5 · faixas terminam no teto do ME (R$30 mil/mês), sem '+30k'", async ({ page }) => {
     await page.goto("/gate?etapa=faixa");
-    for (const faixa of ["Até R$ 5 mil", "R$ 5 a 10 mil", "R$ 10 a 20 mil", "R$ 20 a 30 mil"]) {
+    for (const faixa of ["Não sei ainda", "R$ 5 a 10 mil", "R$ 10 a 20 mil", "R$ 20 a 30 mil"]) {
       await expect(page.getByRole("button", { name: faixa })).toBeVisible();
     }
     // 🔄 01/09 — a faixa "+ R$ 30 mil" saiu: acima disso é EPP, fora do escopo,

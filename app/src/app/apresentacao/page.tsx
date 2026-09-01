@@ -1357,9 +1357,9 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   },
   empresa: {
     dono: "usuario",
-    faz: "Endereço da empresa (CEP puxa o resto), índice do IPTU, tipo do imóvel (casa ou apartamento) e se o titular mora no local.",
+    faz: "🔄 01/09 — a tela ficou com UM campo: o índice cadastral do IPTU. Endereço, tipo de imóvel e residência aparecem TRAVADOS, vindos do E3.4.",
     interfere:
-      "É a tela mais pesada da constituição. O índice do IPTU é OBRIGATÓRIO: sem ele a documentação não passa na JUCEMG. E a residência do titular é o que a Prefeitura de BH usa pra deferir ou indeferir quando o endereço é apartamento — vimos a mesma empresa mudar de indeferida pra deferida só trocando essa resposta.",
+      "O índice do IPTU é OBRIGATÓRIO: sem ele a documentação não passa na JUCEMG. O resto já foi decidido antes do pagamento — inclusive a residência do titular, que é o que a Prefeitura de BH usa pra deferir ou indeferir quando o endereço é apartamento.",
     porque:
       "Área utilizada, atividade inócua, forma de atuação, capital social (R$10.000 fixo desde 31/08) e \"edificação nova\" a gente resolve por dentro, sem perguntar. Só pedimos o que ninguém consegue adivinhar — e \"edificação nova\" é justamente o oposto: termo técnico da Prefeitura que o cliente responderia errado com confiança. Quem não tem endereço comercial compra o nosso aqui, em vez de travar. 🗑️ 01/09: o upsell de endereço fiscal saiu daqui. Ou a pessoa escolheu o nosso endereço lá no E3.4 (e esta tela não existe pra ela), ou informou o dela — e aqui o que já foi respondido vem TRAVADO, com só os campos que faltam editáveis. Vender endereço depois do pagamento seria mexer na mensalidade fora de hora.",
   },

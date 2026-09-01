@@ -1015,10 +1015,9 @@ export function SociosView({
  * "(casa ou ponto)" bate com a fala real da especialista — não é "casa ou
  * apartamento" (isso é outro campo, ver TIPO_IMOVEL abaixo).
  */
-const TIPO_ENDERECO = [
-  { v: "proprio", label: "Endereço próprio (casa ou ponto)" },
-  { v: "coworking", label: "Coworking" },
-];
+// 🗑️ 01/09 — `TIPO_ENDERECO` saiu junto da pergunta "Como é esse endereço?":
+// o E3.4 já resolve isso (endereço dele × o nosso) e o tipo de imóvel
+// (casa/apartamento/outro) responde o resto. Sem consumidor, a lista sai.
 
 /**
  * 🆕 31/08 (achado da reunião Rua Satélite 38-40 + prints reais da JUCEMG) —
@@ -1108,11 +1107,28 @@ export function EmpresaView({
    * que é o único caso que esta tela atende.
    */
   const usarProprio = enderecoProprio ?? true;
-  const [cep, setCep] = useState(inicial?.cep ?? "");
-  const [numero, setNumero] = useState(inicial?.numero ?? "");
-  const [complemento, setComplemento] = useState(inicial?.complemento ?? "");
+  /**
+   * 🔄 01/09 (pedido do Pedro) — sem `inicial` (deep-link, `/mockup`, prévia
+   * do `/mapa`), a tela cai no MOCK em vez de mostrar formulário vazio. Não é
+   * conveniência de demo: quem chega nesta tela SEMPRE veio do E3.4 no flow
+   * real, então o formulário vazio era um estado que não existe — e era ele
+   * que aparecia no board, dando a impressão de que a C4 repergunta o
+   * endereço.
+   */
+  const doGate = inicial ?? {
+    cep: PREENCHIMENTO.empresa.cep,
+    numero: PREENCHIMENTO.empresa.numero,
+    complemento: PREENCHIMENTO.empresa.complemento,
+    tipoImovel: PREENCHIMENTO.empresa.tipoImovel,
+    resideNoEndereco: true as boolean | null,
+  };
+  const [cep, setCep] = useState(doGate.cep);
+  const [numero, setNumero] = useState(doGate.numero);
+  const [complemento, setComplemento] = useState(doGate.complemento);
   const [iptu, setIptu] = useState("");
-  const [tipo, setTipo] = useState("");
+  // 🔄 01/09 — não é mais pergunta: quem chega nesta tela tem endereço
+  // próprio (quem escolheu o nosso endereço fiscal nem vê a C4).
+  const tipo = "proprio";
   // 🔒 31/08 (validado pelo Pedro) — capital social TRAVADO em R$10.000 pra
   // prestador de serviço, preenchido por nós. Deixou de ser campo editável
   // (antes tinha chips de 1k/5k/10k + input livre — a decisão da reunião
@@ -1122,7 +1138,7 @@ export function EmpresaView({
   // PRÓPRIO. Dirige a regra de residência logo abaixo.
   // 🔄 01/09 — nasce do que foi respondido no E3.4 (a pergunta subiu pra lá,
   // pré-pagamento); aqui vira confirmação.
-  const [tipoImovel, setTipoImovel] = useState(inicial?.tipoImovel ?? "");
+  const [tipoImovel, setTipoImovel] = useState(doGate.tipoImovel);
   // 🆕 28/08 — só o MEI usa (ver o bloco "Como você atende?" mais abaixo).
   const [atuacao, setAtuacao] = useState<string[]>([]);
   /**
@@ -1133,7 +1149,7 @@ export function EmpresaView({
    * separada por sócio extra nesse ponto do fluxo.
    */
   const [resideNoEndereco, setResideNoEndereco] = useState<boolean | null>(
-    inicial?.resideNoEndereco ?? null,
+    doGate.resideNoEndereco,
   );
   /**
    * 🆕 01/09 — a resposta sobre o imóvel veio do gate (E3.4)? Então esta tela
@@ -1143,7 +1159,7 @@ export function EmpresaView({
    * fixa do C1, pra todo mundo.
    */
   const respostaImovelVeioDoGate =
-    (inicial?.tipoImovel ?? "") !== "" && inicial?.resideNoEndereco !== null;
+    doGate.tipoImovel !== "" && doGate.resideNoEndereco !== null;
 
   /**
    * 🆕 01/09 — o endereço em si (CEP + número) veio do E3.4? Então ele aparece
@@ -1151,7 +1167,7 @@ export function EmpresaView({
    * que foi para a viabilidade e o que vai para o DBE.
    */
   const enderecoVeioDoGate =
-    (inicial?.cep ?? "").replace(/\D/g, "").length === 8 && (inicial?.numero ?? "") !== "";
+    doGate.cep.replace(/\D/g, "").length === 8 && doGate.numero !== "";
 
   // A tela mais pesada da constituição — e por isso a que mais precisa do
   // automático numa apresentação. Preenche o caminho "endereço próprio", que é
@@ -1164,7 +1180,6 @@ export function EmpresaView({
     setNumero(p.numero);
     setComplemento(p.complemento);
     setIptu(p.iptu);
-    setTipo(p.tipo);
     setTipoImovel(p.tipoImovel);
     setResideNoEndereco(true);
   });
@@ -1217,7 +1232,6 @@ export function EmpresaView({
       // render). Exigir aqui travava o Continuar por um documento que ele não
       // precisa ter.
       (mei || iptuOk) &&
-      tipo !== "" &&
       tipoImovelOk &&
       (!precisaResidencia || resideEfetivo !== null));
 
@@ -1364,9 +1378,14 @@ export function EmpresaView({
               </Campo>
               )}
 
-              <Campo rotulo="Como é esse endereço?">
-                <Select valor={tipo} onChange={setTipo} opcoes={TIPO_ENDERECO} />
-              </Campo>
+              {/* 🗑️ 01/09 (pedido do Pedro) — "Como é esse endereço?" SAIU. Era
+                  a última pergunta desta tela que o E3.4 já tinha respondido:
+                  lá a pessoa escolhe entre o endereço dela e o nosso, e depois
+                  diz se é casa, apartamento ou outro. Perguntar "próprio ou
+                  coworking" aqui, depois do pagamento, era pedir a mesma coisa
+                  com outras palavras — e ainda deixava a pessoa mudar um dado
+                  que já foi pra viabilidade. O valor aparece TRAVADO no card
+                  acima, junto do endereço. */}
 
               {/* 🆕 31/08 (achado da gravação real JUCEMG) — só existe quando o
                   endereço é PRÓPRIO: coworking/virtual não têm essa ambiguidade
@@ -1441,14 +1460,12 @@ export function EmpresaView({
                   residência, o IPTU pode subir na prefeitura (às vezes dobra)
                   por causa da mudança de uso residencial→comercial. Ninguém
                   alerta isso normalmente; a gente alerta. */}
-              {resideEfetivo === true && (
-                <Aviso variante="warning" titulo="O IPTU desse endereço pode subir">
-                  Quando um CNPJ usa seu endereço residencial, algumas
-                  prefeituras reclassificam o imóvel e o IPTU sobe (às vezes
-                  bastante). Vale confirmar com a prefeitura antes de usar esse
-                  endereço.
-                </Aviso>
-              )}
+              {/* 🗑️ 01/09 (pedido do Pedro) — o aviso "O IPTU desse endereço
+                  pode subir" saiu. Ele nasceu em 24/08 como zelo, mas chegava
+                  tarde: nesta altura a pessoa já pagou e já mandou o endereço
+                  pra viabilidade, então o alerta não muda decisão nenhuma — só
+                  planta dúvida sobre uma escolha que ela não pode mais desfazer
+                  aqui. Se voltar, o lugar é o E3.4, antes do dinheiro. */}
             </>
           )}
 

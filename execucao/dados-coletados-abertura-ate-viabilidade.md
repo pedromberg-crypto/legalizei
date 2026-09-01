@@ -122,12 +122,8 @@ tags: [execucao, flow, dados, abertura]
 - se houver, de cada sócio extra: nome completo + CPF + % de participação + data de nascimento + nacionalidade + RG + órgão emissor + estado civil (+ regime de bens se casado) + endereço (CEP com autofill + número + complemento)
 
 ### C4 · Dados da empresa
-- CEP + número + complemento (JÁ PREENCHIDOS do E3.4, editáveis)
-- índice cadastral IPTU (obrigatório, só se próprio)
-- tipo de endereço (próprio/coworking)
-- tipo de imóvel (casa/apartamento/outro, só se próprio)
-- você mora nesse endereço? (obrigatório se apartamento, JUCEMG indefere sem isso)
-- seu endereço pessoal, se não reside no local
+- Índice cadastral do IPTU (único campo do cliente)
+- CEP + número + complemento + tipo de imóvel + residência aparecem TRAVADOS, vindos do E3.4
 
 ### C5 · CNAE secundários
 - CNAEs secundários (seleção múltipla + busca, opcional, até 15)

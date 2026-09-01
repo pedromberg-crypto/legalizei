@@ -15,7 +15,7 @@ tags: [reuniao, produto, societario, dbe, contrato-padrao, decisao, pendente-val
 
 ## 🎯 A decisão, em uma linha
 
-No C3, depois dos dados do sócio, **uma pergunta**: *"Quem vai administrar a empresa?"* — **só o titular** × **titular + o(s) sócio(s) marcado(s)**. Nada além disso.
+No C3, depois dos dados do sócio, **uma pergunta**: *"Quem vai administrar a empresa?"* — o titular sempre administra, e a resposta diz quais sócios administram junto (com 1 sócio, sim/não; com 2+, check por nome). Nada além disso.
 
 ## 🧠 Por que exatamente essa pergunta, e não outra
 
@@ -42,7 +42,7 @@ Ou seja: **2 administradores não significa "tudo com as duas assinaturas"** —
 Quem quiser 2 administradores **com assinatura isolada declarada** cai fora do padrão (alteração contratual, análise humana). Esse caso **não trava a esteira**: o app segue até a cobrança e o atendimento humano resolve depois. A decisão explícita foi *não* parar o robô por causa da exceção.
 
 ### 6. UX: a consequência aparece na hora da escolha, não antes
-O risco levantado foi transformar o final do dossiê em aula de direito societário e perder a pessoa. Por isso: pergunta binária, micro-explicação **só da opção escolhida**, na língua da vida real (banco, DETRAN, cartório) — nunca as duas explicações ao mesmo tempo.
+O risco levantado foi transformar o final do dossiê em aula de direito societário e perder a pessoa. Por isso: uma pergunta só, micro-explicação **só da opção escolhida**, na língua da vida real (banco, DETRAN, cartório) — nunca as duas explicações ao mesmo tempo.
 
 ## 🐛 Achado operacional novo (fora do tema)
 
@@ -59,7 +59,7 @@ O risco levantado foi transformar o final do dossiê em aula de direito societá
 
 - `SociosView` (C3) ganhou o bloco "Quem vai administrar a empresa?", **só no caminho abrir** (na migração a empresa já existe e a administração já está no contrato dela).
 - Titular aparece travado como administrador. **Com 1 sócio** a pergunta é binária e no singular, com o nome dele no botão ("Eu e o Carlos"). **Com 2+ sócios** vira LISTA de nomes com check (refinamento pedido pelo Pedro no mesmo dia): dá pra ter sócio administrador e sócio que é só sócio, e a escolha é nome a nome. Nada marcado = só o titular administra, dito na tela por uma linha-resumo.
-- CTA travado enquanto a pergunta não for respondida: sem ela o RPA não sabe qual qualificação mandar.
+- Com 1 sócio o CTA fica travado até a pergunta ser respondida (sem ela o RPA não sabe qual qualificação mandar). Com 2+ a lista já nasce válida (nada marcado = só o titular), então não trava: botão morto esperando um toque desnecessário seria pior que o silêncio, e a linha-resumo mostra o que está valendo.
 - `flow-data.mjs`: campo novo no C3 + 4 regras internas (qualificação 49×22, forma de assinatura não enviada, representante = quem inicia, telas de conferência puladas) + 1 de API (CPF com MEI ativo).
 
 ## 🔜 Pendências que ficaram

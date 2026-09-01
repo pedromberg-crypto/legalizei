@@ -33,7 +33,10 @@ const ICONE: Record<VarianteCardNota, { classe: string; glifo: ReactNode }> = {
     ),
   },
   atencao: {
-    classe: "bg-state-warning-text text-white",
+    // 🔄 01/09 (2ª rodada) — o warning-700 do DS (#98600A) ficou forte/terroso
+    // demais; o Pedro escolheu o tom no olho, por amostra. Hex direto, com
+    // registro: se a cor entrar em mais lugares, promove pra token da paleta.
+    classe: "bg-[#E7BF11] text-white",
     glifo: (
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" aria-hidden>
         <path d="M12 5v9" />
@@ -42,7 +45,9 @@ const ICONE: Record<VarianteCardNota, { classe: string; glifo: ReactNode }> = {
     ),
   },
   negativo: {
-    classe: "bg-state-danger-text text-white",
+    // Mesma rodada: vermelho por amostra do Pedro (puxado pro laranja-tijolo,
+    // vizinho do coral da marca, não o danger-700 vinho do DS).
+    classe: "bg-[#D84315] text-white",
     glifo: (
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" aria-hidden>
         <path d="m6 6 12 12" />

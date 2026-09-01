@@ -32,9 +32,10 @@ motor trabalha com regra desatualizada sem ninguém perceber.
 2. `../marca/personagem-leo.md` — quem é o Léo, voz, dial de ironia por persona (§5), o que nunca
    vira piada (§3). **Sem isso lido, não escreva nada.**
 3. `../mkt/estrategia/posicionamento.md` — claim, qualificador obrigatório "do Simples Nacional".
-4. `../mkt/estrategia/estrategia-organica.md` — pilares 1-15 (13 ativos + 2 standby, numeração v3
-   26/08), 4 blocos de pauta (20/30/25/25), regras travadas (nunca simular escassez, garantia 7
-   dias em post de venda).
+4. `../mkt/estrategia/estrategia-organica.md` — pilares 1-17 (13 ativos + 4 standby, v4 01/09:
+   guinada "menos imposto" — 6/7 fiscais em standby, novos 16-Dicas empresariais e 17-Facilidade
+   do app, janela promocional LIGADA), 4 blocos de pauta (20/30/25/25), regras travadas (nunca
+   simular escassez, garantia 7 dias em post de venda).
 5. `../mkt/estrategia/mecanicas-engajamento.md` — escada de CTA (nível 1 engajamento / nível 2
    funil), banco de prompts, mecânica "Pergunta que ninguém explica".
 6. `../pesquisa/metodologia-personas.md` — 5 dorsais (A/B/C/D/E) + 18 volantes (26/08). Pra copy

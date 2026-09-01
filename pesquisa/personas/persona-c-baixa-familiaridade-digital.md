@@ -91,18 +91,20 @@ Não quer "aprender a usar um app" — quer alguém em quem confiar pra cuidar d
 | 2 — Cultural/leve | Normalizar a dúvida (sem piada) | "Você sabia que muita gente tem dúvida sobre imposto?" | "Ninguém nasce sabendo essas coisas. Você não é a única com dúvida, e tá tudo bem perguntar de novo quantas vezes precisar." | Acolhimento no lugar de humor — dial zero, mesma função social do pilar sem ironia. |
 | 4 — Dor educativa | Explicando o DAS | "O DAS é o Documento de Arrecadação do Simples Nacional, gerado mensalmente." | "É o boleto do mês. Chega, você paga, pronto. Eu aviso antes de vencer." | Nomeia o jargão só o suficiente pra nunca mais precisar usá-lo. |
 | 5 — Mitos | "Empresa pequena não precisa se preocupar" | "Tem gente que acha que empresa pequena não precisa se preocupar com imposto." | "Empresa pequena também tem prazo e guia pra pagar, sim. Mas relaxa: eu que fico de olho nisso, você não precisa decorar nada." | Corrige a crença sem alarmar — reforça que ela não carrega o peso sozinha. |
-| 6 — Calendário fiscal | Prazo do DAS | "Não perca o prazo do DAS." | "Todo mês, no tempo certo, eu aviso antes de vencer. Você não precisa marcar em lugar nenhum." | Remove qualquer exigência de organização própria dela. |
-| 7 — Educação fiscal/enquadramento | Fator R / Anexo | "Seu enquadramento tributário está sujeito ao Fator R." | "Isso aqui é só o nome de uma conta que eu já fiz. Você não precisa entender a fórmula, só saber que tá certo." | Traduz sem soar como estar explicando pra criança — tira o peso de "precisar saber". |
+| 6 (standby v4) — Calendário fiscal | Prazo do DAS | "Não perca o prazo do DAS." | "Todo mês, no tempo certo, eu aviso antes de vencer. Você não precisa marcar em lugar nenhum." | Remove qualquer exigência de organização própria dela. |
+| 7 (standby v4) — Educação fiscal/enquadramento | Fator R / Anexo | "Seu enquadramento tributário está sujeito ao Fator R." | "Isso aqui é só o nome de uma conta que eu já fiz. Você não precisa entender a fórmula, só saber que tá certo." | Traduz sem soar como estar explicando pra criança — tira o peso de "precisar saber". |
 | 8 — Diferencial | Atendimento humano | "Nosso atendimento é diferenciado." | "Tem gente de verdade do outro lado, sempre que você precisar. Não é robô, não é fila de espera." | Nomeia o medo dela (ficar sem humano) como o próprio diferencial. |
 | 10 — Oferta | Decisão sem pressa | "Assine e comece a usar." | "Sem pressa pra decidir. Quando você quiser começar, eu explico cada passo com você do lado." | Remove pressão de decisão rápida, o gatilho de ansiedade dela. |
 | 11 — Migração | Trocar de contador | "Troque de contador facilmente." | "Se você quiser trocar, eu cuido de tudo com calma, sem você ter que entender o processo todo sozinha." | Tranquiliza sobre a complexidade percebida da troca. |
 | 12 — Gestão do dinheiro do dono | Pró-labore | "Calcule seu pró-labore." | "O valor que você tira pra você todo mês, eu calculo certinho. Você só recebe o número pronto." | Remove qualquer exigência de cálculo próprio. |
 | 13 — Documentação em dia | Alvará/certidões | "Mantenha documentação em dia." | "Alvará, certificado, essas coisas... eu confiro tudo isso pra você. Se faltar algo, eu aviso com tempo de sobra." | Reforça vigilância + "tempo de sobra" — nunca em cima da hora. |
+| 16 — Dicas empresariais 🆕 v4 | Nota pro cliente | "Emitir nota fiscal é importante para o seu negócio." | "O cliente pediu nota? Me chama que eu te mando o passo a passo com as suas informações já preenchidas. Você só confere e aperta." | Dica com a mão estendida — informação + alguém do outro lado, que é o que ela precisa. |
+| 17 — Facilidade do app 🆕 v4 | Medo de app difícil | "Nosso app é fácil de usar." | "É menos tela que o app do banco. E se travar, tem gente de verdade do outro lado pra te destravar." | Ataca a objeção central ("não sou bom com tecnologia") com comparação concreta + humano garantido. |
 | — Onboarding (transversal) | Cadastro inicial | "Complete seu cadastro preenchendo os campos obrigatórios." | "Vamos com calma, um passo de cada vez. Não precisa terminar tudo hoje." | Remove a pressão de completar rápido. |
 
 ## Mapeamento de pilar — onde ela se conecta 🆕 (26/08)
 
-> Mesmo espírito do `personagem-leo.md` §11 — não é regra travada, é encaixe natural. Numeração de pilar v3 (`estrategia-organica.md`).
+> Mesmo espírito do `personagem-leo.md` §11 — não é regra travada, é encaixe natural. Numeração de pilar v3 (`estrategia-organica.md`; 🔄 v4 01/09: 6/7 em standby, novos 16-Dicas empresariais e 17-Facilidade do app).
 
 | # | Pilar | Encaixe | Por quê |
 |---|---|---|---|
@@ -111,14 +113,16 @@ Não quer "aprender a usar um app" — quer alguém em quem confiar pra cuidar d
 | 3 | Nossa origem | 🟢 Forte | "22 anos" é exatamente o tipo de prova de solidez que ela precisa pra confiar (contraponto ao medo de golpe) |
 | 4 | Dor educativa | 🟢 Forte | Precisa entender o básico — sem jargão, sem ironia |
 | 5 | Mitos/crenças erradas | 🟡 Médio | Útil, mas precisa de cuidado extra pra não soar como correção/vergonha |
-| 6 | Calendário fiscal | 🟢 Forte | Vigilância de prazo é alívio direto pro medo de "esquecer algo importante" |
-| 7 | Educação fiscal/enquadramento | 🟡 Médio | Relevante, mas exige simplificação extrema |
+| 6 | Calendário fiscal (standby, v4 01/09) | 🟢 Forte | Vigilância de prazo é alívio direto pro medo de "esquecer algo importante" |
+| 7 | Educação fiscal/enquadramento (standby, v4 01/09) | 🟡 Médio | Relevante, mas exige simplificação extrema |
 | 8 | Diferencial vs mercado | 🟢 Forte | "Gente de verdade, não robô" resolve o medo central dela |
 | 9 | Bastidor/processo | 🟢 Forte | Ver o contador real trabalhando é a prova concreta que ela precisa |
 | 10 | Oferta/conversão | 🟡 Médio | Decide devagar — oferta direta pode soar como pressão, ruim pro perfil dela |
 | 11 | Migração/troca de contador | 🟡 Médio | Menos comum ela já ter tido contador formal — mais provável ser primeira formalização |
 | 12 | Gestão do dinheiro do dono | 🟡 Médio | Relevante, mas não é hook emocional forte |
 | 13 | Documentação em dia | 🟢 Forte | "Eu confiro" é exatamente a vigilância que ela busca |
+| 16 | Dicas empresariais/informativos 🆕 v4 | 🟢 Forte | Dica simples e prática é o formato dela; o fiscal denso nunca foi |
+| 17 | Facilidade do app 🆕 v4 | 🟢 Forte | A objeção "não sou bom com tecnologia" só cai VENDO que é simples — e vendo que tem gente atrás |
 | 14 | Prova/reação (standby) | 🟢 Forte | Decide por confiança pessoal/indicação — prova social bate muito bem quando reativado |
 | 15 | Participativo (standby) | ❌ Fraco | Não é voz pública/digital (indicação é pro círculo próximo, não redes) |
 | Momentâneo | Lançamento/promoção | ❌ Fraco | Não responde a urgência/novidade — "vaga limitada" pode até assustar em vez de atrair |

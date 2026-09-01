@@ -87,18 +87,20 @@ Não quer virar "empresária que entende de imposto" — quer continuar focada n
 | 2 — Cultural/leve | Preconceito de "isso é coisa de empresa grande" | "Você sabia que muitos negócios de beleza atrasam a formalização?" | "Salão que vive de boca a boca também precisa de CNPJ em dia — quem disse que só empresa 'grande' precisa se cuidar?" | Ironiza leve o preconceito, sem atacar quem atrasou por causa dele. |
 | 4 — Dor educativa | Teto do MEI | "Você atingiu o limite de faturamento do MEI e precisa migrar para ME." | "Seu negócio cresceu, e isso é ótimo. Bora ajustar o CNPJ pra acompanhar, sem perder o jeito que você já tem com suas clientes." | Celebra o crescimento antes de tratar da burocracia — nunca trata a transição como problema. |
 | 5 — Mitos | "Contratar é caro e complicado" | "Contratar funcionário é caro e trabalhoso." | "Contratar não precisa ser um parto. A folha a gente monta, você só avisa quem entrou — o mito de que é complicado é o que mais atrasa quem merece crescer." | Desmonta o mito que trava exatamente a decisão que gera o teto do MEI. |
-| 6 — Calendário fiscal | Prazo do DAS | "Não esqueça de pagar o DAS." | "Enquanto você atende sua última cliente do dia, eu já separei o DAS do mês. Chega prontinho." | Vigilância que acontece no fundo, sem ela precisar parar o que faz. |
-| 7 — Educação fiscal/enquadramento | Anexo com venda de produto | "Seu enquadramento tributário pode variar conforme o Anexo." | "Salão cai num Anexo, mas se você também vende produto, a conta muda. Eu confiro isso pra sua realidade, não pro CNAE genérico." | Reconhece a complexidade real do setor (serviço + venda) sem jargão. |
+| 6 (standby v4) — Calendário fiscal | Prazo do DAS | "Não esqueça de pagar o DAS." | "Enquanto você atende sua última cliente do dia, eu já separei o DAS do mês. Chega prontinho." | Vigilância que acontece no fundo, sem ela precisar parar o que faz. |
+| 7 (standby v4) — Educação fiscal/enquadramento | Anexo com venda de produto | "Seu enquadramento tributário pode variar conforme o Anexo." | "Salão cai num Anexo, mas se você também vende produto, a conta muda. Eu confiro isso pra sua realidade, não pro CNAE genérico." | Reconhece a complexidade real do setor (serviço + venda) sem jargão. |
 | 8 — Diferencial | Preço | "Nosso plano cabe no seu orçamento." | "Sei que você tá acostumada a pagar pouco (ou nada) por isso. Aqui o preço é fechado, e o que você ganha é nunca mais ficar no vácuo." | Reconhece a resistência de preço real da dorsal sem se desculpar por ela. |
 | 10 — Oferta | Medo de reajuste | "Assine e comece agora." | "Sem letra miúda, sem mensalidade que sobe do nada mês que vem. O preço que combinamos hoje continua sendo o de amanhã." | Fala à desconfiança de contrato que ela já levou antes. |
 | 11 — Migração | Contador que só cobra | "Troque de contador facilmente conosco." | "Se seu contador de hoje só liga pra cobrar e nunca pra ajudar, dá pra trocar sem perder nada do que você já construiu." | Nomeia a experiência ruim específica, ligada à objeção "vou virar número". |
 | 12 — Gestão do dinheiro do dono | Pró-labore | "Calcule seu pró-labore facilmente pelo app." | "Seu pró-labore sai certo todo mês, sem você fazer conta no fim de semana que era pra ser seu descanso." | Reconhece a sobrecarga de quem cuida de tudo sozinha. |
 | 13 — Documentação em dia | Alvará | "Mantenha sua empresa em dia com a documentação." | "Alvará vencido pode fechar seu salão numa fiscalização. Eu aviso antes disso virar problema." | Consequência concreta e temida (fechar o negócio físico). |
+| 16 — Dicas empresariais 🆕 v4 | Cliente que remarca | "Dicas para organizar a agenda do seu salão." | "Cliente que remarca 3 vezes paga o mesmo que a que vem? Regra simples de sinal resolve, e cabe numa mensagem de WhatsApp." | Dica aplicável HOJE, no contexto real do salão, sem pedir planilha nem sistema novo. |
+| 17 — Facilidade do app 🆕 v4 | Guia do mês | "Emita suas guias pelo app." | "A guia chega pronta no teu celular, entre uma cliente e outra. Sem site do governo, sem senha nova pra decorar." | Facilidade descrita dentro da correria dela — o valor é o tempo que NÃO gasta. |
 | — Onboarding (transversal) | Cadastro inicial | "Complete seu cadastro." | "Poucas perguntas, no seu tempo, entre um cliente e outro." | Reconhece a rotina corrida dela, sem pedir foco que ela não tem sobrando. |
 
 ## Mapeamento de pilar — onde ela se conecta 🆕 (26/08)
 
-> Mesmo espírito do `personagem-leo.md` §11 — não é regra travada, é encaixe natural. Numeração de pilar v3 (`estrategia-organica.md`).
+> Mesmo espírito do `personagem-leo.md` §11 — não é regra travada, é encaixe natural. Numeração de pilar v3 (`estrategia-organica.md`; 🔄 v4 01/09: 6/7 em standby, novos 16-Dicas empresariais e 17-Facilidade do app).
 
 | # | Pilar | Encaixe | Por quê |
 |---|---|---|---|
@@ -107,14 +109,16 @@ Não quer virar "empresária que entende de imposto" — quer continuar focada n
 | 3 | Nossa origem | 🟢 Forte | "22 anos de experiência real" é prova de solidez que evita a sensação de "app frio" |
 | 4 | Dor educativa | 🟢 Forte | Susto de imposto é gatilho real e recorrente no setor dela |
 | 5 | Mitos/crenças erradas | 🟡 Médio | Funciona, mas ela responde mais a prova social que a correção técnica fria |
-| 6 | Calendário fiscal | 🟢 Forte | Ocupada com clientes o dia todo — vigilância de prazo é alívio real |
-| 7 | Educação fiscal/enquadramento | 🟡 Médio | Relevante (Anexo com venda de produto), mas não é hook primário |
+| 6 | Calendário fiscal (standby, v4 01/09) | 🟢 Forte | Ocupada com clientes o dia todo — vigilância de prazo é alívio real |
+| 7 | Educação fiscal/enquadramento (standby, v4 01/09) | 🟡 Médio | Relevante (Anexo com venda de produto), mas não é hook primário |
 | 8 | Diferencial vs mercado | 🟢 Forte | "Humano no plano de entrada" é literalmente a objeção central dela |
 | 9 | Bastidor/processo | 🟢 Forte | Quer ver que tem gente de verdade — contraponto direto ao medo de "virar número" |
 | 10 | Oferta/conversão | 🟡 Médio | Responde bem, mas com mais calor emocional que racionalidade |
 | 11 | Migração/troca de contador | 🟢 Forte | "Contador que só cobra" é dor documentada nesta dorsal |
 | 12 | Gestão do dinheiro do dono | 🟡 Médio | Relevante, mas secundário ao core dela (atendimento ao cliente) |
 | 13 | Documentação em dia | 🟢 Forte | Alvará fechar o salão é medo concreto e alto |
+| 16 | Dicas empresariais/informativos 🆕 v4 | 🟢 Forte | Segue perfis de dica de negócio no Instagram — é o formato que ela já consome |
+| 17 | Facilidade do app 🆕 v4 | 🟢 Forte | Mostrar a tela vale mais que explicar; vídeo curto de produto é nativo do canal dela |
 | 14 | Prova/reação (standby) | 🟢 Forte | Setor de beleza decide muito por prova social/depoimento — canal mais forte pra esta dorsal quando reativado |
 | 15 | Participativo (standby) | 🟡 Médio | Instagram é canal dela, mas não é prioridade de conteúdo |
 | Momentâneo | Lançamento/promoção | 🟡 Médio | Menos early-adopter que A — decide por confiança/prova, não por novidade |

@@ -16,7 +16,7 @@ tags: [pesquisa, marketing, organico]
 
 Orgânico roda **em paralelo ao tráfego pago**, nunca esperando ele — os dois se alimentam (tráfego injeta audiência qualificada, orgânico sustenta e converte no tempo certo). Perfil frio raramente ganha alcance sozinho.
 
-> **Ativo diferencial do projeto:** dado fiscal proprietário. A Legalizai tem o simulador de Fator R (engine já pronta e testada, [[legalize-cnae-fiscalmente-otimo]]) — nenhum concorrente oferece isso aberto e grátis (o mais perto, Contabilivre, esconde atrás de e-book gated, [[insights-estrategicos]]). Isso vira motor de conteúdo educativo real, não genérico. Segundo ativo: **fundador construindo em público** (Pedro é PM+dev, não agência terceirizada) — já previsto no checklist de imersão (S4, "6-9 posts fundadores").
+> **Ativo diferencial do projeto (v4, 01/09):** a **desburocratização vivida no app** — abrir e tocar a empresa sem entender contabilês, sem fila, sem papelada; o app faz o chato e a pessoa vê isso acontecendo na tela. É a promessa central do posicionamento ("cuida do chato pra você") virando motor de conteúdo. Segundo ativo: **fundador construindo em público** (Pedro é PM+dev, não agência terceirizada). O dado fiscal proprietário (simulador de Fator R, engine pronta, [[legalize-cnae-fiscalmente-otimo]]) **desce de motor pra apoio**: continua único no mercado e segue alimentando o ângulo do pilar 8, mas deixa de ser o eixo da pauta — decisão do Pedro em 01/09 (menos imposto/economia fiscal, mais desburocratização + facilidade + dicas empresariais + plano promocional; ADR em [[decisoes-marca]]).
 
 ---
 
@@ -30,15 +30,17 @@ PILAR (sobre o quê)  ×  GATILHO EMOCIONAL (por que mexe)  ×  GATILHO PSICOLÓ
 
 ## Camada 1 — Pilares de conteúdo por bloco de funil
 
-> **v3 (26/08)** — Pedro liberou renumeração completa ("as 12 peças nem subiram, não teria problema nenhum uma sugestão que alterasse elas") — os números NÃO são mais estáveis do jeito que a v2 dizia, foram reorganizados sem gaps. As 12 peças da primeira campanha foram atualizadas de `pilar: 5` (numeração v2) pra `pilar: 10` (numeração v3, mesmo pilar "Oferta/conversão", só renumerado). 2 pilares novos entraram nesta rodada (3-Nossa origem, 5-Mitos/crenças erradas), além dos 5 já criados na v2. Total: **13 pilares ativos + 2 em standby = 15**.
+> **v4 (01/09)** — guinada editorial decidida pelo Pedro: **menos imposto/economia fiscal, mais desburocratização, facilidade do app, informativos/dicas empresariais e plano promocional.** Na prática: pilares **6 e 7 (os fiscais) entram em standby** (mesmo status de 14/15 — não são removidos, os números ficam reservados), entram **2 pilares novos** (16-Dicas empresariais/informativos, 17-Facilidade do app) e a **janela promocional é LIGADA** (ver pilar momentâneo abaixo). Numeração v3 preservada — standby mantém número, novos entram na sequência. Total: **13 pilares ativos + 4 em standby = 17**.
+>
+> *(v3, 26/08 — renumeração completa sem gaps liberada por Pedro; as 12 peças da campanha viraram `pilar: 10`. 7 pilares novos em 2 rodadas.)*
 
 | Bloco | % pauta | Função | Pilares ativos |
 |---|---:|---|---|
 | **Afeto/Marca** | 20% | conexão, marca, topo de funil | 1, 2, 3 |
-| **Educação/Dor** | 30% | ensinar, ser útil, evergreen+sazonal | 4, 5, 6, 7 |
-| **Diferencial/Confiança** | 25% | quebra objeção + prova | 8, 9 |
+| **Educação/Dor** | 30% | ensinar, ser útil, evergreen+sazonal | 4, 5, 16 |
+| **Diferencial/Confiança** | 25% | quebra objeção + prova | 8, 9, 17 |
 | **Conversão/Produto** | 25% | ação concreta, uso real do produto, venda | 10, 11, 12, 13 |
-| *(Comunidade — standby)* | 0% por ora | participação | 15 (pausado) |
+| *(standby)* | 0% por ora | — | 6, 7 (fiscais, v4) · 14, 15 |
 
 ### Bloco Afeto/Marca — pilares
 
@@ -52,10 +54,9 @@ PILAR (sobre o quê)  ×  GATILHO EMOCIONAL (por que mexe)  ×  GATILHO PSICOLÓ
 
 | # | Pilar | Funil | Detalhe |
 |---|---|---|---|
-| 4 | Dor educativa relatable (momento "aquele susto com o DAS") | Topo — salvável | Não é pilar exclusivo do Léo — qualquer voz (Léo, Pedro, institucional) pode postar aqui, Léo só é o encaixe mais natural |
-| 5 | Mitos/crenças erradas 🆕 | Topo — salvável | Mito-busting específico (ex.: "MEI não paga imposto nenhum", "abrir empresa é caro e demorado") — diferente do pilar 4: dor é sofrimento real, mito é crença errada a corrigir |
-| 6 | Calendário/prazo fiscal 🆕 | Topo — salvável, evergreen+sazonal | DAS mensal, DASN-SIMEI (maio), IRPF (mar-mai), virada de ano — já documentados em Camada 2 abaixo, agora vira pauta recorrente própria em vez de só "gatilho" solto |
-| 7 | Educação fiscal/enquadramento 🆕 | Topo/meio — prova de produto | Absorve o antigo pilar Fator R (v1) como sub-tema, mais Anexo III/IV/V, CNAE certo — dado riquíssimo já mapeado em `pesquisa/cnae-matriz/`, embalado como educação, não como formato isolado |
+| 4 | Dor educativa relatable (o peso da burocracia no dia a dia) | Topo — salvável | 🔄 v4: o exemplo-âncora deixa de ser "susto com o DAS" e vira o sufoco burocrático (fila, papelada, órgão que não responde, contador que some). Não é pilar exclusivo do Léo — qualquer voz pode postar aqui |
+| 5 | Mitos/crenças erradas | Topo — salvável | Mito-busting específico (ex.: "abrir empresa é caro e demorado", "sem contador na porta não dá") — diferente do pilar 4: dor é sofrimento real, mito é crença errada a corrigir. 🔄 v4: mitos de BUROCRACIA na frente dos fiscais |
+| 16 | Dicas empresariais/informativos 🆕 v4 | Topo — salvável, evergreen | Dica prática de tocar o negócio: precificar serviço, separar PJ de PF, primeiro cliente, contrato simples, rotina de dono. Informativo útil SEM contabilês — o fiscal só entra quando for inevitável, e traduzido. É o pilar que responde ao pedido "informativos, dicas empresariais e afins" |
 
 ### Bloco Diferencial/Confiança — pilares
 
@@ -63,6 +64,7 @@ PILAR (sobre o quê)  ×  GATILHO EMOCIONAL (por que mexe)  ×  GATILHO PSICOLÓ
 |---|---|---|---|
 | 8 | Diferencial vs mercado | Meio — quebra objeção | Ângulos rotativos abaixo (9, era 4), nunca cita concorrente por nome |
 | 9 | Bastidor/processo | Meio — diferencial | Mostrar contador CRC real — Pedro confirma "rola demais de fazer" (26/08), mantido ativo e valorizado. Responde à "ferida de confiança" ([[insights-estrategicos]] achado 1) |
+| 17 | Facilidade do app / produto em ação 🆕 v4 | Meio — prova de produto | A tela REAL fazendo o trabalho: quantos toques pra abrir, o que a pessoa NÃO precisa preencher, o status que se move sozinho, o boleto que chega pronto. Demo curta > promessa. É a desburocratização PROVADA, não declarada — irmão do pilar 9 (lá é o humano por trás; aqui é o produto na mão) |
 
 **Pilar de diferencial (8) — ângulos rotativos (ataca sem citar concorrente por nome), enriquecido 26/08:**
 
@@ -91,6 +93,8 @@ PILAR (sobre o quê)  ×  GATILHO EMOCIONAL (por que mexe)  ×  GATILHO PSICOLÓ
 
 | # | Pilar | Motivo do standby |
 |---|---|---|
+| 6 | Calendário/prazo fiscal | 🔄 v4 (Pedro, 01/09): guinada "menos imposto". Os prazos NÃO somem da estratégia — voltam a viver como gatilho sazonal (Camada 2), que é onde estavam antes da v2; só deixam de ser pauta recorrente própria. Quando reativar: se a audiência pedir (comentário/DM recorrente de prazo) |
+| 7 | Educação fiscal/enquadramento | 🔄 v4 (Pedro, 01/09): mesma guinada. O acervo (Fator R, Anexo III/IV/V, CNAE — `pesquisa/cnae-matriz/`) fica pronto e único no mercado; reativa quando a fase promocional passar ou quando o dado fiscal voltar a ser prioridade. Fiscal pontual ainda pode aparecer DENTRO do 16, traduzido e sem protagonismo |
 | 14 | Prova/reação | "precisamos amadurecer no decorrer do andamento das redes sociais" (Pedro, 26/08). Quando reativar: founder-made (Pedro mostrando o próprio CNPJ) até ter depoimento real |
 | 15 | Participativo/UGC | "precisamos amadurecer" (Pedro, 26/08) — mecânica de engajamento (`mecanicas-engajamento.md`) ainda não foi validada a fundo (item #7 do mapa de itens travados, também pendente) |
 
@@ -99,6 +103,8 @@ PILAR (sobre o quê)  ×  GATILHO EMOCIONAL (por que mexe)  ×  GATILHO PSICOLÓ
 ## Pilar momentâneo — promoção/lançamento
 
 > Não é pilar permanente. Liga/desliga por decisão humana.
+>
+> 🟢 **LIGADO em 01/09 (decisão do Pedro)** — o plano promocional entra como frente ativa da pauta ("vamos falar mais do plano promocional"). Valem as regras de sempre: até 30% da pauta na janela, escassez SÓ se a vaga for real (cap 15-25 fundador é real), nunca prazo falso.
 
 | Atributo | Definição |
 |---|---|
@@ -132,13 +138,16 @@ PILAR (sobre o quê)  ×  GATILHO EMOCIONAL (por que mexe)  ×  GATILHO PSICOLÓ
 
 | Gatilho | Job emocional/funcional | Persona | Contexto sem data |
 |---|---|---|---|
-| Medo de errar com o fisco | ansiedade → alívio | A, B, C | qualquer momento pré/pós-abertura |
+| Cansaço da burocracia/papelada 🆕 v4 | exaustão → "alguém cuida disso por mim" | todas | qualquer momento — é o gatilho-mestre da guinada v4 (desburocratização) |
+| Medo de errar com o fisco | ansiedade → alívio | A, B, C | 🔄 v4: perde o posto de gatilho nº 1; segue válido, sem dominar a pauta |
 | Alívio da conquista ("Legalizai Story Book!") | orgulho, celebração | todas | pós-abertura |
 | Vergonha de não entender contabilês | evitar humilhação | B, C principalmente | dúvida cotidiana |
 | Urgência de prazo bloqueado (contrato/cliente esperando CNPJ) | ansiedade de perder oportunidade | volante A1 | evento externo (contrato na mão) |
 | Orgulho de "virar PJ/empresária" | identidade, status | A, B | marco pessoal |
 
 ### Gatilhos sazonais (amplificadores de pico)
+
+> 🔄 v4: com o pilar 6 em standby, os prazos fiscais voltam a viver SÓ aqui — amplificador de pico, nunca pauta recorrente. O post sazonal sai como informativo útil (pilar 16), traduzido, sem tom de terrorismo fiscal.
 
 - DASN-SIMEI (prazo maio) — pico de ansiedade MEI
 - Declaração IRPF pessoa física (março-maio) — cruza com pró-labore
@@ -150,7 +159,7 @@ PILAR (sobre o quê)  ×  GATILHO EMOCIONAL (por que mexe)  ×  GATILHO PSICOLÓ
 
 ## Camada 3 — Gatilhos psicológicos (mecanismo)
 
-- **Curiosidade/reveal** — "o que ninguém te conta sobre o Fator R"
+- **Curiosidade/reveal** — 🔄 v4: "quantos passos a Junta exige e quantos sobram pra você no app" (o reveal fiscal "o que ninguém te conta sobre o Fator R" fica no banco, pro dia em que o pilar 7 reativar)
 - **Identificação** — "isso é a gente" (founder real, contador real)
 - **Prova social** — depoimento founder-made até ter base real
 - **Reciprocidade** — simulador grátis antes de pedir qualquer coisa
@@ -162,8 +171,9 @@ PILAR (sobre o quê)  ×  GATILHO EMOCIONAL (por que mexe)  ×  GATILHO PSICOLÓ
 
 ## Formatos especiais
 
-1. **Simulador Fator R aberto** — formato assinatura, ninguém no nicho faz isso sem gate. Alimenta pilar 8.
-2. **"Traduzindo o contabilês"** — vídeo curto pegando 1 termo técnico (DAS, Fator R, Anexo III) e traduzindo em linguagem real, sem jargão. Alimenta pilar 2 + responde direto à regra de ouro de tom (`conceito-marca.md` §5).
+1. **"O app em X segundos"** 🆕 v4 — formato assinatura da guinada: 1 tela real, 1 tarefa chata resolvida em segundos, sem narração técnica. Alimenta pilares 17 e 10.
+2. **"Traduzindo o contabilês"** — vídeo curto pegando 1 termo técnico e traduzindo em linguagem real, sem jargão. MANTIDO na v4: é anti-jargão, serve à desburocratização (o termo é o pretexto; a mensagem é "você não precisa saber isso, a gente cuida"). Alimenta pilares 2 e 16.
+3. **Simulador Fator R aberto** — 🔄 v4: de formato-assinatura pra APOIO. Continua único no nicho e segue alimentando o ângulo do pilar 8; volta a protagonista se/quando o pilar 7 reativar.
 
 ---
 

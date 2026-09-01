@@ -25,7 +25,7 @@ tags: [marketing, atelie, motor, gestor-trafego]
 |---|---|---|
 | 1 | Personagem/voz (Léo) | ✅ Validado + 1 regra nova |
 | 2 | Posicionamento/claim | ✅ Validado, sem mudança |
-| 3 | Pilares de conteúdo (1-15 v3, renumeração completa liberada) | ✅ Fechado — ver `validacao-pilares-blocos-personas.md` |
+| 3 | Pilares de conteúdo (1-17, 🔄 v4 01/09: guinada "menos imposto" — 6/7 standby, +16/17, promo ligada) | ✅ Fechado — ver `validacao-pilares-blocos-personas.md` §v4 |
 | 4 | Blocos de pauta (agora 4 blocos) | ✅ Fechado — ver `validacao-pilares-blocos-personas.md` |
 | 5 | Personas (5 dorsais A/B/C/D/E + 18 volantes, enriquecidas + pesquisa real 26/08) | ✅ Fechado — ver `validacao-pilares-blocos-personas.md` |
 | 6 | Escada de CTA | ✅ Validado, sem mudança |

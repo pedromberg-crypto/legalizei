@@ -13,7 +13,9 @@ tags: [pesquisa, marca, posicionamento]
 
 ## Statement de posicionamento
 
-> **Para o autônomo que virou PJ prestador de serviço (marketing, TI, consultoria, beleza, saúde) e vive com medo de errar e pagar imposto a mais, a Legalizai é a contabilidade digital que fala a sua língua e cuida do chato pra você — ao contrário do escritório tradicional (lento, formal, distante) e do app frio dos concorrentes digitais (humano só no tier caro, preço com asterisco), a Legalizai tem contador de verdade desde o primeiro plano do Simples Nacional e preço fechado, sem surpresa.**
+> **Para o autônomo que virou PJ prestador de serviço (marketing, TI, consultoria, beleza, saúde) e não aguenta mais a burocracia de ter empresa no Brasil (papelada, órgão, prazo, contabilês), a Legalizai é a contabilidade digital que fala a sua língua e cuida do chato pra você, num app que resolve em minutos o que antes tomava semanas — ao contrário do escritório tradicional (lento, formal, distante) e do app frio dos concorrentes digitais (humano só no tier caro, preço com asterisco), a Legalizai tem contador de verdade desde o primeiro plano do Simples Nacional e preço fechado, sem surpresa.**
+
+> 🔄 **v2 do statement (01/09, decisão do Pedro — guinada editorial "menos imposto"):** a dor central sai de "medo de errar e pagar imposto a mais" e vira o **cansaço da burocracia**, com a facilidade do app dita no próprio statement. O medo fiscal não sumiu do mundo — segue como gatilho secundário (Camada 2 da [[estrategia-organica]]) — mas deixa de ser a porta de entrada da mensagem. Versão anterior preservada no histórico do git; ADR em [[decisoes-marca]] 01/09.
 
 > ⚠️ **A precisão "do Simples Nacional" é obrigatória, não estilo** (decisão 17/08). O **MEI não tem contador dedicado** — tem **assistente virtual de contabilidade**. Escrever "desde o primeiro plano" seco vira promessa falsa na boca de quem assina MEI, e a ferida que estamos explorando é justamente a de promessa de humano que não se cumpre. Nunca soltar a frase curta em peça pública.
 

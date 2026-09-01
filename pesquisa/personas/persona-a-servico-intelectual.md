@@ -80,25 +80,27 @@ Não quer "aprender contabilidade" — quer terceirizar completamente e ter cert
 
 ## Banco de calibragem antes/depois 🆕 (26/08, v2 enriquecido — 1 par por pilar relevante)
 
-> Mesmo espírito do `personagem-leo.md` §9 — calibragem de registro, não fórmula de substituição mecânica. Organizado por pilar de conteúdo (`estrategia-organica.md` §Camada 1, numeração v3) pra cobrir alcance real, não só situações soltas.
+> Mesmo espírito do `personagem-leo.md` §9 — calibragem de registro, não fórmula de substituição mecânica. Organizado por pilar de conteúdo (`estrategia-organica.md` §Camada 1, numeração v3; 🔄 v4 01/09: 6/7 standby, +16/17) pra cobrir alcance real, não só situações soltas.
 
 | Pilar | Situação | Genérico (sem persona) | Versão Persona A | Por que funciona |
 |---|---|---|---|---|
 | 2 — Cultural/leve | Confusão MEI×conceito de "empresa" | "Sabia que muita gente confunde MEI com ME?" | "MEI virou sinônimo de 'ter empresa', só que não é. Isso já devia estar na primeira aula de 'como virar PJ'." | Prova um ponto de forma leve, mira a falta de educação do setor, não a pessoa. |
 | 4 — Dor educativa | MEI × ME | "MEI e ME têm regras tributárias diferentes, é importante entender qual se aplica ao seu caso." | "Sua atividade intelectual não pode ser MEI, ponto final. ME, Anexo certo, resolvido." | Direto, sem rodeio — responde a pergunta que ela faria antes dela precisar perguntar. |
 | 5 — Mitos | "MEI é sempre mais barato/melhor pra começar" | "Existe um mito de que MEI paga menos imposto sempre." | "MEI não é sempre mais barato. Pra atividade intelectual, MEI nem é opção legal — o mito de 'todo mundo começa MEI' te atrasa, não te protege." | Desmonta crença específica que essa audiência (freelancer/dev) ouve o tempo todo. |
-| 6 — Calendário fiscal | Prazo do DAS | "Não esqueça de pagar o DAS até o dia 20." | "DAS vence dia 20. Já calculei, já separei, você só recebe a confirmação. Sem planilha, sem lembrete de calendário." | Fala com quem já automatiza tudo (dev) — oferece automação real como linguagem nativa. |
-| 7 — Educação fiscal/enquadramento | Fator R | "O Fator R pode reduzir sua alíquota de imposto." | "Fator R errado é dinheiro saindo do seu bolso sem aviso nenhum. A gente calcula certo todo mês, não só na abertura." | Prova competência técnica na cara — nunca esconde atrás de 'fale com um especialista'. |
+| 6 (standby v4) — Calendário fiscal | Prazo do DAS | "Não esqueça de pagar o DAS até o dia 20." | "DAS vence dia 20. Já calculei, já separei, você só recebe a confirmação. Sem planilha, sem lembrete de calendário." | Fala com quem já automatiza tudo (dev) — oferece automação real como linguagem nativa. |
+| 7 (standby v4) — Educação fiscal/enquadramento | Fator R | "O Fator R pode reduzir sua alíquota de imposto." | "Fator R errado é dinheiro saindo do seu bolso sem aviso nenhum. A gente calcula certo todo mês, não só na abertura." | Prova competência técnica na cara — nunca esconde atrás de 'fale com um especialista'. |
 | 8 — Diferencial | Preço | "Nosso plano tem o melhor custo-benefício do mercado." | "R$139, sem 'a partir de'. Você já deve ter visto esse tipo de letra miúda por aí, aqui não tem." | Fala de igual pra igual — assume que ela já pesquisou concorrência, não explica o óbvio. |
 | 10 — Oferta | Fidelidade/cancelamento | "Assine agora e comece a usar." | "Sem fidelidade-surpresa. Cancela quando quiser, sem multa escondida no contrato." | Responde à objeção de quem já foi pego de surpresa em contrato de SaaS/serviço antes. |
 | 11 — Migração | Troca de contador | "Troque de contador facilmente conosco." | "Seu contador atual te deixou no vácuo? Eu trago seus dados pra cá sem você perder histórico nenhum." | Nomeia a dor concreta ("vácuo") que essa persona relata sobre contador tradicional. |
 | 12 — Gestão do dinheiro do dono | Pró-labore | "Calcule seu pró-labore facilmente pelo app." | "Pró-labore certo, calculado automático. Você não precisa saber a fórmula, só ver o número certo todo mês." | Mesma lógica do Fator R — automação como valor central pra persona técnica. |
 | 13 — Documentação em dia | CND/certidões | "Mantenha sua empresa em dia com a documentação." | "CND vencida trava até proposta de cliente grande. Eu confiro isso toda semana, você só recebe alerta se faltar algo." | Liga direto a uma consequência prática que ela se importa (perder contrato). |
+| 16 — Dicas empresariais 🆕 v4 | Precificar projeto | "Saiba como precificar seus serviços." | "Preço por hora esconde teu custo real. Fecha por projeto, com margem calculada, e a gente te mostra o número que precisa entrar todo mês." | Dica concreta de negócio na língua de quem fatura por contrato, sem contabilês. |
+| 17 — Facilidade do app 🆕 v4 | Abertura sem papelada | "Abra sua empresa 100% online." | "Zero PDF pra imprimir, zero fila. O app pergunta o que precisa e protocola sozinho na Junta. Você acompanha o status como acompanha um deploy." | Demo > promessa: persona técnica confia vendo o produto trabalhar, na linguagem nativa dela. |
 | — Onboarding (transversal) | Cadastro inicial | "Preencha o formulário abaixo para começar." | "3 perguntas. Dá pra preencher entre um commit e outro." | Fala a língua do dia a dia dela sem forçar gíria. |
 
 ## Mapeamento de pilar — onde ela se conecta 🆕 (26/08)
 
-> Mesmo espírito do `personagem-leo.md` §11 — não é regra travada, é encaixe natural. Numeração de pilar v3 (`estrategia-organica.md`).
+> Mesmo espírito do `personagem-leo.md` §11 — não é regra travada, é encaixe natural. Numeração de pilar v3 (`estrategia-organica.md`; 🔄 v4 01/09: 6/7 em standby, novos 16-Dicas empresariais e 17-Facilidade do app).
 
 | # | Pilar | Encaixe | Por quê |
 |---|---|---|---|
@@ -107,14 +109,16 @@ Não quer "aprender contabilidade" — quer terceirizar completamente e ter cert
 | 3 | Nossa origem | 🟡 Médio | Soma como prova de solidez, mas ela busca eficiência antes de tradição |
 | 4 | Dor educativa | 🟢 Forte | Quer entender o "porquê" técnico, gosta de ver profundidade exposta |
 | 5 | Mitos/crenças erradas | 🟢 Forte | Perfil analítico responde bem a correção técnica precisa |
-| 6 | Calendário fiscal | 🟡 Médio | Já é organizada — prazo gera menos ansiedade nela que nas outras dorsais |
-| 7 | Educação fiscal/enquadramento | 🟢 Forte | Fator R é a dor concreta mais citada por esta persona ([[legalize-cobaia-cnpj-pedro]]) |
+| 6 | Calendário fiscal (standby, v4 01/09) | 🟡 Médio | Já é organizada — prazo gera menos ansiedade nela que nas outras dorsais |
+| 7 | Educação fiscal/enquadramento (standby, v4 01/09) | 🟢 Forte | Fator R é a dor concreta mais citada por esta persona ([[legalize-cobaia-cnpj-pedro]]) |
 | 8 | Diferencial vs mercado | 🟢 Forte | Pesquisa e compara ativamente, quer dado concreto na cara |
 | 9 | Bastidor/processo | 🟡 Médio | Prova tangencial — ela confia mais em profundidade fiscal exposta (pilar 7) que em ver o processo |
 | 10 | Oferta/conversão | 🟡 Médio | Responde bem a oferta clara, mas é decisão racional, não gancho emocional |
 | 11 | Migração/troca de contador | 🟢 Forte | Gatilho documentado do volante `a2` — contador atual falhou é dor real desta dorsal |
 | 12 | Gestão do dinheiro do dono | 🟢 Forte | Automação/número certo fala direto com o perfil técnico |
 | 13 | Documentação em dia | 🟡 Médio | Relevante, mas ela confia que "resolve" sem precisar de reforço emocional |
+| 16 | Dicas empresariais/informativos 🆕 v4 | 🟢 Forte | Consome conteúdo prático denso; dica aplicável vale mais que teoria fiscal pra ela |
+| 17 | Facilidade do app 🆕 v4 | 🟢 Forte | Quer ver o produto funcionando antes de confiar — demo de tela é o formato que a convence |
 | 14 | Prova/reação (standby) | 🟡 Médio | Ajuda na comparação racional quando reativado |
 | 15 | Participativo (standby) | 🟡 Médio | Comunidades de freelancer são coesas, mas não é prioridade |
 | Momentâneo | Lançamento/promoção | 🟢 Forte | Early-adopter, gosta de novidade/vaga fundador |

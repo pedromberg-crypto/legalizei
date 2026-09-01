@@ -78,18 +78,20 @@ Não quer "crescer o negócio" — quer que a parte chata (imposto, prazo) suma 
 | 2 — Cultural/leve | Negócio pequeno "não conta" | "Tem gente que acha que MEI não precisa se preocupar com nada." | "MEI pequeno também tem guia pra pagar — só que ninguém fala disso porque não é 'glamouroso' falar de negócio pequeno. Eu falo." | Valida o tamanho do negócio dela em vez de tratar como menos importante. |
 | 4 — Dor educativa | Obrigação mensal do MEI | "MEI tem obrigações fiscais mensais." | "Seu MEI tem, sim, um boleto por mês. Só isso. Eu cuido, você nem sente." | Reduz a complexidade percebida ao que ela realmente é: mínima. |
 | 5 — Mitos | "Não compensa contabilidade pra MEI pequeno" | "Tem gente que acha que MEI de baixo faturamento não compensa contabilidade." | "Não é sobre 'compensar'. É sobre nunca mais pensar nisso pelo preço de um cafézinho por dia." | Reposiciona o valor: não é ROI de crescimento, é paz de espírito barata. |
-| 6 — Calendário fiscal | DASN-SIMEI anual | "Não esqueça o DASN-SIMEI anual." | "Uma vez por ano, uma declaração. Eu preencho, você só confirma." | Menor fricção possível, sem surpresa de novidade. |
-| 7 — Educação fiscal/enquadramento | Adaptado (MEI não tem Fator R) | "Seu enquadramento pode mudar se você crescer." | "Você não pretende crescer, e tá ótimo assim. Isso não muda nada no que eu faço por você." | Reforça o pilar central da persona: nunca empurrar crescimento. |
+| 6 (standby v4) — Calendário fiscal | DASN-SIMEI anual | "Não esqueça o DASN-SIMEI anual." | "Uma vez por ano, uma declaração. Eu preencho, você só confirma." | Menor fricção possível, sem surpresa de novidade. |
+| 7 (standby v4) — Educação fiscal/enquadramento | Adaptado (MEI não tem Fator R) | "Seu enquadramento pode mudar se você crescer." | "Você não pretende crescer, e tá ótimo assim. Isso não muda nada no que eu faço por você." | Reforça o pilar central da persona: nunca empurrar crescimento. |
 | 8 — Diferencial | Preço | "Nosso plano é o mais barato do mercado." | "Não é sobre ser o mais barato. É sobre você nunca mais abrir o app do banco assustada por causa de imposto." | Compete em tranquilidade, não em preço — mais alinhado ao que ela valoriza. |
 | 10 — Oferta | Por que pagar mensalidade | "Nosso serviço oferece o melhor valor agregado do mercado." | "Você já paga pouco hoje. A ideia não é você pagar mais, é você nunca mais pensar nisso." | Ataca a objeção real: por que pagar algo a mais por algo que já resolve sozinha. |
 | 11 — Migração | Quem nunca teve contador | "Troque de contador facilmente." | "Se hoje você não paga nada por isso e tá tudo errado sem saber, trocar agora é mais barato que descobrir depois." | Fala a quem nunca teve contador, não a quem já tem um ruim — perfil mais realista pra D. |
 | 12 — Gestão do dinheiro do dono | Adaptado (sem pró-labore formal) | "Saiba quanto você pode retirar do seu negócio." | "Você já sabe quanto sobra pra você no fim do mês. Eu só confirmo que tá dentro da lei, sem comer seu lucro com imposto a mais." | Fala a língua de quem já administra informalmente, sem impor conceito novo. |
 | 13 — Documentação em dia | Esquecimento normalizado | "Mantenha documentação em dia." | "Alvará, certidão... eu confiro. Você só some da lista de quem 'esqueceu' de novo." | Reduz o constrangimento — esquecer é normal, ela não é falha. |
+| 16 — Dicas empresariais 🆕 v4 | Orçamento falado | "Saiba cobrar pelo seu serviço." | "Orçamento falado se esquece. Manda por escrito no WhatsApp, com validade. O cliente respeita e você não perde o combinado." | Dica da rotina real de quem atende na rua/balcão — zero teoria, uso imediato. |
+| 17 — Facilidade do app 🆕 v4 | DAS sem caçar boleto | "Pague seu DAS em dia pelo app." | "O boleto do mês chega sozinho no app. Pagou, o comprovante fica guardado sozinho. Sem procurar site, sem refazer cadastro." | Facilidade aplicada à única obrigação recorrente dele — o alívio é específico, não genérico. |
 | — Onboarding (transversal) | Cadastro inicial | "Complete seu cadastro em poucos passos." | "3 perguntas, resolve, esquece. Não tem parte 2." | Reforça a promessa de simplicidade definitiva, sem letra miúda de complexidade futura. |
 
 ## Mapeamento de pilar — onde ela se conecta 🆕 (26/08)
 
-> Mesmo espírito do `personagem-leo.md` §11 — não é regra travada, é encaixe natural. Numeração de pilar v3 (`estrategia-organica.md`).
+> Mesmo espírito do `personagem-leo.md` §11 — não é regra travada, é encaixe natural. Numeração de pilar v3 (`estrategia-organica.md`; 🔄 v4 01/09: 6/7 em standby, novos 16-Dicas empresariais e 17-Facilidade do app).
 
 | # | Pilar | Encaixe | Por quê |
 |---|---|---|---|
@@ -98,14 +100,16 @@ Não quer "crescer o negócio" — quer que a parte chata (imposto, prazo) suma 
 | 3 | Nossa origem | 🟡 Médio | Solidez importa, mas ela não pesquisa a fundo — menos crítico que pra B |
 | 4 | Dor educativa | 🟢 Forte | Reduzir a complexidade percebida é o hook central dela |
 | 5 | Mitos/crenças erradas | 🟢 Forte | "Não compensa contabilidade pra MEI pequeno" é o mito que trava a decisão dela |
-| 6 | Calendário fiscal | 🟢 Forte | Simplicidade de "1x por ano" é exatamente o que ela quer ouvir |
-| 7 | Educação fiscal/enquadramento | ❌ Fraco | Não se aplica bem ao MEI puro — adaptado, mas não é hook natural |
+| 6 | Calendário fiscal (standby, v4 01/09) | 🟢 Forte | Simplicidade de "1x por ano" é exatamente o que ela quer ouvir |
+| 7 | Educação fiscal/enquadramento (standby, v4 01/09) | ❌ Fraco | Não se aplica bem ao MEI puro — adaptado, mas não é hook natural |
 | 8 | Diferencial vs mercado | 🟡 Médio | Não compara muito — decide por confiança/preço direto, não por comparação |
 | 9 | Bastidor/processo | 🟡 Médio | Menos crítico que pra B/C — ela quer resolver, não necessariamente ver o processo |
 | 10 | Oferta/conversão | 🟢 Forte | "Nunca mais pensar nisso pelo preço de um café" é o gancho mais forte dela |
 | 11 | Migração/troca de contador | 🟡 Médio | Mais comum ela nunca ter tido contador antes (perfil adaptado, não o migrante clássico) |
 | 12 | Gestão do dinheiro do dono | ❌ Fraco | Conceito de pró-labore formal não ressoa — ela já sabe "quanto sobra" informalmente |
 | 13 | Documentação em dia | 🟡 Médio | Relevante, mas menos ansiogênico que pra B (nem sempre tem loja física fiscalizável) |
+| 16 | Dicas empresariais/informativos 🆕 v4 | 🟢 Forte | Dica de ofício/cobrança fala com o orgulho de quem vive do próprio trabalho |
+| 17 | Facilidade do app 🆕 v4 | 🟢 Forte | O DAS é o único ponto de contato mensal dele com burocracia — resolver isso na tela é o produto inteiro pra ele |
 | 14 | Prova/reação (standby) | 🟡 Médio | Ajuda, mas não é decisivo pro perfil dela |
 | 15 | Participativo (standby) | ❌ Fraco | Baixo investimento digital, não é voz pública |
 | Momentâneo | Lançamento/promoção | ❌ Fraco | Preço-sensível — "vaga fundador" não fala com ela, ela quer é não pagar mais |

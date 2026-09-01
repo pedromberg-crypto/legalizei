@@ -20,7 +20,7 @@ id            string   — slug único, ex: "mote-a1-por-quem-entende"
 titulo        string   — nome interno da variação, ex: "A1 — por quem entende"
 campanha      string   — ex: "primeira-campanha"
 mote          "A"|"B"|"C"                      🆕 — agrupador da campanha (institucional/MEI/ME)
-pilar         number (1-15)                     — v3 26/08: renumeração completa liberada por Pedro
+pilar         number (1-17)                     — v4 01/09: 6/7 standby, +16/17 (v3 26/08: renumeração completa liberada por Pedro)
                                      (peças antigas atualizadas, não quebra nada). 13 ativos (1-13) +
                                      2 em standby (14-Prova/reação, 15-Participativo/UGC, ainda válidos
                                      como valor, só pausados na pauta ativa) — ver estrategia-organica.md

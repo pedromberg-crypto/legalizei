@@ -20,7 +20,7 @@ Digital de verdade, humana, sem contabilês — pro pequeno prestador de serviç
 Tirar o peso da burocracia do CNPJ das costas de quem empreende sozinho. O cliente não quer "entender contabilidade" — quer estar em dia, sem medo de multa, sem perder tempo. **A gente carrega o chato; ele toca o sonho.**
 
 ## 3. Pra quem (o cliente humanizado)
-O autônomo que virou PJ (marketing, TI, consultoria, beleza, saúde…). Não entende "anexo", "Fator R", "DAS". Tem **medo de errar e pagar imposto a mais** (a dor real, confirmada pela Izabela e vivida pelo próprio Pedro). Vive no **celular**. Já foi tratado como número por escritório tradicional E por app frio (Contabilizei).
+O autônomo que virou PJ (marketing, TI, consultoria, beleza, saúde…). Não entende "anexo", "Fator R", "DAS" — e não quer precisar entender. A dor que a comunicação ataca primeiro (🔄 v2, 01/09, decisão do Pedro): o **cansaço da burocracia de ter empresa no Brasil** — papelada, órgão, prazo, contabilês, contador que some. O **medo de errar e pagar imposto a mais** (confirmado pela Izabela e vivido pelo próprio Pedro) continua real e continua no arsenal, como gatilho secundário, não como porta de entrada. Vive no **celular**. Já foi tratado como número por escritório tradicional E por app frio (Contabilizei).
 
 ## 4. Personalidade (arquétipo + traços)
 **Arquétipo dominante: o Aliado/Prestativo** (resolve, cuida) com um toque de **Parceiro de confiança** (fala de igual pra igual, não de cima). NÃO é o Sábio distante (o líder é isso — contabilês, autoridade fria).

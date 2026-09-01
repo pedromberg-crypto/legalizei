@@ -122,7 +122,7 @@ Referência de calibragem pro `legalizai-copywriter`. Não é fórmula de substi
 
 ## 11. Pilares de conteúdo — onde ele encaixa — 🟢 travado (Pedro, 19/08), **revisado 26/08 (não é mais exclusividade, numeração v3)**
 
-Mapeamento contra os pilares travados em `estrategia-organica.md` §Camada 1 (v3, 26/08 — renumeração completa liberada por Pedro, 2 pilares novos: 3-Nossa origem, 5-Mitos).
+Mapeamento contra os pilares travados em `estrategia-organica.md` §Camada 1 (🔄 v4, 01/09 — guinada "menos imposto": 6 e 7 em standby, novos 16-Dicas empresariais e 17-Facilidade do app, janela promocional ligada; antes v3 de 26/08).
 
 > **Mudança 26/08 (Pedro):** "🟢 Dono" deixa de significar exclusividade. Léo é o encaixe MAIS FORTE nos pilares 4 e 2 (numeração v3), mas o Pedro ou a equipe podem perfeitamente postar dor-educativa ou cultural/leve sem o Léo — não é mais trava, é preferência de encaixe. Vale pros pilares novos também: o brief de humano-IA (imagem fotorrealista) não é exclusivo de nenhum pilar específico — pode ser usado em qualquer pilar que fizer sentido.
 
@@ -133,14 +133,16 @@ Mapeamento contra os pilares travados em `estrategia-organica.md` §Camada 1 (v3
 | 3 | Nossa origem 🆕 | ❌ Fora | É a história institucional da fusão Legalize+tech, voz de marca/Pedro-fundador, não do Léo |
 | 4 | Dor educativa relatable | 🟢 Encaixe forte (não exclusivo) | Vigilância + tradução de susto fiscal é o core dele, mas time/Pedro também podem postar aqui |
 | 5 | Mitos/crenças erradas 🆕 | 🟢 Encaixe forte (não exclusivo) | Desmontar mito é ironia com propósito, exatamente o que ele faz (§2) |
-| 6 | Calendário/prazo fiscal 🆕 | 🟢 Encaixe forte (não exclusivo) | Extensão direta do pilar 4 (vigilância de prazo é o core dele) |
-| 7 | Educação fiscal/enquadramento 🆕 | 🟡 Meio | Léo convida a usar a ferramenta/entender o tema; dado técnico sai sério, sem ironia (herda a regra do antigo pilar Fator R) |
+| 6 | Calendário/prazo fiscal (standby, v4 01/09) | 🟢 Encaixe forte (não exclusivo) | Extensão direta do pilar 4 (vigilância de prazo é o core dele) — vale quando reativar; prazo sazonal pontual sai via pilar 16 |
+| 7 | Educação fiscal/enquadramento (standby, v4 01/09) | 🟡 Meio | Léo convida a usar a ferramenta/entender o tema; dado técnico sai sério, sem ironia (herda a regra do antigo pilar Fator R) — vale quando reativar |
 | 8 | Diferencial vs mercado | 🟡 Meio | Ângulo ironiza o teatro (dele), mas dado/comparação dura pode pedir tom mais institucional |
 | 9 | Bastidor/processo (contador CRC real) | 🟡 Meio | Léo pode abrir gancho ("o contador que cuida disso é de verdade") mas quem sustenta é a pessoa real, não ele |
 | 10 | Oferta/conversão | 🟡 Meio | CTA final ("Vai, legaliza aí") é dele; corpo do post com preço/condição pode ser institucional |
 | 11 | Migração/troca de contador 🆕 | 🟡 Meio | Léo pode abrir com "eu vi contrato pior que o seu" tipo de gancho, corpo com detalhe do flow é institucional |
 | 12 | Gestão do dinheiro do dono 🆕 | 🟡 Meio | Pode abrir gancho, mas é funcionalidade de produto, tom mais institucional |
 | 13 | Documentação/regularização em dia 🆕 | 🟢 Encaixe forte (não exclusivo) | "Eu confiro isso pra você" é literalmente vigilância, core do Léo |
+| 16 | Dicas empresariais/informativos 🆕 v4 | 🟢 Encaixe forte (não exclusivo) | Dica útil com leveza é a cara dele — o cuidado é não virar coach: dica concreta, nunca motivacional (§3 já veta) |
+| 17 | Facilidade do app / produto em ação 🆕 v4 | 🟡 Meio | Léo pode abrir o gancho ("olha o que você NÃO vai preencher") e reagir à tela; a demo em si é do produto, sem ironia por cima do vídeo |
 | 14 | Prova/reação (standby, 26/08) | ❌ Fora | É prova pessoal do Pedro, não personagem — mistura quebraria credibilidade |
 | 15 | Participativo/UGC (standby, 26/08) | 🟡 Meio | Pode comentar/reagir a conteúdo de usuário, não protagoniza |
 | Momentâneo | Lançamento/promoção | 🟡 Meio | Mesmo padrão do 10 — CTA dele, condição comercial institucional |

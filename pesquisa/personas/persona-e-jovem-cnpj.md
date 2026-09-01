@@ -90,18 +90,20 @@ Não quer "aprender a linguagem de adulto-do-mercado-de-trabalho" antes de conse
 | 2 — Cultural/leve | Lacuna educacional do "kit dev" | "Muita gente não sabe que atividade intelectual não pode ser MEI." | "Ninguém te falou isso no bootcamp, né? Atividade intelectual não é MEI. Bizarro isso não vir no kit de boas-vindas de dev." | Ironia leve sobre a lacuna educacional — dial alto, tolerado por essa geração. |
 | 4 — Dor educativa | Primeira vez ouvindo sobre Anexo | "Seu enquadramento tributário depende da atividade exercida." | "Ninguém te ensinou isso na faculdade, eu sei. Anexo é só a 'prateleira' de imposto que sua atividade cai. Eu te encaixo na certa." | Reconhece que ela não teve a experiência prévia (CLT) pra já saber isso. |
 | 5 — Mitos | "Só formaliza quando já ganha bem" | "Tem gente que acha que só precisa se formalizar quando já tá ganhando muito." | "Esperar 'ganhar bem' pra abrir CNPJ é o motivo de trocentos freelancer pagar imposto de pessoa física, que é pior. Quanto antes, menos dor." | Desmonta o mito específico que atrasa a formalização precoce. |
-| 6 — Calendário fiscal | DAS mensal | "Não esqueça do DAS." | "DAS todo mês, no automático, que nem assinatura de streaming que você nem lembra que paga — só que essa te poupa dinheiro, não gasta." | Analogia com o universo dela (assinaturas digitais). |
-| 7 — Educação fiscal/enquadramento | Fator R / Anexo (repete o gancho do pilar 4 com outro ângulo) | "O Fator R pode alterar sua alíquota." | "Fator R é tipo aquele achievement escondido que ninguém te conta como destravar. Eu já sei o caminho." | Metáfora de game/tech, fala a língua dela sem forçar. |
+| 6 (standby v4) — Calendário fiscal | DAS mensal | "Não esqueça do DAS." | "DAS todo mês, no automático, que nem assinatura de streaming que você nem lembra que paga — só que essa te poupa dinheiro, não gasta." | Analogia com o universo dela (assinaturas digitais). |
+| 7 (standby v4) — Educação fiscal/enquadramento | Fator R / Anexo (repete o gancho do pilar 4 com outro ângulo) | "O Fator R pode alterar sua alíquota." | "Fator R é tipo aquele achievement escondido que ninguém te conta como destravar. Eu já sei o caminho." | Metáfora de game/tech, fala a língua dela sem forçar. |
 | 8 — Diferencial | Moderno × sólido | "Nosso app é o mais moderno do mercado." | "Não é sobre ser bonito. É sobre ter gente de carne e osso com 22 anos de prática por trás de um app que parece ter nascido ontem." | Contrasta modernidade com solidez — atrativo pra quem valoriza os dois. |
 | 10 — Oferta | Cadastro sem burocracia | "Assine agora." | "Cadastro pelo celular, sem burocracia de formulário grandão. Se não gostar, cancela igual cancelaria qualquer assinatura." | Linguagem de consumo digital nativo dela. |
 | 11 — Migração | Recebendo por CPF, sabe que devia ter CNPJ | "Migre facilmente pra nossa plataforma." | "Se você tá recebendo por CPF ainda e sabe que devia ter CNPJ, começar agora evita imposto retroativo que ninguém quer descobrir depois." | Fala a um cenário real dela — informal, mas ciente do risco. |
 | 12 — Gestão do dinheiro do dono | Primeiro pró-labore da vida | "Calcule seu pró-labore." | "Primeira vez tirando um 'salário' de você mesma? Eu calculo certo, sem você ter que aprender contabilidade pra isso." | Reconhece que é a primeira experiência dela com o conceito. |
 | 13 — Documentação em dia | Certidão pedida por cliente grande | "Mantenha documentação em dia." | "Contrato de cliente grande pode pedir certidão que você nem sabia que existia. Eu já deixo isso pronto, antes de você precisar correr atrás." | Previne a surpresa no momento exato de crescimento de carreira. |
+| 16 — Dicas empresariais 🆕 v4 | Primeiro contrato | "Formalize seus acordos com clientes." | "Primeiro cliente sem contrato é história que termina em print de conversa. Modelo simples, de 1 página, resolve 90% dos casos." | Dica de quem está começando, tom direto, sem assumir experiência que ela não tem. |
+| 17 — Facilidade do app 🆕 v4 | Abrir do celular | "Abra seu CNPJ pelo celular." | "Abre no celular, no intervalo. O app não te pergunta nada que você não sabe responder." | Remove o medo real de quem nunca teve CLT nem contador: não saber os termos. |
 | — Onboarding (transversal) | Cadastro inicial | "Acesse o painel e complete seu cadastro." | "Tudo pelo celular, do jeito que você já faz tudo. Sem ligação, sem papel." | Celular primeiro, nunca telefone/papel como padrão. |
 
 ## Mapeamento de pilar — onde ela se conecta 🆕 (26/08)
 
-> Mesmo espírito do `personagem-leo.md` §11 — não é regra travada, é encaixe natural. Numeração de pilar v3 (`estrategia-organica.md`).
+> Mesmo espírito do `personagem-leo.md` §11 — não é regra travada, é encaixe natural. Numeração de pilar v3 (`estrategia-organica.md`; 🔄 v4 01/09: 6/7 em standby, novos 16-Dicas empresariais e 17-Facilidade do app).
 
 | # | Pilar | Encaixe | Por quê |
 |---|---|---|---|
@@ -110,14 +112,16 @@ Não quer "aprender a linguagem de adulto-do-mercado-de-trabalho" antes de conse
 | 3 | Nossa origem | 🟡 Médio | "22 anos" é menos relevante pra quem não tem ponto de comparação com o "antes" tradicional |
 | 4 | Dor educativa | 🟢 Forte | Realmente não sabe o básico — é o hook mais honesto pra esta dorsal |
 | 5 | Mitos/crenças erradas | 🟢 Forte | Desmontar "só formaliza quando ganha bem" é crítico pro perfil dela |
-| 6 | Calendário fiscal | 🟡 Médio | Relevante, mas mais preventivo que aliviador — ainda não tem histórico de "já vivi isso" |
-| 7 | Educação fiscal/enquadramento | 🟢 Forte | Primeira vez ouvindo — é onde ela mais precisa e mais aprecia clareza |
+| 6 | Calendário fiscal (standby, v4 01/09) | 🟡 Médio | Relevante, mas mais preventivo que aliviador — ainda não tem histórico de "já vivi isso" |
+| 7 | Educação fiscal/enquadramento (standby, v4 01/09) | 🟢 Forte | Primeira vez ouvindo — é onde ela mais precisa e mais aprecia clareza |
 | 8 | Diferencial vs mercado | 🟡 Médio | Sem "concorrente anterior" pra comparar — pilares 4/7 importam mais que este |
 | 9 | Bastidor/processo | 🟡 Médio | Relevante, mas secundário |
 | 10 | Oferta/conversão | 🟢 Forte | Decide rápido, sem processo longo de comparação (documentado na jornada) |
 | 11 | Migração/troca de contador | ❌ Fraco | Ela não teve contador antes — é o oposto do perfil de migração |
 | 12 | Gestão do dinheiro do dono | 🟢 Forte | Primeira experiência de pró-labore — novidade genuína, hook único |
 | 13 | Documentação em dia | 🟡 Médio | Relevante quando cresce (cliente grande pedindo certidão), mas não é dia-1 |
+| 16 | Dicas empresariais/informativos 🆕 v4 | 🟢 Forte | Nunca teve chefe nem RH — aprende a ser dono por conteúdo, e este pilar é exatamente isso |
+| 17 | Facilidade do app 🆕 v4 | 🟢 Forte | Nativo digital espera produto que se mostra; promessa sem tela soa marketing velho |
 | 14 | Prova/reação (standby) | 🟡 Médio | Relevante, mas não decisivo pro perfil dela |
 | 15 | Participativo (standby) | 🟢 Forte | Geração ativa em comunidade — fonte mais provável de UGC quando reativado |
 | Momentâneo | Lançamento/promoção | 🟢 Forte | Early-adopter nata, gosta de novidade/vaga fundador |

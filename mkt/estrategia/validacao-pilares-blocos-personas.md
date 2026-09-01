@@ -16,6 +16,23 @@ tags: [marketing, atelie, motor, validacao]
 
 ---
 
+## 🔄 v4 (01/09) — guinada editorial "menos imposto" — FECHADO
+
+Decisão do Pedro (01/09): **falar menos de imposto/economia fiscal e mais de plano promocional, desburocratização, facilidade do app e informativos/dicas empresariais.** Aplicado em cima da v3, sem renumerar nada:
+
+- **Pilares 6 (Calendário fiscal) e 7 (Educação fiscal/enquadramento) → standby**, mesmo status de 14/15. O acervo fiscal (Fator R, Anexos, CNAE) fica pronto; prazos sazonais voltam a viver só como gatilho (Camada 2) e fiscal pontual pode aparecer DENTRO do 16, traduzido.
+- **2 pilares novos:** **16 — Dicas empresariais/informativos** (Educação/Dor: precificar, contrato simples, separar PJ/PF, rotina de dono — útil sem contabilês) e **17 — Facilidade do app / produto em ação** (Diferencial/Confiança: a tela real fazendo o trabalho, demo > promessa).
+- **Janela promocional LIGADA** (pilar momentâneo): até 30% da pauta, escassez só com vaga real, nunca prazo falso.
+- **Ativo diferencial nº 1** da estratégia orgânica deixa de ser o dado fiscal e vira a **desburocratização vivida no app**; simulador Fator R desce pra apoio.
+- **Statement de posicionamento v2**: dor central sai de "medo de errar e pagar imposto a mais" e vira o **cansaço da burocracia**, com a facilidade do app no próprio statement (`posicionamento.md` + `conceito-marca.md` §público).
+- **5 dorsais atualizadas**: pares de calibragem novos (16 e 17) + linhas novas no mapeamento de pilar; pares fiscais anotados standby, não apagados.
+- Blocos e %: **inalterados** (20/30/25/25) — mudou o miolo, não a moldura. Cap de oferta (20% fora de promo), regras de travessão/escassez/garantia: intactos.
+- 🟡 Pendências da guinada (fora da camada de conteúdo): meio-funil ancorado no simulador Fator R (`funil-conversao.md`), copy da LP no ar, `BASE-ESTRATEGICA.md` (decisão de sócio). O doc validado com o Puntel (12/08) não foi reescrito — é histórico.
+
+ADR em `marca/decisoes-marca.md` 01/09. Detalhe aplicado em `estrategia-organica.md` (v4), `personagem-leo.md` §11, `atelie/CLAUDE.md` (passo 4) e `atelie/dados/legalizai/tipos.md`.
+
+---
+
 ## §3 — Pilares de conteúdo — FECHADO (numeração v3)
 
 **Decisões aplicadas (`estrategia-organica.md` §Camada 1 v3, `personagem-leo.md` §11 v3):**

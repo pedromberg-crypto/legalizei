@@ -123,7 +123,7 @@ tags: [execucao, flow, dados, abertura]
 ### C3 · Sócios?
 - Confirma se terá mais sócios (sem reperguntar quantidade/tipo)
 - se houver, de cada sócio extra: nome completo + CPF + % de participação + data de nascimento + nacionalidade + RG + órgão emissor + estado civil (+ regime de bens se casado) + endereço (CEP com autofill + número + complemento)
-- quem administra a empresa (só o titular × titular + sócio(s) marcados)
+- quem administra a empresa: com 1 sócio é sim/não no singular ("Eu e o Carlos"), com 2+ vira LISTA de nomes com check por sócio (dá pra ter sócio administrador e sócio que é só sócio)
 
 ### C4 · Dados da empresa
 - Índice cadastral do IPTU (único campo do cliente)

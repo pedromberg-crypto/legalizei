@@ -1357,7 +1357,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   },
   socios: {
     dono: "usuario",
-    faz: "🆕 01/09 — ganhou a pergunta \"Quem vai administrar a empresa?\" (só o titular × titular + sócio(s) marcados), logo depois dos dados do sócio. Confirma se a empresa tem mais sócios e, se tiver, coleta a qualificação completa de cada um: nome, CPF, participação, nascimento, nacionalidade, RG + órgão, estado civil (+ regime) e endereço.",
+    faz: "🆕 01/09 — ganhou a pergunta \"Quem vai administrar a empresa?\", logo depois dos dados do sócio. Com 1 sócio é sim/não no singular (\"Eu e o Carlos\"); com 2+ vira LISTA de nomes com check, porque dá pra ter sócio que administra e sócio que é só sócio. Confirma se a empresa tem mais sócios e, se tiver, coleta a qualificação completa de cada um: nome, CPF, participação, nascimento, nacionalidade, RG + órgão, estado civil (+ regime) e endereço.",
     interfere:
       "A divisão em % vai literalmente no contrato social, e o número de sócios determina a natureza jurídica (SLU × LTDA, decidida por dentro). Também define quantas assinaturas o GOV.BR vai exigir no fim.",
     porque:

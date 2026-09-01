@@ -204,7 +204,7 @@ O CTA agora também espera esses campos: sem eles a cobrança volta 400 do gatew
 
 Origem: Rua Satélite 42 (simulação de DBE + Integrador com 2 sócios, contrato padrão gerado e lido na tela). Toda a discussão societária desaguou em **um campo só**.
 
-**A pergunta**, no C3, depois dos dados do sócio: *"Quem vai administrar a empresa?"* → **só o titular** × **titular + o(s) sócio(s) marcado(s)**. Com 1 sócio extra é binária; com 2+ abre a seleção de quais administram. Obrigatória (trava o CTA) no caminho **abrir** — sem ela o RPA não sabe qual qualificação mandar. **Não aparece no migrar**: a empresa já existe e a administração já está no contrato dela.
+**A pergunta**, no C3, depois dos dados do sócio: *"Quem vai administrar a empresa?"*. **Com 1 sócio** é binária e no singular, com o nome dele no botão ("Eu e o Carlos"). **Com 2+ sócios** é uma LISTA de nomes com check, um por sócio: dá pra ter sócio-administrador e sócio que é só sócio, e a escolha é nome a nome. O titular aparece na lista travado e marcado (ele é sempre administrador); nada marcado = só ele administra, e a tela devolve isso numa linha-resumo. `SociosView` aceita a prop `socios` e a rota lê `?socios=3|4` pra ver a variante (o mock congela em 2). Obrigatória (trava o CTA) no caminho **abrir** — sem ela o RPA não sabe qual qualificação mandar. **Não aparece no migrar**: a empresa já existe e a administração já está no contrato dela.
 
 **O que muda no processo** (e é só isso):
 

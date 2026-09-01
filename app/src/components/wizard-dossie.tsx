@@ -605,6 +605,7 @@ export function SociosView({
   onSeguir,
   onVoltar,
   contexto = "abrir",
+  socios,
 }: {
   preencher?: number;
   onSeguir?: () => void;
@@ -619,11 +620,19 @@ export function SociosView({
    * existiu.
    */
   contexto?: "abrir" | "migrar";
+  /**
+   * 🆕 01/09 — quantidade de sócios da empresa (titular incluído). Sem ela vale
+   * o mock (`SOCIOS`), que é 2. Existe pra dar como VER o caso de 3-4 sócios,
+   * onde a pergunta de administração deixa de ser sim/não e vira lista de
+   * nomes: a triagem real (E5T) já aceita até 4, mas o mock congela em 2 e a
+   * variante ficava invisível na demo.
+   */
+  socios?: number;
 }) {
   // 🔒 24/08 — quantidade FIXA, vinda do que a triagem já decidiu (`SOCIOS`,
   // fonte única em `dossie/mock.ts`). Divide 100% em partes iguais entre os
   // extras como ponto de partida; a pessoa ajusta.
-  const qtdExtras = Math.max(0, SOCIOS - 1);
+  const qtdExtras = Math.max(0, (socios ?? SOCIOS) - 1);
   // 🆕 31/08 — só o 1º extra (SOCIO_2) nasce com a qualificação de exemplo;
   // extras além dele nascem em branco, igual sempre foi com nome.
   const socioExtraPreenchido = () => ({
@@ -651,7 +660,7 @@ export function SociosView({
    * quem sai na cláusula de administração do contrato. Deixar o default valendo
    * como resposta escolheria pelo cliente um contrato que ele nunca leu.
    */
-  const [administracao, setAdministracao] = useState<"so-eu" | "com-socios" | null>(null);
+  const [administracao, setAdministracao] = useState<"so-eu" | "com-socios" | "lista" | null>(null);
   /** Ids dos sócios extras que também administram (só usado com 2+ extras). */
   const [admins, setAdmins] = useState<string[]>([]);
 
@@ -715,10 +724,7 @@ export function SociosView({
    * escolhido.
    */
   const administracaoOk =
-    contexto !== "abrir" ||
-    !TEM_SOCIO ||
-    administracao === "so-eu" ||
-    (administracao === "com-socios" && (extras.length === 1 || admins.length > 0));
+    contexto !== "abrir" || !TEM_SOCIO || extras.length > 1 || administracao !== null;
   const completo = (!TEM_SOCIO || (nomesOk && somaOk && qualificacaoOk)) && administracaoOk;
 
   function atualizar(id: string, patch: Partial<SocioExtra>) {
@@ -1047,47 +1053,83 @@ export function SociosView({
                     resultados.
                   </p>
 
-                  <OpcoesLinha
-                    opcoes={[
-                      { v: "so-eu" as const, label: "Só eu" },
-                      { v: "com-socios" as const, label: "Eu e sócio(s)" },
-                    ]}
-                    valor={administracao}
-                    onChange={(v) => {
-                      setAdministracao(v);
-                      // Marcar "eu e sócio(s)" com 1 extra só não tem o que
-                      // escolher: o extra é o sócio. Já entra marcado.
-                      if (v === "com-socios" && extras.length === 1) {
-                        setAdmins([extras[0].id]);
-                      }
-                      if (v === "so-eu") setAdmins([]);
-                    }}
-                  />
+                  {/* ─── 1 SÓCIO: pergunta binária, no singular ────────────
+                      Com um sócio só não há o que escolher além de sim/não, e
+                      o nome dele cabe no próprio botão — "Eu e o Carlos" diz
+                      mais que "Eu e sócio(s)". */}
+                  {extras.length === 1 && (
+                    <OpcoesLinha
+                      opcoes={[
+                        { v: "so-eu" as const, label: "Só eu" },
+                        {
+                          v: "com-socios" as const,
+                          label: `Eu e ${primeiroNome(extras[0].nome) || "meu sócio"}`,
+                        },
+                      ]}
+                      valor={administracao}
+                      onChange={(v) => {
+                        setAdministracao(v);
+                        setAdmins(v === "com-socios" ? [extras[0].id] : []);
+                      }}
+                    />
+                  )}
 
-                  {/* Com 2+ extras a pergunta deixa de ser sim/não: dá pra
-                      escolher QUAIS administram (o caso "eu e o Ademar, mas não
-                      os outros dois" apareceu literalmente na reunião). */}
-                  {administracao === "com-socios" && extras.length > 1 && (
-                    <div className="mt-3 flex flex-col gap-2">
-                      <p className="text-caption font-semibold text-text-primary">
-                        Quais sócios também administram?
-                      </p>
+                  {/* ─── 2+ SÓCIOS: lista com os NOMES, marca quem administra ─
+                      🔄 01/09 (pedido do Pedro) — aqui a pergunta binária não
+                      serve: dá pra ter sócio que administra e sócio que é só
+                      sócio, e a pessoa precisa escolher QUEM, nome a nome. Sem
+                      passo intermediário: a lista já é a resposta.
+
+                      O titular aparece na lista, travado e marcado, porque ele
+                      É um administrador — some daqui e a lista mente sobre quem
+                      vai assinar pela empresa. */}
+                  {extras.length > 1 && (
+                    <div className="flex flex-col gap-2">
+                      <div
+                        className="flex min-h-12 items-center gap-3 rounded-md border border-border-hairline
+                                   bg-surface-alt p-3"
+                      >
+                        <span
+                          aria-hidden
+                          className="flex h-5 w-5 shrink-0 items-center justify-center rounded border-2
+                                     border-action-primary bg-action-primary text-text-on-brand"
+                        >
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M20 6 9 17l-5-5" />
+                          </svg>
+                        </span>
+                        <span className="text-caption text-text-primary">
+                          {primeiroNome(CLIENTE.nome)}
+                        </span>
+                        <span className="ml-auto shrink-0 rounded-full bg-surface-card px-2 py-0.5 text-micro font-semibold text-text-tertiary">
+                          Você
+                        </span>
+                      </div>
+
                       {extras.map((s, i) => {
                         const marcado = admins.includes(s.id);
                         return (
                           <label
                             key={s.id}
-                            className="flex min-h-12 cursor-pointer items-center gap-3 rounded-md border
-                                       border-border-hairline bg-surface-card p-3"
+                            className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-md border p-3
+                                        transition-colors ${
+                                          marcado
+                                            ? "border-action-primary bg-surface-tint-brand"
+                                            : "border-border-hairline bg-surface-card"
+                                        }`}
                           >
                             <input
                               type="checkbox"
                               checked={marcado}
-                              onChange={() =>
+                              onChange={() => {
                                 setAdmins((atual) =>
                                   marcado ? atual.filter((id) => id !== s.id) : [...atual, s.id],
-                                )
-                              }
+                                );
+                                // A lista É a resposta: qualquer toque conta
+                                // como pergunta respondida (inclusive
+                                // desmarcar todos, que significa "só eu").
+                                setAdministracao("lista");
+                              }}
                               className="h-5 w-5 shrink-0 accent-[var(--color-action-primary)]"
                             />
                             <span className="text-caption text-text-primary">
@@ -1096,6 +1138,19 @@ export function SociosView({
                           </label>
                         );
                       })}
+
+                      {/* Devolve a leitura da lista em 1 linha. Marcar caixinha
+                          é fácil; entender o que o conjunto delas significa,
+                          não — e é o conjunto que vai pro contrato. */}
+                      <p className="text-micro text-text-tertiary">
+                        {admins.length === 0
+                          ? "Do jeito que está: só você administra."
+                          : `Vão administrar: você e ${listar(
+                              extras
+                                .filter((s) => admins.includes(s.id))
+                                .map((s, i) => primeiroNome(s.nome) || `${i + 2}º sócio`),
+                            )}.`}
+                      </p>
                     </div>
                   )}
 
@@ -1103,13 +1158,13 @@ export function SociosView({
                       opção escolhida. Explicar as duas ao mesmo tempo era o
                       caminho pra transformar 1 pergunta em aula de direito
                       societário, que foi exatamente o risco levantado. */}
-                  {administracao === "so-eu" && (
+                  {admins.length === 0 && (extras.length > 1 || administracao !== null) && (
                     <p className="text-micro text-text-tertiary mt-3">
                       Você resolve tudo sozinho, sem depender da assinatura de
                       ninguém. Seus sócios não assinam pela empresa.
                     </p>
                   )}
-                  {administracao === "com-socios" && (
+                  {admins.length > 0 && (
                     <p className="text-micro text-text-tertiary mt-3">
                       Cada administrador pode assinar sozinho o dia a dia da
                       empresa. Só atos grandes (vender ou dar em garantia um
@@ -2418,4 +2473,17 @@ export function NomeView({
       </main>
     </>
   );
+}
+
+/* ═══════════════════ HELPERS DE NOME (C3) ══════════════════════════════ */
+
+/** "Carlos Eduardo Silva" → "Carlos". Nome inteiro em caixinha vira parede. */
+function primeiroNome(nome: string): string {
+  return nome.trim().split(/\s+/)[0] ?? "";
+}
+
+/** ["Ana"] → "Ana" · ["Ana","Léo"] → "Ana e Léo" · 3+ → "Ana, Léo e Bia". */
+function listar(nomes: string[]): string {
+  if (nomes.length <= 1) return nomes[0] ?? "";
+  return `${nomes.slice(0, -1).join(", ")} e ${nomes[nomes.length - 1]}`;
 }

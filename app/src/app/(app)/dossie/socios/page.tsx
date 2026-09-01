@@ -53,8 +53,18 @@ export default function SociosPage() {
    */
   const proxima = enderecoFiscal && !mei ? "/dossie/nome" : "/dossie/empresa";
 
+  /**
+   * 🆕 01/09 — `?socios=3` (ou 4) simula uma empresa com mais sócios, do mesmo
+   * jeito que `?simular=` faz nas outras telas: é o único jeito de ver a
+   * pergunta de administração no formato LISTA (com 2 sócios ela é binária).
+   * Sem o parâmetro, vale o mock de sempre.
+   */
+  const socios = Number(searchParams.get("socios"));
+  const qtdSocios = Number.isFinite(socios) && socios >= 1 && socios <= 4 ? socios : undefined;
+
   return (
     <SociosView
+      socios={qtdSocios}
       onSeguir={() => router.push(comEndereco(comRegime(proxima, mei), enderecoFiscal))}
     />
   );

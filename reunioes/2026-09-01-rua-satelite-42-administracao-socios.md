@@ -58,7 +58,7 @@ O risco levantado foi transformar o final do dossiê em aula de direito societá
 ## ✅ O que foi construído a partir daqui (mesmo dia)
 
 - `SociosView` (C3) ganhou o bloco "Quem vai administrar a empresa?", **só no caminho abrir** (na migração a empresa já existe e a administração já está no contrato dela).
-- Titular aparece travado como administrador; com 1 sócio extra a pergunta é binária; com 2+ extras abre seleção de quais administram.
+- Titular aparece travado como administrador. **Com 1 sócio** a pergunta é binária e no singular, com o nome dele no botão ("Eu e o Carlos"). **Com 2+ sócios** vira LISTA de nomes com check (refinamento pedido pelo Pedro no mesmo dia): dá pra ter sócio administrador e sócio que é só sócio, e a escolha é nome a nome. Nada marcado = só o titular administra, dito na tela por uma linha-resumo.
 - CTA travado enquanto a pergunta não for respondida: sem ela o RPA não sabe qual qualificação mandar.
 - `flow-data.mjs`: campo novo no C3 + 4 regras internas (qualificação 49×22, forma de assinatura não enviada, representante = quem inicia, telas de conferência puladas) + 1 de API (CPF com MEI ativo).
 

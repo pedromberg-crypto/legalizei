@@ -480,7 +480,7 @@ export const CONFERENCIA: TelaConferencia[] = [
         "status": ""
       },
       {
-        "nome": "quem administra a empresa (só o titular × titular + sócio(s) marcados)",
+        "nome": "quem administra a empresa: com 1 sócio é sim/não no singular (\"Eu e o Carlos\"), com 2+ vira LISTA de nomes com check por sócio (dá pra ter sócio administrador e sócio que é só sócio)",
         "codigo": "",
         "valor": "",
         "origem": "usuario",

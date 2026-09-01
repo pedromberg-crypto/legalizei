@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
+import { CardNota } from "@/components/ui/card-nota";
 import { Campo, Texto, Select, OpcoesLinha } from "@/components/ui/form";
 import { PILLS, CheckMiniRegime } from "@/components/gate-telas";
 import { mascaraTelefone, mascaraCep, buscarCep } from "@/components/wizard-dinheiro";
@@ -782,9 +783,14 @@ export function EnderecoCategoriaView({
                           {/* 🔴 A saída honesta que faltava. Antes (no C4, pós-
                               pagamento) o app travava a resposta em "Sim" e
                               quem não morava lá não tinha caminho. */}
+                          {/* 🔄 01/09 (pedido do Pedro) — era um `Aviso` warning
+                              (bloco tingido inteiro). Virou `CardNota` variante
+                              "atencao": cartão neutro com círculo amarelo escuro
+                              + "!" branco, mesmo padrão do card de check verde.
+                              1ª aplicação da variante nova. */}
                           {apartamentoSemResidencia && (
-                            <Aviso
-                              variante="warning"
+                            <CardNota
+                              variante="atencao"
                               titulo="Apartamento só serve se você morar nele"
                             >
                               A Prefeitura de Belo Horizonte indefere empresa em
@@ -793,7 +799,7 @@ export function EnderecoCategoriaView({
                               ou usar o endereço da Legalizai por{" "}
                               {brl(CUSTOS.ENDERECO_FISCAL)}/mês, que já entra na
                               conta antes de você pagar qualquer coisa.
-                            </Aviso>
+                            </CardNota>
                           )}
                         </>
                       )}

@@ -108,13 +108,43 @@ export function calcularLayout(
   // nodesep/ranksep antigo (calibrado pro losango pequeno de 170×90) não
   // dava espaço nem pros cards nem pro rótulo da aresta — cards coladinhos
   // encavalavam e o texto do meio ficava por baixo do próximo card.
-  g.setGraph({ rankdir: orientacao, nodesep: 100, ranksep: 160, marginx: 40, marginy: 40 });
+  /**
+   * 🔄 01/09 (pedido do Pedro: "essa parte no mapa está embolada, de A3 a A5")
+   * — mais respiro. Medi antes de mexer: nenhum card estava sobreposto, o
+   * aperto era de LINHA e RÓTULO. Na região A3→A5 a menor folga era 100px, e
+   * as 3 arestas de retorno (A3.1, A3.PS e A3.PSB voltam pro A3) faziam o
+   * dagre rotear por cima da região inteira.
+   *
+   * Duas mudanças, e as duas importam:
+   * · `nodesep` 100→150 e `ranksep` 160→240 dão o respiro pedido (a folga
+   *   mínima da região sobe pra 150px);
+   * · `edgesep` 20→40 separa os rótulos que vinham empilhados uns nos outros
+   *   ("ME · DAE paga", "aguardando compensar", "ME · pagar guia", "boleto",
+   *   "cartão/Pix" estavam quase colados numa coluna só).
+   */
+  g.setGraph({
+    rankdir: orientacao,
+    nodesep: 150,
+    ranksep: 240,
+    edgesep: 40,
+    marginx: 40,
+    marginy: 40,
+  });
   g.setDefaultEdgeLabel(() => ({}));
 
   for (const n of grafo.nodes) {
     const t = TAMANHO[n.forma] ?? TAMANHO.tela;
     g.setNode(n.id, { width: t.w, height: t.h });
   }
+
+  /**
+   * Ordem declarada em `flow-data.mjs` = ordem do flow. Serve de proxy pra
+   * saber quem é aresta de VOLTA (destino declarado antes da origem): retorno
+   * de splash pro status, retry de recusa, reentrada. Elas ganham peso baixo
+   * pra não disputar a linha reta com o caminho principal — sem isso o dagre
+   * trata "A3.PS → A3" com a mesma força de "A3 → A4" e entorta o eixo.
+   */
+  const ordem = new Map(grafo.nodes.map((n, i) => [n.id, i]));
   for (const e of grafo.edges) {
     if (!g.hasNode(e.de) || !g.hasNode(e.para)) continue;
     // Reserva espaço de verdade pro rótulo da aresta no cálculo do dagre —
@@ -122,7 +152,15 @@ export function calcularLayout(
     // na conta de espaçamento e sobrava só a sorte pra não ficar por baixo
     // de um card vizinho.
     const largura = e.label ? e.label.length * 6.2 + 24 : 0;
-    g.setEdge(e.de, e.para, { label: e.label || "", width: largura, height: 24, labelpos: "c" });
+    const volta = (ordem.get(e.de) ?? 0) > (ordem.get(e.para) ?? 0);
+    g.setEdge(e.de, e.para, {
+      label: e.label || "",
+      width: largura,
+      height: 24,
+      labelpos: "c",
+      // 10 pro caminho pra frente, 1 pra volta (ver comentário do `ordem`).
+      weight: volta ? 1 : 10,
+    });
   }
 
   dagre.layout(g);

@@ -1115,7 +1115,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     interfere:
       "Decide o Anexo/regime que o resto do wizard segue: MEI não passa pelo gate de cidade (abre em qualquer lugar do Brasil), ME sim.",
     porque:
-      "🔄 29/08 (pedido do Pedro) — o título deixou de perguntar 'você já sabe' e virou direto 'você é MEI ou ME'; o subtítulo tirou 'dá pra trocar de ideia depois' (a escolha aqui não é reversível de graça lá na frente). Ganhou um link de escape ('Estou com dúvida, preciso de ajuda') pra quem trava, e a ordem dos cards inverteu (ME em cima, MEI embaixo).",
+      "🔄 29/08 (pedido do Pedro) — o título deixou de perguntar 'você já sabe' e virou direto 'você é MEI ou ME'; o subtítulo tirou 'dá pra trocar de ideia depois' (a escolha aqui não é reversível de graça lá na frente). Ganhou um link de escape pra quem trava (✍️ 01/09: virou 'Tirar dúvida no WhatsApp', abrindo o wa.me de verdade), e a ordem dos cards inverteu (ME em cima, MEI embaixo). ✍️ 01/09 (enxugada de copy): subtítulo reescrito ('Toque pra comparar...' — o antigo apontava pros checks que saíram dos cards em 29/08), checklists ~1/3 menores sem perder informação, 'MEI · Microempreendedor Individual' virou só 'MEI'.",
   },
   endereco: {
     dono: "usuario",

@@ -1163,16 +1163,22 @@ function opcoesRegime(contexto: "abrir" | "migrar") {
     {
       id: "me" as const,
       nome: "ME · Simples Nacional",
+      // ✍️ 01/09 (enxugada de copy, pedido do Pedro) — cortes sem perder
+      // informação: o "R$81 mil" era o teto do MEI citado no card do ME
+      // (confundia); "crescer" já estava no check 1; "sem limite do regime" é
+      // contabilês.
       checks: [
         "Fatura acima de ~R$6.750/mês, ou espera crescer rápido",
-        "Por enquanto, só empresas de Belo Horizonte/MG",
-        "Sem teto de R$81 mil, cresce sem trocar de regime depois",
-        "Pode ter sócio · mais de 1 funcionário sem limite do regime",
+        "Só Belo Horizonte/MG, por enquanto",
+        "Sem teto: cresce sem trocar de regime",
+        "Pode ter sócio e quantos funcionários precisar",
       ],
     },
     {
       id: "mei" as const,
-      nome: "MEI · Microempreendedor Individual",
+      // ✍️ 01/09 — soletrar a sigla não ensina nada a quem não sabe; "ME ·
+      // Simples Nacional" fica porque ali o sufixo carrega regime.
+      nome: "MEI",
       // 🆕 03/08 — lista ÚNICA (era pontos + "Recomendado para" separados —
       // duas listas com estilo diferente pra informação do mesmo tipo lia como
       // inconsistência, não hierarquia). Concreto (número) primeiro.
@@ -1180,12 +1186,15 @@ function opcoesRegime(contexto: "abrir" | "migrar") {
       // primeira tela em que a pessoa escolhe ser MEI, e não lá no fim. Ele
       // deixou de vir incluso no plano MEI, e descobrir isso só no contrato
       // seria a surpresa que a marca inteira existe pra não dar.
+      // ✍️ 01/09 (enxugada) — parêntese duplo desfeito, "praticamente" era
+      // hedge (o registro MEI é síncrono mesmo), certificado com a MESMA
+      // honestidade de 28/08 na metade das palavras.
       checks: [
-        "Fatura (ou espera faturar) até ~R$6.750/mês (teto de R$81 mil/ano)",
+        "Fatura até ~R$6.750/mês (R$81 mil/ano)",
         "Abre em qualquer cidade do Brasil",
-        "Sem taxa da Junta, registro é praticamente na hora",
+        "Sem taxa da Junta · registro na hora",
         "Sem sócio · até 1 funcionário com carteira",
-        "Pro dia a dia, você vai precisar de um certificado digital (não vem no plano)",
+        "Certificado digital por sua conta (não vem no plano)",
       ],
     },
   ];
@@ -1241,7 +1250,11 @@ export function MeiOuMeView({
         <p className="text-body text-text-secondary mb-6">
           {contexto === "migrar"
             ? "Isso muda se a cidade importa e como a gente confirma seus dados."
-            : "A diferença real é essa. Escolha com atenção: ela define o que vem a seguir."}
+            : // ✍️ 01/09 (enxugada de copy, pedido do Pedro) — "a diferença
+              // real é essa" apontava pros checks que moravam DENTRO dos
+              // cards; desde 29/08 só tem ícone lá, a frase apontava pro
+              // vazio. A nova diz o gesto (tocar) e o peso (define o resto).
+              "Toque pra comparar. A escolha define o resto da abertura."}
         </p>
       </div>
 
@@ -1338,7 +1351,7 @@ export function MeiOuMeView({
           rel="noopener noreferrer"
           className="mb-3 block text-center w-full text-caption font-medium text-text-secondary underline underline-offset-4"
         >
-          Estou com dúvida, preciso de ajuda
+          Tirar dúvida no WhatsApp
         </a>
         <Button full disabled={!regime} onClick={onSeguir}>
           Continuar

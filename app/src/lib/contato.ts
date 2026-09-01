@@ -2,7 +2,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  * Canais de contato — fonte única
  * ═══════════════════════════════════════════════════════════════════════════
- * 🆕 01/09 (pedido do Pedro) — o "Estou com dúvida, preciso de ajuda" do E3.2
+ * 🆕 01/09 (pedido do Pedro) — o link de dúvida do E3.2 ("Tirar dúvida no WhatsApp")
  * deixou de ser mensagem morta e passou a ABRIR o WhatsApp. O número fica
  * aqui, num lugar só, porque ele vai aparecer em mais telas (portal já cita
  * WhatsApp em 4 lugares sem link nenhum).

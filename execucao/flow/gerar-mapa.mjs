@@ -241,7 +241,18 @@ function gerarConferencia() {
     for (const p of lista ?? []) {
       const cod = codigoDoContexto(p.contexto);
       const alvo = porCodigo.get(cod);
-      const campo = { nome: p.campo, valor: p.valor, origem, porque: p.porque || "", status: p.status || "" };
+      // 🆕 01/09 (pedido do Pedro) — muitos campos internos são SELECT de
+      // sistema do governo, onde o que vale é o código, não o rótulo (a
+      // qualificação "49", a natureza "2062"/"206-2", o evento "101"). Onde o
+      // código existe na fonte, ele viaja junto e aparece na tela.
+      const campo = {
+        nome: p.campo,
+        codigo: p.codigo || "",
+        valor: p.valor,
+        origem,
+        porque: p.porque || "",
+        status: p.status || "",
+      };
       if (alvo) {
         if (!extras.has(alvo)) extras.set(alvo, []);
         extras.get(alvo).push(campo);
@@ -259,7 +270,9 @@ function gerarConferencia() {
       if (!n) return null;
       const doUsuario =
         n.dados && n.dados.trim()
-          ? n.dados.split(" · ").map((nome) => ({ nome, valor: "", origem: "usuario", porque: "", status: "" }))
+          ? n.dados
+              .split(" · ")
+              .map((nome) => ({ nome, codigo: "", valor: "", origem: "usuario", porque: "", status: "" }))
           : [];
       const campos = [...doUsuario, ...(extras.get(id) ?? [])];
       if (!campos.length) return null; // tela sem dado nenhum não vira card
@@ -289,6 +302,8 @@ function gerarConferencia() {
     "",
     "export interface CampoConferencia {",
     "  nome: string;",
+    "  /** Codigo do select no sistema do governo, quando existe (ex.: \"49\", \"2062\"). */",
+    "  codigo: string;",
     "  valor: string;",
     "  origem: OrigemCampo;",
     "  porque: string;",

@@ -117,6 +117,33 @@ export const PREENCHIDOS_API = [
 
 export const PREENCHIDOS_INTERNAMENTE = [
   {
+    campo: "Tipo de evento (Viabilidade JUCEMG)",
+    codigo: "101",
+    valor: "Inscrição de primeiro estabelecimento (Matriz)",
+    contexto: "Pós-C7 · Viabilidade (RPA/JUCEMG)",
+    status: "🟢 travado, visto na gravação (print 2)",
+    porque:
+      "Toda constituição nossa é matriz nascendo: não existe caso de filial nem de alteração no escopo do MVP. É a 1ª escolha da tela de Nova Viabilidade, e errar aqui manda o processo pra outro rito inteiro.",
+  },
+  {
+    campo: "Código do ato (Integrador · Novo FCN)",
+    codigo: "090",
+    valor: "Constituição",
+    contexto: "Pós-C7 · Integrador (RPA)",
+    status: "🟢 travado, visto na gravação (RS39)",
+    porque: "Par do evento 101 do outro lado do processo: no Integrador o que identifica o rito é o código do ato, não o nome.",
+  },
+  {
+    campo: "Evento de enquadramento (JUCEMG)",
+    codigo: "315",
+    valor: "Enquadramento de Microempresa",
+    contexto: "Pós-C7 · Integrador (RPA)",
+    status: "🟢 travado, visto na gravação (RS39)",
+    porque:
+      "É o evento que faz a empresa nascer JÁ enquadrada como ME, no mesmo processo. Sem ele a empresa nasce sem enquadramento e o cliente precisaria de um 2º ato (e de uma 2ª taxa) — e é este evento que faz a guia da Junta custar R$281,08, porque a conferência cobra 2 atos.",
+  },
+
+  {
     campo: "IP do dispositivo de quem paga (`remoteIp`)",
     valor: "capturado na requisição do pagamento",
     contexto: "E9 · Pagamento",
@@ -163,6 +190,7 @@ export const PREENCHIDOS_INTERNAMENTE = [
   },
   {
     campo: "Qualificação do representante (JUCEMG/DBE)",
+    codigo: "49",
     valor: '"49 - Sócio-Administrador"',
     contexto: "C1 · Seus dados",
     status: "🟢 travado",
@@ -282,6 +310,10 @@ export const PREENCHIDOS_INTERNAMENTE = [
   },
   {
     campo: "Natureza jurídica (SLU × LTDA)",
+    // 🆕 01/09 — o MESMO código muda de formatação por sistema: 2062 na
+    // Viabilidade e no Integrador, 206-2 no DBE. Escrever os dois é o que
+    // impede o RPA de mandar o formato errado pro sistema errado.
+    codigo: "2062 (Viabilidade/Integrador) · 206-2 (DBE)",
     valor: "SLU se sem sócio · LTDA se com sócio (automático, sem pergunta)",
     contexto: "C6 · Natureza jurídica (REMOVIDA 31/08)",
     status: "🟢 travado, validado 31/08 pelo Pedro",

@@ -157,6 +157,18 @@ Rota nova, **fora do caminho do cliente**: mesmo layout de cards da A1, com a li
 
 A lista é **gerada**: `execucao/flow/flow-data.mjs` → `node execucao/flow/gerar-mapa.mjs` → `app/src/lib/conferencia-dados.ts`. Não editar a tela pra corrigir campo: corrige na fonte e roda o gerador. Campo cujo `contexto` não é tela do caminho (RPA, pós-C7) cai num card final "Fora de tela · preenchido no processo".
 
+**Códigos dos selects do governo.** Onde a fonte confirma, o campo carrega o CÓDIGO junto do rótulo — nos sistemas da JUCEMG/DBE o select vale pelo número, não pelo nome, e o RPA digita o número:
+
+| Campo | Código | Onde |
+|---|---|---|
+| Tipo de evento (Viabilidade) | `101` | Inscrição de primeiro estabelecimento (Matriz) |
+| Código do ato (Integrador) | `090` | Constituição |
+| Evento de enquadramento | `315` | Enquadramento de Microempresa — é ele que faz a guia custar R$281,08 (2 atos) |
+| Qualificação do representante | `49` | Sócio-Administrador (DBE) |
+| Natureza jurídica | `2062` na Viabilidade/Integrador · `206-2` no DBE | mesma natureza, formatação diferente por sistema |
+
+⚠️ Códigos só entram com fonte (gravação/prints). Campo sem código na tabela é campo cujo código a gente ainda não viu — não deduzir.
+
 ### 4.10 Pagamento: os campos reais do Asaas (E9 e A3.P) — 🆕 01/09
 
 Até 01/09 as duas telas de pagamento escolhiam o método e mandavam pagar, sem nunca pedir cartão. Agora carregam o formulário na forma que o gateway espera. Fonte: `docs.asaas.com`, consultada em 01/09/2026.

@@ -10,6 +10,8 @@ export type OrigemCampo = "usuario" | "automatico" | "api";
 
 export interface CampoConferencia {
   nome: string;
+  /** Codigo do select no sistema do governo, quando existe (ex.: "49", "2062"). */
+  codigo: string;
   valor: string;
   origem: OrigemCampo;
   porque: string;
@@ -33,6 +35,7 @@ export const CONFERENCIA: TelaConferencia[] = [
     "campos": [
       {
         "nome": "Nome completo",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -40,6 +43,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "e-mail",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -47,6 +51,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "telefone",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -54,6 +59,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "consentimento de privacidade (implícito, ao continuar)",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -68,6 +74,7 @@ export const CONFERENCIA: TelaConferencia[] = [
     "campos": [
       {
         "nome": "Regime autodeclarado (MEI ou ME)",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -82,6 +89,7 @@ export const CONFERENCIA: TelaConferencia[] = [
     "campos": [
       {
         "nome": "Endereço da empresa (CEP validado BH + número) OU endereço fiscal Legalizai (+R$60/mês) OU cidade pra fila de espera",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -89,6 +97,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "categoria de atividade (1 das 15 categorias, `pesquisa/cnae-matriz/taxonomia-pills-n4.md`, v2 27/08 -- 90 CNAEs certeza) OU atividade regulamentada (≤12 opções) pra quem não se encontrou",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -96,6 +105,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Logradouro, bairro, município e UF (da empresa)",
+        "codigo": "",
         "valor": "derivados do CEP digitado",
         "origem": "api",
         "porque": "A pessoa digita só CEP e número; o resto do endereço vem da consulta. Precisa de fallback: CEP inexistente, API fora do ar e endereço sem logradouro (zona rural) são casos reais, e nenhum deles pode travar o gate de BH.",
@@ -110,6 +120,7 @@ export const CONFERENCIA: TelaConferencia[] = [
     "campos": [
       {
         "nome": "Quantidade de sócios (1 / 2 / 3 / 4)",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -117,6 +128,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "é a 1ª empresa que abre? (opcional)",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -124,6 +136,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "sócio que não se encaixa no card informativo (opcional, texto livre via 'Falar com o time')",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -138,6 +151,7 @@ export const CONFERENCIA: TelaConferencia[] = [
     "campos": [
       {
         "nome": "Faixa de faturamento mensal (4 faixas até R$30 mil, o teto do ME) ou valor exato, se souber",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -152,6 +166,7 @@ export const CONFERENCIA: TelaConferencia[] = [
     "campos": [
       {
         "nome": "Nome",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -159,6 +174,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "CPF",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -166,6 +182,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "telefone",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -173,6 +190,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "e-mail",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -180,6 +198,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "senha",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -187,6 +206,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "código de verificação de 8 dígitos (mock)",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -201,6 +221,7 @@ export const CONFERENCIA: TelaConferencia[] = [
     "campos": [
       {
         "nome": "CPF (cobrança + elegibilidade)",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -208,6 +229,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "método de pagamento (cartão/Pix/boleto)",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -215,6 +237,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "aceite do contrato de serviço (checkbox)",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -222,6 +245,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "cartão: número + nome impresso + validade + CVV",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -229,6 +253,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "titular do cartão: nome + CPF + e-mail + telefone (pré-preenchidos, editáveis)",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -236,6 +261,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "endereço da fatura: CEP + número + complemento (pré-preenchidos do E3.4, editáveis)",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -243,6 +269,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "IP do dispositivo de quem paga (`remoteIp`)",
+        "codigo": "",
         "valor": "capturado na requisição do pagamento",
         "origem": "automatico",
         "porque": "Obrigatório na criação de cobrança por cartão no Asaas, e a doc é explícita: é o IP do DISPOSITIVO do pagador, não o do nosso servidor. Mandar o IP do servidor passa no schema e derruba a análise antifraude, que é o pior tipo de bug (silencioso e só visível na taxa de recusa).",
@@ -250,6 +277,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Tipo de cobrança enviado ao Asaas (`billingType`)",
+        "codigo": "",
         "valor": "CREDIT_CARD · PIX · BOLETO (o que a pessoa escolheu)",
         "origem": "automatico",
         "porque": "Débito NÃO entra: o enum de criação de cobrança do Asaas aceita BOLETO, CREDIT_CARD, PIX e UNDEFINED (DEBIT_CARD só aparece em resposta). Pra débito a doc manda redirecionar pro `invoiceUrl`, o que significaria tirar a pessoa do nosso app no meio do pagamento.",
@@ -257,6 +285,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Situação do CPF na Receita Federal",
+        "codigo": "",
         "valor": "consulta no ato do pagamento",
         "origem": "api",
         "porque": "A copy do E9 já diz 'a gente confere na Receita se ele está regular pra abrir empresa'. Enquanto a consulta não existir, isso é promessa sem lastro: CPF irregular só apareceria como recusa da Junta, semanas depois.",
@@ -271,6 +300,7 @@ export const CONFERENCIA: TelaConferencia[] = [
     "campos": [
       {
         "nome": "Descrição da atividade (texto livre) → CNAE principal (derivado por IA)",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -278,6 +308,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "OU o código já sabido (atalho 28/07, mesma engine)",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -285,6 +316,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "categoria já vem pré-selecionada do E3.4",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -292,6 +324,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "\"Atividade exercida no local?\" (principal e secundárias)",
+        "codigo": "",
         "valor": "Não (sempre)",
         "origem": "automatico",
         "porque": "Marcar Não em TODAS as atividades é o que habilita a opção \"Escritório/sede administrativa\" — se qualquer uma virasse Sim, a Prefeitura entenderia como comércio/loja física, errado pro nosso perfil",
@@ -299,6 +332,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "CNAE principal sugerido pela descrição da atividade",
+        "codigo": "",
         "valor": "IA cruza o texto livre + a categoria escolhida no E3.4",
         "origem": "api",
         "porque": "É o único campo do flow em que a máquina PROPÕE e a pessoa confirma. O veredito não pode responder 'não atendemos' (a categoria já filtrou isso antes do pagamento), então o fallback de erro é pedir mais descrição, nunca fechar a porta.",
@@ -313,6 +347,7 @@ export const CONFERENCIA: TelaConferencia[] = [
     "campos": [
       {
         "nome": "CONFIRMA nome/CPF/endereço já captados no E6 (não recoleta)",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -320,6 +355,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "RG + órgão emissor (digitação manual)",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -327,6 +363,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "data de nascimento",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -334,6 +371,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "nacionalidade (pré-preenchida \"Brasileira\")",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -341,6 +379,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "estado civil (+ regime de bens se casado)",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -348,6 +387,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Profissão (titular E qualquer sócio)",
+        "codigo": "",
         "valor": "\"Empresário\"",
         "origem": "automatico",
         "porque": "Campo obrigatório no Integrador (Dados do Sócio/Administrador) pra qualquer sócio — nunca varia por atividade, então não gera dúvida útil pro cliente. Preenchido igual pra titular e sócio extra",
@@ -355,6 +395,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Qualificação do representante (JUCEMG/DBE)",
+        "codigo": "49",
         "valor": "\"49 - Sócio-Administrador\"",
         "origem": "automatico",
         "porque": "Sempre o mesmo código no DBE (Identificação do Representante) — não existe outra qualificação possível pra quem está constituindo a própria empresa",
@@ -362,6 +403,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Regime de bens — tradução do rótulo pro valor da JUCEMG",
+        "codigo": "",
         "valor": "\"Separação total de bens\" (nosso rótulo) → \"Separação Convencional de Bens\" (valor da Junta)",
         "origem": "automatico",
         "porque": "O dropdown real do Integrador (tela 103) tem 5 regimes; o app oferece 4, por decisão do Pedro em 01/09 (\"esse quinto, casamento acima de 70 anos, não faz sentido pra gente\"). Falta a Separação Obrigatória, que é imposta por lei e não escolhida. Consequência aceita: quem estiver nesse regime marca \"Separação total\" e o contrato sai com a qualificação errada — caso raro, sem tela, resolvido no atendimento se aparecer",
@@ -369,6 +411,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Logradouro, bairro, município e UF (endereço pessoal do titular)",
+        "codigo": "",
         "valor": "derivados do CEP digitado",
         "origem": "api",
         "porque": "Mesma consulta do endereço da empresa, outro campo — é a ficha do Representante no DBE.",
@@ -383,6 +426,7 @@ export const CONFERENCIA: TelaConferencia[] = [
     "campos": [
       {
         "nome": "Já contribui INSS por fora? (sim/não)",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -390,6 +434,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "valor do vínculo (CLT/aposentadoria/autônomo/sócio de outro CNPJ)",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -404,6 +449,7 @@ export const CONFERENCIA: TelaConferencia[] = [
     "campos": [
       {
         "nome": "Confirma se terá mais sócios (sem reperguntar quantidade/tipo)",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -411,6 +457,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "se houver, de cada sócio extra: nome completo + CPF + % de participação + data de nascimento + nacionalidade + RG + órgão emissor + estado civil (+ regime de bens se casado) + endereço (CEP com autofill + número + complemento)",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -418,6 +465,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Valor da participação de cada sócio (R$) e quantidade de quotas",
+        "codigo": "",
         "valor": "% informado × R$10.000 (o valor em R$ é também o nº de quotas, porque a quota é R$1)",
         "origem": "automatico",
         "porque": "O app pergunta PERCENTUAL; os órgãos pedem VALOR EM REAIS (DBE tela 65: R$10.000,00 pro sócio único; QSA tela 70) e o Integrador pede o valor nominal da quota, R$1,00 (tela 95). A conversão existia na prática e não estava escrita. Como o passo do campo é 0,5%, o menor incremento dá 50 quotas exatas: nenhum percentual selecionável gera fração de quota, então não há arredondamento a tratar. ⚠️ Isso quebra se o capital deixar de ser R$10.000 ou o passo mudar",
@@ -425,6 +473,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Logradouro, bairro, município e UF (endereço do sócio extra)",
+        "codigo": "",
         "valor": "derivados do CEP digitado",
         "origem": "api",
         "porque": "Idem, por sócio. Entra na qualificação do contrato (art. 997 CC) e na ficha do sócio no DBE.",
@@ -439,6 +488,7 @@ export const CONFERENCIA: TelaConferencia[] = [
     "campos": [
       {
         "nome": "Índice cadastral do IPTU (único campo do cliente)",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -446,6 +496,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "CEP + número + complemento + tipo de imóvel + residência aparecem TRAVADOS, vindos do E3.4",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -453,6 +504,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Forma de atuação (JUCEMG)",
+        "codigo": "",
         "valor": "\"Atividade Desenvolvida Fora do Estabelecimento\"",
         "origem": "automatico",
         "porque": "🔴 Estava documentado como \"Internet\" — ERRADO, valor decidido em 26/08 por raciocínio, antes de existir gravação. Os prints mostram \"Atividade Desenvolvida Fora do Estabelecimento\" marcada 2x, em 2 sistemas (tela 14 Viabilidade, tela 48 DBE), e a tela 48 exibe as 8 opções do campo com \"Internet\" entre elas, NÃO marcada: são opções distintas da mesma lista, não sinônimos. 3ª correção desta mesma família (as outras 2: \"Sede\"→Produtiva e metragem). Segue valendo enquanto o escopo for serviço 100% remoto",
@@ -460,6 +512,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Tipo de unidade (JUCEMG)",
+        "codigo": "",
         "valor": "\"Produtiva\"",
         "origem": "automatico",
         "porque": "🔴 Estava documentado como \"Sede\" — ERRADO. Prints reais (Viabilidade e Integrador) confirmam \"Produtiva\": Sede/Filial nem aparece como opção fixa relevante pra uma constituição nova. Toda abertura nova (matriz) usa Produtiva",
@@ -467,6 +520,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Metragem (m² do imóvel + m² da operação)",
+        "codigo": "",
         "valor": "20 m² (fixo)",
         "origem": "automatico",
         "porque": "🔴 Estava \"não implementado, sem decisão\" — RESOLVIDO. Print real da Viabilidade mostra Área Total e Área Utilizada sempre preenchidas com 20,00 — mesmo valor usado em toda a gravação, virou padrão",
@@ -474,6 +528,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Capital social",
+        "codigo": "",
         "valor": "R$ 10.000,00 (fixo)",
         "origem": "automatico",
         "porque": "🔴 ATÉ 31/08 era campo editável (chips R$1k/5k/10k + valor livre) — a reunião Rua Satélite 38-40 decidiu travar em R$10.000 pra prestador de serviço. Deixou de ser pergunta: o app mostra o valor, não pede mais",
@@ -481,6 +536,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Valor nominal de cotas",
+        "codigo": "",
         "valor": "R$ 1,00",
         "origem": "automatico",
         "porque": "Campo do Integrador (Dados da Matriz) sempre preenchido como R$1,00 — o capital social é dividido em quotas de R$1, nunca outro valor nominal",
@@ -488,6 +544,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Acesso ao endereço",
+        "codigo": "",
         "valor": "\"Pedestre\"",
         "origem": "automatico",
         "porque": "Campo da Prefeitura de BH (Dados Adicionais), sempre Pedestre pro nosso perfil de prestador de serviço remoto — nunca veículo leve/pesado",
@@ -495,6 +552,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "\"Atividade é inócua ou virtual?\"",
+        "codigo": "",
         "valor": "Sim (sempre)",
         "origem": "automatico",
         "porque": "Pergunta do Licenciamento (Corpo de Bombeiros): atividade sem circulação de pessoas no local, sempre verdade pro nosso perfil 100% remoto/administrativo",
@@ -502,6 +560,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "\"Edificação nova?\" (regulação urbana, Prefeitura de BH)",
+        "codigo": "",
         "valor": "Não (sempre)",
         "origem": "automatico",
         "porque": "3ª pergunta do Questionário de Regulação Urbana (tela 16), na MESMA tela que já produziu o indeferimento real. As outras 2 (apartamento, sócio reside) a gente já capta; esta não existia em nenhuma fonte. Fica interna e não vira pergunta porque \"edificação nova\" tem sentido técnico na Prefeitura (imóvel recém-construído, questão de habite-se) que o cliente não sabe responder — perguntar convida erro confiante, que é pior modo de falhar que errar sempre igual num caso raro. Risco residual: cliente em prédio novo sem habite-se cai em exigência. Validado por Pedro 01/09; confirmar com a especialista",
@@ -509,6 +568,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Capital Totalmente Integralizado em Moeda Corrente?",
+        "codigo": "",
         "valor": "Sim (sempre)",
         "origem": "automatico",
         "porque": "Cláusula do Contrato Núcleo — o capital social (R$10.000, também travado) já entra integralizado, sem parcelamento",
@@ -516,6 +576,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Tipo de endereço (JUCEMG) — endereço fiscal Legalizai",
+        "codigo": "",
         "valor": "\"Endereço virtual\" (fixo)",
         "origem": "automatico",
         "porque": "Confirmado na gravação real (RS38): quando a empresa usa o endereço fiscal da Legalizai (não o do cliente), o valor sempre enviado à JUCEMG é \"Endereço virtual\" — nunca aparece como opção pro usuário, só se aplica ao caminho endereço-próprio (\"proprio\"/\"coworking\")",
@@ -530,6 +591,7 @@ export const CONFERENCIA: TelaConferencia[] = [
     "campos": [
       {
         "nome": "CNAEs secundários (seleção múltipla + busca, opcional, até 15)",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -544,6 +606,7 @@ export const CONFERENCIA: TelaConferencia[] = [
     "campos": [
       {
         "nome": "3 opções de razão social, editáveis inline, por ordem de prioridade (sugeridas por IA)",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -551,6 +614,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "objeto social (gerado automaticamente, travado)",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -558,6 +622,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "nome fantasia (opcional)",
+        "codigo": "",
         "valor": "",
         "origem": "usuario",
         "porque": "",
@@ -565,6 +630,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Data de assinatura da declaração / início das atividades",
+        "codigo": "",
         "valor": "dia do preenchimento (nunca retroativa)",
         "origem": "automatico",
         "porque": "Integrador não aceita data retroativa — sempre o dia em que o RPA roda o processo, pros dois campos (mesma data)",
@@ -578,7 +644,35 @@ export const CONFERENCIA: TelaConferencia[] = [
     "rota": null,
     "campos": [
       {
+        "nome": "Tipo de evento (Viabilidade JUCEMG)",
+        "codigo": "101",
+        "valor": "Inscrição de primeiro estabelecimento (Matriz)",
+        "origem": "automatico",
+        "porque": "Toda constituição nossa é matriz nascendo: não existe caso de filial nem de alteração no escopo do MVP. É a 1ª escolha da tela de Nova Viabilidade, e errar aqui manda o processo pra outro rito inteiro.",
+        "status": "🟢 travado, visto na gravação (print 2)",
+        "contexto": "Pós-C7 · Viabilidade (RPA/JUCEMG)"
+      },
+      {
+        "nome": "Código do ato (Integrador · Novo FCN)",
+        "codigo": "090",
+        "valor": "Constituição",
+        "origem": "automatico",
+        "porque": "Par do evento 101 do outro lado do processo: no Integrador o que identifica o rito é o código do ato, não o nome.",
+        "status": "🟢 travado, visto na gravação (RS39)",
+        "contexto": "Pós-C7 · Integrador (RPA)"
+      },
+      {
+        "nome": "Evento de enquadramento (JUCEMG)",
+        "codigo": "315",
+        "valor": "Enquadramento de Microempresa",
+        "origem": "automatico",
+        "porque": "É o evento que faz a empresa nascer JÁ enquadrada como ME, no mesmo processo. Sem ele a empresa nasce sem enquadramento e o cliente precisaria de um 2º ato (e de uma 2ª taxa) — e é este evento que faz a guia da Junta custar R$281,08, porque a conferência cobra 2 atos.",
+        "status": "🟢 travado, visto na gravação (RS39)",
+        "contexto": "Pós-C7 · Integrador (RPA)"
+      },
+      {
         "nome": "Telefone enviado aos órgãos — SEM o 9º dígito (8 dígitos)",
+        "codigo": "",
         "valor": "o telefone captado com 9 dígitos é enviado ao DBE/Integrador sem o 9 inicial do celular",
         "origem": "automatico",
         "porque": "Regra dita pela Izabela na gravação (ata, item 13) e confirmada nos prints (tela 51: telefone 94054307, 8 dígitos). Decisão do Pedro: **a captação continua com o 9 normal** — pedir telefone sem o 9 pro cliente seria estranho e daria erro de digitação. Quem tira o dígito é o robô, na hora de preencher o formulário oficial. Fica aqui porque é transformação de dado nossa, invisível pro cliente, e o dev precisa dela escrita",
@@ -587,6 +681,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Sociedade de Propósito Específico?",
+        "codigo": "",
         "valor": "Não (sempre)",
         "origem": "automatico",
         "porque": "Cláusula do Contrato Núcleo — nenhuma empresa do nosso escopo (ME prestador de serviço comum) é SPE. Campo do contrato, não pergunta ao cliente",
@@ -595,6 +690,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Tipo de contrato (Integrador)",
+        "codigo": "",
         "valor": "Padrão · 15 cláusulas obrigatórias (sem anexo, sem cláusula extra)",
         "origem": "automatico",
         "porque": "🔴 ACHADO-CHAVE (31/08): incluir anexo/procuração/cláusula extra no processo DERRUBA a elegibilidade ao Registro Automático (aviso visto ao vivo no print da JUCEMG) — por isso a opção de 15 cláusulas sem anexo é a única que usamos, nunca a de 7 cláusulas nem o contrato personalizado (upload)",
@@ -603,6 +699,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Testemunhas (Contrato Núcleo)",
+        "codigo": "",
         "valor": "Nenhuma (sempre)",
         "origem": "automatico",
         "porque": "Contrato padrão de 15 cláusulas não exige testemunha — campo sempre vazio, nunca preenchido",
@@ -611,6 +708,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "E-mail e telefone de contato (DBE/Integrador)",
+        "codigo": "",
         "valor": "sempre o nosso (Legalizai), nunca o do cliente",
         "origem": "automatico",
         "porque": "Evita que boletim de ocorrência (BO) ou notificação oficial da Receita/Junta chegue direto pro cliente por e-mail — a gente centraliza e repassa o que for relevante",
@@ -619,6 +717,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Endereço de correspondência",
+        "codigo": "",
         "valor": "sempre igual ao do estabelecimento",
         "origem": "automatico",
         "porque": "Checkbox \"igual ao do Estabelecimento\" sempre marcado — nenhum caso do nosso escopo precisa de endereço de correspondência diferente",
@@ -627,6 +726,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Natureza jurídica (SLU × LTDA)",
+        "codigo": "2062 (Viabilidade/Integrador) · 206-2 (DBE)",
         "valor": "SLU se sem sócio · LTDA se com sócio (automático, sem pergunta)",
         "origem": "automatico",
         "porque": "🔴 ATÉ 31/08 era pergunta ao cliente (recomendação editável, Leonan 24/08) — a reunião Rua Satélite 38-40 decidiu tirar a pergunta de vez: a regra (sem sócio→SLU, com sócio→LTDA) não tem exceção real no nosso escopo, então virou decisão de backend nos dois casos. Tela e rota `/dossie/natureza` removidas do app",
@@ -635,6 +735,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Requerente (emissão do DAE)",
+        "codigo": "",
         "valor": "sempre o titular (sócio-administrador)",
         "origem": "automatico",
         "porque": "Quem solicita a taxa no Integrador é sempre a pessoa que está constituindo a empresa — não existe cenário de \"outro requerente\" no nosso fluxo",
@@ -643,6 +744,7 @@ export const CONFERENCIA: TelaConferencia[] = [
       },
       {
         "nome": "Situação do protocolo na JUCEMG / Receita (viabilidade, DBE, registro)",
+        "codigo": "",
         "valor": "polling do protocolo",
         "origem": "api",
         "porque": "Todo o status pós-dossiê depende disso: é o que move as etapas, dispara a recusa de nome (A3.1) e libera a assinatura. Sem polling, a tela é um enfeite bonito que nunca muda de estado.",

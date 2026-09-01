@@ -146,6 +146,18 @@ function BlocoTela({ tela, ordem }: { tela: TelaConferencia; ordem: number }) {
                 </span>
                 <span className="text-caption text-text-primary">{c.nome}</span>
               </div>
+              {/* 🆕 01/09 (pedido do Pedro) — nos sistemas do governo o campo é
+                  um select onde o que vale é o CÓDIGO, não o rótulo: o RPA
+                  escolhe "49", "2062", "101". Fica em destaque, monoespaçado,
+                  porque é o que o dev vai digitar. Só aparece onde a fonte
+                  confirma o código (gravação/prints) — nunca deduzido. */}
+              {c.codigo && (
+                <p className="pl-1">
+                  <span className="rounded bg-surface-alt px-1.5 py-0.5 font-mono text-micro font-semibold text-text-primary">
+                    {c.codigo}
+                  </span>
+                </p>
+              )}
               {c.valor && (
                 <p className="pl-1 text-caption text-text-secondary">
                   <span className="text-text-tertiary">valor: </span>

@@ -247,12 +247,23 @@ export function OutrasOpcoes({
       <div className="flex flex-col gap-2">
         {alternativas.map((a) => {
           const on = escolhido === a.cnae;
+          /* 🔄 02/09 (pedido do Pedro) — o CARD ESCOLHIDO FICA COMPLETAMENTE
+             CORAL (`action-primary`, o mesmo fill dos cartões de faixa e de
+             regime), com toda a tipografia branca e a pill em coral-700.
+             Antes era só borda + tint, e a diferença entre "escolhido" e "não
+             escolhido" ficava fina demais numa tela em que a escolha já vem
+             feita: se ela vem pronta, tem que ser óbvio QUAL veio.
+             Branco sobre coral-700 = 6,4:1, passa AA. */
           const conteudo = (
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p
                   className={`text-caption font-semibold ${
-                    destacarTitulo ? "text-state-success-text" : "text-text-primary"
+                    on
+                      ? "text-text-on-brand"
+                      : destacarTitulo
+                        ? "text-state-success-text"
+                        : "text-text-primary"
                   }`}
                 >
                   {a.humano}
@@ -262,7 +273,13 @@ export function OutrasOpcoes({
                     nenhum e valia igual pra códigos de anexos diferentes.
                     Promessa fiscal sem fonte é o que a regra anti-guru do
                     projeto proíbe, e aqui ela nem era usada pra decidir. */}
-                <p className="text-micro text-text-tertiary mt-0.5">CNAE {a.cnae}</p>
+                <p
+                  className={`text-micro mt-0.5 ${
+                    on ? "text-text-on-brand" : "text-text-tertiary"
+                  }`}
+                >
+                  CNAE {a.cnae}
+                </p>
               </div>
               {/* 🗑️ 02/09 (pedido do Pedro) — O PERCENTUAL SAIU. "72%" e
                   "64%" convidam a comparar dois números que a pessoa não tem
@@ -271,7 +288,13 @@ export function OutrasOpcoes({
                   vez de ler o que cada atividade descreve. Sobra o sinal que
                   de fato ajuda, e só no primeiro. */}
               {pill && (
-                <span className="shrink-0 rounded-full bg-state-success-tint px-2.5 py-1 text-micro font-semibold text-state-success-text">
+                <span
+                  className={`shrink-0 rounded-full px-2.5 py-1 text-micro font-semibold ${
+                    on
+                      ? "bg-action-primary-sm text-text-on-brand"
+                      : "bg-state-success-tint text-state-success-text"
+                  }`}
+                >
                   {pill}
                 </span>
               )}
@@ -299,7 +322,7 @@ export function OutrasOpcoes({
                  não a cor do estado. */
               className={`rounded-2xl border p-3 text-left transition-colors ${
                 on
-                  ? "border-action-primary bg-surface-tint-brand"
+                  ? "border-action-primary bg-action-primary"
                   : "border-border-hairline bg-surface-card hover:border-border-strong"
               }`}
             >

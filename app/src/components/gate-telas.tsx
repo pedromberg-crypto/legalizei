@@ -547,6 +547,12 @@ export function PerguntaView({
                 titulo=""
                 alternativas={[principal]}
                 escolhido={principal.cnae}
+                // 🐛 02/09 — a pill sumia quando o cartão subia: o slot não
+                // recebia `pillDe`, só a lista de baixo. Mesma regra dos dois
+                // lados, senão o cartão perde informação ao ser escolhido.
+                pillDe={(o) =>
+                  o.cnae === encaixe.recomendado.cnae ? "+ compatível" : "compatível"
+                }
                 onVerDetalhes={setDetalhe}
               />
             ) : (

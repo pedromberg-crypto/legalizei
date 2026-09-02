@@ -379,11 +379,23 @@ export function PerguntaView({
    * manter marcado um código da resposta anterior seria mentira silenciosa.
    */
   const [escolha, setEscolha] = useState<{ cnae: string; base: string } | null>(null);
-  // A escolha guarda CONTRA QUAL recomendação ela foi feita. Se a descrição
-  // muda e a recomendação muda junto, a escolha antiga caduca sozinha — sem
-  // `useEffect` zerando estado, que dispara render em cascata.
-  const escolhido =
-    escolha?.base === encaixe.recomendado.cnae ? escolha.cnae : encaixe.recomendado.cnae;
+  /**
+   * 🔄 02/09 (2ª rodada, ideia do Pedro) — A ESCOLHA COMEÇA VAZIA.
+   *
+   * Antes o "+ compatível" já vinha marcado em coral. Ficou ambíguo: a pessoa
+   * não sabia se aquilo era uma escolha dela ou uma informação nossa, e o
+   * sheet virou um segundo lugar pra escolher a mesma coisa. Agora tem um
+   * SLOT vazio no topo ("Escolha seu CNAE principal") e os 3 códigos embaixo,
+   * nenhum marcado: clicar num cartão SOBE ele pro slot, clicar em outro
+   * troca. O gesto passa a ser óbvio e existe num lugar só.
+   *
+   * A escolha guarda CONTRA QUAL recomendação foi feita: se a descrição muda
+   * e a recomendação muda junto, ela caduca sozinha — sem `useEffect` zerando
+   * estado, que dispara render em cascata.
+   */
+  const escolhido = escolha?.base === encaixe.recomendado.cnae ? escolha.cnae : null;
+  const opcoes = [encaixe.recomendado, ...encaixe.alternativas];
+  const principal = opcoes.find((o) => o.cnae === escolhido) ?? null;
   const escolherCnae = (cnae: string) =>
     setEscolha({ cnae, base: encaixe.recomendado.cnae });
   // 🆕 02/09 — qual CNAE está com o sheet de detalhes aberto.
@@ -397,9 +409,12 @@ export function PerguntaView({
       ? null
       : "Acha o que mais parece. Depois conta do seu jeito.";
 
+  // 🔄 02/09 — o CTA diz "Continuar com esse CNAE", então exige que exista
+  // um: com o slot vazio ele não libera. Antes bastava a descrição, porque a
+  // escolha vinha pronta e não havia como não ter uma.
   const podeValidar = sabeCodigo
     ? texto.replace(/\D/g, "").length >= 6
-    : texto.trim().length >= 10;
+    : texto.trim().length >= 10 && escolhido !== null;
 
   /* 🗑️ 02/09 — o scroll-fade daqui (scRef + ResizeObserver + mask) morreu
      junto com a grade de pills: era ele que desbotava a ponta da lista quando
@@ -447,24 +462,36 @@ export function PerguntaView({
               Falta decidir com o Pedro: aparece enquanto digita ou só depois
               do CTA, e o que o CTA vira quando o resultado já está na tela. */}
           <Rolagem className="min-h-0 flex-1">
-            {/* 🔄 02/09 (pedido do Pedro) — duas listas, não uma de três.
-                O recomendado sozinho sob o título da tela, e um "Outras
-                opções" separando os outros dois: a hierarquia fica no LAYOUT,
-                que é o trabalho que o percentual fazia antes de sair. Três
-                cards seguidos liam como três iguais. */}
+            {/* 🆕 02/09 (ideia do Pedro) — O SLOT DO PRINCIPAL.
+                Um lugar de chegada, vazio e pontilhado, com o nome do que
+                falta. O contorno tracejado é a convenção de "cabe algo aqui"
+                e diz, sem texto extra, que a tela ainda espera uma ação —
+                coisa que o cartão pré-marcado não dizia. Preenchido, ele é o
+                MESMO cartão coral, agora inequivocamente uma escolha dela. */}
+            <p className="text-micro text-text-tertiary mb-2">Seu CNAE principal</p>
+            {principal ? (
+              <OutrasOpcoes
+                titulo=""
+                alternativas={[principal]}
+                escolhido={principal.cnae}
+                onVerDetalhes={setDetalhe}
+              />
+            ) : (
+              <div className="flex min-h-[62px] items-center justify-center rounded-2xl border border-dashed border-border-strong px-3 py-4">
+                <p className="text-caption text-text-muted">
+                  Escolha seu CNAE principal, é só clicar
+                </p>
+              </div>
+            )}
+
+            {/* Os que ainda não foram escolhidos. Quem sobe pro slot sai
+                daqui, então a lista nunca mostra o mesmo código duas vezes —
+                é a "troca" que o Pedro descreveu. */}
             <OutrasOpcoes
-              titulo="O que mais se encaixa"
-              alternativas={[encaixe.recomendado]}
+              titulo={principal ? "Trocar por" : "O que mais se encaixa"}
+              alternativas={opcoes.filter((o) => o.cnae !== escolhido)}
               pill="+ compatível"
-              escolhido={escolhido}
-              onEscolher={escolherCnae}
-              onVerDetalhes={setDetalhe}
-            />
-            <OutrasOpcoes
-              titulo="Outras opções"
-              alternativas={encaixe.alternativas}
-              pill="compatível"
-              escolhido={escolhido}
+              pillEm={encaixe.recomendado.cnae}
               onEscolher={escolherCnae}
               onVerDetalhes={setDetalhe}
             />
@@ -554,14 +581,7 @@ export function PerguntaView({
       {/* ⚠️ O sheet mora FORA da `Rolagem`: ele é `absolute inset-0` e, se
           ficasse dentro do contêiner que rola, seria recortado por ele em vez
           de cobrir a tela. */}
-      {detalhe && (
-        <SheetCnae
-          opcao={detalhe}
-          escolhido={escolhido === detalhe.cnae}
-          onEscolher={escolherCnae}
-          onFechar={() => setDetalhe(null)}
-        />
-      )}
+      {detalhe && <SheetCnae opcao={detalhe} onFechar={() => setDetalhe(null)} />}
 
       {/* 🌾 CTA no rodapé = thumb zone (design-system.md §6) */}
       <div className="app-footer-cta">

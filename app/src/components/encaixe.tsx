@@ -216,6 +216,7 @@ export function OutrasOpcoes({
   onEscolher,
   titulo = "Outras opções pra você",
   pill,
+  pillEm,
   onVerDetalhes,
 }: {
   alternativas: OpcaoCnae[];
@@ -234,6 +235,12 @@ export function OutrasOpcoes({
    */
   pill?: string;
   /**
+   * 🆕 02/09 — limita a `pill` a UM cnae da lista. Com o "+ compatível"
+   * convivendo com os outros na mesma lista, o rótulo deixou de valer pra
+   * todos: só o recomendado o carrega. Sem isto, a pill vale pra lista toda.
+   */
+  pillEm?: string;
+  /**
    * 🆕 02/09 (pedido do Pedro) — abre as características do CNAE num
    * bottom-sheet. Sem a prop, o card não mostra o link (é o caso do veredito).
    */
@@ -243,7 +250,7 @@ export function OutrasOpcoes({
 
   return (
     <div className="mt-4">
-      <p className="text-micro text-text-tertiary mb-2">{titulo}</p>
+      {titulo && <p className="text-micro text-text-tertiary mb-2">{titulo}</p>}
       <div className="flex flex-col gap-2">
         {alternativas.map((a) => {
           const on = escolhido === a.cnae;
@@ -310,7 +317,7 @@ export function OutrasOpcoes({
                   técnica: ela fica escolhendo entre 8 pontos de diferença em
                   vez de ler o que cada atividade descreve. Sobra o sinal que
                   de fato ajuda, e só no primeiro. */}
-              {pill && (
+              {pill && (!pillEm || pillEm === a.cnae) && (
                 <span
                   /* 🔄 02/09 (pedido do Pedro) — pill do card NÃO escolhido
                      saiu do verde e virou coral claro (tint + coral-700), o
@@ -394,15 +401,9 @@ function CheckMini() {
  */
 export function SheetCnae({
   opcao,
-  escolhido,
-  onEscolher,
   onFechar,
 }: {
   opcao: OpcaoCnae;
-  /** Já é o CNAE selecionado? Então o sheet é só leitura. */
-  escolhido: boolean;
-  /** Sem isto, o sheet não oferece troca (é só informação). */
-  onEscolher?: (cnae: string) => void;
   onFechar: () => void;
 }) {
   const [entrou, setEntrou] = useState(false);
@@ -482,24 +483,14 @@ export function SheetCnae({
         </div>
 
         <div className="mt-5 shrink-0">
-          {/* Quem abriu o detalhe de OUTRO código provavelmente quer trocar.
-              Fechar e caçar o cartão de novo seria trabalho à toa. No que já
-              está escolhido, o sheet é só leitura. */}
-          {onEscolher && !escolhido ? (
-            <Button
-              full
-              onClick={() => {
-                onEscolher(opcao.cnae);
-                sair();
-              }}
-            >
-              Usar esse CNAE
-            </Button>
-          ) : (
-            <Button full variant="secondary" onClick={sair}>
-              Entendi
-            </Button>
-          )}
+          {/* 🗑️ 02/09 (achado do Pedro) — o "Usar esse CNAE" saiu daqui.
+              Com dois lugares pra escolher (o cartão e o sheet), a pessoa
+              precisava descobrir qual era o certo. O sheet ficou com um
+              trabalho só: informar. Quem escolhe é o cartão, que sobe pro
+              slot do principal. */}
+          <Button full variant="secondary" onClick={sair}>
+            Entendi
+          </Button>
         </div>
       </div>
     </div>

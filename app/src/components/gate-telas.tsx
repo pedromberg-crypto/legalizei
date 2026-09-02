@@ -448,7 +448,24 @@ export function PerguntaView({
   const escolhido = escolha;
   const opcoes = [encaixe.recomendado, ...encaixe.alternativas];
   const principal = opcoes.find((o) => o.cnae === escolhido) ?? null;
-  const escolherCnae = (cnae: string) => setEscolha(cnae);
+  /**
+   * 🆕 02/09 (pedido do Pedro) — escolher ROLA DE VOLTA PRO SLOT.
+   *
+   * Com 5 sugestões a lista rola, e quem escolhe a última fica olhando pro
+   * fim da lista: o cartão sai de onde estava e reaparece no topo, fora da
+   * vista. Sem a rolagem, o gesto parece não ter feito nada — ou pior, parece
+   * ter APAGADO a opção, já que ela some da lista.
+   *
+   * `requestAnimationFrame` porque o slot só existe depois do render que a
+   * escolha dispara.
+   */
+  const slotRef = useRef<HTMLDivElement>(null);
+  const escolherCnae = (cnae: string) => {
+    setEscolha(cnae);
+    requestAnimationFrame(() =>
+      slotRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }),
+    );
+  };
   // 🆕 02/09 — qual CNAE está com o sheet de detalhes aberto.
   const [detalhe, setDetalhe] = useState<OpcaoCnae | null>(null);
 
@@ -564,6 +581,7 @@ export function PerguntaView({
                 e diz, sem texto extra, que a tela ainda espera uma ação —
                 coisa que o cartão pré-marcado não dizia. Preenchido, ele é o
                 MESMO cartão coral, agora inequivocamente uma escolha dela. */}
+            <div ref={slotRef} className="scroll-mt-1">
             <p className="text-micro text-text-tertiary mb-2">Sua atividade principal</p>
             {principal ? (
               <OutrasOpcoes
@@ -585,6 +603,7 @@ export function PerguntaView({
                 </p>
               </div>
             )}
+            </div>
 
             {/* Os que ainda não foram escolhidos. Quem sobe pro slot sai
                 daqui, então a lista nunca mostra o mesmo código duas vezes —

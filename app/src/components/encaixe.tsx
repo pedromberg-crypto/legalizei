@@ -52,7 +52,13 @@ export interface EncaixeData {
 }
 
 /** Deriva o ENCAIXE do veredito do gate. As alternativas saem das vizinhas. */
-export function encaixeDeResultado(r: Resultado): EncaixeData {
+/**
+ * 🔄 02/09 — quantas alternativas entram é do CHAMADOR, não do dado.
+ * A C0 mostra 5 sugestões (recomendado + 4), porque lá a lista é o assunto da
+ * tela e a rolagem já tem o degradê de continuidade; o veredito (C0.2) segue
+ * com 2, que é o que cabe embaixo do cartão grande sem virar outra tela.
+ */
+export function encaixeDeResultado(r: Resultado, maxAlternativas = 2): EncaixeData {
   return {
     recomendado: {
       humano: r.humano,
@@ -61,7 +67,7 @@ export function encaixeDeResultado(r: Resultado): EncaixeData {
       descricao: r.explica,
       cobre: r.compreende ?? [],
     },
-    alternativas: (r.vizinhas ?? []).slice(0, 2).map((v, i) => ({
+    alternativas: (r.vizinhas ?? []).slice(0, maxAlternativas).map((v, i) => ({
       humano: v.oque,
       cnae: v.cnae,
       adequacao: 72 - i * 8,

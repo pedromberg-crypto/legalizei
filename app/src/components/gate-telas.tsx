@@ -413,7 +413,10 @@ export function PerguntaView({
     texto,
     categoria,
   }));
-  const encaixe = encaixeDeResultado(mapear(busca.texto));
+  // 🧪 02/09 (teste do Pedro) — 5 sugestões em vez de 3. Sobrou espaço
+  // depois que a tela enxugou, e a rolagem com degradê já sinaliza que há
+  // mais embaixo. No modo código a lista some, então lá sobra ainda mais.
+  const encaixe = encaixeDeResultado(mapear(busca.texto), 4);
   const desatualizado = texto !== busca.texto || categoria !== busca.categoria;
   /**
    * 🆕 02/09 (pedido do Pedro) — a escolha do CNAE JÁ NASCE FEITA, no

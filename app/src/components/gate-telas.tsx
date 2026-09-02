@@ -414,26 +414,27 @@ export function PerguntaView({
    * Reseta junto com o resultado: se a descrição muda, o recomendado muda, e
    * manter marcado um código da resposta anterior seria mentira silenciosa.
    */
-  const [escolha, setEscolha] = useState<{ cnae: string; base: string } | null>(null);
+  const [escolha, setEscolha] = useState<string | null>(null);
   /**
    * 🔄 02/09 (2ª rodada, ideia do Pedro) — A ESCOLHA COMEÇA VAZIA.
    *
    * Antes o "+ compatível" já vinha marcado em coral. Ficou ambíguo: a pessoa
    * não sabia se aquilo era uma escolha dela ou uma informação nossa, e o
    * sheet virou um segundo lugar pra escolher a mesma coisa. Agora tem um
-   * SLOT vazio no topo ("Escolha seu CNAE principal") e os 3 códigos embaixo,
-   * nenhum marcado: clicar num cartão SOBE ele pro slot, clicar em outro
-   * troca. O gesto passa a ser óbvio e existe num lugar só.
+   * SLOT vazio no topo ("Escolha sua atividade principal") e os códigos
+   * embaixo, nenhum marcado: clicar num cartão SOBE ele pro slot, clicar em
+   * outro troca. O gesto passa a ser óbvio e existe num lugar só.
    *
-   * A escolha guarda CONTRA QUAL recomendação foi feita: se a descrição muda
-   * e a recomendação muda junto, ela caduca sozinha — sem `useEffect` zerando
-   * estado, que dispara render em cascata.
+   * 🔒 02/09 (3ª rodada, decisão do Pedro) — BUSCA NOVA ESVAZIA O SLOT.
+   * O resultado velho não sobrevive a uma pesquisa nova: manter no slot um
+   * código que veio de outra descrição é afirmar que ele ainda é a melhor
+   * resposta pro que a pessoa acabou de escrever, e ninguém verificou isso.
+   * Ela reescolhe entre os novos, que é justamente o que ela pediu ao buscar.
    */
-  const escolhido = escolha?.base === encaixe.recomendado.cnae ? escolha.cnae : null;
+  const escolhido = escolha;
   const opcoes = [encaixe.recomendado, ...encaixe.alternativas];
   const principal = opcoes.find((o) => o.cnae === escolhido) ?? null;
-  const escolherCnae = (cnae: string) =>
-    setEscolha({ cnae, base: encaixe.recomendado.cnae });
+  const escolherCnae = (cnae: string) => setEscolha(cnae);
   // 🆕 02/09 — qual CNAE está com o sheet de detalhes aberto.
   const [detalhe, setDetalhe] = useState<OpcaoCnae | null>(null);
 
@@ -686,11 +687,14 @@ export function PerguntaView({
           onClick={() => {
             if (semResultados) {
               setBusca({ texto, categoria });
+              setEscolha(null);
               onValidar();
               return;
             }
             if (desatualizado) {
               setBusca({ texto, categoria });
+              // Busca nova, slot limpo: ver o comentário do `escolhido`.
+              setEscolha(null);
               return;
             }
             onValidar();

@@ -13,7 +13,7 @@ import { TelaHeader, Aviso, Rolagem } from "@/components/ui/tela";
 // `FaixaView` pro E3.3 (`components/entrada-lead.tsx`).
 // 🔁 28/08 — `Aviso` e `brl` voltaram, agora a serviço do gate de teto do MEI.
 import { OpcoesLinha, Select, Campo } from "@/components/ui/form";
-import { OutrasOpcoes, encaixeDeResultado } from "@/components/encaixe";
+import { OutrasOpcoes, SheetCnae, encaixeDeResultado, type OpcaoCnae } from "@/components/encaixe";
 import { mapear } from "@/lib/mock-veredito";
 import { FISCAL, brl } from "@/lib/fiscal";
 import { linkWhatsApp } from "@/lib/contato";
@@ -386,6 +386,8 @@ export function PerguntaView({
     escolha?.base === encaixe.recomendado.cnae ? escolha.cnae : encaixe.recomendado.cnae;
   const escolherCnae = (cnae: string) =>
     setEscolha({ cnae, base: encaixe.recomendado.cnae });
+  // 🆕 02/09 — qual CNAE está com o sheet de detalhes aberto.
+  const [detalhe, setDetalhe] = useState<OpcaoCnae | null>(null);
 
   const sub = sabeCodigo
     ? jaCliente
@@ -456,6 +458,7 @@ export function PerguntaView({
               pill="+ compatível"
               escolhido={escolhido}
               onEscolher={escolherCnae}
+              onVerDetalhes={setDetalhe}
             />
             <OutrasOpcoes
               titulo="Outras opções"
@@ -463,6 +466,7 @@ export function PerguntaView({
               pill="compatível"
               escolhido={escolhido}
               onEscolher={escolherCnae}
+              onVerDetalhes={setDetalhe}
             />
           </Rolagem>
 
@@ -546,6 +550,18 @@ export function PerguntaView({
           {sabeCodigo ? "Prefiro descrever o que faço" : "Já sei o número do meu CNAE"}
         </button>
       </div>
+
+      {/* ⚠️ O sheet mora FORA da `Rolagem`: ele é `absolute inset-0` e, se
+          ficasse dentro do contêiner que rola, seria recortado por ele em vez
+          de cobrir a tela. */}
+      {detalhe && (
+        <SheetCnae
+          opcao={detalhe}
+          escolhido={escolhido === detalhe.cnae}
+          onEscolher={escolherCnae}
+          onFechar={() => setDetalhe(null)}
+        />
+      )}
 
       {/* 🌾 CTA no rodapé = thumb zone (design-system.md §6) */}
       <div className="app-footer-cta">

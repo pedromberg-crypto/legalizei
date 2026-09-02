@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import type { Resultado } from "@/components/veredito";
+import { Button } from "@/components/ui/button";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -214,6 +216,7 @@ export function OutrasOpcoes({
   onEscolher,
   titulo = "Outras opções pra você",
   pill,
+  onVerDetalhes,
 }: {
   alternativas: OpcaoCnae[];
   escolhido?: string;
@@ -230,7 +233,11 @@ export function OutrasOpcoes({
    * lá ela roda sem pill nenhuma.
    */
   pill?: string;
-
+  /**
+   * 🆕 02/09 (pedido do Pedro) — abre as características do CNAE num
+   * bottom-sheet. Sem a prop, o card não mostra o link (é o caso do veredito).
+   */
+  onVerDetalhes?: (o: OpcaoCnae) => void;
 }) {
   if (alternativas.length === 0) return null;
 
@@ -273,6 +280,28 @@ export function OutrasOpcoes({
                   }`}
                 >
                   CNAE {a.cnae}
+                  {/* 🆕 02/09 (pedido do Pedro) — "Ver detalhes" entra AQUI,
+                      na linha do código, que já existia e sobrava vazia à
+                      direita: não custa altura nem largura, numa tela que a
+                      gente acabou de espremer. O `-my-1 py-1` engorda a área
+                      de toque sem mudar nada do que se vê. */}
+                  {onVerDetalhes && (
+                    <>
+                      {" · "}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          // O card inteiro seleciona; este alvo vive dentro
+                          // dele e faz outra coisa.
+                          e.stopPropagation();
+                          onVerDetalhes(a);
+                        }}
+                        className="pointer-events-auto relative -my-1 py-1 underline underline-offset-2"
+                      >
+                        Ver detalhes
+                      </button>
+                    </>
+                  )}
                 </p>
               </div>
               {/* 🗑️ 02/09 (pedido do Pedro) — O PERCENTUAL SAIU. "72%" e
@@ -301,38 +330,33 @@ export function OutrasOpcoes({
             </div>
           );
 
+          const estilo = `rounded-2xl border p-3 text-left transition-colors ${
+            on
+              ? "border-action-primary bg-action-primary"
+              : "border-border-hairline bg-surface-card hover:border-border-strong"
+          }`;
+
+          /* ⚠️ 02/09 — o card DEIXOU de ser um `<button>`. Com o "Ver
+             detalhes" dentro dele existem dois alvos com ações diferentes, e
+             botão dentro de botão é HTML inválido (o navegador desmonta a
+             árvore e um dos dois para de responder — mesma família do bug de
+             01/09 com o link dentro do `<label>`).
+             Padrão "stretched button": o alvo de seleção é um botão absoluto
+             cobrindo o card, e o conteúdo passa por cima com os cliques
+             desligados, menos o link, que os religa. */
           return onEscolher ? (
-            <button
-              key={a.cnae}
-              onClick={() => onEscolher(a.cnae)}
-              /* 🔄 02/09 — SELECIONADO segue CORAL (borda + tint), como no
-                 resto do app. Houve um desvio no mesmo dia: testamos cinza
-                 preenchido (hairline, depois `surface-alt`) até o Pedro
-                 levantar a dúvida certa — "seria um problema ficar diferente
-                 das telas de trás?". Era: `border-action-primary bg-*` é a
-                 gramática de "escolhido" em 5 lugares antes desta tela (E3.2,
-                 faixa, triagem, checkbox, opção sim/não), e cinza claro no
-                 nosso app é fundo de coisa INATIVA — o card marcado ficava
-                 parecendo o desabilitado. O medo de "coral compete com o CTA"
-                 não se confirmou: faixa e triagem já convivem com card coral
-                 e CTA coral no rodapé.
-                 Tint, não coral sólido: são 3 cards e um já vem marcado; o
-                 fill cheio pesaria numa escolha que a pessoa não precisa
-                 tomar. Quem diz "isto veio pronto" é a pill + o título verde,
-                 não a cor do estado. */
-              className={`rounded-2xl border p-3 text-left transition-colors ${
-                on
-                  ? "border-action-primary bg-action-primary"
-                  : "border-border-hairline bg-surface-card hover:border-border-strong"
-              }`}
-            >
-              {conteudo}
-            </button>
+            <div key={a.cnae} className={`relative ${estilo}`}>
+              <button
+                type="button"
+                onClick={() => onEscolher(a.cnae)}
+                aria-pressed={on}
+                aria-label={`Usar o CNAE ${a.cnae}, ${a.humano}`}
+                className="absolute inset-0 rounded-2xl"
+              />
+              <div className="pointer-events-none relative">{conteudo}</div>
+            </div>
           ) : (
-            <div
-              key={a.cnae}
-              className="rounded-2xl border border-border-hairline bg-surface-card p-3"
-            >
+            <div key={a.cnae} className={estilo}>
               {conteudo}
             </div>
           );
@@ -347,5 +371,137 @@ function CheckMini() {
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
       <path d="m5 12 4 4 8-9" />
     </svg>
+  );
+}
+
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * SHEET DE DETALHES DO CNAE — o que aquele código cobre, sob demanda. 02/09.
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🆕 Pedido do Pedro, junto da fusão do veredito dentro da C0: a pessoa
+ * escolhe entre 3 códigos parecidos e precisava de um jeito de olhar cada um
+ * antes de decidir, sem sair da tela.
+ *
+ * Mesmo bottom-sheet do DS (`EnviarSheet`, 24/07 · `SheetNaoReembolsavel`):
+ * overlay que escurece, folha que sobe, fecha no toque fora ou no botão. Só o
+ * conteúdo muda — é a mesma doutrina de lá, "quem quiser o detalhe lê aqui,
+ * sem custar uma tela a mais pra quem já entendeu".
+ *
+ * 🔴 O QUE NÃO ENTRA: anexo do Simples e Fator R. Os dois existem na matriz
+ * CNAE mas ainda não foram ratificados por contador (fila da Larissa), e
+ * número fiscal sem fonte é o que a regra anti-guru do projeto proíbe. Quando
+ * ratificar, este é o lugar.
+ */
+export function SheetCnae({
+  opcao,
+  escolhido,
+  onEscolher,
+  onFechar,
+}: {
+  opcao: OpcaoCnae;
+  /** Já é o CNAE selecionado? Então o sheet é só leitura. */
+  escolhido: boolean;
+  /** Sem isto, o sheet não oferece troca (é só informação). */
+  onEscolher?: (cnae: string) => void;
+  onFechar: () => void;
+}) {
+  const [entrou, setEntrou] = useState(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setEntrou(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  const sair = () => {
+    setEntrou(false);
+    window.setTimeout(onFechar, 240);
+  };
+
+  return (
+    <div className="absolute inset-0 z-[60]">
+      <button
+        type="button"
+        aria-label="Fechar"
+        onClick={sair}
+        className={`absolute inset-0 bg-[#10151b] transition-opacity duration-300 ${
+          entrou ? "opacity-45" : "opacity-0"
+        }`}
+      />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={`Sobre o CNAE ${opcao.cnae}`}
+        className="absolute inset-x-0 bottom-0 flex max-h-[86%] flex-col rounded-t-3xl bg-surface-page px-5"
+        style={{
+          transform: entrou ? "translateY(0)" : "translateY(100%)",
+          transition: "transform .34s cubic-bezier(.22,1,.36,1)",
+          boxShadow: "0 -14px 44px -14px rgba(20,23,28,.32)",
+          paddingBottom: "calc(16px + var(--safe-bottom))",
+        }}
+      >
+        <div className="shrink-0 pt-2.5">
+          <div className="mx-auto h-1 w-9 rounded-full bg-border-strong" />
+        </div>
+
+        <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <p className="mt-4 text-body-strong font-semibold text-text-primary">
+            {opcao.humano}
+          </p>
+          <p className="mt-0.5 text-micro text-text-tertiary">CNAE {opcao.cnae}</p>
+
+          {opcao.descricao && (
+            <p className="mt-3 text-caption text-text-secondary">{opcao.descricao}</p>
+          )}
+
+          {opcao.cobre && opcao.cobre.length > 0 && (
+            <>
+              <p className="mt-4 text-caption font-semibold text-text-primary">
+                O que esse código cobre
+              </p>
+              <ul className="mt-2 flex flex-col gap-2">
+                {opcao.cobre.map((c) => (
+                  <li key={c} className="flex items-start gap-2.5">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-state-success-tint text-state-success-text">
+                      <CheckMini />
+                    </span>
+                    <span className="text-caption text-text-secondary">{c}</span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+
+          {/* Sem `cobre`, o sheet ficaria com título e nada embaixo. Dizer que
+              o detalhe não existe ainda é melhor que fingir que a lista está
+              vazia por algum motivo. */}
+          {(!opcao.cobre || opcao.cobre.length === 0) && !opcao.descricao && (
+            <p className="mt-3 text-caption text-text-secondary">
+              Ainda não temos o detalhamento desse código aqui. Se ele for o seu
+              caso, a gente confirma junto com você antes de registrar.
+            </p>
+          )}
+        </div>
+
+        <div className="mt-5 shrink-0">
+          {/* Quem abriu o detalhe de OUTRO código provavelmente quer trocar.
+              Fechar e caçar o cartão de novo seria trabalho à toa. No que já
+              está escolhido, o sheet é só leitura. */}
+          {onEscolher && !escolhido ? (
+            <Button
+              full
+              onClick={() => {
+                onEscolher(opcao.cnae);
+                sair();
+              }}
+            >
+              Usar esse CNAE
+            </Button>
+          ) : (
+            <Button full variant="secondary" onClick={sair}>
+              Entendi
+            </Button>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

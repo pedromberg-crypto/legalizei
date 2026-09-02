@@ -380,6 +380,21 @@ export const CONFERENCIA: TelaConferencia[] = [
     ]
   },
   {
+    "id": "C5",
+    "titulo": "C5 · CNAE secundários",
+    "rota": "/dossie/cnae-secundarios",
+    "campos": [
+      {
+        "nome": "CNAEs secundários (seleção múltipla + busca, opcional, até 15)",
+        "codigo": "",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      }
+    ]
+  },
+  {
     "id": "C1",
     "titulo": "C1 · Seus dados",
     "rota": "/dossie/socio",
@@ -644,21 +659,6 @@ export const CONFERENCIA: TelaConferencia[] = [
         "origem": "automatico",
         "porque": "Confirmado na gravação real (RS38): quando a empresa usa o endereço fiscal da Legalizai (não o do cliente), o valor sempre enviado à JUCEMG é \"Endereço virtual\" — nunca aparece como opção pro usuário, só se aplica ao caminho endereço-próprio (\"proprio\"/\"coworking\")",
         "status": "🟢 travado, validado 31/08 pelo Pedro"
-      }
-    ]
-  },
-  {
-    "id": "C5",
-    "titulo": "C5 · CNAE secundários",
-    "rota": "/dossie/cnae-secundarios",
-    "campos": [
-      {
-        "nome": "CNAEs secundários (seleção múltipla + busca, opcional, até 15)",
-        "codigo": "",
-        "valor": "",
-        "origem": "usuario",
-        "porque": "",
-        "status": ""
       }
     ]
   },

@@ -105,6 +105,12 @@ tags: [execucao, flow, dados, abertura]
 - OU o código já sabido (atalho 28/07, mesma engine)
 - categoria já vem pré-selecionada do E3.4
 
+### C5 · CNAE secundários
+- CNAEs secundários (seleção múltipla + busca, opcional, até 15)
+
+### C5.1 · Splash 'já sabemos o que você faz'
+- _(sem dado novo — contexto, confirmação ou decisão do sistema)_
+
 ### C1 · Seus dados
 - CONFIRMA nome/CPF/endereço já captados no E6 (não recoleta)
 - RG + órgão emissor (digitação manual)
@@ -124,12 +130,6 @@ tags: [execucao, flow, dados, abertura]
 ### C4 · Dados da empresa
 - Índice cadastral do IPTU (único campo do cliente)
 - CEP + número + complemento + tipo de imóvel + residência aparecem TRAVADOS, vindos do E3.4
-
-### C5 · CNAE secundários
-- CNAEs secundários (seleção múltipla + busca, opcional, até 15)
-
-### C5.1 · Splash 'já sabemos o que você faz'
-- _(sem dado novo — contexto, confirmação ou decisão do sistema)_
 
 ### C7 · Nome / razão social
 - 3 opções de razão social, editáveis inline, por ordem de prioridade (sugeridas por IA)

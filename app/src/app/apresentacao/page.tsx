@@ -3514,13 +3514,20 @@ export default function ApresentacaoPage() {
                           {(etapa === "perguntando" || etapa === "perguntando-vazio") && (
                             <PerguntaView
                               semResultados={etapa === "perguntando-vazio"}
+                              // C0.0 → C0: buscar revela os códigos. Na demo a
+                              // passagem é entre etapas; no app é o mesmo
+                              // componente revelando o resto de si.
+                              onValidar={
+                                etapa === "perguntando-vazio"
+                                  ? () => setEtapa("perguntando")
+                                  : validar
+                              }
                               texto={texto}
                               setTexto={setTexto}
                               categoria={categoria}
                               setCategoria={setCategoria}
                               sabeCodigo={sabeCodigo}
                               setSabeCodigo={setSabeCodigo}
-                              onValidar={validar}
                               // 🐛→🔒 02/09 (achado do Pedro) — a rota real já
                               // trava a categoria desde 31/08 (`?cat=` do E3.4
                               // vira chip confirmado), mas a DEMO continuava

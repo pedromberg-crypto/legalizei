@@ -62,6 +62,16 @@ export default function AtividadePage() {
   const categoriaDoGate = catInicial && PILLS.some((p) => p.id === catInicial) ? catInicial : null;
   const [categoria, setCategoria] = useState<string | null>(categoriaDoGate);
   const [sabeCodigo, setSabeCodigo] = useState(false);
+  /**
+   * 🆕 02/09 — a passagem C0.0 → C0 (nós do mapa). A chegada é a mesma
+   * rota num estado anterior: apertar "Buscar atividade principal" REVELA os
+   * códigos ali mesmo, sem navegar. Navegar exigiria refazer o carregamento
+   * pra mostrar o resto da própria tela.
+   * `?vazia=1` continua sendo quem ABRE na chegada, então quem revisa entra
+   * direto no estado que quer ver.
+   */
+  const [buscou, setBuscou] = useState(false);
+  const naChegada = searchParams.get("vazia") === "1" && !buscou;
   const [resultado, setResultado] = useState<Resultado | null>(null);
 
   function validar() {
@@ -94,7 +104,9 @@ export default function AtividadePage() {
             setCategoria={setCategoria}
             sabeCodigo={sabeCodigo}
             setSabeCodigo={setSabeCodigo}
-            onValidar={validar}
+            // Na chegada o botão busca (revela os códigos); com eles na tela,
+            // confirma a atividade escolhida e segue.
+            onValidar={naChegada ? () => setBuscou(true) : validar}
             // 🆕 27/08 — a copy muda porque o contexto mudou: a pessoa já é
             // cliente, já passou pelo gate. Não estamos decidindo se atendemos,
             // estamos achando o código certo dela.
@@ -109,7 +121,7 @@ export default function AtividadePage() {
             // decidido se a virada é automática ao digitar ou por ação — o
             // Pedro está lapidando essa tela. Enquanto isso, quem revisa
             // consegue abrir os dois estados por rota.
-            semResultados={searchParams.get("vazia") === "1"}
+            semResultados={naChegada}
           />
         )}
         {etapa === "analisando" && <AnalisandoView />}

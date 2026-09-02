@@ -460,10 +460,23 @@ export function PerguntaView({
    * escolha dispara.
    */
   const slotRef = useRef<HTMLDivElement>(null);
+  /* 🐛 02/09 (achado do Pedro: "está animando a tela de fora também") —
+     `scrollIntoView` rola TODOS os ancestrais roláveis até o elemento
+     aparecer, e na `/apresentacao` isso inclui a página em volta da moldura:
+     o aparelho ficava parado e o site é que andava. Agora a gente acha o
+     contêiner rolável mais próximo (a `Rolagem` da lista) e rola só ele. */
   const voltarAoSlot = () =>
-    requestAnimationFrame(() =>
-      slotRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }),
-    );
+    requestAnimationFrame(() => {
+      let el = slotRef.current?.parentElement;
+      while (el) {
+        const overflow = getComputedStyle(el).overflowY;
+        if ((overflow === "auto" || overflow === "scroll") && el.scrollHeight > el.clientHeight) {
+          el.scrollTo({ top: 0, behavior: "smooth" });
+          return;
+        }
+        el = el.parentElement;
+      }
+    });
   const escolherCnae = (cnae: string) => {
     setEscolha(cnae);
     voltarAoSlot();

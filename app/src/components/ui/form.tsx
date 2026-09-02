@@ -263,6 +263,7 @@ export function Select({
   onChange,
   opcoes,
   placeholder = "Selecione",
+  valorEmDestaque = false,
 }: {
   valor: string;
   onChange: (v: string) => void;
@@ -271,6 +272,16 @@ export function Select({
    *  encontrei o que procuro" se destacarem das demais na lista. */
   opcoes: { v: string; label: string; destaque?: "coral" }[];
   placeholder?: string;
+  /**
+   * 🆕 02/09 (pedido do Pedro) — o VALOR escolhido em coral e negrito.
+   * Nasceu na C0, onde a categoria não é um campo qualquer do formulário: ela
+   * é a resposta que a pessoa deu antes de pagar, chega pronta, e a tela
+   * inteira depende dela. Ler "qual é a minha mesmo?" de relance importa mais
+   * ali do que num estado civil.
+   * Por prop: nos dropdowns de formulário o valor segue em ink, senão todo
+   * campo preenchido virava destaque e nenhum seria.
+   */
+  valorEmDestaque?: boolean;
 }) {
   const [aberto, setAberto] = useState(false);
   const [foco, setFoco] = useState(0); // índice destacado por teclado
@@ -333,7 +344,13 @@ export function Select({
         className={`flex min-h-12 w-full items-center justify-between gap-2 rounded-md border
           bg-surface-card pl-3 pr-3.5 text-left text-body transition-colors focus:outline-none
           ${aberto ? "border-border-focus" : "border-border-hairline hover:border-border-strong"}
-          ${selecionado ? (selecionado.destaque === "coral" ? "text-action-primary-sm" : "text-text-primary") : "text-text-muted"}`}
+          ${
+            selecionado
+              ? selecionado.destaque === "coral" || valorEmDestaque
+                ? "font-semibold text-action-primary-sm"
+                : "text-text-primary"
+              : "text-text-muted"
+          }`}
       >
         <span className="truncate">
           {selecionado ? selecionado.label : placeholder}

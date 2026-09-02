@@ -507,6 +507,7 @@ export function PerguntaView({
                 onChange={(v) => setCategoria(v || null)}
                 opcoes={PILLS.map((p) => ({ v: p.id, label: p.label }))}
                 placeholder="Escolhe uma categoria"
+                valorEmDestaque
               />
             </Campo>
           )}

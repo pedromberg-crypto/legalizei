@@ -213,7 +213,10 @@ function CardFaixa({
  *  badge de check no canto quando selecionado, troca coral/creme), genérico
  *  pra qualquer par de opções fixas (coorte, regime MEI×ME, etc.) em vez de
  *  uma lista indexada por nível. */
-function CardIconeSelecao({
+// 🔄 01/09 — exportado: o E9 (pagamento) passou a usar o MESMO card pra
+// escolher a forma de pagamento. Mesma pergunta ("escolha um dos dois"),
+// mesmo componente — duas gramáticas pro mesmo gesto era inconsistência.
+export function CardIconeSelecao({
   label,
   iconeCoral,
   iconeCreme,

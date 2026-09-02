@@ -10,8 +10,8 @@ import { Campo, Texto, Checkbox } from "@/components/ui/form";
 // cá junto do aceite: a explicação deve morar ao lado do gesto que ela explica.
 import { SheetNaoReembolsavel } from "@/components/wizard-cauda";
 // 🗑️ 01/09 — ícones Google/Apple saíram junto do login social.
-import { Logo } from "@/components/logo";
 import { CUSTOS, brl } from "@/lib/fiscal";
+import { CardIconeSelecao } from "@/components/gate-telas";
 // 🆕 01/09 — o pagamento agora pré-preenche o que já foi coletado: identidade
 // (mock da conta criada no E6) e endereço (rascunho do E3.4).
 import { CLIENTE } from "@/app/(app)/dossie/mock";
@@ -290,12 +290,20 @@ export function ContaView({
           <Titulo
             sub={
               <>
+                {/* 🔒 01/09 (regra do Pedro) — e-mail e telefone NUNCA quebram
+                    no meio. `whitespace-nowrap` faz a linha quebrar ANTES do
+                    dado, empurrando ele inteiro pra linha de baixo. Endereço
+                    ou número partido em duas linhas é o tipo de coisa que a
+                    pessoa lê errado e conclui que a gente mandou pro lugar
+                    errado — justamente na tela em que ela está conferindo
+                    isso. Vale como padrão pra qualquer dado de contato
+                    embutido em frase. */}
                 Mandamos um código de 8 dígitos pro{" "}
-                <strong className="font-bold text-action-primary-sm">
+                <strong className="whitespace-nowrap font-bold text-action-primary-sm">
                   {d.email || "seu e-mail"}
                 </strong>{" "}
                 e por SMS pro{" "}
-                <strong className="font-bold text-action-primary-sm">
+                <strong className="whitespace-nowrap font-bold text-action-primary-sm">
                   {d.telefone || "seu telefone"}
                 </strong>
                 .
@@ -334,7 +342,7 @@ export function ContaView({
           </div>
           <Rodape>
             <Button full disabled={d.codigo.length !== DIGITOS_CODIGO} onClick={onConfirmar}>
-              Confirmar
+              Confirmar código
             </Button>
           </Rodape>
         </main>
@@ -1335,18 +1343,91 @@ function PlanoOferta({
               ruim mesmo depois do wrapper separado (visível demais, sem
               ganho real); removida. Volta a ser um único elemento. */}
           <div
-            className="relative mt-4 overflow-hidden rounded-[28px] p-6"
+            className="relative mt-4 rounded-[28px] p-6"
             style={{
               backgroundColor: "var(--color-surface-dark)",
+              // 🔄 01/09 (pedido do Pedro) — o brilho coral saiu do canto
+              // SUPERIOR DIREITO e foi pro INFERIOR ESQUERDO. Lá em cima ele
+              // disputava com o selo dourado (duas fontes de luz quente na
+              // mesma quina); embaixo à esquerda ele fica atrás do preço e a
+              // quina do selo volta a ser ink puro, que é o contraste que faz
+              // o ouro brilhar.
               backgroundImage:
-                "radial-gradient(120% 90% at 85% -10%, color-mix(in srgb, var(--color-brand) 30%, transparent), transparent 60%)",
+                "radial-gradient(110% 85% at 2% 105%, color-mix(in srgb, var(--color-brand) 32%, transparent), transparent 62%)",
             }}
           >
             {/* 🔴 30/08 (pedido do Pedro) — "Depois, todo mês" saiu: soltinha
                 do jeito que estava, confundia mais que explicava. O pill do
                 nome do plano fica sozinho agora. */}
-            <div className="flex items-center justify-end gap-3">
-              <span className="rounded-full bg-white/12 px-4 py-1.5 text-caption font-semibold text-text-on-dark backdrop-blur-sm">
+            {/* 🔄 01/09 (pedido do Pedro) — o pill sai da DIREITA e vai pra
+                ESQUERDA, alinhado com o preço e o texto abaixo. Solto no canto
+                oposto ele flutuava sem relação com nada; na margem esquerda
+                ele vira a etiqueta do bloco, lida na mesma coluna de leitura
+                do valor. */}
+            {/* 🆕 01/09 (pedido do Pedro) — o SELO DOURADO no canto superior
+                direito: o símbolo da marca vazado numa placa 3D, em ouro. Não
+                é enfeite de "VIP" (coroa/diamante estão fora, brigam com o
+                nosso discurso de preço honesto): é a nossa própria marca em
+                material nobre, que é o jeito de dizer premium sem prometer
+                status. `absolute` pra não empurrar o pill nem o preço.
+                🔄 01/09 — parou de sangrar pra fora da quina: agora respira
+                24px, o MESMO respiro do conteúdo (`p-6`), então ele se alinha
+                à margem interna do card em vez de flutuar na borda. */}
+            <Image
+              id="selo-ouro-flutua"
+              src="/icones/selo-ouro-v3.png"
+              alt=""
+              aria-hidden
+              width={233}
+              height={231}
+              className="pointer-events-none absolute right-6 top-6 h-[40px] w-auto"
+              // 🔄 01/09 (pedido do Pedro) — sombra reforçada, em 2 camadas:
+              // uma curta e densa colada na peça (dá o contato/aresta) e uma
+              // longa e difusa embaixo (dá a altura). Sombra única sempre cai
+              // num meio-termo: ou gruda demais, ou faz o objeto boiar.
+              // Deslocada pra baixo/direita, que é a direção da luz do DS.
+              style={{
+                filter:
+                  "drop-shadow(0 2px 3px rgba(0,0,0,.55)) drop-shadow(3px 10px 16px rgba(0,0,0,.45))",
+              }}
+            />
+
+            {/* 🆕 01/09 (pedido do Pedro) — mesma flutuação do aparelho 3D da
+                E6.1, e pela mesma razão de dosagem: durações que NÃO se
+                dividem entre si evitam que o loop feche sempre no mesmo ponto
+                e vire um "sobe e desce" mecânico. Aqui o objeto é bem menor,
+                então a amplitude cai junto (3px, meio grau) — no aparelho eram
+                7px. Movimento grande num selo de 50px viraria inquietação.
+                ♿ Desliga em `prefers-reduced-motion`. */}
+            <style jsx global>{`
+              @keyframes selo-ouro-flutua {
+                0%   { transform: translate3d(0, 0, 0) rotate(0deg); }
+                40%  { transform: translate3d(-1px, -3px, 0) rotate(0.5deg); }
+                72%  { transform: translate3d(1px, -1px, 0) rotate(-0.4deg); }
+                100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+              }
+              #selo-ouro-flutua {
+                animation: selo-ouro-flutua 6.5s ease-in-out infinite;
+                will-change: transform;
+              }
+              @media (prefers-reduced-motion: reduce) {
+                #selo-ouro-flutua { animation: none; }
+              }
+            `}</style>
+
+            <div className="flex items-center gap-3">
+              {/* 🧪 01/09 (teste do Pedro) — o pill era `bg-white/12` (véu
+                  claro sobre o card). Vira ink sólido com sombra: em vez de
+                  clarear o fundo, ele fura o card — a sombra afunda a peça e
+                  o texto ganha borda escura em volta, que é o que faz uma
+                  etiqueta parecer aplicada e não impressa. */}
+              <span
+                className="rounded-full px-4 py-1.5 text-caption font-semibold text-text-on-dark"
+                style={{
+                  backgroundColor: "#12141A",
+                  boxShadow: "0 3px 10px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06)",
+                }}
+              >
                 {semTaxaJunta ? "Plano MEI" : "Plano único"}
               </span>
             </div>
@@ -1354,7 +1435,10 @@ function PlanoOferta({
                 preview): "R$ 139", não "R$ 139,00". O valor COM centavos
                 continua no rodapé ("Você paga hoje"), que é onde precisão
                 de centavo importa de verdade. */}
-            <div className="mt-1 flex items-baseline gap-2">
+            {/* 🔄 01/09 (pedido do Pedro) — `mt-1` → `mt-5`: o pill estava
+                colado no preço e os dois liam como uma coisa só. Com respiro,
+                o pill é etiqueta e o número é o assunto. */}
+            <div className="mt-5 flex items-baseline gap-2">
               <p className="text-[3.5rem] font-bold leading-none text-text-on-dark">
                 {brl(mensalidade)}
               </p>
@@ -1613,6 +1697,41 @@ export type Metodo = "cartao" | "pix" | "boleto";
  *     QUANDO O DINHEIRO CAI e o aviso diz O QUE ACONTECE COM A EMPRESA — que
  *     são fatos diferentes e agora soam diferentes.
  */
+/**
+ * 🆕 01/09 — ícones 3D das formas de pagamento, na paleta da marca. Dois
+ * arquivos por método, e isso não é capricho: o card inverte o fundo quando
+ * está selecionado (branco → coral), então a versão coral serve o estado
+ * normal e a creme serve o selecionado. Um arquivo só sumiria no fundo em um
+ * dos dois estados.
+ */
+const ICONE_METODO: Record<Metodo, { coral: string; creme: string }> = {
+  cartao: {
+    coral: "/icones/metodo-cartao-coral.png",
+    creme: "/icones/metodo-cartao-creme.png",
+  },
+  pix: {
+    coral: "/icones/metodo-pix-coral.png",
+    creme: "/icones/metodo-pix-creme.png",
+  },
+  // Fora da seleção hoje (ver `METODOS_VISIVEIS_IDS`); mantém o par do cartão
+  // pra nunca renderizar vazio se o boleto voltar pra tela.
+  boleto: {
+    coral: "/icones/metodo-cartao-coral.png",
+    creme: "/icones/metodo-cartao-creme.png",
+  },
+};
+
+/**
+ * 🔴 01/09 (decisão do Pedro) — só CARTÃO e PIX aparecem na escolha. No Asaas,
+ * o boleto emitido já vem com QR de Pix embutido (boleto híbrido), então
+ * oferecer os dois separados era pedir pra pessoa escolher entre a mesma
+ * coisa. O `boleto` continua existindo em `METODOS` e no tipo `Metodo`: o
+ * mapa, a demo e as telas de espera (E9.SB, E9.1) seguem alcançáveis por
+ * rota. ⚠️ Consequência aberta: sem o card, o caminho "pagamento pendente"
+ * perde a porta de entrada no produto real.
+ */
+const METODOS_VISIVEIS_IDS: Metodo[] = ["cartao", "pix"];
+
 export const METODOS: {
   id: Metodo;
   nome: string;
@@ -1635,7 +1754,11 @@ export const METODOS: {
   },
   {
     id: "pix",
-    nome: "Pix",
+    // 🔄 01/09 (pedido do Pedro) — "Pix e Boleto" no mesmo card: no Asaas o
+    // boleto emitido já vem com QR de Pix embutido (boleto híbrido), então
+    // são a mesma escolha pra quem paga. O nome diz isso em vez de esconder o
+    // boleto e deixar quem procura por ele achar que não tem.
+    nome: "Pix e Boleto",
     quando: "em minutos",
     aviso: "Sua abertura começa em minutos",
     efeito: "Assim que o Pix cair, a gente já entra com o processo.",
@@ -1655,6 +1778,8 @@ export const METODOS: {
       "Você já entra no app, mas a gente só aciona seu contador anterior quando o boleto compensar.",
   },
 ];
+
+export const METODOS_VISIVEIS = METODOS.filter((m) => METODOS_VISIVEIS_IDS.includes(m.id));
 
 /**
  * 🆕 01/09 (pedido do Pedro) — o aceite irreversível, que estava na A1, veio
@@ -1825,8 +1950,6 @@ export function PagamentoView({
   const total = guia ? CUSTOS.DAE_JUCEMG : mensalidade;
   const escolhido = METODOS.find((m) => m.id === metodo)!;
 
-  const temCadastrado = Boolean(cpfCadastrado?.trim());
-
   /**
    * 🆕 01/09 (pedido do Pedro) — OS DADOS QUE O ASAAS EXIGE PRA COBRAR.
    *
@@ -1899,66 +2022,39 @@ export function PagamentoView({
             </Aviso>
           )}
 
-          {/* CPF: cobrança + elegibilidade no mesmo dado (decisão nº 5).
-              Já veio do N6 → confirma. Não veio → coleta, como antes. */}
-          {temCadastrado ? (
-            /* Só EXIBE (decisão do Pedro, 29/07). A pessoa já digitou e validou
-               o CPF no cadastro do app (N6): reabrir edição aqui convidaria a
-               divergir de um dado que já passou por validação, e ainda daria a
-               entender que a gente não guardou o que ela preencheu. */
-            <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
-              <p className="text-caption text-text-secondary">Seu CPF</p>
-              <p className="mt-1 text-body font-semibold text-text-primary">{cpfCadastrado}</p>
-              <p className="text-micro text-text-tertiary mt-2">
-                A gente confere na Receita se ele está regular pra abrir empresa.
-              </p>
-            </div>
-          ) : (
-            <Campo
-              rotulo="Seu CPF"
-              dica="A gente confere na Receita se ele está regular pra abrir empresa."
-            >
-              <Texto
-                valor={cpf}
-                onChange={setCpf}
-                inputMode="numeric"
-                maxLength={14}
-                placeholder="000.000.000-00"
-              />
-            </Campo>
-          )}
+          {/* 🗑️ 01/09 (decisão do Pedro) — o CARD "Seu CPF" SAIU do E9.
+              Ele nasceu em 29/07 pra provar que a gente tinha guardado o dado
+              do cadastro, mas hoje o CPF é pedido logo abaixo, dentro do bloco
+              do Asaas (titular do cartão / quem paga), já pré-preenchido.
+              Mostrar o mesmo número duas vezes na mesma tela é o "CPF pedido
+              2×" que a auditoria de 28/07 tinha eliminado, voltando pela porta
+              dos fundos.
+              ⚠️ A checagem na Receita continua existindo como promessa: ela
+              está registrada em `PREENCHIDOS_API` e aparece no bloco de
+              pagamento. As props `cpf`/`setCpf`/`cpfCadastrado` seguem no
+              componente porque o estado do wizard e a demo ainda os usam. */}
 
           <div>
             <p className="text-caption font-semibold text-text-primary mb-2">
               Como você prefere pagar
             </p>
-            <div className="flex flex-col gap-2">
-              {METODOS.map((m) => (
-                <button
+            {/* 🔄 01/09 (pedido do Pedro) — a lista de botões empilhados virou
+                o MESMO card de ícone do E3.2 (`CardIconeSelecao`): é a mesma
+                pergunta ("escolha um dos dois") e não fazia sentido ter duas
+                gramáticas visuais pro mesmo gesto no mesmo flow.
+                Ícones 3D próprios, com par coral/creme pra sobreviver à
+                inversão de fundo do card selecionado. */}
+            <div className="grid grid-cols-2 gap-3">
+              {METODOS_VISIVEIS.map((m) => (
+                <CardIconeSelecao
                   key={m.id}
+                  label={m.nome}
+                  iconeCoral={ICONE_METODO[m.id].coral}
+                  iconeCreme={ICONE_METODO[m.id].creme}
+                  selecionado={metodo === m.id}
                   onClick={() => setMetodo(m.id)}
-                  aria-pressed={metodo === m.id}
-                  className={`flex min-h-12 items-center justify-between gap-3 rounded-md border p-4 text-left transition-colors ${
-                    metodo === m.id
-                      ? "border-action-primary bg-action-primary"
-                      : "border-border-hairline bg-surface-card hover:bg-surface-alt"
-                  }`}
-                >
-                  <span
-                    className={`text-body font-semibold ${
-                      metodo === m.id ? "text-text-on-brand" : "text-text-primary"
-                    }`}
-                  >
-                    {m.nome}
-                  </span>
-                  <span
-                    className={`text-caption ${
-                      metodo === m.id ? "text-text-on-brand/80" : "text-text-secondary"
-                    }`}
-                  >
-                    cai {m.quando}
-                  </span>
-                </button>
+                  tamanho={58}
+                />
               ))}
             </div>
           </div>
@@ -2264,6 +2360,7 @@ function DadosAsaasForm({
               ? "Como você escolheu o endereço fiscal da Legalizai, este a gente não tem: preencha o endereço da fatura do seu cartão."
               : "Veio do endereço que você já informou. Se a fatura do cartão vai pra outro lugar, troque aqui."}
           </p>
+
           <div className="flex flex-col gap-3">
             <Campo rotulo="CEP">
               <Texto

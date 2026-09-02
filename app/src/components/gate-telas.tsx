@@ -460,11 +460,13 @@ export function PerguntaView({
    * escolha dispara.
    */
   const slotRef = useRef<HTMLDivElement>(null);
-  const escolherCnae = (cnae: string) => {
-    setEscolha(cnae);
+  const voltarAoSlot = () =>
     requestAnimationFrame(() =>
       slotRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }),
     );
+  const escolherCnae = (cnae: string) => {
+    setEscolha(cnae);
+    voltarAoSlot();
   };
   // 🆕 02/09 — qual CNAE está com o sheet de detalhes aberto.
   const [detalhe, setDetalhe] = useState<OpcaoCnae | null>(null);
@@ -749,6 +751,10 @@ export function PerguntaView({
               setBusca({ texto, categoria });
               // Busca nova, slot limpo: ver o comentário do `escolhido`.
               setEscolha(null);
+              // A lista trocou inteira e o slot voltou a ficar vazio. Deixar a
+              // pessoa no ponto onde ela estava rolando esconderia as duas
+              // coisas que acabaram de mudar.
+              voltarAoSlot();
               return;
             }
             onValidar();

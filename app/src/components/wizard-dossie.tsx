@@ -1864,18 +1864,28 @@ export function CnaeSecundariosView({
   const idsAtivos = Object.entries(ativos).filter(([, v]) => v).map(([id]) => id);
   // Limite do produto: até 15 secundárias (reunião Leonan 19/08).
   const noLimite = idsAtivos.length >= 15;
+  // As escolhidas, venham de onde vierem (sugestão curada ou busca).
+  const escolhidas = idsAtivos
+    .map((id) => TODAS.find((s) => s.id === id))
+    .filter((s): s is (typeof TODAS)[number] => !!s);
   const algumaMudaEnquadramento = idsAtivos.some(
     (id) => TODAS.find((s) => s.id === id)?.mudaEnquadramento,
   );
 
+  /* 🔄 02/09 — quem já foi escolhido SAI das listas de baixo: ele agora
+     vive em "Secundárias escolhidas", lá em cima. Sem isto o mesmo cartão
+     apareceria duas vezes na tela, e tocar num ou noutro faria coisas opostas
+     (tirar × manter). Mesma regra do slot da C0. */
   const resultadosBusca = busca.trim()
     ? BANCO_BUSCA.filter(
         (s) =>
           !SUGESTOES.some((x) => x.id === s.id) &&
+          !ativos[s.id] &&
           (s.humano.toLowerCase().includes(busca.toLowerCase()) ||
             s.cnae.includes(busca)),
       )
     : [];
+  const sugestoesDisponiveis = SUGESTOES.filter((s) => !ativos[s.id]);
 
   function alterna(id: string) {
     setAtivos((a) => {
@@ -1910,6 +1920,46 @@ export function CnaeSecundariosView({
             </Card>
           </div>
 
+          {/* 🆕 02/09 (achado do Pedro) — AS QUE VOCÊ JÁ ESCOLHEU.
+              As sugestões curadas e os resultados de busca são listas
+              separadas: marcar duas na busca, trocar o termo e buscar outra
+              coisa deixava as primeiras SELECIONADAS e invisíveis. A pessoa
+              perdia o controle do que tinha montado.
+              Mesma gramática do slot da C0: um lugar que responde "o que eu já
+              escolhi?", com o cartão saindo por toque. */}
+          {escolhidas.length > 0 && (
+            <div>
+              <p className="text-micro text-text-tertiary mb-1.5">
+                Secundárias escolhidas ({escolhidas.length}
+                {noLimite ? " de 15, o limite" : ""})
+              </p>
+              <div className="flex flex-col gap-2">
+                {escolhidas.map((s) => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => alterna(s.id)}
+                    className="flex items-center justify-between gap-3 rounded-md border border-action-primary bg-action-primary p-3 text-left"
+                  >
+                    <span className="min-w-0">
+                      <span className="block text-body font-semibold text-text-on-brand">
+                        {s.humano}
+                      </span>
+                      <span className="block text-caption text-text-on-brand/80">
+                        CNAE {s.cnae}
+                      </span>
+                    </span>
+                    {/* Sai por toque, no mesmo cartão. Um "x" separado seria um
+                        segundo alvo pra desfazer o que um toque fez. */}
+                    <span className="shrink-0 text-caption font-semibold text-text-on-brand/80">
+                      Tirar
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* 🗑️ 02/09 (pente fino do Pedro) — 3 linhas que repetiam o que a
               tela já dizia em outros 4 lugares ("é opcional", "complemento").
               A única informação nova, "não precisa ser do mesmo ramo", subiu
@@ -1935,7 +1985,12 @@ export function CnaeSecundariosView({
                 </p>
               ) : (
                 resultadosBusca.map((s) => {
-                  const on = !!ativos[s.id];
+                  // ⚠️ 02/09 — `on` aqui ficou INALCANÇÁVEL: escolhido sai da
+                  // lista e vai pro bloco de cima. O estilo de selecionado
+                  // segue no código porque a filtragem pode mudar, mas hoje é
+                  // ramo morto — não confie nele pra estado.
+                  // ⚠️ Idem: escolhido sai desta lista (ver `sugestoesDisponiveis`).
+                const on = !!ativos[s.id];
                   return (
                     <button
                       key={s.id}
@@ -1996,7 +2051,7 @@ export function CnaeSecundariosView({
                 distingue um cartão do outro). Aqui era só mais uma promessa
                 repetida. */}
             <div className="flex flex-col gap-2">
-              {SUGESTOES.map((s) => {
+              {sugestoesDisponiveis.map((s) => {
                 const on = !!ativos[s.id];
                 return (
                   <button
@@ -2074,7 +2129,20 @@ export function CnaeSecundariosView({
             </Button>
           ) : (
             <Button full onClick={onSeguir}>
-              {ctaLabel ?? "Continuar"}
+              {/* 🆕 02/09 (pedido do Pedro) — O CTA CONFIRMA O QUE FOI
+                  ESCOLHIDO. Dizia "Continuar" com zero ou com dez marcadas, e
+                  a pessoa seguia sem recibo nenhum do que acabou de montar.
+                  "Incluir", não "Validar": validar sugere que alguém vai
+                  conferir e aprovar depois, e não vai — a inclusão é imediata.
+                  O caso zero tem rótulo próprio, senão o botão diria
+                  "Incluir 0 atividades". `ctaLabel` (modo ajuste) continua
+                  mandando: lá o botão volta pro status, não inclui nada. */}
+              {ctaLabel ??
+                (escolhidas.length === 0
+                  ? "Continuar sem secundárias"
+                  : escolhidas.length === 1
+                    ? "Incluir 1 atividade secundária"
+                    : `Incluir ${escolhidas.length} atividades secundárias`)}
             </Button>
           )}
         </Rodape>

@@ -368,6 +368,14 @@ export function PerguntaView({
             que põe campo direto no fundo claro. Agora a tela usa o mesmo
             `Campo` do C1/C4/E3.4: rótulo, campo, nada em volta. */}
         <div className="flex min-h-0 flex-1 flex-col gap-4">
+          {/* 🚧 02/09 (pedido do Pedro, passo 1 de N) — VAZIO RESERVADO.
+              Os campos foram empurrados pro rodapé pra abrir esta faixa, que
+              vai receber o C0.2 (CNAE encontrado): a ideia é o veredito
+              aparecer AQUI, na mesma tela, em vez de virar navegação. Por ora
+              o espaço fica em branco de propósito — é o passo de layout antes
+              da fusão. */}
+          <div className="min-h-0 flex-1" aria-hidden />
+
           {!sabeCodigo && (
             <Campo rotulo="Sua categoria">
               <Select
@@ -382,11 +390,14 @@ export function PerguntaView({
           {/* O campo de descrição herda a sobra que era da lista de pills: é
               o trabalho real desta tela, e campo grande convida a escrever
               mais, que é exatamente o que a IA usa. */}
-          <div className="flex min-h-0 flex-1 flex-col">
+          {/* 🔄 02/09 — o campo parou de esticar. Ele herdou a sobra
+              quando a lista de pills saiu; agora a sobra é do vazio acima, e
+              o campo fica com ~1/4 da altura que ocupava (2 linhas). */}
+          <div className="flex shrink-0 flex-col">
             <p className="text-caption font-semibold text-text-primary">
               {sabeCodigo ? "Número do CNAE" : "O que você faz na prática"}
             </p>
-            <div className="relative mt-1.5 min-h-0 flex-1">
+            <div className="relative mt-1.5 h-16">
               <textarea
                 value={texto}
                 onChange={(e) => setTexto(e.target.value)}
@@ -394,7 +405,7 @@ export function PerguntaView({
                 // 🐛 02/09 (achado do Pedro: "parece mais redonda que o
                 // dropdown") — estava `rounded-xl` (24px). TODO campo do DS
                 // usa `rounded-md` (12px): Texto, Select, Checkbox, opção.
-                className="h-full min-h-[6.5rem] w-full resize-none rounded-md border border-border-hairline
+                className="h-full w-full resize-none rounded-md border border-border-hairline
                            bg-surface-card p-4 pr-9 text-body text-text-primary
                            placeholder:text-text-muted focus:border-border-focus focus:outline-none"
               />

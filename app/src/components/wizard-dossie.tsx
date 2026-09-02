@@ -1890,7 +1890,7 @@ export function CnaeSecundariosView({
       <TelaHeader meta="Atividades da empresa" onVoltar={onVoltar} />
 
       <main className="app-main">
-        <Titulo sub="A principal já está definida. Marque o que mais você faz, se fizer.">
+        <Titulo sub="Se fizer, marque aqui. Não precisa ser do mesmo ramo.">
           Sua empresa faz mais alguma coisa?
         </Titulo>
 
@@ -1910,19 +1910,16 @@ export function CnaeSecundariosView({
             </Card>
           </div>
 
-          {/* 🆕 24/08 (reunião Leonan) — reformulado: secundária NÃO precisa
-              ser do mesmo segmento da principal. Até 15, é só complemento e
-              é opcional. */}
-          <p className="text-caption text-text-secondary -mt-2">
-            Não precisa ser do mesmo ramo da sua atividade principal — pode ser
-            qualquer coisa a mais que você faça. É complemento, é opcional, e
-            dá pra incluir até 15.
-          </p>
+          {/* 🗑️ 02/09 (pente fino do Pedro) — 3 linhas que repetiam o que a
+              tela já dizia em outros 4 lugares ("é opcional", "complemento").
+              A única informação nova, "não precisa ser do mesmo ramo", subiu
+              pro subtítulo; o teto de 15 a própria UI garante (para de deixar
+              marcar). Tinha travessão, proibido em copy pública desde 24/07. */}
 
           {/* 🆕 24/08 — busca restrita ao que a gente atende (mesma lista da
               entrevista principal), pedido original da Jéssica (reunião 19/07)
               e reforçado pelo Leonan. */}
-          <Campo rotulo="Não achou na lista? Busque outra atividade">
+          <Campo rotulo="Buscar outra atividade">
             <Texto
               valor={busca}
               onChange={setBusca}
@@ -1988,13 +1985,12 @@ export function CnaeSecundariosView({
 
           <div>
             <p className="text-micro text-text-tertiary mb-1.5">
-              Sugestões pra você (toque pra incluir)
+              Sugestões pra você
             </p>
-            {/* A garantia vira argumento: incluir não muda o imposto. */}
-            <p className="text-caption text-text-secondary mb-2.5">
-              Estas ficam no mesmo imposto da sua atividade principal, então
-              incluir não muda o que você paga.
-            </p>
+            {/* 🗑️ 02/09 — a garantia "não muda o imposto" saiu daqui: cada
+                cartão já a carrega na etiqueta, e lá ela é acionável (é o que
+                distingue um cartão do outro). Aqui era só mais uma promessa
+                repetida. */}
             <div className="flex flex-col gap-2">
               {SUGESTOES.map((s) => {
                 const on = !!ativos[s.id];
@@ -2068,9 +2064,10 @@ export function CnaeSecundariosView({
             </div>
           </div>
 
-          <p className="text-micro text-text-tertiary">
-            Sem secundárias também está ótimo. Você pode adicionar depois.
-          </p>
+          {/* 🗑️ 02/09 — 3ª vez que a tela dizia "é opcional", e a mais fraca
+              ("está ótimo" soa como consolo). O subtítulo e o CTA já dão essa
+              licença. 🔒 O "pode adicionar depois" saiu por decisão do Pedro
+              mesmo tendo sido sugerido pro subtítulo: convida a pular a tela. */}
         </Corpo>
 
         <Rodape>

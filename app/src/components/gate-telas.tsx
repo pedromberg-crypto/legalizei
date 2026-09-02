@@ -485,11 +485,23 @@ export function PerguntaView({
                promessa ao lugar onde ela se cumpre.
                A fonte é Sora por herança — ela é a fonte do sistema inteiro
                desde 12/07, então não há nada a declarar aqui. */
-            <div className="flex min-h-0 flex-1 items-center">
+            <div className="flex min-h-0 flex-1 flex-col justify-center">
               <p className="text-display text-text-primary">
                 Aqui é onde você escolhe a{" "}
                 <span className="text-action-primary-sm">atividade principal</span> com
                 que trabalha.
+              </p>
+              {/* 🆕 02/09 (pedido do Pedro) — tira o peso da palavra
+                  "principal". Quem faz três coisas trava aqui achando que
+                  precisa escolher UMA e perder as outras, e essa é a hora de
+                  dizer que não.
+                  ⚠️ "logo depois", não "na próxima tela": as secundárias (C5)
+                  estão a 3 passos daqui (C0.2 → C0.3 → C5). Cravar a posição
+                  seria falso hoje, e voltaria a ficar falso a cada mudança de
+                  ordem do flow. */}
+              <p className="mt-3 text-body text-text-secondary">
+                Se você faz mais de uma coisa, fica tranquilo: logo depois dá
+                pra incluir as atividades secundárias.
               </p>
             </div>
           ) : (

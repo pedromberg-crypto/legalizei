@@ -380,9 +380,25 @@ export function PerguntaView({
     el.style.overflowY = el.scrollHeight > TETO ? "auto" : "hidden";
   }, [texto, sabeCodigo, placeholder]);
 
-  // Mock de visualização das 3 opções (ver o comentário no JSX). `mapear()` é
-  // o mesmo mock que a C0.2 usa, então os números batem com os de lá.
-  const encaixe = encaixeDeResultado(mapear(texto));
+  /**
+   * 🔒 02/09 (achado do Pedro) — OS RESULTADOS CONGELAM NA BUSCA.
+   *
+   * Antes eles saíam de `mapear(texto)` ao vivo: mudavam a cada tecla, e a
+   * escolha da pessoa caía do slot no meio da digitação. Ninguém decidiu isso,
+   * era efeito de não existir uma "busca" de verdade — e é mentira sobre o
+   * produto real, onde a IA roda quando alguém pede, não a cada letra.
+   *
+   * Agora a lista é da ÚLTIMA BUSCA. Mexeu na descrição ou na categoria depois
+   * dela? O resultado na tela está velho, e o CTA passa a oferecer buscar de
+   * novo em vez de continuar — que é a resposta pra pergunta do Pedro ("e se
+   * ela quiser pesquisar outra coisa, como faz?").
+   */
+  const [busca, setBusca] = useState<{ texto: string; categoria: string | null } | null>(
+    null,
+  );
+  const encaixe = encaixeDeResultado(mapear(busca?.texto ?? texto));
+  const desatualizado =
+    busca !== null && (texto !== busca.texto || categoria !== busca.categoria);
   /**
    * 🆕 02/09 (pedido do Pedro) — a escolha do CNAE JÁ NASCE FEITA, no
    * "+ compatível". A tela não pergunta "qual desses?": ela mostra o que a
@@ -440,7 +456,7 @@ export function PerguntaView({
    */
   const podeValidar = sabeCodigo
     ? texto.replace(/\D/g, "").length >= 6
-    : semResultados
+    : semResultados || desatualizado
       ? categoria !== null
       : escolhido !== null;
 
@@ -651,7 +667,25 @@ export function PerguntaView({
 
       {/* 🌾 CTA no rodapé = thumb zone (design-system.md §6) */}
       <div className="app-footer-cta">
-        <Button full onClick={onValidar} disabled={!podeValidar}>
+        {/* Um CTA, três trabalhos, decididos pelo estado da tela: buscar
+            (chegada), buscar DE NOVO (mexeu em algo depois da última busca) e
+            seguir com a atividade escolhida. */}
+        <Button
+          full
+          onClick={() => {
+            if (semResultados) {
+              setBusca({ texto, categoria });
+              onValidar();
+              return;
+            }
+            if (desatualizado) {
+              setBusca({ texto, categoria });
+              return;
+            }
+            onValidar();
+          }}
+          disabled={!podeValidar}
+        >
           {/* 🔄 02/09 (pedido do Pedro) — era "Achar meu CNAE", e ficou
               mentiroso quando o veredito passou a morar nesta tela: o CNAE já
               está achado, na tela, marcado. O botão agora nomeia o que vai
@@ -663,9 +697,11 @@ export function PerguntaView({
               ele confirma a escolha. */}
           {semResultados
             ? "Buscar atividade principal"
-            : jaCliente
-              ? "Continuar com essa atividade"
-              : "Validar minha atividade"}
+            : desatualizado
+              ? "Buscar de novo"
+              : jaCliente
+                ? "Continuar com essa atividade"
+                : "Validar minha atividade"}
         </Button>
       </div>
     </>

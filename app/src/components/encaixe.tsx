@@ -317,7 +317,9 @@ export function OutrasOpcoes({
                   className={`shrink-0 rounded-full px-2.5 py-1 text-micro font-semibold ${
                     on
                       ? "bg-action-primary-sm text-text-on-brand"
-                      : "bg-surface-tint-brand text-action-primary-sm"
+                      : // 🧪 02/09 — de volta ao verde nos NÃO escolhidos, a
+                        // pedido do Pedro, pra ele comparar com o coral claro.
+                        "bg-state-success-tint text-state-success-text"
                   }`}
                 >
                   {pillDe(a)}

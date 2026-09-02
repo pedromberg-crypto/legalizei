@@ -213,11 +213,23 @@ export function OutrasOpcoes({
   escolhido,
   onEscolher,
   titulo = "Outras opções pra você",
+  marcarPrimeiro = false,
 }: {
   alternativas: OpcaoCnae[];
   escolhido?: string;
   onEscolher?: (cnae: string) => void;
   titulo?: string;
+  /**
+   * 🆕 02/09 (pedido do Pedro) — marca o 1º item com a pill verde
+   * "+ compatível".
+   *
+   * ⚠️ Por prop, e não sempre: aqui na C0 a lista é
+   * `[recomendado, ...alternativas]`, então o 1º É o mais compatível. No
+   * VEREDITO (C0.2) esta lista tem só as alternativas — o mais compatível
+   * está fora dela, no card grande acima. Marcar o 1º lá diria a coisa
+   * errada sobre a segunda melhor opção.
+   */
+  marcarPrimeiro?: boolean;
 }) {
   if (alternativas.length === 0) return null;
 
@@ -225,7 +237,7 @@ export function OutrasOpcoes({
     <div className="mt-4">
       <p className="text-micro text-text-tertiary mb-2">{titulo}</p>
       <div className="flex flex-col gap-2">
-        {alternativas.map((a) => {
+        {alternativas.map((a, i) => {
           const on = escolhido === a.cnae;
           const conteudo = (
             <div className="flex items-center justify-between gap-3">
@@ -235,9 +247,17 @@ export function OutrasOpcoes({
                   CNAE {a.cnae} · imposto baixo
                 </p>
               </div>
-              <span className="shrink-0 text-caption font-semibold text-text-secondary">
-                {a.adequacao}%
-              </span>
+              {/* 🗑️ 02/09 (pedido do Pedro) — O PERCENTUAL SAIU. "72%" e
+                  "64%" convidam a comparar dois números que a pessoa não tem
+                  como julgar, e transformam uma recomendação em decisão
+                  técnica: ela fica escolhendo entre 8 pontos de diferença em
+                  vez de ler o que cada atividade descreve. Sobra o sinal que
+                  de fato ajuda, e só no primeiro. */}
+              {marcarPrimeiro && i === 0 && (
+                <span className="shrink-0 rounded-full bg-state-success-tint px-2.5 py-1 text-micro font-semibold text-state-success-text">
+                  + compatível
+                </span>
+              )}
             </div>
           );
 

@@ -424,6 +424,9 @@ export function PerguntaView({
             <OutrasOpcoes
               titulo="O que mais se encaixa no que você contou"
               alternativas={[encaixe.recomendado, ...encaixe.alternativas]}
+              // Aqui o 1º da lista é o recomendado, então a pill diz a
+              // verdade. No veredito não seria o caso (ver a prop).
+              marcarPrimeiro
             />
           </Rolagem>
 

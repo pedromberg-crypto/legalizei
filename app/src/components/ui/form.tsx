@@ -111,7 +111,16 @@ export function Checkbox({
   children: ReactNode;
 }) {
   return (
-    <label className="flex cursor-pointer items-start gap-3 rounded-md border border-border-hairline bg-surface-card p-3">
+    // 🆕 01/09 (pedido do Pedro) — marcado, a BORDA do bloco também fica
+    // coral. Só a cor muda: mesma espessura, mesmo fundo, mesmo espaçamento.
+    // O quadradinho sozinho é pequeno demais pra registrar o "pronto" quando a
+    // pessoa está olhando o CTA embaixo; a borda dá o feedback no tamanho do
+    // alvo que ela acabou de tocar.
+    <label
+      className={`flex cursor-pointer items-start gap-3 rounded-md border bg-surface-card p-3 transition-colors ${
+        checked ? "border-action-primary" : "border-border-hairline"
+      }`}
+    >
       <span
         className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 transition-colors ${
           checked

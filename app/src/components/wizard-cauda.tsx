@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { type ReactNode, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -1516,6 +1517,74 @@ export function RetomarCpfView({
     <>
       <TelaHeader meta="Página inicial" onVoltar={onVoltar} />
       <main className="app-main">
+        {/* 🆕 01/09 (pedido do Pedro) — mesmo tratamento do E6.1 (código): a
+            ilustração ocupa a sobra da tela e se centraliza NELA, com o
+            conteúdo ancorado no pé. A pasta entreaberta com papéis dentro diz
+            o que a tela promete — nada se perdeu, seu processo está guardado
+            aqui — que é a única coisa que importa pra quem volta.
+            `h-[90%] max-h-[414px]`: cresce com a tela e para sozinha; o teto
+            evita virar pôster num Pro Max. */}
+        <div className="flex min-h-0 flex-1 items-center justify-center py-4">
+          <div id="retomar-flutua" className="relative flex h-[90%] max-h-[414px] items-end">
+            {/* Sombra de contato em 2 camadas, igual ao aparelho do E6.1: a
+                elipse curta é o apoio na superfície, o drop-shadow segue a
+                silhueta e projeta pra direita (direção de luz do DS). */}
+            <div
+              aria-hidden
+              className="absolute -bottom-2 left-1/2 h-5 w-[72%] -translate-x-1/2 blur-md"
+              style={{
+                background:
+                  "radial-gradient(closest-side, rgba(27,30,36,.30), rgba(27,30,36,.10) 62%, transparent 100%)",
+              }}
+            />
+            <Image
+              src="/icones/retomar-pasta.png"
+              alt=""
+              aria-hidden
+              width={488}
+              height={498}
+              priority
+              className="relative z-10 h-full w-auto"
+              style={{ filter: "drop-shadow(6px 14px 12px rgba(27,30,36,.20))" }}
+            />
+          </div>
+
+          {/* Flutuação sutil, mesma dosagem do E6.1: durações que não se
+              dividem entre si (7s / 5,5s) pra o loop não fechar sempre no
+              mesmo ponto e virar sobe-e-desce mecânico.
+              ♿ desliga em `prefers-reduced-motion`. */}
+          <style jsx global>{`
+            @keyframes retomar-flutua-obj {
+              0%   { transform: translate3d(0, 0, 0) rotate(0deg); }
+              35%  { transform: translate3d(4px, -7px, 0) rotate(0.6deg); }
+              70%  { transform: translate3d(-3px, -3px, 0) rotate(-0.5deg); }
+              100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+            }
+            @keyframes retomar-flutua-sombra {
+              0%   { transform: translateX(-50%) scaleX(1); opacity: 1; }
+              35%  { transform: translateX(-50%) scaleX(0.9); opacity: 0.72; }
+              70%  { transform: translateX(-50%) scaleX(0.96); opacity: 0.88; }
+              100% { transform: translateX(-50%) scaleX(1); opacity: 1; }
+            }
+            #retomar-flutua img {
+              animation: retomar-flutua-obj 7s ease-in-out infinite;
+              will-change: transform;
+            }
+            #retomar-flutua > div[aria-hidden] {
+              animation: retomar-flutua-sombra 5.5s ease-in-out infinite;
+              will-change: transform, opacity;
+            }
+            @media (prefers-reduced-motion: reduce) {
+              #retomar-flutua img,
+              #retomar-flutua > div[aria-hidden] {
+                animation: none;
+              }
+            }
+          `}</style>
+        </div>
+
+        {/* Bloco de baixo ancorado no pé (o `flex-1` de cima é quem empurra). */}
+        <div className="shrink-0">
         <Titulo sub="A gente confirma onde você parou.">Voltar de onde parei</Titulo>
         <Corpo>
           <Campo rotulo="Seu CPF" dica="É o mesmo que você usou pra começar o cadastro.">
@@ -1528,6 +1597,7 @@ export function RetomarCpfView({
             />
           </Campo>
         </Corpo>
+        </div>
         <Rodape>
           <Button full disabled={!cpfOk} onClick={onContinuar}>
             Continuar

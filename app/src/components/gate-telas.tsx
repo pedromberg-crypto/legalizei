@@ -762,15 +762,26 @@ export function TriagemView({
             <p className="text-body-strong font-semibold mb-1">
               Quem vai administrar a empresa?
             </p>
+            {/* ✍️ 01/09 (pedido do Pedro) — texto anterior tinha 3 ideias em
+                4 linhas: o que é administrar, exemplos, e o que acontece com
+                quem não administra. Ficou só a 1ª, que é a única que a pessoa
+                precisa pra responder. A tranquilização ("continua sócio") foi
+                pra baixo, na consequência da opção "Só eu", que é exatamente
+                onde a dúvida nasce. */}
             <p className="text-caption text-text-secondary mb-3">
-              Administrar é assinar pela empresa no dia a dia: banco, cartório,
-              transferência de veículo. Quem não administra continua sócio e
-              continua participando dos resultados.
+              Quem administra assina pela empresa: banco, cartório, contratos.
             </p>
             <OpcoesLinha
               opcoes={[
                 { v: "so-eu" as const, label: "Só eu" },
-                { v: "com-socios" as const, label: "Eu e meus sócios" },
+                {
+                  v: "com-socios" as const,
+                  // ✍️ 01/09 (pedido do Pedro) — concorda com a quantidade
+                  // escolhida logo acima: "Eu + 1" é UM sócio. Plural onde só
+                  // existe um sócio soa a texto genérico, e a pessoa acabou de
+                  // dizer quantos são.
+                  label: socios === 2 ? "Eu e meu sócio" : "Eu e meus sócios",
+                },
               ]}
               valor={administracao}
               onChange={setAdministracao}
@@ -779,14 +790,16 @@ export function TriagemView({
                 virariam aula de direito societário no meio da triagem. */}
             {administracao === "so-eu" && (
               <p className="text-micro text-text-tertiary mt-2">
-                Você resolve tudo sozinho, sem depender da assinatura de
-                ninguém.
+                Você resolve tudo sozinho.{" "}
+                {socios === 2
+                  ? "Seu sócio continua sócio e participa dos resultados."
+                  : "Seus sócios continuam sócios e participam dos resultados."}
               </p>
             )}
             {administracao === "com-socios" && (
               <p className="text-micro text-text-tertiary mt-2">
-                Cada administrador pode assinar sozinho o dia a dia. Alguns
-                bancos pedem todos os administradores pra abrir a conta.
+                Cada um pode assinar sozinho. Alguns bancos pedem todos juntos
+                pra abrir a conta.
               </p>
             )}
           </div>

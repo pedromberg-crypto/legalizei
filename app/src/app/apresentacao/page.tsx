@@ -19,6 +19,7 @@ import {
   MeiOuMeView,
 } from "@/components/gate-telas";
 import { MolduraAparelho } from "@/components/lab/versao-board";
+import grafoFlow from "@/lib/flow-graph.json";
 import { SaidaView } from "@/components/saida";
 import { TelaHeader } from "@/components/ui/tela";
 import { VereditoView, type Resultado } from "@/components/veredito";
@@ -961,9 +962,21 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
  * um sufixo manual em `SUFIXO_MOMENTO`. `fim` não tem rota (é só desta
  * demo) e fica de fora do gerador.
  */
-const LABEL_POR_ROTA: Record<string, string> = Object.fromEntries(
-  GRUPOS.flatMap((g) => g.telas.map((t) => [t.rota, t.nome] as const))
-);
+/**
+ * 🔒 01/09 — o nome vem do MAPA primeiro (`flow-graph.json`, gerado do
+ * `flow-data.mjs`), e só cai no `telas-flow.ts` quando a rota não existe lá
+ * (variantes de demo, ex.: `/welcome`). Antes era só o `telas-flow`, e as
+ * telas ausentes dele apareciam com o id cru da etapa na pill ("guia",
+ * "conferencia").
+ */
+const LABEL_POR_ROTA: Record<string, string> = {
+  ...Object.fromEntries(GRUPOS.flatMap((g) => g.telas.map((t) => [t.rota, t.nome] as const))),
+  ...Object.fromEntries(
+    (grafoFlow.nodes as { rota: string | null; label: string }[])
+      .filter((n) => n.rota)
+      .map((n) => [n.rota as string, n.label.replace(/<br\/>/g, " ")] as const)
+  ),
+};
 
 const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   splash: "/splash",
@@ -1076,7 +1089,46 @@ NOME_MOCKUP["mei-ou-me"] = "E3.2 · MEI × ME";
 NOME_MOCKUP["retomar-cpf"] = "C0.1 · Voltar de onde parei (CPF)";
 // 🆕 30/08 — "aguardando-pago" divide a mesma rota (`/aguardando`) com
 // "aguardando" (boleto pendente × pago via instantâneo).
-NOME_MOCKUP["aguardando-pago"] = "E9.1P · Status (pago)";
+NOME_MOCKUP["aguardando-pago"] = "E9.1P · Status (pago, via instantâneo)";
+// 🆕 01/09 — as 4 abaixo têm rota SEM query nesta demo, e no mapa o nó existe
+// com query (`/welcome?slide=0`, `/painel?regime=mei`, `/splash-recusado?next=…`)
+// ou é uma etapa que não vira nó (`veredito` = 3 etapas pro mesmo momento).
+// Sem override, a pill cairia no id cru da etapa.
+NOME_MOCKUP.welcome = "E2 · Welcome";
+NOME_MOCKUP.painel = "A3 · Status";
+// `veredito` é Etapa, não Momento (3 etapas caem no mesmo momento), por isso
+// o índice frouxo aqui.
+(NOME_MOCKUP as Record<string, string>).veredito = "C0.2 · CNAE encontrado";
+NOME_MOCKUP["pagamento-recusado"] = "E9.SR · Splash pagamento recusado";
+NOME_MOCKUP["m-travado"] = "E9.3 · Iniciando transferência (travado)";
+
+/**
+ * 🔒 01/09 (pedido do Pedro) — NOME DE TELA É UM SÓ, NOS TRÊS LUGARES.
+ *
+ * Existiam três fontes: `flow-data.mjs` (o mapa), `telas-flow.ts` (o título
+ * deste painel e o `/mockup`) e as pills daqui, escritas à mão. As pills
+ * divergiam de tudo — inclusive no CÓDIGO da tela: a captura de lead era
+ * "E3.1" na pill e "E3.3" no mapa, e o endereço era "E3.3" aqui e "E3.4" lá.
+ * Quem lesse os dois documentos concluiria que são telas diferentes.
+ *
+ * Agora `telas-flow.ts` copia os labels do `flow-data`, e a pill deriva daí:
+ * mesmo nome, versão curta. Curto = sem o parêntese explicativo e sem o
+ * marcador de regime (🏷️), que só fazem sentido no título grande.
+ */
+function rotuloCurto(nome: string): string {
+  return nome
+    .replace(/\s*·\s*🏷️.*$/u, "")
+    .replace(/\s*\(.*$/, "")
+    .trim();
+}
+
+const pill = (etapa: Etapa): { etapa: Etapa; label: string } => ({
+  etapa,
+  // `Etapa` é mais larga que `Momento` (o veredito tem 3 etapas que viram 1
+  // momento só), então o índice é frouxo de propósito: sem nome derivado, a
+  // pill cai no id da etapa em vez de quebrar o build.
+  label: rotuloCurto((NOME_MOCKUP as Partial<Record<string, string>>)[etapa] ?? etapa),
+});
 
 const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; porque: string }> = {
   splash: {
@@ -2039,41 +2091,41 @@ export default function ApresentacaoPage() {
 
   /** Ordem real do flow — a mesma ordem das pills no rodapé. */
   const PILLS: { etapa: Etapa; label: string }[] = [
-    { etapa: "splash", label: "E1 · Splash" },
-    { etapa: "welcome", label: "E2 · Welcome" },
-    { etapa: "fork", label: "E3 · Fork" },
-    { etapa: "dados", label: "🆕 E3.1 · Seus dados" },
-    { etapa: "mei-ou-me", label: "🆕 E3.2 · MEI × ME" },
-    { etapa: "endereco", label: "🆕 E3.3 · Endereço + categoria" },
-    { etapa: "triagem", label: "E5 · Triagem" },
-    { etapa: "faixa", label: "E5 · Faixa" },
-    { etapa: "conta", label: "E6 · Conta" },
-    { etapa: "conta-codigo", label: "E6 · Código" },
-    { etapa: "plano", label: "E7 · Plano" },
-    { etapa: "pagamento", label: "🔄 E9 · Pagamento + contrato" },
+    pill("splash"),
+    pill("welcome"),
+    pill("fork"),
+    pill("dados"),
+    pill("mei-ou-me"),
+    pill("endereco"),
+    pill("triagem"),
+    pill("faixa"),
+    pill("conta"),
+    pill("conta-codigo"),
+    pill("plano"),
+    pill("pagamento"),
     // 🔄 27/08 — atividade + veredito ATRAVESSARAM o pagamento: viraram a C0,
     // primeira tela do dossiê. Ver `app/(app)/dossie/atividade/page.tsx`.
-    { etapa: "perguntando", label: "🔄 C0 · Sua atividade" },
-    { etapa: "veredito", label: "🔄 C0 · CNAE encontrado" },
+    pill("perguntando"),
+    pill("veredito"),
     // 🔄 28/08 (pedido do Pedro) — C5 mudou de lugar: era a 5ª tela do
     // dossiê (entre C4 e C6), agora é a 1ª, logo após o veredito da C0.
-    { etapa: "cnae-secundarios", label: "C5 · Secundários" },
-    { etapa: "socio", label: "C1 · Seus dados" },
-    { etapa: "vinculo", label: "C2 · Vínculo" },
-    { etapa: "socios", label: "C3 · Sócios" },
-    { etapa: "empresa", label: "C4 · Empresa" },
+    pill("cnae-secundarios"),
+    pill("socio"),
+    pill("vinculo"),
+    pill("socios"),
+    pill("empresa"),
     // 🗑️ 01/09 — "C6 · Natureza" saiu do carrossel: rota removida em 31/08.
-    { etapa: "nome", label: "C7 · Nome" },
-    { etapa: "revisar", label: "A1 · Revisar" },
-    { etapa: "painel", label: "A3 · Painel" },
-    { etapa: "guia", label: "🆕 A3.P · Guia da Junta" },
-    { etapa: "guia-splash", label: "🆕 A3.PS · Guia paga" },
-    { etapa: "guia-boleto", label: "🆕 A3.PSB · Guia no boleto" },
-    { etapa: "guia-paga", label: "🆕 A3′ · Guia paga" },
+    pill("nome"),
+    pill("revisar"),
+    pill("painel"),
+    pill("guia"),
+    pill("guia-splash"),
+    pill("guia-boleto"),
+    pill("guia-paga"),
     // 🗑️ 01/09 — "A3.2 · Certificado" saiu do carrossel do ME.
-    { etapa: "assinatura", label: "A4 · Assinatura" },
-    { etapa: "ativacao", label: "🔓 A5 · Ativação" },
-    { etapa: "fim", label: "Fim" },
+    pill("assinatura"),
+    pill("ativacao"),
+    pill("fim"),
   ];
 
   /**
@@ -2088,19 +2140,19 @@ export default function ApresentacaoPage() {
    * documentação viva pro dev, que não pertence a sequência nenhuma.
    */
   const PILLS_DEV: { etapa: Etapa; label: string }[] = [
-    { etapa: "conferencia", label: "🛠️ Conferência · campos por origem" },
+    pill("conferencia"),
   ];
 
   const PILLS_PAUSA: { etapa: Etapa; label: string }[] = [
-    { etapa: "retomar-cpf", label: "🆕 C0.1 · Voltar de onde parei" },
-    { etapa: "retomar", label: "🆕 C0.1 · Retomar" },
-    { etapa: "aguardando", label: "🆕 E9.1 · Aguardando boleto" },
-    { etapa: "aguardando-pago", label: "🆕 E9.1P · Status (pago)" },
-    { etapa: "splash-atendido", label: "🆕 E5F.1 · Splash atendido" },
-    { etapa: "splash-pagamento", label: "🆕 E9.S · Splash pagamento" },
-    { etapa: "splash-boleto", label: "🆕 E9.SB · Splash boleto" },
-    { etapa: "pagamento-recusado", label: "🆕 E9.SR · Recusado" },
-    { etapa: "pagamento-retry", label: "🆕 E9.R · Nova tentativa" },
+    pill("retomar-cpf"),
+    pill("retomar"),
+    pill("aguardando"),
+    pill("aguardando-pago"),
+    pill("splash-atendido"),
+    pill("splash-pagamento"),
+    pill("splash-boleto"),
+    pill("pagamento-recusado"),
+    pill("pagamento-retry"),
   ];
 
   /**
@@ -2110,18 +2162,18 @@ export default function ApresentacaoPage() {
    * no pagamento (E9).
    */
   const PILLS_MIGRAR: { etapa: Etapa; label: string }[] = [
-    { etapa: "m-cnpj", label: "E4.2 · Seu CNPJ" },
-    { etapa: "m-diagnostico", label: "🆕 E4.3 · Tem certificado?" },
-    { etapa: "m-plano", label: "E4.4 · A conta" },
-    { etapa: "m-contrato", label: "E4.5 · Contrato" },
-    { etapa: "m-pagamento", label: "E9 · Pagamento" },
-    { etapa: "m-contador", label: "🆕 E9.2 · Seu contador" },
-    { etapa: "m-dados", label: "🆕 E9.2b · Seus dados" },
-    { etapa: "m-socios", label: "🆕 E9.2c · Sócios" },
-    { etapa: "m-gov", label: "🆕 E9.2d · GOV + procuração" },
-    { etapa: "m-transferencia", label: "E9.3 · Transferência" },
-    { etapa: "m-travado", label: "🔴 E9.3 · TTRT travado" },
-    { etapa: "m-ativa", label: "E9.4 · Migrada" },
+    pill("m-cnpj"),
+    pill("m-diagnostico"),
+    pill("m-plano"),
+    pill("m-contrato"),
+    pill("m-pagamento"),
+    pill("m-contador"),
+    pill("m-dados"),
+    pill("m-socios"),
+    pill("m-gov"),
+    pill("m-transferencia"),
+    pill("m-travado"),
+    pill("m-ativa"),
   ];
 
   const momento: Momento =

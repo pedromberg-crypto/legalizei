@@ -51,22 +51,22 @@ export const GRUPOS: GrupoTelas[] = [
       },
       {
         rota: "/entrada",
-        nome: "E3 · Fork de 3 rotas",
+        nome: "E3 · Fork 4 rotas",
         nota: 'A palavra "migrar" NÃO aparece (UX-55): é jargão e "trocar de contador" excluiria quem não tem contador, que é o melhor cliente do caminho migrar. Pergunta pelo fato, nunca pela operação. Login é link, não botão. ✅ 28/07: 3 rotas CONFIRMADAS na reunião (abrir/migrar/já-cliente).',
       },
       {
         rota: "/entrada?intencao=abrir",
-        nome: "🆕 E3.2 · MEI × ME (variante Abrir)",
+        nome: "E3.2 · MEI × ME (variante Abrir)",
         nota: "03/08 — REALOCADA (morava no fim do E5). Recomendação, não trava. 🔄 27/08: agora vem DEPOIS do E3.3 (dados pessoais) e antes do E3.4 (endereço + categoria). 🔴 27/08: o card 'ME · Lucro Presumido' foi REMOVIDO — decisão do Pedro, 'não vale o desgaste da dúvida agora' (volume mínimo no ICP). Consequência assumida e parqueada: quem É Lucro Presumido não tem mais porta no caminho ABRIR (no Migrar continua sendo reconhecido pelo M1, que confirma na Receita). MEI e ME agora passam os dois pelo E3.4 — o gate de BH não vale pro MEI, mas o de CATEGORIA vale pros dois. 🔴 Ainda não corrige se a pessoa disser MEI aqui e depois a triagem revelar 2+ sócios (gap conhecido).",
       },
       {
         rota: "/entrada?intencao=migrar",
-        nome: "🆕 E3.2 · MEI × ME (variante Migrar)",
+        nome: "E3.2 · MEI × ME (variante Migrar)",
         nota: "04/08 — mesma tela (`MeiOuMeView`), `contexto=\"migrar\"`: copy vira AUTODECLARAÇÃO (\"Sua empresa hoje é MEI ou ME?\", não \"qual devo escolher\" — o CNPJ já existe, não há escolha). Decisão do Pedro: inverter a ordem que existia (perguntava cidade ANTES de saber o regime). Escolher MEI pula a cidade e vai DIRETO pro M1 (`/migrar/cnpj?cenario=mei`). Escolher ME cai no gate de cidade de sempre. Autodeclarado, não trava nada — quem confirma de verdade é o M1, puxando da Receita.",
       },
       {
         rota: "/dados",
-        nome: "🆕 E3.3 · Seus dados (captura de lead)",
+        nome: "E3.3 · Seus dados (nome · e-mail · telefone)",
         // 🆕 01/09 — ganhou hero coral com o Léo espiando: relógio preto ficava
         // ilegível em cima dele.
         statusClaro: true,
@@ -74,7 +74,7 @@ export const GRUPOS: GrupoTelas[] = [
       },
       {
         rota: "/endereco",
-        nome: "🆕 E3.4 · Endereço + categoria (os 2 gates)",
+        nome: "E3.4 · Endereço + categoria (os 2 gates)",
         nota: "27/08 — tela NOVA, e a peça central da reordenação. (1) ENDEREÇO: substitui o E4 (gate de cidade, REMOVIDO), que perguntava e acreditava no clique — aqui o CEP valida de verdade (faixa 30000-000 a 31999-999). Quem não tem endereço em BH recebe o endereço fiscal da Legalizai como SOLUÇÃO, não porta na cara: o município segue a sede, não o domicílio do dono, e a nossa sede fica em BH. Herdou a escolha 'próprio × fiscal' que morava no E5F. (2) CATEGORIA: assume o papel de gate de elegibilidade que era do veredito de CNAE — como a lista só oferece atividade atendida, escolher já É passar pelo filtro. É isso que autorizou o CNAE a ir pra depois do pagamento (C0). Quem não se acha na lista sai pela waitlist, antes de qualquer cobrança.",
       },
       {
@@ -84,7 +84,7 @@ export const GRUPOS: GrupoTelas[] = [
       },
       {
         rota: "/migrar/cnpj",
-        nome: "E4.2 · Migrar · Seu CNPJ (consulta + veredito)",
+        nome: "E4.2 · Lê o cartão CNPJ",
         nota: "Consulta e veredito na MESMA tela, de propósito: no caminho abrir o veredito é tela própria porque depende da IA interpretar texto livre (pode errar); aqui o CNAE é fato registrado. Digite qualquer CNPJ de 14 dígitos → loading que explica → cartão + as 4 checagens + veredito. 🆕 04/08 (2ª rodada): **MEI agora PASSA** (checagem de regime ok) — só Lucro Presumido segue bloqueado. `?cenario=mei|presumido|inapto` demonstra os 3 cenários. 🆕 04/08 (3ª rodada): quem chega aqui vindo de MEI na E3.2 já pula direto com `?cenario=mei` — ME continua chegando 'limpo' (padrão) depois do gate de cidade.",
       },
       {
@@ -94,27 +94,27 @@ export const GRUPOS: GrupoTelas[] = [
       },
       {
         rota: "/saida/regime-nao-suportado",
-        nome: "🆕 E4.2 · Saída · Regime não suportado (só Lucro Presumido)",
+        nome: "Saída · Presumido fora de escopo",
         nota: "🔴 05/08 — entrada mudou: quem diz \"Lucro Presumido\" já sai por aqui direto na E3.2 (CTA menor abaixo dos cards MEI/ME), antes mesmo de chegar no M1. Lucro Presumido usa motor fiscal totalmente diferente (IRPJ/CSLL/PIS-COFINS/ISS, não Anexo/Fator R) que ainda não temos, decisão de negócio aberta (`pesquisa/parking-lot.md` item I).",
       },
       {
         rota: "/saida/cnpj-inapto",
-        nome: "🆕 E4.2 · Saída · CNPJ inapto/suspenso",
+        nome: "Saída · CNPJ inapto ou suspenso",
         nota: "04/08 — nasce do M1 (`/migrar/cnpj?cenario=inapto`, mock de demo): situação cadastral ≠ ativa — a Receita nem reconhece a empresa como ativa, então a regularização vem ANTES de qualquer migração. 🔴 06/08: diferente do que era 'auditoria de passivo' (M4a, empresa ATIVA com dívida) — essa tela foi retirada do flow.",
       },
       {
         rota: "/migrar/diagnostico",
-        nome: "E4.3 · Migrar · Diagnóstico (\"tem certificado?\")",
+        nome: "E4.3 · Diagnóstico ('tem certificado?')",
         nota: "🔴 04/08 (3ª rodada, decisão do Pedro) — o diagnóstico de Fator R pra ME foi CORTADO: a única API pré-pagamento é a cadastral, não traz faturamento/folha (isso só existe pós-pagamento, via procuração). 🔴 05/08 — E4.2b (`/migrar/tributario`) foi DESCARTADA por duplicar a E3.2 (regime já autodeclarado antes). 🔴 06/08 — pergunta do MEI trocou de 'você tem contador?' pra 'você já tem certificado digital?': TTRT transfere um contador REGISTRADO NO CRC-MG, e MEI (DASN-SIMEI autodeclaratório) normalmente não tem registro nenhum pra transferir — MEI nunca passa pelo M4b (TTRT), nos 2 casos. 🔴 06/08 (achado do Pedro) — ME TAMBÉM passa por aqui agora (antes ia do M1 direto pro M3): certificado é independente da TTRT pra ME, e não tinha pergunta nenhuma nesse caminho. 🟡 fila-Mauro: custo/fidelidade de emitir certificado pro ME (se não tiver) é decisão de preço não tomada.",
       },
       {
         rota: "/migrar/plano",
-        nome: "E4.4 · Migrar · A conta da migração",
+        nome: "E4.4 · Plano",
         nota: "Sem taxa de governo — a empresa já existe, não há DAE da Junta nem TFLF. O choque de custo do E7 (~R$463 na 3ª tela, UX-54) simplesmente não acontece, e a tela diz isso explicitamente em vez de só omitir. Só a mensalidade no rodapé. Igual pros dois regimes (MEI/ME) — só repassa os params adiante.",
       },
       {
         rota: "/migrar/contrato",
-        nome: "E4.5 · Migrar · Contrato (com a promessa de devolução)",
+        nome: "E4.5 · Contrato + promessa de devolução",
         nota: "🔴 A linha que sustenta a decisão de cobrar antes do TTRT: 'se a transferência não for concluída por algum motivo fora do seu controle, você recebe tudo de volta'. NÃO é copy de marketing — é a contrapartida obrigatória de cobrar por algo cujo destravamento depende de um terceiro hostil. Se essa linha sair, a decisão inteira precisa ser reaberta. Daqui segue pro pagamento (E9, esteira seguinte) — mesmo tronco do caminho abrir. 🔴 05/08: MEI NUNCA tem TTRT pra falhar (não tem responsabilidade técnica registrada pra transferir) — a cláusula vira promessa de início imediato pra todo MEI, não só quem respondeu 'não tenho certificado' no M2.",
       },
     ],
@@ -127,32 +127,32 @@ export const GRUPOS: GrupoTelas[] = [
     telas: [
       {
         rota: "/dossie/atividade",
-        nome: "🔄 C0 · Sua atividade (era E5, agora PÓS-pagamento)",
+        nome: "C0 · Sua atividade (descreve + pills)",
         nota: "27/08 — era o E5A (`/gate`, antes do dinheiro) e virou a primeira tela do dossiê. Copy reenquadrada: não promete mais 'validar minha atividade' (a validação já aconteceu no E3.4), agora é 'achar meu CNAE' — quem chega aqui já é cliente. A categoria escolhida no E3.4 chega pré-selecionada (`?cat=`) e afunila a busca. Mantém o atalho 'já sei o número do meu CNAE'.",
       },
       {
         rota: "/veredito/atende",
-        nome: "🟢 CNAE confirmado (C0.3)",
+        nome: "🟢 CNAE confirmado",
         nota: "Happy path. Linguagem humana ANTES do código (UX-05). CTA 'É isso mesmo' + refazer acima sem perder texto. 🔄 27/08: agora é pós-pagamento, e é o único desfecho possível no caminho abrir (a categoria do E3.4 já garantiu que a atividade é atendida).",
       },
       {
         rota: "/gate?etapa=triagem",
-        nome: "E5 · Triagem (sócios + exterior)",
+        nome: "Triagem quantos sócios?",
         nota: "🔎 SEPARADA 28/07 — vivia presa dentro do SPA do gate. É o fail-fast do UX-21: sócios + exterior, ANTES do dinheiro. 🔄 27/08: agora é a PRIMEIRA tela do `/gate` (o CNAE saiu daqui e foi pra C0, pós-pagamento). Ela FICOU antes do dinheiro de propósito: bloqueia por motivos que a categoria não prevê. Bloqueado → 'Falar com o time' agora navega de verdade pra /saida/exterior ou /saida/socios (era beco sem saída até 28/07).",
       },
       {
         rota: "/gate?etapa=faixa",
-        nome: "E5 · Faixa de faturamento",
+        nome: "Faixa de faturamento",
         nota: "🔎 SEPARADA 28/07 — mesma amarração do SPA. Última etapa do gate; segue direto pro E6. Faixa guiada por padrão + 'sei o valor exato' (UX-51). 🔴 27/08: a escolha de endereço (próprio × fiscal) SAIU daqui e foi pro E3.4, junto do gate de cidade — ela nunca teve a ver com faturamento. Voltou a fazer uma pergunta só.",
       },
       {
         rota: "/veredito/waitlist",
-        nome: "E5.1 · 🟡 Waitlist (regulada)",
+        nome: "E5.1 · 🟡 Waitlist",
         nota: "Não é 'não', é 'ainda não'. UX-22: dar o enquanto isso. Captura contato, não fecha a porta. Template A9. 🔄 27/08: virou a ÚNICA porta de 'não atendo' do caminho abrir, e ela acontece ANTES do dinheiro — alcançada pelo 'minha atividade não está na lista' do E3.4, não mais pelo veredito.",
       },
       {
         rota: "/veredito/nao-atende",
-        nome: "E5.2 · 🔴 Contato especial (Mauro)",
+        nome: "E5.2 · 🔴 Contato especial (atendido pelo Mauro)",
         nota: "✅ 28/07: RELABEL — era 'Comercial'. É quem NÃO atendemos mas a Legalize Digital (escritório do Mauro) atende do jeito tradicional. Mesmo template A9. 🔄 27/08: no caminho ABRIR ficou órfã (o veredito não decide mais elegibilidade); segue viva e alcançável pelo Migrar (E4.2).",
       },
       {
@@ -203,12 +203,12 @@ export const GRUPOS: GrupoTelas[] = [
       },
       {
         rota: "/saida/mei-outra-empresa",
-        nome: "🆕 M-T.1 · 🔴 Já tem outra empresa",
+        nome: "M-T.1 · 🔴 Já tem CNPJ",
         nota: "Saída de bloqueio do GOVERNO, não do produto — por isso não é waitlist: oferece os 2 caminhos reais (baixar a empresa antiga OU abrir como ME), que a Legalizai faz hoje.",
       },
       {
         rota: "/saida/mei-servidor",
-        nome: "🆕 M-T.2 · 🔴 Servidor federal",
+        nome: "M-T.2 · 🔴 Servidor federal",
         nota: "A vedação do art. 117 da Lei 8.112/90 vale só pra servidor FEDERAL na ativa. A saída não fecha a porta pra estadual/municipal de propósito: lá a regra vem do estatuto de cada ente e em muitos casos é permitido — mandar essa pessoa embora seria perder cliente por regra que não se aplica a ela.",
       },
       {
@@ -218,22 +218,22 @@ export const GRUPOS: GrupoTelas[] = [
       },
       {
         rota: "/dossie/ocupacao",
-        nome: "🆕 M-O · Ocupação (Anexo XI + limite interno)",
+        nome: "M-O · Ocupação (Anexo XI + limite interno)",
         nota: "A C0 do ramo MEI, 1ª tela do dossiê. NÃO é o C0 adaptado: o Portal não aceita CNAE livre, só OCUPAÇÃO de lista fechada (Anexo XI, Res. CGSN 140/2018), então não existe 'descrever com suas palavras'. 🎯 Carrega o LIMITE INTERNO (Solução de Consulta Cosit nº 27/2021): a ocupação é mais estrita que o CNAE que ela mapeia — quem escolhe 'Reparador(a) de bicicleta' não pode consertar moto, e descobriria numa fiscalização. É o erro que só contador pega, e é parte do que vendemos. As secundárias (até 15) saem daqui, por isso o ramo pula o C5.",
       },
       {
         rota: "/painel?regime=mei",
-        nome: "A3 · Painel (variante MEI: o atendente)",
+        nome: "A3 · Status (variante MEI)",
         nota: "🔄 28/08 — o pipeline MEI foi REESCRITO. A versão de 03/08 tinha 1 etapa, 'Registrando no Portal do Empreendedor', que PROMETIA O QUE NÃO DÁ PRA ENTREGAR. Agora são 4: recebemos → nosso time está conferindo → próximos passos prontos (ação do cliente, CTA) → empresa aberta. Reusa a mesma máquina parametrizada do Migrar, sem tela nova. ✍️ A palavra 'contador' não aparece: o plano MEI (R$49) tem atendente; contador CRC é o que sustenta o preço do ME (R$139), ver `financeiro/estado-atual.md`.",
       },
       {
         rota: "/certificado?regime=mei",
-        nome: "🆕 A3.2' · Certificado digital (variante MEI)",
+        nome: "A3.2' · Certificado (operar, não abrir)",
         nota: "🆕 28/08 (decisão do Pedro) — MESMA tela do ME, 2 diferenças. (1) MOTIVO: no ME o certificado destrava a procuração que acompanha a assinatura; no MEI não existe assinatura nem procuração de abertura (a abertura DISPENSA certificado — gov.br Prata/Ouro supre), então o que ele destrava é OPERAR: puxar guia, FGTS Digital, agir em nome da empresa sem pedir senha toda vez. (2) QUEM PAGA: no ME vem incluso (contrapartida da fidelidade, ADR 04/08); no MEI NÃO vem — o cliente providencia, e a tela diz isso antes da escolha. Fica ANTES da A5: tem que estar resolvido antes de a pessoa cair dentro do app, mesma régua do ME.",
       },
       {
         rota: "/mei/proximos-passos",
-        nome: "🆕 M-S · Próximos passos (a 'cola')",
+        nome: "M-S · Próximos passos (a 'cola')",
         nota: "A tela que FECHA o ramo, e existe por razão jurídica, não de UX: como não dá pra registrar pelo cliente, a entrega é o passo a passo com os valores DELE prontos, na ordem exata dos campos do Portal, com botão de copiar. Inclui a checagem do nível da conta gov.br (Prata/Ouro é obrigatório e a maioria não sabe qual tem) e o link pro Portal. ✍️ REGRA DE COPY DURA: nunca dizer 'a gente abre pra você' neste ramo — é promessa que não dá pra cumprir e vira reembolso.",
       },
     ],
@@ -261,7 +261,7 @@ export const GRUPOS: GrupoTelas[] = [
       },
       {
         rota: "/pagamento",
-        nome: "E9 · Pagamento · 🏷️ AMBOS (MEI: sem taxa)",
+        nome: "E9 · Pagamento + contrato (variante Abrir) · 🏷️ AMBOS (MEI: sem taxa)",
         nota: 'Mesmo CPF, dois usos: cobrança + elegibilidade. Situação irregular NÃO é cobrada (persona `cpf-irregular`) e não é "cartão recusado". Boleto fica, fora do happy path: entra no app e adianta tudo. 03/08: total não soma a taxa da Junta quando MEI.',
       },
       {
@@ -279,27 +279,27 @@ export const GRUPOS: GrupoTelas[] = [
     telas: [
       {
         rota: "/migrar/contador",
-        nome: "🆕 E9.2 · Seu contador atual",
+        nome: "E9.2 · Seu contador atual",
         nota: "06/08 (reunião Rua Satélite 19, Léo) — só ME passa por aqui (MEI nunca tem TTRT, vai direto pro E9.4). Pede nome/e-mail/telefone/CRC do contador de hoje, pra abrir o TTRT. Pré-preenche e-mail/telefone quando a consulta cadastral trouxer (nem sempre vem — não existe API pública de 'quem é o contador de um CNPJ'); o que a pessoa digitar vale, mesmo se divergir. Sem trava de Continuar: quem não sabe algum dado segue mesmo assim.",
       },
       {
         rota: "/migrar/dados",
-        nome: "🆕 E9.2b · Dados que o cartão CNPJ não traz",
+        nome: "E9.2b · Dados que o cartão CNPJ não traz",
         nota: "24/08 (reunião Leonan 19/08, achado tardio) — reusa os mesmos campos do C1 (CPF/RG/órgão emissor/estado civil), digitação manual. Fica DEPOIS do contador atual e ANTES da transferência (1ª tentativa desta correção colocou errado, entre CNPJ e diagnóstico). ⚠️ Existia como rota real, mas não estava catalogada aqui até esta correção (26/08) — não aparecia no /mockup.",
       },
       {
         rota: "/migrar/socios",
-        nome: "🆕 E9.2c · Dados dos sócios",
+        nome: "E9.2c · Dados dos sócios",
         nota: "24/08 (reunião Leonan 19/08) — MESMA tela do C3 (`SociosView`), reusada com `contexto=\"migrar\"`, só a copy muda. Não existe triagem prévia perguntando quantos sócios no caminho migrar, então a tela se sustenta sozinha. ⚠️ Mesmo gap de catalogação do `/migrar/dados` acima, corrigido em 26/08.",
       },
       {
         rota: "/migrar/gov",
-        nome: "🆕 E9.2d · GOV.BR + procuração",
+        nome: "E9.2d · GOV.BR + procuração",
         nota: "24/08 (reunião Leonan 19/08) — reusa `CodigoGovView` (mesmo componente do A4, caminho abrir) com `soProcuracao`: não existe protocolo de registro pra assinar (empresa já existe), só a procuração. Mesma janela de 10min/3 tentativas/escala pra atendente. ⚠️ Mesmo gap de catalogação, corrigido em 26/08.",
       },
       {
         rota: "/migrar/transferencia",
-        nome: "E9.3 · A transferência (pipeline)",
+        nome: "E9.3 · Iniciando transferência",
         nota: "Reusa o PainelView do A3 (parametrizado 30/07) — mesma máquina de estados, outro pipeline: encerrar com o antigo → transferir no conselho (CRC-MG) → atualizar no Redesim (Receita+Estado) → trocar responsável na Prefeitura (CadWeb PBH) → liberar acesso. Os códigos oficiais (resolução CFC, Evento 232) ficam FORA da tela: são 🟡 pendência, não ratificados em fonte primária. 🆕 04/08: pipeline virou 5 etapas (era 4) — cruzamento com `Fluxo Migração GEMINI.md` tratou a troca municipal (PBH) como ação separada da atualização federal/estadual; 🟡 se confirmar que é o mesmo mecanismo, volta pra 4.",
       },
       {
@@ -309,7 +309,7 @@ export const GRUPOS: GrupoTelas[] = [
       },
       {
         rota: "/migrar/ativa",
-        nome: "E9.4 · ✅ Empresa migrada",
+        nome: "✅ E9.4 · Migração concluída",
         nota: "Fecha o loop do E4.3: a economia prometida com número REAL vira a 1ª tarefa concreta, com valor na cara ('ajustar seu pró-labore e economizar R$X/mês'). Diferença central vs. o caminho abrir: lá a promessa é estimativa que só resolve meses depois; aqui o número era real desde a 2ª tela. Segue direto pra A5 (Home dia-1, esteira Aprovação). 🆕 04/08: `?regime=mei` troca isso por vigilância do limite de faturamento (R$81 mil/ano) — MEI não tem Fator R.",
       },
     ],
@@ -322,12 +322,12 @@ export const GRUPOS: GrupoTelas[] = [
     telas: [
       {
         rota: "/aguardando",
-        nome: "E9.1 · Aguardando o boleto",
+        nome: "E9.1 · Aguardando boleto dossiê já liberado",
         nota: 'Existe porque o boleto ficou (decisão do Pedro). Abre com o dossiê liberado, não com bloqueio: "sem sensação de travou" é regra da spec T19. Dunning com o gancho da economia (UX-45), não lembrete seco. Persona `knife`.',
       },
       {
         rota: "/retomar",
-        nome: "C0.1 · Retomar de onde parou",
+        nome: "C0.1 · Retomar (porta de CPF)",
         nota: "Retomar ≠ restaurar (UX-46): a `cida` volta sem contexto, então responde já fiz / falta / e agora — com UM passo só, porque a lista inteira recria a paralisia. UX-23: revalida a estimativa, que envelhece na virada do ano.",
       },
     ],
@@ -345,7 +345,7 @@ export const GRUPOS: GrupoTelas[] = [
       },
       {
         rota: "/dossie/socio",
-        nome: "C1 · Seus dados (confirmação)",
+        nome: "C1 · Seus dados",
         nota: "✅ 28/07: RECONSTRUÍDA — não coleta mais do zero. Card read-only confirma nome/CPF/telefone/endereço já vindos do E6; só pede o que faltou (RG, órgão emissor, estado civil). Casado revela regime; comunhão universal avisa o cônjuge cedo (UX-30).",
       },
       {
@@ -355,7 +355,7 @@ export const GRUPOS: GrupoTelas[] = [
       },
       {
         rota: "/dossie/socios",
-        nome: "C3 · +Sócios · 🏷️ SÓ ME e só quem disse que teria sócio na Triagem",
+        nome: "C3 · Sócios? · 🏷️ SÓ ME e só quem disse que teria sócio na Triagem",
         nota: "Limite 2 (trava, não 1ª notícia — E5/Triagem já filtrou). Divisão soma 100%, default 50/50. 🔄 28/08 (pedido do Pedro): não é mais 'MEI pula' apenas — ME que respondeu 'Só eu' na Triagem [Image #78] também não vê esta tela (`passosDoCliente({mei, temSocios})` em `lib/passos.ts` filtra de verdade agora).",
       },
       {
@@ -369,7 +369,7 @@ export const GRUPOS: GrupoTelas[] = [
       // PREENCHIDOS_INTERNAMENTE em `execucao/flow/flow-data.mjs`.
       {
         rota: "/dossie/nome",
-        nome: "C7 · Razão social · 🏷️ AMBOS — reencontro final",
+        nome: "C7 · Nome / razão social · 🏷️ AMBOS — reencontro final",
         nota: "IA sugere a razão. Checagem de viabilidade: nome em uso → variações (evita reprova JUCEMG).",
       },
     ],
@@ -382,7 +382,7 @@ export const GRUPOS: GrupoTelas[] = [
     telas: [
       {
         rota: "/revisar",
-        nome: "A1 · Revisar · 🏷️ AMBOS (MEI: sem capital/taxa)",
+        nome: "A1 · Revisar + autorizar · 🏷️ AMBOS (MEI: sem capital/taxa)",
         nota: "Recap read-only de tudo antes do irreversível. Cada bloco tem 'ajustar' que volta pro passo. Último ponto em que corrigir é de graça. Números com carimbo de estimativa; a taxa da Junta (R$ 268,51) é a única quantia dura. 03/08: MEI não vê capital social nem taxa da Junta; enquadramento vira 'DAS fixo' em vez de 'Simples Anexo X'.",
       },
       {
@@ -397,12 +397,12 @@ export const GRUPOS: GrupoTelas[] = [
       },
       {
         rota: "/painel/recusa",
-        nome: "A3.1 · Órgão recusa · 🏷️ SÓ ME (não existe pro MEI)",
+        nome: "A3.1 · Órgão recusa 'precisa de você' · 🏷️ SÓ ME (não existe pro MEI)",
         nota: "O 4º estado (UX-40): a Junta reprovou o nome apesar da prévia (persona `erro-orgao` do motor). Vermelho + 'precisa de você' + a ação, recuperação DENTRO do pipeline. Aqui o danger é legítimo: um órgão externo parou a fila mesmo. ✅ 28/07: RETRY AUTOMÁTICO — tenta as 3 opções do C7 em sequência (~1.4s cada), sem ação do cliente; só pede 3 novas sugestões se as 3 falharem. Mock sempre esgota as 3, pra provar o pior caso. 03/08: MEI não passa pela Junta, então esse tipo de disputa de nome não existe do mesmo jeito — não implementado pro MEI.",
       },
       {
         rota: "/certificado",
-        nome: "🆕 A3.2 · Certificado digital (antes de assinar)",
+        nome: "'A3.2 · Certificado digital' 🗑️ REMOVIDO 01/09 (segue só no MEI/migrar)",
         nota: "26/08 (reunião Rua Satélite 36, item 7) — REINTRODUZIDO, mas reordenado. Existia um `/certificado` antigo (N24), removido como órfão em 30/07 (nada navegava até lá) — este é NOVO, não a mesma tela ressuscitada. Motivo estrutural: a procuração que sai junto da assinatura (A4) EXIGE o certificado já validado, então não dá pra deixar pra depois (era a ordem antiga, documentada como inconsistência). Pergunta 'já tem?' → upload arquivo+senha (sim) ou agenda entrevista com certificadora parceira (não).",
       },
       {
@@ -558,7 +558,7 @@ export const GRUPOS: GrupoTelas[] = [
     telas: [
       {
         rota: "/login",
-        nome: "Login",
+        nome: "E3.1 · Login / portal",
         nota: "A saída terminal A1: diverge no E3 (\"já sou cliente\"), sai da abertura e não reconverge. Não usa o template A9 — aquele é pra recusa, e isto é rota feliz de quem volta pra casa. Layout de 2 painéis, único no produto.",
         statusClaro: true,
       },

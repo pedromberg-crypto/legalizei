@@ -120,6 +120,33 @@ export function Titulo({ children, sub }: { children: ReactNode; sub?: ReactNode
  * (15 Pro Max) some sozinho.
  */
 export function Corpo({ children }: { children: ReactNode }) {
+  const { viewport, conteudo, style } = useFadeScroll();
+
+  return (
+    <div
+      ref={viewport}
+      style={style}
+      className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    >
+      <div ref={conteudo} className="flex flex-col gap-6 pb-4">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * 🆕 01/09 — o fade do `Corpo`, extraído pra hook.
+ *
+ * Motivo: o E6 (`ContaPainel`) tem contêiner de rolagem PRÓPRIO — a folha
+ * branca com o formulário dentro — e por isso nascia sem o degradê que todas
+ * as outras telas têm. Duplicar as ~20 linhas era garantir que as duas cópias
+ * divergissem na primeira correção; a lógica agora vive num lugar só.
+ *
+ * Uso: espalhe `ref={viewport}` e `style` no elemento que rola, e
+ * `ref={conteudo}` no filho que cresce.
+ */
+export function useFadeScroll() {
   const viewport = useRef<HTMLDivElement>(null);
   const conteudo = useRef<HTMLDivElement>(null);
   const [fade, setFade] = useState({ topo: false, base: false });
@@ -151,17 +178,11 @@ export function Corpo({ children }: { children: ReactNode }) {
     : "#000 100%";
   const mask = `linear-gradient(to bottom, ${topStop}, ${baseStop})`;
 
-  return (
-    <div
-      ref={viewport}
-      style={{ maskImage: mask, WebkitMaskImage: mask }}
-      className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-    >
-      <div ref={conteudo} className="flex flex-col gap-6 pb-4">
-        {children}
-      </div>
-    </div>
-  );
+  return {
+    viewport,
+    conteudo,
+    style: { maskImage: mask, WebkitMaskImage: mask } as const,
+  };
 }
 
 /** CTA colado no rodapé = thumb zone (design-system.md §6). Respeita safe-area. */

@@ -127,7 +127,7 @@ export function EntradaView({
           <h1 className="text-h1">
             Como a gente pode te ajudar?{" "}
             <span className="text-text-tertiary">
-              A parte chata fica com a gente.
+              Deixe a parte chata com a gente.
             </span>
           </h1>
 

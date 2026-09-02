@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { Lottie } from "@/components/lottie";
 import { Logo } from "@/components/logo";
 
 /**
@@ -81,7 +82,32 @@ export function SplashMensagemView({
       }
     >
       <Logo variante="negativa" className="absolute top-8 h-7 w-auto" />
-      {recusado ? <XGrandeSplash /> : <CheckGrandeSplash />}
+      {/* 🧪 01/09 (pedido do Pedro) — o check parado dá lugar ao LOTTIE de
+          check+confete (`success-confetti`, a 1ª camada dele chama "Tick").
+          Só no caso de sucesso: na recusa continua o "x" estático, porque
+          confete em tela de erro seria comemorar o problema da pessoa.
+          🐛 01/09 (achado do Pedro) — o check é branco no arquivo, mas o
+          CÍRCULO atrás dele tinha sido recolorido pro mesmo coral do fundo do
+          splash: sumia no fundo e levava o check junto, por falta de contorno.
+          Daí a variante `check-splash`, com as cores INVERTIDAS em relação ao
+          original: disco BRANCO e check CORAL. Sobre o fundo coral do splash é
+          o branco que precisa fazer o recorte — é ele que separa o símbolo do
+          fundo. O `success-confetti` original segue intocado no veredito, onde
+          o fundo é claro e a lógica se inverte.
+          O Lottie roda em loop; se ficar repetitivo demais numa tela que dura
+          poucos segundos, o ajuste é no player, não aqui. */}
+      {recusado ? (
+        <XGrandeSplash />
+      ) : (
+        <Lottie
+          path="/lottie/check-splash-legalizai-story-book.json"
+          fps={60}
+          // 🔄 01/09 (pedido do Pedro) — +30%: 160 → 208px. O confete do
+          // lottie ocupa boa parte do quadro, então o disco desenhado é bem
+          // menor que a caixa: pra o CHECK crescer 30%, a caixa cresce junto.
+          className="h-52 w-52"
+        />
+      )}
       <div>
         <h1 className={`text-h1 ${recusado ? "text-text-on-dark" : "text-text-on-brand"}`}>
           {titulo}

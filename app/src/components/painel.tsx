@@ -4,6 +4,8 @@ import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { StatusIcon, type StatusEstado } from "@/components/ui/status";
+import { useFadeScroll } from "@/components/ui/tela";
+import { linkWhatsApp } from "@/lib/contato";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -213,6 +215,13 @@ export function PainelView({
    */
   heroExtra?: ReactNode;
 }) {
+  // Fade de rolagem, igual às outras telas. Destructuring no ponto da chamada:
+  // acessar `x.viewport` dentro do JSX conta como leitura de ref no render.
+  const {
+    viewport: refRolagem,
+    conteudo: refConteudoRolagem,
+    style: estiloFade,
+  } = useFadeScroll();
   // 🆕 26/08 (item 6) — se `etapas` não veio (caso da abertura), usa o default
   // COM o callback do CTA de DAE já ligado (a migração, que passa `etapas`
   // próprio, nunca cai aqui — não tem DAE).
@@ -278,7 +287,17 @@ export function PainelView({
           )}
         </div>
 
-        <div className="flex-1 min-h-0 overflow-y-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {/* 🐛 01/09 (achado do Pedro) — este contêiner rola mas nascia SEM o
+            degradê de continuidade das outras telas (o `Corpo` do DS traz de
+            fábrica; aqui a timeline tem rolagem própria). Mesma correção do
+            E6: usa o hook, então desbota no topo quando há conteúdo acima e no
+            pé quando há conteúdo abaixo. */}
+        <div
+          ref={refRolagem}
+          style={estiloFade}
+          className="flex-1 min-h-0 overflow-y-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          <div ref={refConteudoRolagem}>
           {/* ── Quanto tempo leva ──
               K1 (anti-guru): o "cerca de 8 dias úteis" era número INVENTADO, e
               justo na tela mais ansiosa do flow. O prazo de abertura é o que o
@@ -440,17 +459,31 @@ export function PainelView({
               O andamento vai pros dois sócios, não só pra você.
             </p>
           )}
-
-          {/* K6: numa tela de STATUS não há ação primária, então nada de botão
-              sticky (ele prometeria uma ação que não existe e competiria com a
-              timeline). O canal humano fica como link leve no fim do conteúdo.
-              O rodapé fixo volta só quando há AÇÃO de verdade: a recusa. */}
-          {!recusa && (
-            <div className="mt-4 flex justify-center">
-              <Button variant="ghost">Tirar uma dúvida no WhatsApp</Button>
-            </div>
-          )}
+          </div>
         </div>
+
+        {/* 🔄 01/09 (pedido do Pedro) — o link do WhatsApp saiu do fim do
+            conteúdo ROLÁVEL e virou item FIXO do rodapé, acima do CTA. Motivo:
+            numa tela de status a pessoa fica esperando, e o canal humano é
+            justamente o que ela procura quando cansa de esperar — enterrado no
+            fim da timeline, ele só existia pra quem rolasse até o fim.
+            K6 preservado: continua link leve, não botão cheio, então não
+            inventa ação primária nem compete com a timeline. Fica de fora só
+            na recusa, onde já existe uma ação de verdade pra fazer. */}
+        {!recusa && (
+          <div className="app-footer-cta pb-0">
+            <a
+              href={linkWhatsApp(
+                "Oi! Estou acompanhando a abertura da minha empresa no app da Legalizai e queria tirar uma dúvida.",
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full text-center text-caption font-medium text-text-secondary underline underline-offset-4"
+            >
+              Tirar uma dúvida no WhatsApp
+            </a>
+          </div>
+        )}
 
         {recusa ? (
           <Rodape>

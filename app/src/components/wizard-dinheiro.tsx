@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
+import { TelaHeader, Titulo, Corpo, Rodape, Aviso, useFadeScroll } from "@/components/ui/tela";
 import { Campo, Texto, Checkbox } from "@/components/ui/form";
 // 🆕 01/09 — o mesmo bottom-sheet que explicava o não-reembolso no A1 vem pra
 // cá junto do aceite: a explicação deve morar ao lado do gesto que ela explica.
@@ -12,6 +12,7 @@ import { SheetNaoReembolsavel } from "@/components/wizard-cauda";
 // 🗑️ 01/09 — ícones Google/Apple saíram junto do login social.
 import { CUSTOS, brl } from "@/lib/fiscal";
 import { CardIconeSelecao, CheckMiniRegime } from "@/components/gate-telas";
+import { linkWhatsApp } from "@/lib/contato";
 import { CardNota } from "@/components/ui/card-nota";
 // 🆕 01/09 — o pagamento agora pré-preenche o que já foi coletado: identidade
 // (mock da conta criada no E6) e endereço (rascunho do E3.4).
@@ -342,6 +343,20 @@ export function ContaView({
           </Corpo>
           </div>
           <Rodape>
+            {/* 🆕 01/09 (pedido do Pedro) — escape hatch acima do CTA, mesmo
+                padrão do E3.2: quem não recebe o código fica sem saída nenhuma
+                (o reenvio só repete o que não chegou). Vai pro WhatsApp com a
+                situação já descrita. */}
+            <a
+              href={linkWhatsApp(
+                "Oi! Estou criando minha conta no app da Legalizai e o código de verificação não está chegando. Podem me ajudar?",
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mb-3 block w-full text-center text-caption font-medium text-text-secondary underline underline-offset-4"
+            >
+              O código não está chegando? Chama a gente.
+            </a>
             <Button full disabled={d.codigo.length !== DIGITOS_CODIGO} onClick={onConfirmar}>
               Confirmar código
             </Button>
@@ -490,6 +505,13 @@ function ContaPainel({
   // 🆕 28/08 (sugestão minha, pedido do Pedro) — mostrar/ocultar senha. Campo
   // de senha cego numa tela sem confirmação (não tem "repita a senha") é onde
   // esse toggle mais compensa: erro de digitação só aparece no próximo login.
+  // Destructuring no ponto da chamada: acessar `rolagem.viewport` dentro do
+  // JSX conta como leitura de ref durante o render pro lint do React.
+  const {
+    viewport: refRolagem,
+    conteudo: refConteudoRolagem,
+    style: estiloFade,
+  } = useFadeScroll();
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
   // 🗑️ 01/09 — `conectar()` removida junto dos botões sociais.
@@ -642,7 +664,16 @@ function ContaPainel({
           </p>
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {/* 🐛 01/09 (achado do Pedro) — este contêiner rola mas NASCEU sem o
+            degradê de continuidade que todas as outras telas têm (o `Corpo` do
+            DS traz de fábrica; aqui a folha branca tem rolagem própria). Agora
+            usa o mesmo hook, então o comportamento é idêntico ao resto. */}
+        <div
+          ref={refRolagem}
+          style={estiloFade}
+          className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          <div ref={refConteudoRolagem}>
 
         {/* 🗑️ 01/09 — o card "conectado por Google/Apple" saiu junto do login
             social: sem os botões, `social` nunca vira diferente de null e este
@@ -837,6 +868,7 @@ function ContaPainel({
         )}
 
         <div className="h-6 shrink-0" />
+          </div>
         </div>
       </div>
 
@@ -2013,7 +2045,10 @@ export function PagamentoView({
           sub={
             guia
               ? `${brl(total, true)}, uma vez só. É a taxa que a Junta cobra pra registrar, e ela vai inteira pro Estado.`
-              : `${brl(total, true)} hoje, e depois ${brl(mensalidade)} por mês.`
+              : // ✍️ 01/09 (pedido do Pedro) — "e depois R$ 139 por mês" repetia
+                // o número que a pessoa acabou de ver 2 linhas acima, no card do
+                // plano. Vira referência ao valor, não repetição dele.
+                `${brl(total, true)} hoje, depois esse valor mensal.`
           }
         >
           {guia ? "Pague a guia da Junta" : "Falta só isso"}
@@ -2120,7 +2155,11 @@ export function PagamentoView({
                   Ler o contrato completo
                 </button>
                 <Checkbox checked={aceito ?? false} onChange={setAceito ?? (() => {})}>
-                  Li e aceito o contrato de serviço da Legalizai.
+                  {/* ✍️ 01/09 (pedido do Pedro) — negrito só no ATO ("li e
+                      aceito o contrato"); o resto fica normal. É o gesto
+                      jurídico que precisa saltar, não o nome da empresa. */}
+                  <strong className="font-bold">Li e aceito o contrato</strong> de
+                  serviço da Legalizai.
                 </Checkbox>
               </>
             )

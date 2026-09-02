@@ -289,10 +289,16 @@ export function OutrasOpcoes({
                   de fato ajuda, e só no primeiro. */}
               {pill && (
                 <span
+                  /* 🔄 02/09 (pedido do Pedro) — pill do card NÃO escolhido
+                     saiu do verde e virou coral claro (tint + coral-700), o
+                     mesmo par de pill clara que o app já usa. O verde vinha
+                     do primeiro ensaio, quando a pill era o único sinal; com
+                     o card escolhido inteiro coral, verde ao lado abria uma
+                     segunda cor sem significado próprio. */
                   className={`shrink-0 rounded-full px-2.5 py-1 text-micro font-semibold ${
                     on
                       ? "bg-action-primary-sm text-text-on-brand"
-                      : "bg-state-success-tint text-state-success-text"
+                      : "bg-surface-tint-brand text-action-primary-sm"
                   }`}
                 >
                   {pill}

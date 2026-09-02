@@ -1,5 +1,7 @@
 # Memory Index — Legalize
 
+- [Mapa é espelho da apresentação](legalize-espelho-mapa-apresentacao.md) — 02/09: uma coleção de telas, duas vistas; pills derivam do flow-data, vínculo por id. Pré-voo antes de editar tela.
+
 - [Encaixe de asset se MEDE, não se estima](legalize-encaixe-asset-medido-nao-no-olho.md) — 01/09: achar o pixel do corte por coluna e derivar o offset por fórmula; empurrar 10px por vez não converge.
 - [Halo escuro = alfa premultiplicado](legalize-alfa-premultiplicado-halo-escuro.md) — 01/09: PNG bom no Photoshop e ruim no app; comparar cor de borda × sólido antes de culpar cache. Achatar fundo+objeto é a saída mais barata.
 - [Escrever arquivo só via Edit/Write](legalize-escrita-arquivo-so-edit-write.md) — 01/09: script Python truncou 2 arquivos do vault (emoji + `open('w')`); node só com texto vindo de arquivo, nunca backtick inline.

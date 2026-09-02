@@ -1140,13 +1140,141 @@ function rotuloCurto(nome: string): string {
     .trim();
 }
 
-const pill = (etapa: Etapa): { etapa: Etapa; label: string } => ({
-  etapa,
-  // `Etapa` é mais larga que `Momento` (o veredito tem 3 etapas que viram 1
-  // momento só), então o índice é frouxo de propósito: sem nome derivado, a
-  // pill cai no id da etapa em vez de quebrar o build.
-  label: rotuloCurto((NOME_MOCKUP as Partial<Record<string, string>>)[etapa] ?? etapa),
-});
+/* ═══════════════════════════════════════════════════════════════════════════
+ * O ESPELHO — mapa e apresentação são duas vistas da MESMA coleção de telas
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🔒 02/09 (decisão do Pedro) — antes existiam duas listas: os 77 nós do
+ * `flow-data.mjs` (que geram o mapa) e 54 pills escritas à mão aqui embaixo.
+ * Duas listas mantidas por mãos diferentes divergem sempre, e divergiram: 12
+ * telas existiam no mapa e não tinham pill nenhuma na demo — as 3 saídas do
+ * veredito, o CNPJ inapto, o `/veredito/atende`, o nome rodada-2, a recusa da
+ * Junta e os 4 ramos MEI. Invisíveis pra quem revisa o flow pela apresentação.
+ *
+ * Agora a fita de pills é DERIVADA do grafo. Tela nova declarada lá aparece
+ * aqui sozinha, na posição do flow, e o espelho deixa de depender de alguém
+ * lembrar. A única coisa que continua manual é o VÍNCULO abaixo.
+ *
+ * ─── Por que o vínculo é por `id`, e não por rota ───────────────────────────
+ * Rota não identifica tela: `/gate?etapa=triagem` é a Triagem do ME (E5T) E a
+ * tela de impedimentos do MEI (M_T); `/dossie/atividade` é a C0 e a
+ * desambiguação. São telas diferentes na mesma URL. O `id` do nó é a única
+ * chave estável.
+ *
+ * `null` = a tela existe no flow e NÃO existe na demo. Não é erro de
+ * digitação: é buraco real, e aparece na fita como pill apagada "sem tela
+ * ainda" em vez de sumir em silêncio (era assim que as 12 se escondiam).
+ * ═════════════════════════════════════════════════════════════════════════ */
+const MOMENTO_POR_NO: Record<string, Etapa | null> = {
+  E1: "splash",
+  E2_1: "welcome",  // 3 slides = 1 tela na demo
+  E2_2: "welcome",  // idem
+  E2_3: "welcome",  // idem
+  E3: "fork",
+  E3_1: "login",
+  E3_3: "dados",
+  E3_2: "mei-ou-me",
+  E3_2_M: null,  // 🕳️ variante Migrar do E3.2 não existe na demo (o fork pula de dados pra m-cnpj)
+  E3_4: "endereco",
+  E3_4_1: "fora-bh",  // abre no gate, antes do envio
+  E4_2: "m-cnpj",
+  E4_2_1: "m-cnpj-inapto",
+  E4_2B_1: "saida-regime",
+  E4_3: "m-diagnostico",
+  E4_4: "m-plano",
+  E4_5: "m-contrato",
+  E9_2: "m-contador",
+  E9_2A: "m-dados",
+  E9_2B: "m-socios",
+  E9_2C: "m-gov",
+  E9_3: "m-transferencia",
+  E9_4: "m-ativa",
+  E5T: "triagem",
+  E5T_1: null,  // 🕳️ gate inline do sócio que não encaixa não tem estado próprio na demo
+  E5F: "faixa",
+  E5F_S: "splash-atendido",
+  E5_1: "veredito",  // é um DESFECHO do veredito, não tela própria: o preparo força o resultado
+  E5_2: "veredito",  // idem — desfecho "quem o Mauro atende" (comércio)
+  E5_3: "veredito",  // idem — desfecho "fora de escopo"
+  E6: "conta",  // abre no form; o código é passo interno dela
+  E7: "plano",
+  E7_1: "plano",  // mesma tela, variante endereço fiscal (o preparo força o estado)
+  E9: "pagamento",
+  E9_M: "m-pagamento",
+  E9_S: "splash-pagamento",
+  E9_SB: "splash-boleto",
+  E9_SR: "pagamento-recusado",
+  E9_R: "pagamento-retry",
+  E9_1: "aguardando",
+  E9_1P: "aguardando-pago",
+  C0: "perguntando",
+  C0_2: "veredito",  // o veredito da C0
+  DESAMB: null,  // 🕳️ mini-loop de desambiguação não foi construído
+  C0_3: "veredito",  // idem — o desfecho 🟢
+  C1: "socio",
+  C2: "vinculo",
+  C3: "socios",
+  C3_1: "socios",  // mesma tela com 3 sócios (o preparo força o estado)
+  C4: "empresa",
+  C5: "cnae-secundarios",
+  C7: "nome",
+  C0_1: "retomar-cpf",  // abre na porta de CPF
+  C7_2: "nome-rodada2",
+  A1: "revisar",
+  A2: "iniciar-viabilidade",
+  A3: "painel",
+  A3_M: "painel",  // mesma tela no regime MEI (o preparo força o estado)
+  A3_1: "painel-recusa",
+  A3_P: "guia",
+  A3_SR: "guia-recusada",
+  A3_R: "guia-retry",
+  A3_PS: "guia-splash",
+  A3_PSB: "guia-boleto",
+  A3_GP: "guia-paga",
+  A3_GB: "guia-boleto",
+  A3_V: "status-viabilidade",
+  A4: "assinatura",
+  A4G: "assinatura",
+  M_T: "triagem",
+  M_T_1: "saida-mei-outra-empresa",
+  M_T_2: "saida-mei-servidor",
+  M_O: "m-ocupacao",
+  M_CERT: "m-certificado",
+  M_S: "m-proximos-passos",
+  CONF: "conferencia",
+  A5: "ativacao",
+};
+
+type CaminhoFlow = "abrir" | "migrar" | "mei" | "dev";
+
+const FILTROS: { id: CaminhoFlow; label: string }[] = [
+  { id: "abrir", label: "Abrir empresa (ME)" },
+  { id: "migrar", label: "Migrar de contador" },
+  { id: "mei", label: "MEI" },
+  { id: "dev", label: "Referência do dev" },
+];
+
+type TelaDoFlow = {
+  id: string;
+  caminho: CaminhoFlow;
+  etapa: Etapa | null;
+  label: string;
+};
+
+/**
+ * A fita, na ordem em que os nós são declarados no `flow-data` — que é a
+ * ordem do flow. Fita ÚNICA com filtro por jornada (escolha do Pedro, 02/09):
+ * as 4 barras separadas de antes (abrir · migrar · pausas · dev) sugeriam
+ * sequências independentes, e as "pausas" na verdade moram DENTRO do caminho
+ * abrir, entre o E9 e o C1. Uma jornada por vez, cada tela no seu lugar.
+ */
+const TELAS_DO_FLOW: TelaDoFlow[] = (
+  grafoFlow.nodes as { id: string; label: string; caminho?: string }[]
+).map((n) => ({
+  id: n.id,
+  caminho: (n.caminho ?? "abrir") as CaminhoFlow,
+  etapa: MOMENTO_POR_NO[n.id] ?? null,
+  label: rotuloCurto(n.label.replace(/<br\/>/g, " ")),
+}));
 
 const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; porque: string }> = {
   splash: {
@@ -1822,6 +1950,9 @@ export default function ApresentacaoPage() {
   // 🆕 26/08 (reunião Rua Satélite 36, item 2) — escolha de endereço, realocada
   // do C4 (dossiê) pro E5F (faixa), antes até do cadastro.
   const [enderecoProprioDemo, setEnderecoProprioDemo] = useState<boolean | null>(null);
+  // 🆕 02/09 — qual jornada a fita de pills mostra. Fita única, uma jornada
+  // por vez (escolha do Pedro sobre agrupar por bloco).
+  const [filtroCaminho, setFiltroCaminho] = useState<CaminhoFlow>("abrir");
   // 🆕 27/08 — estado das 2 telas novas de captura de lead (E3.1 e E3.3).
   const [dadosLead, setDadosLead] = useState<DadosLead>({
     nome: "",
@@ -2150,94 +2281,40 @@ export default function ApresentacaoPage() {
     if (e) pularPara(e);
   };
 
-  const PILLS: { etapa: Etapa; label: string }[] = [
-    pill("splash"),
-    pill("welcome"),
-    pill("fork"),
-    pill("dados"),
-    pill("mei-ou-me"),
-    pill("endereco"),
-    pill("triagem"),
-    pill("faixa"),
-    pill("conta"),
-    pill("conta-codigo"),
-    pill("plano"),
-    pill("pagamento"),
-    // 🔄 27/08 — atividade + veredito ATRAVESSARAM o pagamento: viraram a C0,
-    // primeira tela do dossiê. Ver `app/(app)/dossie/atividade/page.tsx`.
-    pill("perguntando"),
-    pill("veredito"),
-    // 🔄 28/08 (pedido do Pedro) — C5 mudou de lugar: era a 5ª tela do
-    // dossiê (entre C4 e C6), agora é a 1ª, logo após o veredito da C0.
-    pill("cnae-secundarios"),
-    pill("socio"),
-    pill("vinculo"),
-    pill("socios"),
-    pill("empresa"),
-    // 🗑️ 01/09 — "C6 · Natureza" saiu do carrossel: rota removida em 31/08.
-    pill("nome"),
-    pill("revisar"),
-    pill("iniciar-viabilidade"),
-    pill("painel"),
-    pill("guia"),
-    pill("guia-splash"),
-    pill("guia-boleto"),
-    pill("guia-paga"),
-    // 🗑️ 01/09 — "A3.2 · Certificado" saiu do carrossel do ME.
-    pill("assinatura"),
-    pill("ativacao"),
-    pill("login"),
-    pill("saida-regime"),
-    pill("fim"),
-  ];
-
   /**
-   * As pausas de pagamento (C0.1/E9.1, entre E9 e C1) não são sequência — por
-   * isso ficam numa barra separada, não na `PILLS` principal (ver comentário
-   * no `type Etapa`).
+   * 🆕 02/09 — pular pra uma tela do FLOW (nó), não pra um momento da demo.
+   * Alguns nós são a mesma tela num estado diferente (E7.1 = o plano com
+   * endereço fiscal, C3.1 = 3 sócios, A3 variante MEI). Sem forçar o estado,
+   * clicar nessas pills mostraria a tela base e o Pedro reviria a variante
+   * achando que é a padrão — pior que não ter a pill.
    */
-  /**
-   * 🆕 01/09 (pedido do Pedro) — fileira própria, ao lado de "ir direto",
-   * "migrar" e "pausas". Categoria separada porque a natureza é outra: as
-   * outras três são telas de CLIENTE em pontos diferentes do flow; esta é
-   * documentação viva pro dev, que não pertence a sequência nenhuma.
-   */
-  const PILLS_DEV: { etapa: Etapa; label: string }[] = [
-    pill("conferencia"),
-  ];
+  const pularParaNo = (t: TelaDoFlow) => {
+    if (!t.etapa) return;
+    // ⚠️ ORDEM: `pularPara` preenche dependências de forma idempotente, e uma
+    // delas é `if (!resultado) setResultado(mapear(""))`. Como `resultado`
+    // ainda vale o valor antigo dentro do mesmo render, preparar ANTES faria
+    // o `pularPara` enfileirar o default por cima. Ele vem primeiro; o
+    // preparo é a última palavra.
+    pularPara(t.etapa);
+    if (t.id === "E7_1") setEnderecoProprioDemo(false);
+    if (t.id === "E7") setEnderecoProprioDemo(true);
+    if (t.id === "C3_1") setSocios(3);
+    if (t.id === "A3_M") setRegimeDemo("mei");
+    // As 4 saídas do veredito não são telas: são DESFECHOS do mesmo
+    // `VereditoView`, decididos pelo `mapear()`. Eram 4 das 12 telas que o
+    // mapa tinha e a demo não mostrava — só apareciam pra quem digitasse a
+    // palavra certa na C0. Cada pill agora força o seu desfecho.
+    if (t.id === "E5_1") setResultado(mapear("nutricionista"));
+    if (t.id === "E5_2") setResultado(mapear("loja de roupas"));
+    if (t.id === "E5_3") setResultado(mapear("fazenda de gado"));
+    if (t.id === "C0_3") setResultado(mapear("criação de sites"));
+  };
 
-  const PILLS_PAUSA: { etapa: Etapa; label: string }[] = [
-    pill("retomar-cpf"),
-    pill("retomar"),
-    pill("aguardando"),
-    pill("aguardando-pago"),
-    pill("splash-atendido"),
-    pill("splash-pagamento"),
-    pill("splash-boleto"),
-    pill("pagamento-recusado"),
-    pill("pagamento-retry"),
-  ];
-
-  /**
-   * MIGRAR — barra própria, porque é um RAMO decimal de Entrada (E4/E9), não
-   * continuação sequencial. Misturar na fila de cima sugeriria que E4.2 vem
-   * depois de A5, o que é falso: ele sai do fork E4 e reencontra o tronco só
-   * no pagamento (E9).
-   */
-  const PILLS_MIGRAR: { etapa: Etapa; label: string }[] = [
-    pill("m-cnpj"),
-    pill("m-diagnostico"),
-    pill("m-plano"),
-    pill("m-contrato"),
-    pill("m-pagamento"),
-    pill("m-contador"),
-    pill("m-dados"),
-    pill("m-socios"),
-    pill("m-gov"),
-    pill("m-transferencia"),
-    pill("m-travado"),
-    pill("m-ativa"),
-  ];
+  /* 🗑️ 02/09 — as 4 listas de pills escritas à mão (PILLS · PILLS_MIGRAR ·
+     PILLS_PAUSA · PILLS_DEV, 54 no total) sumiram daqui. A fita agora sai de
+     `TELAS_DO_FLOW`, derivada do mesmo grafo que gera o mapa — ver o bloco
+     "O ESPELHO" no topo do arquivo. */
+  const telasVisiveis = TELAS_DO_FLOW.filter((t) => t.caminho === filtroCaminho);
 
   const momento: Momento =
     etapa === "splash"
@@ -3506,50 +3583,59 @@ export default function ApresentacaoPage() {
           </div>
         </div>
 
-        {/* ✈️ NAVEGAÇÃO RÁPIDA — pills na ordem real do flow (29/07).
-            Cada clique preenche (idempotente) o que a tela-alvo depende e
-            pula direto pra ela, sem reandar o flow inteiro. */}
+        {/* ✈️ NAVEGAÇÃO RÁPIDA — a fita de telas, na ordem real do flow.
+            🔒 02/09 (decisão do Pedro) — FITA ÚNICA COM FILTRO POR JORNADA, no
+            lugar das 4 barras separadas (abrir · migrar · pausas · dev). As
+            barras sugeriam 4 sequências independentes, e não eram: as "pausas
+            de pagamento" moram DENTRO do caminho abrir, entre o E9 e o C1.
+            A fita vem de `TELAS_DO_FLOW` — mesma coleção que gera o mapa. */}
         <div className="mt-8 border-t border-border-hairline pt-5">
-          <p className="text-micro font-semibold tracking-wide text-text-tertiary mb-2.5">
-            IR DIRETO PRA TELA
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {PILLS.map((p) => {
-              const atual = etapa === p.etapa;
+          <div className="mb-3 flex flex-wrap items-center gap-2">
+            <p className="text-micro font-semibold tracking-wide text-text-tertiary mr-1">
+              IR DIRETO PRA TELA
+            </p>
+            {FILTROS.map((f) => {
+              const on = filtroCaminho === f.id;
+              const n = TELAS_DO_FLOW.filter((t) => t.caminho === f.id).length;
               return (
                 <button
-                  key={p.etapa}
-                  onClick={() => pularPara(p.etapa)}
-                  aria-current={atual}
-                  className={`rounded-full px-3.5 py-1.5 text-caption font-semibold transition-colors
+                  key={f.id}
+                  onClick={() => setFiltroCaminho(f.id)}
+                  aria-pressed={on}
+                  className={`rounded-full px-3 py-1 text-micro font-semibold transition-colors
                     ${
-                      atual
-                        ? "bg-action-primary text-text-on-brand"
-                        : "border border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
+                      on
+                        ? "bg-ink-900 text-text-on-brand"
+                        : "border border-border-hairline bg-surface-card text-text-tertiary hover:border-border-strong"
                     }`}
                 >
-                  {p.label}
+                  {f.label} · {n}
                 </button>
               );
             })}
           </div>
 
-          {/* C0.1/E9.1 numa linha separada: não são passo da sequência, são
-              pausas de pagamento (ver `type Etapa`). Misturar na fila de cima
-              sugeriria "depois do C7 vem isso", que é falso — elas vivem
-              entre E9 e C1. */}
-          {/* MIGRAR — barra própria. É ramo decimal (sai do fork E4),
-              não continuação sequencial do caminho abrir. */}
-          <p className="text-micro font-semibold tracking-wide text-text-tertiary mt-4 mb-2.5">
-            🆕 MIGRAR DE CONTADOR (E4.2–E9.4, ramo decimal, sai do E4)
-          </p>
           <div className="flex flex-wrap gap-2">
-            {PILLS_MIGRAR.map((p) => {
-              const atual = etapa === p.etapa;
+            {telasVisiveis.map((t) => {
+              const atual = t.etapa != null && etapa === t.etapa;
+              // Tela declarada no flow que ainda não existe na demo. Aparece
+              // apagada e sem clique, em vez de sumir: buraco visível é o
+              // ponto (foi assim que 12 telas se esconderam até 02/09).
+              if (!t.etapa) {
+                return (
+                  <span
+                    key={t.id}
+                    title="Existe no flow, ainda não construída na apresentação"
+                    className="rounded-full border border-dashed border-border-hairline px-3.5 py-1.5 text-caption text-text-tertiary opacity-60"
+                  >
+                    {t.label} · sem tela ainda
+                  </span>
+                );
+              }
               return (
                 <button
-                  key={p.etapa}
-                  onClick={() => pularPara(p.etapa)}
+                  key={t.id}
+                  onClick={() => pularParaNo(t)}
                   aria-current={atual}
                   className={`rounded-full px-3.5 py-1.5 text-caption font-semibold transition-colors
                     ${
@@ -3558,57 +3644,7 @@ export default function ApresentacaoPage() {
                         : "border border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
                     }`}
                 >
-                  {p.label}
-                </button>
-              );
-            })}
-          </div>
-
-          <p className="text-micro font-semibold tracking-wide text-text-tertiary mt-4 mb-2.5">
-            🆕 PAUSAS DE PAGAMENTO (entre E9 e C1 — não é sequência)
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {PILLS_PAUSA.map((p) => {
-              const atual = etapa === p.etapa;
-              return (
-                <button
-                  key={p.etapa}
-                  onClick={() => pularPara(p.etapa)}
-                  aria-current={atual}
-                  className={`rounded-full px-3.5 py-1.5 text-caption font-semibold transition-colors
-                    ${
-                      atual
-                        ? "bg-action-primary text-text-on-brand"
-                        : "border border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
-                    }`}
-                >
-                  {p.label}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* 🛠️ REFERÊNCIA DO DEV — não é tela de cliente, por isso não entra
-              em nenhuma das fileiras acima. */}
-          <p className="text-micro font-semibold tracking-wide text-text-tertiary mt-4 mb-2.5">
-            🛠️ REFERÊNCIA DO DEV (não é tela de cliente)
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {PILLS_DEV.map((p) => {
-              const atual = etapa === p.etapa;
-              return (
-                <button
-                  key={p.etapa}
-                  onClick={() => pularPara(p.etapa)}
-                  aria-current={atual}
-                  className={`rounded-full px-3.5 py-1.5 text-caption font-semibold transition-colors
-                    ${
-                      atual
-                        ? "bg-action-primary text-text-on-brand"
-                        : "border border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
-                    }`}
-                >
-                  {p.label}
+                  {t.label}
                 </button>
               );
             })}

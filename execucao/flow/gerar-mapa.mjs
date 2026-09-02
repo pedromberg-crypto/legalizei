@@ -166,6 +166,10 @@ function exportarFlowGraph() {
     id: n.id,
     rota: n.rota || null,
     label: n.label,
+    // 🆕 02/09 — a jornada a que a tela pertence (abrir/migrar/mei/dev).
+    // Vai pro JSON porque é o que alimenta o FILTRO do carrossel da
+    // apresentação: fita única, uma jornada por vez.
+    caminho: n.caminho || "abrir",
     forma: n.forma,
     classe: n.classe || "",
     status: n.status,
@@ -583,7 +587,45 @@ function blocoAtual(txt, nome) {
   return m ? m[1].trim() : "";
 }
 
+/* ─── 3f. AUDITORIA DO ESPELHO (mapa × apresentação) ───────────────────────
+ *
+ * 🔒 02/09 (decisão do Pedro: "mapa é espelho da apresentação") — o carrossel
+ * da demo passou a DERIVAR deste arquivo, então tela nova aparece nos dois
+ * lugares sozinha. Sobra um ponto manual: o `MOMENTO_POR_NO` da
+ * `apresentacao/page.tsx`, que liga cada nó ao estado da demo.
+ *
+ * Os dois erros possíveis, e o que acontece com cada um:
+ * · nó SEM entrada → a fita mostra "sem tela ainda". Barulhento de propósito,
+ *   é o buraco visível. Aqui vira só um lembrete.
+ * · entrada SEM nó → lixo silencioso (nó renomeado/removido, linha esquecida).
+ *   Ninguém veria nunca. É o que este check existe pra pegar.
+ */
+function auditarEspelho() {
+  const PAGE = path.join(DIR, "..", "..", "app", "src", "app", "apresentacao", "page.tsx");
+  if (!fs.existsSync(PAGE)) return [];
+  const src = fs.readFileSync(PAGE, "utf8");
+  const m = src.match(/const MOMENTO_POR_NO[^{]*\{([\s\S]*?)\n\};/);
+  if (!m) return ["`MOMENTO_POR_NO` não encontrado na apresentação"];
+  const declarados = new Map();
+  for (const l of m[1].matchAll(/^\s*([A-Z0-9_]+):\s*(null|"[^"]+")/gm)) {
+    declarados.set(l[1], l[2] !== "null");
+  }
+  const vivos = new Set(NODES.filter((n) => n.classe !== "todo").map((n) => n.id));
+  const msgs = [];
+  const orfas = [...declarados.keys()].filter((id) => !vivos.has(id));
+  if (orfas.length) msgs.push(`MOMENTO_POR_NO aponta pra nó inexistente: ${orfas.join(", ")}`);
+  const semEntrada = [...vivos].filter((id) => !declarados.has(id));
+  if (semEntrada.length) msgs.push(`nó sem vínculo com a demo: ${semEntrada.join(", ")}`);
+  const semTela = [...declarados].filter(([id, tem]) => !tem && vivos.has(id)).map(([id]) => id);
+  if (semTela.length) msgs.push(`declarado no flow e ainda sem tela na demo: ${semTela.join(", ")}`);
+  return msgs;
+}
+
 /* ─── MAIN ──────────────────────────────────────────────────────────────── */
+
+const espelho = auditarEspelho();
+if (espelho.length) console.log("⚠️  espelho: " + espelho.join(" · "));
+else console.log("✓ espelho mapa × apresentação: sem divergência");
 
 const drift = checarDrift();
 const cur = estruturaAtual();

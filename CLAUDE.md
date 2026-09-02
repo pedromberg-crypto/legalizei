@@ -32,6 +32,15 @@ Nunca encerre um flow sem: (1) atualizar `HOME §Agora`; (2) registrar decisão 
 - `pesquisa/` — `concorrentes/` (teardowns), `cnae-matriz/`, `mercado-*`, `PESQUISA-MERCADO.md`.
 - `reunioes/` — atas Plaud (1 nota/reunião). Auto-memória — fatos duráveis cross-sessão.
 
+## 🔁 Como o Pedro pede alteração de tela (travado 02/09)
+O Pedro revisa o produto **só** por `/apresentacao` e `/mapa`, e pede de onde estiver olhando. Um pedido pode ser layout, flow, ou os dois juntos. O método abaixo existe porque, antes dele, ele virou o detector de bug sistêmico: apontava um sintoma numa tela, eu corrigia só ali, e o mesmo bug reaparecia na próxima (o degradê de rolagem foi pedido 4 vezes; o carry-forward que não atravessa a demo, 2).
+
+1. **Mapa é espelho da apresentação.** Mesma coleção de telas, duas vistas: uma conectada e em ordem de flow, a outra navegável. Nada existe num sem existir no outro. A coleção única é `NODES` em `execucao/flow/flow-data.mjs`; a fita de pills da apresentação **deriva** dela (`TELAS_DO_FLOW`), não é mais lista escrita à mão.
+2. **Tela nova nasce declarada, não copiada.** Um nó no `flow-data` (com `caminho`), o render na apresentação, e a linha no `MOMENTO_POR_NO`. Rodar `node execucao/flow/gerar-mapa.mjs`: mapa, doc do dev e `/conferencia` se atualizam juntos, e a auditoria de espelho avisa o que ficou solto. Sem render, a pill aparece apagada como **"sem tela ainda"** em vez de sumir.
+3. **Pré-voo antes de tocar na tela.** "Vou mexer na tela X" → devolver, ANTES de editar: código e nome, rota, o que ela coleta, o que recebe das telas anteriores, o que passa adiante, variantes/estados que ela tem, e onde ela aparece. Custa segundos e evita rodada de correção besta.
+4. **Lote por tela, não por ajuste.** Esperar o Pedro apontar tudo o que viu numa tela e aplicar junto, em vez de uma rodada por micro-correção.
+5. **Sintoma repetido = bug de raiz.** Se o mesmo tipo de defeito aparece na 2ª tela, parar de corrigir a tela e corrigir a origem (foi assim que nasceram o `Rolagem` e o espelho derivado).
+
 ## Regras de trabalho
 - 🔴 **Playwright/E2E só quando o Pedro PEDIR.** Nunca rodar por iniciativa própria, nem "pra conferir", nem no fim de uma leva de alterações. Padrão de verificação é `tsc` + `eslint`. Se achar que vale rodar, **pergunta** — não roda. (Travado 30/08, reforçado 01/09.)
 - 🔴 **Escopo padrão = flow ME "abrir empresa".** MEI e Migração estão FORA de qualquer alteração, salvo pedido explícito. Quando uma tela é compartilhada (mesmo componente serve ME e MEI), a mudança tem que ser **guardada por regime** pra não vazar; se não der pra guardar, avisar antes de mexer.

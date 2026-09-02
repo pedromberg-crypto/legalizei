@@ -545,7 +545,12 @@ export function PerguntaView({
       {/* 🌾 CTA no rodapé = thumb zone (design-system.md §6) */}
       <div className="app-footer-cta">
         <Button full onClick={onValidar} disabled={!podeValidar}>
-          {jaCliente ? "Achar meu CNAE" : "Validar minha atividade"}
+          {/* 🔄 02/09 (pedido do Pedro) — era "Achar meu CNAE", e ficou
+              mentiroso quando o veredito passou a morar nesta tela: o CNAE já
+              está achado, na tela, marcado. O botão agora nomeia o que vai
+              acontecer, que é o canal mais barato pra dizer "o cartão coral é
+              o que vai no seu CNPJ" — sem gastar uma linha de texto na tela. */}
+          {jaCliente ? "Continuar com esse CNAE" : "Validar minha atividade"}
         </Button>
       </div>
     </>

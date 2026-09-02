@@ -1376,7 +1376,12 @@ function PlanoOferta({
               ruim mesmo depois do wrapper separado (visível demais, sem
               ganho real); removida. Volta a ser um único elemento. */}
           <div
-            className="relative mt-4 rounded-[28px] p-6"
+            // 🔄 01/09 — `overflow-hidden` VOLTOU: ele tinha saído pro selo
+            // dourado sangrar pra fora da quina, e o selo foi removido. Agora
+            // ele é necessário de novo, por outro motivo — é o que faz a quina
+            // arredondada recortar o Léo, sustentando a leitura de que ele
+            // está DENTRO do card, saindo da lateral.
+            className="relative mt-4 overflow-hidden rounded-[28px] p-6"
             style={{
               backgroundColor: "var(--color-surface-dark)",
               // 🔄 01/09 (pedido do Pedro) — o brilho coral saiu do canto
@@ -1397,31 +1402,29 @@ function PlanoOferta({
                 oposto ele flutuava sem relação com nada; na margem esquerda
                 ele vira a etiqueta do bloco, lida na mesma coluna de leitura
                 do valor. */}
-            {/* 🆕 01/09 (pedido do Pedro) — o SELO DOURADO no canto superior
-                direito: o símbolo da marca vazado numa placa 3D, em ouro. Não
-                é enfeite de "VIP" (coroa/diamante estão fora, brigam com o
-                nosso discurso de preço honesto): é a nossa própria marca.
-                🔄 01/09 — o ouro 3D SAIU e entrou o símbolo CHAPADO em coral,
-                o mesmo do logo. Sobre o card escuro o coral já tem contraste
-                de sobra, e a marca lisa lê como assinatura da casa em vez de
-                medalha de premiação. `absolute` pra não empurrar o pill nem o preço.
-                🔄 01/09 — parou de sangrar pra fora da quina: agora respira
-                24px, o MESMO respiro do conteúdo (`p-6`), então ele se alinha
-                à margem interna do card em vez de flutuar na borda. */}
+            {/* 🆕 01/09 (pedido do Pedro) — o Léo saindo da lateral DIREITA do
+                card, no lugar do selo dourado.
+
+                Encaixe medido, não estimado (método travado hoje): o asset já
+                vem cortado reto na borda direita — 363 das 468 linhas terminam
+                exatamente no último pixel (x=239 de 240). Logo, `right-0`
+                alinha o corte do corpo com a lateral do card, e é isso que faz
+                ele parecer emergir da parede em vez de estar colado nela.
+                `bottom-0` + o `overflow-hidden` do card deixam a quina
+                arredondada recortá-lo embaixo, o que reforça a mesma leitura.
+                `pointer-events-none` porque ele é cenário, não alvo. */}
             <Image
-              src="/icones/selo-check-coral.png"
+              src="/leo/leo-parede.png"
               alt=""
               aria-hidden
-              width={801}
-              height={801}
-              className="pointer-events-none absolute right-6 top-6 h-[36px] w-auto"
-              // 🗑️ 01/09 — sombra e flutuação SAÍRAM junto com o ouro 3D. As
-              // duas existiam pra dar volume e vida a um objeto tridimensional;
-              // num símbolo chapado viram ruído: sombra atrás de forma plana é
-              // mancha, e marca da casa não fica balançando.
+              width={240}
+              height={468}
+              // 🔄 01/09 (2 rodadas) — maior e mais baixo: 165 → 190px com a
+              // base 40px pra fora do card. O corte de baixo é aceito de
+              // propósito (pedido do Pedro, "nem que corte um pouco"): quem
+              // não pode ser cortada é a cabeça, que é onde está o gesto.
+              className="pointer-events-none absolute -bottom-10 right-0 h-[190px] w-auto"
             />
-
-
 
             <div className="flex items-center gap-3">
               {/* 🧪 01/09 (teste do Pedro) — o pill era `bg-white/12` (véu
@@ -1429,12 +1432,13 @@ function PlanoOferta({
                   clarear o fundo, ele fura o card — a sombra afunda a peça e
                   o texto ganha borda escura em volta, que é o que faz uma
                   etiqueta parecer aplicada e não impressa. */}
+              {/* 🧪 01/09 (teste do Pedro) — pill em CORAL (era ink escuro).
+                  Fill sólido `action-primary` com texto branco: sobre o card
+                  escuro é o maior contraste possível, e amarra com o CTA coral
+                  do rodapé. Sombra mantida pra não virar adesivo chapado. */}
               <span
-                className="rounded-full px-4 py-1.5 text-caption font-semibold text-text-on-dark"
-                style={{
-                  backgroundColor: "#12141A",
-                  boxShadow: "0 3px 10px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06)",
-                }}
+                className="rounded-full bg-action-primary px-4 py-1.5 text-caption font-semibold text-text-on-brand"
+                style={{ boxShadow: "0 3px 10px rgba(0,0,0,.35)" }}
               >
                 {semTaxaJunta ? "Plano MEI" : "Plano único"}
               </span>
@@ -1447,7 +1451,10 @@ function PlanoOferta({
                 colado no preço e os dois liam como uma coisa só. Com respiro,
                 o pill é etiqueta e o número é o assunto. */}
             <div className="mt-5 flex items-baseline gap-2">
-              <p className="text-[3.5rem] font-bold leading-none text-text-on-dark">
+              {/* 🔄 01/09 (pedido do Pedro) — 3.5rem (56px) → 2.75rem (44px). O número
+                  ocupava quase a largura do card e empurrava o "/mês" pra beira;
+                  menor, ele continua sendo o assunto do card sem virar cartaz. */}
+              <p className="text-[2.75rem] font-bold leading-none text-text-on-dark">
                 {brl(mensalidade)}
               </p>
               <span className="text-h2 text-text-on-dark/60">/mês</span>

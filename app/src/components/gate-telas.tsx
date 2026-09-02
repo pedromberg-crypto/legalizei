@@ -13,6 +13,8 @@ import { TelaHeader, Aviso, Rolagem } from "@/components/ui/tela";
 // `FaixaView` pro E3.3 (`components/entrada-lead.tsx`).
 // 🔁 28/08 — `Aviso` e `brl` voltaram, agora a serviço do gate de teto do MEI.
 import { OpcoesLinha, Select, Campo } from "@/components/ui/form";
+import { OutrasOpcoes, encaixeDeResultado } from "@/components/encaixe";
+import { mapear } from "@/lib/mock-veredito";
 import { FISCAL, brl } from "@/lib/fiscal";
 import { linkWhatsApp } from "@/lib/contato";
 import { TETO_MEI_ANUAL, TETO_MEI_MENSAL } from "@/lib/mei";
@@ -363,6 +365,10 @@ export function PerguntaView({
     el.style.overflowY = el.scrollHeight > TETO ? "auto" : "hidden";
   }, [texto, sabeCodigo, placeholder]);
 
+  // Mock de visualização das 3 opções (ver o comentário no JSX). `mapear()` é
+  // o mesmo mock que a C0.2 usa, então os números batem com os de lá.
+  const encaixe = encaixeDeResultado(mapear(texto));
+
   const podeValidar = sabeCodigo
     ? texto.replace(/\D/g, "").length >= 6
     : texto.trim().length >= 10;
@@ -398,13 +404,28 @@ export function PerguntaView({
             que põe campo direto no fundo claro. Agora a tela usa o mesmo
             `Campo` do C1/C4/E3.4: rótulo, campo, nada em volta. */}
         <div className="flex min-h-0 flex-1 flex-col gap-4">
-          {/* 🚧 02/09 (pedido do Pedro, passo 1 de N) — VAZIO RESERVADO.
-              Os campos foram empurrados pro rodapé pra abrir esta faixa, que
-              vai receber o C0.2 (CNAE encontrado): a ideia é o veredito
-              aparecer AQUI, na mesma tela, em vez de virar navegação. Por ora
-              o espaço fica em branco de propósito — é o passo de layout antes
-              da fusão. */}
-          <div className="min-h-0 flex-1" aria-hidden />
+          {/* 🧪 02/09 (pedido do Pedro, passo 2) — AS 3 OPÇÕES DE CNAE
+              NA PRÓPRIA TELA. Primeiro ensaio da fusão da C0.2 (CNAE
+              encontrado) aqui dentro: em vez de a pessoa mandar descrever,
+              esperar e trocar de tela pra ver o veredito, o que a IA acha
+              aparece na faixa que abrimos no passo 1.
+
+              Cartões REUSADOS do veredito (`OutrasOpcoes`, `encaixe.tsx`) —
+              mesmo desenho que já roda na C0.2, com o nome humano, o código,
+              a etiqueta fiscal e o % de encaixe. Nada de card novo: se o
+              veredito vai morar aqui, ele tem que ser o MESMO veredito.
+
+              🔴 Só visualização, a pedido: os cartões não clicam e não
+              escolhem nada ainda. Os dados saem do `mapear()` (mock de sempre)
+              cruzado com o texto — com o campo vazio, cai no exemplo padrão.
+              Falta decidir com o Pedro: aparece enquanto digita ou só depois
+              do CTA, e o que o CTA vira quando o resultado já está na tela. */}
+          <Rolagem className="min-h-0 flex-1">
+            <OutrasOpcoes
+              titulo="O que mais se encaixa no que você contou"
+              alternativas={[encaixe.recomendado, ...encaixe.alternativas]}
+            />
+          </Rolagem>
 
           {!sabeCodigo && (
             <Campo rotulo="Sua categoria">

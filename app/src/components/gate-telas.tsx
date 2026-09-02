@@ -468,7 +468,7 @@ export function PerguntaView({
                 e diz, sem texto extra, que a tela ainda espera uma ação —
                 coisa que o cartão pré-marcado não dizia. Preenchido, ele é o
                 MESMO cartão coral, agora inequivocamente uma escolha dela. */}
-            <p className="text-micro text-text-tertiary mb-2">Seu CNAE principal</p>
+            <p className="text-micro text-text-tertiary mb-2">Sua atividade principal</p>
             {principal ? (
               <OutrasOpcoes
                 titulo=""
@@ -479,7 +479,7 @@ export function PerguntaView({
             ) : (
               <div className="flex min-h-[62px] items-center justify-center rounded-2xl border border-dashed border-border-strong px-3 py-4">
                 <p className="text-caption text-text-muted">
-                  Escolha seu CNAE principal, é só selecionar
+                  Escolha sua atividade principal, é só selecionar
                 </p>
               </div>
             )}
@@ -594,7 +594,7 @@ export function PerguntaView({
               está achado, na tela, marcado. O botão agora nomeia o que vai
               acontecer, que é o canal mais barato pra dizer "o cartão coral é
               o que vai no seu CNPJ" — sem gastar uma linha de texto na tela. */}
-          {jaCliente ? "Continuar com esse CNAE" : "Validar minha atividade"}
+          {jaCliente ? "Continuar com essa atividade" : "Validar minha atividade"}
         </Button>
       </div>
     </>

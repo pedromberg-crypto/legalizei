@@ -34,6 +34,7 @@ export function SplashMensagemView({
   onAutoAvancar,
   duracaoMs = 1800,
   variante = "sucesso",
+  cta,
 }: {
   titulo: string;
   sub?: string;
@@ -51,14 +52,23 @@ export function SplashMensagemView({
    * "x" — check em tela de falha seria o pior tipo de ruído.
    */
   variante?: "sucesso" | "recusado";
+  /**
+   * 🆕 01/09 (pedido do Pedro) — quando presente, a tela DEIXA de ser splash:
+   * ganha CTA fixo embaixo e não avança sozinha. É o caso do aviso de
+   * irreversibilidade que roda depois do A1 — ali a passagem tem que ser um
+   * ATO da pessoa, não um relógio. Mantive no mesmo componente porque o que
+   * dá o peso é justamente a pele de splash (coral cheio, tela inteira); só
+   * o gesto de saída muda.
+   */
+  cta?: { label: string; onClick?: () => void };
 }) {
   const recusado = variante === "recusado";
   useEffect(() => {
-    if (!onAutoAvancar) return;
+    if (!onAutoAvancar || cta) return;
     if (typeof window !== "undefined" && window.self !== window.top) return;
     const t = setTimeout(onAutoAvancar, duracaoMs);
     return () => clearTimeout(t);
-  }, [onAutoAvancar, duracaoMs]);
+  }, [onAutoAvancar, duracaoMs, cta]);
 
   return (
     // 🎓 lição do `welcome.tsx` (29/08): `absolute inset-0` ancorado no
@@ -97,7 +107,21 @@ export function SplashMensagemView({
           O Lottie roda em loop; se ficar repetitivo demais numa tela que dura
           poucos segundos, o ajuste é no player, não aqui. */}
       {recusado ? (
-        <XGrandeSplash />
+        /* 🆕 01/09 (pedido do Pedro) — o "x" estático deu lugar ao lottie
+           "Bouncy Fail" (vinha vermelho). Recolorido em DUAS cores, não uma:
+           o círculo em branco e o X no ink do fundo (#1B1E24). Pintar tudo de
+           branco apagava o X — ele vira o vazio dentro do disco, mesma lógica
+           do check do sucesso, onde o disco é que faz o recorte.
+           Vermelho ficou fora de propósito: sobre o fundo escuro-com-coral da
+           recusa seria alarme em cima de alarme.
+           Fica menor que o check do sucesso (h-40 × h-52) de propósito: erro
+           não merece o mesmo palco que a comemoração. */
+        <Lottie
+          path="/lottie/fail-splash-legalizai-story-book.json"
+          fps={30}
+          // 🔄 01/09 (pedido do Pedro) — 160 → 128 → 115 → 104px.
+          className="h-[104px] w-[104px]"
+        />
       ) : (
         <Lottie
           path="/lottie/check-splash-legalizai-story-book.json"
@@ -122,6 +146,23 @@ export function SplashMensagemView({
           </p>
         )}
       </div>
+
+      {/* CTA fixo, só na variante de aviso. Fica no rodapé (thumb zone) e não
+          no meio da tela: é decisão, não confirmação — e decisão a gente toma
+          com o polegar onde ele já está. */}
+      {cta && (
+        <div className="absolute inset-x-0 bottom-0 px-6 pb-[calc(24px+var(--safe-bottom))]">
+          <button
+            type="button"
+            onClick={cta.onClick}
+            className="flex min-h-12 w-full items-center justify-center rounded-md bg-surface-card
+                       px-4 text-body font-bold text-action-primary-sm transition-opacity
+                       hover:opacity-90"
+          >
+            {cta.label}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

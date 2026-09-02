@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { SocioView } from "@/components/wizard-dossie";
 import { ehMei, comRegime } from "@/lib/regime";
+import { passoDoAjuste } from "@/lib/ajuste";
 import { ehEnderecoFiscal, comEndereco } from "@/lib/endereco";
 
 /**
@@ -46,6 +47,14 @@ export default function SocioPage() {
   // 🆕 03/08 — MEI pula C2 (Vínculo INSS/Fator R, não existe MEI) e C3
   // (Sócios, MEI não pode ter) — vai direto pra C4. ME segue a sequência
   // normal. Ver mapa em `/mockup` — grupo "Constituição".
+  /**
+   * 🆕 01/09 — MODO AJUSTE: quando a pessoa entra por "Ajustar" na tela
+   * de status, a navegação fica presa ao bloco e a última tela dele troca
+   * o CTA por "Atualizar dados", voltando pro status. Ausente = wizard
+   * normal, com o destino de sempre.
+   */
+  const ajuste = passoDoAjuste(searchParams, "/dossie/socio");
+
   return (
     <SocioView
       mei={mei}

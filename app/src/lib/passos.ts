@@ -76,6 +76,16 @@
 export interface Passo {
   /** Rótulo humano. O cliente nunca vê o código interno. */
   nome: string;
+  /**
+   * 🆕 01/09 (pedido do Pedro) — a que BLOCO este passo pertence.
+   *
+   * A lista corrida de 13 passos era assustadora ("olha o tanto que falta"),
+   * e não dava a sensação de terminar nada. Agrupada em 5 blocos, a pessoa
+   * fecha um assunto por vez e vê "3 de 3" em cada um. O agrupamento não é
+   * estético: espelha as telas reais do dossiê, então bloco fechado
+   * corresponde a assunto de fato resolvido.
+   */
+  bloco: number;
   /** Referência interna, pra rastrear até a tela (código do flow-data.mjs). */
   tela: string;
   /** Só existe pra parte dos clientes — muda o TOTAL, não a ordem. */
@@ -102,14 +112,67 @@ export interface Passo {
   descricao?: string;
 }
 
+/**
+ * 🆕 01/09 (pedido do Pedro) — OS 5 BLOCOS da tela de status.
+ *
+ * `rota` é pra onde o CTA do bloco leva: a pessoa navega por BLOCO, não por
+ * subetapa (decisão do Pedro: "é simples e mantemos menos poluído"). Vale
+ * tanto pra continuar de onde parou quanto pra voltar e corrigir.
+ *
+ * 🔴 Corrigir só existe ANTES do protocolo. Depois que a viabilidade entra na
+ * Junta não há volta — a pessoa aceita isso explicitamente na tela de aviso
+ * que roda depois do A1, e a gravação da JUCEMG (31/08) mostrou o custo real:
+ * mudar dado protocolado significa cancelar a viabilidade e refazer.
+ */
+export const BLOCOS: {
+  id: number;
+  titulo: string;
+  /** Primeira tela do bloco — pra onde o "Ajustar" leva. */
+  rota: string;
+  /**
+   * 🆕 01/09 (pedido do Pedro) — as telas do bloco, NA ORDEM. É isto que
+   * confina o modo de ajuste: entrando por aqui, a pessoa anda só dentro
+   * desta lista e, na última, o CTA vira "Atualizar dados" e devolve pro
+   * status. Lista vazia = bloco não editável.
+   *
+   * ⚠️ O bloco 1 edita só o cadastro. Pagamento não se "ajusta": mexer nele
+   * é outro fluxo (retry/cobrança), não uma correção de dado.
+   * ⚠️ O bloco 5 é o protocolo — nada aqui volta atrás, por isso vazio.
+   */
+  telas: string[];
+}[] = [
+  { id: 1, titulo: "Conta e plano", rota: "/conta", telas: ["/conta"] },
+  {
+    id: 2,
+    titulo: "O que a empresa faz",
+    rota: "/dossie/atividade",
+    telas: ["/dossie/atividade", "/dossie/cnae-secundarios"],
+  },
+  {
+    id: 3,
+    titulo: "Você e os sócios",
+    rota: "/dossie/socio",
+    telas: ["/dossie/socio", "/dossie/vinculo", "/dossie/socios"],
+  },
+  {
+    id: 4,
+    titulo: "A empresa",
+    rota: "/dossie/empresa",
+    telas: ["/dossie/empresa", "/dossie/nome"],
+  },
+  { id: 5, titulo: "Registro nos órgãos", rota: "/revisar", telas: [] },
+];
+
 export const PASSOS_CLIENTE: Passo[] = [
   {
     nome: "Dados base preenchidos",
+    bloco: 1,
     tela: "E3.1",
     descricao: "Nome, e-mail e telefone. Leva menos de 1 minuto.",
   },
   {
     nome: "Plano escolhido e pago",
+    bloco: 1,
     tela: "E7+E9",
     aguardaCompensacao: true,
     nomeEnquantoGirando: "Plano escolhido",
@@ -117,32 +180,38 @@ export const PASSOS_CLIENTE: Passo[] = [
   },
   {
     nome: "CNAE principal da empresa",
+    bloco: 2,
     tela: "C0",
     descricao: "Descreve o que sua empresa faz e a gente encontra o código certo. Leva cerca de 2 minutos.",
   },
   {
     nome: "CNAE secundário da empresa",
+    bloco: 2,
     tela: "C5",
     descricao: "Opcional: outras atividades que você também exerce. Leva cerca de 1 minuto.",
   },
   {
     nome: "Dados pessoais complementares",
+    bloco: 3,
     tela: "C1",
     descricao: "RG, data de nascimento e estado civil. Leva cerca de 2 minutos.",
   },
   {
     nome: "Dados do INSS",
+    bloco: 3,
     tela: "C2",
     descricao: "Se você já contribui por fora. Leva menos de 1 minuto.",
   },
   {
     nome: "Sócios",
+    bloco: 3,
     tela: "C3",
     condicional: true,
     descricao: "Nome e participação de cada sócio extra. Leva cerca de 2 minutos.",
   },
   {
     nome: "Endereço fiscal da empresa",
+    bloco: 4,
     tela: "C4",
     /**
      * 🆕 01/09 (pedido do Pedro) — some pra quem escolheu o endereço fiscal
@@ -157,6 +226,7 @@ export const PASSOS_CLIENTE: Passo[] = [
   },
   {
     nome: "Nome da empresa e razão social",
+    bloco: 4,
     tela: "C7",
     descricao: "3 opções de nome, sugeridas por IA. Leva cerca de 2 minutos.",
   },
@@ -167,6 +237,7 @@ export const PASSOS_CLIENTE: Passo[] = [
   // então a contagem não muda — só a referência interna.
   {
     nome: "Revisar e confirmar",
+    bloco: 5,
     tela: "A1",
     travaSemPagamento: true,
     descricao: "Confere tudo e autoriza a abertura. Leva cerca de 2 minutos.",

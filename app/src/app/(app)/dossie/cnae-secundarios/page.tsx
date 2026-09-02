@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { CnaeSecundariosView } from "@/components/wizard-dossie";
 import { ehMei, comRegime } from "@/lib/regime";
+import { passoDoAjuste } from "@/lib/ajuste";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -43,7 +44,8 @@ import { ehMei, comRegime } from "@/lib/regime";
  */
 export default function CnaeSecundariosPage() {
   const router = useRouter();
-  const mei = ehMei(useSearchParams());
+  const searchParams = useSearchParams();
+  const mei = ehMei(searchParams);
 
   // 🔄 28/08 (pedido do Pedro) — moveu de lugar: antes vinha depois de "Dados
   // da empresa" (C4), agora vem logo depois da atividade principal (C0), na
@@ -51,9 +53,18 @@ export default function CnaeSecundariosPage() {
   // dados), não mais pro C6. 🆕 03/08 — MEI nunca chega aqui (a M-O já
   // resolve secundárias junto da principal), mas o ramo fica pra
   // deep-link/segurança.
+  /**
+   * 🆕 01/09 — MODO AJUSTE: quando a pessoa entra por "Ajustar" na tela
+   * de status, a navegação fica presa ao bloco e a última tela dele troca
+   * o CTA por "Atualizar dados", voltando pro status. Ausente = wizard
+   * normal, com o destino de sempre.
+   */
+  const ajuste = passoDoAjuste(searchParams, "/dossie/cnae-secundarios");
+
   return (
     <CnaeSecundariosView
-      onSeguir={() => router.push(comRegime(mei ? "/dossie/nome" : "/dossie/socio", mei))}
+      onSeguir={() => router.push(ajuste ? ajuste.destino : comRegime(mei ? "/dossie/nome" : "/dossie/socio", mei))}
+      ctaLabel={ajuste?.label}
       // 🆕 24/08 (reunião Leonan 19/08) — secundária de busca pode mudar o
       // enquadramento; mesma rota de "atendido pelo Mauro" que o resto do
       // produto usa quando precisa de um humano no meio.

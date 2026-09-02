@@ -83,7 +83,7 @@ flowchart TD
   C0_1["C0.1 · Retomar<br/>(porta de CPF)"]:::espera
   C7_2["C7′ · Sugerir mais<br/>3 nomes (2ª rodada)"]
   A1["A1 · Revisar + autorizar"]
-  A2["'A2 · Termo irreversível' 🗑️ REMOVIDO 01/09<br/>(aceite absorvido pelo A1)"]:::todo
+  A2["A2 · Ponto sem volta<br/>(antes da viabilidade)"]
   A3["A3 · Status<br/>(fase Junta)"]
   A3_M["A3 · Status<br/>(variante MEI)"]:::branch
   A3_1["A3.1 · Órgão recusa<br/>'precisa de você'"]
@@ -175,7 +175,8 @@ flowchart TD
   C3 -.->|"endereço fiscal (pula C4)"| C7
   C4 --> C7
   C7 --> A1
-  A1 -.->|"ME"| A3
+  A1 -.->|"ME"| A2
+  A2 -->|"inicia viabilidade"| A3
   A1 -.-> CONF
   A1 -.->|"MEI"| A3_M
   A3 -.->|"nome recusado"| A3_1
@@ -273,7 +274,7 @@ flowchart TD
 | 53 | C0.1 · Retomar · (porta de CPF) | CPF (identifica quem está voltando; o status em si é da tela seguinte) | ✅ | ⚪ | UX-23 fechado — mora em /pro-labore pós-constituição. 🆕 30/08 — deixou de ser órfão: o E3 aponta pra cá, via porta de CPF (mock, RF-01). 🔒 31/08 (fusão A3+E9, pedido do Pedro: 'uma tela única de retorno, que é a E9') — ENCOLHEU pra só a porta de CPF: a tela de status própria que vinha depois (`RetomarView`, 'Bem-vindo de volta') foi RETIRADA do código. Agora, confirmado o CPF, SEMPRE cai no E9.1/E9.1P — é a mesma tela de status que já cobre boleto pendente, pago e fase Junta, então não fazia sentido ter uma 2ª versão só pra reentrada. |
 | 54 | C7′ · Sugerir mais · 3 nomes (2ª rodada) | 3 novas opções de razão social, na ordem de prioridade | ✅ | 🟡 | Reusa `NomeView` com `novaRodada`: 3 campos vazios, 1º já em edição, reordenação e objeto social iguais. Volta pro STATUS (não pro dossiê, que já acabou) pra Junta testar os nomes novos. |
 | 55 | A1 · Revisar + autorizar | Leitura + confirmação (enquadramento e pró-labore são SUGERIDOS, 28/07) · aceite do termo irreversível (checkbox) | ✅ | ⚪ | 🔄 01/09 (2ª rodada, pedido do Pedro) — saiu o card 'Taxa da Junta (já paga)', que mentia desde 26/08 (a DAE passou a ser paga DEPOIS, quando a viabilidade volta deferida), e saiu o ACEITE, que foi pra tela da guia (`/guia`) — é lá que a taxa de fato vira gasto irreversível. No ME a tela voltou a ser recap puro, com CTA 'Confirmar e seguir'. No MEI o aceite CONTINUA aqui: ele não paga guia nenhuma, então não existe tela depois desta pra carregá-lo. Recap read-only; carry-forward dos passos = estado do wizard (dev). 🆕 01/09 (decisão do Pedro): **absorveu o aceite da A2**, que foi eliminada. O checkbox irreversível é o último bloco da tela e trava o CTA ("Autorizo, pode abrir"); a explicação do não-reembolso virou LINK na própria frase, abrindo bottom-sheet (`SheetNaoReembolsavel`). Redação jurídica segue pendente (Mauro/Larissa) |
-| 56 | 'A2 · Termo irreversível' 🗑️ REMOVIDO 01/09 · (aceite absorvido pelo A1) | — | 🚧 | 🟢 | 🗑️ 01/09 — tela eliminada, rota `/termo` apagada. O aceite expresso continua existindo, no fim do A1, com link pro detalhe. Se a decisão voltar atrás, `TermoView` (`wizard-cauda.tsx`) ainda existe |
+| 56 | A2 · Ponto sem volta · (antes da viabilidade) | Aceite do ponto sem volta (o toque no CTA) | ✅ | 🟡 | Tela de aviso em coral cheio: depois de iniciar a viabilidade, mudar nome ou endereço exige CANCELAR e refazer o pedido na Junta (visto ao vivo na gravação de 31/08). O aceite já está no contrato do E9, mas contrato ninguém lê — uma tela inteira com CTA próprio transforma a cláusula em momento, e é o que a pessoa lembra se depois pedir pra mudar algo. 🔒 É ela que fecha o modo AJUSTE: antes daqui a tela de status deixa voltar a qualquer bloco; depois, o botão some |
 | 57 | A3 · Status · (fase Junta) | — | ✅ | 🟢 | 🔄 01/09 (pedido do Pedro) — a etapa da vez agora GIRA (anel azul) mesmo quando a ação é do cliente: antes o CTA suprimia o anel e a etapa ficava cinza, igual às que nem começaram, sendo que é exatamente onde a jornada parou. O card com CTA embaixo do passo leva pra `/guia` (pagamento da taxa), não mais direto pra assinatura. 🔒 31/08 (reunião Rua Satélite 38-40, pedido do Pedro) — **FUNDIDA COM O E9.1**: era tela própria (`/painel`), virou a FASE 'junta' da MESMA tela de status. Motivo: 'quando as pessoas clicarem em retomar processo teremos uma tela única de retorno, que é a E9'. Efeitos: (1) `/painel` no caminho ME agora só redireciona pra cá — a rota segue viva só pro MEI (pipeline concierge próprio) e pro Migrar; (2) a lista é ÚNICA, 12 passos: os 9 do dossiê (`lib/passos.ts`) + as 3 da Junta; (3) 'Documentação completa preenchida' SAIU (era redundante com os 9 passos já concluídos logo acima) — de 4 etapas voltou a 3. 🆕 cada passo mostra sub-descrição (o que envolve + tempo estimado) quando é o passo da vez. Histórico: 30/07 reduziu de 9→3; 26/08 (Rua Satélite 36, item 6) voltou a 4 com a DAE virando etapa visível e acionável ('Pague a guia da Junta', CTA coral inline depois que a viabilidade sai). NÃO absorvemos a taxa (alinhado ao líder). Componentes: `components/painel.tsx` (motor de render, `ETAPAS_ABERTURA`) + `wizard-cauda.tsx` (`AguardandoView`, monta a lista combinada) |
 | 58 | A3 · Status · (variante MEI) | — | ✅ | 🟢 | Pipeline PRÓPRIO (`ETAPAS_MEI` em `painel/page.tsx`): recebemos seus dados → time conferindo → próximos passos prontos (CTA) → empresa aberta. ✍️ REGRA DE COPY: nenhuma etapa pode dizer que a Legalizai registra o MEI (não há API nem procuração que permita — ver `abertura-mei-processo.md`). Ficou FORA da fusão A3+E9 de 31/08 de propósito: o MEI não tem dossiê de 9 passos nem etapa de Junta, então fundir as listas não faria sentido. |
 | 59 | A3.1 · Órgão recusa · 'precisa de você' | Retry automático pelas 3 opções priorizadas (C7) antes de pedir novas sugestões ao cliente | ✅ | 🟢 | 🔄 01/09 (pedido do Pedro) — passou a ser A MESMA TELA do A3 (`AguardandoView` na fase junta), no estado de alerta: hero escuro + a jornada inteira, com a recusa inline na etapa que travou. Antes era um `PainelView` cru, só com as 3 etapas da cauda e sem hero — parecia outro app justo onde a confiança está mais frágil. O CTA de sugerir mais 3 nomes agora leva pro C7′. ✅ 28/07: retry automático construído — tenta as 3 opções do C7 em sequência (mock sempre falha as 3, pra provar o pior caso); só aí pede novas sugestões. Testado no motor (nome recusado); faltam DAE-volta e doc-pendência como casos |
@@ -327,6 +328,8 @@ flowchart TD
 > Cada linha = um estado estrutural do mapa. Snapshots completos em `flow/versoes/` (`.json` p/ diff + `.mmd` legível). Mais recente no topo.
 
 <!-- FLOW:VERSOES:INI -->
+- **v82** · 2026-09-02 · ajuste sem efeito estrutural
+- **v81** · 2026-09-02 · renomeou A2 "'A2 · Termo irreversível' 🗑️ REMOVIDO 01/09 (aceite absorvido pelo A1)"→"A2 · Ponto sem volta (antes da viabilidade)" · status A2 planejada→construida · validação A2 oficial→pendente · falta-validar em A2 · dados-coletados em A2 · +conexões A1→A2,A2→A3 · -conexões A1→A3
 - **v80** · 2026-09-02 · dados-coletados em E5T
 - **v79** · 2026-09-01 · +nós C3_1 · dados-coletados em C3 · +conexões C3→C3_1
 - **v78** · 2026-09-01 · dados-coletados em C3

@@ -37,5 +37,17 @@ export default function RevisarPage() {
    * bloco DESTA tela, com o detalhe em popup — então daqui vai direto pro
    * status da Junta, que é o que a A2 fazia depois do aceite.
    */
-  return <RevisarView mei={mei} onSeguir={() => router.push(comRegime("/painel", mei))} />;
+  /**
+   * 🔄 01/09 (pedido do Pedro) — entre o A1 e o status entra a tela do PONTO
+   * SEM VOLTA (`/iniciar-viabilidade`): antes dela dá pra corrigir qualquer
+   * bloco, depois dela mudar dado significa cancelar e refazer na Junta. O
+   * aceite já existe no contrato, mas contrato ninguém lê — uma tela inteira
+   * com CTA próprio é o que transforma a cláusula em momento.
+   */
+  return (
+    <RevisarView
+      mei={mei}
+      onSeguir={() => router.push(comRegime("/iniciar-viabilidade", mei))}
+    />
+  );
 }

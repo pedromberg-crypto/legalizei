@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { VinculoView } from "@/components/wizard-dossie";
 import { ehMei, comRegime } from "@/lib/regime";
+import { passoDoAjuste } from "@/lib/ajuste";
 import { ehEnderecoFiscal, comEndereco } from "@/lib/endereco";
 
 /**
@@ -49,9 +50,18 @@ export default function VinculoPage() {
   const mei = ehMei(searchParams);
   const enderecoFiscal = ehEnderecoFiscal(searchParams);
 
+  /**
+   * 🆕 01/09 — MODO AJUSTE: quando a pessoa entra por "Ajustar" na tela
+   * de status, a navegação fica presa ao bloco e a última tela dele troca
+   * o CTA por "Atualizar dados", voltando pro status. Ausente = wizard
+   * normal, com o destino de sempre.
+   */
+  const ajuste = passoDoAjuste(searchParams, "/dossie/vinculo");
+
   return (
     <VinculoView
-      onSeguir={() => router.push(comEndereco(comRegime("/dossie/socios", mei), enderecoFiscal))}
+      onSeguir={() => router.push(ajuste ? ajuste.destino : comEndereco(comRegime("/dossie/socios", mei), enderecoFiscal))}
+      ctaLabel={ajuste?.label}
     />
   );
 }

@@ -620,7 +620,16 @@ export const NODES = [
   // a garantia jurídica de verdade) virou o último bloco do A1, e o detalhe
   // do não-reembolso virou popup sob demanda. Rota e pasta removidas;
   // `TermoView` fica no código só pro Storybook/histórico.
-  { id: "A2", rota: null, label: "'A2 · Termo irreversível' 🗑️ REMOVIDO 01/09<br/>(aceite absorvido pelo A1)", forma: "tela", classe: "todo", status: "planejada", validado: "oficial", falta: "🗑️ 01/09 — tela eliminada, rota `/termo` apagada. O aceite expresso continua existindo, no fim do A1, com link pro detalhe. Se a decisão voltar atrás, `TermoView` (`wizard-cauda.tsx`) ainda existe", dados: "" },
+  // 🆕 01/09 (pedido do Pedro) — a tela do PONTO SEM VOLTA, entre o A1 e o
+  // status. Não é splash (não avança sozinha): tem CTA próprio, porque
+  // atravessar aqui precisa ser um ATO. Ver `iniciar-viabilidade/page.tsx`.
+  //
+  // ♻️ O código A2 estava VAGO: era do "Termo irreversível", eliminado hoje de
+  // manhã quando o aceite foi absorvido pelo A1. A lápide dele saiu daqui (o
+  // histórico vive no ADR e no git); manter as duas quebraria o grafo, que é
+  // indexado por id. Reusar o código faz sentido: as duas telas ocupam o mesmo
+  // lugar do flow e falam da mesma coisa — o ponto a partir do qual não volta.
+  { id: "A2", rota: "/iniciar-viabilidade", label: "A2 · Ponto sem volta<br/>(antes da viabilidade)", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Tela de aviso em coral cheio: depois de iniciar a viabilidade, mudar nome ou endereço exige CANCELAR e refazer o pedido na Junta (visto ao vivo na gravação de 31/08). O aceite já está no contrato do E9, mas contrato ninguém lê — uma tela inteira com CTA próprio transforma a cláusula em momento, e é o que a pessoa lembra se depois pedir pra mudar algo. 🔒 É ela que fecha o modo AJUSTE: antes daqui a tela de status deixa voltar a qualquer bloco; depois, o botão some", dados: "Aceite do ponto sem volta (o toque no CTA)" },
   { id: "A3", rota: "/aguardando?fase=junta", label: "A3 · Status<br/>(fase Junta)", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "🔄 01/09 (pedido do Pedro) — a etapa da vez agora GIRA (anel azul) mesmo quando a ação é do cliente: antes o CTA suprimia o anel e a etapa ficava cinza, igual às que nem começaram, sendo que é exatamente onde a jornada parou. O card com CTA embaixo do passo leva pra `/guia` (pagamento da taxa), não mais direto pra assinatura. 🔒 31/08 (reunião Rua Satélite 38-40, pedido do Pedro) — **FUNDIDA COM O E9.1**: era tela própria (`/painel`), virou a FASE 'junta' da MESMA tela de status. Motivo: 'quando as pessoas clicarem em retomar processo teremos uma tela única de retorno, que é a E9'. Efeitos: (1) `/painel` no caminho ME agora só redireciona pra cá — a rota segue viva só pro MEI (pipeline concierge próprio) e pro Migrar; (2) a lista é ÚNICA, 12 passos: os 9 do dossiê (`lib/passos.ts`) + as 3 da Junta; (3) 'Documentação completa preenchida' SAIU (era redundante com os 9 passos já concluídos logo acima) — de 4 etapas voltou a 3. 🆕 cada passo mostra sub-descrição (o que envolve + tempo estimado) quando é o passo da vez. Histórico: 30/07 reduziu de 9→3; 26/08 (Rua Satélite 36, item 6) voltou a 4 com a DAE virando etapa visível e acionável ('Pague a guia da Junta', CTA coral inline depois que a viabilidade sai). NÃO absorvemos a taxa (alinhado ao líder). Componentes: `components/painel.tsx` (motor de render, `ETAPAS_ABERTURA`) + `wizard-cauda.tsx` (`AguardandoView`, monta a lista combinada)", dados: "" },
   // 🆕 31/08 — nó explícito do MEI, que a fusão A3+E9 separou: o ME migrou pra
   // `/aguardando?fase=junta`, mas o MEI continua em `/painel` (pipeline
@@ -821,7 +830,8 @@ export const EDGES = [
 
   // 🔄 01/09 — era A1 → A2 → A3. Com a A2 eliminada (aceite absorvido pelo
   // A1), o "Autorizo, pode abrir" leva direto pro status.
-  { de: "A1", para: "A3", tracejado: true, label: "ME" },
+  { de: "A1", para: "A2", tracejado: true, label: "ME" },
+  { de: "A2", para: "A3", label: "inicia viabilidade" },
   // Aresta de DOCUMENTAÇÃO, não de navegação: liga a referência do dev ao
   // ponto do flow em que o dossiê fecha. Tracejada e sem label de propósito.
   { de: "A1", para: "CONF", tracejado: true },

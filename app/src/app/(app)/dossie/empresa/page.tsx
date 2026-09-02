@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { EmpresaView } from "@/components/wizard-dossie";
 import { ehMei, comRegime } from "@/lib/regime";
+import { passoDoAjuste } from "@/lib/ajuste";
 import { ehEnderecoFiscal } from "@/lib/endereco";
 import { lerRascunhoEndereco, type RascunhoEndereco } from "@/lib/rascunho";
 
@@ -100,6 +101,14 @@ export default function EmpresaPage() {
 
   if (pula) return null;
 
+  /**
+   * 🆕 01/09 — MODO AJUSTE: quando a pessoa entra por "Ajustar" na tela
+   * de status, a navegação fica presa ao bloco e a última tela dele troca
+   * o CTA por "Atualizar dados", voltando pro status. Ausente = wizard
+   * normal, com o destino de sempre.
+   */
+  const ajuste = passoDoAjuste(searchParams, "/dossie/empresa");
+
   return (
     <EmpresaView
       // 🔑 `key` força o remount quando o rascunho chega: os campos do
@@ -115,7 +124,8 @@ export default function EmpresaPage() {
       // (natureza jurídica) SUMIU do fluxo do cliente: SLU × LTDA passou a
       // ser decisão 100% interna (conforme TEM_SOCIO), tanto pra quem tem
       // sócio quanto pra quem não tem. ME e MEI vão direto pro C7 (nome).
-      onSeguir={() => router.push(comRegime("/dossie/nome", mei))}
+      onSeguir={() => router.push(ajuste ? ajuste.destino : comRegime("/dossie/nome", mei))}
+      ctaLabel={ajuste?.label}
     />
   );
 }

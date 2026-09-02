@@ -117,6 +117,7 @@ export function SocioView({
   onSeguir,
   onVoltar,
   mei = false,
+  ctaLabel,
 }: {
   preencher?: number;
   onSeguir?: () => void;
@@ -136,6 +137,13 @@ export function SocioView({
    * `false` (default) = ME, tela idêntica ao que sempre foi.
    */
   mei?: boolean;
+  /**
+   * 🆕 01/09 (pedido do Pedro) — rótulo do CTA. Existe pro MODO AJUSTE: quem
+   * volta pra corrigir um bloco vê "Atualizar dados" na última tela dele, em
+   * vez de "Continuar" (que sugeriria refazer o wizard inteiro).
+   * Ausente = "Continuar", o comportamento de sempre.
+   */
+  ctaLabel?: string;
 }) {
   /**
    * 🗑️ 01/09 (auditoria 1-a-1, item 7) — **nome da mãe REMOVIDO**. Ele entrou
@@ -370,7 +378,7 @@ export function SocioView({
 
         <Rodape>
           <Button full disabled={!completo} onClick={onSeguir}>
-            Continuar
+            {ctaLabel ?? "Continuar"}
           </Button>
         </Rodape>
       </main>
@@ -399,10 +407,18 @@ export function VinculoView({
   preencher,
   onSeguir,
   onVoltar,
+  ctaLabel,
 }: {
   preencher?: number;
   onSeguir?: () => void;
   onVoltar?: () => void;
+  /**
+   * 🆕 01/09 (pedido do Pedro) — rótulo do CTA. Existe pro MODO AJUSTE: quem
+   * volta pra corrigir um bloco vê "Atualizar dados" na última tela dele, em
+   * vez de "Continuar" (que sugeriria refazer o wizard inteiro).
+   * Ausente = "Continuar", o comportamento de sempre.
+   */
+  ctaLabel?: string;
 }) {
   const [contribui, setContribui] = useState<boolean | null>(null);
   const [valor, setValor] = useState("");
@@ -499,7 +515,7 @@ export function VinculoView({
 
         <Rodape>
           <Button full disabled={!completo} onClick={onSeguir}>
-            Continuar
+            {ctaLabel ?? "Continuar"}
           </Button>
         </Rodape>
       </main>
@@ -606,6 +622,7 @@ export function SociosView({
   onVoltar,
   contexto = "abrir",
   socios,
+  ctaLabel,
 }: {
   preencher?: number;
   onSeguir?: () => void;
@@ -628,6 +645,13 @@ export function SociosView({
    * variante ficava invisível na demo.
    */
   socios?: number;
+  /**
+   * 🆕 01/09 (pedido do Pedro) — rótulo do CTA. Existe pro MODO AJUSTE: quem
+   * volta pra corrigir um bloco vê "Atualizar dados" na última tela dele, em
+   * vez de "Continuar" (que sugeriria refazer o wizard inteiro).
+   * Ausente = "Continuar", o comportamento de sempre.
+   */
+  ctaLabel?: string;
 }) {
   // 🔒 24/08 — quantidade FIXA, vinda do que a triagem já decidiu (`SOCIOS`,
   // fonte única em `dossie/mock.ts`). Divide 100% em partes iguais entre os
@@ -1187,7 +1211,7 @@ export function SociosView({
 
         <Rodape>
           <Button full disabled={!completo} onClick={onSeguir}>
-            Continuar
+            {ctaLabel ?? "Continuar"}
           </Button>
         </Rodape>
       </main>
@@ -1255,6 +1279,7 @@ export function EmpresaView({
   mei = false,
   enderecoProprio,
   inicial,
+  ctaLabel,
 }: {
   preencher?: number;
   onSeguir?: () => void;
@@ -1290,6 +1315,13 @@ export function EmpresaView({
     tipoImovel: string;
     resideNoEndereco: boolean | null;
   };
+  /**
+   * 🆕 01/09 (pedido do Pedro) — rótulo do CTA. Existe pro MODO AJUSTE: quem
+   * volta pra corrigir um bloco vê "Atualizar dados" na última tela dele, em
+   * vez de "Continuar" (que sugeriria refazer o wizard inteiro).
+   * Ausente = "Continuar", o comportamento de sempre.
+   */
+  ctaLabel?: string;
 }) {
   /**
    * 🔄 01/09 (decisão do Pedro) — não existe mais escolha de endereço AQUI.
@@ -1716,7 +1748,7 @@ export function EmpresaView({
 
         <Rodape>
           <Button full disabled={!completo} onClick={onSeguir}>
-            Continuar
+            {ctaLabel ?? "Continuar"}
           </Button>
         </Rodape>
       </main>
@@ -1803,6 +1835,7 @@ export function CnaeSecundariosView({
   onSeguir,
   onVoltar,
   onFalarAtendente,
+  ctaLabel,
 }: {
   preencher?: number;
   onSeguir?: () => void;
@@ -1811,6 +1844,13 @@ export function CnaeSecundariosView({
    *  CTA principal troca de "Continuar" pra "Falar com atendente" (mesma
    *  lógica já usada no gate de CNAE principal). */
   onFalarAtendente?: () => void;
+  /**
+   * 🆕 01/09 (pedido do Pedro) — rótulo do CTA. Existe pro MODO AJUSTE: quem
+   * volta pra corrigir um bloco vê "Atualizar dados" na última tela dele, em
+   * vez de "Continuar" (que sugeriria refazer o wizard inteiro).
+   * Ausente = "Continuar", o comportamento de sempre.
+   */
+  ctaLabel?: string;
 }) {
   const [ativos, setAtivos] = useState<Record<string, boolean>>({});
   const [busca, setBusca] = useState("");
@@ -2040,7 +2080,7 @@ export function CnaeSecundariosView({
             </Button>
           ) : (
             <Button full onClick={onSeguir}>
-              Continuar
+              {ctaLabel ?? "Continuar"}
             </Button>
           )}
         </Rodape>
@@ -2075,9 +2115,11 @@ const INFO: Record<Tipo, { nome: string; linha: string; sigla: string }> = {
 export function NaturezaView({
   onSeguir,
   onVoltar,
+  ctaLabel,
 }: {
   onSeguir?: () => void;
   onVoltar?: () => void;
+  ctaLabel?: string;
 }) {
   /**
    * ⚠️ 29/07 — A TELA VIROU CONDICIONAL (decisão do Pedro).
@@ -2160,7 +2202,7 @@ export function NaturezaView({
 
         <Rodape>
           <Button full onClick={onSeguir}>
-            Continuar
+            {ctaLabel ?? "Continuar"}
           </Button>
         </Rodape>
       </main>
@@ -2222,6 +2264,7 @@ export function NomeView({
   onVoltar,
   mei = false,
   novaRodada = false,
+  ctaLabel,
 }: {
   preencher?: number;
   onSeguir?: () => void;
@@ -2253,6 +2296,13 @@ export function NomeView({
    * está aqui. Reordenar, objeto social e nome fantasia continuam iguais.
    */
   novaRodada?: boolean;
+  /**
+   * 🆕 01/09 (pedido do Pedro) — rótulo do CTA. Existe pro MODO AJUSTE: quem
+   * volta pra corrigir um bloco vê "Atualizar dados" na última tela dele, em
+   * vez de "Continuar" (que sugeriria refazer o wizard inteiro).
+   * Ausente = "Continuar", o comportamento de sempre.
+   */
+  ctaLabel?: string;
 }) {
   const [ordem, setOrdem] = useState<SugestaoNome[]>(() =>
     novaRodada ? [0, 1, 2].map((i) => ({ id: `r${i}`, valor: "" })) : sugestoesIniciais(),

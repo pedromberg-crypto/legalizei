@@ -97,16 +97,20 @@ export function Logo({
       {/* símbolo */}
       {negativa ? (
         <>
-          {/* splash: quadrado SÓLIDO branco + check coral por cima (o wipe). O
-              compound com knockout mostraria o check antes de animar. */}
-          <rect
-            fill={marca}
-            width="121.44"
-            height="121.44"
-            rx="19.23"
-            ry="19.23"
-          />
-          <path id={checkId} fill="var(--color-brand)" d={CHECK_PATH} />
+          {/* splash: quadrado SÓLIDO + check por cima (o wipe). O compound com
+              knockout mostraria o check antes de animar.
+
+              🔄 01/09 (pedido do Pedro, 2 rodadas) — o check era coral fixo
+              (`var(--color-brand)`), e a marca ficava bicolor no fundo escuro
+              da recusa. Pintar de branco apagou o check dentro do quadrado
+              branco. A solução é o check VAZADO: o quadrado é o compound com
+              knockout (`SIMBOLO_PATH`, o mesmo das outras variantes) e o furo
+              deixa o fundo da tela aparecer — símbolo mono, sem 2ª cor.
+
+              ⚠️ Consequência conhecida: o wipe da splash animava este path
+              como uma forma pintada. Vazado, não há o que pintar — quando a
+              splash voltar a animar, o alvo passa a ser o próprio recorte. */}
+          <path fill={marca} d={SIMBOLO_PATH} />
         </>
       ) : (
         <>

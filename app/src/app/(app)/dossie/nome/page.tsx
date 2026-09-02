@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { NomeView } from "@/components/wizard-dossie";
 import { ehMei, comRegime } from "@/lib/regime";
+import { passoDoAjuste } from "@/lib/ajuste";
 
 /** 🆕 03/08 — última do dossiê pros DOIS caminhos (reencontro: MEI vem de C5,
  *  ME vem de C6). Propaga `regime` pro A1 (Revisar/Termo mudam copy). */
@@ -44,13 +45,23 @@ import { ehMei, comRegime } from "@/lib/regime";
  */
 export default function NomePage() {
   const router = useRouter();
-  const mei = ehMei(useSearchParams());
+  const searchParams = useSearchParams();
+  const mei = ehMei(searchParams);
 
   // 🆕 28/08 — no MEI a razão social é GERADA por lei (Lei 14.195/2021: 8
   // primeiros dígitos do CNPJ + nome civil). A tela some com as 3 sugestões e
   // o objeto social, e mantém só o nome fantasia — que é o único campo de nome
   // que o formulário do MEI oferece de verdade.
+  /**
+   * 🆕 01/09 — MODO AJUSTE: quando a pessoa entra por "Ajustar" na tela
+   * de status, a navegação fica presa ao bloco e a última tela dele troca
+   * o CTA por "Atualizar dados", voltando pro status. Ausente = wizard
+   * normal, com o destino de sempre.
+   */
+  const ajuste = passoDoAjuste(searchParams, "/dossie/nome");
+
   return (
-    <NomeView mei={mei} onSeguir={() => router.push(comRegime("/revisar", mei))} />
+    <NomeView mei={mei} onSeguir={() => router.push(ajuste ? ajuste.destino : comRegime("/revisar", mei))}
+      ctaLabel={ajuste?.label} />
   );
 }

@@ -34,7 +34,7 @@ export default function SplashRecusadoPage() {
     <SplashMensagemView
       variante="recusado"
       titulo="Pagamento não aprovado."
-      sub="Não foi você: acontece com o banco. Vamos tentar de outro jeito."
+      sub="Vamos tentar de outro jeito."
       onAutoAvancar={() => router.replace(next)}
     />
   );

@@ -83,6 +83,9 @@ export default function AguardandoPage() {
             : undefined
       }
       guiaBoleto={guiaBoleto}
+      // 🆕 01/09 — leva pra tela do bloco (continuar ou corrigir), preservando
+      // regime e endereço fiscal, como o resto da navegação do wizard.
+      onIrParaBloco={(rota) => router.push(comEndereco(comRegime(rota, mei), enderecoFiscal))}
       /**
        * 🗑️ 01/09 (decisão do Pedro) — ia pro gate de certificado (A3.2). A
        * tela SAIU do caminho de constituição de ME: o certificado digital é

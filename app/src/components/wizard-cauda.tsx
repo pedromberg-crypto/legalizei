@@ -1522,10 +1522,11 @@ export function RetomarCpfView({
             conteúdo ancorado no pé. A pasta entreaberta com papéis dentro diz
             o que a tela promete — nada se perdeu, seu processo está guardado
             aqui — que é a única coisa que importa pra quem volta.
-            `h-[90%] max-h-[414px]`: cresce com a tela e para sozinha; o teto
-            evita virar pôster num Pro Max. */}
+            🔄 01/09 (pedido do Pedro) — −40%: `h-[90%]/414px` → `h-[54%]` com
+            teto de 248px. Continua relativa à sobra (cresce e encolhe com o
+            aparelho), só ocupa menos dela. */}
         <div className="flex min-h-0 flex-1 items-center justify-center py-4">
-          <div id="retomar-flutua" className="relative flex h-[90%] max-h-[414px] items-end">
+          <div id="retomar-flutua" className="relative flex h-[54%] max-h-[248px] items-end">
             {/* Sombra de contato em 2 camadas, igual ao aparelho do E6.1: a
                 elipse curta é o apoio na superfície, o drop-shadow segue a
                 silhueta e projeta pra direita (direção de luz do DS). */}
@@ -1646,6 +1647,7 @@ export function AguardandoView({
   recusa,
   onSeguir,
   onPagarDae,
+  onIrParaBloco,
   onAssinar,
   onAcaoRecusa,
 }: {
@@ -1691,6 +1693,12 @@ export function AguardandoView({
   recusa?: Omit<Recusa, "etapa"> & { etapa: number };
   onSeguir?: () => void;
   onPagarDae?: () => void;
+  /**
+   * 🆕 01/09 (pedido do Pedro) — navegação por BLOCO da timeline: continuar de
+   * onde parou e, nos blocos já concluídos, voltar pra corrigir. Sem isto o
+   * "Ajustar" nem aparece (`PainelView` só o mostra quando há pra onde ir).
+   */
+  onIrParaBloco?: (rota: string, blocoId: number) => void;
   onAcaoRecusa?: () => void;
 }) {
   const passos = passosDoCliente({ mei, temSocios });
@@ -1718,8 +1726,15 @@ export function AguardandoView({
   const etapasDossie: Etapa[] = passos.map((p, i) => ({
     nome: boletoPendente && i === indiceGirandoBoleto ? (p.nomeEnquantoGirando ?? p.nome) : p.nome,
     detalhe: p.descricao,
+    // 🆕 01/09 — o bloco vem do próprio passo (`lib/passos.ts`); as 3 etapas
+    // da Junta entram todas no bloco 5, junto do "Revisar e confirmar" que as
+    // dispara. É o que permite a timeline agrupar.
+    bloco: p.bloco,
   }));
-  const etapasCombinadas: Etapa[] = [...etapasDossie, ...ETAPAS_ABERTURA];
+  const etapasCombinadas: Etapa[] = [
+    ...etapasDossie,
+    ...ETAPAS_ABERTURA.map((e) => ({ ...e, bloco: 5 })),
+  ];
 
   const emAndamentoDossie = boletoPendente ? indiceGirandoBoleto : feitos;
   const concluidas = naFaseJunta
@@ -1839,6 +1854,14 @@ export function AguardandoView({
       concluidas={concluidas}
       emAndamento={emAndamento}
       etapas={etapas}
+      onIrParaBloco={onIrParaBloco}
+      /**
+       * 🔴 Corrigir só existe ANTES do protocolo. Na fase JUNTA os dados já
+       * estão com o órgão, e a pessoa aceitou isso na tela do ponto sem volta
+       * (`/iniciar-viabilidade`) — deixar o "Ajustar" ali prometeria o que a
+       * Junta não permite mais.
+       */
+      podeAjustar={!naFaseJunta}
       socios={temSocios ? 2 : 1}
       recusa={recusa ? { ...recusa, etapa: dossieTotal + recusa.etapa } : undefined}
       onAcaoRecusa={onAcaoRecusa}

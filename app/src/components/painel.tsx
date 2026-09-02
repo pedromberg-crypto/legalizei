@@ -3,7 +3,9 @@
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useState } from "react";
 import { StatusIcon, type StatusEstado } from "@/components/ui/status";
+import { BLOCOS } from "@/lib/passos";
 import { useFadeScroll } from "@/components/ui/tela";
 import { linkWhatsApp } from "@/lib/contato";
 
@@ -43,6 +45,12 @@ import { linkWhatsApp } from "@/lib/contato";
 export interface Etapa {
   nome: string;
   orgao?: string;
+  /**
+   * 🆕 01/09 — a que bloco a etapa pertence (ver `BLOCOS` em `lib/passos.ts`).
+   * Quando presente, a timeline agrupa; ausente, cai na lista corrida de
+   * sempre (é o caso do Migrar, que passa `etapas` próprias).
+   */
+  bloco?: number;
   /**
    * 🆕 26/08 (reunião Rua Satélite 36, item 6) — presente quando a etapa é a
    * VEZ DO CLIENTE agir (não do órgão, não é recusa) — hoje só o pagamento da
@@ -145,9 +153,262 @@ export interface Recusa {
   acao: string;
 }
 
+
+/* ═══════════ A TIMELINE EM BLOCOS ══════════════════════════════════════════
+ * 🆕 01/09 (pedido do Pedro) — a lista corrida de 13 passos era assustadora
+ * ("olha o tanto que falta") e não dava a sensação de terminar nada. Agrupada
+ * em 5 blocos, a pessoa fecha um assunto por vez.
+ *
+ * Regras de exibição, e o porquê de cada uma:
+ * · Bloco CONCLUÍDO colapsa numa linha só (check + "3 de 3"). O detalhe do
+ *   que já passou não ajuda mais ninguém — atrapalha.
+ * · Bloco ATUAL abre e mostra as subetapas, que é onde a pessoa está.
+ * · Blocos FUTUROS ficam fechados e apagados: existem pra dar noção do
+ *   caminho, não pra serem lidos agora.
+ * · Qualquer bloco pode ser aberto no toque — fechar não é esconder.
+ *
+ * O CTA é por BLOCO, não por subetapa (decisão do Pedro: "é simples e mantemos
+ * menos poluído"). Num bloco concluído ele vira "Ajustar", e é o caminho de
+ * voltar a corrigir. 🔴 Some depois do protocolo (`podeAjustar={false}`): a
+ * partir dali não há volta, e a pessoa aceitou isso explicitamente na tela de
+ * aviso que roda depois do A1.
+ * ═════════════════════════════════════════════════════════════════════════ */
+
+function TimelineEmBlocos({
+  etapas,
+  concluidas,
+  emAndamento,
+  recusa,
+  podeAjustar,
+  onIrParaBloco,
+}: {
+  etapas: Etapa[];
+  concluidas: number;
+  emAndamento: number;
+  recusa?: Recusa;
+  podeAjustar: boolean;
+  onIrParaBloco?: (rota: string, blocoId: number) => void;
+}) {
+  // Índice global de cada etapa preservado: os estados (feito/girando/recusa)
+  // continuam vindo de `concluidas`/`emAndamento`, que contam a lista inteira.
+  const grupos = BLOCOS.map((b) => ({
+    ...b,
+    itens: etapas
+      .map((e, i) => ({ e, i }))
+      .filter(({ e }) => (e.bloco ?? 0) === b.id),
+  })).filter((g) => g.itens.length > 0);
+
+  const blocoAtual =
+    grupos.find((g) => g.itens.some(({ i }) => i === emAndamento))?.id ??
+    grupos.find((g) => g.itens.some(({ i }) => i >= concluidas))?.id ??
+    grupos[grupos.length - 1]?.id;
+
+  const [aberto, setAberto] = useState<number | null>(null);
+
+  return (
+    <div className="flex flex-col gap-2.5">
+      {grupos.map((g) => {
+        const total = g.itens.length;
+        const feitos = g.itens.filter(({ i }) => i < concluidas).length;
+        const temRecusa = recusa != null && g.itens.some(({ i }) => i === recusa.etapa);
+        const concluido = feitos === total && !temRecusa;
+        const ehAtual = g.id === blocoAtual && !concluido;
+        const expandido = aberto === g.id || (aberto === null && (ehAtual || temRecusa));
+
+        const estado: StatusEstado = temRecusa
+          ? "recusa"
+          : concluido
+            ? "feito"
+            : ehAtual
+              ? "girando"
+              : "a-fazer";
+
+        return (
+          <div
+            key={g.id}
+            // 🔄 01/09 — a borda verde no bloco concluído foi testada e
+            // RECUSADA pelo Pedro: com 5 blocos empilhados, 5 bordas verdes
+            // viram poluição (no E9 são 3 cards e funciona). O check no ícone
+            // e o "concluído" no contador já dizem o mesmo, sem pintar a tela.
+            className={`rounded-md border transition-colors ${
+              temRecusa
+                ? "border-state-danger bg-surface-card"
+                : ehAtual
+                  ? "border-border-strong bg-surface-card"
+                  : "border-border-hairline bg-surface-card"
+            }`}
+          >
+            {/* 🐛 01/09 (achado do Pedro) — o "Ajustar" vivia DENTRO do bloco
+                expandido, e bloco concluído nasce fechado: ninguém achava. Ele
+                sobe pro cabeçalho, visível sem precisar abrir nada. A linha
+                deixou de ser um botão só (botão dentro de botão é HTML
+                inválido): o toggle é a área do título, o Ajustar é irmão. */}
+            <div className="flex items-center gap-2 p-3.5">
+            <button
+              type="button"
+              onClick={() => setAberto(expandido ? -1 : g.id)}
+              aria-expanded={expandido}
+              className="flex min-w-0 flex-1 items-center gap-3 text-left"
+            >
+              <span className="shrink-0">
+                <StatusIcon estado={estado} />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span
+                  className={`block text-body ${
+                    concluido
+                      ? "text-text-tertiary"
+                      : ehAtual || temRecusa
+                        ? "font-semibold text-text-primary"
+                        : "text-text-muted"
+                  }`}
+                >
+                  {g.titulo}
+                </span>
+                {/* O contador é o que transforma "faltam 13 coisas" em "3 de 3
+                    aqui dentro": mostra tamanho do bloco, não da jornada. */}
+                <span className="mt-0.5 block text-micro text-text-tertiary">
+                  {concluido ? `${total} de ${total} · concluído` : `${feitos} de ${total}`}
+                </span>
+              </span>
+            </button>
+            {/* 🔄 01/09 (pedido do Pedro) — de link sublinhado pra PILL coral:
+                alvo de toque de verdade (min-h-8 + padding lateral) e peso
+                visual suficiente pra ser encontrado sem procurar. Tint de
+                marca, não fill cheio — o CTA do rodapé continua sendo a ação
+                principal da tela, e dois corais sólidos brigariam. */}
+            {concluido && podeAjustar && onIrParaBloco && (
+              <button
+                type="button"
+                onClick={() => onIrParaBloco(g.rota, g.id)}
+                className="flex min-h-8 shrink-0 items-center rounded-full bg-surface-tint-brand px-3.5
+                           text-caption font-semibold text-action-primary-sm transition-colors
+                           hover:bg-action-primary hover:text-text-on-brand"
+              >
+                Ajustar
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => setAberto(expandido ? -1 : g.id)}
+              aria-label={expandido ? "Fechar bloco" : "Abrir bloco"}
+              className="shrink-0"
+            >
+              <ChevronBloco aberto={expandido} />
+            </button>
+            </div>
+
+            {expandido && (
+              <div className="px-3.5 pb-3.5">
+                <ol className="relative flex flex-col">
+                  {g.itens.map(({ e, i }, idx) => {
+                    const feito = i < concluidas;
+                    const recusada = recusa?.etapa === i;
+                    const ehAVez = !recusa && i === emAndamento;
+                    const ultima = idx === g.itens.length - 1;
+                    const st: StatusEstado = recusada
+                      ? "recusa"
+                      : feito
+                        ? "feito"
+                        : ehAVez
+                          ? "girando"
+                          : "a-fazer";
+                    return (
+                      <li key={e.nome} className="relative flex gap-3 pb-4 last:pb-0">
+                        {!ultima && (
+                          <span
+                            className={`absolute left-[8px] top-[22px] bottom-0 w-px ${
+                              feito ? "bg-state-success" : "bg-border-hairline"
+                            }`}
+                            aria-hidden
+                          />
+                        )}
+                        <span className="relative z-10 mt-0.5 shrink-0">
+                          <StatusIcon estado={st} />
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <p
+                            className={`text-caption ${
+                              recusada
+                                ? "font-semibold text-state-danger-text"
+                                : ehAVez
+                                  ? "font-semibold text-text-primary"
+                                  : feito
+                                    ? "text-text-tertiary"
+                                    : "text-text-muted"
+                            }`}
+                          >
+                            {e.nome}
+                          </p>
+                          {e.orgao && (
+                            <p className="text-micro text-text-tertiary mt-0.5">{e.orgao}</p>
+                          )}
+                          {ehAVez && e.detalhe && (
+                            <p className="text-micro text-text-secondary mt-1">{e.detalhe}</p>
+                          )}
+                          {ehAVez && !e.detalhe && (
+                            <p className="text-micro text-state-info-text mt-1">
+                              Em andamento agora. Te avisaremos quando terminar.
+                            </p>
+                          )}
+                          {ehAVez && e.acaoCliente && (
+                            <div className="mt-2 rounded-md bg-surface-tint-brand p-3">
+                              <p className="text-micro font-semibold text-text-primary mb-2">
+                                A Junta aprovou. Falta só pagar a guia pra liberar a
+                                assinatura.
+                              </p>
+                              <Button onClick={e.acaoCliente.onClick}>
+                                {e.acaoCliente.label}
+                              </Button>
+                            </div>
+                          )}
+                          {recusada && recusa && (
+                            <div className="mt-2 rounded-md bg-state-danger-tint p-3">
+                              <p className="text-caption font-semibold text-state-danger-text mb-0.5">
+                                {recusa.titulo}
+                              </p>
+                              <p className="text-micro text-text-secondary">{recusa.motivo}</p>
+                            </div>
+                          )}
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ol>
+
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function ChevronBloco({ aberto }: { aberto: boolean }) {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      className={`shrink-0 text-text-tertiary transition-transform ${aberto ? "rotate-180" : ""}`}
+    >
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  );
+}
+
 export function PainelView({
   concluidas,
   emAndamento,
+  podeAjustar = true,
+  onIrParaBloco,
   recusa,
   socios = 1,
   etapas,
@@ -168,6 +429,14 @@ export function PainelView({
   emAndamento: number;
   /** Presente = pipeline parado numa recusa de órgão (rota /painel/recusa). */
   recusa?: Recusa;
+  /**
+   * 🆕 01/09 — libera o "Ajustar este bloco" nos blocos já concluídos. Vira
+   * `false` a partir do protocolo: dali em diante não há volta, e oferecer o
+   * botão seria prometer o que a Junta não deixa mais fazer.
+   */
+  podeAjustar?: boolean;
+  /** Navegação do CTA de bloco (continuar de onde parou / voltar e corrigir). */
+  onIrParaBloco?: (rota: string, blocoId: number) => void;
   /** Muda a faixa de notificação: com 2, o andamento vai pros dois. */
   socios?: number;
   /**
@@ -328,6 +597,16 @@ export function PainelView({
           {/* ── A TIMELINE ─────────────────────────────────────────────────
               Cada etapa carrega seu estado. A linha vertical conecta os pontos
               pra ler como uma jornada, não uma lista solta. */}
+          {ETAPAS.some((e) => e.bloco) ? (
+            <TimelineEmBlocos
+              etapas={ETAPAS}
+              concluidas={concluidas}
+              emAndamento={emAndamento}
+              recusa={recusa}
+              podeAjustar={podeAjustar}
+              onIrParaBloco={onIrParaBloco}
+            />
+          ) : (
           <ol className="relative flex flex-col">
             {ETAPAS.map((e, i) => {
               const feito = i < concluidas;
@@ -441,6 +720,7 @@ export function PainelView({
               );
             })}
           </ol>
+          )}
 
           {/* ── IDEMPOTÊNCIA VISÍVEL (UX-38) ────────────────────────────────
               O motor já é idempotente na retomada; aqui a UI finalmente DIZ.

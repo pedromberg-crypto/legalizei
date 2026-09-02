@@ -282,6 +282,8 @@ type Etapa =
   // `C0.1--reentrada-->C1`), alcançáveis por pill própria, não pelo botão
   // Continuar de nenhuma tela do meio.
   | "revisar"
+  // 🆕 01/09 — o ponto sem volta, entre o A1 e o status.
+  | "iniciar-viabilidade"
   | "painel"
   | "guia"
   | "guia-splash"
@@ -371,6 +373,7 @@ function antesDoDossie(e: EtapaDossie): Etapa {
  */
 const ETAPAS_CAUDA = [
   "revisar",
+  "iniciar-viabilidade",
   "painel",
   // 🆕 01/09 — A3.P: pagamento da guia da Junta, aberto pelo CTA do status.
   "guia",
@@ -631,6 +634,8 @@ type Momento =
   | "guia-recusada"
   | "guia-retry"
   | "revisar"
+  // 🆕 01/09 — o ponto sem volta, entre o A1 e o status.
+  | "iniciar-viabilidade"
   | "painel"
   | "guia"
   | "guia-splash"
@@ -1039,6 +1044,7 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   "status-viabilidade": "/aguardando?fase=junta&viabilidade=1",
   conferencia: "/conferencia",
   revisar: "/revisar",
+  "iniciar-viabilidade": "/iniciar-viabilidade",
   painel: "/painel",
   "painel-recusa": "/painel/recusa",
   assinatura: "/assinatura",
@@ -1471,6 +1477,14 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
       "É o último ponto em que corrigir é de graça. Marcar o aceite é irreversível: a partir dele a Junta já está sendo protocolada com esses dados.",
     porque:
       "Ninguém deveria autorizar um registro que nunca viu inteiro. 🔄 01/09: a A2 (tela só de termo) foi ELIMINADA e o aceite virou o último bloco daqui — a tela inteira existia pra reforçar que a taxa da Junta não volta, e isso já está no contrato aceito no pagamento. O detalhe do não-reembolso virou link com popup: quem já entendeu segue, quem quer ler tem onde. O enquadramento aparece como SUGESTÃO (não escolha manual): o simulador pré-empresa foi dissolvido em 28/07.",
+  },
+  "iniciar-viabilidade": {
+    dono: "usuario",
+    faz: "🆕 01/09 — TELA NOVA (A2). Avisa, em coral cheio e tela inteira, que a partir dali não dá pra mudar mais nada: o CTA \"Iniciar viabilidade\" manda os dados pra Junta.",
+    interfere:
+      "É a fronteira do processo. Antes dela, a tela de status deixa voltar e corrigir qualquer bloco; depois, o botão de ajustar some — porque mudar dado protocolado significa CANCELAR a viabilidade e refazer o pedido, que foi exatamente o que aconteceu ao vivo na gravação de 31/08 (apartamento sem sócio residente).",
+    porque:
+      "O aceite já existe no contrato do E9, mas contrato ninguém lê. Uma tela inteira, com um CTA que precisa ser tocado, transforma a cláusula em momento — e é esse momento que a pessoa vai lembrar se depois pedir pra mudar algo. Usa a pele de splash porque é ela que dá o peso, mas NÃO auto-avança: atravessar aqui tem que ser um ato, não um relógio.",
   },
   guia: {
     dono: "usuario",
@@ -2090,6 +2104,24 @@ export default function ApresentacaoPage() {
   }
 
   /** Ordem real do flow — a mesma ordem das pills no rodapé. */
+  /**
+   * 🆕 01/09 — o "Ajustar" da timeline navega por ROTA no app real; aqui a
+   * demo anda por estado, então a rota do bloco vira a etapa equivalente.
+   * Sem isto o botão não aparece na apresentação (o `PainelView` só o mostra
+   * quando existe pra onde ir) e o Pedro revisaria uma tela sem a função.
+   */
+  const irParaBloco = (rota: string) => {
+    const alvo: Record<string, Etapa> = {
+      "/conta": "conta",
+      "/dossie/atividade": "perguntando",
+      "/dossie/socio": "socio",
+      "/dossie/empresa": "empresa",
+      "/revisar": "revisar",
+    };
+    const e = alvo[rota];
+    if (e) pularPara(e);
+  };
+
   const PILLS: { etapa: Etapa; label: string }[] = [
     pill("splash"),
     pill("welcome"),
@@ -2117,6 +2149,7 @@ export default function ApresentacaoPage() {
     // 🗑️ 01/09 — "C6 · Natureza" saiu do carrossel: rota removida em 31/08.
     pill("nome"),
     pill("revisar"),
+    pill("iniciar-viabilidade"),
     pill("painel"),
     pill("guia"),
     pill("guia-splash"),
@@ -2733,6 +2766,16 @@ export default function ApresentacaoPage() {
                             onVoltar={() => voltar(() => setEtapa("nome"))}
                           />
                         )}
+                        {etapa === "iniciar-viabilidade" && (
+                          <SplashMensagemView
+                            titulo="Daqui não dá pra voltar."
+                            sub="Ao iniciar a viabilidade, seus dados vão pra Junta Comercial. A partir daí, mudar nome ou endereço da empresa exige cancelar e refazer o pedido."
+                            cta={{
+                              label: "Iniciar viabilidade",
+                              onClick: () => setEtapa("painel"),
+                            }}
+                          />
+                        )}
                         {etapa === "painel" && (
                           // Sem `onVoltar`: o componente original (`/painel`)
                           // não tem seta própria — é status assíncrono, não
@@ -2805,7 +2848,7 @@ export default function ApresentacaoPage() {
                           <SplashMensagemView
                             variante="recusado"
                             titulo="Pagamento não aprovado."
-                            sub="Não foi você: acontece com o banco. Vamos tentar de outro jeito."
+                            sub="Vamos tentar de outro jeito."
                             onAutoAvancar={() => setEtapa("pagamento-retry")}
                           />
                         )}
@@ -2914,15 +2957,26 @@ export default function ApresentacaoPage() {
                             retomar agora é sempre o mesmo AguardandoView
                             (`pago`, que já lê como "voltando"). */}
                         {etapa === "retomar" && (
-                          <AguardandoView pago onSeguir={() => setEtapa("perguntando")} />
+                          <AguardandoView
+                            pago
+                            onSeguir={() => setEtapa("perguntando")}
+                            onIrParaBloco={irParaBloco}
+                          />
                         )}
                         {etapa === "aguardando" && (
-                          <AguardandoView onSeguir={() => setEtapa("perguntando")} />
+                          <AguardandoView
+                            onSeguir={() => setEtapa("perguntando")}
+                            onIrParaBloco={irParaBloco}
+                          />
                         )}
                         {/* 🆕 30/08 (pedido do Pedro) — E9.1P: variante "pago"
                             da MESMA tela, pra quem pagou por cartão/Pix. */}
                         {etapa === "aguardando-pago" && (
-                          <AguardandoView pago onSeguir={() => setEtapa("perguntando")} />
+                          <AguardandoView
+                            pago
+                            onSeguir={() => setEtapa("perguntando")}
+                            onIrParaBloco={irParaBloco}
+                          />
                         )}
 
                         {/* ═══ SPLASHES DE MENSAGEM (E5F.1 · E9.S) ═══════════

@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  useCallback,
   useEffect,
   useRef,
   useState,
@@ -13,7 +12,7 @@ import { TelaHeader, Aviso, Rolagem } from "@/components/ui/tela";
 // 🔄 27/08 — `CUSTOS` saiu junto com a escolha de endereço, que migrou da
 // `FaixaView` pro E3.3 (`components/entrada-lead.tsx`).
 // 🔁 28/08 — `Aviso` e `brl` voltaram, agora a serviço do gate de teto do MEI.
-import { OpcoesLinha } from "@/components/ui/form";
+import { OpcoesLinha, Select } from "@/components/ui/form";
 import { FISCAL, brl } from "@/lib/fiscal";
 import { linkWhatsApp } from "@/lib/contato";
 import { TETO_MEI_ANUAL, TETO_MEI_MENSAL } from "@/lib/mei";
@@ -292,7 +291,6 @@ export function PerguntaView({
   setSabeCodigo,
   onValidar,
   jaCliente = false,
-  categoriaTravada = false,
 }: {
   texto: string;
   setTexto: (v: string) => void;
@@ -314,17 +312,23 @@ export function PerguntaView({
    * ACHANDO O CÓDIGO da pessoa, não julgando se ela entra.
    */
   jaCliente?: boolean;
-  /**
-   * 🆕 31/08 (pedido do Pedro) — a categoria já foi escolhida no gate (E3.4) e
-   * viaja por `?cat=`. Aqui ela NÃO é pergunta de novo: vira chip confirmado
-   * (read-only), e a pessoa só descreve o que faz — a descrição é o que cruza
-   * com a categoria pra achar a atividade principal mais adequada.
-   * `false` (default) = comportamento antigo (lista de pills escolhível),
-   * usado quando a view é chamada sem carry-forward (demo/story).
-   */
-  categoriaTravada?: boolean;
 }) {
   const sel = PILLS.find((p) => p.id === categoria);
+  /**
+   * 🔄 02/09 (pedido do Pedro) — A LISTA DE 17 PILLS SAIU DA TELA.
+   *
+   * Histórico curto: 31/08 a categoria do E3.4 virou chip confirmado aqui, mas
+   * só quando ela chegava por `?cat=`; sem isso a tela voltava a mostrar as 17
+   * pills. Duas telas na mesma rota, e a lista ocupava o corpo inteiro de uma
+   * tela cujo trabalho é a DESCRIÇÃO — a categoria já foi respondida lá atrás,
+   * e reperguntar em grade sugere que a resposta anterior não valeu.
+   *
+   * Agora é sempre chip + "Trocar", e trocar abre o dropdown do DS já aberto.
+   * A lista continua sendo só a validada (as mesmas 17): aqui a pessoa já
+   * pagou, então não existe "não encontrei" — essa porta é do E3.4, antes do
+   * dinheiro, e abrir ela aqui levaria pra waitlist alguém que já é cliente.
+   */
+  const [trocando, setTrocando] = useState(false);
   const tw = useTypewriter(EXEMPLOS, texto.length > 0 || categoria !== null);
   // Pill escolhida troca o exemplo por uma frase fixa da categoria; sem pill,
   // o typewriter cicla exemplos genéricos. O EXEMPLO é o que ensina o campo.
@@ -335,39 +339,15 @@ export function PerguntaView({
     ? texto.replace(/\D/g, "").length >= 6
     : texto.trim().length >= 10;
 
-  // ── Scroll-fade das pills ────────────────────────────────────────────────
-  // Inversão de quem estica: o textarea virou FIXO e as PILLS são a única
-  // região elástica/rolável. Garante UM scroll só (o das pills) e o input nunca
-  // espreme. Depende do shell travado em 100dvh (.app-page, globals.css): sem o
-  // teto, a página inteira cresce em vez de as pills rolarem — foi o bug no SE.
-  const scRef = useRef<HTMLDivElement>(null);
-  const [fade, setFade] = useState({ up: false, down: false });
-  const recompute = useCallback(() => {
-    const el = scRef.current;
-    if (!el) return;
-    const up = el.scrollTop > 2;
-    const down = el.scrollTop + el.clientHeight < el.scrollHeight - 2;
-    setFade((f) => (f.up === up && f.down === down ? f : { up, down }));
-  }, []);
-  // ResizeObserver, não só onScroll: o /mockup muda a altura útil ao trocar de
-  // aparelho (injeta --safe-*), e isso muda se há overflow.
-  useEffect(() => {
-    recompute();
-    const el = scRef.current;
-    if (!el) return;
-    const ro = new ResizeObserver(recompute);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [recompute]);
-  // Transparência REAL (mask): só desbota a ponta que ainda tem pill pra rolar.
-  const topStop = fade.up ? "transparent 0, #000 22px" : "#000 0";
-  const botStop = fade.down ? "#000 calc(100% - 22px), transparent 100%" : "#000 100%";
-  const mask = `linear-gradient(to bottom, ${topStop}, ${botStop})`;
+  /* 🗑️ 02/09 — o scroll-fade daqui (scRef + ResizeObserver + mask) morreu
+     junto com a grade de pills: era ele que desbotava a ponta da lista quando
+     ainda havia categoria pra rolar. Sem lista, não há o que desbotar. */
 
   return (
     <>
-      {/* Título/subtítulo fixos. As PILLS são a única coisa que rola; input e
-          CTA têm altura reservada. Só funciona com o shell travado em 100dvh. */}
+      {/* Título/subtítulo fixos; o campo de descrição ocupa a sobra. Depende
+          do shell travado em 100dvh (.app-page, globals.css) — sem o teto, a
+          página inteira cresce em vez de o campo se ajustar. */}
       <div className="flex-1 min-h-0 flex flex-col">
         <h1 className="text-h1 mb-2">
           {sabeCodigo ? "Qual o número do seu CNAE?" : "O que você faz?"}
@@ -388,60 +368,56 @@ export function PerguntaView({
             = coral, action-primary — só aqui; o CategoriaChips do resto do app
             segue dark quando ativo). Somem no modo código. */}
         <div className="flex min-h-0 flex-1 flex-col rounded-3xl bg-surface-alt p-4">
-          {/* 🔒 31/08 (pedido do Pedro) — quando a categoria JÁ VEIO do gate
-              (E3.4, `?cat=`), ela não é mais pergunta: vira CHIP CONFIRMADO,
-              read-only. A lista inteira de pills sumia o ponto da tela — a
-              pessoa já escolheu lá atrás, e o que falta aqui é só a DESCRIÇÃO
-              livre (que é o que cruza com a categoria pra achar o CNAE certo).
-              Mesma doutrina do C3/C4: o que já foi decidido só se confirma. */}
-          {!sabeCodigo && categoriaTravada && sel && (
+          {/* CATEGORIA — chip confirmado + "Trocar". A grade de 17 pills que
+              morava aqui saiu (ver o comentário do `trocando` acima). */}
+          {!sabeCodigo && (
             <div className="shrink-0">
               <p className="text-micro text-text-tertiary mb-1.5">Sua categoria</p>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-action-primary px-4 py-2 text-caption font-semibold text-text-on-brand">
-                <CheckMiniRegime />
-                {sel.label}
-              </span>
-            </div>
-          )}
 
-          {!sabeCodigo && !categoriaTravada && (
-            <div
-              ref={scRef}
-              onScroll={recompute}
-              style={{ maskImage: mask, WebkitMaskImage: mask }}
-              className="flex min-h-0 flex-1 flex-wrap content-start gap-2 overflow-y-auto pb-1
-                         [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-            >
-              {PILLS.map((p) => {
-                const on = categoria === p.id;
-                return (
+              {trocando || !sel ? (
+                <Select
+                  valor={categoria ?? ""}
+                  onChange={(v) => {
+                    setCategoria(v || null);
+                    setTrocando(false);
+                  }}
+                  opcoes={PILLS.map((p) => ({ v: p.id, label: p.label }))}
+                  placeholder="Escolhe uma categoria"
+                  // Ela clicou em "Trocar": já pediu pra escolher. Abrir
+                  // fechado cobraria o mesmo gesto duas vezes.
+                  abrirAoMontar={trocando}
+                />
+              ) : (
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-action-primary px-4 py-2 text-caption font-semibold text-text-on-brand">
+                    <CheckMiniRegime />
+                    {sel.label}
+                  </span>
                   <button
-                    key={p.id}
-                    onClick={() => setCategoria(on ? null : p.id)}
-                    aria-pressed={on}
-                    className={`h-fit rounded-full px-4 py-2 text-caption font-semibold transition-colors
-                      ${
-                        on
-                          ? "bg-action-primary text-text-on-brand"
-                          : "border border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
-                      }`}
+                    type="button"
+                    onClick={() => setTrocando(true)}
+                    className="rounded-full border border-border-hairline bg-surface-card px-3.5 py-2 text-caption font-semibold text-action-primary-sm transition-colors hover:border-border-strong"
                   >
-                    {p.label}
+                    Trocar categoria
                   </button>
-                );
-              })}
+                </div>
+              )}
             </div>
           )}
 
           {/* Textarea vira CARD claro dentro do painel escuro — profundidade,
               mesma lógica de contraste do AprendaGradiente/CabecalhoCampea.
               Botão limpar = affordance do SearchMic atualizado. */}
-          <div className="relative mt-3 shrink-0">
+          {/* 🔄 02/09 — quem esticava era a lista de pills; sem ela, o campo
+              de descrição herda a sobra. Faz sentido além do layout: a
+              descrição é o trabalho desta tela, e campo grande convida a
+              escrever mais, que é exatamente o que a IA precisa. */}
+          <div className="relative mt-3 min-h-0 flex-1">
             <textarea
               value={texto}
               onChange={(e) => setTexto(e.target.value)}
               placeholder={placeholder}
-              className="h-[6.5rem] w-full resize-none rounded-2xl border border-border-hairline
+              className="h-full min-h-[6.5rem] w-full resize-none rounded-2xl border border-border-hairline
                          bg-surface-card p-4 pr-9 text-body text-text-primary shadow-sm
                          placeholder:text-text-muted focus:border-border-focus focus:outline-none"
             />
@@ -476,9 +452,10 @@ export function PerguntaView({
           onClick={() => {
             setSabeCodigo(!sabeCodigo);
             setTexto("");
-            // 🔒 31/08 — categoria travada veio do gate, não é escolha desta
-            // tela: alternar pro modo código não pode apagá-la.
-            if (!categoriaTravada) setCategoria(null);
+            setTrocando(false);
+            // 🔒 31/08, mantido 02/09 — a categoria veio do gate (E3.4), não é
+            // escolha desta tela: alternar pro modo código não pode apagá-la.
+            // Voltando pra descrição, ela ainda está lá.
           }}
           className="mt-2 self-start text-caption font-medium text-text-secondary underline underline-offset-4"
         >

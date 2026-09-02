@@ -99,9 +99,9 @@ export default function AtividadePage() {
             // cliente, já passou pelo gate. Não estamos decidindo se atendemos,
             // estamos achando o código certo dela.
             jaCliente
-            // 🔒 31/08 — categoria veio do gate: mostra confirmada, não
-            // repergunta (ver `categoriaDoGate` acima).
-            categoriaTravada={categoriaDoGate !== null}
+            // 🔄 02/09 — a tela não bifurca mais entre "chip travado" e
+            // "grade de pills": é sempre chip + "Trocar categoria". O que a
+            // `?cat=` decide agora é só qual categoria vem preenchida.
           />
         )}
         {etapa === "analisando" && <AnalisandoView />}

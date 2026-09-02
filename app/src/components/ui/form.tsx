@@ -263,6 +263,7 @@ export function Select({
   onChange,
   opcoes,
   placeholder = "Selecione",
+  abrirAoMontar = false,
 }: {
   valor: string;
   onChange: (v: string) => void;
@@ -271,8 +272,15 @@ export function Select({
    *  encontrei o que procuro" se destacarem das demais na lista. */
   opcoes: { v: string; label: string; destaque?: "coral" }[];
   placeholder?: string;
+  /**
+   * 🆕 02/09 — nasce com a lista ABERTA. Serve pra dropdown que aparece por
+   * ação da pessoa (o "Trocar categoria" da C0): ela já pediu pra escolher,
+   * exigir um segundo clique pra abrir seria cobrar duas vezes o mesmo gesto.
+   * Default `false` — os 3 dropdowns de formulário seguem fechados.
+   */
+  abrirAoMontar?: boolean;
 }) {
-  const [aberto, setAberto] = useState(false);
+  const [aberto, setAberto] = useState(abrirAoMontar);
   const [foco, setFoco] = useState(0); // índice destacado por teclado
   const ref = useRef<HTMLDivElement>(null);
 

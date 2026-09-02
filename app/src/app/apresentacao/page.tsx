@@ -3509,7 +3509,6 @@ export default function ApresentacaoPage() {
                               // fiscal (E7.1) — o estado da demo já tinha a
                               // categoria, só não a levava adiante.
                               jaCliente
-                              categoriaTravada={categoria !== null}
                             />
                           )}
                           {etapa === "analisando" && <AnalisandoView />}

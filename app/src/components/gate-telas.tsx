@@ -451,7 +451,7 @@ export function PerguntaView({
                 que é o trabalho que o percentual fazia antes de sair. Três
                 cards seguidos liam como três iguais. */}
             <OutrasOpcoes
-              titulo="O que mais se encaixa no que você contou"
+              titulo="O que mais se encaixa"
               alternativas={[encaixe.recomendado]}
               pill="+ compatível"
               escolhido={escolhido}

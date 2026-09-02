@@ -11,7 +11,8 @@ import { Campo, Texto, Checkbox } from "@/components/ui/form";
 import { SheetNaoReembolsavel } from "@/components/wizard-cauda";
 // 🗑️ 01/09 — ícones Google/Apple saíram junto do login social.
 import { CUSTOS, brl } from "@/lib/fiscal";
-import { CardIconeSelecao } from "@/components/gate-telas";
+import { CardIconeSelecao, CheckMiniRegime } from "@/components/gate-telas";
+import { CardNota } from "@/components/ui/card-nota";
 // 🆕 01/09 — o pagamento agora pré-preenche o que já foi coletado: identidade
 // (mock da conta criada no E6) e endereço (rascunho do E3.4).
 import { CLIENTE } from "@/app/(app)/dossie/mock";
@@ -1367,53 +1368,28 @@ function PlanoOferta({
             {/* 🆕 01/09 (pedido do Pedro) — o SELO DOURADO no canto superior
                 direito: o símbolo da marca vazado numa placa 3D, em ouro. Não
                 é enfeite de "VIP" (coroa/diamante estão fora, brigam com o
-                nosso discurso de preço honesto): é a nossa própria marca em
-                material nobre, que é o jeito de dizer premium sem prometer
-                status. `absolute` pra não empurrar o pill nem o preço.
+                nosso discurso de preço honesto): é a nossa própria marca.
+                🔄 01/09 — o ouro 3D SAIU e entrou o símbolo CHAPADO em coral,
+                o mesmo do logo. Sobre o card escuro o coral já tem contraste
+                de sobra, e a marca lisa lê como assinatura da casa em vez de
+                medalha de premiação. `absolute` pra não empurrar o pill nem o preço.
                 🔄 01/09 — parou de sangrar pra fora da quina: agora respira
                 24px, o MESMO respiro do conteúdo (`p-6`), então ele se alinha
                 à margem interna do card em vez de flutuar na borda. */}
             <Image
-              id="selo-ouro-flutua"
-              src="/icones/selo-ouro-v3.png"
+              src="/icones/selo-check-coral.png"
               alt=""
               aria-hidden
-              width={233}
-              height={231}
-              className="pointer-events-none absolute right-6 top-6 h-[40px] w-auto"
-              // 🔄 01/09 (pedido do Pedro) — sombra reforçada, em 2 camadas:
-              // uma curta e densa colada na peça (dá o contato/aresta) e uma
-              // longa e difusa embaixo (dá a altura). Sombra única sempre cai
-              // num meio-termo: ou gruda demais, ou faz o objeto boiar.
-              // Deslocada pra baixo/direita, que é a direção da luz do DS.
-              style={{
-                filter:
-                  "drop-shadow(0 2px 3px rgba(0,0,0,.55)) drop-shadow(3px 10px 16px rgba(0,0,0,.45))",
-              }}
+              width={801}
+              height={801}
+              className="pointer-events-none absolute right-6 top-6 h-[36px] w-auto"
+              // 🗑️ 01/09 — sombra e flutuação SAÍRAM junto com o ouro 3D. As
+              // duas existiam pra dar volume e vida a um objeto tridimensional;
+              // num símbolo chapado viram ruído: sombra atrás de forma plana é
+              // mancha, e marca da casa não fica balançando.
             />
 
-            {/* 🆕 01/09 (pedido do Pedro) — mesma flutuação do aparelho 3D da
-                E6.1, e pela mesma razão de dosagem: durações que NÃO se
-                dividem entre si evitam que o loop feche sempre no mesmo ponto
-                e vire um "sobe e desce" mecânico. Aqui o objeto é bem menor,
-                então a amplitude cai junto (3px, meio grau) — no aparelho eram
-                7px. Movimento grande num selo de 50px viraria inquietação.
-                ♿ Desliga em `prefers-reduced-motion`. */}
-            <style jsx global>{`
-              @keyframes selo-ouro-flutua {
-                0%   { transform: translate3d(0, 0, 0) rotate(0deg); }
-                40%  { transform: translate3d(-1px, -3px, 0) rotate(0.5deg); }
-                72%  { transform: translate3d(1px, -1px, 0) rotate(-0.4deg); }
-                100% { transform: translate3d(0, 0, 0) rotate(0deg); }
-              }
-              #selo-ouro-flutua {
-                animation: selo-ouro-flutua 6.5s ease-in-out infinite;
-                will-change: transform;
-              }
-              @media (prefers-reduced-motion: reduce) {
-                #selo-ouro-flutua { animation: none; }
-              }
-            `}</style>
+
 
             <div className="flex items-center gap-3">
               {/* 🧪 01/09 (teste do Pedro) — o pill era `bg-white/12` (véu
@@ -1557,10 +1533,30 @@ function PlanoOferta({
                 {semTaxaJunta ? "Não tem" : brl(CUSTOS.DAE_JUCEMG, true)}
               </p>
             </div>
+            {/* ✍️ 01/09 (correção do Pedro) — saiu "A guia é da Junta, a gente
+                só emite o boleto". A cobrança vai ser feita por boleto NOSSO,
+                não pela guia do órgão, então descrever o mecanismo assim seria
+                afirmar algo que não vai acontecer. O que continua verdadeiro e
+                é o que importa pra pessoa: o valor é do órgão e não fica com a
+                gente. A frase agora fala de DESTINO do dinheiro (repasse
+                integral), não de quem emite o documento. */}
             <p className="mt-1 text-micro text-text-tertiary">
-              {semTaxaJunta
-                ? "MEI não passa pela Junta Comercial. O registro é direto no Portal do Empreendedor, sem essa taxa."
-                : "Qualquer contabilidade também repassaria essa taxa: é o custo de registro na Junta Comercial de Minas Gerais, o órgão estadual da abertura. A guia é da Junta, a gente só emite o boleto. Depois disso, o único custo é a sua mensalidade."}
+              {semTaxaJunta ? (
+                "MEI não passa pela Junta Comercial. O registro é direto no Portal do Empreendedor, sem essa taxa."
+              ) : (
+                <>
+                  Qualquer contabilidade também repassaria essa taxa: é o custo de
+                  registro na Junta Comercial de Minas Gerais, o órgão estadual da
+                  abertura.{" "}
+                  {/* Negrito só nesta frase (pedido do Pedro): é a que responde
+                      "vocês estão embutindo margem aqui?" — a objeção real do
+                      card. O resto é contexto. */}
+                  <strong className="font-bold text-text-secondary">
+                    Nada aqui fica com a gente, é repasse integral.
+                  </strong>{" "}
+                  Depois disso, o único custo é a sua mensalidade.
+                </>
+              )}
             </p>
           </div>
 
@@ -1746,11 +1742,19 @@ export const METODOS: {
     id: "cartao",
     nome: "Cartão de crédito",
     quando: "na hora",
-    aviso: "Sua abertura começa hoje",
-    efeito: "Assim que o pagamento passar, a gente já entra com o processo.",
-    avisoMigrar: "Sua migração começa hoje",
+    // ✍️ 01/09 (correção do Pedro, 2 rodadas) — a copy PROMETIA prazo
+    // ("começa hoje"), e depois ainda prometia confirmação ("confirma na
+    // hora"). Nenhuma das duas está na nossa mão: nem o processo depois do
+    // pagamento (dossiê, protocolo, fila dos órgãos), nem a autorização do
+    // cartão, que é do adquirente e pode cair em análise. Sobra o que é
+    // verdade e ainda vende: é o caminho que COSTUMA ser mais rápido, por não
+    // ter compensação pra esperar. Comparativo, não garantia.
+    aviso: "O caminho mais rápido",
+    efeito:
+      "É a forma de pagamento que costuma liberar o processo antes, sem espera de compensação.",
+    avisoMigrar: "O caminho mais rápido",
     efeitoMigrar:
-      "Assim que o pagamento passar, a gente já aciona seu contador anterior.",
+      "É a forma de pagamento que costuma liberar o processo antes, sem espera de compensação.",
   },
   {
     id: "pix",
@@ -1760,11 +1764,14 @@ export const METODOS: {
     // boleto e deixar quem procura por ele achar que não tem.
     nome: "Pix e Boleto",
     quando: "em minutos",
-    aviso: "Sua abertura começa em minutos",
-    efeito: "Assim que o Pix cair, a gente já entra com o processo.",
-    avisoMigrar: "Sua migração começa em minutos",
+    // Mesma correção do cartão: fala do PAGAMENTO (que a gente controla), não
+    // do prazo da abertura (que depende dos órgãos).
+    aviso: "Pelo Pix, o caminho fica livre em minutos",
+    efeito:
+      "O Pix cai rápido, então a abertura não fica parada esperando o pagamento. Se preferir boleto, ele compensa em 1 a 3 dias úteis.",
+    avisoMigrar: "Pelo Pix, o caminho fica livre em minutos",
     efeitoMigrar:
-      "Assim que o Pix cair, a gente já aciona seu contador anterior.",
+      "O Pix cai rápido, então a migração não fica parada esperando o pagamento. Se preferir boleto, ele compensa em 1 a 3 dias úteis.",
   },
   {
     id: "boleto",
@@ -2060,13 +2067,17 @@ export function PagamentoView({
           </div>
 
           {/* O EFEITO DA ESCOLHA, EM TEMPO REAL: o cliente escolhe QUANDO a
-              empresa dele começa a existir, não "meio de pagamento". */}
-          <Aviso
-            variante={metodo === "boleto" ? "warning" : "success"}
-            titulo={migrar ? escolhido.avisoMigrar : escolhido.aviso}
-          >
+              empresa dele começa a existir, não "meio de pagamento".
+              🔄 01/09 (pedido do Pedro) — era `Aviso` (bloco tingido inteiro,
+              verde). Virou `CardNota`, o cartão neutro com ícone-círculo já
+              usado no E3.4: aqui não há alerta nenhum, é informação sobre a
+              escolha que a pessoa acabou de fazer — bloco colorido dava peso
+              de aviso a um texto que só explica. Variante positiva (check
+              verde) porque as duas formas de pagamento levam a um bom
+              caminho; nenhuma delas é problema. */}
+          <CardNota variante="positivo" titulo={migrar ? escolhido.avisoMigrar : escolhido.aviso}>
             {migrar ? escolhido.efeitoMigrar : escolhido.efeito}
-          </Aviso>
+          </CardNota>
 
           {/* 🆕 01/09 — o formulário de verdade, na forma que o Asaas exige. */}
           <DadosAsaasForm
@@ -2076,10 +2087,14 @@ export function PagamentoView({
             enderecoFiscal={enderecoFiscal}
           />
 
-          {/* IDEMPOTÊNCIA VISÍVEL (UX-38): mata o medo de quem paga e some. */}
-          <p className="text-micro text-text-tertiary">
-            Você paga uma vez só, mesmo que o app feche na hora do pagamento.
-          </p>
+          {/* 🗑️ 01/09 (decisão do Pedro) — a linha de IDEMPOTÊNCIA VISÍVEL
+              (UX-38, "você paga uma vez só, mesmo que o app feche") SAIU. Ela
+              levantava um problema que a pessoa não estava cogitando: falar em
+              app fechando no meio do pagamento planta a dúvida em vez de
+              acalmar. A garantia técnica continua valendo no backend; o
+              equivalente na tela de espera (`wizard-cauda`, "se o boleto já
+              foi pago, não cobramos de novo") permanece, porque lá a dúvida é
+              real — a pessoa já pagou e voltou. */}
 
           {/* 🔄 30/08 (pedido do Pedro) — aceite do contrato, realocado do
               extinto E8 (`ContratoView`). Só no fluxo de abertura.
@@ -2230,6 +2245,26 @@ export function dadosAsaasCompletos(d: DadosAsaas, metodo: Metodo): boolean {
   );
 }
 
+/**
+ * 🆕 01/09 (pedido do Pedro) — o mesmo círculo de check do `CardNota` no canto
+ * do bloco resolvido. A borda verde sozinha é sutil demais pra quem está de
+ * olho no campo que digita; o selo dá o "pronto" explícito. `absolute` pra não
+ * deslocar título nem campos — por isso o `Card` do bloco vira `relative`.
+ *
+ * ⚠️ Fora do componente de propósito: definido dentro do render, viraria um
+ * componente NOVO a cada tecla digitada (React remonta a árvore inteira).
+ */
+function SeloOk() {
+  return (
+    <span
+      aria-hidden
+      className="absolute right-4 top-4 flex h-5 w-5 items-center justify-center rounded-full bg-state-success-tint text-state-success-text"
+    >
+      <CheckMiniRegime />
+    </span>
+  );
+}
+
 function DadosAsaasForm({
   metodo,
   dados,
@@ -2242,10 +2277,49 @@ function DadosAsaasForm({
   enderecoFiscal: boolean;
 }) {
   const cartao = metodo === "cartao";
+  // Mock do autofill por CEP (mesma função do E3.4). No app real vira consulta
+  // à API de CEP — já registrada em `PREENCHIDOS_API` como pendência.
+  const enderecoFatura = buscarCep(dados.cep.replace(/\D/g, ""));
+
+  /**
+   * 🧪 01/09 (teste do Pedro) — BLOCO COMPLETO fica com a borda VERDE.
+   *
+   * Mesma espessura de sempre (1px, `border`), só a cor muda: hairline cinza →
+   * `state-success`, o mesmo verde do traço do check do CardNota. A ideia é dar
+   * progresso sem inventar componente: a pessoa vê o formulário "fechando"
+   * bloco a bloco em vez de descobrir o que falta só quando o CTA não habilita.
+   *
+   * As regras por bloco são as MESMAS de `dadosAsaasCompletos` — se um bloco
+   * ficasse verde com campo que o Asaas exige em branco, a borda viraria
+   * mentira e o CTA seguiria travado sem explicação.
+   */
+  const digitos = (v: string) => v.replace(/\D/g, "").length;
+  const blocoCartaoOk =
+    digitos(dados.numeroCartao) >= 13 &&
+    dados.nomeImpresso.trim().length > 2 &&
+    /^\d{2}\/\d{2}$/.test(dados.validade) &&
+    digitos(dados.cvv) >= 3;
+  const blocoTitularOk =
+    dados.titularNome.trim().length > 2 &&
+    digitos(dados.titularCpf) === 11 &&
+    /.+@.+\..+/.test(dados.titularEmail.trim()) &&
+    // Telefone só é obrigatório no cartão (`creditCardHolderInfo.phone`).
+    (!cartao || digitos(dados.titularTelefone) >= 10);
+  const blocoEnderecoOk = digitos(dados.cep) === 8 && dados.numero.trim() !== "";
+  /**
+   * Borda verde quando fecha; a espessura não muda, só a cor.
+   * 🔄 01/09 — testamos o verde do FUNDO do check (`state-success-tint`) e
+   * ficou apagado demais numa borda de 1px: tint foi feito pra área grande,
+   * não pra fio. Fica o verde do TRAÇO (`state-success`).
+   */
+  const borda = (ok: boolean) => (ok ? "border-state-success" : "");
+
+
   return (
     <div className="flex flex-col gap-4">
       {cartao && (
-        <Card>
+        <Card className={`relative ${borda(blocoCartaoOk)}`}>
+        {blocoCartaoOk && <SeloOk />}
           <p className="text-body font-semibold text-text-primary mb-3">Dados do cartão</p>
           <div className="flex flex-col gap-3">
             <Campo rotulo="Número do cartão">
@@ -2291,7 +2365,8 @@ function DadosAsaasForm({
         </Card>
       )}
 
-      <Card>
+      <Card className={`relative ${borda(blocoTitularOk)}`}>
+        {blocoTitularOk && <SeloOk />}
         <p className="text-body font-semibold text-text-primary">
           {cartao ? "Titular do cartão" : "Quem vai pagar"}
         </p>
@@ -2353,7 +2428,8 @@ function DadosAsaasForm({
           boleto do Asaas se viram com nome + CPF, então pedir CEP ali seria
           formulário que a gente inventou. */}
       {cartao && (
-        <Card>
+        <Card className={`relative ${borda(blocoEnderecoOk)}`}>
+        {blocoEnderecoOk && <SeloOk />}
           <p className="text-body font-semibold text-text-primary">Endereço da fatura</p>
           <p className="text-micro text-text-tertiary mt-1 mb-3">
             {enderecoFiscal
@@ -2363,14 +2439,35 @@ function DadosAsaasForm({
 
           <div className="flex flex-col gap-3">
             <Campo rotulo="CEP">
+              {/* 🐛 01/09 (achado do Pedro) — o campo aceitava o CEP CRU
+                  ("30220310"): faltava a máscara que todo outro CEP do app
+                  aplica. */}
               <Texto
                 valor={dados.cep}
-                onChange={(v) => set("cep", v)}
+                onChange={(v) => set("cep", mascaraCep(v))}
                 inputMode="numeric"
                 maxLength={9}
                 placeholder="00000-000"
               />
             </Campo>
+
+            {/* 🆕 01/09 (achado do Pedro: "não teria que puxar automático?") —
+                o endereço resolvido pelo CEP, read-only, igual ao E3.4. O
+                Asaas só precisa de `postalCode` + `addressNumber` (ele deriva
+                o resto), então isto não é dado a mais pra enviar: é
+                CONFIRMAÇÃO visual de que o CEP está certo. Sem isso a pessoa
+                digita 8 números e segue no escuro — e CEP errado só apareceria
+                como recusa do emissor, depois do clique em pagar. */}
+            {enderecoFatura && (
+              <div className="rounded-md border border-border-hairline bg-surface-card p-3">
+                <p className="text-caption text-text-secondary">
+                  {enderecoFatura.logradouro}, {enderecoFatura.bairro}
+                </p>
+                <p className="text-caption font-semibold text-text-primary">
+                  {enderecoFatura.municipio} · {enderecoFatura.uf}
+                </p>
+              </div>
+            )}
             <div className="grid grid-cols-2 gap-3">
               <Campo rotulo="Número">
                 <Texto

@@ -490,8 +490,11 @@ export function PerguntaView({
             <OutrasOpcoes
               titulo={principal ? "Trocar por" : "O que mais se encaixa"}
               alternativas={opcoes.filter((o) => o.cnae !== escolhido)}
-              pill="+ compatível"
-              pillEm={encaixe.recomendado.cnae}
+              // O recomendado se distingue pelo "+"; os outros seguem
+              // marcados como compatíveis, que é o que eles são.
+              pillDe={(o) =>
+                o.cnae === encaixe.recomendado.cnae ? "+ compatível" : "compatível"
+              }
               onEscolher={escolherCnae}
               onVerDetalhes={setDetalhe}
             />

@@ -215,8 +215,7 @@ export function OutrasOpcoes({
   escolhido,
   onEscolher,
   titulo = "Outras opções pra você",
-  pill,
-  pillEm,
+  pillDe,
   onVerDetalhes,
 }: {
   alternativas: OpcaoCnae[];
@@ -224,22 +223,12 @@ export function OutrasOpcoes({
   onEscolher?: (cnae: string) => void;
   titulo?: string;
   /**
-   * 🆕 02/09 (pedido do Pedro) — texto da pill verde de cada card desta
-   * lista. Na C0 são duas listas: o recomendado leva "+ compatível", as
-   * outras levam "compatível". Sem a prop, nenhuma pill.
-   *
-   * ⚠️ É da LISTA, não do card: o rótulo vale pra todo item, e quem decide o
-   * que a lista significa é quem a monta. No VEREDITO (C0.2) esta lista traz
-   * só as alternativas — o mais compatível está no card grande acima —, então
-   * lá ela roda sem pill nenhuma.
+   * 🆕 02/09 (pedido do Pedro) — texto da pill de cada cartão. Recebe a
+   * opção e devolve o rótulo, ou nada. É função porque numa lista só convivem
+   * rótulos diferentes: o recomendado leva "+ compatível" e os outros levam
+   * "compatível". No VEREDITO (C0.2) a prop não é passada e ninguém leva pill.
    */
-  pill?: string;
-  /**
-   * 🆕 02/09 — limita a `pill` a UM cnae da lista. Com o "+ compatível"
-   * convivendo com os outros na mesma lista, o rótulo deixou de valer pra
-   * todos: só o recomendado o carrega. Sem isto, a pill vale pra lista toda.
-   */
-  pillEm?: string;
+  pillDe?: (o: OpcaoCnae) => string | undefined;
   /**
    * 🆕 02/09 (pedido do Pedro) — abre as características do CNAE num
    * bottom-sheet. Sem a prop, o card não mostra o link (é o caso do veredito).
@@ -317,7 +306,7 @@ export function OutrasOpcoes({
                   técnica: ela fica escolhendo entre 8 pontos de diferença em
                   vez de ler o que cada atividade descreve. Sobra o sinal que
                   de fato ajuda, e só no primeiro. */}
-              {pill && (!pillEm || pillEm === a.cnae) && (
+              {pillDe?.(a) && (
                 <span
                   /* 🔄 02/09 (pedido do Pedro) — pill do card NÃO escolhido
                      saiu do verde e virou coral claro (tint + coral-700), o
@@ -331,7 +320,7 @@ export function OutrasOpcoes({
                       : "bg-surface-tint-brand text-action-primary-sm"
                   }`}
                 >
-                  {pill}
+                  {pillDe(a)}
                 </span>
               )}
             </div>

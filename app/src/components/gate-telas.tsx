@@ -293,6 +293,7 @@ export function PerguntaView({
   setSabeCodigo,
   onValidar,
   jaCliente = false,
+  semResultados = false,
 }: {
   texto: string;
   setTexto: (v: string) => void;
@@ -314,6 +315,20 @@ export function PerguntaView({
    * ACHANDO O CÓDIGO da pessoa, não julgando se ela entra.
    */
   jaCliente?: boolean;
+  /**
+   * 🆕 02/09 (pedido do Pedro) — a CHEGADA da C0 (nó C0_0 do mapa): a
+   * tela "pelada", antes de a pessoa contar o que faz. Some o slot da
+   * atividade principal e os 3 cartões de código — não há o que mostrar
+   * enquanto ninguém descreveu nada, e mostrar palpite antes da pergunta é
+   * fingir que a IA adivinhou.
+   *
+   * É PROP, não componente novo: o que as duas telas têm em comum (título,
+   * categoria, campo, link do código, CTA) é quase tudo. Duplicar o
+   * componente faria cada ajuste virar dois, que é o defeito que este projeto
+   * passou o dia consertando. 🟡 Em lapidação — a versão vazia vai ganhar
+   * conteúdo próprio.
+   */
+  semResultados?: boolean;
 }) {
   const sel = PILLS.find((p) => p.id === categoria);
   /**
@@ -414,7 +429,7 @@ export function PerguntaView({
   // escolha vinha pronta e não havia como não ter uma.
   const podeValidar = sabeCodigo
     ? texto.replace(/\D/g, "").length >= 6
-    : texto.trim().length >= 10 && escolhido !== null;
+    : texto.trim().length >= 10 && (semResultados || escolhido !== null);
 
   /* 🗑️ 02/09 — o scroll-fade daqui (scRef + ResizeObserver + mask) morreu
      junto com a grade de pills: era ele que desbotava a ponta da lista quando
@@ -461,6 +476,11 @@ export function PerguntaView({
               cruzado com o texto — com o campo vazio, cai no exemplo padrão.
               Falta decidir com o Pedro: aparece enquanto digita ou só depois
               do CTA, e o que o CTA vira quando o resultado já está na tela. */}
+          {semResultados ? (
+            // A faixa que sobrou é o espaço reservado dos resultados: fica
+            // vazia até a pessoa descrever. É o assunto da lapidação.
+            <div className="min-h-0 flex-1" aria-hidden />
+          ) : (
           <Rolagem className="min-h-0 flex-1">
             {/* 🆕 02/09 (ideia do Pedro) — O SLOT DO PRINCIPAL.
                 Um lugar de chegada, vazio e pontilhado, com o nome do que
@@ -499,6 +519,7 @@ export function PerguntaView({
               onVerDetalhes={setDetalhe}
             />
           </Rolagem>
+          )}
 
           {!sabeCodigo && (
             <Campo rotulo="Sua categoria">

@@ -310,6 +310,29 @@ export const CONFERENCIA: TelaConferencia[] = [
     ]
   },
   {
+    "id": "C0_0",
+    "titulo": "C0.0 · Sua atividade (chegada, antes de descrever)",
+    "rota": "/dossie/atividade?vazia=1",
+    "campos": [
+      {
+        "nome": "Descrição da atividade (texto livre)",
+        "codigo": "",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "categoria já vem preenchida do E3.4",
+        "codigo": "",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      }
+    ]
+  },
+  {
     "id": "C0",
     "titulo": "C0 · Sua atividade (descreve + pills)",
     "rota": "/dossie/atividade",

@@ -96,6 +96,10 @@ tags: [execucao, flow, dados, abertura]
 ### E9.1P · Status (pago, via instantâneo)
 - _(sem dado novo — contexto, confirmação ou decisão do sistema)_
 
+### C0.0 · Sua atividade (chegada, antes de descrever)
+- Descrição da atividade (texto livre)
+- categoria já vem preenchida do E3.4
+
 ### C0 · Sua atividade (descreve + pills)
 - Descrição da atividade (texto livre) → CNAE principal (derivado por IA)
 - OU o código já sabido (atalho 28/07, mesma engine)

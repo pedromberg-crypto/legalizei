@@ -102,6 +102,14 @@ export default function AtividadePage() {
             // 🔄 02/09 — a tela não bifurca mais entre "chip travado" e
             // "grade de pills": é sempre chip + "Trocar categoria". O que a
             // `?cat=` decide agora é só qual categoria vem preenchida.
+            //
+            // 🆕 02/09 — `?vazia=1` abre a CHEGADA (nó C0_0 do mapa): a tela
+            // sem os cartões de código, antes de a pessoa descrever. Por
+            // querystring, e não por `texto === ""`, porque ainda não está
+            // decidido se a virada é automática ao digitar ou por ação — o
+            // Pedro está lapidando essa tela. Enquanto isso, quem revisa
+            // consegue abrir os dois estados por rota.
+            semResultados={searchParams.get("vazia") === "1"}
           />
         )}
         {etapa === "analisando" && <AnalisandoView />}

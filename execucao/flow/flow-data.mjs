@@ -603,7 +603,14 @@ export const NODES = [
   // E5.3 descarta) NÃO são mais alcançáveis do veredito no caminho abrir. A
   // única porta de "não atendo" antes do dinheiro é o "minha atividade não
   // está na lista" do E3.4 → E5.1. E5.2/E5.3 seguem vivas pelo Migrar.
-  { id: "C0", caminho: "abrir", rota: "/dossie/atividade", label: "C0 · Sua atividade<br/>(descreve + pills)", forma: "tela", classe: "", status: "construida", validado: "pendente", grupo: "GATE", falta: "🔄 27/08 — era o E5A (`/gate`), antes do pagamento. Copy reenquadrada (`jaCliente`): não promete mais 'validar minha atividade' (a validação já aconteceu no E3.4), agora é 'achar meu CNAE'. 🔄 02/09 (pedido do Pedro) — A GRADE DE 17 PILLS SAIU DA TELA: a categoria vem pré-selecionada do E3.4 (via `?cat=`) como chip confirmado, dentro de um **dropdown** (mesmo `Select` do E3.4), fechado, que é por onde ela troca se quiser. 🆕 02/09 — O VEREDITO COMEÇOU A SER FUNDIDO AQUI DENTRO: os 3 CNAEs mais compatíveis aparecem na própria tela (cartões reusados do C0.2), num SLOT vazio no topo ('Escolha seu CNAE principal, é só clicar', contorno tracejado): clicar num cartão sobe ele pro slot em coral, clicar em outro troca e o CTA nomeando o que acontece ('Continuar com esse CNAE'). Cada cartão tem 'Ver detalhes', que abre um bottom-sheet com o que aquele código cobre (`SheetCnae`) e permite trocar por lá. O painel cinza (`rounded-3xl bg-surface-alt`, de 28/07) SAIU junto: ele existia pra agrupar a grade de pills, e sem elas os 2 campos vão direto no fundo claro, no mesmo `Campo` do C1/C4/E3.4. Lista do dropdown = só as 17 validadas, SEM a opção "não encontrei" (essa porta é do E3.4, antes do dinheiro; aqui a pessoa já pagou e cair na waitlist seria beco). Sem `?cat=` o dropdown aparece vazio. O campo de descrição herdou a sobra que era da lista. Lista CNAE furada na raiz: 124 não-refutados, 45 impossíveis, 91 duvidosos; IA real (hoje mock) — Larissa/Pedro/dev", dados: "Descrição da atividade (texto livre) → CNAE principal (derivado por IA) · OU o código já sabido (atalho 28/07, mesma engine) · categoria já vem pré-selecionada do E3.4" },
+  // 🆕 02/09 (pedido do Pedro) — a C0 RACHOU EM DUAS. Desde que o veredito
+  // passou a morar dentro dela, a tela tem dois momentos bem diferentes: a
+  // CHEGADA, sem nada pra mostrar porque a pessoa ainda não contou o que faz,
+  // e a tela com os 3 códigos + o slot da atividade principal. Eram estados do
+  // mesmo componente e por isso invisíveis no mapa; agora cada um é um nó, que
+  // é como o Pedro revisa (uma pill por tela).
+  { id: "C0_0", caminho: "abrir", rota: "/dossie/atividade?vazia=1", label: "C0.0 · Sua atividade<br/>(chegada, antes de descrever)", forma: "tela", classe: "", status: "construida", validado: "pendente", grupo: "GATE", falta: "🆕 02/09 — estado 'pelado' da C0: categoria (vinda do E3.4) e campo de descrição, sem os cartões de CNAE nem o slot da atividade principal, porque ainda não há o que mostrar. Mesmo componente da C0 (`PerguntaView`, prop `semResultados`) — o que é comum continua comum. 🟡 Em lapidação pelo Pedro; falta decidir se a transição pro estado com resultados é automática (ao digitar) ou por ação.", dados: "Descrição da atividade (texto livre) · categoria já vem preenchida do E3.4" },
+  { id: "C0", caminho: "abrir", rota: "/dossie/atividade", label: "C0 · Sua atividade<br/>(descreve + pills)", forma: "tela", classe: "", status: "construida", validado: "pendente", grupo: "GATE", falta: "🔄 27/08 — era o E5A (`/gate`), antes do pagamento. Copy reenquadrada (`jaCliente`): não promete mais 'validar minha atividade' (a validação já aconteceu no E3.4), agora é 'achar meu CNAE'. 🔄 02/09 (pedido do Pedro) — A GRADE DE 17 PILLS SAIU DA TELA: a categoria vem pré-selecionada do E3.4 (via `?cat=`) como chip confirmado, dentro de um **dropdown** (mesmo `Select` do E3.4), fechado, que é por onde ela troca se quiser. 🆕 02/09 — O VEREDITO COMEÇOU A SER FUNDIDO AQUI DENTRO: os 3 CNAEs mais compatíveis aparecem na própria tela (cartões reusados do C0.2), num SLOT vazio no topo ('Escolha seu CNAE principal, é só clicar', contorno tracejado): clicar num cartão sobe ele pro slot em coral, clicar em outro troca e o CTA nomeando o que acontece ('Continuar com esse CNAE'). Cada cartão tem 'Ver detalhes', que abre um bottom-sheet com o que aquele código cobre (`SheetCnae`) e permite trocar por lá. O painel cinza (`rounded-3xl bg-surface-alt`, de 28/07) SAIU junto: ele existia pra agrupar a grade de pills, e sem elas os 2 campos vão direto no fundo claro, no mesmo `Campo` do C1/C4/E3.4. Lista do dropdown = só as 17 validadas, SEM a opção 'não encontrei' (essa porta é do E3.4, antes do dinheiro; aqui a pessoa já pagou e cair na waitlist seria beco). Sem `?cat=` o dropdown aparece vazio. O campo de descrição herdou a sobra que era da lista. Lista CNAE furada na raiz: 124 não-refutados, 45 impossíveis, 91 duvidosos; IA real (hoje mock) — Larissa/Pedro/dev", dados: "Descrição da atividade (texto livre) → CNAE principal (derivado por IA) · OU o código já sabido (atalho 28/07, mesma engine) · categoria já vem pré-selecionada do E3.4" },
   { id: "C0_2", caminho: "abrir", rota: "/dossie/atividade?etapa=veredito", label: "C0.2 · CNAE encontrado", forma: "decisao", classe: "", status: "construida", validado: "pendente", grupo: "GATE", falta: "🔄 27/08 — era o E5V. 🔴 A MUDANÇA ESTRUTURAL: aqui o veredito NÃO pode mais dar 🔴/🟡 no caminho abrir (a categoria do E3.4 já garantiu que a atividade é atendida). O split de 3 vias que estava pendente desde 28/07 deixa de ser necessário AQUI e passa a ser problema do E3.4 (lista de categorias) — o `mapear()` mock ainda tem os 4 desfechos porque o Migrar usa os mesmos", dados: "" },
   { id: "DESAMB", caminho: "abrir", rota: "/dossie/atividade", label: "Desambiguação<br/>mini-loop", forma: "tela", classe: "inline", status: "construida", validado: "ux", grupo: "GATE", falta: "Mini-loop conceitual (reformula a pergunta) — sem etapa própria, mesma tela da C0", naTabela: false, dados: "" },
   { id: "C0_3", caminho: "abrir", rota: "/veredito/atende", label: "🟢 CNAE confirmado", forma: "tela", classe: "", status: "construida", validado: "pendente", grupo: "GATE", falta: "🔄 27/08 — era o E5VA. Depende da lista CNAE", dados: "" },
@@ -820,7 +827,7 @@ export const EDGES = [
   { de: "E9_SR", para: "E9_R", tracejado: true },
   { de: "E9_R", para: "E9_S", tracejado: true, label: "passou" },
   { de: "E9_S", para: "E9_1P", tracejado: true },
-  { de: "E9_1P", para: "C0", label: "Continuar preenchendo" },
+  { de: "E9_1P", para: "C0_0", label: "Continuar preenchendo" },
   // MEI entra no dossiê pela ocupação, não pela descrição de atividade.
   // 🟡 30/08 — MEI segue direto por ora (fora do escopo desta rodada, que é
   // só ME Simples Nacional); revisitar quando o splash/status universal
@@ -833,11 +840,13 @@ export const EDGES = [
   { de: "E9_SB", para: "E9_1", tracejado: true },
   // 🔒 31/08 (fusão A3+E9) — o "Continuar preenchendo" do E9.1 fica TRAVADO
   // até o boleto compensar; quem paga por cartão/Pix (E9.1P) segue na hora.
-  { de: "E9_1", para: "C0", label: "Continuar (após compensar)" },
+  { de: "E9_1", para: "C0_0", label: "Continuar (após compensar)" },
 
   { de: "C0", para: "C0_2" },
   { de: "C0_2", para: "DESAMB", label: "ambíguo" },
   { de: "DESAMB", para: "C0" },
+  // 🆕 02/09 — a chegada vira a tela com resultados quando a pessoa descreve.
+  { de: "C0_0", para: "C0", label: "descreveu o que faz" },
   { de: "C0_2", para: "C0_3", label: "🟢 confirmado" },
   // 🔄 28/08 (pedido do Pedro) — C5 (CNAE secundários) MOVEU: antes vinha
   // depois de C4 (dados da empresa); agora vem logo depois da atividade

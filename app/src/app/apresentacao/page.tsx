@@ -236,6 +236,7 @@ type Etapa =
   | "mei-ou-me"
   | "endereco"
   | "fora-bh"
+  | "perguntando-vazio"
   | "perguntando"
   | "analisando"
   | "veredito"
@@ -604,6 +605,7 @@ type Momento =
   | "endereco"
   | "fora-bh"
   | "fora-bh-enviado"
+  | "perguntando-vazio"
   | "perguntando"
   | "analisando"
   | "veredito-atende"
@@ -1031,6 +1033,8 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   "fora-bh": "/endereco?simular=fora-bh",
   "fora-bh-enviado": "/endereco?simular=fora-bh",
   // 🔄 27/08 — atravessaram o pagamento: viraram a C0 (`/dossie/atividade`).
+  // 🆕 02/09 — a chegada da C0, antes de a pessoa descrever (nó C0_0).
+  "perguntando-vazio": "/dossie/atividade?vazia=1",
   perguntando: "/dossie/atividade",
   analisando: "/dossie/atividade",
   "veredito-atende": "/veredito/atende",
@@ -1232,6 +1236,7 @@ const MOMENTO_POR_NO: Record<string, Etapa | null> = {
   E9_R: "pagamento-retry",
   E9_1: "aguardando",
   E9_1P: "aguardando-pago",
+  C0_0: "perguntando-vazio",
   C0: "perguntando",
   C0_2: "veredito",  // o veredito da C0
   DESAMB: null,  // 🕳️ mini-loop de desambiguação não foi construído
@@ -1416,6 +1421,12 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
       "Encerra o fluxo de abertura, mas não encerra o relacionamento — a pessoa segue no radar até a gente abrir na cidade dela.",
     porque:
       "Tela terminal não pode ser beco. Quem não pôde comprar hoje continua sendo público: se sai sem lugar pra ir, a gente perde o lead duas vezes (não abriu e não acompanha).",
+  },
+  "perguntando-vazio": {
+    dono: "usuario",
+    faz: "A chegada da C0: a pessoa acabou de pousar aqui e ainda não contou o que faz. Só a categoria (que veio pronta do E3.4) e o campo de descrição — sem os cartões de código e sem o slot da atividade principal, porque não há o que mostrar antes da pergunta.",
+    interfere: "Nada ainda: é a tela que COLETA o dado que decide o CNAE. O que interfere de fato acontece no estado seguinte, quando os códigos aparecem.",
+    porque: "🟡 Em lapidação (02/09). Ela existe porque mostrar 3 códigos antes de a pessoa descrever seria fingir que a IA adivinhou — e porque a versão com resultados é uma tela visualmente cheia, que não pode ser a primeira impressão de quem acabou de pagar.",
   },
   perguntando: {
     dono: "usuario",
@@ -2509,7 +2520,9 @@ export default function ApresentacaoPage() {
     (idVariante && TELAS_DO_FLOW.find((t) => t.id === idVariante)?.nome) ||
     NOME_MOCKUP[momento];
 
-  const mostraCenarios = etapa === "perguntando";
+  // Os cenários preenchem o campo de descrição, então valem nos dois estados
+  // da C0 — inclusive na chegada, que é justamente onde o campo está vazio.
+  const mostraCenarios = etapa === "perguntando" || etapa === "perguntando-vazio";
   const naEntrada = etapa === "fork";
   const naSaidaCidade = etapa === "fora-bh";
   const naSaidaTriagem =
@@ -3495,8 +3508,12 @@ export default function ApresentacaoPage() {
                         </header>
 
                         <main className="app-main">
-                          {etapa === "perguntando" && (
+                          {/* 🆕 02/09 — os DOIS estados da C0 usam a mesma
+                              view; o que muda é `semResultados`, que é a
+                              diferença entre o nó C0_0 e o C0 no mapa. */}
+                          {(etapa === "perguntando" || etapa === "perguntando-vazio") && (
                             <PerguntaView
+                              semResultados={etapa === "perguntando-vazio"}
                               texto={texto}
                               setTexto={setTexto}
                               categoria={categoria}

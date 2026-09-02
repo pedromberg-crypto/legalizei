@@ -333,6 +333,36 @@ export function PerguntaView({
   const placeholder = sabeCodigo ? "Ex: 6201-5/02" : sel ? `Ex: ${sel.ex}` : tw;
   // b1.descricao valida >= 10 caracteres. Espelha o motor exatamente.
   // No modo código, a régua é outra: só precisa parecer um CNAE (dígitos).
+  /**
+   * 🔄 02/09 (pedido do Pedro: "sem scroll, aumente até que não precise")
+   * — o campo CRESCE com o texto em vez de rolar por dentro. Rolagem dentro
+   * de um campo de 2 linhas esconde o que a pessoa acabou de escrever, e é
+   * justamente a descrição que a IA vai usar pra achar o CNAE.
+   *
+   * Base = 3 linhas; daí em diante acompanha o conteúdo. O teto existe porque
+   * o shell é 100dvh (`.app-page`): sem ele, um texto longo empurraria o CTA
+   * pra fora da tela. Só ao bater no teto volta a haver rolagem interna.
+   */
+  const areaRef = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => {
+    const el = areaRef.current;
+    if (!el) return;
+    const TETO = 240;
+    el.style.height = "auto";
+    // Campo vazio: quem ocupa espaço é o PLACEHOLDER, e `scrollHeight` não o
+    // enxerga — o exemplo da categoria tem 2 linhas e apareceria cortado.
+    // Mede com ele dentro e devolve. Atribuir `value` direto não dispara
+    // evento nem mexe no estado do React.
+    if (el.value === "" && el.placeholder) {
+      el.value = el.placeholder;
+      el.style.height = `${Math.min(el.scrollHeight, TETO)}px`;
+      el.value = "";
+      return;
+    }
+    el.style.height = `${Math.min(el.scrollHeight, TETO)}px`;
+    el.style.overflowY = el.scrollHeight > TETO ? "auto" : "hidden";
+  }, [texto, sabeCodigo, placeholder]);
+
   const podeValidar = sabeCodigo
     ? texto.replace(/\D/g, "").length >= 6
     : texto.trim().length >= 10;
@@ -392,20 +422,23 @@ export function PerguntaView({
               mais, que é exatamente o que a IA usa. */}
           {/* 🔄 02/09 — o campo parou de esticar. Ele herdou a sobra
               quando a lista de pills saiu; agora a sobra é do vazio acima, e
-              o campo fica com ~1/4 da altura que ocupava (2 linhas). */}
+              o campo tem piso de 3 linhas e cresce com o texto. */}
           <div className="flex shrink-0 flex-col">
             <p className="text-caption font-semibold text-text-primary">
               {sabeCodigo ? "Número do CNAE" : "O que você faz na prática"}
             </p>
-            <div className="relative mt-1.5 h-16">
+            <div className="relative mt-1.5">
               <textarea
+                ref={areaRef}
+                // 🔄 02/09 (pedido do Pedro) — piso de 3 linhas. Cresce daí.
+                rows={3}
                 value={texto}
                 onChange={(e) => setTexto(e.target.value)}
                 placeholder={placeholder}
                 // 🐛 02/09 (achado do Pedro: "parece mais redonda que o
                 // dropdown") — estava `rounded-xl` (24px). TODO campo do DS
                 // usa `rounded-md` (12px): Texto, Select, Checkbox, opção.
-                className="h-full w-full resize-none rounded-md border border-border-hairline
+                className="block w-full resize-none rounded-md border border-border-hairline
                            bg-surface-card p-4 pr-9 text-body text-text-primary
                            placeholder:text-text-muted focus:border-border-focus focus:outline-none"
               />

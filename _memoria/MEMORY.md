@@ -1,5 +1,7 @@
 # Memory Index — Legalize
 
+- [Encaixe de asset se MEDE, não se estima](legalize-encaixe-asset-medido-nao-no-olho.md) — 01/09: achar o pixel do corte por coluna e derivar o offset por fórmula; empurrar 10px por vez não converge.
+- [Halo escuro = alfa premultiplicado](legalize-alfa-premultiplicado-halo-escuro.md) — 01/09: PNG bom no Photoshop e ruim no app; comparar cor de borda × sólido antes de culpar cache. Achatar fundo+objeto é a saída mais barata.
 - [Escrever arquivo só via Edit/Write](legalize-escrita-arquivo-so-edit-write.md) — 01/09: script Python truncou 2 arquivos do vault (emoji + `open('w')`); node só com texto vindo de arquivo, nunca backtick inline.
 - [Gravação da JUCEMG é a fonte-verdade do flow](legalize-gravacao-jucemg-fonte-primaria.md) — 31/08: 141 prints da constituição real; matou o debate da procuração (derruba Registro Automático) e achou o bug do apartamento.
 - [Não rodar e2e sem pedir](legalize-nao-rodar-e2e-sem-pedir.md) — 30/08, reforçado 01/09: um "pode rodar" vale só pra aquela rodada; padrão é tsc+eslint. Travado no CLAUDE.md.

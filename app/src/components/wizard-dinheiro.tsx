@@ -189,6 +189,101 @@ export function ContaView({
       <>
         <TelaHeader meta="Confirme seu acesso" onVoltar={onVoltar} />
         <main className="app-main">
+          {/* 🆕 01/09 (pedido do Pedro) — ilustração 3D em cima, conteúdo
+              descendo. Mesmo idioma dos ícones do DS (família A: clay macio,
+              bevel grosso, brilho satinado) e nas cores da paleta: corpo em
+              ink escuro, tela em papel quente, os 3 asteriscos em coral — o
+              único ponto de coral, porque coral é marca e AÇÃO, e a ação aqui
+              é justamente o código que ela vai digitar.
+              🔄 01/09 (2ª rodada, pedido do Pedro) — o aparelho passou a
+              CENTRALIZAR no espaço livre (`flex-1` + `items-center`) e o
+              conteúdo desceu inteiro pro pé da tela. Não é margem chutada: o
+              ícone ocupa a sobra, então ele fica no meio em qualquer aparelho,
+              do iPhone SE ao Pro Max, sem número mágico por tamanho de tela. */}
+          <div className="flex min-h-0 flex-1 items-center justify-center py-4">
+            {/* 🆕 01/09 (pedido do Pedro) — sombra de CONTATO: o aparelho
+                parece escorado numa mesa. São 2 camadas, e as duas importam:
+                a elipse borrada embaixo é o contato com a superfície (mais
+                densa e curta, porque a base do objeto encosta ali), e o
+                `drop-shadow` no próprio PNG segue a silhueta dele, projetando
+                pra baixo e pra DIREITA — mesma direção de luz dos ícones do
+                DS, que vem do alto à esquerda. Sombra chapada centralizada
+                faria o objeto flutuar em vez de apoiar. */}
+            <div id="codigo-flutua" className="relative flex h-[90%] max-h-[414px] items-end">
+              <div
+                  aria-hidden
+                className="absolute -bottom-2 left-1/2 h-5 w-[72%] -translate-x-1/2 blur-md"
+                style={{
+                  background:
+                    "radial-gradient(closest-side, rgba(27,30,36,.30), rgba(27,30,36,.10) 62%, transparent 100%)",
+                }}
+              />
+              <Image
+                src="/icones/codigo-aparelho.png"
+                alt=""
+              aria-hidden
+                width={569}
+                height={1011}
+                priority
+              // 🔄 01/09 (4ª rodada, pedido do Pedro) — o aparelho deixa de
+              // ter altura fixa e passa a OCUPAR o espaço livre (`h-full`).
+              // Como o container é o `flex-1`, ele cresce até onde dá e para
+              // sozinho quando o conteúdo de baixo precisa do espaço — some o
+              // vai-e-vem de "aumenta mais 20%". 🔄 -10% depois de ver na
+              // tela: ocupa 90% da sobra, com teto de 414px pra não virar
+              // pôster num Pro Max.
+                className="relative z-10 h-full w-auto"
+                style={{ filter: "drop-shadow(6px 14px 12px rgba(27,30,36,.20))" }}
+              />
+            </div>
+
+            {/* 🆕 01/09 (pedido do Pedro) — flutuação sutil. Animação LOCAL
+                (styled-jsx), não vira token nem utilitário: acontece nesta
+                tela só, e promover ao DS seria abstração especulativa
+                (design-system.md §6).
+
+                O truque pra não parecer um "sobe e desce" mecânico: dois
+                movimentos com DURAÇÕES QUE NÃO SE DIVIDEM (7s e 5,5s). Como
+                não fecham no mesmo ponto, o caminho nunca se repete igual e o
+                olho lê como flutuar, não como loop. O aparelho anda no eixo
+                vertical e gira 1 grau; a sombra faz o contraponto (encolhe e
+                clareia quando ele sobe), que é o que dá a leitura de altura.
+
+                ♿ `prefers-reduced-motion` desliga tudo: movimento contínuo em
+                tela de digitar código é gatilho real de desconforto. */}
+            <style jsx global>{`
+              @keyframes codigo-flutua-obj {
+                0%   { transform: translate3d(0, 0, 0) rotate(0deg); }
+                35%  { transform: translate3d(4px, -7px, 0) rotate(0.6deg); }
+                70%  { transform: translate3d(-3px, -3px, 0) rotate(-0.5deg); }
+                100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+              }
+              @keyframes codigo-flutua-sombra {
+                0%   { transform: translateX(-50%) scaleX(1); opacity: 1; }
+                35%  { transform: translateX(-50%) scaleX(0.9); opacity: 0.72; }
+                70%  { transform: translateX(-50%) scaleX(0.96); opacity: 0.88; }
+                100% { transform: translateX(-50%) scaleX(1); opacity: 1; }
+              }
+              #codigo-flutua img {
+                animation: codigo-flutua-obj 7s ease-in-out infinite;
+                will-change: transform;
+              }
+              #codigo-flutua > div[aria-hidden] {
+                animation: codigo-flutua-sombra 5.5s ease-in-out infinite;
+                will-change: transform, opacity;
+              }
+              @media (prefers-reduced-motion: reduce) {
+                #codigo-flutua img,
+                #codigo-flutua > div[aria-hidden] {
+                  animation: none;
+                }
+              }
+            `}</style>
+          </div>
+          {/* Bloco de baixo: título + campo + reenvio, ancorados no pé da
+              tela (o `flex-1` de cima é quem empurra). `shrink-0` pra ele
+              nunca ser espremido quando o teclado abre. */}
+          <div className="shrink-0">
           {/* 🔄 30/08 (pedido do Pedro) — explicita PRA ONDE foi cada envio
               (e-mail e telefone, os dois em coral+negrito), não só "e por
               SMS" genérico. */}
@@ -236,6 +331,7 @@ export function ContaView({
               </button>
             )}
           </Corpo>
+          </div>
           <Rodape>
             <Button full disabled={d.codigo.length !== DIGITOS_CODIGO} onClick={onConfirmar}>
               Confirmar
@@ -411,44 +507,133 @@ function ContaPainel({
       {/* PAINEL ESCURO — sangra nos 3 lados, mesma mecânica do login: a margem
           negativa desfaz o padding do shell pra COR chegar na borda do vidro,
           e o padding devolve a inset pro CONTEÚDO. */}
+      {/* 🔄 01/09 (pedido do Pedro) — o painel escuro cresce (`pb-14` →
+          `pb-32`) e a folha clara desce junto: mais respiro em volta da marca,
+          que é a única coisa que mora aqui em cima. Mesmo movimento da tela do
+          código, onde o conteúdo foi pro pé da tela. */}
+      {/* 🔄 01/09 (pedido do Pedro) — `pb-32` → `pb-44`: o painel coral cresce
+          mais 48px e leva TUDO junto pra baixo (folha, Léo e formulário), sem
+          nenhum ajuste extra — o Léo é ancorado na base do painel e a folha é
+          irmã dele no fluxo, então os três se movem em bloco. */}
       <div
-        className="-mx-6 shrink-0 px-7 pb-14"
+        className="relative -mx-6 shrink-0 px-7 pb-44"
         style={{
           marginTop: "calc(-1 * var(--safe-top))",
           paddingTop: "calc(var(--safe-top) + 1.5rem)",
-          backgroundColor: "var(--color-surface-dark)",
-          backgroundImage:
-            "radial-gradient(120% 80% at 15% 0%, color-mix(in srgb, var(--color-brand) 22%, transparent), transparent 60%)",
+          // 🔄 01/09 (pedido do Pedro) — o painel de cima vira CORAL (era o
+          // ink escuro), e é o coral EXATO do hero do E3.3 (#DF5530, medido na
+          // composição que o Pedro montou), não o token `action-primary`
+          // (#F2643C). As duas telas são vizinhas no flow e ficam lado a lado
+          // na apresentação: tom diferente entre elas lê como erro de
+          // impressão. 🔴 Se um dia o hero for recolorido pro token, esta
+          // linha vai junto — por isso o hex está anotado nos dois lugares.
+          // 🔄 01/09 (asset do Pedro) — o painel deixa de ser cor+degradê+PNG
+          // da mesa e passa a ser UMA composição pronta: coral, plano escuro
+          // diagonal e mesa, tudo achatado num arquivo só (`fundo-mesa.png`).
+          // Mesmo movimento do hero da E3.3 e pelo mesmo motivo: com tudo
+          // achatado não há alfa pra interpretar nem 3 camadas pra alinhar.
+          // A ancoragem é `left` + um offset vertical: `left top` colava a
+          // mesa no teto do painel (e ela ficava rente ao relógio). 28px pra
+          // baixo dão o respiro que o Pedro pediu sem mexer no `cover`.
+          backgroundColor: "#CD4E2C",
+          backgroundImage: "url(/leo/fundo-mesa-v2.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "left 28px",
+          backgroundRepeat: "no-repeat",
         }}
       >
-        {/* Logo CENTRALIZADO; a seta fica absoluta pra não deslocar o centro. */}
-        <div className="relative flex items-center justify-center">
+        {/* 🗑️ 01/09 (decisão do Pedro) — o LOGO SAIU deste painel. Ele veio
+            do layout de login, onde a marca precisava se apresentar; aqui a
+            pessoa já atravessou 5 telas do app e sabe onde está — a marca
+            repetida só disputava a faixa com o Léo. Sobra a seta de voltar,
+            que é função, não enfeite. */}
+        <div className="flex h-8 items-center">
           {onVoltar && (
             <button
               onClick={onVoltar}
               aria-label="Voltar"
-              className="absolute left-0 flex h-7 w-7 items-center justify-center rounded-md text-text-on-dark/70 transition-colors hover:text-text-on-dark"
+              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-text-on-dark/70 transition-colors hover:text-text-on-dark"
             >
               <SetaVoltarPainel />
             </button>
           )}
-          <Logo variante="escura" className="h-8 w-auto shrink-0" />
         </div>
+
+        {/* 🆕 01/09 (ideia do Pedro) — o Léo ESCORADO na quina da folha, queixo
+            apoiado no braço dobrado, acompanhando a pessoa preencher. Mesma
+            gramática do hero do E3.3 (personagem atrás de uma superfície que é
+            a própria interface), gesto diferente: lá ele repara em quem chega,
+            aqui ele faz companhia enquanto ela digita.
+
+            A conta que posiciona: o asset tem 864px e o corpo é cortado reto
+            em 72,5% (626px) — os 27,5% de baixo são a pata com as garras, que
+            precisam cair SOBRE a folha. Com 260px de altura na tela, a garra
+            mede 71px; a folha começa 20px acima da base do painel (o `-mt-5`
+            dela), então a base da imagem desce 51px além do painel pra linha
+            do corte bater exatamente na quina. `z-20` põe as garras na frente
+            da folha; sem isso ela cobriria a pata e o efeito morre.
+            🔄 01/09 (2ª tentativa) — 260px era grande demais pra faixa: ele
+            invadia o logo e dominava a tela. Em 205px a garra sobrando mede
+            🔄 01/09 (encaixe medido, método do Pedro) — nada de olho: o corte
+            reto do asset foi localizado coluna a coluna. A base da blusa está
+            em y=626 de 864 = **72,45%**, e essa linha atravessa a figura
+            inteira (x=15→742). Só a pata desce além dela (x=393→665), que são
+            os 27,55% que ficam SOBRE a folha.
+
+            Daí sai a fórmula, sem chute: garra = 0,2755 × altura; a folha
+            sobe 36px no painel (`-mt-9`); logo `bottom = 36 − 0,2755 × altura`.
+            Em 240px: 36 − 66 = −30px. Trocou a altura OU a sobreposição da
+            folha? Recalcula por aqui.
+
+            `right-6` tira ele do canto: em cima da curva do canto arredondado
+            o braço não tem superfície reta onde apoiar, e o efeito lia como
+            flutuação. */}
+        <Image
+          src="/leo/leo-escorado.png"
+          alt=""
+          aria-hidden
+          width={758}
+          height={864}
+          priority
+          className="pointer-events-none absolute right-6 z-20 h-[240px] w-auto"
+          style={{ bottom: "-30px" }}
+        />
       </div>
 
       {/* FOLHA CLARA — sobrepõe o painel (o canto arredondado "monta" na cor).
           Diferente do login, ela ROLA: é a região elástica da tela. */}
-      <div className="-mx-6 -mt-5 flex min-h-0 flex-1 flex-col overflow-y-auto rounded-t-xl bg-surface-page px-7 pt-7 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      {/* 🔄 01/09 (pedido do Pedro: "copia o que deu certo na E3.3") — a folha
+          ganha o MESMO tratamento do hero da E3.3: raio de 32px (fora da escala
+          do DS, exceção já registrada lá) e sombra PROJETADA pra cima sobre o
+          coral, em vez de encostar seca. É a sombra que faz a folha ler como
+          superfície na frente do painel — e é o que sustenta a ilusão de que o
+          Léo está atrás dela, escorado na quina.
+          🐛 01/09 (achado do Pedro) — a sobreposição era `-mt-5` (20px) com
+          quina de 32px: os últimos 12px do arco caíam FORA do painel coral e
+          mostravam o fundo da página nos cantos. Sobreposição tem que ser
+          >= o raio, senão a curva revela o que não deve. `-mt-9` = 36px. */}
+      <div
+        className="relative -mx-6 -mt-9 flex min-h-0 flex-1 flex-col rounded-t-[32px] bg-surface-page px-7 pt-7"
+        style={{ boxShadow: "0 -10px 22px -6px rgba(0,0,0,.28)" }}
+      >
         {/* 🔄 30/08 (pedido do Pedro) — título e subtítulo migraram do painel
             escuro pra dentro da folha clara, como título do próprio card. */}
-        <div className="mb-5">
-          <h1 className="text-h1 text-text-primary">
-            {leadJaCaptado ? "Falta só criar seu acesso." : "Vamos criar seu acesso."}
-          </h1>
+        {/* 🔄 01/09 (pedido do Pedro) — título e subtítulo FIXOS, como no
+            resto do wizard (`Titulo` + `Corpo` das outras telas): a folha
+            inteira rolava e o título sumia junto, quebrando a âncora da tela.
+            Agora só os campos rolam, no container logo abaixo. */}
+        <div className="mb-5 shrink-0">
+          {/* 🔄 01/09 (pedido do Pedro) — título curto: "Criar acesso". O
+              anterior ("Vamos criar seu acesso.") ocupava a largura toda e
+              passava por baixo da pata do Léo; encurtar resolveu a colisão sem
+              mexer no layout nem empurrar o texto pra baixo. */}
+          <h1 className="text-h1 text-text-primary">Criar acesso</h1>
           <p className="text-caption text-text-secondary mt-1.5">
             {subConta(mei, leadJaCaptado)}
           </p>
         </div>
+
+        <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
 
         {/* 🗑️ 01/09 — o card "conectado por Google/Apple" saiu junto do login
             social: sem os botões, `social` nunca vira diferente de null e este
@@ -553,8 +738,14 @@ function ContaPainel({
               {/* 🆕 30/08 (pedido do Pedro) — orientação de força da senha,
                   logo abaixo do campo (a regra é checada de verdade em
                   `senhaForte`, isso não é só decoração). */}
+              {/* 🔄 01/09 (achado do Pedro) — faltava o mínimo de 8
+                  caracteres, que `senhaForte` já exigia desde 30/08. Regra
+                  cobrada e não avisada é a pior combinação: a pessoa digita
+                  uma senha com os 3 tipos de caractere, o CTA continua morto e
+                  ela não sabe por quê. */}
               <p className="text-micro text-text-tertiary -mt-2">
-                Use letras maiúsculas, minúsculas e números.
+                Pelo menos 8 caracteres, com letras maiúsculas, minúsculas e
+                números.
               </p>
 
               {/* 🆕 30/08 (pedido do Pedro) — confirmar senha, padrão de
@@ -632,11 +823,12 @@ function ContaPainel({
             >
               política de privacidade
             </a>
-            . Nada de vender seus dados pra ninguém.
+            .
           </p>
         )}
 
         <div className="h-6 shrink-0" />
+        </div>
       </div>
 
       {/* CTA no rodapé (thumb zone). No login ele mora dentro da folha porque

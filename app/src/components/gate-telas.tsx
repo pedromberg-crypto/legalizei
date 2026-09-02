@@ -393,12 +393,17 @@ export function PerguntaView({
    * novo em vez de continuar — que é a resposta pra pergunta do Pedro ("e se
    * ela quiser pesquisar outra coisa, como faz?").
    */
-  const [busca, setBusca] = useState<{ texto: string; categoria: string | null } | null>(
-    null,
-  );
-  const encaixe = encaixeDeResultado(mapear(busca?.texto ?? texto));
-  const desatualizado =
-    busca !== null && (texto !== busca.texto || categoria !== busca.categoria);
+  /* 🐛 02/09 (teste do Pedro: "selecionei um cnae, digitei no campo e o CTA
+     não virou nova busca") — a busca nascia `null` e só ganhava valor em quem
+     passava pela chegada. Entrando direto na C0 não havia baseline, então
+     nada nunca ficava desatualizado. Agora ela nasce com o estado do primeiro
+     render: o que está na tela ao chegar É o resultado corrente. */
+  const [busca, setBusca] = useState<{ texto: string; categoria: string | null }>(() => ({
+    texto,
+    categoria,
+  }));
+  const encaixe = encaixeDeResultado(mapear(busca.texto));
+  const desatualizado = texto !== busca.texto || categoria !== busca.categoria;
   /**
    * 🆕 02/09 (pedido do Pedro) — a escolha do CNAE JÁ NASCE FEITA, no
    * "+ compatível". A tela não pergunta "qual desses?": ela mostra o que a

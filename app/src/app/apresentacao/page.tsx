@@ -3333,6 +3333,17 @@ export default function ApresentacaoPage() {
                               sabeCodigo={sabeCodigo}
                               setSabeCodigo={setSabeCodigo}
                               onValidar={validar}
+                              // 🐛→🔒 02/09 (achado do Pedro) — a rota real já
+                              // trava a categoria desde 31/08 (`?cat=` do E3.4
+                              // vira chip confirmado), mas a DEMO continuava
+                              // mostrando a lista de 17 pills escolhível: quem
+                              // revisa o flow pela apresentação via a tela
+                              // reperguntando o que já foi respondido antes do
+                              // pagamento. Mesmo carry-forward do endereço
+                              // fiscal (E7.1) — o estado da demo já tinha a
+                              // categoria, só não a levava adiante.
+                              jaCliente
+                              categoriaTravada={categoria !== null}
                             />
                           )}
                           {etapa === "analisando" && <AnalisandoView />}

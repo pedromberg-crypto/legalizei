@@ -214,6 +214,7 @@ export function OutrasOpcoes({
   onEscolher,
   titulo = "Outras opções pra você",
   pill,
+  destacarTitulo = false,
 }: {
   alternativas: OpcaoCnae[];
   escolhido?: string;
@@ -230,6 +231,13 @@ export function OutrasOpcoes({
    * lá ela roda sem pill nenhuma.
    */
   pill?: string;
+  /**
+   * 🆕 02/09 (pedido do Pedro) — pinta o NOME DA ATIVIDADE no verde
+   * escuro da pill (`state-success-text`), pra dar mais destaque ao card
+   * recomendado. Da lista, como a `pill`: quem sabe se ela é a recomendação é
+   * quem a monta.
+   */
+  destacarTitulo?: boolean;
 }) {
   if (alternativas.length === 0) return null;
 
@@ -242,7 +250,13 @@ export function OutrasOpcoes({
           const conteudo = (
             <div className="flex items-center justify-between gap-3">
               <div>
-                <p className="text-caption font-semibold text-text-primary">{a.humano}</p>
+                <p
+                  className={`text-caption font-semibold ${
+                    destacarTitulo ? "text-state-success-text" : "text-text-primary"
+                  }`}
+                >
+                  {a.humano}
+                </p>
                 <p className="text-micro text-text-tertiary mt-0.5">
                   CNAE {a.cnae} · imposto baixo
                 </p>

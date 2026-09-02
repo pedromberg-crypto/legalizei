@@ -430,6 +430,7 @@ export function PerguntaView({
               titulo="O que mais se encaixa no que você contou"
               alternativas={[encaixe.recomendado]}
               pill="+ compatível"
+              destacarTitulo
             />
             <OutrasOpcoes
               titulo="Outras opções"

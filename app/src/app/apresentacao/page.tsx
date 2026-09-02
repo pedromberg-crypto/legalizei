@@ -1270,6 +1270,33 @@ const MOMENTO_POR_NO: Record<string, Etapa | null> = {
   A5: "ativacao",
 };
 
+/**
+ * Nós que herdam o título de OUTRA rota de propósito, e por isso o gerador
+ * não deve acusar. Lista curta e declarada aqui (não escondida no script) pra
+ * que cada exceção tenha dono e motivo:
+ *
+ * · E2_1/E2_2/E2_3 — 3 slides do welcome, 1 tela só na demo ("E2 · Welcome").
+ * · A3 — o status da fase Junta usa o nome do painel ("A3 · Painel
+ *   (andamento)"), que é o nome certo da tela.
+ * · E9_SR — o splash de recusa tem nome próprio via `NOME_MOCKUP`, e a rota
+ *   crua `/splash-recusado` não existe em nenhuma das duas fontes de nome.
+ *
+ * ⚠️ Não use esta lista pra calar divergência de verdade: o A3.PS ficou meses
+ * dizendo "E9.S · Splash 'pagamento confirmado'" numa tela da guia da Junta, e
+ * a saída certa foi apontar a rota completa, não abrir exceção.
+ */
+const TITULO_HERDADO_OK = ["E2_1", "E2_2", "E2_3", "A3", "E9_SR"] as const;
+
+// A lista aponta pra nós, e nó some/renomeia. Sem isto, uma exceção podre
+// calaria uma divergência de verdade em silêncio — o oposto do que ela serve.
+if (process.env.NODE_ENV !== "production") {
+  for (const id of TITULO_HERDADO_OK) {
+    if (!(id in MOMENTO_POR_NO)) {
+      console.warn(`[apresentacao] TITULO_HERDADO_OK cita nó inexistente: ${id}`);
+    }
+  }
+}
+
 type CaminhoFlow = "abrir" | "migrar" | "mei" | "dev";
 
 const FILTROS: { id: CaminhoFlow; label: string }[] = [

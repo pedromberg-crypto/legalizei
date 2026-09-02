@@ -16,6 +16,14 @@
  *      como o resto): é uma TRADUÇÃO 1:1 de NODES/EDGES, nunca diverge porque
  *      nunca é editado à mão — só nasce daqui.
  *
+ *   4. 🆕 02/09 — AUDITA O ESPELHO mapa × apresentação. Desde que a fita de
+ *      pills passou a derivar deste arquivo, o único ponto manual é o
+ *      `MOMENTO_POR_NO` da apresentação. Aqui se pega o que ele pode ter de
+ *      errado: entrada apontando pra nó que não existe mais, nó sem vínculo
+ *      nenhum, nó declarado ainda sem tela na demo, e **título do painel
+ *      vindo de outra tela** (pill diz uma coisa, cabeçalho diz outra — foi
+ *      o caso da C0, que exibia "Desambiguação mini-loop").
+ *
  * Rodar:  node execucao/flow/gerar-mapa.mjs
  * ═══════════════════════════════════════════════════════════════════════════
  */
@@ -618,6 +626,46 @@ function auditarEspelho() {
   if (semEntrada.length) msgs.push(`nó sem vínculo com a demo: ${semEntrada.join(", ")}`);
   const semTela = [...declarados].filter(([id, tem]) => !tem && vivos.has(id)).map(([id]) => id);
   if (semTela.length) msgs.push(`declarado no flow e ainda sem tela na demo: ${semTela.join(", ")}`);
+
+  /* ── TÍTULO DO PAINEL × PILL ────────────────────────────────────────────
+   * 🆕 02/09 (pedido do Pedro, depois de pegar o caso na C0) — a pill vem do
+   * NÓ e o título do painel vem do MOMENTO, por rota. Quando as duas fontes
+   * discordam, a demo mostra a tela de um e o nome de outro, e quem revisa o
+   * flow por ali anota a observação na tela errada.
+   *
+   * Como se checa: pro nó X, ligado ao momento M, a rota que dá o título é
+   * `ROTA_POR_MOMENTO[M]`. Se ela não for a rota de X, o nome vem de outra
+   * tela. Duas isenções legítimas:
+   * · `TITULO_HERDADO_OK` — herança de propósito, declarada e justificada lá.
+   * · variantes de `noVariante()` — o título sai do estado, não da rota.
+   * Momento sem rota (o veredito, cujo desfecho é derivado) não dá pra
+   * comparar e fica de fora.
+   */
+  const rp = src.match(/const ROTA_POR_MOMENTO[^{]*\{([\s\S]*?)\n\};/);
+  if (rp) {
+    const rotaDoMomento = {};
+    for (const l of rp[1].matchAll(/^\s*["']?([\w-]+)["']?:\s*["']([^"']+)["']/gm)) {
+      rotaDoMomento[l[1]] = l[2];
+    }
+    const isentos = new Set();
+    const lista = src.match(/const TITULO_HERDADO_OK = \[([^\]]*)\]/);
+    if (lista) for (const m of lista[1].matchAll(/"([A-Z0-9_]+)"/g)) isentos.add(m[1]);
+    const fn = src.match(/function noVariante\([\s\S]*?\n\}/);
+    if (fn) for (const m of fn[0].matchAll(/return "([A-Z0-9_]+)"/g)) isentos.add(m[1]);
+
+    const rotaDoNo = new Map(NODES.filter((n) => n.classe !== "todo").map((n) => [n.id, n.rota || ""]));
+    const trocados = [];
+    for (const [id, tem] of declarados) {
+      if (!tem || isentos.has(id) || !rotaDoNo.has(id)) continue;
+      // `\\s` de propósito: em template literal, `\s` viraria só "s".
+      const et = src.match(new RegExp(`^\\s*${id}:\\s*"([^"]+)"`, "m"));
+      if (!et) continue;
+      const rota = rotaDoMomento[et[1]];
+      if (rota && rota !== rotaDoNo.get(id)) trocados.push(`${id} (título vem de ${rota})`);
+    }
+    if (trocados.length) msgs.push(`título do painel de outra tela: ${trocados.join(", ")}`);
+  }
+
   return msgs;
 }
 

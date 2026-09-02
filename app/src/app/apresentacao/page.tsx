@@ -3471,6 +3471,14 @@ export default function ApresentacaoPage() {
                             todas as do piloto ganham.
                             🗑️ 02/09 — a exceção era a tela de loading
                             ("analisando"), que saiu junto com o veredito. */}
+                        {/* 🐛 02/09 (achado do Pedro: "o CTA de voltar está
+                            duplicado") — a C0/C0.0 passou a trazer o PRÓPRIO
+                            `TelaHeader` (com o voltar de verdade e o destino
+                            certo), então este header do wrapper virou uma
+                            segunda seta, com o rótulo morto "Legalizai".
+                            Mesmo arranjo do ramo MEI no `/gate`: quando a view
+                            carrega o próprio topo, o wrapper sai da frente. */}
+                        {etapa !== "perguntando" && etapa !== "perguntando-vazio" && (
                         <header className="pt-6 pb-4 shrink-0 flex items-center gap-1.5">
                           <button
                             onClick={() =>
@@ -3479,11 +3487,10 @@ export default function ApresentacaoPage() {
                                 // pro pagamento; triagem/faixa voltam pro E3.3.
                                 voltar(() => {
                                   setIntencao("abrir");
-                                  setEtapa(
-                                    etapa === "perguntando" || etapa === "veredito"
-                                      ? "pagamento"
-                                      : "endereco",
-                                  );
+                                  // A C0/C0.0 não passa mais por aqui (traz o
+                                  // próprio header). Sobram veredito, triagem
+                                  // e faixa.
+                                  setEtapa(etapa === "veredito" ? "pagamento" : "endereco");
                                 })
                               }
                             aria-label="Voltar"
@@ -3504,6 +3511,7 @@ export default function ApresentacaoPage() {
                                 : "Legalizai"}
                           </p>
                         </header>
+                        )}
 
                         <main className="app-main">
                           {/* 🆕 02/09 — os DOIS estados da C0 usam a mesma

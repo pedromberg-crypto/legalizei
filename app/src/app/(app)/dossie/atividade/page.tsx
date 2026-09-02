@@ -2,12 +2,10 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { PerguntaView, AnalisandoView, PILLS } from "@/components/gate-telas";
-import { VereditoView, type Resultado } from "@/components/veredito";
+import { PerguntaView, PILLS } from "@/components/gate-telas";
 import { ehMei, comRegime } from "@/lib/regime";
 import { ehEnderecoFiscal, comEndereco } from "@/lib/endereco";
 import { categoriaDe } from "@/lib/categoria";
-import { mapear } from "@/lib/mock-veredito";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -49,9 +47,9 @@ export default function AtividadePage() {
   const enderecoFiscal = ehEnderecoFiscal(searchParams);
   const catInicial = categoriaDe(searchParams);
 
-  const [etapa, setEtapa] = useState<"perguntando" | "analisando" | "veredito">(
-    "perguntando",
-  );
+  // 🗑️ 02/09 — a máquina de 3 etapas ("perguntando/analisando/veredito") caiu
+  // com a remoção do veredito: sobrou UMA tela em dois momentos, e o momento
+  // agora é `naChegada`.
   const [texto, setTexto] = useState("");
   // A categoria vem PRÉ-SELECIONADA do E3.3 — a pessoa já respondeu isso antes
   // de pagar.
@@ -72,23 +70,17 @@ export default function AtividadePage() {
    */
   const [buscou, setBuscou] = useState(false);
   const naChegada = searchParams.get("vazia") === "1" && !buscou;
-  const [resultado, setResultado] = useState<Resultado | null>(null);
 
   /**
-   * 🐛→🔒 02/09 — GUARDA O CNAE ESCOLHIDO. Antes esta função recebia
-   * nada e recalculava tudo por `mapear(texto)`: a escolha do slot da C0 era
-   * jogada fora, e quem selecionasse a 4ª sugestão seguia com a 1ª. No dado
-   * que trava nome empresarial, objeto social e o registro na Junta.
+   * 🔒 02/09 — O CNAE ESCOLHIDO É O RESULTADO DESTA TELA. Antes ele era
+   * recalculado por `mapear(texto)` na hora de seguir, e a escolha do slot ia
+   * pro lixo. Agora ele é o que atravessa pro resto do dossiê.
+   * 🔴 RF-01: sem estado real entre telas, ele ainda não viaja de fato — a
+   * viagem depende do store que o projeto inteiro não tem.
    */
-  const [cnaeEscolhido, setCnaeEscolhido] = useState<string | undefined>();
-
   function validar(escolhido?: string) {
-    setCnaeEscolhido(escolhido);
-    setEtapa("analisando");
-    setTimeout(() => {
-      setResultado(mapear(texto));
-      setEtapa("veredito");
-    }, 1400);
+    console.info("[C0] atividade principal escolhida:", escolhido);
+    seguir();
   }
 
   // 🔄 28/08 (pedido do Pedro) — CNAE secundário deixou de vir depois de
@@ -100,12 +92,11 @@ export default function AtividadePage() {
 
   return (
     <>
-      <header className="pt-6 pb-4">
-        <p className="text-micro text-text-tertiary">Legalizai</p>
-      </header>
-
+      {/* 🗑️ 02/09 — o header estático ("Legalizai", sem seta) saiu: a
+          `PerguntaView` traz o `TelaHeader` de verdade, com o voltar. Mesmo
+          arranjo do ramo MEI no `/gate`, onde a view carrega o próprio topo. */}
       <main className="app-main">
-        {etapa === "perguntando" && (
+        {(
           <PerguntaView
             texto={texto}
             setTexto={setTexto}
@@ -145,18 +136,14 @@ export default function AtividadePage() {
             semResultados={naChegada}
           />
         )}
-        {etapa === "analisando" && <AnalisandoView />}
-        {etapa === "veredito" && resultado && (
-          <VereditoView
-            r={resultado}
-            onRefazer={() => setEtapa("perguntando")}
-            // A escolha feita na C0 abre promovida aqui, em vez de o veredito
-            // recomeçar pelo maior %.
-            cnaeEscolhido={cnaeEscolhido}
-            onSeguir={seguir}
-            mostrarAlternativas
-          />
-        )}
+        {/* 🗑️ 02/09 (decisão do Pedro) — "analisando" e "veredito" SAÍRAM.
+            A C0 assumiu o trabalho das duas: os códigos aparecem na própria
+            tela e escolher já É confirmar. O veredito de 3 vias nem podia
+            acontecer aqui desde 27/08 (quem chega passou pela categoria no
+            E3.4 e pagou), então ele sobrevivia como cerimônia: a pessoa
+            escolhia e a tela seguinte pedia pra confirmar a mesma escolha.
+            O `VereditoView` segue vivo nas 4 rotas de saída (waitlist,
+            não-atende, descartado e a review /veredito/atende). */}
       </main>
     </>
   );

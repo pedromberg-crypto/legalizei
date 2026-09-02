@@ -13,7 +13,6 @@ import { SplashMensagemView } from "@/components/splash-mensagem";
 import { WelcomeView } from "@/components/welcome";
 import {
   PerguntaView,
-  AnalisandoView,
   TriagemView,
   FaixaView,
   MeiOuMeView,
@@ -238,7 +237,6 @@ type Etapa =
   | "fora-bh"
   | "perguntando-vazio"
   | "perguntando"
-  | "analisando"
   | "veredito"
   | "triagem"
   | "faixa"
@@ -274,6 +272,7 @@ type Etapa =
   | "vinculo"
   | "socios"
   | "empresa"
+  | "splash-atividades"
   | "cnae-secundarios"
   // 🗑️ 01/09 — "natureza" (C6) saiu daqui. A rota `/dossie/natureza` foi
   // apagada em 31/08 (SLU × LTDA virou decisão interna), mas a apresentação
@@ -339,6 +338,8 @@ type Etapa =
 // genéricas (leem por índice), então só a ordem aqui muda o roteamento real.
 const ETAPAS_DOSSIE = [
   "cnae-secundarios",
+  // 🆕 02/09 — fecho do bloco atividade, entre as secundárias e os dados.
+  "splash-atividades",
   "socio",
   "vinculo",
   "socios",
@@ -607,7 +608,6 @@ type Momento =
   | "fora-bh-enviado"
   | "perguntando-vazio"
   | "perguntando"
-  | "analisando"
   | "veredito-atende"
   | "veredito-waitlist"
   | "veredito-waitlist-enviado"
@@ -637,6 +637,7 @@ type Momento =
   | "vinculo"
   | "socios"
   | "empresa"
+  | "splash-atividades"
   | "cnae-secundarios"
   | "nome"
   | "nome-rodada2"
@@ -994,7 +995,6 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
  * dizendo "Desambiguação mini-loop") — TRÊS rotas do flow têm mais de um nó,
  * porque rota não identifica tela:
  *
- *   /dossie/atividade    → C0 (a tela) · DESAMB (o mini-loop dentro dela)
  *   /gate?etapa=triagem  → E5T (Triagem do ME) · M_T (impedimentos do MEI)
  *   /assinatura          → A4 (assinatura) · A4G (upgrade do GOV.BR)
  *
@@ -1036,7 +1036,6 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   // 🆕 02/09 — a chegada da C0, antes de a pessoa descrever (nó C0_0).
   "perguntando-vazio": "/dossie/atividade?vazia=1",
   perguntando: "/dossie/atividade",
-  analisando: "/dossie/atividade",
   "veredito-atende": "/veredito/atende",
   "veredito-waitlist": "/veredito/waitlist",
   "veredito-waitlist-enviado": "/veredito/waitlist",
@@ -1076,6 +1075,8 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   socios: "/dossie/socios",
   empresa: "/dossie/empresa",
   "cnae-secundarios": "/dossie/cnae-secundarios",
+  // 🆕 02/09 — fecho do bloco atividade, depois das secundárias.
+  "splash-atividades": "/splash-atividades",
   nome: "/dossie/nome",
   "nome-rodada2": "/dossie/nome/rodada-2",
   "status-viabilidade": "/aguardando?fase=junta&viabilidade=1",
@@ -1238,15 +1239,13 @@ const MOMENTO_POR_NO: Record<string, Etapa | null> = {
   E9_1P: "aguardando-pago",
   C0_0: "perguntando-vazio",
   C0: "perguntando",
-  C0_2: "veredito",  // o veredito da C0
-  DESAMB: null,  // 🕳️ mini-loop de desambiguação não foi construído
-  C0_3: "veredito",  // idem — o desfecho 🟢
   C1: "socio",
   C2: "vinculo",
   C3: "socios",
   C3_1: "socios",  // mesma tela com 3 sócios (o preparo força o estado)
   C4: "empresa",
   C5: "cnae-secundarios",
+  C5_S: "splash-atividades",
   C7: "nome",
   C0_1: "retomar-cpf",  // abre na porta de CPF
   C7_2: "nome-rodada2",
@@ -1433,12 +1432,6 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     faz: "A pessoa descreve o que faz (texto livre) ou já entra com o número do CNAE, se souber. As pills só afunilam o universo — quem decide é a IA cruzando com o texto.",
     interfere: "O CNAE encontrado aqui é o que trava nome empresarial, objeto social e o registro na Junta Comercial mais à frente. Errar aqui é retrabalho lá na frente.",
     porque: "Pill sozinha não vale como resposta (decisão travada 17/07) — o texto livre é o dado que a IA de fato usa pra mapear o código certo.",
-  },
-  analisando: {
-    dono: "nossa",
-    faz: "Nosso backend/IA cruza a descrição com a base de CNAEs de serviço já mapeados e decide o veredito.",
-    interfere: "É aqui que se decide se a pessoa segue pro fluxo pago (🟢), entra na waitlist (🟡) ou é encaminhada/descartada (🔴).",
-    porque: "A copy explica o que está rolando (não é spinner mudo) — evita a sensação de tela travada.",
   },
   "veredito-atende": {
     dono: "usuario",
@@ -1657,6 +1650,12 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
       "O índice do IPTU é OBRIGATÓRIO: sem ele a documentação não passa na JUCEMG. O resto já foi decidido antes do pagamento — inclusive a residência do titular, que é o que a Prefeitura de BH usa pra deferir ou indeferir quando o endereço é apartamento.",
     porque:
       "Área utilizada, atividade inócua, forma de atuação, capital social (R$10.000 fixo desde 31/08) e \"edificação nova\" a gente resolve por dentro, sem perguntar. Só pedimos o que ninguém consegue adivinhar — e \"edificação nova\" é justamente o oposto: termo técnico da Prefeitura que o cliente responderia errado com confiança. Quem não tem endereço comercial compra o nosso aqui, em vez de travar. 🗑️ 01/09: o upsell de endereço fiscal saiu daqui. Ou a pessoa escolheu o nosso endereço lá no E3.4 (e esta tela não existe pra ela), ou informou o dela — e aqui o que já foi respondido vem TRAVADO, com só os campos que faltam editáveis. Vender endereço depois do pagamento seria mexer na mensalidade fora de hora.",
+  },
+  "splash-atividades": {
+    dono: "nossa",
+    faz: "Fecha o bloco ATIVIDADE: confirma que a principal e as secundárias estão definidas e passa pros dados pessoais. Transitório, sem CTA.",
+    interfere: "Nada por si só — é o recibo do que as duas telas anteriores decidiram.",
+    porque: "🆕 02/09. Nasceu junto da remoção do veredito do caminho: o momento de alívio (o 'Achei o seu encaixe', com o check verde) sumiu quando a C0 assumiu o trabalho da C0.2/C0.3. Volta aqui, e num lugar melhor — em vez de confirmar UMA escolha que a pessoa acabou de fazer com o dedo, fecha o assunto inteiro. É o 1º fecho de bloco do dossiê; se o padrão pegar, os outros ganham o seu.",
   },
   "cnae-secundarios": {
     dono: "usuario",
@@ -2218,14 +2217,9 @@ export default function ApresentacaoPage() {
     anterior.current = null;
   }
 
-  function validar() {
-    setEtapa("analisando");
-    setTimeout(() => {
-      setResultado(mapear(texto));
-      setEnviadoV(false);
-      setEtapa("veredito");
-    }, 1400);
-  }
+  /* 🗑️ 02/09 — `validar()` (analisando → veredito) saiu com a remoção do
+     veredito do caminho. As 4 saídas seguem alcançáveis pelas pills, que
+     armam o desfecho direto pelo `mapear()` em `pularParaNo`. */
 
   /** ARMA o cenário na tela (pill + texto), SEM navegar. */
   function armarCenario(c: Cenario) {
@@ -2401,7 +2395,6 @@ export default function ApresentacaoPage() {
     if (t.id === "E5_1") setResultado(mapear("nutricionista"));
     if (t.id === "E5_2") setResultado(mapear("loja de roupas"));
     if (t.id === "E5_3") setResultado(mapear("fazenda de gado"));
-    if (t.id === "C0_3") setResultado(mapear("criação de sites"));
   };
 
   /* 🗑️ 02/09 — as 4 listas de pills escritas à mão (PILLS · PILLS_MIGRAR ·
@@ -2430,8 +2423,6 @@ export default function ApresentacaoPage() {
             : "fora-bh"
           : etapa === "perguntando"
           ? "perguntando"
-          : etapa === "analisando"
-            ? "analisando"
               : etapa === "triagem"
                 ? "triagem"
                 : etapa === "faixa"
@@ -2491,7 +2482,7 @@ export default function ApresentacaoPage() {
   useEffect(() => {
     if (momentoAnterior.current === momento) return;
     const passo = anterior.current;
-    if (passo && passo.etapa !== "analisando") {
+    if (passo) {
       setHistorico((h) => [...h, passo]);
     }
     momentoAnterior.current = momento;
@@ -3206,6 +3197,14 @@ export default function ApresentacaoPage() {
                             Transitórios, sem CTA, auto-avançam sozinhos —
                             mesmo mecanismo de produção (`onAutoAvancar` com
                             `setTimeout`). Arte provisória, Pedro revisa. */}
+                        {/* 🆕 02/09 — fecho do bloco atividade (C5.1). */}
+                        {etapa === "splash-atividades" && (
+                          <SplashMensagemView
+                            titulo="Já sabemos o que você faz."
+                            sub="Atividade principal e secundárias definidas. Agora, seus dados."
+                            onAutoAvancar={() => setEtapa("socio")}
+                          />
+                        )}
                         {etapa === "splash-atendido" && (
                           <SplashMensagemView
                             titulo="Conseguimos te atender."
@@ -3469,12 +3468,12 @@ export default function ApresentacaoPage() {
                         {/* 🔓 UX-60 aplicado AQUI (deslinkado): o E5 aprovado
                             não tem volta pro E3. */}
                         {/* 🔓 UX-60 — nenhuma tela do wizard tem voltar. Aqui
-                            todas as do piloto ganham (menos a de loading, que
-                            não é passo). */}
+                            todas as do piloto ganham.
+                            🗑️ 02/09 — a exceção era a tela de loading
+                            ("analisando"), que saiu junto com o veredito. */}
                         <header className="pt-6 pb-4 shrink-0 flex items-center gap-1.5">
-                          {etapa !== "analisando" && (
-                            <button
-                              onClick={() =>
+                          <button
+                            onClick={() =>
                                 // 🔄 27/08 — o voltar depende de que lado do
                                 // pagamento a tela está: a atividade (C0) volta
                                 // pro pagamento; triagem/faixa voltam pro E3.3.
@@ -3487,12 +3486,11 @@ export default function ApresentacaoPage() {
                                   );
                                 })
                               }
-                              aria-label="Voltar"
-                              className="-ml-1.5 flex h-7 w-7 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-alt"
-                            >
-                              <SetaVoltarDemo />
-                            </button>
-                          )}
+                            aria-label="Voltar"
+                            className="-ml-1.5 flex h-7 w-7 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-alt"
+                          >
+                            <SetaVoltarDemo />
+                          </button>
                           {/* 🐛 29/08 (achado do Pedro) — triagem/faixa
                               mostravam "Legalizai" fixo, igual ao bug que já
                               tinha corrigido na rota real (`/gate`). Mesmo
@@ -3517,10 +3515,16 @@ export default function ApresentacaoPage() {
                               // C0.0 → C0: buscar revela os códigos. Na demo a
                               // passagem é entre etapas; no app é o mesmo
                               // componente revelando o resto de si.
+                              /* 🔄 02/09 — a C0 leva direto pras secundárias:
+                                 o veredito saiu do caminho (a escolha aqui JÁ
+                                 é a confirmação). O `validar` da demo, que
+                                 rodava o "analisando" e caía no veredito,
+                                 sobrou só pras SAÍDAS, alcançadas pelas pills
+                                 de waitlist/contato/descartado. */
                               onValidar={
                                 etapa === "perguntando-vazio"
                                   ? () => setEtapa("perguntando")
-                                  : validar
+                                  : () => setEtapa("cnae-secundarios")
                               }
                               // Voltar: da tela com resultados desfaz a busca
                               // (mesma tela, momento anterior); da chegada sai
@@ -3548,7 +3552,6 @@ export default function ApresentacaoPage() {
                               jaCliente
                             />
                           )}
-                          {etapa === "analisando" && <AnalisandoView />}
                           {etapa === "veredito" && resultado && (
                             <VereditoView
                               r={resultado}

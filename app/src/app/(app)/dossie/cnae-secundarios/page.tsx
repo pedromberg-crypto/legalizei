@@ -63,7 +63,19 @@ export default function CnaeSecundariosPage() {
 
   return (
     <CnaeSecundariosView
-      onSeguir={() => router.push(ajuste ? ajuste.destino : comRegime(mei ? "/dossie/nome" : "/dossie/socio", mei))}
+      /* 🆕 02/09 (pedido do Pedro) — FECHO DE BLOCO. Sair daqui passa por
+         um splash curto que fecha o assunto ATIVIDADE (principal +
+         secundárias) antes dos dados pessoais. No modo ajuste não: quem veio
+         corrigir um bloco volta pro status, e comemorar ali seria fora de
+         hora. */
+      onSeguir={() => {
+        if (ajuste) {
+          router.push(ajuste.destino);
+          return;
+        }
+        const destino = comRegime(mei ? "/dossie/nome" : "/dossie/socio", mei);
+        router.push(`/splash-atividades?next=${encodeURIComponent(destino)}`);
+      }}
       ctaLabel={ajuste?.label}
       // 🆕 24/08 (reunião Leonan 19/08) — secundária de busca pode mudar o
       // enquadramento; mesma rota de "atendido pelo Mauro" que o resto do

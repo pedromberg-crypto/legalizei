@@ -170,3 +170,32 @@ export const DADOS_SAIDA_MEI_SERVIDOR: DadosSaida = {
       "Nosso time vai te ajudar a ler o que o seu estatuto permite. Se houver caminho, a gente segue daí.",
   },
 };
+
+/**
+ * 🔄 02/09 — saiu da page (`(wizard)/saida/regime-nao-suportado`) pro lib:
+ * a `/apresentacao` precisa dos MESMOS dados pra renderizar a tela real, e
+ * essa era uma das 2 telas do mapa que a demo não sabia mostrar (auditoria de
+ * nomes, 02/09).
+ */
+export const DADOS_SAIDA_REGIME: DadosSaida = {
+  // 🆕 04/08 — teste do Pedro: ícone "Alert" (Lottie) recolorido pro nosso
+  // azul de status (#3B82E0), no lugar do símbolo padrão de pessoa. Escopo
+  // pontual: só esta saída e `/saida/cnpj-inapto` por enquanto.
+  icone: <Lottie path="/lottie/alert-legalizai-story-book.json" fps={30} className="h-[125px] w-[125px]" />,
+  tag: "Regime diferente",
+  titulo: "Seu regime pede um especialista",
+  explica:
+    "A gente atende empresas no Simples Nacional (ME) e MEI. Lucro Presumido tem um cálculo de imposto próprio (IRPJ, CSLL, PIS/COFINS e ISS separados), então esse caso a gente resolve com uma pessoa da equipe falando direto com você, não pelo automático do app.",
+  origem: {
+    rotulo: "Por que fala com humano",
+    texto:
+      "Lucro Presumido não segue Anexo nem Fator R do Simples: é outro cálculo, com outras regras. Prefere te colocar direto com quem entende disso do que te jogar num formulário genérico.",
+  },
+  saida: "Deixa seu contato que um especialista da nossa equipe fala com você.",
+  ctaEnviar: "Falar com especialista",
+  confirmacao: {
+    titulo: "Recebemos seu contato",
+    texto:
+      "Um especialista da nossa equipe entra em contato pra entender seu caso e ver como te ajudar.",
+  },
+};

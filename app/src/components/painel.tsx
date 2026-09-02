@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { useState } from "react";
 import { StatusIcon, type StatusEstado } from "@/components/ui/status";
 import { BLOCOS } from "@/lib/passos";
-import { useFadeScroll } from "@/components/ui/tela";
+import { Rolagem } from "@/components/ui/tela";
 import { linkWhatsApp } from "@/lib/contato";
 
 /**
@@ -484,13 +484,6 @@ export function PainelView({
    */
   heroExtra?: ReactNode;
 }) {
-  // Fade de rolagem, igual às outras telas. Destructuring no ponto da chamada:
-  // acessar `x.viewport` dentro do JSX conta como leitura de ref no render.
-  const {
-    viewport: refRolagem,
-    conteudo: refConteudoRolagem,
-    style: estiloFade,
-  } = useFadeScroll();
   // 🆕 26/08 (item 6) — se `etapas` não veio (caso da abertura), usa o default
   // COM o callback do CTA de DAE já ligado (a migração, que passa `etapas`
   // próprio, nunca cai aqui — não tem DAE).
@@ -561,12 +554,8 @@ export function PainelView({
             fábrica; aqui a timeline tem rolagem própria). Mesma correção do
             E6: usa o hook, então desbota no topo quando há conteúdo acima e no
             pé quando há conteúdo abaixo. */}
-        <div
-          ref={refRolagem}
-          style={estiloFade}
-          className="flex-1 min-h-0 overflow-y-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
-          <div ref={refConteudoRolagem}>
+        <Rolagem className="pb-4">
+          <div>
           {/* ── Quanto tempo leva ──
               K1 (anti-guru): o "cerca de 8 dias úteis" era número INVENTADO, e
               justo na tela mais ansiosa do flow. O prazo de abertura é o que o
@@ -740,7 +729,7 @@ export function PainelView({
             </p>
           )}
           </div>
-        </div>
+        </Rolagem>
 
         {/* 🔄 01/09 (pedido do Pedro) — o link do WhatsApp saiu do fim do
             conteúdo ROLÁVEL e virou item FIXO do rodapé, acima do CTA. Motivo:

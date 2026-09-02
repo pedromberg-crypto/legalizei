@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
+import { Rolagem } from "@/components/ui/tela";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 // ⚠️ `encaixe.tsx` importa daqui, mas só `import type` (apagado no build), então
@@ -227,7 +228,7 @@ export function VereditoView({
   if (r.veredito === "atende") {
     return (
       <>
-        <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <Rolagem>
           <Selo tipo="sucesso" />
 
           {mostrarAlternativas ? (
@@ -285,7 +286,7 @@ export function VereditoView({
             É disso que a gente cuida, do jeito certo, no Simples, com contador
             de verdade acompanhando. Agora faltam duas perguntas rápidas.
           </p>
-        </div>
+        </Rolagem>
 
         {/* ─────────────────────────────────────────────────────────────────
             🪒 29/07 — A CELEBRAÇÃO DO CTA FOI REMOVIDA (decisão do Pedro).
@@ -328,7 +329,7 @@ export function VereditoView({
   if (descarta) {
     return (
       <>
-        <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <Rolagem>
           <Selo tipo="humano" />
           <Card>
             <h2 className="text-h2 mb-1">{r.humano}</h2>
@@ -345,7 +346,7 @@ export function VereditoView({
             fora do nosso escopo, e não temos um parceiro pra esse caso
             específico. O melhor caminho é procurar um contador da sua região.
           </p>
-        </div>
+        </Rolagem>
 
         {/* Decline limpo ≠ porta fechada na cara. Sem `acoesConfirmacao` a
             tela segue como antes (sem CTA), e a produção não muda. */}
@@ -376,7 +377,7 @@ export function VereditoView({
   if (enviado) {
     return (
       <>
-        <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <Rolagem>
           {/* A frase diz o que DE FATO deu certo (a ação), não o veredito. */}
           <Selo
             tipo="sucesso"
@@ -412,7 +413,7 @@ export function VereditoView({
               atende o seu caso do jeito tradicional.
             </p>
           )}
-        </div>
+        </Rolagem>
 
         {/* Saídas da tela terminal.
             🔴 05/08 — removido o branch sem `acoesConfirmacao`: as 2 pages de
@@ -442,7 +443,7 @@ export function VereditoView({
   /* ── ESTADO 1: veredito + captura ─────────────────────────────────────── */
   return (
     <>
-      <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <Rolagem>
         {/* Mesmo esqueleto do 🟢: selo centralizado → card → próximo passo.
             O selo carrega o STATUS; o card carrega o RECONHECIMENTO (a gente
             entendeu o que você faz), igual no caminho feliz. */}
@@ -491,7 +492,7 @@ export function VereditoView({
             quiser.
           </p>
         </div>
-      </div>
+      </Rolagem>
 
       <div className="app-footer-cta">
         <div className="flex justify-center mb-1">

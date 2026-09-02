@@ -1,9 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { SaidaView, type DadosSaida } from "@/components/saida";
+import { SaidaView } from "@/components/saida";
+import { DADOS_SAIDA_REGIME as D } from "@/lib/dados-saida";
 import { TelaHeader } from "@/components/ui/tela";
-import { Lottie } from "@/components/lottie";
 
 /**
  * A9 · SAÍDA — REGIME PEDE ESPECIALISTA (Lucro Presumido) · 🆕 04/08
@@ -24,28 +24,7 @@ import { Lottie } from "@/components/lottie";
  *
  * Mesmo template A9 das outras saídas — não é falha do cliente.
  */
-const D: DadosSaida = {
-  // 🆕 04/08 — teste do Pedro: ícone "Alert" (Lottie) recolorido pro nosso
-  // azul de status (#3B82E0), no lugar do símbolo padrão de pessoa. Escopo
-  // pontual: só esta saída e `/saida/cnpj-inapto` por enquanto.
-  icone: <Lottie path="/lottie/alert-legalizai-story-book.json" fps={30} className="h-[125px] w-[125px]" />,
-  tag: "Regime diferente",
-  titulo: "Seu regime pede um especialista",
-  explica:
-    "A gente atende empresas no Simples Nacional (ME) e MEI. Lucro Presumido tem um cálculo de imposto próprio (IRPJ, CSLL, PIS/COFINS e ISS separados), então esse caso a gente resolve com uma pessoa da equipe falando direto com você, não pelo automático do app.",
-  origem: {
-    rotulo: "Por que fala com humano",
-    texto:
-      "Lucro Presumido não segue Anexo nem Fator R do Simples: é outro cálculo, com outras regras. Prefere te colocar direto com quem entende disso do que te jogar num formulário genérico.",
-  },
-  saida: "Deixa seu contato que um especialista da nossa equipe fala com você.",
-  ctaEnviar: "Falar com especialista",
-  confirmacao: {
-    titulo: "Recebemos seu contato",
-    texto:
-      "Um especialista da nossa equipe entra em contato pra entender seu caso e ver como te ajudar.",
-  },
-};
+
 
 export default function SaidaRegimeNaoSuportadoPage() {
   const router = useRouter();

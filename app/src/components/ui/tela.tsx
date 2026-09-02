@@ -136,6 +136,38 @@ export function Corpo({ children }: { children: ReactNode }) {
 }
 
 /**
+ * 🆕 02/09 — ÁREA ROLÁVEL com o degradê, pra quem não usa o `Corpo`.
+ *
+ * Metade das telas do app tem contêiner de rolagem próprio (a triagem, o
+ * veredito, as saídas, a folha do E6, a timeline do status) — todas nasceram
+ * copiando as mesmas 4 classes e TODAS sem o degradê de continuidade, porque
+ * ele morava dentro do `Corpo`. Era sempre o mesmo bug reaparecendo em tela
+ * nova. Este componente é o mesmo contêiner, com o fade de fábrica.
+ *
+ * Difere do `Corpo` só no miolo: o `Corpo` impõe `flex flex-col gap-6 pb-4`
+ * aos filhos (o ritmo do wizard), este não impõe nada — quem usa já tem o
+ * próprio layout e só quer rolar direito.
+ */
+export function Rolagem({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  const { viewport, conteudo, style } = useFadeScroll();
+  return (
+    <div
+      ref={viewport}
+      style={style}
+      className={`min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${className}`}
+    >
+      <div ref={conteudo}>{children}</div>
+    </div>
+  );
+}
+
+/**
  * 🆕 01/09 — o fade do `Corpo`, extraído pra hook.
  *
  * Motivo: o E6 (`ContaPainel`) tem contêiner de rolagem PRÓPRIO — a folha

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { TelaHeader, Titulo, Corpo, Rodape, Aviso, useFadeScroll } from "@/components/ui/tela";
+import { TelaHeader, Titulo, Corpo, Rodape, Aviso, Rolagem } from "@/components/ui/tela";
 import { Campo, Texto, Checkbox } from "@/components/ui/form";
 // 🆕 01/09 — o mesmo bottom-sheet que explicava o não-reembolso no A1 vem pra
 // cá junto do aceite: a explicação deve morar ao lado do gesto que ela explica.
@@ -505,13 +505,6 @@ function ContaPainel({
   // 🆕 28/08 (sugestão minha, pedido do Pedro) — mostrar/ocultar senha. Campo
   // de senha cego numa tela sem confirmação (não tem "repita a senha") é onde
   // esse toggle mais compensa: erro de digitação só aparece no próximo login.
-  // Destructuring no ponto da chamada: acessar `rolagem.viewport` dentro do
-  // JSX conta como leitura de ref durante o render pro lint do React.
-  const {
-    viewport: refRolagem,
-    conteudo: refConteudoRolagem,
-    style: estiloFade,
-  } = useFadeScroll();
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
   // 🗑️ 01/09 — `conectar()` removida junto dos botões sociais.
@@ -668,12 +661,8 @@ function ContaPainel({
             degradê de continuidade que todas as outras telas têm (o `Corpo` do
             DS traz de fábrica; aqui a folha branca tem rolagem própria). Agora
             usa o mesmo hook, então o comportamento é idêntico ao resto. */}
-        <div
-          ref={refRolagem}
-          style={estiloFade}
-          className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
-          <div ref={refConteudoRolagem}>
+        <Rolagem>
+          <div>
 
         {/* 🗑️ 01/09 — o card "conectado por Google/Apple" saiu junto do login
             social: sem os botões, `social` nunca vira diferente de null e este
@@ -869,7 +858,7 @@ function ContaPainel({
 
         <div className="h-6 shrink-0" />
           </div>
-        </div>
+        </Rolagem>
       </div>
 
       {/* CTA no rodapé (thumb zone). No login ele mora dentro da folha porque

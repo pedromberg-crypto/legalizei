@@ -9,7 +9,7 @@ import {
 } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { TelaHeader, Aviso } from "@/components/ui/tela";
+import { TelaHeader, Aviso, Rolagem } from "@/components/ui/tela";
 // 🔄 27/08 — `CUSTOS` saiu junto com a escolha de endereço, que migrou da
 // `FaixaView` pro E3.3 (`components/entrada-lead.tsx`).
 // 🔁 28/08 — `Aviso` e `brl` voltaram, agora a serviço do gate de teto do MEI.
@@ -626,7 +626,7 @@ export function TriagemView({
         </p>
       </div>
 
-      <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <Rolagem>
         <p className="text-body-strong font-semibold mb-3">
           Quantas pessoas vão ser donas da empresa?
         </p>
@@ -840,7 +840,7 @@ export function TriagemView({
           </div>
         )}
 
-      </div>
+      </Rolagem>
 
       <div className="app-footer-cta">
         {socioNaoAtende ? (
@@ -993,7 +993,7 @@ export function FaixaView({
         </p>
       </div>
 
-      <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <Rolagem>
         {exatoInline ? (
           /* 🔓 UX-68 — as faixas FICAM; o campo exato aparece abaixo. */
           <div className="flex flex-col gap-4">
@@ -1148,7 +1148,7 @@ export function FaixaView({
             </Aviso>
           </div>
         )}
-      </div>
+      </Rolagem>
       <div className="app-footer-cta">
         {/* 28/07: N5' (Resumo de valor) foi REMOVIDO — segue direto pro N6.
             Copy trocada: "ver o que eu ganho" prometia uma revelação que só
@@ -1337,7 +1337,7 @@ export function MeiOuMeView({
         </p>
       </div>
 
-      <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <Rolagem>
         <div className="flex flex-col gap-3">
           {/* 🔄 29/08 (pedido do Pedro) — vira o mesmo padrão de card
               ilustrado (prédio MEI menor × prédio ME maior, mesma família dos
@@ -1413,7 +1413,7 @@ export function MeiOuMeView({
             próximo passo.
           </p>
         )}
-      </div>
+      </Rolagem>
 
       <div className="app-footer-cta">
         {/* 🆕 29/08 (pedido do Pedro) — escape hatch pra quem trava na

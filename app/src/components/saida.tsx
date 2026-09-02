@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { Rolagem } from "@/components/ui/tela";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CampoMunicipio } from "@/components/campo-municipio";
@@ -143,7 +144,7 @@ export function SaidaView({
   if (enviado) {
     return (
       <>
-        <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <Rolagem>
           {/* Frase própria: o default do selo `sucesso` é "Achei o seu
               encaixe", que aqui seria mentira (ninguém encaixou — a pessoa
               entrou numa fila). Ver fix de 29/07 em veredito.tsx. */}
@@ -162,7 +163,7 @@ export function SaidaView({
                 "Nosso time vai falar com você em até um dia útil, já sabendo do seu caso. Você não vai precisar explicar tudo de novo."}
             </p>
           </Card>
-        </div>
+        </Rolagem>
         <div className="app-footer-cta">
           {d.confirmacao?.acoes ? (
             <div className="flex flex-col gap-2">
@@ -189,7 +190,7 @@ export function SaidaView({
 
   return (
     <>
-      <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <Rolagem>
         {/* BARRA — o selo. Mesmo componente do veredito: quem chega aqui pode
             ter visto aquela tela minutos antes, e dois vocabulários visuais
             pro mesmo tipo de desfecho fariam parecer erro do app. */}
@@ -248,7 +249,7 @@ export function SaidaView({
             do seu caso.
           </p>
         </div>
-      </div>
+      </Rolagem>
 
       <div className="app-footer-cta">
         <Button

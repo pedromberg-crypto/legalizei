@@ -21,6 +21,7 @@ import {
 import { MolduraAparelho } from "@/components/lab/versao-board";
 import grafoFlow from "@/lib/flow-graph.json";
 import { SaidaView } from "@/components/saida";
+import { LoginView } from "@/components/login";
 import { TelaHeader } from "@/components/ui/tela";
 import { VereditoView, type Resultado } from "@/components/veredito";
 import {
@@ -65,6 +66,7 @@ import { mapear } from "@/lib/mock-veredito";
 import {
   DADOS_SAIDA_FORA_BH,
   DADOS_SAIDA_EXTERIOR,
+  DADOS_SAIDA_REGIME,
   DADOS_SAIDA_SOCIOS,
   DADOS_SAIDA_SOCIO_PJ,
   DADOS_SAIDA_MEI_OUTRA_EMPRESA,
@@ -284,6 +286,9 @@ type Etapa =
   | "revisar"
   // 🆕 01/09 — o ponto sem volta, entre o A1 e o status.
   | "iniciar-viabilidade"
+  // 🆕 02/09 — as 2 telas que existiam no mapa e não na demo.
+  | "login"
+  | "saida-regime"
   | "painel"
   | "guia"
   | "guia-splash"
@@ -374,6 +379,8 @@ function antesDoDossie(e: EtapaDossie): Etapa {
 const ETAPAS_CAUDA = [
   "revisar",
   "iniciar-viabilidade",
+  "login",
+  "saida-regime",
   "painel",
   // 🆕 01/09 — A3.P: pagamento da guia da Junta, aberto pelo CTA do status.
   "guia",
@@ -636,6 +643,9 @@ type Momento =
   | "revisar"
   // 🆕 01/09 — o ponto sem volta, entre o A1 e o status.
   | "iniciar-viabilidade"
+  // 🆕 02/09 — as 2 telas que existiam no mapa e não na demo.
+  | "login"
+  | "saida-regime"
   | "painel"
   | "guia"
   | "guia-splash"
@@ -1044,6 +1054,8 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   "status-viabilidade": "/aguardando?fase=junta&viabilidade=1",
   conferencia: "/conferencia",
   revisar: "/revisar",
+  login: "/login",
+  "saida-regime": "/saida/regime-nao-suportado",
   "iniciar-viabilidade": "/iniciar-viabilidade",
   painel: "/painel",
   "painel-recusa": "/painel/recusa",
@@ -1477,6 +1489,22 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
       "É o último ponto em que corrigir é de graça. Marcar o aceite é irreversível: a partir dele a Junta já está sendo protocolada com esses dados.",
     porque:
       "Ninguém deveria autorizar um registro que nunca viu inteiro. 🔄 01/09: a A2 (tela só de termo) foi ELIMINADA e o aceite virou o último bloco daqui — a tela inteira existia pra reforçar que a taxa da Junta não volta, e isso já está no contrato aceito no pagamento. O detalhe do não-reembolso virou link com popup: quem já entendeu segue, quem quer ler tem onde. O enquadramento aparece como SUGESTÃO (não escolha manual): o simulador pré-empresa foi dissolvido em 28/07.",
+  },
+  login: {
+    dono: "usuario",
+    faz: "A porta de quem JÁ é cliente: e-mail e senha, com o painel escuro da marca. Sai do fluxo de abertura e não volta pra ele.",
+    interfere:
+      "Nada na constituição — é reentrada de quem já tem conta. Está aqui porque é a 4ª saída do fork (E3) e, sem ela, a demo fingia que todo mundo que abre o app é gente nova.",
+    porque:
+      "Não usa o template de saída graciosa (A9) de propósito: aquele é pra RECUSA (waitlist, comercial), e o login é rota feliz — alguém voltando pra casa. Tratar retorno com a gramática de negativa seria o oposto do que a tela faz. 🔄 02/09: a tela foi extraída da page pra componente, porque era a única do flow que não dava pra revisar aqui.",
+  },
+  "saida-regime": {
+    dono: "usuario",
+    faz: "Saída para quem é Lucro Presumido: explica que esse regime a gente resolve com uma pessoa da equipe, não pelo automático, e captura o contato.",
+    interfere:
+      "Tira o caso do funil automatizado antes de qualquer cobrança. O app não tem motor fiscal de Lucro Presumido (IRPJ, CSLL, PIS/COFINS e ISS separados — nada a ver com Anexo/Fator R do Simples), então seguir seria vender o que não existe.",
+    porque:
+      "🔴 Gap conhecido desde 27/08: o card 'ME · Lucro Presumido' saiu do E3.2 e esta tela ficou sem porta de entrada no caminho ABRIR — segue alcançável pelo Migrar (M1 confirma o regime na Receita). Está na demo desde 02/09 justamente pra não sumir do radar enquanto a captação de LP no abrir está parqueada.",
   },
   "iniciar-viabilidade": {
     dono: "usuario",
@@ -2158,6 +2186,8 @@ export default function ApresentacaoPage() {
     // 🗑️ 01/09 — "A3.2 · Certificado" saiu do carrossel do ME.
     pill("assinatura"),
     pill("ativacao"),
+    pill("login"),
+    pill("saida-regime"),
     pill("fim"),
   ];
 
@@ -2765,6 +2795,15 @@ export default function ApresentacaoPage() {
                             onSeguir={() => setEtapa("painel")}
                             onVoltar={() => voltar(() => setEtapa("nome"))}
                           />
+                        )}
+                        {etapa === "login" && <LoginView />}
+                        {etapa === "saida-regime" && (
+                          <>
+                            <TelaHeader meta="Sobre o seu regime" />
+                            <main className="app-main">
+                              <SaidaView d={DADOS_SAIDA_REGIME} />
+                            </main>
+                          </>
                         )}
                         {etapa === "iniciar-viabilidade" && (
                           <SplashMensagemView

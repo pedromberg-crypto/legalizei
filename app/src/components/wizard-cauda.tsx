@@ -5,7 +5,7 @@ import Image from "next/image";
 import { type ReactNode, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
+import { TelaHeader, Titulo, Corpo, Rodape, Aviso, Rolagem } from "@/components/ui/tela";
 import { Checkbox, Campo, Texto, OpcoesLinha } from "@/components/ui/form";
 import { PillCnpj, AprendaGradiente } from "@/components/lab/campea-blocks";
 import { QuemCuida } from "@/components/lab/ref9-blocks";
@@ -1228,7 +1228,7 @@ const PCT_ATIVACAO = Math.round((FEITOS_ATIVACAO / TAREFAS_ATIVACAO.length) * 10
 export function HomeAtivacaoView() {
   return (
     <main className="app-main">
-      <div className="min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <Rolagem>
         <div className="flex flex-col gap-6 pb-[calc(24px+var(--safe-bottom))] pt-3">
           {/* Sem navbar nesta tela: a pessoa não navega livre até liberar o
               acesso. Avatar DESATIVADO; sino segue ativo. */}
@@ -1338,7 +1338,7 @@ export function HomeAtivacaoView() {
           <AprendaGradiente />
           <QuemCuida />
         </div>
-      </div>
+      </Rolagem>
     </main>
   );
 }

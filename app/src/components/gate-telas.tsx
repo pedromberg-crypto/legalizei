@@ -448,7 +448,6 @@ export function PerguntaView({
               titulo="O que mais se encaixa no que você contou"
               alternativas={[encaixe.recomendado]}
               pill="+ compatível"
-              destacarTitulo
               escolhido={escolhido}
               onEscolher={escolherCnae}
             />

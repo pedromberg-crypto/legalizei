@@ -214,7 +214,6 @@ export function OutrasOpcoes({
   onEscolher,
   titulo = "Outras opções pra você",
   pill,
-  destacarTitulo = false,
 }: {
   alternativas: OpcaoCnae[];
   escolhido?: string;
@@ -231,13 +230,7 @@ export function OutrasOpcoes({
    * lá ela roda sem pill nenhuma.
    */
   pill?: string;
-  /**
-   * 🆕 02/09 (pedido do Pedro) — pinta o NOME DA ATIVIDADE no verde
-   * escuro da pill (`state-success-text`), pra dar mais destaque ao card
-   * recomendado. Da lista, como a `pill`: quem sabe se ela é a recomendação é
-   * quem a monta.
-   */
-  destacarTitulo?: boolean;
+
 }) {
   if (alternativas.length === 0) return null;
 
@@ -257,13 +250,14 @@ export function OutrasOpcoes({
           const conteudo = (
             <div className="flex items-center justify-between gap-3">
               <div>
+                {/* 🗑️ 02/09 — o verde do recomendado saiu junto com o
+                    verde das pills. Ele nasceu quando a cor era o único
+                    sinal; hoje quem diz "é este" é o card coral inteiro, e um
+                    título verde aparecendo só quando a pessoa marca OUTRO
+                    cartão era o único resto de uma cor sem função na tela. */}
                 <p
                   className={`text-caption font-semibold ${
-                    on
-                      ? "text-text-on-brand"
-                      : destacarTitulo
-                        ? "text-state-success-text"
-                        : "text-text-primary"
+                    on ? "text-text-on-brand" : "text-text-primary"
                   }`}
                 >
                   {a.humano}

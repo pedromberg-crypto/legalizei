@@ -151,6 +151,7 @@ export function VereditoView({
   captura,
   acoesConfirmacao,
   mostrarAlternativas = false,
+  cnaeEscolhido,
 }: {
   r: Resultado;
   // Opcionais: o gate passa a navegação real; o mock do /mockup não precisa.
@@ -176,6 +177,8 @@ export function VereditoView({
    * mesma pergunta feita duas vezes. Por isso as opções entram em LEITURA.
    */
   mostrarAlternativas?: boolean;
+  /** 🆕 02/09 — CNAE que a pessoa já escolheu na C0; abre promovido. */
+  cnaeEscolhido?: string;
   /**
    * 🆕 29/07 — captura CONTROLADA (opcional). Sem isto, a tela segue com o
    * estado interno de sempre e ninguém fora precisa saber que ele existe.
@@ -206,7 +209,13 @@ export function VereditoView({
    * alternativa PROMOVE ela ao card de cima, e a antiga desce pra lista.
    * `null` = ninguém trocou ainda → vale a de maior %.
    */
-  const [cnaePromovido, setCnaePromovido] = useState<string | null>(null);
+  // 🆕 02/09 — quem chega da C0 JÁ ESCOLHEU. A escolha entra como
+  // promoção inicial, em vez de o veredito recomeçar do maior %: ignorar o
+  // cartão que a pessoa selecionou e mostrar outro no topo seria trocar a
+  // resposta dela em silêncio.
+  const [cnaePromovido, setCnaePromovido] = useState<string | null>(
+    cnaeEscolhido ?? null,
+  );
   const dadosEncaixe = encaixeDeResultado(r);
   // 🆕 26/08 (achado do Pedro: promover uma vizinha esvaziava o card —
   // "explica" e "cobre" só existiam pro recomendado) — agora cada opção

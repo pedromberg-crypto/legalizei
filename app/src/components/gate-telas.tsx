@@ -305,6 +305,7 @@ export function PerguntaView({
   onValidar,
   jaCliente = false,
   semResultados = false,
+  onVoltar,
 }: {
   texto: string;
   setTexto: (v: string) => void;
@@ -316,7 +317,19 @@ export function PerguntaView({
       pede e como valida. */
   sabeCodigo: boolean;
   setSabeCodigo: (v: boolean) => void;
-  onValidar: () => void;
+  /**
+   * 🐛→🔒 02/09 — recebe o CNAE que a pessoa escolheu no slot.
+   * Antes não recebia nada, e quem chamava recalculava tudo pela descrição:
+   * escolher a 4ª sugestão e seguir registrava a 1ª. Passava despercebido só
+   * porque o mock quase sempre devolve o mesmo recomendado.
+   */
+  onValidar: (cnaeEscolhido?: string) => void;
+  /**
+   * 🆕 02/09 — a tela não tinha seta de voltar nenhuma: o header era um
+   * "Legalizai" estático. Mesma classe do achado de 29/08 no gate, testando
+   * no iPhone.
+   */
+  onVoltar?: () => void;
   /**
    * 🆕 27/08 — a tela atravessou o pagamento (agora é C0, `/dossie/atividade`).
    * O CONTEÚDO é o mesmo, mas o enquadramento não pode ser: antes a gente
@@ -521,6 +534,11 @@ export function PerguntaView({
 
   return (
     <>
+      {/* 🆕 02/09 — seta de voltar. A tela não tinha nenhuma: o topo era um
+          "Legalizai" estático, então quem entrava não saía a não ser
+          seguindo. `meta` nomeia o DESTINO do voltar, padrão do wizard. */}
+      {onVoltar && <TelaHeader meta={semResultados ? "Status" : "Sua atividade"} onVoltar={onVoltar} />}
+
       {/* Título/subtítulo fixos; o campo de descrição ocupa a sobra. Depende
           do shell travado em 100dvh (.app-page, globals.css) — sem o teto, a
           página inteira cresce em vez de o campo se ajustar. */}
@@ -754,6 +772,14 @@ export function PerguntaView({
         <Button
           full
           onClick={() => {
+            // 🐛 02/09 — o modo código NÃO tem lista pra buscar. Sem esta
+            // saída ele caía na mecânica de busca: digitar o CNAE deixava o
+            // botão "Buscar de novo", o 1º clique só registrava a busca e a
+            // pessoa precisava clicar duas vezes pra seguir.
+            if (sabeCodigo) {
+              onValidar();
+              return;
+            }
             if (semResultados) {
               setBusca({ texto, categoria });
               setEscolha(null);
@@ -770,7 +796,7 @@ export function PerguntaView({
               voltarAoSlot();
               return;
             }
-            onValidar();
+            onValidar(escolhido ?? undefined);
           }}
           disabled={!podeValidar}
         >
@@ -785,7 +811,7 @@ export function PerguntaView({
               ele confirma a escolha. */}
           {semResultados
             ? "Buscar atividade principal"
-            : desatualizado
+            : desatualizado && !sabeCodigo
               ? "Buscar de novo"
               : jaCliente
                 ? "Continuar com essa atividade"

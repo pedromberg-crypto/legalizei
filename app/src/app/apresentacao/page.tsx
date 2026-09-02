@@ -3522,6 +3522,14 @@ export default function ApresentacaoPage() {
                                   ? () => setEtapa("perguntando")
                                   : validar
                               }
+                              // Voltar: da tela com resultados desfaz a busca
+                              // (mesma tela, momento anterior); da chegada sai
+                              // pro passo de trás do flow.
+                              onVoltar={
+                                etapa === "perguntando"
+                                  ? () => setEtapa("perguntando-vazio")
+                                  : () => voltar(() => setEtapa("aguardando-pago"))
+                              }
                               texto={texto}
                               setTexto={setTexto}
                               categoria={categoria}

@@ -74,7 +74,16 @@ export default function AtividadePage() {
   const naChegada = searchParams.get("vazia") === "1" && !buscou;
   const [resultado, setResultado] = useState<Resultado | null>(null);
 
-  function validar() {
+  /**
+   * 🐛→🔒 02/09 — GUARDA O CNAE ESCOLHIDO. Antes esta função recebia
+   * nada e recalculava tudo por `mapear(texto)`: a escolha do slot da C0 era
+   * jogada fora, e quem selecionasse a 4ª sugestão seguia com a 1ª. No dado
+   * que trava nome empresarial, objeto social e o registro na Junta.
+   */
+  const [cnaeEscolhido, setCnaeEscolhido] = useState<string | undefined>();
+
+  function validar(escolhido?: string) {
+    setCnaeEscolhido(escolhido);
     setEtapa("analisando");
     setTimeout(() => {
       setResultado(mapear(texto));
@@ -107,6 +116,18 @@ export default function AtividadePage() {
             // Na chegada o botão busca (revela os códigos); com eles na tela,
             // confirma a atividade escolhida e segue.
             onValidar={naChegada ? () => setBuscou(true) : validar}
+            /* 🆕 02/09 — voltar. Como C0.0 e C0 são a MESMA rota em dois
+               momentos, voltar da tela com resultados é desfazer a busca, não
+               navegar: `router.back()` ali sairia do dossiê inteiro e
+               perderia o que a pessoa escreveu. Só quem já está na chegada
+               (ou entrou direto na C0, sem `?vazia=1`) sai de fato. */
+            onVoltar={() => {
+              if (!naChegada && searchParams.get("vazia") === "1") {
+                setBuscou(false);
+                return;
+              }
+              router.back();
+            }}
             // 🆕 27/08 — a copy muda porque o contexto mudou: a pessoa já é
             // cliente, já passou pelo gate. Não estamos decidindo se atendemos,
             // estamos achando o código certo dela.
@@ -129,6 +150,9 @@ export default function AtividadePage() {
           <VereditoView
             r={resultado}
             onRefazer={() => setEtapa("perguntando")}
+            // A escolha feita na C0 abre promovida aqui, em vez de o veredito
+            // recomeçar pelo maior %.
+            cnaeEscolhido={cnaeEscolhido}
             onSeguir={seguir}
             mostrarAlternativas
           />

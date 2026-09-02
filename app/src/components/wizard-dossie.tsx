@@ -11,6 +11,7 @@ import { FISCAL, brl } from "@/lib/fiscal";
 import { FORMAS_ATUACAO } from "@/lib/mei";
 // 🆕 01/09 — mesma máscara do E6, pro CPF do sócio extra (C3).
 import { mascaraCpf } from "@/components/wizard-dinheiro";
+import { OutrasOpcoes, SheetCnae, type OpcaoCnae } from "@/components/encaixe";
 import {
   CLIENTE,
   TEM_SOCIO,
@@ -1864,6 +1865,15 @@ export function CnaeSecundariosView({
   const idsAtivos = Object.entries(ativos).filter(([, v]) => v).map(([id]) => id);
   // Limite do produto: até 15 secundárias (reunião Leonan 19/08).
   const noLimite = idsAtivos.length >= 15;
+  /* A principal no formato que o cartão da C0 espera. `adequacao` não é
+     usada (o percentual saiu dos cartões em 02/09), fica no dado só porque o
+     tipo pede. */
+  const principalComoOpcao = {
+    humano: CNAE_PRINCIPAL.humano,
+    cnae: CNAE_PRINCIPAL.cnae,
+    adequacao: 94,
+  };
+  const [detalhe, setDetalhe] = useState<OpcaoCnae | null>(null);
   // As escolhidas, venham de onde vierem (sugestão curada ou busca).
   const escolhidas = idsAtivos
     .map((id) => TODAS.find((s) => s.id === id))
@@ -1905,19 +1915,22 @@ export function CnaeSecundariosView({
         </Titulo>
 
         <Corpo>
-          {/* Principal herdado do N4 — travado. */}
+          {/* 🔄 02/09 (pedido do Pedro) — A PRINCIPAL É O MESMO CARTÃO DA C0.
+              Era um `Card` neutro, com outro rótulo ("Atividade principal (já
+              definida)") e sem o "Ver detalhes". Duas telas do mesmo bloco
+              mostrando o MESMO dado de dois jeitos fazia a pessoa reconferir
+              se era a mesma coisa. Agora é o cartão coral idêntico, com a pill
+              e o acesso ao detalhe — a identidade visual atravessa o bloco.
+              Reusa `OutrasOpcoes` (encaixe.tsx), a mesma fonte da C0. */}
           <div>
-            <p className="text-micro text-text-tertiary mb-1.5">
-              Atividade principal (já definida)
-            </p>
-            <Card>
-              <p className="text-body font-semibold text-text-primary">
-                {CNAE_PRINCIPAL.humano}
-              </p>
-              <p className="text-caption text-text-secondary mt-0.5">
-                CNAE {CNAE_PRINCIPAL.cnae}
-              </p>
-            </Card>
+            <p className="text-micro text-text-tertiary mb-1.5">Sua atividade principal</p>
+            <OutrasOpcoes
+              titulo=""
+              alternativas={[principalComoOpcao]}
+              escolhido={principalComoOpcao.cnae}
+              pillDe={() => "+ compatível"}
+              onVerDetalhes={setDetalhe}
+            />
           </div>
 
           {/* 🆕 02/09 (achado do Pedro) — AS QUE VOCÊ JÁ ESCOLHEU.
@@ -2121,6 +2134,8 @@ export function CnaeSecundariosView({
               licença. 🔒 O "pode adicionar depois" saiu por decisão do Pedro
               mesmo tendo sido sugerido pro subtítulo: convida a pular a tela. */}
         </Corpo>
+
+        {detalhe && <SheetCnae opcao={detalhe} onFechar={() => setDetalhe(null)} />}
 
         <Rodape>
           {algumaMudaEnquadramento ? (

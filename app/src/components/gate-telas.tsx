@@ -640,7 +640,15 @@ export function PerguntaView({
               está achado, na tela, marcado. O botão agora nomeia o que vai
               acontecer, que é o canal mais barato pra dizer "o cartão coral é
               o que vai no seu CNPJ" — sem gastar uma linha de texto na tela. */}
-          {jaCliente ? "Continuar com essa atividade" : "Validar minha atividade"}
+          {/* 🆕 02/09 (pedido do Pedro) — o rótulo segue o momento: na CHEGADA
+              (C0.0) ainda não existe atividade nenhuma na tela, então o botão
+              pede a busca; depois que os códigos aparecem e um está no slot,
+              ele confirma a escolha. */}
+          {semResultados
+            ? "Buscar atividade principal"
+            : jaCliente
+              ? "Continuar com essa atividade"
+              : "Validar minha atividade"}
         </Button>
       </div>
     </>

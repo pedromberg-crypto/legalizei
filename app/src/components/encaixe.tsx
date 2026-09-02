@@ -257,9 +257,12 @@ export function OutrasOpcoes({
                 >
                   {a.humano}
                 </p>
-                <p className="text-micro text-text-tertiary mt-0.5">
-                  CNAE {a.cnae} · imposto baixo
-                </p>
+                {/* 🗑️ 02/09 (pedido do Pedro) — saiu o "· imposto baixo".
+                    Era texto fixo, colado em TODO card: não vinha de dado
+                    nenhum e valia igual pra códigos de anexos diferentes.
+                    Promessa fiscal sem fonte é o que a regra anti-guru do
+                    projeto proíbe, e aqui ela nem era usada pra decidir. */}
+                <p className="text-micro text-text-tertiary mt-0.5">CNAE {a.cnae}</p>
               </div>
               {/* 🗑️ 02/09 (pedido do Pedro) — O PERCENTUAL SAIU. "72%" e
                   "64%" convidam a comparar dois números que a pessoa não tem

@@ -477,9 +477,21 @@ export function PerguntaView({
               Falta decidir com o Pedro: aparece enquanto digita ou só depois
               do CTA, e o que o CTA vira quando o resultado já está na tela. */}
           {semResultados ? (
-            // A faixa que sobrou é o espaço reservado dos resultados: fica
-            // vazia até a pessoa descrever. É o assunto da lapidação.
-            <div className="min-h-0 flex-1" aria-hidden />
+            /* 🆕 02/09 (pedido do Pedro) — a faixa reservada dos resultados
+               deixa de ser um buraco e passa a dizer pra que ela serve. Texto
+               grande (display, 32px), no ink da marca, com "atividade
+               principal" em coral: é o único termo da frase que a pessoa vai
+               reencontrar no slot logo abaixo, então destacar ele amarra a
+               promessa ao lugar onde ela se cumpre.
+               A fonte é Sora por herança — ela é a fonte do sistema inteiro
+               desde 12/07, então não há nada a declarar aqui. */
+            <div className="flex min-h-0 flex-1 items-center">
+              <p className="text-display text-text-primary">
+                Aqui é onde você escolhe a{" "}
+                <span className="text-action-primary-sm">atividade principal</span> com
+                que trabalha.
+              </p>
+            </div>
           ) : (
           <Rolagem className="min-h-0 flex-1">
             {/* 🆕 02/09 (ideia do Pedro) — O SLOT DO PRINCIPAL.

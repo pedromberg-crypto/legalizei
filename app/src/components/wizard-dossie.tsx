@@ -1953,20 +1953,24 @@ export function CnaeSecundariosView({
                       <p className={`text-caption mt-0.5 ${on ? "text-text-on-brand/80" : "text-text-secondary"}`}>
                         CNAE {s.cnae}
                       </p>
-                      <span
-                        className={`mt-1 inline-block rounded-full px-2 py-0.5 text-micro font-semibold
-                          ${
-                            s.mudaEnquadramento
-                              ? on
+                      {/* 🔒 02/09 (decisão do Pedro) — ETIQUETA SÓ NO QUE MUDA.
+                          O "Mantém seu enquadramento" saiu: ele aparecia na
+                          maioria dos cartões dizendo sempre a mesma coisa, e
+                          etiqueta que não varia não informa, vira decoração.
+                          Alerta só existe quando há o que alertar; o silêncio
+                          passa a significar "nada muda". */}
+                      {s.mudaEnquadramento && (
+                        <span
+                          className={`mt-1 inline-block rounded-full px-2 py-0.5 text-micro font-semibold
+                            ${
+                              on
                                 ? "bg-surface-card/20 text-text-on-brand"
                                 : "bg-state-warning-tint text-state-warning-text"
-                              : on
-                                ? "bg-surface-card/20 text-text-on-brand"
-                                : "bg-state-success-tint text-state-success-text"
-                          }`}
-                      >
-                        {s.mudaEnquadramento ? "Muda seu enquadramento" : "Mantém seu enquadramento"}
-                      </span>
+                            }`}
+                        >
+                          Muda seu enquadramento
+                        </span>
+                      )}
                     </button>
                   );
                 })
@@ -2021,21 +2025,14 @@ export function CnaeSecundariosView({
                         >
                           CNAE {s.cnae}
                         </p>
-                        {/* 🆕 06/08 (WA walkthrough, tag "PIL") — a curadoria já
-                            garante que nenhuma sugestão muda o anexo/enquadramento
-                            (ver comentário de `SUGESTOES` acima); o badge só torna
-                            essa garantia VISÍVEL por item, em vez de só uma frase
-                            genérica acima da lista. */}
-                        <span
-                          className={`mt-1 inline-block rounded-full px-2 py-0.5 text-micro font-semibold
-                            ${
-                              on
-                                ? "bg-surface-card/20 text-text-on-brand"
-                                : "bg-state-success-tint text-state-success-text"
-                            }`}
-                        >
-                          Mantém seu enquadramento
-                        </span>
+                        {/* 🗑️ 02/09 (decisão do Pedro) — a etiqueta "Mantém seu
+                            enquadramento" saiu daqui. Ela nasceu em 06/08 (WA
+                            walkthrough, tag "PIL") pra tornar visível por item a
+                            garantia que a curadoria já dá — só que as 4 sugestões
+                            são TODAS mesmo-imposto, então ela dizia a mesma coisa
+                            quatro vezes. Etiqueta que não varia não informa.
+                            Agora só existe alerta quando há o que alertar, e o
+                            silêncio passa a significar "nada muda". */}
                       </div>
                       {/* No selecionado o marcador inverte: círculo branco com
                           check coral, senão coral-sobre-coral desapareceria. */}

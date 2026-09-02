@@ -79,6 +79,17 @@ export const EXEMPLOS = [
  * campo. A pessoa AINDA descreve no textarea — é lá que a IA cruza e decide.
  * `ex` é a frase em 1ª pessoa que vira placeholder quando a pill é escolhida.
  */
+/**
+ * 🆕 02/09 (pedido do Pedro) — máscara do CNAE: `0000-0/00`.
+ * São 7 dígitos (4 da classe, 1 do DV, 2 da subclasse — estrutura da CONCLA).
+ * Mesmo padrão dos outros campos do app (`mascaraCpf`/`mascaraCep`): só
+ * dígitos entram, a pontuação é nossa, e o corte em 7 impede digitar além.
+ */
+export function mascaraCnae(v: string) {
+  const d = v.replace(/\D/g, "").slice(0, 7);
+  return d.replace(/(\d{4})(\d)/, "$1-$2").replace(/(\d{4}-\d)(\d{1,2})$/, "$1/$2");
+}
+
 export const PILLS = [
   { id: "tech", label: "Tecnologia e software", ex: "Desenvolvo sites, apps ou sistemas sob encomenda" },
   { id: "design", label: "Design", ex: "Crio design gráfico, de interiores ou de produto" },
@@ -461,7 +472,10 @@ export function PerguntaView({
    * ("Continuar com essa atividade").
    */
   const podeValidar = sabeCodigo
-    ? texto.replace(/\D/g, "").length >= 6
+    // 🔄 02/09 — com a máscara, a régua vira o código COMPLETO: 7 dígitos
+    // (4 da classe + DV + 2 da subclasse). Antes eram 6, quando o campo era
+    // livre e não dava pra saber o que a pessoa tinha digitado.
+    ? texto.replace(/\D/g, "").length === 7
     : semResultados || desatualizado
       ? categoria !== null
       : escolhido !== null;
@@ -609,6 +623,20 @@ export function PerguntaView({
               {sabeCodigo ? "Número do CNAE" : "O que você faz na prática"}
             </p>
             <div className="relative mt-1.5">
+              {sabeCodigo ? (
+                /* Código não é texto livre: 1 linha, teclado numérico e a
+                   pontuação por nossa conta. Textarea aqui deixava dar enter
+                   e colar parágrafo num campo de 7 dígitos. */
+                <input
+                  value={texto}
+                  onChange={(e) => setTexto(mascaraCnae(e.target.value))}
+                  inputMode="numeric"
+                  placeholder={placeholder}
+                  className="block min-h-12 w-full rounded-md border border-border-hairline
+                             bg-surface-card px-4 pr-9 text-body text-text-primary
+                             placeholder:text-text-muted focus:border-border-focus focus:outline-none"
+                />
+              ) : (
               <textarea
                 ref={areaRef}
                 // 🔄 02/09 (pedido do Pedro) — piso de 3 linhas. Cresce daí.
@@ -623,6 +651,7 @@ export function PerguntaView({
                            bg-surface-card p-4 pr-9 text-body text-text-primary
                            placeholder:text-text-muted focus:border-border-focus focus:outline-none"
               />
+              )}
               {texto !== "" && (
                 <button
                   type="button"
@@ -649,8 +678,11 @@ export function PerguntaView({
             cobrar texto seria contradizer o botão, que já libera. No lugar,
             a chegada diz o que acontece se a pessoa não escrever nada. */}
         <p className="text-caption text-text-tertiary mt-2 min-h-[1.25rem]">
+          {/* 🗑️ 02/09 (pedido do Pedro) — "Formato: 0000-0/00" saiu: a
+              máscara já mostra o formato enquanto a pessoa digita, e repetir
+              em texto é explicar o que está acontecendo na frente dela. */}
           {sabeCodigo
-            ? "Formato: 0000-0/00"
+            ? ""
             : semResultados && texto.trim().length === 0
               ? "Se não escrever, sugerimos as atividades mais usadas da categoria."
               : ""}

@@ -282,17 +282,24 @@ export function OutrasOpcoes({
             <button
               key={a.cnae}
               onClick={() => onEscolher(a.cnae)}
-              /* 🔄 02/09 (pedido do Pedro) — SELECIONADO = card PREENCHIDO
-                 em `surface-alt` (#F4F4F4), o mesmo cinza do card "Entrar na
-                 minha conta" do fork. Era borda coral + tint de marca: o
-                 coral é a cor de AÇÃO no app (CTA, pill de plano), e usá-lo
-                 pra "este está escolhido" competia com o botão de baixo, que
-                 é o que a pessoa precisa tocar. 🐛 1ª tentativa usou o token
-                 da hairline (#E3DED7) e o Pedro achou escuro demais — a
-                 hairline é cor de LINHA, não de superfície. */
+              /* 🔄 02/09 — SELECIONADO segue CORAL (borda + tint), como no
+                 resto do app. Houve um desvio no mesmo dia: testamos cinza
+                 preenchido (hairline, depois `surface-alt`) até o Pedro
+                 levantar a dúvida certa — "seria um problema ficar diferente
+                 das telas de trás?". Era: `border-action-primary bg-*` é a
+                 gramática de "escolhido" em 5 lugares antes desta tela (E3.2,
+                 faixa, triagem, checkbox, opção sim/não), e cinza claro no
+                 nosso app é fundo de coisa INATIVA — o card marcado ficava
+                 parecendo o desabilitado. O medo de "coral compete com o CTA"
+                 não se confirmou: faixa e triagem já convivem com card coral
+                 e CTA coral no rodapé.
+                 Tint, não coral sólido: são 3 cards e um já vem marcado; o
+                 fill cheio pesaria numa escolha que a pessoa não precisa
+                 tomar. Quem diz "isto veio pronto" é a pill + o título verde,
+                 não a cor do estado. */
               className={`rounded-2xl border p-3 text-left transition-colors ${
                 on
-                  ? "border-surface-alt bg-surface-alt"
+                  ? "border-action-primary bg-surface-tint-brand"
                   : "border-border-hairline bg-surface-card hover:border-border-strong"
               }`}
             >

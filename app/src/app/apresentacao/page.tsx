@@ -512,7 +512,10 @@ const ETAPAS_ESPERA = [
   // 🆕 01/09 — o par de recusa do pagamento do plano (E9.SR/E9.R).
   "pagamento-recusado",
   "pagamento-retry",
-  // 🆕 01/09 — os 2 splashes DA GUIA (A3.PS/A3.PSB), espelho do par do E9.
+  // 🆕 01/09 — o splash da guia paga (A3.PS) e o STATUS de quem escolheu
+  // boleto (A3.GB). 🐛 02/09: o comentário original dizia "os 2 splashes
+  // (A3.PS/A3.PSB)", mas `guia-boleto` renderiza o `AguardandoView`, não um
+  // splash — o splash do boleto da guia (A3.PSB) nunca foi construído.
   "guia-splash",
   "guia-boleto",
   // 🆕 01/09 — o estado "guia paga" do status (A3′), par do "guia-boleto".
@@ -984,13 +987,33 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
  * telas ausentes dele apareciam com o id cru da etapa na pill ("guia",
  * "conferencia").
  */
+/**
+ * 🐛→🔒 02/09 (achado do Pedro: pill "C0 · Sua atividade" acesa e o painel
+ * dizendo "Desambiguação mini-loop") — TRÊS rotas do flow têm mais de um nó,
+ * porque rota não identifica tela:
+ *
+ *   /dossie/atividade    → C0 (a tela) · DESAMB (o mini-loop dentro dela)
+ *   /gate?etapa=triagem  → E5T (Triagem do ME) · M_T (impedimentos do MEI)
+ *   /assinatura          → A4 (assinatura) · A4G (upgrade do GOV.BR)
+ *
+ * O `Object.fromEntries` deixava o ÚLTIMO vencer, então o painel exibia o nó
+ * secundário nos três casos. O primeiro nó de cada rota é o principal (a
+ * ordem de declaração no `flow-data` é a ordem do flow), e é ele que dá o
+ * título. Os secundários seguem com pill própria — quem os identifica é o
+ * `id`, não a rota.
+ */
+function porRota(nodes: { rota: string | null; label: string }[]) {
+  const out: Record<string, string> = {};
+  for (const n of nodes) {
+    if (!n.rota || n.rota in out) continue;
+    out[n.rota] = n.label.replace(/<br\/>/g, " ");
+  }
+  return out;
+}
+
 const LABEL_POR_ROTA: Record<string, string> = {
   ...Object.fromEntries(GRUPOS.flatMap((g) => g.telas.map((t) => [t.rota, t.nome] as const))),
-  ...Object.fromEntries(
-    (grafoFlow.nodes as { rota: string | null; label: string }[])
-      .filter((n) => n.rota)
-      .map((n) => [n.rota as string, n.label.replace(/<br\/>/g, " ")] as const)
-  ),
+  ...porRota(grafoFlow.nodes as { rota: string | null; label: string }[]),
 };
 
 const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
@@ -1078,7 +1101,10 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   retomar: "/retomar",
   aguardando: "/aguardando",
   guia: "/guia",
-  "guia-splash": "/splash-pagamento",
+  // 🐛 02/09 — apontava pro `/splash-pagamento` cru, que é o splash do
+  // PAGAMENTO DO PLANO (E9.S). O painel então dizia "E9.S · Splash 'pagamento
+  // confirmado'" numa tela que é da GUIA da Junta. Rota completa do A3.PS.
+  "guia-splash": "/splash-pagamento?next=/aguardando%3Ffase%3Djunta%26guia%3Dpaga",
   "guia-boleto": "/aguardando?fase=junta&guia=boleto",
   "guia-paga": "/aguardando?fase=junta&guia=paga",
 };
@@ -1228,7 +1254,7 @@ const MOMENTO_POR_NO: Record<string, Etapa | null> = {
   A3_SR: "guia-recusada",
   A3_R: "guia-retry",
   A3_PS: "guia-splash",
-  A3_PSB: "guia-boleto",
+  A3_PSB: null,  // 🕳️ 02/09 — o splash do boleto DA GUIA não foi construído na demo; o momento "guia-boleto" renderiza o STATUS (A3_GB), não ele
   A3_GP: "guia-paga",
   A3_GB: "guia-boleto",
   A3_V: "status-viabilidade",
@@ -1257,7 +1283,10 @@ type TelaDoFlow = {
   id: string;
   caminho: CaminhoFlow;
   etapa: Etapa | null;
+  /** Nome curto, pra pill. */
   label: string;
+  /** Nome completo do nó, pra título do painel. */
+  nome: string;
 };
 
 /**
@@ -1274,7 +1303,29 @@ const TELAS_DO_FLOW: TelaDoFlow[] = (
   caminho: (n.caminho ?? "abrir") as CaminhoFlow,
   etapa: MOMENTO_POR_NO[n.id] ?? null,
   label: rotuloCurto(n.label.replace(/<br\/>/g, " ")),
+  nome: n.label.replace(/<br\/>/g, " "),
 }));
+
+/**
+ * 🐛→🔒 02/09 — VARIANTES: nós que são a mesma tela num estado diferente.
+ * O título do painel sai do `momento`, e momento não distingue variante: quem
+ * clicava em "E7.1 · A conta da abertura" via o painel dizer "E7 ·", e em
+ * "C3.1 · 3+ sócios" via "C3 · Sócios?". Mesma família do bug que o Pedro
+ * pegou na C0 (pill de uma tela, título de outra).
+ *
+ * Deriva do ESTADO, não do último clique: assim o título continua certo se a
+ * pessoa mudar a resposta por dentro do aparelho, que é como ela de fato usa
+ * a demo.
+ */
+function noVariante(
+  etapa: Etapa,
+  st: { enderecoFiscal: boolean; socios: number | null; mei: boolean },
+): string | null {
+  if (etapa === "plano" && st.enderecoFiscal) return "E7_1";
+  if (etapa === "socios" && (st.socios ?? 0) >= 3) return "C3_1";
+  if (etapa === "painel" && st.mei) return "A3_M";
+  return null;
+}
 
 const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; porque: string }> = {
   splash: {
@@ -2316,6 +2367,7 @@ export default function ApresentacaoPage() {
      "O ESPELHO" no topo do arquivo. */
   const telasVisiveis = TELAS_DO_FLOW.filter((t) => t.caminho === filtroCaminho);
 
+
   const momento: Momento =
     etapa === "splash"
       ? "splash"
@@ -2415,6 +2467,16 @@ export default function ApresentacaoPage() {
 
   const desc = DESCRICOES[momento];
   const divergencias = DIVERGENCIAS[momento];
+  // Nome da tela no painel. Variante manda; sem variante, o nome do momento.
+  const idVariante = noVariante(etapa, {
+    enderecoFiscal: enderecoProprioDemo === false,
+    socios,
+    mei: regimeDemo === "mei",
+  });
+  const tituloDaTela =
+    (idVariante && TELAS_DO_FLOW.find((t) => t.id === idVariante)?.nome) ||
+    NOME_MOCKUP[momento];
+
   const mostraCenarios = etapa === "perguntando";
   const naEntrada = etapa === "fork";
   const naSaidaCidade = etapa === "fora-bh";
@@ -3526,7 +3588,7 @@ export default function ApresentacaoPage() {
                 descia ~30px). Título = o MESMO nome do /mockup, pra o Pedro
                 pedir alteração usando o mesmo vocabulário nos dois lugares. */}
             <div className="mb-6 flex flex-wrap items-center gap-3">
-              <h2 className="text-h1 text-text-primary">{NOME_MOCKUP[momento]}</h2>
+              <h2 className="text-h1 text-text-primary">{tituloDaTela}</h2>
               {desc.dono && (
                 <span className={`shrink-0 rounded-full px-3 py-1 text-micro font-bold ${DONO_LABEL[desc.dono].cor}`}>
                   {DONO_LABEL[desc.dono].label}

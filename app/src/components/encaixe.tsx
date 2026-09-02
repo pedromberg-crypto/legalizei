@@ -282,9 +282,17 @@ export function OutrasOpcoes({
             <button
               key={a.cnae}
               onClick={() => onEscolher(a.cnae)}
+              /* 🔄 02/09 (pedido do Pedro) — SELECIONADO = card PREENCHIDO
+                 em `surface-alt` (#F4F4F4), o mesmo cinza do card "Entrar na
+                 minha conta" do fork. Era borda coral + tint de marca: o
+                 coral é a cor de AÇÃO no app (CTA, pill de plano), e usá-lo
+                 pra "este está escolhido" competia com o botão de baixo, que
+                 é o que a pessoa precisa tocar. 🐛 1ª tentativa usou o token
+                 da hairline (#E3DED7) e o Pedro achou escuro demais — a
+                 hairline é cor de LINHA, não de superfície. */
               className={`rounded-2xl border p-3 text-left transition-colors ${
                 on
-                  ? "border-border-focus bg-surface-tint-brand"
+                  ? "border-surface-alt bg-surface-alt"
                   : "border-border-hairline bg-surface-card hover:border-border-strong"
               }`}
             >

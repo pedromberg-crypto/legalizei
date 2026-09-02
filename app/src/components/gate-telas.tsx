@@ -368,6 +368,24 @@ export function PerguntaView({
   // Mock de visualização das 3 opções (ver o comentário no JSX). `mapear()` é
   // o mesmo mock que a C0.2 usa, então os números batem com os de lá.
   const encaixe = encaixeDeResultado(mapear(texto));
+  /**
+   * 🆕 02/09 (pedido do Pedro) — a escolha do CNAE JÁ NASCE FEITA, no
+   * "+ compatível". A tela não pergunta "qual desses?": ela mostra o que a
+   * IA achou, já marcado, e deixa trocar quem discorda. Quem descreveu a
+   * atividade não tem como julgar entre 3 códigos parecidos, e obrigar essa
+   * decisão é devolver pro cliente o trabalho que a gente vende.
+   *
+   * Reseta junto com o resultado: se a descrição muda, o recomendado muda, e
+   * manter marcado um código da resposta anterior seria mentira silenciosa.
+   */
+  const [escolha, setEscolha] = useState<{ cnae: string; base: string } | null>(null);
+  // A escolha guarda CONTRA QUAL recomendação ela foi feita. Se a descrição
+  // muda e a recomendação muda junto, a escolha antiga caduca sozinha — sem
+  // `useEffect` zerando estado, que dispara render em cascata.
+  const escolhido =
+    escolha?.base === encaixe.recomendado.cnae ? escolha.cnae : encaixe.recomendado.cnae;
+  const escolherCnae = (cnae: string) =>
+    setEscolha({ cnae, base: encaixe.recomendado.cnae });
 
   const podeValidar = sabeCodigo
     ? texto.replace(/\D/g, "").length >= 6
@@ -431,11 +449,15 @@ export function PerguntaView({
               alternativas={[encaixe.recomendado]}
               pill="+ compatível"
               destacarTitulo
+              escolhido={escolhido}
+              onEscolher={escolherCnae}
             />
             <OutrasOpcoes
               titulo="Outras opções"
               alternativas={encaixe.alternativas}
               pill="compatível"
+              escolhido={escolhido}
+              onEscolher={escolherCnae}
             />
           </Rolagem>
 

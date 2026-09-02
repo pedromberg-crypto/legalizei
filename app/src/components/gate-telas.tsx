@@ -315,20 +315,18 @@ export function PerguntaView({
 }) {
   const sel = PILLS.find((p) => p.id === categoria);
   /**
-   * 🔄 02/09 (pedido do Pedro) — A LISTA DE 17 PILLS SAIU DA TELA.
+   * 🔄 02/09 (pedido do Pedro, 2 rodadas) — A GRADE DE 17 PILLS SAIU.
    *
-   * Histórico curto: 31/08 a categoria do E3.4 virou chip confirmado aqui, mas
-   * só quando ela chegava por `?cat=`; sem isso a tela voltava a mostrar as 17
-   * pills. Duas telas na mesma rota, e a lista ocupava o corpo inteiro de uma
-   * tela cujo trabalho é a DESCRIÇÃO — a categoria já foi respondida lá atrás,
-   * e reperguntar em grade sugere que a resposta anterior não valeu.
+   * 1ª rodada: chip confirmado + botão "Trocar categoria" que abria o
+   * dropdown. 2ª: o Pedro viu e cortou o intermediário — "a visualização em
+   * dropdown é mais confortável". O dropdown É a categoria: chega com a
+   * escolha do E3.4 dentro dele, e trocar é abrir e escolher outra. Um
+   * componente, um gesto, o MESMO que ela já usou lá no E3.4.
    *
-   * Agora é sempre chip + "Trocar", e trocar abre o dropdown do DS já aberto.
-   * A lista continua sendo só a validada (as mesmas 17): aqui a pessoa já
-   * pagou, então não existe "não encontrei" — essa porta é do E3.4, antes do
-   * dinheiro, e abrir ela aqui levaria pra waitlist alguém que já é cliente.
+   * A lista continua sendo só a validada (as mesmas 17), SEM "não encontrei
+   * minha categoria": essa porta é do E3.4, antes do dinheiro. Aqui a pessoa
+   * já pagou, e mandar cliente pra waitlist seria beco.
    */
-  const [trocando, setTrocando] = useState(false);
   const tw = useTypewriter(EXEMPLOS, texto.length > 0 || categoria !== null);
   // Pill escolhida troca o exemplo por uma frase fixa da categoria; sem pill,
   // o typewriter cicla exemplos genéricos. O EXEMPLO é o que ensina o campo.
@@ -368,46 +366,19 @@ export function PerguntaView({
             = coral, action-primary — só aqui; o CategoriaChips do resto do app
             segue dark quando ativo). Somem no modo código. */}
         <div className="flex min-h-0 flex-1 flex-col rounded-3xl bg-surface-alt p-4">
-          {/* CATEGORIA — chip confirmado + "Trocar". A grade de 17 pills que
-              morava aqui saiu (ver o comentário do `trocando` acima). */}
+          {/* CATEGORIA — o dropdown É o campo. Chega preenchido do E3.4. */}
           {!sabeCodigo && (
             <div className="shrink-0">
               <p className="text-micro text-text-tertiary mb-1.5">Sua categoria</p>
-
-              {trocando || !sel ? (
-                <Select
-                  valor={categoria ?? ""}
-                  onChange={(v) => {
-                    setCategoria(v || null);
-                    setTrocando(false);
-                  }}
-                  opcoes={PILLS.map((p) => ({ v: p.id, label: p.label }))}
-                  placeholder="Escolhe uma categoria"
-                  // Ela clicou em "Trocar": já pediu pra escolher. Abrir
-                  // fechado cobraria o mesmo gesto duas vezes.
-                  abrirAoMontar={trocando}
-                />
-              ) : (
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-action-primary px-4 py-2 text-caption font-semibold text-text-on-brand">
-                    <CheckMiniRegime />
-                    {sel.label}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setTrocando(true)}
-                    className="rounded-full border border-border-hairline bg-surface-card px-3.5 py-2 text-caption font-semibold text-action-primary-sm transition-colors hover:border-border-strong"
-                  >
-                    Trocar categoria
-                  </button>
-                </div>
-              )}
+              <Select
+                valor={categoria ?? ""}
+                onChange={(v) => setCategoria(v || null)}
+                opcoes={PILLS.map((p) => ({ v: p.id, label: p.label }))}
+                placeholder="Escolhe uma categoria"
+              />
             </div>
           )}
 
-          {/* Textarea vira CARD claro dentro do painel escuro — profundidade,
-              mesma lógica de contraste do AprendaGradiente/CabecalhoCampea.
-              Botão limpar = affordance do SearchMic atualizado. */}
           {/* 🔄 02/09 — quem esticava era a lista de pills; sem ela, o campo
               de descrição herda a sobra. Faz sentido além do layout: a
               descrição é o trabalho desta tela, e campo grande convida a
@@ -452,7 +423,6 @@ export function PerguntaView({
           onClick={() => {
             setSabeCodigo(!sabeCodigo);
             setTexto("");
-            setTrocando(false);
             // 🔒 31/08, mantido 02/09 — a categoria veio do gate (E3.4), não é
             // escolha desta tela: alternar pro modo código não pode apagá-la.
             // Voltando pra descrição, ela ainda está lá.

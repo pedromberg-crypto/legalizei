@@ -2306,6 +2306,11 @@ export default function ApresentacaoPage() {
   function pularPara(alvo: Etapa) {
     if (!resultado) setResultado(mapear(""));
     if (socios === null) setSocios(1);
+    // 🆕 02/09 — a C0 pressupõe a categoria escolhida no E3.4: na rota real
+    // ela chega SEMPRE (via `?cat=`), porque não há como passar pelo gate sem
+    // escolher. Saltar direto pra cá na demo era o único jeito de ver a tela
+    // sem categoria nenhuma — um estado que o cliente não alcança.
+    if (!categoria) setCategoria("tech");
     if (exterior === null) setExterior(false);
     if (faixaEsc === null) setFaixaEsc("20-30k");
     if (!dadosConta.nome) {

@@ -624,7 +624,7 @@ export function PerguntaView({
           {sabeCodigo
             ? "Formato: 0000-0/00"
             : semResultados && texto.trim().length === 0
-              ? "Sem escrever nada, a gente sugere as mais usadas da sua categoria."
+              ? "Se não descrever, sugerimos as mais usadas da categoria."
               : ""}
         </p>
 

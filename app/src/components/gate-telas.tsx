@@ -424,12 +424,25 @@ export function PerguntaView({
       ? null
       : "Acha o que mais parece. Depois conta do seu jeito.";
 
-  // 🔄 02/09 — o CTA diz "Continuar com esse CNAE", então exige que exista
-  // um: com o slot vazio ele não libera. Antes bastava a descrição, porque a
-  // escolha vinha pronta e não havia como não ter uma.
+  /**
+   * 🔒 02/09 (decisão do Pedro) — DESCREVER DEIXOU DE SER OBRIGATÓRIO.
+   *
+   * A régua era 10 caracteres de descrição. Só que a categoria já foi
+   * respondida lá no E3.4, antes de pagar, e ela sozinha já estreita o
+   * universo: quem não souber o que escrever aperta e recebe as 3 atividades
+   * MAIS USADAS da categoria dele. A descrição vira refinamento, não pedágio.
+   * Travar um cliente que já pagou num campo de texto livre é cobrar dele o
+   * trabalho que a gente vende.
+   *
+   * Por momento: na chegada (C0.0) basta ter categoria; com os códigos na
+   * tela, o que o botão pede é a escolha do slot, que é o que ele promete
+   * ("Continuar com essa atividade").
+   */
   const podeValidar = sabeCodigo
     ? texto.replace(/\D/g, "").length >= 6
-    : texto.trim().length >= 10 && (semResultados || escolhido !== null);
+    : semResultados
+      ? categoria !== null
+      : escolhido !== null;
 
   /* 🗑️ 02/09 — o scroll-fade daqui (scRef + ResizeObserver + mask) morreu
      junto com a grade de pills: era ele que desbotava a ponta da lista quando
@@ -603,11 +616,15 @@ export function PerguntaView({
             que a pessoa não fez aqui, e pedir mais, antes de ela digitar
             qualquer coisa, é ruído. A linha que corrige de verdade (texto
             curto demais) continua. */}
+        {/* 🔄 02/09 — a linha que cobrava "conta um pouco mais" saiu do
+            estado de chegada: descrever deixou de ser obrigatório, então
+            cobrar texto seria contradizer o botão, que já libera. No lugar,
+            a chegada diz o que acontece se a pessoa não escrever nada. */}
         <p className="text-caption text-text-tertiary mt-2 min-h-[1.25rem]">
           {sabeCodigo
             ? "Formato: 0000-0/00"
-            : texto.length > 0 && !podeValidar
-              ? "Conta um pouco mais do que você faz."
+            : semResultados && texto.trim().length === 0
+              ? "Sem escrever nada, a gente sugere as mais usadas da sua categoria."
               : ""}
         </p>
 

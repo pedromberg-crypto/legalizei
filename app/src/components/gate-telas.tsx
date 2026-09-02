@@ -387,6 +387,14 @@ export function PerguntaView({
   const escolherCnae = (cnae: string) =>
     setEscolha({ cnae, base: encaixe.recomendado.cnae });
 
+  const sub = sabeCodigo
+    ? jaCliente
+      ? "A gente confirma se é esse mesmo e segue com ele."
+      : "A gente confere se ele está na nossa lista de atendidos."
+    : jaCliente
+      ? null
+      : "Acha o que mais parece. Depois conta do seu jeito.";
+
   const podeValidar = sabeCodigo
     ? texto.replace(/\D/g, "").length >= 6
     : texto.trim().length >= 10;
@@ -401,18 +409,16 @@ export function PerguntaView({
           do shell travado em 100dvh (.app-page, globals.css) — sem o teto, a
           página inteira cresce em vez de o campo se ajustar. */}
       <div className="flex-1 min-h-0 flex flex-col">
-        <h1 className="text-h1 mb-2">
+        {/* 🗑️ 02/09 (pedido do Pedro) — a C0 perdeu o subtítulo pra
+            liberar altura: "Conta do seu jeito. A gente acha o código que
+            combina com isso." explicava um mecanismo que a própria tela já
+            mostra desde que os cartões de CNAE passaram a viver nela. Os
+            outros 3 contextos (modo código, e o uso pré-pagamento) seguem com
+            o deles — lá ainda não há resultado na tela pra falar sozinho. */}
+        <h1 className={`text-h1 ${sub ? "mb-2" : "mb-4"}`}>
           {sabeCodigo ? "Qual o número do seu CNAE?" : "O que você faz?"}
         </h1>
-        <p className="text-body text-text-secondary mb-4">
-          {sabeCodigo
-            ? jaCliente
-              ? "A gente confirma se é esse mesmo e segue com ele."
-              : "A gente confere se ele está na nossa lista de atendidos."
-            : jaCliente
-              ? "Conta do seu jeito. A gente acha o código que combina com isso."
-              : "Acha o que mais parece. Depois conta do seu jeito."}
-        </p>
+        {sub && <p className="text-body text-text-secondary mb-4">{sub}</p>}
 
         {/* 🗑️ 02/09 (pedido do Pedro) — O PAINEL CINZA SAIU.
             Ele existia (28/07, redesign v2) pra AGRUPAR a grade de 17 pills

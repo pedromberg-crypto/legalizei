@@ -213,23 +213,23 @@ export function OutrasOpcoes({
   escolhido,
   onEscolher,
   titulo = "Outras opções pra você",
-  marcarPrimeiro = false,
+  pill,
 }: {
   alternativas: OpcaoCnae[];
   escolhido?: string;
   onEscolher?: (cnae: string) => void;
   titulo?: string;
   /**
-   * 🆕 02/09 (pedido do Pedro) — marca o 1º item com a pill verde
-   * "+ compatível".
+   * 🆕 02/09 (pedido do Pedro) — texto da pill verde de cada card desta
+   * lista. Na C0 são duas listas: o recomendado leva "+ compatível", as
+   * outras levam "compatível". Sem a prop, nenhuma pill.
    *
-   * ⚠️ Por prop, e não sempre: aqui na C0 a lista é
-   * `[recomendado, ...alternativas]`, então o 1º É o mais compatível. No
-   * VEREDITO (C0.2) esta lista tem só as alternativas — o mais compatível
-   * está fora dela, no card grande acima. Marcar o 1º lá diria a coisa
-   * errada sobre a segunda melhor opção.
+   * ⚠️ É da LISTA, não do card: o rótulo vale pra todo item, e quem decide o
+   * que a lista significa é quem a monta. No VEREDITO (C0.2) esta lista traz
+   * só as alternativas — o mais compatível está no card grande acima —, então
+   * lá ela roda sem pill nenhuma.
    */
-  marcarPrimeiro?: boolean;
+  pill?: string;
 }) {
   if (alternativas.length === 0) return null;
 
@@ -237,7 +237,7 @@ export function OutrasOpcoes({
     <div className="mt-4">
       <p className="text-micro text-text-tertiary mb-2">{titulo}</p>
       <div className="flex flex-col gap-2">
-        {alternativas.map((a, i) => {
+        {alternativas.map((a) => {
           const on = escolhido === a.cnae;
           const conteudo = (
             <div className="flex items-center justify-between gap-3">
@@ -253,9 +253,9 @@ export function OutrasOpcoes({
                   técnica: ela fica escolhendo entre 8 pontos de diferença em
                   vez de ler o que cada atividade descreve. Sobra o sinal que
                   de fato ajuda, e só no primeiro. */}
-              {marcarPrimeiro && i === 0 && (
+              {pill && (
                 <span className="shrink-0 rounded-full bg-state-success-tint px-2.5 py-1 text-micro font-semibold text-state-success-text">
-                  + compatível
+                  {pill}
                 </span>
               )}
             </div>

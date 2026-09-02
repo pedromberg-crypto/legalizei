@@ -421,12 +421,20 @@ export function PerguntaView({
               Falta decidir com o Pedro: aparece enquanto digita ou só depois
               do CTA, e o que o CTA vira quando o resultado já está na tela. */}
           <Rolagem className="min-h-0 flex-1">
+            {/* 🔄 02/09 (pedido do Pedro) — duas listas, não uma de três.
+                O recomendado sozinho sob o título da tela, e um "Outras
+                opções" separando os outros dois: a hierarquia fica no LAYOUT,
+                que é o trabalho que o percentual fazia antes de sair. Três
+                cards seguidos liam como três iguais. */}
             <OutrasOpcoes
               titulo="O que mais se encaixa no que você contou"
-              alternativas={[encaixe.recomendado, ...encaixe.alternativas]}
-              // Aqui o 1º da lista é o recomendado, então a pill diz a
-              // verdade. No veredito não seria o caso (ver a prop).
-              marcarPrimeiro
+              alternativas={[encaixe.recomendado]}
+              pill="+ compatível"
+            />
+            <OutrasOpcoes
+              titulo="Outras opções"
+              alternativas={encaixe.alternativas}
+              pill="compatível"
             />
           </Rolagem>
 

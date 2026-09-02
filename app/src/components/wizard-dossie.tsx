@@ -1928,7 +1928,12 @@ export function CnaeSecundariosView({
               titulo=""
               alternativas={[principalComoOpcao]}
               escolhido={principalComoOpcao.cnae}
-              pillDe={() => "+ compatível"}
+              // 🔒 02/09 (pedido do Pedro) — aqui a pill é "Principal", não
+              // "+ compatível". Na C0 o rótulo respondia "qual dessas encaixa
+              // melhor?", a pergunta daquela tela. Aqui a escolha já foi
+              // feita: o que o cartão informa é o PAPEL dele no meio das
+              // secundárias que estão sendo montadas embaixo.
+              pillDe={() => "Principal"}
               onVerDetalhes={setDetalhe}
             />
           </div>

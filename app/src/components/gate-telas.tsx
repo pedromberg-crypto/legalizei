@@ -479,7 +479,7 @@ export function PerguntaView({
             ) : (
               <div className="flex min-h-[62px] items-center justify-center rounded-2xl border border-dashed border-border-strong px-3 py-4">
                 <p className="text-caption text-text-muted">
-                  Escolha seu CNAE principal, é só clicar
+                  Escolha seu CNAE principal, é só selecionar
                 </p>
               </div>
             )}

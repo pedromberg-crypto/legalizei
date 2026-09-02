@@ -13,6 +13,7 @@ import { TelaHeader, Aviso } from "@/components/ui/tela";
 // 🔄 27/08 — `CUSTOS` saiu junto com a escolha de endereço, que migrou da
 // `FaixaView` pro E3.3 (`components/entrada-lead.tsx`).
 // 🔁 28/08 — `Aviso` e `brl` voltaram, agora a serviço do gate de teto do MEI.
+import { OpcoesLinha } from "@/components/ui/form";
 import { FISCAL, brl } from "@/lib/fiscal";
 import { linkWhatsApp } from "@/lib/contato";
 import { TETO_MEI_ANUAL, TETO_MEI_MENSAL } from "@/lib/mei";
@@ -596,7 +597,22 @@ export function TriagemView({
   // 🔄 29/08 (pedido do Pedro) — "é a primeira empresa que você abre?" vira
   // obrigatória. Só entra na conta quando a pergunta de fato aparece (função
   // recebeu `setCoorte`) — sem isso, quem não usa essa prop nunca travaria.
-  const completo = socios !== null && (!setCoorte || coorte !== null);
+  /**
+   * 🆕 01/09 (pedido do Pedro, reunião Rua Satélite 42) — QUEM ADMINISTRA,
+   * agora também aqui, logo depois de escolher a quantidade de sócios.
+   *
+   * ⚠️ Versão BINÁRIA de propósito: neste ponto do flow ainda não existem os
+   * nomes dos sócios (só são coletados no C3, pós-pagamento), então não dá
+   * pra oferecer a escolha nome a nome. O refinamento por nome continua no
+   * C3; aqui a pessoa só diz se administra sozinha ou com os sócios.
+   *
+   * Só aparece com sócio: dono único é administrador por definição.
+   */
+  const [administracao, setAdministracao] = useState<"so-eu" | "com-socios" | null>(null);
+  const completo =
+    socios !== null &&
+    (!setCoorte || coorte !== null) &&
+    (!temSocio || administracao !== null);
 
   return (
     <>
@@ -725,6 +741,53 @@ export function TriagemView({
                   seguir pela contabilidade tradicional.
                 </p>
               </div>
+            )}
+          </div>
+        )}
+
+        {/* 🆕 01/09 (pedido do Pedro) — quem administra. Fica logo abaixo do
+            "Vale saber", ainda no bloco de sócios, porque é consequência
+            direta da resposta anterior: escolheu ter sócio, precisa dizer
+            quem manda. Pré-pagamento porque a resposta vira a qualificação de
+            cada um no DBE (49 sócio-administrador × 22 sócio) e a cláusula de
+            administração do contrato — quanto antes estiver decidido, menos
+            retrabalho lá na frente.
+
+            🔴 NÃO existe pergunta de assinatura isolada × conjunta, e é
+            decisão travada (RS42): o contrato PADRÃO da Junta não tem esse
+            campo, e inserir cláusula própria tira o processo do padrão e
+            manda pra análise humana. */}
+        {temSocio && (
+          <div className="mt-8">
+            <p className="text-body-strong font-semibold mb-1">
+              Quem vai administrar a empresa?
+            </p>
+            <p className="text-caption text-text-secondary mb-3">
+              Administrar é assinar pela empresa no dia a dia: banco, cartório,
+              transferência de veículo. Quem não administra continua sócio e
+              continua participando dos resultados.
+            </p>
+            <OpcoesLinha
+              opcoes={[
+                { v: "so-eu" as const, label: "Só eu" },
+                { v: "com-socios" as const, label: "Eu e meus sócios" },
+              ]}
+              valor={administracao}
+              onChange={setAdministracao}
+            />
+            {/* A consequência só da opção escolhida — as duas ao mesmo tempo
+                virariam aula de direito societário no meio da triagem. */}
+            {administracao === "so-eu" && (
+              <p className="text-micro text-text-tertiary mt-2">
+                Você resolve tudo sozinho, sem depender da assinatura de
+                ninguém.
+              </p>
+            )}
+            {administracao === "com-socios" && (
+              <p className="text-micro text-text-tertiary mt-2">
+                Cada administrador pode assinar sozinho o dia a dia. Alguns
+                bancos pedem todos os administradores pra abrir a conta.
+              </p>
             )}
           </div>
         )}

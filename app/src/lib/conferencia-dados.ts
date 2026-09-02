@@ -127,6 +127,14 @@ export const CONFERENCIA: TelaConferencia[] = [
         "status": ""
       },
       {
+        "nome": "quem administra a empresa (só o titular × titular + sócios) quando há sócio",
+        "codigo": "",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
         "nome": "é a 1ª empresa que abre? (opcional)",
         "codigo": "",
         "valor": "",

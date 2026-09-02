@@ -1,7 +1,7 @@
 ---
 tipo: verdade
 status: GERADO — não editar à mão, nasce de `execucao/flow/gerar-mapa.mjs`
-data: 2026-09-01
+data: 2026-09-02
 assunto: dados-coletados-abertura
 tags: [execucao, flow, dados, abertura]
 ---
@@ -45,6 +45,7 @@ tags: [execucao, flow, dados, abertura]
 
 ### Triagem quantos sócios?
 - Quantidade de sócios (1 / 2 / 3 / 4)
+- quem administra a empresa (só o titular × titular + sócios) quando há sócio
 - é a 1ª empresa que abre? (opcional)
 - sócio que não se encaixa no card informativo (opcional, texto livre via 'Falar com o time')
 

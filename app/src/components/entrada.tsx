@@ -133,13 +133,20 @@ export function EntradaView({
 
           {/* Selo de confiança: o diferencial que nenhum concorrente digital
               tem. Vem ANTES das opções porque é o que autoriza a escolha. */}
+          {/* 🔄 01/09 (pedido do Pedro) — só as CORES entram no padrão do
+              `CardNota` (fundo branco, borda hairline cinza, ícone verde,
+              texto no ink da paleta). A disposição fica como está: aqui o
+              ícone é do TAMANHO do texto e alinhado ao centro, não o círculo
+              de 20px com o texto à direita — é um selo de confiança de 1
+              linha, não um cartão de recado. */}
           <div
             className="mt-4 flex items-center gap-2.5 rounded-md border
-                       border-border-hairline bg-surface-tint-brand px-3.5 py-2.5"
+                       border-border-hairline bg-surface-card px-3.5 py-2.5"
           >
             <Escudo />
-            <p className="text-caption font-semibold text-text-secondary">
-              Um escritório de contabilidade de verdade, em BH.
+            <p className="text-caption font-semibold text-text-primary">
+              Um escritório de contabilidade de verdade, com mais de 22 anos de
+              história em Belo Horizonte.
             </p>
           </div>
         </div>
@@ -245,7 +252,12 @@ function CardFork({
         horizontal ? "flex-row items-center gap-3" : "flex-col items-start gap-2"
       } ${
         destaque
-          ? "bg-action-primary-sm text-text-on-brand hover:bg-action-primary-hover"
+          ? // 🔄 01/09 (pedido do Pedro) — o card de destaque usava
+            // `action-primary-sm` (o coral da tipografia pequena, mais
+            // escuro). Passa a usar `action-primary`, o MESMO fill de todos os
+            // outros CTAs do app: era o único botão coral fora do tom, e a
+            // diferença aparecia justamente na 1ª tela.
+            "bg-action-primary text-text-on-brand hover:bg-action-primary-hover"
           : cinza
             ? "bg-surface-alt hover:opacity-80"
             : "border border-border-hairline bg-surface-card hover:bg-surface-alt"
@@ -337,7 +349,7 @@ function Escudo() {
       strokeWidth="2.2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="shrink-0 text-action-primary"
+      className="shrink-0 text-state-success"
       aria-hidden
     >
       <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />

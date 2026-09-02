@@ -12,7 +12,7 @@ import { TelaHeader, Aviso, Rolagem } from "@/components/ui/tela";
 // 🔄 27/08 — `CUSTOS` saiu junto com a escolha de endereço, que migrou da
 // `FaixaView` pro E3.3 (`components/entrada-lead.tsx`).
 // 🔁 28/08 — `Aviso` e `brl` voltaram, agora a serviço do gate de teto do MEI.
-import { OpcoesLinha, Select } from "@/components/ui/form";
+import { OpcoesLinha, Select, Campo } from "@/components/ui/form";
 import { FISCAL, brl } from "@/lib/fiscal";
 import { linkWhatsApp } from "@/lib/contato";
 import { TETO_MEI_ANUAL, TETO_MEI_MENSAL } from "@/lib/mei";
@@ -360,61 +360,71 @@ export function PerguntaView({
               : "Acha o que mais parece. Depois conta do seu jeito."}
         </p>
 
-        {/* Painel único (rounded-3xl bg-surface-alt, mesmo container do timeline
-            de /obrigacoes) agrupa pills + textarea — redesign v2 ROBUSTO,
-            validado 28/07 via /mockup-v2. Pills = estilo CategoriaChips (ativo
-            = coral, action-primary — só aqui; o CategoriaChips do resto do app
-            segue dark quando ativo). Somem no modo código. */}
-        <div className="flex min-h-0 flex-1 flex-col rounded-3xl bg-surface-alt p-4">
-          {/* CATEGORIA — o dropdown É o campo. Chega preenchido do E3.4. */}
+        {/* 🗑️ 02/09 (pedido do Pedro) — O PAINEL CINZA SAIU.
+            Ele existia (28/07, redesign v2) pra AGRUPAR a grade de 17 pills
+            com o textarea: eram muitos elementos soltos, e o cartão dava
+            unidade. Com as pills fora, sobrou um cartão em volta de dois
+            campos — cinza sem função, e diferente de todo o resto do wizard,
+            que põe campo direto no fundo claro. Agora a tela usa o mesmo
+            `Campo` do C1/C4/E3.4: rótulo, campo, nada em volta. */}
+        <div className="flex min-h-0 flex-1 flex-col gap-4">
           {!sabeCodigo && (
-            <div className="shrink-0">
-              <p className="text-micro text-text-tertiary mb-1.5">Sua categoria</p>
+            <Campo rotulo="Sua categoria">
               <Select
                 valor={categoria ?? ""}
                 onChange={(v) => setCategoria(v || null)}
                 opcoes={PILLS.map((p) => ({ v: p.id, label: p.label }))}
                 placeholder="Escolhe uma categoria"
               />
-            </div>
+            </Campo>
           )}
 
-          {/* 🔄 02/09 — quem esticava era a lista de pills; sem ela, o campo
-              de descrição herda a sobra. Faz sentido além do layout: a
-              descrição é o trabalho desta tela, e campo grande convida a
-              escrever mais, que é exatamente o que a IA precisa. */}
-          <div className="relative mt-3 min-h-0 flex-1">
-            <textarea
-              value={texto}
-              onChange={(e) => setTexto(e.target.value)}
-              placeholder={placeholder}
-              className="h-full min-h-[6.5rem] w-full resize-none rounded-2xl border border-border-hairline
-                         bg-surface-card p-4 pr-9 text-body text-text-primary shadow-sm
-                         placeholder:text-text-muted focus:border-border-focus focus:outline-none"
-            />
-            {texto !== "" && (
-              <button
-                type="button"
-                onClick={() => setTexto("")}
-                aria-label="Limpar"
-                className="absolute right-3 top-3 text-text-tertiary transition-colors hover:text-text-primary"
-              >
-                <IconeX />
-              </button>
-            )}
+          {/* O campo de descrição herda a sobra que era da lista de pills: é
+              o trabalho real desta tela, e campo grande convida a escrever
+              mais, que é exatamente o que a IA usa. */}
+          <div className="flex min-h-0 flex-1 flex-col">
+            <p className="text-caption font-semibold text-text-primary">
+              {sabeCodigo ? "Número do CNAE" : "O que você faz na prática"}
+            </p>
+            <div className="relative mt-1.5 min-h-0 flex-1">
+              <textarea
+                value={texto}
+                onChange={(e) => setTexto(e.target.value)}
+                placeholder={placeholder}
+                // 🐛 02/09 (achado do Pedro: "parece mais redonda que o
+                // dropdown") — estava `rounded-xl` (24px). TODO campo do DS
+                // usa `rounded-md` (12px): Texto, Select, Checkbox, opção.
+                className="h-full min-h-[6.5rem] w-full resize-none rounded-md border border-border-hairline
+                           bg-surface-card p-4 pr-9 text-body text-text-primary
+                           placeholder:text-text-muted focus:border-border-focus focus:outline-none"
+              />
+              {texto !== "" && (
+                <button
+                  type="button"
+                  onClick={() => setTexto("")}
+                  aria-label="Limpar"
+                  className="absolute right-3 top-3 text-text-tertiary transition-colors hover:text-text-primary"
+                >
+                  <IconeX />
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Microcopy que ENSINA, não pune (UX-16). Reforça o "descreve mais"
-            quando a pill foi escolhida — a pill não fecha, o texto fecha. */}
+        {/* Microcopy que ENSINA, não pune (UX-16).
+            🗑️ 02/09 (pedido do Pedro) — saiu o "Boa. Agora conta um pouco
+            mais pra gente confirmar.", que aparecia assim que a categoria
+            estava escolhida. Ela CHEGA escolhida do E3.4: elogiar uma escolha
+            que a pessoa não fez aqui, e pedir mais, antes de ela digitar
+            qualquer coisa, é ruído. A linha que corrige de verdade (texto
+            curto demais) continua. */}
         <p className="text-caption text-text-tertiary mt-2 min-h-[1.25rem]">
           {sabeCodigo
             ? "Formato: 0000-0/00"
-            : sel
-              ? "Boa. Agora conta um pouco mais pra gente confirmar."
-              : texto.length > 0 && !podeValidar
-                ? "Conta um pouco mais do que você faz."
-                : ""}
+            : texto.length > 0 && !podeValidar
+              ? "Conta um pouco mais do que você faz."
+              : ""}
         </p>
 
         {/* 🆕 28/07: CTA discreto do atalho — não compete com o CTA principal
@@ -427,7 +437,7 @@ export function PerguntaView({
             // escolha desta tela: alternar pro modo código não pode apagá-la.
             // Voltando pra descrição, ela ainda está lá.
           }}
-          className="mt-2 self-start text-caption font-medium text-text-secondary underline underline-offset-4"
+          className="mt-2 self-center text-caption font-medium text-text-secondary underline underline-offset-4"
         >
           {sabeCodigo ? "Prefiro descrever o que faço" : "Já sei o número do meu CNAE"}
         </button>

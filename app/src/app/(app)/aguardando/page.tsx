@@ -116,7 +116,12 @@ export default function AguardandoPage() {
         router.push(
           comCategoria(
             comEndereco(
-              comRegime(mei ? "/dossie/ocupacao" : "/dossie/atividade", mei),
+              // 🔒 02/09 — o ME entra pela CHEGADA da C0 (`?vazia=1`, nó
+              // C0.0 do mapa): tela limpa, sem palpite de CNAE antes de a
+              // pessoa contar o que faz. Sem esta query o app caía direto na
+              // tela com os 5 cartões e a chegada não existia pra ninguém —
+              // o mapa dizia uma coisa e o link fazia outra.
+              comRegime(mei ? "/dossie/ocupacao" : "/dossie/atividade?vazia=1", mei),
               enderecoFiscal,
             ),
             categoria,

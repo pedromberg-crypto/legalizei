@@ -2359,7 +2359,9 @@ export default function ApresentacaoPage() {
    */
   const irParaBloco = (rota: string) => {
     const alvo: Record<string, Etapa> = {
-      "/conta": "conta",
+      // 🗑️ 02/09 — "/conta" saiu: o bloco 1 deixou de ser ajustável
+      // (cadastro já usado na cobrança + plano já pago), então nada mais
+      // chama esta rota daqui.
       "/dossie/atividade": "perguntando",
       "/dossie/socio": "socio",
       "/dossie/empresa": "empresa",

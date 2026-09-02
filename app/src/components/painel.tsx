@@ -277,7 +277,11 @@ function TimelineEmBlocos({
                 visual suficiente pra ser encontrado sem procurar. Tint de
                 marca, não fill cheio — o CTA do rodapé continua sendo a ação
                 principal da tela, e dois corais sólidos brigariam. */}
-            {concluido && podeAjustar && onIrParaBloco && (
+            {/* 🔒 02/09 — `telas: []` = bloco não editável (o 1, pós-pago, e
+                o 5, pós-protocolo). Antes só o `podeAjustar` global segurava,
+                e o bloco 1 escapava: aparecia concluído com o botão,
+                prometendo uma edição que o fluxo não faz. */}
+            {concluido && podeAjustar && g.telas.length > 0 && onIrParaBloco && (
               <button
                 type="button"
                 onClick={() => onIrParaBloco(g.rota, g.id)}

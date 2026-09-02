@@ -141,7 +141,16 @@ export const BLOCOS: {
    */
   telas: string[];
 }[] = [
-  { id: 1, titulo: "Conta e plano", rota: "/conta", telas: ["/conta"] },
+  /**
+   * 🔒 02/09 (achado do Pedro) — BLOCO 1 NÃO SE AJUSTA. Ele mostrava
+   * "Ajustar" depois de concluído, mas o que tem dentro dele é cadastro JÁ
+   * USADO na cobrança e um plano JÁ PAGO: mexer ali não é corrigir um dado, é
+   * outro fluxo (retry, cobrança, estorno). Ele expande normalmente — a
+   * pessoa abre e vê os checks —, só não oferece volta.
+   * Correção de cadastro pós-pagamento (e-mail errado, por exemplo) sai pelo
+   * WhatsApp, que já tem link fixo nesta tela (decisão do Pedro).
+   */
+  { id: 1, titulo: "Conta e plano", rota: "/conta", telas: [] },
   {
     id: 2,
     titulo: "O que a empresa faz",

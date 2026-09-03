@@ -2006,15 +2006,10 @@ export function CnaeSecundariosView({
                         {escolhidas.map((s) => s.humano).join(" · ")}
                       </span>
                     </span>
-                    {/* 🆕 02/09 (pedido do Pedro) — pill "Secundárias", par da
-                        "Principal" lá em cima. Sobre o coral escuro do bloco,
-                        ela usa o branco translúcido que o app já aplica em
-                        pill dentro de superfície coral (o mesmo par do estado
-                        selecionado): a de fora identifica o cartão, esta
-                        identifica o que está pendurado nele. */}
-                    <span className="shrink-0 rounded-full bg-surface-card/20 px-2.5 py-1 text-micro font-semibold text-text-on-brand">
-                      Secundárias
-                    </span>
+                    {/* 🗑️ 02/09 — testamos uma pill "Secundárias" aqui, par da
+                        "Principal". Saiu na mesma rodada: a própria linha já
+                        diz "3 atividades secundárias", então a pill repetia a
+                        palavra ao lado dela mesma. */}
                     <ChevronResumo />
                   </button>
                 )

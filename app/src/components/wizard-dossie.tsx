@@ -473,13 +473,22 @@ export function VinculoView({
       <TelaHeader meta="Como você já contribui" onVoltar={onVoltar} />
 
       <main className="app-main">
-        <Titulo sub="Isso muda quanto de imposto a empresa paga. Vale a pena acertar.">
+        {/* 🔄 02/09 (pente fino do Pedro) — o subtítulo perdeu o "Vale a
+            pena acertar", que era enfeite e soava como se a gente estivesse
+            convencendo. Ficou só o PORQUÊ da pergunta, que não está em nenhum
+            outro lugar da tela — e aqui ele se justifica: é a única pergunta
+            do dossiê sobre a vida da pessoa FORA da empresa. */}
+        <Titulo sub="Isso muda o imposto que a empresa paga.">
           Você já contribui pro INSS por fora?
         </Titulo>
 
         <Corpo>
+          {/* 🗑️ 02/09 — o rótulo "Já recolhe INSS hoje?" saiu: era a MESMA
+              pergunta do título, com outras palavras, e quem lia as duas
+              parava pra checar se eram a mesma coisa. A dica fica — ela não
+              repete a pergunta, define o escopo do que conta como vínculo. */}
           <Campo
-            rotulo="Já recolhe INSS hoje?"
+            rotulo=""
             dica="Vale emprego de carteira, aposentadoria, autônomo ou sócio de outra empresa."
           >
             <OpcoesLinha
@@ -534,13 +543,14 @@ export function VinculoView({
             </>
           )}
 
-          {/* UX-27: reenquadra o pró-labore como ganho, não só "não pode ser CLT". */}
-          <Aviso variante="info" titulo="Como você se paga na sua empresa">
-            Na sua própria empresa você não entra como CLT: você se paga por
-            pró-labore. E ele conta a favor: recolhe INSS que soma pra sua
-            aposentadoria e dá direito aos benefícios do INSS.
-          </Aviso>
-
+          {/* 🗑️ 02/09 (pente fino do Pedro) — o bloco "Como você se paga na
+              sua empresa" saiu. Ele explicava pró-labore em 3 linhas, SEMPRE
+              visíveis, respondendo uma dúvida que esta tela não levanta: aqui
+              a pergunta é se a pessoa contribui POR FORA. Era o maior peso
+              visual de uma tela que faz uma pergunta binária.
+              O reenquadramento do UX-27 ("pró-labore é ganho, não só 'você não
+              pode ser CLT'") continua valendo — o lugar dele é onde o
+              pró-labore é definido de fato (C4/A1), não aqui. */}
           <p className="text-micro text-text-tertiary">
             A gente não consulta o vínculo de ninguém sozinho. Você declara, e
             isso fica protegido.

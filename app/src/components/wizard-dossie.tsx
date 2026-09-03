@@ -11,6 +11,7 @@ import { FISCAL, brl } from "@/lib/fiscal";
 import { FORMAS_ATUACAO } from "@/lib/mei";
 // 🆕 01/09 — mesma máscara do E6, pro CPF do sócio extra (C3).
 import { mascaraCpf } from "@/components/wizard-dinheiro";
+import { linkWhatsApp } from "@/lib/contato";
 import { OutrasOpcoes, SheetCnae, type OpcaoCnae } from "@/components/encaixe";
 import {
   CLIENTE,
@@ -223,9 +224,12 @@ export function SocioView({
       <TelaHeader meta="Seus dados" onVoltar={onVoltar} />
 
       <main className="app-main">
-        <Titulo sub="Confira o que você já preencheu e complete o resto.">
-          Seus dados
-        </Titulo>
+        {/* 🗑️ 02/09 (pente fino do Pedro) — subtítulo fora, como na C0 e na
+            C5. Ele narrava a mecânica ("confira o que já preencheu e complete
+            o resto") que a própria tela mostra: um card fechado do que veio do
+            cadastro e campos vazios embaixo. A promessa de "não vamos pedir
+            tudo de novo" continua sendo feita, e melhor, pelo card. */}
+        <Titulo>Seus dados</Titulo>
 
         <Corpo>
           {/* CONFIRMAÇÃO — já veio do N6, só conferir. "Editar" mock, mesmo
@@ -235,12 +239,22 @@ export function SocioView({
               <h2 className="text-body font-semibold text-text-primary">
                 Já preenchido no cadastro
               </h2>
-              <button
+              {/* 🔒 02/09 — era um "Editar" mock, que não fazia nada. Pior:
+                  prometia o que o app decidiu HOJE não oferecer — dado de
+                  cadastro pós-pagamento não se edita aqui (o bloco "Conta e
+                  plano" do status perdeu o "Ajustar" pelo mesmo motivo), sai
+                  pelo WhatsApp. O botão passa a levar pra onde a correção
+                  realmente acontece. */}
+              <a
+                href={linkWhatsApp(
+                  "Oi! Preciso corrigir um dado do meu cadastro na abertura da empresa.",
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="shrink-0 text-caption font-semibold text-action-primary-sm underline underline-offset-4"
-                aria-label="Editar dados do cadastro"
               >
-                Editar
-              </button>
+                Corrigir
+              </a>
             </div>
             <div className="flex flex-col gap-1.5">
               <LinhaConfirma rotulo="Nome" valor={CLIENTE.nome} />
@@ -278,11 +292,9 @@ export function SocioView({
             {/* 🆕 01/09 — mesma dupla do card do sócio extra (nascimento +
                 nacionalidade lado a lado), agora também pro titular. */}
             <Campo rotulo="Nacionalidade">
-              <Texto
-                valor={nacionalidade}
-                onChange={setNacionalidade}
-                placeholder="Brasileira"
-              />
+              {/* Sem placeholder: o campo nasce preenchido com "Brasileira",
+                  e um placeholder igual ao valor nunca aparece. */}
+              <Texto valor={nacionalidade} onChange={setNacionalidade} />
             </Campo>
           </div>
 
@@ -334,7 +346,9 @@ export function SocioView({
           {enderecoPessoal && (
             <>
               <div className="-mt-1 rounded-md border border-border-hairline bg-surface-alt px-3 py-2.5 text-caption text-text-secondary">
-                {enderecoPessoal.logradouro}, {enderecoPessoal.bairro} —{" "}
+                {/* 🐛 02/09 — tinha travessão, proibido em texto público desde
+                    24/07. Escapou porque não é frase, é concatenação. */}
+                {enderecoPessoal.logradouro}, {enderecoPessoal.bairro},{" "}
                 {enderecoPessoal.municipio}/{enderecoPessoal.uf}
               </div>
               <div className="grid grid-cols-2 gap-3">

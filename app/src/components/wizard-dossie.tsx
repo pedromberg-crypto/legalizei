@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { CardNota } from "@/components/ui/card-nota";
 import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
 import { Campo, Texto, Select, OpcoesLinha } from "@/components/ui/form";
 // 🗑️ 01/09 — `CUSTOS` saiu junto do upsell de endereço fiscal do C4: a única
@@ -354,16 +355,17 @@ export function SocioView({
                   outra coisa ("é seu, e você não mexe"). Agora é uma linha de
                   confirmação, com o check verde que o app usa pra "deu certo"
                   e o texto dizendo o que ele é. */}
-              <div className="-mt-3 flex items-start gap-2">
-                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-state-success-tint text-state-success-text">
-                  <CheckMarcado />
-                </span>
-                <p className="text-caption text-text-secondary">
+              {/* 🔄 02/09 (pedido do Pedro) — o endereço encontrado usa o
+                  `CardNota` positivo, o mesmo cartão de check verde que o app
+                  já usa pra confirmar coisa boa (E3.2, E3.4). Era uma linha
+                  solta; virou o componente que existe pra isso. */}
+              <div className="-mt-3">
+                <CardNota>
                   {/* 🐛 02/09 — tinha travessão, proibido em texto público
                       desde 24/07. Escapou porque não é frase, é concatenação. */}
                   {enderecoPessoal.logradouro}, {enderecoPessoal.bairro},{" "}
                   {enderecoPessoal.municipio}/{enderecoPessoal.uf}
-                </p>
+                </CardNota>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <Campo rotulo="Número">
@@ -1013,16 +1015,14 @@ export function SociosView({
                         {/* Mesma linha de confirmação da C1 (02/09): o
                             endereço encontrado não é campo, é recibo. Tinha o
                             travessão proibido junto. */}
-                        <div className="-mt-3 flex items-start gap-2">
-                          <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-state-success-tint text-state-success-text">
-                            <CheckMarcado />
-                          </span>
-                          <p className="text-caption text-text-secondary">
+                        {/* Mesmo `CardNota` da C1 (02/09). */}
+                        <div className="-mt-3">
+                          <CardNota>
                             {(() => {
                               const e = buscarCep(s.cep.replace(/\D/g, ""))!;
                               return `${e.logradouro}, ${e.bairro}, ${e.municipio}/${e.uf}`;
                             })()}
-                          </p>
+                          </CardNota>
                         </div>
                         <div className="grid grid-cols-2 gap-3">
                           <Campo rotulo="Número">

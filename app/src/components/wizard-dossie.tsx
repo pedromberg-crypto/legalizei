@@ -2103,7 +2103,9 @@ export function CnaeSecundariosView({
             <div className="mb-1.5 flex items-baseline justify-between gap-3">
               <p className="text-micro text-text-tertiary">Sugestões pra você</p>
               <p className="shrink-0 text-micro font-semibold text-action-primary-sm">
-                {sugestoesDisponiveis.length}
+                {sugestoesDisponiveis.length === 1
+                  ? "1 opção"
+                  : `${sugestoesDisponiveis.length} opções`}
               </p>
             </div>
             {/* 🗑️ 02/09 — a garantia "não muda o imposto" saiu daqui: cada

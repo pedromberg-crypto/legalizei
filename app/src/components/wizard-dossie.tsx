@@ -798,6 +798,9 @@ export function SociosView({
   // Quantidade manda no plural do título e do subtítulo.
   const varios = extras.length > 1;
   const [socioAberto, setSocioAberto] = useState<string | null>(null);
+  // Sheet "o que significa administrar" — conteúdo fixo, não depende de quem
+  // está marcado (fala dos dois papéis, administrador e sócio comum).
+  const [infoAdmin, setInfoAdmin] = useState(false);
   const [socioSalvo, setSocioSalvo] = useState<string[]>([]);
 
   /**
@@ -945,11 +948,35 @@ export function SociosView({
                   mudar a sua % redistribui os sócios extras proporcionalmente
                   (e mudar a de um extra já recalculava a sua, como sempre) —
                   o vínculo passou a valer nos dois sentidos. */}
-              {/* 🗑️ 03/09 (pedido do Pedro) — O CARD DO TITULAR SAIU.
-                  Ele carregava dois dados: o nome (que a mesa da divisão já
-                  mostra) e a participação, que mudou de lugar. Sem a %, sobrava
-                  um card só pra dizer "você é sócio", o que ninguém precisa ler
-                  no meio do formulário dos OUTROS sócios. */}
+              {/* 🔄 03/09 (pedido do Pedro, 2ª rodada) — O CARD DO TITULAR
+                  VOLTA, mas como RECIBO: sem a %, que mora só na mesa da
+                  divisão, sobra só "quem é você" — no mesmo desenho da linha
+                  colapsada dos sócios, pra não ficar um peixe fora d'água
+                  acima deles. A diferença é o check: nos sócios ele é VERDE
+                  ("você confirmou os dados dele agora"); aqui é CINZA — não é
+                  uma ação que você acabou de tomar, é uma qualificação que já
+                  é sua, travada, desde o cadastro. */}
+              <div className="relative flex items-center gap-2 rounded-md border border-border-hairline bg-surface-card p-3 pr-10">
+                <span className="min-w-0 truncate text-caption font-semibold text-text-primary">
+                  {CLIENTE.nome}
+                </span>
+                <span className="ml-auto shrink-0 rounded-full bg-surface-alt px-2 py-0.5 text-micro font-semibold text-text-tertiary">
+                  Você
+                </span>
+                {/* Titular sempre administra (é o representante perante a
+                    Receita) — a pill não depende de escolha, por isso não
+                    reusa a cor de sucesso dos sócios marcados: aqui também é
+                    fato travado, não confirmação de agora. */}
+                <span className="shrink-0 rounded-full bg-surface-alt px-2 py-0.5 text-micro font-semibold text-text-tertiary">
+                  Administra
+                </span>
+                <span
+                  aria-hidden
+                  className="absolute right-3 top-3 flex h-5 w-5 items-center justify-center rounded-full bg-surface-alt text-text-tertiary"
+                >
+                  <CheckMiniDossie />
+                </span>
+              </div>
 
               <div className="flex flex-col gap-3">
                 {extras.map((s, i) => {
@@ -987,9 +1014,19 @@ export function SociosView({
                         aria-expanded={aberto}
                         className="flex items-center gap-2 pr-6 text-left"
                       >
-                        <span className="text-caption font-semibold text-text-primary">
+                        <span className="min-w-0 truncate text-caption font-semibold text-text-primary">
                           {titulo}
                         </span>
+                        {/* 🆕 03/09 (ideia aprovada) — pill "Administra" na
+                            linha fechada, pra quem marcou o sócio como
+                            administrador não precisar abrir o card de novo pra
+                            lembrar. Só aparece fechado: aberto, a resposta já
+                            está logo ali, no próprio campo. */}
+                        {!aberto && admins.includes(s.id) && (
+                          <span className="shrink-0 rounded-full bg-state-success-tint px-2 py-0.5 text-micro font-semibold text-state-success-text">
+                            Administra
+                          </span>
+                        )}
                         <ChevronSocio aberto={aberto} />
                       </button>
                     ) : (
@@ -1311,24 +1348,28 @@ export function SociosView({
                   ali sugeriria que a resposta muda alguma coisa. */}
               {contexto === "abrir" && (
                 <Card>
-                  {/* 🔄 03/09 (pedido do Pedro) — DE PERGUNTA A RESUMO.
-                      Este bloco era onde se escolhia quem administra, numa
-                      lista de checks longe dos cards. A escolha virou campo
-                      DENTRO de cada sócio (é característica dele); aqui fica o
-                      recibo: quem administra, e o que isso significa.
-                      A explicação continua morando aqui, uma vez só — era o
-                      motivo de não repetir a definição dentro dos cards. */}
-                  <p className="text-body font-semibold text-text-primary">
-                    Quem administra a empresa
-                  </p>
-                  <p className="text-caption text-text-secondary mt-1 mb-3">
-                    Administrar é assinar pela empresa no dia a dia: abrir conta
-                    em banco, transferir um veículo, assinar em cartório. Quem
-                    não administra continua sócio e continua participando dos
-                    resultados.
-                  </p>
-
-                  <p className="text-caption text-text-primary">
+                  {/* 🔄 03/09 (pedido do Pedro, 3ª rodada) — DE BLOCO CORRIDO A
+                      RECIBO + "i". Era um card com definição (3 linhas) +
+                      resultado + consequência (mais 3-4 linhas): informação
+                      correta, mas em volume que "dá preguiça de ler" — as
+                      palavras do Pedro. O recibo (quem administra) fica
+                      sempre visível, que é o que muda de pessoa pra pessoa; a
+                      explicação do que isso SIGNIFICA (pros dois papéis, não
+                      só um) vai pro sheet, sob demanda. */}
+                  <div className="flex items-start justify-between gap-3">
+                    <p className="text-body font-semibold text-text-primary">
+                      Quem administra a empresa
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setInfoAdmin(true)}
+                      aria-label="O que significa administrar a empresa"
+                      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border-hairline text-micro font-bold text-text-tertiary"
+                    >
+                      i
+                    </button>
+                  </div>
+                  <p className="text-caption text-text-primary mt-1">
                     {admins.length === 0
                       ? "Só você administra."
                       : `Você e ${listar(
@@ -1337,24 +1378,10 @@ export function SociosView({
                             .map((s, i) => primeiroNome(s.nome) || `${i + 2}º sócio`),
                         )}.`}
                   </p>
-
-                  {/* A consequência prática, e só a da situação atual. */}
-                  {admins.length === 0 ? (
-                    <p className="text-micro text-text-tertiary mt-3">
-                      Você resolve tudo sozinho, sem depender da assinatura de
-                      ninguém. Seus sócios não assinam pela empresa.
-                    </p>
-                  ) : (
-                    <p className="text-micro text-text-tertiary mt-3">
-                      Cada administrador pode assinar sozinho o dia a dia da
-                      empresa. Só atos grandes (vender ou dar em garantia um
-                      imóvel da empresa, por exemplo) precisam da assinatura de
-                      todos. Alguns bancos pedem todos os administradores pra
-                      abrir a conta.
-                    </p>
-                  )}
                 </Card>
               )}
+
+              {infoAdmin && <SheetAdministracao onFechar={() => setInfoAdmin(false)} />}
             </>
           ) : (
             <Aviso variante="info" titulo="Empresa só sua">
@@ -3158,5 +3185,85 @@ function CheckMiniDossie() {
     >
       <path d="m5 12 4 4 8-9" />
     </svg>
+  );
+}
+
+/**
+ * 🆕 03/09 (ideia do Pedro) — sheet do "i" da administração. Mesmo
+ * bottom-sheet do DS (EnviarSheet · SheetNaoReembolsavel · SheetCnae ·
+ * SheetSecundarias) e a MESMA lista de checks do card de regime em
+ * `MeiOuMeView` (gate-telas.tsx) — título + check verde + texto, um item por
+ * responsabilidade. É a explicação que saiu do card de fora, agora com
+ * espaço pra falar dos DOIS papéis, não só de quem administra.
+ */
+function SheetAdministracao({ onFechar }: { onFechar: () => void }) {
+  const [entrou, setEntrou] = useState(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setEntrou(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  const sair = () => {
+    setEntrou(false);
+    window.setTimeout(onFechar, 240);
+  };
+
+  const PONTOS = [
+    "O administrador assina pela empresa no dia a dia: abrir conta em banco, transferir um veículo, assinar em cartório.",
+    "Quem não administra continua sócio, com os mesmos direitos sobre os resultados — só não assina pela empresa.",
+    "Atos grandes (vender ou dar em garantia um imóvel da empresa, por exemplo) precisam da assinatura de todos os administradores, não só de quem cadastrou.",
+    "Alguns bancos pedem a assinatura de todos os administradores pra abrir a conta.",
+  ];
+
+  return (
+    <div className="absolute inset-0 z-[60]">
+      <button
+        type="button"
+        aria-label="Fechar"
+        onClick={sair}
+        className={`absolute inset-0 bg-[#10151b] transition-opacity duration-300 ${
+          entrou ? "opacity-45" : "opacity-0"
+        }`}
+      />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="O que significa administrar a empresa"
+        className="absolute inset-x-0 bottom-0 flex max-h-[86%] flex-col rounded-t-3xl bg-surface-page px-5"
+        style={{
+          transform: entrou ? "translateY(0)" : "translateY(100%)",
+          transition: "transform .34s cubic-bezier(.22,1,.36,1)",
+          boxShadow: "0 -14px 44px -14px rgba(20,23,28,.32)",
+          paddingBottom: "calc(16px + var(--safe-bottom))",
+        }}
+      >
+        <div className="shrink-0 pt-2.5">
+          <div className="mx-auto h-1 w-9 rounded-full bg-border-strong" />
+        </div>
+
+        <p className="mt-4 shrink-0 text-body-strong font-semibold text-text-primary">
+          Administrar × ser só sócio
+        </p>
+
+        <div className="mt-3 min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="flex flex-col gap-2.5">
+            {PONTOS.map((texto) => (
+              <div key={texto} className="flex items-start gap-2.5">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-state-success-tint text-state-success-text">
+                  <CheckMiniDossie />
+                </span>
+                <p className="text-caption text-text-secondary">{texto}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-5 shrink-0">
+          <Button full variant="secondary" onClick={sair}>
+            Entendi
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 }

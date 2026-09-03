@@ -795,6 +795,8 @@ export function SociosView({
      por vez aberto, e "salvar" fecha e carimba. `socioSalvo` é só o RECIBO
      visual — a validação de verdade continua sendo a do CTA da tela, que já
      olha nome, CPF e soma das participações. */
+  // Quantidade manda no plural do título e do subtítulo.
+  const varios = extras.length > 1;
   const [socioAberto, setSocioAberto] = useState<string | null>(null);
   const [socioSalvo, setSocioSalvo] = useState<string[]>([]);
 
@@ -893,16 +895,25 @@ export function SociosView({
                 ? "Pra fazer a procuração e a transferência, a gente precisa dos dados de todos os sócios da empresa."
                 : "Confirma: sua empresa é só sua, sem outros sócios?"
               : TEM_SOCIO
-                ? "Você disse que teria sócio. Complete os dados dele."
+                ? varios
+                  ? "Você disse que teria sócios. Complete os dados de cada um."
+                  : "Você disse que teria sócio. Complete os dados dele."
                 : "Você disse que abriria sozinho. É só confirmar."
           }
         >
+          {/* 🔄 03/09 (pedido do Pedro) — título e subtítulo concordam com a
+              QUANTIDADE. Com 2 ou 3 sócios extras a tela dizia "Seu sócio" no
+              singular e "os dados dele", como se fosse um só. */}
           {contexto === "migrar"
             ? TEM_SOCIO
-              ? "Sua empresa tem sócio"
+              ? varios
+                ? "Sua empresa tem sócios"
+                : "Sua empresa tem sócio"
               : "Empresa só sua"
             : TEM_SOCIO
-              ? "Seu sócio"
+              ? varios
+                ? "Seus sócios"
+                : "Seu sócio"
               : "Empresa só sua"}
         </Titulo>
 

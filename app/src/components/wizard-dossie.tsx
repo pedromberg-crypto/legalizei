@@ -620,15 +620,15 @@ export function VinculoView({
               O reenquadramento do UX-27 ("pró-labore é ganho, não só 'você não
               pode ser CLT'") continua valendo — o lugar dele é onde o
               pró-labore é definido de fato (C4/A1), não aqui. */}
-          <p className="text-micro text-text-tertiary">
-            A gente não consulta o vínculo de ninguém sozinho. Você declara, e
-            isso fica protegido.
-          </p>
+          {/* 🗑️ 02/09 (pedido do Pedro) — a linha "a gente não consulta o
+              vínculo de ninguém sozinho" saiu. Eu tinha defendido mantê-la
+              como resposta à desconfiança certa desta tela; o Pedro cortou. A
+              declaração continua sendo declaração, só sem a nota de rodapé. */}
         </div>
 
         <Rodape>
           <Button full disabled={!completo} onClick={onSeguir}>
-            {ctaLabel ?? "Continuar"}
+            {ctaLabel ?? "Confirmar"}
           </Button>
         </Rodape>
       </main>

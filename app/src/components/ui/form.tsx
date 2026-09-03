@@ -36,7 +36,12 @@ export function Campo({
 }) {
   return (
     <div>
-      <p className="text-caption font-semibold text-text-primary">{rotulo}</p>
+      {/* 🐛 02/09 — rótulo vazio deixava um `<p>` fantasma ocupando a
+          altura de uma linha (achado na C2, onde a pergunta virou só o
+          título). Mesmo tratamento que o `OutrasOpcoes` já dá ao título. */}
+      {rotulo && (
+        <p className="text-caption font-semibold text-text-primary">{rotulo}</p>
+      )}
       {dica && <p className="text-micro text-text-tertiary mt-0.5">{dica}</p>}
       <div className="mt-1.5">{children}</div>
     </div>

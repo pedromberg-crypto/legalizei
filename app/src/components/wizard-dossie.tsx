@@ -1916,20 +1916,23 @@ export function CnaeSecundariosView({
     (id) => TODAS.find((s) => s.id === id)?.mudaEnquadramento,
   );
 
-  /* 🔄 02/09 — quem já foi escolhido SAI das listas de baixo: ele agora
-     vive em "Secundárias escolhidas", lá em cima. Sem isto o mesmo cartão
-     apareceria duas vezes na tela, e tocar num ou noutro faria coisas opostas
-     (tirar × manter). Mesma regra do slot da C0. */
+  /* 🔄 02/09 (achado do Pedro: "ela só some, fica confuso") — O ITEM
+     ESCOLHIDO CONTINUA NA LISTA, marcado.
+     Eu tinha tirado ele daqui ao criar o cartão-resumo, aplicando a regra da
+     C0 (onde o escolhido sobe pro slot e sai da lista). Foi rígido demais: lá
+     a escolha é ÚNICA e o slot é o mesmo cartão mudando de lugar; aqui ela
+     marca várias seguidas, e o resumo lá em cima é outra coisa — contagem e
+     nomes, não o cartão. Sumir deixava o feedback longe do dedo, e ainda
+     encolhia a lista de 8 pra 5 enquanto a pessoa escolhia.
+     Agora o toque responde onde a mão está, e tocar de novo desmarca. */
   const resultadosBusca = busca.trim()
     ? BANCO_BUSCA.filter(
         (s) =>
           !SUGESTOES.some((x) => x.id === s.id) &&
-          !ativos[s.id] &&
           (s.humano.toLowerCase().includes(busca.toLowerCase()) ||
             s.cnae.includes(busca)),
       )
     : [];
-  const sugestoesDisponiveis = SUGESTOES.filter((s) => !ativos[s.id]);
 
   function alterna(id: string) {
     setAtivos((a) => {
@@ -2037,11 +2040,6 @@ export function CnaeSecundariosView({
                 </p>
               ) : (
                 resultadosBusca.map((s) => {
-                  // ⚠️ 02/09 — `on` aqui ficou INALCANÇÁVEL: escolhido sai da
-                  // lista e vai pro bloco de cima. O estilo de selecionado
-                  // segue no código porque a filtragem pode mudar, mas hoje é
-                  // ramo morto — não confie nele pra estado.
-                  // ⚠️ Idem: escolhido sai desta lista (ver `sugestoesDisponiveis`).
                 const on = !!ativos[s.id];
                   return (
                     <button
@@ -2097,15 +2095,13 @@ export function CnaeSecundariosView({
           <div>
             {/* 🆕 02/09 (pedido do Pedro) — a contagem no canto direito, na
                 mesma fonte do rótulo e em coral. Ela conta o que está NA
-                LISTA, não o total curado: quem já foi escolhido sai daqui e
-                sobe pro resumo, então o número acompanha o que sobrou pra
-                escolher. */}
+                CURADORIA, e é fixo: o escolhido continua na lista, marcado.
+                Quem conta o que a pessoa montou é o cartão-resumo. Cada número
+                com um dono só. */}
             <div className="mb-1.5 flex items-baseline justify-between gap-3">
               <p className="text-micro text-text-tertiary">Sugestões pra você</p>
               <p className="shrink-0 text-micro font-semibold text-action-primary-sm">
-                {sugestoesDisponiveis.length === 1
-                  ? "1 opção"
-                  : `${sugestoesDisponiveis.length} opções`}
+                {SUGESTOES.length} opções
               </p>
             </div>
             {/* 🗑️ 02/09 — a garantia "não muda o imposto" saiu daqui: cada
@@ -2113,7 +2109,7 @@ export function CnaeSecundariosView({
                 distingue um cartão do outro). Aqui era só mais uma promessa
                 repetida. */}
             <div className="flex flex-col gap-2">
-              {sugestoesDisponiveis.map((s) => {
+              {SUGESTOES.map((s) => {
                 const on = !!ativos[s.id];
                 return (
                   <button

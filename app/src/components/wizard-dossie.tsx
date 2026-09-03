@@ -237,7 +237,7 @@ export function SocioView({
           <Card>
             <div className="mb-2 flex items-center justify-between gap-3">
               <h2 className="text-body font-semibold text-text-primary">
-                Já preenchido no cadastro
+                O que você já informou
               </h2>
               {/* 🔒 02/09 — era um "Editar" mock, que não fazia nada. Pior:
                   prometia o que o app decidiu HOJE não oferecer — dado de

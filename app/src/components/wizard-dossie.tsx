@@ -2784,7 +2784,11 @@ function SheetSecundarias({
         <div className="mt-5 shrink-0">
           {mudou ? (
             <Button full onClick={() => onSalvar(rascunho)}>
-              Salvar
+              {/* 🔄 02/09 (pedido do Pedro) — "Atualizar", não "Salvar":
+                  salvar sugere guardar algo novo, e aqui a pessoa está
+                  MEXENDO numa lista que já existe. Mesmo verbo do
+                  "Atualizar dados" do modo ajuste. */}
+              Atualizar
             </Button>
           ) : (
             <Button full variant="secondary" onClick={sair}>

@@ -1252,8 +1252,11 @@ export function SociosView({
                             <path d="M20 6 9 17l-5-5" />
                           </svg>
                         </span>
+                        {/* 🔄 03/09 (pedido do Pedro) — nome COMPLETO, como nos
+                            outros da lista. Só o titular vinha abreviado, e a
+                            lista ficava com dois padrões de nome. */}
                         <span className="text-caption text-text-primary">
-                          {primeiroNome(CLIENTE.nome)}
+                          {CLIENTE.nome}
                         </span>
                         <span className="ml-auto shrink-0 rounded-full bg-surface-card px-2 py-0.5 text-micro font-semibold text-text-tertiary">
                           Você
@@ -1272,6 +1275,12 @@ export function SociosView({
                                             : "border-border-hairline bg-surface-card"
                                         }`}
                           >
+                            {/* 🔄 03/09 (pedido do Pedro) — era `<input>` nativo
+                                com `accent-color`: o navegador desenha do jeito
+                                dele, e ficava diferente do quadrado do titular
+                                logo acima, que é desenhado por nós. Agora o
+                                input some (`sr-only`, segue acessível e
+                                clicável pelo label) e o quadrado é o MESMO. */}
                             <input
                               type="checkbox"
                               checked={marcado}
@@ -1284,8 +1293,31 @@ export function SociosView({
                                 // desmarcar todos, que significa "só eu").
                                 setAdministracao("lista");
                               }}
-                              className="h-5 w-5 shrink-0 accent-[var(--color-action-primary)]"
+                              className="sr-only"
                             />
+                            <span
+                              aria-hidden
+                              className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 ${
+                                marcado
+                                  ? "border-action-primary bg-action-primary text-text-on-brand"
+                                  : "border-border-strong bg-surface-card"
+                              }`}
+                            >
+                              {marcado && (
+                                <svg
+                                  width="12"
+                                  height="12"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="3.5"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                >
+                                  <path d="M20 6 9 17l-5-5" />
+                                </svg>
+                              )}
+                            </span>
                             <span className="text-caption text-text-primary">
                               {s.nome.trim() || `${i + 2}º sócio`}
                             </span>

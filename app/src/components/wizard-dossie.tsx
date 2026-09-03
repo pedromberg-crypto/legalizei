@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CardNota } from "@/components/ui/card-nota";
@@ -478,11 +479,79 @@ export function VinculoView({
             convencendo. Ficou só o PORQUÊ da pergunta, que não está em nenhum
             outro lugar da tela — e aqui ele se justifica: é a única pergunta
             do dossiê sobre a vida da pessoa FORA da empresa. */}
+        {/* 🆕 02/09 (pedido do Pedro) — O COFRINHO 3D NO TOPO.
+            Mesmo tratamento do E6.1 e do C0.1: a ilustração ocupa o vazio e
+            se centraliza NELE, com sombra de contato em 2 camadas e
+            flutuação sutil. Cofrinho e não carteira de trabalho: a pergunta
+            cobre CLT, aposentadoria, autônomo e sócio de outra empresa, e um
+            símbolo de emprego formal faria o aposentado achar que não é com
+            ele — justamente o erro que a dica existe pra evitar.
+            ⚠️ Some quando a pessoa responde "sim": aí a tela ganha os campos
+            do vínculo e não sobra vazio pra ocupar. */}
+          <div className="flex min-h-0 flex-1 items-center justify-center py-4">
+            <div id="vinculo-flutua" className="relative flex h-[54%] max-h-[212px] items-end">
+              <div
+                aria-hidden
+                className="absolute -bottom-2 left-1/2 h-5 w-[72%] -translate-x-1/2 blur-md"
+                style={{
+                background:
+                  "radial-gradient(closest-side, rgba(27,30,36,.30), rgba(27,30,36,.10) 62%, transparent 100%)",
+                }}
+              />
+              <Image
+                src="/icones/vinculo-cofrinho.png"
+                alt=""
+                aria-hidden
+                width={500}
+                height={645}
+                className="relative z-10 h-full w-auto"
+                style={{ filter: "drop-shadow(6px 14px 12px rgba(27,30,36,.20))" }}
+              />
+            </div>
+
+            {/* Mesma dosagem do E6.1/C0.1: durações que não se dividem entre
+                si (7s / 5,5s) pro loop não virar sobe-e-desce mecânico.
+                ♿ desliga em `prefers-reduced-motion`. */}
+            <style jsx global>{`
+              @keyframes vinculo-flutua-obj {
+                0%   { transform: translate3d(0, 0, 0) rotate(0deg); }
+                35%  { transform: translate3d(4px, -7px, 0) rotate(0.6deg); }
+                70%  { transform: translate3d(-3px, -3px, 0) rotate(-0.5deg); }
+                100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+              }
+              @keyframes vinculo-flutua-sombra {
+                0%   { transform: translateX(-50%) scaleX(1); opacity: 1; }
+                35%  { transform: translateX(-50%) scaleX(0.9); opacity: 0.72; }
+                70%  { transform: translateX(-50%) scaleX(0.96); opacity: 0.88; }
+                100% { transform: translateX(-50%) scaleX(1); opacity: 1; }
+              }
+              #vinculo-flutua img {
+                animation: vinculo-flutua-obj 7s ease-in-out infinite;
+                will-change: transform;
+              }
+              #vinculo-flutua > div[aria-hidden] {
+                animation: vinculo-flutua-sombra 5.5s ease-in-out infinite;
+                will-change: transform, opacity;
+              }
+              @media (prefers-reduced-motion: reduce) {
+                #vinculo-flutua img,
+                #vinculo-flutua > div[aria-hidden] {
+                animation: none;
+                }
+              }
+            `}</style>
+          </div>
+        
         <Titulo sub="Isso muda o imposto que a empresa paga.">
           Você já contribui pro INSS por fora?
         </Titulo>
 
-        <Corpo>
+        {/* 🔄 02/09 (pedido do Pedro) — conteúdo COLADO NO RODAPÉ: quem
+            estica é a ilustração, lá em cima. Por isso não usa o `Corpo` (que
+            é flex-1 e disputaria a sobra com ela); é um bloco fixo, e quando a
+            resposta é "sim" os campos que aparecem empurram a ilustração, que
+            encolhe em vez de sumir. */}
+        <div className="flex shrink-0 flex-col gap-6 pb-4">
           {/* 🗑️ 02/09 — o rótulo "Já recolhe INSS hoje?" saiu: era a MESMA
               pergunta do título, com outras palavras, e quem lia as duas
               parava pra checar se eram a mesma coisa. A dica fica — ela não
@@ -555,7 +624,7 @@ export function VinculoView({
             A gente não consulta o vínculo de ninguém sozinho. Você declara, e
             isso fica protegido.
           </p>
-        </Corpo>
+        </div>
 
         <Rodape>
           <Button full disabled={!completo} onClick={onSeguir}>

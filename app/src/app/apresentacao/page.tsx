@@ -2041,6 +2041,17 @@ export default function ApresentacaoPage() {
   // 🆕 02/09 — qual jornada a fita de pills mostra. Fita única, uma jornada
   // por vez (escolha do Pedro sobre agrupar por bloco).
   const [filtroCaminho, setFiltroCaminho] = useState<CaminhoFlow>("abrir");
+  /**
+   * 🐛 03/09 (achado do Pedro, olhando a fita) — DUAS PILLS ACENDIAM JUNTAS.
+   * Sete grupos de nós compartilham a mesma etapa da demo, porque são a mesma
+   * tela em estados diferentes (C3/C3.1, E7/E7.1, A3/A3-MEI, A4/A4G, os 3
+   * slides do welcome, E5T/M-T, e as 3 saídas do veredito). Como o destaque
+   * comparava só a etapa, todas do grupo ficavam coral ao mesmo tempo — a fita
+   * dizia que a pessoa estava em duas telas.
+   * Agora manda o nó que a FITA abriu; a navegação por dentro do aparelho
+   * (que não passa por aqui) cai no primeiro nó da etapa, que é o principal.
+   */
+  const [noAberto, setNoAberto] = useState<string | null>(null);
   // 🆕 27/08 — estado das 2 telas novas de captura de lead (E3.1 e E3.3).
   const [dadosLead, setDadosLead] = useState<DadosLead>({
     nome: "",
@@ -2380,6 +2391,7 @@ export default function ApresentacaoPage() {
    */
   const pularParaNo = (t: TelaDoFlow) => {
     if (!t.etapa) return;
+    setNoAberto(t.id);
     // ⚠️ ORDEM: `pularPara` preenche dependências de forma idempotente, e uma
     // delas é `if (!resultado) setResultado(mapear(""))`. Como `resultado`
     // ainda vale o valor antigo dentro do mesmo render, preparar ANTES faria
@@ -2404,6 +2416,12 @@ export default function ApresentacaoPage() {
      `TELAS_DO_FLOW`, derivada do mesmo grafo que gera o mapa — ver o bloco
      "O ESPELHO" no topo do arquivo. */
   const telasVisiveis = TELAS_DO_FLOW.filter((t) => t.caminho === filtroCaminho);
+  // O nó em destaque: o que a fita abriu, enquanto ele ainda corresponder à
+  // etapa na tela. Se a pessoa navegou por dentro, vale o principal da etapa.
+  const noEmDestaque =
+    (noAberto && MOMENTO_POR_NO[noAberto] === etapa && noAberto) ||
+    TELAS_DO_FLOW.find((t) => t.etapa === etapa)?.id ||
+    null;
 
 
   const momento: Momento =
@@ -3755,7 +3773,7 @@ export default function ApresentacaoPage() {
 
           <div className="flex flex-wrap gap-2">
             {telasVisiveis.map((t) => {
-              const atual = t.etapa != null && etapa === t.etapa;
+              const atual = t.id === noEmDestaque;
               // Tela declarada no flow que ainda não existe na demo. Aparece
               // apagada e sem clique, em vez de sumir: buraco visível é o
               // ponto (foi assim que 12 telas se esconderam até 02/09).

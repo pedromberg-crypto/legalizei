@@ -60,6 +60,10 @@ export default function VinculoPage() {
 
   return (
     <VinculoView
+      /* 🐛 02/09 — a tela não tinha seta: o TelaHeader renderiza só o texto
+         quando ninguém passa `onVoltar`, e a página não passava. Daqui volta
+         pra C1, levando as flags. */
+      onVoltar={() => router.push(comEndereco(comRegime("/dossie/socio", mei), enderecoFiscal))}
       onSeguir={() => router.push(ajuste ? ajuste.destino : comEndereco(comRegime("/dossie/socios", mei), enderecoFiscal))}
       ctaLabel={ajuste?.label}
     />

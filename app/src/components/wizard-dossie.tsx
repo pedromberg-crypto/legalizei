@@ -471,7 +471,10 @@ export function VinculoView({
 
   return (
     <>
-      <TelaHeader meta="Como você já contribui" onVoltar={onVoltar} />
+      {/* 🐛 02/09 — `meta` dizia "Como você já contribui", uma descrição
+          DESTA tela. Ele nomeia o DESTINO do voltar (padrão do gate, 29/08):
+          daqui volta pra C1. 4ª ocorrência da mesma família hoje. */}
+      <TelaHeader meta="Seus dados pessoais" onVoltar={onVoltar} />
 
       <main className="app-main">
         {/* 🔄 02/09 (pente fino do Pedro) — o subtítulo perdeu o "Vale a

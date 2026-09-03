@@ -409,7 +409,15 @@ export function SocioView({
 
         <Rodape>
           <Button full disabled={!completo} onClick={onSeguir}>
-            {ctaLabel ?? "Continuar"}
+            {/* 🔄 02/09 (pedido do Pedro) — fora o "Continuar" genérico. O
+                botão diz o que a pessoa está afirmando, que é o critério que
+                a C0 e a C5 já seguem. Aqui ela PREENCHEU o que faltava (RG,
+                nascimento, endereço) e REVALIDOU o que já estava lá (nome,
+                telefone) — "confirmar" cobre as duas.
+                Não "salvar": vocabulário de sistema, e hoje seria mentira
+                (não há persistência entre telas, dívida RF-01).
+                No modo ajuste o `ctaLabel` manda e vira "Atualizar dados". */}
+            {ctaLabel ?? "Confirmar meus dados"}
           </Button>
         </Rodape>
       </main>

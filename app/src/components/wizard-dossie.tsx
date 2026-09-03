@@ -945,49 +945,11 @@ export function SociosView({
                   mudar a sua % redistribui os sócios extras proporcionalmente
                   (e mudar a de um extra já recalculava a sua, como sempre) —
                   o vínculo passou a valer nos dois sentidos. */}
-              {/* 🔄 03/09 (pedido do Pedro) — CARD DO TITULAR COMPACTADO.
-                  Eram 4 blocos empilhados ("1º sócio" + pill, o nome, o rótulo
-                  "Sua participação" e um input de largura inteira) pra carregar
-                  DOIS dados: quem é e quanto tem. Virou 2 linhas — nome com a
-                  pill "Você", e a participação com o rótulo ao lado do campo.
-                  O "1º sócio" saiu: a pill já diz de quem é o card, e o
-                  ordinal só fazia sentido quando ele imitava os cards de baixo. */}
-              <div className="flex flex-col gap-2 rounded-md border border-border-hairline bg-surface-alt p-3">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="min-w-0 truncate text-body font-semibold text-text-primary">
-                    {CLIENTE.nome}
-                  </span>
-                  <span className="shrink-0 rounded-full bg-surface-card px-2 py-0.5 text-micro font-semibold text-text-tertiary">
-                    Você
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between gap-3">
-                  <span className="text-caption text-text-secondary">Sua participação</span>
-                  <div className="flex shrink-0 items-center gap-2">
-                    <input
-                      type="number"
-                      inputMode="decimal"
-                      step={0.5}
-                      min={0.5}
-                      max={99.5}
-                      value={parte1 || ""}
-                      onChange={(e) => {
-                        const raw = e.target.value;
-                        if (raw === "") return;
-                        const n = Number(raw);
-                        if (Number.isNaN(n)) return;
-                        const preso = Math.min(99.5, Math.max(0.5, n));
-                        onChangeParte1(Math.round(preso * 2) / 2);
-                      }}
-                      aria-label="Sua participação, em porcentagem"
-                      className="w-20 min-h-10 rounded-md border border-border-hairline bg-surface-card px-3
-                                 text-body text-text-primary focus:border-border-focus focus:outline-none"
-                    />
-                    <span className="text-body font-semibold text-text-secondary">%</span>
-                  </div>
-                </div>
-              </div>
+              {/* 🗑️ 03/09 (pedido do Pedro) — O CARD DO TITULAR SAIU.
+                  Ele carregava dois dados: o nome (que a mesa da divisão já
+                  mostra) e a participação, que mudou de lugar. Sem a %, sobrava
+                  um card só pra dizer "você é sócio", o que ninguém precisa ler
+                  no meio do formulário dos OUTROS sócios. */}
 
               <div className="flex flex-col gap-3">
                 {extras.map((s, i) => {
@@ -1070,36 +1032,13 @@ export function SociosView({
                       />
                     </Campo>
 
-                    <Campo
-                      rotulo="Participação dele"
-                      dica="De 0,5 em 0,5%. A soma de todos os sócios extras não pode chegar a 100%."
-                    >
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="number"
-                          inputMode="decimal"
-                          step={0.5}
-                          min={0.5}
-                          max={99.5}
-                          value={s.participacao || ""}
-                          onChange={(e) => {
-                            const raw = e.target.value;
-                            if (raw === "") {
-                              atualizar(s.id, { participacao: 0 });
-                              return;
-                            }
-                            const n = Number(raw);
-                            if (Number.isNaN(n)) return;
-                            const preso = Math.min(99.5, Math.max(0, n));
-                            atualizar(s.id, { participacao: Math.round(preso * 2) / 2 });
-                          }}
-                          aria-label={`Participação do ${i + 2}º sócio, em porcentagem`}
-                          className="w-full min-h-12 rounded-md border border-border-hairline bg-surface-card px-3
-                                     text-body text-text-primary focus:border-border-focus focus:outline-none"
-                        />
-                        <span className="shrink-0 text-body font-semibold text-text-secondary">%</span>
-                      </div>
-                    </Campo>
+                    {/* 🗑️ 03/09 (pedido do Pedro) — A PARTICIPAÇÃO SAIU DO CARD.
+                        Ela vivia em 3 lugares (aqui, no card do titular e no
+                        resumo da divisão), e com os cards colapsados dava pra
+                        editar só abrindo um card — enquanto o único lugar que
+                        mostrava a divisão inteira era o que não deixava mexer.
+                        Agora o card responde "quem é essa pessoa" e a mesa da
+                        divisão responde "quanto cada um tem". */}
 
                     {/* 🆕 31/08 — mesma qualificação exigida do titular (C1):
                         a JUCEMG/DBE não distingue "quem cadastrou" de "quem é
@@ -1215,6 +1154,32 @@ export function SociosView({
                     {/* Fecha o card e marca o selo verde. Só existe quando há
                         2+ sócios: com um só, o card nunca colapsa e o botão
                         seria um passo a mais sem função. */}
+                    {/* 🆕 03/09 (pedido do Pedro) — ADMINISTRAÇÃO VIRA CAMPO DO
+                        SÓCIO. Ela é uma característica DELE, igual ao CPF, e
+                        estava numa lista de checks longe daqui. Como última
+                        pergunta do card, ela fecha a qualificação da pessoa.
+                        ⚠️ Só pros sócios extras: quem abre a empresa é sempre
+                        administrador (representante na Receita, reunião 42), e
+                        perguntar sugeriria que dá pra escolher.
+                        ⚠️ Sem explicar o que é administrar AQUI: a explicação
+                        mora uma vez só, no resumo lá embaixo — repetida em 3
+                        cards viraria aula. */}
+                    <Campo rotulo="Esse sócio vai administrar a empresa?">
+                      <OpcoesLinha
+                        opcoes={[
+                          { v: false, label: "Não" },
+                          { v: true, label: "Sim" },
+                        ]}
+                        valor={admins.includes(s.id)}
+                        onChange={(v) => {
+                          setAdmins((atual) =>
+                            v ? [...atual, s.id] : atual.filter((id) => id !== s.id),
+                          );
+                          setAdministracao("lista");
+                        }}
+                      />
+                    </Campo>
+
                     {colapsavel && (
                       <Button
                         full
@@ -1240,14 +1205,72 @@ export function SociosView({
                 <p className="text-caption font-semibold text-text-primary mb-1.5">
                   Como fica a divisão da empresa
                 </p>
-                <div className="flex flex-col gap-1">
-                  <span className="text-caption text-text-primary">
-                    Você: {parte1}%
-                  </span>
-                  {extras.map((s, i) => (
-                    <span key={s.id} className="text-caption text-text-primary">
-                      {s.nome.trim().split(/\s+/)[0] || `${i + 2}º sócio`}: {s.participacao}%
+                {/* 🔄 03/09 (pedido do Pedro) — A MESA DA DIVISÃO passou a ser
+                    o ÚNICO lugar onde a % se edita, de todo mundo. Antes era
+                    leitura, e o valor se mexia dentro de cada card — com os
+                    cards colapsados, isso virava abrir/fechar pra ajustar um
+                    número que só faz sentido comparado com os outros.
+                    Aqui a pessoa vê o todo e mexe no todo. */}
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="min-w-0 truncate text-caption text-text-primary">
+                      {CLIENTE.nome} <span className="text-text-tertiary">(você)</span>
                     </span>
+                    <div className="flex shrink-0 items-center gap-1.5">
+                      <input
+                        type="number"
+                        inputMode="decimal"
+                        step={0.5}
+                        min={0.5}
+                        max={99.5}
+                        value={parte1 || ""}
+                        onChange={(e) => {
+                          const raw = e.target.value;
+                          if (raw === "") return;
+                          const n = Number(raw);
+                          if (Number.isNaN(n)) return;
+                          const preso = Math.min(99.5, Math.max(0.5, n));
+                          onChangeParte1(Math.round(preso * 2) / 2);
+                        }}
+                        aria-label="Sua participação, em porcentagem"
+                        className="w-16 min-h-10 rounded-md border border-border-hairline bg-surface-card px-2
+                                   text-body text-text-primary focus:border-border-focus focus:outline-none"
+                      />
+                      <span className="text-caption font-semibold text-text-secondary">%</span>
+                    </div>
+                  </div>
+
+                  {extras.map((s, i) => (
+                    <div key={s.id} className="flex items-center justify-between gap-3">
+                      <span className="min-w-0 truncate text-caption text-text-primary">
+                        {s.nome.trim() || `${i + 2}º sócio`}
+                      </span>
+                      <div className="flex shrink-0 items-center gap-1.5">
+                        <input
+                          type="number"
+                          inputMode="decimal"
+                          step={0.5}
+                          min={0.5}
+                          max={99.5}
+                          value={s.participacao || ""}
+                          onChange={(e) => {
+                            const raw = e.target.value;
+                            if (raw === "") {
+                              atualizar(s.id, { participacao: 0 });
+                              return;
+                            }
+                            const n = Number(raw);
+                            if (Number.isNaN(n)) return;
+                            const preso = Math.min(99.5, Math.max(0, n));
+                            atualizar(s.id, { participacao: Math.round(preso * 2) / 2 });
+                          }}
+                          aria-label={`Participação do ${i + 2}º sócio, em porcentagem`}
+                          className="w-16 min-h-10 rounded-md border border-border-hairline bg-surface-card px-2
+                                     text-body text-text-primary focus:border-border-focus focus:outline-none"
+                        />
+                        <span className="text-caption font-semibold text-text-secondary">%</span>
+                      </div>
+                    </div>
                   ))}
                 </div>
                 {!somaOk && (
@@ -1288,8 +1311,15 @@ export function SociosView({
                   ali sugeriria que a resposta muda alguma coisa. */}
               {contexto === "abrir" && (
                 <Card>
+                  {/* 🔄 03/09 (pedido do Pedro) — DE PERGUNTA A RESUMO.
+                      Este bloco era onde se escolhia quem administra, numa
+                      lista de checks longe dos cards. A escolha virou campo
+                      DENTRO de cada sócio (é característica dele); aqui fica o
+                      recibo: quem administra, e o que isso significa.
+                      A explicação continua morando aqui, uma vez só — era o
+                      motivo de não repetir a definição dentro dos cards. */}
                   <p className="text-body font-semibold text-text-primary">
-                    Quem vai administrar a empresa?
+                    Quem administra a empresa
                   </p>
                   <p className="text-caption text-text-secondary mt-1 mb-3">
                     Administrar é assinar pela empresa no dia a dia: abrir conta
@@ -1298,150 +1328,23 @@ export function SociosView({
                     resultados.
                   </p>
 
-                  {/* ─── 1 SÓCIO: pergunta binária, no singular ────────────
-                      Com um sócio só não há o que escolher além de sim/não, e
-                      o nome dele cabe no próprio botão — "Eu e o Carlos" diz
-                      mais que "Eu e sócio(s)". */}
-                  {extras.length === 1 && (
-                    <OpcoesLinha
-                      opcoes={[
-                        { v: "so-eu" as const, label: "Só eu" },
-                        {
-                          v: "com-socios" as const,
-                          label: `Eu e ${primeiroNome(extras[0].nome) || "meu sócio"}`,
-                        },
-                      ]}
-                      valor={administracao}
-                      onChange={(v) => {
-                        setAdministracao(v);
-                        setAdmins(v === "com-socios" ? [extras[0].id] : []);
-                      }}
-                    />
-                  )}
+                  <p className="text-caption text-text-primary">
+                    {admins.length === 0
+                      ? "Só você administra."
+                      : `Você e ${listar(
+                          extras
+                            .filter((s) => admins.includes(s.id))
+                            .map((s, i) => primeiroNome(s.nome) || `${i + 2}º sócio`),
+                        )}.`}
+                  </p>
 
-                  {/* ─── 2+ SÓCIOS: lista com os NOMES, marca quem administra ─
-                      🔄 01/09 (pedido do Pedro) — aqui a pergunta binária não
-                      serve: dá pra ter sócio que administra e sócio que é só
-                      sócio, e a pessoa precisa escolher QUEM, nome a nome. Sem
-                      passo intermediário: a lista já é a resposta.
-
-                      O titular aparece na lista, travado e marcado, porque ele
-                      É um administrador — some daqui e a lista mente sobre quem
-                      vai assinar pela empresa. */}
-                  {extras.length > 1 && (
-                    <div className="flex flex-col gap-2">
-                      <div
-                        className="flex min-h-12 items-center gap-3 rounded-md border border-border-hairline
-                                   bg-surface-alt p-3"
-                      >
-                        <span
-                          aria-hidden
-                          className="flex h-5 w-5 shrink-0 items-center justify-center rounded border-2
-                                     border-action-primary bg-action-primary text-text-on-brand"
-                        >
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M20 6 9 17l-5-5" />
-                          </svg>
-                        </span>
-                        {/* 🔄 03/09 (pedido do Pedro) — nome COMPLETO, como nos
-                            outros da lista. Só o titular vinha abreviado, e a
-                            lista ficava com dois padrões de nome. */}
-                        <span className="text-caption text-text-primary">
-                          {CLIENTE.nome}
-                        </span>
-                        <span className="ml-auto shrink-0 rounded-full bg-surface-card px-2 py-0.5 text-micro font-semibold text-text-tertiary">
-                          Você
-                        </span>
-                      </div>
-
-                      {extras.map((s, i) => {
-                        const marcado = admins.includes(s.id);
-                        return (
-                          <label
-                            key={s.id}
-                            className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-md border p-3
-                                        transition-colors ${
-                                          marcado
-                                            ? "border-action-primary bg-surface-tint-brand"
-                                            : "border-border-hairline bg-surface-card"
-                                        }`}
-                          >
-                            {/* 🔄 03/09 (pedido do Pedro) — era `<input>` nativo
-                                com `accent-color`: o navegador desenha do jeito
-                                dele, e ficava diferente do quadrado do titular
-                                logo acima, que é desenhado por nós. Agora o
-                                input some (`sr-only`, segue acessível e
-                                clicável pelo label) e o quadrado é o MESMO. */}
-                            <input
-                              type="checkbox"
-                              checked={marcado}
-                              onChange={() => {
-                                setAdmins((atual) =>
-                                  marcado ? atual.filter((id) => id !== s.id) : [...atual, s.id],
-                                );
-                                // A lista É a resposta: qualquer toque conta
-                                // como pergunta respondida (inclusive
-                                // desmarcar todos, que significa "só eu").
-                                setAdministracao("lista");
-                              }}
-                              className="sr-only"
-                            />
-                            <span
-                              aria-hidden
-                              className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 ${
-                                marcado
-                                  ? "border-action-primary bg-action-primary text-text-on-brand"
-                                  : "border-border-strong bg-surface-card"
-                              }`}
-                            >
-                              {marcado && (
-                                <svg
-                                  width="12"
-                                  height="12"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="3.5"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                >
-                                  <path d="M20 6 9 17l-5-5" />
-                                </svg>
-                              )}
-                            </span>
-                            <span className="text-caption text-text-primary">
-                              {s.nome.trim() || `${i + 2}º sócio`}
-                            </span>
-                          </label>
-                        );
-                      })}
-
-                      {/* Devolve a leitura da lista em 1 linha. Marcar caixinha
-                          é fácil; entender o que o conjunto delas significa,
-                          não — e é o conjunto que vai pro contrato. */}
-                      <p className="text-micro text-text-tertiary">
-                        {admins.length === 0
-                          ? "Do jeito que está: só você administra."
-                          : `Vão administrar: você e ${listar(
-                              extras
-                                .filter((s) => admins.includes(s.id))
-                                .map((s, i) => primeiroNome(s.nome) || `${i + 2}º sócio`),
-                            )}.`}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* A consequência prática, na hora da escolha — e só a da
-                      opção escolhida. Explicar as duas ao mesmo tempo era o
-                      caminho pra transformar 1 pergunta em aula de direito
-                      societário, que foi exatamente o risco levantado. */}
-                  {admins.length === 0 && (extras.length > 1 || administracao !== null) && (
+                  {/* A consequência prática, e só a da situação atual. */}
+                  {admins.length === 0 ? (
                     <p className="text-micro text-text-tertiary mt-3">
                       Você resolve tudo sozinho, sem depender da assinatura de
                       ninguém. Seus sócios não assinam pela empresa.
                     </p>
-                  )}
-                  {admins.length > 0 && (
+                  ) : (
                     <p className="text-micro text-text-tertiary mt-3">
                       Cada administrador pode assinar sozinho o dia a dia da
                       empresa. Só atos grandes (vender ou dar em garantia um

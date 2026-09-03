@@ -1997,17 +1997,22 @@ export function CnaeSecundariosView({
                 setRascunho(ativos);
                 setVendoSecundarias(true);
               }}
-              className="flex w-full items-center justify-between gap-3 rounded-md border border-border-hairline bg-surface-card p-4 text-left transition-colors hover:border-border-strong"
+              /* 🔄 02/09 (achado do Pedro) — o resumo era BRANCO e se confundia
+                 com um cartão de atividade da lista. Agora usa o coral da
+                 principal: no bloco inteiro, coral passa a significar "isto já
+                 está no seu CNPJ" (a principal, as sugestões marcadas e este
+                 resumo), e branco significa "opção disponível". */
+              className="flex w-full items-center justify-between gap-3 rounded-md border border-action-primary bg-action-primary p-4 text-left"
             >
               <span className="min-w-0">
-                <span className="block text-body font-semibold text-text-primary">
+                <span className="block text-body font-semibold text-text-on-brand">
                   {escolhidas.length === 1
                     ? "1 atividade secundária"
                     : `${escolhidas.length} atividades secundárias`}
                 </span>
                 {/* Os nomes no resumo evitam que o cartão seja só um número:
                     a pessoa confere sem precisar abrir. */}
-                <span className="mt-0.5 block truncate text-caption text-text-secondary">
+                <span className="mt-0.5 block truncate text-caption text-text-on-brand/80">
                   {escolhidas.map((s) => s.humano).join(" · ")}
                 </span>
               </span>
@@ -2686,7 +2691,7 @@ function ChevronResumo() {
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden
-      className="shrink-0 text-text-tertiary"
+      className="shrink-0 text-text-on-brand/80"
     >
       <path d="m9 18 6-6-6-6" />
     </svg>

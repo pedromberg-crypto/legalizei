@@ -1874,6 +1874,11 @@ export function CnaeSecundariosView({
     adequacao: 94,
   };
   const [detalhe, setDetalhe] = useState<OpcaoCnae | null>(null);
+  /* O sheet trabalha em RASCUNHO: desmarcar lá não mexe na tela até salvar.
+     É o que justifica o botão dizer "Salvar" — e o que permite fechar sem
+     aplicar, se a pessoa só foi conferir. */
+  const [vendoSecundarias, setVendoSecundarias] = useState(false);
+  const [rascunho, setRascunho] = useState<Record<string, boolean>>({});
   // As escolhidas, venham de onde vierem (sugestão curada ou busca).
   const escolhidas = idsAtivos
     .map((id) => TODAS.find((s) => s.id === id))
@@ -1938,44 +1943,36 @@ export function CnaeSecundariosView({
             />
           </div>
 
-          {/* 🆕 02/09 (achado do Pedro) — AS QUE VOCÊ JÁ ESCOLHEU.
-              As sugestões curadas e os resultados de busca são listas
-              separadas: marcar duas na busca, trocar o termo e buscar outra
-              coisa deixava as primeiras SELECIONADAS e invisíveis. A pessoa
-              perdia o controle do que tinha montado.
-              Mesma gramática do slot da C0: um lugar que responde "o que eu já
-              escolhi?", com o cartão saindo por toque. */}
+          {/* 🔄 02/09 (ideia do Pedro) — AS SECUNDÁRIAS VIRAM UM CARTÃO SÓ.
+              A 1ª versão listava cada escolhida num cartão do tamanho da
+              principal: com 5 ou 10, a tela virava uma pilha e a busca ficava
+              lá embaixo, longe. Agora é um cartão-resumo que abre um sheet com
+              a lista inteira, onde dá pra tirar. Ocupa 1 linha, a hierarquia
+              fica óbvia (um cartão grande = principal, um resumo = o resto) e
+              a busca continua ao alcance. */}
           {escolhidas.length > 0 && (
-            <div>
-              <p className="text-micro text-text-tertiary mb-1.5">
-                Secundárias escolhidas ({escolhidas.length}
-                {noLimite ? " de 15, o limite" : ""})
-              </p>
-              <div className="flex flex-col gap-2">
-                {escolhidas.map((s) => (
-                  <button
-                    key={s.id}
-                    type="button"
-                    onClick={() => alterna(s.id)}
-                    className="flex items-center justify-between gap-3 rounded-md border border-action-primary bg-action-primary p-3 text-left"
-                  >
-                    <span className="min-w-0">
-                      <span className="block text-body font-semibold text-text-on-brand">
-                        {s.humano}
-                      </span>
-                      <span className="block text-caption text-text-on-brand/80">
-                        CNAE {s.cnae}
-                      </span>
-                    </span>
-                    {/* Sai por toque, no mesmo cartão. Um "x" separado seria um
-                        segundo alvo pra desfazer o que um toque fez. */}
-                    <span className="shrink-0 text-caption font-semibold text-text-on-brand/80">
-                      Tirar
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setRascunho(ativos);
+                setVendoSecundarias(true);
+              }}
+              className="flex w-full items-center justify-between gap-3 rounded-md border border-border-hairline bg-surface-card p-4 text-left transition-colors hover:border-border-strong"
+            >
+              <span className="min-w-0">
+                <span className="block text-body font-semibold text-text-primary">
+                  {escolhidas.length === 1
+                    ? "1 atividade secundária"
+                    : `${escolhidas.length} atividades secundárias`}
+                </span>
+                {/* Os nomes no resumo evitam que o cartão seja só um número:
+                    a pessoa confere sem precisar abrir. */}
+                <span className="mt-0.5 block truncate text-caption text-text-secondary">
+                  {escolhidas.map((s) => s.humano).join(" · ")}
+                </span>
+              </span>
+              <ChevronResumo />
+            </button>
           )}
 
           {/* 🗑️ 02/09 (pente fino do Pedro) — 3 linhas que repetiam o que a
@@ -2141,6 +2138,20 @@ export function CnaeSecundariosView({
         </Corpo>
 
         {detalhe && <SheetCnae opcao={detalhe} onFechar={() => setDetalhe(null)} />}
+
+        {vendoSecundarias && (
+          <SheetSecundarias
+            itens={TODAS}
+            rascunho={rascunho}
+            setRascunho={setRascunho}
+            original={ativos}
+            onSalvar={(novo) => {
+              setAtivos(novo);
+              setVendoSecundarias(false);
+            }}
+            onFechar={() => setVendoSecundarias(false)}
+          />
+        )}
 
         <Rodape>
           {algumaMudaEnquadramento ? (
@@ -2618,4 +2629,162 @@ function primeiroNome(nome: string): string {
 function listar(nomes: string[]): string {
   if (nomes.length <= 1) return nomes[0] ?? "";
   return `${nomes.slice(0, -1).join(", ")} e ${nomes[nomes.length - 1]}`;
+}
+
+function ChevronResumo() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      className="shrink-0 text-text-tertiary"
+    >
+      <path d="m9 18 6-6-6-6" />
+    </svg>
+  );
+}
+
+/**
+ * ═══ SHEET DAS SECUNDÁRIAS — conferir e tirar, sem sair da tela. 02/09 ══
+ *
+ * 🆕 Ideia do Pedro. O cartão-resumo da C5 abre aqui: a lista inteira do que
+ * foi escolhido, com o toque tirando item. Mesmo bottom-sheet do DS
+ * (`EnviarSheet` · `SheetNaoReembolsavel` · `SheetCnae`).
+ *
+ * ⚠️ Trabalha em RASCUNHO: desmarcar aqui não mexe na tela até salvar. É o
+ * que faz o botão poder dizer "Salvar" com honestidade, e o que permite abrir
+ * só pra conferir e fechar sem consequência. Sem mudança nenhuma, o botão
+ * nem promete salvamento: vira "Fechar".
+ */
+function SheetSecundarias({
+  itens,
+  rascunho,
+  setRascunho,
+  original,
+  onSalvar,
+  onFechar,
+}: {
+  itens: Sugestao[];
+  rascunho: Record<string, boolean>;
+  setRascunho: (v: Record<string, boolean>) => void;
+  original: Record<string, boolean>;
+  onSalvar: (novo: Record<string, boolean>) => void;
+  onFechar: () => void;
+}) {
+  const [entrou, setEntrou] = useState(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setEntrou(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  const sair = () => {
+    setEntrou(false);
+    window.setTimeout(onFechar, 240);
+  };
+
+  const marcados = (r: Record<string, boolean>) =>
+    Object.entries(r)
+      .filter(([, v]) => v)
+      .map(([id]) => id)
+      .sort()
+      .join(",");
+  const mudou = marcados(rascunho) !== marcados(original);
+  const lista = itens.filter((s) => original[s.id]);
+
+  return (
+    <div className="absolute inset-0 z-[60]">
+      <button
+        type="button"
+        aria-label="Fechar"
+        onClick={sair}
+        className={`absolute inset-0 bg-[#10151b] transition-opacity duration-300 ${
+          entrou ? "opacity-45" : "opacity-0"
+        }`}
+      />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Atividades secundárias escolhidas"
+        className="absolute inset-x-0 bottom-0 flex max-h-[86%] flex-col rounded-t-3xl bg-surface-page px-5"
+        style={{
+          transform: entrou ? "translateY(0)" : "translateY(100%)",
+          transition: "transform .34s cubic-bezier(.22,1,.36,1)",
+          boxShadow: "0 -14px 44px -14px rgba(20,23,28,.32)",
+          paddingBottom: "calc(16px + var(--safe-bottom))",
+        }}
+      >
+        <div className="shrink-0 pt-2.5">
+          <div className="mx-auto h-1 w-9 rounded-full bg-border-strong" />
+        </div>
+
+        <p className="mt-4 shrink-0 text-body-strong font-semibold text-text-primary">
+          Atividades secundárias
+        </p>
+
+        <div className="mt-3 min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="flex flex-col gap-2">
+            {lista.map((s) => {
+              const on = !!rascunho[s.id];
+              return (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => setRascunho({ ...rascunho, [s.id]: !on })}
+                  className={`flex items-center justify-between gap-3 rounded-md border p-3 text-left transition-colors ${
+                    on
+                      ? "border-action-primary bg-action-primary"
+                      : "border-border-hairline bg-surface-card"
+                  }`}
+                >
+                  <span className="min-w-0">
+                    <span
+                      className={`block text-body font-semibold ${
+                        on ? "text-text-on-brand" : "text-text-tertiary line-through"
+                      }`}
+                    >
+                      {s.humano}
+                    </span>
+                    <span
+                      className={`block text-caption ${
+                        on ? "text-text-on-brand/80" : "text-text-tertiary"
+                      }`}
+                    >
+                      CNAE {s.cnae}
+                    </span>
+                  </span>
+                  {/* Riscado em vez de sumir da lista: sumindo, a pessoa
+                      perderia a chance de voltar atrás antes de salvar. */}
+                  <span
+                    className={`shrink-0 text-caption font-semibold ${
+                      on ? "text-text-on-brand/80" : "text-action-primary-sm"
+                    }`}
+                  >
+                    {on ? "Tirar" : "Voltar"}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="mt-5 shrink-0">
+          {mudou ? (
+            <Button full onClick={() => onSalvar(rascunho)}>
+              Salvar
+            </Button>
+          ) : (
+            <Button full variant="secondary" onClick={sair}>
+              Fechar
+            </Button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import type { Resultado } from "@/components/veredito";
 import { Button } from "@/components/ui/button";
 
@@ -223,6 +223,7 @@ export function OutrasOpcoes({
   titulo = "Outras opções pra você",
   pillDe,
   onVerDetalhes,
+  rodapeDoCartao,
 }: {
   alternativas: OpcaoCnae[];
   escolhido?: string;
@@ -240,6 +241,16 @@ export function OutrasOpcoes({
    * bottom-sheet. Sem a prop, o card não mostra o link (é o caso do veredito).
    */
   onVerDetalhes?: (o: OpcaoCnae) => void;
+  /**
+   * 🆕 02/09 (pedido do Pedro) — conteúdo DENTRO do cartão, embaixo do
+   * nome/código. Nasceu pra C5 pendurar as secundárias no cartão da
+   * principal: separadas, as duas informações liam como assuntos
+   * independentes; dentro, a hierarquia (uma principal, N secundárias) fica
+   * dita pela estrutura, sem texto.
+   * ⚠️ Só use em lista de UM cartão. Numa lista de escolha, um rodapé por item
+   * competiria com o toque de escolher.
+   */
+  rodapeDoCartao?: (o: OpcaoCnae) => ReactNode;
 }) {
   if (alternativas.length === 0) return null;
 
@@ -348,6 +359,13 @@ export function OutrasOpcoes({
              Padrão "stretched button": o alvo de seleção é um botão absoluto
              cobrindo o card, e o conteúdo passa por cima com os cliques
              desligados, menos o link, que os religa. */
+          const miolo = (
+            <>
+              {conteudo}
+              {rodapeDoCartao?.(a)}
+            </>
+          );
+
           return onEscolher ? (
             <div key={a.cnae} className={`relative ${estilo}`}>
               <button
@@ -357,11 +375,11 @@ export function OutrasOpcoes({
                 aria-label={`Usar o CNAE ${a.cnae}, ${a.humano}`}
                 className="absolute inset-0 rounded-2xl"
               />
-              <div className="pointer-events-none relative">{conteudo}</div>
+              <div className="pointer-events-none relative">{miolo}</div>
             </div>
           ) : (
             <div key={a.cnae} className={estilo}>
-              {conteudo}
+              {miolo}
             </div>
           );
         })}

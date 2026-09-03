@@ -1980,49 +1980,38 @@ export function CnaeSecundariosView({
               // secundárias que estão sendo montadas embaixo.
               pillDe={() => "Principal"}
               onVerDetalhes={setDetalhe}
+              /* 🔄 02/09 (ideia do Pedro) — as secundárias moram DENTRO do
+                 cartão da principal, e ele cresce pra baixo. Soltas num
+                 cartão próprio, as duas informações liam como assuntos
+                 independentes; aqui a hierarquia (uma principal, N
+                 secundárias penduradas nela) é dita pela estrutura, sem
+                 precisar de texto explicando. */
+              rodapeDoCartao={() =>
+                escolhidas.length === 0 ? null : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setRascunho(ativos);
+                      setVendoSecundarias(true);
+                    }}
+                    className="mt-3 flex w-full items-center justify-between gap-3 rounded-md bg-action-primary-sm p-2 text-left"
+                  >
+                    <span className="min-w-0">
+                      <span className="block text-caption font-semibold text-text-on-brand">
+                        {escolhidas.length === 1
+                          ? "1 atividade secundária"
+                          : `${escolhidas.length} atividades secundárias`}
+                      </span>
+                      <span className="mt-0.5 block truncate text-micro text-text-on-brand/80">
+                        {escolhidas.map((s) => s.humano).join(" · ")}
+                      </span>
+                    </span>
+                    <ChevronResumo />
+                  </button>
+                )
+              }
             />
           </div>
-
-          {/* 🔄 02/09 (ideia do Pedro) — AS SECUNDÁRIAS VIRAM UM CARTÃO SÓ.
-              A 1ª versão listava cada escolhida num cartão do tamanho da
-              principal: com 5 ou 10, a tela virava uma pilha e a busca ficava
-              lá embaixo, longe. Agora é um cartão-resumo que abre um sheet com
-              a lista inteira, onde dá pra tirar. Ocupa 1 linha, a hierarquia
-              fica óbvia (um cartão grande = principal, um resumo = o resto) e
-              a busca continua ao alcance. */}
-          {escolhidas.length > 0 && (
-            <button
-              type="button"
-              onClick={() => {
-                setRascunho(ativos);
-                setVendoSecundarias(true);
-              }}
-              /* 🔄 02/09 (2 rodadas com o Pedro) — o resumo nasceu BRANCO e se
-                 confundia com um cartão de atividade da lista; virou coral
-                 sólido e aí pesou (dois cartões cheios seguidos no topo,
-                 disputando a mesma atenção). Ficou no meio: coral CLARO com
-                 tipografia coral.
-                 A regra do bloco fica legível: coral = "isto já é seu" (a
-                 principal, as sugestões marcadas, este resumo) · branco =
-                 "opção disponível". O peso separa os papéis dentro do coral —
-                 sólido é conteúdo, claro é resumo do que já foi decidido. */
-              className="flex w-full items-center justify-between gap-3 rounded-md border border-border-hairline bg-surface-tint-brand p-4 text-left transition-colors hover:border-action-primary"
-            >
-              <span className="min-w-0">
-                <span className="block text-body font-semibold text-action-primary-sm">
-                  {escolhidas.length === 1
-                    ? "1 atividade secundária"
-                    : `${escolhidas.length} atividades secundárias`}
-                </span>
-                {/* Os nomes no resumo evitam que o cartão seja só um número:
-                    a pessoa confere sem precisar abrir. */}
-                <span className="mt-0.5 block truncate text-caption text-action-primary-sm/80">
-                  {escolhidas.map((s) => s.humano).join(" · ")}
-                </span>
-              </span>
-              <ChevronResumo />
-            </button>
-          )}
 
           {/* 🗑️ 02/09 (pente fino do Pedro) — 3 linhas que repetiam o que a
               tela já dizia em outros 4 lugares ("é opcional", "complemento").
@@ -2695,7 +2684,7 @@ function ChevronResumo() {
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden
-      className="shrink-0 text-action-primary-sm"
+      className="shrink-0 text-text-on-brand/80"
     >
       <path d="m9 18 6-6-6-6" />
     </svg>

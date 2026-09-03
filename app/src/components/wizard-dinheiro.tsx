@@ -47,6 +47,15 @@ export function mascaraTelefone(v: string) {
   const d = v.replace(/\D/g, "").slice(0, 11);
   return d.replace(/(\d{2})(\d)/, "($1) $2").replace(/(\d{5})(\d{1,4})$/, "$1-$2");
 }
+/**
+ * 🆕 02/09 (pedido do Pedro) — data no padrão dos outros campos: só dígitos
+ * entram, as barras são nossas, corte em 8 (DDMMAAAA). O campo já dizia
+ * "DD/MM/AAAA" no placeholder e aceitava qualquer coisa.
+ */
+export function mascaraData(v: string) {
+  const d = v.replace(/\D/g, "").slice(0, 8);
+  return d.replace(/(\d{2})(\d)/, "$1/$2").replace(/(\d{2}\/\d{2})(\d{1,4})$/, "$1/$2");
+}
 export function mascaraCep(v: string) {
   const d = v.replace(/\D/g, "").slice(0, 8);
   return d.replace(/(\d{5})(\d)/, "$1-$2");

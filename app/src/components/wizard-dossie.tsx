@@ -10,7 +10,7 @@ import { Campo, Texto, Select, OpcoesLinha } from "@/components/ui/form";
 import { FISCAL, brl } from "@/lib/fiscal";
 import { FORMAS_ATUACAO } from "@/lib/mei";
 // 🆕 01/09 — mesma máscara do E6, pro CPF do sócio extra (C3).
-import { mascaraCpf, mascaraTelefone } from "@/components/wizard-dinheiro";
+import { mascaraCpf, mascaraTelefone, mascaraData } from "@/components/wizard-dinheiro";
 import { OutrasOpcoes, SheetCnae, type OpcaoCnae } from "@/components/encaixe";
 import {
   CLIENTE,
@@ -285,7 +285,7 @@ export function SocioView({
             <Campo rotulo="Data de nascimento">
               <Texto
                 valor={nascimento}
-                onChange={setNascimento}
+                onChange={(v) => setNascimento(mascaraData(v))}
                 placeholder="DD/MM/AAAA"
                 inputMode="numeric"
                 maxLength={10}
@@ -932,7 +932,7 @@ export function SociosView({
                       <Campo rotulo="Data de nascimento">
                         <Texto
                           valor={s.nascimento}
-                          onChange={(v) => atualizar(s.id, { nascimento: v })}
+                          onChange={(v) => atualizar(s.id, { nascimento: mascaraData(v) })}
                           placeholder="DD/MM/AAAA"
                           inputMode="numeric"
                           maxLength={10}

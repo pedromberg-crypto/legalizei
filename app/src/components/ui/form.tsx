@@ -55,6 +55,7 @@ export function Texto({
   inputMode,
   maxLength,
   type,
+  travado = false,
 }: {
   valor: string;
   onChange: (v: string) => void;
@@ -64,6 +65,14 @@ export function Texto({
   inputMode?: "text" | "numeric" | "tel" | "email";
   maxLength?: number;
   type?: "text" | "email" | "password";
+  /**
+   * 🆕 02/09 — campo PREENCHIDO E TRAVADO. Nasceu pro CPF na C1: ele
+   * identifica a pessoa em tudo que já rodou (cobrança, consulta de situação,
+   * futuro DBE), então mostrar em cinza é mais honesto que esconder — ela
+   * confere que é o dela sem achar que pode trocar. Correção de CPF é outro
+   * assunto, e passa por gente.
+   */
+  travado?: boolean;
 }) {
   return (
     <>
@@ -74,12 +83,15 @@ export function Texto({
         inputMode={inputMode}
         maxLength={maxLength}
         type={type}
-        className={`w-full min-h-12 rounded-md border bg-surface-card px-3 text-body text-text-primary
+        disabled={travado}
+        className={`w-full min-h-12 rounded-md border px-3 text-body
           placeholder:text-text-muted focus:outline-none
           ${
-            erro
-              ? "border-state-danger"
-              : "border-border-hairline focus:border-border-focus"
+            travado
+              ? "border-border-hairline bg-surface-alt text-text-tertiary"
+              : erro
+                ? "border-state-danger bg-surface-card text-text-primary"
+                : "border-border-hairline bg-surface-card text-text-primary focus:border-border-focus"
           }`}
       />
       {erro && <p className="text-micro text-state-danger-text mt-1">{erro}</p>}

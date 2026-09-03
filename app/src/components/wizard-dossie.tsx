@@ -10,8 +10,7 @@ import { Campo, Texto, Select, OpcoesLinha } from "@/components/ui/form";
 import { FISCAL, brl } from "@/lib/fiscal";
 import { FORMAS_ATUACAO } from "@/lib/mei";
 // 🆕 01/09 — mesma máscara do E6, pro CPF do sócio extra (C3).
-import { mascaraCpf } from "@/components/wizard-dinheiro";
-import { linkWhatsApp } from "@/lib/contato";
+import { mascaraCpf, mascaraTelefone } from "@/components/wizard-dinheiro";
 import { OutrasOpcoes, SheetCnae, type OpcaoCnae } from "@/components/encaixe";
 import {
   CLIENTE,
@@ -177,6 +176,10 @@ export function SocioView({
    * domicílio fora do Brasil, não nacionalidade).
    */
   const [nacionalidade, setNacionalidade] = useState("Brasileira");
+  /* 🆕 02/09 — nome e telefone viram estado editável (vinham do cadastro e
+     eram só leitura). Seguir daqui revalida os dois no banco. */
+  const [nome, setNome] = useState(CLIENTE.nome);
+  const [telefone, setTelefone] = useState(CLIENTE.telefone);
   const [civil, setCivil] = useState("");
   const [regime, setRegime] = useState("");
   /**
@@ -229,42 +232,31 @@ export function SocioView({
             o resto") que a própria tela mostra: um card fechado do que veio do
             cadastro e campos vazios embaixo. A promessa de "não vamos pedir
             tudo de novo" continua sendo feita, e melhor, pelo card. */}
-        <Titulo>Seus dados</Titulo>
+        {/* 🔄 02/09 (pedido do Pedro) — "pessoais" no título: a tela agora
+            coleta nome, telefone, RG, nascimento e endereço DE CASA, e vem
+            logo depois de duas telas sobre a empresa. O adjetivo separa os
+            dois assuntos sem precisar de subtítulo. */}
+        <Titulo>Seus dados pessoais</Titulo>
 
         <Corpo>
-          {/* CONFIRMAÇÃO — já veio do N6, só conferir. "Editar" mock, mesmo
-              padrão do N19. */}
-          <Card>
-            <div className="mb-2 flex items-center justify-between gap-3">
-              <h2 className="text-body font-semibold text-text-primary">
-                O que você já informou
-              </h2>
-              {/* 🔒 02/09 — era um "Editar" mock, que não fazia nada. Pior:
-                  prometia o que o app decidiu HOJE não oferecer — dado de
-                  cadastro pós-pagamento não se edita aqui (o bloco "Conta e
-                  plano" do status perdeu o "Ajustar" pelo mesmo motivo), sai
-                  pelo WhatsApp. O botão passa a levar pra onde a correção
-                  realmente acontece. */}
-              <a
-                href={linkWhatsApp(
-                  "Oi! Preciso corrigir um dado do meu cadastro na abertura da empresa.",
-                )}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="shrink-0 text-caption font-semibold text-action-primary-sm underline underline-offset-4"
-              >
-                Corrigir
-              </a>
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <LinhaConfirma rotulo="Nome" valor={CLIENTE.nome} />
-              <LinhaConfirma rotulo="CPF" valor={CLIENTE.cpf} />
-              <LinhaConfirma rotulo="Telefone" valor={CLIENTE.telefone} />
-              {/* 🗑️ 01/09 — "Endereço" saiu do card de confirmação: o cadastro
-                  (E6) não coleta mais endereço nenhum. Ele agora é PERGUNTADO
-                  aqui embaixo, com o rótulo dizendo de quem é. */}
-            </div>
-          </Card>
+          {/* 🔄 02/09 (decisão do Pedro) — O CARD DE CONFIRMAÇÃO VIROU CAMPO.
+              Nome e telefone eram linhas read-only num cartão, com um link de
+              correção que saía do app. Agora são campos normais, preenchidos e
+              EDITÁVEIS: seguir daqui revalida os dados no banco, então esta
+              tela deixa de ser "confira" e passa a ser o ponto onde eles
+              ficam certos. Corrigir um telefone digitado errado no cadastro
+              não deveria custar uma conversa no WhatsApp. */}
+          <Campo rotulo="Nome completo">
+            <Texto valor={nome} onChange={setNome} />
+          </Campo>
+
+          <Campo rotulo="Telefone">
+            <Texto
+              valor={telefone}
+              onChange={(v) => setTelefone(mascaraTelefone(v))}
+              inputMode="tel"
+            />
+          </Campo>
 
           {/* O QUE FALTA — só o que o N6 não pergunta. */}
           <div className="grid grid-cols-2 gap-3">
@@ -275,6 +267,16 @@ export function SocioView({
               <Texto valor={orgao} onChange={setOrgao} placeholder="SSP/MG" />
             </Campo>
           </div>
+
+          {/* 🔒 02/09 (decisão do Pedro) — O CPF FICA, TRAVADO. Nome e
+              telefone se corrigem aqui; o CPF não: ele identifica a pessoa em
+              tudo que já rodou antes desta tela (cobrança, consulta de
+              situação) e vai identificar no DBE. Mostrar em cinza é mais
+              honesto que esconder — ela confere que é o dela sem achar que
+              pode trocar. Trocar CPF é outro assunto, e passa por gente. */}
+          <Campo rotulo="CPF" dica="Confirmado no seu cadastro. Não muda por aqui.">
+            <Texto valor={CLIENTE.cpf} onChange={() => {}} travado />
+          </Campo>
 
           {/* 🆕 26/08 (achado do cruzamento com a pesquisa JUCEMG/DBE) — data
               de nascimento e nome da mãe são campo padrão do DBE (Receita
@@ -333,7 +335,7 @@ export function SocioView({
               estava repetindo. */}
           <Campo
             rotulo="Onde você mora"
-            dica="Seu endereço pessoal, não o da empresa. A gente puxa o resto pelo CEP."
+            dica="O seu, não o da empresa."
           >
             <Texto
               valor={cepPessoal}
@@ -401,14 +403,9 @@ export function SocioView({
   );
 }
 
-function LinhaConfirma({ rotulo, valor }: { rotulo: string; valor: string }) {
-  return (
-    <div className="flex flex-col">
-      <span className="text-micro text-text-tertiary">{rotulo}</span>
-      <span className="text-caption text-text-primary">{valor}</span>
-    </div>
-  );
-}
+/* 🗑️ 02/09 — `LinhaConfirma` (rótulo + valor read-only) morreu com o card
+   de confirmação da C1: nome e telefone viraram campos editáveis e o CPF virou
+   campo travado. Nenhuma outra tela usava. */
 
 /* ═══════════════════ N11 · VÍNCULO INSS ═════════════════════════════════ */
 

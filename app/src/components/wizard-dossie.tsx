@@ -2062,27 +2062,28 @@ export function CnaeSecundariosView({
                   <button
                     key={s.id}
                     onClick={() => alterna(s.id)}
+                    /* 🔄 02/09 (pedido do Pedro) — SELECIONADO SEM PINTAR O
+                       CARTÃO. Com 8 sugestões, cada marcada virava um bloco
+                       coral cheio e a lista ficava pesada. Agora o cartão
+                       segue branco e quem marca é o CHECK coral no canto
+                       superior direito, com a borda acompanhando de leve.
+                       ⚠️ Vale AQUI porque a seleção é múltipla e some no meio
+                       de uma lista longa. Onde a escolha é única e precisa
+                       gritar (a principal na C0, o slot), o fill cheio
+                       continua. */
                     className={`rounded-md border p-3 text-left transition-colors
                       ${
                         on
-                          ? "border-action-primary bg-action-primary"
+                          ? "border-action-primary bg-surface-card"
                           : "border-border-hairline bg-surface-card hover:border-border-strong"
                       }`}
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <p
-                          className={`text-body font-semibold ${
-                            on ? "text-text-on-brand" : "text-text-primary"
-                          }`}
-                        >
+                        <p className="text-body font-semibold text-text-primary">
                           {s.humano}
                         </p>
-                        <p
-                          className={`text-caption mt-0.5 ${
-                            on ? "text-text-on-brand/80" : "text-text-secondary"
-                          }`}
-                        >
+                        <p className="text-caption mt-0.5 text-text-secondary">
                           CNAE {s.cnae}
                         </p>
                         {/* 🗑️ 02/09 (decisão do Pedro) — a etiqueta "Mantém seu
@@ -2094,18 +2095,19 @@ export function CnaeSecundariosView({
                             Agora só existe alerta quando há o que alertar, e o
                             silêncio passa a significar "nada muda". */}
                       </div>
-                      {/* No selecionado o marcador inverte: círculo branco com
-                          check coral, senão coral-sobre-coral desapareceria. */}
+                      {/* Agora o marcador é o ÚNICO sinal de seleção: coral
+                          cheio com check branco quando marcado, contorno vazio
+                          quando não. */}
                       <span
-                        className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-caption font-bold
+                        className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full
                           ${
                             on
-                              ? "bg-surface-card text-action-primary"
+                              ? "bg-action-primary text-text-on-brand"
                               : "border border-border-strong text-text-tertiary"
                           }`}
                         aria-hidden
                       >
-                        {on ? "✓" : "+"}
+                        {on ? <CheckMarcado /> : <MaisMarcador />}
                       </span>
                     </div>
                     {/* 🗑️ 02/09 (decisão do Pedro) — a linha de justificativa
@@ -2150,19 +2152,36 @@ export function CnaeSecundariosView({
                     <button
                       key={s.id}
                       onClick={() => alterna(s.id)}
+                      /* Mesma regra das sugestões (02/09): o cartão não pinta,
+                         quem marca é o check. */
                       className={`rounded-md border p-3 text-left transition-colors
                         ${
                           on
-                            ? "border-action-primary bg-action-primary"
+                            ? "border-action-primary bg-surface-card"
                             : "border-border-hairline bg-surface-card hover:border-border-strong"
                         }`}
                     >
-                      <p className={`text-body font-semibold ${on ? "text-text-on-brand" : "text-text-primary"}`}>
-                        {s.humano}
-                      </p>
-                      <p className={`text-caption mt-0.5 ${on ? "text-text-on-brand/80" : "text-text-secondary"}`}>
-                        CNAE {s.cnae}
-                      </p>
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="text-body font-semibold text-text-primary">
+                            {s.humano}
+                          </p>
+                          <p className="text-caption mt-0.5 text-text-secondary">
+                            CNAE {s.cnae}
+                          </p>
+                        </div>
+                        <span
+                          className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full
+                            ${
+                              on
+                                ? "bg-action-primary text-text-on-brand"
+                                : "border border-border-strong text-text-tertiary"
+                            }`}
+                          aria-hidden
+                        >
+                          {on ? <CheckMarcado /> : <MaisMarcador />}
+                        </span>
+                      </div>
                       {/* 🔒 02/09 (decisão do Pedro) — ETIQUETA SÓ NO QUE MUDA.
                           O "Mantém seu enquadramento" saiu: ele aparecia na
                           maioria dos cartões dizendo sempre a mesma coisa, e
@@ -2843,5 +2862,48 @@ function SheetSecundarias({
         </div>
       </div>
     </div>
+  );
+}
+
+/**
+ * 🆕 02/09 (pedido do Pedro) — o marcador dos cartões de seleção usa o MESMO
+ * check dos cartões de regime e de faixa (`CheckBadgeFaixa`, gate-telas): o
+ * traço vetorial, não o caractere "✓", que vinha com o desenho e o peso da
+ * fonte e destoava do resto do app.
+ */
+function CheckMarcado() {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="m5 12 4 4 8-9" />
+    </svg>
+  );
+}
+
+/** O par vazio: convida a incluir, com o mesmo traço do check. */
+function MaisMarcador() {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3"
+      strokeLinecap="round"
+      aria-hidden
+    >
+      <path d="M12 5v14" />
+      <path d="M5 12h14" />
+    </svg>
   );
 }

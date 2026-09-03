@@ -347,11 +347,23 @@ export function SocioView({
 
           {enderecoPessoal && (
             <>
-              <div className="-mt-1 rounded-md border border-border-hairline bg-surface-alt px-3 py-2.5 text-caption text-text-secondary">
-                {/* 🐛 02/09 — tinha travessão, proibido em texto público desde
-                    24/07. Escapou porque não é frase, é concatenação. */}
-                {enderecoPessoal.logradouro}, {enderecoPessoal.bairro},{" "}
-                {enderecoPessoal.municipio}/{enderecoPessoal.uf}
+              {/* 🔄 02/09 (pente fino do Pedro) — O ENDEREÇO ENCONTRADO DEIXA
+                  DE PARECER CAMPO. Era um bloco cinza (`surface-alt`) sem
+                  rótulo, colado no CEP: lia como mensagem de erro do campo de
+                  cima, e usava o MESMO cinza do CPF travado — que significa
+                  outra coisa ("é seu, e você não mexe"). Agora é uma linha de
+                  confirmação, com o check verde que o app usa pra "deu certo"
+                  e o texto dizendo o que ele é. */}
+              <div className="-mt-3 flex items-start gap-2">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-state-success-tint text-state-success-text">
+                  <CheckMarcado />
+                </span>
+                <p className="text-caption text-text-secondary">
+                  {/* 🐛 02/09 — tinha travessão, proibido em texto público
+                      desde 24/07. Escapou porque não é frase, é concatenação. */}
+                  {enderecoPessoal.logradouro}, {enderecoPessoal.bairro},{" "}
+                  {enderecoPessoal.municipio}/{enderecoPessoal.uf}
+                </p>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <Campo rotulo="Número">
@@ -998,11 +1010,19 @@ export function SociosView({
 
                     {buscarCep(s.cep.replace(/\D/g, "")) && (
                       <>
-                        <div className="-mt-1 rounded-md border border-border-hairline bg-surface-alt px-3 py-2.5 text-caption text-text-secondary">
-                          {(() => {
-                            const e = buscarCep(s.cep.replace(/\D/g, ""))!;
-                            return `${e.logradouro}, ${e.bairro} — ${e.municipio}/${e.uf}`;
-                          })()}
+                        {/* Mesma linha de confirmação da C1 (02/09): o
+                            endereço encontrado não é campo, é recibo. Tinha o
+                            travessão proibido junto. */}
+                        <div className="-mt-3 flex items-start gap-2">
+                          <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-state-success-tint text-state-success-text">
+                            <CheckMarcado />
+                          </span>
+                          <p className="text-caption text-text-secondary">
+                            {(() => {
+                              const e = buscarCep(s.cep.replace(/\D/g, ""))!;
+                              return `${e.logradouro}, ${e.bairro}, ${e.municipio}/${e.uf}`;
+                            })()}
+                          </p>
                         </div>
                         <div className="grid grid-cols-2 gap-3">
                           <Campo rotulo="Número">

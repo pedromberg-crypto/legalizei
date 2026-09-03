@@ -111,6 +111,10 @@ export default function EmpresaPage() {
 
   return (
     <EmpresaView
+      /* 🐛 02/09 (levantamento C3→A1) — a tela não tinha seta: o
+         `TelaHeader` renderiza só o texto quando ninguém passa `onVoltar`, e a
+         página não passava. Regra 6 do CLAUDE.md. */
+      onVoltar={() => router.push(comRegime("/dossie/socios", mei))}
       // 🔑 `key` força o remount quando o rascunho chega: os campos do
       // EmpresaView nascem do estado inicial, e sem isso a leitura tardia
       // (pós-montagem) não apareceria na tela.

@@ -73,6 +73,10 @@ export default function SociosPage() {
 
   return (
     <SociosView
+      /* 🐛 02/09 (levantamento C3→A1) — a tela não tinha seta: o
+         `TelaHeader` renderiza só o texto quando ninguém passa `onVoltar`, e a
+         página não passava. Regra 6 do CLAUDE.md. */
+      onVoltar={() => router.push(comEndereco(comRegime("/dossie/vinculo", mei), enderecoFiscal))}
       socios={qtdSocios}
       onSeguir={() => router.push(ajuste ? ajuste.destino : comEndereco(comRegime(proxima, mei), enderecoFiscal))}
       ctaLabel={ajuste?.label}

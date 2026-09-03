@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { NomeView } from "@/components/wizard-dossie";
 import { ehMei, comRegime } from "@/lib/regime";
+import { ehEnderecoFiscal } from "@/lib/endereco";
 import { passoDoAjuste } from "@/lib/ajuste";
 
 /** 🆕 03/08 — última do dossiê pros DOIS caminhos (reencontro: MEI vem de C5,
@@ -61,7 +62,22 @@ export default function NomePage() {
   const ajuste = passoDoAjuste(searchParams, "/dossie/nome");
 
   return (
-    <NomeView mei={mei} onSeguir={() => router.push(ajuste ? ajuste.destino : comRegime("/revisar", mei))}
-      ctaLabel={ajuste?.label} />
+    <NomeView
+      mei={mei}
+      onSeguir={() => router.push(ajuste ? ajuste.destino : comRegime("/revisar", mei))}
+      /* 🐛 02/09 (levantamento C3→A1) — a tela não tinha seta de voltar.
+         ⚠️ O destino DEPENDE do caminho: quem escolheu endereço fiscal pulou a
+         C4 (decisão 01/09), então voltar pra ela levaria a pessoa a uma tela
+         que ela nunca viu. Nesse caso o voltar devolve pra C3. */
+      onVoltar={() =>
+        router.push(
+          comRegime(
+            ehEnderecoFiscal(searchParams) ? "/dossie/socios" : "/dossie/empresa",
+            mei,
+          ),
+        )
+      }
+      ctaLabel={ajuste?.label}
+    />
   );
 }

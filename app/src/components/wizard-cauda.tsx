@@ -124,7 +124,8 @@ export function RevisarView({
   const setAceito = setAceitoProp ?? setAceitoLocal;
   return (
     <>
-      <TelaHeader meta="Revisar" onVoltar={onVoltar} />
+      {/* 🐛 02/09 — `meta` nomeia o destino: daqui volta pro C7. */}
+      <TelaHeader meta="Nome da empresa" onVoltar={onVoltar} />
 
       <main className="app-main">
         {/* 🆕 28/08 — o subtítulo era único e dizia "a gente já começa a

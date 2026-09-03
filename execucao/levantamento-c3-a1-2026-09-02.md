@@ -1,6 +1,6 @@
 ---
 tipo: levantamento
-status: aguardando-validacao
+status: em-execucao
 data: 2026-09-02
 assunto: dossie-c3-a1
 etapa: constituicao
@@ -9,7 +9,9 @@ tags: [flow, copy, design, dossie]
 
 # 🔍 Levantamento C3 → A1 (para validação do Pedro)
 
-> **O que é:** varredura das 6 telas entre a C3 e a A1, sem aplicar nada. Cada achado foi conferido na tela renderizada antes de entrar aqui. Marque ✅ no que aprovar e ❌ no que descartar; eu aplico depois.
+> **O que é:** varredura das 6 telas entre a C3 e a A1. Cada achado foi conferido na tela renderizada antes de entrar aqui.
+>
+> **✅ 03/09 — o Pedro aprovou as prioridades 1, 2 e 3, e elas já estão aplicadas.** Os itens feitos estão marcados ✅ nas tabelas. O que sobrou é o enxugamento tela a tela (prioridade 4), que vai como as outras: uma tela por vez, com validação dele no meio.
 >
 > **Método:** mesmo pente das telas já validadas hoje (C0.0, C0, C5, C1, C2) — copy que narra mecânica, promessa que a tela não cumpre, vocabulário nosso, e as duas regras duras do projeto (sem travessão · toda tela de wizard tem voltar com `meta` = destino).
 
@@ -19,8 +21,8 @@ Três coisas se repetem em **todas**. Se você aprovar aqui, valem para o lote i
 
 | # | Achado | Por quê |
 |---|---|---|
-| G1 | 🔴 **Nenhuma das 6 tem seta de voltar.** As páginas não passam `onVoltar`, e o `TelaHeader` renderiza só o texto, sem erro. | Quem entra em qualquer tela do dossiê não consegue voltar pra anterior. Mesma família corrigida hoje na C0, C5 e C2 (regra 6 do `CLAUDE.md`). |
-| G2 | 🔴 **O `meta` nomeia a própria tela, não o destino.** "Sócios", "Dados da empresa", "Nome da empresa", "Revisar". | `meta` é o nome de **pra onde o voltar leva**. Da C3 volta pra C2, da C4 pra C3, e assim por diante. |
+| G1 | ✅ **FEITO.** ~~Nenhuma das 6 tem seta de voltar.~~ ⚠️ Correção do levantamento: a **C7′ já tinha** — eu generalizei sem conferir uma a uma, e a auditoria do gerador (que não a listava) estava certa. As outras 5 ganharam. | Quem entra em qualquer tela do dossiê não consegue voltar pra anterior. Mesma família corrigida hoje na C0, C5 e C2 (regra 6 do `CLAUDE.md`). |
+| G2 | ✅ **FEITO** nas 4 que erravam. `meta` agora nomeia o destino: C3→"Vínculo com o INSS", C4→"Sócios", C7→"Dados do dossiê", A1→"Nome da empresa". Na C7′ virou "O que a Junta pediu". | `meta` é o nome de **pra onde o voltar leva**. Da C3 volta pra C2, da C4 pra C3, e assim por diante. |
 | G3 | 🟡 **Todas têm subtítulo**, contrariando o padrão que fixamos hoje (C0, C5, C1 e C2 ficaram só com título). | Em algumas o subtítulo carrega o *porquê* e vale manter (C4, A1); em outras ele narra a mecânica que a tela já mostra. Marquei caso a caso. |
 
 ---
@@ -31,7 +33,7 @@ Três coisas se repetem em **todas**. Se você aprovar aqui, valem para o lote i
 
 | # | Achado | Tipo | Sugestão |
 |---|---|---|---|
-| C3.1 | 🔴 **"Os outros dados de cada sócio a gente coleta igual aos seus, na sequência."** A frase é **falsa**: todos os dados do sócio estão nesta mesma tela. Nada vem depois. | copy | Remover. É promessa de um passo que não existe. |
+| C3.1 | ✅ **FEITO.** 🔴 **"Os outros dados de cada sócio a gente coleta igual aos seus, na sequência."** A frase é **falsa**: todos os dados do sócio estão nesta mesma tela. Nada vem depois. | copy | Remover. É promessa de um passo que não existe. |
 | C3.2 | Subtítulo "Você disse que teria sócio. Complete os dados dele." narra a mecânica. | copy | Remover (padrão G3). O título já pergunta e os campos já mostram. |
 | C3.3 | **"CPF dele" · "Participação dele" · "CEP dele"** — três rótulos com "dele", e o app não sabe o gênero do sócio. | copy | "CPF do sócio" / "Participação" / "CEP". Os campos já estão dentro do card do sócio. |
 | C3.4 | h1 diz **"Seu sócio"** (singular) e o header diz **"Sócios"** (plural). | copy | Alinhar. Com o G2 resolvido o header vira o destino e o conflito some sozinho. |
@@ -54,9 +56,9 @@ Mesma tela, variante. Só o que muda:
 
 | # | Achado | Tipo | Sugestão |
 |---|---|---|---|
-| C4.1 | 🔴 **Travessão** em "Obrigatório — sem ele a documentação não passa na Junta." | copy | Regra dura desde 24/07. Trocar por ponto ou dois-pontos. |
-| C4.2 | 🔴 **Travessão** na concatenação do endereço travado: "Funcionários — 30140-060". | copy | Mesmo caso que corrigi na C1: escapa porque não é frase, é montagem. Vírgula. |
-| C4.3 | **"🔒 travado"** — emoji de cadeado **mais** a palavra "travado". | design | Um dos dois. O `Texto travado` que criei hoje na C1 já resolve isso visualmente (fundo cinza), sem precisar dizer. |
+| C4.1 | ✅ **FEITO.** Travessão em "Obrigatório — sem ele a documentação não passa na Junta." | copy | Regra dura desde 24/07. Trocar por ponto ou dois-pontos. |
+| C4.2 | ✅ **FEITO** (nos 2 pontos do arquivo). Travessão na concatenação do endereço travado: "Funcionários — 30140-060". | copy | Mesmo caso que corrigi na C1: escapa porque não é frase, é montagem. Vírgula. |
+| C4.3 | ✅ **FEITO** (ficou só "travado"). **"🔒 travado"** — emoji de cadeado **mais** a palavra "travado". | design | Um dos dois. O `Texto travado` que criei hoje na C1 já resolve isso visualmente (fundo cinza), sem precisar dizer. |
 | C4.4 | "Endereço da empresa, **informado no começo**" — "no começo" é a nossa visão do flow, não a dela. | copy | "Endereço que você já informou", ou nada: o estado travado já diz. |
 | C4.5 | Título "**Os** dados da empresa" com artigo; os outros títulos do dossiê não usam. | copy | "Dados da empresa". |
 | C4.6 | Subtítulo "O endereço vai no CNPJ, e é ele que a Prefeitura analisa pra liberar a empresa." | copy | ✅ **Manter.** É o único lugar que justifica por que pedimos o IPTU, e a pergunta é intrusiva. Mesma lógica que manteve o subtítulo da C2. |
@@ -69,8 +71,8 @@ Mesma tela, variante. Só o que muda:
 
 | # | Achado | Tipo | Sugestão |
 |---|---|---|---|
-| C7.1 | 🔴 **Travessão** em "já seguimos pra 2ª, e depois a 3ª — sem te avisar toda vez nem travar o processo." | copy | Regra dura. |
-| C7.2 | 🔴 **Travessão** em "Não dá pra editar aqui — assim evitamos erro de grafia indo pro contrato." | copy | Regra dura. |
+| C7.1 | ✅ **FEITO.** Travessão em "já seguimos pra 2ª, e depois a 3ª — sem te avisar toda vez nem travar o processo." | copy | Regra dura. |
+| C7.2 | ✅ **FEITO.** Travessão em "Não dá pra editar aqui — assim evitamos erro de grafia indo pro contrato." | copy | Regra dura. |
 | C7.3 | **"ORDEM" em caixa alta** no subtítulo. O app não usa caixa alta pra ênfase em nenhum outro lugar. | copy | Minúscula. Se precisar de ênfase, negrito. |
 | C7.4 | O subtítulo e o rótulo "Suas 3 opções, na ordem que a gente vai tentar" dizem a mesma coisa. | copy | Um dos dois. |
 | C7.5 | Bloco "Nenhuma tentativa atrasa a sua abertura" com 2 linhas + explicação do objeto social com mais 2. | copy | A primeira tranquiliza de verdade (a pessoa teme que nome negado atrase). A do objeto social explica uma trava que o campo cinza já comunica. |
@@ -83,7 +85,7 @@ Mesma tela, variante. Só o que muda:
 
 | # | Achado | Tipo | Sugestão |
 |---|---|---|---|
-| C7′.1 | 🔴 **Travessão usado como placeholder** de opção vazia (as posições 2 e 3 mostram "—"). | copy/design | Trocar por campo vazio com placeholder de texto, ou por um traço simples. |
+| C7′.1 | ✅ **FEITO** (virou "Escreva um nome", no cinza de placeholder). Travessão usado como placeholder de opção vazia (as posições 2 e 3 mostram "—"). | copy/design | Trocar por campo vazio com placeholder de texto, ou por um traço simples. |
 | C7′.2 | "ORDEM" em caixa alta, de novo. | copy | Mesmo caso da C7.3 — as duas telas compartilham a copy. |
 | C7′.3 | "As 3 primeiras não passaram na Junta." | copy | ✅ **Manter.** Direto, sem rodeio, e explica por que ela está aqui. |
 | C7′.4 | Não está na sequência C3→A1: entra pela A3.1 e sai pra A3.V. | flow | ✅ Correto. É ramo de exceção. |
@@ -119,6 +121,17 @@ Rodei a auditoria do gerador. **As 6 telas estão íntegras nos três lugares:**
 
 - 3 telas declaradas e ainda sem construir na demo: `E3_2_M` (E3.2 variante Migrar), `E5T_1` (gate inline do sócio) e `A3_PSB` (splash do boleto da guia).
 - 30 telas do flow sem voltar declarado — as 6 deste levantamento estão nessa conta (G1).
+
+## ✅ Status da execução (03/09)
+
+| Prioridade | O que era | Status |
+|---|---|---|
+| 1 | Voltar + `meta` nas 6 telas | ✅ feito — a auditoria do gerador caiu de **30 para 25** telas sem voltar |
+| 2 | Os 5 travessões | ✅ feito — varredura nas 6 telas renderizadas devolve **zero** |
+| 3 | A frase falsa da C3 | ✅ feito |
+| 4 | Enxugamento tela a tela | 🔜 pendente, uma tela por vez |
+
+**O que ficou pendente, por tela:** C3.2 a C3.6 · C3.1a · C4.4 a C4.8 · C7.3 a C7.6 · C7′.2 · A1.2 a A1.4.
 
 ## ⚖️ Como eu priorizaria
 

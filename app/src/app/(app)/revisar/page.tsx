@@ -46,6 +46,10 @@ export default function RevisarPage() {
    */
   return (
     <RevisarView
+      /* 🐛 02/09 (levantamento C3→A1) — a tela não tinha seta: o
+         `TelaHeader` renderiza só o texto quando ninguém passa `onVoltar`, e a
+         página não passava. Regra 6 do CLAUDE.md. */
+      onVoltar={() => router.push(comRegime("/dossie/nome", mei))}
       mei={mei}
       onSeguir={() => router.push(comRegime("/iniciar-viabilidade", mei))}
     />

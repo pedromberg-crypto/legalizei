@@ -875,7 +875,9 @@ export function SociosView({
     <>
       {/* Mesmo alinhamento do N10: o cliente lê "Sócios" na lista de passos
           (P1/P2), então é isso que a tela precisa dizer. */}
-      <TelaHeader meta="Sócios" onVoltar={onVoltar} />
+      {/* 🐛 02/09 — `meta` é o nome do DESTINO do voltar, não desta tela
+          (regra 6 do CLAUDE.md). Daqui volta pra C2. */}
+      <TelaHeader meta="Vínculo com o INSS" onVoltar={onVoltar} />
 
       <main className="app-main">
         <Titulo
@@ -908,10 +910,11 @@ export function SociosView({
                   atenção contra o usuário. Virou nota de rodapé.
                   🔒 24/08 — quantidade e tipo (CPF) já foram travados na
                   triagem; aqui só falta preencher nome + participação. */}
-              <p className="text-micro text-text-tertiary">
-                Os outros dados de cada sócio a gente coleta igual aos seus, na
-                sequência.
-              </p>
+{/* 🗑️ 02/09 (levantamento C3→A1) — a frase "os outros dados de cada
+                  sócio a gente coleta igual aos seus, na sequência" saiu: era
+                  FALSA. Todos os dados do sócio (nome, CPF, nascimento, RG,
+                  órgão, estado civil, regime, endereço) estão nesta mesma
+                  tela. Nada vem depois. */}
 
               {/* 🆕 26/08 (pedido do Pedro) — card travado do 1º sócio (você),
                   em TODAS as telas de sócios: mostra que você já É um sócio
@@ -1598,7 +1601,8 @@ export function EmpresaView({
 
   return (
     <>
-      <TelaHeader meta="Dados da empresa" onVoltar={onVoltar} />
+      {/* 🐛 02/09 — `meta` nomeia o destino: daqui volta pra C3. */}
+      <TelaHeader meta="Sócios" onVoltar={onVoltar} />
 
       <main className="app-main">
         {/* ✍️ 29/07 — o título era "Onde a empresa fica?", mas a tela também
@@ -1639,14 +1643,16 @@ export function EmpresaView({
                     </p>
                   )}
                   <p className="text-caption text-text-secondary">
-                    {endereco ? `${endereco.bairro} — ` : ""}
+                    {endereco ? `${endereco.bairro}, ` : ""}
                     {cep}
                   </p>
                 </div>
                 {/* Um cadeado explícito vale mais que campo cinza: cinza a
                     pessoa tenta clicar, cadeado ela entende de primeira. */}
                 <span className="shrink-0 text-micro font-semibold text-text-tertiary">
-                  🔒 travado
+                  {/* 🗑️ 02/09 — era "🔒 travado": emoji MAIS a palavra, dizendo
+                      duas vezes o que o próprio bloco cinza já mostra. */}
+                  travado
                 </span>
               </div>
             </div>
@@ -1672,7 +1678,7 @@ export function EmpresaView({
               {endereco && (
                 <>
                   <div className="-mt-3 rounded-md border border-border-hairline bg-surface-alt px-3 py-2.5 text-caption text-text-secondary">
-                    {endereco.logradouro}, {endereco.bairro} — {endereco.municipio}/
+                    {endereco.logradouro}, {endereco.bairro}, {endereco.municipio}/
                     {endereco.uf}
                   </div>
                   <div className="grid grid-cols-2 gap-3">
@@ -1712,7 +1718,7 @@ export function EmpresaView({
               {!mei && (
               <Campo
                 rotulo="Índice cadastral do IPTU"
-                dica="Está no carnê do IPTU. Obrigatório — sem ele a documentação não passa na Junta."
+                dica="Está no carnê do IPTU. Sem ele a documentação não passa na Junta."
               >
                 <Texto
                   valor={iptu}
@@ -2672,7 +2678,11 @@ export function NomeView({
 
   return (
     <>
-      <TelaHeader meta={novaRodada ? "Novos nomes" : "Nome da empresa"} onVoltar={onVoltar} />
+      {/* 🐛 02/09 — `meta` nomeia o destino. Na rodada 2 o voltar devolve
+          pra tela de recusa da Junta; no fluxo normal, pro dossiê da empresa
+          (ou pros sócios, quando a C4 foi pulada por endereço fiscal — daí o
+          rótulo genérico, que serve aos dois). */}
+      <TelaHeader meta={novaRodada ? "O que a Junta pediu" : "Dados do dossiê"} onVoltar={onVoltar} />
 
       <main className="app-main">
         <Titulo
@@ -2750,8 +2760,15 @@ export function NomeView({
                                    text-body font-semibold text-text-primary focus:outline-none"
                       />
                     ) : (
-                      <span className="min-w-0 flex-1 truncate text-body font-semibold text-text-primary">
-                        {s.valor.trim() || "—"}
+                      // 🗑️ 02/09 — o vazio era um travessão (proibido em texto
+                      // público) fazendo papel de placeholder. Vira convite, no
+                      // cinza que o resto dos campos usa.
+                      <span
+                        className={`min-w-0 flex-1 truncate text-body font-semibold ${
+                          s.valor.trim() ? "text-text-primary" : "text-text-muted"
+                        }`}
+                      >
+                        {s.valor.trim() || "Escreva um nome"}
                       </span>
                     )}
                     {/* 🐛 24/08 — o check "travava": o input tinha `onBlur` fechando
@@ -2806,7 +2823,7 @@ export function NomeView({
           {!mei && !novaRodada && (
           <Aviso variante="info" titulo="Nenhuma tentativa atrasa a sua abertura">
             A gente tenta registrar a 1ª opção na Junta. Se ela não passar, já
-            seguimos pra 2ª, e depois a 3ª — sem te avisar toda vez nem travar
+            seguimos pra 2ª, e depois a 3ª, sem te avisar toda vez nem travar
             o processo.
           </Aviso>
           )}
@@ -2818,7 +2835,7 @@ export function NomeView({
           {!mei && !novaRodada && (
           <Campo
             rotulo="Objeto social"
-            dica="Gerado automaticamente a partir das suas atividades. Não dá pra editar aqui — assim evitamos erro de grafia indo pro contrato."
+            dica="Gerado a partir das suas atividades. Não dá pra editar aqui: assim evitamos erro de grafia indo pro contrato."
           >
             <div
               className="w-full rounded-md border border-border-hairline bg-surface-alt p-3

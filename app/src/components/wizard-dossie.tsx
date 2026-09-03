@@ -1974,7 +1974,10 @@ export function CnaeSecundariosView({
             se era a mesma coisa. Agora é o cartão coral idêntico, com a pill
             e o acesso ao detalhe — a identidade visual atravessa o bloco.
             Reusa `OutrasOpcoes` (encaixe.tsx), a mesma fonte da C0. */}
-        <div>
+        {/* 🔄 02/09 — respiro entre o bloco travado e a lista que rola. Sem
+            ele o cartão encostava no "Sugestões pra você", e a tela lia como
+            se o cartão fizesse parte da lista. */}
+        <div className="mb-5 shrink-0">
           {/* 🗑️ 02/09 (pedido do Pedro) — o rótulo "Sua atividade
               principal" saiu: a pill "Principal" dentro do cartão já diz
               isso, e os dois colados viravam a mesma frase duas vezes. Na

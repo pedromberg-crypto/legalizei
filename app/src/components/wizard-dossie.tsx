@@ -1961,67 +1961,74 @@ export function CnaeSecundariosView({
             escolher fora do ramo. */}
         <Titulo>Sua empresa faz mais alguma coisa?</Titulo>
 
-        <Corpo>
-          {/* 🔄 02/09 (pedido do Pedro) — A PRINCIPAL É O MESMO CARTÃO DA C0.
-              Era um `Card` neutro, com outro rótulo ("Atividade principal (já
-              definida)") e sem o "Ver detalhes". Duas telas do mesmo bloco
-              mostrando o MESMO dado de dois jeitos fazia a pessoa reconferir
-              se era a mesma coisa. Agora é o cartão coral idêntico, com a pill
-              e o acesso ao detalhe — a identidade visual atravessa o bloco.
-              Reusa `OutrasOpcoes` (encaixe.tsx), a mesma fonte da C0. */}
-          <div>
-            {/* 🗑️ 02/09 (pedido do Pedro) — o rótulo "Sua atividade
-                principal" saiu: a pill "Principal" dentro do cartão já diz
-                isso, e os dois colados viravam a mesma frase duas vezes. Na
-                C0 o par não se repetia, porque lá a pill é "+ compatível". */}
-            <OutrasOpcoes
-              titulo=""
-              alternativas={[principalComoOpcao]}
-              escolhido={principalComoOpcao.cnae}
-              // 🔒 02/09 (pedido do Pedro) — aqui a pill é "Principal", não
-              // "+ compatível". Na C0 o rótulo respondia "qual dessas encaixa
-              // melhor?", a pergunta daquela tela. Aqui a escolha já foi
-              // feita: o que o cartão informa é o PAPEL dele no meio das
-              // secundárias que estão sendo montadas embaixo.
-              pillDe={() => "Principal"}
-              onVerDetalhes={setDetalhe}
-              /* 🔄 02/09 (ideia do Pedro) — as secundárias moram DENTRO do
-                 cartão da principal, e ele cresce pra baixo. Soltas num
-                 cartão próprio, as duas informações liam como assuntos
-                 independentes; aqui a hierarquia (uma principal, N
-                 secundárias penduradas nela) é dita pela estrutura, sem
-                 precisar de texto explicando. */
-              rodapeDoCartao={() =>
-                escolhidas.length === 0 ? null : (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setRascunho(ativos);
-                      setVendoSecundarias(true);
-                    }}
-                    className="mt-3 flex w-full items-center justify-between gap-3 rounded-md bg-action-primary-sm p-2 text-left"
-                  >
-                    <span className="min-w-0">
-                      <span className="block text-caption font-semibold text-text-on-brand">
-                        {escolhidas.length === 1
-                          ? "1 atividade secundária"
-                          : `${escolhidas.length} atividades secundárias`}
-                      </span>
-                      <span className="mt-0.5 block truncate text-micro text-text-on-brand/80">
-                        {escolhidas.map((s) => s.humano).join(" · ")}
-                      </span>
-                    </span>
-                    {/* 🗑️ 02/09 — testamos uma pill "Secundárias" aqui, par da
-                        "Principal". Saiu na mesma rodada: a própria linha já
-                        diz "3 atividades secundárias", então a pill repetia a
-                        palavra ao lado dela mesma. */}
-                    <ChevronResumo />
-                  </button>
-                )
-              }
-            />
-          </div>
+        {/* 🔒 02/09 (pedido do Pedro) — TÍTULO E CARTÃO DA PRINCIPAL TRAVADOS.
+            O cartão vivia dentro do `Corpo` e subia junto com a lista: a
+            pessoa rolava pra escolher e perdia de vista qual é a atividade
+            principal, que é justamente a referência de tudo que ela está
+            marcando (e onde as secundárias ficam penduradas). Agora só a
+            lista rola. */}
+        {/* 🔄 02/09 (pedido do Pedro) — A PRINCIPAL É O MESMO CARTÃO DA C0.
+            Era um `Card` neutro, com outro rótulo ("Atividade principal (já
+            definida)") e sem o "Ver detalhes". Duas telas do mesmo bloco
+            mostrando o MESMO dado de dois jeitos fazia a pessoa reconferir
+            se era a mesma coisa. Agora é o cartão coral idêntico, com a pill
+            e o acesso ao detalhe — a identidade visual atravessa o bloco.
+            Reusa `OutrasOpcoes` (encaixe.tsx), a mesma fonte da C0. */}
+        <div>
+          {/* 🗑️ 02/09 (pedido do Pedro) — o rótulo "Sua atividade
+              principal" saiu: a pill "Principal" dentro do cartão já diz
+              isso, e os dois colados viravam a mesma frase duas vezes. Na
+              C0 o par não se repetia, porque lá a pill é "+ compatível". */}
+          <OutrasOpcoes
+            titulo=""
+            alternativas={[principalComoOpcao]}
+            escolhido={principalComoOpcao.cnae}
+            // 🔒 02/09 (pedido do Pedro) — aqui a pill é "Principal", não
+            // "+ compatível". Na C0 o rótulo respondia "qual dessas encaixa
+            // melhor?", a pergunta daquela tela. Aqui a escolha já foi
+            // feita: o que o cartão informa é o PAPEL dele no meio das
+            // secundárias que estão sendo montadas embaixo.
+            pillDe={() => "Principal"}
+            onVerDetalhes={setDetalhe}
+            /* 🔄 02/09 (ideia do Pedro) — as secundárias moram DENTRO do
+               cartão da principal, e ele cresce pra baixo. Soltas num
+               cartão próprio, as duas informações liam como assuntos
+               independentes; aqui a hierarquia (uma principal, N
+               secundárias penduradas nela) é dita pela estrutura, sem
+               precisar de texto explicando. */
+            rodapeDoCartao={() =>
+              escolhidas.length === 0 ? null : (
+                <button
+                type="button"
+                onClick={() => {
+                  setRascunho(ativos);
+                  setVendoSecundarias(true);
+                }}
+                className="mt-3 flex w-full items-center justify-between gap-3 rounded-md bg-action-primary-sm p-2 text-left"
+                >
+                <span className="min-w-0">
+                  <span className="block text-caption font-semibold text-text-on-brand">
+                    {escolhidas.length === 1
+                      ? "1 atividade secundária"
+                      : `${escolhidas.length} atividades secundárias`}
+                  </span>
+                  <span className="mt-0.5 block truncate text-micro text-text-on-brand/80">
+                    {escolhidas.map((s) => s.humano).join(" · ")}
+                  </span>
+                </span>
+                {/* 🗑️ 02/09 — testamos uma pill "Secundárias" aqui, par da
+                    "Principal". Saiu na mesma rodada: a própria linha já
+                    diz "3 atividades secundárias", então a pill repetia a
+                    palavra ao lado dela mesma. */}
+                <ChevronResumo />
+                </button>
+              )
+            }
+          />
+        </div>
 
+
+        <Corpo>
           {/* 🗑️ 02/09 (pente fino do Pedro) — 3 linhas que repetiam o que a
               tela já dizia em outros 4 lugares ("é opcional", "complemento").
               A única informação nova, "não precisa ser do mesmo ramo", subiu
@@ -2227,13 +2234,13 @@ export function CnaeSecundariosView({
           {/* 🆕 24/08 — busca restrita ao que a gente atende (mesma lista da
               entrevista principal), pedido original da Jéssica (reunião 19/07)
               e reforçado pelo Leonan. */}
-          <Campo rotulo="Buscar outra atividade, de qualquer ramo">
+          <div className="mb-4"><Campo rotulo="Buscar outra atividade, de qualquer ramo">
             <Texto
               valor={busca}
               onChange={setBusca}
               placeholder="Ex: consultoria, eventos, treinamento..."
             />
-          </Campo>
+          </Campo></div>
 
 
           {algumaMudaEnquadramento ? (

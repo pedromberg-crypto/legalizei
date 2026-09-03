@@ -895,9 +895,13 @@ export function SociosView({
                 ? "Pra fazer a procuração e a transferência, a gente precisa dos dados de todos os sócios da empresa."
                 : "Confirma: sua empresa é só sua, sem outros sócios?"
               : TEM_SOCIO
-                ? varios
-                  ? "Você disse que teria sócios. Complete os dados de cada um."
-                  : "Você disse que teria sócio. Complete os dados dele."
+                ? // 🔄 03/09 (pedido do Pedro) — sem o "você disse que teria
+                  // sócio": a tela não precisa provar que lembrou da resposta
+                  // anterior, e quem chegou aqui já sabe por que está aqui. Só
+                  // a instrução, no plural certo.
+                  varios
+                  ? "Preencha os dados dos seus sócios."
+                  : "Preencha os dados do seu sócio."
                 : "Você disse que abriria sozinho. É só confirmar."
           }
         >

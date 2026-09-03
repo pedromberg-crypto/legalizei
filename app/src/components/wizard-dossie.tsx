@@ -1944,7 +1944,9 @@ export function CnaeSecundariosView({
 
   return (
     <>
-      <TelaHeader meta="Atividades da empresa" onVoltar={onVoltar} />
+      {/* 🐛 02/09 — `meta` é o nome do DESTINO do voltar, não desta tela
+          (padrão corrigido no gate em 29/08). Daqui volta pra C0. */}
+      <TelaHeader meta="Sua atividade" onVoltar={onVoltar} />
 
       <main className="app-main">
         {/* 🗑️ 02/09 (pedido do Pedro) — SEM SUBTÍTULO, pra padronizar com a
@@ -2023,68 +2025,6 @@ export function CnaeSecundariosView({
               pro subtítulo; o teto de 15 a própria UI garante (para de deixar
               marcar). Tinha travessão, proibido em copy pública desde 24/07. */}
 
-          {/* 🆕 24/08 — busca restrita ao que a gente atende (mesma lista da
-              entrevista principal), pedido original da Jéssica (reunião 19/07)
-              e reforçado pelo Leonan. */}
-          <Campo rotulo="Buscar outra atividade, de qualquer ramo">
-            <Texto
-              valor={busca}
-              onChange={setBusca}
-              placeholder="Ex: consultoria, eventos, treinamento..."
-            />
-          </Campo>
-
-          {busca.trim() && (
-            <div className="flex flex-col gap-2">
-              {resultadosBusca.length === 0 ? (
-                <p className="text-caption text-text-secondary">
-                  Nenhuma atividade encontrada que a gente atenda com esse termo.
-                </p>
-              ) : (
-                resultadosBusca.map((s) => {
-                const on = !!ativos[s.id];
-                  return (
-                    <button
-                      key={s.id}
-                      onClick={() => alterna(s.id)}
-                      className={`rounded-md border p-3 text-left transition-colors
-                        ${
-                          on
-                            ? "border-action-primary bg-action-primary"
-                            : "border-border-hairline bg-surface-card hover:border-border-strong"
-                        }`}
-                    >
-                      <p className={`text-body font-semibold ${on ? "text-text-on-brand" : "text-text-primary"}`}>
-                        {s.humano}
-                      </p>
-                      <p className={`text-caption mt-0.5 ${on ? "text-text-on-brand/80" : "text-text-secondary"}`}>
-                        CNAE {s.cnae}
-                      </p>
-                      {/* 🔒 02/09 (decisão do Pedro) — ETIQUETA SÓ NO QUE MUDA.
-                          O "Mantém seu enquadramento" saiu: ele aparecia na
-                          maioria dos cartões dizendo sempre a mesma coisa, e
-                          etiqueta que não varia não informa, vira decoração.
-                          Alerta só existe quando há o que alertar; o silêncio
-                          passa a significar "nada muda". */}
-                      {s.mudaEnquadramento && (
-                        <span
-                          className={`mt-1 inline-block rounded-full px-2 py-0.5 text-micro font-semibold
-                            ${
-                              on
-                                ? "bg-surface-card/20 text-text-on-brand"
-                                : "bg-state-warning-tint text-state-warning-text"
-                            }`}
-                        >
-                          Muda seu enquadramento
-                        </span>
-                      )}
-                    </button>
-                  );
-                })
-              )}
-            </div>
-          )}
-
           {algumaMudaEnquadramento && (
             <Aviso variante="warning" titulo="Uma dessas muda seu enquadramento">
               Pelo menos uma atividade que você escolheu muda o imposto que sua
@@ -2094,6 +2034,11 @@ export function CnaeSecundariosView({
             </Aviso>
           )}
 
+          {/* 🔄 02/09 (pente fino do Pedro) — SUGESTÕES ANTES DA BUSCA.
+              A busca vinha primeiro, então a pessoa lia "buscar outra
+              atividade" antes de ver o que a gente já tinha pra oferecer:
+              primeiro o esforço, depois a conveniência. Invertida, a busca
+              vira o que ela é — a saída pra quem não se encontrou na lista. */}
           <div>
             {/* 🆕 02/09 (pedido do Pedro) — a contagem no canto direito, na
                 mesma fonte do rótulo e em coral. Ela conta o que está NA
@@ -2163,13 +2108,14 @@ export function CnaeSecundariosView({
                         {on ? "✓" : "+"}
                       </span>
                     </div>
-                    <p
-                      className={`text-micro mt-2 ${
-                        on ? "text-text-on-brand/70" : "text-text-tertiary"
-                      }`}
-                    >
-                      {s.prova}
-                    </p>
+                    {/* 🗑️ 02/09 (decisão do Pedro) — a linha de justificativa
+                        ("Comum como secundário de quem faz site.") saiu de
+                        todos os cartões. Eram 8 linhas, a maior massa de texto
+                        da tela, e três diziam a mesma coisa: "isso combina com
+                        web design". É informação de CURADORIA (por que
+                        sugerimos), não de decisão — e o nome do CNAE já se
+                        explica. O campo `prova` segue no dado, pro caso de
+                        virar conteúdo do sheet de detalhes. */}
                   </button>
                 );
               })}
@@ -2180,6 +2126,68 @@ export function CnaeSecundariosView({
               ("está ótimo" soa como consolo). O subtítulo e o CTA já dão essa
               licença. 🔒 O "pode adicionar depois" saiu por decisão do Pedro
               mesmo tendo sido sugerido pro subtítulo: convida a pular a tela. */}
+          {/* 🆕 24/08 — busca restrita ao que a gente atende (mesma lista da
+              entrevista principal), pedido original da Jéssica (reunião 19/07)
+              e reforçado pelo Leonan. */}
+          <Campo rotulo="Buscar outra atividade, de qualquer ramo">
+            <Texto
+              valor={busca}
+              onChange={setBusca}
+              placeholder="Ex: consultoria, eventos, treinamento..."
+            />
+          </Campo>
+
+          {busca.trim() && (
+            <div className="flex flex-col gap-2">
+              {resultadosBusca.length === 0 ? (
+                <p className="text-caption text-text-secondary">
+                  Nenhuma atividade encontrada que a gente atenda com esse termo.
+                </p>
+              ) : (
+                resultadosBusca.map((s) => {
+                const on = !!ativos[s.id];
+                  return (
+                    <button
+                      key={s.id}
+                      onClick={() => alterna(s.id)}
+                      className={`rounded-md border p-3 text-left transition-colors
+                        ${
+                          on
+                            ? "border-action-primary bg-action-primary"
+                            : "border-border-hairline bg-surface-card hover:border-border-strong"
+                        }`}
+                    >
+                      <p className={`text-body font-semibold ${on ? "text-text-on-brand" : "text-text-primary"}`}>
+                        {s.humano}
+                      </p>
+                      <p className={`text-caption mt-0.5 ${on ? "text-text-on-brand/80" : "text-text-secondary"}`}>
+                        CNAE {s.cnae}
+                      </p>
+                      {/* 🔒 02/09 (decisão do Pedro) — ETIQUETA SÓ NO QUE MUDA.
+                          O "Mantém seu enquadramento" saiu: ele aparecia na
+                          maioria dos cartões dizendo sempre a mesma coisa, e
+                          etiqueta que não varia não informa, vira decoração.
+                          Alerta só existe quando há o que alertar; o silêncio
+                          passa a significar "nada muda". */}
+                      {s.mudaEnquadramento && (
+                        <span
+                          className={`mt-1 inline-block rounded-full px-2 py-0.5 text-micro font-semibold
+                            ${
+                              on
+                                ? "bg-surface-card/20 text-text-on-brand"
+                                : "bg-state-warning-tint text-state-warning-text"
+                            }`}
+                        >
+                          Muda seu enquadramento
+                        </span>
+                      )}
+                    </button>
+                  );
+                })
+              )}
+            </div>
+          )}
+
         </Corpo>
 
         {detalhe && <SheetCnae opcao={detalhe} onFechar={() => setDetalhe(null)} />}

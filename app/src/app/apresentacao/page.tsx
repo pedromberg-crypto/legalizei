@@ -1242,7 +1242,6 @@ const MOMENTO_POR_NO: Record<string, Etapa | null> = {
   C1: "socio",
   C2: "vinculo",
   C3: "socios",
-  C3_1: "socios",  // mesma tela com 3 sócios (o preparo força o estado)
   C4: "empresa",
   C5: "cnae-secundarios",
   C5_S: "splash-atividades",
@@ -1264,7 +1263,10 @@ const MOMENTO_POR_NO: Record<string, Etapa | null> = {
   A3_V: "status-viabilidade",
   A4: "assinatura",
   A4G: "assinatura",
-  M_T: "triagem",
+  // 🐛 03/09 — estava em "triagem" (a do ME). O M-T é a tela de
+  // IMPEDIMENTOS do MEI, que já tem momento e rota próprios; vinculado errado,
+  // a pill do MEI abria a triagem do ME e as duas acendiam juntas.
+  M_T: "m-impedimento",
   M_T_1: "saida-mei-outra-empresa",
   M_T_2: "saida-mei-servidor",
   M_O: "m-ocupacao",
@@ -2052,6 +2054,20 @@ export default function ApresentacaoPage() {
    * (que não passa por aqui) cai no primeiro nó da etapa, que é o principal.
    */
   const [noAberto, setNoAberto] = useState<string | null>(null);
+  /**
+   * 🆕 03/09 (ideia do Pedro) — QUANTIDADE DE SÓCIOS COMO CENÁRIO.
+   * A C3 muda bastante entre 1 sócio extra e o teto (3): a divisão em %, a
+   * lista de quem administra e a pilha de cards. Testar o design exige ver os
+   * dois, e antes isso obrigava a trocar de rota (`?socios=`) ou a mexer no
+   * mock. Agora são dois botões no padrão do "Preencher automático", e a
+   * pessoa alterna com um clique na mesma tela.
+   */
+  const [sociosDemo, setSociosDemo] = useState<number | undefined>(undefined);
+  /* 🆕 03/09 — as outras duas variantes que abriam sem preparo: o slide do
+     welcome (a view lê `slideInicial` só no mount, então remonta por `key`) e
+     o nível do GOV.BR na assinatura (era constante, ver `nivelGov`). */
+  const [slideWelcome, setSlideWelcome] = useState(0);
+  const [nivelGovDemo, setNivelGovDemo] = useState<"bronze" | undefined>(undefined);
   // 🆕 27/08 — estado das 2 telas novas de captura de lead (E3.1 e E3.3).
   const [dadosLead, setDadosLead] = useState<DadosLead>({
     nome: "",
@@ -2400,7 +2416,8 @@ export default function ApresentacaoPage() {
     pularPara(t.etapa);
     if (t.id === "E7_1") setEnderecoProprioDemo(false);
     if (t.id === "E7") setEnderecoProprioDemo(true);
-    if (t.id === "C3_1") setSocios(3);
+    // A C3 abre no caso comum; os botões de cenário alternam pro teto.
+    if (t.id === "C3") setSociosDemo(2);
     if (t.id === "A3_M") setRegimeDemo("mei");
     // As 4 saídas do veredito não são telas: são DESFECHOS do mesmo
     // `VereditoView`, decididos pelo `mapear()`. Eram 4 das 12 telas que o
@@ -2409,6 +2426,13 @@ export default function ApresentacaoPage() {
     if (t.id === "E5_1") setResultado(mapear("nutricionista"));
     if (t.id === "E5_2") setResultado(mapear("loja de roupas"));
     if (t.id === "E5_3") setResultado(mapear("fazenda de gado"));
+    // Os 3 slides do welcome são 3 nós no mapa e uma view só na demo.
+    if (t.id === "E2_1") setSlideWelcome(0);
+    if (t.id === "E2_2") setSlideWelcome(1);
+    if (t.id === "E2_3") setSlideWelcome(2);
+    // A4G é a assinatura com GOV.BR bronze (exige upgrade); A4 é o caso normal.
+    if (t.id === "A4G") setNivelGovDemo("bronze");
+    if (t.id === "A4") setNivelGovDemo(undefined);
   };
 
   /* 🗑️ 02/09 — as 4 listas de pills escritas à mão (PILLS · PILLS_MIGRAR ·
@@ -2677,6 +2701,30 @@ export default function ApresentacaoPage() {
               </>
             )}
             <div className="flex flex-wrap items-center gap-2">
+              {etapa === "socios" && (
+                <>
+                  {[
+                    { n: 2, label: "1 sócio" },
+                    { n: 4, label: "3 sócios (teto)" },
+                  ].map((o) => {
+                    const on = (sociosDemo ?? 2) === o.n;
+                    return (
+                      <button
+                        key={o.n}
+                        onClick={() => setSociosDemo(o.n)}
+                        aria-pressed={on}
+                        className={`rounded-xl px-4 py-2.5 text-caption font-bold transition-colors ${
+                          on
+                            ? "bg-action-primary text-text-on-brand"
+                            : "border border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
+                        }`}
+                      >
+                        {o.label}
+                      </button>
+                    );
+                  })}
+                </>
+              )}
               {mostraPreencher && (
                 <button
                   onClick={preencherEtapa}
@@ -2783,6 +2831,10 @@ export default function ApresentacaoPage() {
                       // `.app-page`, já `position:relative`) dentro do
                       // `welcome.tsx` — não precisa mais de wrapper nenhum aqui.
                       <WelcomeView
+                        // `key` remonta a view: `slideInicial` só é lido no
+                        // mount, então sem isto trocar de pill não move o slide.
+                        key={slideWelcome}
+                        slideInicial={slideWelcome}
                         onPular={() => setEtapa("fork")}
                         onSeguir={() => setEtapa("fork")}
                       />
@@ -2935,6 +2987,15 @@ export default function ApresentacaoPage() {
                         )}
                         {etapa === "socios" && (
                           <SociosView
+                            /* 🆕 03/09 (pedido do Pedro) — a quantidade vem do
+                               botão de cenário, pra alternar entre 1 e 3 sócios
+                               sem trocar de tela.
+                               🐛 `key` é obrigatório aqui: a lista de sócios
+                               extras nasce de `useState(inicial)`, que só roda no
+                               mount — sem remontar, trocar de cenário não mexia
+                               em nada na tela. Mesmo caso do welcome. */
+                            key={sociosDemo ?? 2}
+                            socios={sociosDemo}
                             preencher={preenchimento}
                             onSeguir={() => setEtapa(depoisDoDossie("socios"))}
                             onVoltar={() => voltar(() => setEtapa(antesDoDossie("socios")))}
@@ -3153,6 +3214,7 @@ export default function ApresentacaoPage() {
                         )}
                         {etapa === "assinatura" && (
                           <AssinaturaView
+                            nivelGov={nivelGovDemo}
                             onSeguir={() => setEtapa("ativacao")}
                             // 🔄 01/09 — volta pro painel de novo: a A3.2
                             // (certificado) saiu do caminho ME, então quem

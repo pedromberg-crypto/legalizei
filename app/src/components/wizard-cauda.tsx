@@ -941,9 +941,13 @@ export function AssinaturaView({
   onVoltar,
   onEscalar,
   mei = false,
+  nivelGov,
 }: {
   onSeguir?: () => void;
   onVoltar?: () => void;
+  /** 🆕 03/09 — força o nível do GOV.BR (a demo usa pra abrir a variante
+   *  A4G, "bronze precisa de upgrade"). Sem isto vale `NIVEL_GOVBR`. */
+  nivelGov?: "bronze" | "prata" | "ouro";
   /** 🆕 24/08 — código do GOV expirou ou estourou tentativas: escala pra
    *  atendimento humano em vez de travar o cliente sozinho. */
   onEscalar?: () => void;
@@ -952,7 +956,11 @@ export function AssinaturaView({
   mei?: boolean;
 }) {
   const sociedade = SOCIOS_ASSINATURA.length > 1;
-  const bronze = NIVEL_GOVBR === "bronze";
+  // 🆕 03/09 — o nível vira PROP (default = a constante de sempre). Sem
+  // isso a variante A4G ("bronze, precisa de upgrade") era inalcançável na
+  // demo: `NIVEL_GOVBR` é "prata", então a pill do mapa abria a mesma tela do
+  // A4 e o nó existia sem nunca se mostrar.
+  const bronze = (nivelGov ?? NIVEL_GOVBR) === "bronze";
   // 🆕 24/08 — depois de "Assinar no GOV.BR", entra o código único
   // (procuração + assinatura concentrados, ver `CodigoGovView`).
   const [fase, setFase] = useState<"assinar" | "codigo">("assinar");

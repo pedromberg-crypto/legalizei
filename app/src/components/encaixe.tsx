@@ -345,7 +345,14 @@ export function OutrasOpcoes({
             </div>
           );
 
-          const estilo = `rounded-2xl border p-3 text-left transition-colors ${
+          /* 🔄 02/09 (achado do Pedro: "esse card parece mais arredondado") —
+             era `rounded-2xl` (16px, o raio de CARD de conteúdo) enquanto os
+             cartões de sugestão da C5 e todos os campos em volta usam
+             `rounded-md` (12px, o raio de FORMULÁRIO). Empilhados na mesma
+             tela, os 4px de diferença apareciam.
+             Vale `rounded-md`: C0 e C5 são majoritariamente formulário, e este
+             cartão era o único fora do compasso. */
+          const estilo = `rounded-md border p-3 text-left transition-colors ${
             on
               ? "border-action-primary bg-action-primary"
               : "border-border-hairline bg-surface-card hover:border-border-strong"
@@ -373,7 +380,7 @@ export function OutrasOpcoes({
                 onClick={() => onEscolher(a.cnae)}
                 aria-pressed={on}
                 aria-label={`Usar o CNAE ${a.cnae}, ${a.humano}`}
-                className="absolute inset-0 rounded-2xl"
+                className="absolute inset-0 rounded-md"
               />
               <div className="pointer-events-none relative">{miolo}</div>
             </div>

@@ -11,6 +11,7 @@ import { Campo, Texto, Select, OpcoesLinha } from "@/components/ui/form";
 // coisa que lia preço aqui era aquele card, e ele deixou de existir.
 import { FISCAL, brl } from "@/lib/fiscal";
 import { FORMAS_ATUACAO } from "@/lib/mei";
+import { linkWhatsApp } from "@/lib/contato";
 // 🆕 01/09 — mesma máscara do E6, pro CPF do sócio extra (C3).
 import { mascaraCpf, mascaraTelefone, mascaraData } from "@/components/wizard-dinheiro";
 import { OutrasOpcoes, SheetCnae, type OpcaoCnae } from "@/components/encaixe";
@@ -791,17 +792,12 @@ export function SociosView({
           );
 
   const [extras, setExtras] = useState<SocioExtra[]>(inicial);
-  /* 🆕 03/09 (pedido do Pedro) — com 2+ sócios extras os cards colapsam: um
-     por vez aberto, e "salvar" fecha e carimba. `socioSalvo` é só o RECIBO
-     visual — a validação de verdade continua sendo a do CTA da tela, que já
-     olha nome, CPF e soma das participações. */
   // Quantidade manda no plural do título e do subtítulo.
   const varios = extras.length > 1;
   const [socioAberto, setSocioAberto] = useState<string | null>(null);
   // Sheet "o que significa administrar" — conteúdo fixo, não depende de quem
   // está marcado (fala dos dois papéis, administrador e sócio comum).
   const [infoAdmin, setInfoAdmin] = useState(false);
-  const [socioSalvo, setSocioSalvo] = useState<string[]>([]);
 
   /**
    * 🆕 01/09 (reunião Rua Satélite 42) — QUEM ADMINISTRA.
@@ -855,18 +851,27 @@ export function SociosView({
   // se casado). Profissão não entra — preenchida internamente.
   // 🆕 01/09 — CPF (chave do sócio no QSA) e endereço (qualificação do contrato,
   // art. 997 CC) entraram na conta. Complemento fica opcional, como no E6.
-  const qualificacaoOk = extras.every(
-    (s) =>
-      s.cpf.replace(/\D/g, "").length === 11 &&
-      s.nascimento.trim() !== "" &&
-      s.nacionalidade.trim() !== "" &&
-      s.rg.trim() !== "" &&
-      s.orgao.trim() !== "" &&
-      s.civil !== "" &&
-      (s.civil !== "casado" || s.regime !== "") &&
-      s.cep.replace(/\D/g, "").length === 8 &&
-      s.numero.trim() !== "",
-  );
+  const qualificacaoDoSocioOk = (s: SocioExtra) =>
+    s.cpf.replace(/\D/g, "").length === 11 &&
+    s.nascimento.trim() !== "" &&
+    s.nacionalidade.trim() !== "" &&
+    s.rg.trim() !== "" &&
+    s.orgao.trim() !== "" &&
+    s.civil !== "" &&
+    (s.civil !== "casado" || s.regime !== "") &&
+    s.cep.replace(/\D/g, "").length === 8 &&
+    s.numero.trim() !== "";
+  const qualificacaoOk = extras.every(qualificacaoDoSocioOk);
+  /* 🐛 03/09 (pente-fino, pedido do Pedro) — o check verde do card colapsado
+     vinha de um `socioSalvo` marcado só pelo clique no botão "Salvar
+     informações". Fechar o card de qualquer outra forma (tocar no cabeçalho
+     de novo, abrir outro card) deixava o check MENTINDO — verde travado de
+     um clique antigo, mesmo com edição depois. Agora "salvo" é DERIVADO das
+     mesmas regras da validação real: reflete o dado atual, não o último
+     clique. Mesmo predicado reaproveitado pra sinalizar QUAL card falta
+     completar, com o card fechado (achado do pente-fino: o CTA travava sem
+     apontar onde faltava algo). */
+  const socioCompleto = (s: SocioExtra) => s.nome.trim().split(/\s+/).length >= 2 && qualificacaoDoSocioOk(s);
   /**
    * 🆕 01/09 — com sócio, a administração é obrigatória no caminho ABRIR: sem
    * ela o RPA não sabe qual qualificação mandar pro DBE. Com 2+ extras e a
@@ -877,6 +882,16 @@ export function SociosView({
   const administracaoOk =
     contexto !== "abrir" || !TEM_SOCIO || extras.length > 1 || administracao !== null;
   const completo = (!TEM_SOCIO || (nomesOk && somaOk && qualificacaoOk)) && administracaoOk;
+  /* 🐛 03/09 (pente-fino, pedido do Pedro) — o CTA travava (disabled) sem
+     nenhuma pista de ONDE faltava algo: nome e CPF têm erro inline, o resto
+     da qualificação (nascimento, RG, órgão, civil, regime, endereço) não.
+     Com os cards colapsados, a pessoa só descobria tentando "Continuar" e
+     nada acontecendo. Esta lista alimenta um aviso no rodapé apontando QUAL
+     sócio (por nome) ainda tem dado faltando. */
+  const sociosIncompletos = extras
+    .map((s, i) => ({ s, titulo: s.nome.trim() || `${i + 2}º sócio` }))
+    .filter(({ s }) => !socioCompleto(s))
+    .map(({ titulo }) => titulo);
 
   function atualizar(id: string, patch: Partial<SocioExtra>) {
     setExtras((atual) => atual.map((s) => (s.id === id ? { ...s, ...patch } : s)));
@@ -987,16 +1002,14 @@ export function SociosView({
                 </div>
 
                 {extras.map((s, i) => {
-                  /* 🆕 03/09 (pedido do Pedro) — COM 2+ SÓCIOS OS CARDS COLAPSAM.
-                     Com um sócio extra só, o card fica aberto: são os únicos
-                     campos da tela e esconder atrás de um toque seria fricção
-                     à toa. Com dois ou três, a pilha de ~12 campos vezes N
-                     vira um paredão — aí cada um vira uma linha que expande.
-                     Salvar fecha o card e marca com o selo verde (mesmo do E9),
-                     pra dar o recibo de "esse já está pronto". */
-                  const colapsavel = extras.length > 1;
-                  const aberto = !colapsavel || socioAberto === s.id;
-                  const salvo = socioSalvo.includes(s.id);
+                  /* 🔄 03/09 (pedido do Pedro, 8ª rodada) — TODOS OS CARDS
+                     COLAPSAM, mesmo com 1 sócio extra só. Consistência de
+                     layout vence a economia de 1 toque.
+                     🧹 03/09 (pente-fino) — `colapsavel` virava sempre `true`
+                     (não existe mais caso de card fixo aberto): variável e o
+                     ramo morto do `? :` saíram. */
+                  const aberto = socioAberto === s.id;
+                  const salvo = socioCompleto(s);
                   const titulo = s.nome.trim() || `${i + 2}º sócio`;
                   return (
                   <div
@@ -1005,42 +1018,44 @@ export function SociosView({
                       aberto ? "gap-3" : ""
                     }`}
                   >
-                    {colapsavel ? (
-                      <button
-                        type="button"
-                        onClick={() => setSocioAberto(aberto ? null : s.id)}
-                        aria-expanded={aberto}
-                        className="flex items-center gap-2 text-left"
-                      >
-                        <span className="min-w-0 flex-1 truncate text-caption font-semibold text-text-primary">
-                          {titulo}
+                    <button
+                      type="button"
+                      onClick={() => setSocioAberto(aberto ? null : s.id)}
+                      aria-expanded={aberto}
+                      className="flex items-center gap-2 text-left"
+                    >
+                      <span className="min-w-0 flex-1 truncate text-caption font-semibold text-text-primary">
+                        {titulo}
+                      </span>
+                      {/* 🔄 03/09 (pedido do Pedro, 5ª rodada) — pill e check
+                          LADO A LADO, mesmo padrão do card da Ana. Os
+                          dois só aparecem fechado: aberto, a resposta já
+                          está logo ali, no próprio campo.
+                          🐛 03/09 (pente-fino) — "salvo" (check verde) agora é
+                          DERIVADO de `socioCompleto`, não de um clique
+                          isolado: fechar o card de qualquer jeito (cabeçalho,
+                          trocar de card) sempre reflete o dado real. Faltando
+                          algo, mostra "Incompleto" em vez de check — pista de
+                          ONDE falta preencher sem precisar abrir card por card. */}
+                      {!aberto && admins.includes(s.id) && (
+                        <span className="shrink-0 rounded-full bg-state-success-tint px-2 py-0.5 text-micro font-semibold text-state-success-text">
+                          Administra
                         </span>
-                        {/* 🔄 03/09 (pedido do Pedro, 5ª rodada) — pill e check
-                            LADO A LADO, mesmo padrão do card da Ana: nada de
-                            badge solto no canto brigando com o chevron. Os
-                            dois só aparecem fechado: aberto, a resposta já
-                            está logo ali, no próprio campo. Check sempre
-                            VERDE (recibo de "já salvo"), igual em todo lugar. */}
-                        {!aberto && admins.includes(s.id) && (
-                          <span className="shrink-0 rounded-full bg-state-success-tint px-2 py-0.5 text-micro font-semibold text-state-success-text">
-                            Administra
-                          </span>
-                        )}
-                        {!aberto && salvo && (
+                      )}
+                      {!aberto &&
+                        (salvo ? (
                           <span
                             aria-hidden
                             className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-state-success-tint text-state-success-text"
                           >
                             <CheckMiniDossie />
                           </span>
-                        )}
-                        <ChevronSocio aberto={aberto} />
-                      </button>
-                    ) : (
-                      <span className="text-caption font-semibold text-text-primary">
-                        {titulo}
-                      </span>
-                    )}
+                        ) : (
+                          <span className="shrink-0 rounded-full bg-state-warning-tint px-2 py-0.5 text-micro font-semibold text-state-warning-text">
+                            Incompleto
+                          </span>
+                        ))}
+                    </button>
 
                     {aberto && (
                       <>
@@ -1049,7 +1064,7 @@ export function SociosView({
                       <Texto
                         valor={s.nome}
                         onChange={(v) => atualizar(s.id, { nome: v })}
-                        placeholder="Como está no documento dele"
+                        placeholder="Como está no documento do sócio"
                         erro={
                           s.nome.length > 0 && s.nome.trim().split(/\s+/).length < 2
                             ? "Escreva o nome completo."
@@ -1061,7 +1076,7 @@ export function SociosView({
                     {/* 🆕 01/09 — CPF é o que identifica o sócio no QSA do DBE
                         e no Integrador. Vem logo depois do nome porque são o
                         par que forma a identidade da pessoa. */}
-                    <Campo rotulo="CPF dele">
+                    <Campo rotulo="CPF do sócio">
                       <Texto
                         valor={s.cpf}
                         onChange={(v) => atualizar(s.id, { cpf: mascaraCpf(v) })}
@@ -1147,7 +1162,7 @@ export function SociosView({
                         contrato social (art. 997 CC) e tem ficha própria no
                         DBE. Mesmo autofill por CEP do C4/E6; complemento
                         opcional, igual ao resto do app. */}
-                    <Campo rotulo="CEP dele" dica="A gente puxa o resto do endereço.">
+                    <Campo rotulo="CEP do sócio" dica="A gente puxa o resto do endereço.">
                       <Texto
                         valor={s.cep}
                         onChange={(v) => atualizar(s.id, { cep: mascaraCep(v) })}
@@ -1195,9 +1210,6 @@ export function SociosView({
                       </>
                     )}
 
-                    {/* Fecha o card e marca o selo verde. Só existe quando há
-                        2+ sócios: com um só, o card nunca colapsa e o botão
-                        seria um passo a mais sem função. */}
                     {/* 🆕 03/09 (pedido do Pedro) — ADMINISTRAÇÃO VIRA CAMPO DO
                         SÓCIO. Ela é uma característica DELE, igual ao CPF, e
                         estava numa lista de checks longe daqui. Como última
@@ -1224,20 +1236,17 @@ export function SociosView({
                       />
                     </Campo>
 
-                    {colapsavel && (
-                      <Button
-                        full
-                        variant="secondary"
-                        onClick={() => {
-                          setSocioSalvo((atual) =>
-                            atual.includes(s.id) ? atual : [...atual, s.id],
-                          );
-                          setSocioAberto(null);
-                        }}
-                      >
-                        Salvar informações
-                      </Button>
-                    )}
+                    {/* 🐛 03/09 (pente-fino) — o botão só FECHAVA o card
+                        (`setSocioAberto(null)`); check nunca dependia dele.
+                        Continua fechando; o check/"Incompleto" já reflete o
+                        dado real assim que fecha, salvo ou não. */}
+                    <Button
+                      full
+                      variant="secondary"
+                      onClick={() => setSocioAberto(null)}
+                    >
+                      Salvar informações
+                    </Button>
                       </>
                     )}
                   </div>
@@ -1267,7 +1276,12 @@ export function SociosView({
                         step={1}
                         min={1}
                         max={99}
-                        value={parte1 || ""}
+                        /* 🐛 03/09 (pente-fino) — `parte1` é 100 - soma dos
+                           extras SEM clamp: se os extras somarem mais de 100
+                           (dá pra fazer, cada um vai até 99), esse campo
+                           mostrava número NEGATIVO. Clamp só de exibição — a
+                           matemática de redistribuição continua a mesma. */
+                        value={(parte1 > 0 ? parte1 : 0) || ""}
                         onChange={(e) => {
                           const raw = e.target.value;
                           if (raw === "") return;
@@ -1277,8 +1291,10 @@ export function SociosView({
                           onChangeParte1(Math.round(preso));
                         }}
                         aria-label="Sua participação, em porcentagem"
-                        className="w-16 min-h-10 rounded-md border border-border-hairline bg-surface-card px-2
-                                   text-body text-text-primary focus:border-border-focus focus:outline-none"
+                        className={`w-16 min-h-10 rounded-md border bg-surface-card px-2
+                                   text-body text-text-primary focus:border-border-focus focus:outline-none ${
+                                     somaOk ? "border-border-hairline" : "border-state-warning-text"
+                                   }`}
                       />
                       <span className="text-caption font-semibold text-text-secondary">%</span>
                     </div>
@@ -1321,10 +1337,21 @@ export function SociosView({
                 {/* 🆕 03/09 (pedido do Pedro) — TOTAL fixo como referência: a
                     sua % é DERIVADA (100 - soma dos extras), então a soma
                     sempre fecha 100% por construção — mostrar isso deixa
-                    explícito o porquê de mexer num campo mudar o outro. */}
+                    explícito o porquê de mexer num campo mudar o outro.
+                    🐛 03/09 (pente-fino) — mas era SEMPRE verde, mesmo com o
+                    aviso de erro logo abaixo dizendo que a divisão tá errada
+                    (extras=0% ou titular caindo a 0/negativo): mostrava
+                    sucesso e alerta ao mesmo tempo, na mesma tela. A cor
+                    agora segue `somaOk` — o número continua 100% (é
+                    identidade matemática), mas só fica verde quando a
+                    divisão É válida de verdade. */}
                 <div className="mt-1 flex items-center justify-between gap-3 border-t border-border-hairline pt-2">
                   <span className="text-caption font-semibold text-text-primary">Total</span>
-                  <span className="text-caption font-semibold text-state-success-text">
+                  <span
+                    className={`text-caption font-semibold ${
+                      somaOk ? "text-state-success-text" : "text-state-warning-text"
+                    }`}
+                  >
                     {parte1 + somaExtras}%
                   </span>
                 </div>
@@ -1419,6 +1446,15 @@ export function SociosView({
         {infoAdmin && <SheetAdministracao onFechar={() => setInfoAdmin(false)} />}
 
         <Rodape>
+          {/* 🆕 03/09 (pente-fino) — só aparece quando o motivo do CTA
+              travado é dado faltando num sócio específico (não cobre soma
+              inválida — essa já tem aviso próprio na mesa da divisão, logo
+              acima, pra não duplicar mensagem). */}
+          {TEM_SOCIO && sociosIncompletos.length > 0 && (
+            <p className="text-micro text-state-warning-text mb-2 text-center">
+              Falta preencher os dados de {listar(sociosIncompletos)}.
+            </p>
+          )}
           <Button full disabled={!completo} onClick={onSeguir}>
             {ctaLabel ?? "Continuar"}
           </Button>
@@ -1696,7 +1732,12 @@ export function EmpresaView({
             R$10.000 no backend). Trocado pelo que a tela de fato faz: é o
             endereço que a Prefeitura analisa pra deferir ou indeferir. */}
         <Titulo sub="O endereço vai no CNPJ, e é ele que a Prefeitura analisa pra liberar a empresa.">
-          Os dados da empresa
+          {/* 🔄 03/09 (pedido do Pedro) — "Endereço da empresa" só no ME: é
+              tudo que esta tela pergunta ali. Guardado por regime porque o
+              MEI ainda tem a pergunta extra "Como você atende?" (forma de
+              atuação), que não é endereço — mudar o título pros dois vazaria
+              essa diferença. */}
+          {mei ? "Os dados da empresa" : "Endereço da empresa"}
         </Titulo>
 
         <Corpo>
@@ -1713,32 +1754,44 @@ export function EmpresaView({
 
               O que veio do gate (CEP, número, complemento) aparece TRAVADO: é
               confirmação, não recoleta. O que falta continua editável. */}
-          {enderecoVeioDoGate && (
+          {/* 🔄 03/09 (pedido do Pedro) — DOIS CARDS CINZAS viraram UM. Endereço
+              (este bloco) e "Sobre o imóvel" (mais abaixo) são as duas
+              confirmações travadas desta tela — nada aqui é editável, então
+              não precisavam de dois cartões separados. O IPTU continua fora:
+              é o único campo que ainda se preenche aqui. */}
+          {(enderecoVeioDoGate || (!mei && usarProprio === true && respostaImovelVeioDoGate)) && (
             <div className="rounded-md border border-border-hairline bg-surface-alt p-3">
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="text-micro text-text-tertiary">
-                    Endereço da empresa, informado no começo
-                  </p>
-                  {endereco && (
-                    <p className="text-caption font-semibold text-text-primary mt-0.5">
-                      {endereco.logradouro}, {numero}
-                      {complemento ? ` · ${complemento}` : ""}
+              {enderecoVeioDoGate && (
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-micro text-text-tertiary">
+                      Endereço da empresa, informado no começo
                     </p>
-                  )}
-                  <p className="text-caption text-text-secondary">
-                    {endereco ? `${endereco.bairro}, ` : ""}
-                    {cep}
+                    {endereco && (
+                      <p className="text-caption font-semibold text-text-primary mt-0.5">
+                        {endereco.logradouro}, {numero}
+                        {complemento ? ` · ${complemento}` : ""}
+                      </p>
+                    )}
+                    <p className="text-caption text-text-secondary">
+                      {endereco ? `${endereco.bairro}, ` : ""}
+                      {cep}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {!mei && usarProprio === true && respostaImovelVeioDoGate && (
+                <div className={enderecoVeioDoGate ? "mt-3 border-t border-border-hairline pt-3" : ""}>
+                  <p className="text-caption font-semibold text-text-primary">
+                    Sobre o imóvel, você já respondeu
+                  </p>
+                  <p className="text-caption text-text-secondary mt-0.5">
+                    {TIPO_IMOVEL.find((t) => t.v === tipoImovel)?.label} ·{" "}
+                    {resideEfetivo ? "você mora nele" : "você não mora nele"}
                   </p>
                 </div>
-                {/* Um cadeado explícito vale mais que campo cinza: cinza a
-                    pessoa tenta clicar, cadeado ela entende de primeira. */}
-                <span className="shrink-0 text-micro font-semibold text-text-tertiary">
-                  {/* 🗑️ 02/09 — era "🔒 travado": emoji MAIS a palavra, dizendo
-                      duas vezes o que o próprio bloco cinza já mostra. */}
-                  travado
-                </span>
-              </div>
+              )}
             </div>
           )}
           {usarProprio === true && (
@@ -1802,7 +1855,7 @@ export function EmpresaView({
               {!mei && (
               <Campo
                 rotulo="Índice cadastral do IPTU"
-                dica="Está no carnê do IPTU. Sem ele a documentação não passa na Junta."
+                dica="Está no carnê do IPTU e é obrigatório pra Junta."
               >
                 <Texto
                   valor={iptu}
@@ -1821,33 +1874,7 @@ export function EmpresaView({
                   coworking" aqui, depois do pagamento, era pedir a mesma coisa
                   com outras palavras — e ainda deixava a pessoa mudar um dado
                   que já foi pra viabilidade. O valor aparece TRAVADO no card
-                  acima, junto do endereço. */}
-
-              {/* 🆕 31/08 (achado da gravação real JUCEMG) — só existe quando o
-                  endereço é PRÓPRIO: coworking/virtual não têm essa ambiguidade
-                  residencial. MEI segue de fora — mesma guarda de sempre.
-                  🔄 01/09 — quando a resposta JÁ VEIO do E3.4 (o normal no flow
-                  real), vira confirmação read-only: a regra do apartamento
-                  agora é decidida antes do pagamento, e reperguntar aqui seria
-                  o mesmo eco que o C1 já deixou de fazer com nome/CPF. O campo
-                  editável sobrevive pro deep-link/mockup, onde não há resposta
-                  anterior nenhuma. */}
-              {/* A confirmação read-only não depende do "Como é esse endereço?"
-                  (próprio × coworking), que é pergunta DESTA tela: se a
-                  resposta sobre o imóvel já veio do gate, ela vale desde o
-                  primeiro render — senão a pessoa veria um vazio até escolher
-                  algo que ela já respondeu de outro jeito lá atrás. */}
-              {!mei && usarProprio === true && respostaImovelVeioDoGate && (
-                <div className="rounded-md border border-border-hairline bg-surface-alt p-3">
-                  <p className="text-caption font-semibold text-text-primary">
-                    Sobre o imóvel, você já respondeu
-                  </p>
-                  <p className="text-caption text-text-secondary mt-0.5">
-                    {TIPO_IMOVEL.find((t) => t.v === tipoImovel)?.label} ·{" "}
-                    {resideEfetivo ? "você mora nele" : "você não mora nele"}
-                  </p>
-                </div>
-              )}
+                  do endereço, lá em cima (03/09: fundido no mesmo cartão). */}
 
               {/* Fallback editável: deep-link, `/mockup` e apresentação, onde
                   não existe resposta anterior. Segue preso ao endereço PRÓPRIO
@@ -1959,6 +1986,20 @@ export function EmpresaView({
         </Corpo>
 
         <Rodape>
+          {/* 🆕 03/09 (pedido do Pedro) — escape hatch pra quem trava aqui
+              (endereço/IPTU são os campos que mais geram dúvida da tela),
+              mesmo padrão do E3.2 (`gate-telas.tsx`): abre o WhatsApp com a
+              dúvida já contextualizada, número único em `lib/contato.ts`. */}
+          <a
+            href={linkWhatsApp(
+              "Oi! Estou no cadastro da empresa no app da Legalizai e tô com dúvida nos dados do endereço/IPTU. Podem me ajudar?",
+            )}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mb-3 block text-center w-full text-caption font-medium text-text-secondary underline underline-offset-4"
+          >
+            Está com dúvida? Chama no WhatsApp
+          </a>
           <Button full disabled={!completo} onClick={onSeguir}>
             {ctaLabel ?? "Continuar"}
           </Button>
@@ -3171,26 +3212,6 @@ function MaisMarcador() {
     >
       <path d="M12 5v14" />
       <path d="M5 12h14" />
-    </svg>
-  );
-}
-
-/** Chevron do card de sócio: gira quando abre. */
-function ChevronSocio({ aberto }: { aberto: boolean }) {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-      className={`shrink-0 text-text-tertiary transition-transform ${aberto ? "rotate-180" : ""}`}
-    >
-      <path d="m6 9 6 6 6-6" />
     </svg>
   );
 }

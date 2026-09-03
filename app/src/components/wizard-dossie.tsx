@@ -1797,6 +1797,35 @@ const SUGESTOES: Sugestao[] = [
     humano: "Software pronto (de prateleira)",
     prova: "Se além do site você licencia algum produto seu.",
   },
+  /* 🆕 02/09 (pedido do Pedro: "4 é pouco, traz umas 8") — os 4 novos são
+     todos da mesma família da principal (divisões 62 e 63 da CONCLA, serviços
+     de TI), que é a condição pra estar nesta lista curada: mesmo imposto,
+     sem disparar o aviso de enquadramento. Códigos reais; a classificação
+     fiscal segue a régua do arquivo (mock, não ratificado por contador). */
+  {
+    id: "s5",
+    cnae: "6201-5/01",
+    humano: "Programas de computador sob encomenda",
+    prova: "Irmão direto do web design: o mesmo 6201, outra subclasse.",
+  },
+  {
+    id: "s6",
+    cnae: "6209-1/00",
+    humano: "Suporte técnico e manutenção em TI",
+    prova: "Quem entrega o site quase sempre dá o suporte depois.",
+  },
+  {
+    id: "s7",
+    cnae: "6311-9/00",
+    humano: "Hospedagem na internet",
+    prova: "Se você revende ou administra a hospedagem do cliente.",
+  },
+  {
+    id: "s8",
+    cnae: "6319-4/00",
+    humano: "Portais e provedores de conteúdo",
+    prova: "Pra quem mantém portal ou publica conteúdo próprio.",
+  },
 ];
 
 /**

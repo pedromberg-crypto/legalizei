@@ -945,17 +945,26 @@ export function SociosView({
                   mudar a sua % redistribui os sócios extras proporcionalmente
                   (e mudar a de um extra já recalculava a sua, como sempre) —
                   o vínculo passou a valer nos dois sentidos. */}
-              <div className="flex flex-col gap-3 rounded-md border border-border-hairline bg-surface-alt p-3">
+              {/* 🔄 03/09 (pedido do Pedro) — CARD DO TITULAR COMPACTADO.
+                  Eram 4 blocos empilhados ("1º sócio" + pill, o nome, o rótulo
+                  "Sua participação" e um input de largura inteira) pra carregar
+                  DOIS dados: quem é e quanto tem. Virou 2 linhas — nome com a
+                  pill "Você", e a participação com o rótulo ao lado do campo.
+                  O "1º sócio" saiu: a pill já diz de quem é o card, e o
+                  ordinal só fazia sentido quando ele imitava os cards de baixo. */}
+              <div className="flex flex-col gap-2 rounded-md border border-border-hairline bg-surface-alt p-3">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-caption font-semibold text-text-primary">1º sócio</span>
-                  <span className="rounded-full bg-surface-card px-2 py-0.5 text-micro font-semibold text-text-tertiary">
+                  <span className="min-w-0 truncate text-body font-semibold text-text-primary">
+                    {CLIENTE.nome}
+                  </span>
+                  <span className="shrink-0 rounded-full bg-surface-card px-2 py-0.5 text-micro font-semibold text-text-tertiary">
                     Você
                   </span>
                 </div>
-                <span className="text-body text-text-primary">{CLIENTE.nome}</span>
 
-                <Campo rotulo="Sua participação">
-                  <div className="flex items-center gap-2">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-caption text-text-secondary">Sua participação</span>
+                  <div className="flex shrink-0 items-center gap-2">
                     <input
                       type="number"
                       inputMode="decimal"
@@ -972,12 +981,12 @@ export function SociosView({
                         onChangeParte1(Math.round(preso * 2) / 2);
                       }}
                       aria-label="Sua participação, em porcentagem"
-                      className="w-full min-h-12 rounded-md border border-border-hairline bg-surface-card px-3
+                      className="w-20 min-h-10 rounded-md border border-border-hairline bg-surface-card px-3
                                  text-body text-text-primary focus:border-border-focus focus:outline-none"
                     />
-                    <span className="shrink-0 text-body font-semibold text-text-secondary">%</span>
+                    <span className="text-body font-semibold text-text-secondary">%</span>
                   </div>
-                </Campo>
+                </div>
               </div>
 
               <div className="flex flex-col gap-3">

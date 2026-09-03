@@ -31,7 +31,7 @@ export default function SaidaRegimeNaoSuportadoPage() {
 
   return (
     <>
-      <TelaHeader meta="Sobre o seu regime" />
+      <TelaHeader meta="Sobre o seu regime" semVoltar />
       <main className="app-main">
         <SaidaView
           d={{

@@ -75,7 +75,7 @@ export default function ContaV2RobustoPage() {
   if (etapa === "codigo") {
     return (
       <>
-        <TelaHeader meta="Confirme seu acesso" />
+        <TelaHeader meta="Confirme seu acesso" semVoltar />
         <main className="app-main">
           <Titulo sub={`Mandamos um código de 6 dígitos pro ${email || "seu e-mail"} e por SMS.`}>
             Digite o código
@@ -105,7 +105,7 @@ export default function ContaV2RobustoPage() {
 
   return (
     <>
-      <TelaHeader meta="Sua conta" />
+      <TelaHeader meta="Sua conta" semVoltar />
       <main className="app-main">
         <Titulo sub="Assim seu progresso fica salvo, e a gente já adianta o que precisa pra Junta.">
           Vamos criar seu acesso

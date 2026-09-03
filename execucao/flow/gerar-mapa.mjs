@@ -124,6 +124,26 @@ function renderTabela(driftMsgs) {
 
 /* ─── 3. DRIFT: nós com rota × page.tsx reais ───────────────────────────── */
 
+/**
+ * 🆕 02/09 — rota → caminho do `page.tsx`. O `rotasReais` só devolve os nomes
+ * das rotas; quem precisa LER o arquivo (a auditoria de voltar) precisava
+ * remontar o caminho na mão, e errava: rota dentro de route group
+ * (`(app)`, `(wizard)`) não tem o grupo no caminho da URL, mas TEM no
+ * caminho do disco. O resultado era um falso "está tudo certo".
+ */
+function arquivosPorRota(dir, segs = [], acc = new Map()) {
+  if (!fs.existsSync(dir)) return acc;
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (e.isDirectory()) {
+      const grupo = e.name.startsWith("(") && e.name.endsWith(")");
+      arquivosPorRota(path.join(dir, e.name), grupo ? segs : [...segs, e.name], acc);
+    } else if (e.name === "page.tsx") {
+      acc.set("/" + segs.join("/"), path.join(dir, e.name));
+    }
+  }
+  return acc;
+}
+
 function rotasReais(dir, segs = [], acc = new Set()) {
   if (!fs.existsSync(dir)) return acc;
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -669,9 +689,49 @@ function auditarEspelho() {
   return msgs;
 }
 
+/* ─── 3g. AUDITORIA: tela do flow sem seta de voltar ──────────────────────
+ *
+ * 🐛→🔒 02/09 — o `TelaHeader` renderiza só o texto quando ninguém passa
+ * `onVoltar`: tela nova nascia sem seta EM SILÊNCIO. Aconteceu 3 vezes (gate
+ * 29/08, C0 e C5 em 02/09) e sempre foi o Pedro quem pegou, testando no
+ * aparelho. O componente agora avisa em dev; aqui o mapa cobre o outro lado,
+ * porque o aviso do componente só aparece pra quem ABRE a tela.
+ *
+ * Só olha nó do FLOW: laboratório e variantes (`plano-v2`, `conta-v2`…) não
+ * são passo de ninguém. Quem tem ausência intencional declara `semVoltar` —
+ * é o que faz o aviso significar algo em vez de virar ruído.
+ */
+function auditarVoltar() {
+  const arquivos = arquivosPorRota(APP);
+  const semSeta = [];
+  /* Nem toda tela do flow tem voltar, e forçar seta onde não cabe seria pior
+     que não ter: SPLASH é transitório (auto-avança), ESPERA é status (não é
+     passo), SAÍDA e FELIZ são fim de linha. O aviso só vale pra tela em que a
+     pessoa preenche algo e pode querer rever a anterior. */
+  const semVoltarPorNatureza = (n) =>
+    base(n.rota).startsWith("/splash") ||
+    ["espera", "saida", "feliz"].includes(n.classe);
+
+  for (const n of NODES.filter((x) => x.rota && x.classe !== "todo")) {
+    if (semVoltarPorNatureza(n)) continue;
+    const arq = arquivos.get(base(n.rota));
+    if (!arq) continue; // rota inexistente já é acusada pelo drift-check
+    // Comentários fora: quase toda página cita "onVoltar" ao explicar o que
+    // faz, e isso mascararia a ausência real da prop.
+    const src = fs
+      .readFileSync(arq, "utf8")
+      .replace(/\/\*[\s\S]*?\*\//g, "")
+      .replace(/^\s*\/\/.*$/gm, "");
+    if (!/onVoltar|voltar=|semVoltar/.test(src)) semSeta.push(`${n.id} (${n.rota})`);
+  }
+  return semSeta.length
+    ? [`tela do flow sem voltar nem \`semVoltar\`: ${semSeta.join(", ")}`]
+    : [];
+}
+
 /* ─── MAIN ──────────────────────────────────────────────────────────────── */
 
-const espelho = auditarEspelho();
+const espelho = [...auditarEspelho(), ...auditarVoltar()];
 if (espelho.length) console.log("⚠️  espelho: " + espelho.join(" · "));
 else console.log("✓ espelho mapa × apresentação: sem divergência");
 

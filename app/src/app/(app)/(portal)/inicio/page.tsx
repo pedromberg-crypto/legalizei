@@ -90,7 +90,7 @@ export default function InicioPage() {
 
   return (
     <>
-      <TelaHeader meta="Início" />
+      <TelaHeader meta="Início" semVoltar />
 
       <main className="app-main">
         <Titulo>Bom te ver, {EMPRESA.primeiroNome}</Titulo>

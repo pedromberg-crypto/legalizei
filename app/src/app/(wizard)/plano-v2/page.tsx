@@ -24,7 +24,7 @@ export default function PlanoV2Page() {
 
   return (
     <>
-      <TelaHeader meta="A conta da abertura" />
+      <TelaHeader meta="A conta da abertura" semVoltar />
       <main className="app-main">
         <Titulo sub="Tudo que você vai pagar, num lugar só. Sem letra miúda depois.">
           Quanto custa abrir

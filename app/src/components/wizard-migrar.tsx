@@ -1267,7 +1267,7 @@ export function MigrarAtivaView({
 
   return (
     <>
-      <TelaHeader meta="Pronto" />
+      <TelaHeader meta="Pronto" semVoltar />
       <main className="app-main">
         <Titulo
           sub={

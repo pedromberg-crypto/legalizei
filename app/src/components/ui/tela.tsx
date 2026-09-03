@@ -32,6 +32,7 @@ export function TelaHeader({
   meta,
   voltar,
   onVoltar,
+  semVoltar = false,
 }: {
   meta: string;
   voltar?: string;
@@ -41,7 +42,24 @@ export function TelaHeader({
    * Mesma afordância visual do `voltar`.
    */
   onVoltar?: () => void;
+  /**
+   * 🆕 02/09 — declara que esta tela NÃO tem voltar de propósito (saída
+   * terminal, primeira tela do flow, laboratório). Existe pra que o aviso
+   * abaixo signifique alguma coisa: sem um jeito de dizer "é intencional",
+   * todo alerta viraria ruído e ninguém olharia.
+   */
+  semVoltar?: boolean;
 }) {
+  /* 🐛→🔒 02/09 — TELA NOVA NASCIA SEM SETA, EM SILÊNCIO.
+     Sem `onVoltar` este componente renderizava só o texto, sem erro nem
+     aviso: o furo apareceu 3 vezes (gate 29/08, C0 e C5 em 02/09) e sempre
+     foi o Pedro quem pegou, testando no aparelho. Agora ele fala. */
+  if (process.env.NODE_ENV !== "production" && !onVoltar && !voltar && !semVoltar) {
+    console.warn(
+      `[TelaHeader] "${meta}" não tem voltar. Se for de propósito, passe semVoltar.`,
+    );
+  }
+
   if (onVoltar) {
     return (
       <header className="pt-6 pb-4 flex items-center gap-1.5">

@@ -63,12 +63,12 @@ export default function CnaeSecundariosPage() {
 
   return (
     <CnaeSecundariosView
+      onVoltar={() => router.push(comRegime("/dossie/atividade", mei))}
       /* 🐛 02/09 — a tela não tinha seta de voltar: o `TelaHeader` renderiza
          só o texto quando ninguém passa `onVoltar`, e quem entrava aqui só
          saía seguindo. Terceira vez da mesma família (gate 29/08, C0 hoje).
          Daqui volta pra C0, levando as flags. No modo ajuste a navegação fica
          presa ao bloco, então o voltar respeita o mesmo destino do CTA. */
-      onVoltar={() => router.push(comRegime("/dossie/atividade", mei))}
       /* 🆕 02/09 (pedido do Pedro) — FECHO DE BLOCO. Sair daqui passa por
          um splash curto que fecha o assunto ATIVIDADE (principal +
          secundárias) antes dos dados pessoais. No modo ajuste não: quem veio

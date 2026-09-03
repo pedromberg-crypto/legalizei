@@ -10,7 +10,7 @@ import { SuasGuias } from "@/components/lab/impostos-blocks";
 export default function ImpostosV2() {
   return (
     <>
-      <TelaHeader meta="Impostos" />
+      <TelaHeader meta="Impostos" semVoltar />
       <main className="app-main">
         <Titulo>Seus impostos</Titulo>
         <Corpo>

@@ -21,7 +21,7 @@ import { DADOS_SAIDA_MEI_OUTRA_EMPRESA as D } from "@/lib/dados-saida";
 export default function SaidaMeiOutraEmpresaPage() {
   return (
     <>
-      <TelaHeader meta="Sobre o seu caso" />
+      <TelaHeader meta="Sobre o seu caso" semVoltar />
       <main className="app-main">
         <SaidaView d={D} />
       </main>

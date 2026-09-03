@@ -19,7 +19,7 @@ import { DADOS_SAIDA_MEI_SERVIDOR as D } from "@/lib/dados-saida";
 export default function SaidaMeiServidorPage() {
   return (
     <>
-      <TelaHeader meta="Sobre o seu caso" />
+      <TelaHeader meta="Sobre o seu caso" semVoltar />
       <main className="app-main">
         <SaidaView d={D} />
       </main>

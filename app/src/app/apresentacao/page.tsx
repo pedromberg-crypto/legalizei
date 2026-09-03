@@ -2976,7 +2976,7 @@ export default function ApresentacaoPage() {
                         {etapa === "login" && <LoginView />}
                         {etapa === "saida-regime" && (
                           <>
-                            <TelaHeader meta="Sobre o seu regime" />
+                            <TelaHeader meta="Sobre o seu regime" semVoltar />
                             <main className="app-main">
                               <SaidaView d={DADOS_SAIDA_REGIME} />
                             </main>
@@ -3335,7 +3335,7 @@ export default function ApresentacaoPage() {
                       </>
                     ) : naSaidaCidade ? (
                       <>
-                        <TelaHeader meta="Sobre a sua cidade" />
+                        <TelaHeader meta="Sobre a sua cidade" semVoltar />
                         <main className="app-main">
                           <SaidaView
                             // Composto por spread (não por chamada de função):
@@ -3366,7 +3366,7 @@ export default function ApresentacaoPage() {
                       </>
                     ) : naSaidaTriagem ? (
                       <>
-                        <TelaHeader meta="Sobre o seu caso" />
+                        <TelaHeader meta="Sobre o seu caso" semVoltar />
                         <main className="app-main">
                           <SaidaView
                             d={
@@ -3383,7 +3383,7 @@ export default function ApresentacaoPage() {
                       // 🆕 26/08 — saída do M1 (`onSaidaInapto`), mesmo padrão
                       // das outras saídas: shell próprio, sem header genérico.
                       <>
-                        <TelaHeader meta="Sobre a situação do CNPJ" />
+                        <TelaHeader meta="Sobre a situação do CNPJ" semVoltar />
                         <main className="app-main">
                           <SaidaView
                             d={DADOS_SAIDA_CNPJ_INAPTO}
@@ -3404,7 +3404,7 @@ export default function ApresentacaoPage() {
                       // encaminham (baixar a antiga / abrir como ME / conferir
                       // o estatuto) em vez de virarem lista de espera.
                       <>
-                        <TelaHeader meta="Sobre o seu caso" />
+                        <TelaHeader meta="Sobre o seu caso" semVoltar />
                         <main className="app-main">
                           <SaidaView
                             d={

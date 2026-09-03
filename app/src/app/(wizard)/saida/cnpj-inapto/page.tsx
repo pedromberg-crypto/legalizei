@@ -48,7 +48,7 @@ export default function SaidaCnpjInaptoPage() {
 
   return (
     <>
-      <TelaHeader meta="Sobre a situação do CNPJ" />
+      <TelaHeader meta="Sobre a situação do CNPJ" semVoltar />
       <main className="app-main">
         <SaidaView
           d={{

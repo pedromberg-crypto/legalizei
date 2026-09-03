@@ -58,7 +58,7 @@ export default function PlanoPremiumPage() {
 
   return (
     <>
-      <TelaHeader meta="A conta da abertura" />
+      <TelaHeader meta="A conta da abertura" semVoltar />
       <main className="app-main">
         <div className="shrink-0">
           {/* Eyebrow — o "Good Morning!" da referência vira a garantia da

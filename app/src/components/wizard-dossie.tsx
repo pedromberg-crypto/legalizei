@@ -2095,9 +2095,17 @@ export function CnaeSecundariosView({
           )}
 
           <div>
-            <p className="text-micro text-text-tertiary mb-1.5">
-              Sugestões pra você
-            </p>
+            {/* 🆕 02/09 (pedido do Pedro) — a contagem no canto direito, na
+                mesma fonte do rótulo e em coral. Ela conta o que está NA
+                LISTA, não o total curado: quem já foi escolhido sai daqui e
+                sobe pro resumo, então o número acompanha o que sobrou pra
+                escolher. */}
+            <div className="mb-1.5 flex items-baseline justify-between gap-3">
+              <p className="text-micro text-text-tertiary">Sugestões pra você</p>
+              <p className="shrink-0 text-micro font-semibold text-action-primary-sm">
+                {sugestoesDisponiveis.length}
+              </p>
+            </div>
             {/* 🗑️ 02/09 — a garantia "não muda o imposto" saiu daqui: cada
                 cartão já a carrega na etiqueta, e lá ela é acionável (é o que
                 distingue um cartão do outro). Aqui era só mais uma promessa

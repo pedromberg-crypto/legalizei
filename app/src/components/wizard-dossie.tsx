@@ -1915,9 +1915,17 @@ export function CnaeSecundariosView({
       <TelaHeader meta="Atividades da empresa" onVoltar={onVoltar} />
 
       <main className="app-main">
-        <Titulo sub="Se fizer, marque aqui. Não precisa ser do mesmo ramo.">
-          Sua empresa faz mais alguma coisa?
-        </Titulo>
+        {/* 🗑️ 02/09 (pedido do Pedro) — SEM SUBTÍTULO, pra padronizar com a
+            C0. Ele carregava 2 coisas: "se fizer, marque aqui" (que o título
+            já pergunta e os cartões já mostram) e "não precisa ser do mesmo
+            ramo" — esta NOVA, e vinda da reunião de 19/08 justamente porque as
+            pessoas presumem o contrário.
+            ⚠️ Só apagar perderia a segunda, e aqui o silêncio não é neutro: as
+            4 sugestões curadas são todas do mesmo ramo da principal, então a
+            tela CONFIRMA a expectativa errada. A ressalva foi pro rótulo da
+            busca, que é onde ela vira ação — é lá, e só lá, que dá pra
+            escolher fora do ramo. */}
+        <Titulo>Sua empresa faz mais alguma coisa?</Titulo>
 
         <Corpo>
           {/* 🔄 02/09 (pedido do Pedro) — A PRINCIPAL É O MESMO CARTÃO DA C0.
@@ -1984,7 +1992,7 @@ export function CnaeSecundariosView({
           {/* 🆕 24/08 — busca restrita ao que a gente atende (mesma lista da
               entrevista principal), pedido original da Jéssica (reunião 19/07)
               e reforçado pelo Leonan. */}
-          <Campo rotulo="Buscar outra atividade">
+          <Campo rotulo="Buscar outra atividade, de qualquer ramo">
             <Texto
               valor={busca}
               onChange={setBusca}

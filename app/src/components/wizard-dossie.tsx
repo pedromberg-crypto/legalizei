@@ -2852,36 +2852,37 @@ function SheetSecundarias({
                   key={s.id}
                   type="button"
                   onClick={() => setRascunho({ ...rascunho, [s.id]: !on })}
+                  /* 🔄 02/09 (pedido do Pedro) — MESMO LAYOUT DA LISTA: o
+                     cartão não pinta, quem marca é o check coral. O sheet
+                     usava coral cheio e ficava sendo outro vocabulário pro
+                     mesmo estado, na mesma tela. */
                   className={`flex items-center justify-between gap-3 rounded-md border p-3 text-left transition-colors ${
-                    on
-                      ? "border-action-primary bg-action-primary"
-                      : "border-border-hairline bg-surface-card"
+                    on ? "border-action-primary bg-surface-card" : "border-border-hairline bg-surface-card"
                   }`}
                 >
                   <span className="min-w-0">
+                    {/* Riscado em vez de sumir: sumindo, a pessoa perderia a
+                        chance de voltar atrás antes de atualizar. */}
                     <span
                       className={`block text-body font-semibold ${
-                        on ? "text-text-on-brand" : "text-text-tertiary line-through"
+                        on ? "text-text-primary" : "text-text-tertiary line-through"
                       }`}
                     >
                       {s.humano}
                     </span>
-                    <span
-                      className={`block text-caption ${
-                        on ? "text-text-on-brand/80" : "text-text-tertiary"
-                      }`}
-                    >
+                    <span className="block text-caption text-text-secondary">
                       CNAE {s.cnae}
                     </span>
                   </span>
-                  {/* Riscado em vez de sumir da lista: sumindo, a pessoa
-                      perderia a chance de voltar atrás antes de salvar. */}
                   <span
-                    className={`shrink-0 text-caption font-semibold ${
-                      on ? "text-text-on-brand/80" : "text-action-primary-sm"
+                    className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${
+                      on
+                        ? "bg-action-primary text-text-on-brand"
+                        : "border border-border-strong text-text-tertiary"
                     }`}
+                    aria-hidden
                   >
-                    {on ? "Tirar" : "Voltar"}
+                    {on ? <CheckMarcado /> : <MaisMarcador />}
                   </span>
                 </button>
               );

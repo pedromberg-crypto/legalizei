@@ -489,7 +489,7 @@ export function VinculoView({
             ⚠️ Some quando a pessoa responde "sim": aí a tela ganha os campos
             do vínculo e não sobra vazio pra ocupar. */}
           <div className="flex min-h-0 flex-1 items-center justify-center py-4">
-            <div id="vinculo-flutua" className="relative flex h-[54%] max-h-[212px] items-end">
+            <div id="vinculo-flutua" className="relative flex h-[65%] max-h-[254px] items-end">
               <div
                 aria-hidden
                 className="absolute -bottom-2 left-1/2 h-5 w-[72%] -translate-x-1/2 blur-md"

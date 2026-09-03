@@ -1970,7 +1970,10 @@ export function CnaeSecundariosView({
               e o acesso ao detalhe — a identidade visual atravessa o bloco.
               Reusa `OutrasOpcoes` (encaixe.tsx), a mesma fonte da C0. */}
           <div>
-            <p className="text-micro text-text-tertiary mb-1.5">Sua atividade principal</p>
+            {/* 🗑️ 02/09 (pedido do Pedro) — o rótulo "Sua atividade
+                principal" saiu: a pill "Principal" dentro do cartão já diz
+                isso, e os dois colados viravam a mesma frase duas vezes. Na
+                C0 o par não se repetia, porque lá a pill é "+ compatível". */}
             <OutrasOpcoes
               titulo=""
               alternativas={[principalComoOpcao]}

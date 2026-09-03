@@ -2037,6 +2037,74 @@ export function CnaeSecundariosView({
             </Aviso>
           )}
 
+          {busca.trim() && (
+            <div className="flex flex-col gap-2">
+              {resultadosBusca.length === 0 ? (
+                <p className="text-caption text-text-secondary">
+                  Nenhuma atividade encontrada que a gente atenda com esse termo.
+                </p>
+              ) : (
+                resultadosBusca.map((s) => {
+                const on = !!ativos[s.id];
+                  return (
+                    <button
+                      key={s.id}
+                      onClick={() => alterna(s.id)}
+                      /* Mesma regra das sugestões (02/09): o cartão não pinta,
+                         quem marca é o check. */
+                      className={`rounded-md border p-3 text-left transition-colors
+                        ${
+                          on
+                            ? "border-action-primary bg-surface-card"
+                            : "border-border-hairline bg-surface-card hover:border-border-strong"
+                        }`}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="text-body font-semibold text-text-primary">
+                            {s.humano}
+                          </p>
+                          <p className="text-caption mt-0.5 text-text-secondary">
+                            CNAE {s.cnae}
+                          </p>
+                        </div>
+                        <span
+                          className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full
+                            ${
+                              on
+                                ? "bg-action-primary text-text-on-brand"
+                                : "border border-border-strong text-text-tertiary"
+                            }`}
+                          aria-hidden
+                        >
+                          {on ? <CheckMarcado /> : <MaisMarcador />}
+                        </span>
+                      </div>
+                      {/* 🔒 02/09 (decisão do Pedro) — ETIQUETA SÓ NO QUE MUDA.
+                          O "Mantém seu enquadramento" saiu: ele aparecia na
+                          maioria dos cartões dizendo sempre a mesma coisa, e
+                          etiqueta que não varia não informa, vira decoração.
+                          Alerta só existe quando há o que alertar; o silêncio
+                          passa a significar "nada muda". */}
+                      {s.mudaEnquadramento && (
+                        <span
+                          className={`mt-1 inline-block rounded-full px-2 py-0.5 text-micro font-semibold
+                            ${
+                              on
+                                ? "bg-surface-card/20 text-text-on-brand"
+                                : "bg-state-warning-tint text-state-warning-text"
+                            }`}
+                        >
+                          Muda seu enquadramento
+                        </span>
+                      )}
+                    </button>
+                  );
+                })
+              )}
+            </div>
+          )}
+
           {/* 🔄 02/09 (pente fino do Pedro) — SUGESTÕES ANTES DA BUSCA.
               A busca vinha primeiro, então a pessoa lia "buscar outra
               atividade" antes de ver o que a gente já tinha pra oferecer:
@@ -2131,85 +2199,6 @@ export function CnaeSecundariosView({
               ("está ótimo" soa como consolo). O subtítulo e o CTA já dão essa
               licença. 🔒 O "pode adicionar depois" saiu por decisão do Pedro
               mesmo tendo sido sugerido pro subtítulo: convida a pular a tela. */}
-          {/* 🆕 24/08 — busca restrita ao que a gente atende (mesma lista da
-              entrevista principal), pedido original da Jéssica (reunião 19/07)
-              e reforçado pelo Leonan. */}
-          <Campo rotulo="Buscar outra atividade, de qualquer ramo">
-            <Texto
-              valor={busca}
-              onChange={setBusca}
-              placeholder="Ex: consultoria, eventos, treinamento..."
-            />
-          </Campo>
-
-          {busca.trim() && (
-            <div className="flex flex-col gap-2">
-              {resultadosBusca.length === 0 ? (
-                <p className="text-caption text-text-secondary">
-                  Nenhuma atividade encontrada que a gente atenda com esse termo.
-                </p>
-              ) : (
-                resultadosBusca.map((s) => {
-                const on = !!ativos[s.id];
-                  return (
-                    <button
-                      key={s.id}
-                      onClick={() => alterna(s.id)}
-                      /* Mesma regra das sugestões (02/09): o cartão não pinta,
-                         quem marca é o check. */
-                      className={`rounded-md border p-3 text-left transition-colors
-                        ${
-                          on
-                            ? "border-action-primary bg-surface-card"
-                            : "border-border-hairline bg-surface-card hover:border-border-strong"
-                        }`}
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0">
-                          <p className="text-body font-semibold text-text-primary">
-                            {s.humano}
-                          </p>
-                          <p className="text-caption mt-0.5 text-text-secondary">
-                            CNAE {s.cnae}
-                          </p>
-                        </div>
-                        <span
-                          className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full
-                            ${
-                              on
-                                ? "bg-action-primary text-text-on-brand"
-                                : "border border-border-strong text-text-tertiary"
-                            }`}
-                          aria-hidden
-                        >
-                          {on ? <CheckMarcado /> : <MaisMarcador />}
-                        </span>
-                      </div>
-                      {/* 🔒 02/09 (decisão do Pedro) — ETIQUETA SÓ NO QUE MUDA.
-                          O "Mantém seu enquadramento" saiu: ele aparecia na
-                          maioria dos cartões dizendo sempre a mesma coisa, e
-                          etiqueta que não varia não informa, vira decoração.
-                          Alerta só existe quando há o que alertar; o silêncio
-                          passa a significar "nada muda". */}
-                      {s.mudaEnquadramento && (
-                        <span
-                          className={`mt-1 inline-block rounded-full px-2 py-0.5 text-micro font-semibold
-                            ${
-                              on
-                                ? "bg-surface-card/20 text-text-on-brand"
-                                : "bg-state-warning-tint text-state-warning-text"
-                            }`}
-                        >
-                          Muda seu enquadramento
-                        </span>
-                      )}
-                    </button>
-                  );
-                })
-              )}
-            </div>
-          )}
-
         </Corpo>
 
         {detalhe && <SheetCnae opcao={detalhe} onFechar={() => setDetalhe(null)} />}
@@ -2229,6 +2218,24 @@ export function CnaeSecundariosView({
         )}
 
         <Rodape>
+          {/* 🔄 02/09 (pedido do Pedro) — A BUSCA FICA FIXA ACIMA DO CTA.
+              Ela vivia no fim do corpo rolável: quem não se encontrava nas 8
+              sugestões precisava rolar até o fim pra descobrir que existia
+              busca. Fixa, ela é uma saída sempre à mão, e os RESULTADOS
+              aparecem lá em cima, no corpo, que é onde a lista mora.
+              Mesmo padrão do link de WhatsApp preso acima do CTA na E9.1P. */}
+          {/* 🆕 24/08 — busca restrita ao que a gente atende (mesma lista da
+              entrevista principal), pedido original da Jéssica (reunião 19/07)
+              e reforçado pelo Leonan. */}
+          <Campo rotulo="Buscar outra atividade, de qualquer ramo">
+            <Texto
+              valor={busca}
+              onChange={setBusca}
+              placeholder="Ex: consultoria, eventos, treinamento..."
+            />
+          </Campo>
+
+
           {algumaMudaEnquadramento ? (
             <Button full variant="dark" onClick={onFalarAtendente}>
               Falar com atendente

@@ -745,5 +745,25 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 - 3 coisas pra confirmar com a Izabela: se assinatura GOV.BR substitui firma reconhecida, se pode usar o endereço do escritório no campo pessoal do contador, e quando exatamente fazer a procuração do e-CAC
 ```
 
+## Semana 02-03/09/2026 — reconstruí o passo dos sócios, que era o mais confuso do app
+
+> Peguei o fluxo de sócios (a parte que pede os dados de quem mais entra na empresa) e refiz do zero. Era a tela que mais acumulava problema: percentual duplicado em 3 lugares diferentes, pergunta de quem administra a empresa solta e sem explicação clara, e tudo empilhado numa lista gigante quando tinha mais de um sócio.
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | **Com 2+ sócios, os cards agora se organizam** | Antes era uma pilha enorme de campos, todos abertos ao mesmo tempo. Agora cada sócio vira um card fechado (mostra o nome), e abre só quando você toca. Depois de preencher, marca como pronto e fecha sozinho | 🟢 |
+| 2 | **A divisão de percentual virou 1 lugar só** | Tinha 3 lugares pra editar a mesma % (o que causava divergência). Agora é uma "mesa" única, com todo mundo (você e os sócios) e o percentual de cada um lado a lado — e o sistema avisa se a soma não fecha em 100% | 🟢 |
+| 3 | **"Quem administra a empresa" ficou claro** | Antes era uma pergunta solta, sem explicar o que muda na prática. Agora é uma pergunta simples dentro dos dados de cada sócio ("esse sócio vai administrar?"), com um resumo no fim e um botão de "saiba mais" explicando a diferença — sem forçar todo mundo a ler o texto jurídico inteiro | 🟢 |
+| 4 | **A tela de "achar o CNAE" deixou de duplicar trabalho** | O app tinha duas telas fazendo praticamente a mesma pergunta (o CNAE sugerido, depois pedindo pra confirmar de novo). Juntei numa só: a pessoa descreve o que faz, escolhe entre as sugestões, e segue — sem repetir a mesma decisão duas vezes | 🟢 |
+
+### 📱 WhatsApp (03/09)
+```
+*Update Legalizai* 📣
+- Refiz o passo dos sócios (a tela mais bagunçada do app): agora os dados de cada sócio ficam organizados em cards que abrem um de cada vez, em vez de uma pilha gigante
+- A divisão de % da empresa virou 1 lugar só pra editar (antes tinha 3, e podia divergir)
+- "Quem administra a empresa" ficou uma pergunta simples, com explicação disponível só pra quem quer ler
+- Juntei 2 telas que faziam a mesma pergunta sobre o CNAE (achar o código da atividade) numa só
+```
+
 ## Links
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]] · [[estado-atual]] · [[indice-autoridade]]

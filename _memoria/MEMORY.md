@@ -1,5 +1,7 @@
 # Memory Index — Legalize
 
+- [Método de alteração de tela travado](legalize-metodo-alteracao-tela-travado.md) — 03/09: mapa espelha apresentação por construção, pré-voo, lote por tela, sintoma repetido = raiz. 2 auditorias automáticas no gerador.
+
 - [Mapa é espelho da apresentação](legalize-espelho-mapa-apresentacao.md) — 02/09: uma coleção de telas, duas vistas; pills derivam do flow-data, vínculo por id. Pré-voo antes de editar tela.
 
 - [Encaixe de asset se MEDE, não se estima](legalize-encaixe-asset-medido-nao-no-olho.md) — 01/09: achar o pixel do corte por coluna e derivar o offset por fórmula; empurrar 10px por vez não converge.

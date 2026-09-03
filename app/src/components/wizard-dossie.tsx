@@ -1858,6 +1858,30 @@ const BANCO_BUSCA: Sugestao[] = [
     humano: "Organização de eventos",
     prova: "Exemplo de secundária de outro segmento que mantém o mesmo imposto.",
   },
+  /* 🆕 02/09 (pedido do Pedro) — BANCO DE BUSCA ENGORDADO, de 3 pra 15
+     exclusivas. Com 8 curadas, a busca tinha só 3 resultados possíveis: quase
+     tudo que a pessoa digitasse dava "não atendemos", e a demo passava a
+     impressão de que o produto atende pouca coisa. Pior, 2 das 3 mudavam o
+     enquadramento — o aviso amarelo e o desvio pro atendente, que deviam ser
+     exceção, apareciam em 2 de cada 3 buscas.
+     São atividades de SERVIÇO de outros ramos (é o ponto: secundária não
+     precisa ser do mesmo ramo). Nenhuma regulamentada — essas o produto não
+     atende e sairiam pela waitlist lá no E3.4, não aqui.
+     🔴 Mesma régua de confiança do resto do arquivo: códigos reais, mas a
+     classificação fiscal (quem muda anexo e quem não muda) é mock. A lista de
+     verdade sai da matriz CNAE quando ela for ratificada. */
+  { id: "b4", cnae: "7420-0/01", humano: "Fotografia", prova: "" },
+  { id: "b5", cnae: "7420-0/04", humano: "Filmagem de festas e eventos", prova: "" },
+  { id: "b6", cnae: "5911-1/02", humano: "Produção de filmes para publicidade", prova: "" },
+  { id: "b7", cnae: "5920-1/00", humano: "Gravação de som e edição de música", prova: "" },
+  { id: "b8", cnae: "7311-4/00", humano: "Agência de publicidade", prova: "" },
+  { id: "b9", cnae: "7319-0/03", humano: "Marketing direto", prova: "" },
+  { id: "b10", cnae: "7319-0/02", humano: "Promoção de vendas", prova: "" },
+  { id: "b11", cnae: "8592-9/99", humano: "Ensino de arte e cultura", prova: "" },
+  { id: "b12", cnae: "8599-6/03", humano: "Treinamento em informática", prova: "" },
+  { id: "b13", cnae: "8219-9/99", humano: "Preparação de documentos e apoio administrativo", prova: "" },
+  { id: "b14", cnae: "8299-7/99", humano: "Outros serviços prestados a empresas", prova: "" },
+  { id: "b15", cnae: "7490-1/04", humano: "Agenciamento de serviços e negócios", prova: "" },
 ];
 
 export function CnaeSecundariosView({

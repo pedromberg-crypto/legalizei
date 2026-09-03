@@ -791,6 +791,12 @@ export function SociosView({
           );
 
   const [extras, setExtras] = useState<SocioExtra[]>(inicial);
+  /* 🆕 03/09 (pedido do Pedro) — com 2+ sócios extras os cards colapsam: um
+     por vez aberto, e "salvar" fecha e carimba. `socioSalvo` é só o RECIBO
+     visual — a validação de verdade continua sendo a do CTA da tela, que já
+     olha nome, CPF e soma das participações. */
+  const [socioAberto, setSocioAberto] = useState<string | null>(null);
+  const [socioSalvo, setSocioSalvo] = useState<string[]>([]);
 
   /**
    * 🆕 01/09 (reunião Rua Satélite 42) — QUEM ADMINISTRA.
@@ -960,14 +966,54 @@ export function SociosView({
               </div>
 
               <div className="flex flex-col gap-3">
-                {extras.map((s, i) => (
+                {extras.map((s, i) => {
+                  /* 🆕 03/09 (pedido do Pedro) — COM 2+ SÓCIOS OS CARDS COLAPSAM.
+                     Com um sócio extra só, o card fica aberto: são os únicos
+                     campos da tela e esconder atrás de um toque seria fricção
+                     à toa. Com dois ou três, a pilha de ~12 campos vezes N
+                     vira um paredão — aí cada um vira uma linha que expande.
+                     Salvar fecha o card e marca com o selo verde (mesmo do E9),
+                     pra dar o recibo de "esse já está pronto". */
+                  const colapsavel = extras.length > 1;
+                  const aberto = !colapsavel || socioAberto === s.id;
+                  const salvo = socioSalvo.includes(s.id);
+                  const titulo = s.nome.trim() || `${i + 2}º sócio`;
+                  return (
                   <div
                     key={s.id}
-                    className="flex flex-col gap-3 rounded-md border border-border-hairline bg-surface-card p-3"
+                    className={`relative flex flex-col rounded-md border bg-surface-card p-3 ${
+                      aberto ? "gap-3" : ""
+                    } ${salvo ? "border-state-success" : "border-border-hairline"}`}
                   >
-                    <span className="text-caption font-semibold text-text-primary">
-                      {i + 2}º sócio
-                    </span>
+                    {salvo && !aberto && (
+                      <span
+                        aria-hidden
+                        className="absolute right-3 top-3 flex h-5 w-5 items-center justify-center rounded-full bg-state-success-tint text-state-success-text"
+                      >
+                        <CheckMiniDossie />
+                      </span>
+                    )}
+
+                    {colapsavel ? (
+                      <button
+                        type="button"
+                        onClick={() => setSocioAberto(aberto ? null : s.id)}
+                        aria-expanded={aberto}
+                        className="flex items-center gap-2 pr-6 text-left"
+                      >
+                        <span className="text-caption font-semibold text-text-primary">
+                          {titulo}
+                        </span>
+                        <ChevronSocio aberto={aberto} />
+                      </button>
+                    ) : (
+                      <span className="text-caption font-semibold text-text-primary">
+                        {titulo}
+                      </span>
+                    )}
+
+                    {aberto && (
+                      <>
 
                     <Campo rotulo="Nome completo">
                       <Texto
@@ -1141,8 +1187,29 @@ export function SociosView({
                         </div>
                       </>
                     )}
+
+                    {/* Fecha o card e marca o selo verde. Só existe quando há
+                        2+ sócios: com um só, o card nunca colapsa e o botão
+                        seria um passo a mais sem função. */}
+                    {colapsavel && (
+                      <Button
+                        full
+                        variant="secondary"
+                        onClick={() => {
+                          setSocioSalvo((atual) =>
+                            atual.includes(s.id) ? atual : [...atual, s.id],
+                          );
+                          setSocioAberto(null);
+                        }}
+                      >
+                        Salvar informações do {titulo}
+                      </Button>
+                    )}
+                      </>
+                    )}
                   </div>
-                ))}
+                  );
+                })}
               </div>
 
               <div className="rounded-md border border-border-hairline bg-surface-alt p-3">
@@ -3124,6 +3191,45 @@ function MaisMarcador() {
     >
       <path d="M12 5v14" />
       <path d="M5 12h14" />
+    </svg>
+  );
+}
+
+/** Chevron do card de sócio: gira quando abre. */
+function ChevronSocio({ aberto }: { aberto: boolean }) {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      className={`shrink-0 text-text-tertiary transition-transform ${aberto ? "rotate-180" : ""}`}
+    >
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  );
+}
+
+/** O mesmo check do selo verde usado no E9. */
+function CheckMiniDossie() {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="m5 12 4 4 8-9" />
     </svg>
   );
 }

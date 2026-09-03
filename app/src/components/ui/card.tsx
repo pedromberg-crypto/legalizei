@@ -38,18 +38,23 @@ interface Props {
   children: ReactNode;
   tom?: Tom;
   className?: string;
+  /** 🆕 03/09 (pedido do Pedro) — card inteiro clicável, não só um botão
+   *  dentro dele. Presente = vira `<button>` (full width, texto à esquerda);
+   *  ausente = `<div>` de sempre, sem mudar nenhum uso existente. */
+  onClick?: () => void;
 }
 
-export function Card({ children, tom = "neutro", className = "" }: Props) {
-  return (
-    <div
-      className={
-        `rounded-lg border border-border-hairline p-4 ` +
-        `${FUNDO[tom]} ` +
-        className
-      }
-    >
-      {children}
-    </div>
-  );
+export function Card({ children, tom = "neutro", className = "", onClick }: Props) {
+  const classe =
+    `rounded-lg border border-border-hairline p-4 ` + `${FUNDO[tom]} ` + className;
+
+  if (onClick) {
+    return (
+      <button type="button" onClick={onClick} className={`w-full text-left ${classe}`}>
+        {children}
+      </button>
+    );
+  }
+
+  return <div className={classe}>{children}</div>;
 }

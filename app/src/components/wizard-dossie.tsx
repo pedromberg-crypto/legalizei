@@ -786,8 +786,8 @@ export function SociosView({
         ? [{ ...socioExtraPreenchido(), participacao: 50 }]
         : Array.from({ length: qtdExtras }, (_, i) =>
             i === 0
-              ? { ...socioExtraPreenchido(), participacao: Math.round((100 / (qtdExtras + 1)) * 2) / 2 }
-              : novoSocioExtra("", Math.round((100 / (qtdExtras + 1)) * 2) / 2),
+              ? { ...socioExtraPreenchido(), participacao: Math.round(100 / (qtdExtras + 1)) }
+              : novoSocioExtra("", Math.round(100 / (qtdExtras + 1))),
           );
 
   const [extras, setExtras] = useState<SocioExtra[]>(inicial);
@@ -832,18 +832,18 @@ export function SociosView({
    * vice-versa"). Com 1 extra só, vira o espelho direto (extra = 100 - titular).
    */
   function onChangeParte1(novoParte1: number) {
-    const alvoExtras = Math.max(0, Math.min(99.5, 100 - novoParte1));
+    const alvoExtras = Math.max(0, Math.min(99, 100 - novoParte1));
     setExtras((atual) => {
       if (atual.length === 0) return atual;
       const somaAtual = atual.reduce((acc, s) => acc + s.participacao, 0);
       if (somaAtual <= 0) {
-        const cada = Math.round((alvoExtras / atual.length) * 2) / 2;
+        const cada = Math.round(alvoExtras / atual.length);
         return atual.map((s) => ({ ...s, participacao: cada }));
       }
       const fator = alvoExtras / somaAtual;
       return atual.map((s) => ({
         ...s,
-        participacao: Math.round(s.participacao * fator * 2) / 2,
+        participacao: Math.round(s.participacao * fator),
       }));
     });
   }
@@ -952,33 +952,40 @@ export function SociosView({
                   VOLTA, mas como RECIBO: sem a %, que mora só na mesa da
                   divisão, sobra só "quem é você" — no mesmo desenho da linha
                   colapsada dos sócios, pra não ficar um peixe fora d'água
-                  acima deles. A diferença é o check: nos sócios ele é VERDE
-                  ("você confirmou os dados dele agora"); aqui é CINZA — não é
-                  uma ação que você acabou de tomar, é uma qualificação que já
-                  é sua, travada, desde o cadastro. */}
-              <div className="relative flex items-center gap-2 rounded-md border border-border-hairline bg-surface-card p-3 pr-10">
-                <span className="min-w-0 truncate text-caption font-semibold text-text-primary">
-                  {CLIENTE.nome}
-                </span>
-                <span className="ml-auto shrink-0 rounded-full bg-surface-alt px-2 py-0.5 text-micro font-semibold text-text-tertiary">
-                  Você
-                </span>
-                {/* Titular sempre administra (é o representante perante a
-                    Receita) — a pill não depende de escolha, por isso não
-                    reusa a cor de sucesso dos sócios marcados: aqui também é
-                    fato travado, não confirmação de agora. */}
-                <span className="shrink-0 rounded-full bg-surface-alt px-2 py-0.5 text-micro font-semibold text-text-tertiary">
-                  Administra
-                </span>
-                <span
-                  aria-hidden
-                  className="absolute right-3 top-3 flex h-5 w-5 items-center justify-center rounded-full bg-surface-alt text-text-tertiary"
-                >
-                  <CheckMiniDossie />
-                </span>
-              </div>
-
+                  acima deles.
+                  🔄 03/09 (5ª rodada, pedido do Pedro) — mesma estrutura de
+                  linha dos cards de sócio (flex normal, sem absolute): nome
+                  com `flex-1`, pills, check — todos fluindo no mesmo espaço,
+                  pra bater o mesmo padding com quem tem chevron e quem não
+                  tem. Check sempre VERDE (mesma cor de confirmação).
+                  🐛 03/09 (6ª rodada) — o card da Ana era filho direto do
+                  `Corpo` (gap-6, 24px) enquanto os sócios extras viviam num
+                  wrapper próprio (gap-3, 12px): o espaço ANTES do Carlos saía
+                  o DOBRO do espaço entre Carlos e o 3º sócio. Ana entra pro
+                  mesmo wrapper, mesmo gap-3, pra todo mundo respirar igual.
+                  Pill "Administra" também virou verde aqui — mesma cor de
+                  quem administra nos cards de baixo, sem distinção. */}
               <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-2 rounded-md border border-border-hairline bg-surface-card p-3">
+                  <span className="min-w-0 flex-1 truncate text-caption font-semibold text-text-primary">
+                    {CLIENTE.nome}
+                  </span>
+                  <span className="shrink-0 rounded-full bg-surface-alt px-2 py-0.5 text-micro font-semibold text-text-tertiary">
+                    Você
+                  </span>
+                  {/* Titular sempre administra (é o representante perante a
+                      Receita). */}
+                  <span className="shrink-0 rounded-full bg-state-success-tint px-2 py-0.5 text-micro font-semibold text-state-success-text">
+                    Administra
+                  </span>
+                  <span
+                    aria-hidden
+                    className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-state-success-tint text-state-success-text"
+                  >
+                    <CheckMiniDossie />
+                  </span>
+                </div>
+
                 {extras.map((s, i) => {
                   /* 🆕 03/09 (pedido do Pedro) — COM 2+ SÓCIOS OS CARDS COLAPSAM.
                      Com um sócio extra só, o card fica aberto: são os únicos
@@ -994,37 +1001,37 @@ export function SociosView({
                   return (
                   <div
                     key={s.id}
-                    className={`relative flex flex-col rounded-md border bg-surface-card p-3 ${
+                    className={`relative flex flex-col rounded-md border border-border-hairline bg-surface-card p-3 ${
                       aberto ? "gap-3" : ""
-                    } ${salvo ? "border-state-success" : "border-border-hairline"}`}
+                    }`}
                   >
-                    {salvo && !aberto && (
-                      <span
-                        aria-hidden
-                        className="absolute right-3 top-3 flex h-5 w-5 items-center justify-center rounded-full bg-state-success-tint text-state-success-text"
-                      >
-                        <CheckMiniDossie />
-                      </span>
-                    )}
-
                     {colapsavel ? (
                       <button
                         type="button"
                         onClick={() => setSocioAberto(aberto ? null : s.id)}
                         aria-expanded={aberto}
-                        className="flex items-center gap-2 pr-6 text-left"
+                        className="flex items-center gap-2 text-left"
                       >
-                        <span className="min-w-0 truncate text-caption font-semibold text-text-primary">
+                        <span className="min-w-0 flex-1 truncate text-caption font-semibold text-text-primary">
                           {titulo}
                         </span>
-                        {/* 🆕 03/09 (ideia aprovada) — pill "Administra" na
-                            linha fechada, pra quem marcou o sócio como
-                            administrador não precisar abrir o card de novo pra
-                            lembrar. Só aparece fechado: aberto, a resposta já
-                            está logo ali, no próprio campo. */}
+                        {/* 🔄 03/09 (pedido do Pedro, 5ª rodada) — pill e check
+                            LADO A LADO, mesmo padrão do card da Ana: nada de
+                            badge solto no canto brigando com o chevron. Os
+                            dois só aparecem fechado: aberto, a resposta já
+                            está logo ali, no próprio campo. Check sempre
+                            VERDE (recibo de "já salvo"), igual em todo lugar. */}
                         {!aberto && admins.includes(s.id) && (
                           <span className="shrink-0 rounded-full bg-state-success-tint px-2 py-0.5 text-micro font-semibold text-state-success-text">
                             Administra
+                          </span>
+                        )}
+                        {!aberto && salvo && (
+                          <span
+                            aria-hidden
+                            className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-state-success-tint text-state-success-text"
+                          >
+                            <CheckMiniDossie />
                           </span>
                         )}
                         <ChevronSocio aberto={aberto} />
@@ -1228,7 +1235,7 @@ export function SociosView({
                           setSocioAberto(null);
                         }}
                       >
-                        Salvar informações do {titulo}
+                        Salvar informações
                       </Button>
                     )}
                       </>
@@ -1256,18 +1263,18 @@ export function SociosView({
                     <div className="flex shrink-0 items-center gap-1.5">
                       <input
                         type="number"
-                        inputMode="decimal"
-                        step={0.5}
-                        min={0.5}
-                        max={99.5}
+                        inputMode="numeric"
+                        step={1}
+                        min={1}
+                        max={99}
                         value={parte1 || ""}
                         onChange={(e) => {
                           const raw = e.target.value;
                           if (raw === "") return;
                           const n = Number(raw);
                           if (Number.isNaN(n)) return;
-                          const preso = Math.min(99.5, Math.max(0.5, n));
-                          onChangeParte1(Math.round(preso * 2) / 2);
+                          const preso = Math.min(99, Math.max(1, n));
+                          onChangeParte1(Math.round(preso));
                         }}
                         aria-label="Sua participação, em porcentagem"
                         className="w-16 min-h-10 rounded-md border border-border-hairline bg-surface-card px-2
@@ -1285,10 +1292,10 @@ export function SociosView({
                       <div className="flex shrink-0 items-center gap-1.5">
                         <input
                           type="number"
-                          inputMode="decimal"
-                          step={0.5}
-                          min={0.5}
-                          max={99.5}
+                          inputMode="numeric"
+                          step={1}
+                          min={1}
+                          max={99}
                           value={s.participacao || ""}
                           onChange={(e) => {
                             const raw = e.target.value;
@@ -1298,8 +1305,8 @@ export function SociosView({
                             }
                             const n = Number(raw);
                             if (Number.isNaN(n)) return;
-                            const preso = Math.min(99.5, Math.max(0, n));
-                            atualizar(s.id, { participacao: Math.round(preso * 2) / 2 });
+                            const preso = Math.min(99, Math.max(0, n));
+                            atualizar(s.id, { participacao: Math.round(preso) });
                           }}
                           aria-label={`Participação do ${i + 2}º sócio, em porcentagem`}
                           className="w-16 min-h-10 rounded-md border border-border-hairline bg-surface-card px-2
@@ -1310,6 +1317,18 @@ export function SociosView({
                     </div>
                   ))}
                 </div>
+
+                {/* 🆕 03/09 (pedido do Pedro) — TOTAL fixo como referência: a
+                    sua % é DERIVADA (100 - soma dos extras), então a soma
+                    sempre fecha 100% por construção — mostrar isso deixa
+                    explícito o porquê de mexer num campo mudar o outro. */}
+                <div className="mt-1 flex items-center justify-between gap-3 border-t border-border-hairline pt-2">
+                  <span className="text-caption font-semibold text-text-primary">Total</span>
+                  <span className="text-caption font-semibold text-state-success-text">
+                    {parte1 + somaExtras}%
+                  </span>
+                </div>
+
                 {!somaOk && (
                   <p className="text-micro text-state-warning-text mt-1.5">
                     {somaExtras === 0
@@ -1347,7 +1366,9 @@ export function SociosView({
                   administração já está definida no contrato dela — perguntar
                   ali sugeriria que a resposta muda alguma coisa. */}
               {contexto === "abrir" && (
-                <Card>
+                <Card
+                  onClick={() => setInfoAdmin(true)}
+                >
                   {/* 🔄 03/09 (pedido do Pedro, 3ª rodada) — DE BLOCO CORRIDO A
                       RECIBO + "i". Era um card com definição (3 linhas) +
                       resultado + consequência (mais 3-4 linhas): informação
@@ -1355,19 +1376,20 @@ export function SociosView({
                       palavras do Pedro. O recibo (quem administra) fica
                       sempre visível, que é o que muda de pessoa pra pessoa; a
                       explicação do que isso SIGNIFICA (pros dois papéis, não
-                      só um) vai pro sheet, sob demanda. */}
+                      só um) vai pro sheet, sob demanda.
+                      🔄 03/09 (6ª rodada, pedido do Pedro) — CARD INTEIRO
+                      clicável (faz sentido: card já existe pra abrir o sheet,
+                      não só o "i"), `Card` ganhou `onClick` opcional pra isso. */}
                   <div className="flex items-start justify-between gap-3">
                     <p className="text-body font-semibold text-text-primary">
                       Quem administra a empresa
                     </p>
-                    <button
-                      type="button"
-                      onClick={() => setInfoAdmin(true)}
-                      aria-label="O que significa administrar a empresa"
+                    <span
+                      aria-hidden
                       className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border-hairline text-micro font-bold text-text-tertiary"
                     >
                       i
-                    </button>
+                    </span>
                   </div>
                   <p className="text-caption text-text-primary mt-1">
                     {admins.length === 0
@@ -1380,8 +1402,6 @@ export function SociosView({
                   </p>
                 </Card>
               )}
-
-              {infoAdmin && <SheetAdministracao onFechar={() => setInfoAdmin(false)} />}
             </>
           ) : (
             <Aviso variante="info" titulo="Empresa só sua">
@@ -1391,6 +1411,12 @@ export function SociosView({
             </Aviso>
           )}
         </Corpo>
+
+        {/* 🐛 03/09 — o sheet vivia DENTRO do `Corpo` (o container
+            `overflow-y-auto` com fade de rolagem), então herdava o clip/scroll
+            dele e aparecia cortado/deslocado. Mesma doutrina do `SheetCnae` e
+            `SheetSecundarias`: sheet é irmão do `Corpo`, nunca filho. */}
+        {infoAdmin && <SheetAdministracao onFechar={() => setInfoAdmin(false)} />}
 
         <Rodape>
           <Button full disabled={!completo} onClick={onSeguir}>

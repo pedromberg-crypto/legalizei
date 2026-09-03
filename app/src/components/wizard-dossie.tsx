@@ -1109,7 +1109,12 @@ export function SociosView({
                             endereço encontrado não é campo, é recibo. Tinha o
                             travessão proibido junto. */}
                         {/* Mesmo `CardNota` da C1 (02/09). */}
-                        <div className="-mt-3">
+                        {/* &#x1F41B; 03/09 — tinha `-mt-3`, copiado da C1. Lá o container
+                            do Corpo tem gap-6 e a margem negativa deixa 12px;
+                            aqui dentro do card do sócio o gap é 3 (12px), então
+                            ela zerava o espaço e colava o cartão no campo do
+                            CEP. Sem margem, o gap do container já resolve. */}
+                        <div>
                           <CardNota>
                             {(() => {
                               const e = buscarCep(s.cep.replace(/\D/g, ""))!;

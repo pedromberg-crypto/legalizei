@@ -297,6 +297,8 @@ type Etapa =
   | "guia-boleto"
   // 🆕 01/09 — C7′ (2ª rodada de nomes), aberta pelo CTA do A3.1.
   | "nome-rodada2"
+  // 🆕 04/09 — C7.S: o recibo de envio da 2ª rodada.
+  | "splash-nomes"
   | "status-viabilidade"
   | "pagamento-recusado"
   | "pagamento-retry"
@@ -394,6 +396,7 @@ const ETAPAS_CAUDA = [
   "painel-recusa",
   // 🆕 01/09 — C7′: a 2ª rodada de nomes, aberta pelo CTA do A3.1.
   "nome-rodada2",
+  "splash-nomes",
   // 🆕 01/09 — A3‴: status recuado pra "Analisando viabilidade" depois dos
   // nomes novos.
   "status-viabilidade",
@@ -648,6 +651,8 @@ type Momento =
   | "cnae-secundarios"
   | "nome"
   | "nome-rodada2"
+  // 🆕 04/09 — C7.S: o recibo de envio da 2ª rodada.
+  | "splash-nomes"
   | "status-viabilidade"
   | "pagamento-recusado"
   | "pagamento-retry"
@@ -1093,6 +1098,7 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   "splash-atividades": "/splash-atividades",
   nome: "/dossie/nome",
   "nome-rodada2": "/dossie/nome/rodada-2",
+  "splash-nomes": "/splash-nomes?next=/aguardando%3Ffase%3Djunta%26viabilidade%3D1",
   "status-viabilidade": "/aguardando?fase=junta&viabilidade=1",
   conferencia: "/conferencia",
   revisar: "/revisar",
@@ -1276,6 +1282,7 @@ const MOMENTO_POR_NO: Record<string, Etapa | null> = {
   C0_1: "retomar-cpf",  // abre na porta de CPF
   C0_3: "retomar-codigo",  // 🆕 04/09 — o código da reentrada
   C7_2: "nome-rodada2",
+  C7_2S: "splash-nomes",
   A1: "revisar",
   A2: "iniciar-viabilidade",
   A3: "painel",
@@ -1805,6 +1812,14 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
       "É o destravamento da assinatura: sem a guia compensada a Junta não registra, então esta é a fronteira entre esperar e agir.",
     porque:
       "Virou tela própria no mapa (A3′) porque é OUTRO estado da mesma rota, e estado que muda o que a pessoa pode fazer merece nó — mesma régua que já separa E9.1 de E9.1P.",
+  },
+  "splash-nomes": {
+    dono: null,
+    faz: "🆕 04/09 — C7.S: recibo do envio da 2ª rodada de nomes. Transitório, sem CTA, some sozinho e cai no status com a viabilidade recomeçando (A3‴).",
+    interfere:
+      "Nada por si. Marca o ENVIO: daí em diante a bola está com a Junta de novo, e a jornada volta pra 'analisando viabilidade'.",
+    porque:
+      "A C7′ mandava os nomes e caía direto na timeline, sem recibo de que o envio aconteceu. Aqui NÃO cabe repetir a A2 (decisão do Pedro): a pessoa já atravessou o ponto sem volta, já viu a Junta responder e está reenviando por causa disso. Pedir confirmação de novo seria cobrar consentimento de quem já consentiu. Sem prazo na copy: o tempo da Junta não é nosso.",
   },
   "nome-rodada2": {
     dono: "usuario",
@@ -3259,6 +3274,16 @@ export default function ApresentacaoPage() {
                             Réplica do E9.SB (boleto da mensalidade): mesma
                             copy, mesmo componente, outro destino — daqui volta
                             pro status da guia no boleto (A3″). */}
+                        {/* 🆕 04/09 (pedido do Pedro) — C7.S: o recibo do envio
+                            da 2ª rodada de nomes. Transitório, sem CTA, cai no
+                            status com a viabilidade recomeçando (A3‴). */}
+                        {etapa === "splash-nomes" && (
+                          <SplashMensagemView
+                            titulo="Nomes enviados."
+                            sub="A Junta analisa na ordem da lista. A gente te avisa assim que ela responder."
+                            onAutoAvancar={() => setEtapa("status-viabilidade")}
+                          />
+                        )}
                         {etapa === "guia-splash-boleto" && (
                           <SplashMensagemView
                             titulo="Boleto gerado."
@@ -3336,7 +3361,8 @@ export default function ApresentacaoPage() {
                         {etapa === "nome-rodada2" && (
                           <NomeView
                             novaRodada
-                            onSeguir={() => setEtapa("status-viabilidade")}
+                            /* 🔄 04/09 — passa pelo recibo (C7.S) antes do status. */
+                            onSeguir={() => setEtapa("splash-nomes")}
                             onVoltar={() => voltar(() => setEtapa("painel-recusa"))}
                           />
                         )}

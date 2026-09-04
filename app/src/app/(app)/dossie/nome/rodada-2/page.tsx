@@ -33,7 +33,15 @@ export default function NomeRodada2Page() {
   return (
     <NomeView
       novaRodada
-      onSeguir={() => router.push("/aguardando?fase=junta&viabilidade=1")}
+      /* 🔄 04/09 (pedido do Pedro) — passa pelo SPLASH antes do status. Ela
+         mandava os nomes pra Junta e caía direto na timeline, sem recibo
+         nenhum de que o envio aconteceu. O splash (C7.S) é o fecho: dados
+         pertinentes, sem CTA, some sozinho. */
+      onSeguir={() =>
+        router.push(
+          "/splash-nomes?next=" + encodeURIComponent("/aguardando?fase=junta&viabilidade=1"),
+        )
+      }
       onVoltar={() => router.push("/painel/recusa")}
     />
   );

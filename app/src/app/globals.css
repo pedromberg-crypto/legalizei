@@ -311,6 +311,11 @@
   .app-footer-cta {
     position: sticky;
     bottom: 0;
+    /* 🐛 03/09 (achado na C7) — num layout SEM `Corpo` (conteúdo colado no
+       rodapé, padrão C2/C4), o rodapé era o único item encolhível da coluna:
+       conteúdo grande o comprimia e o CTA "subia", saindo da thumb zone que
+       este bloco existe pra garantir. Ele nunca encolhe. */
+    flex-shrink: 0;
     padding-block: 16px;
     /* var(), não env() direto: assim o /mockup consegue mentir o inset e a
        moldura vira simulador. Com env() aqui, o iframe sempre lia 0 e o CTA

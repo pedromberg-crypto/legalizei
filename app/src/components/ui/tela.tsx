@@ -33,9 +33,17 @@ export function TelaHeader({
   voltar,
   onVoltar,
   semVoltar = false,
+  acao,
 }: {
   meta: string;
   voltar?: string;
+  /**
+   * 🆕 03/09 (pedido do Pedro, na C4) — ação opcional na PONTA DIREITA do
+   * cabeçalho, na mesma linha do voltar. Nasceu pro "i" que abre a explicação
+   * da tela; fica genérico porque a linha do topo é o lugar natural de
+   * qualquer ação secundária de tela (nunca a primária, que mora no rodapé).
+   */
+  acao?: ReactNode;
   /**
    * 🆕 29/07 — voltar por AÇÃO, não por rota. A `/apresentacao` navega por
    * estado (não tem router), e o UX-60 pede a seta nas telas do wizard.
@@ -71,6 +79,7 @@ export function TelaHeader({
           <SetaVoltar />
         </button>
         <p className="text-micro text-text-tertiary">{meta}</p>
+        {acao && <div className="ml-auto">{acao}</div>}
       </header>
     );
   }
@@ -85,12 +94,14 @@ export function TelaHeader({
           <SetaVoltar />
         </Link>
         <p className="text-micro text-text-tertiary">{meta}</p>
+        {acao && <div className="ml-auto">{acao}</div>}
       </header>
     );
   }
   return (
-    <header className="pt-6 pb-4">
+    <header className="pt-6 pb-4 flex items-center gap-1.5">
       <p className="text-micro text-text-tertiary">{meta}</p>
+      {acao && <div className="ml-auto">{acao}</div>}
     </header>
   );
 }

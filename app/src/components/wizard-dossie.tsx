@@ -1,11 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CardNota } from "@/components/ui/card-nota";
 import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
+// 🆕 03/09 (pedido do Pedro) — o "i" + sheet de explicação, agora em TODAS as
+// telas do dossiê. Mecânica no componente; cada tela manda só o conteúdo.
+import { SheetInfo, BotaoInfo } from "@/components/ui/sheet-info";
+import { ImagemZoom } from "@/components/ui/imagem-zoom";
 import { Campo, Texto, Select, OpcoesLinha } from "@/components/ui/form";
 // 🗑️ 01/09 — `CUSTOS` saiu junto do upsell de endereço fiscal do C4: a única
 // coisa que lia preço aqui era aquele card, e ele deixou de existir.
@@ -22,9 +26,17 @@ import {
   SOCIOS,
   NOME_EMPRESARIAL,
   CNAE_PRINCIPAL,
-  CNAES_SECUNDARIAS,
   PREENCHIMENTO,
+  // 🆕 03/09 — subiram pro mock quando o A1 passou a reler os 3 nomes e o
+  // objeto social. Aqui o uso não mudou, só o lugar de onde vêm (`CNAES_
+  // SECUNDARIAS` saiu junto: a única coisa que lia a lista aqui era o gerador
+  // do objeto social).
+  RAZAO_OPCOES,
+  OBJETO_SOCIAL,
 } from "@/app/(app)/dossie/mock";
+// 🆕 03/09 — rótulos de qualificação civil viraram `lib/` porque o recap do A1
+// mostra os mesmos valores e precisa do mesmo texto.
+import { ESTADO_CIVIL, REGIME_BENS, TIPO_IMOVEL } from "@/lib/qualificacao";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -101,20 +113,8 @@ function usePreencher(nonce: number | undefined, aplicar: () => void) {
  * 4 campos" (Pedro, R35). Fica como feature pra depois, não removida por
  * engano — se reaparecer, é decisão nova, não reversão de bug.
  */
-const ESTADO_CIVIL = [
-  { v: "solteiro", label: "Solteiro(a)" },
-  { v: "casado", label: "Casado(a)" },
-  { v: "uniao", label: "União estável" },
-  { v: "divorciado", label: "Divorciado(a)" },
-  { v: "viuvo", label: "Viúvo(a)" },
-];
-
-const REGIME_BENS = [
-  { v: "parcial", label: "Comunhão parcial de bens" },
-  { v: "universal", label: "Comunhão universal de bens" },
-  { v: "separacao", label: "Separação total de bens" },
-  { v: "final", label: "Participação final nos aquestos" },
-];
+/* 🔄 03/09 — `ESTADO_CIVIL` e `REGIME_BENS` mudaram pra `lib/qualificacao.ts`:
+   o A1 (`/revisar`) relê esses valores e precisa do mesmo rótulo. */
 
 export function SocioView({
   preencher,
@@ -200,6 +200,9 @@ export function SocioView({
   const [cepPessoal, setCepPessoal] = useState("");
   const [numeroPessoal, setNumeroPessoal] = useState("");
   const [complementoPessoal, setComplementoPessoal] = useState("");
+  // 🆕 03/09 (pedido do Pedro) — "i" do cabeçalho: por que a gente pede RG,
+  // estado civil e o endereço PESSOAL de quem já deu CPF.
+  const [info, setInfo] = useState(false);
   const enderecoPessoal = buscarCep(cepPessoal.replace(/\D/g, ""));
 
   usePreencher(preencher, () => {
@@ -227,7 +230,11 @@ export function SocioView({
     <>
       {/* "Seus dados", não "Dados do sócio" (19/07): quem abre sozinho não se
           vê como sócio, se vê como dono. */}
-      <TelaHeader meta="Seus dados" onVoltar={onVoltar} />
+      <TelaHeader
+        meta="Seus dados"
+        onVoltar={onVoltar}
+        acao={<BotaoInfo onClick={() => setInfo(true)} rotulo="Por que a gente pede esses dados" />}
+      />
 
       <main className="app-main">
         {/* 🗑️ 02/09 (pente fino do Pedro) — subtítulo fora, como na C0 e na
@@ -409,6 +416,24 @@ export function SocioView({
               ───────────────────────────────────────────────────────────────── */}
         </Corpo>
 
+        {/* Sheet é irmão do `Corpo`, nunca filho (senão sai cortado). */}
+        {info && (
+          <SheetInfo
+            titulo="Por que a gente pede isso"
+            onFechar={() => setInfo(false)}
+            pontos={[
+              "O CPF identifica você nos sistemas, mas o contrato social exige a qualificação completa: RG com órgão emissor, nascimento, nacionalidade e estado civil (art. 997 do Código Civil).",
+              "O estado civil e o regime de bens entram porque, em alguns regimes, o cônjuge precisa assinar junto. Melhor descobrir agora do que na hora da assinatura.",
+              "O endereço aqui é o SEU, de moradia, não o da empresa. Ele vai na ficha do representante na Receita Federal, e é separado do endereço onde a empresa funciona.",
+              "Nada disso vira consulta a órgão nenhum por conta própria: os dados só são usados nos documentos da sua abertura.",
+            ]}
+            exemplo={{
+              titulo: "Onde achar o órgão emissor",
+              nota: "Está no seu RG, abaixo ou ao lado do número, em siglas: SSP/MG, PC/MG, DETRAN/MG. Se o seu documento é a CNH, use o que está escrito nela como documento de origem.",
+            }}
+          />
+        )}
+
         <Rodape>
           <Button full disabled={!completo} onClick={onSeguir}>
             {/* 🔄 02/09 (pedido do Pedro) — fora o "Continuar" genérico. O
@@ -458,6 +483,11 @@ export function VinculoView({
 }) {
   const [contribui, setContribui] = useState<boolean | null>(null);
   const [valor, setValor] = useState("");
+  // 🆕 03/09 (pedido do Pedro) — "i" do cabeçalho. É a tela mais desconfiada
+  // do dossiê ("por que isso é da conta de vocês?"), e o sheet é onde a
+  // resposta cabe sem pesar a tela (a linha sobre não consultar vínculo de
+  // ninguém tinha saído da tela em 02/09 justamente por peso).
+  const [info, setInfo] = useState(false);
 
   usePreencher(preencher, () => {
     setContribui(PREENCHIMENTO.vinculo.contribui);
@@ -475,7 +505,11 @@ export function VinculoView({
       {/* 🐛 02/09 — `meta` dizia "Como você já contribui", uma descrição
           DESTA tela. Ele nomeia o DESTINO do voltar (padrão do gate, 29/08):
           daqui volta pra C1. 4ª ocorrência da mesma família hoje. */}
-      <TelaHeader meta="Seus dados pessoais" onVoltar={onVoltar} />
+      <TelaHeader
+        meta="Seus dados pessoais"
+        onVoltar={onVoltar}
+        acao={<BotaoInfo onClick={() => setInfo(true)} rotulo="Por que a gente pergunta isso" />}
+      />
 
       <main className="app-main">
         {/* 🔄 02/09 (pente fino do Pedro) — o subtítulo perdeu o "Vale a
@@ -629,6 +663,19 @@ export function VinculoView({
               como resposta à desconfiança certa desta tela; o Pedro cortou. A
               declaração continua sendo declaração, só sem a nota de rodapé. */}
         </div>
+
+        {info && (
+          <SheetInfo
+            titulo="Por que a gente pergunta isso"
+            onFechar={() => setInfo(false)}
+            pontos={[
+              "O INSS tem um teto por mês. Se você já contribui em outro lugar, na empresa você recolhe só sobre o que falta pro teto, e não o valor cheio de novo.",
+              "Sem essa resposta a gente teria que assumir o pior caso e você pagaria mais do que deve, todo mês.",
+              "Vale emprego de carteira, aposentadoria, autônomo que já recolhe e sócio de outra empresa.",
+              "A gente não consulta o vínculo de ninguém por conta própria, e seu empregador não fica sabendo de nada: quem informa é você, aqui.",
+            ]}
+          />
+        )}
 
         <Rodape>
           <Button full disabled={!completo} onClick={onSeguir}>
@@ -798,6 +845,12 @@ export function SociosView({
   // Sheet "o que significa administrar" — conteúdo fixo, não depende de quem
   // está marcado (fala dos dois papéis, administrador e sócio comum).
   const [infoAdmin, setInfoAdmin] = useState(false);
+  /* 🆕 03/09 (pedido do Pedro) — "i" do CABEÇALHO, separado do "i" do card de
+     administração: são assuntos diferentes (aquele responde "o que é
+     administrar", este responde "como funciona ter sócio e dividir a
+     empresa"). Fundir os dois num sheet só transformaria a resposta curta de
+     um card numa aula sobre sociedade. */
+  const [infoSocios, setInfoSocios] = useState(false);
 
   /**
    * 🆕 01/09 (reunião Rua Satélite 42) — QUEM ADMINISTRA.
@@ -903,7 +956,11 @@ export function SociosView({
           (P1/P2), então é isso que a tela precisa dizer. */}
       {/* 🐛 02/09 — `meta` é o nome do DESTINO do voltar, não desta tela
           (regra 6 do CLAUDE.md). Daqui volta pra C2. */}
-      <TelaHeader meta="Vínculo com o INSS" onVoltar={onVoltar} />
+      <TelaHeader
+        meta="Vínculo com o INSS"
+        onVoltar={onVoltar}
+        acao={<BotaoInfo onClick={() => setInfoSocios(true)} rotulo="Como funciona ter sócio" />}
+      />
 
       <main className="app-main">
         <Titulo
@@ -1445,6 +1502,24 @@ export function SociosView({
             `SheetSecundarias`: sheet é irmão do `Corpo`, nunca filho. */}
         {infoAdmin && <SheetAdministracao onFechar={() => setInfoAdmin(false)} />}
 
+        {infoSocios && (
+          <SheetInfo
+            titulo="Como funciona ter sócio"
+            onFechar={() => setInfoSocios(false)}
+            pontos={[
+              "A porcentagem diz quanto cada um tem da empresa, e é por ela que o lucro se divide quando vocês tirarem dinheiro dela.",
+              "Ela não muda o imposto da empresa: o Simples é calculado sobre o faturamento, não sobre quem tem quanto.",
+              "Não precisa ser meio a meio. A divisão é escolha de vocês, só precisa fechar 100%.",
+              "Dá pra mudar depois, mas envolve alterar o contrato social na Junta (com custo e prazo). Vale acertar agora.",
+              "Você precisa dos dados do sócio em mãos: documento com RG e órgão emissor, CPF, data de nascimento, estado civil e endereço.",
+            ]}
+            exemplo={{
+              titulo: "Divisão em 3 sócios",
+              nota: "Não precisa dar número redondo: 34% / 33% / 33% fecha 100% e é o mais comum quando ninguém quer ficar por cima.",
+            }}
+          />
+        )}
+
         <Rodape>
           {/* 🆕 03/09 (pente-fino) — só aparece quando o motivo do CTA
               travado é dado faltando num sócio específico (não cobre soma
@@ -1488,15 +1563,24 @@ export function SociosView({
  * gravação). "Tipo de endereço" (acima) é outro eixo (próprio × coworking) —
  * não resolve essa pergunta, que é sobre o IMÓVEL em si.
  */
-const TIPO_IMOVEL = [
-  { v: "casa", label: "Casa" },
-  { v: "apartamento", label: "Apartamento" },
-  { v: "outro", label: "Outro" },
-];
+/* 🔄 03/09 — `TIPO_IMOVEL` foi pra `lib/qualificacao.ts` pelo mesmo motivo dos
+   outros dois: o recap do A1 mostra o tipo de imóvel que a pessoa respondeu. */
 
 function mascaraCep(v: string) {
   const d = v.replace(/\D/g, "").slice(0, 8);
   return d.replace(/(\d{5})(\d)/, "$1-$2");
+}
+
+/**
+ * 🆕 03/09 (pedido do Pedro) — máscara do índice cadastral do IPTU: grupos de
+ * 3 dígitos separados por ponto, igual ao carnê da PBH.
+ * 🔄 03/09 (pedido do Pedro) — teto subiu de 12 pra 15 dígitos: existe carnê
+ * com índice mais longo que o placeholder sugeria. A validação continua com
+ * piso de 10 (o formato EXATO segue na fila-Larissa).
+ */
+function mascaraIptu(v: string) {
+  const d = v.replace(/\D/g, "").slice(0, 15);
+  return d.replace(/(\d{3})(?=\d)/g, "$1.");
 }
 
 interface EnderecoCep {
@@ -1517,6 +1601,28 @@ function buscarCep(cepDigitos: string): EnderecoCep | null {
   };
 }
 
+/**
+ * 🆕 03/09 — o "conteúdo colado no rodapé" da C2/C4 em forma de componente,
+ * pra poder alternar com o `Corpo` (rolável) por regime sem duplicar a tela.
+ * Bloco FIXO: quem estica é a ilustração acima, não ele.
+ */
+/**
+ * 🆕 03/09 (pedido do Pedro) — variante do bloco colado no rodapé pra telas
+ * com MAIS conteúdo (a 2ª rodada do C7): rola por dentro em vez de empurrar o
+ * CTA. O `BlocoColadoNoRodape` puro continua pras telas curtas (C2, C4).
+ */
+function BlocoColadoRolavel({ children }: { children: ReactNode }) {
+  return (
+    <div className="flex min-h-0 flex-col gap-6 overflow-y-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      {children}
+    </div>
+  );
+}
+
+function BlocoColadoNoRodape({ children }: { children: ReactNode }) {
+  return <div className="flex shrink-0 flex-col gap-6 pb-4">{children}</div>;
+}
+
 export function EmpresaView({
   preencher,
   onSeguir,
@@ -1525,12 +1631,20 @@ export function EmpresaView({
   enderecoProprio,
   inicial,
   ctaLabel,
+  metaVoltar,
 }: {
   preencher?: number;
   onSeguir?: () => void;
   onVoltar?: () => void;
-  /** 🆕 03/08 — MEI não tem capital social formal (não é sociedade). Campo
-   *  some; o resto da tela (endereço, IPTU, tipo de imóvel) é igual pros dois. */
+  /**
+   * 🆕 03/08 — MEI não tem capital social formal (não é sociedade).
+   * 🔄 03/09 (pente-fino) — a doc dizia que "endereço, IPTU e tipo de imóvel
+   * são iguais pros dois", e não são: **IPTU e tipo de imóvel/residência não
+   * existem no MEI** (guardas `!mei`), e no lugar deles entra "Como você
+   * atende?" (forma de atuação). O MEI também é o único que chega aqui com
+   * endereço fiscal nosso (`enderecoProprio={false}`), e aí a tela fica só
+   * com essa pergunta.
+   */
   mei?: boolean;
   /**
    * 🆕 26/08 (reunião Rua Satélite 36, item 2) — a escolha "próprio × fiscal
@@ -1567,6 +1681,14 @@ export function EmpresaView({
    * Ausente = "Continuar", o comportamento de sempre.
    */
   ctaLabel?: string;
+  /**
+   * 🐛 03/09 (pente-fino) — nome da tela pra onde o VOLTAR leva (regra 6 do
+   * CLAUDE.md). Era fixo "Sócios", mas o destino real varia: MEI vem da C1
+   * (pula C2/C3) e ME "só eu" vem da C2 (o passo Sócios é filtrado por
+   * `passosDoCliente`). Quem manda o `onVoltar` manda o rótulo junto, pros
+   * dois não divergirem.
+   */
+  metaVoltar?: string;
 }) {
   /**
    * 🔄 01/09 (decisão do Pedro) — não existe mais escolha de endereço AQUI.
@@ -1595,14 +1717,12 @@ export function EmpresaView({
   const [numero, setNumero] = useState(doGate.numero);
   const [complemento, setComplemento] = useState(doGate.complemento);
   const [iptu, setIptu] = useState("");
-  // 🔄 01/09 — não é mais pergunta: quem chega nesta tela tem endereço
-  // próprio (quem escolheu o nosso endereço fiscal nem vê a C4).
-  const tipo = "proprio";
-  // 🔒 31/08 (validado pelo Pedro) — capital social TRAVADO em R$10.000 pra
-  // prestador de serviço, preenchido por nós. Deixou de ser campo editável
-  // (antes tinha chips de 1k/5k/10k + input livre — a decisão da reunião
-  // Rua Satélite 38-40 foi travar, não sugerir).
-  const capital = "10.000";
+  /* 🧹 03/09 (pente-fino) — saíram daqui:
+     · `tipo = "proprio"` (constante) e o `tipo === "proprio"` do
+       `precisaResidencia`, que era sempre verdadeiro;
+     · `capital`/`capitalNum`, travados em R$10.000 desde 31/08 e preenchidos
+       no backend — `capitalNum > 0` era um gate que nunca reprovava, sobra do
+       tempo em que capital social era campo desta tela. */
   // 🆕 31/08 — tipo de imóvel (casa/apartamento/outro), só quando o endereço é
   // PRÓPRIO. Dirige a regra de residência logo abaixo.
   // 🔄 01/09 — nasce do que foi respondido no E3.4 (a pergunta subiu pra lá,
@@ -1610,6 +1730,13 @@ export function EmpresaView({
   const [tipoImovel, setTipoImovel] = useState(doGate.tipoImovel);
   // 🆕 28/08 — só o MEI usa (ver o bloco "Como você atende?" mais abaixo).
   const [atuacao, setAtuacao] = useState<string[]>([]);
+  // 🆕 03/09 (pedido do Pedro) — sheet do "i" do cabeçalho.
+  const [infoEndereco, setInfoEndereco] = useState(false);
+  /* 🆕 03/09 (pedido do Pedro) — 2º "i", este NO CAMPO do índice cadastral.
+     O do cabeçalho responde "por que essa tela pede isso"; este responde
+     "como eu acho esse número", que é dúvida do campo e precisa de espaço
+     próprio (link da PBH e, em breve, a ilustração da folha do IPTU). */
+  const [infoIptu, setInfoIptu] = useState(false);
   /**
    * 🔒 31/08 (validado pelo Pedro contra a reunião real) — a pergunta de
    * residência é SEMPRE sobre o TITULAR (quem está constituindo), nunca sobre
@@ -1653,19 +1780,26 @@ export function EmpresaView({
     setResideNoEndereco(true);
   });
 
+  /* ⚠️ `querFiscal` NÃO é código morto: o MEI é o único que chega nesta tela
+     com o endereço fiscal da Legalizai (o ME nesse caso é redirecionado em
+     `dossie/empresa/page.tsx`), e aí a tela fica só com "Como você atende?". */
   const querFiscal = usarProprio === false;
   const cepDigitos = cep.replace(/\D/g, "");
   const cepCheio = cepDigitos.length === 8;
   const endereco = buscarCep(cepDigitos);
-  const capitalNum = Number(capital.replace(/\D/g, "")) || 0;
   // 🔒 31/08 — apartamento OBRIGA o titular a residir no local (senão a
   // Prefeitura de BH indefere a viabilidade — visto ao vivo na gravação real).
   const ehApartamento = tipoImovel === "apartamento";
-  // 🔒 se é apartamento, a lei não dá opção: a resposta é implícita "Sim"
-  // (mesma lógica que a gravação real mostrou: índice cadastral de apartamento
-  // já vem com residência marcada como sim, sem perguntar).
-  const residenciaImplicita = ehApartamento;
-  const resideEfetivo = residenciaImplicita ? true : resideNoEndereco;
+  /**
+   * 🐛 03/09 (pente-fino) — o fallback editável ainda FORÇAVA "Sim" quando o
+   * imóvel era apartamento ("residência implícita"), com um aviso dizendo que
+   * não dava pra continuar com "não". É exatamente o beco sem saída que a
+   * decisão de 01/09 desmontou ao subir a pergunta pro E3.4: quem tem
+   * apartamento onde NÃO mora precisava declarar algo falso. Agora a resposta
+   * é dela, e "não moro" bloqueia o avanço mostrando a saída real (o endereço
+   * fiscal da Legalizai), igual o gate faz antes do pagamento.
+   */
+  const apartamentoSemResidencia = ehApartamento && resideNoEndereco === false;
 
   /**
    * 🆕 04/08 — cruzamento com pesquisa Gemini: o campo só checava "não vazio",
@@ -1676,13 +1810,16 @@ export function EmpresaView({
    * pode estar errado. 🟡 fila-Larissa: formato exato do índice.
    */
   const iptuDigitos = iptu.replace(/\D/g, "");
-  const iptuCurto = iptuDigitos.length > 0 && iptuDigitos.length < 10;
+  /* 🔄 03/09 (pedido do Pedro) — o aviso só aparece a partir do 6º dígito:
+     antes pulava na tela já no 1º número digitado, cobrando o índice inteiro
+     de quem tinha acabado de começar a digitar. */
+  const iptuCurto = iptuDigitos.length >= 6 && iptuDigitos.length < 10;
   const iptuOk = iptuDigitos.length >= 10;
 
   // 🐛→🔒 31/08 — CORRIGIDO: antes só perguntava residência com SOCIOS > 1
   // (`grep` confirmou zero pergunta pro caso mais comum — dono único). A
   // regra da Prefeitura vale igual, é sempre sobre o titular.
-  const precisaResidencia = !mei && tipo === "proprio";
+  const precisaResidencia = !mei;
 
   const tipoImovelOk = !precisaResidencia || tipoImovel !== "";
 
@@ -1702,37 +1839,135 @@ export function EmpresaView({
       // precisa ter.
       (mei || iptuOk) &&
       tipoImovelOk &&
-      (!precisaResidencia || resideEfetivo !== null));
+      (!precisaResidencia || resideNoEndereco !== null) &&
+      // 🐛 03/09 (pente-fino) — apartamento onde a pessoa não mora trava aqui
+      // em vez de virar um "Sim" forçado (a Prefeitura de BH indefere).
+      !apartamentoSemResidencia);
 
   /**
-   * 🐛 29/07 — O CAPITAL SOCIAL ESCAPAVA. A condição era
-   * `querFiscal || (usarProprio === true && ... && capitalNum > 0 && ...)`, e o
-   * `||` fazia curto-circuito: quem escolhia o endereço fiscal liberava o
-   * Continuar com o capital social em branco — e o campo estava ali,
-   * renderizado, porque aparece nos DOIS caminhos. Capital social vai no
-   * contrato social e a JUCEMG exige. O endereço é que é condicional, não ele.
+   * 🧹 03/09 (pente-fino) — o `usarProprio !== null` saiu (o valor é
+   * `enderecoProprio ?? true`, nunca nulo) e o gate de capital social também
+   * (travado em R$10.000 no backend desde 31/08, nunca reprovava). Sobra a
+   * regra real: endereço resolvido e, no MEI, a forma de atuação — que o
+   * formulário oficial do Portal não deixa passar em branco.
    */
-  const completo =
-    usarProprio !== null &&
-    enderecoOk &&
-    // ME exige capital social (vai pro contrato); MEI exige forma de atuação
-    // (o formulário oficial não deixa passar sem).
-    (mei ? atuacao.length > 0 : capitalNum > 0);
+  const completo = enderecoOk && (!mei || atuacao.length > 0);
+
+  /**
+   * 🐛 03/09 (pente-fino) — O LAYOUT NOVO (conteúdo colado no rodapé, sem
+   * `Corpo`) VALE SÓ PRO ME. No ME sobra pouco conteúdo (1 card + o IPTU),
+   * mas o MEI troca isso por "Como você atende?", que são 7 botões (~380px):
+   * sem container rolável, a ilustração encolhe até zero e o resto é CLIPADO,
+   * fora de alcance. O MEI segue no `Corpo` de sempre (rola).
+   */
+  const Bloco = mei ? Corpo : BlocoColadoNoRodape;
 
   return (
     <>
-      {/* 🐛 02/09 — `meta` nomeia o destino: daqui volta pra C3. */}
-      <TelaHeader meta="Sócios" onVoltar={onVoltar} />
+      {/* 🐛 03/09 (pente-fino) — `meta` nomeia o DESTINO do voltar, e ele
+          varia: MEI vem da C1, ME "só eu" vem da C2, ME com sócio vem da C3.
+          Quem navega (a page) manda o rótulo junto.
+          🆕 03/09 (pedido do Pedro) — "i" na ponta direita do cabeçalho, na
+          altura do voltar: abre a explicação do que está sendo pedido e por
+          que o endereço aparece travado. É a dúvida que a tela levanta e não
+          respondia em lugar nenhum. */}
+      <TelaHeader
+        meta={metaVoltar ?? "Sócios"}
+        onVoltar={onVoltar}
+        acao={
+          <button
+            type="button"
+            onClick={() => setInfoEndereco(true)}
+            aria-label="Por que a gente pede esses dados"
+            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border-hairline text-micro font-bold text-text-tertiary"
+          >
+            i
+          </button>
+        }
+      />
 
       <main className="app-main">
+        {/* 🔄 03/09 (pedido do Pedro) — MESMO MODELO DA C2 (`VinculoView`):
+            conteúdo COLADO NO RODAPÉ, vazio em cima ocupado pela ilustração —
+            não é `Corpo` (flex-1 rolável) porque quem ocupa a sobra é este
+            espaço, não o conteúdo.
+            🔄 03/09 (pedido do Pedro) — ícone do prédio: pro ME, arquivo NOVO
+            exportado (`c4-endereco-me.png`, 400×367 — o `regime-me-coral.png`
+            do gate só tem 140×129 nativo, esticado pra este espaço saía
+            borrado). MEI segue no ícone antigo (sem export novo, fora do
+            escopo desta rodada). Guardado por regime igual o título.
+            🔄 03/09 (pedido do Pedro) — flutuação sutil, mesmo tratamento
+            do C2/retomar (sombra de contato em 2 camadas + drop-shadow).
+            🐛 03/09 (pente-fino) — só no ME: no MEI o conteúdo é grande e o
+            `Corpo` volta a ser quem ocupa a sobra. */}
+        {!mei && (
+        <div className="flex min-h-0 flex-1 items-center justify-center py-4">
+          <div id="c4-endereco-flutua" className="relative flex h-[79%] max-h-[302px] items-end">
+            <div
+              aria-hidden
+              className="absolute -bottom-2 left-1/2 h-5 w-[72%] -translate-x-1/2 blur-md"
+              style={{
+                background:
+                  "radial-gradient(closest-side, rgba(27,30,36,.30), rgba(27,30,36,.10) 62%, transparent 100%)",
+              }}
+            />
+            <Image
+              src="/icones/c4-endereco-me.png"
+              alt=""
+              aria-hidden
+              width={400}
+              height={367}
+              className="relative z-10 h-full w-auto"
+              style={{ filter: "drop-shadow(6px 14px 12px rgba(27,30,36,.20))" }}
+            />
+          </div>
+
+          {/* Mesma dosagem do C2/retomar: durações que não se dividem entre
+              si (7s / 5,5s) pro loop não virar sobe-e-desce mecânico.
+              ♿ desliga em `prefers-reduced-motion`. */}
+          <style jsx global>{`
+            @keyframes c4-endereco-flutua-obj {
+              0%   { transform: translate3d(0, 0, 0) rotate(0deg); }
+              35%  { transform: translate3d(4px, -7px, 0) rotate(0.6deg); }
+              70%  { transform: translate3d(-3px, -3px, 0) rotate(-0.5deg); }
+              100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+            }
+            @keyframes c4-endereco-flutua-sombra {
+              0%   { transform: translateX(-50%) scaleX(1); opacity: 1; }
+              35%  { transform: translateX(-50%) scaleX(0.9); opacity: 0.72; }
+              70%  { transform: translateX(-50%) scaleX(0.96); opacity: 0.88; }
+              100% { transform: translateX(-50%) scaleX(1); opacity: 1; }
+            }
+            #c4-endereco-flutua img {
+              animation: c4-endereco-flutua-obj 7s ease-in-out infinite;
+              will-change: transform;
+            }
+            #c4-endereco-flutua > div[aria-hidden] {
+              animation: c4-endereco-flutua-sombra 5.5s ease-in-out infinite;
+              will-change: transform, opacity;
+            }
+            @media (prefers-reduced-motion: reduce) {
+              #c4-endereco-flutua img,
+              #c4-endereco-flutua > div[aria-hidden] {
+                animation: none;
+              }
+            }
+          `}</style>
+        </div>
+        )}
+
         {/* ✍️ 29/07 — o título era "Onde a empresa fica?", mas a tela também
             coletava capital social, que não é lugar nenhum.
             🐛→✍️ 01/09 (achado pelo E2E) — o SUBTÍTULO continuou prometendo
             capital social depois que o campo saiu (31/08, valor travado em
             R$10.000 no backend). Trocado pelo que a tela de fato faz: é o
             endereço que a Prefeitura analisa pra deferir ou indeferir. */}
-        <Titulo sub="O endereço vai no CNPJ, e é ele que a Prefeitura analisa pra liberar a empresa.">
-          {/* 🔄 03/09 (pedido do Pedro) — "Endereço da empresa" só no ME: é
+        <Titulo sub="É esse endereço que a Prefeitura analisa pra liberar a empresa.">
+          {/* 🔄 03/09 (pedido do Pedro) — subtítulo cortado pra 1 linha: o
+              "vai no CNPJ" saiu (a dica do IPTU logo abaixo já explica o
+              motivo prático, "obrigatório pra Junta" — não precisa das duas
+              justificativas juntas aqui em cima).
+              🔄 03/09 (pedido do Pedro) — "Endereço da empresa" só no ME: é
               tudo que esta tela pergunta ali. Guardado por regime porque o
               MEI ainda tem a pergunta extra "Como você atende?" (forma de
               atuação), que não é endereço — mudar o título pros dois vazaria
@@ -1740,7 +1975,7 @@ export function EmpresaView({
           {mei ? "Os dados da empresa" : "Endereço da empresa"}
         </Titulo>
 
-        <Corpo>
+        <Bloco>
           {/* 🗑️ 01/09 (decisão do Pedro) — O UPSELL DE ENDEREÇO FISCAL SAIU
               DAQUI, e com ele o card de "já decidido lá atrás".
 
@@ -1788,7 +2023,7 @@ export function EmpresaView({
                   </p>
                   <p className="text-caption text-text-secondary mt-0.5">
                     {TIPO_IMOVEL.find((t) => t.v === tipoImovel)?.label} ·{" "}
-                    {resideEfetivo ? "você mora nele" : "você não mora nele"}
+                    {resideNoEndereco ? "você mora nele" : "você não mora nele"}
                   </p>
                 </div>
               )}
@@ -1855,14 +2090,24 @@ export function EmpresaView({
               {!mei && (
               <Campo
                 rotulo="Índice cadastral do IPTU"
-                dica="Está no carnê do IPTU e é obrigatório pra Junta."
+                acao={<BotaoInfo onClick={() => setInfoIptu(true)} rotulo="Como achar o índice cadastral" />}
+                /* 🐛 03/09 (pente-fino) — "Pode conter até 15 dígitos" entrava
+                   pelo `erro` do `Texto`: borda vermelha e cor de perigo pra
+                   uma ORIENTAÇÃO ("o número é mais longo do que você imagina"),
+                   não pra um erro. Virou dica, que é neutra — e só troca a
+                   frase base a partir do 6º dígito, quando ela passa a ser o
+                   que a pessoa precisa ler. */
+                dica={
+                  iptuCurto
+                    ? "Pode conter até 15 dígitos."
+                    : "Está no carnê do IPTU e é obrigatório pra Junta."
+                }
               >
                 <Texto
                   valor={iptu}
-                  onChange={setIptu}
+                  onChange={(v) => setIptu(mascaraIptu(v))}
                   placeholder="000.000.000.000"
                   inputMode="numeric"
-                  erro={iptuCurto ? "Confira o número: o índice completo costuma ter mais dígitos que isso." : undefined}
                 />
               </Campo>
               )}
@@ -1895,22 +2140,31 @@ export function EmpresaView({
                   <p className="text-caption font-semibold text-text-primary mb-2">
                     Você mora nesse endereço?
                   </p>
-                  {/* 🔒 se é apartamento, a lei não dá opção. */}
-                  {residenciaImplicita ? (
-                    <Aviso variante="info" titulo='Marcado como "Sim" automaticamente'>
-                      Como o endereço é um apartamento, a Prefeitura de Belo
-                      Horizonte só aprova se você residir no local — não dá
-                      pra continuar com “não” aqui.
-                    </Aviso>
-                  ) : (
-                    <OpcoesLinha
-                      opcoes={[
-                        { v: false, label: "Não" },
-                        { v: true, label: "Sim" },
-                      ]}
-                      valor={resideNoEndereco}
-                      onChange={setResideNoEndereco}
-                    />
+                  {/* 🐛 03/09 (pente-fino) — a resposta era FORÇADA em "Sim"
+                      quando o imóvel era apartamento, com aviso dizendo que
+                      não dava pra continuar com "não". Era o beco sem saída
+                      que a decisão de 01/09 desmontou no E3.4: quem tem
+                      apartamento onde não mora só podia declarar algo falso.
+                      Agora responde de verdade, e o "não" mostra a saída real
+                      em vez de travar calado. */}
+                  <OpcoesLinha
+                    opcoes={[
+                      { v: false, label: "Não" },
+                      { v: true, label: "Sim" },
+                    ]}
+                    valor={resideNoEndereco}
+                    onChange={setResideNoEndereco}
+                  />
+                  {apartamentoSemResidencia && (
+                    <div className="mt-3">
+                      <Aviso variante="warning" titulo="Apartamento precisa de morador">
+                        A Prefeitura de Belo Horizonte indefere empresa em
+                        apartamento quando nenhum sócio mora no endereço. Dá
+                        pra resolver usando outro endereço seu, ou o endereço
+                        fiscal da Legalizai. Chama a gente no WhatsApp que a
+                        gente troca isso pra você.
+                      </Aviso>
+                    </div>
                   )}
                   {/* 🗑️ 01/09 — o bloco "Onde você mora" saiu daqui: o endereço
                       pessoal virou pergunta fixa do C1, pra TODO mundo (antes
@@ -1983,16 +2237,68 @@ export function EmpresaView({
               </div>
             </Campo>
           )}
-        </Corpo>
+        </Bloco>
+
+        {/* Sheet é IRMÃO do bloco de conteúdo, nunca filho (mesma doutrina do
+            `SheetCnae`/`SheetSecundarias`/`SheetAdministracao`: dentro de um
+            container com clip/scroll ele aparece cortado). */}
+        {infoEndereco && (
+          <SheetEnderecoEmpresa mei={mei} onFechar={() => setInfoEndereco(false)} />
+        )}
+
+        {infoIptu && (
+          <SheetInfo
+            titulo="Como achar o índice cadastral"
+            onFechar={() => setInfoIptu(false)}
+            pontos={[
+              "É o número que identifica o seu imóvel no cadastro da Prefeitura. Cada imóvel tem o seu, e ele não muda de dono pra dono.",
+              "Ele está na sua guia do IPTU, no topo, junto dos dados do imóvel.",
+              "Sem a guia em mãos, dá pra consultar no portal da Prefeitura de BH, no serviço de consulta do índice cadastral.",
+            ]}
+            /* 🆕 03/09 (arte do Pedro) — a guia real do IPTU.
+               🔄 03/09 (2ª rodada, pedido do Pedro) — era só a FAIXA recortada
+               do índice; ele derrubou porque a pessoa precisa reconhecer a
+               folha inteira pra saber que é aquele papel, mesmo pequena. Agora
+               entra completa, encaixada, com pill de zoom que aproxima no
+               número (foco MEDIDO no arquivo: a caixa coral fica em
+               14,3% / 74,9% da imagem, não é chute).
+               🔒 Nome e endereço do contribuinte estão tarjados no arquivo,
+               com a mesma pílula cinza que a própria guia usa nos outros
+               campos: a folha continua inteira, sem dado pessoal de ninguém. */
+            ilustracao={
+              <ImagemZoom
+                src="/icones/c4-iptu-guia.jpg"
+                alt="Guia do IPTU de Belo Horizonte inteira, com o índice cadastral destacado em coral logo abaixo dos dados do imóvel"
+                largura={1200}
+                altura={578}
+                focoX={14.3}
+                focoY={74.9}
+                escala={2.6}
+              />
+            }
+            link={{
+              /* Serviço oficial "IPTU – Consulta do Índice Cadastral e CIB",
+                 achado no portal da PBH em 03/09. 🟡 URL do Portal de
+                 Serviços carrega ids que a PBH pode rotacionar: se cair, a
+                 porta estável é prefeitura.pbh.gov.br/fazenda/iptu. */
+              href: "https://servicos.pbh.gov.br/servicos/i/650b5f6f44d15a1dffe97660/5dc8470253fd6b5bbd99185f/servicos+iptu-consulta-de-numero-do-indice-cadastral",
+              label: "Consultar no site da Prefeitura",
+            }}
+          />
+        )}
 
         <Rodape>
           {/* 🆕 03/09 (pedido do Pedro) — escape hatch pra quem trava aqui
               (endereço/IPTU são os campos que mais geram dúvida da tela),
               mesmo padrão do E3.2 (`gate-telas.tsx`): abre o WhatsApp com a
-              dúvida já contextualizada, número único em `lib/contato.ts`. */}
+              dúvida já contextualizada, número único em `lib/contato.ts`.
+              🐛 03/09 (pente-fino) — a mensagem citava IPTU, que não existe na
+              versão MEI desta tela. Texto guardado por regime. */}
           <a
             href={linkWhatsApp(
-              "Oi! Estou no cadastro da empresa no app da Legalizai e tô com dúvida nos dados do endereço/IPTU. Podem me ajudar?",
+              mei
+                ? "Oi! Estou abrindo meu MEI no app da Legalizai e tô com dúvida nos dados da empresa. Podem me ajudar?"
+                : "Oi! Estou no cadastro da empresa no app da Legalizai e tô com dúvida nos dados do endereço/IPTU. Podem me ajudar?",
             )}
             target="_blank"
             rel="noopener noreferrer"
@@ -2183,6 +2489,9 @@ export function CnaeSecundariosView({
      É o que justifica o botão dizer "Salvar" — e o que permite fechar sem
      aplicar, se a pessoa só foi conferir. */
   const [vendoSecundarias, setVendoSecundarias] = useState(false);
+  // 🆕 03/09 (pedido do Pedro) — "i" do cabeçalho: a tela é opcional e isso
+  // gera hesitação ("preciso mesmo?", "aumenta meu imposto?").
+  const [info, setInfo] = useState(false);
   const [rascunho, setRascunho] = useState<Record<string, boolean>>({});
   // As escolhidas, venham de onde vierem (sugestão curada ou busca).
   const escolhidas = idsAtivos
@@ -2222,7 +2531,11 @@ export function CnaeSecundariosView({
     <>
       {/* 🐛 02/09 — `meta` é o nome do DESTINO do voltar, não desta tela
           (padrão corrigido no gate em 29/08). Daqui volta pra C0. */}
-      <TelaHeader meta="Sua atividade" onVoltar={onVoltar} />
+      <TelaHeader
+        meta="Sua atividade"
+        onVoltar={onVoltar}
+        acao={<BotaoInfo onClick={() => setInfo(true)} rotulo="Pra que serve atividade secundária" />}
+      />
 
       <main className="app-main">
         {/* 🗑️ 02/09 (pedido do Pedro) — SEM SUBTÍTULO, pra padronizar com a
@@ -2489,6 +2802,24 @@ export function CnaeSecundariosView({
 
         {detalhe && <SheetCnae opcao={detalhe} onFechar={() => setDetalhe(null)} />}
 
+        {info && (
+          <SheetInfo
+            titulo="Pra que serve atividade secundária"
+            onFechar={() => setInfo(false)}
+            pontos={[
+              "A atividade principal é o que você mais faz. As secundárias são o resto que você também faz e quer poder cobrar por isso.",
+              "Você só emite nota do que está no seu CNPJ. Fazer um serviço que não está lá te deixa sem como faturar direito.",
+              "Incluir agora é de graça. Depois, acrescentar atividade é uma alteração cadastral, com taxa e prazo.",
+              "As sugestões daqui são do mesmo grupo fiscal da sua principal: não mudam o que você paga.",
+              "Não é obrigatório. Se hoje você só faz uma coisa, pode seguir sem escolher nada.",
+            ]}
+            exemplo={{
+              titulo: "Um caso comum",
+              nota: "Quem tem design como principal costuma incluir consultoria e treinamento: são serviços que aparecem em projeto de cliente e, sem o código, não dava pra colocar na nota.",
+            }}
+          />
+        )}
+
         {vendoSecundarias && (
           <SheetSecundarias
             itens={TODAS}
@@ -2673,50 +3004,146 @@ export function NaturezaView({
 
 /* ═══════════════════ N16 · NOME / RAZÃO SOCIAL ══════════════════════════ */
 
-// 3 sugestões da IA, já na ordem de prioridade default (a pessoa reordena).
-const SUGESTOES_RAZAO = [
-  `${NOME_EMPRESARIAL} Web Studio`,
-  `${NOME_EMPRESARIAL} Desenvolvimento de Software`,
-  `${NOME_EMPRESARIAL.split(" ")[0]} Tecnologia ME`,
+/**
+ * 1ª RODADA — a 1ª linha vira o ponto de partida da pessoa (campo aberto) e as
+ * 2 seguintes são as nossas reservas travadas (decisão do Pedro, 03/09).
+ * 🔄 03/09 — a lista mora em `dossie/mock.ts` (`RAZAO_OPCOES`): o A1 mostra as
+ * 3 na ordem, e duas cópias divergiriam na 1ª correção.
+ */
+
+/**
+ * 🆕 03/09 (pedido do Pedro) — 2ª RODADA: as reservas são OUTRAS.
+ *
+ * Se as 3 primeiras caíram, repetir as nossas seria mandar de volta o que a
+ * Junta acabou de recusar. E o critério de construção também muda, pelo mesmo
+ * motivo que faz a gente travar as reservas: nome novo tem que sair de outra
+ * ideia, não de outra palavra. Aqui a 1ª usa só o SOBRENOME (some o primeiro
+ * nome, que é a colisão mais provável) e a 2ª usa as INICIAIS.
+ */
+const RESERVAS_2A_RODADA = [
+  `${NOME_EMPRESARIAL.split(" ").slice(-1)[0]} Digital Soluções`,
+  `${NOME_EMPRESARIAL.split(" ")
+    .map((parte) => parte[0])
+    .join("")} Sistemas e Serviços`,
 ];
 
-function gerarObjetoSocial(): string {
-  const secs = CNAES_SECUNDARIAS.map((s) => s.humano).join(", ");
-  return `Prestação de serviços de ${CNAE_PRINCIPAL.humano.toLowerCase()}, podendo também exercer ${secs}.`;
-}
+/* 🔄 03/09 — `gerarObjetoSocial()` virou a const `OBJETO_SOCIAL` no mock: o A1
+   exibe o mesmo texto como leitura, e ele é derivado das atividades nos dois. */
 
-// Ícones minimalistas (stroke, `currentColor`) — pedido do Pedro pra não usar
-// emoji nos botões de editar/salvar (emoji vem colorido, ignora o texto).
-function IconeLapis() {
+/* 🗑️ 03/09 — `IconeLapis` e `IconeCheckMini` saíram com o modo de edição:
+   os campos ficam abertos, não há mais o que "editar" nem o que "salvar". */
+
+/* 🗑️ 03/09 — `ChevronOrdem` saiu com as setas: a ordem deixou de ser escolha
+   (a opção da pessoa vai primeiro, as nossas 2 reservas seguram atrás). */
+
+/**
+ * 🔒 03/09 (achado do Pedro) — TETO DE 50 CARACTERES NA RAZÃO SOCIAL.
+ *
+ * O campo do registro aceita 60. A gente acrescenta o tipo societário no fim
+ * ("… LTDA") automaticamente, e esse sufixo tem que caber dentro dos mesmos
+ * 60 — então o que a pessoa escreve para em 50. Sem o teto, o nome passaria
+ * na tela e seria cortado (ou recusado) na hora de registrar, que é o pior
+ * lugar possível pra descobrir.
+ *
+ * 🟡 O 60 veio do Pedro, não de fonte oficial lida por mim: se o limite real
+ * variar por natureza jurídica, é este número que muda.
+ */
+const LIMITE_RAZAO = 50;
+
+/**
+ * 🆕 03/09 (pedido do Pedro) — o nome APARECE INTEIRO, quebrando linha se
+ * precisar. `input` não quebra: some o começo ou o fim do texto, e nome de
+ * empresa é exatamente o que a pessoa precisa reler antes de mandar pra Junta.
+ * Então é um `textarea` de 1 linha que cresce com o conteúdo — mesma técnica
+ * do campo de descrição da C0 (`gate-telas.tsx`), sem rolagem interna.
+ */
+function CampoNomeAberto({
+  valor,
+  onChange,
+  autoFocus,
+  rotulo,
+  placeholder,
+  limite,
+}: {
+  valor: string;
+  onChange: (v: string) => void;
+  autoFocus?: boolean;
+  rotulo: string;
+  placeholder: string;
+  /** Teto de caracteres. Ver `LIMITE_RAZAO` pro porquê do número. */
+  limite: number;
+}) {
+  const ref = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
+  }, [valor]);
+
   return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-    </svg>
+    <textarea
+      ref={ref}
+      rows={1}
+      value={valor}
+      onChange={(e) => onChange(e.target.value)}
+      // Enter não quebra linha aqui: o nome é uma linha só de conteúdo, a
+      // quebra é só visual (o campo cresce sozinho quando não cabe).
+      onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
+      autoFocus={autoFocus}
+      aria-label={rotulo}
+      placeholder={placeholder}
+      maxLength={limite}
+      className="min-w-0 flex-1 resize-none overflow-hidden bg-transparent py-3 text-body
+                 leading-snug text-text-primary placeholder:text-text-muted focus:outline-none"
+    />
   );
 }
 
-function IconeCheckMini() {
+/** Cadeado das reservas — mesmo traço dos outros ícones do wizard. */
+function IconeCadeado() {
   return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="m5 12 5 5L20 7" />
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      className="shrink-0 text-text-tertiary"
+    >
+      <rect x="4" y="10" width="16" height="10" rx="2" />
+      <path d="M8 10V7a4 4 0 0 1 8 0v3" />
     </svg>
   );
 }
 
 /**
- * 🆕 24/08 (pedido do Pedro) — cada sugestão ganha lápis de edição: a pessoa
- * reescreve a sugestão da IA no lugar em vez de digitar uma opção À PARTE
- * ("Nenhuma dessas? Digite a sua", removido). Objeto usa `id` estável (não o
- * texto) porque o texto agora MUDA quando editado — usar o próprio nome como
- * key quebraria a lista.
+ * 🆕 24/08 (pedido do Pedro) — a pessoa reescreve a sugestão da IA no lugar,
+ * em vez de digitar uma opção À PARTE ("Nenhuma dessas? Digite a sua",
+ * removido). Objeto usa `id` estável (não o texto) porque o texto MUDA quando
+ * editado — usar o próprio nome como key quebraria a lista.
+ * 🔄 03/09 — o lápis que abria a edição saiu: os campos ficam sempre abertos.
  */
 interface SugestaoNome {
   id: string;
   valor: string;
 }
 
-function sugestoesIniciais(): SugestaoNome[] {
-  return SUGESTOES_RAZAO.map((valor, i) => ({ id: `n${i}`, valor }));
+function sugestoesIniciais(novaRodada = false): SugestaoNome[] {
+  // 🔄 03/09 — nas DUAS rodadas a regra é a mesma: 1 linha da pessoa + 2
+  // reservas nossas travadas. O que muda é o lote das reservas e o fato de a
+  // 1ª nascer vazia na 2ª rodada (ali ela vem escrever, não escolher).
+  if (novaRodada) {
+    return [
+      { id: "r0", valor: "" },
+      ...RESERVAS_2A_RODADA.map((valor, i) => ({ id: `r${i + 1}`, valor })),
+    ];
+  }
+  return RAZAO_OPCOES.map((valor, i) => ({ id: `n${i}`, valor }));
 }
 
 export function NomeView({
@@ -2766,36 +3193,45 @@ export function NomeView({
   ctaLabel?: string;
 }) {
   const [ordem, setOrdem] = useState<SugestaoNome[]>(() =>
-    novaRodada ? [0, 1, 2].map((i) => ({ id: `r${i}`, valor: "" })) : sugestoesIniciais(),
+    sugestoesIniciais(novaRodada),
   );
-  // Na 2ª rodada o 1º campo já abre em edição: sem isso a pessoa cai numa
-  // lista de 3 vazios e precisa descobrir que o lápis é o caminho.
-  const [editandoId, setEditandoId] = useState<string | null>(novaRodada ? "r0" : null);
+  /* 🗑️ 03/09 (pedido do Pedro) — `editandoId` saiu junto com o lápis: os 3
+     campos agora estão sempre abertos, então não existe mais "qual está em
+     edição". O foco inicial da 2ª rodada virou `autoFocus` no 1º campo. */
   const [fantasia, setFantasia] = useState("");
+  /* 🆕 03/09 — "i" da SEÇÃO das opções (no MEI, do cabeçalho): responde como
+     funcionam as 3 tentativas e por que as 2 reservas são travadas. */
+  const [info, setInfo] = useState(false);
+  /* 🆕 03/09 (pedido do Pedro) — "i" DENTRO do campo de escrever o nome, só
+     com as dicas de como montar uma razão social que passa. Um sheet só
+     estava virando texto demais: são duas dúvidas diferentes ("que nome eu
+     escrevo?" × "e se não passar?") e cada uma agora tem a sua porta. */
+  const [infoRegras, setInfoRegras] = useState(false);
+  /* 🆕 03/09 (pedido do Pedro) — "i" DENTRO do campo de nome fantasia, mesma
+     doutrina: o contraste "aqui é livre" responde melhor no próprio campo do
+     que numa lista lá em cima. */
+  const [infoFantasia, setInfoFantasia] = useState(false);
   // 🔒 24/08 (reunião Leonan 19/08) — TRAVADO, não editável. Erro de grafia
   // do cliente (S↔Z etc) subia pro contrato e virava reclamação real no
   // escritório antigo do Leonan. Objeto social é 100% gerado a partir das
   // atividades (CNAE principal + secundárias) — se as atividades mudam, o
   // objeto se regenera sozinho; a pessoa não digita nele.
-  const objeto = gerarObjetoSocial();
+  const objeto = OBJETO_SOCIAL;
+  /* 🔒 03/09 (pedido do Pedro) — a 2ª rodada tem tela própria: pouco conteúdo
+     e espaço reservado pra ilustração, no modelo da C2. A 1ª rodada é cheia
+     (3 nomes + fantasia + objeto social) e segue no `Corpo` de sempre. */
+  const BlocoDaTela = novaRodada ? BlocoColadoRolavel : Corpo;
 
   usePreencher(preencher, () => {
-    setOrdem(sugestoesIniciais());
-    setEditandoId(null);
+    setOrdem(sugestoesIniciais(novaRodada));
     setFantasia(PREENCHIMENTO.nome.fantasia);
   });
 
   const completo = mei || ordem.every((o) => o.valor.trim().length > 0);
 
-  function mover(i: number, dir: -1 | 1) {
-    const j = i + dir;
-    if (j < 0 || j >= ordem.length) return;
-    setOrdem((o) => {
-      const novo = [...o];
-      [novo[i], novo[j]] = [novo[j], novo[i]];
-      return novo;
-    });
-  }
+  /* 🗑️ 03/09 — `mover()` saiu com as setas: a ordem virou regra do produto
+     (a opção da pessoa vai primeiro, as 2 nossas seguram atrás), não escolha
+     de tela. */
 
   function editarValor(id: string, valor: string) {
     setOrdem((o) => o.map((s) => (s.id === id ? { ...s, valor } : s)));
@@ -2807,26 +3243,114 @@ export function NomeView({
           pra tela de recusa da Junta; no fluxo normal, pro dossiê da empresa
           (ou pros sócios, quando a C4 foi pulada por endereço fiscal — daí o
           rótulo genérico, que serve aos dois). */}
-      <TelaHeader meta={novaRodada ? "O que a Junta pediu" : "Dados do dossiê"} onVoltar={onVoltar} />
+      <TelaHeader
+        meta={novaRodada ? "O que a Junta pediu" : "Dados do dossiê"}
+        onVoltar={onVoltar}
+        /* 🔄 03/09 (pedido do Pedro) — o "i" da TELA volta pro cabeçalho,
+           no mesmo lugar das outras (C0-C5): os "i" de campo respondem "o
+           que escrevo aqui", este responde "como isso funciona". */
+        acao={
+          <BotaoInfo
+            onClick={() => setInfo(true)}
+            rotulo={mei ? "Nome fantasia × razão social" : "Como funcionam as 3 tentativas"}
+          />
+        }
+      />
 
       <main className="app-main">
+        {/* 🔒 03/09 (pedido do Pedro) — O LAYOUT NOVO É SÓ DA 2ª RODADA.
+            A C7 normal volta pro `Corpo`, sem espaço em branco: são telas
+            diferentes, e amarrar o desenho de uma na outra foi erro meu.
+            🔄 MODELO DA C2 (só aqui): conteúdo embaixo, ilustração em cima.
+            🐛 A 1ª tentativa deixou a área vazia só com `flex-1` e ela
+            colapsou: numa coluna dimensionada por conteúdo, quem cria altura é
+            a ILUSTRAÇÃO (na C2, a imagem do cofrinho), não o `flex-1`. Por
+            isso a caixa vazia precisava de `min-h`. Com a ilustração dentro
+            (03/09, arte do Pedro: a mão escrevendo o 3º card), quem cria a
+            altura é a imagem, e o `min-h` saiu. */}
+        {novaRodada && (
+          <div className="flex min-h-0 flex-1 items-center justify-center py-4">
+            <div id="c7-mao-flutua" className="relative flex h-[70%] max-h-[230px] items-end">
+              {/* Sombra de contato em 2 camadas, igual C2/C4/retomar: a elipse
+                  curta é o apoio, o drop-shadow segue a silhueta. */}
+              <div
+                aria-hidden
+                className="absolute -bottom-2 left-1/2 h-5 w-[72%] -translate-x-1/2 blur-md"
+                style={{
+                  background:
+                    "radial-gradient(closest-side, rgba(27,30,36,.30), rgba(27,30,36,.10) 62%, transparent 100%)",
+                }}
+              />
+              <Image
+                src="/icones/c7-nome-mao-escrevendo.png"
+                alt=""
+                aria-hidden
+                width={600}
+                height={443}
+                className="relative z-10 h-full w-auto"
+                style={{ filter: "drop-shadow(6px 14px 12px rgba(27,30,36,.20))" }}
+              />
+            </div>
+
+            {/* Mesma dosagem do C2/C4/retomar: 7s e 5,5s não se dividem entre
+                si, então o loop não fecha sempre no mesmo ponto.
+                ♿ desliga em `prefers-reduced-motion`. */}
+            <style jsx global>{`
+              @keyframes c7-mao-flutua-obj {
+                0%   { transform: translate3d(0, 0, 0) rotate(0deg); }
+                35%  { transform: translate3d(4px, -7px, 0) rotate(0.6deg); }
+                70%  { transform: translate3d(-3px, -3px, 0) rotate(-0.5deg); }
+                100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+              }
+              @keyframes c7-mao-flutua-sombra {
+                0%   { transform: translateX(-50%) scaleX(1); opacity: 1; }
+                35%  { transform: translateX(-50%) scaleX(0.9); opacity: 0.72; }
+                70%  { transform: translateX(-50%) scaleX(0.96); opacity: 0.88; }
+                100% { transform: translateX(-50%) scaleX(1); opacity: 1; }
+              }
+              #c7-mao-flutua img {
+                animation: c7-mao-flutua-obj 7s ease-in-out infinite;
+                will-change: transform;
+              }
+              #c7-mao-flutua > div[aria-hidden] {
+                animation: c7-mao-flutua-sombra 5.5s ease-in-out infinite;
+                will-change: transform, opacity;
+              }
+              @media (prefers-reduced-motion: reduce) {
+                #c7-mao-flutua img,
+                #c7-mao-flutua > div[aria-hidden] {
+                  animation: none;
+                }
+              }
+            `}</style>
+          </div>
+        )}
+
         <Titulo
           sub={
             mei
               ? "No MEI o nome oficial é definido por lei. O que você escolhe é a marca que aparece pro cliente."
               : novaRodada
-                ? "As 3 primeiras não passaram na Junta. Escreva outras 3 e escolha a ORDEM que quer que a gente tente."
-                : "A gente sugeriu 3 nomes. Edite o que quiser e escolha a ORDEM que quer que a gente tente registrar."
+                ? // 🐛 03/09 (pente-fino do Pedro) — a frase envelheceu duas
+                  // vezes: ela não escreve "outras 3" (escreve UMA, as 2
+                  // reservas são nossas) e não "escolhe a ORDEM" (as setas
+                  // saíram). Ficou só o fato, que é o que ela precisa saber.
+                  "As 3 primeiras não passaram na Junta."
+                : // ✍️ 03/09 (pedido do Pedro) — saiu o "A gente sugeriu 3
+                  // nomes": os 3 cards logo abaixo já dizem isso. Sobra a
+                  // instrução, que é o que só o subtítulo entrega.
+                  "Edite o que quiser e deixe na ordem que a gente deve tentar."
           }
         >
           {mei
             ? "O nome da sua empresa"
             : novaRodada
-              ? "Sugira mais 3 nomes"
+              ? // 🐛 03/09 — "Sugira mais 3 nomes" mentia: a pessoa escreve 1.
+                "Escreva outro nome"
               : "Qual nome você prefere?"}
         </Titulo>
 
-        <Corpo>
+        <BlocoDaTela>
           {/* ─── VARIANTE MEI ────────────────────────────────────────────────
               Razão social gerada (Lei 14.195/2021): não há o que escolher, e
               fingir escolha seria pior que explicar a regra. */}
@@ -2844,10 +3368,12 @@ export function NomeView({
                 </div>
               </Campo>
 
+              {/* ✍️ 03/09 (pedido do Pedro) — a regra estava em 3 lugares
+                  (este aviso, a dica do campo acima e o "i"). Aqui ficou só a
+                  consequência prática, que é o que tranquiliza. */}
               <Aviso variante="info" titulo="Ninguém escolhe o nome de um MEI">
-                Diferente do ME, o MEI não passa por consulta de nome na Junta
-                Comercial. A razão social é montada pelo próprio sistema, e por
-                isso não existe risco de ter o nome recusado.
+                O sistema monta a razão social sozinho, então não existe risco
+                de recusa.
               </Aviso>
             </>
           )}
@@ -2860,78 +3386,144 @@ export function NomeView({
               🆕 28/08 — daqui até o objeto social é EXCLUSIVO do ME. */}
           {!mei && (
           <div>
-            <p className="text-caption font-semibold text-text-primary mb-2">
-              Suas 3 opções, na ordem que a gente vai tentar
+            {/* ═══ 🔒 03/09 (decisão do Pedro) — AS 2 RESERVAS SÃO NOSSAS E
+                FICAM TRAVADAS ═══════════════════════════════════════════════
+                Até hoje as 3 opções eram editáveis e reordenáveis. Virou:
+                a 1ª é DELA (o nome que ela quer), a 2ª e a 3ª são nossas e
+                não se editam.
+
+                O porquê: a Junta reprova por regras que ninguém que abre a
+                primeira empresa conhece (semelhança com nome já registrado no
+                estado, palavra genérica demais, termo de atividade que exige
+                registro em conselho). Quem escreve 3 nomes livres tende a
+                escrever 3 variações da MESMA ideia — e as 3 caem juntas pelo
+                mesmo motivo. Travar as 2 de baixo garante que existam
+                tentativas construídas por outro critério.
+
+                Consequência direta: SUMIRAM AS SETAS. A ordem deixou de ser
+                escolha (a dela vai primeiro, as nossas seguram atrás), então
+                reordenar não é mais uma pergunta desta tela. */}
+            {/* 🔄 03/09 (pedido do Pedro) — O "i" SOBE PRO RÓTULO DA SEÇÃO.
+                Ele morava no cabeçalho (regras da Junta) e no campo de nome
+                fantasia (fantasia × razão social), e os dois assuntos são a
+                MESMA conversa: o que é rígido, o que é livre, e por que a
+                gente trava as reservas. Fundidos num sheet só, ancorado onde
+                a dúvida nasce — a opção dela. */}
+            <p className="text-caption font-semibold text-text-primary mb-1">
+              {novaRodada
+                ? "Sua opção, e as nossas 2 reservas"
+                : "Sua opção, e as nossas 2 de reserva"}
             </p>
+
+            {/* Nota fina, não bloco: a tela acabou de perder um `Aviso` por
+                peso, e esta explicação não pode virar o próximo.
+                ⚠️ Sem taxa de aprovação inventada ("nossas passam mais", "90%
+                aprovadas"): o produto não está no ar, o número não existe, e
+                número sem fonte não entra. O argumento honesto é o COMO. */}
+            <p className="text-micro text-text-tertiary mb-2.5">
+              {novaRodada
+                ? // ✍️ 03/09 — rótulo e nota diziam a mesma coisa, e "novas"
+                  // aparecia 3 vezes na mesma dobra. Sobra o que só a nota
+                  // entrega: elas não repetem o que já foi recusado.
+                  "Nenhuma delas já foi tentada."
+                : "As duas de baixo não mudam: são nossas, feitas pra passar nos critérios da Junta se a sua não passar."}
+            </p>
+
             <div className="flex flex-col gap-2">
               {ordem.map((s, i) => {
-                const emEdicao = editandoId === s.id;
+                /* 🔒 A 1ª é dela; 2ª e 3ª são reservas nossas, travadas —
+                   regra igual nas duas rodadas (03/09, pedido do Pedro). Na
+                   2ª o que muda é o LOTE das reservas, que não repete o que a
+                   Junta já recusou. */
+                const travado = i > 0;
+
+                if (travado) {
+                  return (
+                    /* Mesmo desenho de "isto não se edita" que o dossiê já
+                       usa (CPF travado na C1, cartões de confirmação da C4):
+                       fundo `surface-alt`, texto terciário, sem borda de
+                       campo. 🔒 Sem a palavra "travado" — decisão do Pedro na
+                       C4: o cinza já diz isso. */
+                    <div
+                      key={s.id}
+                      className="flex min-h-12 items-start gap-2.5 rounded-md border border-border-hairline bg-surface-alt px-3 py-2.5"
+                    >
+                      <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-surface-card text-caption font-bold text-text-tertiary">
+                        {i + 1}º
+                      </span>
+                      {/* 🐛 03/09 (pedido do Pedro) — era `truncate`: nome
+                          comprido virava "Vértice Desenvolvimen…", justo o
+                          que a pessoa precisa ler pra decidir. Agora quebra
+                          linha e aparece inteiro. */}
+                      <span className="min-w-0 flex-1 break-words py-1 text-caption font-semibold leading-snug text-text-tertiary">
+                        {s.valor}
+                      </span>
+                      <IconeCadeado />
+                    </div>
+                  );
+                }
+
                 return (
-                  <div
-                    key={s.id}
-                    className="flex items-center gap-3 rounded-md border border-border-hairline bg-surface-card p-3"
-                  >
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-surface-tint-brand text-caption font-bold text-action-primary-sm">
-                      {i + 1}
-                    </span>
-                    {emEdicao ? (
-                      <input
-                        autoFocus
-                        value={s.valor}
-                        onChange={(e) => editarValor(s.id, e.target.value)}
-                        onKeyDown={(e) => e.key === "Enter" && setEditandoId(null)}
-                        aria-label={`Editar sugestão ${i + 1}`}
-                        className="min-w-0 flex-1 rounded-md border border-border-focus bg-surface-card px-2 py-1.5
-                                   text-body font-semibold text-text-primary focus:outline-none"
-                      />
-                    ) : (
-                      // 🗑️ 02/09 — o vazio era um travessão (proibido em texto
-                      // público) fazendo papel de placeholder. Vira convite, no
-                      // cinza que o resto dos campos usa.
+                  /* 🔄 03/09 (pedido do Pedro) — A LINHA É O CAMPO COMUM DO
+                     APP. Antes tinha padding e tipografia próprios; agora usa
+                     exatamente o desenho do `Texto` do DS (min-h-12,
+                     rounded-md, border hairline, px-3, `text-body`, borda de
+                     foco), e a ÚNICA diferença é o ordinal morando dentro
+                     dele. O contador saiu de dentro do campo e virou linha
+                     abaixo, no lugar onde o DS já põe erro e confirmação. */
+                  <div key={s.id}>
+                    <div
+                      className="flex min-h-12 items-start gap-2.5 rounded-md border border-border-hairline
+                                 bg-surface-card px-3 transition-colors focus-within:border-border-focus"
+                    >
+                      {/* Coral cheio na 1ª: mesma linguagem de "esta é a
+                          escolhida" do gate e da C0. Ordinal, não número
+                          solto: aqui é posição, não quantidade. */}
                       <span
-                        className={`min-w-0 flex-1 truncate text-body font-semibold ${
-                          s.valor.trim() ? "text-text-primary" : "text-text-muted"
+                        className={`mt-2.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-caption font-bold ${
+                          i === 0
+                            ? "bg-action-primary text-text-on-brand"
+                            : "bg-surface-tint-brand text-action-primary-sm"
                         }`}
                       >
-                        {s.valor.trim() || "Escreva um nome"}
+                        {i + 1}º
                       </span>
-                    )}
-                    {/* 🐛 24/08 — o check "travava": o input tinha `onBlur` fechando
-                        a edição, e o clique no botão dispara blur ANTES do onClick
-                        (mousedown tira o foco, blur roda, só depois o click chega).
-                        O botão reabria com `emEdicao` antigo, capturado no closure
-                        de antes do re-render do blur. Tirar o onBlur mata a corrida
-                        — só Enter ou o próprio botão fecham a edição agora.
-                        Ícone SVG monocromático (não emoji): emoji renderiza colorido
-                        sempre, não respeita `currentColor`. */}
-                    <button
-                      type="button"
-                      onClick={() => setEditandoId(emEdicao ? null : s.id)}
-                      aria-label={emEdicao ? "Salvar edição" : "Editar sugestão"}
-                      className="flex h-7 w-7 shrink-0 items-center justify-center rounded text-text-tertiary transition-colors hover:bg-surface-alt hover:text-action-primary-sm"
-                    >
-                      {emEdicao ? <IconeCheckMini /> : <IconeLapis />}
-                    </button>
-                    <div className="flex shrink-0 flex-col gap-0.5">
-                      <button
-                        type="button"
-                        onClick={() => mover(i, -1)}
-                        disabled={i === 0}
-                        aria-label="Subir prioridade"
-                        className="flex h-6 w-6 items-center justify-center rounded text-text-secondary transition-colors hover:bg-surface-alt disabled:opacity-30"
-                      >
-                        ▲
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => mover(i, 1)}
-                        disabled={i === ordem.length - 1}
-                        aria-label="Descer prioridade"
-                        className="flex h-6 w-6 items-center justify-center rounded text-text-secondary transition-colors hover:bg-surface-alt disabled:opacity-30"
-                      >
-                        ▼
-                      </button>
+
+                      <CampoNomeAberto
+                        valor={s.valor}
+                        onChange={(v) => editarValor(s.id, v)}
+                        autoFocus={novaRodada && i === 0}
+                        rotulo={`Nome da ${i + 1}ª opção`}
+                        placeholder="Veja algumas regras no “i” ao lado"
+                        limite={LIMITE_RAZAO}
+                      />
+
+                      {/* O "i" mora DENTRO do campo: a dúvida "que nome eu
+                          escrevo aqui?" nasce na hora de digitar. Alinhado
+                          pelo topo, junto do ordinal, pra não dançar quando o
+                          nome ocupa 2 linhas. */}
+                      <div className="mt-3 shrink-0">
+                        <BotaoInfo
+                          onClick={() => setInfoRegras(true)}
+                          rotulo="Dicas pra escolher o nome"
+                        />
+                      </div>
                     </div>
+
+                    {/* Contador só quando aperta (últimos 10 caracteres): a
+                        tela é de escrever nome curto, e um "0/50" fixo em
+                        cada linha seria ruído no caso comum. */}
+                    {s.valor.length >= LIMITE_RAZAO - 10 && (
+                      <p
+                        className={`mt-1 text-right text-micro font-semibold ${
+                          s.valor.length >= LIMITE_RAZAO
+                            ? "text-state-warning-text"
+                            : "text-text-tertiary"
+                        }`}
+                      >
+                        {s.valor.length}/{LIMITE_RAZAO}
+                      </p>
+                    )}
                   </div>
                 );
               })}
@@ -2945,14 +3537,48 @@ export function NomeView({
           {/* 🔄 01/09 — some na 2ª rodada: dizer "nenhuma tentativa atrasa"
               pra quem acabou de ter as 3 recusadas seria desmentir o que ela
               acabou de viver. */}
-          {!mei && !novaRodada && (
-          <Aviso variante="info" titulo="Nenhuma tentativa atrasa a sua abertura">
-            A gente tenta registrar a 1ª opção na Junta. Se ela não passar, já
-            seguimos pra 2ª, e depois a 3ª, sem te avisar toda vez nem travar
-            o processo.
-          </Aviso>
-          )}
+          {/* 🗑️ 03/09 (pedido do Pedro) — O AVISO "nenhuma tentativa atrasa"
+              SAIU DA TELA. Foi reduzido a 1 linha nesta mesma sessão e ainda
+              assim não se pagava: era o maior bloco de cor de uma tela cuja
+              única tarefa é escolher 3 nomes, respondendo uma pergunta que a
+              pessoa nem fez ainda. A informação continua viva no "i" do
+              cabeçalho, que é o lugar de quem foi atrás dela. */}
 
+          {/* 🔄 03/09 (pedido do Pedro) — ORDEM TROCADA: nome fantasia sobe
+              pra logo abaixo dos nomes empresariais (os dois são "como sua
+              empresa se chama", e ler os dois seguidos é o que a pessoa faz
+              de cabeça), e o objeto social desce pro fim — ele é recibo do
+              que já foi decidido nas atividades, não decisão desta tela. */}
+          {/* Nome fantasia vale pros DOIS regimes — é o único campo de nome
+              que o formulário do MEI realmente oferece. */}
+          {/* 🆕 03/09 (pedido do Pedro) — "i" DE CAMPO, mesmo padrão do
+              índice cadastral na C4: fantasia × razão social é dúvida deste
+              campo, não da tela, e no ME o "i" do cabeçalho fala de outra
+              coisa (como a Junta avalia o nome). */}
+          {!novaRodada && (
+            <Campo
+              rotulo="Nome fantasia"
+              /* ✍️ 03/09 (pedido do Pedro) — depois de travar 2 das 3 razões
+                 sociais, este campo é o contrapeso: aqui a pessoa é livre, e
+                 a dica diz isso em vez de só definir o que é. */
+              dica="Opcional e livre: é a marca que o cliente vê."
+            >
+              <Texto
+                valor={fantasia}
+                onChange={setFantasia}
+                acao={
+                  <BotaoInfo
+                    onClick={() => setInfoFantasia(true)}
+                    rotulo="As regras do nome fantasia"
+                  />
+                }
+                /* ✍️ 03/09 (pedido do Pedro) — o placeholder repetia a dica
+                   ("marca que o cliente vê" × "como o público vai te
+                   conhecer"). Virou exemplo, que é o que falta ali. */
+                placeholder="Ex.: Vértice Studio"
+              />
+            </Campo>
+          )}
           {/* 🔄 01/09 (pedido do Pedro) — na 2ª rodada a tela é SÓ os 3 nomes:
               objeto social já foi definido e não muda por causa de um nome
               recusado. (A 1ª tentativa de gate pegou o bloco errado — este é
@@ -2960,29 +3586,79 @@ export function NomeView({
           {!mei && !novaRodada && (
           <Campo
             rotulo="Objeto social"
-            dica="Gerado a partir das suas atividades. Não dá pra editar aqui: assim evitamos erro de grafia indo pro contrato."
+            /* ✍️ 03/09 (pedido do Pedro) — a 2ª frase era justificativa
+               NOSSA ("assim evitamos erro de grafia"), não informação que
+               muda a decisão dela: o campo está travado de qualquer jeito. */
+            dica="Gerado a partir das suas atividades. Vai assim no contrato."
           >
-            <div
-              className="w-full rounded-md border border-border-hairline bg-surface-alt p-3
-                         text-body text-text-secondary"
-            >
-              {objeto}
-            </div>
+            {/* 🔄 03/09 (pedido do Pedro) — era um bloco cinza próprio desta
+                tela. Virou `CardNota`, que é o componente que o dossiê já usa
+                pra dizer "isto é recibo, não campo" (endereço achado pelo CEP
+                na C1/C3, confirmação da C4). Mesma função, um desenho só. */}
+            <CardNota>{objeto}</CardNota>
           </Campo>
           )}
 
-          {/* Nome fantasia vale pros DOIS regimes — é o único campo de nome
-              que o formulário do MEI realmente oferece. */}
-          {!novaRodada && (
-            <Campo rotulo="Nome fantasia" dica="Opcional. É a marca que aparece pro cliente.">
-              <Texto
-                valor={fantasia}
-                onChange={setFantasia}
-                placeholder="Como o público vai te conhecer"
-              />
-            </Campo>
-          )}
-        </Corpo>
+        </BlocoDaTela>
+
+        {/* 🔄 03/09 (pedido do Pedro) — SHEET FUNDIDO. Eram dois ("como a
+            Junta avalia o nome", no cabeçalho, e "o que é nome fantasia", no
+            campo), e os dois respondiam a mesma pergunta por metades: onde a
+            regra aperta e onde ela não existe. Junto, o texto fecha o
+            raciocínio — inclusive o porquê de travarmos as 2 reservas. */}
+        {infoFantasia && (
+          <SheetInfo
+            titulo="As regras do nome fantasia"
+            onFechar={() => setInfoFantasia(false)}
+            pontos={[
+              "Aqui não tem regra de Junta: o nome fantasia é livre, você escreve o que quiser.",
+              "Ele é a marca que o cliente vê (fachada, site, Instagram) e pode ser bem diferente da razão social.",
+              "Pode ficar em branco. Nesse caso, a empresa se apresenta pela razão social mesmo.",
+              "Dá pra trocar depois sem mexer no seu CNPJ.",
+              "Fantasia não é marca registrada: exclusividade sobre o nome é registro no INPI, que é outro processo.",
+            ]}
+          />
+        )}
+
+        {infoRegras && (
+          <SheetInfo
+            titulo="Dicas pra escolher o nome"
+            onFechar={() => setInfoRegras(false)}
+            pontos={[
+              "A Junta compara seu nome com o que já está registrado em Minas Gerais. Idêntico ou parecido demais com outro do mesmo ramo é reprovado.",
+              "Nome genérico, feito só de palavras comuns da atividade, costuma travar: ele não distingue sua empresa de nenhuma outra.",
+              "Uma palavra própria (inventada, seu sobrenome, uma referência sua) mais a atividade é a combinação que passa com mais facilidade.",
+              "Não entram termos que sugerem órgão público, nem palavras de atividade que você não exerce (banco, seguros, engenharia sem registro no conselho).",
+              "Cabem 50 caracteres: o registro aceita 60 e a gente completa com o tipo da empresa no fim.",
+            ]}
+            exemplo={{
+              titulo: "Na prática",
+              bom: "“Vértice Studio de Design”. Tem palavra própria e diz o que a empresa faz.",
+              ruim: "“Design e Publicidade”. É o que dezenas de empresas já registraram, e a Junta bate como parecido demais.",
+            }}
+          />
+        )}
+
+        {info && (
+          <SheetInfo
+            titulo={mei ? "Nome fantasia × razão social" : "Como funcionam as 3 tentativas"}
+            onFechar={() => setInfo(false)}
+            pontos={
+              mei
+                ? [
+                    "A razão social é o nome oficial da empresa, o que aparece em contrato e em nota. No MEI ela é definida por lei: seu nome completo + os 8 primeiros dígitos do CNPJ.",
+                    "O nome fantasia é a marca: é o que você usa na fachada, no Instagram e o que o cliente chama.",
+                    "Você escolhe o fantasia livremente, e ele pode mudar depois sem mexer no CNPJ.",
+                    "Nome fantasia não é marca registrada. Se quiser exclusividade sobre ele, o caminho é o registro no INPI, que é outro processo.",
+                  ]
+                : [
+                    "A razão social é o nome oficial: vai no contrato, na nota fiscal e nos órgãos. É nela que a Junta é rígida.",
+                    "A 2ª e a 3ª são nossas e ficam travadas: quem escreve 3 nomes livres costuma escrever 3 versões da mesma ideia, e aí os 3 caem pelo mesmo motivo. As nossas nascem de outro critério, pra segurar o processo.",
+                    "A gente tenta a sua primeiro. Se não passar, seguimos pras nossas duas. Se as 3 caírem, você escreve outras e a gente manda de novo, sem custo e sem atrasar a abertura.",
+                  ]
+            }
+          />
+        )}
 
         <Rodape>
           {/* Última tela da coleta: daqui o cliente vai pro N19 (revisar).
@@ -3243,74 +3919,49 @@ function CheckMiniDossie() {
  * responsabilidade. É a explicação que saiu do card de fora, agora com
  * espaço pra falar dos DOIS papéis, não só de quem administra.
  */
-function SheetAdministracao({ onFechar }: { onFechar: () => void }) {
-  const [entrou, setEntrou] = useState(false);
-  useEffect(() => {
-    const id = requestAnimationFrame(() => setEntrou(true));
-    return () => cancelAnimationFrame(id);
-  }, []);
-
-  const sair = () => {
-    setEntrou(false);
-    window.setTimeout(onFechar, 240);
-  };
-
-  const PONTOS = [
-    "O administrador assina pela empresa no dia a dia: abrir conta em banco, transferir um veículo, assinar em cartório.",
-    "Quem não administra continua sócio, com os mesmos direitos sobre os resultados — só não assina pela empresa.",
-    "Atos grandes (vender ou dar em garantia um imóvel da empresa, por exemplo) precisam da assinatura de todos os administradores, não só de quem cadastrou.",
-    "Alguns bancos pedem a assinatura de todos os administradores pra abrir a conta.",
-  ];
-
+/**
+ * 🆕 03/09 (pedido do Pedro) — o "i" do cabeçalho da C4.
+ *
+ * Responde a dúvida que a tela levanta e não respondia: **por que o endereço
+ * aparece travado** (foi o que já rodou a viabilidade na Prefeitura, trocar
+ * aqui divergiria do que foi analisado) e **por que a gente pede o IPTU**
+ * (é o que prova o endereço na Junta). O tom é de tranquilizar: nada aqui é
+ * cobrança de documento raro, e quem trava tem WhatsApp no rodapé.
+ */
+function SheetEnderecoEmpresa({ mei, onFechar }: { mei: boolean; onFechar: () => void }) {
   return (
-    <div className="absolute inset-0 z-[60]">
-      <button
-        type="button"
-        aria-label="Fechar"
-        onClick={sair}
-        className={`absolute inset-0 bg-[#10151b] transition-opacity duration-300 ${
-          entrou ? "opacity-45" : "opacity-0"
-        }`}
-      />
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-label="O que significa administrar a empresa"
-        className="absolute inset-x-0 bottom-0 flex max-h-[86%] flex-col rounded-t-3xl bg-surface-page px-5"
-        style={{
-          transform: entrou ? "translateY(0)" : "translateY(100%)",
-          transition: "transform .34s cubic-bezier(.22,1,.36,1)",
-          boxShadow: "0 -14px 44px -14px rgba(20,23,28,.32)",
-          paddingBottom: "calc(16px + var(--safe-bottom))",
-        }}
-      >
-        <div className="shrink-0 pt-2.5">
-          <div className="mx-auto h-1 w-9 rounded-full bg-border-strong" />
-        </div>
+    <SheetInfo
+      titulo="Por que a gente pede isso"
+      onFechar={onFechar}
+      pontos={
+        mei
+          ? [
+              "O endereço já foi confirmado no começo, por isso aparece travado aqui: é ele que vale pro seu CNPJ.",
+              "A forma de atendimento é o mesmo campo que o Portal do Empreendedor pede. Pode marcar mais de uma.",
+              "Precisa mudar alguma coisa do endereço? Chama a gente no WhatsApp, aqui embaixo, que a gente ajusta.",
+            ]
+          : [
+              "O endereço aparece travado porque foi com ele que a gente consultou a viabilidade na Prefeitura. Trocar agora divergiria do que já foi analisado.",
+              "O índice cadastral do IPTU é o que prova esse endereço na Junta. Sem ele, o registro não anda.",
+              "Nada aqui vira conta nova: é o mesmo imóvel, só identificado do jeito que os órgãos pedem.",
+              "Precisa trocar o endereço? Chama a gente no WhatsApp, aqui embaixo.",
+            ]
+      }
+    />
+  );
+}
 
-        <p className="mt-4 shrink-0 text-body-strong font-semibold text-text-primary">
-          Administrar × ser só sócio
-        </p>
-
-        <div className="mt-3 min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <div className="flex flex-col gap-2.5">
-            {PONTOS.map((texto) => (
-              <div key={texto} className="flex items-start gap-2.5">
-                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-state-success-tint text-state-success-text">
-                  <CheckMiniDossie />
-                </span>
-                <p className="text-caption text-text-secondary">{texto}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-5 shrink-0">
-          <Button full variant="secondary" onClick={sair}>
-            Entendi
-          </Button>
-        </div>
-      </div>
-    </div>
+function SheetAdministracao({ onFechar }: { onFechar: () => void }) {
+  return (
+    <SheetInfo
+      titulo="Administrar × ser só sócio"
+      onFechar={onFechar}
+      pontos={[
+        "O administrador assina pela empresa no dia a dia: abrir conta em banco, transferir um veículo, assinar em cartório.",
+        "Quem não administra continua sócio, com os mesmos direitos sobre os resultados, só não assina pela empresa.",
+        "Atos grandes (vender ou dar em garantia um imóvel da empresa, por exemplo) precisam da assinatura de todos os administradores, não só de quem cadastrou.",
+        "Alguns bancos pedem a assinatura de todos os administradores pra abrir a conta.",
+      ]}
+    />
   );
 }

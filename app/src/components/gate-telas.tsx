@@ -9,6 +9,8 @@ import {
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { TelaHeader, Aviso, Rolagem } from "@/components/ui/tela";
+// 🆕 03/09 (pedido do Pedro) — "i" + sheet de explicação, padrão do dossiê.
+import { SheetInfo, BotaoInfo } from "@/components/ui/sheet-info";
 // 🔄 27/08 — `CUSTOS` saiu junto com a escolha de endereço, que migrou da
 // `FaixaView` pro E3.3 (`components/entrada-lead.tsx`).
 // 🔁 28/08 — `Aviso` e `brl` voltaram, agora a serviço do gate de teto do MEI.
@@ -496,6 +498,11 @@ export function PerguntaView({
   };
   // 🆕 02/09 — qual CNAE está com o sheet de detalhes aberto.
   const [detalhe, setDetalhe] = useState<OpcaoCnae | null>(null);
+  /* 🆕 03/09 (pedido do Pedro) — "i" do cabeçalho. Esta é a tela em que a
+     pessoa mais teme errar sozinha (a descrição é o que a IA usa pra achar o
+     CNAE), então o sheet leva EXEMPLO de descrição que funciona e de
+     descrição curta demais, além de dizer que nada aqui é irreversível. */
+  const [info, setInfo] = useState(false);
 
   const sub = sabeCodigo
     ? jaCliente
@@ -537,7 +544,13 @@ export function PerguntaView({
       {/* 🆕 02/09 — seta de voltar. A tela não tinha nenhuma: o topo era um
           "Legalizai" estático, então quem entrava não saía a não ser
           seguindo. `meta` nomeia o DESTINO do voltar, padrão do wizard. */}
-      {onVoltar && <TelaHeader meta={semResultados ? "Status" : "Sua atividade"} onVoltar={onVoltar} />}
+      {onVoltar && (
+        <TelaHeader
+          meta={semResultados ? "Status" : "Sua atividade"}
+          onVoltar={onVoltar}
+          acao={<BotaoInfo onClick={() => setInfo(true)} rotulo="Como descrever sua atividade" />}
+        />
+      )}
 
       {/* Título/subtítulo fixos; o campo de descrição ocupa a sobra. Depende
           do shell travado em 100dvh (.app-page, globals.css) — sem o teto, a
@@ -763,6 +776,25 @@ export function PerguntaView({
           ficasse dentro do contêiner que rola, seria recortado por ele em vez
           de cobrir a tela. */}
       {detalhe && <SheetCnae opcao={detalhe} onFechar={() => setDetalhe(null)} />}
+
+      {info && (
+        <SheetInfo
+          titulo="Como descrever sua atividade"
+          onFechar={() => setInfo(false)}
+          pontos={[
+            "O CNAE é o código que diz o que sua empresa faz. Ele define em que tabela do Simples você cai, ou seja, quanto imposto você paga.",
+            "Escreva do seu jeito, com as palavras que você usaria pra explicar seu trabalho pra um cliente. Não precisa de termo técnico.",
+            "Quanto mais concreto, melhor o encaixe: diga o que você entrega e pra quem. Uma frase já resolve.",
+            "Você não fica preso ao primeiro palpite: a tela mostra as opções que combinam e você escolhe qual é a sua.",
+            "Faz mais de uma coisa? Escreva a principal aqui. As outras entram como atividades secundárias no passo seguinte.",
+          ]}
+          exemplo={{
+            titulo: "Duas descrições da mesma pessoa",
+            bom: "\"Desenvolvo sites e sistemas sob encomenda para empresas, e faço a manutenção depois de entregar.\" Diz o que entrega e pra quem.",
+            ruim: "\"Trabalho com internet.\" Cabe em dezenas de códigos diferentes, com impostos diferentes, e a gente teria que adivinhar qual é o seu.",
+          }}
+        />
+      )}
 
       {/* 🌾 CTA no rodapé = thumb zone (design-system.md §6) */}
       <div className="app-footer-cta">
@@ -1311,7 +1343,7 @@ export function FaixaView({
             repetir "estimativa" e ficou só com o acolhimento de quem já sabe
             o valor (a persona PJ-ização, que abre CNPJ com contrato fechado). */}
         <h1 className="text-h1 mb-2">
-          Quanto você vai receber por mês?{" "}
+          Quanto você vai faturar por mês?{" "}
           <span className="text-text-tertiary">Pode ser estimativa!</span>
         </h1>
         <p className="text-body text-text-secondary mb-6">
@@ -1365,7 +1397,7 @@ export function FaixaView({
                     placeholder="0"
                     inputMode="numeric"
                     autoFocus={autoFocus}
-                    aria-label="Quanto você vai receber por mês"
+                    aria-label="Quanto você vai faturar por mês"
                     className="w-full min-h-12 rounded-md border border-border-hairline bg-surface-card
                                py-3 pl-10 pr-3 text-body text-text-primary placeholder:text-text-muted
                                focus:border-border-focus focus:outline-none"
@@ -1410,7 +1442,7 @@ export function FaixaView({
               placeholder="R$ 0"
               inputMode="numeric"
               autoFocus={autoFocus}
-              aria-label="Quanto você vai receber por mês"
+              aria-label="Quanto você vai faturar por mês"
               className="w-full min-h-12 rounded-md border border-border-hairline bg-surface-card
                          px-3 text-body text-text-primary placeholder:text-text-muted
                          focus:border-border-focus focus:outline-none"

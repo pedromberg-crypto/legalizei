@@ -11,14 +11,24 @@ import { PillCnpj, AprendaGradiente } from "@/components/lab/campea-blocks";
 import { QuemCuida } from "@/components/lab/ref9-blocks";
 import { CUSTOS, brl } from "@/lib/fiscal";
 import { passosDoCliente } from "@/lib/passos";
+// 🆕 03/09 — o recap mostra estado civil, regime de bens e tipo de imóvel com
+// o MESMO rótulo que a pessoa viu ao responder (fonte única em `lib/`).
+import { ESTADO_CIVIL, REGIME_BENS, TIPO_IMOVEL, rotuloDe } from "@/lib/qualificacao";
+// 🆕 03/09 — nome/CPF/e-mail/telefone não se ajustam aqui (bloco 1): a saída é
+// o canal humano, no pé do próprio cartão.
+import { linkWhatsApp } from "@/lib/contato";
 import { PainelView, ETAPAS_ABERTURA, type Etapa, type Recusa } from "@/components/painel";
 import {
   CLIENTE,
   TEM_SOCIO,
   SOCIO_2,
-  NOME_EMPRESARIAL,
+  SOCIOS,
   CNAE_PRINCIPAL,
   CNAES_SECUNDARIAS,
+  PREENCHIMENTO,
+  RAZAO_OPCOES,
+  OBJETO_SOCIAL,
+  ENDERECO_CEP,
 } from "@/app/(app)/dossie/mock";
 
 /**
@@ -58,28 +68,122 @@ import {
  * diferença) e secundárias (`Hospedagem`, `Suporte técnico`) que o N14 nunca
  * ofereceu como opção. É a mesma classe de divergência que o `dossie/mock.ts`
  * foi criado pra matar — então esta tela passou a herdar de lá.
+ *
+ * ─── 🔴 03/09 (varredura pedida pelo Pedro) — O RECAP ESTAVA RASO ──────────
+ * Mostrava 8 linhas (nome, CPF, contato, razão, tipo, endereço, CNAEs) numa
+ * tela que é a ÚLTIMA antes do irreversível. Ficavam de fora dados que a
+ * pessoa digitou à mão, que ninguém valida por ela, e que quando saem errados
+ * derrubam o processo na Junta ou na Prefeitura: RG e órgão emissor, data de
+ * nascimento, estado civil e regime de bens, endereço residencial, a
+ * qualificação inteira de cada sócio, a % de cada um, quem administra, as 3
+ * tentativas de razão social (só a 1ª aparecia), o tipo do imóvel, se ela mora
+ * nele (a resposta que produziu o indeferimento real na gravação da JUCEMG) e
+ * o índice cadastral do IPTU.
+ *
+ * ─── O CRITÉRIO DO QUE ENTRA (decisão do Pedro, 03/09) ─────────────────────
+ * Entra o que a PESSOA informou e vai pro protocolo. NÃO entra o que a gente
+ * preenche por ela no backend (capital social, quotas, natureza jurídica,
+ * metragem, profissão, qualificação 49/22, forma de atuação...): ela nunca
+ * respondeu isso, não tem como julgar se está certo, e pedir conferência de
+ * dado nosso só convida erro confiante. Também saiu o que não vai pra Junta
+ * (vínculo de INSS, enquadramento/pró-labore estimado): esta tela é sobre o
+ * REGISTRO, não sobre o que ela vai pagar depois.
  */
+interface SocioRevisao {
+  nome: string;
+  cpf: string;
+  participacao: number;
+  administra: boolean;
+  nascimento: string;
+  nacionalidade: string;
+  rg: string;
+  orgao: string;
+  civil: string;
+  regime: string;
+  endereco: string;
+}
+
 function useRevisao() {
-  const secundarias = CNAES_SECUNDARIAS;
+  /**
+   * A participação nasce dividida em partes iguais, igual ao C3 (`inicial()`):
+   * com 1 sócio extra são 50/50. A do titular é DERIVADA (100 menos a soma),
+   * mesma regra de lá — duas fontes de verdade pro mesmo 100% foi o bug que o
+   * C3 já tinha resolvido, não vale reintroduzir aqui.
+   */
+  const extrasQtd = Math.max(0, SOCIOS - 1);
+  const pctExtra = extrasQtd > 0 ? Math.round(100 / SOCIOS) : 0;
+
+  const e = PREENCHIMENTO.socioExtra;
+  const extras: SocioRevisao[] = TEM_SOCIO
+    ? [
+        {
+          nome: SOCIO_2.nome,
+          cpf: e.cpf,
+          participacao: pctExtra,
+          /**
+           * 🚧 No app real vem da resposta do C3 (quem administra). No mock o
+           * titular administra sozinho, que é o caso mais comum: é essa
+           * resposta que define a qualificação 49 × 22 no DBE.
+           */
+          administra: false,
+          nascimento: e.nascimento,
+          nacionalidade: e.nacionalidade,
+          rg: e.rg,
+          orgao: e.orgao,
+          civil: e.civil,
+          regime: e.regime,
+          endereco: `${ENDERECO_CEP.logradouro}, ${e.numero}${
+            e.complemento ? ` · ${e.complemento}` : ""
+          }, ${ENDERECO_CEP.bairro}, ${e.cep}`,
+        },
+      ]
+    : [];
+
+  const t = PREENCHIMENTO.socio;
+  const titular: SocioRevisao = {
+    nome: CLIENTE.nome,
+    cpf: CLIENTE.cpf,
+    participacao: 100 - extras.reduce((acc, s) => acc + s.participacao, 0),
+    administra: true,
+    nascimento: t.nascimento,
+    nacionalidade: t.nacionalidade,
+    rg: t.rg,
+    orgao: t.orgao,
+    civil: t.civil,
+    regime: t.regime,
+    endereco: CLIENTE.endereco,
+  };
+
+  const emp = PREENCHIMENTO.empresa;
   return {
-    socio: { nome: CLIENTE.nome, cpf: CLIENTE.cpf, contato: CLIENTE.telefone },
-    empresa: {
-      razao: `${NOME_EMPRESARIAL} Web Studio`,
-      natureza: TEM_SOCIO
-        ? "Sociedade Limitada (LTDA)"
-        : "Sociedade Limitada Unipessoal (SLU)",
-      endereco: CLIENTE.endereco,
-      capital: 10000,
-    },
+    titular,
+    extras,
+    contato: { email: CLIENTE.email, telefone: CLIENTE.telefone },
     atividade: {
       principal: { cnae: CNAE_PRINCIPAL.cnae, nome: CNAE_PRINCIPAL.humano },
-      secundarias: secundarias.map((s) => ({ cnae: s.cnae, nome: s.humano })),
+      secundarias: CNAES_SECUNDARIAS.map((s) => ({ cnae: s.cnae, nome: s.humano })),
+      objeto: OBJETO_SOCIAL,
     },
-    // 🚧 Cálculo fiscal do card de sugestão — mock pra farol, independente da
-    // unificação de identidade (é matéria de `lib/fiscal`, não de mock.ts).
-    // Anexo III/6% já é consistente com o `fiscal.entradas[0]` do veredito 🟢.
-    enquadramento: { anexo: "III", aliquota: 6, proLabore: 3600, economiaMes: 940 },
-    taxaJunta: CUSTOS.DAE_JUCEMG,
+    nomes: RAZAO_OPCOES,
+    fantasia: PREENCHIMENTO.nome.fantasia,
+    empresa: {
+      linha1: `${ENDERECO_CEP.logradouro}, ${emp.numero}${
+        emp.complemento ? ` · ${emp.complemento}` : ""
+      }`,
+      linha2: `${ENDERECO_CEP.bairro}, ${emp.cep}`,
+      tipoImovel: emp.tipoImovel,
+      /**
+       * 🚧 Mock: o C4/E3.4 guarda a resposta real. Aqui vale `true` porque o
+       * mock é apartamento, e apartamento sem morador é justamente o caso que
+       * a Prefeitura indefere (o aviso do C4 existe por causa disso).
+       */
+      resideNoEndereco: true,
+      iptu: emp.iptu,
+    },
+    /** Só pra manter o recap do MEI de pé, que não mudou nesta rodada. */
+    mei: {
+      endereco: CLIENTE.endereco,
+    },
   };
 }
 
@@ -89,6 +193,8 @@ export function RevisarView({
   mei = false,
   aceito: aceitoProp,
   setAceito: setAceitoProp,
+  onAjustar,
+  enderecoFiscal = false,
 }: {
   onSeguir?: () => void;
   onVoltar?: () => void;
@@ -112,6 +218,20 @@ export function RevisarView({
    */
   aceito?: boolean;
   setAceito?: (v: boolean) => void;
+  /**
+   * 🆕 03/09 (pedido do Pedro) — a pill "Ajustar" de cada seção. Recebe o id
+   * do BLOCO (ver `lib/passos.ts`) e a página resolve a navegação (entra na
+   * 1ª tela do bloco em `?ajuste=<id>`, o MODO AJUSTE de 01/09).
+   * Ausente = pills somem: é o recap read-only, sem volta.
+   */
+  onAjustar?: (blocoId: number) => void;
+  /**
+   * 🆕 01/09 — quem escolheu o endereço fiscal da Legalizai no E3.4 não passa
+   * pelo C4: não tem IPTU, tipo de imóvel nem "você mora nele" pra conferir.
+   * O recap mostra o que ela de fato decidiu (usar o nosso endereço) em vez de
+   * campos vazios.
+   */
+  enderecoFiscal?: boolean;
   /** 🆕 03/08 — MEI: some capital social (não existe), a taxa da Junta
    *  (não passa por lá) e o enquadramento Simples/Anexo (MEI é DAS fixo, não
    *  Anexo/Fator R). 🔴 valor exato do DAS-MEI 2026 NÃO está ratificado no
@@ -122,52 +242,305 @@ export function RevisarView({
   const [aceitoLocal, setAceitoLocal] = useState(false);
   const aceito = aceitoProp ?? aceitoLocal;
   const setAceito = setAceitoProp ?? setAceitoLocal;
+
+  /**
+   * 🔒 03/09 — A VARREDURA NOVA É SÓ DO ME (regra de escopo do CLAUDE.md).
+   * O MEI não passa pela Junta, não tem sócio, não escolhe razão social e não
+   * responde regulação urbana: o recap detalhado não teria o que mostrar. Ele
+   * continua exatamente como estava, aceite incluído.
+   */
+  if (mei) {
+    return (
+      <RevisarMeiView
+        d={d}
+        aceito={aceito}
+        setAceito={setAceito}
+        onSeguir={onSeguir}
+        onVoltar={onVoltar}
+        onAjustar={onAjustar}
+      />
+    );
+  }
+
+  const administradores = [d.titular, ...d.extras]
+    .filter((s) => s.administra)
+    .map((s) => s.nome);
+
   return (
     <>
       {/* 🐛 02/09 — `meta` nomeia o destino: daqui volta pro C7. */}
       <TelaHeader meta="Nome da empresa" onVoltar={onVoltar} />
 
       <main className="app-main">
-        {/* 🆕 28/08 — o subtítulo era único e dizia "a gente já começa a
-            registrar isso na Junta com o seu nome". Duas coisas falsas no MEI:
-            ele não passa pela Junta Comercial (o registro é no Portal do
-            Empreendedor), e não somos nós que registramos — é o titular, com a
-            conta gov.br dele. Ver `abertura-mei-processo.md` §Bloco 1. */}
-        <Titulo
-          sub={
-            mei
-              ? "Confira com calma. É com esses dados que a gente monta o seu registro, e é você quem vai finalizar no Portal do Empreendedor."
-              : "Confira com calma. Depois que você autoriza, a gente já começa a registrar isso na Junta com o seu nome."
-          }
-        >
+        <Titulo sub="Confira com calma. Depois que você autoriza, a gente já começa a registrar isso na Junta com o seu nome.">
           Está tudo certo?
         </Titulo>
 
         <Corpo>
-          <Bloco titulo="Você" passo="Seus dados">
-            <Linha rotulo="Nome" valor={d.socio.nome} />
-            <Linha rotulo="CPF" valor={d.socio.cpf} />
-            <Linha rotulo="Contato" valor={d.socio.contato} />
+          {/* ─── VOCÊ ─────────────────────────────────────────────────────
+              A ordem é a de um documento: quem é, documento, qualificação,
+              onde mora. Nome/CPF/e-mail/telefone vêm do cadastro (bloco 1,
+              que não se ajusta) — aparecem porque errar o CPF trava o
+              processo inteiro, e a saída é o WhatsApp, no pé do cartão. */}
+          <Bloco
+            titulo="Você"
+            passo="Seus dados"
+            onAjustar={onAjustar && (() => onAjustar(3))}
+            rodape={
+              <PeCadastro texto="Nome, CPF, e-mail e telefone vêm do seu cadastro e não mudam por aqui." />
+            }
+          >
+            <Linha rotulo="Nome" valor={d.titular.nome} />
+            <Linha rotulo="CPF" valor={d.titular.cpf} />
+            <Linha rotulo="Data de nascimento" valor={d.titular.nascimento} />
+            <Linha rotulo="RG" valor={`${d.titular.rg} · ${d.titular.orgao}`} />
+            <Linha rotulo="Nacionalidade" valor={d.titular.nacionalidade} />
+            <Linha rotulo="Estado civil" valor={civilPorExtenso(d.titular)} />
+            <Linha rotulo="Onde você mora" valor={d.titular.endereco} />
+            <Linha rotulo="E-mail" valor={d.contato.email} />
+            <Linha rotulo="Telefone" valor={d.contato.telefone} />
           </Bloco>
 
-          <Bloco titulo="A empresa" passo="Dados da empresa">
+          {/* ─── SÓCIOS ────────────────────────────────────────────────────
+              🆕 03/09 (decisão do Pedro) — RESUMO COM "VER DETALHES". Cada
+              sócio tem 9 campos de qualificação; com 4 sócios abertos de uma
+              vez a tela vira um rolo de 40 linhas e ninguém confere nada. O
+              resumo mostra o que distingue um do outro (nome, CPF, % e papel)
+              e o detalhe abre só pra quem vai conferir de fato. */}
+          {d.extras.length > 0 && (
+            <Bloco
+              titulo={d.extras.length > 1 ? "Você e seus sócios" : "Você e seu sócio"}
+              passo="Sócios"
+              onAjustar={onAjustar && (() => onAjustar(3))}
+            >
+              <Linha
+                rotulo="Quem administra a empresa"
+                valor={administradores.join(" e ")}
+                dica="Quem administra assina pela empresa. Quem não administra é só sócio."
+              />
+              {[d.titular, ...d.extras].map((s, i) => (
+                <CartaoSocio key={s.cpf} socio={s} titular={i === 0} />
+              ))}
+            </Bloco>
+          )}
+
+          {/* ─── O QUE A EMPRESA FAZ ───────────────────────────────────────
+              O objeto social entra aqui, e não no bloco da empresa, porque é
+              DERIVADO destas atividades: ajustar o CNAE é o que o reescreve.
+              Entra como leitura (a pessoa nunca digitou nele) mas precisa
+              aparecer, porque é o texto que vai pro contrato. */}
+          <Bloco
+            titulo="O que a empresa faz"
+            passo="Atividades"
+            onAjustar={onAjustar && (() => onAjustar(2))}
+          >
+            <Linha
+              rotulo="Atividade principal"
+              valor={`${d.atividade.principal.nome} (${d.atividade.principal.cnae})`}
+            />
+            {d.atividade.secundarias.map((s) => (
+              <Linha key={s.cnae} rotulo="Atividade secundária" valor={`${s.nome} (${s.cnae})`} />
+            ))}
+            <Linha
+              rotulo="Objeto social"
+              valor={d.atividade.objeto}
+              dica="Gerado a partir das suas atividades. Vai assim no contrato."
+            />
+          </Bloco>
+
+          {/* ─── A EMPRESA ─────────────────────────────────────────────────
+              🆕 03/09 — AS 3 TENTATIVAS, NA ORDEM. O recap mostrava só a 1ª,
+              como se o nome fosse um. São 3 pedidos por ordem de prioridade:
+              se a Junta recusa o primeiro, é o segundo que vira o nome da
+              empresa dela — e ela precisa ter visto os três antes. */}
+          <Bloco
+            titulo="A empresa"
+            passo="Dados da empresa"
+            onAjustar={onAjustar && (() => onAjustar(4))}
+          >
+            {d.nomes.map((nome, i) => (
+              <Linha key={nome} rotulo={`${i + 1}ª opção de nome`} valor={nome} />
+            ))}
+            {d.fantasia && <Linha rotulo="Nome fantasia" valor={d.fantasia} />}
+
+            {enderecoFiscal ? (
+              <Linha
+                rotulo="Endereço da empresa"
+                valor="Endereço fiscal da Legalizai, em BH"
+                dica={`Você escolheu usar o nosso endereço, ${brl(
+                  CUSTOS.ENDERECO_FISCAL,
+                  true,
+                )}/mês já na mensalidade.`}
+              />
+            ) : (
+              <>
+                <Linha
+                  rotulo="Endereço da empresa"
+                  valor={d.empresa.linha1}
+                  segunda={d.empresa.linha2}
+                />
+                <Linha
+                  rotulo="Sobre o imóvel"
+                  valor={`${rotuloDe(TIPO_IMOVEL, d.empresa.tipoImovel)} · ${
+                    d.empresa.resideNoEndereco ? "você mora nele" : "você não mora nele"
+                  }`}
+                  dica="É o que a Prefeitura analisa pra liberar a empresa nesse endereço."
+                />
+                <Linha rotulo="Índice cadastral do IPTU" valor={d.empresa.iptu} />
+              </>
+            )}
+          </Bloco>
+        </Corpo>
+
+        <Rodape>
+          {/* 🔄 01/09 — no ME o CTA não depende de aceite: o aceite mudou pra
+              tela da guia (`/guia`), onde a taxa vira gasto irreversível. */}
+          <Button full onClick={onSeguir}>
+            Confirmar e seguir
+          </Button>
+        </Rodape>
+      </main>
+    </>
+  );
+}
+
+/** "Casado(a) · Comunhão parcial de bens" — o regime só existe pra casado. */
+function civilPorExtenso(s: SocioRevisao): string {
+  const civil = rotuloDe(ESTADO_CIVIL, s.civil);
+  const regime = s.civil === "casado" ? rotuloDe(REGIME_BENS, s.regime) : "";
+  return regime ? `${civil} · ${regime}` : civil;
+}
+
+/**
+ * 🆕 03/09 (decisão do Pedro) — O CARTÃO DE CADA SÓCIO.
+ *
+ * Fechado mostra o que identifica (nome, CPF, participação, papel). Aberto
+ * mostra a qualificação inteira, que é o que de fato vai pro contrato e pro
+ * DBE. O titular entra na mesma lista porque a participação dele também é um
+ * número que precisa fechar 100% com a dos outros.
+ */
+function CartaoSocio({ socio, titular }: { socio: SocioRevisao; titular: boolean }) {
+  const [aberto, setAberto] = useState(false);
+  return (
+    <div className="rounded-md border border-border-hairline bg-surface-card p-3">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-caption font-semibold text-text-primary">
+            {socio.nome}
+            {titular && <span className="text-text-tertiary"> · você</span>}
+          </p>
+          <p className="text-micro text-text-tertiary mt-0.5">
+            {socio.cpf} · {socio.participacao}% ·{" "}
+            {socio.administra ? "administra" : "só sócio"}
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setAberto((a) => !a)}
+          aria-expanded={aberto}
+          className="shrink-0 rounded-full border border-border-hairline px-2.5 py-1 text-micro font-semibold text-text-secondary transition-colors hover:border-border-strong"
+        >
+          {aberto ? "Ocultar" : "Ver detalhes"}
+        </button>
+      </div>
+
+      {aberto && (
+        <div className="mt-3 flex flex-col gap-2 border-t border-border-hairline pt-3">
+          <Linha rotulo="Data de nascimento" valor={socio.nascimento} />
+          <Linha rotulo="RG" valor={`${socio.rg} · ${socio.orgao}`} />
+          <Linha rotulo="Nacionalidade" valor={socio.nacionalidade} />
+          <Linha rotulo="Estado civil" valor={civilPorExtenso(socio)} />
+          <Linha rotulo="Endereço" valor={socio.endereco} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * 🆕 03/09 (decisão do Pedro) — a saída pro que NÃO se ajusta aqui.
+ *
+ * O bloco 1 (conta e plano) não tem modo de ajuste: o cadastro já foi usado na
+ * cobrança (decisão 02/09). Mas nome e CPF são os dados que mais travam
+ * processo quando saem errados, então eles aparecem pra conferência mesmo
+ * assim, com o canal humano logo abaixo em vez de uma pill que não existe.
+ */
+function PeCadastro({ texto }: { texto: string }) {
+  return (
+    <p className="text-micro text-text-tertiary">
+      {texto}{" "}
+      <a
+        href={linkWhatsApp(
+          "Oi! Estou revisando o dossiê da minha empresa no app da Legalizai e preciso corrigir um dado do meu cadastro.",
+        )}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="font-medium text-text-secondary underline underline-offset-2"
+      >
+        Corrigir no WhatsApp
+      </a>
+    </p>
+  );
+}
+
+/**
+ * O recap do MEI, intocado nesta rodada (varredura de 03/09 é do caminho ME).
+ * Ele não passa pela Junta: registro é no Portal do Empreendedor, feito pelo
+ * próprio titular, e por isso o aceite continua morando aqui.
+ */
+function RevisarMeiView({
+  d,
+  aceito,
+  setAceito,
+  onSeguir,
+  onVoltar,
+  onAjustar,
+}: {
+  d: ReturnType<typeof useRevisao>;
+  aceito: boolean;
+  setAceito: (v: boolean) => void;
+  onSeguir?: () => void;
+  onVoltar?: () => void;
+  onAjustar?: (blocoId: number) => void;
+}) {
+  return (
+    <>
+      <TelaHeader meta="Nome da empresa" onVoltar={onVoltar} />
+
+      <main className="app-main">
+        {/* 🆕 28/08 — o subtítulo do ME dizia "a gente já começa a registrar
+            isso na Junta". Duas coisas falsas no MEI: ele não passa pela Junta
+            Comercial, e não somos nós que registramos — é o titular, com a
+            conta gov.br dele. Ver `abertura-mei-processo.md` §Bloco 1. */}
+        <Titulo sub="Confira com calma. É com esses dados que a gente monta o seu registro, e é você quem vai finalizar no Portal do Empreendedor.">
+          Está tudo certo?
+        </Titulo>
+
+        <Corpo>
+          <Bloco titulo="Você" passo="Seus dados" onAjustar={onAjustar && (() => onAjustar(3))}>
+            <Linha rotulo="Nome" valor={d.titular.nome} />
+            <Linha rotulo="CPF" valor={d.titular.cpf} />
+            <Linha rotulo="Contato" valor={d.contato.telefone} />
+          </Bloco>
+
+          <Bloco
+            titulo="A empresa"
+            passo="Dados da empresa"
+            onAjustar={onAjustar && (() => onAjustar(4))}
+          >
             {/* No MEI a razão social não é escolhida: sai automática do CNPJ +
                 nome civil (Lei 14.195/2021). Mostrar um nome aqui daria a
                 entender que houve escolha — e que ela pode ser recusada. */}
-            <Linha
-              rotulo="Nome"
-              valor={mei ? "Sai automático: seu CNPJ + seu nome" : d.empresa.razao}
-            />
-            <Linha rotulo="Tipo" valor={mei ? "MEI" : d.empresa.natureza} />
-            <Linha rotulo="Endereço" valor={d.empresa.endereco} />
-            {/* 🗑️ 01/09 (decisão do Pedro) — "Capital social" SAIU do recap.
-                O ADR de 31/08 já dizia que o capital sai da tela "por completo
-                (nem card informativo)" quando virou valor travado em R$10.000
-                no backend; o C4 foi limpo naquele dia e este recap ficou pra
-                trás, mostrando um dado que a pessoa nunca informou. */}
+            <Linha rotulo="Nome" valor="Sai automático: seu CNPJ + seu nome" />
+            <Linha rotulo="Tipo" valor="MEI" />
+            <Linha rotulo="Endereço" valor={d.mei.endereco} />
           </Bloco>
 
-          <Bloco titulo="O que a empresa faz" passo="Atividades">
+          <Bloco
+            titulo="O que a empresa faz"
+            passo="Atividades"
+            onAjustar={onAjustar && (() => onAjustar(2))}
+          >
             <Linha
               rotulo="Principal"
               valor={`${d.atividade.principal.nome} (${d.atividade.principal.cnae})`}
@@ -177,74 +550,25 @@ export function RevisarView({
             ))}
           </Bloco>
 
-          {/* ⚠️ 28/07: virou CARD de SUGESTÃO, não recap de escolha manual — o
-              N18 (simulador interativo) saiu do caminho obrigatório pré-
-              constituição. O pró-labore some como PILL dentro do mesmo card. */}
           <Card>
             <div className="mb-2 flex items-center justify-between gap-3">
-              <h2 className="text-body font-semibold text-text-primary">
-                Seu enquadramento
-              </h2>
-              {!mei && (
-                <span className="shrink-0 rounded-full bg-surface-tint-brand px-2.5 py-1 text-micro font-semibold text-action-primary-sm">
-                  ✨ Sugestão
-                </span>
-              )}
+              <h2 className="text-body font-semibold text-text-primary">Seu enquadramento</h2>
             </div>
-            {mei ? (
-              <p className="text-caption text-text-secondary">
-                MEI paga um DAS fixo por mês, sem Fator R nem Anexo pra
-                calcular — bem mais simples que o Simples Nacional.
-              </p>
-            ) : (
-              <>
-                <p className="text-caption text-text-secondary mb-3">
-                  Já escolhemos o melhor enquadramento pra você, com base no
-                  que você preencheu.
-                </p>
-                <div className="flex flex-col gap-1.5">
-                  <Linha
-                    rotulo="Regime"
-                    valor={`Simples Nacional · Anexo ${d.enquadramento.anexo} (${d.enquadramento.aliquota}%)`}
-                  />
-                  <Linha rotulo="Quanto você se paga por mês" valor={brl(d.enquadramento.proLabore)} />
-                </div>
-                <p className="text-micro text-text-tertiary mt-3">
-                  Esse número é uma estimativa. Depois que a empresa nascer, a
-                  gente lapida ele com você de verdade (é o Pró-labore, na aba
-                  Impostos).
-                </p>
-              </>
-            )}
+            <p className="text-caption text-text-secondary">
+              MEI paga um DAS fixo por mês, sem Fator R nem Anexo pra calcular,
+              bem mais simples que o Simples Nacional.
+            </p>
           </Card>
 
-          {/* 🗑️ 01/09 (decisão do Pedro) — o card "Taxa da Junta (já paga)"
-              SAIU. Ele estava mentindo desde 26/08: a DAE deixou de ser cobrada
-              no checkout e passou a ser paga DEPOIS, quando a viabilidade volta
-              deferida — ou seja, neste ponto da jornada ela ainda não foi paga.
-              O lugar dela agora é a tela da guia (`/guia`), que é onde ela de
-              fato é cobrada. */}
-
-          {/* 🔄 01/09, 2ª rodada (decisão do Pedro) — o aceite do ME MUDOU DE
-              TELA de novo, e desta vez pro lugar onde o gesto acontece: a tela
-              de pagamento da guia (`/guia`). É lá que a taxa vira gasto
-              irreversível; aqui a frase "a taxa já paga não é reembolsável"
-              ficava descolada, porque nada tinha sido pago ainda.
-              O MEI mantém o aceite aqui: ele não paga guia nenhuma, então não
-              existe uma tela de pagamento depois desta pra carregar o aceite. */}
-          {mei && (
-            <Checkbox checked={aceito} onChange={setAceito}>
-              Autorizo a Legalizai a preparar minha abertura, e entendo que o
-              registro final é feito por mim no Portal do Empreendedor.
-            </Checkbox>
-          )}
+          <Checkbox checked={aceito} onChange={setAceito}>
+            Autorizo a Legalizai a preparar minha abertura, e entendo que o
+            registro final é feito por mim no Portal do Empreendedor.
+          </Checkbox>
         </Corpo>
 
         <Rodape>
-          {/* 🔄 01/09 — no ME o CTA não depende mais de aceite: o aceite mudou
-              pra tela da guia. No MEI (que não paga guia) ele continua travando. */}
-          <Button full disabled={mei && !aceito} onClick={onSeguir}>
-            {mei ? "Autorizo, pode abrir" : "Confirmar e seguir"}
+          <Button full disabled={!aceito} onClick={onSeguir}>
+            Autorizo, pode abrir
           </Button>
         </Rodape>
       </main>
@@ -252,36 +576,86 @@ export function RevisarView({
   );
 }
 
+/**
+ * 🔄 03/09 (pedido do Pedro) — O RECAP USA O CARTÃO DE CONFIRMAÇÃO DA C4.
+ *
+ * Era `Card` branco com título em `text-body` e um link "Ajustar" sublinhado.
+ * Agora é o mesmo desenho que o dossiê já usa pra dizer "isto é o que você
+ * respondeu, confira": cartão cinza (`surface-alt`), rótulo miúdo em cima do
+ * valor, e uma PILL por seção como única ação. Um estilo só pro mesmo papel,
+ * em vez de dois.
+ *
+ * A pill (e não link) é de propósito: ela é a única coisa clicável do cartão,
+ * e pill lê como alvo de toque num bloco que, no resto, é leitura.
+ */
 function Bloco({
   titulo,
   passo,
+  onAjustar,
+  rodape,
   children,
 }: {
   titulo: string;
+  /** Nome do bloco, só pro leitor de tela ("Ajustar Seus dados"). */
   passo: string;
+  /** Ausente = recap sem volta (ex.: depois do protocolo). A pill some. */
+  onAjustar?: () => void;
+  /**
+   * 🆕 03/09 — nota no pé do cartão, separada do conteúdo por uma linha. Existe
+   * pro bloco "Você", onde parte dos dados não se ajusta por aqui e a saída
+   * precisa estar visível junto deles, não numa tela adiante.
+   */
+  rodape?: ReactNode;
   children: ReactNode;
 }) {
   return (
-    <Card>
+    <div className="rounded-md border border-border-hairline bg-surface-alt p-3">
       <div className="mb-2 flex items-center justify-between gap-3">
-        <h2 className="text-body font-semibold text-text-primary">{titulo}</h2>
-        <button
-          className="shrink-0 text-caption font-semibold text-action-primary-sm underline underline-offset-4"
-          aria-label={`Ajustar ${passo}`}
-        >
-          Ajustar
-        </button>
+        <h2 className="text-caption font-semibold text-text-primary">{titulo}</h2>
+        {onAjustar && (
+          <button
+            type="button"
+            onClick={onAjustar}
+            aria-label={`Ajustar ${passo}`}
+            className="shrink-0 rounded-full bg-action-primary-sm px-2.5 py-1 text-micro font-semibold text-text-on-brand transition-colors hover:bg-action-primary-hover"
+          >
+            Ajustar
+          </button>
+        )}
       </div>
-      <div className="flex flex-col gap-1.5">{children}</div>
-    </Card>
+      <div className="flex flex-col gap-2">{children}</div>
+      {rodape && (
+        <div className="mt-3 border-t border-border-hairline pt-2.5">{rodape}</div>
+      )}
+    </div>
   );
 }
 
-function Linha({ rotulo, valor }: { rotulo: string; valor: string }) {
+function Linha({
+  rotulo,
+  valor,
+  segunda,
+  dica,
+}: {
+  rotulo: string;
+  valor: string;
+  /** 2ª linha do mesmo valor, em peso normal (bairro + CEP do endereço). */
+  segunda?: string;
+  /**
+   * 🆕 03/09 — micro-texto abaixo do valor, pra dado que a pessoa não digitou
+   * (objeto social) ou cuja consequência não é óbvia (o imóvel, que é o que a
+   * Prefeitura analisa). Não vira `Aviso`: aqui é leitura, não alerta.
+   */
+  dica?: string;
+}) {
   return (
     <div className="flex flex-col">
       <span className="text-micro text-text-tertiary">{rotulo}</span>
-      <span className="text-caption text-text-primary">{valor}</span>
+      {/* Valor em semibold, igual ao cartão da C4: o rótulo é etiqueta, o
+          valor é o que a pessoa veio conferir. */}
+      <span className="text-caption font-semibold text-text-primary">{valor}</span>
+      {segunda && <span className="text-caption text-text-secondary">{segunda}</span>}
+      {dica && <span className="text-micro text-text-tertiary mt-0.5">{dica}</span>}
     </div>
   );
 }

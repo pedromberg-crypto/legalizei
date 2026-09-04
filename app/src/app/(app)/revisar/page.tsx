@@ -3,6 +3,9 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { RevisarView } from "@/components/wizard-cauda";
 import { ehMei, comRegime } from "@/lib/regime";
+import { ehEnderecoFiscal, comEndereco } from "@/lib/endereco";
+import { comAjuste } from "@/lib/ajuste";
+import { BLOCOS } from "@/lib/passos";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -28,7 +31,14 @@ import { ehMei, comRegime } from "@/lib/regime";
  */
 export default function RevisarPage() {
   const router = useRouter();
-  const mei = ehMei(useSearchParams());
+  const searchParams = useSearchParams();
+  const mei = ehMei(searchParams);
+  /**
+   * 🆕 03/09 — quem escolheu o endereço fiscal da Legalizai no E3.4 não passa
+   * pelo C4, então não tem IPTU nem resposta de imóvel pra conferir. O flag
+   * atravessa o flow pela querystring (`lib/endereco.ts`), igual ao regime.
+   */
+  const enderecoFiscal = ehEnderecoFiscal(searchParams);
 
   /**
    * 🔄 01/09 (decisão do Pedro) — ia pro `/termo` (A2). A tela A2 foi
@@ -49,9 +59,30 @@ export default function RevisarPage() {
       /* 🐛 02/09 (levantamento C3→A1) — a tela não tinha seta: o
          `TelaHeader` renderiza só o texto quando ninguém passa `onVoltar`, e a
          página não passava. Regra 6 do CLAUDE.md. */
-      onVoltar={() => router.push(comRegime("/dossie/nome", mei))}
+      onVoltar={() => router.push(comEndereco(comRegime("/dossie/nome", mei), enderecoFiscal))}
       mei={mei}
-      onSeguir={() => router.push(comRegime("/iniciar-viabilidade", mei))}
+      enderecoFiscal={enderecoFiscal}
+      /**
+       * 🆕 03/09 (pedido do Pedro) — a pill "Ajustar" de cada seção entra no
+       * MODO AJUSTE (01/09): abre a 1ª tela do bloco com `?ajuste=<id>`, e o
+       * CTA da última tela do bloco vira "Atualizar dados".
+       *
+       * 🟡 Detalhe que fica registrado: o modo ajuste sempre termina no
+       * STATUS (`ROTA_STATUS`, `/aguardando`), não aqui — ele nasceu pra ser
+       * usado a partir de lá. Quem sai do A1 pra corrigir volta pro status,
+       * não pro A1. Se isso incomodar no teste, o ajuste precisa saber de
+       * onde veio (um `?volta=`), que é mudança na `lib/ajuste.ts`.
+       */
+      onAjustar={(blocoId) => {
+        const bloco = BLOCOS.find((b) => b.id === blocoId);
+        if (!bloco) return;
+        router.push(
+          comEndereco(comRegime(comAjuste(bloco.telas[0], bloco.id), mei), enderecoFiscal),
+        );
+      }}
+      onSeguir={() =>
+        router.push(comEndereco(comRegime("/iniciar-viabilidade", mei), enderecoFiscal))
+      }
     />
   );
 }

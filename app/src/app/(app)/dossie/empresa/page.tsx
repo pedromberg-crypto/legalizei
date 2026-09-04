@@ -7,6 +7,8 @@ import { ehMei, comRegime } from "@/lib/regime";
 import { passoDoAjuste } from "@/lib/ajuste";
 import { ehEnderecoFiscal } from "@/lib/endereco";
 import { lerRascunhoEndereco, type RascunhoEndereco } from "@/lib/rascunho";
+// Mesma fonte que `aguardando`/`painel` usam pra saber se a empresa tem sócio.
+import { TEM_SOCIO } from "@/app/(app)/dossie/mock";
 
 /** 🆕 03/08 — ponto de REENCONTRO dos 2 caminhos: MEI cai aqui direto da C1
  *  (pulou C2/C3); ME chega pela sequência normal via C3. Capital social some
@@ -109,12 +111,29 @@ export default function EmpresaPage() {
    */
   const ajuste = passoDoAjuste(searchParams, "/dossie/empresa");
 
+  /**
+   * 🐛 03/09 (pente-fino) — O VOLTAR IA SEMPRE PRA C3 (SÓCIOS), inclusive pra
+   * quem nunca passou por lá:
+   *   · MEI vem da C1 direto (pula C2 e C3 — ver `socio/page.tsx`);
+   *   · ME "só eu" tem o passo Sócios filtrado (`passosDoCliente`, `condicional`),
+   *     então o anterior real dele é a C2 (vínculo com o INSS).
+   * O rótulo (`metaVoltar`) viaja junto com o destino de propósito: a regra 6
+   * do CLAUDE.md quebrou 4 vezes em 02/09 justamente por eles morarem longe um
+   * do outro.
+   */
+  const voltar = mei
+    ? { rota: "/dossie/socio", meta: "Seus dados" }
+    : TEM_SOCIO
+      ? { rota: "/dossie/socios", meta: "Sócios" }
+      : { rota: "/dossie/vinculo", meta: "Vínculo com o INSS" };
+
   return (
     <EmpresaView
       /* 🐛 02/09 (levantamento C3→A1) — a tela não tinha seta: o
          `TelaHeader` renderiza só o texto quando ninguém passa `onVoltar`, e a
          página não passava. Regra 6 do CLAUDE.md. */
-      onVoltar={() => router.push(comRegime("/dossie/socios", mei))}
+      onVoltar={() => router.push(comRegime(voltar.rota, mei))}
+      metaVoltar={voltar.meta}
       // 🔑 `key` força o remount quando o rascunho chega: os campos do
       // EmpresaView nascem do estado inicial, e sem isso a leitura tardia
       // (pós-montagem) não apareceria na tela.

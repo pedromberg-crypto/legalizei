@@ -3050,6 +3050,17 @@ export default function ApresentacaoPage() {
                             setAceito={setAceiteTermo}
                             onSeguir={() => setEtapa("painel")}
                             onVoltar={() => voltar(() => setEtapa("nome"))}
+                            /* 🆕 03/09 (pedido do Pedro) — a pill "Ajustar" de
+                               cada seção do recap. No app ela entra no modo
+                               ajuste por querystring; aqui a navegação é por
+                               estado, então cada bloco vira a 1ª etapa dele:
+                               2 = o que a empresa faz (C0), 3 = você e os
+                               sócios (C1), 4 = a empresa (C4). */
+                            onAjustar={(bloco) =>
+                              setEtapa(
+                                bloco === 2 ? "perguntando" : bloco === 3 ? "socio" : "empresa",
+                              )
+                            }
                           />
                         )}
                         {etapa === "login" && <LoginView />}

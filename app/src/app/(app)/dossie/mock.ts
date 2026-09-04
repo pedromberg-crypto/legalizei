@@ -37,6 +37,12 @@ export const CLIENTE = {
   nome: "Ana Beatriz Ramos",
   cpf: "123.456.789-00",
   telefone: "(31) 99999-0000",
+  /**
+   * 🆕 03/09 — o e-mail é coletado desde o E3.3 e nunca tinha entrado no mock,
+   * porque nenhuma tela o exibia. O A1 (`/revisar`) exibe: é por ele que a
+   * pessoa recebe tudo depois do protocolo, então entra na conferência.
+   */
+  email: "ana.ramos@email.com",
   endereco: "Rua dos Timbiras, 1200, Funcionários, Belo Horizonte/MG",
 };
 
@@ -152,3 +158,43 @@ export const CNAES_SECUNDARIAS = [
   { cnae: "6202-3/00", humano: "desenvolvimento de sistemas sob encomenda" },
   { cnae: "7410-2/99", humano: "design gráfico e identidade visual" },
 ];
+
+/**
+ * ─── 🆕 03/09 — O QUE O A1 (`/revisar`) RELÊ ────────────────────────────────
+ * As 3 coisas abaixo eram consts locais do `wizard-dossie.tsx` (C7). Subiram
+ * pra cá quando o recap passou a mostrar os 3 nomes na ordem e o objeto social:
+ * duas telas lendo o mesmo dado de dois lugares é exatamente a divergência que
+ * este arquivo existe pra matar (o CNAE com um dígito trocado, 29/07).
+ */
+
+/**
+ * As 3 tentativas de razão social, NA ORDEM em que vão pra Junta: a 1ª é a
+ * linha que a pessoa escreve, as 2 seguintes são as nossas reservas travadas
+ * (decisão do Pedro, 03/09). A ordem importa — a Junta tenta uma por vez.
+ */
+export const RAZAO_OPCOES: string[] = [
+  `${NOME_EMPRESARIAL} Web Studio`,
+  `${NOME_EMPRESARIAL} Desenvolvimento de Software`,
+  `${NOME_EMPRESARIAL.split(" ")[0]} Tecnologia ME`,
+];
+
+/**
+ * 🔒 24/08 (reunião Leonan 19/08) — gerado a partir das atividades, nunca
+ * digitado. Se o CNAE muda, ele se regenera; é por isso que é derivado e não
+ * um campo.
+ */
+export const OBJETO_SOCIAL = `Prestação de serviços de ${CNAE_PRINCIPAL.humano.toLowerCase()}, podendo também exercer ${CNAES_SECUNDARIAS.map(
+  (s) => s.humano,
+).join(", ")}.`;
+
+/**
+ * O que o autofill de CEP devolve no mock (mesmo retorno de `buscarCep` no
+ * `wizard-dossie`). O A1 precisa dele pra montar o endereço da empresa por
+ * extenso, já que só guarda CEP + número + complemento.
+ */
+export const ENDERECO_CEP = {
+  logradouro: "Rua dos Timbiras",
+  bairro: "Funcionários",
+  municipio: "Belo Horizonte",
+  uf: "MG",
+};

@@ -28,10 +28,18 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 export function Campo({
   rotulo,
   dica,
+  acao,
   children,
 }: {
   rotulo: string;
   dica?: string;
+  /**
+   * 🆕 03/09 (pedido do Pedro, no IPTU da C4) — ação opcional alinhada à
+   * DIREITA do rótulo. Nasceu pro "i" de campo: tem dado (o índice cadastral
+   * é o caso-mãe) em que a explicação é sobre AQUELE campo, não sobre a tela
+   * inteira, e enfiar isso no "i" do cabeçalho misturava dois assuntos.
+   */
+  acao?: ReactNode;
   children: ReactNode;
 }) {
   return (
@@ -40,7 +48,10 @@ export function Campo({
           altura de uma linha (achado na C2, onde a pergunta virou só o
           título). Mesmo tratamento que o `OutrasOpcoes` já dá ao título. */}
       {rotulo && (
-        <p className="text-caption font-semibold text-text-primary">{rotulo}</p>
+        <div className="flex items-center gap-2">
+          <p className="text-caption font-semibold text-text-primary">{rotulo}</p>
+          {acao && <div className="ml-auto shrink-0">{acao}</div>}
+        </div>
       )}
       {dica && <p className="text-micro text-text-tertiary mt-0.5">{dica}</p>}
       <div className="mt-1.5">{children}</div>
@@ -61,6 +72,7 @@ export function Texto({
   maxLength,
   type,
   travado = false,
+  acao,
 }: {
   valor: string;
   onChange: (v: string) => void;
@@ -78,7 +90,54 @@ export function Texto({
    * assunto, e passa por gente.
    */
   travado?: boolean;
+  /**
+   * 🆕 03/09 (pedido do Pedro, C7) — ação DENTRO do campo, na ponta direita.
+   * Nasceu pro "i" de dicas do nome: a dúvida "o que eu escrevo aqui?" nasce
+   * na hora de digitar, então a porta fica no próprio campo, não no rótulo.
+   * Sem ela, o `<input>` continua exatamente como sempre foi.
+   */
+  acao?: ReactNode;
 }) {
+  const moldura = `min-h-12 rounded-md border ${
+    travado
+      ? "border-border-hairline bg-surface-alt"
+      : erro
+        ? "border-state-danger bg-surface-card"
+        : "border-border-hairline bg-surface-card"
+  }`;
+  const texto = travado ? "text-text-tertiary" : "text-text-primary";
+
+  if (acao) {
+    return (
+      <>
+        {/* Com ação, quem carrega a moldura é o container e o input entra
+            "pelado" — senão seriam duas bordas, uma dentro da outra. O
+            `focus-within` mantém o mesmo feedback de foco do campo normal. */}
+        <div
+          className={`flex w-full items-center gap-2 px-3 transition-colors ${moldura} ${
+            travado || erro ? "" : "focus-within:border-border-focus"
+          }`}
+        >
+          <input
+            value={valor}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={placeholder}
+            inputMode={inputMode}
+            maxLength={maxLength}
+            type={type}
+            disabled={travado}
+            className={`min-w-0 flex-1 bg-transparent py-3 text-body placeholder:text-text-muted focus:outline-none ${texto}`}
+          />
+          <div className="shrink-0">{acao}</div>
+        </div>
+        {erro && <p className="text-micro text-state-danger-text mt-1">{erro}</p>}
+        {!erro && ok && (
+          <p className="text-micro text-state-success-text mt-1">{ok}</p>
+        )}
+      </>
+    );
+  }
+
   return (
     <>
       <input

@@ -101,11 +101,18 @@ export const CUSTOS = {
    *  sobre as parcelas que ainda estiverem por vencer"), pros dois regimes.
    *  Multa é sobre o SALDO restante da fidelidade, não sobre o total pago. */
   MULTA_CANCELAMENTO_PCT: 0.3,
-  /** 🔴 FAKE — valor de referência (`plano-padrao-195-referencia.md`, custo do
-   *  líder), não preço nosso fechado. Cobrança RECORRENTE mensal (não é taxa
-   *  única): quem escolhe endereço fiscal paga isso TODO mês, somado à
-   *  mensalidade do plano. Aprovação AUTOMÁTICA (decisão 27/08) — diferente
-   *  da Contabilizei, que sujeita a aprovação manual. */
+  /**
+   * 🟢 FECHADO (Pedro, 04/09) — R$60/mês. Até aqui era `🔴 FAKE`: valor de
+   * referência do líder (`plano-padrao-195-referencia.md`), não preço nosso.
+   * Travado quando o endereço fiscal virou resposta do agente de WhatsApp: um
+   * bot citando placeholder pra cliente é preço dito em público sem decisão
+   * atrás, que é justamente o que a régua anti-guru existe pra impedir.
+   *
+   * Cobrança RECORRENTE mensal (não é taxa única): quem escolhe endereço
+   * fiscal paga isso TODO mês, somado à mensalidade do plano. Aprovação
+   * AUTOMÁTICA (decisão 27/08), diferente da Contabilizei, que sujeita a
+   * aprovação manual.
+   */
   ENDERECO_FISCAL: 60,
   /**
    * 🟢 FECHADO (Pedro, 30/08) — R$209/ano. Antes ficava `null` de propósito

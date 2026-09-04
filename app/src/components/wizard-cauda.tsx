@@ -242,6 +242,28 @@ export function RevisarView({
   const [aceitoLocal, setAceitoLocal] = useState(false);
   const aceito = aceitoProp ?? aceitoLocal;
   const setAceito = setAceitoProp ?? setAceitoLocal;
+  /**
+   * 🆕 04/09 (decisão do Pedro) — CONFERÊNCIA POR SEÇÃO.
+   *
+   * Recap comprido tem um problema conhecido: ele é lido como decoração. A
+   * pessoa rola até o fim, aperta o CTA e só descobre o RG trocado quando a
+   * Junta exige. Agora cada seção tem o próprio "Está tudo certo", e o CTA
+   * final só destrava quando TODAS foram conferidas — a leitura vira ato, com
+   * um toque por seção em vez de um toque no fim de tudo.
+   *
+   * ⚠️ É um gate, e gate contraria o hábito da casa (o fade de rolagem existe
+   * justamente pra NÃO travar o CTA). A diferença: lá o gate punia quem lê
+   * rápido, sem nada em troca; aqui a tela é a última antes do irreversível e
+   * o custo é 4 toques. Vale registrar a tensão, não desfazer a decisão.
+   *
+   * Guardado no estado da TELA. Duas consequências que ficam registradas:
+   * (a) sair pra ajustar e voltar zera tudo, não só a seção ajustada — hoje
+   *     isso não acontece no flow (o modo ajuste termina no `/aguardando`),
+   *     e quando o carry-forward real existir, isto sobe pro estado do wizard;
+   * (b) o clique em "Ajustar" limpa a seção ANTES de navegar, que é o pedido
+   *     do Pedro: entrou pra mexer, revalida, tenha mudado algo ou não.
+   */
+  const [conferidas, setConferidas] = useState<string[]>([]);
 
   /**
    * 🔒 03/09 — A VARREDURA NOVA É SÓ DO ME (regra de escopo do CLAUDE.md).
@@ -266,13 +288,51 @@ export function RevisarView({
     .filter((s) => s.administra)
     .map((s) => s.nome);
 
+  /**
+   * As seções que precisam de conferência. A dos sócios só existe quando há
+   * sócio — por isso a lista é derivada, e não uma constante: o denominador do
+   * "faltam N" tem que bater com o que está na tela.
+   */
+  const SECOES = [
+    "Seus dados",
+    ...(d.extras.length > 0 ? ["Sócios"] : []),
+    "Atividades",
+    "Dados da empresa",
+  ];
+  const faltam = SECOES.filter((s) => !conferidas.includes(s)).length;
+
+  /**
+   * Tudo que uma seção precisa pro pedido do Pedro, num lugar só: o estado do
+   * "Está tudo certo", o toggle, e o "Ajustar" que LIMPA a conferência antes
+   * de navegar. Fica junto de propósito — separar o botão do reset é como o
+   * segundo nasceria esquecido na próxima seção.
+   */
+  const secao = (chave: string, blocoId: number) => ({
+    passo: chave,
+    conferido: conferidas.includes(chave),
+    onConferir: () =>
+      setConferidas((c) => (c.includes(chave) ? c.filter((x) => x !== chave) : [...c, chave])),
+    onAjustar:
+      onAjustar &&
+      (() => {
+        setConferidas((c) => c.filter((x) => x !== chave));
+        onAjustar(blocoId);
+      }),
+  });
+
   return (
     <>
       {/* 🐛 02/09 — `meta` nomeia o destino: daqui volta pro C7. */}
       <TelaHeader meta="Nome da empresa" onVoltar={onVoltar} />
 
       <main className="app-main">
-        <Titulo sub="Confira com calma. Depois que você autoriza, a gente já começa a registrar isso na Junta com o seu nome.">
+        {/* 🐛 04/09 (pente-fino de copy) — O SUBTÍTULO PROMETIA O QUE NÃO
+            ACONTECE AQUI. Ele dizia "depois que você autoriza, a gente já
+            começa a registrar na Junta": sobra da época em que o aceite morava
+            nesta tela. Desde 01/09 o ME não autoriza nada aqui (o aceite foi
+            pra `/guia`) e o CTA leva pro ponto sem volta, não pra Junta. O
+            "isso" vago também saiu: é justo a frase que define o risco. */}
+        <Titulo sub="Confira com calma. É com esses dados que a gente registra a sua empresa na Junta, no seu nome.">
           Está tudo certo?
         </Titulo>
 
@@ -283,22 +343,26 @@ export function RevisarView({
               que não se ajusta) — aparecem porque errar o CPF trava o
               processo inteiro, e a saída é o WhatsApp, no pé do cartão. */}
           <Bloco
+            tituloFora
             titulo="Você"
-            passo="Seus dados"
-            onAjustar={onAjustar && (() => onAjustar(3))}
-            rodape={
-              <PeCadastro texto="Nome, CPF, e-mail e telefone vêm do seu cadastro e não mudam por aqui." />
-            }
+            {...secao("Seus dados", 3)}
+            /* ✍️ 04/09 — a lista dos 4 campos repetia os rótulos logo acima. */
+            rodape={<PeCadastro texto="Vêm do seu cadastro e não mudam por aqui." />}
           >
             <Linha rotulo="Nome" valor={d.titular.nome} />
             <Linha rotulo="CPF" valor={d.titular.cpf} />
             <Linha rotulo="Data de nascimento" valor={d.titular.nascimento} />
             <Linha rotulo="RG" valor={`${d.titular.rg} · ${d.titular.orgao}`} />
-            <Linha rotulo="Nacionalidade" valor={d.titular.nacionalidade} />
-            <Linha rotulo="Estado civil" valor={civilPorExtenso(d.titular)} />
+            {/* ✍️ 04/09 — nacionalidade e estado civil eram 2 linhas e são um
+                dado só no contrato: a qualificação da pessoa. */}
+            <Linha
+              rotulo="Qualificação"
+              valor={`${d.titular.nacionalidade} · ${civilPorExtenso(d.titular)}`}
+            />
             <Linha rotulo="Onde você mora" valor={d.titular.endereco} />
-            <Linha rotulo="E-mail" valor={d.contato.email} />
-            <Linha rotulo="Telefone" valor={d.contato.telefone} />
+            {/* ✍️ 04/09 — e-mail e telefone viram um par só, igual ao recap
+                do MEI: são o mesmo assunto e nenhum dos dois se ajusta aqui. */}
+            <Linha rotulo="Contato" valor={d.contato.email} segunda={d.contato.telefone} />
           </Bloco>
 
           {/* ─── SÓCIOS ────────────────────────────────────────────────────
@@ -309,18 +373,32 @@ export function RevisarView({
               e o detalhe abre só pra quem vai conferir de fato. */}
           {d.extras.length > 0 && (
             <Bloco
-              titulo={d.extras.length > 1 ? "Você e seus sócios" : "Você e seu sócio"}
-              passo="Sócios"
-              onAjustar={onAjustar && (() => onAjustar(3))}
+              tituloFora
+              /* 🔄 04/09 (pente-fino de copy) — era "Você e seus sócios". Com
+                 o título fora do cartão, dois blocos seguidos começando por
+                 "Você" ficaram lendo como a mesma seção repetida. Você segue
+                 na lista, marcado com "· você" no cartão. */
+              titulo="Sócios"
+              {...secao("Sócios", 3)}
+              /* 🆕 04/09 (pedido do Pedro) — A SOMA, no pé do bloco. É o único
+                 erro caro que a tela não deixava ver: participação que não
+                 fecha 100% derruba o contrato na Junta, e é justamente por
+                 causa dela que o titular aparece nesta lista. Colorido só
+                 quando dá diferente, pra não virar enfeite. */
+              rodape={<SomaParticipacoes socios={[d.titular, ...d.extras]} />}
             >
-              <Linha
-                rotulo="Quem administra a empresa"
-                valor={administradores.join(" e ")}
-                dica="Quem administra assina pela empresa. Quem não administra é só sócio."
-              />
+              {/* 🔄 04/09 (pedido do Pedro) — QUEM ADMINISTRA SAIU DE CIMA E
+                  VIROU NOTA EMBAIXO. Era uma `Linha` no topo ("Quem administra
+                  a empresa: Ana e João") mais uma etiqueta repetida em cada
+                  cartão ("· administra" / "· não administra"): o mesmo fato
+                  dito 3 vezes, e o cartão fechado virou uma fila de itens
+                  separados por ponto que ninguém lê. Agora o cartão guarda só
+                  a participação, e a administração é uma nota visual embaixo
+                  da lista, com os nomes em negrito. */}
               {[d.titular, ...d.extras].map((s, i) => (
                 <CartaoSocio key={s.cpf} socio={s} titular={i === 0} />
               ))}
+              <NotaAdministracao nomes={administradores} />
             </Bloco>
           )}
 
@@ -330,21 +408,39 @@ export function RevisarView({
               Entra como leitura (a pessoa nunca digitou nele) mas precisa
               aparecer, porque é o texto que vai pro contrato. */}
           <Bloco
+            tituloFora
             titulo="O que a empresa faz"
-            passo="Atividades"
-            onAjustar={onAjustar && (() => onAjustar(2))}
+            {...secao("Atividades", 2)}
           >
             <Linha
               rotulo="Atividade principal"
               valor={`${d.atividade.principal.nome} (${d.atividade.principal.cnae})`}
             />
-            {d.atividade.secundarias.map((s) => (
-              <Linha key={s.cnae} rotulo="Atividade secundária" valor={`${s.nome} (${s.cnae})`} />
-            ))}
+            {/* ✍️ 04/09 — o rótulo "Atividade secundária" se repetia a cada
+                CNAE e lia como dado duplicado. Um rótulo, a lista embaixo. Os
+                códigos saíram: ninguém confere o número, confere o nome, e 4
+                códigos entre parênteses eram o maior ruído do cartão. O da
+                principal fica, que é o que define anexo e alíquota. */}
+            {d.atividade.secundarias.length > 0 && (
+              <div className="flex flex-col">
+                <span className="text-micro text-text-tertiary">
+                  {d.atividade.secundarias.length > 1
+                    ? "Atividades secundárias"
+                    : "Atividade secundária"}
+                </span>
+                {d.atividade.secundarias.map((s) => (
+                  <span key={s.cnae} className="text-caption font-semibold text-text-primary">
+                    {s.nome}
+                  </span>
+                ))}
+              </div>
+            )}
             <Linha
               rotulo="Objeto social"
               valor={d.atividade.objeto}
-              dica="Gerado a partir das suas atividades. Vai assim no contrato."
+              /* 🔄 04/09 — "Gerado" soava a máquina numa tela que fala na voz
+                 da casa o tempo todo ("a gente registra", "a gente escreve"). */
+              dica="É esse texto que vai no contrato."
             />
           </Bloco>
 
@@ -354,12 +450,27 @@ export function RevisarView({
               se a Junta recusa o primeiro, é o segundo que vira o nome da
               empresa dela — e ela precisa ter visto os três antes. */}
           <Bloco
+            tituloFora
             titulo="A empresa"
-            passo="Dados da empresa"
-            onAjustar={onAjustar && (() => onAjustar(4))}
+            {...secao("Dados da empresa", 4)}
           >
+            {/* 🆕 04/09 (pente-fino de copy) — a tela listava 1ª/2ª/3ª opção e
+                calava o MOTIVO de serem três. Sem isso, quem não lembra do C7
+                acha que escolheu três nomes à toa. A dica vai só na primeira:
+                repetir em todas viraria ruído. */}
+            {/* 🐛 04/09 (pente-fino) — "1ª/2ª/3ª opção de nome" tratava os três
+                como escolha dela. Desde o travamento do C7 (01/09), só o
+                primeiro é dela: a 2ª e a 3ª são RESERVAS nossas e não se
+                editam. Com a etiqueta antiga, quem estranhasse um nome que não
+                escreveu ia apertar Ajustar e bater numa tela que não deixa
+                mexer. O rótulo agora conta isso sozinho, e a dica encolheu. */}
             {d.nomes.map((nome, i) => (
-              <Linha key={nome} rotulo={`${i + 1}ª opção de nome`} valor={nome} />
+              <Linha
+                key={nome}
+                rotulo={i === 0 ? "Seu nome" : `${i}ª reserva`}
+                valor={nome}
+                dica={i === 0 ? "A Junta analisa na ordem." : undefined}
+              />
             ))}
             {d.fantasia && <Linha rotulo="Nome fantasia" valor={d.fantasia} />}
 
@@ -367,10 +478,9 @@ export function RevisarView({
               <Linha
                 rotulo="Endereço da empresa"
                 valor="Endereço fiscal da Legalizai, em BH"
-                dica={`Você escolheu usar o nosso endereço, ${brl(
-                  CUSTOS.ENDERECO_FISCAL,
-                  true,
-                )}/mês já na mensalidade.`}
+                /* ✍️ 04/09 — "Você escolheu usar o nosso endereço" era
+                   redundante: a tela inteira é o que você escolheu. */
+                dica={`${brl(CUSTOS.ENDERECO_FISCAL, true)}/mês, já na sua mensalidade.`}
               />
             ) : (
               <>
@@ -380,13 +490,17 @@ export function RevisarView({
                   segunda={d.empresa.linha2}
                 />
                 <Linha
-                  rotulo="Sobre o imóvel"
+                  /* ✍️ 04/09 — eram DUAS linhas com DUAS dicas sobre o mesmo
+                     assunto (o imóvel e o número que o identifica). Viraram
+                     uma: tipo + moradia em cima, IPTU embaixo, uma dica só. O
+                     rótulo "Sobre o imóvel" era vago; agora nomeia o dado. */
+                  rotulo="Tipo do imóvel"
                   valor={`${rotuloDe(TIPO_IMOVEL, d.empresa.tipoImovel)} · ${
                     d.empresa.resideNoEndereco ? "você mora nele" : "você não mora nele"
                   }`}
-                  dica="É o que a Prefeitura analisa pra liberar a empresa nesse endereço."
+                  segunda={`IPTU ${d.empresa.iptu}`}
+                  dica="A Prefeitura analisa isso pra liberar a empresa no endereço."
                 />
-                <Linha rotulo="Índice cadastral do IPTU" valor={d.empresa.iptu} />
               </>
             )}
           </Bloco>
@@ -394,9 +508,40 @@ export function RevisarView({
 
         <Rodape>
           {/* 🔄 01/09 — no ME o CTA não depende de aceite: o aceite mudou pra
-              tela da guia (`/guia`), onde a taxa vira gasto irreversível. */}
-          <Button full onClick={onSeguir}>
-            Confirmar e seguir
+              tela da guia (`/guia`), onde a taxa vira gasto irreversível.
+              🆕 04/09 — mas depende da CONFERÊNCIA: destrava quando as seções
+              estiverem todas confirmadas.
+
+              🔄 04/09 (pedido do Pedro) — O CONTADOR VIROU O PRÓPRIO RÓTULO.
+              Era uma linha de apoio acima do botão ("faltam 2 seções") e o
+              botão dizia sempre "Confirmar e seguir". Duas vozes pro mesmo
+              assunto, e a de baixo era a que a pessoa olhava: botão cinza com
+              rótulo de botão pronto lê como app quebrado. Agora o rótulo é o
+              estado ("1 de 4 conferidas") e só vira CTA de verdade quando o
+              caminho abre — a mudança de copy É o sinal de que destravou. */}
+          {/* 🆕 04/09 (pedido do Pedro) — ESCAPE HATCH acima do CTA, mesmo
+              padrão do E3.2 e do E6.1 (código): quem chega com dúvida numa tela
+              que antecede passo irreversível não tem pra onde ir sem abandonar
+              o flow. A mensagem já vai escrita, com a tela nomeada, pra não
+              começar a conversa do zero. */}
+          <a
+            href={linkWhatsApp(
+              "Oi! Estou revisando o dossiê da minha empresa no app da Legalizai e fiquei com uma dúvida antes de confirmar.",
+            )}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mb-3 block w-full text-center text-caption font-medium text-text-secondary underline underline-offset-4"
+          >
+            Ainda com dúvida? Chama no WhatsApp.
+          </a>
+          <Button full disabled={faltam > 0} onClick={onSeguir}>
+            {/* "seções" entra pra fechar o sentido de "0 de 4"; "conferidas"
+                fica de fora por LARGURA: em 18px bold, "0 de 4 seções
+                conferidas" passa de 280px e quebra em duas linhas num iPhone
+                SE. O particípio já está no botão de cada seção, logo acima. */}
+            {faltam > 0
+              ? `${SECOES.length - faltam} de ${SECOES.length} seções`
+              : "Tudo certo, seguir"}
           </Button>
         </Rodape>
       </main>
@@ -422,17 +567,21 @@ function civilPorExtenso(s: SocioRevisao): string {
 function CartaoSocio({ socio, titular }: { socio: SocioRevisao; titular: boolean }) {
   const [aberto, setAberto] = useState(false);
   return (
-    <div className="rounded-md border border-border-hairline bg-surface-card p-3">
+    <div className="rounded-md border border-border-hairline bg-surface-alt p-3">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-caption font-semibold text-text-primary">
             {socio.nome}
             {titular && <span className="text-text-tertiary"> · você</span>}
           </p>
-          <p className="text-micro text-text-tertiary mt-0.5">
-            {socio.cpf} · {socio.participacao}% ·{" "}
-            {socio.administra ? "administra" : "só sócio"}
-          </p>
+          {/* 🔄 04/09 (pedido do Pedro) — o cartão fechado guarda SÓ a
+              participação. O papel virou a nota de administração embaixo da
+              lista, e o CPF desceu pro detalhe: ele continua na tela pra quem
+              vai conferir de fato, sem competir com o número que distingue um
+              sócio do outro. */}
+          {/* ✍️ 04/09 — "da empresa" saiu: repetia em cada cartão e a seção
+              já se chama Sócios. */}
+          <p className="text-micro text-text-tertiary mt-0.5">{socio.participacao}%</p>
         </div>
         <button
           type="button"
@@ -446,6 +595,7 @@ function CartaoSocio({ socio, titular }: { socio: SocioRevisao; titular: boolean
 
       {aberto && (
         <div className="mt-3 flex flex-col gap-2 border-t border-border-hairline pt-3">
+          <Linha rotulo="CPF" valor={socio.cpf} />
           <Linha rotulo="Data de nascimento" valor={socio.nascimento} />
           <Linha rotulo="RG" valor={`${socio.rg} · ${socio.orgao}`} />
           <Linha rotulo="Nacionalidade" valor={socio.nacionalidade} />
@@ -477,7 +627,7 @@ function PeCadastro({ texto }: { texto: string }) {
         rel="noopener noreferrer"
         className="font-medium text-text-secondary underline underline-offset-2"
       >
-        Corrigir no WhatsApp
+        Corrigir pelo WhatsApp
       </a>
     </p>
   );
@@ -581,9 +731,19 @@ function RevisarMeiView({
  *
  * Era `Card` branco com título em `text-body` e um link "Ajustar" sublinhado.
  * Agora é o mesmo desenho que o dossiê já usa pra dizer "isto é o que você
- * respondeu, confira": cartão cinza (`surface-alt`), rótulo miúdo em cima do
- * valor, e uma PILL por seção como única ação. Um estilo só pro mesmo papel,
- * em vez de dois.
+ * respondeu, confira": rótulo miúdo em cima do valor, e uma PILL por seção
+ * como única ação. Um estilo só pro mesmo papel, em vez de dois.
+ *
+ * 🔄 04/09 (pedido do Pedro) — O CARTÃO VOLTOU A SER BRANCO. Ele nasceu cinza
+ * (`surface-alt`) pra ecoar o cartão de confirmação da C4, mas cinza no app
+ * já significa OUTRA coisa: campo travado, dado que não se mexe. Numa tela em
+ * que a ação principal é justamente ajustar, o fundo dizia o contrário do
+ * botão. Agora é `surface-card` + `border-hairline`, o mesmo par branco/borda
+ * cinza-claro de todo card do DS.
+ *
+ * ⚠️ Efeito em cascata: o cartão de cada sócio (`CartaoSocio`) era o branco
+ * que se destacava por cima do cinza. Com o `Bloco` branco, ele passou pro
+ * cinza — a hierarquia inverteu de lado, ela não sumiu.
  *
  * A pill (e não link) é de propósito: ela é a única coisa clicável do cartão,
  * e pill lê como alvo de toque num bloco que, no resto, é leitura.
@@ -593,6 +753,9 @@ function Bloco({
   passo,
   onAjustar,
   rodape,
+  tituloFora = false,
+  conferido = false,
+  onConferir,
   children,
 }: {
   titulo: string;
@@ -606,28 +769,188 @@ function Bloco({
    * precisa estar visível junto deles, não numa tela adiante.
    */
   rodape?: ReactNode;
+  /**
+   * 🆕 04/09 (pedido do Pedro, na A1) — TÍTULO DE SEÇÃO FORA DO CARTÃO.
+   *
+   * O título morava dentro do cartão, em `text-caption` semibold: do tamanho
+   * de um valor qualquer do recap, competindo com as linhas em vez de mandar
+   * nelas. Numa tela de 5 blocos, ninguém enxergava onde uma seção acaba e a
+   * outra começa. Fora e em `text-h2` ele vira RÉGUA: a subdivisão da tela é
+   * lida antes do conteúdo, e o cartão fica sendo só a caixa dos dados.
+   *
+   * 🔒 Guardado por regime (regra de escopo do CLAUDE.md): o `Bloco` também
+   * serve o `RevisarMeiView`, que está fora deste escopo. Sem a prop, nada
+   * muda — o MEI segue com o título dentro do cartão.
+   */
+  tituloFora?: boolean;
+  /**
+   * 🆕 04/09 (decisão do Pedro) — CONFIRMAÇÃO DA SEÇÃO, no pé do próprio
+   * cartão. Ausente = cartão de leitura pura (é o caso do MEI, que tem um
+   * aceite único no fim da tela, e do recap sem volta depois do protocolo).
+   */
+  conferido?: boolean;
+  onConferir?: () => void;
   children: ReactNode;
 }) {
-  return (
-    <div className="rounded-md border border-border-hairline bg-surface-alt p-3">
-      <div className="mb-2 flex items-center justify-between gap-3">
-        <h2 className="text-caption font-semibold text-text-primary">{titulo}</h2>
-        {onAjustar && (
-          <button
-            type="button"
-            onClick={onAjustar}
-            aria-label={`Ajustar ${passo}`}
-            className="shrink-0 rounded-full bg-action-primary-sm px-2.5 py-1 text-micro font-semibold text-text-on-brand transition-colors hover:bg-action-primary-hover"
-          >
-            Ajustar
-          </button>
-        )}
-      </div>
+  const pill = onAjustar && (
+    <button
+      type="button"
+      onClick={onAjustar}
+      aria-label={`Ajustar ${passo}`}
+      /**
+       * 🔄 04/09 (pedido do Pedro, em 2 rodadas) — CINZA CLARO, E MAIOR.
+       *
+       * Nasceu coral-700 em 12px (carimbo, não alvo de toque). Passou por
+       * coral-600 e o coral gritou: numa tela com 4 seções, 4 pills coral
+       * puxavam mais atenção que o próprio conteúdo que a pessoa veio
+       * conferir, e ainda competiam com o CTA do rodapé — que é o único
+       * coral que deveria mandar aqui.
+       *
+       * Agora é cinza claro (`surface-alt` + borda hairline) em 14px, com
+       * 36px de altura. Ação secundária com cara de ação secundária: visível
+       * porque tem caixa e alvo, silenciosa porque não tem cor de marca.
+       * Bônus: sai a dívida de contraste do branco sobre coral-600 (4,04:1,
+       * que só passa AA em texto ≥18,66px bold — regra travada em 12/07).
+       */
+      className="shrink-0 rounded-full border border-border-hairline bg-surface-alt px-3.5 py-1.5 min-h-9 text-caption font-semibold text-text-secondary transition-colors hover:bg-surface-card hover:text-text-primary"
+    >
+      Ajustar
+    </button>
+  );
+
+  const cartao = (
+    <div className="rounded-md border border-border-hairline bg-surface-card p-3">
+      {!tituloFora && (
+        <div className="mb-2 flex items-center justify-between gap-3">
+          <h2 className="text-caption font-semibold text-text-primary">{titulo}</h2>
+          {pill}
+        </div>
+      )}
       <div className="flex flex-col gap-2">{children}</div>
       {rodape && (
         <div className="mt-3 border-t border-border-hairline pt-2.5">{rodape}</div>
       )}
+      {onConferir && (
+        <button
+          type="button"
+          onClick={onConferir}
+          aria-pressed={conferido}
+          /* Toggle, não trava: quem confirmou por engano desfaz no mesmo
+             botão. Rótulo no PASSADO quando ligado ("Conferido") pra ler como
+             estado, e não como uma segunda coisa a fazer. */
+          className={`mt-3 flex min-h-10 w-full items-center justify-center gap-2 rounded-md border text-caption font-semibold transition-colors ${
+            conferido
+              ? "border-transparent bg-state-success-tint text-state-success-text"
+              : "border-border-strong text-text-primary hover:bg-surface-alt"
+          }`}
+        >
+          {conferido && <Certo />}
+          {/* 🔄 04/09 (pente-fino de copy) — era "Está tudo certo", a mesma
+              frase do título da tela E do CTA final: a pergunta do topo era
+              respondida com as próprias palavras dela, três vezes. "Conferi"
+              é ato em 1ª pessoa; o estado segue no particípio. */}
+          {conferido ? "Conferido" : "Conferi"}
+        </button>
+      )}
     </div>
+  );
+
+  if (!tituloFora) return cartao;
+
+  /* A pill sobe junto: ela é a ação DA SEÇÃO, e ficar sozinha dentro do
+     cartão a deixaria órfã do título que ela ajusta. */
+  return (
+    <section className="flex flex-col gap-2">
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-h2 text-text-primary">{titulo}</h2>
+        {pill}
+      </div>
+      {cartao}
+    </section>
+  );
+}
+
+/**
+ * 🆕 04/09 (pedido do Pedro) — A SOMA DAS PARTICIPAÇÕES.
+ *
+ * A tela mostrava 30% aqui, 70% ali, e deixava a conta pro leitor. Participação
+ * que não fecha 100% é reprova na Junta, e é o tipo de erro que ninguém pega
+ * relendo cartão por cartão. Três palavras no pé do bloco resolvem.
+ *
+ * Fora de 100% vira vermelho: o wizard não deveria deixar chegar aqui, mas se
+ * chegar, esta é a última tela antes do irreversível.
+ */
+function SomaParticipacoes({ socios }: { socios: SocioRevisao[] }) {
+  const soma = socios.reduce((t, s) => t + s.participacao, 0);
+  const fecha = soma === 100;
+  return (
+    <p
+      className={`text-micro ${fecha ? "text-text-tertiary" : "font-semibold text-state-danger-text"}`}
+    >
+      Juntos: {soma}%{fecha ? "" : " (precisa fechar 100%)"}
+    </p>
+  );
+}
+
+/**
+ * 🆕 04/09 (pedido do Pedro) — A NOTA DE QUEM ADMINISTRA.
+ *
+ * Mesma gramática do `CardNota` (círculo verde-claro + check + texto), fundo
+ * `surface-card`. Ela nasceu cinza pra separar do cartão branco da seção, e o
+ * Pedro pediu branco na hora (04/09): com os cartões dos sócios logo acima já
+ * em cinza, mais um cinza empilhava dois níveis do mesmo tom e a nota lia como
+ * um quinto sócio. Branco com borda hairline a devolve pro papel de nota.
+ *
+ * Nomes em negrito porque é o que a pessoa procura aqui: numa lista de 3 ou 4
+ * sócios, "quem assina" é a única coisa que ela não consegue deduzir olhando.
+ *
+ * ⚠️ Sem gênero no singular ("é quem administra", não "é a administradora"):
+ * o dossiê não coleta gênero, e chutar erraria com nome ambíguo.
+ */
+function NotaAdministracao({ nomes }: { nomes: string[] }) {
+  if (nomes.length === 0) return null;
+  const varios = nomes.length > 1;
+  return (
+    <div className="flex items-start gap-2.5 rounded-md border border-border-hairline bg-surface-card p-3">
+      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-state-success-tint text-state-success-text">
+        <Certo />
+      </span>
+      <p className="text-caption text-text-secondary">
+        {nomes.map((nome, i) => (
+          <span key={nome}>
+            {i > 0 && (i === nomes.length - 1 ? " e " : ", ")}
+            <strong className="font-semibold text-text-primary">{nome}</strong>
+          </span>
+        ))}
+        {/* ✍️ 04/09 (2ª rodada, pedido do Pedro) — enxugado. A 1ª versão dizia
+            "são os sócios administradores" e emendava "assinam pela empresa no
+            banco, no cartório e nos contratos": duas voltas pro mesmo fato, com
+            "sócios" repetindo o título da seção e as preposições esticando a
+            lista. Ficou o papel + a lista seca, mesmo formato do gate. */}
+        {varios
+          ? " são os administradores. Assinam pela empresa: banco, cartório, contratos."
+          : " é quem administra. Assina pela empresa: banco, cartório, contratos."}
+      </p>
+    </div>
+  );
+}
+
+/** Mesmo glifo do `CardNota` positivo — um check só no app, não dois. */
+function Certo() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="m5 12 4 4 8-9" />
+    </svg>
   );
 }
 

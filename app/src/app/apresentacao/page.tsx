@@ -321,6 +321,9 @@ type Etapa =
   | "m-travado"
   | "m-ativa"
   | "retomar-cpf"
+  // 🆕 04/09 (pedido do Pedro) — C0.3: quem volta confirma o código antes de
+  // ver status. Mesma tela do E6.1, outra posição no flow.
+  | "retomar-codigo"
   | "retomar"
   | "aguardando"
   // 🆕 01/09 — REFERÊNCIA DO DEV, fora de toda sequência: não é passo do
@@ -498,6 +501,7 @@ function antesDoMigrar(e: EtapaMigrar): Etapa {
 /** C0.1 (retomar) e E9.1 (aguardando) — pausas de pagamento, fora da sequência. */
 const ETAPAS_ESPERA = [
   "retomar-cpf",
+  "retomar-codigo",
   "retomar",
   "aguardando",
   // 🆕 30/08 — splashes transitórios (E5F.1/E9.S) e a variante "pago" do
@@ -677,6 +681,9 @@ type Momento =
   | "m-travado"
   | "m-ativa"
   | "retomar-cpf"
+  // 🆕 04/09 (pedido do Pedro) — C0.3: quem volta confirma o código antes de
+  // ver status. Mesma tela do E6.1, outra posição no flow.
+  | "retomar-codigo"
   | "retomar"
   | "aguardando"
   // 🆕 01/09 — REFERÊNCIA DO DEV, fora de toda sequência: não é passo do
@@ -1060,7 +1067,9 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   "saida-mei-servidor": "/saida/mei-servidor",
   "splash-atendido": "/splash-atendido",
   conta: "/conta",
-  "conta-codigo": "/conta",
+  // 🔄 04/09 — aponta pro deep-link agora que o código é nó do mapa (E6.1):
+  // é por esta rota que o painel acha o nome oficial da tela.
+  "conta-codigo": "/conta?etapa=codigo",
   plano: "/plano",
   pagamento: "/pagamento",
   "splash-pagamento": "/splash-pagamento",
@@ -1103,6 +1112,7 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   "m-travado": "/migrar/transferencia?estado=travado",
   "m-ativa": "/migrar/ativa",
   "retomar-cpf": "/retomar",
+  "retomar-codigo": "/retomar?etapa=codigo",
   retomar: "/retomar",
   aguardando: "/aguardando",
   guia: "/guia",
@@ -1118,7 +1128,8 @@ const SUFIXO_MOMENTO: Partial<Record<Momento, string>> = {
   "fora-bh-enviado": " · na lista",
   "veredito-waitlist-enviado": " · confirmada",
   "veredito-mauro-enviado": " · confirmado",
-  "conta-codigo": " · confirmar código",
+  /* 🗑️ 04/09 — o sufixo " · confirmar código" existia porque o código era
+     sub-passo sem nome próprio. Agora ele é o E6.1 e o nome vem do mapa. */
 };
 
 const NOME_MOCKUP: Record<Momento, string> = Object.fromEntries(
@@ -1226,7 +1237,8 @@ const MOMENTO_POR_NO: Record<string, Etapa | null> = {
   E5_1: "veredito",  // é um DESFECHO do veredito, não tela própria: o preparo força o resultado
   E5_2: "veredito",  // idem — desfecho "quem o Mauro atende" (comércio)
   E5_3: "veredito",  // idem — desfecho "fora de escopo"
-  E6: "conta",  // abre no form; o código é passo interno dela
+  E6: "conta",  // abre no form
+  E6_1: "conta-codigo",  // 🆕 04/09 — o código virou tela do flow, com pill própria
   E7: "plano",
   E7_1: "plano",  // mesma tela, variante endereço fiscal (o preparo força o estado)
   E9: "pagamento",
@@ -1247,6 +1259,7 @@ const MOMENTO_POR_NO: Record<string, Etapa | null> = {
   C5_S: "splash-atividades",
   C7: "nome",
   C0_1: "retomar-cpf",  // abre na porta de CPF
+  C0_3: "retomar-codigo",  // 🆕 04/09 — o código da reentrada
   C7_2: "nome-rodada2",
   A1: "revisar",
   A2: "iniciar-viabilidade",
@@ -1567,7 +1580,10 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   },
   "conta-codigo": {
     dono: "usuario",
-    faz: "Valida e-mail e telefone com um código de 6 dígitos antes de deixar seguir.",
+    /* 🐛 04/09 — dizia "6 dígitos". São 8 desde 01/09 (`DIGITOS_CODIGO`), e o
+       próprio mock desta demo já preenchia 8. O `falta` do E6 avisava que o
+       número aparece em 4 lugares e precisa bater nos 4; este era o 4º. */
+    faz: "Valida e-mail e telefone com um código de 8 dígitos antes de deixar seguir (E6.1).",
     interfere:
       "Contato validado é o que garante que a gente consegue avisar sobre exigência de órgão depois. Um e-mail errado aqui quebra a comunicação no meio do processo.",
     porque:
@@ -1964,9 +1980,17 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     dono: "usuario",
     faz: "Porta de entrada da reentrada (C0.1): pede o CPF antes de mostrar qualquer status. Sem isso, `/retomar` era rota órfã — só alcançável digitando a URL.",
     interfere:
-      "É o CPF que decide o resto: se o boleto ainda não compensou, manda pro E9.1 (aguardando); se já pagou, mostra o `retomar` de status normal.",
+      "É o CPF que decide o resto: se o boleto ainda não compensou, manda pro E9.1 (aguardando); se já pagou, mostra o `retomar` de status normal. 🔄 04/09: quem decide isso continua sendo o CPF, mas o status só aparece depois do código (C0.3).",
     porque:
       "🔴 MOCK, RF-01 — não existe backend real de 'status de pagamento por CPF' ainda. O dígito final do CPF decide a ramificação, documentado como mock no código (não é lógica de produção real).",
+  },
+  "retomar-codigo": {
+    dono: "usuario",
+    faz: "C0.3: confirma um código de 8 dígitos, mandado pro e-mail e telefone da conta, antes de abrir o status. Mesma tela do E6.1 (`ContaView`, etapa \"codigo\"), reusada nesta posição.",
+    interfere:
+      "Nada no processo da Junta. Interfere no ACESSO: é o que separa quem é dono do processo de quem só digitou um CPF.",
+    porque:
+      "🆕 04/09 (pedido do Pedro) — CPF não é segredo: circula em cadastro, boleto e recibo. Sem esta tela, qualquer um que soubesse o CPF via nome da empresa, endereço, sócios e status de pagamento de outra pessoa. O código é o que transforma a reentrada em login de verdade. 🔴 MOCK: qualquer 8 dígitos passam, e o contato exibido é o do cadastro fake.",
   },
   retomar: {
     dono: "usuario",
@@ -2284,8 +2308,17 @@ export default function ApresentacaoPage() {
         coorte: "primeira",
         codigo: "",
       });
-    } else if (etapa === "conta-codigo") {
-      setDadosConta((p) => ({ ...p, codigo: "48291374" }));
+    } else if (etapa === "conta-codigo" || etapa === "retomar-codigo") {
+      /* 🆕 04/09 — o C0.3 usa a mesma tela e o mesmo preparo. Na reentrada o
+         contato mostrado tem que existir mesmo que a demo tenha entrado
+         direto pela pill (sem passar pelo E6), senão o subtítulo cai nos
+         placeholders "seu e-mail"/"seu telefone". */
+      setDadosConta((p) => ({
+        ...p,
+        email: p.email || "ana.ramos@email.com",
+        telefone: p.telefone || "(31) 98888-1234",
+        codigo: "48291374",
+      }));
     } else if (etapa === "pagamento") {
       // 🔄 30/08 (pedido do Pedro) — E8 (Contrato) foi ELIMINADO do fluxo; o
       // aceite (`aceite`/`setAceite`) subiu pra dentro do E9 (Pagamento).
@@ -3252,12 +3285,29 @@ export default function ApresentacaoPage() {
                           <RetomarCpfView
                             cpf={cpfRetomar}
                             setCpf={setCpfRetomar}
-                            onContinuar={() => {
+                            /* 🔄 04/09 (pedido do Pedro) — o CPF não abre mais
+                               o status direto: passa pelo código (C0.3). A
+                               ramificação mock por dígito final continua, só
+                               que uma tela depois. */
+                            onContinuar={() => setEtapa("retomar-codigo")}
+                            onVoltar={() => voltar(() => setEtapa("fork"))}
+                          />
+                        )}
+                        {etapa === "retomar-codigo" && (
+                          <ContaView
+                            d={dadosConta}
+                            set={(k, v) => setDadosConta((p) => ({ ...p, [k]: v }))}
+                            etapa="codigo"
+                            /* Só existe no E6 (form → código). Aqui a tela
+                               nasce no código, então nunca é chamado. */
+                            onCriarConta={() => {}}
+                            onConfirmar={() => {
                               const digitos = cpfRetomar.replace(/\D/g, "");
                               const ultimo = Number(digitos[digitos.length - 1] ?? "0");
                               setEtapa(ultimo % 2 !== 0 ? "aguardando" : "retomar");
                             }}
-                            onVoltar={() => voltar(() => setEtapa("fork"))}
+                            onVoltar={() => voltar(() => setEtapa("retomar-cpf"))}
+                            layout="painel"
                           />
                         )}
                         {/* 🔒 31/08 (fusão A3+E9) — RetomarView foi retirada:

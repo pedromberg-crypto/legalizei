@@ -207,17 +207,35 @@ export function Rolagem({
  * Uso: espalhe `ref={viewport}` e `style` no elemento que rola, e
  * `ref={conteudo}` no filho que cresce.
  */
+/**
+ * 🔄 04/09 (pedido do Pedro, na A1) — o degradê do TOPO entrava em DEGRAU e
+ * comia o primeiro card. Ele ligava em `scrollTop > 2`, então bastavam 3px de
+ * rolagem pra que os 20px de ramp aparecessem inteiros — e como o card do
+ * corpo encosta na borda do viewport, o desbote caía sobre o topo dele (a
+ * borda arredondada e o título da seção) em vez de cair no vão do cabeçalho.
+ *
+ * Agora o ramp CRESCE com a rolagem (`TOPO_MAX` = teto) e é mais curto: nos
+ * primeiros pixels ele é do tamanho do que já saiu de vista, e o card só perde
+ * o topo quando o topo dele de fato já passou por baixo do cabeçalho. Raiz,
+ * não tela: `Corpo` e `Rolagem` dividem este hook, então vale no app inteiro.
+ */
+/** Teto do desbote de topo (px). Curto de propósito: é affordance, não véu. */
+const TOPO_MAX = 14;
+/** Passo de quantização: evita re-render a cada pixel de rolagem. */
+const TOPO_PASSO = 2;
+
 export function useFadeScroll() {
   const viewport = useRef<HTMLDivElement>(null);
   const conteudo = useRef<HTMLDivElement>(null);
-  const [fade, setFade] = useState({ topo: false, base: false });
+  const [fade, setFade] = useState({ topo: 0, base: false });
 
   useEffect(() => {
     const vp = viewport.current;
     const ct = conteudo.current;
     if (!vp || !ct) return;
     const recompute = () => {
-      const topo = vp.scrollTop > 2;
+      const bruto = Math.min(Math.max(vp.scrollTop, 0), TOPO_MAX);
+      const topo = Math.round(bruto / TOPO_PASSO) * TOPO_PASSO;
       const base = vp.scrollTop + vp.clientHeight < vp.scrollHeight - 2;
       setFade((f) => (f.topo === topo && f.base === base ? f : { topo, base }));
     };
@@ -233,7 +251,7 @@ export function useFadeScroll() {
   }, []);
 
   // Mask REAL: só desbota a ponta que ainda tem conteúdo pra rolar.
-  const topStop = fade.topo ? "transparent 0, #000 20px" : "#000 0";
+  const topStop = fade.topo > 0 ? `transparent 0, #000 ${fade.topo}px` : "#000 0";
   const baseStop = fade.base
     ? "#000 calc(100% - 28px), transparent 100%"
     : "#000 100%";

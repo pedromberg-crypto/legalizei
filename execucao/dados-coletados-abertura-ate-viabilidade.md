@@ -63,6 +63,9 @@ tags: [execucao, flow, dados, abertura]
 - senha
 - código de verificação de 8 dígitos (mock)
 
+### E6.1 · Confirmar código
+- Código de verificação de 8 dígitos (`DIGITOS_CODIGO`), enviado pro e-mail e pro telefone digitados no E6
+
 ### E7 · A conta da abertura
 - _(sem dado novo — contexto, confirmação ou decisão do sistema)_
 

@@ -56,7 +56,17 @@ export default function ContaPage() {
   // 🆕 27/08 — a categoria escolhida no E3.3 precisa sobreviver até a C0
   // (`/dossie/atividade`, pós-pagamento), que é quem a consome de verdade.
   const categoria = categoriaDe(searchParams);
-  const [etapa, setEtapa] = useState<"form" | "codigo">("form");
+  /**
+   * 🆕 04/09 — DEEP-LINK do código (`/conta?etapa=codigo`). O código virou nó
+   * do flow (E6.1) e nó do mapa tem prévia ao vivo pela rota: sem isso, a
+   * prévia do E6.1 abriria no formulário do E6 e as duas telas ficariam
+   * indistinguíveis no mapa e no `/mockup`. Mesmo padrão de `?etapa=` que o
+   * `/gate` e o `/welcome?slide=` já usam. No flow real ninguém chega por
+   * aqui: quem entra vem do form, pelo `onCriarConta`.
+   */
+  const [etapa, setEtapa] = useState<"form" | "codigo">(
+    searchParams.get("etapa") === "codigo" ? "codigo" : "form",
+  );
   /**
    * 🔄 28/08 (pedido do Pedro) — a tela volta a coletar tudo aqui mesmo
    * (`leadJaCaptado` removido abaixo), então o form começa em branco: não há

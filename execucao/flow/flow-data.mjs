@@ -543,6 +543,12 @@ export const NODES = [
 
   // ── ENTRADA (E) · DINHEIRO · E6–E9 ───────────────────────────────────────
   { id: "E6", caminho: "abrir", rota: "/conta", label: "E6 · Criar conta", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "🔄 01/09 (pedido do Pedro) — **login social (Google/Apple) REMOVIDO**: não teremos por enquanto, e botão que promete caminho inexistente é a pior fricção. O código de verificação passou de **6 para 8 dígitos** (`DIGITOS_CODIGO` — o número aparece em 4 lugares e precisa bater nos 4). 🔄 28/08 (pedido do Pedro) — reverteu o encolhimento de 27/08: a tela volta a coletar o form INTEIRO aqui mesmo (nome/CPF/telefone/e-mail/senha/CEP/número/complemento), sem recap read-only, `leadJaCaptado` removido do código. Form começa em branco. Provider de validação CPF/situação real (Pedro). 🔴 RF-01: sem estado real entre telas, hoje é só estado local do componente. 🐛 29/08 — vazamento de layout no campo Complemento corrigido (`min-w-0` faltava no flex), placeholder simplificado pra só \"Complemento\".", dados: "Nome · CPF · telefone · e-mail · senha · código de verificação de 8 dígitos (mock)" },
+  // 🆕 04/09 (pedido do Pedro) — O CÓDIGO VOLTOU PRO FLOW. A tela existe no app
+  // desde sempre (`ContaView`, etapa "codigo") e na demo (`conta-codigo`), mas
+  // como SUB-PASSO do E6: sem nó, sem pill e invisível no mapa. Era o mesmo
+  // buraco do E7.1 e do C0.1 — tela construída que ninguém achava sem saber
+  // que existia. Agora é nó declarado, no lugar onde acontece.
+  { id: "E6_1", caminho: "abrir", rota: "/conta?etapa=codigo", label: "E6.1 · Confirmar código", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "🔴 Envio real de e-mail/SMS, janela de expiração e trava de tentativas são do dev: hoje é mock e qualquer 8 dígitos passam. Já existem reenvio com contador de 60s e escape pro WhatsApp (01/09). 🐛 04/09 — o `meta` do header diz \"Confirme seu acesso\", que é o nome DESTA tela; pela regra 6 do CLAUDE.md ele deveria nomear o destino do voltar, que é o formulário do E6.", dados: "Código de verificação de 8 dígitos (`DIGITOS_CODIGO`), enviado pro e-mail e pro telefone digitados no E6" },
   { id: "E7", caminho: "abrir", rota: "/plano", label: "E7 · A conta da abertura", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Preço ~R$195 FAKE (Mauro+custo); 🟢 01/09 DAE RESOLVIDO — R$281,08, valor da guia real emitida no processo (prints 125 e 127), substitui os R$268,51 da tabela de 19/07 (a conferência cobra 2 atos: Contrato + Enquadramento ME, e a diferença de R$12,57 bate com o 2º); certificado A1 (Mauro). ✅ RESOLVIDO 26/08 (reunião Rua Satélite 36, item 2): a antiga 'pendência real de spec' ('conta total não é total', endereço fiscal só aparecia no C4 pós-pagamento) foi corrigida — a mensalidade mostrada aqui já soma o endereço fiscal quando escolhido lá no E5F, com 1 linha de explicação. 🆕 28/08 — REDESIGN 'premium' (pedido do Pedro, validado em preview isolado `/plano-premium` antes de aplicar): título bicolor, card-herói com profundidade real (raio+sombra), lista de inclusos como cartões-linha, CTA como barra flutuante escura. Nenhum conteúdo/ramo cortado (MEI×ME, colaboradores, citação legal, endereço fiscal seguem intactos) — só a casca mudou. `PlanoOferta` em `wizard-dinheiro.tsx`. 🆕 30/08 — ver E7.1 pra variante 'escolheu endereço fiscal'. Fechado o gap real na `/apresentacao`: a escolha do E3.4 nunca atravessava até o E7 na demo, mesmo o componente já suportando a prop.", dados: "" },
   // 🆕 30/08 (pedido do Pedro) — variante JÁ CONSTRUÍDA (card "O que você
   // adicionou", ícone 3D + valor explícito) pra quem escolheu endereço fiscal
@@ -645,6 +651,15 @@ export const NODES = [
 
   // ── ESPERA — decimal de entrada em Constituição ──────────────────────────
   { id: "C0_1", caminho: "abrir", rota: "/retomar", label: "C0.1 · Retomar<br/>(porta de CPF)", forma: "tela", classe: "espera", status: "construida", validado: "ux", falta: "UX-23 fechado — mora em /pro-labore pós-constituição. 🆕 30/08 — deixou de ser órfão: o E3 aponta pra cá, via porta de CPF (mock, RF-01). 🔒 31/08 (fusão A3+E9, pedido do Pedro: 'uma tela única de retorno, que é a E9') — ENCOLHEU pra só a porta de CPF: a tela de status própria que vinha depois (`RetomarView`, 'Bem-vindo de volta') foi RETIRADA do código. Agora, confirmado o CPF, SEMPRE cai no E9.1/E9.1P — é a mesma tela de status que já cobre boleto pendente, pago e fase Junta, então não fazia sentido ter uma 2ª versão só pra reentrada.", dados: "CPF (identifica quem está voltando; o status em si é da tela seguinte)" },
+
+  // 🆕 04/09 (pedido do Pedro) — CÓDIGO TAMBÉM NA REENTRADA. O CPF sozinho
+  // abria o processo inteiro de alguém: é dado público, circula em cadastro,
+  // boleto e recibo. Quem volta agora confirma o código antes de ver status.
+  // Reusa a MESMA tela do E6.1 (`ContaView`, etapa "codigo"), do jeito que a
+  // A3.2 reusa o `CodigoGovView` do A4: nó próprio por posição, componente um
+  // só. No mock o contato vem do cadastro fake; no real quem responde é o
+  // backend, a partir do CPF (RF-01).
+  { id: "C0_3", caminho: "abrir", rota: "/retomar?etapa=codigo", label: "C0.3 · Confirmar código<br/>(retomada)", forma: "tela", classe: "espera", status: "construida", validado: "ux", falta: "🔴 Mesmo mock do E6.1: qualquer 8 dígitos passam, e o e-mail/telefone mostrados são do cadastro fake. No real, o backend acha a conta pelo CPF e manda o código pro contato dela (RF-01). Falta decidir o que acontece quando o CPF não tem conta nenhuma: hoje o mock nunca erra.", dados: "Código de 8 dígitos, mandado pro e-mail e telefone da conta encontrada pelo CPF do C0.1" },
 
   // ── APROVAÇÃO (A) · cauda · A1–A5 (construído 21/07) ─────────────────────
   // 🆕 01/09 (pedido do Pedro) — 2ª rodada de nomes, aberta pelo CTA do A3.1
@@ -815,10 +830,12 @@ export const EDGES = [
   { de: "M_T", para: "E5F", label: "sem impedimento", tracejado: true },
   { de: "M_T", para: "M_T_1", label: "já tem outra empresa" },
   { de: "M_T", para: "M_T_2", label: "servidor federal" },
-  { de: "E6", para: "E7" },
+  // 🆕 04/09 — o código entrou ENTRE criar conta e a conta da abertura.
+  { de: "E6", para: "E6_1" },
+  { de: "E6_1", para: "E7" },
   // 🆕 30/08 — variante do E7 pra quem escolheu endereço fiscal lá no E3.4
   // (a escolha atravessa 3 telas até aparecer aqui, mesmo padrão do E9_M).
-  { de: "E6", para: "E7_1", label: "escolheu endereço fiscal no E3.4", tracejado: true },
+  { de: "E6_1", para: "E7_1", label: "escolheu endereço fiscal no E3.4", tracejado: true },
   // 🔴 30/08 — E8 eliminado (ver nota no node E9). E7 vai direto pra E9.
   { de: "E7", para: "E9" },
   { de: "E7_1", para: "E9", tracejado: true },
@@ -906,5 +923,7 @@ export const EDGES = [
   // 🔒 31/08 (fusão A3+E9) — o retomar não aterrissa mais direto no dossiê:
   // confirma o CPF e cai na TELA DE STATUS (E9.1P), que é quem sabe dizer em
   // que ponto a pessoa parou e se ela já pode continuar.
-  { de: "C0_1", para: "E9_1P", label: "CPF confirmado", tracejado: true },
+  // 🆕 04/09 — o status só aparece depois do código, não do CPF.
+  { de: "C0_1", para: "C0_3", label: "CPF confirmado", tracejado: true },
+  { de: "C0_3", para: "E9_1P", label: "código confirmado", tracejado: true },
 ];

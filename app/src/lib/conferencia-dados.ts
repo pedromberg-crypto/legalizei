@@ -223,6 +223,21 @@ export const CONFERENCIA: TelaConferencia[] = [
     ]
   },
   {
+    "id": "E6_1",
+    "titulo": "E6.1 · Confirmar código",
+    "rota": "/conta?etapa=codigo",
+    "campos": [
+      {
+        "nome": "Código de verificação de 8 dígitos (`DIGITOS_CODIGO`), enviado pro e-mail e pro telefone digitados no E6",
+        "codigo": "",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      }
+    ]
+  },
+  {
     "id": "E9",
     "titulo": "E9 · Pagamento + contrato (variante Abrir)",
     "rota": "/pagamento",

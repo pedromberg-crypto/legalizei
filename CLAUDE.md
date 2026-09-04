@@ -17,10 +17,8 @@ Atalho: comando `/boot`.
 ## 🎨 Exceção de prioridade — motor de posts (`atelie/`)
 Pedido de post/peça/copy de marketing **dentro da pasta `atelie/`**: quem manda é `atelie/CLAUDE.md`, não a Regra de BOOT acima (não precisa ler `HOME.md`/checar `git log` pra pedir 3 posts). Fora de `atelie/`, ou se o pedido for sobre produto/roadmap/negócio, o BOOT deste arquivo volta a valer normalmente. Motor migrado 25/08 pra `atelie/` (peça vira JSON com schema); agentes antigos `legalizai-copywriter`/`legalizai-guardian` foram **arquivados** (`_arquivo/agentes-antigos-marketing/`) — não recriar em `.claude/agents/`. ADR completo: `marca/decisoes-marca.md` 2026-08-25.
 
-## 🪟 Regra de SAÚDE DA JANELA (proativa — Claude dispara, Pedro não monitora)
-Ao **fim de cada flow**, emita uma linha:
-- 🟢 saudável (segue) · 🟡 aquecendo (bom pra `/fechar`) · 🔴 pesada (fecha já).
-Suba pra 🟡/🔴 se: já compactou 1x · vários flows na mesma janela · muito dump grande acumulado · você se pega repetindo/perdendo o fio. **Nunca deixe entrar numa 2ª compactação automática.** Unidade segura = FLOW, não token.
+## 🪟 Regra de SAÚDE DA JANELA — ❌ REVOGADA (04/09, pedido do Pedro)
+**Não emitir a linha 🟢/🟡/🔴 no fim do flow, nem sugerir `/fechar` por aquecimento.** A janela é ~1M e o Pedro acompanha a barra sozinho; o aviso virou ruído repetido no fim de toda resposta. Continua valendo só a parte silenciosa: se você se pegar repetindo, perdendo o fio ou entrando numa 2ª compactação, **diga isso em uma linha** — não como carimbo de rotina, mas como fato.
 
 ## 🔒 Regra de FECHO (fim de todo flow)
 Nunca encerre um flow sem: (1) atualizar `HOME §Agora`; (2) registrar decisão travada no ADR `marca/decisoes-marca.md` e/ou marco em `execucao/marcos/`; (3) atualizar `execucao/evolucao-para-mauro.md` se rendeu reporte; (4) `git commit` + `push`. Atalho: comando `/fechar`.

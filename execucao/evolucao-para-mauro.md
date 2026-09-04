@@ -765,5 +765,28 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 - Juntei 2 telas que faziam a mesma pergunta sobre o CNAE (achar o código da atividade) numa só
 ```
 
+## Semana 04/09/2026 — a última tela antes do "sem volta" agora mostra tudo, e o robô do WhatsApp ganhou base própria
+
+> Duas frentes. A primeira: a tela de conferência (a última antes de mandar o processo pra Junta) mostrava 8 linhas e escondia justamente o que o cliente digitou à mão. A segunda: comecei a preparar a base de conhecimento do atendimento automático no WhatsApp, e auditei o que já estava escrito lá antes de qualquer coisa ir pro ar.
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | **A conferência final agora mostra tudo que vai pro governo** | Antes aparecia nome, CPF, contato, nome da empresa e as atividades. Ficavam de fora RG, data de nascimento, estado civil, endereço de casa, os dados de cada sócio, quanto cada um tem da empresa, quem administra, o tipo do imóvel e o número do IPTU. Tudo isso é digitado à mão, ninguém confere pelo cliente, e errado trava o processo na Junta ou na Prefeitura | 🟢 |
+| 2 | **As 3 opções de nome apareciam como se fosse 1** | O cliente escolhe 3 nomes em ordem, porque a Junta pode recusar o primeiro. A tela mostrava só o primeiro. Agora mostra os 3, na ordem em que vão ser tentados | 🟢 |
+| 3 | **O que a gente preenche por ele continua invisível** | Decisão consciente: não pedimos conferência de campo que nós preenchemos (capital social, tipo de sociedade, metragem, códigos de formulário do governo). O cliente não tem como julgar se está certo, e perguntar convidaria erro | 🟢 |
+| 4 | **Auditei a base do atendimento automático antes de ir pro ar** | Encontrei 7 erros que teriam custado dinheiro ou reclamação: o texto cobrava R$209 de certificado digital de quem já tem incluso no plano, dava um valor de imposto do MEI que não está confirmado, invertia a ordem de pagamento, e prometia "paralisar o processo" depois de protocolado (não existe). Corrigidos | 🟢 |
+| 5 | **Faltava o principal: pra quem a gente atende** | A base não dizia em lugar nenhum que só atendemos empresa com sede em BH, e nem que comércio está fora. O robô venderia pra Contagem e pra loja. Fechado, com o endereço fiscal da Legalizai (R$60/mês) como saída pra quem não tem endereço na cidade | 🟢 |
+| 6 | **Preço do endereço fiscal travado** | Era um número de referência de mercado que já aparecia em tela sem ser decisão nossa. Travado em R$60/mês | 🟢 |
+
+### 📱 WhatsApp (04/09)
+```
+*Update Legalizai* 📣
+- A tela de conferência (a última antes de mandar pra Junta) agora mostra TUDO que o cliente informou: RG, estado civil, dados de cada sócio, quem administra, IPTU, tipo do imóvel
+- As 3 opções de nome da empresa agora aparecem na ordem em que a Junta vai tentar (antes só a 1ª aparecia)
+- O que a gente preenche por ele continua fora da tela, de propósito: ele não tem como conferir campo de formulário de governo
+- Comecei a base do atendimento automático no WhatsApp e auditei o que já estava escrito: achei 7 erros antes de ir pro ar, incluindo cobrar certificado de quem já tem incluso
+- Faltava dizer pra quem a gente atende (só BH, só serviço). Agora está escrito, com o endereço fiscal como saída pra quem é de fora
+```
+
 ## Links
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]] · [[estado-atual]] · [[indice-autoridade]]

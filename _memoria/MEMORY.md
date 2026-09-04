@@ -1,5 +1,8 @@
 # Memory Index — Legalize
 
+- [Vault isolado do agente de WhatsApp](legalize-agente-whatsapp-vault-isolado.md) — 04/09: 12 arquivos que o Léo lê em runtime; os 1332 CNAEs ficam FORA do RAG e viram tool com gate por confiança (só `alta` autoriza afirmar).
+- [Personalidade do Léo mora em 4 lugares, 2 já divergiram](legalize-leo-personalidade-4-copias.md) — 04/09: fonte é `marca/personagem-leo.md`; cópia do Ateliê está em pilares v3 e polo com "L" (o certo é o check).
+
 - [Método de alteração de tela travado](legalize-metodo-alteracao-tela-travado.md) — 03/09: mapa espelha apresentação por construção, pré-voo, lote por tela, sintoma repetido = raiz. 2 auditorias automáticas no gerador.
 
 - [Mapa é espelho da apresentação](legalize-espelho-mapa-apresentacao.md) — 02/09: uma coleção de telas, duas vistas; pills derivam do flow-data, vínculo por id. Pré-voo antes de editar tela.

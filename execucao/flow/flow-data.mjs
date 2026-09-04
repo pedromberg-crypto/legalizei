@@ -744,13 +744,18 @@ export const NODES = [
   // como se a volta fosse sempre igual — e não é. Mesma doutrina que já separa
   // E9.1 de E9.1P (boleto pendente × pago) e E7 de E7.1 (variante do endereço):
   // estado que muda o que a tela mostra e o que ela deixa fazer é nó, não nota.
-  { id: "A3_GP", caminho: "abrir", rota: "/aguardando?fase=junta&guia=paga", label: "A3′ · Status<br/>(guia paga)", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Volta de quem pagou a guia por cartão/Pix: a etapa da DAE fecha (verde) e 'Agora é só assinar' vira a vez. Mock por query (`?guia=paga`); no app real quem fecha é o webhook do provedor.", dados: "" },
   // 🆕 01/09 (pedido do Pedro) — o status DEPOIS de mandar os nomes novos: a
   // jornada RECUA pra Analisando viabilidade. É o único ponto do flow em que
   // uma etapa concluída volta a ser a atual, e é honesto — os nomes novos vão
   // pra Junta de novo, então a análise recomeça. Mostrar Pague a guia aqui
   // diria que a análise já passou, quando ela nem começou.
   { id: "A3_V", caminho: "abrir", rota: "/aguardando?fase=junta&viabilidade=1", label: "A3‴ · Status<br/>(analisando viabilidade,<br/>2ª rodada de nomes)", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Mesma tela do A3 com a fase Junta recuada (`junta={concluidas:0, emAndamento:0}`). Daqui volta pro fluxo normal quando a Junta defere, ou pro A3.1 se recusar de novo.", dados: "" },
+  // 🔄 04/09 (pedido do Pedro) — A3′ MUDOU DE LUGAR NA ORDEM. Ele estava
+  // antes do A3‴, no meio dos estados de problema; mas ele é o oposto disso:
+  // é o estado em que TUDO deu certo (viabilidade deferida e guia paga), o
+  // último status antes da assinatura. Lido na fita e no mapa, ele agora fecha
+  // a sequência de status e emenda no A4, que é pra onde ele leva.
+  { id: "A3_GP", caminho: "abrir", rota: "/aguardando?fase=junta&guia=paga", label: "A3′ · Status<br/>(guia paga)", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Volta de quem pagou a guia por cartão/Pix: a etapa da DAE fecha (verde) e 'Agora é só assinar' vira a vez. Mock por query (`?guia=paga`); no app real quem fecha é o webhook do provedor.", dados: "" },
   { id: "A4", caminho: "abrir", rota: "/assinatura", label: "A4 · Assinatura dos sócios", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "GOV.BR/e-CAC deep-link (dev). 🆕 24/08 (reunião Leonan): código 2FA único concentra procuração+assinatura (`CodigoGovView` — janela 10min, 3 tentativas, escala pra atendente se estourar); convite de sócio ganhou seletor de canal (WhatsApp/e-mail). 🆕 26/08 (item 7): certificado já vem validado da A3.2 — a procuração que sai junto desta assinatura agora tem o que precisa. 🗑️→🔴 01/09: **a A3.2 saiu do caminho ME**, então essa premissa caiu junto (o certificado é e-CNPJ, e o CNPJ ainda não existe aqui). Continua aberto o que fazer com a procuração e-CAC nesta tela: ela só pode ser assinada DEPOIS do CNPJ sair, e as 2 decisões de 01/09 (corrigir a cadeia toda + procuração sempre) ainda não foram construídas", dados: "Assinatura via GOV.BR/e-CAC · código de validação de 6 dígitos (janela 10min) · canal do convite ao sócio (WhatsApp/e-mail)" },
   { id: "A4G", caminho: "abrir", rota: "/assinatura", label: "GOV.BR nível<br/>bronze→upgrade", forma: "decisao", classe: "inline", status: "construida", validado: "pendente", falta: "Dobrado inline no A4 — sem query própria (nenhum toggle de demo separa o sub-estado), a prévia mostra a mesma tela do A4", naTabela: false, dados: "" },
   { id: "REMOVIDO_N24", caminho: "removido", label: "'Empresa ativa'<br/>🗑️ REMOVIDO 30/07", forma: "terminal", classe: "todo", status: "planejada", validado: "oficial", falta: "Era órfão desde o swap A4→A5 (nenhuma rota navegava mais até aqui) — arquivo `/ativa` e a view apagados de vez 30/07, confirmado pelo Pedro. Fica só como marca histórica no mapa", dados: "" },

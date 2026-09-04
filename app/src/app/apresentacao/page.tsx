@@ -3212,7 +3212,6 @@ export default function ApresentacaoPage() {
                             <PainelView
                               concluidas={2}
                               emAndamento={2}
-                              socios={socios ?? 1}
                               onPagarDae={() => setEtapa("guia")}
                             />
                           ) : (
@@ -3265,8 +3264,20 @@ export default function ApresentacaoPage() {
                         {etapa === "guia-splash" && (
                           <SplashMensagemView
                             titulo="Pagamento confirmado."
-                            sub="A guia foi paga. A Junta já pode registrar."
-                            onAutoAvancar={() => setEtapa("assinatura")}
+                            /* 🔄 04/09 — mesma frase da rota real, que mudou
+                               na mesma rodada: 2 grafias pro mesmo splash era
+                               o drift que a auditoria pegou no A3.PSB. */
+                            sub="Com a guia paga, a Junta pode registrar sua empresa."
+                            /* 🐛 04/09 (achado do Pedro) — o splash pulava DIRETO
+                               pra assinatura, sem passar pelo status. A rota
+                               real sempre voltou pro A3′ (`next=…&guia=paga`);
+                               a demo é que atalhava. O certo é o que a rota faz:
+                               a pessoa volta pro status, vê a jornada com a guia
+                               ✓ e a assinatura como a vez dela, e é ELA quem
+                               toca "Ir para a assinatura". Splash confirma o
+                               que aconteceu; quem decide o próximo passo é a
+                               pessoa, no status. */
+                            onAutoAvancar={() => setEtapa("guia-paga")}
                           />
                         )}
                         {/* 🆕 04/09 (pedido do Pedro) — A3.PSB, que estava
@@ -3287,7 +3298,12 @@ export default function ApresentacaoPage() {
                         {etapa === "guia-splash-boleto" && (
                           <SplashMensagemView
                             titulo="Boleto gerado."
-                            sub="Assim que o pagamento cair, a Junta segue com o registro."
+                            /* 🐛 04/09 (auditoria do bloco A3) — a demo tinha
+                               copy PRÓPRIA aqui e a rota real outra ("Assim que
+                               ele compensar, a gente continua"). Drift criado
+                               ontem, quando construí o A3.PSB: a mesma tela
+                               dizia coisas diferentes nos 2 lugares. */
+                            sub="Assim que ele compensar, a gente continua."
                             onAutoAvancar={() => setEtapa("guia-boleto")}
                           />
                         )}
@@ -3296,6 +3312,10 @@ export default function ApresentacaoPage() {
                             fase="junta"
                             junta={{ concluidas: 2, emAndamento: 2 }}
                             temSocios={socios === 2}
+                            /* 🆕 04/09 — o CTA desta tela precisa LEVAR: é aqui
+                               que a pessoa decide ir assinar, depois de ver a
+                               guia ✓. Sem isto o botão não fazia nada na demo. */
+                            onAssinar={() => setEtapa("assinatura")}
                           />
                         )}
                         {etapa === "guia-boleto" && (
@@ -3309,7 +3329,7 @@ export default function ApresentacaoPage() {
                         {etapa === "pagamento-recusado" && (
                           <SplashMensagemView
                             variante="recusado"
-                            titulo="Pagamento não aprovado."
+                            titulo="O pagamento não passou."
                             sub="Vamos tentar de outro jeito."
                             onAutoAvancar={() => setEtapa("pagamento-retry")}
                           />
@@ -3317,7 +3337,7 @@ export default function ApresentacaoPage() {
                         {etapa === "guia-recusada" && (
                           <SplashMensagemView
                             variante="recusado"
-                            titulo="Pagamento não aprovado."
+                            titulo="O pagamento não passou."
                             sub="A guia não foi paga. Dá pra tentar de novo agora."
                             onAutoAvancar={() => setEtapa("guia-retry")}
                           />
@@ -3356,6 +3376,10 @@ export default function ApresentacaoPage() {
                             fase="junta"
                             junta={{ concluidas: 0, emAndamento: 0 }}
                             temSocios={socios === 2}
+                            /* 🆕 04/09 — A3‴ tem hero próprio: era idêntica à
+                               chegada do A2, e aqui a pessoa acabou de reenviar
+                               nomes depois de uma exigência. */
+                            rodada2
                           />
                         )}
                         {etapa === "nome-rodada2" && (
@@ -3367,17 +3391,29 @@ export default function ApresentacaoPage() {
                           />
                         )}
                         {etapa === "painel-recusa" && (
-                          <PainelView
-                            concluidas={1}
-                            emAndamento={1}
-                            socios={socios ?? 1}
+                          /* 🐛→🔒 04/09 (achado do Pedro: "essa tela não segue
+                             nosso padrão de status") — A DEMO MOSTRAVA O
+                             `PainelView` APOSENTADO. Mesmo drift que a A3 tinha
+                             até ontem: em 31/08 o status virou a fase "junta"
+                             do `AguardandoView` (hero escuro, jornada inteira,
+                             blocos), a produção acompanhou e só a demo ficou no
+                             painel velho — que é o que o Pedro revisa. Agora é
+                             a MESMA tela da rota real, no estado de exigência. */
+                          <AguardandoView
+                            fase="junta"
+                            temSocios={socios === 2}
                             recusa={{
-                              etapa: 1,
+                              /* 🐛 04/09 — era `1`, que na lista é "Pague a guia
+                                 da Junta": o "!" caía na etapa do dinheiro
+                                 enquanto o texto falava dos NOMES. O nome é
+                                 analisado na etapa 0 (viabilidade). */
+                              etapa: 0,
                               titulo: "As 3 opções de nome não passaram",
                               motivo:
-                                "Testamos automaticamente as 3 que você priorizou, e nenhuma passou na Junta. Precisamos de mais 3 sugestões suas pra tentar de novo.",
+                                "Testamos as 3 que você priorizou e nenhuma passou. A Junta dá 30 dias pra responder, e é bastante tempo: escreva outras 3 que a gente manda de novo, sem custo e sem recomeçar o processo.",
                               acao: "Sugerir mais 3 nomes",
                             }}
+                            onAcaoRecusa={() => setEtapa("nome-rodada2")}
                           />
                         )}
                         {etapa === "assinatura" && (

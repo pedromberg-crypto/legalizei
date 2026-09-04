@@ -336,7 +336,7 @@ export function SocioView({
               {/* UX-30: avisa o cônjuge CEDO, não no cartório. */}
               {regime === "universal" && (
                 <div className="mt-3">
-                  <Aviso variante="info" titulo="Seu cônjuge vai precisar assinar">
+                  <Aviso neutro variante="info" titulo="Seu cônjuge vai precisar assinar">
                     Na comunhão universal, ele assina um documento nesta abertura.
                     Bom já alinhar com ele agora pra não travar no fim.
                   </Aviso>
@@ -2529,7 +2529,7 @@ export function EmpresaView({
                   />
                   {apartamentoSemResidencia && (
                     <div className="mt-3">
-                      <Aviso variante="warning" titulo="Apartamento precisa de morador">
+                      <Aviso neutro variante="warning" titulo="Apartamento precisa de morador">
                         A Prefeitura de Belo Horizonte indefere empresa em
                         apartamento quando nenhum sócio mora no endereço. Dá
                         pra resolver usando outro endereço seu, ou o endereço
@@ -3055,7 +3055,7 @@ export function CnaeSecundariosView({
               marcar). Tinha travessão, proibido em copy pública desde 24/07. */}
 
           {algumaMudaEnquadramento && (
-            <Aviso variante="warning" titulo="Uma dessas muda seu enquadramento">
+            <Aviso neutro variante="warning" titulo="Uma dessas muda seu enquadramento">
               Pelo menos uma atividade que você escolheu muda o imposto que sua
               empresa paga. Isso a gente prefere acertar com você, não sozinho —
               por isso o próximo passo é falar com um atendente em vez de

@@ -1188,7 +1188,7 @@ export function TermoView({
             </ul>
           </div>
 
-          <Aviso
+          <Aviso neutro
             variante="warning"
             titulo={
               mei
@@ -1731,7 +1731,7 @@ export function AssinaturaView({
 
         <Corpo>
           {bronze ? (
-            <Aviso variante="warning" titulo="Sua conta GOV.BR precisa subir de nível">
+            <Aviso neutro variante="warning" titulo="Sua conta GOV.BR precisa subir de nível">
               Pra assinar, o GOV.BR exige nível prata ou ouro, e o seu está
               bronze. A gente te mostra como subir em 2 minutos, aqui mesmo.
             </Aviso>
@@ -1786,7 +1786,7 @@ export function AssinaturaView({
             </div>
           )}
 
-          <Aviso variante="info" titulo="Junto vai uma procuração eletrônica">
+          <Aviso neutro variante="info" titulo="Junto vai uma procuração eletrônica">
             É o que deixa a gente pagar seu DAS e cuidar das obrigações por você.
             Tem limite, serve só pra isso, e você revoga quando quiser.
           </Aviso>
@@ -2411,6 +2411,7 @@ export function AguardandoView({
   pago = false,
   fase = "dossie",
   guiaBoleto = false,
+  rodada2 = false,
   dossieFeitos,
   junta = JUNTA_MOCK,
   recusa,
@@ -2447,6 +2448,18 @@ export function AguardandoView({
    * mesmo CTA de pagar, como se nada tivesse acontecido.
    */
   guiaBoleto?: boolean;
+  /**
+   * 🆕 04/09 (auditoria do bloco A3) — A REANÁLISE PRECISA SE ANUNCIAR.
+   *
+   * O A3‴ (volta da 2ª rodada de nomes) usava a MESMA copy da chegada do A2:
+   * "a Junta já está analisando seu nome e endereço". Verdade nos dois casos,
+   * mas aqui a pessoa acabou de reenviar nomes DEPOIS de uma exigência, e a
+   * tela não reconhecia nada disso — as duas viravam indistinguíveis, o que a
+   * auditoria pegou como efeito colateral do estado `{0,0}`.
+   *
+   * Só muda o hero. A timeline é a mesma (a viabilidade recomeçou de fato).
+   */
+  rodada2?: boolean;
   /**
    * 🆕 01/09 — com o CTA da fase Junta no rodapé, o último passo ("Agora é só
    * assinar") precisava de destino: sem isso a tela virava beco depois da guia
@@ -2558,6 +2571,15 @@ export function AguardandoView({
 
   const etapas = naFaseJunta
     ? etapasCombinadas.map((e, i) => {
+        /* ✍️ 04/09 (auditoria) — na 2ª rodada o endereço já passou; o que
+           voltou pra análise foram só os nomes novos. O detalhe genérico
+           ("nome e endereço") contradizia o hero desta variante. */
+        if (rodada2 && i === iViabilidade) {
+          return {
+            ...e,
+            detalhe: "A Junta confere os nomes novos. Não precisa fazer nada, a gente te avisa.",
+          };
+        }
         /* 🐛 04/09 (achado do Pedro, comparando A3 e A3″) — O RENOME DA GUIA
            DEPENDIA DE ELA SER A ETAPA ATUAL. Enquanto a viabilidade e a guia
            eram uma fila, a guia paga por boleto era sempre a etapa da vez e a
@@ -2593,7 +2615,10 @@ export function AguardandoView({
                não sendo a etapa da vez: o banco está compensando neste
                instante. Cinza aqui dizia "não aconteceu", que é o oposto. */
             emCurso: true,
-            nome: "Guia da Junta · aguardando compensação",
+            /* ✍️ 04/09 (auditoria) — o nome da etapa e o rótulo do CTA diziam
+               a MESMA frase ("aguardando compensação") na mesma tela. A etapa
+               passa a dizer o FATO (foi paga) e o CTA continua com a espera. */
+            nome: "Guia da Junta paga",
             /* 🔄 04/09 — o detalhe dizia só "Em andamento agora". Com a etapa
                desenhada em cinza (quem gira é a viabilidade), ela precisava
                dizer que o dinheiro JÁ SAIU, senão lê como passo não feito. */
@@ -2605,7 +2630,29 @@ export function AguardandoView({
         // etapa e virou o CTA fixo do rodapé, igual ao "Continuar preenchendo"
         // do status do dossiê. Padroniza o gesto: ação principal da tela mora
         // sempre no mesmo lugar, não ora no meio da lista, ora embaixo.
-        return { ...e, acaoCliente: undefined };
+        /* 🆕 04/09 (pedido do Pedro) — A GUIA PENDENTE TAMBÉM GIRA. Ela ficava
+           CINZA (a-fazer) porque quem "é a vez" é a viabilidade, e cinza numa
+           etapa que já está disponível lê como "ainda não chegou" — quando na
+           verdade ela está aberta desde já (viabilidade e guia correm em
+           paralelo, regra travada hoje). Vale nos dois estados em que a guia
+           está pendente: no A3 e no A3.1, onde a etapa aparecia apagada no meio
+           de uma tela de alerta.
+           ⚠️ Registro a tensão: o anel girando, no vocabulário da UX-40,
+           significa "a vez é do órgão". Aqui ele passa a dizer também "isto
+           está disponível agora". Se um dia confundir, o caminho é um 5º
+           estado ("disponível"), não voltar pro cinza. */
+        /* 🐛 04/09 (auditoria do bloco A3) — A EXIGÊNCIA TIRAVA O ACESSO AO
+           PAGAMENTO. O CTA do rodapé é o único lugar de onde se paga a guia, e
+           na A3.1 ele vira "Sugerir mais 3 nomes": a etapa aparecia disponível
+           (girando) sem nenhum jeito de pagar. Isso contradizia a regra travada
+           hoje ("a guia não espera a análise") justamente na tela em que a
+           análise emperrou. Com recusa na tela, a ação VOLTA pra dentro da
+           etapa — que é onde ela morava até 01/09, e o motivo de ter saído (não
+           competir com o CTA do rodapé) não vale aqui: o rodapé está ocupado
+           por outro assunto. */
+        return recusa
+          ? { ...e, emCurso: true, acaoCliente: { label: "Pagar a guia agora", onClick: onPagarDae } }
+          : { ...e, emCurso: true, acaoCliente: undefined };
       })
     : etapasCombinadas;
 
@@ -2630,14 +2677,22 @@ export function AguardandoView({
         // ao status da mensalidade: o que prende a jornada agora é o banco.
         normal: guiaBoleto
           ? "Seu boleto está a caminho"
-          : vezDoCliente
-            ? // 🔄 04/09 — "quase lá" só quando a Junta já respondeu. Na
-              // chegada do A2 a análise mal começou, e comemorar ali seria a
-              // mesma mentira do check verde.
-              viabilidadeOk
-              ? "Sua empresa está quase lá"
-              : "Estamos abrindo sua empresa"
-            : "Estamos abrindo sua empresa",
+          : rodada2
+            ? // 🆕 04/09 — a volta da 2ª rodada fala do que ela acabou de fazer.
+              "Seus novos nomes estão com a Junta"
+            : /* 🆕 04/09 (auditoria) — o A3′ voltava ao hero genérico depois do
+                 splash "Pagamento confirmado": não reconhecia a guia paga, que
+                 é justamente o que mudou. Mesma omissão que o A3‴ tinha. */
+              guiaPaga && viabilidadeOk
+              ? "Falta só a assinatura"
+              : vezDoCliente
+              ? // 🔄 04/09 — "quase lá" só quando a Junta já respondeu. Na
+                // chegada do A2 a análise mal começou, e comemorar ali seria a
+                // mesma mentira do check verde.
+                viabilidadeOk
+                ? "Sua empresa está quase lá"
+                : "Estamos abrindo sua empresa"
+              : "Estamos abrindo sua empresa",
         recusa: "Precisamos de você num ponto",
       }
     : {
@@ -2648,7 +2703,11 @@ export function AguardandoView({
     ? {
         normal: guiaBoleto
           ? "Boleto da Junta leva de 1 a 3 dias úteis pra cair. Assim que compensar, a gente segue."
-          : vezDoCliente
+          : rodada2
+            ? "A análise recomeçou com as opções novas. O resto do processo continua de onde parou, sem recomeçar nada."
+            : guiaPaga && viabilidadeOk
+              ? "A Junta aprovou o nome e a guia está paga. O último passo é a assinatura dos sócios."
+              : vezDoCliente
             ? viabilidadeOk
               ? /* Diz o que já aconteceu (a viabilidade passou), o que falta e
                    de quem é a vez. Sem prazo: o detalhe da etapa já informa
@@ -2662,7 +2721,11 @@ export function AguardandoView({
                  linha miúda logo abaixo, dentro do mesmo hero, já diz isso.
                  Era a mesma promessa duas vezes na mesma caixa. */
               "A parte chata é com a gente. Você acompanha por aqui.",
-        recusa: "A abertura seguiu bem até aqui. Um órgão pediu um ajuste, e é rápido de resolver.",
+        /* ✍️ 04/09 (auditoria) — "é rápido de resolver" brigava com o prazo de
+           30 dias que o card logo abaixo passou a mostrar: uma frase mandava
+           correr, a outra dizia pra respirar. Ficou o que é verdade nas duas
+           leituras — o ajuste é pequeno e a gente já sabe qual é. */
+        recusa: "A abertura seguiu bem até aqui. Um órgão pediu um ajuste, e a gente já sabe qual é.",
       }
     : {
         // 🐛→🔒 31/08 (correção do Pedro) — "enquanto isso, vamos adiantar
@@ -2693,7 +2756,9 @@ export function AguardandoView({
           <div className="mt-4 flex flex-wrap items-center gap-2">
             <button
               type="button"
-              className="flex items-center gap-1.5 rounded-full bg-surface-card px-3 py-1.5 text-caption font-semibold text-text-primary transition-colors active:bg-surface-alt"
+              /* 🔄 04/09 (auditoria) — chips do hero tinham 32/34px de alvo. Sobem pra
+                 40px sem mudar a silhueta (mesmo raio, mesma cor, mais respiro). */
+              className="flex min-h-10 items-center gap-1.5 rounded-full bg-surface-card px-3.5 text-caption font-semibold text-text-primary transition-colors active:bg-surface-alt"
             >
               Ver o boleto de{" "}
               {brl(
@@ -2707,7 +2772,7 @@ export function AguardandoView({
             </button>
             <button
               type="button"
-              className="flex items-center gap-1.5 rounded-full border border-border-hairline px-3 py-1.5 text-caption font-medium text-text-on-dark/80 transition-colors active:bg-white/10"
+              className="flex min-h-10 items-center gap-1.5 rounded-full border border-border-hairline px-3.5 text-caption font-medium text-text-on-dark/80 transition-colors active:bg-white/10"
             >
               Prefiro pagar por Pix
             </button>
@@ -2730,7 +2795,6 @@ export function AguardandoView({
        * Junta não permite mais.
        */
       podeAjustar={!naFaseJunta}
-      socios={temSocios ? 2 : 1}
       recusa={recusa ? { ...recusa, etapa: dossieTotal + recusa.etapa } : undefined}
       onAcaoRecusa={onAcaoRecusa}
       // K6 dizia: status puro não inventa ação, e na fase Junta a ação morava
@@ -2795,7 +2859,14 @@ export function AguardandoView({
             // → ação), e a promessa de idempotência vale igual.
             guiaBoleto
             ? "Você paga uma vez só. Se o boleto já foi pago, não cobramos de novo."
-            : "A abertura roda uma vez só. Pode fechar o app que o processo segue sozinho, de onde parou."
+            : /* 🐛 04/09 (auditoria) — "o processo segue sozinho" era FALSO na
+                 tela de exigência: ali ele PAROU e espera a pessoa. A promessa
+                 de idempotência continua (nada duplica, nada se perde), mas o
+                 que tranquiliza muda: no alerta é o progresso guardado, não o
+                 andamento automático. */
+              recusa
+              ? "Seu progresso está guardado. Pode fechar o app: nada se perde, e nada recomeça do zero."
+              : "A abertura roda uma vez só. Pode fechar o app que o processo segue sozinho, de onde parou."
           : pago
             ? "Seu progresso está salvo. Pode sair e voltar quando quiser."
             : "Seu progresso está salvo. Se você já pagou, não cobramos de novo."

@@ -63,7 +63,6 @@ export default function PainelPage() {
         // Mock pra farol: dados recebidos (0) e time conferindo (1).
         concluidas={1}
         emAndamento={1}
-        socios={1}
         etapas={ETAPAS_MEI}
         onPagarDae={() => router.push("/mei/proximos-passos")}
         titulo={{

@@ -295,14 +295,33 @@ const TITULO: Record<Variante, string> = {
 export function Aviso({
   variante = "info",
   titulo,
+  neutro = false,
   children,
 }: {
   variante?: Variante;
   titulo: string;
+  /**
+   * 🆕 04/09 (pedido do Pedro) — CARTÃO BRANCO, TÍTULO NA COR DO ESTADO.
+   *
+   * O bloco tingido inteiro grita: ele pinta o fundo de alarme e joga a cor de
+   * estado no texto todo. Onde a mensagem é "isto aconteceu, e a saída é esta"
+   * (a recusa de pagamento, o destaque do "i" da C5, o card de exigência do
+   * A3.1), o certo é o cartão da casa — branco, borda hairline — com a cor
+   * SÓ no título, que é onde ela significa alguma coisa.
+   *
+   * Opt-in de propósito: o `Aviso` tingido aparece em 34 lugares, vários fora
+   * do escopo desta rodada (MEI, migrar, saídas). Quando o Pedro decidir que
+   * vale pra todos, isto vira o default numa linha.
+   */
+  neutro?: boolean;
   children: ReactNode;
 }) {
   return (
-    <div className={`rounded-md p-4 ${FUNDO[variante]}`}>
+    <div
+      className={`rounded-md p-4 ${
+        neutro ? "border border-border-hairline bg-surface-card" : FUNDO[variante]
+      }`}
+    >
       <p className={`text-body font-semibold mb-1 ${TITULO[variante]}`}>
         {titulo}
       </p>

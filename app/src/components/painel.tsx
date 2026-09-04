@@ -147,14 +147,16 @@ export const ETAPAS_ABERTURA: Etapa[] = [
     detalhe: "A Junta confere nome e endereço. Não precisa fazer nada, a gente te avisa.",
   },
   {
-    nome: "Pague a guia da Junta (DAE)",
+    /* ✍️ 04/09 (auditoria) — a sigla saiu do NOME e virou tradução no detalhe.
+       "DAE" era o único jargão do bloco que nunca se explicava, e o nome da
+       etapa competia com o da tela de pagamento ("Taxa da Junta"): duas
+       nomenclaturas pra mesma coisa. */
+    nome: "Pague a guia da Junta",
     acaoCliente: { label: "Pagar a guia agora" },
-    /* 🔄 04/09 — a linha diz que não há fila. Ela aparece embaixo de uma etapa
-       que a timeline desenha DEPOIS da viabilidade (a lista é vertical, não
-       tem como mostrar dois trilhos), então sem essa frase o desenho continua
-       ensinando a dependência que a regra derrubou. */
-    detalhe:
-      "Taxa obrigatória da Junta. Não precisa esperar a análise, e o pagamento leva cerca de 1 minuto.",
+    /* 🔄 04/09 — a frase "não precisa esperar a análise" SAIU: ela já está no
+       hero da mesma tela, dita com as mesmas palavras. Aqui fica o que só a
+       etapa entrega — o que é a taxa e quanto custa de tempo. */
+    detalhe: "É a taxa que a Junta cobra pra registrar (DAE). Pagar leva cerca de 1 minuto.",
   },
   {
     nome: "Agora é só assinar",
@@ -278,7 +280,14 @@ function TimelineEmBlocos({
             // e o "concluído" no contador já dizem o mesmo, sem pintar a tela.
             className={`rounded-md border transition-colors ${
               temRecusa
-                ? "border-state-danger bg-surface-card"
+                ? /* 🔄 04/09 (pedido do Pedro) — SEM BORDA VERMELHA no bloco.
+                     Ela pintava o cartão inteiro de alerta, e dentro dele os
+                     ícones já são vermelhos: o contorno só somava barulho num
+                     lugar onde a mensagem é "a gente resolve", não "deu ruim".
+                     Mesma lição da borda VERDE no bloco concluído, recusada em
+                     01/09 pelo mesmo motivo (5 bordas viram poluição). O sinal
+                     fica onde ele é preciso: no ícone e no texto da etapa. */
+                  "border-border-hairline bg-surface-card"
                 : ehAtual
                   ? "border-border-strong bg-surface-card"
                   : "border-border-hairline bg-surface-card"
@@ -342,7 +351,10 @@ function TimelineEmBlocos({
               type="button"
               onClick={() => setTocados((m) => ({ ...m, [g.id]: !expandido }))}
               aria-label={expandido ? "Fechar bloco" : "Abrir bloco"}
-              className="shrink-0"
+              /* 🔄 04/09 (auditoria) — o alvo era o próprio chevron (18px),
+                 metade do mínimo da WCAG 2.5.8. O ícone não muda; cresce a
+                 área, com margem negativa pra não mexer no alinhamento. */
+              className="-m-2.5 flex h-10 w-10 shrink-0 items-center justify-center"
             >
               <ChevronBloco aberto={expandido} />
             </button>
@@ -357,7 +369,15 @@ function TimelineEmBlocos({
                     /* `emCurso` entra aqui junto com o ponteiro: pro desenho,
                        "é a vez" e "está rodando em paralelo" são o mesmo anel
                        girando e o mesmo peso de texto. */
-                    const ehAVez = !recusa && (i === emAndamento || !!e.emCurso);
+                    /* 🐛 04/09 (pedido do Pedro, na A3.1) — o `!recusa` valia
+                       pra lista inteira e apagava TODOS os anéis quando havia
+                       exigência: a guia ficava cinza no meio de uma tela de
+                       alerta, como se nem existisse. O que a recusa suspende é
+                       o PONTEIRO (`emAndamento`), não o que está em curso por
+                       conta própria — a etapa marcada com `emCurso` segue
+                       girando, e a recusa continua mandando na sua etapa (o
+                       `recusada` é checado antes). */
+                    const ehAVez = (!recusa && i === emAndamento) || !!e.emCurso;
                     const ultima = idx === g.itens.length - 1;
                     const st: StatusEstado = recusada
                       ? "recusa"
@@ -405,10 +425,24 @@ function TimelineEmBlocos({
                             </p>
                           )}
                           {ehAVez && e.acaoCliente && (
-                            <div className="mt-2 rounded-md bg-surface-tint-brand p-3">
+                            /* 🔄 04/09 (pedido do Pedro) — CARTÃO BRANCO com
+                               borda hairline, o padrão da casa. Era coral
+                               tingido (`surface-tint-brand`): o botão dentro
+                               dele já é coral cheio, então o fundo repetia a
+                               cor de ação e o cartão inteiro virava um bloco
+                               de destaque dentro de outro. Mesma correção que
+                               o `CardNota` do C3 recebeu hoje. */
+                            <div className="mt-2 rounded-md border border-border-hairline bg-surface-card p-3">
+                              {/* 🐛 04/09 — "A Junta aprovou" era FIXO, e desde
+                                  hoje este cartão também aparece na tela de
+                                  EXIGÊNCIA (onde a Junta justamente não
+                                  aprovou) e no A3, onde a análise ainda está
+                                  rodando. A frase passa a dizer só o que vale
+                                  nos três estados: a guia é o que destrava a
+                                  assinatura, e ela não espera a análise. */}
                               <p className="text-micro font-semibold text-text-primary mb-2">
-                                A Junta aprovou. Falta só pagar a guia pra liberar a
-                                assinatura.
+                                A guia não espera a análise. Pagar agora libera a
+                                assinatura mais cedo.
                               </p>
                               <Button onClick={e.acaoCliente.onClick}>
                                 {e.acaoCliente.label}
@@ -416,7 +450,15 @@ function TimelineEmBlocos({
                             </div>
                           )}
                           {recusada && recusa && (
-                            <div className="mt-2 rounded-md bg-state-danger-tint p-3">
+                            /* 🔄 04/09 (pedido do Pedro) — CARTÃO BRANCO com
+                               borda hairline, igual ao de cima e ao resto da
+                               casa. O fundo vermelho tingido pintava o bloco
+                               inteiro de alarme; o vermelho fica onde ele
+                               significa alguma coisa (o ícone da etapa e o
+                               TÍTULO), e o corpo do texto volta a ser texto.
+                               Mesma decisão da borda vermelha do bloco, tirada
+                               nesta mesma rodada. */
+                            <div className="mt-2 rounded-md border border-border-hairline bg-surface-card p-3">
                               <p className="text-caption font-semibold text-state-danger-text mb-0.5">
                                 {recusa.titulo}
                               </p>
@@ -479,7 +521,6 @@ export function PainelView({
   onIrParaBloco,
   titulosBloco,
   recusa,
-  socios = 1,
   etapas,
   onPagarDae,
   eyebrow = "Sua abertura",
@@ -508,8 +549,8 @@ export function PainelView({
   onIrParaBloco?: (rota: string, blocoId: number) => void;
   /** 🆕 04/09 — renomeia blocos na exibição (ver `TimelineEmBlocos`). */
   titulosBloco?: Record<number, string>;
-  /** Muda a faixa de notificação: com 2, o andamento vai pros dois. */
-  socios?: number;
+  /* 🗑️ 04/09 — `socios` saiu junto com a faixa de notificação: era o único
+     consumidor da prop. Capacidade sem uso é dívida, não preparo. */
   /**
    * 🔁 30/07 — parametrizado para o FLOW #2 (migração) reusar a máquina de 4
    * estados sem duplicar timeline. O default é o pipeline de ABERTURA, então
@@ -794,18 +835,21 @@ export function PainelView({
               Mata o medo de quem pagou, fechou o app e não sabe se "processou". */}
           <div className="mt-2 flex items-start gap-2.5 rounded-md bg-surface-alt p-3">
             <Cadeado />
+            {/* O texto vem de quem chama (o `AguardandoView` varia por estado,
+                inclusive na exigência); o default abaixo serve MEI e Migrar. */}
             <p className="text-micro text-text-secondary">
               {idempotencia ??
                 "A abertura roda uma vez só. Pode fechar o app que o processo segue sozinho, de onde parou."}
             </p>
           </div>
 
-          {/* Com 2 sócios, o outro também precisa saber que anda (T20). */}
-          {socios > 1 && (
-            <p className="text-micro text-text-tertiary mt-3">
-              O andamento vai pros dois sócios, não só pra você.
-            </p>
-          )}
+          {/* 🗑️ 04/09 (decisão do Pedro) — SAIU "O andamento vai pros dois
+              sócios, não só pra você". Ela vinha da spec T20 e prometia uma
+              coisa que a gente NÃO vai fazer: mandar o acompanhamento do
+              processo pro sócio. O sócio é chamado uma vez, na assinatura (A4),
+              e o dono do processo é quem abriu. Promessa de notificação que não
+              existe é a pior classe de copy — ninguém reclama do que não
+              recebeu, só deixa de confiar no resto. */}
           </div>
         </Rolagem>
 
@@ -815,22 +859,28 @@ export function PainelView({
             justamente o que ela procura quando cansa de esperar — enterrado no
             fim da timeline, ele só existia pra quem rolasse até o fim.
             K6 preservado: continua link leve, não botão cheio, então não
-            inventa ação primária nem compete com a timeline. Fica de fora só
-            na recusa, onde já existe uma ação de verdade pra fazer. */}
-        {!recusa && (
-          <div className="app-footer-cta pb-0">
+            inventa ação primária nem compete com a timeline.
+            🔄 04/09 (auditoria do bloco A3) — ANTES SAÍA NA RECUSA, e era o
+            contrário do certo: a recusa é a ÚNICA tela do bloco em que algo
+            deu errado, e era a única sem canal humano. O argumento de 30/07
+            ("lá já existe uma ação de verdade") confundia ação do PROCESSO
+            (sugerir mais 3 nomes) com saída pra DÚVIDA — quem não sabe o que
+            escrever depois de 3 nomes reprovados não é atendido pelo mesmo
+            botão. Fica nos dois estados. */}
+        <div className="app-footer-cta pb-0">
             <a
               href={linkWhatsApp(
                 "Oi! Estou acompanhando a abertura da minha empresa no app da Legalizai e queria tirar uma dúvida.",
               )}
               target="_blank"
               rel="noopener noreferrer"
-              className="block w-full text-center text-caption font-medium text-text-secondary underline underline-offset-4"
+              /* 🔄 04/09 (auditoria) — 20px de alvo, abaixo do mínimo. O
+                 sublinhado e a posição continuam iguais. */
+              className="flex min-h-11 w-full items-center justify-center text-center text-caption font-medium text-text-secondary underline underline-offset-4"
             >
-              Tirar uma dúvida no WhatsApp
-            </a>
-          </div>
-        )}
+            Tirar uma dúvida no WhatsApp
+          </a>
+        </div>
 
         {recusa ? (
           <Rodape>

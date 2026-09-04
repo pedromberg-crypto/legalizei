@@ -548,7 +548,7 @@ export function EnderecoCategoriaView({
             {/* 🔴 A porta fechada que vira porta aberta. Só existe no MEI. */}
             {categoriaSemMei && (
               <div className="mt-3 flex flex-col gap-3">
-                <Aviso variante="info" titulo="Essa atividade não pode ser MEI">
+                <Aviso neutro variante="info" titulo="Essa atividade não pode ser MEI">
                   A lei não considera empresário quem exerce profissão
                   intelectual (art. 966 do Código Civil), então tecnologia,
                   design e consultoria não entram na lista do MEI. Não é
@@ -614,7 +614,7 @@ export function EnderecoCategoriaView({
                     cidade), incorporando o texto que antes vinha numa
                     mensagem própria ("Onde você está?"). */}
                 {cepCheio && (
-                  <Aviso
+                  <Aviso neutro
                     variante="success"
                     titulo={
                       ehCepBh(cep)
@@ -810,7 +810,7 @@ export function EnderecoCategoriaView({
                           </p>
                         </div>
                       )}
-                      <Aviso variante="success" titulo="Falta só confirmar aqui embaixo">
+                      <Aviso neutro variante="success" titulo="Falta só confirmar aqui embaixo">
                         Clicando abaixo, você garante oferta especial quando a
                         gente conseguir te atender.
                       </Aviso>
@@ -942,7 +942,7 @@ export function EnderecoCategoriaView({
                     checagem que ninguém faz agora (mesmo racional do aviso
                     que já não existe no MEI, ver comentário abaixo). */}
                 {cepValido && regimeMei && (
-                  <Aviso variante="info" titulo="Pode ser o seu endereço de casa">
+                  <Aviso neutro variante="info" titulo="Pode ser o seu endereço de casa">
                     No MEI não existe consulta prévia de viabilidade, e em BH o
                     alvará é dispensado pras atividades de baixo risco. Você
                     declara o endereço e assume o compromisso de seguir as

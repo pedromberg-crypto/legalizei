@@ -1562,7 +1562,7 @@ export function FaixaView({
             o ME — nunca um beco. */}
         {estouraTeto && (
           <div className="mt-4 flex flex-col gap-3">
-            <Aviso variante="info" titulo="Com esse faturamento, o MEI não serve">
+            <Aviso neutro variante="info" titulo="Com esse faturamento, o MEI não serve">
               O MEI tem teto de {brl(TETO_MEI_ANUAL, true)} por ano, que dá{" "}
               {brl(TETO_MEI_MENSAL, true)} por mês. Passar disso não é
               impedimento pra abrir empresa: é só sinal de que o seu caso é ME
@@ -1582,7 +1582,7 @@ export function FaixaView({
             afirmar nada — avisa sem bloquear, e oferece o campo exato. */}
         {tetoIncerto && (
           <div className="mt-4">
-            <Aviso variante="warning" titulo="Fica de olho no teto do MEI">
+            <Aviso neutro variante="warning" titulo="Fica de olho no teto do MEI">
               O limite do MEI é {brl(TETO_MEI_MENSAL, true)} por mês (
               {brl(TETO_MEI_ANUAL, true)} no ano), e ele cai dentro dessa faixa.
               Se quiser ter certeza agora, informa o valor exato aqui em cima.

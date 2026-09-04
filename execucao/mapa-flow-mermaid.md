@@ -97,8 +97,8 @@ flowchart TD
   A3_R["A3.R · Guia<br/>(nova tentativa)"]
   A3_PS["A3.PS · Splash<br/>guia paga"]
   A3_PSB["A3.PSB · Splash<br/>boleto da guia"]
-  A3_GP["A3′ · Status<br/>(guia paga)"]
   A3_V["A3‴ · Status<br/>(analisando viabilidade,<br/>2ª rodada de nomes)"]
+  A3_GP["A3′ · Status<br/>(guia paga)"]
   A4["A4 · Assinatura dos sócios"]
   A4G{"GOV.BR nível<br/>bronze→upgrade"}:::inline
   REMOVIDO_N24(["'Empresa ativa'<br/>🗑️ REMOVIDO 30/07"]):::todo
@@ -296,8 +296,8 @@ flowchart TD
 | 68 | A3.R · Guia · (nova tentativa) | Método de pagamento (nova tentativa) · aceite irreversível | ✅ | 🟡 | MESMA tela da guia com o aviso da recusa no topo. O aceite irreversível continua obrigatório na retentativa. |
 | 69 | A3.PS · Splash · guia paga | — | ✅ | 🟡 | Reusa `/splash-pagamento` (SplashMensagemView) com `?next` — transitório, sem CTA. Volta pro status com a etapa da guia concluída e a assinatura liberada. |
 | 70 | A3.PSB · Splash · boleto da guia | — | ✅ | 🟡 | Reusa `/splash-boleto` com `?next`. Volta pro status com a etapa virando **Guia da Junta · aguardando compensação**: segue girando, e as ações passam a ser ver o boleto e adiantar por Pix (mesmo par do hero do E9.1). |
-| 71 | A3′ · Status · (guia paga) | — | ✅ | 🟡 | Volta de quem pagou a guia por cartão/Pix: a etapa da DAE fecha (verde) e 'Agora é só assinar' vira a vez. Mock por query (`?guia=paga`); no app real quem fecha é o webhook do provedor. |
-| 72 | A3‴ · Status · (analisando viabilidade, · 2ª rodada de nomes) | — | ✅ | 🟡 | Mesma tela do A3 com a fase Junta recuada (`junta={concluidas:0, emAndamento:0}`). Daqui volta pro fluxo normal quando a Junta defere, ou pro A3.1 se recusar de novo. |
+| 71 | A3‴ · Status · (analisando viabilidade, · 2ª rodada de nomes) | — | ✅ | 🟡 | Mesma tela do A3 com a fase Junta recuada (`junta={concluidas:0, emAndamento:0}`). Daqui volta pro fluxo normal quando a Junta defere, ou pro A3.1 se recusar de novo. |
+| 72 | A3′ · Status · (guia paga) | — | ✅ | 🟡 | Volta de quem pagou a guia por cartão/Pix: a etapa da DAE fecha (verde) e 'Agora é só assinar' vira a vez. Mock por query (`?guia=paga`); no app real quem fecha é o webhook do provedor. |
 | 73 | A4 · Assinatura dos sócios | Assinatura via GOV.BR/e-CAC · código de validação de 6 dígitos (janela 10min) · canal do convite ao sócio (WhatsApp/e-mail) | ✅ | 🟡 | GOV.BR/e-CAC deep-link (dev). 🆕 24/08 (reunião Leonan): código 2FA único concentra procuração+assinatura (`CodigoGovView` — janela 10min, 3 tentativas, escala pra atendente se estourar); convite de sócio ganhou seletor de canal (WhatsApp/e-mail). 🆕 26/08 (item 7): certificado já vem validado da A3.2 — a procuração que sai junto desta assinatura agora tem o que precisa. 🗑️→🔴 01/09: **a A3.2 saiu do caminho ME**, então essa premissa caiu junto (o certificado é e-CNPJ, e o CNPJ ainda não existe aqui). Continua aberto o que fazer com a procuração e-CAC nesta tela: ela só pode ser assinada DEPOIS do CNPJ sair, e as 2 decisões de 01/09 (corrigir a cadeia toda + procuração sempre) ainda não foram construídas |
 | 74 | 'Empresa ativa' · 🗑️ REMOVIDO 30/07 | — | 🚧 | 🟢 | Era órfão desde o swap A4→A5 (nenhuma rota navegava mais até aqui) — arquivo `/ativa` e a view apagados de vez 30/07, confirmado pelo Pedro. Fica só como marca histórica no mapa |
 | 75 | M-T · Impedimentos · (no lugar da triagem) | Já tem outra empresa? (sim/não) · é servidor federal? (sim/não) · recebe benefício? (sim/não) + ciência explícita se sim | ✅ | 🟢 | 🆕 28/08 — substitui o E5T no ramo MEI (MEI é unipessoal por definição, art. 966 CC: as perguntas de sócio não existem pra ele). São 3 impedimentos que o PRÓPRIO GOVERNO checa e bloqueia: (1) ser sócio/titular/admin de outra PJ — a RFB cruza o CPF, LC 123 art. 18-A; (2) servidor público federal na ativa — Lei 8.112/90 art. 117; (3) receber aposentadoria por invalidez / salário-maternidade / seguro-desemprego — este NÃO bloqueia, mas a formalização cancela o benefício de forma irreversível, então vira escolha informada com confirmação explícita. Fica ANTES do pagamento pelo mesmo motivo da triagem do ME: não cobramos de quem já sabe que não pode. Componente: `components/mei-telas.tsx` (`ImpedimentoView`) |
@@ -339,6 +339,7 @@ flowchart TD
 > Cada linha = um estado estrutural do mapa. Snapshots completos em `flow/versoes/` (`.json` p/ diff + `.mmd` legível). Mais recente no topo.
 
 <!-- FLOW:VERSOES:INI -->
+- **v100** · 2026-09-04 · ajuste sem efeito estrutural
 - **v99** · 2026-09-04 · +nós C7_2S · +conexões C7_2→C7_2S,C7_2S→A3_V · -conexões C7_2→A3_V
 - **v98** · 2026-09-04 · +nós C3_1,C3_2 · +conexões C3→C3_1,C3→C3_2,C3_1→C4,C3_2→C4
 - **v97** · 2026-09-04 · ajuste sem efeito estrutural

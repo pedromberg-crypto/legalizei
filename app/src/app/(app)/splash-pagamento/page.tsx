@@ -26,7 +26,11 @@ export default function SplashPagamentoPage() {
   return (
     <SplashMensagemView
       titulo="Pagamento confirmado."
-      sub="Sua abertura já começou."
+      /* ✍️ 04/09 (auditoria do bloco A3) — dizia "Sua abertura já começou",
+         e ela começou LÁ NO A2, 3 telas antes. O que este pagamento destrava é
+         o REGISTRO: sem a guia compensada a Junta não registra. Dizer o que de
+         fato mudou vale mais que repetir uma boa notícia velha. */
+      sub="Com a guia paga, a Junta pode registrar sua empresa."
       onAutoAvancar={() => router.replace(next)}
     />
   );

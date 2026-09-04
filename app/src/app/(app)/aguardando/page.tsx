@@ -83,6 +83,9 @@ export default function AguardandoPage() {
             : undefined
       }
       guiaBoleto={guiaBoleto}
+      /* 🆕 04/09 — o mesmo flag que recua a timeline agora também troca o hero:
+         a volta da 2ª rodada é um estado próprio, não a chegada do A2. */
+      rodada2={reanalisando}
       // 🆕 01/09 — leva pra tela do bloco (continuar ou corrigir), preservando
       // regime e endereço fiscal, como o resto da navegação do wizard.
       onIrParaBloco={(rota) => router.push(comEndereco(comRegime(rota, mei), enderecoFiscal))}

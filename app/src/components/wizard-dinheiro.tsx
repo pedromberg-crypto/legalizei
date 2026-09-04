@@ -1878,8 +1878,14 @@ function AceiteIrreversivelGuia({
       </label>
       <p className="text-caption text-text-secondary">
         <label htmlFor="aceite-guia" className="cursor-pointer">
-          Autorizo o início da abertura. Depois que a guia é paga, a Junta
-          começa o registro, e essa taxa{" "}
+          {/* 🐛 04/09 (auditoria do bloco A3) — O ACEITE AUTORIZAVA O QUE JÁ
+              TINHA SIDO AUTORIZADO. Ele dizia "Autorizo o início da abertura",
+              e a abertura começou no A2, telas atrás ("Sua abertura está em
+              boas mãos"). O que se autoriza AQUI é o pagamento da taxa, e é
+              esse gesto que não volta atrás. Num texto de aceite, dizer o ato
+              errado é o pior tipo de imprecisão. */}
+          Autorizo o pagamento da taxa da Junta. Com ela paga, a Junta registra
+          a empresa, e essa taxa{" "}
         </label>
         {/* O link fica FORA do label de propósito: dentro dele, o Chrome poda
             o botão da árvore de acessibilidade e o toggle para de responder
@@ -1887,7 +1893,10 @@ function AceiteIrreversivelGuia({
         <button
           type="button"
           onClick={() => setPopupAberto(true)}
-          className="font-semibold text-action-primary-sm underline underline-offset-4"
+          /* 🔄 04/09 (auditoria) — o link vive DENTRO de uma frase, então não
+             pode virar bloco: ganha área vertical com `-my-2 py-2`, que engorda
+             o toque sem quebrar a linha do texto. */
+          className="-my-2 py-2 font-semibold text-action-primary-sm underline underline-offset-4"
         >
           não é reembolsável
         </button>
@@ -2063,7 +2072,7 @@ export function PagamentoView({
           {/* 🆕 01/09 — volta da recusa: explica ANTES de qualquer campo, com
               o caminho concreto (outro cartão ou Pix), sem culpar a pessoa. */}
           {recusado && (
-            <Aviso variante="warning" titulo="O pagamento não passou">
+            <Aviso neutro variante="warning" titulo="O pagamento não passou">
               O banco recusou a cobrança, e isso raramente é problema seu. Dá
               pra tentar outro cartão, ou trocar pra Pix, que cai na hora.
             </Aviso>
@@ -2175,8 +2184,21 @@ export function PagamentoView({
           {/* 🆕 01/09 — o CTA agora também espera os dados do Asaas. Sem eles a
               cobrança volta erro 400 do gateway, e erro de gateway depois do
               clique é a pior hora possível pra descobrir campo faltando. */}
+          {/* 🔄 04/09 (auditoria do bloco A3) — O BOTÃO DIZ O QUE FALTA.
+              Ele ficava travado e mudo com 12 campos e um aceite pendentes: a
+              pessoa tentava, nada acontecia, e a tela não apontava nada. Mesma
+              régua já aplicada no A1, C0.0, C3 e C4 — travado, o rótulo é o
+              estado; livre, é a ação com o valor.
+              A ordem importa: falta de DADO vem antes do aceite, porque é o
+              que a pessoa resolve rolando a tela; o aceite é o último gesto. */}
           <Button full disabled={(!migrar && !aceito) || !dadosOk} onClick={onPagar}>
-            {guia ? `Pagar a guia · ${brl(total, true)}` : `Pagar ${brl(total, true)}`}
+            {!dadosOk
+              ? "Complete os dados de pagamento"
+              : !migrar && !aceito
+                ? "Falta aceitar as condições"
+                : guia
+                  ? `Pagar a guia · ${brl(total, true)}`
+                  : `Pagar ${brl(total, true)}`}
           </Button>
         </Rodape>
       </main>

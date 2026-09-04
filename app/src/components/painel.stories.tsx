@@ -53,5 +53,5 @@ export const RecusaDeNome: Story = {
 };
 
 export const ComDoisSocios: Story = {
-  render: () => <Shell><PainelView concluidas={1} emAndamento={1} socios={2} /></Shell>,
+  render: () => <Shell><PainelView concluidas={1} emAndamento={1} /></Shell>,
 };

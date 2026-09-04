@@ -33,7 +33,10 @@ export default function SplashRecusadoPage() {
   return (
     <SplashMensagemView
       variante="recusado"
-      titulo="Pagamento não aprovado."
+      /* ✍️ 04/09 (auditoria) — o splash dizia "não aprovado" e a tela seguinte
+         "não passou": duas palavras pra mesma notícia, com 2 segundos de
+         distância. Fica a do destino, que é onde a pessoa lê com calma. */
+      titulo="O pagamento não passou."
       sub="Vamos tentar de outro jeito."
       onAutoAvancar={() => router.replace(next)}
     />

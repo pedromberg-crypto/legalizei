@@ -1,6 +1,43 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🆕 04/09 (auditoria com Playwright, aprovada pelo Pedro) — O RÓTULO PASSA A
+ * SER O NOME ACESSÍVEL DO CAMPO.
+ * ═══════════════════════════════════════════════════════════════════════════
+ * Antes, o `Campo` desenhava o rótulo num `<p>` e o filho era um `<input>`
+ * solto: pro olho a proximidade resolvia, pro software eram dois elementos
+ * sem relação nenhuma. A auditoria mediu o efeito — os 8 campos da C1 com
+ * `labels: 0` e sem `aria-label` — e um leitor de tela anunciava "campo de
+ * edição" oito vezes, sem dizer qual era qual.
+ *
+ * O conserto mora AQUI, no DS, e não nas telas: o `Campo` gera um id, vira
+ * `<label htmlFor>` e entrega o id por CONTEXTO. `Texto` e `Select` pegam
+ * sozinhos. Nenhuma chamada muda (`<Campo rotulo="…">` segue igual) e nenhum
+ * pixel muda — `<label>` e `<p>` renderizam idêntico com as mesmas classes.
+ *
+ * Contexto, e não prop, porque o filho do `Campo` é JSX arbitrário: tem tela
+ * que põe o input direto, tem tela que embrulha em `<div>`. Prop exigiria
+ * `cloneElement` (frágil) ou mudar a assinatura de todas as chamadas.
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+type CampoCtx = { id: string; rotuloId: string } | null;
+const CampoContexto = createContext<CampoCtx>(null);
+
+/** O que `Texto`/`Select` usam pra se amarrar no rótulo do `Campo` que os envolve. */
+function useCampo() {
+  return useContext(CampoContexto);
+}
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -42,20 +79,34 @@ export function Campo({
   acao?: ReactNode;
   children: ReactNode;
 }) {
+  const base = useId();
+  const id = `${base}-campo`;
+  const rotuloId = `${base}-rotulo`;
   return (
-    <div>
-      {/* 🐛 02/09 — rótulo vazio deixava um `<p>` fantasma ocupando a
-          altura de uma linha (achado na C2, onde a pergunta virou só o
-          título). Mesmo tratamento que o `OutrasOpcoes` já dá ao título. */}
-      {rotulo && (
-        <div className="flex items-center gap-2">
-          <p className="text-caption font-semibold text-text-primary">{rotulo}</p>
-          {acao && <div className="ml-auto shrink-0">{acao}</div>}
-        </div>
-      )}
-      {dica && <p className="text-micro text-text-tertiary mt-0.5">{dica}</p>}
-      <div className="mt-1.5">{children}</div>
-    </div>
+    <CampoContexto.Provider value={{ id, rotuloId }}>
+      <div>
+        {/* 🐛 02/09 — rótulo vazio deixava um `<p>` fantasma ocupando a
+            altura de uma linha (achado na C2, onde a pergunta virou só o
+            título). Mesmo tratamento que o `OutrasOpcoes` já dá ao título. */}
+        {rotulo && (
+          <div className="flex items-center gap-2">
+            {/* 🆕 04/09 — era `<p>`. Virou `<label>` com as MESMAS classes:
+                mesmo desenho, e agora tocar no rótulo foca o campo (ganho real
+                em tela pequena, onde o alvo do input é estreito). */}
+            <label
+              id={rotuloId}
+              htmlFor={id}
+              className="text-caption font-semibold text-text-primary"
+            >
+              {rotulo}
+            </label>
+            {acao && <div className="ml-auto shrink-0">{acao}</div>}
+          </div>
+        )}
+        {dica && <p className="text-micro text-text-tertiary mt-0.5">{dica}</p>}
+        <div className="mt-1.5">{children}</div>
+      </div>
+    </CampoContexto.Provider>
   );
 }
 
@@ -98,6 +149,9 @@ export function Texto({
    */
   acao?: ReactNode;
 }) {
+  /* 🆕 04/09 — o id vem do `Campo` que envolve este input. Fora de um `Campo`
+     (uso solto) o contexto é `null` e nada muda: o input segue como sempre. */
+  const campo = useCampo();
   const moldura = `min-h-12 rounded-md border ${
     travado
       ? "border-border-hairline bg-surface-alt"
@@ -119,6 +173,7 @@ export function Texto({
           }`}
         >
           <input
+            id={campo?.id}
             value={valor}
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
@@ -141,6 +196,7 @@ export function Texto({
   return (
     <>
       <input
+        id={campo?.id}
         value={valor}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
@@ -359,6 +415,11 @@ export function Select({
    */
   valorEmDestaque?: boolean;
 }) {
+  /* 🆕 04/09 — o `Select` do DS NÃO é `<select>` nativo: é um listbox custom
+     (botão + `ul[role=listbox]`). `button` é elemento rotulável, então o
+     `htmlFor` do `Campo` já aponta pra cá; o `aria-labelledby` entra junto
+     porque é o que os leitores usam com `aria-haspopup`. */
+  const campo = useCampo();
   const [aberto, setAberto] = useState(false);
   const [foco, setFoco] = useState(0); // índice destacado por teclado
   const ref = useRef<HTMLDivElement>(null);
@@ -413,6 +474,8 @@ export function Select({
           quando aberto; seta gira. */}
       <button
         type="button"
+        id={campo?.id}
+        aria-labelledby={campo ? `${campo.rotuloId} ${campo.id}` : undefined}
         aria-haspopup="listbox"
         aria-expanded={aberto}
         onClick={() => (aberto ? setAberto(false) : abrir())}
@@ -422,8 +485,15 @@ export function Select({
           ${aberto ? "border-border-focus" : "border-border-hairline hover:border-border-strong"}
           ${
             selecionado
-              ? selecionado.destaque === "coral" || valorEmDestaque
-                ? "font-semibold text-action-primary-sm"
+              ? /* 🔄 04/09 (pedido do Pedro) — coral CLARO (`text-brand`) no
+                   VALOR selecionado, no lugar do coral-700. Vale nos dois
+                   lugares onde este destaque existe hoje (a categoria da C0 e
+                   a do E3.4), que é justamente o par que ele pediu pra
+                   igualar. 🔴 Custa contraste: coral-500 sobre branco dá ~3:1
+                   e a régua de 12/07 pede 4,5:1 pra texto de 16px. Decisão do
+                   Pedro, com o custo na mesa. */
+                selecionado.destaque === "coral" || valorEmDestaque
+                ? "font-semibold text-brand"
                 : "text-text-primary"
               : "text-text-muted"
           }`}

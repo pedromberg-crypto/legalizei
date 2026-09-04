@@ -2,6 +2,8 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import type { Resultado } from "@/components/veredito";
+/* 🆕 04/09 — fonte única do nome de cada CNAE (oficial IBGE). Ver `lib/cnae`. */
+import { nomeCnae } from "@/lib/cnae";
 import { Button } from "@/components/ui/button";
 
 /**
@@ -59,16 +61,21 @@ export interface EncaixeData {
  * com 2, que é o que cabe embaixo do cartão grande sem virar outra tela.
  */
 export function encaixeDeResultado(r: Resultado, maxAlternativas = 2): EncaixeData {
+  /* 🆕 04/09 (decisão do Pedro) — O NOME VEM DO DICIONÁRIO (`lib/cnae`, nome
+     oficial IBGE), não do texto que cada mock escreveu. Era aqui que nascia
+     metade da divergência: o `humano`/`oque` do `mock-veredito` competia com o
+     `humano` da lista curada do C5 e com o do recap. O texto do mock continua
+     valendo como FALLBACK, pra código fora do dicionário não virar buraco. */
   return {
     recomendado: {
-      humano: r.humano,
+      humano: nomeCnae(r.cnae, r.humano),
       cnae: r.cnae,
       adequacao: 94,
       descricao: r.explica,
       cobre: r.compreende ?? [],
     },
     alternativas: (r.vizinhas ?? []).slice(0, maxAlternativas).map((v, i) => ({
-      humano: v.oque,
+      humano: nomeCnae(v.cnae, v.oque),
       cnae: v.cnae,
       adequacao: 72 - i * 8,
       descricao: v.descricao,
@@ -309,7 +316,9 @@ export function OutrasOpcoes({
                           e.stopPropagation();
                           onVerDetalhes(a);
                         }}
-                        className="pointer-events-auto relative -my-1 py-1 underline underline-offset-2"
+                        /* 🔄 04/09 (auditoria) — o `-my-1 py-1` dava 25px de alvo. Vira 40px
+                           com `-my-2.5 py-2.5`, sem mudar uma linha do que se vê. */
+                        className="pointer-events-auto relative -my-2.5 py-2.5 underline underline-offset-2"
                       >
                         Ver detalhes
                       </button>

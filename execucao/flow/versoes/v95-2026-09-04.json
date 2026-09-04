@@ -2,59 +2,43 @@
   "nodes": [
     {
       "id": "E1",
-      "rota": "/splash",
       "label": "E1 · Splash",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "ux",
       "falta": "",
-      "dados": ""
+      "dados": "",
+      "handles": null
     },
     {
       "id": "E2_1",
-      "rota": "/welcome?slide=0",
       "label": "E2.1 · Welcome<br/>(1/3 · Léo vigia, contador é gente)",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "ux",
       "falta": "",
-      "dados": ""
+      "dados": "",
+      "handles": null
     },
     {
       "id": "E2_2",
-      "rota": "/welcome?slide=1",
       "label": "E2.2 · Welcome<br/>(2/3 · Aquece o fork)",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "ux",
       "falta": "",
-      "dados": ""
+      "dados": "",
+      "handles": null
     },
     {
       "id": "E2_3",
-      "rota": "/welcome?slide=2",
       "label": "E2.3 · Welcome<br/>(3/3 · Sem susto no boleto)",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "ux",
       "falta": "",
-      "dados": ""
+      "dados": "",
+      "handles": null
     },
     {
       "id": "E3",
-      "rota": "/entrada",
       "label": "E3 · Fork<br/>4 rotas",
-      "caminho": "abrir",
-      "forma": "decisao",
-      "classe": "",
       "status": "construida",
       "validado": "oficial",
       "falta": "4 rotas: abrir · migrar · já sou cliente · voltar de onde parei (🆕 30/08, fecha o C0_1 órfão).",
@@ -80,59 +64,43 @@
     },
     {
       "id": "E3_1",
-      "rota": "/login",
       "label": "E3.1 · Login / portal",
-      "caminho": "abrir",
-      "forma": "terminal",
-      "classe": "feliz",
       "status": "construida",
       "validado": "ux",
       "falta": "Rota feliz",
-      "dados": ""
+      "dados": "",
+      "handles": null
     },
     {
       "id": "E3_3",
-      "rota": "/dados",
       "label": "E3.3 · Seus dados<br/>(nome · e-mail · telefone)",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "pendente",
       "falta": "🆕 27/08 — captura de lead, logo depois do fork. NÃO cria conta (isso continua no E6): só identifica quem está do outro lado, porque antes disso o funil inteiro era anônimo até o E6. Cruzamento com o funil da Contabilizei (que pede os mesmos 3 campos na 1ª tela) motivou a mudança. 🟡 LGPD: carrega consentimento mínimo em 1 linha com link, sem checkbox — o aceite contratual segue no E8. 🔴 RF-01: os dados não viajam por querystring (dado pessoal em URL é vazamento), então o E6 hoje exibe o mock `CLIENTE`; quando existir estado real, vem de lá",
-      "dados": "Nome completo · e-mail · telefone · consentimento de privacidade (implícito, ao continuar)"
+      "dados": "Nome completo · e-mail · telefone · consentimento de privacidade (implícito, ao continuar)",
+      "handles": null
     },
     {
       "id": "E3_2",
-      "rota": "/entrada?intencao=abrir",
       "label": "E3.2 · MEI × ME<br/>(variante Abrir)",
-      "caminho": "abrir",
-      "forma": "decisao",
-      "classe": "",
       "status": "construida",
       "validado": "oficial",
       "falta": "🔄 27/08: agora vem DEPOIS do E3.3 (dados) e ANTES do E3.4 (endereço + categoria). MEI não tem o limite geográfico do MLP, mas PASSA pelo E3.4 mesmo assim — o gate de BH não vale pra ele, o de CATEGORIA vale (é ele que autoriza o CNAE a ir pra pós-pagamento, então ninguém pula). 🔴 27/08: card ME · Lucro Presumido REMOVIDO (decisão do Pedro; captação de LP no abrir fica parqueada). 🔴 risco não resolvido: se disser MEI aqui mas depois aparecer 2+ sócios (incompatível com MEI), não há correção automática",
-      "dados": "Regime autodeclarado (MEI ou ME)"
+      "dados": "Regime autodeclarado (MEI ou ME)",
+      "handles": null
     },
     {
       "id": "E3_2_M",
-      "rota": "/entrada?intencao=migrar",
       "label": "E3.2 · MEI × ME<br/>(variante Migrar)",
-      "caminho": "migrar",
-      "forma": "decisao",
-      "classe": "",
       "status": "construida",
       "validado": "oficial",
       "falta": "Mesma tela (`MeiOuMeView`), `contexto=\"migrar\"`: copy vira autodeclaração (\"sua empresa hoje é MEI ou ME?\"), não critério de escolha. MEI pula E4 inteiro, vai direto pro M1 (`/migrar/cnpj?cenario=mei`)",
-      "dados": "Regime autodeclarado (MEI ou ME)"
+      "dados": "Regime autodeclarado (MEI ou ME)",
+      "handles": null
     },
     {
       "id": "E3_4",
-      "rota": "/endereco",
       "label": "E3.4 · Endereço + categoria<br/>(os 2 gates)",
-      "caminho": "abrir",
-      "forma": "decisao",
-      "classe": "",
       "status": "construida",
       "validado": "pendente",
       "falta": "🆕 27/08 — reúne os DOIS gates do produto antes do dinheiro. (1) ENDEREÇO: substitui o E4 (gate de cidade, REMOVIDO), que perguntava 'é em BH?' e acreditava no clique — aqui o CEP valida de verdade (`ehCepBh`, faixa 30000-000 a 31999-999, 🟡 não ratificada em fonte primária). Herdou também a escolha 'próprio × fiscal' que morava no E5F. (2) CATEGORIA: assume o papel de gate de elegibilidade que era do veredito de CNAE — como a lista só oferece o que a gente atende, escolher já É passar pelo filtro, e é isso que autorizou o CNAE a ir pra depois do pagamento. MEI passa por aqui também (sem exigir BH): o gate geográfico não vale pra ele, mas o de categoria vale. 🔒 29/08 (decisão do Pedro) — os 2 gates deixaram de EXPULSAR: fora de BH e atividade fora da lista resolvem AGORA na própria tela (endereço fiscal ou fila da cidade/atividade, com CTA 'Me inscrever e garantir condição'). O handle 'fora' e as saídas E4.1/E5.1 dedicadas ao caminho abrir foram removidas — `/saida/fora-bh` foi deletada (zero uso restante); `/veredito/waitlist` (E5.1) segue viva só pelo Migrar. 🆕 30/08 — ver E3.4.1 pro detalhe do estado 'CEP fora de BH'. Ganhou atalho na `/apresentacao` ('📍 Simular CEP fora de BH', antes só descobria digitando um CEP específico à mão).",
@@ -146,831 +114,633 @@
     },
     {
       "id": "E3_4_1",
-      "rota": "/endereco?simular=fora-bh",
       "label": "E3.4.1 · CEP fora de BH<br/>(gate resolvido inline)",
-      "caminho": "abrir",
-      "forma": "decisao",
-      "classe": "branch",
       "status": "construida",
       "validado": "ux",
       "falta": "🆕 31/08 — ganhou `rota` só pra prévia ao vivo do `/mapa` (`?simular=fora-bh` pré-preenche o estado, ver `endereco/page.tsx` + prop `simularFilaCidade`). NÃO é navegação real — é o MESMO estado do E3.4 (`/endereco`), resolvido inline. As 2 saídas (endereço fiscal · fila de espera) continuam no fluxo normal, nenhuma é dead-end.",
-      "dados": "Confirma: usa endereço fiscal Legalizai OU entra na fila da própria cidade"
+      "dados": "Confirma: usa endereço fiscal Legalizai OU entra na fila da própria cidade",
+      "handles": null
     },
     {
       "id": "E4_2",
-      "rota": "/migrar/cnpj",
       "label": "E4.2 · Lê o cartão CNPJ",
-      "caminho": "migrar",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "oficial",
       "falta": "Autofill por CNPJ via InfoSimples (cadastro, R$0,20/consulta — API PAGA, não pública); sem entrevista de atividade — o CNAE já existe. 🔴 05/08: checagem de regime removida daqui (a API não confirma Simples×Presumido×MEI, ver infosimples-funcionalidades.md) — regime já vem autodeclarado da E3.2. Só confirma situação cadastral (ativa/inapta)",
-      "dados": "CNPJ (consulta) · confirmação dos dados do cartão"
+      "dados": "CNPJ (consulta) · confirmação dos dados do cartão",
+      "handles": null
     },
     {
       "id": "E4_2_1",
-      "rota": "/saida/cnpj-inapto",
       "label": "Saída · CNPJ inapto<br/>ou suspenso",
-      "caminho": "migrar",
-      "forma": "terminal",
-      "classe": "saida",
       "status": "construida",
       "validado": "oficial",
       "falta": "Situação cadastral ≠ ativa: aqui a Receita nem reconhece a empresa como ativa, regularização vem ANTES de qualquer migração. 🔴 06/08: diferente do que era 'auditoria de passivo' (E9.2, empresa ATIVA com dívida) — essa tela foi retirada do flow",
-      "dados": "— (saída, fora do caminho até a migração)"
+      "dados": "— (saída, fora do caminho até a migração)",
+      "handles": null
     },
     {
       "id": "E4_2B_1",
-      "rota": "/saida/regime-nao-suportado",
       "label": "Saída · Presumido<br/>fora de escopo",
-      "caminho": "migrar",
-      "forma": "terminal",
-      "classe": "saida",
       "status": "construida",
       "validado": "oficial",
       "falta": "Lucro Presumido segue fora do escopo (decisão explícita 04/08, sem pesquisa fiscal dedicada ainda). Autodeclarado na E3.2, não confirmado por API",
-      "dados": "— (saída, fora do caminho até a migração)"
+      "dados": "— (saída, fora do caminho até a migração)",
+      "handles": null
     },
     {
       "id": "E4_3",
-      "rota": "/migrar/diagnostico",
       "label": "E4.3 · Diagnóstico<br/>(\"tem certificado?\")",
-      "caminho": "migrar",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "pendente",
       "falta": "🔴 04/08 (3ª rodada): o diagnóstico de Fator R pra ME foi CORTADO — a única API pré-pagamento é a cadastral, não traz faturamento/folha (só via procuração, pós-pagamento). 🔴 05/08: pergunta virou 'tem certificado?' (MEI: decide se roda TTRT). 🔴 06/08 (achado do Pedro): ME TAMBÉM passa aqui agora (antes ia do E4.2 direto pro E4.4) — certificado é independente da TTRT pra ME (as duas rodam em paralelo), mas não tinha pergunta nenhuma no caminho ME. 🟡 fila-Mauro: se sem-certificado-ME carrega custo/fidelidade extra é decisão de preço não tomada",
-      "dados": "Resposta sim/não (tem certificado digital)"
+      "dados": "Resposta sim/não (tem certificado digital)",
+      "handles": null
     },
     {
       "id": "E4_4",
-      "rota": "/migrar/plano",
       "label": "E4.4 · Plano",
-      "caminho": "migrar",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "pendente",
       "falta": "ME: mesma mensalidade do caminho abrir, sem taxa de governo (empresa já existe). 🆕 04/08: MEI tem plano PRÓPRIO — R$49,90/mês, fidelidade 12 meses, certificado incluso, escopo limitado (emitir NF + 1 colaborador) — não é o plano ME com desconto",
-      "dados": ""
+      "dados": "",
+      "handles": null
     },
     {
       "id": "E4_5",
-      "rota": "/migrar/contrato",
       "label": "E4.5 · Contrato<br/>+ promessa de devolução",
-      "caminho": "migrar",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "oficial",
       "falta": "🔴 DECISÃO TRAVADA 30/07: cobra ANTES do TTRT, com contrapartida OBRIGATÓRIA no contrato ('se a transferência não sair por motivo fora do seu controle, devolve tudo'). Se essa linha sair do contrato, a decisão reabre (Mauro/Larissa redigem)",
-      "dados": "Aceite do contrato (com a cláusula de devolução)"
+      "dados": "Aceite do contrato (com a cláusula de devolução)",
+      "handles": null
     },
     {
       "id": "E9_2",
-      "rota": "/migrar/contador",
       "label": "E9.2 · Seu contador atual",
-      "caminho": "migrar",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "oficial",
       "falta": "🔒 24/08 (reunião Leonan 19/08, CONFLITO RESOLVIDO): CRC agora é OBRIGATÓRIO, trava o Continuar — 'eu preciso do número do CRC de qualquer forma' (Leonan). Antes o doc dizia 'opcional', estava errado/desatualizado. Nome/e-mail/telefone continuam opcionais — só o CRC não tem contorno",
-      "dados": "Nome do contador/escritório atual · e-mail · telefone (pré-preenchidos quando o cartão CNPJ trouxer, opcionais) · CRC (OBRIGATÓRIO)"
+      "dados": "Nome do contador/escritório atual · e-mail · telefone (pré-preenchidos quando o cartão CNPJ trouxer, opcionais) · CRC (OBRIGATÓRIO)",
+      "handles": null
     },
     {
       "id": "E9_2A",
-      "rota": "/migrar/dados",
       "label": "E9.2b · Dados que o<br/>cartão CNPJ não traz",
-      "caminho": "migrar",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "oficial",
       "falta": "Reusa os mesmos campos do C1 (abertura) — CPF/RG/órgão/estado civil, digitação manual. 🔴 24/08 (reunião Rua Satélite 35): upload/leitura de IA que tinha entrado aqui foi REMOVIDO do MVP (custo/velocidade)",
-      "dados": "CPF · RG + órgão emissor · estado civil"
+      "dados": "CPF · RG + órgão emissor · estado civil",
+      "handles": null
     },
     {
       "id": "E9_2B",
-      "rota": "/migrar/socios",
       "label": "E9.2c · Dados dos sócios",
-      "caminho": "migrar",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "oficial",
       "falta": "MESMA tela do C3 (`SociosView`), reusada com `contexto=\"migrar\"` — só a copy muda. Não existe triagem prévia perguntando quantos sócios no caminho migrar (diferente do E5T no abrir), então a tela se sustenta sozinha",
-      "dados": "Nome completo + % de participação de cada sócio extra (CPF implícito, quantidade fixa)"
+      "dados": "Nome completo + % de participação de cada sócio extra (CPF implícito, quantidade fixa)",
+      "handles": null
     },
     {
       "id": "E9_2C",
-      "rota": "/migrar/gov",
       "label": "E9.2d · GOV.BR + procuração",
-      "caminho": "migrar",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "oficial",
       "falta": "Reusa `CodigoGovView` (mesmo componente do A4, caminho abrir) com `soProcuracao` — não existe protocolo de registro pra assinar (empresa já existe), só a procuração. Mesma janela de 10min/3 tentativas/escala pra atendente",
-      "dados": "Código de validação de 6 dígitos (janela 10min)"
+      "dados": "Código de validação de 6 dígitos (janela 10min)",
+      "handles": null
     },
     {
       "id": "E9_3",
-      "rota": "/migrar/transferencia",
       "label": "E9.3 · Iniciando transferência",
-      "caminho": "migrar",
-      "forma": "tela",
-      "classe": "espera",
       "status": "construida",
       "validado": "oficial",
       "falta": "🔴 A PAUSA MAIS PERIGOSA DO PRODUTO: quem libera é o CONTADOR ANTIGO (valida no CRC-MG). 🆕 24/08 (reunião Leonan): copy do status trocou pra 'Iniciando o processo de transferência' + 'Estamos entrando em contato para encerrar o vínculo com a contabilidade antiga' — diferente do status de constituição ('empresa foi constituída'), antes os dois diziam a mesma coisa. Nº da resolução CFC / Evento 232 Redesim NÃO ratificados em fonte primária (🟡 pendência)",
-      "dados": ""
+      "dados": "",
+      "handles": null
     },
     {
       "id": "E9_4",
-      "rota": "/migrar/ativa",
       "label": "✅ E9.4 · Migração concluída",
-      "caminho": "migrar",
-      "forma": "terminal",
-      "classe": "feliz",
       "status": "construida",
       "validado": "ux",
       "falta": "Segue pro mesmo handoff do caminho abrir → A5 (home dia-1), autoridade #2 (portal-data.mjs)",
-      "dados": ""
+      "dados": "",
+      "handles": null
     },
     {
       "id": "E5T",
-      "rota": "/gate?etapa=triagem",
       "label": "Triagem<br/>quantos sócios?",
-      "caminho": "abrir",
-      "forma": "decisao",
-      "classe": "",
       "status": "construida",
       "validado": "oficial",
       "falta": "🔒 29/08 — só 1 pergunta de verdade agora (quantidade, até 4). CPF-only/domicílio Brasil/assinatura GOV.BR viraram card informativo com link de escape ('Falar com o time', resolve inline, sem navegar pra fora). 🆕 26/08: coorte ('é a 1ª empresa que você abre?') pousou aqui de vez — 3ª realocação (Veredito → Faixa → aqui), dado puro de log/marketing, opcional. 🆕 30/08 — ver E5T.1 pro detalhe do gate de saída 'sócio não se encaixa', invisível no mapa até agora.",
-      "dados": "Quantidade de sócios (1 / 2 / 3 / 4) · quem administra a empresa (só o titular × titular + sócios) quando há sócio · é a 1ª empresa que abre? (opcional) · sócio que não se encaixa no card informativo (opcional, texto livre via 'Falar com o time')"
+      "dados": "Quantidade de sócios (1 / 2 / 3 / 4) · quem administra a empresa (só o titular × titular + sócios) quando há sócio · é a 1ª empresa que abre? (opcional) · sócio que não se encaixa no card informativo (opcional, texto livre via 'Falar com o time')",
+      "handles": null
     },
     {
       "id": "E5T_1",
-      "rota": "/gate?etapa=triagem&simular=socio-nao-encaixa",
       "label": "E5T.1 · Sócio não se encaixa<br/>(gate de saída inline)",
-      "caminho": "abrir",
-      "forma": "terminal",
-      "classe": "inline",
       "status": "construida",
       "validado": "ux",
       "falta": "🆕 31/08 — ganhou `rota` só pra prévia ao vivo do `/mapa` (`?simular=socio-nao-encaixa` pré-abre o escape hatch, ver `gate/page.tsx` + prop `simularSocioNaoAtende`). NÃO é navegação real — é o MESMO estado da E5T (`/gate?etapa=triagem`), resolvido inline pelo link 'Meu sócio não atende um dos critérios'. Resolve com 'Falar com o time', sem navegar. Dead-end de propósito: quem cai aqui não segue sozinho no produto.",
-      "dados": "Texto livre (opcional) descrevendo o critério que não encaixa"
+      "dados": "Texto livre (opcional) descrevendo o critério que não encaixa",
+      "handles": null
     },
     {
       "id": "E5F",
-      "rota": "/gate?etapa=faixa",
       "label": "Faixa de faturamento",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "ux",
       "falta": "🔒 01/09 — o campo 'valor exato por mês' deixou de ser livre: para em R$30.000 (teto do ME, LC 123 art. 3º II). Trava por clamp, não por rejeição — quem digita 50000 vê 30.000 e o aviso explicando que acima disso a empresa vira EPP; campo que ignora a tecla em silêncio parece travado. 🔄 01/09, 2ª rodada (pedido do Pedro) — o cartão 'Até R$ 5 mil' virou 'Não sei ainda'. Quem abre a 1ª empresa muitas vezes não tem estimativa, e forçar um número faz chutar — chute que vira base do pró-labore sugerido. A grade agora é: Não sei ainda · 5-10k · 10-20k · 20-30k. A opção desconhecida cobre 0-30k de propósito (o gate do MEI lê INCERTEZA, não segurança), é pulada no cálculo por valor exato, e vale 0 no FAIXA_MEDIA — o pró-labore cai no piso legal em vez de sair de um chute. 🔄 01/09 (pedido do Pedro) — GRADE REDESENHADA pro teto do ME: era `até 10k · 10-20k · 20-30k · +30k`, virou `até 5k · 5-10k · 10-20k · 20-30k`. A faixa +30k oferecia justamente o que não atendemos (acima de R$360k/ano é EPP) e a decisão de 01/09 foi NÃO barrar por faturamento — então a pergunta não podia ter uma resposta sem caminho. Quem fatura mais usa Sei o valor exato, que aceita qualquer número. O gate de teto do MEI passou a se calcular pelo `min`/`max` de cada faixa: o teto de R$6.750 cai dentro de 5-10k (avisa, não bloqueia) e faixas acima bloqueiam com saída pro ME. Faixas sem âncora fiscal. 🔴 27/08: a escolha de endereço (próprio × fiscal Legalizai) SAIU daqui — morou nesta tela entre 26/08 e 27/08 e foi pro E3.4, junto do gate de cidade, que é a pergunta de que ela sempre foi parte (faturamento não decide onde a empresa fica). O valor continua somando no E7 pelo mesmo `?endereco=fiscal`. Fonte: `components/gate-telas.tsx` (`FaixaView`)",
-      "dados": "Faixa de faturamento mensal (4 faixas até R$30 mil, o teto do ME) ou valor exato, se souber"
+      "dados": "Faixa de faturamento mensal (4 faixas até R$30 mil, o teto do ME) ou valor exato, se souber",
+      "handles": null
     },
     {
       "id": "E5F_S",
-      "rota": "/splash-atendido",
       "label": "E5F.1 · Splash<br/>'conseguimos te atender'",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "ux",
       "falta": "🟢 30/08 — CONSTRUÍDA (`SplashMensagemView`, `components/splash-mensagem.tsx`). Arte provisória, Pedro revisa. `page.tsx` lê `?next=` e auto-navega (`router.replace`) depois do timeout.",
-      "dados": ""
+      "dados": "",
+      "handles": null
     },
     {
       "id": "E5_1",
-      "rota": "/veredito/waitlist",
       "label": "E5.1 · 🟡 Waitlist",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "saida",
       "status": "construida",
       "validado": "oficial",
       "falta": "✅ 28/07: campo CNAE pretendido construído (read-only, junto do nome+contato). Tags de CRM ficam pra depois, não travam. Waitlist decidido 16/07; líder atende regulada (Mauro reavaliar). 🔒 29/08: no caminho ABRIR a E3.4 resolve inline agora (não navega mais pra cá) — esta tela segue viva só pelo Migrar (E4.2 → 🟡 regulada)",
-      "dados": "Nome + contato · CNAE pretendido (✅ campo construído 28/07)"
+      "dados": "Nome + contato · CNAE pretendido (✅ campo construído 28/07)",
+      "handles": null
     },
     {
       "id": "E5_2",
-      "rota": "/veredito/nao-atende",
       "label": "E5.2 · 🔴 Contato especial<br/>(atendido pelo Mauro)",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "saida",
       "status": "construida",
       "validado": "oficial",
       "falta": "✅ 28/07: relabel construído — é quem NÃO atendemos mas a Legalize Digital (Mauro) atende (ex: comércio). Falta só o split real no mapear() do E5 (hoje é mock estático por página).",
-      "dados": "— (saída, fora do caminho até a constituição)"
+      "dados": "— (saída, fora do caminho até a constituição)",
+      "handles": null
     },
     {
       "id": "E5_3",
-      "rota": "/veredito/descartado",
       "label": "E5.3 · 🔴 Fora de escopo<br/>(descarta)",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "saida",
       "status": "construida",
       "validado": "oficial",
       "falta": "mapear() do E5 ainda não decide entre E5.2/E5.3 de verdade (mock estático) — falta o split real na IA/lista de CNAEs",
-      "dados": "— (saída, fora do caminho até a constituição)"
+      "dados": "— (saída, fora do caminho até a constituição)",
+      "handles": null
     },
     {
       "id": "E6",
-      "rota": "/conta",
       "label": "E6 · Criar conta",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "oficial",
       "falta": "🔄 01/09 (pedido do Pedro) — **login social (Google/Apple) REMOVIDO**: não teremos por enquanto, e botão que promete caminho inexistente é a pior fricção. O código de verificação passou de **6 para 8 dígitos** (`DIGITOS_CODIGO` — o número aparece em 4 lugares e precisa bater nos 4). 🔄 28/08 (pedido do Pedro) — reverteu o encolhimento de 27/08: a tela volta a coletar o form INTEIRO aqui mesmo (nome/CPF/telefone/e-mail/senha/CEP/número/complemento), sem recap read-only, `leadJaCaptado` removido do código. Form começa em branco. Provider de validação CPF/situação real (Pedro). 🔴 RF-01: sem estado real entre telas, hoje é só estado local do componente. 🐛 29/08 — vazamento de layout no campo Complemento corrigido (`min-w-0` faltava no flex), placeholder simplificado pra só \"Complemento\".",
-      "dados": "Nome · CPF · telefone · e-mail · senha · código de verificação de 8 dígitos (mock)"
+      "dados": "Nome · CPF · telefone · e-mail · senha · código de verificação de 8 dígitos (mock)",
+      "handles": null
     },
     {
       "id": "E6_1",
-      "rota": "/conta?etapa=codigo",
       "label": "E6.1 · Confirmar código",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "oficial",
       "falta": "🔴 Envio real de e-mail/SMS, janela de expiração e trava de tentativas são do dev: hoje é mock e qualquer 8 dígitos passam. Já existem reenvio com contador de 60s e escape pro WhatsApp (01/09). 🐛 04/09 — o `meta` do header diz \"Confirme seu acesso\", que é o nome DESTA tela; pela regra 6 do CLAUDE.md ele deveria nomear o destino do voltar, que é o formulário do E6.",
-      "dados": "Código de verificação de 8 dígitos (`DIGITOS_CODIGO`), enviado pro e-mail e pro telefone digitados no E6"
+      "dados": "Código de verificação de 8 dígitos (`DIGITOS_CODIGO`), enviado pro e-mail e pro telefone digitados no E6",
+      "handles": null
     },
     {
       "id": "E7",
-      "rota": "/plano",
       "label": "E7 · A conta da abertura",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "pendente",
       "falta": "Preço ~R$195 FAKE (Mauro+custo); 🟢 01/09 DAE RESOLVIDO — R$281,08, valor da guia real emitida no processo (prints 125 e 127), substitui os R$268,51 da tabela de 19/07 (a conferência cobra 2 atos: Contrato + Enquadramento ME, e a diferença de R$12,57 bate com o 2º); certificado A1 (Mauro). ✅ RESOLVIDO 26/08 (reunião Rua Satélite 36, item 2): a antiga 'pendência real de spec' ('conta total não é total', endereço fiscal só aparecia no C4 pós-pagamento) foi corrigida — a mensalidade mostrada aqui já soma o endereço fiscal quando escolhido lá no E5F, com 1 linha de explicação. 🆕 28/08 — REDESIGN 'premium' (pedido do Pedro, validado em preview isolado `/plano-premium` antes de aplicar): título bicolor, card-herói com profundidade real (raio+sombra), lista de inclusos como cartões-linha, CTA como barra flutuante escura. Nenhum conteúdo/ramo cortado (MEI×ME, colaboradores, citação legal, endereço fiscal seguem intactos) — só a casca mudou. `PlanoOferta` em `wizard-dinheiro.tsx`. 🆕 30/08 — ver E7.1 pra variante 'escolheu endereço fiscal'. Fechado o gap real na `/apresentacao`: a escolha do E3.4 nunca atravessava até o E7 na demo, mesmo o componente já suportando a prop.",
-      "dados": ""
+      "dados": "",
+      "handles": null
     },
     {
       "id": "E7_1",
-      "rota": "/plano?endereco=fiscal",
       "label": "E7.1 · A conta da abertura<br/>(variante endereço fiscal)",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "branch",
       "status": "construida",
       "validado": "pendente",
       "falta": "Mesmo componente do E7, só a prop `enderecoFiscal` muda. Card 'O que você adicionou' com o ícone de GPS e o valor (+R$60/mês) explícito, construído 30/08.",
-      "dados": ""
+      "dados": "",
+      "handles": null
     },
     {
       "id": "E9",
-      "rota": "/pagamento",
       "label": "E9 · Pagamento + contrato<br/>(variante Abrir)",
-      "caminho": "abrir",
-      "forma": "decisao",
-      "classe": "",
       "status": "construida",
       "validado": "pendente",
       "falta": "Asaas travado; falta provider cartão CNPJ + chave de idempotência (Pedro); redação jurídica do contrato (Mauro/Larissa). 🟢 30/08 (pedido do Pedro) — REVOGADO E IMPLEMENTADO: cartão/Pix não pulam mais direto pra C0 (código real em `/pagamento/page.tsx`, função `destino()`). Todo mundo (cartão, Pix, boleto) passa por uma tela de status antes — ver E9.S/E9.1P/E9.1. Reforça 'dá pra sair e voltar, está tudo certo'. MEI segue com o comportamento antigo (fora do escopo desta rodada).",
-      "dados": "CPF (cobrança + elegibilidade) · método de pagamento (cartão/Pix/boleto) · aceite do contrato de serviço (checkbox) · cartão: número + nome impresso + validade + CVV · titular do cartão: nome + CPF + e-mail + telefone (pré-preenchidos, editáveis) · endereço da fatura: CEP + número + complemento (pré-preenchidos do E3.4, editáveis)"
+      "dados": "CPF (cobrança + elegibilidade) · método de pagamento (cartão/Pix/boleto) · aceite do contrato de serviço (checkbox) · cartão: número + nome impresso + validade + CVV · titular do cartão: nome + CPF + e-mail + telefone (pré-preenchidos, editáveis) · endereço da fatura: CEP + número + complemento (pré-preenchidos do E3.4, editáveis)",
+      "handles": null
     },
     {
       "id": "E9_M",
-      "rota": "/pagamento?fluxo=migrar",
       "label": "E9 · Pagamento<br/>(variante Migrar)",
-      "caminho": "migrar",
-      "forma": "decisao",
-      "classe": "",
       "status": "construida",
       "validado": "pendente",
       "falta": "Mesmo componente, `?fluxo=migrar`: total não soma taxa de governo, aviso fala de migração (não abertura). CPF/métodos/idempotência idênticos ao componente base",
-      "dados": "CPF (cobrança + elegibilidade) · método de pagamento (cartão/Pix/boleto)"
+      "dados": "CPF (cobrança + elegibilidade) · método de pagamento (cartão/Pix/boleto)",
+      "handles": null
     },
     {
       "id": "E9_S",
-      "rota": "/splash-pagamento",
       "label": "E9.S · Splash<br/>'pagamento confirmado'",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "ux",
       "falta": "🟢 30/08 — CONSTRUÍDA (`SplashMensagemView`, mesmo componente do E5F.1). Fica no shell APP (`(app)/splash-pagamento`), não WIZARD — o pagamento já caiu. Arte provisória, Pedro revisa.",
-      "dados": ""
+      "dados": "",
+      "handles": null
     },
     {
       "id": "E9_SB",
-      "rota": "/splash-boleto",
       "label": "E9.SB · Splash<br/>'boleto gerado'",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "ux",
       "falta": "🟢 31/08 — CONSTRUÍDA (`SplashMensagemView`, mesmo componente do E9.S/E5F.1). Transitória, sem CTA, auto-avança pro E9.1 (sem `?pago=1` — o boleto ainda não compensou). Arte provisória, Pedro revisa.",
-      "dados": ""
+      "dados": "",
+      "handles": null
     },
     {
       "id": "E9_SR",
-      "rota": "/splash-recusado?next=/pagamento%3Fretry%3D1",
       "label": "E9.SR · Splash<br/>pagamento recusado",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "pendente",
       "falta": "Reusa `SplashMensagemView` com `variante=\"recusado\"` (fundo escuro + gradiente coral, ícone x). Transitório e sem CTA: a decisão (outro cartão, trocar pra Pix) é da tela seguinte. Alcançável por `/pagamento?simular=recusa`.",
-      "dados": ""
+      "dados": "",
+      "handles": null
     },
     {
       "id": "E9_R",
-      "rota": "/pagamento?retry=1",
       "label": "E9.R · Pagamento<br/>(nova tentativa)",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "pendente",
       "falta": "MESMA tela do E9 com aviso no topo explicando a recusa e oferecendo outro cartão ou Pix. Não zera o que foi preenchido: quem teve o cartão recusado já está frustrado, refazer o formulário puniria duas vezes.",
-      "dados": "Método de pagamento (nova tentativa) · CPF já confirmado"
+      "dados": "Método de pagamento (nova tentativa) · CPF já confirmado",
+      "handles": null
     },
     {
       "id": "E9_1",
-      "rota": "/aguardando",
       "label": "E9.1 · Aguardando boleto<br/>dossiê já liberado",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "espera",
       "status": "construida",
       "validado": "ux",
       "falta": "Dunning revisado",
-      "dados": ""
+      "dados": "",
+      "handles": null
     },
     {
       "id": "E9_1P",
-      "rota": "/aguardando?pago=1",
       "label": "E9.1P · Status<br/>(pago, via instantâneo)",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "espera",
       "status": "construida",
       "validado": "ux",
       "falta": "🟢 30/08 — CONSTRUÍDA. `AguardandoView` ganhou prop `pago` (`wizard-cauda.tsx`): mesma lista de passos, CTA 'Continuar preenchendo' idêntico, só o topo muda (check verde, não pill de espera). `page.tsx` lê `?pago=1`.",
-      "dados": ""
+      "dados": "",
+      "handles": null
     },
     {
       "id": "C0_0",
-      "rota": "/dossie/atividade?vazia=1",
       "label": "C0.0 · Sua atividade<br/>(chegada, antes de descrever)",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "pendente",
       "falta": "🆕 02/09 — estado 'pelado' da C0: categoria (vinda do E3.4) e campo de descrição, sem os cartões de CNAE nem o slot da atividade principal, porque ainda não há o que mostrar. Mesmo componente da C0 (`PerguntaView`, prop `semResultados`) — o que é comum continua comum. 🔒 02/09 (decisão do Pedro) — DESCREVER NÃO É OBRIGATÓRIO: o CTA ('Buscar atividade principal') libera só com a categoria, que já veio do E3.4. Quem apertar sem escrever recebe as **3 atividades mais usadas da categoria** na tela seguinte; a descrição é refinamento, não pedágio (travar num campo de texto livre alguém que já pagou é cobrar o trabalho que a gente vende). 🔴 O mock atual (`mapear()`) NÃO conhece categoria: devolve sempre o mesmo trio. O ranking real de 'mais usadas por categoria' é dado que ainda não existe. 🟡 Em lapidação pelo Pedro; falta decidir se a transição pro estado com resultados é automática (ao digitar) ou por ação.",
-      "dados": "Descrição da atividade (texto livre) · categoria já vem preenchida do E3.4"
+      "dados": "Descrição da atividade (texto livre) · categoria já vem preenchida do E3.4",
+      "handles": null
     },
     {
       "id": "C0",
-      "rota": "/dossie/atividade",
       "label": "C0 · Sua atividade<br/>(descreve + pills)",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "pendente",
       "falta": "🔄 27/08 — era o E5A (`/gate`), antes do pagamento. Copy reenquadrada (`jaCliente`): não promete mais 'validar minha atividade' (a validação já aconteceu no E3.4), agora é 'achar meu CNAE'. 🔄 02/09 (pedido do Pedro) — A GRADE DE 17 PILLS SAIU DA TELA: a categoria vem pré-selecionada do E3.4 (via `?cat=`) como chip confirmado, dentro de um **dropdown** (mesmo `Select` do E3.4), fechado, que é por onde ela troca se quiser. 🆕 02/09 — O VEREDITO COMEÇOU A SER FUNDIDO AQUI DENTRO: os 3 CNAEs mais compatíveis aparecem na própria tela (cartões reusados do C0.2), num SLOT vazio no topo ('Escolha seu CNAE principal, é só clicar', contorno tracejado): clicar num cartão sobe ele pro slot em coral, clicar em outro troca e o CTA nomeando o que acontece ('Continuar com esse CNAE'). Cada cartão tem 'Ver detalhes', que abre um bottom-sheet com o que aquele código cobre (`SheetCnae`) e permite trocar por lá. O painel cinza (`rounded-3xl bg-surface-alt`, de 28/07) SAIU junto: ele existia pra agrupar a grade de pills, e sem elas os 2 campos vão direto no fundo claro, no mesmo `Campo` do C1/C4/E3.4. Lista do dropdown = só as 17 validadas, SEM a opção 'não encontrei' (essa porta é do E3.4, antes do dinheiro; aqui a pessoa já pagou e cair na waitlist seria beco). Sem `?cat=` o dropdown aparece vazio. O campo de descrição herdou a sobra que era da lista. 🔒 02/09 — CTA ÚNICO com 3 trabalhos ('Buscar atividade principal' na chegada · 'Buscar de novo' se mexeu na descrição/categoria depois da última busca · 'Continuar com essa atividade' com resultado fresco e um cartão no slot). Os 3 cartões são da ÚLTIMA BUSCA, não do texto ao vivo. Buscar de novo ESVAZIA o slot da atividade principal e o CTA volta a ficar travado até a pessoa escolher entre os novos resultados. Lista CNAE furada na raiz: 124 não-refutados, 45 impossíveis, 91 duvidosos; IA real (hoje mock) — Larissa/Pedro/dev",
-      "dados": "Descrição da atividade (texto livre) → CNAE principal (derivado por IA) · OU o código já sabido (atalho 28/07, mesma engine) · categoria já vem pré-selecionada do E3.4"
+      "dados": "Descrição da atividade (texto livre) → CNAE principal (derivado por IA) · OU o código já sabido (atalho 28/07, mesma engine) · categoria já vem pré-selecionada do E3.4",
+      "handles": null
     },
     {
       "id": "C5",
-      "rota": "/dossie/cnae-secundarios",
       "label": "C5 · CNAE secundários",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "pendente",
       "falta": "🆕 24/08 (reunião Leonan): ganhou busca livre (restrita ao que a gente atende, pedido original da Jéssica 19/07) além das 4 sugestões curadas mesmo-imposto; até 15 no total; secundária que muda enquadramento mostra aviso e troca CTA por 'Falar com atendente' em vez de bloquear silenciosamente. 🔄 28/08 (pedido do Pedro) — MUDOU DE LUGAR: vinha depois de C4 (dados da empresa), agora vem logo depois de C0.3 (CNAE principal confirmado) — sequência mais natural de quem acabou de escolher o CNAE. `lib/passos.ts` reflete a ordem nova ('CNAE secundário' é o 4º passo, não mais o 5º)",
-      "dados": "CNAEs secundários (seleção múltipla + busca, opcional, até 15)"
+      "dados": "CNAEs secundários (seleção múltipla + busca, opcional, até 15)",
+      "handles": null
     },
     {
       "id": "C5_S",
-      "rota": "/splash-atividades",
       "label": "C5.1 · Splash<br/>'já sabemos o que você faz'",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "ux",
       "falta": "Reusa `SplashMensagemView` (mesmo componente de /splash-atendido e /splash-pagamento), com `?next=` e auto-avanço. Arte/copy provisórias, Pedro revisa.",
-      "dados": ""
+      "dados": "",
+      "handles": null
     },
     {
       "id": "C1",
-      "rota": "/dossie/socio",
       "label": "C1 · Seus dados",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "oficial",
       "falta": "✅ 28/07: reconstruída como CONFIRMAÇÃO — card read-only do que veio do E6 (mock, sem estado real compartilhado ainda) + só pede o que faltou. CPF valida situação (provider do E6); regime de bens (casado). 🔴 24/08 (reunião Rua Satélite 35): upload/leitura de IA que tinha entrado aqui (reunião Leonan, mesmo dia) foi REMOVIDO do MVP (custo/velocidade de leitura de imagem). 🆕 26/08 (achado do cruzamento com pesquisa JUCEMG/DBE, ver `gap-analise-dados-abertura-vs-pesquisa-gemini.md`): data de nascimento e nome da mãe ganharam campo — eram exigência de DBE ausente do dossiê. 🗑️ 01/09 (auditoria 1-a-1 contra os 141 prints): **nome da mãe REMOVIDO**. A exigência de 26/08 era inferida, não vista: em 141 prints não há campo de filiação em lugar nenhum (DBE tela 54 puxa do CPF; Integrador telas 102-104; contrato tela 117). MEI também não precisa — `abertura-mei-processo.md` linha 98 diz que vem do gov.br, não editável. Era campo obrigatório na 1ª tela pós-pagamento sem consumidor conhecido; se a certificadora pedir, o lugar é a A3.2. 🆕 01/09 (2ª passada, contra a ata da Izabela): **nacionalidade do titular** ganhou campo — gap assimétrico (o sócio extra tinha desde 31/08, o titular não), e o contrato qualifica TODO sócio com nacionalidade (art. 997 CC, print 117). Nasce como \"Brasileira\", editável. 🐛 Também corrigido o `dados` desta linha, que prometia \"confirma se mora fora do Brasil\" — a pergunta saiu da tela em 29/07 (mesma leva do N10) e o doc nunca foi atualizado: era captura documentada que não existia",
-      "dados": "CONFIRMA nome/CPF/endereço já captados no E6 (não recoleta) · RG + órgão emissor (digitação manual) · data de nascimento · nacionalidade (pré-preenchida \"Brasileira\") · estado civil (+ regime de bens se casado)"
+      "dados": "CONFIRMA nome/CPF/endereço já captados no E6 (não recoleta) · RG + órgão emissor (digitação manual) · data de nascimento · nacionalidade (pré-preenchida \"Brasileira\") · estado civil (+ regime de bens se casado)",
+      "handles": null
     },
     {
       "id": "C2",
-      "rota": "/dossie/vinculo",
       "label": "C2 · Vínculo INSS",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "oficial",
       "falta": "INSS 11% direto + teto folga = consolidado fiscal fechado",
-      "dados": "Já contribui INSS por fora? (sim/não) · valor do vínculo (CLT/aposentadoria/autônomo/sócio de outro CNPJ)"
+      "dados": "Já contribui INSS por fora? (sim/não) · valor do vínculo (CLT/aposentadoria/autônomo/sócio de outro CNPJ)",
+      "handles": null
     },
     {
       "id": "C3",
-      "rota": "/dossie/socios",
       "label": "C3 · Sócios?",
-      "caminho": "abrir",
-      "forma": "decisao",
-      "classe": "",
       "status": "construida",
       "validado": "oficial",
       "falta": "🗑️ 03/09 — o nó C3.1 ('3+ sócios') FOI REMOVIDO: ele existia só pra dar acesso ao estado com o teto de sócios, e a apresentação passou a ter botões de cenário (1 sócio × 3 sócios) na própria tela — alternar com um clique é melhor que uma pill que abre a mesma tela. O ESTADO continua existindo e importa: com 2+ sócios a pergunta 'quem administra' vira lista de nomes com check (decisão 01/09, reunião Rua Satélite 42), porque dá pra ter sócio que administra e sócio que só participa. Re-pergunta o E5T (carry-forward pendente); limite subiu de 2 pra 4 (24/08). 🔒 24/08 (pedido do Pedro): não pergunta MAIS nada além de nome/%; quantidade e tipo (CPF) já vêm travados da triagem (E5T). Quando TEM_SOCIO, a MESMA tela já mostra o formulário de completar os sócios extras (sem passo/rota separada). 🔴→🟢 31/08 (gap-analysis contra a gravação real JUCEMG): faltava TODA a qualificação do sócio extra — só tinha nome+%, mas a JUCEMG/DBE exige a MESMA qualificação do titular (art. 997 CC) pra qualquer sócio. Adicionado nascimento, nacionalidade, RG+órgão, estado civil+regime de bens. Profissão fica de fora — preenchida internamente como \"Empresário\" pra todo mundo (ver PREENCHIDOS_INTERNAMENTE). 🔴→🟢 01/09 (auditoria 1-a-1): faltavam ainda **CPF e endereço do sócio extra**. O CPF é a CHAVE do sócio nos 3 sistemas (Viabilidade tela 14, QSA do DBE telas 63-70, Integrador tela 102) — o \"(CPF implícito)\" que este campo dizia vinha da triagem E5T, que trava o TIPO (só pessoa física), nunca o número. O endereço entra na qualificação do contrato (art. 997 CC, preview real na tela 117) e tem ficha própria no DBE (telas 67-69): na gravação veio automático só porque a empresa era SOLO e o sócio era o representante (popup da tela 66), o que não se repete com 2 sócios",
-      "dados": "Confirma se terá mais sócios (sem reperguntar quantidade/tipo) · se houver, de cada sócio extra: nome completo + CPF + % de participação + data de nascimento + nacionalidade + RG + órgão emissor + estado civil (+ regime de bens se casado) + endereço (CEP com autofill + número + complemento) · quem administra a empresa: com 1 sócio é sim/não no singular (\"Eu e o Carlos\"), com 2+ vira LISTA de nomes com check por sócio (dá pra ter sócio administrador e sócio que é só sócio)"
-    },
-    {
-      "id": "C3_1",
-      "rota": "/dossie/socios?socios=4",
-      "label": "C3.1 · Sócios<br/>(teto: 3 + você)",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "branch",
-      "status": "construida",
-      "validado": "oficial",
-      "falta": "🆕 04/09 — nó recriado (o antigo C3.1 saiu em 03/09). Mesma tela da C3 no TETO: 3 sócios além do titular, o botão de adicionar dá lugar ao motivo do limite, e a pergunta de administração vira LISTA com check por sócio (decisão 01/09, Rua Satélite 42) em vez de sim/não. A divisão em % é redistribuída em partes iguais a cada sócio novo, e a mesa da divisão é o único lugar onde ela se edita.",
-      "dados": "Por sócio: nome, CPF, participação, nascimento, nacionalidade, RG + órgão, estado civil (+ regime) e endereço · quem administra (lista)"
-    },
-    {
-      "id": "C3_2",
-      "rota": "/dossie/socios?socios=1",
-      "label": "C3.2 · Sócios<br/>(só você)",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "branch",
-      "status": "construida",
-      "validado": "ux",
-      "falta": "🆕 04/09 (pedido do Pedro) — estado que só passou a existir quando a lista virou EDITÁVEL: dá pra remover todos os sócios e ficar só o titular. A tela troca de anatomia — somem a mesa da divisão e a pergunta de administração, entra o troféu 3D ocupando a sobra (padrão do E6.1 e do `/retomar`), o cartão de confirmação com o recibo do titular e um caminho de volta (\"+ Vou ter sócio, sim\"). O CTA vira \"Abrir só no meu nome\". 🔴 Redação e asset aprovados pelo Pedro em 04/09; falta o carry-forward real (hoje a quantidade vem da triagem via mock/querystring).",
-      "dados": "Confirmação de que a empresa fica só no nome do titular (nenhum dado novo)"
+      "dados": "Confirma se terá mais sócios (sem reperguntar quantidade/tipo) · se houver, de cada sócio extra: nome completo + CPF + % de participação + data de nascimento + nacionalidade + RG + órgão emissor + estado civil (+ regime de bens se casado) + endereço (CEP com autofill + número + complemento) · quem administra a empresa: com 1 sócio é sim/não no singular (\"Eu e o Carlos\"), com 2+ vira LISTA de nomes com check por sócio (dá pra ter sócio administrador e sócio que é só sócio)",
+      "handles": null
     },
     {
       "id": "C4",
-      "rota": "/dossie/empresa",
       "label": "C4 · Dados da empresa",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "oficial",
       "falta": "🔒 01/09, 2ª rodada (pedido do Pedro) — a tela ficou com UM campo só. CEP, número e complemento aparecem TRAVADOS (vieram do E3.4 e não podem mais mudar aqui: já foram pra viabilidade); a pergunta 'Como é esse endereço?' foi REMOVIDA (o E3.4 já resolve endereço-dele × o nosso, e o tipo de imóvel responde o resto); e o aviso 'o IPTU desse endereço pode subir' saiu — chegava tarde, com a pessoa já tendo pago e já tendo mandado o endereço, então não mudava decisão nenhuma. Se voltar, o lugar é o E3.4, antes do dinheiro. Sobra o índice cadastral do IPTU. Sem `inicial` (deep-link, /mockup, prévia do /mapa) a tela cai no MOCK em vez de mostrar formulário vazio: formulário vazio é um estado que não existe no flow real. 🗑️ 01/09 (pedido do Pedro) — o **upsell de endereço fiscal saiu desta tela**. A regra virou binária: ou a pessoa escolheu o endereço fiscal no E3.4 (e a tela não existe pra ela), ou informou endereço próprio e aqui só TERMINA de preencher. O que veio do gate (CEP, número, complemento) aparece **travado**, com cadeado; o que falta (IPTU, tipo de endereço, imóvel) segue editável. Vender o endereço fiscal aqui seria oferecer, depois do pagamento, algo que muda a mensalidade. ✅ 28/07: IPTU obrigatório travado. 🔄 26/08 (reunião Rua Satélite 36, item 2): a escolha 'próprio × fiscal Legalizai' e o aviso de cobrança recorrente SAÍRAM daqui — moraram no E5F desde 24/08 até virarem o gate oficial de decisão, e o valor já vem confirmado do E7. Esta tela agora só CONFIRMA a escolha (card read-only, mesma doutrina do C3) e coleta os detalhes de endereço (CEP/IPTU/tipo) quando for próprio. 🔒 31/08 (gap-analysis + reunião Rua Satélite 38-40, tudo validado pelo Pedro): capital social deixou de ser pergunta — travado em R$10.000, nem aparece mais na tela (ver PREENCHIDOS_INTERNAMENTE). 'Endereço virtual' saiu do seletor 'tipo de endereço' — vira valor fixo só quando é o endereço fiscal da Legalizai (nunca opção de quem usa endereço próprio). 🐛→🔒 campo NOVO 'tipo de imóvel' (casa/apartamento/outro) — faltava por completo (zero ocorrência no código antes). A pergunta de residência, que só aparecia com 2+ sócios (bug: dono único nunca via essa pergunta, mesmo sendo a regra que decide deferimento/indeferimento na Prefeitura), agora vale sempre — e é SEMPRE sobre o titular (quem constitui), nunca sobre sócio extra. Se apartamento, resposta é automática 'sim' (travada); se o titular não reside ali, informa o endereço pessoal (com o mesmo tipo de imóvel). 🆕 01/09 (2 pedidos do Pedro, ambos construídos): **(1) a tela DEIXA DE EXISTIR pra quem usa o endereço fiscal da Legalizai** — antes ela abria só pra 'confirmar' uma escolha já feita no E3.4 e já somada no preço do E7, sem nada pra responder (endereço/IPTU/tipo de imóvel/residência são todos sobre um imóvel que não é dele). O C3 passa direto pro C7 e a rota redireciona sozinha em deep-link. ⚠️ **O MEI é exceção e continua vendo a tela**: lá existe 'Como você atende?' (forma de atuação), que é dele. O passo também some da lista de `lib/passos.ts` (`soEnderecoProprio`). **(2) carry-forward do endereço**: CEP, número e complemento respondidos no E3.4 chegam PREENCHIDOS aqui — a pessoa completa o que falta (IPTU, tipo de imóvel, residência) em vez de redigitar. Trafega por `sessionStorage` (`lib/rascunho.ts`), NÃO por querystring: endereço é dado pessoal, mesma regra do RF-01 que tirou nome/CPF/telefone da URL",
-      "dados": "Índice cadastral do IPTU (único campo do cliente) · CEP + número + complemento + tipo de imóvel + residência aparecem TRAVADOS, vindos do E3.4"
+      "dados": "Índice cadastral do IPTU (único campo do cliente) · CEP + número + complemento + tipo de imóvel + residência aparecem TRAVADOS, vindos do E3.4",
+      "handles": null
+    },
+    {
+      "id": "C6",
+      "label": "'C6 · Natureza jurídica'<br/>🗑️ REMOVIDO 31/08",
+      "status": "planejada",
+      "validado": "oficial",
+      "falta": "Era pergunta ao cliente (SLU × LTDA, Leonan 24/08). 31/08: virou decisão interna automática (SLU se sem sócio, LTDA se com sócio) — sem tela, sem pergunta. Rota `/dossie/natureza` apagada do app",
+      "dados": "",
+      "handles": null
     },
     {
       "id": "C7",
-      "rota": "/dossie/nome",
       "label": "C7 · Nome / razão social",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "oficial",
       "falta": "Viabilidade JUCEMG (RPA, não API); 3 opções por prioridade (28/07). 🔒 24/08 (reunião Leonan, CONFLITO RESOLVIDO): objeto social virou TRAVADO/read-only — erro de grafia do cliente gerava reclamação real no escritório antigo dele. 🆕 24/08 (pedido do Pedro): cada sugestão ganhou lápis de edição inline (reescreve a sugestão da IA no lugar); campo separado 'Digite a sua' foi removido; seta de reordenar 1/2/3 mantida",
-      "dados": "3 opções de razão social, editáveis inline, por ordem de prioridade (sugeridas por IA) · objeto social (gerado automaticamente, travado) · nome fantasia (opcional)"
+      "dados": "3 opções de razão social, editáveis inline, por ordem de prioridade (sugeridas por IA) · objeto social (gerado automaticamente, travado) · nome fantasia (opcional)",
+      "handles": null
     },
     {
       "id": "C0_1",
-      "rota": "/retomar",
       "label": "C0.1 · Retomar<br/>(porta de CPF)",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "espera",
       "status": "construida",
       "validado": "ux",
       "falta": "UX-23 fechado — mora em /pro-labore pós-constituição. 🆕 30/08 — deixou de ser órfão: o E3 aponta pra cá, via porta de CPF (mock, RF-01). 🔒 31/08 (fusão A3+E9, pedido do Pedro: 'uma tela única de retorno, que é a E9') — ENCOLHEU pra só a porta de CPF: a tela de status própria que vinha depois (`RetomarView`, 'Bem-vindo de volta') foi RETIRADA do código. Agora, confirmado o CPF, SEMPRE cai no E9.1/E9.1P — é a mesma tela de status que já cobre boleto pendente, pago e fase Junta, então não fazia sentido ter uma 2ª versão só pra reentrada.",
-      "dados": "CPF (identifica quem está voltando; o status em si é da tela seguinte)"
+      "dados": "CPF (identifica quem está voltando; o status em si é da tela seguinte)",
+      "handles": null
     },
     {
       "id": "C0_3",
-      "rota": "/retomar?etapa=codigo",
       "label": "C0.3 · Confirmar código<br/>(retomada)",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "espera",
       "status": "construida",
       "validado": "ux",
       "falta": "🔴 Mesmo mock do E6.1: qualquer 8 dígitos passam, e o e-mail/telefone mostrados são do cadastro fake. No real, o backend acha a conta pelo CPF e manda o código pro contato dela (RF-01). Falta decidir o que acontece quando o CPF não tem conta nenhuma: hoje o mock nunca erra.",
-      "dados": "Código de 8 dígitos, mandado pro e-mail e telefone da conta encontrada pelo CPF do C0.1"
+      "dados": "Código de 8 dígitos, mandado pro e-mail e telefone da conta encontrada pelo CPF do C0.1",
+      "handles": null
     },
     {
       "id": "C7_2",
-      "rota": "/dossie/nome/rodada-2",
       "label": "C7′ · Sugerir mais<br/>3 nomes (2ª rodada)",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "pendente",
       "falta": "Reusa `NomeView` com `novaRodada`: 3 campos vazios, 1º já em edição, reordenação e objeto social iguais. Volta pro STATUS (não pro dossiê, que já acabou) pra Junta testar os nomes novos.",
-      "dados": "3 novas opções de razão social, na ordem de prioridade"
+      "dados": "3 novas opções de razão social, na ordem de prioridade",
+      "handles": null
     },
     {
       "id": "A1",
-      "rota": "/revisar",
       "label": "A1 · Revisar + autorizar",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "ux",
       "falta": "🔄 01/09 (2ª rodada, pedido do Pedro) — saiu o card 'Taxa da Junta (já paga)', que mentia desde 26/08 (a DAE passou a ser paga DEPOIS, quando a viabilidade volta deferida), e saiu o ACEITE, que foi pra tela da guia (`/guia`) — é lá que a taxa de fato vira gasto irreversível. No ME a tela voltou a ser recap puro, com CTA 'Confirmar e seguir'. No MEI o aceite CONTINUA aqui: ele não paga guia nenhuma, então não existe tela depois desta pra carregá-lo. Recap read-only; carry-forward dos passos = estado do wizard (dev). 🆕 01/09 (decisão do Pedro): **absorveu o aceite da A2**, que foi eliminada. O checkbox irreversível é o último bloco da tela e trava o CTA (\"Autorizo, pode abrir\"); a explicação do não-reembolso virou LINK na própria frase, abrindo bottom-sheet (`SheetNaoReembolsavel`). Redação jurídica segue pendente (Mauro/Larissa). 🆕 03/09 (varredura pedida pelo Pedro) — o recap do ME era RASO (8 linhas) numa tela que é a última antes do irreversível: ficavam de fora dados digitados à mão que ninguém valida pela pessoa e que derrubam o processo quando saem errados. Passou a mostrar RG+órgão, nascimento, estado civil+regime, endereço residencial, a qualificação inteira de cada sócio (resumo + 'Ver detalhes'), % de cada um, quem administra, as 3 tentativas de razão social NA ORDEM (só a 1ª aparecia), objeto social como leitura, tipo do imóvel + 'você mora nele' e o índice do IPTU. Critério travado: entra o que a PESSOA informou e vai pro protocolo; NÃO entra o que preenchemos no backend (capital, quotas, natureza jurídica, metragem, profissão, qualificação 49/22) nem o que não vai pra Junta (vínculo INSS e o card de enquadramento/pró-labore, que SAIU). Nome/CPF/e-mail/telefone aparecem pra conferência mas não se ajustam aqui (bloco 1): a saída é link de WhatsApp no pé do cartão. Variante endereço fiscal: some imóvel/IPTU, entra a linha do endereço da Legalizai. 🔒 Guardado por regime: o MEI segue com o recap antigo (`RevisarMeiView`)",
-      "dados": "Leitura + confirmação, sem coleta nova. ME: identidade e qualificação do titular (nome, CPF, nascimento, RG+órgão, nacionalidade, estado civil+regime, endereço residencial, e-mail, telefone) · sócios (quem administra + por sócio: nome, CPF, %, e no detalhe nascimento, RG+órgão, nacionalidade, estado civil+regime, endereço) · atividades (CNAE principal + secundárias + objeto social derivado) · empresa (3 opções de razão social na ordem, nome fantasia, endereço + tipo de imóvel + reside no local + índice cadastral do IPTU). MEI: recap curto + aceite do termo irreversível (checkbox)"
+      "dados": "Leitura + confirmação, sem coleta nova. ME: identidade e qualificação do titular (nome, CPF, nascimento, RG+órgão, nacionalidade, estado civil+regime, endereço residencial, e-mail, telefone) · sócios (quem administra + por sócio: nome, CPF, %, e no detalhe nascimento, RG+órgão, nacionalidade, estado civil+regime, endereço) · atividades (CNAE principal + secundárias + objeto social derivado) · empresa (3 opções de razão social na ordem, nome fantasia, endereço + tipo de imóvel + reside no local + índice cadastral do IPTU). MEI: recap curto + aceite do termo irreversível (checkbox)",
+      "handles": null
     },
     {
       "id": "A2",
-      "rota": "/iniciar-viabilidade",
       "label": "A2 · Início da viabilidade<br/>(a casa assume o processo)",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "pendente",
-      "falta": "🔒 04/09 (regra travada com o Pedro) — VIABILIDADE E GUIA CORREM EM PARALELO. O toque aqui dispara SÓ a análise de nome e endereço na Junta. A guia (DAE) não é pré-requisito nem fila: pode ser paga antes ou depois, e o resultado da Junta pode chegar PRIMEIRO (contrato padrão no Integrador defere por robô, em minutos — ver `pesquisa/exigencias-jucemg.md`). A tela passou a dizer isso, em tom neutro: não recomenda pagar antes nem esperar. 🗣️ Vocabulário travado: \"a Junta pediu um ajuste\", com EXIGÊNCIA aparecendo uma vez entre parênteses (é o termo que ela reencontra no e-mail do órgão). ✅ 04/09 — consequência APLICADA na A3: o CTA de pagar a guia não espera mais a viabilidade, e o estado de chegada mostra a análise rodando. 🔄 04/09 (pedido do Pedro) — COPY REESCRITA, de aviso pra entrega. Era \"Daqui não dá pra voltar\" + \"mudar nome ou endereço exige CANCELAR e refazer o pedido\": o fato está certo, a voz estava errada — a última coisa que a pessoa lia antes de o processo dela começar era uma ameaça, numa tela com confete. Agora o título é a promessa (\"Sua abertura está em boas mãos\"), o corpo diz o que a gente vai fazer (entrar com o pedido na Junta e cuidar até a constituição) e que a gente avisa quando a Junta responder; a irreversibilidade virou a ÚLTIMA frase, sem a palavra \"cancelar\". O nome do nó mudou junto: \"Ponto sem volta\" era o título antigo virando rótulo. ⚠️ O fato não pode evaporar numa próxima rodada: mudar dado protocolado significa cancelar a viabilidade e refazer (visto ao vivo na gravação de 31/08). O aceite já está no contrato do E9, mas contrato ninguém lê — uma tela inteira com CTA próprio transforma a cláusula em momento, e é o que a pessoa lembra se depois pedir pra mudar algo. 🔒 É ela que fecha o modo AJUSTE: antes daqui a tela de status deixa voltar a qualquer bloco; depois, o botão some",
-      "dados": "Aceite do ponto sem volta (o toque no CTA)"
+      "falta": "🔒 04/09 (regra travada com o Pedro) — VIABILIDADE E GUIA CORREM EM PARALELO. O toque aqui dispara SÓ a análise de nome e endereço na Junta. A guia (DAE) não é pré-requisito nem fila: pode ser paga antes ou depois, e o resultado da Junta pode chegar PRIMEIRO (contrato padrão no Integrador defere por robô, em minutos — ver `pesquisa/exigencias-jucemg.md`). A tela passou a dizer isso, em tom neutro: não recomenda pagar antes nem esperar. 🗣️ Vocabulário travado: \"a Junta pediu um ajuste\", com EXIGÊNCIA aparecendo uma vez entre parênteses (é o termo que ela reencontra no e-mail do órgão). 🔴 CONSEQUÊNCIA AINDA NÃO APLICADA: a A3 ensina a dependência que esta regra derruba (a timeline põe viabilidade antes da guia e o CTA trava dizendo \"Aguardando viabilidade\"). 🔄 04/09 (pedido do Pedro) — COPY REESCRITA, de aviso pra entrega. Era \"Daqui não dá pra voltar\" + \"mudar nome ou endereço exige CANCELAR e refazer o pedido\": o fato está certo, a voz estava errada — a última coisa que a pessoa lia antes de o processo dela começar era uma ameaça, numa tela com confete. Agora o título é a promessa (\"Sua abertura está em boas mãos\"), o corpo diz o que a gente vai fazer (entrar com o pedido na Junta e cuidar até a constituição) e que a gente avisa quando a Junta responder; a irreversibilidade virou a ÚLTIMA frase, sem a palavra \"cancelar\". O nome do nó mudou junto: \"Ponto sem volta\" era o título antigo virando rótulo. ⚠️ O fato não pode evaporar numa próxima rodada: mudar dado protocolado significa cancelar a viabilidade e refazer (visto ao vivo na gravação de 31/08). O aceite já está no contrato do E9, mas contrato ninguém lê — uma tela inteira com CTA próprio transforma a cláusula em momento, e é o que a pessoa lembra se depois pedir pra mudar algo. 🔒 É ela que fecha o modo AJUSTE: antes daqui a tela de status deixa voltar a qualquer bloco; depois, o botão some",
+      "dados": "Aceite do ponto sem volta (o toque no CTA)",
+      "handles": null
     },
     {
       "id": "A3",
-      "rota": "/aguardando?fase=junta",
       "label": "A3 · Status<br/>(fase Junta)",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "oficial",
-      "falta": "🐛→🔒 04/09 (2º achado do Pedro, chegando do A2) — O ESTADO DE CHEGADA MENTIA: a viabilidade aparecia com CHECK VERDE e o hero dizia que ela tinha passado na Junta, sendo que a análise tinha começado segundos antes (o default do mock era `{concluidas:1, emAndamento:1}`). Agora chega em `{0,0}`: \"Revisar e confirmar\" verde, \"Analisando viabilidade\" GIRANDO, e o hero fala da análise em curso. Junto veio a consequência da regra de paralelismo travada hoje: o CTA do rodapé deixou de esperar a viabilidade (\"Aguardando viabilidade\", travado) e agora oferece pagar a guia enquanto a análise roda, porque a condição que importa é a guia não estar paga. A etapa da guia também ganhou a frase \"não precisa esperar a análise\", já que a timeline é uma linha só e o desenho, sozinho, continuaria sugerindo fila. 🟡 EFEITO COLATERAL REGISTRADO: com a chegada em `{0,0}`, o A3 ficou visualmente IGUAL ao A3‴ (`A3_V`, reanálise da 2ª rodada de nomes) — os dois mostram a viabilidade girando. Se isso incomodar, o jeito é o A3‴ carregar algum sinal do que já passou (a guia paga, por exemplo). 🐛→🔒 04/09 (1º achado, saindo do A2) — A DEMO MOSTRAVA A TELA APOSENTADA. O mapa aponta pra `/aguardando?fase=junta` desde a fusão de 31/08, mas a etapa `painel` da `/apresentacao` continuava renderizando o `PainelView` velho: quem atravessava o A2 caía numa tela que não existe mais no produto, sem o hero, sem a jornada inteira e com outro desenho de CTA. Corrigido, guardado por regime (o A3.M do MEI é a mesma etapa da demo e segue no `PainelView`, que é a tela real dele). Estado de chegada do A2: documentação e viabilidade fechadas, a guia da Junta é a vez, CTA embaixo da etapa abrindo o A3.P. 🔄 01/09 (pedido do Pedro) — a etapa da vez agora GIRA (anel azul) mesmo quando a ação é do cliente: antes o CTA suprimia o anel e a etapa ficava cinza, igual às que nem começaram, sendo que é exatamente onde a jornada parou. O card com CTA embaixo do passo leva pra `/guia` (pagamento da taxa), não mais direto pra assinatura. 🔒 31/08 (reunião Rua Satélite 38-40, pedido do Pedro) — **FUNDIDA COM O E9.1**: era tela própria (`/painel`), virou a FASE 'junta' da MESMA tela de status. Motivo: 'quando as pessoas clicarem em retomar processo teremos uma tela única de retorno, que é a E9'. Efeitos: (1) `/painel` no caminho ME agora só redireciona pra cá — a rota segue viva só pro MEI (pipeline concierge próprio) e pro Migrar; (2) a lista é ÚNICA, 12 passos: os 9 do dossiê (`lib/passos.ts`) + as 3 da Junta; (3) 'Documentação completa preenchida' SAIU (era redundante com os 9 passos já concluídos logo acima) — de 4 etapas voltou a 3. 🆕 cada passo mostra sub-descrição (o que envolve + tempo estimado) quando é o passo da vez. Histórico: 30/07 reduziu de 9→3; 26/08 (Rua Satélite 36, item 6) voltou a 4 com a DAE virando etapa visível e acionável ('Pague a guia da Junta', CTA coral inline depois que a viabilidade sai). NÃO absorvemos a taxa (alinhado ao líder). Componentes: `components/painel.tsx` (motor de render, `ETAPAS_ABERTURA`) + `wizard-cauda.tsx` (`AguardandoView`, monta a lista combinada)",
-      "dados": ""
-    },
-    {
-      "id": "A3_GB",
-      "rota": "/aguardando?fase=junta&guia=boleto",
-      "label": "A3″ · Status<br/>(guia no boleto,<br/>aguardando compensar)",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
-      "status": "construida",
-      "validado": "pendente",
-      "falta": "Volta de quem pagou a guia por BOLETO. A etapa vira 'Guia da Junta · aguardando compensação': segue girando (não volta a pedir pagamento — a pessoa já pagou) e as ações passam a ser ver o boleto e adiantar por Pix. Sai deste estado quando o banco confirma (mock: `?guia=paga`).",
-      "dados": ""
+      "falta": "🐛→🔒 04/09 (achado do Pedro, saindo do A2) — A DEMO MOSTRAVA A TELA APOSENTADA. O mapa aponta pra `/aguardando?fase=junta` desde a fusão de 31/08, mas a etapa `painel` da `/apresentacao` continuava renderizando o `PainelView` velho: quem atravessava o A2 caía numa tela que não existe mais no produto, sem o hero, sem a jornada inteira e com outro desenho de CTA. Corrigido, guardado por regime (o A3.M do MEI é a mesma etapa da demo e segue no `PainelView`, que é a tela real dele). Estado de chegada do A2: documentação e viabilidade fechadas, a guia da Junta é a vez, CTA embaixo da etapa abrindo o A3.P. 🔄 01/09 (pedido do Pedro) — a etapa da vez agora GIRA (anel azul) mesmo quando a ação é do cliente: antes o CTA suprimia o anel e a etapa ficava cinza, igual às que nem começaram, sendo que é exatamente onde a jornada parou. O card com CTA embaixo do passo leva pra `/guia` (pagamento da taxa), não mais direto pra assinatura. 🔒 31/08 (reunião Rua Satélite 38-40, pedido do Pedro) — **FUNDIDA COM O E9.1**: era tela própria (`/painel`), virou a FASE 'junta' da MESMA tela de status. Motivo: 'quando as pessoas clicarem em retomar processo teremos uma tela única de retorno, que é a E9'. Efeitos: (1) `/painel` no caminho ME agora só redireciona pra cá — a rota segue viva só pro MEI (pipeline concierge próprio) e pro Migrar; (2) a lista é ÚNICA, 12 passos: os 9 do dossiê (`lib/passos.ts`) + as 3 da Junta; (3) 'Documentação completa preenchida' SAIU (era redundante com os 9 passos já concluídos logo acima) — de 4 etapas voltou a 3. 🆕 cada passo mostra sub-descrição (o que envolve + tempo estimado) quando é o passo da vez. Histórico: 30/07 reduziu de 9→3; 26/08 (Rua Satélite 36, item 6) voltou a 4 com a DAE virando etapa visível e acionável ('Pague a guia da Junta', CTA coral inline depois que a viabilidade sai). NÃO absorvemos a taxa (alinhado ao líder). Componentes: `components/painel.tsx` (motor de render, `ETAPAS_ABERTURA`) + `wizard-cauda.tsx` (`AguardandoView`, monta a lista combinada)",
+      "dados": "",
+      "handles": null
     },
     {
       "id": "A3_M",
-      "rota": "/painel?regime=mei",
       "label": "A3 · Status<br/>(variante MEI)",
-      "caminho": "mei",
-      "forma": "tela",
-      "classe": "branch",
       "status": "construida",
       "validado": "oficial",
       "falta": "Pipeline PRÓPRIO (`ETAPAS_MEI` em `painel/page.tsx`): recebemos seus dados → time conferindo → próximos passos prontos (CTA) → empresa aberta. ✍️ REGRA DE COPY: nenhuma etapa pode dizer que a Legalizai registra o MEI (não há API nem procuração que permita — ver `abertura-mei-processo.md`). Ficou FORA da fusão A3+E9 de 31/08 de propósito: o MEI não tem dossiê de 9 passos nem etapa de Junta, então fundir as listas não faria sentido.",
-      "dados": ""
+      "dados": "",
+      "handles": null
     },
     {
       "id": "A3_1",
-      "rota": "/painel/recusa",
       "label": "A3.1 · Órgão recusa<br/>'precisa de você'",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "oficial",
       "falta": "🔄 01/09 (pedido do Pedro) — passou a ser A MESMA TELA do A3 (`AguardandoView` na fase junta), no estado de alerta: hero escuro + a jornada inteira, com a recusa inline na etapa que travou. Antes era um `PainelView` cru, só com as 3 etapas da cauda e sem hero — parecia outro app justo onde a confiança está mais frágil. O CTA de sugerir mais 3 nomes agora leva pro C7′. ✅ 28/07: retry automático construído — tenta as 3 opções do C7 em sequência (mock sempre falha as 3, pra provar o pior caso); só aí pede novas sugestões. Testado no motor (nome recusado); faltam DAE-volta e doc-pendência como casos",
-      "dados": "Retry automático pelas 3 opções priorizadas (C7) antes de pedir novas sugestões ao cliente"
+      "dados": "Retry automático pelas 3 opções priorizadas (C7) antes de pedir novas sugestões ao cliente",
+      "handles": null
+    },
+    {
+      "id": "A3_2",
+      "label": "'A3.2 · Certificado digital' 🗑️ REMOVIDO 01/09<br/>(segue só no MEI/migrar)",
+      "status": "planejada",
+      "validado": "oficial",
+      "falta": "🗑️ 01/09 — fora do caminho ME. O componente (`CertificadoGateView`) e a rota seguem existindo pro MEI (`M_CERT`) e pro migrar. Motivo da remoção: (1) o certificado é e-CNPJ e o CNPJ ainda não existe neste ponto, então a justificativa original ('a procuração exige certificado validado') é impossível; (2) certificado é incluso no plano ME e emitido pela Legalizai, não tarefa do cliente. A trilha da A5 passou a dizer isso ('por nossa conta'), em vez de 'você já resolveu antes de assinar'",
+      "dados": "",
+      "handles": null
     },
     {
       "id": "A3_P",
-      "rota": "/guia",
       "label": "A3.P · Pagar a guia<br/>da Junta (DAE)",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "pendente",
       "falta": "Reusa `PagamentoView` com a prop `guia`. Carrega o ACEITE irreversível (veio do A1) porque é aqui que a taxa vira gasto. Mock: pagar volta pro status com `?guia=paga` e a etapa fecha; no app real quem fecha é o webhook do provedor.",
-      "dados": "CPF (confirmado do cadastro) · método de pagamento (cartão/Pix/boleto) · aceite irreversível · cartão: número + nome impresso + validade + CVV · titular do cartão: nome + CPF + e-mail + telefone (pré-preenchidos, editáveis) · endereço da fatura: CEP + número + complemento (pré-preenchidos do E3.4, editáveis)"
+      "dados": "CPF (confirmado do cadastro) · método de pagamento (cartão/Pix/boleto) · aceite irreversível · cartão: número + nome impresso + validade + CVV · titular do cartão: nome + CPF + e-mail + telefone (pré-preenchidos, editáveis) · endereço da fatura: CEP + número + complemento (pré-preenchidos do E3.4, editáveis)",
+      "handles": null
     },
     {
       "id": "A3_SR",
-      "rota": "/splash-recusado?next=/guia%3Fretry%3D1",
       "label": "A3.SR · Splash<br/>guia recusada",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "pendente",
       "falta": "Mesmo componente do E9.SR, outro `next`. Alcançável por `/guia?simular=recusa`.",
-      "dados": ""
+      "dados": "",
+      "handles": null
     },
     {
       "id": "A3_R",
-      "rota": "/guia?retry=1",
       "label": "A3.R · Guia<br/>(nova tentativa)",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "pendente",
       "falta": "MESMA tela da guia com o aviso da recusa no topo. O aceite irreversível continua obrigatório na retentativa.",
-      "dados": "Método de pagamento (nova tentativa) · aceite irreversível"
+      "dados": "Método de pagamento (nova tentativa) · aceite irreversível",
+      "handles": null
     },
     {
       "id": "A3_PS",
-      "rota": "/splash-pagamento?next=/aguardando%3Ffase%3Djunta%26guia%3Dpaga",
       "label": "A3.PS · Splash<br/>guia paga",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "pendente",
       "falta": "Reusa `/splash-pagamento` (SplashMensagemView) com `?next` — transitório, sem CTA. Volta pro status com a etapa da guia concluída e a assinatura liberada.",
-      "dados": ""
+      "dados": "",
+      "handles": null
     },
     {
       "id": "A3_PSB",
-      "rota": "/splash-boleto?next=/aguardando%3Ffase%3Djunta%26guia%3Dboleto",
       "label": "A3.PSB · Splash<br/>boleto da guia",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "pendente",
       "falta": "Reusa `/splash-boleto` com `?next`. Volta pro status com a etapa virando **Guia da Junta · aguardando compensação**: segue girando, e as ações passam a ser ver o boleto e adiantar por Pix (mesmo par do hero do E9.1).",
-      "dados": ""
+      "dados": "",
+      "handles": null
     },
     {
       "id": "A3_GP",
-      "rota": "/aguardando?fase=junta&guia=paga",
       "label": "A3′ · Status<br/>(guia paga)",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "pendente",
       "falta": "Volta de quem pagou a guia por cartão/Pix: a etapa da DAE fecha (verde) e 'Agora é só assinar' vira a vez. Mock por query (`?guia=paga`); no app real quem fecha é o webhook do provedor.",
-      "dados": ""
+      "dados": "",
+      "handles": null
+    },
+    {
+      "id": "A3_GB",
+      "label": "A3″ · Status<br/>(guia no boleto,<br/>aguardando compensar)",
+      "status": "construida",
+      "validado": "pendente",
+      "falta": "Volta de quem pagou a guia por BOLETO. A etapa vira 'Guia da Junta · aguardando compensação': segue girando (não volta a pedir pagamento — a pessoa já pagou) e as ações passam a ser ver o boleto e adiantar por Pix. Sai deste estado quando o banco confirma (mock: `?guia=paga`).",
+      "dados": "",
+      "handles": null
     },
     {
       "id": "A3_V",
-      "rota": "/aguardando?fase=junta&viabilidade=1",
       "label": "A3‴ · Status<br/>(analisando viabilidade,<br/>2ª rodada de nomes)",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "pendente",
       "falta": "Mesma tela do A3 com a fase Junta recuada (`junta={concluidas:0, emAndamento:0}`). Daqui volta pro fluxo normal quando a Junta defere, ou pro A3.1 se recusar de novo.",
-      "dados": ""
+      "dados": "",
+      "handles": null
     },
     {
       "id": "A4",
-      "rota": "/assinatura",
       "label": "A4 · Assinatura dos sócios",
-      "caminho": "abrir",
-      "forma": "tela",
-      "classe": "",
       "status": "construida",
       "validado": "pendente",
       "falta": "GOV.BR/e-CAC deep-link (dev). 🆕 24/08 (reunião Leonan): código 2FA único concentra procuração+assinatura (`CodigoGovView` — janela 10min, 3 tentativas, escala pra atendente se estourar); convite de sócio ganhou seletor de canal (WhatsApp/e-mail). 🆕 26/08 (item 7): certificado já vem validado da A3.2 — a procuração que sai junto desta assinatura agora tem o que precisa. 🗑️→🔴 01/09: **a A3.2 saiu do caminho ME**, então essa premissa caiu junto (o certificado é e-CNPJ, e o CNPJ ainda não existe aqui). Continua aberto o que fazer com a procuração e-CAC nesta tela: ela só pode ser assinada DEPOIS do CNPJ sair, e as 2 decisões de 01/09 (corrigir a cadeia toda + procuração sempre) ainda não foram construídas",
-      "dados": "Assinatura via GOV.BR/e-CAC · código de validação de 6 dígitos (janela 10min) · canal do convite ao sócio (WhatsApp/e-mail)"
+      "dados": "Assinatura via GOV.BR/e-CAC · código de validação de 6 dígitos (janela 10min) · canal do convite ao sócio (WhatsApp/e-mail)",
+      "handles": null
     },
     {
       "id": "A4G",
-      "rota": "/assinatura",
       "label": "GOV.BR nível<br/>bronze→upgrade",
-      "caminho": "abrir",
-      "forma": "decisao",
-      "classe": "inline",
       "status": "construida",
       "validado": "pendente",
       "falta": "Dobrado inline no A4 — sem query própria (nenhum toggle de demo separa o sub-estado), a prévia mostra a mesma tela do A4",
-      "dados": ""
+      "dados": "",
+      "handles": null
+    },
+    {
+      "id": "REMOVIDO_N24",
+      "label": "'Empresa ativa'<br/>🗑️ REMOVIDO 30/07",
+      "status": "planejada",
+      "validado": "oficial",
+      "falta": "Era órfão desde o swap A4→A5 (nenhuma rota navegava mais até aqui) — arquivo `/ativa` e a view apagados de vez 30/07, confirmado pelo Pedro. Fica só como marca histórica no mapa",
+      "dados": "",
+      "handles": null
     },
     {
       "id": "M_T",
-      "rota": "/gate?etapa=triagem&regime=mei",
       "label": "M-T · Impedimentos<br/>(no lugar da triagem)",
-      "caminho": "mei",
-      "forma": "decisao",
-      "classe": "branch",
       "status": "construida",
       "validado": "oficial",
       "falta": "🆕 28/08 — substitui o E5T no ramo MEI (MEI é unipessoal por definição, art. 966 CC: as perguntas de sócio não existem pra ele). São 3 impedimentos que o PRÓPRIO GOVERNO checa e bloqueia: (1) ser sócio/titular/admin de outra PJ — a RFB cruza o CPF, LC 123 art. 18-A; (2) servidor público federal na ativa — Lei 8.112/90 art. 117; (3) receber aposentadoria por invalidez / salário-maternidade / seguro-desemprego — este NÃO bloqueia, mas a formalização cancela o benefício de forma irreversível, então vira escolha informada com confirmação explícita. Fica ANTES do pagamento pelo mesmo motivo da triagem do ME: não cobramos de quem já sabe que não pode. Componente: `components/mei-telas.tsx` (`ImpedimentoView`)",
-      "dados": "Já tem outra empresa? (sim/não) · é servidor federal? (sim/não) · recebe benefício? (sim/não) + ciência explícita se sim"
+      "dados": "Já tem outra empresa? (sim/não) · é servidor federal? (sim/não) · recebe benefício? (sim/não) + ciência explícita se sim",
+      "handles": null
     },
     {
       "id": "M_T_1",
-      "rota": "/saida/mei-outra-empresa",
       "label": "M-T.1 · 🔴 Já tem CNPJ",
-      "caminho": "mei",
-      "forma": "tela",
-      "classe": "saida",
       "status": "construida",
       "validado": "oficial",
       "falta": "Saída de bloqueio do governo, não do produto. Oferece os 2 caminhos reais (baixar a antiga OU abrir como ME) em vez de waitlist — a Legalizai atende essa pessoa hoje, só não como MEI. Conteúdo em `lib/dados-saida.tsx`",
-      "dados": "Nome + contato"
+      "dados": "Nome + contato",
+      "handles": null
     },
     {
       "id": "M_T_2",
-      "rota": "/saida/mei-servidor",
       "label": "M-T.2 · 🔴 Servidor federal",
-      "caminho": "mei",
-      "forma": "tela",
-      "classe": "saida",
       "status": "construida",
       "validado": "oficial",
       "falta": "Vedação do art. 117 da Lei 8.112/90, só pra FEDERAL na ativa. A saída não fecha a porta pra estadual/municipal de propósito: lá a regra vem do estatuto de cada ente e em muitos casos é permitido. Conteúdo em `lib/dados-saida.tsx`",
-      "dados": "Nome + contato"
+      "dados": "Nome + contato",
+      "handles": null
     },
     {
       "id": "M_O",
-      "rota": "/dossie/ocupacao",
       "label": "M-O · Ocupação<br/>(Anexo XI + limite interno)",
-      "caminho": "mei",
-      "forma": "tela",
-      "classe": "branch",
       "status": "construida",
       "validado": "oficial",
       "falta": "🆕 28/08 — a C0 do ramo MEI, 1ª tela do dossiê. NÃO é o C0 adaptado: o Portal do Empreendedor não aceita CNAE livre, só OCUPAÇÃO de lista fechada (Anexo XI, Res. CGSN 140/2018), então não há 'descrever com suas palavras'. 🎯 Carrega o **limite interno** (Solução de Consulta Cosit nº 27/2021): a ocupação é mais estrita que o CNAE que ela mapeia — quem escolhe 'Reparador(a) de bicicleta' não pode consertar moto, e descobre numa fiscalização. É o erro que só contador pega, e é parte do que vendemos. Secundárias (até 15) também saem daqui, por isso o ramo pula o C5. Dados de `lib/mei.ts`, derivados dos 51 CNAEs certeza que aceitam MEI",
-      "dados": "Ocupação principal (1 da lista do Anexo XI) · até 15 ocupações secundárias"
+      "dados": "Ocupação principal (1 da lista do Anexo XI) · até 15 ocupações secundárias",
+      "handles": null
     },
     {
       "id": "M_CERT",
-      "rota": "/certificado?regime=mei",
       "label": "A3.2' · Certificado<br/>(operar, não abrir)",
-      "caminho": "mei",
-      "forma": "tela",
-      "classe": "branch",
       "status": "construida",
       "validado": "oficial",
       "falta": "🆕 28/08 (decisão do Pedro) — o MEI passa pelo MESMO gate de certificado do ME, com 2 diferenças: (1) o MOTIVO — no ME o certificado destrava a procuração da assinatura; no MEI não existe assinatura nem procuração de abertura (a abertura DISPENSA certificado, gov.br Prata/Ouro supre), então o que ele destrava é a OPERAÇÃO: puxar guia, FGTS Digital, agir sem pedir senha do cliente toda vez; (2) QUEM PAGA — no ME vem incluso (contrapartida da fidelidade, ADR 04/08); no MEI **não vem**, o cliente providencia. Fica ANTES da A5 a pedido do Pedro: 'tem que ser efetivado antes da pessoa cair pra dentro do app com as funcionalidades, da mesma forma do ME'. 🔴 Consequência aberta: a fidelidade de 12 meses do MEI perdeu a contrapartida escrita — precisa de justificativa nova antes de virar cláusula (Pedro/Mauro)",
-      "dados": "Certificado digital (upload .pfx/.p12 + senha) OU aceite de contato da certificadora parceira"
+      "dados": "Certificado digital (upload .pfx/.p12 + senha) OU aceite de contato da certificadora parceira",
+      "handles": null
     },
     {
       "id": "M_S",
-      "rota": "/mei/proximos-passos",
       "label": "M-S · Próximos passos<br/>(a \"cola\")",
-      "caminho": "mei",
-      "forma": "tela",
-      "classe": "branch",
       "status": "construida",
       "validado": "oficial",
       "falta": "🆕 28/08 — a tela que FECHA o ramo, e existe por razão jurídica, não de UX: como não dá pra registrar pelo cliente, a entrega é o passo a passo com os valores DELE prontos, na ordem dos campos do Portal. Inclui a checagem do nível da conta gov.br (Prata/Ouro obrigatório) e o link pro Portal. ✍️ REGRA DE COPY DURA: nunca dizer 'a gente abre pra você' neste ramo. 🔴 Falta: definir se o 'copiar tudo' vira PDF/WhatsApp; e o M-S é a tela mais cara de evoluir se um dia a automação for possível. Componente: `components/mei-telas.tsx` (`ProximosPassosView`)",
-      "dados": "Confirmação de que a conta gov.br é Prata/Ouro · (devolve o CNPJ gerado)"
+      "dados": "Confirmação de que a conta gov.br é Prata/Ouro · (devolve o CNPJ gerado)",
+      "handles": null
     },
     {
       "id": "CONF",
-      "rota": "/conferencia",
       "label": "🛠️ Conferência do dev<br/>(campos por origem)",
-      "caminho": "dev",
-      "forma": "tela",
-      "classe": "inline",
       "status": "construida",
       "validado": "ux",
       "falta": "Lista GERADA (`lib/conferencia-dados.ts` ← este arquivo): cada passo da constituição de ME, na ordem, com todo campo etiquetado USUÁRIO / AUTOMÁTICO / API. Existe porque metade do que a JUCEMG/DBE exige nunca aparece na tela do cliente, e sem a etiqueta o dev implementaria só o formulário. Mexeu em `dados`/`PREENCHIDOS_INTERNAMENTE`/`PREENCHIDOS_API`? Roda `gerar-mapa.mjs` e a tela acompanha",
-      "dados": ""
+      "dados": "",
+      "handles": null
     },
     {
       "id": "A5",
-      "rota": "/home-dia1",
       "label": "✅ A5 · Home dia-1<br/>(ativação)",
-      "caminho": "abrir",
-      "forma": "terminal",
-      "classe": "feliz",
       "status": "construida",
       "validado": "oficial",
       "falta": "🔓 SWAP validado 30/07 (confirmado no código: assinatura empurra direto pra cá). 🆕 24/08 (reunião Leonan): trilha agora mostra 3 status explícitos — Procuração (feito, instantâneo com o código) → Validação do certificado digital (agora, linka pra /mais/certificado upload+oferta) → Acesso completo. 🔄 26/08 (item 7): certificado deixou de ser 'agora' e virou 'feito' — já foi validado antes da assinatura (A3.2). Quem vira 'agora' é 'Conferir os dados da empresa' (`/mais/empresa`). 🔄 01/09 (decisão do Pedro, com a A3.2 fora do caminho ME): o passo do certificado continua 'feito', mas o texto mudou de 'você já resolveu antes de assinar' pra **'Certificado digital por nossa conta'** — é incluso no plano e emitido pela Legalizai quando for necessário, não tarefa do cliente. `/mais/certificado` segue existindo, só que agora é pra RENOVAR/trocar, não pra validar a 1ª vez. Sem confete nem selo coral no hero. Handoff pro flow Portal (letra P) → autoridade portal-data.mjs",
-      "dados": ""
+      "dados": "",
+      "handles": null
     }
   ],
   "edges": [
@@ -978,25 +748,29 @@
       "de": "E1",
       "para": "E2_1",
       "label": "",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E2_1",
       "para": "E2_2",
       "label": "",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E2_2",
       "para": "E2_3",
       "label": "",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E2_3",
       "para": "E3",
       "label": "",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E3",
@@ -1030,37 +804,43 @@
       "de": "E3_3",
       "para": "E3_2",
       "label": "abrir",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E3_3",
       "para": "E3_2_M",
       "label": "migrar",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E3_2",
       "para": "E3_4",
       "label": "ME, abrir",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E3_2",
       "para": "E3_4",
       "label": "MEI, abrir (sem gate de BH)",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "E3_2_M",
       "para": "E4_2",
       "label": "ME, migrar",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E3_2_M",
       "para": "E4_2",
       "label": "MEI, migrar",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "E3_4",
@@ -1080,487 +860,540 @@
       "de": "E3_4",
       "para": "E3_4_1",
       "label": "CEP fora de BH",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "E3_4_1",
       "para": "E5T",
       "label": "resolvido (fiscal ou fila)",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "E4_2",
       "para": "E4_3",
       "label": "",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "E4_2",
       "para": "E4_2_1",
       "label": "CNPJ inapto/suspenso",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "E4_2",
       "para": "E5_1",
       "label": "🟡 regulada",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E4_2",
       "para": "E5_2",
       "label": "🔴 Mauro atende",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E4_3",
       "para": "E4_4",
       "label": "",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "E4_4",
       "para": "E4_5",
       "label": "",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E4_5",
       "para": "E9_M",
       "label": "",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E9_M",
       "para": "E9_2",
       "label": "",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "E9_2",
       "para": "E9_2A",
       "label": "",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E9_2A",
       "para": "E9_2B",
       "label": "",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E9_2B",
       "para": "E9_2C",
       "label": "",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E9_2C",
       "para": "E9_3",
       "label": "",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E9_3",
       "para": "E9_4",
       "label": "",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "E9_4",
       "para": "A5",
       "label": "",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "E5T",
       "para": "E5F",
       "label": "",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E5T",
       "para": "E5T_1",
       "label": "sócio não se encaixa",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "E5F",
       "para": "E5F_S",
       "label": "",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E5F_S",
       "para": "E6",
       "label": "",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "M_T",
       "para": "E5F",
       "label": "sem impedimento",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "M_T",
       "para": "M_T_1",
       "label": "já tem outra empresa",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "M_T",
       "para": "M_T_2",
       "label": "servidor federal",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E6",
       "para": "E6_1",
       "label": "",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E6_1",
       "para": "E7",
       "label": "",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E6_1",
       "para": "E7_1",
       "label": "escolheu endereço fiscal no E3.4",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "E7",
       "para": "E9",
       "label": "",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E7_1",
       "para": "E9",
       "label": "",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "E9",
       "para": "E9_S",
       "label": "ME · cartão/Pix",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E9",
       "para": "E9_SR",
       "label": "recusado",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "E9_SR",
       "para": "E9_R",
       "label": "",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "E9_R",
       "para": "E9_S",
       "label": "passou",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "E9_S",
       "para": "E9_1P",
       "label": "",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "E9_1P",
       "para": "C0_0",
       "label": "Continuar preenchendo",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E9",
       "para": "M_O",
       "label": "MEI · cartão",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "M_O",
       "para": "C1",
       "label": "MEI reusa o C1",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "E9",
       "para": "E9_SB",
       "label": "ME · boleto",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "E9_SB",
       "para": "E9_1",
       "label": "",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "E9_1",
       "para": "C0_0",
       "label": "Continuar (após compensar)",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "C0_0",
       "para": "C0",
       "label": "descreveu o que faz",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "C0",
       "para": "C5",
       "label": "escolheu a atividade",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "C5",
       "para": "C5_S",
       "label": "",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "C5_S",
       "para": "C1",
       "label": "",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "C1",
       "para": "C2",
       "label": "",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "C2",
       "para": "C3",
       "label": "",
-      "tracejado": false
-    },
-    {
-      "de": "C3",
-      "para": "C3_1",
-      "label": "somou até o teto",
-      "tracejado": true
-    },
-    {
-      "de": "C3",
-      "para": "C3_2",
-      "label": "removeu todos",
-      "tracejado": true
-    },
-    {
-      "de": "C3_1",
-      "para": "C4",
-      "label": "",
-      "tracejado": true
-    },
-    {
-      "de": "C3_2",
-      "para": "C4",
-      "label": "",
-      "tracejado": true
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "C3",
       "para": "C4",
       "label": "endereço próprio",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "C3",
       "para": "C7",
       "label": "endereço fiscal (pula C4)",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "C4",
       "para": "C7",
       "label": "",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "C7",
       "para": "A1",
       "label": "",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "A1",
       "para": "A2",
       "label": "ME",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "A2",
       "para": "A3",
       "label": "inicia viabilidade",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "A1",
       "para": "CONF",
       "label": "",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "A1",
       "para": "A3_M",
       "label": "MEI",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "A3",
       "para": "A3_1",
       "label": "nome recusado",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "A3_1",
       "para": "C7_2",
       "label": "sugerir mais 3",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "C7_2",
       "para": "A3_V",
       "label": "manda pra viabilidade",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "A3_V",
       "para": "A3",
       "label": "nome aprovado",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "A3_V",
       "para": "A3_1",
       "label": "recusou de novo",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "A3_1",
       "para": "A3",
       "label": "",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "A3",
       "para": "A3_P",
       "label": "ME · pagar guia",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "A3_P",
       "para": "A3_SR",
       "label": "recusado",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "A3_SR",
       "para": "A3_R",
       "label": "",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "A3_R",
       "para": "A3_PS",
       "label": "passou",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "A3_P",
       "para": "A3_PS",
       "label": "cartão/Pix",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "A3_P",
       "para": "A3_PSB",
       "label": "boleto",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "A3_PS",
       "para": "A3_GP",
       "label": "guia paga",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "A3_PSB",
       "para": "A3_GB",
       "label": "aguardando compensar",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "A3_GB",
       "para": "A3_GP",
       "label": "banco confirmou",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "A3_GP",
       "para": "A4",
       "label": "assinatura liberada",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "A3",
       "para": "A4",
       "label": "ME · DAE paga",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "A3_M",
       "para": "M_S",
       "label": "MEI · time conferiu",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "M_S",
       "para": "M_CERT",
       "label": "voltou com o CNPJ",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "M_CERT",
       "para": "A5",
       "label": "certificado resolvido",
-      "tracejado": false
+      "tracejado": false,
+      "deHandle": null
     },
     {
       "de": "A4",
       "para": "A4G",
       "label": "",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "A4G",
       "para": "A5",
       "label": "",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "C0_1",
       "para": "C0_3",
       "label": "CPF confirmado",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     },
     {
       "de": "C0_3",
       "para": "E9_1P",
       "label": "código confirmado",
-      "tracejado": true
+      "tracejado": true,
+      "deHandle": null
     }
   ]
 }

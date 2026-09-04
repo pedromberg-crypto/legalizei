@@ -509,7 +509,7 @@ export function EnderecoCategoriaView({
             {/* ✍️ 01/09 (enxugada de copy) — mesma promessa (aproximado
                 serve), sem narrar o passo futuro inteiro. */}
             <p className="text-caption text-text-secondary mb-3">
-              Escolhe o que mais se parece. O código certo a gente encontra
+              Escolha o que mais se parece. O código certo a gente encontra
               depois.
             </p>
 
@@ -542,7 +542,7 @@ export function EnderecoCategoriaView({
                 // regulamentada de verdade — dado valioso pra mkt.
                 { v: FORA_LISTA_ID, label: "Não encontrei minha categoria", destaque: "coral" },
               ]}
-              placeholder="Escolhe uma categoria"
+              placeholder="Escolha uma categoria"
             />
 
             {/* 🔴 A porta fechada que vira porta aberta. Só existe no MEI. */}

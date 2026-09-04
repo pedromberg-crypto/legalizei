@@ -13,7 +13,6 @@ import { ImagemZoom } from "@/components/ui/imagem-zoom";
 import { Campo, Texto, Select, OpcoesLinha } from "@/components/ui/form";
 // 🗑️ 01/09 — `CUSTOS` saiu junto do upsell de endereço fiscal do C4: a única
 // coisa que lia preço aqui era aquele card, e ele deixou de existir.
-import { FISCAL, brl } from "@/lib/fiscal";
 import { FORMAS_ATUACAO } from "@/lib/mei";
 import { linkWhatsApp } from "@/lib/contato";
 // 🆕 01/09 — mesma máscara do E6, pro CPF do sócio extra (C3).
@@ -37,6 +36,8 @@ import {
 // 🆕 03/09 — rótulos de qualificação civil viraram `lib/` porque o recap do A1
 // mostra os mesmos valores e precisa do mesmo texto.
 import { ESTADO_CIVIL, REGIME_BENS, TIPO_IMOVEL } from "@/lib/qualificacao";
+/* 🆕 04/09 — fonte única do nome de cada CNAE (oficial IBGE). Ver `lib/cnae`. */
+import { nomeCnae } from "@/lib/cnae";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -230,8 +231,13 @@ export function SocioView({
     <>
       {/* "Seus dados", não "Dados do sócio" (19/07): quem abre sozinho não se
           vê como sócio, se vê como dono. */}
+      {/* 🐛 04/09 (auditoria com Playwright) — o `meta` trazia "Seus dados",
+          que é o nome DESTA tela, não o destino do voltar (regra 6 do
+          CLAUDE.md). Daqui volta pro C5, as atividades secundárias — o splash
+          do meio (C5.S) não é destino, some sozinho. No MEI o caminho é outro:
+          ele vem da ocupação (M-O), não das secundárias. */}
       <TelaHeader
-        meta="Seus dados"
+        meta={mei ? "Sua ocupação" : "Atividades secundárias"}
         onVoltar={onVoltar}
         acao={<BotaoInfo onClick={() => setInfo(true)} rotulo="Por que a gente pede esses dados" />}
       />
@@ -458,10 +464,18 @@ export function SocioView({
 
 /* ═══════════════════ N11 · VÍNCULO INSS ═════════════════════════════════ */
 
+/**
+ * 🔄 04/09 (pedido do Pedro) — a máscara passou a trazer o "R$".
+ *
+ * Ela só separava milhar ("2.000"), e o placeholder ("R$ 0") era a única pista
+ * de que o campo era dinheiro — some no primeiro dígito. Com o prefixo dentro
+ * do valor, o campo diz o que é enquanto a pessoa digita. O `clt` que valida
+ * já lê só os dígitos, então nada mais precisou mudar.
+ */
 function mascaraReais(v: string) {
   const d = v.replace(/\D/g, "");
   if (!d) return "";
-  return Number(d).toLocaleString("pt-BR");
+  return `R$ ${Number(d).toLocaleString("pt-BR")}`;
 }
 
 export function VinculoView({
@@ -495,8 +509,9 @@ export function VinculoView({
   });
 
   const clt = Number(valor.replace(/\D/g, "")) || 0;
-  const folga = Math.max(0, FISCAL.TETO_INSS - clt);
-  const zerado = folga <= 0;
+  /* 🗑️ 04/09 — `folga` e `zerado` existiam só pro aviso que saía embaixo do
+     campo (removido a pedido do Pedro). A regra do teto segue explicada no "i"
+     da tela; aqui sobrou o que a validação usa. */
 
   const completo = contribui === false || (contribui === true && clt > 0);
 
@@ -538,6 +553,7 @@ export function VinculoView({
               />
               <Image
                 src="/icones/vinculo-cofrinho.png"
+                priority
                 alt=""
                 aria-hidden
                 width={500}
@@ -622,31 +638,19 @@ export function VinculoView({
                 />
               </Campo>
 
-              {/* Teto = FOLGA, não binário (spec Tela 7). */}
-              {clt > 0 && (
-                <Aviso
-                  variante={zerado ? "success" : "info"}
-                  titulo={
-                    zerado
-                      ? "Você não paga INSS de novo na empresa"
-                      : "Na empresa, o INSS vem só sobre a folga"
-                  }
-                >
-                  {zerado ? (
-                    <>
-                      Seu vínculo já bate o teto de {brl(FISCAL.TETO_INSS)}. O
-                      pró-labore não recolhe INSS de novo.
-                    </>
-                  ) : (
-                    <>
-                      Você já contribui sobre {brl(clt)}. Na empresa, o INSS incide
-                      só sobre o que falta pro teto: {brl(folga)}. Não é o valor
-                      cheio nem zero, então não precisa forçar o pró-labore por
-                      causa disso.
-                    </>
-                  )}
-                </Aviso>
-              )}
+              {/* 🗑️ 04/09 (pedido do Pedro) — SAIU O AVISO QUE APARECIA AO
+                  DIGITAR O VALOR. Eram 2 variantes (verde "já bate o teto" e
+                  azul "o INSS vem só sobre a folga") que abriam embaixo do
+                  campo assim que a pessoa começava a escrever: 3 linhas de
+                  cálculo, movimento na tela a cada tecla, e uma conta que ela
+                  não precisa fazer aqui. A tela pergunta se existe vínculo e
+                  quanto é; o efeito disso no pró-labore é assunto de onde o
+                  pró-labore é definido.
+                  ⚠️ O conteúdo não evaporou: a regra do teto (e que na empresa
+                  o INSS incide só sobre a folga) continua no "i" desta tela,
+                  onde ela é lida por quem quer entender, e não empurrada pra
+                  quem só quer responder. Sobrou o `clt`, que é o que a
+                  validação do campo usa. */}
             </>
           )}
 
@@ -679,7 +683,9 @@ export function VinculoView({
 
         <Rodape>
           <Button full disabled={!completo} onClick={onSeguir}>
-            {ctaLabel ?? "Confirmar"}
+            {/* ✍️ 04/09 (auditoria) — "Confirmar" sozinho não dizia o quê. O
+                C1 ao lado já nomeia ("Confirmar meus dados"); aqui faltava. */}
+            {ctaLabel ?? "Confirmar meu vínculo"}
           </Button>
         </Rodape>
       </main>
@@ -762,6 +768,179 @@ interface SocioExtra {
   complemento: string;
 }
 
+/**
+ * 🔒 04/09 — teto de sócios EXTRAS (fora o titular), travado em 3: o produto
+ * abre com até 4 pessoas no contrato, limite nosso e não da lei (reunião Rua
+ * Satélite 42). É o mesmo número que a triagem do E5T já aceita; aqui ele
+ * vira trava de tela, com o motivo escrito embaixo do botão.
+ */
+const MAX_SOCIOS_EXTRAS = 3;
+
+/**
+ * 🆕 04/09 — O CARTÃO DO TITULAR, um só pros dois estados da C3.
+ *
+ * Ele existia inline no ramo "com sócios" e foi copiado pro ramo "só você"
+ * quando este ganhou o recibo do dono. Duas cópias do mesmo cartão numa tela
+ * que muda de estado no toque é drift garantido: a próxima correção entra numa
+ * e esquece a outra. Vira componente antes de a segunda existir de verdade.
+ *
+ * 🔄 04/09 (correção do Pedro) — chegou a ter uma pill de `100%` no estado sem
+ * sócios, pra suprir a mesa da divisão que não existe lá. Saiu: sem mais
+ * ninguém na lista, 100% é a única divisão possível e o número só disputava
+ * espaço com o nome, que truncava.
+ */
+function CartaoTitular() {
+  return (
+    <div className="flex items-center gap-2 rounded-md border border-border-hairline bg-surface-card p-3">
+      {/* 🐛 04/09 (auditoria) — no iPhone SE (375px) o nome cortava
+          ("Ana Beatriz Ra..."): 2 pills e o check comiam a linha. Sem
+          `truncate` ele quebra em 2 linhas, que é melhor que esconder metade
+          do nome de quem é dono da empresa. */}
+      <span className="min-w-0 flex-1 text-caption font-semibold leading-snug text-text-primary">
+        {CLIENTE.nome}
+      </span>
+      <span className="shrink-0 rounded-full bg-surface-alt px-2 py-0.5 text-micro font-semibold text-text-tertiary">
+        Você
+      </span>
+      {/* Titular sempre administra (é o representante perante a Receita). */}
+      <span className="shrink-0 rounded-full bg-state-success-tint px-2 py-0.5 text-micro font-semibold text-state-success-text">
+        Administra
+      </span>
+      <span
+        aria-hidden
+        className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-state-success-tint text-state-success-text"
+      >
+        <CheckMiniDossie />
+      </span>
+    </div>
+  );
+}
+
+/**
+ * 🆕 04/09 (pedido do Pedro) — O TROFÉU do estado "só você".
+ *
+ * Mesmo tratamento do E6.1 e do `/retomar`: o 3D ocupa a sobra da tela e se
+ * centraliza NELA, com o conteúdo ancorado no pé, perto do CTA. Não é margem
+ * chutada — o contêiner é o `flex-1`, então a ilustração cresce e encolhe com
+ * o aparelho, do SE ao Pro Max, sem número mágico por tamanho de tela.
+ *
+ * As duas sombras vêm daqui, não do PNG: a elipse é o contato com a
+ * superfície (curta e densa, porque a base encosta) e o `drop-shadow` segue a
+ * silhueta, projetando pra direita, que é a direção de luz do DS.
+ */
+function IlustracaoTrofeu() {
+  return (
+    <div className="flex min-h-0 flex-1 items-center justify-center py-4">
+      {/* 🔄 04/09 (pedido do Pedro) — +20%: 54%/212px → 65%/254px. Os dois
+          números sobem juntos, senão a proporção muda de aparelho pra
+          aparelho (o % manda em tela alta, o teto manda em tela baixa). */}
+      <div id="c3-trofeu" className="relative flex h-[65%] max-h-[254px] items-end">
+        <div
+          aria-hidden
+          className="absolute -bottom-1 left-1/2 h-4 w-[62%] -translate-x-1/2 blur-md"
+          style={{
+            background:
+              "radial-gradient(closest-side, rgba(27,30,36,.28), rgba(27,30,36,.10) 62%, transparent 100%)",
+          }}
+        />
+        <Image
+          src="/icones/c3-trofeu-solo.png"
+          priority
+          alt=""
+          aria-hidden
+          width={400}
+          height={558}
+          className="relative z-10 h-full w-auto"
+          style={{ filter: "drop-shadow(6px 12px 10px rgba(27,30,36,.18))" }}
+        />
+      </div>
+
+      {/* Flutuação na mesma dosagem das outras: 7s e 5,5s não se dividem, então
+          o loop nunca fecha no mesmo ponto e o olho lê "flutuar" em vez de
+          "sobe e desce". ♿ desliga em `prefers-reduced-motion`. */}
+      <style jsx global>{`
+        @keyframes c3-trofeu-obj {
+          0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+          35% { transform: translate3d(3px, -6px, 0) rotate(0.6deg); }
+          70% { transform: translate3d(-2px, -3px, 0) rotate(-0.5deg); }
+          100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+        }
+        @keyframes c3-trofeu-sombra {
+          0% { transform: translateX(-50%) scaleX(1); opacity: 1; }
+          35% { transform: translateX(-50%) scaleX(0.9); opacity: 0.7; }
+          70% { transform: translateX(-50%) scaleX(0.96); opacity: 0.88; }
+          100% { transform: translateX(-50%) scaleX(1); opacity: 1; }
+        }
+        #c3-trofeu img {
+          animation: c3-trofeu-obj 7s ease-in-out infinite;
+          will-change: transform;
+        }
+        #c3-trofeu > div[aria-hidden] {
+          animation: c3-trofeu-sombra 5.5s ease-in-out infinite;
+          will-change: transform, opacity;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          #c3-trofeu img,
+          #c3-trofeu > div[aria-hidden] {
+            animation: none;
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+/**
+ * 🆕 04/09 — o conteúdo do estado "só você", num componente porque ele aparece
+ * em DOIS layouts: o do caminho abrir (com o troféu ocupando a sobra e isto
+ * ancorado no pé) e o do migrar, que segue no `Corpo` de sempre.
+ */
+function BlocoSoVoce({
+  contexto,
+  onAdicionar,
+}: {
+  contexto: "abrir" | "migrar";
+  onAdicionar: () => void;
+}) {
+  return (
+    <>
+      {/* 🔄 04/09 (pedido do Pedro) — ERA UM `Aviso` AZUL. Azul é estado de
+          bloqueio/atenção no DS, e aqui não há nada errado: a pessoa acabou de
+          escolher abrir sozinha, que é um caminho tão válido quanto o outro.
+          Pintar de azul a resposta dela fazia a tela parecer um alerta. Virou
+          o `CardNota` positivo, o mesmo cartão branco de borda fina e check
+          verde que o app usa pra confirmar decisão. O título saiu junto: o
+          `Titulo` da tela já diz "Empresa só sua" — repetir era eco. */}
+      <CardNota>
+        {contexto === "migrar"
+          ? "Sem sócios, é só seguir: a gente já tem o que precisa."
+          : /* 🐛 04/09 — "único dono" tinha gênero; a frase passou a falar da
+               empresa, não da pessoa. ✍️ 2ª rodada: perdeu a 1ª oração, que
+               repetia o subtítulo logo acima. */
+            "A gente já abre no formato certo pra isso. Você confirma o tipo na próxima etapa."}
+      </CardNota>
+
+      {/* Recibo de quem é a empresa. Sem ele, remover o último sócio deixava a
+          tela sem NENHUMA pessoa listada. */}
+      <CartaoTitular />
+
+      {/* Quem tirou todos os sócios precisa poder voltar atrás na mesma tela:
+          sem isto, remover o último era um beco (a lista sumia junto com o
+          botão de adicionar). */}
+      <button
+        type="button"
+        onClick={onAdicionar}
+        className="flex min-h-11 items-center justify-center gap-2 rounded-md border border-dashed border-border-strong text-caption font-semibold text-text-secondary transition-colors hover:bg-surface-alt hover:text-text-primary"
+      >
+        <span aria-hidden className="text-body leading-none">
+          +
+        </span>
+        Vou ter sócio, sim
+      </button>
+    </>
+  );
+}
+
 function novoSocioExtra(nome = "", participacao = 0): SocioExtra {
   return {
     id: `s${Math.random().toString(36).slice(2, 8)}`,
@@ -839,6 +1018,30 @@ export function SociosView({
           );
 
   const [extras, setExtras] = useState<SocioExtra[]>(inicial);
+  /**
+   * 🆕 04/09 (pedido do Pedro) — A LISTA VIROU EDITÁVEL, E ELA É QUEM MANDA.
+   *
+   * Até aqui a tela obedecia ao `TEM_SOCIO` do mock (eco da triagem): quem
+   * chegou dizendo "tenho sócio" via a lista, e pronto. Só que a triagem
+   * acontece antes de a pessoa ter os documentos na mão, e mudar de ideia ali
+   * ("o Carlos desistiu", "vou chamar mais um") significava voltar telas.
+   *
+   * Agora o número de sócios se resolve AQUI: dá pra somar até o limite e
+   * remover até zerar. Com a lista vazia, a tela vira a variante "empresa só
+   * sua" que já existia, e o CTA diz isso. `TEM_SOCIO` continua valendo pra
+   * decidir com o que a tela ABRE (via `inicial()`), não pro que ela é.
+   */
+  const temSocio = extras.length > 0;
+  /**
+   * 🆕 04/09 (pedido do Pedro) — LAYOUT PRÓPRIO PRO "SÓ VOCÊ".
+   *
+   * Sem sócios o conteúdo é curto (um cartão, um recibo, um botão) e sobrava
+   * meia tela em branco entre ele e o CTA. Aqui a tela vira o padrão do E6.1 e
+   * do `/retomar`: ilustração ocupando a sobra em cima, título e conteúdo
+   * ancorados no pé. Só no caminho ABRIR — no migrar a empresa já existe, o
+   * troféu não faria sentido e a tela segue no `Corpo` de sempre.
+   */
+  const soVoce = !temSocio && contexto === "abrir";
   // Quantidade manda no plural do título e do subtítulo.
   const varios = extras.length > 1;
   const [socioAberto, setSocioAberto] = useState<string | null>(null);
@@ -860,9 +1063,26 @@ export function SociosView({
    * quem sai na cláusula de administração do contrato. Deixar o default valendo
    * como resposta escolheria pelo cliente um contrato que ele nunca leu.
    */
-  const [administracao, setAdministracao] = useState<"so-eu" | "com-socios" | "lista" | null>(null);
-  /** Ids dos sócios extras que também administram (só usado com 2+ extras). */
-  const [admins, setAdmins] = useState<string[]>([]);
+  /* 🗑️ 04/09 — o estado `administracao` ("so-eu" | "com-socios" | "lista")
+     saiu: ele era a resposta AGREGADA, e desde o mapa por sócio (mesma
+     rodada) quem responde "já respondeu?" é o próprio `admins`. Dois estados
+     pro mesmo fato é o que fazia o resumo afirmar sem ninguém ter respondido. */
+  /**
+   * 🔄 04/09 (decisão do Pedro, saída da auditoria) — DE LISTA PRA MAPA COM
+   * TRÊS ESTADOS.
+   *
+   * Era `string[]` com os ids de quem administra, e lista tem só dois estados:
+   * está dentro ou está fora. "Fora" era usado como "não administra", quando
+   * na verdade ele também significava "ninguém respondeu ainda" — e a tela
+   * mostrava "Não" pré-selecionado, que é responder pela pessoa.
+   *
+   * Agora: chave ausente = NÃO RESPONDIDO (as duas opções nascem desmarcadas,
+   * o cartão fica "Incompleto" e o CTA trava); `true`/`false` = resposta dela.
+   * É a mesma régua do estado civil no C1, e importa pelo mesmo motivo: esta
+   * resposta vira a qualificação do sócio no DBE (49 × 22) e a cláusula de
+   * administração do contrato.
+   */
+  const [admins, setAdmins] = useState<Record<string, boolean>>({});
 
   // Esta tela já nasce preenchida pelo mock; o botão serve pra DESFAZER o que
   // quem apresenta mexeu ao vivo e voltar pro estado canônico.
@@ -924,7 +1144,14 @@ export function SociosView({
      clique. Mesmo predicado reaproveitado pra sinalizar QUAL card falta
      completar, com o card fechado (achado do pente-fino: o CTA travava sem
      apontar onde faltava algo). */
-  const socioCompleto = (s: SocioExtra) => s.nome.trim().split(/\s+/).length >= 2 && qualificacaoDoSocioOk(s);
+  const socioCompleto = (s: SocioExtra) =>
+    s.nome.trim().split(/\s+/).length >= 2 &&
+    qualificacaoDoSocioOk(s) &&
+    /* 🆕 04/09 — sem resposta de administração o cartão fica "Incompleto",
+       igual a um RG em branco: é dado que vai pro órgão. */
+    (contexto !== "abrir" || admins[s.id] !== undefined);
+  /** Todos os sócios extras já responderam quem administra. */
+  const respostaAdmin = extras.every((s) => admins[s.id] !== undefined);
   /**
    * 🆕 01/09 — com sócio, a administração é obrigatória no caminho ABRIR: sem
    * ela o RPA não sabe qual qualificação mandar pro DBE. Com 2+ extras e a
@@ -932,9 +1159,14 @@ export function SociosView({
    * resposta é, na prática, "só eu", e aí é isso que a pessoa deveria ter
    * escolhido.
    */
-  const administracaoOk =
-    contexto !== "abrir" || !TEM_SOCIO || extras.length > 1 || administracao !== null;
-  const completo = (!TEM_SOCIO || (nomesOk && somaOk && qualificacaoOk)) && administracaoOk;
+  /* 🐛 04/09 (auditoria) — o gate tinha um curto-circuito `extras.length > 1`:
+     com 2 ou mais sócios ele virava sempre verdadeiro e ninguém precisava
+     responder — a exigência sumia justamente onde a pergunta fica mais difícil
+     (quanto mais sócio, mais qualificação em jogo no DBE). Agora a régra é uma
+     só: TODO sócio extra precisa de resposta, e ela mora no `socioCompleto`,
+     que é quem já apontava o cartão faltando pelo nome. */
+  const administracaoOk = contexto !== "abrir" || !temSocio || respostaAdmin;
+  const completo = (!temSocio || (nomesOk && somaOk && qualificacaoOk)) && administracaoOk;
   /* 🐛 03/09 (pente-fino, pedido do Pedro) — o CTA travava (disabled) sem
      nenhuma pista de ONDE faltava algo: nome e CPF têm erro inline, o resto
      da qualificação (nascimento, RG, órgão, civil, regime, endereço) não.
@@ -950,6 +1182,48 @@ export function SociosView({
     setExtras((atual) => atual.map((s) => (s.id === id ? { ...s, ...patch } : s)));
   }
 
+  /**
+   * 🆕 04/09 (pedido do Pedro) — ADICIONAR e REMOVER sócio.
+   *
+   * Regras de participação, escolhidas pelo critério do "menos surpreendente":
+   * · ADICIONAR divide de novo em partes iguais entre os extras. O sócio novo
+   *   precisa tirar quota de alguém, e qualquer outro palpite (dar 0%, tirar
+   *   só do titular) seria uma decisão nossa sobre o dinheiro deles. Parte
+   *   igual é a única divisão que não escolhe favorito, e a mesa logo abaixo
+   *   continua aberta pra ajustar.
+   * · REMOVER não mexe em ninguém: a quota de quem saiu volta pro titular,
+   *   que é o dono por padrão. Redistribuir aqui mudaria números que a pessoa
+   *   já tinha acertado, sem ela pedir.
+   */
+  /**
+   * 🐛 04/09 (auditoria com Playwright) — O CARD NOVO NASCIA FECHADO.
+   *
+   * O `setSocioAberto` estava DENTRO do updater do `setExtras`. Updater tem
+   * que ser função pura: o React pode chamá-lo mais de uma vez (StrictMode) e
+   * descartar o resultado, então o efeito colateral lá dentro simplesmente não
+   * acontecia. Na prática: a pessoa adicionava um sócio, o card aparecia
+   * fechado e ela ficava procurando onde digitar.
+   *
+   * Agora a lista é montada FORA e os dois estados são atualizados lado a
+   * lado, cada um com o seu setter.
+   */
+  function adicionarSocio() {
+    if (extras.length >= MAX_SOCIOS_EXTRAS) return;
+    const novo = novoSocioExtra("", 0);
+    const lista = [...extras, novo];
+    const cada = Math.floor(100 / (lista.length + 1));
+    setExtras(lista.map((s) => ({ ...s, participacao: cada })));
+    setSocioAberto(novo.id);
+  }
+
+  function removerSocio(id: string) {
+    setExtras((atual) => atual.filter((s) => s.id !== id));
+    setAdmins((atual) =>
+      Object.fromEntries(Object.entries(atual).filter(([chave]) => chave !== id)),
+    );
+    setSocioAberto(null);
+  }
+
   return (
     <>
       {/* Mesmo alinhamento do N10: o cliente lê "Sócios" na lista de passos
@@ -963,13 +1237,30 @@ export function SociosView({
       />
 
       <main className="app-main">
+        {soVoce && (
+          <>
+            <IlustracaoTrofeu />
+            {/* Ancorado no pé: `shrink-0` pra não ser espremido quando o
+                aparelho é baixo (quem cede espaço é a ilustração, que é
+                `flex-1`). */}
+            <div className="flex shrink-0 flex-col gap-3 pb-2">
+              <Titulo sub="É só confirmar: a empresa fica só no seu nome.">
+                Empresa só sua
+              </Titulo>
+              <BlocoSoVoce contexto={contexto} onAdicionar={adicionarSocio} />
+            </div>
+          </>
+        )}
+
+        {!soVoce && (
+          <>
         <Titulo
           sub={
             contexto === "migrar"
-              ? TEM_SOCIO
+              ? temSocio
                 ? "Pra fazer a procuração e a transferência, a gente precisa dos dados de todos os sócios da empresa."
                 : "Confirma: sua empresa é só sua, sem outros sócios?"
-              : TEM_SOCIO
+              : temSocio
                 ? // 🔄 03/09 (pedido do Pedro) — sem o "você disse que teria
                   // sócio": a tela não precisa provar que lembrou da resposta
                   // anterior, e quem chegou aqui já sabe por que está aqui. Só
@@ -977,19 +1268,23 @@ export function SociosView({
                   varios
                   ? "Preencha os dados dos seus sócios."
                   : "Preencha os dados do seu sócio."
-                : "Você disse que abriria sozinho. É só confirmar."
+                : /* 🐛 04/09 — "Você disse que abriria sozinho" virou mentira
+                     possível: com a lista editável, quem chegou COM sócio e
+                     removeu todos cai aqui, e a triagem dele disse o
+                     contrário. A frase agora vale nos dois casos. */
+                  "É só confirmar: a empresa fica só no seu nome."
           }
         >
           {/* 🔄 03/09 (pedido do Pedro) — título e subtítulo concordam com a
               QUANTIDADE. Com 2 ou 3 sócios extras a tela dizia "Seu sócio" no
               singular e "os dados dele", como se fosse um só. */}
           {contexto === "migrar"
-            ? TEM_SOCIO
+            ? temSocio
               ? varios
                 ? "Sua empresa tem sócios"
                 : "Sua empresa tem sócio"
               : "Empresa só sua"
-            : TEM_SOCIO
+            : temSocio
               ? varios
                 ? "Seus sócios"
                 : "Seu sócio"
@@ -997,7 +1292,7 @@ export function SociosView({
         </Titulo>
 
         <Corpo>
-          {TEM_SOCIO ? (
+          {temSocio ? (
             <>
               {/* ✍️ 29/07 — o limite era um `Aviso` de bloco, com título, e
                   aparecia pra 100% de quem chega aqui: a triagem do N4 já barrou
@@ -1038,25 +1333,7 @@ export function SociosView({
                   Pill "Administra" também virou verde aqui — mesma cor de
                   quem administra nos cards de baixo, sem distinção. */}
               <div className="flex flex-col gap-3">
-                <div className="flex items-center gap-2 rounded-md border border-border-hairline bg-surface-card p-3">
-                  <span className="min-w-0 flex-1 truncate text-caption font-semibold text-text-primary">
-                    {CLIENTE.nome}
-                  </span>
-                  <span className="shrink-0 rounded-full bg-surface-alt px-2 py-0.5 text-micro font-semibold text-text-tertiary">
-                    Você
-                  </span>
-                  {/* Titular sempre administra (é o representante perante a
-                      Receita). */}
-                  <span className="shrink-0 rounded-full bg-state-success-tint px-2 py-0.5 text-micro font-semibold text-state-success-text">
-                    Administra
-                  </span>
-                  <span
-                    aria-hidden
-                    className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-state-success-tint text-state-success-text"
-                  >
-                    <CheckMiniDossie />
-                  </span>
-                </div>
+                <CartaoTitular />
 
                 {extras.map((s, i) => {
                   /* 🔄 03/09 (pedido do Pedro, 8ª rodada) — TODOS OS CARDS
@@ -1079,9 +1356,13 @@ export function SociosView({
                       type="button"
                       onClick={() => setSocioAberto(aberto ? null : s.id)}
                       aria-expanded={aberto}
-                      className="flex items-center gap-2 text-left"
+                      /* 🔄 04/09 (auditoria) — a linha do cabeçalho tinha 20px
+                         de alvo: o padding do cartão dava respiro visual, mas
+                         ficava FORA do botão. `-my-2 py-2` estende o toque até
+                         a borda do respiro, sem mexer no desenho. */
+                      className="-my-2 flex items-center gap-2 py-2 text-left"
                     >
-                      <span className="min-w-0 flex-1 truncate text-caption font-semibold text-text-primary">
+                      <span className="min-w-0 flex-1 text-caption font-semibold leading-snug text-text-primary">
                         {titulo}
                       </span>
                       {/* 🔄 03/09 (pedido do Pedro, 5ª rodada) — pill e check
@@ -1094,7 +1375,7 @@ export function SociosView({
                           trocar de card) sempre reflete o dado real. Faltando
                           algo, mostra "Incompleto" em vez de check — pista de
                           ONDE falta preencher sem precisar abrir card por card. */}
-                      {!aberto && admins.includes(s.id) && (
+                      {!aberto && admins[s.id] === true && (
                         <span className="shrink-0 rounded-full bg-state-success-tint px-2 py-0.5 text-micro font-semibold text-state-success-text">
                           Administra
                         </span>
@@ -1283,12 +1564,11 @@ export function SociosView({
                           { v: false, label: "Não" },
                           { v: true, label: "Sim" },
                         ]}
-                        valor={admins.includes(s.id)}
+                        /* 🆕 04/09 — `null` = nenhuma das duas marcada. Antes
+                           `valor` era booleano e "Não" nascia aceso. */
+                        valor={admins[s.id] ?? null}
                         onChange={(v) => {
-                          setAdmins((atual) =>
-                            v ? [...atual, s.id] : atual.filter((id) => id !== s.id),
-                          );
-                          setAdministracao("lista");
+                          setAdmins((atual) => ({ ...atual, [s.id]: v }));
                         }}
                       />
                     </Campo>
@@ -1304,11 +1584,53 @@ export function SociosView({
                     >
                       Salvar informações
                     </Button>
+
+                    {/* 🆕 04/09 (pedido do Pedro) — REMOVER mora DENTRO do card
+                        aberto, não na linha fechada. Na linha ele conviveria
+                        com o toque que expande, e apagar dado de gente por
+                        engano é o tipo de erro que não se desfaz sozinho.
+                        Aberto, a pessoa já está olhando de quem se trata.
+                        Sem confirmação de propósito: o card ainda está aberto,
+                        o gesto é reversível em segundos (basta adicionar de
+                        novo) e diálogo de confirmação em wizard vira ruído. */}
+                    <button
+                      type="button"
+                      onClick={() => removerSocio(s.id)}
+                      className="self-center text-caption font-medium text-text-secondary underline underline-offset-4 hover:text-state-danger-text"
+                    >
+                      Remover {primeiroNome(s.nome) || "este sócio"}
+                    </button>
                       </>
                     )}
                   </div>
                   );
                 })}
+
+                {/* 🆕 04/09 (pedido do Pedro) — ADICIONAR SÓCIO, no fim da
+                    lista: é onde a pessoa está olhando quando percebe que
+                    falta alguém, e o botão fica com a mesma largura dos cards
+                    pra ler como "mais uma linha", não como CTA da tela (esse é
+                    o do rodapé, e dois cheios brigariam). Contorno tracejado é
+                    o mesmo vocabulário do slot vazio da C0. */}
+                {extras.length < MAX_SOCIOS_EXTRAS ? (
+                  <button
+                    type="button"
+                    onClick={adicionarSocio}
+                    className="flex min-h-11 items-center justify-center gap-2 rounded-md border border-dashed border-border-strong text-caption font-semibold text-text-secondary transition-colors hover:bg-surface-alt hover:text-text-primary"
+                  >
+                    <span aria-hidden className="text-body leading-none">
+                      +
+                    </span>
+                    Adicionar sócio
+                  </button>
+                ) : (
+                  /* No teto, o botão vira o motivo. Sumir sem explicar deixaria
+                     a pessoa procurando o que ela tinha acabado de usar. */
+                  <p className="text-micro text-text-tertiary">
+                    Você chegou ao limite de {MAX_SOCIOS_EXTRAS} sócios além de você. Precisa de
+                    mais? Chama a gente no WhatsApp.
+                  </p>
+                )}
               </div>
 
               <div className="rounded-md border border-border-hairline bg-surface-alt p-3">
@@ -1403,7 +1725,9 @@ export function SociosView({
                     identidade matemática), mas só fica verde quando a
                     divisão É válida de verdade. */}
                 <div className="mt-1 flex items-center justify-between gap-3 border-t border-border-hairline pt-2">
-                  <span className="text-caption font-semibold text-text-primary">Total</span>
+                  {/* ✍️ 04/09 (auditoria) — o A1 chama a mesma soma de
+                      "Juntos". Um rótulo só pro mesmo número. */}
+                  <span className="text-caption font-semibold text-text-primary">Juntos</span>
                   <span
                     className={`text-caption font-semibold ${
                       somaOk ? "text-state-success-text" : "text-state-warning-text"
@@ -1475,26 +1799,48 @@ export function SociosView({
                       i
                     </span>
                   </div>
-                  <p className="text-caption text-text-primary mt-1">
-                    {admins.length === 0
-                      ? "Só você administra."
-                      : `Você e ${listar(
-                          extras
-                            .filter((s) => admins.includes(s.id))
-                            .map((s, i) => primeiroNome(s.nome) || `${i + 2}º sócio`),
-                        )}.`}
+                  {/* 🐛 04/09 (auditoria com Playwright) — O RESUMO RESPONDIA
+                      PELA PESSOA. Com `admins` vazio ele afirmava "Só você
+                      administra", e vazio é AMBÍGUO: pode ser a resposta dela
+                      (ninguém mais administra) ou pode ser que ela ainda não
+                      respondeu. O próprio código já sabia diferenciar — o
+                      estado `administracao` nasce `null` justamente porque,
+                      nas palavras do comentário de 01/09, deixar o default
+                      valer como resposta "escolheria pelo cliente um contrato
+                      que ele nunca leu". Só o texto não usava essa informação.
+                      Agora, sem resposta, o card PERGUNTA em vez de afirmar, e
+                      aponta onde se responde (dentro do card de cada sócio). */}
+                  {/* 🔄 04/09 (2ª rodada) — o resumo passou a ler o MAPA, não
+                      o estado antigo `administracao`: agora "não respondido" é
+                      um estado de verdade por sócio, e o texto acompanha. */}
+                  <p
+                    className={`text-caption mt-1 ${
+                      respostaAdmin ? "text-text-primary" : "text-text-tertiary"
+                    }`}
+                  >
+                    {!respostaAdmin
+                      ? varios
+                        ? "Ainda não definido. Abra cada sócio pra dizer quem administra."
+                        : "Ainda não definido. Abra o card do seu sócio pra responder."
+                      : extras.every((s) => admins[s.id] !== true)
+                        ? "Só você administra."
+                        : `Você e ${listar(
+                            extras
+                              .filter((s) => admins[s.id] === true)
+                              .map((s, i) => primeiroNome(s.nome) || `${i + 2}º sócio`),
+                          )}.`}
                   </p>
                 </Card>
               )}
             </>
           ) : (
-            <Aviso variante="info" titulo="Empresa só sua">
-              {contexto === "migrar"
-                ? "Sem sócios, é só seguir — a gente já tem o que precisa."
-                : "Sem sócios, a gente abre no formato certo pra dono único. Você confirma o tipo na próxima etapa."}
-            </Aviso>
+            /* Migrar segue no `Corpo` de sempre: lá a empresa já existe e
+               a tela é confirmação, sem sobra pra ilustração ocupar. */
+            <BlocoSoVoce contexto={contexto} onAdicionar={adicionarSocio} />
           )}
         </Corpo>
+          </>
+        )}
 
         {/* 🐛 03/09 — o sheet vivia DENTRO do `Corpo` (o container
             `overflow-y-auto` com fade de rolagem), então herdava o clip/scroll
@@ -1525,13 +1871,34 @@ export function SociosView({
               travado é dado faltando num sócio específico (não cobre soma
               inválida — essa já tem aviso próprio na mesa da divisão, logo
               acima, pra não duplicar mensagem). */}
-          {TEM_SOCIO && sociosIncompletos.length > 0 && (
-            <p className="text-micro text-state-warning-text mb-2 text-center">
-              Falta preencher os dados de {listar(sociosIncompletos)}.
-            </p>
-          )}
+          {/* 🗑️ 04/09 — o aviso "Falta preencher os dados de X" saiu: o CTA
+              passou a carregar a contagem e cada cartão já mostra a pill
+              "Incompleto", que é quem identifica. Aviso + rótulo diziam o
+              mesmo fato em dois lugares, que é o erro que o A1 já tinha
+              corrigido nesta mesma rodada. */}
+          {/* 🆕 04/09 (pedido do Pedro) — CTA DINÂMICO. Com a lista vazia,
+              "Continuar" não diz o que a pessoa está confirmando, e o que ela
+              confirma aqui é uma DECISÃO (a empresa vai ser só dela), não uma
+              passagem de tela. O `ctaLabel` do modo ajuste vence os dois: lá o
+              rótulo é "Atualizar dados". */}
           <Button full disabled={!completo} onClick={onSeguir}>
-            {ctaLabel ?? "Continuar"}
+            {/* 🐛 04/09 (achado do Pedro) — "Vou abrir sozinho" tinha gênero.
+                O app não coleta gênero e não deveria: rótulo de CTA em 1ª
+                pessoa precisa funcionar pra qualquer pessoa. Trocado por uma
+                construção sem adjetivo, que ainda diz a mesma decisão. */}
+            {/* 🔄 04/09 (levantamento de CTAs, validado pelo Pedro) — SAIU O
+                "CONTINUAR". Ele não dizia o que a tela decide, e travado ficava
+                mudo: a pessoa descobria o motivo tentando. Agora o rótulo é o
+                estado — travado, conta quantos sócios faltam; livre, nomeia o
+                que confirma. Mesma régua do A1 e do C5. */}
+            {ctaLabel ??
+              (!temSocio
+                ? "Abrir só no meu nome"
+                : sociosIncompletos.length > 0
+                  ? sociosIncompletos.length === 1
+                    ? "Falta 1 sócio"
+                    : `Faltam ${sociosIncompletos.length} sócios`
+                  : "Confirmar sócios")}
           </Button>
         </Rodape>
       </main>
@@ -1875,14 +2242,13 @@ export function EmpresaView({
         meta={metaVoltar ?? "Sócios"}
         onVoltar={onVoltar}
         acao={
-          <button
-            type="button"
+          /* 🔄 04/09 (auditoria) — era um "i" solto de 24px, cópia manual do
+             `BotaoInfo`. Passou a usar o componente do DS, que ganhou área de
+             toque de 40px na mesma rodada. Uma cópia a menos pra divergir. */
+          <BotaoInfo
             onClick={() => setInfoEndereco(true)}
-            aria-label="Por que a gente pede esses dados"
-            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border-hairline text-micro font-bold text-text-tertiary"
-          >
-            i
-          </button>
+            rotulo="Por que a gente pede esses dados"
+          />
         }
       />
 
@@ -1913,6 +2279,7 @@ export function EmpresaView({
             />
             <Image
               src="/icones/c4-endereco-me.png"
+              priority
               alt=""
               aria-hidden
               width={400}
@@ -2000,7 +2367,9 @@ export function EmpresaView({
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <p className="text-micro text-text-tertiary">
-                      Endereço da empresa, informado no começo
+                      {/* ✍️ 04/09 (auditoria) — o rótulo repetia o título da
+                          tela ("Endereço da empresa"), 3 linhas acima. */}
+                      Informado no começo
                     </p>
                     {endereco && (
                       <p className="text-caption font-semibold text-text-primary mt-0.5">
@@ -2019,7 +2388,10 @@ export function EmpresaView({
               {!mei && usarProprio === true && respostaImovelVeioDoGate && (
                 <div className={enderecoVeioDoGate ? "mt-3 border-t border-border-hairline pt-3" : ""}>
                   <p className="text-caption font-semibold text-text-primary">
-                    Sobre o imóvel, você já respondeu
+                    {/* ✍️ 04/09 (auditoria) — "Sobre o imóvel" era vago e
+                        divergia do A1, que chama o mesmo dado de "Tipo do
+                        imóvel". Um nome só, nas duas telas. */}
+                    Tipo do imóvel, você já respondeu
                   </p>
                   <p className="text-caption text-text-secondary mt-0.5">
                     {TIPO_IMOVEL.find((t) => t.v === tipoImovel)?.label} ·{" "}
@@ -2304,10 +2676,15 @@ export function EmpresaView({
             rel="noopener noreferrer"
             className="mb-3 block text-center w-full text-caption font-medium text-text-secondary underline underline-offset-4"
           >
-            Está com dúvida? Chama no WhatsApp
+            {/* ✍️ 04/09 (auditoria) — o mesmo escape hatch tinha 2 redações
+                ("Está com dúvida?" aqui, "Ainda com dúvida?" no A1). */}
+            Ainda com dúvida? Chama no WhatsApp
           </a>
           <Button full disabled={!completo} onClick={onSeguir}>
-            {ctaLabel ?? "Continuar"}
+            {/* 🔄 04/09 (levantamento de CTAs, validado pelo Pedro) — travado,
+                o botão nomeia o único campo que falta; livre, nomeia o que a
+                tela confirma. */}
+            {ctaLabel ?? (completo ? "Confirmar endereço" : "Falta o IPTU")}
           </Button>
         </Rodape>
       </main>
@@ -2480,7 +2857,7 @@ export function CnaeSecundariosView({
      usada (o percentual saiu dos cartões em 02/09), fica no dado só porque o
      tipo pede. */
   const principalComoOpcao = {
-    humano: CNAE_PRINCIPAL.humano,
+    humano: nomeCnae(CNAE_PRINCIPAL.cnae, CNAE_PRINCIPAL.humano),
     cnae: CNAE_PRINCIPAL.cnae,
     adequacao: 94,
   };
@@ -2510,12 +2887,25 @@ export function CnaeSecundariosView({
      nomes, não o cartão. Sumir deixava o feedback longe do dedo, e ainda
      encolhia a lista de 8 pra 5 enquanto a pessoa escolhia.
      Agora o toque responde onde a mão está, e tocar de novo desmarca. */
+  /** Com termo digitado, a busca SUBSTITUI a curadoria (ver render). */
+  const buscando = busca.trim().length > 0;
+  /** Só os dígitos, pra comparar CNAE digitado em qualquer formatação. */
+  const soDigitos = (v: string) => v.replace(/\D/g, "");
+  /* 🔄 04/09 (pedido do Pedro) — a busca varre TODAS (curadas + banco), não só
+     o banco. Antes ela EXCLUÍA as sugestões, o que fazia sentido quando as duas
+     listas apareciam juntas; agora que a busca SUBSTITUI a lista, esconder as
+     curadas faria "6204" e "consultoria em tecnologia" não acharem nada. */
   const resultadosBusca = busca.trim()
-    ? BANCO_BUSCA.filter(
+    ? TODAS.filter(
         (s) =>
-          !SUGESTOES.some((x) => x.id === s.id) &&
-          (s.humano.toLowerCase().includes(busca.toLowerCase()) ||
-            s.cnae.includes(busca)),
+          nomeCnae(s.cnae, s.humano).toLowerCase().includes(busca.toLowerCase()) ||
+          s.humano.toLowerCase().includes(busca.toLowerCase()) ||
+          /* 🆕 04/09 (pedido do Pedro) — BUSCA PELO NÚMERO DO CNAE. Antes só
+             casava se a pessoa digitasse com a pontuação exata ("6202-3/00");
+             quem digita "6202" tinha sorte, quem digita "6202300" (como está
+             no cartão CNPJ e nos sistemas do governo) não achava nada.
+             Comparação por dígitos dos dois lados resolve os três formatos. */
+          (soDigitos(busca).length >= 2 && soDigitos(s.cnae).startsWith(soDigitos(busca))),
       )
     : [];
 
@@ -2548,7 +2938,14 @@ export function CnaeSecundariosView({
             tela CONFIRMA a expectativa errada. A ressalva foi pro rótulo da
             busca, que é onde ela vira ação — é lá, e só lá, que dá pra
             escolher fora do ramo. */}
-        <Titulo>Sua empresa faz mais alguma coisa?</Titulo>
+        {/* 🗑️ 04/09 (pedido do Pedro) — MESMO TRATAMENTO DA C0: o título sai
+            de vista e a PERGUNTA desce pro lugar onde ela é respondida (o
+            cabeçalho da lista, logo abaixo do cartão da principal). São ~40px
+            de volta numa tela que é uma lista longa, e a pergunta fica colada
+            na resposta em vez de morar duas divisórias acima.
+            ⚠️ `sr-only`, não removido: sem `h1` a página fica sem âncora pra
+            quem navega por cabeçalho no leitor de tela. */}
+        <h1 className="sr-only">Sua empresa faz mais alguma coisa?</h1>
 
         {/* 🔒 02/09 (pedido do Pedro) — TÍTULO E CARTÃO DA PRINCIPAL TRAVADOS.
             O cartão vivia dentro do `Corpo` e subia junto com a lista: a
@@ -2605,7 +3002,7 @@ export function CnaeSecundariosView({
                       : `${escolhidas.length} atividades secundárias`}
                   </span>
                   <span className="mt-0.5 block truncate text-micro text-text-on-brand/80">
-                    {escolhidas.map((s) => s.humano).join(" · ")}
+                    {escolhidas.map((s) => nomeCnae(s.cnae, s.humano)).join(" · ")}
                   </span>
                 </span>
                 {/* 🗑️ 02/09 — testamos uma pill "Secundárias" aqui, par da
@@ -2617,6 +3014,36 @@ export function CnaeSecundariosView({
               )
             }
           />
+
+          {/* 🆕 04/09 (pedido do Pedro) — O CABEÇALHO DA LISTA TRAVA JUNTO.
+              Ele vivia dentro do `Corpo` e subia com a rolagem: a pessoa
+              descia dois cartões e perdia de vista o que aquela lista era e
+              quantas opções tinha. Preso ao bloco da principal, ele fica
+              sempre visível e a lista rola por baixo.
+              🔄 Ele também muda de papel na busca: com termo digitado, deixa
+              de anunciar a curadoria e passa a contar o que a busca achou. */}
+          <div className="mt-5 flex items-baseline justify-between gap-3">
+            {/* 🔄 04/09 — o rótulo da lista virou a PERGUNTA da tela (era
+                "Sugestões pra você", que descrevia a origem da lista e não o
+                que se faz com ela). Com termo digitado ele volta a descrever,
+                porque aí a lista é resultado de busca, não sugestão nossa. */}
+            <p
+              className={
+                buscando
+                  ? "text-micro text-text-tertiary"
+                  : "text-caption font-semibold text-text-primary"
+              }
+            >
+              {buscando ? "Resultados da busca" : "Sua empresa faz mais alguma coisa?"}
+            </p>
+            <p className="shrink-0 text-micro font-semibold text-action-primary-sm">
+              {buscando
+                ? `${resultadosBusca.length} ${
+                    resultadosBusca.length === 1 ? "opção" : "opções"
+                  }`
+                : `${SUGESTOES.length} opções`}
+            </p>
+          </div>
         </div>
 
 
@@ -2636,7 +3063,13 @@ export function CnaeSecundariosView({
             </Aviso>
           )}
 
-          {busca.trim() && (
+          {/* 🐛 04/09 (achado do Pedro) — DUAS LISTAS AO MESMO TEMPO. Com um
+              termo digitado, os resultados apareciam AQUI e as 8 sugestões
+              continuavam logo abaixo: a tela mostrava duas listas de cartões
+              iguais, e como vários nomes se parecem ("Consultoria em gestão"
+              × "Consultoria em tecnologia") lia como lista duplicada. Agora a
+              busca SUBSTITUI a curadoria: um termo, uma lista. */}
+          {buscando && (
             <div className="flex flex-col gap-2">
               {resultadosBusca.length === 0 ? (
                 <p className="text-caption text-text-secondary">
@@ -2661,7 +3094,7 @@ export function CnaeSecundariosView({
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
                           <p className="text-body font-semibold text-text-primary">
-                            {s.humano}
+                            {nomeCnae(s.cnae, s.humano)}
                           </p>
                           <p className="text-caption mt-0.5 text-text-secondary">
                             CNAE {s.cnae}
@@ -2709,18 +3142,12 @@ export function CnaeSecundariosView({
               atividade" antes de ver o que a gente já tinha pra oferecer:
               primeiro o esforço, depois a conveniência. Invertida, a busca
               vira o que ela é — a saída pra quem não se encontrou na lista. */}
-          <div>
-            {/* 🆕 02/09 (pedido do Pedro) — a contagem no canto direito, na
-                mesma fonte do rótulo e em coral. Ela conta o que está NA
-                CURADORIA, e é fixo: o escolhido continua na lista, marcado.
-                Quem conta o que a pessoa montou é o cartão-resumo. Cada número
-                com um dono só. */}
-            <div className="mb-1.5 flex items-baseline justify-between gap-3">
-              <p className="text-micro text-text-tertiary">Sugestões pra você</p>
-              <p className="shrink-0 text-micro font-semibold text-action-primary-sm">
-                {SUGESTOES.length} opções
-              </p>
-            </div>
+          {/* 🔄 04/09 — o cabeçalho ("Sugestões pra você · 8 opções") SUBIU pro
+              bloco travado, junto do cartão da principal: ele é a etiqueta da
+              lista e precisava ficar visível enquanto ela rola. A contagem
+              continua sendo da CURADORIA (fixa), não do que a pessoa marcou —
+              quem conta o que ela montou é o cartão-resumo. */}
+          <div hidden={buscando}>
             {/* 🗑️ 02/09 — a garantia "não muda o imposto" saiu daqui: cada
                 cartão já a carrega na etiqueta, e lá ela é acionável (é o que
                 distingue um cartão do outro). Aqui era só mais uma promessa
@@ -2751,7 +3178,7 @@ export function CnaeSecundariosView({
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <p className="text-body font-semibold text-text-primary">
-                          {s.humano}
+                          {nomeCnae(s.cnae, s.humano)}
                         </p>
                         <p className="text-caption mt-0.5 text-text-secondary">
                           CNAE {s.cnae}
@@ -2806,16 +3233,33 @@ export function CnaeSecundariosView({
           <SheetInfo
             titulo="Pra que serve atividade secundária"
             onFechar={() => setInfo(false)}
+            /* ✍️ 04/09 (pedido do Pedro) — ENXUGADO DE 6 PONTOS PRA 3.
+               O sheet tinha 6 checks longos e o assunto mais importante (a
+               etiqueta que muda o imposto) era o 5º deles: presente e
+               escondido. Os pontos viraram uma linha cada, o "não é
+               obrigatório" saiu inteiro (o CTA já diz "Continuar sem
+               secundárias", e o Pedro pediu pra tirar) e o enquadramento
+               ganhou caixa própria, logo abaixo. */
             pontos={[
-              "A atividade principal é o que você mais faz. As secundárias são o resto que você também faz e quer poder cobrar por isso.",
-              "Você só emite nota do que está no seu CNPJ. Fazer um serviço que não está lá te deixa sem como faturar direito.",
-              "Incluir agora é de graça. Depois, acrescentar atividade é uma alteração cadastral, com taxa e prazo.",
-              "As sugestões daqui são do mesmo grupo fiscal da sua principal: não mudam o que você paga.",
-              "Não é obrigatório. Se hoje você só faz uma coisa, pode seguir sem escolher nada.",
+              "Principal é o que você mais faz. Secundária é o resto que você também cobra.",
+              "Você só emite nota do que está no seu CNPJ.",
+              "Incluir agora é de graça. Depois vira alteração cadastral, com taxa.",
             ]}
+            /* 🆕 04/09 (pedido do Pedro) — o assunto ganhou espaço só dele.
+               ✍️ 2ª rodada: saiu a abertura "as sugestões daqui não mexem no
+               seu imposto". Ela era contraste (o que NÃO acontece) antes do
+               fato, e obrigava a pessoa a segurar duas ideias pra entender
+               uma. A caixa começa direto pelo caso que ela vai encontrar. */
+            destaque={{
+              titulo: "Muda seu enquadramento",
+              texto:
+                "A atividade que vier com essa etiqueta cai em outra faixa do Simples, e a conta da empresa muda. Dá pra escolher, mas a gente conversa antes de seguir.",
+            }}
             exemplo={{
               titulo: "Um caso comum",
-              nota: "Quem tem design como principal costuma incluir consultoria e treinamento: são serviços que aparecem em projeto de cliente e, sem o código, não dava pra colocar na nota.",
+              /* ✍️ 04/09 — cortado até caber sem rolagem no iPhone SE: o
+                 "aparecem em projeto de cliente" era contexto, não o fato. */
+              nota: "Quem tem design como principal costuma incluir consultoria e treinamento: sem o código, não dá pra colocar na nota.",
             }}
           />
         )}
@@ -2844,11 +3288,13 @@ export function CnaeSecundariosView({
           {/* 🆕 24/08 — busca restrita ao que a gente atende (mesma lista da
               entrevista principal), pedido original da Jéssica (reunião 19/07)
               e reforçado pelo Leonan. */}
-          <div className="mb-4"><Campo rotulo="Buscar outra atividade, de qualquer ramo">
+          <div className="mb-4"><Campo rotulo="Buscar por atividade ou código">
             <Texto
               valor={busca}
               onChange={setBusca}
-              placeholder="Ex: consultoria, eventos, treinamento..."
+              /* ✍️ 04/09 — o placeholder passa a mostrar que dá pra buscar
+                 pelo CÓDIGO também: sem isso, ninguém descobre. */
+              placeholder="Ex: consultoria, eventos ou 7020-4/00"
             />
           </Campo></div>
 
@@ -3283,6 +3729,7 @@ export function NomeView({
               />
               <Image
                 src="/icones/c7-nome-mao-escrevendo.png"
+                priority
                 alt=""
                 aria-hidden
                 width={600}
@@ -3336,10 +3783,15 @@ export function NomeView({
                   // reservas são nossas) e não "escolhe a ORDEM" (as setas
                   // saíram). Ficou só o fato, que é o que ela precisa saber.
                   "As 3 primeiras não passaram na Junta."
-                : // ✍️ 03/09 (pedido do Pedro) — saiu o "A gente sugeriu 3
-                  // nomes": os 3 cards logo abaixo já dizem isso. Sobra a
-                  // instrução, que é o que só o subtítulo entrega.
-                  "Edite o que quiser e deixe na ordem que a gente deve tentar."
+                : /* 🐛 04/09 (auditoria com Playwright) — A FRASE PROMETIA O
+                     QUE A TELA NÃO FAZ MAIS. Ela dizia "Edite o que quiser e
+                     deixe na ordem que a gente deve tentar", e desde o
+                     travamento de 01/09 só a 1ª opção é editável (a 2ª e a 3ª
+                     são reservas nossas) e não existem mais setas de ordenar.
+                     A própria seção, 3 linhas abaixo, já dizia o contrário:
+                     "As duas de baixo não mudam". Ficou a instrução do que de
+                     fato se faz aqui. */
+                  "Escreva o nome que você quer. A Junta analisa na ordem da lista."
           }
         >
           {mei
@@ -3411,8 +3863,10 @@ export function NomeView({
                 a dúvida nasce — a opção dela. */}
             <p className="text-caption font-semibold text-text-primary mb-1">
               {novaRodada
+                /* ✍️ 04/09 (auditoria) — o MESMO rótulo tinha 2 grafias entre
+                   a 1ª rodada e a 2ª ("2 de reserva" × "2 reservas"). */
                 ? "Sua opção, e as nossas 2 reservas"
-                : "Sua opção, e as nossas 2 de reserva"}
+                : "Sua opção, e as nossas 2 reservas"}
             </p>
 
             {/* Nota fina, não bloco: a tela acabou de perder um `Aviso` por
@@ -3425,7 +3879,10 @@ export function NomeView({
                 ? // ✍️ 03/09 — rótulo e nota diziam a mesma coisa, e "novas"
                   // aparecia 3 vezes na mesma dobra. Sobra o que só a nota
                   // entrega: elas não repetem o que já foi recusado.
-                  "Nenhuma delas já foi tentada."
+                  /* ✍️ 04/09 (auditoria) — "Nenhuma delas JÁ foi tentada" é
+                     construção travada; o advérbio certo pro sentido é
+                     "ainda". */
+                  "Nenhuma delas foi tentada ainda."
                 : "As duas de baixo não mudam: são nossas, feitas pra passar nos critérios da Junta se a sua não passar."}
             </p>
 
@@ -3494,7 +3951,12 @@ export function NomeView({
                         onChange={(v) => editarValor(s.id, v)}
                         autoFocus={novaRodada && i === 0}
                         rotulo={`Nome da ${i + 1}ª opção`}
-                        placeholder="Veja algumas regras no “i” ao lado"
+                        /* ✍️ 04/09 (auditoria) — o placeholder INSTRUÍA em vez
+                           de exemplificar, e sumia justo quando a pessoa
+                           começava a escrever (que é quando a instrução
+                           serviria). O campo do fantasia, na mesma tela, já
+                           fazia certo: exemplo. As regras seguem no "i". */
+                        placeholder="Ex.: Ana Ramos Web Studio"
                         limite={LIMITE_RAZAO}
                       />
 
@@ -3589,7 +4051,10 @@ export function NomeView({
             /* ✍️ 03/09 (pedido do Pedro) — a 2ª frase era justificativa
                NOSSA ("assim evitamos erro de grafia"), não informação que
                muda a decisão dela: o campo está travado de qualquer jeito. */
-            dica="Gerado a partir das suas atividades. Vai assim no contrato."
+            /* ✍️ 04/09 (auditoria) — mesma dica do A1, que já tinha sido
+               enxugada: "Gerado" soava a máquina e a origem já está implícita
+               (a dica mora embaixo das atividades). */
+            dica="É esse texto que vai no contrato."
           >
             {/* 🔄 03/09 (pedido do Pedro) — era um bloco cinza próprio desta
                 tela. Virou `CardNota`, que é o componente que o dossiê já usa
@@ -3661,11 +4126,37 @@ export function NomeView({
         )}
 
         <Rodape>
+          {/* 🆕 04/09 (validado pelo Pedro) — ESCAPE HATCH SÓ NAS 2 TELAS DE
+              NOME. É onde a pessoa mais trava: na 1ª rodada porque nome é o
+              que mais gera exigência na Junta (`pesquisa/exigencias-jucemg.md`)
+              e ela não conhece o critério; na 2ª porque ela chega DEPOIS de um
+              "não", com a régua ainda invisível. Nas outras telas do trecho o
+              convite não entra: sugerir ajuda onde a tela é fácil faz a tela
+              parecer difícil. */}
+          <a
+            href={linkWhatsApp(
+              novaRodada
+                ? "Oi! A Junta não aceitou os nomes que enviei pra minha empresa e não sei o que escrever agora. Podem me ajudar?"
+                : "Oi! Estou escolhendo o nome da minha empresa no app da Legalizai e fiquei em dúvida sobre o que escrever. Podem me ajudar?",
+            )}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mb-3 block w-full text-center text-caption font-medium text-text-secondary underline underline-offset-4"
+          >
+            {novaRodada
+              ? "Não sabe o que escrever? Chama a gente."
+              : "Ainda com dúvida? Chama no WhatsApp."}
+          </a>
           {/* Última tela da coleta: daqui o cliente vai pro N19 (revisar).
               🔄 01/09 (pedido do Pedro) — na 2ª rodada o CTA nomeia o que
-              acontece de verdade: os nomes voltam pra Junta, não pro dossiê. */}
+              acontece de verdade: os nomes voltam pra Junta, não pro dossiê.
+              🔄 04/09 (levantamento de CTAs, validado pelo Pedro) — "Continuar"
+              virou "Confirmar o nome", e "Mandar para a viabilidade" virou
+              "Enviar os novos nomes": o primeiro nomeia o que a tela decide, o
+              segundo descreve o ato sem se apropriar do papel da A2, que é
+              quem de fato dispara a viabilidade desde hoje. */}
           <Button full disabled={!completo} onClick={onSeguir}>
-            {novaRodada ? "Mandar para a viabilidade" : "Continuar"}
+            {novaRodada ? "Enviar os novos nomes" : "Confirmar o nome"}
           </Button>
         </Rodape>
       </main>
@@ -3807,7 +4298,7 @@ function SheetSecundarias({
                         on ? "text-text-primary" : "text-text-tertiary line-through"
                       }`}
                     >
-                      {s.humano}
+                      {nomeCnae(s.cnae, s.humano)}
                     </span>
                     <span className="block text-caption text-text-secondary">
                       CNAE {s.cnae}

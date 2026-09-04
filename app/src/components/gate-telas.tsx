@@ -399,6 +399,13 @@ export function PerguntaView({
     if (el.value === "" && el.placeholder) {
       el.value = el.placeholder;
       el.style.height = `${Math.min(el.scrollHeight, TETO)}px`;
+      /* 🐛 04/09 (achado do Pedro, com o campo em 2 linhas) — BARRA DE
+         ROLAGEM DENTRO DO CAMPO VAZIO. Este ramo media a altura do
+         placeholder e voltava, sem nunca tocar no `overflowY` — que fica no
+         `auto` do navegador. Com 3 linhas de piso sobrava folga e ninguém via;
+         com 2, o placeholder de 2 linhas encosta na borda e a barra aparece.
+         O ramo de baixo já resolvia isso; faltava aqui. */
+      el.style.overflowY = el.scrollHeight > TETO ? "auto" : "hidden";
       el.value = "";
       return;
     }
@@ -562,7 +569,22 @@ export function PerguntaView({
             mostra desde que os cartões de CNAE passaram a viver nela. Os
             outros 3 contextos (modo código, e o uso pré-pagamento) seguem com
             o deles — lá ainda não há resultado na tela pra falar sozinho. */}
-        <h1 className={`text-h1 ${sub ? "mb-2" : "mb-4"}`}>
+        {/* 🗑️ 04/09 (pedido do Pedro) — O TÍTULO SAI DE VISTA NA C0/C0.0.
+            "O que você faz?" custava ~40px numa tela apertada e não dizia
+            nada que a própria tela já não diga em letra maior: na chegada o
+            texto display ("Aqui é onde você escolhe a atividade principal")
+            e, com resultados, o rótulo do slot ("Escolha sua atividade
+            principal, é só selecionar"). Era pergunta em cima de instrução.
+            ⚠️ Sai da TELA, não do documento: vira `sr-only` em vez de sumir,
+            senão a página fica sem nenhum `h1` e quem navega por cabeçalho
+            (leitor de tela) perde a âncora. Nos outros contextos deste mesmo
+            componente (modo código e o uso PRÉ-pagamento) ele continua
+            visível: lá não existe nem hero nem slot pra falar por ele. */}
+        <h1
+          className={
+            jaCliente && !sabeCodigo ? "sr-only" : `text-h1 ${sub ? "mb-2" : "mb-4"}`
+          }
+        >
           {sabeCodigo ? "Qual o número do seu CNAE?" : "O que você faz?"}
         </h1>
         {sub && <p className="text-body text-text-secondary mb-4">{sub}</p>}
@@ -603,7 +625,12 @@ export function PerguntaView({
             <div className="flex min-h-0 flex-1 flex-col justify-center">
               <p className="text-display text-text-primary">
                 Aqui é onde você escolhe a{" "}
-                <span className="text-action-primary-sm">atividade principal</span> com
+                {/* 🔄 04/09 (pedido do Pedro) — coral CLARO (`text-brand`,
+                    coral-500) no lugar do coral-700. Aqui o texto é `display`
+                    (32px bold), então o tom de marca passa AA folgado sobre o
+                    papel claro — a régua do coral-700 existe pra texto pequeno
+                    e pra branco sobre coral, que não é o caso. */}
+                <span className="text-brand">atividade principal</span> com
                 que trabalha.
               </p>
               {/* 🆕 02/09 (pedido do Pedro) — tira o peso da palavra
@@ -620,7 +647,14 @@ export function PerguntaView({
               </p>
             </div>
           ) : (
-          <Rolagem className="min-h-0 flex-1">
+          <>
+            {/* 🔒 04/09 (pedido do Pedro) — O SLOT TRAVA NO TOPO.
+                Ele vivia DENTRO da área rolável e subia junto com a lista: a
+                pessoa descia pra comparar os cartões e perdia de vista o lugar
+                onde a escolha vai encostar (e, com a pergunta agora morando
+                dentro dele, perdia a pergunta junto). Fora da `Rolagem`, ele
+                fica; só a lista rola por baixo. Mesma doutrina que a C5 já
+                usa com o cartão da principal. */}
             {/* 🆕 02/09 (ideia do Pedro) — O SLOT DO PRINCIPAL.
                 Um lugar de chegada, vazio e pontilhado, com o nome do que
                 falta. O contorno tracejado é a convenção de "cabe algo aqui"
@@ -628,7 +662,9 @@ export function PerguntaView({
                 coisa que o cartão pré-marcado não dizia. Preenchido, ele é o
                 MESMO cartão coral, agora inequivocamente uma escolha dela. */}
             <div ref={slotRef} className="scroll-mt-1">
-            <p className="text-micro text-text-tertiary mb-2">Sua atividade principal</p>
+            {/* ✍️ 04/09 (auditoria) — a tela dizia "atividade principal" 3x em
+                4 linhas (rótulo, instrução do slot e CTA). O rótulo some: o
+                slot logo abaixo já diz o que ele é, e o CTA fecha a frase. */}
             {principal ? (
               <OutrasOpcoes
                 titulo=""
@@ -637,13 +673,26 @@ export function PerguntaView({
                 // 🐛 02/09 — a pill sumia quando o cartão subia: o slot não
                 // recebia `pillDe`, só a lista de baixo. Mesma regra dos dois
                 // lados, senão o cartão perde informação ao ser escolhido.
-                pillDe={(o) =>
-                  o.cnae === encaixe.recomendado.cnae ? "+ compatível" : "compatível"
-                }
+                /* 🔄 04/09 (decisão do Pedro, saída da auditoria) — TODAS
+                   levam "compatível". O "+" existia pra marcar a recomendada,
+                   mas a lista já chega filtrada pela categoria que a pessoa
+                   escolheu antes de pagar: todas ali servem, e a ordem já diz
+                   qual a gente sugere primeiro. O "+" virava um comparativo
+                   sem termo de comparação visível. */
+                pillDe={() => "compatível"}
                 onVerDetalhes={setDetalhe}
               />
             ) : (
-              <div className="flex min-h-[62px] items-center justify-center rounded-2xl border border-dashed border-border-strong px-3 py-4">
+              /* 🆕 04/09 (pedido do Pedro) — A PERGUNTA MORA NO SLOT.
+                 O `h1` "O que você faz?" saiu de vista na mesma rodada, e o
+                 slot é o lugar certo pra ela: é onde a resposta vai encostar.
+                 Duas linhas com pesos diferentes, e não uma frase só, porque
+                 são duas coisas: a PERGUNTA (o que a tela quer saber) e a
+                 INSTRUÇÃO (como responder, tocando num cartão de baixo). */
+              <div className="flex min-h-[86px] flex-col items-center justify-center gap-1 rounded-2xl border border-dashed border-border-strong px-3 py-4 text-center">
+                <p className="text-body-strong font-semibold text-text-primary">
+                  O que você faz?
+                </p>
                 <p className="text-caption text-text-muted">
                   Escolha sua atividade principal, é só selecionar
                 </p>
@@ -651,21 +700,20 @@ export function PerguntaView({
             )}
             </div>
 
-            {/* Os que ainda não foram escolhidos. Quem sobe pro slot sai
-                daqui, então a lista nunca mostra o mesmo código duas vezes —
-                é a "troca" que o Pedro descreveu. */}
-            <OutrasOpcoes
-              titulo={principal ? "Trocar por" : "O que mais se encaixa"}
-              alternativas={opcoes.filter((o) => o.cnae !== escolhido)}
-              // O recomendado se distingue pelo "+"; os outros seguem
-              // marcados como compatíveis, que é o que eles são.
-              pillDe={(o) =>
-                o.cnae === encaixe.recomendado.cnae ? "+ compatível" : "compatível"
-              }
-              onEscolher={escolherCnae}
-              onVerDetalhes={setDetalhe}
-            />
-          </Rolagem>
+            <Rolagem className="mt-4 min-h-0 flex-1">
+              {/* Os que ainda não foram escolhidos. Quem sobe pro slot sai
+                  daqui, então a lista nunca mostra o mesmo código duas vezes —
+                  é a "troca" que o Pedro descreveu. */}
+              <OutrasOpcoes
+                titulo={principal ? "Trocar por" : "O que mais se encaixa"}
+                alternativas={opcoes.filter((o) => o.cnae !== escolhido)}
+                // Todas compatíveis: a lista já chega filtrada pela categoria.
+                pillDe={() => "compatível"}
+                onEscolher={escolherCnae}
+                onVerDetalhes={setDetalhe}
+              />
+            </Rolagem>
+          </>
           )}
 
           {!sabeCodigo && (
@@ -674,7 +722,7 @@ export function PerguntaView({
                 valor={categoria ?? ""}
                 onChange={(v) => setCategoria(v || null)}
                 opcoes={PILLS.map((p) => ({ v: p.id, label: p.label }))}
-                placeholder="Escolhe uma categoria"
+                placeholder="Escolha uma categoria"
                 valorEmDestaque
               />
             </Campo>
@@ -687,7 +735,12 @@ export function PerguntaView({
               quando a lista de pills saiu; agora a sobra é do vazio acima, e
               o campo tem piso de 3 linhas e cresce com o texto. */}
           <div className="flex shrink-0 flex-col">
-            <p className="text-caption font-semibold text-text-primary">
+            {/* 🐛 04/09 (auditoria) — este campo não usa o `Campo` do DS (o
+                rótulo é um `<p>` à mão, por causa do layout desta tela), então
+                ele não herdou o `<label>` que o DS ganhou hoje: o textarea
+                ficava SEM NOME acessível, anunciado só como "campo de edição".
+                `aria-labelledby` amarra os dois sem mexer no desenho. */}
+            <p id="c0-rotulo-descricao" className="text-caption font-semibold text-text-primary">
               {sabeCodigo ? "Número do CNAE" : "O que você faz na prática"}
             </p>
             <div className="relative mt-1.5">
@@ -699,6 +752,7 @@ export function PerguntaView({
                   value={texto}
                   onChange={(e) => setTexto(mascaraCnae(e.target.value))}
                   inputMode="numeric"
+                  aria-labelledby="c0-rotulo-descricao"
                   placeholder={placeholder}
                   className="block min-h-12 w-full rounded-md border border-border-hairline
                              bg-surface-card px-4 pr-9 text-body text-text-primary
@@ -707,8 +761,12 @@ export function PerguntaView({
               ) : (
               <textarea
                 ref={areaRef}
-                // 🔄 02/09 (pedido do Pedro) — piso de 3 linhas. Cresce daí.
-                rows={3}
+                /* 🔄 04/09 (pedido do Pedro) — piso de 2 linhas (era 3). Com
+                   o slot travado no topo, a altura que o campo guardava vazia
+                   fazia falta pra lista. Ele continua crescendo com o texto,
+                   então quem escreve muito não perde nada. */
+                rows={2}
+                aria-labelledby="c0-rotulo-descricao"
                 value={texto}
                 onChange={(e) => setTexto(e.target.value)}
                 placeholder={placeholder}
@@ -745,7 +803,17 @@ export function PerguntaView({
             estado de chegada: descrever deixou de ser obrigatório, então
             cobrar texto seria contradizer o botão, que já libera. No lugar,
             a chegada diz o que acontece se a pessoa não escrever nada. */}
-        <p className="text-caption text-text-tertiary mt-2 min-h-[1.25rem]">
+        {/* 🔄 04/09 (achado do Pedro: "o campo está bem distante do link") —
+            A ALTURA RESERVADA SÓ EXISTE ONDE ELA SERVE. Esta linha guarda
+            1,25rem mesmo vazia pra tela não pular enquanto a pessoa digita na
+            CHEGADA (onde a frase aparece e some). Com resultados na tela a
+            frase nunca aparece, então o espaço era buraco puro: 28px entre o
+            campo e o link, sem nada dentro. */}
+        <p
+          className={`text-caption text-text-tertiary ${
+            semResultados ? "mt-2 min-h-[1.25rem]" : ""
+          }`}
+        >
           {/* 🗑️ 02/09 (pedido do Pedro) — "Formato: 0000-0/00" saiu: a
               máscara já mostra o formato enquanto a pessoa digita, e repetir
               em texto é explicar o que está acontecendo na frente dela. */}
@@ -766,7 +834,13 @@ export function PerguntaView({
             // escolha desta tela: alternar pro modo código não pode apagá-la.
             // Voltando pra descrição, ela ainda está lá.
           }}
-          className="mt-2 self-center text-caption font-medium text-text-secondary underline underline-offset-4"
+          /* 🔄 04/09 (auditoria) — o link tinha 20px de altura, abaixo até do
+             mínimo de 24px da WCAG 2.5.8. Vira alvo de 44px sem virar botão:
+             o sublinhado continua, o que muda é o espaço clicável. */
+          /* `-mt-1` porque o alvo de 44px já traz respiro próprio: sem
+             compensar, o espaço de toque vira espaço visual e o link
+             descolava do campo. */
+          className="-mt-1 flex min-h-11 items-center justify-center self-center px-3 text-caption font-medium text-text-secondary underline underline-offset-4"
         >
           {sabeCodigo ? "Prefiro descrever o que faço" : "Já sei o número do meu CNAE"}
         </button>
@@ -841,13 +915,22 @@ export function PerguntaView({
               (C0.0) ainda não existe atividade nenhuma na tela, então o botão
               pede a busca; depois que os códigos aparecem e um está no slot,
               ele confirma a escolha. */}
-          {semResultados
-            ? "Buscar atividade principal"
-            : desatualizado && !sabeCodigo
-              ? "Buscar de novo"
-              : jaCliente
-                ? "Continuar com essa atividade"
-                : "Validar minha atividade"}
+          {/* 🐛 04/09 (auditoria com Playwright) — CTA TRAVADO E MUDO. Sem
+              categoria (o caso de quem abre a C0.0 por deep-link, pela pill do
+              mapa ou pela fita, onde não vem `?cat=`), o botão ficava
+              desabilitado dizendo "Buscar atividade principal" mesmo depois de
+              a pessoa escrever a descrição: ela tentava, nada acontecia, e a
+              tela não dizia o que faltava. Agora o rótulo é o estado, mesma
+              regra que o A1 usa no gate de conferência. */}
+          {!sabeCodigo && categoria === null
+            ? "Escolha uma categoria"
+            : semResultados
+              ? "Buscar atividade principal"
+              : desatualizado && !sabeCodigo
+                ? "Buscar de novo"
+                : jaCliente
+                  ? "Continuar com essa atividade"
+                  : "Validar minha atividade"}
         </Button>
       </div>
     </>

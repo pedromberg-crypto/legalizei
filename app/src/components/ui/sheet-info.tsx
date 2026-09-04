@@ -37,6 +37,7 @@ export function SheetInfo({
   titulo,
   pontos,
   exemplo,
+  destaque,
   ilustracao,
   link,
   onFechar,
@@ -45,6 +46,19 @@ export function SheetInfo({
   /** Uma frase por linha, cada uma com o check verde. */
   pontos: string[];
   exemplo?: ExemploSheet;
+  /**
+   * 🆕 04/09 (pedido do Pedro, na C5) — BLOCO DE DESTAQUE, pra um assunto que
+   * não pode se perder no meio dos checks.
+   *
+   * Nasceu da etiqueta "Muda seu enquadramento": ela aparece em cartão de
+   * busca, é a única coisa da tela que mexe no imposto da pessoa, e a
+   * explicação estava como o 5º de 6 pontos — tecnicamente presente, na
+   * prática escondida. Aqui ela ganha caixa própria, em tinta de atenção, e
+   * fica acima do exemplo.
+   *
+   * ⚠️ Um por sheet, de propósito: dois destaques é nenhum destaque.
+   */
+  destaque?: { titulo: string; texto: string };
   /**
    * 🆕 03/09 — espaço reservado pra imagem que MOSTRA o que o texto descreve
    * (o caso-mãe é a folha do IPTU com o índice cadastral circulado). Entra
@@ -115,12 +129,29 @@ export function SheetInfo({
             ))}
           </div>
 
+          {destaque && (
+            /* `mt-3`, não `mt-4`: com o destaque a coluna ficou 4px mais alta
+               que a folha no iPhone SE, e 4px de rolagem numa folha curta lê
+               como corte. O respiro menor resolve sem apertar o texto. */
+            /* 🔄 04/09 (pedido do Pedro) — CAIXA BRANCA, COMO TODO CARD DA
+               CASA: fundo `surface-card`, borda hairline. O amarelo ficou só
+               no TÍTULO, que é onde ele significa "atenção"; tingir a caixa
+               inteira dava a ela peso de alerta de erro, e aqui não há erro
+               nenhum — é informação sobre uma escolha possível. */
+            <div className="mt-3 rounded-md border border-border-hairline bg-surface-card p-3">
+              <p className="text-caption font-semibold text-state-warning-text">
+                {destaque.titulo}
+              </p>
+              <p className="mt-1 text-caption text-text-primary">{destaque.texto}</p>
+            </div>
+          )}
+
           {ilustracao && <div className="mt-4">{ilustracao}</div>}
 
           {/* O exemplo vem DEPOIS das explicações e num bloco próprio: quem
               rolou até aqui quer ver como se faz, não mais teoria. */}
           {exemplo && (
-            <div className="mt-4 rounded-md border border-border-hairline bg-surface-alt p-3">
+            <div className="mt-3 rounded-md border border-border-hairline bg-surface-alt p-3">
               <p className="text-caption font-semibold text-text-primary">
                 {exemplo.titulo}
               </p>
@@ -199,9 +230,18 @@ export function BotaoInfo({ onClick, rotulo }: { onClick: () => void; rotulo: st
       type="button"
       onClick={onClick}
       aria-label={rotulo}
-      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border-hairline text-micro font-bold text-text-tertiary"
+      /* 🔄 04/09 (auditoria) — o alvo era o próprio círculo de 24px, que é o
+         MÍNIMO da WCAG 2.5.8 e fica longe dos 44px do resto do app. O círculo
+         continua com 24 (é sinal, não botão); quem cresceu foi a área de
+         toque em volta dele, com `p-2` num alvo de 40px. */
+      className="flex shrink-0 items-center justify-center rounded-full p-2 -m-2 text-text-tertiary"
     >
-      i
+      <span
+        aria-hidden
+        className="flex h-6 w-6 items-center justify-center rounded-full border border-border-hairline text-micro font-bold"
+      >
+        i
+      </span>
     </button>
   );
 }

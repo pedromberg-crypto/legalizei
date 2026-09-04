@@ -35,6 +35,8 @@ export function SplashMensagemView({
   duracaoMs = 1800,
   variante = "sucesso",
   cta,
+  passos,
+  nota,
 }: {
   titulo: string;
   sub?: string;
@@ -61,6 +63,25 @@ export function SplashMensagemView({
    * o gesto de saída muda.
    */
   cta?: { label: string; onClick?: () => void };
+  /**
+   * 🆕 04/09 (pedido do Pedro, no A2) — OS PRÓXIMOS PASSOS COMO LISTA.
+   *
+   * O A2 tinha 4 frases num parágrafo só: disparo da viabilidade, paralelismo
+   * da guia, o que fazer se a Junta pedir ajuste e a irreversibilidade. Cada
+   * uma é verdadeira e necessária, mas empilhadas viram um bloco de texto que
+   * ninguém lê na tela mais tensa do flow. Em lista, a pessoa vê o CAMINHO (é
+   * o que tranquiliza) e lê o detalhe só do passo que lhe interessa.
+   *
+   * Desenho emprestado da timeline do status (`painel.tsx`): bolinha, linha
+   * conectando e detalhe embaixo do nome. Aqui em versão clara, sobre o coral.
+   */
+  passos?: { titulo: string; detalhe: string }[];
+  /**
+   * Nota em corpo miúdo, embaixo da lista. Nasceu pro "se a Junta pedir um
+   * ajuste, a gente resolve": é reforço de tranquilidade, não instrução, então
+   * não pode disputar peso com os passos.
+   */
+  nota?: string;
 }) {
   const recusado = variante === "recusado";
   useEffect(() => {
@@ -76,9 +97,14 @@ export function SplashMensagemView({
     // sangra até o vidro do aparelho sem precisar de wrapper com `transform`
     // pra criar containing block (o que a SplashView/N1 ainda precisa).
     <div
-      className={`absolute inset-0 z-50 flex flex-col items-center justify-center gap-5 px-10 text-center ${
-        recusado ? "bg-surface-dark" : "bg-brand"
-      }`}
+      /* Com `passos` a tela deixa de ser cartaz: o conteúdo cresce, encosta no
+         topo (abaixo do logo) e rola se o aparelho for baixo. Sem eles, nada
+         muda — as 5 splashes de sempre seguem centradas. */
+      className={`absolute inset-0 z-50 flex flex-col items-center px-10 ${
+        passos
+          ? "justify-start gap-4 overflow-y-auto pt-20 pb-28 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          : "justify-center gap-5 text-center"
+      } ${recusado ? "bg-surface-dark" : "bg-brand"}`}
       style={
         recusado
           ? {
@@ -129,10 +155,13 @@ export function SplashMensagemView({
           // 🔄 01/09 (pedido do Pedro) — +30%: 160 → 208px. O confete do
           // lottie ocupa boa parte do quadro, então o disco desenhado é bem
           // menor que a caixa: pra o CHECK crescer 30%, a caixa cresce junto.
-          className="h-52 w-52"
+          // 🔄 04/09 — com lista ele encolhe (o protagonista aqui é o caminho,
+          // não a comemoração), mas 128px ficou miúdo demais na tela: 160px,
+          // que empurra o conteúdo pra baixo na mesma medida.
+          className={passos ? "h-40 w-40 shrink-0" : "h-52 w-52"}
         />
       )}
-      <div>
+      <div className={passos ? "w-full max-w-sm" : undefined}>
         <h1 className={`text-h1 ${recusado ? "text-text-on-dark" : "text-text-on-brand"}`}>
           {titulo}
         </h1>
@@ -147,6 +176,43 @@ export function SplashMensagemView({
         )}
       </div>
 
+      {/* ── OS PRÓXIMOS PASSOS ────────────────────────────────────────────
+          Mesma gramática da timeline do status: bolinha, linha conectando,
+          detalhe embaixo do nome. Aqui em branco sobre o coral, e sem estado
+          (nada aconteceu ainda) — é um roteiro, não um progresso. */}
+      {passos && (
+        <ol className="w-full max-w-sm">
+          {passos.map((p, i) => (
+            <li key={p.titulo} className="relative flex gap-3 pb-5 last:pb-0">
+              {/* A linha para no último item: ela conecta passos, e depois do
+                  último não há o que conectar. */}
+              {i < passos.length - 1 && (
+                <span
+                  aria-hidden
+                  className="absolute left-[7px] top-5 bottom-1 w-px bg-text-on-brand/30"
+                />
+              )}
+              <span
+                aria-hidden
+                className="relative z-10 mt-1.5 h-3.5 w-3.5 shrink-0 rounded-full border-2 border-text-on-brand/70"
+              />
+              <span className="min-w-0">
+                <span className="block text-body font-semibold text-text-on-brand">
+                  {p.titulo}
+                </span>
+                <span className="mt-0.5 block text-caption text-text-on-brand/70">
+                  {p.detalhe}
+                </span>
+              </span>
+            </li>
+          ))}
+        </ol>
+      )}
+
+      {nota && (
+        <p className="w-full max-w-sm text-micro text-text-on-brand/70">{nota}</p>
+      )}
+
       {/* CTA fixo, só na variante de aviso. Fica no rodapé (thumb zone) e não
           no meio da tela: é decisão, não confirmação — e decisão a gente toma
           com o polegar onde ele já está. */}
@@ -155,8 +221,21 @@ export function SplashMensagemView({
           <button
             type="button"
             onClick={cta.onClick}
+            /**
+             * 🔄 04/09 (pedido do Pedro) — o rótulo passou de coral-700
+             * (`action-primary-sm`) pro CORAL DA MARCA (`text-brand`,
+             * coral-500), o mesmo tom do fundo da tela: o botão vira um
+             * recorte do fundo, não um elemento com cor própria.
+             *
+             * 🔴 DÍVIDA DE CONTRASTE, registrada: coral-500 sobre branco dá
+             * ~3,0:1, e a regra travada em 12/07 pede 4,5:1 pra texto de 16px
+             * bold (o coral-700 dava 5,64:1). Qualquer coral mais claro que o
+             * 700 reprova nesse tamanho; as saídas seriam voltar ao 700 ou
+             * subir o rótulo pra ≥18,66px bold, que é quando 3:1 passa a
+             * valer. O Pedro pediu o claro sabendo do custo.
+             */
             className="flex min-h-12 w-full items-center justify-center rounded-md bg-surface-card
-                       px-4 text-body font-bold text-action-primary-sm transition-opacity
+                       px-4 text-body font-bold text-brand transition-opacity
                        hover:opacity-90"
           >
             {cta.label}

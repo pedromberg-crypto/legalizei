@@ -14,6 +14,8 @@ import { passosDoCliente } from "@/lib/passos";
 // 🆕 03/09 — o recap mostra estado civil, regime de bens e tipo de imóvel com
 // o MESMO rótulo que a pessoa viu ao responder (fonte única em `lib/`).
 import { ESTADO_CIVIL, REGIME_BENS, TIPO_IMOVEL, rotuloDe } from "@/lib/qualificacao";
+/* 🆕 04/09 — fonte única do nome de cada CNAE (oficial IBGE). Ver `lib/cnae`. */
+import { nomeCnae } from "@/lib/cnae";
 // 🆕 03/09 — nome/CPF/e-mail/telefone não se ajustam aqui (bloco 1): a saída é
 // o canal humano, no pé do próprio cartão.
 import { linkWhatsApp } from "@/lib/contato";
@@ -160,8 +162,13 @@ function useRevisao() {
     extras,
     contato: { email: CLIENTE.email, telefone: CLIENTE.telefone },
     atividade: {
-      principal: { cnae: CNAE_PRINCIPAL.cnae, nome: CNAE_PRINCIPAL.humano },
-      secundarias: CNAES_SECUNDARIAS.map((s) => ({ cnae: s.cnae, nome: s.humano })),
+      /* 🆕 04/09 — nome vem do dicionário (oficial IBGE), igual ao C0 e ao C5.
+         O recap era a 3ª grafia do mesmo código. */
+      principal: { cnae: CNAE_PRINCIPAL.cnae, nome: nomeCnae(CNAE_PRINCIPAL.cnae, CNAE_PRINCIPAL.humano) },
+      secundarias: CNAES_SECUNDARIAS.map((s) => ({
+        cnae: s.cnae,
+        nome: nomeCnae(s.cnae, s.humano),
+      })),
       objeto: OBJETO_SOCIAL,
     },
     nomes: RAZAO_OPCOES,
@@ -332,7 +339,13 @@ export function RevisarView({
             nesta tela. Desde 01/09 o ME não autoriza nada aqui (o aceite foi
             pra `/guia`) e o CTA leva pro ponto sem volta, não pra Junta. O
             "isso" vago também saiu: é justo a frase que define o risco. */}
-        <Titulo sub="Confira com calma. É com esses dados que a gente registra a sua empresa na Junta, no seu nome.">
+        {/* 🔄 04/09 (2ª correção do dia) — dizia "é com esses dados que a gente
+            REGISTRA a sua empresa na Junta". Registro é o fim da linha; o que
+            sai daqui é o pedido de viabilidade, e o registro só acontece
+            depois da guia e da assinatura. Prometer o fim numa tela que abre o
+            começo é o mesmo erro que o subtítulo anterior já tinha cometido
+            com o aceite. */}
+        <Titulo sub="Confira com calma. É com esses dados que a gente dá entrada do seu pedido na Junta, no seu nome.">
           Está tudo certo?
         </Titulo>
 
@@ -421,18 +434,41 @@ export function RevisarView({
                 códigos saíram: ninguém confere o número, confere o nome, e 4
                 códigos entre parênteses eram o maior ruído do cartão. O da
                 principal fica, que é o que define anexo e alíquota. */}
+            {/* 🐛 04/09 (achado do Pedro) — DUAS ATIVIDADES VIRAVAM UM
+                PARÁGRAFO SÓ. Os nomes oficiais do IBGE ocupam 2 e 3 linhas
+                cada, e a lista era só uma pilha de `<span>`: sem separação,
+                não dava pra ver onde uma acaba e a outra começa.
+                O conserto é a estrutura contar isso, não o texto: cada
+                atividade vira um item com marcador e o CNAE embaixo. O código
+                separa, numera e ainda é o dado que vai pro DBE — a única
+                coisa que distingue com certeza duas atividades de nome
+                parecido. Contagem no rótulo pelo mesmo motivo ("2 atividades
+                secundárias" antes de listar as duas). */}
             {d.atividade.secundarias.length > 0 && (
               <div className="flex flex-col">
                 <span className="text-micro text-text-tertiary">
                   {d.atividade.secundarias.length > 1
-                    ? "Atividades secundárias"
+                    ? `${d.atividade.secundarias.length} atividades secundárias`
                     : "Atividade secundária"}
                 </span>
-                {d.atividade.secundarias.map((s) => (
-                  <span key={s.cnae} className="text-caption font-semibold text-text-primary">
-                    {s.nome}
-                  </span>
-                ))}
+                <ul className="mt-1 flex flex-col gap-2">
+                  {d.atividade.secundarias.map((s) => (
+                    <li key={s.cnae} className="flex gap-2">
+                      <span
+                        aria-hidden
+                        className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-text-tertiary"
+                      />
+                      <span className="min-w-0">
+                        <span className="block text-caption font-semibold text-text-primary">
+                          {s.nome}
+                        </span>
+                        <span className="block text-micro text-text-tertiary">
+                          CNAE {s.cnae}
+                        </span>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
             <Linha
@@ -587,7 +623,7 @@ function CartaoSocio({ socio, titular }: { socio: SocioRevisao; titular: boolean
           type="button"
           onClick={() => setAberto((a) => !a)}
           aria-expanded={aberto}
-          className="shrink-0 rounded-full border border-border-hairline px-2.5 py-1 text-micro font-semibold text-text-secondary transition-colors hover:border-border-strong"
+          className="flex min-h-9 shrink-0 items-center rounded-full border border-border-hairline px-3 text-micro font-semibold text-text-secondary transition-colors hover:border-border-strong"
         >
           {aberto ? "Ocultar" : "Ver detalhes"}
         </button>
@@ -916,10 +952,15 @@ function NotaAdministracao({ nomes }: { nomes: string[] }) {
         <Certo />
       </span>
       <p className="text-caption text-text-secondary">
+        {/* ✍️ 04/09 (auditoria) — PRIMEIRO nome. O cartão logo acima já mostra
+            o nome completo de cada sócio; repetir por extenso aqui só alonga a
+            frase sem acrescentar identificação. */}
         {nomes.map((nome, i) => (
           <span key={nome}>
             {i > 0 && (i === nomes.length - 1 ? " e " : ", ")}
-            <strong className="font-semibold text-text-primary">{nome}</strong>
+            <strong className="font-semibold text-text-primary">
+              {nome.trim().split(/\s+/)[0]}
+            </strong>
           </span>
         ))}
         {/* ✍️ 04/09 (2ª rodada, pedido do Pedro) — enxugado. A 1ª versão dizia
@@ -2338,9 +2379,31 @@ export function RetomarCpfView({
 // vez agora. O boleto pendente não trava nada além disso — só "Revisar e
 // confirmar" (o desfecho) fica retido até compensar.
 const BOLETO_P2 = { passosFeitos: 2 };
-// 🆕 31/08 — mock da fase pós-dossiê (era o default de `/painel`, ME):
-// documentação+viabilidade já ok, DAE aguardando pagamento.
-const JUNTA_MOCK = { concluidas: 1, emAndamento: 1 };
+/**
+ * 🐛→🔒 04/09 (achado do Pedro, chegando do A2) — O ESTADO DE CHEGADA MENTIA.
+ *
+ * O default era `{concluidas: 1, emAndamento: 1}`: a viabilidade aparecia com
+ * CHECK VERDE e o hero dizia que ela tinha passado na Junta. Só que quem chega
+ * aqui acabou de tocar no A2 — a análise começou HÁ SEGUNDOS. A tela dava por
+ * concluído o passo que ela deveria estar mostrando rodando, e o hero
+ * comemorava um resultado que ninguém tinha.
+ *
+ * Agora a chegada é `{0, 0}`: "Revisar e confirmar" fica verde (foi o que a
+ * pessoa fez), "Analisando viabilidade" gira, e a guia segue PAGÁVEL em
+ * paralelo (regra travada hoje, ver `iniciar-viabilidade`). Os estados de
+ * guia paga/boleto continuam vindo por prop, com os mesmos números de antes.
+ */
+const JUNTA_MOCK = { concluidas: 0, emAndamento: 0 };
+
+/**
+ * 🆕 04/09 — o bloco que recebe os 9 passos do dossiê quando eles se fundem na
+ * fase Junta. Reusa o id 1 de propósito: ele já é o único bloco não editável
+ * do dossiê (`telas: []` em `lib/passos.ts`), então o "Ajustar" continua sem
+ * aparecer mesmo se um dia o `podeAjustar` global for afrouxado.
+ */
+const BLOCO_DOSSIE_FUNDIDO = 1;
+/** Nome do cartão fundido. Faz par com "Registro nos órgãos", o de baixo. */
+const TITULO_DOSSIE_FUNDIDO = "Informações confirmadas";
 
 export function AguardandoView({
   mei = false,
@@ -2429,13 +2492,27 @@ export function AguardandoView({
   // 🆕 31/08 (pedido do Pedro) — cada passo carrega `descricao` (o que envolve
   // + quanto tempo leva, ver `lib/passos.ts`); o PainelView só mostra a do
   // passo ATUAL, como orientação do que vem pela frente.
+  /**
+   * 🆕 04/09 (pedido do Pedro) — NA FASE JUNTA, O DOSSIÊ VIRA UM CARTÃO SÓ.
+   *
+   * Os 4 blocos ("Conta e plano", "O que a empresa faz", "Você e os sócios",
+   * "A empresa") existem pra dar ordem a quem está PREENCHENDO: cada um é um
+   * assunto que se fecha, e o "Ajustar" mora neles. Passado o ponto sem volta,
+   * nenhum dos dois motivos sobrevive — não há o que preencher nem o que
+   * ajustar — e sobram 4 acordeões concluídos empurrando pra fora da tela a
+   * única coisa que importa ali: a etapa da vez, que é pagar a guia.
+   *
+   * Fundir é só reetiquetar o bloco de cada passo: a timeline agrupa por esse
+   * número, os índices globais continuam os mesmos e o contador vira "9 de 9".
+   * O bloco 5 (Registro nos órgãos) fica intocado, logo abaixo, aberto.
+   */
   const etapasDossie: Etapa[] = passos.map((p, i) => ({
     nome: boletoPendente && i === indiceGirandoBoleto ? (p.nomeEnquantoGirando ?? p.nome) : p.nome,
     detalhe: p.descricao,
     // 🆕 01/09 — o bloco vem do próprio passo (`lib/passos.ts`); as 3 etapas
     // da Junta entram todas no bloco 5, junto do "Revisar e confirmar" que as
     // dispara. É o que permite a timeline agrupar.
-    bloco: p.bloco,
+    bloco: naFaseJunta ? BLOCO_DOSSIE_FUNDIDO : p.bloco,
   }));
   const etapasCombinadas: Etapa[] = [
     ...etapasDossie,
@@ -2465,9 +2542,45 @@ export function AguardandoView({
    *   Pix pra quem não quer esperar 1-3 dias. Mesmo par de ações que o hero do
    *   E9.1 já usava pro boleto da mensalidade.
    */
+  /**
+   * 🔒 04/09 — VIABILIDADE E GUIA NÃO SE ESPERAM (regra travada com o Pedro no
+   * A2). A timeline é uma linha, então ela mostra a viabilidade girando; mas
+   * "girando" aqui não bloqueia nada: a guia continua pagável, e é por isso
+   * que a vez do cliente deixou de ser "a etapa ATUAL tem ação" e passou a ser
+   * "a guia ainda não foi paga".
+   *
+   * ⚠️ Declarados ANTES do `etapas` abaixo: o `map` roda na hora e lê `iGuia`.
+   */
+  const iGuia = etapasCombinadas.findIndex((e) => e.acaoCliente);
+  const iViabilidade = etapasDossie.length; // 1ª etapa da Junta na lista
+  const guiaPaga = iGuia >= 0 && concluidas > iGuia;
+  const viabilidadeOk = concluidas > iViabilidade;
+
   const etapas = naFaseJunta
     ? etapasCombinadas.map((e, i) => {
-        if (i !== emAndamento || !e.acaoCliente) return e;
+        /* 🐛 04/09 (achado do Pedro, comparando A3 e A3″) — O RENOME DA GUIA
+           DEPENDIA DE ELA SER A ETAPA ATUAL. Enquanto a viabilidade e a guia
+           eram uma fila, a guia paga por boleto era sempre a etapa da vez e a
+           condição funcionava por acidente. Com o paralelismo (a análise fica
+           girando enquanto a guia é paga), a etapa da vez passou a ser a
+           viabilidade — e o A3″ mostrava "Seu boleto está a caminho" no hero
+           com "Pague a guia da Junta (DAE)" pendente logo abaixo, como se o
+           pagamento não tivesse acontecido. Agora o gatilho é a ETAPA DA GUIA,
+           não o índice atual. */
+        if (i !== iGuia || !e.acaoCliente) return e;
+        /* 🐛 04/09 (achado do Pedro, no A3′) — DEPOIS DE PAGA, A ETAPA AINDA
+           MANDAVA PAGAR. Ela ficava verde mas com o nome no imperativo
+           ("Pague a guia da Junta (DAE)"), e o detalhe seguia explicando uma
+           taxa que já tinha saído da conta. Etapa concluída se descreve no
+           passado: é recibo, não instrução. */
+        if (guiaPaga) {
+          return {
+            ...e,
+            nome: "Guia da Junta paga",
+            detalhe: undefined,
+            acaoCliente: undefined,
+          };
+        }
         if (guiaBoleto) {
           // 🔄 01/09 (correção do Pedro) — SEM card de ação aqui embaixo. As 2
           // ações (ver boleto / adiantar por Pix) sobem pro hero, como chips,
@@ -2476,8 +2589,15 @@ export function AguardandoView({
           // lugares faria a lista disputar atenção com o hero.
           return {
             ...e,
+            /* 🆕 04/09 (pedido do Pedro) — a etapa fica ATIVA, girando, mesmo
+               não sendo a etapa da vez: o banco está compensando neste
+               instante. Cinza aqui dizia "não aconteceu", que é o oposto. */
+            emCurso: true,
             nome: "Guia da Junta · aguardando compensação",
-            detalhe: "Em andamento agora. Te avisaremos quando terminar.",
+            /* 🔄 04/09 — o detalhe dizia só "Em andamento agora". Com a etapa
+               desenhada em cinza (quem gira é a viabilidade), ela precisava
+               dizer que o dinheiro JÁ SAIU, senão lê como passo não feito. */
+            detalhe: "Você já pagou. O banco confirma em 1 a 3 dias úteis, e a gente te avisa.",
             acaoCliente: undefined,
           };
         }
@@ -2489,11 +2609,35 @@ export function AguardandoView({
       })
     : etapasCombinadas;
 
+  /**
+   * 🐛→🔒 04/09 (achado do Pedro: "o card do header não casa com este status")
+   * — O HERO FALAVA DE ESPERA NUMA TELA DE AÇÃO.
+   *
+   * Na fase Junta o hero era um só: "Estamos abrindo sua empresa · a parte
+   * chata é com a gente". Verdade quando a vez é do órgão. Só que este é
+   * exatamente o estado em que a vez é DELA — a viabilidade passou e a guia
+   * está esperando pagamento, com "Pagar a guia agora" no rodapé. O hero
+   * mandava relaxar e o rodapé cobrava ação: a pessoa lê o hero primeiro e
+   * conclui que não tem nada pra fazer.
+   *
+   * Agora o hero segue a etapa da vez, que é o que o resto da tela já fazia.
+   */
+  const vezDoCliente = naFaseJunta && !guiaBoleto && !guiaPaga;
+
   const t = naFaseJunta
     ? {
         // 🔄 01/09 — com a guia paga por boleto o hero fala do boleto, igual
         // ao status da mensalidade: o que prende a jornada agora é o banco.
-        normal: guiaBoleto ? "Seu boleto está a caminho" : "Estamos abrindo sua empresa",
+        normal: guiaBoleto
+          ? "Seu boleto está a caminho"
+          : vezDoCliente
+            ? // 🔄 04/09 — "quase lá" só quando a Junta já respondeu. Na
+              // chegada do A2 a análise mal começou, e comemorar ali seria a
+              // mesma mentira do check verde.
+              viabilidadeOk
+              ? "Sua empresa está quase lá"
+              : "Estamos abrindo sua empresa"
+            : "Estamos abrindo sua empresa",
         recusa: "Precisamos de você num ponto",
       }
     : {
@@ -2504,7 +2648,20 @@ export function AguardandoView({
     ? {
         normal: guiaBoleto
           ? "Boleto da Junta leva de 1 a 3 dias úteis pra cair. Assim que compensar, a gente segue."
-          : "A parte chata é com a gente. Você acompanha por aqui e a gente avisa no WhatsApp a cada passo.",
+          : vezDoCliente
+            ? viabilidadeOk
+              ? /* Diz o que já aconteceu (a viabilidade passou), o que falta e
+                   de quem é a vez. Sem prazo: o detalhe da etapa já informa
+                   que o pagamento leva cerca de 1 minuto. */
+                "A viabilidade passou na Junta. Falta pagar a taxa dela, e o registro é com a gente."
+              : /* 🆕 04/09 — chegada do A2: a análise está rodando E a guia já
+                   pode ser paga. A frase existe pra dizer que uma coisa não
+                   trava a outra, que é o que a pessoa acabou de ler no A2. */
+                "A Junta já está analisando seu nome e endereço. A guia não espera a análise: dá pra pagar quando quiser."
+            : /* ✍️ 04/09 — saiu "e a gente avisa no WhatsApp a cada passo": a
+                 linha miúda logo abaixo, dentro do mesmo hero, já diz isso.
+                 Era a mesma promessa duas vezes na mesma caixa. */
+              "A parte chata é com a gente. Você acompanha por aqui.",
         recusa: "A abertura seguiu bem até aqui. Um órgão pediu um ajuste, e é rápido de resolver.",
       }
     : {
@@ -2560,6 +2717,11 @@ export function AguardandoView({
       concluidas={concluidas}
       emAndamento={emAndamento}
       etapas={etapas}
+      /* 🆕 04/09 — só na fase Junta: o cartão fundido não pode herdar o nome
+         do bloco 1 ("Conta e plano"), que é um quarto do que ele contém. */
+      titulosBloco={
+        naFaseJunta ? { [BLOCO_DOSSIE_FUNDIDO]: TITULO_DOSSIE_FUNDIDO } : undefined
+      }
       onIrParaBloco={onIrParaBloco}
       /**
        * 🔴 Corrigir só existe ANTES do protocolo. Na fase JUNTA os dados já
@@ -2596,10 +2758,18 @@ export function AguardandoView({
                 // Pagou por boleto: nada a fazer até o banco confirmar. O CTA
                 // continua visível (existe próximo passo) mas travado, com o
                 // motivo no rótulo — mesma regra do boleto da mensalidade.
-                label: "Aguardando compensar",
+                // 🆕 04/09 (pedido do Pedro) — com anel girando: botão apagado
+                // e mudo lê como quebrado; com o anel, lê como espera.
+                label: "Aguardando compensação",
                 desabilitado: true,
+                carregando: true,
               }
-            : etapasCombinadas[emAndamento]?.acaoCliente
+            : /* 🔄 04/09 — ANTES ESTE CTA ENSINAVA A FILA QUE A REGRA DERRUBOU.
+                 Ele só oferecia pagar quando a guia era a etapa ATUAL; com a
+                 viabilidade rodando, ficava travado dizendo "Aguardando
+                 viabilidade". Agora a condição é a que importa: guia não paga,
+                 botão de pagar. */
+              !guiaPaga
               ? { label: "Pagar a guia agora", onClick: onPagarDae }
               : emAndamento === etapasCombinadas.length - 1
                 ? { label: "Ir para a assinatura", onClick: onAssinar }

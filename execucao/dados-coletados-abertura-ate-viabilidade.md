@@ -130,6 +130,13 @@ tags: [execucao, flow, dados, abertura]
 - se houver, de cada sócio extra: nome completo + CPF + % de participação + data de nascimento + nacionalidade + RG + órgão emissor + estado civil (+ regime de bens se casado) + endereço (CEP com autofill + número + complemento)
 - quem administra a empresa: com 1 sócio é sim/não no singular ("Eu e o Carlos"), com 2+ vira LISTA de nomes com check por sócio (dá pra ter sócio administrador e sócio que é só sócio)
 
+### C3.1 · Sócios (teto: 3 + você)
+- Por sócio: nome, CPF, participação, nascimento, nacionalidade, RG + órgão, estado civil (+ regime) e endereço
+- quem administra (lista)
+
+### C3.2 · Sócios (só você)
+- Confirmação de que a empresa fica só no nome do titular (nenhum dado novo)
+
 ### C4 · Dados da empresa
 - Índice cadastral do IPTU (único campo do cliente)
 - CEP + número + complemento + tipo de imóvel + residência aparecem TRAVADOS, vindos do E3.4

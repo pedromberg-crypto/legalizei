@@ -28,6 +28,10 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
  * iguais, sem tocar nelas). A nav ENTRE seções é a barra de abas, não isto;
  * isto é só o back de drill-down.
  */
+/* 🔄 04/09 (auditoria com Playwright) — a seta de voltar tinha 28px de alvo,
+   contra os 44px que os CTAs do app respeitam. O ícone continua com 18px; o
+   que cresceu foi a área de toque (h-10 w-10), com a margem negativa
+   compensando pra o alinhamento óptico não mudar. */
 export function TelaHeader({
   meta,
   voltar,
@@ -74,7 +78,7 @@ export function TelaHeader({
         <button
           onClick={onVoltar}
           aria-label="Voltar"
-          className="-ml-1.5 flex h-7 w-7 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-alt"
+          className="-ml-2.5 flex h-10 w-10 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-alt"
         >
           <SetaVoltar />
         </button>
@@ -89,7 +93,7 @@ export function TelaHeader({
         <Link
           href={voltar}
           aria-label="Voltar"
-          className="-ml-1.5 flex h-7 w-7 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-alt"
+          className="-ml-2.5 flex h-10 w-10 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-alt"
         >
           <SetaVoltar />
         </Link>

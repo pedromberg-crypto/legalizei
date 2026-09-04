@@ -31,6 +31,7 @@
  * próprio de identidade, sócios ou CNAE.**
  * ═══════════════════════════════════════════════════════════════════════════
  */
+import { nomeCnae, nomeCnaeEmFrase } from "@/lib/cnae";
 
 /** Coletado no N6 (front-load, 28/07) e só CONFIRMADO no N10. */
 export const CLIENTE = {
@@ -183,9 +184,14 @@ export const RAZAO_OPCOES: string[] = [
  * digitado. Se o CNAE muda, ele se regenera; é por isso que é derivado e não
  * um campo.
  */
-export const OBJETO_SOCIAL = `Prestação de serviços de ${CNAE_PRINCIPAL.humano.toLowerCase()}, podendo também exercer ${CNAES_SECUNDARIAS.map(
-  (s) => s.humano,
-).join(", ")}.`;
+/* 🔄 04/09 (decisão do Pedro) — o objeto social passou a ser montado com os
+   nomes OFICIAIS do IBGE (`lib/cnae`), não com os apelidos de cada tela. É o
+   texto que vai pro contrato e ele precisa espelhar a descrição da subclasse:
+   objeto divergente do CNAE do DBE é o ponto de falha nº 1 da JUCEMG (ver
+   `pesquisa/exigencias-jucemg.md`). */
+export const OBJETO_SOCIAL = `Prestação de serviços de ${nomeCnaeEmFrase(
+  CNAE_PRINCIPAL.cnae,
+)}, podendo também exercer ${CNAES_SECUNDARIAS.map((s) => nomeCnaeEmFrase(s.cnae)).join(", ")}.`;
 
 /**
  * O que o autofill de CEP devolve no mock (mesmo retorno de `buscarCep` no

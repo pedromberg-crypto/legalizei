@@ -74,6 +74,20 @@ export interface Etapa {
    * timeline vira parede de texto.
    */
   detalhe?: string;
+  /**
+   * 🆕 04/09 (pedido do Pedro, no A3″) — ETAPA EM CURSO SEM SER "A VEZ".
+   *
+   * A timeline tinha um único ponteiro (`emAndamento`), o que bastava
+   * enquanto a jornada era uma fila. Com viabilidade e guia correndo em
+   * PARALELO (regra travada hoje no A2), existem dois passos acontecendo ao
+   * mesmo tempo: a Junta analisando e o banco compensando o boleto. Sem isto,
+   * quem pagou por boleto voltava e via a guia CINZA, como se o pagamento não
+   * tivesse acontecido.
+   *
+   * Liga o anel girando e o peso de texto da etapa atual, sem mover o
+   * `emAndamento` (que segue mandando no bloco aberto e no CTA do rodapé).
+   */
+  emCurso?: boolean;
 }
 
 /**
@@ -135,7 +149,12 @@ export const ETAPAS_ABERTURA: Etapa[] = [
   {
     nome: "Pague a guia da Junta (DAE)",
     acaoCliente: { label: "Pagar a guia agora" },
-    detalhe: "Taxa obrigatória da Junta. Pagamento leva cerca de 1 minuto.",
+    /* 🔄 04/09 — a linha diz que não há fila. Ela aparece embaixo de uma etapa
+       que a timeline desenha DEPOIS da viabilidade (a lista é vertical, não
+       tem como mostrar dois trilhos), então sem essa frase o desenho continua
+       ensinando a dependência que a regra derrubou. */
+    detalhe:
+      "Taxa obrigatória da Junta. Não precisa esperar a análise, e o pagamento leva cerca de 1 minuto.",
   },
   {
     nome: "Agora é só assinar",
@@ -181,6 +200,7 @@ function TimelineEmBlocos({
   recusa,
   podeAjustar,
   onIrParaBloco,
+  titulosBloco,
 }: {
   etapas: Etapa[];
   concluidas: number;
@@ -188,11 +208,22 @@ function TimelineEmBlocos({
   recusa?: Recusa;
   podeAjustar: boolean;
   onIrParaBloco?: (rota: string, blocoId: number) => void;
+  /**
+   * 🆕 04/09 (pedido do Pedro) — renomear um bloco SEM mexer em `BLOCOS`.
+   *
+   * Nasceu da fase Junta: lá os 4 blocos do dossiê viram um só (ver
+   * `AguardandoView`), e o cartão fundido não pode se chamar "Conta e plano",
+   * que é o nome de um quarto do que ele passou a conter. `BLOCOS` continua
+   * sendo a fonte da divisão em quem coleta; isto é só a etiqueta de quem
+   * mostra.
+   */
+  titulosBloco?: Record<number, string>;
 }) {
   // Índice global de cada etapa preservado: os estados (feito/girando/recusa)
   // continuam vindo de `concluidas`/`emAndamento`, que contam a lista inteira.
   const grupos = BLOCOS.map((b) => ({
     ...b,
+    titulo: titulosBloco?.[b.id] ?? b.titulo,
     itens: etapas
       .map((e, i) => ({ e, i }))
       .filter(({ e }) => (e.bloco ?? 0) === b.id),
@@ -203,7 +234,22 @@ function TimelineEmBlocos({
     grupos.find((g) => g.itens.some(({ i }) => i >= concluidas))?.id ??
     grupos[grupos.length - 1]?.id;
 
-  const [aberto, setAberto] = useState<number | null>(null);
+  /**
+   * 🔄 04/09 (pedido do Pedro: "quando chegar aqui, trave pra ele vir aberto")
+   * — DE ACORDEÃO ÚNICO PRA ABERTURA INDEPENDENTE.
+   *
+   * Antes era um estado só (`aberto: number | null`): abrir um bloco FECHAVA o
+   * atual. Na fase Junta isso quebrava a tela — abrir "Informações
+   * confirmadas" pra dar uma conferida fechava "Registro nos órgãos", que é
+   * onde está a etapa da vez e a única ação da tela; pra reabrir, a pessoa
+   * tinha que perceber que ela mesma fechou.
+   *
+   * Agora cada bloco guarda o próprio estado, e o mapa só registra o que a
+   * PESSOA tocou: sem toque, vale o default (o bloco atual e o de recusa
+   * nascem abertos, os concluídos fechados). O bloco da vez continua aberto
+   * enquanto ninguém o fechar de propósito.
+   */
+  const [tocados, setTocados] = useState<Record<number, boolean>>({});
 
   return (
     <div className="flex flex-col gap-2.5">
@@ -213,7 +259,7 @@ function TimelineEmBlocos({
         const temRecusa = recusa != null && g.itens.some(({ i }) => i === recusa.etapa);
         const concluido = feitos === total && !temRecusa;
         const ehAtual = g.id === blocoAtual && !concluido;
-        const expandido = aberto === g.id || (aberto === null && (ehAtual || temRecusa));
+        const expandido = tocados[g.id] ?? (ehAtual || temRecusa);
 
         const estado: StatusEstado = temRecusa
           ? "recusa"
@@ -246,7 +292,7 @@ function TimelineEmBlocos({
             <div className="flex items-center gap-2 p-3.5">
             <button
               type="button"
-              onClick={() => setAberto(expandido ? -1 : g.id)}
+              onClick={() => setTocados((m) => ({ ...m, [g.id]: !expandido }))}
               aria-expanded={expandido}
               className="flex min-w-0 flex-1 items-center gap-3 text-left"
             >
@@ -294,7 +340,7 @@ function TimelineEmBlocos({
             )}
             <button
               type="button"
-              onClick={() => setAberto(expandido ? -1 : g.id)}
+              onClick={() => setTocados((m) => ({ ...m, [g.id]: !expandido }))}
               aria-label={expandido ? "Fechar bloco" : "Abrir bloco"}
               className="shrink-0"
             >
@@ -308,7 +354,10 @@ function TimelineEmBlocos({
                   {g.itens.map(({ e, i }, idx) => {
                     const feito = i < concluidas;
                     const recusada = recusa?.etapa === i;
-                    const ehAVez = !recusa && i === emAndamento;
+                    /* `emCurso` entra aqui junto com o ponteiro: pro desenho,
+                       "é a vez" e "está rodando em paralelo" são o mesmo anel
+                       girando e o mesmo peso de texto. */
+                    const ehAVez = !recusa && (i === emAndamento || !!e.emCurso);
                     const ultima = idx === g.itens.length - 1;
                     const st: StatusEstado = recusada
                       ? "recusa"
@@ -408,11 +457,27 @@ function ChevronBloco({ aberto }: { aberto: boolean }) {
   );
 }
 
+/**
+ * 🆕 04/09 — anel do CTA em espera. Mesma gramática do `Girando` do
+ * `ui/status.tsx` (borda fina, topo colorido, `animate-spin`), mas herdando a
+ * cor do botão em vez do token de info: dentro de um CTA desabilitado, azul
+ * seria uma segunda cor sem significado.
+ */
+function AnelCta() {
+  return (
+    <span
+      aria-hidden
+      className="block h-4 w-4 shrink-0 animate-spin rounded-full border-2 border-current/30 border-t-current"
+    />
+  );
+}
+
 export function PainelView({
   concluidas,
   emAndamento,
   podeAjustar = true,
   onIrParaBloco,
+  titulosBloco,
   recusa,
   socios = 1,
   etapas,
@@ -441,6 +506,8 @@ export function PainelView({
   podeAjustar?: boolean;
   /** Navegação do CTA de bloco (continuar de onde parou / voltar e corrigir). */
   onIrParaBloco?: (rota: string, blocoId: number) => void;
+  /** 🆕 04/09 — renomeia blocos na exibição (ver `TimelineEmBlocos`). */
+  titulosBloco?: Record<number, string>;
   /** Muda a faixa de notificação: com 2, o andamento vai pros dois. */
   socios?: number;
   /**
@@ -470,7 +537,13 @@ export function PainelView({
   /** 🆕 31/08 — `desabilitado` trava o CTA sem escondê-lo (o cliente precisa
    *  VER que existe um próximo passo, só não pode agir ainda). Usado enquanto
    *  o boleto não compensa. */
-  ctaNormal?: { label: string; onClick?: () => void; desabilitado?: boolean };
+  ctaNormal?: {
+    label: string;
+    onClick?: () => void;
+    desabilitado?: boolean;
+    /** 🆕 04/09 — anel girando dentro do botão: travado POR ESPERA, não por erro. */
+    carregando?: boolean;
+  };
   onAcaoRecusa?: () => void;
   /**
    * 🆕 31/08 (pedido do Pedro, fusão A3+E9) — hero escuro (gradiente coral no
@@ -598,6 +671,7 @@ export function PainelView({
               recusa={recusa}
               podeAjustar={podeAjustar}
               onIrParaBloco={onIrParaBloco}
+              titulosBloco={titulosBloco}
             />
           ) : (
           <ol className="relative flex flex-col">
@@ -772,6 +846,12 @@ export function PainelView({
           ctaNormal && (
             <Rodape>
               <Button full disabled={ctaNormal.desabilitado} onClick={ctaNormal.onClick}>
+                {/* 🆕 04/09 (pedido do Pedro) — CTA travado por ESPERA mostra
+                    que algo está rodando. Sem o anel, "Aguardando compensar"
+                    num botão apagado lê como botão quebrado; com ele, lê como
+                    relógio andando. Só aparece quando quem pede diz que é
+                    espera (`carregando`), não em todo botão desabilitado. */}
+                {ctaNormal.carregando && <AnelCta />}
                 {ctaNormal.label}
               </Button>
             </Rodape>

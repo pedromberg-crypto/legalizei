@@ -708,9 +708,18 @@ function auditarVoltar() {
      que não ter: SPLASH é transitório (auto-avança), ESPERA é status (não é
      passo), SAÍDA e FELIZ são fim de linha. O aviso só vale pra tela em que a
      pessoa preenche algo e pode querer rever a anterior. */
+  /* 🆕 04/09 (auditoria C0→A2) — ausência intencional que a TELA não consegue
+     declarar. O `semVoltar` mora no `TelaHeader`, e há tela sem cabeçalho: o
+     A2 usa a pele de splash (`SplashMensagemView`) mas NÃO auto-avança, então
+     não cai na regra dos splashes nem tem onde marcar a intenção. Aqui a
+     exceção fica nomeada, com motivo — que é o contrário de silenciar. */
+  const SEM_VOLTA_POR_DECISAO = {
+    A2: "é o ponto sem volta: passar daqui é ato, e voltar não existe (01/09)",
+  };
   const semVoltarPorNatureza = (n) =>
     base(n.rota).startsWith("/splash") ||
-    ["espera", "saida", "feliz"].includes(n.classe);
+    ["espera", "saida", "feliz"].includes(n.classe) ||
+    n.id in SEM_VOLTA_POR_DECISAO;
 
   for (const n of NODES.filter((x) => x.rota && x.classe !== "todo")) {
     if (semVoltarPorNatureza(n)) continue;

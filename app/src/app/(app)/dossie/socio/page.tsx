@@ -58,6 +58,20 @@ export default function SocioPage() {
   return (
     <SocioView
       mei={mei}
+      /* 🐛 04/09 (auditoria com Playwright) — a tela nascia SEM SETA: a página
+         não passava `onVoltar`, e o aviso do `TelaHeader` estava disparando no
+         console desde então. 5ª ocorrência do mesmo furo (gate 29/08, C0, C5,
+         C2 e agora C1), que é a razão de a regra 6 existir no CLAUDE.md.
+         Destino: o MEI vem da ocupação; o ME vem das secundárias (o splash
+         C5.S do meio não é destino, ele some sozinho). */
+      onVoltar={() =>
+        router.push(
+          comEndereco(
+            comRegime(mei ? "/dossie/ocupacao" : "/dossie/cnae-secundarios", mei),
+            enderecoFiscal,
+          ),
+        )
+      }
       onSeguir={() =>
         router.push(
           comEndereco(comRegime(mei ? "/dossie/empresa" : "/dossie/vinculo", mei), enderecoFiscal),

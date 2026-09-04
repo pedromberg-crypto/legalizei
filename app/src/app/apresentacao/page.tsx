@@ -292,6 +292,8 @@ type Etapa =
   | "painel"
   | "guia"
   | "guia-splash"
+  // 🆕 04/09 — A3.PSB: splash do boleto DA GUIA (réplica do E9.SB).
+  | "guia-splash-boleto"
   | "guia-boleto"
   // 🆕 01/09 — C7′ (2ª rodada de nomes), aberta pelo CTA do A3.1.
   | "nome-rodada2"
@@ -523,6 +525,7 @@ const ETAPAS_ESPERA = [
   // (A3.PS/A3.PSB)", mas `guia-boleto` renderiza o `AguardandoView`, não um
   // splash — o splash do boleto da guia (A3.PSB) nunca foi construído.
   "guia-splash",
+  "guia-splash-boleto",
   "guia-boleto",
   // 🆕 01/09 — o estado "guia paga" do status (A3′), par do "guia-boleto".
   "guia-paga",
@@ -659,6 +662,8 @@ type Momento =
   | "painel"
   | "guia"
   | "guia-splash"
+  // 🆕 04/09 — A3.PSB: splash do boleto DA GUIA (réplica do E9.SB).
+  | "guia-splash-boleto"
   | "guia-boleto"
   | "guia-paga"
   | "painel-recusa"
@@ -1094,7 +1099,11 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   login: "/login",
   "saida-regime": "/saida/regime-nao-suportado",
   "iniciar-viabilidade": "/iniciar-viabilidade",
-  painel: "/painel",
+  /* 🔄 04/09 — a rota do A3 é `/aguardando?fase=junta` desde a fusão de
+     31/08; apontar pro `/painel` velho fazia a prévia do mapa e o link do
+     mockup abrirem a tela aposentada. O `/painel?regime=mei` continua sendo
+     a rota do A3.M, que tem nó próprio. */
+  painel: "/aguardando?fase=junta",
   "painel-recusa": "/painel/recusa",
   assinatura: "/assinatura",
   ativacao: "/home-dia1",
@@ -1120,6 +1129,7 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   // PAGAMENTO DO PLANO (E9.S). O painel então dizia "E9.S · Splash 'pagamento
   // confirmado'" numa tela que é da GUIA da Junta. Rota completa do A3.PS.
   "guia-splash": "/splash-pagamento?next=/aguardando%3Ffase%3Djunta%26guia%3Dpaga",
+  "guia-splash-boleto": "/splash-boleto?next=/aguardando%3Ffase%3Djunta%26guia%3Dboleto",
   "guia-boleto": "/aguardando?fase=junta&guia=boleto",
   "guia-paga": "/aguardando?fase=junta&guia=paga",
 };
@@ -1254,6 +1264,11 @@ const MOMENTO_POR_NO: Record<string, Etapa | null> = {
   C1: "socio",
   C2: "vinculo",
   C3: "socios",
+  // 🆕 04/09 — as 2 variações da C3 apontam pra MESMA etapa da demo: o que as
+  // separa é o estado (`sociosDemo`), forçado no clique da pill por
+  // `pularParaNo`, e é `noVariante` quem devolve o nó certo pro painel.
+  C3_1: "socios",
+  C3_2: "socios",
   C4: "empresa",
   C5: "cnae-secundarios",
   C5_S: "splash-atividades",
@@ -1270,7 +1285,7 @@ const MOMENTO_POR_NO: Record<string, Etapa | null> = {
   A3_SR: "guia-recusada",
   A3_R: "guia-retry",
   A3_PS: "guia-splash",
-  A3_PSB: null,  // 🕳️ 02/09 — o splash do boleto DA GUIA não foi construído na demo; o momento "guia-boleto" renderiza o STATUS (A3_GB), não ele
+  A3_PSB: "guia-splash-boleto",  // 🆕 04/09 — construído (era o único "sem tela ainda" da cauda)
   A3_GP: "guia-paga",
   A3_GB: "guia-boleto",
   A3_V: "status-viabilidade",
@@ -1368,7 +1383,10 @@ function noVariante(
   st: { enderecoFiscal: boolean; socios: number | null; mei: boolean },
 ): string | null {
   if (etapa === "plano" && st.enderecoFiscal) return "E7_1";
+  /* 🆕 04/09 — a C3 tem 3 anatomias: 1 sócio (base), teto e só você. O `socios`
+     aqui é o TOTAL com o titular, então 4 = teto e 1 = ninguém além dela. */
   if (etapa === "socios" && (st.socios ?? 0) >= 3) return "C3_1";
+  if (etapa === "socios" && (st.socios ?? 2) <= 1) return "C3_2";
   if (etapa === "painel" && st.mei) return "A3_M";
   return null;
 }
@@ -1718,9 +1736,9 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   },
   revisar: {
     dono: "usuario",
-    faz: "Mostra tudo que foi preenchido, bloco por bloco, com 'ajustar' em cada um — e termina com o aceite que autoriza a abertura.",
+    faz: "Mostra tudo que foi preenchido, seção por seção, com 'Ajustar' em cada uma. 🆕 04/09 (decisão do Pedro): cada seção tem o próprio \"Conferi\" e o CTA final só destrava com todas conferidas, mostrando o progresso no rótulo (\"2 de 4 seções\" → \"Tudo certo, seguir\"). Quem entra pra ajustar precisa reconferir a seção, tenha mudado algo ou não.",
     interfere:
-      "É o último ponto em que corrigir é de graça. Marcar o aceite é irreversível: a partir dele a Junta já está sendo protocolada com esses dados.",
+      "É o último ponto em que corrigir é de graça, e o que sai daqui é o PEDIDO DE VIABILIDADE (não o registro, que só acontece depois da guia e da assinatura). O aceite irreversível não mora mais aqui no ME: ele foi pra tela da guia, onde a taxa vira gasto. Quem atravessa esta tela cai no A2, que é a fronteira de verdade.",
     porque:
       "Ninguém deveria autorizar um registro que nunca viu inteiro. 🔄 01/09: a A2 (tela só de termo) foi ELIMINADA e o aceite virou o último bloco daqui — a tela inteira existia pra reforçar que a taxa da Junta não volta, e isso já está no contrato aceito no pagamento. O detalhe do não-reembolso virou link com popup: quem já entendeu segue, quem quer ler tem onde. O enquadramento aparece como SUGESTÃO (não escolha manual): o simulador pré-empresa foi dissolvido em 28/07.",
   },
@@ -1742,11 +1760,11 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   },
   "iniciar-viabilidade": {
     dono: "usuario",
-    faz: "🆕 01/09 — TELA NOVA (A2). Avisa, em coral cheio e tela inteira, que a partir dali não dá pra mudar mais nada: o CTA \"Iniciar viabilidade\" manda os dados pra Junta.",
+    faz: "A2, em coral cheio e tela inteira: a casa assume o processo (\"Sua abertura está em boas mãos\"), diz o que vai fazer (entrar com o pedido na Junta e cuidar até a constituição), promete o retorno e só então avisa que nome e endereço passam a ser da Junta. O CTA \"Iniciar viabilidade\" manda os dados. 🔄 04/09 (pedido do Pedro) — a copy era só o aviso (\"Daqui não dá pra voltar\"): fato certo, voz errada. O fato virou a última frase; a promessa virou o título.",
     interfere:
-      "É a fronteira do processo. Antes dela, a tela de status deixa voltar e corrigir qualquer bloco; depois, o botão de ajustar some — porque mudar dado protocolado significa CANCELAR a viabilidade e refazer o pedido, que foi exatamente o que aconteceu ao vivo na gravação de 31/08 (apartamento sem sócio residente).",
+      "É a fronteira do processo. Antes dela, a tela de status deixa voltar e corrigir qualquer bloco; depois, o botão de ajustar some — porque mudar dado protocolado significa CANCELAR a viabilidade e refazer o pedido, que foi exatamente o que aconteceu ao vivo na gravação de 31/08 (apartamento sem sócio residente). 🆕 04/09 (regra travada com o Pedro): o toque dispara SÓ a análise de viabilidade. A guia da Junta corre em PARALELO — pode ser paga antes ou depois, e o resultado da Junta pode chegar primeiro (contrato padrão no Integrador defere por robô, em minutos). Nenhum dos dois espera o outro, e a tela passou a dizer isso.",
     porque:
-      "O aceite já existe no contrato do E9, mas contrato ninguém lê. Uma tela inteira, com um CTA que precisa ser tocado, transforma a cláusula em momento — e é esse momento que a pessoa vai lembrar se depois pedir pra mudar algo. Usa a pele de splash porque é ela que dá o peso, mas NÃO auto-avança: atravessar aqui tem que ser um ato, não um relógio.",
+      "O aceite já existe no contrato do E9, mas contrato ninguém lê. Uma tela inteira, com um CTA que precisa ser tocado, transforma a cláusula em momento — e é esse momento que a pessoa vai lembrar se depois pedir pra mudar algo. Usa a pele de splash porque é ela que dá o peso, mas NÃO auto-avança: atravessar aqui tem que ser um ato, não um relógio. 🗣️ Vocabulário travado 04/09: \"a Junta pediu um ajuste\", com a palavra EXIGÊNCIA aparecendo uma vez entre parênteses — é o termo que ela vai reencontrar no e-mail do órgão. Fatos em `pesquisa/exigencias-jucemg.md`: indeferir na hora é raro, o padrão é exigência com 30 dias pra corrigir, e a taxa só se perde se ninguém corrigir no prazo.",
   },
   guia: {
     dono: "usuario",
@@ -1755,6 +1773,14 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
       "Sem a guia paga, a Junta não registra e a assinatura não libera. É também onde mora o ACEITE irreversível, que antes ficava no A1: é neste clique que a taxa vira gasto que não volta.",
     porque:
       "Reusa a tela de pagamento em vez de criar outra: pagar duas coisas em momentos diferentes já é confuso o bastante sem duas gramáticas visuais. Muda o valor, a copy e o aceite; CPF, métodos e a linha de idempotência ficam idênticos de propósito.",
+  },
+  "guia-splash-boleto": {
+    dono: null,
+    faz: "🆕 04/09 — A3.PSB: splash do boleto DA GUIA, réplica do E9.SB (boleto da mensalidade). Transitório, sem CTA, some sozinho e cai no status da guia no boleto (A3″).",
+    interfere:
+      "Nada por si. Marca que o boleto FOI GERADO — o pagamento só conta quando o banco compensa, 1 a 3 dias úteis depois.",
+    porque:
+      "Estava declarada no flow e sem tela na demo desde 02/09: o boleto da guia pulava direto pro status, enquanto o boleto da mensalidade ganhava respiro. Mesmo evento, mesmo tratamento.",
   },
   "guia-splash": {
     dono: null,
@@ -2449,8 +2475,11 @@ export default function ApresentacaoPage() {
     pularPara(t.etapa);
     if (t.id === "E7_1") setEnderecoProprioDemo(false);
     if (t.id === "E7") setEnderecoProprioDemo(true);
-    // A C3 abre no caso comum; os botões de cenário alternam pro teto.
+    // A C3 e suas 2 variações: a pill força o estado, senão as três abririam
+    // a mesma tela e o Pedro reveria a base achando que é a variante.
     if (t.id === "C3") setSociosDemo(2);
+    if (t.id === "C3_1") setSociosDemo(4);
+    if (t.id === "C3_2") setSociosDemo(1);
     if (t.id === "A3_M") setRegimeDemo("mei");
     // As 4 saídas do veredito não são telas: são DESFECHOS do mesmo
     // `VereditoView`, decididos pelo `mapear()`. Eram 4 das 12 telas que o
@@ -2739,6 +2768,14 @@ export default function ApresentacaoPage() {
                   {[
                     { n: 2, label: "1 sócio" },
                     { n: 4, label: "3 sócios (teto)" },
+                    /* 🆕 04/09 (pedido do Pedro) — o 3º cenário: NINGUÉM além
+                       dela. Virou estado de verdade quando a lista ficou
+                       editável (a pessoa pode remover todos), e é uma tela
+                       visualmente diferente das outras duas: sai a mesa da
+                       divisão, sai a pergunta de administração, entra o
+                       cartão de confirmação e o CTA muda de rótulo. Sem o
+                       botão, só dava pra ver isso removendo sócio por sócio. */
+                    { n: 1, label: "Sem sócio" },
                   ].map((o) => {
                     const on = (sociosDemo ?? 2) === o.n;
                     return (
@@ -3107,32 +3144,76 @@ export default function ApresentacaoPage() {
                         )}
                         {etapa === "iniciar-viabilidade" && (
                           <SplashMensagemView
-                            titulo="Daqui não dá pra voltar."
-                            sub="Ao iniciar a viabilidade, seus dados vão pra Junta Comercial. A partir daí, mudar nome ou endereço da empresa exige cancelar e refazer o pedido."
+                            /* 🔄 04/09 (pedido do Pedro) — copy reescrita: de
+                               aviso ("Daqui não dá pra voltar") pra entrega.
+                               ⚠️ Este texto é CÓPIA da página real
+                               (`/iniciar-viabilidade`): mudou aqui, muda lá. */
+                            titulo="Sua abertura está em boas mãos."
+                            sub="Daqui pra frente nome e endereço já seguem com a Junta, e mudar um deles pede um pedido novo. O caminho é este:"
+                            passos={[
+                              {
+                                titulo: "Análise de viabilidade",
+                                detalhe: "A Junta confere nome e endereço. Pode sair em minutos.",
+                              },
+                              {
+                                titulo: "Guia da Junta",
+                                detalhe:
+                                  "Pague quando quiser. Ela não espera a análise, e a análise não espera ela.",
+                              },
+                              {
+                                titulo: "Assinatura",
+                                detalhe: "Você assina pelo GOV.BR e a empresa é constituída.",
+                              },
+                            ]}
+                            nota="Se a Junta pedir um ajuste (exigência, no vocabulário dela), não se preocupe: é comum, a gente já sabe resolver e cuida disso com você."
                             cta={{
-                              label: "Iniciar viabilidade",
+                              label: "Pode começar",
                               onClick: () => setEtapa("painel"),
                             }}
                           />
                         )}
-                        {etapa === "painel" && (
-                          // Sem `onVoltar`: o componente original (`/painel`)
-                          // não tem seta própria — é status assíncrono, não
-                          // passo de wizard. A seta EXTERNA do aparelho segue
-                          // funcionando (lê o histórico, não este prop).
-                          // 🔄 26/08 (item 6): índices 2/2 — `ETAPAS` voltou a
-                          // ter 4 (a DAE virou etapa visível com CTA próprio,
-                          // ver `components/painel.tsx`). CTA coral ("Pagar a
-                          // guia agora") agora avança pra A3.2 (certificado).
-                          <PainelView
-                            concluidas={2}
-                            emAndamento={2}
-                            socios={socios ?? 1}
-                            // 🔄 01/09 — o CTA da guia abre a tela de
-                            // pagamento da taxa (A3.P), não pula pra assinatura.
-                            onPagarDae={() => setEtapa("guia")}
-                          />
-                        )}
+                        {etapa === "painel" &&
+                          /**
+                           * 🐛→🔒 04/09 (achado do Pedro: "a tela certa é a
+                           * similar a essa, com um CTA de pagar guia embaixo")
+                           * — A DEMO MOSTRAVA A TELA APOSENTADA.
+                           *
+                           * Em 31/08 o A3 foi FUNDIDO com o E9.1: virou a fase
+                           * "junta" da tela de status (`AguardandoView`,
+                           * `/aguardando?fase=junta`), com hero, jornada
+                           * inteira e o CTA da guia embaixo da etapa da vez.
+                           * O `flow-data` acompanhou (a rota do A3 é essa
+                           * desde então) e as variantes de guia (A3.GP/A3.GB)
+                           * também. Só a etapa `painel` da demo ficou no
+                           * `PainelView` velho — então quem saía do A2 caía
+                           * numa tela que não existe mais no produto.
+                           *
+                           * 🔒 MEI intacto: o A3.M é a MESMA etapa da demo e
+                           * continua sendo `/painel?regime=mei` no mapa, que é
+                           * o `PainelView` de verdade. Por isso o render é
+                           * guardado por regime em vez de trocado no atacado.
+                           */
+                          (regimeDemo === "mei" ? (
+                            <PainelView
+                              concluidas={2}
+                              emAndamento={2}
+                              socios={socios ?? 1}
+                              onPagarDae={() => setEtapa("guia")}
+                            />
+                          ) : (
+                            /* Estado de chegada do A2: documentação e
+                               viabilidade fechadas, a guia da Junta é a vez
+                               (`JUNTA_MOCK`). O CTA embaixo da etapa abre o
+                               A3.P (`/guia`); se a guia já tivesse sido paga,
+                               a mesma tela mostraria "Agora é só assinar" —
+                               é a condicional que já existe no componente. */
+                            <AguardandoView
+                              fase="junta"
+                              temSocios={socios === 2}
+                              onPagarDae={() => setEtapa("guia")}
+                              onAssinar={() => setEtapa("assinatura")}
+                            />
+                          ))}
                         {/* 🗑️ 01/09 — A3.2 (CertificadoGateView) saiu daqui: a
                             DAE paga libera a assinatura direto no caminho ME.
                             O componente segue vivo pro MEI ("m-certificado"). */}
@@ -3154,8 +3235,13 @@ export default function ApresentacaoPage() {
                             // 🆕 01/09 — mesma bifurcação da produção: boleto
                             // volta pro status aguardando compensar; cartão/Pix
                             // passam pelo splash de confirmação.
+                            /* 🔄 04/09 (pedido do Pedro) — o boleto da guia
+                               pulava direto pro status. Agora passa pelo
+                               splash próprio (A3.PSB), igual ao E9.SB do
+                               boleto da mensalidade: o "boleto gerado" merece
+                               o mesmo respiro nos dois lugares. */
                             onPagar={() =>
-                              setEtapa(metodo === "boleto" ? "guia-boleto" : "guia-splash")
+                              setEtapa(metodo === "boleto" ? "guia-splash-boleto" : "guia-splash")
                             }
                             onVoltar={() => voltar(() => setEtapa("painel"))}
                           />
@@ -3166,6 +3252,18 @@ export default function ApresentacaoPage() {
                             titulo="Pagamento confirmado."
                             sub="A guia foi paga. A Junta já pode registrar."
                             onAutoAvancar={() => setEtapa("assinatura")}
+                          />
+                        )}
+                        {/* 🆕 04/09 (pedido do Pedro) — A3.PSB, que estava
+                            declarada no flow e "sem tela ainda" na demo.
+                            Réplica do E9.SB (boleto da mensalidade): mesma
+                            copy, mesmo componente, outro destino — daqui volta
+                            pro status da guia no boleto (A3″). */}
+                        {etapa === "guia-splash-boleto" && (
+                          <SplashMensagemView
+                            titulo="Boleto gerado."
+                            sub="Assim que o pagamento cair, a Junta segue com o registro."
+                            onAutoAvancar={() => setEtapa("guia-boleto")}
                           />
                         )}
                         {etapa === "guia-paga" && (

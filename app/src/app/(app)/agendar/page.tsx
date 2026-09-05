@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AgendarAssinaturaView } from "@/components/wizard-cauda";
 
 /**
@@ -29,10 +29,18 @@ import { AgendarAssinaturaView } from "@/components/wizard-cauda";
  */
 export default function AgendarPage() {
   const router = useRouter();
+  /* 🆕 04/09 — `?agendado=` presente = a pessoa veio REMARCAR, não marcar a
+     primeira vez. Muda só o voltar: ela precisa poder desistir e reencontrar o
+     horário que já tinha, em vez de cair num status sem agendamento (que leria
+     como cancelamento acidental). */
+  const atual = useSearchParams().get("agendado");
+  const status = `/aguardando?fase=junta&guia=paga&rota=assistida${
+    atual ? `&agendado=${encodeURIComponent(atual)}` : ""
+  }`;
 
   return (
     <AgendarAssinaturaView
-      onVoltar={() => router.push("/aguardando?fase=junta&guia=paga&rota=assistida")}
+      onVoltar={() => router.push(status)}
       /* 🚧 Mock (RF-01): sem estado real entre telas, o horário volta pelo
          querystring. No produto real ele vem da agenda da consultora, e o
          status lê do servidor. */

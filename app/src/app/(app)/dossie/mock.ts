@@ -73,8 +73,18 @@ export const CONSULTOR = {
   papel: "Sua consultora na abertura",
   /** Contador de verdade, com registro. É o que dá peso ao "ao vivo". */
   registro: "CRC-MG 112.487",
-  /** Janela de atendimento, pra tela não prometer horário que não existe. */
-  atendimento: "Seg a sex, 9h às 18h",
+  /**
+   * Janela de atendimento DA CASA, não a agenda pessoal da consultora — ela
+   * tem horários marcados com outros clientes, e é por isso que a A3.H1 existe.
+   * A tela rotula como "Atendimento" pra não ler como "ela está livre nisso
+   * tudo" (achado do Pedro, 04/09).
+   * 🔄 04/09 — separada em dois campos porque o cartão mostra em 2 linhas, na
+   * lateral direita. Dado partido na FONTE, não com `split(",")` na tela:
+   * parsing de string pra fazer layout quebra no primeiro dia em que alguém
+   * escrever a janela de outro jeito.
+   */
+  atendimentoDias: "Seg a sex",
+  atendimentoHoras: "9h às 18h",
 };
 
 /** Iniciais pro avatar (sem foto no MLP: nada de asset falso de pessoa). */

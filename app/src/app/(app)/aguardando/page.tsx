@@ -112,7 +112,12 @@ export default function AguardandoPage() {
       assistida={assistida}
       agendado={agendado}
       /* 🆕 04/09 — o CTA da rota assistida leva pra agenda, não pro A4. */
-      onAgendar={() => router.push("/agendar")}
+      /* 🆕 04/09 — quem vem REMARCAR carrega o horário atual: sem isso, tocar
+         em "Remarcar" e desistir devolvia a pessoa pra um status sem
+         agendamento nenhum, como se ela tivesse cancelado sem querer. */
+      onAgendar={() =>
+        router.push(agendado ? `/agendar?agendado=${encodeURIComponent(agendado)}` : "/agendar")
+      }
       // 🆕 01/09 — leva pra tela do bloco (continuar ou corrigir), preservando
       // regime e endereço fiscal, como o resto da navegação do wizard.
       onIrParaBloco={(rota) => router.push(comEndereco(comRegime(rota, mei), enderecoFiscal))}

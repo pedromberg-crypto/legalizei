@@ -582,6 +582,8 @@ export function PainelView({
   escuro = false,
   heroExtra,
   antesDaTimeline,
+  ajudaWhats,
+  acaoExtra,
 }: {
   /** Quantas etapas já fecharam (verde). */
   concluidas: number;
@@ -659,6 +661,21 @@ export function PainelView({
    * escuro, que é outro componente, não este.
    */
   antesDaTimeline?: ReactNode;
+  /**
+   * 🆕 04/09 — troca o rótulo e a mensagem do link de WhatsApp do rodapé.
+   *
+   * Nasceu pro status com horário marcado (A3.H2): ali a dúvida provável não é
+   * genérica, é REMARCAR. Continua sendo um link só — remarcar acontece pelo
+   * WhatsApp com a consultora, que é o mesmo canal de qualquer outra dúvida, e
+   * dois links pro mesmo destino seriam duas portas pra mesma sala.
+   */
+  ajudaWhats?: { label: string; mensagem: string };
+  /**
+   * 🆕 04/09 — ação de APP ao lado do link de WhatsApp, na linha acima do CTA.
+   * Existe pro "Remarcar" do A3.H2: ele volta pra tela de agendamento, e não
+   * tem nada a ver com o canal humano que divide a linha com ele.
+   */
+  acaoExtra?: { label: string; onClick?: () => void };
 }) {
   // 🆕 26/08 (item 6) — se `etapas` não veio (caso da abertura), usa o default
   // COM o callback do CTA de DAE já ligado (a migração, que passa `etapas`
@@ -705,9 +722,16 @@ export function PainelView({
               }}
             >
               <p className="text-h1 font-bold leading-tight">{recusa ? t.recusa : t.normal}</p>
-              <p className="mt-1.5 text-caption text-text-on-dark/70">
-                {recusa ? s.recusa : s.normal}
-              </p>
+              {/* 🆕 04/09 — o subtítulo pode vir VAZIO. Acontece no A3.H2: o
+                  compromisso ganhou cartão próprio logo abaixo do hero, e
+                  repetir "Hoje às 15:00" aqui seria a mesma informação duas
+                  vezes em dois blocos colados. Sem a guarda, string vazia
+                  deixaria um parágrafo invisível empurrando o resto. */}
+              {(recusa ? s.recusa : s.normal) && (
+                <p className="mt-1.5 text-caption text-text-on-dark/70">
+                  {recusa ? s.recusa : s.normal}
+                </p>
+              )}
               {!recusa && heroExtra}
               {!recusa && (
                 <p className="mt-3 text-micro text-text-on-dark/50">
@@ -927,18 +951,41 @@ export function PainelView({
             (sugerir mais 3 nomes) com saída pra DÚVIDA — quem não sabe o que
             escrever depois de 3 nomes reprovados não é atendido pelo mesmo
             botão. Fica nos dois estados. */}
-        <div className="app-footer-cta pb-0">
+        <div className="app-footer-cta flex items-center justify-center gap-3 pb-0">
+            {/* 🆕 04/09 (achado do Pedro) — DOIS DESTINOS, DOIS LINKS.
+                No A3.H2 a linha era um link só ("Remarcar ou falar com outro
+                consultor") apontando pro WhatsApp — mas remarcar é ação DENTRO
+                do app (a agenda é nossa, a tela existe) e falar é canal
+                externo. Um link com dois verbos manda a pessoa pro WhatsApp
+                pedir à mão o que ela faria em dois toques. */}
+            {acaoExtra && (
+              <>
+                <button
+                  type="button"
+                  onClick={acaoExtra.onClick}
+                  className="flex min-h-11 items-center justify-center text-center text-caption font-medium text-text-secondary underline underline-offset-4"
+                >
+                  {acaoExtra.label}
+                </button>
+                <span aria-hidden className="text-caption text-text-muted">
+                  ·
+                </span>
+              </>
+            )}
             <a
               href={linkWhatsApp(
-                "Oi! Estou acompanhando a abertura da minha empresa no app da Legalizai e queria tirar uma dúvida.",
+                ajudaWhats?.mensagem ??
+                  "Oi! Estou acompanhando a abertura da minha empresa no app da Legalizai e queria tirar uma dúvida.",
               )}
               target="_blank"
               rel="noopener noreferrer"
               /* 🔄 04/09 (auditoria) — 20px de alvo, abaixo do mínimo. O
                  sublinhado e a posição continuam iguais. */
-              className="flex min-h-11 w-full items-center justify-center text-center text-caption font-medium text-text-secondary underline underline-offset-4"
+              className={`flex min-h-11 items-center justify-center text-center text-caption font-medium text-text-secondary underline underline-offset-4 ${
+                acaoExtra ? "" : "w-full"
+              }`}
             >
-            Tirar uma dúvida no WhatsApp
+            {ajudaWhats?.label ?? "Tirar uma dúvida no WhatsApp"}
           </a>
         </div>
 

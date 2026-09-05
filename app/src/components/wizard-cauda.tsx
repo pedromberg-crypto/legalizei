@@ -22,7 +22,7 @@ import { linkWhatsApp } from "@/lib/contato";
 import { PainelView, ETAPAS_ABERTURA, type Etapa, type Recusa } from "@/components/painel";
 /* 🆕 04/09 — rota assistida: da assinatura em diante quem conduz é gente da
    casa. O racional inteiro do corte mora em `components/consultor.tsx`. */
-import { CardConsultor } from "@/components/consultor";
+import { CardConsultor, CardCompromisso } from "@/components/consultor";
 import { CONSULTOR_PRIMEIRO_NOME } from "@/app/(app)/dossie/mock";
 import {
   CLIENTE,
@@ -1745,7 +1745,13 @@ export function AgendarAssinaturaView({
       {/* Regra 6: o `meta` nomeia o DESTINO do voltar, não esta tela. */}
       <TelaHeader meta="Status da abertura" onVoltar={onVoltar} />
       <main className="app-main">
-        <Titulo sub="A assinatura leva cerca de 15 minutos, e a gente faz junto, por vídeo ou telefone. Escolha quando fica melhor pra você.">
+        {/* 🗑️ 04/09 (Pedro) — SAIU "por vídeo": não vamos fazer videochamada
+            nesta etapa. Prometer um canal que não existe é o tipo de detalhe
+            que ninguém confere no desenho e o cliente cobra na hora.
+            ⚠️ Não confundir com a tela de certificado (`/certificado`), onde a
+            videochamada é real: quem faz é a certificadora parceira, e a
+            entrevista por vídeo é exigência dela. */}
+        <Titulo sub="A assinatura leva cerca de 15 minutos, e a gente faz junto, por telefone ou WhatsApp. Escolha quando fica melhor pra você.">
           Marque com a {CONSULTOR_PRIMEIRO_NOME}
         </Titulo>
 
@@ -1769,9 +1775,18 @@ export function AgendarAssinaturaView({
                     setHora(null);
                   }}
                   aria-pressed={dia === d.id}
+                  /* 🔄 04/09 (decisão do Pedro, 2ª rodada) — SELECIONADO É
+                     CORAL CHEIO COM LETRA BRANCA, igual ao CTA do rodapé.
+                     Passou por coral-50 (tint quase branco sobre cartão
+                     branco: a seleção sumia) e coral-100, até o Pedro cravar o
+                     padrão do DS — é exatamente o que o `BotaoOpcao` faz em
+                     `ui/form.tsx`, e é assim que escolha se marca no app
+                     inteiro. Eu tinha evitado por achar que competiria com o
+                     CTA; competir aqui é o certo: os dois são a mesma decisão
+                     (o horário), um escolhe e o outro confirma. */
                   className={`min-h-11 rounded-md border px-4 text-caption font-semibold transition-colors ${
                     dia === d.id
-                      ? "border-action-primary bg-surface-tint-brand text-brand"
+                      ? "border-action-primary bg-action-primary text-text-on-brand"
                       : "border-border-hairline bg-surface-card text-text-secondary"
                   }`}
                 >
@@ -1795,7 +1810,7 @@ export function AgendarAssinaturaView({
                      da casa é 44 no confortável). */
                   className={`min-h-11 rounded-md border text-caption font-semibold tabular-nums transition-colors ${
                     hora === h
-                      ? "border-action-primary bg-surface-tint-brand text-brand"
+                      ? "border-action-primary bg-action-primary text-text-on-brand"
                       : "border-border-hairline bg-surface-card text-text-secondary"
                   }`}
                 >
@@ -1805,10 +1820,11 @@ export function AgendarAssinaturaView({
             </div>
           </div>
 
-          <Aviso neutro variante="info" titulo="Se precisar remarcar">
-            Sem problema: é só falar com a {CONSULTOR_PRIMEIRO_NOME} no WhatsApp. Nada do
-            processo se perde, e a Junta não tem prazo correndo contra você neste ponto.
-          </Aviso>
+          {/* 🗑️ 04/09 (pedido do Pedro) — SAIU o aviso "Se precisar remarcar".
+              Na tela de MARCAR, falar em remarcar é ansiedade adiantada: a
+              pessoa ainda não tem compromisso nenhum pra desmarcar. A saída
+              vira ação de verdade DEPOIS do agendamento, no rodapé do status
+              (A3.H2), onde existe um horário pra mexer. */}
         </Corpo>
 
         <Rodape>
@@ -1818,15 +1834,28 @@ export function AgendarAssinaturaView({
             {quando ? `Confirmar ${quando}` : "Escolha um horário"}
           </Button>
           <div className="mt-2 flex justify-center">
+            {/* 🔄 04/09 (pedido do Pedro) — era "Prefiro falar agora no
+                WhatsApp", que diz PREFERÊNCIA. O que a casa precisa saber é
+                DISPONIBILIDADE: quem toca aqui está dizendo que tem a janela
+                inteira livre agora, e a assinatura só acontece com os dois
+                juntos. O rótulo declara isso, com os mesmos 15 minutos que o
+                subtítulo já anunciou — e a mensagem enviada repete, senão o
+                compromisso morre no caminho.
+
+                🐛 04/09 (2ª rodada, achado do Pedro) — E É OUTRO CONSULTOR. A
+                tela inteira é sobre marcar com a Larissa; sem dizer quem
+                atende, "agora" seria lido como "ela larga tudo e vem", que é
+                exatamente a promessa que a existência desta tela desmente. Quem
+                atende de imediato é quem estiver livre. */}
             <a
               href={linkWhatsApp(
-                "Oi! Acabei de pagar a guia da Junta e queria falar sobre a assinatura.",
+                "Oi! Paguei a guia da Junta e tenho 15 minutos livres agora pra fazer a assinatura, se tiver alguém disponível.",
               )}
               target="_blank"
               rel="noopener noreferrer"
-              className="min-h-11 px-3 py-2 text-caption font-semibold text-action-primary-sm underline"
+              className="min-h-11 px-3 py-2 text-center text-caption font-semibold text-action-primary-sm underline"
             >
-              Prefiro falar agora no WhatsApp
+              Tenho 15 minutos agora, falar com outro consultor
             </a>
           </div>
         </Rodape>
@@ -3133,7 +3162,13 @@ export function AguardandoView({
             : juntaResolvida
               ? assistida
                 ? agendado
-                  ? `${agendado} a ${CONSULTOR_PRIMEIRO_NOME} te chama pra assinar. Leva cerca de 15 minutos, e ela faz junto com você.`
+                  ? /* 🔄 04/09 (pedido do Pedro) — VAZIO de propósito. O
+                       compromisso ganhou cartão próprio logo abaixo do hero
+                       (`CardCompromisso`), e dizer "Hoje às 15:00" nos dois
+                       seria a mesma informação em blocos colados. O hero fica
+                       só com o título, que é o veredito ("Você tem hora
+                       marcada"), e o cartão carrega o detalhe. */
+                    ""
                   : assinou1
                     ? `O contrato social já está assinado. Falta a assinatura que gera o CNPJ, e a ${CONSULTOR_PRIMEIRO_NOME} faz essa com você também.`
                     : "A Junta aprovou o nome e a guia está paga. As assinaturas são feitas ao vivo, com uma consultora nossa do seu lado."
@@ -3220,8 +3255,47 @@ export function AguardandoView({
          dono. Depois de marcado o horário ele some — a informação já migrou
          pro hero e pra própria etapa, e mantê-lo seria dizer a mesma coisa em
          três lugares (o erro que o A1 e o C3 já corrigiram nesta rodada). */
+      /* 🔄 04/09 — o mesmo slot serve os dois momentos da rota assistida, e
+         nunca os dois ao mesmo tempo: ANTES de marcar, quem precisa aparecer é
+         a consultora (é ela que explica por que as etapas mudaram de dono);
+         DEPOIS, o compromisso, que é a única coisa que a pessoa precisa reter
+         nesta tela. */
       antesDaTimeline={
-        assistida && juntaResolvida && !agendado ? <CardConsultor /> : undefined
+        assistida && juntaResolvida
+          ? agendado
+            ? <CardCompromisso quando={agendado} />
+            : <CardConsultor />
+          : undefined
+      }
+      /* 🆕 04/09 (pedido do Pedro) — com horário marcado, a dúvida provável
+         não é genérica: é REMARCAR. O link do rodapé assume esse papel em vez
+         de ganhar um irmão — remarcar é pelo WhatsApp, o mesmo canal de
+         qualquer outra dúvida.
+
+         🐛 04/09 (achado do Pedro) — O RÓTULO PROMETIA A CONSULTORA DISPONÍVEL.
+         Era "Remarcar ou falar com a Larissa", e isso está errado justamente
+         AQUI: ela tem hora marcada com esta pessoa às 15h porque a agenda dela
+         é finita — se estivesse livre a qualquer momento, agendar não faria
+         sentido nenhum. Quem atende fora do horário marcado é quem estiver
+         disponível, e a tela passa a dizer isso. ⚠️ Vale só onde a frase
+         promete atendimento AGORA: "marcado com a Larissa" e "a Larissa faz
+         este passo com você" continuam certos — são compromisso, não
+         disponibilidade. */
+      ajudaWhats={
+        assistida && agendado
+          ? {
+              label: "Falar com outro consultor",
+              /* A mensagem já entrega o contexto que a pessoa teria que
+                 digitar: quem atender não é quem marcou com ela. */
+              mensagem: `Oi! Tenho a assinatura marcada com a ${CONSULTOR_PRIMEIRO_NOME} pra ${agendado.toLowerCase()} e preciso de ajuda.`,
+            }
+          : undefined
+      }
+      /* 🆕 04/09 (achado do Pedro) — REMARCAR É AÇÃO DO APP, não pedido no
+         WhatsApp: a agenda é nossa e a tela de escolher horário já existe.
+         Divide a linha com o canal humano, cada um no seu destino. */
+      acaoExtra={
+        assistida && agendado ? { label: "Remarcar", onClick: onAgendar } : undefined
       }
       /* 🆕 04/09 — só na fase Junta: o cartão fundido não pode herdar o nome
          do bloco 1 ("Conta e plano"), que é um quarto do que ele contém. */

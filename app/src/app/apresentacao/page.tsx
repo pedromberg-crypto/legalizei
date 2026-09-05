@@ -1181,7 +1181,7 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   "assistida-agendar": "/agendar",
   "assistida-ativacao": "/home-dia1?rota=assistida",
   "assistida-marcado":
-    "/aguardando?fase=junta&guia=paga&rota=assistida&agendado=Hoje%20%C3%A0s%2015%3A00",
+    "/aguardando?fase=junta&guia=paga&rota=assistida&agendado=Hoje%20%C3%A0s%2015%3A00&dia=5&semana=Sex&mes=Set&hora=15%3A00&hoje=1",
   "conta-cpf-divergente": "/conta?cpf=nome",
   "assinatura-2": "/assinatura?rodada=2",
 };
@@ -1886,7 +1886,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     dono: "nossa",
     faz: "🆕 04/09 — A3.H: o A3′ na ROTA ASSISTIDA. Mesma tela e mesma timeline, com o cartão da consultora acima das etapas e as duas assinaturas trocando de dono (5º estado do DS: silhueta de pessoa). O CTA deixa de ser \"Ir para a assinatura\" e vira \"Escolher um horário\".",
     interfere:
-      "É o ponto em que a condução muda de mão. O processo não para nem muda de ordem: as mesmas 2 assinaturas acontecem, só que ao vivo, com alguém do lado.",
+      "É o ponto em que a condução muda de mão. O processo não para nem muda de ordem: as mesmas 2 assinaturas acontecem, só que junto com um consultor.",
     porque:
       "Decisão do Pedro (04/09): a operação NASCE assim. O A3′ é o último ponto em que tudo que falta ainda é nosso — depois dele vem CAPTCHA, 2FA, nível de conta GOV.BR que a gente não consegue ler, código de 10 minutos e o contador assinando junto. O flow automático até aqui já entrega mais do que a contabilidade digital que existe hoje; o resto vira otimização. 🔴 Regra de copy da rota: NUNCA enquadrar como limitação (\"o sistema não consegue\") nem dizer \"nossa equipe entra em contato\" — a pessoa tem nome, registro e horário.",
   },
@@ -3486,6 +3486,13 @@ export default function ApresentacaoPage() {
                             temSocios={socios === 2}
                             assistida
                             agendado={etapa === "assistida-marcado" ? "Hoje às 15:00" : null}
+                            /* 🆕 05/09 — as partes do compromisso, pro cartão
+                               desenhar o bloco de data (ver `CardCompromisso`). */
+                            compromisso={
+                              etapa === "assistida-marcado"
+                                ? { numero: 5, semana: "Sex", mes: "Set", hora: "15:00", hoje: true }
+                                : null
+                            }
                             onAgendar={() => setEtapa("assistida-agendar")}
                           />
                         )}

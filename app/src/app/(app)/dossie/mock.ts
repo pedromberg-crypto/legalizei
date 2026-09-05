@@ -67,7 +67,9 @@ export const SOCIO_2 = { nome: "Carlos Eduardo Silva" };
  * ⚠️ A saída NÃO é voltar pro "nossa equipe entra em contato" — a frase vazia
  * que a regra desta rota proíbe desde 04/09. O que se pode afirmar sem mentir
  * continua sendo bastante, e é o que a tela diz: é gente da CASA (não robô,
- * não terceirizado), é ao vivo, e existe uma janela de atendimento conhecida.
+ * não terceirizado), é junto com a pessoa, e existe uma janela de atendimento
+ * conhecida. ⚠️ Nunca "ao vivo" (proibido pelo Pedro, 05/09): é termo de
+ * transmissão, e aqui não há nada sendo transmitido.
  *
  * 🗑️ Saíram junto: `nome`, `registro` (o Pedro pediu pra tirar o CRC),
  * `CONSULTOR_INICIAIS` e `CONSULTOR_PRIMEIRO_NOME` — sem pessoa fixa, iniciais

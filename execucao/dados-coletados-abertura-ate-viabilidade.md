@@ -1,7 +1,7 @@
 ---
 tipo: verdade
 status: GERADO — não editar à mão, nasce de `execucao/flow/gerar-mapa.mjs`
-data: 2026-09-04
+data: 2026-09-05
 assunto: dados-coletados-abertura
 tags: [execucao, flow, dados, abertura]
 ---

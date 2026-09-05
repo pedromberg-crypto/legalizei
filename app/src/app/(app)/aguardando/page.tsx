@@ -85,8 +85,19 @@ export default function AguardandoPage() {
    * `components/consultor.tsx`.
    */
   const assistida = searchParams.get("rota") === "assistida";
-  /** Horário já marcado com a consultora ("Hoje às 15:00"). */
+  /** A frase do compromisso ("Hoje às 15:00") — hero, CTA e mensagens. */
   const agendado = searchParams.get("agendado");
+  /* 🆕 05/09 — as PARTES do compromisso, pro cartão desenhar o bloco de data
+     (ver `CardCompromisso`). Vêm juntas ou não vêm: o cartão só aparece com o
+     conjunto completo, e sem ele o status cai no estado "a marcar". */
+  const dia = searchParams.get("dia");
+  const semana = searchParams.get("semana");
+  const mes = searchParams.get("mes");
+  const hora = searchParams.get("hora");
+  const compromisso =
+    agendado && dia && semana && mes && hora
+      ? { numero: Number(dia), semana, mes, hora, hoje: searchParams.get("hoje") === "1" }
+      : null;
 
   return (
     <AguardandoView
@@ -111,6 +122,7 @@ export default function AguardandoPage() {
       assinou1={assinou1}
       assistida={assistida}
       agendado={agendado}
+      compromisso={compromisso}
       /* 🆕 04/09 — o CTA da rota assistida leva pra agenda, não pro A4. */
       /* 🆕 04/09 — quem vem REMARCAR carrega o horário atual: sem isso, tocar
          em "Remarcar" e desistir devolvia a pessoa pra um status sem

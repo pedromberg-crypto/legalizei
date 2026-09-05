@@ -41,12 +41,18 @@ export default function AgendarPage() {
   return (
     <AgendarAssinaturaView
       onVoltar={() => router.push(status)}
-      /* 🚧 Mock (RF-01): sem estado real entre telas, o horário volta pelo
-         querystring. No produto real ele vem da agenda da consultora, e o
-         status lê do servidor. */
-      onConfirmar={(quando) =>
+      /* 🚧 Mock (RF-01): sem estado real entre telas, o compromisso volta pelo
+         querystring — em PARTES (dia, semana, mês, hora), porque o cartão do
+         status desenha um bloco de data e não uma frase. `agendado` continua
+         indo junto: hero, CTA e mensagem de WhatsApp precisam dele numa linha
+         só. No produto real isso tudo vem do servidor. */
+      onConfirmar={(c) =>
         router.push(
-          `/aguardando?fase=junta&guia=paga&rota=assistida&agendado=${encodeURIComponent(quando)}`,
+          "/aguardando?fase=junta&guia=paga&rota=assistida" +
+            `&agendado=${encodeURIComponent(c.frase)}` +
+            `&dia=${c.numero}&semana=${encodeURIComponent(c.semana)}` +
+            `&mes=${encodeURIComponent(c.mes)}&hora=${encodeURIComponent(c.hora)}` +
+            (c.hoje ? "&hoje=1" : ""),
         )
       }
     />

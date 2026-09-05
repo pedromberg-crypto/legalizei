@@ -1675,7 +1675,7 @@ export function CodigoGovView({
               </Campo>
               <p className="text-micro text-text-tertiary">
                 Tentativa {tentativas + 1} de {MAX_TENTATIVAS}. Se travar,
-                a gente chama um atendente pra te ajudar ao vivo.
+                a gente chama um atendente pra te ajudar na hora.
               </p>
             </>
           )}
@@ -1766,6 +1766,8 @@ const DIAS_AGENDA: {
   id: string;
   numero: number;
   semana: string;
+  /** 🆕 05/09 — o cartão do compromisso (A3.H2) mostra o mês no bloco de data. */
+  mes: string;
   label: string;
   /** A casa não atende nesse dia (feriado, folga). Diferente de lotado. */
   fechado?: boolean;
@@ -1780,36 +1782,59 @@ const DIAS_AGENDA: {
     id: "d1",
     numero: 5,
     semana: "Sex",
+    mes: "Set",
     label: "Hoje",
     horarios: [
       "09:00", "09:30", "10:00", "10:30", "11:00",
       "11:30", "14:00", "14:30", "15:00", "15:30",
     ],
   },
-  { id: "d2", numero: 8, semana: "Seg", label: "Segunda", horarios: ["09:30", "11:00", "14:00", "16:00"] },
-  { id: "d3", numero: 9, semana: "Ter", label: "Terça", horarios: [] },
+  { id: "d2", numero: 8, semana: "Seg", mes: "Set", label: "Segunda", horarios: ["09:30", "11:00", "14:00", "16:00"] },
+  { id: "d3", numero: 9, semana: "Ter", mes: "Set", label: "Terça", horarios: [] },
   /* 🆕 05/09 (pedido do Pedro) — dia 10 com UM horário só, pra ver o estado
      amarelo no meio da fila (e o singular "1 livre", que é outro caso). */
-  { id: "d4", numero: 10, semana: "Qua", label: "Quarta", horarios: ["14:00"] },
+  { id: "d4", numero: 10, semana: "Qua", mes: "Set", label: "Quarta", horarios: ["14:00"] },
   /* 🆕 05/09 (pedido do Pedro) — os DOIS jeitos de um dia sair de jogo:
      `horarios: []` = a agenda encheu · `fechado` = a gente decidiu não atender
      (feriado, folga, o que for). Os dois viram o mesmo cartão desativado; o
      que muda é a palavra, porque "lotado" e "fechado" pedem reações
      diferentes de quem lê (esperar uma vaga × nem tentar). */
-  { id: "d5", numero: 11, semana: "Qui", label: "Quinta", horarios: ["09:00", "10:30", "14:30", "16:30"] },
+  { id: "d5", numero: 11, semana: "Qui", mes: "Set", label: "Quinta", horarios: ["09:00", "10:30", "14:30", "16:30"] },
   /* 🔄 05/09 (pedido do Pedro) — 5 → 7 dias. Com 7 cartões a fila passa de
      375px e ROLA, que é o comportamento certo de agenda: mostra que existe
      mais semana adiante sem empurrar os horários pra fora da primeira tela. */
-  { id: "d6", numero: 12, semana: "Sex", label: "Sexta", fechado: true, horarios: [] },
-  { id: "d7", numero: 15, semana: "Seg", label: "Segunda 15", horarios: ["09:00", "10:00", "14:00", "16:00", "17:30"] },
+  { id: "d6", numero: 12, semana: "Sex", mes: "Set", label: "Sexta", fechado: true, horarios: [] },
+  { id: "d7", numero: 15, semana: "Seg", mes: "Set", label: "Segunda 15", horarios: ["09:00", "10:00", "14:00", "16:00", "17:30"] },
 ];
+
+/**
+ * O compromisso marcado, em partes.
+ *
+ * 🆕 05/09 — o cartão do A3.H2 desenha um bloco de data (semana · número ·
+ * mês) ao lado do horário, então a frase pronta ("Hoje às 15:00") deixou de
+ * bastar. Mesma lição da janela de atendimento e do cartão de dia: dado
+ * partido na FONTE, não com `split` na tela — quem monta layout a partir de
+ * string quebra no primeiro texto que mudar de forma.
+ *
+ * `frase` continua existindo porque hero, CTA e mensagem de WhatsApp precisam
+ * dele numa linha só ("Marcado pra hoje às 15:00").
+ */
+export type Compromisso = {
+  frase: string;
+  numero: number;
+  semana: string;
+  mes: string;
+  hora: string;
+  /** 🆕 05/09 — o compromisso é pra HOJE. O cartão troca a sigla do dia da
+   *  semana por "HOJE", que é a informação que a pessoa procura primeiro. */
+  hoje: boolean;
+};
 
 export function AgendarAssinaturaView({
   onConfirmar,
   onVoltar,
 }: {
-  /** Recebe o rótulo do horário escolhido ("Hoje às 15:00"). */
-  onConfirmar?: (quando: string) => void;
+  onConfirmar?: (c: Compromisso) => void;
   onVoltar?: () => void;
 }) {
   /* 🆕 05/09 (pedido do Pedro) — DIA SEM VAGA SAI DE JOGO. Dois motivos, um
@@ -1879,7 +1904,16 @@ export function AgendarAssinaturaView({
   }
 
   const diaAtual = DIAS_AGENDA.find((d) => d.id === dia) ?? DIAS_AGENDA[0];
-  const quando = hora ? `${diaAtual.label} às ${hora}` : null;
+  const quando: Compromisso | null = hora
+    ? {
+        frase: `${diaAtual.label} às ${hora}`,
+        numero: diaAtual.numero,
+        semana: diaAtual.semana,
+        mes: diaAtual.mes,
+        hora,
+        hoje: diaAtual.label === "Hoje",
+      }
+    : null;
 
   return (
     <>
@@ -2137,7 +2171,7 @@ export function AgendarAssinaturaView({
           {/* CTA travado NOMEIA o que falta (régua da casa), em vez de ficar
               mudo e deixar a pessoa descobrir clicando. */}
           <Button full disabled={!quando} onClick={() => quando && onConfirmar?.(quando)}>
-            {quando ? `Confirmar ${quando}` : "Escolha um horário"}
+            {quando ? `Confirmar ${quando.frase}` : "Escolha um horário"}
           </Button>
           {/* ═══════════ 🆕 05/09 (referência do Pedro) — O EXPRESSO ═══════════
               Era um link sublinhado embaixo do botão, e link no rodapé lê como
@@ -3062,6 +3096,7 @@ export function AguardandoView({
   assinou1 = false,
   assistida = false,
   agendado = null,
+  compromisso = null,
   dossieFeitos,
   junta = JUNTA_MOCK,
   recusa,
@@ -3134,8 +3169,16 @@ export function AguardandoView({
    * automática, o destino. Isto é um desvio no fim, não uma amputação.
    */
   assistida?: boolean;
-  /** Horário já marcado com a consultora ("Hoje às 15:00"). Null = a marcar. */
+  /** A frase do compromisso ("Hoje às 15:00"). Null = a marcar. */
   agendado?: string | null;
+  /** 🆕 05/09 — as partes do compromisso, pro cartão desenhar o bloco de data. */
+  compromisso?: {
+    numero: number;
+    semana: string;
+    mes: string;
+    hora: string;
+    hoje?: boolean;
+  } | null;
   /**
    * 🆕 01/09 — com o CTA da fase Junta no rodapé, o último passo ("Agora é só
    * assinar") precisava de destino: sem isso a tela virava beco depois da guia
@@ -3412,7 +3455,12 @@ export function AguardandoView({
             comConsultor: true,
             detalhe: agendado
               ? `Marcado pra ${agendado.toLowerCase()}. Um consultor te chama por aqui e por WhatsApp.`
-              : "Um consultor faz este passo com você, ao vivo. Leva cerca de 15 minutos.",
+              : /* ✍️ 05/09 — era "Um consultor faz este passo junto com você.
+                   Leva cerca de 15 minutos", a TERCEIRA vez que a tela dizia a
+                   mesma coisa (hero e cartão já disseram). Aqui sobra o que só
+                   a etapa entrega: quanto tempo. O ícone de pessoa na linha já
+                   diz de quem é a vez. */
+                "Leva cerca de 15 minutos.",
           };
         })
       : etapas;
@@ -3488,7 +3536,12 @@ export function AguardandoView({
                     ""
                   : assinou1
                     ? "O contrato social já está assinado. Falta a assinatura que gera o CNPJ, e a gente faz essa com você também."
-                    : "A Junta aprovou o nome e a guia está paga. As assinaturas são feitas ao vivo, com uma consultora nossa do seu lado."
+                    : /* ✍️ 05/09 (pente-fino do Pedro: "texto demais") — SAIU
+                         o recap "A Junta aprovou o nome e a guia está paga":
+                         a timeline logo abaixo mostra exatamente isso, com
+                         dois checks verdes. Contar em palavras o que a lista
+                         desenha é o jeito mais fácil de encher uma tela. */
+                      "Só falta assinar, e um consultor faz isso com você."
                 : assinou1
                   ? "O contrato social já está assinado. Falta a assinatura que gera o CNPJ, com o seu contador junto."
                   : "A Junta aprovou o nome e a guia está paga. O último passo é a assinatura dos sócios."
@@ -3577,10 +3630,22 @@ export function AguardandoView({
          a consultora (é ela que explica por que as etapas mudaram de dono);
          DEPOIS, o compromisso, que é a única coisa que a pessoa precisa reter
          nesta tela. */
+      /* Na rota assistida quem avisa é o consultor, com hora marcada — a
+         promessa genérica de "a gente te avisa" só somaria linha. */
+      semAvisoWhats={assistida && juntaResolvida}
       antesDaTimeline={
         assistida && juntaResolvida
-          ? agendado
-            ? <CardCompromisso quando={agendado} />
+          ? agendado && compromisso
+            ? (
+                <CardCompromisso
+                  quando={compromisso}
+                  /* O contato mora no cartão, junto de quem atende (ver
+                     `CardCompromisso`). Por isso saiu do rodapé. */
+                  onFalar={linkWhatsApp(
+                    `Oi! Tenho a assinatura marcada pra ${agendado.toLowerCase()} e preciso de ajuda.`,
+                  )}
+                />
+              )
             : <CardConsultor />
           : undefined
       }
@@ -3598,21 +3663,15 @@ export function AguardandoView({
          promete atendimento AGORA: "marcado com a Larissa" e "a Larissa faz
          este passo com você" continuam certos — são compromisso, não
          disponibilidade. */
-      ajudaWhats={
-        assistida && agendado
-          ? {
-              label: "Falar com um consultor",
-              /* A mensagem já entrega o contexto que a pessoa teria que
-                 digitar: quem atende não é necessariamente quem vai conduzir. */
-              mensagem: `Oi! Tenho a assinatura marcada pra ${agendado.toLowerCase()} e preciso de ajuda.`,
-            }
-          : undefined
-      }
+      /* 🗑️ 05/09 — o "Falar com um consultor" SAIU daqui: com a referência
+         nova, o atalho de contato passou a morar dentro do cartão do
+         compromisso, ao lado de quem atende. A mesma ação em dois lugares na
+         mesma tela faz a pessoa achar que são coisas diferentes. */
       /* 🆕 04/09 (achado do Pedro) — REMARCAR É AÇÃO DO APP, não pedido no
          WhatsApp: a agenda é nossa e a tela de escolher horário já existe.
          Divide a linha com o canal humano, cada um no seu destino. */
       acaoExtra={
-        assistida && agendado ? { label: "Remarcar", onClick: onAgendar } : undefined
+        assistida && agendado ? { label: "Remarcar horário", onClick: onAgendar } : undefined
       }
       /* 🆕 04/09 — só na fase Junta: o cartão fundido não pode herdar o nome
          do bloco 1 ("Conta e plano"), que é um quarto do que ele contém. */
@@ -3716,7 +3775,13 @@ export function AguardandoView({
                  andamento automático. */
               recusa
               ? "Seu progresso está guardado. Pode fechar o app: nada se perde, e nada recomeça do zero."
-              : "A abertura roda uma vez só. Pode fechar o app que o processo segue sozinho, de onde parou."
+              : /* ✍️ 05/09 — na rota assistida sem horário marcado, "o
+                   processo segue sozinho" é falso: ele parou e espera a pessoa
+                   marcar. A promessa que vale aqui é a mesma da tela de
+                   exigência — o progresso está guardado. */
+                assistida && !agendado
+                ? "Seu progresso está guardado. Pode fechar o app: nada se perde, e nada recomeça do zero."
+                : "A abertura roda uma vez só. Pode fechar o app que o processo segue sozinho, de onde parou."
           : pago
             ? "Seu progresso está salvo. Pode sair e voltar quando quiser."
             : "Seu progresso está salvo. Se você já pagou, não cobramos de novo."

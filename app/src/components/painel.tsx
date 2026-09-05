@@ -582,6 +582,7 @@ export function PainelView({
   escuro = false,
   heroExtra,
   antesDaTimeline,
+  semAvisoWhats = false,
   ajudaWhats,
   acaoExtra,
 }: {
@@ -661,6 +662,9 @@ export function PainelView({
    * escuro, que é outro componente, não este.
    */
   antesDaTimeline?: ReactNode;
+  /** 🆕 05/09 — esconde a linha "a gente te avisa no WhatsApp" do hero. Ver o
+   *  comentário no próprio bloco: ela é promessa de espera de órgão. */
+  semAvisoWhats?: boolean;
   /**
    * 🆕 04/09 — troca o rótulo e a mensagem do link de WhatsApp do rodapé.
    *
@@ -733,7 +737,15 @@ export function PainelView({
                 </p>
               )}
               {!recusa && heroExtra}
-              {!recusa && (
+              {/* 🗑️ 05/09 (pedido do Pedro, na A3.H) — a linha "Assim que um
+                  passo anda, a gente atualiza aqui e te avisa no WhatsApp" SAI
+                  na rota assistida. Ela é a promessa de quem espera um ÓRGÃO:
+                  vale enquanto a vez é da Junta ou do banco. Na rota assistida
+                  o contato humano já é a promessa da tela inteira (o cartão
+                  diz quem conduz, o CTA marca a hora, e o compromisso tem
+                  horário), então ela vira mais uma frase dizendo que a gente
+                  avisa — numa tela que já explicou como. */}
+              {!recusa && !semAvisoWhats && (
                 <p className="mt-3 text-micro text-text-on-dark/50">
                   Assim que um passo anda, a gente atualiza aqui e te avisa no WhatsApp.
                 </p>

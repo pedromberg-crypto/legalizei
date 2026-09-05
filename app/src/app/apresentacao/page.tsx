@@ -35,6 +35,8 @@ import {
   RevisarView,
   // 🗑️ 01/09 — `TermoView` saiu: a A2 foi eliminada (aceite absorvido pelo A1).
   AssinaturaView,
+  /* 🆕 04/09 — rota assistida: marcar a assinatura com a consultora (A3.H1). */
+  AgendarAssinaturaView,
   HomeAtivacaoView,
   RetomarCpfView,
   AguardandoView,
@@ -259,6 +261,8 @@ type Etapa =
   | "splash-atendido"
   | "conta"
   | "conta-codigo"
+  // 🆕 04/09 — E6.2: a Receita recusou o CPF na criação da conta.
+  | "conta-cpf-divergente"
   | "plano"
   | "pagamento"
   | "splash-pagamento"
@@ -305,8 +309,20 @@ type Etapa =
   | "guia-recusada"
   | "guia-retry"
   | "guia-paga"
+  // 🆕 04/09 — A3⁗: o status DEPOIS da 1ª assinatura, esperando a 2ª.
+  | "status-assinatura-1"
+  // 🆕 04/09 — ROTA ASSISTIDA: a passagem pra consultora, a agenda e o status
+  // com horário marcado. É como a operação nasce (ver `consultor.tsx`).
+  | "assistida-passagem"
+  | "assistida-agendar"
+  | "assistida-marcado"
+  | "assistida-ativacao"
   | "painel-recusa"
   | "assinatura"
+  // 🆕 04/09 — A4.1: o código do GOV.BR virou tela do flow.
+  | "assinatura-codigo"
+  // 🆕 04/09 — A4″: a 2ª assinatura, a que o contador assina junto.
+  | "assinatura-2"
   | "ativacao"
   // ─── MIGRAR DE CONTADOR (30/07) — decimal de Entrada ─────────────────────
   // Ramo decimal, não continuação: sai do fork E4 e reencontra o tronco só no
@@ -409,6 +425,8 @@ const ETAPAS_CAUDA = [
   // certificado validado") não se sustenta: certificado é e-CNPJ, e o CNPJ
   // ainda não existe neste ponto do flow. Segue no MEI ("m-certificado").
   "assinatura",
+  "assinatura-codigo",
+  "assinatura-2",
   "ativacao",
 ] as const satisfies readonly Etapa[];
 
@@ -532,6 +550,11 @@ const ETAPAS_ESPERA = [
   "guia-boleto",
   // 🆕 01/09 — o estado "guia paga" do status (A3′), par do "guia-boleto".
   "guia-paga",
+  "status-assinatura-1",
+  "assistida-passagem",
+  "assistida-agendar",
+  "assistida-marcado",
+  "assistida-ativacao",
   "aguardando-pago",
 ] as const satisfies readonly Etapa[];
 
@@ -638,6 +661,8 @@ type Momento =
   | "splash-atendido"
   | "conta"
   | "conta-codigo"
+  // 🆕 04/09 — E6.2: a Receita recusou o CPF na criação da conta.
+  | "conta-cpf-divergente"
   | "plano"
   | "pagamento"
   | "splash-pagamento"
@@ -671,8 +696,20 @@ type Momento =
   | "guia-splash-boleto"
   | "guia-boleto"
   | "guia-paga"
+  // 🆕 04/09 — A3⁗: o status DEPOIS da 1ª assinatura, esperando a 2ª.
+  | "status-assinatura-1"
+  // 🆕 04/09 — ROTA ASSISTIDA: a passagem pra consultora, a agenda e o status
+  // com horário marcado. É como a operação nasce (ver `consultor.tsx`).
+  | "assistida-passagem"
+  | "assistida-agendar"
+  | "assistida-marcado"
+  | "assistida-ativacao"
   | "painel-recusa"
   | "assinatura"
+  // 🆕 04/09 — A4.1: o código do GOV.BR virou tela do flow.
+  | "assinatura-codigo"
+  // 🆕 04/09 — A4″: a 2ª assinatura, a que o contador assina junto.
+  | "assinatura-2"
   | "ativacao"
   // ─── MIGRAR DE CONTADOR (30/07) — decimal de Entrada ─────────────────────
   // Ramo decimal, não continuação: sai do fork E4 e reencontra o tronco só no
@@ -1013,7 +1050,7 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
  * porque rota não identifica tela:
  *
  *   /gate?etapa=triagem  → E5T (Triagem do ME) · M_T (impedimentos do MEI)
- *   /assinatura          → A4 (assinatura) · A4G (upgrade do GOV.BR)
+ *   /assinatura          → A4 (assinatura) · A4″ (2ª, `?rodada=2`)
  *
  * O `Object.fromEntries` deixava o ÚLTIMO vencer, então o painel exibia o nó
  * secundário nos três casos. O primeiro nó de cada rota é o principal (a
@@ -1112,6 +1149,7 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   painel: "/aguardando?fase=junta",
   "painel-recusa": "/painel/recusa",
   assinatura: "/assinatura",
+  "assinatura-codigo": "/assinatura?etapa=codigo",
   ativacao: "/home-dia1",
   "m-cnpj": "/migrar/cnpj",
   "m-diagnostico": "/migrar/diagnostico",
@@ -1138,6 +1176,14 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   "guia-splash-boleto": "/splash-boleto?next=/aguardando%3Ffase%3Djunta%26guia%3Dboleto",
   "guia-boleto": "/aguardando?fase=junta&guia=boleto",
   "guia-paga": "/aguardando?fase=junta&guia=paga",
+  "status-assinatura-1": "/aguardando?fase=junta&guia=paga&assinatura=1",
+  "assistida-passagem": "/aguardando?fase=junta&guia=paga&rota=assistida",
+  "assistida-agendar": "/agendar",
+  "assistida-ativacao": "/home-dia1?rota=assistida",
+  "assistida-marcado":
+    "/aguardando?fase=junta&guia=paga&rota=assistida&agendado=Hoje%20%C3%A0s%2015%3A00",
+  "conta-cpf-divergente": "/conta?cpf=nome",
+  "assinatura-2": "/assinatura?rodada=2",
 };
 
 const SUFIXO_MOMENTO: Partial<Record<Momento, string>> = {
@@ -1297,7 +1343,19 @@ const MOMENTO_POR_NO: Record<string, Etapa | null> = {
   A3_GB: "guia-boleto",
   A3_V: "status-viabilidade",
   A4: "assinatura",
-  A4G: "assinatura",
+  A4_1: "assinatura-codigo",
+  // 🆕 04/09 — as duas assinaturas e o status entre elas.
+  A3_A1: "status-assinatura-1",
+  A3_H: "assistida-passagem",
+  A3_H1: "assistida-agendar",
+  A3_H2: "assistida-marcado",
+  A5_H: "assistida-ativacao",
+  A4_2: "assinatura-2",
+  E6_2: "conta-cpf-divergente",
+  // C3_3 é variante da MESMA tela da C3 (o cartão do sócio recusado abre com o
+  // alerta dentro), então compartilha o momento e quem resolve a pill é o
+  // `noVariante` — mesmo tratamento de C3_1/C3_2.
+  C3_3: "socios",
   // 🐛 03/09 — estava em "triagem" (a do ME). O M-T é a tela de
   // IMPEDIMENTOS do MEI, que já tem momento e rota próprios; vinculado errado,
   // a pill do MEI abria a triagem do ME e as duas acendiam juntas.
@@ -1387,11 +1445,22 @@ const TELAS_DO_FLOW: TelaDoFlow[] = (
  */
 function noVariante(
   etapa: Etapa,
-  st: { enderecoFiscal: boolean; socios: number | null; mei: boolean },
+  st: {
+    enderecoFiscal: boolean;
+    socios: number | null;
+    mei: boolean;
+    cpfSocio: boolean;
+  },
 ): string | null {
+  /* 🗑️ 04/09 (Pedro) — a variante A4G saiu: sem acesso à conta GOV.BR do
+     cliente não dá pra saber o nível dela, então não existe estado a mostrar. */
   if (etapa === "plano" && st.enderecoFiscal) return "E7_1";
   /* 🆕 04/09 — a C3 tem 3 anatomias: 1 sócio (base), teto e só você. O `socios`
      aqui é o TOTAL com o titular, então 4 = teto e 1 = ninguém além dela. */
+  /* 🆕 04/09 — a divergência de CPF vem ANTES das outras 2 variantes da C3:
+     ela é o estado mais específico (a tela está com alerta e CTA travado), e
+     as outras duas só olham a quantidade de sócios. */
+  if (etapa === "socios" && st.cpfSocio) return "C3_3";
   if (etapa === "socios" && (st.socios ?? 0) >= 3) return "C3_1";
   if (etapa === "socios" && (st.socios ?? 2) <= 1) return "C3_2";
   if (etapa === "painel" && st.mei) return "A3_M";
@@ -1813,6 +1882,62 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     porque:
       "Virou tela própria no mapa (A3′) porque é OUTRO estado da mesma rota, e estado que muda o que a pessoa pode fazer merece nó — mesma régua que já separa E9.1 de E9.1P.",
   },
+  "assistida-passagem": {
+    dono: "nossa",
+    faz: "🆕 04/09 — A3.H: o A3′ na ROTA ASSISTIDA. Mesma tela e mesma timeline, com o cartão da consultora acima das etapas e as duas assinaturas trocando de dono (5º estado do DS: silhueta de pessoa). O CTA deixa de ser \"Ir para a assinatura\" e vira \"Escolher um horário\".",
+    interfere:
+      "É o ponto em que a condução muda de mão. O processo não para nem muda de ordem: as mesmas 2 assinaturas acontecem, só que ao vivo, com alguém do lado.",
+    porque:
+      "Decisão do Pedro (04/09): a operação NASCE assim. O A3′ é o último ponto em que tudo que falta ainda é nosso — depois dele vem CAPTCHA, 2FA, nível de conta GOV.BR que a gente não consegue ler, código de 10 minutos e o contador assinando junto. O flow automático até aqui já entrega mais do que a contabilidade digital que existe hoje; o resto vira otimização. 🔴 Regra de copy da rota: NUNCA enquadrar como limitação (\"o sistema não consegue\") nem dizer \"nossa equipe entra em contato\" — a pessoa tem nome, registro e horário.",
+  },
+  "assistida-agendar": {
+    dono: "usuario",
+    faz: "🆕 04/09 — A3.H1: escolher dia e horário pra assinar junto com a consultora. Trocar de dia zera a hora, e o CTA travado nomeia o que falta.",
+    interfere:
+      "Marca o único tempo do processo que a casa controla de fato. O prazo dos órgãos continua fora do nosso alcance, e a tela não promete nada sobre ele.",
+    porque:
+      "AGENDAR vence \"fale conosco\": a assinatura exige sincronia (o código do GOV.BR vale 10 minutos, os dois precisam estar juntos). \"Manda mensagem e espera\" quebra dos dois lados — a pessoa não sabe quando vem, a consultora liga no vazio. \"Falar agora\" fica como saída secundária, pra quem está com pressa.",
+  },
+  "assistida-marcado": {
+    dono: "nossa",
+    faz: "🆕 04/09 — A3.H2: o status DEPOIS de marcar. O hero vira \"Você tem hora marcada\", a etapa mostra o compromisso e o CTA fica travado dizendo quando a consultora chama.",
+    interfere:
+      "Nada muda no processo: é o intervalo até a chamada. Mas o status continua sendo a fonte de verdade, mesmo com a conversa acontecendo no WhatsApp.",
+    porque:
+      "O cartão da consultora SOME aqui (a informação já migrou pro hero e pra etapa) e o CTA fica travado em vez de sumir — mesma régua do \"Aguardando compensação\" do boleto: o botão não desaparece, ele conta o estado. Se o status morresse no handoff, a pessoa perguntaria no WhatsApp onde está, e o consultor viraria suporte em vez de executor.",
+  },
+  "assistida-ativacao": {
+    dono: "nossa",
+    faz: "🆕 04/09 — A5.H: a home de dia-1 na rota assistida. Mesma tela e mesma trilha; o passo da procuração deixa de ser tarefa do cliente (com CTA pro GOV.BR) e vira o próximo passo com a consultora, sem botão.",
+    interfere:
+      "Nada no processo. Muda quem faz: a procuração é e-CAC, tem CAPTCHA e, segundo o Ademar (RS36, 26/08), são quatro procurações diferentes lá dentro.",
+    porque:
+      "Terminar a rota assistida mandando a pessoa resolver sozinha justamente o passo mais chato desmentiria todas as telas anteriores. Fica sem CTA de propósito: a conversa já está aberta no WhatsApp, e um botão aqui abriria um segundo canal pro mesmo assunto.",
+  },
+  "status-assinatura-1": {
+    dono: "nossa",
+    faz: "🆕 04/09 — o status ENTRE as duas assinaturas: o contrato social já foi assinado, e o que falta é a assinatura que gera o CNPJ, com o contador junto.",
+    interfere:
+      "É o intervalo em que a bola está com a casa: a 2ª assinatura só libera quando o contador entra. A pessoa fecha o app aqui e volta quando a gente chamar.",
+    porque:
+      "Sem este estado o status recebia quem tinha ACABADO de assinar dizendo \"o último passo é a assinatura\" — o mesmo furo que o A3′ tinha com a guia paga: a tela não reconhecia o que mudou, e não reconhecer o esforço da pessoa lê como erro do sistema.",
+  },
+  "assinatura-2": {
+    dono: "usuario",
+    faz: "🆕 04/09 — A4″: a SEGUNDA assinatura. Mesma tela e mesmo gesto (GOV.BR + código), o que muda é o que está sendo assinado: aqui é a abertura do CNPJ, e o contador assina junto.",
+    interfere:
+      "É a última ação da pessoa antes do CNPJ existir. Sem ela o processo para com a empresa registrada e sem CNPJ.",
+    porque:
+      "Pedro, 04/09, destrinchando o processo real: até o CNPJ sair são 2 assinaturas do cliente e 1 do contador (a 1ª sozinho, a 2ª junto). O app mostrava uma só e prometia o CNPJ logo depois dela, então a 2ª chegaria como surpresa DEPOIS do ponto sem volta. Bate com a Izabela (09/07): o CRC assina na finalização do CNPJ.",
+  },
+  "conta-cpf-divergente": {
+    dono: "usuario",
+    faz: "🆕 04/09 — E6.2: a Receita recusou o CPF na criação da conta. O alerta volta pro próprio formulário, em cima dos campos, e o CTA responde à recusa: com o nome divergente vira \"Conferir de novo\"; com o CPF irregular trava e diz o motivo.",
+    interfere:
+      "Barra a conta. É de propósito: se o nome não bate com a Receita, o DBE recusa lá na frente e o processo inteiro para, com o dossiê já preenchido e pago.",
+    porque:
+      "Izabela, 09/07, sobre o que mais gera retrabalho: pessoa casa, muda o nome no CPF e não atualiza na Receita. Barrar na entrada custa uma tela de alerta; barrar no DBE custa o processo. Sem tela nova (decisão do Pedro): erro volta pra onde o dado foi digitado.",
+  },
   "splash-nomes": {
     dono: null,
     faz: "🆕 04/09 — C7.S: recibo do envio da 2ª rodada de nomes. Transitório, sem CTA, some sozinho e cai no status com a viabilidade recomeçando (A3‴).",
@@ -1820,6 +1945,14 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
       "Nada por si. Marca o ENVIO: daí em diante a bola está com a Junta de novo, e a jornada volta pra 'analisando viabilidade'.",
     porque:
       "A C7′ mandava os nomes e caía direto na timeline, sem recibo de que o envio aconteceu. Aqui NÃO cabe repetir a A2 (decisão do Pedro): a pessoa já atravessou o ponto sem volta, já viu a Junta responder e está reenviando por causa disso. Pedir confirmação de novo seria cobrar consentimento de quem já consentiu. Sem prazo na copy: o tempo da Junta não é nosso.",
+  },
+  "assinatura-codigo": {
+    dono: "usuario",
+    faz: "A4.1: o código de 6 dígitos do GOV.BR, com janela de 10 minutos e 3 tentativas. É ele que assina o registro na Junta.",
+    interfere:
+      "É a assinatura em si: sem ela a Junta não registra, e o CNPJ não sai. Estourou a janela ou as 3 tentativas, escala pra atendente em vez de travar a pessoa sozinha.",
+    porque:
+      "🆕 04/09 (pedido do Pedro) — a tela existia escondida ATRÁS do A4, sem nó e sem pill: no mapa a prévia mostrava a assinatura. Mesmo buraco do E6.1 e do C0.3. 🔄 04/09: o código deixou de prometer a procuração junto — ela é e-CAC, exige o CNPJ (que ainda não existe aqui) e virou tarefa da A5.",
   },
   "nome-rodada2": {
     dono: "usuario",
@@ -1889,7 +2022,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     dono: "usuario",
     faz: "Pede a assinatura via GOV.BR (todos os sócios, quando há mais de um) e explica a procuração eletrônica que acompanha.",
     interfere:
-      "A Junta só registra com a assinatura de quem é sócio. Nível GOV.BR abaixo de prata trava a assinatura — por isso o gate de nível mora dobrado aqui (A4G no mapa).",
+      "A Junta só registra com a assinatura de quem é sócio. O GOV.BR só aceita conta prata ou ouro, e a tela avisa isso antes — sem afirmar em que nível a pessoa está, porque a gente não tem acesso à conta dela pra saber (Pedro, 04/09).",
     porque:
       "Com 2 sócios, ninguém assina pelo outro: o parceiro confirma os próprios dados e o custo antes de assinar (consenso antes do commit). Evita o cenário 'um decidiu e o outro descobriu depois'.",
   },
@@ -2111,7 +2244,7 @@ export default function ApresentacaoPage() {
   /**
    * 🐛 03/09 (achado do Pedro, olhando a fita) — DUAS PILLS ACENDIAM JUNTAS.
    * Sete grupos de nós compartilham a mesma etapa da demo, porque são a mesma
-   * tela em estados diferentes (C3/C3.1, E7/E7.1, A3/A3-MEI, A4/A4G, os 3
+   * tela em estados diferentes (C3/C3.1, E7/E7.1, A3/A3-MEI, C3/C3.3, os 3
    * slides do welcome, E5T/M-T, e as 3 saídas do veredito). Como o destaque
    * comparava só a etapa, todas do grupo ficavam coral ao mesmo tempo — a fita
    * dizia que a pessoa estava em duas telas.
@@ -2132,7 +2265,12 @@ export default function ApresentacaoPage() {
      welcome (a view lê `slideInicial` só no mount, então remonta por `key`) e
      o nível do GOV.BR na assinatura (era constante, ver `nivelGov`). */
   const [slideWelcome, setSlideWelcome] = useState(0);
-  const [nivelGovDemo, setNivelGovDemo] = useState<"bronze" | undefined>(undefined);
+  /* 🆕 04/09 (pedido do Pedro) — C3.3: a Receita recusou o CPF de um sócio. É
+     variante da MESMA tela da C3 (o cartão do recusado abre com o alerta
+     dentro), então segue o padrão do `sociosDemo`: a pill força
+     o estado, senão as pills abririam a mesma tela e o Pedro reveria a base
+     achando que está vendo a variante. */
+  const [cpfSocioDemo, setCpfSocioDemo] = useState(false);
   // 🆕 27/08 — estado das 2 telas novas de captura de lead (E3.1 e E3.3).
   const [dadosLead, setDadosLead] = useState<DadosLead>({
     nome: "",
@@ -2164,6 +2302,7 @@ export default function ApresentacaoPage() {
   const [dadosConta, setDadosConta] = useState<DadosConta>({
     nome: "",
     cpf: "",
+    nascimento: "",
     telefone: "",
     email: "",
     senha: "",
@@ -2289,6 +2428,7 @@ export default function ApresentacaoPage() {
     setDadosConta({
       nome: "",
       cpf: "",
+      nascimento: "",
       telefone: "",
       email: "",
       senha: "",
@@ -2339,6 +2479,7 @@ export default function ApresentacaoPage() {
       setDadosConta({
         nome: "Ana Beatriz Ramos",
         cpf: "123.456.789-00",
+        nascimento: "14/03/1988",
         telefone: "(31) 98888-7766",
         email: "ana.beatriz@email.com",
         senha: "legalizai2026",
@@ -2423,6 +2564,7 @@ export default function ApresentacaoPage() {
       setDadosConta({
         nome: "Ana Beatriz Ramos",
         cpf: "123.456.789-00",
+        nascimento: "14/03/1988",
         telefone: "(31) 98888-7766",
         email: "ana.beatriz@email.com",
         senha: "legalizai2026",
@@ -2495,6 +2637,12 @@ export default function ApresentacaoPage() {
     if (t.id === "C3") setSociosDemo(2);
     if (t.id === "C3_1") setSociosDemo(4);
     if (t.id === "C3_2") setSociosDemo(1);
+    if (t.id === "C3_3") {
+      setSociosDemo(2);
+      setCpfSocioDemo(true);
+    } else if (t.id === "C3" || t.id === "C3_1" || t.id === "C3_2") {
+      setCpfSocioDemo(false);
+    }
     if (t.id === "A3_M") setRegimeDemo("mei");
     // As 4 saídas do veredito não são telas: são DESFECHOS do mesmo
     // `VereditoView`, decididos pelo `mapear()`. Eram 4 das 12 telas que o
@@ -2507,9 +2655,6 @@ export default function ApresentacaoPage() {
     if (t.id === "E2_1") setSlideWelcome(0);
     if (t.id === "E2_2") setSlideWelcome(1);
     if (t.id === "E2_3") setSlideWelcome(2);
-    // A4G é a assinatura com GOV.BR bronze (exige upgrade); A4 é o caso normal.
-    if (t.id === "A4G") setNivelGovDemo("bronze");
-    if (t.id === "A4") setNivelGovDemo(undefined);
   };
 
   /* 🗑️ 02/09 — as 4 listas de pills escritas à mão (PILLS · PILLS_MIGRAR ·
@@ -2627,6 +2772,7 @@ export default function ApresentacaoPage() {
     enderecoFiscal: enderecoProprioDemo === false,
     socios,
     mei: regimeDemo === "mei",
+    cpfSocio: cpfSocioDemo,
   });
   const tituloDaTela =
     (idVariante && TELAS_DO_FLOW.find((t) => t.id === idVariante)?.nome) ||
@@ -2653,6 +2799,10 @@ export default function ApresentacaoPage() {
     etapa === "endereco" ||
     etapa === "conta" ||
     etapa === "conta-codigo" ||
+    // 🆕 04/09 — E6.2 é a MESMA tela do E6 (o alerta mora dentro dela), então
+    // usa o mesmo shell. Fora daqui, o TS estreita `etapa` e o render nem
+    // compila — a trava pegou na primeira rodada.
+    etapa === "conta-cpf-divergente" ||
     etapa === "plano" ||
     etapa === "pagamento" ||
     // O dossiê usa o mesmo shell de tela cheia da travessia do dinheiro: são
@@ -2993,11 +3143,16 @@ export default function ApresentacaoPage() {
                             onVoltar={() => voltar(() => setEtapa("mei-ou-me"))}
                           />
                         )}
-                        {(etapa === "conta" || etapa === "conta-codigo") && (
+                        {(etapa === "conta" ||
+                          etapa === "conta-codigo" ||
+                          etapa === "conta-cpf-divergente") && (
                           <ContaView
                             d={dadosConta}
                             set={(k, v) => setDadosConta((p) => ({ ...p, [k]: v }))}
-                            etapa={etapa === "conta" ? "form" : "codigo"}
+                            etapa={etapa === "conta-codigo" ? "codigo" : "form"}
+                            /* 🆕 04/09 — E6.2: a Receita recusou o CPF. Mesma
+                               tela, com o alerta em cima do formulário. */
+                            divergencia={etapa === "conta-cpf-divergente" ? "nome" : undefined}
                             onCriarConta={() => setEtapa("conta-codigo")}
                             onConfirmar={() => setEtapa("plano")}
                             onVoltar={() => voltar(() => setEtapa("faixa"))}
@@ -3081,6 +3236,9 @@ export default function ApresentacaoPage() {
                                em nada na tela. Mesmo caso do welcome. */
                             key={sociosDemo ?? 2}
                             socios={sociosDemo}
+                            /* 🆕 04/09 — C3.3: a Receita recusou o CPF do 1º
+                               sócio da lista (o 2º da empresa). */
+                            divergencia={cpfSocioDemo ? { socio: 0, tipo: "nome" } : undefined}
                             preencher={preenchimento}
                             onSeguir={() => setEtapa(depoisDoDossie("socios"))}
                             onVoltar={() => voltar(() => setEtapa(antesDoDossie("socios")))}
@@ -3318,6 +3476,35 @@ export default function ApresentacaoPage() {
                             onAssinar={() => setEtapa("assinatura")}
                           />
                         )}
+                        {/* 🆕 04/09 — ROTA ASSISTIDA (A3.H · A3.H1 · A3.H2).
+                            É a MESMA `AguardandoView` do A3′, com `assistida`;
+                            a agenda é tela própria. Ver `consultor.tsx`. */}
+                        {(etapa === "assistida-passagem" || etapa === "assistida-marcado") && (
+                          <AguardandoView
+                            fase="junta"
+                            junta={{ concluidas: 2, emAndamento: 2 }}
+                            temSocios={socios === 2}
+                            assistida
+                            agendado={etapa === "assistida-marcado" ? "Hoje às 15:00" : null}
+                            onAgendar={() => setEtapa("assistida-agendar")}
+                          />
+                        )}
+                        {etapa === "assistida-agendar" && (
+                          <AgendarAssinaturaView
+                            onConfirmar={() => setEtapa("assistida-marcado")}
+                            onVoltar={() => voltar(() => setEtapa("assistida-passagem"))}
+                          />
+                        )}
+                        {/* 🆕 04/09 — A3⁗: o status entre as duas assinaturas. */}
+                        {etapa === "status-assinatura-1" && (
+                          <AguardandoView
+                            fase="junta"
+                            junta={{ concluidas: 3, emAndamento: 3 }}
+                            assinou1
+                            temSocios={socios === 2}
+                            onAssinar={() => setEtapa("assinatura-2")}
+                          />
+                        )}
                         {etapa === "guia-boleto" && (
                           <AguardandoView
                             fase="junta"
@@ -3416,10 +3603,24 @@ export default function ApresentacaoPage() {
                             onAcaoRecusa={() => setEtapa("nome-rodada2")}
                           />
                         )}
-                        {etapa === "assinatura" && (
+                        {/* 🆕 04/09 (pedido do Pedro) — A4.1 tem tela própria
+                            na demo: mesma `AssinaturaView`, abrindo direto na
+                            fase do código. Antes ela só existia como sub-estado
+                            e a pill do mapa mostrava a assinatura. */}
+                        {(etapa === "assinatura" ||
+                          etapa === "assinatura-codigo" ||
+                          etapa === "assinatura-2") && (
                           <AssinaturaView
-                            nivelGov={nivelGovDemo}
-                            onSeguir={() => setEtapa("ativacao")}
+                            key={etapa}
+                            faseInicial={etapa === "assinatura-codigo" ? "codigo" : "assinar"}
+                            /* 🆕 04/09 — A4″: a 2ª assinatura, a que o contador
+                               assina junto e que gera o CNPJ. */
+                            rodada={etapa === "assinatura-2" ? 2 : 1}
+                            /* 🔄 04/09 — só a 2ª aterrissa na A5; a 1ª devolve
+                               pro status, que é de onde a 2ª é chamada. */
+                            onSeguir={() =>
+                              setEtapa(etapa === "assinatura-2" ? "ativacao" : "status-assinatura-1")
+                            }
                             // 🔄 01/09 — volta pro painel de novo: a A3.2
                             // (certificado) saiu do caminho ME, então quem
                             // precede a assinatura é o status da Junta.
@@ -3436,7 +3637,12 @@ export default function ApresentacaoPage() {
                             Sem onVoltar/onSeguir: a tela original não tem CTA de
                             avançar (é a home, não passo de wizard); a seta
                             externa do aparelho segue funcionando via histórico. */}
-                        {etapa === "ativacao" && <HomeAtivacaoView />}
+                        {/* 🆕 04/09 — A5.H é a MESMA tela, com a procuração
+                            conduzida pela consultora em vez de tarefa do
+                            cliente (rota assistida). */}
+                        {(etapa === "ativacao" || etapa === "assistida-ativacao") && (
+                          <HomeAtivacaoView assistida={etapa === "assistida-ativacao"} />
+                        )}
 
                         {/* ═══ C0.1 · E9.1 — pausas de pagamento ════════════
                             Fora da sequência linear: alcançadas pelo E3

@@ -75,6 +75,7 @@ export default function ContaPage() {
   const [dados, setDados] = useState<DadosConta>({
     nome: "",
     cpf: "",
+    nascimento: "",
     telefone: "",
     email: "",
     senha: "",
@@ -101,6 +102,19 @@ export default function ContaPage() {
       // social). UX-73 (coorte obrigatória) NÃO veio junto — decisão em
       // aberto, ver comentário em `ContaPainel`. Fonte: /apresentacao.
       layout="painel"
+      /* 🆕 04/09 (Pedro) — E6.2: a Receita recusou o CPF (`?cpf=nome` ou
+         `?cpf=situacao`). A validação roda quando a pessoa toca em criar a
+         conta: quem tem divergência é barrado AQUI, e não lá no DBE, com o
+         dossiê inteiro preenchido. Deep-link porque a variante precisa existir
+         no mapa e na apresentação — mesmo padrão do `?etapa=codigo` (E6.1) e do
+         `?socios=` (C3). */
+      divergencia={
+        searchParams.get("cpf") === "nome"
+          ? "nome"
+          : searchParams.get("cpf") === "situacao"
+            ? "situacao"
+            : undefined
+      }
       // 🔄 28/08 (pedido do Pedro, reposição no /mapa) — volta a ser o form
       // completo (nome/CPF/telefone/e-mail/senha/CEP/número), sem o recap
       // read-only. `leadJaCaptado` omitido = false (default).

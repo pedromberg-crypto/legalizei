@@ -20,6 +20,10 @@ import { nomeCnae } from "@/lib/cnae";
 // o canal humano, no pé do próprio cartão.
 import { linkWhatsApp } from "@/lib/contato";
 import { PainelView, ETAPAS_ABERTURA, type Etapa, type Recusa } from "@/components/painel";
+/* 🆕 04/09 — rota assistida: da assinatura em diante quem conduz é gente da
+   casa. O racional inteiro do corte mora em `components/consultor.tsx`. */
+import { CardConsultor } from "@/components/consultor";
+import { CONSULTOR_PRIMEIRO_NOME } from "@/app/(app)/dossie/mock";
 import {
   CLIENTE,
   TEM_SOCIO,
@@ -1535,7 +1539,12 @@ const SOCIOS_ASSINATURA: { nome: string; status: StatusSocio }[] = [
 /** Primeiro nome do sócio, pro CTA do convite ("Enviar convite pro Carlos"). */
 const PRIMEIRO_NOME_SOCIO = SOCIO_2.nome.trim().split(/\s+/)[0];
 
-const NIVEL_GOVBR: "bronze" | "prata" | "ouro" = "prata";
+/* 🗑️ 04/09 (Pedro) — `NIVEL_GOVBR` REMOVIDA. A gente NÃO tem acesso nenhum à
+   conta GOV.BR da pessoa: não dá pra saber se ela é bronze, prata ou ouro. A
+   constante era mock ("prata") e a tela afirmava o nível como se soubesse —
+   inventar um estado que o produto não consegue ler é pior do que não dizer
+   nada, porque a pessoa acredita. O requisito (prata ou ouro) continua sendo
+   dito, sem afirmar em qual a pessoa está. */
 
 /**
  * ⚠️ SEM ESTADO REAL DE CONSENSO (mock pra farol). O produto real trackearia
@@ -1567,10 +1576,14 @@ export function CodigoGovView({
   onEscalar,
   onVoltar,
   soProcuracao = false,
+  rodada = 1,
 }: {
   onValidar?: () => void;
   onEscalar?: () => void;
   onVoltar?: () => void;
+  /** 🆕 04/09 — qual das duas assinaturas do registro (ver `AssinaturaView`).
+   *  Só troca a frase que diz o que o código assina; o mecanismo é idêntico. */
+  rodada?: 1 | 2;
   /** 🆕 24/08 (achado da reunião Leonan 19/08, aplicado à MIGRAÇÃO) — na
    *  migração a empresa já existe: não tem protocolo de registro pra assinar,
    *  só a procuração (que dá acesso ao e-CAC/GOV.BR do cliente). Mesmo
@@ -1616,8 +1629,19 @@ export function CodigoGovView({
         <Titulo
           sub={
             soProcuracao
-              ? "É o código que chegou no seu app ou celular cadastrado no GOV.BR. Serve pra fazer a procuração — sua empresa já existe, não tem registro novo pra assinar."
-              : "É o código que chegou no seu app ou celular cadastrado no GOV.BR. Serve pra procuração e pra assinatura, de uma vez só."
+              ? "É o código que chegou no seu app ou celular cadastrado no GOV.BR. Serve pra fazer a procuração: sua empresa já existe, não tem registro novo pra assinar."
+              : /* 🐛 04/09 (decisão do Pedro, com a pesquisa) — dizia "serve
+                   pra procuração E pra assinatura, de uma vez só". A procuração
+                   é e-CAC e SÓ pode ser assinada depois que o CNPJ existe, o
+                   que não acontece aqui (a premissa caiu em 01/09, quando a
+                   A3.2 saiu do caminho ME, e a tela continuou prometendo).
+                   Agora o código faz uma coisa só, e a procuração virou passo
+                   próprio na A5, quando o CNPJ já saiu. */
+                rodada === 2
+                ? /* 🆕 04/09 — a 2ª assinatura. Dizer "o registro" de novo
+                     faria a pessoa achar que está repetindo o passo anterior. */
+                  "É o código que chegou no seu app ou celular cadastrado no GOV.BR. É ele que assina a abertura do CNPJ, junto com o seu contador."
+                : "É o código que chegou no seu app ou celular cadastrado no GOV.BR. É ele que assina o contrato social da sua empresa."
           }
         >
           Digite o código que chegou pra você
@@ -1634,7 +1658,7 @@ export function CodigoGovView({
           )}
 
           {precisaEscalar ? (
-            <Aviso variante="warning" titulo={expirou ? "O código expirou" : "As tentativas acabaram"}>
+            <Aviso neutro variante="warning" titulo={expirou ? "O código expirou" : "As tentativas acabaram"}>
               {expirou
                 ? "Passaram os 10 minutos da janela do GOV.BR. Sem problema — um atendente nosso te ajuda a gerar um novo agora."
                 : "Foram 3 tentativas sem validar. Pra não te travar sozinho nisso, um atendente nosso assume daqui."}
@@ -1664,10 +1688,147 @@ export function CodigoGovView({
               Falar com atendente agora
             </Button>
           ) : (
-            <Button full onClick={validar}>
-              Validar código
+            /* 🐛 04/09 (auditoria) — O GATE NÃO TRAVAVA. O botão nascia
+               habilitado e seguia habilitado com o campo vazio: clicar marcava
+               erro e, com qualquer coisa digitada, avançava. É o único gate de
+               segurança do bloco. Agora ele trava até os 6 dígitos, igual ao
+               código do E6.1, e o rótulo diz o que falta. */
+            <Button full disabled={codigo.replace(/\D/g, "").length < 6} onClick={validar}>
+              {codigo.replace(/\D/g, "").length < 6 ? "Digite os 6 dígitos" : "Validar código"}
             </Button>
           )}
+        </Rodape>
+      </main>
+    </>
+  );
+}
+
+/* ═══════════════ A3.H1 · AGENDAR A ASSINATURA (rota assistida) ═════════════
+ * 🆕 04/09 (decisão do Pedro).
+ *
+ * ─── POR QUE AGENDAR, E NÃO "FALAR AGORA" ────────────────────────────────
+ * A assinatura exige SINCRONIA: o código do GOV.BR vale 10 minutos, então os
+ * dois precisam estar juntos. "Manda mensagem e espera" quebra dos dois lados
+ * — a pessoa não sabe quando vem, e a consultora liga no vazio. Escolher a
+ * hora resolve os dois com um toque.
+ *
+ * "Falar agora" continua existindo, como saída secundária: quem está com
+ * pressa não pode ser obrigado a marcar horário.
+ *
+ * ─── O QUE ESTA TELA NÃO FAZ ─────────────────────────────────────────────
+ * Não promete prazo de órgão (isso não é nosso). O horário aqui é o NOSSO, o
+ * único tempo do processo que a casa controla de fato.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/** Grade mock. No produto real vem da agenda da consultora. */
+const DIAS_AGENDA = [
+  { id: "hoje", label: "Hoje", horarios: ["15:00", "16:30", "17:15"] },
+  { id: "amanha", label: "Amanhã", horarios: ["09:30", "11:00", "14:00", "16:00"] },
+  { id: "sexta", label: "Sexta", horarios: ["09:00", "10:30", "15:30", "17:00"] },
+];
+
+export function AgendarAssinaturaView({
+  onConfirmar,
+  onVoltar,
+}: {
+  /** Recebe o rótulo do horário escolhido ("Hoje às 15:00"). */
+  onConfirmar?: (quando: string) => void;
+  onVoltar?: () => void;
+}) {
+  const [dia, setDia] = useState(DIAS_AGENDA[0].id);
+  const [hora, setHora] = useState<string | null>(null);
+  const diaAtual = DIAS_AGENDA.find((d) => d.id === dia) ?? DIAS_AGENDA[0];
+  const quando = hora ? `${diaAtual.label} às ${hora}` : null;
+
+  return (
+    <>
+      {/* Regra 6: o `meta` nomeia o DESTINO do voltar, não esta tela. */}
+      <TelaHeader meta="Status da abertura" onVoltar={onVoltar} />
+      <main className="app-main">
+        <Titulo sub="A assinatura leva cerca de 15 minutos, e a gente faz junto, por vídeo ou telefone. Escolha quando fica melhor pra você.">
+          Marque com a {CONSULTOR_PRIMEIRO_NOME}
+        </Titulo>
+
+        <Corpo>
+          {/* Sem repetir o porquê: quem chega aqui acabou de ler na tela
+              anterior. O cartão fica só pra dar rosto a quem vai atender. */}
+          <CardConsultor motivo={false} />
+
+          <div>
+            <p className="text-body-strong font-semibold text-text-primary mb-2">Dia</p>
+            <div className="flex flex-wrap gap-2">
+              {DIAS_AGENDA.map((d) => (
+                <button
+                  key={d.id}
+                  type="button"
+                  onClick={() => {
+                    setDia(d.id);
+                    /* Trocar de dia zera a hora: manter "15:00" de um dia que
+                       não tem 15:00 deixaria o CTA confirmar um horário que
+                       não existe. */
+                    setHora(null);
+                  }}
+                  aria-pressed={dia === d.id}
+                  className={`min-h-11 rounded-md border px-4 text-caption font-semibold transition-colors ${
+                    dia === d.id
+                      ? "border-action-primary bg-surface-tint-brand text-brand"
+                      : "border-border-hairline bg-surface-card text-text-secondary"
+                  }`}
+                >
+                  {d.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <p className="text-body-strong font-semibold text-text-primary mb-2">Horário</p>
+            <div className="grid grid-cols-3 gap-2">
+              {diaAtual.horarios.map((h) => (
+                <button
+                  key={h}
+                  type="button"
+                  onClick={() => setHora(h)}
+                  aria-pressed={hora === h}
+                  /* 44px de alvo: é uma grade densa, e alvo pequeno em grade é
+                     onde o toque erra de vizinho (WCAG 2.5.8 pede 24, a régua
+                     da casa é 44 no confortável). */
+                  className={`min-h-11 rounded-md border text-caption font-semibold tabular-nums transition-colors ${
+                    hora === h
+                      ? "border-action-primary bg-surface-tint-brand text-brand"
+                      : "border-border-hairline bg-surface-card text-text-secondary"
+                  }`}
+                >
+                  {h}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <Aviso neutro variante="info" titulo="Se precisar remarcar">
+            Sem problema: é só falar com a {CONSULTOR_PRIMEIRO_NOME} no WhatsApp. Nada do
+            processo se perde, e a Junta não tem prazo correndo contra você neste ponto.
+          </Aviso>
+        </Corpo>
+
+        <Rodape>
+          {/* CTA travado NOMEIA o que falta (régua da casa), em vez de ficar
+              mudo e deixar a pessoa descobrir clicando. */}
+          <Button full disabled={!quando} onClick={() => quando && onConfirmar?.(quando)}>
+            {quando ? `Confirmar ${quando}` : "Escolha um horário"}
+          </Button>
+          <div className="mt-2 flex justify-center">
+            <a
+              href={linkWhatsApp(
+                "Oi! Acabei de pagar a guia da Junta e queria falar sobre a assinatura.",
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="min-h-11 px-3 py-2 text-caption font-semibold text-action-primary-sm underline"
+            >
+              Prefiro falar agora no WhatsApp
+            </a>
+          </div>
         </Rodape>
       </main>
     </>
@@ -1679,13 +1840,25 @@ export function AssinaturaView({
   onVoltar,
   onEscalar,
   mei = false,
-  nivelGov,
+  faseInicial = "assinar",
+  rodada = 1,
 }: {
   onSeguir?: () => void;
   onVoltar?: () => void;
-  /** 🆕 03/09 — força o nível do GOV.BR (a demo usa pra abrir a variante
-   *  A4G, "bronze precisa de upgrade"). Sem isto vale `NIVEL_GOVBR`. */
-  nivelGov?: "bronze" | "prata" | "ouro";
+  /** 🆕 04/09 — abre direto no código (rota `?etapa=codigo`, nó A4.1). */
+  faseInicial?: "assinar" | "codigo";
+  /**
+   * 🆕 04/09 (Pedro, destrinchando o processo real) — QUAL DAS DUAS.
+   *
+   * Até o CNPJ existir a pessoa assina duas vezes: a 1ª sozinha, formalizando
+   * o contrato social; a 2ª com o CONTADOR assinando junto, e é ela que gera o
+   * CNPJ. É a MESMA tela e o MESMO gesto (GOV.BR + código), então vira
+   * variante em vez de tela nova — mesmo padrão do `?etapa=codigo`.
+   *
+   * O que muda é só o que ela está assinando, e isso não é detalhe: assinar
+   * "de novo" sem saber por quê é a leitura de que algo deu errado.
+   */
+  rodada?: 1 | 2;
   /** 🆕 24/08 — código do GOV expirou ou estourou tentativas: escala pra
    *  atendimento humano em vez de travar o cliente sozinho. */
   onEscalar?: () => void;
@@ -1693,15 +1866,23 @@ export function AssinaturaView({
    *  não se aplica (MEI é sempre solo, `sociedade` abaixo já cobre isso). */
   mei?: boolean;
 }) {
-  const sociedade = SOCIOS_ASSINATURA.length > 1;
-  // 🆕 03/09 — o nível vira PROP (default = a constante de sempre). Sem
-  // isso a variante A4G ("bronze, precisa de upgrade") era inalcançável na
-  // demo: `NIVEL_GOVBR` é "prata", então a pill do mapa abria a mesma tela do
-  // A4 e o nó existia sem nunca se mostrar.
-  const bronze = (nivelGov ?? NIVEL_GOVBR) === "bronze";
+  /* 🐛 04/09 (auditoria) — A VARIANTE MEI MOSTRAVA SÓCIO. `SOCIOS_ASSINATURA`
+     é constante e ignorava o regime, então `/assinatura?regime=mei` listava o
+     Carlos e dizia "a empresa só é registrada quando os dois assinam" — num
+     regime que é sempre solo. O comentário do código afirmava que `sociedade`
+     já cobria isso; não cobria. */
+  const socios = mei ? SOCIOS_ASSINATURA.slice(0, 1) : SOCIOS_ASSINATURA;
+  const sociedade = socios.length > 1;
   // 🆕 24/08 — depois de "Assinar no GOV.BR", entra o código único
   // (procuração + assinatura concentrados, ver `CodigoGovView`).
-  const [fase, setFase] = useState<"assinar" | "codigo">("assinar");
+  /* 🆕 04/09 (pedido do Pedro) — A TELA DO CÓDIGO VIRA VISÍVEL NO FLOW.
+     Ela era sub-estado do A4: existia no produto e na demo, mas escondida
+     ATRÁS da tela anterior — sem nó, sem pill, e no mapa a prévia mostrava a
+     assinatura. Mesmo buraco do E6.1 (código da conta) e do C0.3. Com
+     `faseInicial`, a rota `?etapa=codigo` abre direto nela e o nó A4.1 passa a
+     ter tela própria. No flow real ninguém entra por aqui: quem chega vem do
+     CTA de assinar. */
+  const [fase, setFase] = useState<"assinar" | "codigo">(faseInicial);
   const [canalConvite, setCanalConvite] = useState<"whatsapp" | "email">("whatsapp");
 
   if (fase === "codigo") {
@@ -1710,46 +1891,68 @@ export function AssinaturaView({
         onVoltar={() => setFase("assinar")}
         onValidar={onSeguir}
         onEscalar={onEscalar}
+        rodada={rodada}
       />
     );
   }
 
   return (
     <>
-      <TelaHeader meta="Assinatura" onVoltar={onVoltar} />
+      {/* 🐛 04/09 (auditoria) — o `meta` trazia "Assinatura", que é o nome
+          DESTA tela e não o destino do voltar (regra 6). Daqui volta pro
+          status da abertura, que é de onde ela veio. */}
+      <TelaHeader meta="Status da abertura" onVoltar={onVoltar} />
 
       <main className="app-main">
         <Titulo
           sub={
             mei
               ? "O registro do MEI é pelo GOV.BR, com o seu CPF. Leva uns minutos."
-              : "A Junta registra a empresa com a assinatura dos sócios. É pelo GOV.BR e leva uns minutos."
+              : /* 🆕 04/09 — a 2ª assinatura precisa se apresentar como
+                   PROGRESSO, não como repetição: quem chega aqui já assinou uma
+                   vez e, sem uma frase que diga o que mudou, lê "deu errado". */
+                rodada === 2
+                ? "Falta só esta. Seu contador assina junto com você, e é a assinatura que gera o CNPJ."
+                : "A Junta registra a empresa com a assinatura dos sócios. É pelo GOV.BR e leva uns minutos."
           }
         >
-          Hora de assinar
+          {rodada === 2 ? "Última assinatura" : "Hora de assinar"}
         </Titulo>
 
         <Corpo>
-          {bronze ? (
-            <Aviso neutro variante="warning" titulo="Sua conta GOV.BR precisa subir de nível">
-              Pra assinar, o GOV.BR exige nível prata ou ouro, e o seu está
-              bronze. A gente te mostra como subir em 2 minutos, aqui mesmo.
-            </Aviso>
-          ) : (
-            <Card tom="sucesso">
-              <div className="flex items-center gap-2">
-                <Check />
-                <span className="text-caption font-semibold text-state-success-text">
-                  Sua conta GOV.BR está no nível prata
-                </span>
-              </div>
-              <p className="text-micro text-text-secondary mt-1">
-                {mei
-                  ? "É o nível que o Portal do Empreendedor aceita pra assinar. Pode seguir."
-                  : "É o nível que a Junta aceita pra assinar. Pode seguir."}
-              </p>
-            </Card>
-          )}
+          {/* ═══════════ 🗑️→✍️ 04/09 (Pedro) ═══════════════════════════════
+              A TELA AFIRMAVA UM DADO QUE A GENTE NÃO TEM.
+
+              Eram 2 estados: card verde "Sua conta GOV.BR está no nível prata"
+              e o aviso "o seu está bronze". Os dois vinham de `NIVEL_GOVBR`,
+              uma constante mock — a gente NÃO tem acesso nenhum à conta GOV.BR
+              da pessoa e não consegue ler o nível dela. Afirmar um estado que
+              o produto não lê é pior do que ficar calado: o card verde dizia
+              "pode seguir" pra quem talvez fosse ser barrado no GOV.BR, e o
+              aviso mandava subir de nível quem já estava prata.
+
+              Fica só o que é VERDADE e é nosso dizer: o requisito existe, e
+              quem estiver abaixo dele resolve em minutos. Sem gate e sem
+              checkbox — a pessoa não precisa declarar nada pra seguir, e quem
+              confere o nível de fato é o GOV.BR, na hora de assinar.
+
+              (O MEI já fazia assim desde sempre, por outro caminho: o M-S
+              PERGUNTA por checkbox em vez de afirmar. Foi o único lugar que
+              não precisou de conserto.)
+              ═══════════════════════════════════════════════════════════════ */}
+          <Aviso neutro variante="info" titulo="Antes de assinar, confira sua conta GOV.BR">
+            {mei
+              ? "O Portal do Empreendedor só aceita assinatura de conta nível prata ou ouro. Se a sua ainda for bronze, dá pra subir em poucos minutos, pelo app do seu banco ou pelo reconhecimento facial do GOV.BR."
+              : "A Junta só aceita assinatura de conta nível prata ou ouro. Se a sua ainda for bronze, dá pra subir em poucos minutos, pelo app do seu banco ou pelo reconhecimento facial do GOV.BR."}
+            <a
+              href="https://www.gov.br/governodigital/pt-br/conta-gov-br/aumentar-nivel-da-conta-gov-br"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 block font-semibold text-action-primary-sm underline"
+            >
+              Ver como subir de nível
+            </a>
+          </Aviso>
 
           {sociedade && (
             <div>
@@ -1757,21 +1960,24 @@ export function AssinaturaView({
                 Quem precisa assinar
               </p>
               <div className="flex flex-col gap-2">
-                {SOCIOS_ASSINATURA.map((s) => (
+                {socios.map((s) => (
                   <SocioLinha key={s.nome} nome={s.nome} status={s.status} />
                 ))}
               </div>
               <p className="text-micro text-text-tertiary mt-2">
-                A empresa só é registrada quando os dois assinam. Seu sócio
-                confirma os próprios dados e aprova o custo antes, ninguém assina
-                pelo outro.
+                {/* 🐛 04/09 — na 2ª rodada a empresa JÁ está registrada: repetir
+                    "só é registrada quando os dois assinam" contaria uma etapa
+                    que passou. O que trava agora é o CNPJ. */}
+                {rodada === 2
+                  ? "O CNPJ só sai quando os dois assinam. Ninguém assina pelo outro."
+                  : "A empresa só é registrada quando os dois assinam. Seu sócio confirma os próprios dados e aprova o custo antes, ninguém assina pelo outro."}
               </p>
 
               {/* 🆕 24/08 (reunião Leonan 19/08) — link de convite rastreável
                   por canal. O status ("Falta convidar" → "Aguardando" →
                   "Assinou") já existe em `SocioLinha`; isto só torna
                   explícito POR ONDE o convite sai. */}
-              {SOCIOS_ASSINATURA[1].status === "convidar" && (
+              {sociedade && socios[1]?.status === "convidar" && (
                 <Campo rotulo="Enviar convite por">
                   <OpcoesLinha
                     opcoes={[
@@ -1786,29 +1992,57 @@ export function AssinaturaView({
             </div>
           )}
 
-          <Aviso neutro variante="info" titulo="Junto vai uma procuração eletrônica">
-            É o que deixa a gente pagar seu DAS e cuidar das obrigações por você.
-            Tem limite, serve só pra isso, e você revoga quando quiser.
+{/* 🔄 04/09 — a procuração SAIU desta tela: ela é e-CAC e precisa do CNPJ,
+              que ainda não existe aqui. O que a pessoa precisa saber neste ponto
+              é o que a assinatura faz, não o que vem junto (não vem). */}
+          <Aviso neutro variante="info" titulo={rodada === 2 ? "O que esta assinatura faz" : "O que a assinatura faz"}>
+            {/* 🔒 guardado por regime: o MEI não passa pela Junta (registro é
+                no Portal do Empreendedor, feito pelo próprio titular). Dizer
+                "Junta" pra ele seria o mesmo erro que a lista de sócios era. */}
+            {/* 🐛 04/09 (Pedro, destrinchando o processo real) — A TELA PULAVA
+                UMA ASSINATURA. Dizia "fecha o registro na Junta, depois disso o
+                CNPJ sai", e não é assim: entre uma coisa e outra existe uma
+                SEGUNDA assinatura, com o contador junto, e é ela que gera o
+                CNPJ. Prometer o CNPJ aqui fazia a 2ª chegar como surpresa ruim.
+                Agora a 1ª anuncia a 2ª, e a 2ª é a que fala do que vem depois. */}
+            {mei
+              ? "É ela que fecha o seu registro no Portal do Empreendedor. Depois disso o CNPJ sai, e aí a gente te chama pra assinar a procuração que deixa a gente cuidar das suas obrigações."
+              : rodada === 2
+                ? "É ela que gera o CNPJ. Seu contador assina junto e se responsabiliza pela empresa. Com o CNPJ na mão, a gente te chama pra assinar a procuração que deixa a gente cuidar do DAS e das obrigações por você."
+                : "É ela que formaliza o contrato social da empresa. Depois dela vem a última assinatura, com o seu contador junto, e é essa que gera o CNPJ."}
           </Aviso>
         </Corpo>
 
         <Rodape>
-          {sociedade && SOCIOS_ASSINATURA[1].status === "convidar" ? (
+          {/* 🔄 04/09 (decisão do Pedro) — HIERARQUIA INVERTIDA. O primário era
+              "Enviar convite pro Carlos" e o secundário "Assinar a minha parte":
+              a tela empurrava primeiro o que depende de OUTRA pessoa. Assinar é
+              o que ela controla e pode fazer agora; convidar é o que ela
+              delega. O convite continua a um toque, logo abaixo, e o card do
+              sócio (com o seletor de canal) segue no corpo. */}
+          {/* 🗑️ 04/09 (Pedro) — o RAMO BRONZE saiu do rodapé junto com a
+              detecção de nível: ele trocava o botão de assinar por um link
+              "Subir de nível no GOV.BR", decidido por uma constante mock. Sem
+              saber o nível, não existe motivo pra desviar ninguém: quem
+              estiver abaixo de prata é barrado pelo próprio GOV.BR, e o aviso
+              lá em cima já dá o caminho de subir. O rodapé volta a ter uma
+              coisa só — assinar. */}
+          {sociedade && socios[1]?.status === "convidar" ? (
             <>
               <Button full onClick={() => setFase("codigo")}>
-                {canalConvite === "whatsapp"
-                  ? `Enviar convite pro ${PRIMEIRO_NOME_SOCIO} no WhatsApp`
-                  : `Enviar convite pro ${PRIMEIRO_NOME_SOCIO} por e-mail`}
+                Assinar a minha parte agora
               </Button>
               <div className="mt-2 flex justify-center">
                 <Button variant="ghost" onClick={() => setFase("codigo")}>
-                  Assinar a minha parte agora
+                  {canalConvite === "whatsapp"
+                    ? `Enviar convite pro ${PRIMEIRO_NOME_SOCIO} no WhatsApp`
+                    : `Enviar convite pro ${PRIMEIRO_NOME_SOCIO} por e-mail`}
                 </Button>
               </div>
             </>
           ) : (
-            <Button full disabled={bronze} onClick={() => setFase("codigo")}>
-              {bronze ? "Subir de nível no GOV.BR" : "Assinar no GOV.BR"}
+            <Button full onClick={() => setFase("codigo")}>
+              Assinar no GOV.BR
             </Button>
           )}
         </Rodape>
@@ -1931,13 +2165,31 @@ const PASSOS_ATIVACAO: PassoAtivacao[] = [
     id: "cnpj",
     estado: "feito",
     titulo: "CNPJ aberto",
-    sub: "Sua empresa já está ativa na Receita Federal.",
+    /* 🆕 04/09 (Izabela, 09/07) — a opção pelo Simples entra JUNTO com a
+       liberação do CNPJ: a Receita sincroniza as duas coisas no mesmo ato. A
+       pessoa escolheu o regime lá no começo do flow e não ouvia falar dele de
+       novo até a primeira guia chegar. Dizer aqui fecha o ciclo do que ela
+       decidiu, no primeiro momento em que virou fato. */
+    sub: "Sua empresa já está ativa na Receita Federal, e o Simples Nacional entrou junto.",
   },
   {
+    /**
+     * 🔄 04/09 (decisão do Pedro, com a pesquisa) — A PROCURAÇÃO DEIXOU DE SER
+     * "JÁ FEITA".
+     *
+     * Ela vinha marcada como concluída, "junto da assinatura do registro". Só
+     * que procuração e-CAC exige e-CNPJ, e no A4 o CNPJ ainda não existe — a
+     * premissa caiu em 01/09, quando a A3.2 saiu do caminho ME, e ninguém
+     * mexeu na trilha. Aqui na A5 o CNPJ JÁ SAIU, então este é o primeiro
+     * lugar do flow em que ela pode de fato ser assinada: vira tarefa, não
+     * recibo.
+     */
     id: "procuracao",
-    estado: "feito",
-    titulo: "Procuração assinada",
-    sub: "Junto da assinatura do registro. É o que deixa a gente cuidar do DAS e das obrigações por você.",
+    estado: "agora",
+    titulo: "Assinar a procuração",
+    sub: "Agora que o CNPJ saiu, é ela que deixa a gente pagar seu DAS e cuidar das obrigações por você. Leva um minuto, pelo GOV.BR.",
+    status: "Sua vez",
+    href: "/assinatura",
   },
   {
     /**
@@ -1953,11 +2205,14 @@ const PASSOS_ATIVACAO: PassoAtivacao[] = [
     sub: "Está incluso no seu plano. A gente emite quando for necessário, sem cobrar nada a mais e sem você precisar resolver isso agora.",
   },
   {
+    /* 🔄 04/09 — com a procuração virando a vez da pessoa, esta passa a ser a
+       tarefa SEGUINTE. Segue clicável (é ela que abre o app por completo), só
+       não disputa mais o "agora" com a procuração. */
     id: "dados",
     estado: "agora",
     titulo: "Conferir os dados da empresa",
     sub: "Dê uma olhada se está tudo certo no seu cadastro.",
-    status: "Em andamento",
+    status: "Depois disso",
     href: "/mais/empresa",
   },
   {
@@ -1972,7 +2227,35 @@ const TAREFAS_ATIVACAO = PASSOS_ATIVACAO.filter((p) => p.estado !== "final");
 const FEITOS_ATIVACAO = TAREFAS_ATIVACAO.filter((p) => p.estado === "feito").length;
 const PCT_ATIVACAO = Math.round((FEITOS_ATIVACAO / TAREFAS_ATIVACAO.length) * 100);
 
-export function HomeAtivacaoView() {
+export function HomeAtivacaoView({ assistida = false }: { assistida?: boolean }) {
+  /**
+   * 🆕 04/09 (rota assistida) — A PROCURAÇÃO TAMBÉM É CONDUZIDA.
+   *
+   * Na rota automática ela é tarefa da pessoa ("Assinar a procuração", com
+   * href pro GOV.BR). Na assistida não pode ser: procuração é e-CAC, tem
+   * CAPTCHA, e no RS36 (26/08) o Ademar contou que são quatro procurações
+   * diferentes, todas lá dentro. É exatamente o tipo de passo que motivou o
+   * corte — terminar a rota mandando a pessoa fazer sozinha logo isso
+   * desmentiria tudo que as telas anteriores prometeram.
+   *
+   * Vira recado do que a consultora já vai fazer com ela, sem CTA: a conversa
+   * já está aberta no WhatsApp, e um botão aqui abriria um segundo canal pro
+   * mesmo assunto.
+   */
+  const passos = assistida
+    ? PASSOS_ATIVACAO.map((p) =>
+        p.id === "procuracao"
+          ? {
+              ...p,
+              titulo: "Procuração, com a " + CONSULTOR_PRIMEIRO_NOME,
+              sub: `É ela que deixa a gente pagar seu DAS e cuidar das obrigações por você. A ${CONSULTOR_PRIMEIRO_NOME} faz junto com você, no mesmo formato da assinatura.`,
+              status: "Ela te chama",
+              href: undefined,
+            }
+          : p,
+      )
+    : PASSOS_ATIVACAO;
+
   return (
     <main className="app-main">
       <Rolagem>
@@ -1981,7 +2264,11 @@ export function HomeAtivacaoView() {
               acesso. Avatar DESATIVADO; sino segue ativo. */}
           <div className="flex items-start justify-between">
             <div className="min-w-0">
-              <p className="text-caption text-text-secondary">Bem-vinda, Ana</p>
+              {/* 🐛 04/09 (auditoria) — "Bem-vinda" flexiona no feminino, e o
+                  app não coleta gênero. Mesmo bug que a C3 teve hoje ("Vou
+                  abrir sozinho", "único dono"), agora na PRIMEIRA tela que a
+                  pessoa vê como cliente. */}
+              <p className="text-caption text-text-secondary">Olá, Ana</p>
               <h1 className="text-h1 leading-tight text-text-primary">
                 Vamos ativar
                 <br />
@@ -2022,13 +2309,17 @@ export function HomeAtivacaoView() {
           >
             <p className="text-h2 font-bold leading-tight">Sua empresa nasceu.</p>
             <p className="mt-1 text-caption text-text-on-dark/70">
-              Ativa há 3 dias. Agora é deixar tudo pronto pra você faturar.
+              {/* 🐛 04/09 (auditoria) — dizia "Ativa há 3 dias" numa tela que
+                  abre LOGO DEPOIS de assinar: o texto foi escrito pra home de
+                  retorno, não pro dia 1. */}
+              Ativa desde hoje. Agora é deixar tudo pronto pra você faturar.
             </p>
             <div className="mt-4 flex flex-wrap items-center gap-2">
               <PillCnpj />
               <button
                 type="button"
-                className="flex items-center gap-1.5 rounded-full border border-border-hairline bg-surface-card px-3 py-1.5 text-caption font-medium text-text-secondary transition-colors active:bg-surface-alt"
+                /* 🔄 04/09 (auditoria) — 34px de alvo, igual ao chip do CNPJ ao lado. */
+                className="flex min-h-10 items-center gap-1.5 rounded-full border border-border-hairline bg-surface-card px-3.5 text-caption font-medium text-text-secondary transition-colors active:bg-surface-alt"
               >
                 <IconeDownloadAtivacao />
                 Cartão CNPJ
@@ -2040,8 +2331,12 @@ export function HomeAtivacaoView() {
           <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
             <div className="flex items-center justify-between">
               <p className="text-body-strong font-semibold text-text-primary">Sua ativação</p>
+              {/* ✍️ 04/09 (auditoria) — o contador dizia "2 de 4" e a lista
+                  mostrava 5 linhas: o 5º item é o DESFECHO ("acesso completo"),
+                  não tarefa, e sai do denominador por dentro. A palavra
+                  "tarefas" fecha a conta pra quem lê. */}
               <span className="text-caption font-semibold text-text-secondary">
-                {FEITOS_ATIVACAO} de {TAREFAS_ATIVACAO.length}
+                {FEITOS_ATIVACAO} de {TAREFAS_ATIVACAO.length} tarefas
               </span>
             </div>
             <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface-alt">
@@ -2050,18 +2345,20 @@ export function HomeAtivacaoView() {
                 style={{ width: `${PCT_ATIVACAO}%` }}
               />
             </div>
+            {/* ✍️ 04/09 — a linha citava só a conferência de dados, que era a
+                única tarefa aberta. Com a procuração virando tarefa também, ela
+                passa a falar das duas. */}
             <p className="mt-1.5 text-micro text-text-tertiary">
-              Terminou de conferir os dados da empresa? Seu app abre por
-              completo.
+              Feitas essas duas, seu app abre por completo.
             </p>
 
             <div className="mt-4">
-              {PASSOS_ATIVACAO.map((p, i) => (
+              {passos.map((p, i) => (
                 <PassoAtivacaoItem
                   key={p.id}
                   p={p}
                   n={i + 1}
-                  ultimo={i === PASSOS_ATIVACAO.length - 1}
+                  ultimo={i === passos.length - 1}
                 />
               ))}
             </div>
@@ -2400,6 +2697,10 @@ const JUNTA_MOCK = { concluidas: 0, emAndamento: 0 };
  * fase Junta. Reusa o id 1 de propósito: ele já é o único bloco não editável
  * do dossiê (`telas: []` em `lib/passos.ts`), então o "Ajustar" continua sem
  * aparecer mesmo se um dia o `podeAjustar` global for afrouxado.
+ *
+ * 🔄 04/09 (3ª rodada) — o cartão fundido deixou de ser permanente na fase
+ * Junta: ele vive só ENQUANTO viabilidade ou guia ainda estão em validação
+ * (ver `dossieNaLista`). Resolvidas as duas, ele sai e cede o lugar.
  */
 const BLOCO_DOSSIE_FUNDIDO = 1;
 /** Nome do cartão fundido. Faz par com "Registro nos órgãos", o de baixo. */
@@ -2412,6 +2713,9 @@ export function AguardandoView({
   fase = "dossie",
   guiaBoleto = false,
   rodada2 = false,
+  assinou1 = false,
+  assistida = false,
+  agendado = null,
   dossieFeitos,
   junta = JUNTA_MOCK,
   recusa,
@@ -2419,6 +2723,7 @@ export function AguardandoView({
   onPagarDae,
   onIrParaBloco,
   onAssinar,
+  onAgendar,
   onAcaoRecusa,
 }: {
   /** 🆕 04/08 — MEI não tem "Sócios" na lista (repassa pra `passosDoCliente`). */
@@ -2461,11 +2766,38 @@ export function AguardandoView({
    */
   rodada2?: boolean;
   /**
+   * 🆕 04/09 (Pedro) — A 1ª DAS DUAS ASSINATURAS JÁ FOI FEITA.
+   *
+   * Entre a assinatura do contrato social e a da abertura do CNPJ (a que o
+   * contador assina junto) a pessoa passa por aqui. Sem isto o hero recebia
+   * quem acabou de assinar dizendo "o último passo é a assinatura" — o mesmo
+   * furo que o A3′ tinha com a guia paga: a tela não reconhecia o que mudou.
+   */
+  assinou1?: boolean;
+  /**
+   * 🆕 04/09 (decisão do Pedro) — ROTA ASSISTIDA.
+   *
+   * No lançamento o app conduz sozinho até aqui (guia paga). Da assinatura em
+   * diante quem assume é uma consultora nossa, por WhatsApp: é a parte com
+   * CAPTCHA, 2FA, nível de conta GOV.BR que a gente não consegue ler, código
+   * que expira em 10 minutos e o contador assinando junto. O flow automático
+   * ATÉ AQUI já entrega mais do que a contabilidade digital que existe hoje;
+   * automatizar o resto vira otimização de depois, não requisito de lançar.
+   *
+   * As telas A4/A4.1/A4″ continuam existindo e intactas — são a rota
+   * automática, o destino. Isto é um desvio no fim, não uma amputação.
+   */
+  assistida?: boolean;
+  /** Horário já marcado com a consultora ("Hoje às 15:00"). Null = a marcar. */
+  agendado?: string | null;
+  /**
    * 🆕 01/09 — com o CTA da fase Junta no rodapé, o último passo ("Agora é só
    * assinar") precisava de destino: sem isso a tela virava beco depois da guia
    * paga. Leva pro A4.
    */
   onAssinar?: () => void;
+  /** 🆕 04/09 (rota assistida) — leva pra tela de marcar horário (A3.H1). */
+  onAgendar?: () => void;
   /** Quantos dos 9 passos do dossiê já foram feitos (fase "dossie"). Default
    *  = mock de sempre (`BOLETO_P2`). */
   dossieFeitos?: number;
@@ -2489,6 +2821,32 @@ export function AguardandoView({
 
   const naFaseJunta = fase === "junta";
 
+  /* ═══════════ 🔄 04/09, 3ª rodada (refinamento do Pedro) ══════════════════
+   * OS DOIS ESTADOS DA FASE JUNTA, E O QUE CADA UM MOSTRA.
+   *
+   * `junta` já chega RELATIVO à cauda (0 = viabilidade · 1 = guia · 2 e 3 = as
+   * assinaturas), então dá pra saber onde a pessoa está sem depender de como a
+   * lista foi montada. Isso importa porque agora a lista MUDA conforme o
+   * estado, e derivar uma da outra seria circular.
+   *
+   * · Enquanto viabilidade OU guia ainda estão pendentes, a tela é de ESPERA.
+   *   Aí o cartão do dossiê ("Informações confirmadas · 9 de 9") ganha função:
+   *   é a âncora de progresso, o que já passou enquanto se espera o que falta.
+   * · Quando os dois fecham, a espera acabou e a tela vira de AÇÃO. Aí o
+   *   cartão é só peso — e cede o lugar pro que importa agora: na rota
+   *   assistida, o cartão da consultora, que entra exatamente onde ele sai.
+   *
+   * 🔒 UMA condição governa três coisas (o hero "Falta só a assinatura", o
+   * cartão do dossiê e o da consultora). Se um dia divergirem, é porque
+   * alguém duplicou a regra — ela mora aqui.
+   * ═══════════════════════════════════════════════════════════════════════ */
+  const viabilidadeOk = naFaseJunta && junta.concluidas > 0;
+  const guiaPaga = naFaseJunta && junta.concluidas > 1;
+  /** A Junta já respondeu e o dinheiro já saiu: nada mais está em validação. */
+  const juntaResolvida = viabilidadeOk && guiaPaga;
+  /** O dossiê aparece na timeline enquanto ainda houver algo sendo validado. */
+  const dossieNaLista = !naFaseJunta || !juntaResolvida;
+
   /**
    * 🐛→🔒 31/08 (correção do Pedro, viu ao vivo) — com o boleto pendente, o
    * anel girando estava no passo do CNAE, dando a entender que a espera era
@@ -2500,24 +2858,23 @@ export function AguardandoView({
   const indiceGirandoBoleto = passos.findIndex((p) => p.aguardaCompensacao);
   const boletoPendente = !naFaseJunta && !pago && indiceGirandoBoleto >= 0;
 
-  // A lista combinada: os 9 passos do dossiê primeiro, depois as 3 etapas da
-  // Junta — UMA jornada só, do 1º dado digitado ao CNPJ sair.
+  // A lista da fase DOSSIÊ: os 9 passos primeiro, depois as etapas da Junta
+  // ainda por vir — UMA jornada só, do 1º dado digitado ao CNPJ sair. Na fase
+  // Junta a lista é só a cauda (ver `etapasCombinadas`).
   // 🆕 31/08 (pedido do Pedro) — cada passo carrega `descricao` (o que envolve
   // + quanto tempo leva, ver `lib/passos.ts`); o PainelView só mostra a do
   // passo ATUAL, como orientação do que vem pela frente.
   /**
-   * 🆕 04/09 (pedido do Pedro) — NA FASE JUNTA, O DOSSIÊ VIRA UM CARTÃO SÓ.
+   * 🆕 04/09 (pedido do Pedro) — O DOSSIÊ SÓ EXISTE NA FASE DOSSIÊ.
    *
    * Os 4 blocos ("Conta e plano", "O que a empresa faz", "Você e os sócios",
    * "A empresa") existem pra dar ordem a quem está PREENCHENDO: cada um é um
    * assunto que se fecha, e o "Ajustar" mora neles. Passado o ponto sem volta,
-   * nenhum dos dois motivos sobrevive — não há o que preencher nem o que
-   * ajustar — e sobram 4 acordeões concluídos empurrando pra fora da tela a
-   * única coisa que importa ali: a etapa da vez, que é pagar a guia.
+   * nenhum dos dois motivos sobrevive.
    *
-   * Fundir é só reetiquetar o bloco de cada passo: a timeline agrupa por esse
-   * número, os índices globais continuam os mesmos e o contador vira "9 de 9".
-   * O bloco 5 (Registro nos órgãos) fica intocado, logo abaixo, aberto.
+   * A correção veio em duas rodadas no mesmo dia. Primeiro os 4 acordeões
+   * viraram um cartão fundido; depois o Pedro pegou o que sobrou e o cartão
+   * saiu inteiro (ver `etapasCombinadas`, logo abaixo).
    */
   const etapasDossie: Etapa[] = passos.map((p, i) => ({
     nome: boletoPendente && i === indiceGirandoBoleto ? (p.nomeEnquantoGirando ?? p.nome) : p.nome,
@@ -2525,20 +2882,51 @@ export function AguardandoView({
     // 🆕 01/09 — o bloco vem do próprio passo (`lib/passos.ts`); as 3 etapas
     // da Junta entram todas no bloco 5, junto do "Revisar e confirmar" que as
     // dispara. É o que permite a timeline agrupar.
-    bloco: naFaseJunta ? BLOCO_DOSSIE_FUNDIDO : p.bloco,
+    bloco: p.bloco,
   }));
-  const etapasCombinadas: Etapa[] = [
-    ...etapasDossie,
-    ...ETAPAS_ABERTURA.map((e) => ({ ...e, bloco: 5 })),
-  ];
+  /**
+   * 🗑️ 04/09, 2ª rodada (achado do Pedro, na A3.H) — O DOSSIÊ SAIU DA TIMELINE
+   * DA FASE JUNTA DE VEZ.
+   *
+   * De manhã os 4 acordeões do dossiê viraram UM cartão fundido ("Informações
+   * confirmadas · 9 de 9"). Foi meia correção: o cartão continuava lá, e o
+   * Pedro pegou o resto — "já validamos e nem tem como mais voltar nesse
+   * status". É verdade e é o fim do argumento. Passado o ponto sem volta o
+   * dossiê não é passo, é histórico: não há o que preencher, não há o que
+   * ajustar, e nada do que ele mostra muda o que a pessoa faz agora.
+   *
+   * Some, então, e a timeline da fase Junta fica só com o que ainda acontece:
+   * viabilidade, guia e as 2 assinaturas. Vale nas OITO telas da fase (A3, A3′,
+   * A3″, A3‴, A3⁗, A3.1, A3.H, A3.H2) — o que criava o cartão era o dossiê ter
+   * fechado, não a rota. Corrigir só na A3.H traria ele de volta na próxima.
+   *
+   * ⚠️ Os índices passam a ser RELATIVOS à cauda na fase Junta (`junta` já vem
+   * assim do consumidor), então o offset `dossieTotal` sai de `concluidas`,
+   * `emAndamento` e `recusa`.
+   */
+  const etapasCombinadas: Etapa[] = dossieNaLista
+    ? [
+        /* Na fase Junta os 9 passos entram FUNDIDOS num cartão só: os 4 blocos
+           existem pra dar ordem a quem preenche, e ali não há mais o que
+           preencher nem o que ajustar. Fundir é só reetiquetar o bloco de cada
+           passo — a timeline agrupa por esse número. */
+        ...etapasDossie.map((e) =>
+          naFaseJunta ? { ...e, bloco: BLOCO_DOSSIE_FUNDIDO } : e,
+        ),
+        ...ETAPAS_ABERTURA.map((e) => ({ ...e, bloco: 5 })),
+      ]
+    : ETAPAS_ABERTURA.map((e) => ({ ...e, bloco: 5 }));
+
+  /** Offset da cauda dentro da lista: 0 quando o dossiê já saiu dela. */
+  const offsetCauda = dossieNaLista ? dossieTotal : 0;
 
   const emAndamentoDossie = boletoPendente ? indiceGirandoBoleto : feitos;
   const concluidas = naFaseJunta
-    ? dossieTotal + junta.concluidas
+    ? offsetCauda + junta.concluidas
     : boletoPendente
       ? indiceGirandoBoleto
       : feitos;
-  const emAndamento = naFaseJunta ? dossieTotal + junta.emAndamento : emAndamentoDossie;
+  const emAndamento = naFaseJunta ? offsetCauda + junta.emAndamento : emAndamentoDossie;
 
   // 🐛→🔒 31/08 (correção do Pedro) — a fase DOSSIÊ não ganha `acaoCliente`
   // inline: o CTA "Continuar preenchendo" já existe fixo no rodapé, e repetir
@@ -2565,9 +2953,14 @@ export function AguardandoView({
    * ⚠️ Declarados ANTES do `etapas` abaixo: o `map` roda na hora e lê `iGuia`.
    */
   const iGuia = etapasCombinadas.findIndex((e) => e.acaoCliente);
-  const iViabilidade = etapasDossie.length; // 1ª etapa da Junta na lista
-  const guiaPaga = iGuia >= 0 && concluidas > iGuia;
-  const viabilidadeOk = concluidas > iViabilidade;
+  /* 🔄 04/09 — a 1ª etapa da Junta na lista. Depende de o dossiê ainda estar
+     nela ou não, e é por isso que o offset é derivado num lugar só. */
+  const iViabilidade = offsetCauda;
+  /* 🆕 04/09 — a cauda da Junta virou 4 etapas (viabilidade · guia · assinar o
+     contrato · assinar o CNPJ com o contador), então "a última da lista" parou
+     de significar "hora de assinar". O CTA passa a olhar pra 1ª ASSINATURA:
+     chegou nela, o botão leva pro A4, e vale pras duas. */
+  const iAssinatura = iViabilidade + 2;
 
   const etapas = naFaseJunta
     ? etapasCombinadas.map((e, i) => {
@@ -2656,6 +3049,28 @@ export function AguardandoView({
       })
     : etapasCombinadas;
 
+  /* 🆕 04/09 (rota assistida) — AS ETAPAS DE ASSINATURA TROCAM DE DONO.
+     Elas continuam na lista, no mesmo lugar: o que muda é quem move. A da vez
+     ganha o 5º estado (`comConsultor` → silhueta de pessoa) e, se já houver
+     horário, o detalhe passa a ser o compromisso marcado. A seguinte fica
+     a-fazer, como sempre — anunciar duas pessoas cuidando ao mesmo tempo
+     seria falso. Sem isto a timeline mandava a pessoa assinar sozinha numa
+     rota em que ninguém vai deixar ela sozinha. */
+  const etapasFinais =
+    assistida && juntaResolvida
+      ? etapas.map((e, i) => {
+          const iVez = assinou1 ? iAssinatura + 1 : iAssinatura;
+          if (i !== iVez) return e;
+          return {
+            ...e,
+            comConsultor: true,
+            detalhe: agendado
+              ? `Marcado com a ${CONSULTOR_PRIMEIRO_NOME} pra ${agendado.toLowerCase()}. Ela te chama por aqui e por WhatsApp.`
+              : `A ${CONSULTOR_PRIMEIRO_NOME} faz este passo com você, ao vivo. Leva cerca de 15 minutos.`,
+          };
+        })
+      : etapas;
+
   /**
    * 🐛→🔒 04/09 (achado do Pedro: "o card do header não casa com este status")
    * — O HERO FALAVA DE ESPERA NUMA TELA DE AÇÃO.
@@ -2683,8 +3098,18 @@ export function AguardandoView({
             : /* 🆕 04/09 (auditoria) — o A3′ voltava ao hero genérico depois do
                  splash "Pagamento confirmado": não reconhecia a guia paga, que
                  é justamente o que mudou. Mesma omissão que o A3‴ tinha. */
-              guiaPaga && viabilidadeOk
-              ? "Falta só a assinatura"
+              juntaResolvida
+              ? /* 🆕 04/09 (rota assistida) — o título deixa de cobrar e passa
+                   a APRESENTAR: quem chega aqui não tem tarefa, tem hora
+                   marcada. "Falta só a assinatura" numa rota em que a pessoa
+                   não assina sozinha soletra uma cobrança sem destino. */
+                assistida
+                ? agendado
+                  ? "Você tem hora marcada"
+                  : `Agora é com a ${CONSULTOR_PRIMEIRO_NOME}`
+                : assinou1
+                  ? "Falta só a última assinatura"
+                  : "Falta só a assinatura"
               : vezDoCliente
               ? // 🔄 04/09 — "quase lá" só quando a Junta já respondeu. Na
                 // chegada do A2 a análise mal começou, e comemorar ali seria a
@@ -2705,8 +3130,16 @@ export function AguardandoView({
           ? "Boleto da Junta leva de 1 a 3 dias úteis pra cair. Assim que compensar, a gente segue."
           : rodada2
             ? "A análise recomeçou com as opções novas. O resto do processo continua de onde parou, sem recomeçar nada."
-            : guiaPaga && viabilidadeOk
-              ? "A Junta aprovou o nome e a guia está paga. O último passo é a assinatura dos sócios."
+            : juntaResolvida
+              ? assistida
+                ? agendado
+                  ? `${agendado} a ${CONSULTOR_PRIMEIRO_NOME} te chama pra assinar. Leva cerca de 15 minutos, e ela faz junto com você.`
+                  : assinou1
+                    ? `O contrato social já está assinado. Falta a assinatura que gera o CNPJ, e a ${CONSULTOR_PRIMEIRO_NOME} faz essa com você também.`
+                    : "A Junta aprovou o nome e a guia está paga. As assinaturas são feitas ao vivo, com uma consultora nossa do seu lado."
+                : assinou1
+                  ? "O contrato social já está assinado. Falta a assinatura que gera o CNPJ, com o seu contador junto."
+                  : "A Junta aprovou o nome e a guia está paga. O último passo é a assinatura dos sócios."
               : vezDoCliente
             ? viabilidadeOk
               ? /* Diz o que já aconteceu (a viabilidade passou), o que falta e
@@ -2781,11 +3214,22 @@ export function AguardandoView({
       }
       concluidas={concluidas}
       emAndamento={emAndamento}
-      etapas={etapas}
+      etapas={etapasFinais}
+      /* 🆕 04/09 — na rota assistida o cartão da consultora vem ANTES da
+         timeline: é ele que explica por que as duas últimas etapas mudaram de
+         dono. Depois de marcado o horário ele some — a informação já migrou
+         pro hero e pra própria etapa, e mantê-lo seria dizer a mesma coisa em
+         três lugares (o erro que o A1 e o C3 já corrigiram nesta rodada). */
+      antesDaTimeline={
+        assistida && juntaResolvida && !agendado ? <CardConsultor /> : undefined
+      }
       /* 🆕 04/09 — só na fase Junta: o cartão fundido não pode herdar o nome
          do bloco 1 ("Conta e plano"), que é um quarto do que ele contém. */
+      /* O rótulo do cartão fundido, enquanto ele existe (ver `dossieNaLista`). */
       titulosBloco={
-        naFaseJunta ? { [BLOCO_DOSSIE_FUNDIDO]: TITULO_DOSSIE_FUNDIDO } : undefined
+        naFaseJunta && dossieNaLista
+          ? { [BLOCO_DOSSIE_FUNDIDO]: TITULO_DOSSIE_FUNDIDO }
+          : undefined
       }
       onIrParaBloco={onIrParaBloco}
       /**
@@ -2795,7 +3239,9 @@ export function AguardandoView({
        * Junta não permite mais.
        */
       podeAjustar={!naFaseJunta}
-      recusa={recusa ? { ...recusa, etapa: dossieTotal + recusa.etapa } : undefined}
+      /* 🔄 04/09 — a `recusa.etapa` já chega relativa à cauda, e a cauda agora
+         é a lista inteira na fase Junta: o offset do dossiê saiu junto com ele. */
+      recusa={recusa ? { ...recusa, etapa: offsetCauda + recusa.etapa } : undefined}
       onAcaoRecusa={onAcaoRecusa}
       // K6 dizia: status puro não inventa ação, e na fase Junta a ação morava
       // inline na etapa. 🔄 01/09 (pedido do Pedro) — a ação da fase Junta
@@ -2835,8 +3281,21 @@ export function AguardandoView({
                  botão de pagar. */
               !guiaPaga
               ? { label: "Pagar a guia agora", onClick: onPagarDae }
-              : emAndamento === etapasCombinadas.length - 1
-                ? { label: "Ir para a assinatura", onClick: onAssinar }
+              : emAndamento >= iAssinatura
+                ? /* 🆕 04/09 (rota assistida) — o CTA muda de verbo. Sem
+                     horário: marcar. Com horário: fica TRAVADO dizendo o
+                     compromisso, mesmo padrão do "Aguardando compensação" do
+                     boleto — o botão não some (a tela perderia a anatomia no
+                     meio da jornada), ele conta o estado. A dúvida continua
+                     saindo pelo link de WhatsApp logo acima dele. */
+                  assistida
+                  ? agendado
+                    ? {
+                        label: `${CONSULTOR_PRIMEIRO_NOME} te chama ${agendado.toLowerCase()}`,
+                        desabilitado: true,
+                      }
+                    : { label: "Escolher um horário", onClick: onAgendar }
+                  : { label: "Ir para a assinatura", onClick: onAssinar }
                 : {
                     // 🆕 01/09 (pedido do Pedro) — quando a vez é do ÓRGÃO, o
                     // CTA não some: fica no mesmo lugar, travado, dizendo o

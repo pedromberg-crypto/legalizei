@@ -92,8 +92,14 @@ export default function IniciarViabilidadePage() {
           detalhe: "Pague quando quiser. Ela não espera a análise, e a análise não espera ela.",
         },
         {
-          titulo: "Assinatura",
-          detalhe: "Você assina pelo GOV.BR e a empresa é constituída.",
+          /* 🐛 04/09 (Pedro, destrinchando o processo real) — ERA UMA
+             ASSINATURA SÓ AQUI, E SÃO DUAS. A 1ª formaliza o contrato social;
+             a 2ª, com o contador assinando junto, é a que gera o CNPJ. Esta
+             tela é o mapa do caminho inteiro — omitir um passo dele aqui
+             significa que a 2ª assinatura chega como surpresa depois do ponto
+             sem volta, que é o pior lugar possível pra uma surpresa. */
+          titulo: "Assinaturas",
+          detalhe: "Duas, pelo GOV.BR: a do contrato social e a que gera o CNPJ, com o seu contador junto.",
         },
       ]}
       /* Fonte dos fatos: `pesquisa/exigencias-jucemg.md`. Indeferir na hora é

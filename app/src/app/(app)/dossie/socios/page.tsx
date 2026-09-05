@@ -80,6 +80,18 @@ export default function SociosPage() {
       socios={qtdSocios}
       onSeguir={() => router.push(ajuste ? ajuste.destino : comEndereco(comRegime(proxima, mei), enderecoFiscal))}
       ctaLabel={ajuste?.label}
+      /* 🆕 04/09 (Pedro) — C3.3: a Receita recusou o CPF de um sócio
+         (`?divergencia=1` = o 1º da lista, o 2º da empresa). A consulta roda na
+         passagem pro C4 e só nos sócios: o CPF do titular já foi conferido no
+         E6, quando a conta nasceu. */
+      divergencia={
+        searchParams.get("divergencia")
+          ? {
+              socio: Math.max(0, Number(searchParams.get("divergencia")) - 1),
+              tipo: searchParams.get("cpf") === "situacao" ? "situacao" : "nome",
+            }
+          : undefined
+      }
     />
   );
 }

@@ -92,6 +92,20 @@ export function buscarCep(cepDigitos: string): EnderecoCep | null {
 export type DadosConta = {
   nome: string;
   cpf: string;
+  /**
+   * 🆕 04/09 (Pedro) — DATA DE NASCIMENTO ENTROU AQUI PRA VALIDAR O CPF.
+   *
+   * Decisão: o CPF é conferido contra a Receita JÁ NA CRIAÇÃO DA CONTA, e
+   * quem tem divergência é barrado aqui em vez de descobrir lá na frente,
+   * quando o DBE recusar (foi o que a Izabela relatou em 09/07: pessoa casou,
+   * mudou o nome no CPF e não atualizou na Receita, o DBE dá erro e o processo
+   * para). A consulta exige `cpf` + `birthdate`, e o E6 só tinha o CPF.
+   *
+   * Não é campo novo no flow: o C1 já pedia nascimento depois do pagamento.
+   * Ele só subiu — que é exatamente a doutrina de front-load travada no RS9
+   * (28/07): captar tudo num lugar só, cedo, e o C1 vira confirmação.
+   */
+  nascimento: string;
   telefone: string;
   email: string;
   senha: string;
@@ -129,6 +143,66 @@ function subConta(mei: boolean, leadJaCaptado: boolean) {
     : "Assim seu progresso fica salvo, e a gente já adianta o que precisa pra Junta.";
 }
 
+/**
+ * 🆕 04/09 (Pedro) — O QUE A RECEITA DEVOLVEU SOBRE O CPF.
+ *
+ * A conta só nasce se o CPF conferir na Receita (consulta `cpf` + nascimento,
+ * InfoSimples). Duas recusas possíveis, e elas pedem coisas diferentes da
+ * pessoa — por isso não são um erro só:
+ *
+ *   · `nome`     — o par CPF+nascimento existe, mas o nome não é o que a
+ *                  Receita tem. Caso clássico da Izabela (09/07): casou,
+ *                  mudou o nome no cartório e não atualizou na Receita. Se
+ *                  passar daqui, o DBE recusa lá na frente e o processo para.
+ *   · `situacao` — o CPF não está regular (suspenso, pendente, cancelado).
+ *                  Nada que a gente escreva na tela resolve: é a Receita que
+ *                  regulariza.
+ *
+ * 🔴 NÃO VIRA TELA NOVA (decisão do Pedro): o alerta volta pra tela onde o
+ * dado foi digitado. Tela de erro dedicada tira a pessoa do lugar em que ela
+ * conserta, e é o que faz um erro simples virar abandono.
+ */
+export type DivergenciaCpf = "nome" | "situacao";
+
+/**
+ * O aviso, um só pros dois lugares que consultam a Receita (E6 e C3). Mesma
+ * checagem, mesma recusa, mesma palavra — se divergir entre as duas telas, a
+ * pessoa lê como dois problemas diferentes.
+ */
+export function AvisoCpfDivergente({
+  tipo,
+  quem,
+}: {
+  tipo: DivergenciaCpf;
+  /** Nome de quem falhou. Vazio = a própria pessoa (E6). */
+  quem?: string;
+}) {
+  const dono = quem ? `de ${quem}` : "seu";
+  return (
+    <Aviso
+      neutro
+      variante="warning"
+      titulo={
+        tipo === "nome"
+          ? quem
+            ? `O nome ${dono} não bate com o CPF`
+            : "Seu nome não bate com o CPF"
+          : quem
+            ? `O CPF ${dono} está irregular`
+            : "Seu CPF está irregular na Receita"
+      }
+    >
+      {tipo === "nome"
+        ? /* Diz o mais provável (é quase sempre isso) sem afirmar que foi
+             isso, e dá as duas saídas: corrigir a digitação, ou atualizar na
+             Receita. Sem a segunda, a pessoa fica tentando de novo o mesmo
+             nome. */
+          "Na Receita Federal ele está escrito de outro jeito. Confira se não faltou um sobrenome ou saiu um acento. Se você mudou de nome e ainda não atualizou o CPF, precisa fazer isso na Receita antes de seguir: a Junta recusa o registro se os dois não forem idênticos."
+        : "Enquanto ele estiver assim, a Receita não libera a abertura. A regularização é feita no site da Receita Federal e costuma ser rápida. Se precisar de ajuda, chama a gente."}
+    </Aviso>
+  );
+}
+
 export function ContaView({
   d,
   set,
@@ -139,9 +213,13 @@ export function ContaView({
   layout = "classico",
   leadJaCaptado = false,
   mei = false,
+  divergencia,
 }: {
   d: DadosConta;
   set: <K extends keyof DadosConta>(k: K, v: DadosConta[K]) => void;
+  /** 🆕 04/09 — a Receita recusou o CPF: o alerta aparece NESTA tela, em cima
+   *  do formulário, e o CTA fica travado (ver `DivergenciaCpf`). */
+  divergencia?: DivergenciaCpf;
   /** `form` = os dados; `codigo` = validação obrigatória (front-load 28/07). */
   etapa: "form" | "codigo";
   onCriarConta: () => void;
@@ -183,6 +261,7 @@ export function ContaView({
         set={set}
         onCriarConta={onCriarConta}
         onVoltar={onVoltar}
+        divergencia={divergencia}
         leadJaCaptado={leadJaCaptado}
         mei={mei}
       />
@@ -192,8 +271,9 @@ export function ContaView({
   const cpfCheio = d.cpf.replace(/\D/g, "").length === 11;
   const telefoneCheio = d.telefone.replace(/\D/g, "").length >= 10;
   // 🗑️ 01/09 — idem layout "classico": endereço pessoal migrou pro C1.
+  const nascimentoCheio = d.nascimento.replace(/\D/g, "").length === 8;
   const completo =
-    nomeOk && cpfCheio && telefoneCheio && /@/.test(d.email) && d.senha.length >= 8;
+    nomeOk && cpfCheio && nascimentoCheio && telefoneCheio && /@/.test(d.email) && d.senha.length >= 8;
 
   if (etapa === "codigo") {
     return (
@@ -416,6 +496,16 @@ export function ContaView({
             </Campo>
           </div>
 
+          {/* 🆕 04/09 — par do CPF pra validação na Receita (ver `DadosConta`). */}
+          <Campo rotulo="Data de nascimento">
+            <Texto
+              valor={d.nascimento}
+              onChange={(v) => set("nascimento", mascaraData(v))}
+              placeholder="DD/MM/AAAA"
+              inputMode="numeric"
+            />
+          </Campo>
+
           <Campo rotulo="Seu e-mail">
             <Texto
               valor={d.email}
@@ -482,11 +572,14 @@ function ContaPainel({
   onVoltar,
   leadJaCaptado = false,
   mei = false,
+  divergencia,
 }: {
   d: DadosConta;
   set: <K extends keyof DadosConta>(k: K, v: DadosConta[K]) => void;
   onCriarConta: () => void;
   onVoltar?: () => void;
+  /** 🆕 04/09 — recusa da Receita no CPF (ver `DivergenciaCpf`). */
+  divergencia?: DivergenciaCpf;
   /** 🆕 28/08 — só troca o subtítulo (MEI não passa pela Junta). */
   mei?: boolean;
   /**
@@ -531,9 +624,12 @@ function ContaPainel({
   // e senha — os outros campos nem aparecem, então não podem travar o CTA.
   // 🗑️ 01/09 — CEP/número saíram da conta (viraram o endereço pessoal do C1),
   // então não travam mais o CTA.
+  /* 🆕 04/09 — a data entra no gate junto do CPF: sem ela a consulta à Receita
+     nem roda, e deixar passar significaria descobrir a divergência lá no DBE. */
+  const nascimentoCheio = d.nascimento.replace(/\D/g, "").length === 8;
   const completo = leadJaCaptado
-    ? cpfCheio && senhaOk
-    : nomeOk && cpfCheio && telefoneCheio && /@/.test(d.email) && senhaOk;
+    ? cpfCheio && nascimentoCheio && senhaOk
+    : nomeOk && cpfCheio && nascimentoCheio && telefoneCheio && /@/.test(d.email) && senhaOk;
 
   return (
     <main className="app-main">
@@ -697,6 +793,15 @@ function ContaPainel({
           </div>
         )}
 
+        {/* 🆕 04/09 — a recusa da Receita mora EM CIMA do formulário: é a
+            primeira coisa que a pessoa lê ao voltar, e os campos que ela
+            precisa mexer estão logo abaixo, no mesmo lugar de sempre. */}
+        {divergencia && (
+          <div className="mb-4">
+            <AvisoCpfDivergente tipo={divergencia} />
+          </div>
+        )}
+
         {/* Um campo por linha: CPF e telefone lado a lado cortavam o valor
             mascarado (000.000.000-00 não cabe em meia largura no SE). */}
         <div className="flex flex-col gap-3.5">
@@ -719,6 +824,20 @@ function ContaPainel({
               onChange={(e) => set("cpf", mascaraCpf(e.target.value))}
               placeholder="CPF"
               aria-label="CPF"
+              inputMode="numeric"
+              className="min-h-12 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
+            />
+          </CampoIconeConta>
+
+          {/* 🆕 04/09 (Pedro) — colado no CPF de propósito: os dois viajam
+              juntos pra Receita, e o par é o que valida o nome. Separá-los
+              faria a data parecer burocracia solta. */}
+          <CampoIconeConta icone={<IconeDoc />}>
+            <input
+              value={d.nascimento}
+              onChange={(e) => set("nascimento", mascaraData(e.target.value))}
+              placeholder="Data de nascimento"
+              aria-label="Data de nascimento"
               inputMode="numeric"
               className="min-h-12 flex-1 bg-transparent text-body text-text-primary outline-none placeholder:text-text-muted"
             />
@@ -879,8 +998,21 @@ function ContaPainel({
             plano (E7), não só "criar conta" — o texto avisa isso.
             🔄 30/08 (pedido do Pedro) — "efetuar pagamento" virou "ver
             plano": o pagamento em si só acontece na E9, depois do E7/E8. */}
-        <Button full disabled={!completo} onClick={onCriarConta}>
-          Criar conta e ver plano
+        {/* 🆕 04/09 — o CTA responde à recusa, e as duas recusas pedem coisas
+            diferentes: com o NOME divergente a pessoa corrige ali mesmo e
+            tenta de novo (botão vivo); com o CPF IRREGULAR não existe nada
+            nesta tela que resolva, então ele trava e o rótulo diz o motivo
+            (regra da casa: CTA bloqueado nomeia o que falta, não fica mudo). */}
+        <Button
+          full
+          disabled={!completo || divergencia === "situacao"}
+          onClick={onCriarConta}
+        >
+          {divergencia === "situacao"
+            ? "CPF irregular na Receita"
+            : divergencia === "nome"
+              ? "Conferir de novo"
+              : "Criar conta e ver plano"}
         </Button>
       </Rodape>
     </main>

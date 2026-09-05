@@ -26,7 +26,23 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-export type StatusEstado = "feito" | "a-fazer" | "girando" | "travado" | "recusa";
+/**
+ * 🆕 04/09 (Pedro — rota assistida) — ENTROU O 5º ESTADO: `com-a-casa`.
+ *
+ * Os 4 anteriores respondiam "de quem é a vez" em 2 respostas: sua (a-fazer
+ * com CTA) ou do órgão (girando). A rota assistida abriu uma 3ª, que não
+ * cabia em nenhuma das duas: a vez é de um CONSULTOR NOSSO, uma pessoa com
+ * nome, que vai conduzir aquele passo junto com o cliente.
+ *
+ * Não dava pra reusar `girando`. Ele já vinha carregando dois sentidos ("a vez
+ * é do órgão" e, desde 04/09, "está disponível agora") e eu tinha registrado
+ * no `wizard-cauda` que, se confundisse de novo, o caminho era um estado novo
+ * — não empilhar um terceiro sentido. É este o momento.
+ *
+ * Também não é `a-fazer`: cinza significa "ainda não chegou", e aqui chegou —
+ * só que quem move é outra pessoa.
+ */
+export type StatusEstado = "feito" | "a-fazer" | "girando" | "travado" | "recusa" | "com-a-casa";
 
 /** Marcador de 18px. O caller provê o slot (`shrink-0`, alinhamento). */
 export function StatusIcon({ estado }: { estado: StatusEstado }) {
@@ -34,6 +50,7 @@ export function StatusIcon({ estado }: { estado: StatusEstado }) {
   if (estado === "girando") return <Girando />;
   if (estado === "travado") return <Travado />;
   if (estado === "recusa") return <Recusa />;
+  if (estado === "com-a-casa") return <ComACasa />;
   return <AFazer />;
 }
 
@@ -74,6 +91,34 @@ function Girando() {
       className="block h-[18px] w-[18px] shrink-0 animate-spin rounded-full border-2 border-border-hairline border-t-[color:var(--color-state-info)]"
       aria-label="em andamento"
     />
+  );
+}
+
+/**
+ * Silhueta de pessoa: a vez é de um consultor NOSSO, ao vivo com o cliente.
+ * Preenchido (não contorno) porque, como o check, ele afirma um fato — tem
+ * alguém nisso agora. Fica na cor `info`, a mesma família do anel: os dois
+ * dizem "não é você que age", e a diferença é quem age.
+ */
+function ComACasa() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      className="shrink-0 text-state-info"
+      aria-label="com a nossa equipe"
+    >
+      <circle cx="12" cy="12" r="11" fill="currentColor" />
+      <circle cx="12" cy="9.6" r="3.1" fill="#fff" />
+      <path
+        d="M5.9 19.2a6.4 6.4 0 0 1 12.2 0"
+        stroke="#fff"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+      />
+    </svg>
   );
 }
 

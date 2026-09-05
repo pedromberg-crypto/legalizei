@@ -16,7 +16,13 @@ import { Campo, Texto, Select, OpcoesLinha } from "@/components/ui/form";
 import { FORMAS_ATUACAO } from "@/lib/mei";
 import { linkWhatsApp } from "@/lib/contato";
 // 🆕 01/09 — mesma máscara do E6, pro CPF do sócio extra (C3).
-import { mascaraCpf, mascaraTelefone, mascaraData } from "@/components/wizard-dinheiro";
+import {
+  mascaraCpf,
+  mascaraTelefone,
+  mascaraData,
+  AvisoCpfDivergente,
+  type DivergenciaCpf,
+} from "@/components/wizard-dinheiro";
 import { OutrasOpcoes, SheetCnae, type OpcaoCnae } from "@/components/encaixe";
 import {
   CLIENTE,
@@ -966,8 +972,21 @@ export function SociosView({
   contexto = "abrir",
   socios,
   ctaLabel,
+  divergencia,
 }: {
   preencher?: number;
+  /**
+   * 🆕 04/09 (Pedro) — A RECEITA RECUSOU O CPF DE UM SÓCIO.
+   *
+   * O CPF do titular já foi conferido lá no E6 (é o que deixa a conta nascer),
+   * então aqui a consulta roda só nos sócios, na passagem pro C4. Regra do
+   * Pedro: o nome de TODO sócio tem que bater 100% com a Receita, igual ao do
+   * titular — se um só divergir, o DBE recusa e o processo inteiro para.
+   *
+   * `socio` é o índice do sócio EXTRA (0 = o 2º da empresa, o 1º da lista).
+   * Sem tela nova: o alerta volta pra este cartão, que é onde o dado mora.
+   */
+  divergencia?: { socio: number; tipo: DivergenciaCpf };
   onSeguir?: () => void;
   onVoltar?: () => void;
   /**
@@ -1342,8 +1361,13 @@ export function SociosView({
                      🧹 03/09 (pente-fino) — `colapsavel` virava sempre `true`
                      (não existe mais caso de card fixo aberto): variável e o
                      ramo morto do `? :` saíram. */
-                  const aberto = socioAberto === s.id;
-                  const salvo = socioCompleto(s);
+                  /* 🆕 04/09 — o cartão do sócio recusado ABRE SOZINHO. Ele
+                     é colapsável e, fechado, o alerta ficaria escondido atrás
+                     de um toque: a pessoa leria "algo deu errado" no rodapé
+                     sem enxergar onde. */
+                  const recusado = divergencia?.socio === i ? divergencia.tipo : undefined;
+                  const aberto = socioAberto === s.id || !!recusado;
+                  const salvo = socioCompleto(s) && !recusado;
                   const titulo = s.nome.trim() || `${i + 2}º sócio`;
                   return (
                   <div
@@ -1380,7 +1404,12 @@ export function SociosView({
                           Administra
                         </span>
                       )}
-                      {!aberto &&
+                      {!aberto && recusado && (
+                        <span className="shrink-0 rounded-full bg-state-warning-tint px-2 py-0.5 text-micro font-semibold text-state-warning-text">
+                          {recusado === "nome" ? "Nome divergente" : "CPF irregular"}
+                        </span>
+                      )}
+                      {!aberto && !recusado &&
                         (salvo ? (
                           <span
                             aria-hidden
@@ -1397,6 +1426,12 @@ export function SociosView({
 
                     {aberto && (
                       <>
+
+                    {/* 🆕 04/09 — o alerta encosta no campo que resolve: nome e
+                        CPF vêm logo abaixo dele. */}
+                    {recusado && (
+                      <AvisoCpfDivergente tipo={recusado} quem={titulo} />
+                    )}
 
                     <Campo rotulo="Nome completo">
                       <Texto
@@ -1881,7 +1916,10 @@ export function SociosView({
               confirma aqui é uma DECISÃO (a empresa vai ser só dela), não uma
               passagem de tela. O `ctaLabel` do modo ajuste vence os dois: lá o
               rótulo é "Atualizar dados". */}
-          <Button full disabled={!completo} onClick={onSeguir}>
+          {/* 🆕 04/09 — divergência de CPF trava o CTA independentemente de o
+              cartão estar "completo": os campos estão todos preenchidos, o que
+              falta é bater com a Receita. */}
+          <Button full disabled={!completo || !!divergencia} onClick={onSeguir}>
             {/* 🐛 04/09 (achado do Pedro) — "Vou abrir sozinho" tinha gênero.
                 O app não coleta gênero e não deveria: rótulo de CTA em 1ª
                 pessoa precisa funcionar pra qualquer pessoa. Trocado por uma
@@ -1892,7 +1930,11 @@ export function SociosView({
                 estado — travado, conta quantos sócios faltam; livre, nomeia o
                 que confirma. Mesma régua do A1 e do C5. */}
             {ctaLabel ??
-              (!temSocio
+              (divergencia
+                ? divergencia.tipo === "nome"
+                  ? "Confira o nome do sócio"
+                  : "CPF do sócio irregular"
+                : !temSocio
                 ? "Abrir só no meu nome"
                 : sociosIncompletos.length > 0
                   ? sociosIncompletos.length === 1

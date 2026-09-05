@@ -50,6 +50,7 @@ export default function RetomarPage() {
   const [dados, setDados] = useState<DadosConta>({
     nome: "",
     cpf: "",
+    nascimento: "",
     telefone: "",
     email: "",
     senha: "",

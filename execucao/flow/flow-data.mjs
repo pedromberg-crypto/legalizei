@@ -549,6 +549,16 @@ export const NODES = [
   // buraco do E7.1 e do C0.1 — tela construída que ninguém achava sem saber
   // que existia. Agora é nó declarado, no lugar onde acontece.
   { id: "E6_1", caminho: "abrir", rota: "/conta?etapa=codigo", label: "E6.1 · Confirmar código", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "🔴 Envio real de e-mail/SMS, janela de expiração e trava de tentativas são do dev: hoje é mock e qualquer 8 dígitos passam. Já existem reenvio com contador de 60s e escape pro WhatsApp (01/09). 🐛 04/09 — o `meta` do header diz \"Confirme seu acesso\", que é o nome DESTA tela; pela regra 6 do CLAUDE.md ele deveria nomear o destino do voltar, que é o formulário do E6.", dados: "Código de verificação de 8 dígitos (`DIGITOS_CODIGO`), enviado pro e-mail e pro telefone digitados no E6" },
+  // 🆕 04/09 (pedido do Pedro) — A CONTA SÓ NASCE COM O CPF CONFERIDO.
+  // A validação do CPF contra a Receita (nome + situação cadastral, via
+  // InfoSimples: entra `cpf` + data de nascimento, volta `nome`, `nome_civil`,
+  // `situacao_cadastral`) roda AQUI, no toque de criar conta. Motivo: a
+  // Izabela relatou em 09/07 o caso que mais gera retrabalho — pessoa casou,
+  // mudou o nome no CPF, não atualizou na Receita, e o DBE recusa lá na
+  // frente, com o dossiê inteiro preenchido. Barrar na entrada custa uma tela
+  // de alerta; barrar no DBE custa o processo. Sem tela nova: o alerta volta
+  // pro próprio E6 (decisão do Pedro).
+  { id: "E6_2", caminho: "abrir", rota: "/conta?cpf=nome", label: "E6.2 · CPF não confere<br/>(nome divergente)", forma: "tela", classe: "atencao", status: "construida", validado: "pendente", falta: "🔴 A consulta em si é do dev: **InfoSimples `receita-federal-cpf`** (entrada `cpf` + `birthdate`; volta `nome`, `nome_civil`, `nome_social`, `situacao_cadastral`, `ano_obito`, comprovante). Preço por consulta e limite de chamadas NÃO estão na página pública — pendência comercial (Mauro). A variante `?cpf=situacao` cobre o CPF irregular (suspenso/pendente/cancelado), que trava o CTA porque nada nesta tela resolve. 🆕 04/09 — o E6 passou a coletar **data de nascimento**: sem ela a consulta não roda, e o dado já era pedido no C1 (só subiu, doutrina de front-load do RS9).", dados: "Retorno da Receita: nome civil × nome digitado · situação cadastral" },
   { id: "E7", caminho: "abrir", rota: "/plano", label: "E7 · A conta da abertura", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Preço ~R$195 FAKE (Mauro+custo); 🟢 01/09 DAE RESOLVIDO — R$281,08, valor da guia real emitida no processo (prints 125 e 127), substitui os R$268,51 da tabela de 19/07 (a conferência cobra 2 atos: Contrato + Enquadramento ME, e a diferença de R$12,57 bate com o 2º); certificado A1 (Mauro). ✅ RESOLVIDO 26/08 (reunião Rua Satélite 36, item 2): a antiga 'pendência real de spec' ('conta total não é total', endereço fiscal só aparecia no C4 pós-pagamento) foi corrigida — a mensalidade mostrada aqui já soma o endereço fiscal quando escolhido lá no E5F, com 1 linha de explicação. 🆕 28/08 — REDESIGN 'premium' (pedido do Pedro, validado em preview isolado `/plano-premium` antes de aplicar): título bicolor, card-herói com profundidade real (raio+sombra), lista de inclusos como cartões-linha, CTA como barra flutuante escura. Nenhum conteúdo/ramo cortado (MEI×ME, colaboradores, citação legal, endereço fiscal seguem intactos) — só a casca mudou. `PlanoOferta` em `wizard-dinheiro.tsx`. 🆕 30/08 — ver E7.1 pra variante 'escolheu endereço fiscal'. Fechado o gap real na `/apresentacao`: a escolha do E3.4 nunca atravessava até o E7 na demo, mesmo o componente já suportando a prop.", dados: "" },
   // 🆕 30/08 (pedido do Pedro) — variante JÁ CONSTRUÍDA (card "O que você
   // adicionou", ícone 3D + valor explícito) pra quem escolheu endereço fiscal
@@ -655,6 +665,12 @@ export const NODES = [
   // da tela. As pills são o jeito de ENXERGAR que as variações existem.
   { id: "C3_1", caminho: "abrir", rota: "/dossie/socios?socios=4", label: "C3.1 · Sócios<br/>(teto: 3 + você)", forma: "tela", classe: "branch", status: "construida", validado: "oficial", falta: "🆕 04/09 — nó recriado (o antigo C3.1 saiu em 03/09). Mesma tela da C3 no TETO: 3 sócios além do titular, o botão de adicionar dá lugar ao motivo do limite, e a pergunta de administração vira LISTA com check por sócio (decisão 01/09, Rua Satélite 42) em vez de sim/não. A divisão em % é redistribuída em partes iguais a cada sócio novo, e a mesa da divisão é o único lugar onde ela se edita.", dados: "Por sócio: nome, CPF, participação, nascimento, nacionalidade, RG + órgão, estado civil (+ regime) e endereço · quem administra (lista)" },
   { id: "C3_2", caminho: "abrir", rota: "/dossie/socios?socios=1", label: "C3.2 · Sócios<br/>(só você)", forma: "tela", classe: "branch", status: "construida", validado: "ux", falta: "🆕 04/09 (pedido do Pedro) — estado que só passou a existir quando a lista virou EDITÁVEL: dá pra remover todos os sócios e ficar só o titular. A tela troca de anatomia — somem a mesa da divisão e a pergunta de administração, entra o troféu 3D ocupando a sobra (padrão do E6.1 e do `/retomar`), o cartão de confirmação com o recibo do titular e um caminho de volta (\"+ Vou ter sócio, sim\"). O CTA vira \"Abrir só no meu nome\". 🔴 Redação e asset aprovados pelo Pedro em 04/09; falta o carry-forward real (hoje a quantidade vem da triagem via mock/querystring).", dados: "Confirmação de que a empresa fica só no nome do titular (nenhum dado novo)" },
+  // 🆕 04/09 (pedido do Pedro) — MESMA CHECAGEM, AGORA NOS SÓCIOS. O CPF do
+  // titular já passou no E6; na saída da C3 a consulta roda em cada sócio, e a
+  // regra é dura: o nome de todos tem que bater 100% com a Receita, igual ao
+  // do titular. Um só divergindo já derruba o DBE. Sem tela nova — o cartão do
+  // sócio recusado abre sozinho com o alerta dentro.
+  { id: "C3_3", caminho: "abrir", rota: "/dossie/socios?divergencia=1", label: "C3.3 · CPF de sócio<br/>não confere", forma: "tela", classe: "atencao", status: "construida", validado: "pendente", falta: "🔴 Mesma pendência do E6.2 (consulta InfoSimples é do dev; preço/limite com o Mauro). A C3 já coletava CPF + nascimento de cada sócio, então nada de campo novo aqui.", dados: "Retorno da Receita por sócio: nome civil × nome digitado · situação cadastral" },
   { id: "C4", caminho: "abrir", rota: "/dossie/empresa", label: "C4 · Dados da empresa", forma: "tela", classe: "", status: "construida", validado: "oficial", falta: "🔒 01/09, 2ª rodada (pedido do Pedro) — a tela ficou com UM campo só. CEP, número e complemento aparecem TRAVADOS (vieram do E3.4 e não podem mais mudar aqui: já foram pra viabilidade); a pergunta 'Como é esse endereço?' foi REMOVIDA (o E3.4 já resolve endereço-dele × o nosso, e o tipo de imóvel responde o resto); e o aviso 'o IPTU desse endereço pode subir' saiu — chegava tarde, com a pessoa já tendo pago e já tendo mandado o endereço, então não mudava decisão nenhuma. Se voltar, o lugar é o E3.4, antes do dinheiro. Sobra o índice cadastral do IPTU. Sem `inicial` (deep-link, /mockup, prévia do /mapa) a tela cai no MOCK em vez de mostrar formulário vazio: formulário vazio é um estado que não existe no flow real. 🗑️ 01/09 (pedido do Pedro) — o **upsell de endereço fiscal saiu desta tela**. A regra virou binária: ou a pessoa escolheu o endereço fiscal no E3.4 (e a tela não existe pra ela), ou informou endereço próprio e aqui só TERMINA de preencher. O que veio do gate (CEP, número, complemento) aparece **travado**, com cadeado; o que falta (IPTU, tipo de endereço, imóvel) segue editável. Vender o endereço fiscal aqui seria oferecer, depois do pagamento, algo que muda a mensalidade. ✅ 28/07: IPTU obrigatório travado. 🔄 26/08 (reunião Rua Satélite 36, item 2): a escolha 'próprio × fiscal Legalizai' e o aviso de cobrança recorrente SAÍRAM daqui — moraram no E5F desde 24/08 até virarem o gate oficial de decisão, e o valor já vem confirmado do E7. Esta tela agora só CONFIRMA a escolha (card read-only, mesma doutrina do C3) e coleta os detalhes de endereço (CEP/IPTU/tipo) quando for próprio. 🔒 31/08 (gap-analysis + reunião Rua Satélite 38-40, tudo validado pelo Pedro): capital social deixou de ser pergunta — travado em R$10.000, nem aparece mais na tela (ver PREENCHIDOS_INTERNAMENTE). 'Endereço virtual' saiu do seletor 'tipo de endereço' — vira valor fixo só quando é o endereço fiscal da Legalizai (nunca opção de quem usa endereço próprio). 🐛→🔒 campo NOVO 'tipo de imóvel' (casa/apartamento/outro) — faltava por completo (zero ocorrência no código antes). A pergunta de residência, que só aparecia com 2+ sócios (bug: dono único nunca via essa pergunta, mesmo sendo a regra que decide deferimento/indeferimento na Prefeitura), agora vale sempre — e é SEMPRE sobre o titular (quem constitui), nunca sobre sócio extra. Se apartamento, resposta é automática 'sim' (travada); se o titular não reside ali, informa o endereço pessoal (com o mesmo tipo de imóvel). 🆕 01/09 (2 pedidos do Pedro, ambos construídos): **(1) a tela DEIXA DE EXISTIR pra quem usa o endereço fiscal da Legalizai** — antes ela abria só pra 'confirmar' uma escolha já feita no E3.4 e já somada no preço do E7, sem nada pra responder (endereço/IPTU/tipo de imóvel/residência são todos sobre um imóvel que não é dele). O C3 passa direto pro C7 e a rota redireciona sozinha em deep-link. ⚠️ **O MEI é exceção e continua vendo a tela**: lá existe 'Como você atende?' (forma de atuação), que é dele. O passo também some da lista de `lib/passos.ts` (`soEnderecoProprio`). **(2) carry-forward do endereço**: CEP, número e complemento respondidos no E3.4 chegam PREENCHIDOS aqui — a pessoa completa o que falta (IPTU, tipo de imóvel, residência) em vez de redigitar. Trafega por `sessionStorage` (`lib/rascunho.ts`), NÃO por querystring: endereço é dado pessoal, mesma regra do RF-01 que tirou nome/CPF/telefone da URL", dados: "Índice cadastral do IPTU (único campo do cliente) · CEP + número + complemento + tipo de imóvel + residência aparecem TRAVADOS, vindos do E3.4" },
   // 🔴→🟢 31/08 (validado pelo Pedro, reunião Rua Satélite 38-40) — C6 SAIU do
   // fluxo do cliente. Era pergunta (SLU × LTDA, sugerida/editável); virou
@@ -757,7 +773,50 @@ export const NODES = [
   // a sequência de status e emenda no A4, que é pra onde ele leva.
   { id: "A3_GP", caminho: "abrir", rota: "/aguardando?fase=junta&guia=paga", label: "A3′ · Status<br/>(guia paga)", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Volta de quem pagou a guia por cartão/Pix: a etapa da DAE fecha (verde) e 'Agora é só assinar' vira a vez. Mock por query (`?guia=paga`); no app real quem fecha é o webhook do provedor.", dados: "" },
   { id: "A4", caminho: "abrir", rota: "/assinatura", label: "A4 · Assinatura dos sócios", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "GOV.BR/e-CAC deep-link (dev). 🆕 24/08 (reunião Leonan): código 2FA único concentra procuração+assinatura (`CodigoGovView` — janela 10min, 3 tentativas, escala pra atendente se estourar); convite de sócio ganhou seletor de canal (WhatsApp/e-mail). 🆕 26/08 (item 7): certificado já vem validado da A3.2 — a procuração que sai junto desta assinatura agora tem o que precisa. 🗑️→🔴 01/09: **a A3.2 saiu do caminho ME**, então essa premissa caiu junto (o certificado é e-CNPJ, e o CNPJ ainda não existe aqui). Continua aberto o que fazer com a procuração e-CAC nesta tela: ela só pode ser assinada DEPOIS do CNPJ sair, e as 2 decisões de 01/09 (corrigir a cadeia toda + procuração sempre) ainda não foram construídas", dados: "Assinatura via GOV.BR/e-CAC · código de validação de 6 dígitos (janela 10min) · canal do convite ao sócio (WhatsApp/e-mail)" },
-  { id: "A4G", caminho: "abrir", rota: "/assinatura", label: "GOV.BR nível<br/>bronze→upgrade", forma: "decisao", classe: "inline", status: "construida", validado: "pendente", falta: "Dobrado inline no A4 — sem query própria (nenhum toggle de demo separa o sub-estado), a prévia mostra a mesma tela do A4", naTabela: false, dados: "" },
+  // 🆕 04/09 (pedido do Pedro) — O CÓDIGO DO GOV.BR VIRA TELA DO FLOW. Ele
+  // existia como sub-estado do A4: no produto e na demo, mas escondido ATRÁS da
+  // tela de assinatura, sem nó, sem pill, e com a prévia do mapa mostrando o
+  // A4. Mesmo buraco que o E6.1 (código da conta) e o C0.3 tinham. Agora tem
+  // rota (`?etapa=codigo`) e nó próprio.
+  { id: "A4_1", caminho: "abrir", rota: "/assinatura?etapa=codigo", label: "A4.1 · Código do GOV.BR", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "🔒 24/08 (reunião Leonan) — código ÚNICO com janela de 10min e 3 tentativas; estourou, escala pra atendente em vez de travar. 🔄 04/09 — o código deixou de prometer a procuração junto: ela é e-CAC, exige o CNPJ (que ainda não existe aqui) e virou tarefa da A5. Agora ele assina só o registro. 🐛 04/09 — o CTA validava com o campo vazio; trava em 6 dígitos e o rótulo diz o que falta. 🔴 Mock: qualquer 6 dígitos passam; a API do GOV.BR é do dev.", dados: "Código de 6 dígitos do GOV.BR (janela de 10min, 3 tentativas)" },
+  // 🗑️ 04/09 (Pedro) — O GATE DE NÍVEL GOV.BR NÃO EXISTE. A gente não tem
+  // acesso nenhum à conta GOV.BR do cliente: não dá pra ler se ela é bronze,
+  // prata ou ouro. O nó vivia de uma constante mock (`NIVEL_GOVBR = "prata"`),
+  // e a A4 afirmava o nível nos dois sentidos — card verde "sua conta está no
+  // nível prata" pra quem talvez fosse barrado, e "o seu está bronze" pra quem
+  // já estava prata. O requisito (prata ou ouro) continua dito na A4, como
+  // aviso, com link de como subir; o que sumiu foi a pretensão de saber.
+  // Fica como marca histórica, igual ao REMOVIDO_N24 e à A3.2.
+  { id: "A4G", caminho: "removido", label: "'GOV.BR nível bronze→upgrade'<br/>🗑️ REMOVIDO 04/09", forma: "terminal", classe: "todo", status: "planejada", validado: "oficial", falta: "Sem acesso à conta GOV.BR do cliente não há como detectar o nível: a variante inteira vinha de mock. Volta se um dia existir integração que leia o nível (não existe hoje, e o Login Único não se abre pra empresa privada — decisão de 19/07).", naTabela: false, dados: "" },
+  // ═══════════════════════════════════════════════════════════════════════
+  // 🆕 04/09 (decisão do Pedro) — ROTA ASSISTIDA · o fim humano do lançamento
+  // ═══════════════════════════════════════════════════════════════════════
+  // O app conduz sozinho até a guia da Junta ser paga (A3′). Da assinatura em
+  // diante quem assume é uma consultora nossa, por WhatsApp.
+  //
+  // POR QUE O CORTE É EXATAMENTE AQUI: o A3′ é o último ponto em que tudo que
+  // falta ainda é nosso. Depois dele vem o que a gente não controla — nível de
+  // conta GOV.BR (que nem conseguimos ler, decisão de hoje), CAPTCHA, 2FA, um
+  // código que vale 10 minutos, e o contador assinando junto na segunda.
+  // Automatizar essa faixa é onde o risco mora e é a menor parte do valor: o
+  // flow automático até aqui já entrega mais do que a contabilidade digital
+  // que existe hoje. O resto vira otimização de depois.
+  //
+  // ⚠️ A4, A4.1 e A4″ NÃO saem do mapa: elas são a rota automática, o destino.
+  // Isto é um desvio no fim, não uma amputação.
+  { id: "A3_H", caminho: "abrir", rota: "/aguardando?fase=junta&guia=paga&rota=assistida", label: "A3.H · Passagem<br/>pra consultora", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "🔴 Telas internas (ficha de handoff, fila por espera, checklist do consultor espelhado na timeline do cliente) NÃO estão construídas — o Pedro faz depois. Sem elas o consultor recomeça a conversa do zero, que é justamente o que o handoff existe pra evitar. 🔴 Consultora é mock (`CONSULTOR` em `dossie/mock.ts`): no real vem do sistema interno, com o WhatsApp dela.", dados: "Nome, papel e registro (CRC) da consultora · janela de atendimento" },
+  { id: "A3_H1", caminho: "abrir", rota: "/agendar", label: "A3.H1 · Marcar horário<br/>com a consultora", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "🔴 Agenda é mock (3 dias fixos): no real vem da disponibilidade da consultora. 🔴 Confirmação, lembrete e remarcação são do dev. A decisão de produto está travada: AGENDAR vence 'fale conosco' porque a assinatura exige sincronia (código de 10min, os dois juntos) — 'manda mensagem e espera' quebra dos dois lados.", dados: "Dia e horário escolhidos pra chamada de assinatura" },
+  { id: "A3_H2", caminho: "abrir", rota: "/aguardando?fase=junta&guia=paga&rota=assistida&agendado=Hoje%20%C3%A0s%2015%3A00", label: "A3.H2 · Status<br/>(horário marcado)", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "As 2 etapas de assinatura ficam no 5º estado da timeline (`com-a-casa`, silhueta de pessoa — estado NOVO no DS, 04/09) com o compromisso no detalhe. O CTA fica travado dizendo quando a consultora chama, mesmo padrão do 'Aguardando compensação' do boleto.", dados: "" },
+
+  // 🆕 04/09 (Pedro, destrinchando o processo real) — SÃO DUAS ASSINATURAS.
+  // Até o CNPJ existir a pessoa assina 2×: a 1ª sozinha (formaliza o contrato
+  // social) e a 2ª com o CONTADOR assinando junto, que é a que gera o CNPJ
+  // (bate com a Izabela, 09/07: o CRC assina "na finalização do CNPJ"). O app
+  // mostrava uma só e prometia o CNPJ logo depois dela — a 2ª chegaria como
+  // surpresa, depois do ponto sem volta. Mesma tela e mesmo gesto, então é
+  // VARIANTE de rota (`?rodada=2`), não tela nova.
+  { id: "A3_A1", caminho: "abrir", rota: "/aguardando?fase=junta&guia=paga&assinatura=1", label: "A3⁗ · Status<br/>(1ª assinatura feita)", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "🆕 04/09 — estado NOVO: entre as duas assinaturas a pessoa volta pro status, e antes disto ele recebia quem tinha acabado de assinar dizendo \"o último passo é a assinatura\". Hero e timeline agora reconhecem a 1ª como feita.", dados: "" },
+  { id: "A4_2", caminho: "abrir", rota: "/assinatura?rodada=2", label: "A4″ · 2ª assinatura<br/>(gera o CNPJ, contador junto)", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "🔴 A assinatura do CONTADOR é ato interno (CRC): a tela do cliente só anuncia que ela acontece junto. Como isso aparece no lado da Legalize (fila do contador, quem assina, prazo) é spec de dashboard interno, não existe ainda. 🔴 Mesmas pendências de deep-link GOV.BR da A4.", dados: "Assinatura via GOV.BR · código de 6 dígitos (mesma `CodigoGovView`, copy da rodada 2)" },
   { id: "REMOVIDO_N24", caminho: "removido", label: "'Empresa ativa'<br/>🗑️ REMOVIDO 30/07", forma: "terminal", classe: "todo", status: "planejada", validado: "oficial", falta: "Era órfão desde o swap A4→A5 (nenhuma rota navegava mais até aqui) — arquivo `/ativa` e a view apagados de vez 30/07, confirmado pelo Pedro. Fica só como marca histórica no mapa", dados: "" },
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -791,6 +850,12 @@ export const NODES = [
   // dizem isso visualmente: ninguém navega pra cá, e nada depois dela.
   // `naTabela: false` — a tabela de validação lista telas de produto.
   { id: "CONF", caminho: "dev", rota: "/conferencia", label: "🛠️ Conferência do dev<br/>(campos por origem)", forma: "tela", classe: "inline", status: "construida", validado: "ux", naTabela: false, falta: "Lista GERADA (`lib/conferencia-dados.ts` ← este arquivo): cada passo da constituição de ME, na ordem, com todo campo etiquetado USUÁRIO / AUTOMÁTICO / API. Existe porque metade do que a JUCEMG/DBE exige nunca aparece na tela do cliente, e sem a etiqueta o dev implementaria só o formulário. Mexeu em `dados`/`PREENCHIDOS_INTERNAMENTE`/`PREENCHIDOS_API`? Roda `gerar-mapa.mjs` e a tela acompanha", dados: "" },
+  // 🆕 04/09 — a A5 da ROTA ASSISTIDA. Mesma tela; o que muda é a procuração,
+  // que deixa de ser tarefa do cliente e vira o próximo passo com a
+  // consultora. Ela é e-CAC, tem CAPTCHA e, segundo o Ademar (RS36, 26/08),
+  // são quatro procurações diferentes lá dentro: terminar a rota mandando a
+  // pessoa fazer sozinha justamente isso desmentiria todas as telas anteriores.
+  { id: "A5_H", caminho: "abrir", rota: "/home-dia1?rota=assistida", label: "✅ A5.H · Home dia-1<br/>(rota assistida)", forma: "terminal", classe: "feliz", status: "construida", validado: "pendente", falta: "🔴 Como a consultora avisa que o CNPJ saiu (push, WhatsApp, os dois) é decisão de operação + dev. 🔴 O passo da procuração fica sem CTA de propósito: a conversa já está aberta no WhatsApp, e um botão aqui abriria um segundo canal pro mesmo assunto.", dados: "" },
   { id: "A5", caminho: "abrir", rota: "/home-dia1", label: "✅ A5 · Home dia-1<br/>(ativação)", forma: "terminal", classe: "feliz", status: "construida", validado: "oficial", falta: "🔓 SWAP validado 30/07 (confirmado no código: assinatura empurra direto pra cá). 🆕 24/08 (reunião Leonan): trilha agora mostra 3 status explícitos — Procuração (feito, instantâneo com o código) → Validação do certificado digital (agora, linka pra /mais/certificado upload+oferta) → Acesso completo. 🔄 26/08 (item 7): certificado deixou de ser 'agora' e virou 'feito' — já foi validado antes da assinatura (A3.2). Quem vira 'agora' é 'Conferir os dados da empresa' (`/mais/empresa`). 🔄 01/09 (decisão do Pedro, com a A3.2 fora do caminho ME): o passo do certificado continua 'feito', mas o texto mudou de 'você já resolveu antes de assinar' pra **'Certificado digital por nossa conta'** — é incluso no plano e emitido pela Legalizai quando for necessário, não tarefa do cliente. `/mais/certificado` segue existindo, só que agora é pra RENOVAR/trocar, não pra validar a 1ª vez. Sem confete nem selo coral no hero. Handoff pro flow Portal (letra P) → autoridade portal-data.mjs", dados: "" },
 ];
 
@@ -859,6 +924,10 @@ export const EDGES = [
   { de: "M_T", para: "M_T_2", label: "servidor federal" },
   // 🆕 04/09 — o código entrou ENTRE criar conta e a conta da abertura.
   { de: "E6", para: "E6_1" },
+  // 🆕 04/09 — a validação de CPF na Receita fica ENTRE o form e o código: só
+  // vira conta quem tem nome e situação conferindo.
+  { de: "E6", para: "E6_2", tracejado: true, label: "CPF não confere" },
+  { de: "E6_2", para: "E6", tracejado: true, label: "corrigiu" },
   { de: "E6_1", para: "E7" },
   // 🆕 30/08 — variante do E7 pra quem escolheu endereço fiscal lá no E3.4
   // (a escolha atravessa 3 telas até aparecer aqui, mesmo padrão do E9_M).
@@ -909,6 +978,9 @@ export const EDGES = [
   { de: "C3", para: "C3_2", tracejado: true, label: "removeu todos" },
   { de: "C3_1", para: "C4", tracejado: true },
   { de: "C3_2", para: "C4", tracejado: true },
+  // 🆕 04/09 — a saída da C3 consulta o CPF de cada sócio.
+  { de: "C3", para: "C3_3", tracejado: true, label: "CPF de sócio não confere" },
+  { de: "C3_3", para: "C3", tracejado: true, label: "corrigiu" },
   { de: "C3", para: "C4", label: "endereço próprio" },
   // 🆕 01/09 (pedido do Pedro) — quem escolheu o endereço fiscal da Legalizai
   // lá no E3.4 PULA o C4: a tela inteira não existe pra essa pessoa.
@@ -947,14 +1019,27 @@ export const EDGES = [
   { de: "A3_PSB", para: "A3_GB", tracejado: true, label: "aguardando compensar" },
   { de: "A3_GB", para: "A3_GP", tracejado: true, label: "banco confirmou" },
   { de: "A3_GP", para: "A4", tracejado: true, label: "assinatura liberada" },
+  // 🆕 04/09 — o desvio assistido sai do MESMO ponto que a rota automática.
+  { de: "A3_GP", para: "A3_H", label: "rota assistida (lançamento)" },
+  { de: "A3_H", para: "A3_H1", label: "escolher horário" },
+  { de: "A3_H1", para: "A3_H2", label: "horário confirmado" },
+  // A consultora conduz as 2 assinaturas ao vivo; quando o CNPJ sai, o cliente
+  // aterrissa na mesma A5 da rota automática.
+  { de: "A3_H2", para: "A5_H", tracejado: true, label: "assinaturas feitas com a consultora" },
   { de: "A3", para: "A4", tracejado: true, label: "ME · DAE paga" },
   // No MEI o painel não espera órgão: espera o ATENDENTE conferir. Quando ele
   // libera, a etapa vira ação do cliente e abre o M-S.
   { de: "A3_M", para: "M_S", label: "MEI · time conferiu", tracejado: true },
   { de: "M_S", para: "M_CERT", label: "voltou com o CNPJ", tracejado: true },
   { de: "M_CERT", para: "A5", label: "certificado resolvido" },
-  { de: "A4", para: "A4G", tracejado: true },
-  { de: "A4G", para: "A5", tracejado: true },
+  // 🔄 04/09 — a assinatura passa pelo código antes de fechar.
+  { de: "A4", para: "A4_1", label: "assina no GOV.BR" },
+  // 🔄 04/09 (Pedro) — a 1ª assinatura NÃO termina o processo: ela fecha o
+  // contrato social e devolve pro status, de onde sai a 2ª (a que o contador
+  // assina junto e que gera o CNPJ). Só a 2ª aterrissa na A5.
+  { de: "A4_1", para: "A3_A1", tracejado: true, label: "contrato social assinado" },
+  { de: "A3_A1", para: "A4_2", label: "última assinatura" },
+  { de: "A4_2", para: "A5", tracejado: true, label: "CNPJ gerado" },
 
   // 🔒 31/08 (fusão A3+E9) — o retomar não aterrissa mais direto no dossiê:
   // confirma o CPF e cai na TELA DE STATUS (E9.1P), que é quem sabe dizer em

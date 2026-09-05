@@ -68,6 +68,25 @@ export default function AguardandoPage() {
    * aqui seria dizer que a análise já passou, quando ela nem começou.
    */
   const reanalisando = searchParams.get("viabilidade") === "1";
+  /**
+   * 🆕 04/09 (Pedro, destrinchando o processo real) — A 1ª ASSINATURA JÁ FOI.
+   *
+   * São duas até o CNPJ existir (contrato social, depois a abertura com o
+   * contador junto), e entre uma e outra a pessoa volta pra cá. Sem este
+   * estado a volta da 1ª caía num status que ainda mandava assinar a 1ª.
+   */
+  const assinou1 = searchParams.get("assinatura") === "1";
+  /**
+   * 🆕 04/09 (decisão do Pedro) — ROTA ASSISTIDA (`?rota=assistida`).
+   *
+   * É assim que a operação nasce: automático até a guia paga, humano da
+   * assinatura em diante. As telas A4/A4.1/A4″ seguem intactas — elas são a
+   * rota automática, que continua sendo o destino. Racional em
+   * `components/consultor.tsx`.
+   */
+  const assistida = searchParams.get("rota") === "assistida";
+  /** Horário já marcado com a consultora ("Hoje às 15:00"). */
+  const agendado = searchParams.get("agendado");
 
   return (
     <AguardandoView
@@ -78,14 +97,22 @@ export default function AguardandoPage() {
       junta={
         reanalisando
           ? { concluidas: 0, emAndamento: 0 }
-          : guiaPaga
-            ? { concluidas: 2, emAndamento: 2 }
-            : undefined
+          : assinou1
+            ? { concluidas: 3, emAndamento: 3 }
+            : guiaPaga
+              ? { concluidas: 2, emAndamento: 2 }
+              : undefined
       }
       guiaBoleto={guiaBoleto}
       /* 🆕 04/09 — o mesmo flag que recua a timeline agora também troca o hero:
          a volta da 2ª rodada é um estado próprio, não a chegada do A2. */
       rodada2={reanalisando}
+      /* 🆕 04/09 — o hero precisa reconhecer que a 1ª assinatura já passou. */
+      assinou1={assinou1}
+      assistida={assistida}
+      agendado={agendado}
+      /* 🆕 04/09 — o CTA da rota assistida leva pra agenda, não pro A4. */
+      onAgendar={() => router.push("/agendar")}
       // 🆕 01/09 — leva pra tela do bloco (continuar ou corrigir), preservando
       // regime e endereço fiscal, como o resto da navegação do wizard.
       onIrParaBloco={(rota) => router.push(comEndereco(comRegime(rota, mei), enderecoFiscal))}
@@ -109,7 +136,7 @@ export default function AguardandoPage() {
        */
       onPagarDae={() => router.push("/guia")}
       // 🆕 01/09 — último passo da fase Junta: o CTA do rodapé leva pro A4.
-      onAssinar={() => router.push("/assinatura")}
+      onAssinar={() => router.push(assinou1 ? "/assinatura?rodada=2" : "/assinatura")}
       // 🔄 27/08 — a 1ª tela do dossiê virou a C0 (`/dossie/atividade`), não
       // mais o C1. Mesma mudança do `/pagamento` (racional lá).
       // 🐛 28/08 — faltava o ramo MEI: ia sempre pra C0 (ME), mesmo quando

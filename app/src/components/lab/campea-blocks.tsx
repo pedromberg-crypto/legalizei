@@ -81,7 +81,9 @@ export function PillCnpj() {
     <button
       type="button"
       onClick={copiar}
-      className="flex items-center gap-1.5 rounded-full border border-border-hairline bg-surface-card px-3 py-1.5 text-caption text-text-secondary transition-colors active:bg-surface-alt"
+      /* 🔄 04/09 (auditoria da leva A4/A5) — 34px de alvo. Vira 40px sem mudar
+         a silhueta do chip. */
+      className="flex min-h-10 items-center gap-1.5 rounded-full border border-border-hairline bg-surface-card px-3.5 text-caption text-text-secondary transition-colors active:bg-surface-alt"
     >
       <span className={copiado ? "text-state-success-text" : "text-text-tertiary"}>
         {copiado ? <IconeCheck /> : <IconeCopiar />}
@@ -142,7 +144,7 @@ export function AtalhosRapidos() {
         <p className="text-body-strong font-semibold text-text-primary">
           Atalhos rápidos
         </p>
-        <button className="text-caption font-semibold text-action-primary-sm">
+        <button className="-my-2.5 py-2.5 text-caption font-semibold text-action-primary-sm">
           Ver tudo
         </button>
       </div>
@@ -194,7 +196,7 @@ export function AprendaGradiente() {
         </p>
         <Link
           href="/blog"
-          className="text-caption font-semibold text-action-primary-sm"
+          className="-my-2.5 py-2.5 text-caption font-semibold text-action-primary-sm"
         >
           Ver tudo
         </Link>
@@ -242,7 +244,7 @@ export function NotasRecentesMov() {
         <p className="text-body-strong font-semibold text-text-primary">
           Notas recentes
         </p>
-        <button className="text-caption font-semibold text-action-primary-sm">
+        <button className="-my-2.5 py-2.5 text-caption font-semibold text-action-primary-sm">
           Ver tudo
         </button>
       </div>

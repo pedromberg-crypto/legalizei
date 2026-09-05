@@ -238,6 +238,29 @@ export const CONFERENCIA: TelaConferencia[] = [
     ]
   },
   {
+    "id": "E6_2",
+    "titulo": "E6.2 · CPF não confere (nome divergente)",
+    "rota": "/conta?cpf=nome",
+    "campos": [
+      {
+        "nome": "Retorno da Receita: nome civil × nome digitado",
+        "codigo": "",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "situação cadastral",
+        "codigo": "",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      }
+    ]
+  },
+  {
     "id": "E9",
     "titulo": "E9 · Pagamento + contrato (variante Abrir)",
     "rota": "/pagamento",
@@ -571,6 +594,29 @@ export const CONFERENCIA: TelaConferencia[] = [
         "origem": "api",
         "porque": "Idem, por sócio. Entra na qualificação do contrato (art. 997 CC) e na ficha do sócio no DBE.",
         "status": "🟡 mock hoje (`buscarCep`), API real pendente"
+      }
+    ]
+  },
+  {
+    "id": "C3_3",
+    "titulo": "C3.3 · CPF de sócio não confere",
+    "rota": "/dossie/socios?divergencia=1",
+    "campos": [
+      {
+        "nome": "Retorno da Receita por sócio: nome civil × nome digitado",
+        "codigo": "",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
+      },
+      {
+        "nome": "situação cadastral",
+        "codigo": "",
+        "valor": "",
+        "origem": "usuario",
+        "porque": "",
+        "status": ""
       }
     ]
   },

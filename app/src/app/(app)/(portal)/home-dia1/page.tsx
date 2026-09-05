@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { HomeAtivacaoView } from "@/components/wizard-cauda";
 
 /**
@@ -28,5 +29,10 @@ import { HomeAtivacaoView } from "@/components/wizard-cauda";
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function HomeDia1Page() {
-  return <HomeAtivacaoView />;
+  /* 🆕 04/09 — na ROTA ASSISTIDA (`?rota=assistida`) a procuração deixa de ser
+     tarefa do cliente e vira o próximo passo com a consultora: ela é e-CAC,
+     tem CAPTCHA, e é justamente o tipo de coisa que motivou o corte humano
+     lá no A3′. Ver `components/consultor.tsx`. */
+  const assistida = useSearchParams().get("rota") === "assistida";
+  return <HomeAtivacaoView assistida={assistida} />;
 }

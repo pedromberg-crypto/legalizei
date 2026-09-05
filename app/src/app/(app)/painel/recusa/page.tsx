@@ -64,10 +64,12 @@ export default function RecusaPage() {
         fase="junta"
         temSocios={TEM_SOCIO}
         recusa={{
-          /* 🐛 04/09 (auditoria) — índice relativo às 3 etapas da Junta (o
-             `AguardandoView` soma os passos do dossiê sozinho). Era 1 ("Pague
-             a guia"); o certo é 0, "Analisando viabilidade", que é onde o nome
-             é analisado e onde a exigência de fato aconteceu. */
+          /* 🐛 04/09 (auditoria) — índice relativo às etapas da Junta. Era 1
+             ("Pague a guia"); o certo é 0, "Analisando viabilidade", que é onde
+             o nome é analisado e onde a exigência de fato aconteceu.
+             🔄 04/09 (2ª rodada) — o dossiê saiu da timeline da fase Junta,
+             então a lista JÁ COMEÇA na viabilidade: não há mais offset nenhum
+             sendo somado, e este 0 aponta direto pra ela. */
           etapa: 0,
           titulo: "As 3 opções de nome não passaram",
           /* ✍️ 04/09 (auditoria) — ENTROU O PRAZO. A Junta trabalha por

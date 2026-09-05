@@ -56,6 +56,38 @@ export const CLIENTE = {
 export const TEM_SOCIO = true;
 export const SOCIO_2 = { nome: "Carlos Eduardo Silva" };
 
+/**
+ * 🆕 04/09 (Pedro) — A CONSULTORA DA ROTA ASSISTIDA.
+ *
+ * No lançamento, tudo daqui em diante (as 2 assinaturas, o certificado e a
+ * procuração) é conduzido por uma pessoa da casa, ao vivo. Ela precisa ter
+ * NOME e ROSTO no app desde a tela em que assume: "nossa equipe entra em
+ * contato" é a frase de quem não tem ninguém pra apresentar.
+ *
+ * Fonte única — a tela de passagem, a de agendamento e a timeline leem daqui.
+ * No produto real vem do sistema interno, junto do link do WhatsApp dela.
+ */
+export const CONSULTOR = {
+  nome: "Larissa Andrade",
+  /** Como ela se apresenta pro cliente. Não é cargo interno. */
+  papel: "Sua consultora na abertura",
+  /** Contador de verdade, com registro. É o que dá peso ao "ao vivo". */
+  registro: "CRC-MG 112.487",
+  /** Janela de atendimento, pra tela não prometer horário que não existe. */
+  atendimento: "Seg a sex, 9h às 18h",
+};
+
+/** Iniciais pro avatar (sem foto no MLP: nada de asset falso de pessoa). */
+export const CONSULTOR_INICIAIS = CONSULTOR.nome
+  .trim()
+  .split(/\s+/)
+  .slice(0, 2)
+  .map((n) => n[0])
+  .join("");
+
+/** Primeiro nome — é assim que as telas falam dela ("a Larissa te chama"). */
+export const CONSULTOR_PRIMEIRO_NOME = CONSULTOR.nome.trim().split(/\s+/)[0];
+
 export const SOCIOS: number = TEM_SOCIO ? 2 : 1;
 export const NOMES_SOCIOS: string[] = TEM_SOCIO
   ? [CLIENTE.nome, SOCIO_2.nome]

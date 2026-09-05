@@ -88,6 +88,16 @@ export interface Etapa {
    * `emAndamento` (que segue mandando no bloco aberto e no CTA do rodapé).
    */
   emCurso?: boolean;
+  /**
+   * 🆕 04/09 (Pedro — rota assistida) — A VEZ É DE UM CONSULTOR NOSSO.
+   *
+   * Liga o 5º estado do `StatusIcon` (`com-a-casa`, silhueta de pessoa) e dá à
+   * etapa o mesmo peso de texto da atual: ela ACONTECEU de chegar, só que quem
+   * conduz é gente da casa, ao vivo com o cliente. Cinza aqui leria "ainda não
+   * chegou" e o anel leria "o órgão está processando" — nenhum dos dois é
+   * verdade quando existe uma pessoa com nome cuidando do passo.
+   */
+  comConsultor?: boolean;
 }
 
 /**
@@ -158,9 +168,36 @@ export const ETAPAS_ABERTURA: Etapa[] = [
        etapa entrega — o que é a taxa e quanto custa de tempo. */
     detalhe: "É a taxa que a Junta cobra pra registrar (DAE). Pagar leva cerca de 1 minuto.",
   },
+  /* ═══════════ 🆕 04/09 (Pedro, destrinchando o processo real) ═══════════
+   * SÃO DUAS ASSINATURAS, NÃO UMA.
+   *
+   * A etapa era uma só ("Agora é só assinar") e o A4 dizia, logo depois dela,
+   * "é ela que fecha o registro na Junta, depois disso o CNPJ sai". Falso: até
+   * o CNPJ existir a pessoa assina DUAS vezes, e a segunda não é igual à
+   * primeira.
+   *
+   *   1ª — só ela. Formaliza o contrato social da empresa.
+   *   2ª — ela + o CONTADOR, que assina junto e se responsabiliza. É esta que
+   *        gera o CNPJ.
+   *
+   * (Bate com a Izabela em 09/07: o CRC assina "na finalização do CNPJ", no
+   * campo em que se declara o regime tributário. O app nunca mostrou isso.)
+   *
+   * Ficam como 2 etapas, e não como 1 com detalhe comprido, porque são 2
+   * momentos separados no tempo — entre elas a pessoa fecha o app e volta. Uma
+   * etapa que a pessoa cumpre duas vezes não fecha nunca, e "fechar um assunto
+   * por vez" é o motivo de a timeline existir em blocos.
+   * ═══════════════════════════════════════════════════════════════════════ */
   {
-    nome: "Agora é só assinar",
+    nome: "Assinar o contrato social",
     detalhe: "Assinatura pelo GOV.BR, no seu celular. Leva cerca de 3 minutos.",
+  },
+  {
+    nome: "Assinar a abertura do CNPJ",
+    /* Por que dizer que o contador assina junto: é a única etapa do flow em
+       que alguém de dentro da casa põe o nome no documento. Some daqui e a
+       pessoa lê "de novo?"; dito, vira o motivo de existir uma segunda vez. */
+    detalhe: "A última. Seu contador assina junto com você, e é ela que gera o CNPJ.",
   },
 ];
 
@@ -377,15 +414,21 @@ function TimelineEmBlocos({
                        conta própria — a etapa marcada com `emCurso` segue
                        girando, e a recusa continua mandando na sua etapa (o
                        `recusada` é checado antes). */
-                    const ehAVez = (!recusa && i === emAndamento) || !!e.emCurso;
+                    /* 🆕 04/09 — a etapa com consultor conta como "a vez" pro
+                       peso de texto e pro detalhe, mas NÃO gira: quem está
+                       nela é uma pessoa, não um órgão. */
+                    const ehAVez =
+                      (!recusa && i === emAndamento) || !!e.emCurso || !!e.comConsultor;
                     const ultima = idx === g.itens.length - 1;
                     const st: StatusEstado = recusada
                       ? "recusa"
                       : feito
                         ? "feito"
-                        : ehAVez
-                          ? "girando"
-                          : "a-fazer";
+                        : e.comConsultor
+                          ? "com-a-casa"
+                          : ehAVez
+                            ? "girando"
+                            : "a-fazer";
                     return (
                       <li key={e.nome} className="relative flex gap-3 pb-4 last:pb-0">
                         {!ultima && (
@@ -421,7 +464,13 @@ function TimelineEmBlocos({
                           )}
                           {ehAVez && !e.detalhe && (
                             <p className="text-micro text-state-info-text mt-1">
-                              Em andamento agora. Te avisaremos quando terminar.
+                              {/* 🐛 04/09 — "Em andamento agora" é a frase do
+                                  ÓRGÃO processando. Numa etapa conduzida por
+                                  consultor ela mentiria: não tem nada rodando,
+                                  tem alguém pra falar com você. */}
+                              {e.comConsultor
+                                ? "Sua consultora conduz este passo com você."
+                                : "Em andamento agora. Te avisaremos quando terminar."}
                             </p>
                           )}
                           {ehAVez && e.acaoCliente && (
@@ -532,6 +581,7 @@ export function PainelView({
   onAcaoRecusa,
   escuro = false,
   heroExtra,
+  antesDaTimeline,
 }: {
   /** Quantas etapas já fecharam (verde). */
   concluidas: number;
@@ -601,6 +651,14 @@ export function PainelView({
    * de pagamento pendente.
    */
   heroExtra?: ReactNode;
+  /**
+   * 🆕 04/09 (rota assistida) — bloco que entra ACIMA da timeline, dentro da
+   * rolagem. Nasceu pro cartão da consultora no A3.H: ele precisa vir antes
+   * das etapas (é quem explica por que elas mudaram de dono), mas depois do
+   * hero — dentro do hero escuro ele viraria um cartão claro sobre fundo
+   * escuro, que é outro componente, não este.
+   */
+  antesDaTimeline?: ReactNode;
 }) {
   // 🆕 26/08 (item 6) — se `etapas` não veio (caso da abertura), usa o default
   // COM o callback do CTA de DAE já ligado (a migração, que passa `etapas`
@@ -700,6 +758,8 @@ export function PainelView({
               </p>
             </Card>
           )}
+
+          {antesDaTimeline && <div className="mb-4">{antesDaTimeline}</div>}
 
           {/* ── A TIMELINE ─────────────────────────────────────────────────
               Cada etapa carrega seu estado. A linha vertical conecta os pontos

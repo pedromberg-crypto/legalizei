@@ -64,7 +64,9 @@ export function QuemCuida() {
         </p>
         <div className="mt-3 flex items-center gap-3">
           <PilhaAvatares />
-          <button className="text-caption font-semibold text-action-primary-sm">
+          {/* 🔄 04/09 (auditoria) — 20px de alvo. `-my-2.5 py-2.5` engorda o
+              toque sem mexer no desenho. */}
+          <button className="-my-2.5 py-2.5 text-caption font-semibold text-action-primary-sm">
             Falar no WhatsApp
           </button>
         </div>
@@ -97,7 +99,7 @@ function Cabecalho({ titulo }: { titulo: string }) {
   return (
     <div className="mb-2 flex items-center justify-between">
       <p className="text-body-strong font-semibold text-text-primary">{titulo}</p>
-      <button className="text-caption font-semibold text-action-primary-sm">
+      <button className="-my-2.5 py-2.5 text-caption font-semibold text-action-primary-sm">
         Ver tudo
       </button>
     </div>

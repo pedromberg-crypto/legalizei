@@ -66,6 +66,10 @@ tags: [execucao, flow, dados, abertura]
 ### E6.1 · Confirmar código
 - Código de verificação de 8 dígitos (`DIGITOS_CODIGO`), enviado pro e-mail e pro telefone digitados no E6
 
+### E6.2 · CPF não confere (nome divergente)
+- Retorno da Receita: nome civil × nome digitado
+- situação cadastral
+
 ### E7 · A conta da abertura
 - _(sem dado novo — contexto, confirmação ou decisão do sistema)_
 
@@ -136,6 +140,10 @@ tags: [execucao, flow, dados, abertura]
 
 ### C3.2 · Sócios (só você)
 - Confirmação de que a empresa fica só no nome do titular (nenhum dado novo)
+
+### C3.3 · CPF de sócio não confere
+- Retorno da Receita por sócio: nome civil × nome digitado
+- situação cadastral
 
 ### C4 · Dados da empresa
 - Índice cadastral do IPTU (único campo do cliente)

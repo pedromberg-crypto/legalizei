@@ -149,9 +149,47 @@ que só ele pode dizer**. Hero afirma QUEM assina, cartão carrega POR QUE tem
 que ser junto, etapa entrega QUANTO TEMPO. A dispensa do sócio mora num lugar
 só — a agenda, que é onde ela muda o comportamento.
 
+## 8. Emenda no fim do dia — limpeza de órfãs e telas adormecidas
+
+**3 telas legadas removidas** do flow, mapa e apresentação: **E5.1 (Waitlist) ·
+E5.2 (Contato especial) · E5.3 (Fora de escopo)**. Eram o veredito
+PRÉ-pagamento, aposentado em 27/08. A varredura provou que já estavam mortas: a
+E5.3 não tinha **nenhuma** aresta de entrada, e E5.1/E5.2 só eram alcançadas
+pelo E4.2 — que é do caminho **migrar**. As saídas de verdade vivem em
+`/saida/*`.
+
+**A tela de "veredito" da demo saiu junto.** Ninguém chamava
+`setEtapa("veredito")`, e o flow declara **C0 → C5** direto. O voltar da C5
+passou a apontar pra C0. 🟡 O estado `resultado` segue no snapshot sem leitor de
+render — removê-lo invalidaria snapshots salvos.
+
+**E5T.1 construída**: não é tela nova, é a triagem com o escape hatch aberto.
+🐛 A prévia abria pela metade — o `?simular` ligava o hatch, mas o link que o
+abre só existe pra quem tem sócio, e a prévia entrava sem quantidade escolhida.
+
+**🌙 Telas adormecidas** (pedido do Pedro): a rota **automática** (A4 · A4.1 ·
+A3⁗ · A4″ · A5) fica cinza no mapa e na fita, com o sufixo "· adormecida", e
+**continua clicável** — ela existe, está pronta e é o destino quando a automação
+chegar. Campo próprio `adormecida` no `flow-data`, não sequestro da `classe` (a
+A5 é `feliz`). Contorno contínuo: o tracejado é do `todo`, o que nunca foi
+construído.
+
+**2 bugs achados pela spec:**
+- A barra de abas cobriu o CTA na A5.H. O link de WhatsApp deixou o rodapé com
+  132px e o offset cravado de 80px ficou curto — **3ª vez** que eu chutava essa
+  altura (112 → 80 → 132). A barra passou a **medir** o rodapé
+  (`ResizeObserver`) em vez de assumir.
+- A contagem de sócios não voltava no caso **solo**: só viajava quando havia
+  sócio, e sem ela o status caía no mock (`TEM_SOCIO = true`) — a pessoa saía de
+  uma tela dizendo "sua assinatura" e voltava pra outra citando um sócio que ela
+  não tem.
+
+⚠️ Os dois só apareceram porque a spec existia — e 5 testes falharam por eu ter
+mexido no rodapé sem revalidá-la na hora. Descuido meu, não instabilidade.
+
 ## Estado
 
-Mapa **v112** · `tsc` e `eslint` limpos · 28 casos verdes na spec do ramo ·
+Mapa **v113** · `tsc` e `eslint` limpos · 28 casos verdes na spec do ramo ·
 espelho mapa × apresentação sem pendência.
 
 ## Falta

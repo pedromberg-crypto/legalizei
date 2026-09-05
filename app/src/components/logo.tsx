@@ -151,3 +151,28 @@ export function Logo({
     </svg>
   );
 }
+
+/**
+ * O NOME NO MEIO DE UMA FRASE, com o "ai" em coral de marca.
+ *
+ * 🆕 05/09 (pedido do Pedro) — a última sílaba do nome vai em
+ * `--color-brand` (#F2643C, o coral-500). É o mesmo tratamento do wordmark, e o
+ * token já existe exatamente pra isso: a paleta marca o coral-500 como "★ cor
+ * de MARCA (logo/wordmark)", separado do coral-600 que preenche botão.
+ *
+ * ⚠️ Componente, e não string, porque metade da palavra muda de cor: dado de
+ * texto não carrega cor, e quem tentar resolver isso no mock vai acabar com
+ * HTML dentro de um campo de dados.
+ *
+ * 🔴 GRAFIA: o app escreve "Legalizai", SEM acento, em todo lugar. O Pedro
+ * escreveu "Legalizaí" ao pedir isto — se a grafia com acento for pra valer,
+ * é decisão de marca (ADR em `marca/decisoes-marca.md`) e muda o nome no app
+ * inteiro, não só aqui. Até lá, o que muda é só a cor.
+ */
+export function NomeLegalizai({ className }: { className?: string }) {
+  return (
+    <span className={className}>
+      Legaliz<span className="text-brand">ai</span>
+    </span>
+  );
+}

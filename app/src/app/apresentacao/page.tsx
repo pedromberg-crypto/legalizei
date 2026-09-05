@@ -18,6 +18,9 @@ import {
   MeiOuMeView,
 } from "@/components/gate-telas";
 import { MolduraAparelho } from "@/components/lab/versao-board";
+/* 🆕 05/09 — a variante com sócio da 1ª assinatura cita o nome dele; ele vem da
+   fonte única do dossiê, não de um mock próprio desta tela. */
+import { sociosExtras } from "@/app/(app)/dossie/mock";
 import grafoFlow from "@/lib/flow-graph.json";
 import { SaidaView } from "@/components/saida";
 import { LoginView } from "@/components/login";
@@ -172,7 +175,8 @@ const CENARIOS: Cenario[] = [
     pill: "tech",
     texto: "Desenvolvo sites, apps ou sistemas sob encomenda",
     desfecho: "🟢 Atende — segue pro fluxo pago",
-    porque: "Serviço no Simples, sem conselho de classe e sem venda de produto: é exatamente o nosso ICP.",
+    porque:
+      "Serviço no Simples, sem conselho de classe e sem venda de produto: é exatamente o nosso ICP.",
   },
   {
     id: "waitlist",
@@ -316,6 +320,18 @@ type Etapa =
   | "assistida-passagem"
   | "assistida-agendar"
   | "assistida-marcado"
+  // 🆕 05/09 (achado do Pedro) — as MESMAS 3 telas quando a empresa tem sócio:
+  // o contrato social é assinado por TODOS eles, então a 1ª assinatura é ato de
+  // duas pessoas dentro do mesmo código de 10 minutos.
+  | "assistida-passagem-socio"
+  | "assistida-agendar-socio"
+  | "assistida-marcado-socio"
+  // 🆕 05/09 (pedido do Pedro) — A 2ª ASSINATURA GANHOU O MESMO CICLO. Ela
+  // exige a mesma sincronia da 1ª (código de 10 min) e ainda tem o contador
+  // assinando junto, então também tem passagem, agenda e status.
+  | "assistida-passagem-2"
+  | "assistida-agendar-2"
+  | "assistida-marcado-2"
   | "assistida-ativacao"
   | "painel-recusa"
   | "assinatura"
@@ -554,6 +570,12 @@ const ETAPAS_ESPERA = [
   "assistida-passagem",
   "assistida-agendar",
   "assistida-marcado",
+  "assistida-passagem-socio",
+  "assistida-agendar-socio",
+  "assistida-marcado-socio",
+  "assistida-passagem-2",
+  "assistida-agendar-2",
+  "assistida-marcado-2",
   "assistida-ativacao",
   "aguardando-pago",
 ] as const satisfies readonly Etapa[];
@@ -703,6 +725,18 @@ type Momento =
   | "assistida-passagem"
   | "assistida-agendar"
   | "assistida-marcado"
+  // 🆕 05/09 (achado do Pedro) — as MESMAS 3 telas quando a empresa tem sócio:
+  // o contrato social é assinado por TODOS eles, então a 1ª assinatura é ato de
+  // duas pessoas dentro do mesmo código de 10 minutos.
+  | "assistida-passagem-socio"
+  | "assistida-agendar-socio"
+  | "assistida-marcado-socio"
+  // 🆕 05/09 (pedido do Pedro) — A 2ª ASSINATURA GANHOU O MESMO CICLO. Ela
+  // exige a mesma sincronia da 1ª (código de 10 min) e ainda tem o contador
+  // assinando junto, então também tem passagem, agenda e status.
+  | "assistida-passagem-2"
+  | "assistida-agendar-2"
+  | "assistida-marcado-2"
   | "assistida-ativacao"
   | "painel-recusa"
   | "assinatura"
@@ -743,19 +777,23 @@ type Momento =
  * Regra do Pedro (29/07): editar aqui não altera o oficial; vira observação
  * visível, ele valida, e só então a mudança sobe pro flow de produção.
  */
-const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: string }[]>> = {
+const DIVERGENCIAS: Partial<
+  Record<Momento, { id: string; oque: string; status: string }[]>
+> = {
   fork: [
     {
       id: "UX-63",
       oque: "Card de destaque usa o coral-600 do botão primário (era coral-700). ⚠️ Custa contraste: branco sobre coral-600 = 4,04:1, e o título tem 16px bold (não conta como texto grande) — AA exige 4,5:1. No coral-700 era 5,64:1.",
-      status: "✅ mesclado em /entrada (03/08, Pedro escolheu consistência sobre AA)",
+      status:
+        "✅ mesclado em /entrada (03/08, Pedro escolheu consistência sobre AA)",
     },
   ],
   "veredito-atende": [
     {
       id: "UX-65",
       oque: "'Outras opções compatíveis' + % de compatibilidade no card de cima. Os cards são clicáveis: tocar promove a opção pro topo e devolve a antiga pra lista.",
-      status: "✅ mesclado em /veredito/atende (03/08) — prop `mostrarAlternativas` já existia no VereditoView desde 31/07, só o wrapper de produção não passava",
+      status:
+        "✅ mesclado em /veredito/atende (03/08) — prop `mostrarAlternativas` já existia no VereditoView desde 31/07, só o wrapper de produção não passava",
     },
     {
       id: "⚠️ decidir (obsoleto)",
@@ -767,14 +805,16 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
     {
       id: "UX-64",
       oque: "Ganhou saídas: 'Ler o blog', 'Conhecer o site' e 'Voltar ao início'. A tela aprovada só oferece 'Falar com um contador agora' — quem não quer falar com ninguém agora fica sem pra onde ir.",
-      status: "✅ 'Voltar ao início' mesclado (03/08, real: /entrada) — 'Ler o blog'/'Conhecer o site' seguem 🔴, blog/site ainda sem rota",
+      status:
+        "✅ 'Voltar ao início' mesclado (03/08, real: /entrada) — 'Ler o blog'/'Conhecer o site' seguem 🔴, blog/site ainda sem rota",
     },
   ],
   "veredito-mauro-enviado": [
     {
       id: "UX-64",
       oque: "Mesmas saídas da waitlist. Na tela aprovada este estado não tem CTA nenhum — é beco puro.",
-      status: "✅ 'Voltar ao início' mesclado (03/08, real: /entrada) — 'Ler o blog'/'Conhecer o site' seguem 🔴, blog/site ainda sem rota",
+      status:
+        "✅ 'Voltar ao início' mesclado (03/08, real: /entrada) — 'Ler o blog'/'Conhecer o site' seguem 🔴, blog/site ainda sem rota",
     },
   ],
   conta: [
@@ -786,12 +826,14 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
     {
       id: "UX-72",
       oque: "Cadastro por Google/Apple agora CONECTA de verdade: nome e e-mail vêm do provedor, a tela mostra um card 'conectado como…' (com opção de trocar) e pede só o que falta — CPF, telefone e endereço, que nenhum provedor fornece. Senha some (conta social não tem).",
-      status: "🟡 visual mesclado (layout='painel', 03/08); `conectar()` segue MOCK — falta OAuth real (Google/Apple)",
+      status:
+        "🟡 visual mesclado (layout='painel', 03/08); `conectar()` segue MOCK — falta OAuth real (Google/Apple)",
     },
     {
       id: "UX-73",
       oque: "A pergunta 'é a primeira empresa?' virou OBRIGATÓRIA (inclusive no cadastro social). ⚠️ Contraria a decisão UX-48, que a definiu como 'dado puro, pulável sem custo' — lá o racional era não cobrar fricção por algo que não muda nada no fluxo.",
-      status: "🔴 NÃO mesclado de propósito (03/08): ao ligar layout='painel' em produção, a coorte ficou opcional (regra já travada da UX-48) — essa parte da demo continua deslinkada até decisão explícita",
+      status:
+        "🔴 NÃO mesclado de propósito (03/08): ao ligar layout='painel' em produção, a coorte ficou opcional (regra já travada da UX-48) — essa parte da demo continua deslinkada até decisão explícita",
     },
   ],
   plano: [
@@ -818,14 +860,16 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
     {
       id: "✅ RESOLVIDO 26/08",
       oque: "Era a 'pendência real de spec' documentada há semanas: o add-on de endereço fiscal não aparecia aqui, e a 'conta total' desta tela não era total. Reunião Rua Satélite 36 (item 2) resolveu na raiz: a escolha 'endereço próprio × fiscal Legalizai' saiu do C4 (pós-pagamento) e subiu pro E5F (`FaixaView`, antes do cadastro) — quando escolhido, o valor já soma na mensalidade mostrada aqui, com 1 linha de explicação ('Inclui R$60/mês de endereço fiscal, porque você optou por usar o nosso').",
-      status: "✅ aplicado em PlanoView + PlanoOferta (prop `enderecoFiscal`, `wizard-dinheiro.tsx`)",
+      status:
+        "✅ aplicado em PlanoView + PlanoOferta (prop `enderecoFiscal`, `wizard-dinheiro.tsx`)",
     },
   ],
   pagamento: [
     {
       id: "🐛 BUG-04",
       oque: "CPF pedido DUAS VEZES. O E6 virou front-load em 28/07 e passou a coletar CPF, mas o E9 continuava abrindo campo vazio e pedindo de novo. É literalmente o '1 dado duplicado sem reuso (CPF pedido 2x)' que o cruzamento com os dados da JUCEMG pegou na reunião de 28/07: a correção foi aplicada no C1 e esqueceu esta tela. Agora o E9 só EXIBE o CPF: como ele já foi digitado e validado no cadastro, não há o que reconfirmar nem editar (decisão do Pedro, 29/07).",
-      status: "✅ corrigido — ⚠️ na produção só funciona com persistência (RF-01)",
+      status:
+        "✅ corrigido — ⚠️ na produção só funciona com persistência (RF-01)",
     },
     {
       id: "UX-77",
@@ -886,7 +930,8 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
     {
       id: "🔄 26/08 — escolha saiu daqui",
       oque: "A pergunta 'próprio × fiscal Legalizai' e o aviso de cobrança recorrente SAÍRAM desta tela (reunião Rua Satélite 36, item 2) — moram no E5F desde antes do cadastro, e o valor já vem confirmado do E7. Esta tela agora só CONFIRMA a escolha (card read-only, mesma doutrina do C3 pra sócios) e coleta os detalhes de endereço (CEP/IPTU/tipo) quando for próprio.",
-      status: "✅ aplicado — prop `enderecoProprio` em `EmpresaView` (`wizard-dossie.tsx`)",
+      status:
+        "✅ aplicado — prop `enderecoProprio` em `EmpresaView` (`wizard-dossie.tsx`)",
     },
     {
       id: "✍️ título",
@@ -923,12 +968,14 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
     {
       id: "✍️ reduzido (2ª passada)",
       oque: "'Conferir o nome' + 'Montar o contrato social' — os 2 passos ANTES da análise — eram trabalho NOSSO nos bastidores, não algo que o cliente reconhece ter feito. Viraram 1 status só: 'Documentação completa preenchida', já verde ao chegar no painel. Lista caiu de 4 pra 3.",
-      status: "✅ aplicado — índices de `concluidas`/`emAndamento` ajustados em /painel, /painel/recusa e na demo (2/2 → 1/1)",
+      status:
+        "✅ aplicado — índices de `concluidas`/`emAndamento` ajustados em /painel, /painel/recusa e na demo (2/2 → 1/1)",
     },
     {
       id: "🔄 26/08 (3ª passada) — item 6",
       oque: "O pagamento da DAE (taxa da Junta), que desde 28/07 era timing de BACKEND (paga no E9 junto da mensalidade, a gente segura e repassa depois), voltou a ser etapa VISÍVEL: reunião Rua Satélite 36 decidiu que o cliente só paga DEPOIS que a viabilidade sai, com um CTA coral inline aqui no painel ('Pagar a guia agora' — 'pagardar', literal da reunião). 'Agora é só assinar' passa a depender dessa etapa nova, não só do deferimento. Lista voltou de 3 pra 4.",
-      status: "✅ aplicado — `Etapa.acaoCliente` + `onPagarDae` (`components/painel.tsx`)",
+      status:
+        "✅ aplicado — `Etapa.acaoCliente` + `onPagarDae` (`components/painel.tsx`)",
     },
   ],
   assinatura: [
@@ -940,14 +987,16 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
     {
       id: "🔄 26/08 — item 7",
       oque: "Reunião Rua Satélite 36: o certificado digital agora é validado ANTES desta assinatura (tela nova, A3.2 `CertificadoGateView`, `/certificado`), não depois — a procuração que sai junto da assinatura EXIGE o certificado já validado, e a ordem antiga (certificado só na home de ativação, depois de já ter assinado) era uma inconsistência real, não só preferência de ordenação. Não está mesclado nesta timeline de carrossel (fica como rota própria, fora do passo-a-passo guiado) — só a documentação e o componente real existem por enquanto.",
-      status: "🟡 componente/rota real existem (`/certificado`); NÃO entrou no carrossel guiado desta apresentação",
+      status:
+        "🟡 componente/rota real existem (`/certificado`); NÃO entrou no carrossel guiado desta apresentação",
     },
   ],
   ativacao: [
     {
       id: "🔓 SWAP",
       oque: "O que vem depois da assinatura NÃO é a antiga 'empresa ativa' (3 primeiros passos genéricos, removida 30/07): é esta home de dia-1 (A5), que trata o certificado como item 'agora' de uma trilha (1 de 3), não como coisa já liberada. ⚠️ Autocrítica: a 1ª tentativa desta correção trouxe a tela ERRADA (`/certificado`, um gate isolado que também existe, também chamado de 'A5' num doc antigo) — o Pedro mandou o print da tela real pra corrigir.",
-      status: "✅ corrigido — HomeAtivacaoView substitui o que era CertificadoView na sequência",
+      status:
+        "✅ corrigido — HomeAtivacaoView substitui o que era CertificadoView na sequência",
     },
     {
       id: "🔄 26/08 — item 7 (segue do achado acima)",
@@ -964,21 +1013,24 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
     {
       id: "🐛 BUG-11",
       oque: "O `/pagamento` de produção mandava TODO MUNDO direto pro dossiê, inclusive quem pagou boleto. A aresta `E9--boleto-->E9.1` do mapa (`flow-data.mjs`) nunca tinha sido implementada — a E9.1 existia como rota isolada, sem ninguém apontando pra ela.",
-      status: "✅ corrigido no wrapper de produção `/pagamento` — boleto agora passa por E9.1 antes do C1",
+      status:
+        "✅ corrigido no wrapper de produção `/pagamento` — boleto agora passa por E9.1 antes do C1",
     },
   ],
   retomar: [
     {
       id: "🐛 BUG-12",
       oque: "'Continuar de onde parei' não navegava.",
-      status: "✅ corrigido — segue pro C1 (mesma aresta do mapa: reentrada aterrissa no início do dossiê)",
+      status:
+        "✅ corrigido — segue pro C1 (mesma aresta do mapa: reentrada aterrissa no início do dossiê)",
     },
   ],
   "fora-bh": [
     {
       id: "UX-62",
       oque: "Virou lista de espera classificada: etiqueta '📍 Outra cidade' + campo obrigatório 'qual a sua cidade?' + confirmação que promete só avisar (a oficial promete ligação em 1 dia útil, que aqui não se cumpre).",
-      status: "✅ mesclado em /saida/fora-bh (03/08) — 'Voltar ao início' real; blog/site continuam sem rota",
+      status:
+        "✅ mesclado em /saida/fora-bh (03/08) — 'Voltar ao início' real; blog/site continuam sem rota",
     },
   ],
   perguntando: [
@@ -997,7 +1049,8 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
     {
       id: "UX-67",
       oque: "Pergunta do exterior virou condicional: some no 'Só eu', e só aparece depois de escolher o nº de sócios. O título se dirige a quem existe — 2 sócios: 'Seu sócio mora fora do Brasil?'; 3+: 'Algum sócio mora fora do Brasil?'. ⚠️ Ressalva fiscal: o gate do E4 confirma onde fica a EMPRESA (BH), não onde a pessoa MORA — sócio único domiciliado fora derruba o Simples igual (LC 123 art.17). Alternativa sem furo pro caso solo: 'Você mora fora do Brasil?' em vez de remover.",
-      status: "🔴 decisão do Pedro (risco de falso-negativo antes do pagamento)",
+      status:
+        "🔴 decisão do Pedro (risco de falso-negativo antes do pagamento)",
     },
   ],
   faixa: [
@@ -1016,12 +1069,14 @@ const DIVERGENCIAS: Partial<Record<Momento, { id: string; oque: string; status: 
     {
       id: "UX-64",
       oque: "Decline limpo ganhou saídas ('Ler o blog', 'Conhecer o site', 'Voltar ao início'). A tela aprovada não tem CTA nenhum: explica e para, sem oferecer pra onde ir.",
-      status: "✅ 'Voltar ao início' mesclado (03/08, real: /entrada) — 'Ler o blog'/'Conhecer o site' seguem 🔴, blog/site ainda sem rota",
+      status:
+        "✅ 'Voltar ao início' mesclado (03/08, real: /entrada) — 'Ler o blog'/'Conhecer o site' seguem 🔴, blog/site ainda sem rota",
     },
     {
       id: "demo",
       oque: "O 3º desfecho 🔴 ('ninguém atende') sai do mesmo campo que os outros.",
-      status: "✅ 06/08: mapear() virou fonte única (@/lib/mock-veredito) — /gate agora também tem os 4 desfechos, só o VALOR do split ainda é mock (a IA real depende da lista de CNAEs, fila Larissa)",
+      status:
+        "✅ 06/08: mapear() virou fonte única (@/lib/mock-veredito) — /gate agora também tem os 4 desfechos, só o VALOR do split ainda é mock (a IA real depende da lista de CNAEs, fila Larissa)",
     },
   ],
 };
@@ -1068,7 +1123,9 @@ function porRota(nodes: { rota: string | null; label: string }[]) {
 }
 
 const LABEL_POR_ROTA: Record<string, string> = {
-  ...Object.fromEntries(GRUPOS.flatMap((g) => g.telas.map((t) => [t.rota, t.nome] as const))),
+  ...Object.fromEntries(
+    GRUPOS.flatMap((g) => g.telas.map((t) => [t.rota, t.nome] as const)),
+  ),
   ...porRota(grafoFlow.nodes as { rota: string | null; label: string }[]),
 };
 
@@ -1135,7 +1192,8 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   "splash-atividades": "/splash-atividades",
   nome: "/dossie/nome",
   "nome-rodada2": "/dossie/nome/rodada-2",
-  "splash-nomes": "/splash-nomes?next=/aguardando%3Ffase%3Djunta%26viabilidade%3D1",
+  "splash-nomes":
+    "/splash-nomes?next=/aguardando%3Ffase%3Djunta%26viabilidade%3D1",
   "status-viabilidade": "/aguardando?fase=junta&viabilidade=1",
   conferencia: "/conferencia",
   revisar: "/revisar",
@@ -1172,16 +1230,30 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   // 🐛 02/09 — apontava pro `/splash-pagamento` cru, que é o splash do
   // PAGAMENTO DO PLANO (E9.S). O painel então dizia "E9.S · Splash 'pagamento
   // confirmado'" numa tela que é da GUIA da Junta. Rota completa do A3.PS.
-  "guia-splash": "/splash-pagamento?next=/aguardando%3Ffase%3Djunta%26guia%3Dpaga",
-  "guia-splash-boleto": "/splash-boleto?next=/aguardando%3Ffase%3Djunta%26guia%3Dboleto",
+  "guia-splash":
+    "/splash-pagamento?next=/aguardando%3Ffase%3Djunta%26guia%3Dpaga",
+  "guia-splash-boleto":
+    "/splash-boleto?next=/aguardando%3Ffase%3Djunta%26guia%3Dboleto",
   "guia-boleto": "/aguardando?fase=junta&guia=boleto",
   "guia-paga": "/aguardando?fase=junta&guia=paga",
   "status-assinatura-1": "/aguardando?fase=junta&guia=paga&assinatura=1",
   "assistida-passagem": "/aguardando?fase=junta&guia=paga&rota=assistida",
   "assistida-agendar": "/agendar",
   "assistida-ativacao": "/home-dia1?rota=assistida",
+  /* 🔄 05/09 (auditoria) — saiu o `&agendado=`: a frase deixou de viajar, e o
+     compromisso agora é só as partes (ver `lib/compromisso`). */
   "assistida-marcado":
-    "/aguardando?fase=junta&guia=paga&rota=assistida&agendado=Hoje%20%C3%A0s%2015%3A00&dia=5&semana=Sex&mes=Set&hora=15%3A00&hoje=1",
+    "/aguardando?fase=junta&guia=paga&rota=assistida&dia=5&semana=Sex&mes=Set&hora=15%3A00&hoje=1",
+  "assistida-passagem-socio":
+    "/aguardando?fase=junta&guia=paga&rota=assistida&socios=2",
+  "assistida-agendar-socio": "/agendar?socios=2",
+  "assistida-marcado-socio":
+    "/aguardando?fase=junta&guia=paga&rota=assistida&socios=2&dia=5&semana=Sex&mes=Set&hora=15%3A00&hoje=1",
+  "assistida-passagem-2":
+    "/aguardando?fase=junta&guia=paga&rota=assistida&assinatura=1",
+  "assistida-agendar-2": "/agendar?rodada=2",
+  "assistida-marcado-2":
+    "/aguardando?fase=junta&guia=paga&rota=assistida&assinatura=1&dia=8&semana=Seg&mes=Set&hora=09%3A30",
   "conta-cpf-divergente": "/conta?cpf=nome",
   "assinatura-2": "/assinatura?rodada=2",
 };
@@ -1198,7 +1270,7 @@ const NOME_MOCKUP: Record<Momento, string> = Object.fromEntries(
   (Object.keys(ROTA_POR_MOMENTO) as Momento[]).map((m) => [
     m,
     (LABEL_POR_ROTA[ROTA_POR_MOMENTO[m]!] ?? m) + (SUFIXO_MOMENTO[m] ?? ""),
-  ])
+  ]),
 ) as Record<Momento, string>;
 NOME_MOCKUP.fim = "— fim do piloto —";
 // 🆕 29/08 — a rota real leva query string (`/entrada?intencao=abrir`), que
@@ -1270,16 +1342,16 @@ function rotuloCurto(nome: string): string {
  * ═════════════════════════════════════════════════════════════════════════ */
 const MOMENTO_POR_NO: Record<string, Etapa | null> = {
   E1: "splash",
-  E2_1: "welcome",  // 3 slides = 1 tela na demo
-  E2_2: "welcome",  // idem
-  E2_3: "welcome",  // idem
+  E2_1: "welcome", // 3 slides = 1 tela na demo
+  E2_2: "welcome", // idem
+  E2_3: "welcome", // idem
   E3: "fork",
   E3_1: "login",
   E3_3: "dados",
   E3_2: "mei-ou-me",
-  E3_2_M: null,  // 🕳️ variante Migrar do E3.2 não existe na demo (o fork pula de dados pra m-cnpj)
+  E3_2_M: null, // 🕳️ variante Migrar do E3.2 não existe na demo (o fork pula de dados pra m-cnpj)
   E3_4: "endereco",
-  E3_4_1: "fora-bh",  // abre no gate, antes do envio
+  E3_4_1: "fora-bh", // abre no gate, antes do envio
   E4_2: "m-cnpj",
   E4_2_1: "m-cnpj-inapto",
   E4_2B_1: "saida-regime",
@@ -1293,16 +1365,16 @@ const MOMENTO_POR_NO: Record<string, Etapa | null> = {
   E9_3: "m-transferencia",
   E9_4: "m-ativa",
   E5T: "triagem",
-  E5T_1: null,  // 🕳️ gate inline do sócio que não encaixa não tem estado próprio na demo
+  E5T_1: null, // 🕳️ gate inline do sócio que não encaixa não tem estado próprio na demo
   E5F: "faixa",
   E5F_S: "splash-atendido",
-  E5_1: "veredito",  // é um DESFECHO do veredito, não tela própria: o preparo força o resultado
-  E5_2: "veredito",  // idem — desfecho "quem o Mauro atende" (comércio)
-  E5_3: "veredito",  // idem — desfecho "fora de escopo"
-  E6: "conta",  // abre no form
-  E6_1: "conta-codigo",  // 🆕 04/09 — o código virou tela do flow, com pill própria
+  E5_1: "veredito", // é um DESFECHO do veredito, não tela própria: o preparo força o resultado
+  E5_2: "veredito", // idem — desfecho "quem o Mauro atende" (comércio)
+  E5_3: "veredito", // idem — desfecho "fora de escopo"
+  E6: "conta", // abre no form
+  E6_1: "conta-codigo", // 🆕 04/09 — o código virou tela do flow, com pill própria
   E7: "plano",
-  E7_1: "plano",  // mesma tela, variante endereço fiscal (o preparo força o estado)
+  E7_1: "plano", // mesma tela, variante endereço fiscal (o preparo força o estado)
   E9: "pagamento",
   E9_M: "m-pagamento",
   E9_S: "splash-pagamento",
@@ -1325,20 +1397,20 @@ const MOMENTO_POR_NO: Record<string, Etapa | null> = {
   C5: "cnae-secundarios",
   C5_S: "splash-atividades",
   C7: "nome",
-  C0_1: "retomar-cpf",  // abre na porta de CPF
-  C0_3: "retomar-codigo",  // 🆕 04/09 — o código da reentrada
+  C0_1: "retomar-cpf", // abre na porta de CPF
+  C0_3: "retomar-codigo", // 🆕 04/09 — o código da reentrada
   C7_2: "nome-rodada2",
   C7_2S: "splash-nomes",
   A1: "revisar",
   A2: "iniciar-viabilidade",
   A3: "painel",
-  A3_M: "painel",  // mesma tela no regime MEI (o preparo força o estado)
+  A3_M: "painel", // mesma tela no regime MEI (o preparo força o estado)
   A3_1: "painel-recusa",
   A3_P: "guia",
   A3_SR: "guia-recusada",
   A3_R: "guia-retry",
   A3_PS: "guia-splash",
-  A3_PSB: "guia-splash-boleto",  // 🆕 04/09 — construído (era o único "sem tela ainda" da cauda)
+  A3_PSB: "guia-splash-boleto", // 🆕 04/09 — construído (era o único "sem tela ainda" da cauda)
   A3_GP: "guia-paga",
   A3_GB: "guia-boleto",
   A3_V: "status-viabilidade",
@@ -1349,6 +1421,13 @@ const MOMENTO_POR_NO: Record<string, Etapa | null> = {
   A3_H: "assistida-passagem",
   A3_H1: "assistida-agendar",
   A3_H2: "assistida-marcado",
+  A3_HS: "assistida-passagem-socio",
+  A3_H1S: "assistida-agendar-socio",
+  A3_H2S: "assistida-marcado-socio",
+  // 🆕 05/09 — o ciclo da 2ª assinatura (a que gera o CNPJ, com o contador).
+  A3_H3: "assistida-passagem-2",
+  A3_H4: "assistida-agendar-2",
+  A3_H5: "assistida-marcado-2",
   A5_H: "assistida-ativacao",
   A4_2: "assinatura-2",
   E6_2: "conta-cpf-divergente",
@@ -1391,7 +1470,9 @@ const TITULO_HERDADO_OK = ["E2_1", "E2_2", "E2_3", "A3", "E9_SR"] as const;
 if (process.env.NODE_ENV !== "production") {
   for (const id of TITULO_HERDADO_OK) {
     if (!(id in MOMENTO_POR_NO)) {
-      console.warn(`[apresentacao] TITULO_HERDADO_OK cita nó inexistente: ${id}`);
+      console.warn(
+        `[apresentacao] TITULO_HERDADO_OK cita nó inexistente: ${id}`,
+      );
     }
   }
 }
@@ -1467,11 +1548,15 @@ function noVariante(
   return null;
 }
 
-const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; porque: string }> = {
+const DESCRICOES: Record<
+  Momento,
+  { dono: Dono; faz: string; interfere: string; porque: string }
+> = {
   splash: {
     dono: null,
     faz: "A marca se apresenta em tela cheia — o único momento do produto inteiro em que o coral cobre o vidro todo.",
-    interfere: "Não pede nem grava nenhum dado. É pura apresentação de marca, antes de qualquer pergunta.",
+    interfere:
+      "Não pede nem grava nenhum dado. É pura apresentação de marca, antes de qualquer pergunta.",
     porque:
       "Logo negativa com o check em wipe: o mesmo gesto de 'conferido' que o confete do veredito 🟢 ecoa lá na frente. Não auto-navega por escolha, nem aqui nem em produção — a ponte /splash→/welcome ainda não foi ligada a lugar nenhum, então a demo precisa de um toque próprio pra seguir.",
   },
@@ -1486,7 +1571,8 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   fork: {
     dono: "usuario",
     faz: "Divide o produto em dois caminhos: quem ainda não tem CNPJ vai pro fluxo de abertura; quem já tem vai pro fluxo de migração. Quem já é cliente entra na conta.",
-    interfere: "Define QUAL processo será executado. Abrir empresa e migrar contabilidade são operações completamente diferentes na Junta e na Receita.",
+    interfere:
+      "Define QUAL processo será executado. Abrir empresa e migrar contabilidade são operações completamente diferentes na Junta e na Receita.",
     porque:
       "A copy pergunta pelo FATO ('já tenho empresa'), nunca pela operação ('migrar'). 'Migrar' é jargão e excluiria quem não tem contador nenhum — que é justamente o caso mais fácil pra gente, porque não existe distrato nem transferência de responsabilidade técnica.",
   },
@@ -1533,37 +1619,47 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   "perguntando-vazio": {
     dono: "usuario",
     faz: "A chegada da C0: a pessoa acabou de pousar aqui e ainda não contou o que faz. Só a categoria (que veio pronta do E3.4) e o campo de descrição — sem os cartões de código e sem o slot da atividade principal, porque não há o que mostrar antes da pergunta.",
-    interfere: "Nada ainda: é a tela que COLETA o dado que decide o CNAE. O que interfere de fato acontece no estado seguinte, quando os códigos aparecem.",
-    porque: "🟡 Em lapidação (02/09). Ela existe porque mostrar 3 códigos antes de a pessoa descrever seria fingir que a IA adivinhou — e porque a versão com resultados é uma tela visualmente cheia, que não pode ser a primeira impressão de quem acabou de pagar.",
+    interfere:
+      "Nada ainda: é a tela que COLETA o dado que decide o CNAE. O que interfere de fato acontece no estado seguinte, quando os códigos aparecem.",
+    porque:
+      "🟡 Em lapidação (02/09). Ela existe porque mostrar 3 códigos antes de a pessoa descrever seria fingir que a IA adivinhou — e porque a versão com resultados é uma tela visualmente cheia, que não pode ser a primeira impressão de quem acabou de pagar.",
   },
   perguntando: {
     dono: "usuario",
     faz: "A pessoa descreve o que faz (texto livre) ou já entra com o número do CNAE, se souber. As pills só afunilam o universo — quem decide é a IA cruzando com o texto.",
-    interfere: "O CNAE encontrado aqui é o que trava nome empresarial, objeto social e o registro na Junta Comercial mais à frente. Errar aqui é retrabalho lá na frente.",
-    porque: "Pill sozinha não vale como resposta (decisão travada 17/07) — o texto livre é o dado que a IA de fato usa pra mapear o código certo.",
+    interfere:
+      "O CNAE encontrado aqui é o que trava nome empresarial, objeto social e o registro na Junta Comercial mais à frente. Errar aqui é retrabalho lá na frente.",
+    porque:
+      "Pill sozinha não vale como resposta (decisão travada 17/07) — o texto livre é o dado que a IA de fato usa pra mapear o código certo.",
   },
   "veredito-atende": {
     dono: "usuario",
     faz: "Confirma o enquadramento encontrado em linguagem humana, com o CNAE como recibo discreto.",
-    interfere: "Esse é o CNAE que vai literalmente pra Junta e pra Receita — nome da empresa e objeto social nascem dele.",
-    porque: "Nenhum dado novo é pedido aqui — é confirmação. A gaveta 'e se eu faço mais de uma coisa?' é o guarda-corpo contra o falso-🟢.",
+    interfere:
+      "Esse é o CNAE que vai literalmente pra Junta e pra Receita — nome da empresa e objeto social nascem dele.",
+    porque:
+      "Nenhum dado novo é pedido aqui — é confirmação. A gaveta 'e se eu faço mais de uma coisa?' é o guarda-corpo contra o falso-🟢.",
   },
   "veredito-waitlist": {
     dono: "usuario",
     faz: "Explica honestamente que a atividade é regulamentada (ainda não atendemos) e oferece entrar na lista de espera.",
-    interfere: "Não abre CNPJ agora. Gera um lead qualificado pro nosso time, já com o enquadramento encontrado anotado.",
-    porque: "Nome + contato é o mínimo pra retomar sem pedir tudo de novo depois.",
+    interfere:
+      "Não abre CNPJ agora. Gera um lead qualificado pro nosso time, já com o enquadramento encontrado anotado.",
+    porque:
+      "Nome + contato é o mínimo pra retomar sem pedir tudo de novo depois.",
   },
   "veredito-waitlist-enviado": {
     dono: "nossa",
     faz: "Confirma que o contato foi registrado na lista de espera.",
-    interfere: "A partir daqui é nosso time que avisa quando abrirmos pra essa atividade.",
+    interfere:
+      "A partir daqui é nosso time que avisa quando abrirmos pra essa atividade.",
     porque: "Fecha o loop — sem essa tela o lead 'sumiria' sem confirmação.",
   },
   "veredito-mauro": {
     dono: "usuario",
     faz: "Explica que o app não atende esse caso (ex. comércio), mas a Legalize Digital atende do jeito tradicional.",
-    interfere: "Não abre CNPJ pelo app. Gera lead direto pro escritório do Mauro.",
+    interfere:
+      "Não abre CNPJ pelo app. Gera lead direto pro escritório do Mauro.",
     porque: "Nome + contato é o mínimo pro escritório retomar já com contexto.",
   },
   "veredito-mauro-enviado": {
@@ -1576,37 +1672,48 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     dono: null,
     faz: "Decline limpo: explica que ninguém atende esse caso (nem a gente, nem regulado, nem o Mauro).",
     interfere: "Encerra o funil aqui — sem fingir uma rota que não existe.",
-    porque: "Honestidade > beco sem saída silencioso (doutrina das telas de saída, A9).",
+    porque:
+      "Honestidade > beco sem saída silencioso (doutrina das telas de saída, A9).",
   },
   triagem: {
     dono: "usuario",
     faz: "Perguntas rápidas: quantos sócios, se o sócio é CPF ou CNPJ (🆕 24/08), e se alguém mora fora do Brasil.",
-    interfere: "Mais de 4 sócios, sócio pessoa jurídica ou sócio no exterior barra o MLP/Simples — descobrir isso aqui evita cobrar de quem não pode abrir.",
-    porque: "Fail-fast (UX-21): com a cobrança logo depois, o que mata elegibilidade tem que ser perguntado ANTES do dinheiro.",
+    interfere:
+      "Mais de 4 sócios, sócio pessoa jurídica ou sócio no exterior barra o MLP/Simples — descobrir isso aqui evita cobrar de quem não pode abrir.",
+    porque:
+      "Fail-fast (UX-21): com a cobrança logo depois, o que mata elegibilidade tem que ser perguntado ANTES do dinheiro.",
   },
   faixa: {
     dono: "usuario",
     faz: "Pergunta quanto a pessoa espera faturar por mês — faixa guiada ou valor exato.",
-    interfere: "Alimenta o cálculo de enquadramento e Fator R nas telas seguintes (a conta da abertura e o pró-labore).",
-    porque: "Base necessária pra estimar corretamente o que a empresa vai pagar — sem isso o resto do fluxo chuta. 🔄 01/09: as faixas foram redesenhadas pro teto real do ME (R$30 mil/mês = R$360 mil/ano). A opção +R$30 mil saiu: oferecia justamente o que a Legalizai não atende, e a decisão de 01/09 foi não barrar por faturamento — quem fatura mais informa o valor exato e segue, pra ser acompanhado e desenquadrado pra EPP quando fizer sentido.",
+    interfere:
+      "Alimenta o cálculo de enquadramento e Fator R nas telas seguintes (a conta da abertura e o pró-labore).",
+    porque:
+      "Base necessária pra estimar corretamente o que a empresa vai pagar — sem isso o resto do fluxo chuta. 🔄 01/09: as faixas foram redesenhadas pro teto real do ME (R$30 mil/mês = R$360 mil/ano). A opção +R$30 mil saiu: oferecia justamente o que a Legalizai não atende, e a decisão de 01/09 foi não barrar por faturamento — quem fatura mais informa o valor exato e segue, pra ser acompanhado e desenquadrado pra EPP quando fizer sentido.",
   },
   "saida-exterior": {
     dono: null,
     faz: "Explica que a empresa pode existir, mas fora do Simples — a lei (LC 123 art.17) barra a opção pelo Simples com sócio domiciliado no exterior.",
-    interfere: "Encerra o funil do app (que só faz Simples). Não é 'não pode abrir empresa', é 'não pelo Simples' — confundir as duas seria uma notícia pior que a verdadeira.",
-    porque: "Honestidade > beco sem saída silencioso (doutrina das telas de saída, A9). Roteia pro time contábil, que atende esse regime fora do app.",
+    interfere:
+      "Encerra o funil do app (que só faz Simples). Não é 'não pode abrir empresa', é 'não pelo Simples' — confundir as duas seria uma notícia pior que a verdadeira.",
+    porque:
+      "Honestidade > beco sem saída silencioso (doutrina das telas de saída, A9). Roteia pro time contábil, que atende esse regime fora do app.",
   },
   "saida-socios": {
     dono: null,
     faz: "Explica que o limite de 4 sócios é do PRODUTO, não da lei — a sociedade é legal, só o app que ainda não abre com 5+.",
-    interfere: "Encerra o funil do app. 'Ainda' porque o limite pode cair (subiu de 2 pra 4 em 24/08, reunião Leonan — não é regra externa).",
-    porque: "Dizer que o limite é nosso custa orgulho e compra confiança — mesma escolha da doutrina anti-guru. Roteia pro escritório, que já faz esse tipo de abertura fora do app.",
+    interfere:
+      "Encerra o funil do app. 'Ainda' porque o limite pode cair (subiu de 2 pra 4 em 24/08, reunião Leonan — não é regra externa).",
+    porque:
+      "Dizer que o limite é nosso custa orgulho e compra confiança — mesma escolha da doutrina anti-guru. Roteia pro escritório, que já faz esse tipo de abertura fora do app.",
   },
   "saida-socio-pj": {
     dono: null,
     faz: "Explica que sócio pessoa jurídica tira a empresa do Simples Nacional no ato do contrato social — regra fiscal, não limite nosso.",
-    interfere: "Encerra o funil do app (só atende Simples hoje). Diferente do limite de sócios: aqui é a LEI que empurra pro Presumido/Real, não uma escolha nossa.",
-    porque: "🆕 24/08 (reunião Leonan 19/08 + pedido do Pedro) — bloqueia na TRIAGEM, antes do dinheiro, em vez de deixar a pessoa avançar e travar só lá no C3 do dossiê. Roteia pro escritório, que atende Presumido fora do app.",
+    interfere:
+      "Encerra o funil do app (só atende Simples hoje). Diferente do limite de sócios: aqui é a LEI que empurra pro Presumido/Real, não uma escolha nossa.",
+    porque:
+      "🆕 24/08 (reunião Leonan 19/08 + pedido do Pedro) — bloqueia na TRIAGEM, antes do dinheiro, em vez de deixar a pessoa avançar e travar só lá no C3 do dossiê. Roteia pro escritório, que atende Presumido fora do app.",
   },
   "m-impedimento": {
     dono: "nossa",
@@ -1737,7 +1844,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     interfere:
       "Estado civil e regime de bens vão no contrato social e podem CONVOCAR outra pessoa: na comunhão universal, o cônjuge assina esta abertura. Descobrir isso no cartório trava tudo; descobrir aqui é só um aviso. O resto é a qualificação que o art. 997 do Código Civil exige de todo sócio — sem ela o contrato não é lavrado.",
     porque:
-      "Nome, CPF, telefone e endereço não são pedidos de novo — eles subiram pro E6 no front-load de 28/07. Esta tela vira CONFIRMAÇÃO. Nome da mãe SAIU em 01/09: não existe em nenhum dos 141 prints da JUCEMG/DBE, era campo obrigatório sem consumidor. Nacionalidade ENTROU no mesmo dia, já preenchida com \"Brasileira\" — o sócio extra tinha, o titular não. O RG a Junta já não exige mais (o CPF virou o identificador); mantemos porque entra no contrato e custa pouco perguntar.",
+      'Nome, CPF, telefone e endereço não são pedidos de novo — eles subiram pro E6 no front-load de 28/07. Esta tela vira CONFIRMAÇÃO. Nome da mãe SAIU em 01/09: não existe em nenhum dos 141 prints da JUCEMG/DBE, era campo obrigatório sem consumidor. Nacionalidade ENTROU no mesmo dia, já preenchida com "Brasileira" — o sócio extra tinha, o titular não. O RG a Junta já não exige mais (o CPF virou o identificador); mantemos porque entra no contrato e custa pouco perguntar.',
   },
   vinculo: {
     dono: "usuario",
@@ -1749,11 +1856,11 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   },
   socios: {
     dono: "usuario",
-    faz: "🆕 01/09 — ganhou a pergunta \"Quem vai administrar a empresa?\", logo depois dos dados do sócio. Com 1 sócio é sim/não no singular (\"Eu e o Carlos\"); com 2+ vira LISTA de nomes com check, porque dá pra ter sócio que administra e sócio que é só sócio. Confirma se a empresa tem mais sócios e, se tiver, coleta a qualificação completa de cada um: nome, CPF, participação, nascimento, nacionalidade, RG + órgão, estado civil (+ regime) e endereço.",
+    faz: '🆕 01/09 — ganhou a pergunta "Quem vai administrar a empresa?", logo depois dos dados do sócio. Com 1 sócio é sim/não no singular ("Eu e o Carlos"); com 2+ vira LISTA de nomes com check, porque dá pra ter sócio que administra e sócio que é só sócio. Confirma se a empresa tem mais sócios e, se tiver, coleta a qualificação completa de cada um: nome, CPF, participação, nascimento, nacionalidade, RG + órgão, estado civil (+ regime) e endereço.',
     interfere:
       "A divisão em % vai literalmente no contrato social, e o número de sócios determina a natureza jurídica (SLU × LTDA, decidida por dentro). Também define quantas assinaturas o GOV.BR vai exigir no fim.",
     porque:
-      "🆕 01/09 (Rua Satélite 42, simulação de DBE ao vivo): a administração muda UMA coisa no processo — a qualificação de cada sócio no DBE (49 sócio-administrador × 22 sócio) e quem sai na cláusula de administração. Quem inicia o cadastro é sempre administrador (é o representante perante a Receita), por isso o titular aparece travado. 🔴 Não existe pergunta de assinatura isolada × conjunta de propósito: o contrato PADRÃO não tem esse campo, e inserir cláusula tira o processo do padrão e manda pra análise humana. O produto abre com até 4 sócios: é limite nosso, não da lei. A qualificação completa não é zelo, é o art. 997 do Código Civil — sem ela o contrato não é lavrado. CPF e endereço entraram em 01/09, na auditoria contra os 141 prints da JUCEMG: o CPF é a chave do sócio no QSA, e o endereço só veio automático na gravação porque a empresa era de um dono só. Profissão a gente preenche por dentro (\"Empresário\", igual pra todos).",
+      '🆕 01/09 (Rua Satélite 42, simulação de DBE ao vivo): a administração muda UMA coisa no processo — a qualificação de cada sócio no DBE (49 sócio-administrador × 22 sócio) e quem sai na cláusula de administração. Quem inicia o cadastro é sempre administrador (é o representante perante a Receita), por isso o titular aparece travado. 🔴 Não existe pergunta de assinatura isolada × conjunta de propósito: o contrato PADRÃO não tem esse campo, e inserir cláusula tira o processo do padrão e manda pra análise humana. O produto abre com até 4 sócios: é limite nosso, não da lei. A qualificação completa não é zelo, é o art. 997 do Código Civil — sem ela o contrato não é lavrado. CPF e endereço entraram em 01/09, na auditoria contra os 141 prints da JUCEMG: o CPF é a chave do sócio no QSA, e o endereço só veio automático na gravação porque a empresa era de um dono só. Profissão a gente preenche por dentro ("Empresário", igual pra todos).',
   },
   empresa: {
     dono: "usuario",
@@ -1761,13 +1868,15 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     interfere:
       "O índice do IPTU é OBRIGATÓRIO: sem ele a documentação não passa na JUCEMG. O resto já foi decidido antes do pagamento — inclusive a residência do titular, que é o que a Prefeitura de BH usa pra deferir ou indeferir quando o endereço é apartamento.",
     porque:
-      "Área utilizada, atividade inócua, forma de atuação, capital social (R$10.000 fixo desde 31/08) e \"edificação nova\" a gente resolve por dentro, sem perguntar. Só pedimos o que ninguém consegue adivinhar — e \"edificação nova\" é justamente o oposto: termo técnico da Prefeitura que o cliente responderia errado com confiança. Quem não tem endereço comercial compra o nosso aqui, em vez de travar. 🗑️ 01/09: o upsell de endereço fiscal saiu daqui. Ou a pessoa escolheu o nosso endereço lá no E3.4 (e esta tela não existe pra ela), ou informou o dela — e aqui o que já foi respondido vem TRAVADO, com só os campos que faltam editáveis. Vender endereço depois do pagamento seria mexer na mensalidade fora de hora.",
+      'Área utilizada, atividade inócua, forma de atuação, capital social (R$10.000 fixo desde 31/08) e "edificação nova" a gente resolve por dentro, sem perguntar. Só pedimos o que ninguém consegue adivinhar — e "edificação nova" é justamente o oposto: termo técnico da Prefeitura que o cliente responderia errado com confiança. Quem não tem endereço comercial compra o nosso aqui, em vez de travar. 🗑️ 01/09: o upsell de endereço fiscal saiu daqui. Ou a pessoa escolheu o nosso endereço lá no E3.4 (e esta tela não existe pra ela), ou informou o dela — e aqui o que já foi respondido vem TRAVADO, com só os campos que faltam editáveis. Vender endereço depois do pagamento seria mexer na mensalidade fora de hora.',
   },
   "splash-atividades": {
     dono: "nossa",
     faz: "Fecha o bloco ATIVIDADE: confirma que a principal e as secundárias estão definidas e passa pros dados pessoais. Transitório, sem CTA.",
-    interfere: "Nada por si só — é o recibo do que as duas telas anteriores decidiram.",
-    porque: "🆕 02/09. Nasceu junto da remoção do veredito do caminho: o momento de alívio (o 'Achei o seu encaixe', com o check verde) sumiu quando a C0 assumiu o trabalho da C0.2/C0.3. Volta aqui, e num lugar melhor — em vez de confirmar UMA escolha que a pessoa acabou de fazer com o dedo, fecha o assunto inteiro. É o 1º fecho de bloco do dossiê; se o padrão pegar, os outros ganham o seu.",
+    interfere:
+      "Nada por si só — é o recibo do que as duas telas anteriores decidiram.",
+    porque:
+      "🆕 02/09. Nasceu junto da remoção do veredito do caminho: o momento de alívio (o 'Achei o seu encaixe', com o check verde) sumiu quando a C0 assumiu o trabalho da C0.2/C0.3. Volta aqui, e num lugar melhor — em vez de confirmar UMA escolha que a pessoa acabou de fazer com o dedo, fecha o assunto inteiro. É o 1º fecho de bloco do dossiê; se o padrão pegar, os outros ganham o seu.",
   },
   "cnae-secundarios": {
     dono: "usuario",
@@ -1812,7 +1921,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   },
   revisar: {
     dono: "usuario",
-    faz: "Mostra tudo que foi preenchido, seção por seção, com 'Ajustar' em cada uma. 🆕 04/09 (decisão do Pedro): cada seção tem o próprio \"Conferi\" e o CTA final só destrava com todas conferidas, mostrando o progresso no rótulo (\"2 de 4 seções\" → \"Tudo certo, seguir\"). Quem entra pra ajustar precisa reconferir a seção, tenha mudado algo ou não.",
+    faz: 'Mostra tudo que foi preenchido, seção por seção, com \'Ajustar\' em cada uma. 🆕 04/09 (decisão do Pedro): cada seção tem o próprio "Conferi" e o CTA final só destrava com todas conferidas, mostrando o progresso no rótulo ("2 de 4 seções" → "Tudo certo, seguir"). Quem entra pra ajustar precisa reconferir a seção, tenha mudado algo ou não.',
     interfere:
       "É o último ponto em que corrigir é de graça, e o que sai daqui é o PEDIDO DE VIABILIDADE (não o registro, que só acontece depois da guia e da assinatura). O aceite irreversível não mora mais aqui no ME: ele foi pra tela da guia, onde a taxa vira gasto. Quem atravessa esta tela cai no A2, que é a fronteira de verdade.",
     porque:
@@ -1836,15 +1945,15 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   },
   "iniciar-viabilidade": {
     dono: "usuario",
-    faz: "A2, em coral cheio e tela inteira: a casa assume o processo (\"Sua abertura está em boas mãos\"), diz o que vai fazer (entrar com o pedido na Junta e cuidar até a constituição), promete o retorno e só então avisa que nome e endereço passam a ser da Junta. O CTA \"Iniciar viabilidade\" manda os dados. 🔄 04/09 (pedido do Pedro) — a copy era só o aviso (\"Daqui não dá pra voltar\"): fato certo, voz errada. O fato virou a última frase; a promessa virou o título.",
+    faz: 'A2, em coral cheio e tela inteira: a casa assume o processo ("Sua abertura está em boas mãos"), diz o que vai fazer (entrar com o pedido na Junta e cuidar até a constituição), promete o retorno e só então avisa que nome e endereço passam a ser da Junta. O CTA "Iniciar viabilidade" manda os dados. 🔄 04/09 (pedido do Pedro) — a copy era só o aviso ("Daqui não dá pra voltar"): fato certo, voz errada. O fato virou a última frase; a promessa virou o título.',
     interfere:
       "É a fronteira do processo. Antes dela, a tela de status deixa voltar e corrigir qualquer bloco; depois, o botão de ajustar some — porque mudar dado protocolado significa CANCELAR a viabilidade e refazer o pedido, que foi exatamente o que aconteceu ao vivo na gravação de 31/08 (apartamento sem sócio residente). 🆕 04/09 (regra travada com o Pedro): o toque dispara SÓ a análise de viabilidade. A guia da Junta corre em PARALELO — pode ser paga antes ou depois, e o resultado da Junta pode chegar primeiro (contrato padrão no Integrador defere por robô, em minutos). Nenhum dos dois espera o outro, e a tela passou a dizer isso.",
     porque:
-      "O aceite já existe no contrato do E9, mas contrato ninguém lê. Uma tela inteira, com um CTA que precisa ser tocado, transforma a cláusula em momento — e é esse momento que a pessoa vai lembrar se depois pedir pra mudar algo. Usa a pele de splash porque é ela que dá o peso, mas NÃO auto-avança: atravessar aqui tem que ser um ato, não um relógio. 🗣️ Vocabulário travado 04/09: \"a Junta pediu um ajuste\", com a palavra EXIGÊNCIA aparecendo uma vez entre parênteses — é o termo que ela vai reencontrar no e-mail do órgão. Fatos em `pesquisa/exigencias-jucemg.md`: indeferir na hora é raro, o padrão é exigência com 30 dias pra corrigir, e a taxa só se perde se ninguém corrigir no prazo.",
+      'O aceite já existe no contrato do E9, mas contrato ninguém lê. Uma tela inteira, com um CTA que precisa ser tocado, transforma a cláusula em momento — e é esse momento que a pessoa vai lembrar se depois pedir pra mudar algo. Usa a pele de splash porque é ela que dá o peso, mas NÃO auto-avança: atravessar aqui tem que ser um ato, não um relógio. 🗣️ Vocabulário travado 04/09: "a Junta pediu um ajuste", com a palavra EXIGÊNCIA aparecendo uma vez entre parênteses — é o termo que ela vai reencontrar no e-mail do órgão. Fatos em `pesquisa/exigencias-jucemg.md`: indeferir na hora é raro, o padrão é exigência com 30 dias pra corrigir, e a taxa só se perde se ninguém corrigir no prazo.',
   },
   guia: {
     dono: "usuario",
-    faz: "🆕 01/09 — TELA NOVA (A3.P). Pagamento da taxa da Junta (R$ 281,08), aberta pelo CTA que nasce embaixo do passo \"Pague a guia\" no status. É o MESMO PagamentoView do E9, no modo guia.",
+    faz: '🆕 01/09 — TELA NOVA (A3.P). Pagamento da taxa da Junta (R$ 281,08), aberta pelo CTA que nasce embaixo do passo "Pague a guia" no status. É o MESMO PagamentoView do E9, no modo guia.',
     interfere:
       "Sem a guia paga, a Junta não registra e a assinatura não libera. É também onde mora o ACEITE irreversível, que antes ficava no A1: é neste clique que a taxa vira gasto que não volta.",
     porque:
@@ -1864,11 +1973,11 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     interfere:
       "Fecha a etapa da guia: a Junta pode registrar e a assinatura libera. É o mesmo componente do E9.S, com outro destino.",
     porque:
-      "Pagar e cair direto numa lista de 12 passos não dá o respiro de \"deu certo\". O splash existe pra isso, e some sozinho.",
+      'Pagar e cair direto numa lista de 12 passos não dá o respiro de "deu certo". O splash existe pra isso, e some sozinho.',
   },
   "guia-boleto": {
     dono: "nossa",
-    faz: "🆕 01/09 — status DEPOIS de pagar a guia por boleto: a etapa vira \"Guia da Junta · aguardando compensação\", segue girando, e oferece ver o boleto ou adiantar por Pix.",
+    faz: '🆕 01/09 — status DEPOIS de pagar a guia por boleto: a etapa vira "Guia da Junta · aguardando compensação", segue girando, e oferece ver o boleto ou adiantar por Pix.',
     interfere:
       "A Junta só registra com a guia compensada, o que leva de 1 a 3 dias úteis. A etapa não pode voltar a pedir pagamento (a pessoa já pagou) nem fingir que está resolvida.",
     porque:
@@ -1876,7 +1985,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   },
   "guia-paga": {
     dono: "nossa",
-    faz: "🆕 01/09 — o status DEPOIS que a guia foi paga por cartão ou Pix: a etapa da DAE fecha em verde e \"Agora é só assinar\" vira a vez.",
+    faz: '🆕 01/09 — o status DEPOIS que a guia foi paga por cartão ou Pix: a etapa da DAE fecha em verde e "Agora é só assinar" vira a vez.',
     interfere:
       "É o destravamento da assinatura: sem a guia compensada a Junta não registra, então esta é a fronteira entre esperar e agir.",
     porque:
@@ -1884,11 +1993,11 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   },
   "assistida-passagem": {
     dono: "nossa",
-    faz: "🆕 04/09 — A3.H: o A3′ na ROTA ASSISTIDA. Mesma tela e mesma timeline, com o cartão da consultora acima das etapas e as duas assinaturas trocando de dono (5º estado do DS: silhueta de pessoa). O CTA deixa de ser \"Ir para a assinatura\" e vira \"Escolher um horário\".",
+    faz: '🆕 04/09 — A3.H: o A3′ na ROTA ASSISTIDA. Mesma tela e mesma timeline, com o cartão da consultora acima das etapas e as duas assinaturas trocando de dono (5º estado do DS: silhueta de pessoa). O CTA deixa de ser "Ir para a assinatura" e vira "Escolher um horário".',
     interfere:
       "É o ponto em que a condução muda de mão. O processo não para nem muda de ordem: as mesmas 2 assinaturas acontecem, só que junto com um consultor.",
     porque:
-      "Decisão do Pedro (04/09): a operação NASCE assim. O A3′ é o último ponto em que tudo que falta ainda é nosso — depois dele vem CAPTCHA, 2FA, nível de conta GOV.BR que a gente não consegue ler, código de 10 minutos e o contador assinando junto. O flow automático até aqui já entrega mais do que a contabilidade digital que existe hoje; o resto vira otimização. 🔴 Regra de copy da rota: NUNCA enquadrar como limitação (\"o sistema não consegue\") nem dizer \"nossa equipe entra em contato\" — a pessoa tem nome, registro e horário.",
+      'Decisão do Pedro (04/09): a operação NASCE assim. O A3′ é o último ponto em que tudo que falta ainda é nosso — depois dele vem CAPTCHA, 2FA, nível de conta GOV.BR que a gente não consegue ler, código de 10 minutos e o contador assinando junto. O flow automático até aqui já entrega mais do que a contabilidade digital que existe hoje; o resto vira otimização. 🔴 Regra de copy da rota: NUNCA enquadrar como limitação ("o sistema não consegue") nem dizer "nossa equipe entra em contato" — a pessoa tem nome, registro e horário.',
   },
   "assistida-agendar": {
     dono: "usuario",
@@ -1896,15 +2005,63 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     interfere:
       "Marca o único tempo do processo que a casa controla de fato. O prazo dos órgãos continua fora do nosso alcance, e a tela não promete nada sobre ele.",
     porque:
-      "AGENDAR vence \"fale conosco\": a assinatura exige sincronia (o código do GOV.BR vale 10 minutos, os dois precisam estar juntos). \"Manda mensagem e espera\" quebra dos dois lados — a pessoa não sabe quando vem, a consultora liga no vazio. \"Falar agora\" fica como saída secundária, pra quem está com pressa.",
+      'AGENDAR vence "fale conosco": a assinatura exige sincronia (o código do GOV.BR vale 10 minutos, os dois precisam estar juntos). "Manda mensagem e espera" quebra dos dois lados — a pessoa não sabe quando vem, a consultora liga no vazio. "Falar agora" fica como saída secundária, pra quem está com pressa.',
   },
   "assistida-marcado": {
     dono: "nossa",
-    faz: "🆕 04/09 — A3.H2: o status DEPOIS de marcar. O hero vira \"Você tem hora marcada\", a etapa mostra o compromisso e o CTA fica travado dizendo quando a consultora chama.",
+    faz: '🆕 04/09 — A3.H2: o status DEPOIS de marcar. O hero vira "Você tem hora marcada", a etapa mostra o compromisso e o CTA fica travado dizendo quando a consultora chama.',
     interfere:
       "Nada muda no processo: é o intervalo até a chamada. Mas o status continua sendo a fonte de verdade, mesmo com a conversa acontecendo no WhatsApp.",
     porque:
-      "O cartão da consultora SOME aqui (a informação já migrou pro hero e pra etapa) e o CTA fica travado em vez de sumir — mesma régua do \"Aguardando compensação\" do boleto: o botão não desaparece, ele conta o estado. Se o status morresse no handoff, a pessoa perguntaria no WhatsApp onde está, e o consultor viraria suporte em vez de executor.",
+      'O cartão da consultora SOME aqui (a informação já migrou pro hero e pra etapa) e o CTA fica travado em vez de sumir — mesma régua do "Aguardando compensação" do boleto: o botão não desaparece, ele conta o estado. Se o status morresse no handoff, a pessoa perguntaria no WhatsApp onde está, e o consultor viraria suporte em vez de executor.',
+  },
+  "assistida-passagem-socio": {
+    dono: "nossa",
+    faz: "🆕 05/09 — A3.H′: a passagem quando a empresa tem SÓCIO. O hero e o cartão passam a dizer que os dois assinam no mesmo momento, e o código de 10 minutos deixa de ser curiosidade: é ele que obriga a hora marcada.",
+    interfere:
+      "Não muda o processo, muda quem precisa estar. O contrato social é assinado por TODOS os sócios, então a 1ª assinatura é ato de duas pessoas.",
+    porque:
+      'O ramo assistido inteiro tinha sido construído assumindo uma pessoa só. A ata de 01/09 diz que o sócio 22 "não assina pela empresa" — isso é REPRESENTAÇÃO (agir em nome da sociedade depois de aberta), não a assinatura da constituição, que é o acordo entre os sócios (art. 997/999 CC). Ler uma camada como a outra é o erro que só aparece no cartório.',
+  },
+  "assistida-agendar-socio": {
+    dono: "usuario",
+    faz: '🆕 05/09 — A3.H1′: a agenda com o bloco "Quem assina" (você + sócio) e a promessa de avisar o sócio por WhatsApp ao confirmar.',
+    interfere:
+      "O horário marcado aqui vale pros DOIS. É o único ponto do processo em que duas pessoas e um consultor precisam estar no mesmo momento.",
+    porque:
+      'O aviso mora nesta tela e não numa tela de convite própria: a rota automática (A4) tem convite com seletor de canal, e trazer aquilo pra cá pediria uma decisão a mais ("por onde avisar?") no meio de outra ("que horas?"). Aqui a gente AFIRMA o que faz, em vez de perguntar. 🔴 Ainda é só copy: não há envio, não há estado de "sócio não confirmou" e a agenda casa uma disponibilidade, não duas.',
+  },
+  "assistida-marcado-socio": {
+    dono: "nossa",
+    faz: '🆕 05/09 — A3.H2′: o status com a hora marcada, nomeando os dois ("Sua assinatura e a de Carlos" · "Os dois no mesmo horário").',
+    interfere:
+      "É o intervalo até a chamada, agora com duas pessoas esperando em vez de uma.",
+    porque:
+      "Sem nomear o sócio, a tela marcava um horário que parecia só dela e ele virava surpresa no dia. 🔴 O status ainda NÃO mostra se o sócio confirmou — e esse é o caso mais provável de travar a esteira na hora da chamada.",
+  },
+  "assistida-passagem-2": {
+    dono: "nossa",
+    faz: '🆕 05/09 — A3.H3: o status DEPOIS da 1ª assinatura, na rota assistida. O hero vira "Falta a assinatura do CNPJ", o cartão do consultor volta (agora explicando o contador) e o CTA é "Marcar a última assinatura".',
+    interfere:
+      "É o segundo handoff da mesma rota. O processo não muda; muda o ATO que está sendo marcado, e ele tem uma exigência a mais que a primeira.",
+    porque:
+      'Pedido do Pedro (05/09): a 2ª assinatura exige a mesma complexidade da 1ª e vinha sem ciclo nenhum. Voltando da primeira, a pessoa caía num status que ainda mostrava o compromisso já cumprido e oferecia "remarcar" uma hora que já tinha passado. Agora ela tem passagem, agenda e status próprios.',
+  },
+  "assistida-agendar-2": {
+    dono: "usuario",
+    faz: "🆕 05/09 — A3.H4: a mesma tela de agenda com `?rodada=2`. Título, subtítulo, cartão do consultor e a mensagem do WhatsApp expresso falam da assinatura que gera o CNPJ, com o contador junto.",
+    interfere:
+      "Marca o segundo (e último) encontro antes do CNPJ existir. É o único passo do processo em que três pessoas precisam estar no mesmo ato.",
+    porque:
+      "Variante, não tela nova — mesma decisão do A4″ (a 2ª assinatura reusa a tela da 1ª). O que muda é o conteúdo, e o que NÃO pode mudar é a mecânica: a pessoa já aprendeu a marcar aqui uma vez.",
+  },
+  "assistida-marcado-2": {
+    dono: "nossa",
+    faz: '🆕 05/09 — A3.H5: o status com a última assinatura marcada. Mesmo cartão de compromisso, dizendo "A assinatura que gera seu CNPJ" e "Com você, um consultor e seu contador".',
+    interfere:
+      "É o último intervalo antes do CNPJ. Depois dele a pessoa não volta mais pra este status: cai na A5.H, já com empresa.",
+    porque:
+      'O cartão nomeia QUAL assinatura está marcada. Repetir "Sua assinatura, feita junto com você" nas duas faria a segunda parecer que a pessoa remarcou a primeira por engano.',
   },
   "assistida-ativacao": {
     dono: "nossa",
@@ -1920,7 +2077,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     interfere:
       "É o intervalo em que a bola está com a casa: a 2ª assinatura só libera quando o contador entra. A pessoa fecha o app aqui e volta quando a gente chamar.",
     porque:
-      "Sem este estado o status recebia quem tinha ACABADO de assinar dizendo \"o último passo é a assinatura\" — o mesmo furo que o A3′ tinha com a guia paga: a tela não reconhecia o que mudou, e não reconhecer o esforço da pessoa lê como erro do sistema.",
+      'Sem este estado o status recebia quem tinha ACABADO de assinar dizendo "o último passo é a assinatura" — o mesmo furo que o A3′ tinha com a guia paga: a tela não reconhecia o que mudou, e não reconhecer o esforço da pessoa lê como erro do sistema.',
   },
   "assinatura-2": {
     dono: "usuario",
@@ -1932,7 +2089,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   },
   "conta-cpf-divergente": {
     dono: "usuario",
-    faz: "🆕 04/09 — E6.2: a Receita recusou o CPF na criação da conta. O alerta volta pro próprio formulário, em cima dos campos, e o CTA responde à recusa: com o nome divergente vira \"Conferir de novo\"; com o CPF irregular trava e diz o motivo.",
+    faz: '🆕 04/09 — E6.2: a Receita recusou o CPF na criação da conta. O alerta volta pro próprio formulário, em cima dos campos, e o CTA responde à recusa: com o nome divergente vira "Conferir de novo"; com o CPF irregular trava e diz o motivo.',
     interfere:
       "Barra a conta. É de propósito: se o nome não bate com a Receita, o DBE recusa lá na frente e o processo inteiro para, com o dossiê já preenchido e pago.",
     porque:
@@ -1964,11 +2121,11 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   },
   "status-viabilidade": {
     dono: "nossa",
-    faz: "🆕 01/09 — o status depois de mandar os 3 nomes novos: a jornada RECUA e \"Analisando viabilidade\" volta a ser a etapa da vez.",
+    faz: '🆕 01/09 — o status depois de mandar os 3 nomes novos: a jornada RECUA e "Analisando viabilidade" volta a ser a etapa da vez.',
     interfere:
       "A Junta vai testar os nomes novos na ordem escolhida. Enquanto isso, guia e assinatura ficam para trás na fila de novo — nada além da análise pode andar.",
     porque:
-      "É o único ponto do flow em que uma etapa concluída volta a ser a atual, e é honestidade: mostrar \"Pague a guia\" aqui diria que a análise já passou, quando ela nem começou. Recuar a barra é pior de ver e melhor de confiar.",
+      'É o único ponto do flow em que uma etapa concluída volta a ser a atual, e é honestidade: mostrar "Pague a guia" aqui diria que a análise já passou, quando ela nem começou. Recuar a barra é pior de ver e melhor de confiar.',
   },
   "pagamento-recusado": {
     dono: null,
@@ -1976,7 +2133,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     interfere:
       "Nada foi cobrado e nada foi perdido: a abertura não começou. O que muda é a rota — em vez de seguir, a pessoa volta pra tela de pagamento.",
     porque:
-      "Recusa não pode ter a MESMA cara de sucesso: com o layout idêntico em coral, a pessoa lê a forma antes da palavra e comemora errado. A copy tira o peso de cima dela (\"não foi você: acontece com o banco\") porque recusa de cartão raramente é culpa de quem paga.",
+      'Recusa não pode ter a MESMA cara de sucesso: com o layout idêntico em coral, a pessoa lê a forma antes da palavra e comemora errado. A copy tira o peso de cima dela ("não foi você: acontece com o banco") porque recusa de cartão raramente é culpa de quem paga.',
   },
   "pagamento-retry": {
     dono: "usuario",
@@ -1992,13 +2149,13 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
     interfere:
       "A guia não foi paga, então a Junta não registra e a assinatura segue travada. A etapa continua esperando.",
     porque:
-      "Uma família de splashes que só sabe dizer \"deu certo\" mente por omissão. O par escuro existe pros dois pontos de cobrança do flow, não só pro primeiro.",
+      'Uma família de splashes que só sabe dizer "deu certo" mente por omissão. O par escuro existe pros dois pontos de cobrança do flow, não só pro primeiro.',
   },
   "guia-retry": {
     dono: "usuario",
     faz: "🆕 01/09 — a tela da guia de novo, com o aviso da recusa no topo.",
     interfere:
-      "O aceite irreversível continua obrigatório aqui: é o mesmo ato de autorizar, e ele não fica \"já dado\" por causa de uma tentativa que não passou.",
+      'O aceite irreversível continua obrigatório aqui: é o mesmo ato de autorizar, e ele não fica "já dado" por causa de uma tentativa que não passou.',
     porque:
       "Mesma doutrina do E9.R: explica, oferece outro caminho e não apaga nada do que a pessoa já fez.",
   },
@@ -2013,8 +2170,10 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   "painel-recusa": {
     dono: "nossa",
     faz: "O 4º estado do painel: a Junta reprovou as 3 opções de nome que a pessoa priorizou lá no C7, apesar do retry automático.",
-    interfere: "A constituição PARA até o cliente sugerir 3 novos nomes — é a única pausa da Aprovação que volta a depender dele, não do órgão.",
-    porque: "Vermelho legítimo (um órgão externo parou a fila mesmo) + 'precisa de você' + a ação, tudo DENTRO do pipeline — nunca um limbo mudo (UX-40). Produção tenta as 3 opções sozinha antes de chegar aqui; a demo pula direto pro pior caso.",
+    interfere:
+      "A constituição PARA até o cliente sugerir 3 novos nomes — é a única pausa da Aprovação que volta a depender dele, não do órgão.",
+    porque:
+      "Vermelho legítimo (um órgão externo parou a fila mesmo) + 'precisa de você' + a ação, tudo DENTRO do pipeline — nunca um limbo mudo (UX-40). Produção tenta as 3 opções sozinha antes de chegar aqui; a demo pula direto pro pior caso.",
   },
   // 🆕 26/08 (reunião Rua Satélite 36, item 7) — A3.2, entre painel-recusa e
   // assinatura. Certificado passou a ser validado ANTES de assinar.
@@ -2160,7 +2319,7 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   },
   "retomar-codigo": {
     dono: "usuario",
-    faz: "C0.3: confirma um código de 8 dígitos, mandado pro e-mail e telefone da conta, antes de abrir o status. Mesma tela do E6.1 (`ContaView`, etapa \"codigo\"), reusada nesta posição.",
+    faz: 'C0.3: confirma um código de 8 dígitos, mandado pro e-mail e telefone da conta, antes de abrir o status. Mesma tela do E6.1 (`ContaView`, etapa "codigo"), reusada nesta posição.',
     interfere:
       "Nada no processo da Junta. Interfere no ACESSO: é o que separa quem é dono do processo de quem só digitou um CPF.",
     porque:
@@ -2184,9 +2343,18 @@ const DESCRICOES: Record<Momento, { dono: Dono; faz: string; interfere: string; 
   },
 };
 
-const DONO_LABEL: Record<Exclude<Dono, null>, { label: string; cor: string }> = {
-  usuario: { label: "🟧 Pausa: usuário", cor: "bg-state-warning-tint text-state-warning-text" },
-  nossa: { label: "🟦 Pausa: nossa", cor: "bg-state-info-tint text-state-info-text" },
+const DONO_LABEL: Record<
+  Exclude<Dono, null>,
+  { label: string; cor: string }
+> = {
+  usuario: {
+    label: "🟧 Pausa: usuário",
+    cor: "bg-state-warning-tint text-state-warning-text",
+  },
+  nossa: {
+    label: "🟦 Pausa: nossa",
+    cor: "bg-state-info-tint text-state-info-text",
+  },
 };
 
 export default function ApresentacaoPage() {
@@ -2237,7 +2405,9 @@ export default function ApresentacaoPage() {
   const [exato, setExato] = useState("");
   // 🆕 26/08 (reunião Rua Satélite 36, item 2) — escolha de endereço, realocada
   // do C4 (dossiê) pro E5F (faixa), antes até do cadastro.
-  const [enderecoProprioDemo, setEnderecoProprioDemo] = useState<boolean | null>(null);
+  const [enderecoProprioDemo, setEnderecoProprioDemo] = useState<
+    boolean | null
+  >(null);
   // 🆕 02/09 — qual jornada a fita de pills mostra. Fita única, uma jornada
   // por vez (escolha do Pedro sobre agrupar por bloco).
   const [filtroCaminho, setFiltroCaminho] = useState<CaminhoFlow>("abrir");
@@ -2435,7 +2605,7 @@ export default function ApresentacaoPage() {
       confirmarSenha: "",
       cep: "",
       numero: "",
-    complemento: "",
+      complemento: "",
       coorte: null,
       codigo: "",
     });
@@ -2661,7 +2831,9 @@ export default function ApresentacaoPage() {
      PILLS_PAUSA · PILLS_DEV, 54 no total) sumiram daqui. A fita agora sai de
      `TELAS_DO_FLOW`, derivada do mesmo grafo que gera o mapa — ver o bloco
      "O ESPELHO" no topo do arquivo. */
-  const telasVisiveis = TELAS_DO_FLOW.filter((t) => t.caminho === filtroCaminho);
+  const telasVisiveis = TELAS_DO_FLOW.filter(
+    (t) => t.caminho === filtroCaminho,
+  );
   // O nó em destaque: o que a fita abriu, enquanto ele ainda corresponder à
   // etapa na tela. Se a pessoa navegou por dentro, vale o principal da etapa.
   const noEmDestaque =
@@ -2669,76 +2841,78 @@ export default function ApresentacaoPage() {
     TELAS_DO_FLOW.find((t) => t.etapa === etapa)?.id ||
     null;
 
-
   const momento: Momento =
     etapa === "splash"
       ? "splash"
       : etapa === "welcome"
         ? "welcome"
         : etapa === "fork"
-      ? "fork"
-      : etapa === "dados"
-        ? "dados"
-        : etapa === "mei-ou-me"
-          ? "mei-ou-me"
-        : etapa === "endereco"
-        ? "endereco"
-        : etapa === "fora-bh"
-          ? enviadoS
-            ? "fora-bh-enviado"
-            : "fora-bh"
-          : etapa === "perguntando"
-          ? "perguntando"
-              : etapa === "triagem"
-                ? "triagem"
-                : etapa === "faixa"
-                  ? "faixa"
-                  : etapa === "saida-exterior"
-                    ? "saida-exterior"
-                    : etapa === "saida-socios"
-                      ? "saida-socios"
-                      : etapa === "saida-socio-pj"
-                        ? "saida-socio-pj"
-                        : etapa === "m-cnpj-inapto"
-                          ? "m-cnpj-inapto"
-                          : etapa === "m-impedimento" ||
-                              etapa === "m-ocupacao" ||
-                              etapa === "m-proximos-passos" ||
-                              etapa === "m-certificado" ||
-                              etapa === "saida-mei-outra-empresa" ||
-                              etapa === "saida-mei-servidor"
-                            ? etapa
-                  : etapa === "conta"
-                    ? "conta"
-                    : etapa === "conta-codigo"
-                      ? "conta-codigo"
-                      : etapa === "plano"
-                        ? "plano"
-                        : etapa === "pagamento"
-                          ? "pagamento"
-                            : noDossie(etapa) ||
-                                naCauda(etapa) ||
-                                naEspera(etapa) ||
-                                // 🆕 01/09 — a referência do dev vira momento
-                                // com o próprio nome (tem DESCRICOES própria).
-                                etapa === "conferencia" ||
-                                noMigrar(etapa)
-                              ? etapa
-                              : etapa === "fim"
-                    ? "fim"
-                    : resultado
-                      ? resultado.veredito === "atende"
-                        ? "veredito-atende"
-                        : resultado.veredito === "waitlist"
-                          ? enviadoV
-                            ? "veredito-waitlist-enviado"
-                            : "veredito-waitlist"
-                          : resultado.motivo === "descarta"
-                            ? "veredito-descarta"
-                            : enviadoV
-                              ? "veredito-mauro-enviado"
-                              : "veredito-mauro"
-                      : "perguntando";
+          ? "fork"
+          : etapa === "dados"
+            ? "dados"
+            : etapa === "mei-ou-me"
+              ? "mei-ou-me"
+              : etapa === "endereco"
+                ? "endereco"
+                : etapa === "fora-bh"
+                  ? enviadoS
+                    ? "fora-bh-enviado"
+                    : "fora-bh"
+                  : etapa === "perguntando"
+                    ? "perguntando"
+                    : etapa === "triagem"
+                      ? "triagem"
+                      : etapa === "faixa"
+                        ? "faixa"
+                        : etapa === "saida-exterior"
+                          ? "saida-exterior"
+                          : etapa === "saida-socios"
+                            ? "saida-socios"
+                            : etapa === "saida-socio-pj"
+                              ? "saida-socio-pj"
+                              : etapa === "m-cnpj-inapto"
+                                ? "m-cnpj-inapto"
+                                : etapa === "m-impedimento" ||
+                                    etapa === "m-ocupacao" ||
+                                    etapa === "m-proximos-passos" ||
+                                    etapa === "m-certificado" ||
+                                    etapa === "saida-mei-outra-empresa" ||
+                                    etapa === "saida-mei-servidor"
+                                  ? etapa
+                                  : etapa === "conta"
+                                    ? "conta"
+                                    : etapa === "conta-codigo"
+                                      ? "conta-codigo"
+                                      : etapa === "plano"
+                                        ? "plano"
+                                        : etapa === "pagamento"
+                                          ? "pagamento"
+                                          : noDossie(etapa) ||
+                                              naCauda(etapa) ||
+                                              naEspera(etapa) ||
+                                              // 🆕 01/09 — a referência do dev vira momento
+                                              // com o próprio nome (tem DESCRICOES própria).
+                                              etapa === "conferencia" ||
+                                              noMigrar(etapa)
+                                            ? etapa
+                                            : etapa === "fim"
+                                              ? "fim"
+                                              : resultado
+                                                ? resultado.veredito ===
+                                                  "atende"
+                                                  ? "veredito-atende"
+                                                  : resultado.veredito ===
+                                                      "waitlist"
+                                                    ? enviadoV
+                                                      ? "veredito-waitlist-enviado"
+                                                      : "veredito-waitlist"
+                                                    : resultado.motivo ===
+                                                        "descarta"
+                                                      ? "veredito-descarta"
+                                                      : enviadoV
+                                                        ? "veredito-mauro-enviado"
+                                                        : "veredito-mauro"
+                                                : "perguntando";
 
   /**
    * Empilha o snapshot do momento ANTERIOR sempre que o momento muda.
@@ -2780,11 +2954,14 @@ export default function ApresentacaoPage() {
 
   // Os cenários preenchem o campo de descrição, então valem nos dois estados
   // da C0 — inclusive na chegada, que é justamente onde o campo está vazio.
-  const mostraCenarios = etapa === "perguntando" || etapa === "perguntando-vazio";
+  const mostraCenarios =
+    etapa === "perguntando" || etapa === "perguntando-vazio";
   const naEntrada = etapa === "fork";
   const naSaidaCidade = etapa === "fora-bh";
   const naSaidaTriagem =
-    etapa === "saida-exterior" || etapa === "saida-socios" || etapa === "saida-socio-pj";
+    etapa === "saida-exterior" ||
+    etapa === "saida-socios" ||
+    etapa === "saida-socio-pj";
   // 🆕 28/08 — as 2 saídas de impedimento do ramo MEI. As 3 telas exclusivas
   // (m-impedimento, m-ocupacao, m-proximos-passos) são checadas inline no
   // render: cada uma tem props próprias e não compartilha shell como estas.
@@ -2845,7 +3022,8 @@ export default function ApresentacaoPage() {
       // da tela é mostrar o prefill PARCIAL (e-mail/telefone às vezes vêm,
       // nome/CRC nunca vêm) — um botão de preencher tudo escondia isso.
       (!noMigrar(etapa) || etapa === "m-cnpj" || etapa === "m-contrato"));
-  const mostraSimularValidacao = momento === "veredito-waitlist" || momento === "veredito-mauro";
+  const mostraSimularValidacao =
+    momento === "veredito-waitlist" || momento === "veredito-mauro";
   // 🆕 03/08 — atalho pro A3.1 (gap fechado): produção só chega lá por retry
   // automático mockado, sem interação real pra demo replicar.
   const mostraSimularRecusa = momento === "painel";
@@ -2859,11 +3037,13 @@ export default function ApresentacaoPage() {
             <p className="text-micro font-semibold tracking-wide text-text-tertiary">
               LEGALIZAI · APRESENTAÇÃO PRA GESTÃO
             </p>
-            <h1 className="text-h1 text-text-primary">Onboarding — como funciona por dentro</h1>
+            <h1 className="text-h1 text-text-primary">
+              Onboarding — como funciona por dentro
+            </h1>
             <p className="text-body text-text-secondary mt-1 max-w-[70ch]">
-              Da splash (E1) ao pagamento (E9). As telas são as aprovadas (mesmo componente
-              do app), não maquete. Escolha um cenário pra preencher o campo e avance
-              pelos botões de dentro do aparelho.
+              Da splash (E1) ao pagamento (E9). As telas são as aprovadas (mesmo
+              componente do app), não maquete. Escolha um cenário pra preencher
+              o campo e avance pelos botões de dentro do aparelho.
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-2">
@@ -2912,7 +3092,9 @@ export default function ApresentacaoPage() {
                             : "border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
                         }`}
                       >
-                        <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${COR_DOT[c.cor]}`} />
+                        <span
+                          className={`h-2.5 w-2.5 shrink-0 rounded-full ${COR_DOT[c.cor]}`}
+                        />
                         {c.botao}
                       </button>
                     );
@@ -3020,11 +3202,20 @@ export default function ApresentacaoPage() {
 
               {/* Mesmo aparelho dos outros mockups (15 Pro Max, insets 59/34) —
                   sem iframe: aqui o painel da direita precisa reagir ao estado. */}
-              <div className="origin-top-left" style={{ transform: "scale(.82)", width: 478 * 0.82, height: 980 * 0.82 }}>
+              <div
+                className="origin-top-left"
+                style={{
+                  transform: "scale(.82)",
+                  width: 478 * 0.82,
+                  height: 980 * 0.82,
+                }}
+              >
                 {/* 🔄 01/09 — a splash deixou de ser a única tela de fundo
                     coral: a E3.3 ganhou o hero do Léo sobre coral, e o relógio
                     preto ficava ilegível em cima dele. */}
-                <MolduraAparelho statusClaro={etapa === "splash" || etapa === "dados"}>
+                <MolduraAparelho
+                  statusClaro={etapa === "splash" || etapa === "dados"}
+                >
                   {/* `.app-page` usa height:100dvh (viewport). Dentro da moldura
                       o teto é a altura DELA, então sobrescreve pra 100%. */}
                   <div className="app-page" style={{ height: "100%" }}>
@@ -3099,10 +3290,16 @@ export default function ApresentacaoPage() {
                         {etapa === "dados" && (
                           <DadosPessoaisView
                             d={dadosLead}
-                            set={(k, v) => setDadosLead((p) => ({ ...p, [k]: v }))}
-                            contexto={intencao === "migrar" ? "migrar" : "abrir"}
+                            set={(k, v) =>
+                              setDadosLead((p) => ({ ...p, [k]: v }))
+                            }
+                            contexto={
+                              intencao === "migrar" ? "migrar" : "abrir"
+                            }
                             onSeguir={() =>
-                              setEtapa(intencao === "migrar" ? "m-cnpj" : "mei-ou-me")
+                              setEtapa(
+                                intencao === "migrar" ? "m-cnpj" : "mei-ou-me",
+                              )
                             }
                             onVoltar={() => voltar(() => setEtapa("fork"))}
                           />
@@ -3148,11 +3345,17 @@ export default function ApresentacaoPage() {
                           etapa === "conta-cpf-divergente") && (
                           <ContaView
                             d={dadosConta}
-                            set={(k, v) => setDadosConta((p) => ({ ...p, [k]: v }))}
+                            set={(k, v) =>
+                              setDadosConta((p) => ({ ...p, [k]: v }))
+                            }
                             etapa={etapa === "conta-codigo" ? "codigo" : "form"}
                             /* 🆕 04/09 — E6.2: a Receita recusou o CPF. Mesma
                                tela, com o alerta em cima do formulário. */
-                            divergencia={etapa === "conta-cpf-divergente" ? "nome" : undefined}
+                            divergencia={
+                              etapa === "conta-cpf-divergente"
+                                ? "nome"
+                                : undefined
+                            }
                             onCriarConta={() => setEtapa("conta-codigo")}
                             onConfirmar={() => setEtapa("plano")}
                             onVoltar={() => voltar(() => setEtapa("faixa"))}
@@ -3200,7 +3403,11 @@ export default function ApresentacaoPage() {
                             // 🔄 01/09 — boleto passou a ter splash próprio
                             // (E9.SB), igual à produção: ia direto pro status.
                             onPagar={() =>
-                              setEtapa(metodo === "boleto" ? "splash-boleto" : "splash-pagamento")
+                              setEtapa(
+                                metodo === "boleto"
+                                  ? "splash-boleto"
+                                  : "splash-pagamento",
+                              )
                             }
                             onVoltar={() => voltar(() => setEtapa("plano"))}
                           />
@@ -3215,14 +3422,18 @@ export default function ApresentacaoPage() {
                           <SocioView
                             preencher={preenchimento}
                             onSeguir={() => setEtapa(depoisDoDossie("socio"))}
-                            onVoltar={() => voltar(() => setEtapa(antesDoDossie("socio")))}
+                            onVoltar={() =>
+                              voltar(() => setEtapa(antesDoDossie("socio")))
+                            }
                           />
                         )}
                         {etapa === "vinculo" && (
                           <VinculoView
                             preencher={preenchimento}
                             onSeguir={() => setEtapa(depoisDoDossie("vinculo"))}
-                            onVoltar={() => voltar(() => setEtapa(antesDoDossie("vinculo")))}
+                            onVoltar={() =>
+                              voltar(() => setEtapa(antesDoDossie("vinculo")))
+                            }
                           />
                         )}
                         {etapa === "socios" && (
@@ -3238,25 +3449,37 @@ export default function ApresentacaoPage() {
                             socios={sociosDemo}
                             /* 🆕 04/09 — C3.3: a Receita recusou o CPF do 1º
                                sócio da lista (o 2º da empresa). */
-                            divergencia={cpfSocioDemo ? { socio: 0, tipo: "nome" } : undefined}
+                            divergencia={
+                              cpfSocioDemo
+                                ? { socio: 0, tipo: "nome" }
+                                : undefined
+                            }
                             preencher={preenchimento}
                             onSeguir={() => setEtapa(depoisDoDossie("socios"))}
-                            onVoltar={() => voltar(() => setEtapa(antesDoDossie("socios")))}
+                            onVoltar={() =>
+                              voltar(() => setEtapa(antesDoDossie("socios")))
+                            }
                           />
                         )}
                         {etapa === "empresa" && (
                           <EmpresaView
                             preencher={preenchimento}
                             onSeguir={() => setEtapa(depoisDoDossie("empresa"))}
-                            onVoltar={() => voltar(() => setEtapa(antesDoDossie("empresa")))}
+                            onVoltar={() =>
+                              voltar(() => setEtapa(antesDoDossie("empresa")))
+                            }
                           />
                         )}
                         {etapa === "cnae-secundarios" && (
                           <CnaeSecundariosView
                             preencher={preenchimento}
-                            onSeguir={() => setEtapa(depoisDoDossie("cnae-secundarios"))}
+                            onSeguir={() =>
+                              setEtapa(depoisDoDossie("cnae-secundarios"))
+                            }
                             onVoltar={() =>
-                              voltar(() => setEtapa(antesDoDossie("cnae-secundarios")))
+                              voltar(() =>
+                                setEtapa(antesDoDossie("cnae-secundarios")),
+                              )
                             }
                             // 🆕 24/08 — busca livre pode escolher secundária que
                             // muda enquadramento; na rota real isso navega pra
@@ -3272,7 +3495,9 @@ export default function ApresentacaoPage() {
                           <NomeView
                             preencher={preenchimento}
                             onSeguir={() => setEtapa(depoisDoDossie("nome"))}
-                            onVoltar={() => voltar(() => setEtapa(antesDoDossie("nome")))}
+                            onVoltar={() =>
+                              voltar(() => setEtapa(antesDoDossie("nome")))
+                            }
                           />
                         )}
 
@@ -3285,7 +3510,9 @@ export default function ApresentacaoPage() {
                             detalhe do não-reembolso em popup. Daqui vai direto
                             pro status da Junta. */}
                         {etapa === "conferencia" && (
-                          <ConferenciaView onVoltar={() => voltar(() => setEtapa("revisar"))} />
+                          <ConferenciaView
+                            onVoltar={() => voltar(() => setEtapa("revisar"))}
+                          />
                         )}
                         {etapa === "revisar" && (
                           <RevisarView
@@ -3301,7 +3528,11 @@ export default function ApresentacaoPage() {
                                sócios (C1), 4 = a empresa (C4). */
                             onAjustar={(bloco) =>
                               setEtapa(
-                                bloco === 2 ? "perguntando" : bloco === 3 ? "socio" : "empresa",
+                                bloco === 2
+                                  ? "perguntando"
+                                  : bloco === 3
+                                    ? "socio"
+                                    : "empresa",
                               )
                             }
                           />
@@ -3326,7 +3557,8 @@ export default function ApresentacaoPage() {
                             passos={[
                               {
                                 titulo: "Análise de viabilidade",
-                                detalhe: "A Junta confere nome e endereço. Pode sair em minutos.",
+                                detalhe:
+                                  "A Junta confere nome e endereço. Pode sair em minutos.",
                               },
                               {
                                 titulo: "Guia da Junta",
@@ -3335,7 +3567,8 @@ export default function ApresentacaoPage() {
                               },
                               {
                                 titulo: "Assinatura",
-                                detalhe: "Você assina pelo GOV.BR e a empresa é constituída.",
+                                detalhe:
+                                  "Você assina pelo GOV.BR e a empresa é constituída.",
                               },
                             ]}
                             nota="Se a Junta pedir um ajuste (exigência, no vocabulário dela), não se preocupe: é comum, a gente já sabe resolver e cuida disso com você."
@@ -3413,7 +3646,11 @@ export default function ApresentacaoPage() {
                                boleto da mensalidade: o "boleto gerado" merece
                                o mesmo respiro nos dois lugares. */
                             onPagar={() =>
-                              setEtapa(metodo === "boleto" ? "guia-splash-boleto" : "guia-splash")
+                              setEtapa(
+                                metodo === "boleto"
+                                  ? "guia-splash-boleto"
+                                  : "guia-splash",
+                              )
                             }
                             onVoltar={() => voltar(() => setEtapa("painel"))}
                           />
@@ -3479,27 +3716,104 @@ export default function ApresentacaoPage() {
                         {/* 🆕 04/09 — ROTA ASSISTIDA (A3.H · A3.H1 · A3.H2).
                             É a MESMA `AguardandoView` do A3′, com `assistida`;
                             a agenda é tela própria. Ver `consultor.tsx`. */}
-                        {(etapa === "assistida-passagem" || etapa === "assistida-marcado") && (
+                        {/* 🆕 05/09 (achado do Pedro) — as variantes `-socio`
+                            são as MESMAS telas com `temSocios`: o contrato
+                            social é assinado por todos os sócios, então a 1ª
+                            assinatura vira ato de duas pessoas. Aqui o
+                            `temSocios` é FORÇADO, porque estes momentos existem
+                            justamente pra mostrar esse caso — não dependem de
+                            como a triagem foi respondida na demo. */}
+                        {(etapa === "assistida-passagem" ||
+                          etapa === "assistida-marcado" ||
+                          etapa === "assistida-passagem-socio" ||
+                          etapa === "assistida-marcado-socio") && (
                           <AguardandoView
                             fase="junta"
                             junta={{ concluidas: 2, emAndamento: 2 }}
-                            temSocios={socios === 2}
+                            temSocios={
+                              etapa === "assistida-passagem-socio" ||
+                              etapa === "assistida-marcado-socio" ||
+                              socios === 2
+                            }
                             assistida
-                            agendado={etapa === "assistida-marcado" ? "Hoje às 15:00" : null}
-                            /* 🆕 05/09 — as partes do compromisso, pro cartão
-                               desenhar o bloco de data (ver `CardCompromisso`). */
+                            /* 🔄 05/09 (auditoria) — o prop `agendado` (a FRASE)
+                               saiu: hero, etapa e CTA agora derivam do mesmo
+                               compromisso que o cartão usa. Ver
+                               `lib/compromisso`. */
                             compromisso={
-                              etapa === "assistida-marcado"
-                                ? { numero: 5, semana: "Sex", mes: "Set", hora: "15:00", hoje: true }
+                              etapa === "assistida-marcado" ||
+                              etapa === "assistida-marcado-socio"
+                                ? {
+                                    numero: 5,
+                                    semana: "Sex",
+                                    mes: "Set",
+                                    hora: "15:00",
+                                    hoje: true,
+                                  }
                                 : null
                             }
-                            onAgendar={() => setEtapa("assistida-agendar")}
+                            onAgendar={() =>
+                              setEtapa(
+                                etapa === "assistida-passagem-socio" ||
+                                  etapa === "assistida-marcado-socio"
+                                  ? "assistida-agendar-socio"
+                                  : "assistida-agendar",
+                              )
+                            }
                           />
                         )}
                         {etapa === "assistida-agendar" && (
                           <AgendarAssinaturaView
                             onConfirmar={() => setEtapa("assistida-marcado")}
-                            onVoltar={() => voltar(() => setEtapa("assistida-passagem"))}
+                            onVoltar={() =>
+                              voltar(() => setEtapa("assistida-passagem"))
+                            }
+                          />
+                        )}
+                        {etapa === "assistida-agendar-socio" && (
+                          <AgendarAssinaturaView
+                            socios={sociosExtras(2).map((x) => x.nome)}
+                            onConfirmar={() =>
+                              setEtapa("assistida-marcado-socio")
+                            }
+                            onVoltar={() =>
+                              voltar(() => setEtapa("assistida-passagem-socio"))
+                            }
+                          />
+                        )}
+                        {/* 🆕 05/09 (pedido do Pedro) — O CICLO DA 2ª ASSINATURA.
+                            Mesmas 3 telas com `assinou1`/`rodada={2}`: o que
+                            muda é o ato marcado (a que gera o CNPJ, com o
+                            contador junto), não a mecânica. */}
+                        {(etapa === "assistida-passagem-2" ||
+                          etapa === "assistida-marcado-2") && (
+                          <AguardandoView
+                            fase="junta"
+                            junta={{ concluidas: 3, emAndamento: 3 }}
+                            temSocios={socios === 2}
+                            assistida
+                            assinou1
+                            compromisso={
+                              etapa === "assistida-marcado-2"
+                                ? {
+                                    numero: 8,
+                                    semana: "Seg",
+                                    mes: "Set",
+                                    hora: "09:30",
+                                    hoje: false,
+                                  }
+                                : null
+                            }
+                            onAgendar={() => setEtapa("assistida-agendar-2")}
+                          />
+                        )}
+                        {etapa === "assistida-agendar-2" && (
+                          <AgendarAssinaturaView
+                            rodada={2}
+                            onConfirmar={() => setEtapa("assistida-marcado-2")}
+                            onVoltar={() =>
+                              voltar(() => setEtapa("assistida-passagem-2"))
+                            }
                           />
                         )}
                         {/* 🆕 04/09 — A3⁗: o status entre as duas assinaturas. */}
@@ -3581,7 +3895,9 @@ export default function ApresentacaoPage() {
                             novaRodada
                             /* 🔄 04/09 — passa pelo recibo (C7.S) antes do status. */
                             onSeguir={() => setEtapa("splash-nomes")}
-                            onVoltar={() => voltar(() => setEtapa("painel-recusa"))}
+                            onVoltar={() =>
+                              voltar(() => setEtapa("painel-recusa"))
+                            }
                           />
                         )}
                         {etapa === "painel-recusa" && (
@@ -3619,14 +3935,22 @@ export default function ApresentacaoPage() {
                           etapa === "assinatura-2") && (
                           <AssinaturaView
                             key={etapa}
-                            faseInicial={etapa === "assinatura-codigo" ? "codigo" : "assinar"}
+                            faseInicial={
+                              etapa === "assinatura-codigo"
+                                ? "codigo"
+                                : "assinar"
+                            }
                             /* 🆕 04/09 — A4″: a 2ª assinatura, a que o contador
                                assina junto e que gera o CNPJ. */
                             rodada={etapa === "assinatura-2" ? 2 : 1}
                             /* 🔄 04/09 — só a 2ª aterrissa na A5; a 1ª devolve
                                pro status, que é de onde a 2ª é chamada. */
                             onSeguir={() =>
-                              setEtapa(etapa === "assinatura-2" ? "ativacao" : "status-assinatura-1")
+                              setEtapa(
+                                etapa === "assinatura-2"
+                                  ? "ativacao"
+                                  : "status-assinatura-1",
+                              )
                             }
                             // 🔄 01/09 — volta pro painel de novo: a A3.2
                             // (certificado) saiu do caminho ME, então quem
@@ -3645,10 +3969,12 @@ export default function ApresentacaoPage() {
                             avançar (é a home, não passo de wizard); a seta
                             externa do aparelho segue funcionando via histórico. */}
                         {/* 🆕 04/09 — A5.H é a MESMA tela, com a procuração
-                            conduzida pela consultora em vez de tarefa do
-                            cliente (rota assistida). */}
-                        {(etapa === "ativacao" || etapa === "assistida-ativacao") && (
-                          <HomeAtivacaoView assistida={etapa === "assistida-ativacao"} />
+                            🗑️ 05/09 — a variante por rota SAIU: o único passo
+                            que divergia era a procuração, e ela não existe mais
+                            (o certificado a dispensa). */}
+                        {(etapa === "ativacao" ||
+                          etapa === "assistida-ativacao") && (
+                          <HomeAtivacaoView />
                         )}
 
                         {/* ═══ C0.1 · E9.1 — pausas de pagamento ════════════
@@ -3669,17 +3995,25 @@ export default function ApresentacaoPage() {
                         {etapa === "retomar-codigo" && (
                           <ContaView
                             d={dadosConta}
-                            set={(k, v) => setDadosConta((p) => ({ ...p, [k]: v }))}
+                            set={(k, v) =>
+                              setDadosConta((p) => ({ ...p, [k]: v }))
+                            }
                             etapa="codigo"
                             /* Só existe no E6 (form → código). Aqui a tela
                                nasce no código, então nunca é chamado. */
                             onCriarConta={() => {}}
                             onConfirmar={() => {
                               const digitos = cpfRetomar.replace(/\D/g, "");
-                              const ultimo = Number(digitos[digitos.length - 1] ?? "0");
-                              setEtapa(ultimo % 2 !== 0 ? "aguardando" : "retomar");
+                              const ultimo = Number(
+                                digitos[digitos.length - 1] ?? "0",
+                              );
+                              setEtapa(
+                                ultimo % 2 !== 0 ? "aguardando" : "retomar",
+                              );
                             }}
-                            onVoltar={() => voltar(() => setEtapa("retomar-cpf"))}
+                            onVoltar={() =>
+                              voltar(() => setEtapa("retomar-cpf"))
+                            }
                             layout="painel"
                           />
                         )}
@@ -3753,7 +4087,9 @@ export default function ApresentacaoPage() {
                           <MigrarCnpjView
                             preencher={preenchimento}
                             onSeguir={() => setEtapa(depoisDoMigrar("m-cnpj"))}
-                            onVoltar={() => voltar(() => setEtapa(antesDoMigrar("m-cnpj")))}
+                            onVoltar={() =>
+                              voltar(() => setEtapa(antesDoMigrar("m-cnpj")))
+                            }
                             // 🆕 26/08 — saída existia no componente
                             // (`onSaidaInapto`) desde 04/08, mas a demo nunca
                             // ligou o callback: CNPJ inapto/suspenso não tinha
@@ -3768,23 +4104,35 @@ export default function ApresentacaoPage() {
                             // (mesma simplificação de MigrarPlanoView/
                             // MigrarContratoView, que também não recebem `mei`).
                             mei={false}
-                            onSeguir={() => setEtapa(depoisDoMigrar("m-diagnostico"))}
-                            onVoltar={() => voltar(() => setEtapa(antesDoMigrar("m-diagnostico")))}
+                            onSeguir={() =>
+                              setEtapa(depoisDoMigrar("m-diagnostico"))
+                            }
+                            onVoltar={() =>
+                              voltar(() =>
+                                setEtapa(antesDoMigrar("m-diagnostico")),
+                              )
+                            }
                           />
                         )}
                         {etapa === "m-plano" && (
                           <MigrarPlanoView
                             onSeguir={() => setEtapa(depoisDoMigrar("m-plano"))}
-                            onVoltar={() => voltar(() => setEtapa(antesDoMigrar("m-plano")))}
+                            onVoltar={() =>
+                              voltar(() => setEtapa(antesDoMigrar("m-plano")))
+                            }
                           />
                         )}
                         {etapa === "m-contrato" && (
                           <MigrarContratoView
                             aceito={aceiteMigrar}
                             setAceito={setAceiteMigrar}
-                            onSeguir={() => setEtapa(depoisDoMigrar("m-contrato"))}
+                            onSeguir={() =>
+                              setEtapa(depoisDoMigrar("m-contrato"))
+                            }
                             onVoltar={() =>
-                              voltar(() => setEtapa(antesDoMigrar("m-contrato")))
+                              voltar(() =>
+                                setEtapa(antesDoMigrar("m-contrato")),
+                              )
                             }
                           />
                         )}
@@ -3796,16 +4144,22 @@ export default function ApresentacaoPage() {
                             setMetodo={setMetodo}
                             cpfCadastrado={dadosConta.cpf}
                             fluxo="migrar"
-                            onPagar={() => setEtapa(depoisDoMigrar("m-pagamento"))}
+                            onPagar={() =>
+                              setEtapa(depoisDoMigrar("m-pagamento"))
+                            }
                             onVoltar={() =>
-                              voltar(() => setEtapa(antesDoMigrar("m-pagamento")))
+                              voltar(() =>
+                                setEtapa(antesDoMigrar("m-pagamento")),
+                              )
                             }
                           />
                         )}
                         {etapa === "m-contador" && (
                           <MigrarContadorAntigoView
                             empresa={EMPRESA_MIGRAR}
-                            onSeguir={() => setEtapa(depoisDoMigrar("m-contador"))}
+                            onSeguir={() =>
+                              setEtapa(depoisDoMigrar("m-contador"))
+                            }
                           />
                         )}
                         {/* 🆕 24/08 (reunião Leonan 19/08, achado tardio) — E9.2b/c/d.
@@ -3821,7 +4175,9 @@ export default function ApresentacaoPage() {
                         {etapa === "m-socios" && (
                           <SociosView
                             contexto="migrar"
-                            onSeguir={() => setEtapa(depoisDoMigrar("m-socios"))}
+                            onSeguir={() =>
+                              setEtapa(depoisDoMigrar("m-socios"))
+                            }
                           />
                         )}
                         {etapa === "m-gov" && (
@@ -3834,7 +4190,9 @@ export default function ApresentacaoPage() {
                           // Sem onVoltar: é tela de status assíncrono, igual ao
                           // A3. A seta externa do aparelho segue funcionando.
                           <MigrarTransferenciaView
-                            onSeguir={() => setEtapa(depoisDoMigrar("m-transferencia"))}
+                            onSeguir={() =>
+                              setEtapa(depoisDoMigrar("m-transferencia"))
+                            }
                           />
                         )}
                         {etapa === "m-travado" && (
@@ -3994,46 +4352,52 @@ export default function ApresentacaoPage() {
                             segunda seta, com o rótulo morto "Legalizai".
                             Mesmo arranjo do ramo MEI no `/gate`: quando a view
                             carrega o próprio topo, o wrapper sai da frente. */}
-                        {etapa !== "perguntando" && etapa !== "perguntando-vazio" && (
-                        <header className="pt-6 pb-4 shrink-0 flex items-center gap-1.5">
-                          <button
-                            onClick={() =>
-                                // 🔄 27/08 — o voltar depende de que lado do
-                                // pagamento a tela está: a atividade (C0) volta
-                                // pro pagamento; triagem/faixa voltam pro E3.3.
-                                voltar(() => {
-                                  setIntencao("abrir");
-                                  // A C0/C0.0 não passa mais por aqui (traz o
-                                  // próprio header). Sobram veredito, triagem
-                                  // e faixa.
-                                  setEtapa(etapa === "veredito" ? "pagamento" : "endereco");
-                                })
-                              }
-                            aria-label="Voltar"
-                            className="-ml-1.5 flex h-7 w-7 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-alt"
-                          >
-                            <SetaVoltarDemo />
-                          </button>
-                          {/* 🐛 29/08 (achado do Pedro) — triagem/faixa
+                        {etapa !== "perguntando" &&
+                          etapa !== "perguntando-vazio" && (
+                            <header className="pt-6 pb-4 shrink-0 flex items-center gap-1.5">
+                              <button
+                                onClick={() =>
+                                  // 🔄 27/08 — o voltar depende de que lado do
+                                  // pagamento a tela está: a atividade (C0) volta
+                                  // pro pagamento; triagem/faixa voltam pro E3.3.
+                                  voltar(() => {
+                                    setIntencao("abrir");
+                                    // A C0/C0.0 não passa mais por aqui (traz o
+                                    // próprio header). Sobram veredito, triagem
+                                    // e faixa.
+                                    setEtapa(
+                                      etapa === "veredito"
+                                        ? "pagamento"
+                                        : "endereco",
+                                    );
+                                  })
+                                }
+                                aria-label="Voltar"
+                                className="-ml-1.5 flex h-7 w-7 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-alt"
+                              >
+                                <SetaVoltarDemo />
+                              </button>
+                              {/* 🐛 29/08 (achado do Pedro) — triagem/faixa
                               mostravam "Legalizai" fixo, igual ao bug que já
                               tinha corrigido na rota real (`/gate`). Mesmo
                               rótulo usado lá: `meta` é o destino do voltar,
                               não o nome desta tela. */}
-                          <p className="text-micro text-text-tertiary">
-                            {etapa === "faixa"
-                              ? "Perguntas rápidas"
-                              : etapa === "triagem"
-                                ? "Sobre sua empresa"
-                                : "Legalizai"}
-                          </p>
-                        </header>
-                        )}
+                              <p className="text-micro text-text-tertiary">
+                                {etapa === "faixa"
+                                  ? "Perguntas rápidas"
+                                  : etapa === "triagem"
+                                    ? "Sobre sua empresa"
+                                    : "Legalizai"}
+                              </p>
+                            </header>
+                          )}
 
                         <main className="app-main">
                           {/* 🆕 02/09 — os DOIS estados da C0 usam a mesma
                               view; o que muda é `semResultados`, que é a
                               diferença entre o nó C0_0 e o C0 no mapa. */}
-                          {(etapa === "perguntando" || etapa === "perguntando-vazio") && (
+                          {(etapa === "perguntando" ||
+                            etapa === "perguntando-vazio") && (
                             <PerguntaView
                               semResultados={etapa === "perguntando-vazio"}
                               // C0.0 → C0: buscar revela os códigos. Na demo a
@@ -4056,7 +4420,8 @@ export default function ApresentacaoPage() {
                               onVoltar={
                                 etapa === "perguntando"
                                   ? () => setEtapa("perguntando-vazio")
-                                  : () => voltar(() => setEtapa("aguardando-pago"))
+                                  : () =>
+                                      voltar(() => setEtapa("aguardando-pago"))
                               }
                               texto={texto}
                               setTexto={setTexto}
@@ -4079,7 +4444,9 @@ export default function ApresentacaoPage() {
                           {etapa === "veredito" && resultado && (
                             <VereditoView
                               r={resultado}
-                              onRefazer={() => voltar(() => setEtapa("perguntando"))}
+                              onRefazer={() =>
+                                voltar(() => setEtapa("perguntando"))
+                              }
                               // 🔄 27/08 — daqui segue pro dossiê, não mais
                               // pra triagem: a triagem ficou lá atrás, antes
                               // do pagamento. 🔄 28/08 — a 1ª tela do dossiê
@@ -4095,7 +4462,10 @@ export default function ApresentacaoPage() {
                               // cidade. Blog/site ainda não têm rota.
                               acoesConfirmacao={[
                                 { label: "Ler o blog", variante: "primary" },
-                                { label: "Conhecer o site", variante: "primary" },
+                                {
+                                  label: "Conhecer o site",
+                                  variante: "primary",
+                                },
                                 {
                                   label: "Voltar ao início",
                                   variante: "ghost",
@@ -4114,7 +4484,9 @@ export default function ApresentacaoPage() {
                               // `dadosConta.coorte` de sempre, só muda quem
                               // renderiza a UI.
                               coorte={dadosConta.coorte}
-                              setCoorte={(v) => setDadosConta((p) => ({ ...p, coorte: v }))}
+                              setCoorte={(v) =>
+                                setDadosConta((p) => ({ ...p, coorte: v }))
+                              }
                             />
                           )}
                           {etapa === "faixa" && (
@@ -4136,7 +4508,9 @@ export default function ApresentacaoPage() {
                             />
                           )}
 
-                          {etapa === "fim" && <FimPiloto onReiniciar={reiniciar} />}
+                          {etapa === "fim" && (
+                            <FimPiloto onReiniciar={reiniciar} />
+                          )}
                         </main>
                       </>
                     )}
@@ -4180,7 +4554,9 @@ export default function ApresentacaoPage() {
             <div className="mb-6 flex flex-wrap items-center gap-3">
               <h2 className="text-h1 text-text-primary">{tituloDaTela}</h2>
               {desc.dono && (
-                <span className={`shrink-0 rounded-full px-3 py-1 text-micro font-bold ${DONO_LABEL[desc.dono].cor}`}>
+                <span
+                  className={`shrink-0 rounded-full px-3 py-1 text-micro font-bold ${DONO_LABEL[desc.dono].cor}`}
+                >
                   {DONO_LABEL[desc.dono].label}
                 </span>
               )}
@@ -4199,7 +4575,9 @@ export default function ApresentacaoPage() {
                   <p className="text-caption font-bold text-text-primary mb-2">
                     🧪 Cenário no campo → {cenario.desfecho}
                   </p>
-                  <p className="text-body text-text-secondary">{cenario.porque}</p>
+                  <p className="text-body text-text-secondary">
+                    {cenario.porque}
+                  </p>
                 </div>
               )}
 
@@ -4219,8 +4597,11 @@ export default function ApresentacaoPage() {
                   <ul className="flex flex-col gap-2">
                     {divergencias.map((d) => (
                       <li key={d.id} className="text-body text-text-secondary">
-                        <strong className="text-text-primary">{d.id}</strong> — {d.oque}{" "}
-                        <span className="text-caption text-text-tertiary">({d.status})</span>
+                        <strong className="text-text-primary">{d.id}</strong> —{" "}
+                        {d.oque}{" "}
+                        <span className="text-caption text-text-tertiary">
+                          ({d.status})
+                        </span>
                       </li>
                     ))}
                   </ul>
@@ -4228,9 +4609,13 @@ export default function ApresentacaoPage() {
               )}
 
               <Bloco titulo="🎯 O que essa tela faz">{desc.faz}</Bloco>
-              <Bloco titulo="🏗️ O que interfere na constituição da empresa">{desc.interfere}</Bloco>
+              <Bloco titulo="🏗️ O que interfere na constituição da empresa">
+                {desc.interfere}
+              </Bloco>
               <Bloco titulo="📋 Por que pede esses dados">{desc.porque}</Bloco>
-              {(momento === "m-transferencia" || momento === "m-travado") && <CardPipelineTecnico />}
+              {(momento === "m-transferencia" || momento === "m-travado") && (
+                <CardPipelineTecnico />
+              )}
             </div>
           </div>
         </div>
@@ -4309,7 +4694,17 @@ export default function ApresentacaoPage() {
 
 function SetaVoltarDemo() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
       <path d="m15 18-6-6 6-6" />
     </svg>
   );
@@ -4346,7 +4741,12 @@ function Bloco({ titulo, children }: { titulo: string; children: ReactNode }) {
  * ME (como já existe pro MEI) é decisão de preço NÃO tomada — Pedro escolheu
  * decidir depois, mesmo padrão usado pro M2 do MEI.
  */
-const PASSOS_TECNICOS_TRANSFERENCIA: { passo: string; oque: string; fonte: string; ressalva?: string }[] = [
+const PASSOS_TECNICOS_TRANSFERENCIA: {
+  passo: string;
+  oque: string;
+  fonte: string;
+  ressalva?: string;
+}[] = [
   {
     passo: "1 · Distrato",
     oque: "Encerramento do contrato com o contador antigo. Define a DATA DE CORTE — a competência que fica sob responsabilidade dele.",
@@ -4358,11 +4758,11 @@ const PASSOS_TECNICOS_TRANSFERENCIA: { passo: string; oque: string; fonte: strin
     fonte: "CRC-MG",
   },
   {
-    passo: "3 · DBE Evento 232 \"Alteração do Contabilista\"",
+    passo: '3 · DBE Evento 232 "Alteração do Contabilista"',
     oque: "Via Coletor Redesim, assinado com e-CNPJ da empresa. Nossa fonte de maior confiança diz que atualiza Receita Federal + Sefaz-MG + Prefeitura de BH numa cascata SÓ.",
     fonte: "Redesim / RFB",
     ressalva:
-      "O produto mostra isso como 2 passos separados (\"Atualizando no Redesim\" + \"Trocando o responsável · Prefeitura de BH\"), por precaução — não por confirmação de que são 2 trâmites reais. Se for 1 evento só, o pipeline volta de 6 pra 5 passos.",
+      'O produto mostra isso como 2 passos separados ("Atualizando no Redesim" + "Trocando o responsável · Prefeitura de BH"), por precaução — não por confirmação de que são 2 trâmites reais. Se for 1 evento só, o pipeline volta de 6 pra 5 passos.',
   },
   {
     passo: "4 · Procuração e-CAC nova",
@@ -4392,14 +4792,19 @@ function CardPipelineTecnico() {
         🔧 Passo a passo técnico por trás (não aparece pro cliente)
       </p>
       <p className="text-caption text-text-secondary mb-4">
-        Confere com quem entende de contabilidade — os pontos ⚠️ abaixo ainda não têm fonte primária ou decisão travada.
+        Confere com quem entende de contabilidade — os pontos ⚠️ abaixo ainda
+        não têm fonte primária ou decisão travada.
       </p>
       <ol className="flex flex-col gap-4">
         {PASSOS_TECNICOS_TRANSFERENCIA.map((p) => (
           <li key={p.passo}>
-            <p className="text-body font-semibold text-text-primary">{p.passo}</p>
+            <p className="text-body font-semibold text-text-primary">
+              {p.passo}
+            </p>
             <p className="text-caption text-text-secondary mt-0.5">{p.oque}</p>
-            <p className="text-micro text-text-tertiary mt-1">Fonte: {p.fonte}</p>
+            <p className="text-micro text-text-tertiary mt-1">
+              Fonte: {p.fonte}
+            </p>
             {p.ressalva && (
               <p className="text-caption font-semibold text-state-warning-text mt-1.5">
                 ⚠️ {p.ressalva}
@@ -4409,7 +4814,8 @@ function CardPipelineTecnico() {
         ))}
       </ol>
       <p className="text-micro text-text-tertiary mt-4 pt-3 border-t border-state-warning">
-        Fonte: `pesquisa/fiscal-simples-bh-2026.md` §I + `pesquisa/cruzamento-gemini-fluxo-migracao.md` achados #6-7.
+        Fonte: `pesquisa/fiscal-simples-bh-2026.md` §I +
+        `pesquisa/cruzamento-gemini-fluxo-migracao.md` achados #6-7.
       </p>
     </div>
   );
@@ -4420,7 +4826,8 @@ function FimPiloto({ onReiniciar }: { onReiniciar: () => void }) {
     <div className="flex-1 flex flex-col items-center justify-center gap-4 text-center">
       <p className="text-h2 text-text-primary">Fim do piloto</p>
       <p className="text-body text-text-secondary max-w-[26ch]">
-        O flow real segue pro E6 (Criar conta). Essa parte entra na próxima fase.
+        O flow real segue pro E6 (Criar conta). Essa parte entra na próxima
+        fase.
       </p>
       <Button onClick={onReiniciar}>Recomeçar demo</Button>
     </div>

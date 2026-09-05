@@ -87,7 +87,22 @@ const RAIZES = new Set([
   "/impostos-v1",
   "/impostos-v2",
   "/componentes",
+  /**
+   * 🆕 05/09 (pedido do Pedro: "trave o menu como nas outras telas") — A HOME
+   * DIA-1 MOSTRA A BARRA, TRAVADA.
+   *
+   * Ela não mostrava nenhuma: "a pessoa não navega livre até liberar o acesso".
+   * O racional continua valendo, mas esconder a barra resolvia o errado — a
+   * própria tela promete, na última linha da trilha, que "tudo se abre" quando
+   * a ativação terminar. Sem barra, a promessa não tem objeto: a pessoa não vê
+   * o que está esperando. Com a barra travada, vê — e ela mesma explica por
+   * que ainda não clica, do mesmo jeito que o avatar do cabeçalho já fazia.
+   */
+  "/home-dia1",
 ]);
+
+/** As telas que mostram a barra mas ainda NÃO deixam navegar. */
+const TRAVADAS = new Set(["/home-dia1"]);
 
 export default function PortalLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -97,12 +112,27 @@ export default function PortalLayout({ children }: { children: ReactNode }) {
   return (
     <>
       {children}
-      {mostrarAbas && <BarraAbas pathname={pathname} mei={mei} />}
+      {mostrarAbas && (
+        <BarraAbas
+          pathname={pathname}
+          mei={mei}
+          travada={TRAVADAS.has(pathname)}
+        />
+      )}
     </>
   );
 }
 
-function BarraAbas({ pathname, mei }: { pathname: string; mei: boolean }) {
+function BarraAbas({
+  pathname,
+  mei,
+  travada = false,
+}: {
+  pathname: string;
+  mei: boolean;
+  /** Barra à vista, navegação fechada (ver `TRAVADAS`). */
+  travada?: boolean;
+}) {
   // 🆕 04/08 — Plano MEI não tem dashboard de impostos (DAS-MEI é fixo).
   const abas = mei ? ABAS.filter((a) => a.href !== "/impostos") : ABAS;
   // Lembra a ÚLTIMA rota visitada de cada aba (por iframe, via sessionStorage).
@@ -135,6 +165,10 @@ function BarraAbas({ pathname, mei }: { pathname: string; mei: boolean }) {
     router.push(comRegime(destino, mei));
   };
 
+  /* A MESMA frase do avatar desativado no cabeçalho da home dia-1: dois
+     elementos travados pelo mesmo motivo não podem dar dois motivos. */
+  const motivoTrava = "Disponível quando sua empresa estiver ativada";
+
   const esquerda = abas.slice(0, Math.ceil(abas.length / 2));
   const direita = abas.slice(Math.ceil(abas.length / 2));
   return (
@@ -143,7 +177,20 @@ function BarraAbas({ pathname, mei }: { pathname: string; mei: boolean }) {
     // não env — pra o /mockup conseguir simular o inset, igual ao footer-cta).
     <div
       className="app-navbar pointer-events-none absolute inset-x-0 bottom-0 z-40 px-4 pt-7"
-      style={{ paddingBottom: "calc(10px + var(--safe-bottom))" }}
+      /**
+       * 🆕 05/09 (correção do Pedro) — NA TELA TRAVADA A BARRA SOBE.
+       *
+       * A home dia-1 tem um CTA no rodapé, e ele fica na MESMA altura do CTA de
+       * todas as outras telas — anatomia fixa é o que faz a pessoa não procurar
+       * o botão. Quem cede é a barra: aqui ela está travada, não navega, e não
+       * pode disputar a thumb zone com o único elemento acionável da tela.
+       * 80px = a altura do `app-footer-cta` (botão de 48 + 16 de padding em
+       * cima e embaixo); a safe-area já vem no `bottom` e sai do padding.
+       */
+      style={{
+        paddingBottom: travada ? "10px" : "calc(10px + var(--safe-bottom))",
+        ...(travada ? { bottom: "calc(80px + var(--safe-bottom))" } : {}),
+      }}
     >
       <nav
         className="pointer-events-auto relative flex h-16 items-stretch rounded-[28px] border border-border-hairline bg-surface-card"
@@ -156,31 +203,61 @@ function BarraAbas({ pathname, mei }: { pathname: string; mei: boolean }) {
         }}
       >
         {esquerda.map((a) => (
-          <Aba key={a.href} a={a} pathname={pathname} onIr={ir} />
+          <Aba
+            key={a.href}
+            a={a}
+            pathname={pathname}
+            onIr={ir}
+            travada={travada}
+            motivo={motivoTrava}
+          />
         ))}
 
         {/* vão central: o CTA elevado ocupa este espaço (absoluto, por cima) */}
         <div className="w-16 shrink-0" aria-hidden />
 
         {direita.map((a) => (
-          <Aba key={a.href} a={a} pathname={pathname} onIr={ir} />
+          <Aba
+            key={a.href}
+            a={a}
+            pathname={pathname}
+            onIr={ir}
+            travada={travada}
+            motivo={motivoTrava}
+          />
         ))}
 
         {/* CTA ELEVADO — Emitir NF-e. Sobe metade pra fora da barra (o notch do
             print). → /emitir (P6, a tela de emissão em 1 passo). */}
         <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
-          <Link
-            href={comRegime("/emitir", mei)}
-            aria-label="Emitir nota fiscal"
-            className="flex h-[62px] w-[62px] items-center justify-center rounded-[18px] bg-action-primary text-text-on-brand shadow-lg transition-colors hover:bg-action-primary-hover active:bg-action-primary-hover"
-          >
-            {/* Sigla no lugar do ícone (pedido do Pedro). 20px BOLD não é
+          {/* 🆕 05/09 — travado também: emitir nota é justamente o que a
+              ativação destrava. Vira `span` em vez de `Link` desativado — link
+              que não leva a lugar nenhum continua sendo link pro leitor de tela.
+              Some a sombra junto: o que está travado não flutua. */}
+          {travada ? (
+            <span
+              aria-disabled
+              title={motivoTrava}
+              className="flex h-[62px] w-[62px] cursor-not-allowed items-center justify-center rounded-[18px] bg-surface-alt text-text-muted"
+            >
+              <span className="text-h2 font-bold leading-none tracking-tight">
+                NF-e
+              </span>
+            </span>
+          ) : (
+            <Link
+              href={comRegime("/emitir", mei)}
+              aria-label="Emitir nota fiscal"
+              className="flex h-[62px] w-[62px] items-center justify-center rounded-[18px] bg-action-primary text-text-on-brand shadow-lg transition-colors hover:bg-action-primary-hover active:bg-action-primary-hover"
+            >
+              {/* Sigla no lugar do ícone (pedido do Pedro). 20px BOLD não é
                 estética: branco sobre coral-600 só passa AA em texto grande
                 (≥18,66px bold) — ver o token text-on-brand no globals. */}
-            <span className="text-h2 font-bold leading-none tracking-tight">
-              NF-e
-            </span>
-          </Link>
+              <span className="text-h2 font-bold leading-none tracking-tight">
+                NF-e
+              </span>
+            </Link>
+          )}
         </div>
       </nav>
     </div>
@@ -191,29 +268,41 @@ function Aba({
   a,
   pathname,
   onIr,
+  travada = false,
+  motivo,
 }: {
   a: (typeof ABAS)[number];
   pathname: string;
   onIr: (base: string) => void;
+  travada?: boolean;
+  motivo?: string;
 }) {
   const { Icone, label } = a;
   // Ativa pela BASE (/inicio cobre as versões /inicio-ref5… e as /home-*); a
   // navegação (onIr) resolve a última versão visitada daquela aba.
-  const ativo = abaAtiva(pathname) === a.href;
+  const ativo = !travada && abaAtiva(pathname) === a.href;
   return (
     <button
       type="button"
-      onClick={() => onIr(a.href)}
+      onClick={() => !travada && onIr(a.href)}
+      disabled={travada}
+      title={travada ? motivo : undefined}
       aria-current={ativo ? "page" : undefined}
       className={`flex flex-1 flex-col items-center justify-center gap-1 transition-colors ${
-        ativo ? "text-action-primary-sm" : "text-text-tertiary"
+        travada
+          ? "cursor-not-allowed text-text-muted"
+          : ativo
+            ? "text-action-primary-sm"
+            : "text-text-tertiary"
       }`}
     >
       {/* Sem filete: o "você está aqui" é o ÍCONE + RÓTULO em coral (decisão do
           Pedro). O ícone usa currentColor, então herda a cor do botão.
           `action-primary-sm` (coral-700) = o coral AA pra elemento pequeno. */}
       <Icone />
-      <span className={`text-micro ${ativo ? "font-semibold" : ""}`}>{label}</span>
+      <span className={`text-micro ${ativo ? "font-semibold" : ""}`}>
+        {label}
+      </span>
     </button>
   );
 }
@@ -273,4 +362,3 @@ function IconeMais() {
     </svg>
   );
 }
-

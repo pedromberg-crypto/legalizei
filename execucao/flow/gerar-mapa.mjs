@@ -716,9 +716,21 @@ function auditarVoltar() {
   const SEM_VOLTA_POR_DECISAO = {
     A2: "é o ponto sem volta: passar daqui é ato, e voltar não existe (01/09)",
   };
+  /* 🆕 05/09 (auditoria do ramo assistido) — O STATUS NÃO É UM PASSO.
+     `/aguardando` é a home da jornada: ela não tem cabeçalho (logo, não tem
+     onde declarar `semVoltar`), não existe tela anterior pra onde voltar, e ela
+     é justamente o DESTINO de todo voltar do ramo. São 7 nós da mesma tela, e
+     eles sozinhos respondiam por um terço do aviso — auditoria que acusa tudo
+     não protege nada, que era o motivo de ela existir. */
+  const SEM_VOLTA_POR_ROTA = {
+    "/aguardando":
+      "é o STATUS da jornada, não um passo: sem cabeçalho, sem tela anterior, e destino do voltar das outras",
+  };
   const semVoltarPorNatureza = (n) =>
     base(n.rota).startsWith("/splash") ||
     ["espera", "saida", "feliz"].includes(n.classe) ||
+    base(n.rota) in SEM_VOLTA_POR_ROTA ||
+    n.semVoltar === true ||
     n.id in SEM_VOLTA_POR_DECISAO;
 
   for (const n of NODES.filter((x) => x.rota && x.classe !== "todo")) {

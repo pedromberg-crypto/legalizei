@@ -5,6 +5,7 @@ import { AguardandoView } from "@/components/wizard-cauda";
 import { ehMei, comRegime } from "@/lib/regime";
 import { ehEnderecoFiscal, comEndereco } from "@/lib/endereco";
 import { categoriaDe, comCategoria } from "@/lib/categoria";
+import { compromissoDaQuery, queryDoCompromisso } from "@/lib/compromisso";
 import { TEM_SOCIO } from "@/app/(app)/dossie/mock";
 
 /**
@@ -84,25 +85,32 @@ export default function AguardandoPage() {
    * rota automática, que continua sendo o destino. Racional em
    * `components/consultor.tsx`.
    */
-  const assistida = searchParams.get("rota") === "assistida";
-  /** A frase do compromisso ("Hoje às 15:00") — hero, CTA e mensagens. */
-  const agendado = searchParams.get("agendado");
-  /* 🆕 05/09 — as PARTES do compromisso, pro cartão desenhar o bloco de data
-     (ver `CardCompromisso`). Vêm juntas ou não vêm: o cartão só aparece com o
-     conjunto completo, e sem ele o status cai no estado "a marcar". */
-  const dia = searchParams.get("dia");
-  const semana = searchParams.get("semana");
-  const mes = searchParams.get("mes");
-  const hora = searchParams.get("hora");
-  const compromisso =
-    agendado && dia && semana && mes && hora
-      ? { numero: Number(dia), semana, mes, hora, hoje: searchParams.get("hoje") === "1" }
-      : null;
+  /* 🔒 05/09 (auditoria) — GUARDA POR REGIME. `?rota=assistida&regime=mei`
+     renderizava a rota assistida inteira (cartão do consultor, "Escolher um
+     horário") num regime que não tem contrato social nem guia da Junta pra
+     assinar. O MEI tem pipeline próprio (`/painel`) e chegava aqui só por URL
+     na mão, mas tela compartilhada sem guarda é como o vazamento aparece na
+     próxima mudança — a regra da casa é guardar por regime. */
+  const assistida = !mei && searchParams.get("rota") === "assistida";
+  /* 🔄 05/09 (auditoria) — O COMPROMISSO CHEGA EM PARTES, E SÓ EM PARTES.
+     Antes vinha uma frase pronta (`?agendado=`) ao lado das partes, e desistir
+     de remarcar devolvia a frase sem elas: hero, etapa e CTA diziam "hora
+     marcada" e o cartão da hora sumia. A frase agora é derivada das partes
+     dentro da view (`lib/compromisso`). */
+  const compromisso = compromissoDaQuery(searchParams);
+  /* 🆕 05/09 — `?socios=` é a CONTAGEM de sócios (mesma convenção do C3:
+     `/dossie/socios?socios=4`), e ela VENCE o mock. Sem isso os dois nós do
+     mapa (A3.H sem sócio × A3.H′ com sócio) renderizariam igual, porque
+     `TEM_SOCIO` é `true` — o mock existe pra mostrar o máximo de UI, não pra
+     decidir qual variante uma rota específica demonstra. */
+  const socios = Number(searchParams.get("socios"));
+  const temSocios =
+    Number.isFinite(socios) && socios > 0 ? socios > 1 : TEM_SOCIO;
 
   return (
     <AguardandoView
       mei={mei}
-      temSocios={TEM_SOCIO}
+      temSocios={temSocios}
       pago={pago}
       fase={fase}
       junta={
@@ -118,21 +126,42 @@ export default function AguardandoPage() {
       /* 🆕 04/09 — o mesmo flag que recua a timeline agora também troca o hero:
          a volta da 2ª rodada é um estado próprio, não a chegada do A2. */
       rodada2={reanalisando}
+      /* 🐛 05/09 (auditoria) — recuar a viabilidade zerava a guia junto, e a
+         tela voltava a cobrar de quem já pagou. As duas coisas são
+         independentes: o nome volta pra Junta, o dinheiro não volta pro
+         cliente. */
+      guiaJaPaga={reanalisando && guiaPaga}
       /* 🆕 04/09 — o hero precisa reconhecer que a 1ª assinatura já passou. */
       assinou1={assinou1}
       assistida={assistida}
-      agendado={agendado}
       compromisso={compromisso}
       /* 🆕 04/09 — o CTA da rota assistida leva pra agenda, não pro A4. */
-      /* 🆕 04/09 — quem vem REMARCAR carrega o horário atual: sem isso, tocar
-         em "Remarcar" e desistir devolvia a pessoa pra um status sem
-         agendamento nenhum, como se ela tivesse cancelado sem querer. */
-      onAgendar={() =>
-        router.push(agendado ? `/agendar?agendado=${encodeURIComponent(agendado)}` : "/agendar")
-      }
+      /* 🔄 05/09 (auditoria) — quem vem REMARCAR carrega o compromisso INTEIRO,
+         não só a frase dele. É esse conjunto que a agenda usa pra abrir no dia
+         certo, pré-selecionar a hora e reconstruir o status se a pessoa
+         desistir no meio; com só a frase, desistir apagava o cartão da hora.
+         A RODADA viaja junto: sem ela, remarcar a 2ª assinatura devolvia a
+         pessoa pra tela da 1ª. */
+      onAgendar={() => {
+        const q = new URLSearchParams(
+          compromisso ? queryDoCompromisso(compromisso) : "",
+        );
+        if (assinou1) q.set("rodada", "2");
+        /* 🆕 05/09 — a agenda precisa saber que são DOIS assinando: o contrato
+           social é assinado por todos os sócios, e o horário marcado lá vale
+           pros dois. Vai só o flag; o nome vem do mock do outro lado, como no
+           resto do wizard. */
+        /* 🔒 05/09 — vale nas DUAS rodadas. Na 1ª o sócio assina junto; na 2ª
+           a agenda usa o nome dele pra dizer que ele não precisa estar. */
+        if (temSocios) q.set("socios", "2");
+        const s = q.toString();
+        router.push(s ? `/agendar?${s}` : "/agendar");
+      }}
       // 🆕 01/09 — leva pra tela do bloco (continuar ou corrigir), preservando
       // regime e endereço fiscal, como o resto da navegação do wizard.
-      onIrParaBloco={(rota) => router.push(comEndereco(comRegime(rota, mei), enderecoFiscal))}
+      onIrParaBloco={(rota) =>
+        router.push(comEndereco(comRegime(rota, mei), enderecoFiscal))
+      }
       /**
        * 🗑️ 01/09 (decisão do Pedro) — ia pro gate de certificado (A3.2). A
        * tela SAIU do caminho de constituição de ME: o certificado digital é
@@ -153,7 +182,9 @@ export default function AguardandoPage() {
        */
       onPagarDae={() => router.push("/guia")}
       // 🆕 01/09 — último passo da fase Junta: o CTA do rodapé leva pro A4.
-      onAssinar={() => router.push(assinou1 ? "/assinatura?rodada=2" : "/assinatura")}
+      onAssinar={() =>
+        router.push(assinou1 ? "/assinatura?rodada=2" : "/assinatura")
+      }
       // 🔄 27/08 — a 1ª tela do dossiê virou a C0 (`/dossie/atividade`), não
       // mais o C1. Mesma mudança do `/pagamento` (racional lá).
       // 🐛 28/08 — faltava o ramo MEI: ia sempre pra C0 (ME), mesmo quando
@@ -168,7 +199,10 @@ export default function AguardandoPage() {
               // pessoa contar o que faz. Sem esta query o app caía direto na
               // tela com os 5 cartões e a chegada não existia pra ninguém —
               // o mapa dizia uma coisa e o link fazia outra.
-              comRegime(mei ? "/dossie/ocupacao" : "/dossie/atividade?vazia=1", mei),
+              comRegime(
+                mei ? "/dossie/ocupacao" : "/dossie/atividade?vazia=1",
+                mei,
+              ),
               enderecoFiscal,
             ),
             categoria,

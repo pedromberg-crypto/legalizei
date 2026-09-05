@@ -1,5 +1,9 @@
 # Memory Index — Legalize
 
+- [Reta final: 2 assinaturas + videochamada do certificado](legalize-reta-final-certificado-e-assinaturas.md) — 05/09: 1ª = todos os sócios (Junta) · 2ª = só contador + representante (Receita) · certificado é o ÚLTIMO passo, com parceira; procuração e-CAC saiu do flow.
+- [Regra de órgão não se deduz, se pergunta](legalize-regra-de-orgao-nao-se-deduz.md) — 05/09: a procuração teve 5 versões em 2 dias, 4 deduzidas por mim; o Ademar responde em minutos.
+- [Edição simples se resolve com Edit direto](legalize-edicao-simples-editar-direto.md) — 05/09: nada de script Python de patch nem suíte de e2e em pedido pontual de layout; Pedro cobrou lentidão 2x na mesma sessão.
+
 - [Vault isolado do agente de WhatsApp](legalize-agente-whatsapp-vault-isolado.md) — 04/09: 12 arquivos que o Léo lê em runtime; os 1332 CNAEs ficam FORA do RAG e viram tool com gate por confiança (só `alta` autoriza afirmar).
 - [Personalidade do Léo mora em 4 lugares, 2 já divergiram](legalize-leo-personalidade-4-copias.md) — 04/09: fonte é `marca/personagem-leo.md`; cópia do Ateliê está em pilares v3 e polo com "L" (o certo é o check).
 

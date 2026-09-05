@@ -788,5 +788,30 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 - Faltava dizer pra quem a gente atende (só BH, só serviço). Agora está escrito, com o endereço fiscal como saída pra quem é de fora
 ```
 
+## Semana 05/09/2026 — a reta final da abertura ficou de pé: 2 assinaturas, o certificado como último passo, e o caso de sociedade
+
+> O dia inteiro na parte final do app (do "guia paga" até o cliente entrar). Três coisas mudaram o desenho, e duas delas vieram do Ademar, não de mim: a procuração que a gente ia pedir **não é necessária**, e a assinatura com sócio tem regra diferente na Junta e na Receita. Fora isso, uma auditoria pesada encontrou 9 defeitos no que já estava construído, e três deles tinham a mesma causa.
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | **A procuração saiu do processo** | A gente ia pedir uma procuração eletrônica pro cliente assinar depois do CNPJ. O Ademar confirmou que, com o certificado digital na nossa mão, ela é dispensável. Isso tira um contato inteiro da reta final: eram 4 conversas com o cliente depois do pagamento, agora são 3 | 🟢 |
+| 2 | **O certificado digital deixou de ser "a gente resolve" e virou o último passo, com hora marcada** | O app dizia "certificado por nossa conta", como se acontecesse sozinho no fundo. Não acontece: a emissão exige videochamada de validação, feita pela certificadora parceira, que procura o cliente e marca. Quem lê "por nossa conta" não atende a ligação — e aí o processo trava no último metro | 🟢 |
+| 3 | **Assinatura com sócios: as duas etapas têm regras diferentes** | Na 1ª (registro do contrato na Junta) **todos os sócios assinam**, sejam administradores ou não. Na 2ª (Receita, a que gera o CNPJ) assinam **só o contador e o sócio representante**. O app assumia uma pessoa só nas duas. Agora ele diz quem precisa estar em cada uma — inclusive que na segunda o sócio **não** precisa vir, pra ninguém remarcar agenda à toa | 🟢 |
+| 4 | **A segunda assinatura ganhou o mesmo tratamento da primeira** | Quem terminava a 1ª voltava pro app e via o compromisso **que já tinha acontecido**, com opção de remarcar uma hora que já passou. Agora a 2ª tem o ciclo dela: avisa que falta, marca a hora, mostra o compromisso | 🟢 |
+| 5 | **Auditoria: 9 defeitos, 3 com a mesma causa** | O horário marcado viajava entre as telas como texto pronto em vez de dado. Resultado: desistir de remarcar apagava o cartão do horário (e a tela continuava dizendo que tinha hora marcada); e um nome interno do sistema vazava pro botão do cliente. Corrigido na raiz | 🟢 |
+| 6 | **A tela de "empresa aberta" foi reorganizada** | Ela usava um desenho de progresso diferente do resto do app — duas linguagens pra mesma coisa, no mesmo dia. Passou a usar o mesmo cartão de acompanhamento das outras telas, com o menu do app à vista e travado, pra mostrar o que se abre quando terminar | 🟢 |
+| 7 | **O que ficou aberto e é decisão de operação** | Quem é a certificadora parceira, em quanto tempo ela procura o cliente e o que fazer se ele não atende. E a nossa plataforma interna que recebe o certificado dela ainda não existe | 🔴 |
+
+### 📱 WhatsApp (05/09)
+```
+*Update Legalizai* 📣
+- Confirmei com o Ademar: com certificado digital, a procuração do cliente não é necessária. Tira um contato inteiro da reta final (eram 4 conversas depois do pagamento, agora são 3)
+- O certificado digital virou o último passo do processo, com videochamada marcada pela certificadora parceira. Antes o app dizia "por nossa conta", e quem lê isso não atende a ligação
+- Assinatura com sócios agora está certa nas duas etapas: na Junta todos assinam, na Receita só o contador e o representante. O app dizia que o sócio precisava estar nas duas
+- A 2ª assinatura ganhou tela própria: quem terminava a 1ª via no app um compromisso que já tinha acontecido
+- Auditoria no trecho final achou 9 problemas antes de liberar. Três tinham a mesma causa e foram corrigidos na raiz
+- Falta decidir com você: qual certificadora parceira, prazo de contato com o cliente, e o que fazer se ele não atender a videochamada
+```
+
 ## Links
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]] · [[estado-atual]] · [[indice-autoridade]]

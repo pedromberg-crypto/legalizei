@@ -1,7 +1,13 @@
 "use client";
 
 import { CONSULTOR } from "@/app/(app)/dossie/mock";
-import { SimboloLegalizai } from "@/components/logo";
+import { SimboloLegalizai, NomeLegalizai } from "@/components/logo";
+import {
+  fimDoSlot,
+  type Compromisso,
+  type RodadaAssinatura,
+} from "@/lib/compromisso";
+import { rotuloSocios } from "@/lib/socios";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -61,8 +67,36 @@ export function SeloConsultor({ tamanho = 44 }: { tamanho?: number }) {
  *
  * `motivo` é opcional porque na 2ª aparição a explicação já foi dada: repetir
  * o porquê em toda tela transforma um argumento bom em ladainha.
+ *
+ * 🆕 05/09 (pedido do Pedro) — `rodada` 2 é a assinatura QUE GERA O CNPJ, e o
+ * motivo dela é outro: além do código de 10 minutos, entra o CONTADOR, que
+ * assina o mesmo ato do nosso lado. Repetir só o argumento do código na 2ª
+ * faria a pessoa ler "de novo a mesma coisa" numa etapa que na verdade tem uma
+ * exigência a mais.
  */
-export function CardConsultor({ motivo = true }: { motivo?: boolean }) {
+export function CardConsultor({
+  motivo = true,
+  rodada = 1,
+  socios = [],
+}: {
+  motivo?: boolean;
+  rodada?: RodadaAssinatura;
+  /**
+   * 🆕 05/09 (achado do Pedro) — PRIMEIRO NOME DO SÓCIO, quando a empresa tem
+   * um. O contrato social é o acordo ENTRE os sócios: todos assinam, sejam
+   * administradores ou não (art. 997/999 CC). A qualificação 49×22 decide quem
+   * REPRESENTA a empresa depois de aberta, não quem assina a constituição —
+   * são camadas diferentes, e ler uma como a outra é o erro que só aparece no
+   * cartório.
+   *
+   * Isso muda o ato inteiro: não é uma pessoa com um consultor, são duas
+   * pessoas e um consultor, no mesmo código de 10 minutos.
+   */
+  socios?: string[];
+}) {
+  /* Como citar os outros sócios nesta frase: 1 → o nome, 2+ → a contagem.
+     Ver o racional inteiro em `lib/socios`. */
+  const outros = rotuloSocios(socios);
   return (
     <div className="rounded-md border border-border-hairline bg-surface-card p-4">
       {/* 🗑️ 05/09 (pedido do Pedro) — saiu o subtítulo "Gente da nossa equipe,
@@ -75,15 +109,21 @@ export function CardConsultor({ motivo = true }: { motivo?: boolean }) {
       <div className="flex items-center gap-3">
         <SeloConsultor />
         <div className="min-w-0 flex-1">
-          <p className="text-body-strong font-semibold text-text-primary">{CONSULTOR.titulo}</p>
+          <p className="text-body-strong font-semibold text-text-primary">
+            {CONSULTOR.papel} <NomeLegalizai />
+          </p>
         </div>
         {/* O rótulo diz de quem é a janela: é o atendimento da casa, não a
             agenda de uma pessoa. `shrink-0` + `text-right` pra ela nunca
             quebrar sozinha no meio de "Seg a" / "sex". */}
         <div className="shrink-0 text-right">
           <p className="text-micro text-text-muted">Atendimento</p>
-          <p className="text-micro text-text-tertiary">{CONSULTOR.atendimentoDias}</p>
-          <p className="text-micro text-text-tertiary">{CONSULTOR.atendimentoHoras}</p>
+          <p className="text-micro text-text-tertiary">
+            {CONSULTOR.atendimentoDias}
+          </p>
+          <p className="text-micro text-text-tertiary">
+            {CONSULTOR.atendimentoHoras}
+          </p>
         </div>
       </div>
 
@@ -93,8 +133,27 @@ export function CardConsultor({ motivo = true }: { motivo?: boolean }) {
               ("A partir daqui um consultor conduz com você") repetia o hero
               logo acima. Ficou só o que este cartão é o único a explicar: POR
               QUE precisa de alguém junto. Fato, não desculpa. */}
-          O GOV.BR manda um código que vale 10 minutos, então a assinatura é feita
-          com alguém do seu lado.
+          {rodada === 2
+            ? /* ✍️ 05/09 (pente-fino) — o cartão dizia de novo que o sócio não
+                 precisa vir, terceira vez na mesma tela (hero, cartão e etapa).
+                 Ele volta a carregar só o POR QUÊ, que é o que nenhum outro
+                 bloco diz. A dispensa explícita mora na AGENDA, que é onde ela
+                 muda o que a pessoa faz. */
+              "O código do GOV.BR vale 10 minutos e vale pro ato inteiro, então o contador assina do nosso lado na mesma hora que você."
+            : outros
+              ? /* 🆕 05/09 — com sócio, o código de 10 minutos deixa de ser
+                   curiosidade e vira a razão de existir hora marcada: todos
+                   precisam estar no mesmo momento, e "cada um assina quando
+                   puder" simplesmente não funciona. */
+                /* 🐛 05/09 (pente-fino) — dois defeitos numa frase só:
+                   (1) `toLowerCase()` no sujeito inteiro derrubava o NOME do
+                       sócio pra minúscula ("você e carlos");
+                   (2) ela repetia o hero logo acima quase palavra por palavra,
+                       inclusive o fecho "com um consultor conduzindo".
+                   O cartão volta a dizer só o que só ele diz: POR QUE tem que
+                   ser no mesmo momento. Quem já está no ato é assunto do hero. */
+                "O GOV.BR manda um código que vale 10 minutos, e ele vale pra assinatura de todos. Por isso o horário é o mesmo pra todo mundo."
+              : "O GOV.BR manda um código que vale 10 minutos, então a assinatura é feita com alguém do seu lado."}
         </p>
       )}
     </div>
@@ -117,19 +176,25 @@ export function CardConsultor({ motivo = true }: { motivo?: boolean }) {
  * pessoa procura quando abre o app pela terceira vez pra conferir o
  * compromisso, e como bloco ele se acha de relance, sem ler frase nenhuma.
  *
- * 🔒 O botão de contato mora AQUI, junto de quem atende, e por isso saiu do
- * rodapé da tela — a mesma ação em dois lugares na mesma tela faz a pessoa
- * achar que são coisas diferentes. No rodapé sobrou "Remarcar", que é ação de
- * app e tem outro destino.
+ * 🗑️ 05/09 (pedido do Pedro) — SAIU o botão circular de WhatsApp do rodapé do
+ * cartão. Ele tinha vindo pra cá no mesmo dia, do rodapé da tela, e mesmo aqui
+ * continuava sendo um alvo de toque genérico ("fale com alguém") competindo
+ * com o único dado que o cartão existe pra afirmar: o horário. Quem tem hora
+ * marcada não precisa de um canal aberto na mesma caixa que diz a hora.
+ * O rodapé do cartão fica só com a identificação de quem conduz.
  */
 export function CardCompromisso({
   quando,
-  onFalar,
+  rodada = 1,
+  socios = [],
 }: {
-  quando: { numero: number; semana: string; mes: string; hora: string; hoje?: boolean };
-  /** Href do WhatsApp (o botão circular do rodapé do cartão). */
-  onFalar?: string;
+  quando: Compromisso;
+  /** 🆕 05/09 — a 2ª assinatura é outra coisa, e o cartão precisa dizer qual. */
+  rodada?: RodadaAssinatura;
+  /** Os outros sócios: o cartão precisa dizer quantas pessoas o horário ocupa. */
+  socios?: string[];
 }) {
+  const outros = rotuloSocios(socios);
   return (
     <div className="rounded-md border border-border-hairline bg-surface-card p-4">
       <div className="flex items-start gap-3.5">
@@ -169,68 +234,44 @@ export function CardCompromisso({
               Não confundir com a regra dura da casa, que proíbe o TRAVESSÃO
               (—) como pontuação de frase em texto público. */}
           <p className="text-h1 font-bold leading-none tabular-nums text-text-primary">
-            {quando.hora} – {maisMeiaHora(quando.hora)}
+            {quando.hora} – {fimDoSlot(quando.hora)}
           </p>
           <p className="text-caption text-text-primary mt-1.5">
-            Sua assinatura, feita junto com você
+            {/* 🆕 05/09 (pedido do Pedro) — a 2ª assinatura NÃO é "mais uma":
+                é a que gera o CNPJ, e tem o contador junto. Um cartão que diz
+                a mesma frase nas duas faria a pessoa achar que remarcou a
+                primeira por engano. */}
+            {rodada === 2
+              ? "A assinatura que gera seu CNPJ"
+              : outros
+                ? `Sua assinatura e a de ${outros}`
+                : "Sua assinatura, feita junto com você"}
           </p>
           {/* 🗑️ 05/09 — saiu o "cerca de 15 min": com a faixa de 30 minutos
               logo acima, os dois números na mesma caixa liam como contradição.
               A duração real continua dita na tela ANTERIOR, que é onde ela
               ajuda a decidir o horário. */}
-          <p className="text-micro text-text-secondary mt-0.5">Por telefone ou WhatsApp</p>
+          <p className="text-micro text-text-secondary mt-0.5">
+            {rodada === 2
+              ? outros
+                ? `Só você e o contador, sem ${socios.length === 1 ? "o sócio" : "os sócios"}`
+                : "Com você, um consultor e seu contador"
+              : outros
+                ? /* 🆕 05/09 — o horário é de TODOS os sócios. Sem isto, o
+                     cartão marcava uma hora que parecia só dela, e os outros
+                     viravam surpresa no dia. */
+                  `${socios.length === 1 ? "Os dois" : "Todos"} no mesmo horário, por telefone ou WhatsApp`
+                : "Por telefone ou WhatsApp"}
+          </p>
         </div>
       </div>
 
       <div className="mt-3 flex items-center gap-2 border-t border-border-hairline pt-3">
         <SeloConsultor tamanho={28} />
         <p className="min-w-0 flex-1 text-caption font-semibold text-text-primary">
-          Consultor oficial Legalizai
+          {CONSULTOR.papel} <NomeLegalizai />
         </p>
-        {onFalar && (
-          <a
-            href={onFalar}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Falar com um consultor no WhatsApp"
-            /* 40px de alvo: botão circular pequeno é onde o toque erra mais,
-               e este é o único atalho de contato da tela. */
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border-hairline text-text-primary transition-colors hover:border-border-strong"
-          >
-            <IconeConversa />
-          </a>
-        )}
       </div>
     </div>
-  );
-}
-
-/**
- * Fim do slot: começo + 30 minutos, que é o passo da agenda.
- *
- * Calculado aqui em vez de virar mais um campo na querystring: é derivação
- * pura de um dado que já existe, e dado derivado que viaja é dado que um dia
- * chega divergente do original.
- */
-function maisMeiaHora(hora: string) {
-  const [h, m] = hora.split(":").map(Number);
-  const total = h * 60 + m + 30;
-  const hh = String(Math.floor(total / 60) % 24).padStart(2, "0");
-  const mm = String(total % 60).padStart(2, "0");
-  return `${hh}:${mm}`;
-}
-
-/** Balão de conversa: o atalho é WhatsApp, não ligação. */
-function IconeConversa() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M21 11.5a8.4 8.4 0 0 1-11.9 7.6L3 21l1.9-6a8.4 8.4 0 1 1 16.1-3.5Z"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
   );
 }

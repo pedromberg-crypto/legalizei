@@ -57,6 +57,31 @@ export const TEM_SOCIO = true;
 export const SOCIO_2 = { nome: "Carlos Eduardo Silva" };
 
 /**
+ * 🆕 05/09 — SÓCIOS 3 E 4, pro caso de N.
+ *
+ * Nasceram do áudio do Ademar sobre a 1ª assinatura ("se cadastrou dez, dez
+ * assinam"): o ramo assistido citava UM nome numa tela que pode ter até 4
+ * pessoas (o C3 aceita 3 sócios além do titular). Sem estes, a variante de 3+
+ * sócios não tinha como ser desenhada nem revisada.
+ *
+ * ⚠️ Nomes inventados por mim, não escolhidos pelo Pedro — se ele preferir
+ * outros, é trocar aqui e a tela inteira acompanha.
+ */
+export const SOCIO_3 = { nome: "Marina Alves Prado" };
+export const SOCIO_4 = { nome: "Rafael Nogueira Lima" };
+
+/**
+ * Os sócios ALÉM do titular, na quantidade pedida.
+ *
+ * `quantos` é o total de sócios da empresa (mesma convenção do C3 e da query
+ * `?socios=`), então o titular sai da conta aqui dentro — quem chama pensa em
+ * "a empresa tem 3 sócios", não em "há 2 além de mim".
+ */
+export function sociosExtras(quantos: number): { nome: string }[] {
+  return [SOCIO_2, SOCIO_3, SOCIO_4].slice(0, Math.max(0, quantos - 1));
+}
+
+/**
  * 🔄 05/09 (correção do Pedro) — NÃO EXISTE CONSULTOR EXCLUSIVO.
  *
  * A versão anterior daqui tinha nome, sobrenome, CRC e avatar de iniciais
@@ -76,8 +101,14 @@ export const SOCIO_2 = { nome: "Carlos Eduardo Silva" };
  * de avatar e primeiro nome em copy não têm de onde sair.
  */
 export const CONSULTOR = {
-  /** Como a casa se apresenta nesse papel. */
-  titulo: "Consultor oficial Legalizai",
+  /**
+   * Como a casa se apresenta nesse papel — SÓ o papel.
+   *
+   * 🔄 05/09 (pedido do Pedro) — era "Consultor oficial Legalizai", com o
+   * nome da marca dentro. O nome saiu porque metade dele agora vai em coral
+   * (`NomeLegalizai`), e cor não cabe num campo de texto: a tela junta os dois.
+   */
+  papel: "Consultor oficial",
   /**
    * Janela de atendimento DA CASA. A tela rotula como "Atendimento" pra não
    * ler como a agenda de uma pessoa específica (que não existe).
@@ -98,7 +129,9 @@ export const NOMES_SOCIOS: string[] = TEM_SOCIO
  */
 export const NOME_EMPRESARIAL = (() => {
   const partes = CLIENTE.nome.trim().split(/\s+/);
-  return partes.length > 1 ? `${partes[0]} ${partes[partes.length - 1]}` : partes[0];
+  return partes.length > 1
+    ? `${partes[0]} ${partes[partes.length - 1]}`
+    : partes[0];
 })();
 
 /**

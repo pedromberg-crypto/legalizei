@@ -804,9 +804,44 @@ export const NODES = [
   //
   // ⚠️ A4, A4.1 e A4″ NÃO saem do mapa: elas são a rota automática, o destino.
   // Isto é um desvio no fim, não uma amputação.
-  { id: "A3_H", caminho: "abrir", rota: "/aguardando?fase=junta&guia=paga&rota=assistida", label: "A3.H · Passagem<br/>pra consultora", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "🔴 Telas internas (ficha de handoff, fila por espera, checklist do consultor espelhado na timeline do cliente) NÃO estão construídas — o Pedro faz depois. Sem elas o consultor recomeça a conversa do zero, que é justamente o que o handoff existe pra evitar. 🔴 Consultora é mock (`CONSULTOR` em `dossie/mock.ts`): no real vem do sistema interno, com o WhatsApp dela.", dados: "Nome, papel e registro (CRC) da consultora · janela de atendimento" },
-  { id: "A3_H1", caminho: "abrir", rota: "/agendar", label: "A3.H1 · Marcar horário<br/>com a consultora", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "🔴 Agenda é mock (3 dias fixos): no real vem da disponibilidade da consultora. 🔴 Confirmação, lembrete e remarcação são do dev. A decisão de produto está travada: AGENDAR vence 'fale conosco' porque a assinatura exige sincronia (código de 10min, os dois juntos) — 'manda mensagem e espera' quebra dos dois lados.", dados: "Dia e horário escolhidos pra chamada de assinatura" },
-  { id: "A3_H2", caminho: "abrir", rota: "/aguardando?fase=junta&guia=paga&rota=assistida&agendado=Hoje%20%C3%A0s%2015%3A00&dia=5&semana=Sex&mes=Set&hora=15%3A00&hoje=1", label: "A3.H2 · Status<br/>(horário marcado)", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "As 2 etapas de assinatura ficam no 5º estado da timeline (`com-a-casa`, silhueta de pessoa — estado NOVO no DS, 04/09) com o compromisso no detalhe. O CTA fica travado dizendo quando a consultora chama, mesmo padrão do 'Aguardando compensação' do boleto.", dados: "" },
+  { id: "A3_H", caminho: "abrir", rota: "/aguardando?fase=junta&guia=paga&rota=assistida", label: "A3.H · Passagem<br/>pro consultor", forma: "tela", classe: "", semVoltar: true, status: "construida", validado: "pendente", falta: "🔴 Telas internas (ficha de handoff, fila por espera, checklist do consultor espelhado na timeline do cliente) NÃO estão construídas — o Pedro faz depois. Sem elas o consultor recomeça a conversa do zero, que é justamente o que o handoff existe pra evitar. 🔴 Quem atende é mock (`CONSULTOR` em `dossie/mock.ts`): no real vem do sistema interno, com o WhatsApp da casa.", dados: "Papel e janela de atendimento de quem conduz (05/09: NÃO há consultor designado, então não há nome nem CRC individual)" },
+  { id: "A3_H1", caminho: "abrir", rota: "/agendar", label: "A3.H1 · Marcar horário<br/>(1ª assinatura)", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "🔴 Agenda é mock (7 dias fixos): no real vem da disponibilidade da casa. 🔴 Confirmação, lembrete e remarcação são do dev. A decisão de produto está travada: AGENDAR vence 'fale conosco' porque a assinatura exige sincronia (código de 10min, os dois juntos) — 'manda mensagem e espera' quebra dos dois lados. 🆕 05/09: a mesma tela serve a 2ª assinatura (`?rodada=2`, nó A3.H4) e reconhece quem vem REMARCAR (compromisso na URL: abre no dia certo, com a hora selecionada).", dados: "Dia e horário escolhidos pra chamada de assinatura" },
+  { id: "A3_H2", caminho: "abrir", rota: "/aguardando?fase=junta&guia=paga&rota=assistida&dia=5&semana=Sex&mes=Set&hora=15%3A00&hoje=1", label: "A3.H2 · Status<br/>(1ª marcada)", forma: "tela", classe: "", semVoltar: true, status: "construida", validado: "pendente", falta: "As 2 etapas de assinatura ficam no 5º estado da timeline (`com-a-casa`, silhueta de pessoa — estado NOVO no DS, 04/09) com o compromisso no detalhe. O CTA fica travado dizendo quando o consultor chama, mesmo padrão do 'Aguardando compensação' do boleto. 🐛→🔒 05/09 (auditoria): o compromisso viajava como FRASE pronta ao lado das partes, e desistir de remarcar devolvia a frase sem elas — hero, etapa e CTA diziam 'hora marcada' e o cartão da hora sumia. Agora ele viaja só em partes (`lib/compromisso`).", dados: "" },
+
+  // ═══════ 🆕 05/09 (achado do Pedro) — O RAMO ASSISTIDO IGNORAVA O SÓCIO ═══
+  // Todo o trecho A3.H → A3.H2 foi construído assumindo UMA pessoa. O contrato
+  // social é assinado por TODOS os sócios (art. 997/999 CC): a qualificação
+  // 49 × 22 decide quem REPRESENTA a empresa depois de aberta, não quem assina
+  // a constituição. São camadas diferentes, e a ata de 01/09 ("sócio 22 não
+  // assina pela empresa") fala da primeira, não da segunda.
+  //
+  // Consequência: a 1ª assinatura é ato de DUAS pessoas, no mesmo código de 10
+  // minutos. Isso muda o cartão (o horário é dos dois), a agenda (entra "Quem
+  // assina" e a promessa de avisar o sócio) e o status (o consultor chama os
+  // dois). São VARIANTES por `temSocios`, não telas novas.
+  //
+  // 🔴 A 2ª assinatura (A3.H3-H5) fica de fora DE PROPÓSITO: se o DBE é
+  // assinado só pelo representante ainda é pergunta aberta com o especialista
+  // (05/09). Melhor um ramo sem variante do que uma variante inventada — foi o
+  // que a procuração custou hoje (5 versões em 2 dias, 4 delas deduzidas).
+  { id: "A3_HS", caminho: "abrir", rota: "/aguardando?fase=junta&guia=paga&rota=assistida&socios=2", label: "A3.H′ · Passagem<br/>(com sócio)", forma: "tela", classe: "", semVoltar: true, status: "construida", validado: "pendente", falta: "🔒 RATIFICADO 05/09 (Ademar, por escrito): na 1ª assinatura, a do registro do contrato na JUCEMG, TODOS os sócios assinam. Variante da A3.H quando a empresa tem sócio: o hero e o cartão passam a dizer que os DOIS assinam no mesmo momento, e o motivo do código de 10 minutos deixa de ser curiosidade — é ele que obriga a hora marcada. 🔴 O convite ao sócio ainda não existe aqui: quem avisa é a tela de agenda, ao confirmar.", dados: "" },
+  { id: "A3_H1S", caminho: "abrir", rota: "/agendar?socios=2", label: "A3.H1′ · Marcar horário<br/>(com sócio)", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "Entra o bloco 'Quem assina' (você + sócio, os dois no 5º estado do DS) e a promessa de avisar o sócio por WhatsApp ao confirmar. 🔒 O aviso mora AQUI e não em tela própria: a rota automática (A4) tem convite com seletor de canal, e trazer aquilo pra cá pediria uma decisão a mais ('por onde avisar?') no meio de outra ('que horas?'). 🔴 ABERTO: (1) o convite é só promessa de copy, não há envio; (2) não existe estado de 'sócio não confirmou' nem tela do lado DELE; (3) a agenda casa UMA disponibilidade — no real são duas pessoas e um consultor no mesmo slot.", dados: "Dia e horário da assinatura, válido pros dois sócios" },
+  { id: "A3_H2S", caminho: "abrir", rota: "/aguardando?fase=junta&guia=paga&rota=assistida&socios=2&dia=5&semana=Sex&mes=Set&hora=15%3A00&hoje=1", label: "A3.H2′ · Status<br/>(marcada, com sócio)", forma: "tela", classe: "", semVoltar: true, status: "construida", validado: "pendente", falta: "O cartão do compromisso nomeia os dois ('Sua assinatura e a de Carlos' · 'Os dois no mesmo horário') e a etapa diz que o consultor chama os dois. 🔴 O status NÃO mostra se o sócio confirmou — e esse é o caso mais provável de travar a esteira no dia da chamada.", dados: "" },
+
+  // ═══════ 🆕 05/09 (pedido do Pedro) — O CICLO DA 2ª ASSINATURA ═════
+  // "Temos o status de segunda assinatura e essa exige a mesma complexidade da
+  // primeira." Exige mais, na verdade: além do código de 10 minutos, o CONTADOR
+  // assina o mesmo ato. Até 05/09 a rota assistida tinha ciclo só pra 1ª — a
+  // volta da primeira caía num status que ainda mostrava o compromisso JÁ
+  // CUMPRIDO e oferecia remarcar uma hora que tinha passado.
+  //
+  // São as MESMAS 3 telas com variante (`?assinatura=1` no status, `?rodada=2`
+  // na agenda), não telas novas: a mecânica que a pessoa já aprendeu não pode
+  // mudar entre uma assinatura e outra. O que muda é o ato marcado, e isso a
+  // copy diz em todos os pontos (hero, cartão, etapa, CTA e o WhatsApp expresso).
+  { id: "A3_H3", caminho: "abrir", rota: "/aguardando?fase=junta&guia=paga&rota=assistida&assinatura=1", label: "A3.H3 · Passagem<br/>(2ª assinatura)", forma: "tela", classe: "", semVoltar: true, status: "construida", validado: "pendente", falta: "🔴 Como o consultor avisa que a 1ª foi registrada e a 2ª está liberada (push, WhatsApp, os dois) é decisão de operação + dev. 🔴 A fila do CONTADOR do lado da Legalize (quem assina, em quanto tempo) é spec de dashboard interno e não existe.", dados: "" },
+  { id: "A3_H4", caminho: "abrir", rota: "/agendar?rodada=2", label: "A3.H4 · Marcar horário<br/>(2ª, contador junto)", forma: "tela", classe: "", status: "construida", validado: "pendente", falta: "🔴 A agenda é a mesma mock da A3.H1 e NÃO cruza a disponibilidade do contador — no real são duas agendas que precisam coincidir, e é isso que decide se este passo tem os mesmos horários da 1ª. Decisão de operação (Mauro) antes de virar spec.", dados: "Dia e horário da assinatura que gera o CNPJ" },
+  { id: "A3_H5", caminho: "abrir", rota: "/aguardando?fase=junta&guia=paga&rota=assistida&assinatura=1&dia=8&semana=Seg&mes=Set&hora=09%3A30", label: "A3.H5 · Status<br/>(2ª marcada)", forma: "tela", classe: "", semVoltar: true, status: "construida", validado: "pendente", falta: "🔒 05/09 (Ademar): na 2ª assinam SÓ o contador e o sócio REPRESENTANTE (sempre quem abriu o app) — por isso este ramo NÃO tem variante com sócio, e a copy diz explicitamente que o sócio não precisa estar. Mesmo cartão de compromisso da A3.H2, nomeando o outro ato ('A assinatura que gera seu CNPJ' · 'Com você, um consultor e seu contador'). 🔴 O que acontece se o contador furar o horário não está desenhado.", dados: "" },
 
   // 🆕 04/09 (Pedro, destrinchando o processo real) — SÃO DUAS ASSINATURAS.
   // Até o CNPJ existir a pessoa assina 2×: a 1ª sozinha (formaliza o contrato
@@ -855,7 +890,7 @@ export const NODES = [
   // consultora. Ela é e-CAC, tem CAPTCHA e, segundo o Ademar (RS36, 26/08),
   // são quatro procurações diferentes lá dentro: terminar a rota mandando a
   // pessoa fazer sozinha justamente isso desmentiria todas as telas anteriores.
-  { id: "A5_H", caminho: "abrir", rota: "/home-dia1?rota=assistida", label: "✅ A5.H · Home dia-1<br/>(rota assistida)", forma: "terminal", classe: "feliz", status: "construida", validado: "pendente", falta: "🔴 Como a consultora avisa que o CNPJ saiu (push, WhatsApp, os dois) é decisão de operação + dev. 🔴 O passo da procuração fica sem CTA de propósito: a conversa já está aberta no WhatsApp, e um botão aqui abriria um segundo canal pro mesmo assunto.", dados: "" },
+  { id: "A5_H", caminho: "abrir", rota: "/home-dia1?rota=assistida", label: "✅ A5.H · Home dia-1<br/>(rota assistida)", forma: "terminal", classe: "feliz", status: "construida", validado: "pendente", falta: "\U0001f504 05/09 (Pedro, confirmado com o Ademar) — O ÚLTIMO PASSO É O CERTIFICADO DIGITAL, e ele não é recibo: a emissão exige VIDEOCHAMADA de validação com hora marcada, feita por uma CERTIFICADORA PARCEIRA que procura o cliente, agenda, conduz, emite e sobe os arquivos numa plataforma interna nossa. Emitido o certificado, o app abre por completo. \U0001f5d1️ A PROCURAÇÃO e-CAC SAIU do flow: com o certificado ativo ela é dispensável (registro de 31/08, RS38-40 item 17, ratificado por telefone com o Ademar em 05/09) — com o e-CNPJ na mão a gente age pela empresa direto. \U0001f534 ABERTO: (1) a plataforma interna que RECEBE o certificado da parceira não existe (spec de dashboard interno); (2) o agendamento da videochamada acontece FORA do app, então não há tela de agenda aqui; (3) qual parceira, prazo de contato e o que fazer se o cliente não atende são decisão de operação (Mauro); (4) como o consultor avisa que o CNPJ saiu (push, WhatsApp, os dois) é operação + dev. \U0001f5d1️ 05/09: saíram da tela a tarefa 'Conferir os dados da empresa' (conferência já feita no A1), o cartão 'Sem pressa com imposto' e os blocos de conteúdo do pé (Aprenda/Quem cuida, que são de home em regime). \U0001f195 05/09: a barra de abas aparece TRAVADA, com a mesma frase do avatar desativado; a trilha usa o cartão de status da casa (`TimelineEmBlocos`), não mais uma timeline própria.", dados: "" },
   { id: "A5", caminho: "abrir", rota: "/home-dia1", label: "✅ A5 · Home dia-1<br/>(ativação)", forma: "terminal", classe: "feliz", status: "construida", validado: "oficial", falta: "🔓 SWAP validado 30/07 (confirmado no código: assinatura empurra direto pra cá). 🆕 24/08 (reunião Leonan): trilha agora mostra 3 status explícitos — Procuração (feito, instantâneo com o código) → Validação do certificado digital (agora, linka pra /mais/certificado upload+oferta) → Acesso completo. 🔄 26/08 (item 7): certificado deixou de ser 'agora' e virou 'feito' — já foi validado antes da assinatura (A3.2). Quem vira 'agora' é 'Conferir os dados da empresa' (`/mais/empresa`). 🔄 01/09 (decisão do Pedro, com a A3.2 fora do caminho ME): o passo do certificado continua 'feito', mas o texto mudou de 'você já resolveu antes de assinar' pra **'Certificado digital por nossa conta'** — é incluso no plano e emitido pela Legalizai quando for necessário, não tarefa do cliente. `/mais/certificado` segue existindo, só que agora é pra RENOVAR/trocar, não pra validar a 1ª vez. Sem confete nem selo coral no hero. Handoff pro flow Portal (letra P) → autoridade portal-data.mjs", dados: "" },
 ];
 
@@ -1023,9 +1058,28 @@ export const EDGES = [
   { de: "A3_GP", para: "A3_H", label: "rota assistida (lançamento)" },
   { de: "A3_H", para: "A3_H1", label: "escolher horário" },
   { de: "A3_H1", para: "A3_H2", label: "horário confirmado" },
+  /* 🆕 05/09 — o mesmo ciclo, quando a empresa tem sócio. A bifurcação é o
+     dossiê (C3), não uma escolha desta etapa: quem tem sócio entra aqui. */
+  { de: "A3_GP", para: "A3_HS", tracejado: true, label: "com sócio" },
+  { de: "A3_HS", para: "A3_H1S", label: "escolher horário" },
+  { de: "A3_H1S", para: "A3_H2S", label: "horário confirmado (avisa o sócio)" },
+  { de: "A3_H2S", para: "A3_H1S", tracejado: true, label: "remarcar" },
+  { de: "A3_H2S", para: "A3_H3", tracejado: true, label: "1ª feita pelos dois sócios" },
+  /* 🆕 05/09 (auditoria) — REMARCAR é aresta de verdade e faltava no mapa: o
+     status volta pra agenda, e a agenda sabe qual compromisso está sendo
+     trocado. Sem ela o mapa mostrava um caminho só de ida. */
+  { de: "A3_H2", para: "A3_H1", tracejado: true, label: "remarcar" },
   // A consultora conduz as 2 assinaturas ao vivo; quando o CNPJ sai, o cliente
   // aterrissa na mesma A5 da rota automática.
-  { de: "A3_H2", para: "A5_H", tracejado: true, label: "assinaturas feitas com a consultora" },
+  /* 🔄 05/09 (pedido do Pedro) — a A3.H2 NÃO cai mais direto na A5.H. Entre
+     elas existe a 2ª assinatura, e ela tem o mesmo ciclo da 1ª: volta pro
+     status, marca hora, espera. Era esse pulo que fazia a rota assistida
+     prometer o CNPJ logo depois da primeira. */
+  { de: "A3_H2", para: "A3_H3", tracejado: true, label: "1ª feita, com o consultor" },
+  { de: "A3_H3", para: "A3_H4", label: "marcar a 2ª" },
+  { de: "A3_H4", para: "A3_H5", label: "horário confirmado" },
+  { de: "A3_H5", para: "A3_H4", tracejado: true, label: "remarcar" },
+  { de: "A3_H5", para: "A5_H", tracejado: true, label: "2ª feita: CNPJ gerado (contador junto)" },
   { de: "A3", para: "A4", tracejado: true, label: "ME · DAE paga" },
   // No MEI o painel não espera órgão: espera o ATENDENTE conferir. Quando ele
   // libera, a etapa vira ação do cliente e abre o M-S.

@@ -1,32 +1,61 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { TelaHeader, Titulo, Corpo, Rodape, Aviso, Rolagem } from "@/components/ui/tela";
+import {
+  TelaHeader,
+  Titulo,
+  Corpo,
+  Rodape,
+  Aviso,
+  Rolagem,
+} from "@/components/ui/tela";
 import { Checkbox, Campo, Texto, OpcoesLinha } from "@/components/ui/form";
-import { PillCnpj, AprendaGradiente } from "@/components/lab/campea-blocks";
-import { QuemCuida } from "@/components/lab/ref9-blocks";
+import { PillCnpj } from "@/components/lab/campea-blocks";
 import { CUSTOS, brl } from "@/lib/fiscal";
 import { passosDoCliente } from "@/lib/passos";
 // 🆕 03/09 — o recap mostra estado civil, regime de bens e tipo de imóvel com
 // o MESMO rótulo que a pessoa viu ao responder (fonte única em `lib/`).
-import { ESTADO_CIVIL, REGIME_BENS, TIPO_IMOVEL, rotuloDe } from "@/lib/qualificacao";
+import {
+  ESTADO_CIVIL,
+  REGIME_BENS,
+  TIPO_IMOVEL,
+  rotuloDe,
+} from "@/lib/qualificacao";
 /* 🆕 04/09 — fonte única do nome de cada CNAE (oficial IBGE). Ver `lib/cnae`. */
 import { nomeCnae } from "@/lib/cnae";
 // 🆕 03/09 — nome/CPF/e-mail/telefone não se ajustam aqui (bloco 1): a saída é
 // o canal humano, no pé do próprio cartão.
 import { linkWhatsApp } from "@/lib/contato";
-import { PainelView, ETAPAS_ABERTURA, type Etapa, type Recusa } from "@/components/painel";
+import { StatusIcon } from "@/components/ui/status";
+import { rotuloSocios, sujeitoComSocios } from "@/lib/socios";
+import {
+  PainelView,
+  TimelineEmBlocos,
+  ETAPAS_ABERTURA,
+  type Etapa,
+  type Recusa,
+} from "@/components/painel";
 /* 🆕 04/09 — rota assistida: da assinatura em diante quem conduz é gente da
    casa. O racional inteiro do corte mora em `components/consultor.tsx`. */
 import { CardConsultor, CardCompromisso } from "@/components/consultor";
+/* 🆕 05/09 (auditoria) — o compromisso é DADO, e toda frase sobre ele nasce
+   aqui. Ver o cabeçalho do módulo pros 3 bugs que a frase solta gerou. */
+import {
+  fraseCompromisso,
+  fraseDoDia,
+  nomeDaSemana,
+  type Compromisso,
+  type RodadaAssinatura,
+} from "@/lib/compromisso";
 import {
   CLIENTE,
   TEM_SOCIO,
   SOCIO_2,
+  sociosExtras,
   SOCIOS,
   CNAE_PRINCIPAL,
   CNAES_SECUNDARIAS,
@@ -167,7 +196,10 @@ function useRevisao() {
     atividade: {
       /* 🆕 04/09 — nome vem do dicionário (oficial IBGE), igual ao C0 e ao C5.
          O recap era a 3ª grafia do mesmo código. */
-      principal: { cnae: CNAE_PRINCIPAL.cnae, nome: nomeCnae(CNAE_PRINCIPAL.cnae, CNAE_PRINCIPAL.humano) },
+      principal: {
+        cnae: CNAE_PRINCIPAL.cnae,
+        nome: nomeCnae(CNAE_PRINCIPAL.cnae, CNAE_PRINCIPAL.humano),
+      },
       secundarias: CNAES_SECUNDARIAS.map((s) => ({
         cnae: s.cnae,
         nome: nomeCnae(s.cnae, s.humano),
@@ -321,7 +353,9 @@ export function RevisarView({
     passo: chave,
     conferido: conferidas.includes(chave),
     onConferir: () =>
-      setConferidas((c) => (c.includes(chave) ? c.filter((x) => x !== chave) : [...c, chave])),
+      setConferidas((c) =>
+        c.includes(chave) ? c.filter((x) => x !== chave) : [...c, chave],
+      ),
     onAjustar:
       onAjustar &&
       (() => {
@@ -363,7 +397,9 @@ export function RevisarView({
             titulo="Você"
             {...secao("Seus dados", 3)}
             /* ✍️ 04/09 — a lista dos 4 campos repetia os rótulos logo acima. */
-            rodape={<PeCadastro texto="Vêm do seu cadastro e não mudam por aqui." />}
+            rodape={
+              <PeCadastro texto="Vêm do seu cadastro e não mudam por aqui." />
+            }
           >
             <Linha rotulo="Nome" valor={d.titular.nome} />
             <Linha rotulo="CPF" valor={d.titular.cpf} />
@@ -378,7 +414,11 @@ export function RevisarView({
             <Linha rotulo="Onde você mora" valor={d.titular.endereco} />
             {/* ✍️ 04/09 — e-mail e telefone viram um par só, igual ao recap
                 do MEI: são o mesmo assunto e nenhum dos dois se ajusta aqui. */}
-            <Linha rotulo="Contato" valor={d.contato.email} segunda={d.contato.telefone} />
+            <Linha
+              rotulo="Contato"
+              valor={d.contato.email}
+              segunda={d.contato.telefone}
+            />
           </Bloco>
 
           {/* ─── SÓCIOS ────────────────────────────────────────────────────
@@ -535,7 +575,9 @@ export function RevisarView({
                      rótulo "Sobre o imóvel" era vago; agora nomeia o dado. */
                   rotulo="Tipo do imóvel"
                   valor={`${rotuloDe(TIPO_IMOVEL, d.empresa.tipoImovel)} · ${
-                    d.empresa.resideNoEndereco ? "você mora nele" : "você não mora nele"
+                    d.empresa.resideNoEndereco
+                      ? "você mora nele"
+                      : "você não mora nele"
                   }`}
                   segunda={`IPTU ${d.empresa.iptu}`}
                   dica="A Prefeitura analisa isso pra liberar a empresa no endereço."
@@ -603,7 +645,13 @@ function civilPorExtenso(s: SocioRevisao): string {
  * DBE. O titular entra na mesma lista porque a participação dele também é um
  * número que precisa fechar 100% com a dos outros.
  */
-function CartaoSocio({ socio, titular }: { socio: SocioRevisao; titular: boolean }) {
+function CartaoSocio({
+  socio,
+  titular,
+}: {
+  socio: SocioRevisao;
+  titular: boolean;
+}) {
   const [aberto, setAberto] = useState(false);
   return (
     <div className="rounded-md border border-border-hairline bg-surface-alt p-3">
@@ -620,7 +668,9 @@ function CartaoSocio({ socio, titular }: { socio: SocioRevisao; titular: boolean
               sócio do outro. */}
           {/* ✍️ 04/09 — "da empresa" saiu: repetia em cada cartão e a seção
               já se chama Sócios. */}
-          <p className="text-micro text-text-tertiary mt-0.5">{socio.participacao}%</p>
+          <p className="text-micro text-text-tertiary mt-0.5">
+            {socio.participacao}%
+          </p>
         </div>
         <button
           type="button"
@@ -706,7 +756,11 @@ function RevisarMeiView({
         </Titulo>
 
         <Corpo>
-          <Bloco titulo="Você" passo="Seus dados" onAjustar={onAjustar && (() => onAjustar(3))}>
+          <Bloco
+            titulo="Você"
+            passo="Seus dados"
+            onAjustar={onAjustar && (() => onAjustar(3))}
+          >
             <Linha rotulo="Nome" valor={d.titular.nome} />
             <Linha rotulo="CPF" valor={d.titular.cpf} />
             <Linha rotulo="Contato" valor={d.contato.telefone} />
@@ -735,13 +789,19 @@ function RevisarMeiView({
               valor={`${d.atividade.principal.nome} (${d.atividade.principal.cnae})`}
             />
             {d.atividade.secundarias.map((s) => (
-              <Linha key={s.cnae} rotulo="Secundária" valor={`${s.nome} (${s.cnae})`} />
+              <Linha
+                key={s.cnae}
+                rotulo="Secundária"
+                valor={`${s.nome} (${s.cnae})`}
+              />
             ))}
           </Bloco>
 
           <Card>
             <div className="mb-2 flex items-center justify-between gap-3">
-              <h2 className="text-body font-semibold text-text-primary">Seu enquadramento</h2>
+              <h2 className="text-body font-semibold text-text-primary">
+                Seu enquadramento
+              </h2>
             </div>
             <p className="text-caption text-text-secondary">
               MEI paga um DAS fixo por mês, sem Fator R nem Anexo pra calcular,
@@ -861,13 +921,17 @@ function Bloco({
     <div className="rounded-md border border-border-hairline bg-surface-card p-3">
       {!tituloFora && (
         <div className="mb-2 flex items-center justify-between gap-3">
-          <h2 className="text-caption font-semibold text-text-primary">{titulo}</h2>
+          <h2 className="text-caption font-semibold text-text-primary">
+            {titulo}
+          </h2>
           {pill}
         </div>
       )}
       <div className="flex flex-col gap-2">{children}</div>
       {rodape && (
-        <div className="mt-3 border-t border-border-hairline pt-2.5">{rodape}</div>
+        <div className="mt-3 border-t border-border-hairline pt-2.5">
+          {rodape}
+        </div>
       )}
       {onConferir && (
         <button
@@ -1020,9 +1084,15 @@ function Linha({
       <span className="text-micro text-text-tertiary">{rotulo}</span>
       {/* Valor em semibold, igual ao cartão da C4: o rótulo é etiqueta, o
           valor é o que a pessoa veio conferir. */}
-      <span className="text-caption font-semibold text-text-primary">{valor}</span>
-      {segunda && <span className="text-caption text-text-secondary">{segunda}</span>}
-      {dica && <span className="text-micro text-text-tertiary mt-0.5">{dica}</span>}
+      <span className="text-caption font-semibold text-text-primary">
+        {valor}
+      </span>
+      {segunda && (
+        <span className="text-caption text-text-secondary">{segunda}</span>
+      )}
+      {dica && (
+        <span className="text-micro text-text-tertiary mt-0.5">{dica}</span>
+      )}
     </div>
   );
 }
@@ -1181,7 +1251,9 @@ export function TermoView({
                 </>
               ) : (
                 <>
-                  <Item>Protocola sua empresa na Junta Comercial de Minas.</Item>
+                  <Item>
+                    Protocola sua empresa na Junta Comercial de Minas.
+                  </Item>
                   <Item>A taxa que você já pagou cobre esse registro.</Item>
                   <Item>
                     Segue com Receita, Simples e Prefeitura até o CNPJ ativar.
@@ -1191,7 +1263,8 @@ export function TermoView({
             </ul>
           </div>
 
-          <Aviso neutro
+          <Aviso
+            neutro
             variante="warning"
             titulo={
               mei
@@ -1254,7 +1327,8 @@ export function TermoView({
               </Camada>
               <Camada>
                 Até aqui, nada foi registrado. Se você desistir antes de
-                autorizar, recebe de volta o que pagou{!mei && ", inclusive a taxa"}.
+                autorizar, recebe de volta o que pagou
+                {!mei && ", inclusive a taxa"}.
               </Camada>
             </div>
           </div>
@@ -1351,7 +1425,9 @@ export function CertificadoGateView({
    */
   mei?: boolean;
 }) {
-  const [caminho, setCaminho] = useState<"pergunta" | "tenho" | "nao-tenho">("pergunta");
+  const [caminho, setCaminho] = useState<"pergunta" | "tenho" | "nao-tenho">(
+    "pergunta",
+  );
   const [arquivo, setArquivo] = useState<File | null>(null);
   const [senha, setSenha] = useState("");
   const [enviando, setEnviando] = useState(false);
@@ -1392,7 +1468,10 @@ export function CertificadoGateView({
                 </Aviso>
                 {/* 🔴 28/08 — honestidade antes do toque (mesma doutrina do
                     portal): o custo aparece ANTES da escolha, não depois. */}
-                <Aviso variante="warning" titulo="O certificado não vem no plano MEI">
+                <Aviso
+                  variante="warning"
+                  titulo="O certificado não vem no plano MEI"
+                >
                   Ele é seu, não nosso — diferente da mensalidade. Se você não
                   tiver um, a gente te conecta com a nossa certificadora
                   parceira e te passa o valor antes de qualquer coisa.
@@ -1424,7 +1503,10 @@ export function CertificadoGateView({
   if (caminho === "nao-tenho") {
     return (
       <>
-        <TelaHeader meta="Certificado digital" onVoltar={() => setCaminho("pergunta")} />
+        <TelaHeader
+          meta="Certificado digital"
+          onVoltar={() => setCaminho("pergunta")}
+        />
         <main className="app-main">
           <Titulo
             sub={
@@ -1433,7 +1515,9 @@ export function CertificadoGateView({
                 : "Nossa certificadora parceira agenda uma videochamada rápida com você e providencia um novo, por nossa conta."
             }
           >
-            {mei ? "A gente te conecta com a certificadora" : "A gente providencia um novo pra você"}
+            {mei
+              ? "A gente te conecta com a certificadora"
+              : "A gente providencia um novo pra você"}
           </Titulo>
           <Corpo>
             <Aviso variante="info" titulo="Como funciona">
@@ -1460,7 +1544,10 @@ export function CertificadoGateView({
 
   return (
     <>
-      <TelaHeader meta="Certificado digital" onVoltar={() => setCaminho("pergunta")} />
+      <TelaHeader
+        meta="Certificado digital"
+        onVoltar={() => setCaminho("pergunta")}
+      />
       <main className="app-main">
         <Titulo sub="Sobe o arquivo e a senha. A gente confere e libera em minutos.">
           Envie seu certificado
@@ -1500,8 +1587,8 @@ export function CertificadoGateView({
           </Campo>
 
           <p className="text-micro text-text-tertiary">
-            A senha fica guardada só pra assinar em seu nome — a gente nunca
-            usa pra mais nada.
+            A senha fica guardada só pra assinar em seu nome — a gente nunca usa
+            pra mais nada.
           </p>
         </Corpo>
         <Rodape>
@@ -1532,7 +1619,9 @@ type StatusSocio = "voce" | "convidar" | "aguardando" | "assinou";
  */
 const SOCIOS_ASSINATURA: { nome: string; status: StatusSocio }[] = [
   { nome: "Você", status: "voce" },
-  ...(TEM_SOCIO ? [{ nome: SOCIO_2.nome, status: "convidar" as StatusSocio }] : []),
+  ...(TEM_SOCIO
+    ? [{ nome: SOCIO_2.nome, status: "convidar" as StatusSocio }]
+    : []),
 ];
 
 /** Primeiro nome do sócio, pro CTA do convite ("Enviar convite pro Carlos"). */
@@ -1649,7 +1738,9 @@ export function CodigoGovView({
         <Corpo>
           {!precisaEscalar && (
             <div className="rounded-md border border-border-hairline bg-surface-alt px-3 py-2.5 text-center">
-              <span className="text-caption text-text-secondary">Expira em </span>
+              <span className="text-caption text-text-secondary">
+                Expira em{" "}
+              </span>
               <span className="text-body font-semibold text-text-primary tabular-nums">
                 {min}:{seg}
               </span>
@@ -1657,7 +1748,11 @@ export function CodigoGovView({
           )}
 
           {precisaEscalar ? (
-            <Aviso neutro variante="warning" titulo={expirou ? "O código expirou" : "As tentativas acabaram"}>
+            <Aviso
+              neutro
+              variante="warning"
+              titulo={expirou ? "O código expirou" : "As tentativas acabaram"}
+            >
               {expirou
                 ? "Passaram os 10 minutos da janela do GOV.BR. Sem problema — um atendente nosso te ajuda a gerar um novo agora."
                 : "Foram 3 tentativas sem validar. Pra não te travar sozinho nisso, um atendente nosso assume daqui."}
@@ -1670,12 +1765,16 @@ export function CodigoGovView({
                   onChange={(v) => setCodigo(v.replace(/\D/g, "").slice(0, 6))}
                   placeholder="000000"
                   inputMode="numeric"
-                  erro={erro ? "Confira o código: precisa ter 6 dígitos." : undefined}
+                  erro={
+                    erro
+                      ? "Confira o código: precisa ter 6 dígitos."
+                      : undefined
+                  }
                 />
               </Campo>
               <p className="text-micro text-text-tertiary">
-                Tentativa {tentativas + 1} de {MAX_TENTATIVAS}. Se travar,
-                a gente chama um atendente pra te ajudar na hora.
+                Tentativa {tentativas + 1} de {MAX_TENTATIVAS}. Se travar, a
+                gente chama um atendente pra te ajudar na hora.
               </p>
             </>
           )}
@@ -1692,8 +1791,14 @@ export function CodigoGovView({
                erro e, com qualquer coisa digitada, avançava. É o único gate de
                segurança do bloco. Agora ele trava até os 6 dígitos, igual ao
                código do E6.1, e o rótulo diz o que falta. */
-            <Button full disabled={codigo.replace(/\D/g, "").length < 6} onClick={validar}>
-              {codigo.replace(/\D/g, "").length < 6 ? "Digite os 6 dígitos" : "Validar código"}
+            <Button
+              full
+              disabled={codigo.replace(/\D/g, "").length < 6}
+              onClick={validar}
+            >
+              {codigo.replace(/\D/g, "").length < 6
+                ? "Digite os 6 dígitos"
+                : "Validar código"}
             </Button>
           )}
         </Rodape>
@@ -1710,7 +1815,14 @@ export function CodigoGovView({
  */
 function IconeExpresso() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden className="text-text-primary">
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden
+      className="text-text-primary"
+    >
       <path
         d="M13 2 4 13.5h6.2L11 22l9-11.5h-6.2L13 2Z"
         stroke="currentColor"
@@ -1725,8 +1837,21 @@ function IconeExpresso() {
 /** Chevron do cartão expresso: sai do app (WhatsApp), não seleciona. */
 function ChevronExpresso() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden className="shrink-0 text-text-tertiary">
-      <path d="m9 5 7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden
+      className="shrink-0 text-text-tertiary"
+    >
+      <path
+        d="m9 5 7 7-7 7"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
@@ -1768,7 +1893,18 @@ const DIAS_AGENDA: {
   semana: string;
   /** 🆕 05/09 — o cartão do compromisso (A3.H2) mostra o mês no bloco de data. */
   mes: string;
-  label: string;
+  /**
+   * 🗑️ 05/09 (auditoria) — SAIU O `label`.
+   *
+   * Ele existia pra virar a frase do compromisso ("Hoje às 15:00"), e o dia 15
+   * precisou se chamar "Segunda 15" pra não se confundir com o dia 8 na fila.
+   * Esse nome inventado vazava pro botão do cliente: "Confirmar Segunda 15 às
+   * 09:00". Agora o nome do dia é DERIVADO da sigla da semana em
+   * `lib/compromisso`, e o que distingue duas segundas é o dia do mês, que é o
+   * dado de verdade.
+   */
+  /** É hoje: o cartão de data e a frase trocam a sigla da semana por "hoje". */
+  hoje?: boolean;
   /** A casa não atende nesse dia (feriado, folga). Diferente de lotado. */
   fechado?: boolean;
   horarios: string[];
@@ -1783,68 +1919,145 @@ const DIAS_AGENDA: {
     numero: 5,
     semana: "Sex",
     mes: "Set",
-    label: "Hoje",
+    hoje: true,
     horarios: [
-      "09:00", "09:30", "10:00", "10:30", "11:00",
-      "11:30", "14:00", "14:30", "15:00", "15:30",
+      "09:00",
+      "09:30",
+      "10:00",
+      "10:30",
+      "11:00",
+      "11:30",
+      "14:00",
+      "14:30",
+      "15:00",
+      "15:30",
     ],
   },
-  { id: "d2", numero: 8, semana: "Seg", mes: "Set", label: "Segunda", horarios: ["09:30", "11:00", "14:00", "16:00"] },
-  { id: "d3", numero: 9, semana: "Ter", mes: "Set", label: "Terça", horarios: [] },
+  {
+    id: "d2",
+    numero: 8,
+    semana: "Seg",
+    mes: "Set",
+    horarios: ["09:30", "11:00", "14:00", "16:00"],
+  },
+  { id: "d3", numero: 9, semana: "Ter", mes: "Set", horarios: [] },
   /* 🆕 05/09 (pedido do Pedro) — dia 10 com UM horário só, pra ver o estado
      amarelo no meio da fila (e o singular "1 livre", que é outro caso). */
-  { id: "d4", numero: 10, semana: "Qua", mes: "Set", label: "Quarta", horarios: ["14:00"] },
+  { id: "d4", numero: 10, semana: "Qua", mes: "Set", horarios: ["14:00"] },
   /* 🆕 05/09 (pedido do Pedro) — os DOIS jeitos de um dia sair de jogo:
      `horarios: []` = a agenda encheu · `fechado` = a gente decidiu não atender
      (feriado, folga, o que for). Os dois viram o mesmo cartão desativado; o
      que muda é a palavra, porque "lotado" e "fechado" pedem reações
      diferentes de quem lê (esperar uma vaga × nem tentar). */
-  { id: "d5", numero: 11, semana: "Qui", mes: "Set", label: "Quinta", horarios: ["09:00", "10:30", "14:30", "16:30"] },
+  {
+    id: "d5",
+    numero: 11,
+    semana: "Qui",
+    mes: "Set",
+    horarios: ["09:00", "10:30", "14:30", "16:30"],
+  },
   /* 🔄 05/09 (pedido do Pedro) — 5 → 7 dias. Com 7 cartões a fila passa de
      375px e ROLA, que é o comportamento certo de agenda: mostra que existe
      mais semana adiante sem empurrar os horários pra fora da primeira tela. */
-  { id: "d6", numero: 12, semana: "Sex", mes: "Set", label: "Sexta", fechado: true, horarios: [] },
-  { id: "d7", numero: 15, semana: "Seg", mes: "Set", label: "Segunda 15", horarios: ["09:00", "10:00", "14:00", "16:00", "17:30"] },
+  {
+    id: "d6",
+    numero: 12,
+    semana: "Sex",
+    mes: "Set",
+    fechado: true,
+    horarios: [],
+  },
+  {
+    id: "d7",
+    numero: 15,
+    semana: "Seg",
+    mes: "Set",
+    horarios: ["09:00", "10:00", "14:00", "16:00", "17:30"],
+  },
 ];
 
 /**
- * O compromisso marcado, em partes.
+ * 🔄 05/09 (auditoria) — O TIPO `Compromisso` MUDOU DE CASA e perdeu a `frase`.
  *
- * 🆕 05/09 — o cartão do A3.H2 desenha um bloco de data (semana · número ·
- * mês) ao lado do horário, então a frase pronta ("Hoje às 15:00") deixou de
- * bastar. Mesma lição da janela de atendimento e do cartão de dia: dado
- * partido na FONTE, não com `split` na tela — quem monta layout a partir de
- * string quebra no primeiro texto que mudar de forma.
- *
- * `frase` continua existindo porque hero, CTA e mensagem de WhatsApp precisam
- * dele numa linha só ("Marcado pra hoje às 15:00").
+ * Ele agora mora em `lib/compromisso`, junto das funções que leem, escrevem e
+ * DERIVAM a frase a partir das partes. O campo `frase` saiu: era ele o que
+ * viajava por fora das partes e chegava divergente delas (o racional completo
+ * está no cabeçalho do módulo).
  */
-export type Compromisso = {
-  frase: string;
-  numero: number;
-  semana: string;
-  mes: string;
-  hora: string;
-  /** 🆕 05/09 — o compromisso é pra HOJE. O cartão troca a sigla do dia da
-   *  semana por "HOJE", que é a informação que a pessoa procura primeiro. */
-  hoje: boolean;
-};
 
 export function AgendarAssinaturaView({
   onConfirmar,
   onVoltar,
+  atual = null,
+  rodada = 1,
+  socios = [],
 }: {
   onConfirmar?: (c: Compromisso) => void;
   onVoltar?: () => void;
+  /**
+   * 🐛→🆕 05/09 (auditoria) — QUEM VEM REMARCAR JÁ TEM UM HORÁRIO.
+   *
+   * A tela era idêntica nos dois casos: mesmo título "Marque sua assinatura",
+   * nenhuma hora pré-selecionada, o dia abrindo no primeiro livre e não no dia
+   * marcado, e nada dizendo o que estava sendo trocado. Quem tocasse em
+   * "Remarcar" caía numa tela que não reconhecia o compromisso que ela
+   * acabara de ter em mãos.
+   */
+  atual?: Compromisso | null;
+  /**
+   * 🆕 05/09 (pedido do Pedro) — A 2ª ASSINATURA TEM O MESMO PESO DA 1ª.
+   *
+   * Até o CNPJ existir são duas, e a segunda não é repeteco: ela é a que GERA
+   * o CNPJ e tem o contador assinando junto. Marcar as duas na mesma tela sem
+   * dizer qual é qual faria a segunda parecer erro do app.
+   */
+  rodada?: RodadaAssinatura;
+  /**
+   * 🆕 05/09 (achado do Pedro) — PRIMEIRO NOME DO SÓCIO.
+   *
+   * O contrato social é assinado por TODOS os sócios (art. 997/999 CC): a
+   * qualificação 49×22 decide quem representa a empresa depois, não quem
+   * assina a constituição. Então o horário marcado aqui não é o dela, é o dos
+   * dois — e o sócio precisa saber que foi marcado, senão ele descobre na hora
+   * em que o consultor liga.
+   */
+  /**
+   * Os NOMES COMPLETOS dos outros sócios (o titular não entra).
+   *
+   * 🔄 05/09 — era um sócio só. Virou lista depois do áudio do Ademar: *"se
+   * cadastrou dez, dez assinam"*. O C3 aceita 3 além do titular, e a tela
+   * citava um nome fixo.
+   *
+   * Nome COMPLETO aqui porque a lista "Quem assina" é registro de assinante de
+   * contrato social, e ali não se abrevia. As frases da tela usam o primeiro
+   * nome (com 1) ou a contagem (com 2+), derivados em `lib/socios`.
+   */
+  socios?: string[];
 }) {
   /* 🆕 05/09 (pedido do Pedro) — DIA SEM VAGA SAI DE JOGO. Dois motivos, um
      resultado: a agenda encheu (`horarios` vazio) ou a casa não atende naquele
      dia (`fechado`). O cartão fica cinza e não clica. */
-  const indisponivel = (d: (typeof DIAS_AGENDA)[number]) => !!d.fechado || d.horarios.length === 0;
+  const indisponivel = (d: (typeof DIAS_AGENDA)[number]) =>
+    !!d.fechado || d.horarios.length === 0;
+  /* 🆕 05/09 (auditoria) — REMARCAR ABRE NO QUE JÁ ESTÁ MARCADO. Trocar de
+     horário começa por ver o horário atual selecionado: é isso que diz "é ESTE
+     que você está mexendo". Se o dia marcado tiver saído de jogo (encheu,
+     fechou), cai na regra normal — que é justamente o caso em que a pessoa
+     PRECISA remarcar. */
+  const diaDoAtual = atual
+    ? DIAS_AGENDA.find((d) => d.numero === atual.numero && !indisponivel(d))
+    : undefined;
   /* O default é o 1º dia COM vaga, não o 1º da lista: se hoje estiver lotado,
      abrir nele mostraria uma grade de horários vazia sem explicação. */
-  const [dia, setDia] = useState((DIAS_AGENDA.find((d) => !indisponivel(d)) ?? DIAS_AGENDA[0]).id);
-  const [hora, setHora] = useState<string | null>(null);
+  const [dia, setDia] = useState(
+    (diaDoAtual ?? DIAS_AGENDA.find((d) => !indisponivel(d)) ?? DIAS_AGENDA[0])
+      .id,
+  );
+  const [hora, setHora] = useState<string | null>(
+    diaDoAtual && atual && diaDoAtual.horarios.includes(atual.hora)
+      ? atual.hora
+      : null,
+  );
 
   /* ═══════════ 🆕 05/09 (pedido do Pedro) — ARRASTA E SOLTA ════════════════
    * No celular o trilho já rola com o dedo (scroll nativo, com inércia). No
@@ -1906,14 +2119,21 @@ export function AgendarAssinaturaView({
   const diaAtual = DIAS_AGENDA.find((d) => d.id === dia) ?? DIAS_AGENDA[0];
   const quando: Compromisso | null = hora
     ? {
-        frase: `${diaAtual.label} às ${hora}`,
         numero: diaAtual.numero,
         semana: diaAtual.semana,
         mes: diaAtual.mes,
         hora,
-        hoje: diaAtual.label === "Hoje",
+        hoje: !!diaAtual.hoje,
       }
     : null;
+  /* Remarcou pro MESMO horário: não é erro, mas o botão não pode dizer
+     "Confirmar" como se fosse mudança. Dizer "Manter" é a única leitura
+     honesta do que aquele toque faz. */
+  const mantendo =
+    !!atual &&
+    !!quando &&
+    quando.numero === atual.numero &&
+    quando.hora === atual.hora;
 
   return (
     <>
@@ -1938,15 +2158,51 @@ export function AgendarAssinaturaView({
                   e no meio da frase ele passava batido. O resto fica em peso
                   normal: negritar tudo é o mesmo que não negritar nada. */}
               <strong className="font-semibold text-text-primary">
-                A assinatura leva cerca de 15 minutos,
+                {rodada === 2
+                  ? "Esta também leva cerca de 15 minutos,"
+                  : "A assinatura leva cerca de 15 minutos,"}
               </strong>{" "}
-              e a gente faz junto, por telefone ou WhatsApp.
+              {/* 🆕 05/09 — a 2ª tem uma exigência que a 1ª não tinha: o
+                  contador assina o mesmo ato. Isso não é detalhe burocrático,
+                  é o motivo de ela precisar de hora marcada também. */}
+              {/* ✍️ 05/09 — o subtítulo diz QUEM está no ato; o cartão logo
+                  abaixo diz POR QUE precisa ser ao mesmo tempo. Na 1ª versão
+                  os dois diziam a mesma frase quase palavra por palavra, que é
+                  o eco que o cartão do consultor já tinha perdido em 05/09. */}
+              {rodada === 2
+                ? socios.length
+                  ? `e desta vez ${rotuloSocios(socios)} não ${socios.length === 1 ? "precisa" : "precisam"} estar: quem assina na Receita é você, como representante, com o contador.`
+                  : "e são três no ato: você, um consultor e seu contador."
+                : socios.length === 1
+                  ? `e ${rotuloSocios(socios)} precisa estar junto: o contrato social é assinado pelos dois sócios, no mesmo código.`
+                  : socios.length > 1
+                    ? `e ${rotuloSocios(socios)} precisam estar juntos: o contrato social é assinado por todos, no mesmo código.`
+                    : "e a gente faz junto, por telefone ou WhatsApp."}
+              {/* 🆕 05/09 (auditoria) — REMARCANDO, a tela diz o que está sendo
+                  trocado. Sem isso ela era indistinguível de marcar pela 1ª
+                  vez, e a pessoa não tinha como saber se tinha perdido o
+                  horário anterior. */}
+              {atual && (
+                <>
+                  {" "}
+                  <span className="text-text-primary">
+                    Hoje está marcada pra {fraseCompromisso(atual)}; confirmar
+                    um novo horário libera esse.
+                  </span>
+                </>
+              )}
             </>
           }
         >
           {/* 🔄 05/09 — era "Marque com a Larissa". Sem consultor designado,
               o que se marca é o ATO, não a pessoa. */}
-          Marque sua assinatura
+          {atual
+            ? rodada === 2
+              ? "Remarcar a assinatura do CNPJ"
+              : "Remarcar sua assinatura"
+            : rodada === 2
+              ? "Marque a assinatura do CNPJ"
+              : "Marque sua assinatura"}
         </Titulo>
 
         {/* ═══════════ 🔄 05/09 (achado do Pedro) — O TRILHO SAIU DO `Corpo`
@@ -1961,17 +2217,73 @@ export function AgendarAssinaturaView({
             Efeito colateral bom: numa tela pequena, o dia escolhido não sai
             de vista enquanto a pessoa procura a hora.
             ═══════════════════════════════════════════════════════════════ */}
-        <div className="flex shrink-0 flex-col gap-6 pb-6">
-          {/* Sem repetir o porquê: quem chega aqui acabou de ler na tela
-              anterior. O cartão fica só pra dar rosto a quem vai atender. */}
-          <CardConsultor motivo={false} />
+        {/* ═══════ 🐛→🔒 05/09 (auditoria + correção do Pedro) — A TELA INTEIRA
+            ROLA, EM VEZ DE METADE DELA FICAR PRESA.
+            Medindo a A3.H4 apareceu o furo: o bloco de cima (título, cartão e
+            fila de dias) era FIXO e comia a tela, então a área rolável dos
+            horários ficava com 21px na 1ª rodada e ZERO na 2ª, onde o subtítulo
+            tem uma linha a mais. O último horário nascia debaixo do rodapé; o
+            teste só clicava nele porque o Playwright rola sozinho.
+            Tentei devolver altura descendo o cartão pra baixo da fila, e o
+            Pedro corrigiu: ele fica em cima. Está certo — quem atende vem antes
+            de quando. Então o que muda é o outro lado: cartão e fila entram na
+            MESMA rolagem dos horários, na ordem que ele pediu.
+            O que se perde é a fila de dias sempre à vista (motivo de 05/09 pra
+            ela ser fixa); o que se ganha é a grade existir. Numa tela de 667px
+            não cabem título, subtítulo, cartão, fila E grade sem rolar.
+            ⚠️ A fila continua sangrando até a borda (`-mx-6 px-6`): ela alcança
+            exatamente a borda do scrollport, não passa dela. ═══════════════ */}
+        <Corpo>
+          <div className="flex flex-col gap-4">
+            <CardConsultor motivo={false} rodada={rodada} socios={socios} />
 
-          <div>
-            {/* 🔄 05/09 (pedido do Pedro) — mais respiro entre o rótulo e a
+            {/* ═══════ 🆕 05/09 (achado do Pedro) — QUEM ASSINA, quando a
+                empresa tem sócio.
+                O ramo assistido inteiro (A3.H → A3.H2) foi construído
+                assumindo UMA pessoa, e o contrato social é assinado por todos
+                os sócios. Sem este bloco, a tela marcava um horário que parecia
+                só dela e o sócio virava surpresa no dia da chamada.
+                🔒 O aviso do convite fica AQUI, não numa tela própria: a rota
+                automática (A4) tem uma tela de convite com seletor de canal, e
+                trazer aquilo pra cá pediria uma decisão a mais ("por onde
+                avisar?") no meio de outra decisão ("que horas?"). Aqui a gente
+                afirma o que faz — avisa por WhatsApp ao confirmar — em vez de
+                perguntar. Se o canal virar escolha de verdade, o lugar dela é a
+                tela do sócio, não esta. ═══════════════════════════════ */}
+            {/* 🔒 Só na 1ª: na 2ª o sócio NÃO assina (Ademar, 05/09), então
+                listá-lo aqui seria convocar quem não precisa vir. */}
+            {socios.length > 0 && rodada === 1 && (
+              <div className="rounded-md border border-border-hairline bg-surface-card p-4">
+                <p className="text-body-strong font-semibold text-text-primary">
+                  Quem assina
+                </p>
+                <div className="mt-3 flex flex-col gap-2">
+                  {["Você", ...socios].map((quem) => (
+                    <div key={quem} className="flex items-center gap-2.5">
+                      <span className="shrink-0 text-state-info">
+                        <StatusIcon estado="com-a-casa" />
+                      </span>
+                      <p className="text-caption text-text-primary">{quem}</p>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-micro text-text-secondary mt-3">
+                  Ao confirmar, a gente avisa {rotuloSocios(socios)} pelo
+                  WhatsApp com o dia e a hora. Se{" "}
+                  {socios.length === 1 ? "ele não puder" : "alguém não puder"},
+                  dá pra remarcar por aqui.
+                </p>
+              </div>
+            )}
+
+            <div>
+              {/* 🔄 05/09 (pedido do Pedro) — mais respiro entre o rótulo e a
                 fila: com o contador de horários os cartões ficaram mais altos
                 e encostavam no "Dia". */}
-            <p className="text-body-strong font-semibold text-text-primary mb-3">Dia</p>
-            {/* 🔄 05/09 (referência do Pedro) — CARTÃO DE DATA, não pill de
+              <p className="text-body-strong font-semibold text-text-primary mb-3">
+                Dia
+              </p>
+              {/* 🔄 05/09 (referência do Pedro) — CARTÃO DE DATA, não pill de
                 texto. Número do dia grande em cima, dia da semana embaixo:
                 é o formato que todo app de agendamento usa, e ele carrega
                 mais informação no mesmo espaço (a pessoa vê a semana inteira
@@ -1985,13 +2297,13 @@ export function AgendarAssinaturaView({
                 `-mx-6 px-6`: o trilho SANGRA até a borda do vidro, senão o 7º
                 cartão parece cortado pelo padding em vez de continuar — e o
                 padding devolve o alinhamento do primeiro com o resto da tela. */}
-            <div
-              ref={trilho}
-              onPointerDown={aoApertar}
-              onPointerMove={aoArrastar}
-              onPointerUp={aoSoltar}
-              onPointerCancel={aoSoltar}
-              /* 🔄 05/09, 2ª rodada (correção do Pedro) — SANGRA, MAS COMEÇA
+              <div
+                ref={trilho}
+                onPointerDown={aoApertar}
+                onPointerMove={aoArrastar}
+                onPointerUp={aoSoltar}
+                onPointerCancel={aoSoltar}
+                /* 🔄 05/09, 2ª rodada (correção do Pedro) — SANGRA, MAS COMEÇA
                  ALINHADO. `-mx-6` tira os 24px do shell (é o que deixa os
                  cartões atravessarem a borda ao rolar) e o `px-6` os devolve
                  ao CONTEÚDO: em repouso o dia de hoje nasce na mesma linha
@@ -2003,33 +2315,33 @@ export function AgendarAssinaturaView({
                  alinhamento no primeiro arrasto.
                  `select-none` + `cursor-grab`: sem eles, arrastar seleciona os
                  números como texto e o cursor não convida ao gesto. */
-              className="-mx-6 flex cursor-grab snap-x scroll-pl-6 select-none gap-2 overflow-x-auto px-6 pb-1
+                className="-mx-6 flex cursor-grab snap-x scroll-pl-6 select-none gap-2 overflow-x-auto px-6 pb-1
                          active:cursor-grabbing
                          [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-            >
-              {DIAS_AGENDA.map((d) => (
-                <button
-                  key={d.id}
-                  type="button"
-                  disabled={indisponivel(d)}
-                  onClick={() => {
-                    // Arrastou a fila? Isso não é escolha de dia (ver `arrasto`).
-                    if (arrasto.current.moveu) return;
-                    setDia(d.id);
-                    /* Trocar de dia zera a hora: manter "15:00" de um dia que
+              >
+                {DIAS_AGENDA.map((d) => (
+                  <button
+                    key={d.id}
+                    type="button"
+                    disabled={indisponivel(d)}
+                    onClick={() => {
+                      // Arrastou a fila? Isso não é escolha de dia (ver `arrasto`).
+                      if (arrasto.current.moveu) return;
+                      setDia(d.id);
+                      /* Trocar de dia zera a hora: manter "15:00" de um dia que
                        não tem 15:00 deixaria o CTA confirmar um horário que
                        não existe. */
-                    setHora(null);
-                  }}
-                  aria-pressed={dia === d.id}
-                  aria-label={`${d.label}, dia ${d.numero}, ${
-                    d.fechado
-                      ? "não atendemos neste dia"
-                      : d.horarios.length === 0
-                        ? "sem horários livres"
-                        : `${d.horarios.length} ${d.horarios.length === 1 ? "horário livre" : "horários livres"}`
-                  }`}
-                  /* 🔄 04/09 (decisão do Pedro, 2ª rodada) — SELECIONADO É
+                      setHora(null);
+                    }}
+                    aria-pressed={dia === d.id}
+                    aria-label={`${d.hoje ? "Hoje" : nomeDaSemana(d.semana)}, dia ${d.numero}, ${
+                      d.fechado
+                        ? "não atendemos neste dia"
+                        : d.horarios.length === 0
+                          ? "sem horários livres"
+                          : `${d.horarios.length} ${d.horarios.length === 1 ? "horário livre" : "horários livres"}`
+                    }`}
+                    /* 🔄 04/09 (decisão do Pedro, 2ª rodada) — SELECIONADO É
                      CORAL CHEIO COM LETRA BRANCA, igual ao CTA do rodapé.
                      Passou por coral-50 (tint quase branco sobre cartão
                      branco: a seleção sumia) e coral-100, até o Pedro cravar o
@@ -2038,51 +2350,51 @@ export function AgendarAssinaturaView({
                      inteiro. Eu tinha evitado por achar que competiria com o
                      CTA; competir aqui é o certo: os dois são a mesma decisão
                      (o horário), um escolhe e o outro confirma. */
-                  /* 🐛 05/09 (achado do Pedro) — LARGURA FIXA, não mínima.
+                    /* 🐛 05/09 (achado do Pedro) — LARGURA FIXA, não mínima.
                      Com `min-w` cada cartão crescia até caber o próprio texto,
                      e "10 livres" ficava visivelmente mais largo que "1 livre":
                      a fila virava um serrote, e a largura passava a informar
                      quantidade sem querer. Agora todos têm a largura do maior
                      caso (2 dígitos + "livres"), e o que varia é só o
                      conteúdo — que é o certo numa fila de datas. */
-                  className={`flex w-[86px] shrink-0 snap-start flex-col items-center rounded-md border px-2 py-2.5 transition-colors ${
-                    indisponivel(d)
-                      ? /* Cinza claro e sem cursor de ação: o dia continua na
+                    className={`flex w-[86px] shrink-0 snap-start flex-col items-center rounded-md border px-2 py-2.5 transition-colors ${
+                      indisponivel(d)
+                        ? /* Cinza claro e sem cursor de ação: o dia continua na
                            fila (sumir daria a impressão de que a semana tem
                            buraco) mas não convida ao toque. */
-                        "cursor-not-allowed border-border-hairline bg-surface-alt"
-                      : dia === d.id
-                        ? "border-action-primary bg-action-primary text-text-on-brand"
-                        : "border-border-hairline bg-surface-card"
-                  }`}
-                >
-                  <span
-                    /* 🔄 05/09 (pedido do Pedro) — h2 (20px) → h1 (26px). O
+                          "cursor-not-allowed border-border-hairline bg-surface-alt"
+                        : dia === d.id
+                          ? "border-action-primary bg-action-primary text-text-on-brand"
+                          : "border-border-hairline bg-surface-card"
+                    }`}
+                  >
+                    <span
+                      /* 🔄 05/09 (pedido do Pedro) — h2 (20px) → h1 (26px). O
                        número é o que a pessoa lê primeiro na fila; no tamanho
                        antigo ele competia de igual pra igual com o dia da
                        semana logo abaixo. */
-                    className={`text-h1 font-bold leading-none tabular-nums ${
-                      indisponivel(d)
-                        ? "text-text-muted"
-                        : dia === d.id
-                          ? "text-text-on-brand"
-                          : "text-text-primary"
-                    }`}
-                  >
-                    {d.numero}
-                  </span>
-                  <span
-                    className={`mt-1 text-micro font-medium ${
-                      indisponivel(d)
-                        ? "text-text-muted"
-                        : dia === d.id
-                          ? "text-text-on-brand/80"
-                          : "text-text-tertiary"
-                    }`}
-                  >
-                    {d.semana}
-                  </span>
-                  {/* 🆕 05/09 (referência do Pedro) — QUANTOS HORÁRIOS SOBRAM.
+                      className={`text-h1 font-bold leading-none tabular-nums ${
+                        indisponivel(d)
+                          ? "text-text-muted"
+                          : dia === d.id
+                            ? "text-text-on-brand"
+                            : "text-text-primary"
+                      }`}
+                    >
+                      {d.numero}
+                    </span>
+                    <span
+                      className={`mt-1 text-micro font-medium ${
+                        indisponivel(d)
+                          ? "text-text-muted"
+                          : dia === d.id
+                            ? "text-text-on-brand/80"
+                            : "text-text-tertiary"
+                      }`}
+                    >
+                      {d.semana}
+                    </span>
+                    {/* 🆕 05/09 (referência do Pedro) — QUANTOS HORÁRIOS SOBRAM.
                       Sem isso a pessoa escolhe um dia às cegas e descobre a
                       escassez só depois de tocar: a informação que decide o
                       dia estava escondida atrás da escolha do dia.
@@ -2092,48 +2404,47 @@ export function AgendarAssinaturaView({
                       amarelo sobre coral cheio brigam, e ali o estado já não
                       precisa chamar atenção (a pessoa já escolheu, e a grade
                       de horários logo abaixo mostra exatamente o que sobrou). */}
-                  <span className="mt-1.5 flex items-center gap-1">
-                    {/* Sem bolinha quando não há vaga: ela existe pra graduar
+                    <span className="mt-1.5 flex items-center gap-1">
+                      {/* Sem bolinha quando não há vaga: ela existe pra graduar
                         urgência, e "nenhuma" não é um grau — é o fim da linha. */}
-                    {!indisponivel(d) && (
+                      {!indisponivel(d) && (
+                        <span
+                          aria-hidden
+                          className={`h-1.5 w-1.5 rounded-full ${
+                            dia === d.id
+                              ? "bg-text-on-brand"
+                              : d.horarios.length <= 2
+                                ? "bg-state-warning"
+                                : "bg-state-success"
+                          }`}
+                        />
+                      )}
                       <span
-                        aria-hidden
-                        className={`h-1.5 w-1.5 rounded-full ${
-                          dia === d.id
-                            ? "bg-text-on-brand"
-                            : d.horarios.length <= 2
-                              ? "bg-state-warning"
-                              : "bg-state-success"
+                        className={`text-micro ${
+                          indisponivel(d)
+                            ? "text-text-muted"
+                            : dia === d.id
+                              ? "text-text-on-brand/80"
+                              : "text-text-tertiary"
                         }`}
-                      />
-                    )}
-                    <span
-                      className={`text-micro ${
-                        indisponivel(d)
-                          ? "text-text-muted"
-                          : dia === d.id
-                            ? "text-text-on-brand/80"
-                            : "text-text-tertiary"
-                      }`}
-                    >
-                      {/* "Lotado" e "Fechado" pedem reações diferentes de quem
+                      >
+                        {/* "Lotado" e "Fechado" pedem reações diferentes de quem
                           lê: numa dá pra esperar vaga, na outra nem tentar. */}
-                      {d.fechado
-                        ? "Fechado"
-                        : d.horarios.length === 0
-                          ? "Lotado"
-                          : d.horarios.length === 1
-                            ? "1 livre"
-                            : `${d.horarios.length} livres`}
+                        {d.fechado
+                          ? "Fechado"
+                          : d.horarios.length === 0
+                            ? "Lotado"
+                            : d.horarios.length === 1
+                              ? "1 livre"
+                              : `${d.horarios.length} livres`}
+                      </span>
                     </span>
-                  </span>
-                </button>
-              ))}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
 
-        <Corpo>
           <div>
             <p className="text-body-strong font-semibold text-text-primary mb-2">
               Horário disponível
@@ -2170,8 +2481,17 @@ export function AgendarAssinaturaView({
         <Rodape>
           {/* CTA travado NOMEIA o que falta (régua da casa), em vez de ficar
               mudo e deixar a pessoa descobrir clicando. */}
-          <Button full disabled={!quando} onClick={() => quando && onConfirmar?.(quando)}>
-            {quando ? `Confirmar ${quando.frase}` : "Escolha um horário"}
+          <Button
+            full
+            disabled={!quando}
+            onClick={() => quando && onConfirmar?.(quando)}
+          >
+            {/* 🔄 05/09 (auditoria) — a frase vem de `fraseCompromisso`, não de
+                um `label` de mock. Era daqui que saía "Confirmar Segunda 15 às
+                09:00", com o nome que a lista tinha inventado pra si mesma. */}
+            {quando
+              ? `${mantendo ? "Manter" : "Confirmar"} ${fraseCompromisso(quando)}`
+              : "Escolha um horário"}
           </Button>
           {/* ═══════════ 🆕 05/09 (referência do Pedro) — O EXPRESSO ═══════════
               Era um link sublinhado embaixo do botão, e link no rodapé lê como
@@ -2190,7 +2510,9 @@ export function AgendarAssinaturaView({
               livres) e diz a condição de verdade: se houver consultor livre. */}
           <a
             href={linkWhatsApp(
-              "Oi! Paguei a guia da Junta e tenho 15 minutos livres agora pra fazer a assinatura, se tiver alguém disponível.",
+              rodada === 2
+                ? "Oi! Já assinei o contrato social e tenho 15 minutos livres agora pra fazer a assinatura que gera o CNPJ, se tiver alguém disponível."
+                : "Oi! Paguei a guia da Junta e tenho 15 minutos livres agora pra fazer a assinatura, se tiver alguém disponível.",
             )}
             target="_blank"
             rel="noopener noreferrer"
@@ -2263,7 +2585,9 @@ export function AssinaturaView({
      ter tela própria. No flow real ninguém entra por aqui: quem chega vem do
      CTA de assinar. */
   const [fase, setFase] = useState<"assinar" | "codigo">(faseInicial);
-  const [canalConvite, setCanalConvite] = useState<"whatsapp" | "email">("whatsapp");
+  const [canalConvite, setCanalConvite] = useState<"whatsapp" | "email">(
+    "whatsapp",
+  );
 
   if (fase === "codigo") {
     return (
@@ -2320,7 +2644,11 @@ export function AssinaturaView({
               PERGUNTA por checkbox em vez de afirmar. Foi o único lugar que
               não precisou de conserto.)
               ═══════════════════════════════════════════════════════════════ */}
-          <Aviso neutro variante="info" titulo="Antes de assinar, confira sua conta GOV.BR">
+          <Aviso
+            neutro
+            variante="info"
+            titulo="Antes de assinar, confira sua conta GOV.BR"
+          >
             {mei
               ? "O Portal do Empreendedor só aceita assinatura de conta nível prata ou ouro. Se a sua ainda for bronze, dá pra subir em poucos minutos, pelo app do seu banco ou pelo reconhecimento facial do GOV.BR."
               : "A Junta só aceita assinatura de conta nível prata ou ouro. Se a sua ainda for bronze, dá pra subir em poucos minutos, pelo app do seu banco ou pelo reconhecimento facial do GOV.BR."}
@@ -2372,10 +2700,18 @@ export function AssinaturaView({
             </div>
           )}
 
-{/* 🔄 04/09 — a procuração SAIU desta tela: ela é e-CAC e precisa do CNPJ,
+          {/* 🔄 04/09 — a procuração SAIU desta tela: ela é e-CAC e precisa do CNPJ,
               que ainda não existe aqui. O que a pessoa precisa saber neste ponto
               é o que a assinatura faz, não o que vem junto (não vem). */}
-          <Aviso neutro variante="info" titulo={rodada === 2 ? "O que esta assinatura faz" : "O que a assinatura faz"}>
+          <Aviso
+            neutro
+            variante="info"
+            titulo={
+              rodada === 2
+                ? "O que esta assinatura faz"
+                : "O que a assinatura faz"
+            }
+          >
             {/* 🔒 guardado por regime: o MEI não passa pela Junta (registro é
                 no Portal do Empreendedor, feito pelo próprio titular). Dizer
                 "Junta" pra ele seria o mesmo erro que a lista de sócios era. */}
@@ -2442,8 +2778,12 @@ function SocioLinha({ nome, status }: { nome: string; status: StatusSocio }) {
     <Card>
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-caption font-semibold text-text-primary truncate">{nome}</p>
-          <p className="text-micro text-text-tertiary mt-0.5">{legenda[status]}</p>
+          <p className="text-caption font-semibold text-text-primary truncate">
+            {nome}
+          </p>
+          <p className="text-micro text-text-tertiary mt-0.5">
+            {legenda[status]}
+          </p>
         </div>
         {status === "assinou" ? (
           <Check />
@@ -2515,7 +2855,16 @@ function Check() {
  * do N24): efeito de entrada em tela de meio de fluxo, fora.
  */
 
-type EstadoAtivacao = "feito" | "agora" | "depois" | "final";
+/**
+ * 🆕 05/09 (auditoria da rota assistida) — ENTROU `casa`, o 5º estado.
+ *
+ * Mesma lacuna que o `com-a-casa` do `StatusIcon` resolveu em 04/09, agora na
+ * trilha de ativação: existe passo que já chegou a vez, mas a vez não é da
+ * pessoa — é de um consultor nosso. Ele não é `agora` (a pill "Sua vez" pulsa
+ * cobrando ação que ela não pode tomar), não é `feito` (não aconteceu) e não é
+ * `depois` (cinza lê como "ainda não chegou").
+ */
+type EstadoAtivacao = "feito" | "agora" | "casa" | "depois" | "final";
 type PassoAtivacao = {
   id: string;
   estado: EstadoAtivacao;
@@ -2523,6 +2872,8 @@ type PassoAtivacao = {
   sub: string;
   href?: string;
   status?: string;
+  /** Abre o `sub` em negrito (ver o passo do certificado). */
+  subDestaque?: string;
 };
 
 /**
@@ -2554,60 +2905,115 @@ const PASSOS_ATIVACAO: PassoAtivacao[] = [
   },
   {
     /**
-     * 🔄 04/09 (decisão do Pedro, com a pesquisa) — A PROCURAÇÃO DEIXOU DE SER
-     * "JÁ FEITA".
-     *
-     * Ela vinha marcada como concluída, "junto da assinatura do registro". Só
-     * que procuração e-CAC exige e-CNPJ, e no A4 o CNPJ ainda não existe — a
-     * premissa caiu em 01/09, quando a A3.2 saiu do caminho ME, e ninguém
-     * mexeu na trilha. Aqui na A5 o CNPJ JÁ SAIU, então este é o primeiro
-     * lugar do flow em que ela pode de fato ser assinada: vira tarefa, não
-     * recibo.
-     */
-    id: "procuracao",
-    estado: "agora",
-    titulo: "Assinar a procuração",
-    sub: "Agora que o CNPJ saiu, é ela que deixa a gente pagar seu DAS e cuidar das obrigações por você. Leva um minuto, pelo GOV.BR.",
-    status: "Sua vez",
-    href: "/assinatura",
-  },
-  {
-    /**
      * 🔄 01/09 (decisão do Pedro) — deixou de ser "você já resolveu antes de
-     * assinar": o gate de certificado SAIU do caminho de constituição de ME.
-     * O certificado é incluso no plano e emitido POR NÓS quando for preciso
-     * (promessa que já está escrita na tela do plano), então aqui ele deixa de
-     * ser tarefa do cliente e vira aviso do que a gente faz por ele.
+     * assinar": o gate de certificado SAIU do caminho de constituição de ME. Ele
+     * é incluso no plano, e o CNPJ ainda nem existia lá atrás.
+     *
+     * 🔄🔄 05/09 (Pedro, destrinchando a operação) — E NÃO É UM RECIBO: É O
+     * ÚLTIMO PASSO DE VERDADE.
+     *
+     * Ele estava aqui como "feito · por nossa conta", como se emitir certificado
+     * fosse coisa que acontece sozinha no fundo. Não é: a emissão exige
+     * VIDEOCHAMADA de validação, com hora marcada, feita por uma CERTIFICADORA
+     * PARCEIRA — é exigência dela, e a mesma que a tela `/certificado` (MEI e
+     * migrar) sempre descreveu. Quem procura, marca e conduz é a parceira; no
+     * fim ela sobe os arquivos pra nossa plataforma interna.
+     *
+     * Marcar isso como "feito" era a mesma mentira que o check verde da
+     * viabilidade era em 04/09: dar por concluído o passo que ainda vai
+     * acontecer. Pior aqui, porque este passo PEDE a pessoa — ela precisa
+     * atender uma chamada. Quem lê "por nossa conta" não atende.
+     *
+     * 🔴 O que continua verdade e continua dito: está INCLUSO no plano. O que
+     * mudou é só quem faz o quê — a gente paga e organiza, a parceira executa,
+     * e a pessoa aparece na chamada.
      */
     id: "certificado",
-    estado: "feito",
-    titulo: "Certificado digital por nossa conta",
-    sub: "Está incluso no seu plano. A gente emite quando for necessário, sem cobrar nada a mais e sem você precisar resolver isso agora.",
+    estado: "casa",
+    titulo: "Certificado digital",
+    /* 🆕 05/09 (pedido do Pedro) — a primeira oração vai em NEGRITO. É a única
+       parte da frase que cobra algo da pessoa (alguém VAI LIGAR pra ela), e no
+       meio de um parágrafo de peso único ela passava batido.
+       ⚠️ Partido na FONTE, não com `split` na tela: quem monta layout a partir
+       de string quebra no primeiro texto que mudar de forma — a mesma lição
+       que o compromisso deu hoje de manhã. */
+    subDestaque: "Uma certificadora parceira entra em contato",
+    sub: "pra marcar uma videochamada rápida: é assim que a lei valida quem você é. Ela emite e manda o certificado direto pra gente.",
+    status: "A parceira te chama",
   },
-  {
-    /* 🔄 04/09 — com a procuração virando a vez da pessoa, esta passa a ser a
-       tarefa SEGUINTE. Segue clicável (é ela que abre o app por completo), só
-       não disputa mais o "agora" com a procuração. */
-    id: "dados",
-    estado: "agora",
-    titulo: "Conferir os dados da empresa",
-    sub: "Dê uma olhada se está tudo certo no seu cadastro.",
-    status: "Depois disso",
-    href: "/mais/empresa",
-  },
+  /**
+   * 🗑️ 05/09 (pedido do Pedro: "esse status não existe") — SAIU "CONFERIR OS
+   * DADOS DA EMPRESA".
+   *
+   * Era uma tarefa inventada pela tela: nada no processo espera a pessoa
+   * conferir cadastro pra liberar o app, e ela já conferiu tudo no A1 (o recap
+   * com aceite, antes do ponto sem volta). Pedir de novo aqui transformava uma
+   * conferência que já aconteceu em pendência, e ainda segurava o "acesso
+   * completo" atrás dela. `/mais/empresa` continua existindo no portal, que é
+   * onde conferir cadastro é uma coisa que se faz quando se quer, não um passo
+   * de ativação.
+   */
+  /**
+   * 🗑️ 05/09 (Pedro, confirmando com o Ademar por telefone) — SAIU O PASSO DA
+   * PROCURAÇÃO. **Com o certificado digital, ela não é necessária.**
+   *
+   * O registro de 31/08 (RS38-40, item 17) já dizia isso — "procuração e-CAC só
+   * dispensa se o cliente tiver certificado digital ativo na plataforma" — e
+   * ficou 5 dias sem ratificação, então a trilha manteve a procuração por
+   * segurança. Hoje ela foi confirmada por quem opera, e aí o passo cai
+   * inteiro: com o e-CNPJ na nossa mão a gente age pela empresa direto.
+   *
+   * A reta final encolheu de 4 contatos pra 3, e o último nem é nosso:
+   * contrato social → abertura do CNPJ → videochamada do certificado (parceira).
+   *
+   * ⚠️ Este passo teve 5 versões em 2 dias ("já feita" → tarefa do cliente →
+   * conduzida pelo consultor → 3ª assinatura agendada → inexistente). As 4
+   * primeiras foram deduzidas; a última veio de quem opera. Se o assunto
+   * voltar, é pela mesma porta: pergunta ao Ademar, não raciocínio.
+   */
   {
     id: "acesso",
     estado: "final",
     titulo: "Acesso completo ao app",
-    sub: "Assim que os dados forem conferidos, tudo se abre: emitir nota, impostos, relatórios e mais.",
+    /* ✍️ 05/09 — passou por "assim que os DADOS forem conferidos" (a
+       conferência saiu da trilha) e por "assim que a procuração estiver
+       assinada". Quem fecha a fila é o CERTIFICADO: é ele que deixa a gente
+       emitir nota e agir nos órgãos, e ele é o último a chegar porque depende
+       de uma chamada marcada. O desfecho aponta pro último passo, sempre. */
+    sub: "Com o certificado emitido, tudo se abre: emitir nota, impostos, relatórios e mais.",
   },
 ];
 
-const TAREFAS_ATIVACAO = PASSOS_ATIVACAO.filter((p) => p.estado !== "final");
-const FEITOS_ATIVACAO = TAREFAS_ATIVACAO.filter((p) => p.estado === "feito").length;
-const PCT_ATIVACAO = Math.round((FEITOS_ATIVACAO / TAREFAS_ATIVACAO.length) * 100);
+/**
+ * 🗑️ 05/09 — SAÍRAM `contarAtivacao`, `PassoAtivacaoItem` e `NodeAtivacao`.
+ *
+ * Eram o contador, a linha e o marcador PRÓPRIOS desta trilha. Com ela usando o
+ * cartão de status da casa (`TimelineEmBlocos`), quem conta, desenha a linha e
+ * escolhe o ícone é o mesmo componente do `/aguardando` — que é o ponto da
+ * mudança. Ficaram só os dados (`PASSOS_ATIVACAO`) e a tradução deles pro
+ * vocabulário do status (`etapasAtivacao`, dentro da view).
+ *
+ * O estado `casa` continua no tipo: é ele que vira `comConsultor` na tradução.
+ */
 
-export function HomeAtivacaoView({ assistida = false }: { assistida?: boolean }) {
+/**
+ * 🗑️ 05/09 — SAIU O PROP `assistida`.
+ *
+ * Ele existia por causa de UM passo: a procuração, que na rota assistida era
+ * conduzida por um consultor e na automática era tarefa do cliente. Com a
+ * procuração fora do flow (o certificado a dispensa), as duas rotas chegam
+ * nesta tela com exatamente o mesmo conteúdo — o certificado é conduzido pela
+ * certificadora parceira nos dois casos.
+ *
+ * Prop sem consumidor é dívida, não preparo: se a distinção voltar, ela volta
+ * com o motivo dela junto. As rotas seguem separadas no mapa (A5 × A5.H)
+ * porque o CAMINHO até aqui é diferente, mesmo que a chegada não seja.
+ */
+export function HomeAtivacaoView() {
+  /* 🔄 05/09 — as ações da trilha eram `href` num `<Link>` que embrulhava a
+     linha inteira. No cartão de status a ação é um BOTÃO dentro da etapa da vez
+     (mesmo padrão do "Pagar a guia agora"), então quem navega é o router. */
+  const router = useRouter();
   /**
    * 🆕 04/09 (rota assistida) — A PROCURAÇÃO TAMBÉM É CONDUZIDA.
    *
@@ -2622,297 +3028,258 @@ export function HomeAtivacaoView({ assistida = false }: { assistida?: boolean })
    * já está aberta no WhatsApp, e um botão aqui abriria um segundo canal pro
    * mesmo assunto.
    */
-  const passos = assistida
-    ? PASSOS_ATIVACAO.map((p) =>
-        p.id === "procuracao"
-          ? {
-              ...p,
-              titulo: "Procuração, com um consultor",
-              sub: "É ela que deixa a gente pagar seu DAS e cuidar das obrigações por você. Um consultor faz junto com você, no mesmo formato da assinatura.",
-              status: "A gente te chama",
-              href: undefined,
-            }
-          : p,
-      )
-    : PASSOS_ATIVACAO;
+  /* 🗑️ 05/09 — a trilha não tem mais variante por rota: o único passo que
+     mudava entre a assistida e a automática era a procuração, e ela saiu. O
+     resto é igual nas duas — o certificado é conduzido pela parceira de
+     qualquer jeito. `assistida` fica na assinatura porque a tela segue sendo o
+     destino das duas rotas, e a distinção volta assim que algo divergir. */
+  const passos = PASSOS_ATIVACAO;
+
+  /**
+   * 🆕 05/09 — os mesmos passos, traduzidos pro vocabulário do status.
+   *
+   * O que era `estado` ("feito"/"agora"/"casa") vira o par de sinais que o
+   * `StatusIcon` entende: `jaFeita` (check verde fora de ordem), `comConsultor`
+   * (silhueta: quem move é a casa) e `acaoCliente` (a vez é dela, com botão).
+   * `orgao` é a linha que continua visível mesmo quando a etapa não é a da vez:
+   * é nela que a promessa do certificado ("incluso no plano") sobrevive, já que
+   * o `detalhe` só aparece na etapa da vez.
+   */
+  const etapasAtivacao: Etapa[] = passos.map((pa) => ({
+    nome: pa.titulo,
+    detalhe: pa.subDestaque ? (
+      <>
+        <strong className="font-semibold text-text-primary">
+          {pa.subDestaque}
+        </strong>{" "}
+        {pa.sub}
+      </>
+    ) : (
+      pa.sub
+    ),
+    ...(pa.id === "cnpj" ? { orgao: "Receita Federal", jaFeita: true } : {}),
+    /* 🔄 05/09 — era `jaFeita` (check verde). O certificado ainda vai
+       acontecer, e com a pessoa junto; o que sobra do "por nossa conta" é o
+       que continua verdade, na linha que fica sempre visível: está incluso. */
+    ...(pa.id === "certificado" ? { orgao: "Incluso no seu plano" } : {}),
+    /* 🐛 05/09 — o `sub` do desfecho ("Com o certificado emitido, tudo se
+       abre…") ficava INVISÍVEL: no cartão de status o detalhe só aparece na
+       etapa da vez, e o desfecho nunca é a vez. A trilha inteira existe pra
+       prometer isso, então a promessa migra pra linha que fica sempre à
+       vista. */
+    ...(pa.id === "acesso"
+      ? { orgao: "Emitir nota, impostos, relatórios e mais" }
+      : {}),
+    ...(pa.estado === "casa" ? { comConsultor: true } : {}),
+    ...(pa.id === "dados" && pa.href
+      ? {
+          acaoCliente: {
+            label: "Conferir agora",
+            onClick: () => router.push(pa.href as string),
+          },
+        }
+      : {}),
+  }));
 
   return (
     <main className="app-main">
-      <Rolagem>
-        <div className="flex flex-col gap-6 pb-[calc(24px+var(--safe-bottom))] pt-3">
-          {/* Sem navbar nesta tela: a pessoa não navega livre até liberar o
-              acesso. Avatar DESATIVADO; sino segue ativo. */}
-          <div className="flex items-start justify-between">
-            <div className="min-w-0">
-              {/* 🐛 04/09 (auditoria) — "Bem-vinda" flexiona no feminino, e o
-                  app não coleta gênero. Mesmo bug que a C3 teve hoje ("Vou
-                  abrir sozinho", "único dono"), agora na PRIMEIRA tela que a
-                  pessoa vê como cliente. */}
-              <p className="text-caption text-text-secondary">Olá, Ana</p>
-              <h1 className="text-h1 leading-tight text-text-primary">
-                Vamos ativar
-                <br />
-                sua empresa
-              </h1>
-            </div>
-            <div className="flex shrink-0 items-center gap-2">
-              <Link
-                href="/avisos"
-                aria-label="Ver avisos"
-                className="relative flex h-11 w-11 items-center justify-center rounded-full border border-border-hairline bg-surface-card text-text-secondary transition-colors hover:border-border-strong active:bg-surface-alt"
-              >
-                <IconeSinoAtivacao />
-                <span className="absolute right-2.5 top-2.5 h-2.5 w-2.5 rounded-full border-2 border-surface-page bg-action-primary" />
-              </Link>
-              <span
-                aria-disabled
-                title="Disponível quando sua empresa estiver ativada"
-                className="flex h-11 w-11 cursor-not-allowed items-center justify-center rounded-full bg-surface-dark/50 text-caption font-bold text-text-on-dark/50"
-              >
-                AB
-              </span>
-            </div>
+      {/* ═══════ 🔄 05/09 (pedido do Pedro) — TÍTULO E HERO FICAM PRESOS,
+          igual ao resto do app: título fixo, corpo rola, CTA fixo. Era a única
+          tela da cauda em que o título subia junto com o conteúdo — e ela é
+          exatamente onde a pessoa mais volta pra conferir uma coisa só ("o
+          certificado saiu?"), então o que ela vem ler não pode depender de onde
+          a rolagem parou. O hero vem junto porque é a mesma unidade: ele diz o
+          que aconteceu, o título diz o que falta. ═══════════════════ */}
+      <div className="flex shrink-0 flex-col gap-6 pb-5 pt-3">
+        <div className="flex items-start justify-between">
+          <div className="min-w-0">
+            {/* 🗑️ 05/09 (pedido do Pedro) — saiu o "Olá, Ana". Saudação é de
+                  home de retorno; esta tela tem um assunto só, e o título agora
+                  o nomeia. Sai junto o último resquício do bug de 04/09 (o
+                  "Bem-vinda" flexionado no feminino num app que não coleta
+                  gênero). */}
+            {/* 🔄 05/09 (pedido do Pedro) — era "Vamos ativar sua empresa".
+                  Título de trilha longa, escrito quando a tela tinha 4 tarefas
+                  pendentes. Sobrou UMA, e ela tem nome: o título passa a dizer
+                  onde a pessoa está e o que falta, em vez de convocar pra um
+                  trabalho que não existe mais. */}
+            <h1 className="text-h1 leading-tight text-text-primary">
+              Último passo:
+              <br />
+              Certificado Digital
+            </h1>
           </div>
+          {/* 🗑️ 05/09 (pedido do Pedro) — saíram o SINO e o AVATAR. O sino
+                levava pra uma caixa de avisos que ainda não tem nada pra
+                mostrar nesta etapa, e o avatar já nascia desativado. Somados ao
+                menu travado, eram três elementos apagados numa tela que tem UM
+                assunto — e o título agora diz qual. */}
+        </div>
 
-          {/* Hero de nascimento — SEM confete (decisão do Pedro, 29/07) e SEM
+        {/* Hero de nascimento — SEM confete (decisão do Pedro, 29/07) e SEM
               o selo coral no topo (removido a pedido, mesma data).
               🔄 28/08 (pedido do Pedro) — brilho coral sutil no canto via
               `radial-gradient`, mesmo tratamento aplicado nos 3 heróis
               escuros da cauda (não é o selo sólido removido em 29/07, é um
               degradê de fundo, bem mais discreto). */}
-          <div
-            className="relative overflow-hidden rounded-2xl p-5 text-text-on-dark"
-            style={{
-              background:
-                "radial-gradient(120% 100% at 0% 0%, color-mix(in srgb, var(--color-action-primary) 45%, transparent) 0%, transparent 55%), var(--color-surface-dark)",
-            }}
-          >
-            <p className="text-h2 font-bold leading-tight">Sua empresa nasceu.</p>
-            <p className="mt-1 text-caption text-text-on-dark/70">
-              {/* 🐛 04/09 (auditoria) — dizia "Ativa há 3 dias" numa tela que
+        <div
+          className="relative overflow-hidden rounded-2xl p-5 text-text-on-dark"
+          style={{
+            background:
+              "radial-gradient(120% 100% at 0% 0%, color-mix(in srgb, var(--color-action-primary) 45%, transparent) 0%, transparent 55%), var(--color-surface-dark)",
+          }}
+        >
+          <p className="text-h2 font-bold leading-tight">Sua empresa nasceu.</p>
+          <p className="mt-1 text-caption text-text-on-dark/70">
+            {/* 🐛 04/09 (auditoria) — dizia "Ativa há 3 dias" numa tela que
                   abre LOGO DEPOIS de assinar: o texto foi escrito pra home de
                   retorno, não pro dia 1. */}
-              Ativa desde hoje. Agora é deixar tudo pronto pra você faturar.
-            </p>
-            <div className="mt-4 flex flex-wrap items-center gap-2">
-              <PillCnpj />
-              <button
-                type="button"
-                /* 🔄 04/09 (auditoria) — 34px de alvo, igual ao chip do CNPJ ao lado. */
-                className="flex min-h-10 items-center gap-1.5 rounded-full border border-border-hairline bg-surface-card px-3.5 text-caption font-medium text-text-secondary transition-colors active:bg-surface-alt"
-              >
-                <IconeDownloadAtivacao />
-                Cartão CNPJ
-              </button>
-            </div>
+            Ativa desde hoje. Agora é deixar tudo pronto pra você faturar.
+          </p>
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <PillCnpj />
+            <button
+              type="button"
+              /* 🔄 04/09 (auditoria) — 34px de alvo, igual ao chip do CNPJ ao lado. */
+              className="flex min-h-10 items-center gap-1.5 rounded-full border border-border-hairline bg-surface-card px-3.5 text-caption font-medium text-text-secondary transition-colors active:bg-surface-alt"
+            >
+              <IconeDownloadAtivacao />
+              Cartão CNPJ
+            </button>
           </div>
+        </div>
+      </div>
 
-          {/* Trilha de ativação (o herói funcional) */}
-          <div className="rounded-2xl border border-border-hairline bg-surface-card p-4">
-            <div className="flex items-center justify-between">
-              <p className="text-body-strong font-semibold text-text-primary">Sua ativação</p>
-              {/* ✍️ 04/09 (auditoria) — o contador dizia "2 de 4" e a lista
-                  mostrava 5 linhas: o 5º item é o DESFECHO ("acesso completo"),
-                  não tarefa, e sai do denominador por dentro. A palavra
-                  "tarefas" fecha a conta pra quem lê. */}
-              <span className="text-caption font-semibold text-text-secondary">
-                {FEITOS_ATIVACAO} de {TAREFAS_ATIVACAO.length} tarefas
-              </span>
-            </div>
-            <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface-alt">
-              <div
-                className="h-full rounded-full bg-action-primary transition-all"
-                style={{ width: `${PCT_ATIVACAO}%` }}
-              />
-            </div>
-            {/* ✍️ 04/09 — a linha citava só a conferência de dados, que era a
-                única tarefa aberta. Com a procuração virando tarefa também, ela
-                passa a falar das duas. */}
-            <p className="mt-1.5 text-micro text-text-tertiary">
-              Feitas essas duas, seu app abre por completo.
-            </p>
+      <Rolagem>
+        {/* 🔄 05/09 — o respiro do pé cobre só a BARRA DE ABAS (~102px), que
+            flutua por cima da rolagem. O CTA não entra na conta: ele é irmão
+            desta área, empurra em vez de sobrepor. */}
+        <div className="flex flex-col gap-6 pb-[102px]">
+          {/* ═══════ 🔄 05/09 (pedido do Pedro) — A TRILHA USA O CARTÃO DE
+              STATUS DA CASA, não uma timeline só dela.
+              Esta tela tinha marcador próprio (círculo numerado), contador
+              próprio ("2 de 4 tarefas"), barra de progresso própria e um item
+              com pill "Sua vez". O status da abertura (`/aguardando`), que a
+              pessoa acabou de atravessar, diz a MESMA coisa com outro
+              vocabulário: cartão com contador, check verde, anel girando,
+              silhueta de pessoa. Duas linguagens pro mesmo conceito, no mesmo
+              dia — e a segunda chegando quando ela já aprendeu a primeira.
+              Agora é o mesmo componente (`TimelineEmBlocos`, exportado pra
+              isto): o que muda é o grupo, não o desenho. A barra de progresso
+              saiu junto — o contador do cabeçalho já é a barra em texto, e o
+              status nunca teve uma. ═════════════════════════════ */}
+          <TimelineEmBlocos
+            etapas={etapasAtivacao}
+            /* O CNPJ é a única etapa concluída por ORDEM; o certificado também
+               está pronto, mas fora de ordem (`jaFeita`), que é exatamente o
+               caso que a flag existe pra descrever. */
+            concluidas={1}
+            /* A vez é do CERTIFICADO, que virou o ÚLTIMO passo: a parceira está
+               procurando o cliente pra marcar a videochamada, e depois dele o
+               app abre por completo — não há mais nada no meio. */
+            emAndamento={1}
+            podeAjustar={false}
+            gruposProprios={[
+              {
+                id: 0,
+                titulo: "Sua ativação",
+                rota: "",
+                telas: [],
+                itens: etapasAtivacao.map((e, i) => ({ e, i })),
+              },
+            ]}
+          />
 
-            <div className="mt-4">
-              {passos.map((p, i) => (
-                <PassoAtivacaoItem
-                  key={p.id}
-                  p={p}
-                  n={i + 1}
-                  ultimo={i === passos.length - 1}
-                />
-              ))}
-            </div>
-          </div>
+          {/* 🗑️ 05/09 (pedido do Pedro) — saiu o cartão "Sem pressa com
+              imposto agora". Ele tranquilizava sobre uma cobrança que ninguém
+              fez: nada nesta tela fala de imposto, e a própria trilha já diz o
+              que falta. Aviso que responde pergunta não feita ocupa a altura
+              que a tela precisa pro que ela veio dizer. A promessa continua
+              viva onde ela é respondida de verdade (o Portal, e a tela do
+              plano). */}
 
-          <div className="flex gap-3 rounded-2xl bg-surface-tint-brand p-4">
-            <span className="mt-0.5 shrink-0 text-action-primary-sm">
-              <IconeRelogioAtivacao />
-            </span>
-            <div>
-              <p className="text-caption font-semibold text-text-primary">
-                Sem pressa com imposto agora
-              </p>
-              <p className="mt-0.5 text-micro text-text-secondary">
-                Seu primeiro DAS só chega quando você faturar. A gente calcula,
-                gera a guia e te avisa. Você não precisa lembrar de nada.
-              </p>
-            </div>
-          </div>
-
-          <AprendaGradiente />
-          <QuemCuida />
+          {/* 🗑️ 05/09 (pedido do Pedro) — saíram "Aprenda com a gente" e "Quem
+              cuida de você". Os dois são blocos de HOME EM REGIME: conteúdo pra
+              quem já opera e tédio pra quem tem um passo pendente na tela. Esta
+              tela tem um trabalho só — terminar a ativação — e tudo que rola
+              depois da trilha compete com ele. Os dois seguem vivos na home em
+              regime (`/home-campea` e as variações), que é onde eles têm função. */}
         </div>
       </Rolagem>
+
+      {/* ═══════ 🆕 05/09 (decisão do Pedro) — O CTA É A PROMESSA, EM CINZA.
+          A tela não tinha rodapé nenhum. Eu tinha recomendado um CTA de CONTATO
+          (é a única ação possível aqui) e o Pedro preferiu o contrário: o botão
+          nomeia o DESTINO, trancado. Faz sentido — a última linha da trilha
+          promete que "tudo se abre", o menu travado mostra o que abre, e o CTA
+          dá nome a isso. Os três contam a mesma história em vez de três
+          histórias.
+          ⚠️ `travado`, não `disabled`: coral apagado significa "espera curta, a
+          ação volta" (o "Aguardando compensação" do boleto). Aqui é outra coisa
+          — está trancado até o certificado sair, e não é esta tela que
+          destranca. Ver a variante em `ui/button.tsx`.
+          📐 05/09 (correção do Pedro) — ELE FICA NO RODAPÉ DE VERDADE, na mesma
+          altura do CTA de todas as outras telas. Eu tinha empurrado o botão
+          38px pra cima pra ele "caber" acima da barra de abas, e isso criava um
+          CTA que muda de lugar dependendo da tela — justamente o que a anatomia
+          fixa (título, corpo, rodapé) existe pra impedir. Quem cede é a BARRA,
+          que sobe pra cima do CTA: ela está travada e não faz nada aqui, então
+          não pode disputar a thumb zone com o único elemento que a tela tem a
+          dizer. Ver `TRAVADAS` no layout do portal. ═══════════════════ */}
+      <div className="app-footer-cta">
+        {/* 🆕 05/09 (pedido do Pedro) — O CANAL VOLTOU PRO RODAPÉ.
+            A tela tinha ficado sem contato nenhum quando o bloco "Quem cuida de
+            você" saiu, e é justamente aqui que a pessoa mais pode ter dúvida:
+            ela está esperando a ligação de uma empresa que ela nunca ouviu
+            falar. Mesma anatomia do rodapé dos status (link acima, CTA abaixo)
+            e mesmo alvo de 44px — o que muda é só o texto, porque a dúvida daqui
+            não é sobre a abertura, é sobre o certificado. */}
+        <a
+          href={linkWhatsApp(
+            "Oi! Estou esperando o contato da certificadora pro meu certificado digital e queria tirar uma dúvida.",
+          )}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mb-2 flex min-h-11 w-full items-center justify-center text-center text-caption font-medium text-text-secondary underline underline-offset-4"
+        >
+          Alguma dúvida? Chama no WhatsApp
+        </a>
+        <Button
+          full
+          variant="travado"
+          disabled
+          title="Disponível quando seu certificado digital sair"
+        >
+          Acessar app completo
+        </Button>
+      </div>
     </main>
   );
 }
 
-function PassoAtivacaoItem({
-  p,
-  n,
-  ultimo,
-}: {
-  p: PassoAtivacao;
-  n: number;
-  ultimo: boolean;
-}) {
-  const conteudo = (
-    <div className="flex gap-3">
-      <div className="flex flex-col items-center">
-        <NodeAtivacao estado={p.estado} n={n} />
-        {!ultimo && <div className="my-1 w-0.5 flex-1 rounded-full bg-border-hairline" />}
-      </div>
-      <div className={`flex-1 ${ultimo ? "" : "pb-5"}`}>
-        <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0">
-            <p
-              className={`text-caption font-semibold ${
-                p.estado === "feito" || p.estado === "agora"
-                  ? "text-text-primary"
-                  : "text-text-secondary"
-              }`}
-            >
-              {p.titulo}
-            </p>
-            <p className="mt-0.5 text-micro text-text-tertiary">{p.sub}</p>
-          </div>
-          {p.estado === "agora" && p.status && (
-            <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-state-info-tint px-2.5 py-1 text-micro font-semibold text-state-info-text">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-state-info-text" />
-              {p.status}
-            </span>
-          )}
-          {p.estado === "feito" && (
-            <span className="shrink-0 text-micro font-semibold text-state-success-text">
-              Feito
-            </span>
-          )}
-          {p.estado === "depois" && p.href && (
-            <span className="shrink-0 text-text-tertiary">
-              <IconeChevronAtivacao />
-            </span>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-
-  return p.href ? (
-    <Link href={p.href} className="block rounded-xl transition-colors active:bg-surface-alt">
-      {conteudo}
-    </Link>
-  ) : (
-    conteudo
-  );
-}
-
-function NodeAtivacao({ estado, n }: { estado: EstadoAtivacao; n: number }) {
-  if (estado === "feito") {
-    return (
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-state-success text-text-on-dark">
-        <IconeCheckAtivacao />
-      </span>
-    );
-  }
-  if (estado === "agora") {
-    return (
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-action-primary text-text-on-brand ring-4 ring-action-primary/20">
-        <IconeFaiscaAtivacao sm />
-      </span>
-    );
-  }
-  if (estado === "final") {
-    return (
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-surface-tint-brand text-action-primary-sm">
-        <IconeCadeadoAbertoAtivacao />
-      </span>
-    );
-  }
-  return (
-    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border-strong text-micro font-bold text-text-tertiary">
-      {n}
-    </span>
-  );
-}
-
-function IconeFaiscaAtivacao({ sm = false }: { sm?: boolean }) {
-  const s = sm ? 15 : 24;
-  return (
-    <svg width={s} height={s} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-      <path d="M12 2c.6 3.5 2 4.9 5.5 5.5C14 8.1 12.6 9.5 12 13c-.6-3.5-2-4.9-5.5-5.5C10 6.9 11.4 5.5 12 2z" />
-      <path d="M18.5 13c.3 1.8 1 2.5 2.8 2.8-1.8.3-2.5 1-2.8 2.8-.3-1.8-1-2.5-2.8-2.8 1.8-.3 2.5-1 2.8-2.8z" />
-    </svg>
-  );
-}
-function IconeSinoAtivacao() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6" />
-      <path d="M10 20a2 2 0 0 0 4 0" />
-    </svg>
-  );
-}
-function IconeRelogioAtivacao() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 7v5l3 2" />
-    </svg>
-  );
-}
-function IconeCheckAtivacao() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="m5 12 4.5 4.5L19 7" />
-    </svg>
-  );
-}
+/* 🗑️ 05/09 — saíram junto com a trilha antiga os ícones que só ela usava
+   (faísca, check, cadeado aberto e chevron do passo). Quem desenha o estado
+   agora é o `StatusIcon` do DS, via `TimelineEmBlocos`. */
 function IconeDownloadAtivacao() {
   return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
       <path d="M12 3v12M8 11l4 4 4-4" />
       <path d="M5 20h14" />
     </svg>
   );
 }
-function IconeCadeadoAbertoAtivacao() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <rect x="4" y="11" width="16" height="10" rx="2" />
-      <path d="M8 11V7a4 4 0 0 1 7.5-2" />
-    </svg>
-  );
-}
-function IconeChevronAtivacao() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="m9 18 6-6-6-6" />
-    </svg>
-  );
-}
 
 /* ═══════════════════ P1 · RETOMAR DE ONDE PAROU ═════════════════════════ */
-
 
 /**
  * 🆕 30/08 (pedido do Pedro) — PORTA DE ENTRADA da reentrada (P1). Antes o
@@ -2950,7 +3317,10 @@ export function RetomarCpfView({
             teto de 248px. Continua relativa à sobra (cresce e encolhe com o
             aparelho), só ocupa menos dela. */}
         <div className="flex min-h-0 flex-1 items-center justify-center py-4">
-          <div id="retomar-flutua" className="relative flex h-[54%] max-h-[248px] items-end">
+          <div
+            id="retomar-flutua"
+            className="relative flex h-[54%] max-h-[248px] items-end"
+          >
             {/* Sombra de contato em 2 camadas, igual ao aparelho do E6.1: a
                 elipse curta é o apoio na superfície, o drop-shadow segue a
                 silhueta e projeta pra direita (direção de luz do DS). */}
@@ -2970,7 +3340,9 @@ export function RetomarCpfView({
               height={498}
               priority
               className="relative z-10 h-full w-auto"
-              style={{ filter: "drop-shadow(6px 14px 12px rgba(27,30,36,.20))" }}
+              style={{
+                filter: "drop-shadow(6px 14px 12px rgba(27,30,36,.20))",
+              }}
             />
           </div>
 
@@ -2980,16 +3352,36 @@ export function RetomarCpfView({
               ♿ desliga em `prefers-reduced-motion`. */}
           <style jsx global>{`
             @keyframes retomar-flutua-obj {
-              0%   { transform: translate3d(0, 0, 0) rotate(0deg); }
-              35%  { transform: translate3d(4px, -7px, 0) rotate(0.6deg); }
-              70%  { transform: translate3d(-3px, -3px, 0) rotate(-0.5deg); }
-              100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+              0% {
+                transform: translate3d(0, 0, 0) rotate(0deg);
+              }
+              35% {
+                transform: translate3d(4px, -7px, 0) rotate(0.6deg);
+              }
+              70% {
+                transform: translate3d(-3px, -3px, 0) rotate(-0.5deg);
+              }
+              100% {
+                transform: translate3d(0, 0, 0) rotate(0deg);
+              }
             }
             @keyframes retomar-flutua-sombra {
-              0%   { transform: translateX(-50%) scaleX(1); opacity: 1; }
-              35%  { transform: translateX(-50%) scaleX(0.9); opacity: 0.72; }
-              70%  { transform: translateX(-50%) scaleX(0.96); opacity: 0.88; }
-              100% { transform: translateX(-50%) scaleX(1); opacity: 1; }
+              0% {
+                transform: translateX(-50%) scaleX(1);
+                opacity: 1;
+              }
+              35% {
+                transform: translateX(-50%) scaleX(0.9);
+                opacity: 0.72;
+              }
+              70% {
+                transform: translateX(-50%) scaleX(0.96);
+                opacity: 0.88;
+              }
+              100% {
+                transform: translateX(-50%) scaleX(1);
+                opacity: 1;
+              }
             }
             #retomar-flutua img {
               animation: retomar-flutua-obj 7s ease-in-out infinite;
@@ -3010,18 +3402,23 @@ export function RetomarCpfView({
 
         {/* Bloco de baixo ancorado no pé (o `flex-1` de cima é quem empurra). */}
         <div className="shrink-0">
-        <Titulo sub="A gente confirma onde você parou.">Voltar de onde parei</Titulo>
-        <Corpo>
-          <Campo rotulo="Seu CPF" dica="É o mesmo que você usou pra começar o cadastro.">
-            <Texto
-              valor={cpf}
-              onChange={setCpf}
-              inputMode="numeric"
-              maxLength={14}
-              placeholder="000.000.000-00"
-            />
-          </Campo>
-        </Corpo>
+          <Titulo sub="A gente confirma onde você parou.">
+            Voltar de onde parei
+          </Titulo>
+          <Corpo>
+            <Campo
+              rotulo="Seu CPF"
+              dica="É o mesmo que você usou pra começar o cadastro."
+            >
+              <Texto
+                valor={cpf}
+                onChange={setCpf}
+                inputMode="numeric"
+                maxLength={14}
+                placeholder="000.000.000-00"
+              />
+            </Campo>
+          </Corpo>
         </div>
         <Rodape>
           <Button full disabled={!cpfOk} onClick={onContinuar}>
@@ -3093,9 +3490,9 @@ export function AguardandoView({
   fase = "dossie",
   guiaBoleto = false,
   rodada2 = false,
+  guiaJaPaga = false,
   assinou1 = false,
   assistida = false,
-  agendado = null,
   compromisso = null,
   dossieFeitos,
   junta = JUNTA_MOCK,
@@ -3154,6 +3551,16 @@ export function AguardandoView({
    * quem acabou de assinar dizendo "o último passo é a assinatura" — o mesmo
    * furo que o A3′ tinha com a guia paga: a tela não reconhecia o que mudou.
    */
+  /**
+   * 🐛→🔒 05/09 (auditoria) — A GUIA PAGA SOBREVIVE AO RECUO.
+   *
+   * Na 2ª rodada de nomes a viabilidade volta a zero, e como o progresso é um
+   * ponteiro linear a guia voltava junto: o rodapé cobrava "Pagar a guia agora"
+   * de quem já tinha pago. Cenário real, não teórico — o A2 diz à pessoa que
+   * a guia não espera a análise, ou seja, o app INCENTIVA pagar antes de saber
+   * o veredito.
+   */
+  guiaJaPaga?: boolean;
   assinou1?: boolean;
   /**
    * 🆕 04/09 (decisão do Pedro) — ROTA ASSISTIDA.
@@ -3169,16 +3576,17 @@ export function AguardandoView({
    * automática, o destino. Isto é um desvio no fim, não uma amputação.
    */
   assistida?: boolean;
-  /** A frase do compromisso ("Hoje às 15:00"). Null = a marcar. */
-  agendado?: string | null;
-  /** 🆕 05/09 — as partes do compromisso, pro cartão desenhar o bloco de data. */
-  compromisso?: {
-    numero: number;
-    semana: string;
-    mes: string;
-    hora: string;
-    hoje?: boolean;
-  } | null;
+  /**
+   * 🔄 05/09 (auditoria) — FONTE ÚNICA DO "TEM HORA MARCADA".
+   *
+   * Eram DOIS props: a frase (`agendado`) e as partes (`compromisso`). O hero,
+   * a etapa e o CTA liam a frase; só o cartão lia as partes. Quando um chegava
+   * sem o outro (acontecia ao desistir de remarcar), a tela afirmava a hora
+   * marcada em três lugares e mostrava o cartão de apresentação no quarto.
+   * Agora é um prop só, e a frase é derivada dele.
+   */
+  /** As partes do compromisso. Null = a marcar. */
+  compromisso?: Compromisso | null;
   /**
    * 🆕 01/09 — com o CTA da fase Junta no rodapé, o último passo ("Agora é só
    * assinar") precisava de destino: sem isso a tela virava beco depois da guia
@@ -3230,9 +3638,43 @@ export function AguardandoView({
    * alguém duplicou a regra — ela mora aqui.
    * ═══════════════════════════════════════════════════════════════════════ */
   const viabilidadeOk = naFaseJunta && junta.concluidas > 0;
-  const guiaPaga = naFaseJunta && junta.concluidas > 1;
+  const guiaPaga = naFaseJunta && (junta.concluidas > 1 || guiaJaPaga);
   /** A Junta já respondeu e o dinheiro já saiu: nada mais está em validação. */
   const juntaResolvida = viabilidadeOk && guiaPaga;
+  /* 🔄 05/09 (auditoria) — A FRASE DA HORA MARCADA NASCE AQUI, UMA VEZ SÓ.
+     Hero, etapa da timeline e CTA bebem desta linha. Antes cada um lia um prop
+     de texto que viajava por fora das partes, e bastava um chegar sem o outro
+     pra tela afirmar hora marcada em três lugares e negar no quarto. */
+  const agendado = compromisso ? fraseCompromisso(compromisso) : null;
+  /* 🆕 05/09 (pedido do Pedro) — QUAL DAS DUAS ASSINATURAS ESTÁ EM JOGO.
+     Até o CNPJ existir são duas, e a 2ª tem o contador assinando junto: mesma
+     mecânica (marcar hora, consultor conduz), conteúdo diferente. Sem esta
+     distinção a volta da 1ª caía num status que oferecia remarcar a assinatura
+     que já tinha acontecido. */
+  const rodadaAssinatura: RodadaAssinatura = assinou1 ? 2 : 1;
+  /**
+   * 🆕 05/09 (achado do Pedro) — O RAMO ASSISTIDO IGNORAVA O SÓCIO.
+   *
+   * 🔒 RATIFICADO no mesmo dia pelo Ademar, por escrito, e a resposta é
+   * DIFERENTE nas duas assinaturas:
+   *   · 1ª (registro do contrato na JUCEMG) → **todos os sócios assinam**
+   *   · 2ª (Receita) → **só o contador e o sócio representante**
+   *
+   * Por isso o nome do sócio viaja SEMPRE (não só na 1ª): na 2ª ele não some,
+   * ele muda de papel — de quem assina junto pra quem NÃO precisa estar. E
+   * isso precisa ser dito, senão a pessoa que acabou de alinhar dois horários
+   * pra primeira vai alinhar de novo pra uma chamada que não pede o sócio.
+   * Quem decide o sentido é a `rodada`, dentro de cada componente.
+   *
+   * Primeiro nome só: cartão e etapa citam a pessoa no meio de uma frase, não
+   * numa lista formal.
+   */
+  /* 🚧 Mock (RF-01): a quantidade real vem do C3; aqui o status só sabe SE tem
+     sócio (`temSocios`). Enquanto não houver estado de verdade, 2 é o caso que
+     a tela demonstra — e `sociosExtras` já entrega N quando o dado existir. */
+  const sociosAssinatura = temSocios ? sociosExtras(2).map((x) => x.nome) : [];
+  /** Como citar os outros sócios no meio de uma frase (1 → nome, 2+ → contagem). */
+  const socioAssinatura = rotuloSocios(sociosAssinatura);
   /** O dossiê aparece na timeline enquanto ainda houver algo sendo validado. */
   const dossieNaLista = !naFaseJunta || !juntaResolvida;
 
@@ -3266,7 +3708,10 @@ export function AguardandoView({
    * saiu inteiro (ver `etapasCombinadas`, logo abaixo).
    */
   const etapasDossie: Etapa[] = passos.map((p, i) => ({
-    nome: boletoPendente && i === indiceGirandoBoleto ? (p.nomeEnquantoGirando ?? p.nome) : p.nome,
+    nome:
+      boletoPendente && i === indiceGirandoBoleto
+        ? (p.nomeEnquantoGirando ?? p.nome)
+        : p.nome,
     detalhe: p.descricao,
     // 🆕 01/09 — o bloco vem do próprio passo (`lib/passos.ts`); as 3 etapas
     // da Junta entram todas no bloco 5, junto do "Revisar e confirmar" que as
@@ -3315,7 +3760,9 @@ export function AguardandoView({
     : boletoPendente
       ? indiceGirandoBoleto
       : feitos;
-  const emAndamento = naFaseJunta ? offsetCauda + junta.emAndamento : emAndamentoDossie;
+  const emAndamento = naFaseJunta
+    ? offsetCauda + junta.emAndamento
+    : emAndamentoDossie;
 
   // 🐛→🔒 31/08 (correção do Pedro) — a fase DOSSIÊ não ganha `acaoCliente`
   // inline: o CTA "Continuar preenchendo" já existe fixo no rodapé, e repetir
@@ -3342,6 +3789,16 @@ export function AguardandoView({
    * ⚠️ Declarados ANTES do `etapas` abaixo: o `map` roda na hora e lê `iGuia`.
    */
   const iGuia = etapasCombinadas.findIndex((e) => e.acaoCliente);
+  /* 🆕 05/09 (auditoria) — a etapa da guia afirma que está paga mesmo com o
+     ponteiro atrás dela (ver `jaFeita` em `painel.tsx`). Sem isto a timeline
+     desmentia o CTA: um dizia que a guia estava resolvida, a outra a mostrava
+     como pendente. */
+  const etapasComGuiaPaga =
+    guiaJaPaga && iGuia >= 0
+      ? etapasCombinadas.map((e, i) =>
+          i === iGuia ? { ...e, jaFeita: true, acaoCliente: undefined } : e,
+        )
+      : etapasCombinadas;
   /* 🔄 04/09 — a 1ª etapa da Junta na lista. Depende de o dossiê ainda estar
      nela ou não, e é por isso que o offset é derivado num lugar só. */
   const iViabilidade = offsetCauda;
@@ -3359,7 +3816,8 @@ export function AguardandoView({
         if (rodada2 && i === iViabilidade) {
           return {
             ...e,
-            detalhe: "A Junta confere os nomes novos. Não precisa fazer nada, a gente te avisa.",
+            detalhe:
+              "A Junta confere os nomes novos. Não precisa fazer nada, a gente te avisa.",
           };
         }
         /* 🐛 04/09 (achado do Pedro, comparando A3 e A3″) — O RENOME DA GUIA
@@ -3404,7 +3862,8 @@ export function AguardandoView({
             /* 🔄 04/09 — o detalhe dizia só "Em andamento agora". Com a etapa
                desenhada em cinza (quem gira é a viabilidade), ela precisava
                dizer que o dinheiro JÁ SAIU, senão lê como passo não feito. */
-            detalhe: "Você já pagou. O banco confirma em 1 a 3 dias úteis, e a gente te avisa.",
+            detalhe:
+              "Você já pagou. O banco confirma em 1 a 3 dias úteis, e a gente te avisa.",
             acaoCliente: undefined,
           };
         }
@@ -3433,10 +3892,14 @@ export function AguardandoView({
            competir com o CTA do rodapé) não vale aqui: o rodapé está ocupado
            por outro assunto. */
         return recusa
-          ? { ...e, emCurso: true, acaoCliente: { label: "Pagar a guia agora", onClick: onPagarDae } }
+          ? {
+              ...e,
+              emCurso: true,
+              acaoCliente: { label: "Pagar a guia agora", onClick: onPagarDae },
+            }
           : { ...e, emCurso: true, acaoCliente: undefined };
       })
-    : etapasCombinadas;
+    : etapasComGuiaPaga;
 
   /* 🆕 04/09 (rota assistida) — AS ETAPAS DE ASSINATURA TROCAM DE DONO.
      Elas continuam na lista, no mesmo lugar: o que muda é quem move. A da vez
@@ -3454,13 +3917,22 @@ export function AguardandoView({
             ...e,
             comConsultor: true,
             detalhe: agendado
-              ? `Marcado pra ${agendado.toLowerCase()}. Um consultor te chama por aqui e por WhatsApp.`
+              ? socioAssinatura && rodadaAssinatura === 1
+                ? `Marcado pra ${agendado}. Um consultor chama você e ${socioAssinatura} por aqui e por WhatsApp.`
+                : `Marcado pra ${agendado}. Um consultor te chama por aqui e por WhatsApp.`
               : /* ✍️ 05/09 — era "Um consultor faz este passo junto com você.
                    Leva cerca de 15 minutos", a TERCEIRA vez que a tela dizia a
                    mesma coisa (hero e cartão já disseram). Aqui sobra o que só
                    a etapa entrega: quanto tempo. O ícone de pessoa na linha já
                    diz de quem é a vez. */
-                "Leva cerca de 15 minutos.",
+                rodadaAssinatura === 2
+                ? /* ✍️ 05/09 (pente-fino) — a etapa entrega o que só ela
+                     entrega: quanto tempo. Quem assina é assunto do hero, e a
+                     dispensa do sócio é da agenda. */
+                  "Leva cerca de 15 minutos, com o seu contador assinando junto."
+                : socioAssinatura
+                  ? `Leva cerca de 15 minutos, com você e ${socioAssinatura} juntos.`
+                  : "Leva cerca de 15 minutos.",
           };
         })
       : etapas;
@@ -3500,18 +3972,24 @@ export function AguardandoView({
                 assistida
                 ? agendado
                   ? "Você tem hora marcada"
-                  : "Agora é com a gente"
+                  : /* 🆕 05/09 (pedido do Pedro) — a 2ª assinatura não é
+                       "continuar": é um ato próprio, com nome próprio. Voltar
+                       da 1ª pro genérico "Agora é com a gente" fazia parecer
+                       que nada tinha mudado. */
+                    assinou1
+                    ? "Falta a assinatura do CNPJ"
+                    : "Agora é com a gente"
                 : assinou1
                   ? "Falta só a última assinatura"
                   : "Falta só a assinatura"
               : vezDoCliente
-              ? // 🔄 04/09 — "quase lá" só quando a Junta já respondeu. Na
-                // chegada do A2 a análise mal começou, e comemorar ali seria a
-                // mesma mentira do check verde.
-                viabilidadeOk
-                ? "Sua empresa está quase lá"
-                : "Estamos abrindo sua empresa"
-              : "Estamos abrindo sua empresa",
+                ? // 🔄 04/09 — "quase lá" só quando a Junta já respondeu. Na
+                  // chegada do A2 a análise mal começou, e comemorar ali seria a
+                  // mesma mentira do check verde.
+                  viabilidadeOk
+                  ? "Sua empresa está quase lá"
+                  : "Estamos abrindo sua empresa"
+                : "Estamos abrindo sua empresa",
         recusa: "Precisamos de você num ponto",
       }
     : {
@@ -3535,35 +4013,46 @@ export function AguardandoView({
                        marcada"), e o cartão carrega o detalhe. */
                     ""
                   : assinou1
-                    ? "O contrato social já está assinado. Falta a assinatura que gera o CNPJ, e a gente faz essa com você também."
+                    ? socioAssinatura
+                      ? /* ✍️ 05/09 (pente-fino) — dizia "…: Carlos não precisa
+                           estar", e a mesma frase aparecia no cartão e na etapa.
+                           Três blocos com o mesmo fato. O hero afirma QUEM
+                           assina, que já diz quem não; a dispensa explícita
+                           mora na AGENDA, que é onde ela muda o que a pessoa
+                           faz (parar de alinhar horário com o sócio). */
+                        "O contrato social já está assinado por todos. Falta a que gera o CNPJ, e essa é só sua e do contador."
+                      : "O contrato social já está assinado. Falta a que gera o CNPJ, e um consultor faz essa com você também, com o seu contador junto."
                     : /* ✍️ 05/09 (pente-fino do Pedro: "texto demais") — SAIU
                          o recap "A Junta aprovou o nome e a guia está paga":
                          a timeline logo abaixo mostra exatamente isso, com
                          dois checks verdes. Contar em palavras o que a lista
                          desenha é o jeito mais fácil de encher uma tela. */
-                      "Só falta assinar, e um consultor faz isso com você."
+                      socioAssinatura
+                      ? `Só falta assinar. ${sujeitoComSocios(sociosAssinatura)} assinam juntos, com um consultor conduzindo.`
+                      : "Só falta assinar, e um consultor faz isso com você."
                 : assinou1
                   ? "O contrato social já está assinado. Falta a assinatura que gera o CNPJ, com o seu contador junto."
                   : "A Junta aprovou o nome e a guia está paga. O último passo é a assinatura dos sócios."
               : vezDoCliente
-            ? viabilidadeOk
-              ? /* Diz o que já aconteceu (a viabilidade passou), o que falta e
+                ? viabilidadeOk
+                  ? /* Diz o que já aconteceu (a viabilidade passou), o que falta e
                    de quem é a vez. Sem prazo: o detalhe da etapa já informa
                    que o pagamento leva cerca de 1 minuto. */
-                "A viabilidade passou na Junta. Falta pagar a taxa dela, e o registro é com a gente."
-              : /* 🆕 04/09 — chegada do A2: a análise está rodando E a guia já
+                    "A viabilidade passou na Junta. Falta pagar a taxa dela, e o registro é com a gente."
+                  : /* 🆕 04/09 — chegada do A2: a análise está rodando E a guia já
                    pode ser paga. A frase existe pra dizer que uma coisa não
                    trava a outra, que é o que a pessoa acabou de ler no A2. */
-                "A Junta já está analisando seu nome e endereço. A guia não espera a análise: dá pra pagar quando quiser."
-            : /* ✍️ 04/09 — saiu "e a gente avisa no WhatsApp a cada passo": a
+                    "A Junta já está analisando seu nome e endereço. A guia não espera a análise: dá pra pagar quando quiser."
+                : /* ✍️ 04/09 — saiu "e a gente avisa no WhatsApp a cada passo": a
                  linha miúda logo abaixo, dentro do mesmo hero, já diz isso.
                  Era a mesma promessa duas vezes na mesma caixa. */
-              "A parte chata é com a gente. Você acompanha por aqui.",
+                  "A parte chata é com a gente. Você acompanha por aqui.",
         /* ✍️ 04/09 (auditoria) — "é rápido de resolver" brigava com o prazo de
            30 dias que o card logo abaixo passou a mostrar: uma frase mandava
            correr, a outra dizia pra respirar. Ficou o que é verdade nas duas
            leituras — o ajuste é pequeno e a gente já sabe qual é. */
-        recusa: "A abertura seguiu bem até aqui. Um órgão pediu um ajuste, e a gente já sabe qual é.",
+        recusa:
+          "A abertura seguiu bem até aqui. Um órgão pediu um ajuste, e a gente já sabe qual é.",
       }
     : {
         // 🐛→🔒 31/08 (correção do Pedro) — "enquanto isso, vamos adiantar
@@ -3634,20 +4123,26 @@ export function AguardandoView({
          promessa genérica de "a gente te avisa" só somaria linha. */
       semAvisoWhats={assistida && juntaResolvida}
       antesDaTimeline={
-        assistida && juntaResolvida
-          ? agendado && compromisso
-            ? (
-                <CardCompromisso
-                  quando={compromisso}
-                  /* O contato mora no cartão, junto de quem atende (ver
-                     `CardCompromisso`). Por isso saiu do rodapé. */
-                  onFalar={linkWhatsApp(
-                    `Oi! Tenho a assinatura marcada pra ${agendado.toLowerCase()} e preciso de ajuda.`,
-                  )}
-                />
-              )
-            : <CardConsultor />
-          : undefined
+        assistida && juntaResolvida ? (
+          compromisso ? (
+            /* 🗑️ 05/09 (pedido do Pedro) — o cartão não leva mais o
+                   botão de WhatsApp: ele só mostra o compromisso. Quem
+                   precisa falar antes da hora usa "Remarcar" no rodapé, que
+                   é o mesmo canal.
+                   🔄 05/09 (auditoria) — a condição era `agendado &&
+                   compromisso`, dois props pro mesmo fato. Sobrou o fato. */
+            <CardCompromisso
+              quando={compromisso}
+              rodada={rodadaAssinatura}
+              socios={sociosAssinatura}
+            />
+          ) : (
+            <CardConsultor
+              rodada={rodadaAssinatura}
+              socios={sociosAssinatura}
+            />
+          )
+        ) : undefined
       }
       /* 🆕 04/09 (pedido do Pedro) — com horário marcado, a dúvida provável
          não é genérica: é REMARCAR. O link do rodapé assume esse papel em vez
@@ -3671,7 +4166,9 @@ export function AguardandoView({
          WhatsApp: a agenda é nossa e a tela de escolher horário já existe.
          Divide a linha com o canal humano, cada um no seu destino. */
       acaoExtra={
-        assistida && agendado ? { label: "Remarcar horário", onClick: onAgendar } : undefined
+        assistida && compromisso
+          ? { label: "Remarcar horário", onClick: onAgendar }
+          : undefined
       }
       /* 🆕 04/09 — só na fase Junta: o cartão fundido não pode herdar o nome
          do bloco 1 ("Conta e plano"), que é um quarto do que ele contém. */
@@ -3691,7 +4188,9 @@ export function AguardandoView({
       podeAjustar={!naFaseJunta}
       /* 🔄 04/09 — a `recusa.etapa` já chega relativa à cauda, e a cauda agora
          é a lista inteira na fase Junta: o offset do dossiê saiu junto com ele. */
-      recusa={recusa ? { ...recusa, etapa: offsetCauda + recusa.etapa } : undefined}
+      recusa={
+        recusa ? { ...recusa, etapa: offsetCauda + recusa.etapa } : undefined
+      }
       onAcaoRecusa={onAcaoRecusa}
       // K6 dizia: status puro não inventa ação, e na fase Junta a ação morava
       // inline na etapa. 🔄 01/09 (pedido do Pedro) — a ação da fase Junta
@@ -3739,12 +4238,22 @@ export function AguardandoView({
                      meio da jornada), ele conta o estado. A dúvida continua
                      saindo pelo link de WhatsApp logo acima dele. */
                   assistida
-                  ? agendado
+                  ? compromisso
                     ? {
-                        label: `Marcado pra ${agendado.toLowerCase()}`,
+                        /* 🔄 05/09 (pedido do Pedro) — SEM A HORA. Ela está no
+                           maior tamanho da tela, no cartão logo acima, e no
+                           botão estourava pra duas linhas. Sobra o dia, que é
+                           o que o cartão não grita. */
+                        label: `Marcado pra ${fraseDoDia(compromisso)}`,
                         desabilitado: true,
                       }
-                    : { label: "Escolher um horário", onClick: onAgendar }
+                    : {
+                        label:
+                          rodadaAssinatura === 2
+                            ? "Marcar a última assinatura"
+                            : "Escolher um horário",
+                        onClick: onAgendar,
+                      }
                   : { label: "Ir para a assinatura", onClick: onAssinar }
                 : {
                     // 🆕 01/09 (pedido do Pedro) — quando a vez é do ÓRGÃO, o
@@ -3775,11 +4284,16 @@ export function AguardandoView({
                  andamento automático. */
               recusa
               ? "Seu progresso está guardado. Pode fechar o app: nada se perde, e nada recomeça do zero."
-              : /* ✍️ 05/09 — na rota assistida sem horário marcado, "o
-                   processo segue sozinho" é falso: ele parou e espera a pessoa
-                   marcar. A promessa que vale aqui é a mesma da tela de
-                   exigência — o progresso está guardado. */
-                assistida && !agendado
+              : /* ✍️ 05/09 — na rota assistida, depois que a Junta resolveu,
+                   "o processo segue sozinho" é falso: ele parou e espera uma
+                   PESSOA — ela, pra marcar, ou o consultor, pra chamar na hora
+                   combinada. A promessa que vale aqui é a mesma da tela de
+                   exigência: o progresso está guardado.
+                   🐛 05/09 (auditoria) — a condição era `assistida &&
+                   !agendado`, e por isso a tela COM hora marcada voltava a
+                   prometer andamento automático justamente no estado em que
+                   tudo depende de duas pessoas se encontrarem. */
+                assistida && juntaResolvida
                 ? "Seu progresso está guardado. Pode fechar o app: nada se perde, e nada recomeça do zero."
                 : "A abertura roda uma vez só. Pode fechar o app que o processo segue sozinho, de onde parou."
           : pago

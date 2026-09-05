@@ -58,7 +58,17 @@ export interface Etapa {
    * girando aparece um bloco com CTA. Ícone segue "a-fazer" (não é estado novo
    * — coral nunca é estado, ver `ui/status.tsx`); o que muda é o texto+botão.
    */
-  acaoCliente?: { label: string; onClick?: () => void };
+  /**
+   * A ação da etapa da vez, dentro dela.
+   *
+   * 🐛→🔒 05/09 (auditoria) — A NOTA ERA FIXA NO COMPONENTE. O cartão
+   * trazia, escrita no render, a frase da guia da Junta ("A guia não espera a
+   * análise…"). Funcionou enquanto a única ação inline do app era pagar a
+   * guia; no minuto em que a trilha de ativação passou a usar esta timeline,
+   * "Conferir os dados da empresa" apareceu com a frase da guia embaixo.
+   * A nota agora é da ETAPA, que é quem sabe o que a ação dela significa.
+   */
+  acaoCliente?: { label: string; onClick?: () => void; nota?: string };
   /**
    * 🗑️ 01/09 — `acaoSecundaria` e `aguardando` existiram por algumas horas
    * (guia paga por boleto mostrava "ver boleto"/"Pix" dentro da etapa).
@@ -73,7 +83,13 @@ export interface Etapa {
    * adivinhar o tamanho do passo. Nas outras etapas fica escondida, senão a
    * timeline vira parede de texto.
    */
-  detalhe?: string;
+  /**
+   * 🔄 05/09 — era `string`. Virou `ReactNode` porque o detalhe do certificado
+   * destaca a primeira oração em negrito (pedido do Pedro): ela é a única coisa
+   * da frase que exige ação da pessoa — alguém VAI LIGAR — e no meio de um
+   * parágrafo de peso único ela passava batido.
+   */
+  detalhe?: ReactNode;
   /**
    * 🆕 04/09 (pedido do Pedro, no A3″) — ETAPA EM CURSO SEM SER "A VEZ".
    *
@@ -98,6 +114,19 @@ export interface Etapa {
    * verdade quando existe uma pessoa com nome cuidando do passo.
    */
   comConsultor?: boolean;
+  /**
+   * 🆕 05/09 (auditoria) — FEITA FORA DE ORDEM.
+   *
+   * `concluidas` é um ponteiro linear: tudo antes dele está pronto. Isso vale
+   * pro caminho normal e quebra num caso real — a 2ª RODADA DE NOMES. Ali a
+   * viabilidade RECUA (os nomes novos voltam pra Junta), mas a guia continua
+   * paga: a própria tela diz, no A2, que "a guia não espera a análise". Com
+   * só o ponteiro, a volta da rodada 2 zerava a lista inteira e o rodapé
+   * voltava a cobrar "Pagar a guia agora" de quem já tinha pago.
+   *
+   * Esta flag deixa UMA etapa afirmar que está pronta sem mover o ponteiro.
+   */
+  jaFeita?: boolean;
 }
 
 /**
@@ -154,7 +183,8 @@ export const ETAPAS_ABERTURA: Etapa[] = [
   {
     nome: "Analisando viabilidade",
     orgao: "Junta Comercial",
-    detalhe: "A Junta confere nome e endereço. Não precisa fazer nada, a gente te avisa.",
+    detalhe:
+      "A Junta confere nome e endereço. Não precisa fazer nada, a gente te avisa.",
   },
   {
     /* ✍️ 04/09 (auditoria) — a sigla saiu do NOME e virou tradução no detalhe.
@@ -162,11 +192,17 @@ export const ETAPAS_ABERTURA: Etapa[] = [
        etapa competia com o da tela de pagamento ("Taxa da Junta"): duas
        nomenclaturas pra mesma coisa. */
     nome: "Pague a guia da Junta",
-    acaoCliente: { label: "Pagar a guia agora" },
+    acaoCliente: {
+      label: "Pagar a guia agora",
+      /* 🔄 05/09 — morava no render do cartão (ver `acaoCliente.nota`). É
+         desta etapa que ela fala, então é aqui que ela mora. */
+      nota: "A guia não espera a análise. Pagar agora libera a assinatura mais cedo.",
+    },
     /* 🔄 04/09 — a frase "não precisa esperar a análise" SAIU: ela já está no
        hero da mesma tela, dita com as mesmas palavras. Aqui fica o que só a
        etapa entrega — o que é a taxa e quanto custa de tempo. */
-    detalhe: "É a taxa que a Junta cobra pra registrar (DAE). Pagar leva cerca de 1 minuto.",
+    detalhe:
+      "É a taxa que a Junta cobra pra registrar (DAE). Pagar leva cerca de 1 minuto.",
   },
   /* ═══════════ 🆕 04/09 (Pedro, destrinchando o processo real) ═══════════
    * SÃO DUAS ASSINATURAS, NÃO UMA.
@@ -197,7 +233,8 @@ export const ETAPAS_ABERTURA: Etapa[] = [
     /* Por que dizer que o contador assina junto: é a única etapa do flow em
        que alguém de dentro da casa põe o nome no documento. Some daqui e a
        pessoa lê "de novo?"; dito, vira o motivo de existir uma segunda vez. */
-    detalhe: "A última. Seu contador assina junto com você, e é ela que gera o CNPJ.",
+    detalhe:
+      "A última. Seu contador assina junto com você, e é ela que gera o CNPJ.",
   },
 ];
 
@@ -210,7 +247,6 @@ export interface Recusa {
   /** O rótulo do botão de recuperação. */
   acao: string;
 }
-
 
 /* ═══════════ A TIMELINE EM BLOCOS ══════════════════════════════════════════
  * 🆕 01/09 (pedido do Pedro) — a lista corrida de 13 passos era assustadora
@@ -232,7 +268,19 @@ export interface Recusa {
  * aviso que roda depois do A1.
  * ═════════════════════════════════════════════════════════════════════════ */
 
-function TimelineEmBlocos({
+/**
+ * 🔄 05/09 (pedido do Pedro: "use o nosso layout de status") — EXPORTADA.
+ *
+ * A trilha de ativação da home dia-1 (A5/A5.H) tinha uma timeline PRÓPRIA:
+ * outro card, outro marcador, outro contador, outra barra de progresso. Duas
+ * linguagens pra dizer a mesma coisa ("onde você está nesta fila"), e a pessoa
+ * atravessa as duas no mesmo dia. Agora é uma só.
+ *
+ * `gruposProprios` existe pra isso: a divisão em `BLOCOS` é do dossiê/abertura
+ * e não descreve a ativação. Quem tem outra divisão traz a sua; o RENDER é o
+ * mesmo, que é o ponto.
+ */
+export function TimelineEmBlocos({
   etapas,
   concluidas,
   emAndamento,
@@ -240,6 +288,7 @@ function TimelineEmBlocos({
   podeAjustar,
   onIrParaBloco,
   titulosBloco,
+  gruposProprios,
 }: {
   etapas: Etapa[];
   concluidas: number;
@@ -257,16 +306,30 @@ function TimelineEmBlocos({
    * mostra.
    */
   titulosBloco?: Record<number, string>;
+  /**
+   * Grupos que NÃO vêm de `BLOCOS` (ver o cabeçalho da função). Os índices de
+   * `itens` continuam sendo os da lista inteira, porque é deles que os estados
+   * (feito/girando/recusa) saem.
+   */
+  gruposProprios?: {
+    id: number;
+    titulo: string;
+    rota: string;
+    telas: string[];
+    itens: { e: Etapa; i: number }[];
+  }[];
 }) {
   // Índice global de cada etapa preservado: os estados (feito/girando/recusa)
   // continuam vindo de `concluidas`/`emAndamento`, que contam a lista inteira.
-  const grupos = BLOCOS.map((b) => ({
-    ...b,
-    titulo: titulosBloco?.[b.id] ?? b.titulo,
-    itens: etapas
-      .map((e, i) => ({ e, i }))
-      .filter(({ e }) => (e.bloco ?? 0) === b.id),
-  })).filter((g) => g.itens.length > 0);
+  const grupos =
+    gruposProprios ??
+    BLOCOS.map((b) => ({
+      ...b,
+      titulo: titulosBloco?.[b.id] ?? b.titulo,
+      itens: etapas
+        .map((e, i) => ({ e, i }))
+        .filter(({ e }) => (e.bloco ?? 0) === b.id),
+    })).filter((g) => g.itens.length > 0);
 
   const blocoAtual =
     grupos.find((g) => g.itens.some(({ i }) => i === emAndamento))?.id ??
@@ -294,8 +357,11 @@ function TimelineEmBlocos({
     <div className="flex flex-col gap-2.5">
       {grupos.map((g) => {
         const total = g.itens.length;
-        const feitos = g.itens.filter(({ i }) => i < concluidas).length;
-        const temRecusa = recusa != null && g.itens.some(({ i }) => i === recusa.etapa);
+        const feitos = g.itens.filter(
+          ({ i, e }) => i < concluidas || !!e.jaFeita,
+        ).length;
+        const temRecusa =
+          recusa != null && g.itens.some(({ i }) => i === recusa.etapa);
         const concluido = feitos === total && !temRecusa;
         const ehAtual = g.id === blocoAtual && !concluido;
         const expandido = tocados[g.id] ?? (ehAtual || temRecusa);
@@ -336,72 +402,81 @@ function TimelineEmBlocos({
                 deixou de ser um botão só (botão dentro de botão é HTML
                 inválido): o toggle é a área do título, o Ajustar é irmão. */}
             <div className="flex items-center gap-2 p-3.5">
-            <button
-              type="button"
-              onClick={() => setTocados((m) => ({ ...m, [g.id]: !expandido }))}
-              aria-expanded={expandido}
-              className="flex min-w-0 flex-1 items-center gap-3 text-left"
-            >
-              <span className="shrink-0">
-                <StatusIcon estado={estado} />
-              </span>
-              <span className="min-w-0 flex-1">
-                <span
-                  className={`block text-body ${
-                    concluido
-                      ? "text-text-tertiary"
-                      : ehAtual || temRecusa
-                        ? "font-semibold text-text-primary"
-                        : "text-text-muted"
-                  }`}
-                >
-                  {g.titulo}
+              <button
+                type="button"
+                onClick={() =>
+                  setTocados((m) => ({ ...m, [g.id]: !expandido }))
+                }
+                aria-expanded={expandido}
+                className="flex min-w-0 flex-1 items-center gap-3 text-left"
+              >
+                <span className="shrink-0">
+                  <StatusIcon estado={estado} />
                 </span>
-                {/* O contador é o que transforma "faltam 13 coisas" em "3 de 3
+                <span className="min-w-0 flex-1">
+                  <span
+                    className={`block text-body ${
+                      concluido
+                        ? "text-text-tertiary"
+                        : ehAtual || temRecusa
+                          ? "font-semibold text-text-primary"
+                          : "text-text-muted"
+                    }`}
+                  >
+                    {g.titulo}
+                  </span>
+                  {/* O contador é o que transforma "faltam 13 coisas" em "3 de 3
                     aqui dentro": mostra tamanho do bloco, não da jornada. */}
-                <span className="mt-0.5 block text-micro text-text-tertiary">
-                  {concluido ? `${total} de ${total} · concluído` : `${feitos} de ${total}`}
+                  <span className="mt-0.5 block text-micro text-text-tertiary">
+                    {concluido
+                      ? `${total} de ${total} · concluído`
+                      : `${feitos} de ${total}`}
+                  </span>
                 </span>
-              </span>
-            </button>
-            {/* 🔄 01/09 (pedido do Pedro) — de link sublinhado pra PILL coral:
+              </button>
+              {/* 🔄 01/09 (pedido do Pedro) — de link sublinhado pra PILL coral:
                 alvo de toque de verdade (min-h-8 + padding lateral) e peso
                 visual suficiente pra ser encontrado sem procurar. Tint de
                 marca, não fill cheio — o CTA do rodapé continua sendo a ação
                 principal da tela, e dois corais sólidos brigariam. */}
-            {/* 🔒 02/09 — `telas: []` = bloco não editável (o 1, pós-pago, e
+              {/* 🔒 02/09 — `telas: []` = bloco não editável (o 1, pós-pago, e
                 o 5, pós-protocolo). Antes só o `podeAjustar` global segurava,
                 e o bloco 1 escapava: aparecia concluído com o botão,
                 prometendo uma edição que o fluxo não faz. */}
-            {concluido && podeAjustar && g.telas.length > 0 && onIrParaBloco && (
-              <button
-                type="button"
-                onClick={() => onIrParaBloco(g.rota, g.id)}
-                className="flex min-h-8 shrink-0 items-center rounded-full bg-surface-tint-brand px-3.5
+              {concluido &&
+                podeAjustar &&
+                g.telas.length > 0 &&
+                onIrParaBloco && (
+                  <button
+                    type="button"
+                    onClick={() => onIrParaBloco(g.rota, g.id)}
+                    className="flex min-h-8 shrink-0 items-center rounded-full bg-surface-tint-brand px-3.5
                            text-caption font-semibold text-action-primary-sm transition-colors
                            hover:bg-action-primary hover:text-text-on-brand"
-              >
-                Ajustar
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={() => setTocados((m) => ({ ...m, [g.id]: !expandido }))}
-              aria-label={expandido ? "Fechar bloco" : "Abrir bloco"}
-              /* 🔄 04/09 (auditoria) — o alvo era o próprio chevron (18px),
+                  >
+                    Ajustar
+                  </button>
+                )}
+              <button
+                type="button"
+                onClick={() =>
+                  setTocados((m) => ({ ...m, [g.id]: !expandido }))
+                }
+                aria-label={expandido ? "Fechar bloco" : "Abrir bloco"}
+                /* 🔄 04/09 (auditoria) — o alvo era o próprio chevron (18px),
                  metade do mínimo da WCAG 2.5.8. O ícone não muda; cresce a
                  área, com margem negativa pra não mexer no alinhamento. */
-              className="-m-2.5 flex h-10 w-10 shrink-0 items-center justify-center"
-            >
-              <ChevronBloco aberto={expandido} />
-            </button>
+                className="-m-2.5 flex h-10 w-10 shrink-0 items-center justify-center"
+              >
+                <ChevronBloco aberto={expandido} />
+              </button>
             </div>
 
             {expandido && (
               <div className="px-3.5 pb-3.5">
                 <ol className="relative flex flex-col">
                   {g.itens.map(({ e, i }, idx) => {
-                    const feito = i < concluidas;
+                    const feito = i < concluidas || !!e.jaFeita;
                     const recusada = recusa?.etapa === i;
                     /* `emCurso` entra aqui junto com o ponteiro: pro desenho,
                        "é a vez" e "está rodando em paralelo" são o mesmo anel
@@ -418,7 +493,9 @@ function TimelineEmBlocos({
                        peso de texto e pro detalhe, mas NÃO gira: quem está
                        nela é uma pessoa, não um órgão. */
                     const ehAVez =
-                      (!recusa && i === emAndamento) || !!e.emCurso || !!e.comConsultor;
+                      (!recusa && i === emAndamento) ||
+                      !!e.emCurso ||
+                      !!e.comConsultor;
                     const ultima = idx === g.itens.length - 1;
                     const st: StatusEstado = recusada
                       ? "recusa"
@@ -430,7 +507,10 @@ function TimelineEmBlocos({
                             ? "girando"
                             : "a-fazer";
                     return (
-                      <li key={e.nome} className="relative flex gap-3 pb-4 last:pb-0">
+                      <li
+                        key={e.nome}
+                        className="relative flex gap-3 pb-4 last:pb-0"
+                      >
                         {!ultima && (
                           <span
                             className={`absolute left-[8px] top-[22px] bottom-0 w-px ${
@@ -457,10 +537,14 @@ function TimelineEmBlocos({
                             {e.nome}
                           </p>
                           {e.orgao && (
-                            <p className="text-micro text-text-tertiary mt-0.5">{e.orgao}</p>
+                            <p className="text-micro text-text-tertiary mt-0.5">
+                              {e.orgao}
+                            </p>
                           )}
                           {ehAVez && e.detalhe && (
-                            <p className="text-micro text-text-secondary mt-1">{e.detalhe}</p>
+                            <p className="text-micro text-text-secondary mt-1">
+                              {e.detalhe}
+                            </p>
                           )}
                           {ehAVez && !e.detalhe && (
                             <p className="text-micro text-state-info-text mt-1">
@@ -468,8 +552,14 @@ function TimelineEmBlocos({
                                   ÓRGÃO processando. Numa etapa conduzida por
                                   consultor ela mentiria: não tem nada rodando,
                                   tem alguém pra falar com você. */}
+                              {/* 🐛 05/09 (auditoria) — a frase ainda dizia
+                                  "Sua consultora", com dona fixa e no
+                                  feminino, duas coisas que 05/09 derrubou (não
+                                  há profissional designado, e o app não coleta
+                                  gênero). Ela é fallback e por isso passou
+                                  batido nas duas correções. */}
                               {e.comConsultor
-                                ? "Sua consultora conduz este passo com você."
+                                ? "Um consultor conduz este passo com você."
                                 : "Em andamento agora. Te avisaremos quando terminar."}
                             </p>
                           )}
@@ -483,16 +573,21 @@ function TimelineEmBlocos({
                                o `CardNota` do C3 recebeu hoje. */
                             <div className="mt-2 rounded-md border border-border-hairline bg-surface-card p-3">
                               {/* 🐛 04/09 — "A Junta aprovou" era FIXO, e desde
-                                  hoje este cartão também aparece na tela de
-                                  EXIGÊNCIA (onde a Junta justamente não
+                                  aquele dia este cartão também aparece na tela
+                                  de EXIGÊNCIA (onde a Junta justamente não
                                   aprovou) e no A3, onde a análise ainda está
-                                  rodando. A frase passa a dizer só o que vale
-                                  nos três estados: a guia é o que destrava a
-                                  assinatura, e ela não espera a análise. */}
-                              <p className="text-micro font-semibold text-text-primary mb-2">
-                                A guia não espera a análise. Pagar agora libera a
-                                assinatura mais cedo.
-                              </p>
+                                  rodando. A frase passou a dizer só o que vale
+                                  nos três estados.
+                                  🔄 05/09 — e agora vem da própria etapa (ver
+                                  `acaoCliente.nota`): a frase continua sendo a
+                                  da guia onde a ação é pagar a guia, e some onde
+                                  a ação é outra. Sem nota, o botão fica sozinho
+                                  — que é o certo quando o nome dele já basta. */}
+                              {e.acaoCliente.nota && (
+                                <p className="text-micro font-semibold text-text-primary mb-2">
+                                  {e.acaoCliente.nota}
+                                </p>
+                              )}
                               <Button onClick={e.acaoCliente.onClick}>
                                 {e.acaoCliente.label}
                               </Button>
@@ -511,7 +606,9 @@ function TimelineEmBlocos({
                               <p className="text-caption font-semibold text-state-danger-text mb-0.5">
                                 {recusa.titulo}
                               </p>
-                              <p className="text-micro text-text-secondary">{recusa.motivo}</p>
+                              <p className="text-micro text-text-secondary">
+                                {recusa.motivo}
+                              </p>
                             </div>
                           )}
                         </div>
@@ -519,7 +616,6 @@ function TimelineEmBlocos({
                     );
                   })}
                 </ol>
-
               </div>
             )}
           </div>
@@ -687,7 +783,9 @@ export function PainelView({
   const ETAPAS =
     etapas ??
     ETAPAS_ABERTURA.map((e) =>
-      e.acaoCliente ? { ...e, acaoCliente: { ...e.acaoCliente, onClick: onPagarDae } } : e,
+      e.acaoCliente
+        ? { ...e, acaoCliente: { ...e.acaoCliente, onClick: onPagarDae } }
+        : e,
     );
   const t = titulo ?? {
     normal: "Estamos abrindo sua empresa",
@@ -725,7 +823,9 @@ export function PainelView({
                   "radial-gradient(120% 100% at 0% 0%, color-mix(in srgb, var(--color-action-primary) 45%, transparent) 0%, transparent 55%), var(--color-surface-dark)",
               }}
             >
-              <p className="text-h1 font-bold leading-tight">{recusa ? t.recusa : t.normal}</p>
+              <p className="text-h1 font-bold leading-tight">
+                {recusa ? t.recusa : t.normal}
+              </p>
               {/* 🆕 04/09 — o subtítulo pode vir VAZIO. Acontece no A3.H2: o
                   compromisso ganhou cartão próprio logo abaixo do hero, e
                   repetir "Hoje às 15:00" aqui seria a mesma informação duas
@@ -747,7 +847,8 @@ export function PainelView({
                   avisa — numa tela que já explicou como. */}
               {!recusa && !semAvisoWhats && (
                 <p className="mt-3 text-micro text-text-on-dark/50">
-                  Assim que um passo anda, a gente atualiza aqui e te avisa no WhatsApp.
+                  Assim que um passo anda, a gente atualiza aqui e te avisa no
+                  WhatsApp.
                 </p>
               )}
             </div>
@@ -768,7 +869,7 @@ export function PainelView({
             pé quando há conteúdo abaixo. */}
         <Rolagem className="pb-4">
           <div>
-          {/* ── Quanto tempo leva ──
+            {/* ── Quanto tempo leva ──
               K1 (anti-guru): o "cerca de 8 dias úteis" era número INVENTADO, e
               justo na tela mais ansiosa do flow. O prazo de abertura é o que o
               concorrente não divulga (oportunidade nossa), então cravar um e
@@ -781,165 +882,172 @@ export function PainelView({
               repetia o mesmo prazo que o subtítulo do hero já dava. Sumiu:
               no modo escuro o hero absorve a informação (subtítulo + a linha
               do WhatsApp), e só o modo claro (MEI/Migrar) mantém o card. */}
-          {!recusa && !escuro && (
-            <Card className="mb-4">
-              <p className="text-caption text-text-secondary">Quanto tempo leva</p>
-              <p className="text-body text-text-primary mt-0.5">
-                {prazo ??
-                  "Depende de cada órgão, e o tempo deles a gente não controla."}
-              </p>
-              <p className="text-micro text-text-tertiary mt-1">
-                Assim que um passo anda, a gente atualiza aqui e te avisa no
-                WhatsApp.
-              </p>
-            </Card>
-          )}
+            {!recusa && !escuro && (
+              <Card className="mb-4">
+                <p className="text-caption text-text-secondary">
+                  Quanto tempo leva
+                </p>
+                <p className="text-body text-text-primary mt-0.5">
+                  {prazo ??
+                    "Depende de cada órgão, e o tempo deles a gente não controla."}
+                </p>
+                <p className="text-micro text-text-tertiary mt-1">
+                  Assim que um passo anda, a gente atualiza aqui e te avisa no
+                  WhatsApp.
+                </p>
+              </Card>
+            )}
 
-          {antesDaTimeline && <div className="mb-4">{antesDaTimeline}</div>}
+            {antesDaTimeline && <div className="mb-4">{antesDaTimeline}</div>}
 
-          {/* ── A TIMELINE ─────────────────────────────────────────────────
+            {/* ── A TIMELINE ─────────────────────────────────────────────────
               Cada etapa carrega seu estado. A linha vertical conecta os pontos
               pra ler como uma jornada, não uma lista solta. */}
-          {ETAPAS.some((e) => e.bloco) ? (
-            <TimelineEmBlocos
-              etapas={ETAPAS}
-              concluidas={concluidas}
-              emAndamento={emAndamento}
-              recusa={recusa}
-              podeAjustar={podeAjustar}
-              onIrParaBloco={onIrParaBloco}
-              titulosBloco={titulosBloco}
-            />
-          ) : (
-          <ol className="relative flex flex-col">
-            {ETAPAS.map((e, i) => {
-              const feito = i < concluidas;
-              const recusada = recusa?.etapa === i;
-              const ehAVez = !recusa && i === emAndamento;
-              // 🆕 26/08 (item 6): quando a etapa-da-vez é do CLIENTE agir
-              // (acaoCliente presente), mostra CTA em vez do anel girando —
-              // girando é "vez do órgão", isso aqui é "vez do cliente, sem
-              // problema nenhum" (diferente de recusa, que é vez do cliente
-              // POR TER DADO ERRADO).
-              const aguardaAcaoCliente = ehAVez && !!e.acaoCliente;
-              // 🔄 01/09 (pedido do Pedro) — a etapa-da-vez GIRA mesmo quando
-              // a ação é do cliente. Antes o CTA suprimia o anel e a etapa
-              // ficava com cara de "a-fazer" (cinza), igual às que nem
-              // começaram — sendo que ela é justamente onde a jornada parou.
-              // O anel diz "é aqui"; o card embaixo diz o que fazer.
-              const girando = ehAVez;
-              const ultima = i === ETAPAS.length - 1;
-              // PainelView usa {feito, girando, a-fazer, recusa} do StatusIcon.
-              const estado: StatusEstado = recusada
-                ? "recusa"
-                : feito
-                  ? "feito"
-                  : girando
-                    ? "girando"
-                    : "a-fazer";
-              return (
-                <li key={e.nome} className="relative flex gap-3 pb-5 last:pb-0">
-                  {/* fio que liga um ponto ao próximo (não desenha no último) */}
-                  {!ultima && (
-                    <span
-                      className={`absolute left-[8px] top-[22px] bottom-0 w-px ${
-                        feito ? "bg-state-success" : "bg-border-hairline"
-                      }`}
-                      aria-hidden
-                    />
-                  )}
-                  <span className="relative z-10 mt-0.5 shrink-0">
-                    <StatusIcon estado={estado} />
-                  </span>
-
-                  <div className="min-w-0 flex-1">
-                    <p
-                      className={`text-body ${
-                        recusada
-                          ? "font-semibold text-state-danger-text"
-                          : girando
-                            ? "font-semibold text-text-primary"
-                            : feito
-                              ? "text-text-tertiary"
-                              : "text-text-muted"
-                      }`}
+            {ETAPAS.some((e) => e.bloco) ? (
+              <TimelineEmBlocos
+                etapas={ETAPAS}
+                concluidas={concluidas}
+                emAndamento={emAndamento}
+                recusa={recusa}
+                podeAjustar={podeAjustar}
+                onIrParaBloco={onIrParaBloco}
+                titulosBloco={titulosBloco}
+              />
+            ) : (
+              <ol className="relative flex flex-col">
+                {ETAPAS.map((e, i) => {
+                  const feito = i < concluidas || !!e.jaFeita;
+                  const recusada = recusa?.etapa === i;
+                  const ehAVez = !recusa && i === emAndamento;
+                  // 🆕 26/08 (item 6): quando a etapa-da-vez é do CLIENTE agir
+                  // (acaoCliente presente), mostra CTA em vez do anel girando —
+                  // girando é "vez do órgão", isso aqui é "vez do cliente, sem
+                  // problema nenhum" (diferente de recusa, que é vez do cliente
+                  // POR TER DADO ERRADO).
+                  const aguardaAcaoCliente = ehAVez && !!e.acaoCliente;
+                  // 🔄 01/09 (pedido do Pedro) — a etapa-da-vez GIRA mesmo quando
+                  // a ação é do cliente. Antes o CTA suprimia o anel e a etapa
+                  // ficava com cara de "a-fazer" (cinza), igual às que nem
+                  // começaram — sendo que ela é justamente onde a jornada parou.
+                  // O anel diz "é aqui"; o card embaixo diz o que fazer.
+                  const girando = ehAVez;
+                  const ultima = i === ETAPAS.length - 1;
+                  // PainelView usa {feito, girando, a-fazer, recusa} do StatusIcon.
+                  const estado: StatusEstado = recusada
+                    ? "recusa"
+                    : feito
+                      ? "feito"
+                      : girando
+                        ? "girando"
+                        : "a-fazer";
+                  return (
+                    <li
+                      key={e.nome}
+                      className="relative flex gap-3 pb-5 last:pb-0"
                     >
-                      {e.nome}
-                    </p>
-                    {e.orgao && (
-                      <p className="text-micro text-text-tertiary mt-0.5">
-                        {e.orgao}
-                      </p>
-                    )}
+                      {/* fio que liga um ponto ao próximo (não desenha no último) */}
+                      {!ultima && (
+                        <span
+                          className={`absolute left-[8px] top-[22px] bottom-0 w-px ${
+                            feito ? "bg-state-success" : "bg-border-hairline"
+                          }`}
+                          aria-hidden
+                        />
+                      )}
+                      <span className="relative z-10 mt-0.5 shrink-0">
+                        <StatusIcon estado={estado} />
+                      </span>
 
-                    {/* 🆕 31/08 (pedido do Pedro) — sub-descrição do passo
+                      <div className="min-w-0 flex-1">
+                        <p
+                          className={`text-body ${
+                            recusada
+                              ? "font-semibold text-state-danger-text"
+                              : girando
+                                ? "font-semibold text-text-primary"
+                                : feito
+                                  ? "text-text-tertiary"
+                                  : "text-text-muted"
+                          }`}
+                        >
+                          {e.nome}
+                        </p>
+                        {e.orgao && (
+                          <p className="text-micro text-text-tertiary mt-0.5">
+                            {e.orgao}
+                          </p>
+                        )}
+
+                        {/* 🆕 31/08 (pedido do Pedro) — sub-descrição do passo
                         ATUAL: o que ele envolve + tempo estimado. Só na etapa
                         da vez (nas outras vira parede de texto). Quando existe,
                         substitui o genérico "Em andamento agora" — é mais
                         específico e diz a mesma coisa melhor. */}
-                    {ehAVez && e.detalhe && (
-                      <p className="text-micro text-text-secondary mt-1">{e.detalhe}</p>
-                    )}
+                        {ehAVez && e.detalhe && (
+                          <p className="text-micro text-text-secondary mt-1">
+                            {e.detalhe}
+                          </p>
+                        )}
 
-                    {/* Girando: diz que a bola está com o órgão, não travou.
+                        {/* Girando: diz que a bola está com o órgão, não travou.
                         ✍️ 29/07 — "Não precisa fazer nada" descrevia ausência
                         de ação; "Te avisaremos quando terminar" promete o quê
                         vem a seguir (o WhatsApp), que é o que tranquiliza de
                         verdade quem está esperando. */}
-                    {girando && !e.detalhe && (
-                      <p className="text-micro text-state-info-text mt-1">
-                        Em andamento agora. Te avisaremos quando terminar.
-                      </p>
-                    )}
+                        {girando && !e.detalhe && (
+                          <p className="text-micro text-state-info-text mt-1">
+                            Em andamento agora. Te avisaremos quando terminar.
+                          </p>
+                        )}
 
-                    {/* 🆕 26/08 (item 6): vez do cliente, sem ser problema —
+                        {/* 🆕 26/08 (item 6): vez do cliente, sem ser problema —
                         CTA coral inline ("pagardar", literal da reunião Rua
                         Satélite 36). Tinta de marca (surface-tint-brand), não
                         de estado — reforça que isto não é um alerta. */}
-                    {aguardaAcaoCliente && e.acaoCliente && (
-                      <div className="mt-2 rounded-md bg-surface-tint-brand p-3">
-                        <p className="text-micro font-semibold text-text-primary mb-2">
-                          A Junta aprovou. Falta só pagar a guia pra liberar a
-                          assinatura.
-                        </p>
-                        <Button onClick={e.acaoCliente.onClick}>
-                          {e.acaoCliente.label}
-                        </Button>
-                      </div>
-                    )}
+                        {aguardaAcaoCliente && e.acaoCliente && (
+                          <div className="mt-2 rounded-md bg-surface-tint-brand p-3">
+                            <p className="text-micro font-semibold text-text-primary mb-2">
+                              A Junta aprovou. Falta só pagar a guia pra liberar
+                              a assinatura.
+                            </p>
+                            <Button onClick={e.acaoCliente.onClick}>
+                              {e.acaoCliente.label}
+                            </Button>
+                          </div>
+                        )}
 
-                    {/* ── O 4º ESTADO (UX-40): recuperação inline, aqui mesmo. ── */}
-                    {recusada && recusa && (
-                      <div className="mt-2 rounded-md bg-state-danger-tint p-3">
-                        <p className="text-caption font-semibold text-state-danger-text mb-0.5">
-                          {recusa.titulo}
-                        </p>
-                        <p className="text-micro text-text-secondary">
-                          {recusa.motivo}
-                        </p>
+                        {/* ── O 4º ESTADO (UX-40): recuperação inline, aqui mesmo. ── */}
+                        {recusada && recusa && (
+                          <div className="mt-2 rounded-md bg-state-danger-tint p-3">
+                            <p className="text-caption font-semibold text-state-danger-text mb-0.5">
+                              {recusa.titulo}
+                            </p>
+                            <p className="text-micro text-text-secondary">
+                              {recusa.motivo}
+                            </p>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                </li>
-              );
-            })}
-          </ol>
-          )}
+                    </li>
+                  );
+                })}
+              </ol>
+            )}
 
-          {/* ── IDEMPOTÊNCIA VISÍVEL (UX-38) ────────────────────────────────
+            {/* ── IDEMPOTÊNCIA VISÍVEL (UX-38) ────────────────────────────────
               O motor já é idempotente na retomada; aqui a UI finalmente DIZ.
               Mata o medo de quem pagou, fechou o app e não sabe se "processou". */}
-          <div className="mt-2 flex items-start gap-2.5 rounded-md bg-surface-alt p-3">
-            <Cadeado />
-            {/* O texto vem de quem chama (o `AguardandoView` varia por estado,
+            <div className="mt-2 flex items-start gap-2.5 rounded-md bg-surface-alt p-3">
+              <Cadeado />
+              {/* O texto vem de quem chama (o `AguardandoView` varia por estado,
                 inclusive na exigência); o default abaixo serve MEI e Migrar. */}
-            <p className="text-micro text-text-secondary">
-              {idempotencia ??
-                "A abertura roda uma vez só. Pode fechar o app que o processo segue sozinho, de onde parou."}
-            </p>
-          </div>
+              <p className="text-micro text-text-secondary">
+                {idempotencia ??
+                  "A abertura roda uma vez só. Pode fechar o app que o processo segue sozinho, de onde parou."}
+              </p>
+            </div>
 
-          {/* 🗑️ 04/09 (decisão do Pedro) — SAIU "O andamento vai pros dois
+            {/* 🗑️ 04/09 (decisão do Pedro) — SAIU "O andamento vai pros dois
               sócios, não só pra você". Ela vinha da spec T20 e prometia uma
               coisa que a gente NÃO vai fazer: mandar o acompanhamento do
               processo pro sócio. O sócio é chamado uma vez, na assinatura (A4),
@@ -963,40 +1071,27 @@ export function PainelView({
             (sugerir mais 3 nomes) com saída pra DÚVIDA — quem não sabe o que
             escrever depois de 3 nomes reprovados não é atendido pelo mesmo
             botão. Fica nos dois estados. */}
-        <div className="app-footer-cta flex items-center justify-center gap-3 pb-0">
-            {/* 🆕 04/09 (achado do Pedro) — DOIS DESTINOS, DOIS LINKS.
-                No A3.H2 a linha era um link só ("Remarcar ou falar com outro
-                consultor") apontando pro WhatsApp — mas remarcar é ação DENTRO
-                do app (a agenda é nossa, a tela existe) e falar é canal
-                externo. Um link com dois verbos manda a pessoa pro WhatsApp
-                pedir à mão o que ela faria em dois toques. */}
-            {acaoExtra && (
-              <>
-                <button
-                  type="button"
-                  onClick={acaoExtra.onClick}
-                  className="flex min-h-11 items-center justify-center text-center text-caption font-medium text-text-secondary underline underline-offset-4"
-                >
-                  {acaoExtra.label}
-                </button>
-                <span aria-hidden className="text-caption text-text-muted">
-                  ·
-                </span>
-              </>
+        {/* 🔄 05/09 (pedido do Pedro) — O LINK DE AJUDA VOLTA A SER SOZINHO.
+            Ele dividia a linha com "Remarcar horário", dois links sublinhados
+            lado a lado separados por um ponto. Duas ações de peso visual igual
+            e naturezas diferentes: remarcar é ação DENTRO do app, com destino e
+            consequência; tirar dúvida é sair pro WhatsApp. Empatadas na mesma
+            linha, a de dentro do app lia como nota de rodapé.
+            Agora o remarcar virou botão de verdade, abaixo do CTA (ver o
+            `Rodape`), e aqui fica só o canal humano — centralizado, como no
+            rodapé de todas as outras telas. */}
+        <div className="app-footer-cta flex items-center justify-center pb-0">
+          <a
+            href={linkWhatsApp(
+              ajudaWhats?.mensagem ??
+                "Oi! Estou acompanhando a abertura da minha empresa no app da Legalizai e queria tirar uma dúvida.",
             )}
-            <a
-              href={linkWhatsApp(
-                ajudaWhats?.mensagem ??
-                  "Oi! Estou acompanhando a abertura da minha empresa no app da Legalizai e queria tirar uma dúvida.",
-              )}
-              target="_blank"
-              rel="noopener noreferrer"
-              /* 🔄 04/09 (auditoria) — 20px de alvo, abaixo do mínimo. O
-                 sublinhado e a posição continuam iguais. */
-              className={`flex min-h-11 items-center justify-center text-center text-caption font-medium text-text-secondary underline underline-offset-4 ${
-                acaoExtra ? "" : "w-full"
-              }`}
-            >
+            target="_blank"
+            rel="noopener noreferrer"
+            /* 🔄 04/09 (auditoria) — 20px de alvo, abaixo do mínimo. O
+               sublinhado e a posição continuam iguais. */
+            className="flex min-h-11 w-full items-center justify-center text-center text-caption font-medium text-text-secondary underline underline-offset-4"
+          >
             {ajudaWhats?.label ?? "Tirar uma dúvida no WhatsApp"}
           </a>
         </div>
@@ -1012,17 +1107,40 @@ export function PainelView({
              não inventa ação primária). A MIGRAÇÃO tem: quando a transferência
              fecha, existe um próximo passo real (entrar no app já migrado), e
              aí o botão não é decorativo. Só aparece se quem chama passar. */
-          ctaNormal && (
+          (ctaNormal || acaoExtra) && (
             <Rodape>
-              <Button full disabled={ctaNormal.desabilitado} onClick={ctaNormal.onClick}>
-                {/* 🆕 04/09 (pedido do Pedro) — CTA travado por ESPERA mostra
+              {ctaNormal && (
+                <Button
+                  full
+                  disabled={ctaNormal.desabilitado}
+                  onClick={ctaNormal.onClick}
+                >
+                  {/* 🆕 04/09 (pedido do Pedro) — CTA travado por ESPERA mostra
                     que algo está rodando. Sem o anel, "Aguardando compensar"
                     num botão apagado lê como botão quebrado; com ele, lê como
                     relógio andando. Só aparece quando quem pede diz que é
                     espera (`carregando`), não em todo botão desabilitado. */}
-                {ctaNormal.carregando && <AnelCta />}
-                {ctaNormal.label}
-              </Button>
+                  {ctaNormal.carregando && <AnelCta />}
+                  {ctaNormal.label}
+                </Button>
+              )}
+              {/* 🆕 05/09 (pedido do Pedro) — REMARCAR É CTA, NÃO LINK.
+                  Ela tem o mesmo peso de decisão do botão de cima ("Marcado pra
+                  hoje às 15:00" está travado justamente porque a única coisa a
+                  fazer com aquele horário é MUDAR ele), então ganha o mesmo
+                  tamanho e o mesmo lugar — logo abaixo, na mesma coluna.
+                  Branco com borda, não coral: o principal continua sendo o
+                  estado; este é a saída de quem precisa dela. */}
+              {acaoExtra && (
+                <Button
+                  full
+                  variant="secondary"
+                  onClick={acaoExtra.onClick}
+                  className={ctaNormal ? "mt-2" : ""}
+                >
+                  {acaoExtra.label}
+                </Button>
+              )}
             </Rodape>
           )
         )}

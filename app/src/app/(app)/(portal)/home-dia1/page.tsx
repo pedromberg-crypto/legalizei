@@ -1,6 +1,5 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { HomeAtivacaoView } from "@/components/wizard-cauda";
 
 /**
@@ -29,10 +28,10 @@ import { HomeAtivacaoView } from "@/components/wizard-cauda";
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export default function HomeDia1Page() {
-  /* 🆕 04/09 — na ROTA ASSISTIDA (`?rota=assistida`) a procuração deixa de ser
-     tarefa do cliente e vira o próximo passo com a consultora: ela é e-CAC,
-     tem CAPTCHA, e é justamente o tipo de coisa que motivou o corte humano
-     lá no A3′. Ver `components/consultor.tsx`. */
-  const assistida = useSearchParams().get("rota") === "assistida";
-  return <HomeAtivacaoView assistida={assistida} />;
+  /* 🗑️ 05/09 — `?rota=assistida` deixou de mudar esta tela: o único passo que
+     divergia entre as duas rotas era a procuração, e ela saiu do flow (o
+     certificado a dispensa). A query segue válida na URL, e o nó A5.H segue
+     existindo no mapa, porque o CAMINHO até aqui é outro — a chegada é que
+     virou a mesma. */
+  return <HomeAtivacaoView />;
 }

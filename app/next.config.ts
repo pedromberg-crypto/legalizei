@@ -11,7 +11,26 @@ const nextConfig: NextConfig = {
   // celular. Sem efeito em produção (só existe em `next dev`).
   // 01/09 — máquina mudou de IP na LAN (agora .241); sem ele aqui o teste
   // pelo celular volta a travar sem hidratação.
-  allowedDevOrigins: ["192.168.0.68", "192.168.0.67", "192.168.0.241"],
+  // 05/09 — IP mudou de novo (.112).
+  allowedDevOrigins: [
+    "192.168.0.68",
+    "192.168.0.67",
+    "192.168.0.241",
+    "192.168.0.112",
+  ],
+  // 05/09 — existe um `package-lock.json` órfão em ~/. Sem isso aqui o
+  // Turbopack infere a HOME inteira como raiz do workspace (aviso no boot).
+  turbopack: {
+    root: __dirname,
+  },
+  // 05/09 — Next 16.2 liga por padrão o cache persistente do Turbopack em dev
+  // (`.next/dev/cache/turbopack`). Ele só cresce, nunca compacta: chegou a
+  // 3,1 GB em 9 dias e cada boot carregava isso tudo, com a máquina indo pro
+  // swap. Desligado: boot a frio um pouco mais lento, mas nada acumula.
+  // Se ainda pesar, `npm run dev:restart` limpa o `.next` e sobe de novo.
+  experimental: {
+    turbopackFileSystemCacheForDev: false,
+  },
 };
 
 export default nextConfig;

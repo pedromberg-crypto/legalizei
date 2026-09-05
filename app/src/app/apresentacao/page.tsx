@@ -25,7 +25,11 @@ import grafoFlow from "@/lib/flow-graph.json";
 import { SaidaView } from "@/components/saida";
 import { LoginView } from "@/components/login";
 import { TelaHeader } from "@/components/ui/tela";
-import { VereditoView, type Resultado } from "@/components/veredito";
+/* 🗑️ 05/09 — o `VereditoView` saiu da demo junto com a etapa "veredito". O
+   tipo `Resultado` fica: o estado `resultado` continua no snapshot (removê-lo
+   invalidaria os snapshots salvos), embora hoje ninguém mais o LEIA pra
+   renderizar. 🟡 Dívida conhecida, não urgente. */
+import { type Resultado } from "@/components/veredito";
 import {
   SocioView,
   VinculoView,
@@ -243,8 +247,18 @@ type Etapa =
   | "fora-bh"
   | "perguntando-vazio"
   | "perguntando"
-  | "veredito"
+  /* 🗑️ 05/09 (pedido do Pedro) — SAIU a etapa "veredito". Era o veredito de
+     CNAE do desenho PRÉ-pagamento, aposentado em 27/08 quando a atividade
+     virou a C0 do dossiê. Ficou órfã em dois sentidos ao mesmo tempo: no mapa
+     só existia através das E5.1/E5.2/E5.3 (removidas hoje), e na demo NINGUÉM
+     chamava `setEtapa("veredito")` — a tela tinha render, não tinha entrada.
+     Com ela fora, a demo passa a andar como o flow diz: C0 → C5. */
   | "triagem"
+  // 🆕 05/09 (pedido do Pedro) — E5T.1: a MESMA triagem com o escape hatch já
+  // aberto ("Meu sócio não atende um dos critérios"). Não é tela nova nem fluxo
+  // novo: é o estado que o link abre inline, e que o mapa precisava conseguir
+  // mostrar. Mesmo mecanismo do E3.4.1 (`simularFilaCidade`).
+  | "triagem-socio-nao-encaixa"
   | "faixa"
   // 🆕 03/08 — E5.4/E5.5, saídas da triagem (gap fechado, ver DADOS_SAIDA_EXTERIOR/
   // DADOS_SAIDA_SOCIOS). Alcançáveis só pela interação real (escolher exterior/3+
@@ -408,7 +422,9 @@ function depoisDoDossie(e: EtapaDossie): Etapa {
  */
 function antesDoDossie(e: EtapaDossie): Etapa {
   const i = ETAPAS_DOSSIE.indexOf(e);
-  return i === 0 ? "veredito" : ETAPAS_DOSSIE[i - 1];
+  /* 🔄 05/09 — voltava pro "veredito", que saiu. O anterior da C5 é a C0
+     (`perguntando`), exatamente a aresta que o `flow-data` declara. */
+  return i === 0 ? "perguntando" : ETAPAS_DOSSIE[i - 1];
 }
 
 /**
@@ -670,6 +686,11 @@ type Momento =
   | "veredito-mauro-enviado"
   | "veredito-descarta"
   | "triagem"
+  // 🆕 05/09 (pedido do Pedro) — E5T.1: a MESMA triagem com o escape hatch já
+  // aberto ("Meu sócio não atende um dos critérios"). Não é tela nova nem fluxo
+  // novo: é o estado que o link abre inline, e que o mapa precisava conseguir
+  // mostrar. Mesmo mecanismo do E3.4.1 (`simularFilaCidade`).
+  | "triagem-socio-nao-encaixa"
   | "faixa"
   | "saida-exterior"
   | "saida-socios"
@@ -1237,6 +1258,7 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   "guia-boleto": "/aguardando?fase=junta&guia=boleto",
   "guia-paga": "/aguardando?fase=junta&guia=paga",
   "status-assinatura-1": "/aguardando?fase=junta&guia=paga&assinatura=1",
+  "triagem-socio-nao-encaixa": "/gate?etapa=triagem&simular=socio-nao-encaixa",
   "assistida-passagem": "/aguardando?fase=junta&guia=paga&rota=assistida",
   "assistida-agendar": "/agendar",
   "assistida-ativacao": "/home-dia1?rota=assistida",
@@ -1365,12 +1387,19 @@ const MOMENTO_POR_NO: Record<string, Etapa | null> = {
   E9_3: "m-transferencia",
   E9_4: "m-ativa",
   E5T: "triagem",
-  E5T_1: null, // 🕳️ gate inline do sócio que não encaixa não tem estado próprio na demo
+  /* 🔄 05/09 (pedido do Pedro) — era `null` ("não tem estado próprio na demo"),
+     e era isso que fazia a pill aparecer apagada como "sem tela ainda". Tem
+     estado, sim: é a própria triagem com o escape hatch aberto. */
+  E5T_1: "triagem-socio-nao-encaixa",
   E5F: "faixa",
   E5F_S: "splash-atendido",
-  E5_1: "veredito", // é um DESFECHO do veredito, não tela própria: o preparo força o resultado
-  E5_2: "veredito", // idem — desfecho "quem o Mauro atende" (comércio)
-  E5_3: "veredito", // idem — desfecho "fora de escopo"
+  /* 🗑️ 05/09 (pedido do Pedro) — E5.1 (Waitlist), E5.2 (Contato especial) e
+     E5.3 (Fora de escopo) SAÍRAM do flow. Eram o desenho de veredito
+     PRÉ-pagamento, aposentado em 27/08 quando o CNAE virou assunto do dossiê
+     (C0/C5). Evidência de que já estavam mortas: a E5.3 não tinha NENHUMA
+     aresta de entrada, e a E5.1/E5.2 só eram alcançadas pelo E4.2, que é do
+     caminho MIGRAR — no caminho abrir eram beco sem entrada. As saídas de
+     verdade hoje vivem em `/saida/*`. */
   E6: "conta", // abre no form
   E6_1: "conta-codigo", // 🆕 04/09 — o código virou tela do flow, com pill própria
   E7: "plano",
@@ -1494,6 +1523,14 @@ type TelaDoFlow = {
   label: string;
   /** Nome completo do nó, pra título do painel. */
   nome: string;
+  /**
+   * 🆕 05/09 (pedido do Pedro) — a tela EXISTE e está construída, mas hoje
+   * ninguém passa por ela: o lançamento desvia do A3′ pra rota assistida
+   * (A3.H), e a rota AUTOMÁTICA (A4 → A4.1 → A3⁗ → A4″ → A5) fica dormindo.
+   * Não é buraco (`sem tela ainda`) nem remoção — é uma terceira coisa, e a
+   * fita precisava conseguir dizê-la.
+   */
+  adormecida: boolean;
 };
 
 /**
@@ -1504,13 +1541,19 @@ type TelaDoFlow = {
  * abrir, entre o E9 e o C1. Uma jornada por vez, cada tela no seu lugar.
  */
 const TELAS_DO_FLOW: TelaDoFlow[] = (
-  grafoFlow.nodes as { id: string; label: string; caminho?: string }[]
+  grafoFlow.nodes as {
+    id: string;
+    label: string;
+    caminho?: string;
+    adormecida?: boolean;
+  }[]
 ).map((n) => ({
   id: n.id,
   caminho: (n.caminho ?? "abrir") as CaminhoFlow,
   etapa: MOMENTO_POR_NO[n.id] ?? null,
   label: rotuloCurto(n.label.replace(/<br\/>/g, " ")),
   nome: n.label.replace(/<br\/>/g, " "),
+  adormecida: !!n.adormecida,
 }));
 
 /**
@@ -1990,6 +2033,14 @@ const DESCRICOES: Record<
       "É o destravamento da assinatura: sem a guia compensada a Junta não registra, então esta é a fronteira entre esperar e agir.",
     porque:
       "Virou tela própria no mapa (A3′) porque é OUTRO estado da mesma rota, e estado que muda o que a pessoa pode fazer merece nó — mesma régua que já separa E9.1 de E9.1P.",
+  },
+  "triagem-socio-nao-encaixa": {
+    dono: "usuario",
+    faz: '🆕 05/09 — E5T.1: a mesma triagem com o link "Meu sócio não atende um dos critérios" JÁ ABERTO. Aparece o campo de texto livre e a saída pro time; a tela não navega pra lugar nenhum.',
+    interfere:
+      "É o único ponto do gate em que a pessoa declara um caso que a esteira não cobre (sócio no exterior, sócio PJ) sem ser barrada por isso.",
+    porque:
+      'Desde 29/08 a triagem tem UMA pergunta de verdade (quantos sócios). Os checks de "vale saber" deixaram de ser pergunta obrigatória, mas quem SABE que o próprio caso foge da regra precisava conseguir avisar — senão continuaria como se nada fosse e o problema apareceria depois do pagamento. Dead-end de propósito: quem cai aqui não segue sozinho.',
   },
   "assistida-passagem": {
     dono: "nossa",
@@ -2713,10 +2764,9 @@ export default function ApresentacaoPage() {
    * que acabou de mudar é lento. As pills navegam direto.
    *
    * `setEtapa` sozinho não bastaria: telas do meio do flow (`triagem`,
-   * `faixa`, `conta`, `contrato`, `pagamento`, `veredito`…) leem dado que só
-   * existe se as telas ANTERIORES foram andadas — pular direto renderizaria
-   * formulário vazio ou (no caso do veredito) a tela nem existe sem
-   * `resultado`. Por isso esta função garante, IDEMPOTENTE (só preenche o que
+   * `faixa`, `conta`, `contrato`, `pagamento`…) leem dado que só existe se as
+   * telas ANTERIORES foram andadas — pular direto renderizaria formulário
+   * vazio. Por isso esta função garante, IDEMPOTENTE (só preenche o que
    * ainda está vazio — não pisa em edição ao vivo), os dados de que cada
    * trecho do flow depende, na mesma ordem em que o flow real os produziria.
    */
@@ -4362,14 +4412,11 @@ export default function ApresentacaoPage() {
                                   // pro pagamento; triagem/faixa voltam pro E3.3.
                                   voltar(() => {
                                     setIntencao("abrir");
-                                    // A C0/C0.0 não passa mais por aqui (traz o
-                                    // próprio header). Sobram veredito, triagem
-                                    // e faixa.
-                                    setEtapa(
-                                      etapa === "veredito"
-                                        ? "pagamento"
-                                        : "endereco",
-                                    );
+                                    // A C0/C0.0 não passa mais por aqui (traz
+                                    // o próprio header). 🔄 05/09 — com o
+                                    // veredito fora, sobram triagem e faixa, e
+                                    // as duas voltam pro E3.3.
+                                    setEtapa("endereco");
                                   })
                                 }
                                 aria-label="Voltar"
@@ -4441,43 +4488,27 @@ export default function ApresentacaoPage() {
                               jaCliente
                             />
                           )}
-                          {etapa === "veredito" && resultado && (
-                            <VereditoView
-                              r={resultado}
-                              onRefazer={() =>
-                                voltar(() => setEtapa("perguntando"))
-                              }
-                              // 🔄 27/08 — daqui segue pro dossiê, não mais
-                              // pra triagem: a triagem ficou lá atrás, antes
-                              // do pagamento. 🔄 28/08 — a 1ª tela do dossiê
-                              // virou C5 (secundárias), não mais C1.
-                              onSeguir={() => setEtapa(ETAPAS_DOSSIE[0])}
-                              captura={{
-                                enviado: enviadoV,
-                                setEnviado: setEnviadoV,
-                              }}
-                              // 🔓 UX-65: alternativas de CNAE no veredito 🟢.
-                              mostrarAlternativas
-                              // 🔓 UX-64: mesmas saídas da lista de espera de
-                              // cidade. Blog/site ainda não têm rota.
-                              acoesConfirmacao={[
-                                { label: "Ler o blog", variante: "primary" },
-                                {
-                                  label: "Conhecer o site",
-                                  variante: "primary",
-                                },
-                                {
-                                  label: "Voltar ao início",
-                                  variante: "ghost",
-                                  onClick: reiniciar,
-                                },
-                              ]}
-                            />
-                          )}
-                          {etapa === "triagem" && (
+                          {/* 🆕 05/09 (pedido do Pedro) — E5T.1 é a MESMA
+                              triagem, com o escape hatch já aberto. Duas
+                              condições, porque o link só existe pra quem tem
+                              sócio: força `socios` pra 2 (o estado do link não
+                              aparece pra quem abre sozinho) e liga
+                              `simularSocioNaoAtende`, a mesma prop que o
+                              `?simular=socio-nao-encaixa` liga na rota real.
+                              Nada de tela nova: replicar aqui seria criar uma
+                              segunda fonte da mesma triagem. */}
+                          {(etapa === "triagem" ||
+                            etapa === "triagem-socio-nao-encaixa") && (
                             <TriagemView
-                              socios={socios}
+                              socios={
+                                etapa === "triagem-socio-nao-encaixa"
+                                  ? Math.max(socios ?? 2, 2)
+                                  : socios
+                              }
                               setSocios={setSocios}
+                              simularSocioNaoAtende={
+                                etapa === "triagem-socio-nao-encaixa"
+                              }
                               onSeguir={() => setEtapa("faixa")}
                               // 🆕 26/08 — 3ª realocação da coorte (Veredito →
                               // aqui, dentro da própria Triagem). Mesmo
@@ -4674,14 +4705,27 @@ export default function ApresentacaoPage() {
                   key={t.id}
                   onClick={() => pularParaNo(t)}
                   aria-current={atual}
+                  title={
+                    t.adormecida
+                      ? "Construída, mas fora do caminho de hoje: o lançamento vai pela rota assistida (A3.H). Clicável."
+                      : undefined
+                  }
                   className={`rounded-full px-3.5 py-1.5 text-caption font-semibold transition-colors
                     ${
                       atual
                         ? "bg-action-primary text-text-on-brand"
-                        : "border border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
+                        : t.adormecida
+                          ? /* 🆕 05/09 — ADORMECIDA: cinza cheio, sem borda de
+                               cartão. Continua CLICÁVEL de propósito — ela
+                               existe, está pronta e é o destino quando a
+                               automação chegar; o cinza diz que hoje ninguém
+                               passa por aqui, não que ela sumiu. */
+                            "bg-surface-alt text-text-muted hover:text-text-secondary"
+                          : "border border-border-hairline bg-surface-card text-text-secondary hover:border-border-strong"
                     }`}
                 >
                   {t.label}
+                  {t.adormecida && " · adormecida"}
                 </button>
               );
             })}

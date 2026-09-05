@@ -81,7 +81,9 @@ export default function AgendarPage() {
     /* 🆕 05/09 — a contagem de sócios volta junto. Sem isso o status caía no
        mock (`TEM_SOCIO`) e acertava por sorte: bastaria o mock virar `false`
        pra ida e volta discordarem sobre quantas pessoas assinam. */
-    if (socios.length) q.set("socios", String(qtdSocios));
+    /* 🐛 05/09 — só devolvia a contagem quando havia sócio; no caso solo o
+       status voltava sem ela e caía no mock. Ela volta sempre. */
+    q.set("socios", String(qtdSocios));
     if (c)
       for (const [k, v] of new URLSearchParams(queryDoCompromisso(c)))
         q.set(k, v);

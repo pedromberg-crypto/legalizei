@@ -63,12 +63,16 @@ export default function GatePage() {
   const categoria = categoriaDe(searchParams);
 
   const etapaParam = searchParams.get("etapa");
-  const [etapa, setEtapa] = useState<Etapa>(etapaParam === "faixa" ? "faixa" : "triagem");
+  const [etapa, setEtapa] = useState<Etapa>(
+    etapaParam === "faixa" ? "faixa" : "triagem",
+  );
 
   // 🐛 29/08 (achado do Pedro testando no iPhone) — a demo (`/apresentacao`)
   // já vinha com "Só eu" pré-selecionado, a rota real não. É o mais comum
   // entre os prestadores de serviço (mesma copy do card de reforço logo
   // abaixo em `gate-telas.tsx`), faz sentido como ponto de partida.
+  /** Prévia do E5T.1 no `/mapa` (não é fluxo real, ver `simularSocioNaoAtende`). */
+  const simulaSocio = searchParams.get("simular") === "socio-nao-encaixa";
   const [socios, setSocios] = useState<number | null>(1);
   const [faixa, setFaixa] = useState<string | null>(null);
   const [modoExato, setModoExato] = useState(false);
@@ -77,14 +81,15 @@ export default function GatePage() {
   const [coorte, setCoorte] = useState<"primeira" | "ja-abri" | null>(null);
 
   // 🆕 28/08 — estado do M-T (só usado no ramo MEI).
-  const [impedimentos, setImpedimentos] = useState<Record<string, boolean | null>>(
-    Object.fromEntries(IMPEDIMENTOS.map((i) => [i.id, null])),
-  );
+  const [impedimentos, setImpedimentos] = useState<
+    Record<string, boolean | null>
+  >(Object.fromEntries(IMPEDIMENTOS.map((i) => [i.id, null])));
   const [cienteBeneficio, setCienteBeneficio] = useState(false);
 
   /** Qual saída o impedimento respondido "sim" leva. */
   function saidaDoImpedimento() {
-    if (impedimentos["outra-empresa"] === true) return "/saida/mei-outra-empresa";
+    if (impedimentos["outra-empresa"] === true)
+      return "/saida/mei-outra-empresa";
     return "/saida/mei-servidor";
   }
 
@@ -128,50 +133,63 @@ export default function GatePage() {
           />
 
           <main className="app-main">
-        {etapa === "triagem" && !mei && (
-          <TriagemView
-            socios={socios}
-            setSocios={setSocios}
-            onSeguir={() => setEtapa("faixa")}
-            coorte={coorte}
-            setCoorte={setCoorte}
-            // 🆕 31/08 (pedido do Pedro) — `?simular=socio-nao-encaixa`
-            // pré-abre o escape hatch (E5T.1) só pra prévia ao vivo do
-            // `/mapa`, mesmo mecanismo do `?simular=fora-bh` no E3.4.1.
-            // Não é fluxo real.
-            simularSocioNaoAtende={searchParams.get("simular") === "socio-nao-encaixa"}
-          />
-        )}
-        {etapa === "faixa" && (
-          <FaixaView
-            faixa={faixa}
-            setFaixa={setFaixa}
-            modoExato={modoExato}
-            setModoExato={setModoExato}
-            exato={exato}
-            setExato={setExato}
-            // 🆕 30/08 (pedido do Pedro) — não vai mais direto pro E6: passa
-            // pelo splash "conseguimos te atender" (E5F.1) primeiro. O
-            // destino de sempre (E6 + flags) viaja como `next`.
-            onSeguir={() => {
-              const destino = comCategoria(
-                comEndereco(comRegime("/conta", mei), enderecoFiscal),
-                categoria,
-              );
-              router.push(`/splash-atendido?next=${encodeURIComponent(destino)}`);
-            }}
-            // 🆕 03/08 — UX-68 mesclado: revela o campo inline em vez de
-            // trocar a tela inteira. Fonte: /apresentacao.
-            exatoInline
-            // 🆕 28/08 — só no MEI: vira gate do teto de R$81.000/ano.
-            regimeMei={mei}
-            onTrocarParaMe={() =>
-              router.push(
-                comCategoria(comEndereco("/gate?etapa=faixa", enderecoFiscal), categoria),
-              )
-            }
-          />
-        )}
+            {etapa === "triagem" && !mei && (
+              <TriagemView
+                /* 🐛→🔒 05/09 (achado do Pedro) — A PRÉVIA ABRIA PELA METADE.
+               `?simular=socio-nao-encaixa` ligava o escape hatch, mas o link
+               que o abre só existe pra quem TEM sócio — e a prévia entra sem
+               ninguém ter escolhido a quantidade. Resultado: aparecia o "Falar
+               com o time" solto, sem o contexto que o justifica. A simulação
+               agora também assume 2 sócios, que é a condição real de quem
+               chega nesse estado. Vale só na prévia; no fluxo de verdade quem
+               escolhe é a pessoa. */
+                socios={simulaSocio ? Math.max(socios ?? 2, 2) : socios}
+                setSocios={setSocios}
+                onSeguir={() => setEtapa("faixa")}
+                coorte={coorte}
+                setCoorte={setCoorte}
+                // 🆕 31/08 (pedido do Pedro) — `?simular=socio-nao-encaixa`
+                // pré-abre o escape hatch (E5T.1) só pra prévia ao vivo do
+                // `/mapa`, mesmo mecanismo do `?simular=fora-bh` no E3.4.1.
+                // Não é fluxo real.
+                simularSocioNaoAtende={simulaSocio}
+              />
+            )}
+            {etapa === "faixa" && (
+              <FaixaView
+                faixa={faixa}
+                setFaixa={setFaixa}
+                modoExato={modoExato}
+                setModoExato={setModoExato}
+                exato={exato}
+                setExato={setExato}
+                // 🆕 30/08 (pedido do Pedro) — não vai mais direto pro E6: passa
+                // pelo splash "conseguimos te atender" (E5F.1) primeiro. O
+                // destino de sempre (E6 + flags) viaja como `next`.
+                onSeguir={() => {
+                  const destino = comCategoria(
+                    comEndereco(comRegime("/conta", mei), enderecoFiscal),
+                    categoria,
+                  );
+                  router.push(
+                    `/splash-atendido?next=${encodeURIComponent(destino)}`,
+                  );
+                }}
+                // 🆕 03/08 — UX-68 mesclado: revela o campo inline em vez de
+                // trocar a tela inteira. Fonte: /apresentacao.
+                exatoInline
+                // 🆕 28/08 — só no MEI: vira gate do teto de R$81.000/ano.
+                regimeMei={mei}
+                onTrocarParaMe={() =>
+                  router.push(
+                    comCategoria(
+                      comEndereco("/gate?etapa=faixa", enderecoFiscal),
+                      categoria,
+                    ),
+                  )
+                }
+              />
+            )}
           </main>
         </>
       )}

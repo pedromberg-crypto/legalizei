@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { comRegime } from "@/lib/regime";
 
 /**
@@ -169,6 +169,29 @@ function BarraAbas({
      elementos travados pelo mesmo motivo não podem dar dois motivos. */
   const motivoTrava = "Disponível quando sua empresa estiver ativada";
 
+  /**
+   * 🐛→🔒 05/09 — A ALTURA DO RODAPÉ SE MEDE, NÃO SE CHUTA.
+   *
+   * Na tela travada a barra sobe pra cima do CTA, e eu vinha cravando esse
+   * espaço à mão: 112px, depois 80px. Na terceira mudança do rodapé (entrou um
+   * link de WhatsApp acima do botão, e ele passou a ter 132px) a barra cobriu o
+   * CTA — o mesmo bug pela terceira vez, que é o sinal de que o número não
+   * devia estar no código. Agora ele vem do próprio rodapé, e muda junto com
+   * ele. O `offsetHeight` já inclui a safe-area, que o `app-footer-cta` embute
+   * no padding — por isso não somamos nada aqui.
+   */
+  const [alturaRodape, setAlturaRodape] = useState(0);
+  useEffect(() => {
+    if (!travada) return;
+    const rodape = document.querySelector<HTMLElement>(".app-footer-cta");
+    if (!rodape) return;
+    const medir = () => setAlturaRodape(rodape.offsetHeight);
+    medir();
+    const ro = new ResizeObserver(medir);
+    ro.observe(rodape);
+    return () => ro.disconnect();
+  }, [travada, pathname]);
+
   const esquerda = abas.slice(0, Math.ceil(abas.length / 2));
   const direita = abas.slice(Math.ceil(abas.length / 2));
   return (
@@ -189,7 +212,7 @@ function BarraAbas({
        */
       style={{
         paddingBottom: travada ? "10px" : "calc(10px + var(--safe-bottom))",
-        ...(travada ? { bottom: "calc(80px + var(--safe-bottom))" } : {}),
+        ...(travada && alturaRodape ? { bottom: `${alturaRodape}px` } : {}),
       }}
     >
       <nav

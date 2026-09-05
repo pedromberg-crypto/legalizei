@@ -152,8 +152,12 @@ export default function AguardandoPage() {
            pros dois. Vai só o flag; o nome vem do mock do outro lado, como no
            resto do wizard. */
         /* 🔒 05/09 — vale nas DUAS rodadas. Na 1ª o sócio assina junto; na 2ª
-           a agenda usa o nome dele pra dizer que ele não precisa estar. */
-        if (temSocios) q.set("socios", "2");
+           a agenda usa o nome dele pra dizer que ele não precisa estar.
+           🐛 05/09 — a contagem só ia quando havia sócio, e no caso SOLO a
+           volta caía no mock (`TEM_SOCIO = true`): a pessoa saía de um status
+           que dizia "sua assinatura" e voltava pra um que citava um sócio que
+           ela não tem. A contagem viaja sempre, inclusive quando é 1. */
+        q.set("socios", temSocios ? "2" : "1");
         const s = q.toString();
         router.push(s ? `/agendar?${s}` : "/agendar");
       }}

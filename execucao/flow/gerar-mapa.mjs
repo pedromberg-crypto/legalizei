@@ -56,7 +56,15 @@ function defNo(n) {
       : n.forma === "terminal"
         ? `${n.id}(["${l}"])`
         : `${n.id}["${l}"]`;
-  return `  ${corpo}${n.classe ? `:::${n.classe}` : ""}`;
+  /* 🆕 05/09 (pedido do Pedro) — ADORMECIDA vence a classe semântica.
+     No lançamento o flow desvia pra rota assistida (A3.H) e a rota AUTOMÁTICA
+     (A4 → A4.1 → A3⁗ → A4″ → A5) fica sem ninguém passando. Ela não foi
+     removida — segue construída e é o destino quando a automação chegar —, mas
+     o mapa precisa dizer que hoje ninguém anda ali. Pintar por cima da classe
+     (a A5 é `feliz`, verde) é de propósito: o estado "adormecida" fala do
+     PRESENTE e a classe fala do papel, e no mapa o presente manda. */
+  const classe = n.adormecida ? "adormecida" : n.classe;
+  return `  ${corpo}${classe ? `:::${classe}` : ""}`;
 }
 
 function renderMermaid() {
@@ -91,6 +99,10 @@ function renderMermaid() {
   linhas.push("  classDef branch fill:#eef1ff,stroke:#5b6cf0,color:#2a338a;");
   linhas.push("  classDef inline fill:#f1f1f3,stroke:#9aa0a6,color:#555;");
   linhas.push("  classDef todo fill:#f7f7f8,stroke:#bcbcc2,stroke-dasharray:5 4,color:#888;");
+  /* Cinza CHEIO e contorno contínuo: ela existe e está pronta, só não é o
+     caminho de hoje. O tracejado é do `todo` (o que nunca foi construído) e
+     confundir os dois apagaria a diferença que importa. */
+  linhas.push("  classDef adormecida fill:#ececee,stroke:#a8a8b0,color:#6b6b75;");
   linhas.push("```");
   return linhas.join("\n");
 }
@@ -200,6 +212,10 @@ function exportarFlowGraph() {
     caminho: n.caminho || "abrir",
     forma: n.forma,
     classe: n.classe || "",
+    /* 🆕 05/09 — a tela existe e está construída, mas hoje ninguém passa por
+       ela (o lançamento vai pela rota assistida). O mapa e a apresentação
+       pintam de cinza; nada é removido. */
+    adormecida: n.adormecida || false,
     status: n.status,
     validado: n.validado,
     falta: n.falta || "",

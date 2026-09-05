@@ -34,7 +34,15 @@ const HOJE_15 = "dia=5&semana=Sex&mes=Set&hora=15%3A00&hoje=1";
 /** Um compromisso que NÃO é hoje: é ele que exige a data na frase. */
 const SEG_8 = "dia=8&semana=Seg&mes=Set&hora=09%3A30";
 
-const cta = (p: Page) => p.locator("div.app-footer-cta button").last();
+/**
+ * O CTA PRINCIPAL do rodapé.
+ *
+ * 🐛 05/09 — era `.last()`, e quebrou quando o "Remarcar horário" virou botão
+ * ABAIXO do CTA (pedido do Pedro): o último passou a ser o secundário. O
+ * primeiro botão é sempre o principal — o link de WhatsApp acima dele é `<a>`,
+ * não entra na conta.
+ */
+const cta = (p: Page) => p.locator("div.app-footer-cta button").first();
 const corpo = (p: Page) => p.locator("main").innerText();
 
 /** Coleta avisos/erros de console pra provar que o guarda-corpo está calado. */
@@ -108,7 +116,10 @@ test.describe("o compromisso é dado, não frase", () => {
    */
   test("desistir de remarcar devolve o status inteiro, com o cartão da hora", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 667 });
-    await page.goto(`${STATUS}&${HOJE_15}`);
+    /* 🔄 05/09 — `&socios=1` explícito: sem ele a tela cai no mock
+       (`TEM_SOCIO = true`) e mostra a variante COM sócio, cuja copy é outra.
+       Este caso é o solo, e o solo agora precisa ser dito. */
+    await page.goto(`${STATUS}&socios=1&${HOJE_15}`);
     await expect(page.getByText("Sua assinatura, feita junto com você")).toBeVisible();
 
     await page.getByRole("button", { name: "Remarcar horário" }).click();
@@ -195,7 +206,9 @@ test.describe("as duas assinaturas têm o mesmo ciclo", () => {
     await page.goto(`${STATUS}&assinatura=1`);
     // A passagem da 2ª é um estado próprio, não o genérico "Agora é com a gente".
     await expect(page.getByText("Falta a assinatura do CNPJ")).toBeVisible();
-    await expect(page.getByText(/com o seu contador junto/)).toBeVisible();
+    /* 🔄 05/09 — com sócio (o mock tem um), o hero da 2ª diz que o contrato já
+       foi assinado por todos e que esta é só dela e do contador. */
+    await expect(page.getByText(/só sua e do contador/)).toBeVisible();
     // O PORQUÊ mora aqui, no cartão da passagem, como na 1ª rodada.
     await expect(page.getByText(/o contador assina do nosso lado na mesma hora/)).toBeVisible();
     await expect(cta(page)).toHaveText("Marcar a última assinatura");
@@ -206,15 +219,21 @@ test.describe("as duas assinaturas têm o mesmo ciclo", () => {
     /* 🔄 05/09 (pedido do Pedro) — na AGENDA o cartão do consultor é o pequeno,
        igual ao da 1ª rodada: o porquê já foi dado na tela anterior. Aqui quem
        diz quem está no ato é o subtítulo. */
-    await expect(page.getByText(/são três no ato/)).toBeVisible();
+    /* 🔄 05/09 — com sócio (o mock tem um), a agenda da 2ª não fala em "três no
+       ato": ela diz que o sócio NÃO precisa estar, que é a informação que muda
+       o comportamento de quem acabou de alinhar dois horários pra 1ª. */
+    await expect(page.getByText(/não precisa estar/)).toBeVisible();
     await expect(page.getByText(/o contador assina do nosso lado na mesma hora/)).toHaveCount(0);
 
     await page.getByRole("button", { name: "15:00", exact: true }).click();
     await cta(page).click();
-    await page.waitForURL(/assinatura=1&dia=/);
+    await page.waitForURL(/assinatura=1.*dia=/); // `socios` agora viaja sempre e entra no meio
     // O cartão diz QUAL assinatura está marcada: sem isso a 2ª lê como engano.
     await expect(page.getByText("A assinatura que gera seu CNPJ")).toBeVisible();
-    await expect(page.getByText("Com você, um consultor e seu contador")).toBeVisible();
+    /* 🔄 05/09 — com sócio, a linha do canal vira "Só você e o contador, sem o
+       sócio": é a mesma informação (quem está no ato) dita pelo lado que
+       importa quando existe um sócio esperando ser chamado. */
+    await expect(page.getByText(/Só você e o contador, sem o sócio/)).toBeVisible();
     await expect(cta(page)).toBeDisabled();
   });
 

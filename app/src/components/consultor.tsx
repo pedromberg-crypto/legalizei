@@ -1,6 +1,7 @@
 "use client";
 
-import { CONSULTOR, CONSULTOR_INICIAIS, CONSULTOR_PRIMEIRO_NOME } from "@/app/(app)/dossie/mock";
+import { CONSULTOR } from "@/app/(app)/dossie/mock";
+import { SimboloLegalizai } from "@/components/logo";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -17,32 +18,43 @@ import { CONSULTOR, CONSULTOR_INICIAIS, CONSULTOR_PRIMEIRO_NOME } from "@/app/(a
  * menor parte do valor — o flow automático até aqui já entrega mais do que a
  * contabilidade digital que existe hoje.
  *
+ * ─── 🔄 05/09: NÃO HÁ CONSULTOR EXCLUSIVO ─────────────────────────────────
+ * A 1ª versão destas telas dava nome, sobrenome e CRC a uma consultora fixa.
+ * O Pedro corrigiu: a operação não tem profissional designado com agenda
+ * própria. Quem atende é quem estiver disponível — e a tela que promete o
+ * contrário cria uma expectativa que o primeiro atendimento desmente.
+ *
  * ─── A REGRA DE COPY DESTA ROTA ───────────────────────────────────────────
  * 🔴 NUNCA enquadrar como limitação ("nosso sistema não consegue", "a partir
  * daqui é manual"). O motivo real é bom e é checável: assinatura tem valor
  * legal e o código tem prazo, então é feita AO VIVO, com alguém do seu lado.
- * 🔴 E nunca "nossa equipe entra em contato" — essa é a frase de quem não tem
- * ninguém pra apresentar. A pessoa tem nome, registro e horário.
+ * 🔴 E nunca o vazio "nossa equipe entra em contato". Sem nome pra dar, sobra
+ * o que dá pra afirmar sem mentir, que ainda é bastante: é gente da CASA (não
+ * robô, não terceirizado), é ao vivo, tem hora marcada, e existe uma janela de
+ * atendimento conhecida.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-/** Avatar de iniciais. Sem foto de propósito: rosto falso de pessoa que não
- *  existe é o tipo de mock que vaza pra produção e vira problema de verdade. */
-export function AvatarConsultor({ tamanho = 44 }: { tamanho?: number }) {
-  return (
-    <span
-      aria-hidden
-      style={{ width: tamanho, height: tamanho }}
-      className="flex shrink-0 items-center justify-center rounded-full bg-surface-tint-brand text-brand"
-    >
-      <span className="text-body font-bold">{CONSULTOR_INICIAIS}</span>
-    </span>
-  );
+/**
+ * Selo do consultor: o SÍMBOLO DA MARCA.
+ *
+ * 🔄 05/09 (pedido do Pedro) — passou por avatar de iniciais ("LA", enquanto
+ * existia uma consultora nomeada) e por uma silhueta de pessoa. Agora é a
+ * própria logo, e faz mais sentido do que as duas: o que o cartão afirma não é
+ * QUEM atende (não há pessoa fixa), é DE ONDE vem quem atende. Um símbolo de
+ * pessoa genérica dizia "alguém"; a marca diz "nosso".
+ *
+ * O círculo tint saiu junto — a logo já é uma forma fechada, com fundo coral e
+ * cantos próprios, e emoldurá-la num segundo fundo faria dois recipientes
+ * concêntricos.
+ */
+export function SeloConsultor({ tamanho = 44 }: { tamanho?: number }) {
+  return <SimboloLegalizai tamanho={tamanho} />;
 }
 
 /**
- * O cartão de apresentação. Aparece na tela em que ela assume (A3.H) e na de
- * agendamento, pra pessoa saber com quem vai falar antes de escolher a hora.
+ * O cartão de apresentação. Aparece na tela em que a casa assume (A3.H) e na
+ * de agendamento, pra pessoa saber com quem vai falar antes de escolher a hora.
  *
  * `motivo` é opcional porque na 2ª aparição a explicação já foi dada: repetir
  * o porquê em toda tela transforma um argumento bom em ladainha.
@@ -50,30 +62,21 @@ export function AvatarConsultor({ tamanho = 44 }: { tamanho?: number }) {
 export function CardConsultor({ motivo = true }: { motivo?: boolean }) {
   return (
     <div className="rounded-md border border-border-hairline bg-surface-card p-4">
-      {/* 🔄 04/09 (pedido do Pedro) — a janela de atendimento subiu pra LATERAL
-          DIREITA, em 2 linhas. Embaixo e em largura cheia ela lia como mais
-          uma frase do cartão; do lado do nome ela vira o que é: a etiqueta de
-          quando essa pessoa existe. `items-start` porque o bloco da direita
-          tem 2 linhas e o da esquerda tem 3 — centralizar desalinharia os dois
-          topos, que é o que o olho usa pra parear as colunas. */}
-      <div className="flex items-start gap-3">
-        <AvatarConsultor />
+      {/* 🗑️ 05/09 (pedido do Pedro) — saiu o subtítulo "Gente da nossa equipe,
+          ao vivo com você": o parágrafo logo abaixo já diz que um consultor
+          conduz ao vivo, e a mesma promessa em dois tamanhos de fonte no mesmo
+          cartão vira eco, não ênfase.
+          Com o título sozinho à esquerda, o alinhamento volta a ser
+          `items-center`: são 1-2 linhas contra 3 do bloco de horário, e aí
+          quem pareia as colunas é o meio, não o topo. */}
+      <div className="flex items-center gap-3">
+        <SeloConsultor />
         <div className="min-w-0 flex-1">
-          <p className="text-body-strong font-semibold text-text-primary">{CONSULTOR.nome}</p>
-          <p className="text-micro text-text-secondary">{CONSULTOR.papel}</p>
-          {/* O registro é o que separa "atendente" de "contadora". Quem vai
-              assinar um documento com valor legal repara nisso. */}
-          <p className="text-micro text-text-tertiary mt-0.5">{CONSULTOR.registro}</p>
+          <p className="text-body-strong font-semibold text-text-primary">{CONSULTOR.titulo}</p>
         </div>
-        {/* `shrink-0` + `text-right`: a janela nunca quebra sozinha no meio de
-            "Seg a" / "sex" — quem cede espaço numa tela estreita é o bloco do
-            nome, que tem `min-w-0` e trunca sem estragar a leitura.
-
-            🐛 04/09 (na esteira do achado do Pedro sobre disponibilidade) — sem
-            rótulo, duas linhas de horário coladas no nome dela liam como a
-            AGENDA DELA ("a Larissa está livre seg a sex, 9h às 18h"), que é
-            falso e é o motivo de a tela seguinte existir pra marcar horário. O
-            rótulo diz de quem é a janela: é o atendimento da casa. */}
+        {/* O rótulo diz de quem é a janela: é o atendimento da casa, não a
+            agenda de uma pessoa. `shrink-0` + `text-right` pra ela nunca
+            quebrar sozinha no meio de "Seg a" / "sex". */}
         <div className="shrink-0 text-right">
           <p className="text-micro text-text-muted">Atendimento</p>
           <p className="text-micro text-text-tertiary">{CONSULTOR.atendimentoDias}</p>
@@ -85,12 +88,11 @@ export function CardConsultor({ motivo = true }: { motivo?: boolean }) {
         <p className="text-caption text-text-secondary mt-3">
           {/* Fato, não desculpa: o GOV.BR manda um código que expira em 10
               minutos, e a assinatura vale como documento. Por isso é ao vivo. */}
-          A partir daqui a {CONSULTOR_PRIMEIRO_NOME} conduz com você. A assinatura é feita
-          ao vivo porque o GOV.BR manda um código que vale 10 minutos, e ela precisa
-          estar do seu lado na hora.
+          A partir daqui um consultor conduz com você. A assinatura é feita ao vivo
+          porque o GOV.BR manda um código que vale 10 minutos, e alguém precisa estar
+          do seu lado na hora.
         </p>
       )}
-
     </div>
   );
 }
@@ -105,12 +107,11 @@ export function CardConsultor({ motivo = true }: { motivo?: boolean }) {
  * Vale um cartão inteiro porque, neste estado, o horário é a única coisa que a
  * pessoa precisa reter — o resto da tela é progresso que ela não move. Ele
  * responde as três perguntas de um compromisso, na ordem em que se pergunta:
- * QUANDO (em destaque), COM QUEM (rosto e nome, não "a equipe") e QUANTO
- * TEMPO (pra ela saber se cabe no dia).
+ * QUANDO (em destaque), COM QUEM e QUANTO TEMPO (pra saber se cabe no dia).
  *
- * Branco com hairline e a cor só no rótulo, seguindo o padrão travado hoje
- * pros cartões de aviso: bloco tingido inteiro grita, e aqui não há alarme
- * nenhum — é uma boa notícia.
+ * Branco com hairline e a cor só no rótulo, seguindo o padrão travado pros
+ * cartões de aviso: bloco tingido inteiro grita, e aqui não há alarme nenhum —
+ * é uma boa notícia.
  */
 export function CardCompromisso({ quando }: { quando: string }) {
   return (
@@ -122,9 +123,12 @@ export function CardCompromisso({ quando }: { quando: string }) {
       <p className="mt-1 text-h2 font-bold leading-tight text-text-primary">{quando}</p>
 
       <div className="mt-3 flex items-center gap-2 border-t border-border-hairline pt-3">
-        <AvatarConsultor tamanho={28} />
+        <SeloConsultor tamanho={28} />
         <p className="min-w-0 flex-1 text-caption text-text-secondary">
-          Com a <span className="font-semibold text-text-primary">{CONSULTOR.nome}</span>
+          {/* 🔄 05/09 — era "Com a Larissa Andrade". Sem consultor designado, o
+              que se afirma é a CASA: quem atende é gente nossa, e isso continua
+              sendo diferente de um robô ou de um call center terceirizado. */}
+          Com um <span className="font-semibold text-text-primary">consultor Legalizai</span>
         </p>
         {/* Duração à direita, do mesmo jeito que a janela de atendimento no
             cartão de apresentação: é etiqueta, não frase. */}

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { TelaHeader, Titulo, Corpo, Rodape, Aviso, Rolagem } from "@/components/ui/tela";
@@ -23,7 +23,6 @@ import { PainelView, ETAPAS_ABERTURA, type Etapa, type Recusa } from "@/componen
 /* 🆕 04/09 — rota assistida: da assinatura em diante quem conduz é gente da
    casa. O racional inteiro do corte mora em `components/consultor.tsx`. */
 import { CardConsultor, CardCompromisso } from "@/components/consultor";
-import { CONSULTOR_PRIMEIRO_NOME } from "@/app/(app)/dossie/mock";
 import {
   CLIENTE,
   TEM_SOCIO,
@@ -1703,6 +1702,35 @@ export function CodigoGovView({
   );
 }
 
+/**
+ * Raio: o gesto "agora". 🔄 05/09 (pedido do Pedro) — era relógio + raio, e o
+ * relógio remetia a MARCAR HORA, que é exatamente o outro caminho da tela. Em
+ * 20px os dois símbolos juntos ainda viravam borrão. Sozinho, o raio diz uma
+ * coisa só, e diz rápido.
+ */
+function IconeExpresso() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden className="text-text-primary">
+      <path
+        d="M13 2 4 13.5h6.2L11 22l9-11.5h-6.2L13 2Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+/** Chevron do cartão expresso: sai do app (WhatsApp), não seleciona. */
+function ChevronExpresso() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden className="shrink-0 text-text-tertiary">
+      <path d="m9 5 7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 /* ═══════════════ A3.H1 · AGENDAR A ASSINATURA (rota assistida) ═════════════
  * 🆕 04/09 (decisão do Pedro).
  *
@@ -1721,10 +1749,59 @@ export function CodigoGovView({
  * ═══════════════════════════════════════════════════════════════════════════ */
 
 /** Grade mock. No produto real vem da agenda da consultora. */
-const DIAS_AGENDA = [
-  { id: "hoje", label: "Hoje", horarios: ["15:00", "16:30", "17:15"] },
-  { id: "amanha", label: "Amanhã", horarios: ["09:30", "11:00", "14:00", "16:00"] },
-  { id: "sexta", label: "Sexta", horarios: ["09:00", "10:30", "15:30", "17:00"] },
+/**
+ * Grade mock. No produto real vem da disponibilidade da consultora.
+ *
+ * 🔄 05/09 (referência do Pedro) — cada dia carrega 3 campos, e não um rótulo
+ * só: `numero` e `semana` desenham o cartão (número grande em cima, dia da
+ * semana embaixo), e `label` é como o dia se chama numa FRASE ("Hoje às
+ * 15:00", "Segunda às 09:30"). Partido na fonte de novo, pelo mesmo motivo da
+ * janela de atendimento: montar "5 Sex às 15:00" com `split` daria uma frase
+ * que ninguém fala.
+ *
+ * 🔒 Fim de semana não entra: o atendimento é de segunda a sexta, e oferecer
+ * sábado seria marcar hora com quem não vai estar lá.
+ */
+const DIAS_AGENDA: {
+  id: string;
+  numero: number;
+  semana: string;
+  label: string;
+  /** A casa não atende nesse dia (feriado, folga). Diferente de lotado. */
+  fechado?: boolean;
+  horarios: string[];
+}[] = [
+  /* 🔄 05/09 (pedido do Pedro) — hoje passa a ser um dia CHEIO, com 10
+     horários de 30 em 30: é o dia que abre selecionado, e era ele quem tinha
+     que mostrar a grade preenchida. O estado "poucos" continua visível na
+     fila, no dia 10 ("1 livre"). A pausa das 12h às 14h é o almoço — grade
+     corrida das 9h às 18h seria a única agenda do Brasil sem intervalo. */
+  {
+    id: "d1",
+    numero: 5,
+    semana: "Sex",
+    label: "Hoje",
+    horarios: [
+      "09:00", "09:30", "10:00", "10:30", "11:00",
+      "11:30", "14:00", "14:30", "15:00", "15:30",
+    ],
+  },
+  { id: "d2", numero: 8, semana: "Seg", label: "Segunda", horarios: ["09:30", "11:00", "14:00", "16:00"] },
+  { id: "d3", numero: 9, semana: "Ter", label: "Terça", horarios: [] },
+  /* 🆕 05/09 (pedido do Pedro) — dia 10 com UM horário só, pra ver o estado
+     amarelo no meio da fila (e o singular "1 livre", que é outro caso). */
+  { id: "d4", numero: 10, semana: "Qua", label: "Quarta", horarios: ["14:00"] },
+  /* 🆕 05/09 (pedido do Pedro) — os DOIS jeitos de um dia sair de jogo:
+     `horarios: []` = a agenda encheu · `fechado` = a gente decidiu não atender
+     (feriado, folga, o que for). Os dois viram o mesmo cartão desativado; o
+     que muda é a palavra, porque "lotado" e "fechado" pedem reações
+     diferentes de quem lê (esperar uma vaga × nem tentar). */
+  { id: "d5", numero: 11, semana: "Qui", label: "Quinta", horarios: ["09:00", "10:30", "14:30", "16:30"] },
+  /* 🔄 05/09 (pedido do Pedro) — 5 → 7 dias. Com 7 cartões a fila passa de
+     375px e ROLA, que é o comportamento certo de agenda: mostra que existe
+     mais semana adiante sem empurrar os horários pra fora da primeira tela. */
+  { id: "d6", numero: 12, semana: "Sex", label: "Sexta", fechado: true, horarios: [] },
+  { id: "d7", numero: 15, semana: "Seg", label: "Segunda 15", horarios: ["09:00", "10:00", "14:00", "16:00", "17:30"] },
 ];
 
 export function AgendarAssinaturaView({
@@ -1735,8 +1812,72 @@ export function AgendarAssinaturaView({
   onConfirmar?: (quando: string) => void;
   onVoltar?: () => void;
 }) {
-  const [dia, setDia] = useState(DIAS_AGENDA[0].id);
+  /* 🆕 05/09 (pedido do Pedro) — DIA SEM VAGA SAI DE JOGO. Dois motivos, um
+     resultado: a agenda encheu (`horarios` vazio) ou a casa não atende naquele
+     dia (`fechado`). O cartão fica cinza e não clica. */
+  const indisponivel = (d: (typeof DIAS_AGENDA)[number]) => !!d.fechado || d.horarios.length === 0;
+  /* O default é o 1º dia COM vaga, não o 1º da lista: se hoje estiver lotado,
+     abrir nele mostraria uma grade de horários vazia sem explicação. */
+  const [dia, setDia] = useState((DIAS_AGENDA.find((d) => !indisponivel(d)) ?? DIAS_AGENDA[0]).id);
   const [hora, setHora] = useState<string | null>(null);
+
+  /* ═══════════ 🆕 05/09 (pedido do Pedro) — ARRASTA E SOLTA ════════════════
+   * No celular o trilho já rola com o dedo (scroll nativo, com inércia). No
+   * DESKTOP não: `overflow-x` sem barra visível vira uma fila que parece
+   * travada, porque não existe gesto de arrastar por padrão. Isto liga o
+   * arrasto do mouse.
+   *
+   * 🔒 SÓ PRA MOUSE (`pointerType === "mouse"`). Capturar o ponteiro no touch
+   * mataria o scroll nativo e a inércia — trocaria algo bom por uma imitação.
+   *
+   * 🐛 O detalhe que faz ou quebra: `moveu`. Sem ele, arrastar a fila
+   * SELECIONA o cartão onde o dedo levantou, e a pessoa muda de dia sem
+   * querer só de navegar. Passou de 4px, o clique seguinte é engolido.
+   * ═══════════════════════════════════════════════════════════════════════ */
+  const trilho = useRef<HTMLDivElement>(null);
+  const arrasto = useRef({ ativo: false, x0: 0, scroll0: 0, moveu: false });
+
+  function aoApertar(e: React.PointerEvent<HTMLDivElement>) {
+    if (e.pointerType !== "mouse" || !trilho.current) return;
+    arrasto.current = {
+      ativo: true,
+      x0: e.clientX,
+      scroll0: trilho.current.scrollLeft,
+      moveu: false,
+    };
+    /* 🐛 05/09 (achado do Pedro: "não consigo trocar de dia") — A CAPTURA
+       COMEÇAVA AQUI, E ISSO MATAVA O CLIQUE.
+       `setPointerCapture` redireciona os eventos de ponteiro pro elemento que
+       capturou, e o `click` nasce do alvo comum entre pointerdown e pointerup:
+       com a captura no trilho desde o primeiro toque, TODO clique passava a
+       ser do trilho, nunca do cartão. O dia de hoje vinha selecionado e não
+       havia como trocar — o arrasto tinha engolido a seleção.
+       A captura agora só entra quando o gesto VIRA arrasto de fato (ver
+       `aoArrastar`): clique parado não captura nada e chega no botão. */
+  }
+
+  function aoArrastar(e: React.PointerEvent<HTMLDivElement>) {
+    const a = arrasto.current;
+    if (!a.ativo || !trilho.current) return;
+    const dx = e.clientX - a.x0;
+    if (!a.moveu && Math.abs(dx) > 4) {
+      a.moveu = true;
+      // Passou do limiar: agora sim é arrasto, e a captura garante que ele
+      // continue mesmo se o cursor sair do trilho no meio do gesto.
+      trilho.current.setPointerCapture(e.pointerId);
+    }
+    if (!a.moveu) return;
+    trilho.current.scrollLeft = a.scroll0 - dx;
+  }
+
+  function aoSoltar(e: React.PointerEvent<HTMLDivElement>) {
+    if (!arrasto.current.ativo) return;
+    arrasto.current.ativo = false;
+    if (trilho.current?.hasPointerCapture(e.pointerId)) {
+      trilho.current.releasePointerCapture(e.pointerId);
+    }
+  }
+
   const diaAtual = DIAS_AGENDA.find((d) => d.id === dia) ?? DIAS_AGENDA[0];
   const quando = hora ? `${diaAtual.label} às ${hora}` : null;
 
@@ -1751,23 +1892,95 @@ export function AgendarAssinaturaView({
             ⚠️ Não confundir com a tela de certificado (`/certificado`), onde a
             videochamada é real: quem faz é a certificadora parceira, e a
             entrevista por vídeo é exigência dela. */}
-        <Titulo sub="A assinatura leva cerca de 15 minutos, e a gente faz junto, por telefone ou WhatsApp. Escolha quando fica melhor pra você.">
-          Marque com a {CONSULTOR_PRIMEIRO_NOME}
+        {/* 🔄 05/09 (pedido do Pedro) — 3 → 2 linhas. Saiu "Escolha quando fica
+            melhor pra você": o título já manda marcar e a tela inteira embaixo
+            é a escolha, então a frase gastava uma linha pra instruir o óbvio.
+            Ficou o que a pessoa NÃO sabe: quanto tempo leva e por onde é. */}
+        <Titulo
+          sub={
+            <>
+              {/* 🔄 05/09 (pedido do Pedro) — a DURAÇÃO em negrito. É o dado
+                  que decide se a pessoa marca pra hoje ou pra semana que vem,
+                  e no meio da frase ele passava batido. O resto fica em peso
+                  normal: negritar tudo é o mesmo que não negritar nada. */}
+              <strong className="font-semibold text-text-primary">
+                A assinatura leva cerca de 15 minutos,
+              </strong>{" "}
+              e a gente faz junto, por telefone ou WhatsApp.
+            </>
+          }
+        >
+          {/* 🔄 05/09 — era "Marque com a Larissa". Sem consultor designado,
+              o que se marca é o ATO, não a pessoa. */}
+          Marque sua assinatura
         </Titulo>
 
-        <Corpo>
+        {/* ═══════════ 🔄 05/09 (achado do Pedro) — O TRILHO SAIU DO `Corpo`
+            O pedido era simples ("colado nas laterais do aparelho") e o
+            `-mx-6` não bastava: o `Corpo` do DS rola verticalmente
+            (`overflow-y-auto`), e contêiner com overflow RECORTA o filho que
+            passa da largura dele. A margem negativa existia e não vazava.
+            O welcome, único outro carrossel do app, sangra de verdade porque
+            o trilho dele é filho direto do `app-main`, que não corta. Mesma
+            estrutura aqui: consultora e seletor de dia ficam FIXOS acima, e
+            só a grade de horários rola.
+            Efeito colateral bom: numa tela pequena, o dia escolhido não sai
+            de vista enquanto a pessoa procura a hora.
+            ═══════════════════════════════════════════════════════════════ */}
+        <div className="flex shrink-0 flex-col gap-6 pb-6">
           {/* Sem repetir o porquê: quem chega aqui acabou de ler na tela
               anterior. O cartão fica só pra dar rosto a quem vai atender. */}
           <CardConsultor motivo={false} />
 
           <div>
-            <p className="text-body-strong font-semibold text-text-primary mb-2">Dia</p>
-            <div className="flex flex-wrap gap-2">
+            {/* 🔄 05/09 (pedido do Pedro) — mais respiro entre o rótulo e a
+                fila: com o contador de horários os cartões ficaram mais altos
+                e encostavam no "Dia". */}
+            <p className="text-body-strong font-semibold text-text-primary mb-3">Dia</p>
+            {/* 🔄 05/09 (referência do Pedro) — CARTÃO DE DATA, não pill de
+                texto. Número do dia grande em cima, dia da semana embaixo:
+                é o formato que todo app de agendamento usa, e ele carrega
+                mais informação no mesmo espaço (a pessoa vê a semana inteira
+                de uma vez, em vez de ler 5 palavras).
+                🔄 05/09 (pedido do Pedro) — SCROLL LATERAL de verdade, com o
+                mesmo padrão do welcome (o único outro carrossel do app):
+                barra ESCONDIDA (`[scrollbar-width:none]` + o pseudo do
+                webkit) e `snap-x` pros cartões pararem alinhados em vez de
+                meio cortados. Barra de rolagem visível dentro de um cartão de
+                formulário lê como bug de layout, não como "tem mais coisa".
+                `-mx-6 px-6`: o trilho SANGRA até a borda do vidro, senão o 7º
+                cartão parece cortado pelo padding em vez de continuar — e o
+                padding devolve o alinhamento do primeiro com o resto da tela. */}
+            <div
+              ref={trilho}
+              onPointerDown={aoApertar}
+              onPointerMove={aoArrastar}
+              onPointerUp={aoSoltar}
+              onPointerCancel={aoSoltar}
+              /* 🔄 05/09, 2ª rodada (correção do Pedro) — SANGRA, MAS COMEÇA
+                 ALINHADO. `-mx-6` tira os 24px do shell (é o que deixa os
+                 cartões atravessarem a borda ao rolar) e o `px-6` os devolve
+                 ao CONTEÚDO: em repouso o dia de hoje nasce na mesma linha
+                 vertical do "Dia", da consultora e do "Horário". Sem o `px-6`
+                 o primeiro cartão colava no vidro e lia como desalinhado, não
+                 como carrossel.
+                 `scroll-pl-6`: o snap precisa saber do padding, senão ele
+                 encosta o cartão na borda do scrollport e desfaz o
+                 alinhamento no primeiro arrasto.
+                 `select-none` + `cursor-grab`: sem eles, arrastar seleciona os
+                 números como texto e o cursor não convida ao gesto. */
+              className="-mx-6 flex cursor-grab snap-x scroll-pl-6 select-none gap-2 overflow-x-auto px-6 pb-1
+                         active:cursor-grabbing
+                         [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            >
               {DIAS_AGENDA.map((d) => (
                 <button
                   key={d.id}
                   type="button"
+                  disabled={indisponivel(d)}
                   onClick={() => {
+                    // Arrastou a fila? Isso não é escolha de dia (ver `arrasto`).
+                    if (arrasto.current.moveu) return;
                     setDia(d.id);
                     /* Trocar de dia zera a hora: manter "15:00" de um dia que
                        não tem 15:00 deixaria o CTA confirmar um horário que
@@ -1775,6 +1988,13 @@ export function AgendarAssinaturaView({
                     setHora(null);
                   }}
                   aria-pressed={dia === d.id}
+                  aria-label={`${d.label}, dia ${d.numero}, ${
+                    d.fechado
+                      ? "não atendemos neste dia"
+                      : d.horarios.length === 0
+                        ? "sem horários livres"
+                        : `${d.horarios.length} ${d.horarios.length === 1 ? "horário livre" : "horários livres"}`
+                  }`}
                   /* 🔄 04/09 (decisão do Pedro, 2ª rodada) — SELECIONADO É
                      CORAL CHEIO COM LETRA BRANCA, igual ao CTA do rodapé.
                      Passou por coral-50 (tint quase branco sobre cartão
@@ -1784,20 +2004,106 @@ export function AgendarAssinaturaView({
                      inteiro. Eu tinha evitado por achar que competiria com o
                      CTA; competir aqui é o certo: os dois são a mesma decisão
                      (o horário), um escolhe e o outro confirma. */
-                  className={`min-h-11 rounded-md border px-4 text-caption font-semibold transition-colors ${
-                    dia === d.id
-                      ? "border-action-primary bg-action-primary text-text-on-brand"
-                      : "border-border-hairline bg-surface-card text-text-secondary"
+                  /* 🐛 05/09 (achado do Pedro) — LARGURA FIXA, não mínima.
+                     Com `min-w` cada cartão crescia até caber o próprio texto,
+                     e "10 livres" ficava visivelmente mais largo que "1 livre":
+                     a fila virava um serrote, e a largura passava a informar
+                     quantidade sem querer. Agora todos têm a largura do maior
+                     caso (2 dígitos + "livres"), e o que varia é só o
+                     conteúdo — que é o certo numa fila de datas. */
+                  className={`flex w-[86px] shrink-0 snap-start flex-col items-center rounded-md border px-2 py-2.5 transition-colors ${
+                    indisponivel(d)
+                      ? /* Cinza claro e sem cursor de ação: o dia continua na
+                           fila (sumir daria a impressão de que a semana tem
+                           buraco) mas não convida ao toque. */
+                        "cursor-not-allowed border-border-hairline bg-surface-alt"
+                      : dia === d.id
+                        ? "border-action-primary bg-action-primary text-text-on-brand"
+                        : "border-border-hairline bg-surface-card"
                   }`}
                 >
-                  {d.label}
+                  <span
+                    /* 🔄 05/09 (pedido do Pedro) — h2 (20px) → h1 (26px). O
+                       número é o que a pessoa lê primeiro na fila; no tamanho
+                       antigo ele competia de igual pra igual com o dia da
+                       semana logo abaixo. */
+                    className={`text-h1 font-bold leading-none tabular-nums ${
+                      indisponivel(d)
+                        ? "text-text-muted"
+                        : dia === d.id
+                          ? "text-text-on-brand"
+                          : "text-text-primary"
+                    }`}
+                  >
+                    {d.numero}
+                  </span>
+                  <span
+                    className={`mt-1 text-micro font-medium ${
+                      indisponivel(d)
+                        ? "text-text-muted"
+                        : dia === d.id
+                          ? "text-text-on-brand/80"
+                          : "text-text-tertiary"
+                    }`}
+                  >
+                    {d.semana}
+                  </span>
+                  {/* 🆕 05/09 (referência do Pedro) — QUANTOS HORÁRIOS SOBRAM.
+                      Sem isso a pessoa escolhe um dia às cegas e descobre a
+                      escassez só depois de tocar: a informação que decide o
+                      dia estava escondida atrás da escolha do dia.
+                      A bolinha carrega o alarme e o número carrega o fato —
+                      ≤2 é amarelo (corre, que está acabando), 3+ é verde.
+                      🔒 No cartão SELECIONADO a bolinha vira branca: verde ou
+                      amarelo sobre coral cheio brigam, e ali o estado já não
+                      precisa chamar atenção (a pessoa já escolheu, e a grade
+                      de horários logo abaixo mostra exatamente o que sobrou). */}
+                  <span className="mt-1.5 flex items-center gap-1">
+                    {/* Sem bolinha quando não há vaga: ela existe pra graduar
+                        urgência, e "nenhuma" não é um grau — é o fim da linha. */}
+                    {!indisponivel(d) && (
+                      <span
+                        aria-hidden
+                        className={`h-1.5 w-1.5 rounded-full ${
+                          dia === d.id
+                            ? "bg-text-on-brand"
+                            : d.horarios.length <= 2
+                              ? "bg-state-warning"
+                              : "bg-state-success"
+                        }`}
+                      />
+                    )}
+                    <span
+                      className={`text-micro ${
+                        indisponivel(d)
+                          ? "text-text-muted"
+                          : dia === d.id
+                            ? "text-text-on-brand/80"
+                            : "text-text-tertiary"
+                      }`}
+                    >
+                      {/* "Lotado" e "Fechado" pedem reações diferentes de quem
+                          lê: numa dá pra esperar vaga, na outra nem tentar. */}
+                      {d.fechado
+                        ? "Fechado"
+                        : d.horarios.length === 0
+                          ? "Lotado"
+                          : d.horarios.length === 1
+                            ? "1 livre"
+                            : `${d.horarios.length} livres`}
+                    </span>
+                  </span>
                 </button>
               ))}
             </div>
           </div>
+        </div>
 
+        <Corpo>
           <div>
-            <p className="text-body-strong font-semibold text-text-primary mb-2">Horário</p>
+            <p className="text-body-strong font-semibold text-text-primary mb-2">
+              Horário disponível
+            </p>
             <div className="grid grid-cols-3 gap-2">
               {diaAtual.horarios.map((h) => (
                 <button
@@ -1833,31 +2139,42 @@ export function AgendarAssinaturaView({
           <Button full disabled={!quando} onClick={() => quando && onConfirmar?.(quando)}>
             {quando ? `Confirmar ${quando}` : "Escolha um horário"}
           </Button>
-          <div className="mt-2 flex justify-center">
-            {/* 🔄 04/09 (pedido do Pedro) — era "Prefiro falar agora no
-                WhatsApp", que diz PREFERÊNCIA. O que a casa precisa saber é
-                DISPONIBILIDADE: quem toca aqui está dizendo que tem a janela
-                inteira livre agora, e a assinatura só acontece com os dois
-                juntos. O rótulo declara isso, com os mesmos 15 minutos que o
-                subtítulo já anunciou — e a mensagem enviada repete, senão o
-                compromisso morre no caminho.
+          {/* ═══════════ 🆕 05/09 (referência do Pedro) — O EXPRESSO ═══════════
+              Era um link sublinhado embaixo do botão, e link no rodapé lê como
+              rodapé: quem estava com pressa passava batido. Virou CARTÃO, com
+              ícone e duas linhas — mesma anatomia da referência (ícone · título
+              + detalhe · chevron).
 
-                🐛 04/09 (2ª rodada, achado do Pedro) — E É OUTRO CONSULTOR. A
-                tela inteira é sobre marcar com a Larissa; sem dizer quem
-                atende, "agora" seria lido como "ela larga tudo e vem", que é
-                exatamente a promessa que a existência desta tela desmente. Quem
-                atende de imediato é quem estiver livre. */}
-            <a
-              href={linkWhatsApp(
-                "Oi! Paguei a guia da Junta e tenho 15 minutos livres agora pra fazer a assinatura, se tiver alguém disponível.",
-              )}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="min-h-11 px-3 py-2 text-center text-caption font-semibold text-action-primary-sm underline"
-            >
-              Tenho 15 minutos agora, falar com outro consultor
-            </a>
-          </div>
+              🔒 Chevron, e NÃO o círculo de seleção da referência. Lá o círculo
+              é rádio: escolher entre entregas. Aqui o toque SAI do app pro
+              WhatsApp, e um rádio que nunca marca prometeria uma escolha que
+              não acontece nesta tela.
+
+              🔴 O que ele NÃO promete: prazo de atendimento. Sem consultor
+              designado, "falamos em 5 minutos" seria a mesma mentira que a
+              agenda fixa era. Ele declara o que a PESSOA tem (15 minutos
+              livres) e diz a condição de verdade: se houver consultor livre. */}
+          <a
+            href={linkWhatsApp(
+              "Oi! Paguei a guia da Junta e tenho 15 minutos livres agora pra fazer a assinatura, se tiver alguém disponível.",
+            )}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 flex items-center gap-3 rounded-md border border-border-hairline bg-surface-card p-3 transition-colors hover:border-border-strong"
+          >
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border-hairline">
+              <IconeExpresso />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-caption font-semibold text-text-primary">
+                Tenho 15 minutos agora
+              </span>
+              <span className="block text-micro text-text-secondary">
+                Falar com um consultor livre, pelo WhatsApp
+              </span>
+            </span>
+            <ChevronExpresso />
+          </a>
         </Rodape>
       </main>
     </>
@@ -2276,9 +2593,9 @@ export function HomeAtivacaoView({ assistida = false }: { assistida?: boolean })
         p.id === "procuracao"
           ? {
               ...p,
-              titulo: "Procuração, com a " + CONSULTOR_PRIMEIRO_NOME,
-              sub: `É ela que deixa a gente pagar seu DAS e cuidar das obrigações por você. A ${CONSULTOR_PRIMEIRO_NOME} faz junto com você, no mesmo formato da assinatura.`,
-              status: "Ela te chama",
+              titulo: "Procuração, com um consultor",
+              sub: "É ela que deixa a gente pagar seu DAS e cuidar das obrigações por você. Um consultor faz junto com você, no mesmo formato da assinatura.",
+              status: "A gente te chama",
               href: undefined,
             }
           : p,
@@ -3094,8 +3411,8 @@ export function AguardandoView({
             ...e,
             comConsultor: true,
             detalhe: agendado
-              ? `Marcado com a ${CONSULTOR_PRIMEIRO_NOME} pra ${agendado.toLowerCase()}. Ela te chama por aqui e por WhatsApp.`
-              : `A ${CONSULTOR_PRIMEIRO_NOME} faz este passo com você, ao vivo. Leva cerca de 15 minutos.`,
+              ? `Marcado pra ${agendado.toLowerCase()}. Um consultor te chama por aqui e por WhatsApp.`
+              : "Um consultor faz este passo com você, ao vivo. Leva cerca de 15 minutos.",
           };
         })
       : etapas;
@@ -3135,7 +3452,7 @@ export function AguardandoView({
                 assistida
                 ? agendado
                   ? "Você tem hora marcada"
-                  : `Agora é com a ${CONSULTOR_PRIMEIRO_NOME}`
+                  : "Agora é com a gente"
                 : assinou1
                   ? "Falta só a última assinatura"
                   : "Falta só a assinatura"
@@ -3170,7 +3487,7 @@ export function AguardandoView({
                        marcada"), e o cartão carrega o detalhe. */
                     ""
                   : assinou1
-                    ? `O contrato social já está assinado. Falta a assinatura que gera o CNPJ, e a ${CONSULTOR_PRIMEIRO_NOME} faz essa com você também.`
+                    ? "O contrato social já está assinado. Falta a assinatura que gera o CNPJ, e a gente faz essa com você também."
                     : "A Junta aprovou o nome e a guia está paga. As assinaturas são feitas ao vivo, com uma consultora nossa do seu lado."
                 : assinou1
                   ? "O contrato social já está assinado. Falta a assinatura que gera o CNPJ, com o seu contador junto."
@@ -3284,10 +3601,10 @@ export function AguardandoView({
       ajudaWhats={
         assistida && agendado
           ? {
-              label: "Falar com outro consultor",
+              label: "Falar com um consultor",
               /* A mensagem já entrega o contexto que a pessoa teria que
-                 digitar: quem atender não é quem marcou com ela. */
-              mensagem: `Oi! Tenho a assinatura marcada com a ${CONSULTOR_PRIMEIRO_NOME} pra ${agendado.toLowerCase()} e preciso de ajuda.`,
+                 digitar: quem atende não é necessariamente quem vai conduzir. */
+              mensagem: `Oi! Tenho a assinatura marcada pra ${agendado.toLowerCase()} e preciso de ajuda.`,
             }
           : undefined
       }
@@ -3365,7 +3682,7 @@ export function AguardandoView({
                   assistida
                   ? agendado
                     ? {
-                        label: `${CONSULTOR_PRIMEIRO_NOME} te chama ${agendado.toLowerCase()}`,
+                        label: `Marcado pra ${agendado.toLowerCase()}`,
                         desabilitado: true,
                       }
                     : { label: "Escolher um horário", onClick: onAgendar }

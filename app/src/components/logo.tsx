@@ -50,6 +50,34 @@ const SIMBOLO_PATH =
 export const CHECK_PATH =
   "M121.43,18.95l-60.67,60.67-19.33-19.33c-7.6-7.6-19.93-7.6-27.54,0h0s34.97,34.97,34.97,34.97c6.56,6.56,17.21,6.56,23.77,0l48.79-48.79v-27.54Z";
 
+/**
+ * 🆕 05/09 (pedido do Pedro) — O SÍMBOLO SOZINHO, sem wordmark.
+ *
+ * Nasceu pro selo do "Consultor oficial Legalizai" (rota assistida): ali o
+ * espaço é de 44px e o que precisa aparecer é a marca, não o nome escrito.
+ *
+ * ⚠️ Vetor, e não o `Legalizai-Logo.png` (100x100) que o Pedro apontou: é o
+ * MESMO desenho, mas em 44px numa tela retina o PNG dobra pra 88 e borra, e
+ * PNG coral sobre fundo claro já nos custou uma sessão inteira de halo escuro
+ * por alfa premultiplicado. Um path não tem nenhum dos dois problemas.
+ */
+export function SimboloLegalizai({ tamanho = 44 }: { tamanho?: number }) {
+  return (
+    <svg
+      width={tamanho}
+      height={tamanho}
+      viewBox="0 0 121.44 121.44"
+      fill="none"
+      aria-hidden
+      className="shrink-0"
+    >
+      {/* O compound com knockout: o furo do check deixa passar o fundo de trás,
+          que é o mesmo comportamento da variante `escura` da Logo. */}
+      <path d={SIMBOLO_PATH} fill="var(--color-brand)" />
+    </svg>
+  );
+}
+
 export function Logo({
   variante = "padrao",
   className = "",

@@ -57,46 +57,32 @@ export const TEM_SOCIO = true;
 export const SOCIO_2 = { nome: "Carlos Eduardo Silva" };
 
 /**
- * 🆕 04/09 (Pedro) — A CONSULTORA DA ROTA ASSISTIDA.
+ * 🔄 05/09 (correção do Pedro) — NÃO EXISTE CONSULTOR EXCLUSIVO.
  *
- * No lançamento, tudo daqui em diante (as 2 assinaturas, o certificado e a
- * procuração) é conduzido por uma pessoa da casa, ao vivo. Ela precisa ter
- * NOME e ROSTO no app desde a tela em que assume: "nossa equipe entra em
- * contato" é a frase de quem não tem ninguém pra apresentar.
+ * A versão anterior daqui tinha nome, sobrenome, CRC e avatar de iniciais
+ * ("Larissa Andrade, sua consultora"), e isso prometia uma coisa que a
+ * operação não tem: profissional designado, com agenda fixa, atendendo aquela
+ * pessoa do começo ao fim. Quem atende é quem estiver disponível.
  *
- * Fonte única — a tela de passagem, a de agendamento e a timeline leem daqui.
- * No produto real vem do sistema interno, junto do link do WhatsApp dela.
+ * ⚠️ A saída NÃO é voltar pro "nossa equipe entra em contato" — a frase vazia
+ * que a regra desta rota proíbe desde 04/09. O que se pode afirmar sem mentir
+ * continua sendo bastante, e é o que a tela diz: é gente da CASA (não robô,
+ * não terceirizado), é ao vivo, e existe uma janela de atendimento conhecida.
+ *
+ * 🗑️ Saíram junto: `nome`, `registro` (o Pedro pediu pra tirar o CRC),
+ * `CONSULTOR_INICIAIS` e `CONSULTOR_PRIMEIRO_NOME` — sem pessoa fixa, iniciais
+ * de avatar e primeiro nome em copy não têm de onde sair.
  */
 export const CONSULTOR = {
-  nome: "Larissa Andrade",
-  /** Como ela se apresenta pro cliente. Não é cargo interno. */
-  papel: "Sua consultora na abertura",
-  /** Contador de verdade, com registro. É o que dá peso ao "ao vivo". */
-  registro: "CRC-MG 112.487",
+  /** Como a casa se apresenta nesse papel. */
+  titulo: "Consultor oficial Legalizai",
   /**
-   * Janela de atendimento DA CASA, não a agenda pessoal da consultora — ela
-   * tem horários marcados com outros clientes, e é por isso que a A3.H1 existe.
-   * A tela rotula como "Atendimento" pra não ler como "ela está livre nisso
-   * tudo" (achado do Pedro, 04/09).
-   * 🔄 04/09 — separada em dois campos porque o cartão mostra em 2 linhas, na
-   * lateral direita. Dado partido na FONTE, não com `split(",")` na tela:
-   * parsing de string pra fazer layout quebra no primeiro dia em que alguém
-   * escrever a janela de outro jeito.
+   * Janela de atendimento DA CASA. A tela rotula como "Atendimento" pra não
+   * ler como a agenda de uma pessoa específica (que não existe).
    */
   atendimentoDias: "Seg a sex",
   atendimentoHoras: "9h às 18h",
 };
-
-/** Iniciais pro avatar (sem foto no MLP: nada de asset falso de pessoa). */
-export const CONSULTOR_INICIAIS = CONSULTOR.nome
-  .trim()
-  .split(/\s+/)
-  .slice(0, 2)
-  .map((n) => n[0])
-  .join("");
-
-/** Primeiro nome — é assim que as telas falam dela ("a Larissa te chama"). */
-export const CONSULTOR_PRIMEIRO_NOME = CONSULTOR.nome.trim().split(/\s+/)[0];
 
 export const SOCIOS: number = TEM_SOCIO ? 2 : 1;
 export const NOMES_SOCIOS: string[] = TEM_SOCIO

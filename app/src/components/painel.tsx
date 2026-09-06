@@ -392,7 +392,21 @@ export function TimelineEmBlocos({
                      fica onde ele é preciso: no ícone e no texto da etapa. */
                   "border-border-hairline bg-surface-card"
                 : ehAtual
-                  ? "border-border-strong bg-surface-card"
+                  ? /* 🆕 05/09 (pedido do Pedro) — O BLOCO DA VEZ TEM BORDA
+                       CORAL. Era `border-strong`, um cinza escuro que dizia
+                       "este é diferente" sem dizer por quê — e com 3 a 5 blocos
+                       empilhados, a diferença entre hairline e strong é sutil
+                       demais pra achar de relance, que é exatamente o que a
+                       pessoa faz ao abrir o app pela terceira vez.
+                       ⚠️ Não contradiz a regra de 01/09 (nada de borda VERDE no
+                       bloco concluído) nem a de 04/09 (nada de borda VERMELHA
+                       na recusa): as duas foram recusadas porque pintavam
+                       ESTADO no contorno, e estado já mora no ícone e no
+                       contador. Aqui o coral não é estado, é POSIÇÃO — "você
+                       está aqui" —, e é o único bloco que recebe. Um só, nunca
+                       cinco: a poluição que derrubou as outras duas era a
+                       repetição, não a cor. */
+                    "border-action-primary bg-surface-card"
                   : "border-border-hairline bg-surface-card"
             }`}
           >

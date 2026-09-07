@@ -247,3 +247,79 @@ export const TETO_MEI_ANUAL = 81000;
 
 /** Teto mensal equivalente (o número que a FaixaView compara). */
 export const TETO_MEI_MENSAL = TETO_MEI_ANUAL / 12; // R$ 6.750
+
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🆕 07/09 — AS CATEGORIAS DO CAMINHO MEI (fork do ramo).
+ * ═══════════════════════════════════════════════════════════════════════════
+ * Com o ramo MEI ganhando telas próprias (`lib/mei-flow.ts`), a lista de
+ * categorias precisa morar aqui — as `PILLS` do `gate-telas.tsx` são do
+ * caminho ME, e o ramo MEI não importa tela de ME (trava
+ * `verificar-fronteira-mei.mjs`).
+ *
+ * ⚠️ NÃO É DUPLICAÇÃO DISFARÇADA, e a diferença é de fonte:
+ *   · as `PILLS` do ME derivam dos 103 CNAEs serviço-liso que a gente atende;
+ *   · esta lista deriva do **Anexo XI** (Res. CGSN 140/2018), que é uma lista
+ *     fechada e menor. São universos diferentes que por acaso se encontram.
+ *
+ * O que garante que elas não divirjam é a trava de fronteira, que confere se
+ * todo `id` daqui existe nas `PILLS` (leitura, sem acoplar código).
+ *
+ * ✍️ As 3 categorias sem MEI ficam na lista, DESABILITADAS e com o motivo à
+ * vista (decisão 27/08 com o Pedro). Esconder faria a pessoa achar que a
+ * gente não atende a atividade dela — e a gente atende, só não como MEI.
+ */
+export interface CategoriaMei {
+  id: string;
+  label: string;
+  /** Exemplo em 1ª pessoa, do jeito que a pessoa se descreveria. */
+  ex: string;
+}
+
+export const CATEGORIAS_MEI: CategoriaMei[] = [
+  { id: "foto", label: "Foto, vídeo e áudio", ex: "Fotografo, filmo e edito vídeo ou áudio" },
+  { id: "mkt", label: "Marketing e publicidade", ex: "Panfletagem e promoção de vendas" },
+  { id: "edicao", label: "Edição e mídia", ex: "Edito livros, jornais ou revistas" },
+  { id: "cursos", label: "Ensino e cursos", ex: "Dou aula de idioma, música, informática ou curso preparatório" },
+  { id: "arte", label: "Arte, cultura e patrimônio", ex: "Canto, toco, faço humor ou restauro obras" },
+  { id: "eventos", label: "Eventos e entretenimento", ex: "Organizo eventos ou tenho casa de jogos" },
+  { id: "admin", label: "Apoio administrativo", ex: "Faço serviços de escritório, digitação e cobrança" },
+  { id: "aluguel", label: "Aluguel de equipamentos", ex: "Alugo equipamentos, móveis ou objetos" },
+  { id: "reparos", label: "Reparos e manutenção", ex: "Conserto computador, celular, bicicleta ou relógio" },
+  { id: "salao", label: "Salão e beleza", ex: "Trabalho com cabelo, manicure e pedicure" },
+  { id: "hospedagem", label: "Hospedagem", ex: "Tenho albergue ou pensão" },
+  { id: "tech", label: "Tecnologia e software", ex: "Desenvolvo sites, apps ou sistemas sob encomenda" },
+  { id: "design", label: "Design", ex: "Crio design gráfico, de interiores ou de produto" },
+  { id: "consult", label: "Consultoria, pesquisa e tradução", ex: "Faço consultoria, pesquisa ou tradução" },
+];
+
+/**
+ * O motivo, em uma frase, de a categoria não existir como MEI. Vazio = existe.
+ *
+ * ✍️ A frase é a mesma pras 3 porque a causa é a mesma (art. 966 do CC), e
+ * inventar 3 redações diferentes pro mesmo fato jurídico só criaria a dúvida
+ * "então são coisas diferentes?".
+ */
+export function motivoSemMei(id: string): string | null {
+  if (categoriaTemMei(id)) return null;
+  return "A lei não considera empresário quem exerce profissão intelectual, então essa atividade não entra na lista do MEI. Como ME, a gente abre normalmente.";
+}
+
+/**
+ * As 4 formas de o MEI ter endereço, e o que cada uma exige.
+ *
+ * 🎯 É aqui que o caminho MEI mais se afasta do ME, e por 2 motivos de lei:
+ *   · **o residencial vale** (LC 123/2006 art. 3º-A + Res. CGSIM 22/2010): o
+ *     MEI pode declarar a própria casa como endereço comercial, sem alvará
+ *     prévio, desde que a atividade seja de baixo risco;
+ *   · **não existe gate de BH** — o MLP limita o ME a Belo Horizonte porque a
+ *     abertura passa por JUCEMG + prefeitura; o MEI registra no Portal do
+ *     Empreendedor pela Redesim, e a gente presta o serviço contábil de
+ *     qualquer lugar. Limitar por CEP aqui seria recusar cliente à toa.
+ */
+export const FORMAS_ENDERECO_MEI = [
+  { id: "casa", label: "Na minha casa", nota: "Vale como endereço comercial no MEI" },
+  { id: "comercial", label: "Num ponto comercial", nota: "Loja, sala ou galpão alugado ou próprio" },
+  { id: "cliente", label: "Sempre no cliente", nota: "Você atende fora, mas o cadastro pede um endereço" },
+  { id: "online", label: "Só pela internet", nota: "Sem atendimento presencial" },
+] as const;

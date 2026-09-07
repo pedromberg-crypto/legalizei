@@ -1,7 +1,7 @@
 ---
 tipo: verdade
 status: GERADO — não editar à mão, nasce de `execucao/flow/gerar-mapa.mjs`
-data: 2026-09-05
+data: 2026-09-07
 assunto: dados-coletados-abertura
 tags: [execucao, flow, dados, abertura]
 ---
@@ -156,14 +156,19 @@ tags: [execucao, flow, dados, abertura]
 
 🔴 **É aqui que o CTA dispara a 1ª tentativa de viabilidade na Junta (JUCEMG)** — os campos acima são exatamente o que vai pro pedido de viabilidade.
 
-### M-T · Impedimentos (no lugar da triagem)
+### M1 · Onde você trabalha (área + endereço)
+- Categoria de atividade (14, sendo 3 sem MEI)
+- forma de endereço
+- CEP + número + complemento
+
+### M3 · Faturamento (gate do teto R$81k)
+- Faixa de faturamento mensal (5 opções, a última estoura o teto) OU valor exato
+- ciência do teto quando perto
+
+### M2 · Impedimentos (no lugar da triagem)
 - Já tem outra empresa? (sim/não)
 - é servidor federal? (sim/não)
 - recebe benefício? (sim/não) + ciência explícita se sim
-
-### M-O · Ocupação (Anexo XI + limite interno)
-- Ocupação principal (1 da lista do Anexo XI)
-- até 15 ocupações secundárias
 
 ## Preenchidos por nós, não pelo cliente
 

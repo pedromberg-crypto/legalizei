@@ -74,10 +74,26 @@ export default function EntradaPage() {
             router.push(regime === "mei" ? "/migrar/cnpj?cenario=mei" : "/migrar/cnpj");
             return;
           }
-          // Abrir: os dois regimes passam pelo E3.3 — o gate de BH só vale pro
-          // ME (`?regime=mei` desliga a exigência lá), mas a CATEGORIA vale
-          // pros dois, e é ela que autoriza o CNAE a ir pra pós-pagamento.
-          router.push(regime === "mei" ? "/endereco?regime=mei" : "/endereco");
+          /**
+           * 🔒 07/09 — ESTE É O PONTO DE FORK, e ele é de mão única.
+           *
+           * Até aqui os dois regimes seguiam pro MESMO E3.3, e o MEI viajava
+           * o flow inteiro como `?regime=mei` dentro das telas do ME. Foi esse
+           * arranjo que fez o MEI herdar 4 defeitos em 8 dias sem ninguém
+           * mexer nele (contrato e termo morreram junto com as telas do ME que
+           * os hospedavam; o status virou "fase Junta"; os splashes de
+           * pagamento nunca chegaram).
+           *
+           * Agora o MEI tem caminho próprio, sob `/mei/*`, com telas e copy
+           * dele — `lib/mei-flow.ts` é a espinha. Daqui pra frente os dois
+           * ramos não se tocam, e a trava
+           * `execucao/flow/verificar-fronteira-mei.mjs` garante isso.
+           *
+           * ⚠️ Esta linha é a ÚNICA alteração feita numa tela de ME no fork.
+           * O `?regime=mei` continua existindo pro Migrar (acima) e pro
+           * Portal, que são compartilhados de propósito.
+           */
+          router.push(regime === "mei" ? "/mei/endereco" : "/endereco");
         }}
         onVoltar={() => router.push("/dados")}
       />

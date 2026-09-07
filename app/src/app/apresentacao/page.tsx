@@ -81,14 +81,27 @@ import {
   DADOS_SAIDA_MEI_SERVIDOR,
   DADOS_SAIDA_CNPJ_INAPTO,
 } from "@/lib/dados-saida";
-// 🆕 28/08 — as 3 telas exclusivas do ramo MEI (fidelidade por construção: a
-// demo renderiza os MESMOS componentes que as rotas de produção).
+/**
+ * 🔄 07/09 — O RAMO MEI VIROU CAMINHO PRÓPRIO, e a demo acompanha.
+ *
+ * Fidelidade por construção continua sendo a regra: a demo renderiza os MESMOS
+ * componentes que as rotas de produção. O que mudou é que as rotas de produção
+ * do MEI agora vivem em `components/mei/`, com telas próprias — antes o ramo
+ * era o ME com uma prop `mei`, e foi assim que ele herdou 4 defeitos em 8 dias
+ * sem ninguém mexer nele. Ver `app/src/lib/mei-flow.ts`.
+ *
+ * ⚠️ A apresentação é UMA DAS 3 SUPERFÍCIES DE REVISÃO (com `/mapa` e
+ * `/mockup`), e por isso é a única exceção da trava de fronteira: ela importa
+ * dos dois ramos por definição, porque existe pra mostrar o produto inteiro.
+ */
+import { ImpedimentosView } from "@/components/mei/impedimentos";
+import { OcupacaoMeiView } from "@/components/mei/ocupacao";
 import {
-  ImpedimentoView,
-  OcupacaoView,
-  ProximosPassosView,
+  ProximosPassosMeiView,
   type CampoCola,
-} from "@/components/mei-telas";
+} from "@/components/mei/proximos-passos";
+import { CertificadoMeiView } from "@/components/mei/certificado";
+import { metaDoVoltar } from "@/lib/mei-flow";
 import { IMPEDIMENTOS } from "@/lib/mei";
 import { GRUPOS } from "@/lib/telas-flow";
 
@@ -1184,12 +1197,17 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   "saida-exterior": "/gate?etapa=triagem&simular=socio-nao-encaixa",
   "saida-socios": "/gate?etapa=triagem&simular=socio-nao-encaixa",
   "saida-socio-pj": "/gate?etapa=triagem&simular=socio-nao-encaixa",
-  "m-impedimento": "/gate?etapa=triagem&regime=mei",
-  "m-ocupacao": "/dossie/ocupacao",
+  /* 🔄 07/09 — rotas do ramo MEI atualizadas com o fork: todas passaram a
+     morar sob `/mei/*`. As antigas (`/gate?etapa=triagem&regime=mei`,
+     `/dossie/ocupacao`, `/certificado?regime=mei`, `/saida/mei-*`) eram telas
+     do ME emprestadas com uma prop — que foi o arranjo que deixou o ramo
+     herdar defeito sem ninguém mexer nele. */
+  "m-impedimento": "/mei/impedimentos",
+  "m-ocupacao": "/mei/ocupacao",
   "m-proximos-passos": "/mei/proximos-passos",
-  "m-certificado": "/certificado?regime=mei",
-  "saida-mei-outra-empresa": "/saida/mei-outra-empresa",
-  "saida-mei-servidor": "/saida/mei-servidor",
+  "m-certificado": "/mei/certificado",
+  "saida-mei-outra-empresa": "/mei/saida/ja-tem-cnpj",
+  "saida-mei-servidor": "/mei/saida/servidor",
   "splash-atendido": "/splash-atendido",
   conta: "/conta",
   // 🔄 04/09 — aponta pro deep-link agora que o código é nó do mapa (E6.1):
@@ -1433,7 +1451,11 @@ const MOMENTO_POR_NO: Record<string, Etapa | null> = {
   A1: "revisar",
   A2: "iniciar-viabilidade",
   A3: "painel",
-  A3_M: "painel", // mesma tela no regime MEI (o preparo força o estado)
+  /* 🔄 07/09 — o status do MEI virou tela PRÓPRIA (`/mei/status`, id M12).
+     Enquanto o render dela não existe aqui, o vínculo segue no "painel", que é
+     a tela mais parecida — a demo força o estado MEI. É provisório e está na
+     lista de pendências do fork. */
+  M12: "painel",
   A3_1: "painel-recusa",
   A3_P: "guia",
   A3_SR: "guia-recusada",
@@ -1464,15 +1486,21 @@ const MOMENTO_POR_NO: Record<string, Etapa | null> = {
   // alerta dentro), então compartilha o momento e quem resolve a pill é o
   // `noVariante` — mesmo tratamento de C3_1/C3_2.
   C3_3: "socios",
-  // 🐛 03/09 — estava em "triagem" (a do ME). O M-T é a tela de
-  // IMPEDIMENTOS do MEI, que já tem momento e rota próprios; vinculado errado,
-  // a pill do MEI abria a triagem do ME e as duas acendiam juntas.
-  M_T: "m-impedimento",
-  M_T_1: "saida-mei-outra-empresa",
-  M_T_2: "saida-mei-servidor",
-  M_O: "m-ocupacao",
-  M_CERT: "m-certificado",
-  M_S: "m-proximos-passos",
+  // ─── O RAMO MEI (ids renomeados em 07/09, com o fork) ──────────────────
+  // 🐛 03/09 — a de impedimentos estava em "triagem" (a do ME). É tela
+  // própria, com momento e rota próprios; vinculada errado, a pill do MEI
+  // abria a triagem do ME e as duas acendiam juntas.
+  M2: "m-impedimento",
+  M2_1: "saida-mei-outra-empresa",
+  M2_2: "saida-mei-servidor",
+  M7: "m-ocupacao",
+  M14: "m-certificado",
+  M13: "m-proximos-passos",
+  // 🔴 07/09 — as 12 telas NOVAS do ramo (M1, M3, M4, M4.1, M4.2, M5, M6,
+  // M6.S, M6.SB, M8, M9, M10, M11, M12) ainda não têm momento na demo, e por
+  // isso aparecem na fita como "sem tela ainda". Elas EXISTEM em produção
+  // (`/mei/*`) — o que falta é o render aqui. A auditoria de espelho do
+  // `gerar-mapa.mjs` lista todas a cada rodada, então nenhuma some do radar.
   CONF: "conferencia",
   A5: "ativacao",
 };
@@ -1587,7 +1615,7 @@ function noVariante(
   if (etapa === "socios" && st.cpfSocio) return "C3_3";
   if (etapa === "socios" && (st.socios ?? 0) >= 3) return "C3_1";
   if (etapa === "socios" && (st.socios ?? 2) <= 1) return "C3_2";
-  if (etapa === "painel" && st.mei) return "A3_M";
+  if (etapa === "painel" && st.mei) return "M12";
   return null;
 }
 
@@ -2445,6 +2473,13 @@ export default function ApresentacaoPage() {
   const [ocupacaoDemo, setOcupacaoDemo] = useState<string | null>(null);
   const [secundariasDemo, setSecundariasDemo] = useState<string[]>([]);
   const [govBrOkDemo, setGovBrOkDemo] = useState(false);
+  /* 🆕 07/09 — estado da M14 (certificado do ramo MEI). Antes a demo usava a
+     `CertificadoGateView` do ME, que não tinha escolha: era gate. A do MEI
+     tem, porque lá seguir sem certificado é opção legítima. */
+  const [certificadoMeiDemo, setCertificadoMeiDemo] = useState<
+    "quero" | "depois" | null
+  >(null);
+  const [aceiteCertMeiDemo, setAceiteCertMeiDemo] = useState(false);
 
   const [socios, setSocios] = useState<number | null>(null);
   const [exterior, setExterior] = useState<boolean | null>(null);
@@ -2863,7 +2898,7 @@ export default function ApresentacaoPage() {
     } else if (t.id === "C3" || t.id === "C3_1" || t.id === "C3_2") {
       setCpfSocioDemo(false);
     }
-    if (t.id === "A3_M") setRegimeDemo("mei");
+    if (t.id === "M12") setRegimeDemo("mei");
     // As 4 saídas do veredito não são telas: são DESFECHOS do mesmo
     // `VereditoView`, decididos pelo `mapear()`. Eram 4 das 12 telas que o
     // mapa tinha e a demo não mostrava — só apareciam pra quem digitasse a
@@ -4338,7 +4373,8 @@ export default function ApresentacaoPage() {
                         </main>
                       </>
                     ) : etapa === "m-impedimento" ? (
-                      <ImpedimentoView
+                      <ImpedimentosView
+                        meta={metaDoVoltar("/mei/impedimentos")}
                         respostas={impedimentosDemo}
                         setResposta={(id, v) =>
                           setImpedimentosDemo((r) => ({ ...r, [id]: v }))
@@ -4358,7 +4394,8 @@ export default function ApresentacaoPage() {
                         onVoltar={() => setEtapa("endereco")}
                       />
                     ) : etapa === "m-ocupacao" ? (
-                      <OcupacaoView
+                      <OcupacaoMeiView
+                        meta={metaDoVoltar("/mei/ocupacao")}
                         // A demo fixa "reparos": é a categoria com mais
                         // ocupações (20) e a que melhor mostra o limite
                         // interno na tela.
@@ -4371,16 +4408,22 @@ export default function ApresentacaoPage() {
                         onVoltar={() => setEtapa("pagamento")}
                       />
                     ) : etapa === "m-certificado" ? (
-                      // 🆕 28/08 — MESMA view do ME (fidelidade por construção),
-                      // com a variante `mei`: motivo é OPERAR, e o custo é do
-                      // cliente (não vem no plano).
-                      <CertificadoGateView
-                        mei
+                      /* 🔄 07/09 — era a `CertificadoGateView` do ME com a
+                         prop `mei`. Virou tela própria: no MEI o motivo é
+                         OPERAR (não a procuração da assinatura), o custo é do
+                         cliente, e não é gate — dá pra seguir sem. */
+                      <CertificadoMeiView
+                        meta={metaDoVoltar("/mei/certificado")}
+                        escolha={certificadoMeiDemo}
+                        setEscolha={setCertificadoMeiDemo}
+                        aceiteContato={aceiteCertMeiDemo}
+                        setAceiteContato={setAceiteCertMeiDemo}
                         onSeguir={() => setEtapa("fim")}
                         onVoltar={() => setEtapa("m-proximos-passos")}
                       />
                     ) : etapa === "m-proximos-passos" ? (
-                      <ProximosPassosView
+                      <ProximosPassosMeiView
+                        meta={metaDoVoltar("/mei/proximos-passos")}
                         campos={CAMPOS_COLA_DEMO}
                         nivelGovBrOk={govBrOkDemo}
                         setNivelGovBrOk={setGovBrOkDemo}

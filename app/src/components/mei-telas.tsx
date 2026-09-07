@@ -10,8 +10,28 @@ import { IMPEDIMENTOS, ocupacoesDe, type Ocupacao } from "@/lib/mei";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * AS TELAS EXCLUSIVAS DO RAMO MEI — fonte única (fidelidade por construção).
+ * 🗑️ APOSENTADO EM 07/09 — NÃO EDITAR. O ramo MEI mudou de casa.
  * ═══════════════════════════════════════════════════════════════════════════
+ * As 3 telas daqui viraram `components/mei/impedimentos.tsx`,
+ * `components/mei/ocupacao.tsx` e `components/mei/proximos-passos.tsx`, dentro
+ * do caminho próprio do MEI (`/mei/*`, espinha em `app/src/lib/mei-flow.ts`).
+ *
+ * Este arquivo segue vivo só porque 2 rotas antigas ainda o importam, e as
+ * duas estão órfãs (nenhuma navegação chega nelas desde o fork):
+ *   · `(app)/dossie/ocupacao` — substituída por `/mei/ocupacao`;
+ *   · `(wizard)/gate`, no ramo `etapa === "triagem" && mei` — substituído por
+ *     `/mei/impedimentos`.
+ *
+ * 📌 PENDENTE: apagar este arquivo, as 2 rotas órfãs e as saídas
+ * `(wizard)/saida/mei-*`. Ficou pra depois de propósito: remover a 2ª exige
+ * editar `(wizard)/gate/page.tsx`, que é tela de ME, e o combinado de 07/09 é
+ * que toque em ME seja DECISÃO isolada, nunca efeito colateral de um flow de
+ * MEI. Enquanto isso, qualquer mudança de conteúdo do MEI vai no ramo novo —
+ * editar aqui não muda nada que o cliente vê.
+ * ═══════════════════════════════════════════════════════════════════════════
+ *
+ * ─── Histórico (28/08, quando estas telas nasceram) ────────────────────────
+ * AS TELAS EXCLUSIVAS DO RAMO MEI — fonte única (fidelidade por construção).
  * 🆕 28/08. Nasce do cruzamento `execucao/flow/cruzamento-flow-mei-vs-me.md`,
  * em cima da pesquisa `pesquisa/abertura-mei/abertura-mei-processo.md`.
  *

@@ -64,12 +64,11 @@ export default function SocioPage() {
          C2 e agora C1), que é a razão de a regra 6 existir no CLAUDE.md.
          Destino: o MEI vem da ocupação; o ME vem das secundárias (o splash
          C5.S do meio não é destino, ele some sozinho). */
+      /* 🗑️ 07/09 — o destino do MEI (`/dossie/ocupacao`) saiu com o fork: a
+         rota foi removida e o ramo tem `/mei/titular`, com voltar próprio. */
       onVoltar={() =>
         router.push(
-          comEndereco(
-            comRegime(mei ? "/dossie/ocupacao" : "/dossie/cnae-secundarios", mei),
-            enderecoFiscal,
-          ),
+          comEndereco(comRegime("/dossie/cnae-secundarios", mei), enderecoFiscal),
         )
       }
       onSeguir={() =>

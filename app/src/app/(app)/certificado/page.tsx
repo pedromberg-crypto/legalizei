@@ -40,7 +40,14 @@ export default function CertificadoGatePage() {
   return (
     <CertificadoGateView
       mei={mei}
-      onVoltar={() => router.push(mei ? "/mei/proximos-passos" : "/painel")}
+      /* 🔄 07/09 — o voltar do ramo NÃO-mei era `/painel`, rota que existia só
+         pra redirecionar pra cá (ela morreu com o fork, ver abaixo). Agora
+         aponta direto pro destino real, sem o pulo. O ramo `mei` daqui é o
+         MIGRAR de MEI, que continua compartilhado de propósito — a abertura de
+         MEI tem tela própria em `/mei/certificado`. */
+      onVoltar={() =>
+        router.push(mei ? "/mei/proximos-passos" : "/aguardando?fase=junta")
+      }
       // No MEI a empresa JÁ existe quando chega aqui (o CNPJ saiu na hora, no
       // Portal), então o próximo passo é entrar no app — não assinar nada.
       onSeguir={() => router.push(mei ? "/home-dia1?regime=mei" : "/assinatura")}

@@ -191,9 +191,9 @@ export default function AguardandoPage() {
       }
       // 🔄 27/08 — a 1ª tela do dossiê virou a C0 (`/dossie/atividade`), não
       // mais o C1. Mesma mudança do `/pagamento` (racional lá).
-      // 🐛 28/08 — faltava o ramo MEI: ia sempre pra C0 (ME), mesmo quando
-      // `mei=true`. MEI não usa a C0 (não aceita CNAE livre) — vai pra M-O
-      // (`/dossie/ocupacao`), mesmo destino que `/pagamento` já usa.
+      /* 🗑️ 07/09 — saiu o desvio pro MEI (`/dossie/ocupacao`, rota removida
+         no fork). O ramo MEI tem `/mei/ocupacao` e não passa mais por esta
+         tela vindo do "abrir". */
       onSeguir={() =>
         router.push(
           comCategoria(
@@ -203,10 +203,7 @@ export default function AguardandoPage() {
               // pessoa contar o que faz. Sem esta query o app caía direto na
               // tela com os 5 cartões e a chegada não existia pra ninguém —
               // o mapa dizia uma coisa e o link fazia outra.
-              comRegime(
-                mei ? "/dossie/ocupacao" : "/dossie/atividade?vazia=1",
-                mei,
-              ),
+              comRegime("/dossie/atividade?vazia=1", mei),
               enderecoFiscal,
             ),
             categoria,

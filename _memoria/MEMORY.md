@@ -1,5 +1,7 @@
 # Memory Index — Legalize
 
+- [Fork do ramo MEI](legalize-fork-ramo-mei.md) — 07/09: MEI virou caminho próprio (`/mei/*`, `components/mei/`, `lib/mei-flow.ts`) com trava de fronteira; herança por prop `mei` custou 4 defeitos em 8 dias.
+
 - [Reta final: 2 assinaturas + videochamada do certificado](legalize-reta-final-certificado-e-assinaturas.md) — 05/09: 1ª = todos os sócios (Junta) · 2ª = só contador + representante (Receita) · certificado é o ÚLTIMO passo, com parceira; procuração e-CAC saiu do flow.
 - [Regra de órgão não se deduz, se pergunta](legalize-regra-de-orgao-nao-se-deduz.md) — 05/09: a procuração teve 5 versões em 2 dias, 4 deduzidas por mim; o Ademar responde em minutos.
 - [Edição simples se resolve com Edit direto](legalize-edicao-simples-editar-direto.md) — 05/09: nada de script Python de patch nem suíte de e2e em pedido pontual de layout; Pedro cobrou lentidão 2x na mesma sessão.

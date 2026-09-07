@@ -4,8 +4,6 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { TriagemView, FaixaView } from "@/components/gate-telas";
 import { TelaHeader } from "@/components/ui/tela";
-import { ImpedimentoView } from "@/components/mei-telas";
-import { IMPEDIMENTOS } from "@/lib/mei";
 import { ehMei, comRegime } from "@/lib/regime";
 import { ehEnderecoFiscal, comEndereco } from "@/lib/endereco";
 import { categoriaDe, comCategoria } from "@/lib/categoria";
@@ -80,18 +78,13 @@ export default function GatePage() {
   // 🆕 26/08 (reunião Rua Satélite 36) — coorte pousou na Triagem de vez.
   const [coorte, setCoorte] = useState<"primeira" | "ja-abri" | null>(null);
 
-  // 🆕 28/08 — estado do M-T (só usado no ramo MEI).
-  const [impedimentos, setImpedimentos] = useState<
-    Record<string, boolean | null>
-  >(Object.fromEntries(IMPEDIMENTOS.map((i) => [i.id, null])));
-  const [cienteBeneficio, setCienteBeneficio] = useState(false);
-
-  /** Qual saída o impedimento respondido "sim" leva. */
-  function saidaDoImpedimento() {
-    if (impedimentos["outra-empresa"] === true)
-      return "/saida/mei-outra-empresa";
-    return "/saida/mei-servidor";
-  }
+  /* 🗑️ 07/09 — O ESTADO DO M-T SAIU DAQUI (impedimentos, ciência do
+     benefício e a função que escolhia a saída). Ele existia porque a tela de
+     impedimentos do MEI era renderizada de DENTRO desta página, com um
+     `if (etapa === "triagem" && mei)` — e trazia o próprio `<main>`, o que
+     obrigava um wrapper especial pra não aninhar `<main>` dentro de `<main>`.
+     Era o sintoma visível da herança. Com o fork de 07/09 a tela virou rota
+     própria (`/mei/impedimentos`), e o `/gate` voltou a ser só do ME. */
 
   /** 🆕 29/08 — comum às 2 rotas de voltar reais (endereço) e local (faixa→triagem). */
   function onVoltarComum() {
@@ -108,22 +101,12 @@ export default function GatePage() {
           seta de voltar nenhuma, só um header estático "Legalizai". A que
           aparecia na `/apresentacao` era chrome do PRÓPRIO demo (botão fora
           da moldura do aparelho), não algo desta tela.
-          ⚠️ `ImpedimentoView` (ramo MEI) já traz o PRÓPRIO header+main —
-          renderizar ele aqui dentro aninhava `<main>` dentro de `<main>` e
-          duplicava o header. Ele fica de fora deste wrapper, com seu próprio
-          `onVoltar`. */}
-      {etapa === "triagem" && mei ? (
-        <ImpedimentoView
-          respostas={impedimentos}
-          setResposta={(id, v) => setImpedimentos((r) => ({ ...r, [id]: v }))}
-          cienteBeneficio={cienteBeneficio}
-          setCienteBeneficio={setCienteBeneficio}
-          onSeguir={() => setEtapa("faixa")}
-          onSaida={() => router.push(saidaDoImpedimento())}
-          onVoltar={onVoltarComum}
-        />
-      ) : (
-        <>
+
+          🗑️ 07/09 — sumiu daqui o ramo `etapa === "triagem" && mei`, que
+          renderizava a tela de impedimentos do MEI. Ela agora tem rota própria
+          (`/mei/impedimentos`) e o wrapper condicional que existia só pra ela
+          (pra não aninhar `<main>` dentro de `<main>`) foi junto. */}
+      <>
           {/* `meta` segue o mesmo padrão do resto do wizard (nome do DESTINO
               do voltar, não desta tela): "faixa" volta pro passo interno
               "triagem"; "triagem" volta pro E3.3 (`/endereco`). */}
@@ -192,7 +175,6 @@ export default function GatePage() {
             )}
           </main>
         </>
-      )}
     </>
   );
 }

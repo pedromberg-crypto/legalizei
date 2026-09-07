@@ -111,21 +111,14 @@ export default function PagamentoPage() {
       const qs = searchParams.toString();
       return qs ? `/migrar/contador?${qs}` : "/migrar/contador";
     }
-    // 🆕 28/08 — MEI entra no dossiê pela M-O (ocupação do Anexo XI), não
-    // pela C0 (descrever atividade + CNAE): o Portal do Empreendedor não
-    // aceita CNAE livre, só ocupação de lista fechada.
-    // 🟡 30/08 — MEI fica FORA do escopo da reestruturação abaixo (pedido do
-    // Pedro: essa rodada é só ME Simples Nacional). Mantém o comportamento
-    // antigo — cartão pula direto, só boleto passa pelo E9.1.
-    if (mei) {
-      return comCategoria(
-        comEndereco(
-          comRegime(metodo === "boleto" ? "/aguardando" : "/dossie/ocupacao", mei),
-          enderecoFiscal,
-        ),
-        categoria,
-      );
-    }
+    /* 🗑️ 07/09 — SAIU O RAMO MEI DAQUI. Ele mandava pra `/dossie/ocupacao`
+       (rota removida) e carregava a dívida escrita em 30/08: "MEI fica FORA do
+       escopo desta rodada, mantém o comportamento antigo — cartão pula direto,
+       só boleto passa pelo E9.1". A dívida foi paga do outro lado: o ramo MEI
+       tem `/mei/pagamento` com splashes próprios (M6.S/M6.SB), e não chega
+       mais nesta tela vindo do "abrir".
+       ⚠️ O `mei` acima (fluxo migrar) FICA: o Migrar de MEI continua passando
+       por aqui, e é compartilhado de propósito. */
     // 🔴 30/08 (pedido do Pedro) — REVOGADO "cartão/Pix pulam direto pro C0".
     // Todo método de pagamento passa por uma tela de status antes de seguir:
     // boleto vai pro E9.1 (aguardando, pendente); cartão/Pix passam pelo

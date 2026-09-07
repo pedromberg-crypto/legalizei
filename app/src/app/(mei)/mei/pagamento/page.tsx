@@ -2,7 +2,12 @@
 
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { PagamentoMeiView, type MetodoMei } from "@/components/mei/pagamento";
+import {
+  PagamentoMeiView,
+  PAGAMENTO_MEI_VAZIO,
+  type MetodoMei,
+  type DadosPagamentoMei,
+} from "@/components/mei/pagamento";
 import { anterior, proxima, metaDoVoltar } from "@/lib/mei-flow";
 import { comCategoria, categoriaDe } from "@/lib/categoria";
 
@@ -33,14 +38,19 @@ function PagamentoConteudo() {
   const categoria = categoriaDe(searchParams);
 
   const [metodo, setMetodo] = useState<MetodoMei | null>(null);
-  const [cpf, setCpf] = useState("");
+  const [dados, setDados] = useState<DadosPagamentoMei>(PAGAMENTO_MEI_VAZIO);
   const [aceito, setAceito] = useState(false);
   const [contratoAberto, setContratoAberto] = useState(false);
 
   function pagar() {
     const destino = comCategoria(proxima(ROTA), categoria);
-    const splash = metodo === "boleto" ? "/mei/splash-boleto" : "/mei/splash-pagamento";
-    router.push(`${splash}?next=${encodeURIComponent(destino)}`);
+    /* 🔴 Só cartão e Pix aparecem na escolha (mesma decisão de 01/09 do ME: no
+       Asaas o boleto já vem com QR de Pix embutido). O splash do boleto segue
+       existindo e alcançável por rota — a M6.SB está no mapa e é revisável —,
+       mas ninguém cai nela pela escolha, porque não há card de boleto. */
+    router.push(
+      `/mei/splash-pagamento?next=${encodeURIComponent(destino)}`,
+    );
   }
 
   return (
@@ -48,12 +58,13 @@ function PagamentoConteudo() {
       meta={metaDoVoltar(ROTA)}
       metodo={metodo}
       setMetodo={setMetodo}
-      cpf={cpf}
-      setCpf={setCpf}
+      dados={dados}
+      setDados={setDados}
       aceito={aceito}
       setAceito={setAceito}
       contratoAberto={contratoAberto}
       setContratoAberto={setContratoAberto}
+      recusado={searchParams.get("recusado") === "1"}
       onVoltar={() => router.push(comCategoria(anterior(ROTA), categoria))}
       onPagar={pagar}
     />

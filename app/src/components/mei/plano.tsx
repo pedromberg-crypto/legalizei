@@ -1,62 +1,106 @@
 "use client";
 
+import Image from "next/image";
+import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
-import { StatusIcon } from "@/components/ui/status";
+import { TelaHeader, Rolagem, Rodape } from "@/components/ui/tela";
 import { CUSTOS } from "@/lib/fiscal";
 import { reais } from "./_formato";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * M5 · SEU PLANO — a conta honesta do MEI.
+ * M5 · SEU PLANO — a conta honesta do MEI, no layout aprovado do E7.
  * ═══════════════════════════════════════════════════════════════════════════
- * 🆕 07/09. Substitui o uso que o MEI fazia da `PlanoView` do ME.
+ * 🆕 07/09, redesenhada no MESMO dia (pedido do Pedro: *"traga os layouts de
+ * ME aprovados, mantendo as copys daqui"*, com esta tela como exemplo).
  *
- * ─── A DIFERENÇA QUE OBRIGA A TELA A SER OUTRA ──────────────────────────────
- * A tela do ME se chama "a conta da abertura" e o número grande dela é a soma
- * do que a pessoa vai desembolsar pra abrir: mensalidade + taxa da Junta
- * (R$281,08, repasse ao Estado). **No MEI não existe nenhum dos dois lados
- * dessa conta**: a abertura é gratuita em todas as instâncias, e o honorário
- * de abertura já é zero por decisão nossa desde 14/07.
+ * ─── DE ONDE VEM O LAYOUT ───────────────────────────────────────────────────
+ * Do E7 versão **oferta** (`PlanoOferta` em `wizard-dinheiro.tsx`), que é o
+ * que roda em produção no caminho ME e foi validado com o Pedro entre 28/08 e
+ * 01/09, em várias rodadas: título bicolor em linha única, card-herói escuro
+ * com o brilho coral saindo do canto inferior esquerdo, o Léo emergindo da
+ * lateral direita, pill coral, preço sem centavos, inclusos como
+ * cartões-linha, e o total COM centavos só no rodapé, junto da decisão.
  *
- * Então a pergunta que esta tela responde é outra: *se abrir é grátis e eu
- * mesmo clico, o que eu estou pagando?* Fugir dela seria o pior caminho
- * possível — a pessoa faria a pergunta sozinha, no pagamento.
+ * ⚠️ NÃO É IMPORT, E NÃO PODE SER. A trava de fronteira
+ * (`verificar-fronteira-mei.mjs`) proíbe o ramo MEI de importar tela de ME —
+ * foi essa herança que fez o MEI acumular 4 defeitos em 8 dias. O que se
+ * herda aqui é o DESENHO, reescrito com os mesmos tokens do DS. Se o Pedro
+ * mudar o card-herói no ME, esta tela não muda sozinha: é o preço combinado
+ * de ter dois caminhos que não se quebram entre si.
  *
- * A resposta, e ela é a tese do produto (`cruzamento-flow-mei-vs-me.md`):
- * **não errar agora, e o ano seguinte**. O difícil do MEI nunca foi preencher
- * o formulário; é saber qual ocupação (com o limite da Cosit 27/2021), se você
- * pode, o que declarar, e depois manter em dia.
+ * ─── O QUE MUDA EM RELAÇÃO AO E7, E POR QUÊ ─────────────────────────────────
+ * O E7 se chama "a conta da abertura" e existe pra fechar 3 baldes: grátis
+ * (honorário) · taxa de governo (repasse) · mensalidade. **No MEI o balde do
+ * meio não existe** — a abertura é gratuita em todas as instâncias, e o
+ * honorário já é zero desde 14/07.
  *
- * ─── 🔴 O CERTIFICADO NÃO VEM INCLUSO, E ISSO SE DIZ AQUI ───────────────────
- * Decisão do Pedro (28/08): o plano MEI não inclui certificado digital. A
- * pessoa já ouviu isso no fork (E3.2) e ouve de novo aqui, com o valor. Não é
- * repetição à toa — é a regra de honestidade-antes-do-toque: quem descobre um
- * custo no meio do caminho não confia mais no resto dos números.
+ * Então o título muda de assunto: não é "quanto custa abrir", é *"se abrir é
+ * grátis e eu mesmo clico, o que eu estou pagando?"*. É a tese do produto
+ * (`cruzamento-flow-mei-vs-me.md`): não errar agora, e o ano seguinte.
+ *
+ * O bloco "o que ainda tem de custo pra abrir o CNPJ" FICA, com "Não tem" —
+ * responder a pergunta antes dela ser feita vale mais que omitir a seção.
+ *
+ * 🔴 O CERTIFICADO NÃO VEM INCLUSO (decisão do Pedro, 28/08) e aparece na
+ * MESMA lista onde a pessoa lê o que está incluso, num cartão próprio. Igual
+ * ao E7: esconder seria o oposto da doutrina de honestidade antes do toque.
  *
  * 🔴 PENDÊNCIA DE NEGÓCIO, ANOTADA E NÃO INVENTADA: tirando o certificado do
  * plano, a fidelidade de 12 meses ficou **sem contrapartida escrita** (o ADR
- * de 04/08 dizia, com todas as letras, que a fidelidade era a contrapartida de
- * pagar o certificado). O número segue valendo porque não foi revogado, e a
- * copy usa a formulação genérica de sempre — não inventei justificativa nova.
- * Precisa de decisão Pedro/Mauro antes de virar cláusula. Ver
- * `execucao/flow/rastreio-mei.md` §"A consequência que ficou aberta".
+ * de 04/08 dizia que ela ERA a contrapartida de pagar o certificado). O número
+ * segue valendo porque não foi revogado, e a copy usa a formulação genérica.
+ * Precisa de decisão Pedro/Mauro. Ver `execucao/flow/rastreio-mei.md`.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
+/** Ícone glossy, mesmo tratamento dos cartões-linha do E7. */
+function IconeGlossy({ src }: { src: string }) {
+  return <Image src={src} alt="" width={26} height={26} aria-hidden />;
+}
+
 /**
  * O que o plano MEI entrega. Escopo LIMITADO de propósito (nota do
- * `CUSTOS.MENSALIDADE_MEI`): não é o plano ME completo com preço menor, é
- * escopo menor mesmo — e o teto legal do MEI é 1 colaborador.
+ * `CUSTOS.MENSALIDADE_MEI`): não é o plano ME com preço menor, é escopo menor
+ * mesmo — o teto legal do MEI é 1 colaborador.
+ *
+ * ✍️ A ORDEM não é a do E7. Lá o 1º item é a abertura grátis, porque é o que
+ * a pessoa veio comprar. Aqui a abertura é grátis por LEI, não por escolha
+ * nossa, então liderar com ela seria cobrar crédito por algo que não é nosso.
+ * O 1º item é a ocupação: é o erro caro que a gente resolve, e é o que
+ * justifica existir uma mensalidade num serviço cuja abertura é gratuita.
  */
-const INCLUSO_MEI = [
-  "Escolha da ocupação certa, com o que ela cobre e o que não cobre",
-  "Emissão das suas notas fiscais de serviço",
-  "A DASN-SIMEI todo ano, feita e entregue por nós",
-  "Suas guias mensais (DAS) na mão, sem você caçar no site do governo",
-  "Monitor do teto: a gente avisa antes de você estourar, não depois",
-  "1 colaborador registrado, que é o limite legal do MEI",
+const INCLUSO_MEI: { titulo: string; sub: string; icone: ReactNode }[] = [
+  {
+    titulo: "A ocupação certa, com o que ela cobre",
+    sub: "A lista do governo tem armadilha: a ocupação é mais estrita que o código que ela mapeia. A gente escolhe com você e escreve o que você pode e não pode fazer.",
+    icone: <IconeGlossy src="/icones/certificado-check-teste.png" />,
+  },
+  {
+    titulo: "Notas fiscais sem limite",
+    sub: "Emite pelo app, em segundos.",
+    icone: <IconeGlossy src="/icones/certificado-raio-teste.png" />,
+  },
+  {
+    titulo: "Guia mensal e declaração do ano",
+    sub: "O DAS pronto todo mês, e a DASN-SIMEI entregue no prazo, sem você caçar nada no site do governo.",
+    icone: <IconeGlossy src="/icones/certificado-papel-teste.png" />,
+  },
+  {
+    titulo: "Monitor do teto",
+    sub: "A gente acompanha seu faturamento e avisa ANTES de você estourar os R$ 81 mil. Nenhuma ferramenta oficial faz isso.",
+    icone: <IconeGlossy src="/icones/certificado-gps-teste.png" />,
+  },
+  {
+    titulo: "1 colaborador",
+    sub: "O único que a lei permite ao MEI. FGTS e INSS patronal inclusos.",
+    icone: <IconeGlossy src="/icones/certificado-pessoas-teste.png" />,
+  },
+  {
+    titulo: "Assistente de contabilidade",
+    sub: "Tira dúvida e resolve a rotina do MEI, a qualquer hora.",
+    icone: <IconeGlossy src="/icones/certificado-balao-teste.png" />,
+  },
 ];
 
 export function PlanoMeiView({
@@ -69,74 +113,162 @@ export function PlanoMeiView({
   onSeguir?: () => void;
   onVoltar?: () => void;
 }) {
+  const mensalidade = CUSTOS.MENSALIDADE_MEI;
+
   return (
     <>
       <TelaHeader meta={meta} onVoltar={onVoltar} />
 
       <main className="app-main">
-        <Titulo sub="Abrir o MEI é de graça, e continua sendo. O que você paga aqui é o que vem depois.">
-          Seu plano
-        </Titulo>
+        {/* Título bicolor em linha única, igual ao E7. O assunto é outro: lá
+            é "quanto custa abrir", aqui abrir é grátis por lei. */}
+        <div className="shrink-0">
+          <h1 className="text-[1.375rem] leading-tight tracking-tight whitespace-nowrap">
+            <span className="font-bold text-text-primary">Abrir é grátis.</span>{" "}
+            <span className="font-bold text-text-tertiary">Depois é com a gente</span>
+          </h1>
+          <p className="text-body text-text-secondary mt-2 whitespace-nowrap">
+            Sem letra miúda, sem surpresa depois.
+          </p>
+        </div>
 
-        <Corpo>
-          {/* ── O NÚMERO ──────────────────────────────────────────────────
-              Um valor só, sem soma. No ME o card soma taxa de governo; aqui
-              somar seria inventar uma linha que não existe. */}
-          <Card tom="marca">
-            <p className="text-micro text-text-tertiary">Plano MEI</p>
-            <p className="text-h1 text-text-primary mt-1">
-              {reais(CUSTOS.MENSALIDADE_MEI)}
-              <span className="text-body text-text-secondary"> por mês</span>
-            </p>
-            <p className="text-caption text-text-secondary mt-2">
-              A abertura em si custa {reais(0)}: o registro do MEI é gratuito em
-              todas as instâncias, e a gente não cobra honorário pra te
-              acompanhar nela.
-            </p>
-          </Card>
+        {/* `Rolagem` no lugar do hook duplicado do E7: o degradê de
+            continuidade virou componente do DS em 02/09, justamente porque
+            toda tela com contêiner próprio nascia sem ele. */}
+        <Rolagem className="mt-5 pb-4">
+          {/* ═══ O CARD-HERÓI ═══════════════════════════════════════════════
+              Mesma anatomia validada no E7: quina de 28px, ink com o brilho
+              coral saindo de baixo à esquerda (atrás do preço), e o Léo
+              emergindo da lateral direita — o `overflow-hidden` é o que faz a
+              quina recortá-lo e sustentar a leitura de que ele está DENTRO. */}
+          <div
+            className="relative mt-4 overflow-hidden rounded-[28px] p-6"
+            style={{
+              backgroundColor: "var(--color-surface-dark)",
+              backgroundImage:
+                "radial-gradient(110% 85% at 2% 105%, color-mix(in srgb, var(--color-brand) 32%, transparent), transparent 62%)",
+            }}
+          >
+            <Image
+              src="/leo/leo-parede.png"
+              alt=""
+              aria-hidden
+              width={240}
+              height={468}
+              className="pointer-events-none absolute -bottom-10 right-0 h-[190px] w-auto"
+            />
 
-          {/* ── O QUE VOCÊ ESTÁ COMPRANDO ─────────────────────────────────
-              Ordem proposital: a ocupação vem primeiro porque é o que resolve
-              o erro caro, não porque é o mais bonito de listar. */}
-          <div>
-            <p className="text-caption font-semibold text-text-primary mb-2">
-              O que entra
+            <div className="flex items-center gap-3">
+              <span
+                className="rounded-full bg-action-primary px-4 py-1.5 text-caption font-semibold text-text-on-brand"
+                style={{ boxShadow: "0 3px 10px rgba(0,0,0,.35)" }}
+              >
+                Plano MEI
+              </span>
+            </div>
+
+            {/* Preço SEM centavos aqui (decisão de 28/08): o valor com
+                centavos vive no rodapé, que é onde precisão importa. */}
+            <div className="mt-5 flex items-baseline gap-2">
+              <p className="text-[2.75rem] font-bold leading-none text-text-on-dark">
+                {reais(mensalidade)}
+              </p>
+              <span className="text-h2 text-text-on-dark/60">/mês</span>
+            </div>
+            <p className="mt-3 text-caption text-text-on-dark/70">
+              A 1ª mensalidade já é o seu 1º mês.
             </p>
-            <div className="flex flex-col gap-2.5">
-              {INCLUSO_MEI.map((item) => (
-                <div key={item} className="flex items-start gap-2.5">
-                  <span className="mt-0.5 shrink-0">
-                    <StatusIcon estado="feito" />
-                  </span>
-                  <p className="text-caption text-text-secondary">{item}</p>
+          </div>
+
+          {/* ═══ O QUE ESTÁ INCLUSO ═════════════════════════════════════════ */}
+          <p className="mb-2.5 mt-6 text-caption font-semibold text-text-primary">
+            O que está incluso
+          </p>
+          <div className="flex flex-col gap-2.5">
+            {INCLUSO_MEI.map((i) => (
+              <div
+                key={i.titulo}
+                className="flex items-center gap-3 rounded-2xl border border-border-hairline bg-surface-card p-3.5"
+              >
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full">
+                  {i.icone}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-body font-semibold text-text-primary">
+                    {i.titulo}
+                  </p>
+                  <p className="text-micro text-text-tertiary">{i.sub}</p>
                 </div>
-              ))}
+              </div>
+            ))}
+
+            {/* 🔴 O QUE NÃO ESTÁ INCLUSO, na mesma lista onde ela lê o que
+                está — mesmo tratamento do E7. Aqui COM o valor, porque desde
+                30/08 o preço da certificadora parceira está fechado. */}
+            <div className="flex items-center gap-3 rounded-2xl border border-border-hairline bg-surface-card p-3.5">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-surface-alt text-text-tertiary">
+                <span className="text-body font-bold" aria-hidden>
+                  !
+                </span>
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="text-body font-semibold text-text-primary">
+                  Certificado digital: por sua conta
+                </p>
+                <p className="text-micro text-text-tertiary">
+                  Não precisa dele pra abrir. Precisa pra gente cuidar do dia a
+                  dia sem te pedir senha. Fora daqui, certificadoras cobram em
+                  torno de {reais(CUSTOS.CERTIFICADO_PRECO)}/ano.
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* ── 🔴 O QUE NÃO ENTRA ────────────────────────────────────────
-              Bloco PRÓPRIO, não um item riscado no meio da lista de inclusos.
-              Custo que a pessoa vai ter merece o mesmo peso visual do que ela
-              está ganhando. */}
-          <Aviso variante="info" titulo="O certificado digital não vem no plano">
-            Ele custa cerca de {reais(CUSTOS.CERTIFICADO_PRECO)} por ano, pago
-            direto na certificadora. Não é obrigatório pra abrir o MEI, e a
-            gente só recomenda depois que o CNPJ existir. Ele serve pro dia a
-            dia: com ele, a gente puxa suas guias e resolve o que precisa sem
-            pedir sua senha toda vez.
-          </Aviso>
+          {/* ═══ O CUSTO DE ABRIR ═══════════════════════════════════════════
+              A seção FICA, mesmo o valor sendo zero: no E7 ela existe pra que
+              o repasse de governo nunca se esconda dentro do preço. Aqui ela
+              existe pelo motivo espelhado — a pessoa chega achando que abrir
+              custa, e responder antes vale mais que omitir. */}
+          <p className="mb-2.5 mt-6 text-caption font-semibold text-text-primary">
+            O que ainda tem de custo pra abrir o CNPJ
+          </p>
+          <div className="rounded-2xl bg-surface-alt px-4 py-3">
+            <div className="flex items-baseline justify-between gap-3">
+              <p className="text-caption text-text-secondary">Taxa de registro</p>
+              <p className="text-caption font-semibold text-text-primary">Não tem</p>
+            </div>
+            <p className="mt-1 text-micro text-text-tertiary">
+              O MEI não passa pela Junta Comercial: o registro é direto no
+              Portal do Empreendedor, e é gratuito por lei em todas as
+              instâncias.{" "}
+              <strong className="font-bold text-text-secondary">
+                A gente também não cobra nada pra abrir.
+              </strong>{" "}
+              Depois disso, o único custo é a sua mensalidade.
+            </p>
+          </div>
 
-          <p className="text-micro text-text-tertiary">
+          <p className="mt-4 text-micro text-text-tertiary px-1">
             Período mínimo de permanência de {CUSTOS.FIDELIDADE_MESES} meses,
             contado a partir da emissão do seu CNPJ. Cancelando antes, a multa é
             de {Math.round(CUSTOS.MULTA_CANCELAMENTO_PCT * 100)}% sobre as
             mensalidades que faltam, nunca sobre o que você já pagou.
           </p>
-        </Corpo>
+        </Rolagem>
 
+        {/* ═══ O TOTAL — no rodapé, junto da decisão ═══ */}
         <Rodape>
+          <div className="mb-3 flex items-baseline justify-between gap-3">
+            <span className="text-caption text-text-secondary">Você paga hoje</span>
+            <span className="text-h2 text-text-primary">
+              {mensalidade.toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              })}
+            </span>
+          </div>
           <Button full onClick={onSeguir}>
-            Continuar
+            Ótimo, continuar
           </Button>
         </Rodape>
       </main>

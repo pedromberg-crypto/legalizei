@@ -32,20 +32,40 @@ function RevisarConteudo() {
      blocos e o destino de cada "Ajustar" — esses são de verdade. */
   const blocos: BlocoRevisao[] = [
     {
-      titulo: "Seus dados",
-      linhas: [searchParams.get("nome") ?? "Seu nome completo"],
+      titulo: "Você",
+      linhas: [
+        { rotulo: "Nome", valor: searchParams.get("nome") ?? "Ana Beatriz Ramos" },
+        { rotulo: "CPF", valor: searchParams.get("cpf") ?? "123.456.789-01" },
+        { rotulo: "Contato", valor: "(31) 98765-4321" },
+      ],
       onAjustar: () => router.push(comCategoria("/mei/titular", categoria)),
     },
     {
-      titulo: "Sua ocupação",
-      linhas: [searchParams.get("ocup") ?? "A ocupação que você escolheu"],
+      titulo: "O que a empresa faz",
+      linhas: [
+        {
+          rotulo: "Ocupação principal",
+          valor:
+            searchParams.get("ocup") ??
+            "Técnico(a) de manutenção de computador (9511-8/00)",
+        },
+      ],
       onAjustar: () => router.push(comCategoria("/mei/ocupacao", categoria)),
     },
     {
-      titulo: "Sua empresa",
+      titulo: "A empresa",
       linhas: [
-        searchParams.get("end") ??
-          "Rua dos Timbiras, 123 · Belo Horizonte, MG",
+        /* No MEI a razão social não é escolhida: sai automática do nome civil
+           + CPF (Lei 14.195/2021). Mostrar um nome aqui daria a entender que
+           houve escolha, e que ela pode ser recusada. */
+        { rotulo: "Nome", valor: "Sai automático: seu nome + seu CPF" },
+        { rotulo: "Tipo", valor: "MEI" },
+        {
+          rotulo: "Endereço",
+          valor:
+            searchParams.get("end") ??
+            "Rua dos Timbiras, 1200 · Belo Horizonte, MG",
+        },
       ],
       onAjustar: () => router.push(comCategoria("/mei/empresa", categoria)),
     },

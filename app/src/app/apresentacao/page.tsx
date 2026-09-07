@@ -115,7 +115,12 @@ import {
   type DadosContaMei,
 } from "@/components/mei/conta";
 import { PlanoMeiView } from "@/components/mei/plano";
-import { PagamentoMeiView, type MetodoMei } from "@/components/mei/pagamento";
+import {
+  PagamentoMeiView,
+  PAGAMENTO_MEI_VAZIO,
+  type MetodoMei,
+  type DadosPagamentoMei,
+} from "@/components/mei/pagamento";
 import {
   TitularMeiView,
   EmpresaMeiView,
@@ -2692,7 +2697,8 @@ export default function ApresentacaoPage() {
   const [codigoMeiDemo, setCodigoMeiDemo] = useState("");
   // M6 · pagamento + contrato
   const [metodoMeiDemo, setMetodoMeiDemo] = useState<MetodoMei | null>(null);
-  const [cpfPagadorMeiDemo, setCpfPagadorMeiDemo] = useState("");
+  const [pagamentoMeiDemo, setPagamentoMeiDemo] =
+    useState<DadosPagamentoMei>(PAGAMENTO_MEI_VAZIO);
   const [aceiteMeiDemo, setAceiteMeiDemo] = useState(false);
   const [contratoAbertoMeiDemo, setContratoAbertoMeiDemo] = useState(false);
   // M8/M9/M10 · o dossiê
@@ -2714,18 +2720,35 @@ export default function ApresentacaoPage() {
    */
   const BLOCOS_REVISAO_MEI_DEMO: BlocoRevisao[] = [
     {
-      titulo: "Seus dados",
-      linhas: [contaMeiDemo.nome || "Ana Ramos"],
+      titulo: "Você",
+      linhas: [
+        { rotulo: "Nome", valor: contaMeiDemo.nome || "Ana Beatriz Ramos" },
+        { rotulo: "CPF", valor: contaMeiDemo.cpf || "123.456.789-01" },
+        { rotulo: "Contato", valor: contaMeiDemo.telefone || "(31) 98765-4321" },
+      ],
       onAjustar: () => setEtapa("mei-titular"),
     },
     {
-      titulo: "Sua ocupação",
-      linhas: [ocupacaoDemo ?? "Técnico(a) de manutenção de computador"],
+      titulo: "O que a empresa faz",
+      linhas: [
+        {
+          rotulo: "Ocupação principal",
+          valor:
+            ocupacaoDemo ?? "Técnico(a) de manutenção de computador (9511-8/00)",
+        },
+      ],
       onAjustar: () => setEtapa("mei-ocupacao"),
     },
     {
-      titulo: "Sua empresa",
-      linhas: ["Rua dos Timbiras, 1200 · Belo Horizonte, MG"],
+      titulo: "A empresa",
+      linhas: [
+        /* No MEI a razão social não é escolhida: sai automática do nome civil
+           + CPF (Lei 14.195/2021). Mostrar um nome aqui daria a entender que
+           houve escolha, e que ela pode ser recusada. */
+        { rotulo: "Nome", valor: "Sai automático: seu nome + seu CPF" },
+        { rotulo: "Tipo", valor: "MEI" },
+        { rotulo: "Endereço", valor: "Rua dos Timbiras, 1200 · Belo Horizonte, MG" },
+      ],
       onAjustar: () => setEtapa("mei-empresa"),
     },
   ];
@@ -4737,22 +4760,18 @@ export default function ApresentacaoPage() {
                         meta={metaDoVoltar("/mei/pagamento")}
                         metodo={metodoMeiDemo}
                         setMetodo={setMetodoMeiDemo}
-                        cpf={cpfPagadorMeiDemo}
-                        setCpf={setCpfPagadorMeiDemo}
+                        dados={pagamentoMeiDemo}
+                        setDados={setPagamentoMeiDemo}
                         aceito={aceiteMeiDemo}
                         setAceito={setAceiteMeiDemo}
                         contratoAberto={contratoAbertoMeiDemo}
                         setContratoAberto={setContratoAbertoMeiDemo}
-                        /* Segue pro splash do método escolhido, igual à rota
-                           real — é o que a demo precisava mostrar e não
-                           mostrava (o MEI pulava direto pro dossiê). */
-                        onPagar={() =>
-                          setEtapa(
-                            metodoMeiDemo === "boleto"
-                              ? "mei-splash-boleto"
-                              : "mei-splash-pagamento",
-                          )
-                        }
+                        /* Segue pro splash, igual à rota real — é o que a demo
+                           precisava mostrar e não mostrava (o MEI pulava
+                           direto pro dossiê). O splash do boleto (M6.SB) segue
+                           alcançável pela pill do mapa, não pela escolha: não
+                           existe card de boleto, mesma decisão de 01/09. */
+                        onPagar={() => setEtapa("mei-splash-pagamento")}
                         onVoltar={() => setEtapa("mei-plano")}
                       />
                     ) : etapa === "mei-splash-pagamento" ||

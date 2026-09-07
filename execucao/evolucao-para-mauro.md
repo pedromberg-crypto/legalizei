@@ -813,5 +813,27 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 - Falta decidir com você: qual certificadora parceira, prazo de contato com o cliente, e o que fazer se ele não atender a videochamada
 ```
 
+## Semana 07/09/2026 — o MEI virou um caminho próprio dentro do app
+
+> O dia inteiro no MEI. O ponto de partida foi um levantamento que o Pedro pediu, e ele achou um problema silencioso: o MEI estava construído **por cima** das telas do ME, e por isso vinha quebrando sozinho a cada mudança que a gente fazia no ME. Nenhuma dessas quebras tinha sido causada por descuido — o arranjo é que permitia. Resolvido na raiz.
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | **O MEI estava quebrando sozinho, e ninguém tinha visto** | Em 8 dias ele acumulou 4 defeitos sem ninguém tocar nele: perdeu as cláusulas próprias do contrato, perdeu a tela de autorização (e passava a cair numa tela sobre uma etapa que **não existe** pro MEI), o acompanhamento passou a dizer "fase Junta" (órgão pelo qual o MEI não passa), e ficou sem as telas de confirmação de pagamento | 🟢 corrigido |
+| 2 | **O MEI ganhou caminho, telas e endereços próprios** | 20 telas, do começo ao fim, separadas das do ME. As duas partes não se tocam mais: mexer em uma não pode quebrar a outra | 🟢 |
+| 3 | **Uma trava automática, pra não repetir** | Um verificador que responde em 1 segundo se os dois caminhos voltaram a se misturar. Promessa verbal já tinha sido feita em 28/08 e não segurou | 🟢 |
+| 4 | **As telas do MEI usam o visual que a gente já aprovou no ME** | Mesmo desenho de plano, pagamento, cadastro e acompanhamento — só a conversa muda, porque o MEI é outro processo (abertura gratuita, sem Junta, sem taxa) | 🟢 |
+| 5 | **O que ficou aberto, e é decisão sua com o Pedro** | Quando a gente tirou o certificado digital do plano MEI (R$49), a **fidelidade de 12 meses ficou sem contrapartida escrita** — até então a justificativa era "o certificado vem incluso, pago por nós". O número segue valendo, mas hoje o contrato pediria 12 meses de permanência sem dizer em troca de quê | 🔴 |
+
+### 📱 WhatsApp (07/09)
+```
+*Update Legalizai* 📣
+- Levantamento no MEI achou um problema silencioso: ele estava construído por cima das telas do ME, e vinha quebrando sozinho a cada mudança nossa no ME. Foram 4 defeitos em 8 dias, sem ninguém ter tocado nele
+- O pior deles: o MEI caía numa tela sobre uma etapa que não existe pro MEI (a consulta de viabilidade, extinta em 2020), bem na hora de autorizar a abertura
+- Resolvido na raiz: o MEI agora tem caminho e telas próprias, 20 no total, e uma trava automática avisa se os dois voltarem a se misturar
+- O visual é o mesmo que a gente já aprovou no ME. O que muda é a conversa, porque o processo é outro: abertura gratuita, sem Junta, sem taxa
+- Falta decidir com você: quando tiramos o certificado digital do plano MEI, a fidelidade de 12 meses ficou sem contrapartida escrita. Ou a gente declara outra, ou reduz o prazo, ou oferece o certificado como opcional com desconto pra quem aceita a fidelidade
+```
+
 ## Links
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]] · [[estado-atual]] · [[indice-autoridade]]

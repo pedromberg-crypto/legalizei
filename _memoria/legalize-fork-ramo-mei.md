@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: 6cedebf8-360c-4764-9714-bcae0a36d009
-  modified: 2026-09-07T04:45:23.053Z
+  modified: 2026-09-07T19:55:56.879Z
 ---
 
 O ramo MEI deixou de morar dentro das telas do ME. Rotas próprias sob `/mei/*` (route group `(mei)`), componentes em `app/src/components/mei/`, espinha declarada em `app/src/lib/mei-flow.ts`. Ponto de contato único: o fork no E3.2 (`(wizard)/entrada/page.tsx`), de mão única.
@@ -18,4 +18,6 @@ O ramo MEI deixou de morar dentro das telas do ME. Rotas próprias sob `/mei/*` 
 - Voltar e `meta` NÃO se escrevem à mão: `anterior()` e `metaDoVoltar()` derivam da espinha. Sobrescrita só explícita e escrita (a M7 não volta pra tela de pagamento já paga).
 - ⚠️ Na `/apresentacao` o prefixo de momento `m-` é do **MIGRAR** (`m-cnpj`, `m-plano`, `m-contrato`). O ramo MEI usa `mei-`, e o teste de pertencimento é `etapa.startsWith("mei-")` — tela nova entra sozinha. A colisão já aconteceu uma vez (07/09, `m-plano`/`m-pagamento` duplicados). Ver [[legalize-metodo-alteracao-tela-travado]] e [[legalize-espelho-mapa-apresentacao]].
 - Removidas em 07/09: `mei-telas.tsx`, `(app)/dossie/ocupacao`, `(wizard)/saida/mei-*`, o ramo MEI do `(wizard)/gate` e o `(app)/painel` inteiro (era só redirect + pipeline MEI). `PainelView` segue vivo pro migrar e pra `/painel/recusa`.
+- **Layout se herda REESCREVENDO, não importando** (07/09): M5←E7-oferta, M6←E9, M3←E5F, M4←E6, M1←E3.4, M11←A1, M12←status do ME. Consequência escrita em cada cabeçalho: mudança de layout no ME não chega sozinha no MEI. Ao copiar encaixe, **trazer a fórmula junto** — a folha do E6 sobrepõe 36px porque tem que ser ≥ o raio 32px; o Léo é `bottom = 36 − 0,2755 × altura`.
+- Na `/apresentacao`, o prefixo `m-` é do MIGRAR. Ramo MEI usa `mei-`, e o teste é `etapa.startsWith("mei-")`.
 - Aberto de negócio: a fidelidade de 12 meses do MEI segue sem contrapartida escrita desde que o certificado saiu do plano (28/08). Decisão Pedro/Mauro.

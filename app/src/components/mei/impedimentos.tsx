@@ -1,9 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Campo, OpcoesLinha, Checkbox } from "@/components/ui/form";
+import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Campo, Texto, OpcoesLinha, Checkbox } from "@/components/ui/form";
 import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
 import { IMPEDIMENTOS } from "@/lib/mei";
+import { SAIDAS_POR_IMPEDIMENTO } from "./saidas";
+import { mascaraTelefone } from "./_formato";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -27,10 +31,29 @@ import { IMPEDIMENTOS } from "@/lib/mei";
  * leria um alerta assustador sobre perder o benefício pra só então descobrir
  * que nem podia seguir.
  *
- * ⚠️ O benefício não fecha a porta, de propósito. O governo deixa registrar —
- * o que acontece é o benefício ser cancelado, e isso é irreversível. Fingir
- * que é bloqueio seria mentir; deixar passar em silêncio seria pior. Vira
- * escolha informada, com confirmação explícita.
+ * ⚠️ O benefício não fecha a porta, de propósito. O governo deixa registrar; o
+ * que acontece é o benefício ser cancelado, e isso é irreversível. Fingir que
+ * é bloqueio seria mentir; deixar passar em silêncio seria pior. Vira escolha
+ * informada, com confirmação explícita.
+ *
+ * ─── 🔄 07/09: OS 2 GATES VIRARAM ESTADO DESTA TELA ─────────────────────────
+ * Pedido do Pedro: *"temos 2 telas para 2 gates e eu quero que esses gates
+ * fossem condicionais dentro dessa própria tela"*. Era o que faltava pra a M2
+ * fechar sozinha — ela já mostrava o aviso inline e depois mandava a pessoa
+ * pra OUTRA tela repetir a mesma informação com mais detalhe.
+ *
+ * Segue o precedente do ME: em 04/09 o E6.2 (CPF não confere) deixou de ser
+ * tela e virou `/conta?cpf=nome`, estado da própria E6. E o E3.4 já fazia
+ * assim com "essa categoria não pode ser MEI".
+ *
+ * O que a tela separada tinha e agora mora aqui: a **base legal em card** (sem
+ * ela, "não pode" soa como regra da casa), o texto completo da alternativa, e
+ * o **formulário de contato** — que é o que transforma um bloqueio em lead.
+ * Nada foi cortado; mudou de lugar.
+ *
+ * 🔗 Continuam alcançáveis por rota (`?bloqueio=ja-tem-cnpj` e `?bloqueio=
+ * servidor`), como M4.1/M4.2 fazem: estado que não é navegável no mapa é
+ * estado que ninguém revisa.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 export function ImpedimentosView({
@@ -40,7 +63,7 @@ export function ImpedimentosView({
   cienteBeneficio,
   setCienteBeneficio,
   onSeguir,
-  onSaida,
+  onVerMe,
   onVoltar,
 }: {
   /** Nome de PRA ONDE O VOLTAR LEVA (vem de `mei-flow.metaDoVoltar`). */
@@ -52,15 +75,22 @@ export function ImpedimentosView({
   cienteBeneficio: boolean;
   setCienteBeneficio: (v: boolean) => void;
   onSeguir?: () => void;
-  /** Chamado quando um impedimento que BLOQUEIA foi respondido "sim". */
-  onSaida?: () => void;
+  /** A alternativa concreta de quem foi bloqueado: abrir como ME. */
+  onVerMe?: () => void;
   onVoltar?: () => void;
 }) {
+  const [nome, setNome] = useState("");
+  const [telefone, setTelefone] = useState("");
+  const [leadEnviado, setLeadEnviado] = useState(false);
+
   // O primeiro bloqueio respondido "sim" trava a tela inteira: não adianta
   // continuar perguntando, e continuar daria a impressão de que ainda dá.
   const bloqueado = IMPEDIMENTOS.find(
     (i) => i.bloqueia && respostas[i.id] === true,
   );
+  /* O conteúdo que morava na tela de saída: base legal, alternativa completa e
+     o formulário. Continua em `saidas.tsx` porque é DADO, não tela. */
+  const saidaDoBloqueio = bloqueado ? SAIDAS_POR_IMPEDIMENTO[bloqueado.id] : null;
 
   const beneficio = IMPEDIMENTOS.find((i) => !i.bloqueia)!;
   const alertaBeneficio = respostas[beneficio.id] === true;
@@ -70,6 +100,8 @@ export function ImpedimentosView({
   );
   const completo =
     !bloqueado && todasRespondidas && (!alertaBeneficio || cienteBeneficio);
+  const podeEnviarLead =
+    nome.trim().length > 1 && telefone.replace(/\D/g, "").length >= 10;
 
   return (
     <>
@@ -110,7 +142,58 @@ export function ImpedimentosView({
                     >
                       {imp.motivo}
                     </Aviso>
-                    <p className="text-caption text-text-secondary">{imp.saida}</p>
+
+                    {/* 🔄 07/09 — o que era a tela de saída, agora aqui.
+                        A BASE LEGAL fica à vista de propósito: sem ela, "não
+                        pode" soa como regra da casa. Com ela, a pessoa entende
+                        que a gente está do lado dela contra um sistema. */}
+                    {imp.bloqueia && saidaDoBloqueio && !leadEnviado && (
+                      <>
+                        <Card>
+                          <p className="text-micro text-text-tertiary">
+                            {saidaDoBloqueio.origem.rotulo}
+                          </p>
+                          <p className="text-caption text-text-secondary mt-1">
+                            {saidaDoBloqueio.origem.texto}
+                          </p>
+                        </Card>
+
+                        <p className="text-caption text-text-secondary">
+                          {saidaDoBloqueio.saida}
+                        </p>
+
+                        {/* O formulário é o que transforma um bloqueio em
+                            lead. Sem ele, a tela vira só um "não". */}
+                        <div className="flex flex-col gap-4">
+                          <Campo rotulo="Seu nome">
+                            <Texto
+                              valor={nome}
+                              onChange={setNome}
+                              placeholder="Como te chamam"
+                            />
+                          </Campo>
+                          <Campo rotulo="Seu WhatsApp">
+                            <Texto
+                              valor={telefone}
+                              onChange={(v) => setTelefone(mascaraTelefone(v))}
+                              placeholder="(31) 90000-0000"
+                              inputMode="tel"
+                              maxLength={15}
+                            />
+                          </Campo>
+                        </div>
+                      </>
+                    )}
+
+                    {imp.bloqueia && saidaDoBloqueio && leadEnviado && (
+                      <Aviso variante="success" titulo={saidaDoBloqueio.confirmacao.titulo}>
+                        {saidaDoBloqueio.confirmacao.texto}
+                      </Aviso>
+                    )}
+
+                    {!imp.bloqueia && (
+                      <p className="text-caption text-text-secondary">{imp.saida}</p>
+                    )}
 
                     {/* Quem recebe benefício NÃO está bloqueado — está diante
                         de uma escolha cara e irreversível. Confirmação
@@ -140,9 +223,30 @@ export function ImpedimentosView({
 
         <Rodape>
           {bloqueado ? (
-            <Button full onClick={onSaida}>
-              Ver o que dá pra fazer
-            </Button>
+            /* 🔄 07/09 — o CTA parou de mandar pra outra tela ("Ver o que dá
+               pra fazer") e passou a FAZER, aqui. Duas ações, e a ordem
+               importa: mandar o contato é o que resolve o caso concreto dela;
+               ver o ME é a alternativa que sempre existe. Depois de enviado,
+               sobra só o ME — repetir o formulário seria pedir de novo o que
+               ela acabou de dar. */
+            <div className="flex flex-col gap-2">
+              {!leadEnviado && (
+                <Button
+                  full
+                  disabled={!podeEnviarLead}
+                  onClick={() => setLeadEnviado(true)}
+                >
+                  {saidaDoBloqueio?.ctaEnviar ?? "Quero entender meu caso"}
+                </Button>
+              )}
+              <Button
+                full
+                variant={leadEnviado ? "secondary" : "ghost"}
+                onClick={onVerMe}
+              >
+                Ver como seria em ME
+              </Button>
+            </div>
           ) : (
             <Button full disabled={!completo} onClick={onSeguir}>
               Continuar

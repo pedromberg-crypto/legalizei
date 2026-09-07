@@ -29,6 +29,7 @@
  */
 
 import fs from "node:fs";
+import { spawnSync } from "node:child_process";
 import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
@@ -809,3 +810,29 @@ if (drift.length) {
 console.log(`✓ nota atualizada: ${path.relative(path.join(DIR, "..", ".."), NOTA)}`);
 console.log(`✓ flow-graph.json exportado: ${path.relative(path.join(DIR, "..", ".."), FLOW_GRAPH_JSON)}`);
 console.log(`✓ dados-coletados exportado: ${path.relative(path.join(DIR, "..", ".."), DADOS_MD)} + dados-constituicao.ts`);
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   A TRAVA DE ANATOMIA, ACOPLADA AO GERADOR.
+   ═══════════════════════════════════════════════════════════════════════════
+   🆕 07/09. As outras duas travas do ramo (fronteira e vocabulário) são
+   rodadas à mão, e é por isso que ninguém as roda. Esta pega carona no
+   comando que a regra do CLAUDE.md já obriga a rodar a cada tela mexida — que
+   é o único jeito de uma trava existir de verdade.
+
+   ⚠️ Ela AVISA, não derruba: o gerador tem outro trabalho (escrever o mapa) e
+   falhar aqui deixaria o mapa desatualizado por causa de um defeito de tela.
+   Quem decide se o exit code importa é quem roda a trava direto. */
+try {
+  const anatomia = spawnSync(process.execPath, [path.join(DIR, "verificar-anatomia-mei.mjs")], {
+    encoding: "utf8",
+  });
+  const saida = (anatomia.stdout || "").trim();
+  if (anatomia.status === 0) {
+    console.log("✓ anatomia MEI↔ME batendo");
+  } else if (saida) {
+    console.log(`\n${saida}`);
+    console.log("   ↑ rode `node execucao/flow/verificar-anatomia-mei.mjs` pro detalhe.\n");
+  }
+} catch {
+  /* A trava é opcional pro gerador: se ela sumir ou quebrar, o mapa continua. */
+}

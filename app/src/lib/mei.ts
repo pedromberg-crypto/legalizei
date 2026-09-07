@@ -231,7 +231,7 @@ export const IMPEDIMENTOS = [
     bloqueia: false,
     tituloBloqueio: "Abrir MEI encerra esse benefício",
     motivo:
-      "O registro não é bloqueado, mas o benefício é suspenso ou cancelado — e isso não volta atrás. Se houver dolo, ainda cabe multa.",
+      "O registro não é bloqueado, mas o benefício é suspenso ou cancelado, e isso não volta atrás. Se houver dolo, ainda cabe multa.",
     saida:
       "Não é impedimento, é escolha. Vale conversar com a gente antes de seguir.",
   },
@@ -265,9 +265,17 @@ export const TETO_MEI_MENSAL = TETO_MEI_ANUAL / 12; // R$ 6.750
  * O que garante que elas não divirjam é a trava de fronteira, que confere se
  * todo `id` daqui existe nas `PILLS` (leitura, sem acoplar código).
  *
- * ✍️ As 3 categorias sem MEI ficam na lista, DESABILITADAS e com o motivo à
- * vista (decisão 27/08 com o Pedro). Esconder faria a pessoa achar que a
- * gente não atende a atividade dela — e a gente atende, só não como MEI.
+ * ✍️ AS 3 SEM MEI CONTINUAM AQUI, mas não aparecem mais no dropdown da M1.
+ *
+ * Até 07/09 elas eram listadas com o rótulo "(só como ME)" — decisão de 27/08,
+ * pra ninguém achar que a gente não atende a atividade dela. O Pedro derrubou
+ * hoje: a lista da M1 passou a ter SÓ o que o MEI atende, e quem não se
+ * encontra usa a opção "Não encontrei minha categoria", que leva ao ME. A
+ * preocupação de 27/08 segue atendida, por outro caminho — e sem oferecer
+ * como escolha aquilo que o regime não faz.
+ *
+ * ⚠️ Elas ficam no array porque o E3.4 do ME consome a MESMA lista de ids, e
+ * porque `categoriaTemMei()` é a guarda de retaguarda pra deep-link.
  */
 export interface CategoriaMei {
   id: string;

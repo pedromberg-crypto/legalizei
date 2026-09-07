@@ -15,7 +15,7 @@ import { SplashMensagemView } from "@/components/splash-mensagem";
  */
 function SplashBoletoConteudo() {
   const router = useRouter();
-  const next = useSearchParams().get("next") || "/mei/ocupacao";
+  const next = useSearchParams().get("next") || "/mei/aguardando";
 
   return (
     <SplashMensagemView

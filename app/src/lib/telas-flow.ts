@@ -217,9 +217,14 @@ export const GRUPOS: GrupoTelas[] = [
         nota: "Mesma tela, mas no MEI ela vira GATE: o teto é R$81.000/ano (LC 123 art. 18-A), ou R$6.750/mês. Acima disso o Continuar trava e a saída é o ME. A faixa 'até R$10 mil' CONTÉM o teto, então ali não dá pra afirmar nada — vira aviso, não porta fechada, com convite pra informar o valor exato. Descobrir depois de aberto custa caro: acima de 20% de excesso o desenquadramento é retroativo, com juros e multa.",
       },
       {
-        rota: "/mei/ocupacao",
-        nome: "M-O · Ocupação (Anexo XI + limite interno)",
-        nota: "A C0 do ramo MEI, 1ª tela do dossiê. NÃO é o C0 adaptado: o Portal não aceita CNAE livre, só OCUPAÇÃO de lista fechada (Anexo XI, Res. CGSN 140/2018), então não existe 'descrever com suas palavras'. 🎯 Carrega o LIMITE INTERNO (Solução de Consulta Cosit nº 27/2021): a ocupação é mais estrita que o CNAE que ela mapeia — quem escolhe 'Reparador(a) de bicicleta' não pode consertar moto, e descobriria numa fiscalização. É o erro que só contador pega, e é parte do que vendemos. As secundárias (até 15) saem daqui, por isso o ramo pula o C5.",
+        rota: "/mei/atividade",
+        nome: "M7 · Atividade principal (Anexo XI + limite interno)",
+        nota: "🔄 07/09 — a tela única virou o BLOCO ATIVIDADE, no sistema aprovado da C0/C5 do ME (pedido do Pedro): chegada, escolha da principal com slot e cartões, secundárias, splash de fecho. O que continua diferente do ME é o motor, não o gesto: o Portal não aceita CNAE livre, só OCUPAÇÃO de lista fechada (Anexo XI, Res. CGSN 140/2018), então a busca ORDENA as ocupações da categoria em vez de a IA adivinhar código entre 1332. 🎯 Carrega o LIMITE INTERNO (Solução de Consulta Cosit nº 27/2021): a ocupação é mais estrita que o CNAE que ela mapeia — quem escolhe 'Reparador(a) de bicicleta' não pode consertar moto, e descobriria numa fiscalização. É o erro que só contador pega, e é parte do que vendemos.",
+      },
+      {
+        rota: "/mei/atividade-secundarias",
+        nome: "M7.S · Atividades secundárias (até 15)",
+        nota: "🆕 07/09 — a C5 do ramo. O limite de 15 aqui é OFICIAL (etapa 'Qualificação do Negócio' do Portal), não régua de produto como no ME. Duas diferenças de fundo: a busca atravessa as categorias (quem faz duas coisas de ramos diferentes precisa achar a segunda), e não existe 'muda seu enquadramento' — o DAS do MEI é fixo. O que pode mudar é outra coisa: ocupação de comércio, indústria ou transporte intermunicipal gera Inscrição Estadual automática no SIARE, e é isso que a tela avisa.",
       },
       {
         rota: "/mei/status",

@@ -1,0 +1,283 @@
+```mermaid
+flowchart TD
+  subgraph GATE["E5 · Gate-CNAE — uma tela"]
+    direction TB
+    E5T{"Triagem<br/>quantos sócios?"}
+    E5F["Faixa de faturamento"]
+    C0_0["C0.0 · Sua atividade<br/>(chegada, antes de descrever)"]
+    C0["C0 · Sua atividade<br/>(descreve + pills)"]
+    C5_S["C5.1 · Splash<br/>'já sabemos o que você faz'"]
+  end
+  E1["E1 · Splash"]
+  E2_1["E2.1 · Welcome<br/>(1/3 · Léo vigia, contador é gente)"]
+  E2_2["E2.2 · Welcome<br/>(2/3 · Aquece o fork)"]
+  E2_3["E2.3 · Welcome<br/>(3/3 · Sem susto no boleto)"]
+  E3{"E3 · Fork<br/>4 rotas"}
+  E3_1(["E3.1 · Login / portal"]):::feliz
+  E3_3["E3.3 · Seus dados<br/>(nome · e-mail · telefone)"]
+  E3_2{"E3.2 · MEI × ME<br/>(variante Abrir)"}
+  E3_2_M{"E3.2 · MEI × ME<br/>(variante Migrar)"}
+  E3_4{"E3.4 · Endereço + categoria<br/>(os 2 gates)"}
+  E3_4_1{"E3.4.1 · CEP fora de BH<br/>(gate resolvido inline)"}:::branch
+  E4_2["E4.2 · Lê o cartão CNPJ"]
+  E4_2_1(["Saída · CNPJ inapto<br/>ou suspenso"]):::saida
+  E4_2B_1(["Saída · Presumido<br/>fora de escopo"]):::saida
+  E4_3["E4.3 · Diagnóstico<br/>("tem certificado?")"]
+  E4_4["E4.4 · Plano"]
+  E4_5["E4.5 · Contrato<br/>+ promessa de devolução"]
+  E9_2["E9.2 · Seu contador atual"]
+  E9_2A["E9.2b · Dados que o<br/>cartão CNPJ não traz"]
+  E9_2B["E9.2c · Dados dos sócios"]
+  E9_2C["E9.2d · GOV.BR + procuração"]
+  E9_3["E9.3 · Iniciando transferência"]:::espera
+  E9_4(["✅ E9.4 · Migração concluída"]):::feliz
+  E5T_1(["E5T.1 · Sócio não se encaixa<br/>(gate de saída inline)"]):::inline
+  E5F_S["E5F.1 · Splash<br/>'conseguimos te atender'"]
+  E6["E6 · Criar conta"]
+  E6_1["E6.1 · Confirmar código"]
+  E6_2["E6.2 · CPF não confere<br/>(nome divergente)"]:::atencao
+  E7["E7 · A conta da abertura"]
+  E7_1["E7.1 · A conta da abertura<br/>(variante endereço fiscal)"]:::branch
+  E9{"E9 · Pagamento + contrato<br/>(variante Abrir)"}
+  E9_M{"E9 · Pagamento<br/>(variante Migrar)"}
+  E9_S["E9.S · Splash<br/>'pagamento confirmado'"]
+  E9_SB["E9.SB · Splash<br/>'boleto gerado'"]
+  E9_SR["E9.SR · Splash<br/>pagamento recusado"]
+  E9_R["E9.R · Pagamento<br/>(nova tentativa)"]
+  E9_1["E9.1 · Aguardando boleto<br/>dossiê já liberado"]:::espera
+  E9_1P["E9.1P · Status<br/>(pago, via instantâneo)"]:::espera
+  C5["C5 · CNAE secundários"]
+  C1["C1 · Seus dados"]
+  C2["C2 · Vínculo INSS"]
+  C3{"C3 · Sócios?"}
+  C3_1["C3.1 · Sócios<br/>(teto: 3 + você)"]:::branch
+  C3_2["C3.2 · Sócios<br/>(só você)"]:::branch
+  C3_3["C3.3 · CPF de sócio<br/>não confere"]:::atencao
+  C4["C4 · Dados da empresa"]
+  C6(["'C6 · Natureza jurídica'<br/>🗑️ REMOVIDO 31/08"]):::todo
+  C7["C7 · Nome / razão social"]
+  C0_1["C0.1 · Retomar<br/>(porta de CPF)"]:::espera
+  C0_3["C0.3 · Confirmar código<br/>(retomada)"]:::espera
+  C7_2["C7′ · Sugerir mais<br/>3 nomes (2ª rodada)"]
+  C7_2S["C7.S · Splash<br/>'nomes enviados'"]
+  A1["A1 · Revisar + autorizar"]
+  A2["A2 · Início da viabilidade<br/>(a casa assume o processo)"]
+  A3["A3 · Status<br/>(fase Junta)"]
+  A3_GB["A3″ · Status<br/>(guia no boleto,<br/>aguardando compensar)"]
+  M12["M12 · Status<br/>(pipeline concierge)"]:::branch
+  A3_1["A3.1 · Órgão recusa<br/>'precisa de você'"]
+  A3_2["'A3.2 · Certificado digital' 🗑️ REMOVIDO 01/09<br/>(segue só no MEI/migrar)"]:::todo
+  A3_P["A3.P · Pagar a guia<br/>da Junta (DAE)"]
+  A3_SR["A3.SR · Splash<br/>guia recusada"]
+  A3_R["A3.R · Guia<br/>(nova tentativa)"]
+  A3_PS["A3.PS · Splash<br/>guia paga"]
+  A3_PSB["A3.PSB · Splash<br/>boleto da guia"]
+  A3_V["A3‴ · Status<br/>(analisando viabilidade,<br/>2ª rodada de nomes)"]
+  A3_GP["A3′ · Status<br/>(guia paga)"]
+  A4["A4 · Assinatura dos sócios"]:::adormecida
+  A4_1["A4.1 · Código do GOV.BR"]:::adormecida
+  A4G(["'GOV.BR nível bronze→upgrade'<br/>🗑️ REMOVIDO 04/09"]):::todo
+  A3_H["A3.H · Passagem<br/>pro consultor"]
+  A3_H1["A3.H1 · Marcar horário<br/>(1ª assinatura)"]
+  A3_H2["A3.H2 · Status<br/>(1ª marcada)"]
+  A3_HS["A3.H′ · Passagem<br/>(com sócio)"]
+  A3_H1S["A3.H1′ · Marcar horário<br/>(com sócio)"]
+  A3_H2S["A3.H2′ · Status<br/>(marcada, com sócio)"]
+  A3_H3["A3.H3 · Passagem<br/>(2ª assinatura)"]
+  A3_H4["A3.H4 · Marcar horário<br/>(2ª, contador junto)"]
+  A3_H5["A3.H5 · Status<br/>(2ª marcada)"]
+  A3_A1["A3⁗ · Status<br/>(1ª assinatura feita)"]:::adormecida
+  A4_2["A4″ · 2ª assinatura<br/>(gera o CNPJ, contador junto)"]:::adormecida
+  REMOVIDO_N24(["'Empresa ativa'<br/>🗑️ REMOVIDO 30/07"]):::todo
+  M1["M1 · Onde você trabalha<br/>(área + endereço)"]:::branch
+  M3{"M3 · Faturamento<br/>(gate do teto R$81k)"}:::branch
+  M4["M4 · Criar conta"]:::branch
+  M4_1["M4.1 · Confirmar código"]:::branch
+  M4_2["M4.2 · CPF não confere"]:::saida
+  M5["M5 · Seu plano<br/>(R$49/mês)"]:::branch
+  M6["M6 · Pagamento + contrato"]:::branch
+  M6_S["M6.S · Splash 'pagamento confirmado'"]:::branch
+  M6_SB["M6.SB · Splash 'boleto gerado'"]:::branch
+  M6_SR["M6.SR · Splash<br/>pagamento recusado"]:::branch
+  M6_R["M6.R · Pagamento<br/>(nova tentativa)"]:::branch
+  M6_1["M6.1 · Aguardando boleto<br/>cadastro já liberado"]:::espera
+  M6_1P["M6.1P · Status<br/>(pago, via instantâneo)"]:::espera
+  M8["M8 · Seus dados<br/>(o titular)"]:::branch
+  M9["M9 · Sua empresa<br/>(atuação + baixo risco)"]:::branch
+  M10["M10 · Nome da empresa<br/>(gerado por lei)"]:::branch
+  M11["M11 · Revisar e autorizar"]:::branch
+  M2{"M2 · Impedimentos<br/>(no lugar da triagem)"}:::branch
+  M2_1["M2.1 · 🔴 Já tem CNPJ"]:::saida
+  M2_2["M2.2 · 🔴 Servidor federal"]:::saida
+  M7["M7 · Ocupação<br/>(Anexo XI + limite interno)"]:::branch
+  M14["M14 · Certificado<br/>(operar, não abrir)"]:::branch
+  M14_P["M14.P · Pagar o<br/>certificado digital"]:::branch
+  M14_SR["M14.SR · Splash<br/>certificado recusado"]:::branch
+  M14_R["M14.R · Certificado<br/>(nova tentativa)"]:::branch
+  M14_PS["M14.PS · Splash<br/>certificado pago"]:::branch
+  M14_PSB["M14.PSB · Splash<br/>boleto do certificado"]:::branch
+  M14_1["M14‴ · Status<br/>(travado no certificado)"]:::espera
+  M14_1B["M14″ · Status<br/>(boleto do certificado<br/>compensando)"]:::espera
+  M14_1P["M14′ · Status<br/>(pago, aguardando<br/>a videochamada)"]:::espera
+  M14_1L["M14⁗ · Status<br/>(certificado emitido,<br/>app liberado)"]:::espera
+  M13["M13 · Próximos passos<br/>(a "cola")"]:::branch
+  CONF["🛠️ Conferência do dev<br/>(campos por origem)"]:::inline
+  A5_H(["✅ A5.H · Home dia-1<br/>(rota assistida)"]):::feliz
+  A5(["✅ A5 · Home dia-1<br/>(ativação)"]):::adormecida
+
+  E1 --> E2_1
+  E2_1 --> E2_2
+  E2_2 --> E2_3
+  E2_3 --> E3
+  E3 -->|"já sou cliente"| E3_1
+  E3 -->|"quero abrir"| E3_3
+  E3 -->|"já tenho empresa"| E3_3
+  E3 -.->|"voltar de onde parei"| C0_1
+  E3_3 -->|"abrir"| E3_2
+  E3_3 -->|"migrar"| E3_2_M
+  E3_2 -->|"ME, abrir"| E3_4
+  E3_2 -.->|"MEI, abrir (sem gate de BH)"| E3_4
+  E3_2_M -->|"ME, migrar"| E4_2
+  E3_2_M -.->|"MEI, migrar"| E4_2
+  E3_4 -->|"ME · endereço BH + categoria ok"| E5T
+  E3_2 -.->|"MEI · caminho próprio"| M1
+  E3_4 -.->|"CEP fora de BH"| E3_4_1
+  E3_4_1 -.->|"resolvido (fiscal ou fila)"| E5T
+  E4_2 -.-> E4_3
+  E4_2 -.->|"CNPJ inapto/suspenso"| E4_2_1
+  E4_3 -.-> E4_4
+  E4_4 --> E4_5
+  E4_5 --> E9_M
+  E9_M -.-> E9_2
+  E9_2 --> E9_2A
+  E9_2A --> E9_2B
+  E9_2B --> E9_2C
+  E9_2C --> E9_3
+  E9_3 -.-> E9_4
+  E9_4 -.-> A5
+  E5T --> E5F
+  E5T -.->|"sócio não se encaixa"| E5T_1
+  E5F --> E5F_S
+  E5F_S -.-> E6
+  M1 -->|"área com MEI"| M2
+  M1 -.->|"categoria sem MEI · vira ME"| E3_4
+  M2 -->|"sem impedimento"| M3
+  M2 -->|"já tem outra empresa"| M2_1
+  M2 -->|"servidor federal"| M2_2
+  M3 -->|"dentro do teto"| M4
+  M3 -.->|"estourou o teto · vira ME"| E3_4
+  M4 -->|"criar conta"| M4_1
+  M4 -.->|"CPF não confere"| M4_2
+  M4_1 -->|"código confirmado"| M5
+  M5 -->|"seguir"| M6
+  M6 -->|"cartão ou Pix"| M6_S
+  M6 -->|"boleto"| M6_SB
+  M6 -->|"recusado"| M6_SR
+  M6_SR -.-> M6_R
+  M6_R -->|"passou na 2ª"| M6_S
+  M6_S -.-> M6_1P
+  M6_SB -.-> M6_1
+  M6_1 -->|"continuar preenchendo"| M7
+  M6_1P -->|"continuar preenchendo"| M7
+  M7 -->|"ocupação escolhida"| M8
+  M8 --> M9
+  M9 --> M10
+  M10 --> M11
+  M11 -->|"autorizou"| M12
+  M12 -.->|"time conferiu"| M13
+  M13 -.->|"voltou com o CNPJ"| M14
+  M14 -->|"quero resolver agora"| M14_P
+  M14 -->|"deixa pra depois"| M14_1
+  M14_1 -->|"pagar"| M14_P
+  M14_P -->|"cartão ou Pix"| M14_PS
+  M14_P -->|"boleto"| M14_PSB
+  M14_P -->|"recusado"| M14_SR
+  M14_SR -.-> M14_R
+  M14_R -->|"passou na 2ª"| M14_PS
+  M14_PS -.-> M14_1P
+  M14_PSB -.-> M14_1B
+  M14_1B -.->|"boleto compensou"| M14_1P
+  M14_1P -.->|"videochamada validada"| M14_1L
+  M14_1L -->|"app liberado"| A5
+  E6 --> E6_1
+  E6 -.->|"CPF não confere"| E6_2
+  E6_2 -.->|"corrigiu"| E6
+  E6_1 --> E7
+  E6_1 -.->|"escolheu endereço fiscal no E3.4"| E7_1
+  E7 --> E9
+  E7_1 -.-> E9
+  E9 -->|"ME · cartão/Pix"| E9_S
+  E9 -.->|"recusado"| E9_SR
+  E9_SR -.-> E9_R
+  E9_R -.->|"passou"| E9_S
+  E9_S -.-> E9_1P
+  E9_1P -->|"Continuar preenchendo"| C0_0
+  E9 -->|"ME · boleto"| E9_SB
+  E9_SB -.-> E9_1
+  E9_1 -->|"Continuar (após compensar)"| C0_0
+  C0_0 -->|"descreveu o que faz"| C0
+  C0 -->|"escolheu a atividade"| C5
+  C5 --> C5_S
+  C5_S --> C1
+  C1 --> C2
+  C2 --> C3
+  C3 -.->|"somou até o teto"| C3_1
+  C3 -.->|"removeu todos"| C3_2
+  C3_1 -.-> C4
+  C3_2 -.-> C4
+  C3 -.->|"CPF de sócio não confere"| C3_3
+  C3_3 -.->|"corrigiu"| C3
+  C3 -->|"endereço próprio"| C4
+  C3 -.->|"endereço fiscal (pula C4)"| C7
+  C4 --> C7
+  C7 --> A1
+  A1 -.->|"ME"| A2
+  A2 -->|"inicia viabilidade"| A3
+  A1 -.-> CONF
+  A3 -.->|"nome recusado"| A3_1
+  A3_1 -.->|"sugerir mais 3"| C7_2
+  C7_2 -.->|"envia os novos nomes"| C7_2S
+  C7_2S -.-> A3_V
+  A3_V -.->|"nome aprovado"| A3
+  A3_V -.->|"recusou de novo"| A3_1
+  A3_1 -.-> A3
+  A3 -.->|"ME · pagar guia"| A3_P
+  A3_P -.->|"recusado"| A3_SR
+  A3_SR -.-> A3_R
+  A3_R -.->|"passou"| A3_PS
+  A3_P -.->|"cartão/Pix"| A3_PS
+  A3_P -.->|"boleto"| A3_PSB
+  A3_PS -.->|"guia paga"| A3_GP
+  A3_PSB -.->|"aguardando compensar"| A3_GB
+  A3_GB -.->|"banco confirmou"| A3_GP
+  A3_GP -.->|"assinatura liberada"| A4
+  A3_GP -->|"rota assistida (lançamento)"| A3_H
+  A3_H -->|"escolher horário"| A3_H1
+  A3_H1 -->|"horário confirmado"| A3_H2
+  A3_GP -.->|"com sócio"| A3_HS
+  A3_HS -->|"escolher horário"| A3_H1S
+  A3_H1S -->|"horário confirmado (avisa o sócio)"| A3_H2S
+  A3_H2S -.->|"remarcar"| A3_H1S
+  A3_H2S -.->|"1ª feita pelos dois sócios"| A3_H3
+  A3_H2 -.->|"remarcar"| A3_H1
+  A3_H2 -.->|"1ª feita, com o consultor"| A3_H3
+  A3_H3 -->|"marcar a 2ª"| A3_H4
+  A3_H4 -->|"horário confirmado"| A3_H5
+  A3_H5 -.->|"remarcar"| A3_H4
+  A3_H5 -.->|"2ª feita: CNPJ gerado (contador junto)"| A5_H
+  A3 -.->|"ME · DAE paga"| A4
+  A4 -->|"assina no GOV.BR"| A4_1
+  A4_1 -.->|"contrato social assinado"| A3_A1
+  A3_A1 -->|"última assinatura"| A4_2
+  A4_2 -.->|"CNPJ gerado"| A5
+  C0_1 -.->|"CPF confirmado"| C0_3
+  C0_3 -.->|"código confirmado"| E9_1P
+
+  classDef saida fill:#fde8e4,stroke:#e0603f,color:#7a2d18;
+  classDef feliz fill:#e6f4ea,stroke:#2f9e5a,color:#1c5e37;
+  classDef espera fill:#fff4e0,stroke:#e0a03f,color:#7a5518;
+  classDef branch fill:#eef1ff,stroke:#5b6cf0,color:#2a338a;
+  classDef inline fill:#f1f1f3,stroke:#9aa0a6,color:#555;
+  classDef todo fill:#f7f7f8,stroke:#bcbcc2,stroke-dasharray:5 4,color:#888;
+  classDef adormecida fill:#ececee,stroke:#a8a8b0,color:#6b6b75;
+```

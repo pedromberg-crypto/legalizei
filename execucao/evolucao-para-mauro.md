@@ -835,5 +835,30 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 - Falta decidir com você: quando tiramos o certificado digital do plano MEI, a fidelidade de 12 meses ficou sem contrapartida escrita. Ou a gente declara outra, ou reduz o prazo, ou oferece o certificado como opcional com desconto pra quem aceita a fidelidade
 ```
 
+## Semana 07/09/2026 (parte 2) — o MEI ficou completo, e uma decisão de cobrança precisa de você
+
+> Continuação do mesmo dia. Com o caminho do MEI separado, a gente foi tela por tela igualando o que faltava. Duas coisas pedem sua decisão, e a segunda mexe em contrato.
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | **O MEI não tinha o que fazer quando um pagamento é recusado** | O ME já tinha: cartão negado → tela explicando → nova tentativa sem refazer nada. No MEI isso não existia, e também não existia tela nenhuma depois de pagar. Agora tem tudo, igual | 🟢 |
+| 2 | **O boleto voltou a funcionar no MEI** | Ele tinha sido desligado por engano numa mudança anterior: as telas de "boleto gerado" e "aguardando compensar" existiam, mas nenhum caminho chegava nelas | 🟢 |
+| 3 | 🔴 **O certificado digital virou cobrança nossa, e virou obrigatório** | **Decisão do Pedro, e ela pede a sua.** Duas mudanças: (1) sem certificado o app não libera o acesso completo (a pessoa fica numa tela de espera até resolver); (2) o certificado deixa de ser "pago direto na certificadora" e passa a ser **cobrado dentro do app** — mesmo valor, repassado sem acréscimo, mas o dinheiro passa por nós. Foi assim que o ME já cobra a taxa da Junta | 🔴 **precisa de cláusula** |
+| 4 | **A escolha da atividade do MEI ficou igual à do ME** | A pessoa descreve o que faz com as palavras dela e o app mostra as ocupações mais parecidas. A diferença: no MEI a lista é **fechada por lei** (só existem as ocupações do Anexo XI), e o app mostra o que cada uma permite e o que não permite | 🟢 |
+| 5 | **Na primeira tela, a lista de categorias só mostra o que o MEI atende** | Antes ela listava 14 categorias com 3 marcadas "(só como ME)". Agora são 11, e quem não se encontra clica em "Não encontrei minha categoria" e é levado pro ME | 🟢 |
+| 6 | **Auditoria automática do caminho MEI inteiro** | Uma varredura nas 33 telas achou 5 problemas antes de qualquer cliente ver: entre eles, uma tela que dizia "a gente te avisa quando terminar" logo acima de um botão mandando a pessoa continuar preenchendo, e outra que cobrava de novo quem já tinha pago | 🟢 |
+
+### 📱 WhatsApp (07/09, parte 2)
+```
+*Update Legalizai* 📣 (2/2)
+- O caminho do MEI ficou completo: pagamento recusado, nova tentativa, boleto e telas de acompanhamento. Tudo o que o ME já tinha e faltava lá
+- O boleto do MEI estava desligado por engano desde uma mudança anterior. As telas existiam, mas nenhum caminho chegava nelas
+- A escolha da atividade agora é igual à do ME: a pessoa descreve com as palavras dela. A diferença é que no MEI a lista é fechada por lei, e o app mostra o que cada ocupação permite e o que não permite
+- Uma varredura automática nas 33 telas do MEI achou 5 problemas antes de qualquer cliente ver
+- *Preciso de você em 2 coisas:*
+- 1) O certificado digital do MEI passou a ser cobrado DENTRO do app (mesmo valor da certificadora, repassado sem acréscimo) e virou obrigatório pra liberar o app completo. Isso pede cláusula no contrato: a gente estaria repassando cobrança de terceiro
+- 2) Continua de pé a fidelidade de 12 meses sem contrapartida escrita, do update anterior
+```
+
 ## Links
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]] · [[estado-atual]] · [[indice-autoridade]]

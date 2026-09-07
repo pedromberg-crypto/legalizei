@@ -96,17 +96,14 @@ import {
  * dos dois ramos por definição, porque existe pra mostrar o produto inteiro.
  */
 import { ImpedimentosView } from "@/components/mei/impedimentos";
-import { OcupacaoMeiView } from "@/components/mei/ocupacao";
+import { AtividadeMeiView } from "@/components/mei/atividade";
+import type { Ocupacao } from "@/lib/mei";
+import { AtividadeSecundariasMeiView } from "@/components/mei/atividade-secundarias";
 import {
   ProximosPassosMeiView,
   type CampoCola,
 } from "@/components/mei/proximos-passos";
 import { CertificadoMeiView } from "@/components/mei/certificado";
-import {
-  SaidaMeiView,
-  SAIDA_JA_TEM_CNPJ,
-  SAIDA_SERVIDOR,
-} from "@/components/mei/saidas";
 import { EnderecoMeiView } from "@/components/mei/endereco";
 import { FaturamentoMeiView } from "@/components/mei/faturamento";
 import {
@@ -115,6 +112,7 @@ import {
   type DadosContaMei,
 } from "@/components/mei/conta";
 import { PlanoMeiView } from "@/components/mei/plano";
+import { AguardandoMeiView } from "@/components/mei/aguardando";
 import {
   PagamentoMeiView,
   PAGAMENTO_MEI_VAZIO,
@@ -319,8 +317,8 @@ type Etapa =
      Fonte dos fatos: `pesquisa/abertura-mei/abertura-mei-processo.md`. */
   | "mei-endereco"
   | "mei-impedimentos"
-  | "mei-saida-cnpj"
-  | "mei-saida-servidor"
+  | "mei-bloqueio-cnpj"
+  | "mei-bloqueio-servidor"
   | "mei-faturamento"
   | "mei-conta"
   | "mei-conta-codigo"
@@ -329,7 +327,14 @@ type Etapa =
   | "mei-pagamento"
   | "mei-splash-pagamento"
   | "mei-splash-boleto"
-  | "mei-ocupacao"
+  | "mei-splash-recusado"
+  | "mei-pagamento-retry"
+  | "mei-aguardando"
+  | "mei-aguardando-pago"
+  | "mei-atividade-vazia"
+  | "mei-atividade"
+  | "mei-atividade-secundarias"
+  | "mei-splash-atividades"
   | "mei-titular"
   | "mei-empresa"
   | "mei-nome"
@@ -337,6 +342,15 @@ type Etapa =
   | "mei-status"
   | "mei-proximos-passos"
   | "mei-certificado"
+  | "mei-certificado-pagar"
+  | "mei-certificado-retry"
+  | "mei-certificado-splash-recusado"
+  | "mei-certificado-splash-pago"
+  | "mei-certificado-splash-boleto"
+  | "mei-status-cert-pendente"
+  | "mei-status-cert-boleto"
+  | "mei-status-cert-pronto"
+  | "mei-status-cert-liberado"
   | "splash-atendido"
   | "conta"
   | "conta-codigo"
@@ -759,8 +773,8 @@ type Momento =
   /* O ramo MEI, com caminho próprio desde 07/09 (ver o `type Etapa` acima). */
   | "mei-endereco"
   | "mei-impedimentos"
-  | "mei-saida-cnpj"
-  | "mei-saida-servidor"
+  | "mei-bloqueio-cnpj"
+  | "mei-bloqueio-servidor"
   | "mei-faturamento"
   | "mei-conta"
   | "mei-conta-codigo"
@@ -772,7 +786,14 @@ type Momento =
   | "mei-pagamento"
   | "mei-splash-pagamento"
   | "mei-splash-boleto"
-  | "mei-ocupacao"
+  | "mei-splash-recusado"
+  | "mei-pagamento-retry"
+  | "mei-aguardando"
+  | "mei-aguardando-pago"
+  | "mei-atividade-vazia"
+  | "mei-atividade"
+  | "mei-atividade-secundarias"
+  | "mei-splash-atividades"
   | "mei-titular"
   | "mei-empresa"
   | "mei-nome"
@@ -780,6 +801,15 @@ type Momento =
   | "mei-status"
   | "mei-proximos-passos"
   | "mei-certificado"
+  | "mei-certificado-pagar"
+  | "mei-certificado-retry"
+  | "mei-certificado-splash-recusado"
+  | "mei-certificado-splash-pago"
+  | "mei-certificado-splash-boleto"
+  | "mei-status-cert-pendente"
+  | "mei-status-cert-boleto"
+  | "mei-status-cert-pronto"
+  | "mei-status-cert-liberado"
   | "splash-atendido"
   | "conta"
   | "conta-codigo"
@@ -1270,8 +1300,8 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
      herdar defeito sem ninguém mexer nele. */
   "mei-endereco": "/mei/endereco",
   "mei-impedimentos": "/mei/impedimentos",
-  "mei-saida-cnpj": "/mei/saida/ja-tem-cnpj",
-  "mei-saida-servidor": "/mei/saida/servidor",
+  "mei-bloqueio-cnpj": "/mei/impedimentos?bloqueio=ja-tem-cnpj",
+  "mei-bloqueio-servidor": "/mei/impedimentos?bloqueio=servidor",
   "mei-faturamento": "/mei/faturamento",
   "mei-conta": "/mei/conta",
   "mei-conta-codigo": "/mei/conta?etapa=codigo",
@@ -1280,7 +1310,14 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   "mei-pagamento": "/mei/pagamento",
   "mei-splash-pagamento": "/mei/splash-pagamento",
   "mei-splash-boleto": "/mei/splash-boleto",
-  "mei-ocupacao": "/mei/ocupacao",
+  "mei-splash-recusado": "/mei/splash-recusado",
+  "mei-pagamento-retry": "/mei/pagamento?retry=1",
+  "mei-aguardando": "/mei/aguardando",
+  "mei-aguardando-pago": "/mei/aguardando?pago=1",
+  "mei-atividade-vazia": "/mei/atividade?vazia=1",
+  "mei-atividade": "/mei/atividade",
+  "mei-atividade-secundarias": "/mei/atividade-secundarias",
+  "mei-splash-atividades": "/mei/splash-atividades",
   "mei-titular": "/mei/titular",
   "mei-empresa": "/mei/empresa",
   "mei-nome": "/mei/nome",
@@ -1288,6 +1325,15 @@ const ROTA_POR_MOMENTO: Partial<Record<Momento, string>> = {
   "mei-status": "/mei/status",
   "mei-proximos-passos": "/mei/proximos-passos",
   "mei-certificado": "/mei/certificado",
+  "mei-certificado-pagar": "/mei/certificado/pagar",
+  "mei-certificado-retry": "/mei/certificado/pagar?retry=1",
+  "mei-certificado-splash-recusado": "/mei/splash-recusado",
+  "mei-certificado-splash-pago": "/mei/splash-pagamento",
+  "mei-certificado-splash-boleto": "/mei/splash-boleto",
+  "mei-status-cert-pendente": "/mei/status?fase=certificado&certificado=pendente",
+  "mei-status-cert-boleto": "/mei/status?fase=certificado&certificado=boleto",
+  "mei-status-cert-pronto": "/mei/status?fase=certificado&certificado=pronto",
+  "mei-status-cert-liberado": "/mei/status?fase=certificado&certificado=liberado",
   "splash-atendido": "/splash-atendido",
   conta: "/conta",
   // 🔄 04/09 — aponta pro deep-link agora que o código é nó do mapa (E6.1):
@@ -1569,8 +1615,8 @@ const MOMENTO_POR_NO: Record<string, Etapa | null> = {
   // render próprios. Ordem = a da espinha (`ESPINHA_MEI` em `lib/mei-flow.ts`).
   M1: "mei-endereco",
   M2: "mei-impedimentos",
-  M2_1: "mei-saida-cnpj",
-  M2_2: "mei-saida-servidor",
+  M2_1: "mei-bloqueio-cnpj",
+  M2_2: "mei-bloqueio-servidor",
   M3: "mei-faturamento",
   M4: "mei-conta",
   M4_1: "mei-conta-codigo",
@@ -1579,7 +1625,14 @@ const MOMENTO_POR_NO: Record<string, Etapa | null> = {
   M6: "mei-pagamento",
   M6_S: "mei-splash-pagamento",
   M6_SB: "mei-splash-boleto",
-  M7: "mei-ocupacao",
+  M6_SR: "mei-splash-recusado",
+  M6_R: "mei-pagamento-retry",
+  M6_1: "mei-aguardando",
+  M6_1P: "mei-aguardando-pago",
+  M7_0: "mei-atividade-vazia",
+  M7: "mei-atividade",
+  M7_S: "mei-atividade-secundarias",
+  M7_1: "mei-splash-atividades",
   M8: "mei-titular",
   M9: "mei-empresa",
   M10: "mei-nome",
@@ -1587,6 +1640,15 @@ const MOMENTO_POR_NO: Record<string, Etapa | null> = {
   M12: "mei-status",
   M13: "mei-proximos-passos",
   M14: "mei-certificado",
+  M14_P: "mei-certificado-pagar",
+  M14_R: "mei-certificado-retry",
+  M14_SR: "mei-certificado-splash-recusado",
+  M14_PS: "mei-certificado-splash-pago",
+  M14_PSB: "mei-certificado-splash-boleto",
+  M14_1: "mei-status-cert-pendente",
+  M14_1B: "mei-status-cert-boleto",
+  M14_1P: "mei-status-cert-pronto",
+  M14_1L: "mei-status-cert-liberado",
   CONF: "conferencia",
   A5: "ativacao",
 };
@@ -1601,12 +1663,34 @@ const MOMENTO_POR_NO: Record<string, Etapa | null> = {
  *   (andamento)"), que é o nome certo da tela.
  * · E9_SR — o splash de recusa tem nome próprio via `NOME_MOCKUP`, e a rota
  *   crua `/splash-recusado` não existe em nenhuma das duas fontes de nome.
+ * · M6_SR — o mesmo caso, no ramo MEI: o nó carrega o `?next=` na rota (pra a
+ *   aresta do mapa mostrar pra onde a recusa leva) e a demo aponta pra rota
+ *   crua `/mei/splash-recusado`, que é a que existe no app.
  *
  * ⚠️ Não use esta lista pra calar divergência de verdade: o A3.PS ficou meses
  * dizendo "E9.S · Splash 'pagamento confirmado'" numa tela da guia da Junta, e
  * a saída certa foi apontar a rota completa, não abrir exceção.
  */
-const TITULO_HERDADO_OK = ["E2_1", "E2_2", "E2_3", "A3", "E9_SR"] as const;
+const TITULO_HERDADO_OK = [
+  "E2_1",
+  "E2_2",
+  "E2_3",
+  "A3",
+  "E9_SR",
+  "M6_SR",
+  /* 🆕 07/09 — o 2º pagamento do MEI reusa os 3 splashes do 1º com `?next`
+     diferente (é o que o ME faz entre E9.S/E9.SB e A3.PS/A3.PSB), e os 4
+     estados do status moram na mesma rota `/mei/status`. Em todos, o nó
+     carrega a query e a demo aponta pra rota crua. */
+  "M14_SR",
+  "M14_PS",
+  "M14_PSB",
+  "M14_R",
+  "M14_1",
+  "M14_1B",
+  "M14_1P",
+  "M14_1L",
+] as const;
 
 // A lista aponta pra nós, e nó some/renomeia. Sem isto, uma exceção podre
 // calaria uma divergência de verdade em silêncio — o oposto do que ela serve.
@@ -1945,6 +2029,110 @@ const DESCRICOES: Record<
     porque:
       "Deixar a pessoa achando que parou seria criar uma espera que não existe. É o mesmo cuidado que fez a tela do ME dizer o que de fato mudou, em vez de repetir a boa notícia.",
   },
+  "mei-splash-recusado": {
+    dono: "nossa",
+    faz: "Diz em tela cheia que o pagamento não passou, por poucos segundos, e leva pra nova tentativa.",
+    interfere:
+      "Era o buraco da família de splashes do MEI: ela só sabia dizer que deu certo. Sem ela, uma recusa de cartão deixava a pessoa na mesma tela sem explicação nenhuma.",
+    porque:
+      "A pele é ESCURA com gradiente coral, não a do sucesso: recusa com a mesma cara da confirmação faz a pessoa ler o layout antes da palavra e comemorar errado. E a copy não culpa ninguém, porque o motivo real da recusa não chega até aqui legível.",
+  },
+  "mei-pagamento-retry": {
+    dono: "usuario",
+    faz: "A mesma tela de pagamento, com o aviso da recusa no topo e o que já foi digitado intacto.",
+    interfere:
+      "Estava meio-construída e inalcançável: o aviso já existia no componente, mas nada no app apontava pra ele e não havia nó no mapa. Ninguém conseguia revisar a tela.",
+    porque:
+      "Não zerar o formulário é a decisão: quem teve o cartão recusado já está frustrado, refazer tudo puniria duas vezes. O param virou `?retry=1`, o mesmo nome do ME, pra ninguém procurar a tela pelo nome do outro caminho e concluir que ela não existe.",
+  },
+  "mei-aguardando": {
+    dono: "usuario",
+    faz: "Status logo depois do pagamento por boleto: mostra que ele está compensando e lista o cadastro que falta.",
+    interfere:
+      "Tela nova. Antes o MEI saía do splash direto pra ocupação, sem nada dizendo o que acabou de acontecer nem quanto falta. Não dá pra reusar o M12: ele fala de conferência humana em curso, e aqui faltam 5 telas de cadastro.",
+    porque:
+      "O boleto NÃO trava o cadastro, e a tela diz isso. No ME a espera atrasa o registro na Junta; aqui não atrasa nada, porque o registro depende do titular clicar no Portal. As 2 ações do hero (ver o boleto, adiantar por Pix) existem pra a espera ter alavanca, não só aviso.",
+  },
+  "mei-aguardando-pago": {
+    dono: "usuario",
+    faz: "A mesma tela, para quem pagou por cartão ou Pix: check verde de plano ativo e o mesmo CTA de continuar.",
+    interfere:
+      "Muda o que a tela mostra e o que ela deixa fazer, então é nó e não nota. Mesma doutrina que separa E9.1 de E9.1P no ME.",
+    porque:
+      "Só o topo muda. Fazer duas telas diferentes pra uma diferença de estado seria duplicar copy que envelhece separada, que é a raiz dos 4 defeitos que o MEI herdou entre 30/08 e 05/09.",
+  },
+  "mei-certificado-pagar": {
+    dono: "usuario",
+    faz: "Cobra o certificado digital: mesma tela de pagamento da M6, no modo certificado.",
+    interfere:
+      "É o SEGUNDO pagamento do ramo, o equivalente exato da taxa da Junta no ME. Decisão de 07/09: o certificado passa a ser cobrado dentro do app, não mais pago direto na certificadora.",
+    porque:
+      "Reusar a tela do plano não é economia de código, é coerência: método, dados de cobrança e idempotência precisam ser os mesmos, senão viram dois caminhos de pagamento com dois conjuntos de bug. O contrato de serviço não reaparece — ele foi aceito na M6, e não se aceita duas vezes.",
+  },
+  "mei-certificado-retry": {
+    dono: "usuario",
+    faz: "A mesma cobrança do certificado, com o aviso da recusa no topo.",
+    interfere:
+      "Fecha a simetria: o 1º pagamento ganhou recusa e retentativa, e o 2º precisava dos dois também.",
+    porque:
+      "Não zera o que foi digitado, mesma razão da M6.R: quem teve o cartão recusado já está frustrado. A autorização de emissão continua obrigatória, porque ela é o ato, não uma formalidade da primeira tentativa.",
+  },
+  "mei-certificado-splash-recusado": {
+    dono: "nossa",
+    faz: "Diz que a cobrança do certificado não passou e leva pra nova tentativa.",
+    interfere:
+      "Mesma peça da M6.SR com outro destino, igual ao ME reusando o splash entre o E9 e a guia da Junta.",
+    porque:
+      "Pele escura com coral, nunca a do sucesso. Uma recusa com a cara da confirmação faz a pessoa ler o layout antes da palavra.",
+  },
+  "mei-certificado-splash-pago": {
+    dono: "nossa",
+    faz: "Confirma o pagamento do certificado e leva pro status, com a videochamada virando a vez.",
+    interfere:
+      "O certificado só é EMITIDO depois da videochamada de validação, então o splash não pode dizer que está pronto.",
+    porque:
+      "A copy fala do próximo passo, não da conquista: 'agora é só a videochamada'. Confirmar demais aqui criaria a expectativa de que o app já liberou, e ele não liberou.",
+  },
+  "mei-certificado-splash-boleto": {
+    dono: "nossa",
+    faz: "Avisa que o boleto do certificado foi gerado e que a emissão espera ele compensar.",
+    interfere:
+      "É o único ponto do ramo em que o boleto de fato ATRASA alguma coisa: a certificadora não emite antes de receber.",
+    porque:
+      "Oposto exato da M6.SB, e por isso a copy não pôde ser copiada: lá o boleto não trava nada, aqui trava. Repetir 'pode seguir tranquilo' seria falso.",
+  },
+  "mei-status-cert-pendente": {
+    dono: "usuario",
+    faz: "O status onde a jornada PARA: certificado não pago, app no modo limitado.",
+    interfere:
+      "Decisão nova do Pedro (07/09): sem certificado a gente não libera o acesso total ao app. Revoga o 'não é gate, dá pra seguir sem' que a M14 dizia até hoje.",
+    porque:
+      "A copy separa duas coisas que confundidas viram mentira: o CNPJ está ATIVO e não depende disso; o que espera é o acesso completo ao app. E o CTA é a saída (pagar), não um aviso de espera.",
+  },
+  "mei-status-cert-boleto": {
+    dono: "nossa",
+    faz: "Pagou por boleto: a etapa segue girando e o CTA fica visível e travado.",
+    interfere:
+      "A emissão não começa antes da compensação, então o estado é de espera real, não de cortesia.",
+    porque:
+      "CTA visível e travado, não escondido: regra de 31/08 do ME. A pessoa precisa VER que existe um próximo passo, só não pode agir ainda.",
+  },
+  "mei-status-cert-pronto": {
+    dono: "nossa",
+    faz: "Pagamento confirmado, a videochamada de validação vira a vez.",
+    interfere:
+      "É a etapa que mais gera dúvida do ramo: a pessoa pagou e o app ainda não liberou.",
+    porque:
+      "A tela diz que a videochamada é exigência da certificadora (ICP-Brasil), não nossa. Sem essa frase a espera parece burocracia que a Legalizai inventou.",
+  },
+  "mei-status-cert-liberado": {
+    dono: "usuario",
+    faz: "Certificado emitido, app inteiro liberado, e a casa finalmente vira o destino.",
+    interfere:
+      "É o único estado da fase em que a jornada volta a andar. Equivalente do A3′ do ME (guia paga).",
+    porque:
+      "Fechar o gate sem construir a saída dele deixaria o flow sem fim na demo, e o Pedro revisa por aqui. Estado que libera é estado que precisa ser revisável.",
+  },
   "mei-titular": {
     dono: "usuario",
     faz: "Mostra travados o nome, CPF e nascimento que já vieram, e pede os 4 que faltam: RG, órgão emissor, UF e nome da mãe.",
@@ -1993,13 +2181,37 @@ const DESCRICOES: Record<
     porque:
       "🆕 28/08 — fica ANTES do pagamento pelo mesmo motivo da triagem do ME: a gente não cobra de quem já sabe que não pode ser atendido. E aqui isso pesa mais, porque o modelo do MEI usa hora de atendente — descobrir o impedimento depois é reembolso + trabalho humano gasto à toa.",
   },
-  "mei-ocupacao": {
+  "mei-atividade-vazia": {
     dono: "usuario",
-    faz: "Escolhe a ocupação principal numa lista fechada (Anexo XI da Res. CGSN 140/2018) e, se quiser, até 15 secundárias. Não existe campo de texto livre.",
+    faz: "A chegada do bloco atividade: categoria e campo de descrição, sem resultados ainda.",
     interfere:
-      "É a C0 do ramo MEI, mas NÃO é o C0 adaptado: o Portal do Empreendedor não aceita CNAE livre. E a tela avisa do LIMITE INTERNO (Solução de Consulta Cosit nº 27/2021) — a ocupação é mais estrita que o CNAE que ela mapeia.",
+      "Mesmo estado 'pelado' que a C0.0 do ME ganhou em 02/09. Descrever NÃO é obrigatório: quem apertar sem escrever recebe as ocupações da categoria dele.",
     porque:
-      "🎯 É onde mora parte do que a gente vende. Quem escolhe 'Reparador(a) de bicicleta' não pode consertar moto, mesmo o CNAE parecendo permitir — e descobriria isso numa fiscalização, não no cadastro. É exatamente o erro que só contador pega.",
+      "Travar num campo de texto livre alguém que já pagou é cobrar dele o trabalho que a gente vende. E aqui tem uma frase que o ME não precisa: a lista do MEI é fechada por lei, e sem dizer isso a pessoa procura a atividade dela com as palavras do dia a dia e conclui que a gente não atende.",
+  },
+  "mei-atividade": {
+    dono: "usuario",
+    faz: "Escolha da atividade principal: slot tracejado no topo, cartões de ocupação embaixo, sheet com o escopo.",
+    interfere:
+      "É o sistema da C0 do ME (pedido do Pedro), com o motor trocado: em vez de a IA adivinhar entre 1332 CNAEs, a busca ORDENA as ocupações da categoria — o universo do MEI é uma lista fechada de 66 (Anexo XI, Res. CGSN 140/2018).",
+    porque:
+      "A busca ordena e não filtra: quem descreveu com outra palavra continuaria vendo a ocupação certa, só mais embaixo. E não há etiqueta de anexo nos cartões porque o MEI paga DAS fixo — pôr uma seria inventar variável que o regime não tem.",
+  },
+  "mei-atividade-secundarias": {
+    dono: "usuario",
+    faz: "Até 15 secundárias, com a principal travada no topo e busca que atravessa as categorias.",
+    interfere:
+      "O limite de 15 aqui é do PORTAL (etapa Qualificação do Negócio), não régua nossa como no ME. E não existe 'muda seu enquadramento': o DAS do MEI é fixo, igual pra toda ocupação.",
+    porque:
+      "A busca atravessa categorias porque quem faz duas coisas de ramos diferentes precisa achar a segunda, e ela não mora na categoria da principal. O que pode mudar de verdade é outra coisa: comércio, indústria e transporte entre cidades geram Inscrição Estadual automática no SIARE, e a tela avisa isso.",
+  },
+  "mei-splash-atividades": {
+    dono: "nossa",
+    faz: "Fecha o assunto atividade (principal + secundárias) antes de virar a página pros dados pessoais.",
+    interfere:
+      "Espelha a C5.1 do ME: não confirma UMA escolha, fecha o bloco inteiro.",
+    porque:
+      "A copy é própria: a do ME fala em CNAE, e aqui o que foi escolhido é OCUPAÇÃO. Dizer 'achamos seu CNAE' no MEI ensinaria a palavra errada — o Portal nunca vai mostrar esse termo pra ela.",
   },
   "mei-certificado": {
     dono: "usuario",
@@ -2017,7 +2229,7 @@ const DESCRICOES: Record<
     porque:
       "🆕 28/08 — ✍️ REGRA DE COPY DURA deste ramo: **nunca dizer 'a gente abre pra você'**. O que a gente promete é conferir, escolher a ocupação certa e deixar pronto — que já é o trabalho difícil. Promessa que não dá pra cumprir vira reembolso.",
   },
-  "mei-saida-cnpj": {
+  "mei-bloqueio-cnpj": {
     dono: null,
     faz: "Explica que quem já é sócio, titular ou administrador de outra empresa ativa não consegue abrir MEI — inclusive empresa parada que nunca foi baixada.",
     interfere:
@@ -2025,7 +2237,7 @@ const DESCRICOES: Record<
     porque:
       "Por isso a saída NÃO é waitlist: oferece os 2 caminhos reais (dar baixa na antiga ou abrir como ME), que a Legalizai faz hoje. Porta fechada vira encaminhamento.",
   },
-  "mei-saida-servidor": {
+  "mei-bloqueio-servidor": {
     dono: null,
     faz: "Explica a vedação do art. 117 da Lei 8.112/90, que vale pra servidor público FEDERAL na ativa.",
     interfere:
@@ -2669,8 +2881,14 @@ export default function ApresentacaoPage() {
     Record<string, boolean | null>
   >(Object.fromEntries(IMPEDIMENTOS.map((i) => [i.id, null])));
   const [cienteBeneficioDemo, setCienteBeneficioDemo] = useState(false);
-  const [ocupacaoDemo, setOcupacaoDemo] = useState<string | null>(null);
-  const [secundariasDemo, setSecundariasDemo] = useState<string[]>([]);
+  /* 🔄 07/09 — a ocupação virou o bloco ATIVIDADE (M7.0→M7.1). O estado
+     deixou de ser `string` (o nome solto) e passou a ser a `Ocupacao` inteira:
+     a tela precisa do CNAE pra abrir o escopo no sheet, e guardar só o nome
+     obrigaria a procurar de volta na lista a cada render. */
+  const [ocupacaoDemo, setOcupacaoDemo] = useState<Ocupacao | null>(null);
+  const [secundariasDemo, setSecundariasDemo] = useState<Ocupacao[]>([]);
+  const [descricaoAtivDemo, setDescricaoAtivDemo] = useState("");
+  const [categoriaAtivDemo, setCategoriaAtivDemo] = useState<string | null>(null);
   const [govBrOkDemo, setGovBrOkDemo] = useState(false);
   /* ─── 🆕 07/09 · ESTADO DO RAMO MEI ──────────────────────────────────────
      A demo do MEI passou de 3 telas emprestadas pra 20 telas próprias, então
@@ -2734,10 +2952,12 @@ export default function ApresentacaoPage() {
         {
           rotulo: "Ocupação principal",
           valor:
-            ocupacaoDemo ?? "Técnico(a) de manutenção de computador (9511-8/00)",
+            ocupacaoDemo
+              ? `${ocupacaoDemo.nome} (${ocupacaoDemo.cnae})`
+              : "Técnico(a) de manutenção de computador (9511-8/00)",
         },
       ],
-      onAjustar: () => setEtapa("mei-ocupacao"),
+      onAjustar: () => setEtapa("mei-atividade"),
     },
     {
       titulo: "A empresa",
@@ -3102,6 +3322,20 @@ export default function ApresentacaoPage() {
         coorte: "primeira",
         codigo: "48291374",
       });
+    } else if (etapa.startsWith("mei-conta")) {
+      /* 🆕 07/09 — o ramo MEI não tinha preenchimento: as 3 etapas da M4
+         rodavam a demo com `CONTA_MEI_VAZIA`, então a M4.1 mostrava "seu
+         e-mail" e "seu telefone" genéricos onde o E6.1 mostra o dado real em
+         coral. Mesma pessoa do resto da demo, pra o dado ser coeso até o fim. */
+      setContaMeiDemo({
+        nome: "Ana Beatriz Ramos",
+        cpf: "123.456.789-00",
+        nascimento: "14/03/1988",
+        telefone: "(31) 98888-7766",
+        email: "ana.beatriz@email.com",
+        senha: "legalizai2026",
+      });
+      setCodigoMeiDemo("48291374");
     }
     if (!aceite) setAceite(true);
     if (!cpfPag) setCpfPag("123.456.789-00");
@@ -3320,12 +3554,6 @@ export default function ApresentacaoPage() {
     etapa === "saida-exterior" ||
     etapa === "saida-socios" ||
     etapa === "saida-socio-pj";
-  // 🆕 28/08 — as 2 saídas de impedimento do ramo MEI. As 3 telas exclusivas
-  // (m-impedimento, m-ocupacao, m-proximos-passos) são checadas inline no
-  // render: cada uma tem props próprias e não compartilha shell como estas.
-  const naSaidaMei =
-    etapa === "mei-saida-cnpj" || etapa === "mei-saida-servidor";
-
   const naTravessia =
     // 🆕 27/08 — E3.1/E3.3 trazem o próprio header+main (TelaHeader), igual às
     // telas do dinheiro. Por isso entram aqui, não no bloco genérico.
@@ -4628,24 +4856,6 @@ export default function ApresentacaoPage() {
                           />
                         </main>
                       </>
-                    ) : naSaidaMei ? (
-                      /* 🆕 28/08 — as 2 saídas de impedimento do ramo MEI.
-                         Bloqueio do GOVERNO, não do produto: por isso elas
-                         encaminham (baixar a antiga / abrir como ME / conferir
-                         o estatuto) em vez de virarem lista de espera.
-                         🔄 07/09 — saíram do template compartilhado
-                         (`SaidaView` + `lib/dados-saida`) pro ramo. A view do
-                         MEI traz o próprio header e o próprio rodapé, com a
-                         alternativa concreta ("ver como seria em ME") como
-                         ação de verdade, não como frase. */
-                      <SaidaMeiView
-                        dados={
-                          etapa === "mei-saida-cnpj"
-                            ? SAIDA_JA_TEM_CNPJ
-                            : SAIDA_SERVIDOR
-                        }
-                        onVerMe={() => setEtapa("endereco")}
-                      />
                     ) : /* ═══════════ O RAMO MEI, NA ORDEM DA ESPINHA ═══════
                            🔄 07/09 — a demo do MEI tinha 3 telas e emprestava
                            o resto do ME. Agora tem as 20, e cada uma renderiza
@@ -4677,25 +4887,30 @@ export default function ApresentacaoPage() {
                            justamente o que precisa ser visto na demo. */
                         onQueroMe={() => setEtapa("endereco")}
                       />
-                    ) : etapa === "mei-impedimentos" ? (
+                    ) : etapa === "mei-impedimentos" ||
+                      etapa === "mei-bloqueio-cnpj" ||
+                      etapa === "mei-bloqueio-servidor" ? (
+                      /* 🔄 07/09 — as 2 saídas viraram ESTADO desta tela. Elas
+                         eram telas próprias (`SaidaMeiView`) e a demo navegava
+                         pra elas; agora o bloqueio se abre aqui dentro, com a
+                         base legal, a alternativa e o formulário. Mesmo
+                         movimento do E6.2 do ME em 04/09. */
                       <ImpedimentosView
                         meta={metaDoVoltar("/mei/impedimentos")}
-                        respostas={impedimentosDemo}
+                        respostas={
+                          etapa === "mei-bloqueio-cnpj"
+                            ? { ...impedimentosDemo, "outra-empresa": true }
+                            : etapa === "mei-bloqueio-servidor"
+                              ? { ...impedimentosDemo, servidor: true }
+                              : impedimentosDemo
+                        }
                         setResposta={(id, v) =>
                           setImpedimentosDemo((r) => ({ ...r, [id]: v }))
                         }
                         cienteBeneficio={cienteBeneficioDemo}
                         setCienteBeneficio={setCienteBeneficioDemo}
                         onSeguir={() => setEtapa("mei-faturamento")}
-                        // A demo navega pra saída de verdade: é justamente o
-                        // desfecho que precisa ser mostrado na apresentação.
-                        onSaida={() =>
-                          setEtapa(
-                            impedimentosDemo["outra-empresa"] === true
-                              ? "mei-saida-cnpj"
-                              : "mei-saida-servidor",
-                          )
-                        }
+                        onVerMe={() => setEtapa("mei-ou-me")}
                         onVoltar={() => setEtapa("mei-endereco")}
                       />
                     ) : etapa === "mei-faturamento" ? (
@@ -4774,43 +4989,117 @@ export default function ApresentacaoPage() {
                         onPagar={() => setEtapa("mei-splash-pagamento")}
                         onVoltar={() => setEtapa("mei-plano")}
                       />
+                    ) : etapa === "mei-pagamento-retry" ? (
+                      /* M6.R — a MESMA tela, com o aviso da recusa no topo.
+                         Compartilha o estado da M6 de propósito: o ponto da
+                         tela e o que a nota diz e que a demo precisa mostrar,
+                         e o que ja foi digitado continua la. */
+                      <PagamentoMeiView
+                        meta={metaDoVoltar("/mei/pagamento")}
+                        metodo={metodoMeiDemo}
+                        setMetodo={setMetodoMeiDemo}
+                        dados={pagamentoMeiDemo}
+                        setDados={setPagamentoMeiDemo}
+                        aceito={aceiteMeiDemo}
+                        setAceito={setAceiteMeiDemo}
+                        contratoAberto={contratoAbertoMeiDemo}
+                        setContratoAberto={setContratoAbertoMeiDemo}
+                        recusado
+                        onPagar={() => setEtapa("mei-splash-pagamento")}
+                        onVoltar={() => setEtapa("mei-plano")}
+                      />
+                    ) : etapa === "mei-aguardando" ||
+                      etapa === "mei-aguardando-pago" ? (
+                      <AguardandoMeiView
+                        pago={etapa === "mei-aguardando-pago"}
+                        onSeguir={() => setEtapa("mei-atividade-vazia")}
+                        onVerBoleto={() => setEtapa("mei-pagamento")}
+                        onPagarPix={() => setEtapa("mei-pagamento")}
+                      />
                     ) : etapa === "mei-splash-pagamento" ||
-                      etapa === "mei-splash-boleto" ? (
+                      etapa === "mei-splash-boleto" ||
+                      etapa === "mei-splash-recusado" ? (
                       /* ⚠️ Sem `onAutoAvancar` aqui de propósito: dentro do
                          board a splash que se auto-substitui deixa o card com
                          o rótulo de uma tela e o preview de outra (bug de
                          30/08). Na demo quem avança é o Pedro. */
                       <SplashMensagemView
+                        variante={
+                          etapa === "mei-splash-recusado" ? "recusado" : "sucesso"
+                        }
                         titulo={
-                          etapa === "mei-splash-boleto"
-                            ? "Boleto gerado."
-                            : "Pagamento confirmado."
+                          etapa === "mei-splash-recusado"
+                            ? "O pagamento não passou."
+                            : etapa === "mei-splash-boleto"
+                              ? "Boleto gerado."
+                              : "Pagamento confirmado."
                         }
                         sub={
-                          etapa === "mei-splash-boleto"
-                            ? "Mandamos no seu WhatsApp. Pode seguir montando seu cadastro enquanto ele compensa."
-                            : "Agora é montar seu cadastro. Falta pouco."
+                          etapa === "mei-splash-recusado"
+                            ? "Acontece, e não é com você. Vamos tentar de outro jeito."
+                            : etapa === "mei-splash-boleto"
+                              ? "Mandamos no seu WhatsApp. Pode seguir montando seu cadastro enquanto ele compensa."
+                              : "Agora é montar seu cadastro. Falta pouco."
                         }
+                        /* Cada splash cai no SEU destino, igual à rota real:
+                           recusa vai pra nova tentativa, boleto pro status
+                           pendente, cartão/Pix pro status já pago. */
                         cta={{
                           label: "Continuar",
-                          onClick: () => setEtapa("mei-ocupacao"),
+                          onClick: () =>
+                            setEtapa(
+                              etapa === "mei-splash-recusado"
+                                ? "mei-pagamento-retry"
+                                : etapa === "mei-splash-boleto"
+                                  ? "mei-aguardando"
+                                  : "mei-aguardando-pago",
+                            ),
                         }}
                       />
-                    ) : etapa === "mei-ocupacao" ? (
-                      <OcupacaoMeiView
-                        meta={metaDoVoltar("/mei/ocupacao")}
+                    ) : etapa === "mei-atividade-vazia" ||
+                      etapa === "mei-atividade" ? (
+                      /* M7.0 / M7 — a MESMA tela em 2 estados, igual à
+                         C0.0/C0 do ME: `semResultados` tira o slot e os
+                         cartões, porque não há o que mostrar antes de alguém
+                         descrever nada. */
+                      <AtividadeMeiView
+                        meta={metaDoVoltar("/mei/atividade")}
                         /* Segue a categoria escolhida na M1. O default da demo
-                           é "reparos": é a que tem mais ocupações (20) e a que
+                           é "reparos": é a que tem mais ocupações e a que
                            melhor mostra o limite interno na tela. */
-                        categoria={categoriaMeiDemo ?? "reparos"}
+                        categoria={categoriaAtivDemo ?? categoriaMeiDemo ?? "reparos"}
+                        setCategoria={setCategoriaAtivDemo}
+                        texto={descricaoAtivDemo}
+                        setTexto={setDescricaoAtivDemo}
                         principal={ocupacaoDemo}
                         setPrincipal={setOcupacaoDemo}
-                        secundarias={secundariasDemo}
-                        setSecundarias={setSecundariasDemo}
-                        onSeguir={() => setEtapa("mei-titular")}
+                        semResultados={etapa === "mei-atividade-vazia"}
+                        onBuscar={() => setEtapa("mei-atividade")}
+                        onSeguir={() => setEtapa("mei-atividade-secundarias")}
                         /* Não volta pro pagamento já pago — mesma sobrescrita
                            consciente da rota real. */
                         onVoltar={() => setEtapa("mei-plano")}
+                      />
+                    ) : etapa === "mei-atividade-secundarias" ? (
+                      <AtividadeSecundariasMeiView
+                        meta={metaDoVoltar("/mei/atividade-secundarias")}
+                        principal={ocupacaoDemo}
+                        secundarias={secundariasDemo}
+                        setSecundarias={setSecundariasDemo}
+                        categoriaDaPrincipal={
+                          categoriaAtivDemo ?? categoriaMeiDemo ?? "reparos"
+                        }
+                        onSeguir={() => setEtapa("mei-splash-atividades")}
+                        onVoltar={() => setEtapa("mei-atividade")}
+                      />
+                    ) : etapa === "mei-splash-atividades" ? (
+                      <SplashMensagemView
+                        titulo="Já sabemos o que você faz."
+                        sub="Sua ocupação está escolhida. Agora são só os seus dados."
+                        cta={{
+                          label: "Continuar",
+                          onClick: () => setEtapa("mei-titular"),
+                        }}
                       />
                     ) : etapa === "mei-titular" ? (
                       <TitularMeiView
@@ -4821,7 +5110,7 @@ export default function ApresentacaoPage() {
                         dados={titularMeiDemo}
                         setDados={setTitularMeiDemo}
                         onSeguir={() => setEtapa("mei-empresa")}
-                        onVoltar={() => setEtapa("mei-ocupacao")}
+                        onVoltar={() => setEtapa("mei-atividade-secundarias")}
                       />
                     ) : etapa === "mei-empresa" ? (
                       <EmpresaMeiView
@@ -4881,16 +5170,101 @@ export default function ApresentacaoPage() {
                     ) : etapa === "mei-certificado" ? (
                       /* 🔄 07/09 — era a `CertificadoGateView` do ME com a
                          prop `mei`. Virou tela própria: no MEI o motivo é
-                         OPERAR (não a procuração da assinatura), o custo é do
-                         cliente, e não é gate — dá pra seguir sem. */
+                         OPERAR (não a procuração da assinatura) e o custo é do
+                         cliente.
+                         🔴 07/09 (2ª rodada, decisão do Pedro) — E VIROU GATE:
+                         sem certificado o app não libera, e as 2 escolhas
+                         passam pelo status em vez de despejar na casa. */
                       <CertificadoMeiView
                         meta={metaDoVoltar("/mei/certificado")}
                         escolha={certificadoMeiDemo}
                         setEscolha={setCertificadoMeiDemo}
                         aceiteContato={aceiteCertMeiDemo}
                         setAceiteContato={setAceiteCertMeiDemo}
-                        onSeguir={() => setEtapa("fim")}
+                        onSeguir={() =>
+                          setEtapa(
+                            certificadoMeiDemo === "quero"
+                              ? "mei-certificado-pagar"
+                              : "mei-status-cert-pendente",
+                          )
+                        }
                         onVoltar={() => setEtapa("mei-proximos-passos")}
+                      />
+                    ) : etapa === "mei-certificado-pagar" ||
+                      etapa === "mei-certificado-retry" ? (
+                      /* M14.P / M14.R — o 2º pagamento. MESMA tela da M6 no
+                         modo `certificado`, igual ao ME reusando o pagamento
+                         no modo `guia` pra cobrar a taxa da Junta. */
+                      <PagamentoMeiView
+                        modo="certificado"
+                        meta="Certificado digital"
+                        metodo={metodoMeiDemo}
+                        setMetodo={setMetodoMeiDemo}
+                        dados={pagamentoMeiDemo}
+                        setDados={setPagamentoMeiDemo}
+                        aceito={aceiteMeiDemo}
+                        setAceito={setAceiteMeiDemo}
+                        contratoAberto={contratoAbertoMeiDemo}
+                        setContratoAberto={setContratoAbertoMeiDemo}
+                        recusado={etapa === "mei-certificado-retry"}
+                        onPagar={() => setEtapa("mei-certificado-splash-pago")}
+                        onVoltar={() => setEtapa("mei-certificado")}
+                      />
+                    ) : etapa === "mei-certificado-splash-pago" ||
+                      etapa === "mei-certificado-splash-boleto" ||
+                      etapa === "mei-certificado-splash-recusado" ? (
+                      <SplashMensagemView
+                        variante={
+                          etapa === "mei-certificado-splash-recusado"
+                            ? "recusado"
+                            : "sucesso"
+                        }
+                        titulo={
+                          etapa === "mei-certificado-splash-recusado"
+                            ? "O pagamento não passou."
+                            : etapa === "mei-certificado-splash-boleto"
+                              ? "Boleto gerado."
+                              : "Pagamento confirmado."
+                        }
+                        sub={
+                          etapa === "mei-certificado-splash-recusado"
+                            ? "Acontece, e não é com você. Vamos tentar de outro jeito."
+                            : etapa === "mei-certificado-splash-boleto"
+                              ? "Mandamos no seu WhatsApp. A emissão começa quando ele compensar."
+                              : "Agora é só a videochamada de validação. Falta pouco."
+                        }
+                        cta={{
+                          label: "Continuar",
+                          onClick: () =>
+                            setEtapa(
+                              etapa === "mei-certificado-splash-recusado"
+                                ? "mei-certificado-retry"
+                                : etapa === "mei-certificado-splash-boleto"
+                                  ? "mei-status-cert-boleto"
+                                  : "mei-status-cert-pronto",
+                            ),
+                        }}
+                      />
+                    ) : etapa === "mei-status-cert-pendente" ||
+                      etapa === "mei-status-cert-boleto" ||
+                      etapa === "mei-status-cert-pronto" ||
+                      etapa === "mei-status-cert-liberado" ? (
+                      /* Os 4 ESTADOS do status na fase do certificado. Uma
+                         tela, 4 nós: cada um muda o que ela mostra e o que
+                         deixa fazer. */
+                      <StatusMeiView
+                        fase="certificado"
+                        certificado={
+                          etapa === "mei-status-cert-boleto"
+                            ? "boleto"
+                            : etapa === "mei-status-cert-pronto"
+                              ? "pronto"
+                              : etapa === "mei-status-cert-liberado"
+                                ? "liberado"
+                                : "pendente"
+                        }
+                        onPagarCertificado={() => setEtapa("mei-certificado-pagar")}
+                        onEntrar={() => setEtapa("fim")}
                       />
                     ) : (
                       <>

@@ -1,10 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Campo, Texto, Checkbox } from "@/components/ui/form";
 import { CardNota } from "@/components/ui/card-nota";
 import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
+import { SheetInfo } from "@/components/ui/sheet-info";
 import { CUSTOS } from "@/lib/fiscal";
 import { CardIconeMei, SeloOkMei } from "./_card-icone";
 import { mascaraCpf, mascaraCep, mascaraTelefone, buscarCep, reais } from "./_formato";
@@ -50,29 +52,43 @@ import { mascaraCpf, mascaraCep, mascaraTelefone, buscarCep, reais } from "./_fo
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-export type MetodoMei = "cartao" | "pix";
+export type MetodoMei = "cartao" | "pix" | "boleto";
 
 /**
- * Os 2 métodos, com o EFEITO de cada escolha.
+ * 🔄 07/09 (pedido do Pedro: *"quero sim que MEI tenha boleto"*) — o `boleto`
+ * voltou pro TIPO, exatamente como no ME.
  *
- * 🔴 Só cartão e Pix, mesma decisão do Pedro em 01/09 pro ME: no Asaas o
- * boleto emitido já vem com QR de Pix embutido (boleto híbrido), então
- * oferecer os dois separados era pedir pra pessoa escolher entre a mesma
- * coisa. O nome do card diz "Pix e Boleto" pra quem procura o boleto não achar
- * que não tem.
+ * O ramo tinha copiado a decisão de 01/09 (só cartão e Pix no card, porque no
+ * Asaas o boleto já vem com QR de Pix embutido) mas copiou ERRADO: apagou o
+ * boleto do tipo inteiro, e não só da seleção. O ME nunca fez isso — ele
+ * mantém `boleto` em `Metodo` e filtra só o que aparece na tela
+ * (`METODOS_VISIVEIS_IDS`), justamente pra as telas de espera (splash do
+ * boleto, status "aguardando compensação") continuarem alcançáveis por rota,
+ * no mapa e na demo.
+ *
+ * Sem isso, a M6.SB existia e ninguém — nem o Pedro revisando — conseguia
+ * chegar nela por caminho nenhum.
+ */
+const METODOS_MEI_VISIVEIS: MetodoMei[] = ["cartao", "pix"];
+
+/**
+ * Os métodos, com o EFEITO de cada escolha.
  *
  * ✍️ A copy fala do PAGAMENTO, que a gente controla, nunca do prazo do
  * registro — que no MEI depende do titular clicar no Portal. Prometer "sua
  * empresa sai hoje" aqui seria a mesma promessa impossível que a auditoria de
  * 28/08 tirou da A2.
  */
-const METODOS: {
+const TODOS_METODOS: {
   id: MetodoMei;
   nome: string;
   coral: string;
   creme: string;
   aviso: string;
   efeito: string;
+  /** O mesmo efeito, dito pro 2º pagamento (M14.P): aqui não há conferência
+      do nosso time esperando, há emissão do certificado. */
+  efeitoCertificado: string;
 }[] = [
   {
     id: "cartao",
@@ -82,6 +98,8 @@ const METODOS: {
     aviso: "O caminho mais rápido",
     efeito:
       "É a forma de pagamento que costuma liberar a conferência antes, sem espera de compensação.",
+    efeitoCertificado:
+      "Cai na hora, então a certificadora já pode te chamar pra videochamada de validação.",
   },
   {
     id: "pix",
@@ -91,8 +109,27 @@ const METODOS: {
     aviso: "Pelo Pix, o caminho fica livre em minutos",
     efeito:
       "O Pix cai rápido, então a conferência não fica parada esperando o pagamento. Se preferir boleto, ele compensa em 1 a 3 dias úteis.",
+    efeitoCertificado:
+      "Pelo Pix a emissão começa hoje. Se preferir boleto, ele compensa em 1 a 3 dias úteis e a emissão espera por ele.",
+  },
+  {
+    /* Fora da seleção hoje (`METODOS_MEI_VISIVEIS`), igual ao ME: existe pro
+       mapa, pra demo e pras telas de espera seguirem alcançáveis. Reusa os
+       ícones do cartão pra nunca renderizar vazio se ele voltar pra tela. */
+    id: "boleto",
+    nome: "Boleto",
+    coral: "/icones/metodo-cartao-coral.png",
+    creme: "/icones/metodo-cartao-creme.png",
+    aviso: "Com boleto, a conferência espera o pagamento",
+    efeito:
+      "Você já segue montando seu cadastro. A conferência do nosso time só começa quando o boleto compensar.",
+    efeitoCertificado:
+      "A certificadora só emite depois que o boleto compensar, então o app segue limitado até lá.",
   },
 ];
+
+/** O que de fato aparece na escolha. */
+const METODOS = TODOS_METODOS.filter((m) => METODOS_MEI_VISIVEIS.includes(m.id));
 
 /** As cláusulas do contrato do MEI, abertas na própria tela. */
 const CLAUSULAS_MEI = [
@@ -103,7 +140,13 @@ const CLAUSULAS_MEI = [
   },
   {
     titulo: "O certificado digital fica por sua conta",
-    texto: `Ele não é necessário pra abrir o MEI e não está incluso no plano. Se você quiser um depois, a gente indica a certificadora parceira: custa em torno de ${reais(CUSTOS.CERTIFICADO_PRECO)} por ano, pagos direto lá. Com ele, a gente resolve suas guias e obrigações sem precisar da sua senha a cada vez.`,
+    /* ✍️ 07/09 — REESCRITA junto com a decisão do gate. Ela dizia "pagos
+       direto lá" e "se você quiser um depois", e as duas partes deixaram de ser
+       verdade: agora a cobrança é nossa (repasse sem acréscimo) e ele não é
+       opcional pra usar o app por inteiro. Cláusula que descreve o mundo
+       antigo é pior que cláusula ausente. 🟡 Redação jurídica pendente com o
+       Mauro: repassar cobrança de terceiro muda o que este parágrafo promete. */
+    texto: `Ele não é necessário pra abrir o MEI e não está incluso na mensalidade. Depois que seu CNPJ sair, ele é o que libera a gente a agir no seu lugar: puxar guia, emitir nota e resolver no e-CAC sem pedir sua senha. Custa em torno de ${reais(CUSTOS.CERTIFICADO_PRECO)} por ano, cobrados aqui no app em uma vez, e é o valor da certificadora parceira repassado sem acréscimo. Sem ele, sua empresa continua ativa e sua mensalidade também, mas o app fica no modo limitado.`,
   },
   {
     titulo: "Abrir o MEI não custa nada, em instância nenhuma",
@@ -191,6 +234,7 @@ export function PagamentoMeiView({
   contratoAberto,
   setContratoAberto,
   recusado = false,
+  modo = "plano",
   onPagar,
   onVoltar,
 }: {
@@ -207,11 +251,32 @@ export function PagamentoMeiView({
   setContratoAberto: (v: boolean) => void;
   /** Volta de uma recusa do banco (M6 depois do splash de recusado). */
   recusado?: boolean;
+  /**
+   * 🆕 07/09 (pedido do Pedro) — O SEGUNDO PAGAMENTO DO RAMO.
+   *
+   * `plano` (default) é a M6: mensalidade + contrato de serviço.
+   * `certificado` é a M14.P: o certificado digital, cobrado uma vez por ano.
+   *
+   * É o mesmo arranjo que o ME já usa (`PagamentoView` com a prop `guia` pra
+   * cobrar a taxa da Junta): MESMA tela, MESMOS métodos, MESMA idempotência —
+   * muda o valor, a copy e o que se aceita. Pedido literal do Pedro: *"a parte
+   * do segundo pagamento muda apenas o que seria pago, em ME a taxa da junta e
+   * em MEI o certificado digital"*.
+   *
+   * ⚠️ O contrato de serviço NÃO reaparece aqui: ele foi aceito na M6 e não se
+   * aceita duas vezes. O que a M14.P pede é outra coisa — a autorização de
+   * emissão em nome do titular e o compromisso da videochamada.
+   */
+  modo?: "plano" | "certificado";
   onPagar?: () => void;
   onVoltar?: () => void;
 }) {
+  const certificado = modo === "certificado";
+  const valor = certificado ? CUSTOS.CERTIFICADO_PRECO : CUSTOS.MENSALIDADE_MEI;
   const cartao = metodo === "cartao";
-  const escolhido = METODOS.find((m) => m.id === metodo) ?? null;
+  /* Busca em TODOS, não só nos visíveis: quem chega por rota com
+     `?metodo=boleto` tem que ver o efeito escrito do método dele. */
+  const escolhido = TODOS_METODOS.find((m) => m.id === metodo) ?? null;
   const set = <K extends keyof DadosPagamentoMei>(k: K, v: DadosPagamentoMei[K]) =>
     setDados({ ...dados, [k]: v });
 
@@ -239,9 +304,19 @@ export function PagamentoMeiView({
 
       <main className="app-main">
         <Titulo
-          sub={`${reais(CUSTOS.MENSALIDADE_MEI)} hoje, depois esse valor mensal.`}
+          /* ✍️ 07/09 (revisão contra o A3.P) — o modo `guia` do ME abre no
+             IMPERATIVO ("Pague a guia da Junta") e o subtítulo tem 3 partes
+             fixas: o valor, a periodicidade e PRA ONDE O DINHEIRO VAI. A 1ª
+             versão daqui trocou as três por uma promessa de produto ("é o
+             último passo pra liberar o app"), que é argumento, não informação
+             de cobrança. */
+          sub={
+            certificado
+              ? `${reais(CUSTOS.CERTIFICADO_PRECO)} por ano, uma vez só. É o preço da certificadora parceira, e ele vai inteiro pra ela.`
+              : `${reais(CUSTOS.MENSALIDADE_MEI)} hoje, depois esse valor mensal.`
+          }
         >
-          Falta só isso
+          {certificado ? "Pague o seu certificado" : "Falta só isso"}
         </Titulo>
 
         <Corpo>
@@ -280,7 +355,7 @@ export function PagamentoMeiView({
               sobre a escolha que a pessoa acabou de fazer. */}
           {escolhido && (
             <CardNota variante="positivo" titulo={escolhido.aviso}>
-              {escolhido.efeito}
+              {certificado ? escolhido.efeitoCertificado : escolhido.efeito}
             </CardNota>
           )}
 
@@ -460,17 +535,36 @@ export function PagamentoMeiView({
               descrevem uma limitação legal, e limitação escondida atrás de um
               "leia o contrato completo" é limitação que ninguém leu. O botão
               segue o mesmo desenho do E9 (secundário, altura de CTA). */}
-          <button
-            type="button"
-            onClick={() => setContratoAberto(!contratoAberto)}
-            className="flex min-h-12 w-full items-center justify-center rounded-md border
-                       border-border-strong bg-surface-card px-4 text-body font-semibold
-                       text-text-primary transition-colors hover:bg-surface-alt"
-          >
-            {contratoAberto ? "Fechar o contrato" : "Ler o contrato completo"}
-          </button>
+          {/* 🆕 07/09 — no 2º pagamento o contrato de serviço NÃO reaparece:
+              ele foi aceito na M6 e não se aceita duas vezes. No lugar dele
+              entra o que a pessoa está comprando, porque este é o único
+              momento do flow em que ela paga por uma coisa que não é o plano. */}
+          {certificado ? (
+            <Card>
+              <p className="text-caption font-semibold text-text-primary mb-1">
+                O que você está pagando
+              </p>
+              <p className="text-caption text-text-secondary">
+                Um certificado e-CNPJ A1, válido por 1 ano, emitido pela
+                certificadora parceira em nome da sua empresa. O valor é o dela,
+                repassado sem acréscimo. A emissão exige uma videochamada de
+                validação de uns 15 minutos, marcada por eles depois que o
+                pagamento cair.
+              </p>
+            </Card>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setContratoAberto(!contratoAberto)}
+              className="flex min-h-12 w-full items-center justify-center rounded-md border
+                         border-border-strong bg-surface-card px-4 text-body font-semibold
+                         text-text-primary transition-colors hover:bg-surface-alt"
+            >
+              {contratoAberto ? "Fechar o contrato" : "Ler o contrato completo"}
+            </button>
+          )}
 
-          {contratoAberto && (
+          {!certificado && contratoAberto && (
             <Card>
               <div className="flex flex-col gap-4">
                 {CLAUSULAS_MEI.map((c) => (
@@ -485,12 +579,22 @@ export function PagamentoMeiView({
             </Card>
           )}
 
-          <Checkbox checked={aceito} onChange={setAceito}>
-            {/* Negrito só no ATO: é o gesto jurídico que precisa saltar. */}
-            <strong className="font-bold">Li e aceito o contrato</strong> de
-            serviço da Legalizai, e entendi que o registro no Portal do
-            Empreendedor é feito por mim.
-          </Checkbox>
+          {/* 🔄 07/09 (revisão contra o A3.P) — no 2º pagamento o aceite NÃO é
+              o `Checkbox` corrido do DS: é um card com borda, com o termo que
+              importa virando link pra um sheet. Foi assim que o ME resolveu o
+              aceite irreversível da guia, e pelo mesmo motivo — é neste clique
+              que o dinheiro deixa de voltar, e essa condição não pode passar
+              como mais uma linha de formulário. */}
+          {certificado ? (
+            <AceiteCertificado aceito={aceito} setAceito={setAceito} />
+          ) : (
+            <Checkbox checked={aceito} onChange={setAceito}>
+              {/* Negrito só no ATO: é o gesto jurídico que precisa saltar. */}
+              <strong className="font-bold">Li e aceito o contrato</strong> de
+              serviço da Legalizai, e entendi que o registro no Portal do
+              Empreendedor é feito por mim.
+            </Checkbox>
+          )}
         </Corpo>
 
         <Rodape>
@@ -506,10 +610,98 @@ export function PagamentoMeiView({
                 ? "Complete os dados de pagamento"
                 : !aceito
                   ? "Falta aceitar as condições"
-                  : `Pagar ${reais(CUSTOS.MENSALIDADE_MEI)}`}
+                  : certificado
+                    ? `Pagar o certificado · ${reais(valor)}`
+                    : `Pagar ${reais(valor)}`}
           </Button>
         </Rodape>
       </main>
     </>
+  );
+}
+
+/* ═══════════════ O ACEITE DO 2º PAGAMENTO (M14.P) ═══════════════════════ */
+
+/**
+ * 🆕 07/09 — o par do `AceiteIrreversivelGuia` do ME, no ramo MEI.
+ *
+ * Mesma estrutura, e ela não é estética: **input irmão do texto, nunca dentro
+ * do label**. Aninhar botão em label some da árvore de acessibilidade e quebra
+ * o toggle — problema real, achado no ME em 01/09. O link "não é reembolsável"
+ * fica FORA do label pelo mesmo motivo.
+ *
+ * ✍️ O que se autoriza aqui é o PAGAMENTO e a emissão, não "o certificado" em
+ * abstrato. A auditoria do ME em 04/09 pegou um aceite que autorizava um ato
+ * já autorizado telas atrás; num texto de aceite, dizer o ato errado é o pior
+ * tipo de imprecisão.
+ */
+function AceiteCertificado({
+  aceito,
+  setAceito,
+}: {
+  aceito: boolean;
+  setAceito: (v: boolean) => void;
+}) {
+  const [sheetAberto, setSheetAberto] = useState(false);
+  return (
+    <div className="flex items-start gap-3 rounded-md border border-border-hairline bg-surface-card p-3">
+      <input
+        id="aceite-certificado"
+        type="checkbox"
+        checked={aceito}
+        onChange={(e) => setAceito(e.target.checked)}
+        className="sr-only"
+      />
+      <label
+        htmlFor="aceite-certificado"
+        aria-hidden
+        className={`mt-0.5 flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center rounded border-2 transition-colors ${
+          aceito
+            ? "border-action-primary bg-action-primary"
+            : "border-border-strong bg-surface-card"
+        }`}
+      >
+        {aceito && (
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M4 12.5 9.5 18 20 6"
+              stroke="#fff"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        )}
+      </label>
+      <p className="text-caption text-text-secondary">
+        <label htmlFor="aceite-certificado" className="cursor-pointer">
+          Autorizo o pagamento e a emissão do certificado em meu nome, e me
+          comprometo com a videochamada de validação. Depois de emitido, o
+          valor{" "}
+        </label>
+        <button
+          type="button"
+          onClick={() => setSheetAberto(true)}
+          /* O link vive DENTRO de uma frase, então não vira bloco: ganha área
+             vertical com `-my-2 py-2`, que engorda o toque sem quebrar a linha. */
+          className="-my-2 py-2 font-semibold text-action-primary-sm underline underline-offset-4"
+        >
+          não é reembolsável
+        </button>
+        .
+      </p>
+      {sheetAberto && (
+        <SheetInfo
+          titulo="Sobre o valor do certificado"
+          pontos={[
+            `Os ${reais(CUSTOS.CERTIFICADO_PRECO)} são da certificadora parceira, repassados sem acréscimo. A Legalizai não fica com nada.`,
+            "A videochamada de validação é exigência da ICP-Brasil, não nossa. Sem ela o certificado não é emitido.",
+            "Faltou na hora marcada? É só remarcar, sem custo. O que não volta é o valor depois que o certificado sai.",
+            "Ele vale 1 ano. Perto do vencimento a gente te avisa e renova com você.",
+          ]}
+          onFechar={() => setSheetAberto(false)}
+        />
+      )}
+    </div>
   );
 }

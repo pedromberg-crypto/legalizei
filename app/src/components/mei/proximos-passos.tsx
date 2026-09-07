@@ -91,7 +91,7 @@ export function ProximosPassosMeiView({
           <Aviso variante="info" titulo="Por que essa parte é você quem faz">
             O governo não permite que ninguém registre um MEI no lugar de outra
             pessoa: o Portal do Empreendedor exige a sua conta gov.br, e ela é
-            pessoal. Então a gente fez tudo o que dava — conferiu seus dados,
+            pessoal. Então a gente fez tudo o que dava: conferiu seus dados,
             escolheu a ocupação certa e deixou cada campo pronto aqui embaixo.
           </Aviso>
 

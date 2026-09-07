@@ -14,7 +14,7 @@ import { SplashMensagemView } from "@/components/splash-mensagem";
  */
 function SplashPagamentoConteudo() {
   const router = useRouter();
-  const next = useSearchParams().get("next") || "/mei/ocupacao";
+  const next = useSearchParams().get("next") || "/mei/aguardando?pago=1";
 
   return (
     <SplashMensagemView

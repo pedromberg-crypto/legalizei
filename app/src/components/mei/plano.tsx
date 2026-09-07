@@ -123,9 +123,19 @@ export function PlanoMeiView({
         {/* Título bicolor em linha única, igual ao E7. O assunto é outro: lá
             é "quanto custa abrir", aqui abrir é grátis por lei. */}
         <div className="shrink-0">
+          {/* 🐛→🔒 07/09 (E2E do ramo, pedido do Pedro) — O TÍTULO ESTOURAVA
+              55px NO iPhone SE. Ele herdou o `whitespace-nowrap` do E7 mas não
+              a outra metade da decisão: lá o comentário diz que o texto foi
+              **encurtado, não só diminuído** ("copy comprida encolhida fica
+              ilegível antes de caber numa linha só"). "Depois é com a gente"
+              tem 382px de largura natural num espaço de 327px.
+              📐 MEDIDO, não estimado (método de 01/09): 6 alternativas passaram
+              por régua antes desta. "Manter, não" dá 277px, 50px de folga — e
+              diz a tese da tela melhor que a anterior, que só anunciava quem
+              cuida. O contraste é o argumento: abrir não custa, manter custa. */}
           <h1 className="text-[1.375rem] leading-tight tracking-tight whitespace-nowrap">
             <span className="font-bold text-text-primary">Abrir é grátis.</span>{" "}
-            <span className="font-bold text-text-tertiary">Depois é com a gente</span>
+            <span className="font-bold text-text-tertiary">Manter, não</span>
           </h1>
           <p className="text-body text-text-secondary mt-2 whitespace-nowrap">
             Sem letra miúda, sem surpresa depois.
@@ -216,9 +226,14 @@ export function PlanoMeiView({
                   Certificado digital: por sua conta
                 </p>
                 <p className="text-micro text-text-tertiary">
+                  {/* ✍️ 07/09 — a frase dizia "fora daqui, certificadoras
+                      cobram", o que deixou de ser verdade quando ele passou a
+                      ser cobrado no app. Aqui ele ainda é só aviso de custo
+                      futuro: a decisão mesmo acontece na M14. */}
                   Não precisa dele pra abrir. Precisa pra gente cuidar do dia a
-                  dia sem te pedir senha. Fora daqui, certificadoras cobram em
-                  torno de {reais(CUSTOS.CERTIFICADO_PRECO)}/ano.
+                  dia sem te pedir senha, e o app só libera tudo com ele. São{" "}
+                  {reais(CUSTOS.CERTIFICADO_PRECO)}/ano, cobrados depois que
+                  seu CNPJ sair.
                 </p>
               </div>
             </div>

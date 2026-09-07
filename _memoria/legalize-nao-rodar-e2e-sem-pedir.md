@@ -17,3 +17,10 @@ Um "pode rodar" vale **só pra aquela rodada**; não vira permissão permanente.
 **How to apply:** verificação padrão = `npx tsc --noEmit` + `npx eslint`. Pra conferir comportamento de UI sem rodar a suíte, um spec temporário pontual também é E2E — vale a mesma regra. Regra escrita em `CLAUDE.md` do projeto (§Regras de trabalho), junto do escopo ME.
 
 Relacionado: [[legalize-escopo-so-me-abrir]], [[legalize-pedro-confere-ui-sozinho]].
+
+**Reforço 07/09 (3ª vez).** Ele pediu o E2E do ramo MEI, eu rodei, e a partir
+daí passei a rodar a suíte a cada alteração como se a autorização valesse pra
+sessão. Ele cortou no meio do turno: *"só vai passar E2E completo quando eu
+pedir. Trave isso"*. A autorização é por **pedido**, não por sessão nem por
+assunto. Escrever e versionar spec continua livre; o que exige pedido é
+**executar**.

@@ -32,9 +32,21 @@ import { reais } from "./_formato";
  * erro que tirou a A3.2 do caminho ME em 01/09 (ela pedia certificado num
  * ponto em que o CNPJ ainda não existia).
  *
- * ⚠️ **Não é gate.** Dá pra seguir sem, e a tela diz isso. Quem opera sem
- * certificado continua atendido; o que muda é que a gente vai precisar da
- * presença dele em algumas tarefas, em vez de resolver sozinho.
+ * ─── 🔄 07/09: ELE VIROU GATE, E ISSO REVOGA A REGRA ANTERIOR ───────────────
+ * Até hoje esta tela dizia *"não é gate, dá pra seguir sem"*, e a escolha
+ * "depois" levava direto pra casa. Decisão do Pedro em 07/09: **sem
+ * certificado a gente não libera o acesso total ao app, e a jornada PARA no
+ * status** — o mesmo lugar que a taxa da Junta ocupa no ME.
+ *
+ * A outra metade da mesma decisão: o certificado passa a ser **cobrado dentro
+ * do app** (M14.P), e não mais "pago direto na certificadora". O valor segue
+ * sendo o dela, repassado sem acréscimo — o que muda é por onde o dinheiro
+ * entra, e portanto quem pode dizer "está pago" sem depender de aviso de
+ * terceiro.
+ *
+ * ✍️ O que a tela NÃO pode fazer é fingir que sempre foi assim. Ela abre
+ * dizendo que a abertura não precisou dele (verdade, e a dúvida mais provável
+ * de quem acabou de abrir), e só depois diz o que trava daqui pra frente.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -74,8 +86,8 @@ export function CertificadoMeiView({
       <TelaHeader meta={meta} onVoltar={onVoltar} />
 
       <main className="app-main">
-        <Titulo sub="Seu MEI já está aberto. Este é o último ajuste, e ele é opcional.">
-          Quer um certificado digital?
+        <Titulo sub="Seu MEI já está aberto e o CNPJ é seu. Falta o passo que deixa a gente cuidar dele por dentro do app.">
+          O seu certificado digital
         </Titulo>
 
         <Corpo>
@@ -84,8 +96,8 @@ export function CertificadoMeiView({
               evita a sensação de ter pulado uma etapa. */}
           <Aviso variante="success" titulo="Você não precisou dele pra abrir">
             E não precisa mesmo: a abertura do MEI dispensa certificado, sua
-            conta gov.br já resolveu essa parte. Ele serve pro dia a dia
-            daqui pra frente.
+            conta gov.br já resolveu essa parte. Ele serve pro dia a dia daqui
+            pra frente, e é o que libera o app inteiro.
           </Aviso>
 
           <div>
@@ -107,15 +119,16 @@ export function CertificadoMeiView({
               Cerca de {reais(CUSTOS.CERTIFICADO_PRECO)} por ano
             </p>
             <p className="text-caption text-text-secondary mt-1">
-              Pago direto na certificadora, não pra gente. No plano MEI ele não
-              vem incluso, e a gente disse isso desde o começo.
+              É o valor da certificadora, repassado sem acréscimo. Você paga
+              aqui, em uma vez, com os mesmos meios do plano. No plano MEI ele
+              não vem incluso, e a gente disse isso desde o começo.
             </p>
           </Card>
 
           <div className="flex flex-col gap-2">
             <Card tom={escolha === "quero" ? "marca" : "neutro"} onClick={() => setEscolha("quero")}>
               <p className="text-body font-semibold text-text-primary">
-                Quero um certificado
+                Quero resolver agora
               </p>
               <p className="text-caption text-text-secondary mt-0.5">
                 A certificadora parceira te chama pra marcar a videochamada de
@@ -127,23 +140,36 @@ export function CertificadoMeiView({
               <p className="text-body font-semibold text-text-primary">
                 Deixa pra depois
               </p>
+              {/* ✍️ 07/09 — esta copy MUDOU junto com a decisão. Ela dizia
+                  "segue tudo funcionando", e agora não segue: o que a pessoa
+                  escolhe aqui é esperar, não pular. Dizer o custo da escolha
+                  na hora de escolher é o oposto de descobrir depois, batendo
+                  numa porta trancada. */}
               <p className="text-caption text-text-secondary mt-0.5">
-                Segue tudo funcionando. Quando alguma tarefa precisar dele, a
-                gente te avisa na hora.
+                Seu CNPJ continua ativo e nada se perde. Mas o app fica no modo
+                limitado até o certificado sair, e a gente não consegue puxar
+                guia nem emitir nota no seu lugar.
               </p>
             </Card>
           </div>
 
           {escolha === "quero" && (
             <Checkbox checked={aceiteContato} onChange={setAceiteContato}>
-              Autorizo a certificadora parceira a entrar em contato comigo
+              Autorizo a certificadora parceira a entrar em contato comigo pra
+              marcar a videochamada
             </Checkbox>
           )}
         </Corpo>
 
         <Rodape>
+          {/* 🔄 07/09 — o CTA deixou de prometer "entrar no meu painel" pra
+              quem escolheu esperar: com o gate, esse caminho leva pro status,
+              não pra casa. Prometer a casa e entregar uma tela de espera é o
+              tipo de quebra que a pessoa lê como bug. */}
           <Button full disabled={!completo} onClick={onSeguir}>
-            {escolha === "quero" ? "Quero ser chamado" : "Entrar no meu painel"}
+            {escolha === "quero"
+              ? `Pagar ${reais(CUSTOS.CERTIFICADO_PRECO)}`
+              : "Ver meu acompanhamento"}
           </Button>
         </Rodape>
       </main>

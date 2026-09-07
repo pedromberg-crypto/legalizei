@@ -161,14 +161,14 @@ tags: [execucao, flow, dados, abertura]
 - forma de endereço
 - CEP + número + complemento
 
-### M3 · Faturamento (gate do teto R$81k)
-- Faixa de faturamento mensal (5 opções, a última estoura o teto) OU valor exato
-- ciência do teto quando perto
-
 ### M2 · Impedimentos (no lugar da triagem)
 - Já tem outra empresa? (sim/não)
 - é servidor federal? (sim/não)
 - recebe benefício? (sim/não) + ciência explícita se sim
+
+### M3 · Faturamento (gate do teto R$81k)
+- Faixa de faturamento mensal (5 opções, a última estoura o teto) OU valor exato
+- ciência do teto quando perto
 
 ## Preenchidos por nós, não pelo cliente
 

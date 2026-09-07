@@ -90,6 +90,22 @@ export const SAIDA_SERVIDOR: SaidaMei = {
   },
 };
 
+/**
+ * 🆕 07/09 — o de-para entre o impedimento e o conteúdo da saída dele.
+ *
+ * Existe porque as saídas deixaram de ser TELA e viraram estado da M2 (pedido
+ * do Pedro). O conteúdo continua aqui, e é o certo: ele é DADO (base legal,
+ * alternativa, copy da confirmação), não layout. Quem renderiza é a M2.
+ *
+ * 🔑 A chave é o `id` do `IMPEDIMENTOS` em `lib/mei.ts`. Impedimento novo que
+ * bloqueia precisa de uma entrada aqui, senão a M2 mostra o aviso curto e
+ * perde a base legal e o formulário.
+ */
+export const SAIDAS_POR_IMPEDIMENTO: Record<string, SaidaMei> = {
+  "outra-empresa": SAIDA_JA_TEM_CNPJ,
+  servidor: SAIDA_SERVIDOR,
+};
+
 export function SaidaMeiView({
   dados,
   onVerMe,

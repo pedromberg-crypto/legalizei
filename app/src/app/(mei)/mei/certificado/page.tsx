@@ -3,7 +3,7 @@
 import { Suspense, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CertificadoMeiView } from "@/components/mei/certificado";
-import { anterior, proxima, metaDoVoltar } from "@/lib/mei-flow";
+import { anterior, metaDoVoltar } from "@/lib/mei-flow";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -17,7 +17,15 @@ import { anterior, proxima, metaDoVoltar } from "@/lib/mei-flow";
  * do cliente, então nada dela servia sem guarda — que é exatamente o tipo de
  * tela que o fork existe pra separar.
  *
- * É o ÚLTIMO passo da espinha: `proxima()` devolve a casa (`/home-dia1`).
+ * 🔴 07/09 (decisão do Pedro) — ELE VIROU GATE. A tela deixou de despejar na
+ * casa: quem escolhe resolver agora vai pro pagamento (M14.P), quem escolhe
+ * esperar vai pro status travado (M14‴). A casa passa a ser destino de quem
+ * tem certificado, não de quem chegou até aqui — o mesmo lugar que a taxa da
+ * Junta ocupa no ME.
+ *
+ * ⚠️ `proxima(ROTA)` (a casa) deixou de ser chamado por isso, e não por
+ * esquecimento: a espinha continua dizendo que a M14 é o último passo, o que
+ * segue verdade — o que mudou é o que acontece ENTRE ela e a casa.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 const ROTA = "/mei/certificado";
@@ -35,7 +43,13 @@ function CertificadoConteudo() {
       aceiteContato={aceiteContato}
       setAceiteContato={setAceiteContato}
       onVoltar={() => router.push(anterior(ROTA))}
-      onSeguir={() => router.push(proxima(ROTA))}
+      onSeguir={() =>
+        router.push(
+          escolha === "quero"
+            ? "/mei/certificado/pagar"
+            : "/mei/status?fase=certificado&certificado=pendente",
+        )
+      }
     />
   );
 }

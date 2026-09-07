@@ -68,7 +68,13 @@ export const ESPINHA_MEI: PassoMei[] = [
   { id: "M4", rota: "/mei/conta", nome: "Sua conta" },
   { id: "M5", rota: "/mei/plano", nome: "Seu plano" },
   { id: "M6", rota: "/mei/pagamento", nome: "Pagamento" },
-  { id: "M7", rota: "/mei/ocupacao", nome: "Sua ocupação" },
+  /* 🔄 07/09 (pedido do Pedro) — a ocupação deixou de ser UMA tela.
+     Ela virou o bloco ATIVIDADE, no sistema aprovado da C0/C5 do ME:
+     chegada → escolha da principal → secundárias → splash de fecho. A rota
+     `/mei/ocupacao` (uma lista simples com principal e secundárias juntas)
+     saiu junto. Os splashes ficam fora da espinha, como sempre. */
+  { id: "M7", rota: "/mei/atividade", nome: "Sua atividade" },
+  { id: "M7_S", rota: "/mei/atividade-secundarias", nome: "Atividades secundárias" },
   { id: "M8", rota: "/mei/titular", nome: "Seus dados" },
   { id: "M9", rota: "/mei/empresa", nome: "Seu endereço" },
   { id: "M10", rota: "/mei/nome", nome: "Nome da empresa" },
@@ -142,16 +148,24 @@ export function metaDoVoltar(rota: string): string {
 /* ═══════════════════ AS SAÍDAS (fora da espinha) ════════════════════════ */
 
 /**
- * Saídas terminais do ramo. Não têm "próxima": ou a pessoa volta pra tela que
- * a trouxe, ou fala com o time.
+ * Os 2 bloqueios do ramo. 🔄 07/09 (pedido do Pedro) — DEIXARAM DE SER TELA.
  *
- * ⚠️ Nenhuma delas é "não atendemos". As três dizem o contrário: a Legalizai
+ * Eram `/mei/saida/ja-tem-cnpj` e `/mei/saida/servidor`, e viraram estado da
+ * própria M2, alcançável por `?bloqueio=`. Mesmo movimento que o ME fez em
+ * 04/09 com o E6.2 (`/conta?cpf=nome`): o que muda o que a tela mostra
+ * continua sendo nó do mapa, sem precisar de rota própria.
+ *
+ * A mudança apagou uma repetição real: a M2 já abria o aviso do bloqueio
+ * inline e, logo depois, mandava a pessoa pra outra tela dizer a mesma coisa
+ * com mais detalhe.
+ *
+ * ⚠️ Nenhum dos dois é "não atendemos". Os dois dizem o contrário: a Legalizai
  * atende essa pessoa hoje, só não como MEI. É a diferença entre bloqueio do
  * GOVERNO (que a gente só informa) e recusa do PRODUTO (que a gente não faz).
  */
-export const SAIDAS_MEI = {
-  /** M2.1 — impedimento: já é sócio/titular de outra PJ (LC 123 art. 18-A). */
-  jaTemCnpj: "/mei/saida/ja-tem-cnpj",
-  /** M2.2 — impedimento: servidor público federal na ativa (Lei 8.112/90). */
-  servidor: "/mei/saida/servidor",
+export const BLOQUEIOS_MEI = {
+  /** M2.1 — já é sócio/titular de outra PJ (LC 123 art. 18-A). */
+  jaTemCnpj: "/mei/impedimentos?bloqueio=ja-tem-cnpj",
+  /** M2.2 — servidor público federal na ativa (Lei 8.112/90). */
+  servidor: "/mei/impedimentos?bloqueio=servidor",
 } as const;

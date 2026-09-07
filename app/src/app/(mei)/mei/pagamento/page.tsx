@@ -8,7 +8,7 @@ import {
   type MetodoMei,
   type DadosPagamentoMei,
 } from "@/components/mei/pagamento";
-import { anterior, proxima, metaDoVoltar } from "@/lib/mei-flow";
+import { anterior, metaDoVoltar } from "@/lib/mei-flow";
 import { comCategoria, categoriaDe } from "@/lib/categoria";
 
 /**
@@ -37,20 +37,46 @@ function PagamentoConteudo() {
   const searchParams = useSearchParams();
   const categoria = categoriaDe(searchParams);
 
-  const [metodo, setMetodo] = useState<MetodoMei | null>(null);
+  /* 🆕 07/09 — o método pode vir por ROTA (`?metodo=boleto`), que é como o
+     caminho do boleto fica alcançável sem card na tela. Mesmo arranjo do ME. */
+  const metodoDaRota = searchParams.get("metodo");
+  const [metodo, setMetodo] = useState<MetodoMei | null>(
+    metodoDaRota === "boleto" || metodoDaRota === "pix" || metodoDaRota === "cartao"
+      ? metodoDaRota
+      : null,
+  );
   const [dados, setDados] = useState<DadosPagamentoMei>(PAGAMENTO_MEI_VAZIO);
   const [aceito, setAceito] = useState(false);
   const [contratoAberto, setContratoAberto] = useState(false);
 
-  function pagar() {
-    const destino = comCategoria(proxima(ROTA), categoria);
-    /* 🔴 Só cartão e Pix aparecem na escolha (mesma decisão de 01/09 do ME: no
-       Asaas o boleto já vem com QR de Pix embutido). O splash do boleto segue
-       existindo e alcançável por rota — a M6.SB está no mapa e é revisável —,
-       mas ninguém cai nela pela escolha, porque não há card de boleto. */
-    router.push(
-      `/mei/splash-pagamento?next=${encodeURIComponent(destino)}`,
-    );
+  /**
+   * 🆕 07/09 (pedido do Pedro) — recusa e retentativa, o par que faltava.
+   * · `?retry=1`        — volta do splash de recusa; a tela explica e pede
+   *                       outro cartão ou Pix, SEM zerar o que foi preenchido.
+   * · `?simular=recusa` — deixa o caminho alcançável no mapa e na demo, mesmo
+   *                       padrão de `/pagamento?simular=recusa` do ME.
+   * ⚠️ O nome do param mudou de `?recusado=1` pra `?retry=1`: era o único
+   * ponto em que os dois ramos escreviam a mesma ideia com nomes diferentes, e
+   * divergência de vocabulário entre caminhos é o que faz alguém procurar a
+   * tela pelo nome do outro e concluir que ela não existe.
+   */
+  const retry = searchParams.get("retry") === "1";
+  const simularRecusa = searchParams.get("simular") === "recusa";
+
+  function destino() {
+    if (simularRecusa) {
+      return `/mei/splash-recusado?next=${encodeURIComponent("/mei/pagamento?retry=1")}`;
+    }
+    /* 🔄 07/09 — antes ia do splash direto pro M7 (ocupação). Agora todo
+       método passa pelo status intermediário (M6.1/M6.1P), mesma revogação
+       que o ME fez em 30/08: reforça "dá pra sair e voltar, está tudo certo".
+       Boleto cai no status PENDENTE; cartão e Pix caem no status já pago. */
+    if (metodo === "boleto") {
+      const pendente = comCategoria("/mei/aguardando", categoria);
+      return `/mei/splash-boleto?next=${encodeURIComponent(pendente)}`;
+    }
+    const pago = comCategoria("/mei/aguardando?pago=1", categoria);
+    return `/mei/splash-pagamento?next=${encodeURIComponent(pago)}`;
   }
 
   return (
@@ -64,9 +90,9 @@ function PagamentoConteudo() {
       setAceito={setAceito}
       contratoAberto={contratoAberto}
       setContratoAberto={setContratoAberto}
-      recusado={searchParams.get("recusado") === "1"}
+      recusado={retry}
       onVoltar={() => router.push(comCategoria(anterior(ROTA), categoria))}
-      onPagar={pagar}
+      onPagar={() => router.push(destino())}
     />
   );
 }

@@ -50,7 +50,7 @@ function RevisarConteudo() {
             "Técnico(a) de manutenção de computador (9511-8/00)",
         },
       ],
-      onAjustar: () => router.push(comCategoria("/mei/ocupacao", categoria)),
+      onAjustar: () => router.push(comCategoria("/mei/atividade", categoria)),
     },
     {
       titulo: "A empresa",

@@ -1,5 +1,7 @@
 # Memory Index — Legalize
 
+- [Réplica de tela se PORTA, não se remonta](legalize-replica-de-tela-se-porta.md) — 07/09: 5 telas erradas no mesmo dia pela mesma raiz; nasceu a trava `verificar-anatomia-mei.mjs`, que roda junto com o gerar-mapa.
+- [Certificado do MEI virou gate E cobrança no app](legalize-certificado-vira-gate-e-cobranca.md) — 07/09: sem ele o app não libera; deixa de ser "pago direto na certificadora". 🔴 pede cláusula com o Mauro.
 - [Fork do ramo MEI](legalize-fork-ramo-mei.md) — 07/09: MEI virou caminho próprio (`/mei/*`, `components/mei/`, `lib/mei-flow.ts`) com trava de fronteira; herança por prop `mei` custou 4 defeitos em 8 dias.
 
 - [Reta final: 2 assinaturas + videochamada do certificado](legalize-reta-final-certificado-e-assinaturas.md) — 05/09: 1ª = todos os sócios (Junta) · 2ª = só contador + representante (Receita) · certificado é o ÚLTIMO passo, com parceira; procuração e-CAC saiu do flow.
@@ -17,7 +19,7 @@
 - [Halo escuro = alfa premultiplicado](legalize-alfa-premultiplicado-halo-escuro.md) — 01/09: PNG bom no Photoshop e ruim no app; comparar cor de borda × sólido antes de culpar cache. Achatar fundo+objeto é a saída mais barata.
 - [Escrever arquivo só via Edit/Write](legalize-escrita-arquivo-so-edit-write.md) — 01/09: script Python truncou 2 arquivos do vault (emoji + `open('w')`); node só com texto vindo de arquivo, nunca backtick inline.
 - [Gravação da JUCEMG é a fonte-verdade do flow](legalize-gravacao-jucemg-fonte-primaria.md) — 31/08: 141 prints da constituição real; matou o debate da procuração (derruba Registro Automático) e achou o bug do apartamento.
-- [Não rodar e2e sem pedir](legalize-nao-rodar-e2e-sem-pedir.md) — 30/08, reforçado 01/09: um "pode rodar" vale só pra aquela rodada; padrão é tsc+eslint. Travado no CLAUDE.md.
+- [Não rodar e2e sem pedir](legalize-nao-rodar-e2e-sem-pedir.md) — 30/08, reforçado 01/09 e **07/09 (3ª vez)**: um "pode rodar" vale só pra aquela rodada, não pra sessão nem pro assunto. Escrever spec é livre; EXECUTAR pede pedido. Travado no CLAUDE.md.
 - [Escopo é só o ME abrir empresa](legalize-escopo-so-me-abrir.md) — 01/09: MEI e Migração fora, salvo pedido; tela compartilhada exige guarda por regime, senão avisar antes.
 - [Mapa é estático, reposição precisa entrar na apresentação junto](legalize-mapa-estatico-apresentacao-junto.md) — 28/08: pedido de reordenar/layout "no mapa" mexe em `flow-data.mjs` E na `/apresentacao` sempre juntos; `/mockup` fica de fora.
 

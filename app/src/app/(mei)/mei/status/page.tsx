@@ -24,13 +24,33 @@ const ROTA = "/mei/status";
 
 function StatusConteudo() {
   const router = useRouter();
-  const param = useSearchParams().get("etapa");
+  const searchParams = useSearchParams();
+  const param = searchParams.get("etapa");
   const emAndamento = param !== null ? Math.min(Math.max(Number(param), 0), 3) : 1;
+
+  /* 🆕 07/09 — a MESMA rota cobre as 2 fases, como o `/aguardando?fase=` do
+     ME. `?fase=certificado` é o 2º pagamento; `?certificado=` diz em qual dos
+     3 estados ele está (pendente · boleto compensando · pago). */
+  const fase = searchParams.get("fase") === "certificado" ? "certificado" : "abertura";
+  const est = searchParams.get("certificado");
+  const certificado =
+    est === "boleto" || est === "pronto" || est === "liberado" ? est : "pendente";
 
   return (
     <StatusMeiView
+      fase={fase}
+      certificado={certificado}
       emAndamento={emAndamento}
       onVerProximosPassos={() => router.push(proxima(ROTA))}
+      onPagarCertificado={() => router.push("/mei/certificado/pagar")}
+      /* O único ponto em que a fase do certificado volta a andar: com ele
+         emitido, a casa finalmente é o destino (`SAIDA_MEI`). */
+      onEntrar={() => router.push(proxima("/mei/certificado"))}
+      /* 🚧 mock (RF-01): sem provedor. Os 2 chips voltam pro pagamento do
+         certificado com o método já escolhido — o mais perto do real sem
+         inventar documento que não existe. */
+      onVerBoleto={() => router.push("/mei/certificado/pagar?metodo=boleto")}
+      onPagarPix={() => router.push("/mei/certificado/pagar?metodo=pix")}
     />
   );
 }

@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Campo, Texto, Select } from "@/components/ui/form";
 import { CardNota } from "@/components/ui/card-nota";
 import { TelaHeader, Titulo, Corpo, Rodape, Aviso } from "@/components/ui/tela";
-import { LinhaEscolha } from "./_linha-escolha";
 import {
   CATEGORIAS_MEI,
   FORMAS_ENDERECO_MEI,
@@ -67,6 +66,16 @@ import { mascaraCep, buscarCep, type EnderecoCep } from "./_formato";
  * a gente não atende a atividade dela.
  * ═══════════════════════════════════════════════════════════════════════════
  */
+/**
+ * A última opção do dropdown. Mesmo papel do `FORA_LISTA_ID` do E3.4, com
+ * outro DESTINO: lá "não encontrei" vai pra waitlist, aqui vai pro ME.
+ *
+ * A diferença é de fato, não de estilo: quem não se encontra na lista do MEI
+ * quase sempre É atendido pela Legalizai, só não nesse regime. Mandar essa
+ * pessoa pra uma fila de espera seria recusar quem a gente atende hoje.
+ */
+const FORA_LISTA_MEI = "fora-lista-mei";
+
 export function EnderecoMeiView({
   meta,
   categoria,
@@ -108,7 +117,15 @@ export function EnderecoMeiView({
     setAchado(buscarCep(mascarado.replace(/\D/g, "")));
   }
 
-  const categoriaSemMei = categoria !== null && !categoriaTemMei(categoria);
+  /* 🔄 07/09 (pedido do Pedro) — a lista mostra SÓ o que o MEI atende, e quem
+     não se encontra sai pela última opção. Ver o bloco do `Select` abaixo. */
+  const formaEscolhida = FORMAS_ENDERECO_MEI.find((f) => f.id === forma) ?? null;
+  const foraDaLista = categoria === FORA_LISTA_MEI;
+  /* Guarda de retaguarda: se uma categoria sem MEI chegar por deep-link
+     (`?cat=tech`), ela cai no mesmo bloco em vez de passar batido. Ela não
+     aparece mais no dropdown, mas a rota aceita qualquer valor. */
+  const categoriaSemMei =
+    foraDaLista || (categoria !== null && !categoriaTemMei(categoria));
 
   const completo =
     categoria !== null &&
@@ -135,13 +152,28 @@ export function EnderecoMeiView({
               depois, de uma lista do governo.
             </p>
 
+            {/* 🔄 07/09 (pedido do Pedro) — A LISTA SÓ TEM O QUE O MEI ATENDE.
+                Ela trazia as 14 categorias, com as 3 sem MEI marcadas
+                "(só como ME)": a pessoa lia uma lista em que 3 das opções não
+                serviam pro que ela veio fazer, e o rótulo entre parênteses
+                pedia que ela entendesse o enquadramento antes de escolher.
+                Agora é a mesma dinâmica do E3.4: só o atendido, e quem não se
+                encontra usa a ÚLTIMA opção, em coral. Escolher já é passar
+                pelo gate. */}
             <Select
               valor={categoria ?? ""}
               onChange={(v) => setCategoria(v || null)}
-              opcoes={CATEGORIAS_MEI.map((c) => ({
-                v: c.id,
-                label: categoriaTemMei(c.id) ? c.label : `${c.label} (só como ME)`,
-              }))}
+              opcoes={[
+                ...CATEGORIAS_MEI.filter((c) => categoriaTemMei(c.id)).map((c) => ({
+                  v: c.id,
+                  label: c.label,
+                })),
+                {
+                  v: FORA_LISTA_MEI,
+                  label: "Não encontrei minha categoria",
+                  destaque: "coral" as const,
+                },
+              ]}
               placeholder="Escolha uma categoria"
             />
 
@@ -149,15 +181,27 @@ export function EnderecoMeiView({
                 onde ele nasceu justamente pro caminho MEI. */}
             {categoriaSemMei && (
               <div className="mt-3 flex flex-col gap-3">
-                <Aviso neutro variante="info" titulo="Essa atividade não pode ser MEI">
-                  A lei não considera empresário quem exerce profissão
-                  intelectual (art. 966 do Código Civil), então tecnologia,
-                  design e consultoria não entram na lista do MEI. Não é escolha
-                  nossa, e não tem exceção.
+                {/* ✍️ 07/09 — a copy MUDOU junto com a lista. Ela nomeava as 3
+                    categorias ("tecnologia, design e consultoria") porque eram
+                    exatamente as 3 que apareciam marcadas no dropdown. Agora
+                    quem chega aqui pode ser qualquer pessoa que não se
+                    encontrou, então a explicação começa pelo fato geral: a
+                    lista do MEI é FECHADA por lei. As profissões intelectuais
+                    seguem citadas como o caso mais comum, com a base legal —
+                    é a resposta de quem estava procurando "programador" e não
+                    achou. */}
+                <Aviso neutro variante="info" titulo="A lista do MEI é fechada por lei">
+                  O MEI só pode as ocupações do Anexo XI (Res. CGSN 140/2018), e
+                  quem exerce profissão intelectual não entra: a lei não
+                  considera empresário quem trabalha com ciência, letras ou arte
+                  (art. 966 do Código Civil). É por isso que tecnologia, design
+                  e consultoria ficam de fora. Não é escolha nossa, e não tem
+                  exceção.
                 </Aviso>
                 <p className="text-caption text-text-secondary">
-                  A boa notícia: a gente atende essa atividade como ME no
-                  Simples Nacional, que é o caminho certo pro seu caso.
+                  A boa notícia: como ME no Simples Nacional a lista é bem mais
+                  ampla, e é provável que a gente atenda o seu caso. Na próxima
+                  tela você escolhe entre 17 categorias.
                 </p>
                 <Button full onClick={onQueroMe}>
                   Continuar como ME
@@ -177,19 +221,32 @@ export function EnderecoMeiView({
                 casa. Como MEI, você abre de qualquer cidade do Brasil.
               </p>
 
-              {/* A pergunta que só existe no MEI. Cartões-linha, o mesmo
-                  idioma da lista de inclusos do E7. */}
-              <div className="flex flex-col gap-2">
-                {FORMAS_ENDERECO_MEI.map((f) => (
-                  <LinhaEscolha
-                    key={f.id}
-                    titulo={f.label}
-                    nota={f.nota}
-                    selecionada={forma === f.id}
-                    onClick={() => setForma(f.id)}
-                  />
-                ))}
-              </div>
+              {/* 🔄 07/09 (pedido do Pedro) — DE CARTÕES-LINHA PRA DROPDOWN.
+                  Eram 4 `LinhaEscolha` empilhadas, e elas custavam ~200px numa
+                  tela que ainda tem CEP e número embaixo. Agora é o mesmo
+                  `Select` da categoria, logo acima: duas perguntas seguidas
+                  com a mesma gramática de escolha, em vez de um dropdown e um
+                  bloco de cartões fazendo a mesma coisa de dois jeitos.
+                  ⚠️ A `nota` de cada opção NÃO se perde: ela desce pro cartão
+                  abaixo quando a escolha é feita. É o mesmo arranjo do M6, em
+                  que o efeito do método aparece depois de escolhido — dizer o
+                  efeito das 4 de uma vez seria parede de texto pra explicar
+                  uma decisão que só importa depois de tomada. */}
+              <Select
+                valor={forma ?? ""}
+                onChange={setForma}
+                opcoes={FORMAS_ENDERECO_MEI.map((f) => ({
+                  v: f.id,
+                  label: f.label,
+                }))}
+                placeholder="Escolha onde você atende"
+              />
+
+              {formaEscolhida && (
+                <div className="mt-3">
+                  <CardNota variante="positivo">{formaEscolhida.nota}</CardNota>
+                </div>
+              )}
             </div>
           )}
 

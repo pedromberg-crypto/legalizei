@@ -860,5 +860,32 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 - 2) Continua de pé a fidelidade de 12 meses sem contrapartida escrita, do update anterior
 ```
 
+## Semana 08/09/2026 — escopo do produto, nomes dos CNAEs e a saída do Asaas
+
+> Dia sem mexer em tela. Três frentes: deixar os CNAEs legíveis pra quem não é contador, fechar a lista do que o app vai entregar, e trocar o meio de pagamento. Duas coisas pedem decisão sua, e uma delas é fiscal.
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | **Os 87 CNAEs ganharam nome de gente** | O banco tinha só a descrição oficial do IBGE, que é escrita em maiúscula e ao contrário ("AUTOMÓVEIS COM MOTORISTA; LOCAÇÃO DE"). Agora cada um tem um título curto e uma explicação do que cobre. "ATIVIDADES DE PRODUÇÃO DE FOTOGRAFIAS, EXCETO AÉREA E SUBMARINA" virou **Fotografia**, e a exceção foi pra descrição | 🟢 entregue ao dev |
+| 2 | **Lista fechada do que o app entrega** | Cruzamos tudo o que mapeamos da Contabilizei com o que já construímos: são **51 funcionalidades, 31 já em tela** (ainda sem o motor por trás). A lista mostra o que falta e o que a gente decidiu não fazer | 🟢 |
+| 3 | 🔴 **A gente vai receber a taxa da Junta e o certificado, e repassar** | Decisão do Pedro: o cliente paga pra nós (R$281,08 da Junta e R$209/ano do certificado) e nós pagamos o órgão e a certificadora. **Isso precisa da sua leitura fiscal:** receber esse dinheiro no nosso CNPJ sem separar pode ser tributado como se fosse nosso faturamento (de 6% a 16%), sobre dinheiro que é de terceiro. A solução usual (dividir o pagamento na origem) esbarra no fato de a Junta ser órgão público e não abrir conta em gateway | 🔴 **precisa de você** |
+| 4 | **Regra de quando o serviço avulso é cobrado** | Antes era "tudo entra na próxima fatura". Não se sustenta com serviço de R$1.299. Nova regra: **repasse a terceiro e valor alto cobram na hora**; serviço nosso e valor baixo entram na fatura. Falta travar o teto (proposta: 1 mensalidade) | 🟡 |
+| 5 | **Trocamos o meio de pagamento** | Saímos do Asaas: no formato dele o nosso sistema teria que manipular número de cartão do cliente, o que traz responsabilidade de segurança pesada. Pesquisamos o mercado e o Pedro está marcando reunião com o **Pagar.me**, onde a operadora assume esse pedaço | 🟢 |
+| 6 | **Descobrimos o que depende de órgão antes de prometer** | Paramos a discussão de funcionalidades pra mapear o que depende de fora. De 51 funcionalidades, 24 dependem de terceiros e **10 a gente ainda não sabe se é possível**. As duas que decidem tudo: emitir nota fiscal e gerar a guia do imposto | 🟡 |
+| 7 | ⚠️ **A Junta Comercial de MG continua sem sistema automatizado** | Isso atinge justamente os 3 serviços mais caros do catálogo (alteração de contrato, baixa da empresa e mudança de porte). Se continuar assim, esses serviços são feitos à mão, e o preço precisa refletir esse trabalho | 🔴 |
+
+### 📱 WhatsApp (08/09)
+```
+*Update Legalizai* 📣
+- Os 87 CNAEs que a gente atende ganharam nome de gente. "ATIVIDADES DE PRODUÇÃO DE FOTOGRAFIAS, EXCETO AÉREA E SUBMARINA" virou "Fotografia", com a exceção explicada embaixo. Já entregue pro programador
+- Fechamos a lista do que o app vai entregar: 51 funcionalidades, 31 já com tela pronta
+- Trocamos o meio de pagamento: saímos do Asaas porque o formato dele obrigaria o nosso sistema a lidar com o número do cartão do cliente. Estou marcando reunião com o Pagar.me
+- Antes de continuar detalhando funcionalidade, paramos pra mapear o que depende de órgão. De 51, são 24 que dependem de fora e 10 que a gente ainda não sabe se dá
+- *Preciso de você em 2 coisas:*
+- 1) Decidimos que a gente recebe a taxa da Junta (R$281,08) e o certificado (R$209) do cliente e repassa. Isso tem uma questão fiscal: receber no nosso CNPJ sem separar pode ser tributado como faturamento nosso, sobre dinheiro que é do órgão. Preciso da sua leitura
+- 2) A Junta de MG continua sem sistema automatizado, e isso pega alteração de contrato, baixa e mudança de porte. Esses são feitos à mão, e o preço precisa considerar isso
+```
+
 ## Links
+
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]] · [[estado-atual]] · [[indice-autoridade]]

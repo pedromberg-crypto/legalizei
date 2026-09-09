@@ -1,5 +1,8 @@
 # Memory Index — Legalize
 
+- [API antes de funcionalidade](legalize-api-antes-de-funcionalidade.md) — 08/09: matriz de dependência externa em `funcionalidades-me-simples.md`; 24 deps, 10 sem resposta. Emitir NFS-e e emitir a guia do DAS decidem o produto.
+- [Asaas fora, Pagar.me em avaliação](legalize-gateway-asaas-fora.md) — 08/09: o formato do Asaas nos jogaria pro escopo PCI; pesquisa arquivada, reunião com Pagar.me sendo marcada.
+- [Portal ME/Simples: lista consolidada](legalize-portal-lista-consolidada.md) — 08/09: 51 funcionalidades, 31 construídas; "pagar o DAS pelo app" morreu em 27/07 e o gap virou "saber que foi pago".
 - [Réplica de tela se PORTA, não se remonta](legalize-replica-de-tela-se-porta.md) — 07/09: 5 telas erradas no mesmo dia pela mesma raiz; nasceu a trava `verificar-anatomia-mei.mjs`, que roda junto com o gerar-mapa.
 - [Certificado do MEI virou gate E cobrança no app](legalize-certificado-vira-gate-e-cobranca.md) — 07/09: sem ele o app não libera; deixa de ser "pago direto na certificadora". 🔴 pede cláusula com o Mauro.
 - [Fork do ramo MEI](legalize-fork-ramo-mei.md) — 07/09: MEI virou caminho próprio (`/mei/*`, `components/mei/`, `lib/mei-flow.ts`) com trava de fronteira; herança por prop `mei` custou 4 defeitos em 8 dias.

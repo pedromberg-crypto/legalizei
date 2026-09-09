@@ -1,0 +1,524 @@
+[
+  {
+    "code": "7729201",
+    "official_description": "ALUGUEL DE APARELHOS DE JOGOS ELETRÔNICOS",
+    "friendly_title": "Aluguel de videogames e jogos eletrônicos",
+    "friendly_description": "Aluguel de consoles, videogames, fliperamas e brinquedos eletrônicos. Você aluga o aparelho; explorar o jogo no seu ponto é outra atividade."
+  },
+  {
+    "code": "7729202",
+    "official_description": "ALUGUEL DE MÓVEIS, UTENSÍLIOS E APARELHOS DE USO DOMÉSTICO E PESSOAL; INSTRUMENTOS MUSICAIS",
+    "friendly_title": "Aluguel de móveis, eletrodomésticos e instrumentos",
+    "friendly_description": "Aluguel de móveis, cadeiras, eletrodomésticos, ar-condicionado e instrumentos musicais para uso doméstico ou pessoal."
+  },
+  {
+    "code": "7729203",
+    "official_description": "ALUGUEL DE MATERIAL MÉDICO",
+    "friendly_title": "Aluguel de material médico",
+    "friendly_description": "Aluguel de cadeira de rodas, cama hospitalar, muletas, inaladores e material médico em geral."
+  },
+  {
+    "code": "5590601",
+    "official_description": "ALBERGUES, EXCETO ASSISTENCIAIS",
+    "friendly_title": "Albergue e hostel",
+    "friendly_description": "Hospedagem em albergue ou hostel, com cama por noite ou quarto compartilhado. Não cobre albergue assistencial, que é serviço social."
+  },
+  {
+    "code": "5590603",
+    "official_description": "PENSÕES(ALOJAMENTO)",
+    "friendly_title": "Pensão e casa de cômodos",
+    "friendly_description": "Hospedagem em pensão, com ou sem refeição incluída."
+  },
+  {
+    "code": "5811500",
+    "official_description": "EDIÇÃO DE LIVROS",
+    "friendly_title": "Edição de livros",
+    "friendly_description": "Edição de livros impressos e digitais, e-books, audiolivros, apostilas, dicionários e atlas."
+  },
+  {
+    "code": "5812301",
+    "official_description": "EDIÇÃO DE JORNAIS DIÁRIOS",
+    "friendly_title": "Edição de jornal diário",
+    "friendly_description": "Edição de jornal que sai todo dia, impresso, eletrônico ou na internet."
+  },
+  {
+    "code": "5812302",
+    "official_description": "EDIÇÃO DE JORNAIS NÃO DIÁRIOS",
+    "friendly_title": "Edição de jornal semanal ou mensal",
+    "friendly_description": "Edição de jornal que não sai todo dia: semanal, quinzenal ou mensal, impresso ou na internet."
+  },
+  {
+    "code": "5813100",
+    "official_description": "EDIÇÃO DE REVISTAS",
+    "friendly_title": "Edição de revistas",
+    "friendly_description": "Edição de revistas e publicações periódicas, impressas, eletrônicas ou na internet."
+  },
+  {
+    "code": "6201502",
+    "official_description": "WEB DESIGN",
+    "friendly_title": "Web design",
+    "friendly_description": "Criação e desenvolvimento de sites, portais e páginas na internet."
+  },
+  {
+    "code": "5819100",
+    "official_description": "EDIÇÃO DE CADASTROS, LISTAS E DE OUTROS PRODUTOS GRÁFICOS",
+    "friendly_title": "Edição de catálogos, listas e guias",
+    "friendly_description": "Edição de catálogos, listas, guias, calendários, cartões-postais e cartões de felicitação."
+  },
+  {
+    "code": "5911102",
+    "official_description": "PRODUÇÃO DE FILMES PARA PUBLICIDADE",
+    "friendly_title": "Produção de vídeo publicitário",
+    "friendly_description": "Produção de comercial de TV, filme institucional e vídeo para campanha publicitária."
+  },
+  {
+    "code": "5912001",
+    "official_description": "SERVIÇOS DE DUBLAGEM",
+    "friendly_title": "Dublagem",
+    "friendly_description": "Dublagem de filmes, séries, programas de televisão e vídeos."
+  },
+  {
+    "code": "5912002",
+    "official_description": "SERVIÇOS DE MIXAGEM SONORA EM PRODUÇÃO AUDIOVISUAL",
+    "friendly_title": "Mixagem e edição de som",
+    "friendly_description": "Mixagem sonora para filme, vídeo e programa de televisão."
+  },
+  {
+    "code": "7220700",
+    "official_description": "PESQUISA E DESENVOLVIMENTO EXPERIMENTAL EM CIÊNCIAS SOCIAIS E HUMANAS",
+    "friendly_title": "Pesquisa em ciências sociais e humanas",
+    "friendly_description": "Pesquisa e desenvolvimento em direito, economia, linguística, arqueologia, artes e áreas afins."
+  },
+  {
+    "code": "5920100",
+    "official_description": "ATIVIDADES DE GRAVAÇÃO DE SOM E DE EDIÇÃO DE MÚSICA",
+    "friendly_title": "Estúdio de gravação e edição musical",
+    "friendly_description": "Gravação de som, edição de música e gestão de direitos autorais de obras musicais."
+  },
+  {
+    "code": "6201501",
+    "official_description": "DESENVOLVIMENTO DE PROGRAMAS DE COMPUTADOR SOB ENCOMENDA",
+    "friendly_title": "Desenvolvimento de software sob encomenda",
+    "friendly_description": "Criação de sistema, aplicativo ou banco de dados feito sob medida para um cliente específico."
+  },
+  {
+    "code": "6202300",
+    "official_description": "DESENVOLVIMENTO E LICENCIAMENTO DE PROGRAMAS DE COMPUTADOR CUSTOMIZÁVEIS",
+    "friendly_title": "Desenvolvimento de software customizável",
+    "friendly_description": "Desenvolvimento e licenciamento de software que você adapta para cada cliente."
+  },
+  {
+    "code": "6203100",
+    "official_description": "DESENVOLVIMENTO E LICENCIAMENTO DE PROGRAMAS DE COMPUTADOR NÃO CUSTOMIZÁVEIS",
+    "friendly_title": "Desenvolvimento de software pronto",
+    "friendly_description": "Desenvolvimento e licenciamento de software vendido igual para todo mundo, sem adaptação por cliente."
+  },
+  {
+    "code": "6204000",
+    "official_description": "CONSULTORIA EM TECNOLOGIA DA INFORMAÇÃO",
+    "friendly_title": "Consultoria em TI",
+    "friendly_description": "Consultoria, assessoria e auditoria em sistemas, software e infraestrutura de informática."
+  },
+  {
+    "code": "6209100",
+    "official_description": "SUPORTE TÉCNICO, MANUTENÇÃO E OUTROS SERVIÇOS EM TECNOLOGIA DA INFORMAÇÃO",
+    "friendly_title": "Suporte técnico em TI",
+    "friendly_description": "Help-desk, instalação, configuração e manutenção de sistemas e equipamentos de informática."
+  },
+  {
+    "code": "6311900",
+    "official_description": "TRATAMENTO DE DADOS, PROVEDORES DE SERVIÇOS DE APLICAÇÃO E SERVIÇOS DE HOSPEDAGEM NA INTERNET",
+    "friendly_title": "Hospedagem de sites e tratamento de dados",
+    "friendly_description": "Hospedagem na internet, gestão de banco de dados de terceiros e processamento de dados."
+  },
+  {
+    "code": "6391700",
+    "official_description": "AGÊNCIAS DE NOTÍCIAS",
+    "friendly_title": "Agência de notícias",
+    "friendly_description": "Apuração, produção e distribuição de material noticioso para veículos de imprensa."
+  },
+  {
+    "code": "7722500",
+    "official_description": "ALUGUEL DE FITAS DE VÍDEO, DVDS E SIMILARES",
+    "friendly_title": "Locadora de filmes e mídias",
+    "friendly_description": "Aluguel de DVD, Blu-ray, CD e cartuchos de videogame."
+  },
+  {
+    "code": "7723300",
+    "official_description": "ALUGUEL DE OBJETOS DO VESTUÁRIO, JÓIAS E ACESSÓRIOS",
+    "friendly_title": "Aluguel de roupas, joias e acessórios",
+    "friendly_description": "Aluguel de roupa, traje de festa, enxoval de noiva, calçado, joia e acessório."
+  },
+  {
+    "code": "7210000",
+    "official_description": "PESQUISA E DESENVOLVIMENTO EXPERIMENTAL EM CIÊNCIAS FÍSICAS E NATURAIS",
+    "friendly_title": "Pesquisa em ciências exatas e naturais",
+    "friendly_description": "Pesquisa e desenvolvimento em agronomia, biologia, biomedicina, física, química e áreas afins."
+  },
+  {
+    "code": "7311400",
+    "official_description": "AGÊNCIAS DE PUBLICIDADE",
+    "friendly_title": "Agência de publicidade",
+    "friendly_description": "Criação de campanha publicitária, propaganda e material de anúncio para clientes."
+  },
+  {
+    "code": "7312200",
+    "official_description": "AGENCIAMENTO DE ESPAÇOS PARA PUBLICIDADE, EXCETO EM VEÍCULOS DE COMUNICAÇÃO",
+    "friendly_title": "Venda de espaço publicitário",
+    "friendly_description": "Aluguel e revenda de espaço físico para publicidade: outdoor, busdoor, cartaz e painel. Não cobre espaço em rádio, TV e jornal."
+  },
+  {
+    "code": "7319002",
+    "official_description": "PROMOÇÃO DE VENDAS",
+    "friendly_title": "Promoção de vendas",
+    "friendly_description": "Demonstração de produto em ponto de venda, panfletagem e distribuição de material promocional."
+  },
+  {
+    "code": "7319003",
+    "official_description": "MARKETING DIRETO",
+    "friendly_title": "Marketing direto",
+    "friendly_description": "Marketing e publicidade por mala direta, telefone e canais diretos com o cliente."
+  },
+  {
+    "code": "7319004",
+    "official_description": "CONSULTORIA EM PUBLICIDADE",
+    "friendly_title": "Consultoria em publicidade",
+    "friendly_description": "Consultoria e assessoria em marketing, branding e gestão de marca."
+  },
+  {
+    "code": "7320300",
+    "official_description": "PESQUISAS DE MERCADO E DE OPINIÃO PÚBLICA",
+    "friendly_title": "Pesquisa de mercado e de opinião",
+    "friendly_description": "Levantamento e análise de dados de mercado e de opinião pública, incluindo a análise estatística."
+  },
+  {
+    "code": "7410202",
+    "official_description": "DESIGN DE INTERIORES",
+    "friendly_title": "Design de interiores",
+    "friendly_description": "Projeto e decoração de ambientes, além de vitrine e organização visual de loja."
+  },
+  {
+    "code": "7410203",
+    "official_description": "DESIGN DE PRODUTO",
+    "friendly_title": "Design de produto",
+    "friendly_description": "Desenho industrial e criação de produto, roupa, joia e maquete."
+  },
+  {
+    "code": "7410299",
+    "official_description": "ATIVIDADES DE DESIGN NÃO ESPECIFICADAS ANTERIORMENTE",
+    "friendly_title": "Design gráfico e outros designs",
+    "friendly_description": "Criação de logotipo, identidade visual, arte gráfica digital e design de jogos, sem a programação."
+  },
+  {
+    "code": "7420001",
+    "official_description": "ATIVIDADES DE PRODUÇÃO DE FOTOGRAFIAS, EXCETO AÉREA E SUBMARINA",
+    "friendly_title": "Fotografia",
+    "friendly_description": "Fotografia em estúdio, de evento, de imprensa e por conta própria. Não cobre foto aérea nem submarina."
+  },
+  {
+    "code": "7420003",
+    "official_description": "LABORATÓRIOS FOTOGRÁFICOS",
+    "friendly_title": "Laboratório e revelação fotográfica",
+    "friendly_description": "Revelação de fotos, montagem de slides e edição de imagem fotográfica."
+  },
+  {
+    "code": "7420004",
+    "official_description": "FILMAGEM DE FESTAS E EVENTOS",
+    "friendly_title": "Filmagem de festas e eventos",
+    "friendly_description": "Gravação e produção de vídeo de festa, casamento e evento cultural."
+  },
+  {
+    "code": "7420005",
+    "official_description": "SERVIÇOS DE MICROFILMAGEM",
+    "friendly_title": "Microfilmagem e digitalização de acervo",
+    "friendly_description": "Microfilmagem de documentos e acervos."
+  },
+  {
+    "code": "7490101",
+    "official_description": "SERVIÇOS DE TRADUÇÃO, INTERPRETAÇÃO E SIMILARES",
+    "friendly_title": "Tradução e interpretação",
+    "friendly_description": "Tradução de textos, interpretação, revisão gramatical e copywriting."
+  },
+  {
+    "code": "7490104",
+    "official_description": "ATIVIDADES DE INTERMEDIAÇÃO E AGENCIAMENTO DE SERVIÇOS E NEGÓCIOS EM GERAL, EXCETO IMOBILIÁRIOS",
+    "friendly_title": "Intermediação de negócios e representação",
+    "friendly_description": "Aproximar quem compra e quem vende: intermediação de contratos, serviços e negócios em geral. Não cobre negócio imobiliário."
+  },
+  {
+    "code": "7490105",
+    "official_description": "AGENCIAMENTO DE PROFISSIONAIS PARA ATIVIDADES ESPORTIVAS, CULTURAIS E ARTÍSTICAS",
+    "friendly_title": "Agenciamento de atletas e artistas",
+    "friendly_description": "Empresariamento de atleta, ator, modelo e artista para atividade esportiva, cultural ou artística."
+  },
+  {
+    "code": "7721700",
+    "official_description": "ALUGUEL DE EQUIPAMENTOS RECREATIVOS E ESPORTIVOS",
+    "friendly_title": "Aluguel de equipamento esportivo e de lazer",
+    "friendly_description": "Aluguel de bicicleta, barco de lazer, pula-pula, tobogã e brinquedo não eletrônico, sem operar o equipamento."
+  },
+  {
+    "code": "7729299",
+    "official_description": "ALUGUEL DE OUTROS OBJETOS PESSOAIS E DOMÉSTICOS NÃO ESPECIFICADOS ANTERIORMENTE",
+    "friendly_title": "Aluguel de outros objetos pessoais e domésticos",
+    "friendly_description": "Aluguel de itens que não cabem nas outras listas: livros, plantas e flores, peruca, decoração de Natal."
+  },
+  {
+    "code": "7733100",
+    "official_description": "ALUGUEL DE MÁQUINAS E EQUIPAMENTOS PARA ESCRITÓRIOS",
+    "friendly_title": "Aluguel de equipamento de escritório",
+    "friendly_description": "Aluguel de computador, celular, data-show, caixa registradora e máquina de escritório."
+  },
+  {
+    "code": "8591100",
+    "official_description": "ENSINO DE ESPORTES",
+    "friendly_title": "Aulas de esporte",
+    "friendly_description": "Escolinha e aulas de futebol, natação, artes marciais, capoeira, atletismo e outros esportes."
+  },
+  {
+    "code": "8220200",
+    "official_description": "ATIVIDADES DE TELEATENDIMENTO",
+    "friendly_title": "Teleatendimento e call center",
+    "friendly_description": "Atendimento a clientes por telefone para outras empresas: SAC, central de atendimento e call center."
+  },
+  {
+    "code": "8592901",
+    "official_description": "ENSINO DE DANÇA",
+    "friendly_title": "Aulas de dança",
+    "friendly_description": "Aulas e academia de dança: balé, dança de salão, dança popular e folclórica."
+  },
+  {
+    "code": "8211300",
+    "official_description": "SERVIÇOS COMBINADOS DE ESCRITÓRIO E APOIO ADMINISTRATIVO",
+    "friendly_title": "Serviços de escritório e apoio administrativo",
+    "friendly_description": "Recepção, arquivo de documentos e apoio operacional combinados, para empresas e profissionais liberais."
+  },
+  {
+    "code": "8219901",
+    "official_description": "FOTOCÓPIAS",
+    "friendly_title": "Fotocópias e impressão",
+    "friendly_description": "Xerox, cópia, digitalização e impressão de documentos."
+  },
+  {
+    "code": "8230001",
+    "official_description": "SERVIÇOS DE ORGANIZAÇÃO DE FEIRAS, CONGRESSOS, EXPOSIÇÕES E FESTAS",
+    "friendly_title": "Organização de eventos e festas",
+    "friendly_description": "Organização de feira, congresso, exposição, festa infantil e festa de família, e a gestão do espaço do evento."
+  },
+  {
+    "code": "8291100",
+    "official_description": "ATIVIDADES DE COBRANÇAS E INFORMAÇÕES CADASTRAIS",
+    "friendly_title": "Cobrança e consulta cadastral",
+    "friendly_description": "Cobrança de faturas e dívidas para terceiros, análise de cadastro e aprovação de crédito."
+  },
+  {
+    "code": "8292000",
+    "official_description": "ENVASAMENTO E EMPACOTAMENTO SOB CONTRATO",
+    "friendly_title": "Envase e empacotamento para terceiros",
+    "friendly_description": "Envasar, fracionar e empacotar produtos de outras empresas, sob contrato."
+  },
+  {
+    "code": "8299703",
+    "official_description": "SERVIÇOS DE GRAVAÇÃO DE CARIMBOS, EXCETO CONFECÇÃO",
+    "friendly_title": "Gravação de carimbos",
+    "friendly_description": "Gravação de carimbos. Não cobre a fabricação do carimbo, que é indústria."
+  },
+  {
+    "code": "8299707",
+    "official_description": "SALAS DE ACESSO À INTERNET",
+    "friendly_title": "Lan house e sala de internet",
+    "friendly_description": "Sala com computadores para acesso à internet, digitação, escaneamento e apoio administrativo."
+  },
+  {
+    "code": "8599603",
+    "official_description": "TREINAMENTO EM INFORMÁTICA",
+    "friendly_title": "Curso de informática",
+    "friendly_description": "Aulas e cursos de informática, computador e uso da internet."
+  },
+  {
+    "code": "8599604",
+    "official_description": "TREINAMENTO EM DESENVOLVIMENTO PROFISSIONAL E GERENCIAL",
+    "friendly_title": "Curso profissionalizante e de gestão",
+    "friendly_description": "Cursos de capacitação profissional, aperfeiçoamento e treinamento gerencial, presenciais ou a distância."
+  },
+  {
+    "code": "8599605",
+    "official_description": "CURSOS PREPARATÓRIOS PARA CONCURSOS",
+    "friendly_title": "Curso preparatório para concursos",
+    "friendly_description": "Cursinho para concurso público, vestibular e ENEM."
+  },
+  {
+    "code": "8592902",
+    "official_description": "ENSINO DE ARTES CÊNICAS, EXCETO DANÇA",
+    "friendly_title": "Aulas de teatro e artes cênicas",
+    "friendly_description": "Aulas de teatro, impostação de voz e direção de espetáculo. Não cobre dança nem curso de nível técnico ou superior."
+  },
+  {
+    "code": "8592903",
+    "official_description": "ENSINO DE MÚSICA",
+    "friendly_title": "Aulas de música",
+    "friendly_description": "Aulas de música e conservatório, sem ser curso superior."
+  },
+  {
+    "code": "8592999",
+    "official_description": "ENSINO DE ARTE E CULTURA NÃO ESPECIFICADO ANTERIORMENTE",
+    "friendly_title": "Aulas de arte e cultura",
+    "friendly_description": "Aulas de artesanato, pintura, escultura e outras artes não listadas em outra atividade."
+  },
+  {
+    "code": "8593700",
+    "official_description": "ENSINO DE IDIOMAS",
+    "friendly_title": "Aulas de idiomas",
+    "friendly_description": "Cursos de inglês, espanhol, francês e outros idiomas, incluindo exame de proficiência."
+  },
+  {
+    "code": "9609202",
+    "official_description": "AGÊNCIAS MATRIMONIAIS",
+    "friendly_title": "Agência matrimonial",
+    "friendly_description": "Agência de casamento e de encontros."
+  },
+  {
+    "code": "9529103",
+    "official_description": "REPARAÇÃO DE RELÓGIOS",
+    "friendly_title": "Conserto de relógios",
+    "friendly_description": "Conserto de relógio, cronômetro e artigos de relojoaria."
+  },
+  {
+    "code": "9002702",
+    "official_description": "RESTAURAÇÃO DE OBRAS DE ARTE",
+    "friendly_title": "Restauração de obras de arte",
+    "friendly_description": "Restauração de quadro, escultura, imagem sacra e objeto de arte."
+  },
+  {
+    "code": "9001901",
+    "official_description": "PRODUÇÃO TEATRAL",
+    "friendly_title": "Produção de teatro",
+    "friendly_description": "Companhia de teatro, ator independente e produção de espetáculo teatral."
+  },
+  {
+    "code": "9001902",
+    "official_description": "PRODUÇÃO MUSICAL",
+    "friendly_title": "Produção musical",
+    "friendly_description": "Banda, cantor, intérprete, autoria e arranjo musical."
+  },
+  {
+    "code": "9001903",
+    "official_description": "PRODUÇÃO DE ESPETÁCULOS DE DANÇA",
+    "friendly_title": "Produção de espetáculo de dança",
+    "friendly_description": "Companhia e conjunto de dança, incluindo dança folclórica, e a produção do espetáculo."
+  },
+  {
+    "code": "9001904",
+    "official_description": "PRODUÇÃO DE ESPETÁCULOS CIRCENSES, DE MARIONETES E SIMILARES",
+    "friendly_title": "Produção de circo e teatro de bonecos",
+    "friendly_description": "Circo, espetáculo circense, fantoche e marionete."
+  },
+  {
+    "code": "9002701",
+    "official_description": "ATIVIDADES DE ARTISTAS PLÁSTICOS, JORNALISTAS INDEPENDENTES E ESCRITORES",
+    "friendly_title": "Artista plástico, jornalista ou escritor",
+    "friendly_description": "Trabalho independente de artista plástico, escritor, jornalista, cartunista, caligrafista e criador de desenho animado."
+  },
+  {
+    "code": "9102302",
+    "official_description": "RESTAURAÇÃO E CONSERVAÇÃO DE LUGARES E PRÉDIOS HISTÓRICOS",
+    "friendly_title": "Restauração de prédios históricos",
+    "friendly_description": "Conservação e restauro de prédio tombado e imóvel de valor histórico. Não cobre o projeto de arquitetura."
+  },
+  {
+    "code": "9319101",
+    "official_description": "PRODUÇÃO E PROMOÇÃO DE EVENTOS ESPORTIVOS",
+    "friendly_title": "Organização de eventos esportivos",
+    "friendly_description": "Produção e promoção de competição esportiva, além de associação e federação de esporte."
+  },
+  {
+    "code": "9329803",
+    "official_description": "EXPLORAÇÃO DE JOGOS DE SINUCA, BILHAR E SIMILARES",
+    "friendly_title": "Salão de sinuca e bilhar",
+    "friendly_description": "Exploração de mesa de sinuca e bilhar no seu ponto."
+  },
+  {
+    "code": "9329804",
+    "official_description": "EXPLORAÇÃO DE JOGOS ELETRÔNICOS RECREATIVOS",
+    "friendly_title": "Fliperama e jogos eletrônicos",
+    "friendly_description": "Exploração de fliperama, jogo eletrônico e cyber café com foco em jogos."
+  },
+  {
+    "code": "9511800",
+    "official_description": "REPARAÇÃO E MANUTENÇÃO DE COMPUTADORES E DE EQUIPAMENTOS PERIFÉRICOS",
+    "friendly_title": "Conserto de computadores",
+    "friendly_description": "Assistência técnica em computador, notebook e equipamento de informática."
+  },
+  {
+    "code": "9512600",
+    "official_description": "REPARAÇÃO E MANUTENÇÃO DE EQUIPAMENTOS DE COMUNICAÇÃO",
+    "friendly_title": "Conserto de celulares e equipamentos de comunicação",
+    "friendly_description": "Conserto de celular, telefone, câmera de vídeo e equipamento de comunicação."
+  },
+  {
+    "code": "9521500",
+    "official_description": "REPARAÇÃO E MANUTENÇÃO DE EQUIPAMENTOS ELETROELETRÔNICOS DE USO PESSOAL E DOMÉSTICO",
+    "friendly_title": "Conserto de eletrodomésticos e eletrônicos",
+    "friendly_description": "Conserto de eletrodoméstico, eletrônico de uso pessoal, antena e alarme residencial."
+  },
+  {
+    "code": "9529101",
+    "official_description": "REPARAÇÃO DE CALÇADOS, DE BOLSAS E ARTIGOS DE VIAGEM",
+    "friendly_title": "Conserto de calçados e bolsas",
+    "friendly_description": "Sapataria: conserto e renovação de calçado, bolsa e artigo de viagem."
+  },
+  {
+    "code": "9529102",
+    "official_description": "CHAVEIROS",
+    "friendly_title": "Chaveiro",
+    "friendly_description": "Cópia de chave e conserto de fechadura e cadeado."
+  },
+  {
+    "code": "9529104",
+    "official_description": "REPARAÇÃO DE BICICLETAS, TRICICLOS E OUTROS VEÍCULOS NÃO MOTORIZADOS",
+    "friendly_title": "Conserto de bicicletas",
+    "friendly_description": "Oficina de bicicleta, bicicleta elétrica, triciclo e cadeira de rodas não motorizada."
+  },
+  {
+    "code": "9529105",
+    "official_description": "REPARAÇÃO DE ARTIGOS DO MOBILIÁRIO",
+    "friendly_title": "Conserto e restauro de móveis",
+    "friendly_description": "Conserto de móvel, armário, tapeçaria e estofamento."
+  },
+  {
+    "code": "9529106",
+    "official_description": "REPARAÇÃO DE JÓIAS",
+    "friendly_title": "Conserto de joias",
+    "friendly_description": "Conserto e gravação em joias."
+  },
+  {
+    "code": "9529199",
+    "official_description": "REPARAÇÃO E MANUTENÇÃO DE OUTROS OBJETOS E EQUIPAMENTOS PESSOAIS E DOMÉSTICOS NÃO ESPECIFICADOS ANTERIORMENTE",
+    "friendly_title": "Conserto de outros objetos pessoais e domésticos",
+    "friendly_description": "Conserto que não cabe nas outras listas: amolar facas e cutelaria, artigos de borracha, acessórios de roupa."
+  },
+  {
+    "code": "9602501",
+    "official_description": "CABELEIREIROS, MANICURE E PEDICURE",
+    "friendly_title": "Cabeleireiro, manicure e pedicure",
+    "friendly_description": "Salão de beleza, barbearia, corte, alisamento, manicure, pedicure e podologia."
+  },
+  {
+    "code": "7490199",
+    "official_description": "OUTRAS ATIVIDADES PROFISSIONAIS, CIENTÍFICAS E TÉCNICAS NÃO ESPECIFICADAS ANTERIORMENTE",
+    "friendly_title": "Outros serviços profissionais e técnicos",
+    "friendly_description": "Consultoria técnica que não cabe nas outras listas: culinária, moda e imagem pessoal, projetos culturais, sommelier."
+  },
+  {
+    "code": "8219999",
+    "official_description": "PREPARAÇÃO DE DOCUMENTOS E SERVIÇOS ESPECIALIZADOS DE APOIO ADMINISTRATIVO NÃO ESPECIFICADOS ANTERIORMENTE",
+    "friendly_title": "Preparação de documentos e apoio administrativo",
+    "friendly_description": "Redação e conferência de texto, elaboração de crachá e cartão de visita, assessoria para visto e passaporte."
+  },
+  {
+    "code": "6319400",
+    "official_description": "PORTAIS, PROVEDORES DE CONTEÚDO E OUTROS SERVIÇOS DE INFORMAÇÃO NA INTERNET",
+    "friendly_title": "Portal de conteúdo e sites de informação",
+    "friendly_description": "Portal de conteúdo na internet, gestão de redes sociais para terceiros e banco de informação para consulta."
+  }
+]

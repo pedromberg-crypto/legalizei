@@ -85,12 +85,13 @@ Então: **a spec manda, a evidência é fonte.** É a mesma doutrina do [[indice
 | **Emitir nota fiscal** | [[emitir-nota-fiscal]] | [[2026-09-09-contabilizei-nota-fiscal]] | 🟢 desenho fechado · 🔴 prazo 01/11/2026 e de-para NBS inexistente |
 | **A guia de imposto** | [[guia-de-imposto]] | [[2026-09-09-contabilizei-guia-imposto]] | 🟢 desenho fechado · 🔴 2.4 é decisão de arquitetura, não descoberta |
 | **Compliance e rotinas** | [[compliance-e-rotinas]] | [[2026-09-09-contabilizei-central-rotinas]] | 🟢 desenho fechado · 🔴 DTE-SN (5.7) sem caminho |
+| **Folha de pagamento** | [[folha-de-pagamento]] | [[2026-09-09-contabilizei-folha-pagamento]] | 🔵 fora do MVP · 🔑 mas o modelo de rubricas muda o motor do Fator R **hoje** |
 
 🔗 **[[_mapa-de-cruzamentos]]** — como as funcionalidades se puxam. Nasceu em 09/09, quando pró-labore e alíquota chegaram **no mesmo número (37,72%) por caminhos diferentes** e ninguém tinha notado. Toda spec fiscal agora abre com uma seção **Cruzamentos declarados**; a regra está no [[_metodo]], passo 7.
 
 ### Fila, na ordem sugerida
 
-✅ **Já feitos (5):** [[pro-labore]] · [[aliquota-e-enquadramento]] · [[emitir-nota-fiscal]] · [[guia-de-imposto]] · [[compliance-e-rotinas]].
+✅ **Já feitos (6):** [[pro-labore]] · [[aliquota-e-enquadramento]] · [[emitir-nota-fiscal]] · [[guia-de-imposto]] · [[compliance-e-rotinas]] · [[folha-de-pagamento]].
 
 🔗 **O ciclo mensal está fechado e o estado agregado também:** nota entra → alíquota precifica → pró-labore ajusta → guia sai → compliance diz se está tudo em dia.
 

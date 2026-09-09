@@ -128,6 +128,8 @@ type CalculoCompetencia = {
 | **Desconto simplificado no IRRF** | `deducaoSimplificada` |
 | **Adiantamento de lucros** | `totalAdiantamentos`, separado do distribuído |
 | 🔴🔴 **Débito federal PROÍBE distribuição de lucro** | *"multa de 50% sobre o valor distribuído"*. **Guia não paga → o sócio não pode tirar dinheiro da empresa.** Eleva a 2.4 de higiene contábil para o que **libera o dono a receber** |
+| 🔴 **O Fator R soma por RUBRICA, não por total** | O líder marca `incideINSS` em cada rubrica de folha (296 de 606 incidem). O numerador **não é "tudo que se paga"**. Vale já pro pró-labore: nem toda linha do recibo entra |
+| 🔑 **Plano de saúde do sócio SAI do pró-labore** | rubricas `escrituraProlabore` batem na conta *"Pró-Labore a Pagar"*. Benefício do sócio é desconto de pró-labore, não despesa separada |
 | 🔑 **Lucro é inferido do EXTRATO** | *"qualquer retirada que não seja pró-labore nem devolução de empréstimo"*. Não é ato declarado: é saque identificado |
 | 📅 **Dia 15: movimentações** | extrato, investimentos e empréstimos precisam chegar até o dia 15 para entrar na EFD-Reinf |
 | 🔴 **Informe bloqueado por pendência** | 5 estados de bloqueio, incluindo **período contábil fechado**, que só destrava contratando **reabertura do balanço** (R$142,90 no líder — distinta da reabertura de MÊS, R$21,90) |

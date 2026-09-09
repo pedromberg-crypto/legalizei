@@ -116,6 +116,9 @@ Pró-labore ─────> FOLHA 12m ──> FATOR R ──┘                
 | **DCTFWeb** | consome o eSocial e é quem **gera o DARF numerado**, dia 15, antecipa |
 | **Cruzamento fiscal** | A Receita cruza **EFD-Reinf × DCTFWeb** para achar pró-labore declarado e não pago |
 | 🔑 **EFD-Reinf R-2099 e R-4099** | São **dois eventos distintos**, ambos dia 15. R-2099: retenção de **INSS em notas fiscais**. R-4099: retenção de **IRRF em notas TOMADAS**, aluguel PF, auto retenção em publicidade e **distribuição de lucro**. 🔑 **Nota que o cliente RECEBE também gera obrigação** |
+| 🔴 **O Fator R soma por RUBRICA, não por total** | O líder marca `incideINSS` **em cada uma das 606 rubricas de folha** (296 incidem). O numerador do Fator R **não é "tudo que se paga"**: é o que tem incidência de INSS. Vale **hoje**, pro pró-labore, antes de existir folha. Ver [[2026-09-09-contabilizei-folha-pagamento]] |
+| 🔑 **Folha CLT e pró-labore somam no MESMO numerador** | Contratar alguém **muda a alíquota do dono**. É pergunta de quem está crescendo, e precisa estar no simulador antes de existir folha |
+| 🔑 **Plano de saúde do sócio sai do pró-labore** | `escrituraProlabore` → conta *"Pró-Labore a Pagar"*. É a ponte entre benefícios e pró-labore, e explica por que o líder vende plano de saúde dentro do app de contabilidade |
 | 🔑 **4 de 5 obrigações mensais exigem certificado ou procuração** | O A1 não é pré-condição só da emissão: é **infraestrutura da operação mensal inteira**. Ver [[2026-09-09-contabilizei-central-rotinas]] §8 |
 | **Informe de rendimentos** | O pró-labore do ano vira o informe do sócio, que alimenta o **IRPF** dele |
 | 🔴 **O informe é BLOQUEÁVEL** | Pendência documental ou débito federal **impedem a emissão do informe** (`informerendimento/…/restricoes`), e no líder a regularização é **serviço pago**. É trava de fim de ano com efeito em abril, e não estava na nossa lista |

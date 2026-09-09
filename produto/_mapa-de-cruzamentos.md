@@ -141,6 +141,8 @@ Pró-labore ─────> FOLHA 12m ──> FATOR R ──┘                
 | **Por que cruza com tudo** | Guia não paga vira juros, multa, pendência, e pendência vira Termo de Exclusão, que vira alíquota de Lucro Presumido. **É a corrente inteira puxada por um elo** |
 | **Como o líder resolve** | Lote **no fim de cada mês**, contra "dados oficiais do Governo Federal". Por isso os 30 dias |
 | 🔑 **A exceção que ensina** | No **débito automático**, a confirmação sai **entre os dias 20 e 23**, no mês corrente. Eles sabem em tempo hábil **só quando o pagamento passa pelo trilho deles** (Contabilizei.bank) |
+| 🔴🔴 **O elo que faltava: guia não paga PROÍBE distribuição de lucro** | *"A retirada de lucros por sócio de empresa que possui **débitos federais não é permitida**. A Receita Federal impõe **multa de 50% sobre o valor distribuído**, limitado a 50% do imposto devido."* **Guia não paga → débito federal → sócio não pode tirar dinheiro da empresa.** É a consequência mais afiada da cadeia inteira, e eleva a 2.4 de higiene contábil para **o que libera o dono a receber**. Ver [[2026-09-09-contabilizei-pro-labore]] §10 |
+| 🔑 **"Distribuição de lucro" é INFERIDA do extrato** | Definição deles: *"qualquer retirada em espécie/bancária que **não seja pró-labore nem devolução de empréstimo**"*. Não é ato formal que o sócio declara: **é saque identificado no extrato**. Explica por que o extrato é central pra eles |
 | 🔴 **Nossa linha 2.4, agora com uma porta a menos** | ⚪ **Escopo travado em 09/09 (Pedro): não seremos financeira e não teremos conta PJ.** O caminho do "trilho próprio" (Contabilizei.bank) **sai da mesa**. Sobra a consulta de arrecadação, e a pergunta vira: **dá pra fazer melhor que o lote mensal deles sem possuir o pagamento?** |
 | 🔑 **O que a API revelou (09/09)** | `verificacaoPagamentoAutomatica` é flag **por guia**, não global — nem toda guia é auditada. E `acaoBotao` vem do servidor: `PAGAR` → `RECALCULAR` → `BAIXAR_GUIA`, um botão com três significados conforme o estado. Ver [[2026-09-09-contabilizei-guia-imposto]] |
 | 🔴 **Dois impostos fora do radar** | **TFE** (Taxa de Fiscalização de Estabelecimentos, municipal de BH, R$168,48/ano) e **`DARF_UNIFICADO_ATIVACAO_FATOR_R`** (R$11, pró-labore simbólico pra abrir a contagem do Fator R). 🕓 o 2º **não ratificado** |
@@ -154,7 +156,7 @@ Pró-labore ─────> FOLHA 12m ──> FATOR R ──┘                
 |:--:|---|---|
 | **1º ao último** | janela de emissão de nota | — |
 | **5** | 🆕 **fecho do mês contábil**: importar, alterar ou cancelar nota do mês anterior sem custo (regra do líder, não da lei) | — |
-| **15** | eSocial + DCTFWeb | **antecipa** |
+| **15** | eSocial + DCTFWeb · 🆕 **e o envio das MOVIMENTAÇÕES financeiras** (extrato, investimentos, empréstimos) para a EFD-Reinf | **antecipa** |
 | **20** | **DAS** | **PRORROGA** |
 | **20** | DARF (INSS/IRRF) + FGTS Digital | **ANTECIPA** |
 | **25** | 🆕 último dia pra escolher o pró-labore do mês (regra do líder, não da lei) | — |

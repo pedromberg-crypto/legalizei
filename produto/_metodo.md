@@ -43,6 +43,8 @@ No pró-labore, o que mais rendeu **não estava na tela do pró-labore**: estava
 
 🔑 **Regra:** seguir a funcionalidade até onde ela vira **guia, documento ou obrigação**. É lá que a conta aparece.
 
+📏 **Medir antes de fatiar.** A forma certa é `const t = main.innerText; ({tam: t.length, txt: t.slice(0,N)})` — **o `tam` no mesmo retorno**. Sem ele não dá pra saber se sobrou. A auditoria de 09/09 mediu as 12 telas documentadas: **11 estavam íntegras e 1 não** — a do informe de rendimentos, com **7.314 caracteres**, da qual eu tinha lido ~1.100. E era justamente onde estava a regra fiscal mais dura do arquivo (débito federal proíbe distribuição de lucro, multa de 50%). ⚠️ **Telas curtas enganam:** cinco das que eu suspeitava tinham 350 a 600 caracteres. O risco não está onde a gente cortou muito, está onde a tela era grande.
+
 📜 **Ler a tela INTEIRA, não os primeiros mil caracteres.** Em 09/09 eu li o topo da Central de Rotinas, achei as 21 pendências e parei. A tela tem **três blocos** e o terceiro — *"A Contabilizei faz por você"* — é o **dispositivo de confiança do produto deles**, e o mais aproveitável do arquivo. Só apareceu quando o Pedro perguntou até onde eu tinha chegado. **`innerText` inteiro, com `slice` em fatias, até o fim.**
 
 ⚠️ **Payload rico NÃO substitui varrer o flow.** Em 09/09 a 1ª passada de compliance abriu `#/central-de-rotinas`, achou um payload com 28 tipos de pendência e **parou por achar que já tinha tudo**. Ficaram sem cobertura 4 linhas do catálogo (5.1, 5.2, 5.5, 5.6), e a 2ª rodada trouxe as obrigações reais, o catálogo de 43 avulsos com preço e o mapa de migração deles. **Quantidade de dado num endpoint não é medida de cobertura de flow.**

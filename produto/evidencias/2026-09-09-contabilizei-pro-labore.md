@@ -15,6 +15,8 @@ tags: [produto, evidencia, concorrente, pro-labore, folha]
 >
 > **Método:** navegação só-leitura na conta logada do Pedro. Nenhum botão de salvar, confirmar, recalcular ou pagar foi clicado. **Único toque:** um rádio foi selecionado na tela de gestão para revelar o conteúdo condicional, e a tela foi abandonada sem confirmar. Regra completa em [[_metodo]].
 >
+> 🔄 **3ª rodada (09/09):** auditoria de "tela inteira" em todas as frentes. Seis telas estavam íntegras; **a do informe de rendimentos tinha 7.314 caracteres e eu havia documentado ~15%**. Está em **§10**, e trouxe a regra fiscal mais afiada do arquivo.
+>
 > 🔄 **Backfill de 09/09 (2ª rodada):** este foi o **primeiro** teardown da série e rodou **antes** de a leitura de API virar passo do método. A varredura de API foi feita depois, a pedido do Pedro, e está em **§9**.
 >
 > **Rotas visitadas:** `#/socio/central` · `#/socio/editar-gestao/{id}` · `#/socio/{id}/duplo-vinculos` · `#/socio/comprovante-rendimentos` · `/sistema/#/prolabore` · `/sistema/#/ficha-financeira` · `#/impostos` · `#/impostos-a-pagar/como-foi-calculado`
@@ -562,6 +564,104 @@ type CalculoCompetencia = {
 ```
 
 🎯 **Este é o payload de uma tela só ("por que pago isso"), e ele já tem tudo:** os dois impostos, as duas bases, o Fator R, o histórico de 12 meses e as flags de exceção. **É o formato que a nossa tela A2 precisa.**
+
+---
+
+## 10. 🔴 Auditoria de "tela inteira" — o informe tinha 7.314 caracteres e eu documentei ~15%
+
+> 🔄 **09/09, 3ª rodada.** Com a lição de *ler a tela inteira* travada, medi o `innerText` de todas as telas que documentei e comparei com o que eu tinha lido. **Seis estavam íntegras. Uma não.**
+
+| Tela | Tamanho real | Eu li | |
+|---|:--:|:--:|:--:|
+| `emissor/listagem` | 600 | 2500 | ✅ |
+| `emissor/tomadores` | 403 | 2000 | ✅ |
+| `sistema/consultarnotas` | 352 | 1700 | ✅ |
+| `sistema/importarnota` | 548 | 1100 | ✅ |
+| `sistema/informarCancelamento` | 401 | 1600 | ✅ |
+| `minhas-aliquotas` · `impostos` · `historico-impostos` · `simulador` · `central-de-rotinas` | 517–3684 | tudo | ✅ |
+| 🔴 **`socio/comprovante-rendimentos`** | **7.314** | ~1.100 | ❌ |
+
+**A tela do informe de rendimentos é a maior do produto deles, e eu tinha documentado o cabeçalho.**
+
+---
+
+### 🔴 A regra fiscal que faltava: não se distribui lucro com débito federal
+
+Do **Termo de Ciência e Responsabilidade**, §2:
+
+> *"Conforme a legislação tributária vigente, a **retirada de lucros por sócio(s) de empresa que possui débitos federais não é permitida** e pode acarretar sérias penalidades.*
+> *A Receita Federal impõe uma **multa de 50% sobre o valor distribuído, limitado a 50% do imposto devido**.*
+> *Caso possua débitos federais em atraso e não quitados, **regularize-os antes de realizar qualquer antecipação/distribuição de lucros**."*
+
+🔴 **Isso fecha um elo da cadeia que a gente não sabia que existia:**
+
+```
+guia não paga  →  débito federal  →  distribuição de lucro PROIBIDA
+                                     →  se distribuir: multa de 50%
+```
+
+⚠️ **É a consequência mais afiada de todo o produto**, e ela liga direto a nossa linha 2.4: **saber que a guia foi paga não é só higiene contábil — é o que libera o sócio a tirar dinheiro da empresa legalmente.**
+
+### E a definição que muda o desenho
+
+> *"(*) **Qualquer retirada em espécie/bancária que não seja oriunda de pró-labore ou devolução de empréstimo** do sócio para a empresa."*
+
+🔑 **Para efeito de EFD-Reinf, "distribuição de lucro" é QUALQUER saque do sócio** que não seja pró-labore nem devolução de empréstimo. Não é um ato formal que ele declara: é **inferido do extrato**.
+
+🎯 **Isso explica por que o extrato é tão central para eles** — e por que criaram duas pendências só para o ciclo de vida da integração bancária.
+
+---
+
+### 📅 Um prazo novo: dia 15 para as movimentações
+
+> *"…os extratos de toda movimentação financeira da sua empresa devem ser **importados até o dia 15 de cada mês**, assim como enviar os documentos sobre todas as transações: extratos de investimentos, contratos de empréstimos e outros documentos relevantes."*
+> *"**Enquanto o aceite referente ao termo não for concedido, os adiantamentos/retiradas de lucros não serão considerados na entrega da EFD-Reinf.** A inclusão dos lucros após o prazo final acarretará multa, a qual será de responsabilidade do cliente."*
+
+🔑 **Agora são dois prazos de fechamento, não um:**
+
+| Dia | O quê |
+|:--:|---|
+| **5** | fecho do **mês contábil**: importar/alterar/cancelar nota |
+| **15** | **movimentações financeiras** (extrato, investimentos, empréstimos) para a EFD-Reinf |
+
+### 🔴 E a transferência de responsabilidade, por termo
+
+> *"O cliente **assume a responsabilidade** por qualquer consequência decorrente de dados fornecidos parcialmente ou inadequadamente."*
+> *"A Contabilizei **não irá se responsabilizar** por penalidades pela não entrega ou entrega parcial de informações."*
+> *"Declaro, para todos os fins, que estou ciente dos riscos e concordo com os termos acima mencionados."* → `Ler depois` · `Estou ciente do termo`
+
+⚠️ **O termo é juridicamente compreensível e comercialmente duro.** Ele existe porque o contador depende de dado que só o cliente tem. Mas o desenho transfere **todo** o risco, e o botão de escape é *"Ler depois"* — o que empurra o aceite sem leitura.
+
+---
+
+### Os 5 estados de bloqueio do informe
+
+A tela tem um bloqueio para cada tipo de problema:
+
+| Estado | Copy | Saída |
+|---|---|---|
+| **Indisponível** | *"Para ter acesso ao seu informe você precisa finalizar o processo de regularização de pendências que você iniciou anteriormente"* | `Regularizar pendências` |
+| **Em análise** | *"Nosso time está analisando a documentação. Prazo de **3 dias úteis**. Esse prazo **pode ser maior se a sua conta bancária não estiver integrada**"* | `Entendi!` |
+| **Pendência documental** | *"…referentes ao **exercício anterior**"* · 🔴 *"Caso opte por **'Não regularizar pendência', não haverá distribuição de lucros**"* | `Não regularizar` · `Regularizar` |
+| **Débitos federais** | *"Nosso sistema **ainda não registrou o pagamento** dos seguintes impostos (**valores aproximados**)"* · *"sujeita a fiscalização da Receita Federal"* | `Continuar para o informe` · `Regularizar débitos federais` |
+| 🔴 **Período fechado** | *"Seu período contábil já foi fechado. Para regularizar as pendências documentais é necessário que você **contrate o serviço de reabertura do balanço**. Esse serviço gera uma cobrança de R$ ___"* | `Voltar` · `Contratar serviço de reabertura` |
+
+🔑 **Existem DUAS reaberturas, e são coisas diferentes:**
+
+| | Fecha em | Reabrir custa (no líder) |
+|---|---|---|
+| **Mês contábil** | dia 5 do mês seguinte | **R$ 21,90** |
+| **Balanço / exercício** | anual | **R$ 142,90** (catálogo: *"Alteração de escrituração Contábil - Reabertura do Balanço"*) |
+
+⚠️ **E o encadeamento é cruel:** pendência documental do exercício anterior → só regulariza reabrindo o balanço → reabrir custa → sem regularizar, **sem informe e sem distribuição de lucros**.
+
+### ⚠️ A alavanca do banco, e ela mira o que o Pedro acabou de cortar
+
+> *"Esse prazo pode ser maior **se a sua conta bancária não estiver integrada** à plataforma Contabilizei."*
+
+🔑 **A integração bancária é usada como alavanca de SLA:** quem não integra espera mais. Combina com as duas pendências dedicadas ao ciclo de vida da integração e com o Contabilizei.bank.
+
+🎯 **Para nós isso é informação de desenho, não de cópia.** Com a decisão de 09/09 (sem conta PJ, sem integração), **o envio de extrato pelo cliente até o dia 15 vira fluxo desenhado nosso** — e a gente não pode usar demora como punição por não integrar, porque não teremos o que integrar.
 
 ---
 

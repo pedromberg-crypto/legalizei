@@ -1,5 +1,5 @@
 ---
-tipo: execucao
+tipo: operacao
 status: vivo
 data: 2026-07-22
 assunto: home-portal-candidatos-modulos

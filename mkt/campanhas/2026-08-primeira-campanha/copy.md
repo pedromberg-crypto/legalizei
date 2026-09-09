@@ -1,5 +1,5 @@
 ---
-tipo: campanha
+tipo: operacao
 status: rascunho
 data: 2026-08-20
 tags: [marketing, campanhas, primeira-campanha, copy]
@@ -429,4 +429,4 @@ Cadastro rápido, só algumas perguntas.
 ▶️ Segue valendo pras 12: (1) Pedro validar "Vai, legaliza aí." em contexto de lista de espera (pendência 4) e (2) a LP existir de fato com a mesma mecânica prometida no texto (pendência 3) antes de produzir arte/publicar.
 
 ## Links
-[[brief]] · [[../../marca/personagem-leo|personagem-leo]] · [[../../pesquisa/posicionamento|posicionamento]] · [[../../marca/decisoes-marca|decisoes-marca]] · [[../../marca/copy/roteiro-teaser-investidor|roteiro-teaser-investidor]]
+[[brief]] · [[personagem-leo|personagem-leo]] · [[posicionamento|posicionamento]] · [[decisoes-marca|decisoes-marca]] · [[roteiro-teaser-investidor|roteiro-teaser-investidor]]

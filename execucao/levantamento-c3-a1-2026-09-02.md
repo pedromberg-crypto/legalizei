@@ -1,6 +1,6 @@
 ---
-tipo: levantamento
-status: em-execucao
+tipo: fato
+status: vivo
 data: 2026-09-02
 assunto: dossie-c3-a1
 etapa: constituicao

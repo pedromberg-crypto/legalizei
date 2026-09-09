@@ -1,5 +1,5 @@
 ---
-tipo: original
+tipo: derivado
 status: vivo
 data: 2026-08-05
 assunto: frente-captacao-meta

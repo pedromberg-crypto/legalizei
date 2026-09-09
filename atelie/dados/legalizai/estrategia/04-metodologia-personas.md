@@ -1,5 +1,5 @@
 ---
-tipo: original
+tipo: verdade
 status: vivo
 data: 2026-08-05
 assunto: metodologia-personas
@@ -52,13 +52,13 @@ Seeds de QA que alimentaram as dorsais: `reta`/`reta-direto` (dev freelancer) �
 |---|---|---|
 | [[a1-dev-freelancer-recem-clt]] | A | contrato PJ na mão, prazo curto pra formalizar |
 | [[a2-consultor-senior-migrando]] | A | contador atual falhou, veio via flow migrar |
-| [[a3-designer-recebe-exterior]] | A | primeiro pagamento internacional — 🔴 gap de produto a confirmar |
+| a3-designer-recebe-exterior | A | primeiro pagamento internacional — 🔴 gap de produto a confirmar |
 | [[b1-cabeleireira]] | B | teto do MEI / precisa contratar |
 | [[b2-esteticista]] | B | parceria B2B exige nota formal |
 | [[b3-personal-trainer]] | B | academia exige CNPJ pra contratar |
-| [[b4-nutricionista-pj]] | B | crescimento + profissão regulamentada — 🔴 gap de produto a confirmar |
+| b4-nutricionista-pj | B | crescimento + profissão regulamentada — 🔴 gap de produto a confirmar |
 | [[c1-professor-autonomo-aposentado]] | C | aluno/escola pede nota fiscal |
-| [[c2-artesao-formalizando]] | C | oportunidade de venda exige CNPJ — 🔴 checar comércio×serviço |
+| c2-artesao-formalizando | C | oportunidade de venda exige CNPJ — 🔴 checar comércio×serviço |
 
 > 3 volantes carregam ressalva de produto (🔴) — não ativar campanha nelas sem confirmar antes que o motor fiscal/escopo do MLP cobre o caso.
 

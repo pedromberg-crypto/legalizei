@@ -1,7 +1,7 @@
 ---
 tipo: marco
 data: 2026-08-30
-status: registrado-retroativamente
+status: vivo
 ---
 # 2026-08-30 — Redesign visual (mockup-v2 → produção) + simplificação do flow (E8 morre, estados escondidos revelados)
 
@@ -56,4 +56,4 @@ status: registrado-retroativamente
 - 🟡 As 10 referências visuais do `/mockup-v2` são exploração — o que mais sobe pra `validados.tsx`/produção é decisão por asset.
 
 ## Links
-- [[decisoes-marca]] · [[2026-08-28-ramo-mei-construido]] · [[mapa-flow-mermaid]] · [[leo-render-3d-doutrina]] · [[HOME]]
+- [[decisoes-marca]] · 2026-08-28-ramo-mei-construido · [[mapa-flow-mermaid]] · [[leo-render-3d-doutrina]] · [[HOME]]

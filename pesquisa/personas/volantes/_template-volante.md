@@ -1,6 +1,6 @@
 ---
-tipo: template
-status: draft
+tipo: referencia
+status: rascunho
 ---
 
 # Volante — [Nome]

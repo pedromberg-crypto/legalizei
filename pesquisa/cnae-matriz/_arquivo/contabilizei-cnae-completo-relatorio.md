@@ -8,7 +8,7 @@ cobertura: 390/390
 ---
 # Extração completa — tabela CNAE da Contabilizei (390 atendidos)
 
-> Dataset estruturado dos **390 CNAEs** que a Contabilizei declara atender, raspados **um a um** da página individual de cada código. Fonte-verdade do cruzamento fiscal. Ver também [[contabilizei-tabela-cnae]] (extração bruta da tabela-resumo) e [[fila-validacao-humana]].
+> Dataset estruturado dos **390 CNAEs** que a Contabilizei declara atender, raspados **um a um** da página individual de cada código. Fonte-verdade do cruzamento fiscal. Ver também [[2026-07-17-extracao-tabela-cnae-contabilizei]] (extração bruta da tabela-resumo) e [[fila-validacao-humana]].
 
 ## Arquivos (gêmeos)
 - **`contabilizei-cnae-completo.json`** — fidelidade total (listas e objetos aninhados). Fonte de verdade.

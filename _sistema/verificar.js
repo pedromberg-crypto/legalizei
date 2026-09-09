@@ -22,9 +22,19 @@ const fs = require("fs");
 const path = require("path");
 
 const ROOT = path.resolve(__dirname, "..");
-const SKIP = /node_modules|[\\/]\.next|[\\/]\.obsidian|[\\/]\.git|[\\/]relatorios|_templates/;
+// `.claude` entrou em 09/09: `.claude/worktrees/` guarda uma COPIA inteira do vault
+// (637 .md, ignorada pelo git). Sem excluir, toda contagem dobrava e a lista de orfas
+// enchia de arquivo que nem e do vault.
+const SKIP = /node_modules|[\\/]\.next|[\\/]\.obsidian|[\\/]\.git|[\\/]\.claude|[\\/]\.agents|[\\/]relatorios|_templates|playwright-report|test-results/;
 
-const TIPOS = ["hub", "verdade", "derivado", "fato", "historico", "operacao"];
+// Vocabulario fechado. Fonte-verdade: _sistema/indice-autoridade.md.
+// 09/09: passou de 6 para 8 tipos. `marco` e `referencia` foram PROMOVIDOS porque
+// eram categorias reais e usadas (19 e 17 notas), e porque `execucao/marcos.base`
+// filtra por `tipo == "marco"` — a doutrina proibia o que a ferramenta exigia.
+const TIPOS = [
+  "hub", "verdade", "derivado", "fato", "historico", "operacao",
+  "marco", "referencia",
+];
 const STATUS = ["vivo", "superado", "rascunho", "congelado", "fila-humana"];
 
 // [[link]] usado como EXEMPLO dentro de doc de processo (CLAUDE.md, README do motor).
@@ -32,6 +42,10 @@ const STATUS = ["vivo", "superado", "rascunho", "congelado", "fila-humana"];
 const EXEMPLOS = new Set([
   "link", "links", "cliente", "feature", "nota-de-feature", "dor observada",
   "concorrente / reuniao / lei", "concorrente / reunião / lei", "their-name", "name",
+  // 09/09: placeholders de template/exemplo. Nao sao alvo real.
+  "nota-linha",   // exemplo de formato em marco e HOME
+  "persona-X",    // _template-volante.md, a dorsal e preenchida ao criar o volante
+  "wikilinks",    // citado como conceito no handoff do dev
 ]);
 
 // ── coleta ──────────────────────────────────────────────────────────────────
@@ -43,8 +57,11 @@ const existe = (a) => notas.has(a) || alias.has(a);
     const p = path.join(d, e.name);
     if (SKIP.test(p)) continue;
     if (e.isDirectory()) walk(p);
-    else if (/\.(md|svg)$/.test(e.name)) {
-      const slug = e.name.replace(/\.(md|svg)$/, "");
+    // 09/09: png/jpg/webp entraram. As notas de pricing-snapshot linkam
+    // [[img-2026-07-08/contab_pricing_0.png]], que EXISTE — mas o verificador so
+    // indexava md/svg e reportava como quebrado. Falso positivo, nao erro de nota.
+    else if (/\.(md|svg|png|jpe?g|webp|gif|pdf)$/i.test(e.name)) {
+      const slug = e.name.replace(/\.(md|svg|png|jpe?g|webp|gif|pdf)$/i, "");
       const rel = path.relative(ROOT, p).split(path.sep).join("/");
       // resolve tambem por nome-com-extensao ([[logo.svg]]) e por caminho ([[mkt/README]])
       alias.set(e.name, slug);
@@ -57,9 +74,13 @@ const existe = (a) => notas.has(a) || alias.has(a);
       let fm = {}, txt = "";
       if (e.name.endsWith(".md")) {
         txt = fs.readFileSync(p, "utf8");
-        const m = txt.match(/^---\n([\s\S]*?)\n---/);
+        // ⚠️ `\r?` NAO e detalhe. Ate 09/09 esta regex era /^---\n/, so LF, e o vault
+        // e Windows: 523 das 663 notas com frontmatter (79%) eram INVISIVEIS pro
+        // verificador. Ele reportava 44 violacoes de vocabulario porque so conseguia
+        // ler 140 notas. Nunca trocar por \n seco.
+        const m = txt.match(/^---\r?\n([\s\S]*?)\r?\n---/);
         if (m) {
-          for (const line of m[1].split("\n")) {
+          for (const line of m[1].split(/\r?\n/)) {
             const kv = line.match(/^(\w+):\s*(.*)$/);
             if (!kv) continue;
             const v = kv[2].trim();
@@ -93,6 +114,17 @@ for (const [slug, n] of notas) {
     }
     // sem data em algum dos dois, nao da pra comparar: nao inventa alarme
     if (n.data == null || fonte.data == null) continue;
+    // fonte GERADA por script carrega `data: hoje` a cada rodada. Comparar contra ela
+    // acusaria todo mundo que dela deriva, todo dia, pra sempre — alarme que sempre toca
+    // e alarme que ninguem olha. A data dela e carimbo de build, nao data semantica.
+    if (fonte.fm.gerado_por) continue;
+    // `revisado_em: AAAA-MM-DD` e a saida HONESTA do alarme: alguem olhou a nota
+    // contra a fonte nesta data e disse que continua valendo. Nao mexe na `data:`
+    // (que e semantica: quando o CONTEUDO foi decidido). Se a fonte mudar de novo
+    // depois dessa revisao, o alarme volta sozinho.
+    const revisto = n.fm.revisado_em && /^\d{4}-\d{2}-\d{2}$/.test(n.fm.revisado_em)
+      ? Date.parse(n.fm.revisado_em) : null;
+    if (revisto != null && revisto >= fonte.data) continue;
     if (fonte.data > n.data) {
       const dias = Math.round((fonte.data - n.data) / 86400000);
       problemas.derivado.push({

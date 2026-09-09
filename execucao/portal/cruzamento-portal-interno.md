@@ -1,5 +1,5 @@
 ---
-tipo: execucao
+tipo: operacao
 status: vivo
 data: 2026-07-22
 assunto: cruzamento-portal-interno-spec
@@ -162,6 +162,6 @@ Hierarquia dura: 1 herói, resto progressivo/abaixo da dobra.
 6. **Acesso do 2º sócio** — escopo mínimo no MVP.
 
 ## Cruza com
-[[matriz-portal-interno]] (P0–P14) · [[home-candidatos-modulos]] (banco de inovação) · [[2026-07-21-dossie-plataforma-logada]] (paridade) · [[cnae-fiscalmente-otimo]] (âncora) · [[legalize-cobaia-cnpj-pedro]] (o insight da vigília) · [[benchmark-padrao-195]].
+[[matriz-portal-interno]] (P0–P14) · [[home-candidatos-modulos]] (banco de inovação) · [[2026-07-21-dossie-plataforma-logada]] (paridade) · [[cnae-fiscalmente-otimo]] (âncora) · [[legalize-cobaia-cnpj-pedro]] (o insight da vigília) · [[plano-padrao-195-referencia]].
 
 > 🔌 **Autofill/consulta:** todo campo que puxa dado de órgão (CNPJ, CEP, situação, certidão) segue [[infosimples-funcionalidades]] — autoridade do que cada API entrega. Não assumir; checar lá.

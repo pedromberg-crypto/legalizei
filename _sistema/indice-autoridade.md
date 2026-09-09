@@ -119,18 +119,22 @@ reescrita** (custaria um dia e criaria 8 docs novos pra manter). Traduza por aqu
 
 ## 🏷️ Vocabulário fechado
 
-**Antes:** 25 `tipo` e 20 `status` improvisados, 106 notas sem status nenhum.
-**Agora:** 6 tipos, 5 status. Fechados. Se não couber, discute antes de inventar.
+**16/07:** 25 `tipo` e 20 `status` improvisados, 106 notas sem status nenhum. Fechou em 6 tipos, 5 status.
+**09/09:** a regra existia e **não era aplicada por nada**, e o vault tinha voltado a 34 tipos. Duas coisas mudaram: o vocabulário abriu pra **8 tipos** (onde ele estava apertado demais) e o verificador passou a **rodar sozinho** (onde faltava trava). Detalhe do diagnóstico em [[2026-09-09-vocabulario-fechado-aplicado]].
 
 ### `tipo` — o que a nota É
 | tipo | O que é | Regra |
 |---|---|---|
 | `hub` | navegação | HOME, este índice |
-| `verdade` | **fonte-verdade de um assunto** | só uma por assunto (ver tabela) |
+| `verdade` | **fonte-verdade de um assunto** | só uma por assunto (ver tabela). ⚠️ pode ter `deriva_de`: ser fonte de um assunto não impede derivar de outro |
 | `derivado` | **deriva de uma verdade** | ⚠️ **apodrece** quando a fonte muda → o script pega |
 | `fato` | dado externo, datado | teardown, captura, pesquisa. **Não muda**, só ganha data |
-| `historico` | registro do que aconteceu | marco, reunião, diário. **Nunca leia como atual** |
-| `operacao` | trabalho corrente | kanban, tarefa, briefing. Muda toda hora, não é fonte |
+| `historico` | registro do que aconteceu | reunião, diário. **Nunca leia como atual** |
+| `operacao` | trabalho corrente | kanban, briefing, prompt de pesquisa, campanha. Muda toda hora, não é fonte |
+| `marco` | 🆕 **entrega datada de um flow** | `execucao/marcos/`. É `historico` com estrutura própria, e `marcos.base` filtra por ele |
+| `referencia` | 🆕 **material externo consultável** | doc de API, tabela de anexo, template. Você **volta nele**, não o lê uma vez |
+
+⚠️ **`marco` e `referencia` foram promovidos, não inventados.** Eram 19 e 17 notas, e o `marcos.base` já filtrava `tipo == "marco"` — a doutrina proibia o que a ferramenta exigia. Quando isso acontecer de novo, **a ferramenta é o sintoma, não o culpado**.
 
 ### `status` — em que estado está
 | status | Significa |
@@ -138,8 +142,10 @@ reescrita** (custaria um dia e criaria 8 docs novos pra manter). Traduza por aqu
 | `vivo` | atual, pode usar |
 | `superado` | morreu **neste assunto** → aponta o sucessor em `superado_por` |
 | `rascunho` | em construção, não confie ainda |
-| `congelado` | snapshot **intencional** (ex.: a spec no repo do dev) |
+| `congelado` | snapshot **intencional** (a spec no repo do dev, pesquisa externa arquivada na íntegra) |
 | `fila-humana` | 🕓 espera Mauro / Larissa / Karla → [[fila-validacao-humana]] |
+
+🔒 **`status` não é campo de recado.** Em 09/09 havia `status: GERADO — não editar à mão...` e `status: vivo — v0.2, rodada 2 de correções aplicada`. Recado tem campo próprio (`gerado_por`) ou vai pro corpo. Quem escreve estado no campo de estado deixa o script cego.
 
 ### 🕓 `fila-humana` não é 🔴
 Decisão do Pedro em 16/07, e é uma correção de um vício meu: eu vinha carimbando 🔴 em
@@ -154,18 +160,35 @@ precisa de um contador"**. São coisas diferentes.
 
 ## 🔗 Dependência declarada (o campo que faltava)
 
-Três campos novos no frontmatter. Não é burocracia: **é o que torna a verificação automática
-possível**, e é a resposta direta ao achado nº 2 lá de cima.
+Campos de frontmatter. Não é burocracia: **é o que torna a verificação automática possível**,
+e é a resposta direta ao achado nº 2 lá de cima.
 
 ```yaml
 deriva_de: [fiscal-simples-bh-2026]     # se ISTO mudar, eu fico suspeito
+deriva_de_codigo: [execucao/flow/flow-data.mjs]   # deriva de CÓDIGO (não dá pra datar)
+gerado_por: execucao/flow/gerar-mapa.mjs          # nasce de script, não editar à mão
+revisado_em: 2026-09-09                 # olhei contra a fonte nesta data, continua valendo
 supera: [mapa-telas-mobile]             # eu matei estes (neste assunto)
 superado_por: reordenacao-flow-cobranca-cedo   # quem me matou
 assunto: ordem-do-flow                  # em QUE assunto eu mando
 ```
 
-**Verificação:** `node _sistema/verificar.js` lista todo `derivado` cuja fonte mudou depois
-dele, todo link quebrado e todo status fora do vocabulário.
+🔑 **`deriva_de` vale sozinho, independente do `tipo`.** Uma `verdade` pode derivar de outra
+coisa e apodrecer igual. 8 notas estavam exatamente assim.
+
+🔑 **`revisado_em` é a saída HONESTA do alarme.** Quando o verificador acusa "a fonte é 7 dias
+mais nova", há dois caminhos: atualizar a nota, ou olhar e concluir que ela continua valendo.
+No segundo caso, `revisado_em: <hoje>` **cala o alarme sem mentir** — e ele volta sozinho se a
+fonte mudar de novo depois dessa data. ⚠️ Nunca resolver isso mexendo na `data:`, que é
+semântica (diz quando o CONTEÚDO foi decidido, não quando o arquivo foi tocado).
+
+⚠️ **`deriva_de` só aponta pra NOTA.** Código não tem frontmatter, logo não tem data pra
+comparar; apontar pra `.mjs`/`.tsx` ali vira ruído permanente. Use `deriva_de_codigo`.
+
+**Verificação:** `node _sistema/verificar.js` audita derivado apodrecido, link quebrado,
+vocabulário e órfã. 🆕 **Desde 09/09 ele roda junto com `node execucao/flow/gerar-mapa.mjs`**,
+como aviso — que é o comando que a regra do `CLAUDE.md` já obriga a rodar a cada tela mexida.
+Antes disso ele existia havia 2 meses e nunca tinha rodado.
 
 > Se o UX-44 tivesse `deriva_de: [ordem-do-flow]`, a reordenação teria acendido a luz em vez
 > de revogá-lo em silêncio. É exatamente esse o caso que este campo existe pra evitar.

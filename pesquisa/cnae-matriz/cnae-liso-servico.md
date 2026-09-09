@@ -3,7 +3,7 @@ tipo: verdade
 status: vivo
 data: 2026-08-27
 assunto: cnae-atendemos-com-certeza
-deriva_de: [cnae-matriz-governo, lc123-art18-anexos-taxativo, profissoes-regulamentadas-conselhos, mei-risco-e-simplificacao-abertura, cnae-complexidade-abertura]
+deriva_de: [cnae-matriz-governo, lc123-art18-anexos-taxativo, profissoes-regulamentadas-conselhos, mei-risco-e-simplificacao-abertura, 2026-07-17-complexidade-abertura-e-telas]
 superado_por:
 tags: [cnae, mei, simples-nacional, escopo, fonte-primaria]
 ---
@@ -31,7 +31,7 @@ Este documento é a **leitura humana curada** (tabela enxuta, 6 colunas, pra ent
 →  94 não exigem registro em conselho profissional (Lei 6.839/1980 + leis de cada conselho)
 →  90 não exigem registro setorial federal (CADASTUR/Polícia Federal/Bacen-CVM-SUSEP — cruzado contra a seção de complexidade abaixo)
 ```
-4ª rodada (28/08, [[cnae-verifica-atende]]): dos 90, **5 tinham o eixo nao-verificado** (não checado nessa subclasse específica, não "nao" de verdade) — investigado com fonte primária. 1 confirmou exigência (saiu) · 2 confirmaram "não exige" (ficam) · 2 seguem pendentes. **87 restam certeza.**
+4ª rodada (28/08, `cnae-verifica-atende.js`): dos 90, **5 tinham o eixo nao-verificado** (não checado nessa subclasse específica, não "nao" de verdade) — investigado com fonte primária. 1 confirmou exigência (saiu) · 2 confirmaram "não exige" (ficam) · 2 seguem pendentes. **87 restam certeza.**
 Dos 87, **51 também permitem MEI** (Anexo XI CGSN140) — MEI segue o mesmo filtro de risco do ME (confirmado em [[mei-risco-e-simplificacao-abertura]], Art. 18-A §18 da LC123), não existe atalho.
 
 ## O que mudou vs a v1 (103, herdada)

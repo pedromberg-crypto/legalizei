@@ -1,5 +1,5 @@
 ---
-tipo: spec
+tipo: verdade
 status: vivo
 data: 2026-07-22
 assunto: portal-interno-dia2

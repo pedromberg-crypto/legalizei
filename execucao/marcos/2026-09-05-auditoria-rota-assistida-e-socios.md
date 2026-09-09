@@ -30,7 +30,7 @@ lado das partes. Três bugs saíram daí:
    agenda não escolhe entre elas — e foi por isso que o mock inventou o nome do
    item 2.
 
-Nasceu [[compromisso]] (`app/src/lib/compromisso.ts`): **o compromisso é DADO,
+Nasceu `lib/compromisso` (`app/src/lib/compromisso.ts`): **o compromisso é DADO,
 não texto**. Viaja em partes, e toda frase que a interface mostra é derivada num
 lugar só. Regra que fica: *dado derivado que viaja é dado que um dia chega
 divergente do original*.

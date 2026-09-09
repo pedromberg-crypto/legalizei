@@ -80,7 +80,7 @@ No Avançado a 1ª faixa vai até R$ 50.000/mês — ou seja, **cobre o ICP inte
 1. **A comparação "nosso R$139 × R$195 deles" estava incompleta.** Contra o Básico, quem fatura R$ 30k paga R$ 228 lá. Contra o Avançado, paga R$ 195 e ainda pode ter funcionário.
 2. **Funcionário é bloqueio no Básico.** Se a gente permitir funcionário no plano de entrada, é diferencial real — não é o caso hoje (MVP é ME sem funcionário), mas é carta na mão.
 3. **A progressão é agressiva.** No Básico, sair de R$ 25k para R$ 25.001 de faturamento custa **+64%** na mensalidade (139 → 228). Nenhum aviso disso no funil de venda deles.
-4. **Confirma a cláusula 3.4 do contrato**, que lista faturamento e nº de empregados entre as 9 variáveis de preço → [[2026-07-30-contrato-195-clausulas]].
+4. **Confirma a cláusula 3.4 do contrato**, que lista faturamento e nº de empregados entre as 9 variáveis de preço → 2026-07-30-contrato-195-clausulas.
 
 ## Ligações
 [[plano-padrao-195-referencia]] · [[2026-07-08-planos-servico]] · [[legalize-benchmark-padrao-195]] · [[2026-07-21-dossie-plataforma-logada]]

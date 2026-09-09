@@ -1,6 +1,6 @@
 ---
-tipo: original
-status: vivo — v0.2, rodada 2 de correções aplicada (Pedro, 19/08)
+tipo: verdade
+status: vivo
 data: 2026-08-19
 assunto: personagem-leo
 tags: [marca, personagem, voz, criativo]

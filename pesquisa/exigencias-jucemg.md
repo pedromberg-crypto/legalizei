@@ -10,7 +10,7 @@ confianca: media-alta
 
 # ⚖️ Exigências e indeferimento na JUCEMG — o que trava um registro
 
-> Trazido pelo Pedro em 04/09 pra orientar a copy do A1/A2 (o que a gente promete antes do ponto sem volta). **Companheira de** [[gravacao-jucemg-constituicao]] · [[spec-mvp-v0]] · [[decisoes-marca]].
+> Trazido pelo Pedro em 04/09 pra orientar a copy do A1/A2 (o que a gente promete antes do ponto sem volta). **Companheira de** [[2026-08-31-gravacao-jucemg-e-fusao-status]] · [[spec-mvp-v0]] · [[decisoes-marca]].
 >
 > 🔴 **Confiança média-alta, não ratificada.** A base normativa citada (IN DREI nº 81/2020) confere com o que a gravação de 31/08 mostrou, mas os detalhes de prazo e perda de taxa ainda precisam do double-check do Mauro/Larissa antes de virar promessa escrita em tela. Ver [[fila-validacao-humana]].
 

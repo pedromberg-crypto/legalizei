@@ -34,4 +34,4 @@ Faltam cruzamentos — o de hoje foi só **paridade × inovação (o QUÊ)**:
 **6 decisões abertas** registradas na spec: pagar-DAS-pelo-app (viabilidade dev), Open Finance no dia-1, baseline da economia, preço+catálogo (Mauro), AIDF (venda × embutido quando bloqueia), acesso do 2º sócio.
 
 ## Links
-[[cruzamento-portal-interno]] · [[home-candidatos-modulos]] · [[matriz-portal-interno]] · [[2026-07-21-dossie-plataforma-logada]] · [[benchmark-padrao-195]] · [[legalize-cobaia-cnpj-pedro]] · [[HOME]]
+[[cruzamento-portal-interno]] · [[home-candidatos-modulos]] · [[matriz-portal-interno]] · [[2026-07-21-dossie-plataforma-logada]] · [[plano-padrao-195-referencia]] · [[legalize-cobaia-cnpj-pedro]] · [[HOME]]

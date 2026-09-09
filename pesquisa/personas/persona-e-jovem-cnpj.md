@@ -1,5 +1,5 @@
 ---
-tipo: original
+tipo: verdade
 status: vivo
 data: 2026-08-26
 assunto: persona-e

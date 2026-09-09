@@ -1,5 +1,5 @@
 ---
-tipo: execucao
+tipo: operacao
 status: vivo
 data: 2026-07-23
 assunto: backlog-telas-portal

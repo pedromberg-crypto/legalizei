@@ -1,6 +1,6 @@
 ---
-tipo: campanha
-status: auditado
+tipo: operacao
+status: vivo
 data: 2026-08-20
 tags: [marketing, campanhas, primeira-campanha, guardian, auditoria]
 ---
@@ -208,4 +208,4 @@ Qualificador "do Simples Nacional" presente e colado em "contador de verdade" (d
 **5. Direções de arte de risco (papel timbrado, card de contador)** — reais, não só estéticas. Corrigidas nas 5 células afetadas (B-SOB 30s, C-SOB 15s/30s, C-COM 15s/30s). Estendido também (achado adicional) pra UI de mensagens do C-SOB 30s, mesma família de risco.
 
 ## Links
-[[copy]] · [[roteiros-video]] · [[brief]] · [[../../marca/personagem-leo|personagem-leo]] · [[../../pesquisa/posicionamento|posicionamento]] · [[../../marca/decisoes-marca|decisoes-marca]]
+[[copy]] · [[roteiros-video]] · [[brief]] · [[personagem-leo|personagem-leo]] · [[posicionamento|posicionamento]] · [[decisoes-marca|decisoes-marca]]

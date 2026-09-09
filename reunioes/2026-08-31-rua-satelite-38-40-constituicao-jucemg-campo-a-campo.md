@@ -3,7 +3,8 @@ tipo: historico
 status: vivo
 data: 2026-08-31
 fonte: "Rua Satélite 38/39/40 (vídeo+transcrição) + Tela 1/Tela 2 (áudio+transcrição, mesma reunião, 2ª captação) — Downloads/Transcrições Reunião/ (Pedro Maia, Isabela/especialista contábil, Thiago/dev, Natanael Dev)"
-deriva_de: [../execucao/checklist-validacao-jucemg.html, ../execucao/dados-coletados-abertura-ate-viabilidade.md]
+deriva_de: [dados-coletados-abertura-ate-viabilidade]
+deriva_de_codigo: [execucao/checklist-validacao-jucemg.html]
 tags: [reuniao, produto, rpa, jucemg, dbe, fiscal, decisao, pendente-validacao]
 ---
 

@@ -3,7 +3,8 @@ tipo: derivado
 status: vivo
 data: 2026-07-28
 assunto: telas-e-condicionais
-deriva_de: [flow-data, mapa-ramificacoes-flow, reordenacao-flow-cobranca-cedo]
+deriva_de: [mapa-ramificacoes-flow, reordenacao-flow-cobranca-cedo]
+deriva_de_codigo: [execucao/flow/flow-data.mjs]
 tags: [produto, ux, telas, fluxo, condicionais, mermaid, mapa, vivo, dados-jucemg]
 ---
 

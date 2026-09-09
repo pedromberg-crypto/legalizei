@@ -3,7 +3,7 @@ tipo: historico
 status: vivo
 data: 2026-08-19
 fonte: Plaud (1 transcrição + 1 summary, "Leonan 19_08_2026")
-deriva_de: [../execucao/flow/flow-data.mjs, ../app/src/app/apresentacao/page.tsx]
+deriva_de_codigo: [execucao/flow/flow-data.mjs, app/src/app/apresentacao/page.tsx]
 tags: [reuniao, produto, fiscal, ux, flow, decisao]
 ---
 
@@ -61,4 +61,4 @@ Esses 2 valem correção prioritária em `flow-data.mjs` antes de qualquer outra
 - 🔴 **Cria:** 6 itens (4, 5[parcial], 14, 15, 17, 18, 23)
 
 ## Links
-- [[../execucao/flow/flow-data.mjs]] · [[2026-07-13-alinhamento-pedro-dev-leonam]] · [[../HOME]]
+- `execucao/flow/flow-data.mjs` · [[2026-07-13-alinhamento-pedro-dev-leonam]] · [[HOME]]

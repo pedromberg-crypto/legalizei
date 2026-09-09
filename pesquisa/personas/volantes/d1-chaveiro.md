@@ -1,7 +1,8 @@
 ---
-tipo: original
+tipo: derivado
 status: vivo
 data: 2026-08-26
+deriva_de: [persona-d-mei-puro-permanente]
 assunto: volante-d1
 tags: [pesquisa, personas, volante]
 ---

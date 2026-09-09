@@ -1,5 +1,5 @@
 ---
-tipo: rascunho
+tipo: operacao
 status: vivo
 data: 2026-08-24
 assunto: apresentacao-custos-valores

@@ -1,9 +1,9 @@
 ---
 tipo: marco
-status: fechado
+status: vivo
 data: 2026-09-01
 assunto: auditoria-campo-a-campo-constituicao-me
-deriva_de: [../telas-jucemg-mapeamento-prints.md, ../../reunioes/2026-08-31-rua-satelite-38-40-constituicao-jucemg-campo-a-campo.md]
+deriva_de: [telas-jucemg-mapeamento-prints, 2026-08-31-rua-satelite-38-40-constituicao-jucemg-campo-a-campo]
 tags: [execucao, marco, flow, constituicao, me, auditoria, e2e]
 ---
 

@@ -19,4 +19,4 @@ Decisão 22/07 (13º flow) sobre **o que a parte interna do app oferece e como c
 
 **2 ressalvas registradas:** (1) **AIDF** onde bloqueia a 1ª nota não pode ser paywall puro (trava o happy-path); venda × embutido = decisão Mauro. (2) A **"verificação de pendências" one-off** é vendável, mas o **monitoramento passivo** na home (Fator R vivo, "tá tudo certo") segue **grátis e core** — é o North Star, não vira paywall. São 2 produtos com o mesmo nome.
 
-Catálogo completo + preços-referência na spec `execucao/cruzamento-portal-interno.md` §Catálogo. Cruza com [[benchmark-padrao-195]] (surcharge oculto + IGP-DI) e alimenta o debate de preço com o Mauro.
+Catálogo completo + preços-referência na spec `execucao/cruzamento-portal-interno.md` §Catálogo. Cruza com [[plano-padrao-195-referencia]] (surcharge oculto + IGP-DI) e alimenta o debate de preço com o Mauro.

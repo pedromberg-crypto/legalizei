@@ -1,5 +1,5 @@
 ---
-tipo: prompt-externo
+tipo: operacao
 status: vivo
 data: 2026-08-26
 assunto: prompt-pesquisa-volantes

@@ -43,4 +43,4 @@ Pergunta do Pedro: *quais CNAEs a Legalizai Story Book abre sozinha (passa liso)
 - Médio×alto dos 120 quando a fonte BH liberar.
 
 ## Ligações
-[[cnae-complexidade-abertura]] · [[cnae-liso-servico]] · [[anexo-iii-simples]] · [[design-system]] · [[legalize-pill-estreita-nao-valida]] · [[fila-validacao-humana]]
+[[2026-07-17-complexidade-abertura-e-telas]] · [[cnae-liso-servico]] · [[anexo-iii-simples]] · [[design-system]] · [[legalize-pill-estreita-nao-valida]] · [[fila-validacao-humana]]

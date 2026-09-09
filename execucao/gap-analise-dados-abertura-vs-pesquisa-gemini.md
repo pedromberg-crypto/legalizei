@@ -1,6 +1,6 @@
 ---
 tipo: verdade
-status: vivo — achados não ratificados em fonte primária
+status: vivo
 data: 2026-08-26
 assunto: gap-dados-abertura
 tags: [execucao, flow, dados, abertura, fiscal, pendencia]

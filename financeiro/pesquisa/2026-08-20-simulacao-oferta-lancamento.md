@@ -91,4 +91,4 @@ Todos os 5 cenários fecham positivo em qualquer ponto de cancelamento.
 - Achado que não existia na simulação anterior (com honorário + certificado no MEI + atendente caro): **MEI deixava de fechar conta em CAC alto e cancelamento cedo.** Tirando honorário, tirando certificado do MEI e baixando o custo de atendente, o MEI vira tão seguro quanto o ME.
 
 ## Cross-refs
-[[2026-08-18-custos-margem-decisao]] · [[../mkt/campanhas/2026-08-primeira-campanha/brief|brief da primeira campanha]] · [[HOME]]
+[[2026-08-18-custos-margem-decisao]] · [[brief|brief da primeira campanha]] · [[HOME]]

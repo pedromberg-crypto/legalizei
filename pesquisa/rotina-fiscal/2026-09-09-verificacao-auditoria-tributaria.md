@@ -1,6 +1,6 @@
 ---
-tipo: pesquisa-externa
-status: arquivo-integra
+tipo: fato
+status: congelado
 data: 2026-09-09
 assunto: verificacao-rotina-me-simples-bh
 fonte: Google Search Pro (Gemini), rodado pelo Pedro

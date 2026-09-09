@@ -1,5 +1,5 @@
 ---
-tipo: handoff
+tipo: operacao
 status: vivo
 data: 2026-09-03
 assunto: leo-agente-whatsapp

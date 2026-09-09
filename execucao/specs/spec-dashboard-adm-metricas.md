@@ -93,7 +93,7 @@ Só dado de **entrada do usuário** = disponível imediato + diz QUEM é o merca
 ## 🟡 Pendências
 - Eventos de telemetria que o backend precisa emitir (por tela, por campo, por método de pagamento) — cruzar com as "Implicações pro Dev" de [[spec-instrumentacao-flow]] pra virar 1 lista única de eventos.
 - Definir stack de analytics (aberto na spec de instrumentação).
-- Confirmar overlap CRM × fila de homologação CRC × [[Leghub]] (pendência do doc2).
+- Confirmar overlap CRM × fila de homologação CRC × Leghub (pendência do doc2).
 
 ## Links
 - [[spec-instrumentacao-flow]] (coorte + eventos por tela) · [[spec-telas-entrada-b1-b2]] · [[compilado-ux-flow]] · [[kanban-legalizai-story-book]] · [[HOME]]

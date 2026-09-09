@@ -1,6 +1,6 @@
 ---
 tipo: marco
-status: registro
+status: vivo
 data: 2026-07-27
 assunto: portal-interno-construido
 tags: [produto, ui, portal, notas, impostos, mais, billing]

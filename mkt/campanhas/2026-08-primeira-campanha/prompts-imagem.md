@@ -1,5 +1,5 @@
 ---
-tipo: campanha
+tipo: operacao
 status: rascunho
 data: 2026-08-20
 tags: [marketing, campanhas, primeira-campanha, imagem]

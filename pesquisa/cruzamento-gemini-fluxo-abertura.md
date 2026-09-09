@@ -3,7 +3,7 @@ tipo: derivado
 status: vivo
 data: 2026-08-04
 assunto: validacao-cruzada-fiscal-e-flow
-deriva_de: [fiscal-simples-bh-2026, cnae-matriz, mapa-mental-mockup, mvp-so-servico-cnae]
+deriva_de: [fiscal-simples-bh-2026, cnae-matriz-governo, mapa-mental-mockup, legalize-mvp-so-servico-cnae]
 tags: [fiscal, cnae, jucemg, gemini, validacao, cruzamento]
 ---
 

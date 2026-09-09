@@ -1,5 +1,5 @@
 ---
-tipo: prep
+tipo: operacao
 status: vivo
 data: 2026-08-05
 tags: [trafego-pago, meta, google, marketing, pauta]

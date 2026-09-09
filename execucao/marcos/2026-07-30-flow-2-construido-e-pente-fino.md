@@ -92,4 +92,4 @@ Lido o contrato do plano R$195 + a grade de faixas de dentro da conta de cliente
 - **CTAs selecionados = coral sólido** (padrão do N4) em todo o dossiê.
 
 ## Links
-[[HOME]] · [[HOME-reorganizacao]] · [[2026-07-30-tabela-real-faixas]] · [[limpeza-260-servico]] · [[cnae-complexidade-abertura]] · [[fiscal-simples-bh-2026]]
+[[HOME]] · [[HOME-reorganizacao]] · [[2026-07-30-tabela-real-faixas]] · [[limpeza-260-servico]] · [[2026-07-17-complexidade-abertura-e-telas]] · [[fiscal-simples-bh-2026]]

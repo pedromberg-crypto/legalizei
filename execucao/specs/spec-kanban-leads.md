@@ -1,5 +1,5 @@
 ---
-tipo: spec
+tipo: verdade
 status: vivo
 data: 2026-07-23
 assunto: kanban-leads-operacional

@@ -3,7 +3,7 @@ tipo: historico
 status: vivo
 data: 2026-09-01
 fonte: "Rua Satélite 42 (transcrição + summary) — Downloads/Rua Satélite 42-transcript.txt e -Summary.md. Simulação de DBE + Integrador com 2 sócios, ao vivo."
-deriva_de: [2026-08-31-rua-satelite-38-40-constituicao-jucemg-campo-a-campo.md, ../execucao/dados-coletados-abertura-ate-viabilidade.md]
+deriva_de: [2026-08-31-rua-satelite-38-40-constituicao-jucemg-campo-a-campo.md, dados-coletados-abertura-ate-viabilidade]
 tags: [reuniao, produto, societario, dbe, contrato-padrao, decisao, pendente-validacao]
 ---
 

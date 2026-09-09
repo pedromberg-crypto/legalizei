@@ -1,6 +1,6 @@
 ---
 tipo: marco
-status: registrado
+status: vivo
 data: 2026-07-21
 assunto: [mapa-flow, sociedade, n14, concorrente]
 tags: [marco, produto, ux, telas, concorrente, decisao]

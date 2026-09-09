@@ -21,4 +21,4 @@ Método que fechou o encaixe em 1 rodada depois de ~6 tentativas no olho:
 
 **Como aplicar:** antes de posicionar qualquer PNG de personagem/objeto contra uma borda, rodar a medição e escrever a conta. Vale também pra simular a composição em PIL e OLHAR o resultado antes de mandar o Pedro recarregar — foi o que revelou, no caso das folhas, que o problema não era posição e sim alfa premultiplicado.
 
-Relacionado: [[legalize-muro-que-nao-existe-e3-3]] · [[legalize-alfa-premultiplicado-halo-escuro]]
+Relacionado: legalize-muro-que-nao-existe-e3-3 · [[legalize-alfa-premultiplicado-halo-escuro]]

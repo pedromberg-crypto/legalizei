@@ -840,7 +840,7 @@ Redação da cláusula de arrependimento sem promessa incondicional (a pesquisa 
 **Marca:** [[posicionamento]] · `marca/conceito/conceito-marca.md` · `marca/decisoes-marca.md` · [[glossario-tecnico-humano]] · [[exemplos-copy-por-tela]]
 **Público:** [[metodologia-personas]] · [[persona-a-servico-intelectual]] · [[persona-b-servico-estetico]] · [[persona-c-baixa-familiaridade-digital]]
 **Orgânico:** [[estrategia-organica]] · [[mecanicas-engajamento]]
-**Economia:** [[economia-preco-cac]] · [[benchmark-padrao-195]]
+**Economia:** [[economia-preco-cac]] · [[plano-padrao-195-referencia]]
 **Funil/canais:** [[funil-conversao]] · [[estrutura-funil-trafego]] · [[frente-1-captacao-meta-bh]] · [[trafego-pago-contabilidade-mercado]]
 **Gate:** [[validacao-ideia]] · `BASE-ESTRATEGICA.md` §13
 **Pauta operacional da reunião:** [[2026-08-05-pauta-reuniao-gestor-trafego]]

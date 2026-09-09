@@ -3,7 +3,8 @@ tipo: derivado
 status: vivo
 data: 2026-09-01
 assunto: handoff-dev-constituicao-me
-deriva_de: [../flow/flow-data.mjs, ../telas-jucemg-mapeamento-prints.md, ../../reunioes/2026-08-31-rua-satelite-38-40-constituicao-jucemg-campo-a-campo.md]
+deriva_de: [telas-jucemg-mapeamento-prints, 2026-08-31-rua-satelite-38-40-constituicao-jucemg-campo-a-campo]
+deriva_de_codigo: [execucao/flow/flow-data.mjs]
 tags: [execucao, handoff, dev, constituicao, me, jucemg]
 ---
 
@@ -258,7 +259,7 @@ Origem: Rua Satélite 42 (simulação de DBE + Integrador com 2 sócios, contrat
 **29/29 passando em 01/09.** Se um desses quebrar, a mudança provavelmente contraria uma decisão registrada — confira o ADR (`marca/decisoes-marca.md`) antes de "consertar" o teste.
 
 ## Links
-- [[flow-data]] · `execucao/flow/flow-data.mjs` (fonte única)
+- `execucao/flow/flow-data.mjs` · `execucao/flow/flow-data.mjs` (fonte única)
 - [[dados-coletados-abertura-ate-viabilidade]] (gerado)
 - [[telas-jucemg-mapeamento-prints]] (141 prints)
 - [[2026-08-31-rua-satelite-38-40-constituicao-jucemg-campo-a-campo]] (ata da Izabela)

@@ -1,7 +1,8 @@
 ---
-tipo: original
+tipo: derivado
 status: vivo
 data: 2026-08-05
+deriva_de: [persona-b-servico-estetico]
 assunto: volante-b3
 tags: [pesquisa, personas, volante]
 ---

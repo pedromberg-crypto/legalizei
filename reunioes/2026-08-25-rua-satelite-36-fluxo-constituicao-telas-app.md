@@ -3,7 +3,7 @@ tipo: historico
 status: vivo
 data: 2026-08-25
 fonte: transcrição + summary, "Rua Satélite 36" (Downloads, Pedro Dev/Pedro Maia/Natanael Dev/Pedro Puntel/Speaker 2/Speaker 6)
-deriva_de: [../execucao/flow/flow-data.mjs, ../app/src/app/apresentacao/page.tsx]
+deriva_de_codigo: [execucao/flow/flow-data.mjs, app/src/app/apresentacao/page.tsx]
 tags: [reuniao, produto, rpa, ux, flow, decisao, pendente-validacao]
 ---
 

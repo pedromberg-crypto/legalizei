@@ -1,5 +1,5 @@
 ---
-tipo: campanha
+tipo: operacao
 status: rascunho
 data: 2026-08-20
 tags: [marketing, campanhas, primeira-campanha, video, roteiro]
@@ -389,4 +389,4 @@ tags: [marketing, campanhas, primeira-campanha, video, roteiro]
 
 ## Links
 
-[[copy]] · [[brief]] · [[guardian-log]] · [[prompts-imagem]] · [[../../marca/personagem-leo|personagem-leo]] · [[../../marca/copy/roteiro-teaser-investidor|roteiro-teaser-investidor]] · [[../../pesquisa/posicionamento|posicionamento]] · [[../../marca/decisoes-marca|decisoes-marca]]
+[[copy]] · [[brief]] · [[guardian-log]] · [[prompts-imagem]] · [[personagem-leo|personagem-leo]] · [[roteiro-teaser-investidor|roteiro-teaser-investidor]] · [[posicionamento|posicionamento]] · [[decisoes-marca|decisoes-marca]]

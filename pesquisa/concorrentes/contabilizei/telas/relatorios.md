@@ -1,5 +1,5 @@
 ---
-tipo: teardown-tela
+tipo: fato
 data: 2026-07-09
 concorrente: Contabilizei
 plataforma: [desktop, mobile]

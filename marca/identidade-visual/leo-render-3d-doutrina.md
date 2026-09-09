@@ -1,6 +1,6 @@
 ---
-tipo: doutrina
-status: vivo — v0.2, template real do Pedro incorporado 29/08
+tipo: verdade
+status: vivo
 data: 2026-08-29
 assunto: leo-render-3d
 tags: [marca, personagem, leo, visual, doutrina, prompt]

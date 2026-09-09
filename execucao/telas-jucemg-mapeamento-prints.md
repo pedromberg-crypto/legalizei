@@ -3,7 +3,7 @@ tipo: verdade
 status: vivo
 data: 2026-08-31
 fonte: transcrições Rua Satélite 38/39/40 (timestamps do vídeo) + 75 prints reais colados pelo Pedro (31/08, sessão de debate — vídeo 1 completo)
-deriva_de: [../reunioes/2026-08-31-rua-satelite-38-40-constituicao-jucemg-campo-a-campo.md]
+deriva_de: [2026-08-31-rua-satelite-38-40-constituicao-jucemg-campo-a-campo]
 tags: [execucao, jucemg, telas, print, validacao]
 ---
 

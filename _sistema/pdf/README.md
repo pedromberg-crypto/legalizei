@@ -1,5 +1,5 @@
 ---
-tipo: ferramenta
+tipo: hub
 status: vivo
 data: 2026-08-13
 tags: [sistema, pdf, identidade-visual]

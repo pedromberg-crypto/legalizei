@@ -1,6 +1,6 @@
 ---
 tipo: marco
-status: fechado
+status: vivo
 data: 2026-07-29
 assunto: apresentacao-gestao-e-fidelidade-por-construcao
 tags: [flow, apresentacao, componentes, fidelidade, ux, achados]

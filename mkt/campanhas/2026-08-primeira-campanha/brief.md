@@ -1,13 +1,13 @@
 ---
-tipo: campanha
-status: em-definicao
+tipo: operacao
+status: rascunho
 data: 2026-08-20
 tags: [marketing, campanhas, primeira-campanha]
 ---
 
 # Primeira campanha — brief
 
-> Preencido em conjunto com Pedro (20/08). Nada aqui trava até virar decisão em [[../../marca/decisoes-marca|decisoes-marca]]. Diverge em pontos pontuais de [[../../pesquisa/frente-1-captacao-meta-bh|frente-1-captacao-meta-bh]] (doc evergreen mais antigo) — ver §Diferenças abaixo.
+> Preencido em conjunto com Pedro (20/08). Nada aqui trava até virar decisão em [[decisoes-marca|decisoes-marca]]. Diverge em pontos pontuais de [[frente-1-captacao-meta-bh|frente-1-captacao-meta-bh]] (doc evergreen mais antigo) — ver §Diferenças abaixo.
 
 ## Mote
 🟢 **Banco final travado (Pedro, 20/08)** — 2 motes, não 6. Pegada teaser "algo vem aí" (`roteiro-teaser-investidor.md`) + lista de espera.

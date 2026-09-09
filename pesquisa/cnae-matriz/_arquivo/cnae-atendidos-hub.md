@@ -28,4 +28,4 @@ Dataset primeiro; **promover pra nota só o que a gente quiser** (feature-âncor
 - **3 atacados removidos** (a própria página dizia não-atende): `4530-7/01`, `4530-7/02`, `4541-2/02`.
 
 ## Ligações
-[[contabilizei-tabela-cnae]] (bruto da tabela-resumo, 417) · [[contabilizei-cnae-atendidos]] (whitelist 414→387) · [[cnae-fiscalmente-otimo]] · [[fila-validacao-humana]]
+[[2026-07-17-extracao-tabela-cnae-contabilizei]] (bruto da tabela-resumo, 417) · [[cnae-atendidos-e-nao-atendidos]] (whitelist 414→387) · [[cnae-fiscalmente-otimo]] · [[fila-validacao-humana]]

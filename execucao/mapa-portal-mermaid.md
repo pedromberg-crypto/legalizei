@@ -3,7 +3,8 @@ tipo: derivado
 status: vivo
 data: 2026-07-27
 assunto: telas-internas-portal
-deriva_de: [portal-data, matriz-portal-interno, cruzamento-portal-interno, backlog-telas-portal]
+deriva_de: [matriz-portal-interno, cruzamento-portal-interno, backlog-telas-portal]
+deriva_de_codigo: [execucao/portal/portal-data.mjs]
 tags: [produto, ux, telas, portal, navegacao, mermaid, mapa, vivo]
 ---
 

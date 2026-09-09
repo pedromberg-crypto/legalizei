@@ -1,7 +1,8 @@
 ---
-tipo: original
+tipo: derivado
 status: vivo
 data: 2026-08-05
+deriva_de: [persona-c-baixa-familiaridade-digital]
 assunto: volante-c1
 tags: [pesquisa, personas, volante]
 ---

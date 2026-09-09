@@ -1,6 +1,6 @@
 ---
-tipo: prompt-pesquisa
-status: pronto-pra-rodar
+tipo: operacao
+status: vivo
 data: 2026-09-08
 assunto: gateways-de-pagamento-br
 tags: [pesquisa, prompt, gemini, pagamento, gateway, psp, fornecedor]

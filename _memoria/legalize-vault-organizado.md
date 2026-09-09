@@ -1,6 +1,6 @@
 ---
 name: legalize-vault-organizado
-description: O vault tem indice de autoridade (quem manda em cada assunto + mapa T->N), fila-validacao-humana (🕓 nao bloqueia) e verificar.js. A memoria mora em _memoria/ dentro do vault via junction. Vocabulario fechado: 6 tipos, 5 status.
+description: O vault tem indice de autoridade (quem manda em cada assunto + mapa T->N), fila-validacao-humana (🕓 nao bloqueia) e verificar.js. A memoria mora em _memoria/ dentro do vault via junction. Vocabulario fechado: 8 tipos (09/09: `marco` e `referencia` promovidos), 5 status.
 metadata:
   node_type: memory
   type: feedback
@@ -40,8 +40,15 @@ for a hora**, depois da casa organizada.
 Audita o vault sozinho: derivado desatualizado (`deriva_de` no frontmatter) · link quebrado ·
 vocabulário fora do fechado · órfã. **Usa a `data:` do frontmatter, não o mtime** (edição em
 massa reseta mtime e cega o script).
-🔴 **Limite conhecido:** ele marca 13 arquivos de uma vez e **aviso genérico vira ruído** —
-precisa dizer *o que* mudou, não só que a fonte é mais nova.
+🆕 **09/09: roda sozinho**, junto com `node execucao/flow/gerar-mapa.mjs`, como AVISO (padrão da
+trava de anatomia do MEI). Antes existia havia 2 meses e nada o chamava.
+🔴 **Bug crítico corrigido em 09/09:** a regex de frontmatter era `/^---
+/` (só LF) e o vault é
+CRLF — ele lia **140 de 663 notas (21%)**. Nunca trocar por `
+` seco.
+🔴 **Limite conhecido:** aviso genérico vira ruído — precisa dizer *o que* mudou, não só que a
+fonte é mais nova. Saídas honestas: `revisado_em` (olhei, continua valendo), `deriva_de_codigo`
+(código não tem data) e `gerado_por` (a `data:` é carimbo de build).
 
 ## 🔗 A memória mora no VAULT
 `_memoria/` dentro do vault; a pasta do harness é uma **junction** apontando pra lá. Conteúdo num

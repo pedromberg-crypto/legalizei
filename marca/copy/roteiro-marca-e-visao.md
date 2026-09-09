@@ -1,5 +1,5 @@
 ---
-tipo: original
+tipo: derivado
 status: rascunho
 data: 2026-08-13
 assunto: pitch-investidor

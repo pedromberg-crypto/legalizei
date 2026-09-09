@@ -1,6 +1,6 @@
 ---
-tipo: pesquisa-externa
-status: arquivo-integra
+tipo: fato
+status: congelado
 data: 2026-09-08
 assunto: provedores-de-pagamento-br
 fonte: Google Search Pro (Gemini), rodado pelo Pedro

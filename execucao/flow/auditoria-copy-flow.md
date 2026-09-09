@@ -3,7 +3,8 @@ tipo: derivado
 status: vivo
 data: 2026-07-21
 assunto: auditoria-copy-flow
-deriva_de: [flow-data, mapa-flow-mermaid, compilado-ux-flow]
+deriva_de: [mapa-flow-mermaid, compilado-ux-flow]
+deriva_de_codigo: [execucao/flow/flow-data.mjs]
 tags: [produto, ux, copy, flow, auditoria, redundancia, negativa]
 ---
 
@@ -215,4 +216,4 @@ _32 telas navegáveis · gerado de `flow-data.mjs`._
 ---
 
 ## 🔗 Links
-[[metodo-varredura-flow]] (a rubrica) · [[mapa-flow-mermaid]] · [[flow-data]] · [[compilado-ux-flow]] · [[legalize-telas-padrao-layout]] · [[spec-telas-b3-b4-aterrissagem]] · [[spec-telas-entrada-b1-b2]] · [[HOME]]
+[[metodo-varredura-flow]] (a rubrica) · [[mapa-flow-mermaid]] · `execucao/flow/flow-data.mjs` · [[compilado-ux-flow]] · [[legalize-telas-padrao-layout]] · [[spec-telas-b3-b4-aterrissagem]] · [[spec-telas-entrada-b1-b2]] · [[HOME]]

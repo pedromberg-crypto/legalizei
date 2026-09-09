@@ -455,8 +455,13 @@ function gerarDadosConstituicaoMd() {
 
   const linhas = [];
   linhas.push("---");
-  linhas.push("tipo: verdade");
-  linhas.push("status: GERADO — não editar à mão, nasce de `execucao/flow/gerar-mapa.mjs`");
+  // 09/09: era `tipo: verdade` + `status: GERADO — não editar...`. Duas coisas erradas:
+  // a nota NASCE do flow-data, então é `derivado`, não fonte; e `status` é vocabulário
+  // fechado (vivo/superado/rascunho/congelado/fila-humana), não campo de recado. O aviso
+  // de "não editar à mão" já está no corpo e agora tem campo próprio.
+  linhas.push("tipo: derivado");
+  linhas.push("status: vivo");
+  linhas.push("gerado_por: execucao/flow/gerar-mapa.mjs");
   linhas.push(`data: ${hoje}`);
   linhas.push("assunto: dados-coletados-abertura");
   linhas.push("tags: [execucao, flow, dados, abertura]");
@@ -835,4 +840,37 @@ try {
   }
 } catch {
   /* A trava é opcional pro gerador: se ela sumir ou quebrar, o mapa continua. */
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   O VERIFICADOR DO VAULT, PELA MESMA CARONA.
+   ═══════════════════════════════════════════════════════════════════════════
+   🆕 09/09. `_sistema/verificar.js` existe desde 16/07 e audita 4 coisas:
+   derivado apodrecido, link quebrado, vocabulário fora do fechado e nota órfã.
+   Em 2 meses ele nunca rodou, porque ninguém o chamava — a regra existia e
+   não era aplicada por nada. Mesmo diagnóstico da trava de anatomia acima.
+
+   ⚠️ AVISA, não derruba, pelo mesmo motivo: escrever o mapa é outro trabalho.
+   Quem quiser o exit code roda `node _sistema/verificar.js` direto. */
+try {
+  const vault = spawnSync(process.execPath, [path.join(DIR, "..", "..", "_sistema", "verificar.js")], {
+    encoding: "utf8",
+  });
+  const saida = (vault.stdout || "");
+  const derivados = (saida.match(/DERIVADO DESATUALIZADO \((\d+)\)/) || [])[1];
+  const vocab = (saida.match(/VOCABULÁRIO fora do fechado \((\d+)\)/) || [])[1];
+  const links = (saida.match(/LINKS QUEBRADOS \((\d+)/) || [])[1];
+  const alertas = [
+    derivados && `${derivados} derivado(s) desatualizado(s)`,
+    vocab && `${vocab} fora do vocabulário`,
+    links && `${links} link(s) quebrado(s)`,
+  ].filter(Boolean);
+  if (!alertas.length) {
+    console.log("✓ vault limpo (vocabulário, links, derivados)");
+  } else {
+    console.log(`\n🟡 VAULT: ${alertas.join(" · ")}`);
+    console.log("   ↑ rode `node _sistema/verificar.js` pro detalhe.\n");
+  }
+} catch {
+  /* Mesma regra: se sumir ou quebrar, o mapa continua. */
 }

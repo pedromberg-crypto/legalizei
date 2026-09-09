@@ -3,7 +3,8 @@ tipo: derivado
 status: fila-humana
 data: 2026-07-16
 assunto: cnae-escopo-mvp
-deriva_de: [cnae-atendidos-e-nao-atendidos, cnae-matriz.json]
+deriva_de: [cnae-atendidos-e-nao-atendidos]
+deriva_de_codigo: [pesquisa/cnae-matriz/cnae-matriz.json]
 gerado_por: pesquisa/cnae-matriz/classificar-260.js
 tags: [cnae, escopo, mvp, fila]
 ---

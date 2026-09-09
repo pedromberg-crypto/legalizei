@@ -3,7 +3,8 @@ tipo: marco
 status: vivo
 data: 2026-07-28
 assunto: reuniao-rua-satelite-9-decisoes-flow
-deriva_de: [flow-data, mapa-flow-mermaid]
+deriva_de: [mapa-flow-mermaid]
+deriva_de_codigo: [execucao/flow/flow-data.mjs]
 tags: [produto, ux, flow, decisoes, jucemg, reuniao]
 ---
 

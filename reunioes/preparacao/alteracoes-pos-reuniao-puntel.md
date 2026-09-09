@@ -1,5 +1,5 @@
 ---
-tipo: execucao
+tipo: operacao
 status: vivo
 data: 2026-08-18
 assunto: alteracoes-pos-reuniao-puntel

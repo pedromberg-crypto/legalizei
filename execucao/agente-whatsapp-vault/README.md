@@ -1,5 +1,5 @@
 ---
-tipo: original
+tipo: verdade
 status: vivo
 data: 2026-09-04
 assunto: agente-whatsapp-vault

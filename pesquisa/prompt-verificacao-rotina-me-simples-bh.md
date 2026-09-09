@@ -1,6 +1,6 @@
 ---
-tipo: prompt-pesquisa
-status: pronto-pra-rodar
+tipo: operacao
+status: vivo
 data: 2026-09-09
 assunto: verificacao-rotina-me-simples-bh
 tags: [pesquisa, prompt, gemini, verificacao, fiscal, nfse, esocial, bh]

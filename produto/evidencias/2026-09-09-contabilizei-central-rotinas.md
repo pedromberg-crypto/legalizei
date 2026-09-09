@@ -315,7 +315,7 @@ Um modal apareceu em toda tela do app legado, bloqueando a leitura:
 > *"É um prazer ter você como nosso cliente :)"*
 > **"Você aceita o aumento de mensalidade ou prefere conversar com alguém para entender melhor?"**
 
-✅ **Confirma em copy o que o vault já registrava** como "IGP-DI anual" no [[2026-07-22-dossie-plataforma-logada|dossiê]] e na nota de benchmark.
+✅ **Confirma em copy o que o vault já registrava** como "IGP-DI anual" no [[2026-07-21-dossie-plataforma-logada|dossiê]] e na nota de benchmark.
 
 ⚠️ **Três coisas para a nossa decisão de preço:**
 1. O reajuste é **anunciado com antecedência e com índice nomeado** (IGP-DI). Isso é correto e vale copiar.

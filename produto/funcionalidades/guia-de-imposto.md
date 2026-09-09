@@ -89,7 +89,7 @@ Verificando pagamento · Paga · Paga via parcelamento · Vencida · Recalculand
 | # | Eles | Nós | Por quê |
 |:--:|---|---|---|
 | 1 | Juros e multa **sem linha própria** (só `valorPago > valorPrincipal`) | **Linha separada**: "principal R$720 + multa e juros R$40,46" | O dado existe e é calculável. Esconder o custo do atraso é o oposto de ensinar o cliente a não atrasar |
-| 2 | `modalDetalhes.oqueE` / `porQueEImportante` **construídos e vazios** | **Preenchidos.** Todo imposto explica o que é e por que importa | Eles fizeram o schema da nossa tese e não preencheram. É o menor custo de diferenciação do arquivo |
+| 2 | Explicador **inconsistente entre telas**: rico na Central de Rotinas, nulo em `Impostos a pagar` | **A mesma explicação em toda tela onde o imposto aparece**, vinda de uma fonte só | Eles têm o texto e ele não chega onde o cliente decide pagar. É custo zero de conteúdo e ganho direto de confiança |
 | 3 | `RECALCULAR` a **R$15,90** aparece assim que vence | Recalcular a guia do próprio cliente é **incluso**. Cobramos serviço, não correção de algo que a gente já calculou | Cobrar pra reemitir o que a gente errou de prazo é o "surcharge oculto" que a gente critica no líder |
 | 4 | Auditoria em **lote mensal** | 🔴 decisão de arquitetura em aberto (2.4) | Ver abaixo |
 | 5 | Confirmação manual que a auditoria **derruba em silêncio** | Se a auditoria contradisser o cliente, **mostrar a data da checagem e perguntar** | Desmentir o cliente sem mostrar a fonte corrói a confiança |

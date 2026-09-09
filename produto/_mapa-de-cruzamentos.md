@@ -123,6 +123,9 @@ Pró-labore ─────> FOLHA 12m ──> FATOR R ──┘                
 | **Os prazos** | Ciência **presumida em 45 dias** mesmo sem ninguém abrir · **30 dias** para regularizar depois |
 | **O que o líder faz** | Tela pronta pro Termo de Exclusão, e **vende** a verificação de pendências. Sair do Simples ainda **acrescenta R$95 à mensalidade** deles |
 | 🔴 **Nossa lacuna** | Linha **5.7**, sem caminho. É o único ponto do produto onde **o silêncio custa a empresa do cliente** |
+| 🔑 **A taxonomia do que dá errado (09/09)** | O líder cataloga **21 pendências críticas + 7 outras**, e a frase de abertura da tela deles liga a corrente inteira: *"podem afetar seu informe de rendimentos e gerar desenquadramento tributário e inativação do CNPJ"*. Ver [[2026-09-09-contabilizei-central-rotinas]] |
+| ⚠️ **7 das 21 não se aplicam ao nosso ICP** | estoque · ativo imobilizado · empréstimo · financiamento · aplicação financeira · AFAC · investimento anjo. A lista deles não é filtrada por perfil, e o cliente precisa **negar ativamente**. Nosso recorte estreito nos poupa isso |
+| 🔴 **O DTE-SN NÃO está na Central de Rotinas deles** | Eles têm tela pro Termo de Exclusão, mas ela dispara **depois** que ele chegou. Trazer o monitoramento pra dentro do compliance é onde a nossa 5.7 vira produto |
 
 ### 7. Pagamento ⇄ tudo
 

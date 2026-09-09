@@ -182,7 +182,9 @@ Campos por guia no histórico, além dos já citados:
 }
 ```
 
-🎯 **`modalDetalhes` tem os campos `oqueE` e `porQueEImportante`.** Eles construíram a estrutura de um explicador por imposto ("o que é" / "por que é importante") — e nesta conta ela vem **toda nula**. **A tese de transparência está no schema deles e não está preenchida.**
+🎯 **`modalDetalhes` tem os campos `oqueE` e `porQueEImportante`** — um explicador por imposto. No payload **da guia** ele vem **todo nulo**.
+
+✏️ **CORRIGIDO em seguida, no teardown da [[2026-09-09-contabilizei-central-rotinas|Central de Rotinas]]:** eu tinha escrito aqui que eles *"construíram o schema e não preencheram"*. **Errado pela metade.** Os textos **existem e são bons**, só que no payload de **rotinas**, não no de guias. O defeito real não é ausência de conteúdo: é **inconsistência entre telas** — quem chega pela Central de Rotinas lê a explicação do DAS, quem chega por `Impostos a pagar` não lê nada.
 
 ---
 
@@ -225,7 +227,7 @@ memoriaDeCalculo: {
 | | O quê |
 |:--:|---|
 | ⚠️ | **Juros e multa não têm linha própria.** Aparecem como `valorPago > valorPrincipal`. O dado existe (a diferença é calculável) e não é mostrado |
-| ⚠️ | **`modalDetalhes` inteiramente nulo.** Construíram o explicador por imposto e não preencheram |
+| ⚠️ | **Explicador inconsistente entre telas.** `modalDetalhes` é nulo aqui, mas os mesmos campos vêm **preenchidos** no payload de rotinas. Mesma informação, uma tela tem e a outra não |
 | ⚠️ | **`RECALCULAR` custa R$15,90** e o botão aparece assim que a guia vence, sem alternativa gratuita visível na lista |
 | 🕓 | **`DARF_UNIFICADO_ATIVACAO_FATOR_R` de R$11,00** — mecânica observada, **não ratificada**. Pró-labore simbólico abaixo do mínimo de contribuição |
 

@@ -33,7 +33,7 @@ O Pedro é cliente pagante da Contabilizei (plano Padrão). A conta é dele, o a
 
 ---
 
-## 🧭 Os 7 passos
+## 🧭 Os 8 passos
 
 ### 1. Escolher pelo que destrava, não pelo que é fácil
 Pró-labore veio primeiro porque cruza Fator R, INSS, eSocial e IRPF. Desenhar ele destravou o cálculo de imposto, o calendário e o informe anual de uma vez. **Pergunta certa:** quantas outras funcionalidades esta aqui responde?
@@ -48,7 +48,23 @@ No pró-labore, o que mais rendeu **não estava na tela do pró-labore**: estava
 
 **Vale sempre:** rodar `get_page_text` numa tela de configuração antes de clicar em qualquer coisa.
 
-### 4. Conferir a aritmética, sempre
+### 4. 🔌 Ler a API que alimenta a tela, não só a tela
+
+🆕 **Travado em 09/09**, depois que um `<select>` nativo não respondeu ao teclado via CDP. Em vez de insistir no clique, fui ver de onde o campo vinha, e **rendeu muito mais**.
+
+**Como fazer:** `read_network_requests` na rota, achar o endpoint, e dar um `GET` de mesma origem na sessão do próprio Pedro. Só leitura, devolvendo o dado que a página já exibia.
+
+O que a tela **não** mostrava e a API mostrou:
+- `anexo: 5` → a empresa é **Anexo V por padrão** e sobe pro III. A tela só dizia "Variável"
+- `motorFatorR: true` e `deveExibirVersaoReformaRenda: true` → **feature flags por empresa**, inclusive uma versão já pronta pra Reforma da Renda
+- `codigoServicoItemServico` → um **terceiro nível de código** (o do município) que a tela nunca exibe
+- o campo se chama **`fatorR`** literalmente, o que prova que esconder o jargão foi escolha de UX, não desconhecimento
+
+🔑 **A regra:** quando o clique travar, **não insista** — vá pela API. E mesmo quando o clique funcionar, a API costuma entregar o **contrato de dados**, que é o que o dev precisa e a tela nunca mostra.
+
+⚠️ **Limite:** só `GET` de leitura, na sessão do Pedro, de endpoint que a própria página já chamou. Nunca `POST`, `PUT` ou `DELETE`. Nunca endpoint que a tela não usou.
+
+### 5. Conferir a aritmética, sempre
 Não aceitar o número: refazer a conta.
 
 Foi o que transformou observação em achado:
@@ -57,7 +73,7 @@ Foi o que transformou observação em achado:
 - 7.910,00 × 6% = 474,60, mas a tela mostra **474,59** → divergência de um centavo que vira regra de arredondamento nossa
 - 16.564 ÷ 43.910 = 37,7%, e a tela só diz "maior ou igual a 28%" → **eles escondem a folga de propósito**
 
-### 5. Separar o que é dado do que é decisão
+### 6. Separar o que é dado do que é decisão
 Toda tela mistura três coisas, e elas têm validades diferentes:
 
 | | O que é | Envelhece |
@@ -68,7 +84,7 @@ Toda tela mistura três coisas, e elas têm validades diferentes:
 
 🔴 **Nunca ratificar dado fiscal pela tela do concorrente.** A tabela do IRRF que eles exibem foi anotada como **não ratificada**, justamente porque o app deles carrega um banner de reforma tributária. Vale a regra de sempre: valor + fonte + confiança.
 
-### 6. 🔗 Declarar os cruzamentos, sempre
+### 7. 🔗 Declarar os cruzamentos, sempre
 
 🔒 **Regra dura, travada em 09/09 a pedido do Pedro.** Nenhuma funcionalidade fiscal se documenta sozinha. Toda spec em `produto/funcionalidades/` abre com uma seção **Cruzamentos declarados**, com quatro linhas:
 
@@ -83,7 +99,7 @@ Toda tela mistura três coisas, e elas têm validades diferentes:
 
 ⚠️ **O teste:** se der pra escrever a spec sem citar nenhuma outra funcionalidade, ou ela é isolada de verdade (raro), ou o cruzamento passou batido.
 
-### 7. Fechar com desenho, não com resumo
+### 8. Fechar com desenho, não com resumo
 Toda evidência termina virando **spec nossa**, com três blocos obrigatórios:
 
 - **o que a gente copia sem vergonha** (e por quê)

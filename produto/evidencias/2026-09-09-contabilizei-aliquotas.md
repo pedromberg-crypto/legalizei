@@ -16,6 +16,8 @@ tags: [produto, evidencia, concorrente, aliquota, fator-r, simples-nacional]
 > **Método:** só leitura ([[_metodo]]). Nenhum salvar, confirmar, pagar, recalcular ou parcelar.
 > ⚠️ **O que foi tocado:** (a) alternei o rádio `Mercado interno` → `Mercado externo` em Minhas Alíquotas, que é filtro de exibição; (b) no **simulador**, que a própria tela declara ser inerte (*"Esta é apenas uma simulação, e não gera impostos reais"*), digitei um valor hipotético de R$ 10.000 num campo de nota. O `select` de atividade não respondeu ao teclado via CDP e a simulação **não chegou a calcular**. Nada foi confirmado.
 >
+> 🔬 **2ª rodada (mesmo dia), a pedido do Pedro:** o select foi mapeado por dentro, pelo DOM e pelas **duas APIs** que o alimentam (§8). Só leitura: `GET` de mesma origem, na sessão do próprio Pedro, devolvendo o dado que a página já exibia.
+>
 > **Rotas visitadas:** `#/minhas-aliquotas` · `#/simulador/impostos-avancado` · `#/impostos` · `#/historico-impostos` · painel "Dados da empresa e banco"
 >
 > **Ligações:** [[aliquota-e-enquadramento]] (a spec) · [[2026-09-09-contabilizei-pro-labore]] (a outra ponta da mesma conta) · [[_mapa-de-cruzamentos]] · [[_matriz-dependencia]]
@@ -223,6 +225,123 @@ E um plano de retenção: **Plano Manutenção R$79/mês**, "enquanto não estiv
 | 🐛 | **O mesmo CNAE escrito de duas formas**: `7319-0/04` em Minhas Alíquotas, `7319-00/4` no simulador. A segunda é inválida |
 | 🐛 | O simulador **não cobre exportação**, embora a tela de alíquotas cubra |
 | ⚠️ | "Disponível até o dia 15/16" (home) × "entre 15 e 20" (simulador) × vencimento 18/21 (impostos): três conceitos, uma palavra |
+
+---
+
+## 8. 🔬 O select de atividade, mapeado por dentro
+
+> Pedido do Pedro: *"quero que vc me mostre em que página está esse select que vc n conseguiu acessar, vamos mapear ele antes"*. Mapeado em 09/09, e rendeu mais que o clique teria rendido.
+
+**Onde fica:** `#/simulador/impostos-avancado`, cartão `Nota fiscal #1`, primeiro campo, **"Atividade Exercida"**.
+**Como se chega:** Home → cartão "Notas fiscais" → "Simule o valor dos seus impostos" → botão `Simular impostos`.
+
+### O DOM do select
+
+```json
+{
+  "id": "ac84009b-77eb-48c2-97b5-7e761ef913da",   // UUID gerado por render
+  "class": "select",
+  "options": [
+    { "text": "",                                  "value": ""     },
+    { "text": "",                                  "value": "-"    },   // ⚠️
+    { "text": "7319-00/4 - Consultoria em publicidade", "value": "7319-00/4" }
+  ]
+}
+```
+
+🐛 **Duas opções em branco.** A primeira é placeholder vazio; a segunda tem `value: "-"` e é o sentinela de "nada escolhido" — mas aparece na lista como **mais uma linha em branco**, indistinguível da primeira. Quem abre o dropdown vê duas linhas vazias antes da única opção real.
+
+⚠️ **Sendo justo com eles:** o que me travou foi o **popup nativo do `<select>`, que o CDP não dirige** no Windows. Isso é limitação de automação, **não** defeito do produto. O defeito real e visível ao humano é só a linha em branco duplicada.
+
+### 🔑 A API por trás — e é aqui que estava o valor
+
+`GET /api/plataforma/simulador-impostos-avancado/init`
+
+```json
+{
+  "disponibilidade": "DISPONIVEL",
+  "atividades": [{
+    "codigo": "7319-00/4",
+    "descricao": "Consultoria em publicidade",
+    "anexos": [{
+      "idCnaeEmpresa": 5363987813171200,
+      "descricaoAliquota": "Alíquota inicial de 6% ou 15,5%",
+      "anexoFixo": false,
+      "anexo": 5,
+      "descricaoAtividade": "Consultoria em publicidade"
+    }]
+  }],
+  "primeiroCiclo": false,
+  "deveExibirVersaoReformaRenda": true,
+  "motorFatorR": true
+}
+```
+
+**Cada campo é uma decisão de projeto:**
+
+| Campo | O que revela |
+|---|---|
+| `anexos` é **array dentro da atividade** | confirma que **um CNAE pode ter mais de um anexo/item**. É o que faz existir o modal *"Especifique a atividade"* |
+| **`anexo: 5`** | 🔴 **a empresa é classificada como Anexo V por padrão**, e SOBE para o III quando o Fator R alcança 28%. O piso é V; o III é o prêmio |
+| `anexoFixo: false` | diz se a atividade tem anexo fixo ou **variável**. É a origem do `Alíquota: Variável` na tela |
+| `descricaoAliquota` | a frase `"Alíquota inicial de 6% ou 15,5%"` vem **pronta do servidor**, não é montada no front |
+| **`motorFatorR: true`** | 🔑 existe um **motor de Fator R** ligável **por empresa**. Nem todo cliente tem |
+| **`deveExibirVersaoReformaRenda: true`** | 🔴 **já existe uma versão do simulador consciente da Reforma da Renda**, atrás de flag. Eles se prepararam antes da lei virar rotina |
+| `primeiroCiclo: false` | empresa no 1º mês tem tratamento próprio (sem 12 meses de histórico, o Fator R não fecha) |
+| `disponibilidade` | o simulador inteiro pode ser desligado por empresa |
+
+### 🔑 A outra API: `GET /api/plataforma/notafiscal/listaliquotaatividade`
+
+É a que alimenta a tela **Minhas alíquotas**:
+
+```json
+{
+  "regimeTributario": "SIMPLES",
+  "temCodigoServicoItemServico": false,
+  "interno": {
+    "possuiFaturamento": true,
+    "servico": [{
+      "codigoCnae": "7319004",
+      "descricaoCnae": "Consultoria em publicidade",
+      "codigoItemServico": "17.06",
+      "descricaoItemServico": "Propaganda e publicidade, inclusive promoção de vendas…",
+      "codigoServicoItemServico": null,
+      "descricaoServicoItemServico": null,
+      "atividadeCnae": "Consultoria em publicidade",
+      "aliquotaBase": 6,
+      "aliquotaISS": 2.01,
+      "fatorR": 0.3772,
+      "anexoFixo": false
+    }],
+    "comercio": []
+  },
+  "externo": { "…": "igual, com aliquotaBase 3.05 e aliquotaISS 0" }
+}
+```
+
+🔑 **O campo se chama `fatorR`, literalmente.** Eles usam o nome internamente e **escondem só da interface**. Confirma que omitir o jargão foi **decisão de UX deliberada**, não desconhecimento — o que reforça a nossa escolha de fazer igual (esconder o nome) e diferente (mostrar o efeito).
+
+**Mais três coisas que o payload entrega:**
+
+1. **Três níveis de código, não dois:** `codigoCnae` → `codigoItemServico` (LC 116) → `codigoServicoItemServico` (**código de serviço do município**, `null` aqui). O terceiro nível existe e a flag `temCodigoServicoItemServico: false` diz que esta empresa não usa. ⚠️ **BH tem lista própria de códigos de serviço**, então esse campo vai importar pra nós.
+2. **`interno` e `externo` têm `possuiFaturamento` separado.** Eles rastreiam se a empresa já faturou em cada mercado, e só mostram o que é real.
+3. **`comercio: []` convive com `servico`.** A estrutura suporta os dois; nosso escopo é só serviço, mas o formato do dado já prevê a expansão.
+
+### 🎯 O que isso vale pro nosso contrato de dados
+
+Este é o **contrato de dados de alíquota já validado em produção por quem tem 50 mil clientes**. Nosso equivalente precisa dos mesmos campos:
+
+```
+por atividade:
+  codigoCnae · descricaoCnae
+  codigoItemServico (LC 116) · descricaoItemServico
+  codigoServicoItemServico (município)      ← BH tem lista própria
+  aliquotaBase · aliquotaISS
+  fatorR · anexoFixo · anexo
+  × { interno, externo }, cada um com possuiFaturamento
+```
+
+⚠️ **O que eles têm e nós ainda não decidimos:** o `anexo` como **padrão V com subida para III**. A nossa `lib/fiscal.ts` precisa da mesma direção (piso V, prêmio III), senão o alerta de Fator R dispara ao contrário.
 
 ---
 

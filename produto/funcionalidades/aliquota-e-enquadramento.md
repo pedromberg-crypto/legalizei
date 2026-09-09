@@ -58,6 +58,48 @@ O líder mostra o número (`6,00%`) e esconde a alavanca. Nossa tese inteira é 
 
 ---
 
+## 📦 Contrato de dados (validado em produção pelo líder)
+
+> Extraído das 2 APIs do líder em 09/09 (§8 da [[2026-09-09-contabilizei-aliquotas|evidência]]). Não é chute de modelagem: é o formato que roda pra 50 mil clientes.
+
+```ts
+type AtividadeAliquota = {
+  codigoCnae: string                 // "7319004"
+  descricaoCnae: string
+  codigoItemServico: string          // "17.06" — LC 116, decide o ISS
+  descricaoItemServico: string
+  codigoServicoItemServico: string | null    // código do MUNICÍPIO (BH tem lista própria)
+  descricaoServicoItemServico: string | null
+  aliquotaBase: number               // 6 (interno) · 3.05 (externo)
+  aliquotaISS: number                // 2.01 (interno) · 0 (externo)
+  fatorR: number                     // 0.3772
+  anexoFixo: boolean                 // false = varia com o Fator R
+  anexo: 3 | 5                       // 🔴 o PADRÃO é 5; o 3 é o prêmio do Fator R
+}
+
+type Aliquotas = {
+  regimeTributario: "SIMPLES"
+  temCodigoServicoItemServico: boolean
+  interno: { possuiFaturamento: boolean; servico: AtividadeAliquota[]; comercio: [] }
+  externo: { possuiFaturamento: boolean; servico: AtividadeAliquota[]; comercio: [] }
+}
+```
+
+🔑 **Três níveis de código, não dois.** `CNAE` → `item da LC 116` → **`código de serviço do município`**. O terceiro existe no modelo deles e vem `null` nesta conta. ⚠️ **BH tem lista própria**, então pra nós ele não será nulo.
+
+🔴 **`anexo: 5` é o padrão, e isso inverte a leitura do alerta.** A empresa nasce no **Anexo V (15,5%)** e **sobe** para o III (6%) quando o Fator R alcança 28%. Nossa `lib/fiscal.ts` precisa da mesma direção — piso V, prêmio III — senão o alerta de Fator R dispara ao contrário.
+
+🔑 **A API deles chama o campo de `fatorR`, literalmente.** Eles usam o nome por dentro e escondem só da interface. Isso **confirma** a nossa regra do [[_mapa-de-cruzamentos]]: esconder o jargão é decisão de UX, não desconhecimento. Fazemos igual no nome, e diferente no efeito.
+
+**Duas flags de operação que valem copiar:**
+
+| Flag | Para quê |
+|---|---|
+| `motorFatorR: boolean` | ligar o motor **por empresa**. Nem todo cliente precisa (quem tem anexo fixo, por exemplo) |
+| `primeiroCiclo: boolean` | empresa no 1º mês **não tem 12 meses de histórico**, então o Fator R não fecha e a tela precisa dizer isso em vez de mostrar 0% |
+
+---
+
 ## 🖥️ As telas
 
 | # | Tela | O que faz | Cobertura hoje |

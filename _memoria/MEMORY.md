@@ -1,6 +1,9 @@
 # Memory Index — Legalize
 
-- [API antes de funcionalidade](legalize-api-antes-de-funcionalidade.md) — 08/09: matriz de dependência externa em `funcionalidades-me-simples.md`; 24 deps, 10 sem resposta. Emitir NFS-e e emitir a guia do DAS decidem o produto.
+- [Pasta produto/ e a fonte-verdade das funcionalidades](legalize-pasta-produto-fonte-verdade.md) — 09/09: frente ganhou pasta-raiz; spec viva e evidencia datada SEPARADAS; funcionalidades-me-simples virou redirecionador.
+- [Metodo de teardown funcionalidade a funcionalidade](legalize-metodo-teardown-funcionalidade.md) — 09/09: conta de producao, so leitura; ler o DOM antes de clicar; refazer toda aritmetica; seguir ate onde vira guia.
+- [Vocabulario `tipo` fechado em 6, vault tem 34](legalize-vocabulario-tipo-derivou.md) — 09/09: doutrina sem verificador; propriedade pode crescer, `tipo` nao. Proxima janela comeca por aqui.
+- [API antes de funcionalidade](legalize-api-antes-de-funcionalidade.md) — 08/09: matriz em `produto/_matriz-dependencia.md`. ⚠️ placar recontado em 09/09: 23 deps, 🟢16 · 🟡3 · 🔴4. Emitir NFS-e e emitir a guia do DAS decidem o produto.
 - [Asaas fora, Pagar.me em avaliação](legalize-gateway-asaas-fora.md) — 08/09: o formato do Asaas nos jogaria pro escopo PCI; pesquisa arquivada, reunião com Pagar.me sendo marcada.
 - [Portal ME/Simples: lista consolidada](legalize-portal-lista-consolidada.md) — 08/09: 51 funcionalidades, 31 construídas; "pagar o DAS pelo app" morreu em 27/07 e o gap virou "saber que foi pago".
 - [Réplica de tela se PORTA, não se remonta](legalize-replica-de-tela-se-porta.md) — 07/09: 5 telas erradas no mesmo dia pela mesma raiz; nasceu a trava `verificar-anatomia-mei.mjs`, que roda junto com o gerar-mapa.

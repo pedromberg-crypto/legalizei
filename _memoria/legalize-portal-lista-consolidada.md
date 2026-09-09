@@ -1,6 +1,6 @@
 ---
 name: legalize-portal-lista-consolidada
-description: "08/09: execucao/portal/funcionalidades-me-simples.md é a lista única do portal ME/Simples — 51 funcionalidades, 31 construídas; consolida dossiê + baldes + telas"
+description: "08/09: produto/_catalogo.md (movida em 09/09) é a lista única do portal ME/Simples — 51 funcionalidades, 31 construídas; consolida dossiê + baldes + telas"
 metadata: 
   node_type: memory
   type: project
@@ -8,7 +8,7 @@ metadata:
   modified: 2026-09-09T11:44:57.691Z
 ---
 
-`execucao/portal/funcionalidades-me-simples.md` é a **lista única** do que o app
+`produto/_catalogo.md` (movida em 09/09; o caminho antigo virou redirecionador) é a **lista única** do que o app
 entrega no dia-2 (portal pós-abertura), escopo **ME no Simples**. MEI fica de
 fora de propósito e entra em rodada própria.
 

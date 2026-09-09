@@ -886,6 +886,31 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 - 2) A Junta de MG continua sem sistema automatizado, e isso pega alteração de contrato, baixa e mudança de porte. Esses são feitos à mão, e o preço precisa considerar isso
 ```
 
+## Semana 09/09/2026 — entrei na conta paga da Contabilizei e destrinchei o pró-labore por dentro
+
+> Dois avanços grandes num dia. De manhã, uma pesquisa de auditoria derrubou 6 informações erradas que a gente tinha sobre prazos e obrigações do Simples. De tarde, mudei o método: em vez de ler o concorrente por fora, entrei na conta que o Pedro paga e acompanhei **uma funcionalidade do começo ao fim**, só olhando, sem clicar em nada que altere a conta dele.
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | 🔴 **Dois prazos correndo, e um é decisão sua** | **30/09** é o último dia para optar pelo chamado Simples Híbrido, que permite apurar os tributos novos (CBS/IBS) fora da guia única e gerar crédito para cliente que é empresa. **01/11** o Emissor Nacional de nota de serviço vira obrigatório para toda empresa do Simples, o que atropela o calendário de BH. O primeiro é decisão de negócio, não de app | 🔴 **precisa de você** |
+| 2 | ✅ **O maior risco técnico do produto caiu** | A geração da guia do imposto tem API oficial (Serpro), e ela cobre também as declarações e a folha. Custa cerca de R$300/mês por escritório. Isso mata o pior cenário, que era o sistema ter que "fingir ser uma pessoa" navegando no site do governo | 🟢 |
+| 3 | **Aprendi como o líder calcula o pró-labore, e a conta inteira** | Achei uma página deles que não está no menu (só se chega por um link no rodapé) com toda a matemática exposta. Confirmei em tela que o pró-labore é a alavanca que segura o imposto em 6% em vez de 15,5%, e que eles lançam sempre o **menor valor possível** que ainda mantém esse benefício | 🟢 |
+| 4 | **Confirmei os vencimentos na prática** | O mesmo mês tem duas guias com datas diferentes: uma antecipa e a outra adia quando cai em fim de semana. Vi isso funcionando na tela deles (18/09 e 21/09), o que confirma a pesquisa da manhã. Parece detalhe, mas é o tipo de erro que faria o cliente pagar juros por culpa nossa | 🟢 |
+| 5 | 🎯 **O maior buraco do produto mudou de tamanho** | A gente achava que o líder simplesmente pergunta "você pagou?". Não é bem assim: ele **tem** uma auditoria que detecta falta de pagamento, mas com cerca de **30 dias de atraso**, e ela desmarca o que o cliente já tinha marcado como pago. Ou seja, existe uma solução parcial no mercado, e ela é desconfortável para o cliente. Nosso alvo agora é fazer isso mais rápido e sem desmentir quem paga | 🟡 |
+| 6 | **Organizei toda essa frente num lugar só** | Criei uma área dedicada no projeto para funcionalidades. Antes, uma única funcionalidade tinha informação espalhada em seis lugares e ninguém respondia "como está isso?" sem abrir seis arquivos | 🟢 |
+
+### 📱 WhatsApp (09/09)
+```
+*Update Legalizai* 📣
+- Entrei na conta que eu pago da Contabilizei e destrinchei uma funcionalidade inteira por dentro, do começo ao fim. Rendeu mais que semanas lendo por fora
+- Achei uma página deles, escondida do menu, com toda a matemática do cálculo exposta. Agora sei exatamente como eles seguram o imposto em 6% em vez de 15,5%
+- Boa notícia técnica: a geração da guia do imposto TEM API oficial do Serpro (~R$300/mês por escritório), e cobre também as declarações e a folha. Era o nosso maior risco e caiu
+- Uma pesquisa de auditoria derrubou 6 informações erradas que a gente tinha sobre prazos. A mais grave: prazo pra regularizar exclusão do Simples é 30 dias, não 90
+- Sobre o "saber que o cliente pagou sem perguntar": descobri que a Contabilizei TEM uma detecção, mas com ~30 dias de atraso, e ela desmarca o que o cliente já tinha confirmado. Existe solução parcial no mercado e ela incomoda o cliente. Nosso alvo é ser mais rápido e não desmentir quem paga
+- *Preciso de você em 1 coisa (com data):*
+- Até *30/09* dá pra optar pelo Simples Híbrido, que permite apurar CBS/IBS fora da guia única e gerar crédito pro cliente que é empresa. Depois dessa data, não dá. É decisão de negócio, não de sistema. Vale a gente conversar essa semana
+```
+
 ## Links
 
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]] · [[estado-atual]] · [[indice-autoridade]]

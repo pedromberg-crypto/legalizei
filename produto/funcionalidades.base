@@ -1,0 +1,58 @@
+filters:
+  and:
+    - note.dominio == "funcionalidade"
+properties:
+  file.name:
+    displayName: Funcionalidade
+  note.cobertura:
+    displayName: Cobertura
+  note.balde:
+    displayName: Balde
+  note.dependencia:
+    displayName: Depende de
+  note.confianca:
+    displayName: Confiança
+  note.bloqueio:
+    displayName: O que trava
+  note.data:
+    displayName: Atualizada
+views:
+  - type: table
+    name: Todas
+    order:
+      - file.name
+      - cobertura
+      - balde
+      - dependencia
+      - confianca
+      - bloqueio
+  - type: table
+    name: O que trava o produto
+    filters:
+      and:
+        - note.confianca == "baixa"
+    order:
+      - file.name
+      - bloqueio
+      - dependencia
+      - data
+  - type: table
+    name: Por cobertura
+    groupBy:
+      property: cobertura
+      direction: ASC
+    order:
+      - file.name
+      - balde
+      - dependencia
+      - confianca
+  - type: table
+    name: A receita alem da mensalidade
+    filters:
+      and:
+        - note.balde == "vendavel"
+    order:
+      - file.name
+      - cobertura
+      - dependencia
+      - confianca

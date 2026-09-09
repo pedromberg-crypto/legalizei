@@ -1,0 +1,93 @@
+---
+tipo: hub
+status: vivo
+data: 2026-09-09
+assunto: frente-funcionalidades
+autoridade: fonte-verdade
+tags: [produto, hub, funcionalidades]
+---
+
+# 🧱 Produto — a fonte-verdade das funcionalidades
+
+> **O que é esta pasta.** O lugar único onde mora **o que o app faz, por que faz, e como faz**. Nasceu em 09/09/2026, quando o teardown de pró-labore mostrou que uma funcionalidade só estava espalhada por seis pastas diferentes.
+>
+> **Acima daqui:** `CLAUDE.md` da raiz e [[HOME]] continuam mandando no projeto. Esta pasta manda **no produto**.
+
+---
+
+## 🧭 Por que existe (o diagnóstico que a criou)
+
+O vault está organizado por **fonte**: `pesquisa/` guarda o que veio de fora, `execucao/` o que a gente fez, `marca/` o que a gente decidiu. Isso funciona bem pra quase tudo.
+
+Não funciona pra funcionalidade. Uma funcionalidade tem seis facetas, e elas caíam em seis pastas:
+
+| Faceta | Onde caía antes |
+|---|---|
+| o que o líder faz | `pesquisa/concorrentes/contabilizei/` |
+| onde entra no catálogo | `execucao/portal/funcionalidades-me-simples.md` |
+| a lei e o prazo | `pesquisa/rotina-fiscal/` |
+| de que API depende | `pesquisa/integracoes-apis/` |
+| que tela nossa cobre | `execucao/portal/matriz-portal-interno.md` |
+| a decisão travada | `marca/decisoes-marca.md` |
+
+Ninguém respondia *"como está o pró-labore?"* sem abrir seis arquivos. **Aqui a unidade de organização é o objeto (a funcionalidade), não a fonte.**
+
+---
+
+## 🗺️ Como esta pasta se lê
+
+| Arquivo | Manda em | Não manda em |
+|---|---|---|
+| **[[_catalogo]]** | quais funcionalidades existem · a cobertura de cada uma (✅🟡🔴⚪) · o balde de monetização | como automatizar |
+| **[[_matriz-dependencia]]** | de que terceiro cada uma depende · o que sabemos do caminho técnico | se a funcionalidade existe |
+| **[[_metodo]]** | como se faz um teardown · a regra de navegação na conta do líder | conteúdo de funcionalidade |
+| `funcionalidades/<nome>.md` | **o nosso desenho.** Spec viva, é o que o dev implementa | o que o concorrente faz |
+| `evidencias/<data>-<fonte>-<tema>.md` | o que foi **observado**, com data | o que a gente vai fazer |
+
+### 🔑 A separação que mais importa
+
+**`funcionalidades/` é decisão viva. `evidencias/` é foto com data.**
+
+O teardown do líder envelhece sozinho: a Contabilizei muda a tela e a nota vira mentira sem avisar. Nosso desenho não envelhece pelo mesmo motivo. Misturar os dois num arquivo só significa que, em seis meses, metade dele mente e ninguém sabe qual metade.
+
+Então: **a spec manda, a evidência é fonte.** É a mesma doutrina do [[indice-autoridade]], aplicada a esta frente.
+
+---
+
+## 📍 Estado da frente
+
+**Catálogo:** 51 funcionalidades mapeadas (§1–7 mais o à-la-carte), 31 construídas em mockup.
+**Matriz:** 23 dependências externas. Placar de 09/09: 🟢 16 · 🟡 3 · 🔴 4.
+
+### Os 4 vermelhos, que são o trabalho real
+
+| # | O que é | Por que trava |
+|:--:|---|---|
+| **2.4** | Saber que o imposto foi pago sem perguntar | Maior buraco do produto. É decisão de **arquitetura**, não de fornecedor |
+| **5.7** | Monitorar o DTE-SN | Ciência presumida em 45 dias, 30 pra regularizar. **Único ponto onde o silêncio custa a empresa do cliente** |
+| **8.4** | Alvará (ALF PBH) | Municipal, sem caminho mapeado |
+| **8.5** | CPOM | Idem |
+
+### 🔴 Dois prazos correndo, e não são de código
+
+- **Simples Híbrido: opção até 30/09/2026.** Decisão de negócio com o Mauro.
+- **Emissor Nacional de NFS-e obrigatório em 01/11/2026.** Se a gente pretende emitir nota em produção este ano, é essa data que manda no roadmap.
+
+---
+
+## 📚 Funcionalidades destrinchadas
+
+| Funcionalidade | Spec | Evidência | Estado |
+|---|---|---|---|
+| **Pró-labore** | [[pro-labore]] | [[2026-09-09-contabilizei-pro-labore]] | 🟢 desenho fechado, motor a construir |
+
+### Fila, na ordem sugerida
+
+1. **Como o imposto foi calculado** — é o `Novo` do líder, ou seja, onde eles estão investindo agora, e é transparência, que é a nossa tese. Boa parte já saiu no teardown de pró-labore.
+2. **Emitir NFS-e** — linha 3.1, caminho já resolvido em API, e tem o prazo de 01/11 em cima.
+3. **Importar extrato bancário** — é a porta de entrada do 2.4, o nosso maior buraco.
+
+---
+
+## Links
+[[HOME]] · [[BASE-ESTRATEGICA]] · [[indice-autoridade]] · [[decisoes-marca]] · [[matriz-portal-interno]] · [[cruzamento-portal-interno]] · [[2026-07-21-dossie-plataforma-logada]]

@@ -1,6 +1,6 @@
 ---
 name: legalize-api-antes-de-funcionalidade
-description: "08/09: não discutir funcionalidade sem saber que API existe; matriz de dependência externa em funcionalidades-me-simples.md tem 24 deps, 10 sem resposta"
+description: "08/09: não discutir funcionalidade sem saber que API existe; matriz de dependência externa em produto/_matriz-dependencia.md tem 24 deps, 10 sem resposta"
 metadata: 
   node_type: memory
   type: feedback
@@ -14,14 +14,17 @@ ela **depende de alguém de fora**. O Pedro parou a análise no meio pra isso:
 o que temos de API disponível realmente"*.
 
 A **matriz de dependência externa** vive em
-`execucao/portal/funcionalidades-me-simples.md`. Regra de entrada dura: **só
+`produto/_matriz-dependencia.md` (era `execucao/portal/funcionalidades-me-simples.md`, movida em 09/09). Regra de entrada dura: **só
 entra o que depende de terceiro** (órgão, provedor, parceiro). O que se resolve
 com dado interno + programação fica fora — já está resolvido, é só construir.
 
 **Why:** eu tinha escrito uma coluna "como automatizar" cheia de 🤖 que eram
 hipóteses não testadas. Discutir escopo em cima disso leva a prometer o que um
-órgão trava. Das 51 funcionalidades, 24 dependem de fora e **10 estão em 🔴
-(não sabemos)**.
+órgão trava. Das 51 funcionalidades, 23 dependem de fora.
+
+⚠️ **Placar recontado em 09/09** pela verificação fiscal em fonte primária: era
+🟢8 · 🟡6 · 🔴10, virou **🟢16 · 🟡3 · 🔴4**. Os 4 vermelhos: 2.4 (status de
+pagamento) · 5.7 (DTE-SN) · 8.4 (alvará) · 8.5 (CPOM).
 
 **How to apply:**
 - Os 2 que decidem o produto: **emitir NFS-e (3.1)** e **emitir a guia do DAS

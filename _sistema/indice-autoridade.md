@@ -67,6 +67,11 @@ Então a pergunta nunca é *"esse doc está vivo?"*. É sempre **"esse doc manda
 | **Otimizações de UX** | [[compilado-ux-flow]] | ⚠️ "✅" lá significa **decidido**, não construído (ver Estados) |
 | **Estratégia · custo · equity** | [[BASE-ESTRATEGICA]] | — |
 | **Funil real do líder** | [[2026-07-16-funil-abertura-ate-pagamento]] · [[2026-07-16-pos-pagamento-operacao-real]] | ⚠️ [[onboarding-jornada-completa]] (08/07) é anterior e mais rasa |
+| **QUAIS funcionalidades o app tem** · cobertura · balde de monetização | [[_catalogo]] (`produto/`) | ❌ `execucao/portal/funcionalidades-me-simples` virou redirecionador em 09/09. ⚠️ [[matriz-portal-interno]] tem as TELAS (P0–P14), não a lista de funcionalidades |
+| **De que TERCEIRO cada funcionalidade depende** (API, órgão, provedor) | [[_matriz-dependencia]] (`produto/`) | ⚠️ a coluna "como automatizar" do [[_catalogo]] é anterior e é **hipótese**; quando divergirem, **a matriz ganha** (ela tem fonte) |
+| **DESENHO de uma funcionalidade** (o que o dev implementa) | `produto/funcionalidades/<nome>.md` | ❌ nunca a evidência do concorrente: ela é foto com data e não manda em nada |
+| **O que o CONCORRENTE faz**, com data | `produto/evidencias/<data>-<fonte>-<tema>.md` | ⚠️ **envelhece sozinho.** Nunca ratificar dado fiscal por tela de concorrente |
+| **Como se destrincha uma funcionalidade** · regra de navegação na conta do líder | [[_metodo]] (`produto/`) | — |
 | **Estado corrente do projeto** | [[HOME]] §Agora | — |
 | **Valores a validar com gente** | [[fila-validacao-humana]] | — |
 

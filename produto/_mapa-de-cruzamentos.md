@@ -1,0 +1,177 @@
+---
+tipo: verdade
+status: vivo
+dominio: cruzamento
+data: 2026-09-09
+assunto: encadeamento-motor-fiscal
+autoridade: fonte-verdade
+tags: [produto, cruzamento, fiscal, aliquota, pro-labore, fator-r, motor]
+---
+
+# 🔗 Mapa de cruzamentos — como as funcionalidades se puxam
+
+> 🧭 **Autoridade:** esta nota manda em **como as funcionalidades se conectam**. Cada uma tem sua spec própria; aqui mora o que só existe **entre** elas.
+>
+> 🔴 **Por que existe** (pedido do Pedro, 09/09): *"quero que nessa nossa documentação sejam cruzados as frentes… aonde isso entra na conta, no cálculo, nas obrigações e o que isso gera de resultado"*. Duas frentes destrinchadas separadamente (pró-labore e alíquota) chegaram **no mesmo número por caminhos diferentes** e ninguém tinha notado. Sem esta nota, isso volta a acontecer.
+>
+> Hub: [[HOME-produto]] · método: [[_metodo]]
+
+---
+
+## 🔒 A regra que esta nota cria
+
+**Nenhuma funcionalidade fiscal se documenta sozinha.** Toda spec em `produto/funcionalidades/` precisa declarar, em seção própria:
+
+| | O que declarar |
+|---|---|
+| **⬅️ De onde recebe** | que dado de outra funcionalidade entra no cálculo |
+| **➡️ Para onde manda** | que outra funcionalidade muda quando esta muda |
+| **📅 Que obrigação dispara** | guia, declaração, prazo |
+| **👁️ O que o cliente precisa VER** | o resultado, não o mecanismo |
+
+⚠️ **O teste:** se der pra escrever a spec sem citar nenhuma outra funcionalidade, ou a funcionalidade é isolada de verdade (raro), ou o cruzamento passou batido.
+
+---
+
+## 🧮 A cadeia, do começo ao fim
+
+Tudo no ME/Simples serviço sai de **uma cadeia só**. Ela tem 3 entradas e 2 saídas.
+
+```
+ENTRADAS                        MOTOR                          SAÍDAS
+
+CNAE  ──────────┐
+(atividade)     │
+                ├──> item LC 116 ──> ISS do município
+CNPJ/município ─┘         │
+                          v
+Nota fiscal ────> FATURAMENTO ──> RBT12 ──┐
+(competência)                             │
+                                          ├──> ANEXO (III ou V) ──> ALÍQUOTA ──> DAS
+Pró-labore ─────> FOLHA 12m ──> FATOR R ──┘                                       │
+     │            (÷ RBT12)                                                       │
+     │                                                                            v
+     ├──> INSS 11% ──┐                                                    guia mensal
+     └──> IRRF ──────┴──> DARF UNIFICADO ──> guia mensal                   dia 20 (prorroga)
+                                             dia 20 (antecipa)
+     │
+     └──> eSocial (S-1200) ──> DCTFWeb ──> obrigação mensal, dia 15 (antecipa)
+```
+
+---
+
+## 🔑 Os 7 cruzamentos, um a um
+
+### 1. Pró-labore ⇄ Alíquota — **o cruzamento central, e é um gangorra**
+
+| | |
+|---|---|
+| **Como se tocam** | O pró-labore é a maior parcela da folha. A folha ÷ faturamento (12m) = **Fator R**. Fator R **≥ 28%** joga a empresa no **Anexo III (6%)**; abaixo, **Anexo V (15,5%)** |
+| **O efeito é uma gangorra** | Subir o pró-labore **AUMENTA** o DARF (11% INSS + IRRF) e **DIMINUI** o DAS (6% em vez de 15,5%). O que importa é a **soma** |
+| **A prova na tela do líder** | A tela de alíquotas mostra `Folha: 37,72%`, e a tela de pró-labore mostra `16.564 ÷ 43.910`. **É o mesmo número por dois caminhos**, e nenhuma das duas telas diz isso |
+| **Onde eles quantificam** | Painel "Cálculo inteligente": compara **pró-labore mínimo × pró-labore ideal** e mostra o total de imposto de cada cenário, quebrado em DAS e DARF |
+| 🔴 **A armadilha** | A folha só conta no Fator R **se foi efetivamente PAGA** (caixa), enquanto a receita é competência. Recibo sem trânsito financeiro = glosa + Anexo V + multa |
+| **O que o cliente vê** | Hoje, no líder: nada. Ele vê "6,00%" e "37,72%" em colunas vizinhas e nunca soube que uma causa a outra |
+
+### 2. Nota fiscal ⇄ Alíquota
+
+| | |
+|---|---|
+| **Como se tocam** | Cada nota carrega um **CNAE**, que mapeia num **item da LC 116**, que define o **ISS do município**. A soma das notas do mês é o faturamento; a soma de 12 meses é o **RBT12**, que define a faixa |
+| **O detalhe que escapa** | Um CNAE pode mapear em **mais de um item da LC 116**. O líder resolve com o modal *"Especifique a atividade — selecione a opção mais parecida"*. **Quem escolhe o item escolhe o ISS** |
+| **Exportação** | Nota pra cliente no exterior é **imune a ISS, PIS e COFINS**. No caso medido: 6,00% vira **3,05%**. Quase metade |
+| **Obrigação disparada** | Emissão pelo Emissor Nacional (obrigatório 01/11/2026), que exige **Inscrição Municipal regular** |
+
+### 3. Alíquota ⇄ DAS
+
+| | |
+|---|---|
+| **Como se tocam** | `DAS = faturamento do mês anterior × alíquota efetiva`. A alíquota efetiva sai da faixa do RBT12 dentro do Anexo definido pelo Fator R |
+| **Vencimento** | dia **20**, e **PRORROGA** se cair em dia não útil |
+| ⚠️ **Arredondamento** | Medido no líder: `7.910,00 × 6% = 474,60`, e a tela mostra **474,59**. Um centavo. Nossa regra tem que estar escrita **antes** do motor, e ser a mesma na tela e na guia |
+
+### 4. Pró-labore ⇄ DARF Unificado
+
+| | |
+|---|---|
+| **Como se tocam** | `DARF = INSS + IRRF`, ambos sobre o pró-labore |
+| **INSS** | `min(11% × pró-labore; 932,31)`. O teto de R$932,31 = 11% do teto do INSS (R$8.475,55) |
+| **IRRF** | `base = pró-labore − INSS`, depois `(base × alíquota) − dedução`. Isento até R$2.428,80 🔴 tabela **não ratificada** |
+| **Vencimento** | dia **20**, e **ANTECIPA** se cair em dia não útil |
+| 🔴 **A armadilha do calendário** | DAS **prorroga** e DARF **antecipa**, ambos no dia 20. Visto na tela do líder: mesma competência Ago/2026, DARF **18/09** e DAS **21/09**, porque 20/09 caiu num domingo |
+
+### 5. Pró-labore ⇄ obrigações acessórias
+
+| | |
+|---|---|
+| **eSocial** | evento **S-1200** de remuneração do sócio, mensal, dia **15**, **antecipa** |
+| **DCTFWeb** | consome o eSocial e é quem **gera o DARF numerado**, dia 15, antecipa |
+| **Cruzamento fiscal** | A Receita cruza **EFD-Reinf × DCTFWeb** para achar pró-labore declarado e não pago |
+| **Informe de rendimentos** | O pró-labore do ano vira o informe do sócio, que alimenta o **IRPF** dele |
+
+### 6. Alíquota ⇄ enquadramento (e a saída dele)
+
+| | |
+|---|---|
+| **Como se tocam** | Perder o Simples faz a alíquota **explodir** (vai pro Lucro Presumido) |
+| **O gatilho** | Pendência federal, municipal ou estadual → **Termo de Exclusão** no **DTE-SN** |
+| **Os prazos** | Ciência **presumida em 45 dias** mesmo sem ninguém abrir · **30 dias** para regularizar depois |
+| **O que o líder faz** | Tela pronta pro Termo de Exclusão, e **vende** a verificação de pendências. Sair do Simples ainda **acrescenta R$95 à mensalidade** deles |
+| 🔴 **Nossa lacuna** | Linha **5.7**, sem caminho. É o único ponto do produto onde **o silêncio custa a empresa do cliente** |
+
+### 7. Pagamento ⇄ tudo
+
+| | |
+|---|---|
+| **Por que cruza com tudo** | Guia não paga vira juros, multa, pendência, e pendência vira Termo de Exclusão, que vira alíquota de Lucro Presumido. **É a corrente inteira puxada por um elo** |
+| **Como o líder resolve** | Lote **no fim de cada mês**, contra "dados oficiais do Governo Federal". Por isso os 30 dias |
+| 🔑 **A exceção que ensina** | No **débito automático**, a confirmação sai **entre os dias 20 e 23**, no mês corrente. Eles sabem em tempo hábil **só quando o pagamento passa pelo trilho deles** (Contabilizei.bank) |
+| 🔴 **Nossa linha 2.4** | A pergunta final: **dá pra saber sem possuir o trilho?** Se não der, possuir o trilho vira decisão de arquitetura e de negócio, não de feature |
+
+---
+
+## 📅 O calendário que sai de tudo isso
+
+| Dia | O quê | Se cair em dia não útil |
+|:--:|---|---|
+| **1º ao último** | janela de emissão de nota | — |
+| **15** | eSocial + DCTFWeb | **antecipa** |
+| **20** | **DAS** | **PRORROGA** |
+| **20** | DARF (INSS/IRRF) + FGTS Digital | **ANTECIPA** |
+| **25** | 🆕 último dia pra escolher o pró-labore do mês (regra do líder, não da lei) | — |
+| **31/03** | DEFIS (anual) · ⚠️ extinta a partir de 2027 | — |
+
+⚠️ **Dia 20 aparece duas vezes com regras opostas.** É a armadilha nº 1 do calendário e já foi vista funcionando na tela do líder.
+
+---
+
+## 🎯 O que este mapa exige do nosso produto
+
+### As 3 telas que o cruzamento obriga
+
+| # | Tela | Por que o cruzamento a exige |
+|:--:|---|---|
+| 1 | **"Por que pago isso"** | O cliente vê DAS e DARF separados e não sabe que são a mesma gangorra. Uma tela que mostre os dois juntos e o efeito de mexer no pró-labore |
+| 2 | **Folga do Fator R** | "Sua folha está em 37,7%; o mínimo é 28%; você tem R$4.269 de folga." O líder tem o número e **esconde** |
+| 3 | **Simulador com exportação** | O líder simula só mercado interno. Pra quem fatura fora, a alíquota cai à metade e ele nunca vê |
+
+### As 4 travas de motor
+
+| # | Trava |
+|:--:|---|
+| 1 | **Pró-labore lançado e não pago não entra no Fator R.** Exige estado de pagamento por competência (reencontra a 2.4) |
+| 2 | **Regra de arredondamento escrita antes do motor**, igual na tela e na guia |
+| 3 | **Deslocamento por tributo, não global:** DAS prorroga, DARF antecipa |
+| 4 | **Item da LC 116 é dado do cliente, não dedução nossa.** Um CNAE pode ter vários; quem escolhe o item escolhe o ISS |
+
+### O vocabulário que o cliente NUNCA lê
+
+🔒 Travado aqui: **"Fator R", "Anexo III", "Anexo V", "RBT12" e "LC 116" não aparecem na interface.** O líder já não usa (nem "Anexo" ele mostra), e não é por falta de coragem: é porque **o nome não ajuda quem não é contador**.
+
+O que aparece no lugar é o **efeito**:
+> "Sua folha está em **37,7%** do faturamento. Acima de 28%, sua alíquota fica em **6%**; abaixo, sobe pra **15,5%**. Você tem **R$4.269** de folga."
+
+---
+
+## Links
+[[HOME-produto]] · [[_metodo]] · [[_catalogo]] · [[_matriz-dependencia]] · [[pro-labore]] · [[aliquota-e-enquadramento]] · [[2026-09-09-contabilizei-aliquotas]] · [[2026-09-09-contabilizei-pro-labore]] · [[fiscal-simples-bh-2026]] · [[anexo-iii-simples]] · [[lc123-art18-anexos-taxativo]] · [[cnae-fiscalmente-otimo]]

@@ -33,7 +33,7 @@ O Pedro é cliente pagante da Contabilizei (plano Padrão). A conta é dele, o a
 
 ---
 
-## 🧭 Os 6 passos
+## 🧭 Os 7 passos
 
 ### 1. Escolher pelo que destrava, não pelo que é fácil
 Pró-labore veio primeiro porque cruza Fator R, INSS, eSocial e IRPF. Desenhar ele destravou o cálculo de imposto, o calendário e o informe anual de uma vez. **Pergunta certa:** quantas outras funcionalidades esta aqui responde?
@@ -68,7 +68,22 @@ Toda tela mistura três coisas, e elas têm validades diferentes:
 
 🔴 **Nunca ratificar dado fiscal pela tela do concorrente.** A tabela do IRRF que eles exibem foi anotada como **não ratificada**, justamente porque o app deles carrega um banner de reforma tributária. Vale a regra de sempre: valor + fonte + confiança.
 
-### 6. Fechar com desenho, não com resumo
+### 6. 🔗 Declarar os cruzamentos, sempre
+
+🔒 **Regra dura, travada em 09/09 a pedido do Pedro.** Nenhuma funcionalidade fiscal se documenta sozinha. Toda spec em `produto/funcionalidades/` abre com uma seção **Cruzamentos declarados**, com quatro linhas:
+
+| | O que declarar |
+|---|---|
+| **⬅️ Recebe de** | que dado de outra funcionalidade entra no cálculo |
+| **➡️ Manda em** | que outra funcionalidade muda quando esta muda |
+| **📅 Obrigação que dispara** | guia, declaração, prazo |
+| **👁️ O cliente precisa ver** | o resultado, não o mecanismo |
+
+**Por que virou regra:** pró-labore e alíquota foram destrinchados separadamente e chegaram **no mesmo número (37,72%) por caminhos diferentes** — um pela divisão folha ÷ faturamento, o outro por uma coluna chamada "Folha". Ninguém tinha notado, e o líder também não conecta as duas telas. O mapa completo da cadeia vive em [[_mapa-de-cruzamentos]].
+
+⚠️ **O teste:** se der pra escrever a spec sem citar nenhuma outra funcionalidade, ou ela é isolada de verdade (raro), ou o cruzamento passou batido.
+
+### 7. Fechar com desenho, não com resumo
 Toda evidência termina virando **spec nossa**, com três blocos obrigatórios:
 
 - **o que a gente copia sem vergonha** (e por quê)

@@ -22,6 +22,21 @@ tags: [produto, funcionalidade, pro-labore, folha, fator-r]
 ---
 
 
+## 🔗 Cruzamentos declarados
+
+> Seção obrigatória, criada pela regra do [[_mapa-de-cruzamentos]] em 09/09. Nenhuma funcionalidade fiscal se documenta sozinha.
+
+| | |
+|---|---|
+| **⬅️ Recebe de** | **faturamento** (a receita de 12m é o denominador do Fator R) · **cadastro de sócios** (quantos, e o pró-labore de cada um **soma**) · **outro vínculo** (pode zerar o INSS) · **dependentes** (muda o IRRF) |
+| **➡️ Manda em** | 🔑 **[[aliquota-e-enquadramento]]** — é a alavanca do Fator R, que escolhe Anexo III (6%) ou V (15,5%) · **DARF Unificado** (INSS + IRRF) · **informe de rendimentos** e o **IRPF do sócio** |
+| **📅 Obrigação que dispara** | eSocial S-1200 (dia **15**, antecipa) → DCTFWeb → **DARF** (dia **20**, **ANTECIPA**) · recibo mensal · informe anual |
+| **👁️ O cliente precisa ver** | quanto recebe líquido · **quanta folga tem no Fator R** · e que subir o pró-labore **sobe o DARF e desce o DAS** (é gangorra, o que importa é a soma) |
+
+🔴 **O cruzamento em uma frase:** pró-labore **não é um campo de valor, é o preço de uma alíquota**. Mexer nele muda dois impostos em direções opostas. Cadeia completa em [[_mapa-de-cruzamentos]].
+
+---
+
 ## 🔭 Por que esta funcionalidade primeiro
 
 O pró-labore parece um campo de valor. Não é. Ele é o **nó onde quatro coisas se cruzam**, e desenhá-lo direito responde muita coisa que ainda está aberta no nosso app:

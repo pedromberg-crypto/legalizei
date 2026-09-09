@@ -41,6 +41,7 @@ Ninguém respondia *"como está o pró-labore?"* sem abrir seis arquivos. **Aqui
 | **[[_catalogo]]** | quais funcionalidades existem · a cobertura de cada uma (✅🟡🔴⚪) · o balde de monetização | como automatizar |
 | **[[_matriz-dependencia]]** | de que terceiro cada uma depende · o que sabemos do caminho técnico | se a funcionalidade existe |
 | **[[_metodo]]** | como se faz um teardown · a regra de navegação na conta do líder | conteúdo de funcionalidade |
+| **[[_mapa-de-cruzamentos]]** | **como as funcionalidades se conectam** · a cadeia fiscal inteira · o calendário consolidado | o desenho de uma funcionalidade isolada |
 | `funcionalidades/<nome>.md` | **o nosso desenho.** Spec viva, é o que o dev implementa | o que o concorrente faz |
 | `evidencias/<data>-<fonte>-<tema>.md` | o que foi **observado**, com data | o que a gente vai fazer |
 
@@ -80,6 +81,9 @@ Então: **a spec manda, a evidência é fonte.** É a mesma doutrina do [[indice
 | Funcionalidade | Spec | Evidência | Estado |
 |---|---|---|---|
 | **Pró-labore** | [[pro-labore]] | [[2026-09-09-contabilizei-pro-labore]] | 🟢 desenho fechado, motor a construir |
+| **Alíquota e enquadramento** | [[aliquota-e-enquadramento]] | [[2026-09-09-contabilizei-aliquotas]] | 🟢 desenho fechado · 🔴 tabela do IRRF não ratificada |
+
+🔗 **[[_mapa-de-cruzamentos]]** — como as funcionalidades se puxam. Nasceu em 09/09, quando pró-labore e alíquota chegaram **no mesmo número (37,72%) por caminhos diferentes** e ninguém tinha notado. Toda spec fiscal agora abre com uma seção **Cruzamentos declarados**; a regra está no [[_metodo]], passo 6.
 
 ### Fila, na ordem sugerida
 

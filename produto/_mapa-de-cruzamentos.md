@@ -41,9 +41,10 @@ Tudo no ME/Simples serviço sai de **uma cadeia só**. Ela tem 3 entradas e 2 sa
 ENTRADAS                        MOTOR                          SAÍDAS
 
 CNAE  ──────────┐
-(atividade)     │
-                ├──> item LC 116 ──> ISS do município
-CNPJ/município ─┘         │
+(atividade)     │        4 códigos em cascata, do menor pro maior detalhe:
+                ├──> item LC 116 ──> cód. NACIONAL ──> cód. MUNICIPAL ──> NBS
+CNPJ/município ─┘         │              (+ IndOp: onde o serviço foi prestado)
+                          │              🔴 o ISS mora no cód. MUNICIPAL, não no CNAE
                           v
 Nota fiscal ────> FATURAMENTO ──> RBT12 ──┐
 (competência)                             │
@@ -81,6 +82,8 @@ Pró-labore ─────> FOLHA 12m ──> FATOR R ──┘                
 | **O detalhe que escapa** | Um CNAE pode mapear em **mais de um item da LC 116**. O líder resolve com o modal *"Especifique a atividade — selecione a opção mais parecida"*. **Quem escolhe o item escolhe o ISS** |
 | **Exportação** | Nota pra cliente no exterior é **imune a ISS, PIS e COFINS**. No caso medido: 6,00% vira **3,05%**. Quase metade |
 | **Obrigação disparada** | Emissão pelo Emissor Nacional (obrigatório 01/11/2026), que exige **Inscrição Municipal regular** |
+| 🔴 **O que a API do líder revelou (09/09)** | O **ISS municipal pertence ao CÓDIGO MUNICIPAL, não ao CNAE**: 11 combinações sob um único CNAE, com ISS de **2,5% a 5%**. E a emissão precisa de **4 códigos em cascata** (CNAE → nacional → municipal → NBS) mais o **IndOp**, que diz onde o serviço foi prestado. Ver [[2026-09-09-contabilizei-nota-fiscal]] |
+| 🔴 **Onde o líder DESISTE** | Quando o ISS é devido a **outro município**, ele não emite: manda o cliente pro portal da prefeitura, porque *"as prefeituras não têm uma base de dados unificada de códigos municipais"*. Para o nosso ICP em BH isso não morde; para quem atende fora, morde igual |
 
 ### 3. Alíquota ⇄ DAS
 

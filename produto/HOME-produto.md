@@ -82,14 +82,17 @@ Então: **a spec manda, a evidência é fonte.** É a mesma doutrina do [[indice
 |---|---|---|---|
 | **Pró-labore** | [[pro-labore]] | [[2026-09-09-contabilizei-pro-labore]] | 🟢 desenho fechado, motor a construir |
 | **Alíquota e enquadramento** | [[aliquota-e-enquadramento]] | [[2026-09-09-contabilizei-aliquotas]] | 🟢 desenho fechado · 🔴 tabela do IRRF não ratificada |
+| **Emitir nota fiscal** | [[emitir-nota-fiscal]] | [[2026-09-09-contabilizei-nota-fiscal]] | 🟢 desenho fechado · 🔴 prazo 01/11/2026 e de-para NBS inexistente |
 
 🔗 **[[_mapa-de-cruzamentos]]** — como as funcionalidades se puxam. Nasceu em 09/09, quando pró-labore e alíquota chegaram **no mesmo número (37,72%) por caminhos diferentes** e ninguém tinha notado. Toda spec fiscal agora abre com uma seção **Cruzamentos declarados**; a regra está no [[_metodo]], passo 7.
 
 ### Fila, na ordem sugerida
 
-1. **Como o imposto foi calculado** — é o `Novo` do líder, ou seja, onde eles estão investindo agora, e é transparência, que é a nossa tese. Boa parte já saiu no teardown de pró-labore.
-2. **Emitir NFS-e** — linha 3.1, caminho já resolvido em API, e tem o prazo de 01/11 em cima.
-3. **Importar extrato bancário** — é a porta de entrada do 2.4, o nosso maior buraco.
+1. **Importar extrato bancário** — é a porta de entrada do **2.4**, o nosso maior buraco, e o teardown de alíquota mostrou que o líder resolve pagamento **possuindo o trilho** (Contabilizei.bank). Vale entender o mecanismo antes de decidir arquitetura.
+2. **Consultar e cancelar nota** — completa o ciclo da NF, e tem a divergência de prazo aberta (730 dias × "mesmo mês").
+3. **Central de avisos / DTE-SN (5.7)** — o único ponto onde o silêncio custa a empresa do cliente.
+
+✅ **Já feitos:** pró-labore · alíquota e enquadramento · emissão de NF (que absorveu boa parte de "como o imposto foi calculado").
 
 ---
 

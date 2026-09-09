@@ -48,21 +48,35 @@ No pró-labore, o que mais rendeu **não estava na tela do pró-labore**: estava
 
 **Vale sempre:** rodar `get_page_text` numa tela de configuração antes de clicar em qualquer coisa.
 
-### 4. 🔌 Ler a API que alimenta a tela, não só a tela
+### 4. 🔌 Mapear as APIs, SEMPRE — não só quando o clique trava
 
-🆕 **Travado em 09/09**, depois que um `<select>` nativo não respondeu ao teclado via CDP. Em vez de insistir no clique, fui ver de onde o campo vinha, e **rendeu muito mais**.
+🔒 **Regra padrão, elevada em 09/09 a pedido do Pedro:** *"nas nossas passadas de fluxo quero que tb tente encontrar sobre API e como elas estão funcionando nesse cruzamento de dados interno com os dados para gerar outro dado"*.
 
-**Como fazer:** `read_network_requests` na rota, achar o endpoint, e dar um `GET` de mesma origem na sessão do próprio Pedro. Só leitura, devolvendo o dado que a página já exibia.
+Nasceu como saída de emergência (um `<select>` nativo não respondeu ao CDP) e virou **passo obrigatório de toda passada**, porque rendeu mais que a tela nas duas vezes que foi usado.
 
-O que a tela **não** mostrava e a API mostrou:
-- `anexo: 5` → a empresa é **Anexo V por padrão** e sobe pro III. A tela só dizia "Variável"
-- `motorFatorR: true` e `deveExibirVersaoReformaRenda: true` → **feature flags por empresa**, inclusive uma versão já pronta pra Reforma da Renda
-- `codigoServicoItemServico` → um **terceiro nível de código** (o do município) que a tela nunca exibe
-- o campo se chama **`fatorR`** literalmente, o que prova que esconder o jargão foi escolha de UX, não desconhecimento
+**Como fazer, na ordem:**
 
-🔑 **A regra:** quando o clique travar, **não insista** — vá pela API. E mesmo quando o clique funcionar, a API costuma entregar o **contrato de dados**, que é o que o dev precisa e a tela nunca mostra.
+| # | Passo |
+|:--:|---|
+| 1 | **`read_network_requests` ANTES de navegar.** O rastreio só começa na 1ª chamada; se a página carregou antes, você perde as chamadas de init |
+| 2 | Percorrer o flow, e **listar os endpoints** filtrando por `/api/` |
+| 3 | `GET` de leitura nos que decidem comportamento (init, feature-flag, listas) |
+| 4 | Registrar a **FORMA** (`{campo: tipo}`), não os valores |
 
-⚠️ **Limite:** só `GET` de leitura, na sessão do Pedro, de endpoint que a própria página já chamou. Nunca `POST`, `PUT` ou `DELETE`. Nunca endpoint que a tela não usou.
+**As 3 perguntas que o payload responde e a tela não:**
+
+| Pergunta | O que procurar |
+|---|---|
+| **O que a tela esconde?** | `anexo: 5` quando a tela só dizia "Variável"; `codigoServicoItemServico` que a tela nunca exibe |
+| **O que é feature flag?** | `motorFatorR`, `deveExibirVersaoReformaRenda`, `tipoEmissorDisponivel`. Revela o que eles ligam **por cliente** e o que já está pronto e escondido |
+| 🔑 **Como um dado GERA outro?** | endpoints que recebem código e devolvem código. Ex.: `cindop?codigoNacionalItemServico=…&nbs=…` → opções válidas de IndOp. **Dois entram, um terceiro sai** |
+
+**Os 2 padrões que já apareceram nos dois teardowns, e valem como doutrina:**
+
+1. **Separar o que EMITE do que CALCULA.** O líder carrega `dadosParaEmissao` e `dadosParaCalculo` como payloads disjuntos na mesma atividade. Misturar é o caminho curto pro bug em que a nota sai certa e o imposto errado.
+2. **Não deduzir combinação de código: perguntar ao servidor.** É a mesma doutrina de "regra de órgão não se deduz, se pergunta", aplicada a código fiscal.
+
+🔒 **Limite, e é duro:** só `GET` de leitura, na sessão do Pedro, de endpoint que **a própria página já chamou**. Nunca `POST`, `PUT` ou `DELETE`. Nunca endpoint adivinhado. Nunca reproduzir dado pessoal no vault — só a forma.
 
 ### 5. Conferir a aritmética, sempre
 Não aceitar o número: refazer a conta.

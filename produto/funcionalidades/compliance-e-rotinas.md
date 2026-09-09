@@ -91,6 +91,48 @@ Das **21 pendências críticas**, sete só existem em empresa muito maior ou mai
 
 ---
 
+## 📄 As obrigações reais (5.2), confirmadas em conta de produção
+
+| Periodicidade | Declaração | Prova |
+|---|---|---|
+| **Mensal** | **PGDAS** — Programa Gerador do DAS | `TRANSMITIDO` + recibo PDF |
+| **Mensal** | **DCTFWeb** | `TRANSMITIDO` + recibo PDF |
+| **Anual** | **DEFIS** | `TRANSMITIDO` + `Baixar recibo` |
+
+✅ **Ratifica a [[2026-09-09-verificacao-auditoria-tributaria|verificação de fonte primária]]**: são estas três, e ECD/ECF/EFD-Contribuições não se aplicam. Antes era documentação; agora está visto em conta real.
+
+🔴 **O defeito deles aqui é caro e é fácil de não repetir:** a tela abre filtrada no **mês corrente**, que por definição ainda não tem nada transmitido, e mostra **"Sem informações"**. A tela que deveria ser **a prova de que a contabilidade funciona** dá, de primeira impressão, o oposto.
+
+🎯 **Nossa regra:** a tela de prova abre no **último período COM dado**, nunca no mês corrente vazio. E o estado sem dado nenhum diz *"sua primeira declaração sai em março"*, não *"sem informações"*.
+
+---
+
+## 💰 O catálogo à-la-carte deles, com preço (43 serviços)
+
+Levantado em `sistema/servicos-disponiveis`. Os que cruzam com as nossas linhas:
+
+| Serviço | Preço | Linha |
+|---|---:|---|
+| Verificação de pendências | R$ 24,90 | 5.5 |
+| Emissão de CND | R$ 35,90 | 6.3 |
+| Reemissão de guia (Simples · INSS/IRRF · ISS) | R$ 15,90 | 2.7 |
+| **Entrega de obrigações acessórias (DEFIS, DCTF, ECD, ECF)** | **R$ 197,90** | 5.2 |
+| **Alteração Pró-labore** | **R$ 98,90** | 4.x |
+| Parcelamento de débitos | R$ 135,40 | 2.x |
+| Obtenção/renovação de alvará | R$ 416,00 + taxas | 8.4 |
+| CPOM/CEPOM | R$ 249,00 | 8.5 |
+| Alteração de porte ME/EPP | R$ 156,40 | 8.7 |
+| Baixa / encerramento | R$ 1.406 e R$ 1.999 | 8.2 |
+
+🔴 **Duas cobranças que mudam a leitura do que é "incluso" no plano deles:**
+
+1. **Entregar obrigação acessória custa R$197,90** — e a tela de declarações mostra as mesmas obrigações como transmitidas. A fronteira entre o incluso e o cobrado **não está dita em lugar nenhum**.
+2. **Alterar pró-labore custa R$98,90**, enquanto a Gestão Inteligente muda o valor **sozinha e de graça** todo mês. **A mesma ação é gratuita quando o robô faz e paga quando o cliente pede.**
+
+🎯 **Nossa posição, que já era doutrina e agora tem número:** cobramos **execução de serviço**, nunca **acesso ao que o plano promete**. Se a obrigação é do plano, entregá-la é do plano.
+
+---
+
 ## ✅ O que copiamos sem vergonha
 
 1. **A frase de abertura.** *"Estas pendências podem afetar seu informe de rendimentos e gerar multas e penalizações como desenquadramento tributário e inativação do CNPJ."* Em uma linha ela liga a corrente inteira, e é honesta sem ser chantagem.
@@ -112,6 +154,9 @@ Das **21 pendências críticas**, sete só existem em empresa muito maior ou mai
 | 4 | Explicador só na Central de Rotinas | **A mesma explicação em toda tela** onde o item aparece | Eles têm o texto e ele não chega onde o cliente decide |
 | 5 | Regularizar pendência é **serviço pago** (`valorServicoAdicional`) e o Termo de Exclusão **acrescenta R$95** | Vigiar e avisar é **incluso**. Cobramos execução, nunca o aviso | Vender o alarme de incêndio pra quem já está pegando fogo é o padrão que a gente critica |
 | 6 | `prazoAceiteTacito`: silêncio vira aceite | **Nunca usar aceite tácito** contra o cliente. Se ele não respondeu, a gente pergunta de novo | O silêncio do cliente é problema nosso de comunicação, não consentimento dele |
+| 7 | Tela de declarações abre no **mês corrente vazio** e diz "Sem informações" | Abre no **último período com dado**. Sem dado nenhum: *"sua primeira declaração sai em março"* | A prova de que a contabilidade funciona não pode dar como 1ª impressão que ela não funciona |
+| 8 | Entregar obrigação acessória custa **R$197,90**; alterar pró-labore, **R$98,90** | Cobramos **execução**, nunca **acesso ao que o plano promete** | Se a obrigação é do plano, entregá-la é do plano. É o "surcharge oculto" que a gente critica |
+| 9 | Reajuste anual em modal **que bloqueia a tela**, com escolha binária | Reajuste **anunciado com antecedência e índice nomeado**, sem prender o cliente fora do produto | Anunciar é certo. Fazer refém, não. Liga com a nossa decisão aberta **7.7** |
 
 ---
 

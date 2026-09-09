@@ -43,6 +43,10 @@ No pró-labore, o que mais rendeu **não estava na tela do pró-labore**: estava
 
 🔑 **Regra:** seguir a funcionalidade até onde ela vira **guia, documento ou obrigação**. É lá que a conta aparece.
 
+⚠️ **Payload rico NÃO substitui varrer o flow.** Em 09/09 a 1ª passada de compliance abriu `#/central-de-rotinas`, achou um payload com 28 tipos de pendência e **parou por achar que já tinha tudo**. Ficaram sem cobertura 4 linhas do catálogo (5.1, 5.2, 5.5, 5.6), e a 2ª rodada trouxe as obrigações reais, o catálogo de 43 avulsos com preço e o mapa de migração deles. **Quantidade de dado num endpoint não é medida de cobertura de flow.**
+
+📌 **E reportar a contagem de endpoints, sempre.** O Pedro perguntou se eu tinha rodado a etapa de API porque eu não disse nenhum número naquela rodada, tendo dito nas anteriores. **Se a etapa rodou, o relatório diz quantos endpoints saíram.**
+
 ### 3. Ler o DOM, não só a tela
 `get_page_text` devolve **os modais que ainda não abriram**. No pró-labore, foi assim que saíram, de uma vez, o algoritmo da otimização, a política multi-sócio, o anti-nudge e a trava de saída. Nenhum deles estava visível.
 
@@ -62,6 +66,8 @@ Nasceu como saída de emergência (um `<select>` nativo não respondeu ao CDP) e
 | 2 | Percorrer o flow, e **listar os endpoints** filtrando por `/api/` |
 | 3 | `GET` de leitura nos que decidem comportamento (init, feature-flag, listas) |
 | 4 | Registrar a **FORMA** (`{campo: tipo}`), não os valores |
+
+🔑 **Comece pelo menu, quando existir.** `GET /api/plataforma/menu/get` no app da Contabilizei devolve **todo item com `application` + `route`**. Isso entrega de uma vez o **mapa de rotas** (fim de adivinhar URL e de brigar com flyout que fecha) e o **estado de migração** deles (qual tela vive no app novo × no legado). Procurar por um endpoint de menu/navegação deve ser a **primeira** tentativa numa frente nova.
 
 **As 3 perguntas que o payload responde e a tela não:**
 
@@ -97,6 +103,8 @@ Toda tela mistura três coisas, e elas têm validades diferentes:
 | **Fato de lei** (teto do INSS, faixa do IRRF, prazo) | precisa de fonte primária, não do concorrente | quando a lei muda |
 | **Escolha de produto** (esconder a folga, botão assimétrico) | é onde a gente pode ser melhor | quando eles mudam |
 | **Bug deles** | serve de alerta, não de referência | quando corrigem |
+
+⚠️ **Tela vazia não é dado ausente.** Em 09/09 a tela de declarações mostrava *"Sem informações"* e eu quase registrei "empty state morto". A API tinha os dados: a tela abria filtrada no **mês corrente**, que ainda não tinha nada transmitido. **Antes de concluir que falta dado, perguntar à API por outro período.**
 
 🔴 **Nunca ratificar dado fiscal pela tela do concorrente.** A tabela do IRRF que eles exibem foi anotada como **não ratificada**, justamente porque o app deles carrega um banner de reforma tributária. Vale a regra de sempre: valor + fonte + confiança.
 

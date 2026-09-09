@@ -106,6 +106,61 @@ GET …/emissao/atividades/cindop?codigoNacionalItemServico={x}&nbs={y}
 
 ---
 
+## 🔄 O ciclo da nota tem 6 telas, não 1
+
+> Corrigido em 09/09, na auditoria retroativa. A 1ª passada mapeou só a emissão.
+
+| Tela | O que faz | Cobertura nossa |
+|---|---|:--:|
+| **Emitir** | o wizard de 4 códigos | 🔴 |
+| **Consultar** | lista, status, PDF/XML, log de alterações | 🔴 |
+| **Cancelar / informar cancelamento** | 2 operações distintas: cancelar o que emitimos × registrar cancelamento de nota importada | 🔴 |
+| **Importar** | XML de nota emitida fora, com prazo | 🔴 |
+| **Como emitir na prefeitura** | contingência guiada | 🔴 |
+| **Notas tomadas** | nota que o cliente recebeu | 🔴 |
+
+### 📦 O modelo da nota emitida
+
+```ts
+type NotaFiscal = {
+  numero, codVerificacao, numeroRps, serieRps
+  razaoSocialTomador, cnpjTomador, valorServico, descricaoServico
+  dataEmissao, dataImportacao, competencia
+  situacaoNota | situacaoNFe | situacaoCnae | situacaoRetencaoNota   // 🔑 4 status
+  anexoEscolhido                        // 🔑 o Anexo grava NA NOTA
+  numeroNotaSubstituta                  // substituição é cadeia
+  logAlteracoes                         // auditoria por nota
+  permiteMovimentacao, importada, registrada
+  erroProcessamento, errosNotaFiscal, motivoCancelamento
+  idLoteNotaFiscal, nomeArquivo, linkVisualizacao
+}
+```
+
+🔑 **`anexoEscolhido` por nota.** Se o Fator R virar no meio do ano, cada nota carrega o Anexo que valeu na hora. Nossa modelagem precisa disso, senão o histórico mente.
+
+🔑 **4 status independentes.** Uma nota pode estar processada com sucesso **e** ter CNAE errado. Um status só não dá conta.
+
+### 🔴 Obrigação legal que não estava mapeada: Lei 12.741/2012
+
+A descrição da nota traz, anexado automaticamente:
+
+> *"Conforme **Lei 12.741/2012**, o percentual total de impostos incidentes neste serviço prestado é de aproximadamente **6,00%**"*
+
+**A "Lei da Transparência" obriga informar a carga tributária na nota.** Consequência de arquitetura: **a alíquota tem que estar resolvida no momento da emissão**, não só no fechamento. É mais um cruzamento [[aliquota-e-enquadramento|alíquota]] → nota.
+
+### 📅 Prazos operacionais descobertos
+
+| Regra | Valor |
+|---|---|
+| Importar XML de nota emitida fora | **até o dia 5** do mês seguinte, **sem custo** |
+| Depois disso | cai em **reabertura de mês contábil, R$21,90** |
+
+🔴 **A cobrança é disparada pela AÇÃO, não escolhida.** No líder: *"caso faça essas alterações e importações, a reabertura do mês é feita **automaticamente**"*, e o serviço tem `disponivelParaCliente: false`.
+
+🎯 **Nossa regra, que já era doutrina e agora tem caso:** **preço e momento da cobrança aparecem ANTES do aceite.** Se corrigir mês fechado custa, a tela diz antes de deixar corrigir.
+
+---
+
 ## ✅ O que copiamos sem vergonha
 
 1. 🥇 **A "sequência" salva como favorita.** O usuário escolhe os 4 códigos **uma vez**, salva, e nunca mais pensa. É a melhor resposta que existe à complexidade que a reforma criou.
@@ -116,6 +171,9 @@ GET …/emissao/atividades/cindop?codigoNacionalItemServico={x}&nbs={y}
 6. **Certificado e instabilidade checados no LOAD**, não no submit.
 7. **A consequência dita no momento da escolha:** *"O tomador não foi identificado. Você fica responsável pelo pagamento do imposto."*
 8. **Tela de estado degradado** para instabilidade de portal. Não é exceção, é rotina.
+9. 🥉 **A tela "como emitir na prefeitura".** Quando não dá pra emitir, eles entregam o caminho alternativo **com os dados do cliente já prontos para copiar**: link do BHISS, as duas formas de acesso, e a tabela `CNAE · Atividade · ISS · Alíquota Total`. É o melhor padrão de degradação do produto deles, e o município é o nosso.
+10. **`anexoEscolhido` e `logAlteracoes` por nota**, e as 4 situações independentes.
+11. **Separar "cancelar" de "informar cancelamento".** Para nota importada, quem cancela é o portal do município; o app só registra.
 
 ---
 
@@ -126,7 +184,7 @@ GET …/emissao/atividades/cindop?codigoNacionalItemServico={x}&nbs={y}
 | 1 | **Desistem** quando o ISS é de outro município e mandam pro portal da prefeitura | Para **BH**, cobertura completa. Para fora, **dizer isso antes**, na escolha do CNAE, não no meio da emissão | Nosso recorte geográfico deixa de ser limitação e vira vantagem. Mas o cliente precisa saber **antes de pagar** |
 | 2 | 67 NBS sem filtro, resolvido só na UX | **De-para CNAE → NBS curado** nos nossos 87 CNAEs | A UX deles tapa um buraco de dado. Com 87 CNAEs, curar é viável pra nós e não era pra eles |
 | 3 | `cClassTrib` vazio | Mesmo estado hoje, **mas com prazo e dono** | Ninguém resolveu. Vira risco se ignorarmos e janela se enfrentarmos |
-| 4 | Cancelamento: *"dentro do mesmo mês"* | **730 dias**, conforme a Portaria SMFA 075/2025 | 🕓 confirmar antes de virar copy |
+| 4 | Cancelamento: *"dentro do mesmo mês"* no rodapé da emissão; a tela de cancelar **não declara prazo nenhum** | **730 dias**, conforme a Portaria SMFA 075/2025 | 🕓 **segue sem conciliação.** Visitei a tela de cancelamento na 2ª rodada e ela não diz o prazo. Não resolvo por dedução |
 | 5 | Emitir e a alíquota só aparece depois | **Mostrar o efeito no imposto na hora**: "esta nota acrescenta R$X no DAS de outubro" | A nota é a entrada; o imposto é a saída. Mostrar as duas juntas é a nossa tese |
 | 6 | Backfill de tomador cobrado no meio da emissão | Cobrar **antes**, em lote, fora do caminho crítico | Descobrir que o cadastro está incompleto com a nota pela metade é o pior momento possível |
 

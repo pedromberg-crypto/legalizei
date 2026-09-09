@@ -19,7 +19,10 @@ tags: [produto, evidencia, concorrente, nfse, reforma-tributaria, iss, api]
 > 🔌 **APIs:** 20 chamadas capturadas com `read_network_requests`, todas `GET`, todas de mesma origem, na sessão do próprio Pedro, relendo o que a página já tinha carregado. Nenhum `POST`.
 > 🔒 O payload de `listagem/init` traz CPF, e-mail e endereço do Pedro. **Aqui está registrada só a FORMA, nunca os valores.**
 >
-> **Rotas:** `#/emissor/listagem` · `#/emissor/tomadores` · `#/emissor/emitir`
+> **Rodada 1** — `#/emissor/listagem` · `#/emissor/tomadores` · `#/emissor/emitir`. 🔌 **20 chamadas**.
+> **Rodada 2** (auditoria retroativa, mesmo dia) — as **5 telas** que a 1ª deixou de fora: consultar, cancelar, importar, como-emitir e a rota real do pró-labore. 🔌 **8 chamadas**. Está em **§9**.
+>
+> ⚠️ **Por que houve 2 rodadas:** a 1ª percorreu **1 de 6 telas** da seção Notas Fiscais e mesmo assim se chamou "teardown da NF". O mapa de rotas (`menu/get`, achado depois) expôs o buraco. Lição no [[_metodo]].
 >
 > **Ligações:** [[emitir-nota-fiscal]] · [[_mapa-de-cruzamentos]] · [[aliquota-e-enquadramento]] · [[_matriz-dependencia]] (3.1, 3.3, 3.4)
 
@@ -291,6 +294,161 @@ As primeiras entradas são *"consolidação documental de cargas no transporte m
 | ⚠️ | **Cancelamento: "dentro do mesmo mês"** (rodapé) × **730 dias** (Portaria SMFA 075/2025). 🕓 perguntar |
 | ⚠️ | **Favorito aponta pro código de 5%** enquanto o código da atividade real está a 3%. 🕓 ratificar se importa no Simples |
 | ⚠️ | **NBS em dois formatos**: `114011400` na API, `1.1401.14.00` na tela |
+
+---
+
+## 9. 🔄 2ª rodada — as 5 telas que a 1ª deixou de fora
+
+> 🔄 **Auditoria retroativa, 09/09.** Com o mapa de rotas do `menu/get` em mãos, ficou visível que a 1ª rodada percorreu **1 de 6 telas** da seção Notas Fiscais e mesmo assim se chamou "teardown da NF". Emissão é uma tela; o ciclo tem seis.
+>
+> 🔌 **8 endpoints** nesta rodada, todos `GET`. 🔒 Nenhuma nota cancelada, importada ou emitida.
+
+### O mapa que faltava
+
+| Tela | Rota | App | Cobertura |
+|---|---|---|:--:|
+| Emitir NFS-e | `emissor/listagem` → `/tomadores` → `/emitir` | novo | ✅ 1ª rodada |
+| **Consultar notas fiscais** | `sistema/consultarnotas` | legado | ✅ agora |
+| **Cancelar nota fiscal** | `sistema/informarCancelamento` | legado | ✅ agora |
+| **Importar notas fiscais** | `sistema/importarnota` | legado | ✅ agora |
+| **Como emitir notas de serviço** | `sistema/como-emitir` | legado | ✅ agora |
+| Registrar notas tomadas | `painel-de-controle/nota-tomada/listagem` | novo | 🟡 não visitada |
+
+⚠️ **Quatro das seis vivem no app legado**, o que reforça o padrão do `menu/get`: emitir migrou, consultar e cancelar não.
+
+---
+
+### 🔑 O modelo completo de uma nota emitida
+
+`GET /api/plataforma/notafiscal/consultar/list/{mes}/{ano}?cursor=0&limit=20`
+→ `{ serializedList, list, total, cursor }`
+
+```ts
+type NotaFiscal = {
+  id, idEmissor, numero: "3",
+  codVerificacao: string          // o código de verificação do município
+  numeroRps, serieRps             // RPS: o recibo provisório que vira nota
+
+  razaoSocialTomador, cnpjTomador, valorServico
+  descricaoServico: string
+
+  dataEmissao, dataImportacao, competencia
+  erroProcessamento, errosNotaFiscal, motivoCancelamento
+
+  situacaoNota:          { id: "PROCESSADO_SUCESSO", descricao: "NFS-e processada com sucesso" }
+  situacaoNFe:           null
+  situacaoCnae:          { id: "PROCESSADO", descricao: "Cnae da nota correto" }
+  situacaoRetencaoNota:  null
+
+  tipoNota: "SERVICO"
+  anexoEscolhido                  // 🔑 o Anexo fica gravado NA NOTA
+  permiteMovimentacao, importada, registrada
+  numeroNotaSubstituta            // cadeia de substituição
+  logAlteracoes                   // auditoria por nota
+  idLoteNotaFiscal, nomeArquivo, linkVisualizacao
+}
+```
+
+🔑 **Quatro decisões de modelagem que valem copiar:**
+
+| | O que revela |
+|:--:|---|
+| **4 situações independentes** (`Nota`, `NFe`, `Cnae`, `RetencaoNota`) | uma nota pode ser processada com sucesso **e** ter CNAE errado, ou pendência de retenção. Um status só não dá conta |
+| **`anexoEscolhido` na nota** | o Anexo (III ou V) fica gravado **por nota**, não só por empresa. Se o Fator R virar no meio do ano, cada nota carrega o que valeu na hora |
+| **`numeroNotaSubstituta`** | substituição é **cadeia**, não flag |
+| **`logAlteracoes`** | auditoria por nota, de primeira classe |
+
+### 🔑 A Lei 12.741/2012 vai na descrição, automaticamente
+
+A descrição do serviço na nota real termina com:
+
+> *"— Conforme **Lei 12.741/2012**, o percentual total de impostos incidentes neste serviço prestado é de aproximadamente **6,00%**"*
+
+🔴 **Obrigação legal que não estava mapeada em lugar nenhum nosso.** É a "Lei da Transparência": a nota tem que informar a carga tributária do serviço. Eles **anexam automaticamente**, com a alíquota do cliente.
+
+🎯 **Efeito direto:** quem emite a nota precisa saber a alíquota **no momento da emissão**. Mais um cruzamento [[aliquota-e-enquadramento|alíquota]] → [[emitir-nota-fiscal|nota]] que a gente não tinha declarado.
+
+---
+
+### 🔴 A cobrança escondida: reabertura de mês contábil
+
+A tela de consulta **pré-carrega** duas definições de serviço antes de qualquer ação:
+
+`GET /api/plataforma/notafiscal/consultar/servico/51` e `/52`
+
+```json
+{
+  "id": 51,
+  "descricao": "Reabertura de Mês Contábil - Simples nacional",
+  "categoria": "REGULARIZACAO",
+  "valor": 21.9,
+  "detalhe": "Reabertura do mês contábil quando precisar alterar alguma nota ou importar alguma nota fiscal de meses anteriores…",
+  "maisDetalhes": "…(Caso faça essas alterações e importações a reabertura do mês é feita automaticamente).",
+  "disponivelParaCliente": false,
+  "issueTypeJira": "reabertura-de-mes-contabil-simples-nacional"
+}
+```
+
+🔴 **Alterar ou importar nota de mês anterior custa R$21,90, e a cobrança é DISPARADA PELA AÇÃO**, não escolhida: *"a reabertura do mês é feita automaticamente"*. E `disponivelParaCliente: false` — não é item de catálogo que o cliente contrata, é consequência.
+
+⚠️ **É o "surcharge oculto" que o vault já criticava, agora com o mecanismo.** O cliente corrige um erro e descobre a cobrança depois.
+
+🎯 **Nossa regra, que já era doutrina e agora tem caso concreto:** **preço e momento da cobrança aparecem ANTES do aceite.** Se corrigir mês fechado custa, a tela diz antes de deixar corrigir.
+
+---
+
+### 📅 `importarnota` — o prazo do dia 5
+
+> **"Envio sem custo · Notas emitidas em setembro · Formato do arquivo: XML · Prazo limite: Dia 5 de outubro"**
+
+🔑 **Prazo operacional que não estava no nosso calendário:** notas emitidas fora da plataforma precisam ser importadas **até o dia 5 do mês seguinte**, em XML, sem custo.
+
+🔴 **E aqui os dois achados se encontram:** importar **até dia 5** é grátis; **depois disso** cai na reabertura de mês contábil a **R$21,90**. A gratuidade tem prazo, e o prazo não aparece na tela de cobrança.
+
+---
+
+### 🎯 `como-emitir` — a tela de contingência, e ela é boa
+
+Quando a plataforma não emite (ISS de outro município, instabilidade, sem certificado), eles **não deixam o cliente na mão**: ensinam a emitir no portal da prefeitura.
+
+**"Como emitir Notas Fiscais na Prefeitura — Veja como emitir uma Nota Fiscal em Belo Horizonte e todos os dados necessários para concluir a emissão."**
+
+| Passo | Conteúdo |
+|:--:|---|
+| **1** | Link direto: `bhissdigital.pbh.gov.br/nfse/index.jsp` + `ACESSAR TUTORIAL` |
+| **2** | As duas formas de acesso: **CNPJ + senha** ou **certificado digital** |
+| **3** | **A tabela que ele vai precisar digitar lá:** `CNAE · Atividade · ISS · Alíquota Total` → `7319-0/04 · Consultoria em publicidade · 2,01% · 6,00` |
+
+🎯 **É o melhor padrão de degradação que vi no produto deles.** Em vez de "não é possível emitir", entregam o caminho alternativo **com os dados do cliente já preenchidos**, prontos para copiar.
+
+⚠️ **E é diretamente aproveitável:** BHISS Digital é o nosso município. Essa tela é praticamente uma spec pronta para o nosso caso de contingência.
+
+---
+
+### `informarCancelamento` — e o prazo continua sem resposta
+
+> **"Cancelar Nota Fiscal — Aqui você cancela notas fiscais emitidas na Contabilizei ou informa o cancelamento/substituição de notas importadas."**
+> Campo único: `Número da nota fiscal` + `Pesquisar`.
+
+🔑 **A tela faz duas coisas diferentes com o mesmo nome:**
+1. **Cancelar** nota emitida na plataforma (ação real)
+2. **Informar** cancelamento/substituição de nota **importada** (registro de algo feito fora)
+
+Essa distinção é correta e a gente precisa dela: para nota importada, quem cancela é o portal do município; o app só registra.
+
+🕓 **A divergência do prazo NÃO foi resolvida.** A tela não declara prazo nenhum. Seguem em pé, sem conciliação:
+- rodapé da emissão: *"cancelar **dentro do mesmo mês**"*
+- Portaria SMFA 075/2025: **730 dias**
+
+**Não resolvi por dedução**, conforme a regra da casa. Fica na fila humana.
+
+---
+
+### ✅ E uma lacuna que não era lacuna
+
+`painel-de-controle/socio/assessor/gateway` — a rota real do menu para "Gerenciar sócios e pró-labore", que eu havia pulado indo direto ao `socio/central`.
+
+**Visitada: é um roteador.** Sem fluxo de assessor pendente, redireciona para `socio/central`. Explica o `fluxoAssessorPendente` do payload e **confirma que o teardown de pró-labore não tinha buraco ali.**
 
 ---
 

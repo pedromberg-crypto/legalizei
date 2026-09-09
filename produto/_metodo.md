@@ -45,6 +45,8 @@ No pró-labore, o que mais rendeu **não estava na tela do pró-labore**: estava
 
 ⚠️ **Payload rico NÃO substitui varrer o flow.** Em 09/09 a 1ª passada de compliance abriu `#/central-de-rotinas`, achou um payload com 28 tipos de pendência e **parou por achar que já tinha tudo**. Ficaram sem cobertura 4 linhas do catálogo (5.1, 5.2, 5.5, 5.6), e a 2ª rodada trouxe as obrigações reais, o catálogo de 43 avulsos com preço e o mapa de migração deles. **Quantidade de dado num endpoint não é medida de cobertura de flow.**
 
+🗺️ **Antes de declarar uma frente coberta, conferir contra o mapa de rotas.** Em 09/09 uma auditoria retroativa mostrou que o "teardown da NF" tinha percorrido **1 de 6 telas** da seção. A 2ª rodada trouxe o modelo completo da nota (4 status, `anexoEscolhido`, `logAlteracoes`), a **Lei 12.741/2012** na descrição, o **prazo do dia 5** para importar e uma **cobrança de R$21,90 disparada por ação**. Nada disso estava na tela de emissão.
+
 📌 **E reportar a contagem de endpoints, sempre.** O Pedro perguntou se eu tinha rodado a etapa de API porque eu não disse nenhum número naquela rodada, tendo dito nas anteriores. **Se a etapa rodou, o relatório diz quantos endpoints saíram.**
 
 ### 3. Ler o DOM, não só a tela

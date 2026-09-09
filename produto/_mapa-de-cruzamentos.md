@@ -82,6 +82,9 @@ Pró-labore ─────> FOLHA 12m ──> FATOR R ──┘                
 | **O detalhe que escapa** | Um CNAE pode mapear em **mais de um item da LC 116**. O líder resolve com o modal *"Especifique a atividade — selecione a opção mais parecida"*. **Quem escolhe o item escolhe o ISS** |
 | **Exportação** | Nota pra cliente no exterior é **imune a ISS, PIS e COFINS**. No caso medido: 6,00% vira **3,05%**. Quase metade |
 | **Obrigação disparada** | Emissão pelo Emissor Nacional (obrigatório 01/11/2026), que exige **Inscrição Municipal regular** |
+| 🔴 **Lei 12.741/2012** | A nota é obrigada a informar a carga tributária do serviço (*"o percentual total de impostos incidentes neste serviço prestado é de aproximadamente 6,00%"*). **A alíquota tem que estar resolvida NO MOMENTO DA EMISSÃO**, não só no fechamento. Achado em 09/09 numa nota real |
+| 📅 **Prazo do dia 5** | Nota emitida FORA da plataforma precisa ser importada (XML) **até o dia 5 do mês seguinte**, sem custo. Depois disso, mês fechado: no líder custa R$21,90 de "reabertura de mês contábil", cobrada **automaticamente pela ação** |
+| 🔑 **`anexoEscolhido` por nota** | o Anexo fica gravado **na nota**, não só na empresa. Se o Fator R virar no meio do ano, cada nota carrega o que valeu na hora |
 | 🔴 **O que a API do líder revelou (09/09)** | O **ISS municipal pertence ao CÓDIGO MUNICIPAL, não ao CNAE**: 11 combinações sob um único CNAE, com ISS de **2,5% a 5%**. E a emissão precisa de **4 códigos em cascata** (CNAE → nacional → municipal → NBS) mais o **IndOp**, que diz onde o serviço foi prestado. Ver [[2026-09-09-contabilizei-nota-fiscal]] |
 | 🔴 **Onde o líder DESISTE** | Quando o ISS é devido a **outro município**, ele não emite: manda o cliente pro portal da prefeitura, porque *"as prefeituras não têm uma base de dados unificada de códigos municipais"*. Para o nosso ICP em BH isso não morde; para quem atende fora, morde igual |
 
@@ -146,6 +149,7 @@ Pró-labore ─────> FOLHA 12m ──> FATOR R ──┘                
 | Dia | O quê | Se cair em dia não útil |
 |:--:|---|---|
 | **1º ao último** | janela de emissão de nota | — |
+| **5** | 🆕 importar XML de nota emitida fora da plataforma (regra do líder, não da lei) | — |
 | **15** | eSocial + DCTFWeb | **antecipa** |
 | **20** | **DAS** | **PRORROGA** |
 | **20** | DARF (INSS/IRRF) + FGTS Digital | **ANTECIPA** |

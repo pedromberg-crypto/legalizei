@@ -94,7 +94,7 @@ Então: **a spec manda, a evidência é fonte.** É a mesma doutrina do [[indice
 
 🔗 **O ciclo mensal está fechado e o estado agregado também:** nota entra → alíquota precifica → pró-labore ajusta → guia sai → compliance diz se está tudo em dia.
 
-1. **Extrato bancário / movimentações** — a matéria-prima do fechamento contábil e a **porta da 2.4**. O líder tem **duas pendências só pro ciclo de vida da integração**, o que mostra o peso. É a última peça de dado que entra no ciclo.
+1. ⚪ ~~Extrato bancário~~ — **FORA DE ESCOPO** (Pedro, 09/09): não seremos financeira e não teremos conta PJ. ⚠️ Efeito colateral: a **2.4 perde o caminho do trilho próprio** e sobra a consulta de arrecadação.
 2. **§6 · Documentos e certificado** — o A1 é pré-condição de tudo e já apareceu como campo em **5 payloads**, sempre com `diasParaVencimento`.
 3. **Consultar e cancelar nota** — fecha a NF, e tem a divergência de prazo aberta (730 dias × "mesmo mês").
 

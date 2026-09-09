@@ -133,6 +133,42 @@ Levantado em `sistema/servicos-disponiveis`. Os que cruzam com as nossas linhas:
 
 ---
 
+## 🏆 "A CASA FAZ POR VOCÊ" — a peça que faltava na 5.1
+
+> Achado na 3ª rodada. É o melhor dispositivo de confiança do produto do líder, e a nossa linha 5.1 estava desenhada mais fraca que isso.
+
+A Central de Rotinas deles tem **duas listas separadas**, e a separação é o produto:
+
+| Lista | O que traz |
+|---|---|
+| **"Suas rotinas de setembro"** | o que o cliente precisa saber ou fazer. Pill `Automática` quando a casa cuida |
+| 🏆 **"A Contabilizei faz por você"** | **as 5 obrigações que o contador executa**, com data e detalhe |
+
+🎯 **O cliente paga R$195/mês e normalmente não vê nada acontecer.** Essa lista torna visível o trabalho invisível. **A nossa 5.1 não pode ser só "você está em dia ✓": tem que ser "veja o que fizemos e quando".**
+
+### As 5 obrigações, e o que cada uma exige
+
+| Sigla | Prazo | Requisitos declarados |
+|---|:--:|---|
+| **eSocial** | 15 | Certificado **ou** Procuração |
+| **EFD-Reinf R-2099** (previdenciário) | 15 | Certificado **ou** Procuração |
+| **EFD-Reinf R-4099** (não previdenciário) | 15 | Certificado **ou** Procuração |
+| **DCTFWeb** | 15 | Certificado **ou** Procuração |
+| DESTDA (ICMS) | 28 | ⚪ não se aplica a serviço puro |
+
+🔴 **`requisitos` é campo de primeira classe, e a leitura é dura:** **4 de 5 obrigações mensais dependem de certificado ou procuração.** O certificado A1 não é pré-condição só da emissão de nota — é **pré-condição de quase toda a operação mensal**. Isso eleva a linha 6.x (certificado) de "documento" para **infraestrutura**.
+
+### Duas obrigações que não estavam no nosso radar
+
+| | O quê |
+|---|---|
+| **EFD-Reinf R-4099** | cobre **retenção de IRRF em notas TOMADAS**, aluguel para PF, **auto retenção em publicidade** e **distribuição de lucro**. 🔑 Ou seja: **nota que o cliente RECEBE também gera obrigação**, e a distribuição de lucros entra aqui |
+| **EFD-Reinf R-2099** | retenção de **INSS em notas fiscais** |
+
+✅ E a descrição do DCTFWeb ratifica a cadeia do [[_mapa-de-cruzamentos]] por fonte nova: *"gerada a partir das informações do **eSocial e da EFD-Reinf**… consolidando em um documento único"*.
+
+---
+
 ## ✅ O que copiamos sem vergonha
 
 1. **A frase de abertura.** *"Estas pendências podem afetar seu informe de rendimentos e gerar multas e penalizações como desenquadramento tributário e inativação do CNPJ."* Em uma linha ela liga a corrente inteira, e é honesta sem ser chantagem.
@@ -141,6 +177,10 @@ Levantado em `sistema/servicos-disponiveis`. Os que cruzam com as nossas linhas:
 4. **`pendenciasBloqueantes`** como grafo explícito.
 5. **Criticidade é ESTADO, não tipo.** Três tipos aparecem nas duas listas: a mesma pendência é crítica ou não conforme o quão perto do prazo.
 6. **`diasParaVencimento`** em certificado e procuração: contagem regressiva, não flag booleana.
+7. 🏆 **A lista "a casa faz por você"**, separada da lista do cliente. Torna visível o trabalho invisível.
+8. **`requisitos` por obrigação:** cada uma declara do que depende para acontecer.
+9. **Modal em 3 seções** com selo de responsabilidade: *O que é? · Requisitos necessários para a entrega · Por que é importante?*
+10. **Calendário navegável com bolinha** nos dias que têm rotina, e **pill `Automática`** só nas da casa.
 
 ---
 
@@ -157,6 +197,8 @@ Levantado em `sistema/servicos-disponiveis`. Os que cruzam com as nossas linhas:
 | 7 | Tela de declarações abre no **mês corrente vazio** e diz "Sem informações" | Abre no **último período com dado**. Sem dado nenhum: *"sua primeira declaração sai em março"* | A prova de que a contabilidade funciona não pode dar como 1ª impressão que ela não funciona |
 | 8 | Entregar obrigação acessória custa **R$197,90**; alterar pró-labore, **R$98,90** | Cobramos **execução**, nunca **acesso ao que o plano promete** | Se a obrigação é do plano, entregá-la é do plano. É o "surcharge oculto" que a gente critica |
 | 9 | Reajuste anual em modal **que bloqueia a tela**, com escolha binária | Reajuste **anunciado com antecedência e índice nomeado**, sem prender o cliente fora do produto | Anunciar é certo. Fazer refém, não. Liga com a nossa decisão aberta **7.7** |
+| 10 | Listam **DESTDA (ICMS)** para prestador de serviço puro, que é isento | Só as obrigações **do perfil** | 3ª ocorrência do mesmo defeito: mostrar tudo pra todos e deixar o cliente descobrir o que não se aplica |
+| 11 | *"A central está em evolução… **te lembramos por e-mail e WhatsApp**"* | Se a central for o canal, ela é **completa**; senão, dizemos qual é o canal | 🔴 **Isso testa a nossa decisão de 08/09.** O líder tem central **e** avisa por fora, porque a central não cobre tudo. Ou a nossa cobre, ou a gente repete o problema com menos honestidade |
 
 ---
 
@@ -166,7 +208,7 @@ Levantado em `sistema/servicos-disponiveis`. Os que cruzam com as nossas linhas:
 |:--:|---|---|
 | 🔴 | **5.7 — monitorar o DTE-SN.** Sem caminho técnico. É o único ponto onde **o silêncio custa a empresa do cliente** | [[_matriz-dependencia]] |
 | 🔴 | **5.4 — vigília preditiva.** O bloco existe, falta o gatilho | motor |
-| 🟡 | **Extrato bancário**: é a matéria-prima do fechamento e a porta da 2.4. Eles têm 2 pendências só pro ciclo de vida da integração | próxima frente |
+| ⚪ | **Extrato bancário / conta PJ: FORA DE ESCOPO** (Pedro, 09/09). Não seremos financeira e não teremos conta PJ própria. O mecanismo do líder depende do Contabilizei.bank, que a gente não vai ter. ⚠️ Consequência: a 2.4 **perde o caminho do trilho próprio** e sobra consulta de arrecadação | decisão travada |
 | 🟡 | **TFE e credencial da prefeitura** em BH: regra não mapeada | [[fiscal-simples-bh-2026]] |
 
 ---

@@ -43,6 +43,8 @@ No pró-labore, o que mais rendeu **não estava na tela do pró-labore**: estava
 
 🔑 **Regra:** seguir a funcionalidade até onde ela vira **guia, documento ou obrigação**. É lá que a conta aparece.
 
+📜 **Ler a tela INTEIRA, não os primeiros mil caracteres.** Em 09/09 eu li o topo da Central de Rotinas, achei as 21 pendências e parei. A tela tem **três blocos** e o terceiro — *"A Contabilizei faz por você"* — é o **dispositivo de confiança do produto deles**, e o mais aproveitável do arquivo. Só apareceu quando o Pedro perguntou até onde eu tinha chegado. **`innerText` inteiro, com `slice` em fatias, até o fim.**
+
 ⚠️ **Payload rico NÃO substitui varrer o flow.** Em 09/09 a 1ª passada de compliance abriu `#/central-de-rotinas`, achou um payload com 28 tipos de pendência e **parou por achar que já tinha tudo**. Ficaram sem cobertura 4 linhas do catálogo (5.1, 5.2, 5.5, 5.6), e a 2ª rodada trouxe as obrigações reais, o catálogo de 43 avulsos com preço e o mapa de migração deles. **Quantidade de dado num endpoint não é medida de cobertura de flow.**
 
 🚪 **Menu dá as portas; ação dá os corredores.** O `menu/get` é excelente e **não é suficiente**: em 09/09 o fluxo real de cancelamento de nota (`cancelamento-nota-emitida`, 2 telas, app novo) **não está no menu** — ele nasce de um botão dentro da nota. A varredura por menu deu a NF por coberta e faltava o fluxo que resolvia a única divergência aberta da frente. **Depois do menu, entrar num item e clicar nas ações dele.**

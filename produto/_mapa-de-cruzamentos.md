@@ -115,6 +115,8 @@ Pró-labore ─────> FOLHA 12m ──> FATOR R ──┘                
 | **eSocial** | evento **S-1200** de remuneração do sócio, mensal, dia **15**, **antecipa** |
 | **DCTFWeb** | consome o eSocial e é quem **gera o DARF numerado**, dia 15, antecipa |
 | **Cruzamento fiscal** | A Receita cruza **EFD-Reinf × DCTFWeb** para achar pró-labore declarado e não pago |
+| 🔑 **EFD-Reinf R-2099 e R-4099** | São **dois eventos distintos**, ambos dia 15. R-2099: retenção de **INSS em notas fiscais**. R-4099: retenção de **IRRF em notas TOMADAS**, aluguel PF, auto retenção em publicidade e **distribuição de lucro**. 🔑 **Nota que o cliente RECEBE também gera obrigação** |
+| 🔑 **4 de 5 obrigações mensais exigem certificado ou procuração** | O A1 não é pré-condição só da emissão: é **infraestrutura da operação mensal inteira**. Ver [[2026-09-09-contabilizei-central-rotinas]] §8 |
 | **Informe de rendimentos** | O pró-labore do ano vira o informe do sócio, que alimenta o **IRPF** dele |
 | 🔴 **O informe é BLOQUEÁVEL** | Pendência documental ou débito federal **impedem a emissão do informe** (`informerendimento/…/restricoes`), e no líder a regularização é **serviço pago**. É trava de fim de ano com efeito em abril, e não estava na nossa lista |
 | 🔑 **ISS retido abate o DAS** | `deducaoRetencao` no cálculo da competência, alimentado pelo `valorPendenteRetencao` de cada cliente. **Emitir nota para tomador que retém muda o DAS do mês** |
@@ -139,7 +141,7 @@ Pró-labore ─────> FOLHA 12m ──> FATOR R ──┘                
 | **Por que cruza com tudo** | Guia não paga vira juros, multa, pendência, e pendência vira Termo de Exclusão, que vira alíquota de Lucro Presumido. **É a corrente inteira puxada por um elo** |
 | **Como o líder resolve** | Lote **no fim de cada mês**, contra "dados oficiais do Governo Federal". Por isso os 30 dias |
 | 🔑 **A exceção que ensina** | No **débito automático**, a confirmação sai **entre os dias 20 e 23**, no mês corrente. Eles sabem em tempo hábil **só quando o pagamento passa pelo trilho deles** (Contabilizei.bank) |
-| 🔴 **Nossa linha 2.4** | A pergunta final: **dá pra saber sem possuir o trilho?** Se não der, possuir o trilho vira decisão de arquitetura e de negócio, não de feature |
+| 🔴 **Nossa linha 2.4, agora com uma porta a menos** | ⚪ **Escopo travado em 09/09 (Pedro): não seremos financeira e não teremos conta PJ.** O caminho do "trilho próprio" (Contabilizei.bank) **sai da mesa**. Sobra a consulta de arrecadação, e a pergunta vira: **dá pra fazer melhor que o lote mensal deles sem possuir o pagamento?** |
 | 🔑 **O que a API revelou (09/09)** | `verificacaoPagamentoAutomatica` é flag **por guia**, não global — nem toda guia é auditada. E `acaoBotao` vem do servidor: `PAGAR` → `RECALCULAR` → `BAIXAR_GUIA`, um botão com três significados conforme o estado. Ver [[2026-09-09-contabilizei-guia-imposto]] |
 | 🔴 **Dois impostos fora do radar** | **TFE** (Taxa de Fiscalização de Estabelecimentos, municipal de BH, R$168,48/ano) e **`DARF_UNIFICADO_ATIVACAO_FATOR_R`** (R$11, pró-labore simbólico pra abrir a contagem do Fator R). 🕓 o 2º **não ratificado** |
 | ⚠️ **O custo do atraso é invisível** | Juros e multa aparecem só como `valorPago > valorPrincipal`, sem linha própria. Medido: DAS de R$720 pago a R$774,72 |

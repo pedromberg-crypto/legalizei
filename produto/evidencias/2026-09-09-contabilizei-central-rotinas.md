@@ -18,7 +18,9 @@ tags: [produto, evidencia, concorrente, compliance, pendencias, rotinas, api]
 > **Rodada 1** — rota `#/central-de-rotinas`. 🔌 **4 chamadas**, 1 útil: `GET /api/plataforma/central-rotinas/init` (de onde saiu §2 e §3).
 > **Rodada 2** (mesmo dia, a pedido do Pedro) — as 4 superfícies que a 1ª deixou de fora: declarações, relatórios contábeis, serviços adicionais e "estar em dia". 🔌 **11 chamadas**. Está em **§6**.
 >
-> ⚠️ **Por que houve 2 rodadas:** a 1ª percorreu **uma rota só**, achou um payload muito rico e parou. As linhas 5.1, 5.2, 5.5 e 5.6 do catálogo ficaram sem cobertura. Lição registrada no [[_metodo]]: **payload rico não substitui varrer o flow**.
+> **Rodada 3** (provocada pelo Pedro: *"não sei até onde vc chegou nela"*) — a **tela** em si, que as duas primeiras leram raso. Está em **§8**.
+>
+> ⚠️ **Por que houve 3 rodadas:** a 1ª percorreu **uma rota só** e parou num payload rico (lição: *payload rico não substitui varrer o flow*). A 2ª cobriu as 4 superfícies que faltavam. A 3ª descobriu que **eu tinha lido só o 1º dos 3 blocos da tela** e perdido o **"A Contabilizei faz por você"**, que é o dispositivo de confiança do produto deles. Lições no [[_metodo]].
 >
 > **Ligações:** [[compliance-e-rotinas]] · [[_mapa-de-cruzamentos]] · [[guia-de-imposto]] · [[_matriz-dependencia]] (5.1–5.8)
 
@@ -326,7 +328,119 @@ Um modal apareceu em toda tela do app legado, bloqueando a leitura:
 
 ---
 
-## 7. Observações
+## 8. 🔄 3ª rodada — a TELA, que eu tinha lido raso
+
+> 🔄 **09/09, provocado pelo Pedro:** *"estou aqui em uma página que n sei até onde vc chegou nela"*. Boa provocação. Nas rodadas 1 e 2 eu fui **fundo na API e raso na tela**: li os primeiros ~1000 caracteres, achei as 21 pendências e parei. **A tela tem três blocos e eu tinha visto um.**
+
+### O que a tela realmente tem
+
+```
+┌─ Pendências críticas ──────────────────────────────┐
+│  abas: [Pendências críticas] [Outras pendências]   │
+│  ⛔ Pagamento de imposto pendente   [Ver pendência] │
+└────────────────────────────────────────────────────┘
+┌─ Central de rotinas ───────────────────────────────┐
+│  ‹ Ago.   SETEMBRO 2026   Out. ›                   │
+│  calendário com BOLINHA nos dias 5·15·18·21·28     │
+│                                                     │
+│  Suas rotinas de setembro                          │
+│   ✅ 05/09  importar extratos   [Automática] [Ver]  │
+│   🕐 15/09  mensalidade         [Automática] [Ver]  │
+│   🕐 18/09  DARF Unificado                   [Ver]  │
+│   🕐 21/09  DAS Simples                      [Ver]  │
+│                                                     │
+│  🔑 A Contabilizei faz por você                    │
+│   🕐 15/09  eSocial              [Ver detalhes]     │
+│   🕐 15/09  EFD-Reinf R-2099     [Ver detalhes]     │
+│   🕐 15/09  EFD-Reinf R-4099     [Ver detalhes]     │
+│   🕐 15/09  DCTFWeb              [Ver detalhes]     │
+│   🕐 28/09  DESTDA               [Ver detalhes]     │
+└────────────────────────────────────────────────────┘
+```
+
+### 🔑 O bloco que eu tinha perdido: "A Contabilizei faz por você"
+
+**É o dispositivo de confiança do produto deles, e é o melhor achado desta rodada.**
+
+Uma lista separada, com data e botão próprio, do que **o contador executa** — o trabalho que, sem essa tela, seria invisível. O cliente paga R$195/mês e normalmente não vê nada acontecer; aqui ele vê **cinco obrigações com prazo**.
+
+🎯 **Isso é exatamente o que a nossa linha 5.1 ("você está em dia ✓") precisa ser**, e é mais forte do que a gente tinha desenhado: não é só *"está tudo certo"*, é ***"veja o que fizemos e quando"***.
+
+### As 5 obrigações que a casa entrega, com o que cada uma exige
+
+`rotinasContabilizei` — 15 itens = **5 obrigações × 3 competências**.
+
+| Sigla | Prazo | Requisitos declarados |
+|---|:--:|---|
+| **ESOCIAL** | dia **15** | Certificado Digital **ou** Procuração |
+| **EFD-REINF R-2099** (previdenciário) | dia **15** | Certificado Digital **ou** Procuração |
+| **EFD-REINF R-4099** (não previdenciário) | dia **15** | Certificado Digital **ou** Procuração |
+| **DCTFWEB** | dia **15** | Certificado Digital **ou** Procuração |
+| **DESTDA** | dia **28** | Certificado, Procuração **ou Inscrição Estadual** |
+
+🔑 **`requisitos` é campo de primeira classe.** Cada obrigação declara **do que ela depende para acontecer**. Quatro das cinco dependem de **certificado ou procuração** — o que transforma o certificado, na prática, em **pré-condição de quase toda a operação mensal**, não só da emissão de nota.
+
+### As descrições, que são boas e explicam a cadeia
+
+| | |
+|---|---|
+| **eSocial** | *"unifica as informações fornecidas pelo empregador em relação aos seus funcionários. Aqui na Contabilizei, declaramos informações de **funcionários, sócios, RPA e Folha de Pagamento**."* |
+| **EFD-Reinf R-2099** | *"informações da empresa e **retenção de INSS em Notas Fiscais**"* |
+| **EFD-Reinf R-4099** | *"retenção de **IRRF em notas tomadas**, aluguel para pessoa física, **auto retenção em serviços de publicidade e propaganda** e **distribuição de lucro**"* |
+| **DCTFWeb** | *"gerada a partir das informações fornecidas no **eSocial e na EFD-Reinf**. Com base nesses dados, calcula os valores devidos de contribuições previdenciárias e outras retenções, **consolidando esses valores em um documento único**."* |
+| **DESTDA** | *"simplifica a apuração e recolhimento do **ICMS** para empresas do Simples Nacional"* |
+
+✅ **A descrição do DCTFWeb ratifica a cadeia do [[_mapa-de-cruzamentos]]** por fonte nova: **eSocial + EFD-Reinf → DCTFWeb → DARF**. A gente tinha isso da pesquisa; agora está dito pelo próprio produto.
+
+🔑 **Duas coisas que a EFD-Reinf R-4099 revela e não estavam no nosso radar:**
+1. **Notas TOMADAS geram obrigação** (retenção de IRRF). O cliente que **contrata** serviço também declara.
+2. **A distribuição de lucro entra na EFD-Reinf.** Mais um cruzamento pró-labore/lucros → obrigação acessória.
+
+### ⚠️ DESTDA na lista: mesmo padrão das 21 pendências
+
+A empresa é consultoria em publicidade, **serviço puro**, e a DESTDA é declaração de **ICMS**. A [[2026-09-09-verificacao-auditoria-tributaria|verificação de fonte primária]] diz que prestador de serviço puro em BH **não tem Inscrição Estadual e está isento de DeSTDA**.
+
+🔑 **Não é contradição: é a mesma lista genérica.** Repare que o próprio `requisitos` dela diz *"…ou **Inscrição Estadual**"* — que esta empresa não tem. **Ela é listada e nunca executada.** Terceira ocorrência do mesmo defeito: o líder mostra tudo para todos e deixa o cliente descobrir o que não se aplica.
+
+✅ **Nossa pesquisa se mantém**, e agora com o motivo à mostra.
+
+### O modal de detalhe, em 3 seções
+
+```
+🕐  Responsabilidade da Contabilizei
+    O que é?
+    Requisitos necessários para a entrega dessa rotina
+    Por que é importante?
+                                            [ Fechar ]
+```
+
+🎯 **Selo de responsabilidade + as três perguntas certas.** É a mesma estrutura do `modalDetalhes` que aparecia **vazio** no payload da guia ([[2026-09-09-contabilizei-guia-imposto]]) — aqui ela está **preenchida e boa**. Confirma pela segunda vez: **o conteúdo existe e não chega em todas as telas.**
+
+### 🔴 O aviso que eles próprios dão
+
+> **"A central está em evolução e algumas rotinas ainda não aparecem aqui. Te lembramos de rotinas importantes por e-mail e WhatsApp."**
+
+⚠️ **Três leituras, e a terceira é a que importa pra gente:**
+1. É honestidade, e é rara. Admitir que a tela está incompleta é melhor que fingir completude.
+2. **A central NÃO é a fonte de verdade dos lembretes.** O canal real é **e-mail e WhatsApp**.
+3. 🎯 **Isso testa a nossa decisão de 08/09** de que a central de avisos é *"o canal da casa"*. O líder tem a central **e** avisa por fora, porque a central não cobre tudo. **Se a nossa central for o único canal, ela precisa ser completa de verdade — ou a gente repete o problema com menos honestidade.**
+
+### Os detalhes de interface que valem
+
+| | O quê |
+|---|---|
+| **Calendário navegável** com `‹ Ago.` e `Out. ›`, **bolinha nos dias com rotina** | dá a forma do mês de relance, e o dia 5/15/18/21/28 saltam |
+| **Pill `Automática`** azul só nas rotinas da casa | é o `automatica: boolean` renderizado. Quem **não** tem pill é vez do cliente |
+| **Ícone de status por linha** (✅ feita · 🕐 pendente) | estado antes do texto |
+| **Duas listas separadas** | "Suas rotinas" × "A Contabilizei faz por você". A separação é o produto |
+
+### `Outras pendências`
+
+Aba vazia nesta conta, coerente com a API (as 7 estão todas em `possuiPendencia: false`).
+
+---
+
+## 9. Observações
 
 | | O quê |
 |:--:|---|

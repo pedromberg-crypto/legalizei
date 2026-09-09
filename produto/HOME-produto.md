@@ -83,16 +83,21 @@ Então: **a spec manda, a evidência é fonte.** É a mesma doutrina do [[indice
 | **Pró-labore** | [[pro-labore]] | [[2026-09-09-contabilizei-pro-labore]] | 🟢 desenho fechado, motor a construir |
 | **Alíquota e enquadramento** | [[aliquota-e-enquadramento]] | [[2026-09-09-contabilizei-aliquotas]] | 🟢 desenho fechado · 🔴 tabela do IRRF não ratificada |
 | **Emitir nota fiscal** | [[emitir-nota-fiscal]] | [[2026-09-09-contabilizei-nota-fiscal]] | 🟢 desenho fechado · 🔴 prazo 01/11/2026 e de-para NBS inexistente |
+| **A guia de imposto** | [[guia-de-imposto]] | [[2026-09-09-contabilizei-guia-imposto]] | 🟢 desenho fechado · 🔴 2.4 é decisão de arquitetura, não descoberta |
 
 🔗 **[[_mapa-de-cruzamentos]]** — como as funcionalidades se puxam. Nasceu em 09/09, quando pró-labore e alíquota chegaram **no mesmo número (37,72%) por caminhos diferentes** e ninguém tinha notado. Toda spec fiscal agora abre com uma seção **Cruzamentos declarados**; a regra está no [[_metodo]], passo 7.
 
 ### Fila, na ordem sugerida
 
-1. **Importar extrato bancário** — é a porta de entrada do **2.4**, o nosso maior buraco, e o teardown de alíquota mostrou que o líder resolve pagamento **possuindo o trilho** (Contabilizei.bank). Vale entender o mecanismo antes de decidir arquitetura.
-2. **Consultar e cancelar nota** — completa o ciclo da NF, e tem a divergência de prazo aberta (730 dias × "mesmo mês").
-3. **Central de avisos / DTE-SN (5.7)** — o único ponto onde o silêncio custa a empresa do cliente.
+✅ **Já feitos (4):** [[pro-labore]] · [[aliquota-e-enquadramento]] · [[emitir-nota-fiscal]] · [[guia-de-imposto]].
 
-✅ **Já feitos:** pró-labore · alíquota e enquadramento · emissão de NF (que absorveu boa parte de "como o imposto foi calculado").
+🔗 **Com esses 4, o ciclo mensal está fechado:** nota entra → alíquota precifica → pró-labore ajusta → guia sai. O que falta é o que acontece **quando o ciclo falha**.
+
+1. **§5 · Compliance e Central de Rotinas** — onde moram os nossos 2 diferenciais declarados: vigília preditiva (5.4) e **DTE-SN (5.7)**, o único ponto onde o silêncio custa a empresa do cliente. Apareceu de pano de fundo nos 4 teardowns e nunca foi encarada.
+2. **§6 · Documentos e certificado** — o A1 é pré-condição de tudo e já apareceu como campo em 4 payloads.
+3. **Consultar e cancelar nota** — fecha a NF, e tem a divergência de prazo aberta (730 dias × "mesmo mês").
+
+🔴 **Fora da fila, porque não é descoberta:** a **2.4** não sai de teardown. Já sabemos a resposta do líder (lote mensal + trilho próprio). É **decisão de arquitetura e de negócio**, e precisa do Pedro e do Mauro, não de mais uma passada.
 
 ---
 

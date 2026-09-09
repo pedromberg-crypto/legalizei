@@ -132,6 +132,9 @@ Pró-labore ─────> FOLHA 12m ──> FATOR R ──┘                
 | **Como o líder resolve** | Lote **no fim de cada mês**, contra "dados oficiais do Governo Federal". Por isso os 30 dias |
 | 🔑 **A exceção que ensina** | No **débito automático**, a confirmação sai **entre os dias 20 e 23**, no mês corrente. Eles sabem em tempo hábil **só quando o pagamento passa pelo trilho deles** (Contabilizei.bank) |
 | 🔴 **Nossa linha 2.4** | A pergunta final: **dá pra saber sem possuir o trilho?** Se não der, possuir o trilho vira decisão de arquitetura e de negócio, não de feature |
+| 🔑 **O que a API revelou (09/09)** | `verificacaoPagamentoAutomatica` é flag **por guia**, não global — nem toda guia é auditada. E `acaoBotao` vem do servidor: `PAGAR` → `RECALCULAR` → `BAIXAR_GUIA`, um botão com três significados conforme o estado. Ver [[2026-09-09-contabilizei-guia-imposto]] |
+| 🔴 **Dois impostos fora do radar** | **TFE** (Taxa de Fiscalização de Estabelecimentos, municipal de BH, R$168,48/ano) e **`DARF_UNIFICADO_ATIVACAO_FATOR_R`** (R$11, pró-labore simbólico pra abrir a contagem do Fator R). 🕓 o 2º **não ratificado** |
+| ⚠️ **O custo do atraso é invisível** | Juros e multa aparecem só como `valorPago > valorPrincipal`, sem linha própria. Medido: DAS de R$720 pago a R$774,72 |
 
 ---
 

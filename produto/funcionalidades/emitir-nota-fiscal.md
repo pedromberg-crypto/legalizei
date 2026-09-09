@@ -106,7 +106,7 @@ GET …/emissao/atividades/cindop?codigoNacionalItemServico={x}&nbs={y}
 
 ---
 
-## 🔄 O ciclo da nota tem 6 telas, não 1
+## 🔄 O ciclo da nota tem 7 telas, não 1
 
 > Corrigido em 09/09, na auditoria retroativa. A 1ª passada mapeou só a emissão.
 
@@ -114,7 +114,8 @@ GET …/emissao/atividades/cindop?codigoNacionalItemServico={x}&nbs={y}
 |---|---|:--:|
 | **Emitir** | o wizard de 4 códigos | 🔴 |
 | **Consultar** | lista, status, PDF/XML, log de alterações | 🔴 |
-| **Cancelar / informar cancelamento** | 2 operações distintas: cancelar o que emitimos × registrar cancelamento de nota importada | 🔴 |
+| **Cancelar nota emitida** | fluxo próprio de 2 passos (aviso → confirmação). **Não está no menu**: nasce do botão dentro da nota | 🔴 |
+| **Informar cancelamento** | registra cancelamento de nota **importada** (quem cancelou foi o portal) | 🔴 |
 | **Importar** | XML de nota emitida fora, com prazo | 🔴 |
 | **Como emitir na prefeitura** | contingência guiada | 🔴 |
 | **Notas tomadas** | nota que o cliente recebeu | 🔴 |
@@ -138,6 +139,33 @@ type NotaFiscal = {
 
 🔑 **`anexoEscolhido` por nota.** Se o Fator R virar no meio do ano, cada nota carrega o Anexo que valeu na hora. Nossa modelagem precisa disso, senão o histórico mente.
 
+### O modelo fiscal completo (75 campos, via `/api/legado/nota001/…`)
+
+```ts
+mesFechado: boolean                    // 🔑 decide se cancelar/alterar tem custo
+naturezaOperacao: "TRIBUTACAO_MUNICIPIO"
+regime, baseCalculo, aliquota, valorIss, valorIssRetido, issRetido
+valorPis, valorCofins, valorInss, valorIr, valorCsll, outrasRetencoes
+descontoIncondicionado, descontoCondicionado, codBeneficio
+numeroNotaSubstituta, numeroNotaSubstituida            // 🔑 cadeia nos 2 sentidos
+servicoPrestadoExterior, estrangeiro,
+moeda, cotacao, valorMoedaEstrangeira, dataInvoice     // 🔑 exportação de 1ª classe
+nbs, cClass, codigoNacionalServico, codIbge
+```
+
+🔑 **`mesFechado` é estado da competência, não data calculada na tela.** É ele que governa custo de cancelamento, alteração e importação.
+
+🔑 **Exportação é cidadã de primeira classe:** `moeda`, `cotacao`, `valorMoedaEstrangeira` e `dataInvoice` estão no modelo da nota. Combina com o `possuiFaturamento` separado por mercado da tela de alíquotas.
+
+🔴 **`aliquota: 0.02` × `valorIss: 158.99` (= 2,01%).** Terceira ocorrência do descasamento exibição × cálculo, e **a mais grave**, porque `aliquota` vai no **XML da nota**. Recalcular por esse campo erra 79 centavos. **Campo de exibição nunca é fonte de recálculo.**
+
+✅ **A conta fecha por dois caminhos independentes**, o que ratifica a repartição do Anexo III:
+```
+7.910,00 × 2,01%  = 158,99   ← pela alíquota de ISS da nota
+  474,59 × 33,5%  = 158,99   ← pela parcela de ISS dentro do DAS
+```
+O `valorIss` da nota **não é cobrança municipal separada**: é a parcela de ISS que já está no DAS.
+
 🔑 **4 status independentes.** Uma nota pode estar processada com sucesso **e** ter CNAE errado. Um status só não dá conta.
 
 ### 🔴 Obrigação legal que não estava mapeada: Lei 12.741/2012
@@ -148,12 +176,21 @@ A descrição da nota traz, anexado automaticamente:
 
 **A "Lei da Transparência" obriga informar a carga tributária na nota.** Consequência de arquitetura: **a alíquota tem que estar resolvida no momento da emissão**, não só no fechamento. É mais um cruzamento [[aliquota-e-enquadramento|alíquota]] → nota.
 
-### 📅 Prazos operacionais descobertos
+### 📅 🔑 O DIA 5 é o fecho do mês contábil, e vale para tudo
 
-| Regra | Valor |
-|---|---|
-| Importar XML de nota emitida fora | **até o dia 5** do mês seguinte, **sem custo** |
-| Depois disso | cai em **reabertura de mês contábil, R$21,90** |
+> Consolidado na 3ª rodada. Três telas diferentes dizem pedaços da mesma regra, e nenhuma diz ela inteira.
+
+| Ação sobre nota de mês anterior | Até o dia 5 | Depois do dia 5 |
+|---|:--:|:--:|
+| **Importar** XML de nota emitida fora | grátis | custa |
+| **Alterar** nota | grátis | custa |
+| **Cancelar** nota | grátis | custa |
+
+O custo é a **"reabertura de mês contábil"**, R$21,90 no líder, e o flag que decide é **`mesFechado`**, que vem do servidor no payload da nota.
+
+E o limite **legal** (não o comercial) é **730 dias**, pela Portaria SMFA 075/2025.
+
+🎯 **Nossa regra:** uma frase só, no momento da decisão — *"Cancelar até 5/10 não tem custo. Depois disso, R$X de reabertura do mês. O limite legal é 2 anos."* Não três telas com um terço da informação cada.
 
 🔴 **A cobrança é disparada pela AÇÃO, não escolhida.** No líder: *"caso faça essas alterações e importações, a reabertura do mês é feita **automaticamente**"*, e o serviço tem `disponivelParaCliente: false`.
 
@@ -184,7 +221,7 @@ A descrição da nota traz, anexado automaticamente:
 | 1 | **Desistem** quando o ISS é de outro município e mandam pro portal da prefeitura | Para **BH**, cobertura completa. Para fora, **dizer isso antes**, na escolha do CNAE, não no meio da emissão | Nosso recorte geográfico deixa de ser limitação e vira vantagem. Mas o cliente precisa saber **antes de pagar** |
 | 2 | 67 NBS sem filtro, resolvido só na UX | **De-para CNAE → NBS curado** nos nossos 87 CNAEs | A UX deles tapa um buraco de dado. Com 87 CNAEs, curar é viável pra nós e não era pra eles |
 | 3 | `cClassTrib` vazio | Mesmo estado hoje, **mas com prazo e dono** | Ninguém resolveu. Vira risco se ignorarmos e janela se enfrentarmos |
-| 4 | Cancelamento: *"dentro do mesmo mês"* no rodapé da emissão; a tela de cancelar **não declara prazo nenhum** | **730 dias**, conforme a Portaria SMFA 075/2025 | 🕓 **segue sem conciliação.** Visitei a tela de cancelamento na 2ª rodada e ela não diz o prazo. Não resolvo por dedução |
+| 4 | A regra do cancelamento está **espalhada em 3 telas**, e o rodapé da emissão diz uma coisa imprecisa (*"mesmo mês"*) | **Uma frase só, no lugar certo:** *"Cancelar até 5/10 é sem custo. Depois disso, R$X de reabertura. O limite legal é 2 anos."* | ✅ resolvido na 3ª rodada: são 3 regras diferentes, não versões conflitantes. Ver [[2026-09-09-contabilizei-nota-fiscal]] §10 |
 | 5 | Emitir e a alíquota só aparece depois | **Mostrar o efeito no imposto na hora**: "esta nota acrescenta R$X no DAS de outubro" | A nota é a entrada; o imposto é a saída. Mostrar as duas juntas é a nossa tese |
 | 6 | Backfill de tomador cobrado no meio da emissão | Cobrar **antes**, em lote, fora do caminho crítico | Descobrir que o cadastro está incompleto com a nota pela metade é o pior momento possível |
 

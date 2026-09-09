@@ -83,8 +83,10 @@ Pró-labore ─────> FOLHA 12m ──> FATOR R ──┘                
 | **Exportação** | Nota pra cliente no exterior é **imune a ISS, PIS e COFINS**. No caso medido: 6,00% vira **3,05%**. Quase metade |
 | **Obrigação disparada** | Emissão pelo Emissor Nacional (obrigatório 01/11/2026), que exige **Inscrição Municipal regular** |
 | 🔴 **Lei 12.741/2012** | A nota é obrigada a informar a carga tributária do serviço (*"o percentual total de impostos incidentes neste serviço prestado é de aproximadamente 6,00%"*). **A alíquota tem que estar resolvida NO MOMENTO DA EMISSÃO**, não só no fechamento. Achado em 09/09 numa nota real |
-| 📅 **Prazo do dia 5** | Nota emitida FORA da plataforma precisa ser importada (XML) **até o dia 5 do mês seguinte**, sem custo. Depois disso, mês fechado: no líder custa R$21,90 de "reabertura de mês contábil", cobrada **automaticamente pela ação** |
+| 📅 🔑 **O DIA 5 fecha o mês contábil, e vale pra TUDO** | **Importar, alterar e cancelar** nota de mês anterior: **grátis até o dia 5** do mês seguinte, **com custo depois** (reabertura, R$21,90 no líder). O flag que decide é **`mesFechado`**, vindo do servidor. E o limite **legal** do cancelamento é **730 dias** (Portaria SMFA 075/2025), coisa diferente da janela sem custo |
 | 🔑 **`anexoEscolhido` por nota** | o Anexo fica gravado **na nota**, não só na empresa. Se o Fator R virar no meio do ano, cada nota carrega o que valeu na hora |
+| ✅ **O ISS da nota É a parcela do DAS** | `7.910 × 2,01% = 158,99` e `474,59 × 33,5% = 158,99`. Dois caminhos independentes, mesmo número. Empresa do Simples **não recolhe ISS à parte**: o valor na nota é a fatia que já vai no DAS. Ratifica a repartição do Anexo III pela 3ª vez |
+| 🔴 **Exibição × cálculo, 3ª ocorrência** | `aliquota: 0.02` no XML da nota, contra 2,01% real. Depois de `6%`×5,99987% no DAS e `932,31`×932,3105 no teto do INSS. **Campo de exibição nunca é fonte de recálculo** |
 | 🔴 **O que a API do líder revelou (09/09)** | O **ISS municipal pertence ao CÓDIGO MUNICIPAL, não ao CNAE**: 11 combinações sob um único CNAE, com ISS de **2,5% a 5%**. E a emissão precisa de **4 códigos em cascata** (CNAE → nacional → municipal → NBS) mais o **IndOp**, que diz onde o serviço foi prestado. Ver [[2026-09-09-contabilizei-nota-fiscal]] |
 | 🔴 **Onde o líder DESISTE** | Quando o ISS é devido a **outro município**, ele não emite: manda o cliente pro portal da prefeitura, porque *"as prefeituras não têm uma base de dados unificada de códigos municipais"*. Para o nosso ICP em BH isso não morde; para quem atende fora, morde igual |
 
@@ -149,7 +151,7 @@ Pró-labore ─────> FOLHA 12m ──> FATOR R ──┘                
 | Dia | O quê | Se cair em dia não útil |
 |:--:|---|---|
 | **1º ao último** | janela de emissão de nota | — |
-| **5** | 🆕 importar XML de nota emitida fora da plataforma (regra do líder, não da lei) | — |
+| **5** | 🆕 **fecho do mês contábil**: importar, alterar ou cancelar nota do mês anterior sem custo (regra do líder, não da lei) | — |
 | **15** | eSocial + DCTFWeb | **antecipa** |
 | **20** | **DAS** | **PRORROGA** |
 | **20** | DARF (INSS/IRRF) + FGTS Digital | **ANTECIPA** |

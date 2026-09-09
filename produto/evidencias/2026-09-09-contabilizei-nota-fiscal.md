@@ -22,7 +22,9 @@ tags: [produto, evidencia, concorrente, nfse, reforma-tributaria, iss, api]
 > **Rodada 1** — `#/emissor/listagem` · `#/emissor/tomadores` · `#/emissor/emitir`. 🔌 **20 chamadas**.
 > **Rodada 2** (auditoria retroativa, mesmo dia) — as **5 telas** que a 1ª deixou de fora: consultar, cancelar, importar, como-emitir e a rota real do pró-labore. 🔌 **8 chamadas**. Está em **§9**.
 >
-> ⚠️ **Por que houve 2 rodadas:** a 1ª percorreu **1 de 6 telas** da seção Notas Fiscais e mesmo assim se chamou "teardown da NF". O mapa de rotas (`menu/get`, achado depois) expôs o buraco. Lição no [[_metodo]].
+> **Rodada 3** (mesmo dia, **conduzida pelo Pedro**) — ele emitiu uma nota, entrou no fluxo de cancelamento e passou a URL, autorizando ler e clicar em `Continuar`. 🔒 O `Confirmar cancelamento` **não foi tocado**; a nota segue emitida. 🔌 **1 endpoint**, e ele resolveu a divergência de prazo. Está em **§10**.
+>
+> ⚠️ **Por que houve 3 rodadas:** a 1ª percorreu **1 de 6 telas** da seção e mesmo assim se chamou "teardown da NF". A 2ª usou o mapa de rotas (`menu/get`) e fechou o menu — mas **o cancelamento real não está no menu**: ele nasce de um botão dentro da nota. Lições no [[_metodo]].
 >
 > **Ligações:** [[emitir-nota-fiscal]] · [[_mapa-de-cruzamentos]] · [[aliquota-e-enquadramento]] · [[_matriz-dependencia]] (3.1, 3.3, 3.4)
 
@@ -79,7 +81,7 @@ Ou seja, não identificar o cliente **transfere o ISS para o emitente** (não h�
 ⚠️ **Rodapé que contradiz o que apuramos:**
 > *"Emita sua nota tranquilamente, caso seja necessário, você poderá cancelar **dentro do mesmo mês** e fazer uma nova emissão."*
 
-A [[2026-09-09-verificacao-auditoria-tributaria|verificação de fonte primária]] diz **730 dias** (Portaria SMFA 075/2025). Ou a copy deles está velha, ou é uma regra interna mais apertada que a lei. 🕓 **Não resolver por dedução** — vale a regra do vault: regra de órgão se pergunta.
+✅ **RESOLVIDO na 3ª rodada (§10).** Não eram versões conflitantes da mesma regra, eram **três regras diferentes**: até o **dia 5 do mês seguinte** cancela sem custo · depois disso cancela **com custo** de operação contábil · e **730 dias** é o limite legal do município. A copy deste rodapé (*"dentro do mesmo mês"*) é **imprecisa deles**.
 
 ---
 
@@ -449,6 +451,158 @@ Essa distinção é correta e a gente precisa dela: para nota importada, quem ca
 `painel-de-controle/socio/assessor/gateway` — a rota real do menu para "Gerenciar sócios e pró-labore", que eu havia pulado indo direto ao `socio/central`.
 
 **Visitada: é um roteador.** Sem fluxo de assessor pendente, redireciona para `socio/central`. Explica o `fluxoAssessorPendente` do payload e **confirma que o teardown de pró-labore não tinha buraco ali.**
+
+---
+
+## 10. 🔴 3ª rodada — o cancelamento de verdade, e a divergência RESOLVIDA
+
+> 🔄 **09/09, com o Pedro conduzindo.** Ele emitiu uma nota, entrou no fluxo de cancelamento e me passou a URL da tela intermediária, autorizando ler e clicar em `Continuar`. 🔒 **O `Confirmar cancelamento` não foi tocado. A nota segue emitida.**
+>
+> 🔌 **1 endpoint**, `GET`. E ele vale por muitos.
+
+### 🔑 São DOIS caminhos de cancelamento, não um
+
+| Caminho | Rota | App | O que faz |
+|---|---|---|---|
+| **Informar cancelamento** | `sistema/informarCancelamento` | legado | registra cancelamento de nota **importada** (quem cancelou foi o portal) |
+| **Cancelar nota emitida** | `painel-de-controle/#/cancelamento-nota-emitida/inicio/{codVerificacao}` | **novo** | cancela de verdade nota emitida na plataforma |
+
+⚠️ **Por isso a 2ª rodada não achou.** Eu varri o menu, e o menu só lista o caminho legado. O caminho real **nasce do botão `Cancelar` dentro da nota**, e não tem entrada de menu.
+
+🎯 **Lição:** o mapa de rotas do `menu/get` é excelente, mas **não cobre fluxo que nasce de ação dentro de um item**. Menu dá as portas; ação dá os corredores.
+
+---
+
+### 🔴 A divergência do prazo, RESOLVIDA
+
+Tela 1 (`/inicio/{codVerificacao}`), com dois avisos:
+
+> **"Antes de continuar, fique atento às seguintes informações:"**
+> 📅 *"Notas canceladas **depois do dia 5 do próximo mês** possuem um **custo de operação contábil**."*
+> 🏛️ *"O tempo de cancelamento da nota fiscal **pode demorar um pouco em certas prefeituras**."*
+
+🔑 **As três informações que pareciam brigar não brigavam.** Eram três coisas diferentes:
+
+| Fonte | O que dizia | O que é de verdade |
+|---|---|---|
+| Rodapé da emissão | *"cancelar dentro do mesmo mês"* | ⚠️ **copy imprecisa deles.** A janela real é **até o dia 5 do mês seguinte** |
+| Portaria SMFA 075/2025 | **730 dias** | ✅ o **limite legal** do município |
+| Esta tela | *"depois do dia 5 do próximo mês tem custo"* | ✅ a **janela sem custo** |
+
+**A regra completa, agora fechada:**
+```
+até o dia 5 do mês seguinte  →  cancela, sem custo
+depois do dia 5              →  cancela, com "custo de operação contábil" (a reabertura, R$21,90)
+até 730 dias                 →  limite legal do município (Portaria SMFA 075/2025)
+```
+
+🔑 **O dia 5 é o fecho do mês contábil, e vale para TUDO.** Importar nota, alterar nota e cancelar nota: **antes do dia 5 é grátis, depois custa a mesma reabertura.** Três telas diferentes, uma regra só — e em nenhuma delas isso está dito assim.
+
+⚠️ **E o 2º aviso é honestidade que vale copiar:** *"pode demorar um pouco em certas prefeituras"*. Eles não prometem cancelamento imediato porque **não controlam o portal do município**. É a mesma família do `hasInstability`.
+
+---
+
+### Tela 2 — a confirmação
+
+Rota: `#/cancelamento-nota-emitida/detalhes/{codVerificacao}`
+
+> **"Tem certeza que deseja cancelar a seguinte nota fiscal?"**
+
+| Campo | Conteúdo |
+|---|---|
+| Número da Nota | 5 |
+| Cód. de Verificação | `NFS3106…0741` |
+| Data da Emissão | 11/08/2026 |
+| Cliente | LEGALIZE DIGITAL LTDA |
+| **Município / UF** | **Belo Horizonte - MG** |
+| Resumo dos serviços | a descrição completa |
+
+🎯 **Mostrar `Município / UF` na confirmação não é decoração.** É o município que cancela, e é ele que decide prazo e demora. O campo está ali porque a consequência depende dele.
+
+🔑 **A descrição do serviço carrega DUAS coisas anexadas automaticamente**, não uma:
+> *"Desenvolvimento de produto digital e gestão de equipe. Referente ao serviço prestado no mês de julho. --------------- Conforme **Lei 12.741/2012**, o percentual total de impostos incidentes neste serviço prestado é de aproximadamente **6.00%** **Valor líquido da Nota Fiscal = R$ 7.910,00**"*
+
+Na 2ª rodada eu só tinha visto a Lei 12.741. **Vai junto também o valor líquido.**
+
+---
+
+### 🔑 O modelo fiscal completo da NFS-e — 75 campos
+
+`GET /api/legado/nota001/obtercodverificacao/{codVerificacao}`
+
+⚠️ **Repare no caminho: `/api/legado/`.** A tela **nova** de cancelamento chama uma API **legada**, num serviço chamado `nota001`. 🎯 **Complementa o mapa de migração:** não é só que algumas telas ficaram no legado — **as telas novas ainda comem do backend velho.** A migração é de interface, não de sistema.
+
+```ts
+// identidade e ciclo
+idNota, numero, codVerificacao, idEmissor, numeroRps, serieRps, numeroLote
+dataEmissao, competencia, situacaoNota, status, tipo
+numeroNotaSubstituta, numeroNotaSubstituida       // 🔑 cadeia nos DOIS sentidos
+mesFechado: boolean                                // 🔑 decide se cancelar tem custo
+registrada, importada
+
+// fiscal
+regime: "SIMPLES"
+naturezaOperacao: "TRIBUTACAO_MUNICIPIO", naturezaOperacaoCodigo: "1"
+valorServico, valorDeducoes, baseCalculo, valorLiquidoNfse
+aliquota: 0.02, valorIss: 158.99, valorIssRetido, issRetido
+valorPis, valorCofins, valorInss, valorIr, valorCsll, outrasRetencoes
+descontoIncondicionado, descontoCondicionado
+codBeneficio
+
+// classificação
+codigoCnae, idCnaeEmpresa, situacaoCnae
+codigoItemServico: "17.06", codItemServicoDetalhe: "170601001"
+nbs, cClass, cclass, codigoNacionalServico         // 🔑 códigos da reforma
+codIbge
+
+// exportação  🔑
+servicoPrestadoExterior, estrangeiro
+moeda, cotacao, valorMoedaEstrangeira, dataInvoice
+
+// tomador
+cnpjTomador, cpfTomador, nomeRazaoTomador, inscricaoMunicipalTomador, idTomador
+logradouro/numero/complemento/bairro/cep/cidade/uf/pais + codigoMunicipio + nomeMunicipio
+telefoneTomador, emailTomador
+incentivadorCultural, enviarEmail, enviarEmail001, emitirPorCnae
+```
+
+### 🔴 O problema do centavo, 3ª ocorrência — e agora no XML da nota
+
+```
+campo  aliquota : 0.02          →  7.910 × 2%    = R$ 158,20
+campo  valorIss : 158.99        →  158,99 ÷ 7.910 = 2,0100%
+```
+
+**Diferença: 79 centavos.** Quem recalcular a nota pelo campo `aliquota` chega em outro número.
+
+🔴 **Esta é a mais grave das três**, porque `aliquota` é campo que vai **no XML da nota fiscal**, não só na tela:
+
+| # | Onde | Armazenado | Real |
+|:--:|---|---|---|
+| 1 | DAS | `6%` exibido | 5,99987% |
+| 2 | Teto INSS | `932,31` exibido | 932,3105 |
+| 3 | **ISS da nota** | **`aliquota: 0.02`** | **2,0100%** |
+
+🎯 **A regra que já estava escrita ganha um terceiro caso e vira inegociável:** **arredondamento se decide uma vez, se escreve, e se testa.** Um campo de exibição nunca pode ser a fonte de um recálculo.
+
+### ✅ E a conta fecha por dois caminhos independentes
+
+```
+7.910,00 × 2,01%          = 158,99   ← pela alíquota de ISS da nota
+  474,59 × 33,5%          = 158,99   ← pela parcela de ISS dentro do DAS (Anexo III, faixa 1)
+```
+
+🔑 **O `valorIss` da nota NÃO é uma cobrança municipal separada: é a parcela de ISS que já está dentro do DAS.** Empresa do Simples não recolhe ISS à parte, e o número na nota é informativo.
+
+✅ **Isso ratifica, pela terceira vez e por caminho novo, a repartição do Anexo III** (ISS = 33,5% na 1ª faixa) que a gente vinha usando. Antes era tabela; agora bate em três lugares independentes.
+
+### Três campos que mudam o desenho
+
+| Campo | Por quê |
+|---|---|
+| **`mesFechado: true`** | é **o** flag que decide se cancelar/alterar tem custo. Não é data calculada na tela: é estado da competência, vindo do servidor |
+| **`numeroNotaSubstituida`** | a cadeia de substituição aponta **nos dois sentidos**. Na 2ª rodada eu só tinha visto `numeroNotaSubstituta` |
+| **`moeda` · `cotacao` · `valorMoedaEstrangeira` · `dataInvoice`** | **exportação é cidadã de primeira classe no modelo da nota**, com câmbio e data de invoice. Combina com o `possuiFaturamento` separado de interno/externo visto em [[2026-09-09-contabilizei-aliquotas]] |
 
 ---
 

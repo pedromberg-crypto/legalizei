@@ -52,6 +52,85 @@ Ou seja: acertar o desenho do pró-labore **destrava** o desenho do cálculo de 
 
 ---
 
+## 📦 Contrato de dados (validado em produção pelo líder)
+
+> Extraído dos 17 endpoints do líder em 09/09, na varredura retroativa de API. Detalhe em [[2026-09-09-contabilizei-pro-labore|§9 da evidência]].
+
+### O payload de uma competência — é o formato da nossa tela "por que pago isso"
+
+```ts
+type CalculoCompetencia = {
+  faturamentoTotal: number
+  nomeMesCompetencia: string
+
+  dasSimples: {
+    impostoBruto: number
+    deducaoRetencao: number            // 🔑 ISS retido na fonte ABATE do DAS
+    impostoTotal: number
+    faturamentosPorAliquota: [{ aliquota, faturamento, imposto }]   // 🔑 ARRAY
+    inconsistente: boolean             // 🔑 flag de cálculo inconsistente
+  }
+
+  darf: {
+    inss: { prolabore, aliquota, totalImposto, teto }
+    irrf: { prolaboreMaximoIsencaoIRRF, prolabore, deducaoSimplificada,
+            valorDeducao, baseCalculoIrrf, aliquota, subTotal, deducaoIrrf, totalImposto }
+    total: number
+  }
+
+  valorProlaboreUltimos12Meses: number
+  valorFaturamentoUltimos12Meses: number
+  percentualFatorR: number             // 🔴 eles têm e escondem. Nós MOSTRAMOS
+  ultimaCompetenciaSemFaturamento: boolean
+  teveAumentoProlabore: boolean
+  historicoFaturamento: [{ mes, valorProlabore, valorFaturamento }]  // 12 meses
+}
+```
+
+🎯 **Um payload só já tem tudo:** os dois impostos, as duas bases, o Fator R, o histórico de 12 meses e as flags de exceção.
+
+### A configuração do sócio
+
+```ts
+{
+  tipoGerenciamento: "INTELIGENTE" | "PERSONALIZADO" | …
+  elegivelNoMotor: boolean           // 🔑 o motor NÃO é para todos
+  socios: [{
+    valorProlabore, dataUltimaAtualizacao, admin, responsavelReceita,
+    possuiDuploVinculo, cnpjDuploVinculo, nomesDependentes,
+    exibirInsightIrrf: boolean,
+    fluxoAssessorPendente, fluxoAssessorFinalizado   // 🔑 há GENTE no meio
+  }]
+  valorMaximoInss: 932.3105          // ⚠️ 4 casas; a tela mostra 932,31
+  zerarProlabore: boolean            // o toggle "meses sem faturamento"
+  valorProlaboreMinimo: number|null  // o piso do sócio
+  deveExibirAlertaDividendos: boolean
+  prolaboreIndisponivel: boolean
+}
+```
+
+### 🔴 Três coisas que a API revelou e mudam o desenho
+
+| # | Achado | Efeito na nossa spec |
+|:--:|---|---|
+| 1 | **`percentualFatorR: 37.72` viaja no payload**, e a tela desenha "≥ 28%" | Encerra a dúvida: esconder é **decisão de produto**, não limitação. Reforça a nossa escolha de mostrar a folga |
+| 2 | **A alíquota efetiva real é 5,99987%**, não 6% (`474,59 ÷ 7.910`) | 🔴 O centavo **não é arredondamento**: é a exibida ≠ a calculada. Nossa regra: ou mostra a efetiva com as casas que importam, ou o valor bate com a arredondada. Nunca as duas |
+| 3 | **`fluxoAssessorPendente` existe** | A "gestão automática" tem **humano no meio**. Se a gente prometer 100% automático, promete mais que o líder entrega |
+
+⚠️ **`valorMaximoInss: 932.3105`** repete o padrão do centavo: o dado tem 4 casas, a tela mostra 2. **Decidir onde arredondar, uma vez, e testar.**
+
+### Casos que a API expôs e não estavam na nossa lista
+
+| Caso | Onde aparece |
+|---|---|
+| **ISS retido abate do DAS** | `deducaoRetencao` — liga com `valorPendenteRetencao` por cliente na [[emitir-nota-fiscal|NF]] |
+| **Várias alíquotas na mesma competência** | `faturamentosPorAliquota[]` é array (várias atividades, ou interno + externo) |
+| **Desconto simplificado no IRRF** | `deducaoSimplificada` |
+| **Adiantamento de lucros** | `totalAdiantamentos`, separado do distribuído |
+| 🔴 **Informe bloqueado por pendência** | `informerendimento/…/restricoes`: pendência documental ou débito federal **impede o informe**, e a regularização é **serviço pago** (`valorServicoAdicional`) |
+
+---
+
 ## ✍️ O desenho da NOSSA funcionalidade
 
 > Base: tudo acima, filtrado pelo nosso propósito (ME serviço no Simples, BH/MG, app que já tem o A1 do cliente em posse).

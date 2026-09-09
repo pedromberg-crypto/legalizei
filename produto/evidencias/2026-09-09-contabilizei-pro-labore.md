@@ -15,6 +15,8 @@ tags: [produto, evidencia, concorrente, pro-labore, folha]
 >
 > **Método:** navegação só-leitura na conta logada do Pedro. Nenhum botão de salvar, confirmar, recalcular ou pagar foi clicado. **Único toque:** um rádio foi selecionado na tela de gestão para revelar o conteúdo condicional, e a tela foi abandonada sem confirmar. Regra completa em [[_metodo]].
 >
+> 🔄 **Backfill de 09/09 (2ª rodada):** este foi o **primeiro** teardown da série e rodou **antes** de a leitura de API virar passo do método. A varredura de API foi feita depois, a pedido do Pedro, e está em **§9**.
+>
 > **Rotas visitadas:** `#/socio/central` · `#/socio/editar-gestao/{id}` · `#/socio/{id}/duplo-vinculos` · `#/socio/comprovante-rendimentos` · `/sistema/#/prolabore` · `/sistema/#/ficha-financeira` · `#/impostos` · `#/impostos-a-pagar/como-foi-calculado`
 >
 > **Ligações:** [[pro-labore]] (a spec) · [[_matriz-dependencia]] (linhas 4.5, 2.4, 2.7) · [[2026-09-09-verificacao-auditoria-tributaria]] · [[2026-07-21-dossie-plataforma-logada]]
@@ -349,6 +351,217 @@ Com essa folga, o valor ótimo do mês cairia abaixo do salário mínimo (28% da
 ⚠️ **A escolha de UX mais reveladora da página:** eles mostram `maior ou igual a 28%`, **não** os 37,7% reais. Esconder a folga evita a pergunta óbvia ("se sobra folga, por que ainda pago pró-labore?"), mas também esconde a informação que o dono da empresa mais quer: **quanta margem eu tenho**. É uma decisão de produto, não uma limitação técnica.
 
 ---
+
+---
+
+## 9. 🔌 As APIs do pró-labore — varredura retroativa (09/09, 2ª rodada)
+
+> 🔄 **Backfill.** Este foi o **primeiro** teardown da série e rodou **antes** de a leitura de API virar passo do [[_metodo]]. O Pedro pediu a varredura retroativa. Rodada com o rastreio ligado **antes** de navegar, como a regra manda.
+>
+> 🔒 Só `GET`, mesma origem, sessão do Pedro, endpoints que a própria página chamou. Os payloads trazem CPF e nome: **aqui está a forma e os valores fiscais, nunca o dado pessoal.**
+
+### Os 17 endpoints, em 3 famílias
+
+| Família | Endpoint (`/api/plataforma/…`) |
+|---|---|
+| **pró-labore** | `prolabore/central/rollout` · `prolabore/central/init` · `prolabore/central/historico/{idSocio}` |
+| **informe / lucros** | `informerendimento/v2/{ano}/restricoes` · `informerendimento/carta-responsabilidade/{ano}` · `informerendimento/recuperardadosdistribuicaocliente` · `informerendimento/listSocioInformeRendimentos/{ano}` · `informerendimento/clientedistribuilucro?ano=` |
+| **impostos** | `impostos/rollout` · `impostos/v4/impostos-a-pagar/init` · `impostos/v4/impostos-a-pagar/previsao?dados=ESTE_MES` · `…?dados=EM_ATRASO` · **`impostos/como-imposto-foi-calculado/init`** |
+
+---
+
+### 🔑 `impostos/como-imposto-foi-calculado/init` — o motor inteiro num payload
+
+```json
+{
+  "faturamentoTotal": 7910,
+  "nomeMesCompetencia": "Agosto",
+
+  "dasSimples": {
+    "impostoBruto": 474.59,
+    "deducaoRetencao": 0,              // 🔑 ISS retido DEDUZ do DAS
+    "impostoTotal": 474.59,
+    "faturamentosPorAliquota": [       // 🔑 ARRAY: várias alíquotas na mesma competência
+      { "aliquota": 6, "faturamento": 7910, "imposto": 474.59 }
+    ],
+    "inconsistente": false             // 🔑 flag de inconsistência do cálculo
+  },
+
+  "darf": {
+    "inss": { "prolabore": 1621, "aliquota": 11, "totalImposto": 178.31, "teto": 932.31 },
+    "irrf": {
+      "prolaboreMaximoIsencaoIRRF": 2428.8,
+      "prolabore": 1621,
+      "deducaoSimplificada": false,    // 🔑 desconto simplificado × deduções legais
+      "valorDeducao": null, "baseCalculoIrrf": null, "aliquota": null,
+      "subTotal": null, "deducaoIrrf": null, "totalImposto": null
+    },
+    "total": 178.31
+  },
+
+  "valorProlaboreUltimos12Meses": 16564,
+  "valorFaturamentoUltimos12Meses": 43910,
+  "percentualFatorR": 37.72,           // 🔴 O NÚMERO REAL VAI NO PAYLOAD
+  "ultimaCompetenciaSemFaturamento": false,
+  "teveAumentoProlabore": false,
+  "historicoFaturamento": [ { "mes": "ago./26", "valorProlabore": 1621, "valorFaturamento": 7910 }, … 12 meses ]
+}
+```
+
+### 🔴 Confirmação definitiva: eles escondem o Fator R na renderização, não no dado
+
+A tela mostra **`maior ou igual a 28%`**. O payload traz **`percentualFatorR: 37.72`**.
+
+🔑 **O dado exato viaja até o navegador e é descartado na hora de desenhar.** Não é limitação de cálculo nem de arquitetura: é **decisão de produto**, tomada depois de o número já estar na mão. Isso encerra a dúvida que ficou registrada em [[2026-09-09-contabilizei-aliquotas]] e sustenta a nossa escolha oposta (mostrar a folga).
+
+### ✅ O mistério do centavo, resolvido
+
+Refazendo as contas com os números do payload:
+
+```
+Fator R:  16.564 ÷ 43.910 = 37,72%          ✓ idêntico ao campo `percentualFatorR`
+DAS:      474,59 ÷ 7.910  = 5,99987%        ← a alíquota EFETIVA real
+          7.910 × 6%      = 474,60          ← o que daria com a exibida
+```
+
+🔑 **A alíquota real não é 6%: é 5,99987%.** A tela mostra `6,00%` porque é o `aliquotaApresentacao` (campo que a evidência da [[2026-09-09-contabilizei-nota-fiscal|NF]] mostrou existir separado do `aliquotaBase`). **O centavo não é bug de arredondamento: é a alíquota exibida sendo diferente da calculada.**
+
+🕓 **Por que 5,99987% e não 6%?** Hipótese, **não conclusão**: a empresa é de início recente (histórico com meses zerados), e o Simples manda **proporcionalizar o RBT12** nos 12 primeiros meses (LC 123 art. 18 §2º). Isso mudaria a base e explicaria a fração. **Não deduzir** — vale a regra de sempre: confirmar antes de virar código.
+
+⚠️ **A lição de produto vale mesmo sem a explicação:** eles **exibem uma alíquota e cobram por outra**, com diferença de centavos. A nossa regra precisa ser: **ou mostra a efetiva com as casas que importam, ou mostra a arredondada e o valor bate com ela.** As duas coisas ao mesmo tempo é o que gera a ligação do cliente.
+
+### Três campos que revelam casos que a gente não tinha mapeado
+
+| Campo | O que é |
+|---|---|
+| **`deducaoRetencao`** | ISS retido na fonte **abate do DAS**. Liga direto com o `valorPendenteRetencao` por cliente visto na [[2026-09-09-contabilizei-nota-fiscal|NF]] |
+| **`faturamentosPorAliquota[]`** | é **array**: a mesma competência pode ter faturamento em alíquotas diferentes (várias atividades, ou interno + externo). Nosso modelo precisa nascer assim |
+| **`deducaoSimplificada`** | no IRRF, o **desconto simplificado** como alternativa às deduções legais. Não estava no nosso radar |
+
+---
+
+### 🔑 `prolabore/central/init` — a configuração, e o que ela esconde
+
+```ts
+{
+  tipoGerenciamento: "INTELIGENTE",     // o modo escolhido
+  elegivelNoMotor: boolean,             // 🔑 nem toda empresa pode usar o motor
+  socios: [{
+    id, cpf, nome,
+    possuiProlabore, responsavelReceita, admin,
+    valorProlabore, dataUltimaAtualizacao,
+    exibirInsightIrrf: boolean,         // insight de IRRF é condicional
+    possuiDuploVinculo, indicativoDuploVinculo, cnpjDuploVinculo,
+    nomesDependentes,
+    insightGestao: "INTELIGENTE",
+    fluxoAssessorPendente: boolean,     // 🔑 existe FLUXO DE ASSESSOR
+    fluxoAssessorFinalizado: boolean
+  }],
+  qtdSocioGestaoInteligente: number,
+  totalProLabore: number,
+  prolaboreIndisponivel: boolean,
+  valorMaximoInss: 932.3105,            // 🔑 4 casas, a tela mostra 932,31
+  baseCalculoIrrf: 5000,
+  zerarProlabore: boolean,              // o toggle "meses sem faturamento"
+  deveExibirAlertaDividendos: boolean,  // 🔑 alerta de dividendos
+  valorProlaboreMinimo: number | null   // o piso do sócio
+}
+```
+
+**O que isso entrega que a tela não entregava:**
+
+| | Achado |
+|:--:|---|
+| 🔑 | **`elegivelNoMotor`**: a Gestão Inteligente **não é para todos**. Existe critério de elegibilidade que a tela nunca menciona |
+| 🔑 | **`fluxoAssessorPendente` / `fluxoAssessorFinalizado`**: há **gente no meio do caminho**. O pró-labore não é 100% automático como a copy sugere |
+| ⚠️ | **`valorMaximoInss: 932.3105`** com 4 casas, exibido como `932,31`. **Mesmo padrão do centavo:** o dado tem mais precisão que a tela |
+| 🔑 | **`deveExibirAlertaDividendos`**: existe alerta de dividendos que não apareceu nesta conta |
+| 🔑 | **`zerarProlabore`** e **`valorProlaboreMinimo`** são campos de primeira classe, não preferência escondida |
+
+`prolabore/central/rollout` → `{ centralSocio: true }`. Feature flag por empresa, como no emissor.
+
+`prolabore/central/historico/{idSocio}` → `[{ competencia, nome, prolabore, descontos }]`, tudo `string` (já formatado no servidor).
+
+---
+
+### 🔴 `informerendimento/v2/{ano}/restricoes` — o informe é BLOQUEÁVEL
+
+```ts
+{
+  restricoes: {
+    pendenciaDocumental: {
+      possuiPendencia: boolean,
+      fluxoRegularizacao: string,
+      valorServicoAdicional: number | null,   // 🔴 regularizar é SERVIÇO PAGO
+      pendencias: []
+    },
+    debitosFederais: {
+      possuiPendencia: boolean,
+      divergenciaContabilFiscal: boolean,     // 🔑 campo próprio
+      debitos: []
+    }
+  },
+  processoReabertura: { status: string }
+}
+```
+
+🔴 **O informe de rendimentos não sai se houver pendência documental ou débito federal.** E `valorServicoAdicional` mostra que a regularização é **monetizada**, no mesmo padrão do Termo de Exclusão (que cobra R$95 na mensalidade).
+
+⚠️ **Isso é uma dependência que a gente não tinha mapeado:** o documento que o sócio precisa para o IRPF depende de a contabilidade estar em dia. **Trava de fim de ano, com efeito em abril.**
+
+### 🔑 `informerendimento/recuperardadosdistribuicaocliente` — distribuição de lucros
+
+```ts
+{
+  ano, saldo, totalDistribuido,
+  totalAdiantamentos: number,        // 🔑 ADIANTAMENTO de lucros
+  exercicioFechado: boolean,
+  lucrosSocios: [{ id, socio, valor }],
+  habilitaTelaCliente: boolean,
+  podeAlterar: boolean,
+  motivoNaoPodeAlterar: string | null,   // 🔑 diz POR QUE não pode
+  dataLimite: string,                    // 🔑 prazo para alterar
+  perfil: string,
+  fechadoRestritivo: boolean,
+  exibirAviso: boolean
+}
+```
+
+🔑 **`totalAdiantamentos` é campo próprio.** Adiantamento de lucros (antes do exercício fechar) é caso real e tem tratamento separado do distribuído.
+
+🎯 **`motivoNaoPodeAlterar`**: quando bloqueia, o servidor manda **o motivo**, não só o `false`. É o oposto do botão cinza sem explicação, e vale copiar.
+
+---
+
+### 📦 O que este backfill acrescenta ao nosso contrato de dados
+
+```ts
+type CalculoCompetencia = {
+  faturamentoTotal: number
+  nomeMesCompetencia: string
+  dasSimples: {
+    impostoBruto: number
+    deducaoRetencao: number              // ISS retido abate
+    impostoTotal: number
+    faturamentosPorAliquota: [{ aliquota, faturamento, imposto }]   // ARRAY
+    inconsistente: boolean
+  }
+  darf: {
+    inss: { prolabore, aliquota, totalImposto, teto }
+    irrf: { prolaboreMaximoIsencaoIRRF, prolabore, deducaoSimplificada,
+            valorDeducao, baseCalculoIrrf, aliquota, subTotal, deducaoIrrf, totalImposto }
+    total: number
+  }
+  valorProlaboreUltimos12Meses: number
+  valorFaturamentoUltimos12Meses: number
+  percentualFatorR: number               // 🔴 nós MOSTRAMOS
+  ultimaCompetenciaSemFaturamento: boolean
+  teveAumentoProlabore: boolean
+  historicoFaturamento: [{ mes, valorProlabore, valorFaturamento }]  // 12 meses
+}
+```
+
+🎯 **Este é o payload de uma tela só ("por que pago isso"), e ele já tem tudo:** os dois impostos, as duas bases, o Fator R, o histórico de 12 meses e as flags de exceção. **É o formato que a nossa tela A2 precisa.**
 
 ---
 

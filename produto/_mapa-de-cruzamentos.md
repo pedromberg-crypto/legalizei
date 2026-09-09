@@ -91,7 +91,7 @@ Pró-labore ─────> FOLHA 12m ──> FATOR R ──┘                
 |---|---|
 | **Como se tocam** | `DAS = faturamento do mês anterior × alíquota efetiva`. A alíquota efetiva sai da faixa do RBT12 dentro do Anexo definido pelo Fator R |
 | **Vencimento** | dia **20**, e **PRORROGA** se cair em dia não útil |
-| ⚠️ **Arredondamento** | Medido no líder: `7.910,00 × 6% = 474,60`, e a tela mostra **474,59**. Um centavo. Nossa regra tem que estar escrita **antes** do motor, e ser a mesma na tela e na guia |
+| ✅ **Arredondamento, resolvido em 09/09** | Não era arredondamento: **a alíquota efetiva real é 5,99987%** (`474,59 ÷ 7.910`), e a tela exibe `6,00%` por um campo `aliquotaApresentacao` separado. Regra que fica: **ou exibe a efetiva, ou o valor bate com a exibida. Nunca as duas** |
 
 ### 4. Pró-labore ⇄ DARF Unificado
 
@@ -111,6 +111,8 @@ Pró-labore ─────> FOLHA 12m ──> FATOR R ──┘                
 | **DCTFWeb** | consome o eSocial e é quem **gera o DARF numerado**, dia 15, antecipa |
 | **Cruzamento fiscal** | A Receita cruza **EFD-Reinf × DCTFWeb** para achar pró-labore declarado e não pago |
 | **Informe de rendimentos** | O pró-labore do ano vira o informe do sócio, que alimenta o **IRPF** dele |
+| 🔴 **O informe é BLOQUEÁVEL** | Pendência documental ou débito federal **impedem a emissão do informe** (`informerendimento/…/restricoes`), e no líder a regularização é **serviço pago**. É trava de fim de ano com efeito em abril, e não estava na nossa lista |
+| 🔑 **ISS retido abate o DAS** | `deducaoRetencao` no cálculo da competência, alimentado pelo `valorPendenteRetencao` de cada cliente. **Emitir nota para tomador que retém muda o DAS do mês** |
 
 ### 6. Alíquota ⇄ enquadramento (e a saída dele)
 

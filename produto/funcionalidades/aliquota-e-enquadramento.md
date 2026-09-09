@@ -54,7 +54,11 @@ O líder mostra o número (`6,00%`) e esconde a alavanca. Nossa tese inteira é 
 | 6 | Item da **LC 116** decide o ISS, e um CNAE pode ter **mais de um item** | modal "Especifique a atividade" | 🟡 mapear os itens dos nossos 87 CNAEs |
 | 7 | Vencimento **dia 20**, e **PRORROGA** em dia não útil (diferente do DARF, que antecipa) | Res. CGSN 140/2018 art. 40 §3º · ✅ visto na tela (DAS 21/09 × DARF 18/09) | 🟢 |
 
-⚠️ **Regra de arredondamento, pendente e obrigatória.** No líder, `7.910,00 × 6% = 474,60` aparece como **474,59**. Um centavo. A nossa regra tem que estar **escrita antes do motor** e ser idêntica na tela e na guia, senão o cliente encontra a diferença e a confiança vai junto.
+✅ **O centavo foi RESOLVIDO em 09/09, pela API.** Não era arredondamento: **a alíquota efetiva real é 5,99987%**, não 6%. O payload traz `impostoTotal: 474.59`, e `474,59 ÷ 7.910 = 5,99987%`. A tela mostra `6,00%` porque é o `aliquotaApresentacao`, campo que existe **separado** do valor de cálculo.
+
+🕓 **Por que 5,99987%?** Hipótese, não conclusão: empresa de início recente proporcionaliza o RBT12 nos 12 primeiros meses (LC 123 art. 18 §2º). **Confirmar antes de virar código.**
+
+🔴 **A regra que nasce disso, e é obrigatória:** **ou** exibimos a alíquota efetiva com as casas que importam, **ou** exibimos a arredondada e o valor cobrado bate com ela. **Nunca as duas ao mesmo tempo** — que é exatamente o que o líder faz, e é o que gera a ligação do cliente. O mesmo vale para `valorMaximoInss: 932.3105` exibido como `932,31`.
 
 ---
 

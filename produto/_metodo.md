@@ -78,6 +78,8 @@ Nasceu como saída de emergência (um `<select>` nativo não respondeu ao CDP) e
 
 🔒 **Limite, e é duro:** só `GET` de leitura, na sessão do Pedro, de endpoint que **a própria página já chamou**. Nunca `POST`, `PUT` ou `DELETE`. Nunca endpoint adivinhado. Nunca reproduzir dado pessoal no vault — só a forma.
 
+🔄 **Teardown antigo sem API se completa depois.** O de pró-labore rodou antes desta regra existir e foi backfillado em 09/09. Rendeu 3 achados que a tela não dava: o Fator R exato viajando no payload e sendo descartado no desenho, a alíquota efetiva real (5,99987%, que resolveu o mistério do centavo) e um **fluxo de assessor humano** dentro da "gestão automática". **Vale voltar em qualquer teardown que não tenha a seção de API.**
+
 ### 5. Conferir a aritmética, sempre
 Não aceitar o número: refazer a conta.
 

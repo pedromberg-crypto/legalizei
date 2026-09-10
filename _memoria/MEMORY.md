@@ -1,5 +1,7 @@
 # Memory Index — Legalize
 
+- [Contrato do lider: enumera o incluso, nao o avulso](legalize-contrato-lider-enumera-incluso.md) — 10/09: 11 clausulas + 3 anexos lidos; a 4.2 e lista de exclusao nominal; a 5.4 remete pro anexo errado; ECD esta incluida E vendida.
+- [A casa tem DOIS CNPJs](legalize-entidades-duas-empresas.md) — 10/09: Legalizai Tecnologia (41.569.345/0001-48, ex-"Legalize Digital") + Legalize Auditoria (12.423.332/0001-68, CRC-MG 007900/O).
 - [Pasta produto/ e a fonte-verdade das funcionalidades](legalize-pasta-produto-fonte-verdade.md) — 09/09: frente ganhou pasta-raiz; spec viva e evidencia datada SEPARADAS; funcionalidades-me-simples virou redirecionador.
 - [Metodo de teardown funcionalidade a funcionalidade](legalize-metodo-teardown-funcionalidade.md) — 09/09: conta de producao, so leitura; ler o DOM antes de clicar; refazer toda aritmetica; seguir ate onde vira guia.
 - [Vocabulario do vault: doutrina virou trava](legalize-vocabulario-tipo-derivou.md) — 09/09 RESOLVIDO: verificar.js estava cego em 79% por CRLF e nunca rodava. 8 tipos, 0 violacoes, 0 links quebrados, plugado no gerar-mapa.

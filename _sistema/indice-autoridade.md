@@ -72,6 +72,8 @@ Então a pergunta nunca é *"esse doc está vivo?"*. É sempre **"esse doc manda
 | **DESENHO de uma funcionalidade** (o que o dev implementa) | `produto/funcionalidades/<nome>.md` | ❌ nunca a evidência do concorrente: ela é foto com data e não manda em nada |
 | **O que o CONCORRENTE faz**, com data | `produto/evidencias/<data>-<fonte>-<tema>.md` | ⚠️ **envelhece sozinho.** Nunca ratificar dado fiscal por tela de concorrente |
 | **Como se destrincha uma funcionalidade** · regra de navegação na conta do líder | [[_metodo]] (`produto/`) | — |
+| **CNPJs da casa** · CRC · quem assina o quê · responsabilidade técnica | [[entidades-legais]] (`execucao/`) | ❌ o ADR de 03/08 gravou a razão social ANTIGA ("Legalize Digital"). São **duas** empresas, não uma |
+| **O que o contrato do LÍDER diz**, cláusula a cláusula | [[2026-09-10-contabilizei-contrato-integral]] (`produto/evidencias/`) | ⚠️ a captura de 27/08 ([[2026-08-27-funil-4-etapas-contrato-completo]]) é **parcial**: não tem a cláusula 1. Quando divergirem, a de 10/09 ganha |
 | **Estado corrente do projeto** | [[HOME]] §Agora | — |
 | **Valores a validar com gente** | [[fila-validacao-humana]] | — |
 

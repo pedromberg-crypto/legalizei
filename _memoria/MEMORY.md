@@ -1,5 +1,6 @@
 # Memory Index — Legalize
 
+- [Lucro 2026 (Lei 15.270/2025) + Carta CFC obrigatoria](legalize-lucro-2026-e-carta-cfc.md) — 10/09: lucro sacado vai pra EFD-Reinf com IRRF antecipado; ATA ate 31/01/2026 isenta o acumulado. Carta de Responsabilidade (CFC 1.590/2020) trava o fechamento contabil.
 - [Documento importante se le INTEIRO](legalize-leitura-integral-documento.md) — 10/09 TRAVADO no CLAUDE.md: 100% do texto, literal salvo em arquivo, e o que ficou de fora vira lista com nome. Nasceu de eu entregar 12% como se fosse tudo.
 - [Contrato do lider: enumera o incluso, nao o avulso](legalize-contrato-lider-enumera-incluso.md) — 10/09: 11 clausulas + 3 anexos lidos; a 4.2 e lista de exclusao nominal; a 5.4 remete pro anexo errado; ECD esta incluida E vendida.
 - [A casa tem DOIS CNPJs](legalize-entidades-duas-empresas.md) — 10/09: Legalizai Tecnologia (41.569.345/0001-48, ex-"Legalize Digital") + Legalize Auditoria (12.423.332/0001-68, CRC-MG 007900/O).

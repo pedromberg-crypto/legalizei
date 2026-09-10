@@ -76,13 +76,15 @@ Então: **a spec manda, a evidência é fonte.** É a mesma doutrina do [[indice
 
 ---
 
-## 📊 Painel de cobertura de mapeamento (10/09)
+## 📊 Painel de cobertura de mapeamento (revisado 11/09)
 
 > **O que mede:** quanto do que eu precisaria para **escrever a spec pro dev** já está documentado — modelo de dados, regras de negócio, dependência externa resolvida e cruzamentos declarados.
 >
-> ⚠️ **É avaliação, não medição.** O % é julgamento meu a partir dos 6 teardowns, e serve para priorizar, não para reportar progresso.
+> ⚠️ **É avaliação, não medição.** O % é julgamento meu a partir dos teardowns, e serve para priorizar, não para reportar progresso.
 >
-> 🔒 **Recorte:** só os **38 itens core** (`balde: 🟢`) das seções §1–7. **Fora:** os 15 à-la-carte (§8), os rejeitados (§9) e os de backlog. Foi pedido do Pedro: *"quero tabela apenas de funcionalidades que o usuário terá acesso pelo plano"*.
+> 🔒 **Recorte:** só os **49 itens core** (`balde: 🟢`). **Fora:** os 15 à-la-carte (§8 do catálogo), os rejeitados e os de backlog.
+>
+> 🔄 **O que mudou nesta revisão:** **folha de pagamento entrou como §8** (decisão de 10/09, que revogou a de 08/09). Três itens novos nasceram das leituras de 10/09: **5.5** Carta de Responsabilidade, **5.6** distribuição de lucro e **6.4** contrato e aceites. E **6.1** saltou de 30% para 75%, porque a Área de Documentos finalmente foi aberta.
 
 ### §1 · Home e navegação — 68%
 
@@ -122,14 +124,14 @@ Então: **a spec manda, a evidência é fonte.** É a mesma doutrina do [[indice
 | # | Funcionalidade | Nossa tela | % | O que falta |
 |:--:|---|---|:--:|---|
 | 4.1 | Pró-labore interativo | `/pro-labore` | 95% | — |
-| 4.2 | Fator R + alerta preditivo | `/pro-labore` | 80% | falta o **gatilho**. 🔑 A fórmula e o `incideINSS` **por rubrica** estão (veio do teardown de folha) |
+| 4.2 | Fator R + alerta preditivo | `/pro-labore` | 80% | falta o **gatilho**. 🔑 A fórmula e o `incideINSS` **por rubrica** vieram do teardown de folha, que agora é core (§8) |
 | 4.3 | Toggle sem faturamento | `/pro-labore` | 95% | — |
 | 4.4 | Recibo + informe | — | 90% | — |
 | 4.5 | Guia do INSS (DARF) | — | 80% | 🔴 Serpro |
 | 4.6 | Duplo vínculo | `/mais/socios` | 90% | — |
 | 4.7 | Dependentes (IRRF) | — | 40% | só vi o contador "0" e a coluna `Dep. IRRF`. Nunca abri |
 
-### §5 · Estar em dia — 81%
+### §5 · Estar em dia — 75%
 
 | # | Funcionalidade | Nossa tela | % | O que falta |
 |:--:|---|---|:--:|---|
@@ -137,14 +139,32 @@ Então: **a spec manda, a evidência é fonte.** É a mesma doutrina do [[indice
 | 5.2 | Declarações entregues | `/mais/declaracoes` | 90% | 🔴 transmissão depende do Serpro |
 | 5.3 | Calendário de obrigações | `/obrigacoes` | 90% | — |
 | 5.4 | Vigília preditiva | `/inicio` (bloco) | 60% | 🔴 **DTE-SN sem caminho** + falta o gatilho |
+| 5.5 🆕 | **Carta de Responsabilidade anual** | — | 80% | 🔑 **obrigatória** (Res. CFC 1.590/2020, art. 3º) e **trava o fechamento contábil**. Temos o texto literal (6.418 car.); falta a tela, o lembrete anual e o ciclo de aceite |
+| 5.6 🆕 | **Distribuição de lucro e EFD-Reinf** | — | **45%** | 🔴 a partir de 2026 todo saque de sócio vai pra EFD-Reinf, com IRRF antecipado. 🕓 **Lei 15.270/2025 não ratificada em fonte primária.** Sem o extrato integrado, depende do envio do cliente |
 
-### §6 · Documentos e certificado — 67%
+### §6 · Documentos e certificado — 79%
 
 | # | Funcionalidade | Nossa tela | % | O que falta |
 |:--:|---|---|:--:|---|
-| 6.1 | Documentos da empresa | `/mais/documentos` | **30%** | 🔴 vi "Área de Documentos" no painel e **nunca abri** |
+| 6.1 | Documentos da empresa | `/mais/documentos` | **75%** ↑ | 🔄 era 30%. Área de Documentos aberta em 10/09: **10 pastas fixas** do que o cliente envia. ⚠️ Só a área `DOCUMENTOS_CONTABEIS` foi vista, e **não há upload de documento da empresa** (contrato social, cartão CNPJ, alvará) — o que a nossa tela provavelmente precisa ter |
 | 6.2 | Certificado digital | `/mais/certificado` | 80% | falta o fluxo de renovação. 🔑 4 de 5 obrigações mensais dependem dele |
+| 6.4 🆕 | **Contrato e aceites do cliente** | — | 70% | 🔑 arquitetura mapeada: contrato é o tronco, Termos são galhos com **trilha própria de data, IP e navegador**. **Requisito de engenharia**: cada cliente fica preso à versão que aceitou, e com 3 coortes de preço isso deixa de ser hipótese |
 | 6.6 | Dados da empresa | `/mais/empresa` | 90% | — |
+
+### 🆕 §8 · Folha de pagamento — 64%
+
+> 🔄 **Entrou no core em 10/09**, revogando a decisão de 08/09 que a deixava no backlog. Regra travada: **R$39 por colaborador ativo na competência, teto de 10**, contratado no app depois da abertura.
+
+| # | Funcionalidade | Nossa tela | % | O que falta |
+|:--:|---|---|:--:|---|
+| 8.1 | Cadastrar colaborador | — | **35%** | 🔴 o formulário do líder **está bloqueado** (*"entre em contato com a nossa equipe"*). **Nunca vi os campos.** O que sei veio do layout do demonstrativo, por inferência |
+| 8.2 | Rubricas e lançamentos do mês | — | **95%** | 🔑 **606 rubricas** com `incideINSS`, `incideFGTS`, `incideIRRF` e o **plano de contas** por linha. É o ativo mais completo que temos de qualquer frente |
+| 8.3 | Holerite e demonstrativo | — | 55% | vi as colunas do cabeçalho (PIS/NIT, CBO, Dep. IRRF); nunca vi um holerite montado |
+| 8.4 | Fechamento da competência | — | 75% | `getMesCompetencia` vem do **servidor**, coerente com o padrão. Falta a regra de trava |
+| 8.5 | Obrigações mensais (eSocial, EFD-Reinf, DCTFWeb) | — | 70% | prazos e requisitos mapeados (dia 15, certificado ou procuração). 🔴 **transmissão depende do Serpro** |
+| 8.6 | Guias de FGTS, INSS e IRRF | — | **40%** | 🔴 **anomalia aberta:** `incideFGTS` existe em 314 rubricas e o **FGTS não aparece em nenhuma das 15 rotinas** da casa. Ou sai por outro caminho, ou a lista está incompleta |
+| 8.7 | Rescisão | — | 55% | 11+ modalidades do enum `tipoDesligamento` e as rubricas de rescisão. Falta o fluxo e o prazo de 10 dias |
+| 8.8 | Cobrança por colaborador **ativo** | `/mais/plano` | 90% | 🔑 regra nossa, já em contrato (cláusula 7.4): cobra mesmo sem movimento, porque a obrigação existe. Falta a mecânica de faturamento |
 
 ### 🔴 §7 · Plano, cobrança e conta — 38%
 
@@ -155,47 +175,45 @@ Então: **a spec manda, a evidência é fonte.** É a mesma doutrina do [[indice
 | 7.3 | Histórico de faturas | `/mais/plano` | 25% | 🔴 idem (`sistema/pagto-historico`) |
 | 7.4 | Cancelar plano sem punição | `/mais/plano` | **15%** | 🔴 nunca vi. É o nosso anti-dark-pattern e **não sei como eles fazem** |
 | 7.6 | Perfil / conta / login | `/perfil` | 60% | vi o painel lateral; não entrei em "Alterar dados" |
-| 7.7 | Reajuste anunciado | — | 70% | tenho a copy inteira do IGP-DI deles; falta **nossa regra** |
+| 7.7 | Reajuste anunciado | — | 70% | tenho a copy inteira do IGP-DI deles + a nossa regra de coorte travada em contrato |
 
 ---
 
 ### 🎯 O placar
 
-| Seção | % |
-|---|:--:|
-| §2 Impostos | **82%** |
-| §4 Pró-labore | **81%** |
-| §5 Estar em dia | **81%** |
-| §3 Notas | **76%** |
-| §1 Home | **68%** |
-| §6 Documentos | **67%** |
-| 🔴 **§7 Plano e cobrança** | **38%** |
-| **Total (38 itens core)** | **≈ 70%** |
+| Seção | % | |
+|---|:--:|---|
+| §2 Impostos | **82%** | |
+| §4 Pró-labore | **81%** | |
+| §6 Documentos | **79%** | ↑ era 67% |
+| §3 Notas | **76%** | |
+| §5 Estar em dia | **75%** | ↓ era 81%, com 2 itens novos |
+| §1 Home | **68%** | |
+| 🆕 §8 Folha | **64%** | entrou agora |
+| 🔴 §7 Plano e cobrança | **38%** | |
+| **Total (49 itens core)** | **≈ 70%** | era 70% com 38 itens |
 
-### As três leituras
+🔑 **O total não mexeu, e isso é informação.** Entraram **11 itens novos**, a maioria abaixo da média, e ao mesmo tempo o §6 subiu 12 pontos. **A base cresceu 29% e a cobertura se manteve**, o que significa que o trabalho de 10/09 pagou o custo de ampliar o escopo.
 
-**1. 🔴 §7 é o buraco, e é o pior lugar pra ter um.** É onde mora **a nossa receita**: plano, fatura, cancelamento. Está em 38% porque **nunca varri** — sete rodadas nas telas de contabilidade e nenhuma na de dinheiro. **Ponto cego meu, não escolha.**
+### As quatro leituras
 
-**2. Os bloqueios de verdade são 4, e são concentrados.** Fora do §7, o que falta pra chegar perto de 100%:
+**1. 🔴 §7 continua sendo o buraco, e piorou de significado.** Segue em 38% porque **nunca varri**. Só que agora é pior: em 10/09 a gente **fechou a tabela de preço inteira** (3 coortes, 5 faixas de EPP, folha, avulsos) sem nunca ter visto as telas de plano, fatura e cancelamento do líder. **Decidimos o preço antes de olhar onde o preço mora.**
+
+**2. 🆕 A folha entra desequilibrada, e o desequilíbrio é útil.** A linha **8.2 está em 95%**, a melhor de todo o painel, porque a API entregou as 606 rubricas com incidência e plano de contas. Mas **8.1 está em 35%**, porque o formulário de admissão do líder é bloqueado e **nunca vi um campo**. Ou seja: **sabemos calcular a folha e não sabemos cadastrar quem entra nela.**
+
+**3. Os bloqueios de verdade agora são 5.**
 
 | | O quê | Destrava | Natureza |
 |:--:|---|---|---|
 | 🔴 | **Swagger do Emissor Nacional** | 3.1 · 3.3 · 3.4 | **leitura** |
-| 🔴 | **Contrato Serpro Integra Contador** | 2.2 · 4.5 · 5.2 | **contratação** |
+| 🔴 | **Contrato Serpro Integra Contador** | 2.2 · 4.5 · 5.2 · 8.5 · 8.6 | **contratação** |
 | 🔴 | **2.4 status de pagamento** | 2.4 · 2.5 | **decisão** |
 | 🔴 | **5.7 DTE-SN** | 5.4 | **investigação** |
+| 🆕 🔴 | **Por onde sai o FGTS** | 8.6 | **investigação** |
 
-🔑 **Três dos quatro não são pesquisa aberta.** Um é ler documento público, outro é assinar contrato, outro é o Pedro e o Mauro decidirem. Só o DTE-SN é investigação de verdade.
+🔑 **O Serpro subiu de 3 para 5 linhas** com a entrada da folha. Era importante, virou o item mais alavancado da lista.
 
-**3. Seis telas já construídas têm pouco lastro de mapeamento:** `/home-dia1` (30%) · `/avisos` (60%) · `/mais/documentos` (30%) · e as três de `/mais/plano` (15–35%). Foram desenhadas **antes** desta série de teardowns. ⚠️ **Vale conferir se o que a gente supôs bate com o que agora sabemos** — é exatamente o tipo de drift que o vault já pagou caro pra aprender.
-
----
-
-### ⚪ Por que folha de pagamento não está nesta tabela
-
-Ela está no **§9 do catálogo** — *"o que o líder tem e a gente decidiu NÃO fazer"* — com a justificativa de 08/09: *"Solo de serviço não tem funcionário. Backlog"*. O recorte desta tabela é só `§1–7` com balde 🟢, então ela não entra por duas razões independentes.
-
-⚠️ **Mas o teardown dela rendeu para o core mesmo assim**, e isso vale registrar como padrão: o `incideINSS` **por rubrica** (296 de 606) mudou o motor do **Fator R**, que é a linha **4.2** e é core. **Frente fora de escopo pode ensinar sobre frente core** — o critério para varrer não é só "isso vai virar tela".
+**4. Sete telas construídas têm pouco lastro.** `/home-dia1` (30%) · `/avisos` (60%) · as três de `/mais/plano` (15–35%) · e agora as telas de folha, que **não existem**. ⚠️ Vale conferir se o que a gente supôs bate com o que agora sabemos.
 
 ---
 ## 📚 Funcionalidades destrinchadas
@@ -207,7 +225,7 @@ Ela está no **§9 do catálogo** — *"o que o líder tem e a gente decidiu NÃ
 | **Emitir nota fiscal** | [[emitir-nota-fiscal]] | [[2026-09-09-contabilizei-nota-fiscal]] | 🟢 desenho fechado · 🔴 prazo 01/11/2026 e de-para NBS inexistente |
 | **A guia de imposto** | [[guia-de-imposto]] | [[2026-09-09-contabilizei-guia-imposto]] | 🟢 desenho fechado · 🔴 2.4 é decisão de arquitetura, não descoberta |
 | **Compliance e rotinas** | [[compliance-e-rotinas]] | [[2026-09-09-contabilizei-central-rotinas]] | 🟢 desenho fechado · 🔴 DTE-SN (5.7) sem caminho |
-| **Folha de pagamento** | [[folha-de-pagamento]] | [[2026-09-09-contabilizei-folha-pagamento]] | 🔵 fora do MVP · 🔑 mas o modelo de rubricas muda o motor do Fator R **hoje** |
+| **Folha de pagamento** | [[folha-de-pagamento]] | [[2026-09-09-contabilizei-folha-pagamento]] | 🟢 **CORE desde 10/09** · R$39 por colaborador ativo, teto 10 · 🔴 cadastro de colaborador em 35%: o formulário do líder é bloqueado |
 
 🔗 **[[_mapa-de-cruzamentos]]** — como as funcionalidades se puxam. Nasceu em 09/09, quando pró-labore e alíquota chegaram **no mesmo número (37,72%) por caminhos diferentes** e ninguém tinha notado. Toda spec fiscal agora abre com uma seção **Cruzamentos declarados**; a regra está no [[_metodo]], passo 7.
 
@@ -219,8 +237,9 @@ Ela está no **§9 do catálogo** — *"o que o líder tem e a gente decidiu NÃ
 
 1. 🔴 **§7 · Plano, cobrança e conta** — o painel de cobertura acima colocou em **38%**, o pior da casa, e é **onde mora a nossa receita**. Rotas já localizadas e nunca visitadas: `sistema/planos` · `sistema/pagto-pendente` · `sistema/pagto-historico` · `painel/formas-pagamento`. Inclui o **cancelamento**, que é o nosso anti-dark-pattern e sobre o qual não sei nada do líder.
 2. ⚪ ~~Extrato bancário~~ — **FORA DE ESCOPO** (Pedro, 09/09): não seremos financeira e não teremos conta PJ. ⚠️ Efeito colateral: a **2.4 perde o caminho do trilho próprio** e sobra a consulta de arrecadação.
-3. **§6 · Documentos e certificado** — o A1 é pré-condição de tudo e já apareceu como campo em **5 payloads**, sempre com `diasParaVencimento`.
-4. **Consultar e cancelar nota** — fecha a NF, e tem a divergência de prazo aberta (730 dias × "mesmo mês").
+3. 🆕 🔴 **§8 · Cadastro de colaborador** — a folha entrou no core em 10/09 e a linha **8.1 está em 35%**: o formulário de admissão do líder é **bloqueado** e nunca vi um campo. Sabemos calcular a folha (8.2 em 95%) e não sabemos cadastrar quem entra nela. ⚠️ Como o líder não mostra, este não sai de teardown: sai de **fonte primária do eSocial** (leiaute do S-2200) ou do Ademar.
+4. **§6 · Documentos e certificado** — o A1 é pré-condição de tudo e já apareceu como campo em **5 payloads**, sempre com `diasParaVencimento`. 🔄 A Área de Documentos já foi aberta em 10/09 (10 pastas), então o que falta é o **upload de documento da EMPRESA**, que o líder não tem.
+5. **Consultar e cancelar nota** — fecha a NF, e tem a divergência de prazo aberta (730 dias × "mesmo mês").
 
 🔴 **Fora da fila, porque não é descoberta:** a **2.4** não sai de teardown. Já sabemos a resposta do líder (lote mensal + trilho próprio). É **decisão de arquitetura e de negócio**, e precisa do Pedro e do Mauro, não de mais uma passada.
 

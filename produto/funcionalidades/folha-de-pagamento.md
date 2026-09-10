@@ -9,7 +9,7 @@ cobertura: nao-existe
 balde: backlog
 dependencia: externa
 confianca: media
-bloqueio: fora do MVP; motor de folha; eSocial via Serpro
+bloqueio: cadastro de colaborador (formulario do lider bloqueado); eSocial via Serpro; por onde sai o FGTS
 tags: [produto, funcionalidade, folha, fopag, esocial, rubricas, fator-r]
 ---
 

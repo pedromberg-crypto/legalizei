@@ -17,6 +17,8 @@ tags: [juridico, contrato, minuta, me, constituicao]
 > **Onde mais vive:** o comentário cláusula a cláusula está em [[espelho-contrato-comentado]]. A versão navegável, com o contrato de referência ao lado, está no artefato publicado. Os PDFs enviados à advogada estão em `Downloads/`.
 >
 > **Tamanho:** 16 cláusulas + Anexo I, ~42.700 caracteres. 24 remissões internas, todas verificadas.
+>
+> 🔄 **Corrigido em 11/09:** a cláusula 3.6 dizia coorte travada por 12 meses. Virou **oferta de lançamento de 3 competências** (R$ 99 no ME), alinhando o instrumento ao que o site pratica. Alcança 3.1, 3.6, 3.8, 3.11, 12.4 e o Anexo I.
 
 
 ## 1. Das partes e do objeto
@@ -63,7 +65,7 @@ Quando referidas em conjunto, as duas empresas serão chamadas de Legalizai.
 
 ## 3. Dos preços e do pagamento
 
-**3.1** Os valores das mensalidades constam do **Anexo I, Plano Contratado**, e variam conforme a coorte de contratação e a faixa de receita bruta acumulada nos últimos 12 (doze) meses, doravante RBT12.
+**3.1** Os valores das mensalidades constam do **Anexo I, Plano Contratado**, e variam conforme o plano contratado e a faixa de receita bruta acumulada nos últimos 12 (doze) meses, doravante RBT12.
 
 **3.2** A Abertura de Empresa não gera honorário. As taxas públicas seguem o disposto na cláusula 9.
 
@@ -73,17 +75,17 @@ Quando referidas em conjunto, as duas empresas serão chamadas de Legalizai.
 
 **3.5** Sobre valores em atraso incidirão multa de 2% (dois por cento) e juros de mora de 0,033% (zero vírgula zero trinta e três por cento) por dia de atraso.
 
-**3.6** O preço da coorte de contratação é garantido por 12 (doze) meses contados da ativação. Findo esse período, aplica-se o valor vigente para novos clientes na data, comunicado com 30 (trinta) dias de antecedência, facultado ao Cliente encerrar o contrato sem multa.
+**3.6** A **oferta de lançamento** consiste na redução da mensalidade durante as **3 (três) primeiras competências** contadas da ativação, nos valores indicados no Anexo I. A partir da quarta competência aplica-se a mensalidade cheia do plano contratado. A data do término da oferta consta do Anexo I e é comunicada ao Cliente com antecedência mínima de 30 (trinta) dias.
 
 **3.7** A mudança de faixa por RBT12 observará o seguinte: a **elevação** de faixa produz efeitos na competência seguinte, mediante aviso com 30 (trinta) dias de antecedência; a **redução** de faixa produz efeitos automaticamente na competência seguinte, independentemente de solicitação do Cliente.
 
-**3.8** Os valores poderão ser reajustados anualmente por índice, mediante aviso prévio de 30 (trinta) dias, facultado ao Cliente encerrar o contrato sem multa caso não concorde.
+**3.8** Encerrada a oferta de lançamento, os valores poderão ser reajustados anualmente por índice, mediante aviso prévio de 30 (trinta) dias, facultado ao Cliente encerrar o contrato sem multa caso não concorde.
 
 **3.9** O Cliente reconhece que a estrutura de custos da Legalizai é diretamente afetada pela legislação tributária incidente sobre os serviços objeto deste contrato. Qualquer alteração legislativa que resulte em aumento da carga fiscal sobre a Legalizai, incluindo a implantação do Imposto sobre Bens e Serviços, da Contribuição sobre Bens e Serviços e do Imposto Seletivo decorrentes da Emenda Constitucional nº 132/2023, dará ensejo a reajuste.
 
 **3.10** O reajuste de que trata a cláusula 3.9 será limitado ao impacto financeiro líquido, em percentual, efetivamente suportado pela Legalizai, e será comunicado com antecedência mínima de 30 (trinta) dias, acompanhado da respectiva memória de cálculo. Trata-se de mecanismo de restabelecimento do equilíbrio econômico-financeiro, que não se confunde nem substitui o reajuste anual da cláusula 3.8.
 
-**3.11** O desconto concedido em razão da coorte de contratação **integra o preço** e não constitui liberalidade sujeita a devolução no encerramento antecipado. Benefícios concedidos fora do plano seguem o disposto nas cláusulas 8.4 e 12.4.
+**3.11** A redução concedida na oferta de lançamento **integra o preço** e não constitui liberalidade sujeita a devolução no encerramento antecipado. Benefícios concedidos fora do plano seguem o disposto nas cláusulas 8.4 e 12.4.
 
 **3.12** Ainda que a empresa fique inativa ou com baixa movimentação, as mensalidades serão devidas até a solicitação de cancelamento, sem qualquer abatimento, uma vez que subsistem obrigações acessórias de declaração sem movimento e a manutenção da conformidade perante os entes municipais, estaduais e federais, sob pena de multas por omissão ou atraso.
 
@@ -281,7 +283,7 @@ Quando referidas em conjunto, as duas empresas serão chamadas de Legalizai.
 
 **12.3** A Legalizai poderá encerrar este contrato independentemente de aviso prévio nas hipóteses de: descumprimento das obrigações contratuais; ausência de pagamento de 2 (duas) mensalidades consecutivas; indícios da prática de atos contrários à legislação, tais como sonegação de tributos, falsificação de informações ou documentos e oferta de vantagem indevida a agente público ou a colaborador da Legalizai; condutas de desrespeito, assédio ou qualquer forma de discriminação, por escrito ou verbalmente; prática de ações que impeçam a prestação dos serviços em conformidade com as normas gerais da contabilidade; e utilização da Plataforma para fins comerciais ou para prestação de serviços contábeis e fiscais a terceiros.
 
-**12.4** Encerrado o contrato antes do prazo de fidelidade, além da multa da cláusula 12.2, será devido o valor dos **benefícios concedidos fora do plano e efetivamente usufruídos**, na forma da cláusula 8.4. O desconto de coorte, por integrar o preço, não é reembolsável.
+**12.4** Encerrado o contrato antes do prazo de fidelidade, além da multa da cláusula 12.2, será devido o valor dos **benefícios concedidos fora do plano e efetivamente usufruídos**, na forma da cláusula 8.4. A redução da oferta de lançamento, por integrar o preço, não é reembolsável.
 
 **12.5** Ocorrendo o cancelamento por qualquer das hipóteses da cláusula 12.3 durante o processo de abertura, o Cliente reembolsará à Legalizai as taxas públicas por ela antecipadas na forma da cláusula 9, sem prejuízo das demais penalidades.
 
@@ -377,12 +379,10 @@ Quando referidas em conjunto, as duas empresas serão chamadas de Legalizai.
 
 ## Anexo I · Plano Contratado
 
-**Mensalidade, coorte de contratação, para empresa enquadrada como Microempresa:**
+**Mensalidade do plano, para empresa enquadrada como Microempresa:**
 
-| Coorte | Mensalidade | Garantia ||
-| Fundador | R$ 79,00 | 12 meses da ativação ||
-| Lançamento | R$ 99,00 | 12 meses da ativação ||
-| Base | R$ 139,00 | vigente ||
+| Plano | Mensalidade | Oferta de lançamento ||
+| ME · Simples Nacional | R$ 139,00 | R$ 99,00 nas 3 primeiras competências, até 31/12/2026 ||
 
 **Mensalidade por faixa de RBT12, para empresa enquadrada como Empresa de Pequeno Porte:**
 
@@ -406,8 +406,6 @@ Quando referidas em conjunto, as duas empresas serão chamadas de Legalizai.
 **A-I.1** Serviços de valor igual ou inferior a R$ 50,00 são lançados na fatura da competência seguinte. Acima disso, exigem aceite no ato.
 
 **A-I.2** Os itens descritos como incluídos nas cláusulas 4 e 5 não constam desta tabela e não são objeto de cobrança adicional.
-
-
 ---
 
 ## 🕓 Pontos que dependem de confirmação

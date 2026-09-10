@@ -41,6 +41,20 @@ O Pedro revisa o produto **só** por `/apresentacao` e `/mapa`, e pede de onde e
 6. 🔴 **Réplica de tela do ME se PORTA, não se remonta.** Em 07/09 o Pedro pegou 5 telas do ramo MEI que deviam ser réplicas e não eram: a M7 com outro esqueleto (chegou comprimida), o cartão de ocupação com a pill do lado errado e jargão de órgão no lugar de "compatível", a M6.1 com lista plana onde o E9.1 tem acordeão de blocos, a M7.S com a busca no topo em vez de fixa no rodapé, e as telas de status escuras com um `TelaHeader` que o `PainelView` não renderiza no escuro. Nenhum foi descuido pontual: em todos eu montei a tela **no espírito** da original em vez de portar a anatomia dela. Duas travas nasceram disso: `verificar-anatomia-mei.mjs` (roda junto com o `gerar-mapa.mjs` e compara o esqueleto das duas telas; diferença não declarada em `DIVERGENCIAS_OK` é defeito) e a extração das peças compartilhadas (`components/mei/_timeline-blocos.tsx`, `_cartao-ocupacao.tsx`). ⚠️ A trava pega ESTRUTURA, não espaçamento, cor nem copy — isso ainda é olho humano no print.
 7. 🔴 **Toda tela de wizard tem VOLTAR, e o `meta` nomeia o DESTINO.** Dois erros que apareceram 4 vezes em 02/09 (gate 29/08, C0, C5, C2): (a) a página esquece de passar `onVoltar` e o `TelaHeader` renderiza só o texto, sem seta e **sem erro** — a tela nasce sem saída e só o Pedro pega, testando no aparelho; (b) o `meta` recebe o nome da PRÓPRIA tela, quando ele é o nome de pra onde o voltar leva. Quem não tem voltar de propósito (splash, saída terminal, laboratório) declara `semVoltar`. Duas travas já no código: o componente avisa em dev, e `gerar-mapa.mjs` audita as telas do flow a cada rodada.
 
+## 📖 Regra de LEITURA INTEGRAL (travada 10/09, provocação do Pedro)
+
+🔴 **Documento de alto grau para o negócio se lê INTEIRO, nunca por amostra.** Contrato, termo, aceite, anexo, política, procuração, laudo, tabela de preço oficial: **100% do texto, literal**, salvo em arquivo do vault, com a fonte e a data. Nada de "li as cláusulas que importam".
+
+Nasceu porque em 10/09 eu apresentei o contrato do líder como lido e ele estava **12% literal** (9.000 de 74.700 caracteres): eu tinha o mapa das 11 cláusulas e o texto só das que respondiam a pergunta da vez. O Pedro pegou perguntando *"incluindo scroll?"*. Antes disso, no mesmo dia, a captura de 27/08 do mesmo contrato tinha perdido a **cláusula 1**, que era justamente onde estava a resposta que ele procurava.
+
+**O que a regra obriga:**
+1. **Ler até o fim e provar.** Declarar o tamanho total e o quanto foi lido. Se leu 12%, dizer 12% — nunca deixar "li o documento" no ar.
+2. **Salvar o texto literal em arquivo**, não só a paráfrase. Paráfrase minha não é o que advogado, contador ou sócio valida.
+3. **Inventariar o que ficou de fora.** Documento que existe e não foi aberto entra numa lista de pendência explícita, com o nome dele.
+4. **Vale para tela também** (regra de 09/09, que esta generaliza): medir o `innerText` e comparar com o que foi lido, em vez de confiar no que coube na primeira olhada.
+
+⚠️ **Não vale como desculpa** limite de ferramenta. A leitura por `javascript_exec` trunca em ~1.000 caracteres por chamada; a saída é **paginar até o fim** (`browser_batch` roda várias de uma vez), não resumir.
+
 ## Regras de trabalho
 - 🔴 **Playwright/E2E só quando o Pedro PEDIR.** Nunca rodar por iniciativa própria, nem "pra conferir", nem no fim de uma leva de alterações. Padrão de verificação é `tsc` + `eslint`. Se achar que vale rodar, **pergunta** — não roda. (Travado 30/08, reforçado 01/09.)
   - 🔒 **Um "pode rodar" vale só pra AQUELA rodada** (reforçado 07/09, 3ª vez). Depois que o Pedro pediu o E2E do ramo MEI, eu passei a rodar a suíte a cada alteração como se a autorização fosse permanente. Não é: autorização é por pedido, não por sessão nem por assunto. Spec nova continua podendo ser ESCRITA e versionada sem pedido; o que exige pedido é **executar**.

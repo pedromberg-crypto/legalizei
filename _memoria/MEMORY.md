@@ -1,5 +1,6 @@
 # Memory Index — Legalize
 
+- [Documento importante se le INTEIRO](legalize-leitura-integral-documento.md) — 10/09 TRAVADO no CLAUDE.md: 100% do texto, literal salvo em arquivo, e o que ficou de fora vira lista com nome. Nasceu de eu entregar 12% como se fosse tudo.
 - [Contrato do lider: enumera o incluso, nao o avulso](legalize-contrato-lider-enumera-incluso.md) — 10/09: 11 clausulas + 3 anexos lidos; a 4.2 e lista de exclusao nominal; a 5.4 remete pro anexo errado; ECD esta incluida E vendida.
 - [A casa tem DOIS CNPJs](legalize-entidades-duas-empresas.md) — 10/09: Legalizai Tecnologia (41.569.345/0001-48, ex-"Legalize Digital") + Legalize Auditoria (12.423.332/0001-68, CRC-MG 007900/O).
 - [Pasta produto/ e a fonte-verdade das funcionalidades](legalize-pasta-produto-fonte-verdade.md) — 09/09: frente ganhou pasta-raiz; spec viva e evidencia datada SEPARADAS; funcionalidades-me-simples virou redirecionador.

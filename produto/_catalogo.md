@@ -216,10 +216,13 @@ A tela `/avisos` existe e lista avisos. Falta o que a transforma em canal:
 
 ## 9. ❌ O que o líder tem e a gente decidiu NÃO fazer
 
+⚠️ **Estar aqui não significa "não vale varrer".** Em 09/09 a varredura de **folha** — que está nesta lista — foi a que mais mudou o motor do Fator R, que é core. **Frente fora de escopo pode ensinar sobre frente core**, e o critério para destrinchar não é "isso vai virar tela".
+
+
 | Funcionalidade | Por quê |
 |---|---|
-| Conta digital PJ própria | Lock-in bancário. Nosso caminho é Open Finance com qualquer banco |
-| Folha de pagamento | Solo de serviço não tem funcionário. Backlog |
+| Conta digital PJ própria + **integração bancária** | Lock-in bancário. 🔒 **Ratificado pelo Pedro em 09/09**: *"não seremos uma financeira"*. ⚠️ **Consequência registrada:** o líder só sabe do pagamento em tempo hábil quando ele passa pelo trilho dele (débito automático confirma dias 20–23; fora dele, lote mensal). **Sem trilho próprio, esse caminho da 2.4 sai da mesa.** E o extrato, que é matéria-prima do fechamento, passa a depender de **envio do cliente até o dia 15** — fluxo desenhado nosso, não omissão |
+| Folha de pagamento → **[[folha-de-pagamento]]** | Solo de serviço não tem funcionário. **Segue fora do MVP.** ⚠️ Mas o teardown de 09/09 rendeu para o CORE: o `incideINSS` **por rubrica** (296 de 606) mudou o motor do Fator R, que é a linha **4.2**. E o líder cobra *"eSocial sem movimento"* (R$71,90), o que mostra que **contratar cria obrigação mensal permanente** — informação que o simulador precisa ter antes de existir folha |
 | Plano de saúde / benefícios / TotalPass | Upsell puro, fora do produto |
 | Cobrar seu cliente (gateway de recebíveis) | Adjacente, compete com Asaas/InfinitePay. Backlog |
 | "Informe se você pagou" (✓/✗ manual) | ❌ **Rejeitado**: é o trabalho empurrado pro cliente que a gente ataca |

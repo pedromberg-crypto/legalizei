@@ -38,6 +38,10 @@ O Pedro é cliente pagante da Contabilizei (plano Padrão). A conta é dele, o a
 ### 1. Escolher pelo que destrava, não pelo que é fácil
 Pró-labore veio primeiro porque cruza Fator R, INSS, eSocial e IRPF. Desenhar ele destravou o cálculo de imposto, o calendário e o informe anual de uma vez. **Pergunta certa:** quantas outras funcionalidades esta aqui responde?
 
+⚠️ **E "está fora do escopo" NÃO é resposta para "não varrer".** Em 09/09 a varredura de **folha de pagamento** — que está no §9 do catálogo, a lista do que decidimos não fazer, e numa conta **sem nenhum funcionário** — foi a que mais mudou o motor do **Fator R**, que é core. O `incideINSS` por rubrica só apareceu ali.
+
+🔑 **O critério é o que a frente ENSINA, não o que ela vira.** Frente fora de escopo costuma guardar o modelo de dados de coisa que está dentro.
+
 ### 2. Varrer o caminho inteiro, não a tela principal
 No pró-labore, o que mais rendeu **não estava na tela do pró-labore**: estava em `Impostos a pagar` (onde ele vira dinheiro) e numa página **sem entrada no menu**, alcançável só por um link de rodapé, que continha a matemática inteira.
 

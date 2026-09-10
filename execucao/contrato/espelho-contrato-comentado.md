@@ -178,9 +178,9 @@ tags: [juridico, contrato, espelho, advogada, briefing]
 
 ✍️ **Legalizai.** Mesmo corte, com a lista adaptada ao que a plataforma realmente entrega hoje.
 
-⚠️ **Ponto de atenção que é nosso, não da advogada:** parte da lista 5.2 depende de integração ainda não contratada (Serpro Integra Contador para guias; Emissor Nacional para NFS-e). **O contrato não pode prometer o que a operação ainda não sabe entregar.** A lista final do bloco 6 precisa ser conferida contra a matriz de dependência antes de fechar.
+✅ **Rota definida (Pedro, 10/09):** as funções desta lista são construídas **pelo nosso dev, direto por API**, dentro do aplicativo. **Não vamos contratar serviço externo intermediário** para executar o que é nosso. Isso fecha a dúvida que estava aberta sobre a lista do objeto.
 
-⚖️ 🟢 Copiar o corte. 🕓 A lista literal depende de fechamento técnico.
+⚖️ 🟢 Copiar o corte, com a lista adaptada ao que a plataforma entrega.
 
 ❓ **Como redigir de forma que a lista possa crescer sem aditar o contrato, mas sem cair na armadilha de "conforme disponível na plataforma"?**
 
@@ -379,14 +379,17 @@ d) A partir da competência seguinte, aplica-se a mensalidade da
    faixa EPP da tabela do Plano Contratado, apurada pela RBT12.
 
 e) A diferença de faixa decorre do maior volume de operações, notas
-   fiscais e movimentações a processar, e NÃO constitui reajuste na
-   acepção da cláusula de reajuste anual.
+   fiscais e movimentações a processar, E DA ALTERAÇÃO DAS OBRIGAÇÕES
+   ACESSÓRIAS DECORRENTE DA MUDANÇA DE PORTE, e NÃO constitui reajuste
+   na acepção da cláusula de reajuste anual.
 
 f) Ultrapassado o limite do Simples Nacional (R$ 4,8 milhões),
    aplica-se a cláusula de superveniência.
 ```
 
 📌 Taxa da JUCEMG (R$290): confirmada pelo Ademar em 10/09. Honorário (R$139) e tabela EPP: decisões do Pedro em 10/09.
+
+🔑 **A obrigação acessória muda por PORTE, não por faixa de receita.** 📌 Confirmado pelo Pedro em 10/09. Isso **reforça a causa objetiva** do item (e): o desenquadramento não traz só mais volume, traz **outro conjunto de obrigações a cumprir**. É o argumento mais forte que a faixa EPP tem, e vale escrever com essa palavra.
 
 🎯 **Por que não escrevemos "poderá haver reajuste de até 30%":** o **CDC art. 51, X** considera abusiva a cláusula que permita ao fornecedor variação unilateral do preço. Preço definido em **tabela prévia** e disparado por **fato objetivo** não é variação unilateral — é o contrato funcionando como combinado. O item (e) declara a **causa objetiva**, que é o que sustenta a faixa.
 
@@ -460,12 +463,16 @@ f) Ultrapassado o limite do Simples Nacional (R$ 4,8 milhões),
 
 | | Lacuna | Quem resolve |
 |:--:|---|---|
-| 🕓 | Alguma obrigação acessória entra por **porte** (ECD, DEFIS) ou é tudo por faixa de receita? | Ademar |
-| 🕓 | O R$1.100 da Legalize tradicional pelo desenquadramento **inclui** a taxa de R$290? É o mesmo escopo do R$156,40 do líder? A distância de 7× sugere que não | Mauro |
-| 🕓 | **Margem da folha** a R$39 com teto de 5, contra a carga operacional (eSocial mensal, R-2099, R-4099, DCTFWeb dia 15, rescisão em 10 dias). Custo unitário real ainda aberto | Mauro |
-| 🕓 | A **Lei 15.270/2025** e o art. 32 da Lei 4.357/64 são **citações do concorrente**, lidas em tela. Não ratificadas em fonte primária | Advogada + Ademar |
-| 🔴 | A lista do bloco 6 depende de **Serpro Integra Contador** e do **Emissor Nacional de NFS-e**, ainda não contratados. Contrato não pode prometer o que a operação não entrega | Pedro |
-| 🔴 | Páginas públicas de Privacidade e Termos, e o rodapé das LPs, ainda estampam **"Legalize Digital"** | Pedro |
+| 🕓 | A **Lei nº 15.270/2025** (distribuição de lucro na EFD-Reinf a partir de 2026, com IRRF antecipado) e o **art. 32 da Lei nº 4.357/64** (multa de 50%) são **citações do concorrente**, lidas em tela do produto deles. **Não ratificadas em fonte primária.** Antes de virarem cláusula, texto de anexo ou copy, precisam da confirmação da advogada | Advogada |
+
+✅ **Fechadas em 10/09, no fim desta rodada:**
+
+| | O que estava aberto | Como fechou |
+|:--:|---|---|
+| ✅ | Obrigação acessória entra por porte ou por faixa? | **Por PORTE.** Confirmado pelo Pedro. Reforça a causa objetiva da faixa EPP (bloco 12) |
+| ✅ | O R$1.100 da Legalize tradicional é comparável? | **Não é dúvida.** O preço está travado: **R$290 de taxa da Junta + R$139 de honorário** |
+| ✅ | Margem da folha | **Travada:** R$39 por colaborador, teto de **10** |
+| ✅ | A lista do bloco 6 depende de contratação externa? | **Não.** Construída pelo dev, direto por API, dentro do app |
 
 ---
 

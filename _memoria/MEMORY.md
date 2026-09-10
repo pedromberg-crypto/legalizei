@@ -93,7 +93,7 @@
 - [CNAE fiscalmente ótimo](legalize-cnae-fiscalmente-otimo.md) — recomenda CNAE mais barato entre os que cobrem a mesma atividade; engine pronta+testada; falta Larissa ratificar.
 - [Log-UX vivo + regra UI-inline](legalize-log-ux-flow-e-regra-ui.md) — compilado-ux-flow.md = fonte única do que otimizar; regra: UI é fase-2, não construir ainda.
 - [Pesquisa fiscal BH 2026](legalize-pesquisa-fiscal-bh-2026.md) — bloco CONSOLIDADO em `fiscal-simples-bh-2026.md` = fonte-verdade do flow; sem contradição dura vs Gemini.
-- [MVP só serviço + corte comércio](legalize-mvp-so-servico-cnae.md) — 15/07: MVP só serviço; 200 CNAEs comércio cortados p/ standby; limite sócios=2.
+- [MVP só serviço + corte comércio](legalize-mvp-so-servico-cnae.md) — 15/07: MVP só serviço; 200 CNAEs comércio cortados p/ standby; limite sócios=2 → 🔴 **SUPERADO 29/08: teto é 4** (`gate-telas.tsx`).
 - [LP construída](legalize-lp-construida.md) — v1 HTML/CSS/JS puros; regra AA coral travada; validador: regulamentada vence verde.
 - [Janela de contexto: ~1M](legalize-janela-contexto-1m.md) — Pedro monitora a barra sozinho. NÃO emitir linha de saúde 🟢/🟡/🔴 nem sugerir `/fechar` por aquecimento.
 - [Reordenação + telas em CÓDIGO](legalize-reordenacao-e-telas-em-codigo.md) — 16/07: cobra no N9, não T16; telas N1-N25. Sem Figma, app em `app/`. Regra dos 3.

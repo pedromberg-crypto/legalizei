@@ -16,3 +16,5 @@ metadata:
 **Outras decisões do mesmo flow:** limite de sócios = **2** (corrige spec que dizia 3) · endereço fiscal = **upsell** · B3 = **1 plano único** (~R$195 régua Contabilizei) · sócio no exterior = **bloqueio duro** (art.17 II). Provocação parqueada: atender Lucro Presumido no MVP (diferença R$195→R$239 é pequena) → [[parking-lot]].
 
 Liga [[legalize-pesquisa-fiscal-bh-2026]] · [[legalize-benchmark-padrao-195]] · [[legalize-blocos-fluxo-abertura]].
+
+⚠️ **CORREÇÃO 10/09:** o limite de sócios registrado aqui (2) está **SUPERADO**. Decisão do Pedro em **29/08** travou o teto em **4 sócios** (`app/src/components/gate-telas.tsx` linha 1075: *"teto vira 4 (era 1-5 com 5+). A opção de 5+ sócios SAI do produto"*). Ver [[legalize-entidades-duas-empresas]].

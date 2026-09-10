@@ -40,3 +40,14 @@ Tetos do produto: **4 socios** (29/08) · **10 empregados** (10/09) · servico �
 🕓 obrigacao acessoria entra por porte? (Ademar) · R$1.100 da Legalize inclui a taxa? (Mauro) · margem da folha (Mauro) · Lei 15.270/2025 e art. 32 da Lei 4.357/64 sao citacoes do concorrente, nao ratificadas · 🔴 a lista de servicos mensais depende de Serpro e Emissor Nacional, nao contratados.
 
 Relacionado: [[legalize-contrato-lider-enumera-incluso]] · [[legalize-entidades-duas-empresas]] · [[legalize-lucro-2026-e-carta-cfc]] · [[legalize-leitura-integral-documento]]
+
+## Entregue em 10/09
+
+- **Minuta escrita**: 16 clausulas + Anexo I, ~42.700 caracteres, em `execucao/contrato/minuta-contrato-me.md`. 24 remissoes internas, todas verificadas.
+- **Briefing comentado** em `execucao/contrato/espelho-contrato-comentado.md`: 17 blocos com origem do dado, veredito copiar/nao copiar e 12 perguntas para a advogada.
+- **Artefato publicado** com 4 vistas (comentado · so a minuta · lado a lado · contrato do lider integral).
+- **2 PDFs enviados por e-mail a advogada**, validados com pypdf antes do envio.
+
+⚠️ **Migracao (troca de contador) foi REMOVIDA do contrato em 10/09.** Este instrumento e de **constituicao**. A razao e de fundo, nao de escopo: sem a abertura nao existe a isencao de honorario que **justifica** a fidelidade de 12 meses. Se migracao vier a ser oferecida, pede instrumento proprio. Ver clausula 1.1.1.
+
+⚠️ **Tres coisas entraram por heranca, nao por decisao**, e estao declaradas: o prazo de 5 dias uteis da clausula 9.4 (invencao minha, marcada como proposta); dez prazos copiados da referencia (30 dias, 90 dias, 3o e 5o dia util, dia 10, mora de 2%); e as leis citadas em tela do concorrente sem fonte primaria.

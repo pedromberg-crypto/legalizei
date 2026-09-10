@@ -1,6 +1,6 @@
 # Memory Index — Legalize
 
-- [Decisoes do NOSSO contrato ME](legalize-contrato-proprio-decisoes.md) — 10/09: 3 coortes ME (79/99/139) + tabela EPP por RBT12; folha R$39 teto 10; ME→EPP permanece no app; certificado e beneficio; elegibilidade por caracteristica x conduta. Espelho em `execucao/contrato/`.
+- [Decisoes do NOSSO contrato ME](legalize-contrato-proprio-decisoes.md) — 10/09 **MINUTA ESCRITA E ENVIADA A ADVOGADA**: 16 clausulas em `execucao/contrato/minuta-contrato-me.md`; 3 coortes ME (79/99/139) + tabela EPP por RBT12; folha R$39 teto 10; ME→EPP permanece no app; migracao REMOVIDA (contrato e de constituicao); elegibilidade por caracteristica x conduta.
 - [Lucro 2026 (Lei 15.270/2025) + Carta CFC obrigatoria](legalize-lucro-2026-e-carta-cfc.md) — 10/09: lucro sacado vai pra EFD-Reinf com IRRF antecipado; ATA ate 31/01/2026 isenta o acumulado. Carta de Responsabilidade (CFC 1.590/2020) trava o fechamento contabil.
 - [Documento importante se le INTEIRO](legalize-leitura-integral-documento.md) — 10/09 TRAVADO no CLAUDE.md: 100% do texto, literal salvo em arquivo, e o que ficou de fora vira lista com nome. Nasceu de eu entregar 12% como se fosse tudo.
 - [Contrato do lider: enumera o incluso, nao o avulso](legalize-contrato-lider-enumera-incluso.md) — 10/09: 11 clausulas + 3 anexos lidos; a 4.2 e lista de exclusao nominal; a 5.4 remete pro anexo errado; ECD esta incluida E vendida.

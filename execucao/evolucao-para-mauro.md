@@ -911,6 +911,40 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 - Até *30/09* dá pra optar pelo Simples Híbrido, que permite apurar CBS/IBS fora da guia única e gerar crédito pro cliente que é empresa. Depois dessa data, não dá. É decisão de negócio, não de sistema. Vale a gente conversar essa semana
 ```
 
+
+## Semana 10/09/2026 — o nosso contrato existe, e já está com a advogada
+
+| # | O que rendeu | Por quê importa | |
+|:--:|---|---|:--:|
+| 1 | 🎯 **Nosso contrato saiu do zero e foi para a advogada** | Escrevi a minuta completa: 16 cláusulas e um anexo de preços. Enviei por e-mail junto com o contrato da Contabilizei inteiro, para ela comparar, e um link onde os dois aparecem lado a lado, com uma nota explicando de onde veio cada decisão nossa | 🟢 |
+| 2 | **Li o contrato da Contabilizei inteiro, palavra por palavra** | Não foi resumo nem leitura por cima: 74 mil caracteres, 11 cláusulas e 3 anexos, mais três outros documentos que eles fazem o cliente assinar. Tudo salvo. É a base de comparação mais sólida que a gente já teve de qualquer coisa deles | 🟢 |
+| 3 | 🔴 **Achei uma contradição séria no contrato deles** | A entrega de uma obrigação contábil está escrita como **incluída** na mensalidade e, ao mesmo tempo, é **vendida à parte por R$197,90** na loja do aplicativo. O cliente não tem como saber qual vale. A causa é que eles jogam a lista de serviços pagos para fora do contrato. No nosso, essa lista é anexo, e item incluso não pode aparecer nela | 🟢 |
+| 4 | 📋 **Descobri um documento obrigatório que a gente não tinha no radar** | A **Carta de Responsabilidade da Administração** é exigida pela Resolução CFC 1.590/2020, e **sem ela assinada pelo cliente o contador não pode assinar o balanço**. Isso vale igual para a Legalize. Vira tela e lembrete anual no app, não é opcional | 🟡 |
+| 5 | 🔥 **Mudança de lei que afeta todo cliente nosso a partir de 2026** | Pela Lei 15.270/2025, todo lucro que o sócio saca passa a ser informado à Receita pela EFD-Reinf, podendo gerar imposto retido no mês. E há uma janela: empresa que assinar uma **ATA até 31/01/2026** deixa isento o lucro acumulado até 31/12/2025. ⚠️ Li isso na tela da Contabilizei, ainda **não confirmei na lei**. Precisa passar pelo Ademar | 🔴 |
+| 6 | 💰 **Fechamos a tabela de preços inteira, inclusive para quem cresce** | Três preços de entrada conforme quando a pessoa entra (79, 99 e 139, cada um garantido por 12 meses) e uma tabela para quando a empresa vira EPP: 189, 239, 309, 399 e 519, conforme o faturamento dos últimos 12 meses. **Quem cresce continua com a gente**, a gente mesmo faz o desenquadramento por R$139 mais a taxa de R$290 da Junta | 🟢 |
+| 7 | **Folha de pagamento entrou no produto** | Tinha ficado de fora em 08/09. Agora entra como serviço extra: **R$39 por colaborador, até 10 colaboradores**. A Contabilizei cobra R$50 e **só** no plano de R$395; os outros três planos deles nem permitem funcionário. É diferencial de venda claro | 🟡 |
+| 8 | 🤝 **Uma escolha nossa que vale você conhecer** | O contrato deles rescinde **sem aviso nenhum** se o cliente mudar de condição, inclusive por ter crescido. O nosso faz o oposto: quem muda de característica nunca é multado nem rescindido, ou continua conosco, ou é encaminhado ao escritório. Punição fica só para quem mente, não paga ou usa a plataforma indevidamente | 🟢 |
+
+**Preciso de você em 3 coisas:**
+
+1. 🕓 O escritório cobra **R$1.100** pelo desenquadramento de ME para EPP. A Contabilizei cobra **R$156,40** de honorário mais a taxa. A diferença de sete vezes sugere que não é o mesmo serviço. **O que está dentro desse R$1.100?** Preciso saber antes de fechar o nosso em R$139.
+2. 🕓 **A conta da folha fecha?** R$39 por colaborador, até 10, dá no máximo R$390 por mês por cliente. A carga é real: eSocial mensal, EFD-Reinf, DCTFWeb todo dia 15, rescisão em 10 dias. Com o custo unitário ainda em aberto, vale você olhar o número.
+3. 🔴 A **Lei 15.270/2025** e a janela da **ATA até 31/01/2026** precisam de confirmação. Se estiver certo, é assunto para avisar cliente, não só para o contrato.
+
+```
+Oi Mauro, resumo da semana:
+
+- *Nosso contrato existe.* Escrevi a minuta completa, 16 cláusulas, e já mandei para a advogada com o contrato da Contabilizei inteiro do lado, para ela comparar
+- Li o contrato deles palavra por palavra, 74 mil caracteres. Achei uma contradição séria: tem obrigação que está escrita como incluída na mensalidade e é vendida à parte por R$197,90 na loja deles
+- Descobri um documento obrigatório que faltava no nosso radar: a *Carta de Responsabilidade da Administração* (Resolução CFC 1.590/2020). Sem ela assinada pelo cliente, o contador não assina o balanço. Vai virar tela no app
+- Fechamos a tabela de preço inteira, inclusive para quem cresce e vira EPP. Quem cresce *continua com a gente*, a gente mesmo faz o desenquadramento
+- Folha de pagamento entrou: R$39 por colaborador, até 10. A Contabilizei cobra R$50 e só no plano de R$395, os outros nem permitem funcionário
+- *Preciso de você em 3 coisas:*
+- O escritório cobra R$1.100 pelo desenquadramento ME para EPP e a Contabilizei cobra R$156,40 de honorário. Diferença de 7x. O que está dentro do nosso R$1.100? Preciso saber antes de fechar o preço
+- A conta da folha fecha? R$39 por colaborador, até 10, dá no máximo R$390/mês, contra eSocial, EFD-Reinf e DCTFWeb todo mês
+- Achei uma mudança de lei (15.270/2025) que põe todo saque de lucro na EFD-Reinf a partir de 2026, com janela de ATA até 31/01/2026 para isentar o acumulado. Li na tela da Contabilizei, *não confirmei na lei ainda*. Vale passar pro Ademar
+```
+
 ## Links
 
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]] · [[estado-atual]] · [[indice-autoridade]]

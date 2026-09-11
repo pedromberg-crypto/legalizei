@@ -1,5 +1,6 @@
 # Memory Index — Legalize
 
+- [A doutrina de processos nao se enche sozinha](legalize-doutrina-processos-nao-se-enche-sozinha.md) — 11/09: §6 e a casa das licoes e depende de alguem escrever; vigia no gerar-processos avisa depois de 3 levas.
 - [Processo ANTES da tela](legalize-processo-antes-da-tela.md) — 11/09 revoga o plano de inventariar telas: inventario de tela e cego pro que falta. Board `/processos`, semaforo, vermelho e o produto.
 - [LP virou a raiz, em modo pre-lancamento](legalize-lp-na-raiz-modo-espera.md) — 11/09 no ar; modo vira com 1 comando. 🔴 `lp/_lab` e a FONTE e nao esta versionada.
 - [Billing = fatura por competencia, nao assinatura](legalize-cobranca-fatura-competencia.md) — 11/09 travado: itens de linha, `plano: null`, competencia AAAAMM; gateway entra por ultimo. Corroborado na API do lider.

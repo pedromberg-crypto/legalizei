@@ -20,6 +20,7 @@
  */
 
 import { writeFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { PROCESSOS, PASSOS, ARESTAS } from "./processos-data.mjs";
@@ -150,6 +151,73 @@ for (const pr of PROCESSOS) {
 
 writeFileSync(SAIDA_MD, L.join("\n"), "utf8");
 
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * VIGIA DA DOUTRINA — 11/09, pedido do Pedro.
+ * ═══════════════════════════════════════════════════════════════════════════
+ * *"eu já te preparei com arquivos base pra salvar mudanças e não repetirmos
+ * erros, quero saber se isso está se atualizando sozinho"* — e a resposta
+ * honesta era **não**. A §6 da doutrina (a tabela de erros que eu já cometi)
+ * é prosa: só enche se alguém lembrar de escrever. No mesmo dia em que ela
+ * nasceu, dois erros meus ficaram de fora dela.
+ *
+ * Isto não conserta o problema de verdade — nenhum script escreve a lição no
+ * lugar de quem errou. O que ele faz é tirar a lembrança do caminho crítico:
+ * o gerador passa a CONTAR quantas mexidas em `/processos` aconteceram desde
+ * a última vez que a doutrina mudou, e a falar alto quando a conta passa do
+ * limite.
+ *
+ * 🔑 Por que AVISO e não erro: doutrina não é dado, e código que falha por
+ * motivo subjetivo ensina a ignorar o exit code — aí as cinco auditorias de
+ * cima, que pegam defeito de verdade, morrem junto. O barulho é de propósito;
+ * a barreira seria contraproducente.
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+/**
+ * A unidade é a LEVA (um commit, ou a árvore suja de agora), nunca o arquivo:
+ * um commit que toca seis arquivos é uma leva, não seis. Somar arquivo com
+ * commit faria o vigia gritar por refatoração grande e calar por três levas
+ * pequenas — exatamente ao contrário do que interessa.
+ * `PROCESSOS_LIMITE=1` força o aviso, pra conferir que ele ainda aparece.
+ */
+const LIMITE = Number(process.env.PROCESSOS_LIMITE ?? 3);
+const DOUTRINA = "execucao/processos/_doutrina-processos.md";
+const TERRITORIO = [
+  "execucao/processos/processos-data.mjs",
+  "app/src/app/processos",
+  "app/src/components/processos",
+  "app/src/lib/processos-medidas.ts",
+  "app/src/app/api/e2e",
+  "app/e2e",
+];
+
+function git(args) {
+  return execFileSync("git", args, { cwd: RAIZ, encoding: "utf8" }).trim();
+}
+
+let vigia = null;
+try {
+  const ultimo = git(["log", "--format=%H", "-n", "1", "--", DOUTRINA]);
+  // sem commit na doutrina ainda: nada pra comparar, e avisar seria ruído
+  if (ultimo) {
+    const desde = Number(git(["rev-list", "--count", `${ultimo}..HEAD`, "--", ...TERRITORIO]));
+    // a leva ainda NÃO commitada conta como uma: é justamente a hora de
+    // escrever a lição com o erro fresco, antes de ele virar história
+    const emCurso = git(["status", "--porcelain", "--", ...TERRITORIO]) !== "" ? 1 : 0;
+    // doutrina já sendo editada agora = a lição está sendo escrita. Calar.
+    const doutrinaSuja = git(["status", "--porcelain", "--", DOUTRINA]) !== "";
+    if (!doutrinaSuja && desde + emCurso >= LIMITE) {
+      vigia = {
+        levas: desde + emCurso,
+        emCurso,
+        desde: git(["log", "--format=%cd", "--date=short", "-n", "1", "--", DOUTRINA]),
+      };
+    }
+  }
+} catch {
+  /* fora de repo git, ou git ausente: o gerador continua sendo o gerador */
+}
+
 // ── relatório ───────────────────────────────────────────────────────────────
 console.log(`✓ grafo:  ${SAIDA_JSON.replace(RAIZ, ".")}  (${PASSOS.length} passos, ${ARESTAS.length} arestas)`);
 console.log(`✓ nota:   ${SAIDA_MD.replace(RAIZ, ".")}`);
@@ -160,4 +228,20 @@ if (avisos.length) {
   process.exitCode = 1;
 } else {
   console.log("✓ auditorias limpas");
+}
+
+if (vigia) {
+  console.log("");
+  console.log("┌─────────────────────────────────────────────────────────────────────┐");
+  console.log("│ 📓 A DOUTRINA NÃO MUDA, MAS O TERRITÓRIO SIM                        │");
+  console.log("└─────────────────────────────────────────────────────────────────────┘");
+  console.log(`   ${vigia.levas} leva(s) em /processos desde a última edição da doutrina`);
+  console.log(
+    `   (parada desde ${vigia.desde}${vigia.emCurso ? " · uma delas é a que está na árvore agora" : ""})`,
+  );
+  console.log("");
+  console.log("   A §6 só enche se alguém escrever. A pergunta que ela responde:");
+  console.log("   → nessa leva, o que quebrou por um motivo que vai voltar?");
+  console.log("");
+  console.log(`   Se nada quebrou, ignore. Se quebrou: ${DOUTRINA} §6`);
 }

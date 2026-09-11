@@ -176,7 +176,30 @@ Valor fora da lista aparece **em cinza com "?"**. Falhar em silêncio seria pior
 | 11/09 | Declarei ao dagre um cartão de 190px de altura que na verdade tinha 286 — cartões se sobrepuseram | **Medida mora em um lugar só.** Dois números pro mesmo objeto sempre divergem (§5.1) |
 | 11/09 | Deixei o fundo do cartão translúcido e joguei fora o caminho que o dagre calculava — a aresta atravessou o cartão | Aproveitar o que a ferramenta **já calculou** antes de desenhar por cima dela (§5.1) |
 | 11/09 | Painel de cobertura tinha 3 créditos errados, todos dizendo que temos o que não temos | Verificação roda nos **dois sentidos**: declarado→tela E tela→declarado |
+| 11/09 | Chamei `npx.cmd` via `execFile` — proibido no Windows desde a CVE-2024-27980, e ele **estoura de forma síncrona**. A rota morria sem responder e a tela culpava o JSON | §6.1 |
+| 11/09 | Passei o caminho absoluto da spec pro `playwright test`, que espera **regex**, não caminho. `C:\…` como regex não casa nada: *"No tests found"* | §6.1 |
+| 11/09 | Entreguei a saída do reporter `line` crua, num `<pre>`, e chamei de resultado. O Pedro teve que pedir pra conseguir ler | §6.2 |
 | 10/09 | Apresentei um contrato como lido com **12% do texto** | [[legalize-leitura-integral-documento]] |
+
+### 6.1 🔑 A raiz dos dois erros de ferramenta (11/09)
+
+Os dois são **o mesmo erro com roupa diferente**: *presumi como a ferramenta recebe o argumento, em vez de conferir.*
+
+Não são erros de digitação, e é por isso que merecem seção. Nos dois casos o código **parecia certo** — passar o caminho do arquivo que se quer rodar é o gesto óbvio, e `npx` é como se chama o Playwright na linha de comando. O que faltou foi uma pergunta de dez segundos: **"esse argumento é o quê, exatamente?"**
+
+O `playwright test` não recebe caminho, recebe **regex casada contra o caminho**. No Linux o erro teria passado por acaso (`/` é literal em regex) e a gente só descobriria meses depois, no Windows do Pedro. Erro que só aparece num sistema operacional é erro que fica escondido.
+
+🔴 **A trava:** ao chamar uma ferramenta externa pela primeira vez, declarar em uma linha o que cada argumento é (caminho? regex? glob? flag?) e **conferir na documentação dela, não na intuição.** Se não der pra conferir, o comentário diz "presumido" — e aí a próxima pessoa sabe onde olhar quando quebrar.
+
+⚠️ Vale pro `execFile` também: **o que ele aceita mudou por CVE** e continua mudando. Comando que rodava ano passado pode ser recusado hoje, e a recusa nem sempre vem como erro bonito — a do `.cmd` vem como `throw` síncrono que escapa do `await`.
+
+### 6.2 🔑 Saída de ferramenta é DADO, não texto (11/09)
+
+O painel de E2E rodava certo e mostrava o resultado como um bloco de texto de 264px de altura. O Pedro pediu pra ficar legível, e o diagnóstico não era estética: **num dump, o que passou e o que falhou têm o mesmo peso visual.** Pra decidir, ele tinha que ler tudo e rolar — a informação que decide afogada na que não decide.
+
+🔴 **A trava:** quando uma ferramenta oferece saída estruturada (`--reporter=json`, `--format=json`, `--porcelain`), a tela consome a **estrutura**, não o texto humano. E ordena por **atenção**, não por ordem de execução: o que quebrou primeiro, o que passou encolhido.
+
+⚠️ **Mas nunca joga o texto cru fora.** Ele é a única pista exatamente quando a estrutura não existe: ferramenta que morre no boot não escreve relatório nenhum. Guardar os dois custa uma flag; escolher um custa a depuração do dia ruim.
 
 ---
 

@@ -65,6 +65,121 @@ type Estado = "parado" | "rodando" | "ok" | "falhou" | "indisponivel";
 /** Linha em branco entre os blocos da mensagem de erro. */
 const QUEBRA = String.fromCharCode(10, 10);
 
+/* O que a rota devolve depois que ela passou a ler o relatório JSON. */
+type ErroLido = {
+  titulo: string;
+  campos: { rotulo: string; valor: string }[];
+  detalhe: string;
+};
+type TesteLido = {
+  titulo: string;
+  local: string;
+  status: "passou" | "falhou" | "instavel" | "pulado";
+  ms: number;
+  erro: ErroLido | null;
+};
+type Resumo = { total: number; passou: number; falhou: number; pulado: number; ms: number };
+
+/**
+ * 🎨 11/09 — A LEITURA DO RESULTADO, e por que ela virou coluna própria.
+ *
+ * Pedido do Pedro: *"eu só quero esse resultado mais visualmente agradável…
+ * melhor formato de leitura para a minha tomada de decisões"*.
+ *
+ * O diagnóstico não é estética: era um `<pre>` de 264px de altura com a saída
+ * do reporter `line` inteira dentro. Ali, o teste que passou, o que falhou e a
+ * pilha de erro têm o MESMO peso visual, e a única forma de achar a falha é
+ * ler tudo e rolar. Pra "tomada de decisão" isso é o pior formato possível:
+ * a informação que decide (o que quebrou, e onde) está afogada na que não
+ * decide (o que passou).
+ *
+ * Três escolhas, cada uma resolvendo uma parte:
+ *   1. FALHA PRIMEIRO. A lista não sai na ordem de execução, sai na ordem de
+ *      quem precisa de atenção: falhou › instável › pulado › passou.
+ *   2. O ERRO VEM DESTRINCHADO. `Locator/Esperado/Recebido` viram linhas
+ *      rotuladas, não parágrafo. O call log e a pilha ficam num acordeão —
+ *      existem, mas não competem com a primeira leitura.
+ *   3. QUEM PASSOU ENCOLHE. Uma linha, sem erro, cinza. A prova de que rodou
+ *      continua na tela; ela só para de gritar.
+ */
+const ESTILO_STATUS: Record<TesteLido["status"], { rotulo: string; cor: string; ponto: string }> = {
+  falhou: { rotulo: "falhou", cor: "text-red-700", ponto: "bg-red-500" },
+  instavel: { rotulo: "instável", cor: "text-amber-700", ponto: "bg-amber-500" },
+  pulado: { rotulo: "pulado", cor: "text-zinc-500", ponto: "bg-zinc-300" },
+  passou: { rotulo: "passou", cor: "text-emerald-700", ponto: "bg-emerald-500" },
+};
+
+/** Ordem de ATENÇÃO, não de execução. Ver o comentário acima. */
+const PESO: Record<TesteLido["status"], number> = { falhou: 0, instavel: 1, pulado: 2, passou: 3 };
+
+function duracao(ms: number) {
+  if (ms < 1000) return `${ms}ms`;
+  return `${(ms / 1000).toFixed(1)}s`;
+}
+
+function CartaoTeste({ teste }: { teste: TesteLido }) {
+  const [aberto, setAberto] = useState(false);
+  const estilo = ESTILO_STATUS[teste.status];
+  const falhou = teste.status === "falhou" || teste.status === "instavel";
+
+  return (
+    <div
+      className={`rounded-xl border ${
+        falhou ? "border-red-200 bg-red-50/50" : "border-zinc-200 bg-white"
+      }`}
+    >
+      <div className="flex items-start gap-2 px-3 py-2">
+        <span className={`mt-[6px] size-2 shrink-0 rounded-full ${estilo.ponto}`} aria-hidden />
+        <div className="min-w-0 flex-1">
+          <p className={`text-[12px] font-semibold leading-snug ${falhou ? "text-zinc-900" : "text-zinc-600"}`}>
+            {teste.titulo}
+          </p>
+          <p className="mt-0.5 font-mono text-[10px] text-zinc-400">{teste.local}</p>
+        </div>
+        <span className="shrink-0 text-[10px] tabular-nums text-zinc-400">{duracao(teste.ms)}</span>
+      </div>
+
+      {teste.erro && (
+        <div className="border-t border-red-200/70 px-3 py-2">
+          <p className="text-[12px] font-bold text-red-800">{teste.erro.titulo}</p>
+
+          {teste.erro.campos.length > 0 && (
+            <dl className="mt-1.5 grid grid-cols-[auto_1fr] gap-x-2.5 gap-y-1">
+              {teste.erro.campos.map((c) => (
+                <div key={c.rotulo} className="contents">
+                  <dt className="text-[10px] font-bold uppercase tracking-wider text-red-400">
+                    {c.rotulo}
+                  </dt>
+                  <dd className="break-all font-mono text-[11px] leading-snug text-zinc-700">
+                    {c.valor}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          )}
+
+          {teste.erro.detalhe && (
+            <>
+              <button
+                type="button"
+                onClick={() => setAberto((v) => !v)}
+                className="mt-2 text-[11px] font-semibold text-red-700 underline underline-offset-2 hover:text-red-900"
+              >
+                {aberto ? "esconder o rastro" : "ver o rastro (call log e pilha)"}
+              </button>
+              {aberto && (
+                <pre className="mt-1.5 max-h-56 overflow-auto whitespace-pre-wrap rounded-lg bg-white/80 p-2 font-mono text-[10px] leading-relaxed text-zinc-600">
+                  {teste.erro.detalhe}
+                </pre>
+              )}
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function PainelE2E({
   onFechar,
   processo,
@@ -96,6 +211,9 @@ export function PainelE2E({
   const [escolhida, setEscolhida] = useState(lista[0].arquivo);
   const [estado, setEstado] = useState<Estado>("parado");
   const [saida, setSaida] = useState("");
+  const [testes, setTestes] = useState<TesteLido[]>([]);
+  const [resumo, setResumo] = useState<Resumo | null>(null);
+  const [verBruto, setVerBruto] = useState(false);
   const [copiado, setCopiado] = useState(false);
 
   const comando = `cd app && npx playwright test e2e/${escolhida}`;
@@ -103,6 +221,8 @@ export function PainelE2E({
   async function rodar() {
     setEstado("rodando");
     setSaida("");
+    setTestes([]);
+    setResumo(null);
     try {
       const r = await fetch("/api/e2e/run", {
         method: "POST",
@@ -118,7 +238,14 @@ export function PainelE2E({
        * no `npx.cmd`, e a tela culpava o JSON.
        */
       const bruto = await r.text();
-      let j: { ok?: boolean; saida?: string; erro?: string; indisponivel?: boolean };
+      let j: {
+        ok?: boolean;
+        saida?: string;
+        erro?: string;
+        indisponivel?: boolean;
+        testes?: TesteLido[];
+        resumo?: Resumo | null;
+      };
       try {
         j = JSON.parse(bruto);
       } catch {
@@ -139,6 +266,9 @@ export function PainelE2E({
         return;
       }
       setSaida(j.saida ?? j.erro ?? "(sem saída)");
+      // ordem de ATENÇÃO, não de execução: falha primeiro
+      setTestes([...(j.testes ?? [])].sort((a, b) => PESO[a.status] - PESO[b.status]));
+      setResumo(j.resumo ?? null);
       setEstado(j.ok ? "ok" : "falhou");
     } catch (e) {
       setEstado("falhou");
@@ -158,9 +288,17 @@ export function PainelE2E({
 
   return (
     <div className="absolute inset-0 z-50 flex items-center justify-center bg-zinc-900/40 p-6">
-      <div className="flex max-h-full w-[640px] flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-2xl">
+      <div className="flex max-h-full w-[min(1040px,96vw)] flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-2xl">
         <div className="flex items-center gap-3 border-b border-zinc-200 px-5 py-3">
           <p className="text-[15px] font-bold text-zinc-900">Passar E2E</p>
+          {resumo && (
+            <span className="flex items-center gap-2 text-[11px] font-semibold tabular-nums">
+              <span className="text-emerald-600">✓ {resumo.passou}</span>
+              {resumo.falhou > 0 && <span className="text-red-600">✕ {resumo.falhou}</span>}
+              {resumo.pulado > 0 && <span className="text-zinc-400">⤼ {resumo.pulado}</span>}
+              <span className="text-zinc-400">· {duracao(resumo.ms)}</span>
+            </span>
+          )}
           <button
             type="button"
             onClick={onFechar}
@@ -171,7 +309,9 @@ export function PainelE2E({
           </button>
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
+        <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
+          {/* ESQUERDA — o que rodar. Largura fixa: é a coluna de comando. */}
+          <div className="min-h-0 shrink-0 overflow-y-auto px-5 py-4 lg:w-[360px] lg:border-r lg:border-zinc-200">
           <p className="mb-3 text-[12px] leading-relaxed text-zinc-600">
             A suíte roda contra o app em desenvolvimento. Só você dispara daqui:
             o assistente não aciona este caminho, por regra travada no projeto.
@@ -226,11 +366,72 @@ export function PainelE2E({
             <code className="block break-all text-[11px] text-zinc-100">{comando}</code>
           </div>
 
-          {saida && (
-            <pre className="mt-3 max-h-64 overflow-auto whitespace-pre-wrap rounded-xl border border-zinc-200 bg-zinc-50 p-3 text-[11px] leading-relaxed text-zinc-700">
-              {saida}
-            </pre>
-          )}
+          </div>
+
+          {/* DIREITA — o que ACONTECEU. Rola sozinha, sem levar a lista junto. */}
+          <div className="min-h-0 flex-1 overflow-y-auto bg-zinc-50/60 px-5 py-4">
+            {estado === "parado" && !saida && (
+              <div className="flex h-full min-h-[220px] flex-col items-center justify-center text-center">
+                <p className="text-[13px] font-semibold text-zinc-400">Nenhuma rodada ainda</p>
+                <p className="mt-1 max-w-[280px] text-[11px] leading-relaxed text-zinc-400">
+                  Escolha a suíte ao lado e aperte Rodar. O resultado aparece aqui,
+                  com a falha em primeiro lugar.
+                </p>
+              </div>
+            )}
+
+            {estado === "rodando" && (
+              <div className="flex h-full min-h-[220px] flex-col items-center justify-center text-center">
+                <p className="text-[13px] font-semibold text-zinc-500">Rodando a suíte…</p>
+                <p className="mt-1 max-w-[300px] text-[11px] leading-relaxed text-zinc-400">
+                  O navegador está subindo de verdade. A saída chega inteira no fim,
+                  não passo a passo.
+                </p>
+              </div>
+            )}
+
+            {estado !== "rodando" && testes.length > 0 && (
+              <>
+                {resumo && resumo.falhou > 0 && (
+                  <p className="mb-2.5 text-[12px] font-bold text-red-700">
+                    {resumo.falhou} de {resumo.total} {resumo.falhou === 1 ? "teste pede" : "testes pedem"} atenção
+                  </p>
+                )}
+                <div className="flex flex-col gap-1.5">
+                  {testes.map((t) => (
+                    <CartaoTeste key={`${t.local}-${t.titulo}`} teste={t} />
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/**
+             * A saída crua não some: ela é a ÚNICA pista quando o Playwright
+             * morre antes de escrever o relatório (spec que não compila,
+             * timeout, binário faltando). Só deixa de ser a primeira coisa.
+             */}
+            {estado !== "rodando" && saida && (
+              <div className={testes.length > 0 ? "mt-3" : ""}>
+                {testes.length === 0 && estado !== "parado" && (
+                  <p className="mb-2 text-[12px] font-semibold text-amber-700">
+                    Sem relatório por teste. A saída do Playwright está abaixo.
+                  </p>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setVerBruto((v) => !v)}
+                  className="text-[11px] font-semibold text-zinc-500 underline underline-offset-2 hover:text-zinc-900"
+                >
+                  {verBruto ? "esconder a saída bruta" : "ver a saída bruta do Playwright"}
+                </button>
+                {(verBruto || testes.length === 0) && (
+                  <pre className="mt-1.5 max-h-72 overflow-auto whitespace-pre-wrap rounded-xl border border-zinc-200 bg-white p-3 font-mono text-[10px] leading-relaxed text-zinc-600">
+                    {saida}
+                  </pre>
+                )}
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="flex items-center gap-2 border-t border-zinc-200 px-5 py-3">

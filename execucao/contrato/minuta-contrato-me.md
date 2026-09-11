@@ -401,7 +401,7 @@ Quando referidas em conjunto, as duas empresas serão chamadas de Legalizai.
 | Desenquadramento de ME para EPP, honorário | R$ 139,00 | no ato ||
 | Taxa da Junta Comercial no desenquadramento, repasse | R$ 290,00 | no ato ||
 | Taxa da Junta Comercial na abertura, repasse | R$ 281,08 | no ato ||
-| Endereço fiscal, mensal | R$ 60,00 | fatura ||
+| Endereço fiscal, mensal | R$ 49,00 | fatura ||
 
 **A-I.1** Serviços de valor igual ou inferior a R$ 50,00 são lançados na fatura da competência seguinte. Acima disso, exigem aceite no ato.
 

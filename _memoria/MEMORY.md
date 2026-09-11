@@ -1,5 +1,9 @@
 # Memory Index — Legalize
 
+- [Processo ANTES da tela](legalize-processo-antes-da-tela.md) — 11/09 revoga o plano de inventariar telas: inventario de tela e cego pro que falta. Board `/processos`, semaforo, vermelho e o produto.
+- [LP virou a raiz, em modo pre-lancamento](legalize-lp-na-raiz-modo-espera.md) — 11/09 no ar; modo vira com 1 comando. 🔴 `lp/_lab` e a FONTE e nao esta versionada.
+- [Billing = fatura por competencia, nao assinatura](legalize-cobranca-fatura-competencia.md) — 11/09 travado: itens de linha, `plano: null`, competencia AAAAMM; gateway entra por ultimo. Corroborado na API do lider.
+- [Endereco fiscal = R$49/mes](legalize-endereco-fiscal-49.md) — 11/09 revoga o R$60 de 04/09: abaixo de R$50 a clausula 6.3 deixa de se contradizer com o Anexo I. ⚠️ colide com o preco do plano MEI, tambem R$49.
 - [Decisoes do NOSSO contrato ME](legalize-contrato-proprio-decisoes.md) — 10/09 **MINUTA ESCRITA E ENVIADA A ADVOGADA**: 16 clausulas em `execucao/contrato/minuta-contrato-me.md`; 3 coortes ME (79/99/139) + tabela EPP por RBT12; folha R$39 teto 10; ME→EPP permanece no app; migracao REMOVIDA (contrato e de constituicao); elegibilidade por caracteristica x conduta.
 - [Lucro 2026 (Lei 15.270/2025) + Carta CFC obrigatoria](legalize-lucro-2026-e-carta-cfc.md) — 10/09: lucro sacado vai pra EFD-Reinf com IRRF antecipado; ATA ate 31/01/2026 isenta o acumulado. Carta de Responsabilidade (CFC 1.590/2020) trava o fechamento contabil.
 - [Documento importante se le INTEIRO](legalize-leitura-integral-documento.md) — 10/09 TRAVADO no CLAUDE.md: 100% do texto, literal salvo em arquivo, e o que ficou de fora vira lista com nome. Nasceu de eu entregar 12% como se fosse tudo.

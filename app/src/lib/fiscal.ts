@@ -112,8 +112,15 @@ export const CUSTOS = {
    * fiscal paga isso TODO mês, somado à mensalidade do plano. Aprovação
    * AUTOMÁTICA (decisão 27/08), diferente da Contabilizei, que sujeita a
    * aprovação manual.
+   *
+   * 10/09: revisado de R$60 para R$49 (Pedro). O número novo resolve de
+   * graça uma inconsistência que existia no contrato: a cláusula 6.3 manda
+   * lançar na fatura só o que custa até R$50, e acima disso exige aceite no
+   * ato. A R$60 o Anexo I dizia "fatura" e contrariava a própria 6.3. A
+   * R$49 o lançamento em fatura passa a ser legítimo pela regra geral, sem
+   * precisar redigir exceção para serviço recorrente.
    */
-  ENDERECO_FISCAL: 60,
+  ENDERECO_FISCAL: 49,
   /**
    * 🟢 FECHADO (Pedro, 30/08) — R$209/ano. Antes ficava `null` de propósito
    * (regra anti-guru: o ADR de 30/07 só citava "~R$200" dentro de uma

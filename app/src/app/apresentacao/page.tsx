@@ -989,7 +989,7 @@ const DIVERGENCIAS: Partial<
     },
     {
       id: "✅ RESOLVIDO 26/08",
-      oque: "Era a 'pendência real de spec' documentada há semanas: o add-on de endereço fiscal não aparecia aqui, e a 'conta total' desta tela não era total. Reunião Rua Satélite 36 (item 2) resolveu na raiz: a escolha 'endereço próprio × fiscal Legalizai' saiu do C4 (pós-pagamento) e subiu pro E5F (`FaixaView`, antes do cadastro) — quando escolhido, o valor já soma na mensalidade mostrada aqui, com 1 linha de explicação ('Inclui R$60/mês de endereço fiscal, porque você optou por usar o nosso').",
+      oque: "Era a 'pendência real de spec' documentada há semanas: o add-on de endereço fiscal não aparecia aqui, e a 'conta total' desta tela não era total. Reunião Rua Satélite 36 (item 2) resolveu na raiz: a escolha 'endereço próprio × fiscal Legalizai' saiu do C4 (pós-pagamento) e subiu pro E5F (`FaixaView`, antes do cadastro) — quando escolhido, o valor já soma na mensalidade mostrada aqui, com 1 linha de explicação ('Inclui R$49/mês de endereço fiscal, porque você optou por usar o nosso').",
       status:
         "✅ aplicado em PlanoView + PlanoOferta (prop `enderecoFiscal`, `wizard-dinheiro.tsx`)",
     },
@@ -1962,7 +1962,7 @@ const DESCRICOES: Record<
     dono: "usuario",
     faz: "Pergunta a área em que a pessoa trabalha, DE ONDE ela trabalha (casa, ponto comercial, no cliente, só internet) e o CEP que vai no cadastro.",
     interfere:
-      "É a 1ª tela do caminho MEI, no lugar da E3.4 do ME, e tirou 3 coisas que só existem no ME: o gate de BH (o MEI registra pela Redesim, e a contabilidade a gente presta de qualquer lugar), o card de endereço fiscal de R$60/mês (que existe pra RESOLVER o gate de BH), e o aviso de viabilidade (extinta pro MEI em 2020).",
+      "É a 1ª tela do caminho MEI, no lugar da E3.4 do ME, e tirou 3 coisas que só existem no ME: o gate de BH (o MEI registra pela Redesim, e a contabilidade a gente presta de qualquer lugar), o card de endereço fiscal de R$49/mês (que existe pra RESOLVER o gate de BH), e o aviso de viabilidade (extinta pro MEI em 2020).",
     porque:
       "🎯 As 2 primeiras eram ERRO REAL, achados pela auditoria de 28/08: vender endereço fiscal pro MEI é vender solução pra um problema que ele não tem, porque a lei deixa ele usar a própria casa (LC 123 art. 3º-A). A pergunta NOVA (forma de endereço) existe porque ela interage com a dispensa de alvará, coisa que no ME não faz sentido perguntar.",
   },

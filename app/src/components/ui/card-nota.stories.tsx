@@ -41,7 +41,7 @@ export const Atencao: Story = {
     variante: "atencao",
     titulo: "Apartamento só serve se você morar nele",
     children:
-      "A Prefeitura de Belo Horizonte indefere empresa em apartamento quando nenhum sócio mora no endereço. Dá pra resolver de dois jeitos: usar outro endereço seu, ou usar o endereço da Legalizai por R$ 60/mês.",
+      "A Prefeitura de Belo Horizonte indefere empresa em apartamento quando nenhum sócio mora no endereço. Dá pra resolver de dois jeitos: usar outro endereço seu, ou usar o endereço da Legalizai por R$ 49/mês.",
   },
   decorators: [moldura],
 };

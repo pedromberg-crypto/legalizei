@@ -20,6 +20,24 @@
  * pelo Mermaid) segue como já estava. A5 (home dia-1) é o handoff do flow
  * Aprovação — mesma tela, não ganha código novo aqui.
  *
+ * 🆕 11/09 — ESTE ARQUIVO VIRA A CASA DO INVENTÁRIO DE CAPACIDADES.
+ * Decisão do Pedro: o medo não é a tela ficar feia, é a tela nova PERDER
+ * funcionalidade que a atual já tem. A resposta não é congelar cópia (o fork
+ * do MEI já provou que sai caro); é cada tela DECLARAR o que faz e um script
+ * conferir se ainda faz. Dois campos novos por nó:
+ *
+ *   caps:  ["impostos.baixar-guia", ...]  o que a tela entrega. Cada uma tem
+ *          um `data-cap` correspondente no JSX — atributo, não classe nem
+ *          texto, pra sobreviver a redesenho inteiro.
+ *   cobre: ["2.2", "2.5"]                 os itens do painel de 51
+ *          funcionalidades ([[HOME-produto]]) que esta tela cobre. É o que
+ *          transforma o placar de cobertura em coisa CALCULADA em vez de
+ *          escrita à mão (a versão manual já estava errada em 2 pontos).
+ *
+ * Regras, gramática e a régua do que conta como capacidade:
+ * `produto/_doutrina-capacidades.md`. Verificador:
+ * `execucao/portal/verificar-capacidades.mjs`.
+ *
  * Campos de um nó (iguais ao flow-data):
  *   id · rota · label · forma('tela'|'decisao'|'terminal') · classe · status
  *   ('construida'|'planejada') · validado('oficial'|'ux'|'pendente') · falta

@@ -11,7 +11,7 @@ O que trava e o que libera uma abertura. Use pra explicar o "porquê" de cada pe
 * Por isso o app pergunta **se é casa ou apartamento** e **se o titular mora no local**. Não é curiosidade, é o que decide o deferimento.
 * **Índice cadastral do IPTU:** obrigatório. Sem ele a Prefeitura não localiza o imóvel, e o processo para. Fica na guia do IPTU, e o app mostra onde achar.
 * Imóvel comercial: o IPTU precisa ter destinação compatível e o endereço não pode ter impedimento de zoneamento pra atividade.
-* **Saída quando não dá:** endereço fiscal da Legalizai, R$ 60 por mês (ver `01-PLANOS-E-OFERTAS`). Resolve tanto quem mora fora de BH quanto quem tem apartamento sem poder cumprir a regra.
+* **Saída quando não dá:** endereço fiscal da Legalizai, R$ 49 por mês (ver `01-PLANOS-E-OFERTAS`). Resolve tanto quem mora fora de BH quanto quem tem apartamento sem poder cumprir a regra.
 
 Como explicar sem assustar: "O que a Prefeitura analisa é o endereço, não você. Eu peço o IPTU exato pra ela conseguir localizar o imóvel e não indeferir o seu processo por um detalhe que dá pra resolver antes."
 

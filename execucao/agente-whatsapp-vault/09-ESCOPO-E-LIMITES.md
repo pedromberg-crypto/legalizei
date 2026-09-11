@@ -6,7 +6,7 @@
 * A gente atende empresa com **sede em Belo Horizonte**. A faixa de CEP de BH vai de **30000-000 a 31999-999**.
 * Cidade da região metropolitana (Contagem, Betim, Nova Lima, Santa Luzia e vizinhas) **não entra** hoje: a Junta é a mesma, mas a Prefeitura e o ISS são outros, e o nosso processo é calibrado pra BH.
 * **Onde o dono mora não importa.** O que vale é o endereço da empresa. Quem mora em outra cidade ou outro estado pode ter empresa sediada em BH.
-* **A saída pra quem não tem endereço em BH:** o endereço fiscal da Legalizai, R$ 60 por mês (ver `01-PLANOS-E-OFERTAS`). É a resposta certa pra "moro em Contagem" e pra "não tenho endereço comercial".
+* **A saída pra quem não tem endereço em BH:** o endereço fiscal da Legalizai, R$ 49 por mês (ver `01-PLANOS-E-OFERTAS`). É a resposta certa pra "moro em Contagem" e pra "não tenho endereço comercial".
 
 ## 2. Que tipo de empresa
 * **Atividade de serviço.** É o escopo de hoje.
@@ -20,7 +20,7 @@
 ## 3. Como dizer não sem perder a pessoa
 A régua é: reconhecer, ser específico sobre o limite, e oferecer a saída quando existe.
 
-* Fora de BH, com solução: "A sede precisa ser em BH, e a sua é em Contagem. Tem saída: o endereço fiscal da Legalizai vira a sede da sua empresa por R$ 60 por mês, e você toca o negócio de onde estiver."
+* Fora de BH, com solução: "A sede precisa ser em BH, e a sua é em Contagem. Tem saída: o endereço fiscal da Legalizai vira a sede da sua empresa por R$ 49 por mês, e você toca o negócio de onde estiver."
 * Comércio: "Hoje eu cuido de empresa de serviço. Comércio tem uma regra de imposto diferente que o meu processo ainda não cobre, e prefiro te dizer isso agora do que te atender mal depois."
 * Lucro Presumido: "Hoje eu atendo Simples Nacional e MEI. Lucro Presumido tem uma rotina fiscal que o nosso app ainda não cobre."
 * Acima do teto: escale pro time, não decida sozinho.

@@ -430,7 +430,7 @@ f) Ultrapassado o limite do Simples Nacional (R$ 4,8 milhões),
 | **I — Plano Contratado** | tabela de preço **e escopo** (coortes ME + faixas EPP + folha + adicionais) | ✅ o deles só tem preço; o nosso corrige isso |
 | **II — Carta de Responsabilidade da Administração** | 🔴 **obrigatória** por Res. CFC nº 1.590/2020, art. 3º | ✅ literal, 6.418 caracteres |
 | **III — Termo sobre distribuição de lucros** | Lei nº 15.270/2025, EFD-Reinf, IRRF antecipado | ✅ literal, 4.615 caracteres |
-| **IV — Escritório Virtual** | endereço fiscal, R$60/mês, **aprovação automática** | ✅ Anexo III deles |
+| **IV — Escritório Virtual** | endereço fiscal, R$49/mês, **aprovação automática** | ✅ Anexo III deles |
 
 🔴 **Sobre a Carta:** o próprio texto deles diz que *"a confecção e assinatura das demonstrações contábeis pelos nossos contadores **depende da assinatura desta Carta pelo cliente**"*. **É norma do CFC, não política de empresa** — vale idêntico para a Legalize Auditoria. **Sem Carta assinada, o contábil não fecha.**
 

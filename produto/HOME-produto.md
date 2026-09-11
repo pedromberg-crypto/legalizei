@@ -102,7 +102,7 @@ Então: **a spec manda, a evidência é fonte.** É a mesma doutrina do [[indice
 | # | Funcionalidade | Nossa tela | % | O que falta |
 |:--:|---|---|:--:|---|
 | 2.1 | Ver DAS do mês | `/impostos` | 95% | — modelo, 10 status e `acaoBotao` mapeados |
-| 2.2 | Baixar guia + código de barras | `/impostos/guias` | 70% | 🔴 a **geração** depende do Serpro, não contratado |
+| 2.2 | Baixar guia + código de barras | `/impostos/pagar` | 70% | 🔴 a **geração** depende do Serpro, não contratado. ⚠️ 11/09: o crédito estava em `/impostos/guias`, que é a LISTA; quem entrega ver, baixar e copiar o código é a `/impostos/pagar` |
 | 2.4 | Saber que foi pago | — | 50% | 🔴 sabemos o mecanismo **deles**; o nosso é **decisão**, não descoberta |
 | 2.5 | Histórico de guias | `/impostos/guias` | 95% | — |
 | 2.6 | Minhas alíquotas | `/impostos/aliquotas` | 95% | 🕓 tabela do IRRF não ratificada |
@@ -157,7 +157,7 @@ Então: **a spec manda, a evidência é fonte.** É a mesma doutrina do [[indice
 
 | # | Funcionalidade | Nossa tela | % | O que falta |
 |:--:|---|---|:--:|---|
-| 8.1 | Cadastrar colaborador | — | **35%** | 🔴 o formulário do líder **está bloqueado** (*"entre em contato com a nossa equipe"*). **Nunca vi os campos.** O que sei veio do layout do demonstrativo, por inferência |
+| 8.1 | Cadastrar colaborador | `/mais/colaborador` (só MEI) | **35%** | ⚠️ 11/09: dizia "—" e a tela EXISTE, construída em 04/08 para o **1 funcionário que a lei dá ao MEI**. Ela não cobre a folha do ME, que é o que falta. 🔴 o formulário do líder **está bloqueado** (*"entre em contato com a nossa equipe"*). **Nunca vi os campos.** O que sei veio do layout do demonstrativo, por inferência |
 | 8.2 | Rubricas e lançamentos do mês | — | **95%** | 🔑 **606 rubricas** com `incideINSS`, `incideFGTS`, `incideIRRF` e o **plano de contas** por linha. É o ativo mais completo que temos de qualquer frente |
 | 8.3 | Holerite e demonstrativo | — | 55% | vi as colunas do cabeçalho (PIS/NIT, CBO, Dep. IRRF); nunca vi um holerite montado |
 | 8.4 | Fechamento da competência | — | 75% | `getMesCompetencia` vem do **servidor**, coerente com o padrão. Falta a regra de trava |
@@ -179,6 +179,19 @@ Então: **a spec manda, a evidência é fonte.** É a mesma doutrina do [[indice
 
 ---
 
+### 🆕 §9 · O que já existe e não estava catalogado — 63%
+
+> ⚠️ **Nasceu de um erro de inventário, não de uma descoberta.** Em 11/09 o cruzamento das 49 funcionalidades contra as 44 rotas do portal achou **duas telas construídas que o painel não sabia que existiam**. Enquanto não entram aqui, elas não têm dono, não têm % e ninguém lapida.
+>
+> 🔑 As duas são **tese anti-líder**, não paridade. Por isso mesmo escaparam: o painel nasceu do teardown do concorrente, então ele só enxergava o que ELE faz.
+
+| # | Funcionalidade | Nossa tela | % | O que falta |
+|:--:|---|---|:--:|---|
+| 9.1 🆕 | **Relatórios em português** | `/mais/relatorios` | **60%** | 🔑 O concorrente entrega DRE e Balanço com jargão; aqui o relatório é pra DONO entender ("quanto entrou, quanto sobrou"). Tela de 27/07, com gráfico de faturamento e cards em linguagem comum. 🔴 **nunca cruzada com o que o líder oferece de relatório** — não sei o que a gente deixa de fora. 🕓 números são farol |
+| 9.2 🆕 | **Loja de serviços avulsos** | `/mais/servicos` | **65%** | 🔑 É o **balde vendável** inteiro: o líder fatura ~45 serviços à-la-carte e isso é receita oculta do modelo dele. Tela de 24/07 com catálogo, sheet de detalhe e double-check anti-dark-pattern. 🔴 **preços FAKE, deferidos ao Mauro**. 🔴 falta o de-para com o catálogo real de ~45 serviços, que já está capturado |
+
+---
+
 ### 🎯 O placar
 
 | Seção | % | |
@@ -190,8 +203,9 @@ Então: **a spec manda, a evidência é fonte.** É a mesma doutrina do [[indice
 | §5 Estar em dia | **75%** | ↓ era 81%, com 2 itens novos |
 | §1 Home | **68%** | |
 | 🆕 §8 Folha | **64%** | entrou agora |
+| 🆕 §9 Não catalogado | **63%** | entrou em 11/09 |
 | 🔴 §7 Plano e cobrança | **38%** | |
-| **Total (49 itens core)** | **≈ 70%** | era 70% com 38 itens |
+| **Total (51 itens core)** | **≈ 70%** | 49 + os 2 achados no cruzamento de 11/09 |
 
 🔑 **O total não mexeu, e isso é informação.** Entraram **11 itens novos**, a maioria abaixo da média, e ao mesmo tempo o §6 subiu 12 pontos. **A base cresceu 29% e a cobertura se manteve**, o que significa que o trabalho de 10/09 pagou o custo de ampliar o escopo.
 

@@ -8,6 +8,12 @@ tags: [portal, home, dia-2, ux, feature, spec, navegacao]
 
 # 🧩 Portal interno — cruzamento paridade × inovação (spec canônica)
 
+> 🔻 **PRECEDÊNCIA (travada 11/09).** Este documento é de **julho** e nasceu da primeira leva de comparação com o líder, que foi o que gerou as telas do portal. **Ele é histórico, não é guia.**
+>
+> Para a rodada de lapidação do MVP, quem manda é a pesquisa de setembro, muito mais robusta: o painel de 51 funcionalidades em [[HOME-produto]], as evidências com API e endpoint em `produto/evidencias/`, e o inventário de capacidades em `execucao/portal/portal-data.mjs`.
+>
+> ⚠️ **Não apagar.** Aqui mora o porquê de cada tela ter nascido como nasceu, e isso não está em nenhum outro lugar. O que não vale é usar este arquivo para decidir o que construir agora.
+
 > A **parte interna do app** (dia-2) desenhada cruzando o esqueleto da Contabilizei ([[2026-07-21-dossie-plataforma-logada]], paridade) com o banco de inovação ([[home-candidatos-modulos]]). Define **navegação + home + abas + monetização + faseamento**. Vira a base pra montar a home final (mesclando os campeões do acervo `/componentes`).
 >
 > **Fixes aplicados** (auto-auditoria 22/07): densidade → hierarquia · 1 gauge virou vigília preditiva · dia-1 × regime separados · economia acumulada travada (anti-guru) · gauge+pró-labore acoplados · trilha alinhada ao "certificado invisível" · pagar-pelo-app com fallback · redundância de ações removida · veredito único · avisos+2º sócio previstos.

@@ -8,6 +8,12 @@ tags: [produto, portal, spec, matriz, dia-2]
 
 # 🧩 Matriz do Portal Interno (o "dia-2") — versão leve
 
+> 🔻 **PRECEDÊNCIA (travada 11/09).** Este documento é de **julho** e nasceu da primeira leva de comparação com o líder, que foi o que gerou as telas do portal. **Ele é histórico, não é guia.**
+>
+> Para a rodada de lapidação do MVP, quem manda é a pesquisa de setembro, muito mais robusta: o painel de 51 funcionalidades em [[HOME-produto]], as evidências com API e endpoint em `produto/evidencias/`, e o inventário de capacidades em `execucao/portal/portal-data.mjs`.
+>
+> ⚠️ **Não apagar.** Aqui mora o porquê de cada tela ter nascido como nasceu, e isso não está em nenhum outro lugar. O que não vale é usar este arquivo para decidir o que construir agora.
+
 > **O que é:** o mapa em papel do **portal pós-abertura** (o app logado, depois que a empresa está ativa). É o "dia-2" que o flow de abertura N1→N24 **ainda não constrói** — o **N24 é a porta** deste portal. Feito ANTES de desenhar tela, porque este portal é **cíclico** (não linear) e é uma **vitrine sobre o motor contábil**, então a ordem/dado importa mais que o pixel.
 >
 > **Escopo travado:** só o que é **grátis no plano Padrão R$195** da Contabilizei (cruzamento [[plano-padrao-195-referencia]] × [[2026-07-21-dossie-plataforma-logada|dossiê logado]]). Fora daqui = deferido/backlog.

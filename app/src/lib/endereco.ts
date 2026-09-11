@@ -4,7 +4,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  * 🆕 26/08 (reunião Rua Satélite 36, item 2). Antes, a escolha "uso um
  * endereço meu × quero o fiscal da Legalizai" só existia no C4 (dossiê,
- * `/dossie/empresa`), depois do pagamento — e o custo de +R$60/mês nem
+ * `/dossie/empresa`), depois do pagamento — e o custo de +R$49/mês nem
  * aparecia na "conta da abertura" (E7, `/plano`), que já tinha essa
  * pendência documentada (`⚠️ a "conta total" desta tela não é total`).
  *

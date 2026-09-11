@@ -8,6 +8,12 @@ tags: [portal, dia-2, telas, backlog, mockup]
 
 # 🗺️ Backlog de telas do portal (derivado da HOME CAMPEÃ)
 
+> 🔻 **PRECEDÊNCIA (travada 11/09).** Este documento é de **julho** e nasceu da primeira leva de comparação com o líder, que foi o que gerou as telas do portal. **Ele é histórico, não é guia.**
+>
+> Para a rodada de lapidação do MVP, quem manda é a pesquisa de setembro, muito mais robusta: o painel de 51 funcionalidades em [[HOME-produto]], as evidências com API e endpoint em `produto/evidencias/`, e o inventário de capacidades em `execucao/portal/portal-data.mjs`.
+>
+> ⚠️ **Não apagar.** Aqui mora o porquê de cada tela ter nascido como nasceu, e isso não está em nenhum outro lugar. O que não vale é usar este arquivo para decidir o que construir agora.
+
 > Inventário do que falta construir no portal interno, **mapeado a partir do que a home campeã toca**. Complementa a [[matriz-portal-interno]] (P0–P14, o inventário canônico) e a [[cruzamento-portal-interno]] (nav + faseamento).
 >
 > **Por que a ordem mudou:** a matriz ordenava a construção por **disponibilidade de dado** (primeiro o que não depende do motor do dev). Estamos em **mockup**, onde dado não trava — o que importa é o protótipo ficar **navegável** pra review. Então a ordem passa a ser **por derivação da home**: constrói primeiro o que dá 1 toque a partir dela, pra não sobrar beco sem saída.

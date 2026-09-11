@@ -2,7 +2,7 @@
 tipo: derivado
 status: vivo
 gerado_por: execucao/flow/gerar-mapa.mjs
-data: 2026-09-09
+data: 2026-09-10
 assunto: dados-coletados-abertura
 tags: [execucao, flow, dados, abertura]
 ---
@@ -38,7 +38,7 @@ tags: [execucao, flow, dados, abertura]
 - Regime autodeclarado (MEI ou ME)
 
 ### E3.4 · Endereço + categoria (os 2 gates)
-- Endereço da empresa (CEP validado BH + número) OU endereço fiscal Legalizai (+R$60/mês) OU cidade pra fila de espera
+- Endereço da empresa (CEP validado BH + número) OU endereço fiscal Legalizai (+R$49/mês) OU cidade pra fila de espera
 - categoria de atividade (1 das 15 categorias, `pesquisa/cnae-matriz/taxonomia-pills-n4.md`, v2 27/08 -- 90 CNAEs certeza) OU atividade regulamentada (≤12 opções) pra quem não se encontrou
 
 ### E3.4.1 · CEP fora de BH (gate resolvido inline)

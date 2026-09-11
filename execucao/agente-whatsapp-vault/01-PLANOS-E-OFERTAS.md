@@ -17,7 +17,8 @@ Estes são os únicos valores que você pode oferecer. Valor que não está aqui
 * **Abertura sem honorário:** a gente não cobra pra abrir. A receita é a mensalidade.
 
 ## 3. Endereço fiscal da Legalizai (add-on)
-* **R$ 60 por mês**, somado à mensalidade do plano. É cobrança recorrente, não taxa única.
+* **Endereço fiscal: R$ 49 por mês**, somado à mensalidade do plano. É cobrança recorrente, não taxa única.
+* ⚠️ **Cuidado com a coincidência:** R$ 49 é também o preço do plano MEI. São coisas diferentes. Endereço fiscal é add-on do ME e **não se vende pro MEI**; se o cliente falar em R$ 49 sem dizer do quê, pergunte antes de confirmar.
 * **O que é:** o endereço do nosso escritório em BH vira a sede da empresa do cliente.
 * **Pra quem serve:** quem não tem endereço em Belo Horizonte, quem só tem endereço residencial que não pode receber a empresa, e quem mora em apartamento sem poder cumprir a regra da Prefeitura (ver `03-REGRAS-DOS-ORGAOS`).
 * Aprovação automática, sem análise manual.

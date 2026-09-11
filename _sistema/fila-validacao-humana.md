@@ -27,7 +27,7 @@ tags: [sistema, fila, placeholder, decisao, meta]
 |---|---|---|---|---|
 | **Nosso preço** | `~R$195` **FAKE** | benchmark do plano Padrão do líder ([[plano-padrao-195-referencia]]) | **Mauro** + custo unitário real (DB+API) | N7 e N9. Se virar parcelamento ou +1 plano, **muda a estrutura** das telas, não só o número → [[legalize-preco-deferido-custo-real]] |
 | **DAE JUCEMG** | `~R$268,51` | tabela | **Larissa/Mauro** | ⚠️ **em disputa desde 09/07**: a Izabela cravou **R$288** ([[fluxo-abertura-portais-pedro-dev]]) e nunca foi reconciliado. Aparece na "conta da abertura" (N7) |
-| **Endereço fiscal** | `~R$60/mês` | ✅ **confirmado com print** do líder 16/07 ("cobrado a partir da 2ª parcela") | Mauro (o nosso preço) | upsell do N13 |
+| ~~**Endereço fiscal**~~ | 🟢 **`R$49/mês`, FECHADO** (Pedro, 10/09) | passou por 3 estados: benchmark do líder R$60 (print 16/07, "cobrado a partir da 2ª parcela") → travado em R$60 em 04/09 → **revisado pra R$49 em 10/09**, preço nosso, sem relação com o deles | ✅ saiu da fila | `CUSTOS.ENDERECO_FISCAL`. Ficar abaixo de R$50 não é detalhe: a cláusula 6.3 do nosso contrato só deixa lançar na fatura o que custa até R$50, e a R$60 o Anexo I se contradizia |
 | **Certificado A1** | `R$209–229/ano` | Izabela | Mauro (parceiro) | N7 |
 | **TFLF BH** | `R$161,36 + correção` | ✅ **fato duro**: boleto real do CNPJ do Pedro | — (é do município) | N25 |
 | **`FISCAL.TEASER_PISO`** | `0.5` | 🤷 **chute meu**, não ratificado | **Pedro** | só o modo `swap` do teaser. Depois do UX-51 (3 modos), o risco caiu muito |

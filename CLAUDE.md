@@ -55,6 +55,25 @@ Nasceu porque em 10/09 eu apresentei o contrato do líder como lido e ele estava
 
 ⚠️ **Não vale como desculpa** limite de ferramenta. A leitura por `javascript_exec` trunca em ~1.000 caracteres por chamada; a saída é **paginar até o fim** (`browser_batch` roda várias de uma vez), não resumir.
 
+## 🧩 Regra das CAPACIDADES (travada 11/09, medo declarado pelo Pedro)
+
+🔴 **Tela do portal declara o que faz, e um script confere se ainda faz.** Nasceu de uma pergunta do Pedro em 11/09: *"tenho medo da gente perder funcionalidades nas novas telas, sendo que as que já criamos estão muito boas."*
+
+A resposta **não** é duplicar tela nem congelar cópia. Cópia só serve pra comparar depois do estrago, e o fork do ramo MEI (07/09) já provou o preço: **4 defeitos em 8 dias**. A resposta é declarar e verificar.
+
+1. **Toda capacidade tem um `data-cap` no JSX** (`<button data-cap="plano.cancelar">`). Atributo, não classe nem texto: assim ela sobrevive a redesenho inteiro e só some se o elemento sumir.
+2. **E uma linha em `execucao/portal/portal-data.mjs`**, nos campos `caps` (o que a tela entrega) e `cobre` (que itens do painel de 51 ela cobre). Esse arquivo é a casa; **não criar um segundo inventário**.
+3. 🔴 **Capacidade nova nasce declarada, no mesmo commit.** Sem isso o inventário envelhece igual o `portal-data.mjs` envelheceu (parado 03/08→11/09) e igual o vocabulário do vault, que ficou cego em 79% sem ninguém notar.
+4. 🔴 **Remover capacidade é DECISÃO, não limpeza.** Só sai junto de uma linha no ADR. O script não distingue "tiramos de propósito" de "esquecemos"; quem distingue é o registro.
+
+🔻 **Precedência (Pedro, 11/09):** quem guia é a pesquisa de **setembro** (`produto/` — painel de 51, evidências com API e endpoint). Os quatro docs de **22-23/07** do `execucao/portal/` (matriz, cruzamento, candidatos de home, backlog) são **histórico**: explicam por que as telas nasceram assim, **não decidem o que construir agora**. Não apagar, não obedecer.
+
+🔴 **O inventário nasce da NOSSA TELA pra fora, não da lista do líder pra dentro.** Foi por olhar pela lista dele que `/mais/relatorios` e `/mais/servicos` ficaram invisíveis por um mês e meio: são tese nossa, ele não tem equivalente, e o painel não as enxergava. A pergunta ao abrir uma tela é *"o que ela deixa a pessoa fazer?"* — o amarre com o painel vem depois, e capacidade sem item correspondente é **diferencial**, não erro.
+
+⚠️ **Protege capacidade, não qualidade.** Garante que o botão continua existindo, não que ficou bom — mesma fronteira da trava de anatomia do MEI. Isso segue sendo olho do Pedro no print.
+
+Régua completa do que conta como capacidade, nomenclatura e o verificador: `produto/_doutrina-capacidades.md`.
+
 ## Regras de trabalho
 - 🔴 **Playwright/E2E só quando o Pedro PEDIR.** Nunca rodar por iniciativa própria, nem "pra conferir", nem no fim de uma leva de alterações. Padrão de verificação é `tsc` + `eslint`. Se achar que vale rodar, **pergunta** — não roda. (Travado 30/08, reforçado 01/09.)
   - 🔒 **Um "pode rodar" vale só pra AQUELA rodada** (reforçado 07/09, 3ª vez). Depois que o Pedro pediu o E2E do ramo MEI, eu passei a rodar a suíte a cada alteração como se a autorização fosse permanente. Não é: autorização é por pedido, não por sessão nem por assunto. Spec nova continua podendo ser ESCRITA e versionada sem pedido; o que exige pedido é **executar**.

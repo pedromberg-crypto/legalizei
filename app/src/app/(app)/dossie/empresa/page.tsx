@@ -48,8 +48,9 @@ import { TEM_SOCIO } from "@/app/(app)/dossie/mock";
  * curto-circuito e quem escolhia endereço fiscal passava com o campo em branco.
  * Corrigido na View (endereço é condicional, capital social não).
  *
- * 🕓 Preço do endereço fiscal = placeholder FAKE (~R$60/mês). Não reabrir até
- * o Pedro fechar custo (legalize-preco-deferido-custo-real). ⚠️ 29/07: este doc
+ * 🟢 Preço do endereço fiscal FECHADO — R$49/mês (Pedro, revisado 10/09; era
+ * R$60 desde 04/09, e antes disso placeholder FAKE). Valor único em
+ * `CUSTOS.ENDERECO_FISCAL`, nunca hardcoded em tela. ⚠️ 29/07: este doc
  * dizia "Marcado na UI" e NÃO estava — a marcação foi criada de verdade agora.
  * ═══════════════════════════════════════════════════════════════════════════
  */

@@ -43,7 +43,7 @@ import { mascaraCep, buscarCep, type EnderecoCep } from "./_formato";
  *      do Empreendedor, pela Redesim, e o serviço contábil a gente presta de
  *      qualquer lugar. O CEP aqui é dado cadastral, não porta.
  *
- *   2. **Não existe o card de endereço fiscal (R$60/mês).** Ele existe no ME
+ *   2. **Não existe o card de endereço fiscal (R$49/mês).** Ele existe no ME
  *      pra RESOLVER o gate de BH — sem gate, virou upsell sem função. Pior:
  *      o MEI pode usar o endereço residencial por lei (LC 123 art. 3º-A +
  *      Res. CGSIM 22/2010), então seria vender solução pra um problema que

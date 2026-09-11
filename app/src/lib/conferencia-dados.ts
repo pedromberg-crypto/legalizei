@@ -88,7 +88,7 @@ export const CONFERENCIA: TelaConferencia[] = [
     "rota": "/endereco",
     "campos": [
       {
-        "nome": "Endereço da empresa (CEP validado BH + número) OU endereço fiscal Legalizai (+R$60/mês) OU cidade pra fila de espera",
+        "nome": "Endereço da empresa (CEP validado BH + número) OU endereço fiscal Legalizai (+R$49/mês) OU cidade pra fila de espera",
         "codigo": "",
         "valor": "",
         "origem": "usuario",

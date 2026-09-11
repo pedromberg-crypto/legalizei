@@ -662,7 +662,7 @@ export function EnderecoCategoriaView({
                   não precisa. Some também o argumento legal: o MEI pode usar o
                   próprio endereço residencial como comercial (LC 123/2006), e
                   como não há análise de viabilidade, ninguém confere zoneamento
-                  antes. Vender endereço a R$60/mês nesse cenário seria vender
+                  antes. Vender endereço a R$49/mês nesse cenário seria vender
                   solução pra problema que ele não tem. */}
               {!regimeMei && (
               <button
@@ -826,7 +826,7 @@ export function EnderecoCategoriaView({
                           &ldquo;Quero um endereço da Legalizai&rdquo;
                         </span>{" "}
                         {/* ✍️ 01/09 — cortado "sem custo extra na abertura":
-                            meia-verdade (são R$60/mês). */}
+                            meia-verdade (são R$49/mês). */}
                         aqui em cima, e a empresa nasce em BH do mesmo jeito.
                       </p>
                       <button

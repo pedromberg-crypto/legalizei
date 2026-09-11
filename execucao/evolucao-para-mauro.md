@@ -945,6 +945,40 @@ Oi Mauro, resumo da semana:
 - Achei uma mudança de lei (15.270/2025) que põe todo saque de lucro na EFD-Reinf a partir de 2026, com janela de ATA até 31/01/2026 para isentar o acumulado. Li na tela da Contabilizei, *não confirmei na lei ainda*. Vale passar pro Ademar
 ```
 
+---
+
+## Semana 11/09/2026 — o site foi ao ar, e mudei o jeito de construir o app
+
+| # | O que rendeu | Por quê importa | |
+|:--:|---|---|:--:|
+| 1 | 🚀 **O site está no ar, no endereço principal** | `legalizai.com.br` deixou de mostrar a página de "em breve" e passa a mostrar o site de verdade, em **modo de pré-lançamento**: todos os botões levam para a lista de espera, e os selos das lojas dizem *"Em breve na App Store"*. Quando o app subir, isso vira o site normal **com um comando**, sem reescrever nada | 🟢 |
+| 2 | 🎟️ **O preço de quem entra pela lista de espera ficou resolvido** | A lista tinha sido avisada de **R$79** e a página anunciava R$99, sem lugar para o 79 existir. Agora quem entra pela fila paga **R$79 nos 3 primeiros meses**; no lançamento aberto o mesmo período passa a R$99. Depois disso, R$139 nos dois casos. Os dois preços **nunca aparecem na mesma tela** | 🟢 |
+| 3 | 💰 **Endereço fiscal: R$60 → R$49** | O R$60 nunca foi conta nossa, era o preço do concorrente adotado como referência. O número novo resolve **de graça** uma contradição do nosso contrato: a cláusula 6.3 só deixa lançar na fatura o que custa até R$50, e a R$60 o anexo de preços se contradizia. Era uma pergunta a menos para a advogada | 🟢 |
+| 4 | 🧾 **Descobri como a Contabilizei cobra de verdade, e mudei nossa arquitetura** | Não é "assinatura": é **uma fatura por mês de competência**, com a mensalidade como uma linha dentro dela. Isso importa porque o **nosso** preço também varia (folha por colaborador, endereço fiscal, faixa de faturamento). Adotamos o mesmo modelo. Prova: na sua conta deles apareceram **5 valores diferentes em 9 meses**, no mesmo contrato e sem trocar de plano | 🟢 |
+| 5 | 📐 **Mudei o método de construção do app** | Estava inventariando tela por tela para não perder funcionalidade. O Pedro me parou: inventário de tela **só enxerga o que está na tela, é cego para o que falta**. Agora desenhamos o **processo inteiro primeiro** (o que precisa acontecer, com quem o sistema fala), e só depois olhamos a tela. Cada passo tem semáforo: 🟢 sabemos e dá · 🟡 falta decidir · 🔴 não sabemos | 🟢 |
+| 6 | 🔴 **O primeiro processo desenhado já achou 4 buracos** | Peguei *"cliente pede um serviço avulso e ele entra na fatura"*. Resultado: 5 passos resolvidos, 2 esperando decisão e **4 sem resposta em lugar nenhum** — inclusive **dois que nem o nosso contrato nem o deles respondem** | 🔴 |
+
+**Preciso de você em 3 coisas:**
+
+1. 🔴 **Serviço avulso que não pode ser entregue.** O cliente pede uma certidão, ela já entrou na fatura e o trabalho já começou — e aí a certidão volta negada, ou o órgão está fora do ar. A gente estorna, vira crédito no mês seguinte, ou cobra assim mesmo porque o trabalho foi feito? **Não está no nosso contrato e não está no da Contabilizei.**
+2. 🔴 **Pedido feito com o mês já fechado.** Se a pessoa pede um serviço no dia 30 e a fatura fechou no dia 28, isso cai no mês seguinte (e ela espera quase 60 dias para pagar algo que já recebeu) ou vira uma cobrança à parte?
+3. 🔴 **Cancelamento com serviço em andamento.** Cliente cancela o plano com um avulso já pedido e em execução. Cobra, entrega mesmo assim, ou cancela o serviço junto? A nossa minuta não trata; a da Contabilizei cobra tudo que está em aberto.
+
+```
+Oi Mauro, resumo da semana:
+
+- *O site está no ar* em legalizai.com.br, em modo de pré-lançamento: os botões levam pra lista de espera e os selos das lojas dizem "Em breve". Quando o app subir, vira o site normal com um comando
+- Quem entra pela *lista de espera paga R$79* nos 3 primeiros meses. No lançamento aberto vira R$99, e depois R$139 nos dois casos
+- *Endereço fiscal caiu de R$60 pra R$49.* O R$60 era o preço do concorrente que a gente tinha adotado de referência. O valor novo ainda resolveu uma contradição do nosso contrato de graça
+- Descobri como a Contabilizei cobra de verdade: *não é assinatura, é uma fatura por mês*, com a mensalidade como uma linha dentro dela. Adotamos o mesmo modelo, porque o nosso preço também varia (folha, endereço fiscal, faixa de faturamento). Na sua conta deles apareceram 5 valores diferentes em 9 meses
+- Mudei o jeito de construir: agora *desenho o processo inteiro antes da tela*. O primeiro processo já achou 4 buracos
+- *Preciso de você em 3 coisas, todas do mesmo assunto:*
+- Serviço avulso que não pode ser entregue (certidão negada, órgão fora do ar): estorna, vira crédito ou cobra? Nem o nosso contrato nem o deles respondem
+- Pedido feito com o mês já fechado: cai no mês seguinte ou vira cobrança à parte?
+- Cliente cancela o plano com um serviço em andamento: cobra, entrega, ou cancela junto?
+```
+
+
 ## Links
 
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]] · [[estado-atual]] · [[indice-autoridade]]

@@ -321,6 +321,45 @@ function defeitos({ nos, arestas }) {
   return fora;
 }
 
+/**
+ * 🔴 BIFURCAÇÃO PELA METADE (11/09, achado do Pedro).
+ *
+ * Ele viu o P4.5 com dois CTAs escritos "segue" — rótulo que EU inventei
+ * num fallback, pra duas arestas que não tinham condição nenhuma. O board
+ * já não inventa mais. Aqui fica a outra metade: se um passo tem saídas
+ * condicionais E saídas sem condição, o desenho está pela metade, e é o
+ * dado que está errado, não a tela.
+ */
+{
+  const tudo = new Set(PROPOSTAS.map((s) => s.id));
+  const g = grafoRotulado(tudo);
+  const porNo = new Map();
+  for (const a of g) {
+    if (!porNo.has(a.de)) porNo.set(a.de, []);
+    porNo.get(a.de).push(a.label ?? "");
+  }
+  for (const [id, labels] of porNo) {
+    if (labels.length < 2) continue;
+    const comCondicao = labels.filter(Boolean).length;
+    if (comCondicao > 0 && comCondicao < labels.length) {
+      avisos.push(
+        `${id} bifurca pela metade: ${comCondicao} de ${labels.length} saídas têm condição escrita`,
+      );
+    }
+
+/**
+ * 🔴 O GUARDA ABAIXO PROTEGE SÓ O SIMULADOR DE CENÁRIOS.
+ *
+ * 🐛 11/09, achado pela tabela de saídas: a trava de "bifurcação pela metade"
+ * estava DENTRO do `if (PROPOSTAS.length)`. Quando a camada de sugestão
+ * esvaziou — porque o Pedro decidiu tudo — ela foi desligada em silêncio, e o
+ * P3.5 entrou com uma saída rotulada e outra não sem ninguém reclamar.
+ *
+ * 🔑 Trava de DADO roda sempre. Só o que compara CENÁRIOS de proposta depende
+ * de existir proposta. Misturar os dois foi o que criou o ponto cego — e o
+ * ponto cego só apareceu quando a camada esvaziou pela primeira vez.
+ */
+
 if (PROPOSTAS.length) {
   const base = defeitos(grafoCom(new Set()));
   const piorou = (cenario) => [...defeitos(grafoCom(cenario))].filter((d) => !base.has(d));
@@ -329,31 +368,6 @@ if (PROPOSTAS.length) {
     avisos.push(`com TODAS as propostas aceitas: ${d}`);
   }
 
-  /**
-   * 🔴 BIFURCAÇÃO PELA METADE (11/09, achado do Pedro).
-   *
-   * Ele viu o P4.5 com dois CTAs escritos "segue" — rótulo que EU inventei
-   * num fallback, pra duas arestas que não tinham condição nenhuma. O board
-   * já não inventa mais. Aqui fica a outra metade: se um passo tem saídas
-   * condicionais E saídas sem condição, o desenho está pela metade, e é o
-   * dado que está errado, não a tela.
-   */
-  {
-    const tudo = new Set(PROPOSTAS.map((s) => s.id));
-    const g = grafoRotulado(tudo);
-    const porNo = new Map();
-    for (const a of g) {
-      if (!porNo.has(a.de)) porNo.set(a.de, []);
-      porNo.get(a.de).push(a.label ?? "");
-    }
-    for (const [id, labels] of porNo) {
-      if (labels.length < 2) continue;
-      const comCondicao = labels.filter(Boolean).length;
-      if (comCondicao > 0 && comCondicao < labels.length) {
-        avisos.push(
-          `${id} bifurca pela metade: ${comCondicao} de ${labels.length} saídas têm condição escrita`,
-        );
-      }
     }
   }
 

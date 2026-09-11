@@ -13,7 +13,7 @@ tags: [execucao, processos, dev, spec]
 >
 > **Pra quem é:** o dev que vai implementar e o Mauro, que decide as regras de negócio. O mesmo arquivo alimenta o board visual em `/processos`, que é onde o Pedro valida.
 
-**Placar:** 🟢 25 sabemos e dá · 🟡 14 falta decidir · 🔴 1 não sabemos
+**Placar:** 🟢 32 sabemos e dá · 🟡 17 falta decidir · 🔴 2 não sabemos
 
 ---
 
@@ -160,6 +160,80 @@ O que acontece quando o cliente marcou “já paguei” e a consulta diz que nã
 - **P2.5** — Decisão do Pedro em 11/09.
 - **P2.6** — Linha 2.5 do catálogo (histórico de guias pagas), tela já construída em /impostos/guias.
 - **P2.7** — Decisão do Pedro em 11/09: R$ 9,90, contra R$ 15,90 do líder. Por estar abaixo de R$ 50, entra na fatura do próximo ciclo pela cláusula 6.3 — não cobra na hora.
+
+---
+
+## P3 · Emitir a nota fiscal
+
+> A pessoa presta o serviço e fatura. A casa pede só o valor e o cliente, transmite ao Emissor Nacional e devolve a nota pronta. A receita que nasce aqui é o que alimenta o resto do produto.
+>
+> 🔑 **Por que importa:** É o processo que os OUTROS consomem: a receita define o DAS (P2.1), a faixa de RBT12 (P1.2), o Fator R e o teto do Simples. ⏱ E é o único com relógio correndo: a Res. CGSN 191/2026 obriga toda ME/EPP do Simples ao Emissor Nacional a partir de 01/11/2026. 🔑 O caminho técnico é o mais resolvido do produto — API nacional RESTful, gratuita, com Swagger público — então o que sobra aqui é desenho, não integração.
+
+🟢 7 · 🟡 3 · 🔴 1
+
+| | Passo | Quem dispara | O que a casa faz | Com quem fala | O que a pessoa vê |
+|:--:|---|---|---|---|---|
+| 🟢 | **P3.1** Prestou o serviço e precisa faturar | cliente | Nada ainda: é o fato gerador acontecendo. A casa só entra quando a pessoa vem emitir. | só a nossa casa | O CTA de emitir, fixo no centro da barra de abas. |
+| 🟢 | **P3.2** ◆ Emite aqui, ou já emitiu fora? | a casa | Separa os dois caminhos: a nota nasce no app, ou nasceu fora e precisa entrar aqui pra receita fechar. | só a nossa casa | nada, acontece por baixo |
+| 🟢 | **P3.3** Pede só o valor e o cliente | cliente | Pergunta o valor e para quem é. Os três códigos que o órgão exige já vêm preenchidos do cadastro, e a pessoa não precisa saber que existem. | só a nossa casa | A tela /emitir, com valor, tomador e o resumo do que vai ser emitido. |
+| 🟡 | **P3.4** Sugere o código do serviço | a casa | Olha a atividade da empresa e propõe o código municipal do serviço, deixando a pessoa trocar se for outro. | só a nossa casa | O código já escolhido, com uma linha dizendo em português o que ele significa. |
+| 🟢 | **P3.5** Transmite ao Emissor Nacional | a casa | Assina com o certificado da empresa e transmite ao Ambiente de Dados Nacional, esperando o número, o PDF e o XML. | Emissor Nacional (ADN, Serpro/RFB) | Um “emitindo…” curto, e a nota pronta em seguida. |
+| 🟢 | **P3.6** ◆ O órgão aceitou? | a casa | Lê a resposta do ADN e decide se a nota está autorizada ou se voltou com erro. | Emissor Nacional (ADN) | nada, acontece por baixo |
+| 🟢 | **P3.7** ■ Nota emitida, e a receita entra na conta | a casa | Guarda número, PDF e XML, entrega a nota ao cliente e soma o valor à receita do mês e ao acumulado de 12 meses. | só a nossa casa | A nota na lista, pronta pra baixar ou enviar, e o valor já refletido no resumo do mês. |
+| 🟡 | **P3.8** Voltou com erro, e a pessoa entende o porquê | a casa | Traduz o erro do órgão pra português comum, diz o que corrigir e deixa tentar de novo sem redigitar tudo. | só a nossa casa | A mensagem do que está errado, no campo que está errado, e o botão de tentar de novo. |
+| 🟢 | **P3.9** ◆ O certificado está válido? | a casa | Antes de transmitir, confere se o certificado da empresa está válido. Sem ele não existe emissão. | só a nossa casa | nada, acontece por baixo |
+| 🔴 | **P3.10** Emitiu fora: a nota precisa entrar aqui | cliente | Recebe a nota emitida em outro sistema pra que a receita do mês feche. Sem isso, o DAS sai errado. | ainda não sabemos | nada: a tela não existe |
+| 🟡 | **P3.11** Emissão parada até renovar | a casa | Segura a emissão, explica que o certificado venceu ou não existe, e leva direto pra renovação. | só a nossa casa | Aviso dizendo que a emissão está parada, por quê, e o caminho pra resolver. |
+
+### Por onde o processo caminha
+
+- `P3.1` → `P3.2`
+- `P3.2` → `P3.3` — *emite aqui*
+- `P3.2` → `P3.10` — *já emitiu fora*
+- `P3.3` → `P3.4`
+- `P3.4` → `P3.9`
+- `P3.9` → `P3.5` — *válido*
+- `P3.9` → `P3.11` — *vencido ou ausente*
+- `P3.5` → `P3.6`
+- `P3.6` → `P3.7` — *autorizada*
+- `P3.6` → `P3.8` — *voltou com erro*
+- `P3.8` → `P3.3` — *corrigiu e tenta de novo*
+- `P3.10` → `P3.7` — *a nota entrou*
+- `P3.11` → `P3.9` — *renovou o certificado*
+
+### 🔴 O que precisa ser respondido
+
+> Esta lista é o produto do desenho, não o defeito dele. Um processo que sai todo verde na primeira passada não foi desenhado, foi copiado.
+
+**🟡 P3.4 · Sugere o código do serviço**
+
+A matriz cobre o de-para de CNAE para o código municipal de BH, mas quem emite pra fora precisa do código do MUNICÍPIO DO TOMADOR em alguns casos. Falta decidir se a sugestão cobre só BH no MVP e o resto cai em escolha manual, ou se a gente mapeia mais municípios antes de lançar.
+
+**🟡 P3.8 · Voltou com erro, e a pessoa entende o porquê**
+
+Falta a lista de erros que o ADN devolve e o de-para pra português. Sem ela, ou a gente mostra o código cru do órgão (que é o que todo mundo faz e a gente critica) ou inventa um texto genérico que não ajuda. É trabalho de leitura do manual do ADN, não de decisão.
+
+**🔴 P3.10 · Emitiu fora: a nota precisa entrar aqui**
+
+🔑 É O BURACO REAL DESTE PROCESSO, e não é de API: é de RESPONSABILIDADE. Se a pessoa emite fora e não traz, a receita fica menor do que é, o DAS sai a menor, e quem responde pelo imposto é ela (5.4 e 13.8) — mas quem calculou fomos nós. Três caminhos: (a) puxar do ADN as notas do CNPJ, já que a partir de 01/11/2026 TODAS passam por lá, e aí o problema pode sumir sozinho; (b) upload de XML; (c) digitação. O (a) é o que muda o jogo e precisa ser confirmado no manual do ADN.
+
+**🟡 P3.11 · Emissão parada até renovar**
+
+🔴 A 8.6 diz que a inadimplência suspende a renovação, e sem certificado não se emite nota. Ou seja: atrasar a mensalidade pode travar o FATURAMENTO do cliente, que é como ele paga a mensalidade. Isso precisa de decisão explícita com o Mauro — é a mesma família da dúvida do P1.9 (o que exatamente a suspensão corta).
+
+### Fonte de cada regra
+
+- **P3.1** — Cláusula 5.4: o Cliente se compromete a emitir as notas “imediatamente após o fato gerador”, pela Plataforma, ou nela importá-las quando emitidas por outro sistema.
+- **P3.2** — Cláusula 5.4, que prevê os dois casos com todas as letras.
+- **P3.3** — Catálogo 3.1 (construída) e 3.5 (cadastro de tomadores). Doutrina: o líder pede 3 códigos (CNAE, LC116, municipal); a gente pede 2 campos.
+- **P3.4** — Catálogo 3.6, hoje 🔴 sem tela. A matriz CNAE já tem o de-para, então é engine nossa, sem IA e sem dependência externa.
+- **P3.5** — Matriz 3.1, resolvida em 09/09: API RESTful, GRATUITA, com Swagger público, autenticada por token e usando o A1 da empresa. ⚠️ Não comparar mais fornecedores — o caminho é a API nacional.
+- **P3.6** — Retorno síncrono da API nacional.
+- **P3.7** — Catálogo 3.2 e 3.3 (telas construídas). 🔑 É AQUI que os outros processos se abastecem: a receita do mês vira o DAS no P2.1, e o acumulado de 12 meses decide a faixa de RBT12 no P1.2, o Fator R e o teto do Simples. Não há aresta entre os processos porque não há salto — é DADO que atravessa, não caminho.
+- **P3.8** — Doutrina anti-jargão do projeto: erro de órgão não se repassa cru.
+- **P3.9** — Cláusula 5.3: é condição essencial que o Cliente mantenha o certificado digital válido.
+- **P3.10** — Cláusula 5.4, que obriga o Cliente a importar na Plataforma a nota emitida por outro sistema. Catálogo 3.7, hoje 🔴.
+- **P3.11** — Cláusula 8.1 (a Legalizai custeia e renova o certificado enquanto o contrato estiver adimplente) e 8.6 (a inadimplência suspende a renovação).
 
 ---
 

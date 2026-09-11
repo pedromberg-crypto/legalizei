@@ -14,6 +14,12 @@
       "porqueImporta": "Carrega o diferencial nº 1 do teardown: a linha 2.4 do catálogo, “saber que foi pago SEM perguntar ao cliente”, que era 🔴 sem caminho. 🔑 O desenho do Pedro colapsa o problema: a gente não precisa saber em tempo real, precisa saber UMA VEZ, logo depois do vencimento — e a guia sai sempre no mesmo dia, com o mesmo prazo, então essa data é conhecida desde a emissão."
     },
     {
+      "id": "P3",
+      "titulo": "Emitir a nota fiscal",
+      "resumo": "A pessoa presta o serviço e fatura. A casa pede só o valor e o cliente, transmite ao Emissor Nacional e devolve a nota pronta. A receita que nasce aqui é o que alimenta o resto do produto.",
+      "porqueImporta": "É o processo que os OUTROS consomem: a receita define o DAS (P2.1), a faixa de RBT12 (P1.2), o Fator R e o teto do Simples. ⏱ E é o único com relógio correndo: a Res. CGSN 191/2026 obriga toda ME/EPP do Simples ao Emissor Nacional a partir de 01/11/2026. 🔑 O caminho técnico é o mais resolvido do produto — API nacional RESTful, gratuita, com Swagger público — então o que sobra aqui é desenho, não integração."
+    },
+    {
       "id": "P4",
       "titulo": "Adicionar um serviço avulso à fatura aberta",
       "resumo": "A pessoa pede um serviço à-la-carte dentro do app. Ele não cobra na hora: entra como item de linha na fatura da competência. Atravessa /mais/servicos (onde nasce) e /mais/plano (onde aparece).",
@@ -893,6 +899,241 @@
         "ve": "normal"
       },
       "sugestoes": []
+    },
+    {
+      "id": "P3.1",
+      "processos": [
+        "P3"
+      ],
+      "titulo": "Prestou o serviço e precisa faturar",
+      "quem": "cliente",
+      "faz": "Nada ainda: é o fato gerador acontecendo. A casa só entra quando a pessoa vem emitir.",
+      "fala": "só a nossa casa",
+      "ve": "O CTA de emitir, fixo no centro da barra de abas.",
+      "luz": "verde",
+      "forma": "passo",
+      "fonte": "Cláusula 5.4: o Cliente se compromete a emitir as notas “imediatamente após o fato gerador”, pela Plataforma, ou nela importá-las quando emitidas por outro sistema.",
+      "cor": "#17A06A",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "normal"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P3.2",
+      "processos": [
+        "P3"
+      ],
+      "titulo": "Emite aqui, ou já emitiu fora?",
+      "quem": "a casa",
+      "faz": "Separa os dois caminhos: a nota nasce no app, ou nasceu fora e precisa entrar aqui pra receita fechar.",
+      "fala": "só a nossa casa",
+      "ve": "nada, acontece por baixo",
+      "luz": "verde",
+      "forma": "decisao",
+      "fonte": "Cláusula 5.4, que prevê os dois casos com todas as letras.",
+      "cor": "#17A06A",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "neutro"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P3.3",
+      "processos": [
+        "P3"
+      ],
+      "titulo": "Pede só o valor e o cliente",
+      "quem": "cliente",
+      "faz": "Pergunta o valor e para quem é. Os três códigos que o órgão exige já vêm preenchidos do cadastro, e a pessoa não precisa saber que existem.",
+      "fala": "só a nossa casa",
+      "ve": "A tela /emitir, com valor, tomador e o resumo do que vai ser emitido.",
+      "luz": "verde",
+      "forma": "passo",
+      "fonte": "Catálogo 3.1 (construída) e 3.5 (cadastro de tomadores). Doutrina: o líder pede 3 códigos (CNAE, LC116, municipal); a gente pede 2 campos.",
+      "cor": "#17A06A",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "normal"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P3.4",
+      "processos": [
+        "P3"
+      ],
+      "titulo": "Sugere o código do serviço",
+      "quem": "a casa",
+      "faz": "Olha a atividade da empresa e propõe o código municipal do serviço, deixando a pessoa trocar se for outro.",
+      "fala": "só a nossa casa",
+      "ve": "O código já escolhido, com uma linha dizendo em português o que ele significa.",
+      "luz": "amarelo",
+      "forma": "passo",
+      "fonte": "Catálogo 3.6, hoje 🔴 sem tela. A matriz CNAE já tem o de-para, então é engine nossa, sem IA e sem dependência externa.",
+      "duvida": "A matriz cobre o de-para de CNAE para o código municipal de BH, mas quem emite pra fora precisa do código do MUNICÍPIO DO TOMADOR em alguns casos. Falta decidir se a sugestão cobre só BH no MVP e o resto cai em escolha manual, ou se a gente mapeia mais municípios antes de lançar.",
+      "cor": "#D6A400",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "normal"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P3.5",
+      "processos": [
+        "P3"
+      ],
+      "titulo": "Transmite ao Emissor Nacional",
+      "quem": "a casa",
+      "faz": "Assina com o certificado da empresa e transmite ao Ambiente de Dados Nacional, esperando o número, o PDF e o XML.",
+      "fala": "Emissor Nacional (ADN, Serpro/RFB)",
+      "ve": "Um “emitindo…” curto, e a nota pronta em seguida.",
+      "luz": "verde",
+      "forma": "passo",
+      "fonte": "Matriz 3.1, resolvida em 09/09: API RESTful, GRATUITA, com Swagger público, autenticada por token e usando o A1 da empresa. ⚠️ Não comparar mais fornecedores — o caminho é a API nacional.",
+      "cor": "#17A06A",
+      "tons": {
+        "faz": "normal",
+        "fala": "normal",
+        "ve": "normal"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P3.6",
+      "processos": [
+        "P3"
+      ],
+      "titulo": "O órgão aceitou?",
+      "quem": "a casa",
+      "faz": "Lê a resposta do ADN e decide se a nota está autorizada ou se voltou com erro.",
+      "fala": "Emissor Nacional (ADN)",
+      "ve": "nada, acontece por baixo",
+      "luz": "verde",
+      "forma": "decisao",
+      "fonte": "Retorno síncrono da API nacional.",
+      "cor": "#17A06A",
+      "tons": {
+        "faz": "normal",
+        "fala": "normal",
+        "ve": "neutro"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P3.7",
+      "processos": [
+        "P3"
+      ],
+      "titulo": "Nota emitida, e a receita entra na conta",
+      "quem": "a casa",
+      "faz": "Guarda número, PDF e XML, entrega a nota ao cliente e soma o valor à receita do mês e ao acumulado de 12 meses.",
+      "fala": "só a nossa casa",
+      "ve": "A nota na lista, pronta pra baixar ou enviar, e o valor já refletido no resumo do mês.",
+      "luz": "verde",
+      "forma": "fim",
+      "fonte": "Catálogo 3.2 e 3.3 (telas construídas). 🔑 É AQUI que os outros processos se abastecem: a receita do mês vira o DAS no P2.1, e o acumulado de 12 meses decide a faixa de RBT12 no P1.2, o Fator R e o teto do Simples. Não há aresta entre os processos porque não há salto — é DADO que atravessa, não caminho.",
+      "cor": "#17A06A",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "normal"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P3.8",
+      "processos": [
+        "P3"
+      ],
+      "titulo": "Voltou com erro, e a pessoa entende o porquê",
+      "quem": "a casa",
+      "faz": "Traduz o erro do órgão pra português comum, diz o que corrigir e deixa tentar de novo sem redigitar tudo.",
+      "fala": "só a nossa casa",
+      "ve": "A mensagem do que está errado, no campo que está errado, e o botão de tentar de novo.",
+      "luz": "amarelo",
+      "forma": "passo",
+      "fonte": "Doutrina anti-jargão do projeto: erro de órgão não se repassa cru.",
+      "duvida": "Falta a lista de erros que o ADN devolve e o de-para pra português. Sem ela, ou a gente mostra o código cru do órgão (que é o que todo mundo faz e a gente critica) ou inventa um texto genérico que não ajuda. É trabalho de leitura do manual do ADN, não de decisão.",
+      "cor": "#D6A400",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "normal"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P3.9",
+      "processos": [
+        "P3"
+      ],
+      "titulo": "O certificado está válido?",
+      "quem": "a casa",
+      "faz": "Antes de transmitir, confere se o certificado da empresa está válido. Sem ele não existe emissão.",
+      "fala": "só a nossa casa",
+      "ve": "nada, acontece por baixo",
+      "luz": "verde",
+      "forma": "decisao",
+      "fonte": "Cláusula 5.3: é condição essencial que o Cliente mantenha o certificado digital válido.",
+      "cor": "#17A06A",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "neutro"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P3.10",
+      "processos": [
+        "P3"
+      ],
+      "titulo": "Emitiu fora: a nota precisa entrar aqui",
+      "quem": "cliente",
+      "faz": "Recebe a nota emitida em outro sistema pra que a receita do mês feche. Sem isso, o DAS sai errado.",
+      "fala": "ainda não sabemos",
+      "ve": "nada: a tela não existe",
+      "luz": "vermelho",
+      "forma": "passo",
+      "fonte": "Cláusula 5.4, que obriga o Cliente a importar na Plataforma a nota emitida por outro sistema. Catálogo 3.7, hoje 🔴.",
+      "duvida": "🔑 É O BURACO REAL DESTE PROCESSO, e não é de API: é de RESPONSABILIDADE. Se a pessoa emite fora e não traz, a receita fica menor do que é, o DAS sai a menor, e quem responde pelo imposto é ela (5.4 e 13.8) — mas quem calculou fomos nós. Três caminhos: (a) puxar do ADN as notas do CNPJ, já que a partir de 01/11/2026 TODAS passam por lá, e aí o problema pode sumir sozinho; (b) upload de XML; (c) digitação. O (a) é o que muda o jogo e precisa ser confirmado no manual do ADN.",
+      "cor": "#D64A2D",
+      "tons": {
+        "faz": "normal",
+        "fala": "buraco",
+        "ve": "buraco"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P3.11",
+      "processos": [
+        "P3"
+      ],
+      "titulo": "Emissão parada até renovar",
+      "quem": "a casa",
+      "faz": "Segura a emissão, explica que o certificado venceu ou não existe, e leva direto pra renovação.",
+      "fala": "só a nossa casa",
+      "ve": "Aviso dizendo que a emissão está parada, por quê, e o caminho pra resolver.",
+      "luz": "amarelo",
+      "forma": "passo",
+      "fonte": "Cláusula 8.1 (a Legalizai custeia e renova o certificado enquanto o contrato estiver adimplente) e 8.6 (a inadimplência suspende a renovação).",
+      "duvida": "🔴 A 8.6 diz que a inadimplência suspende a renovação, e sem certificado não se emite nota. Ou seja: atrasar a mensalidade pode travar o FATURAMENTO do cliente, que é como ele paga a mensalidade. Isso precisa de decisão explícita com o Mauro — é a mesma família da dúvida do P1.9 (o que exatamente a suspensão corta).",
+      "cor": "#D6A400",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "normal"
+      },
+      "sugestoes": []
     }
   ],
   "edges": [
@@ -1167,6 +1408,84 @@
       "para": "P4.2",
       "label": "aceitou recalcular",
       "abre": "fatura",
+      "tracejado": false
+    },
+    {
+      "de": "P3.1",
+      "para": "P3.2",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "P3.2",
+      "para": "P3.3",
+      "label": "emite aqui",
+      "tracejado": false
+    },
+    {
+      "de": "P3.2",
+      "para": "P3.10",
+      "label": "já emitiu fora",
+      "tracejado": true
+    },
+    {
+      "de": "P3.3",
+      "para": "P3.4",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "P3.4",
+      "para": "P3.9",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "P3.9",
+      "para": "P3.5",
+      "label": "válido",
+      "tracejado": false
+    },
+    {
+      "de": "P3.9",
+      "para": "P3.11",
+      "label": "vencido ou ausente",
+      "tracejado": true
+    },
+    {
+      "de": "P3.5",
+      "para": "P3.6",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "P3.6",
+      "para": "P3.7",
+      "label": "autorizada",
+      "tracejado": false
+    },
+    {
+      "de": "P3.6",
+      "para": "P3.8",
+      "label": "voltou com erro",
+      "tracejado": true
+    },
+    {
+      "de": "P3.8",
+      "para": "P3.3",
+      "label": "corrigiu e tenta de novo",
+      "tracejado": false
+    },
+    {
+      "de": "P3.10",
+      "para": "P3.7",
+      "label": "a nota entrou",
+      "tracejado": false
+    },
+    {
+      "de": "P3.11",
+      "para": "P3.9",
+      "label": "renovou o certificado",
       "tracejado": false
     }
   ]

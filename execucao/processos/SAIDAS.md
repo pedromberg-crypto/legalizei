@@ -59,6 +59,35 @@ Chega aqui por uma trilha: **na fatura**.
 
 ✅ **Cobertura completa:** toda condição responde em toda trilha que chega aqui, e todo caminho termina.
 
+## P3 · Emitir a nota fiscal
+
+### 🟢 P3.2 · Emite aqui, ou já emitiu fora?
+
+| Condição | Vale na trilha | Leva para | Onde esse caminho termina |
+|---|---|---|---|
+| emite aqui | as duas | P3.3 · Pede só o valor e o cliente | P3.7 · Nota emitida, e a receita entra na conta |
+| já emitiu fora | as duas | P3.10 · Emitiu fora: a nota precisa entrar aqui | P3.7 · Nota emitida, e a receita entra na conta |
+
+✅ **Cobertura completa:** toda condição responde em toda trilha que chega aqui, e todo caminho termina.
+
+### 🟢 P3.6 · O órgão aceitou?
+
+| Condição | Vale na trilha | Leva para | Onde esse caminho termina |
+|---|---|---|---|
+| autorizada | as duas | P3.7 · Nota emitida, e a receita entra na conta | P3.7 · Nota emitida, e a receita entra na conta |
+| voltou com erro | as duas | P3.8 · Voltou com erro, e a pessoa entende o porquê | P3.7 · Nota emitida, e a receita entra na conta |
+
+✅ **Cobertura completa:** toda condição responde em toda trilha que chega aqui, e todo caminho termina.
+
+### 🟢 P3.9 · O certificado está válido?
+
+| Condição | Vale na trilha | Leva para | Onde esse caminho termina |
+|---|---|---|---|
+| válido | as duas | P3.5 · Transmite ao Emissor Nacional | P3.7 · Nota emitida, e a receita entra na conta |
+| vencido ou ausente | as duas | P3.11 · Emissão parada até renovar | P3.7 · Nota emitida, e a receita entra na conta |
+
+✅ **Cobertura completa:** toda condição responde em toda trilha que chega aqui, e todo caminho termina.
+
 ## P4 · Adicionar um serviço avulso à fatura aberta
 
 ### 🟢 P4.2 · Aceita o serviço, na sheet

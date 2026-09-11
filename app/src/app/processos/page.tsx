@@ -19,7 +19,7 @@ import grafo from "@/lib/processos-graph.json";
 import { TIPOS_DE_PASSO, type Passo } from "@/components/processos/passo-node";
 import { PainelE2E } from "@/components/processos/painel-e2e";
 import { TIPOS_DE_CAMINHO } from "@/components/processos/caminho-edge";
-import { PASSO_W, PASSO_H, RESPIRO, RESPIRO_ARESTA } from "@/lib/processos-medidas";
+import { PASSO_W, RESPIRO, RESPIRO_ARESTA, alturaDo } from "@/lib/processos-medidas";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -206,7 +206,35 @@ export default function ProcessosPage() {
       marginy: 40,
     });
     g.setDefaultEdgeLabel(() => ({}));
-    passos.forEach((p) => g.setNode(p.id, { width: PASSO_W, height: PASSO_H }));
+
+    /**
+     * ── AS SAÍDAS DE CADA PASSO (11/09, pedido do Pedro) ─────────────────
+     * Um passo que bifurca ganha uma faixa no rodapé, com um CTA por condição
+     * e uma bolinha própria na lateral, de onde sai aquela linha. Assim a
+     * pergunta "esta condição leva pra onde?" se responde no cartão, sem
+     * seguir fio com o olho.
+     *
+     * 🔑 Calculado AQUI, e não no gerador, porque depende do que está
+     * visível: filtro por processo, proposta descartada e aresta aposentada
+     * mudam quantas saídas um passo tem AGORA. Congelar isso no JSON faria a
+     * faixa mentir a cada clique de ✓/✕.
+     */
+    const saidas = new Map<string, { label: string; para: string }[]>();
+    arestas.forEach((a) => {
+      const lista = saidas.get(a.de) ?? [];
+      lista.push({
+        label:
+          (a.rotuladaPor && estadoDe(a.rotuladaPor) === "aceita" ? a.rotuloNovo : a.label) || "",
+        para: a.para,
+      });
+      saidas.set(a.de, lista);
+    });
+
+    // 🔴 a MESMA altura que o cartão vai ter (processos-medidas). Duas contas
+    // pro mesmo objeto foi o que empilhou os cartões em 11/09.
+    const altura = (id: string) => alturaDo(saidas.get(id)?.length ?? 0);
+
+    passos.forEach((p) => g.setNode(p.id, { width: PASSO_W, height: altura(p.id) }));
     arestas.forEach((a) => g.setEdge(a.de, a.para));
     dagre.layout(g);
 
@@ -215,7 +243,7 @@ export default function ProcessosPage() {
       return {
         id: p.id,
         type: p.forma,
-        position: { x: pos.x - PASSO_W / 2, y: pos.y - PASSO_H / 2 },
+        position: { x: pos.x - PASSO_W / 2, y: pos.y - altura(p.id) / 2 },
         data: {
           ...p,
           ori,
@@ -224,6 +252,7 @@ export default function ProcessosPage() {
              Num passo REAL que eu sugiro tirar, quem manda é o id da
              proposta de remoção, não o do passo. */
           estado: estadoDe(p.proposta ? p.propostaId : p.removidoPor),
+          saidas: saidas.get(p.id) ?? [],
           onDecidir: decidir,
           gravando: gravando === p.id,
         },
@@ -243,6 +272,12 @@ export default function ProcessosPage() {
       id: `${a.de}->${a.para}#${i}`,
       source: a.de,
       target: a.para,
+      /* cada condição sai da SUA bolinha. Sem isto, as duas linhas do P4.3
+         partiriam do mesmo ponto e o rótulo voltaria a ser a única pista. */
+      sourceHandle:
+        (saidas.get(a.de)?.length ?? 0) > 1
+          ? `saida-${saidas.get(a.de)!.findIndex((x) => x.para === a.para && x.label === ((a.rotuladaPor && estadoDe(a.rotuladaPor) === "aceita" ? a.rotuloNovo : a.label) || ""))}`
+          : undefined,
       type: "caminho",
       // 🔑 o dagre JÁ calcula um caminho que desvia dos cartões (é pra isso que
       // ele insere pontos intermediários). Antes eu jogava isso fora e deixava

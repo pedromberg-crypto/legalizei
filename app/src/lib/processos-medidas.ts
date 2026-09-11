@@ -49,3 +49,34 @@ export const RESPIRO = {
 
 /** Folga entre rótulos de arestas paralelas, pra não empilharem um no outro. */
 export const RESPIRO_ARESTA = 34;
+
+/**
+ * ── A FAIXA DE SAÍDAS (11/09, pedido do Pedro) ─────────────────────────────
+ * *"no card que tem uma pergunta e uma condicional, podemos criar na parte de
+ * baixo do card um campo com 2 CTAs com as variáveis, e na lateral direita do
+ * card, em frente a cada um dos CTAs, uma bolinha de onde sai a linha guia até
+ * o próximo card, pra eu identificar mais fácil o que cada variável segue."*
+ *
+ * 🔑 O problema real que isso resolve: hoje todas as linhas saem do MESMO
+ * ponto do cartão, e o rótulo da condição viaja no meio do fio, longe da
+ * origem. Num board com bifurcação, saber qual condição leva a qual cartão
+ * exige seguir a linha com o olho. Com uma saída por condição, a resposta
+ * está no cartão.
+ *
+ * 🔴 Cartão com faixa é MAIS ALTO, e essa altura também mora aqui — o mesmo
+ * número vai pro componente e pro dagre. Foi exatamente isso que quebrou em
+ * 11/09 (altura em dois lugares, cartões sobrepostos): a regra não é "altura
+ * fixa", é "UM número, em um lugar".
+ */
+export const LINHA_SAIDA = 26;
+export const FAIXA_PADDING = 10;
+
+/** A faixa só existe quando o passo bifurca: uma saída não precisa de escolha. */
+export function alturaDo(nSaidas: number) {
+  return nSaidas > 1 ? PASSO_H + FAIXA_PADDING + nSaidas * LINHA_SAIDA : PASSO_H;
+}
+
+/** Onde fica o centro da bolinha da saída `i`, medido do topo do cartão. */
+export function topoDaSaida(i: number, nSaidas: number) {
+  return alturaDo(nSaidas) - FAIXA_PADDING - (nSaidas - i) * LINHA_SAIDA + LINHA_SAIDA / 2;
+}

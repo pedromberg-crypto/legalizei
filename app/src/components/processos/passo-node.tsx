@@ -1,7 +1,7 @@
 "use client";
 
 import { Handle, Position, type NodeProps } from "@xyflow/react";
-import { PASSO_W, PASSO_H } from "@/lib/processos-medidas";
+import { PASSO_W, alturaDo, topoDaSaida, LINHA_SAIDA, FAIXA_PADDING } from "@/lib/processos-medidas";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -74,6 +74,9 @@ export type Passo = {
   /** id da proposta que sugere TIRAR este passo do processo */
   removidoPor?: string;
   porqueRemover?: string;
+  /** as condições que saem daqui, uma por aresta. Vem do board, não do
+   *  gerador: depende do filtro e do que o Pedro já aceitou ou descartou */
+  saidas?: { label: string; para: string }[];
   /** "pendente" | "aceita" | "descartada" — vem da decisão do Pedro */
   estado?: string | null;
   onDecidir?: (id: string, status: "aceita" | "descartada" | "pendente") => void;
@@ -194,6 +197,8 @@ export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
   const lr = data.ori === "LR";
   /** proposta ainda não aceita: cinza claro, como o Pedro pediu */
   const sugerido = Boolean(data.proposta) && data.estado !== "aceita";
+  /** só quem bifurca ganha a faixa de saídas: uma saída não é escolha */
+  const bifurca = (data.saidas?.length ?? 0) > 1;
 
   return (
     <div
@@ -202,7 +207,7 @@ export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
         // 🔴 o MESMO número que o dagre recebe (processos-medidas.ts). Altura
         // que nasce do conteúdo é o que fazia os cartões se sobreporem.
         width: PASSO_W,
-        height: PASSO_H,
+        height: alturaDo(data.saidas?.length ?? 0),
         borderColor: sugerido ? "#d4d4d8" : selected ? data.cor : "#e4e4e7",
         borderWidth: decisao ? 2 : 1,
         // tracejado = "ainda não é decisão": mesma gramática do fim de fluxo
@@ -280,11 +285,66 @@ export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
         <Linha rotulo="a pessoa vê" valor={data.ve} linhas={2} tom={data.tons?.ve} />
       </div>
 
-      <Handle
-        type="source"
-        position={lr ? Position.Right : Position.Bottom}
-        style={{ opacity: 0 }}
-      />
+      {/**
+       * ── A FAIXA DE SAÍDAS (11/09, pedido do Pedro) ────────────────────
+       * Uma linha por condição, e a bolinha DELA na lateral, na mesma altura.
+       * "pra eu identificar de forma mais fácil o que cada variável está
+       * seguindo a partir dali."
+       *
+       * 🔑 Um passo com saída única não ganha faixa: não há escolha a mostrar,
+       * e a faixa só gastaria altura. A bolinha volta a ser a invisível de
+       * sempre, no meio da borda.
+       */}
+      {bifurca ? (
+        <div
+          className="border-t border-zinc-200/80 px-2"
+          /* 🔴 sem padding no TOPO: a conta de `topoDaSaida` assume que a
+             primeira linha começa exatamente onde o corpo do cartão acaba.
+             Um `pt-1` aqui desalinharia a bolinha do CTA em 4px — o mesmo
+             tipo de divergência que empilhou os cartões em 11/09, só que
+             pequena o bastante pra passar despercebida. */
+          style={{
+            paddingTop: 0,
+            paddingBottom: FAIXA_PADDING,
+            background: sugerido ? "#f6f6f7" : "#ffffff90",
+          }}
+        >
+          {data.saidas!.map((s, i) => (
+            <div
+              key={`${s.para}-${s.label}-${i}`}
+              className="flex items-center gap-1.5"
+              style={{ height: LINHA_SAIDA }}
+            >
+              <span
+                className="min-w-0 flex-1 truncate rounded-md border border-zinc-200 bg-white px-1.5 py-[3px] text-[10px] font-bold text-zinc-700"
+                title={s.label || "sem condição"}
+              >
+                {s.label || "segue"}
+              </span>
+              <span className="shrink-0 text-[9px] font-bold text-zinc-400">{s.para}</span>
+              <Handle
+                type="source"
+                id={`saida-${i}`}
+                position={lr ? Position.Right : Position.Bottom}
+                /* 🔴 a posição vem de `topoDaSaida`, a MESMA conta que o
+                   dagre usa pra altura. Calcular aqui "no olho" é o defeito
+                   de 11/09 que empilhou os cartões. */
+                style={
+                  lr
+                    ? { top: topoDaSaida(i, data.saidas!.length), background: "#71717a", width: 9, height: 9, border: "2px solid #fff" }
+                    : { left: `${((i + 0.5) / data.saidas!.length) * 100}%`, background: "#71717a", width: 9, height: 9, border: "2px solid #fff" }
+                }
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <Handle
+          type="source"
+          position={lr ? Position.Right : Position.Bottom}
+          style={{ opacity: 0 }}
+        />
+      )}
     </div>
   );
 }

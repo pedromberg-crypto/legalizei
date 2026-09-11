@@ -64,8 +64,21 @@ export function CaminhoEdge({
   data,
 }: EdgeProps) {
   const d = data as DadosCaminho | undefined;
+  /**
+   * 🔑 A PONTA SAI DA BOLINHA, o meio é do dagre (11/09).
+   *
+   * O dagre calcula o caminho entre CENTROS de cartão: ele não sabe que um
+   * passo que bifurca agora tem uma bolinha por condição, cada uma numa altura
+   * diferente. Se a gente usasse o primeiro ponto dele, a linha nasceria solta
+   * no meio da borda e a faixa de saídas perderia a graça — que é justamente
+   * ver de qual condição o fio parte.
+   *
+   * Então: primeira e última coordenada vêm do React Flow (as âncoras reais),
+   * e os pontos do MEIO continuam sendo os do dagre, que são os que desviam
+   * dos cartões.
+   */
   const pontos = d?.pontos?.length
-    ? d.pontos
+    ? [{ x: sourceX, y: sourceY }, ...d.pontos.slice(1, -1), { x: targetX, y: targetY }]
     : [
         { x: sourceX, y: sourceY },
         { x: targetX, y: targetY },

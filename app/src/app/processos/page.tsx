@@ -253,6 +253,31 @@ export default function ProcessosPage() {
     arestas.forEach((a) => g.setEdge(a.de, a.para));
     dagre.layout(g);
 
+    /**
+     * ── A ORDEM DOS CTAs SEGUE OS CARTÕES (11/09, achado do Pedro) ───────
+     * *"a condicional 'aceitou' leva pra um flow longo na parte de cima e a
+     * 'fechou a sheet' pra um card de saída; sem necessidade estamos cruzando
+     * as duas linhas. Se trocar os cards um pelo outro, elas não se cruzam."*
+     *
+     * 🔑 Quem está em cima no board fica em cima na faixa. Cruzamento de linha
+     * custa atenção e não carrega informação nenhuma — o fio só cruzava porque
+     * a ordem dos CTAs era a ordem em que eu declarei as arestas, que não tem
+     * relação com nada.
+     *
+     * Só dá pra ordenar AQUI: a posição de cada cartão só existe depois do
+     * `dagre.layout`, e o dagre precisa das alturas, que dependem de QUANTAS
+     * saídas cada passo tem. A contagem vem antes, a ordem vem depois.
+     */
+    for (const lista of saidas.values()) {
+      lista.sort((a, b) => {
+        const pa = g.node(a.para);
+        const pb = g.node(b.para);
+        if (!pa || !pb) return 0;
+        // no board deitado o que separa os destinos é o Y; em pé, o X
+        return ori === "LR" ? pa.y - pb.y : pa.x - pb.x;
+      });
+    }
+
     const ns: Node<Passo>[] = passos.map((p) => {
       const pos = g.node(p.id);
       return {

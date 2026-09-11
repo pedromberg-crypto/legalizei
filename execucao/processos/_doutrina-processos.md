@@ -171,6 +171,14 @@ A aresta que **pula uma fileira** (P4.3 → P4.5, "até R$ 50") era desenhada em
 | Respiro entre fileiras | 150 (vertical) · **220** (horizontal) | é aqui que o rótulo da aresta cabe. Maior no horizontal porque o cartão é largo e o rótulo entra **ao lado** dele |
 | Folga entre rótulos | 34 | senão rótulos de arestas paralelas empilham |
 
+### 5.1.1 A ordem dos CTAs segue os cartões (11/09)
+
+Num passo que bifurca, a faixa lista as condições **na ordem vertical dos destinos**: quem está em cima no board fica em cima na faixa.
+
+🔑 Nasceu de um achado do Pedro no P4.2: *"a condicional 'aceitou' leva pra um flow longo na parte de cima e a 'fechou a sheet' pra um card de saída; sem necessidade estamos cruzando as duas linhas."* O fio cruzava porque a ordem dos CTAs era a ordem em que eu **declarei as arestas** — que não tem relação com nada. Cruzamento de linha custa atenção e não carrega informação.
+
+⚠️ A ordenação mora no board, e só pode morar lá: a posição de cada cartão só existe **depois** do `dagre.layout`, e o dagre precisa das alturas, que dependem de **quantas** saídas cada passo tem. A contagem vem antes do layout; a ordem, depois.
+
 ⚠️ **Passo novo não pede ajuste de medida.** Se alguém sentir vontade de mexer nesses números pra "caber", o problema é o passo, não o board.
 
 ---

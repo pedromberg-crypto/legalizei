@@ -13,7 +13,7 @@ tags: [execucao, processos, dev, spec]
 >
 > **Pra quem é:** o dev que vai implementar e o Mauro, que decide as regras de negócio. O mesmo arquivo alimenta o board visual em `/processos`, que é onde o Pedro valida.
 
-**Placar:** 🟢 32 sabemos e dá · 🟡 17 falta decidir · 🔴 2 não sabemos
+**Placar:** 🟢 33 sabemos e dá · 🟡 16 falta decidir · 🔴 2 não sabemos
 
 ---
 
@@ -169,7 +169,7 @@ O que acontece quando o cliente marcou “já paguei” e a consulta diz que nã
 >
 > 🔑 **Por que importa:** É o processo que os OUTROS consomem: a receita define o DAS (P2.1), a faixa de RBT12 (P1.2), o Fator R e o teto do Simples. ⏱ E é o único com relógio correndo: a Res. CGSN 191/2026 obriga toda ME/EPP do Simples ao Emissor Nacional a partir de 01/11/2026. 🔑 O caminho técnico é o mais resolvido do produto — API nacional RESTful, gratuita, com Swagger público — então o que sobra aqui é desenho, não integração.
 
-🟢 7 · 🟡 3 · 🔴 1
+🟢 8 · 🟡 2 · 🔴 1
 
 | | Passo | Quem dispara | O que a casa faz | Com quem fala | O que a pessoa vê |
 |:--:|---|---|---|---|---|
@@ -183,7 +183,7 @@ O que acontece quando o cliente marcou “já paguei” e a consulta diz que nã
 | 🟡 | **P3.8** Voltou com erro, e a pessoa entende o porquê | a casa | Traduz o erro do órgão pra português comum, diz o que corrigir e deixa tentar de novo sem redigitar tudo. | só a nossa casa | A mensagem do que está errado, no campo que está errado, e o botão de tentar de novo. |
 | 🟢 | **P3.9** ◆ O certificado está válido? | a casa | Antes de transmitir, confere se o certificado da empresa está válido. Sem ele não existe emissão. | só a nossa casa | nada, acontece por baixo |
 | 🔴 | **P3.10** Emitiu fora: a nota precisa entrar aqui | cliente | Recebe a nota emitida em outro sistema pra que a receita do mês feche. Sem isso, o DAS sai errado. | ainda não sabemos | nada: a tela não existe |
-| 🟡 | **P3.11** Emissão parada até renovar | a casa | Segura a emissão, explica que o certificado venceu ou não existe, e leva direto pra renovação. | só a nossa casa | Aviso dizendo que a emissão está parada, por quê, e o caminho pra resolver. |
+| 🟢 | **P3.11** Emissão parada: falta o certificado | a casa | Segura a emissão e leva pro que resolve: agendar a videochamada, se ele nunca fez, ou renovar, se venceu. | só a nossa casa | Aviso dizendo que a emissão está parada, por quê, e o botão que resolve. |
 
 ### Por onde o processo caminha
 
@@ -217,10 +217,6 @@ Falta a lista de erros que o ADN devolve e o de-para pra português. Sem ela, ou
 
 🔑 É O BURACO REAL DESTE PROCESSO, e não é de API: é de RESPONSABILIDADE. Se a pessoa emite fora e não traz, a receita fica menor do que é, o DAS sai a menor, e quem responde pelo imposto é ela (5.4 e 13.8) — mas quem calculou fomos nós. Três caminhos: (a) puxar do ADN as notas do CNPJ, já que a partir de 01/11/2026 TODAS passam por lá, e aí o problema pode sumir sozinho; (b) upload de XML; (c) digitação. O (a) é o que muda o jogo e precisa ser confirmado no manual do ADN.
 
-**🟡 P3.11 · Emissão parada até renovar**
-
-🔴 A 8.6 diz que a inadimplência suspende a renovação, e sem certificado não se emite nota. Ou seja: atrasar a mensalidade pode travar o FATURAMENTO do cliente, que é como ele paga a mensalidade. Isso precisa de decisão explícita com o Mauro — é a mesma família da dúvida do P1.9 (o que exatamente a suspensão corta).
-
 ### Fonte de cada regra
 
 - **P3.1** — Cláusula 5.4: o Cliente se compromete a emitir as notas “imediatamente após o fato gerador”, pela Plataforma, ou nela importá-las quando emitidas por outro sistema.
@@ -233,7 +229,7 @@ Falta a lista de erros que o ADN devolve e o de-para pra português. Sem ela, ou
 - **P3.8** — Doutrina anti-jargão do projeto: erro de órgão não se repassa cru.
 - **P3.9** — Cláusula 5.3: é condição essencial que o Cliente mantenha o certificado digital válido.
 - **P3.10** — Cláusula 5.4, que obriga o Cliente a importar na Plataforma a nota emitida por outro sistema. Catálogo 3.7, hoje 🔴.
-- **P3.11** — Cláusula 8.1 (a Legalizai custeia e renova o certificado enquanto o contrato estiver adimplente) e 8.6 (a inadimplência suspende a renovação).
+- **P3.11** — Decisão do Pedro em 11/09: o certificado é BRINDE do plano, pagamento único nosso (R$ 209/ano, Anexo I), e vale 1 ano — então não falta certificado durante os 12 meses de fidelidade. ⚠️ Restam DOIS casos, e nenhum é “venceu no meio do caminho”: (a) o titular não compareceu à videochamada e nunca teve certificado — a 8.3 diz que a ausência não devolve valor nem prorroga prazo, e esse caso acontece logo no começo; (b) a partir do 13º mês, quando a renovação entra e a 8.6 a suspende por inadimplência. O caso (b) fica FORA do MVP, e está registrado aqui pra não virar surpresa no ano 2.
 
 ---
 

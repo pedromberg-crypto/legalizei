@@ -84,7 +84,7 @@ Chega aqui por uma trilha: **na fatura**.
 | Condição | Vale na trilha | Leva para | Onde esse caminho termina |
 |---|---|---|---|
 | válido | as duas | P3.5 · Transmite ao Emissor Nacional | P3.7 · Nota emitida, e a receita entra na conta |
-| vencido ou ausente | as duas | P3.11 · Emissão parada até renovar | P3.7 · Nota emitida, e a receita entra na conta |
+| vencido ou ausente | as duas | P3.11 · Emissão parada: falta o certificado | P3.7 · Nota emitida, e a receita entra na conta |
 
 ✅ **Cobertura completa:** toda condição responde em toda trilha que chega aqui, e todo caminho termina.
 

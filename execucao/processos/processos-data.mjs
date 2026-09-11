@@ -813,16 +813,15 @@ export const PASSOS = [
   {
     id: "P3.11",
     processos: ["P3"],
-    titulo: "Emissão parada até renovar",
+    titulo: "Emissão parada: falta o certificado",
     quem: "a casa",
-    faz: "Segura a emissão, explica que o certificado venceu ou não existe, e leva direto pra renovação.",
+    faz: "Segura a emissão e leva pro que resolve: agendar a videochamada, se ele nunca fez, ou renovar, se venceu.",
     fala: "só a nossa casa",
-    ve: "Aviso dizendo que a emissão está parada, por quê, e o caminho pra resolver.",
-    luz: "amarelo",
+    ve: "Aviso dizendo que a emissão está parada, por quê, e o botão que resolve.",
+    luz: "verde",
     forma: "passo",
-    fonte: "Cláusula 8.1 (a Legalizai custeia e renova o certificado enquanto o contrato estiver adimplente) e 8.6 (a inadimplência suspende a renovação).",
-    duvida:
-      "🔴 A 8.6 diz que a inadimplência suspende a renovação, e sem certificado não se emite nota. Ou seja: atrasar a mensalidade pode travar o FATURAMENTO do cliente, que é como ele paga a mensalidade. Isso precisa de decisão explícita com o Mauro — é a mesma família da dúvida do P1.9 (o que exatamente a suspensão corta).",
+    fonte:
+      "Decisão do Pedro em 11/09: o certificado é BRINDE do plano, pagamento único nosso (R$ 209/ano, Anexo I), e vale 1 ano — então não falta certificado durante os 12 meses de fidelidade. ⚠️ Restam DOIS casos, e nenhum é “venceu no meio do caminho”: (a) o titular não compareceu à videochamada e nunca teve certificado — a 8.3 diz que a ausência não devolve valor nem prorroga prazo, e esse caso acontece logo no começo; (b) a partir do 13º mês, quando a renovação entra e a 8.6 a suspende por inadimplência. O caso (b) fica FORA do MVP, e está registrado aqui pra não virar surpresa no ano 2."
   },
 ];
 

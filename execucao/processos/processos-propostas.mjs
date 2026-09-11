@@ -460,9 +460,9 @@ export const PROPOSTAS = [
       processo: "P4",
       titulo: "Paga na hora",
       quem: "cliente",
-      faz: "Gera a cobrança do valor travado no aceite e leva a pessoa pro pagamento, sem sair do app.",
+      faz: "Gera a cobrança do valor travado no aceite e leva a pessoa pro pagamento, sem sair do app. A forma escolhida aqui TRAVA com o pedido: ela define o prazo de validade e não muda depois.",
       fala: "Stone",
-      ve: "Tela de pagamento com o valor, o serviço e o prazo estimado. Pix ou cartão.",
+      ve: "Tela de pagamento com o valor, o serviço, o prazo estimado de entrega e até quando o pedido vale. Pix, cartão ou boleto.",
       luz: "amarelo",
       forma: "passo",
       fonte:
@@ -483,32 +483,32 @@ export const PROPOSTAS = [
       fonte:
         "Decisão do Pedro em 11/09: “só será iniciado/liberado após efetuação do pagamento” e o gate é a CAPTURA — não a autorização, que só reserva limite, nem a liquidação, que no cartão é D+30.",
       duvida:
-        "O gate está decidido (captura). O que segura este passo é o mesmo do S10a: até a integração com a Stone estar confirmada, não sabemos o formato do retorno nem se ele nos mantém fora do escopo PCI. Junto vêm duas perguntas de meio de pagamento: a pessoa espera na tela até confirmar ou o app avisa depois (com boleto, que leva de 1 a 3 dias úteis, esperar na tela não é opção) — e o boleto sai da lista pro avulso, ou o relógio das 72 horas pausa enquanto houver boleto em aberto? Emitido numa sexta, ele pode compensar já fora da janela.",
+        "O gate está decidido (captura). O que segura este passo é o mesmo do S10a: até a integração com a Stone estar confirmada, não sabemos o formato do retorno nem se ele nos mantém fora do escopo PCI. Segue aberta uma pergunta de experiência: a pessoa espera na tela até confirmar, ou o app deixa ela sair e avisa depois? Com boleto, que leva de 1 a 3 dias úteis pra compensar, esperar na tela não é opção — e é por isso que o prazo dele é o dobro (S10c).",
     },
     {
       id: "S10c",
       processo: "P4",
-      titulo: "Fica aguardando, e nada começa",
+      titulo: "Fica aguardando dentro do prazo",
       quem: "a casa",
-      faz: "Mantém o pedido parado por 72 horas, com o preço e o aceite travados e fora da fila de execução. Dentro da janela, a pessoa retoma o pagamento de onde parou, quantas vezes quiser.",
+      faz: "Segura o pedido pelo prazo da forma escolhida: 72 horas no Pix e no cartão, 6 dias no boleto, que precisa compensar. Preço e aceite travados, fora da fila de execução. Dentro da janela, a pessoa retoma o pagamento de onde parou, quantas vezes quiser — na MESMA forma, que não se troca.",
       fala: "só a nossa casa",
-      ve: "O item aparece como “aguardando pagamento”, com o tempo que resta e o botão pra pagar sempre à mão. Nada de “em andamento”.",
+      ve: "O item aparece como “aguardando pagamento”, com o tempo que resta e o botão pra pagar sempre à mão. Pra trocar de forma de pagamento, pedir de novo. Nada de “em andamento”.",
       luz: "verde",
       forma: "passo",
-      fonte: "Decisão do Pedro em 11/09: 72 horas de validade. Decorre da 6.4, que trava o preço na data da contratação — prazo aberto seria preço que nunca reajusta.",
+      fonte: "Decisão do Pedro em 11/09: 72 horas no Pix e no cartão, 6 dias no boleto (o dobro, pela compensação), e a forma de pagamento não se altera num pedido já gerado. Decorre da 6.4, que trava o preço na data da contratação — prazo aberto seria preço que nunca reajusta.",
     },
     {
       id: "S10d",
       processo: "P4",
       titulo: "Expirou, e vira histórico",
       quem: "o relógio",
-      faz: "Passadas as 72 horas sem captura, derruba o pedido: o preço e o aceite perdem validade e o item some da tela. Guarda o registro de que foi solicitado e não pago.",
+      faz: "Vencido o prazo da forma escolhida sem captura, derruba o pedido: preço e aceite perdem validade e o item some da tela. Guarda o registro de que foi solicitado e não pago.",
       fala: "só a nossa casa",
-      ve: "O item sai da lista. Pra pedir de novo, começa do zero, pelo preço do dia.",
+      ve: "O item sai da lista. Pra pedir de novo — ou pra trocar a forma de pagamento — começa do zero, pelo preço do dia.",
       luz: "verde",
       forma: "fim",
       fonte:
-        "Decisão do Pedro em 11/09: 72 horas, some da tela, e a ocorrência fica registrada em banco pra termos histórico de quem solicitou e não pagou.",
+        "Decisão do Pedro em 11/09: vencido o prazo (72 horas no Pix e no cartão, 6 dias no boleto), some da tela, e a ocorrência fica registrada em banco pra termos histórico de quem solicitou e não pagou.",
     }],
     // 🔑 a entrada sai do P4.5, não do P4.6 (correção do Pedro, 11/09): a
     // régua já foi aplicada no P4.3, e repetir a pergunta num nó de decisão
@@ -518,7 +518,7 @@ export const PROPOSTAS = [
       { de: "S10a", para: "S10b" },
       { de: "S10b", para: "P4.8", label: "pago" },
       { de: "S10b", para: "S10c", label: "não pagou" },
-      { de: "S10c", para: "S10d", label: "72 horas sem pagar" },
+      { de: "S10c", para: "S10d", label: "venceu o prazo do pedido" },
     ],
     depende: ["S4"],
     porque:

@@ -433,6 +433,37 @@ function trilhasPorPasso(arestas) {
   }
 
   /**
+   * 🔴 CONDIÇÃO REPETIDA (11/09, achado do Pedro no P4.8).
+   *
+   * Ele viu dois CTAs escritos "correu bem" no mesmo bloco e não tinha como
+   * saber qual era qual. Naquele caso era transitório — uma saída atual e a
+   * proposta que vai substituí-la convivendo — e o cartão passou a marcar de
+   * quem é cada uma. Mas se a repetição sobreviver ao cenário de TUDO aceito,
+   * aí não é transitório: são duas respostas diferentes com a mesma frase, e
+   * quem lê o processo não consegue escolher entre elas.
+   *
+   * Mesma família do rótulo inventado e do glifo: o texto existe, parece
+   * informação, e não distingue nada.
+   */
+  {
+    const porNoTrilha = new Map();
+    for (const a of grafoRotulado(new Set(PROPOSTAS.map((s) => s.id)))) {
+      if (!a.label) continue;
+      const chave = `${a.de}§${a.quando ?? "*"}§${a.label}`;
+      porNoTrilha.set(chave, (porNoTrilha.get(chave) ?? 0) + 1);
+    }
+    for (const [chave, n] of porNoTrilha) {
+      if (n < 2) continue;
+      const [de, trilha, label] = chave.split("§");
+      avisos.push(
+        `${de}: a condição "${label}" aparece ${n}x` +
+          (trilha === "*" ? "" : ` na trilha "${trilha}"`) +
+          " — duas respostas com a mesma frase, e quem lê não consegue escolher",
+      );
+    }
+  }
+
+  /**
    * 🔴 COBERTURA DE TRILHA. Se um passo é alcançado por duas trilhas e alguma
    * saída dele declara `quando`, então TODA trilha precisa ter resposta ali —
    * senão existe um caso real sem caminho, e é justamente o buraco que o Pedro

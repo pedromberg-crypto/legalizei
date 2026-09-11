@@ -125,10 +125,11 @@ Pior que isso: o mesmo símbolo carregava **respostas diferentes**. O `—` quer
 
 **No cartão:** a faixa de saídas ganha seções. O grupo sem cabeçalho vem primeiro (vale para todas), depois um grupo por trilha, com o cabeçalho *"se veio por …"* na cor dela.
 
-🔴 **Três travas no gerador:**
+🔴 **Quatro travas no gerador:**
 1. `quando` que aponta pra trilha que **não alcança** aquele passo é caminho morto — descreve algo que nunca acontece.
 2. **Cobertura:** passo alcançado por duas trilhas, com alguma saída condicionada, precisa responder por **todas** elas. É exatamente o buraco do P4.8.
-3. **Ambiguidade:** a mesma condição não pode existir "para todas" **e** numa trilha específica — dentro daquela trilha valeriam as duas. Foi o defeito que eu mesmo criei ao escrever a versão `pago` sem fechar a original em `fatura`, e a auditoria pegou.
+3. **Condição repetida:** a mesma frase não pode sair duas vezes do mesmo passo dentro da mesma trilha. Duas respostas com o mesmo texto não distinguem nada — quem lê não consegue escolher. ⚠️ Enquanto uma proposta está pendente a repetição é legítima (a saída atual e a que vai substituí-la convivem), e aí o CTA carrega um selo `+S9` / `−S9` dizendo de quem ela é. A trava mede o cenário de **tudo aceito**, onde transitório não existe.
+4. **Ambiguidade:** a mesma condição não pode existir "para todas" **e** numa trilha específica — dentro daquela trilha valeriam as duas. Foi o defeito que eu mesmo criei ao escrever a versão `pago` sem fechar a original em `fatura`, e a auditoria pegou.
 
 ---
 

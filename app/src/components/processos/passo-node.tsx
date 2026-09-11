@@ -87,7 +87,11 @@ export type Passo = {
    *  gerador: depende do filtro e do que o Pedro já aceitou ou descartou */
   saidas?: { label: string; para: string; quando?: string }[];
   /** as saídas já separadas por trilha. Grupo sem `trilha` vale para todas */
-  grupos?: { trilha?: string; comCabeca: boolean; itens: { label: string; para: string }[] }[];
+  grupos?: {
+    trilha?: string;
+    comCabeca: boolean;
+    itens: { label: string; para: string; proposta?: string; saiCom?: string }[];
+  }[];
   trilhas?: { id: string; nome: string; curto: string; cor: string }[];
   /** "pendente" | "aceita" | "descartada" — vem da decisão do Pedro */
   estado?: string | null;
@@ -379,6 +383,35 @@ export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
                           >
                             {sa.label}
                           </span>
+                          {/**
+                            * 🔴 DUAS CONDIÇÕES COM A MESMA FRASE (11/09,
+                            * achado do Pedro): enquanto uma proposta está
+                            * pendente, a saída atual e a que vai substituí-la
+                            * convivem — no P4.8 apareceram dois "correu bem",
+                            * e nada no cartão dizia qual era qual.
+                            *
+                            * O selo diz de quem é a saída: `+S9` nasce com a
+                            * proposta, `−S9` sai com ela. Repetição que NÃO
+                            * vem de proposta é defeito de dado, e o gerador
+                            * recusa — aqui é só o transitório da decisão.
+                            */}
+                          {(sa.proposta || sa.saiCom) && (
+                            <span
+                              className="shrink-0 rounded px-1 text-[9px] font-bold"
+                              style={
+                                sa.proposta
+                                  ? { background: "#e4e4e7", color: "#3f3f46" }
+                                  : { background: "#fee2e2", color: "#991b1b" }
+                              }
+                              title={
+                                sa.proposta
+                                  ? `esta saída nasce com a proposta ${sa.proposta}`
+                                  : `esta saída sai do processo se você aceitar a ${sa.saiCom}`
+                              }
+                            >
+                              {sa.proposta ? `+${sa.proposta}` : `−${sa.saiCom}`}
+                            </span>
+                          )}
                           <span className="shrink-0 text-[9px] font-bold text-zinc-400">{sa.para}</span>
                           <Handle
                             type="source"

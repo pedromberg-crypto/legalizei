@@ -236,7 +236,10 @@ export default function ProcessosPage() {
      * Mesma família do glifo (§2.1): preencher um espaço com texto vazio é
      * pior que deixar vazio, porque parece informação.
      */
-    const saidas = new Map<string, { label: string; para: string; quando?: string }[]>();
+    const saidas = new Map<
+      string,
+      { label: string; para: string; quando?: string; proposta?: string; saiCom?: string }[]
+    >();
     arestas.forEach((a) => {
       const label = rotuloDe(a);
       if (!label) return;
@@ -244,6 +247,11 @@ export default function ProcessosPage() {
       lista.push({
         label,
         para: a.para,
+        /* de quem é esta saída: a proposta que a cria, ou a que vai matá-la.
+           Sem isso, duas condições com a mesma frase ficam indistinguíveis
+           enquanto a proposta está pendente (achado do Pedro no P4.8). */
+        proposta: a.proposta,
+        saiCom: a.substituidaPor,
         // a trilha em que esta saída existe. `rotula` pode redeclarar isso
         quando:
           (a.rotuladaPor && estadoDe(a.rotuladaPor) === "aceita" ? a.quandoNovo : a.quando) ??

@@ -49,6 +49,46 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * TRILHAS — a decisão que continua valendo depois que o caminho segue.
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🔑 Provocação do Pedro em 11/09, olhando o P4.8: *"uma condicional lá atrás,
+ * com o título custa mais de 50 ou menos de 50, tem interferência em todo o
+ * restante do processo."*
+ *
+ * Ele está certo, e o buraco é do MODELO. Um grafo de flow sabe dizer de onde
+ * o caminho veio agora; não sabe dizer que decisão foi tomada três passos
+ * atrás e ainda está valendo. Sem isso sobram duas saídas ruins: duplicar o
+ * processo inteiro depois da primeira bifurcação, ou escrever condições
+ * ambíguas — que foi o que aconteceu no P4.8, onde "cancelou o plano" queria
+ * dizer duas coisas diferentes conforme o item estivesse na fatura ou já pago.
+ *
+ * Então a decisão ganha NOME e vira trilha. A aresta que a toma `abre` a
+ * trilha; qualquer aresta lá na frente pode declarar `quando`, e aí ela só
+ * existe dentro daquela trilha.
+ *
+ * ⚠️ Trilha NÃO é para toda bifurcação. Só para a decisão que **continua
+ * importando** depois de tomada. "Correu bem ou não" morre no passo seguinte;
+ * "está na fatura ou já foi pago" atravessa o processo inteiro. Criar trilha
+ * para tudo devolveria a complexidade pela outra porta.
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+export const TRILHAS = [
+  {
+    id: "fatura",
+    nome: "até R$ 50 · vai pra fatura",
+    curto: "na fatura",
+    cor: "#5B4BC4",
+  },
+  {
+    id: "pago",
+    nome: "acima de R$ 50 · pago no ato",
+    curto: "já pago",
+    cor: "#0F7A63",
+  },
+];
+
 export const PROCESSOS = [
   {
     id: "P4",

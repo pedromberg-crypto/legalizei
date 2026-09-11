@@ -244,7 +244,7 @@ export const PROPOSTAS = [
     arestas: [
       { de: "P4.2", para: "S4a", label: "fechou a sheet" },
       { de: "P4.5", para: "P4.3" },
-      { de: "P4.3", para: "P4.6", label: "até R$ 50 · vai pra fatura" },
+      { de: "P4.3", para: "P4.6", label: "até R$ 50 · vai pra fatura", abre: "fatura" },
     ],
     depende: ["S5"],
     porque:
@@ -440,7 +440,7 @@ export const PROPOSTAS = [
     // régua já foi aplicada no P4.3, e repetir a pergunta num nó de decisão
     // seria decidir duas vezes a mesma coisa.
     arestas: [
-      { de: "P4.3", para: "S10a", label: "acima de R$ 50 · paga agora" },
+      { de: "P4.3", para: "S10a", label: "acima de R$ 50 · paga agora", abre: "pago" },
       { de: "S10a", para: "S10b" },
       { de: "S10b", para: "P4.8", label: "pago" },
       { de: "S10b", para: "S10c", label: "não pagou" },
@@ -449,6 +449,40 @@ export const PROPOSTAS = [
     depende: ["S4"],
     porque:
       "É a sua decisão virando processo. 🔄 Os três passos vêm numa PROPOSTA SÓ, e isso mudou hoje: eram S10, S11 e S12 separados, e o simulador mostrou que aceitar o “paga na hora” sem o “confirmou?” deixava um beco — paga e nada acontece. Ramo de pagamento não se aceita pela metade.\n\nO que a decisão traz de novo, e não é pouco: o P4 deixa de ser um processo que só conversa com a nossa própria base. Até agora eram 9 passos “só a nossa casa”, e é por isso que ele parecia quase resolvido — não havia terceiro pra falhar. Com o gateway entra tudo o que vem junto: retorno assíncrono, tentativa que expira, cobrança que confirma horas depois.\n\nOs três: (a) PAGA NA HORA — 🔴 porque o gateway não está escolhido, e agora isso é bloqueante: sem ele, serviço acima de R$ 50 não começa. (b) CONFIRMOU? — a trava que você pediu precisa de um ponto onde o pedido ESPERA; sem ele, “pagou” vira suposição do passo anterior, e pagamento é o que mais falha em silêncio, porque o dinheiro confirma depois e por outro canal. Carrega a pergunta que decide arquitetura: vale a autorização do cartão ou a liquidação? (c) FICA AGUARDANDO — o “não pagou” acontece com ou sem desenho, alguém vai abandonar a tela; sem este nó o pedido vira lixo invisível, nem cobrado nem cancelado nem visível. E ele NÃO entra na fila de execução, que é o que o separa do P4.8, onde o trabalho já começou e por isso não dá mais pra remover. Fica 🟡 porque o prazo de validade esbarra na 6.4: preço travado na data do pedido, então pedido que espera pra sempre é preço que nunca reajusta.",
+  },
+
+
+  /* ═══════════════════════════════════════════════════════════════════════
+   * S11 · O P4.8 passa a responder POR TRILHA (provocação do Pedro, 11/09).
+   * ═══════════════════════════════════════════════════════════════════════ */
+  {
+    id: "S11",
+    titulo: "“Cancelou o plano” quer dizer duas coisas — separa por trilha",
+    passos: [
+      {
+        id: "S11a",
+        processo: "P4",
+        titulo: "Cancelou com o avulso já pago",
+        quem: "a casa",
+        faz: "Não há o que cobrar: o serviço já foi pago no ato. Entrega o que foi contratado dentro do aviso prévio e encerra o item junto com o plano.",
+        fala: "só a nossa casa",
+        ve: "Na tela de cancelamento, o item aparece como já pago e com a data prevista de entrega, sem valor a quitar.",
+        luz: "amarelo",
+        forma: "passo",
+        fonte:
+          "Cláusula 12.1 (aviso prévio de 30 dias). A 12.6 trata de valor em aberto, e aqui não há — o pagamento no ato tirou este caso do alcance dela.",
+        duvida:
+          "Se o serviço já pago NÃO couber nos 30 dias do aviso prévio, o dinheiro volta? A 12.6 não alcança (não há valor em aberto) e a 9.5 só fala de taxa pública. Cai na régua do S6 (quem deu causa), mas com dinheiro já compensado, que é situação diferente de item na fatura.",
+      },
+    ],
+    arestas: [
+      { de: "P4.8", para: "S11a", label: "cancelou o plano", quando: "pago" },
+      { de: "S11a", para: "P4.9", label: "não deu pra entregar" },
+    ],
+    rotula: [{ de: "P4.8", para: "P4.10", label: "cancelou o plano", quando: "fatura" }],
+    depende: ["S10", "S7"],
+    porque:
+      "🔑 Esta é a provocação do Pedro virando desenho: *“uma condicional lá atrás, com o título custa mais de 50 ou menos de 50, tem interferência em todo o restante do processo.”* Ele está certo, e o P4.8 provava: “cancelou o plano” queria dizer DUAS coisas. Para quem pegou um serviço de até R$ 50, o item está na fatura e a 12.6 manda quitar tudo em aberto até o encerramento. Para quem pegou acima de R$ 50, o serviço já foi pago no ato — não há valor em aberto, então a 12.6 simplesmente não alcança o caso, e o que sobra é uma pergunta de entrega, não de cobrança. A saída foi dar NOME à decisão de trás: ela virou trilha (`fatura` e `pago`), e cada saída do P4.8 declara em qual trilha existe. O que NÃO muda com a trilha continua com uma saída só — “não deu certo” e “correu bem” valem para as duas, e duplicá-las seria o erro contrário. ⚠️ Fica 🟡 porque sobra uma pergunta real e nova: serviço já pago que não cabe no aviso prévio devolve dinheiro? A 12.6 não alcança, a 9.5 é de taxa pública. Vale decisão com o Mauro, e provavelmente vira cláusula.",
   },
 
   /* ═══════════════════════════════════════════════════════════════════════

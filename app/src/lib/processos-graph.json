@@ -8,6 +8,20 @@
       "porqueImporta": "É o balde vendável inteiro. O líder fatura ~45 serviços assim, e é receita oculta do modelo dele. É também o processo que mais atravessa tela, então é onde uma incoerência aparece primeiro."
     }
   ],
+  "trilhas": [
+    {
+      "id": "fatura",
+      "nome": "até R$ 50 · vai pra fatura",
+      "curto": "na fatura",
+      "cor": "#5B4BC4"
+    },
+    {
+      "id": "pago",
+      "nome": "acima de R$ 50 · pago no ato",
+      "curto": "já pago",
+      "cor": "#0F7A63"
+    }
+  ],
   "nodes": [
     {
       "id": "P4.1",
@@ -574,6 +588,32 @@
         "fala": "neutro",
         "ve": "normal"
       }
+    },
+    {
+      "id": "S11a",
+      "processo": "P4",
+      "titulo": "Cancelou com o avulso já pago",
+      "quem": "a casa",
+      "faz": "Não há o que cobrar: o serviço já foi pago no ato. Entrega o que foi contratado dentro do aviso prévio e encerra o item junto com o plano.",
+      "fala": "só a nossa casa",
+      "ve": "Na tela de cancelamento, o item aparece como já pago e com a data prevista de entrega, sem valor a quitar.",
+      "luz": "amarelo",
+      "forma": "passo",
+      "fonte": "Cláusula 12.1 (aviso prévio de 30 dias). A 12.6 trata de valor em aberto, e aqui não há — o pagamento no ato tirou este caso do alcance dela.",
+      "duvida": "Se o serviço já pago NÃO couber nos 30 dias do aviso prévio, o dinheiro volta? A 12.6 não alcança (não há valor em aberto) e a 9.5 só fala de taxa pública. Cai na régua do S6 (quem deu causa), mas com dinheiro já compensado, que é situação diferente de item na fatura.",
+      "proposta": true,
+      "propostaId": "S11",
+      "porque": "🔑 Esta é a provocação do Pedro virando desenho: *“uma condicional lá atrás, com o título custa mais de 50 ou menos de 50, tem interferência em todo o restante do processo.”* Ele está certo, e o P4.8 provava: “cancelou o plano” queria dizer DUAS coisas. Para quem pegou um serviço de até R$ 50, o item está na fatura e a 12.6 manda quitar tudo em aberto até o encerramento. Para quem pegou acima de R$ 50, o serviço já foi pago no ato — não há valor em aberto, então a 12.6 simplesmente não alcança o caso, e o que sobra é uma pergunta de entrega, não de cobrança. A saída foi dar NOME à decisão de trás: ela virou trilha (`fatura` e `pago`), e cada saída do P4.8 declara em qual trilha existe. O que NÃO muda com a trilha continua com uma saída só — “não deu certo” e “correu bem” valem para as duas, e duplicá-las seria o erro contrário. ⚠️ Fica 🟡 porque sobra uma pergunta real e nova: serviço já pago que não cabe no aviso prévio devolve dinheiro? A 12.6 não alcança, a 9.5 é de taxa pública. Vale decisão com o Mauro, e provavelmente vira cláusula.",
+      "depende": [
+        "S10",
+        "S7"
+      ],
+      "cor": "#D6A400",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "normal"
+      }
     }
   ],
   "edges": [
@@ -649,7 +689,10 @@
       "de": "P4.8",
       "para": "P4.10",
       "label": "cancelou o plano",
-      "tracejado": true
+      "tracejado": true,
+      "rotuloNovo": "cancelou o plano",
+      "quandoNovo": "fatura",
+      "rotuladaPor": "S11"
     },
     {
       "de": "P4.8",
@@ -676,6 +719,7 @@
       "de": "P4.3",
       "para": "P4.6",
       "label": "até R$ 50 · vai pra fatura",
+      "abre": "fatura",
       "tracejado": false,
       "proposta": "S4"
     },
@@ -711,6 +755,7 @@
       "de": "P4.3",
       "para": "S10a",
       "label": "acima de R$ 50 · paga agora",
+      "abre": "pago",
       "tracejado": false,
       "proposta": "S10"
     },
@@ -741,6 +786,21 @@
       "label": "tenta de novo",
       "tracejado": false,
       "proposta": "S10"
+    },
+    {
+      "de": "P4.8",
+      "para": "S11a",
+      "label": "cancelou o plano",
+      "quando": "pago",
+      "tracejado": false,
+      "proposta": "S11"
+    },
+    {
+      "de": "S11a",
+      "para": "P4.9",
+      "label": "não deu pra entregar",
+      "tracejado": false,
+      "proposta": "S11"
     },
     {
       "de": "P4.10",

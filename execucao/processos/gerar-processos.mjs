@@ -23,7 +23,7 @@ import { writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { PROCESSOS, PASSOS, ARESTAS } from "./processos-data.mjs";
+import { PROCESSOS, PASSOS, ARESTAS, TRILHAS } from "./processos-data.mjs";
 import { PROPOSTAS } from "./processos-propostas.mjs";
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
@@ -254,15 +254,22 @@ function grafoCom(aceitas) {
 /** O mesmo cenário do `grafoCom`, mas guardando o rótulo de cada aresta. */
 function grafoRotulado(aceitas) {
   const nos = new Set(PASSOS.map((p) => p.id));
-  let ar = ARESTAS.map((a) => ({ de: a.de, para: a.para, label: a.label ?? "" }));
+  let ar = ARESTAS.map((a) => ({ de: a.de, para: a.para, label: a.label ?? "", abre: a.abre, quando: a.quando }));
   for (const s of PROPOSTAS) {
     if (!aceitas.has(s.id)) continue;
     for (const p of s.passos ?? []) nos.add(p.id);
     for (const r of s.remove ?? []) nos.delete(r);
-    ar.push(...(s.arestas ?? []).map((a) => ({ de: a.de, para: a.para, label: a.label ?? "" })));
+    ar.push(...(s.arestas ?? []).map((a) => ({ de: a.de, para: a.para, label: a.label ?? "", abre: a.abre, quando: a.quando })));
     for (const x of s.substitui ?? []) ar = ar.filter((a) => !(a.de === x.de && a.para === x.para));
     for (const r of s.rotula ?? []) {
-      for (const a of ar) if (a.de === r.de && a.para === r.para) a.label = r.label ?? "";
+      for (const a of ar) {
+        if (a.de !== r.de || a.para !== r.para) continue;
+        if (r.label !== undefined) a.label = r.label;
+        // `rotula` ajusta o que a aresta DIZ: o rótulo e a trilha em que ela
+        // vale. As duas coisas são declaração, não ligação — por isso cabem
+        // aqui, e não num `substitui` + aresta nova, que seria ambíguo.
+        if (r.quando !== undefined) a.quando = r.quando;
+      }
     }
   }
   return ar.filter((a) => nos.has(a.de) && nos.has(a.para));
@@ -366,6 +373,109 @@ if (PROPOSTAS.length) {
   }
 }
 
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * PROPAGAÇÃO DE TRILHA — que decisão de trás ainda está valendo aqui.
+ * ═══════════════════════════════════════════════════════════════════════════
+ * Uma aresta `abre` uma trilha; a partir dali, todo passo alcançado está
+ * DENTRO dela, e segue estando até o fim do processo. Aresta com `quando`
+ * fecha a porta pras outras trilhas: ela só existe na sua.
+ *
+ * 🔑 Isto é o que permite o P4.8 dizer "cancelou o plano" duas vezes sem
+ * ambiguidade — uma saída vale na trilha da fatura, outra na trilha do pago.
+ * Sem a propagação, as duas seriam a mesma frase e o board mentiria.
+ */
+function trilhasPorPasso(arestas) {
+  const dentro = new Map(); // passo → Set de trilhas
+  const guarda = (id, t) => {
+    if (!dentro.has(id)) dentro.set(id, new Set());
+    dentro.get(id).add(t);
+  };
+
+  for (const t of TRILHAS.map((x) => x.id)) {
+    const fila = arestas.filter((a) => a.abre === t).map((a) => a.para);
+    const visto = new Set(fila);
+    while (fila.length) {
+      const aqui = fila.shift();
+      guarda(aqui, t);
+      for (const a of arestas.filter((x) => x.de === aqui)) {
+        // aresta de OUTRA trilha não propaga esta
+        if (a.quando && a.quando !== t) continue;
+        if (!visto.has(a.para)) {
+          visto.add(a.para);
+          fila.push(a.para);
+        }
+      }
+    }
+  }
+  return dentro;
+}
+
+{
+  const idsTrilha = new Set(TRILHAS.map((t) => t.id));
+  const todas = grafoRotulado(new Set(PROPOSTAS.map((s) => s.id)));
+  const dentro = trilhasPorPasso(todas);
+
+  for (const a of todas) {
+    if (a.abre && !idsTrilha.has(a.abre)) avisos.push(`aresta ${a.de}→${a.para} abre trilha desconhecida: ${a.abre}`);
+    if (a.quando && !idsTrilha.has(a.quando)) avisos.push(`aresta ${a.de}→${a.para} usa trilha desconhecida: ${a.quando}`);
+    /**
+     * 🔴 Aresta condicionada a uma trilha que NÃO chega no passo é caminho
+     * morto: ela nunca vai acontecer, e mesmo assim ocupa espaço no cartão e
+     * atenção de quem lê. É o mesmo defeito do rótulo inventado, com outra
+     * roupa — descrever um caminho que não existe.
+     */
+    if (a.quando && idsTrilha.has(a.quando) && !dentro.get(a.de)?.has(a.quando)) {
+      avisos.push(
+        `aresta ${a.de}→${a.para} só existe na trilha "${a.quando}", que não alcança o ${a.de}`,
+      );
+    }
+  }
+
+  /**
+   * 🔴 COBERTURA DE TRILHA. Se um passo é alcançado por duas trilhas e alguma
+   * saída dele declara `quando`, então TODA trilha precisa ter resposta ali —
+   * senão existe um caso real sem caminho, e é justamente o buraco que o Pedro
+   * apontou no P4.8 ("cancelou o plano" queria dizer duas coisas).
+   */
+  for (const [id, trilhas] of dentro) {
+    if (trilhas.size < 2) continue;
+    const saidas = todas.filter((a) => a.de === id);
+    if (!saidas.some((a) => a.quando)) continue;
+    // agrupa por rótulo: é o rótulo que representa o evento ("cancelou o plano")
+    const porRotulo = new Map();
+    for (const a of saidas) {
+      const k = a.label || "(sem condição)";
+      if (!porRotulo.has(k)) porRotulo.set(k, new Set());
+      porRotulo.get(k).add(a.quando ?? "*");
+    }
+    for (const [rotulo, quais] of porRotulo) {
+      /**
+       * 🔴 Ambiguidade: a MESMA condição com uma saída "pra todas" e outra
+       * específica de trilha. Dentro daquela trilha as duas valem, e o
+       * processo passa a ter dois destinos para o mesmo evento. Foi o que eu
+       * deixei passar no P4.8 em 11/09 ao criar a versão "pago" sem fechar a
+       * original na trilha "fatura".
+       */
+      if (quais.has("*") && quais.size > 1) {
+        avisos.push(
+          `${id}: a saída "${rotulo}" existe "para todas as trilhas" E também só em ` +
+            `${[...quais].filter((x) => x !== "*").join(", ")} — dentro dessa trilha valem as duas`,
+        );
+        continue;
+      }
+      if (quais.has("*")) continue; // vale pra todas as trilhas: coberto
+      for (const t of trilhas) {
+        if (!quais.has(t)) {
+          avisos.push(
+            `${id}: a saída "${rotulo}" não diz o que acontece na trilha "${t}"`,
+          );
+        }
+      }
+    }
+  }
+}
+
 // ── saída 1: o grafo do board ───────────────────────────────────────────────
 /**
  * 🔑 O grafo carrega TODAS as propostas, inclusive as já descartadas. Quem
@@ -401,6 +511,8 @@ const arestaDeProposta = PROPOSTAS.flatMap((s) =>
     de: a.de,
     para: a.para,
     label: a.label ?? "",
+    abre: a.abre,
+    quando: a.quando,
     proposta: s.id,
   })),
 );
@@ -408,6 +520,7 @@ const arestaDeProposta = PROPOSTAS.flatMap((s) =>
 const grafo = {
   gerado: new Date().toISOString().slice(0, 10),
   processos: PROCESSOS,
+  trilhas: TRILHAS,
   nodes: [
     ...PASSOS.map((p) => ({
       ...p,
@@ -446,15 +559,18 @@ const grafo = {
       const renome = PROPOSTAS.flatMap((s) =>
         (s.rotula ?? [])
           .filter((r) => r.de === a.de && r.para === a.para)
-          .map((r) => ({ id: s.id, label: r.label ?? "" })),
+          .map((r) => ({ id: s.id, label: r.label ?? "", quando: r.quando })),
       )[0];
       return {
         de: a.de,
         para: a.para,
         label: a.label ?? "",
+        abre: a.abre,
+        quando: a.quando,
         tracejado: !!a.tracejado,
         substituidaPor: morta?.id,
         rotuloNovo: renome?.label,
+        quandoNovo: renome?.quando,
         rotuladaPor: renome?.id,
       };
     }),
@@ -462,6 +578,8 @@ const grafo = {
       de: a.de,
       para: a.para,
       label: a.label ?? "",
+      abre: a.abre,
+      quando: a.quando,
       tracejado: false,
       proposta: a.proposta,
     })),

@@ -84,10 +84,17 @@ export const FAIXA_TOPO = 12;
 /** Respiro embaixo do último CTA. */
 export const FAIXA_PADDING = 12;
 
+/**
+ * Cabeçalho de grupo, quando as saídas são separadas por TRILHA ("na fatura" /
+ * "já pago"). Sem ele o cartão teria duas linhas "cancelou o plano" e nada
+ * dizendo o que as diferencia — foi a provocação do Pedro em 11/09.
+ */
+export const CABECA_TRILHA = 22;
+
 /** A faixa só existe quando o passo bifurca: uma saída não precisa de escolha. */
-export function alturaDo(nSaidas: number) {
+export function alturaDo(nSaidas: number, nGrupos = 0) {
   if (nSaidas < 2) return PASSO_H;
-  return PASSO_H + FAIXA_TOPO + nSaidas * LINHA_SAIDA + FAIXA_PADDING;
+  return PASSO_H + FAIXA_TOPO + nGrupos * CABECA_TRILHA + nSaidas * LINHA_SAIDA + FAIXA_PADDING;
 }
 
 /**
@@ -96,6 +103,8 @@ export function alturaDo(nSaidas: number) {
  * desenhada — a versão anterior subtraía da altura total, e conferir se ela
  * batia com o CSS exigia refazer a conta ao contrário.
  */
-export function topoDaSaida(i: number) {
-  return PASSO_H + FAIXA_TOPO + i * LINHA_SAIDA + LINHA_SAIDA / 2;
+export function topoDaSaida(i: number, cabecasAntes = 0) {
+  return (
+    PASSO_H + FAIXA_TOPO + cabecasAntes * CABECA_TRILHA + i * LINHA_SAIDA + LINHA_SAIDA / 2
+  );
 }

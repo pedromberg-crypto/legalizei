@@ -183,6 +183,8 @@ export default function ProcessosPage() {
         substituidaPor?: string;
         rotuloNovo?: string;
         rotuladaPor?: string;
+        quando?: string;
+        quandoNovo?: string;
       }[]
     )
       .filter((a) => vivos.has(a.de) && vivos.has(a.para))
@@ -234,12 +236,19 @@ export default function ProcessosPage() {
      * Mesma família do glifo (§2.1): preencher um espaço com texto vazio é
      * pior que deixar vazio, porque parece informação.
      */
-    const saidas = new Map<string, { label: string; para: string }[]>();
+    const saidas = new Map<string, { label: string; para: string; quando?: string }[]>();
     arestas.forEach((a) => {
       const label = rotuloDe(a);
       if (!label) return;
       const lista = saidas.get(a.de) ?? [];
-      lista.push({ label, para: a.para });
+      lista.push({
+        label,
+        para: a.para,
+        // a trilha em que esta saída existe. `rotula` pode redeclarar isso
+        quando:
+          (a.rotuladaPor && estadoDe(a.rotuladaPor) === "aceita" ? a.quandoNovo : a.quando) ??
+          undefined,
+      });
       saidas.set(a.de, lista);
     });
     // uma condição sozinha também não é escolha: sem par, não há o que separar
@@ -247,7 +256,33 @@ export default function ProcessosPage() {
 
     // 🔴 a MESMA altura que o cartão vai ter (processos-medidas). Duas contas
     // pro mesmo objeto foi o que empilhou os cartões em 11/09.
-    const altura = (id: string) => alturaDo(saidas.get(id)?.length ?? 0);
+    /**
+     * ── AGRUPAMENTO POR TRILHA (11/09, provocação do Pedro) ──────────────
+     * Quando as saídas de um passo se dividem por trilha, elas viram grupos
+     * com cabeçalho ("na fatura" / "já pago"). O que vale nas duas fica num
+     * grupo sem cabeçalho, no topo: duplicar "não deu certo" nas duas seções
+     * seria o erro contrário ao que estamos consertando.
+     */
+    const gruposDe = (id: string) => {
+      const lista = saidas.get(id) ?? [];
+      const comuns = lista.filter((x) => !x.quando);
+      const porTrilha = new Map<string, typeof lista>();
+      for (const x of lista) {
+        if (!x.quando) continue;
+        porTrilha.set(x.quando, [...(porTrilha.get(x.quando) ?? []), x]);
+      }
+      const grupos: { trilha?: string; itens: typeof lista }[] = [];
+      if (comuns.length) grupos.push({ itens: comuns });
+      for (const [t, itens] of porTrilha) grupos.push({ trilha: t, itens });
+      return grupos;
+    };
+
+    const altura = (id: string) => {
+      const lista = saidas.get(id) ?? [];
+      // 🔴 só o grupo COM cabeçalho ocupa a altura extra
+      const cabecas = gruposDe(id).filter((g) => g.trilha).length;
+      return alturaDo(lista.length, cabecas);
+    };
 
     passos.forEach((p) => g.setNode(p.id, { width: PASSO_W, height: altura(p.id) }));
     arestas.forEach((a) => g.setEdge(a.de, a.para));
@@ -293,6 +328,8 @@ export default function ProcessosPage() {
              proposta de remoção, não o do passo. */
           estado: estadoDe(p.proposta ? p.propostaId : p.removidoPor),
           saidas: saidas.get(p.id) ?? [],
+          grupos: gruposDe(p.id),
+          trilhas: grafo.trilhas as { id: string; nome: string; curto: string; cor: string }[],
           onDecidir: decidir,
           gravando: gravando === p.id,
         },

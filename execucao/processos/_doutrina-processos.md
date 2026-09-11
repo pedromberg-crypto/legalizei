@@ -95,6 +95,34 @@ Pior que isso: o mesmo símbolo carregava **respostas diferentes**. O `—` quer
 
 ---
 
+## 2.2 🔴 TRILHA — a decisão de trás que continua valendo (travada 11/09)
+
+> *"uma condicional lá atrás, por exemplo com o título custa mais de 50 ou custa menos de 50, tem interferência em todo o restante do processo… no 4.8 poderia ter uma sessão com a condicional custa menos de 50 e outra custa mais de 50, e dentro delas os sub cards."*
+
+🔑 **O buraco era do MODELO, não do P4.8.** Um grafo de flow sabe dizer de onde o caminho veio agora; não sabe dizer que decisão foi tomada três passos atrás e **ainda está valendo**. Sem isso sobram duas saídas ruins: duplicar o processo inteiro depois da primeira bifurcação, ou escrever condição ambígua. Foi o segundo: no P4.8, *"cancelou o plano"* queria dizer duas coisas — item na fatura (a 12.6 manda quitar) ou serviço já pago (a 12.6 nem alcança).
+
+**A decisão ganha nome e vira trilha:**
+
+| | |
+|---|---|
+| `abre` | na aresta que toma a decisão. A partir dali, tudo que for alcançado está dentro da trilha |
+| `quando` | na aresta lá na frente que **só existe** naquela trilha |
+| sem `quando` | vale em todas — e é assim que fica o que não muda |
+| `TRILHAS` | a lista, em `processos-data.mjs`, com nome e cor |
+
+🔑 **O que NÃO muda com a trilha continua com uma saída só.** *"Não deu certo"* e *"correu bem"* valem nas duas; duplicá-las seria o erro contrário ao que estamos consertando. A trilha existe para separar **o que de fato se separa**.
+
+⚠️ **Trilha não é para toda bifurcação.** Só para a decisão que continua importando depois de tomada. *"Correu bem ou não"* morre no passo seguinte; *"está na fatura ou já foi pago"* atravessa o processo inteiro. Criar trilha para tudo devolveria a complexidade pela outra porta.
+
+**No cartão:** a faixa de saídas ganha seções. O grupo sem cabeçalho vem primeiro (vale para todas), depois um grupo por trilha, com o cabeçalho *"se veio por …"* na cor dela.
+
+🔴 **Três travas no gerador:**
+1. `quando` que aponta pra trilha que **não alcança** aquele passo é caminho morto — descreve algo que nunca acontece.
+2. **Cobertura:** passo alcançado por duas trilhas, com alguma saída condicionada, precisa responder por **todas** elas. É exatamente o buraco do P4.8.
+3. **Ambiguidade:** a mesma condição não pode existir "para todas" **e** numa trilha específica — dentro daquela trilha valeriam as duas. Foi o defeito que eu mesmo criei ao escrever a versão `pago` sem fechar a original em `fatura`, e a auditoria pegou.
+
+---
+
 ## 3. O semáforo — o campo mais importante do arquivo
 
 | | Significa | O que fazer |

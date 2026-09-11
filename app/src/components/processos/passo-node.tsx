@@ -9,6 +9,7 @@ import {
   ALTURA_CTA,
   FAIXA_TOPO,
   FAIXA_PADDING,
+  CABECA_TRILHA,
 } from "@/lib/processos-medidas";
 
 /**
@@ -84,7 +85,10 @@ export type Passo = {
   porqueRemover?: string;
   /** as condições que saem daqui, uma por aresta. Vem do board, não do
    *  gerador: depende do filtro e do que o Pedro já aceitou ou descartou */
-  saidas?: { label: string; para: string }[];
+  saidas?: { label: string; para: string; quando?: string }[];
+  /** as saídas já separadas por trilha. Grupo sem `trilha` vale para todas */
+  grupos?: { trilha?: string; itens: { label: string; para: string }[] }[];
+  trilhas?: { id: string; nome: string; curto: string; cor: string }[];
   /** "pendente" | "aceita" | "descartada" — vem da decisão do Pedro */
   estado?: string | null;
   onDecidir?: (id: string, status: "aceita" | "descartada" | "pendente") => void;
@@ -215,7 +219,7 @@ export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
         // 🔴 o MESMO número que o dagre recebe (processos-medidas.ts). Altura
         // que nasce do conteúdo é o que fazia os cartões se sobreporem.
         width: PASSO_W,
-        height: alturaDo(data.saidas?.length ?? 0),
+        height: alturaDo(data.saidas?.length ?? 0, (data.grupos ?? []).filter((g) => g.trilha).length),
         borderColor: sugerido ? "#d4d4d8" : selected ? data.cor : "#e4e4e7",
         borderWidth: decisao ? 2 : 1,
         // tracejado = "ainda não é decisão": mesma gramática do fim de fluxo
@@ -317,38 +321,70 @@ export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
             background: sugerido ? "#f6f6f7" : "#ffffff90",
           }}
         >
-          {data.saidas!.map((s, i) => (
-            <div
-              key={`${s.para}-${s.label}-${i}`}
-              className="flex items-center gap-1.5"
-              /* fatia de altura fixa: o CTA fica centrado nela e a sobra vira
-                 o respiro entre um e outro. A bolinha mira o centro da FATIA
-                 (`topoDaSaida`), então gap de flex aqui desalinharia. */
-              style={{ height: LINHA_SAIDA }}
-            >
-              <span
-                className="flex min-w-0 flex-1 items-center truncate rounded-lg border border-zinc-200 bg-white px-2 text-[10px] font-bold text-zinc-700"
-                style={{ height: ALTURA_CTA }}
-                title={s.label}
-              >
-                {s.label}
-              </span>
-              <span className="shrink-0 text-[9px] font-bold text-zinc-400">{s.para}</span>
-              <Handle
-                type="source"
-                id={`saida-${i}`}
-                position={lr ? Position.Right : Position.Bottom}
-                /* 🔴 a posição vem de `topoDaSaida`, a MESMA conta que o
-                   dagre usa pra altura. Calcular aqui "no olho" é o defeito
-                   de 11/09 que empilhou os cartões. */
-                style={
-                  lr
-                    ? { top: topoDaSaida(i), background: "#71717a", width: 9, height: 9, border: "2px solid #fff" }
-                    : { left: `${((i + 0.5) / data.saidas!.length) * 100}%`, background: "#71717a", width: 9, height: 9, border: "2px solid #fff" }
-                }
-              />
-            </div>
-          ))}
+          {(() => {
+            /* índice GLOBAL da saída (é o que casa com `saida-N` do board) e
+               quantos cabeçalhos vieram antes — as duas contas que o
+               `topoDaSaida` precisa pra pôr a bolinha no centro da fatia. */
+            let i = -1;
+            /** quantos cabeçalhos existem ACIMA da fatia que está sendo
+             *  desenhada, incluindo o deste grupo. É o único offset que a
+             *  bolinha precisa além do índice. */
+            let cabecas = 0;
+            return (data.grupos ?? []).map((grupo, gi) => {
+              const t = data.trilhas?.find((x) => x.id === grupo.trilha);
+              if (grupo.trilha) cabecas += 1;
+              const acima = cabecas;
+              return (
+                <div key={grupo.trilha ?? `comum-${gi}`}>
+                  {grupo.trilha && (
+                    <div
+                      className="flex items-center gap-1 truncate text-[9px] font-bold uppercase tracking-wider"
+                      style={{ height: CABECA_TRILHA, color: t?.cor ?? "#71717a" }}
+                      title={t?.nome ?? grupo.trilha}
+                    >
+                      <span
+                        className="inline-block size-1.5 rounded-full"
+                        style={{ background: t?.cor ?? "#a1a1aa" }}
+                        aria-hidden
+                      />
+                      se veio por “{t?.curto ?? grupo.trilha}”
+                    </div>
+                  )}
+                  {grupo.itens.map((sa) => {
+                    i += 1;
+                    const meu = i;
+                    const alto = topoDaSaida(meu, acima);
+                    return (
+                      <div
+                        key={`${sa.para}-${sa.label}-${meu}`}
+                        className="flex items-center gap-1.5"
+                        style={{ height: LINHA_SAIDA }}
+                      >
+                        <span
+                          className="flex min-w-0 flex-1 items-center truncate rounded-lg border border-zinc-200 bg-white px-2 text-[10px] font-bold text-zinc-700"
+                          style={{ height: ALTURA_CTA }}
+                          title={sa.label}
+                        >
+                          {sa.label}
+                        </span>
+                        <span className="shrink-0 text-[9px] font-bold text-zinc-400">{sa.para}</span>
+                        <Handle
+                          type="source"
+                          id={`saida-${meu}`}
+                          position={lr ? Position.Right : Position.Bottom}
+                          style={
+                            lr
+                              ? { top: alto, background: "#71717a", width: 9, height: 9, border: "2px solid #fff" }
+                              : { left: `${((meu + 0.5) / (data.saidas?.length ?? 1)) * 100}%`, background: "#71717a", width: 9, height: 9, border: "2px solid #fff" }
+                          }
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            });
+          })()}
         </div>
       ) : null}
 

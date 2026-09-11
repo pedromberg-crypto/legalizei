@@ -133,6 +133,18 @@ Pior que isso: o mesmo símbolo carregava **respostas diferentes**. O `—` quer
 
 ---
 
+## 2.3 🔗 PASSO COMPARTILHADO (travado 11/09)
+
+Um passo pode pertencer a **mais de um processo** — o campo é `processos`, lista, não texto.
+
+🔑 **Por que a decisão foi essa:** o fechamento do ciclo é o **fim** do P4 e o **começo** do P1. Não são dois fatos parecidos, é um fato só, lido por dois processos. Duplicá-lo criaria duas fontes pro mesmo fato, que é a raiz de 5 dos 10 defeitos de 11/09 (§6.6).
+
+Consequência no board: o passo compartilhado aparece no filtro dos **dois** processos, e o painel mostra `P4 + P1`. E não existe aresta ligando processo a processo — **não há salto porque não há dois fatos**.
+
+⚠️ **Compartilhar é exceção, não hábito.** Só vale quando é literalmente o mesmo acontecimento. Passo parecido em dois processos é passo parecido: cada um escreve o seu, porque vão divergir com o tempo — e devem.
+
+---
+
 ## 3. O semáforo — o campo mais importante do arquivo
 
 | | Significa | O que fazer |
@@ -257,6 +269,7 @@ Valor fora da lista aparece **em cinza com "?"**. Falhar em silêncio seria pior
 | 11/09 | **Reescrevi o P4.6 três vezes**, as três corrigido pelo Pedro. Cheguei a propor remover um nó que estava vivo no outro ramo | **§6.4.** Julguei o nó pelo ramo em que eu estava. Todo nó depois de uma bifurcação é potencialmente compartilhado |
 | 11/09 | Fatiei o ramo de pagamento em 3 propostas: aceitar a 1ª sem a 2ª deixava um beco | **§6.4.** Unidade de decisão = mudança que deixa o grafo válido |
 | 11/09 | Escrevi "trocar rótulo de aresta" como apagar-e-recriar: o board mostrou linha duplicada e o simulador apagou as duas | **§6.4.** Operação ambígua por construção pede primitivo próprio (`rotula`) |
+| 11/09 | Escrevi a promoção do S11 sem escopar o "correu bem" da fatura: devolveria a ambiguidade que ele tinha achado | Promover metade de um par é o mesmo defeito da **§6.5**, com outra roupa. O cálculo da promoção pegou antes de eu escrever |
 | 11/09 | Fatiei a faixa do P4.8 em CTAs irmãos: os dois "correu bem" pareciam alternativas, e o Pedro leu como duas trilhas | Saída sendo **redirecionada** não é segunda opção. Colapsa em uma linha, com o destino de hoje e o selo de pra onde vai |
 | 11/09 | A aresta antiga seguia sem trilha enquanto a nova já tinha a dela: o bloco "já pago" ganhou um "correu bem" que caía na fatura | **§6.5.** Redirecionar carrega a DECLARAÇÃO inteira, não só o destino. E `rotula` vale já, não depois do ✓ |
 | 11/09 | Pus um fallback `\|\| "segue"` na faixa de saídas: o P4.5 apareceu com dois CTAs iguais, rótulo que eu inventei pra condição que não existe | **Mesma família do glifo (§2.1):** preencher espaço com texto vazio é pior que deixar vazio, porque parece informação. Faixa é sobre ESCOLHA; aresta sem condição é sequência |

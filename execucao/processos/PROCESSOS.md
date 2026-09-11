@@ -13,7 +13,97 @@ tags: [execucao, processos, dev, spec]
 >
 > **Pra quem é:** o dev que vai implementar e o Mauro, que decide as regras de negócio. O mesmo arquivo alimenta o board visual em `/processos`, que é onde o Pedro valida.
 
-**Placar:** 🟢 18 sabemos e dá · 🟡 4 falta decidir · 🔴 1 não sabemos
+**Placar:** 🟢 21 sabemos e dá · 🟡 10 falta decidir · 🔴 2 não sabemos
+
+---
+
+## P1 · A competência fecha, a fatura é emitida e cobrada
+
+> O ciclo do cliente vira no dia da assinatura, a fatura soma o que se acumulou e a cobrança sai na forma cadastrada. Daqui em diante o processo trata do dinheiro: pagou, não pagou, o que muda no preço, e o que a casa faz com quem atrasa.
+>
+> 🔑 **Por que importa:** É pra onde o P4 entrega, e era caixa preta declarada. Carrega o maior buraco do produto — saber que foi PAGO sem perguntar ao cliente, irmã da linha 2.4 do catálogo — e é onde moram as cláusulas 3.5, 3.6, 3.7, 3.14 e 3.15 da minuta, que hoje não têm desenho nenhum.
+
+🟢 5 · 🟡 6 · 🔴 1
+
+| | Passo | Quem dispara | O que a casa faz | Com quem fala | O que a pessoa vê |
+|:--:|---|---|---|---|---|
+| 🟢 | **P4.11** ■ O ciclo vira e a fatura soma tudo | o relógio | No dia do aniversário do contrato, fecha a janela de itens do ciclo que terminou e emite a fatura. Assinou dia 8, o ciclo vira todo dia 8. | só a nossa casa | A fatura muda de “Próxima fatura” para “Fatura de <ciclo>” e para de aceitar item novo. A data do próximo fechamento aparece o tempo todo. |
+| 🟢 | **P4.24** O ciclo vira no dia da assinatura | o relógio | Conta a partir do dia da assinatura. Se o mês não tiver esse dia, cobra no último dia dele e volta pro dia original no mês seguinte que tiver. Se a data cair em fim de semana, joga pro próximo dia útil. A âncora nunca muda. | só a nossa casa | A data da próxima cobrança sempre escrita por extenso, nunca “daqui a um mês”. |
+| 🟢 | **P1.1** Monta a fatura do ciclo | a casa | Soma a mensalidade do ciclo que começa, os avulsos de até R$ 50 do ciclo que terminou, a folha por colaborador ativo e o endereço fiscal, se tiver. | só a nossa casa | A fatura aberta em /mais/plano, com cada linha nomeada e o total. |
+| 🟡 | **P1.2** ◆ O preço mudou neste ciclo? | a casa | Antes de fechar o valor, confere se a faixa de RBT12 mudou, se a oferta de lançamento acabou ou se houve reajuste anual. | só a nossa casa | nada, acontece por baixo |
+| 🟡 | **P1.3** Avisa o preço novo, 30 dias antes | a casa | Dispara o aviso da mudança com pelo menos 30 dias de antecedência, dizendo o valor novo, a razão e a partir de qual ciclo vale. | só a nossa casa | Aviso na central, na categoria “precisa de você”, e o valor novo marcado na fatura seguinte. |
+| 🟡 | **P1.4** Emite a fatura e cobra na forma cadastrada | a casa | Fecha o valor, emite a fatura e dispara a cobrança recorrente na forma que o cliente cadastrou. | Stone | A fatura muda de “Próxima” para “Em aberto”, com a data de vencimento e a forma de pagamento à vista. |
+| 🔴 | **P1.5** ◆ A fatura foi paga? | o gateway | Espera a captura. Mesmo gate do avulso: não vale a autorização, não se espera a liquidação. | Stone (webhook de captura) | A fatura vira “paga” sozinha, sem a pessoa precisar avisar. |
+| 🟢 | **P1.6** ■ Dá baixa e o ciclo segue | a casa | Marca a fatura como paga, guarda o comprovante e abre o ciclo seguinte. | só a nossa casa | Histórico de faturas com a paga no topo, e a próxima já anunciada com a data. |
+| 🟢 | **P1.7** Venceu: entra multa e juros | o relógio | Passado o vencimento, aplica multa de 2% e juros de 0,033% por dia de atraso, e mostra o valor atualizado. | só a nossa casa | A fatura fica “vencida”, com o valor de hoje e a conta aberta: original, multa e juros separados. |
+| 🟡 | **P1.8** Tenta de novo, e avisa sem assustar | a casa | Repete a cobrança em dias combinados e avisa o cliente com o que ele precisa fazer, sem falar em exclusão do Simples nem em multa da Receita. | Stone | Aviso com o valor, a data da próxima tentativa e um botão pra pagar agora ou trocar a forma. |
+| 🟡 | **P1.9** Suspende o acesso, sem apagar o dado | a casa | Persistindo a falta de pagamento, suspende os serviços e o acesso ao software. O dado do cliente continua lá e volta assim que ele quitar. | só a nossa casa | Tela dizendo o que está suspenso, o que continua funcionando, e exatamente o que fazer pra voltar. |
+| 🟡 | **P1.10** ■ Duas mensalidades: a casa pode encerrar | a casa | Com duas mensalidades consecutivas em aberto, a Legalizai pode encerrar o contrato sem aviso prévio e cobrar o que está em aberto. | só a nossa casa | Aviso formal do encerramento, com o que ainda é devido e como quitar. |
+
+### Por onde o processo caminha
+
+- `P1.1` → `P1.2`
+- `P1.2` → `P1.4` — *o preço é o mesmo*
+- `P1.2` → `P1.3` — *mudou de faixa, acabou a oferta ou teve reajuste*
+- `P1.3` → `P1.4`
+- `P1.4` → `P1.5`
+- `P1.5` → `P1.6` — *pagou*
+- `P1.5` → `P1.7` — *não pagou*
+- `P1.7` → `P1.8`
+- `P1.8` → `P1.5` — *tentou de novo*
+- `P1.8` → `P1.9` — *segue sem pagar*
+- `P1.9` → `P1.10` — *2 mensalidades em aberto*
+
+### 🔴 O que precisa ser respondido
+
+> Esta lista é o produto do desenho, não o defeito dele. Um processo que sai todo verde na primeira passada não foi desenhado, foi copiado.
+
+**🟡 P1.2 · O preço mudou neste ciclo?**
+
+As três regras exigem aviso prévio de 30 dias e nenhuma tem tela ou disparo hoje. Quem avisa, por qual canal, e o que acontece se o aviso não sair a tempo — a fatura sobe assim mesmo, ou o preço velho vale mais um ciclo? A 3.8 ainda dá ao cliente o direito de encerrar SEM MULTA se não concordar, e esse caminho não existe em lugar nenhum do produto.
+
+**🟡 P1.3 · Avisa o preço novo, 30 dias antes**
+
+O aviso vive só no app, ou também sai por e-mail e WhatsApp? Aviso de preço que a pessoa não vê é o mesmo que aviso nenhum, e a 3.8 dá a ela o direito de sair sem multa. Se ela não soube, a gente perde o direito de cobrar o valor novo.
+
+**🟡 P1.4 · Emite a fatura e cobra na forma cadastrada**
+
+Cobrança RECORRENTE é integração diferente da avulsa do P4.14: exige tokenizar o cartão e guardar o mandato, e isso muda o escopo PCI — exatamente o que derrubou o Asaas em 08/09. Precisa entrar na pauta da reunião com a Stone junto com o avulso, não depois.
+
+**🔴 P1.5 · A fatura foi paga?**
+
+🔑 O MAIOR BURACO DO PRODUTO, e não é o mesmo do avulso. Dentro do trilho da Stone a gente sabe. FORA dele — cliente que paga o boleto no banco dele ou faz o Pix por outro caminho — a gente só sabe pelo extrato que ele envia (cláusula 5.4). O líder resolve com “informe se você pagou”, que a gente REJEITOU em 27/07 como trabalho empurrado pro cliente. É a irmã da linha 2.4 do catálogo, o diferencial nº 1 do teardown, e segue sem caminho decidido.
+
+**🟡 P1.8 · Tenta de novo, e avisa sem assustar**
+
+Quantas tentativas, em que dias, e por quais canais. O número não é estético: cartão recusado por saldo costuma passar em D+3, mas tentativa demais queima o cartão na antifraude do emissor. Depende da política da Stone.
+
+**🟡 P1.9 · Suspende o acesso, sem apagar o dado**
+
+Depois de quantos dias, e o que EXATAMENTE fica suspenso. Cortar a emissão de nota trava o faturamento do cliente e pode virar dano; cortar a obrigação acessória vira risco fiscal dele e responsabilidade técnica nossa (cláusula 2.3, Res. CFC 1.590/2020). Essa linha precisa do Mauro — não é decisão de produto.
+
+**🟡 P1.10 · Duas mensalidades: a casa pode encerrar**
+
+A 12.3 diz que a casa PODE — falta decidir se a gente faz, e quando. E a 3.15 permite protestar e inscrever em órgão de proteção ao crédito: isso é decisão de POSICIONAMENTO, não de sistema, e bate de frente com o “não punir a saída” que a gente travou em 27/07. Pergunta pro Mauro.
+
+### Detalhe técnico
+
+- **P4.11** — O fechamento em si é o processo P1, que ainda não foi desenhado.
+
+### Fonte de cada regra
+
+- **P4.11** — Decisão do Pedro em 11/09, e ela MANDA: cobrança por aniversário, no dia em que o cliente fechou. ⚠️ A cláusula 3.4 da minuta fixa o pagamento “até o 15º dia de cada mês” e terá que ser ajustada ao produto, não o contrário.
+- **P4.24** — Decisão do Pedro em 11/09, e ela é REGRA NOSSA, não régua de mercado: conta do dia da assinatura · fim de semana joga pro próximo dia útil · dia que o mês não tem cobra no último dia, e volta ao original no mês seguinte que tiver. ⚠️ O Código Civil, art. 132 §3º, resolve prazo em mês pelo caminho oposto (“ou no imediato, se faltar exata correspondência”), o que daria 1º/03 — a advogada precisa ver essa diferença, porque a regra vai pro contrato. ⚠️ Ele disse “fim de semana”; eu escrevi “dia útil”, que estende a FERIADO. Se não for isso, muda aqui.
+- **P1.1** — Cláusula 6.3 e Anexo A-I.1 (avulso até R$ 50 na competência seguinte), 7.2 e 7.4 (folha R$ 39 por colaborador ATIVO, mesmo sem movimento) e Anexo I (endereço fiscal R$ 49/mês). As duas temporalidades da fatura foram travadas pelo Pedro em 11/09.
+- **P1.2** — Cláusula 3.6 (oferta de lançamento: 3 competências, término avisado com 30 dias), 3.7 (RBT12: elevação com aviso de 30 dias, redução automática) e 3.8 (reajuste anual, também com 30 dias).
+- **P1.3** — Cláusulas 3.6, 3.7 e 3.8 — as três exigem o mesmo aviso de 30 dias.
+- **P1.4** — Decisão do Pedro em 11/09: gateway Stone, ciclo por aniversário, vencimento no dia da assinatura, jogando pro próximo dia útil quando cair em fim de semana.
+- **P1.5** — Decisão do Pedro em 11/09: o gate é a captura.
+- **P1.6** — Cláusula 3.4 e o histórico de faturas que já existe em /mais/plano.
+- **P1.7** — Cláusula 3.5: multa de 2% e juros de mora de 0,033% por dia de atraso.
+- **P1.8** — Posicionamento travado: “não vender pânico”. O dunning por medo do líder está na lista do que a gente NÃO faz (§9 do catálogo). A retentativa em si é mecanismo do gateway.
+- **P1.9** — Cláusula 3.14 (a ausência de pagamento pode suspender os serviços e o acesso ao software) e 12.7 (a reativação depende de quitação integral).
+- **P1.10** — Cláusula 12.3 (ausência de pagamento de 2 mensalidades consecutivas) e 3.15 (protesto, órgãos de proteção ao crédito e cessão do crédito a terceiros).
 
 ---
 
@@ -78,6 +168,7 @@ tags: [execucao, processos, dev, spec]
 - `P4.9` → `P4.22` — *falha nossa ou do órgão*
 - `P4.10` → `P4.23` — *o serviço sobrevive ao fim do CNPJ*
 - `P4.10` → `P4.9` — *o serviço morre com a baixa do CNPJ*
+- `P4.11` → `P1.1`
 
 ### 🔴 O que precisa ser respondido
 

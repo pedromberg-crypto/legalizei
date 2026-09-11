@@ -193,7 +193,9 @@ export default function ProcessosPage() {
 
   const { nodes, edges } = useMemo(() => {
     const passos = (grafo.nodes as Passo[])
-      .filter((p) => filtro === "todos" || p.processo === filtro)
+      /* passo COMPARTILHADO aparece no filtro dos dois processos:
+         o fechamento do ciclo é o fim do P4 e o começo do P1 */
+      .filter((p) => filtro === "todos" || (p.processos ?? []).includes(filtro))
       // descartada some do board na hora. Ela continua no
       // `processos-propostas.mjs` e no arquivo de decisões — some da VISTA,
       // não da história, senão a mesma ideia volta daqui a duas semanas.
@@ -384,7 +386,7 @@ export default function ProcessosPage() {
 
   const placar = useMemo(() => {
     const alvo = (grafo.nodes as Passo[]).filter(
-      (p) => filtro === "todos" || p.processo === filtro,
+      (p) => filtro === "todos" || (p.processos ?? []).includes(filtro),
     );
     return LEGENDA.map((l) => ({ ...l, n: alvo.filter((p) => p.luz === l.luz).length }));
   }, [filtro]);
@@ -469,7 +471,7 @@ export default function ProcessosPage() {
             <div className="flex items-start gap-2">
               <div className="min-w-0 flex-1">
                 <p className="text-[11px] font-bold tracking-wide" style={{ color: selecionado.cor }}>
-                  {selecionado.id} · {selecionado.processo}
+                  {selecionado.id} · {(selecionado.processos ?? []).join(" + ")}
                 </p>
                 <p className="text-[15px] font-bold leading-tight text-zinc-900">
                   {selecionado.titulo}

@@ -70,7 +70,7 @@ for (const a of ARESTAS) {
 
 const alcancados = new Set(ARESTAS.map((a) => a.para));
 const primeiros = new Set(
-  PROCESSOS.map((pr) => PASSOS.find((p) => p.processo === pr.id)?.id).filter(Boolean)
+  PROCESSOS.map((pr) => PASSOS.find((p) => (p.processos ?? []).includes(pr.id))?.id).filter(Boolean)
 );
 for (const p of PASSOS) {
   if (!alcancados.has(p.id) && !primeiros.has(p.id)) {
@@ -83,6 +83,7 @@ for (const p of PASSOS) {
   if (p.luz === "verde" && p.duvida) {
     avisos.push(`${p.id} está verde mas carrega uma dúvida — ou não é verde, ou a dúvida já morreu`);
   }
+  if (!p.processos?.length) avisos.push(`${p.id} não declara a que processo(s) pertence`);
   if (!p.fala) avisos.push(`${p.id} não declara com quem a casa fala (use "só a nossa casa")`);
 
   /**
@@ -277,7 +278,7 @@ function grafoRotulado(aceitas) {
 
 function defeitos({ nos, arestas }) {
   const entradas = new Set(
-    PROCESSOS.map((pr) => PASSOS.find((p) => p.processo === pr.id)?.id).filter((id) => nos.has(id)),
+    PROCESSOS.map((pr) => PASSOS.find((p) => (p.processos ?? []).includes(pr.id))?.id).filter((id) => nos.has(id)),
   );
   const saiDe = new Map();
   const chegaEm = new Set();
@@ -673,7 +674,7 @@ writeFileSync(SAIDA_JSON, JSON.stringify(grafo, null, 2) + "\n", "utf8");
 
 // ── saída 2: a nota pro dev ─────────────────────────────────────────────────
 const contar = (luz, proc) =>
-  PASSOS.filter((p) => p.luz === luz && (!proc || p.processo === proc)).length;
+  PASSOS.filter((p) => p.luz === luz && (!proc || (p.processos ?? []).includes(proc))).length;
 
 const L = [];
 L.push("---");
@@ -695,7 +696,7 @@ L.push(`**Placar:** ${LUZ.verde.emoji} ${contar("verde")} sabemos e dá · ${LUZ
 L.push("");
 
 for (const pr of PROCESSOS) {
-  const meus = PASSOS.filter((p) => p.processo === pr.id);
+  const meus = PASSOS.filter((p) => (p.processos ?? []).includes(pr.id));
   L.push("---");
   L.push("");
   L.push(`## ${pr.id} · ${pr.titulo}`);
@@ -795,7 +796,7 @@ for (const pr of PROCESSOS) {
   T.push("## " + pr.id + " · " + pr.titulo);
   T.push("");
 
-  for (const p of PASSOS.filter((x) => x.processo === pr.id)) {
+  for (const p of PASSOS.filter((x) => (x.processos ?? []).includes(pr.id))) {
     const saidas = ARESTAS.filter((a) => a.de === p.id);
     if (saidas.length < 2) continue;
 

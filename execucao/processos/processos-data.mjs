@@ -12,7 +12,12 @@
  * arquivo. Regras completas: `_doutrina-processos.md`.
  *
  * ── ANATOMIA DE UM PASSO (5 campos, sempre os mesmos) ───────────────────────
- *   id     · P<processo>.<passo>
+ *   id     · P<processo>.<passo> — o número diz onde ele NASCEU, não onde vive
+ *   processos · a que processos o passo pertence. Lista, não texto: desde
+ *            11/09 um passo pode ser COMPARTILHADO (decisão do Pedro). O
+ *            fechamento do ciclo é o fim do P4 e o começo do P1 — duplicá-lo
+ *            criaria duas fontes pro mesmo fato, que foi a raiz de 5 dos 10
+ *            defeitos daquele dia
  *   titulo · o passo em 3 a 6 palavras
  *   quem   · quem dispara: "cliente" | "a casa" | "o relógio" | "o gateway"
  *   faz    · o que a casa faz, EM PORTUGUÊS COMUM (escrito pro Pedro)
@@ -91,6 +96,14 @@ export const TRILHAS = [
 
 export const PROCESSOS = [
   {
+    id: "P1",
+    titulo: "A competência fecha, a fatura é emitida e cobrada",
+    resumo:
+      "O ciclo do cliente vira no dia da assinatura, a fatura soma o que se acumulou e a cobrança sai na forma cadastrada. Daqui em diante o processo trata do dinheiro: pagou, não pagou, o que muda no preço, e o que a casa faz com quem atrasa.",
+    porqueImporta:
+      "É pra onde o P4 entrega, e era caixa preta declarada. Carrega o maior buraco do produto — saber que foi PAGO sem perguntar ao cliente, irmã da linha 2.4 do catálogo — e é onde moram as cláusulas 3.5, 3.6, 3.7, 3.14 e 3.15 da minuta, que hoje não têm desenho nenhum.",
+  },
+  {
     id: "P4",
     titulo: "Adicionar um serviço avulso à fatura aberta",
     resumo:
@@ -104,7 +117,7 @@ export const PASSOS = [
   // ── o pedido ──────────────────────────────────────────────────────────────
   {
     id: "P4.1",
-    processo: "P4",
+    processos: ["P4"],
     titulo: "Escolhe o serviço",
     quem: "cliente",
     faz: "Mostra o catálogo à-la-carte com preço aberto e o prazo estimado. Um toque abre o detalhe.",
@@ -116,7 +129,7 @@ export const PASSOS = [
   },
   {
     id: "P4.2",
-    processo: "P4",
+    processos: ["P4"],
     titulo: "Aceita o serviço, na sheet",
     quem: "cliente",
     faz: "Mostra preço, o que a pessoa recebe, o prazo estimado e quando vai ser cobrado (“entra na fatura de 05/08” ou “paga agora”), e só então libera o botão. O toque no botão É o aceite.",
@@ -130,7 +143,7 @@ export const PASSOS = [
   // ── a regra do contrato ───────────────────────────────────────────────────
   {
     id: "P4.3",
-    processo: "P4",
+    processos: ["P4"],
     titulo: "Custa mais de R$ 50?",
     quem: "a casa",
     faz: "Olha o preço do serviço e decide se ele pode simplesmente cair na fatura ou se precisa de um aceite formal na hora.",
@@ -144,7 +157,7 @@ export const PASSOS = [
   // ── o registro ────────────────────────────────────────────────────────────
   {
     id: "P4.5",
-    processo: "P4",
+    processos: ["P4"],
     titulo: "Guarda o pedido e trava o preço",
     quem: "a casa",
     faz: "Cria o pedido e congela o preço da tabela vigente NA DATA DO PEDIDO, guardando junto a versão da tabela que a pessoa viu. Reajuste posterior não alcança o que já foi pedido.",
@@ -158,7 +171,7 @@ export const PASSOS = [
   // ── onde o item cai ───────────────────────────────────────────────────────
   {
     id: "P4.6",
-    processo: "P4",
+    processos: ["P4"],
     titulo: "Acha ou abre a fatura do próximo ciclo",
     quem: "a casa",
     faz: "Procura a fatura do próximo ciclo. Se ela ainda não existir, abre uma, e é nela que o item entra.",
@@ -170,7 +183,7 @@ export const PASSOS = [
   },
   {
     id: "P4.7",
-    processo: "P4",
+    processos: ["P4"],
     titulo: "Entra como item de linha",
     quem: "a casa",
     faz: "Soma o serviço à fatura como uma linha própria, ao lado da mensalidade, com descrição, valor e tipo.",
@@ -184,7 +197,7 @@ export const PASSOS = [
   },
   {
     id: "P4.8",
-    processo: "P4",
+    processos: ["P4"],
     titulo: "O trabalho começa. Não dá pra remover.",
     quem: "a casa",
     faz: "Marca o item como em andamento e coloca na fila de execução. A partir daqui o cliente não pode tirar da fatura.",
@@ -198,7 +211,7 @@ export const PASSOS = [
   // ── o que ainda não tem resposta ──────────────────────────────────────────
   {
     id: "P4.9",
-    processo: "P4",
+    processos: ["P4"],
     titulo: "O serviço não pôde ser entregue",
     quem: "a casa",
     faz: "Separa por CAUSA: falha nossa ou do órgão de um lado, falta de documento do cliente do outro. O que acontece com o dinheiro depende de como ele entrou.",
@@ -212,7 +225,7 @@ export const PASSOS = [
   },
   {
     id: "P4.10",
-    processo: "P4",
+    processos: ["P4"],
     titulo: "Cancelou com avulso na fatura",
     quem: "cliente",
     faz: "O contrato segue vivo nos 30 dias de aviso prévio, então o avulso continua normalmente. A única pergunta é se o serviço sobrevive ao fim do CNPJ: o que precisa de empresa ativa tem que sair ANTES da baixa.",
@@ -226,7 +239,7 @@ export const PASSOS = [
   // ── o fecho ───────────────────────────────────────────────────────────────
   {
     id: "P4.11",
-    processo: "P4",
+    processos: ["P4", "P1"],
     titulo: "O ciclo vira e a fatura soma tudo",
     quem: "o relógio",
     faz: "No dia do aniversário do contrato, fecha a janela de itens do ciclo que terminou e emite a fatura. Assinou dia 8, o ciclo vira todo dia 8.",
@@ -241,7 +254,7 @@ export const PASSOS = [
   // ── promovidos em 11/09 (propostas S4, S5, S10 e S11, aceitas pelo Pedro) ──
   {
     id: "P4.12",
-    processo: "P4",
+    processos: ["P4"],
     titulo: "Fechou a sheet, e nada acontece",
     quem: "cliente",
     faz: "Fecha sem pedir nada. Não cria pedido, não guarda aceite, não cobra.",
@@ -253,7 +266,7 @@ export const PASSOS = [
   },
   {
     id: "P4.13",
-    processo: "P4",
+    processos: ["P4"],
     titulo: "Guarda o comprovante do aceite",
     quem: "a casa",
     faz: "Grava data, hora, o texto exato que foi aceito e a versão da tabela de preços vigente, e deixa isso disponível pra consulta na Plataforma.",
@@ -265,7 +278,7 @@ export const PASSOS = [
   },
   {
     id: "P4.14",
-    processo: "P4",
+    processos: ["P4"],
     titulo: "Paga na hora",
     quem: "cliente",
     faz: "Gera a cobrança do valor travado no aceite e leva a pessoa pro pagamento, sem sair do app. A forma escolhida aqui TRAVA com o pedido: ela define o prazo de validade e não muda depois.",
@@ -279,7 +292,7 @@ export const PASSOS = [
   },
   {
     id: "P4.15",
-    processo: "P4",
+    processos: ["P4"],
     titulo: "O pagamento confirmou?",
     quem: "o gateway",
     faz: "Espera a CAPTURA, não a autorização nem a liquidação. Pix confirma no webhook, boleto na compensação, cartão na captura. Só aí o serviço é liberado.",
@@ -293,7 +306,7 @@ export const PASSOS = [
   },
   {
     id: "P4.16",
-    processo: "P4",
+    processos: ["P4"],
     titulo: "Fica aguardando dentro do prazo",
     quem: "a casa",
     faz: "Segura o pedido pelo prazo da forma escolhida: 72 horas no Pix e no cartão, 6 dias no boleto, que precisa compensar. Preço e aceite travados, fora da fila de execução. Dentro da janela, a pessoa retoma o pagamento de onde parou, quantas vezes quiser — na MESMA forma, que não se troca.",
@@ -305,7 +318,7 @@ export const PASSOS = [
   },
   {
     id: "P4.17",
-    processo: "P4",
+    processos: ["P4"],
     titulo: "Expirou, e vira histórico",
     quem: "o relógio",
     faz: "Vencido o prazo da forma escolhida sem captura, derruba o pedido: preço e aceite perdem validade e o item some da tela. Guarda o registro de que foi solicitado e não pago.",
@@ -317,7 +330,7 @@ export const PASSOS = [
   },
   {
     id: "P4.18",
-    processo: "P4",
+    processos: ["P4"],
     titulo: "Cancelou com o avulso já pago",
     quem: "a casa",
     faz: "Não há o que cobrar: já foi pago no ato. Entrega dentro do aviso prévio, valendo a mesma régua do P4.10 — o que precisa de CNPJ ativo tem que sair antes da baixa.",
@@ -331,7 +344,7 @@ export const PASSOS = [
   },
   {
     id: "P4.19",
-    processo: "P4",
+    processos: ["P4"],
     titulo: "Entregue, e já estava pago",
     quem: "a casa",
     faz: "Encerra o item. Não há nada a lançar em fatura: o dinheiro entrou no ato do pedido.",
@@ -345,7 +358,7 @@ export const PASSOS = [
   // ── promovidos em 11/09, 2ª leva (S1, S2, S3, S6, S7, S8 e S9) ───────────
   {
     id: "P4.20",
-    processo: "P4",
+    processos: ["P4"],
     titulo: "A cobrança fica de pé",
     quem: "a casa",
     faz: "Não devolve nada: o trabalho foi feito e a entrega não saiu porque faltou documento do cliente. O item segue cobrado, do jeito que já estava.",
@@ -357,7 +370,7 @@ export const PASSOS = [
   },
   {
     id: "P4.21",
-    processo: "P4",
+    processos: ["P4"],
     titulo: "Tira da fatura, ou credita na seguinte",
     quem: "a casa",
     faz: "Se a fatura ainda não fechou, tira o item dela. Se já fechou, lança um crédito do mesmo valor na fatura seguinte.",
@@ -369,7 +382,7 @@ export const PASSOS = [
   },
   {
     id: "P4.22",
-    processo: "P4",
+    processos: ["P4"],
     titulo: "Estorna o que já foi pago",
     quem: "a casa",
     faz: "O dinheiro já entrou, então devolver é uma operação no provedor, não um ajuste de fatura. Pede o estorno e acompanha até cair.",
@@ -383,7 +396,7 @@ export const PASSOS = [
   },
   {
     id: "P4.23",
-    processo: "P4",
+    processos: ["P4"],
     titulo: "Entrega e cobra na fatura final",
     quem: "a casa",
     faz: "Entrega o serviço dentro do aviso prévio e lança o valor na fatura final, que é quitada até a data do encerramento.",
@@ -395,7 +408,7 @@ export const PASSOS = [
   },
   {
     id: "P4.24",
-    processo: "P4",
+    processos: ["P4", "P1"],
     titulo: "O ciclo vira no dia da assinatura",
     quem: "o relógio",
     faz: "Conta a partir do dia da assinatura. Se o mês não tiver esse dia, cobra no último dia dele e volta pro dia original no mês seguinte que tiver. Se a data cair em fim de semana, joga pro próximo dia útil. A âncora nunca muda.",
@@ -405,6 +418,146 @@ export const PASSOS = [
     forma: "passo",
     fonte: "Decisão do Pedro em 11/09, e ela é REGRA NOSSA, não régua de mercado: conta do dia da assinatura · fim de semana joga pro próximo dia útil · dia que o mês não tem cobra no último dia, e volta ao original no mês seguinte que tiver. ⚠️ O Código Civil, art. 132 §3º, resolve prazo em mês pelo caminho oposto (“ou no imediato, se faltar exata correspondência”), o que daria 1º/03 — a advogada precisa ver essa diferença, porque a regra vai pro contrato. ⚠️ Ele disse “fim de semana”; eu escrevi “dia útil”, que estende a FERIADO. Se não for isso, muda aqui.",
   },
+
+  // ══ P1 · A competência fecha, a fatura é emitida e cobrada ════════════════
+  // O P4 entrega aqui, pelo P4.11. Os dois passos do ciclo (P4.24 e P4.11)
+  // são COMPARTILHADOS: mesmo fato, lido por dois processos. Duplicá-los
+  // criaria duas fontes pro mesmo fato — a raiz de 5 dos 10 defeitos de 11/09.
+  {
+    id: "P1.1",
+    processos: ["P1"],
+    titulo: "Monta a fatura do ciclo",
+    quem: "a casa",
+    faz: "Soma a mensalidade do ciclo que começa, os avulsos de até R$ 50 do ciclo que terminou, a folha por colaborador ativo e o endereço fiscal, se tiver.",
+    fala: "só a nossa casa",
+    ve: "A fatura aberta em /mais/plano, com cada linha nomeada e o total.",
+    luz: "verde",
+    forma: "passo",
+    fonte: "Cláusula 6.3 e Anexo A-I.1 (avulso até R$ 50 na competência seguinte), 7.2 e 7.4 (folha R$ 39 por colaborador ATIVO, mesmo sem movimento) e Anexo I (endereço fiscal R$ 49/mês). As duas temporalidades da fatura foram travadas pelo Pedro em 11/09.",
+  },
+  {
+    id: "P1.2",
+    processos: ["P1"],
+    titulo: "O preço mudou neste ciclo?",
+    quem: "a casa",
+    faz: "Antes de fechar o valor, confere se a faixa de RBT12 mudou, se a oferta de lançamento acabou ou se houve reajuste anual.",
+    fala: "só a nossa casa",
+    ve: "nada, acontece por baixo",
+    luz: "amarelo",
+    forma: "decisao",
+    fonte: "Cláusula 3.6 (oferta de lançamento: 3 competências, término avisado com 30 dias), 3.7 (RBT12: elevação com aviso de 30 dias, redução automática) e 3.8 (reajuste anual, também com 30 dias).",
+    duvida:
+      "As três regras exigem aviso prévio de 30 dias e nenhuma tem tela ou disparo hoje. Quem avisa, por qual canal, e o que acontece se o aviso não sair a tempo — a fatura sobe assim mesmo, ou o preço velho vale mais um ciclo? A 3.8 ainda dá ao cliente o direito de encerrar SEM MULTA se não concordar, e esse caminho não existe em lugar nenhum do produto.",
+  },
+  {
+    id: "P1.3",
+    processos: ["P1"],
+    titulo: "Avisa o preço novo, 30 dias antes",
+    quem: "a casa",
+    faz: "Dispara o aviso da mudança com pelo menos 30 dias de antecedência, dizendo o valor novo, a razão e a partir de qual ciclo vale.",
+    fala: "só a nossa casa",
+    ve: "Aviso na central, na categoria “precisa de você”, e o valor novo marcado na fatura seguinte.",
+    luz: "amarelo",
+    forma: "passo",
+    fonte: "Cláusulas 3.6, 3.7 e 3.8 — as três exigem o mesmo aviso de 30 dias.",
+    duvida:
+      "O aviso vive só no app, ou também sai por e-mail e WhatsApp? Aviso de preço que a pessoa não vê é o mesmo que aviso nenhum, e a 3.8 dá a ela o direito de sair sem multa. Se ela não soube, a gente perde o direito de cobrar o valor novo.",
+  },
+  {
+    id: "P1.4",
+    processos: ["P1"],
+    titulo: "Emite a fatura e cobra na forma cadastrada",
+    quem: "a casa",
+    faz: "Fecha o valor, emite a fatura e dispara a cobrança recorrente na forma que o cliente cadastrou.",
+    fala: "Stone",
+    ve: "A fatura muda de “Próxima” para “Em aberto”, com a data de vencimento e a forma de pagamento à vista.",
+    luz: "amarelo",
+    forma: "passo",
+    fonte: "Decisão do Pedro em 11/09: gateway Stone, ciclo por aniversário, vencimento no dia da assinatura, jogando pro próximo dia útil quando cair em fim de semana.",
+    duvida:
+      "Cobrança RECORRENTE é integração diferente da avulsa do P4.14: exige tokenizar o cartão e guardar o mandato, e isso muda o escopo PCI — exatamente o que derrubou o Asaas em 08/09. Precisa entrar na pauta da reunião com a Stone junto com o avulso, não depois.",
+  },
+  {
+    id: "P1.5",
+    processos: ["P1"],
+    titulo: "A fatura foi paga?",
+    quem: "o gateway",
+    faz: "Espera a captura. Mesmo gate do avulso: não vale a autorização, não se espera a liquidação.",
+    fala: "Stone (webhook de captura)",
+    ve: "A fatura vira “paga” sozinha, sem a pessoa precisar avisar.",
+    luz: "vermelho",
+    forma: "decisao",
+    fonte: "Decisão do Pedro em 11/09: o gate é a captura.",
+    duvida:
+      "🔑 O MAIOR BURACO DO PRODUTO, e não é o mesmo do avulso. Dentro do trilho da Stone a gente sabe. FORA dele — cliente que paga o boleto no banco dele ou faz o Pix por outro caminho — a gente só sabe pelo extrato que ele envia (cláusula 5.4). O líder resolve com “informe se você pagou”, que a gente REJEITOU em 27/07 como trabalho empurrado pro cliente. É a irmã da linha 2.4 do catálogo, o diferencial nº 1 do teardown, e segue sem caminho decidido.",
+  },
+  {
+    id: "P1.6",
+    processos: ["P1"],
+    titulo: "Dá baixa e o ciclo segue",
+    quem: "a casa",
+    faz: "Marca a fatura como paga, guarda o comprovante e abre o ciclo seguinte.",
+    fala: "só a nossa casa",
+    ve: "Histórico de faturas com a paga no topo, e a próxima já anunciada com a data.",
+    luz: "verde",
+    forma: "fim",
+    fonte: "Cláusula 3.4 e o histórico de faturas que já existe em /mais/plano.",
+  },
+  {
+    id: "P1.7",
+    processos: ["P1"],
+    titulo: "Venceu: entra multa e juros",
+    quem: "o relógio",
+    faz: "Passado o vencimento, aplica multa de 2% e juros de 0,033% por dia de atraso, e mostra o valor atualizado.",
+    fala: "só a nossa casa",
+    ve: "A fatura fica “vencida”, com o valor de hoje e a conta aberta: original, multa e juros separados.",
+    luz: "verde",
+    forma: "passo",
+    fonte: "Cláusula 3.5: multa de 2% e juros de mora de 0,033% por dia de atraso.",
+  },
+  {
+    id: "P1.8",
+    processos: ["P1"],
+    titulo: "Tenta de novo, e avisa sem assustar",
+    quem: "a casa",
+    faz: "Repete a cobrança em dias combinados e avisa o cliente com o que ele precisa fazer, sem falar em exclusão do Simples nem em multa da Receita.",
+    fala: "Stone",
+    ve: "Aviso com o valor, a data da próxima tentativa e um botão pra pagar agora ou trocar a forma.",
+    luz: "amarelo",
+    forma: "passo",
+    fonte: "Posicionamento travado: “não vender pânico”. O dunning por medo do líder está na lista do que a gente NÃO faz (§9 do catálogo). A retentativa em si é mecanismo do gateway.",
+    duvida:
+      "Quantas tentativas, em que dias, e por quais canais. O número não é estético: cartão recusado por saldo costuma passar em D+3, mas tentativa demais queima o cartão na antifraude do emissor. Depende da política da Stone.",
+  },
+  {
+    id: "P1.9",
+    processos: ["P1"],
+    titulo: "Suspende o acesso, sem apagar o dado",
+    quem: "a casa",
+    faz: "Persistindo a falta de pagamento, suspende os serviços e o acesso ao software. O dado do cliente continua lá e volta assim que ele quitar.",
+    fala: "só a nossa casa",
+    ve: "Tela dizendo o que está suspenso, o que continua funcionando, e exatamente o que fazer pra voltar.",
+    luz: "amarelo",
+    forma: "passo",
+    fonte: "Cláusula 3.14 (a ausência de pagamento pode suspender os serviços e o acesso ao software) e 12.7 (a reativação depende de quitação integral).",
+    duvida:
+      "Depois de quantos dias, e o que EXATAMENTE fica suspenso. Cortar a emissão de nota trava o faturamento do cliente e pode virar dano; cortar a obrigação acessória vira risco fiscal dele e responsabilidade técnica nossa (cláusula 2.3, Res. CFC 1.590/2020). Essa linha precisa do Mauro — não é decisão de produto.",
+  },
+  {
+    id: "P1.10",
+    processos: ["P1"],
+    titulo: "Duas mensalidades: a casa pode encerrar",
+    quem: "a casa",
+    faz: "Com duas mensalidades consecutivas em aberto, a Legalizai pode encerrar o contrato sem aviso prévio e cobrar o que está em aberto.",
+    fala: "só a nossa casa",
+    ve: "Aviso formal do encerramento, com o que ainda é devido e como quitar.",
+    luz: "amarelo",
+    forma: "fim",
+    fonte: "Cláusula 12.3 (ausência de pagamento de 2 mensalidades consecutivas) e 3.15 (protesto, órgãos de proteção ao crédito e cessão do crédito a terceiros).",
+    duvida:
+      "A 12.3 diz que a casa PODE — falta decidir se a gente faz, e quando. E a 3.15 permite protestar e inscrever em órgão de proteção ao crédito: isso é decisão de POSICIONAMENTO, não de sistema, e bate de frente com o “não punir a saída” que a gente travou em 27/07. Pergunta pro Mauro.",
+  },
+
 ];
 
 export const ARESTAS = [
@@ -446,4 +599,21 @@ export const ARESTAS = [
   // ── cancelamento: o serviço sobrevive ao fim do CNPJ? ────────────────────
   { de: "P4.10", para: "P4.23", label: "o serviço sobrevive ao fim do CNPJ" },
   { de: "P4.10", para: "P4.9", label: "o serviço morre com a baixa do CNPJ" },
+
+  // ══ P1 · do fechamento à cobrança ════════════════════════════════════════
+  // 🔑 a entrada do P1 é o MESMO passo que fecha o P4: o ciclo virando. Não há
+  // salto entre processos porque não há dois fatos — há um, lido por dois.
+  { de: "P4.11", para: "P1.1" },
+  { de: "P1.1", para: "P1.2" },
+  { de: "P1.2", para: "P1.4", label: "o preço é o mesmo" },
+  { de: "P1.2", para: "P1.3", label: "mudou de faixa, acabou a oferta ou teve reajuste" },
+  { de: "P1.3", para: "P1.4" },
+  { de: "P1.4", para: "P1.5" },
+  { de: "P1.5", para: "P1.6", label: "pagou" },
+  { de: "P1.5", para: "P1.7", label: "não pagou", tracejado: true },
+  { de: "P1.7", para: "P1.8" },
+  { de: "P1.8", para: "P1.5", label: "tentou de novo" },
+  { de: "P1.8", para: "P1.9", label: "segue sem pagar", tracejado: true },
+  { de: "P1.9", para: "P1.10", label: "2 mensalidades em aberto", tracejado: true },
+
 ];

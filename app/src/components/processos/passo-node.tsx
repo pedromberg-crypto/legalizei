@@ -39,7 +39,7 @@ import {
 
 export type Passo = {
   id: string;
-  processo: string;
+  processos: string[];
   titulo: string;
   quem: string;
   faz: string;

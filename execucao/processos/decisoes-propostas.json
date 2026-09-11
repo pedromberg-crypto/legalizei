@@ -1,21 +1,7 @@
 {
-  "_leia": "Escrito pelo board /processos (dev-only, api/propostas). Não editar à mão: o clique do Pedro é a fonte. Cada chave é o id de uma proposta em processos-propostas.mjs.",
-  "decisoes": {
-    "S5": {
-      "status": "aceita",
-      "em": "2026-09-11T14:33:54.988Z"
-    },
-    "S4": {
-      "status": "aceita",
-      "em": "2026-09-11T15:33:49.846Z"
-    },
-    "S11": {
-      "status": "aceita",
-      "em": "2026-09-11T16:54:34.351Z"
-    },
-    "S10": {
-      "status": "aceita",
-      "em": "2026-09-11T18:04:43.991Z"
-    }
-  }
+  "_leia": "Escrito pelo board /processos (dev-only, api/propostas). Não editar à mão: o clique do Pedro é a fonte. Proposta ACEITA e já promovida pro processos-data.mjs sai daqui — a decisão passa a viver no dado e no ADR.",
+  "_promovidas": {
+    "2026-09-11": ["S4", "S5", "S10", "S11"]
+  },
+  "decisoes": {}
 }

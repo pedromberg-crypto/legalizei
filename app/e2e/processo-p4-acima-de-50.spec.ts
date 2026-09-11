@@ -8,7 +8,7 @@ import { test, expect, type Page } from "@playwright/test";
  * ele, minucioso na varredura. Quero ver o que você vai encontrar."*
  *
  * 🔴 O QUE ESTE ARQUIVO PODE E NÃO PODE ACHAR. O ramo acima de R$ 50 é quase
- * todo PROPOSTA: S10a–S10d não têm tela porque o gateway (Stone) ainda não
+ * todo PROPOSTA: P4.14–P4.17 não têm tela porque o gateway (Stone) ainda não
  * está integrado. Então isto não valida comportamento de pagamento — mede a
  * DISTÂNCIA entre o processo desenhado e o app construído, passo a passo.
  *
@@ -18,7 +18,8 @@ import { test, expect, type Page } from "@playwright/test";
  * existe pra evitar.
  *
  * Par do processo: `execucao/processos/processos-data.mjs` + as propostas
- * S4, S5, S10 e S11 em `processos-propostas.mjs`.
+ * S1, S2, S3, S6, S7, S8 e S9 em `processos-propostas.mjs`. As de 11/09 (S4, S5,
+ * S10 e S11) já foram promovidas e viraram os passos P4.12 a P4.19.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -61,12 +62,12 @@ test.describe("P4 · ramo acima de R$ 50 (paga no ato)", () => {
   });
 
   // ── P4.2 / S4 · a sheet como aceite (cláusula 6.3) ──────────────────────
-  test("P4.2+S4 · a sheet exibe PREÇO antes do aceite", async ({ page }) => {
+  test("P4.2 · a sheet exibe PREÇO antes do aceite", async ({ page }) => {
     await abrirSheet(page, SERVICO);
     await expect(page.getByText(PRECO).first()).toBeVisible();
   });
 
-  test("P4.2+S4 · a sheet exibe o MOMENTO DA COBRANÇA (6.3 exige)", async ({ page }) => {
+  test("P4.2 · a sheet exibe o MOMENTO DA COBRANÇA (6.3 exige)", async ({ page }) => {
     await abrirSheet(page, SERVICO);
     await expect(
       page.getByText(/cobrado na hora|cobra agora|cobrança agora/i).first(),
@@ -74,7 +75,7 @@ test.describe("P4 · ramo acima de R$ 50 (paga no ato)", () => {
     ).toBeVisible();
   });
 
-  test("P4.2+S4 · a sheet exibe o PRAZO ESTIMADO de entrega (6.1)", async ({ page }) => {
+  test("P4.2 · a sheet exibe o PRAZO ESTIMADO de entrega (6.1)", async ({ page }) => {
     await abrirSheet(page, SERVICO);
     await expect(
       page.getByText(/prazo|dias úteis|em até/i),
@@ -82,7 +83,7 @@ test.describe("P4 · ramo acima de R$ 50 (paga no ato)", () => {
     ).toBeVisible();
   });
 
-  test("P4.2+S4 · a sheet exibe O QUE ESTÁ SENDO CONTRATADO", async ({ page }) => {
+  test("P4.2 · a sheet exibe O QUE ESTÁ SENDO CONTRATADO", async ({ page }) => {
     await abrirSheet(page, SERVICO);
     await expect(page.getByText(/O que você recebe|inclui/i).first()).toBeVisible();
   });
@@ -96,8 +97,8 @@ test.describe("P4 · ramo acima de R$ 50 (paga no ato)", () => {
     ).toBeVisible();
   });
 
-  // ── S5 · o comprovante do aceite ────────────────────────────────────────
-  test("S5 · o aceite deixa comprovante consultável", async ({ page }) => {
+  // ── P4.13 · o comprovante do aceite ────────────────────────────────────────
+  test("P4.13 · o aceite deixa comprovante consultável", async ({ page }) => {
     await abrirSheet(page, SERVICO);
     await page.getByRole("button", { name: /Solicitar/ }).click();
     await page.getByRole("button", { name: /Confirmar/i }).click();
@@ -111,8 +112,8 @@ test.describe("P4 · ramo acima de R$ 50 (paga no ato)", () => {
     ).toBeVisible({ timeout: 4000 });
   });
 
-  // ── S10a · a tela de pagamento ──────────────────────────────────────────
-  test("S10a · existe tela de pagamento com Pix, cartão ou boleto", async ({ page }) => {
+  // ── P4.14 · a tela de pagamento ──────────────────────────────────────────
+  test("P4.14 · existe tela de pagamento com Pix, cartão ou boleto", async ({ page }) => {
     await abrirSheet(page, SERVICO);
     await page.getByRole("button", { name: /Solicitar/ }).click();
     await page.getByRole("button", { name: /Confirmar/i }).click();
@@ -122,7 +123,7 @@ test.describe("P4 · ramo acima de R$ 50 (paga no ato)", () => {
     ).toBeVisible({ timeout: 4000 });
   });
 
-  test("S10a · a tela diz até quando o pedido vale", async ({ page }) => {
+  test("P4.14 · a tela diz até quando o pedido vale", async ({ page }) => {
     await abrirSheet(page, SERVICO);
     await page.getByRole("button", { name: /Solicitar/ }).click();
     await page.getByRole("button", { name: /Confirmar/i }).click();
@@ -132,13 +133,13 @@ test.describe("P4 · ramo acima de R$ 50 (paga no ato)", () => {
     ).toBeVisible({ timeout: 4000 });
   });
 
-  // ── S10c · o item aguardando ────────────────────────────────────────────
-  test("S10c · item não pago aparece como aguardando, e não como em andamento", async ({ page }) => {
+  // ── P4.16 · o item aguardando ────────────────────────────────────────────
+  test("P4.16 · item não pago aparece como aguardando, e não como em andamento", async ({ page }) => {
     await page.goto("/mais/plano");
     const aguardando = page.getByText(/aguardando pagamento/i);
     await expect(
       aguardando,
-      "o que separa o S10c do P4.8: sem captura, o trabalho NÃO começou",
+      "o que separa o P4.16 do P4.8: sem captura, o trabalho NÃO começou",
     ).toBeVisible({ timeout: 4000 });
   });
 
@@ -154,14 +155,14 @@ test.describe("P4 · ramo acima de R$ 50 (paga no ato)", () => {
     ).toHaveCount(0);
   });
 
-  // ── S11b · entregue e já pago ───────────────────────────────────────────
-  test("S11b · serviço pago no ato não aparece na próxima fatura", async ({ page }) => {
+  // ── P4.19 · entregue e já pago ───────────────────────────────────────────
+  test("P4.19 · serviço pago no ato não aparece na próxima fatura", async ({ page }) => {
     await page.goto("/mais/plano");
     const fatura = page.getByText(/Próxima fatura|Fatura de/i).first();
     await expect(fatura).toBeVisible();
     await expect(
       page.getByText(new RegExp(SERVICO, "i")),
-      "item pago no ato não entra em fatura: quem paga no S10 termina no S11b",
+      "item pago no ato não entra em fatura: quem paga no S10 termina no P4.19",
     ).toHaveCount(0);
   });
 });

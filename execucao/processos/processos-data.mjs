@@ -117,14 +117,14 @@ export const PASSOS = [
   {
     id: "P4.2",
     processo: "P4",
-    titulo: "Confirma, com dupla checagem",
+    titulo: "Aceita o serviço, na sheet",
     quem: "cliente",
-    faz: "Antes de aceitar, diz o preço, quando será cobrado e avisa que o trabalho começa na hora. Só então libera o botão.",
+    faz: "Mostra preço, o que a pessoa recebe, o prazo estimado e quando vai ser cobrado (“entra na fatura de 05/08” ou “paga agora”), e só então libera o botão. O toque no botão É o aceite.",
     fala: "só a nossa casa",
-    ve: "Sheet de detalhe com 'Solicitar serviço' e um segundo toque de confirmação.",
+    ve: "A sheet de detalhe do serviço, com valor, a linha do momento da cobrança e “Solicitar serviço”. Falta ali o prazo estimado e o texto do que está sendo contratado.",
     luz: "verde",
     forma: "passo",
-    fonte: "Balde vendável, ADR 22/07. O double-check existe porque o pedido é IRREVERSÍVEL (ver P4.7).",
+    fonte: "Cláusula 6.3 (preço e momento da cobrança exibidos antes, aceite no ato), 6.1 (prazo estimado) e 1.6 (a confirmação na Plataforma integra o contrato). Decisão do Pedro em 11/09: a sheet que já existe é o nosso aceite, e o aceite vale para qualquer valor."
   },
 
   // ── a regra do contrato ───────────────────────────────────────────────────
@@ -139,20 +139,6 @@ export const PASSOS = [
     luz: "verde",
     forma: "decisao",
     fonte: "Cláusula 6.3 da nossa minuta: serviço de até R$ 50 é lançado na fatura da competência seguinte; acima disso exige aceite específico no ato, com exibição prévia do preço e do momento da cobrança.",
-  },
-  {
-    id: "P4.4",
-    processo: "P4",
-    titulo: "Aceite no ato (acima de R$ 50)",
-    quem: "cliente",
-    faz: "Registra um aceite com data e hora, guardando o preço exibido e o texto que a pessoa leu.",
-    fala: "só a nossa casa",
-    ve: "nada: a tela não existe",
-    luz: "vermelho",
-    forma: "passo",
-    fonte: "Cláusula 6.3 obriga. Nenhuma tela cobre.",
-    duvida:
-      "O aceite acima de R$ 50 é EXIGÊNCIA DO NOSSO CONTRATO e não existe em lugar nenhum do app. Como ele se parece? É o mesmo double-check do P4.2 com texto diferente, ou é uma tela de aceite com trilha própria (data, IP, navegador), como a do contrato? A minuta trata aceite de serviço como coisa formal, então provavelmente é a segunda.",
   },
 
   // ── o registro ────────────────────────────────────────────────────────────
@@ -259,19 +245,147 @@ export const PASSOS = [
     duvida:
       "Em que DIA a competência fecha? A cláusula 3.4 fixa o vencimento no dia 15, mas vencimento e fechamento são coisas diferentes. O líder tem `jaFechada` e `fechada` no objeto da fatura, então o conceito existe do lado dele — mas o dia é decisão nossa.",
   },
+
+  // ── promovidos em 11/09 (propostas S4, S5, S10 e S11, aceitas pelo Pedro) ──
+  {
+    id: "P4.12",
+    processo: "P4",
+    titulo: "Fechou a sheet, e nada acontece",
+    quem: "cliente",
+    faz: "Fecha sem pedir nada. Não cria pedido, não guarda aceite, não cobra.",
+    fala: "só a nossa casa",
+    ve: "Volta pra lista de serviços, no mesmo lugar onde estava.",
+    luz: "verde",
+    forma: "fim",
+    fonte: "Decisão do Pedro em 11/09. Sem aceite não há contratação (cláusula 6.3).",
+  },
+  {
+    id: "P4.13",
+    processo: "P4",
+    titulo: "Guarda o comprovante do aceite",
+    quem: "a casa",
+    faz: "Grava data, hora, o texto exato que foi aceito e a versão da tabela de preços vigente, e deixa isso disponível pra consulta na Plataforma.",
+    fala: "só a nossa casa",
+    ve: "O aceite fica listado no histórico do serviço, com data e hora, e pode ser reaberto.",
+    luz: "verde",
+    forma: "passo",
+    fonte: "Cláusula 6.4 (“que ficará registrada na Plataforma”), 1.6 (a confirmação integra o contrato) e 16.9 (registro de data e hora do aceite).",
+  },
+  {
+    id: "P4.14",
+    processo: "P4",
+    titulo: "Paga na hora",
+    quem: "cliente",
+    faz: "Gera a cobrança do valor travado no aceite e leva a pessoa pro pagamento, sem sair do app. A forma escolhida aqui TRAVA com o pedido: ela define o prazo de validade e não muda depois.",
+    fala: "Stone",
+    ve: "Tela de pagamento com o valor, o serviço, o prazo estimado de entrega e até quando o pedido vale. Pix, cartão ou boleto.",
+    luz: "amarelo",
+    forma: "passo",
+    fonte: "Decisão do Pedro em 11/09: acima de R$ 50, o pagamento acontece no ato da solicitação. Compatível com a cláusula 6.3, que exige exibir “o momento da cobrança” — aqui o momento é agora. O Anexo I já usa “no ato” para todos os itens acima de R$ 50.",
+    duvida:
+      "O provedor está decidido (Stone, 11/09), mas o caminho técnico não: falta saber por qual produto da casa a integração entra (a Pagar.me é do grupo Stone) e, principalmente, se o formato nos mantém FORA do escopo PCI — foi exatamente isso que derrubou o Asaas em 08/09. Enquanto isso não estiver confirmado por escrito com eles, não é verde.",
+  },
+  {
+    id: "P4.15",
+    processo: "P4",
+    titulo: "O pagamento confirmou?",
+    quem: "o gateway",
+    faz: "Espera a CAPTURA, não a autorização nem a liquidação. Pix confirma no webhook, boleto na compensação, cartão na captura. Só aí o serviço é liberado.",
+    fala: "Stone (webhook de captura)",
+    ve: "O item mostra “aguardando pagamento” até confirmar, e muda sozinho quando confirma.",
+    luz: "amarelo",
+    forma: "decisao",
+    fonte: "Decisão do Pedro em 11/09: “só será iniciado/liberado após efetuação do pagamento” e o gate é a CAPTURA — não a autorização, que só reserva limite, nem a liquidação, que no cartão é D+30.",
+    duvida:
+      "O gate está decidido (captura). O que segura este passo é o mesmo do S10a: até a integração com a Stone estar confirmada, não sabemos o formato do retorno nem se ele nos mantém fora do escopo PCI. Segue aberta uma pergunta de experiência: a pessoa espera na tela até confirmar, ou o app deixa ela sair e avisa depois? Com boleto, que leva de 1 a 3 dias úteis pra compensar, esperar na tela não é opção — e é por isso que o prazo dele é o dobro (S10c).",
+  },
+  {
+    id: "P4.16",
+    processo: "P4",
+    titulo: "Fica aguardando dentro do prazo",
+    quem: "a casa",
+    faz: "Segura o pedido pelo prazo da forma escolhida: 72 horas no Pix e no cartão, 6 dias no boleto, que precisa compensar. Preço e aceite travados, fora da fila de execução. Dentro da janela, a pessoa retoma o pagamento de onde parou, quantas vezes quiser — na MESMA forma, que não se troca.",
+    fala: "só a nossa casa",
+    ve: "O item aparece como “aguardando pagamento”, com o tempo que resta e o botão pra pagar sempre à mão. Pra trocar de forma de pagamento, pedir de novo. Nada de “em andamento”.",
+    luz: "verde",
+    forma: "passo",
+    fonte: "Decisão do Pedro em 11/09: 72 horas no Pix e no cartão, 6 dias no boleto (o dobro, pela compensação), e a forma de pagamento não se altera num pedido já gerado. Decorre da 6.4, que trava o preço na data da contratação — prazo aberto seria preço que nunca reajusta.",
+  },
+  {
+    id: "P4.17",
+    processo: "P4",
+    titulo: "Expirou, e vira histórico",
+    quem: "o relógio",
+    faz: "Vencido o prazo da forma escolhida sem captura, derruba o pedido: preço e aceite perdem validade e o item some da tela. Guarda o registro de que foi solicitado e não pago.",
+    fala: "só a nossa casa",
+    ve: "O item sai da lista. Pra pedir de novo — ou pra trocar a forma de pagamento — começa do zero, pelo preço do dia.",
+    luz: "verde",
+    forma: "fim",
+    fonte: "Decisão do Pedro em 11/09: vencido o prazo (72 horas no Pix e no cartão, 6 dias no boleto), some da tela, e a ocorrência fica registrada em banco pra termos histórico de quem solicitou e não pagou.",
+  },
+  {
+    id: "P4.18",
+    processo: "P4",
+    titulo: "Cancelou com o avulso já pago",
+    quem: "a casa",
+    faz: "Não há o que cobrar: já foi pago no ato. Entrega dentro do aviso prévio, valendo a mesma régua do P4.10 — o que precisa de CNPJ ativo tem que sair antes da baixa.",
+    fala: "só a nossa casa",
+    ve: "Na tela de cancelamento, o item aparece como já pago e com a data prevista de entrega, sem valor a quitar.",
+    luz: "amarelo",
+    forma: "passo",
+    fonte: "Cláusula 12.1 (aviso prévio de 30 dias). A 12.6 trata de valor em aberto, e aqui não há — o pagamento no ato tirou este caso do alcance dela.",
+    duvida:
+      "Se o serviço já pago NÃO couber nos 30 dias do aviso prévio, o dinheiro volta? A 12.6 não alcança (não há valor em aberto) e a 9.5 só fala de taxa pública. Cai na régua do S6 (quem deu causa), mas com dinheiro já compensado, que é situação diferente de item na fatura.",
+  },
+  {
+    id: "P4.19",
+    processo: "P4",
+    titulo: "Entregue, e já estava pago",
+    quem: "a casa",
+    faz: "Encerra o item. Não há nada a lançar em fatura: o dinheiro entrou no ato do pedido.",
+    fala: "só a nossa casa",
+    ve: "O item vira “concluído” no histórico de serviços, com o comprovante de pagamento junto.",
+    luz: "verde",
+    forma: "fim",
+    fonte: "Decorre do pagamento no ato (decisão do Pedro, 11/09): item pago não entra em fatura.",
+  },
 ];
 
 export const ARESTAS = [
+  // ── o pedido, comum aos dois caminhos ─────────────────────────────────────
   { de: "P4.1", para: "P4.2" },
-  { de: "P4.2", para: "P4.3" },
-  { de: "P4.3", para: "P4.4", label: "acima de R$ 50" },
-  { de: "P4.3", para: "P4.5", label: "até R$ 50" },
-  { de: "P4.4", para: "P4.5" },
-  { de: "P4.5", para: "P4.6" },
+  { de: "P4.2", para: "P4.13", label: "aceitou" },
+  { de: "P4.2", para: "P4.12", label: "fechou a sheet" },
+  { de: "P4.13", para: "P4.5" },
+  { de: "P4.5", para: "P4.3" },
+
+  // ── a régua do valor abre as duas TRILHAS ─────────────────────────────────
+  { de: "P4.3", para: "P4.6", label: "até R$ 50 · vai pra fatura", abre: "fatura" },
+  { de: "P4.3", para: "P4.14", label: "acima de R$ 50 · paga agora", abre: "pago" },
+
+  // ── trilha da fatura ──────────────────────────────────────────────────────
   { de: "P4.6", para: "P4.7", label: "fatura aberta" },
   { de: "P4.6", para: "P4.11", label: "já fechou · ❓", tracejado: true },
   { de: "P4.7", para: "P4.8" },
+
+  // ── trilha do pago no ato ─────────────────────────────────────────────────
+  { de: "P4.14", para: "P4.15" },
+  { de: "P4.15", para: "P4.8", label: "pago" },
+  { de: "P4.15", para: "P4.16", label: "não pagou" },
+  { de: "P4.16", para: "P4.17", label: "venceu o prazo do pedido" },
+
+  // ── depois que o trabalho começa, cada trilha responde a sua ──────────────
   { de: "P4.8", para: "P4.9", label: "não deu certo", tracejado: true },
-  { de: "P4.8", para: "P4.10", label: "cancelou o plano", tracejado: true },
-  { de: "P4.8", para: "P4.11", label: "correu bem" },
+  { de: "P4.8", para: "P4.10", label: "cancelou o plano", quando: "fatura", tracejado: true },
+  { de: "P4.8", para: "P4.18", label: "cancelou o plano", quando: "pago", tracejado: true },
+  /**
+   * 🔴 o `quando: "fatura"` aqui NÃO veio da proposta — apareceu na promoção.
+   * O S11 criou o "correu bem" da trilha paga e deixou este sem trilha, então
+   * promover os dois juntos devolveria a ambiguidade que o Pedro achou em
+   * 11/09 (o "correu bem" do já pago caindo no fechamento da fatura). A
+   * auditoria de cobertura teria pego; o cálculo da promoção pegou antes.
+   */
+  { de: "P4.8", para: "P4.11", label: "correu bem", quando: "fatura" },
+  { de: "P4.8", para: "P4.19", label: "correu bem", quando: "pago" },
+  { de: "P4.18", para: "P4.9", label: "não deu pra entregar" },
 ];

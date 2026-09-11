@@ -100,6 +100,11 @@ export type Passo = {
     }[];
   }[];
   trilhas?: { id: string; nome: string; curto: string; cor: string }[];
+  /** fora do ramo aceso: apaga em cinza, mas continua legível */
+  apagado?: boolean;
+  /** a saída deste cartão que está acesa agora, se for este o cartão */
+  ramoAceso?: { de: string; para: string; label: string } | null;
+  onRamo?: (de: string, para: string, label: string) => void;
   /** "pendente" | "aceita" | "descartada" — vem da decisão do Pedro */
   estado?: string | null;
   onDecidir?: (id: string, status: "aceita" | "descartada" | "pendente") => void;
@@ -237,7 +242,10 @@ export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
         borderStyle: sugerido || fim ? "dashed" : "solid",
         boxShadow: selected ? `0 0 0 3px ${(sugerido ? "#a1a1aa" : data.cor)}22` : undefined,
         background: sugerido ? "#fbfbfc" : LUZ_FUNDO[data.luz],
-        opacity: sugerido ? 0.92 : 1,
+        // fora do ramo aceso o cartão apaga, mas NÃO some: é o entorno que
+        // permite comparar um ramo com o outro (pedido do Pedro, 11/09)
+        opacity: data.apagado ? 0.22 : sugerido ? 0.92 : 1,
+        filter: data.apagado ? "grayscale(0.7)" : undefined,
       }}
     >
       <Handle
@@ -383,13 +391,41 @@ export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
                           className="flex items-center gap-1.5"
                           style={{ height: LINHA_SAIDA }}
                         >
-                          <span
-                            className="flex min-w-0 flex-1 items-center truncate rounded-lg border bg-white px-2 text-[10px] font-bold text-zinc-700"
-                            style={{ height: ALTURA_CTA, borderColor: grupo.trilha ? `${cor}55` : "#e4e4e7" }}
-                            title={sa.label}
-                          >
-                            {sa.label}
-                          </span>
+                          {(() => {
+                            const ligado =
+                              data.ramoAceso?.para === sa.para && data.ramoAceso?.label === sa.label;
+                            return (
+                              <button
+                                type="button"
+                                className={`nodrag flex min-w-0 flex-1 items-center truncate rounded-lg border px-2 text-left text-[10px] font-bold transition ${
+                                  ligado ? "text-white" : "bg-white text-zinc-700 hover:bg-zinc-50"
+                                }`}
+                                style={{
+                                  height: ALTURA_CTA,
+                                  borderColor: ligado ? cor : grupo.trilha ? `${cor}55` : "#e4e4e7",
+                                  background: ligado ? cor : undefined,
+                                  boxShadow: ligado ? `0 0 0 3px ${cor}33` : undefined,
+                                }}
+                                title={
+                                  ligado
+                                    ? "clique de novo pra apagar o ramo"
+                                    : `acender só o caminho de “${sa.label}”`
+                                }
+                                /* 🔑 o clique acende o RAMO; sem parar a
+                                   propagação ele subiria pro nó e abriria o
+                                   painel lateral por cima do board, bem na
+                                   hora de olhar o efeito. */
+                                onMouseDown={(e) => e.stopPropagation()}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  e.preventDefault();
+                                  data.onRamo?.(data.id, sa.para, sa.label);
+                                }}
+                              >
+                                {sa.label}
+                              </button>
+                            );
+                          })()}
                           {/**
                             * 🔴 DUAS CONDIÇÕES COM A MESMA FRASE (11/09,
                             * achado do Pedro): enquanto uma proposta está

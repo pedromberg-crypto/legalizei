@@ -98,6 +98,29 @@ export default function ProcessosPage() {
     }
   }
 
+  /**
+   * ── ACENDER UM RAMO (11/09, pedido do Pedro) ─────────────────────────────
+   * *"quando eu clicar no card de uma variável, deixe em cor viva apenas onde
+   * passará aquele fluxo e cinza claro o restante, pra eu enxergar exatamente
+   * tudo que está dentro daquela ramificação e validar cada variável
+   * individualmente."*
+   *
+   * Primo do que o /mapa faz desde 26/08, com duas diferenças que importam:
+   * lá as trilhas são uma lista fixa em `lib/trilhas.ts`, aqui o ramo nasce da
+   * ARESTA clicada, qualquer uma; e lá o que fica de fora SOME (decisão de
+   * 01/09), aqui apaga em cinza — ele pediu para continuar vendo o entorno,
+   * que é o que permite comparar um ramo com o outro.
+   */
+  const [ramo, setRamo] = useState<{ de: string; para: string; label: string } | null>(null);
+
+  const acenderRamo = useCallback((de: string, para: string, label: string) => {
+    setRamo((atual) =>
+      atual && atual.de === de && atual.para === para && atual.label === label
+        ? null
+        : { de, para, label },
+    );
+  }, []);
+
   const [selecionado, setSelecionado] = useState<Passo | null>(null);
   const [e2eAberto, setE2eAberto] = useState(false);
 
@@ -185,6 +208,7 @@ export default function ProcessosPage() {
         rotuladaPor?: string;
         quando?: string;
         quandoNovo?: string;
+        abre?: string;
       }[]
     )
       .filter((a) => vivos.has(a.de) && vivos.has(a.para))
@@ -360,6 +384,36 @@ export default function ProcessosPage() {
       });
     }
 
+    /**
+     * O que o ramo aceso alcança. A caminhada respeita a TRILHA da aresta
+     * clicada: se ela abre (ou pertence a) uma trilha, o ramo não atravessa
+     * portas de outra — senão acender "acima de R$ 50" iluminaria o caminho da
+     * fatura também, e a resposta seria inútil.
+     */
+    const aceso = (() => {
+      if (!ramo) return null;
+      const inicio = arestas.find(
+        (a) => a.de === ramo.de && a.para === ramo.para && rotuloDe(a) === ramo.label,
+      );
+      const trilha = inicio?.abre ?? inicio?.quando;
+      const nos = new Set<string>([ramo.de, ramo.para]);
+      const fios = new Set<string>([`${ramo.de}→${ramo.para}`]);
+      const fila = [ramo.para];
+      while (fila.length) {
+        const aqui = fila.shift()!;
+        for (const a of arestas) {
+          if (a.de !== aqui) continue;
+          if (trilha && a.quando && a.quando !== trilha) continue;
+          fios.add(`${a.de}→${a.para}`);
+          if (!nos.has(a.para)) {
+            nos.add(a.para);
+            fila.push(a.para);
+          }
+        }
+      }
+      return { nos, fios };
+    })();
+
     const ns: Node<Passo>[] = passos.map((p) => {
       const pos = g.node(p.id);
       return {
@@ -375,6 +429,9 @@ export default function ProcessosPage() {
              proposta de remoção, não o do passo. */
           estado: estadoDe(p.proposta ? p.propostaId : p.removidoPor),
           saidas: saidas.get(p.id) ?? [],
+          apagado: Boolean(aceso) && !aceso!.nos.has(p.id),
+          ramoAceso: ramo && ramo.de === p.id ? ramo : null,
+          onRamo: acenderRamo,
           grupos: gruposDe(p.id),
           trilhas: grafo.trilhas as { id: string; nome: string; curto: string; cor: string }[],
           onDecidir: decidir,
@@ -428,14 +485,17 @@ export default function ProcessosPage() {
       },
       style: {
         stroke: corDaAresta(a, estadoDe(a.proposta)),
-        strokeWidth: 1.7,
+        strokeWidth: aceso?.fios.has(`${a.de}→${a.para}`) ? 2.6 : 1.7,
+        // fora do ramo aceso: apaga, não some. O entorno continua legível, e é
+        // ele que permite comparar um ramo com o outro.
+        opacity: aceso && !aceso.fios.has(`${a.de}→${a.para}`) ? 0.16 : 1,
         strokeDasharray: a.tracejado || (a.proposta && estadoDe(a.proposta) !== "aceita") ? "6 4" : undefined,
       },
       markerEnd: { type: MarkerType.ArrowClosed, color: corDaAresta(a, estadoDe(a.proposta)) },
     }));
 
     return { nodes: ns, edges: es };
-  }, [filtro, ori, estadoDe, decidir, gravando]);
+  }, [filtro, ori, estadoDe, decidir, gravando, ramo, acenderRamo]);
 
   const placar = useMemo(() => {
     const alvo = (grafo.nodes as Passo[]).filter(
@@ -445,6 +505,9 @@ export default function ProcessosPage() {
   }, [filtro]);
 
   const aoClicar: NodeMouseHandler = (_, no) => setSelecionado(no.data as Passo);
+
+  /** clicar no vazio do quadro apaga o ramo — a outra saída que ele pediu */
+  const aoClicarNoVazio = useCallback(() => setRamo(null), []);
 
   return (
     <div className="flex h-dvh flex-col bg-zinc-50">
@@ -502,7 +565,10 @@ export default function ProcessosPage() {
           nodeTypes={TIPOS_DE_PASSO}
           edgeTypes={TIPOS_DE_CAMINHO}
           onNodeClick={aoClicar}
-          onPaneClick={() => setSelecionado(null)}
+          onPaneClick={() => {
+            setSelecionado(null);
+            aoClicarNoVazio();
+          }}
           fitView
           minZoom={0.15}
           proOptions={{ hideAttribution: true }}

@@ -238,7 +238,18 @@ export default function ProcessosPage() {
      */
     const saidas = new Map<
       string,
-      { label: string; para: string; quando?: string; proposta?: string; saiCom?: string }[]
+      {
+        label: string;
+        para: string;
+        quando?: string;
+        proposta?: string;
+        saiCom?: string;
+        /** a proposta que redireciona esta saída, quando ela foi colapsada */
+        viraPor?: string;
+        viraPara?: string;
+        /** todos os destinos que este CTA representa (ancora as duas arestas) */
+        paras?: string[];
+      }[]
     >();
     arestas.forEach((a) => {
       const label = rotuloDe(a);
@@ -259,6 +270,33 @@ export default function ProcessosPage() {
       });
       saidas.set(a.de, lista);
     });
+    /**
+     * 🔴 SAÍDA QUE ESTÁ SENDO REDIRECIONADA NÃO É UMA SEGUNDA OPÇÃO.
+     *
+     * 🐛 11/09, e o Pedro leu errado por causa disto — com razão. O P4.8
+     * mostrava dois CTAs "correu bem" lado a lado, e ele entendeu que eram
+     * dois caminhos concorrentes (um por trilha). Não eram: uma é a aresta
+     * atual (P4.8 → P4.11) e a outra é a mesma condição depois que o S9
+     * insere um passo no meio (P4.8 → S9 → P4.11). Mesma condição, mesmo
+     * destino final, momentos diferentes.
+     *
+     * CTA irmão parece ALTERNATIVA. Então elas colapsam numa linha só, que
+     * mostra o destino de hoje e diz por onde passa a ir se a proposta for
+     * aceita. Quando ele decide, uma das duas arestas some sozinha e o CTA
+     * volta a ser comum.
+     */
+    for (const [, lista] of saidas) {
+      for (const atual of [...lista]) {
+        if (!atual.saiCom) continue;
+        const nova = lista.find((x) => x.proposta === atual.saiCom && x.label === atual.label);
+        if (!nova) continue;
+        atual.viraPor = atual.saiCom;
+        atual.viraPara = nova.para;
+        atual.paras = [atual.para, nova.para];
+        lista.splice(lista.indexOf(nova), 1);
+      }
+    }
+
     // uma condição sozinha também não é escolha: sem par, não há o que separar
     for (const [id, lista] of saidas) if (lista.length < 2) saidas.delete(id);
 
@@ -364,7 +402,11 @@ export default function ProcessosPage() {
         ? (() => {
             const i = saidas
               .get(a.de)!
-              .findIndex((x) => x.para === a.para && x.label === rotuloDe(a));
+              .findIndex(
+                (x) =>
+                  x.label === rotuloDe(a) &&
+                  (x.para === a.para || (x.paras ?? []).includes(a.para)),
+              );
             // aresta sem condição num passo que bifurca sai pela âncora padrão
             return i >= 0 ? `saida-${i}` : undefined;
           })()

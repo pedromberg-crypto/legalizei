@@ -90,7 +90,14 @@ export type Passo = {
   grupos?: {
     trilha?: string;
     comCabeca: boolean;
-    itens: { label: string; para: string; proposta?: string; saiCom?: string }[];
+    itens: {
+      label: string;
+      para: string;
+      proposta?: string;
+      saiCom?: string;
+      viraPor?: string;
+      viraPara?: string;
+    }[];
   }[];
   trilhas?: { id: string; nome: string; curto: string; cor: string }[];
   /** "pendente" | "aceita" | "descartada" — vem da decisão do Pedro */
@@ -395,7 +402,15 @@ export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
                             * vem de proposta é defeito de dado, e o gerador
                             * recusa — aqui é só o transitório da decisão.
                             */}
-                          {(sa.proposta || sa.saiCom) && (
+                          {sa.viraPor && (
+                            <span
+                              className="shrink-0 rounded bg-amber-100 px-1 text-[9px] font-bold text-amber-800"
+                              title={`hoje vai pro ${sa.para}; com a ${sa.viraPor} passa a ir pro ${sa.viraPara}`}
+                            >
+                              ↦{sa.viraPara}
+                            </span>
+                          )}
+                          {!sa.viraPor && (sa.proposta || sa.saiCom) && (
                             <span
                               className="shrink-0 rounded px-1 text-[9px] font-bold"
                               style={

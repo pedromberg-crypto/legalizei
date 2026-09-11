@@ -398,6 +398,7 @@ export const PROPOSTAS = [
    * ═══════════════════════════════════════════════════════════════════════ */
   {
     id: "S9",
+    titulo: "A regra do dia 31: âncora fixa, recuo temporário",
     passos: [{
       id: "S9",
       processo: "P4",

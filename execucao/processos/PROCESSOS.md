@@ -13,7 +13,7 @@ tags: [execucao, processos, dev, spec]
 >
 > **Pra quem é:** o dev que vai implementar e o Mauro, que decide as regras de negócio. O mesmo arquivo alimenta o board visual em `/processos`, que é onde o Pedro valida.
 
-**Placar:** 🟢 10 sabemos e dá · 🟡 5 falta decidir · 🔴 3 não sabemos
+**Placar:** 🟢 18 sabemos e dá · 🟡 4 falta decidir · 🔴 1 não sabemos
 
 ---
 
@@ -23,20 +23,20 @@ tags: [execucao, processos, dev, spec]
 >
 > 🔑 **Por que importa:** É o balde vendável inteiro. O líder fatura ~45 serviços assim, e é receita oculta do modelo dele. É também o processo que mais atravessa tela, então é onde uma incoerência aparece primeiro.
 
-🟢 10 · 🟡 5 · 🔴 3
+🟢 18 · 🟡 4 · 🔴 1
 
 | | Passo | Quem dispara | O que a casa faz | Com quem fala | O que a pessoa vê |
 |:--:|---|---|---|---|---|
 | 🟢 | **P4.1** Escolhe o serviço | cliente | Mostra o catálogo à-la-carte com preço aberto e o prazo estimado. Um toque abre o detalhe. | só a nossa casa | A loja em /mais/servicos, com os mais pedidos em destaque. |
 | 🟢 | **P4.2** Aceita o serviço, na sheet | cliente | Mostra preço, o que a pessoa recebe, o prazo estimado e quando vai ser cobrado (“entra na fatura de 05/08” ou “paga agora”), e só então libera o botão. O toque no botão É o aceite. | só a nossa casa | A sheet de detalhe do serviço, com valor, a linha do momento da cobrança e “Solicitar serviço”. Falta ali o prazo estimado e o texto do que está sendo contratado. |
 | 🟢 | **P4.3** ◆ Custa mais de R$ 50? | a casa | Olha o preço do serviço e decide se ele pode simplesmente cair na fatura ou se precisa de um aceite formal na hora. | só a nossa casa | nada, acontece por baixo |
-| 🟡 | **P4.5** Guarda o pedido e trava o preço | a casa | Cria o pedido com o preço do dia congelado, para que reajuste posterior não mude o que já foi contratado. | só a nossa casa | nada, acontece por baixo |
-| 🔴 | **P4.6** ◆ Existe fatura ABERTA na competência? | a casa | Procura a fatura do mês corrente que ainda não fechou. | só a nossa casa | nada, acontece por baixo |
+| 🟢 | **P4.5** Guarda o pedido e trava o preço | a casa | Cria o pedido e congela o preço da tabela vigente NA DATA DO PEDIDO, guardando junto a versão da tabela que a pessoa viu. Reajuste posterior não alcança o que já foi pedido. | só a nossa casa | nada, acontece por baixo |
+| 🟢 | **P4.6** Acha ou abre a fatura do próximo ciclo | a casa | Procura a fatura do próximo ciclo. Se ela ainda não existir, abre uma, e é nela que o item entra. | só a nossa casa | nada, acontece por baixo |
 | 🟢 | **P4.7** Entra como item de linha | a casa | Soma o serviço à fatura como uma linha própria, ao lado da mensalidade, com descrição, valor e tipo. | só a nossa casa | O item aparece no /mais/plano, dentro de 'Próxima fatura'. |
 | 🟢 | **P4.8** O trabalho começa. Não dá pra remover. | a casa | Marca o item como em andamento e coloca na fila de execução. A partir daqui o cliente não pode tirar da fatura. | só a nossa casa | Chip 'Em andamento' ao lado do item, com a data do pedido. Sem X de remover. |
-| 🔴 | **P4.9** ◆ E se o serviço não puder ser entregue? | a casa | ainda não sabemos | ainda não sabemos | ainda não sabemos |
-| 🔴 | **P4.10** ◆ E se cancelar o plano com avulso em andamento? | cliente | ainda não sabemos | só a nossa casa | ainda não sabemos |
-| 🟡 | **P4.11** ■ A competência fecha e a fatura soma tudo | o relógio | No fechamento, a fatura para de aceitar item novo e vira o total que será cobrado. | só a nossa casa | O total no /mais/plano deixa de mudar. |
+| 🟡 | **P4.9** ◆ O serviço não pôde ser entregue | a casa | Separa por CAUSA: falha nossa ou do órgão de um lado, falta de documento do cliente do outro. O que acontece com o dinheiro depende de como ele entrou. | só a nossa casa | Aviso no item dizendo por que não deu e o que vai acontecer com o valor. |
+| 🟢 | **P4.10** ◆ Cancelou com avulso na fatura | cliente | O contrato segue vivo nos 30 dias de aviso prévio, então o avulso continua normalmente. A única pergunta é se o serviço sobrevive ao fim do CNPJ: o que precisa de empresa ativa tem que sair ANTES da baixa. | só a nossa casa | Na tela de cancelamento, a lista do que continua em andamento e o valor que vai na fatura final, antes de confirmar. |
+| 🟢 | **P4.11** ■ O ciclo vira e a fatura soma tudo | o relógio | No dia do aniversário do contrato, fecha a janela de itens do ciclo que terminou e emite a fatura. Assinou dia 8, o ciclo vira todo dia 8. | só a nossa casa | A fatura muda de “Próxima fatura” para “Fatura de <ciclo>” e para de aceitar item novo. A data do próximo fechamento aparece o tempo todo. |
 | 🟢 | **P4.12** ■ Fechou a sheet, e nada acontece | cliente | Fecha sem pedir nada. Não cria pedido, não guarda aceite, não cobra. | só a nossa casa | Volta pra lista de serviços, no mesmo lugar onde estava. |
 | 🟢 | **P4.13** Guarda o comprovante do aceite | a casa | Grava data, hora, o texto exato que foi aceito e a versão da tabela de preços vigente, e deixa isso disponível pra consulta na Plataforma. | só a nossa casa | O aceite fica listado no histórico do serviço, com data e hora, e pode ser reaberto. |
 | 🟡 | **P4.14** Paga na hora | cliente | Gera a cobrança do valor travado no aceite e leva a pessoa pro pagamento, sem sair do app. A forma escolhida aqui TRAVA com o pedido: ela define o prazo de validade e não muda depois. | Stone | Tela de pagamento com o valor, o serviço, o prazo estimado de entrega e até quando o pedido vale. Pix, cartão ou boleto. |
@@ -45,6 +45,11 @@ tags: [execucao, processos, dev, spec]
 | 🟢 | **P4.17** ■ Expirou, e vira histórico | o relógio | Vencido o prazo da forma escolhida sem captura, derruba o pedido: preço e aceite perdem validade e o item some da tela. Guarda o registro de que foi solicitado e não pago. | só a nossa casa | O item sai da lista. Pra pedir de novo — ou pra trocar a forma de pagamento — começa do zero, pelo preço do dia. |
 | 🟡 | **P4.18** Cancelou com o avulso já pago | a casa | Não há o que cobrar: já foi pago no ato. Entrega dentro do aviso prévio, valendo a mesma régua do P4.10 — o que precisa de CNPJ ativo tem que sair antes da baixa. | só a nossa casa | Na tela de cancelamento, o item aparece como já pago e com a data prevista de entrega, sem valor a quitar. |
 | 🟢 | **P4.19** ■ Entregue, e já estava pago | a casa | Encerra o item. Não há nada a lançar em fatura: o dinheiro entrou no ato do pedido. | só a nossa casa | O item vira “concluído” no histórico de serviços, com o comprovante de pagamento junto. |
+| 🟢 | **P4.20** ■ A cobrança fica de pé | a casa | Não devolve nada: o trabalho foi feito e a entrega não saiu porque faltou documento do cliente. O item segue cobrado, do jeito que já estava. | só a nossa casa | O item fica com o aviso de por que não deu, e o valor permanece. |
+| 🟢 | **P4.21** ■ Tira da fatura, ou credita na seguinte | a casa | Se a fatura ainda não fechou, tira o item dela. Se já fechou, lança um crédito do mesmo valor na fatura seguinte. | só a nossa casa | O item some da próxima fatura, ou aparece um crédito com o motivo escrito. |
+| 🔴 | **P4.22** ■ Estorna o que já foi pago | a casa | O dinheiro já entrou, então devolver é uma operação no provedor, não um ajuste de fatura. Pede o estorno e acompanha até cair. | Stone | O item mostra o estorno em andamento e o prazo de devolução. |
+| 🟢 | **P4.23** ■ Entrega e cobra na fatura final | a casa | Entrega o serviço dentro do aviso prévio e lança o valor na fatura final, que é quitada até a data do encerramento. | só a nossa casa | O item segue em andamento normalmente, e aparece na fatura final com a data de encerramento junto. |
+| 🟢 | **P4.24** O ciclo vira no dia da assinatura | o relógio | Conta a partir do dia da assinatura. Se o mês não tiver esse dia, cobra no último dia dele e volta pro dia original no mês seguinte que tiver. Se a data cair em fim de semana, joga pro próximo dia útil. A âncora nunca muda. | só a nossa casa | A data da próxima cobrança sempre escrita por extenso, nunca “daqui a um mês”. |
 
 ### Por onde o processo caminha
 
@@ -55,8 +60,7 @@ tags: [execucao, processos, dev, spec]
 - `P4.5` → `P4.3`
 - `P4.3` → `P4.6` — *até R$ 50 · vai pra fatura*
 - `P4.3` → `P4.14` — *acima de R$ 50 · paga agora*
-- `P4.6` → `P4.7` — *fatura aberta*
-- `P4.6` → `P4.11` — *já fechou · ❓*
+- `P4.6` → `P4.7`
 - `P4.7` → `P4.8`
 - `P4.14` → `P4.15`
 - `P4.15` → `P4.8` — *pago*
@@ -65,33 +69,23 @@ tags: [execucao, processos, dev, spec]
 - `P4.8` → `P4.9` — *não deu certo*
 - `P4.8` → `P4.10` — *cancelou o plano*
 - `P4.8` → `P4.18` — *cancelou o plano*
-- `P4.8` → `P4.11` — *correu bem*
+- `P4.8` → `P4.24` — *correu bem*
 - `P4.8` → `P4.19` — *correu bem*
+- `P4.24` → `P4.11`
 - `P4.18` → `P4.9` — *não deu pra entregar*
+- `P4.9` → `P4.20` — *o cliente deu causa*
+- `P4.9` → `P4.21` — *falha nossa ou do órgão*
+- `P4.9` → `P4.22` — *falha nossa ou do órgão*
+- `P4.10` → `P4.23` — *o serviço sobrevive ao fim do CNPJ*
+- `P4.10` → `P4.9` — *o serviço morre com a baixa do CNPJ*
 
 ### 🔴 O que precisa ser respondido
 
 > Esta lista é o produto do desenho, não o defeito dele. Um processo que sai todo verde na primeira passada não foi desenhado, foi copiado.
 
-**🟡 P4.5 · Guarda o pedido e trava o preço**
+**🟡 P4.9 · O serviço não pôde ser entregue**
 
-O preço congela no PEDIDO ou no FECHAMENTO da competência? Se o reajuste anual cair entre os dois, a pessoa paga o que viu ou o novo? O contrato manda exibir antes, o que aponta pro pedido — mas isso precisa ser dito, não deduzido.
-
-**🔴 P4.6 · Existe fatura ABERTA na competência?**
-
-🔑 O BURACO CENTRAL DESTE PROCESSO. Se a competência já fechou (pedido no dia 30, fatura fechou no dia 28), o item vai pra competência SEGUINTE, ou abre uma cobrança avulsa? A cláusula 6.3 diz 'fatura da competência seguinte', o que sugere a primeira. Mas aí um pedido feito no dia 1º espera quase 60 dias pra ser cobrado, e o trabalho já foi entregue. Precisa de decisão do Pedro + Mauro.
-
-**🔴 P4.9 · E se o serviço não puder ser entregue?**
-
-Certidão que volta negada, órgão fora do ar, documento que o cliente não mandou. O item já está na fatura e o trabalho já começou. Estorna, vira crédito na fatura seguinte, ou cobra assim mesmo porque o trabalho foi feito? Isso NÃO está no nosso contrato, e o do líder também não responde.
-
-**🔴 P4.10 · E se cancelar o plano com avulso em andamento?**
-
-A cláusula 7.4 do líder cobra tudo que está em aberto no aviso prévio. A nossa minuta não trata de avulso em andamento no cancelamento. Cobra, entrega mesmo assim, ou cancela o serviço junto?
-
-**🟡 P4.11 · A competência fecha e a fatura soma tudo**
-
-Em que DIA a competência fecha? A cláusula 3.4 fixa o vencimento no dia 15, mas vencimento e fechamento são coisas diferentes. O líder tem `jaFechada` e `fechada` no objeto da fatura, então o conceito existe do lado dele — mas o dia é decisão nossa.
+A régua de CAUSA é analogia minha entre a cláusula 9.5 (taxa pública não realizada volta, salvo a que o órgão reteve) e serviço adicional, que a minuta não trata. O desenho está travado; falta o Mauro ou a advogada RATIFICAREM, e provavelmente vira cláusula. As três perguntas caras moram no P4.22 (estorno).
 
 **🟡 P4.14 · Paga na hora**
 
@@ -105,6 +99,10 @@ O gate está decidido (captura). O que segura este passo é o mesmo do S10a: at�
 
 Se o serviço já pago NÃO couber nos 30 dias do aviso prévio, o dinheiro volta? A 12.6 não alcança (não há valor em aberto) e a 9.5 só fala de taxa pública. Cai na régua do S6 (quem deu causa), mas com dinheiro já compensado, que é situação diferente de item na fatura.
 
+**🔴 P4.22 · Estorna o que já foi pago**
+
+Três perguntas, e nenhuma tem resposta hoje. (1) A taxa que o gateway reteve volta? Na maioria dos provedores, não — então estorno integral sai do nosso bolso. (2) Estorno ou crédito na próxima fatura? Crédito não custa taxa e é mais rápido, mas prende o cliente. (3) Qual o prazo, e quem avisa quando cai. Tudo isso depende do provedor, que ainda não foi escolhido.
+
 ### Detalhe técnico
 
 - **P4.7** — 📚 O modelo do líder confirma que fatura suporta itens: `GET /api/pagamentos/faturas/` devolve `itens[]` com `{descricao, valor, tipo}`, e a mensalidade é UM dos tipos, não o objeto.
@@ -115,11 +113,13 @@ Se o serviço já pago NÃO couber nos 30 dias do aviso prévio, o dinheiro volt
 - **P4.1** — Tela construída em 24/07. Doutrina anti-dark-pattern: preço aparece ANTES do clique.
 - **P4.2** — Cláusula 6.3 (preço e momento da cobrança exibidos antes, aceite no ato), 6.1 (prazo estimado) e 1.6 (a confirmação na Plataforma integra o contrato). Decisão do Pedro em 11/09: a sheet que já existe é o nosso aceite, e o aceite vale para qualquer valor.
 - **P4.3** — Cláusula 6.3 da nossa minuta: serviço de até R$ 50 é lançado na fatura da competência seguinte; acima disso exige aceite específico no ato, com exibição prévia do preço e do momento da cobrança.
-- **P4.5** — Decorre da cláusula 6.3, que manda exibir o preço antes. Preço exibido e preço cobrado têm que ser o mesmo.
-- **P4.6** — Modelo de fatura por competência, travado em 11/09.
+- **P4.5** — Cláusula 6.4: aplica-se “a versão vigente na data da contratação de cada serviço, que ficará registrada na Plataforma”. A 6.3 reforça, exigindo exibição prévia do preço.
+- **P4.6** — Cláusula 6.3 e Anexo A-I.1: item de até R$ 50 é lançado na fatura da competência seguinte. Com o ciclo por aniversário, qual fatura recebe o item deixa de ser pergunta e vira consequência.
 - **P4.7** — Modelo de fatura por competência (ADR 11/09). Evidência: 2026-09-11-contabilizei-modelo-de-cobranca.
 - **P4.8** — Decisão de 27/07: 'pedir = o trabalho já começou'. Transparência sem fingir carrinho — mostrar um X que não remove seria pior.
-- **P4.11** — Modelo de fatura por competência (ADR 11/09).
+- **P4.9** — Espelha a cláusula 9.5 (não realizado o ato, o valor volta, salvo taxa já retida pelo órgão) e a 1.4 (a Legalizai não responde por documentação não apresentada pelo Cliente). Regra nova: a 9.5 trata de taxa pública, não de serviço adicional.
+- **P4.10** — Cláusula 12.6: quitar todos os valores em aberto até a data do encerramento, incluindo serviços adicionais. Cláusula 12.1: aviso prévio de 30 dias.
+- **P4.11** — Decisão do Pedro em 11/09, e ela MANDA: cobrança por aniversário, no dia em que o cliente fechou. ⚠️ A cláusula 3.4 da minuta fixa o pagamento “até o 15º dia de cada mês” e terá que ser ajustada ao produto, não o contrário.
 - **P4.12** — Decisão do Pedro em 11/09. Sem aceite não há contratação (cláusula 6.3).
 - **P4.13** — Cláusula 6.4 (“que ficará registrada na Plataforma”), 1.6 (a confirmação integra o contrato) e 16.9 (registro de data e hora do aceite).
 - **P4.14** — Decisão do Pedro em 11/09: acima de R$ 50, o pagamento acontece no ato da solicitação. Compatível com a cláusula 6.3, que exige exibir “o momento da cobrança” — aqui o momento é agora. O Anexo I já usa “no ato” para todos os itens acima de R$ 50.
@@ -128,3 +128,8 @@ Se o serviço já pago NÃO couber nos 30 dias do aviso prévio, o dinheiro volt
 - **P4.17** — Decisão do Pedro em 11/09: vencido o prazo (72 horas no Pix e no cartão, 6 dias no boleto), some da tela, e a ocorrência fica registrada em banco pra termos histórico de quem solicitou e não pagou.
 - **P4.18** — Cláusula 12.1 (aviso prévio de 30 dias). A 12.6 trata de valor em aberto, e aqui não há — o pagamento no ato tirou este caso do alcance dela.
 - **P4.19** — Decorre do pagamento no ato (decisão do Pedro, 11/09): item pago não entra em fatura.
+- **P4.20** — Cláusula 1.4: a Legalizai não responde pelas consequências de documentação não apresentada pelo Cliente.
+- **P4.21** — Princípio da cláusula 9.5 aplicado ao avulso: o que não foi realizado não é devido.
+- **P4.22** — Mesmo princípio da 9.5, mas com dinheiro já compensado — situação que a minuta não trata.
+- **P4.23** — Cláusula 12.6 (quitar tudo em aberto até o encerramento, incluindo serviços adicionais) e 12.1 (aviso prévio de 30 dias).
+- **P4.24** — Decisão do Pedro em 11/09, e ela é REGRA NOSSA, não régua de mercado: conta do dia da assinatura · fim de semana joga pro próximo dia útil · dia que o mês não tem cobra no último dia, e volta ao original no mês seguinte que tiver. ⚠️ O Código Civil, art. 132 §3º, resolve prazo em mês pelo caminho oposto (“ou no imediato, se faltar exata correspondência”), o que daria 1º/03 — a advogada precisa ver essa diferença, porque a regra vai pro contrato. ⚠️ Ele disse “fim de semana”; eu escrevi “dia útil”, que estende a FERIADO. Se não for isso, muda aqui.

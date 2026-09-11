@@ -147,30 +147,26 @@ export const PASSOS = [
     processo: "P4",
     titulo: "Guarda o pedido e trava o preço",
     quem: "a casa",
-    faz: "Cria o pedido com o preço do dia congelado, para que reajuste posterior não mude o que já foi contratado.",
+    faz: "Cria o pedido e congela o preço da tabela vigente NA DATA DO PEDIDO, guardando junto a versão da tabela que a pessoa viu. Reajuste posterior não alcança o que já foi pedido.",
     fala: "só a nossa casa",
     ve: "nada, acontece por baixo",
-    luz: "amarelo",
+    luz: "verde",
     forma: "passo",
-    fonte: "Decorre da cláusula 6.3, que manda exibir o preço antes. Preço exibido e preço cobrado têm que ser o mesmo.",
-    duvida:
-      "O preço congela no PEDIDO ou no FECHAMENTO da competência? Se o reajuste anual cair entre os dois, a pessoa paga o que viu ou o novo? O contrato manda exibir antes, o que aponta pro pedido — mas isso precisa ser dito, não deduzido.",
+    fonte: "Cláusula 6.4: aplica-se “a versão vigente na data da contratação de cada serviço, que ficará registrada na Plataforma”. A 6.3 reforça, exigindo exibição prévia do preço.",
   },
 
   // ── onde o item cai ───────────────────────────────────────────────────────
   {
     id: "P4.6",
     processo: "P4",
-    titulo: "Existe fatura ABERTA na competência?",
+    titulo: "Acha ou abre a fatura do próximo ciclo",
     quem: "a casa",
-    faz: "Procura a fatura do mês corrente que ainda não fechou.",
+    faz: "Procura a fatura do próximo ciclo. Se ela ainda não existir, abre uma, e é nela que o item entra.",
     fala: "só a nossa casa",
     ve: "nada, acontece por baixo",
-    luz: "vermelho",
-    forma: "decisao",
-    fonte: "Modelo de fatura por competência, travado em 11/09.",
-    duvida:
-      "🔑 O BURACO CENTRAL DESTE PROCESSO. Se a competência já fechou (pedido no dia 30, fatura fechou no dia 28), o item vai pra competência SEGUINTE, ou abre uma cobrança avulsa? A cláusula 6.3 diz 'fatura da competência seguinte', o que sugere a primeira. Mas aí um pedido feito no dia 1º espera quase 60 dias pra ser cobrado, e o trabalho já foi entregue. Precisa de decisão do Pedro + Mauro.",
+    luz: "verde",
+    forma: "passo",
+    fonte: "Cláusula 6.3 e Anexo A-I.1: item de até R$ 50 é lançado na fatura da competência seguinte. Com o ciclo por aniversário, qual fatura recebe o item deixa de ser pergunta e vira consequência.",
   },
   {
     id: "P4.7",
@@ -203,47 +199,43 @@ export const PASSOS = [
   {
     id: "P4.9",
     processo: "P4",
-    titulo: "E se o serviço não puder ser entregue?",
+    titulo: "O serviço não pôde ser entregue",
     quem: "a casa",
-    faz: "ainda não sabemos",
-    fala: "ainda não sabemos",
-    ve: "ainda não sabemos",
-    luz: "vermelho",
+    faz: "Separa por CAUSA: falha nossa ou do órgão de um lado, falta de documento do cliente do outro. O que acontece com o dinheiro depende de como ele entrou.",
+    fala: "só a nossa casa",
+    ve: "Aviso no item dizendo por que não deu e o que vai acontecer com o valor.",
+    luz: "amarelo",
     forma: "decisao",
-    fonte: "—",
+    fonte: "Espelha a cláusula 9.5 (não realizado o ato, o valor volta, salvo taxa já retida pelo órgão) e a 1.4 (a Legalizai não responde por documentação não apresentada pelo Cliente). Regra nova: a 9.5 trata de taxa pública, não de serviço adicional.",
     duvida:
-      "Certidão que volta negada, órgão fora do ar, documento que o cliente não mandou. O item já está na fatura e o trabalho já começou. Estorna, vira crédito na fatura seguinte, ou cobra assim mesmo porque o trabalho foi feito? Isso NÃO está no nosso contrato, e o do líder também não responde.",
+      "A régua de CAUSA é analogia minha entre a cláusula 9.5 (taxa pública não realizada volta, salvo a que o órgão reteve) e serviço adicional, que a minuta não trata. O desenho está travado; falta o Mauro ou a advogada RATIFICAREM, e provavelmente vira cláusula. As três perguntas caras moram no P4.22 (estorno).",
   },
   {
     id: "P4.10",
     processo: "P4",
-    titulo: "E se cancelar o plano com avulso em andamento?",
+    titulo: "Cancelou com avulso na fatura",
     quem: "cliente",
-    faz: "ainda não sabemos",
+    faz: "O contrato segue vivo nos 30 dias de aviso prévio, então o avulso continua normalmente. A única pergunta é se o serviço sobrevive ao fim do CNPJ: o que precisa de empresa ativa tem que sair ANTES da baixa.",
     fala: "só a nossa casa",
-    ve: "ainda não sabemos",
-    luz: "vermelho",
+    ve: "Na tela de cancelamento, a lista do que continua em andamento e o valor que vai na fatura final, antes de confirmar.",
+    luz: "verde",
     forma: "decisao",
-    fonte: "—",
-    duvida:
-      "A cláusula 7.4 do líder cobra tudo que está em aberto no aviso prévio. A nossa minuta não trata de avulso em andamento no cancelamento. Cobra, entrega mesmo assim, ou cancela o serviço junto?",
+    fonte: "Cláusula 12.6: quitar todos os valores em aberto até a data do encerramento, incluindo serviços adicionais. Cláusula 12.1: aviso prévio de 30 dias.",
   },
 
   // ── o fecho ───────────────────────────────────────────────────────────────
   {
     id: "P4.11",
     processo: "P4",
-    titulo: "A competência fecha e a fatura soma tudo",
+    titulo: "O ciclo vira e a fatura soma tudo",
     quem: "o relógio",
-    faz: "No fechamento, a fatura para de aceitar item novo e vira o total que será cobrado.",
+    faz: "No dia do aniversário do contrato, fecha a janela de itens do ciclo que terminou e emite a fatura. Assinou dia 8, o ciclo vira todo dia 8.",
     fala: "só a nossa casa",
     falaNota: "O fechamento em si é o processo P1, que ainda não foi desenhado.",
-    ve: "O total no /mais/plano deixa de mudar.",
-    luz: "amarelo",
+    ve: "A fatura muda de “Próxima fatura” para “Fatura de <ciclo>” e para de aceitar item novo. A data do próximo fechamento aparece o tempo todo.",
+    luz: "verde",
     forma: "fim",
-    fonte: "Modelo de fatura por competência (ADR 11/09).",
-    duvida:
-      "Em que DIA a competência fecha? A cláusula 3.4 fixa o vencimento no dia 15, mas vencimento e fechamento são coisas diferentes. O líder tem `jaFechada` e `fechada` no objeto da fatura, então o conceito existe do lado dele — mas o dia é decisão nossa.",
+    fonte: "Decisão do Pedro em 11/09, e ela MANDA: cobrança por aniversário, no dia em que o cliente fechou. ⚠️ A cláusula 3.4 da minuta fixa o pagamento “até o 15º dia de cada mês” e terá que ser ajustada ao produto, não o contrário.",
   },
 
   // ── promovidos em 11/09 (propostas S4, S5, S10 e S11, aceitas pelo Pedro) ──
@@ -349,6 +341,70 @@ export const PASSOS = [
     forma: "fim",
     fonte: "Decorre do pagamento no ato (decisão do Pedro, 11/09): item pago não entra em fatura.",
   },
+
+  // ── promovidos em 11/09, 2ª leva (S1, S2, S3, S6, S7, S8 e S9) ───────────
+  {
+    id: "P4.20",
+    processo: "P4",
+    titulo: "A cobrança fica de pé",
+    quem: "a casa",
+    faz: "Não devolve nada: o trabalho foi feito e a entrega não saiu porque faltou documento do cliente. O item segue cobrado, do jeito que já estava.",
+    fala: "só a nossa casa",
+    ve: "O item fica com o aviso de por que não deu, e o valor permanece.",
+    luz: "verde",
+    forma: "fim",
+    fonte: "Cláusula 1.4: a Legalizai não responde pelas consequências de documentação não apresentada pelo Cliente.",
+  },
+  {
+    id: "P4.21",
+    processo: "P4",
+    titulo: "Tira da fatura, ou credita na seguinte",
+    quem: "a casa",
+    faz: "Se a fatura ainda não fechou, tira o item dela. Se já fechou, lança um crédito do mesmo valor na fatura seguinte.",
+    fala: "só a nossa casa",
+    ve: "O item some da próxima fatura, ou aparece um crédito com o motivo escrito.",
+    luz: "verde",
+    forma: "fim",
+    fonte: "Princípio da cláusula 9.5 aplicado ao avulso: o que não foi realizado não é devido.",
+  },
+  {
+    id: "P4.22",
+    processo: "P4",
+    titulo: "Estorna o que já foi pago",
+    quem: "a casa",
+    faz: "O dinheiro já entrou, então devolver é uma operação no provedor, não um ajuste de fatura. Pede o estorno e acompanha até cair.",
+    fala: "Stone",
+    ve: "O item mostra o estorno em andamento e o prazo de devolução.",
+    luz: "vermelho",
+    forma: "fim",
+    fonte: "Mesmo princípio da 9.5, mas com dinheiro já compensado — situação que a minuta não trata.",
+    duvida:
+      "Três perguntas, e nenhuma tem resposta hoje. (1) A taxa que o gateway reteve volta? Na maioria dos provedores, não — então estorno integral sai do nosso bolso. (2) Estorno ou crédito na próxima fatura? Crédito não custa taxa e é mais rápido, mas prende o cliente. (3) Qual o prazo, e quem avisa quando cai. Tudo isso depende do provedor, que ainda não foi escolhido.",
+  },
+  {
+    id: "P4.23",
+    processo: "P4",
+    titulo: "Entrega e cobra na fatura final",
+    quem: "a casa",
+    faz: "Entrega o serviço dentro do aviso prévio e lança o valor na fatura final, que é quitada até a data do encerramento.",
+    fala: "só a nossa casa",
+    ve: "O item segue em andamento normalmente, e aparece na fatura final com a data de encerramento junto.",
+    luz: "verde",
+    forma: "fim",
+    fonte: "Cláusula 12.6 (quitar tudo em aberto até o encerramento, incluindo serviços adicionais) e 12.1 (aviso prévio de 30 dias).",
+  },
+  {
+    id: "P4.24",
+    processo: "P4",
+    titulo: "O ciclo vira no dia da assinatura",
+    quem: "o relógio",
+    faz: "Conta a partir do dia da assinatura. Se o mês não tiver esse dia, cobra no último dia dele e volta pro dia original no mês seguinte que tiver. Se a data cair em fim de semana, joga pro próximo dia útil. A âncora nunca muda.",
+    fala: "só a nossa casa",
+    ve: "A data da próxima cobrança sempre escrita por extenso, nunca “daqui a um mês”.",
+    luz: "verde",
+    forma: "passo",
+    fonte: "Decisão do Pedro em 11/09, e ela é REGRA NOSSA, não régua de mercado: conta do dia da assinatura · fim de semana joga pro próximo dia útil · dia que o mês não tem cobra no último dia, e volta ao original no mês seguinte que tiver. ⚠️ O Código Civil, art. 132 §3º, resolve prazo em mês pelo caminho oposto (“ou no imediato, se faltar exata correspondência”), o que daria 1º/03 — a advogada precisa ver essa diferença, porque a regra vai pro contrato. ⚠️ Ele disse “fim de semana”; eu escrevi “dia útil”, que estende a FERIADO. Se não for isso, muda aqui.",
+  },
 ];
 
 export const ARESTAS = [
@@ -364,8 +420,7 @@ export const ARESTAS = [
   { de: "P4.3", para: "P4.14", label: "acima de R$ 50 · paga agora", abre: "pago" },
 
   // ── trilha da fatura ──────────────────────────────────────────────────────
-  { de: "P4.6", para: "P4.7", label: "fatura aberta" },
-  { de: "P4.6", para: "P4.11", label: "já fechou · ❓", tracejado: true },
+  { de: "P4.6", para: "P4.7" },
   { de: "P4.7", para: "P4.8" },
 
   // ── trilha do pago no ato ─────────────────────────────────────────────────
@@ -378,14 +433,17 @@ export const ARESTAS = [
   { de: "P4.8", para: "P4.9", label: "não deu certo", tracejado: true },
   { de: "P4.8", para: "P4.10", label: "cancelou o plano", quando: "fatura", tracejado: true },
   { de: "P4.8", para: "P4.18", label: "cancelou o plano", quando: "pago", tracejado: true },
-  /**
-   * 🔴 o `quando: "fatura"` aqui NÃO veio da proposta — apareceu na promoção.
-   * O S11 criou o "correu bem" da trilha paga e deixou este sem trilha, então
-   * promover os dois juntos devolveria a ambiguidade que o Pedro achou em
-   * 11/09 (o "correu bem" do já pago caindo no fechamento da fatura). A
-   * auditoria de cobertura teria pego; o cálculo da promoção pegou antes.
-   */
-  { de: "P4.8", para: "P4.11", label: "correu bem", quando: "fatura" },
+  { de: "P4.8", para: "P4.24", label: "correu bem", quando: "fatura" },
   { de: "P4.8", para: "P4.19", label: "correu bem", quando: "pago" },
+  { de: "P4.24", para: "P4.11" },
+
+  // ── não entregue: primeiro a CAUSA, depois a trilha ──────────────────────
   { de: "P4.18", para: "P4.9", label: "não deu pra entregar" },
+  { de: "P4.9", para: "P4.20", label: "o cliente deu causa" },
+  { de: "P4.9", para: "P4.21", label: "falha nossa ou do órgão", quando: "fatura" },
+  { de: "P4.9", para: "P4.22", label: "falha nossa ou do órgão", quando: "pago" },
+
+  // ── cancelamento: o serviço sobrevive ao fim do CNPJ? ────────────────────
+  { de: "P4.10", para: "P4.23", label: "o serviço sobrevive ao fim do CNPJ" },
+  { de: "P4.10", para: "P4.9", label: "o serviço morre com a baixa do CNPJ" },
 ];

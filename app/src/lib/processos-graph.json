@@ -293,7 +293,7 @@
       "sugestoes": [
         {
           "id": "S6",
-          "titulo": "Não entregue: quem deu causa decide quem paga",
+          "titulo": "Não entregue: primeiro a causa, depois a trilha",
           "mudancas": [
             {
               "passo": "P4.9",
@@ -303,17 +303,22 @@
             {
               "passo": "P4.9",
               "campo": "faz",
-              "valor": "Separa por causa. Falha nossa ou do órgão: tira o item da fatura se ela ainda não fechou, e devolve como crédito na competência seguinte se já foi cobrado. Falta de documento do cliente: mantém a cobrança, porque o trabalho foi feito. Taxa pública já retida pelo órgão não volta, e o comprovante fica na Plataforma."
+              "valor": "Separa por CAUSA: falha nossa ou do órgão de um lado, falta de documento do cliente do outro. O que acontece com o dinheiro depende de como ele entrou."
             },
             {
               "passo": "P4.9",
               "campo": "ve",
-              "valor": "Aviso no item dizendo por que não deu, o que acontece com o valor, e o crédito aparecendo na próxima fatura quando for o caso."
+              "valor": "Aviso no item dizendo por que não deu e o que vai acontecer com o valor."
             },
             {
               "passo": "P4.9",
               "campo": "fala",
               "valor": "só a nossa casa"
+            },
+            {
+              "passo": "P4.9",
+              "campo": "forma",
+              "valor": "decisao"
             },
             {
               "passo": "P4.9",
@@ -326,8 +331,10 @@
               "valor": "amarelo"
             }
           ],
-          "porque": "A minuta não trata disso para serviço adicional, mas trata para taxa pública, e o princípio da 9.5 é limpo: o que não foi realizado volta, salvo o que o órgão reteve. Estendo isso ao avulso, com um corte que a 1.4 já autoriza: se a entrega não saiu porque o cliente não mandou documento, o trabalho foi feito e a cobrança fica de pé. Deixo em 🟡 de propósito, não em 🟢 — é analogia minha entre cláusulas, não texto expresso, e a diferença importa: quem ratifica é o Mauro ou a advogada. ⚠️ Se aceitar, isto vira cláusula na minuta, não só passo no board.",
-          "depende": []
+          "porque": "🔄 REESCRITO em 11/09, aplicando a trilha a pedido do Pedro — e aqui ela muda mais do que o texto. A versão anterior dizia “tira o item da fatura” como se fosse a única resolução possível, mas isso só vale na trilha da FATURA. Na trilha do PAGO o dinheiro já foi compensado: devolver deixa de ser ajuste de fatura e vira operação no provedor. 🔑 E aí aparece o que só o corte por trilha revela: naquele ramo o passo deixa de ser “só a nossa casa” e passa a FALAR COM O GATEWAY. Um passo que era 🟢 de um lado é 🔴 do outro, pelo mesmo evento. O corte de CAUSA continua valendo nas duas trilhas e por isso tem saída única: se o cliente deu causa, a cobrança fica de pé, e tanto faz se ela está na fatura ou já foi paga — não há o que fazer em nenhum dos dois casos. ⚠️ O S6c traz três perguntas novas e caras: a taxa retida pelo gateway volta? estorno ou crédito? qual prazo? Nenhuma tem resposta antes de escolher o provedor.",
+          "depende": [
+            "S10"
+          ]
         }
       ]
     },
@@ -352,17 +359,17 @@
       "sugestoes": [
         {
           "id": "S7",
-          "titulo": "Cancelou com avulso em andamento: entrega e cobra, pela 12.6",
+          "titulo": "Cancelou com avulso na fatura: entrega e cobra, pela 12.6",
           "mudancas": [
             {
               "passo": "P4.10",
               "campo": "titulo",
-              "valor": "Cancelamento com avulso em andamento"
+              "valor": "Cancelou com avulso na fatura"
             },
             {
               "passo": "P4.10",
               "campo": "faz",
-              "valor": "O contrato segue vivo nos 30 dias de aviso prévio. O avulso continua e é entregue dentro desse prazo, e entra na fatura final, que tem que ser quitada até a data do encerramento."
+              "valor": "O contrato segue vivo nos 30 dias de aviso prévio. O avulso continua, é entregue dentro desse prazo e entra na fatura final, que tem que ser quitada até a data do encerramento."
             },
             {
               "passo": "P4.10",
@@ -372,7 +379,7 @@
             {
               "passo": "P4.10",
               "campo": "fonte",
-              "valor": "Cláusula 12.6: “o Cliente deverá quitar todos os valores em aberto até a data fixada para o encerramento, incluindo faturas de serviços adicionais”. Cláusula 12.1: aviso prévio de 30 dias."
+              "valor": "Cláusula 12.6: quitar todos os valores em aberto até a data do encerramento, incluindo faturas de serviços adicionais. Cláusula 12.1: aviso prévio de 30 dias."
             },
             {
               "passo": "P4.10",
@@ -380,9 +387,10 @@
               "valor": "verde"
             }
           ],
-          "porque": "A 12.6 responde a pergunta com todas as letras, e a 12.1 dá o prazo em que a entrega ainda cabe: o contrato não morre no clique, morre 30 dias depois. Então não há “cancela o serviço junto” — há entregar dentro do aviso prévio e cobrar na fatura final. O que a 12.6 não cobre é o avulso que NÃO dá pra entregar nesses 30 dias, e esse caso não precisa de regra nova: cai na do S6, por causa. A tela precisa mostrar isso ANTES da confirmação, senão o cliente descobre a cobrança depois de cancelar, que é onde nasce reclamação.",
+          "porque": "🔄 ESTREITADO em 11/09, aplicando a trilha. 🔑 E aqui a trilha fez o contrário do que fez no S6: em vez de DIVIDIR o passo, ela REVELOU que ele já era de um ramo só. Depois que o S11 mandou o caso do serviço já pago pro S11a, o P4.10 passou a ser alcançado apenas pela trilha da fatura — conferido na propagação, uma única entrada, `P4.8 → P4.10` com `quando: fatura`. O texto ganhou o nome certo e parou de fingir que valia pros dois. A 12.6 responde este caso com todas as letras (quitar tudo em aberto até o encerramento, incluindo serviços adicionais) e a 12.1 dá o prazo em que a entrega ainda cabe: o contrato não morre no clique, morre 30 dias depois. Por isso não existe “cancela o serviço junto”. O que a 12.6 não cobre é o avulso que NÃO dá pra entregar nesses 30 dias, e esse cai na régua do S6 pela aresta do S8. A tela precisa mostrar isso ANTES da confirmação, senão o cliente descobre a cobrança depois de cancelar, que é onde nasce reclamação.",
           "depende": [
-            "S6"
+            "S6",
+            "S11"
           ]
         }
       ]
@@ -487,6 +495,79 @@
       "tons": {
         "faz": "normal",
         "fala": "neutro",
+        "ve": "normal"
+      }
+    },
+    {
+      "id": "S6a",
+      "processo": "P4",
+      "titulo": "A cobrança fica de pé",
+      "quem": "a casa",
+      "faz": "Não devolve nada: o trabalho foi feito e a entrega não saiu porque faltou documento do cliente. O item segue cobrado, do jeito que já estava.",
+      "fala": "só a nossa casa",
+      "ve": "O item fica com o aviso de por que não deu, e o valor permanece.",
+      "luz": "verde",
+      "forma": "fim",
+      "fonte": "Cláusula 1.4: a Legalizai não responde pelas consequências de documentação não apresentada pelo Cliente.",
+      "proposta": true,
+      "propostaId": "S6",
+      "porque": "🔄 REESCRITO em 11/09, aplicando a trilha a pedido do Pedro — e aqui ela muda mais do que o texto. A versão anterior dizia “tira o item da fatura” como se fosse a única resolução possível, mas isso só vale na trilha da FATURA. Na trilha do PAGO o dinheiro já foi compensado: devolver deixa de ser ajuste de fatura e vira operação no provedor. 🔑 E aí aparece o que só o corte por trilha revela: naquele ramo o passo deixa de ser “só a nossa casa” e passa a FALAR COM O GATEWAY. Um passo que era 🟢 de um lado é 🔴 do outro, pelo mesmo evento. O corte de CAUSA continua valendo nas duas trilhas e por isso tem saída única: se o cliente deu causa, a cobrança fica de pé, e tanto faz se ela está na fatura ou já foi paga — não há o que fazer em nenhum dos dois casos. ⚠️ O S6c traz três perguntas novas e caras: a taxa retida pelo gateway volta? estorno ou crédito? qual prazo? Nenhuma tem resposta antes de escolher o provedor.",
+      "depende": [
+        "S10"
+      ],
+      "cor": "#17A06A",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "normal"
+      }
+    },
+    {
+      "id": "S6b",
+      "processo": "P4",
+      "titulo": "Tira da fatura, ou credita na seguinte",
+      "quem": "a casa",
+      "faz": "Se a fatura ainda não fechou, tira o item dela. Se já fechou, lança um crédito do mesmo valor na fatura seguinte.",
+      "fala": "só a nossa casa",
+      "ve": "O item some da próxima fatura, ou aparece um crédito com o motivo escrito.",
+      "luz": "verde",
+      "forma": "fim",
+      "fonte": "Princípio da cláusula 9.5 aplicado ao avulso: o que não foi realizado não é devido.",
+      "proposta": true,
+      "propostaId": "S6",
+      "porque": "🔄 REESCRITO em 11/09, aplicando a trilha a pedido do Pedro — e aqui ela muda mais do que o texto. A versão anterior dizia “tira o item da fatura” como se fosse a única resolução possível, mas isso só vale na trilha da FATURA. Na trilha do PAGO o dinheiro já foi compensado: devolver deixa de ser ajuste de fatura e vira operação no provedor. 🔑 E aí aparece o que só o corte por trilha revela: naquele ramo o passo deixa de ser “só a nossa casa” e passa a FALAR COM O GATEWAY. Um passo que era 🟢 de um lado é 🔴 do outro, pelo mesmo evento. O corte de CAUSA continua valendo nas duas trilhas e por isso tem saída única: se o cliente deu causa, a cobrança fica de pé, e tanto faz se ela está na fatura ou já foi paga — não há o que fazer em nenhum dos dois casos. ⚠️ O S6c traz três perguntas novas e caras: a taxa retida pelo gateway volta? estorno ou crédito? qual prazo? Nenhuma tem resposta antes de escolher o provedor.",
+      "depende": [
+        "S10"
+      ],
+      "cor": "#17A06A",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "normal"
+      }
+    },
+    {
+      "id": "S6c",
+      "processo": "P4",
+      "titulo": "Estorna o que já foi pago",
+      "quem": "a casa",
+      "faz": "O dinheiro já entrou, então devolver é uma operação no provedor, não um ajuste de fatura. Pede o estorno e acompanha até cair.",
+      "fala": "gateway de pagamento (ainda não escolhido)",
+      "ve": "O item mostra o estorno em andamento e o prazo de devolução.",
+      "luz": "vermelho",
+      "forma": "fim",
+      "fonte": "Mesmo princípio da 9.5, mas com dinheiro já compensado — situação que a minuta não trata.",
+      "duvida": "Três perguntas, e nenhuma tem resposta hoje. (1) A taxa que o gateway reteve volta? Na maioria dos provedores, não — então estorno integral sai do nosso bolso. (2) Estorno ou crédito na próxima fatura? Crédito não custa taxa e é mais rápido, mas prende o cliente. (3) Qual o prazo, e quem avisa quando cai. Tudo isso depende do provedor, que ainda não foi escolhido.",
+      "proposta": true,
+      "propostaId": "S6",
+      "porque": "🔄 REESCRITO em 11/09, aplicando a trilha a pedido do Pedro — e aqui ela muda mais do que o texto. A versão anterior dizia “tira o item da fatura” como se fosse a única resolução possível, mas isso só vale na trilha da FATURA. Na trilha do PAGO o dinheiro já foi compensado: devolver deixa de ser ajuste de fatura e vira operação no provedor. 🔑 E aí aparece o que só o corte por trilha revela: naquele ramo o passo deixa de ser “só a nossa casa” e passa a FALAR COM O GATEWAY. Um passo que era 🟢 de um lado é 🔴 do outro, pelo mesmo evento. O corte de CAUSA continua valendo nas duas trilhas e por isso tem saída única: se o cliente deu causa, a cobrança fica de pé, e tanto faz se ela está na fatura ou já foi paga — não há o que fazer em nenhum dos dois casos. ⚠️ O S6c traz três perguntas novas e caras: a taxa retida pelo gateway volta? estorno ou crédito? qual prazo? Nenhuma tem resposta antes de escolher o provedor.",
+      "depende": [
+        "S10"
+      ],
+      "cor": "#D64A2D",
+      "tons": {
+        "faz": "normal",
+        "fala": "normal",
         "ve": "normal"
       }
     },
@@ -736,6 +817,29 @@
       "label": "",
       "tracejado": false,
       "proposta": "S5"
+    },
+    {
+      "de": "P4.9",
+      "para": "S6a",
+      "label": "o cliente deu causa",
+      "tracejado": false,
+      "proposta": "S6"
+    },
+    {
+      "de": "P4.9",
+      "para": "S6b",
+      "label": "falha nossa ou do órgão",
+      "quando": "fatura",
+      "tracejado": false,
+      "proposta": "S6"
+    },
+    {
+      "de": "P4.9",
+      "para": "S6c",
+      "label": "falha nossa ou do órgão",
+      "quando": "pago",
+      "tracejado": false,
+      "proposta": "S6"
     },
     {
       "de": "P4.8",

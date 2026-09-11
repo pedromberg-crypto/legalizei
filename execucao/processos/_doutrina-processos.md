@@ -114,6 +114,15 @@ Pior que isso: o mesmo símbolo carregava **respostas diferentes**. O `—` quer
 
 ⚠️ **Trilha não é para toda bifurcação.** Só para a decisão que continua importando depois de tomada. *"Correu bem ou não"* morre no passo seguinte; *"está na fatura ou já foi pago"* atravessa o processo inteiro. Criar trilha para tudo devolveria a complexidade pela outra porta.
 
+**A trilha faz DUAS coisas, e a segunda não é óbvia:**
+
+| | Exemplo |
+|---|---|
+| **divide** um passo que parecia um só | o P4.9 ("não entregue") virou três resoluções: cobrança fica de pé (vale nas duas) · tira da fatura (`fatura`) · **estorna pelo gateway** (`pago`) |
+| **estreita** um passo, revelando que ele já era de um ramo só | o P4.10 ("cancelou o plano") deixou de ser alcançado pela trilha `pago` no momento em que aquele caso ganhou passo próprio. O texto parou de fingir que valia pros dois |
+
+🔑 **O achado que só o corte por trilha revela:** no ramo `pago`, o P4.9 deixa de ser *"só a nossa casa"* e passa a **falar com o gateway** — devolver dinheiro compensado é operação no provedor, não ajuste de fatura. **O mesmo evento é 🟢 de um lado e 🔴 do outro.** Sem trilha, esse passo teria ficado verde inteiro e o buraco só apareceria na implementação.
+
 **No cartão:** a faixa de saídas ganha seções. O grupo sem cabeçalho vem primeiro (vale para todas), depois um grupo por trilha, com o cabeçalho *"se veio por …"* na cor dela.
 
 🔴 **Três travas no gerador:**

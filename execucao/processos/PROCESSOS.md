@@ -13,7 +13,7 @@ tags: [execucao, processos, dev, spec]
 >
 > **Pra quem é:** o dev que vai implementar e o Mauro, que decide as regras de negócio. O mesmo arquivo alimenta o board visual em `/processos`, que é onde o Pedro valida.
 
-**Placar:** 🟢 21 sabemos e dá · 🟡 10 falta decidir · 🔴 2 não sabemos
+**Placar:** 🟢 21 sabemos e dá · 🟡 11 falta decidir · 🔴 1 não sabemos
 
 ---
 
@@ -21,9 +21,9 @@ tags: [execucao, processos, dev, spec]
 
 > O ciclo do cliente vira no dia da assinatura, a fatura soma o que se acumulou e a cobrança sai na forma cadastrada. Daqui em diante o processo trata do dinheiro: pagou, não pagou, o que muda no preço, e o que a casa faz com quem atrasa.
 >
-> 🔑 **Por que importa:** É pra onde o P4 entrega, e era caixa preta declarada. Carrega o maior buraco do produto — saber que foi PAGO sem perguntar ao cliente, irmã da linha 2.4 do catálogo — e é onde moram as cláusulas 3.5, 3.6, 3.7, 3.14 e 3.15 da minuta, que hoje não têm desenho nenhum.
+> 🔑 **Por que importa:** É pra onde o P4 entrega, e era caixa preta declarada. É onde moram as cláusulas 3.5, 3.6, 3.7, 3.14 e 3.15 da minuta, que hoje não têm desenho nenhum — e onde se decide o que a casa faz com quem atrasa, que é posicionamento, não sistema. ⚠️ NÃO confundir com o pagamento da GUIA (linha 2.4 do catálogo): aqui quem recebe somos nós e o trilho é nosso; lá quem recebe é o governo e a gente nem vê o dinheiro.
 
-🟢 5 · 🟡 6 · 🔴 1
+🟢 5 · 🟡 7 · 🔴 0
 
 | | Passo | Quem dispara | O que a casa faz | Com quem fala | O que a pessoa vê |
 |:--:|---|---|---|---|---|
@@ -33,7 +33,7 @@ tags: [execucao, processos, dev, spec]
 | 🟡 | **P1.2** ◆ O preço mudou neste ciclo? | a casa | Antes de fechar o valor, confere se a faixa de RBT12 mudou, se a oferta de lançamento acabou ou se houve reajuste anual. | só a nossa casa | nada, acontece por baixo |
 | 🟡 | **P1.3** Avisa o preço novo, 30 dias antes | a casa | Dispara o aviso da mudança com pelo menos 30 dias de antecedência, dizendo o valor novo, a razão e a partir de qual ciclo vale. | só a nossa casa | Aviso na central, na categoria “precisa de você”, e o valor novo marcado na fatura seguinte. |
 | 🟡 | **P1.4** Emite a fatura e cobra na forma cadastrada | a casa | Fecha o valor, emite a fatura e dispara a cobrança recorrente na forma que o cliente cadastrou. | Stone | A fatura muda de “Próxima” para “Em aberto”, com a data de vencimento e a forma de pagamento à vista. |
-| 🔴 | **P1.5** ◆ A fatura foi paga? | o gateway | Espera a captura. Mesmo gate do avulso: não vale a autorização, não se espera a liquidação. | Stone (webhook de captura) | A fatura vira “paga” sozinha, sem a pessoa precisar avisar. |
+| 🟡 | **P1.5** ◆ A fatura foi paga? | o gateway | Espera a captura. Mesmo gate do avulso: não vale a autorização, não se espera a liquidação. | Stone (webhook de captura) | A fatura vira “paga” sozinha, sem a pessoa precisar avisar. |
 | 🟢 | **P1.6** ■ Dá baixa e o ciclo segue | a casa | Marca a fatura como paga, guarda o comprovante e abre o ciclo seguinte. | só a nossa casa | Histórico de faturas com a paga no topo, e a próxima já anunciada com a data. |
 | 🟢 | **P1.7** Venceu: entra multa e juros | o relógio | Passado o vencimento, aplica multa de 2% e juros de 0,033% por dia de atraso, e mostra o valor atualizado. | só a nossa casa | A fatura fica “vencida”, com o valor de hoje e a conta aberta: original, multa e juros separados. |
 | 🟡 | **P1.8** Tenta de novo, e avisa sem assustar | a casa | Repete a cobrança em dias combinados e avisa o cliente com o que ele precisa fazer, sem falar em exclusão do Simples nem em multa da Receita. | Stone | Aviso com o valor, a data da próxima tentativa e um botão pra pagar agora ou trocar a forma. |
@@ -70,9 +70,9 @@ O aviso vive só no app, ou também sai por e-mail e WhatsApp? Aviso de preço q
 
 Cobrança RECORRENTE é integração diferente da avulsa do P4.14: exige tokenizar o cartão e guardar o mandato, e isso muda o escopo PCI — exatamente o que derrubou o Asaas em 08/09. Precisa entrar na pauta da reunião com a Stone junto com o avulso, não depois.
 
-**🔴 P1.5 · A fatura foi paga?**
+**🟡 P1.5 · A fatura foi paga?**
 
-🔑 O MAIOR BURACO DO PRODUTO, e não é o mesmo do avulso. Dentro do trilho da Stone a gente sabe. FORA dele — cliente que paga o boleto no banco dele ou faz o Pix por outro caminho — a gente só sabe pelo extrato que ele envia (cláusula 5.4). O líder resolve com “informe se você pagou”, que a gente REJEITOU em 27/07 como trabalho empurrado pro cliente. É a irmã da linha 2.4 do catálogo, o diferencial nº 1 do teardown, e segue sem caminho decidido.
+⚠️ CORRIGIDO em 11/09, achado do Pedro: eu tinha escrito aqui o buraco da linha 2.4 do catálogo, e é OUTRO problema. Aqui QUEM RECEBE somos nós — a mensalidade entra pelo nosso trilho, e o webhook da Stone responde. A pergunta que sobra é só de escopo: TODO meio que a gente oferecer passa pela Stone? Boleto emitido por ela compensa de volta por ela, Pix com QR dela também. Se em algum momento a gente aceitar transferência direta pra conta da Legalizai, aí sim nasce um caminho cego — e a recomendação é não aceitar. O buraco da 2.4 é o pagamento da GUIA, onde quem recebe é o governo e a gente nem vê o dinheiro: processo próprio, ainda não desenhado.
 
 **🟡 P1.8 · Tenta de novo, e avisa sem assustar**
 

@@ -26,7 +26,7 @@ Chega aqui por uma trilha: **na fatura**.
 
 ✅ **Cobertura completa:** toda condição responde em toda trilha que chega aqui, e todo caminho termina.
 
-### 🔴 P1.5 · A fatura foi paga?
+### 🟡 P1.5 · A fatura foi paga?
 
 Chega aqui por uma trilha: **na fatura**.
 

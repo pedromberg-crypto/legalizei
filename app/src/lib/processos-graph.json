@@ -5,7 +5,7 @@
       "id": "P1",
       "titulo": "A competência fecha, a fatura é emitida e cobrada",
       "resumo": "O ciclo do cliente vira no dia da assinatura, a fatura soma o que se acumulou e a cobrança sai na forma cadastrada. Daqui em diante o processo trata do dinheiro: pagou, não pagou, o que muda no preço, e o que a casa faz com quem atrasa.",
-      "porqueImporta": "É pra onde o P4 entrega, e era caixa preta declarada. Carrega o maior buraco do produto — saber que foi PAGO sem perguntar ao cliente, irmã da linha 2.4 do catálogo — e é onde moram as cláusulas 3.5, 3.6, 3.7, 3.14 e 3.15 da minuta, que hoje não têm desenho nenhum."
+      "porqueImporta": "É pra onde o P4 entrega, e era caixa preta declarada. É onde moram as cláusulas 3.5, 3.6, 3.7, 3.14 e 3.15 da minuta, que hoje não têm desenho nenhum — e onde se decide o que a casa faz com quem atrasa, que é posicionamento, não sistema. ⚠️ NÃO confundir com o pagamento da GUIA (linha 2.4 do catálogo): aqui quem recebe somos nós e o trilho é nosso; lá quem recebe é o governo e a gente nem vê o dinheiro."
     },
     {
       "id": "P4",
@@ -618,11 +618,11 @@
       "faz": "Espera a captura. Mesmo gate do avulso: não vale a autorização, não se espera a liquidação.",
       "fala": "Stone (webhook de captura)",
       "ve": "A fatura vira “paga” sozinha, sem a pessoa precisar avisar.",
-      "luz": "vermelho",
+      "luz": "amarelo",
       "forma": "decisao",
       "fonte": "Decisão do Pedro em 11/09: o gate é a captura.",
-      "duvida": "🔑 O MAIOR BURACO DO PRODUTO, e não é o mesmo do avulso. Dentro do trilho da Stone a gente sabe. FORA dele — cliente que paga o boleto no banco dele ou faz o Pix por outro caminho — a gente só sabe pelo extrato que ele envia (cláusula 5.4). O líder resolve com “informe se você pagou”, que a gente REJEITOU em 27/07 como trabalho empurrado pro cliente. É a irmã da linha 2.4 do catálogo, o diferencial nº 1 do teardown, e segue sem caminho decidido.",
-      "cor": "#D64A2D",
+      "duvida": "⚠️ CORRIGIDO em 11/09, achado do Pedro: eu tinha escrito aqui o buraco da linha 2.4 do catálogo, e é OUTRO problema. Aqui QUEM RECEBE somos nós — a mensalidade entra pelo nosso trilho, e o webhook da Stone responde. A pergunta que sobra é só de escopo: TODO meio que a gente oferecer passa pela Stone? Boleto emitido por ela compensa de volta por ela, Pix com QR dela também. Se em algum momento a gente aceitar transferência direta pra conta da Legalizai, aí sim nasce um caminho cego — e a recomendação é não aceitar. O buraco da 2.4 é o pagamento da GUIA, onde quem recebe é o governo e a gente nem vê o dinheiro: processo próprio, ainda não desenhado.",
+      "cor": "#D6A400",
       "tons": {
         "faz": "normal",
         "fala": "normal",

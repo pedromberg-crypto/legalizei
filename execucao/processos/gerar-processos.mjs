@@ -753,6 +753,123 @@ for (const pr of PROCESSOS) {
   L.push("");
 }
 
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * SAÍDA 3 · A TABELA DE SAÍDAS — o que o GRAFO não consegue responder.
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🔑 Provocação do Pedro em 11/09: *"quero olhar esses cards e conseguir
+ * entender que o cliente que selecionou um produto de mais de 50 reais vai
+ * percorrer o caminho correto com todas as saídas possíveis mapeadas."*
+ *
+ * 🔴 GRAFO NÃO PROVA EXAUSTIVIDADE. Ele desenha as setas que EXISTEM; não tem
+ * como apontar a que FALTA. Foi por isso que o "cancelou o plano" ficou
+ * ambíguo e o "correu bem" caía na fatura — os dois eram buraco de COBERTURA,
+ * e desenho nenhum mostra buraco.
+ *
+ * Quem mostra é tabela: por ponto de decisão, as condições enumeradas e a
+ * pergunta respondida em aritmética, não no olho.
+ */
+const T = [];
+T.push("---");
+T.push("tipo: derivado");
+T.push("status: vivo");
+T.push("data: " + grafo.gerado);
+T.push("assunto: saidas-por-decisao");
+T.push("gerado_por: execucao/processos/gerar-processos.mjs");
+T.push("tags: [execucao, processos, cobertura, dev]");
+T.push("---");
+T.push("");
+T.push("# 🚦 Tabela de saídas — todas as portas de cada decisão");
+T.push("");
+T.push("> ⚠️ **Nota gerada.** Não editar à mão. A fonte é `processos-data.mjs`.");
+T.push(">");
+T.push("> **Pra que serve:** o board mostra por onde o caminho passa; esta tabela responde se ele **cobre todos os casos**. É a pergunta que grafo nenhum responde, e é onde os dois buracos de 11/09 estavam.");
+T.push("");
+
+const trilhasDe = trilhasPorPasso(grafoRotulado(new Set()));
+const nomeDe = (id) => PASSOS.find((p) => p.id === id)?.titulo ?? id;
+const luzDe = (id) => LUZ[PASSOS.find((p) => p.id === id)?.luz]?.emoji ?? "";
+const curto = (t) => TRILHAS.find((x) => x.id === t)?.curto ?? t;
+
+for (const pr of PROCESSOS) {
+  T.push("## " + pr.id + " · " + pr.titulo);
+  T.push("");
+
+  for (const p of PASSOS.filter((x) => x.processo === pr.id)) {
+    const saidas = ARESTAS.filter((a) => a.de === p.id);
+    if (saidas.length < 2) continue;
+
+    const dentro = [...(trilhasDe.get(p.id) ?? [])];
+    T.push("### " + luzDe(p.id) + " " + p.id + " · " + p.titulo);
+    T.push("");
+    if (dentro.length) {
+      T.push("Chega aqui por " + (dentro.length === 1 ? "uma trilha" : dentro.length + " trilhas") +
+        ": " + dentro.map((t) => "**" + curto(t) + "**").join(" e ") + ".");
+      T.push("");
+    }
+
+    T.push("| Condição | Vale na trilha | Leva para | Onde esse caminho termina |");
+    T.push("|---|---|---|---|");
+    for (const a of saidas) {
+      const fins = new Set();
+      const fila = [a.para];
+      const visto = new Set(fila);
+      while (fila.length) {
+        const aqui = fila.shift();
+        const seguintes = ARESTAS.filter(
+          (x) => x.de === aqui && (!a.quando || !x.quando || x.quando === a.quando),
+        );
+        if (!seguintes.length) fins.add(aqui);
+        for (const x of seguintes) {
+          if (!visto.has(x.para)) { visto.add(x.para); fila.push(x.para); }
+        }
+      }
+      T.push("| " + (a.label || "*(sem condição)*") +
+        " | " + (a.quando ? curto(a.quando) : "as duas") +
+        " | " + a.para + " · " + nomeDe(a.para) +
+        " | " + ([...fins].map((f) => f + " · " + nomeDe(f)).join(" · ") || "—") + " |");
+    }
+    T.push("");
+
+    const alertas = [];
+    const porRotulo = new Map();
+    for (const a of saidas) {
+      const k = a.label || "(sem condição)";
+      if (!porRotulo.has(k)) porRotulo.set(k, new Set());
+      porRotulo.get(k).add(a.quando ?? "*");
+    }
+    for (const [rotulo, quais] of porRotulo) {
+      if (quais.has("*") && quais.size > 1) {
+        alertas.push("**" + rotulo + "** responde duas vezes: uma para todas e outra só em " +
+          [...quais].filter((q) => q !== "*").map(curto).join(", "));
+        continue;
+      }
+      if (quais.has("*")) continue;
+      for (const t of dentro) {
+        if (!quais.has(t)) alertas.push("**" + rotulo + "** não diz o que acontece na trilha **" + curto(t) + "**");
+      }
+    }
+    for (const a of saidas) {
+      const temSaida = ARESTAS.some((x) => x.de === a.para);
+      const ehFim = PASSOS.find((p2) => p2.id === a.para)?.forma === "fim";
+      if (!temSaida && !ehFim) {
+        alertas.push("o caminho de **" + (a.label || "(sem condição)") + "** para no " + a.para + ", que não é um fim declarado");
+      }
+    }
+
+    if (alertas.length) {
+      T.push("🔴 **Cobertura incompleta:**");
+      T.push("");
+      for (const x of alertas) T.push("- " + x);
+    } else {
+      T.push("✅ **Cobertura completa:** toda condição responde em toda trilha que chega aqui, e todo caminho termina.");
+    }
+    T.push("");
+  }
+}
+
+writeFileSync(resolve(AQUI, "SAIDAS.md"), T.join(String.fromCharCode(10)), "utf8");
+
 writeFileSync(SAIDA_MD, L.join("\n"), "utf8");
 
 /**
@@ -857,6 +974,7 @@ console.log(
     ")",
 );
 console.log(`✓ nota:   ${SAIDA_MD.replace(RAIZ, ".")}`);
+console.log(`✓ saídas: ${resolve(AQUI, "SAIDAS.md").replace(RAIZ, ".")}  (cobertura por decisão)`);
 console.log(`  placar: ${LUZ.verde.emoji} ${contar("verde")} · ${LUZ.amarelo.emoji} ${contar("amarelo")} · ${LUZ.vermelho.emoji} ${contar("vermelho")}`);
 if (avisos.length) {
   console.log(`\n⚠️  ${avisos.length} aviso(s):`);

@@ -19,7 +19,7 @@ import grafo from "@/lib/processos-graph.json";
 import { TIPOS_DE_PASSO, type Passo } from "@/components/processos/passo-node";
 import { PainelE2E } from "@/components/processos/painel-e2e";
 import { TIPOS_DE_CAMINHO } from "@/components/processos/caminho-edge";
-import { PASSO_W, RESPIRO, RESPIRO_ARESTA, alturaDo } from "@/lib/processos-medidas";
+import { PASSO_W, RESPIRO, RESPIRO_ARESTA, layoutFaixa } from "@/lib/processos-medidas";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -271,18 +271,19 @@ export default function ProcessosPage() {
         if (!x.quando) continue;
         porTrilha.set(x.quando, [...(porTrilha.get(x.quando) ?? []), x]);
       }
-      const grupos: { trilha?: string; itens: typeof lista }[] = [];
-      if (comuns.length) grupos.push({ itens: comuns });
-      for (const [t, itens] of porTrilha) grupos.push({ trilha: t, itens });
+      const grupos: { trilha?: string; itens: typeof lista; comCabeca: boolean }[] = [];
+      if (comuns.length) grupos.push({ itens: comuns, comCabeca: false });
+      for (const [t, itens] of porTrilha) grupos.push({ trilha: t, itens, comCabeca: true });
+      /* 🔑 com mais de um bloco, TODOS ganham cabeçalho — inclusive o comum.
+         Sem isso a vista rápida não sabe onde o "vale pra todas" termina, que
+         foi o que o Pedro apontou no print do P4.8. */
+      if (grupos.length > 1) for (const g of grupos) g.comCabeca = true;
       return grupos;
     };
 
-    const altura = (id: string) => {
-      const lista = saidas.get(id) ?? [];
-      // 🔴 só o grupo COM cabeçalho ocupa a altura extra
-      const cabecas = gruposDe(id).filter((g) => g.trilha).length;
-      return alturaDo(lista.length, cabecas);
-    };
+    // 🔴 a MESMA função que o cartão usa pra desenhar. Ver `layoutFaixa`.
+    const altura = (id: string) =>
+      layoutFaixa(gruposDe(id).map((g) => ({ comCabeca: g.comCabeca, n: g.itens.length }))).altura;
 
     passos.forEach((p) => g.setNode(p.id, { width: PASSO_W, height: altura(p.id) }));
     arestas.forEach((a) => g.setEdge(a.de, a.para));

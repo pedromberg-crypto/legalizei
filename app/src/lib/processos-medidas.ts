@@ -91,20 +91,41 @@ export const FAIXA_PADDING = 12;
  */
 export const CABECA_TRILHA = 22;
 
-/** A faixa só existe quando o passo bifurca: uma saída não precisa de escolha. */
-export function alturaDo(nSaidas: number, nGrupos = 0) {
-  if (nSaidas < 2) return PASSO_H;
-  return PASSO_H + FAIXA_TOPO + nGrupos * CABECA_TRILHA + nSaidas * LINHA_SAIDA + FAIXA_PADDING;
-}
+/** Respiro entre um bloco de saídas e o seguinte. */
+export const GRUPO_GAP = 10;
+
+export type GrupoFaixa = { comCabeca: boolean; n: number };
 
 /**
- * Onde fica o centro da bolinha da saída `i`, medido do topo do cartão.
- * Escrito somando de cima pra baixo, na mesma ordem em que a faixa é
- * desenhada — a versão anterior subtraía da altura total, e conferir se ela
- * batia com o CSS exigia refazer a conta ao contrário.
+ * 🔴 UMA FUNÇÃO SÓ CALCULA A FAIXA INTEIRA — altura do cartão e o centro de
+ * cada bolinha, na mesma passada.
+ *
+ * Antes eram duas contas separadas (`alturaDo` e `topoDaSaida`) que precisavam
+ * concordar. Enquanto a faixa era uma pilha simples isso deu certo; quando
+ * entraram cabeçalho de trilha e respiro entre blocos, virou três variáveis
+ * pra manter em sincronia em dois lugares — e é exatamente assim que nasce o
+ * defeito das duas alturas (11/09, cartões sobrepostos).
+ *
+ * Agora o layout é percorrido UMA vez, de cima pra baixo, na mesma ordem em
+ * que o componente desenha. O que sai daqui é a verdade para o dagre e para o
+ * CSS, sem chance de divergirem.
  */
-export function topoDaSaida(i: number, cabecasAntes = 0) {
-  return (
-    PASSO_H + FAIXA_TOPO + cabecasAntes * CABECA_TRILHA + i * LINHA_SAIDA + LINHA_SAIDA / 2
-  );
+export function layoutFaixa(grupos: GrupoFaixa[]) {
+  const total = grupos.reduce((a, g) => a + g.n, 0);
+  if (total < 2) return { altura: PASSO_H, tops: grupos.map((g) => new Array(g.n).fill(0)) };
+
+  let y = PASSO_H + FAIXA_TOPO;
+  const tops: number[][] = [];
+  grupos.forEach((g, gi) => {
+    if (gi > 0) y += GRUPO_GAP;
+    if (g.comCabeca) y += CABECA_TRILHA;
+    const meus: number[] = [];
+    for (let k = 0; k < g.n; k += 1) {
+      meus.push(y + LINHA_SAIDA / 2);
+      y += LINHA_SAIDA;
+    }
+    tops.push(meus);
+  });
+  return { altura: y + FAIXA_PADDING, tops };
 }
+

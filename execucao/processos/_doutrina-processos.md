@@ -379,6 +379,57 @@ Todas as travas do gerador mediam o cenário de **tudo aceito**. Só que o board
 
 ---
 
+## 6.6 🔴 A AUDITORIA DOS ERROS BOBOS (11/09) — e o que mudou por causa dela
+
+> *"isso é erro MUITO BÁSICO e eu pedi para a gente não repetir. Chegou a hora de auditar o que está gerando esse tanto de erro ridículo. Dessa forma nunca vamos fechar um modelo padrão de validação de processos, e o prazo está muito curto."*
+
+**O número que fecha o diagnóstico, medido e não sentido:**
+
+| | |
+|---|:--:|
+| Verificações automáticas sobre o **DADO** | **34** |
+| Verificações automáticas sobre a **VISTA** | **0** |
+| Defeitos que o Pedro achou em 11/09 | **10** |
+| … deles **na vista** | **8** |
+
+🔑 **Eu blindei a camada em que estava pensando e deixei nua exatamente a camada que ele olha.** Toda trava que construí verifica o `processos-data.mjs`. Nenhuma verificava o board — que é o único lugar onde ele valida.
+
+### A classe que se repete: duas fontes para o mesmo fato
+
+Em 5 dos 10, sempre o mesmo formato — dois lugares derivando a mesma coisa por conta própria:
+
+| O fato | Fonte A | Fonte B | O que ele viu |
+|---|---|---|---|
+| altura do cartão | componente | dagre | cartões sobrepostos |
+| índice da bolinha | lista plana | ordem dos grupos | linha chegando no cartão errado |
+| rótulo da aresta | aresta velha | aresta nova | linha pontilhada duplicada |
+| trilha da saída | aresta nova tinha | antiga não | "correu bem" caindo na fatura |
+| prazo do pedido | S10c | S10d | "72 horas" sobrando |
+
+As outras 5: **preencher em vez de deixar vazio** (`—`, `"segue"`, nó de decisão onde bastava aresta) e **corrigir onde ele aponta e deixar o gêmeo vivo** (o glifo no `ve`, as 72h no S10d).
+
+### ⚠️ O que NÃO funcionou: escrever mais regra
+
+Esta §6 tinha **16 linhas de erro registrado** quando ele cobrou a auditoria, e eu repeti a mesma classe **três vezes no mesmo dia**. Documentação não é trava. **Parar de responder a defeito com parágrafo.**
+
+### O que mudou de fato
+
+🔴 **1. A faixa virou função PURA** (`app/src/lib/faixa-saidas.ts`). O board e o cartão consomem o MESMO objeto — grupos, lista plana, altura e a bolinha de cada aresta saem de uma passada só. Não existe mais "o outro lado recalcula", que era a raiz de 5 dos 10.
+
+🔴 **2. Invariantes da vista, rodando contra o grafo REAL** (`faixa-saidas.test.ts`, 19 testes). Cada defeito que ele achou virou invariante: a bolinha pertence à aresta dela · a lista plana é a concatenação dos grupos · nenhum CTA com rótulo vazio · faixa só com 2+ condições · gêmeas só com selo · as bolinhas cabem no cartão e não se sobrepõem · ordenar não desfaz os blocos. Roda nos **dois cenários** que existem na vida real: board pendente e board com tudo aceito.
+
+🔴 **3. O gerador roda a vista junto.** `node gerar-processos.mjs` agora imprime `✓ vista: invariantes da faixa passaram`, ou lista o que quebrou. Conferido quebrando de propósito.
+
+⚠️ **Não é Playwright e não sobe navegador** — projeto `unidade` do vitest, ambiente node, segundos. A regra de *"E2E só quando o Pedro pedir"* continua inteira.
+
+### A régua que fica
+
+🔑 **Defeito que o Pedro acha vira invariante, não vira parágrafo.** Se não dá pra escrever como invariante, é porque eu não entendi a causa ainda — e aí o conserto é palpite.
+
+🔑 **Fato usado em dois lugares tem que sair de uma função.** Não "os dois têm que concordar": um só calcula.
+
+---
+
 ## 7. ⚠️ Onde este método NÃO chega
 
 - **Não desenha tela.** Ele diz o que precisa acontecer, não como fica bonito.

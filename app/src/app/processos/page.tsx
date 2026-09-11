@@ -19,7 +19,14 @@ import grafo from "@/lib/processos-graph.json";
 import { TIPOS_DE_PASSO, type Passo } from "@/components/processos/passo-node";
 import { PainelE2E } from "@/components/processos/painel-e2e";
 import { TIPOS_DE_CAMINHO } from "@/components/processos/caminho-edge";
-import { PASSO_W, RESPIRO, RESPIRO_ARESTA, layoutFaixa } from "@/lib/processos-medidas";
+import { PASSO_W, RESPIRO, RESPIRO_ARESTA } from "@/lib/processos-medidas";
+import {
+  alturaDaFaixa,
+  bolinhaDaAresta,
+  montarFaixas,
+  ordenarFaixas,
+  rotuloDe,
+} from "@/lib/faixa-saidas";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -234,175 +241,20 @@ export default function ProcessosPage() {
     g.setDefaultEdgeLabel(() => ({}));
 
     /**
-     * ── AS SAÍDAS DE CADA PASSO (11/09, pedido do Pedro) ─────────────────
-     * Um passo que bifurca ganha uma faixa no rodapé, com um CTA por condição
-     * e uma bolinha própria na lateral, de onde sai aquela linha. Assim a
-     * pergunta "esta condição leva pra onde?" se responde no cartão, sem
-     * seguir fio com o olho.
+     * ── AS SAÍDAS DE CADA PASSO ──────────────────────────────────────────
+     * 🔴 A montagem inteira vive em `lib/faixa-saidas`, que é função PURA e
+     * tem teste de invariantes. Este arquivo só CONSOME — se ele recalculasse
+     * qualquer pedaço aqui, voltaria a existir duas fontes pro mesmo fato, que
+     * é a raiz dos 8 defeitos de vista que o Pedro achou em 11/09.
      *
-     * 🔑 Calculado AQUI, e não no gerador, porque depende do que está
-     * visível: filtro por processo, proposta descartada e aresta aposentada
-     * mudam quantas saídas um passo tem AGORA. Congelar isso no JSON faria a
-     * faixa mentir a cada clique de ✓/✕.
+     * 🔑 Calculado aqui e não no gerador porque depende do que está VISÍVEL:
+     * filtro por processo, proposta descartada e aresta aposentada mudam
+     * quantas saídas um passo tem agora. Congelar no JSON faria a faixa mentir
+     * a cada clique de ✓/✕.
      */
-    /**
-     * 🔴 `rotula` vale JÁ, sem esperar o aceite — e o CTA diz de quem é.
-     *
-     * 🐛 11/09, 2ª parte do achado do Pedro: o S11 declara, via `rotula`, que
-     * "cancelou o plano → P4.10" é da trilha da fatura. Como eu só aplicava
-     * isso depois do ✓, no board pendente aquela saída seguia sem trilha — e
-     * o bloco "já pago" ficava com DOIS "cancelou o plano", um deles caindo no
-     * caminho da fatura.
-     *
-     * 🔑 A diferença que resolve: `rotula` não cria nem mata caminho, só diz o
-     * que o caminho É. Mostrar isso pendente não pode enganar sobre estrutura;
-     * ESCONDER, sim — e escondia. Estrutura (passo novo, aresta nova, remoção)
-     * continua esperando o ✓.
-     */
-    const rotuloDe = (a: { label: string; rotuloNovo?: string; rotuladaPor?: string }) =>
-      (a.rotuladaPor && a.rotuloNovo !== undefined ? a.rotuloNovo : a.label) || "";
-    const trilhaDe = (a: { quando?: string; quandoNovo?: string; rotuladaPor?: string }) =>
-      (a.rotuladaPor && a.quandoNovo !== undefined ? a.quandoNovo : a.quando) || undefined;
+    const faixas = montarFaixas(arestas);
 
-    /**
-     * 🔴 SÓ ENTRA NA FAIXA A ARESTA QUE TEM CONDIÇÃO ESCRITA.
-     *
-     * 🐛 11/09 (achado do Pedro): eu montava a faixa com TODAS as saídas e
-     * escrevia "segue" nas que não tinham rótulo. O P4.5 apareceu com dois
-     * CTAs idênticos dizendo "segue" — um rótulo que eu inventei pra uma
-     * condição que não existe. Faixa é sobre ESCOLHA; aresta sem condição não
-     * é escolha, é sequência, e sequência não precisa de CTA.
-     *
-     * Mesma família do glifo (§2.1): preencher um espaço com texto vazio é
-     * pior que deixar vazio, porque parece informação.
-     */
-    const saidas = new Map<
-      string,
-      {
-        label: string;
-        para: string;
-        quando?: string;
-        proposta?: string;
-        saiCom?: string;
-        redeclaradaPor?: string;
-        /** a proposta que redireciona esta saída, quando ela foi colapsada */
-        viraPor?: string;
-        viraPara?: string;
-        /** todos os destinos que este CTA representa (ancora as duas arestas) */
-        paras?: string[];
-      }[]
-    >();
-    arestas.forEach((a) => {
-      const label = rotuloDe(a);
-      if (!label) return;
-      const lista = saidas.get(a.de) ?? [];
-      lista.push({
-        label,
-        para: a.para,
-        /* de quem é esta saída: a proposta que a cria, ou a que vai matá-la.
-           Sem isso, duas condições com a mesma frase ficam indistinguíveis
-           enquanto a proposta está pendente (achado do Pedro no P4.8). */
-        proposta: a.proposta,
-        saiCom: a.substituidaPor,
-        // saída que uma proposta apenas RE-DECLARA (rótulo ou trilha)
-        redeclaradaPor: a.rotuladaPor,
-        // a trilha em que esta saída existe. `rotula` pode redeclarar isso
-        quando: trilhaDe(a),
-      });
-      saidas.set(a.de, lista);
-    });
-    /**
-     * 🔴 SAÍDA QUE ESTÁ SENDO REDIRECIONADA NÃO É UMA SEGUNDA OPÇÃO.
-     *
-     * 🐛 11/09, e o Pedro leu errado por causa disto — com razão. O P4.8
-     * mostrava dois CTAs "correu bem" lado a lado, e ele entendeu que eram
-     * dois caminhos concorrentes (um por trilha). Não eram: uma é a aresta
-     * atual (P4.8 → P4.11) e a outra é a mesma condição depois que o S9
-     * insere um passo no meio (P4.8 → S9 → P4.11). Mesma condição, mesmo
-     * destino final, momentos diferentes.
-     *
-     * CTA irmão parece ALTERNATIVA. Então elas colapsam numa linha só, que
-     * mostra o destino de hoje e diz por onde passa a ir se a proposta for
-     * aceita. Quando ele decide, uma das duas arestas some sozinha e o CTA
-     * volta a ser comum.
-     */
-    for (const [, lista] of saidas) {
-      for (const atual of [...lista]) {
-        if (!atual.saiCom) continue;
-        const nova = lista.find((x) => x.proposta === atual.saiCom && x.label === atual.label);
-        if (!nova) continue;
-        atual.viraPor = atual.saiCom;
-        atual.viraPara = nova.para;
-        atual.paras = [atual.para, nova.para];
-        /**
-         * 🔴 A saída redirecionada herda a DECLARAÇÃO nova, não só o destino.
-         *
-         * 🐛 11/09, achado do Pedro: o S9 declarava `quando: "fatura"` na
-         * aresta nova, e a antiga (P4.8 → P4.11) continuava sem trilha
-         * nenhuma. No board pendente, o bloco "já pago" passava a ter DOIS
-         * "correu bem" — o do S11b, certo, e esse órfão caindo no fechamento
-         * da fatura, que não faz sentido pra quem já pagou.
-         *
-         * ⚠️ As auditorias não pegaram porque medem o cenário de TUDO ACEITO,
-         * onde essa aresta já foi substituída. O board que ele olha é o
-         * cenário PENDENTE — ponto cego conhecido, e é por isso que o colapso
-         * precisa carregar a declaração inteira, não metade dela.
-         */
-        if (nova.quando !== undefined) atual.quando = nova.quando;
-        lista.splice(lista.indexOf(nova), 1);
-      }
-    }
-
-    // uma condição sozinha também não é escolha: sem par, não há o que separar
-    for (const [id, lista] of saidas) if (lista.length < 2) saidas.delete(id);
-
-    // 🔴 a MESMA altura que o cartão vai ter (processos-medidas). Duas contas
-    // pro mesmo objeto foi o que empilhou os cartões em 11/09.
-    /**
-     * ── AGRUPAMENTO POR TRILHA (11/09, provocação do Pedro) ──────────────
-     * Quando as saídas de um passo se dividem por trilha, elas viram grupos
-     * com cabeçalho ("na fatura" / "já pago"). O que vale nas duas fica num
-     * grupo sem cabeçalho, no topo: duplicar "não deu certo" nas duas seções
-     * seria o erro contrário ao que estamos consertando.
-     */
-    const gruposDe = (id: string) => {
-      const lista = saidas.get(id) ?? [];
-      const comuns = lista.filter((x) => !x.quando);
-      const porTrilha = new Map<string, typeof lista>();
-      for (const x of lista) {
-        if (!x.quando) continue;
-        porTrilha.set(x.quando, [...(porTrilha.get(x.quando) ?? []), x]);
-      }
-      const grupos: { trilha?: string; itens: typeof lista; comCabeca: boolean }[] = [];
-      if (comuns.length) grupos.push({ itens: comuns, comCabeca: false });
-      for (const [t, itens] of porTrilha) grupos.push({ trilha: t, itens, comCabeca: true });
-      /* 🔑 com mais de um bloco, TODOS ganham cabeçalho — inclusive o comum.
-         Sem isso a vista rápida não sabe onde o "vale pra todas" termina, que
-         foi o que o Pedro apontou no print do P4.8. */
-      if (grupos.length > 1) for (const g of grupos) g.comCabeca = true;
-      return grupos;
-    };
-
-    // 🔴 a MESMA função que o cartão usa pra desenhar. Ver `layoutFaixa`.
-    /**
-     * 🔴 A LISTA PLANA PASSA A SEGUIR A ORDEM DOS GRUPOS.
-     *
-     * 🐛 11/09, achado do Pedro: no P4.8, a linha do "correu bem" da trilha
-     * paga chegava no cartão do "cancelou o plano". Não era o desenho, era a
-     * ligação: o id da bolinha (`saida-N`) nascia do índice na lista PLANA,
-     * ordenada por altura do destino, e era consumido pelo cartão, que caminha
-     * em ordem de GRUPO. Enquanto as duas ordens coincidiram, funcionou; quando
-     * o dagre pôs um destino da trilha paga acima de um da fatura, o N passou a
-     * apontar pra linha errada.
-     *
-     * A correção é tirar a possibilidade de divergirem: a lista plana é
-     * reescrita como a concatenação dos grupos. Uma ordem só, as duas leituras.
-     */
-    const grupos = new Map<string, ReturnType<typeof gruposDe>>();
-    for (const id of saidas.keys()) grupos.set(id, gruposDe(id));
-
-    const altura = (id: string) =>
-      layoutFaixa((grupos.get(id) ?? []).map((g) => ({ comCabeca: g.comCabeca, n: g.itens.length }))).altura;
+    const altura = (id: string) => alturaDaFaixa(faixas.get(id));
 
     passos.forEach((p) => g.setNode(p.id, { width: PASSO_W, height: altura(p.id) }));
     arestas.forEach((a) => g.setEdge(a.de, a.para));
@@ -423,26 +275,12 @@ export default function ProcessosPage() {
      * `dagre.layout`, e o dagre precisa das alturas, que dependem de QUANTAS
      * saídas cada passo tem. A contagem vem antes, a ordem vem depois.
      */
-    const porPosicao = (a: { para: string }, b: { para: string }) => {
-      const pa = g.node(a.para);
-      const pb = g.node(b.para);
-      if (!pa || !pb) return 0;
+    ordenarFaixas(faixas, (id) => {
+      const pos = g.node(id);
+      if (!pos) return null;
       // no board deitado o que separa os destinos é o Y; em pé, o X
-      return ori === "LR" ? pa.y - pb.y : pa.x - pb.x;
-    };
-
-    for (const [id, gs] of grupos) {
-      // ordena DENTRO do grupo: cruzar linha só importa entre vizinhos, e o
-      // bloco de trilha não se desfaz pra acomodar a posição de um destino
-      for (const gr of gs) gr.itens.sort(porPosicao);
-      /**
-       * 🔴 e a lista plana vira a concatenação dos grupos, na mesma ordem em
-       * que o cartão desenha. É o que impede o `saida-N` de apontar pra linha
-       * errada — o bug que o Pedro achou no P4.8, onde o "correu bem" da
-       * trilha paga chegava no cartão do "cancelou o plano".
-       */
-      saidas.set(id, gs.flatMap((gr) => gr.itens));
-    }
+      return ori === "LR" ? pos.y : pos.x;
+    });
 
     /**
      * O que o ramo aceso alcança. A caminhada respeita a TRILHA da aresta
@@ -488,11 +326,11 @@ export default function ProcessosPage() {
              Num passo REAL que eu sugiro tirar, quem manda é o id da
              proposta de remoção, não o do passo. */
           estado: estadoDe(p.proposta ? p.propostaId : p.removidoPor),
-          saidas: saidas.get(p.id) ?? [],
+          saidas: faixas.get(p.id)?.plana ?? [],
           apagado: Boolean(aceso) && !aceso!.nos.has(p.id),
           ramoAceso: ramo && ramo.de === p.id ? ramo : null,
           onRamo: acenderRamo,
-          grupos: grupos.get(p.id) ?? [],
+          grupos: faixas.get(p.id)?.grupos ?? [],
           trilhas: grafo.trilhas as { id: string; nome: string; curto: string; cor: string }[],
           onDecidir: decidir,
           gravando: gravando === p.id,
@@ -515,19 +353,7 @@ export default function ProcessosPage() {
       target: a.para,
       /* cada condição sai da SUA bolinha. Sem isto, as duas linhas do P4.3
          partiriam do mesmo ponto e o rótulo voltaria a ser a única pista. */
-      sourceHandle: saidas.has(a.de)
-        ? (() => {
-            const i = saidas
-              .get(a.de)!
-              .findIndex(
-                (x) =>
-                  x.label === rotuloDe(a) &&
-                  (x.para === a.para || (x.paras ?? []).includes(a.para)),
-              );
-            // aresta sem condição num passo que bifurca sai pela âncora padrão
-            return i >= 0 ? `saida-${i}` : undefined;
-          })()
-        : undefined,
+      sourceHandle: bolinhaDaAresta(faixas.get(a.de), a),
       type: "caminho",
       // 🔑 o dagre JÁ calcula um caminho que desvia dos cartões (é pra isso que
       // ele insere pontos intermediários). Antes eu jogava isso fora e deixava

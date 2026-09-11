@@ -823,6 +823,33 @@ try {
 }
 
 // ── relatório ───────────────────────────────────────────────────────────────
+/**
+ * ── A VISTA TAMBÉM É VERIFICADA (11/09) ────────────────────────────────────
+ * Auditoria pedida pelo Pedro: 34 verificações sobre o DADO, zero sobre a
+ * VISTA, e 8 dos 10 defeitos do dia estavam na vista. O gerador passa a rodar
+ * os invariantes da faixa junto — função pura, sem navegador, em segundos.
+ *
+ * ⚠️ Isto NÃO é Playwright e não sobe browser. A regra de "E2E só quando o
+ * Pedro pedir" continua inteira.
+ */
+try {
+  // 🔑 o PRÓPRIO node no cli do vitest, sem npx e sem shell — mesma lição do
+  // runner de E2E (`api/e2e/run`), onde `npx.cmd` estourava com EINVAL.
+  execFileSync(process.execPath, [resolve(RAIZ, "app/node_modules/vitest/vitest.mjs"),
+    "run", "--project", "unidade", "--silent"], {
+    cwd: resolve(RAIZ, "app"),
+    stdio: "pipe",
+  });
+  console.log("✓ vista:  invariantes da faixa passaram");
+} catch (e) {
+  const saida = String(e.stdout ?? "") + String(e.stderr ?? "");
+  const linhas = saida.split(String.fromCharCode(10)).filter((l) => /AssertionError|FAIL|×/.test(l)).slice(0, 6);
+  console.log(String.fromCharCode(10) + "🔴 A VISTA QUEBROU — a faixa do board mente em algum passo:");
+  for (const l of linhas) console.log("   " + l.trim());
+  console.log("   detalhe: cd app && npx vitest run --project unidade");
+  process.exitCode = 1;
+}
+
 const nSugestoes = PROPOSTAS.length;
 console.log(
   `✓ grafo:  ${SAIDA_JSON.replace(RAIZ, ".")}  (${PASSOS.length} passos, ${ARESTAS.length} arestas` +

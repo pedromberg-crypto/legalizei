@@ -211,6 +211,7 @@ Valor fora da lista aparece **em cinza com "?"**. Falhar em silêncio seria pior
 | 11/09 | **Reescrevi o P4.6 três vezes**, as três corrigido pelo Pedro. Cheguei a propor remover um nó que estava vivo no outro ramo | **§6.4.** Julguei o nó pelo ramo em que eu estava. Todo nó depois de uma bifurcação é potencialmente compartilhado |
 | 11/09 | Fatiei o ramo de pagamento em 3 propostas: aceitar a 1ª sem a 2ª deixava um beco | **§6.4.** Unidade de decisão = mudança que deixa o grafo válido |
 | 11/09 | Escrevi "trocar rótulo de aresta" como apagar-e-recriar: o board mostrou linha duplicada e o simulador apagou as duas | **§6.4.** Operação ambígua por construção pede primitivo próprio (`rotula`) |
+| 11/09 | Pus um fallback `\|\| "segue"` na faixa de saídas: o P4.5 apareceu com dois CTAs iguais, rótulo que eu inventei pra condição que não existe | **Mesma família do glifo (§2.1):** preencher espaço com texto vazio é pior que deixar vazio, porque parece informação. Faixa é sobre ESCOLHA; aresta sem condição é sequência |
 | 10/09 | Apresentei um contrato como lido com **12% do texto** | [[legalize-leitura-integral-documento]] |
 
 ### 6.1 🔑 A raiz dos dois erros de ferramenta (11/09)

@@ -215,6 +215,22 @@ export const PROPOSTAS = [
           "Cláusula 6.3 (preço e momento da cobrança exibidos antes, aceite no ato), 6.1 (prazo estimado) e 1.6 (a confirmação na Plataforma integra o contrato). Decisão do Pedro em 11/09: a sheet que já existe é o nosso aceite, e o aceite vale para qualquer valor.",
       },
     ],
+    // o caminho de quem NÃO aceita. Sai do P4.2 e não do P4.3 porque fechar
+    // a sheet é não ter aceitado: ele não passa pelo comprovante do aceite.
+    passos: [
+      {
+        id: "S4a",
+        processo: "P4",
+        titulo: "Fechou a sheet, e nada acontece",
+        quem: "cliente",
+        faz: "Fecha sem pedir nada. Não cria pedido, não guarda aceite, não cobra.",
+        fala: "só a nossa casa",
+        ve: "Volta pra lista de serviços, no mesmo lugar onde estava.",
+        luz: "verde",
+        forma: "fim",
+        fonte: "Decisão do Pedro em 11/09. Sem aceite não há contratação (cláusula 6.3).",
+      },
+    ],
     // o P4.4 era a mesma tela, descrita duas vezes no mesmo processo
     remove: ["P4.4"],
     substitui: [
@@ -226,6 +242,7 @@ export const PROPOSTAS = [
     // a régua do valor desce pra DEPOIS do pedido, que é onde os caminhos
     // divergem de verdade: gateway de um lado, fatura do outro
     arestas: [
+      { de: "P4.2", para: "S4a", label: "fechou a sheet" },
       { de: "P4.5", para: "P4.3" },
       { de: "P4.3", para: "P4.6", label: "até R$ 50 · vai pra fatura" },
     ],
@@ -253,7 +270,7 @@ export const PROPOSTAS = [
         "Cláusula 6.4 (“que ficará registrada na Plataforma”), 1.6 (a confirmação integra o contrato) e 16.9 (registro de data e hora do aceite).",
     }],
     arestas: [
-      { de: "P4.2", para: "S5" },
+      { de: "P4.2", para: "S5", label: "aceitou" },
       { de: "S5", para: "P4.5" },
     ],
     // 🔑 entrar NO MEIO de um caminho não é só somar dois fios: o fio velho

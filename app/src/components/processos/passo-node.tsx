@@ -317,9 +317,9 @@ export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
             >
               <span
                 className="min-w-0 flex-1 truncate rounded-md border border-zinc-200 bg-white px-1.5 py-[3px] text-[10px] font-bold text-zinc-700"
-                title={s.label || "sem condição"}
+                title={s.label}
               >
-                {s.label || "segue"}
+                {s.label}
               </span>
               <span className="shrink-0 text-[9px] font-bold text-zinc-400">{s.para}</span>
               <Handle
@@ -338,13 +338,16 @@ export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
             </div>
           ))}
         </div>
-      ) : (
-        <Handle
-          type="source"
-          position={lr ? Position.Right : Position.Bottom}
-          style={{ opacity: 0 }}
-        />
-      )}
+      ) : null}
+
+      {/* âncora padrão, SEMPRE presente: é por ela que sai a aresta sem
+          condição — inclusive num passo que bifurca, onde uma saída pode ser
+          condicional e a outra ser só sequência. */}
+      <Handle
+        type="source"
+        position={lr ? Position.Right : Position.Bottom}
+        style={{ opacity: 0 }}
+      />
     </div>
   );
 }

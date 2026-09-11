@@ -429,6 +429,30 @@
       ]
     },
     {
+      "id": "S4a",
+      "processo": "P4",
+      "titulo": "Fechou a sheet, e nada acontece",
+      "quem": "cliente",
+      "faz": "Fecha sem pedir nada. Não cria pedido, não guarda aceite, não cobra.",
+      "fala": "só a nossa casa",
+      "ve": "Volta pra lista de serviços, no mesmo lugar onde estava.",
+      "luz": "verde",
+      "forma": "fim",
+      "fonte": "Decisão do Pedro em 11/09. Sem aceite não há contratação (cláusula 6.3).",
+      "proposta": true,
+      "propostaId": "S4",
+      "porque": "🔄 REESCRITO em 11/09, e mudou de natureza duas vezes na mesma conversa. O Pedro pediu para DUPLICAR o aceite e o comprovante no ramo de até R$ 50 (“a única coisa que muda é como será cobrado”). Duplicar seria criar duas cópias do mesmo passo, e a §5.1 já diz o que acontece: duas cópias do mesmo fato divergem — daqui a um mês alguém corrige o texto do aceite num ramo só. Se vale nos dois, o lugar dele é ANTES da bifurcação.\n\nE aí ele mandou o print da sheet que já existe, e ela resolve sozinha: o P4.2 JÁ está antes do P4.3, JÁ mostra o preço e JÁ escreve o momento da cobrança (“Sem cobrança agora — entra na fatura de 05/08”). Ou seja, o aceite que a 6.3 exige não é uma tela a construir: é uma tela a COMPLETAR, e ela já vale nos dois caminhos por estar onde está. O P4.4 descrevia essa mesma tela uma segunda vez, e some.\n\n🔑 Falta pouco pra ela cumprir a cláusula: o prazo estimado (6.1) e o texto do que está sendo contratado. E o comprovante, que é o S5.\n\n⚠️ Duas coisas honestas. (1) Abaixo de R$ 50 o contrato NÃO exige aceite formal — fazer assim é decisão nossa, acima do piso da 6.3, e eu concordo: a régua de R$ 50 é de cobrança, não de consentimento. (2) A régua do valor (P4.3) desce pra depois do P4.5, porque é ali que os caminhos divergem de fato; antes disso os dois fazem a mesma coisa, e decisão que não separa nada é decisão no lugar errado.",
+      "depende": [
+        "S5"
+      ],
+      "cor": "#17A06A",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "normal"
+      }
+    },
+    {
       "id": "S5",
       "processo": "P4",
       "titulo": "Guarda o comprovante do aceite",
@@ -635,6 +659,13 @@
       "substituidaPor": "S9"
     },
     {
+      "de": "P4.2",
+      "para": "S4a",
+      "label": "fechou a sheet",
+      "tracejado": false,
+      "proposta": "S4"
+    },
+    {
       "de": "P4.5",
       "para": "P4.3",
       "label": "",
@@ -651,7 +682,7 @@
     {
       "de": "P4.2",
       "para": "S5",
-      "label": "",
+      "label": "aceitou",
       "tracejado": false,
       "proposta": "S5"
     },

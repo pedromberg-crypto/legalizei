@@ -219,16 +219,31 @@ export default function ProcessosPage() {
      * mudam quantas saídas um passo tem AGORA. Congelar isso no JSON faria a
      * faixa mentir a cada clique de ✓/✕.
      */
+    const rotuloDe = (a: { label: string; rotuloNovo?: string; rotuladaPor?: string }) =>
+      (a.rotuladaPor && estadoDe(a.rotuladaPor) === "aceita" ? a.rotuloNovo : a.label) || "";
+
+    /**
+     * 🔴 SÓ ENTRA NA FAIXA A ARESTA QUE TEM CONDIÇÃO ESCRITA.
+     *
+     * 🐛 11/09 (achado do Pedro): eu montava a faixa com TODAS as saídas e
+     * escrevia "segue" nas que não tinham rótulo. O P4.5 apareceu com dois
+     * CTAs idênticos dizendo "segue" — um rótulo que eu inventei pra uma
+     * condição que não existe. Faixa é sobre ESCOLHA; aresta sem condição não
+     * é escolha, é sequência, e sequência não precisa de CTA.
+     *
+     * Mesma família do glifo (§2.1): preencher um espaço com texto vazio é
+     * pior que deixar vazio, porque parece informação.
+     */
     const saidas = new Map<string, { label: string; para: string }[]>();
     arestas.forEach((a) => {
+      const label = rotuloDe(a);
+      if (!label) return;
       const lista = saidas.get(a.de) ?? [];
-      lista.push({
-        label:
-          (a.rotuladaPor && estadoDe(a.rotuladaPor) === "aceita" ? a.rotuloNovo : a.label) || "",
-        para: a.para,
-      });
+      lista.push({ label, para: a.para });
       saidas.set(a.de, lista);
     });
+    // uma condição sozinha também não é escolha: sem par, não há o que separar
+    for (const [id, lista] of saidas) if (lista.length < 2) saidas.delete(id);
 
     // 🔴 a MESMA altura que o cartão vai ter (processos-medidas). Duas contas
     // pro mesmo objeto foi o que empilhou os cartões em 11/09.
@@ -274,10 +289,15 @@ export default function ProcessosPage() {
       target: a.para,
       /* cada condição sai da SUA bolinha. Sem isto, as duas linhas do P4.3
          partiriam do mesmo ponto e o rótulo voltaria a ser a única pista. */
-      sourceHandle:
-        (saidas.get(a.de)?.length ?? 0) > 1
-          ? `saida-${saidas.get(a.de)!.findIndex((x) => x.para === a.para && x.label === ((a.rotuladaPor && estadoDe(a.rotuladaPor) === "aceita" ? a.rotuloNovo : a.label) || ""))}`
-          : undefined,
+      sourceHandle: saidas.has(a.de)
+        ? (() => {
+            const i = saidas
+              .get(a.de)!
+              .findIndex((x) => x.para === a.para && x.label === rotuloDe(a));
+            // aresta sem condição num passo que bifurca sai pela âncora padrão
+            return i >= 0 ? `saida-${i}` : undefined;
+          })()
+        : undefined,
       type: "caminho",
       // 🔑 o dagre JÁ calcula um caminho que desvia dos cartões (é pra isso que
       // ele insere pontos intermediários). Antes eu jogava isso fora e deixava

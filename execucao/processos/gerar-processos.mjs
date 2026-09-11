@@ -251,6 +251,23 @@ function grafoCom(aceitas) {
   return { nos, arestas };
 }
 
+/** O mesmo cenário do `grafoCom`, mas guardando o rótulo de cada aresta. */
+function grafoRotulado(aceitas) {
+  const nos = new Set(PASSOS.map((p) => p.id));
+  let ar = ARESTAS.map((a) => ({ de: a.de, para: a.para, label: a.label ?? "" }));
+  for (const s of PROPOSTAS) {
+    if (!aceitas.has(s.id)) continue;
+    for (const p of s.passos ?? []) nos.add(p.id);
+    for (const r of s.remove ?? []) nos.delete(r);
+    ar.push(...(s.arestas ?? []).map((a) => ({ de: a.de, para: a.para, label: a.label ?? "" })));
+    for (const x of s.substitui ?? []) ar = ar.filter((a) => !(a.de === x.de && a.para === x.para));
+    for (const r of s.rotula ?? []) {
+      for (const a of ar) if (a.de === r.de && a.para === r.para) a.label = r.label ?? "";
+    }
+  }
+  return ar.filter((a) => nos.has(a.de) && nos.has(a.para));
+}
+
 function defeitos({ nos, arestas }) {
   const entradas = new Set(
     PROCESSOS.map((pr) => PASSOS.find((p) => p.processo === pr.id)?.id).filter((id) => nos.has(id)),
@@ -274,11 +291,24 @@ function defeitos({ nos, arestas }) {
     }
   }
 
+  /**
+   * Passo com `forma: "fim"` é terminal POR DECLARAÇÃO: ele não tem saída de
+   * propósito, e cobrar uma seria ruído. Quem não declara e mesmo assim não
+   * sai continua sendo avisado — a diferença entre "acabou aqui" e "esqueci
+   * de ligar" é justamente essa declaração.
+   */
+  const formaDe = new Map([
+    ...PASSOS.map((p) => [p.id, p.forma]),
+    ...PROPOSTAS.flatMap((s) => (s.passos ?? []).map((p) => [p.id, p.forma])),
+  ]);
+
   const fora = new Set();
   for (const id of nos) {
     if (!visto.has(id)) fora.add(`${id} virou inalcançável`);
     if (!chegaEm.has(id) && !entradas.has(id)) fora.add(`${id} ficou sem entrada`);
-    if (!(saiDe.get(id) ?? []).length) fora.add(`${id} ficou sem saída`);
+    if (!(saiDe.get(id) ?? []).length && formaDe.get(id) !== "fim") {
+      fora.add(`${id} ficou sem saída`);
+    }
   }
   return fora;
 }
@@ -289,6 +319,34 @@ if (PROPOSTAS.length) {
 
   for (const d of piorou(new Set(PROPOSTAS.map((s) => s.id)))) {
     avisos.push(`com TODAS as propostas aceitas: ${d}`);
+  }
+
+  /**
+   * 🔴 BIFURCAÇÃO PELA METADE (11/09, achado do Pedro).
+   *
+   * Ele viu o P4.5 com dois CTAs escritos "segue" — rótulo que EU inventei
+   * num fallback, pra duas arestas que não tinham condição nenhuma. O board
+   * já não inventa mais. Aqui fica a outra metade: se um passo tem saídas
+   * condicionais E saídas sem condição, o desenho está pela metade, e é o
+   * dado que está errado, não a tela.
+   */
+  {
+    const tudo = new Set(PROPOSTAS.map((s) => s.id));
+    const g = grafoRotulado(tudo);
+    const porNo = new Map();
+    for (const a of g) {
+      if (!porNo.has(a.de)) porNo.set(a.de, []);
+      porNo.get(a.de).push(a.label ?? "");
+    }
+    for (const [id, labels] of porNo) {
+      if (labels.length < 2) continue;
+      const comCondicao = labels.filter(Boolean).length;
+      if (comCondicao > 0 && comCondicao < labels.length) {
+        avisos.push(
+          `${id} bifurca pela metade: ${comCondicao} de ${labels.length} saídas têm condição escrita`,
+        );
+      }
+    }
   }
 
   for (const s of PROPOSTAS) {

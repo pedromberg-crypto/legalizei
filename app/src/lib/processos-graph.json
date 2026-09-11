@@ -574,7 +574,7 @@
     {
       "id": "S9",
       "processo": "P4",
-      "titulo": "Acha o dia do ciclo neste mês",
+      "titulo": "O ciclo vira no dia do aniversário",
       "quem": "o relógio",
       "faz": "Usa o dia do aniversário. Se o mês não tiver esse dia, recua pro último dia daquele mês e volta pro dia original no mês seguinte que comportar. A âncora nunca muda: 31/01 vira 28/02 e volta a 31/03.",
       "fala": "só a nossa casa",
@@ -586,7 +586,8 @@
       "propostaId": "S9",
       "porque": "A pergunta do Pedro: “fecha dia 31 e o mês seguinte só tem 30, o que o mercado faz?”. Faz recuo pro último dia, mantendo a âncora — 31/01 cobra 28/02 e volta a cobrar 31/03. A alternativa que parece mais simples (mover a âncora pra 28 pra sempre) tira 3 dias de ciclo do cliente todo ano sem ele ter pedido, e o erro se acumula. Fica 🟡 por dois motivos, e nenhum deles é o desenho: (1) a régua de mercado está citada de MEMÓRIA, e número sem fonte não entra — conferir na doc do gateway escolhido, conversa que já vai acontecer com o Pagar.me; (2) falta decidir o que acontece quando o dia cai em fim de semana ou feriado, que é pergunta de meio de pagamento, não de calendário: boleto costuma prorrogar pro próximo dia útil, cartão cobra no dia mesmo. Vira passo próprio porque é cálculo que o app faz sozinho toda competência, e cálculo que mora só na cabeça de alguém vira bug de fevereiro.",
       "depende": [
-        "S2"
+        "S2",
+        "S10"
       ],
       "cor": "#D6A400",
       "tons": {
@@ -690,6 +691,31 @@
         "S7"
       ],
       "cor": "#D6A400",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "normal"
+      }
+    },
+    {
+      "id": "S11b",
+      "processo": "P4",
+      "titulo": "Entregue, e já estava pago",
+      "quem": "a casa",
+      "faz": "Encerra o item. Não há nada a lançar em fatura: o dinheiro entrou no ato do pedido.",
+      "fala": "só a nossa casa",
+      "ve": "O item vira “concluído” no histórico de serviços, com o comprovante de pagamento junto.",
+      "luz": "verde",
+      "forma": "fim",
+      "fonte": "Decorre do pagamento no ato (decisão do Pedro, 11/09): item pago não entra em fatura.",
+      "proposta": true,
+      "propostaId": "S11",
+      "porque": "🔑 Esta é a provocação do Pedro virando desenho: *“uma condicional lá atrás, com o título custa mais de 50 ou menos de 50, tem interferência em todo o restante do processo.”* Ele está certo, e o P4.8 provava: “cancelou o plano” queria dizer DUAS coisas. Para quem pegou um serviço de até R$ 50, o item está na fatura e a 12.6 manda quitar tudo em aberto até o encerramento. Para quem pegou acima de R$ 50, o serviço já foi pago no ato — não há valor em aberto, então a 12.6 simplesmente não alcança o caso, e o que sobra é uma pergunta de entrega, não de cobrança. A saída foi dar NOME à decisão de trás: ela virou trilha (`fatura` e `pago`), e cada saída do P4.8 declara em qual trilha existe. O que NÃO muda com a trilha continua com uma saída só — “não deu certo” e “correu bem” valem para as duas, e duplicá-las seria o erro contrário. ⚠️ Fica 🟡 porque sobra uma pergunta real e nova: serviço já pago que não cabe no aviso prévio devolve dinheiro? A 12.6 não alcança, a 9.5 é de taxa pública. Vale decisão com o Mauro, e provavelmente vira cláusula.",
+      "depende": [
+        "S10",
+        "S7"
+      ],
+      "cor": "#17A06A",
       "tons": {
         "faz": "normal",
         "fala": "neutro",
@@ -845,6 +871,7 @@
       "de": "P4.8",
       "para": "S9",
       "label": "correu bem",
+      "quando": "fatura",
       "tracejado": false,
       "proposta": "S9"
     },
@@ -903,6 +930,14 @@
       "de": "S11a",
       "para": "P4.9",
       "label": "não deu pra entregar",
+      "tracejado": false,
+      "proposta": "S11"
+    },
+    {
+      "de": "P4.8",
+      "para": "S11b",
+      "label": "correu bem",
+      "quando": "pago",
       "tracejado": false,
       "proposta": "S11"
     },

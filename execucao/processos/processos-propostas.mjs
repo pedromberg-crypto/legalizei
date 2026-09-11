@@ -398,11 +398,11 @@ export const PROPOSTAS = [
    * ═══════════════════════════════════════════════════════════════════════ */
   {
     id: "S9",
-    titulo: "A regra do dia 31: âncora fixa, recuo temporário",
+    titulo: "O ciclo vira no aniversário — e o que fazer quando o mês não tem aquele dia",
     passos: [{
       id: "S9",
       processo: "P4",
-      titulo: "Acha o dia do ciclo neste mês",
+      titulo: "O ciclo vira no dia do aniversário",
       quem: "o relógio",
       faz: "Usa o dia do aniversário. Se o mês não tiver esse dia, recua pro último dia daquele mês e volta pro dia original no mês seguinte que comportar. A âncora nunca muda: 31/01 vira 28/02 e volta a 31/03.",
       fala: "só a nossa casa",
@@ -413,11 +413,11 @@ export const PROPOSTAS = [
         "Padrão de mercado de assinatura (âncora de ciclo com recuo pro último dia do mês). 🕓 Citado de memória da documentação da Stripe e do padrão Chargebee/Recurly, NÃO conferido em fonte primária. ⚠️ O Código Civil, art. 132 §3º, resolve prazo em mês pelo caminho oposto (“ou no imediato, se faltar exata correspondência”), o que daria 1º/03.",
     }],
     arestas: [
-      { de: "P4.8", para: "S9", label: "correu bem" },
+      { de: "P4.8", para: "S9", label: "correu bem", quando: "fatura" },
       { de: "S9", para: "P4.11" },
     ],
     substitui: [{ de: "P4.8", para: "P4.11" }],
-    depende: ["S2"],
+    depende: ["S2", "S10"],
     porque:
       "A pergunta do Pedro: “fecha dia 31 e o mês seguinte só tem 30, o que o mercado faz?”. Faz recuo pro último dia, mantendo a âncora — 31/01 cobra 28/02 e volta a cobrar 31/03. A alternativa que parece mais simples (mover a âncora pra 28 pra sempre) tira 3 dias de ciclo do cliente todo ano sem ele ter pedido, e o erro se acumula. Fica 🟡 por dois motivos, e nenhum deles é o desenho: (1) a régua de mercado está citada de MEMÓRIA, e número sem fonte não entra — conferir na doc do gateway escolhido, conversa que já vai acontecer com o Pagar.me; (2) falta decidir o que acontece quando o dia cai em fim de semana ou feriado, que é pergunta de meio de pagamento, não de calendário: boleto costuma prorrogar pro próximo dia útil, cartão cobra no dia mesmo. Vira passo próprio porque é cálculo que o app faz sozinho toda competência, e cálculo que mora só na cabeça de alguém vira bug de fevereiro.",
   },
@@ -517,10 +517,23 @@ export const PROPOSTAS = [
         duvida:
           "Se o serviço já pago NÃO couber nos 30 dias do aviso prévio, o dinheiro volta? A 12.6 não alcança (não há valor em aberto) e a 9.5 só fala de taxa pública. Cai na régua do S6 (quem deu causa), mas com dinheiro já compensado, que é situação diferente de item na fatura.",
       },
+      {
+        id: "S11b",
+        processo: "P4",
+        titulo: "Entregue, e já estava pago",
+        quem: "a casa",
+        faz: "Encerra o item. Não há nada a lançar em fatura: o dinheiro entrou no ato do pedido.",
+        fala: "só a nossa casa",
+        ve: "O item vira “concluído” no histórico de serviços, com o comprovante de pagamento junto.",
+        luz: "verde",
+        forma: "fim",
+        fonte: "Decorre do pagamento no ato (decisão do Pedro, 11/09): item pago não entra em fatura.",
+      },
     ],
     arestas: [
       { de: "P4.8", para: "S11a", label: "cancelou o plano", quando: "pago" },
       { de: "S11a", para: "P4.9", label: "não deu pra entregar" },
+      { de: "P4.8", para: "S11b", label: "correu bem", quando: "pago" },
     ],
     rotula: [{ de: "P4.8", para: "P4.10", label: "cancelou o plano", quando: "fatura" }],
     depende: ["S10", "S7"],

@@ -369,7 +369,7 @@
             {
               "passo": "P4.10",
               "campo": "faz",
-              "valor": "O contrato segue vivo nos 30 dias de aviso prévio. O avulso continua, é entregue dentro desse prazo e entra na fatura final, que tem que ser quitada até a data do encerramento."
+              "valor": "O contrato segue vivo nos 30 dias de aviso prévio, então o avulso continua normalmente. A única pergunta é se o serviço sobrevive ao fim do CNPJ: o que precisa de empresa ativa tem que sair ANTES da baixa."
             },
             {
               "passo": "P4.10",
@@ -383,11 +383,21 @@
             },
             {
               "passo": "P4.10",
+              "campo": "forma",
+              "valor": "decisao"
+            },
+            {
+              "passo": "P4.10",
+              "campo": "duvida",
+              "valor": ""
+            },
+            {
+              "passo": "P4.10",
               "campo": "luz",
               "valor": "verde"
             }
           ],
-          "porque": "🔄 ESTREITADO em 11/09, aplicando a trilha. 🔑 E aqui a trilha fez o contrário do que fez no S6: em vez de DIVIDIR o passo, ela REVELOU que ele já era de um ramo só. Depois que o S11 mandou o caso do serviço já pago pro S11a, o P4.10 passou a ser alcançado apenas pela trilha da fatura — conferido na propagação, uma única entrada, `P4.8 → P4.10` com `quando: fatura`. O texto ganhou o nome certo e parou de fingir que valia pros dois. A 12.6 responde este caso com todas as letras (quitar tudo em aberto até o encerramento, incluindo serviços adicionais) e a 12.1 dá o prazo em que a entrega ainda cabe: o contrato não morre no clique, morre 30 dias depois. Por isso não existe “cancela o serviço junto”. O que a 12.6 não cobre é o avulso que NÃO dá pra entregar nesses 30 dias, e esse cai na régua do S6 pela aresta do S8. A tela precisa mostrar isso ANTES da confirmação, senão o cliente descobre a cobrança depois de cancelar, que é onde nasce reclamação.",
+          "porque": "🔄 REESCRITO em 11/09 com a decisão do Pedro, que trocou a régua por uma melhor. Eu tinha desenhado isto como “quem deu causa”, herdando o corte do S6. Ele cortou por outro eixo: o avulso CONTINUA normalmente, porque foi contratado e, na trilha da fatura, ainda vai ser cobrado (12.6) — a única pergunta é se o serviço sobrevive ao fim do CNPJ. 🔑 E dentro disso vem uma ordem de execução que não estava em lugar nenhum: o que precisa de empresa ativa tem que sair ANTES da baixa. Se o cliente pediu uma certidão e a baixa na mesma leva, a certidão vem primeiro ou não vem. Isso deixa o P4.10 verde: não é mais “não sabemos o que fazer”, é uma decisão com duas saídas — sobrevive (entrega e cobra na fatura final) ou morre com a baixa (cai na régua da causa, pelo S8). ⚠️ Vale lembrar que cancelar o PLANO e dar BAIXA no CNPJ são coisas diferentes: sair da Legalizai não encerra a empresa. A régua só morde quando a baixa também foi pedida — e a baixa é ela mesma um avulso do catálogo (§8.2). Antes de confirmar o cancelamento, a tela precisa dizer o que ainda vai ser entregue, o que não vai, e por quê; senão o cliente descobre depois, que é onde nasce reclamação.",
           "depende": [
             "S6",
             "S11"
@@ -572,6 +582,31 @@
       }
     },
     {
+      "id": "S7a",
+      "processo": "P4",
+      "titulo": "Entrega e cobra na fatura final",
+      "quem": "a casa",
+      "faz": "Entrega o serviço dentro do aviso prévio e lança o valor na fatura final, que é quitada até a data do encerramento.",
+      "fala": "só a nossa casa",
+      "ve": "O item segue em andamento normalmente, e aparece na fatura final com a data de encerramento junto.",
+      "luz": "verde",
+      "forma": "fim",
+      "fonte": "Cláusula 12.6 (quitar tudo em aberto até o encerramento, incluindo serviços adicionais) e 12.1 (aviso prévio de 30 dias).",
+      "proposta": true,
+      "propostaId": "S7",
+      "porque": "🔄 REESCRITO em 11/09 com a decisão do Pedro, que trocou a régua por uma melhor. Eu tinha desenhado isto como “quem deu causa”, herdando o corte do S6. Ele cortou por outro eixo: o avulso CONTINUA normalmente, porque foi contratado e, na trilha da fatura, ainda vai ser cobrado (12.6) — a única pergunta é se o serviço sobrevive ao fim do CNPJ. 🔑 E dentro disso vem uma ordem de execução que não estava em lugar nenhum: o que precisa de empresa ativa tem que sair ANTES da baixa. Se o cliente pediu uma certidão e a baixa na mesma leva, a certidão vem primeiro ou não vem. Isso deixa o P4.10 verde: não é mais “não sabemos o que fazer”, é uma decisão com duas saídas — sobrevive (entrega e cobra na fatura final) ou morre com a baixa (cai na régua da causa, pelo S8). ⚠️ Vale lembrar que cancelar o PLANO e dar BAIXA no CNPJ são coisas diferentes: sair da Legalizai não encerra a empresa. A régua só morde quando a baixa também foi pedida — e a baixa é ela mesma um avulso do catálogo (§8.2). Antes de confirmar o cancelamento, a tela precisa dizer o que ainda vai ser entregue, o que não vai, e por quê; senão o cliente descobre depois, que é onde nasce reclamação.",
+      "depende": [
+        "S6",
+        "S11"
+      ],
+      "cor": "#17A06A",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "normal"
+      }
+    },
+    {
       "id": "S9",
       "processo": "P4",
       "titulo": "O ciclo vira no dia do aniversário",
@@ -676,7 +711,7 @@
       "processo": "P4",
       "titulo": "Cancelou com o avulso já pago",
       "quem": "a casa",
-      "faz": "Não há o que cobrar: o serviço já foi pago no ato. Entrega o que foi contratado dentro do aviso prévio e encerra o item junto com o plano.",
+      "faz": "Não há o que cobrar: já foi pago no ato. Entrega dentro do aviso prévio, valendo a mesma régua do P4.10 — o que precisa de CNPJ ativo tem que sair antes da baixa.",
       "fala": "só a nossa casa",
       "ve": "Na tela de cancelamento, o item aparece como já pago e com a data prevista de entrega, sem valor a quitar.",
       "luz": "amarelo",
@@ -868,6 +903,13 @@
       "proposta": "S6"
     },
     {
+      "de": "P4.10",
+      "para": "S7a",
+      "label": "o serviço sobrevive ao fim do CNPJ",
+      "tracejado": false,
+      "proposta": "S7"
+    },
+    {
       "de": "P4.8",
       "para": "S9",
       "label": "correu bem",
@@ -944,7 +986,7 @@
     {
       "de": "P4.10",
       "para": "P4.9",
-      "label": "não dá pra entregar no aviso prévio",
+      "label": "o serviço morre com a baixa do CNPJ",
       "tracejado": false,
       "proposta": "S8"
     }

@@ -27,17 +27,17 @@ tags: [execucao, processos, dev, spec]
 
 | | Passo | Quem dispara | O que a casa faz | Com quem fala | O que a pessoa vê |
 |:--:|---|---|---|---|---|
-| 🟢 | **P4.1** Escolhe o serviço | cliente | Mostra o catálogo à-la-carte com preço aberto e o prazo estimado. Um toque abre o detalhe. | — | A loja em /mais/servicos, com os mais pedidos em destaque. |
-| 🟢 | **P4.2** Confirma, com dupla checagem | cliente | Antes de aceitar, diz o preço, quando será cobrado e avisa que o trabalho começa na hora. Só então libera o botão. | — | Sheet de detalhe com 'Solicitar serviço' e um segundo toque de confirmação. |
-| 🟢 | **P4.3** ◆ Custa mais de R$ 50? | a casa | Olha o preço do serviço e decide se ele pode simplesmente cair na fatura ou se precisa de um aceite formal na hora. | — | — |
-| 🔴 | **P4.4** Aceite no ato (acima de R$ 50) | cliente | Registra um aceite com data e hora, guardando o preço exibido e o texto que a pessoa leu. | — | ❓ Não existe tela para isto. |
-| 🟡 | **P4.5** Guarda o pedido e trava o preço | a casa | Cria o pedido com o preço do dia congelado, para que reajuste posterior não mude o que já foi contratado. | — (banco nosso) | — |
-| 🔴 | **P4.6** ◆ Existe fatura ABERTA na competência? | a casa | Procura a fatura do mês corrente que ainda não fechou. | — (banco nosso) | — |
-| 🟢 | **P4.7** Entra como item de linha | a casa | Soma o serviço à fatura como uma linha própria, ao lado da mensalidade, com descrição, valor e tipo. | — (banco nosso). 📚 O modelo do líder confirma que fatura suporta itens: `GET /api/pagamentos/faturas/` devolve `itens[]` com `{descricao, valor, tipo}`, e a mensalidade é UM dos tipos, não o objeto. | O item aparece no /mais/plano, dentro de 'Próxima fatura'. |
-| 🟢 | **P4.8** O trabalho começa. Não dá pra remover. | a casa | Marca o item como em andamento e coloca na fila de execução. A partir daqui o cliente não pode tirar da fatura. | — | Chip 'Em andamento' ao lado do item, com a data do pedido. Sem X de remover. |
-| 🔴 | **P4.9** ◆ E se o serviço não puder ser entregue? | a casa | ❓ | ❓ | ❓ |
-| 🔴 | **P4.10** ◆ E se cancelar o plano com avulso em andamento? | cliente | ❓ | — | ❓ |
-| 🟡 | **P4.11** ■ A competência fecha e a fatura soma tudo | o relógio | No fechamento, a fatura para de aceitar item novo e vira o total que será cobrado. | — (entra no processo P1, que ainda não foi desenhado) | O total no /mais/plano deixa de mudar. |
+| 🟢 | **P4.1** Escolhe o serviço | cliente | Mostra o catálogo à-la-carte com preço aberto e o prazo estimado. Um toque abre o detalhe. | só a nossa casa | A loja em /mais/servicos, com os mais pedidos em destaque. |
+| 🟢 | **P4.2** Confirma, com dupla checagem | cliente | Antes de aceitar, diz o preço, quando será cobrado e avisa que o trabalho começa na hora. Só então libera o botão. | só a nossa casa | Sheet de detalhe com 'Solicitar serviço' e um segundo toque de confirmação. |
+| 🟢 | **P4.3** ◆ Custa mais de R$ 50? | a casa | Olha o preço do serviço e decide se ele pode simplesmente cair na fatura ou se precisa de um aceite formal na hora. | só a nossa casa | nada, acontece por baixo |
+| 🔴 | **P4.4** Aceite no ato (acima de R$ 50) | cliente | Registra um aceite com data e hora, guardando o preço exibido e o texto que a pessoa leu. | só a nossa casa | nada: a tela não existe |
+| 🟡 | **P4.5** Guarda o pedido e trava o preço | a casa | Cria o pedido com o preço do dia congelado, para que reajuste posterior não mude o que já foi contratado. | só a nossa casa | nada, acontece por baixo |
+| 🔴 | **P4.6** ◆ Existe fatura ABERTA na competência? | a casa | Procura a fatura do mês corrente que ainda não fechou. | só a nossa casa | nada, acontece por baixo |
+| 🟢 | **P4.7** Entra como item de linha | a casa | Soma o serviço à fatura como uma linha própria, ao lado da mensalidade, com descrição, valor e tipo. | só a nossa casa | O item aparece no /mais/plano, dentro de 'Próxima fatura'. |
+| 🟢 | **P4.8** O trabalho começa. Não dá pra remover. | a casa | Marca o item como em andamento e coloca na fila de execução. A partir daqui o cliente não pode tirar da fatura. | só a nossa casa | Chip 'Em andamento' ao lado do item, com a data do pedido. Sem X de remover. |
+| 🔴 | **P4.9** ◆ E se o serviço não puder ser entregue? | a casa | ainda não sabemos | ainda não sabemos | ainda não sabemos |
+| 🔴 | **P4.10** ◆ E se cancelar o plano com avulso em andamento? | cliente | ainda não sabemos | só a nossa casa | ainda não sabemos |
+| 🟡 | **P4.11** ■ A competência fecha e a fatura soma tudo | o relógio | No fechamento, a fatura para de aceitar item novo e vira o total que será cobrado. | só a nossa casa | O total no /mais/plano deixa de mudar. |
 
 ### Por onde o processo caminha
 
@@ -81,6 +81,11 @@ A cláusula 7.4 do líder cobra tudo que está em aberto no aviso prévio. A nos
 **🟡 P4.11 · A competência fecha e a fatura soma tudo**
 
 Em que DIA a competência fecha? A cláusula 3.4 fixa o vencimento no dia 15, mas vencimento e fechamento são coisas diferentes. O líder tem `jaFechada` e `fechada` no objeto da fatura, então o conceito existe do lado dele — mas o dia é decisão nossa.
+
+### Detalhe técnico
+
+- **P4.7** — 📚 O modelo do líder confirma que fatura suporta itens: `GET /api/pagamentos/faturas/` devolve `itens[]` com `{descricao, valor, tipo}`, e a mensalidade é UM dos tipos, não o objeto.
+- **P4.11** — O fechamento em si é o processo P1, que ainda não foi desenhado.
 
 ### Fonte de cada regra
 

@@ -46,6 +46,38 @@ export type Passo = {
   fonte?: string;
   duvida?: string;
   cor: string;
+  /** detalhe técnico longo: fica no painel, nunca no cartão (§5.1) */
+  falaNota?: string;
+  /** derivado pelo gerador a partir do vocabulário fechado — ver `Linha` */
+  tons?: { faz: string; fala: string; ve: string };
+
+  /* ── camada de sugestão (11/09) ──────────────────────────────────────── */
+  /** este cartão é opinião minha, não decisão travada */
+  proposta?: boolean;
+  /** 🔑 a DECISÃO é da proposta inteira, não do cartão: uma proposta pode
+   *  trazer três passos, e aceitar um terço de um ramo de pagamento seria
+   *  ficar com um beco. Por isso o ✓/✕ aponta pra cá, não pro `id`. */
+  propostaId?: string;
+  /** o raciocínio, pro Pedro decidir. Mora no painel */
+  porque?: string;
+  /** outras propostas de que esta depende — serve pra eu avisar o que ficou
+   *  solto num descarte, factualmente, não pra argumentar contra */
+  depende?: string[];
+  /** sugestões de CAMPO que miram este passo (não viram cartão, §5.1) */
+  sugestoes?: {
+    id: string;
+    titulo: string;
+    mudancas: { campo: string; valor: string }[];
+    porque: string;
+    depende?: string[];
+  }[];
+  /** id da proposta que sugere TIRAR este passo do processo */
+  removidoPor?: string;
+  porqueRemover?: string;
+  /** "pendente" | "aceita" | "descartada" — vem da decisão do Pedro */
+  estado?: string | null;
+  onDecidir?: (id: string, status: "aceita" | "descartada" | "pendente") => void;
+  gravando?: boolean;
 };
 
 const LUZ_EMOJI = { verde: "🟢", amarelo: "🟡", vermelho: "🔴" } as const;
@@ -99,10 +131,69 @@ const LUZ_FUNDO = {
   vermelho: "#FCF2F0",
 } as const;
 
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * ✕ E ✓ — a decisão do Pedro sobre uma sugestão minha (11/09).
+ * ═══════════════════════════════════════════════════════════════════════════
+ * "discreto" é requisito, não estética: os botões dividem o cartão com o
+ * conteúdo do passo, e sugestão que grita compete com o processo de verdade.
+ *
+ * 🔑 `stopPropagation` nos dois: sem isso o clique sobe pro nó e abre o painel
+ * lateral junto, escondendo o board na hora exata em que ele quer ver o efeito
+ * da decisão. `nodrag` impede o React Flow de tratar o clique como arrasto.
+ */
+function BotoesDecisao({ data }: { data: Passo }) {
+  /* num passo que eu sugiro TIRAR, o que se decide é a remoção, não o passo */
+  const alvo = data.proposta ? data.propostaId : data.removidoPor;
+  if (!alvo || !data.onDecidir) return null;
+  const aceita = data.estado === "aceita";
+
+  const parar = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+  };
+
+  return (
+    <span className="nodrag ml-auto flex items-center gap-1">
+      {/* aceita já conta como passo: mostra o semáforo, como qualquer cartão */}
+      {aceita && <span className="mr-0.5 text-[11px]">{LUZ_EMOJI[data.luz]}</span>}
+      {data.gravando && <span className="text-[9px] opacity-70">…</span>}
+      <button
+        type="button"
+        title={aceita ? "desfazer o aceite" : "descartar a sugestão"}
+        onMouseDown={parar}
+        onClick={(e) => {
+          parar(e);
+          data.onDecidir?.(alvo, aceita ? "pendente" : "descartada");
+        }}
+        className="rounded px-1 text-[11px] leading-none opacity-60 transition hover:bg-black/10 hover:opacity-100"
+      >
+        ✕
+      </button>
+      <button
+        type="button"
+        title={aceita ? "aceita — clique pra voltar a sugestão" : "manter a sugestão"}
+        onMouseDown={parar}
+        onClick={(e) => {
+          parar(e);
+          data.onDecidir?.(alvo, aceita ? "pendente" : "aceita");
+        }}
+        className={`rounded px-1 text-[11px] leading-none transition hover:bg-black/10 ${
+          aceita ? "opacity-100" : "opacity-60 hover:opacity-100"
+        }`}
+      >
+        ✓
+      </button>
+    </span>
+  );
+}
+
 export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
   const decisao = data.forma === "decisao";
   const fim = data.forma === "fim";
   const lr = data.ori === "LR";
+  /** proposta ainda não aceita: cinza claro, como o Pedro pediu */
+  const sugerido = Boolean(data.proposta) && data.estado !== "aceita";
 
   return (
     <div
@@ -112,11 +203,13 @@ export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
         // que nasce do conteúdo é o que fazia os cartões se sobreporem.
         width: PASSO_W,
         height: PASSO_H,
-        borderColor: selected ? data.cor : "#e4e4e7",
+        borderColor: sugerido ? "#d4d4d8" : selected ? data.cor : "#e4e4e7",
         borderWidth: decisao ? 2 : 1,
-        borderStyle: fim ? "dashed" : "solid",
-        boxShadow: selected ? `0 0 0 3px ${data.cor}22` : undefined,
-        background: LUZ_FUNDO[data.luz],
+        // tracejado = "ainda não é decisão": mesma gramática do fim de fluxo
+        borderStyle: sugerido || fim ? "dashed" : "solid",
+        boxShadow: selected ? `0 0 0 3px ${(sugerido ? "#a1a1aa" : data.cor)}22` : undefined,
+        background: sugerido ? "#fbfbfc" : LUZ_FUNDO[data.luz],
+        opacity: sugerido ? 0.92 : 1,
       }}
     >
       <Handle
@@ -128,12 +221,39 @@ export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
       {/* faixa do topo: id + semáforo. A cor vive aqui e na borda, não no corpo. */}
       <div
         className="flex items-center gap-2 rounded-t-2xl px-3 py-1.5"
-        style={{ background: data.cor, color: "#fff" }}
+        style={{
+          background: sugerido ? "#d4d4d8" : data.cor,
+          color: sugerido ? "#3f3f46" : "#fff",
+        }}
       >
         <span className="text-[11px] font-bold tracking-wide">{data.id}</span>
-        {decisao && <span className="text-[10px] opacity-80">◆ decisão</span>}
-        {fim && <span className="text-[10px] opacity-80">■ fim</span>}
-        <span className="ml-auto text-[11px]">{LUZ_EMOJI[data.luz]}</span>
+        {sugerido && <span className="text-[10px] font-semibold">sugestão</span>}
+        {!sugerido && decisao && <span className="text-[10px] opacity-80">◆ decisão</span>}
+        {!sugerido && fim && <span className="text-[10px] opacity-80">■ fim</span>}
+
+        {/* sugiro tirar: o cartão continua legível, mas diz o que vai ser dele */}
+        {data.removidoPor && !data.proposta && (
+          <span className="rounded bg-white/25 px-1 text-[9px] font-bold uppercase tracking-wide">
+            sugiro tirar
+          </span>
+        )}
+
+        {data.proposta || data.removidoPor ? (
+          <BotoesDecisao data={data} />
+        ) : (
+          <span className="ml-auto flex items-center gap-1.5">
+            {/* sugestão de CAMPO não vira cartão: avisa aqui e abre no painel */}
+            {data.sugestoes?.length ? (
+              <span
+                className="rounded bg-white/25 px-1 text-[9px] font-bold"
+                title="tem sugestão minha nos campos — abra o painel"
+              >
+                +{data.sugestoes.length}
+              </span>
+            ) : null}
+            <span className="text-[11px]">{LUZ_EMOJI[data.luz]}</span>
+          </span>
+        )}
       </div>
 
       <div className="min-h-0 flex-1 px-3 py-2.5">
@@ -144,10 +264,20 @@ export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
         <div className="mt-2">
           <PillQuem quem={data.quem} />
         </div>
-        <Linha rotulo="a casa faz" valor={data.faz} linhas={3} />
+        <Linha rotulo="a casa faz" valor={data.faz} linhas={3} tom={data.tons?.faz} />
         {/* 🔌 é a única linha escrita pro DEV. Fica visível de propósito. */}
-        <Linha rotulo="🔌 fala com" valor={data.fala} linhas={2} destaque />
-        <Linha rotulo="a pessoa vê" valor={data.ve} linhas={2} />
+        <Linha
+          rotulo="🔌 fala com"
+          valor={data.fala}
+          linhas={2}
+          destaque
+          tom={data.tons?.fala}
+          /* 🔴 o detalhe técnico NÃO entra no cartão: altura é fixa (§5.1) e
+             uma linha a mais empurraria "a pessoa vê" pra fora. Marca no
+             rótulo, que já ocupa espaço, e o texto inteiro no painel. */
+          marca={data.falaNota ? "+ detalhe" : undefined}
+        />
+        <Linha rotulo="a pessoa vê" valor={data.ve} linhas={2} tom={data.tons?.ve} />
       </div>
 
       <Handle
@@ -161,11 +291,32 @@ export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
 
 const CLAMP: Record<number, string> = { 1: "line-clamp-1", 2: "line-clamp-2", 3: "line-clamp-3" };
 
+/**
+ * 🔴 O TOM VEM DO GERADOR, não daqui (`gerar-processos.mjs`).
+ *
+ * 11/09 — o Pedro perguntou o que "fala com" queria dizer, olhando um cartão
+ * que mostrava só "—". Glifo não é resposta curta: é resposta ausente com
+ * cara de preenchida. Agora cada campo responde em português, e o tom separa
+ * as duas leituras que o traço misturava:
+ *
+ *   neutro → resposta legítima, nada a fazer. Recua, em cinza
+ *   buraco → resposta que é pendência. Âmbar, e pesa igual ao 🟡 do semáforo
+ *
+ * ⚠️ "invisível de propósito" × "falta tela" é a distinção que decide se há
+ * trabalho de UX pela frente — e era exatamente ela que o "—" apagava.
+ */
+const TOM_CLASSE = {
+  neutro: "italic text-zinc-400",
+  buraco: "font-semibold text-amber-700",
+} as const;
+
 function Linha({
   rotulo,
   valor,
   linhas,
   destaque,
+  tom,
+  marca,
 }: {
   rotulo: string;
   valor: string;
@@ -173,20 +324,27 @@ function Linha({
    *  que sabe a largura real da fonte. Contar caractere errava nos dois lados. */
   linhas?: number;
   destaque?: boolean;
+  tom?: string;
+  /** selo curto no rótulo, pra sinalizar sem gastar altura (§5.1) */
+  marca?: string;
 }) {
-  const texto = valor;
-  const vazio = !valor || valor === "—" || valor === "❓";
+  const especial = TOM_CLASSE[tom as keyof typeof TOM_CLASSE];
   return (
     <div className="mt-1.5 border-t border-zinc-200/70 pt-1.5">
-      <p className="text-[9px] font-bold uppercase tracking-wider text-zinc-400">
+      <p className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider text-zinc-400">
         {rotulo}
+        {marca && (
+          <span className="rounded bg-zinc-200/80 px-1 py-[1px] text-[8px] tracking-normal text-zinc-600">
+            {marca}
+          </span>
+        )}
       </p>
       <p
         className={`text-[11px] leading-snug ${linhas ? CLAMP[linhas] : ""} ${
-          vazio ? "text-zinc-400" : destaque ? "font-semibold text-zinc-800" : "text-zinc-600"
+          especial ?? (destaque ? "font-semibold text-zinc-800" : "text-zinc-600")
         }`}
       >
-        {texto}
+        {valor}
       </p>
     </div>
   );

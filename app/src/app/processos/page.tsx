@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import dagre from "@dagrejs/dagre";
 import {
@@ -48,6 +48,20 @@ import { PASSO_W, PASSO_H, RESPIRO, RESPIRO_ARESTA } from "@/lib/processos-medid
 
 type Proc = { id: string; titulo: string; resumo: string; porqueImporta: string };
 
+/**
+ * Cinza-claro é o estado "isto é opinião minha, não decisão sua" — o pedido
+ * literal do Pedro. Aceita, a aresta passa a valer e vira a cor normal.
+ */
+const CINZA_PROPOSTA = "#c4c4c8";
+
+function corDaAresta(
+  a: { tracejado?: boolean; proposta?: string },
+  estado: string | null,
+) {
+  if (a.proposta && estado !== "aceita") return CINZA_PROPOSTA;
+  return a.tracejado ? "#D64A2D" : "#a1a1aa";
+}
+
 const LEGENDA = [
   { luz: "verde", emoji: "🟢", nome: "Sabemos e dá", cor: "#17A06A" },
   { luz: "amarelo", emoji: "🟡", nome: "Falta decidir", cor: "#D6A400" },
@@ -87,13 +101,94 @@ export default function ProcessosPage() {
   const [selecionado, setSelecionado] = useState<Passo | null>(null);
   const [e2eAberto, setE2eAberto] = useState(false);
 
+  /**
+   * ── CAMADA DE SUGESTÃO (11/09, dinâmica combinada com o Pedro) ───────────
+   * Sugestão minha entra no board em cinza, com ✕ e ✓. A decisão dele mora em
+   * `execucao/processos/decisoes-propostas.json`, escrita pela `/api/propostas`.
+   *
+   * 🔑 Lida em tempo de EXECUÇÃO, não embutida no `processos-graph.json`. Se
+   * a decisão viesse do arquivo gerado, cada clique exigiria rodar o gerador
+   * de novo pra aparecer — e aí o ✓ não seria um clique, seria uma tarefa.
+   *
+   * Fora de dev a rota devolve 404 e tudo fica pendente (cinza). É o estado
+   * honesto: sem onde gravar, nada foi decidido.
+   */
+  const [decisoes, setDecisoes] = useState<Record<string, { status: string }>>({});
+  const [gravando, setGravando] = useState<string | null>(null);
+
+  useEffect(() => {
+    let vivo = true;
+    fetch("/api/propostas")
+      .then((r) => (r.ok ? r.json() : { decisoes: {} }))
+      .then((j) => vivo && setDecisoes(j.decisoes ?? {}))
+      .catch(() => {
+        /* sem runner: tudo pendente, que é a verdade */
+      });
+    return () => {
+      vivo = false;
+    };
+  }, []);
+
+  const decidir = useCallback(async (id: string, status: "aceita" | "descartada" | "pendente") => {
+    setGravando(id);
+    // otimista: o board responde ao clique na hora. Se a gravação falhar, o
+    // catch devolve o estado anterior — pior que lento é mentir que salvou.
+    const antes = decisoes;
+    setDecisoes((d) => {
+      const novo = { ...d };
+      if (status === "pendente") delete novo[id];
+      else novo[id] = { status };
+      return novo;
+    });
+    try {
+      const r = await fetch("/api/propostas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, status }),
+      });
+      if (!r.ok) throw new Error(String(r.status));
+      const j = await r.json();
+      setDecisoes(j.decisoes ?? {});
+    } catch {
+      setDecisoes(antes);
+    } finally {
+      setGravando(null);
+    }
+  }, [decisoes]);
+
+  const estadoDe = useCallback(
+    (id?: string) => (id ? (decisoes[id]?.status ?? "pendente") : null),
+    [decisoes],
+  );
+
   const { nodes, edges } = useMemo(() => {
-    const passos = (grafo.nodes as Passo[]).filter(
-      (p) => filtro === "todos" || p.processo === filtro,
-    );
+    const passos = (grafo.nodes as Passo[])
+      .filter((p) => filtro === "todos" || p.processo === filtro)
+      // descartada some do board na hora. Ela continua no
+      // `processos-propostas.mjs` e no arquivo de decisões — some da VISTA,
+      // não da história, senão a mesma ideia volta daqui a duas semanas.
+      .filter((p) => !p.proposta || estadoDe(p.propostaId) !== "descartada")
+      // passo que eu sugeri TIRAR: sai da vista quando o ✓ é dado. As arestas
+      // que tocavam nele caem sozinhas no filtro de ponta viva, logo abaixo.
+      .filter((p) => !p.removidoPor || estadoDe(p.removidoPor) !== "aceita");
+
     const vivos = new Set(passos.map((p) => p.id));
-    const arestas = (grafo.edges as { de: string; para: string; label: string; tracejado: boolean }[])
-      .filter((a) => vivos.has(a.de) && vivos.has(a.para));
+    const arestas = (
+      grafo.edges as {
+        de: string;
+        para: string;
+        label: string;
+        tracejado: boolean;
+        proposta?: string;
+        substituidaPor?: string;
+        rotuloNovo?: string;
+        rotuladaPor?: string;
+      }[]
+    )
+      .filter((a) => vivos.has(a.de) && vivos.has(a.para))
+      .filter((a) => !a.proposta || estadoDe(a.proposta) !== "descartada")
+      // fio aposentado por proposta aceita: some só depois do ✓, e volta no ✕
+      .filter((a) => !a.substituidaPor || estadoDe(a.substituidaPor) !== "aceita");
 
     const g = new dagre.graphlib.Graph();
     /**
@@ -121,12 +216,31 @@ export default function ProcessosPage() {
         id: p.id,
         type: p.forma,
         position: { x: pos.x - PASSO_W / 2, y: pos.y - PASSO_H / 2 },
-        data: { ...p, ori },
+        data: {
+          ...p,
+          ori,
+          /* proposta aceita perde o cinza na hora: ela passa a valer como
+             passo, e eu escrevo no `processos-data.mjs` no fecho do flow.
+             Num passo REAL que eu sugiro tirar, quem manda é o id da
+             proposta de remoção, não o do passo. */
+          estado: estadoDe(p.proposta ? p.propostaId : p.removidoPor),
+          onDecidir: decidir,
+          gravando: gravando === p.id,
+        },
       };
     });
 
-    const es: Edge[] = arestas.map((a) => ({
-      id: `${a.de}->${a.para}`,
+    const es: Edge[] = arestas.map((a, i) => ({
+      /**
+       * 🐛 11/09 (print do Pedro): o id era só `de->para`, e quando duas
+       * arestas ligavam o mesmo par (a velha e a proposta pra substituí-la), o
+       * React Flow recebia dois elementos com a MESMA chave — duas linhas
+       * pontilhadas sobrepostas, com o mesmo rótulo. A raiz foi resolvida com
+       * o primitivo `rotula` no gerador; o índice aqui é o cinto de segurança,
+       * porque chave repetida nunca falha de forma barulhenta, falha desenhando
+       * errado.
+       */
+      id: `${a.de}->${a.para}#${i}`,
       source: a.de,
       target: a.para,
       type: "caminho",
@@ -136,19 +250,24 @@ export default function ProcessosPage() {
       // "até R$ 50" atravessar o cartão do P4.4 inteiro.
       data: {
         pontos: g.edge(a.de, a.para)?.points ?? [],
-        rotulo: a.label || "",
+        // aresta renomeada por proposta: o nome novo só vale depois do ✓
+        rotulo:
+          (a.rotuladaPor && estadoDe(a.rotuladaPor) === "aceita" ? a.rotuloNovo : a.label) || "",
         tracejado: a.tracejado,
+        proposta: a.proposta,
+        estado: estadoDe(a.proposta),
+        onDecidir: decidir,
       },
       style: {
-        stroke: a.tracejado ? "#D64A2D" : "#a1a1aa",
+        stroke: corDaAresta(a, estadoDe(a.proposta)),
         strokeWidth: 1.7,
-        strokeDasharray: a.tracejado ? "6 4" : undefined,
+        strokeDasharray: a.tracejado || (a.proposta && estadoDe(a.proposta) !== "aceita") ? "6 4" : undefined,
       },
-      markerEnd: { type: MarkerType.ArrowClosed, color: a.tracejado ? "#D64A2D" : "#a1a1aa" },
+      markerEnd: { type: MarkerType.ArrowClosed, color: corDaAresta(a, estadoDe(a.proposta)) },
     }));
 
     return { nodes: ns, edges: es };
-  }, [filtro, ori]);
+  }, [filtro, ori, estadoDe, decidir, gravando]);
 
   const placar = useMemo(() => {
     const alvo = (grafo.nodes as Passo[]).filter(
@@ -250,11 +369,70 @@ export default function ProcessosPage() {
             <Campo rotulo="Quem dispara" valor={selecionado.quem} />
             <Campo rotulo="O que a casa faz" valor={selecionado.faz} />
             <Campo rotulo="Com quem fala" valor={selecionado.fala} />
+            {/* o detalhe técnico não cabe no cartão (§5.1) e é aqui que ele mora */}
+            {selecionado.falaNota && (
+              <Campo rotulo="Detalhe técnico" valor={selecionado.falaNota} />
+            )}
             <Campo rotulo="O que a pessoa vê" valor={selecionado.ve} />
 
             {selecionado.fonte && selecionado.fonte !== "—" && (
               <Campo rotulo="De onde vem a regra" valor={selecionado.fonte} />
             )}
+
+            {/* ── por que EU sugeri isto ─────────────────────────────────── */}
+            {selecionado.proposta && selecionado.porque && (
+              <div className="mt-3 rounded-xl border border-dashed border-zinc-300 bg-zinc-50 p-3">
+                <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-zinc-500">
+                  Por que eu sugeri
+                </p>
+                <p className="text-[12px] leading-relaxed text-zinc-700">{selecionado.porque}</p>
+                {selecionado.depende?.length ? (
+                  <p className="mt-1.5 text-[11px] text-zinc-500">
+                    Só faz sentido junto de {selecionado.depende.join(", ")}.
+                  </p>
+                ) : null}
+                <BotoesPainel
+                  id={selecionado.propostaId ?? selecionado.id}
+                  estado={estadoDe(selecionado.propostaId ?? selecionado.id)}
+                  onDecidir={decidir}
+                />
+              </div>
+            )}
+
+            {/* ── sugestões de CAMPO: não cabem no cartão (§5.1), moram aqui ─ */}
+            {selecionado.sugestoes?.map((s) => (
+              estadoDe(s.id) === "descartada" ? null : (
+                <div
+                  key={s.id}
+                  className="mt-3 rounded-xl border border-dashed border-zinc-300 bg-zinc-50 p-3"
+                >
+                  <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-zinc-500">
+                    Sugestão · {s.titulo || "mudança de campo"}
+                  </p>
+                  {s.mudancas.map((m) => (
+                    <div key={m.campo} className="mt-1.5">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
+                        {m.campo}
+                      </p>
+                      <p
+                        className={`text-[12px] leading-relaxed ${
+                          estadoDe(s.id) === "aceita" ? "text-zinc-800" : "text-zinc-500"
+                        }`}
+                      >
+                        {m.valor}
+                      </p>
+                    </div>
+                  ))}
+                  <p className="mt-2 text-[11px] leading-relaxed text-zinc-500">{s.porque}</p>
+                  {s.depende?.length ? (
+                    <p className="mt-1 text-[11px] text-zinc-400">
+                      Só faz sentido junto de {s.depende.join(", ")}.
+                    </p>
+                  ) : null}
+                  <BotoesPainel id={s.id} estado={estadoDe(s.id)} onDecidir={decidir} />
+                </div>
+              )
+            ))}
 
             {selecionado.duvida && (
               <div className="mt-3 rounded-xl border-l-4 p-3" style={{ borderColor: selecionado.cor, background: "#fafafa" }}>
@@ -271,6 +449,48 @@ export default function ProcessosPage() {
           <PainelE2E processo={filtro} onFechar={() => setE2eAberto(false)} />
         )}
       </div>
+    </div>
+  );
+}
+
+/**
+ * O mesmo ✕/✓ do cartão, em tamanho de leitura. No painel há espaço pra
+ * PALAVRA em vez de só o símbolo — e é aqui que ele decide de verdade, depois
+ * de ler o porquê. No cartão o par é discreto porque divide lugar com o passo.
+ */
+function BotoesPainel({
+  id,
+  estado,
+  onDecidir,
+}: {
+  id: string;
+  estado: string | null;
+  onDecidir: (id: string, status: "aceita" | "descartada" | "pendente") => void;
+}) {
+  const aceita = estado === "aceita";
+  return (
+    <div className="mt-2.5 flex items-center gap-2">
+      <button
+        type="button"
+        onClick={() => onDecidir(id, aceita ? "pendente" : "descartada")}
+        className="rounded-lg border border-zinc-300 px-2.5 py-1 text-[11px] font-semibold text-zinc-600 hover:bg-white"
+      >
+        ✕ descartar
+      </button>
+      <button
+        type="button"
+        onClick={() => onDecidir(id, aceita ? "pendente" : "aceita")}
+        className={`rounded-lg px-2.5 py-1 text-[11px] font-semibold ${
+          aceita ? "bg-zinc-900 text-white" : "border border-zinc-300 text-zinc-700 hover:bg-white"
+        }`}
+      >
+        {aceita ? "✓ aceita" : "✓ manter"}
+      </button>
+      {aceita && (
+        <span className="text-[10px] text-zinc-400">
+          entra no processos-data.mjs no fecho do flow
+        </span>
+      )}
     </div>
   );
 }

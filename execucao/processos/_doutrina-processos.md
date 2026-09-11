@@ -55,8 +55,8 @@ Todo passo responde exatamente cinco perguntas. **Cinco, sempre as mesmas, nessa
 |---|---|---|
 | `quem` | **Quem dispara?** | ou uma pessoa, ou "a casa" (automático), ou "o relógio" (agendado) |
 | `faz` | **O que a casa faz?** | em português, uma frase. Sem nome de função, sem tabela |
-| `fala` | **Com quem fala?** | API, órgão, gateway — ou `—` quando é só banco nosso |
-| `ve` | **O que a pessoa vê?** | `—` quando é invisível. **Invisível é resposta válida e precisa ser declarada** |
+| `fala` | **Com quem a casa fala FORA dela?** | API, órgão, gateway — ou `só a nossa casa` (§2.1) |
+| `ve` | **O que a pessoa vê?** | `nada, acontece por baixo` quando é invisível. **Invisível é resposta válida e precisa ser declarada** |
 | `luz` | 🚦 | `verde` · `amarelo` · `vermelho` |
 
 🔴 **REGRA DURA — vocabulário.** O Pedro disse, com todas as letras, que não domina o vocabulário profundo de programação. Então:
@@ -64,6 +64,34 @@ Todo passo responde exatamente cinco perguntas. **Cinco, sempre as mesmas, nessa
 - **`faz` e `ve` são escritos pra ele.** Português comum. "Guarda o pedido e trava o preço do dia", não "persiste a entidade com snapshot do pricing".
 - **`fala` é escrito pro dev.** Ali pode ter nome de endpoint, método e campo. É a única coluna técnica, e é técnica de propósito.
 - Se um passo só pode ser explicado com jargão, **ele está grande demais**: quebra em dois.
+
+---
+
+## 2.1 🔴 PALAVRA, NUNCA GLIFO (11/09, pergunta do Pedro)
+
+Ele olhou um cartão e perguntou: *"o que quer dizer mesmo o campo 'Fala com'?"* — e a resposta que o cartão dava era `—`.
+
+🔑 **Glifo não é resposta curta. É resposta ausente com cara de preenchida.**
+
+Pior que isso: o mesmo símbolo carregava **respostas diferentes**. O `—` queria dizer "não fala com ninguém" num passo e "não se aplica" noutro; o `❓` queria dizer "não sabemos" num e "não existe tela" noutro. Quem lê não tem como saber qual — e a segunda distinção é justamente a que decide se há **trabalho de UX pela frente** ou não.
+
+**Vocabulário fechado, escrito em português:**
+
+| Campo | Resposta | Significa | Tom no cartão |
+|---|---|---|:--:|
+| `fala` | `só a nossa casa` | nada externo: banco nosso, código nosso | cinza, recua |
+| `fala` | `ainda não sabemos` | buraco declarado | âmbar |
+| `fala` | *texto livre* | o nome do terceiro, curto | normal |
+| `ve` | `nada, acontece por baixo` | invisível **de propósito** | cinza, recua |
+| `ve` | `nada: a tela não existe` | **deveria** haver tela e não há | âmbar |
+| `faz` | `ainda não sabemos` | o passo é a própria pergunta | âmbar |
+
+⚠️ **`nada, acontece por baixo` e `nada: a tela não existe` NÃO são a mesma resposta.** A primeira é decisão; a segunda é pendência. Um traço só, servindo às duas, escondia a pendência.
+
+🔴 **Três travas no código:**
+1. `gerar-processos.mjs` **recusa** qualquer `faz`/`fala`/`ve` que comece com `—`, `-`, `?` ou `❓`, e diz qual palavra usar.
+2. `fala` acima de **46 caracteres** (duas linhas do cartão) vira aviso: o detalhe técnico vai pro campo `falaNota`, que aparece no painel e na nota do dev, **nunca no cartão** — altura é fixa (§5.1).
+3. O **tom** (cinza × âmbar) é derivado no gerador, não escrito no `.tsx`. Repetir a lista nos dois lados é o mesmo defeito das duas alturas do board: duas cópias do mesmo fato sempre divergem.
 
 ---
 
@@ -179,6 +207,10 @@ Valor fora da lista aparece **em cinza com "?"**. Falhar em silêncio seria pior
 | 11/09 | Chamei `npx.cmd` via `execFile` — proibido no Windows desde a CVE-2024-27980, e ele **estoura de forma síncrona**. A rota morria sem responder e a tela culpava o JSON | §6.1 |
 | 11/09 | Passei o caminho absoluto da spec pro `playwright test`, que espera **regex**, não caminho. `C:\…` como regex não casa nada: *"No tests found"* | §6.1 |
 | 11/09 | Entreguei a saída do reporter `line` crua, num `<pre>`, e chamei de resultado. O Pedro teve que pedir pra conseguir ler | §6.2 |
+| 11/09 | Preenchi `fala`/`ve` com `—` e `❓`. O Pedro teve que perguntar o que o campo queria dizer | **Glifo não é resposta curta** (§2.1). E o mesmo símbolo escondia duas respostas diferentes |
+| 11/09 | **Reescrevi o P4.6 três vezes**, as três corrigido pelo Pedro. Cheguei a propor remover um nó que estava vivo no outro ramo | **§6.4.** Julguei o nó pelo ramo em que eu estava. Todo nó depois de uma bifurcação é potencialmente compartilhado |
+| 11/09 | Fatiei o ramo de pagamento em 3 propostas: aceitar a 1ª sem a 2ª deixava um beco | **§6.4.** Unidade de decisão = mudança que deixa o grafo válido |
+| 11/09 | Escrevi "trocar rótulo de aresta" como apagar-e-recriar: o board mostrou linha duplicada e o simulador apagou as duas | **§6.4.** Operação ambígua por construção pede primitivo próprio (`rotula`) |
 | 10/09 | Apresentei um contrato como lido com **12% do texto** | [[legalize-leitura-integral-documento]] |
 
 ### 6.1 🔑 A raiz dos dois erros de ferramenta (11/09)
@@ -200,6 +232,85 @@ O painel de E2E rodava certo e mostrava o resultado como um bloco de texto de 26
 🔴 **A trava:** quando uma ferramenta oferece saída estruturada (`--reporter=json`, `--format=json`, `--porcelain`), a tela consome a **estrutura**, não o texto humano. E ordena por **atenção**, não por ordem de execução: o que quebrou primeiro, o que passou encolhido.
 
 ⚠️ **Mas nunca joga o texto cru fora.** Ele é a única pista exatamente quando a estrutura não existe: ferramenta que morre no boot não escreve relatório nenhum. Guardar os dois custa uma flag; escolher um custa a depuração do dia ruim.
+
+---
+
+## 6.3 🤝 A CAMADA DE SUGESTÃO (dinâmica travada 11/09)
+
+> *"quando eu te pedisse sugestão de como você resolveria os gargalos… quero que você de fato valide e dê opiniões de como resolveria. Se no seu cruzamento de dados vir a necessidade de resolver criando uma tela, coloque a sugestão no card; se achar pertinente adicionar mais uma ramificação, crie essa ramificação. Mas TODAS em cinza claro, com um X e um check pra eu clicar."*
+
+Quando o Pedro pede sugestão, a resposta **não é um parágrafo no chat**: é objeto no board, e ele decide clicando.
+
+### Como funciona
+
+| | |
+|---|---|
+| **Onde a sugestão mora** | `processos-propostas.mjs` — arquivo SEPARADO do `processos-data.mjs` |
+| **Três formas** | `passo` (cartão novo) · `aresta` (ramificação nova) · `campo` (muda um campo de um passo que já existe) |
+| **Como aparece** | cinza claro, borda tracejada, faixa "sugestão", ✕ e ✓ discretos no cartão |
+| **Onde ele lê o porquê** | painel lateral, com ✕/✓ em tamanho de leitura |
+| **Onde a decisão fica** | `decisoes-propostas.json`, escrito pela rota dev-only `/api/propostas` |
+| **✓ aceita** | perde o cinza na hora e passa a valer. **Eu** escrevo no `processos-data.mjs` no fecho, com linha no ADR |
+| **✕ descarta** | some do board na hora. Continua nos arquivos: some da vista, não da história |
+
+🔴 **Por que arquivo separado.** Proposta minha não é decisão da casa. Junto no mesmo arquivo, descartar deixaria cicatriz no diff, o placar 🟢🟡🔴 passaria a contar opinião minha como estado do produto (a mentira que o §3 existe pra evitar), e o arquivo reservado à edição humana viraria pasto de texto gerado.
+
+🔴 **Por que a decisão é lida em tempo de execução**, e não embutida no JSON gerado: se viesse do arquivo gerado, cada clique exigiria rodar o gerador pra aparecer — e aí o ✓ não seria um clique, seria uma tarefa.
+
+🔴 **Aceitar não promove sozinho.** O código não escreve no `processos-data.mjs`. Decisão travada passa por registro (ADR), e foi assim que o Pedro escolheu quando montamos a dinâmica.
+
+### A parte que não é técnica
+
+> *"não quero que você sofra caso eu descarte uma opção que quebraria seu raciocínio. Se eu fizer isso é porque vou trabalhar melhor em cima da sua sugestão. Eu irei justificar minhas decisões."*
+
+🔑 **Descarte é dado, não contrariedade.** A regra pra mim:
+
+1. **Não defender a versão morta.** Descartou, morreu.
+2. **Dizer o que ficou solto, em uma linha e factual** — "com o S3 fora, o S5 passa a não ter de onde vir" — usando o campo `depende`. É informação, não argumento.
+3. **Propor de novo em cima da razão dele**, não da minha ideia anterior.
+4. A justificativa vem **no chat** (escolha dele em 11/09): o ✕ só descarta, sem campo de texto.
+
+---
+
+## 6.4 🔴 NÃO MATAR UM CAMINHO CONSERTANDO OUTRO (travado 11/09)
+
+> *"parece que você não está sabendo lidar com múltiplos caminhos, e nesse trabalho isso será o mais comum de todos. Preciso que a gente não mate um caminho corrigindo outro. Anote e trave isso, para não errarmos mais — em uma dessas a gente mata um caminho inteiro de forma errada."*
+
+O placar que gerou a regra: **o P4.6 foi reescrito três vezes em um dia, e as três correções foram do Pedro.** Sempre o mesmo erro meu — eu olhava o nó pelo ramo em que estava trabalhando e esquecia que ele servia o outro. Na terceira eu propus **remover** um nó que estava vivo pro ramo da fatura.
+
+🔑 **A raiz não é desatenção, é enquadramento.** Eu tratava o nó como *espaço a preencher* dentro do caminho que estava na minha cabeça, em vez de perguntar **quantos caminhos passam por ele**. Num processo com bifurcação, todo nó depois da primeira decisão é potencialmente compartilhado.
+
+⚠️ **Regra escrita não resolve isto sozinha.** A §5 ("sintoma repetido = bug de raiz") já existia e eu errei três vezes no mesmo nó, no mesmo dia. O que resolve é a máquina conferir.
+
+### A trava humana: o pré-voo ganha uma pergunta
+
+Antes de mexer em qualquer nó ou aresta, responder **por escrito**:
+
+1. **Quantos ramos passam por aqui?** Listar cada um pelo rótulo da aresta que o traz.
+2. **O que este nó faz para CADA ramo?** Se a resposta for diferente por ramo, ele é compartilhado e não pode ser julgado por um só.
+3. **Se eu tirar/mudar isto, o outro ramo continua chegando ao fim?**
+
+🔑 **"A pergunta morreu" ≠ "o trabalho morreu".** No P4.6, a pergunta (*"existe fatura aberta?"*) morreu quando o ciclo virou determinístico. O trabalho (*achar a fatura do próximo ciclo, e abrir se não existir*) continuou vivo. Nó que perde a pergunta vira **passo**; só some quando perde também o trabalho.
+
+### A trava mecânica: o simulador de caminhos
+
+`gerar-processos.mjs` monta o grafo em três cenários e compara com o estado atual, reportando **só o que piorou**:
+
+| Cenário | Pega o quê |
+|---|---|
+| **base** | o processo como está hoje — é a régua, não um cenário |
+| **todas as propostas aceitas** | incoerência entre propostas que convivem |
+| **cada proposta sozinha, com as dependências que ela declara** | 🔑 o caso real: o Pedro aceita uma e descarta outra |
+
+Ele reporta `virou inalcançável`, `ficou sem entrada` e `ficou sem saída`. Comparar com a **base** e não com o ideal é o que mantém o aviso preciso: o P4.9 já não tem saída hoje, e ninguém precisa ouvir isso a cada rodada.
+
+**Na estreia ele achou 45 avisos**, todos reais.
+
+### As duas regras que o simulador impôs
+
+🔴 **1. A unidade de decisão é uma mudança que deixa o grafo VÁLIDO.** Não se fatia uma mudança em pedaços que, aceitos sozinhos, matam um caminho. O ramo do pagamento no ato eram três propostas (S10, S11, S12); aceitar a primeira sem a segunda deixava um beco — paga e nada acontece. Viraram **uma proposta com três passos**. Pelo mesmo motivo, **a religação anda no mesmo pacote da mudança que a exige**: quando as arestas de reposição moravam em propostas separadas, aceitar o S3 sozinho deixava 7 nós órfãos.
+
+🔴 **2. Renomear aresta é primitivo próprio (`rotula`), não apagar-e-recriar.** Escrever troca de rótulo como `substitui` + `arestas` com as mesmas pontas é ambíguo por construção, e quebrou nos dois lados no mesmo dia: o board desenhou **duas linhas pontilhadas idênticas** entre P4.5 e P4.6 (print do Pedro), e o simulador apagou as duas, porque casa por `(de, para)` e não distingue a velha da nova. Hoje o gerador **recusa** proposta que cria aresta já existente e manda usar `rotula`.
 
 ---
 

@@ -1,0 +1,9 @@
+{
+  "_leia": "Escrito pelo board /processos (dev-only, api/propostas). Não editar à mão: o clique do Pedro é a fonte. Cada chave é o id de uma proposta em processos-propostas.mjs.",
+  "decisoes": {
+    "S5": {
+      "status": "aceita",
+      "em": "2026-09-11T14:33:54.988Z"
+    }
+  }
+}

@@ -24,6 +24,7 @@ import { execFileSync } from "node:child_process";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { PROCESSOS, PASSOS, ARESTAS } from "./processos-data.mjs";
+import { PROPOSTAS } from "./processos-propostas.mjs";
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
 const RAIZ = resolve(AQUI, "..", "..");
@@ -35,6 +36,28 @@ const LUZ = {
   amarelo: { emoji: "🟡", nome: "falta decidir", cor: "#D6A400" },
   vermelho: { emoji: "🔴", nome: "não sabemos", cor: "#D64A2D" },
 };
+
+/** Duas linhas de ~23 caracteres no cartão de 300px. Acima disso, corta. */
+const TETO_FALA = 46;
+
+/**
+ * O TOM de cada resposta, derivado aqui e consumido pelo cartão.
+ *
+ * 🔑 Derivado, não escrito à mão nos dois lados: o vocabulário é decisão da
+ * fonte (§5), e repetir a lista dentro do `.tsx` é o mesmo erro que pôs dois
+ * números de altura no board em 11/09 — duas cópias do mesmo fato sempre
+ * divergem. Quem muda a palavra muda aqui, e o cartão obedece.
+ *
+ *   neutro → resposta legítima que NÃO pede trabalho ("só a nossa casa")
+ *   buraco → resposta que é uma pendência ("ainda não sabemos")
+ */
+const TOM = {
+  "só a nossa casa": "neutro",
+  "nada, acontece por baixo": "neutro",
+  "ainda não sabemos": "buraco",
+  "nada: a tela não existe": "buraco",
+};
+const tomDe = (v) => TOM[String(v ?? "").trim()] ?? "normal";
 
 // ── auditorias ──────────────────────────────────────────────────────────────
 const ids = new Set(PASSOS.map((p) => p.id));
@@ -60,20 +83,334 @@ for (const p of PASSOS) {
   if (p.luz === "verde" && p.duvida) {
     avisos.push(`${p.id} está verde mas carrega uma dúvida — ou não é verde, ou a dúvida já morreu`);
   }
-  if (!p.fala) avisos.push(`${p.id} não declara com quem a casa fala (use "—" se for só banco nosso)`);
+  if (!p.fala) avisos.push(`${p.id} não declara com quem a casa fala (use "só a nossa casa")`);
+
+  /**
+   * 🔴 PALAVRA, NUNCA GLIFO (11/09). O Pedro perguntou o que "fala com"
+   * queria dizer olhando um cartão que mostrava "—". Glifo não é resposta
+   * curta: é resposta ausente com cara de preenchida, e o mesmo traço
+   * escondia duas respostas diferentes. Vocabulário no topo do data.
+   */
+  for (const campo of ["faz", "fala", "ve"]) {
+    const v = String(p[campo] ?? "");
+    if (/^[—\-–?❓]/.test(v.trim())) {
+      avisos.push(
+        `${p.id}.${campo} começa com glifo ("${v.slice(0, 24)}") — escreva a palavra: ` +
+          `"só a nossa casa", "ainda não sabemos", "nada, acontece por baixo"`,
+      );
+    }
+  }
+
+  /**
+   * O cartão tem altura fixa (doutrina §5.1): rótulo comprido vira reticências
+   * e a informação some da vista sem avisar. Detalhe técnico tem campo próprio.
+   */
+  if (p.fala && p.fala.length > TETO_FALA) {
+    avisos.push(
+      `${p.id}.fala tem ${p.fala.length} caracteres e não cabe no cartão — ` +
+        `deixe o nome do terceiro em "fala" e mande o resto pra "falaNota"`,
+    );
+  }
+}
+
+/**
+ * ── AUDITORIAS DA CAMADA DE PROPOSTA ───────────────────────────────────────
+ * Proposta mal escrita é pior que proposta nenhuma: ocupa espaço no board e o
+ * Pedro gasta atenção decidindo sobre algo que nem está claro.
+ */
+const idsPropostas = new Set();
+for (const s of PROPOSTAS) {
+  if (!s.id || !/^S\d+$/.test(s.id)) avisos.push(`proposta com id inválido: ${s.id} (use "S<n>")`);
+  // 🔴 id reusado ressuscitaria um "não" que o Pedro já deu, com outra cara
+  if (idsPropostas.has(s.id)) avisos.push(`proposta com id repetido: ${s.id}`);
+  idsPropostas.add(s.id);
+  if (ids.has(s.id)) avisos.push(`proposta ${s.id} colide com um passo real`);
+  if (!s.porque) avisos.push(`proposta ${s.id} não diz POR QUE — é o que o Pedro lê pra decidir`);
+
+  if (s.tipo === "campo") {
+    if (!ids.has(s.passo)) avisos.push(`proposta ${s.id} mira um passo que não existe: ${s.passo}`);
+    // uma ideia pode mexer em vários campos (o texto E o semáforo, por
+    // exemplo). Uma proposta por campo faria o Pedro clicar 3 vezes na mesma
+    // decisão — e pior, poder aceitar metade de um raciocínio sem querer.
+    if (!s.mudancas?.length) avisos.push(`proposta ${s.id} não diz o que muda (use "mudancas")`);
+    for (const m of s.mudancas ?? []) {
+      if (!m.campo || !m.valor) avisos.push(`proposta ${s.id} tem mudança sem campo ou sem valor`);
+    }
+  } else if (s.tipo === "aresta") {
+    for (const ponta of [s.de, s.para]) {
+      if (!ids.has(ponta) && !idsPropostas.has(ponta)) {
+        avisos.push(`proposta ${s.id} liga ponta inexistente: ${ponta}`);
+      }
+    }
+  } else if (s.tipo === "remover") {
+    if (!ids.has(s.passo)) avisos.push(`proposta ${s.id} quer remover passo que não existe: ${s.passo}`);
+  } else if (s.tipo === "passo") {
+    /**
+     * Uma proposta pode trazer VÁRIOS passos, e isso não é conveniência: é a
+     * trava. Se o ramo do pagamento no ato viesse em três propostas, o Pedro
+     * poderia aceitar "paga na hora" e descartar "confirmou?", ficando com um
+     * beco — paga e nada acontece. A unidade de decisão tem que ser uma
+     * mudança que deixa o grafo VÁLIDO. (11/09, achado pelo simulador.)
+     */
+    if (!s.passos?.length) avisos.push(`proposta ${s.id} de tipo passo não declara "passos"`);
+    for (const p of s.passos ?? []) {
+      if (!p.id || !/^S\d+[a-z]?$/.test(p.id)) avisos.push(`proposta ${s.id} tem passo com id inválido: ${p.id}`);
+      if (ids.has(p.id)) avisos.push(`proposta ${s.id} usa id de passo real: ${p.id}`);
+    }
+    if (!s.arestas?.length) avisos.push(`proposta ${s.id} é um passo solto: declare "arestas"`);
+  } else {
+    avisos.push(`proposta ${s.id} tem tipo desconhecido: "${s.tipo}"`);
+  }
+
+  for (const d of s.depende ?? []) {
+    if (!PROPOSTAS.some((o) => o.id === d)) avisos.push(`proposta ${s.id} depende de ${d}, que não existe`);
+  }
+
+  /**
+   * 🔴 TRAVA DA LINHA DUPLICADA (11/09, print do Pedro).
+   *
+   * Eu escrevi "mudar o rótulo de uma aresta" como `substitui` + `arestas`
+   * com as MESMAS pontas. Ambíguo por construção, e quebrou nos dois lados:
+   * no board apareceram duas linhas idênticas entre P4.5 e P4.6 (a velha, que
+   * só morre com o ✓, e a nova), e no simulador o `substitui` apagou as duas,
+   * porque ele casa por (de, para) e não sabe distinguir uma da outra.
+   *
+   * Aresta que só troca de nome usa `rotula`. Criar outra com as mesmas
+   * pontas é defeito, e o gerador passa a dizer isso.
+   */
+  for (const a of s.arestas ?? []) {
+    const jaExiste = ARESTAS.some((x) => x.de === a.de && x.para === a.para);
+    if (jaExiste) {
+      avisos.push(
+        `proposta ${s.id} cria uma aresta que já existe (${a.de} → ${a.para}) — ` +
+          `se é só o rótulo que muda, use "rotula"`,
+      );
+    }
+  }
+  for (const r of s.rotula ?? []) {
+    if (!ARESTAS.some((x) => x.de === r.de && x.para === r.para)) {
+      avisos.push(`proposta ${s.id} quer renomear aresta que não existe: ${r.de} → ${r.para}`);
+    }
+  }
+}
+
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🔴 SIMULADOR DE CAMINHOS — não matar um caminho consertando outro.
+ * ═══════════════════════════════════════════════════════════════════════════
+ * Travado em 11/09, a pedido do Pedro: *"parece que você não está sabendo
+ * lidar com múltiplos caminhos, e nesse trabalho isso será o mais comum de
+ * todos. Preciso que a gente não mate um caminho corrigindo outro."*
+ *
+ * Ele está certo, e o placar do dia prova: o P4.6 foi reescrito TRÊS vezes,
+ * e as três correções foram dele, não minhas. Sempre o mesmo erro — eu olhava
+ * o nó pelo ramo em que estava trabalhando (o de acima de R$ 50) e esquecia
+ * que ele também servia o outro (o de até R$ 50). Na 3ª eu propus REMOVER um
+ * nó que estava vivo pro ramo da fatura.
+ *
+ * 🔑 Regra escrita não resolve isso sozinha: a doutrina já tinha o §5
+ * ("sintoma repetido = bug de raiz") e eu errei três vezes no mesmo nó. O que
+ * resolve é a máquina conferir.
+ *
+ * COMO FUNCIONA. O simulador monta o grafo em três cenários e compara:
+ *   · BASE          — nenhuma proposta aceita (o processo como está hoje)
+ *   · TODAS         — todas as propostas aceitas
+ *   · UMA A UMA     — cada proposta com as suas dependências, sozinha
+ *
+ * E reporta só o que PIOROU em relação à base: nó que ficou inalcançável, sem
+ * entrada ou sem saída. Comparar com a base, e não com o ideal, é o que faz o
+ * aviso ser preciso — o P4.9 já não tem saída hoje, e ninguém precisa ouvir
+ * isso toda vez que roda o gerador.
+ *
+ * O cenário UMA A UMA é o que pega o erro do dia: o Pedro pode aceitar S10 e
+ * descartar S3, e é aí que caminho morre sem ninguém ver.
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+function grafoCom(aceitas) {
+  const nos = new Set(PASSOS.map((p) => p.id));
+  let arestas = ARESTAS.map((a) => ({ de: a.de, para: a.para }));
+
+  for (const s of PROPOSTAS) {
+    if (!aceitas.has(s.id)) continue;
+    if (s.tipo === "passo") for (const p of s.passos ?? []) nos.add(p.id);
+    if (s.tipo === "aresta") arestas.push({ de: s.de, para: s.para });
+    if (s.tipo === "remover") nos.delete(s.passo);
+    arestas.push(...(s.arestas ?? []).map((a) => ({ de: a.de, para: a.para })));
+    // aresta aposentada só morre quando a proposta que a aposenta é aceita
+    for (const x of s.substitui ?? []) {
+      arestas = arestas.filter((a) => !(a.de === x.de && a.para === x.para));
+    }
+  }
+
+  // ponta solta não conta como ligação: nó removido leva as arestas dele junto
+  arestas = arestas.filter((a) => nos.has(a.de) && nos.has(a.para));
+  return { nos, arestas };
+}
+
+function defeitos({ nos, arestas }) {
+  const entradas = new Set(
+    PROCESSOS.map((pr) => PASSOS.find((p) => p.processo === pr.id)?.id).filter((id) => nos.has(id)),
+  );
+  const saiDe = new Map();
+  const chegaEm = new Set();
+  for (const a of arestas) {
+    if (!saiDe.has(a.de)) saiDe.set(a.de, []);
+    saiDe.get(a.de).push(a.para);
+    chegaEm.add(a.para);
+  }
+
+  const visto = new Set(entradas);
+  const fila = [...entradas];
+  while (fila.length) {
+    for (const proximo of saiDe.get(fila.shift()) ?? []) {
+      if (!visto.has(proximo)) {
+        visto.add(proximo);
+        fila.push(proximo);
+      }
+    }
+  }
+
+  const fora = new Set();
+  for (const id of nos) {
+    if (!visto.has(id)) fora.add(`${id} virou inalcançável`);
+    if (!chegaEm.has(id) && !entradas.has(id)) fora.add(`${id} ficou sem entrada`);
+    if (!(saiDe.get(id) ?? []).length) fora.add(`${id} ficou sem saída`);
+  }
+  return fora;
+}
+
+if (PROPOSTAS.length) {
+  const base = defeitos(grafoCom(new Set()));
+  const piorou = (cenario) => [...defeitos(grafoCom(cenario))].filter((d) => !base.has(d));
+
+  for (const d of piorou(new Set(PROPOSTAS.map((s) => s.id)))) {
+    avisos.push(`com TODAS as propostas aceitas: ${d}`);
+  }
+
+  for (const s of PROPOSTAS) {
+    // a proposta vem com as dependências que ela mesma declara, e só elas:
+    // é exatamente assim que o Pedro pode aceitá-la no board
+    const comDeps = new Set([s.id]);
+    for (let mudou = true; mudou; ) {
+      mudou = false;
+      for (const o of PROPOSTAS) {
+        if (!comDeps.has(o.id)) continue;
+        for (const d of o.depende ?? []) if (!comDeps.has(d)) (comDeps.add(d), (mudou = true));
+      }
+    }
+    for (const d of piorou(comDeps)) {
+      avisos.push(`aceitando ${s.id} sozinha (+ dependências): ${d}`);
+    }
+  }
 }
 
 // ── saída 1: o grafo do board ───────────────────────────────────────────────
-const grafo = {
-  gerado: new Date().toISOString().slice(0, 10),
-  processos: PROCESSOS,
-  nodes: PASSOS.map((p) => ({ ...p, cor: LUZ[p.luz]?.cor ?? "#999" })),
-  edges: ARESTAS.map((a) => ({
+/**
+ * 🔑 O grafo carrega TODAS as propostas, inclusive as já descartadas. Quem
+ * decide o que aparece é o board, em tempo de execução, lendo as decisões pela
+ * `/api/propostas`. Filtrar aqui obrigaria a regenerar o arquivo a cada clique
+ * — e aí o ✓ dependeria de alguém rodar um script, que é o oposto do combinado.
+ */
+const passoDeProposta = PROPOSTAS.filter((s) => s.tipo === "passo").flatMap((s) =>
+  (s.passos ?? []).map((p) => ({
+    ...p,
+    proposta: true,
+    /** 🔑 o CARTÃO tem id próprio, a DECISÃO é da proposta inteira. Uma
+     *  proposta com três passos se aceita de uma vez — ver a trava lá em cima. */
+    propostaId: s.id,
+    porque: s.porque,
+    depende: s.depende ?? [],
+    // a cor do SEMÁFORO, não o cinza: cinza é estado de vista (ainda não
+    // decidida) e quem aplica é o board. Aceita, o cartão já nasce com a cor
+    // certa sem precisar regenerar nada.
+    cor: LUZ[p.luz]?.cor ?? "#999",
+    tons: { faz: tomDe(p.faz), fala: tomDe(p.fala), ve: tomDe(p.ve) },
+  })),
+);
+
+/**
+ * Arestas de proposta: QUALQUER tipo pode trazer as suas. Não é só o passo
+ * novo que rewira o processo — uma mudança de campo que aposenta uma pergunta
+ * precisa refazer as ligações dela no MESMO pacote, senão aceitar a mudança
+ * sozinha deixa o ramo sem entrada. Foi o que o simulador pegou no S3.
+ */
+const arestaDeProposta = PROPOSTAS.flatMap((s) =>
+  (s.arestas ?? []).map((a) => ({
     de: a.de,
     para: a.para,
     label: a.label ?? "",
-    tracejado: !!a.tracejado,
+    proposta: s.id,
   })),
+).concat(
+  PROPOSTAS.filter((s) => s.tipo === "aresta").map((s) => ({
+    de: s.de,
+    para: s.para,
+    label: s.label ?? "",
+    proposta: s.id,
+  })),
+);
+
+const grafo = {
+  gerado: new Date().toISOString().slice(0, 10),
+  processos: PROCESSOS,
+  nodes: [
+    ...PASSOS.map((p) => ({
+      ...p,
+      cor: LUZ[p.luz]?.cor ?? "#999",
+      tons: { faz: tomDe(p.faz), fala: tomDe(p.fala), ve: tomDe(p.ve) },
+      // sugestões de CAMPO não viram cartão: viajam junto do passo que miram
+      /**
+       * Proposta de REMOÇÃO não apaga nada aqui: marca o passo. O board tira
+       * da vista só depois do ✓, e as arestas que tocavam nele caem sozinhas
+       * porque ele já filtra aresta com ponta faltando. O ✕ devolve tudo.
+       */
+      removidoPor: PROPOSTAS.find((s) => s.tipo === "remover" && s.passo === p.id)?.id,
+      porqueRemover: PROPOSTAS.find((s) => s.tipo === "remover" && s.passo === p.id)?.porque,
+      sugestoes: PROPOSTAS.filter((s) => s.tipo === "campo" && s.passo === p.id).map((s) => ({
+        id: s.id,
+        titulo: s.titulo ?? "",
+        mudancas: s.mudancas ?? [],
+        porque: s.porque,
+        depende: s.depende ?? [],
+      })),
+    })),
+    ...passoDeProposta,
+  ],
+  edges: [
+    ...ARESTAS.map((a) => {
+      /**
+       * Proposta que entra NO MEIO de um caminho aposenta o fio que existia.
+       * A aresta velha não some do arquivo: ela carrega o id da proposta que a
+       * substitui, e o board a apaga só quando aquela proposta é aceita. Assim
+       * o ✕ devolve o desenho anterior inteiro, sem regenerar nada.
+       */
+      const morta = PROPOSTAS.find((s) =>
+        (s.substitui ?? []).some((x) => x.de === a.de && x.para === a.para),
+      );
+      // renomear é diferente de trocar: a aresta é a MESMA, só muda o que se lê
+      const renome = PROPOSTAS.flatMap((s) =>
+        (s.rotula ?? [])
+          .filter((r) => r.de === a.de && r.para === a.para)
+          .map((r) => ({ id: s.id, label: r.label ?? "" })),
+      )[0];
+      return {
+        de: a.de,
+        para: a.para,
+        label: a.label ?? "",
+        tracejado: !!a.tracejado,
+        substituidaPor: morta?.id,
+        rotuloNovo: renome?.label,
+        rotuladaPor: renome?.id,
+      };
+    }),
+    ...arestaDeProposta.map((a) => ({
+      de: a.de,
+      para: a.para,
+      label: a.label ?? "",
+      tracejado: false,
+      proposta: a.proposta,
+    })),
+  ],
 };
 writeFileSync(SAIDA_JSON, JSON.stringify(grafo, null, 2) + "\n", "utf8");
 
@@ -141,6 +478,16 @@ for (const pr of PROCESSOS) {
       L.push("");
     }
   }
+  // o detalhe técnico não cabe no cartão (§5.1) mas não pode sumir: é o que o
+  // dev precisa pra integrar, e é evidência datada
+  const comNota = meus.filter((p) => p.falaNota);
+  if (comNota.length) {
+    L.push("### Detalhe técnico");
+    L.push("");
+    for (const p of comNota) L.push(`- **${p.id}** — ${p.falaNota}`);
+    L.push("");
+  }
+
   L.push("### Fonte de cada regra");
   L.push("");
   for (const p of meus.filter((x) => x.fonte && x.fonte !== "—")) {
@@ -219,7 +566,12 @@ try {
 }
 
 // ── relatório ───────────────────────────────────────────────────────────────
-console.log(`✓ grafo:  ${SAIDA_JSON.replace(RAIZ, ".")}  (${PASSOS.length} passos, ${ARESTAS.length} arestas)`);
+const nSugestoes = PROPOSTAS.length;
+console.log(
+  `✓ grafo:  ${SAIDA_JSON.replace(RAIZ, ".")}  (${PASSOS.length} passos, ${ARESTAS.length} arestas` +
+    (nSugestoes ? ` + ${nSugestoes} sugestões aguardando o Pedro` : "") +
+    ")",
+);
 console.log(`✓ nota:   ${SAIDA_MD.replace(RAIZ, ".")}`);
 console.log(`  placar: ${LUZ.verde.emoji} ${contar("verde")} · ${LUZ.amarelo.emoji} ${contar("amarelo")} · ${LUZ.vermelho.emoji} ${contar("vermelho")}`);
 if (avisos.length) {

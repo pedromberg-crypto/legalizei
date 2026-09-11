@@ -1,5 +1,6 @@
 # Memory Index — Legalize
 
+- [Nao matar um caminho corrigindo outro](legalize-nao-matar-caminho-multiplos-ramos.md) — 11/09 travado: todo no depois de bifurcacao e compartilhado; simulador de caminhos no gerar-processos (base x todas x cada uma sozinha).
 - [A doutrina de processos nao se enche sozinha](legalize-doutrina-processos-nao-se-enche-sozinha.md) — 11/09: §6 e a casa das licoes e depende de alguem escrever; vigia no gerar-processos avisa depois de 3 levas.
 - [Processo ANTES da tela](legalize-processo-antes-da-tela.md) — 11/09 revoga o plano de inventariar telas: inventario de tela e cego pro que falta. Board `/processos`, semaforo, vermelho e o produto.
 - [LP virou a raiz, em modo pre-lancamento](legalize-lp-na-raiz-modo-espera.md) — 11/09 no ar; modo vira com 1 comando. 🔴 `lp/_lab` e a FONTE e nao esta versionada.

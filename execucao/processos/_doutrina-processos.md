@@ -139,7 +139,14 @@ Um passo pode pertencer a **mais de um processo** — o campo é `processos`, li
 
 🔑 **Por que a decisão foi essa:** o fechamento do ciclo é o **fim** do P4 e o **começo** do P1. Não são dois fatos parecidos, é um fato só, lido por dois processos. Duplicá-lo criaria duas fontes pro mesmo fato, que é a raiz de 5 dos 10 defeitos de 11/09 (§6.6).
 
-Consequência no board: o passo compartilhado aparece no filtro dos **dois** processos, e o painel mostra `P4 + P1`. E não existe aresta ligando processo a processo — **não há salto porque não há dois fatos**.
+Consequência no board: o passo compartilhado aparece no filtro dos **dois** processos, e o painel mostra `P4 + P1`.
+
+⚠️ **Compartilhar não é a única forma de dois processos se encontrarem** — e confundir as duas é fácil:
+
+| | Quando | Como se escreve |
+|---|---|---|
+| **Passo compartilhado** | é o **mesmo fato**, lido por dois processos | `processos: ["P4", "P1"]`, e **nenhuma aresta** entre eles — não há salto porque não há dois fatos |
+| **Handoff** | são **dois fatos**, e um leva ao outro | aresta normal, atravessando processo. Ex.: a guia venceu (P2) e a pessoa contrata o recálculo (P4) |
 
 ⚠️ **Compartilhar é exceção, não hábito.** Só vale quando é literalmente o mesmo acontecimento. Passo parecido em dois processos é passo parecido: cada um escreve o seu, porque vão divergir com o tempo — e devem.
 

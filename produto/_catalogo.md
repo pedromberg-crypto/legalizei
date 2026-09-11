@@ -210,7 +210,7 @@ A tela `/avisos` existe e lista avisos. Falta o que a transforma em canal:
 | 8.10 | Declaração / previsão de faturamento | R$68,90 | ✅ na loja | 🔴 **candidato a core** (ver 6.4) |
 | 8.11 | Emissão de CND | R$35,90 | ✅ na loja | 🤖 InfoSimples |
 | 8.12 | Verificação de pendências | R$24,90 | ✅ na loja | 🤖 InfoSimples |
-| 8.13 | Reemissão de guia | R$15,90 | ✅ na loja | 🤖 Serpro |
+| 8.13 | Reemissão de guia | R$15,90 | ✅ na loja | 🤖 Serpro. 🔵 **Nosso preço: R$ 9,90** (Pedro, 11/09) — abaixo de R$ 50, entra na fatura pela 6.3 |
 | 8.14 | NF emitida pela equipe | Experts | ✅ na loja | 🧑 |
 | 8.15 | Balanço/DRE assinado | R$0 | ✅ na loja | 🤖 Motor + assinatura |
 

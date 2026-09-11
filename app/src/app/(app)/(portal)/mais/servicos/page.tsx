@@ -67,7 +67,9 @@ const SERVICOS: Servico[] = [
     id: "recalculo",
     nome: "Recálculo de guia",
     desc: "Emitiu nota depois do fechamento? A gente refaz o DAS.",
-    preco: "R$ 15,90",
+    // 🔵 11/09 (Pedro): R$ 9,90 contra R$ 15,90 do líder. Abaixo de R$ 50,
+    // então entra na fatura do próximo ciclo (cláusula 6.3), não cobra na hora.
+    preco: "R$ 9,90",
     categoria: "Fiscal",
     popular: true,
     Icone: IconeRefresh,

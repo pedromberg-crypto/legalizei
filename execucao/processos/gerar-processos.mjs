@@ -812,17 +812,36 @@ for (const pr of PROCESSOS) {
     T.push("| Condição | Vale na trilha | Leva para | Onde esse caminho termina |");
     T.push("|---|---|---|---|");
     for (const a of saidas) {
+      /**
+       * Onde este caminho termina, caminhando o grafo a partir daqui.
+       *
+       * 🔑 A trilha é carregada DURANTE a caminhada, não fixada no início:
+       * uma aresta lá na frente pode ABRIR uma trilha, e a partir dali as
+       * portas das outras se fecham.
+       *
+       * 🐛 11/09: sem isso, o recálculo da guia (R$ 9,90, que entra no P4 já
+       * destinado à fatura) aparecia podendo terminar em "estorna o que já foi
+       * pago" — um final que ele nunca alcança.
+       */
       const fins = new Set();
-      const fila = [a.para];
-      const visto = new Set(fila);
+      const fila = [{ id: a.para, trilha: a.abre ?? a.quando ?? null }];
+      const visto = new Set([a.para + "§" + (a.abre ?? a.quando ?? "")]);
       while (fila.length) {
         const aqui = fila.shift();
         const seguintes = ARESTAS.filter(
-          (x) => x.de === aqui && (!a.quando || !x.quando || x.quando === a.quando),
+          (x) =>
+            x.de === aqui.id &&
+            (!aqui.trilha || !x.quando || x.quando === aqui.trilha) &&
+            (!aqui.trilha || !x.abre || x.abre === aqui.trilha),
         );
-        if (!seguintes.length) fins.add(aqui);
+        if (!seguintes.length) fins.add(aqui.id);
         for (const x of seguintes) {
-          if (!visto.has(x.para)) { visto.add(x.para); fila.push(x.para); }
+          const trilha = x.abre ?? x.quando ?? aqui.trilha;
+          const chave = x.para + "§" + (trilha ?? "");
+          if (!visto.has(chave)) {
+            visto.add(chave);
+            fila.push({ id: x.para, trilha });
+          }
         }
       }
       T.push("| " + (a.label || "*(sem condição)*") +

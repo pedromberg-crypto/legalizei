@@ -8,6 +8,12 @@
       "porqueImporta": "É pra onde o P4 entrega, e era caixa preta declarada. É onde moram as cláusulas 3.5, 3.6, 3.7, 3.14 e 3.15 da minuta, que hoje não têm desenho nenhum — e onde se decide o que a casa faz com quem atrasa, que é posicionamento, não sistema. ⚠️ NÃO confundir com o pagamento da GUIA (linha 2.4 do catálogo): aqui quem recebe somos nós e o trilho é nosso; lá quem recebe é o governo e a gente nem vê o dinheiro."
     },
     {
+      "id": "P2",
+      "titulo": "Emitir a guia do DAS e saber que ela foi paga",
+      "resumo": "A casa apura e emite a guia todo mês. O cliente pode marcar que pagou, mas quem confirma é a casa: passado o vencimento, ela consulta a arrecadação e descobre sozinha. Não pagou, oferece refazer a guia com o valor de hoje.",
+      "porqueImporta": "Carrega o diferencial nº 1 do teardown: a linha 2.4 do catálogo, “saber que foi pago SEM perguntar ao cliente”, que era 🔴 sem caminho. 🔑 O desenho do Pedro colapsa o problema: a gente não precisa saber em tempo real, precisa saber UMA VEZ, logo depois do vencimento — e a guia sai sempre no mesmo dia, com o mesmo prazo, então essa data é conhecida desde a emissão."
+    },
+    {
       "id": "P4",
       "titulo": "Adicionar um serviço avulso à fatura aberta",
       "resumo": "A pessoa pede um serviço à-la-carte dentro do app. Ele não cobra na hora: entra como item de linha na fatura da competência. Atravessa /mais/servicos (onde nasce) e /mais/plano (onde aparece).",
@@ -737,6 +743,156 @@
         "ve": "normal"
       },
       "sugestoes": []
+    },
+    {
+      "id": "P2.1",
+      "processos": [
+        "P2"
+      ],
+      "titulo": "Apura e emite a guia do mês",
+      "quem": "o relógio",
+      "faz": "No fechamento da competência, apura o DAS com a receita do mês e emite a guia, sempre no mesmo dia e com o mesmo prazo.",
+      "fala": "Serpro Integra Contador (PGDAS-D)",
+      "ve": "A guia aparece em /impostos com valor, vencimento e código de barras.",
+      "luz": "verde",
+      "forma": "passo",
+      "fonte": "Matriz de dependência, linha 2.2 (resolvida em 09/09): o Integra Contador tem API REST oficial pro PGDAS-D e não exige procuração e-CAC com o A1 da própria empresa.",
+      "cor": "#17A06A",
+      "tons": {
+        "faz": "normal",
+        "fala": "normal",
+        "ve": "normal"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P2.2",
+      "processos": [
+        "P2"
+      ],
+      "titulo": "Marca “já paguei”, se quiser",
+      "quem": "cliente",
+      "faz": "Deixa a pessoa dizer que pagou, e passa a mostrar a guia como quitada na hora.",
+      "fala": "só a nossa casa",
+      "ve": "Um toque em “já paguei” na guia, sem formulário e sem anexo.",
+      "luz": "verde",
+      "forma": "passo",
+      "fonte": "Decisão do Pedro em 11/09. ⚠️ Isto NÃO reabre o que foi rejeitado em 27/07. Lá, “informe se você pagou” era a ÚNICA fonte — o cliente fazendo o trabalho da casa. Aqui é conveniência: ele ganha a guia quitada na hora se quiser, e a casa confere sozinha depois (P2.4). A marcação não é a verdade; é um atalho.",
+      "cor": "#17A06A",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "normal"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P2.3",
+      "processos": [
+        "P2"
+      ],
+      "titulo": "Passou o vencimento?",
+      "quem": "o relógio",
+      "faz": "Espera o vencimento passar. Como a guia sai sempre no mesmo dia e com o mesmo prazo, a data da conferência é conhecida desde a emissão.",
+      "fala": "só a nossa casa",
+      "ve": "nada, acontece por baixo",
+      "luz": "verde",
+      "forma": "decisao",
+      "fonte": "Decisão do Pedro em 11/09: conferir perto do vencimento, não continuamente.",
+      "cor": "#17A06A",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "neutro"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P2.4",
+      "processos": [
+        "P2"
+      ],
+      "titulo": "Consulta a arrecadação e descobre sozinha",
+      "quem": "a casa",
+      "faz": "Consulta se a guia daquela competência foi quitada, sem perguntar nada ao cliente.",
+      "fala": "Serpro (consulta de arrecadação)",
+      "ve": "nada, acontece por baixo",
+      "luz": "amarelo",
+      "forma": "passo",
+      "fonte": "Caminho (b) da linha 2.4 da matriz de dependência: consulta de arrecadação no e-CAC via Serpro. 🔑 O contrato do Integra Contador já está previsto para a emissão (2.2), então o custo marginal desta consulta tende a ser baixo.",
+      "duvida": "🔴 FALTA CONFIRMAR COM O SERPRO se o Integra Contador expõe a consulta de arrecadação por competência, e a que custo por chamada. É a única peça técnica do desenho — o resto é nosso. Se não expuser, os caminhos que sobram são Open Finance read-only (exige consentimento do cliente) ou conciliação manual, que não escala.",
+      "cor": "#D6A400",
+      "tons": {
+        "faz": "normal",
+        "fala": "normal",
+        "ve": "neutro"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P2.5",
+      "processos": [
+        "P2"
+      ],
+      "titulo": "A guia foi paga?",
+      "quem": "a casa",
+      "faz": "Compara o que a consulta respondeu com o que está na tela, e resolve a divergência.",
+      "fala": "só a nossa casa",
+      "ve": "nada, acontece por baixo",
+      "luz": "amarelo",
+      "forma": "decisao",
+      "fonte": "Decisão do Pedro em 11/09.",
+      "duvida": "O que acontece quando o cliente marcou “já paguei” e a consulta diz que não. O líder tem esse caso e resolve derrubando a marcação com ~30 dias de atraso (evidência de tela, 09/09) — o que é desmentir o cliente, tarde. A gente confere em dias, não em 30, mas a pergunta continua: a casa corrige em silêncio, ou avisa? E se a consulta é que estiver desatualizada?",
+      "cor": "#D6A400",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "neutro"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P2.6",
+      "processos": [
+        "P2"
+      ],
+      "titulo": "Guia quitada, e o mês fecha",
+      "quem": "a casa",
+      "faz": "Marca a guia como paga com a data real do pagamento e guarda no histórico.",
+      "fala": "só a nossa casa",
+      "ve": "A guia vira “paga” com a data, e entra no histórico de guias pagas.",
+      "luz": "verde",
+      "forma": "fim",
+      "fonte": "Linha 2.5 do catálogo (histórico de guias pagas), tela já construída em /impostos/guias.",
+      "cor": "#17A06A",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "normal"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P2.7",
+      "processos": [
+        "P2"
+      ],
+      "titulo": "Venceu sem pagar: oferece refazer a guia",
+      "quem": "a casa",
+      "faz": "Avisa que a guia venceu e oferece refazê-la com o valor de hoje, já com multa e juros, por R$ 9,90.",
+      "fala": "só a nossa casa",
+      "ve": "Aviso na guia vencida com o CTA “Recalcular por R$ 9,90”, dizendo o que muda e por quê.",
+      "luz": "amarelo",
+      "forma": "passo",
+      "fonte": "Decisão do Pedro em 11/09: R$ 9,90, contra R$ 15,90 do líder. Por estar abaixo de R$ 50, entra na fatura do próximo ciclo pela cláusula 6.3 — não cobra na hora.",
+      "duvida": "⚠️ A COPY decide se isto é serviço ou chantagem. O §9 do catálogo rejeita o “dunning por medo” do líder, e oferecer um pago no exato momento em que a pessoa está em falta é a hora mais fácil de escorregar pra isso. A regra tem que ser: avisar do vencimento é GRÁTIS e incondicional; o recálculo é conveniência opcional, e a guia velha continua paga­vel com os acréscimos por conta dela. Falta escrever o texto e ratificar com o Pedro.",
+      "cor": "#D6A400",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "normal"
+      },
+      "sugestoes": []
     }
   ],
   "edges": [
@@ -969,6 +1125,49 @@
       "para": "P1.10",
       "label": "2 mensalidades em aberto",
       "tracejado": true
+    },
+    {
+      "de": "P2.1",
+      "para": "P2.2",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "P2.2",
+      "para": "P2.3",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "P2.3",
+      "para": "P2.4",
+      "label": "venceu",
+      "tracejado": false
+    },
+    {
+      "de": "P2.4",
+      "para": "P2.5",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "P2.5",
+      "para": "P2.6",
+      "label": "foi paga",
+      "tracejado": false
+    },
+    {
+      "de": "P2.5",
+      "para": "P2.7",
+      "label": "não foi paga",
+      "tracejado": true
+    },
+    {
+      "de": "P2.7",
+      "para": "P4.2",
+      "label": "aceitou recalcular",
+      "abre": "fatura",
+      "tracejado": false
     }
   ]
 }

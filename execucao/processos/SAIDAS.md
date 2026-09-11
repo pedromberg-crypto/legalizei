@@ -48,23 +48,38 @@ Chega aqui por uma trilha: **na fatura**.
 
 ✅ **Cobertura completa:** toda condição responde em toda trilha que chega aqui, e todo caminho termina.
 
+## P2 · Emitir a guia do DAS e saber que ela foi paga
+
+### 🟡 P2.5 · A guia foi paga?
+
+| Condição | Vale na trilha | Leva para | Onde esse caminho termina |
+|---|---|---|---|
+| foi paga | as duas | P2.6 · Guia quitada, e o mês fecha | P2.6 · Guia quitada, e o mês fecha |
+| não foi paga | as duas | P2.7 · Venceu sem pagar: oferece refazer a guia | P4.12 · Fechou a sheet, e nada acontece · P4.20 · A cobrança fica de pé · P4.21 · Tira da fatura, ou credita na seguinte · P4.23 · Entrega e cobra na fatura final · P1.6 · Dá baixa e o ciclo segue · P1.10 · Duas mensalidades: a casa pode encerrar |
+
+✅ **Cobertura completa:** toda condição responde em toda trilha que chega aqui, e todo caminho termina.
+
 ## P4 · Adicionar um serviço avulso à fatura aberta
 
 ### 🟢 P4.2 · Aceita o serviço, na sheet
 
+Chega aqui por uma trilha: **na fatura**.
+
 | Condição | Vale na trilha | Leva para | Onde esse caminho termina |
 |---|---|---|---|
-| aceitou | as duas | P4.13 · Guarda o comprovante do aceite | P4.19 · Entregue, e já estava pago · P4.17 · Expirou, e vira histórico · P4.20 · A cobrança fica de pé · P4.21 · Tira da fatura, ou credita na seguinte · P4.22 · Estorna o que já foi pago · P4.23 · Entrega e cobra na fatura final · P1.6 · Dá baixa e o ciclo segue · P1.10 · Duas mensalidades: a casa pode encerrar |
+| aceitou | as duas | P4.13 · Guarda o comprovante do aceite | P4.19 · Entregue, e já estava pago · P4.17 · Expirou, e vira histórico · P4.20 · A cobrança fica de pé · P4.21 · Tira da fatura, ou credita na seguinte · P4.23 · Entrega e cobra na fatura final · P4.22 · Estorna o que já foi pago · P1.6 · Dá baixa e o ciclo segue · P1.10 · Duas mensalidades: a casa pode encerrar |
 | fechou a sheet | as duas | P4.12 · Fechou a sheet, e nada acontece | P4.12 · Fechou a sheet, e nada acontece |
 
 ✅ **Cobertura completa:** toda condição responde em toda trilha que chega aqui, e todo caminho termina.
 
 ### 🟢 P4.3 · Custa mais de R$ 50?
 
+Chega aqui por uma trilha: **na fatura**.
+
 | Condição | Vale na trilha | Leva para | Onde esse caminho termina |
 |---|---|---|---|
-| até R$ 50 · vai pra fatura | as duas | P4.6 · Acha ou abre a fatura do próximo ciclo | P4.19 · Entregue, e já estava pago · P4.20 · A cobrança fica de pé · P4.21 · Tira da fatura, ou credita na seguinte · P4.22 · Estorna o que já foi pago · P4.23 · Entrega e cobra na fatura final · P1.6 · Dá baixa e o ciclo segue · P1.10 · Duas mensalidades: a casa pode encerrar |
-| acima de R$ 50 · paga agora | as duas | P4.14 · Paga na hora | P4.19 · Entregue, e já estava pago · P4.17 · Expirou, e vira histórico · P4.20 · A cobrança fica de pé · P4.21 · Tira da fatura, ou credita na seguinte · P4.22 · Estorna o que já foi pago · P4.23 · Entrega e cobra na fatura final · P1.6 · Dá baixa e o ciclo segue · P1.10 · Duas mensalidades: a casa pode encerrar |
+| até R$ 50 · vai pra fatura | as duas | P4.6 · Acha ou abre a fatura do próximo ciclo | P4.20 · A cobrança fica de pé · P4.21 · Tira da fatura, ou credita na seguinte · P4.23 · Entrega e cobra na fatura final · P1.6 · Dá baixa e o ciclo segue · P1.10 · Duas mensalidades: a casa pode encerrar |
+| acima de R$ 50 · paga agora | as duas | P4.14 · Paga na hora | P4.19 · Entregue, e já estava pago · P4.17 · Expirou, e vira histórico · P4.20 · A cobrança fica de pé · P4.22 · Estorna o que já foi pago |
 
 ✅ **Cobertura completa:** toda condição responde em toda trilha que chega aqui, e todo caminho termina.
 
@@ -107,7 +122,7 @@ Chega aqui por uma trilha: **na fatura**.
 
 ### 🟡 P4.15 · O pagamento confirmou?
 
-Chega aqui por uma trilha: **já pago**.
+Chega aqui por 2 trilhas: **na fatura** e **já pago**.
 
 | Condição | Vale na trilha | Leva para | Onde esse caminho termina |
 |---|---|---|---|

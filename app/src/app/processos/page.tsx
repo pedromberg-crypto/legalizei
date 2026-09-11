@@ -303,7 +303,10 @@ export default function ProcessosPage() {
         const aqui = fila.shift()!;
         for (const a of arestas) {
           if (a.de !== aqui) continue;
+          // mesma regra da caminhada do SAIDAS.md: quem já está numa trilha
+          // não atravessa a porta de outra, nem por `quando` nem por `abre`
           if (trilha && a.quando && a.quando !== trilha) continue;
+          if (trilha && a.abre && a.abre !== trilha) continue;
           fios.add(`${a.de}→${a.para}`);
           if (!nos.has(a.para)) {
             nos.add(a.para);

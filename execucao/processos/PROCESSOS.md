@@ -13,7 +13,7 @@ tags: [execucao, processos, dev, spec]
 >
 > **Pra quem é:** o dev que vai implementar e o Mauro, que decide as regras de negócio. O mesmo arquivo alimenta o board visual em `/processos`, que é onde o Pedro valida.
 
-**Placar:** 🟢 21 sabemos e dá · 🟡 11 falta decidir · 🔴 1 não sabemos
+**Placar:** 🟢 25 sabemos e dá · 🟡 14 falta decidir · 🔴 1 não sabemos
 
 ---
 
@@ -104,6 +104,62 @@ A 12.3 diz que a casa PODE — falta decidir se a gente faz, e quando. E a 3.15 
 - **P1.8** — Posicionamento travado: “não vender pânico”. O dunning por medo do líder está na lista do que a gente NÃO faz (§9 do catálogo). A retentativa em si é mecanismo do gateway.
 - **P1.9** — Cláusula 3.14 (a ausência de pagamento pode suspender os serviços e o acesso ao software) e 12.7 (a reativação depende de quitação integral).
 - **P1.10** — Cláusula 12.3 (ausência de pagamento de 2 mensalidades consecutivas) e 3.15 (protesto, órgãos de proteção ao crédito e cessão do crédito a terceiros).
+
+---
+
+## P2 · Emitir a guia do DAS e saber que ela foi paga
+
+> A casa apura e emite a guia todo mês. O cliente pode marcar que pagou, mas quem confirma é a casa: passado o vencimento, ela consulta a arrecadação e descobre sozinha. Não pagou, oferece refazer a guia com o valor de hoje.
+>
+> 🔑 **Por que importa:** Carrega o diferencial nº 1 do teardown: a linha 2.4 do catálogo, “saber que foi pago SEM perguntar ao cliente”, que era 🔴 sem caminho. 🔑 O desenho do Pedro colapsa o problema: a gente não precisa saber em tempo real, precisa saber UMA VEZ, logo depois do vencimento — e a guia sai sempre no mesmo dia, com o mesmo prazo, então essa data é conhecida desde a emissão.
+
+🟢 4 · 🟡 3 · 🔴 0
+
+| | Passo | Quem dispara | O que a casa faz | Com quem fala | O que a pessoa vê |
+|:--:|---|---|---|---|---|
+| 🟢 | **P2.1** Apura e emite a guia do mês | o relógio | No fechamento da competência, apura o DAS com a receita do mês e emite a guia, sempre no mesmo dia e com o mesmo prazo. | Serpro Integra Contador (PGDAS-D) | A guia aparece em /impostos com valor, vencimento e código de barras. |
+| 🟢 | **P2.2** Marca “já paguei”, se quiser | cliente | Deixa a pessoa dizer que pagou, e passa a mostrar a guia como quitada na hora. | só a nossa casa | Um toque em “já paguei” na guia, sem formulário e sem anexo. |
+| 🟢 | **P2.3** ◆ Passou o vencimento? | o relógio | Espera o vencimento passar. Como a guia sai sempre no mesmo dia e com o mesmo prazo, a data da conferência é conhecida desde a emissão. | só a nossa casa | nada, acontece por baixo |
+| 🟡 | **P2.4** Consulta a arrecadação e descobre sozinha | a casa | Consulta se a guia daquela competência foi quitada, sem perguntar nada ao cliente. | Serpro (consulta de arrecadação) | nada, acontece por baixo |
+| 🟡 | **P2.5** ◆ A guia foi paga? | a casa | Compara o que a consulta respondeu com o que está na tela, e resolve a divergência. | só a nossa casa | nada, acontece por baixo |
+| 🟢 | **P2.6** ■ Guia quitada, e o mês fecha | a casa | Marca a guia como paga com a data real do pagamento e guarda no histórico. | só a nossa casa | A guia vira “paga” com a data, e entra no histórico de guias pagas. |
+| 🟡 | **P2.7** Venceu sem pagar: oferece refazer a guia | a casa | Avisa que a guia venceu e oferece refazê-la com o valor de hoje, já com multa e juros, por R$ 9,90. | só a nossa casa | Aviso na guia vencida com o CTA “Recalcular por R$ 9,90”, dizendo o que muda e por quê. |
+
+### Por onde o processo caminha
+
+- `P2.1` → `P2.2`
+- `P2.2` → `P2.3`
+- `P2.3` → `P2.4` — *venceu*
+- `P2.4` → `P2.5`
+- `P2.5` → `P2.6` — *foi paga*
+- `P2.5` → `P2.7` — *não foi paga*
+- `P2.7` → `P4.2` — *aceitou recalcular*
+
+### 🔴 O que precisa ser respondido
+
+> Esta lista é o produto do desenho, não o defeito dele. Um processo que sai todo verde na primeira passada não foi desenhado, foi copiado.
+
+**🟡 P2.4 · Consulta a arrecadação e descobre sozinha**
+
+🔴 FALTA CONFIRMAR COM O SERPRO se o Integra Contador expõe a consulta de arrecadação por competência, e a que custo por chamada. É a única peça técnica do desenho — o resto é nosso. Se não expuser, os caminhos que sobram são Open Finance read-only (exige consentimento do cliente) ou conciliação manual, que não escala.
+
+**🟡 P2.5 · A guia foi paga?**
+
+O que acontece quando o cliente marcou “já paguei” e a consulta diz que não. O líder tem esse caso e resolve derrubando a marcação com ~30 dias de atraso (evidência de tela, 09/09) — o que é desmentir o cliente, tarde. A gente confere em dias, não em 30, mas a pergunta continua: a casa corrige em silêncio, ou avisa? E se a consulta é que estiver desatualizada?
+
+**🟡 P2.7 · Venceu sem pagar: oferece refazer a guia**
+
+⚠️ A COPY decide se isto é serviço ou chantagem. O §9 do catálogo rejeita o “dunning por medo” do líder, e oferecer um pago no exato momento em que a pessoa está em falta é a hora mais fácil de escorregar pra isso. A regra tem que ser: avisar do vencimento é GRÁTIS e incondicional; o recálculo é conveniência opcional, e a guia velha continua paga­vel com os acréscimos por conta dela. Falta escrever o texto e ratificar com o Pedro.
+
+### Fonte de cada regra
+
+- **P2.1** — Matriz de dependência, linha 2.2 (resolvida em 09/09): o Integra Contador tem API REST oficial pro PGDAS-D e não exige procuração e-CAC com o A1 da própria empresa.
+- **P2.2** — Decisão do Pedro em 11/09. ⚠️ Isto NÃO reabre o que foi rejeitado em 27/07. Lá, “informe se você pagou” era a ÚNICA fonte — o cliente fazendo o trabalho da casa. Aqui é conveniência: ele ganha a guia quitada na hora se quiser, e a casa confere sozinha depois (P2.4). A marcação não é a verdade; é um atalho.
+- **P2.3** — Decisão do Pedro em 11/09: conferir perto do vencimento, não continuamente.
+- **P2.4** — Caminho (b) da linha 2.4 da matriz de dependência: consulta de arrecadação no e-CAC via Serpro. 🔑 O contrato do Integra Contador já está previsto para a emissão (2.2), então o custo marginal desta consulta tende a ser baixo.
+- **P2.5** — Decisão do Pedro em 11/09.
+- **P2.6** — Linha 2.5 do catálogo (histórico de guias pagas), tela já construída em /impostos/guias.
+- **P2.7** — Decisão do Pedro em 11/09: R$ 9,90, contra R$ 15,90 do líder. Por estar abaixo de R$ 50, entra na fatura do próximo ciclo pela cláusula 6.3 — não cobra na hora.
 
 ---
 

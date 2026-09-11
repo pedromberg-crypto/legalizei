@@ -89,6 +89,7 @@ import { resolve, join } from "node:path";
 const PERMITIDAS = new Set([
   // suítes por PROCESSO — cada uma é o par de um §P<n> do processos-data.mjs
   "processo-p4-avulso-na-fatura.spec.ts",
+  "processo-p4-acima-de-50.spec.ts",
   // suítes do flow de abertura
   "smoke.spec.ts",
   "abrir-me-ate-conta.spec.ts",

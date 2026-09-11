@@ -51,6 +51,11 @@ const POR_PROCESSO: Record<string, { arquivo: string; nome: string; desc: string
 
 /** Lista FECHADA. Spec nova entra aqui e na rota — nos dois, de propósito. */
 const SUITES = [
+  {
+    arquivo: "processo-p4-acima-de-50.spec.ts",
+    nome: "P4 · ramo acima de R$ 50",
+    desc: "A varredura do caminho que paga no ato. Vermelho aqui é tela que falta, não bug.",
+  },
   { arquivo: "smoke.spec.ts", nome: "Smoke", desc: "As rotas sobem e não quebram. O mais rápido." },
   { arquivo: "abrir-me-ate-conta.spec.ts", nome: "Abrir ME até a conta", desc: "O caminho feliz da abertura, do splash ao cadastro." },
   { arquivo: "constituicao-me-dossie.spec.ts", nome: "Constituição · dossiê", desc: "Os campos que vão pra Junta." },

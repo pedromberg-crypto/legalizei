@@ -257,6 +257,8 @@ Valor fora da lista aparece **em cinza com "?"**. Falhar em silêncio seria pior
 | 11/09 | **Reescrevi o P4.6 três vezes**, as três corrigido pelo Pedro. Cheguei a propor remover um nó que estava vivo no outro ramo | **§6.4.** Julguei o nó pelo ramo em que eu estava. Todo nó depois de uma bifurcação é potencialmente compartilhado |
 | 11/09 | Fatiei o ramo de pagamento em 3 propostas: aceitar a 1ª sem a 2ª deixava um beco | **§6.4.** Unidade de decisão = mudança que deixa o grafo válido |
 | 11/09 | Escrevi "trocar rótulo de aresta" como apagar-e-recriar: o board mostrou linha duplicada e o simulador apagou as duas | **§6.4.** Operação ambígua por construção pede primitivo próprio (`rotula`) |
+| 11/09 | Fatiei a faixa do P4.8 em CTAs irmãos: os dois "correu bem" pareciam alternativas, e o Pedro leu como duas trilhas | Saída sendo **redirecionada** não é segunda opção. Colapsa em uma linha, com o destino de hoje e o selo de pra onde vai |
+| 11/09 | A aresta antiga seguia sem trilha enquanto a nova já tinha a dela: o bloco "já pago" ganhou um "correu bem" que caía na fatura | **§6.5.** Redirecionar carrega a DECLARAÇÃO inteira, não só o destino. E `rotula` vale já, não depois do ✓ |
 | 11/09 | Pus um fallback `\|\| "segue"` na faixa de saídas: o P4.5 apareceu com dois CTAs iguais, rótulo que eu inventei pra condição que não existe | **Mesma família do glifo (§2.1):** preencher espaço com texto vazio é pior que deixar vazio, porque parece informação. Faixa é sobre ESCOLHA; aresta sem condição é sequência |
 | 10/09 | Apresentei um contrato como lido com **12% do texto** | [[legalize-leitura-integral-documento]] |
 
@@ -358,6 +360,22 @@ Ele reporta `virou inalcançável`, `ficou sem entrada` e `ficou sem saída`. Co
 🔴 **1. A unidade de decisão é uma mudança que deixa o grafo VÁLIDO.** Não se fatia uma mudança em pedaços que, aceitos sozinhos, matam um caminho. O ramo do pagamento no ato eram três propostas (S10, S11, S12); aceitar a primeira sem a segunda deixava um beco — paga e nada acontece. Viraram **uma proposta com três passos**. Pelo mesmo motivo, **a religação anda no mesmo pacote da mudança que a exige**: quando as arestas de reposição moravam em propostas separadas, aceitar o S3 sozinho deixava 7 nós órfãos.
 
 🔴 **2. Renomear aresta é primitivo próprio (`rotula`), não apagar-e-recriar.** Escrever troca de rótulo como `substitui` + `arestas` com as mesmas pontas é ambíguo por construção, e quebrou nos dois lados no mesmo dia: o board desenhou **duas linhas pontilhadas idênticas** entre P4.5 e P4.6 (print do Pedro), e o simulador apagou as duas, porque casa por `(de, para)` e não distingue a velha da nova. Hoje o gerador **recusa** proposta que cria aresta já existente e manda usar `rotula`.
+
+---
+
+## 6.5 🔴 O BOARD PENDENTE TAMBÉM PRECISA FAZER SENTIDO (11/09)
+
+Todas as travas do gerador mediam o cenário de **tudo aceito**. Só que o board que o Pedro olha o dia inteiro é o **pendente** — arestas atuais e propostas convivendo. Foi exatamente ali que passou o defeito que ele achou: o bloco "já pago" do P4.8 com **dois** *"correu bem"*, um deles caindo no fechamento da fatura, que não faz sentido nenhum pra quem já pagou.
+
+🔑 **A raiz:** eu mostrava **metade** de uma proposta. O `quando: "fatura"` ia na aresta nova, e a antiga — que morre com a mesma proposta — seguia sem trilha. Meia declaração é pior que nenhuma, porque as duas metades se contradizem na tela.
+
+**Duas regras saíram disso:**
+
+🔴 **1. Redirecionar carrega a declaração inteira, não só o destino.** Quando uma saída é substituída por outra, ela herda **também** a trilha e o rótulo novos. Metade do redirecionamento é contradição.
+
+🔴 **2. `rotula` vale JÁ, sem esperar o ✓.** A diferença que justifica: `rotula` **não cria nem mata caminho**, só diz o que o caminho É. Mostrar isso pendente não pode enganar sobre estrutura; **esconder**, sim — e escondia. Estrutura (passo novo, aresta nova, remoção) continua esperando a decisão, e o CTA marca `~S11` pra dizer que aquela declaração é proposta.
+
+⚠️ **A trava:** o gerador passou a auditar **também** a vista pendente, montada com as mesmas regras do board (rotula aplicada na hora, par substituída+substituta colapsado). Conferida tirando o `quando` de propósito: grita nas duas vistas.
 
 ---
 

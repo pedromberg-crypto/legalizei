@@ -464,6 +464,59 @@ function trilhasPorPasso(arestas) {
   }
 
   /**
+   * 🔴 O BOARD PENDENTE TAMBÉM PRECISA FAZER SENTIDO (11/09, achado do Pedro).
+   *
+   * As auditorias acima medem o cenário de TUDO ACEITO. Só que o board que o
+   * Pedro olha o dia inteiro é o PENDENTE: arestas atuais e propostas
+   * convivendo. Foi ali que apareceu o defeito — o bloco "já pago" do P4.8
+   * com dois "correu bem", um deles caindo no fechamento da fatura, porque a
+   * aresta antiga seguia sem trilha enquanto a nova já tinha a dela.
+   *
+   * Este bloco monta a vista pendente com as MESMAS regras do board (rotula
+   * aplicada na hora; par substituída+substituta colapsado herdando a
+   * declaração nova) e cobra coerência de trilha ali também.
+   */
+  {
+    const pendente = [
+      ...ARESTAS.map((a) => ({ ...a })),
+      ...PROPOSTAS.flatMap((s) =>
+        (s.arestas ?? []).map((a) => ({ ...a, proposta: s.id })),
+      ),
+    ];
+    for (const s of PROPOSTAS) {
+      for (const r of s.rotula ?? []) {
+        for (const a of pendente) {
+          if (a.de !== r.de || a.para !== r.para) continue;
+          if (r.label !== undefined) a.label = r.label;
+          if (r.quando !== undefined) a.quando = r.quando;
+        }
+      }
+      // colapsa a aresta que sai com a proposta na que entra no lugar dela
+      for (const x of s.substitui ?? []) {
+        const velha = pendente.find((a) => a.de === x.de && a.para === x.para && !a.proposta);
+        const nova = pendente.find((a) => a.proposta === s.id && a.de === x.de && a.label === velha?.label);
+        if (velha && nova) velha.quando = nova.quando;
+      }
+    }
+
+    const porNo = new Map();
+    for (const a of pendente) {
+      if (!a.label) continue;
+      const k = `${a.de}§${a.label}`;
+      if (!porNo.has(k)) porNo.set(k, new Set());
+      porNo.get(k).add(a.quando ?? "*");
+    }
+    for (const [k, quais] of porNo) {
+      if (!quais.has("*") || quais.size < 2) continue;
+      const [de, label] = k.split("§");
+      avisos.push(
+        `no board PENDENTE, ${de}: a condição "${label}" aparece sem trilha E também em ` +
+          `${[...quais].filter((t) => t !== "*").join(", ")} — dentro dessa trilha ela responde duas vezes`,
+      );
+    }
+  }
+
+  /**
    * 🔴 COBERTURA DE TRILHA. Se um passo é alcançado por duas trilhas e alguma
    * saída dele declara `quando`, então TODA trilha precisa ter resposta ali —
    * senão existe um caso real sem caminho, e é justamente o buraco que o Pedro

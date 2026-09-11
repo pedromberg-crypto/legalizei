@@ -245,8 +245,24 @@ export default function ProcessosPage() {
      * mudam quantas saídas um passo tem AGORA. Congelar isso no JSON faria a
      * faixa mentir a cada clique de ✓/✕.
      */
+    /**
+     * 🔴 `rotula` vale JÁ, sem esperar o aceite — e o CTA diz de quem é.
+     *
+     * 🐛 11/09, 2ª parte do achado do Pedro: o S11 declara, via `rotula`, que
+     * "cancelou o plano → P4.10" é da trilha da fatura. Como eu só aplicava
+     * isso depois do ✓, no board pendente aquela saída seguia sem trilha — e
+     * o bloco "já pago" ficava com DOIS "cancelou o plano", um deles caindo no
+     * caminho da fatura.
+     *
+     * 🔑 A diferença que resolve: `rotula` não cria nem mata caminho, só diz o
+     * que o caminho É. Mostrar isso pendente não pode enganar sobre estrutura;
+     * ESCONDER, sim — e escondia. Estrutura (passo novo, aresta nova, remoção)
+     * continua esperando o ✓.
+     */
     const rotuloDe = (a: { label: string; rotuloNovo?: string; rotuladaPor?: string }) =>
-      (a.rotuladaPor && estadoDe(a.rotuladaPor) === "aceita" ? a.rotuloNovo : a.label) || "";
+      (a.rotuladaPor && a.rotuloNovo !== undefined ? a.rotuloNovo : a.label) || "";
+    const trilhaDe = (a: { quando?: string; quandoNovo?: string; rotuladaPor?: string }) =>
+      (a.rotuladaPor && a.quandoNovo !== undefined ? a.quandoNovo : a.quando) || undefined;
 
     /**
      * 🔴 SÓ ENTRA NA FAIXA A ARESTA QUE TEM CONDIÇÃO ESCRITA.
@@ -268,6 +284,7 @@ export default function ProcessosPage() {
         quando?: string;
         proposta?: string;
         saiCom?: string;
+        redeclaradaPor?: string;
         /** a proposta que redireciona esta saída, quando ela foi colapsada */
         viraPor?: string;
         viraPara?: string;
@@ -287,10 +304,10 @@ export default function ProcessosPage() {
            enquanto a proposta está pendente (achado do Pedro no P4.8). */
         proposta: a.proposta,
         saiCom: a.substituidaPor,
+        // saída que uma proposta apenas RE-DECLARA (rótulo ou trilha)
+        redeclaradaPor: a.rotuladaPor,
         // a trilha em que esta saída existe. `rotula` pode redeclarar isso
-        quando:
-          (a.rotuladaPor && estadoDe(a.rotuladaPor) === "aceita" ? a.quandoNovo : a.quando) ??
-          undefined,
+        quando: trilhaDe(a),
       });
       saidas.set(a.de, lista);
     });
@@ -317,6 +334,21 @@ export default function ProcessosPage() {
         atual.viraPor = atual.saiCom;
         atual.viraPara = nova.para;
         atual.paras = [atual.para, nova.para];
+        /**
+         * 🔴 A saída redirecionada herda a DECLARAÇÃO nova, não só o destino.
+         *
+         * 🐛 11/09, achado do Pedro: o S9 declarava `quando: "fatura"` na
+         * aresta nova, e a antiga (P4.8 → P4.11) continuava sem trilha
+         * nenhuma. No board pendente, o bloco "já pago" passava a ter DOIS
+         * "correu bem" — o do S11b, certo, e esse órfão caindo no fechamento
+         * da fatura, que não faz sentido pra quem já pagou.
+         *
+         * ⚠️ As auditorias não pegaram porque medem o cenário de TUDO ACEITO,
+         * onde essa aresta já foi substituída. O board que ele olha é o
+         * cenário PENDENTE — ponto cego conhecido, e é por isso que o colapso
+         * precisa carregar a declaração inteira, não metade dela.
+         */
+        if (nova.quando !== undefined) atual.quando = nova.quando;
         lista.splice(lista.indexOf(nova), 1);
       }
     }
@@ -476,8 +508,7 @@ export default function ProcessosPage() {
       data: {
         pontos: g.edge(a.de, a.para)?.points ?? [],
         // aresta renomeada por proposta: o nome novo só vale depois do ✓
-        rotulo:
-          (a.rotuladaPor && estadoDe(a.rotuladaPor) === "aceita" ? a.rotuloNovo : a.label) || "",
+        rotulo: rotuloDe(a),
         tracejado: a.tracejado,
         proposta: a.proposta,
         estado: estadoDe(a.proposta),

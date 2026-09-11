@@ -95,6 +95,7 @@ export type Passo = {
       para: string;
       proposta?: string;
       saiCom?: string;
+      redeclaradaPor?: string;
       viraPor?: string;
       viraPara?: string;
     }[];
@@ -444,6 +445,14 @@ export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
                               title={`hoje vai pro ${sa.para}; com a ${sa.viraPor} passa a ir pro ${sa.viraPara}`}
                             >
                               ↦{sa.viraPara}
+                            </span>
+                          )}
+                          {!sa.viraPor && !sa.proposta && !sa.saiCom && sa.redeclaradaPor && (
+                            <span
+                              className="shrink-0 rounded bg-zinc-100 px-1 text-[9px] font-bold text-zinc-500"
+                              title={`a proposta ${sa.redeclaradaPor} re-declara esta saída (rótulo ou trilha). O caminho em si não muda.`}
+                            >
+                              ~{sa.redeclaradaPor}
                             </span>
                           )}
                           {!sa.viraPor && (sa.proposta || sa.saiCom) && (

@@ -246,7 +246,7 @@ Quando o Pedro pede sugestão, a resposta **não é um parágrafo no chat**: é 
 | | |
 |---|---|
 | **Onde a sugestão mora** | `processos-propostas.mjs` — arquivo SEPARADO do `processos-data.mjs` |
-| **Três formas** | `passo` (cartão novo) · `aresta` (ramificação nova) · `campo` (muda um campo de um passo que já existe) |
+| **Uma proposta é um PATCH** | pode trazer `passos` novos, `mudancas` em passos existentes, `remove`, `arestas`, `substitui` e `rotula` — tudo junto, porque uma ideia costuma ser as quatro coisas (§6.4) |
 | **Como aparece** | cinza claro, borda tracejada, faixa "sugestão", ✕ e ✓ discretos no cartão |
 | **Onde ele lê o porquê** | painel lateral, com ✕/✓ em tamanho de leitura |
 | **Onde a decisão fica** | `decisoes-propostas.json`, escrito pela rota dev-only `/api/propostas` |

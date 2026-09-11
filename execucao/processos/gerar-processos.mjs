@@ -127,39 +127,44 @@ for (const s of PROPOSTAS) {
   if (ids.has(s.id)) avisos.push(`proposta ${s.id} colide com um passo real`);
   if (!s.porque) avisos.push(`proposta ${s.id} não diz POR QUE — é o que o Pedro lê pra decidir`);
 
-  if (s.tipo === "campo") {
-    if (!ids.has(s.passo)) avisos.push(`proposta ${s.id} mira um passo que não existe: ${s.passo}`);
-    // uma ideia pode mexer em vários campos (o texto E o semáforo, por
-    // exemplo). Uma proposta por campo faria o Pedro clicar 3 vezes na mesma
-    // decisão — e pior, poder aceitar metade de um raciocínio sem querer.
-    if (!s.mudancas?.length) avisos.push(`proposta ${s.id} não diz o que muda (use "mudancas")`);
-    for (const m of s.mudancas ?? []) {
-      if (!m.campo || !m.valor) avisos.push(`proposta ${s.id} tem mudança sem campo ou sem valor`);
-    }
-  } else if (s.tipo === "aresta") {
-    for (const ponta of [s.de, s.para]) {
+  /**
+   * 🔴 UMA PROPOSTA É UM PATCH, não um tipo (refeito em 11/09).
+   *
+   * Antes cada proposta tinha UM tipo — "passo", "aresta", "campo" ou
+   * "remover" — e podia fazer só aquilo. O Pedro então pediu uma mudança que
+   * era, ao mesmo tempo, mexer num passo, criar outro, tirar um terceiro e
+   * religar o desenho. Com tipo único, isso vira quatro propostas, e aceitar
+   * três delas quebra o processo — exatamente o que a §6.4 acabou de proibir.
+   *
+   * Agora uma proposta pode trazer todas as partes de uma vez. `tipo` continua
+   * existindo só como etiqueta de leitura. A trava real é o simulador, que
+   * confere se ela deixa o grafo válido quando aceita sozinha.
+   */
+  const vazia =
+    !s.passos?.length && !s.mudancas?.length && !s.remove?.length && !s.arestas?.length && !s.rotula?.length;
+  if (vazia) avisos.push(`proposta ${s.id} não faz nada`);
+
+  for (const p of s.passos ?? []) {
+    if (!p.id || !/^S\d+[a-z]?$/.test(p.id)) avisos.push(`proposta ${s.id} tem passo com id inválido: ${p.id}`);
+    if (ids.has(p.id)) avisos.push(`proposta ${s.id} usa id de passo real: ${p.id}`);
+    idsPropostas.add(p.id);
+  }
+  for (const m of s.mudancas ?? []) {
+    if (!ids.has(m.passo)) avisos.push(`proposta ${s.id} muda passo que não existe: ${m.passo}`);
+    if (!m.campo || m.valor === undefined) avisos.push(`proposta ${s.id} tem mudança sem campo ou sem valor`);
+  }
+  for (const r of s.remove ?? []) {
+    if (!ids.has(r)) avisos.push(`proposta ${s.id} quer remover passo que não existe: ${r}`);
+  }
+  for (const a of [...(s.arestas ?? []), ...(s.substitui ?? [])]) {
+    for (const ponta of [a.de, a.para]) {
       if (!ids.has(ponta) && !idsPropostas.has(ponta)) {
-        avisos.push(`proposta ${s.id} liga ponta inexistente: ${ponta}`);
+        avisos.push(`proposta ${s.id} usa ponta inexistente: ${ponta}`);
       }
     }
-  } else if (s.tipo === "remover") {
-    if (!ids.has(s.passo)) avisos.push(`proposta ${s.id} quer remover passo que não existe: ${s.passo}`);
-  } else if (s.tipo === "passo") {
-    /**
-     * Uma proposta pode trazer VÁRIOS passos, e isso não é conveniência: é a
-     * trava. Se o ramo do pagamento no ato viesse em três propostas, o Pedro
-     * poderia aceitar "paga na hora" e descartar "confirmou?", ficando com um
-     * beco — paga e nada acontece. A unidade de decisão tem que ser uma
-     * mudança que deixa o grafo VÁLIDO. (11/09, achado pelo simulador.)
-     */
-    if (!s.passos?.length) avisos.push(`proposta ${s.id} de tipo passo não declara "passos"`);
-    for (const p of s.passos ?? []) {
-      if (!p.id || !/^S\d+[a-z]?$/.test(p.id)) avisos.push(`proposta ${s.id} tem passo com id inválido: ${p.id}`);
-      if (ids.has(p.id)) avisos.push(`proposta ${s.id} usa id de passo real: ${p.id}`);
-    }
-    if (!s.arestas?.length) avisos.push(`proposta ${s.id} é um passo solto: declare "arestas"`);
-  } else {
-    avisos.push(`proposta ${s.id} tem tipo desconhecido: "${s.tipo}"`);
+  }
+  if (s.passos?.length && !s.arestas?.length) {
+    avisos.push(`proposta ${s.id} traz passo novo e nenhuma aresta: ele nasceria solto`);
   }
 
   for (const d of s.depende ?? []) {
@@ -232,9 +237,8 @@ function grafoCom(aceitas) {
 
   for (const s of PROPOSTAS) {
     if (!aceitas.has(s.id)) continue;
-    if (s.tipo === "passo") for (const p of s.passos ?? []) nos.add(p.id);
-    if (s.tipo === "aresta") arestas.push({ de: s.de, para: s.para });
-    if (s.tipo === "remover") nos.delete(s.passo);
+    for (const p of s.passos ?? []) nos.add(p.id);
+    for (const r of s.remove ?? []) nos.delete(r);
     arestas.push(...(s.arestas ?? []).map((a) => ({ de: a.de, para: a.para })));
     // aresta aposentada só morre quando a proposta que a aposenta é aceita
     for (const x of s.substitui ?? []) {
@@ -311,7 +315,7 @@ if (PROPOSTAS.length) {
  * `/api/propostas`. Filtrar aqui obrigaria a regenerar o arquivo a cada clique
  * — e aí o ✓ dependeria de alguém rodar um script, que é o oposto do combinado.
  */
-const passoDeProposta = PROPOSTAS.filter((s) => s.tipo === "passo").flatMap((s) =>
+const passoDeProposta = PROPOSTAS.flatMap((s) =>
   (s.passos ?? []).map((p) => ({
     ...p,
     proposta: true,
@@ -341,13 +345,6 @@ const arestaDeProposta = PROPOSTAS.flatMap((s) =>
     label: a.label ?? "",
     proposta: s.id,
   })),
-).concat(
-  PROPOSTAS.filter((s) => s.tipo === "aresta").map((s) => ({
-    de: s.de,
-    para: s.para,
-    label: s.label ?? "",
-    proposta: s.id,
-  })),
 );
 
 const grafo = {
@@ -364,12 +361,12 @@ const grafo = {
        * da vista só depois do ✓, e as arestas que tocavam nele caem sozinhas
        * porque ele já filtra aresta com ponta faltando. O ✕ devolve tudo.
        */
-      removidoPor: PROPOSTAS.find((s) => s.tipo === "remover" && s.passo === p.id)?.id,
-      porqueRemover: PROPOSTAS.find((s) => s.tipo === "remover" && s.passo === p.id)?.porque,
-      sugestoes: PROPOSTAS.filter((s) => s.tipo === "campo" && s.passo === p.id).map((s) => ({
+      removidoPor: PROPOSTAS.find((s) => (s.remove ?? []).includes(p.id))?.id,
+      porqueRemover: PROPOSTAS.find((s) => (s.remove ?? []).includes(p.id))?.porque,
+      sugestoes: PROPOSTAS.filter((s) => (s.mudancas ?? []).some((m) => m.passo === p.id)).map((s) => ({
         id: s.id,
         titulo: s.titulo ?? "",
-        mudancas: s.mudancas ?? [],
+        mudancas: (s.mudancas ?? []).filter((m) => m.passo === p.id),
         porque: s.porque,
         depende: s.depende ?? [],
       })),

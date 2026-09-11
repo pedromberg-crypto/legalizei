@@ -45,7 +45,38 @@
         "fala": "neutro",
         "ve": "normal"
       },
-      "sugestoes": []
+      "sugestoes": [
+        {
+          "id": "S4",
+          "titulo": "O aceite é a sheet que já existe, e vale nos DOIS caminhos",
+          "mudancas": [
+            {
+              "passo": "P4.2",
+              "campo": "titulo",
+              "valor": "Aceita o serviço, na sheet"
+            },
+            {
+              "passo": "P4.2",
+              "campo": "faz",
+              "valor": "Mostra preço, o que a pessoa recebe, o prazo estimado e quando vai ser cobrado (“entra na fatura de 05/08” ou “paga agora”), e só então libera o botão. O toque no botão É o aceite."
+            },
+            {
+              "passo": "P4.2",
+              "campo": "ve",
+              "valor": "A sheet de detalhe do serviço, com valor, a linha do momento da cobrança e “Solicitar serviço”. Falta ali o prazo estimado e o texto do que está sendo contratado."
+            },
+            {
+              "passo": "P4.2",
+              "campo": "fonte",
+              "valor": "Cláusula 6.3 (preço e momento da cobrança exibidos antes, aceite no ato), 6.1 (prazo estimado) e 1.6 (a confirmação na Plataforma integra o contrato). Decisão do Pedro em 11/09: a sheet que já existe é o nosso aceite, e o aceite vale para qualquer valor."
+            }
+          ],
+          "porque": "🔄 REESCRITO em 11/09, e mudou de natureza duas vezes na mesma conversa. O Pedro pediu para DUPLICAR o aceite e o comprovante no ramo de até R$ 50 (“a única coisa que muda é como será cobrado”). Duplicar seria criar duas cópias do mesmo passo, e a §5.1 já diz o que acontece: duas cópias do mesmo fato divergem — daqui a um mês alguém corrige o texto do aceite num ramo só. Se vale nos dois, o lugar dele é ANTES da bifurcação.\n\nE aí ele mandou o print da sheet que já existe, e ela resolve sozinha: o P4.2 JÁ está antes do P4.3, JÁ mostra o preço e JÁ escreve o momento da cobrança (“Sem cobrança agora — entra na fatura de 05/08”). Ou seja, o aceite que a 6.3 exige não é uma tela a construir: é uma tela a COMPLETAR, e ela já vale nos dois caminhos por estar onde está. O P4.4 descrevia essa mesma tela uma segunda vez, e some.\n\n🔑 Falta pouco pra ela cumprir a cláusula: o prazo estimado (6.1) e o texto do que está sendo contratado. E o comprovante, que é o S5.\n\n⚠️ Duas coisas honestas. (1) Abaixo de R$ 50 o contrato NÃO exige aceite formal — fazer assim é decisão nossa, acima do piso da 6.3, e eu concordo: a régua de R$ 50 é de cobrança, não de consentimento. (2) A régua do valor (P4.3) desce pra depois do P4.5, porque é ali que os caminhos divergem de fato; antes disso os dois fazem a mesma coisa, e decisão que não separa nada é decisão no lugar errado.",
+          "depende": [
+            "S5"
+          ]
+        }
+      ]
     },
     {
       "id": "P4.3",
@@ -84,34 +115,9 @@
         "fala": "neutro",
         "ve": "buraco"
       },
-      "sugestoes": [
-        {
-          "id": "S4",
-          "titulo": "A tela de aceite: preço, momento da cobrança e o texto aceito",
-          "mudancas": [
-            {
-              "campo": "ve",
-              "valor": "Tela de aceite com quatro coisas na mesma vista: o preço, a data exata em que vai ser cobrado (“entra na fatura que fecha em 08/10”), o prazo estimado de entrega, e o texto do que está sendo contratado. Botão “Aceitar e contratar”, sem pré-marcação."
-            },
-            {
-              "campo": "faz",
-              "valor": "Mostra preço, momento da cobrança e prazo ANTES do aceite, e só cria o pedido depois do toque explícito."
-            },
-            {
-              "campo": "fonte",
-              "valor": "Cláusula 6.3: acima de R$ 50 “exige aceite específico do Cliente no ato, com exibição prévia do preço e do momento da cobrança”. Cláusula 6.1 acrescenta o prazo estimado. Cláusula 1.6: a confirmação na Plataforma integra o contrato."
-            },
-            {
-              "campo": "luz",
-              "valor": "verde"
-            }
-          ],
-          "porque": "A 6.3 não pede “uma confirmação”: pede preço E momento da cobrança exibidos ANTES, e aceite específico no ato. Hoje não existe tela nenhuma — é a única obrigação do nosso próprio contrato que o app não cumpre em lugar algum. Repare que “o momento da cobrança” só é exibível depois do S2: sem saber quando a fatura fecha, não dá pra escrever “vence 15/10” na tela. E isto NÃO é o mesmo double-check do P4.2: lá a segunda confirmação é cortesia, aqui é requisito contratual com efeito jurídico (1.6).",
-          "depende": [
-            "S5"
-          ]
-        }
-      ]
+      "removidoPor": "S4",
+      "porqueRemover": "🔄 REESCRITO em 11/09, e mudou de natureza duas vezes na mesma conversa. O Pedro pediu para DUPLICAR o aceite e o comprovante no ramo de até R$ 50 (“a única coisa que muda é como será cobrado”). Duplicar seria criar duas cópias do mesmo passo, e a §5.1 já diz o que acontece: duas cópias do mesmo fato divergem — daqui a um mês alguém corrige o texto do aceite num ramo só. Se vale nos dois, o lugar dele é ANTES da bifurcação.\n\nE aí ele mandou o print da sheet que já existe, e ela resolve sozinha: o P4.2 JÁ está antes do P4.3, JÁ mostra o preço e JÁ escreve o momento da cobrança (“Sem cobrança agora — entra na fatura de 05/08”). Ou seja, o aceite que a 6.3 exige não é uma tela a construir: é uma tela a COMPLETAR, e ela já vale nos dois caminhos por estar onde está. O P4.4 descrevia essa mesma tela uma segunda vez, e some.\n\n🔑 Falta pouco pra ela cumprir a cláusula: o prazo estimado (6.1) e o texto do que está sendo contratado. E o comprovante, que é o S5.\n\n⚠️ Duas coisas honestas. (1) Abaixo de R$ 50 o contrato NÃO exige aceite formal — fazer assim é decisão nossa, acima do piso da 6.3, e eu concordo: a régua de R$ 50 é de cobrança, não de consentimento. (2) A régua do valor (P4.3) desce pra depois do P4.5, porque é ali que os caminhos divergem de fato; antes disso os dois fazem a mesma coisa, e decisão que não separa nada é decisão no lugar errado.",
+      "sugestoes": []
     },
     {
       "id": "P4.5",
@@ -137,14 +143,17 @@
           "titulo": "O preço congela no pedido, e a 6.4 já diz isso",
           "mudancas": [
             {
+              "passo": "P4.5",
               "campo": "faz",
               "valor": "Cria o pedido e congela o preço da tabela vigente NA DATA DO PEDIDO, guardando junto a versão da tabela que a pessoa viu. Reajuste posterior não alcança o que já foi pedido."
             },
             {
+              "passo": "P4.5",
               "campo": "fonte",
               "valor": "Cláusula 6.4: aplica-se “a versão vigente na data da contratação de cada serviço, que ficará registrada na Plataforma”. A 6.3 reforça, exigindo exibição prévia do preço."
             },
             {
+              "passo": "P4.5",
               "campo": "luz",
               "valor": "verde"
             }
@@ -178,22 +187,27 @@
           "titulo": "P4.6 deixa de ser decisão e vira passo, só no ramo de até R$ 50",
           "mudancas": [
             {
+              "passo": "P4.6",
               "campo": "titulo",
               "valor": "Acha ou abre a fatura do próximo ciclo"
             },
             {
+              "passo": "P4.6",
               "campo": "faz",
               "valor": "Procura a fatura do próximo ciclo. Se ela ainda não existir, abre uma, e é nela que o item entra."
             },
             {
+              "passo": "P4.6",
               "campo": "forma",
               "valor": "passo"
             },
             {
+              "passo": "P4.6",
               "campo": "fonte",
               "valor": "Cláusula 6.3 e Anexo A-I.1: item de até R$ 50 é lançado na fatura da competência seguinte. Com o ciclo por aniversário (S2), qual fatura recebe o item deixa de ser pergunta e vira consequência."
             },
             {
+              "passo": "P4.6",
               "campo": "luz",
               "valor": "verde"
             }
@@ -268,26 +282,32 @@
           "titulo": "Não entregue: quem deu causa decide quem paga",
           "mudancas": [
             {
+              "passo": "P4.9",
               "campo": "titulo",
               "valor": "O serviço não pôde ser entregue"
             },
             {
+              "passo": "P4.9",
               "campo": "faz",
               "valor": "Separa por causa. Falha nossa ou do órgão: tira o item da fatura se ela ainda não fechou, e devolve como crédito na competência seguinte se já foi cobrado. Falta de documento do cliente: mantém a cobrança, porque o trabalho foi feito. Taxa pública já retida pelo órgão não volta, e o comprovante fica na Plataforma."
             },
             {
+              "passo": "P4.9",
               "campo": "ve",
               "valor": "Aviso no item dizendo por que não deu, o que acontece com o valor, e o crédito aparecendo na próxima fatura quando for o caso."
             },
             {
+              "passo": "P4.9",
               "campo": "fala",
               "valor": "só a nossa casa"
             },
             {
+              "passo": "P4.9",
               "campo": "fonte",
               "valor": "Espelha a cláusula 9.5 (não realizado o ato, o valor volta, salvo taxa já retida pelo órgão) e a 1.4 (a Legalizai não responde por documentação não apresentada pelo Cliente). Regra nova: a 9.5 trata de taxa pública, não de serviço adicional."
             },
             {
+              "passo": "P4.9",
               "campo": "luz",
               "valor": "amarelo"
             }
@@ -321,22 +341,27 @@
           "titulo": "Cancelou com avulso em andamento: entrega e cobra, pela 12.6",
           "mudancas": [
             {
+              "passo": "P4.10",
               "campo": "titulo",
               "valor": "Cancelamento com avulso em andamento"
             },
             {
+              "passo": "P4.10",
               "campo": "faz",
               "valor": "O contrato segue vivo nos 30 dias de aviso prévio. O avulso continua e é entregue dentro desse prazo, e entra na fatura final, que tem que ser quitada até a data do encerramento."
             },
             {
+              "passo": "P4.10",
               "campo": "ve",
               "valor": "Na tela de cancelamento, a lista do que continua em andamento e o valor que vai na fatura final, antes de confirmar."
             },
             {
+              "passo": "P4.10",
               "campo": "fonte",
               "valor": "Cláusula 12.6: “o Cliente deverá quitar todos os valores em aberto até a data fixada para o encerramento, incluindo faturas de serviços adicionais”. Cláusula 12.1: aviso prévio de 30 dias."
             },
             {
+              "passo": "P4.10",
               "campo": "luz",
               "valor": "verde"
             }
@@ -373,22 +398,27 @@
           "titulo": "O ciclo é o ANIVERSÁRIO do contrato, não uma data fixa do mês",
           "mudancas": [
             {
+              "passo": "P4.11",
               "campo": "titulo",
               "valor": "O ciclo vira e a fatura soma tudo"
             },
             {
+              "passo": "P4.11",
               "campo": "faz",
               "valor": "No dia do aniversário do contrato, fecha a janela de itens do ciclo que terminou e emite a fatura. Assinou dia 8, o ciclo vira todo dia 8."
             },
             {
+              "passo": "P4.11",
               "campo": "ve",
               "valor": "A fatura muda de “Próxima fatura” para “Fatura de <ciclo>” e para de aceitar item novo. A data do próximo fechamento aparece o tempo todo."
             },
             {
+              "passo": "P4.11",
               "campo": "fonte",
               "valor": "Decisão do Pedro em 11/09: cobrança por aniversário, no dia em que o cliente fechou, no mês seguinte, como o padrão de mercado de assinatura. 🔴 Contradiz a cláusula 3.4 da minuta, que fixa o pagamento “até o 15º dia de cada mês”."
             },
             {
+              "passo": "P4.11",
               "campo": "luz",
               "valor": "verde"
             }
@@ -462,7 +492,7 @@
       "propostaId": "S10",
       "porque": "É a sua decisão virando processo. 🔄 Os três passos vêm numa PROPOSTA SÓ, e isso mudou hoje: eram S10, S11 e S12 separados, e o simulador mostrou que aceitar o “paga na hora” sem o “confirmou?” deixava um beco — paga e nada acontece. Ramo de pagamento não se aceita pela metade.\n\nO que a decisão traz de novo, e não é pouco: o P4 deixa de ser um processo que só conversa com a nossa própria base. Até agora eram 9 passos “só a nossa casa”, e é por isso que ele parecia quase resolvido — não havia terceiro pra falhar. Com o gateway entra tudo o que vem junto: retorno assíncrono, tentativa que expira, cobrança que confirma horas depois.\n\nOs três: (a) PAGA NA HORA — 🔴 porque o gateway não está escolhido, e agora isso é bloqueante: sem ele, serviço acima de R$ 50 não começa. (b) CONFIRMOU? — a trava que você pediu precisa de um ponto onde o pedido ESPERA; sem ele, “pagou” vira suposição do passo anterior, e pagamento é o que mais falha em silêncio, porque o dinheiro confirma depois e por outro canal. Carrega a pergunta que decide arquitetura: vale a autorização do cartão ou a liquidação? (c) FICA AGUARDANDO — o “não pagou” acontece com ou sem desenho, alguém vai abandonar a tela; sem este nó o pedido vira lixo invisível, nem cobrado nem cancelado nem visível. E ele NÃO entra na fila de execução, que é o que o separa do P4.8, onde o trabalho já começou e por isso não dá mais pra remover. Fica 🟡 porque o prazo de validade esbarra na 6.4: preço travado na data do pedido, então pedido que espera pra sempre é preço que nunca reajusta.",
       "depende": [
-        "S3"
+        "S4"
       ],
       "cor": "#D64A2D",
       "tons": {
@@ -487,7 +517,7 @@
       "propostaId": "S10",
       "porque": "É a sua decisão virando processo. 🔄 Os três passos vêm numa PROPOSTA SÓ, e isso mudou hoje: eram S10, S11 e S12 separados, e o simulador mostrou que aceitar o “paga na hora” sem o “confirmou?” deixava um beco — paga e nada acontece. Ramo de pagamento não se aceita pela metade.\n\nO que a decisão traz de novo, e não é pouco: o P4 deixa de ser um processo que só conversa com a nossa própria base. Até agora eram 9 passos “só a nossa casa”, e é por isso que ele parecia quase resolvido — não havia terceiro pra falhar. Com o gateway entra tudo o que vem junto: retorno assíncrono, tentativa que expira, cobrança que confirma horas depois.\n\nOs três: (a) PAGA NA HORA — 🔴 porque o gateway não está escolhido, e agora isso é bloqueante: sem ele, serviço acima de R$ 50 não começa. (b) CONFIRMOU? — a trava que você pediu precisa de um ponto onde o pedido ESPERA; sem ele, “pagou” vira suposição do passo anterior, e pagamento é o que mais falha em silêncio, porque o dinheiro confirma depois e por outro canal. Carrega a pergunta que decide arquitetura: vale a autorização do cartão ou a liquidação? (c) FICA AGUARDANDO — o “não pagou” acontece com ou sem desenho, alguém vai abandonar a tela; sem este nó o pedido vira lixo invisível, nem cobrado nem cancelado nem visível. E ele NÃO entra na fila de execução, que é o que o separa do P4.8, onde o trabalho já começou e por isso não dá mais pra remover. Fica 🟡 porque o prazo de validade esbarra na 6.4: preço travado na data do pedido, então pedido que espera pra sempre é preço que nunca reajusta.",
       "depende": [
-        "S3"
+        "S4"
       ],
       "cor": "#D64A2D",
       "tons": {
@@ -512,7 +542,7 @@
       "propostaId": "S10",
       "porque": "É a sua decisão virando processo. 🔄 Os três passos vêm numa PROPOSTA SÓ, e isso mudou hoje: eram S10, S11 e S12 separados, e o simulador mostrou que aceitar o “paga na hora” sem o “confirmou?” deixava um beco — paga e nada acontece. Ramo de pagamento não se aceita pela metade.\n\nO que a decisão traz de novo, e não é pouco: o P4 deixa de ser um processo que só conversa com a nossa própria base. Até agora eram 9 passos “só a nossa casa”, e é por isso que ele parecia quase resolvido — não havia terceiro pra falhar. Com o gateway entra tudo o que vem junto: retorno assíncrono, tentativa que expira, cobrança que confirma horas depois.\n\nOs três: (a) PAGA NA HORA — 🔴 porque o gateway não está escolhido, e agora isso é bloqueante: sem ele, serviço acima de R$ 50 não começa. (b) CONFIRMOU? — a trava que você pediu precisa de um ponto onde o pedido ESPERA; sem ele, “pagou” vira suposição do passo anterior, e pagamento é o que mais falha em silêncio, porque o dinheiro confirma depois e por outro canal. Carrega a pergunta que decide arquitetura: vale a autorização do cartão ou a liquidação? (c) FICA AGUARDANDO — o “não pagou” acontece com ou sem desenho, alguém vai abandonar a tela; sem este nó o pedido vira lixo invisível, nem cobrado nem cancelado nem visível. E ele NÃO entra na fila de execução, que é o que o separa do P4.8, onde o trabalho já começou e por isso não dá mais pra remover. Fica 🟡 porque o prazo de validade esbarra na 6.4: preço travado na data do pedido, então pedido que espera pra sempre é preço que nunca reajusta.",
       "depende": [
-        "S3"
+        "S4"
       ],
       "cor": "#D6A400",
       "tons": {
@@ -533,19 +563,22 @@
       "de": "P4.2",
       "para": "P4.3",
       "label": "",
-      "tracejado": false
+      "tracejado": false,
+      "substituidaPor": "S4"
     },
     {
       "de": "P4.3",
       "para": "P4.4",
       "label": "acima de R$ 50",
-      "tracejado": false
+      "tracejado": false,
+      "substituidaPor": "S4"
     },
     {
       "de": "P4.3",
       "para": "P4.5",
       "label": "até R$ 50",
-      "tracejado": false
+      "tracejado": false,
+      "substituidaPor": "S4"
     },
     {
       "de": "P4.4",
@@ -559,8 +592,7 @@
       "para": "P4.6",
       "label": "",
       "tracejado": false,
-      "rotuloNovo": "até R$ 50 · vai pra fatura",
-      "rotuladaPor": "S3"
+      "substituidaPor": "S4"
     },
     {
       "de": "P4.6",
@@ -603,7 +635,21 @@
       "substituidaPor": "S9"
     },
     {
-      "de": "P4.4",
+      "de": "P4.5",
+      "para": "P4.3",
+      "label": "",
+      "tracejado": false,
+      "proposta": "S4"
+    },
+    {
+      "de": "P4.3",
+      "para": "P4.6",
+      "label": "até R$ 50 · vai pra fatura",
+      "tracejado": false,
+      "proposta": "S4"
+    },
+    {
+      "de": "P4.2",
       "para": "S5",
       "label": "",
       "tracejado": false,
@@ -631,7 +677,7 @@
       "proposta": "S9"
     },
     {
-      "de": "P4.5",
+      "de": "P4.3",
       "para": "S10a",
       "label": "acima de R$ 50 · paga agora",
       "tracejado": false,

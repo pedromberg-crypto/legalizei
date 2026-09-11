@@ -26,17 +26,28 @@
  *
  * ── COMO SE ESCREVE UMA PROPOSTA ───────────────────────────────────────────
  *
- * Três tipos, e o tipo diz onde ela aparece no board:
+ * 🔴 UMA PROPOSTA É UM PATCH, não um tipo (refeito em 11/09).
  *
- *   tipo: "passo"  → cartão novo, cinza, no lugar onde ele entraria.
- *                    Traz os campos de um passo normal + `arestas` dizendo
- *                    de onde ele vem e pra onde vai (sem isso ele flutua).
- *   tipo: "aresta" → ramificação nova entre dois passos que já existem.
- *   tipo: "campo"  → mudança num campo de um passo existente. NÃO aparece no
- *                    cartão (altura é fixa, §5.1): aparece no painel lateral,
- *                    e o cartão ganha um selo discreto de "tem sugestão".
+ * Ela nasceu com UM tipo por proposta — "passo", "aresta", "campo" ou
+ * "remover". Aí o Pedro pediu uma mudança que era as quatro coisas ao mesmo
+ * tempo: completar uma tela, criar um passo, tirar outro e religar o desenho.
+ * Com tipo único isso vira quatro propostas, e aceitar três delas quebra o
+ * processo — exatamente o que a §6.4 acabou de proibir. Então uma proposta
+ * carrega as partes que precisar:
  *
- * Campos obrigatórios em qualquer uma:
+ *   passos    · cartões novos (cada um com `id` "S<n>" ou "S<n><letra>")
+ *   mudancas  · [{ passo, campo, valor }] em passos que já existem. NÃO
+ *               aparecem no cartão (altura é fixa, §5.1): vão pro painel
+ *               lateral, e o cartão ganha um selo de "tem sugestão"
+ *   remove    · ids de passos que saem do processo
+ *   arestas   · ligações novas, com `label` quando houver condição
+ *   substitui · ligações que morrem quando a proposta é aceita
+ *   rotula    · [{ de, para, label }] pra aresta que só troca de NOME.
+ *               🔴 Nunca escrever renomeação como substitui + arestas com as
+ *               mesmas pontas: é ambíguo por construção, e em 11/09 desenhou
+ *               linha duplicada no board e apagou as duas no simulador
+ *
+ * Obrigatórios:
  *   id     · "S<n>", único e ESTÁVEL. É por ele que a decisão fica gravada:
  *            reusar um id descartado ressuscita um "não" do Pedro.
  *   porque · o raciocínio, em português. É o que ele lê pra decidir.
@@ -45,6 +56,11 @@
  *   depende · ids de outras propostas que precisam existir pra esta fazer
  *             sentido. Serve pra eu avisar o que ficou solto quando ele
  *             descarta uma da cadeia — aviso factual, não argumento.
+ *
+ * 🔴 O TAMANHO CERTO DE UMA PROPOSTA é a mudança que deixa o grafo VÁLIDO
+ * quando aceita sozinha. Nem maior (o Pedro perde granularidade), nem menor
+ * (ele aceita um pedaço e fica com um beco). Quem confere é o simulador de
+ * caminhos do `gerar-processos.mjs` — não a minha impressão.
  *
  * ⚠️ Descarte NÃO é contrariedade. Ele descartar é dado novo: quer dizer que
  * vai trabalhar melhor em cima, e a justificativa vem no chat. Se o descarte
@@ -78,21 +94,21 @@ export const PROPOSTAS = [
    * ═══════════════════════════════════════════════════════════════════════ */
   {
     id: "S1",
-    tipo: "campo",
-    passo: "P4.5",
     titulo: "O preço congela no pedido, e a 6.4 já diz isso",
     mudancas: [
       {
+        passo: "P4.5",
         campo: "faz",
         valor:
           "Cria o pedido e congela o preço da tabela vigente NA DATA DO PEDIDO, guardando junto a versão da tabela que a pessoa viu. Reajuste posterior não alcança o que já foi pedido.",
       },
       {
+        passo: "P4.5",
         campo: "fonte",
         valor:
           "Cláusula 6.4: aplica-se “a versão vigente na data da contratação de cada serviço, que ficará registrada na Plataforma”. A 6.3 reforça, exigindo exibição prévia do preço.",
       },
-      { campo: "luz", valor: "verde" },
+      { passo: "P4.5", campo: "luz", valor: "verde" },
     ],
     porque:
       "A dúvida era “congela no pedido ou no fechamento?”. A 6.4 responde sem margem: vale a tabela da DATA DA CONTRATAÇÃO, e ela fica registrada na Plataforma. Não é interpretação — é o texto. O passo estava amarelo porque foi desenhado antes de alguém cruzar com o contrato, não porque falte decisão. Aceitar isto também cria uma obrigação técnica que hoje não está declarada: guardar a VERSÃO da tabela junto do pedido, não só o número do preço. Sem a versão, “a tabela que ele viu” não é provável depois.",
@@ -103,30 +119,32 @@ export const PROPOSTAS = [
    * ═══════════════════════════════════════════════════════════════════════ */
   {
     id: "S2",
-    tipo: "campo",
-    passo: "P4.11",
     titulo: "O ciclo é o ANIVERSÁRIO do contrato, não uma data fixa do mês",
     mudancas: [
       {
+        passo: "P4.11",
         campo: "titulo",
         valor: "O ciclo vira e a fatura soma tudo",
       },
       {
+        passo: "P4.11",
         campo: "faz",
         valor:
           "No dia do aniversário do contrato, fecha a janela de itens do ciclo que terminou e emite a fatura. Assinou dia 8, o ciclo vira todo dia 8.",
       },
       {
+        passo: "P4.11",
         campo: "ve",
         valor:
           "A fatura muda de “Próxima fatura” para “Fatura de <ciclo>” e para de aceitar item novo. A data do próximo fechamento aparece o tempo todo.",
       },
       {
+        passo: "P4.11",
         campo: "fonte",
         valor:
           "Decisão do Pedro em 11/09: cobrança por aniversário, no dia em que o cliente fechou, no mês seguinte, como o padrão de mercado de assinatura. 🔴 Contradiz a cláusula 3.4 da minuta, que fixa o pagamento “até o 15º dia de cada mês”.",
       },
-      { campo: "luz", valor: "verde" },
+      { passo: "P4.11", campo: "luz", valor: "verde" },
     ],
     porque:
       "🔄 REESCRITO em 11/09. A versão anterior propunha data fixa (fecha no último dia do mês, vence dia 15) e o Pedro travou o contrário: o ciclo é o aniversário do contrato. Ele está certo, e o motivo é operacional: com data fixa, quem assina dia 28 paga um mês cheio por três dias de serviço, ou a gente inventa cálculo proporcional — que é trabalho a mais pra resolver um problema criado pela própria régua. Por aniversário, todo cliente recebe 30 dias pelo preço de 30 dias, e a oferta de lançamento da 3.6 (“3 primeiras competências contadas da ativação”) passa a bater exatamente com o ciclo, sem tradução. O que continua valendo do desenho anterior é a descoberta que destrava o processo: a fatura carrega DUAS temporalidades — a mensalidade do ciclo que começa (antecipada) e os avulsos do ciclo que terminou (vencidos). Só que agora o corte é o aniversário, não a virada do mês. 🔴 A 3.4 precisa mudar, e a minuta está com a advogada desde 10/09.",
@@ -137,33 +155,30 @@ export const PROPOSTAS = [
    * ═══════════════════════════════════════════════════════════════════════ */
   {
     id: "S3",
-    tipo: "campo",
-    passo: "P4.6",
     titulo: "P4.6 deixa de ser decisão e vira passo, só no ramo de até R$ 50",
     mudancas: [
-      { campo: "titulo", valor: "Acha ou abre a fatura do próximo ciclo" },
+      { passo: "P4.6", campo: "titulo", valor: "Acha ou abre a fatura do próximo ciclo" },
       {
+        passo: "P4.6",
         campo: "faz",
         valor:
           "Procura a fatura do próximo ciclo. Se ela ainda não existir, abre uma, e é nela que o item entra.",
       },
-      { campo: "forma", valor: "passo" },
+      { passo: "P4.6", campo: "forma", valor: "passo" },
       {
+        passo: "P4.6",
         campo: "fonte",
         valor:
           "Cláusula 6.3 e Anexo A-I.1: item de até R$ 50 é lançado na fatura da competência seguinte. Com o ciclo por aniversário (S2), qual fatura recebe o item deixa de ser pergunta e vira consequência.",
       },
-      { campo: "luz", valor: "verde" },
+      { passo: "P4.6", campo: "luz", valor: "verde" },
     ],
     // só a “já fechou · ❓” morre de fato: ela era o buraco que o S2 fechou
     substitui: [{ de: "P4.6", para: "P4.11" }],
     // 🔴 as outras duas NÃO trocam, só mudam de nome. Quando eu escrevi isso
     // como apagar-e-recriar, o board desenhou linha duplicada e o simulador
     // apagou as duas pontas. Renomear é primitivo próprio.
-    rotula: [
-      { de: "P4.5", para: "P4.6", label: "até R$ 50 · vai pra fatura" },
-      { de: "P4.6", para: "P4.7", label: "" },
-    ],
+    rotula: [{ de: "P4.6", para: "P4.7", label: "" }],
     depende: ["S2"],
     porque:
       "🔄 REESCRITO TRÊS VEZES em 11/09, e cada vez por uma correção do Pedro. (1ª) Eu virava o P4.6 em “o item passa de R$ 50?” — que é literalmente o P4.3, já existente: a mesma decisão duas vezes no mesmo caminho. (2ª) Virava no desvio do pagamento, e o Pedro mostrou que o desvio pode sair direto do P4.5, sem nó no meio — e ele tem o precedente a favor: o P4.8 já é um passo comum com TRÊS saídas rotuladas. (3ª) Eu então propus REMOVER o nó, e o Pedro perguntou se ele não continuava vivo para os serviços de até R$ 50. Continua. 🔑 O que morre aqui é a PERGUNTA (“existe fatura aberta?”), que o S2 tornou determinística. O TRABALHO não morre: alguém tem que achar a fatura do próximo ciclo e, se ela ainda não existir, abrir. Isso acontece no primeiro mês do cliente e em todo pedido feito logo depois de um fechamento. Remover o nó teria jogado esses dois casos pra debaixo do tapete do P4.7, que diz “soma à fatura” sem dizer a qual nem o que fazer quando não há nenhuma. Por isso ele é rebaixado, não removido: vira passo, no ramo de até R$ 50, e as três arestas velhas são refeitas com os rótulos certos (S13 e S14).",
@@ -174,30 +189,49 @@ export const PROPOSTAS = [
    * ═══════════════════════════════════════════════════════════════════════ */
   {
     id: "S4",
-    tipo: "campo",
-    passo: "P4.4",
-    titulo: "A tela de aceite: preço, momento da cobrança e o texto aceito",
+    titulo: "O aceite é a sheet que já existe, e vale nos DOIS caminhos",
     mudancas: [
       {
-        campo: "ve",
-        valor:
-          "Tela de aceite com quatro coisas na mesma vista: o preço, a data exata em que vai ser cobrado (“entra na fatura que fecha em 08/10”), o prazo estimado de entrega, e o texto do que está sendo contratado. Botão “Aceitar e contratar”, sem pré-marcação.",
+        passo: "P4.2",
+        campo: "titulo",
+        valor: "Aceita o serviço, na sheet",
       },
       {
+        passo: "P4.2",
         campo: "faz",
         valor:
-          "Mostra preço, momento da cobrança e prazo ANTES do aceite, e só cria o pedido depois do toque explícito.",
+          "Mostra preço, o que a pessoa recebe, o prazo estimado e quando vai ser cobrado (“entra na fatura de 05/08” ou “paga agora”), e só então libera o botão. O toque no botão É o aceite.",
       },
       {
+        passo: "P4.2",
+        campo: "ve",
+        valor:
+          "A sheet de detalhe do serviço, com valor, a linha do momento da cobrança e “Solicitar serviço”. Falta ali o prazo estimado e o texto do que está sendo contratado.",
+      },
+      {
+        passo: "P4.2",
         campo: "fonte",
         valor:
-          "Cláusula 6.3: acima de R$ 50 “exige aceite específico do Cliente no ato, com exibição prévia do preço e do momento da cobrança”. Cláusula 6.1 acrescenta o prazo estimado. Cláusula 1.6: a confirmação na Plataforma integra o contrato.",
+          "Cláusula 6.3 (preço e momento da cobrança exibidos antes, aceite no ato), 6.1 (prazo estimado) e 1.6 (a confirmação na Plataforma integra o contrato). Decisão do Pedro em 11/09: a sheet que já existe é o nosso aceite, e o aceite vale para qualquer valor.",
       },
-      { campo: "luz", valor: "verde" },
+    ],
+    // o P4.4 era a mesma tela, descrita duas vezes no mesmo processo
+    remove: ["P4.4"],
+    substitui: [
+      { de: "P4.3", para: "P4.4" },
+      { de: "P4.3", para: "P4.5" },
+      { de: "P4.2", para: "P4.3" },
+      { de: "P4.5", para: "P4.6" },
+    ],
+    // a régua do valor desce pra DEPOIS do pedido, que é onde os caminhos
+    // divergem de verdade: gateway de um lado, fatura do outro
+    arestas: [
+      { de: "P4.5", para: "P4.3" },
+      { de: "P4.3", para: "P4.6", label: "até R$ 50 · vai pra fatura" },
     ],
     depende: ["S5"],
     porque:
-      "A 6.3 não pede “uma confirmação”: pede preço E momento da cobrança exibidos ANTES, e aceite específico no ato. Hoje não existe tela nenhuma — é a única obrigação do nosso próprio contrato que o app não cumpre em lugar algum. Repare que “o momento da cobrança” só é exibível depois do S2: sem saber quando a fatura fecha, não dá pra escrever “vence 15/10” na tela. E isto NÃO é o mesmo double-check do P4.2: lá a segunda confirmação é cortesia, aqui é requisito contratual com efeito jurídico (1.6).",
+      "🔄 REESCRITO em 11/09, e mudou de natureza duas vezes na mesma conversa. O Pedro pediu para DUPLICAR o aceite e o comprovante no ramo de até R$ 50 (“a única coisa que muda é como será cobrado”). Duplicar seria criar duas cópias do mesmo passo, e a §5.1 já diz o que acontece: duas cópias do mesmo fato divergem — daqui a um mês alguém corrige o texto do aceite num ramo só. Se vale nos dois, o lugar dele é ANTES da bifurcação.\n\nE aí ele mandou o print da sheet que já existe, e ela resolve sozinha: o P4.2 JÁ está antes do P4.3, JÁ mostra o preço e JÁ escreve o momento da cobrança (“Sem cobrança agora — entra na fatura de 05/08”). Ou seja, o aceite que a 6.3 exige não é uma tela a construir: é uma tela a COMPLETAR, e ela já vale nos dois caminhos por estar onde está. O P4.4 descrevia essa mesma tela uma segunda vez, e some.\n\n🔑 Falta pouco pra ela cumprir a cláusula: o prazo estimado (6.1) e o texto do que está sendo contratado. E o comprovante, que é o S5.\n\n⚠️ Duas coisas honestas. (1) Abaixo de R$ 50 o contrato NÃO exige aceite formal — fazer assim é decisão nossa, acima do piso da 6.3, e eu concordo: a régua de R$ 50 é de cobrança, não de consentimento. (2) A régua do valor (P4.3) desce pra depois do P4.5, porque é ali que os caminhos divergem de fato; antes disso os dois fazem a mesma coisa, e decisão que não separa nada é decisão no lugar errado.",
   },
 
   /* ═══════════════════════════════════════════════════════════════════════
@@ -205,7 +239,6 @@ export const PROPOSTAS = [
    * ═══════════════════════════════════════════════════════════════════════ */
   {
     id: "S5",
-    tipo: "passo",
     passos: [{
       id: "S5",
       processo: "P4",
@@ -220,7 +253,7 @@ export const PROPOSTAS = [
         "Cláusula 6.4 (“que ficará registrada na Plataforma”), 1.6 (a confirmação integra o contrato) e 16.9 (registro de data e hora do aceite).",
     }],
     arestas: [
-      { de: "P4.4", para: "S5" },
+      { de: "P4.2", para: "S5" },
       { de: "S5", para: "P4.5" },
     ],
     // 🔑 entrar NO MEIO de um caminho não é só somar dois fios: o fio velho
@@ -236,31 +269,33 @@ export const PROPOSTAS = [
    * ═══════════════════════════════════════════════════════════════════════ */
   {
     id: "S6",
-    tipo: "campo",
-    passo: "P4.9",
     titulo: "Não entregue: quem deu causa decide quem paga",
     mudancas: [
-      { campo: "titulo", valor: "O serviço não pôde ser entregue" },
+      { passo: "P4.9", campo: "titulo", valor: "O serviço não pôde ser entregue" },
       {
+        passo: "P4.9",
         campo: "faz",
         valor:
           "Separa por causa. Falha nossa ou do órgão: tira o item da fatura se ela ainda não fechou, e devolve como crédito na competência seguinte se já foi cobrado. Falta de documento do cliente: mantém a cobrança, porque o trabalho foi feito. Taxa pública já retida pelo órgão não volta, e o comprovante fica na Plataforma.",
       },
       {
+        passo: "P4.9",
         campo: "ve",
         valor:
           "Aviso no item dizendo por que não deu, o que acontece com o valor, e o crédito aparecendo na próxima fatura quando for o caso.",
       },
       {
+        passo: "P4.9",
         campo: "fala",
         valor: "só a nossa casa",
       },
       {
+        passo: "P4.9",
         campo: "fonte",
         valor:
           "Espelha a cláusula 9.5 (não realizado o ato, o valor volta, salvo taxa já retida pelo órgão) e a 1.4 (a Legalizai não responde por documentação não apresentada pelo Cliente). Regra nova: a 9.5 trata de taxa pública, não de serviço adicional.",
       },
-      { campo: "luz", valor: "amarelo" },
+      { passo: "P4.9", campo: "luz", valor: "amarelo" },
     ],
     porque:
       "A minuta não trata disso para serviço adicional, mas trata para taxa pública, e o princípio da 9.5 é limpo: o que não foi realizado volta, salvo o que o órgão reteve. Estendo isso ao avulso, com um corte que a 1.4 já autoriza: se a entrega não saiu porque o cliente não mandou documento, o trabalho foi feito e a cobrança fica de pé. Deixo em 🟡 de propósito, não em 🟢 — é analogia minha entre cláusulas, não texto expresso, e a diferença importa: quem ratifica é o Mauro ou a advogada. ⚠️ Se aceitar, isto vira cláusula na minuta, não só passo no board.",
@@ -271,27 +306,28 @@ export const PROPOSTAS = [
    * ═══════════════════════════════════════════════════════════════════════ */
   {
     id: "S7",
-    tipo: "campo",
-    passo: "P4.10",
     titulo: "Cancelou com avulso em andamento: entrega e cobra, pela 12.6",
     mudancas: [
-      { campo: "titulo", valor: "Cancelamento com avulso em andamento" },
+      { passo: "P4.10", campo: "titulo", valor: "Cancelamento com avulso em andamento" },
       {
+        passo: "P4.10",
         campo: "faz",
         valor:
           "O contrato segue vivo nos 30 dias de aviso prévio. O avulso continua e é entregue dentro desse prazo, e entra na fatura final, que tem que ser quitada até a data do encerramento.",
       },
       {
+        passo: "P4.10",
         campo: "ve",
         valor:
           "Na tela de cancelamento, a lista do que continua em andamento e o valor que vai na fatura final, antes de confirmar.",
       },
       {
+        passo: "P4.10",
         campo: "fonte",
         valor:
           "Cláusula 12.6: “o Cliente deverá quitar todos os valores em aberto até a data fixada para o encerramento, incluindo faturas de serviços adicionais”. Cláusula 12.1: aviso prévio de 30 dias.",
       },
-      { campo: "luz", valor: "verde" },
+      { passo: "P4.10", campo: "luz", valor: "verde" },
     ],
     depende: ["S6"],
     porque:
@@ -303,7 +339,6 @@ export const PROPOSTAS = [
    * ═══════════════════════════════════════════════════════════════════════ */
   {
     id: "S9",
-    tipo: "passo",
     passos: [{
       id: "S9",
       processo: "P4",
@@ -340,7 +375,6 @@ export const PROPOSTAS = [
    * ═══════════════════════════════════════════════════════════════════════ */
   {
     id: "S10",
-    tipo: "passo",
     passos: [{
       id: "S10a",
       processo: "P4",
@@ -389,13 +423,13 @@ export const PROPOSTAS = [
     // régua já foi aplicada no P4.3, e repetir a pergunta num nó de decisão
     // seria decidir duas vezes a mesma coisa.
     arestas: [
-      { de: "P4.5", para: "S10a", label: "acima de R$ 50 · paga agora" },
+      { de: "P4.3", para: "S10a", label: "acima de R$ 50 · paga agora" },
       { de: "S10a", para: "S10b" },
       { de: "S10b", para: "P4.8", label: "pago" },
       { de: "S10b", para: "S10c", label: "não pagou" },
       { de: "S10c", para: "S10a", label: "tenta de novo" },
     ],
-    depende: ["S3"],
+    depende: ["S4"],
     porque:
       "É a sua decisão virando processo. 🔄 Os três passos vêm numa PROPOSTA SÓ, e isso mudou hoje: eram S10, S11 e S12 separados, e o simulador mostrou que aceitar o “paga na hora” sem o “confirmou?” deixava um beco — paga e nada acontece. Ramo de pagamento não se aceita pela metade.\n\nO que a decisão traz de novo, e não é pouco: o P4 deixa de ser um processo que só conversa com a nossa própria base. Até agora eram 9 passos “só a nossa casa”, e é por isso que ele parecia quase resolvido — não havia terceiro pra falhar. Com o gateway entra tudo o que vem junto: retorno assíncrono, tentativa que expira, cobrança que confirma horas depois.\n\nOs três: (a) PAGA NA HORA — 🔴 porque o gateway não está escolhido, e agora isso é bloqueante: sem ele, serviço acima de R$ 50 não começa. (b) CONFIRMOU? — a trava que você pediu precisa de um ponto onde o pedido ESPERA; sem ele, “pagou” vira suposição do passo anterior, e pagamento é o que mais falha em silêncio, porque o dinheiro confirma depois e por outro canal. Carrega a pergunta que decide arquitetura: vale a autorização do cartão ou a liquidação? (c) FICA AGUARDANDO — o “não pagou” acontece com ou sem desenho, alguém vai abandonar a tela; sem este nó o pedido vira lixo invisível, nem cobrado nem cancelado nem visível. E ele NÃO entra na fila de execução, que é o que o separa do P4.8, onde o trabalho já começou e por isso não dá mais pra remover. Fica 🟡 porque o prazo de validade esbarra na 6.4: preço travado na data do pedido, então pedido que espera pra sempre é preço que nunca reajusta.",
   },
@@ -405,10 +439,8 @@ export const PROPOSTAS = [
    * ═══════════════════════════════════════════════════════════════════════ */
   {
     id: "S8",
-    tipo: "aresta",
-    de: "P4.10",
-    para: "P4.9",
-    label: "não dá pra entregar no aviso prévio",
+    titulo: "A ponte do cancelamento pro “não entregue”",
+    arestas: [{ de: "P4.10", para: "P4.9", label: "não dá pra entregar no aviso prévio" }],
     depende: ["S6", "S7"],
     porque:
       "Hoje o P4.10 é uma ponta solta: o processo entra nele e não sai. Com o S7, o caso normal se resolve (entrega e cobra na fatura final), e sobra exatamente um caso — o serviço que não cabe nos 30 dias do aviso prévio. Esse não pede regra nova, pede ligação: é a mesma pergunta do S6, “quem deu causa?”. A ramificação existe pra que ninguém volte a tratar isso como buraco separado daqui a um mês.",

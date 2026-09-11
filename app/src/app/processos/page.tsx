@@ -384,8 +384,25 @@ export default function ProcessosPage() {
     };
 
     // 🔴 a MESMA função que o cartão usa pra desenhar. Ver `layoutFaixa`.
+    /**
+     * 🔴 A LISTA PLANA PASSA A SEGUIR A ORDEM DOS GRUPOS.
+     *
+     * 🐛 11/09, achado do Pedro: no P4.8, a linha do "correu bem" da trilha
+     * paga chegava no cartão do "cancelou o plano". Não era o desenho, era a
+     * ligação: o id da bolinha (`saida-N`) nascia do índice na lista PLANA,
+     * ordenada por altura do destino, e era consumido pelo cartão, que caminha
+     * em ordem de GRUPO. Enquanto as duas ordens coincidiram, funcionou; quando
+     * o dagre pôs um destino da trilha paga acima de um da fatura, o N passou a
+     * apontar pra linha errada.
+     *
+     * A correção é tirar a possibilidade de divergirem: a lista plana é
+     * reescrita como a concatenação dos grupos. Uma ordem só, as duas leituras.
+     */
+    const grupos = new Map<string, ReturnType<typeof gruposDe>>();
+    for (const id of saidas.keys()) grupos.set(id, gruposDe(id));
+
     const altura = (id: string) =>
-      layoutFaixa(gruposDe(id).map((g) => ({ comCabeca: g.comCabeca, n: g.itens.length }))).altura;
+      layoutFaixa((grupos.get(id) ?? []).map((g) => ({ comCabeca: g.comCabeca, n: g.itens.length }))).altura;
 
     passos.forEach((p) => g.setNode(p.id, { width: PASSO_W, height: altura(p.id) }));
     arestas.forEach((a) => g.setEdge(a.de, a.para));
@@ -406,14 +423,25 @@ export default function ProcessosPage() {
      * `dagre.layout`, e o dagre precisa das alturas, que dependem de QUANTAS
      * saídas cada passo tem. A contagem vem antes, a ordem vem depois.
      */
-    for (const lista of saidas.values()) {
-      lista.sort((a, b) => {
-        const pa = g.node(a.para);
-        const pb = g.node(b.para);
-        if (!pa || !pb) return 0;
-        // no board deitado o que separa os destinos é o Y; em pé, o X
-        return ori === "LR" ? pa.y - pb.y : pa.x - pb.x;
-      });
+    const porPosicao = (a: { para: string }, b: { para: string }) => {
+      const pa = g.node(a.para);
+      const pb = g.node(b.para);
+      if (!pa || !pb) return 0;
+      // no board deitado o que separa os destinos é o Y; em pé, o X
+      return ori === "LR" ? pa.y - pb.y : pa.x - pb.x;
+    };
+
+    for (const [id, gs] of grupos) {
+      // ordena DENTRO do grupo: cruzar linha só importa entre vizinhos, e o
+      // bloco de trilha não se desfaz pra acomodar a posição de um destino
+      for (const gr of gs) gr.itens.sort(porPosicao);
+      /**
+       * 🔴 e a lista plana vira a concatenação dos grupos, na mesma ordem em
+       * que o cartão desenha. É o que impede o `saida-N` de apontar pra linha
+       * errada — o bug que o Pedro achou no P4.8, onde o "correu bem" da
+       * trilha paga chegava no cartão do "cancelou o plano".
+       */
+      saidas.set(id, gs.flatMap((gr) => gr.itens));
     }
 
     /**
@@ -464,7 +492,7 @@ export default function ProcessosPage() {
           apagado: Boolean(aceso) && !aceso!.nos.has(p.id),
           ramoAceso: ramo && ramo.de === p.id ? ramo : null,
           onRamo: acenderRamo,
-          grupos: gruposDe(p.id),
+          grupos: grupos.get(p.id) ?? [],
           trilhas: grafo.trilhas as { id: string; nome: string; curto: string; cor: string }[],
           onDecidir: decidir,
           gravando: gravando === p.id,

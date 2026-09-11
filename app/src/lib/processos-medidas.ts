@@ -68,15 +68,34 @@ export const RESPIRO_ARESTA = 34;
  * 11/09 (altura em dois lugares, cartões sobrepostos): a regra não é "altura
  * fixa", é "UM número, em um lugar".
  */
-export const LINHA_SAIDA = 26;
-export const FAIXA_PADDING = 10;
+/**
+ * A faixa é uma pilha de FATIAS de altura igual. O CTA não preenche a fatia
+ * inteira: sobra `FOLGA_CTA` em cima e embaixo, e é essa sobra que vira o
+ * respiro entre um CTA e o outro. Assim a bolinha continua no centro exato da
+ * fatia — se o respiro fosse `gap` do flex, a conta do centro mudaria e a
+ * bolinha sairia do lugar.
+ */
+export const LINHA_SAIDA = 36;
+export const ALTURA_CTA = 28;
+export const FOLGA_CTA = (LINHA_SAIDA - ALTURA_CTA) / 2;
+
+/** Respiro entre a borda de cima da faixa e o primeiro CTA. */
+export const FAIXA_TOPO = 12;
+/** Respiro embaixo do último CTA. */
+export const FAIXA_PADDING = 12;
 
 /** A faixa só existe quando o passo bifurca: uma saída não precisa de escolha. */
 export function alturaDo(nSaidas: number) {
-  return nSaidas > 1 ? PASSO_H + FAIXA_PADDING + nSaidas * LINHA_SAIDA : PASSO_H;
+  if (nSaidas < 2) return PASSO_H;
+  return PASSO_H + FAIXA_TOPO + nSaidas * LINHA_SAIDA + FAIXA_PADDING;
 }
 
-/** Onde fica o centro da bolinha da saída `i`, medido do topo do cartão. */
-export function topoDaSaida(i: number, nSaidas: number) {
-  return alturaDo(nSaidas) - FAIXA_PADDING - (nSaidas - i) * LINHA_SAIDA + LINHA_SAIDA / 2;
+/**
+ * Onde fica o centro da bolinha da saída `i`, medido do topo do cartão.
+ * Escrito somando de cima pra baixo, na mesma ordem em que a faixa é
+ * desenhada — a versão anterior subtraía da altura total, e conferir se ela
+ * batia com o CSS exigia refazer a conta ao contrário.
+ */
+export function topoDaSaida(i: number) {
+  return PASSO_H + FAIXA_TOPO + i * LINHA_SAIDA + LINHA_SAIDA / 2;
 }

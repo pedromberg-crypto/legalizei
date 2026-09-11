@@ -1,7 +1,15 @@
 "use client";
 
 import { Handle, Position, type NodeProps } from "@xyflow/react";
-import { PASSO_W, alturaDo, topoDaSaida, LINHA_SAIDA, FAIXA_PADDING } from "@/lib/processos-medidas";
+import {
+  PASSO_W,
+  alturaDo,
+  topoDaSaida,
+  LINHA_SAIDA,
+  ALTURA_CTA,
+  FAIXA_TOPO,
+  FAIXA_PADDING,
+} from "@/lib/processos-medidas";
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -304,7 +312,7 @@ export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
              tipo de divergência que empilhou os cartões em 11/09, só que
              pequena o bastante pra passar despercebida. */
           style={{
-            paddingTop: 0,
+            paddingTop: FAIXA_TOPO,
             paddingBottom: FAIXA_PADDING,
             background: sugerido ? "#f6f6f7" : "#ffffff90",
           }}
@@ -313,10 +321,14 @@ export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
             <div
               key={`${s.para}-${s.label}-${i}`}
               className="flex items-center gap-1.5"
+              /* fatia de altura fixa: o CTA fica centrado nela e a sobra vira
+                 o respiro entre um e outro. A bolinha mira o centro da FATIA
+                 (`topoDaSaida`), então gap de flex aqui desalinharia. */
               style={{ height: LINHA_SAIDA }}
             >
               <span
-                className="min-w-0 flex-1 truncate rounded-md border border-zinc-200 bg-white px-1.5 py-[3px] text-[10px] font-bold text-zinc-700"
+                className="flex min-w-0 flex-1 items-center truncate rounded-lg border border-zinc-200 bg-white px-2 text-[10px] font-bold text-zinc-700"
+                style={{ height: ALTURA_CTA }}
                 title={s.label}
               >
                 {s.label}
@@ -331,7 +343,7 @@ export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
                    de 11/09 que empilhou os cartões. */
                 style={
                   lr
-                    ? { top: topoDaSaida(i, data.saidas!.length), background: "#71717a", width: 9, height: 9, border: "2px solid #fff" }
+                    ? { top: topoDaSaida(i), background: "#71717a", width: 9, height: 9, border: "2px solid #fff" }
                     : { left: `${((i + 0.5) / data.saidas!.length) * 100}%`, background: "#71717a", width: 9, height: 9, border: "2px solid #fff" }
                 }
               />

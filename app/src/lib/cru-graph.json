@@ -57,10 +57,10 @@
         "N44"
       ],
       "contagem": {
-        "nos": 51,
-        "variaveis": 24,
+        "nos": 55,
+        "variaveis": 27,
         "fins": 15,
-        "fronteiras": 10
+        "fronteiras": 11
       }
     }
   ],
@@ -136,11 +136,11 @@
       },
       {
         "id": "N5",
-        "o": "Confirma o cliente escolhido",
-        "variavel": "O cliente fica onde?",
+        "o": "Confirma onde o serviço foi prestado",
+        "variavel": "Em qual município o serviço foi prestado?",
         "saidas": [
           {
-            "se": "no mesmo município da empresa",
+            "se": "na cidade da empresa — já vem preenchido assim",
             "vai": "N6"
           },
           {
@@ -151,7 +151,8 @@
             "se": "fora do Brasil",
             "vai": "N8"
           }
-        ]
+        ],
+        "nota": "🔴 CORRIGIDO EM 12/09 — a pergunta anterior era “o cliente fica onde?”, e isso confunde DOMICÍLIO DO CLIENTE com LOCAL DA PRESTAÇÃO. Não é a mesma coisa: o imposto segue o local da prestação em boa parte das atividades, e só coincide com o endereço do cliente nos códigos de operação em que o local é o domicílio do adquirente — que é o nosso caso (100301), mas não o de todo mundo. 🔑 Vem PRÉ-PREENCHIDO com a cidade da empresa e só se altera quando o serviço saiu de casa. A ajuda condicional explica quando: “em certas atividades, como serviços que exigem a presença física do prestador, o imposto pertence à cidade onde o serviço foi de fato realizado, e não ao município onde a sua empresa está estabelecida”."
       },
       {
         "id": "N7",
@@ -250,7 +251,7 @@
             "vai": "N11"
           }
         ],
-        "nota": "Uma atividade pode cair em mais de um item da lista de serviço, e é o item que decide o imposto. Desempatar é escolha de negócio, não de código."
+        "nota": "Uma atividade pode cair em mais de um item da lista de serviço, e é o item que decide o imposto. Desempatar é escolha de negócio, não de código. 🔴 12/09 — A CASCATA É MAIOR DO QUE ESTE NÓ DIZ. No líder são CINCO campos encadeados: CNAE → Código Nacional → Código Municipal → NBS → IndOp. E o último **não se escolhe, se DERIVA**: a API recebe os dois códigos anteriores e devolve o indicador (`cindop?codigoNacionalItemServico=…&nbs=…`). No nosso caso voltou uma opção só — “No endereço do meu cliente ou online”, que é o `100301`. 🔑 O Código Municipal é o `cTribMun` que a PBH exige e o IndOp é o `cIndOp` da regra E0187. Decisão do Pedro em 12/09: manter assim no mapa, e **achar mais pra frente de onde conectamos os dados que derivam** — é trabalho da fase de conexão, não desta."
       },
       {
         "id": "N13",
@@ -261,29 +262,47 @@
       },
       {
         "id": "N11",
-        "o": "Informa o valor do serviço",
+        "o": "Informa o valor do serviço e o desconto, se houver",
         "saidas": [
           {
             "se": "",
+            "vai": "N57"
+          }
+        ],
+        "nota": "🆕 12/09 — o DESCONTO INCONDICIONADO faltava no mapa e não é detalhe: a ajuda do líder diz que ele “abate diretamente do valor da nota e REDUZ A BASE DE CÁLCULO DOS IMPOSTOS”. Ou seja, muda o imposto. Decisão do Pedro: o campo entra, e o valor tem que ficar GUARDADO — a guia do DAS é calculada sobre a base, não sobre o valor bruto. ↗ sai daqui pra impostos. ⚠️ Decidido em 12/09 NÃO fazer o cálculo do imposto ao vivo nesta fase: pede-se só o valor, igual ao líder. A prévia viva fica como feature."
+      },
+      {
+        "id": "N57",
+        "o": "Define a competência da nota",
+        "variavel": "A competência é a data de hoje?",
+        "saidas": [
+          {
+            "se": "sim, a nota vale para o mês em que está sendo emitida",
+            "vai": "N14"
+          },
+          {
+            "se": "não, o serviço é de competência anterior",
             "vai": "N14"
           }
-        ]
+        ],
+        "saiPara": "impostos · é a competência, não a descrição, que decide em qual apuração a receita entra",
+        "nota": "🔴 BURACO ACHADO EM 12/09, NA NOTA REAL QUE EMITIMOS. A nota saiu com `competencia: 12/09/2026` — a DATA DA EMISSÃO — enquanto a descrição dizia “referente ao serviço prestado no mês de agosto”. 🔑 O texto é decorativo: quem decide em qual apuração a receita entra é o CAMPO competência, e ele foi setembro. O DAS dessa nota vence em outubro, não em setembro. ⚠️ O líder NÃO deixa escolher a competência — usa a data de emissão e pronto. O leiaute nacional TEM o campo (`dCompet`), e a regra E0061 proíbe alterá-lo em substituição para optante do Simples, o que mostra que ele é fiscal de verdade. 🔴 PERGUNTA ABERTA, e é decisão de produto: a gente deixa a pessoa escolher a competência ou copia o líder e trava na data de emissão? Deixar escolher é mais correto e abre a porta pra erro; travar é simples e faz o texto “referente a agosto” mentir para sempre."
       },
       {
         "id": "N14",
         "o": "Resolve se alguém retém imposto na fonte",
-        "variavel": "O cliente retém algum imposto?",
+        "variavel": "Essa atividade está na lista de retenção do município?",
         "saidas": [
           {
-            "se": "não retém nada",
+            "se": "não está na lista",
             "vai": "N16"
           },
           {
-            "se": "retém, e o valor líquido muda",
+            "se": "está, e o cliente passa a ser o responsável pelo ISS",
             "vai": "N15"
           }
         ],
-        "nota": "Retenção muda o que CAI NA CONTA sem mudar o que foi faturado. Quem não entende isso acha que a nota saiu errada."
+        "nota": "🔴 CORRIGIDO EM 12/09 — antes a pergunta era “o cliente retém algum imposto?”, como se fosse escolha dele. NÃO É: a retenção é definida por LISTA FECHADA na lei municipal. Em BH são as atividades dos incisos I a XXV — obras de construção civil, demolição, limpeza, manutenção, conservação, varrição, diversão, lazer, entretenimento, guarda e estacionamento de veículos, entre outras. 🔑 Retenção muda o que CAI NA CONTA sem mudar o que foi faturado, e quem não entende isso acha que a nota saiu errada."
       },
       {
         "id": "N15",
@@ -351,18 +370,34 @@
         "saidas": [
           {
             "se": "sim, tudo pelo Simples",
-            "vai": "N18"
+            "vai": "N58"
           },
           {
             "se": "passou de um sublimite: o ISS sai pela regra do município",
-            "vai": "N18"
+            "vai": "N58"
           },
           {
             "se": "passou do limite: federais e ISS saem por fora do Simples",
-            "vai": "N18"
+            "vai": "N58"
           }
         ],
         "nota": "🔑 VARIÁVEL NOVA, achada em 12/09 no leiaute oficial, e ela não estava em lugar nenhum nosso. O optante ME/EPP declara EM CADA NOTA sob qual regime de apuração ela sai — é o campo `regApTribSN`, que existe justamente pra quem ultrapassou sublimite ou limite. Não é decorativo: muda duas outras regras. Quando a apuração é toda pelo Simples, o regime especial municipal tem que ser “Nenhum” (E0175) e NÃO se pode informar dedução nem redução de base, exceto numa lista fechada de subitens (E0398). ⚠️ Liga com o teto do N16: lá a gente avisa que o faturamento VAI estourar; aqui a nota já sai diferente porque estourou."
+      },
+      {
+        "id": "N58",
+        "o": "Oferece guardar essa combinação como padrão",
+        "variavel": "Guardar pra próxima?",
+        "saidas": [
+          {
+            "se": "guardar: da próxima vez já vem preenchido",
+            "vai": "N18"
+          },
+          {
+            "se": "não guardar: só vale pra esta nota",
+            "vai": "N18"
+          }
+        ],
+        "nota": "🆕 12/09 — o mapa ASSUMIA que existe “o serviço de sempre” (N6) sem ter o passo que cria isso. É a sequência salva, e é o que faz a segunda emissão durar segundos. 🔑 Decisão do Pedro: a gente já nasce melhor que o líder, porque na constituição temos o dossiê completo — então a sugestão vem PRÉ-PREENCHIDA e pertinente, com a pessoa podendo alterar. ⚠️ Ele nunca mexeu nesses campos na Contabilizei em nota nenhuma, o que confirma que pré-preencher certo resolve o caso comum. 🔍 A investigar: o líder cruza a sugestão com o CNAE principal e, provavelmente, com os secundários — mas isso é leitura nossa, não confirmada. Vale abrir antes de copiar a régua. ⚠️ O campo do IndOp NÃO pode ser salvo como favorito no líder, e é justamente o que decide onde o imposto é devido. Se a gente conseguir guardar, é vantagem direta."
       },
       {
         "id": "N18",
@@ -371,7 +406,7 @@
         "saidas": [
           {
             "se": "não falta nada",
-            "vai": "N21"
+            "vai": "N59"
           },
           {
             "se": "a empresa não está habilitada no sistema nacional",
@@ -416,6 +451,22 @@
         "nota": "🔑 Degradação é rotina, não exceção. O caminho alternativo entrega os dados já prontos pra copiar, não um pedido de desculpas. ↗ o que for emitido por fora volta pela entrada N30."
       },
       {
+        "id": "N59",
+        "o": "Pergunta se manda a nota direto pro cliente",
+        "variavel": "Envia cópia pro cliente?",
+        "saidas": [
+          {
+            "se": "sim, manda pro e-mail dele",
+            "vai": "N21"
+          },
+          {
+            "se": "não, eu mesmo mando depois",
+            "vai": "N21"
+          }
+        ],
+        "nota": "🆕 12/09 — no líder é um toggle na revisão, JÁ LIGADO, que dispara o comprovante pro e-mail do tomador (e uma cópia pro emitente). O nosso modelo hoje é link pra copiar e mandar na mão. 🔑 Decisão do Pedro: adotar, e como escolha explícita durante a emissão em vez de trabalho depois. ⚠️ Vir ligado por padrão é decisão em aberto: manda e-mail em nome do cliente sem ele pedir."
+      },
+      {
         "id": "N21",
         "o": "Transmite a nota ao órgão",
         "saidas": [
@@ -429,11 +480,15 @@
       {
         "id": "N25",
         "o": "Lê a resposta do órgão",
-        "variavel": "O órgão aceitou?",
+        "variavel": "Como o órgão respondeu?",
         "saidas": [
           {
-            "se": "aceitou",
+            "se": "processou com sucesso, sem ressalva",
             "vai": "N26"
+          },
+          {
+            "se": "processou, mas com ressalva na atividade",
+            "vai": "N56"
           },
           {
             "se": "recusou por dado errado",
@@ -445,7 +500,18 @@
           }
         ],
         "ja": "P3.6",
-        "nota": "⚠️ 'Não respondeu' não é 'recusou', e tratar os dois igual gera nota duplicada — a pessoa tenta de novo e o órgão já tinha aceitado a primeira."
+        "nota": "🔴 CORRIGIDO EM 12/09 — “aceitou?” era binário, e a resposta do órgão não é. A nota carrega TRÊS SITUAÇÕES INDEPENDENTES, vistas na nota real que emitimos: `situacaoNota` (processou?), `situacaoNFe` e `situacaoCnae` (a atividade da nota está correta?). Na nossa nota vieram “PROCESSADO_SUCESSO” e “Cnae da nota correto” — mas nada impede processar com sucesso E ter ressalva de CNAE. ⚠️ E “não respondeu” continua não sendo “recusou”: tratar igual gera nota duplicada."
+      },
+      {
+        "id": "N56",
+        "o": "A nota valeu, mas o órgão marcou ressalva na atividade",
+        "saidas": [
+          {
+            "se": "",
+            "vai": "N26"
+          }
+        ],
+        "nota": "🆕 12/09 — a nota existe e produz efeito, mas fica com uma marca de que a atividade declarada não confere. Não é erro de emissão, é risco fiscal guardado: aparece na nota e ninguém é obrigado a olhar. 🔑 Quem não avisa aqui deixa o cliente descobrir na fiscalização."
       },
       {
         "id": "N27",
@@ -483,7 +549,7 @@
           "3.2"
         ],
         "ja": "P3.7",
-        "nota": "🆕 12/09, do FAQ da PBH: o número da nota é atribuído pela Sefin Nacional, não pela casa — e a numeração PODE TER PULOS, porque números reservados nem sempre viram nota. O órgão diz com todas as letras que isso “não representa irregularidade fiscal”. 🔑 Consequência de produto: a lista de notas não pode alarmar ninguém com buraco de sequência, e quem apoiar o cliente precisa saber disso antes de ser perguntado.",
+        "nota": "🔴 A NOTA CONGELA O ENQUADRAMENTO. Visto na nota real de 12/09: o campo `anexoEscolhido` veio com **5**, e as notas de agosto e setembro mostram o mesmo valor — é o Anexo V do Simples gravado NA NOTA, não contagem de anexo. Decisão do Pedro: a gente também grava. 🔑 Sem isso, o dia em que o Fator R virar o histórico passa a mentir sobre qual alíquota valeu em cada competência. 🆕 E o número da nota é atribuído pela Sefin Nacional, não pela casa — a numeração PODE TER PULOS, e o órgão diz que isso “não representa irregularidade fiscal”. A lista não pode alarmar ninguém com buraco de sequência.",
         "saiPara": "impostos · a receita entra na apuração do mês · pró-labore · muda o Fator R · plano e cobrança · pode mudar a faixa de preço"
       },
       {

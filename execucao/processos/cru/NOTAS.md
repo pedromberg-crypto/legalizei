@@ -15,7 +15,7 @@ tags: [execucao, processos, cru, notas]
 
 ## Estado da varredura
 
-**🟩 FECHADA** · 51 nós · 24 variáveis · 5 entradas · 15 fins · 10 fronteiras
+**🟩 FECHADA** · 55 nós · 27 variáveis · 5 entradas · 15 fins · 11 fronteiras
 
 ✅ **Todos os 9 itens da categoria foram tocados.**
 
@@ -39,7 +39,7 @@ tags: [execucao, processos, cru, notas]
 | ◆ | **N2** · Identifica pra quem é a nota | Quem é o tomador? | **é cliente que já emiti antes** → N5<br/>**é cliente novo** → N3<br/>**é consumidor final, sem identificar** → N4 |
 | ◆ | **N3** · Cadastra o cliente novo | É empresa ou pessoa física? | **PJ — basta o CNPJ, o resto vem do cadastro público** → N5<br/>**PF — nome e CPF** → N5<br/>**está fora do Brasil** → N8 |
 | · | **N4** · Segue sem identificar o tomador, com a consequência dita antes | — | → N6 |
-| ◆ | **N5** · Confirma o cliente escolhido | O cliente fica onde? | **no mesmo município da empresa** → N6<br/>**em outro município** → N7<br/>**fora do Brasil** → N8 |
+| ◆ | **N5** · Confirma onde o serviço foi prestado | Em qual município o serviço foi prestado? | **na cidade da empresa — já vem preenchido assim** → N6<br/>**em outro município** → N7<br/>**fora do Brasil** → N8 |
 | ◆ | **N7** · Resolve onde o imposto é devido quando o cliente é de fora | O município do cliente exige cadastro de prestador de fora? | **não exige** → N6<br/>**exige e a empresa tem** → N6<br/>**exige e a empresa não tem** → N9 |
 | · | **N8** · Trata a nota de exportação de serviço | — | → N6 |
 | · | **N9** · Avisa que o cliente vai reter o imposto, e o que fazer pra evitar | — | → N6 |
@@ -47,18 +47,22 @@ tags: [execucao, processos, cru, notas]
 | ◆ | **N10** · Escolhe o serviço, partindo do que a empresa faz | A atividade da empresa aponta pra um serviço só? | **sim, só um** → N11<br/>**mais de um possível** → N12<br/>**nenhum corresponde** → N13 |
 | · | **N12** · Desempata entre os serviços possíveis, em português | — | → N11 |
 | ■ | **N13** · Nenhum serviço corresponde ao que foi feito | — | _termina aqui_ |
-| · | **N11** · Informa o valor do serviço | — | → N14 |
-| ◆ | **N14** · Resolve se alguém retém imposto na fonte | O cliente retém algum imposto? | **não retém nada** → N16<br/>**retém, e o valor líquido muda** → N15 |
+| · | **N11** · Informa o valor do serviço e o desconto, se houver | — | → N57 |
+| ◆ | **N57** · Define a competência da nota | A competência é a data de hoje? | **sim, a nota vale para o mês em que está sendo emitida** → N14<br/>**não, o serviço é de competência anterior** → N14 |
+| ◆ | **N14** · Resolve se alguém retém imposto na fonte | Essa atividade está na lista de retenção do município? | **não está na lista** → N16<br/>**está, e o cliente passa a ser o responsável pelo ISS** → N15 |
 | · | **N15** · Mostra o que o cliente vai reter e o que sobra | — | → N16 |
 | ◆ | **N16** · Confere o que esse faturamento faz com a empresa antes de emitir | Esse valor encosta em algum limite? | **não encosta em nada** → N53<br/>**aproxima do teto do regime** → N17<br/>**ultrapassa o teto do regime** → N17<br/>**muda a faixa de faturamento** → N17 |
 | ◆ | **N17** · Diz o que muda antes de a nota existir, e deixa decidir | A pessoa quer emitir assim mesmo? | **emitir assim mesmo** → N53<br/>**mudar o valor** → N11<br/>**desistir por ora** → N19 |
 | ■ | **N19** · Desistiu: nada é emitido e nada é cobrado | — | _termina aqui_ |
-| ◆ | **N53** · Resolve sob qual regime esta nota sai | A empresa ainda apura tudo pelo Simples? | **sim, tudo pelo Simples** → N18<br/>**passou de um sublimite: o ISS sai pela regra do município** → N18<br/>**passou do limite: federais e ISS saem por fora do Simples** → N18 |
-| ◆ | **N18** · Confere se a empresa pode emitir agora | Falta alguma condição pra emitir? | **não falta nada** → N21<br/>**a empresa não está habilitada no sistema nacional** → N20<br/>**falta a identidade digital da empresa** → N20<br/>**a empresa está impedida por pendência no órgão** → N20<br/>**o órgão está fora do ar** → N22 |
+| ◆ | **N53** · Resolve sob qual regime esta nota sai | A empresa ainda apura tudo pelo Simples? | **sim, tudo pelo Simples** → N58<br/>**passou de um sublimite: o ISS sai pela regra do município** → N58<br/>**passou do limite: federais e ISS saem por fora do Simples** → N58 |
+| ◆ | **N58** · Oferece guardar essa combinação como padrão | Guardar pra próxima? | **guardar: da próxima vez já vem preenchido** → N18<br/>**não guardar: só vale pra esta nota** → N18 |
+| ◆ | **N18** · Confere se a empresa pode emitir agora | Falta alguma condição pra emitir? | **não falta nada** → N59<br/>**a empresa não está habilitada no sistema nacional** → N20<br/>**falta a identidade digital da empresa** → N20<br/>**a empresa está impedida por pendência no órgão** → N20<br/>**o órgão está fora do ar** → N22 |
 | ◆ | **N20** · Emissão parada: diz o que falta, de quem é, e o que destrava | O impedimento foi resolvido? | **resolvido, dá pra tentar de novo** → N18<br/>**depende de terceiro e não resolve agora** → N22 |
 | ■ | **N22** · Não dá pra emitir por aqui agora: entrega o caminho alternativo pronto | — | _termina aqui_ |
+| ◆ | **N59** · Pergunta se manda a nota direto pro cliente | Envia cópia pro cliente? | **sim, manda pro e-mail dele** → N21<br/>**não, eu mesmo mando depois** → N21 |
 | · | **N21** · Transmite a nota ao órgão | — | → N25 |
-| ◆ | **N25** · Lê a resposta do órgão | O órgão aceitou? | **aceitou** → N26<br/>**recusou por dado errado** → N27<br/>**não respondeu a tempo** → N28 |
+| ◆ | **N25** · Lê a resposta do órgão | Como o órgão respondeu? | **processou com sucesso, sem ressalva** → N26<br/>**processou, mas com ressalva na atividade** → N56<br/>**recusou por dado errado** → N27<br/>**não respondeu a tempo** → N28 |
+| · | **N56** · A nota valeu, mas o órgão marcou ressalva na atividade | — | → N26 |
 | · | **N27** · Recusou: traduz o erro e deixa corrigir sem redigitar tudo | — | → N11 |
 | ◆ | **N28** · Sem resposta: descobre se a nota nasceu antes de deixar tentar de novo | A nota existe no órgão? | **existe, foi só a resposta que se perdeu** → N26<br/>**não existe** → N21 |
 | ■ | **N26** · A nota existe, e a receita da empresa muda | — | _termina aqui_ |
@@ -93,19 +97,19 @@ tags: [execucao, processos, cru, notas]
 
 **N2 · Quem é o tomador?**
 
-- é cliente que já emiti antes → **N5** · Confirma o cliente escolhido
+- é cliente que já emiti antes → **N5** · Confirma onde o serviço foi prestado
 - é cliente novo → **N3** · Cadastra o cliente novo
 - é consumidor final, sem identificar → **N4** · Segue sem identificar o tomador, com a consequência dita antes
 
 **N3 · É empresa ou pessoa física?**
 
-- PJ — basta o CNPJ, o resto vem do cadastro público → **N5** · Confirma o cliente escolhido
-- PF — nome e CPF → **N5** · Confirma o cliente escolhido
+- PJ — basta o CNPJ, o resto vem do cadastro público → **N5** · Confirma onde o serviço foi prestado
+- PF — nome e CPF → **N5** · Confirma onde o serviço foi prestado
 - está fora do Brasil → **N8** · Trata a nota de exportação de serviço
 
-**N5 · O cliente fica onde?**
+**N5 · Em qual município o serviço foi prestado?**
 
-- no mesmo município da empresa → **N6** · Define qual serviço está sendo faturado
+- na cidade da empresa — já vem preenchido assim → **N6** · Define qual serviço está sendo faturado
 - em outro município → **N7** · Resolve onde o imposto é devido quando o cliente é de fora
 - fora do Brasil → **N8** · Trata a nota de exportação de serviço
 
@@ -117,20 +121,25 @@ tags: [execucao, processos, cru, notas]
 
 **N6 · É o serviço de sempre?**
 
-- sim, o mesmo de sempre → **N11** · Informa o valor do serviço
+- sim, o mesmo de sempre → **N11** · Informa o valor do serviço e o desconto, se houver
 - é outro serviço → **N10** · Escolhe o serviço, partindo do que a empresa faz
 - é a primeira nota da empresa → **N10** · Escolhe o serviço, partindo do que a empresa faz
 
 **N10 · A atividade da empresa aponta pra um serviço só?**
 
-- sim, só um → **N11** · Informa o valor do serviço
+- sim, só um → **N11** · Informa o valor do serviço e o desconto, se houver
 - mais de um possível → **N12** · Desempata entre os serviços possíveis, em português
 - nenhum corresponde → **N13** · Nenhum serviço corresponde ao que foi feito
 
-**N14 · O cliente retém algum imposto?**
+**N57 · A competência é a data de hoje?**
 
-- não retém nada → **N16** · Confere o que esse faturamento faz com a empresa antes de emitir
-- retém, e o valor líquido muda → **N15** · Mostra o que o cliente vai reter e o que sobra
+- sim, a nota vale para o mês em que está sendo emitida → **N14** · Resolve se alguém retém imposto na fonte
+- não, o serviço é de competência anterior → **N14** · Resolve se alguém retém imposto na fonte
+
+**N14 · Essa atividade está na lista de retenção do município?**
+
+- não está na lista → **N16** · Confere o que esse faturamento faz com a empresa antes de emitir
+- está, e o cliente passa a ser o responsável pelo ISS → **N15** · Mostra o que o cliente vai reter e o que sobra
 
 **N16 · Esse valor encosta em algum limite?**
 
@@ -142,18 +151,23 @@ tags: [execucao, processos, cru, notas]
 **N17 · A pessoa quer emitir assim mesmo?**
 
 - emitir assim mesmo → **N53** · Resolve sob qual regime esta nota sai
-- mudar o valor → **N11** · Informa o valor do serviço
+- mudar o valor → **N11** · Informa o valor do serviço e o desconto, se houver
 - desistir por ora → **N19** · Desistiu: nada é emitido e nada é cobrado
 
 **N53 · A empresa ainda apura tudo pelo Simples?**
 
-- sim, tudo pelo Simples → **N18** · Confere se a empresa pode emitir agora
-- passou de um sublimite: o ISS sai pela regra do município → **N18** · Confere se a empresa pode emitir agora
-- passou do limite: federais e ISS saem por fora do Simples → **N18** · Confere se a empresa pode emitir agora
+- sim, tudo pelo Simples → **N58** · Oferece guardar essa combinação como padrão
+- passou de um sublimite: o ISS sai pela regra do município → **N58** · Oferece guardar essa combinação como padrão
+- passou do limite: federais e ISS saem por fora do Simples → **N58** · Oferece guardar essa combinação como padrão
+
+**N58 · Guardar pra próxima?**
+
+- guardar: da próxima vez já vem preenchido → **N18** · Confere se a empresa pode emitir agora
+- não guardar: só vale pra esta nota → **N18** · Confere se a empresa pode emitir agora
 
 **N18 · Falta alguma condição pra emitir?**
 
-- não falta nada → **N21** · Transmite a nota ao órgão
+- não falta nada → **N59** · Pergunta se manda a nota direto pro cliente
 - a empresa não está habilitada no sistema nacional → **N20** · Emissão parada: diz o que falta, de quem é, e o que destrava
 - falta a identidade digital da empresa → **N20** · Emissão parada: diz o que falta, de quem é, e o que destrava
 - a empresa está impedida por pendência no órgão → **N20** · Emissão parada: diz o que falta, de quem é, e o que destrava
@@ -164,9 +178,15 @@ tags: [execucao, processos, cru, notas]
 - resolvido, dá pra tentar de novo → **N18** · Confere se a empresa pode emitir agora
 - depende de terceiro e não resolve agora → **N22** · Não dá pra emitir por aqui agora: entrega o caminho alternativo pronto
 
-**N25 · O órgão aceitou?**
+**N59 · Envia cópia pro cliente?**
 
-- aceitou → **N26** · A nota existe, e a receita da empresa muda
+- sim, manda pro e-mail dele → **N21** · Transmite a nota ao órgão
+- não, eu mesmo mando depois → **N21** · Transmite a nota ao órgão
+
+**N25 · Como o órgão respondeu?**
+
+- processou com sucesso, sem ressalva → **N26** · A nota existe, e a receita da empresa muda
+- processou, mas com ressalva na atividade → **N56** · A nota valeu, mas o órgão marcou ressalva na atividade
 - recusou por dado errado → **N27** · Recusou: traduz o erro e deixa corrigir sem redigitar tudo
 - não respondeu a tempo → **N28** · Sem resposta: descobre se a nota nasceu antes de deixar tentar de novo
 
@@ -240,6 +260,8 @@ tags: [execucao, processos, cru, notas]
   ↗ plano e cobrança · o cadastro no outro município é serviço avulso
 - **N13** · Nenhum serviço corresponde ao que foi feito
   ↗ plano e cobrança · alteração contratual é serviço avulso
+- **N57** · Define a competência da nota
+  ↗ impostos · é a competência, não a descrição, que decide em qual apuração a receita entra
 - **N16** · Confere o que esse faturamento faz com a empresa antes de emitir
   ↗ estar em dia · a vigília do teto vive lá · impostos · a faixa muda a alíquota
 - **N26** · A nota existe, e a receita da empresa muda
@@ -281,6 +303,10 @@ A pergunta certa não é *até quando ele existe*, é **para quais operações**
 
 Duas consequências, e as duas precisam aparecer ANTES: o imposto passa a ser responsabilidade de quem emite, e em município que exija identificação a nota não poderá ser cancelada nem substituída depois (recusas E0824 e E0056). ↗ a segunda só morde no N24.
 
+**N5 · Confirma onde o serviço foi prestado**
+
+🔴 CORRIGIDO EM 12/09 — a pergunta anterior era “o cliente fica onde?”, e isso confunde DOMICÍLIO DO CLIENTE com LOCAL DA PRESTAÇÃO. Não é a mesma coisa: o imposto segue o local da prestação em boa parte das atividades, e só coincide com o endereço do cliente nos códigos de operação em que o local é o domicílio do adquirente — que é o nosso caso (100301), mas não o de todo mundo. 🔑 Vem PRÉ-PREENCHIDO com a cidade da empresa e só se altera quando o serviço saiu de casa. A ajuda condicional explica quando: “em certas atividades, como serviços que exigem a presença física do prestador, o imposto pertence à cidade onde o serviço foi de fato realizado, e não ao município onde a sua empresa está estabelecida”.
+
 **N7 · Resolve onde o imposto é devido quando o cliente é de fora**
 
 É o CPOM/CEPOM. Sem ele, o cliente é obrigado a reter o ISS, e o valor que a pessoa recebe cai sem ela entender por quê.
@@ -295,15 +321,23 @@ Exportação é caso de primeira classe, não exceção: precisa de moeda, cota�
 
 **N12 · Desempata entre os serviços possíveis, em português**
 
-Uma atividade pode cair em mais de um item da lista de serviço, e é o item que decide o imposto. Desempatar é escolha de negócio, não de código.
+Uma atividade pode cair em mais de um item da lista de serviço, e é o item que decide o imposto. Desempatar é escolha de negócio, não de código. 🔴 12/09 — A CASCATA É MAIOR DO QUE ESTE NÓ DIZ. No líder são CINCO campos encadeados: CNAE → Código Nacional → Código Municipal → NBS → IndOp. E o último **não se escolhe, se DERIVA**: a API recebe os dois códigos anteriores e devolve o indicador (`cindop?codigoNacionalItemServico=…&nbs=…`). No nosso caso voltou uma opção só — “No endereço do meu cliente ou online”, que é o `100301`. 🔑 O Código Municipal é o `cTribMun` que a PBH exige e o IndOp é o `cIndOp` da regra E0187. Decisão do Pedro em 12/09: manter assim no mapa, e **achar mais pra frente de onde conectamos os dados que derivam** — é trabalho da fase de conexão, não desta.
 
 **N13 · Nenhum serviço corresponde ao que foi feito**
 
 🔴 Caminho sem saída declarado. Ou a atividade da empresa não cobre o que ela está vendendo (e aí é alteração contratual), ou o de-para está incompleto. ⚠️ Pode virar mais de um passo.
 
+**N11 · Informa o valor do serviço e o desconto, se houver**
+
+🆕 12/09 — o DESCONTO INCONDICIONADO faltava no mapa e não é detalhe: a ajuda do líder diz que ele “abate diretamente do valor da nota e REDUZ A BASE DE CÁLCULO DOS IMPOSTOS”. Ou seja, muda o imposto. Decisão do Pedro: o campo entra, e o valor tem que ficar GUARDADO — a guia do DAS é calculada sobre a base, não sobre o valor bruto. ↗ sai daqui pra impostos. ⚠️ Decidido em 12/09 NÃO fazer o cálculo do imposto ao vivo nesta fase: pede-se só o valor, igual ao líder. A prévia viva fica como feature.
+
+**N57 · Define a competência da nota**
+
+🔴 BURACO ACHADO EM 12/09, NA NOTA REAL QUE EMITIMOS. A nota saiu com `competencia: 12/09/2026` — a DATA DA EMISSÃO — enquanto a descrição dizia “referente ao serviço prestado no mês de agosto”. 🔑 O texto é decorativo: quem decide em qual apuração a receita entra é o CAMPO competência, e ele foi setembro. O DAS dessa nota vence em outubro, não em setembro. ⚠️ O líder NÃO deixa escolher a competência — usa a data de emissão e pronto. O leiaute nacional TEM o campo (`dCompet`), e a regra E0061 proíbe alterá-lo em substituição para optante do Simples, o que mostra que ele é fiscal de verdade. 🔴 PERGUNTA ABERTA, e é decisão de produto: a gente deixa a pessoa escolher a competência ou copia o líder e trava na data de emissão? Deixar escolher é mais correto e abre a porta pra erro; travar é simples e faz o texto “referente a agosto” mentir para sempre.
+
 **N14 · Resolve se alguém retém imposto na fonte**
 
-Retenção muda o que CAI NA CONTA sem mudar o que foi faturado. Quem não entende isso acha que a nota saiu errada.
+🔴 CORRIGIDO EM 12/09 — antes a pergunta era “o cliente retém algum imposto?”, como se fosse escolha dele. NÃO É: a retenção é definida por LISTA FECHADA na lei municipal. Em BH são as atividades dos incisos I a XXV — obras de construção civil, demolição, limpeza, manutenção, conservação, varrição, diversão, lazer, entretenimento, guarda e estacionamento de veículos, entre outras. 🔑 Retenção muda o que CAI NA CONTA sem mudar o que foi faturado, e quem não entende isso acha que a nota saiu errada.
 
 **N16 · Confere o que esse faturamento faz com a empresa antes de emitir**
 
@@ -313,6 +347,10 @@ Retenção muda o que CAI NA CONTA sem mudar o que foi faturado. Quem não enten
 
 🔑 VARIÁVEL NOVA, achada em 12/09 no leiaute oficial, e ela não estava em lugar nenhum nosso. O optante ME/EPP declara EM CADA NOTA sob qual regime de apuração ela sai — é o campo `regApTribSN`, que existe justamente pra quem ultrapassou sublimite ou limite. Não é decorativo: muda duas outras regras. Quando a apuração é toda pelo Simples, o regime especial municipal tem que ser “Nenhum” (E0175) e NÃO se pode informar dedução nem redução de base, exceto numa lista fechada de subitens (E0398). ⚠️ Liga com o teto do N16: lá a gente avisa que o faturamento VAI estourar; aqui a nota já sai diferente porque estourou.
 
+**N58 · Oferece guardar essa combinação como padrão**
+
+🆕 12/09 — o mapa ASSUMIA que existe “o serviço de sempre” (N6) sem ter o passo que cria isso. É a sequência salva, e é o que faz a segunda emissão durar segundos. 🔑 Decisão do Pedro: a gente já nasce melhor que o líder, porque na constituição temos o dossiê completo — então a sugestão vem PRÉ-PREENCHIDA e pertinente, com a pessoa podendo alterar. ⚠️ Ele nunca mexeu nesses campos na Contabilizei em nota nenhuma, o que confirma que pré-preencher certo resolve o caso comum. 🔍 A investigar: o líder cruza a sugestão com o CNAE principal e, provavelmente, com os secundários — mas isso é leitura nossa, não confirmada. Vale abrir antes de copiar a régua. ⚠️ O campo do IndOp NÃO pode ser salvo como favorito no líder, e é justamente o que decide onde o imposto é devido. Se a gente conseguir guardar, é vantagem direta.
+
 **N18 · Confere se a empresa pode emitir agora**
 
 🔑 Quatro impedimentos diferentes, e o desenho anterior conhecia um só (a identidade digital). 🔴 CORRIGIDO EM 12/09 pelo FAQ oficial da PBH: eu tinha escrito “falta a habilitação no município” pensando em inscrição municipal, e para o nosso caso ela NÃO entra na nota — empresa com atividade iniciada depois de 12/2025 em BH emite SEM informar a IM. O que sobra é a habilitação no sistema nacional, que é outra coisa. ⚠️ E a identidade digital é a trava de verdade: não existe procuração nem delegação na NFS-e Nacional, e não há data pra existir — só emite quem tem o certificado da própria empresa.
@@ -321,9 +359,17 @@ Retenção muda o que CAI NA CONTA sem mudar o que foi faturado. Quem não enten
 
 🔑 Degradação é rotina, não exceção. O caminho alternativo entrega os dados já prontos pra copiar, não um pedido de desculpas. ↗ o que for emitido por fora volta pela entrada N30.
 
+**N59 · Pergunta se manda a nota direto pro cliente**
+
+🆕 12/09 — no líder é um toggle na revisão, JÁ LIGADO, que dispara o comprovante pro e-mail do tomador (e uma cópia pro emitente). O nosso modelo hoje é link pra copiar e mandar na mão. 🔑 Decisão do Pedro: adotar, e como escolha explícita durante a emissão em vez de trabalho depois. ⚠️ Vir ligado por padrão é decisão em aberto: manda e-mail em nome do cliente sem ele pedir.
+
 **N25 · Lê a resposta do órgão**
 
-⚠️ 'Não respondeu' não é 'recusou', e tratar os dois igual gera nota duplicada — a pessoa tenta de novo e o órgão já tinha aceitado a primeira.
+🔴 CORRIGIDO EM 12/09 — “aceitou?” era binário, e a resposta do órgão não é. A nota carrega TRÊS SITUAÇÕES INDEPENDENTES, vistas na nota real que emitimos: `situacaoNota` (processou?), `situacaoNFe` e `situacaoCnae` (a atividade da nota está correta?). Na nossa nota vieram “PROCESSADO_SUCESSO” e “Cnae da nota correto” — mas nada impede processar com sucesso E ter ressalva de CNAE. ⚠️ E “não respondeu” continua não sendo “recusou”: tratar igual gera nota duplicada.
+
+**N56 · A nota valeu, mas o órgão marcou ressalva na atividade**
+
+🆕 12/09 — a nota existe e produz efeito, mas fica com uma marca de que a atividade declarada não confere. Não é erro de emissão, é risco fiscal guardado: aparece na nota e ninguém é obrigado a olhar. 🔑 Quem não avisa aqui deixa o cliente descobrir na fiscalização.
 
 **N28 · Sem resposta: descobre se a nota nasceu antes de deixar tentar de novo**
 
@@ -331,7 +377,7 @@ Retenção muda o que CAI NA CONTA sem mudar o que foi faturado. Quem não enten
 
 **N26 · A nota existe, e a receita da empresa muda**
 
-🆕 12/09, do FAQ da PBH: o número da nota é atribuído pela Sefin Nacional, não pela casa — e a numeração PODE TER PULOS, porque números reservados nem sempre viram nota. O órgão diz com todas as letras que isso “não representa irregularidade fiscal”. 🔑 Consequência de produto: a lista de notas não pode alarmar ninguém com buraco de sequência, e quem apoiar o cliente precisa saber disso antes de ser perguntado.
+🔴 A NOTA CONGELA O ENQUADRAMENTO. Visto na nota real de 12/09: o campo `anexoEscolhido` veio com **5**, e as notas de agosto e setembro mostram o mesmo valor — é o Anexo V do Simples gravado NA NOTA, não contagem de anexo. Decisão do Pedro: a gente também grava. 🔑 Sem isso, o dia em que o Fator R virar o histórico passa a mentir sobre qual alíquota valeu em cada competência. 🆕 E o número da nota é atribuído pela Sefin Nacional, não pela casa — a numeração PODE TER PULOS, e o órgão diz que isso “não representa irregularidade fiscal”. A lista não pode alarmar ninguém com buraco de sequência.
 
 **N29 · Abre uma nota que já existe**
 

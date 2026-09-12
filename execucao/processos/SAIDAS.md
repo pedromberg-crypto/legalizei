@@ -1,7 +1,7 @@
 ---
 tipo: derivado
 status: vivo
-data: 2026-09-11
+data: 2026-09-12
 assunto: saidas-por-decisao
 gerado_por: execucao/processos/gerar-processos.mjs
 tags: [execucao, processos, cobertura, dev]
@@ -157,5 +157,25 @@ Chega aqui por 2 trilhas: **na fatura** e **já pago**.
 |---|---|---|---|
 | pago | as duas | P4.8 · O trabalho começa. Não dá pra remover. | P4.19 · Entregue, e já estava pago · P4.20 · A cobrança fica de pé · P4.21 · Tira da fatura, ou credita na seguinte · P4.22 · Estorna o que já foi pago · P4.23 · Entrega e cobra na fatura final · P1.6 · Dá baixa e o ciclo segue · P1.10 · Duas mensalidades: a casa pode encerrar |
 | não pagou | as duas | P4.16 · Fica aguardando dentro do prazo | P4.17 · Expirou, e vira histórico |
+
+✅ **Cobertura completa:** toda condição responde em toda trilha que chega aqui, e todo caminho termina.
+
+## P5 · Definir e pagar o pró-labore
+
+### 🟢 P5.4 · Faturou neste mês?
+
+| Condição | Vale na trilha | Leva para | Onde esse caminho termina |
+|---|---|---|---|
+| faturou | as duas | P5.3 · Mexe e vê o imposto mudar | P5.10 · Lançado e não pago: avisa antes de virar multa · P5.5 · Sem faturamento, sem pró-labore |
+| não faturou | as duas | P5.5 · Sem faturamento, sem pró-labore | P5.5 · Sem faturamento, sem pró-labore |
+
+✅ **Cobertura completa:** toda condição responde em toda trilha que chega aqui, e todo caminho termina.
+
+### 🔴 P5.8 · O dinheiro saiu da conta pro sócio?
+
+| Condição | Vale na trilha | Leva para | Onde esse caminho termina |
+|---|---|---|---|
+| o dinheiro saiu | as duas | P5.9 · Entra no Fator R, e a alíquota se sustenta | P5.5 · Sem faturamento, sem pró-labore · P5.10 · Lançado e não pago: avisa antes de virar multa |
+| declarado e não pago | as duas | P5.10 · Lançado e não pago: avisa antes de virar multa | P5.10 · Lançado e não pago: avisa antes de virar multa |
 
 ✅ **Cobertura completa:** toda condição responde em toda trilha que chega aqui, e todo caminho termina.

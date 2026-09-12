@@ -1,7 +1,7 @@
 ---
 tipo: derivado
 status: vivo
-data: 2026-09-11
+data: 2026-09-12
 assunto: processos-do-produto
 gerado_por: execucao/processos/gerar-processos.mjs
 tags: [execucao, processos, dev, spec]
@@ -13,7 +13,7 @@ tags: [execucao, processos, dev, spec]
 >
 > **Pra quem é:** o dev que vai implementar e o Mauro, que decide as regras de negócio. O mesmo arquivo alimenta o board visual em `/processos`, que é onde o Pedro valida.
 
-**Placar:** 🟢 33 sabemos e dá · 🟡 16 falta decidir · 🔴 2 não sabemos
+**Placar:** 🟢 40 sabemos e dá · 🟡 19 falta decidir · 🔴 3 não sabemos
 
 ---
 
@@ -350,3 +350,75 @@ Três perguntas, e nenhuma tem resposta hoje. (1) A taxa que o gateway reteve vo
 - **P4.22** — Mesmo princípio da 9.5, mas com dinheiro já compensado — situação que a minuta não trata.
 - **P4.23** — Cláusula 12.6 (quitar tudo em aberto até o encerramento, incluindo serviços adicionais) e 12.1 (aviso prévio de 30 dias).
 - **P4.24** — Decisão do Pedro em 11/09, e ela é REGRA NOSSA, não régua de mercado: conta do dia da assinatura · fim de semana joga pro próximo dia útil · dia que o mês não tem cobra no último dia, e volta ao original no mês seguinte que tiver. ⚠️ O Código Civil, art. 132 §3º, resolve prazo em mês pelo caminho oposto (“ou no imediato, se faltar exata correspondência”), o que daria 1º/03 — a advogada precisa ver essa diferença, porque a regra vai pro contrato. ⚠️ Ele disse “fim de semana”; eu escrevi “dia útil”, que estende a FERIADO. Se não for isso, muda aqui.
+
+---
+
+## P5 · Definir e pagar o pró-labore
+
+> Todo mês a casa calcula quanto de pró-labore mantém a empresa no anexo mais barato, a pessoa mexe e vê o imposto mudar, e o valor é declarado. Só entra no Fator R o que foi efetivamente pago.
+>
+> 🔑 **Por que importa:** Fecha o loop mensal: a receita nasce no P3, o imposto sai no P2, e a ALÍQUOTA daquele imposto se decide aqui — Fator R ≥ 28% é Anexo III (6%), senão Anexo V (15,5%). É também o diferencial-âncora do produto (o líder tem 4 presets e esconde a conta) e carrega a armadilha mais cara que a gente mapeou: pró-labore lançado e NÃO pago vira glosa, reclassificação e multa.
+
+🟢 7 · 🟡 3 · 🔴 1
+
+| | Passo | Quem dispara | O que a casa faz | Com quem fala | O que a pessoa vê |
+|:--:|---|---|---|---|---|
+| 🟢 | **P5.1** Chega o mês, e o pró-labore precisa ser decidido | o relógio | Abre a decisão do mês com o valor sugerido já calculado, em vez de esperar a pessoa lembrar. | só a nossa casa | A tarefa do mês aparece na home, com o valor proposto e o prazo. |
+| 🟢 | **P5.2** Calcula o que mantém o Anexo III | a casa | Calcula o mínimo que segura o Fator R em 28%: folha dos últimos 12 meses dividida pela receita dos últimos 12 meses, respeitando o piso do salário mínimo. | só a nossa casa | nada, acontece por baixo |
+| 🟢 | **P5.3** Mexe e vê o imposto mudar | cliente | Deixa a pessoa mover o valor e mostra na hora o que muda: INSS, IRRF, Fator R e a alíquota do DAS. | só a nossa casa | A tela /pro-labore, com o controle e o efeito ao vivo. Sem preset, sem “confie na gente”. |
+| 🟢 | **P5.4** ◆ Faturou neste mês? | a casa | Sem faturamento no mês, oferece não pagar pró-labore — e explica o efeito disso no Fator R dos 12 meses. | só a nossa casa | nada, acontece por baixo |
+| 🟡 | **P5.5** ■ Sem faturamento, sem pró-labore | a casa | Registra o mês sem pró-labore e mantém a obrigação acessória em dia, porque ela não pausa. | só a nossa casa | O mês fica marcado como sem pró-labore, com o efeito no Fator R à vista. |
+| 🟢 | **P5.6** Confirma o valor do mês | cliente | Trava o valor do mês e o manda pra transmissão. | só a nossa casa | Resumo do que vai ser declarado e quanto sai de INSS e IRRF. |
+| 🟢 | **P5.7** Declara e gera a guia do INSS | a casa | Transmite o evento do pró-labore ao eSocial, consolida na DCTFWeb e devolve o DARF numerado. | Integra Contador (eSocial S-1200 → DCTFWeb) | A guia do INSS aparece em /impostos, junto com o DAS. |
+| 🔴 | **P5.8** ◆ O dinheiro saiu da conta pro sócio? | a casa | Confere se o pró-labore foi EFETIVAMENTE PAGO. Enquanto não houver trânsito financeiro, ele não pode entrar no Fator R. | ainda não sabemos | nada: a tela não existe |
+| 🟢 | **P5.9** ■ Entra no Fator R, e a alíquota se sustenta | a casa | Soma o pró-labore pago à folha dos 12 meses, recalcula o Fator R e confirma o anexo que vale no mês. | só a nossa casa | O Fator R atualizado em /impostos/aliquotas, com quanto falta pros 28%. |
+| 🟡 | **P5.10** ■ Lançado e não pago: avisa antes de virar multa | a casa | Marca o pró-labore como pendente de pagamento, deixa ele FORA do Fator R e avisa o que acontece se ficar assim. | só a nossa casa | Aviso dizendo que o valor foi declarado mas não pago, o que isso faz com a alíquota, e até quando dá pra resolver. |
+| 🟡 | **P5.11** Avisa ANTES de virar a faixa | a casa | Acompanha o Fator R dos 12 meses e avisa quando a empresa está perto de cair pro Anexo V, com quanto falta de pró-labore pra evitar. | só a nossa casa | Aviso com a distância pros 28% e o valor exato que resolve. |
+
+### Por onde o processo caminha
+
+- `P5.1` → `P5.2`
+- `P5.2` → `P5.4`
+- `P5.4` → `P5.3` — *faturou*
+- `P5.4` → `P5.5` — *não faturou*
+- `P5.3` → `P5.6`
+- `P5.6` → `P5.7`
+- `P5.7` → `P5.8`
+- `P5.8` → `P5.9` — *o dinheiro saiu*
+- `P5.8` → `P5.10` — *declarado e não pago*
+- `P5.9` → `P5.11`
+- `P5.11` → `P5.1` — *perto de virar a faixa*
+
+### 🔴 O que precisa ser respondido
+
+> Esta lista é o produto do desenho, não o defeito dele. Um processo que sai todo verde na primeira passada não foi desenhado, foi copiado.
+
+**🟡 P5.5 · Sem faturamento, sem pró-labore**
+
+Mês sem pró-labore derruba a média do Fator R nos 12 meses seguintes, e o efeito só aparece lá na frente. A tela precisa dizer QUANTO isso custa antes do toque — e falta decidir se a gente chega a desaconselhar, ou só informa.
+
+**🔴 P5.8 · O dinheiro saiu da conta pro sócio?**
+
+🔴 A ARMADILHA MAIS CARA DO PRODUTO, e ela é diferente do P2.4. Lá era saber que a GUIA foi paga, e existe consulta de arrecadação. Aqui é uma transferência da empresa PRO SÓCIO — o dinheiro não passa por nós nem pelo governo, e não há API nenhuma. O único rastro é o EXTRATO que o cliente envia até o 5º dia útil (cláusula 5.4). Se a gente considerar pago o que só foi lançado, o Fator R é glosado, a empresa cai pro Anexo V (6% → 15,5%) e leva multa. Três caminhos: (a) só contar depois de casar com o extrato, atrasando o Fator R; (b) contar na hora e corrigir se o extrato desmentir; (c) Open Finance read-only. Nenhum está decidido.
+
+**🟡 P5.10 · Lançado e não pago: avisa antes de virar multa**
+
+Até quando o pagamento ainda conta pro mês de competência, e o que acontece se ele sair depois. Isso muda o Fator R retroativamente e pode obrigar retificação (catálogo 4.8, serviço à-la-carte). Pergunta pro Mauro: a régua é a data do pagamento ou a competência do recibo?
+
+**🟡 P5.11 · Avisa ANTES de virar a faixa**
+
+Com quanta antecedência avisar, e quantas vezes. Avisar cedo demais em janeiro não ajuda; avisar em dezembro não dá tempo de corrigir, porque o Fator R é média de 12 meses. Falta a régua — e ela é a mesma do 5.4.
+
+### Fonte de cada regra
+
+- **P5.1** — Aferição do Fator R é MENSAL, no PGDAS-D (Res. CGSN 140/2018, art. 26). Não é decisão anual.
+- **P5.2** — Fórmula da matriz: folha 12m ÷ receita 12m; ≥ 28% → Anexo III (6%), senão Anexo V (15,5%). Entram salário CLT, pró-labore, 13º, férias + 1/3, FGTS e a CPP mesmo embutida no DAS. Não entram distribuição de lucros, autônomo, prestador PJ, PAT e estagiário. Evidência do líder (09/09): pró-labore do mês = max(piso; 0,28 × Σfaturamento 12m − Σpró-labore dos 11 meses anteriores).
+- **P5.3** — Catálogo 4.1, construída. É o diferencial-âncora: o líder tem 4 presets em radio button e esconde a conta. A engine é nossa e roda 100% local, sem API.
+- **P5.4** — Catálogo 4.3, construída: o toggle existe e vem explicado, ao contrário do switch cru do líder.
+- **P5.5** — Catálogo 4.3. A obrigação mensal continua existindo mesmo sem valor — mesmo princípio do “eSocial sem movimento” da folha (7.4).
+- **P5.6** — Decorre do P5.3: o valor é escolha da pessoa, e a casa só sugere.
+- **P5.7** — Matriz 4.5, resolvida em 09/09: o caminho é eSocial (S-1200) → DCTFWeb → DARF numerado, coberto pelo Integra Contador com o A1 da empresa. Mesmo contrato do P2.1 e do P3.5. Evidência do líder (09/09): o “DARF Unificado” é essa guia — R$ 178,31 = 11% de R$ 1.621.
+- **P5.8** — Matriz, seção do Fator R: a folha só conta em REGIME DE CAIXA, enquanto a receita é competência. A Receita cruza EFD-Reinf com DCTFWeb pra pegar isso.
+- **P5.9** — 🔑 É daqui que o P2.1 tira a alíquota: Fator R ≥ 28% → Anexo III (6%), senão Anexo V (15,5%). Não há aresta entre os processos porque não há salto — é DADO que atravessa.
+- **P5.10** — Decorre do regime de caixa do Fator R. O app NÃO PODE considerar pró-labore lançado e não pago.
+- **P5.11** — Catálogo 4.2, hoje 🟡: o cálculo existe, falta o gatilho do alerta. É o mesmo motor da vigília preditiva (5.4), o diferencial nº 2. O líder tem o cálculo e NÃO tem o alerta.

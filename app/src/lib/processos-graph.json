@@ -1,5 +1,5 @@
 {
-  "gerado": "2026-09-11",
+  "gerado": "2026-09-12",
   "processos": [
     {
       "id": "P1",
@@ -24,6 +24,12 @@
       "titulo": "Adicionar um serviço avulso à fatura aberta",
       "resumo": "A pessoa pede um serviço à-la-carte dentro do app. Ele não cobra na hora: entra como item de linha na fatura da competência. Atravessa /mais/servicos (onde nasce) e /mais/plano (onde aparece).",
       "porqueImporta": "É o balde vendável inteiro. O líder fatura ~45 serviços assim, e é receita oculta do modelo dele. É também o processo que mais atravessa tela, então é onde uma incoerência aparece primeiro."
+    },
+    {
+      "id": "P5",
+      "titulo": "Definir e pagar o pró-labore",
+      "resumo": "Todo mês a casa calcula quanto de pró-labore mantém a empresa no anexo mais barato, a pessoa mexe e vê o imposto mudar, e o valor é declarado. Só entra no Fator R o que foi efetivamente pago.",
+      "porqueImporta": "Fecha o loop mensal: a receita nasce no P3, o imposto sai no P2, e a ALÍQUOTA daquele imposto se decide aqui — Fator R ≥ 28% é Anexo III (6%), senão Anexo V (15,5%). É também o diferencial-âncora do produto (o líder tem 4 presets e esconde a conta) e carrega a armadilha mais cara que a gente mapeou: pró-labore lançado e NÃO pago vira glosa, reclassificação e multa."
     }
   ],
   "trilhas": [
@@ -1133,6 +1139,241 @@
         "ve": "normal"
       },
       "sugestoes": []
+    },
+    {
+      "id": "P5.1",
+      "processos": [
+        "P5"
+      ],
+      "titulo": "Chega o mês, e o pró-labore precisa ser decidido",
+      "quem": "o relógio",
+      "faz": "Abre a decisão do mês com o valor sugerido já calculado, em vez de esperar a pessoa lembrar.",
+      "fala": "só a nossa casa",
+      "ve": "A tarefa do mês aparece na home, com o valor proposto e o prazo.",
+      "luz": "verde",
+      "forma": "passo",
+      "fonte": "Aferição do Fator R é MENSAL, no PGDAS-D (Res. CGSN 140/2018, art. 26). Não é decisão anual.",
+      "cor": "#17A06A",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "normal"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P5.2",
+      "processos": [
+        "P5"
+      ],
+      "titulo": "Calcula o que mantém o Anexo III",
+      "quem": "a casa",
+      "faz": "Calcula o mínimo que segura o Fator R em 28%: folha dos últimos 12 meses dividida pela receita dos últimos 12 meses, respeitando o piso do salário mínimo.",
+      "fala": "só a nossa casa",
+      "ve": "nada, acontece por baixo",
+      "luz": "verde",
+      "forma": "passo",
+      "fonte": "Fórmula da matriz: folha 12m ÷ receita 12m; ≥ 28% → Anexo III (6%), senão Anexo V (15,5%). Entram salário CLT, pró-labore, 13º, férias + 1/3, FGTS e a CPP mesmo embutida no DAS. Não entram distribuição de lucros, autônomo, prestador PJ, PAT e estagiário. Evidência do líder (09/09): pró-labore do mês = max(piso; 0,28 × Σfaturamento 12m − Σpró-labore dos 11 meses anteriores).",
+      "cor": "#17A06A",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "neutro"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P5.3",
+      "processos": [
+        "P5"
+      ],
+      "titulo": "Mexe e vê o imposto mudar",
+      "quem": "cliente",
+      "faz": "Deixa a pessoa mover o valor e mostra na hora o que muda: INSS, IRRF, Fator R e a alíquota do DAS.",
+      "fala": "só a nossa casa",
+      "ve": "A tela /pro-labore, com o controle e o efeito ao vivo. Sem preset, sem “confie na gente”.",
+      "luz": "verde",
+      "forma": "passo",
+      "fonte": "Catálogo 4.1, construída. É o diferencial-âncora: o líder tem 4 presets em radio button e esconde a conta. A engine é nossa e roda 100% local, sem API.",
+      "cor": "#17A06A",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "normal"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P5.4",
+      "processos": [
+        "P5"
+      ],
+      "titulo": "Faturou neste mês?",
+      "quem": "a casa",
+      "faz": "Sem faturamento no mês, oferece não pagar pró-labore — e explica o efeito disso no Fator R dos 12 meses.",
+      "fala": "só a nossa casa",
+      "ve": "nada, acontece por baixo",
+      "luz": "verde",
+      "forma": "decisao",
+      "fonte": "Catálogo 4.3, construída: o toggle existe e vem explicado, ao contrário do switch cru do líder.",
+      "cor": "#17A06A",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "neutro"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P5.5",
+      "processos": [
+        "P5"
+      ],
+      "titulo": "Sem faturamento, sem pró-labore",
+      "quem": "a casa",
+      "faz": "Registra o mês sem pró-labore e mantém a obrigação acessória em dia, porque ela não pausa.",
+      "fala": "só a nossa casa",
+      "ve": "O mês fica marcado como sem pró-labore, com o efeito no Fator R à vista.",
+      "luz": "amarelo",
+      "forma": "fim",
+      "fonte": "Catálogo 4.3. A obrigação mensal continua existindo mesmo sem valor — mesmo princípio do “eSocial sem movimento” da folha (7.4).",
+      "duvida": "Mês sem pró-labore derruba a média do Fator R nos 12 meses seguintes, e o efeito só aparece lá na frente. A tela precisa dizer QUANTO isso custa antes do toque — e falta decidir se a gente chega a desaconselhar, ou só informa.",
+      "cor": "#D6A400",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "normal"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P5.6",
+      "processos": [
+        "P5"
+      ],
+      "titulo": "Confirma o valor do mês",
+      "quem": "cliente",
+      "faz": "Trava o valor do mês e o manda pra transmissão.",
+      "fala": "só a nossa casa",
+      "ve": "Resumo do que vai ser declarado e quanto sai de INSS e IRRF.",
+      "luz": "verde",
+      "forma": "passo",
+      "fonte": "Decorre do P5.3: o valor é escolha da pessoa, e a casa só sugere.",
+      "cor": "#17A06A",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "normal"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P5.7",
+      "processos": [
+        "P5"
+      ],
+      "titulo": "Declara e gera a guia do INSS",
+      "quem": "a casa",
+      "faz": "Transmite o evento do pró-labore ao eSocial, consolida na DCTFWeb e devolve o DARF numerado.",
+      "fala": "Integra Contador (eSocial S-1200 → DCTFWeb)",
+      "ve": "A guia do INSS aparece em /impostos, junto com o DAS.",
+      "luz": "verde",
+      "forma": "passo",
+      "fonte": "Matriz 4.5, resolvida em 09/09: o caminho é eSocial (S-1200) → DCTFWeb → DARF numerado, coberto pelo Integra Contador com o A1 da empresa. Mesmo contrato do P2.1 e do P3.5. Evidência do líder (09/09): o “DARF Unificado” é essa guia — R$ 178,31 = 11% de R$ 1.621.",
+      "cor": "#17A06A",
+      "tons": {
+        "faz": "normal",
+        "fala": "normal",
+        "ve": "normal"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P5.8",
+      "processos": [
+        "P5"
+      ],
+      "titulo": "O dinheiro saiu da conta pro sócio?",
+      "quem": "a casa",
+      "faz": "Confere se o pró-labore foi EFETIVAMENTE PAGO. Enquanto não houver trânsito financeiro, ele não pode entrar no Fator R.",
+      "fala": "ainda não sabemos",
+      "ve": "nada: a tela não existe",
+      "luz": "vermelho",
+      "forma": "decisao",
+      "fonte": "Matriz, seção do Fator R: a folha só conta em REGIME DE CAIXA, enquanto a receita é competência. A Receita cruza EFD-Reinf com DCTFWeb pra pegar isso.",
+      "duvida": "🔴 A ARMADILHA MAIS CARA DO PRODUTO, e ela é diferente do P2.4. Lá era saber que a GUIA foi paga, e existe consulta de arrecadação. Aqui é uma transferência da empresa PRO SÓCIO — o dinheiro não passa por nós nem pelo governo, e não há API nenhuma. O único rastro é o EXTRATO que o cliente envia até o 5º dia útil (cláusula 5.4). Se a gente considerar pago o que só foi lançado, o Fator R é glosado, a empresa cai pro Anexo V (6% → 15,5%) e leva multa. Três caminhos: (a) só contar depois de casar com o extrato, atrasando o Fator R; (b) contar na hora e corrigir se o extrato desmentir; (c) Open Finance read-only. Nenhum está decidido.",
+      "cor": "#D64A2D",
+      "tons": {
+        "faz": "normal",
+        "fala": "buraco",
+        "ve": "buraco"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P5.9",
+      "processos": [
+        "P5"
+      ],
+      "titulo": "Entra no Fator R, e a alíquota se sustenta",
+      "quem": "a casa",
+      "faz": "Soma o pró-labore pago à folha dos 12 meses, recalcula o Fator R e confirma o anexo que vale no mês.",
+      "fala": "só a nossa casa",
+      "ve": "O Fator R atualizado em /impostos/aliquotas, com quanto falta pros 28%.",
+      "luz": "verde",
+      "forma": "fim",
+      "fonte": "🔑 É daqui que o P2.1 tira a alíquota: Fator R ≥ 28% → Anexo III (6%), senão Anexo V (15,5%). Não há aresta entre os processos porque não há salto — é DADO que atravessa.",
+      "cor": "#17A06A",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "normal"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P5.10",
+      "processos": [
+        "P5"
+      ],
+      "titulo": "Lançado e não pago: avisa antes de virar multa",
+      "quem": "a casa",
+      "faz": "Marca o pró-labore como pendente de pagamento, deixa ele FORA do Fator R e avisa o que acontece se ficar assim.",
+      "fala": "só a nossa casa",
+      "ve": "Aviso dizendo que o valor foi declarado mas não pago, o que isso faz com a alíquota, e até quando dá pra resolver.",
+      "luz": "amarelo",
+      "forma": "fim",
+      "fonte": "Decorre do regime de caixa do Fator R. O app NÃO PODE considerar pró-labore lançado e não pago.",
+      "duvida": "Até quando o pagamento ainda conta pro mês de competência, e o que acontece se ele sair depois. Isso muda o Fator R retroativamente e pode obrigar retificação (catálogo 4.8, serviço à-la-carte). Pergunta pro Mauro: a régua é a data do pagamento ou a competência do recibo?",
+      "cor": "#D6A400",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "normal"
+      },
+      "sugestoes": []
+    },
+    {
+      "id": "P5.11",
+      "processos": [
+        "P5"
+      ],
+      "titulo": "Avisa ANTES de virar a faixa",
+      "quem": "a casa",
+      "faz": "Acompanha o Fator R dos 12 meses e avisa quando a empresa está perto de cair pro Anexo V, com quanto falta de pró-labore pra evitar.",
+      "fala": "só a nossa casa",
+      "ve": "Aviso com a distância pros 28% e o valor exato que resolve.",
+      "luz": "amarelo",
+      "forma": "passo",
+      "fonte": "Catálogo 4.2, hoje 🟡: o cálculo existe, falta o gatilho do alerta. É o mesmo motor da vigília preditiva (5.4), o diferencial nº 2. O líder tem o cálculo e NÃO tem o alerta.",
+      "duvida": "Com quanta antecedência avisar, e quantas vezes. Avisar cedo demais em janeiro não ajuda; avisar em dezembro não dá tempo de corrigir, porque o Fator R é média de 12 meses. Falta a régua — e ela é a mesma do 5.4.",
+      "cor": "#D6A400",
+      "tons": {
+        "faz": "normal",
+        "fala": "neutro",
+        "ve": "normal"
+      },
+      "sugestoes": []
     }
   ],
   "edges": [
@@ -1485,6 +1726,72 @@
       "de": "P3.11",
       "para": "P3.9",
       "label": "renovou o certificado",
+      "tracejado": false
+    },
+    {
+      "de": "P5.1",
+      "para": "P5.2",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "P5.2",
+      "para": "P5.4",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "P5.4",
+      "para": "P5.3",
+      "label": "faturou",
+      "tracejado": false
+    },
+    {
+      "de": "P5.4",
+      "para": "P5.5",
+      "label": "não faturou",
+      "tracejado": true
+    },
+    {
+      "de": "P5.3",
+      "para": "P5.6",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "P5.6",
+      "para": "P5.7",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "P5.7",
+      "para": "P5.8",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "P5.8",
+      "para": "P5.9",
+      "label": "o dinheiro saiu",
+      "tracejado": false
+    },
+    {
+      "de": "P5.8",
+      "para": "P5.10",
+      "label": "declarado e não pago",
+      "tracejado": true
+    },
+    {
+      "de": "P5.9",
+      "para": "P5.11",
+      "label": "",
+      "tracejado": false
+    },
+    {
+      "de": "P5.11",
+      "para": "P5.1",
+      "label": "perto de virar a faixa",
       "tracejado": false
     }
   ]

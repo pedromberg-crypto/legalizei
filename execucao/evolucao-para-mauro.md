@@ -979,6 +979,35 @@ Oi Mauro, resumo da semana:
 ```
 
 
+## Semana 12/09/2026 — descobri o que falta chegar da abertura pro app funcionar
+
+| # | O que rendeu | Por quê importa | |
+|:--:|---|---|:--:|
+| 1 | 🚧 **Não vamos refazer a abertura: ela já está construída** | O time de programadores já fez o caminho do cliente **do download do app até o pagamento da guia da Junta**, e está em teste. O que sobra pra nós é o trecho final, que no começo vai ser **feito por gente, com acompanhamento**: as duas assinaturas e o certificado digital. Automatizar isso depois é melhoria, não requisito pra abrir | 🟢 |
+| 2 | 🤝 **Mapeei quais dados da abertura o app precisa pra funcionar** | O cliente responde dezenas de perguntas pra abrir a empresa, e **boa parte delas volta a ser usada todo mês**: o CNAE decide o anexo e o imposto, o vínculo de INSS muda o pró-labore, o quadro de sócios alimenta a folha. São **24 dados mapeados: 11 já chegam, 9 nascem depois, e 4 ninguém produz hoje** | 🟡 |
+| 3 | ⚠️ **Achei 8 passos que pareciam prontos e não estão** | O painel de processos marcava verde em passos que a gente sabe fazer, mas que **dependem de algo que ninguém combinou quem entrega**. O caso mais grave: emitir nota fiscal aparece como resolvido, e **não funciona sem a inscrição municipal na Prefeitura nem sem o certificado digital** | 🔴 |
+| 4 | 📋 **Os outros processos do app já estão desenhados** | Além do serviço avulso da semana passada, agora existem também **a cobrança da mensalidade, a guia do DAS, a nota fiscal e o pró-labore**. São 62 passos no total: 40 resolvidos, 19 esperando decisão, 3 sem resposta | 🟡 |
+
+**Preciso de você em 2 coisas:**
+
+1. 🔴 **Como a gente prova que o pró-labore foi realmente pago.** O dinheiro sai da conta da empresa pro sócio sem passar por nós nem pelo governo, então não existe consulta que responda. E isso não é detalhe: **só entra no Fator R o que foi efetivamente pago**. Considerar pago o que só foi lançado gera glosa, reclassificação pro Anexo V e multa. A gente fica no extrato que o cliente manda até o 5º dia útil (como está na nossa minuta), ou vale desenhar outro caminho?
+2. 🔴 **Como calcular o imposto no primeiro ano.** Empresa recém-aberta não tem 12 meses de faturamento pra formar o RBT12, e a lei manda proporcionalizar. Isso decide **o primeiro DAS de todo cliente novo** e também a faixa de preço que a gente cobra dele. Qual regra a gente adota?
+
+⚠️ Os processos novos (mensalidade, DAS, nota, pró-labore) trazem mais perguntas suas — o que acontece com quem atrasa, se a gente suspende o acesso e o que exatamente fica suspenso. Junto tudo num bloco só e te levo em seguida, pra não virar interrogatório.
+
+```
+Oi Mauro, resumo:
+
+- *Não vamos refazer a abertura da empresa.* O time de programadores já construiu do download do app até o pagamento da guia da Junta, e está em teste. Sobra pra nós o trecho final (as duas assinaturas e o certificado), que no começo vai ser feito por gente, com acompanhamento
+- Mapeei *quais dados da abertura o app precisa depois*: o CNAE decide o anexo e o imposto, o vínculo de INSS muda o pró-labore, os sócios alimentam a folha. 24 dados no total, e 4 deles ninguém produz hoje
+- Achei *8 passos que pareciam prontos e não estão*. O pior: emitir nota fiscal aparece resolvido e não funciona sem a inscrição municipal na Prefeitura nem sem o certificado digital
+- Os outros processos do app já estão desenhados: mensalidade, DAS, nota fiscal e pró-labore. 62 passos, 40 resolvidos
+- *Preciso de você em 2 coisas:*
+- Como a gente prova que o pró-labore foi mesmo pago? Só entra no Fator R o que foi pago de verdade, e considerar pago o que só foi lançado dá glosa e multa. Fica no extrato que o cliente manda até o 5º dia útil, ou tem caminho melhor?
+- Como calcular o imposto no primeiro ano, quando a empresa ainda não tem 12 meses de faturamento pro RBT12? Isso decide o primeiro DAS de todo cliente novo
+```
+
+
 ## Links
 
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]] · [[estado-atual]] · [[indice-autoridade]]

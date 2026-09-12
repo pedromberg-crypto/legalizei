@@ -66,6 +66,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -87,6 +89,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -108,6 +112,8 @@
         "fala": "neutro",
         "ve": "neutro"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -129,6 +135,8 @@
         "fala": "neutro",
         "ve": "neutro"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -150,6 +158,8 @@
         "fala": "neutro",
         "ve": "neutro"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -172,6 +182,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -193,6 +205,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -215,6 +229,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -236,6 +252,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -259,6 +277,15 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [
+        {
+          "dado": "Data e hora do aceite do contrato de serviço",
+          "status": "nao-sei",
+          "quem": "dev",
+          "porque": "🔴 É a ÂNCORA DO CICLO DE COBRANÇA inteiro, travada pelo Pedro em 11/09: assinou dia 8, o ciclo vira todo dia 8, pra sempre. A tela existe e o aceite acontece (checkbox no E9), mas 'existe o checkbox' e 'a data fica gravada e chega até nós' são coisas diferentes. Se esse carimbo não atravessar a fronteira, o P1 não sabe quando fechar a primeira fatura, e não há como recalcular depois."
+        }
+      ],
+      "insumosFaltando": 1,
       "sugestoes": []
     },
     {
@@ -280,6 +307,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -301,6 +330,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -323,6 +354,8 @@
         "fala": "normal",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -345,6 +378,8 @@
         "fala": "normal",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -366,6 +401,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -387,6 +424,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -409,6 +448,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -430,6 +471,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -451,6 +494,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -472,6 +517,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -494,6 +541,8 @@
         "fala": "normal",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -515,6 +564,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -537,6 +588,15 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [
+        {
+          "dado": "Data e hora do aceite do contrato de serviço",
+          "status": "nao-sei",
+          "quem": "dev",
+          "porque": "🔴 É a ÂNCORA DO CICLO DE COBRANÇA inteiro, travada pelo Pedro em 11/09: assinou dia 8, o ciclo vira todo dia 8, pra sempre. A tela existe e o aceite acontece (checkbox no E9), mas 'existe o checkbox' e 'a data fica gravada e chega até nós' são coisas diferentes. Se esse carimbo não atravessar a fronteira, o P1 não sabe quando fechar a primeira fatura, e não há como recalcular depois."
+        }
+      ],
+      "insumosFaltando": 1,
       "sugestoes": []
     },
     {
@@ -558,6 +618,33 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [
+        {
+          "dado": "Usa o endereço fiscal da Legalizai? (sim/não)",
+          "status": "captado",
+          "quem": "dev",
+          "porque": "Vira uma linha recorrente de R$ 49/mês na fatura, todo ciclo, pelo Anexo I. É decisão tomada no gate, antes do pagamento, e a fatura do P1.1 precisa saber dela desde o primeiro ciclo."
+        },
+        {
+          "dado": "CNPJ",
+          "status": "nasce-depois",
+          "quem": "assistido",
+          "porque": "É a chave de tudo: nenhuma das quatro integrações do produto (PGDAS-D, ADN, eSocial, gateway) aceita requisição sem ele. Nasce na 2ª assinatura, que é justamente o trecho que os programadores ainda não atacaram."
+        },
+        {
+          "dado": "Data e hora do aceite do contrato de serviço",
+          "status": "nao-sei",
+          "quem": "dev",
+          "porque": "🔴 É a ÂNCORA DO CICLO DE COBRANÇA inteiro, travada pelo Pedro em 11/09: assinou dia 8, o ciclo vira todo dia 8, pra sempre. A tela existe e o aceite acontece (checkbox no E9), mas 'existe o checkbox' e 'a data fica gravada e chega até nós' são coisas diferentes. Se esse carimbo não atravessar a fronteira, o P1 não sabe quando fechar a primeira fatura, e não há como recalcular depois."
+        },
+        {
+          "dado": "Colaboradores (admissão, ativo, demissão)",
+          "status": "nao-captado",
+          "quem": "ninguem",
+          "porque": "O P1.1 já soma 'R$ 39 por colaborador ATIVO' na fatura, pelas cláusulas 7.2 e 7.4 — cobra mesmo sem movimento. Mas nada na constituição cria colaborador, e nenhum processo desenhado transforma alguém em ativo. A linha da fatura existe e a origem dela não. Não é dado de handoff: é processo faltando (candidato a P6)."
+        }
+      ],
+      "insumosFaltando": 3,
       "sugestoes": []
     },
     {
@@ -580,6 +667,21 @@
         "fala": "neutro",
         "ve": "neutro"
       },
+      "insumos": [
+        {
+          "dado": "Faixa de faturamento autodeclarada",
+          "status": "captado",
+          "quem": "dev",
+          "porque": "⚠️ É ESTIMATIVA, não RBT12. Serve pra escolher a coorte de preço na entrada (as três faixas ME de 79/99/139 da minuta), e só. A partir da 1ª nota quem manda é a receita real do P3.7, e o P1.2 passa a comparar contra ela. Confundir os dois faria a mensalidade nascer travada numa chute do cliente."
+        },
+        {
+          "dado": "Como o RBT12 se comporta na empresa nova",
+          "status": "nao-captado",
+          "quem": "ninguem",
+          "porque": "Empresa recém-aberta não tem 12 meses de receita: a legislação manda proporcionalizar. Isso muda a alíquota do P2.1 nos primeiros meses e a faixa de preço do P1.2. Não é dado que alguém capta, é regra que ninguém escreveu — e sem ela o primeiro DAS da empresa sai de um cálculo que não foi decidido."
+        }
+      ],
+      "insumosFaltando": 1,
       "sugestoes": []
     },
     {
@@ -602,6 +704,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -624,6 +728,15 @@
         "fala": "normal",
         "ve": "normal"
       },
+      "insumos": [
+        {
+          "dado": "Mandato de cobrança recorrente (cartão tokenizado)",
+          "status": "nao-sei",
+          "quem": "dev",
+          "porque": "🔴 O E9 cobra a ABERTURA, que é pagamento único. A mensalidade do P1.4 é cobrança RECORRENTE: exige tokenizar o cartão e guardar o mandato, o que é outra integração e muda o escopo PCI. Foi exatamente isso que derrubou o Asaas em 08/09. Se o cartão do E9 não deixar mandato, o cliente vai ter que cadastrar forma de pagamento DE NOVO no primeiro ciclo, logo depois de ter pago a abertura."
+        }
+      ],
+      "insumosFaltando": 1,
       "sugestoes": []
     },
     {
@@ -646,6 +759,8 @@
         "fala": "normal",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -667,6 +782,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -688,6 +805,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -710,6 +829,8 @@
         "fala": "normal",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -732,6 +853,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -754,6 +877,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -775,6 +900,39 @@
         "fala": "normal",
         "ve": "normal"
       },
+      "insumos": [
+        {
+          "dado": "CNAE principal",
+          "status": "captado",
+          "quem": "dev",
+          "porque": "É o dado mais reaproveitado do produto inteiro. Ele decide o Anexo (III ou V), e o Anexo é o que faz o Fator R importar: sem essa escolha, o P5 não tem por que existir. Também é dele que sai o código do serviço na nota (P3.4). Uma escolha na constituição, três processos internos dependendo."
+        },
+        {
+          "dado": "CNPJ",
+          "status": "nasce-depois",
+          "quem": "assistido",
+          "porque": "É a chave de tudo: nenhuma das quatro integrações do produto (PGDAS-D, ADN, eSocial, gateway) aceita requisição sem ele. Nasce na 2ª assinatura, que é justamente o trecho que os programadores ainda não atacaram."
+        },
+        {
+          "dado": "Data de abertura do CNPJ",
+          "status": "nasce-depois",
+          "quem": "assistido",
+          "porque": "Abre a primeira competência e o calendário inteiro de obrigações. Também é dela que corre a fidelidade de 12 meses da minuta. ⚠️ NÃO confundir com a data da assinatura do contrato de serviço, que é a âncora do ciclo de COBRANÇA: são duas datas diferentes, com semanas de distância, e tratá-las como uma só erra a fatura ou erra a obrigação."
+        },
+        {
+          "dado": "Certificado digital A1: arquivo + senha",
+          "status": "nasce-depois",
+          "quem": "parceira",
+          "porque": "🔴 O item de maior alcance da nota inteira: quatro passos em três processos diferentes travam sem ele. É o que assina no ADN, no PGDAS-D e no eSocial. Decisão do Pedro em 12/09: os nossos processos NÃO desenham a emissão, só constatam o estado 'certificado ok'. ⚠️ Continua valendo o aberto de 05/09: a plataforma interna que recebe o arquivo da parceira não existe."
+        },
+        {
+          "dado": "Como o RBT12 se comporta na empresa nova",
+          "status": "nao-captado",
+          "quem": "ninguem",
+          "porque": "Empresa recém-aberta não tem 12 meses de receita: a legislação manda proporcionalizar. Isso muda a alíquota do P2.1 nos primeiros meses e a faixa de preço do P1.2. Não é dado que alguém capta, é regra que ninguém escreveu — e sem ela o primeiro DAS da empresa sai de um cálculo que não foi decidido."
+        }
+      ],
+      "insumosFaltando": 4,
       "sugestoes": []
     },
     {
@@ -796,6 +954,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -817,6 +977,8 @@
         "fala": "neutro",
         "ve": "neutro"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -839,6 +1001,8 @@
         "fala": "normal",
         "ve": "neutro"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -861,6 +1025,8 @@
         "fala": "neutro",
         "ve": "neutro"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -882,6 +1048,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -904,6 +1072,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -925,6 +1095,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -946,6 +1118,8 @@
         "fala": "neutro",
         "ve": "neutro"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -967,6 +1141,15 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [
+        {
+          "dado": "Objeto social (gerado, travado)",
+          "status": "captado",
+          "quem": "dev",
+          "porque": "Descreve o que a empresa pode faturar. É a fronteira do que o P3 aceita emitir sem virar caso de alteração contratual (catálogo 8.1)."
+        }
+      ],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -989,6 +1172,21 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [
+        {
+          "dado": "CNAE principal",
+          "status": "captado",
+          "quem": "dev",
+          "porque": "É o dado mais reaproveitado do produto inteiro. Ele decide o Anexo (III ou V), e o Anexo é o que faz o Fator R importar: sem essa escolha, o P5 não tem por que existir. Também é dele que sai o código do serviço na nota (P3.4). Uma escolha na constituição, três processos internos dependendo."
+        },
+        {
+          "dado": "CNAEs secundários (até 15)",
+          "status": "captado",
+          "quem": "dev",
+          "porque": "Quem fatura serviço diferente do principal precisa do código municipal correspondente, e a lista de secundários é o universo do que ela pode emitir sem alteração contratual."
+        }
+      ],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -1010,6 +1208,39 @@
         "fala": "normal",
         "ve": "normal"
       },
+      "insumos": [
+        {
+          "dado": "Razão social + nome fantasia",
+          "status": "captado",
+          "quem": "dev",
+          "porque": "É o emitente da nota. Sai do C7 depois da viabilidade deferida, então o valor que vale é o APROVADO pela Junta, não necessariamente a 1ª das 3 opções que a pessoa escreveu."
+        },
+        {
+          "dado": "Endereço da empresa (CEP, número, complemento, IPTU, tipo de imóvel)",
+          "status": "captado",
+          "quem": "dev",
+          "porque": "Define o município de incidência do ISS, que é o que faz a nota ser de BH e não de outro lugar. Faturar fora de BH é outro caso e já está na loja como CPOM (catálogo 8.5)."
+        },
+        {
+          "dado": "CNPJ",
+          "status": "nasce-depois",
+          "quem": "assistido",
+          "porque": "É a chave de tudo: nenhuma das quatro integrações do produto (PGDAS-D, ADN, eSocial, gateway) aceita requisição sem ele. Nasce na 2ª assinatura, que é justamente o trecho que os programadores ainda não atacaram."
+        },
+        {
+          "dado": "Inscrição municipal (CCM) na Prefeitura de BH",
+          "status": "nao-sei",
+          "quem": "orgao",
+          "porque": "🔴 Sem CCM não se emite NFS-e em BH. O P3 inteiro é o processo com relógio correndo (Res. CGSN 191/2026 obriga o Emissor Nacional a partir de 01/11/2026) e depende de um número que nasce fora dos dois trechos mapeados. Nenhuma tela do flow coleta, nenhum passo de processo produz."
+        },
+        {
+          "dado": "Certificado digital A1: arquivo + senha",
+          "status": "nasce-depois",
+          "quem": "parceira",
+          "porque": "🔴 O item de maior alcance da nota inteira: quatro passos em três processos diferentes travam sem ele. É o que assina no ADN, no PGDAS-D e no eSocial. Decisão do Pedro em 12/09: os nossos processos NÃO desenham a emissão, só constatam o estado 'certificado ok'. ⚠️ Continua valendo o aberto de 05/09: a plataforma interna que recebe o arquivo da parceira não existe."
+        }
+      ],
+      "insumosFaltando": 3,
       "sugestoes": []
     },
     {
@@ -1031,6 +1262,8 @@
         "fala": "normal",
         "ve": "neutro"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -1052,6 +1285,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -1074,6 +1309,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -1095,6 +1332,21 @@
         "fala": "neutro",
         "ve": "neutro"
       },
+      "insumos": [
+        {
+          "dado": "Certificado digital A1: arquivo + senha",
+          "status": "nasce-depois",
+          "quem": "parceira",
+          "porque": "🔴 O item de maior alcance da nota inteira: quatro passos em três processos diferentes travam sem ele. É o que assina no ADN, no PGDAS-D e no eSocial. Decisão do Pedro em 12/09: os nossos processos NÃO desenham a emissão, só constatam o estado 'certificado ok'. ⚠️ Continua valendo o aberto de 05/09: a plataforma interna que recebe o arquivo da parceira não existe."
+        },
+        {
+          "dado": "Validade do certificado",
+          "status": "nasce-depois",
+          "quem": "parceira",
+          "porque": "O P3.9 confere a validade ANTES de cada transmissão, então a data precisa estar guardada como dado, não só o arquivo. É também o que faz o P3.11 saber se o caso é 'nunca fez a videochamada' ou 'venceu'."
+        }
+      ],
+      "insumosFaltando": 2,
       "sugestoes": []
     },
     {
@@ -1117,6 +1369,8 @@
         "fala": "buraco",
         "ve": "buraco"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -1138,6 +1392,15 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [
+        {
+          "dado": "Validade do certificado",
+          "status": "nasce-depois",
+          "quem": "parceira",
+          "porque": "O P3.9 confere a validade ANTES de cada transmissão, então a data precisa estar guardada como dado, não só o arquivo. É também o que faz o P3.11 saber se o caso é 'nunca fez a videochamada' ou 'venceu'."
+        }
+      ],
+      "insumosFaltando": 1,
       "sugestoes": []
     },
     {
@@ -1159,6 +1422,15 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [
+        {
+          "dado": "Quem administra a empresa",
+          "status": "captado",
+          "quem": "dev",
+          "porque": "Já está travado como o que decide a qualificação 49 × 22 no DBE. Do lado interno, é quem tem pró-labore a decidir: sócio 22 é quotista e pode não receber nada, e oferecer a decisão do mês pra quem não é administrador é pergunta sem dono."
+        }
+      ],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -1180,6 +1452,15 @@
         "fala": "neutro",
         "ve": "neutro"
       },
+      "insumos": [
+        {
+          "dado": "CNAE principal",
+          "status": "captado",
+          "quem": "dev",
+          "porque": "É o dado mais reaproveitado do produto inteiro. Ele decide o Anexo (III ou V), e o Anexo é o que faz o Fator R importar: sem essa escolha, o P5 não tem por que existir. Também é dele que sai o código do serviço na nota (P3.4). Uma escolha na constituição, três processos internos dependendo."
+        }
+      ],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -1201,6 +1482,15 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [
+        {
+          "dado": "Vínculo INSS por fora (sim/não + valor)",
+          "status": "captado",
+          "quem": "dev",
+          "porque": "Quem já contribui por fora tem folga no teto do INSS, e isso muda quanto sai de contribuição no pró-labore. O catálogo já dizia 'declarado pelo cliente no onboarding (já coletamos no flow)': esta linha é a confirmação de que a promessa tem lastro."
+        }
+      ],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -1222,6 +1512,8 @@
         "fala": "neutro",
         "ve": "neutro"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -1244,6 +1536,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -1265,6 +1559,15 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [
+        {
+          "dado": "Quem administra a empresa",
+          "status": "captado",
+          "quem": "dev",
+          "porque": "Já está travado como o que decide a qualificação 49 × 22 no DBE. Do lado interno, é quem tem pró-labore a decidir: sócio 22 é quotista e pode não receber nada, e oferecer a decisão do mês pra quem não é administrador é pergunta sem dono."
+        }
+      ],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -1286,6 +1589,39 @@
         "fala": "normal",
         "ve": "normal"
       },
+      "insumos": [
+        {
+          "dado": "Vínculo INSS por fora (sim/não + valor)",
+          "status": "captado",
+          "quem": "dev",
+          "porque": "Quem já contribui por fora tem folga no teto do INSS, e isso muda quanto sai de contribuição no pró-labore. O catálogo já dizia 'declarado pelo cliente no onboarding (já coletamos no flow)': esta linha é a confirmação de que a promessa tem lastro."
+        },
+        {
+          "dado": "Sócios: nome, CPF, nascimento, RG, % de participação",
+          "status": "captado",
+          "quem": "dev",
+          "porque": "O eSocial pede a qualificação completa de cada pessoa que recebe pró-labore. Sem CPF e nascimento de cada sócio, o S-1200 não transmite, e o P5.7 para."
+        },
+        {
+          "dado": "CNPJ",
+          "status": "nasce-depois",
+          "quem": "assistido",
+          "porque": "É a chave de tudo: nenhuma das quatro integrações do produto (PGDAS-D, ADN, eSocial, gateway) aceita requisição sem ele. Nasce na 2ª assinatura, que é justamente o trecho que os programadores ainda não atacaram."
+        },
+        {
+          "dado": "Certificado digital A1: arquivo + senha",
+          "status": "nasce-depois",
+          "quem": "parceira",
+          "porque": "🔴 O item de maior alcance da nota inteira: quatro passos em três processos diferentes travam sem ele. É o que assina no ADN, no PGDAS-D e no eSocial. Decisão do Pedro em 12/09: os nossos processos NÃO desenham a emissão, só constatam o estado 'certificado ok'. ⚠️ Continua valendo o aberto de 05/09: a plataforma interna que recebe o arquivo da parceira não existe."
+        },
+        {
+          "dado": "Dependentes para IRRF",
+          "status": "nao-captado",
+          "quem": "ninguem",
+          "porque": "Entra direto no cálculo do IRRF do pró-labore, e o líder tem. Não é gap de constituição (não vai pra Junta nem pro DBE), é gap do app interno: o lugar natural é o cadastro do sócio depois que a empresa abre, não mais uma pergunta antes do pagamento."
+        }
+      ],
+      "insumosFaltando": 3,
       "sugestoes": []
     },
     {
@@ -1308,6 +1644,15 @@
         "fala": "buraco",
         "ve": "buraco"
       },
+      "insumos": [
+        {
+          "dado": "Conta bancária da PJ (ou o extrato dela)",
+          "status": "nao-captado",
+          "quem": "ninguem",
+          "porque": "🔴 É o único caminho conhecido pro vermelho do P5. O P5.8 pergunta se o pró-labore foi EFETIVAMENTE PAGO, e o dinheiro vai da empresa pro sócio sem passar por nós nem pelo governo: não há API. O preço de errar está medido — considerar pago o que só foi lançado gera glosa do Fator R, reclassificação pro Anexo V e multa (6% virando 15,5%). Hoje o único rastro previsto é o extrato que o cliente envia até o 5º dia útil (cláusula 5.4)."
+        }
+      ],
+      "insumosFaltando": 1,
       "sugestoes": []
     },
     {
@@ -1329,6 +1674,15 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [
+        {
+          "dado": "Sócios: nome, CPF, nascimento, RG, % de participação",
+          "status": "captado",
+          "quem": "dev",
+          "porque": "O eSocial pede a qualificação completa de cada pessoa que recebe pró-labore. Sem CPF e nascimento de cada sócio, o S-1200 não transmite, e o P5.7 para."
+        }
+      ],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -1351,6 +1705,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -1373,6 +1729,8 @@
         "fala": "neutro",
         "ve": "normal"
       },
+      "insumos": [],
+      "insumosFaltando": 0,
       "sugestoes": []
     }
   ],

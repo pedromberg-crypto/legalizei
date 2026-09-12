@@ -457,6 +457,20 @@ Esta §6 tinha **16 linhas de erro registrado** quando ele cobrou a auditoria, e
 - **Não valida número.** Preço, prazo e alíquota continuam vindo das fontes de sempre.
 - **Não substitui o E2E.** O processo diz o que deveria acontecer; o E2E prova que acontece. O board tem o botão, e **só o Pedro aperta** — a regra de 30/08 continua valendo: *E2E só quando o Pedro pedir, e um "pode rodar" vale só pra aquela rodada.*
 
+### 7.1 🔴 O semáforo mede DESENHO, não INSUMO (achado de 12/09)
+
+O 🟢 responde uma pergunta só: **"a gente sabe o que fazer aqui?"**. Ele nunca respondeu **"a gente tem com que fazer?"**, e eu tratei os dois como se fossem um.
+
+O achado veio do handoff de dados (`execucao/handoff/`), que cruzou o que a constituição coleta com o que os passos consomem. Resultado: **8 passos 🟢 verdes dependem de insumo sem entrega combinada**. O P3.5 está verde e não emite nota nenhuma sem CCM e sem certificado. O P4.24 está verde e não sabe que dia cobrar se a data do aceite não atravessar a fronteira do time do dev.
+
+Não é defeito do semáforo, é o escopo dele — mas verde sozinho lê como "pronto", e nesses cartões isso é verdade pela metade.
+
+**O que mudou:** o cartão do board ganhou o selo `⚠ N` (âmbar sobre a faixa, mesmo quando ela é verde) e o painel lista o que o passo come, com o estado de cada insumo. A fonte é o `dados-handoff.mjs`; o board não cruza nada sozinho, e **não existe segundo inventário**.
+
+⚠️ E a fronteira do selo: ele diz que o insumo não tem entrega combinada, **não** que é impossível. "Nasce depois" é o CNPJ, que existe e vem do trecho assistido — falta combinado, não desenho.
+
+🔴 **Dado não vira cartão.** A tentação de desenhar o handoff como caminho no board foi descartada em 12/09 (Pedro): um dado é **pré-condição**, não etapa. Virar nó inventaria sequência onde só existe dependência, e a tabela de saídas passaria a auditar caminho que não é caminho. Handoff é tabela; o board só pendura o selo.
+
 ## Links
 - [[_doutrina-capacidades]] — a fase 3, adiada de propósito
 - [[HOME-produto]] — o painel de 51 funcionalidades

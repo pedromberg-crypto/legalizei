@@ -503,6 +503,40 @@ export default function ProcessosPage() {
               <Campo rotulo="De onde vem a regra" valor={selecionado.fonte} />
             )}
 
+            {/* ── o que este passo COME (handoff, 12/09) ─────────────────── */}
+            {selecionado.insumos?.length ? (
+              <div className="mt-3 border-t border-zinc-100 pt-2">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
+                  Insumo · o que ele precisa receber
+                </p>
+                <ul className="mt-1 space-y-1.5">
+                  {selecionado.insumos.map((i) => {
+                    const s = INSUMO[i.status] ?? INSUMO_DESCONHECIDO;
+                    return (
+                      <li key={i.dado} className="flex gap-1.5 text-[12px] leading-snug">
+                        <span aria-hidden>{s.emoji}</span>
+                        <span className="min-w-0">
+                          <span className={s.classe}>{i.dado}</span>
+                          <span className="text-zinc-400"> · {s.rotulo}</span>
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+                {/* 🔑 o board não decide isto: quem decide é o handoff, e a
+                    pergunta de cada buraco está escrita lá com destinatário */}
+                {selecionado.insumosFaltando ? (
+                  <p className="mt-2 text-[11px] leading-relaxed text-amber-800">
+                    {selecionado.insumosFaltando === 1
+                      ? "1 insumo ainda não tem entrega combinada."
+                      : `${selecionado.insumosFaltando} insumos ainda não têm entrega combinada.`}{" "}
+                    A pergunta de cada um, e pra quem ela vai, está em{" "}
+                    <code className="rounded bg-amber-50 px-1">execucao/handoff/HANDOFF-DADOS.md</code>.
+                  </p>
+                ) : null}
+              </div>
+            ) : null}
+
             {/* ── por que EU sugeri isto ─────────────────────────────────── */}
             {selecionado.proposta && selecionado.porque && (
               <div className="mt-3 rounded-xl border border-dashed border-zinc-300 bg-zinc-50 p-3">
@@ -618,6 +652,22 @@ function BotoesPainel({
     </div>
   );
 }
+
+/**
+ * ── OS QUATRO ESTADOS DE UM INSUMO (12/09) ──────────────────────────────────
+ *
+ * Mesma escala do handoff, e ela NÃO é o semáforo do passo: aqui não se mede
+ * se a gente sabe o que fazer, se mede se o dado chega. "nasce depois" não é
+ * defeito — é o CNPJ, que existe e vem do trecho assistido; o que ele precisa
+ * é de um combinado de entrega, não de desenho.
+ */
+const INSUMO: Record<string, { emoji: string; rotulo: string; classe: string }> = {
+  captado: { emoji: "🟢", rotulo: "chega da constituição", classe: "text-zinc-600" },
+  "nasce-depois": { emoji: "🟡", rotulo: "nasce depois, falta combinar a entrega", classe: "text-zinc-800 font-semibold" },
+  "nao-sei": { emoji: "🟡", rotulo: "ninguém combinou", classe: "text-amber-800 font-semibold" },
+  "nao-captado": { emoji: "🔴", rotulo: "ninguém produz hoje", classe: "text-red-800 font-semibold" },
+};
+const INSUMO_DESCONHECIDO = { emoji: "❔", rotulo: "estado desconhecido", classe: "text-zinc-500" };
 
 function Campo({ rotulo, valor }: { rotulo: string; valor: string }) {
   return (

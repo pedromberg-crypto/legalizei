@@ -1,5 +1,7 @@
 # Memory Index — Legalize
 
+- [A abertura ja tem dono: nao desenhar, so mapear os dados](legalize-fronteira-abertura-time-dev.md) — 12/09: time do dev cobre download→pagamento da guia; assistido = 2 assinaturas + certificado; handoff e TABELA, nao caminho no board.
+- [O semaforo mede desenho, nao insumo](legalize-semaforo-mede-desenho-nao-insumo.md) — 12/09: 8 passos verdes dependiam de insumo sem entrega combinada; nasceu o selo ⚠ N no cartao. Dado nao vira cartao.
 - [Nao matar um caminho corrigindo outro](legalize-nao-matar-caminho-multiplos-ramos.md) — 11/09 travado: todo no depois de bifurcacao e compartilhado; simulador de caminhos no gerar-processos (base x todas x cada uma sozinha).
 - [A doutrina de processos nao se enche sozinha](legalize-doutrina-processos-nao-se-enche-sozinha.md) — 11/09: §6 e a casa das licoes e depende de alguem escrever; vigia no gerar-processos avisa depois de 3 levas.
 - [Processo ANTES da tela](legalize-processo-antes-da-tela.md) — 11/09 revoga o plano de inventariar telas: inventario de tela e cego pro que falta. Board `/processos`, semaforo, vermelho e o produto.

@@ -83,6 +83,20 @@ export type Passo = {
   /** id da proposta que sugere TIRAR este passo do processo */
   removidoPor?: string;
   porqueRemover?: string;
+
+  /* ── camada de INSUMO (12/09) ────────────────────────────────────────── */
+  /**
+   * 🔴 O QUE O PASSO COME, e se isso chega. Vem do `handoff/dados-handoff.mjs`
+   * pelo gerador — o board não sabe cruzar nada sozinho.
+   *
+   * Existe porque o semáforo mede um eixo só: "sabemos o que fazer". Ele não
+   * mede "temos com que fazer". O P3.5 é verde e não emite nota sem CCM nem
+   * certificado; o P4.24 é verde e não sabe que dia cobrar sem a data do
+   * aceite. Sem este selo, o cartão verde mente por omissão.
+   */
+  insumos?: { dado: string; status: string; quem: string; porque?: string }[];
+  /** quantos desses ainda não têm entrega combinada — só isto vira selo */
+  insumosFaltando?: number;
   /** as condições que saem daqui, uma por aresta. Vem do board, não do
    *  gerador: depende do filtro e do que o Pedro já aceitou ou descartou */
   saidas?: { label: string; para: string; quando?: string }[];
@@ -279,6 +293,25 @@ export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
           <BotoesDecisao data={data} />
         ) : (
           <span className="ml-auto flex items-center gap-1.5">
+            {/**
+             * 🔴 SELO DE INSUMO (12/09, pedido do Pedro).
+             *
+             * Âmbar sólido DE PROPÓSITO, mesmo sobre uma faixa verde: a
+             * dissonância é a mensagem. Um cartão verde com este selo está
+             * dizendo "eu sei o que fazer e não tenho com que fazer", que é
+             * exatamente a leitura que o semáforo sozinho apagava.
+             *
+             * Só o número no cartão; o que falta, e por quê, mora no painel
+             * — altura aqui é fixa (§5.1), mesma regra das sugestões.
+             */}
+            {data.insumosFaltando ? (
+              <span
+                className="rounded bg-amber-300 px-1 text-[9px] font-bold text-amber-950"
+                title={`${data.insumosFaltando} insumo(s) sem entrega combinada — abra o painel`}
+              >
+                ⚠ {data.insumosFaltando}
+              </span>
+            ) : null}
             {/* sugestão de CAMPO não vira cartão: avisa aqui e abre no painel */}
             {data.sugestoes?.length ? (
               <span

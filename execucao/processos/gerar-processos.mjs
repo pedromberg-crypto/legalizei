@@ -25,6 +25,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { PROCESSOS, PASSOS, ARESTAS, TRILHAS } from "./processos-data.mjs";
 import { PROPOSTAS } from "./processos-propostas.mjs";
+import { DADOS } from "../handoff/dados-handoff.mjs";
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
 const RAIZ = resolve(AQUI, "..", "..");
@@ -66,6 +67,39 @@ const avisos = [];
 for (const a of ARESTAS) {
   if (!ids.has(a.de)) avisos.push(`aresta parte de passo inexistente: ${a.de}`);
   if (!ids.has(a.para)) avisos.push(`aresta chega em passo inexistente: ${a.para}`);
+}
+
+/**
+ * ── INSUMO (12/09, pedido do Pedro) ─────────────────────────────────────────
+ *
+ * 🔴 O SEMÁFORO E O INSUMO SÃO DOIS EIXOS, e até hoje só um estava na tela.
+ *
+ * O semáforo responde *"a gente sabe o que fazer aqui?"*. Ele NÃO responde
+ * *"a gente tem com que fazer?"*. O P3.5 é 🟢 verde e não emite nota nenhuma
+ * sem CCM e sem certificado; o P4.24 é 🟢 e não sabe que dia cobrar se a data
+ * do aceite não atravessar a fronteira do time do dev. Olhar o board e ver
+ * verde nesses cartões é ler uma verdade pela metade.
+ *
+ * O handoff (`handoff/dados-handoff.mjs`) é quem sabe disso, porque é ele que
+ * cruza o que a constituição coleta com o que os processos consomem. Aqui o
+ * board só PENDURA esse fato no cartão que já existe — nada de inventário
+ * novo, nada de caminho novo: dado não é etapa, é pré-condição.
+ */
+const insumoPorPasso = new Map();
+for (const d of DADOS) {
+  for (const id of d.consome ?? []) {
+    if (!ids.has(id)) {
+      avisos.push(`handoff: o dado "${d.id}" consome passo inexistente: ${id}`);
+      continue;
+    }
+    if (!insumoPorPasso.has(id)) insumoPorPasso.set(id, []);
+    insumoPorPasso.get(id).push({
+      dado: d.dado,
+      status: d.status,
+      quem: d.entregaPor,
+      porque: d.porque,
+    });
+  }
 }
 
 const alcancados = new Set(ARESTAS.map((a) => a.para));
@@ -633,6 +667,10 @@ const grafo = {
        */
       removidoPor: PROPOSTAS.find((s) => (s.remove ?? []).includes(p.id))?.id,
       porqueRemover: PROPOSTAS.find((s) => (s.remove ?? []).includes(p.id))?.porque,
+      /** o que este passo COME (handoff). Lista inteira no painel; no cartão
+       *  só o selo, porque altura é fixa (§5.1) — mesma regra das sugestões */
+      insumos: insumoPorPasso.get(p.id) ?? [],
+      insumosFaltando: (insumoPorPasso.get(p.id) ?? []).filter((i) => i.status !== "captado").length,
       sugestoes: PROPOSTAS.filter((s) => (s.mudancas ?? []).some((m) => m.passo === p.id)).map((s) => ({
         id: s.id,
         titulo: s.titulo ?? "",

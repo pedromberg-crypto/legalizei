@@ -1,0 +1,886 @@
+1 
+ 
+NFS-e Nacional: orientações gerais e perguntas frequentes 
+Versão 7.1 – Atualizado em 09/04/2026 
+NFS-e Nacional: orientações gerais e perguntas frequentes ...................................... 1 
+Orientações gerais: ................................ ................................ ................................ .......... 3 
+Perguntas Frequentes ................................ ................................ ................................ ...... 8 
+1 - Como ficará a emissão de Nota Fiscal de Serviços Eletrônica Nacional (NFS -e Nacional) e o 
+recolhimento (guia) do ISSQN “fixo” para as sociedades de profissionais liberais (SPL), disciplinadas 
+pelo artigo 13 da Lei 8.725/2003? ....................................................................................................... 8 
+2- Como ficará a emissão de guias pertinentes às notas fiscais de serviços emitidas pelo sistema 
+emissor nacional? ................................................................................................................................ 8 
+3- Como emitir a Nota Fiscal de Serviços Eletrônica Nacional (NFS-e Nacional)? ............................... 8 
+4- Qual o procedimento a ser adotado após o início da utilização da NFS -e Nacional, quando 
+houver necessidade de emissão de nota para competências anteriores à transição?  ....................... 9 
+5- Onde obter informações mais detalhadas acerca do emissor nacional?  ........................................ 9 
+6- Como será a emissão de nota fiscal de locação (quando não incide ISSQN) no ambiente da Nota 
+Fiscal de Serviços Eletrônica Nacional (NFS-e Nacional)? .................................................................... 9 
+7- Como baixar os arquivos XML e Planilha/relatório das notas emitidas no ambiente Nota Fiscal de 
+Serviços Eletrônica Nacional (NFS-e Nacional)? ................................................................................ 10 
+8- Onde localizo os códigos de tributação para informar na Nota Fiscal de Serviço Eletrônica 
+Nacional - NFS-e Nacional? ................................................................................................................ 10 
+9- Não encontro um enquadramento exato dos serviços prestados em um código da Nomenclatura 
+Brasileira de Serviços (NBS). Como proceder? .................................................................................. 11 
+10- O Município manterá a lista de serviços da LC 116/03 ou adotará a nova Tabela de Classificação 
+Tributária do IBS/CBS (cClass Trib)? ................................................................................................... 11 
+11- Como fazer testes no Emissor Nacional antes de o ambiente ser liberado?  .............................. 11 
+12- Como ficará a situação dos prestadores que possuem regime especial que autoriza a emissão 
+de nota fiscal sem os dados do tomador? ......................................................................................... 12 
+13- Em caso de aluguéis de imóveis, a emissão da nota será feita pela prefeitura da empresa 
+locadora ou pela prefeitura onde está localizado o imóvel? ............................................................. 12 
+14- As empresas que ainda usam Nota Fiscal de Serviços série "A" e “D”, documento em papel, 
+ficam obrigados a emitir uma NFS-e Nacional? ................................................................................. 12 
+15- As empresas já podem emitir a Nota Fiscal de Serviço Eletrônica Nacional - NFS-e Nacional com 
+os campos IBS (Imposto sobre Bens e Serviços) e CBS (Contribuição sobre Bens e Serviços) em 
+homologação? ................................................................................................................................... 12 
+16- O sistema próprio que utilizo para e emissão de notas fiscais continuará funcionando?  .......... 13 
+17- Como fazer o cancelamento/substituição da Nota Fiscal de Serviços Eletrônica (NFS -e 
+Nacional)? .......................................................................................................................................... 13 
+18- Qual o prazo para análise fiscal do cancelamento de NFS-e solicitado no Portal Nacional? ...... 16 
+19- Há um cronograma para a adesão dos contribuintes ao Emissor Nacional?  .............................. 16 
+20- Os contribuintes com recolhimento do ISSQN por Estimativa Total continuam a ter a obrigação 
+de emitir NFS-e apenas quando for solicitada? ................................................................................. 17 
+21- Como será a migração de empresa beneficiada pelo PROEMP para o emissor nacional de notas 
+fiscais de serviços? ............................................................................................................................. 17 
+22- Haverá alteração no valor a ser recolhido pela SPL, com a utilização da NFS -e Nacional? ......... 17 
+23- É possível emitir a NFS-e Nacional com deduções na base de cálculo do ISSQN? ...................... 17 
+24- Como deve ser feita a emissão da NFS-e com base em decisão administrativa do Município de 
+Belo Horizonte? ................................................................................................................................. 18 
+25- É necessário comprovar as deduções utilizadas na NFS-e Nacional? .......................................... 18 
+26- De que forma devem ser informados os documentos comprobatórios das deduções?  ............. 18 
+2 
+ 
+27- Como ficará a situação do registro dos serviços tomados na Declaração Eletrônica de Serviços – 
+DES e do ISSQN retido na fonte, quando houver, após a transição para o emissor nacional da Nota 
+Fiscal de Serviços Eletrônica (NFS-e Nacional)? ................................................................................. 18 
+28- É possível a importação dos arquivos XML das NFS-e baixados no Portal Nacional diretamente 
+no programa da DES? ........................................................................................................................ 19 
+29- Há alguma flexibilização em relação ao cumprimento de obrigações acessórias do IBS a partir 
+de 01/01/2026? ................................................................................................................................. 20 
+30- É permitida a emissão de NFS-e por procuração? ....................................................................... 20 
+31- O que é a NFS-e Via? ................................................................................................................... 20 
+32- Quem são os Obrigados (Emissores)?  A norma se aplica às Concessionárias de rodovias. Para 
+emitir o documento, elas devem: - Estar regularmente inscritas no CNPJ - Cadastrar-se no Portal 
+Nacional da NFS-e .............................................................................................................................. 21 
+33- O que o motorista/usuário do serviço recebe (Documentos Auxiliares)? ................................... 21 
+34- O motorista/usuário recebe a NFS-e Via no momento de sua passagem pelo posto de pedágio?
+ ........................................................................................................................................................... 21 
+35- É permitida alteração de informações na NFS-e Via? ................................................................. 21 
+36- Qual a diferença entre cancelamento de NFS-e Via, cancelamento de NFS-e Via por substituição 
+e manifestação de NFS-e Via? ........................................................................................................... 21 
+37- Qual é o prazo de guarda dos documentos gerados pela Concessionária?  ................................ 22 
+  
+3 
+ 
+Orientações gerais: 
+ 
+NOTA TÉCNICA SE/CGNFS-e Nº 004 V2 DESOBRIGA TEMPORARIAMENTE A INFORMAÇÃO DO 
+GRUPO "IBSCBS" A PARTIR DE JANEIRO/2026 
+  
+Foi publicada em 10/12/2025 a versão 2.0 da Nota Técnica SE \CGNFS-e nº 004, que está 
+disponível aqui. Esta NT traz as seguintes novidades:  
+1. Desligamento das Regras de Validação de Obrigatoriedade dos Grupos “IBSCBS”  
+2. Disponibilização de Ambiente de Testes para os Grupos “IBSCBS” - Piloto 
+3. NFS-e Via 
+  
+Recomendamos fortemente aos responsáveis pela confecção de software de emissão/gestão da 
+NFS-e de padrão nacional para contribuintes e municípios uma leitura atenta à referida Nota 
+Técnica, especialmente nos itens 1.1, 1.2 e 1.3. 
+  
+Estejam atentos também às notícias e novos documentos técnicos que são publicados e 
+atualizados periodicamente no Portal da NFS-e Nacional (https://www.gov.br/nfse/pt-br). 
+ 
+BENEFICIÁRIOS DO PROEMP – NOVO PRAZO PARA OBRIGATORIEDADE DE EMISSÃO DE NFS-E 
+POR MEIO DO EMISSOR NACIONAL 
+ 
+Em 19/12/2025, foi publicada a  Portaria SMFA nº 88/2025 (https://dom-
+web.pbh.gov.br/visualizacao/ato/474961), que altera a Portaria SMFA nº 75/2025, 
+determinando que os beneficiários do PROEMP deverão continuar a emitir a Nota Fiscal de 
+Serviços eletrônica - NFS-e por meio do emissor local de Belo Horizonte até 31 de janeiro de 
+2026. 
+ 
+Esta alteração mostrou -se necessária, sobretudo porque o prazo originalmente estabelecido 
+revelou-se exíguo para que os contribuintes beneficiados pelo Programa de Incentivo à 
+Instalação e Ampliação de Empresas – PROEMP realizem os testes necessários em seus sistemas, 
+especialmente diante da pendência de ajustes técnicos a serem desenvolvidos pelo SERPRO para 
+viabilizar o envio da NFS -e Nacional com a utilização deste benefício fiscal (inciso IV do art. 4º 
+da Portaria SMFA nº 75/2025). 
+ 
+COOPERATIVAS 
+Ato cooperado e art. 10 da Lei 8.725/2003: 
+  
+As cooperativas que pratiquem atos cooperativos, conforme definição legal, devem emitir as 
+NFS-e referentes a estes atos utilizando o regime especial “Ato Cooperado”. Este procedimento 
+faz com que a nota fiscal saia sem o imposto destacado, não gerando déb itos para o 
+contribuinte. 
+  
+As cooperativas que emitem suas notas em conformidade com o art. 10 da Lei 8.725/2003 
+deverão emitir duas NFS -e distintas, sendo uma nota para o ato cooperativo auxiliar 
+(informando o regime especial de ato cooperado) e outra nota para o valor efetivamente  
+recebido pela cooperativa (sem regime especial e com o ISSQN destacado). 
+  
+4 
+ 
+Para emissão via API da nota de ato cooperado, essa informação deve ser inserida no campo 
+<regEspTrib> da DPS, com o valor “1”.  
+  
+Para emissão  via Web , deve -se selecionar o referido regime no campo “Regime Especial de 
+Tributação” na tela de Valores, conforme imagem abaixo: 
+ 
+  
+Alíquota diferenciada de 3%: 
+  
+As cooperativas que prestarem serviços cujo ISSQN seja devido em Belo Horizonte deverão 
+informar que gozam de um  BENEFÍCIO MUNICIPAL para poderem usufruir da alíquota de 3% 
+definida na legislação. 
+  
+Para emissão via API, o identificador (ID) do benefício deve ser informado no campo <nBM> da 
+DPS. Este benefício possui ID  31062000200004 no ambiente de produção restrita 
+e 31062000200002 no ambiente de produção. 
+  
+Para emissão  via Web , deve -se responder "Sim" na pergunta "Este serviço prestado está 
+amparado por algum benefício municipal?" na tela de Valores, conforme imagem abaixo: 
+ 
+ 
+ 
+ 
+
+5 
+ 
+PROFISSIONAIS AUTÔNOMOS E TITULARES DE CARTÓRIOS 
+  
+Os profissionais autônomos e titulares de cartórios são, pela legislação do ISSQN de Belo 
+Horizonte, dispensados da emissão de NFS-e. Entretanto, aqueles que desejarem emitir NFS-e a 
+partir de 01/01/2026, diante das disposições trazidas pela legislação do IBS/CBS, devem solicitar 
+sua habilitação no sistema nacional por meio do serviço ISSQN - Esclarecimentos sobre 
+Legislação e Preenchimento de DES/ NFS-e, acessível pelo endereço abaixo: 
+https://servicos.pbh.gov.br/servicos+issqn-esclarecimentos-sobre-legislacao-e-
+preenchimento-de-des-nfs-e+5e839418d9521a26a970ecec 
+  
+Em ambos os casos, o contribuinte deverá emitir sua NFS-e informando seu CPF e sua Inscrição 
+Municipal (IM). O contribuinte deverá, ainda, na NFS -e, indicar o regime especial 
+correspondente: "Profissional Autônomo" ou "Notário ou Registrador" (para emissão  via API, 
+essa informação deve ser inserida no campo <regEspTrib> da DPS, com o valor “5” para 
+autônomos e "4" para os titulares de cartórios). 
+  
+É importante destacar que a forma de recolhimento do ISSQN por estes contribuintes não sofre 
+alteração com a emissão da NFS -e, permanecendo válidos os procedimentos que já eram 
+adotados. 
+ 
+ 
+DESDOBRAMENTOS MUNICIPAIS 
+As NFS-e emitidas pelo Emissor Nacional cujo ISSQN seja devido à Belo Horizonte devem ter, 
+além do campo <cTribNac> (6 dígitos), o campo <cTribMun> preenchido. Este campo 
+corresponde ao desdobramento municipal dos serviços constantes da Lista de Serviços d a Lei 
+Complementar nº 116/2003, análogos aos CTISS já existentes, e possui 3 dígitos.  
+ 
+Os desdobramentos municipais podem ser consultados por meio do serviço "ISSQN - Correlação 
+CTISS - Código de Tributação do ISSQN/ Código de Tributação Nacional" (acessível por meio 
+deste link). Também é possível consultar os desdobramentos pelo Emissor Web da NFS -e 
+Nacional. 
+ 
+CORRELAÇÃO DA NBS COM A LISTA DE SERVIÇOS DA LEI COMPLEMENTAR 116/2003 
+ A Nomenclatura Brasileira de Serviços (NBS) é o classificador nacional para a identificação dos 
+serviços e intangíveis que produzam variações no patrimônio. Este código já deve ser informado 
+nas NFS-e emitidas para a exportação de serviços e, nos demais c asos, será exigida a partir de 
+01/01/2026, atendendo aos requisitos da reforma tributária. A correlação entre os códigos da 
+NBS e os itens e subitens da Lista de Serviços da LC 116/2003 pode ser consultada no portal 
+nacional da NFS-e, na área de documentação técnica (acessível por meio deste link). 
+ 
+BENEFICIÁRIOS DO PROEMP 
+ 
+As entidades beneficiárias do Programa de Incentivo à Instalação e Ampliação de Empresa 
+(Proemp) devem emitir suas NFS-e indicando o regime especial "Outros". Para emissão via API, 
+essa informação deve ser inserida no campo <regEspTrib> do DPS, com o valor "9". 
+6 
+ 
+O regime especial "Outros"  não deve ser incluído  (isto é, o campo deve ser preenchido com 
+"Nenhum" no emissor Web e, para emissão via API, o campo <regEspTrib> do DPS deve ser 
+preenchido com o valor "0") caso a NFS-e emitida seja relativa a um serviço não abrangido pelo 
+Proemp, conforme o Certificado de Incentivo Fiscal (CIF).  
+No campo descritivo da nota, o contribuinte deve informar que é beneficiário do programa e o 
+número do CIF correspondente. 
+Vale destacar que, nos termos do art. 11 do Decreto 17.044/2019, a utilização do benefício fiscal 
+sobre a prestação de serviços não incluídos no CIF -Proemp implicará a imediata exclusão do 
+incentivado do Proemp; a anulação de todos os incentivos concedidos  e eventualmente 
+usufruídos no âmbito do programa, com a perda da redução do imposto e dos diferimentos já 
+ocorridos e a exigência imediata do imposto vencido, acrescido dos gravames legais, sem 
+prejuízo das penalidades cominadas às infrações tributárias apuradas. 
+ 
+REGIMES ESPECIAIS DE TRIBUTAÇÃO 
+No layout da NFS -e Nacional, são previstos alguns tipos de Regimes Especiais de Tributação 
+Municipal, que devem ser informados no campo <regEspTrib>. Em Belo Horizonte, são 
+admitidos os regimes: 
+ 
+1 - Ato Cooperado (específico para utilização pelas cooperativas, em caso de emissão de nota 
+cujo valor integral é referente ao valor repassado a cooperados); 
+2 - Estimativa; 
+4 - Notário ou Registrador; 
+5 - Profissional Autônomo; 
+6 - Sociedade de Profissionais (destinado às Sociedades de Profissionais Liberais - SPL); 
+9 – Outros (destinado, no caso de Belo Horizonte, aos beneficiários do PROEMP). 
+ 
+INSCRIÇÕES MUNICIPAIS 
+No layout da NFS -e Nacional, o campo <IM> é numérico. Por isso, os contribuintes migrados 
+para o Emissor Nacional em 01/10/2025, em 01/11/2025 e em 01/01/2026 cujo dígito 
+verificador da Inscrição Municipal é "X" foram cadastrados no sistema substituindo es te 
+caractere por "0". Assim, os contribuintes que emitirem suas notas via API devem ter isso em 
+mente ao preencher o campo <IM>. É também possível consultar a IM cadastrada pelo Emissor 
+Web. 
+Os contribuintes migrados em 01/12/2025, bem como aqueles cuja atividade foi iniciada após 
+esta data ou que mudaram seu endereço para Belo Horizonte após esta data devem emitir suas 
+NFS-e sem informar a IM, salvo eventuais casos específicos, que serão devidamente informados 
+às entidades afetadas. 
+ 
+MENSAGENS NO CAMPO DE INFORMAÇÕES COMPLEMENTARES 
+7 
+ 
+A NFS-e nacional ainda não possibilita ao município a inserção automática de mensagens no 
+campo de Informações Complementares. Caso o contribuinte deseje ou seja obrigado pela 
+legislação a inserir mensagens no documento fiscal para não ter o ISSQN retido n a fonte, ele 
+mesmo deve fazê -lo, utilizando -se do campo correspondente no emissor web ou do campo 
+<xInfComp> no arquivo XML da DPS, para aqueles que emitem via API. 
+ 
+MUDANÇA NA INFORMAÇÃO DE DOCUMENTOS COMPROBATÓRIOS DAS DEDUÇÕES 
+A legislação municipal permite que certas atividades tenham deduções ou reduções na base de 
+cálculo do Imposto Sobre Serviços de Qualquer Natureza (ISSQN). Em alguns desses casos, é 
+obrigatório informar os documentos que comprovam o direito a essa dedução. Sobre isso, veja 
+mensagem publicada aqui mesmo no site BHISS em 02/10/2025. 
+Antes da adoção do padrão nacional da NFS-e, a identificação dos documentos que comprovam 
+as deduções era exigida na Declaração Eletrônica de Serviços (DES). Com a adoção da NFS-e de 
+padrão nacional, esta informação passa a ser exigida diretamente na nota fiscal, no momento 
+da sua emissão, quando o município assim determinar. 
+Assim, não será mais necessário informar os documentos comprobatórios das deduções na DES. 
+Esta obrigação acessória já é cumprida no momento da emissão da nota fiscal eletrônica de 
+padrão nacional. 
+Para refletir essa mudança, o programa da DES foi atualizado e não exigirá mais essa informação. 
+Certifique-se de que está utilizando a última versão do programa da DES (versão 3.01 Build 154 
+ou superior) . Para mais orientações sobre essa atualização, veja mensagem publicada aqui 
+mesmo no site BHISS em 05/12/2025. 
+As NFS-e emitidas utilizando os subitens 7.02, 7.05, 9.01, 10.01, 10.02, 10.03, 10.04, 10.05, 10.08 
+e 17.06 somente admitem dedução na modalidade "por documentos". Nesses casos, o 
+contribuinte deve informar qual é o documento que embasa a dedução realizada , de forma 
+análoga ao que era feito na DES. Os subitens 4.22, 4.23, 5.09, 6.01, 6.02, 9.02, 10.06, 10.07, 
+10.09, 10.10, 12.13, 14.01, 14.03, 15.01, 15.10, 17.10, 17.11, 17.12, 17.14, 21.01 e 25.03, por 
+sua vez, admitem dedução por valor monetário, em que basta o contribuinte informar o valor a 
+ser deduzido. 
+  
+8 
+ 
+Perguntas Frequentes  
+ 
+1 - Como ficará a emissão de Nota Fiscal de Serviços Eletrônica Nacional (NFS-e Nacional) 
+e o recolhimento (guia) do ISSQN “fixo” para as sociedades de profissionais liberais (SPL), 
+disciplinadas pelo artigo 13 da Lei 8.725/2003? 
+ 
+De forma similar à nota fiscal emitida pelo sistema da Prefeitura de Belo Horizonte, a NFS -e 
+Nacional dispõe do campo "regEspTrib" para informar/identificar que se trata de documento 
+fiscal emitido por SPL, com recolhimento do ISSQN nos termos da legislação municipal. 
+ 
+A emissão da guia de pagamento da SPLs continuará sendo feita através do sistema da 
+Declaração Eletrônica de Serviços – DES, de acordo com a orientação do subitem 4.7.1.2 do 
+respectivo Manual do Usuário, disponível pelo link informado abaixo: 
+ 
+http://www.pbh.gov.br/bhissdigital/download/des/ManualUsuarioDES30v1.1.pdf 
+ 
+ 
+2- Como ficará a emissão de guias pertinentes às notas fiscais de serviços emitidas pelo 
+sistema emissor nacional? 
+ 
+A guia de recolhimento do ISSQN continuará a ser emitida no BHISS, que passará a reconhecer 
+as NFS -e emitidas no sistema nacional, além das notas eventualmente emitidas no próprio 
+emissor de BH. Apenas a guia de recolhimento do IBS/CBS, quando disponível, deverá ser 
+emitida no sistema de apuração e recolhimento que será disponibilizado pelo Comitê Gestor do 
+IBS e pela Receita Federal do Brasil. 
+ 
+ 
+3- Como emitir a Nota Fiscal de Serviços Eletrônica Nacional (NFS-e Nacional)? 
+ 
+Para emissão de NFS -e Nacional foi disponibilizado um sistema próprio e gratuito 
+(https://www.nfse.gov.br/EmissorNacional/) de forma similar ao que a prefeitura disponibiliza, 
+não sendo necessário adquirir no mercado programa próprio para viabilizar a emissão dos 
+documentos fiscais. O Portal Nacional da NFS -e Nacional oferece emissores nas seguintes 
+modalidades: 
+- Emissor Web: acessível diretamente pelo navegador de internet. 
+- Emissor Mobile: um aplicativo para celular (Android e iOS). 
+- API: para empresas que desejam integrar a emissão diretamente em seus sistemas de gestão, 
+ou seja, para conectar o sistema de gestão (ERP) do contribuinte diretamente ao Ambiente de 
+Dados Nacional (ADN) da NFS-e Nacional. Portanto, as empresas de tecnologia, responsáveis por 
+softwares próprios, devem se adaptar com antecedência. Isso é crucial para os contribuintes 
+que já usam sistemas de gestão e precisam que a emissão de notas fiscais esteja integrada a 
+eles. 
+ 
+O passo a passo para emissão está disponível em https://www.gov.br/nfse/pt-
+br/biblioteca/links-com-passo-a-passo 
+ 
+9 
+ 
+4- Qual o procedimento a ser adotado após o início da utilização da NFS -e Nacional, 
+quando houver necessidade de emissão de nota para competências anteriores à 
+transição? 
+ 
+A partir da data de transição, de acordo com o cronograma divulgado, a emissão de notas fiscais 
+de serviços deverá ser feita exclusivamente por meio dos emissores nacionais, pois o atual 
+emissor da prefeitura será descontinuado. Uma vez feita a transição p ara a NFS -e Nacional 
+somente as NFS-e com competências anteriores à migração deverão continuar a ser emitidas no 
+emissor de Belo Horizonte. 
+ 
+5- Onde obter informações mais detalhadas acerca do emissor nacional? 
+ 
+Informações mais detalhadas sobre o funcionamento do emissor nacional podem ser obtidas no 
+portal nacional da NFS-e, acessível em (https://www.gov.br/nfse/pt-br).  
+ 
+A documentação técnica está disponível em: ( https://www.gov.br/nfse/pt-
+br/biblioteca/documentacao-tecnica/documentacao-em-homologacao).  
+ 
+Nessa página, recomendamos a leitura atenta do "Manual Contribuintes Emissor Público API - 
+Sistema Nacional NFS -e.pdf" e da "Guia EmissorPúblicoNacionalWEB_SNNFSe -ERN.pdf", além 
+dos demais artefatos disponíveis. 
+ 
+6- Como será a emissão de nota fiscal de locação (quando não incide ISSQN) no ambiente 
+da Nota Fiscal de Serviços Eletrônica Nacional (NFS-e Nacional)? 
+ 
+Em razão dos ajustes necessários para a formalização dessas operações, o layout da NFS-e e os 
+Emissores Públicos Nacionais estão sendo adaptados para refletirem essas evoluções, a exemplo 
+daquelas trazidas nesta NT e na NT SE/CGNFS -e nº 005.  Essas evoluções ainda não estão 
+disponíveis e o cronograma dessas implantações será publicado no portal da NFS-e. 
+ 
+Conforme descritos na Nota Técnica SE/CGNFS-e nº 005, de 19 de novembro de 2025, os novos 
+fatos geradores deverão ser formalizados a partir da informação dos novos códigos (“cTribNac”) 
+que serão criados:  
+ 
+Código Descrição 
+99.02.01 Operações com Bens Imateriais Não Classificados em Itens Anteriores 
+99.03.01 Locação de Bens Imóveis 
+99.03.02 Cessão Onerosa de Bens Imóveis 
+99.03.03 Arrendamento de Bens Imóveis 
+99.03.04 Servidão, Cessão de Uso ou de Espaço de Bens Imóveis (quando não caracterizem 
+operações tributáveis pelo ISSQN) 
+99.03.05 Permissão de Uso ou Direito de Passagem de Bens Imóveis (quando não 
+caracterizem operações tributáveis pelo ISSQN) 
+99.04.01 Locação de Bens Móveis 
+ 
+ 
+10 
+ 
+Observação: o código “99.01.01 - Outros serviços sem a incidência de ISSQN e ICMS”, 
+atualmente vigente na plataforma nacional NFS -e, deverá ser utilizado somente quando 
+houver operação que eventualmente incida IBS ou CBS, mas não o ISSQN, e que não se 
+enquadre em nenhum dos casos descritos na tabela acima. 
+  
+7- Como baixar os arquivos XML e Planilha/relatório das notas emitidas no ambiente Nota 
+Fiscal de Serviços Eletrônica Nacional (NFS-e Nacional)? 
+ 
+As Notas Fiscais de Serviço Nacional (NFS -e Nacional) deverão ser baixadas no próprio Portal 
+Nacional. Esse portal disponibiliza APIs para obter os arquivos XML. Relatórios estão previstos 
+na plataforma nacional, mas ainda não estão disponíveis. No site BH ISS constarão apenas as 
+NFS-e emitidas pelo emissor de BH.  
+ 
+8- Como baixar lotes de documentos fiscais (NFS-e e seus respectivos eventos) via 
+API? 
+ 
+A plataforma nacional da NFS-e oferece a funcionalidade de download em lote de Documentos 
+Fiscais Eletrônicos (DF-e), que incluem a NFS-e e seus respectivos eventos. Esta funcionalidade 
+está disponível para prestadores, tomadores e intermediários. 
+ 
+O processo de download é realizado através de API, utilizando um Número Sequencial Único 
+(NSU) inicial. Todos os documentos com NSU igual ou superior ao número informado são 
+retornados em lotes de até 50 documentos por chamada. É fundamental que o contribu inte 
+mantenha o controle do último NSU retornado para que, em chamadas subsequentes, a busca 
+seja iniciada a partir do NSU imediatamente posterior. 
+ 
+Para informações detalhadas sobre a funcionalidade e o procedimento de utilização da API, 
+consulte o manual específico: 
+https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-
+atual/manual-contribuintes-apis-adn-sistema-nacional-nfse.pdf 
+ 
+9- Onde localizo os códigos de tributação para informar na Nota Fiscal de Serviço 
+Eletrônica Nacional - NFS-e Nacional? 
+ 
+A PBH disponibilizou correlação entre os CTISS utilizados em âmbito local com o CTN a ser 
+informado na NFS -e Nacional, incluindo os desdobramentos municipais: 
+https://servicos.pbh.gov.br/servicos+issqn-correlacao-ctiss-codigo-de-tributacao-do-issqn-
+codigo-de-tributacao-nacional+68fa794eb5ad6a681fc1ec16.  
+ 
+Lista com códigos e descrição dos serviços para e emitir a NFS -e Nacional: 
+https://www.gov.br/nfse/pt-br/mei-e-demais-empresas/codigos-de-tributacao-nacional-nbs  
+ 
+- Acessar o Portal da Nota Fiscal de Serviço eletrônica ( https://www.gov.br/nfse/pt-br), 
+selecionar “MEI e demais empresas” e depois “Lista de Serviços Anexa à Lei Complementar 116, 
+de 31 de julho de 2003”. 
+ 
+11 
+ 
+10- Não encontro um enquadramento exato dos serviços prestados em um código da 
+Nomenclatura Brasileira de Serviços (NBS). Como proceder? 
+ 
+A Nomenclatura Brasileira de Serviços (NBS) é uma nomenclatura/codificação utilizada 
+geralmente no âmbito do comércio internacional, e seu emprego para a tributação do IBS/CBS 
+é uma decisão relativamente recente. Nem todos os serviços sujeitos à incidência do ISSQN e/ou 
+dos novos tributos conseguirão ser perfeitamente enquadrados em um código NBS específico. 
+A correlação entre os itens da Lista de Serviços anexa à Lei Complementar 116/2003 (que trata 
+do ISSQN) e os códigos da Nomenclatura Brasileira de Serviços (NBS) é uma tarefa complexa, em 
+estágio inicial, que ainda passará por evoluções. Orientações específicas e a própria 
+nomenclatura serão atualizadas para atender às necessidades do novo sistema tributário 
+nacional. 
+Neste momento, recomendamos avaliar a tabela de correlação disponibilizada no Portal 
+Nacional da NFS -e e selecionar a opção que melhor se adeque às circunstâncias em que a 
+atividade é desenvolvida, ainda que não se amolde perfeitamente.  
+Ressaltamos que o enquadramento do caso concreto ao dispositivo legal é de responsabilidade 
+do contribuinte, ficando sujeito à posterior verificação pelo Fisco, com exigência do tributo 
+devido e aplicação das penalidades cabíveis, se for o caso. 
+ 
+11- O Município manterá a lista de serviços da LC 116/03 ou adotará a nova Tabela de 
+Classificação Tributária do IBS/CBS (cClass Trib)? 
+ 
+No padrão nacional da NFS-e, o código que identifica o serviço e direciona a tributação do ISSQN 
+é o Código de Tributação Nacional, que possui uma parte comum nacionalmente (seis primeiros 
+dígitos) e uma parte municipal (três últimos dígitos), conforme manuais e documentos técnicos 
+do sistema nacional.  
+ 
+O código cClassTrib identifica a tributação aplicável ao IBS/CBS, não guardando relação com o 
+ISSQN. Como mencionado acima, este código faz parte do grupo de campos dos novos tributos, 
+que ainda não estão sendo exigidos na NFS -e. Quando a informação dos ca mpos de IBS/CBS 
+estiver presente na DPS, a informação do cClassTrib será obrigatória. 
+ 
+12- Como fazer testes no Emissor Nacional antes de o ambiente ser liberado? 
+ 
+Os contribuintes devem utilizar o ambiente de testes, conhecido como "produção restrita", por 
+intermédio dos seguintes links: 
+ 
+- Emissor Nacional:  https://www.producaorestrita.nfse.gov.br/EmissorNacional/  
+- Painel Nacional:  https://www.producaorestrita.nfse.gov.br/PainelNacional/  
+- Swagger contribute:  https://www.producaorestrita.nfse.gov.br/swagger/contribuintesissqn/  
+- Consulta Pública:  https://www.producaorestrita.nfse.gov.br/consultapublica  
+ 
+12 
+ 
+13- Como ficará a situação dos prestadores que possuem regime especial que autoriza a 
+emissão de nota fiscal sem os dados do tomador? 
+ 
+Todos os regimes especiais que envolvam notas fiscais terão que ser revistos à luz da nova 
+legislação trazida pela Reforma Tributária do Consumo, especialmente da LC 214/2025. Em 
+algumas situações, de acordo com o novo sistema tributário, não será possível  a emissão da 
+NFS-e sem a identificação do tomador. 
+ 
+Contudo isso ainda é possível, mesmo na NFS -e Nacional. Somente em algumas situações a 
+identificação do tomador é obrigatória, como no caso de serviços cujo ISS é devido no local do 
+tomador. 
+ 
+14- Em caso de aluguéis de imóveis, a emissão da nota será feita pela prefeitura da 
+empresa locadora ou pela prefeitura onde está localizado o imóvel? 
+ 
+Ainda é cedo para entrarmos em questões mais complexas sobre o IBS/CBS, pois as leis ainda 
+estão em discussão e o regulamento nem foi construído. A questão da incidência do IBS sobre 
+locação de imóveis, por ser um fato gerador novo, está em plena discussão  nos grupos da 
+Reforma Tributária sobre Consumo - RTC. 
+ 
+Todavia, em regra, o documento fiscal deve ser emitido pelo Município em que o emissor está 
+estabelecido. No caso de pessoa jurídica, é o município que consta no endereço do CNPJ. No 
+caso de pessoa natural, isso ainda está indefinido. Certamente em breve s airão orientações 
+específicas em nível nacional para essa questão de emissão de NFS -e para locação de imóveis, 
+pois trata-se de uma questão nova para todos. 
+ 
+15- As empresas que ainda usam Nota Fiscal de Serviços série "A" e “D”, documento em 
+papel, ficam obrigados a emitir uma NFS-e Nacional? 
+ 
+A partir da obrigatoriedade de transição para a NFS-e Nacional, o uso de Nota Fiscal de Serviços 
+série "A" e “D”, documento em papel, não será permitido. Conforme disposto na Portaria SMFA 
+nº 075/2025, a migração para o sistema nacional ocorrerá de forma g radativa, por grupos de 
+contribuintes, observando o seguinte cronograma (atualizado pela Portaria SMFA nº 088/2025): 
+ 
+1º de outubro de 2025: Sociedades de Profissionais Liberais (SPL) que também são optantes pelo 
+Simples Nacional e Contribuintes com recolhimento do ISSQN por Estimativa Total 
+ 
+1º de novembro de 2025: Restante dos contribuintes optantes pelo Simples Nacional 
+ 
+1º de dezembro de 2025: Demais contribuintes, exceto os que se enquadram no Regime Especial 
+PROEMP 
+ 
+1º de fevereiro de 2026: Contribuintes do Regime Especial PROEMP 
+ 
+16- As empresas já podem emitir a Nota Fiscal de Serviço Eletrônica Nacional - NFS-e 
+Nacional com os campos IBS (Imposto sobre Bens e Serviços) e CBS (Contribuição sobre 
+Bens e Serviços) em homologação? 
+ 
+13 
+ 
+Os campos relacionados à reforma tributária, bem como toda a documentação relacionada a 
+este assunto, estão descritos na Nota Técnica SE/CGNFS -e nº 004, de 19 de agosto de 2025 , 
+disponível no portal da NFS -e Nacional, acessível pelo link https://www.gov.br/nfse/pt-
+br/biblioteca/documentacao-tecnica/rtc   
+ 
+Esses campos somente serão exigidos a partir do primeiro dia útil do quarto mês subsequente 
+ao da publicação da parte comum dos regulamentos do IBS e da CBS . Contudo, desde  
+10/12/2025, estão disponíveis para testes no ambiente de produção restrita. 
+ 
+17- O sistema próprio que utilizo para e emissão de notas fiscais continuará funcionando? 
+ 
+O sistema que você utiliza hoje deverá ser atualizado/modificado para interagir com o sistema 
+nacional, pois não funcionará sem tal procedimento preliminarmente. O Portal Nacional da NFS-
+e Nacional oferece aos emissores a Interface de Programação de Aplica ções (API), para as 
+empresas que desejam integrar a emissão diretamente em seus sistemas de gestão, ou seja, que 
+pretendem conectar o sistema de gestão (ERP) do contribuinte diretamente ao Ambiente de 
+Dados Nacional (ADN) da NFS-e Nacional. Portanto, as empresas de tecnologia, responsáveis por 
+softwares próprios, devem se adaptar com antecedência. Isso é crucial para os contribuintes 
+que já usam sistemas de gestão e precisam que a emissão de notas fiscais esteja integrada a 
+eles. 
+ 
+Uma vez feita a transição para a NFS-e Nacional, somente as NFS-e com competências anteriores 
+à migração deverão continuar a ser emitidas no emissor de Belo Horizonte. Portanto, o sistema 
+próprio que utiliza atualmente para e emissão de notas fiscais eventualmente ainda poderá ser 
+utilizado se precisar emitir NFS-e com competências anteriores à migração. 
+ 
+A documentação técnica está disponível em: https://www.gov.br/nfse/pt-
+br/biblioteca/documentacao-tecnica/documentacao-em-homologacao   
+ 
+Nessa página, recomendamos a leitura atenta do "Manual Contribuintes Emissor Público API - 
+Sistema Nacional NFS-e.pdf" e da "Guia EmissorPúblicoNacionalWEB_SNNFSe-ERN.pdf". 
+ 
+18- Como fazer o cancelamento/substituição da Nota Fiscal de Serviços Eletrônica (NFS -
+e Nacional)? 
+ 
+O cancelamento/substituição das NFS-e emitidas no sistema nacional devem ser feitas por este 
+mesmo sistema.  
+ 
+Os procedimentos estão descritos no "Guia EmissorPúblicoNacionalWEB_SNNFSe -ERN", que 
+pode ser obtido na área de documentação técnica do portal nacional da NFS -e 
+(https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-atual).  
+ 
+Abaixo segue o procedimento de cancelamento no emissor web da NFS-e nacional: 
+ 
+a) O contribuinte consulta as notas emitidas, clica nos três pontinhos na direita e escolhe o que 
+quer fazer (cancelar ou substituir):  
+ 
+14 
+ 
+ 
+ 
+b) Caso opte pelo cancelamento, abre uma tela pedindo para ele informar o motivo: 
+ 
+  
+ 
+ 
+c) É obrigatório também preencher a justificativa: 
+
+15 
+ 
+ 
+ 
+  
+ 
+d) Se não cumprir as condições para cancelamento automático, será exibida a opção  "Solicitar 
+Análise Fiscal", em vez de “Cancelar NFS-e”, situação na qual o contribuinte pode clicar naquela 
+opção para que o pedido seja direcionado ao Fisco Municipal: 
+ 
+ 
+  
+ 
+As regras de cancelamento e substituição da Nota Fiscal de Serviços Eletrônica (NFS-e Nacional) 
+estão dispostas no artigo 5º da Portaria SMFA Nº 075/2025, abaixo transcrito: 
+ 
+Art. 5º - O cancelamento, a substituição e a consulta da NFS -e devem ser realizados no mesmo 
+ambiente em que o documento foi gerado. 
+
+16 
+ 
+§ 1º - O cancelamento da NFS-e emitida pelo Emissor Nacional somente poderá ser realizado de 
+forma automatizada, no Portal Nacional do Contribuinte, disponível 
+em https://www.nfse.gov.br/EmissorNacional, ou via API, caso atendidas, cumulativamente, as 
+seguintes condições: 
+I – a emissão da NFS-e cancelada tenha ocorrido, no máximo, há 730 (setecentos e trinta) dias;  
+II – o CPF ou CNPJ do tomador do respectivo serviço tenha sido informado no documento fiscal 
+cancelado; (Revogado pela Portaria SMFA nº 88/2025 – art. 3º) 
+III – a ATM não tenha bloqueado o cancelamento automatizado pelo contribuinte.  
+II – a ATM não tenha bloqueado o cancelamento automatizado pelo contribuinte. (Renumerado 
+pela Portaria SMFA nº 88/2025 – art. 3º) 
+§ 2º - A substituição de NFS -e gerada pelo Emissor Nacional somente poderá ser realizada no 
+Portal Nacional do Contribuinte, disponível em https://www.nfse.gov.br/EmissorNacional, ou via 
+API, caso atendidas, cumulativamente, as seguintes condições: 
+I – a emissão da NFS-e substituída tenha ocorrido, no máximo, há 730 (setecentos e trinta) dias;  
+II – a NFS-e substituída não tenha sido objeto de anterior cancelamento;  
+III – a ATM não tenha bloqueado a substituição da NFS-e pelo contribuinte. 
+§ 3º - Nas situações em que as condições estabelecidas neste artigo não forem atendidas, o 
+cancelamento da NFS -e dependerá de análise da ATM em processo administrativo específico, 
+que poderá solicitar mais informações ao requerente, podendo indeferir o pedido, a seu critério. 
+ 
+19- Qual o prazo para análise fiscal do cancelamento de NFS -e solicitado no Portal 
+Nacional? 
+ 
+Os prazos para cancelamento de NFS-e nacional, requeridos via processo administrativo, ainda 
+não foram estabelecidos pelo Conselho Gestor do IBS.  
+ 
+20- Há um cronograma para a adesão dos contribuintes ao Emissor Nacional? 
+ 
+Sim, a Portaria SMFA nº 075/2025 de 19/09/2025, estabeleceu o cronograma inicial, atualizado 
+pela Portaria SMFA nº 88/2025: 
+ 
+1º de outubro de 2025: Sociedades de Profissionais Liberais (SPL) que também são optantes pelo 
+Simples Nacional e Contribuintes com recolhimento do ISSQN por Estimativa Total 
+1º de novembro de 2025: Restante dos contribuintes optantes pelo Simples Nacional 
+1º de dezembro de 2025: Demais contribuintes, exceto os que se enquadram no Regime Especial 
+PROEMP 
+1º de fevereiro de 2026: Contribuintes do Regime Especial PROEMP 
+Os MEIs já estão obrigados à emissão da NFS-e pelo Emissor Nacional desde 01/09/2023. 
+ 
+A partir da data de transição, de acordo com o referido cronograma, a emissão de notas fiscais 
+de serviços deverá ser feita exclusivamente por meio dos emissores nacionais, pois o atual 
+emissor da prefeitura será descontinuado. Uma vez feita a transição pa ra a NFS -e Nacional, 
+somente as NFS-e com competências anteriores à migração poderão continuar a ser emitidas 
+no emissor de Belo Horizonte. 
+17 
+ 
+ 
+21- Os contribuintes com recolhimento do ISSQN por Estimativa Total continuam a ter a 
+obrigação de emitir NFS-e apenas quando for solicitada? 
+ 
+Até o primeiro dia do quarto mês subsequente ao da publicação da parte comum dos 
+regulamentos do IBS e da CBS, sim. Após essa data, o procedimento poderá mudar. 
+ 
+22- Como será a migração de empresa beneficiada pelo PROEMP para o emissor nacional 
+de notas fiscais de serviços? 
+ 
+A partir de 01/02/2026 todos os contribuintes de BH deverão emitir suas NFS -e no emissor 
+nacional, inclusive aqueles beneficiados pelo PROEMP. Essa migração será automática. A partir 
+de fevereiro de 2026 não será mais possível emitir a NFS -e no emissor local de BH para 
+competências de FEV/2026 em diante. Notas fiscais de serviços com competência de JAN/2026 
+para trás continuarão a ser emitidas no emissor local. 
+ 
+Os contribuintes precisam adaptar seus sistemas de emissão para adequar -se ao layout do 
+padrão nacional e às novas APIs de envio de DPS (Declaração de Prestação de Serviço).  
+ 
+O emissor nacional está disponível para testes no link 
+https://www.producaorestrita.nfse.gov.br/EmissorNacional/  
+ 
+Toda documentação técnica e manuais desse novo sistema está disponível no portal da NFS -e 
+nacional, acessível em https://www.gov.br/nfse/pt-br  
+ 
+Não há previsão de nenhuma alteração nas regras e na concessão de benefício fiscal do 
+PROEMP, apenas na emissão da NFS -e nacional o beneficiário terá que selecionar um Regime 
+Especial específico. Mais informações sobre isso serão divulgadas em breve. 
+ 
+23- Haverá alteração no valor a ser recolhido pela SPL, com a utilização da NFS -e 
+Nacional? 
+  
+Não haverá modificação. Os valores do ISSQN devidos pelas SPLs são aqueles estabelecidos pelo 
+§ 3º do art. 13 da Lei nº 8.725/2003, os quais são corrigidos anualmente pelo IPCA-E, nos termos 
+do art. 14 da Lei nº 8.147/2000. 
+ 
+Tais valores são aplicados automaticamente quando da emissão da guia pela DES; a tabela 
+correspondente pode ser pesquisada através do Portal BHISS 
+(https://prefeitura.pbh.gov.br/fazenda/bhiss), no menu “INFORMAÇÕES”, item “SOCIEDADE DE 
+PROFISSIONAIS LIBERAIS”, subitem “VALORES”. 
+ 
+24- É possível emitir a NFS-e Nacional com deduções na base de cálculo do ISSQN? 
+ 
+Sim. A legislação tributária municipal permite que certas atividades tenham deduções ou 
+reduções na base de cálculo do Imposto Sobre Serviços de Qualquer Natureza (ISSQN). Tais 
+atividades são aquelas inseridas nos subitens 4.22, 4.23, 5.09, 6.01, 6.02, 7.02, 7.05, 9.01, 9.02, 
+18 
+ 
+10.01, 10.02, 10.03, 10.04, 10.05, 10.06, 10.07, 10.08, 10.09, 10.10, 12.13, 14.01, 14.03, 15.01, 
+15.10, 17.10, 17.06, 17.11, 17.12, 17.14, 21.01 e 25.03. 
+ 
+25- Como deve ser feita a emissão da NFS-e com base em decisão administrativa do 
+Município de Belo Horizonte? 
+ 
+Caso haja decisão cadastrada, a  emissão da NFS -e com base em decisão administrativa do 
+município deve ser realizada, via emissor Web, pela opção “Emissão por decisão 
+administrativa/judicial” ou, via API específica, informando o campo < cStat > igual a 102, com o 
+envio do XML da NFS-e completo e não o XML da DPS. 
+ 
+26- É necessário comprovar as deduções utilizadas na NFS-e Nacional? 
+ 
+Sim. Em alguns casos é obrigatório informar os documentos que comprovam o direito às 
+deduções lançadas na NFS-e. 
+ 
+As NFS-e emitidas com a utilização dos subitens 7.02, 7.05, 9.01, 10.01, 10.02, 10.03, 10.04, 
+10.05, 10.08 e 17.06 somente admitem a dedução na modalidade "por documentos". Nesses 
+casos, o contribuinte deve informar qual é o documento que embasa a dedução realizada, de 
+forma análoga ao que era feito na DES. 
+ 
+Entretanto, quando são utilizados para emissão os subitens 4.22, 4.23, 5.09, 6.01, 6.02, 9.02, 
+10.06, 10.07, 10.09, 10.10, 12.13, 14.01, 14.03, 15.01, 15.10, 17.10, 17.11, 17.12, 17.14, 21.01 e 
+25.03, admite-se a dedução por valor monetário, em que basta o contribuinte informar o valor 
+a ser deduzido. 
+ 
+27- De que forma devem ser informados os documentos comprobatórios das 
+deduções? 
+ 
+Antes da adoção do padrão nacional da NFS-e, a identificação dos documentos que comprovam 
+as deduções era exigida na Declaração Eletrônica de Serviços (DES). Na NFS -e Nacional, esta 
+informação passou a ser exigida diretamente na nota fiscal, no momento da sua emissão, nos 
+casos obrigatórios informados na resposta para a pergunta 28. 
+ 
+Sendo assim, não será mais necessário informar na DES os documentos comprobatórios das 
+deduções utilizadas. 
+ 
+Para refletir essa mudança, o programa da DES foi atualizado e não exigirá mais essa informação. 
+Certifique-se de que está utilizando a última versão do programa da DES (versão 3.01 Build 154). 
+Para mais orientações sobre essa atualização, veja o aviso pub licado no Portal BHISS  
+(https://prefeitura.pbh.gov.br/fazenda/bhiss/avisos) em 05/12/2025.  
+ 
+ 
+28- Como ficará a situação do registro dos serviços tomados na Declaração Eletrônica de 
+Serviços – DES e do ISSQN retido na fonte, quando houver, após a transição para o 
+emissor nacional da Nota Fiscal de Serviços Eletrônica (NFS-e Nacional)? 
+ 
+19 
+ 
+A escrituração dos serviços tomados via NFS -e Nacional deverá continuar sendo feita na DES. 
+Informaremos os contribuintes, por intermédio dos canais institucionais, caso ocorra alteração 
+desse procedimento. 
+ 
+29- É possível a importação dos arquivos XML das NFS -e baixados no Portal Nacional 
+diretamente no programa da DES? 
+ 
+Desde a versão 3.01 Build 154 – é possível importar o arquivo XML da Nota Fiscal de Serviço 
+Eletrônica (NFS -e) gerada no emissor nacional. Essa opção será o padrão para os serviços 
+tomados, conforme imagem abaixo: 
+ 
+Conforme informado na Nota Técnica 001/2025, publicada no site BHISS em 22/03/2025, para 
+importar para o programa da DES uma NFS-e que foi originalmente gerada no Emissor Nacional, 
+o declarante deve selecionar o modelo de documento "28 -NFS-e Nacional". Iss o habilita o 
+programa a entender o número da nota no padrão nacional, que é diferente do padrão Abrasf, 
+utilizado no emissor local da NFS-e em BH. Se o arquivo de importação estiver sendo gerado por 
+um programa de terceiros, é preciso que ele seja ajustado  conforme Nota Técnica.  
+ 
+As NFS-e geradas originalmente no BHISS podem ser consultadas e baixadas tanto no BHISS, 
+quanto no Emissor Nacional. Quando é gerada no BHISS e baixada do emissor nacional, a NFS-e 
+tem a aparência da NFS -e nacional, mas sua estrutura de numeração permanece  a mesma do 
+BHISS, portanto, ela ainda deve ser informada na DES usado o modelo “5 - NFS-e – Nota Fiscal 
+de Serviços Eletrônica”. 
+ 
+Para atualizar o programa, execute a versão antiga. Quando aparecer o alerta abaixo na tela, 
+clique em “OK”. Certifique-se de que o computador está conectado à internet nesse momento. 
+
+20 
+ 
+ 
+ 
+Se tiver dúvidas sobre a instalação ou configuração do programa, acesse o Portal de Serviços da 
+Prefeitura de Belo Horizonte (PBH) e busque pelo serviço Suporte Técnico Informática - Fazenda. 
+ 
+ 
+30- Há alguma flexibilização em relação ao cumprimento de obrigações acessórias do 
+IBS a partir de 01/01/2026? 
+ 
+Em 23/12/2025, a Receita Federal do Brasil (RFB) e o Comitê Gestor do IBS (CGIBS) divulgaram 
+um ato conjunto para esclarecer as obrigações acessórias das empresas no início de 2026 
+(disponível em  https://in.gov.br/en/web/dou/-/ato-conjunto-rfb/cgibs-n-1-de-22-de-
+dezembro-de-2025-677624586. 
+ 
+Essa norma dispensou a informação dos campos referentes aos novos tributos (IBS/CBS) até o 
+primeiro dia do quarto mês subsequente ao da publicação da parte comum dos regulamentos 
+do IBS e da CBS, obstando a aplicação de penalidades pela falta de registro dess es campos nos 
+documentos fiscais.  No mesmo sentido, foi publicad a em 10 /12/2025 a versão 2.0 da Nota 
+Técnica SE \CGNFS-e nº 004, tornando temporariamente opcional a informação dos campos 
+referentes aos novos tributos (IBS/CBS) na NFS-e. 
+ 
+Desta forma, até que seja publicada outra norma com orientação diversa, não é necessário 
+informar códigos e alíquotas referentes aos novos tributos na NFS -e. Quando isso se tornar 
+obrigatório, será amplamente divulgado , motivo pelo qual  é de suma importância  o 
+acompanhamento das notas técnicas, normas e notícias publicadas no portal da NFS-e, no portal 
+do CGIBS e pela RFB. 
+ 
+ 
+31- É permitida a emissão de NFS-e por procuração? 
+ 
+Não. O  controle de acesso do Sistema de emissão da NFS -e Nacional ainda não possui as 
+funcionalidades para delegação/procuração, nos moldes da NFS -e de Belo Horizonte. Estas 
+funções estão em desenvolvimento pelo SERPRO, sob gestão do CGNFS -e, porém não há data 
+para ser publicação em produção. 
+ 
+32- O que é a NFS-e Via? 
+ 
+
+21 
+ 
+É um documento fiscal 100% digital destinado a registrar a prestação de serviços de 
+exploração de vias (pedágios) sujeitos ao ISSQN. Ela faz parte do Sistema Nacional da NFS-e e 
+possui validade jurídica garantida por assinatura eletrônica vinculada ao CNPJ da 
+concessionária. 
+A documentação técnica da NFS-e Via pode ser obtida no portal nacional da NFS-e, disponível 
+em https://www.gov.br/nfse/pt-br/nfs-e-via 
+ 
+33- Quem são os Obrigados (Emissores)? 
+ 
+A norma se aplica às Concessionárias de rodovias. Para emitir o documento, elas 
+devem: 
+- Estar regularmente inscritas no CNPJ 
+- Cadastrar-se no Portal Nacional da NFS-e 
+- Registrar seus contratos de concessão, indicando trechos, praças de pedágio e a 
+proporcionalidade de divisão do ISSQN entre os municípios por onde a via passa. 
+ 
+34- O que o motorista/usuário do serviço recebe (Documentos Auxiliares)? 
+ 
+A resolução cria dois documentos distintos para facilitar a vida do usuário e a fiscalização: 
+- Registro de Passagem Veicular (RPV): É o "ticket" entregue no momento da passagem 
+(impresso ou digital). 
+Atenção: o RPV não é a nota fiscal. 
+- DANFSe Via: É o documento auxiliar em PDF, gerado pelo sistema nacional, que o usuário 
+pode baixar no portal oficial caso precise de um comprovante formal da nota fiscal. 
+ 
+35- O motorista/usuário recebe a NFS-e Via no momento de sua passagem pelo posto 
+de pedágio?  
+ 
+A NFS-e Via é o documento de existência apenas digital, emitido e armazenado eletronicamente, 
+com o intuito de documentar, para fins fiscais, as operações e prestações a que se refere o 
+caput. Ao passar pelo posto de pedágio, será emitido pela Concessionária apenas o Registro de 
+Passagem Veicular (RPV). 
+ 
+36- É permitida alteração de informações na NFS-e Via? 
+ 
+Uma nota emitida não pode ser alterada  (princípio da imutabilidade), ressalvadas as hipóteses 
+de cancelamento ou substituição.  
+ 
+37- Qual a diferença entre cancelamento de NFS-e Via, cancelamento de NFS-e Via por 
+substituição e manifestação de NFS-e Via? 
+ 
+Enquanto o cancelamento de NFS-e Via invalida os efeitos da nota original, o cancelamento por 
+substituição torna a NFS -e Via sem efeito em decorrência da emissão imediata de um novo 
+documento em sua substituição – situação em que ambos os registros ficam v inculados 
+eletronicamente.  
+ 
+22 
+ 
+A manifestação de NFS-e Via, por outro lado, serve para que o tomador/adquirente possa, em 
+momento posterior à passagem na praça de pedágio, além de confirmar o serviço tomado, 
+identificar-se com a inserção de seu CPF/CNPJ no documento. Assim, se for o cas o, ele terá 
+direito ao crédito do IBS/CBS incidente na operação. 
+ 
+38- Qual é o prazo de guarda dos documentos gerados pela Concessionária? 
+ 
+A concessionária deve guardar o arquivo digital (XML) e demais documentos atinentes pelo 
+prazo legal (6 anos), conforme disposto no art. 98 do Regulamento do ISSQN divulgado pelo 
+Decreto Municipal nº 17.174/2019. 
+ 
+39- Como proceder se alguma NFS-e for gerada com intervalos na numeração? 
+ 
+Não são necessárias ações. Na plataforma NFS -e, quando da emissão pelos emissores públicos 
+nacionais, a numeração das notas fiscais (número da NFS-e, campo “nNFSe”) não é definida pelo 
+contribuinte, sendo atribuída exclusivamente pela Sefin Nacional quando  uma DPS é 
+recepcionada e processada para conversão em NFS-e.  
+Esse modelo centralizado de geração de numeração, embora padronizado e alinhado a diretrizes 
+nacionais, pode resultar em situações nas quais determinados números sequenciais são 
+reservados pela plataforma, mas não culminam na efetiva emissão e persistência  da NFS-e no 
+Ambiente de Dados Nacional (ADN). Essa circunstância acarreta a possibilidade de existência de 
+intervalos, popularmente denominados “pulos”, na sequência numérica das notas fiscais de um 
+mesmo contribuinte. 
+Os intervalos decorrem exclusivamente do funcionamento técnico do processo de 
+geração/autorização da Sefin Nacional e não representam irregularidade fiscal, falha do 
+contribuinte ou inconsistência cadastral. 
+ 
+40- Como solicitar habilitação para emitir NFS-e com a isenção de ISSQN concedida para 
+o serviço de execução de obra de construção civil vinculada aos PPFHIS, conforme art. 
+8º da Lei nº 9.814/2010? 
+ 
+Os contribuintes com direito à isenção devem solicitar sua habilitação no sistema nacional da 
+NFS-e. Para isso, é necessário apresentar um comprovante emitido pela CAIXA (representante 
+da União e responsável pela operacionalização dos PPFHIS) e pela Urbel, atestando que a obra 
+e o respectivo construtor vinculam-se aos PPFHIS, por meio do serviço ISSQN - Esclarecimentos 
+sobre Legislação e Preenchimento de DES/ NFS-e, acessível pelo endereço abaixo: 
+https://servicos.pbh.gov.br/servicos+issqn-esclarecimentos-sobre-legislacao-e-
+preenchimento-de-des-nfs-e+5e839418d9521a26a970ecec 
+ 

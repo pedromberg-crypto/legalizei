@@ -26,6 +26,7 @@ import { fileURLToPath } from "node:url";
 import { PROCESSOS, PASSOS, ARESTAS, TRILHAS } from "./processos-data.mjs";
 import { PROPOSTAS } from "./processos-propostas.mjs";
 import { DADOS } from "../handoff/dados-handoff.mjs";
+import { verificarEscopo } from "./verificar-escopo.mjs";
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
 const RAIZ = resolve(AQUI, "..", "..");
@@ -59,6 +60,9 @@ const TOM = {
   "nada: a tela não existe": "buraco",
 };
 const tomDe = (v) => TOM[String(v ?? "").trim()] ?? "normal";
+
+// 🔒 escopo primeiro: ME do Simples, Anexos III e V (ver `_escopo.mjs`)
+if (!verificarEscopo()) process.exit(1);
 
 // ── auditorias ──────────────────────────────────────────────────────────────
 const ids = new Set(PASSOS.map((p) => p.id));

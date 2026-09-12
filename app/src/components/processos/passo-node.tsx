@@ -97,6 +97,33 @@ export type Passo = {
   insumos?: { dado: string; status: string; quem: string; porque?: string }[];
   /** quantos desses ainda não têm entrega combinada — só isto vira selo */
   insumosFaltando?: number;
+
+  /* ── 🥩 MODO CRU (12/09) ──────────────────────────────────────────────── */
+  /**
+   * Nó de varredura crua: só **o que acontece** e **o que decide o caminho**.
+   * Quem dispara, com quem fala, o que a pessoa vê e o semáforo não existem
+   * nesta fase — e não é omissão, é o adiamento pedido pelo Pedro.
+   *
+   * 🔑 O cartão não fica mais BAIXO: a altura segue sendo a mesma
+   * (`PASSO_H` + faixa). Sobra espaço dentro, e sobrar é de graça — recalcular
+   * altura por variante é exatamente o caminho que empilhou os cartões em
+   * 11/09.
+   */
+  cru?: boolean;
+  /** a pergunta que decide o caminho, quando o nó é decisão */
+  variavel?: string;
+  /** fronteira: outra categoria continua daqui. É NOTA, não ligação */
+  saiPara?: string;
+  /** este pedaço já existe no formato completo (P1–P6) */
+  ja?: string;
+  /** o que a varredura achou neste nó */
+  notaCrua?: string;
+  /** itens da categoria que este nó atende */
+  cobre?: string[];
+  /** ⏳ este ramo tem PRAZO ou condição externa pra deixar de existir. Pedido
+   *  do Pedro em 12/09, olhando o cronograma da obrigatoriedade do tomador:
+   *  "só pra sabermos até quando essa ramificação irá existir". */
+  alerta?: string;
   /** as condições que saem daqui, uma por aresta. Vem do board, não do
    *  gerador: depende do filtro e do que o Pedro já aceitou ou descartou */
   saidas?: { label: string; para: string; quando?: string }[];
@@ -175,6 +202,9 @@ const LUZ_FUNDO = {
   verde: "#EFF8F5",
   amarelo: "#FBF7E8",
   vermelho: "#FCF2F0",
+  /* 🥩 cru não tem cor de semáforo porque não tem semáforo. Papel neutro:
+     a cor aqui diria alguma coisa que a varredura ainda não perguntou. */
+  cru: "#FAFAFA",
 } as const;
 
 /**
@@ -312,6 +342,25 @@ export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
                 ⚠ {data.insumosFaltando}
               </span>
             ) : null}
+            {/* 🥩 no cru não há semáforo. O que vale marcar é se aquele
+                pedaço JÁ foi desenhado no formato completo — é o que diz
+                quanto da categoria é trabalho novo. */}
+            {data.cru && data.alerta ? (
+              <span
+                className="rounded bg-amber-300 px-1 text-[9px] font-bold text-amber-950"
+                title="este ramo tem prazo ou condição externa — abra o painel"
+              >
+                ⏳
+              </span>
+            ) : null}
+            {data.cru && data.ja ? (
+              <span
+                className="rounded bg-white/25 px-1 text-[9px] font-bold"
+                title={`este pedaço já está desenhado como ${data.ja}`}
+              >
+                ✓ {data.ja}
+              </span>
+            ) : null}
             {/* sugestão de CAMPO não vira cartão: avisa aqui e abre no painel */}
             {data.sugestoes?.length ? (
               <span
@@ -321,11 +370,38 @@ export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
                 +{data.sugestoes.length}
               </span>
             ) : null}
-            <span className="text-[11px]">{LUZ_EMOJI[data.luz]}</span>
+            {!data.cru && <span className="text-[11px]">{LUZ_EMOJI[data.luz]}</span>}
           </span>
         )}
       </div>
 
+      {/* ── 🥩 corpo do modo cru: o que acontece, e a pergunta ─────────── */}
+      {data.cru ? (
+        <div className="min-h-0 flex-1 px-3 py-2.5">
+          <p className="line-clamp-3 text-[13px] font-bold leading-tight text-zinc-900">
+            {data.titulo}
+          </p>
+
+          {data.variavel && (
+            <div className="mt-2 rounded-lg border border-zinc-300 bg-white px-2 py-1.5">
+              <p className="text-[9px] font-bold uppercase tracking-wider text-zinc-400">
+                a variável
+              </p>
+              <p className="line-clamp-3 text-[12px] font-semibold leading-snug text-zinc-800">
+                {data.variavel}
+              </p>
+            </div>
+          )}
+
+          {/* fronteira aparece no cartão porque é o que o Pedro precisa ver
+              pra saber onde a categoria acaba. É nota, não ligação. */}
+          {data.saiPara && (
+            <p className="mt-2 line-clamp-2 text-[10px] leading-snug text-zinc-500">
+              ↗ {data.saiPara}
+            </p>
+          )}
+        </div>
+      ) : (
       <div className="min-h-0 flex-1 px-3 py-2.5">
         <p className="line-clamp-2 text-[13px] font-bold leading-tight text-zinc-900">
           {data.titulo}
@@ -349,6 +425,7 @@ export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
         />
         <Linha rotulo="a pessoa vê" valor={data.ve} linhas={2} tom={data.tons?.ve} />
       </div>
+      )}
 
       {/**
        * ── A FAIXA DE SAÍDAS (11/09, pedido do Pedro) ────────────────────

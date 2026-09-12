@@ -16,6 +16,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import grafo from "@/lib/processos-graph.json";
+import cru from "@/lib/cru-graph.json";
 import { TIPOS_DE_PASSO, type Passo } from "@/components/processos/passo-node";
 import { PainelE2E } from "@/components/processos/painel-e2e";
 import { TIPOS_DE_CAMINHO } from "@/components/processos/caminho-edge";
@@ -74,6 +75,96 @@ const LEGENDA = [
   { luz: "amarelo", emoji: "🟡", nome: "Falta decidir", cor: "#D6A400" },
   { luz: "vermelho", emoji: "🔴", nome: "Não sabemos", cor: "#D64A2D" },
 ] as const;
+
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🥩 MODO CRU NO BOARD (12/09, pedido do Pedro)
+ * ═══════════════════════════════════════════════════════════════════════════
+ * *"Quero isso visual no nosso painel. Cria um campo no seletor de cima com
+ * nome por categoria."*
+ *
+ * 🔑 A DECISÃO DE DESENHO: o nó cru é convertido no MESMO formato do passo
+ * ANTES de entrar no pipeline. Assim o dagre, a faixa de saídas, a ordenação
+ * dos CTAs, o acender-ramo e o painel continuam funcionando sem uma linha
+ * nova. Um segundo pipeline de layout seria a chance perfeita de recriar o
+ * bug dos cartões sobrepostos de 11/09 — que já custou caro duas vezes.
+ *
+ * O que o modo cru NÃO tem, e é de propósito: quem dispara, com quem fala, o
+ * que a pessoa vê e o semáforo. Os campos existem no formato e ficam vazios;
+ * o cartão sabe não desenhá-los.
+ *
+ * ⚠️ A altura do cartão continua sendo a mesma (`PASSO_H`), mesmo com menos
+ * conteúdo dentro. Sobra espaço, e sobrar é de graça; recalcular altura é
+ * exatamente o caminho que empilhou os cartões antes.
+ */
+type NoCru = {
+  id: string;
+  o: string;
+  variavel?: string;
+  saidas?: { se: string; vai: string }[];
+  fim?: boolean;
+  saiPara?: string;
+  cobre?: string[];
+  ja?: string;
+  nota?: string;
+  alerta?: string;
+};
+type Categoria = {
+  id: string;
+  nome: string;
+  emoji: string;
+  estado: string;
+  itens: string[];
+  semCobertura: string[];
+  entradas: string[];
+  contagem: { nos: number; variaveis: number; fins: number; fronteiras: number };
+};
+
+const CATEGORIAS = cru.categorias as Categoria[];
+/** 🔒 o escopo vem do `_escopo.mjs` pelo gerador — a tela não repete a regra,
+ *  ela mostra. Fica visível na barra pra não depender de ninguém abrir
+ *  arquivo: o enquadramento MUDA a regra (a E0061 vale só pro Simples). */
+const ESCOPO = cru.escopo as {
+  dentro: { regime: string; porte: string; anexos: string[]; fatorR: string; documento: string; marcaNoLeiaute: string };
+  fora: { o: string; porque: string }[];
+};
+const PREFIXO_CRU = "cru:";
+const CINZA_CRU = "#71717A";
+
+function converterCru(catId: string) {
+  const nos = ((cru.nos as Record<string, NoCru[]>)[catId] ?? []).filter(Boolean);
+  const passos = nos.map((n) => ({
+    id: n.id,
+    processos: [PREFIXO_CRU + catId],
+    titulo: n.o,
+    /* os quatro campos de fora existem e ficam vazios: é o adiamento,
+       escrito no dado em vez de escondido numa flag */
+    quem: "",
+    faz: "",
+    fala: "",
+    ve: "",
+    luz: "cru",
+    forma: n.fim ? "fim" : n.variavel ? "decisao" : "passo",
+    cor: CINZA_CRU,
+    cru: true,
+    variavel: n.variavel,
+    saiPara: n.saiPara,
+    ja: n.ja,
+    notaCrua: n.nota,
+    cobre: n.cobre,
+    alerta: n.alerta,
+  })) as unknown as Passo[];
+
+  const arestas = nos.flatMap((n) =>
+    (n.saidas ?? []).map((s) => ({
+      de: n.id,
+      para: s.vai,
+      label: s.se ?? "",
+      tracejado: false,
+    })),
+  );
+  return { passos, arestas };
+}
 
 export default function ProcessosPage() {
   const processos = grafo.processos as Proc[];
@@ -191,11 +282,17 @@ export default function ProcessosPage() {
     [decisoes],
   );
 
+  const ehCru = filtro.startsWith(PREFIXO_CRU);
+
   const { nodes, edges } = useMemo(() => {
-    const passos = (grafo.nodes as Passo[])
+    /* 🥩 o modo cru entra AQUI e em mais lugar nenhum: troca a fonte, e todo
+       o resto do pipeline (dagre, faixa, ordenação, ramo) roda igual */
+    const fonteCrua = ehCru ? converterCru(filtro.slice(PREFIXO_CRU.length)) : null;
+
+    const passos = (fonteCrua?.passos ?? (grafo.nodes as Passo[]))
       /* passo COMPARTILHADO aparece no filtro dos dois processos:
          o fechamento do ciclo é o fim do P4 e o começo do P1 */
-      .filter((p) => filtro === "todos" || (p.processos ?? []).includes(filtro))
+      .filter((p) => ehCru || filtro === "todos" || (p.processos ?? []).includes(filtro))
       // descartada some do board na hora. Ela continua no
       // `processos-propostas.mjs` e no arquivo de decisões — some da VISTA,
       // não da história, senão a mesma ideia volta daqui a duas semanas.
@@ -206,7 +303,7 @@ export default function ProcessosPage() {
 
     const vivos = new Set(passos.map((p) => p.id));
     const arestas = (
-      grafo.edges as {
+      (fonteCrua?.arestas ?? grafo.edges) as {
         de: string;
         para: string;
         label: string;
@@ -385,7 +482,10 @@ export default function ProcessosPage() {
     }));
 
     return { nodes: ns, edges: es };
-  }, [filtro, ori, estadoDe, decidir, gravando, ramo, acenderRamo]);
+    /* `ehCru` deriva de `filtro` e não muda sozinho, mas fica declarado:
+       dependência implícita é o tipo de coisa que sobrevive até alguém mexer
+       na origem dela e o board parar de atualizar sem erro nenhum */
+  }, [filtro, ehCru, ori, estadoDe, decidir, gravando, ramo, acenderRamo]);
 
   const placar = useMemo(() => {
     const alvo = (grafo.nodes as Passo[]).filter(
@@ -413,20 +513,78 @@ export default function ProcessosPage() {
           onChange={(e) => setFiltro(e.target.value)}
           className="rounded-lg border border-zinc-300 bg-white px-2.5 py-1 text-[13px] font-semibold text-zinc-800"
         >
-          <option value="todos">Todos os processos</option>
-          {processos.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.id} · {p.titulo}
-            </option>
-          ))}
+          <optgroup label="Processos desenhados">
+            <option value="todos">Todos os processos</option>
+            {processos.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.id} · {p.titulo}
+              </option>
+            ))}
+          </optgroup>
+          {/* 🥩 a varredura crua entra como GRUPO à parte, não misturada na
+              lista: são duas vistas do produto em fases diferentes, e
+              embaralhá-las faria o Pedro escolher sem saber o que ia ver */}
+          <optgroup label="🥩 Varredura crua · por categoria">
+            {CATEGORIAS.map((c) => (
+              <option key={c.id} value={PREFIXO_CRU + c.id}>
+                {c.emoji} {c.nome}
+              </option>
+            ))}
+          </optgroup>
         </select>
 
         <div className="flex items-center gap-3">
-          {placar.map((l) => (
-            <span key={l.luz} className="text-[12px] font-semibold text-zinc-600">
-              {l.emoji} {l.n}
+          {ehCru ? (
+            <span
+              className="rounded-full border border-zinc-300 bg-zinc-100 px-2 py-0.5 text-[11px] font-bold text-zinc-700"
+              title={`Dentro: ${ESCOPO.dentro.porte} do ${ESCOPO.dentro.regime}, Anexos ${ESCOPO.dentro.anexos.join(" e ")}, Fator R ${ESCOPO.dentro.fatorR} · ${ESCOPO.dentro.documento} (${ESCOPO.dentro.marcaNoLeiaute}).
+
+FORA: ${ESCOPO.fora.map((f) => f.o).join(" · ")}`}
+            >
+              🔒 {ESCOPO.dentro.porte} {ESCOPO.dentro.regime} · Anexos {ESCOPO.dentro.anexos.join("/")}
             </span>
-          ))}
+          ) : null}
+          {ehCru ? (
+            /* no cru não há semáforo: o que se mede é se toda variável tem
+               todas as respostas escritas */
+            (() => {
+              const c = CATEGORIAS.find((x) => PREFIXO_CRU + x.id === filtro);
+              if (!c) return null;
+              return (
+                <>
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-[12px] font-bold ${
+                      c.estado === "fechado"
+                        ? "bg-emerald-100 text-emerald-800"
+                        : "bg-amber-100 text-amber-800"
+                    }`}
+                    title={
+                      c.estado === "fechado"
+                        ? "toda variável tem todas as saídas escritas, e nenhum item da categoria ficou de fora"
+                        : `a varredura não encostou em: ${c.semCobertura.join(" · ")}`
+                    }
+                  >
+                    {c.estado === "fechado" ? "🟩 fechada" : "🟨 aberta"}
+                  </span>
+                  <span className="text-[12px] font-semibold text-zinc-600" title="nós no mapa">
+                    {c.contagem.nos} nós
+                  </span>
+                  <span className="text-[12px] font-semibold text-zinc-600" title="decisões: cada uma com todas as saídas escritas">
+                    ◆ {c.contagem.variaveis}
+                  </span>
+                  <span className="text-[12px] font-semibold text-zinc-600" title="onde a categoria toca outra — é nota, não ligação">
+                    ↗ {c.contagem.fronteiras}
+                  </span>
+                </>
+              );
+            })()
+          ) : (
+            placar.map((l) => (
+              <span key={l.luz} className="text-[12px] font-semibold text-zinc-600">
+                {l.emoji} {l.n}
+              </span>
+            ))
+          )}
         </div>
 
         <button
@@ -490,6 +648,49 @@ export default function ProcessosPage() {
               </button>
             </div>
 
+            {/* 🥩 no cru o painel responde outras perguntas: qual é a
+                variável, pra onde a categoria continua, o que a varredura
+                achou, e se aquele pedaço já existe desenhado */}
+            {selecionado.cru ? (
+              <>
+                {selecionado.variavel && (
+                  <Campo rotulo="A variável" valor={selecionado.variavel} />
+                )}
+                {selecionado.saiPara && (
+                  <Campo rotulo="↗ Continua em" valor={selecionado.saiPara} />
+                )}
+                {selecionado.cobre?.length ? (
+                  <Campo rotulo="Atende os itens" valor={selecionado.cobre.join(" · ")} />
+                ) : null}
+                {selecionado.ja && (
+                  <Campo
+                    rotulo="Já desenhado como"
+                    valor={`${selecionado.ja} — no formato completo, com quem executa e com quem a casa fala`}
+                  />
+                )}
+                {selecionado.alerta && (
+                  <div className="mt-3 rounded-xl border border-amber-300 bg-amber-50 p-3">
+                    <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-amber-800">
+                      ⏳ Este ramo tem prazo
+                    </p>
+                    <p className="whitespace-pre-line text-[12px] leading-relaxed text-amber-900">
+                      {selecionado.alerta}
+                    </p>
+                  </div>
+                )}
+                {selecionado.notaCrua && (
+                  <div className="mt-3 rounded-xl border border-zinc-200 bg-zinc-50 p-3">
+                    <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-zinc-500">
+                      O que a varredura achou
+                    </p>
+                    <p className="text-[12px] leading-relaxed text-zinc-700">
+                      {selecionado.notaCrua}
+                    </p>
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
             <Campo rotulo="Quem dispara" valor={selecionado.quem} />
             <Campo rotulo="O que a casa faz" valor={selecionado.faz} />
             <Campo rotulo="Com quem fala" valor={selecionado.fala} />
@@ -536,6 +737,8 @@ export default function ProcessosPage() {
                 ) : null}
               </div>
             ) : null}
+              </>
+            )}
 
             {/* ── por que EU sugeri isto ─────────────────────────────────── */}
             {selecionado.proposta && selecionado.porque && (

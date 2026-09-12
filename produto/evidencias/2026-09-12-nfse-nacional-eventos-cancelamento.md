@@ -116,3 +116,32 @@ Swagger em produção restrita, para contribuintes: `https://adn.producaorestrit
 - Desenho: [[emitir-nota-fiscal]] · [[PROCESSOS]] (P3 e P6) · [[FUNCIONALIDADES]] (3.1, 3.4, 3.8)
 - Dependências: [[_matriz-dependencia]] linha 3.4
 - Teardown do líder, para comparar: [[2026-09-09-contabilizei-nota-fiscal]] §10
+
+---
+
+## 9. ⚠️ Conferência de um documento secundário (12/09)
+
+O Pedro trouxe `documentacao-nfse-bh-fator-r.md` (5.560 caracteres, lido 100%), pesquisa dele sobre NFS-e em BH para ME do Simples nos Anexos III e V. **O negócio está certo; quatro afirmações técnicas não batem com o leiaute oficial.** Registro aqui porque duas delas custariam dia de dev.
+
+| O que o documento diz | O que o leiaute diz | |
+|---|---|:--:|
+| `regTrib`: "definir fixo como **1** — ME/EPP optante pelo Simples" | `regTrib` é **GRUPO**, não campo. Dentro dele, `opSimpNac`: **1 = Não Optante** · 2 = MEI · **3 = ME/EPP optante** | 🔴 |
+| Chave de acesso de **44 dígitos** | **50** posições (`chNFSe`, `chSubstda`, `chNFSeRej`). O identificador com prefixo "ID" tem 53. 44 é chave de NF-e | 🔴 |
+| `xMotivo`: "mensagem textual do status" | Existe, mas é **a justificativa da SUBSTITUIÇÃO** quando `cMotivo = 99`. O sentido de "mensagem de status" é vocabulário de NF-e | 🟡 |
+| `cTribMun` e `cNBS` "obrigatórios" | Os dois são **`0-1`, opcionais** no leiaute nacional. Pode ser exigência parametrizada por BH, o que é plausível — mas então a fonte é a Prefeitura, não o leiaute | 🟡 |
+
+🔴 **O primeiro é o mais caro.** Seguir o documento faria a integração emitir como **não optante do Simples**, e o enquadramento muda regra de verdade: a E0061 (substituição não altera tomador, competência e valor) vale **só** para MEI e ME/EPP; para não optante vale a E0060, que é outra.
+
+✅ **O que o documento acertou, e vale guardar:**
+- **Teto de 5% na alíquota do ISSQN** — confirmado pela regra **E1300**. ⚠️ O piso de 2% que ele cita **não** é regra nacional; se existe, é de BH.
+- **A alíquota não é escolha nossa.** O campo real é `pAliqAplic`, e o leiaute é explícito: quando o município é **conveniado**, o percentual é o que ele **parametrizou previamente** para aquele código de serviço.
+- **A fórmula e a composição do Fator R** batem com o que a casa já tinha (folha 12m ÷ receita 12m ≥ 28%, somando salários, pró-labore, FGTS e CPP).
+- 🔑 **"A Portaria SMFA nº 75 tornou obrigatório o Emissor Nacional em BH"** — se confirmado, responde a pergunta que ficou aberta no P6.9 (*BH é conveniada ao padrão nacional?*). ⚠️ Não consegui confirmar pelo leiaute; **precisa do texto da portaria**. É a pendência de maior valor desta leva.
+
+### 🆕 E o achado que veio de graça: `regApTribSN`
+
+Procurando `regTrib` no leiaute pra conferir a afirmação errada, apareceu um campo que **não estava em lugar nenhum nosso**: o optante ME/EPP declara, **em cada nota**, sob qual regime de apuração ela sai — existe para quem ultrapassou sublimite ou limite do Simples.
+
+E ele não é decorativo: quando a apuração é toda pelo Simples, o regime especial municipal tem que ser "Nenhum" (**E0175**) e **não se pode informar dedução nem redução de base**, exceto numa lista fechada de subitens (**E0398**).
+
+Virou o nó **N53** da varredura crua de Notas.

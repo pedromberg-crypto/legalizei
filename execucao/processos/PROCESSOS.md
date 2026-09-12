@@ -88,7 +88,7 @@ A 12.3 diz que a casa PODE — falta decidir se a gente faz, e quando. E a 3.15 
 
 ### Detalhe técnico
 
-- **P4.11** — O fechamento em si é o processo P1, que ainda não foi desenhado.
+- **P4.11** — O fechamento em si é o processo P1, desenhado em 11/09: daqui a fatura segue pro P1.1, que a monta. Este passo é a porta entre os dois — por isso ele é ■ fim no P4 (acaba o escopo do avulso) e continua vivo no P1.
 
 ### Fonte de cada regra
 
@@ -318,12 +318,12 @@ Se o serviço já pago NÃO couber nos 30 dias do aviso prévio, o dinheiro volt
 
 **🔴 P4.22 · Estorna o que já foi pago**
 
-Três perguntas, e nenhuma tem resposta hoje. (1) A taxa que o gateway reteve volta? Na maioria dos provedores, não — então estorno integral sai do nosso bolso. (2) Estorno ou crédito na próxima fatura? Crédito não custa taxa e é mais rápido, mas prende o cliente. (3) Qual o prazo, e quem avisa quando cai. Tudo isso depende do provedor, que ainda não foi escolhido.
+Três perguntas, e nenhuma tem resposta hoje. (1) A taxa que o gateway reteve volta? Na maioria dos provedores, não — então estorno integral sai do nosso bolso. (2) Estorno ou crédito na próxima fatura? Crédito não custa taxa e é mais rápido, mas prende o cliente. (3) Qual o prazo, e quem avisa quando cai. Tudo isso depende da política da Stone, que é o provedor nomeado nos passos de pagamento (P4.14, P4.15, P4.22). ⚠️ O que segue aberto NÃO é a escolha do provedor, é a condição comercial dele: quanto ele devolve num estorno e em que prazo. Pauta da reunião, junto com o mandato recorrente do P1.4.
 
 ### Detalhe técnico
 
 - **P4.7** — 📚 O modelo do líder confirma que fatura suporta itens: `GET /api/pagamentos/faturas/` devolve `itens[]` com `{descricao, valor, tipo}`, e a mensalidade é UM dos tipos, não o objeto.
-- **P4.11** — O fechamento em si é o processo P1, que ainda não foi desenhado.
+- **P4.11** — O fechamento em si é o processo P1, desenhado em 11/09: daqui a fatura segue pro P1.1, que a monta. Este passo é a porta entre os dois — por isso ele é ■ fim no P4 (acaba o escopo do avulso) e continua vivo no P1.
 
 ### Fonte de cada regra
 

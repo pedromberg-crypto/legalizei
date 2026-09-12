@@ -266,7 +266,7 @@
       "quem": "o relógio",
       "faz": "No dia do aniversário do contrato, fecha a janela de itens do ciclo que terminou e emite a fatura. Assinou dia 8, o ciclo vira todo dia 8.",
       "fala": "só a nossa casa",
-      "falaNota": "O fechamento em si é o processo P1, que ainda não foi desenhado.",
+      "falaNota": "O fechamento em si é o processo P1, desenhado em 11/09: daqui a fatura segue pro P1.1, que a monta. Este passo é a porta entre os dois — por isso ele é ■ fim no P4 (acaba o escopo do avulso) e continua vivo no P1.",
       "ve": "A fatura muda de “Próxima fatura” para “Fatura de <ciclo>” e para de aceitar item novo. A data do próximo fechamento aparece o tempo todo.",
       "luz": "verde",
       "forma": "fim",
@@ -534,7 +534,7 @@
       "luz": "vermelho",
       "forma": "fim",
       "fonte": "Mesmo princípio da 9.5, mas com dinheiro já compensado — situação que a minuta não trata.",
-      "duvida": "Três perguntas, e nenhuma tem resposta hoje. (1) A taxa que o gateway reteve volta? Na maioria dos provedores, não — então estorno integral sai do nosso bolso. (2) Estorno ou crédito na próxima fatura? Crédito não custa taxa e é mais rápido, mas prende o cliente. (3) Qual o prazo, e quem avisa quando cai. Tudo isso depende do provedor, que ainda não foi escolhido.",
+      "duvida": "Três perguntas, e nenhuma tem resposta hoje. (1) A taxa que o gateway reteve volta? Na maioria dos provedores, não — então estorno integral sai do nosso bolso. (2) Estorno ou crédito na próxima fatura? Crédito não custa taxa e é mais rápido, mas prende o cliente. (3) Qual o prazo, e quem avisa quando cai. Tudo isso depende da política da Stone, que é o provedor nomeado nos passos de pagamento (P4.14, P4.15, P4.22). ⚠️ O que segue aberto NÃO é a escolha do provedor, é a condição comercial dele: quanto ele devolve num estorno e em que prazo. Pauta da reunião, junto com o mandato recorrente do P1.4.",
       "cor": "#D64A2D",
       "tons": {
         "faz": "normal",

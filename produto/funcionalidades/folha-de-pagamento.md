@@ -6,7 +6,7 @@ data: 2026-09-09
 assunto: folha-de-pagamento
 autoridade: fonte-verdade
 cobertura: nao-existe
-balde: backlog
+balde: core
 dependencia: externa
 confianca: media
 bloqueio: cadastro de colaborador (formulario do lider bloqueado); eSocial via Serpro; por onde sai o FGTS
@@ -19,7 +19,13 @@ tags: [produto, funcionalidade, folha, fopag, esocial, rubricas, fator-r]
 > O que o concorrente faz está em [[2026-09-09-contabilizei-folha-pagamento]], foto com data.
 > Hub: [[HOME-produto]] · catálogo: [[_catalogo]] · dependências: [[_matriz-dependencia]].
 >
-> ⚠️ **Escopo:** ME serviço no MVP é **quase sempre sem funcionário**. Isto é 🔵 **backlog**, não core. A nota existe porque a varredura entregou o **modelo de dados**, e ele muda coisa no que já é core.
+> 🔴 **ENTROU NO MVP em 12/09** (decisão do Pedro, ao ratificar a lista de 58 que foi ao Mauro). São os 9 itens da §8 de [[FUNCIONALIDADES]], de `8.1 cadastro do colaborador` a `8.9 a folha somando no Fator R`.
+>
+> ⚠️ **`cobertura: nao-existe` continua valendo, e não é contradição:** entrar no MVP é decisão de ESCOPO; cobertura é constatação de FATO. Hoje a §8 tem 1 tela (`/mais/colaborador`, de 04/08, a conferir se cobre algo ou é casca), **zero processo desenhado** e os 3 bloqueios abaixo em pé. O campo vira `parcial` quando houver tela e processo, não quando alguém decidir que vai ter.
+>
+> 🔴 **Os 3 bloqueios viraram TRABALHO, não observação** — é a diferença que a decisão de 12/09 faz. Nenhum deles tem processo: (1) cadastro de colaborador, com o formulário do líder bloqueado na varredura; (2) eSocial via Serpro; (3) por onde sai o FGTS.
+>
+> 🕰️ *Até 11/09 esta nota dizia: "ME serviço no MVP é quase sempre sem funcionário, isto é 🔵 backlog, não core". A tese continua verdadeira — a maioria não contrata — mas deixou de decidir o escopo.*
 
 ---
 

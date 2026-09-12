@@ -179,3 +179,60 @@ Chega aqui por 2 trilhas: **na fatura** e **já pago**.
 | declarado e não pago | as duas | P5.10 · Lançado e não pago: avisa antes de virar multa | P5.10 · Lançado e não pago: avisa antes de virar multa |
 
 ✅ **Cobertura completa:** toda condição responde em toda trilha que chega aqui, e todo caminho termina.
+
+## P6 · Cancelar, corrigir ou substituir uma nota já emitida
+
+### 🟢 P6.2 · ◆ A nota nasceu aqui ou veio de fora?
+
+| Condição | Vale na trilha | Leva para | Onde esse caminho termina |
+|---|---|---|---|
+| a nota nasceu aqui | as duas | P6.3 · ◆ Ainda está dentro do prazo legal? | P6.4 · ■ Passou de 2 anos: não dá mais · P6.13 · ■ Corrige o que não mexe em imposto, e guarda no log · P6.17 · ■ A receita da competência cai, e tudo que dependia dela se move · P6.11 · ■ Recusou: a nota continua valendo |
+| veio de fora, importada | as duas | P6.14 · Registra o cancelamento que o portal já fez | P6.17 · ■ A receita da competência cai, e tudo que dependia dela se move |
+
+✅ **Cobertura completa:** toda condição responde em toda trilha que chega aqui, e todo caminho termina.
+
+### 🟢 P6.3 · ◆ Ainda está dentro do prazo legal?
+
+| Condição | Vale na trilha | Leva para | Onde esse caminho termina |
+|---|---|---|---|
+| dentro dos 2 anos | as duas | P6.5 · ◆ A competência está fechada? | P6.13 · ■ Corrige o que não mexe em imposto, e guarda no log · P6.17 · ■ A receita da competência cai, e tudo que dependia dela se move · P6.11 · ■ Recusou: a nota continua valendo |
+| passou de 730 dias | as duas | P6.4 · ■ Passou de 2 anos: não dá mais | P6.4 · ■ Passou de 2 anos: não dá mais |
+
+✅ **Cobertura completa:** toda condição responde em toda trilha que chega aqui, e todo caminho termina.
+
+### 🟢 P6.5 · ◆ A competência está fechada?
+
+| Condição | Vale na trilha | Leva para | Onde esse caminho termina |
+|---|---|---|---|
+| mês ainda aberto | as duas | P6.7 · ◆ Cancelar, substituir ou corrigir? | P6.13 · ■ Corrige o que não mexe em imposto, e guarda no log · P6.17 · ■ A receita da competência cai, e tudo que dependia dela se move · P6.11 · ■ Recusou: a nota continua valendo |
+| mês já fechado | as duas | P6.6 · Mês fechado: diz o custo ANTES de deixar seguir | P6.13 · ■ Corrige o que não mexe em imposto, e guarda no log · P6.17 · ■ A receita da competência cai, e tudo que dependia dela se move · P6.11 · ■ Recusou: a nota continua valendo |
+
+✅ **Cobertura completa:** toda condição responde em toda trilha que chega aqui, e todo caminho termina.
+
+### 🟢 P6.7 · ◆ Cancelar, substituir ou corrigir?
+
+| Condição | Vale na trilha | Leva para | Onde esse caminho termina |
+|---|---|---|---|
+| essa nota não deveria existir | as duas | P6.8 · Confirma com a nota inteira na tela | P6.11 · ■ Recusou: a nota continua valendo · P6.17 · ■ A receita da competência cai, e tudo que dependia dela se move |
+| o valor ou o serviço está errado | as duas | P6.12 · Substitui: nasce a nota nova, ligada à velha | P6.17 · ■ A receita da competência cai, e tudo que dependia dela se move |
+| só o texto está errado | as duas | P6.13 · ■ Corrige o que não mexe em imposto, e guarda no log | P6.13 · ■ Corrige o que não mexe em imposto, e guarda no log |
+
+✅ **Cobertura completa:** toda condição responde em toda trilha que chega aqui, e todo caminho termina.
+
+### 🟡 P6.10 · ◆ O município aceitou?
+
+| Condição | Vale na trilha | Leva para | Onde esse caminho termina |
+|---|---|---|---|
+| o município cancelou | as duas | P6.15 · ◆ Aquela competência já virou imposto? | P6.17 · ■ A receita da competência cai, e tudo que dependia dela se move |
+| o município recusou | as duas | P6.11 · ■ Recusou: a nota continua valendo | P6.11 · ■ Recusou: a nota continua valendo |
+
+✅ **Cobertura completa:** toda condição responde em toda trilha que chega aqui, e todo caminho termina.
+
+### 🔴 P6.15 · ◆ Aquela competência já virou imposto?
+
+| Condição | Vale na trilha | Leva para | Onde esse caminho termina |
+|---|---|---|---|
+| o DAS daquele mês já saiu | as duas | P6.16 · Refaz a apuração da competência que já tinha fechado | P6.17 · ■ A receita da competência cai, e tudo que dependia dela se move |
+| a competência ainda não apurou | as duas | P6.17 · ■ A receita da competência cai, e tudo que dependia dela se move | P6.17 · ■ A receita da competência cai, e tudo que dependia dela se move |
+
+✅ **Cobertura completa:** toda condição responde em toda trilha que chega aqui, e todo caminho termina.

@@ -8,8 +8,15 @@ autoridade: fonte-verdade
 tags: [produto, catalogo, portal, escopo, dia-2]
 ---
 
-> 🧭 **Autoridade:** este é o catálogo. Ele manda em *quais* funcionalidades existem e em *qual a cobertura de cada uma*.
-> Ele **não** manda em dependência de API (isso é [[_matriz-dependencia]]) nem no desenho de cada uma (isso é `produto/funcionalidades/<nome>.md`).
+> 🔴 **A LISTA E A COBERTURA SAÍRAM DAQUI EM 12/09.** Quem manda em *quais funcionalidades existem* e em *qual a luz de cada uma* passou a ser **[[FUNCIONALIDADES]]**, gerado de `produto/funcionalidades-data.mjs`.
+>
+> Motivo: o Pedro ratificou em 12/09 a lista de **58** que foi ao Mauro (o PDF de 11/09) como a lista core oficial, com a **folha de pagamento dentro do MVP** e dois cortes (acesso do 2º sócio · pagar o DAS no app). E o semáforo lá é **derivado** — cai de "a rota existe?" e "o passo existe?" — em vez de digitado, que é o que fez a tabela abaixo envelhecer.
+>
+> ⚠️ **A numeração mudou** em §1 e §2 por causa dos dois cortes: `2.6` aqui é *"minhas alíquotas"*, e lá é *"recalcular guia vencida"*. Ao citar, escreva o nome junto do número.
+>
+> 🧭 **O que este arquivo ainda manda:** os **15 vendáveis do à-la-carte** (§8, que não entram nos 58), as decisões de **08/09** e **27/07**, o desenho da **central de avisos** (§1.4) e o **§9 — o que o líder tem e a gente decidiu não fazer**. Nada disso foi duplicado lá.
+>
+> Ele **não** manda em dependência de API (isso é [[_matriz-dependencia]]) nem no desenho de cada funcionalidade (isso é `produto/funcionalidades/<nome>.md`).
 > Hub da frente: [[HOME-produto]].
 >
 > 🔄 Extraído de `execucao/portal/funcionalidades-me-simples.md` em 09/09/2026, quando a frente ganhou pasta própria.
@@ -73,6 +80,12 @@ Elas estão aplicadas na tabela abaixo, mas registro aqui porque **contradizem a
 2. **Serviço avulso não cobra na hora** — entra na próxima fatura, removível antes de fechar (mesmo modelo do líder).
 
 ---
+
+---
+
+> 🕰️ **As sete tabelas abaixo (§1 a §7) são HISTÓRICO desde 12/09.** Elas continuam úteis por duas colunas que não foram pra lista nova — *"no líder"* (o que a Contabilizei faz em cada item, do teardown) e *"como automatizar"* (a API ou o caminho técnico de cada uma). A **coluna Cobertura, porém, está congelada**: ela foi digitada à mão e é exatamente o que a luz derivada de [[FUNCIONALIDADES]] veio substituir.
+>
+> Lê aqui pra entender **por que** uma funcionalidade é assim. Lê lá pra saber **em que pé ela está**.
 
 ## 1. 🏠 Home e navegação
 
@@ -234,9 +247,13 @@ A tela `/avisos` existe e lista avisos. Falta o que a transforma em canal:
 
 ## 📊 Onde a gente está
 
+> 🔴 **ESTE PLACAR MORREU EM 12/09, e ele é a prova do problema.** Dizia **47** funcionalidades quando as tabelas acima já tinham **51**, e listava *"a sociedade vai até 2 no MVP"* quando o teto virou **4** em 29/08. Digitado à mão, nunca recontado.
+>
+> O placar vivo está em **[[FUNCIONALIDADES]]** e é calculado a cada rodada do gerador. Deixo o número velho abaixo, riscado, porque ele explica por que a casa parou de digitar status.
+
 | | Total | ✅ construída | 🟡 parcial | 🔴 não existe | ⚪ decidido não fazer |
 |---|:--:|:--:|:--:|:--:|:--:|
-| **Funcionalidades (§1–7)** | 47 | 31 | 5 | 10 | 1 |
+| ~~**Funcionalidades (§1–7)**~~ | ~~47~~ | ~~31~~ | ~~5~~ | ~~10~~ | ~~1~~ |
 
 **Os 10 buracos, em ordem de importância:**
 

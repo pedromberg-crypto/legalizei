@@ -380,6 +380,8 @@ function defeitos({ nos, arestas }) {
         `${id} bifurca pela metade: ${comCondicao} de ${labels.length} saídas têm condição escrita`,
       );
     }
+  }
+}
 
 /**
  * 🔴 O GUARDA ABAIXO PROTEGE SÓ O SIMULADOR DE CENÁRIOS.
@@ -392,6 +394,20 @@ function defeitos({ nos, arestas }) {
  * 🔑 Trava de DADO roda sempre. Só o que compara CENÁRIOS de proposta depende
  * de existir proposta. Misturar os dois foi o que criou o ponto cego — e o
  * ponto cego só apareceu quando a camada esvaziou pela primeira vez.
+ *
+ * 🐛 12/09, SEGUNDO BUG DA MESMA FAMÍLIA, e ele nasceu do conserto acima.
+ * Ao tirar a trava de bifurcação de dentro deste `if`, as chaves ficaram
+ * trocadas: o `if (PROPOSTAS.length)` acabou ANINHADO dentro do laço da
+ * bifurcação, e a segunda metade do simulador — a que testa cada proposta
+ * sozinha — ficou FORA do escopo onde `piorou` existe. O arquivo nem
+ * carregava (`ReferenceError: piorou is not defined`), e ninguém viu por
+ * 1 dia inteiro porque a camada estava vazia: sem proposta, o bloco nunca
+ * era alcançado.
+ *
+ * 🔑 A lição não é sobre chaves. É que **código que só roda num estado raro
+ * não é verificado pelo uso** — e a camada de sugestão vazia é o estado
+ * normal aqui, não o raro. O primeiro `node gerar-processos.mjs` depois de
+ * escrever uma proposta é, na prática, o único teste que esse trecho tem.
  */
 
 if (PROPOSTAS.length) {
@@ -400,9 +416,6 @@ if (PROPOSTAS.length) {
 
   for (const d of piorou(new Set(PROPOSTAS.map((s) => s.id)))) {
     avisos.push(`com TODAS as propostas aceitas: ${d}`);
-  }
-
-    }
   }
 
   for (const s of PROPOSTAS) {

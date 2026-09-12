@@ -99,4 +99,81 @@ export const PROPOSTAS = [
    * Histórico: o ADR (`marca/decisoes-marca.md`, 11/09) e o
    * `decisoes-propostas.json`, que guarda quais ids foram promovidos.
    */
+
+  /**
+   * ── LEVA 2 · 12/09 — o caminho que a fonte primária abriu no P6 ──────────
+   *
+   * Não nasceu de opinião minha: nasceu de ler a documentação oficial do
+   * Sistema Nacional NFS-e (`2026-09-12-nfse-nacional-eventos-cancelamento`).
+   * O P6 saiu desenhado hoje assumindo que cancelar tem dois desfechos —
+   * aceito ou recusado. A documentação mostra um terceiro, e ele é o único
+   * ASSÍNCRONO do processo.
+   */
+  {
+    id: "S12",
+    titulo: "Recusou por prazo: pedir análise fiscal",
+    porque:
+      "🔴 O P6 de hoje trata recusa como fim de linha (P6.11 · “a nota continua valendo”), e o Sistema Nacional diz que não é. Quando o cancelamento direto não passa, existe um segundo caminho documentado: **Solicitação de Análise Fiscal para Cancelamento** (evento e101103, autor: o emitente), que fica PENDENTE até o município responder com **Deferido** (e105104) ou **Indeferido** (e105105). A regra de negócio é explícita: o deferimento não pode ser recebido sem uma solicitação pendente.\n\n🔑 É AQUI que nasce o vigia que eu procurei no lugar errado. O cancelamento comum é síncrono; a exceção é que espera. Mesmo formato do P2.3/P2.4, que espera o vencimento pra consultar a arrecadação.\n\n⚠️ Sem isso, o produto diz “não deu” pra alguém que ainda tem caminho — e é justamente o caso do erro descoberto tarde, que é quando cancelar mais importa.",
+    passos: [
+      {
+        id: "S12a",
+        processos: ["P6"],
+        titulo: "Pede análise fiscal do cancelamento",
+        quem: "cliente",
+        faz: "Quando a recusa foi de prazo, registra um pedido de análise fiscal explicando o motivo, e avisa que agora quem decide é a prefeitura.",
+        fala: "Sefin Nacional NFS-e · evento e101103",
+        ve: "A recusa vira caminho, não beco: “o prazo direto passou, mas dá pra pedir análise da prefeitura”, com o campo do motivo e o aviso de que a resposta não é imediata.",
+        luz: "amarelo",
+        forma: "passo",
+        fonte:
+          "Anexo II do Sistema Nacional NFS-e, aba de tipos de evento: `Solicitação de Análise Fiscal para Cancelamento de NFS-e`, código 1 01 1 03, autor “Emite”, assinatura digital obrigatória.",
+        duvida:
+          "Quanto tempo a prefeitura leva, e se existe prazo máximo — a documentação não diz, e é parametrização municipal. Enquanto pende, a receita da competência conta com a nota ou não? A resposta honesta é CONTA (a nota ainda vale), mas isso precisa estar escrito antes de alguém supor o contrário.",
+      },
+      {
+        id: "S12b",
+        processos: ["P6"],
+        titulo: "◆ A prefeitura deferiu?",
+        quem: "a casa",
+        faz: "Fica de olho nos eventos vinculados à nota e vê qual dos dois chegou: deferimento ou indeferimento.",
+        fala: "ADN · GET /NFSe/{chaveAcesso}/Eventos",
+        ve: "nada, acontece por baixo",
+        luz: "amarelo",
+        forma: "decisao",
+        fonte:
+          "Os dois desfechos são eventos próprios, autorados pelo município: `Cancelamento Deferido por Análise Fiscal` (e105104) e `Indeferido` (e105105). 🔑 A consulta de eventos por chave de acesso é justamente uma das duas APIs que o contribuinte tem no ADN.",
+        duvida:
+          "De quanto em quanto tempo consultar, e por quanto tempo insistir. O vigia do P2 tem data certa pra acordar (o vencimento é conhecido desde a emissão); este não tem — depende da prefeitura. Sem régua, ou a gente consulta demais ou descobre tarde.",
+      },
+      {
+        id: "S12c",
+        processos: ["P6"],
+        titulo: "■ Indeferido: a nota vale, e agora é definitivo",
+        quem: "a casa",
+        faz: "Fecha o caminho: a prefeitura analisou e negou, então não há mais para onde ir dentro do app.",
+        fala: "só a nossa casa",
+        ve: "O motivo que a prefeitura deu, a data, e a saída honesta pela contabilidade. Nada de “tentar de novo”.",
+        luz: "amarelo",
+        forma: "fim",
+        fonte: "Evento e105105. Saída terminal: depois do indeferimento, o app não tem mais ação a oferecer.",
+        duvida:
+          "Se o indeferimento é definitivo mesmo, ou se cabe novo pedido com outra justificativa. Prometer “acabou” e estar errado é pior que mandar pro atendimento.",
+      },
+    ],
+    arestas: [
+      { de: "P6.11", para: "S12a", label: "a recusa foi de prazo" },
+      { de: "S12a", para: "S12b" },
+      { de: "S12b", para: "P6.15", label: "a prefeitura deferiu" },
+      { de: "S12b", para: "S12c", label: "a prefeitura indeferiu" },
+    ],
+    mudancas: [
+      {
+        passo: "P6.11",
+        campo: "forma",
+        valor: "passo",
+        porque:
+          "Deixa de ser fim de linha: com a análise fiscal, a recusa passa a ter saída. Continua sendo fim quando a recusa não for de prazo.",
+      },
+    ],
+  },
 ];

@@ -35,7 +35,7 @@ Da emissão com o cliente até a entrega do certificado e da senha pra gente. No
 
 **24 dados mapeados:** 🟢 11 chegam · 🟡 6 nascem depois · 🟡 3 ninguém combinou · 🔴 4 ninguém produz
 
-**18 dos 62 passos** do P1 ao P5 dependem de algum dado da constituição.
+**18 dos 79 passos** do P1 ao P5 dependem de algum dado da constituição.
 
 ## 1. Chegam da constituição, e movem o app interno
 
@@ -205,7 +205,7 @@ Empresa recém-aberta não tem 12 meses de receita: a legislação manda proporc
 
 > Informativo, não é defeito: a maioria dos passos nasce do uso do app, não da abertura. Serve pra ver o tamanho real da dependência.
 
-44 passos: P4.1 · P4.2 · P4.3 · P4.5 · P4.6 · P4.7 · P4.8 · P4.9 · P4.10 · P4.12 · P4.13 · P4.14 · P4.15 · P4.16 · P4.17 · P4.18 · P4.19 · P4.20 · P4.21 · P4.22 · P4.23 · P1.3 · P1.5 · P1.6 · P1.7 · P1.8 · P1.9 · P1.10 · P2.2 · P2.3 · P2.4 · P2.5 · P2.6 · P2.7 · P3.1 · P3.2 · P3.6 · P3.7 · P3.8 · P3.10 · P5.4 · P5.5 · P5.10 · P5.11
+61 passos: P4.1 · P4.2 · P4.3 · P4.5 · P4.6 · P4.7 · P4.8 · P4.9 · P4.10 · P4.12 · P4.13 · P4.14 · P4.15 · P4.16 · P4.17 · P4.18 · P4.19 · P4.20 · P4.21 · P4.22 · P4.23 · P1.3 · P1.5 · P1.6 · P1.7 · P1.8 · P1.9 · P1.10 · P2.2 · P2.3 · P2.4 · P2.5 · P2.6 · P2.7 · P3.1 · P3.2 · P3.6 · P3.7 · P3.8 · P3.10 · P5.4 · P5.5 · P5.10 · P5.11 · P6.1 · P6.2 · P6.3 · P6.4 · P6.5 · P6.6 · P6.7 · P6.8 · P6.9 · P6.10 · P6.11 · P6.12 · P6.13 · P6.14 · P6.15 · P6.16 · P6.17
 
 ## Nota de fonte
 

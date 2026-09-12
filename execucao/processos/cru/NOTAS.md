@@ -15,7 +15,7 @@ tags: [execucao, processos, cru, notas]
 
 ## Estado da varredura
 
-**🟩 FECHADA** · 55 nós · 27 variáveis · 5 entradas · 15 fins · 11 fronteiras
+**🟩 FECHADA** · 55 nós · 26 variáveis · 5 entradas · 15 fins · 11 fronteiras
 
 ✅ **Todos os 9 itens da categoria foram tocados.**
 
@@ -48,7 +48,7 @@ tags: [execucao, processos, cru, notas]
 | · | **N12** · Desempata entre os serviços possíveis, em português | — | → N11 |
 | ■ | **N13** · Nenhum serviço corresponde ao que foi feito | — | _termina aqui_ |
 | · | **N11** · Informa o valor do serviço e o desconto, se houver | — | → N57 |
-| ◆ | **N57** · Define a competência da nota | A competência é a data de hoje? | **sim, a nota vale para o mês em que está sendo emitida** → N14<br/>**não, o serviço é de competência anterior** → N14 |
+| · | **N57** · A nota nasce com a competência do dia em que foi emitida | — | → N14 |
 | ◆ | **N14** · Resolve se alguém retém imposto na fonte | Essa atividade está na lista de retenção do município? | **não está na lista** → N16<br/>**está, e o cliente passa a ser o responsável pelo ISS** → N15 |
 | · | **N15** · Mostra o que o cliente vai reter e o que sobra | — | → N16 |
 | ◆ | **N16** · Confere o que esse faturamento faz com a empresa antes de emitir | Esse valor encosta em algum limite? | **não encosta em nada** → N53<br/>**aproxima do teto do regime** → N17<br/>**ultrapassa o teto do regime** → N17<br/>**muda a faixa de faturamento** → N17 |
@@ -130,11 +130,6 @@ tags: [execucao, processos, cru, notas]
 - sim, só um → **N11** · Informa o valor do serviço e o desconto, se houver
 - mais de um possível → **N12** · Desempata entre os serviços possíveis, em português
 - nenhum corresponde → **N13** · Nenhum serviço corresponde ao que foi feito
-
-**N57 · A competência é a data de hoje?**
-
-- sim, a nota vale para o mês em que está sendo emitida → **N14** · Resolve se alguém retém imposto na fonte
-- não, o serviço é de competência anterior → **N14** · Resolve se alguém retém imposto na fonte
 
 **N14 · Essa atividade está na lista de retenção do município?**
 
@@ -260,7 +255,7 @@ tags: [execucao, processos, cru, notas]
   ↗ plano e cobrança · o cadastro no outro município é serviço avulso
 - **N13** · Nenhum serviço corresponde ao que foi feito
   ↗ plano e cobrança · alteração contratual é serviço avulso
-- **N57** · Define a competência da nota
+- **N57** · A nota nasce com a competência do dia em que foi emitida
   ↗ impostos · é a competência, não a descrição, que decide em qual apuração a receita entra
 - **N16** · Confere o que esse faturamento faz com a empresa antes de emitir
   ↗ estar em dia · a vigília do teto vive lá · impostos · a faixa muda a alíquota
@@ -331,9 +326,9 @@ Uma atividade pode cair em mais de um item da lista de serviço, e é o item que
 
 🆕 12/09 — o DESCONTO INCONDICIONADO faltava no mapa e não é detalhe: a ajuda do líder diz que ele “abate diretamente do valor da nota e REDUZ A BASE DE CÁLCULO DOS IMPOSTOS”. Ou seja, muda o imposto. Decisão do Pedro: o campo entra, e o valor tem que ficar GUARDADO — a guia do DAS é calculada sobre a base, não sobre o valor bruto. ↗ sai daqui pra impostos. ⚠️ Decidido em 12/09 NÃO fazer o cálculo do imposto ao vivo nesta fase: pede-se só o valor, igual ao líder. A prévia viva fica como feature.
 
-**N57 · Define a competência da nota**
+**N57 · A nota nasce com a competência do dia em que foi emitida**
 
-🔴 BURACO ACHADO EM 12/09, NA NOTA REAL QUE EMITIMOS. A nota saiu com `competencia: 12/09/2026` — a DATA DA EMISSÃO — enquanto a descrição dizia “referente ao serviço prestado no mês de agosto”. 🔑 O texto é decorativo: quem decide em qual apuração a receita entra é o CAMPO competência, e ele foi setembro. O DAS dessa nota vence em outubro, não em setembro. ⚠️ O líder NÃO deixa escolher a competência — usa a data de emissão e pronto. O leiaute nacional TEM o campo (`dCompet`), e a regra E0061 proíbe alterá-lo em substituição para optante do Simples, o que mostra que ele é fiscal de verdade. 🔴 PERGUNTA ABERTA, e é decisão de produto: a gente deixa a pessoa escolher a competência ou copia o líder e trava na data de emissão? Deixar escolher é mais correto e abre a porta pra erro; travar é simples e faz o texto “referente a agosto” mentir para sempre.
+🔒 12/09 (Pedro): SEM PERGUNTA E SEM CAMPO. A competência é a data da emissão e pronto; o mês de referência do serviço vai na DESCRIÇÃO, em texto livre. O nó perdeu a pergunta e virou passo, mas o trabalho sobreviveu: a casa carimba a competência, e é ela que decide a apuração. 🔑 O PADRÃO, validado nas duas notas reais: emite-se no mês seguinte ao serviço. A nota 5 saiu em 11/08 dizendo “mês de julho” e ficou na competência agosto; a nota 6 saiu em 12/09 dizendo “mês de agosto” e ficou na competência setembro. Sempre M−1 na descrição. É a prática de quem fecha 30 dias e fatura depois, e o Pedro confirmou que é assim que se trabalha. ⚠️ SOBRA UMA PERGUNTA, e é pro contador, não de produto: serviço prestado em agosto com nota emitida em setembro tem a receita reconhecida em QUAL mês? O sistema do líder joga em setembro, pela competência. Se a resposta certa for agosto, a apuração inteira anda um mês — e isso vale a mesma pergunta na varredura de Impostos.
 
 **N14 · Resolve se alguém retém imposto na fonte**
 

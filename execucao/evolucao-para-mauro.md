@@ -1008,6 +1008,33 @@ Oi Mauro, resumo:
 ```
 
 
+## Semana 12/09/2026 (parte 2) — descobrimos que BH já mudou a regra há 10 meses, e emitimos uma nota pra testar
+
+| # | O que rendeu | Por quê importa | |
+|:--:|---|---|:--:|
+| 1 | 🔴 **BH obriga o Emissor Nacional desde novembro de 2025** | A gente trabalhava com a data nacional, **novembro de 2026**, e achava que tinha um ano de folga. Fui atrás da portaria da Prefeitura: o Simples de BH migrou em **01/11/2025**, e o emissor antigo da prefeitura *"será descontinuado"*. **Não existe transição pra fazer — já é o sistema de hoje** | 🟢 |
+| 2 | ✅ **Empresa nova não precisa de inscrição municipal pra emitir nota** | Era um dos nossos buracos críticos: *"sem inscrição municipal o app não emite a primeira nota"*. A Prefeitura resolve: quem abriu depois de dezembro de 2025 **emite sem informar a inscrição**. Um bloqueio a menos, e dos grandes | 🟢 |
+| 3 | 🔴 **Não existe procuração na nota fiscal nacional** | Não dá pra emitir nota "pelo cliente" com uma procuração, como se faz em outros sistemas. **Só emite quem tem o certificado digital da própria empresa**, e o governo diz que não há data pra isso mudar. Confirma que o certificado é o item mais crítico do nosso produto | 🟢 |
+| 4 | 🧾 **Emitimos uma nota fiscal de verdade na plataforma da Contabilizei** | O Pedro precisava emitir a nota do mês, e aproveitamos pra percorrer o caminho inteiro deles com olho de auditoria: **18 endereços de sistema, 10 telas de ajuda e cada campo do formulário**. Não é curiosidade: é a régua do que o nosso tem que fazer | 🟢 |
+| 5 | ⚠️ **A consulta de CNPJ deles devolve dado DESATUALIZADO** | Testamos com o CNPJ da nossa própria empresa. O sistema devolveu a **razão social antiga** e o **CNAE antigo**, de antes da alteração contratual de um mês e meio atrás — e ainda **sobrescreveu** o nome correto que tinha sido digitado. O próprio dado deles entrega o motivo: *"Consulta Offline"*. **A nota do cliente sai com o nome errado e ninguém percebe** | 🔴 |
+| 6 | 🔍 **A conferência depois da emissão achou 3 erros no nosso desenho** | E são erros que **nenhuma leitura de documentação pegaria**: (a) o imposto segue **onde o serviço foi prestado**, não onde o cliente está; (b) a retenção do ISS é **lista fechada da lei**, não escolha do cliente; (c) *"o órgão aceitou a nota"* **não é sim ou não** — são três situações independentes, e uma delas marca um problema de atividade que a nota carrega em silêncio | 🟡 |
+
+**Não preciso de nada seu nesta parte** — são achados técnicos e de produto. As duas perguntas da semana (como provar que o pró-labore foi pago · a regra do RBT12 no primeiro ano) **seguem valendo**.
+
+⚠️ Uma observação de ordem prática: a conta da Contabilizei do Pedro está com **mensalidade atrasada**, e a plataforma avisa que a emissão de nota estaria bloqueada. **Não bloqueou** — a nota saiu normalmente. O aviso é comercial, não é trava.
+
+```
+Oi Mauro, segunda parte da semana:
+
+- *Descobri que BH já obriga o Emissor Nacional desde novembro de 2025.* A gente trabalhava com a data nacional (novembro de 2026) e achava que tinha um ano de folga. Não tem: já é o sistema de hoje, e o emissor antigo da prefeitura vai ser descontinuado
+- *Boa notícia:* empresa nova não precisa de inscrição municipal pra emitir nota em BH. Era um dos nossos buracos críticos e a própria Prefeitura resolve
+- *Importante pro nosso modelo:* não existe procuração na nota fiscal nacional. Só emite quem tem o certificado digital da própria empresa, e não há data pra isso mudar. O certificado é o item mais crítico do produto
+- O Pedro precisou emitir a nota do mês e aproveitamos pra *percorrer o caminho inteiro da Contabilizei com olho de auditoria*
+- *Achado que me preocupou:* a consulta de CNPJ deles devolve dado desatualizado. Testei com o CNPJ da nossa empresa e voltou a razão social e o CNAE antigos, de antes da alteração contratual — e ainda sobrescreveu o nome certo que tinha sido digitado. A nota sai com o nome errado do cliente e ninguém percebe
+- A conferência depois da emissão achou 3 erros no nosso desenho que nenhuma leitura de documentação pegaria. Já corrigidos
+```
+
+
 ## Links
 
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]] · [[estado-atual]] · [[indice-autoridade]]

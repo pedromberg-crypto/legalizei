@@ -1,5 +1,9 @@
 # Memory Index — Legalize
 
+- [Modo cru: varredura por categoria](legalize-modo-cru-varredura-categoria.md) — 12/09: o Pedro parou a esteira. 2 campos obrigatorios, sem tela/API/semaforo, fronteira e NOTA. Home por ultimo.
+- [So o uso real corrige o mapa](legalize-uso-real-corrige-o-mapa.md) — 12/09: emitimos NF de verdade e o uso achou 3 erros conceituais que documentacao nenhuma pegaria. Contar tela != contar o que existe.
+- [Escopo: ME Simples, Anexos III e V](legalize-escopo-me-simples-anexos-3-5.md) — 12/09 travado: virou dado + script nos 3 geradores. O enquadramento MUDA a regra (E0061).
+- [BH ja obriga o Emissor Nacional desde 01/11/2025](legalize-bh-emissor-nacional-desde-2025.md) — 12/09: o P3 dizia 2026. Empresa nova emite SEM inscricao municipal; nao existe procuracao na NFS-e.
 - [A abertura ja tem dono: nao desenhar, so mapear os dados](legalize-fronteira-abertura-time-dev.md) — 12/09: time do dev cobre download→pagamento da guia; assistido = 2 assinaturas + certificado; handoff e TABELA, nao caminho no board.
 - [O semaforo mede desenho, nao insumo](legalize-semaforo-mede-desenho-nao-insumo.md) — 12/09: 8 passos verdes dependiam de insumo sem entrega combinada; nasceu o selo ⚠ N no cartao. Dado nao vira cartao.
 - [Nao matar um caminho corrigindo outro](legalize-nao-matar-caminho-multiplos-ramos.md) — 11/09 travado: todo no depois de bifurcacao e compartilhado; simulador de caminhos no gerar-processos (base x todas x cada uma sozinha).

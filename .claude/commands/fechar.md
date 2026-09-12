@@ -8,7 +8,14 @@ Ritual de FECHO de flow no vault do Legalizai Story Book. Faça, nesta ordem, s�
 2. **Decisão travada?** Registre no ADR `marca/decisoes-marca.md` e/ou crie um marco em `execucao/marcos/AAAA-MM-DD-<slug>.md`.
 3. **Fato durável cross-sessão?** Atualize a auto-memória do projeto (e o `MEMORY.md`).
 4. **Rendeu item de reporte?** Atualize `execucao/evolucao-para-mauro.md` (tabela interna + bloco WhatsApp).
-5. **Git:** `git add -A && git commit` com mensagem clara (terminando em `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`) e `git push`.
+5. **Git:** `git add -A && git commit` com mensagem clara e `git push`. A assinatura vai no fim da mensagem, **com o modelo que está rodando de fato** (hoje, 12/09, é o Opus 5) e a linha da sessão:
+
+   ```
+   Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+   Claude-Session: https://claude.ai/code/session_<id>
+   ```
+
+   ⚠️ Este arquivo dizia `Opus 4.8` até 12/09, quando o repo já assinava Opus 5 havia dias. Se a sua sessão rodar em outro modelo, **assine o seu** e corrija esta linha em vez de copiar o exemplo.
 6. Confirme, em 1 linha, que está seguro fechar e que a próxima janela deve abrir com `/boot`.
 
 🔴 **Nada de veredito 🪟 de saúde da janela** (revogado em 04/09, pedido do Pedro, e este comando ficou pedindo até 12/09). A janela é ~1M e ele acompanha a barra sozinho. Continua valendo só a parte silenciosa do `CLAUDE.md`: se você se pegar repetindo, perdendo o fio ou entrando numa 2ª compactação, **diga isso em uma linha** — como fato, não como carimbo de rotina.

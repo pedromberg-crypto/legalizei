@@ -57,8 +57,8 @@
         "N44"
       ],
       "contagem": {
-        "nos": 53,
-        "variaveis": 27,
+        "nos": 51,
+        "variaveis": 24,
         "fins": 15,
         "fronteiras": 10
       }
@@ -497,6 +497,14 @@
             "vai": "N31"
           },
           {
+            "se": "emitir outra igual a essa",
+            "vai": "N54"
+          },
+          {
+            "se": "ver o que já aconteceu com ela",
+            "vai": "N55"
+          },
+          {
             "se": "tem alguma coisa errada",
             "vai": "N23"
           }
@@ -504,7 +512,31 @@
         "cobre": [
           "3.2",
           "3.3"
-        ]
+        ],
+        "nota": "🔒 TRAVADO EM 12/09 (Pedro): são estas QUATRO ações e mais nenhuma. Nota emitida NÃO se edita nem se altera. A decisão bate com o princípio que a própria PBH escreve — *a nota emitida é imutável, ressalvadas as hipóteses de cancelamento ou substituição* — e com o leiaute nacional, onde não existe carta de correção."
+      },
+      {
+        "id": "N54",
+        "o": "Duplica a nota: nasce uma nova com os mesmos dados",
+        "saidas": [
+          {
+            "se": "",
+            "vai": "N11"
+          }
+        ],
+        "cobre": [
+          "3.1"
+        ],
+        "nota": "🆕 AÇÃO QUE FALTAVA NO MAPA, e ela é a resposta prática pro caso mais comum: o mesmo cliente, o mesmo serviço, todo mês. Duplicar não conserta nada — cria documento NOVO, com número novo. 🔑 Por isso ela cai de volta no caminho de emissão e passa por todas as travas de novo: retenção, teto, regime e o que impede emitir. Duplicata que pula validação é nota errada nascendo rápido."
+      },
+      {
+        "id": "N55",
+        "o": "Mostra tudo o que já aconteceu com a nota",
+        "fim": true,
+        "cobre": [
+          "3.2"
+        ],
+        "nota": "🆕 No modelo nacional isso tem nome: são os EVENTOS vinculados à chave de acesso — cancelamento, substituição, manifestação do tomador, bloqueio do Fisco. Não é log interno nosso, é o que o órgão registrou. 🔑 É também a única janela do cliente pra enxergar que o tomador dele rejeitou ou confirmou uma nota."
       },
       {
         "id": "N31",
@@ -557,76 +589,15 @@
       },
       {
         "id": "N32",
-        "o": "Decide o que fazer com a nota errada",
-        "variavel": "O que exatamente está errado?",
+        "o": "Diz o motivo e a justificativa do cancelamento",
         "saidas": [
           {
-            "se": "a nota não deveria existir",
+            "se": "",
             "vai": "N35"
-          },
-          {
-            "se": "o valor, a competência ou quem é o cliente",
-            "vai": "N35"
-          },
-          {
-            "se": "o serviço: código, descrição ou onde foi prestado",
-            "vai": "N51"
-          },
-          {
-            "se": "só o texto livre da descrição",
-            "vai": "N38"
           }
         ],
         "ja": "P6.7",
-        "nota": "🔴 CORRIGIDO EM 12/09 CONTRA A FONTE PRIMÁRIA, e o erro era meu. Eu tinha desenhado “valor errado → substitui”. A regra **E0061** do leiaute nacional proíbe: para optante do Simples ME/EPP (`opSimpNac = 3`), a substituição **não pode alterar tomador, competência nem valor do serviço**. Então errar o valor não tem caminho de conserto: é cancelar e emitir de novo. O que a substituição carrega, no nosso regime, é o SERVIÇO — código, subitem, local da prestação e descrição."
-      },
-      {
-        "id": "N51",
-        "o": "Confere se essa nota ainda aceita substituição",
-        "variavel": "Alguma coisa impede substituir?",
-        "saidas": [
-          {
-            "se": "nada impede",
-            "vai": "N37"
-          },
-          {
-            "se": "a nota já foi cancelada antes",
-            "vai": "N39"
-          },
-          {
-            "se": "passou de 2 anos da emissão",
-            "vai": "N52"
-          },
-          {
-            "se": "o Fisco bloqueou a substituição desta nota",
-            "vai": "N39"
-          },
-          {
-            "se": "há pedido de análise fiscal esperando resposta",
-            "vai": "N39"
-          },
-          {
-            "se": "o cliente já confirmou essa nota",
-            "vai": "N39"
-          }
-        ],
-        "nota": "🔑 Cinco travas, todas com código no leiaute: **E0046** (cancelada não se substitui) · **E0050** (prazo do município) · **E0056** (sem tomador identificado) · **E0068** (análise fiscal pendente) · **E0070** (o tomador já manifestou confirmação).\n\n🔴 A última é a que amarra as duas pontas desta categoria: **a confirmação do tomador TRAVA a substituição**. A máquina de manifestação que apareceu no N36 não é decorativa — ela decide se a nota ainda pode ser mexida."
-      },
-      {
-        "id": "N52",
-        "o": "Fora do prazo, mas há uma exceção que pode valer",
-        "variavel": "O motivo da substituição é mudança de regime?",
-        "saidas": [
-          {
-            "se": "é enquadramento ou desenquadramento no Simples",
-            "vai": "N37"
-          },
-          {
-            "se": "é outro motivo qualquer",
-            "vai": "N39"
-          }
-        ],
-        "nota": "🔑 A E0050 abre exceção explícita: fora do prazo, ainda dá pra substituir quando a justificativa for **enquadramento ou desenquadramento no Simples Nacional** (`cMotivo` 1 ou 2). É caso nosso, não hipótese: empresa que entra ou sai do Simples precisa refazer notas do período."
+        "nota": "🔒 12/09 (Pedro): SEM SUBSTITUIÇÃO. O menu do líder tem quatro ações pra nota emitida — ver, duplicar, ver atualizações e cancelar — e a casa espelha isso. Com uma saída só, este nó DEIXOU DE SER DECISÃO; virou passo, porque o trabalho sobreviveu à pergunta: o cancelamento exige MOTIVO (lista) e JUSTIFICATIVA (texto), os dois obrigatórios. ⚠️ O que se perde é real e fica registrado: substituir é UMA operação e deixa as duas notas amarradas no registro do fisco (`numeroNotaSubstituta` ↔ `numeroNotaSubstituida`); cancelar e duplicar são dois eventos soltos, com uma janela em que a velha morreu e a nova não nasceu. O art. 5º §2º da Portaria 075/2025 permite substituir. A regra E0061 é que esvazia o ganho: no nosso regime a substituição não carrega valor, competência nem tomador, então sobraria pra corrigir código de serviço — erro que quase ninguém comete."
       },
       {
         "id": "N35",
@@ -666,27 +637,7 @@
             "vai": "N41"
           }
         ],
-        "nota": "🔑 É o único trecho da categoria que ESPERA, e a espera não tem prazo conhecido. ⚠️ Pode virar mais de um passo."
-      },
-      {
-        "id": "N37",
-        "o": "Emite a nota certa no lugar da errada, e as duas ficam ligadas",
-        "saidas": [
-          {
-            "se": "",
-            "vai": "N40"
-          }
-        ],
-        "ja": "P6.12",
-        "nota": "Nenhuma das duas some da lista: a velha fica marcada como substituída. Senão o histórico mente sobre o que foi faturado em cada mês.\n\n🔴 E a substituição exige JUSTIFICATIVA codificada (`cMotivo`), não é campo livre: enquadramento no Simples, desenquadramento, inclusão de dado, e assim por diante. A lista fechada precisa virar as opções que a pessoa vê — em português, não em código."
-      },
-      {
-        "id": "N38",
-        "o": "Corrige o que não muda o imposto, e guarda o que mudou",
-        "fim": true,
-        "ja": "P6.13",
-        "alerta": "⚠️ ESTE NÓ PODE NÃO EXISTIR, e a dúvida é de 12/09.\n\nNo modelo nacional **não há carta de correção** — varri as 655 regras do leiaute e a expressão não aparece uma vez. Em NF-e de mercadoria existe (a CC-e, evento próprio); em NFS-e, não. Corrigir é substituir, e substituir tem as travas do N51.\n\n🔑 O líder tem uma função chamada *“Alterar nota”*, que cobra reabertura de mês. Ela provavelmente **é substituição por baixo** — mas isso é suposição minha, não leitura. Enquanto não confirmar, este nó fica marcado: se ele não existir, o N32 perde uma saída e a categoria muda de forma.",
-        "nota": "🔴 Se existir, falta a lista do que é neutro. Uma 'correção' que muda a base vira receita falsa, porque este caminho não passa pelo acerto do mês."
+        "nota": "🔑 É o único trecho da categoria que ESPERA — e o prazo NÃO EXISTE: o FAQ oficial da PBH diz que os prazos da análise fiscal “ainda não foram estabelecidos pelo Conselho Gestor do IBS”. Não é lacuna nossa, é fato do órgão, e o produto não pode prometer prazo nenhum. ⚠️ Pode virar mais de um passo."
       },
       {
         "id": "N39",

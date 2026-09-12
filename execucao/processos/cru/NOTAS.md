@@ -15,11 +15,11 @@ tags: [execucao, processos, cru, notas]
 
 ## Estado da varredura
 
-**🟩 FECHADA** · 53 nós · 27 variáveis · 5 entradas · 15 fins · 10 fronteiras
+**🟩 FECHADA** · 51 nós · 24 variáveis · 5 entradas · 15 fins · 10 fronteiras
 
 ✅ **Todos os 9 itens da categoria foram tocados.**
 
-🔁 **17 nós já existem no formato completo** (P1–P6): N10→P3.4 · N18→P3.9 · N20→P3.11 · N21→P3.5 · N25→P3.6 · N27→P3.8 · N26→P3.7 · N23→P6.2 · N24→P6.3 · N32→P6.7 · N35→P6.9 · N37→P6.12 · N38→P6.13 · N39→P6.11 · N40→P6.17 · N30→P3.10 · N33→P6.14. Não é duplicata: é o mapa dizendo onde já há desenho pronto. No fim da varredura a gente decide se absorve.
+🔁 **15 nós já existem no formato completo** (P1–P6): N10→P3.4 · N18→P3.9 · N20→P3.11 · N21→P3.5 · N25→P3.6 · N27→P3.8 · N26→P3.7 · N23→P6.2 · N24→P6.3 · N32→P6.7 · N35→P6.9 · N39→P6.11 · N40→P6.17 · N30→P3.10 · N33→P6.14. Não é duplicata: é o mapa dizendo onde já há desenho pronto. No fim da varredura a gente decide se absorve.
 
 ## Por onde essa categoria começa
 
@@ -62,17 +62,15 @@ tags: [execucao, processos, cru, notas]
 | · | **N27** · Recusou: traduz o erro e deixa corrigir sem redigitar tudo | — | → N11 |
 | ◆ | **N28** · Sem resposta: descobre se a nota nasceu antes de deixar tentar de novo | A nota existe no órgão? | **existe, foi só a resposta que se perdeu** → N26<br/>**não existe** → N21 |
 | ■ | **N26** · A nota existe, e a receita da empresa muda | — | _termina aqui_ |
-| ◆ | **N29** · Abre uma nota que já existe | O que precisa fazer com ela? | **só ver, baixar ou mandar pro cliente** → N31<br/>**tem alguma coisa errada** → N23 |
+| ◆ | **N29** · Abre uma nota que já existe | O que precisa fazer com ela? | **só ver, baixar ou mandar pro cliente** → N31<br/>**emitir outra igual a essa** → N54<br/>**ver o que já aconteceu com ela** → N55<br/>**tem alguma coisa errada** → N23 |
+| · | **N54** · Duplica a nota: nasce uma nova com os mesmos dados | — | → N11 |
+| ■ | **N55** · Mostra tudo o que já aconteceu com a nota | — | _termina aqui_ |
 | ■ | **N31** · Entrega o documento pelo canal escolhido | — | _termina aqui_ |
 | ◆ | **N23** · Achou um erro numa nota já emitida | A nota nasceu aqui ou veio de fora? | **nasceu aqui** → N24<br/>**veio de fora** → N33 |
 | ◆ | **N24** · Confere se ainda dá pra mexer nessa nota | O que o município permite para esta nota? | **dentro de 2 anos e sem bloqueio: dá pra resolver sozinho** → N32<br/>**passou de 2 anos da emissão** → N41<br/>**o Fisco bloqueou o caminho automático desta nota** → N41 |
-| ◆ | **N32** · Decide o que fazer com a nota errada | O que exatamente está errado? | **a nota não deveria existir** → N35<br/>**o valor, a competência ou quem é o cliente** → N35<br/>**o serviço: código, descrição ou onde foi prestado** → N51<br/>**só o texto livre da descrição** → N38 |
-| ◆ | **N51** · Confere se essa nota ainda aceita substituição | Alguma coisa impede substituir? | **nada impede** → N37<br/>**a nota já foi cancelada antes** → N39<br/>**passou de 2 anos da emissão** → N52<br/>**o Fisco bloqueou a substituição desta nota** → N39<br/>**há pedido de análise fiscal esperando resposta** → N39<br/>**o cliente já confirmou essa nota** → N39 |
-| ◆ | **N52** · Fora do prazo, mas há uma exceção que pode valer | O motivo da substituição é mudança de regime? | **é enquadramento ou desenquadramento no Simples** → N37<br/>**é outro motivo qualquer** → N39 |
+| · | **N32** · Diz o motivo e a justificativa do cancelamento | — | → N35 |
 | ◆ | **N35** · Pede o cancelamento da nota | O município aceitou? | **cancelou** → N40<br/>**recusou, e dá pra pedir análise** → N41<br/>**recusou em definitivo** → N39 |
 | ◆ | **N41** · Pede análise do cancelamento a quem decide | A análise voltou como? | **deferida** → N40<br/>**indeferida** → N39<br/>**ainda não voltou** → N41 |
-| · | **N37** · Emite a nota certa no lugar da errada, e as duas ficam ligadas | — | → N40 |
-| ■ | **N38** · Corrige o que não muda o imposto, e guarda o que mudou | — | _termina aqui_ |
 | ■ | **N39** · Não dá pra mexer nessa nota: diz por quê e o que sobrou de caminho | — | _termina aqui_ |
 | ■ | **N40** · A nota deixou de valer, e a receita do mês cai | — | _termina aqui_ |
 | ◆ | **N30** · Traz pra cá uma nota que foi emitida fora do app | De onde ela vem? | **a pessoa tem o documento em mãos** → N42<br/>**está no órgão e dá pra buscar** → N42<br/>**a pessoa não tem e não sabe onde está** → N43 |
@@ -180,6 +178,8 @@ tags: [execucao, processos, cru, notas]
 **N29 · O que precisa fazer com ela?**
 
 - só ver, baixar ou mandar pro cliente → **N31** · Entrega o documento pelo canal escolhido
+- emitir outra igual a essa → **N54** · Duplica a nota: nasce uma nova com os mesmos dados
+- ver o que já aconteceu com ela → **N55** · Mostra tudo o que já aconteceu com a nota
 - tem alguma coisa errada → **N23** · Achou um erro numa nota já emitida
 
 **N23 · A nota nasceu aqui ou veio de fora?**
@@ -189,30 +189,9 @@ tags: [execucao, processos, cru, notas]
 
 **N24 · O que o município permite para esta nota?**
 
-- dentro de 2 anos e sem bloqueio: dá pra resolver sozinho → **N32** · Decide o que fazer com a nota errada
+- dentro de 2 anos e sem bloqueio: dá pra resolver sozinho → **N32** · Diz o motivo e a justificativa do cancelamento
 - passou de 2 anos da emissão → **N41** · Pede análise do cancelamento a quem decide
 - o Fisco bloqueou o caminho automático desta nota → **N41** · Pede análise do cancelamento a quem decide
-
-**N32 · O que exatamente está errado?**
-
-- a nota não deveria existir → **N35** · Pede o cancelamento da nota
-- o valor, a competência ou quem é o cliente → **N35** · Pede o cancelamento da nota
-- o serviço: código, descrição ou onde foi prestado → **N51** · Confere se essa nota ainda aceita substituição
-- só o texto livre da descrição → **N38** · Corrige o que não muda o imposto, e guarda o que mudou
-
-**N51 · Alguma coisa impede substituir?**
-
-- nada impede → **N37** · Emite a nota certa no lugar da errada, e as duas ficam ligadas
-- a nota já foi cancelada antes → **N39** · Não dá pra mexer nessa nota: diz por quê e o que sobrou de caminho
-- passou de 2 anos da emissão → **N52** · Fora do prazo, mas há uma exceção que pode valer
-- o Fisco bloqueou a substituição desta nota → **N39** · Não dá pra mexer nessa nota: diz por quê e o que sobrou de caminho
-- há pedido de análise fiscal esperando resposta → **N39** · Não dá pra mexer nessa nota: diz por quê e o que sobrou de caminho
-- o cliente já confirmou essa nota → **N39** · Não dá pra mexer nessa nota: diz por quê e o que sobrou de caminho
-
-**N52 · O motivo da substituição é mudança de regime?**
-
-- é enquadramento ou desenquadramento no Simples → **N37** · Emite a nota certa no lugar da errada, e as duas ficam ligadas
-- é outro motivo qualquer → **N39** · Não dá pra mexer nessa nota: diz por quê e o que sobrou de caminho
 
 **N35 · O município aceitou?**
 
@@ -295,14 +274,6 @@ A pergunta certa não é *até quando ele existe*, é **para quais operações**
 
 ✅ O ramo SOBREVIVE onde o local não é o endereço do adquirente: serviço sobre imóvel (local do imóvel), serviço prestado fisicamente sobre pessoa ou bem móvel (local da prestação), transporte. Nenhum deles é o nosso escopo.
 
-**N38 · Corrige o que não muda o imposto, e guarda o que mudou**
-
-⚠️ ESTE NÓ PODE NÃO EXISTIR, e a dúvida é de 12/09.
-
-No modelo nacional **não há carta de correção** — varri as 655 regras do leiaute e a expressão não aparece uma vez. Em NF-e de mercadoria existe (a CC-e, evento próprio); em NFS-e, não. Corrigir é substituir, e substituir tem as travas do N51.
-
-🔑 O líder tem uma função chamada *“Alterar nota”*, que cobra reabertura de mês. Ela provavelmente **é substituição por baixo** — mas isso é suposição minha, não leitura. Enquanto não confirmar, este nó fica marcado: se ele não existir, o N32 perde uma saída e a categoria muda de forma.
-
 
 ## O que a varredura achou
 
@@ -362,6 +333,18 @@ Retenção muda o que CAI NA CONTA sem mudar o que foi faturado. Quem não enten
 
 🆕 12/09, do FAQ da PBH: o número da nota é atribuído pela Sefin Nacional, não pela casa — e a numeração PODE TER PULOS, porque números reservados nem sempre viram nota. O órgão diz com todas as letras que isso “não representa irregularidade fiscal”. 🔑 Consequência de produto: a lista de notas não pode alarmar ninguém com buraco de sequência, e quem apoiar o cliente precisa saber disso antes de ser perguntado.
 
+**N29 · Abre uma nota que já existe**
+
+🔒 TRAVADO EM 12/09 (Pedro): são estas QUATRO ações e mais nenhuma. Nota emitida NÃO se edita nem se altera. A decisão bate com o princípio que a própria PBH escreve — *a nota emitida é imutável, ressalvadas as hipóteses de cancelamento ou substituição* — e com o leiaute nacional, onde não existe carta de correção.
+
+**N54 · Duplica a nota: nasce uma nova com os mesmos dados**
+
+🆕 AÇÃO QUE FALTAVA NO MAPA, e ela é a resposta prática pro caso mais comum: o mesmo cliente, o mesmo serviço, todo mês. Duplicar não conserta nada — cria documento NOVO, com número novo. 🔑 Por isso ela cai de volta no caminho de emissão e passa por todas as travas de novo: retenção, teto, regime e o que impede emitir. Duplicata que pula validação é nota errada nascendo rápido.
+
+**N55 · Mostra tudo o que já aconteceu com a nota**
+
+🆕 No modelo nacional isso tem nome: são os EVENTOS vinculados à chave de acesso — cancelamento, substituição, manifestação do tomador, bloqueio do Fisco. Não é log interno nosso, é o que o órgão registrou. 🔑 É também a única janela do cliente pra enxergar que o tomador dele rejeitou ou confirmou uma nota.
+
 **N31 · Entrega o documento pelo canal escolhido**
 
 ⚠️ Pode virar mais de um passo: 'mandar pro cliente' por canal é coisa diferente de 'baixar', e o registro de que foi enviado pode importar depois.
@@ -370,33 +353,13 @@ Retenção muda o que CAI NA CONTA sem mudar o que foi faturado. Quem não enten
 
 🔴 REESCRITO EM 12/09 com o texto da Portaria SMFA 075/2025 na mão (art. 5º, transcrito no FAQ oficial da PBH). Em BH as condições do caminho automático são só DUAS, cumulativas: emissão há no máximo 730 dias, e o Fisco não ter bloqueado esta nota. A terceira que constava — “CPF ou CNPJ do tomador informado” — foi REVOGADA pela Portaria 88/2025, art. 3º. ⚠️ O leiaute nacional lista mais recusas (valor acima do permitido, tributos já recolhidos): ele descreve o que o sistema PODE recusar, a portaria diz o que BH parametrizou. Para BH, manda a portaria. 🔑 E não atender as condições NÃO é fim de linha: o §3º manda pra análise do Fisco.
 
-**N32 · Decide o que fazer com a nota errada**
+**N32 · Diz o motivo e a justificativa do cancelamento**
 
-🔴 CORRIGIDO EM 12/09 CONTRA A FONTE PRIMÁRIA, e o erro era meu. Eu tinha desenhado “valor errado → substitui”. A regra **E0061** do leiaute nacional proíbe: para optante do Simples ME/EPP (`opSimpNac = 3`), a substituição **não pode alterar tomador, competência nem valor do serviço**. Então errar o valor não tem caminho de conserto: é cancelar e emitir de novo. O que a substituição carrega, no nosso regime, é o SERVIÇO — código, subitem, local da prestação e descrição.
-
-**N51 · Confere se essa nota ainda aceita substituição**
-
-🔑 Cinco travas, todas com código no leiaute: **E0046** (cancelada não se substitui) · **E0050** (prazo do município) · **E0056** (sem tomador identificado) · **E0068** (análise fiscal pendente) · **E0070** (o tomador já manifestou confirmação).
-
-🔴 A última é a que amarra as duas pontas desta categoria: **a confirmação do tomador TRAVA a substituição**. A máquina de manifestação que apareceu no N36 não é decorativa — ela decide se a nota ainda pode ser mexida.
-
-**N52 · Fora do prazo, mas há uma exceção que pode valer**
-
-🔑 A E0050 abre exceção explícita: fora do prazo, ainda dá pra substituir quando a justificativa for **enquadramento ou desenquadramento no Simples Nacional** (`cMotivo` 1 ou 2). É caso nosso, não hipótese: empresa que entra ou sai do Simples precisa refazer notas do período.
+🔒 12/09 (Pedro): SEM SUBSTITUIÇÃO. O menu do líder tem quatro ações pra nota emitida — ver, duplicar, ver atualizações e cancelar — e a casa espelha isso. Com uma saída só, este nó DEIXOU DE SER DECISÃO; virou passo, porque o trabalho sobreviveu à pergunta: o cancelamento exige MOTIVO (lista) e JUSTIFICATIVA (texto), os dois obrigatórios. ⚠️ O que se perde é real e fica registrado: substituir é UMA operação e deixa as duas notas amarradas no registro do fisco (`numeroNotaSubstituta` ↔ `numeroNotaSubstituida`); cancelar e duplicar são dois eventos soltos, com uma janela em que a velha morreu e a nova não nasceu. O art. 5º §2º da Portaria 075/2025 permite substituir. A regra E0061 é que esvazia o ganho: no nosso regime a substituição não carrega valor, competência nem tomador, então sobraria pra corrigir código de serviço — erro que quase ninguém comete.
 
 **N41 · Pede análise do cancelamento a quem decide**
 
-🔑 É o único trecho da categoria que ESPERA, e a espera não tem prazo conhecido. ⚠️ Pode virar mais de um passo.
-
-**N37 · Emite a nota certa no lugar da errada, e as duas ficam ligadas**
-
-Nenhuma das duas some da lista: a velha fica marcada como substituída. Senão o histórico mente sobre o que foi faturado em cada mês.
-
-🔴 E a substituição exige JUSTIFICATIVA codificada (`cMotivo`), não é campo livre: enquadramento no Simples, desenquadramento, inclusão de dado, e assim por diante. A lista fechada precisa virar as opções que a pessoa vê — em português, não em código.
-
-**N38 · Corrige o que não muda o imposto, e guarda o que mudou**
-
-🔴 Se existir, falta a lista do que é neutro. Uma 'correção' que muda a base vira receita falsa, porque este caminho não passa pelo acerto do mês.
+🔑 É o único trecho da categoria que ESPERA — e o prazo NÃO EXISTE: o FAQ oficial da PBH diz que os prazos da análise fiscal “ainda não foram estabelecidos pelo Conselho Gestor do IBS”. Não é lacuna nossa, é fato do órgão, e o produto não pode prometer prazo nenhum. ⚠️ Pode virar mais de um passo.
 
 **N40 · A nota deixou de valer, e a receita do mês cai**
 

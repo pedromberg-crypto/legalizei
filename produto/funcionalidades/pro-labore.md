@@ -114,7 +114,7 @@ type CalculoCompetencia = {
 | # | Achado | Efeito na nossa spec |
 |:--:|---|---|
 | 1 | **`percentualFatorR: 37.72` viaja no payload**, e a tela desenha "≥ 28%" | Encerra a dúvida: esconder é **decisão de produto**, não limitação. Reforça a nossa escolha de mostrar a folga |
-| 2 | **A alíquota efetiva real é 5,99987%**, não 6% (`474,59 ÷ 7.910`) | 🔴 O centavo **não é arredondamento**: é a exibida ≠ a calculada. Nossa regra: ou mostra a efetiva com as casas que importam, ou o valor bate com a arredondada. Nunca as duas |
+| 2 | ~~A alíquota efetiva real é 5,99987%~~ → **CORRIGIDO 13/09: o centavo É arredondamento, por TRIBUTO** | 🔴 `DAS = Σ(6 parcelas arredondadas)` = 474,59, batendo o recibo do PGDAS-D; `7.910 × 6%` daria 474,60. O `5,99987%` era o quociente lido de trás pra frente, não a causa. Regra pro motor: reparte por tributo → arredonda cada um → soma. Ver [[aliquota-e-enquadramento]] |
 | 3 | **`fluxoAssessorPendente` existe** | A "gestão automática" tem **humano no meio**. Se a gente prometer 100% automático, promete mais que o líder entrega |
 
 ⚠️ **`valorMaximoInss: 932.3105`** repete o padrão do centavo: o dado tem 4 casas, a tela mostra 2. **Decidir onde arredondar, uma vez, e testar.**

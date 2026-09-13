@@ -430,6 +430,10 @@ DAS:      474,59 ÷ 7.910  = 5,99987%        ← a alíquota EFETIVA real
 
 🕓 **Por que 5,99987% e não 6%?** Hipótese, **não conclusão**: a empresa é de início recente (histórico com meses zerados), e o Simples manda **proporcionalizar o RBT12** nos 12 primeiros meses (LC 123 art. 18 §2º). Isso mudaria a base e explicaria a fração. **Não deduzir** — vale a regra de sempre: confirmar antes de virar código.
 
+> 🔄 **SUPERADO EM 13/09 — leia esta seção como registro, não como conclusão.** O centavo **É** arredondamento, e é **por tributo**: o DAS é a soma de 6 parcelas já arredondadas (IRPJ 18,98 + CSLL 16,61 + COFINS 60,84 + PIS 13,19 + CPP 205,98 + ISS 158,99 = **474,59**), batendo o recibo do PGDAS-D da Receita. O `5,99987%` é o quociente `474,59 ÷ 7.910` lido de trás pra frente: consequência, não causa. A hipótese da proporcionalização do RBT12 **não** explica o desvio (a regra existe, mas não é isto). Fonte: [[2026-09-13-teardown-prolabore-e-pgdas-conta-real]].
+>
+> ✅ A lição de produto logo abaixo **continua valendo inteira** — exibir uma alíquota e cobrar por outra é o problema, independente da causa.
+
 ⚠️ **A lição de produto vale mesmo sem a explicação:** eles **exibem uma alíquota e cobram por outra**, com diferença de centavos. A nossa regra precisa ser: **ou mostra a efetiva com as casas que importam, ou mostra a arredondada e o valor bate com ela.** As duas coisas ao mesmo tempo é o que gera a ligação do cliente.
 
 ### Três campos que revelam casos que a gente não tinha mapeado

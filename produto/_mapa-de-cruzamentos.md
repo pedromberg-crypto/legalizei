@@ -86,7 +86,7 @@ Pró-labore ─────> FOLHA 12m ──> FATOR R ──┘                
 | 📅 🔑 **O DIA 5 fecha o mês contábil, e vale pra TUDO** | **Importar, alterar e cancelar** nota de mês anterior: **grátis até o dia 5** do mês seguinte, **com custo depois** (reabertura, R$21,90 no líder). O flag que decide é **`mesFechado`**, vindo do servidor. E o limite **legal** do cancelamento é **730 dias** (Portaria SMFA 075/2025), coisa diferente da janela sem custo |
 | 🔑 **`anexoEscolhido` por nota** | o Anexo fica gravado **na nota**, não só na empresa. Se o Fator R virar no meio do ano, cada nota carrega o que valeu na hora |
 | ✅ **O ISS da nota É a parcela do DAS** | `7.910 × 2,01% = 158,99` e `474,59 × 33,5% = 158,99`. Dois caminhos independentes, mesmo número. Empresa do Simples **não recolhe ISS à parte**: o valor na nota é a fatia que já vai no DAS. Ratifica a repartição do Anexo III pela 3ª vez |
-| 🔴 **Exibição × cálculo, 3ª ocorrência** | `aliquota: 0.02` no XML da nota, contra 2,01% real. Depois de `6%`×5,99987% no DAS e `932,31`×932,3105 no teto do INSS. **Campo de exibição nunca é fonte de recálculo** |
+| 🔴 **Exibição × cálculo, 3ª ocorrência** | `aliquota: 0.02` no XML da nota, contra 2,01% real. Depois de `474,60` calculado × `474,59` cobrado no DAS e `932,31`×932,3105 no teto do INSS. **Campo de exibição nunca é fonte de recálculo** |
 | 🔴 **O que a API do líder revelou (09/09)** | O **ISS municipal pertence ao CÓDIGO MUNICIPAL, não ao CNAE**: 11 combinações sob um único CNAE, com ISS de **2,5% a 5%**. E a emissão precisa de **4 códigos em cascata** (CNAE → nacional → municipal → NBS) mais o **IndOp**, que diz onde o serviço foi prestado. Ver [[2026-09-09-contabilizei-nota-fiscal]] |
 | 🔴 **Onde o líder DESISTE** | Quando o ISS é devido a **outro município**, ele não emite: manda o cliente pro portal da prefeitura, porque *"as prefeituras não têm uma base de dados unificada de códigos municipais"*. Para o nosso ICP em BH isso não morde; para quem atende fora, morde igual |
 
@@ -94,9 +94,9 @@ Pró-labore ─────> FOLHA 12m ──> FATOR R ──┘                
 
 | | |
 |---|---|
-| **Como se tocam** | `DAS = faturamento do mês anterior × alíquota efetiva`. A alíquota efetiva sai da faixa do RBT12 dentro do Anexo definido pelo Fator R |
+| **Como se tocam** | A alíquota efetiva sai da faixa do RBT12 dentro do Anexo definido pelo Fator R, e **reparte a base em 6 tributos**. O DAS é a **soma das 6 parcelas arredondadas**, não `faturamento × alíquota` |
 | **Vencimento** | dia **20**, e **PRORROGA** se cair em dia não útil |
-| ✅ **Arredondamento, resolvido em 09/09** | Não era arredondamento: **a alíquota efetiva real é 5,99987%** (`474,59 ÷ 7.910`), e a tela exibe `6,00%` por um campo `aliquotaApresentacao` separado. Regra que fica: **ou exibe a efetiva, ou o valor bate com a exibida. Nunca as duas** |
+| ✅ **Arredondamento: É arredondamento, e é POR TRIBUTO** (13/09) | ⚠️ **Corrige a linha de 09/09**, que dizia *"não era arredondamento"*. `7.910 × 6% = 474,60`, mas o recibo do PGDAS-D traz **474,59** = IRPJ 18,98 + CSLL 16,61 + COFINS 60,84 + PIS 13,19 + CPP 205,98 + ISS 158,99. O `5,99987%` é o quociente, não a causa. Regra que fica: **arredonda por parcela, nunca só no total** — e segue valendo **ou exibe a efetiva, ou o valor bate com a exibida** |
 
 ### 4. Pró-labore ⇄ DARF Unificado
 

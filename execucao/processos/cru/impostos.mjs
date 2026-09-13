@@ -25,6 +25,12 @@
  *    teto · virada de faixa ou anexo · primeiro e último mês). Não são detalhe:
  *    são a VIGÍLIA, que é o diferencial nº 2 do produto.
  *
+ * 🔄 BACKFILL 13/09: o teardown do PGDAS-D da conta real caiu depois desta
+ *    varredura e mexeu em dois nós — `I6` (a ordem da conta: arredonda por
+ *    TRIBUTO, não no total) e `I30` (a composição são 6 linhas, não uma
+ *    alíquota). Corrige de quebra a conclusão de 09/09 que dizia que o centavo
+ *    "não era arredondamento".
+ *
  * ⚠️ 1ª PASSADA. Escrita para o Pedro lapidar, não para ser obedecida.
  * ═══════════════════════════════════════════════════════════════════════════
  */
@@ -83,7 +89,7 @@ export const NOS = [
     id: "I6",
     o: "Calcula o imposto da competência",
     saidas: [{ se: "", vai: "I7" }],
-    nota: "🔴 O motor de cálculo NÃO EXISTE — é o buraco declarado na nota da funcionalidade. E ele precisa saber: receita do mês, RBT12, anexo, alíquota efetiva, a parcela de ISS e a repartição do DAS. ⚠️ Empresa com menos de 12 meses tem RBT12 proporcionalizado, e essa regra nunca foi escrita (pergunta aberta com o Mauro desde 12/09).",
+    nota: "🔴 O motor de cálculo NÃO EXISTE — é o buraco declarado na nota da funcionalidade. E ele precisa saber: receita do mês, RBT12, anexo, alíquota efetiva, a parcela de ISS e a repartição do DAS. 🔑 A ORDEM DA CONTA É REGRA, não detalhe de implementação (13/09, recibo do PGDAS-D da conta real): base → reparte nos 6 tributos → **arredonda CADA parcela** → soma. Quem faz `receita × alíquota` e arredonda no fim erra centavo em toda guia: 7.910 × 6% dá 474,60, e a Receita cobra 474,59 (IRPJ 18,98 + CSLL 16,61 + COFINS 60,84 + PIS 13,19 + CPP 205,98 + ISS 158,99). Guia diferente do PGDAS-D é divergência com a Receita, e o cliente descobre pela Receita, não por nós. ⚠️ Empresa com menos de 12 meses tem RBT12 proporcionalizado, e essa regra nunca foi escrita (pergunta aberta com o Mauro desde 12/09). ✅ A metade da FOLHA dessa pergunta já fechou em 13/09: empresa com menos de 13 meses anualiza a folha junto com a receita (Res. CGSN 140/2018 art. 26 §4º) — ver `L4b` em pró-labore. Falta só a metade da RECEITA.",
   },
   {
     id: "I7",
@@ -287,7 +293,7 @@ export const NOS = [
     o: "Abre a composição da alíquota: anexo, ISS e Fator R",
     fim: true,
     cobre: ["2.5"],
-    nota: "🔑 É o que separa a casa do líder: ele mostra o número, a gente mostra a conta. ⚠️ E a parcela de ISS que aparece na nota NÃO é cobrança separada — é a fatia de ISS que já está dentro do DAS. Confirmado três vezes no teardown.",
+    nota: "🔑 É o que separa a casa do líder: ele mostra o número, a gente mostra a conta. E a conta são SEIS LINHAS, não uma alíquota (13/09): IRPJ · CSLL · COFINS · PIS · CPP · ISS, cada uma já arredondada, somando o valor da guia. Mostrar só `6%` é o que obriga o cliente a ligar perguntando o centavo. ⚠️ E a parcela de ISS que aparece na nota NÃO é cobrança separada — é a fatia de ISS que já está dentro do DAS. Confirmado três vezes no teardown.",
   },
   { id: "I31", o: "Mostra o histórico do que já foi pago", fim: true, cobre: ["2.3"] },
   {

@@ -183,7 +183,7 @@ tags: [execucao, processos, cru, impostos]
 
 **I6 · Calcula o imposto da competência**
 
-🔴 O motor de cálculo NÃO EXISTE — é o buraco declarado na nota da funcionalidade. E ele precisa saber: receita do mês, RBT12, anexo, alíquota efetiva, a parcela de ISS e a repartição do DAS. ⚠️ Empresa com menos de 12 meses tem RBT12 proporcionalizado, e essa regra nunca foi escrita (pergunta aberta com o Mauro desde 12/09).
+🔴 O motor de cálculo NÃO EXISTE — é o buraco declarado na nota da funcionalidade. E ele precisa saber: receita do mês, RBT12, anexo, alíquota efetiva, a parcela de ISS e a repartição do DAS. 🔑 A ORDEM DA CONTA É REGRA, não detalhe de implementação (13/09, recibo do PGDAS-D da conta real): base → reparte nos 6 tributos → **arredonda CADA parcela** → soma. Quem faz `receita × alíquota` e arredonda no fim erra centavo em toda guia: 7.910 × 6% dá 474,60, e a Receita cobra 474,59 (IRPJ 18,98 + CSLL 16,61 + COFINS 60,84 + PIS 13,19 + CPP 205,98 + ISS 158,99). Guia diferente do PGDAS-D é divergência com a Receita, e o cliente descobre pela Receita, não por nós. ⚠️ Empresa com menos de 12 meses tem RBT12 proporcionalizado, e essa regra nunca foi escrita (pergunta aberta com o Mauro desde 12/09). ✅ A metade da FOLHA dessa pergunta já fechou em 13/09: empresa com menos de 13 meses anualiza a folha junto com a receita (Res. CGSN 140/2018 art. 26 §4º) — ver `L4b` em pró-labore. Falta só a metade da RECEITA.
 
 **I7 · A guia existe, mas ainda não está disponível**
 
@@ -259,7 +259,7 @@ Volta a esperar o vencimento novo. 🔑 O ciclo pode repetir, e o desenho precis
 
 **I30 · Abre a composição da alíquota: anexo, ISS e Fator R**
 
-🔑 É o que separa a casa do líder: ele mostra o número, a gente mostra a conta. ⚠️ E a parcela de ISS que aparece na nota NÃO é cobrança separada — é a fatia de ISS que já está dentro do DAS. Confirmado três vezes no teardown.
+🔑 É o que separa a casa do líder: ele mostra o número, a gente mostra a conta. E a conta são SEIS LINHAS, não uma alíquota (13/09): IRPJ · CSLL · COFINS · PIS · CPP · ISS, cada uma já arredondada, somando o valor da guia. Mostrar só `6%` é o que obriga o cliente a ligar perguntando o centavo. ⚠️ E a parcela de ISS que aparece na nota NÃO é cobrança separada — é a fatia de ISS que já está dentro do DAS. Confirmado três vezes no teardown.
 
 **I32 · Simula o mês seguinte com o que ela imaginar faturar**
 

@@ -579,11 +579,13 @@ campo  valorIss : 158.99        →  158,99 ÷ 7.910 = 2,0100%
 
 | # | Onde | Armazenado | Real |
 |:--:|---|---|---|
-| 1 | DAS | `6%` exibido | 5,99987% |
+| 1 | DAS | `6%` exibido | 474,59 cobrado × 474,60 calculado ⚠️ |
 | 2 | Teto INSS | `932,31` exibido | 932,3105 |
 | 3 | **ISS da nota** | **`aliquota: 0.02`** | **2,0100%** |
 
 🎯 **A regra que já estava escrita ganha um terceiro caso e vira inegociável:** **arredondamento se decide uma vez, se escreve, e se testa.** Um campo de exibição nunca pode ser a fonte de um recálculo.
+
+> 🔄 **Nota de 13/09 sobre a linha 1 da tabela:** a divergência do DAS **não** era "6% exibido × 5,99987% real". É arredondamento **por tributo**: a guia é a soma de 6 parcelas já arredondadas (474,59), e `7.910 × 6%` daria 474,60. Fonte: [[2026-09-13-teardown-prolabore-e-pgdas-conta-real]]. Os casos 2 e 3 da tabela seguem exatos.
 
 ### ✅ E a conta fecha por dois caminhos independentes
 

@@ -135,7 +135,7 @@ Mecânica nossa. **Não tem correspondente no caso real** — não houve diverg�
 |---|:--:|---|---|
 | Descrição da atividade (texto livre) | U | insumo, não resultado — o que importa é o CNAE abaixo | — |
 | CNAE principal derivado | API/U | **7319-0/04** Consultoria em publicidade | Cartão CNPJ |
-| "Atividade exercida no local?" | A | Não (sempre) | nossa automação |
+| "Atividade exercida no local?" | A | Não (sempre) — ✅ **CONFERIDO** | Alvará 2025098844: "Atividades NÃO exercidas no local" |
 
 🔑 **Teste de ouro pro nosso motor de CNAE.** Ele é PM/dev que faz "desenvolvimento de produto digital e gestão de equipe" (o texto do serviço na NFS-e nº 6) e terminou em **consultoria em publicidade**. Vale rodar o nosso motor com a descrição real e ver se chega no mesmo CNAE — e se não chegar, quem está certo. ⚠️ Não é conferência de UI: é a única funcionalidade nossa que dá pra testar contra um resultado real já homologado por um órgão.
 
@@ -172,15 +172,15 @@ Mecânica nossa. **Não tem correspondente no caso real** — não houve diverg�
 ### C4 · Dados da empresa · `/dossie/empresa`
 | Campo | Origem | Nosso valor fixo | Valor real do Pedro |
 |---|:--:|---|---|
-| Índice cadastral do IPTU | U | (único campo do cliente) | ⚪ fora de escopo agora — temos o endereço completo |
+| Índice cadastral do IPTU | U | (único campo do cliente) | ✅ **108020 006A0264** — Alvará 2025098844 |
 | Objeto social (via C7) | U | gerado automático | 🐛 no e-mail da líder saiu como `*\|OBJETO_SOCIAL\|*` |
 | Forma de atuação | A | Atividade Desenvolvida Fora do Estabelecimento | ⚙️ **nunca conferido** |
 | Tipo de unidade | A | Produtiva | ⚙️ **nunca conferido** |
-| Metragem | A | **20 m² fixo** | ⚙️ **nunca conferido** |
+| 🔴 **Metragem** | A | **20 m² fixo** | **5 m²** — ✅ medido, e **DIVERGE** (FIC + Alvará) |
 | 🔴 **Capital social** | A | **R$ 10.000,00 fixo** | **R$ 1.000,00** — ✅ medido, e **DIVERGE 10×** ([[2026-09-13-email-abertura-11-12-confirmacao-de-dados]]) |
 | Valor nominal de cotas | A | R$ 1,00 | ⚙️ **nunca conferido** |
-| Acesso ao endereço | A | Pedestre | ⚙️ **nunca conferido** |
-| Atividade inócua ou virtual? | A | Sim (sempre) | ⚙️ **nunca conferido** |
+| Acesso ao endereço | A | Pedestre | ✅ **CONFERIDO** — Alvará: "Tipo de acesso: Pedestres" |
+| Atividade inócua ou virtual? | A | Sim (sempre) | ✅ **CONFERIDO** — Dispensa Bombeiros: "ambiente inócuo ou virtual" |
 | Edificação nova? | A | Não (sempre) | ⚙️ **nunca conferido** |
 | Capital integralizado? | A | Sim (sempre) | ⚙️ **nunca conferido** |
 

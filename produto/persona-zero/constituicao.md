@@ -89,7 +89,7 @@ Legenda de origem, herdada do schema: **[U]** o cliente digita · **[A]** nós p
 |---|:--:|---|---|
 | Endereço da empresa | U | R Corinto, 202, APT 601, Serra, BH | Cartão CNPJ |
 | CEP | U | **30.220-310** | Cartão CNPJ literal |
-| Categoria de atividade (1 das 15) | U | 🕳️ **buraco** — qual das nossas 15 pills cobre "consultoria em publicidade"? | — |
+| Categoria de atividade | U | **4 · Marketing e publicidade** (⚠️ são **14** categorias, não 15) | `taxonomia-pills-n4.md` |
 | Logradouro/bairro/município/UF | API | Serra · Belo Horizonte · MG | Cartão CNPJ |
 
 ⚠️ **O endereço é APARTAMENTO, e ele mora nele.** É exatamente o gate que subiu pro E3.4 em 01/09 (casa/apartamento + "você mora aqui?"), com a saída do endereço fiscal pra quem não mora. A persona zero passa pelo caminho **mais restrito** do gate, o que é bom: é o caso que a gente mais precisa ver funcionando.
@@ -99,12 +99,12 @@ Legenda de origem, herdada do schema: **[U]** o cliente digita · **[A]** nós p
 |---|:--:|---|---|
 | Quantidade de sócios | U | **1** (só o titular) | Pedro, 13/09 |
 | Quem administra | U | não se pergunta com 1 sócio | regra do C3 |
-| É a 1ª empresa que abre? | U | 🕳️ **buraco** (opcional) | — |
+| É a 1ª empresa que abre? | U | ⚪ fora de escopo — não interfere | Pedro, 13/09 |
 
 ### E5F · Faixa de faturamento · `/gate?etapa=faixa`
 | Campo | Origem | Valor real | Fonte |
 |---|:--:|---|---|
-| Faixa de faturamento mensal | U | 🕳️ **buraco** — o que ele declarou em 12/2025 | — |
+| Faixa de faturamento mensal | U | ⚪ **dado interno, e não é buraco** — ver decisão abaixo | Pedro, 13/09 |
 
 🔑 **Vale medir depois:** o real dele nos 9 meses foi `0 · 0 · 12.000 · 12.000 · 12.000 · 0 · 12.000 · 0 · 7.910 · 9.895`. Média ~7.500/mês, com 4 meses zerados. **Se ele tivesse declarado a faixa pelo mês bom, teria errado a própria expectativa em 40%.** É argumento pra pergunta de faixa ser sobre expectativa anual, não mensal — mas ainda é 1 caso, não regra.
 
@@ -113,7 +113,8 @@ Legenda de origem, herdada do schema: **[U]** o cliente digita · **[A]** nós p
 |---|:--:|---|---|
 | Nome | U | PEDRO MAIA BERG DE OLIVEIRA | aceites |
 | **CPF** | U | **088.561.916-10** | Central de Sócios, 13/09 |
-| Telefone · e-mail · senha | U | 🕳️ **buraco** | — |
+| Telefone · e-mail | U | **(31) 99405-4307** · **pedromberg@gmail.com** | Portal JUCEMG |
+| Senha | U | ⚪ fora de escopo (não é dado de negócio) | — |
 | Código de verificação (8 díg.) | U | mecânica nossa, sem correspondente | — |
 
 ### E6.1 / E6.2 · Código e divergência de CPF
@@ -123,8 +124,8 @@ Mecânica nossa. **Não tem correspondente no caso real** — não houve diverg�
 | Campo | Origem | Valor real | Fonte |
 |---|:--:|---|---|
 | Aceite do contrato | U | **19/01/2026**, com registro de IP e CPF | aceites LITERAL |
-| Método de pagamento | U | 🕳️ **buraco** | — |
-| Dados de cartão / titular / fatura | U | 🕳️ **buraco** (e é dado que a gente não precisa guardar) | — |
+| Método de pagamento | U | ⚪ fora de escopo — não interfere na varredura de processos | Pedro, 13/09 |
+| Dados de cartão / titular / fatura | U | ⚪ fora de escopo — e é dado que a gente não quer guardar | Pedro, 13/09 |
 | CPF com MEI ativo | API | não se aplica — sem impedimento | — |
 
 🔴 **A data do aceite é a âncora de cobrança, e o caso real ACENDE a luz.** A empresa abriu **12/12/2025** e o aceite registrado é de **19/01/2026** — 38 dias depois. Se o ciclo de cobrança ancora no aceite, ele ancora **depois** da empresa existir. Isso é exatamente a pergunta 🔴 que ficou aberta pro time do dev em 12/09 (*"a data/hora do aceite atravessa o handoff?"*), e aqui ela ganha um caso concreto onde as duas datas **não coincidem**. ⚠️ Não sei ainda se o aceite de 19/01 é o da contratação ou o de um documento anual — é a primeira coisa a checar na varredura.
@@ -132,7 +133,7 @@ Mecânica nossa. **Não tem correspondente no caso real** — não houve diverg�
 ### C0 / C0.0 · Sua atividade · `/dossie/atividade`
 | Campo | Origem | Valor real | Fonte |
 |---|:--:|---|---|
-| Descrição da atividade (texto livre) | U | 🕳️ **buraco** | — |
+| Descrição da atividade (texto livre) | U | insumo, não resultado — o que importa é o CNAE abaixo | — |
 | CNAE principal derivado | API/U | **7319-0/04** Consultoria em publicidade | Cartão CNPJ |
 | "Atividade exercida no local?" | A | Não (sempre) | nossa automação |
 
@@ -146,17 +147,17 @@ Mecânica nossa. **Não tem correspondente no caso real** — não houve diverg�
 ### C1 · Seus dados · `/dossie/socio`
 | Campo | Origem | Valor real | Fonte |
 |---|:--:|---|---|
-| Nome / CPF / endereço (confirma do E6) | U | nome ✅ · CPF **088.561.916-10** ✅ · endereço pessoal 🕳️ | Central de Sócios, 13/09 |
-| RG + órgão emissor | U | 🕳️ **buraco** | — |
-| Data de nascimento | U | 🕳️ **buraco** | — |
-| Nacionalidade | U | 🕳️ (presumível brasileira, **não medida**) | — |
-| Estado civil (+ regime de bens) | U | 🕳️ **buraco** | — |
+| Nome / CPF / endereço (confirma do E6) | U | nome ✅ · CPF **088.561.916-10** · endereço pessoal ✅ **igual ao da empresa** | Pedro, 13/09 |
+| RG + órgão emissor | U | **MG 17113036** · **SSP MG** | Pedro, 13/09 |
+| Data de nascimento | U | **07/09/1993** | Pedro, 13/09 |
+| Nacionalidade | U | **Brasileiro** | Pedro, 13/09 |
+| Estado civil (+ regime de bens) | U | **Solteiro** — sem regime de bens | Pedro, 13/09 |
 | Representante na Receita | A | o próprio Pedro | Cartão CNPJ |
 | Profissão | A | "Empresário" | nossa automação |
 | Qualificação (cód. 49) | A | Sócio-Administrador | nossa automação |
-| Endereço pessoal (CEP → autofill) | API | 🕳️ **buraco** | — |
+| Endereço pessoal (CEP → autofill) | API | **CEP 30.220-310** · R Corinto 202 APT 601, Serra, BH/MG | Pedro + Cartão CNPJ |
 
-⚠️ **O endereço pessoal dele pode ser o mesmo da empresa** (R Corinto 202 APT 601 é residência, e ele mora nela). Se for, é um caso que o nosso flow trata como duas coletas separadas — vale medir se dá pra derivar.
+✅ **CONFIRMADO 13/09: o endereço pessoal É o mesmo da empresa.** 🔑 Nosso flow trata como **duas coletas separadas** (E3.4 para a empresa, C1 para a pessoa). Na persona zero — sócio único que abre a empresa em casa — é a **mesma digitação duas vezes**. Vale um "é o mesmo endereço?" com o valor já preenchido. ⚠️ Não vale derivar sozinho: quem usa endereço fiscal da Legalizai tem os dois diferentes por construção.
 
 ### C2 · Vínculo INSS · `/dossie/vinculo`
 | Campo | Origem | Valor real | Fonte |
@@ -171,17 +172,17 @@ Mecânica nossa. **Não tem correspondente no caso real** — não houve diverg�
 ### C4 · Dados da empresa · `/dossie/empresa`
 | Campo | Origem | Nosso valor fixo | Valor real do Pedro |
 |---|:--:|---|---|
-| Índice cadastral do IPTU | U | (único campo do cliente) | 🕳️ **buraco** |
+| Índice cadastral do IPTU | U | (único campo do cliente) | ⚪ fora de escopo agora — temos o endereço completo |
 | Objeto social (via C7) | U | gerado automático | 🐛 no e-mail da líder saiu como `*\|OBJETO_SOCIAL\|*` |
-| Forma de atuação | A | Atividade Desenvolvida Fora do Estabelecimento | 🕳️ não medido |
-| Tipo de unidade | A | Produtiva | 🕳️ não medido |
-| Metragem | A | **20 m² fixo** | 🕳️ não medido |
+| Forma de atuação | A | Atividade Desenvolvida Fora do Estabelecimento | ⚙️ **nunca conferido** |
+| Tipo de unidade | A | Produtiva | ⚙️ **nunca conferido** |
+| Metragem | A | **20 m² fixo** | ⚙️ **nunca conferido** |
 | 🔴 **Capital social** | A | **R$ 10.000,00 fixo** | **R$ 1.000,00** — ✅ medido, e **DIVERGE 10×** ([[2026-09-13-email-abertura-11-12-confirmacao-de-dados]]) |
-| Valor nominal de cotas | A | R$ 1,00 | 🕳️ não medido |
-| Acesso ao endereço | A | Pedestre | 🕳️ não medido |
-| Atividade inócua ou virtual? | A | Sim (sempre) | 🕳️ não medido |
-| Edificação nova? | A | Não (sempre) | 🕳️ não medido |
-| Capital integralizado? | A | Sim (sempre) | 🕳️ não medido |
+| Valor nominal de cotas | A | R$ 1,00 | ⚙️ **nunca conferido** |
+| Acesso ao endereço | A | Pedestre | ⚙️ **nunca conferido** |
+| Atividade inócua ou virtual? | A | Sim (sempre) | ⚙️ **nunca conferido** |
+| Edificação nova? | A | Não (sempre) | ⚙️ **nunca conferido** |
+| Capital integralizado? | A | Sim (sempre) | ⚙️ **nunca conferido** |
 
 🔴 **Esta tela é a mais cega das 19, e é a que mais chuta.** Dez campos, nove deles preenchidos por nós com valor fixo, e **zero medidos contra o caso real**. O capital social de R$10.000 é o exemplo: é número que a gente escolheu, ele está no contrato social de verdade do Pedro, e nunca comparamos. Todos esses valores estão no **contrato social dele**, que é 1 documento — e resolve a tela inteira de uma vez.
 
@@ -189,9 +190,21 @@ Mecânica nossa. **Não tem correspondente no caso real** — não houve diverg�
 | Campo | Origem | Valor real | Fonte |
 |---|:--:|---|---|
 | 3 opções de razão social | U | a vencedora foi o **nome civil + atividade**. ⚠️ A líder avisa que *"nossos especialistas podem ter feito alterações"* — muda sem perguntar | Cartão CNPJ + e-mail 11/12 |
-| Objeto social | U | 🕳️ **buraco** (está no contrato social) | — |
+| Objeto social | U | **derivado** do CNAE, padrão nosso já existe → **"Prestação de serviços de consultoria em publicidade."** 🐛 ver bug abaixo | `mock.ts` OBJETO_SOCIAL |
 | Nome fantasia | U | **BERG CONSULTORIA EM MARKETING** | Cartão CNPJ |
 | Data de início das atividades | A | dia do preenchimento, nunca retroativa | 12/12/2025 |
+
+🐛 **BUG NOSSO, achado pela persona zero (13/09).** O `OBJETO_SOCIAL` no `mock.ts` é:
+
+```
+Prestação de serviços de ${CNAE principal}, podendo também exercer ${secundárias.join(", ")}.
+```
+
+**Não há guarda para lista vazia.** A persona zero tem **zero CNAEs secundários**, então o texto sai:
+
+> *"Prestação de serviços de consultoria em publicidade, podendo também exercer ."*
+
+🔴 **E o comentário do próprio arquivo diz por que isso é grave:** *"objeto divergente do CNAE do DBE é o ponto de falha nº 1 da JUCEMG"* (`pesquisa/exigencias-jucemg.md`). CNAE único não é caso raro — é o **mais comum** no ME de serviço, e é o da persona zero. O correto sem secundária é encerrar em *"consultoria em publicidade."*, sem a oração pendurada.
 
 🔑 **A razão social dele não foi escolhida, foi derivada.** "PEDRO MAIA BERG DE OLIVEIRA CONSULTORIA EM MARKETING LTDA" é nome civil completo + ramo. Nosso C7 pede **3 opções criativas por ordem de prioridade** — e o caso real sugere que a maioria termina no padrão automático. Vale medir se a tela de 3 opções resolve um problema que existe.
 
@@ -222,68 +235,51 @@ Ver a tabela acima. Nove valores fixos, zero medidos. Resolve com o contrato soc
 
 ---
 
-## 4 · 🕳️ Os buracos, e onde cada um está
+## 4 · 📍 O placar dos 90 campos
 
-Nada aqui é "não sei": é "sei onde está e ainda não abri".
+🔄 **Atualizado 13/09 depois da rodada de preenchimento com o Pedro.** O `🕳️ buraco` deixou de existir como categoria: tudo que faltava ou foi preenchido, ou foi declarado fora de escopo desta varredura.
 
-| # | O que falta | Onde está | Peso |
-|:--:|---|---|:--:|
-| 1 | **Contrato social** — capital, objeto, cláusulas, integralização, quotas | 🔴 **NÃO está no portal.** Procurado em 13/09 nas duas áreas de documentos: `DOCUMENTOS_CONTABEIS` é upload do cliente (10 tipos, todos com 0 arquivos) e não há download de contrato social em lugar nenhum. **O Pedro precisa ter o arquivo** (e-mail da constituição, Junta, ou gov.br) | 🔴 resolve a C4 e a C7 quase inteiras |
-| 2 | Qualificação civil — RG, nascimento, estado civil, nacionalidade | 🔴 **não existe em tela na plataforma** (só o CPF). Vem do contrato social | 🔴 resolve a C1 inteira |
-| ✅ 3 | ~~Cartão CNPJ literal~~ | **FECHADO 13/09** — 1.912 car., 100%, em [[2026-09-13-cartao-cnpj-persona-zero-LITERAL]] | — |
-| 4 | Índice cadastral do IPTU | IPTU do imóvel / contrato social | 🟡 |
-| ✅ 5 | ~~E-mail e telefone do cadastro~~ | **FECHADOS 13/09** no Portal JUCEMG | — |
-| ✅ 6 | ~~Vínculo INSS por fora~~ | **FECHADO 13/09 — Não** | — |
-| 7 | O que ele declarou de faixa de faturamento em 12/2025 | onboarding da conta, se ainda existir | 🟡 |
-| 8 | Descrição livre da atividade que virou o CNAE | onboarding da conta | 🟡 testa o motor de CNAE |
-| 9 | Natureza do aceite de 19/01/2026 (contratação × documento anual) | aba Contrato | 🔴 é a âncora de cobrança |
-| 10 | 🆕 Por que não houve pró-labore em dez/jan/fev | Central de Sócios / atendimento | 🟡 |
-| 11 | 🆕 Status real do certificado digital (card da home × painel de 09/07) | painel de dados da conta | 🟡 |
-| ✅ 12 | ~~Contrato social no e-mail~~ | **DESCARTADO 13/09** — varrida a caixa certa (`pedromberg@`): marcador Contabilizei tem 44 e-mails e **zero anexos**. A líder nunca entregou. Ver [[2026-09-13-certificado-16-minutos-e-o-contrato-que-nunca-chegou]] | — |
-| 🔴 13 | 🆕 **Certidão de Inteiro Teor da JUCEMG** — ato **31217298589**, aprovado 12/12/2025, imagem 798 KB, único ato da empresa | Portal JUCEMG → Serviços WEB (pago, DAE) | 🔴 **é o único caminho que sobrou** |
+| | Categoria | Nº | O que significa |
+|:--:|---|---:|---|
+| ✅ | **Medidos** | **37** | temos o valor real, com fonte |
+| ⚪ | **Fora de escopo desta varredura** | **7** | não interferem no levantamento de processos |
+| ⚙️ | **Automação nossa, NUNCA conferida** | **22** | 🔴 **a zona de risco** |
+| 🚫 | **Não se aplicam a este caso** | **24** | unipessoal, sem divergência de CPF, sem sócio extra |
+| | **TOTAL** | **90** | |
 
-🔴 **O contrato social é o gargalo, e não está na plataforma.** Sozinho ele fecha a C4 inteira (9 valores que hoje são chute nosso), o objeto social da C7 e a qualificação civil da C1 — ~25 dos 90 campos. Depende do Pedro ter o arquivo.
+### 🔴 Os 22 nunca conferidos são o que sobrou de risco
 
----
+São valores que **nós cravamos** e nunca comparamos com nada: **C4 (8)** forma de atuação · tipo de unidade · metragem 20m² · valor nominal de cotas · acesso ao endereço · atividade inócua · edificação nova · capital integralizado · **RPA (10)** tipo de evento 101 · código do ato 090 · telefone sem 9º dígito · SPE · tipo de contrato · testemunhas · endereço de correspondência · requerente do DAE · telas do DBE puladas · polling de protocolo · **C1 (3)** profissão "Empresário" · qualificação 49 · tradução do regime de bens · **C0 (1)** "atividade exercida no local = Não".
 
-## 4.1 · 🔍 O que a varredura da conta entregou (13/09)
+🔴 **Placar dessa categoria: 2 conferidos, 2 errados.**
 
-Conta logada, só leitura. Sete achados, nenhum previsto quando abri.
-
-### ✅ Três buracos fechados
-| Campo | Valor | Onde estava |
+| Campo | Nosso | Real |
 |---|---|---|
-| **CPF do titular** | 088.561.916-10 | Central de Sócios (`#/socio/central`) |
-| **CEP** | 30.220-310 | Cartão CNPJ literal |
-| **Vínculo INSS (C2)** | **Não** | Central de Sócios |
-| Dependentes | 0 | Central de Sócios |
+| **Capital social** | R$ 10.000,00 | **R$ 1.000,00** |
+| **Natureza jurídica** (unipessoal) | SLU (230-5) | **206-2 LTDA** |
 
-### 🔑 O pró-labore só começa em MARÇO/2026
-O histórico da conta vai de **março/2026** até agosto — nada em dezembro, janeiro e fevereiro. A empresa abriu **12/12/2025**. São **quase 3 meses de CNPJ ativo sem pró-labore nenhum**.
+⚠️ Dois pra dois não é amostra suficiente para concluir que o resto está errado. **Mas é suficiente para parar de tratar essa coluna como "provavelmente ok".** É "não sabemos", e o que medimos até agora errou.
 
-Nosso mapa não tem esse estado. O flow entrega a empresa aberta e o portal já pressupõe pró-labore configurado; **o intervalo entre "CNPJ existe" e "primeiro pró-labore" não existe em lugar nenhum**. E é o intervalo em que todo cliente nosso vai nascer, porque o produto começa na constituição. ⚠️ Falta descobrir se foi decisão do Pedro ou default deles.
+🔑 **O contrato social resolve a maior parte dela de uma vez** — capital, quotas, integralização, administração e testemunhas estão todos lá. É por isso que ele continua sendo a peça mais valiosa em aberto (pedido à Contabilizei em 13/09; alternativa é a certidão paga da JUCEMG, ato **31217298589**).
 
-### 🏢 O líder oferece "não ter pró-labore em meses sem faturamento" — e isso briga com o Fator R
-Opção literal na Central de Sócios: *"Não quero ter pró-labore cadastrado em meses sem faturamento."*
+### 📊 Decisão travada: a faixa de faturamento é DADO INTERNO
 
-🔴 **É decisão deles, e é perigosa.** A pesquisa de 13/09 fechou que o Fator R é **regime de caixa**: o numerador só conta o que foi **pago**. Mês sem faturar já ajuda sozinho (o denominador para); mas **deixar de pagar** o pró-labore trava o numerador e empurra o Fator R pra baixo. A opção é apresentada como economia e pode custar o Anexo. Se a gente replicar, replica com o aviso — ou não replica.
+Pedro, 13/09:
 
-### ✅ O desconto do pró-labore é 11% exato, e bate com o DARF
-`1.621,00 × 11% = 178,31` (mar-ago) e `3.360,00 × 11% = 369,60` (mar-abr). O `R$ 178,31` aparece igual no card "DARF UN…" da home. ⚖️ É INSS do contribuinte individual, alíquota legal — copiar.
+> *"esse a gente sempre usará apenas como dado interno, pois na constituição da empresa isso começa zerado. Então a pessoa coloca apenas um valor simbólico, ou pode até colocar que não sabe quanto faturará ainda — e pra gente também não é um problema, pois nossas funcionalidades e cruzamento de dados são em cima de fato do que a pessoa emite de NF."*
 
-### ✅ A DEFIS de 2025 foi TRANSMITIDA, com recibo para baixar
-`#/declaracoes-anuais` → **"DEFIS - Recibo · TRANSMITIDO · Baixar recibo"**. ⚖️ Obrigação anual, e o líder entrega o comprovante. **A DEFIS não está em nenhuma das nossas 8 categorias** — é a primeira confirmação prática de que o recorte funcional tem furo no eixo temporal, que era a aposta do método.
+🔑 **Muda o peso da pergunta, não a pergunta.** A faixa do E5F **não alimenta cálculo nenhum**: RBT12, anexo, Fator R e alíquota saem todos da **nota emitida**, não da expectativa declarada. Então "não sei ainda" é resposta válida e não degrada nada.
 
-### 🧩 São DOIS apps, não um
-`app.contabilizei.com.br/painel-de-controle/` (novo, home e rotinas) e `app.contabilizei.com.br/sistema/` (legado, declarações mensais/anuais/informe de rendimentos). Navegar de um pro outro **troca o app inteiro**, com header e menu diferentes. 🐛 Não é decisão de produto, é dívida técnica exposta ao cliente — e é exatamente o tipo de costura que a gente pode não ter.
+⚠️ E isso **enterra uma hipótese minha de hoje de manhã**: eu tinha sugerido que a pergunta de faixa deveria ser sobre expectativa anual em vez de mensal, porque o real do Pedro (`0 · 0 · 12k · 12k · 12k · 0 · 12k · 0 · 7,9k · 9,9k`) faria qualquer declaração mensal errar feio. A observação sobre a variação continua verdadeira; a conclusão não se sustenta, porque o número **não é usado para nada que dependa de precisão**.
 
-### 🐛 A qualificação civil não existe em tela nenhuma
-Varri a Central de Sócios inteira (2.469 caracteres, lidos 100%): **só o CPF aparece**. RG, data de nascimento, estado civil, regime de bens e nacionalidade **não são exibidos em lugar nenhum da plataforma**, mesmo sendo dados que o cliente entregou na constituição e que estão no contrato social. ⚠️ Nosso C1 coleta os cinco. Ou o líder guarda e não mostra, ou não guarda — as duas respostas mudam o nosso desenho, e nenhuma delas dá pra ler daqui.
+### ⚪ Os 7 fora de escopo
 
-### ⚠️ Contradição pendente sobre o certificado digital
-A home de hoje mostra o card *"Emita o seu certificado digital… sem ele, você deve emitir as notas no site da prefeitura"* com botão **"Emitir certificado grátis"**. Mas o painel de 09/07 registrava **Certificado Digital [Ativo] · Validade 22/12/2026**, e a NFS-e nº 6 foi emitida **pela plataforma** em 12/09. Os três fatos não fecham. 🕓 Checar antes de virar conclusão.
-
----
+| Tela | Campo | Por quê |
+|---|---|---|
+| E9 | método de pagamento · cartão · titular · endereço da fatura (4) | não interferem na varredura de processos, e cartão a gente não quer guardar |
+| C4 | índice cadastral do IPTU | temos o endereço completo |
+| E5T | é a 1ª empresa que abre | não interfere |
+| E6 | senha | não é dado de negócio |
 
 ## 5 · 🚫 O que este caso NÃO prova
 

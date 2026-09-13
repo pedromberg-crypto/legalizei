@@ -50,6 +50,8 @@ Cadeia completa da **AC SAFEWEB** em **22/12/2025**, dez dias depois do CNPJ (12
 
 ## 2 · 🔴 A líder nunca entregou o contrato social ao cliente
 
+> 🔧 **CORRIGIDO NO MESMO DIA.** O título continua certo, a generalização não. Eu concluí aqui que a líder *"nunca entregou documento nenhum"* com base em `label:Contabilizei has:attachment → zero`. O recorte era cego: os e-mails de chamado vêm do **Zendesk** e não recebem esse marcador. O chamado 26994688 (15/12/2025) **tem dois anexos** — `IM...pdf` e `ALVARÁ DE LOCALIZAÇÃO E FUNCIONAMENTO.pdf`. **O contrato social segue não entregue**; o resto foi. A tese muda de *"não entregam"* para *"entregam avulso, sem lugar fixo"* — que é uma tese melhor. Ver [[2026-09-13-cadeia-de-emails-da-abertura]].
+
 Dois recortes independentes, ambos vazios:
 
 1. **Marcador "Contabilizei" · 44 e-mails · `has:attachment` → ZERO resultados.** Nenhum anexo, em nenhum e-mail, em 9 meses de relação.

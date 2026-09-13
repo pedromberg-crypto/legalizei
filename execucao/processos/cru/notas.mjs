@@ -37,7 +37,7 @@
  *
  * 🔑 E o `opSimpNac = 3` não é etiqueta: ele MUDA A REGRA. A E0061 proíbe a
  * substituição de alterar tomador, competência e valor justamente para MEI e
- * ME/EPP — regra que não vale para o não optante.
+ * ME/EPP (citacao de norma, FORA DO ESCOPO como porte atendido) — regra que não vale para o não optante.
  *
  * 🔑 CINCO ENTRADAS, não uma. A categoria inteira nasce de cinco fatos
  * diferentes, e essa foi a primeira coisa que a varredura mostrou: o desenho
@@ -94,7 +94,7 @@ export const NOS = [
     o: "Segue sem identificar o tomador, com a consequência dita antes",
     saidas: [{ se: "", vai: "N6" }],
     alerta:
-      "⏳ ESTE RAMO TEM DATA, E NÃO É NO FUTURO — ele já fechou pro nosso ICP.\n\nA pergunta certa não é *até quando ele existe*, é **para quais operações**. Quem decide é o código de operação (cIndOp), e a regra E0187 exige o tomador em 13 deles. O `100301` — *“demais serviços, em operações onerosas”*, cujo local é o domicílio do adquirente — está na lista, e é exatamente o caso do prestador de serviço remoto de BH.\n\n📅 Duas datas, e elas não são a mesma: a obrigatoriedade dos grupos IBS/CBS é de **03/08/2026**; a migração da ME/EPP do Simples pro Emissor Nacional é **01/11/2026** (Res. CGSN 191/2026). Até lá quem manda no nosso cliente é o BHISS, então a data prática é 01/11 — **a menos que BH já exija antes**.\n\n✅ O ramo SOBREVIVE onde o local não é o endereço do adquirente: serviço sobre imóvel (local do imóvel), serviço prestado fisicamente sobre pessoa ou bem móvel (local da prestação), transporte. Nenhum deles é o nosso escopo.",
+      "⏳ ESTE RAMO TEM DATA, E NÃO É NO FUTURO — ele já fechou pro nosso ICP.\n\nA pergunta certa não é *até quando ele existe*, é **para quais operações**. Quem decide é o código de operação (cIndOp), e a regra E0187 exige o tomador em 13 deles. O `100301` — *“demais serviços, em operações onerosas”*, cujo local é o domicílio do adquirente — está na lista, e é exatamente o caso do prestador de serviço remoto de BH.\n\n📅 Duas datas, e elas não são a mesma: a obrigatoriedade dos grupos IBS/CBS é de **03/08/2026**; a migração da ME/EPP (citacao de norma, FORA DO ESCOPO como porte atendido) do Simples pro Emissor Nacional é **01/11/2026** (Res. CGSN 191/2026). Até lá quem manda no nosso cliente é o BHISS, então a data prática é 01/11 — **a menos que BH já exija antes**.\n\n✅ O ramo SOBREVIVE onde o local não é o endereço do adquirente: serviço sobre imóvel (local do imóvel), serviço prestado fisicamente sobre pessoa ou bem móvel (local da prestação), transporte. Nenhum deles é o nosso escopo.",
     nota: "Duas consequências, e as duas precisam aparecer ANTES: o imposto passa a ser responsabilidade de quem emite, e em município que exija identificação a nota não poderá ser cancelada nem substituída depois (recusas E0824 e E0056). ↗ a segunda só morde no N24.",
   },
   {
@@ -225,7 +225,7 @@ export const NOS = [
       { se: "passou de um sublimite: o ISS sai pela regra do município", vai: "N58" },
       { se: "passou do limite: federais e ISS saem por fora do Simples", vai: "N58" },
     ],
-    nota: "🔑 VARIÁVEL NOVA, achada em 12/09 no leiaute oficial, e ela não estava em lugar nenhum nosso. O optante ME/EPP declara EM CADA NOTA sob qual regime de apuração ela sai — é o campo `regApTribSN`, que existe justamente pra quem ultrapassou sublimite ou limite. Não é decorativo: muda duas outras regras. Quando a apuração é toda pelo Simples, o regime especial municipal tem que ser “Nenhum” (E0175) e NÃO se pode informar dedução nem redução de base, exceto numa lista fechada de subitens (E0398). ⚠️ Liga com o teto do N16: lá a gente avisa que o faturamento VAI estourar; aqui a nota já sai diferente porque estourou.",
+    nota: "🔑 VARIÁVEL NOVA, achada em 12/09 no leiaute oficial, e ela não estava em lugar nenhum nosso. O optante ME/EPP (citacao de norma, FORA DO ESCOPO como porte atendido) declara EM CADA NOTA sob qual regime de apuração ela sai — é o campo `regApTribSN`, que existe justamente pra quem ultrapassou sublimite ou limite. Não é decorativo: muda duas outras regras. Quando a apuração é toda pelo Simples, o regime especial municipal tem que ser “Nenhum” (E0175) e NÃO se pode informar dedução nem redução de base, exceto numa lista fechada de subitens (E0398). ⚠️ Liga com o teto do N16: lá a gente avisa que o faturamento VAI estourar; aqui a nota já sai diferente porque estourou.",
   },
   {
     id: "N58",

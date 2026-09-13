@@ -192,7 +192,7 @@ export const FUNCIONALIDADES = [
     nome: "Dependentes para o IRRF",
     tela: null,
     processo: [],
-    nota: "🟡 Pergunta aberta do handoff de 12/09: ninguém capta, nem a constituição nem o portal. Entra no cálculo do IRRF do P5.7 e hoje sai sem dedução.",
+    nota: "🔴 RESPONDIDA EM 13/09, E A RESPOSTA MUDA O LUGAR DESTE ITEM. O Pedro travou que NÃO captamos dependente de SÓCIO: dependente existe só em folha, para colaborador. Então (a) o IRRF do pró-labore sai sem dedução por pessoa a cargo, e sobra o desconto simplificado como única via; (b) este item, como está escrito, pertence à §8 Folha e não à §4 Pró-labore. ⚠️ Não movi nem removi: a lista de 58 é ratificada pelo Pedro, e mexer nela sem a palavra dele é o mesmo erro de copiar o líder. Aguarda decisão.",
   },
   {
     id: "4.8",

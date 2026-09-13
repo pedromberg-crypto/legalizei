@@ -27,6 +27,8 @@ import { writeFileSync, readdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { verificarEscopo } from "../verificar-escopo.mjs";
+import { verificarPersona } from "../verificar-persona.mjs";
+import { gerarPersona } from "../gerar-persona.mjs";
 import { ESCOPO } from "../_escopo.mjs";
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
@@ -45,6 +47,8 @@ const arquivos = readdirSync(AQUI)
 /* 🔒 a trava de escopo roda ANTES de qualquer coisa: gerar um mapa fora do
    escopo e só avisar depois seria produzir o erro e carimbá-lo. */
 if (!verificarEscopo()) process.exit(1);
+if (!verificarPersona()) process.exit(1);
+gerarPersona();
 
 /* o escopo viaja junto pro board: quem olha o mapa tem que ver de que
    enquadramento ele é, sem abrir arquivo nenhum */

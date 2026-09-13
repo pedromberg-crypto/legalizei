@@ -35,6 +35,7 @@ import { fileURLToPath } from "node:url";
 import { FUNCIONALIDADES, SECOES } from "./funcionalidades-data.mjs";
 import { PASSOS } from "../execucao/processos/processos-data.mjs";
 import { verificarEscopo } from "../execucao/processos/verificar-escopo.mjs";
+import { verificarPersona } from "../execucao/processos/verificar-persona.mjs";
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
 const RAIZ = resolve(AQUI, "..");
@@ -58,6 +59,7 @@ function telaExiste(tela) {
 
 // 🔒 escopo primeiro: ME do Simples, Anexos III e V (ver `_escopo.mjs`)
 if (!verificarEscopo()) process.exit(1);
+if (!verificarPersona()) process.exit(1);
 
 // ── auditorias ────────────────────────────────────────────────────────────
 const erros = [];

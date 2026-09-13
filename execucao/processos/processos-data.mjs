@@ -117,7 +117,7 @@ export const PROCESSOS = [
     resumo:
       "A pessoa presta o serviço e fatura. A casa pede só o valor e o cliente, transmite ao Emissor Nacional e devolve a nota pronta. A receita que nasce aqui é o que alimenta o resto do produto.",
     porqueImporta:
-      "É o processo que os OUTROS consomem: a receita define o DAS (P2.1), a faixa de RBT12 (P1.2), o Fator R e o teto do Simples. ⏱ E é o único com relógio correndo: a Res. CGSN 191/2026 obriga toda ME/EPP do Simples ao Emissor Nacional a partir de 01/11/2026. 🔑 O caminho técnico é o mais resolvido do produto — API nacional RESTful, gratuita, com Swagger público — então o que sobra aqui é desenho, não integração.",
+      "É o processo que os OUTROS consomem: a receita define o DAS (P2.1), a faixa de RBT12 (P1.2), o Fator R e o teto do Simples. ⏱ E é o único com relógio correndo: a Res. CGSN 191/2026 obriga toda ME/EPP (citacao de norma, FORA DO ESCOPO como porte atendido) do Simples ao Emissor Nacional a partir de 01/11/2026. 🔑 O caminho técnico é o mais resolvido do produto — API nacional RESTful, gratuita, com Swagger público — então o que sobra aqui é desenho, não integração.",
   },
   {
     id: "P4",
@@ -697,7 +697,7 @@ export const PASSOS = [
   // caixa preta a montante — o mesmo padrão que o P4 tinha com o P1.
   //
   // ⏱ E é o único com RELÓGIO CORRENDO: a Res. CGSN 191/2026 obriga toda
-  // ME/EPP do Simples ao Emissor Nacional a partir de 01/11/2026.
+  // ME/EPP (citacao de norma, FORA DO ESCOPO como porte atendido) do Simples ao Emissor Nacional a partir de 01/11/2026.
   {
     id: "P3.1",
     processos: ["P3"],

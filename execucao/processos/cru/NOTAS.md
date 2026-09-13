@@ -287,7 +287,7 @@ tags: [execucao, processos, cru, notas]
 
 A pergunta certa não é *até quando ele existe*, é **para quais operações**. Quem decide é o código de operação (cIndOp), e a regra E0187 exige o tomador em 13 deles. O `100301` — *“demais serviços, em operações onerosas”*, cujo local é o domicílio do adquirente — está na lista, e é exatamente o caso do prestador de serviço remoto de BH.
 
-📅 Duas datas, e elas não são a mesma: a obrigatoriedade dos grupos IBS/CBS é de **03/08/2026**; a migração da ME/EPP do Simples pro Emissor Nacional é **01/11/2026** (Res. CGSN 191/2026). Até lá quem manda no nosso cliente é o BHISS, então a data prática é 01/11 — **a menos que BH já exija antes**.
+📅 Duas datas, e elas não são a mesma: a obrigatoriedade dos grupos IBS/CBS é de **03/08/2026**; a migração da ME/EPP (citacao de norma, FORA DO ESCOPO como porte atendido) do Simples pro Emissor Nacional é **01/11/2026** (Res. CGSN 191/2026). Até lá quem manda no nosso cliente é o BHISS, então a data prática é 01/11 — **a menos que BH já exija antes**.
 
 ✅ O ramo SOBREVIVE onde o local não é o endereço do adquirente: serviço sobre imóvel (local do imóvel), serviço prestado fisicamente sobre pessoa ou bem móvel (local da prestação), transporte. Nenhum deles é o nosso escopo.
 
@@ -340,7 +340,7 @@ Uma atividade pode cair em mais de um item da lista de serviço, e é o item que
 
 **N53 · Resolve sob qual regime esta nota sai**
 
-🔑 VARIÁVEL NOVA, achada em 12/09 no leiaute oficial, e ela não estava em lugar nenhum nosso. O optante ME/EPP declara EM CADA NOTA sob qual regime de apuração ela sai — é o campo `regApTribSN`, que existe justamente pra quem ultrapassou sublimite ou limite. Não é decorativo: muda duas outras regras. Quando a apuração é toda pelo Simples, o regime especial municipal tem que ser “Nenhum” (E0175) e NÃO se pode informar dedução nem redução de base, exceto numa lista fechada de subitens (E0398). ⚠️ Liga com o teto do N16: lá a gente avisa que o faturamento VAI estourar; aqui a nota já sai diferente porque estourou.
+🔑 VARIÁVEL NOVA, achada em 12/09 no leiaute oficial, e ela não estava em lugar nenhum nosso. O optante ME/EPP (citacao de norma, FORA DO ESCOPO como porte atendido) declara EM CADA NOTA sob qual regime de apuração ela sai — é o campo `regApTribSN`, que existe justamente pra quem ultrapassou sublimite ou limite. Não é decorativo: muda duas outras regras. Quando a apuração é toda pelo Simples, o regime especial municipal tem que ser “Nenhum” (E0175) e NÃO se pode informar dedução nem redução de base, exceto numa lista fechada de subitens (E0398). ⚠️ Liga com o teto do N16: lá a gente avisa que o faturamento VAI estourar; aqui a nota já sai diferente porque estourou.
 
 **N58 · Oferece guardar essa combinação como padrão**
 

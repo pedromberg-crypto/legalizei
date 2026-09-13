@@ -1035,6 +1035,39 @@ Oi Mauro, segunda parte da semana:
 ```
 
 
+## Semana 13/09/2026 — o motor do imposto ganhou número, e duas perguntas suas viraram resposta
+
+| # | O que rendeu | Por quê importa | |
+|:--:|---|---|:--:|
+| 1 | 🧮 **Descobrimos por que o DAS nunca fecha na conta redonda** | O recibo oficial do PGDAS de agosto da empresa do Pedro traz **R$ 474,59** sobre uma receita de R$ 7.910,00. `7.910 × 6%` dá **R$ 474,60**. O centavo não é erro: **o DAS é a soma de seis parcelas arredondadas** (IRPJ, CSLL, COFINS, PIS, CPP e ISS), não o arredondamento do total. Quem programa `receita × alíquota` erra centavo em toda guia, e guia diferente do PGDAS é divergência com a Receita | 🟢 |
+| 2 | ✅ **Respondida: a regra do RBT12 no primeiro ano** — e tem uma parte que quase ninguém aplica | Era pergunta sua de 12/09. A receita se anualiza (média dos meses anteriores × 12), o que já sabíamos. **O que não sabíamos: a FOLHA anualiza junto**, pelo mesmo critério (Resolução CGSN 140/2018, art. 26 §4º). Quem anualiza só a receita e soma a folha crua **joga o cliente recém-aberto no Anexo V sem merecer**. Conferimos na empresa do Pedro: anualizado dá Fator R de 29,6% (Anexo III, 6%); folha crua daria 22,2% (Anexo V, 15,5%). **É a maioria dos nossos clientes, porque o produto nasce da constituição** | 🟢 |
+| 3 | ✅ **Respondida: como provar que o pró-labore foi pago** — e a resposta é dura | Também pergunta sua. O Fator R conta **regime de caixa**: pró-labore declarado no eSocial e não pago **não vale nada** (Res. CGSN 140/2018 art. 26 §6º e Soluções de Consulta COSIT 17/2021 e 251/2024). Se a Receita pega, é glosa, **reclassificação de ofício** para o Anexo V, recálculo de todas as competências, Selic e **multa de 75%**. Na prática o app só pode somar no Fator R **depois que o dinheiro saiu**, nunca no fechamento da folha | 🔴 |
+| 4 | ✅ **Resolvida uma dúvida que estava em aberto: a CPP conta no Fator R** | Como no Anexo III e V a CPP está **dentro do DAS** e não em guia separada, havia dúvida se ela entrava na folha do Fator R. **Entra, e é ponto pacífico** (Solução de Consulta COSIT 17/2021). Muda a conta pra mais, a favor do cliente | 🟢 |
+| 5 | 🔍 **Desmontamos o "pró-labore inteligente" da Contabilizei, e a regra dele não é a que se imagina** | Enquanto a empresa faturava R$ 12.000 por mês, eles pagavam **R$ 3.360 — que é 0,28 × 12.000 exato**, o alvo do Fator R. No fechamento do **primeiro mês sem faturamento**, baixaram para **R$ 1.621**, o salário mínimo, e **não voltaram a subir** quando o faturamento retornou. A regra deles não é "manter o Fator R em 28%": é **pagar o menor valor que ainda segura o anexo barato** | 🟢 |
+| 6 | ⚠️ **O contador aparece como o dono do CNPJ perante o governo** | No Cartão CNPJ da empresa do Pedro, o e-mail de contato é **@contabilizei.com.br** e o telefone tem DDD de Curitiba. No recibo do PGDAS, quem assina a transmissão é **o CPF do contador**, de servidor deles. Comunicação oficial da Receita chega neles, não no cliente. **É retenção e é operação ao mesmo tempo, e a gente nunca decidiu se replica** | 🟡 |
+
+**Preciso de você em dois pontos:**
+
+1. 🔴 **Retirada de lucro.** A Contabilizei nunca menciona o assunto com o cliente — na plataforma existe um alerta de dividendos que simplesmente não acende. Do lado deles o lucro é **deduzido do extrato bancário**; nós travamos que não teremos conta nem integração bancária, então esse caminho não existe pra gente. **Como se declara formalmente uma retirada de lucro sem extrato?** E qual é o limite isento de verdade num ME de serviço: o teto por presunção, ou a escrituração contábil completa derruba esse teto?
+2. 🟡 **Pró-labore desproporcional.** A jurisprudência trata pró-labore mínimo com faturamento alto como distribuição disfarçada de lucro, com risco de reclassificação. **Qual régua você usa na prática** pra dizer que um valor está baixo demais?
+
+⚠️ Uma correção nossa, para o registro: eu tinha reportado que a empresa do Pedro estava no **Anexo V**. **Está no Anexo III, 6%** — eu li errado um campo do sistema da Contabilizei, e o recibo oficial da Receita desfez.
+
+```
+Oi Mauro, resumo da semana:
+
+- *Descobrimos por que o DAS nunca fecha na conta redonda.* O recibo do PGDAS traz R$ 474,59 onde 7.910 x 6% daria R$ 474,60. O DAS e a soma de seis parcelas arredondadas (IRPJ, CSLL, COFINS, PIS, CPP e ISS), nao o arredondamento do total. Programar errado isso gera guia divergente da Receita em todo mes
+- *Respondi sua pergunta do RBT12 no primeiro ano,* e tem uma parte que quase ninguem aplica: a FOLHA anualiza junto com a receita, pelo mesmo criterio. Quem anualiza so a receita joga o cliente recem-aberto no Anexo V sem merecer. Conferi na empresa do Pedro: da 29,6% (Anexo III) do jeito certo e 22,2% (Anexo V) do jeito errado
+- *Respondi a outra tambem, e a resposta e dura:* o Fator R conta regime de caixa. Pro-labore declarado no eSocial e nao pago nao vale nada, e se a Receita pega e glosa, reclassificacao de oficio pro Anexo V e multa de 75%
+- *Resolvida a duvida da CPP:* ela conta no Fator R mesmo estando dentro do DAS, e e ponto pacifico (Solucao de Consulta COSIT 17/2021)
+- *Desmontei o "pro-labore inteligente" deles.* Pagavam 3.360, que e 0,28 x 12.000 exato. No primeiro mes sem faturamento baixaram pro salario minimo e nao voltaram a subir. A regra nao e manter os 28%, e pagar o menor valor que ainda segura o anexo barato
+- *Uma coisa que me chamou atencao:* no Cartao CNPJ da empresa o e-mail de contato e da Contabilizei e o telefone e de Curitiba, e no recibo do PGDAS quem assina a transmissao e o CPF do contador. A Receita fala com eles, nao com o cliente
+
+Preciso de voce em dois pontos:
+1) *Retirada de lucro.* Eles deduzem do extrato bancario e nunca falam do assunto com o cliente. Nos nao vamos ter conta nem integracao bancaria. Como se declara formalmente uma retirada de lucro sem extrato? E qual o limite isento de verdade num ME de servico?
+2) *Pro-labore desproporcional.* Qual regua voce usa na pratica pra dizer que o valor esta baixo demais e vira risco de distribuicao disfarcada?
+```
+
 ## Links
 
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]] · [[estado-atual]] · [[indice-autoridade]]

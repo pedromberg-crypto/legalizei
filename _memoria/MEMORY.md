@@ -1,5 +1,7 @@
 # Memory Index — Legalize
 
+- [Trava de PERSONA: o 2o filtro](legalize-trava-persona-produto.md) — 13/09: pega o que e legal no nosso regime e mesmo assim nao existe no produto. Proibido e POR CATEGORIA. INFORMAR, nunca TUTELAR.
+- [Motor fiscal: arredonda por TRIBUTO](legalize-motor-fiscal-arredonda-por-tributo.md) — 13/09: DAS = soma de 6 parcelas arredondadas (resolve o 5,99987%); Fator R e CAIXA; empresa nova anualiza a FOLHA junto.
 - [Modo cru: varredura por categoria](legalize-modo-cru-varredura-categoria.md) — 12/09: o Pedro parou a esteira. 2 campos obrigatorios, sem tela/API/semaforo, fronteira e NOTA. Home por ultimo.
 - [So o uso real corrige o mapa](legalize-uso-real-corrige-o-mapa.md) — 12/09: emitimos NF de verdade e o uso achou 3 erros conceituais que documentacao nenhuma pegaria. Contar tela != contar o que existe.
 - [Escopo: ME Simples, Anexos III e V](legalize-escopo-me-simples-anexos-3-5.md) — 12/09 travado: virou dado + script nos 3 geradores. O enquadramento MUDA a regra (E0061).

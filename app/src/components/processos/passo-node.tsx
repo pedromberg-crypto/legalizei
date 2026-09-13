@@ -582,7 +582,23 @@ export function PassoNode({ data, selected }: NodeProps & { data: Passo }) {
                               {sa.proposta ? `+${sa.proposta}` : `−${sa.saiCom}`}
                             </span>
                           )}
-                          <span className="shrink-0 text-[9px] font-bold text-zinc-400">{sa.para}</span>
+                          {/**
+                            * 🔁 13/09 — saída que volta pro PRÓPRIO nó não
+                            * ganha fio (o dagre não sabe desenhar, e virava
+                            * diagonal atravessando o board). Ela vira este
+                            * selo: a condição continua legível e o destino
+                            * fica óbvio sem gastar uma linha.
+                            */}
+                          {sa.para === data.id ? (
+                            <span
+                              className="shrink-0 rounded bg-zinc-200 px-1 text-[9px] font-bold text-zinc-600"
+                              title="continua aqui, esperando"
+                            >
+                              ↻ aqui
+                            </span>
+                          ) : (
+                            <span className="shrink-0 text-[9px] font-bold text-zinc-400">{sa.para}</span>
+                          )}
                           <Handle
                             type="source"
                             id={`saida-${meu}`}

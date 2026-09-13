@@ -86,9 +86,36 @@ export function CaminhoEdge({
 
   const caminho = traçar(pontos);
 
-  // o rótulo vai no vértice do MEIO do caminho real, não na média das pontas:
-  // numa aresta que desvia, a média cai em cima do cartão que ela contorna.
-  const meio = pontos[Math.floor(pontos.length / 2)];
+  /**
+   * ── ONDE O RÓTULO FICA (13/09, print do Pedro) ──────────────────────────
+   *
+   * 🐛 Era o vértice do MEIO por ÍNDICE — `pontos[length/2]`. Num caminho com
+   * poucos vértices, ou com um trecho longo e outro curto, o vértice do meio
+   * não fica no meio do DESENHO: cai perto de uma das pontas, que é justamente
+   * onde tem cartão. Os rótulos apareciam cortados pela borda dos cards.
+   *
+   * 🔑 Agora é o meio por COMPRIMENTO: anda o caminho somando distância e para
+   * na metade. Independe de quantos vértices o dagre gerou.
+   */
+  const meio = (() => {
+    let total = 0;
+    for (let i = 1; i < pontos.length; i++) {
+      total += Math.hypot(pontos[i].x - pontos[i - 1].x, pontos[i].y - pontos[i - 1].y);
+    }
+    let andado = 0;
+    for (let i = 1; i < pontos.length; i++) {
+      const passo = Math.hypot(pontos[i].x - pontos[i - 1].x, pontos[i].y - pontos[i - 1].y);
+      if (andado + passo >= total / 2) {
+        const t = passo === 0 ? 0 : (total / 2 - andado) / passo;
+        return {
+          x: pontos[i - 1].x + (pontos[i].x - pontos[i - 1].x) * t,
+          y: pontos[i - 1].y + (pontos[i].y - pontos[i - 1].y) * t,
+        };
+      }
+      andado += passo;
+    }
+    return pontos[pontos.length - 1];
+  })();
 
   return (
     <>
@@ -96,13 +123,21 @@ export function CaminhoEdge({
       {d?.rotulo && (
         <EdgeLabelRenderer>
           <div
-            className="nodrag nopan absolute rounded-md border px-1.5 py-0.5 text-[11px] font-semibold"
+            className="nodrag nopan absolute rounded-md border px-1.5 py-0.5 text-[11px] font-semibold shadow-sm"
             style={{
               transform: `translate(-50%, -50%) translate(${meio.x}px, ${meio.y}px)`,
               background: "#fff",
               borderColor: d.tracejado ? "#D64A2D55" : "#e4e4e7",
               color: d.tracejado ? "#B03A22" : "#3f3f46",
               pointerEvents: "all",
+              /**
+               * 🐛 13/09 — o React Flow pinta as arestas NUMA CAMADA ABAIXO dos
+               * nós, e o rótulo herdava isso: quando caía perto de um cartão,
+               * ficava atrás dele e aparecia cortado pela metade. Mesmo tipo de
+               * defeito que o fundo translúcido do cartão causou em 11/09, e a
+               * mesma correção: o que precisa ser lido vai por cima.
+               */
+              zIndex: 1000,
             }}
           >
             {d.rotulo}

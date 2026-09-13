@@ -440,7 +440,24 @@ export default function ProcessosPage() {
       };
     });
 
-    const es: Edge[] = arestas.map((a, i) => ({
+    /**
+     * ── 🔁 LAÇO NÃO VIRA LINHA (13/09, print do Pedro) ────────────────────
+     *
+     * 🐛 Três nós voltam pra si mesmos — `I11` e `I12` (esperar vencimento,
+     * esperar a consulta) e `N41` (esperar a análise fiscal). São verdade no
+     * processo: "ainda não voltou → continua esperando". Mas o dagre não
+     * posiciona aresta de um nó pra ele mesmo, então o React Flow ligava as
+     * duas âncoras em linha reta e saía uma diagonal gigante atravessando o
+     * board inteiro — foi o que o Pedro chamou de "voltas".
+     *
+     * 🔑 A correção é de VISTA, não de dado: a saída continua no arquivo e
+     * continua aparecendo na faixa do cartão (com o selo ↻). O que some é só
+     * o fio, que não carregava informação nenhuma — ele saía e voltava no
+     * mesmo lugar.
+     */
+    const es: Edge[] = arestas
+      .filter((a) => a.de !== a.para)
+      .map((a, i) => ({
       /**
        * 🐛 11/09 (print do Pedro): o id era só `de->para`, e quando duas
        * arestas ligavam o mesmo par (a velha e a proposta pra substituí-la), o

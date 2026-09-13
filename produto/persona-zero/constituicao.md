@@ -172,10 +172,11 @@ Mecânica nossa. **Não tem correspondente no caso real** — não houve diverg�
 | Campo | Origem | Nosso valor fixo | Valor real do Pedro |
 |---|:--:|---|---|
 | Índice cadastral do IPTU | U | (único campo do cliente) | 🕳️ **buraco** |
+| Objeto social (via C7) | U | gerado automático | 🐛 no e-mail da líder saiu como `*\|OBJETO_SOCIAL\|*` |
 | Forma de atuação | A | Atividade Desenvolvida Fora do Estabelecimento | 🕳️ não medido |
 | Tipo de unidade | A | Produtiva | 🕳️ não medido |
 | Metragem | A | **20 m² fixo** | 🕳️ não medido |
-| **Capital social** | A | **R$ 10.000,00 fixo** | 🕳️ **buraco — e é o mais importante da tela** |
+| 🔴 **Capital social** | A | **R$ 10.000,00 fixo** | **R$ 1.000,00** — ✅ medido, e **DIVERGE 10×** ([[2026-09-13-email-abertura-11-12-confirmacao-de-dados]]) |
 | Valor nominal de cotas | A | R$ 1,00 | 🕳️ não medido |
 | Acesso ao endereço | A | Pedestre | 🕳️ não medido |
 | Atividade inócua ou virtual? | A | Sim (sempre) | 🕳️ não medido |
@@ -187,7 +188,7 @@ Mecânica nossa. **Não tem correspondente no caso real** — não houve diverg�
 ### C7 · Nome / razão social · `/dossie/nome`
 | Campo | Origem | Valor real | Fonte |
 |---|:--:|---|---|
-| 3 opções de razão social | U | a vencedora foi o **nome civil + atividade** (padrão automático da Junta) | Cartão CNPJ |
+| 3 opções de razão social | U | a vencedora foi o **nome civil + atividade**. ⚠️ A líder avisa que *"nossos especialistas podem ter feito alterações"* — muda sem perguntar | Cartão CNPJ + e-mail 11/12 |
 | Objeto social | U | 🕳️ **buraco** (está no contrato social) | — |
 | Nome fantasia | U | **BERG CONSULTORIA EM MARKETING** | Cartão CNPJ |
 | Data de início das atividades | A | dia do preenchimento, nunca retroativa | 12/12/2025 |

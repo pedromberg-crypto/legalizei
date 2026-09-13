@@ -42,6 +42,8 @@ Cadeia completa da **AC SAFEWEB** em **22/12/2025**, dez dias depois do CNPJ (12
 
 🔑 **O prazo muda a conversa com o cliente.** Estávamos tratando o certificado como etapa de duração desconhecida no fim do flow. É meia hora, com uma videochamada no meio. Dá pra prometer, e dá pra agendar.
 
+🔴 **RATIFICADO 13/09 — existe UM certificado só, o e-CNPJ.** O e-mail de abertura da líder descreve o passo 2 como *"criação da sua assinatura digital, através da emissão do certificado digital do seu CPF"*, e eu li isso como um **segundo certificado**. Não é. Pedro: *"nessa primeira assinatura simplesmente pedem para acessar o gov, tem que ser Ouro e assinar por lá o usuário mesmo. Não existe de fato esse segundo certificado. É apenas o do CNPJ mesmo."* A 1ª assinatura é **assinatura eletrônica gov.br nível Ouro** — nada a emitir, instalar ou pagar. A copy deles é imprecisa. Ver [[2026-09-13-email-abertura-11-12-confirmacao-de-dados]].
+
 ⚠️ **Ressalva de amostra:** 1 caso, 1 certificadora, sem fila. Não é SLA — é uma medição. Não virar promessa de tela sem confirmar com a parceira.
 
 ---

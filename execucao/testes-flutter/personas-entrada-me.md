@@ -309,7 +309,29 @@ Conferido por script sobre as 14 base. **Todo valor de toda variável aparece pe
 
 ## 🧾 O que conferir no relatório final
 
-Ao fim de **cada** persona, o relatório precisa provar que os campos que **nós** preenchemos saíram certos. Eles não aparecem em tela nenhuma, então só o relatório os pega.
+> 🔴 **CORRIGIDO 14/09, na 1ª rodada da P01.** Esta seção nasceu errada: eu mandei conferir **no app** campos que **não existem no app**. `montar_revisao_do_dossie.dart:24-26` declara textualmente que capital social, metragem, natureza jurídica, quota, qualificação 49/22, profissão, forma de atuação e tipo de unidade **não entram no Flutter**, porque são o que a casa preenche por dentro. Busca em `lib/` não acha `metragem`, `Produtiva`, `Pedestre` nem `20,00`.
+>
+> 🧭 **A verificação é de DUAS camadas, e a fronteira é esta:**
+
+| Camada | Onde se verifica | O que prova |
+|---|---|---|
+| **1 · O app** | rodada de persona no Flutter | O que a pessoa vê, digita e clica. Telas, copy, navegação, voltar, estados de erro, e os poucos valores internos que **chegam à tela** |
+| **2 · O envio aos órgãos** | `api-app` / RPA, **não o app** | Os ~20 campos de `PREENCHIDOS_INTERNAMENTE`. Exige rodada própria, com outro instrumento |
+
+### Camada 1 — o que a rodada de persona CONSEGUE provar
+
+| Campo | Valor esperado | Onde aparece |
+|---|---|---|
+| **Guia da Junta (DAE)** | `R$ 281,08` (`taxaDaJunta`) | A3.P |
+| **Objeto social** | gerado pelo servidor. 🔴 Conferir que **não** sai `"...podendo também exercer ."` com lista de secundários vazia (item **62** de [[PENDENCIAS]]) | C7 |
+| **Preço do plano** | `R$ 139,00/mês` | E7 |
+| **CNAE principal** | o código derivado bate com a categoria escolhida no E3.4 | C0 |
+| **Herança entre telas** | titular e endereço da fatura chegam ao E9 **pré-preenchidos** do cadastro | E9 |
+| **Voltar** | existe em toda tela de wizard e leva ao destino certo | todas |
+
+### Camada 2 — o que só a `api-app` / RPA prova
+
+⛔ **Não pedir isto numa rodada de persona.** Fica registrado aqui porque é o contrato do envio, mas o instrumento é outro. Lista completa em [[variaveis-entrada-me]] §"O que NÓS preenchemos".
 
 ### Sempre igual, em toda persona
 
@@ -357,6 +379,24 @@ Ao fim de **cada** persona, o relatório precisa provar que os campos que **nós
 - 🔴 **P17 não pode gerar cobrança.** CPF suspenso descoberto no checkout = nenhum lançamento.
 - 🔴 **P19 precisa liberar o dossiê** mesmo com o boleto pendente.
 - 🔴 **P15 sai pela porta de espera**, nunca por erro genérico.
+
+---
+
+## 📊 Estado das rodadas
+
+### P01 · 14/09 — 🟡 parou no E9.1P
+
+**15 nós percorridos:** E1 · E2.1 · E2.2 · E2.3 · E3 · E3.3 · E3.2 · E3.4 · E5T · E5F · E6 · E6.1 · E7 · E9 · **E9.1P**.
+
+⛔ **A parede:** *"Simulação indisponível — Este servidor não tem a rota de simulação. A cobrança segue pendente."* Contra a AWS em produção a rota `dev/payments/{id}/simulate` não existe (`ambiente_api.dart:18-20`). Os botões *Simular pagamento* / *Simular recusa* aparecem porque `kDebugMode` os liga, mas o servidor não responde.
+
+🔴 **O A5.H é inalcançável hoje.** Além da parede do E9, toda a Fase 6 (29 nós, as duas assinaturas e o A5.H) é **mock em memória**, acionado por gatilhos manuais. Fechar o funil ponta a ponta exige a `legalizai-api` local, que não está nesta máquina.
+
+✅ **O que ficou provado:** o backend da AWS **dispara e-mail de verdade** e entrega na caixa de entrada (remetente `nao-responda@mail.legalizai.com.br`, assunto *"Seu código de confirmação"*). O código tem 8 dígitos e **expira em poucos minutos**, então o handoff precisa ser imediato.
+
+⚠️ **O relógio do emulador está ~9h atrasado** (08:33 no aparelho = 17:33 real). Todo carimbo de tempo colhido da tela está deslocado.
+
+🗂️ **Os achados não moram aqui.** O ledger é `docs/achados/README.md` no repo do Flutter (A-001 a A-009), com o relatório em `docs/achados/P01-rodada-2026-09-14.md`. **Não duplicar** — mesma doutrina do inventário único.
 
 ## Links
 [[variaveis-entrada-me]] · [[PERSONA]] · [[taxonomia-pills-n4]] · [[PENDENCIAS]] · [[dados-coletados-abertura-ate-viabilidade]] · [[decisoes-marca]]

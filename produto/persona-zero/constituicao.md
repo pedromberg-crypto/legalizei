@@ -148,12 +148,12 @@ Mecânica nossa. **Não tem correspondente no caso real** — não houve diverg�
 | Campo | Origem | Valor real | Fonte |
 |---|:--:|---|---|
 | Nome / CPF / endereço (confirma do E6) | U | nome ✅ · CPF **088.561.916-10** · endereço pessoal ✅ **igual ao da empresa** | Pedro, 13/09 |
-| RG + órgão emissor | U | **MG 17113036** · **SSP MG** | Pedro, 13/09 |
+| 🔴 Documento de identidade + órgão | U | Pedro informou **RG MG 17113036 · SSP MG**, mas o que foi pro CONTRATO foi **05960222142 · DETRAN · MG** (a CNH). Nosso rótulo "RG" está estreito | Contrato social, cláusula de qualificação |
 | Data de nascimento | U | **07/09/1993** | Pedro, 13/09 |
 | Nacionalidade | U | **Brasileiro** | Pedro, 13/09 |
 | Estado civil (+ regime de bens) | U | **Solteiro** — sem regime de bens | Pedro, 13/09 |
 | Representante na Receita | A | o próprio Pedro | Cartão CNPJ |
-| Profissão | A | "Empresário" | nossa automação |
+| Profissão | A | "Empresário" — ✅ **CONFERIDO** | Contrato social |
 | Qualificação (cód. 49) | A | Sócio-Administrador | nossa automação |
 | Endereço pessoal (CEP → autofill) | API | **CEP 30.220-310** · R Corinto 202 APT 601, Serra, BH/MG | Pedro + Cartão CNPJ |
 
@@ -178,11 +178,11 @@ Mecânica nossa. **Não tem correspondente no caso real** — não houve diverg�
 | Tipo de unidade | A | Produtiva | ⚙️ **nunca conferido** |
 | 🔴 **Metragem** | A | **20 m² fixo** | **5 m²** — ✅ medido, e **DIVERGE** (FIC + Alvará) |
 | 🔴 **Capital social** | A | **R$ 10.000,00 fixo** | **R$ 1.000,00** — ✅ medido, e **DIVERGE 10×** ([[2026-09-13-email-abertura-11-12-confirmacao-de-dados]]) |
-| Valor nominal de cotas | A | R$ 1,00 | ⚙️ **nunca conferido** |
+| Valor nominal de cotas | A | R$ 1,00 | ✅ **CONFERIDO** — 1.000 quotas × R$1,00 |
 | Acesso ao endereço | A | Pedestre | ✅ **CONFERIDO** — Alvará: "Tipo de acesso: Pedestres" |
 | Atividade inócua ou virtual? | A | Sim (sempre) | ✅ **CONFERIDO** — Dispensa Bombeiros: "ambiente inócuo ou virtual" |
 | Edificação nova? | A | Não (sempre) | ⚙️ **nunca conferido** |
-| Capital integralizado? | A | Sim (sempre) | ⚙️ **nunca conferido** |
+| Capital integralizado? | A | Sim (sempre) | ✅ **CONFERIDO** — "integralizadas, neste ato, em moeda corrente do País" |
 
 🔴 **Esta tela é a mais cega das 19, e é a que mais chuta.** Dez campos, nove deles preenchidos por nós com valor fixo, e **zero medidos contra o caso real**. O capital social de R$10.000 é o exemplo: é número que a gente escolheu, ele está no contrato social de verdade do Pedro, e nunca comparamos. Todos esses valores estão no **contrato social dele**, que é 1 documento — e resolve a tela inteira de uma vez.
 
@@ -190,7 +190,7 @@ Mecânica nossa. **Não tem correspondente no caso real** — não houve diverg�
 | Campo | Origem | Valor real | Fonte |
 |---|:--:|---|---|
 | 3 opções de razão social | U | a vencedora foi o **nome civil + atividade**. ⚠️ A líder avisa que *"nossos especialistas podem ter feito alterações"* — muda sem perguntar | Cartão CNPJ + e-mail 11/12 |
-| Objeto social | U | **derivado** do CNAE, padrão nosso já existe → **"Prestação de serviços de consultoria em publicidade."** 🐛 ver bug abaixo | `mock.ts` OBJETO_SOCIAL |
+| 🔴 Objeto social | U | Real: **"CONSULTORIA EM PUBLICIDADE"** — só o nome IBGE da subclasse. Nosso template erra **por excesso** ("Prestação de serviços de…, podendo também exercer…") | Contrato social, Cláusula Segunda |
 | Nome fantasia | U | **BERG CONSULTORIA EM MARKETING** | Cartão CNPJ |
 | Data de início das atividades | A | dia do preenchimento, nunca retroativa | 12/12/2025 |
 

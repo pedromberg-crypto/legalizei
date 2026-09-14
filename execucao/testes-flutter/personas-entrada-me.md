@@ -388,7 +388,21 @@ Conferido por script sobre as 14 base. **Todo valor de toda variável aparece pe
 
 **15 nós percorridos:** E1 · E2.1 · E2.2 · E2.3 · E3 · E3.3 · E3.2 · E3.4 · E5T · E5F · E6 · E6.1 · E7 · E9 · **E9.1P**.
 
-⛔ **A parede:** *"Simulação indisponível — Este servidor não tem a rota de simulação. A cobrança segue pendente."* Contra a AWS em produção a rota `dev/payments/{id}/simulate` não existe (`ambiente_api.dart:18-20`). Os botões *Simular pagamento* / *Simular recusa* aparecem porque `kDebugMode` os liga, mas o servidor não responde.
+⛔ **A parede:** *"Simulação indisponível — Este servidor não tem a rota de simulação. A cobrança segue pendente."* Os botões *Simular pagamento* / *Simular recusa* aparecem porque `kDebugMode` os liga, mas a rota `dev/payments/{id}/simulate` **não existe** na AWS.
+
+🔬 **Provado por `curl`, com 2 controles (14/09).** Não é gate de ambiente nem permissão:
+
+| Requisição | Status | Resposta |
+|---|---:|---|
+| `POST /api/v1/dev/payments/.../simulate` | **404** | `NOT_FOUND` · `"Cannot POST <path>"` |
+| controle: rota real e guardada (`identity/signups/verification`) | 401 | `FUNNEL_CREDENTIAL_INVALID` |
+| controle: rota inventada | **404** | `NOT_FOUND` · `"Cannot POST <path>"` |
+
+🔑 **A rota de simulação responde IDÊNTICA a uma rota inventada** — é o roteador do Nest respondendo antes de qualquer guard. Rota que existisse e estivesse fechada responderia como o controle do meio: 401 com code de domínio. **A rota nunca foi publicada em produção**, e a `api-app` a condiciona a `NODE_ENV != production`.
+
+⚠️ **Os dois botões batem na MESMA URL** (`pagamento_remoto_datasource.dart:36-41`: um método `simular(chargeId, statusDoProvedor)`, só o campo `status` do corpo muda). Não existe hipótese de um funcionar e o outro não.
+
+🔓 **`--dart-define API_BASE_URL` existe** (`ambiente_api.dart:44-48`) e resolve o *para onde*, não o *quê*: continua exigindo um servidor com a rota registrada do outro lado.
 
 🔴 **O A5.H é inalcançável hoje.** Além da parede do E9, toda a Fase 6 (29 nós, as duas assinaturas e o A5.H) é **mock em memória**, acionado por gatilhos manuais. Fechar o funil ponta a ponta exige a `legalizai-api` local, que não está nesta máquina.
 

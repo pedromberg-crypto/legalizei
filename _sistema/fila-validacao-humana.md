@@ -72,6 +72,16 @@ Pra contraste. **Uma coisa só, e não é número:**
 |---|---|
 | **Avisar o dev** | ele recebeu 15/07 uma spec congelada com *"as 14 personas são o critério de aceite"*. Desde então: a ordem inverteu, viraram **19 personas**, nasceu um **flow #2**, e **5 promessas da spec** se revelaram não implementadas. Ele está em E2E contra um contrato que não existe mais. **🆕 16/07: os DADOS também.** O `cnae-lookup-b1.json` que foi junto sai das mesmas 1332 subclasses pela mesma regra por seção: a triagem dele responde *"atende, passa liso"* pra `8422-1/00 DEFESA` → [[limpeza-260-servico]] |
 
+## 🧪 Da varredura cronológica da persona zero (14/09)
+
+Saíram da leitura integral do **contrato social** do Pedro. Detalhe e contexto em [[acionaveis]].
+
+| O que perguntar | Quem responde | Por que importa |
+|---|---|---|
+| **Qual a base legal da retroação dos efeitos do registro, e qual o prazo exato?** O Termo da JUCEMG diz *"Efeitos do registro: 11/12/2025"* para um ato registrado em 12/12. A regra dos ~30 dias existe, mas **não confirmei o artigo** | **Ademar** | Decide o relógio que o app precisa contar, e qual data alimenta o 1º DAS, o RBT12 e o Fator R |
+| **Para ME unipessoal no Simples, a aprovação anual de contas precisa de ata registrada ou basta o registro contábil?** (Cláusulas 9ª e 10ª: exercício fecha 31/12, 4 meses pra deliberar) | **Mauro** | Decide se vira processo no app ou fica invisível. Com 2+ sócios já é ato formal |
+| **Qual o risco real de a empresa ficar meses sem pró-labore no início, e qual a tese que o escritório usa hoje?** A Cláusula 13ª diz *"poderão"*, o marketing deles diz *"é obrigatório"* | **Mauro** | A persona zero passou 3 meses sem pró-labore. E não pagar **trava o numerador do Fator R** (regime de caixa) |
+
 Todo o resto é 🕓.
 
 ## Links

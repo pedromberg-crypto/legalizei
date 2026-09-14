@@ -104,6 +104,7 @@ Evidência **não decide nada sozinha**. Cada achado que exige ação sai daqui 
 |---|---|
 | [[acionaveis]] | 🔨 adaptar · ⚖️ decidir · ❓ perguntar — com dono nomeado |
 | [[fila-validacao-humana]] | as perguntas que só pessoa responde (Mauro, Ademar, advogada) |
+| [[PENDENCIAS]] | 📞 a **vista consolidada** de tudo que está aberto, agrupada por quem resolve |
 | [[decisoes-marca]] | o ADR: toda decisão travada, datada, com o racional |
 | `execucao/processos/cru/` | o que vira regra de processo |
 | [[HOME]] §Agora | o estado corrente |

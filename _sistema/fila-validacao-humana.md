@@ -7,6 +7,8 @@ tags: [sistema, fila, placeholder, decisao, meta]
 
 # 🕓 Fila de validação humana
 
+> 📞 **Vendo a lista INTEIRA, por quem resolve:** [[PENDENCIAS]] — consolida esta fila com os acionáveis da persona zero, as perguntas de persona e o que ficou aberto nas evidências. Esta nota segue sendo a **fonte** dos itens abaixo.
+
 > **Decisão do Pedro (16/07), e é uma correção de um vício meu:** eu vinha carimbando 🔴 em
 > preço, `TEASER_PISO`, DAE, SLU×LTDA e tratando cada um como urgência. **Não são.** São
 > valores que precisam de **pessoa certa** (Mauro, Larissa, Karla), e o Pedro puxa **quando

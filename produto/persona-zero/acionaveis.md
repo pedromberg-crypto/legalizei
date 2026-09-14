@@ -13,6 +13,8 @@ tags: [produto, persona-zero, acionavel, pendencia]
 >
 > **Tipos:** 🔨 **adaptar** (mexe em código ou dado nosso) · ⚖️ **decidir** (escolha de produto/negócio) · ❓ **perguntar** (precisa de pessoa — espelhado em [[fila-validacao-humana]]).
 >
+> 📞 **Vendo a lista INTEIRA, por quem resolve:** [[PENDENCIAS]] — consolida estes acionáveis com a [[fila-validacao-humana]] e as perguntas de persona. Esta nota segue sendo a **fonte** dos itens abaixo.
+>
 > 🔒 **Fora daqui, de propósito:** capital R$10.000, natureza SLU, metragem 20 m² e o rótulo "RG" são **decisões travadas** (Pedro, 14/09), não pendências. Não reabrir.
 
 ---

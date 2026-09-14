@@ -148,7 +148,7 @@ Mecânica nossa. **Não tem correspondente no caso real** — não houve diverg�
 | Campo | Origem | Valor real | Fonte |
 |---|:--:|---|---|
 | Nome / CPF / endereço (confirma do E6) | U | nome ✅ · CPF **088.561.916-10** · endereço pessoal ✅ **igual ao da empresa** | Pedro, 13/09 |
-| 🔴 Documento de identidade + órgão | U | Pedro informou **RG MG 17113036 · SSP MG**, mas o que foi pro CONTRATO foi **05960222142 · DETRAN · MG** (a CNH). Nosso rótulo "RG" está estreito | Contrato social, cláusula de qualificação |
+| 🔒 RG + órgão emissor | U | **MG 17113036 · SSP MG** — rótulo "RG" **MANTIDO** (Pedro, 14/09). 🕓 Aceitar **CNH como validador legal** fica como evolução futura. O contrato do caso real usou a CNH (05960222142 · DETRAN · MG) | Pedro + contrato social |
 | Data de nascimento | U | **07/09/1993** | Pedro, 13/09 |
 | Nacionalidade | U | **Brasileiro** | Pedro, 13/09 |
 | Estado civil (+ regime de bens) | U | **Solteiro** — sem regime de bens | Pedro, 13/09 |
@@ -176,8 +176,8 @@ Mecânica nossa. **Não tem correspondente no caso real** — não houve diverg�
 | Objeto social (via C7) | U | gerado automático | 🐛 no e-mail da líder saiu como `*\|OBJETO_SOCIAL\|*` |
 | Forma de atuação | A | Atividade Desenvolvida Fora do Estabelecimento | ⚙️ **nunca conferido** |
 | Tipo de unidade | A | Produtiva | ⚙️ **nunca conferido** |
-| 🔴 **Metragem** | A | **20 m² fixo** | **5 m²** — ✅ medido, e **DIVERGE** (FIC + Alvará) |
-| 🔴 **Capital social** | A | **R$ 10.000,00 fixo** | **R$ 1.000,00** — ✅ medido, e **DIVERGE 10×** ([[2026-09-13-email-abertura-11-12-confirmacao-de-dados]]) |
+| 🔒 **Metragem** | A | **20 m²** — **DECISÃO TRAVADA** (Pedro, 14/09) | líder usa 5 m². Divergência **deliberada**, não erro |
+| 🔒 **Capital social** | A | **R$ 10.000,00** — **DECISÃO TRAVADA** (Pedro, 14/09) | líder usa R$1.000. Divergência **deliberada**, não erro |
 | Valor nominal de cotas | A | R$ 1,00 | ✅ **CONFERIDO** — 1.000 quotas × R$1,00 |
 | Acesso ao endereço | A | Pedestre | ✅ **CONFERIDO** — Alvará: "Tipo de acesso: Pedestres" |
 | Atividade inócua ou virtual? | A | Sim (sempre) | ✅ **CONFERIDO** — Dispensa Bombeiros: "ambiente inócuo ou virtual" |

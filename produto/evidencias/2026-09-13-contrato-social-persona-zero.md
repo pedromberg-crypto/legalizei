@@ -41,7 +41,7 @@ O caso real fez exatamente isso e **foi deferido automaticamente**. Uma decisão
 
 ---
 
-## 2 · 🔴 O objeto social é MENOR do que o nosso — não maior
+## 2 · 🔴 O objeto social é MENOR do que o nosso — não maior (segue aberto)
 
 **Cláusula Segunda, íntegra:**
 
@@ -62,7 +62,7 @@ Prestação de serviços de <principal>, podendo também exercer <secundárias>.
 
 ---
 
-## 3 · 🔴 O documento de identidade não é o RG — é a CNH
+## 3 · 🕓 O órgão aceita CNH no lugar do RG (evolução futura)
 
 **Qualificação, íntegra:**
 
@@ -70,7 +70,9 @@ Prestação de serviços de <principal>, podendo também exercer <secundárias>.
 
 O Pedro informou ontem **RG MG 17113036 · SSP MG**. O que foi para o contrato foi **05960222142 · DETRAN · MG** — o número de registro da **CNH**.
 
-🔑 **Nosso C1 pede "RG + órgão emissor" e trata como campo único.** O caso real mostra que o campo é **"documento de identidade + órgão + UF"**, e aceita CNH/DETRAN. Casa com a instrução do e-mail de onboarding deles: *"Tenha em mãos o **RG ou CNH** dos sócios"*. ⚠️ Rotular a pergunta como "RG" faz quem só tem CNH em mãos travar ou preencher errado.
+🔒 **DECISÃO (Pedro, 14/09): o rótulo "RG" fica como está.** Não é correção pendente.
+
+🕓 **Fica registrado como evolução futura:** aceitar a **CNH como validador legal** do campo. O caso real mostra que o órgão aceita (o contrato saiu com `05960222142 · DETRAN · MG`) e a própria líder instrui *"tenha em mãos o **RG ou CNH**"*. Quando fizer sentido, o campo vira **"documento de identidade + órgão + UF"** com as duas opções.
 
 ---
 
@@ -78,9 +80,9 @@ O Pedro informou ontem **RG MG 17113036 · SSP MG**. O que foi para o contrato f
 
 | Campo | Nosso | Real | |
 |---|---|---|:--:|
-| Capital social | R$ 10.000 | **R$ 1.000** | ❌ |
-| Natureza jurídica (regra) | SLU se sem sócio | **206-2 LTDA** | ❌ |
-| Metragem | 20 m² | **5 m²** | ❌ |
+| 🔒 Capital social | **R$ 10.000** (travado) | R$ 1.000 | 🏢 |
+| 🔒 Natureza jurídica (regra) | **SLU se sem sócio** (travado) | 206-2 LTDA | 🏢 |
+| 🔒 Metragem | **20 m²** (travado) | 5 m² | 🏢 |
 | **Valor nominal da cota** | **R$ 1,00** | **R$ 1,00** (1.000 quotas) | ✅ |
 | **Profissão** | **"Empresário"** | **"Empresário"** | ✅ |
 | **Testemunhas** | **Nenhuma** | **nenhuma** | ✅ |
@@ -93,9 +95,18 @@ O Pedro informou ontem **RG MG 17113036 · SSP MG**. O que foi para o contrato f
 | Atividade inócua ou virtual | Sim | inócuo ou virtual | ✅ |
 | **Tipo de contrato** | Padrão · **15 cláusulas** | Padrão · **16 cláusulas** | ⚠️ |
 
-**12 de 22 conferidos · 3 errados · 8 certos · 1 impreciso.**
+**12 de 22 conferidos · 8 iguais · 3 DIVERGÊNCIAS DELIBERADAS · 1 impreciso.**
 
-🔑 **O padrão se manteve e ficou mais claro:** todos os **códigos de órgão** que cravamos estão certos (090, 315, 2062, 1 via) — porque foram lidos dos prints. Os três erros são **números que escolhemos sem fonte** (capital, metragem) ou **regra deduzida** (SLU no unipessoal). ⚠️ A contagem de cláusulas é o 4º item deduzido: são **16** (Primeira a Décima Sexta), e nossos docs dizem 15 em 3 lugares.
+> 🔒 **TRAVADO POR DECISÃO DO PEDRO (14/09).** As três "divergências" **não são erros nossos** — são **escolhas de negócio**, e ficam como estão:
+> - **Capital social R$ 10.000** (líder usa R$1.000) — mantido
+> - **Natureza jurídica SLU** no unipessoal (líder usa 206-2 LTDA) — mantido
+> - **Metragem 20 m²** (líder usa 5 m²) — mantido
+>
+> **Não reabrir, não listar como erro.** O valor do líder é referência, não gabarito — é a etiqueta 🏢 *decisão deles* da doutrina deste estudo, aplicada a nós mesmos.
+>
+> 🔒 **O rótulo "RG" também fica** como está. 🕓 Aceitar **CNH como validador legal** entra como evolução futura, não como correção.
+
+🔑 **O padrão se manteve e ficou mais claro:** todos os **códigos de órgão** que cravamos estão certos (090, 315, 2062, 1 via) — porque foram lidos dos prints. As três divergências são **escolhas nossas, travadas** (capital, metragem, SLU) — não erros. ⚠️ O único item de fato impreciso é a contagem de cláusulas: são **16** (Primeira a Décima Sexta), e nossos docs dizem 15 em 3 lugares.
 
 ---
 

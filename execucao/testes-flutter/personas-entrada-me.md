@@ -15,6 +15,18 @@ tags: [execucao, teste, flutter, persona, entrada]
 >
 > 🔒 **Escopo:** constituição de **ME no Simples Nacional**, serviço, BH/MG, 1 a 4 sócios PF no Brasil. Nada de MEI, Migração, comércio ou regulamentada, **salvo a P15, que existe justamente pra ser recusada**.
 
+## 🔑 Dados fixos de TODA persona
+
+> Travado em 14/09, na 1ª rodada da P01: a persona usou um e-mail inventado e **o flow parou na validação do código de 8 dígitos**, porque nada chega num endereço que não existe.
+
+| Campo | Valor | Por quê |
+|---|---|---|
+| **E-mail** | 🔴 **`pedromberg@gmail.com`** em **todas** as personas, sempre | É o gmail do Pedro, conectado à sessão do vault. Dá pra **buscar o código de verificação de verdade** e destravar o E6.1. Não inventar e-mail |
+| **Senha** | qualquer uma, mas **anotada no relatório** | Sem ela não dá pra retomar a conta numa 2ª rodada |
+| **Telefone** | ⏳ **em aberto** | O E6 manda o código *"pro e-mail e pro telefone"*. Se o app exigir os dois, telefone inventado trava igual. Pendente de resposta da rodada da P01 |
+
+⚠️ **O e-mail repetido é de propósito, e tem consequência:** as 20 personas vão compartilhar o mesmo endereço. Se o app impedir 2 contas com o mesmo e-mail, isso aparece já na P02 e vira **achado**, não bug de teste. Anotar quando acontecer.
+
 ## Índice
 - [[#🗺️ Como o elenco cobre o espaço]]
 - [[#🎬 As 14 base — uma por categoria, caminho completo]]

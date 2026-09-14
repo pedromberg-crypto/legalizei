@@ -114,6 +114,21 @@ Declaração, sob as penas da lei, de ausência de condenação criminal que imp
 
 ---
 
+## 👤 Dos recibos de pró-labore e do cadastro do sócio (14/09)
+
+| | Item | Tipo | Dono |
+|:--:|---|:--:|---|
+| S1 | 🔴🔴 **Informar o PIS na plataforma do líder.** `statusQualifCadastral: "FALTA DADOS"` — a qualificação cadastral do eSocial está pendente e o pró-labore vem sendo transmitido assim, alimentando a DCTFWeb. **Nenhuma tela avisa** | 🔨 adaptar | **Pedro (ação na conta dele)** |
+| S2 | **Guardar a TERCEIRA data.** Admissão do sócio = 01/12/2025, onze dias antes de a empresa existir — e é ela que decide a competência do primeiro pró-labore. Estende D1/D2: são três datas, e nenhuma tela mostra as três juntas | 🔨 adaptar | Pedro + dev |
+| S3 | **Exibir pendência de qualificação cadastral como estado de tela.** Campo obrigatório vazio + validação oficial pendurada é exatamente o que o app deve mostrar, e no líder só aparece no JSON | 🔨 adaptar | dev |
+| S4 | **Se a rubrica carregar a conta contábil, alguém confere onde ela caiu.** No líder a rubrica declara *Remuneração a Dirigentes* e o livro recebe *Custo com Pró-labore aos Sócios*. Declarar é metade, verificar é a outra | 🔨 adaptar | dev |
+| S5 | **`quantidade` não pode ter duas semânticas.** Na rubrica 042 são 30 **dias**; na 043 são 11 **por cento**. Ou declara unidade de verdade, ou são dois campos | 🔨 adaptar | dev |
+| S6 | **"Não houve pró-labore" ≠ "não existe folha".** Janeiro/2026 não tem folha nenhuma, e a tela do líder mostra os dois estados do mesmo jeito | 🔨 adaptar | dev |
+| S7 | 🕓 **`salarioBaseIRRF = 0` em TODAS as competências**, inclusive nas de R$3.360. Base declarada como zero, em vez de base calculada com imposto zero. Isenção aplicada na origem ou campo não preenchido? | ❓ perguntar | **Mauro** |
+| S8 | 🕓 **A `dataAdmissao` de 01/12 é escolha ou erro?** Pode ser deliberada para fechar a competência de dezembro. Não deduzo regra de órgão | ❓ perguntar | **Mauro** |
+
+---
+
 ## 🔴 O que segue aberto do estudo (fora deste bloco)
 
 | Item | Onde |
@@ -126,4 +141,4 @@ Declaração, sob as penas da lei, de ausência de condenação criminal que imp
 | **Alteração cadastral tem prazo de 30 dias e multa** (Decreto Municipal 17.175/2019) | idem |
 
 ## Links
-[[constituicao]] · [[2026-09-14-balanco-patrimonial-serie-mensal]] · [[2026-09-14-dre-balancete-razao-diario]] · [[2026-09-13-contrato-social-persona-zero]] · [[fila-validacao-humana]] · [[decisoes-marca]] · [[HOME]]
+[[constituicao]] · [[2026-09-14-balanco-patrimonial-serie-mensal]] · [[2026-09-14-dre-balancete-razao-diario]] · [[2026-09-14-recibos-de-prolabore-e-cadastro-do-socio]] · [[2026-09-13-contrato-social-persona-zero]] · [[fila-validacao-humana]] · [[decisoes-marca]] · [[HOME]]

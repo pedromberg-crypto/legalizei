@@ -13,7 +13,7 @@ tags: [produto, persona, escopo, trava]
 >
 > 🧭 **Autoridade:** manda em *quem é o cliente*. O `_escopo.mjs` manda em *qual é o regime*. São coisas diferentes, e a segunda não pega a primeira.
 
-**19 travas · 1 perguntas abertas · 🔴 1 crítica(s)**
+**19 travas · 0 perguntas abertas**
 
 ---
 
@@ -79,40 +79,7 @@ São **dois filtros diferentes**, e até 13/09 só um estava travado:
 
 ## ⏳ O que ainda não está travado
 
-🔑 Estas perguntas moram como **dado** no `_persona.mjs`, não em prosa, porque o gerador conta quantas seguem abertas a cada rodada. Pergunta que mora em prosa envelhece sem ninguém notar.
-
-
-### 1 · A empresa
-
-**✅ P1.5 — Endereço: casa, apartamento, sede própria ou endereço fiscal nosso?**
-
-> **Resposta:** PARCIAL — não é uma persona só. Casa, apartamento e endereço fiscal nosso são variáveis internas, e grande parte já está mapeada. A persona zero é APARTAMENTO (APT 601, confirmado no Cartão CNPJ).
-
-- *Por que importa:* 🔑 A resposta reformula a pergunta, e a reformulação é a parte importante: endereço não é traço fixo da persona, é VARIÁVEL com efeito diferente em cada valor. Apartamento puxa condomínio e IPTU próprio; endereço fiscal nosso é produto pago (R$49/mês).
-- *O que muda:* Falta dizer O QUE MUDA em cada valor: IPTU, alvará e taxa municipal saem iguais nos três? É o que a categoria ✅ Estar em dia precisa saber, e ela ainda não foi varrida.
-
-
-### 2 · O sócio, pessoa
-
-**✅ P2.1 — Vínculo CLT por fora: comum ou raro?**
-
-> **Resposta:** RARO, mas existe e já é perguntado no cadastro do usuário.
-
-- *Por que importa:* Quem já contribui como CLT tem folga no teto do INSS, e isso muda o líquido do sócio sem mudar o valor declarado. O Pedro confirmou que a pergunta já está no cadastro e que interfere em funcionalidade interna.
-- *O que muda:* O L24 CONTINUA no mapa — raro não é inexistente. Falta saber em quais funcionalidades ele bate além do INSS; o Pedro sinalizou que pode valer pesquisa externa.
-
-**🔴 P2.3 — Como o lucro entra nos nossos cálculos, já que não vamos inferir de extrato?**
-
-- *Por que importa:* 🔴 VIROU OUTRA PERGUNTA, e maior. A original era "a persona tira lucro?". O Pedro respondeu algo mais fundo: *"a Contabilizei em momento nenhum nem cita sobre retirada de lucro, então com toda certeza é algo que é calculado por trás e vem com respostas apenas que o usuário precisa saber"*. Bate com a evidência: na plataforma do líder o lucro é INFERIDO DO EXTRATO, silenciosamente, e nunca é perguntado. ⚠️ E a casa travou em 09/09 que não teremos conta nem integração bancária — então o caminho dele não existe pra nós.
-- *O que muda:* Como DECLARAMOS o que é retirada de lucro. O Pedro alerta que interfere no resto dos cálculos, ainda que seja só pra mostrar. 📚 Ele autorizou buscar fora: é pesquisa em fonte primária de governo, não dedução minha. ⚠️ E a resposta precisa respeitar a régua nova: INFORMAR, não TUTELAR.
-
-**✅ P2.4 — Como o líder recalcula o pró-labore sozinho em mês sem faturamento?**
-
-> **Resposta:** RESPONDIDA EM 13/09, na conta logada. Enquanto a receita era regular (R$ 12.000/mês) ele pagava R$ 3.360 = 0,28 × 12.000, o alvo EXATO do Fator R. No fechamento de maio/2026 — primeiro mês com receita zero — ele recalculou e desceu para R$ 1.621, o salário mínimo, que é o PISO legal. E não voltou a subir quando o faturamento retornou em junho. 🔑 A regra dele não é 'manter o Fator R em 28%': é pagar o MENOR valor que ainda segura o anexo barato. Mês sem faturar encolhe o denominador, o Fator R sobra, e o motor aproveita a folga pra baixar o pró-labore.
-
-- *Por que importa:* 🔑 Pergunta NOVA, levantada pelo próprio Pedro em 13/09: *"eles fazem aquela conta automática do pró-labore para sempre manter a gente na menor alíquota e ele recalcula sozinho também em meses que eu não faturo"*. É exatamente o nó L3 do nosso mapa, e a conta do L4. A conta de mês cheio nós temos; a de mês vazio, não.
-- *O que muda:* L3 e L4. Hoje o mapa oferece um switch 'pagar ou não pagar'; se o líder RECALCULA um valor específico, a regra dele é outra e precisa ser lida. Os dados do Pedro estão dentro da plataforma deles — é teardown, complementável com pesquisa externa.
-
+✅ Nenhuma. A persona está inteira respondida.
 ---
 
 ## 🧪 Persona zero — BERG CONSULTORIA EM MARKETING

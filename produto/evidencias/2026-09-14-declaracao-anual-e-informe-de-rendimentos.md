@@ -61,9 +61,13 @@ Comprovante de Rendimentos Pagos e de IRRF, ano-calendário **2025**:
 
 ---
 
-## 3 · 🔴🔴 O LÍDER TRAVA A DISTRIBUIÇÃO DE LUCRO — e o Pedro já tinha proibido isso
+## 3 · 🔴🔴 O LÍDER TEM A TRAVA DE DISTRIBUIÇÃO DE LUCRO CONSTRUÍDA — e o Pedro já tinha proibido isso
 
-A aba do Informe, na conta real, está **bloqueada**. Textos literais da tela:
+> ⚠️ **CORREÇÃO (Pedro, 14/09).** Eu tinha escrito que *"a aba está bloqueada"*. **Não está.** Ela abre e funciona: seleciona-se o sócio no dropdown e clica-se em *Pré-visualizar*. Os textos abaixo são **modais escondidos no DOM**, que eu li como se fossem estado de tela — **4ª vez neste estudo** que confundo o que o DOM contém com o que a tela mostra. Confirmado por duas vias: o fluxo funcionou na prática, e `RESOLUCAO_DEBITOS_IMPOSTOS_2025 = NENHUM:NAO_POSSUI_IMPOSTOS_DEVIDOS` na API de parâmetros ([[2026-09-14-api-relatorios-endpoints]] §3).
+>
+> 🔑 **O achado sobrevive à correção, e fica melhor:** o código da trava **existe e está embarcado**, pronto para disparar quando houver pendência. O que muda é a etiqueta — não é *"o líder travou o Pedro"*, é *"o líder tem a trava construída e a dispara por condição"*. A leitura de produto do §3 vale inteira; o que não vale é dizer que ela estava ativa nesta conta.
+
+O Informe, na conta real, **abre normalmente**. O que segue são os textos literais dos modais de bloqueio que vivem na mesma tela, prontos para aparecer quando a condição bater:
 
 > *"**Seu Informe de Rendimentos está indisponível.** Para ter acesso ao seu informe você precisa finalizar o processo de regularização de pendências que você iniciou anteriormente."*
 
@@ -113,4 +117,4 @@ Texto literal, na mesma tela:
 ⚠️ Este termo já tinha sido lido em 10/09 ([[2026-09-10-contabilizei-aceites-LITERAL]] §2). O que é novo é **vê-lo funcionando como gate**, ligado ao bloqueio do Informe.
 
 ## Links
-[[constituicao]] · [[acionaveis]] · [[2026-09-14-declaracoes-mensais-serie-completa]] · [[legalize-trava-persona-produto]] · [[legalize-lucro-2026-e-carta-cfc]] · [[HOME]]
+[[constituicao]] · [[acionaveis]] · [[2026-09-14-declaracoes-mensais-serie-completa]] · [[2026-09-14-api-relatorios-endpoints]] · [[legalize-trava-persona-produto]] · [[legalize-lucro-2026-e-carta-cfc]] · [[HOME]]

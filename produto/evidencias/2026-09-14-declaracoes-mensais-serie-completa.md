@@ -151,4 +151,4 @@ E enumera as consequências: multa e juros (Lei 9.430/96 art. 61 + Lei 8.212/91 
 ⚠️ E a retificação tem limite: *"não surtirão efeitos as retificações que pretendam excluir ou reduzir débitos **enviados para inscrição em Dívida Ativa**"*. Depois que inscreveu, não dá pra corrigir declarando de novo.
 
 ## Links
-[[constituicao]] · [[acionaveis]] · [[2026-09-13-documentos-municipais-da-abertura]] · [[legalize-motor-fiscal-arredonda-por-tributo]] · [[HOME]]
+[[constituicao]] · [[acionaveis]] · [[2026-09-14-api-relatorios-endpoints]] · [[2026-09-13-documentos-municipais-da-abertura]] · [[legalize-motor-fiscal-arredonda-por-tributo]] · [[HOME]]

@@ -84,6 +84,21 @@ Declaração, sob as penas da lei, de ausência de condenação criminal que imp
 
 ---
 
+## 📊 Do balanço patrimonial (14/09)
+
+| | Item | Tipo | Dono |
+|:--:|---|:--:|---|
+| B1 | 🔴 **Conciliação bancária: temos ou não?** Sem extrato o balanço é competência pura — no líder, a receita inteira fica "a receber", o pró-labore inteiro fica "a pagar" e o caixa vai a **−5.012,83**. ⚠️ O caminho perigoso é o do meio: exibir "Caixa" e "Lucro disponível" só por competência produz cliente sacando lucro que não existe | ⚖️ decidir | **Pedro + Mauro** |
+| B2 | **Fator R não pode zerar em 1º de janeiro.** Provado: os R$100 de dez/2025 estão no numerador (16.564 ÷ 43.910 = 37,72%) e fora da DRE de 2026 (16.464 = 37,49%). Janela é de **13 meses cruzando o exercício** | 🔨 adaptar | dev |
+| B3 | **Pró-labore se modela em 3 contas:** bruto no custo, **11% de INSS** na retenção, **líquido** na obrigação (`16.464 × 11% = 1.811,04` exato). É o desenho a copiar | 🔨 adaptar | dev |
+| B4 | **"Você pagou R$ X de multa este ano"** — a conta de multas e juros existe no livro e **nenhuma tela do líder mostra**. Funcionalidade nomeada, e é INFORMAR, não tutelar | ⚖️ decidir | Pedro |
+| B5 | **O sinal do saldo:** `saldoExercicio = crédito − débito` sempre, ignorando a natureza da conta. Na nossa API isso se decide de propósito — ou vem na convenção contábil, ou o nome do campo diz que é `creditoMenosDebito` | 🔨 adaptar | dev |
+| B6 | **Relatório contábil é geração assíncrona** (`PENDENTE/PROCESSANDO/GERANDO_ARQUIVO`), não consulta. A tela precisa de estado de espera de verdade | 🔨 adaptar | dev |
+| B7 | **De onde vieram os R$15,90 a mais em mai/jun/jul?** Três meses a R$210,90 em vez de R$195, e depois volta. Serviço avulso? Reajuste revertido? | ❓ perguntar | **Pedro** |
+| B8 | 🔴 **A empresa pagou R$229,85 de multa e juros entre abril e junho** e isso não apareceu em tela nem e-mail nenhum. Vale saber qual guia atrasou e por quê | ❓ perguntar | **Pedro** |
+
+---
+
 ## 🔴 O que segue aberto do estudo (fora deste bloco)
 
 | Item | Onde |
@@ -96,4 +111,4 @@ Declaração, sob as penas da lei, de ausência de condenação criminal que imp
 | **Alteração cadastral tem prazo de 30 dias e multa** (Decreto Municipal 17.175/2019) | idem |
 
 ## Links
-[[constituicao]] · [[2026-09-13-contrato-social-persona-zero]] · [[fila-validacao-humana]] · [[decisoes-marca]] · [[HOME]]
+[[constituicao]] · [[2026-09-14-balanco-patrimonial-serie-mensal]] · [[2026-09-13-contrato-social-persona-zero]] · [[fila-validacao-humana]] · [[decisoes-marca]] · [[HOME]]

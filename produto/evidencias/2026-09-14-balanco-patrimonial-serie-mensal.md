@@ -141,7 +141,9 @@ Conta `3.01.01.08.01.39 — Serviços Contábeis`, o que a Contabilizei cobrou d
 | 07/2026 | 1.300,70 | **210,90** | ⚠️ |
 | 08/2026 | 1.495,70 | **195,00** | voltou |
 
-🔑 **A reversão R$139 → R$195 aparece em março, contabilizada.** Não é letra miúda do recibo: é lançamento. O cliente pagou **40% a mais** no 4º mês sem nova negociação, e os livros dele registram isso. ✅ Confirma [[legalize-benchmark-padrao-195]] com prova contábil, e reforça o argumento comercial nosso: **as 3 coortes (R$79 / R$99 / R$139) são preço cheio, não isca**.
+🔑 **A reversão R$139 → R$195 aparece em março, contabilizada.** Não é letra miúda do recibo: é lançamento. O cliente pagou **40% a mais** no 4º mês sem nova negociação, e os livros dele registram isso. ✅ Confirma [[legalize-benchmark-padrao-195]] com prova contábil.
+
+🔴 **CORRIGIDO 14/09:** eu tinha emendado aqui que *"as 3 coortes nossas são preço cheio, não isca"*. **Falso** — o nosso tem a mesma forma: R$79 ou R$99 nos 3 primeiros meses, depois **R$139**, com 12 meses de fidelidade ([[estado-atual]]). 🔑 A diferença real é o **destino da reversão**: a deles vai para **R$195**, um preço que o cliente nunca viu anunciado; a nossa volta para **R$139**, que é o preço anunciado. Detalhe em [[2026-09-13-cadeia-de-emails-22-12-a-20-01]] §1.
 
 ❓ **Os R$15,90 extras em mai/jun/jul não têm explicação** nesta fonte. Três meses, valor idêntico, some depois. Fica como pergunta ao Pedro (serviço avulso contratado? reajuste aplicado e revertido?).
 

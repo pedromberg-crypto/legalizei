@@ -41,7 +41,7 @@ tags: [juridico, contrato, marco, advogada, concorrente]
 
 | Tema | Decisão |
 |---|---|
-| **Preço ME** | 3 coortes: Fundador **R$79** · Lançamento **R$99** · Base **R$139**, cada uma garantida por 12 meses da ativação |
+| **Preço ME** | ~~3 coortes: Fundador **R$79** · Lançamento **R$99** · Base **R$139**, cada uma garantida por 12 meses da ativação~~ → 🔴 **REGISTRO ERRADO, corrigido em 14/09.** O certo, e que já valia desde agosto em [[estado-atual]]: preço do plano **R$139/mês**; **R$79** (campanha) e **R$99** (lançamento) são ofertas dos **3 primeiros meses**; o que dura **12 meses** é a **fidelidade**, não o preço. A minuta já tinha sido corrigida em **11/09** (cláusula 3.6). |
 | **Preço EPP** | tabela única por **RBT12**: 189 · 239 · 309 · 399 · 519, terminando no teto do Simples |
 | **Faixa** | sobe com aviso de 30 dias, **desce automaticamente** |
 | **Desconto** | é **preço**, não adiantamento. Não se devolve. Só benefício concedido fora do plano é recuperável |

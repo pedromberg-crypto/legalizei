@@ -12,7 +12,7 @@ metadata:
 
 ## Preco
 
-- **3 coortes ME**, cada uma travada por 12 meses da ativacao: **Fundador R$79** (lista de espera) · **Lancamento R$99** · **Base R$139**.
+- **Preco ME — CORRIGIDO 14/09 (eu havia registrado errado em 10/09):** o preco do plano e **R$139/mes**. R$79 (campanha/lista de espera) e R$99 (lancamento) sao **ofertas dos 3 primeiros meses**, e depois vira R$139. **Nao sao coortes travadas por 12 meses** — o que dura 12 meses e a **fidelidade assinada em contrato**. A fonte sempre foi `financeiro/estado-atual.md` (decisoes de 05/08, 17/08 e 20/08); o registro de 10/09 divergiu dela e a minuta ja tinha sido corrigida em 11/09 (clausula 3.6 virou oferta de 3 competencias). ⚠️ Consequencia que nao pode ser esquecida: **nosso mecanismo tem a MESMA forma do lider** (promo 3 meses -> preco cheio). A diferenca e o destino: a reversao dele vai pra R$195, preco que o cliente nunca viu anunciado; a nossa volta pra R$139, que e o preco anunciado. Logo a copy tem que mostrar o preco final na mesma tela da promocao.
 - **Tabela EPP unica** (sem coorte), apurada pela **RBT12**, nao pelo faturamento mensal: 360-600k → **189** · 600k-1,2M → **239** · 1,2-2,4M → **309** · 2,4-3,6M → **399** · 3,6-4,8M → **519**. Termina exatamente no teto do Simples.
 - 🔑 **A faixa desce automaticamente**, sem pedido do cliente. Sobe com aviso de 30 dias.
 - 🔴 **Desconto de plano e PRECO, nao adiantamento** — nao se devolve no cancelamento. **Excecao:** beneficio pontual concedido fora do plano (cortesia de taxa, certificado ja emitido) e recuperavel.

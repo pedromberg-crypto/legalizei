@@ -38,13 +38,13 @@ Responde em minutos, e a regra de ouro é **não deduzir regra de órgão** ([[l
 | **7** | 🟡 | **A nota diz "Anexo: 5" e declara 6,00% na mesma linha.** Anexo-de-origem × efetivo pós-Fator R? | Se for isso, nossa tela resolve com uma palavra | `C8` |
 | **8** | 🟡 | **Qual o risco real de ficar meses sem pró-labore no início**, e qual a tese do escritório hoje? | A persona zero passou 3 meses assim. Não pagar **trava o numerador do Fator R** (caixa) | `L4` |
 | **9** | 🟡 | **ME unipessoal: aprovação anual de contas precisa de ata registrada?** | Decide se vira processo no app ou fica invisível | `L2` |
-| **10** | 🟡 | **Nosso preço** — hoje `~R$195` é **placeholder FAKE** | N7 e N9. Se virar parcelamento ou +1 plano, muda a **estrutura** das telas | [[fila-validacao-humana]] |
-| **11** | 🟡 | **Certificado digital: terceirizar (Sete Minas) ou emitir?** E o A1 a R$209–229/ano | N7 e a cláusula do MEI | idem |
-| **12** | 🟡 | **InfoSimples: preço por consulta e limite de chamadas** (CPF na Receita) | Não estão na página pública. Entra no custo unitário | idem |
-| **13** | 🟡 | **Flow #2: certificado pro ME sem certificado** — carrega custo/fidelidade extra ou fica incluso? | Pergunta já está na tela (M2); o preço não | idem |
+| **10** | ✅ | ~~**Nosso preço**~~ → 🟢 **TRAVADO 14/09 (Pedro).** Plano ME = **R$139/mês**. Duas ofertas, ambas das **3 primeiras competências**: **R$79** (campanha/lista de espera) e **R$99** (lançamento); depois vira R$139. **12 meses de fidelidade assinada em contrato** em todos. | ⚠️ Confirma o que [[estado-atual]] já dizia desde agosto: o registro de 10/09 (*"coorte travada por 12 meses"*) era **erro meu**, e a minuta já fora corrigida em 11/09. 🔑 Nosso mecanismo tem a **mesma forma** do líder; a diferença é o destino da reversão (**R$139 anunciado** × R$195 nunca anunciado) — então **a copy precisa mostrar o preço final na mesma tela da promoção**. | — |
+| **11** | ✅ | ~~**Certificado digital: terceirizar ou emitir?**~~ → 🟢 **TRAVADO 14/09 (Pedro).** **Terceirizado**, custo **R$209**. **Incluso no plano ME**; no **plano MEI é pago pelo usuário**. | Fecha o custo do ME e a cláusula do MEI. | — |
+| **12** | ✅ | ~~**InfoSimples: preço por consulta e limite**~~ → 🟢 **TRAVADO 14/09 (Pedro).** **InfoSimples confirmado** como fornecedor. | O volume de requisições será calculado mais à frente — não bloqueia agora. | — |
+| **13** | ✅ | ~~**Flow #2: certificado pro ME sem certificado**~~ → 🟢 **TRAVADO 14/09 (Pedro).** Mesma regra do **11**: incluso no ME, pago pelo usuário no MEI. | Sem custo nem fidelidade extra no ME. | — |
 | **14** | 🟡 | **Flow #2: cobrar antes do TTRT?** É cobrar por algo que não controlamos | SLA? reembolso? | idem |
-| **15** | 🟡 | **Reguladas** — decidimos waitlist, o líder **atende** (cobra e pede a carteira depois) | Divergência consciente, vale reavaliar | idem |
-| **16** | 🟡 | **DAE JUCEMG em disputa desde 09/07**: tabela diz R$268,51, a Izabela cravou R$288 | ⚠️ nunca reconciliado. Aparece na "conta da abertura" (N7) | idem |
+| **15** | ✅ | ~~**Reguladas**~~ → 🟢 **TRAVADO 14/09 (Pedro).** **Waitlist, e não atendemos no MVP.** | Divergência consciente com o líder (que atende e pede a carteira depois). Fica como está. | — |
+| **16** | ✅ | ~~**DAE JUCEMG**~~ → 🟢 **RESOLVIDO 14/09 — a fila estava velha.** O valor real é **R$281,08**, da **guia real** (print 125 da gravação da JUCEMG). | Já travado em `app/src/lib/fiscal.ts` como `DAE_JUCEMG`, usado no E7 e coberto por teste e2e. A disputa R$268,51 × R$288 morreu em 01/09. Nem 282. | — |
 
 ---
 
@@ -147,11 +147,14 @@ Nenhum destes espera pessoa. Entram no handoff.
 
 | | Quantos | Quais |
 |---|---:|---|
+| ✅ **Resolvidos** | **6** | **10** · **11** · **12** · **13** · **15** · **16** — travados pelo Pedro em 14/09 |
 | 🔴 **Bloqueiam hoje** | **3** | **4** (risco da qualificação) · **29** (informar o PIS) · **30** (P2.3, o lucro sem extrato) |
-| 🟡 **Esperam pessoa** | 40 | 1–28 · 31–43 (parte) · 66–67 |
+| 🟡 **Esperam pessoa** | 34 | o resto de 1–43 · 66–67 |
 | ⚪ **Só construir** | 26 | 44–65 · 68–69 |
 | **TOTAL** | **69** | |
-| **Pessoas a chamar** | **4** | Ademar (1–3) · Mauro (4–16) · Larissa (17–24) · advogada (25–28) |
+| **Pessoas a chamar** | **4** | Ademar (1–3) · Mauro (4–9, 14) · Larissa (17–24) · advogada (25–28) |
+
+📉 **A rodada de 14/09 tirou 6 itens da mesa do Mauro** — sobraram **7** (4–9 e 14). O bloco comercial (preço, certificado, InfoSimples, reguladas, taxa da Junta) está fechado; o que resta com ele é **fiscal e societário**.
 
 🔑 **A leitura:** quase nada está bloqueado de verdade. O que existe é **um monte de decisão esperando quatro conversas** — e três delas (Ademar, Larissa, advogada) são pautas fechadas, com perguntas prontas, que cabem numa ligação cada.
 

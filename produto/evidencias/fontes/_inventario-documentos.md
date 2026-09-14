@@ -46,7 +46,7 @@ tags: [produto, evidencia, contrato, juridico, inventario, pendencia]
 | | O quê | Modelo já capturado? |
 |:--:|---|---|
 | 🔴 | Contrato de prestação de serviço | ✅ sim |
-| 🔴 | "Plano Contratado" (3 coortes: R$79 fundador · R$99 lançamento · R$139) | ✅ sim, e **com a correção**: o nosso precisa dizer preço **E** escopo |
+| 🔴 | "Plano Contratado" (R$139/mês, com ofertas de 3 meses a R$79 campanha e R$99 lançamento) | ✅ sim, e **com a correção**: o nosso precisa dizer preço **E** escopo |
 | 🔴 | **Carta de Responsabilidade da Administração** | ✅ sim. **Obrigatória** (art. 3º, Resolução CFC nº 1.590/2020) |
 | 🔴 | Termo sobre distribuição de lucros (Lei 15.270/2025) | ✅ sim |
 | 🔴 | Resumo mastigado do contrato | 🟡 modelo visto, literal não salvo |

@@ -124,4 +124,6 @@ Resposta direta à pergunta do Pedro. Até 15/12/2025 (3 dias após o CNPJ):
 23/12 ative o certificado digital · 23/12 Cobre Seu Cliente · 25/12 rotina do CNPJ · 02/01 chamado 27126269 *"Abertura: Emissão Dispensas - finalizado"* · 02/01 feedback · 08/01 fatura · 17/01 e 19/01 DARF Unificado · 19/01 chamado 27282421 *"VOCÊ POSSUI TAXA(S) DO MUNICÍPIO A VENCER"* · 19/01 impostos na plataforma · 20/01 Taxa de Fiscalização de Estabelecimentos.
 
 ## Links
-[[constituicao]] · [[2026-09-13-email-abertura-11-12-confirmacao-de-dados]] · [[2026-09-13-certificado-16-minutos-e-o-contrato-que-nunca-chegou]] · [[2026-09-13-ecac-procuracao-e-caixa-postal]] · [[HOME]]
+➡️ **Continua em [[2026-09-13-cadeia-de-emails-22-12-a-20-01]]** — a mesma cadeia de 22/12 a 20/01, onde aparecem o R$139 como promoção de 3 meses, a TFE de R$168,48 e os cinco avisos de imposto em quatro dias.
+
+[[_dossie-contabilizei]] · [[constituicao]] · [[2026-09-13-email-abertura-11-12-confirmacao-de-dados]] · [[2026-09-13-certificado-16-minutos-e-o-contrato-que-nunca-chegou]] · [[2026-09-13-ecac-procuracao-e-caixa-postal]] · [[HOME]]

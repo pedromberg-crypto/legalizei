@@ -139,8 +139,8 @@ Pedido do Pedro em 13/09: *"eu sou uma das personas e perfil fixo de cliente. Po
 | prolabore | R$ 1.621,00/mês desde maio/2026 — exatamente o salário mínimo |
 | prolaboreAntes | R$ 3.360,00 em março e abril, que é 0,28 × 12.000 EXATO (o alvo do Fator R) |
 | prolaboreSerieOficial | 🔴 CORRIGIDO 14/09 pelas DCTFWeb (INSS segurado ÷ 11%): dez/25 R$100 · jan/26 SEM MOVIMENTO · fev R$3.260 · mar R$3.360 · abr R$3.360 · mai-ago R$1.621. A Central de Sócios só mostra a partir de MARÇO — esconde 3 competências, duas delas com valor. Eu tinha registrado '3 meses sem pró-labore nenhum'; era a tela, não o fato. |
-| receitaSerieOficial | PGDAS-D por competência: dez/25 0 · jan 0 · fev 12.000 · mar 12.000 · abr 12.000 · mai 0 · jun 0 · jul 0 · ago 7.910. ⚠️ DIVERGE do campo receitaReal acima, que diz jun 12.000 — a série oficial vale mais; conferir de onde veio. |
-| receitaReal | dez/25 0 · jan 0 · fev 12.000 · mar 12.000 · abr 12.000 · mai 0 · jun 12.000 · jul 0 · ago 7.910 · set 9.895 |
+| receitaSerieOficial | PGDAS-D por competência: dez/25 0 · jan 0 · fev 12.000 · mar 12.000 · abr 12.000 · mai 0 · jun 0 · jul 0 · ago 7.910. ✅ DIVERGÊNCIA RESOLVIDA 14/09: o antigo receitaReal dizia jun 12.000 porque a **NF nº4 foi emitida em 03/06 por R$12.000 e CANCELADA** (tela Consultar notas fiscais; situação `cancelada`). A nota existiu, a receita não. 🔴 E o Diário contábil **não tem um único lançamento dela** — nem original, nem estorno — então reconstituir histórico fiscal exige DUAS fontes: o livro e a lista de NFS-e. |
+| receitaReal | dez/25 0 · jan 0 · fev 12.000 · mar 12.000 · abr 12.000 · mai 0 · jun 0 (NF nº4 emitida e CANCELADA) · jul 0 · ago 7.910 · set 9.895 |
 | endereco | R Corinto 202, APT 601, Serra — APARTAMENTO |
 | municipio | Belo Horizonte / MG — IBGE 3106200 na chave de acesso |
 | iss | 2,01% (R$ 198,89 sobre R$ 9.895,00), não retido |

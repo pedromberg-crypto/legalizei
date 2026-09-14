@@ -139,6 +139,9 @@ Declaração, sob as penas da lei, de ausência de condenação criminal que imp
 | **Espelhar o DTE no app** — "a Receita te escreveu" | idem |
 | **Renovação do Alvará (15/12/2030) e do certificado (22/12/2026)** — ciclo longo sem vigia | [[2026-09-13-documentos-municipais-da-abertura]] §6 |
 | **Alteração cadastral tem prazo de 30 dias e multa** (Decreto Municipal 17.175/2019) | idem |
+| 🔴 **"Em breve o acesso ao e-CAC será desativado"** — a Receita anuncia migração para acesso exclusivo pelo gov.br. **Muda a infraestrutura em que a nossa procuração se apoia**, e não tinha dono até 14/09 | [[2026-09-13-ecac-procuracao-e-caixa-postal]] §5 |
+| **Aviso prévio de 30 dias** no contrato do líder — estava lido e citado, sem dono. Entra na comparação com a nossa minuta | [[2026-09-10-contabilizei-contrato-integral]] |
+| **Licenciamento sanitário ESTADUAL** — a dispensa municipal manda *"verifique se a atividade é passível de licenciamento pela Vigilância estadual"* e para aí. Caminho não percorrido | [[2026-09-13-documentos-municipais-da-abertura]] |
 
 ## Links
-[[constituicao]] · [[2026-09-14-balanco-patrimonial-serie-mensal]] · [[2026-09-14-dre-balancete-razao-diario]] · [[2026-09-14-recibos-de-prolabore-e-cadastro-do-socio]] · [[2026-09-13-contrato-social-persona-zero]] · [[fila-validacao-humana]] · [[decisoes-marca]] · [[HOME]]
+[[_dossie-contabilizei]] · [[constituicao]] · [[2026-09-14-balanco-patrimonial-serie-mensal]] · [[2026-09-14-dre-balancete-razao-diario]] · [[2026-09-14-recibos-de-prolabore-e-cadastro-do-socio]] · [[2026-09-13-contrato-social-persona-zero]] · [[fila-validacao-humana]] · [[decisoes-marca]] · [[HOME]]

@@ -1,5 +1,8 @@
 # Memory Index — Legalize
 
+- [O prototipo Next.js NAO descreve mais o Flutter](legalize-prototipo-nextjs-nao-descreve-flutter.md) — 14/09: 2 erros meus no mesmo dia por ler a fonte errada com confianca de fonte certa. Codigo do E6.1 e real (AWS manda e-mail), e os campos internos nao existem no app.
+- [Suite de teste do Flutter: 20 personas](legalize-suite-teste-flutter-personas.md) — 14/09: `execucao/testes-flutter/`, P01 rodou ate o E9.1P, parede e 404 puro. PARADO por pedido do Pedro; 3 fios abertos (destravar E9, CPFs gerados, escopo da leva).
+
 - [Metodo virou CRONOLOGICO: persona zero e o motor](legalize-metodo-cronologico-persona-zero.md) - 13/09: sai varredura por categoria, entra ordem de execucao real. Etiqueta de 3 vias (lei/decisao deles/defeito deles) + coluna do que NAO prova.
 - [Achados da conta real, 13/09](legalize-achados-conta-real-13-09.md) - procuracao de 5 anos com confissao de debitos; intimacao nao lida no DTE (a vigilia e "a Receita te escreveu"); certificado em 16 min com senha junto; o lider nunca entregou o contrato social.
 - [Retirada sem lucro vira EMPRESTIMO ao socio](legalize-retirada-sem-lucro-vira-emprestimo.md) — 14/09: o lider lanca em Creditos com Pessoas Ligadas, no ativo, sem bloquear nem avisar. Resolve sem tutelar. E nota cancelada nao deixa rastro no Diario.

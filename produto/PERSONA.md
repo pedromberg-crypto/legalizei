@@ -1,7 +1,7 @@
 ---
 tipo: verdade
 status: vivo
-data: 2026-09-13
+data: 2026-09-14
 assunto: persona-e-cliente-travado
 autoridade: fonte-verdade
 tags: [produto, persona, escopo, trava]
@@ -138,6 +138,8 @@ Pedido do Pedro em 13/09: *"eu sou uma das personas e perfil fixo de cliente. Po
 | comoSeSabe | 🔴 CORRIGIDO EM 13/09. Eu tinha escrito Anexo V lendo `anexoEscolhido: 5` como se o 5 fosse o anexo. NÃO É — é id interno do líder. Duas provas independentes: (1) a própria nota carrega 'Conforme Lei 12.741/2012, o percentual total de impostos é de aproximadamente 6,00%'; (2) a aritmética do ISS fecha exata — R$ 198,89 ÷ R$ 9.895,00 = 2,0100%, e 6% × 33,50% (repartição do ISS no Anexo III faixa 1) = 2,010%. No Anexo V daria 15,5% × 14,00% = 2,17%, que não bate. |
 | prolabore | R$ 1.621,00/mês desde maio/2026 — exatamente o salário mínimo |
 | prolaboreAntes | R$ 3.360,00 em março e abril, que é 0,28 × 12.000 EXATO (o alvo do Fator R) |
+| prolaboreSerieOficial | 🔴 CORRIGIDO 14/09 pelas DCTFWeb (INSS segurado ÷ 11%): dez/25 R$100 · jan/26 SEM MOVIMENTO · fev R$3.260 · mar R$3.360 · abr R$3.360 · mai-ago R$1.621. A Central de Sócios só mostra a partir de MARÇO — esconde 3 competências, duas delas com valor. Eu tinha registrado '3 meses sem pró-labore nenhum'; era a tela, não o fato. |
+| receitaSerieOficial | PGDAS-D por competência: dez/25 0 · jan 0 · fev 12.000 · mar 12.000 · abr 12.000 · mai 0 · jun 0 · jul 0 · ago 7.910. ⚠️ DIVERGE do campo receitaReal acima, que diz jun 12.000 — a série oficial vale mais; conferir de onde veio. |
 | receitaReal | dez/25 0 · jan 0 · fev 12.000 · mar 12.000 · abr 12.000 · mai 0 · jun 12.000 · jul 0 · ago 7.910 · set 9.895 |
 | endereco | R Corinto 202, APT 601, Serra — APARTAMENTO |
 | municipio | Belo Horizonte / MG — IBGE 3106200 na chave de acesso |

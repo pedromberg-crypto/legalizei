@@ -1,7 +1,7 @@
 ---
 tipo: derivado
 status: vivo
-data: 2026-09-13
+data: 2026-09-14
 assunto: cru-impostos
 gerado_por: execucao/processos/cru/gerar-cru.mjs
 tags: [execucao, processos, cru, impostos]

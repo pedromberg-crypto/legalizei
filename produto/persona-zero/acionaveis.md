@@ -99,6 +99,21 @@ Declaração, sob as penas da lei, de ausência de condenação criminal que imp
 
 ---
 
+## 📒 Da DRE, Razão, Balancete e Diário (14/09)
+
+| | Item | Tipo | Dono |
+|:--:|---|:--:|---|
+| C1 | 🔑 **Retirada sem lucro apurado vira empréstimo ao sócio?** O líder lança em *Créditos com Pessoas Ligadas* no ativo e deixa lá até devolver — sem bloquear, sem avisar, sem perguntar. Resolve o problema **sem tutelar**, o oposto da trava do Informe. Vale copiar | ⚖️ decidir | **Pedro + Mauro** |
+| C2 | **Lucro acumulado não se mostra sem o porquê.** A DRE real cai R$5.650,70 entre abril e julho sem nenhuma venda perdida — é o pró-labore no piso correndo. Ou não mostramos, ou mostramos junto com a explicação | ⚖️ decidir | Pedro |
+| C3 | **Cancelamento de nota deixa rastro contábil?** No líder não deixa nenhum, e o cliente que pergunta *"cadê a nota 4?"* não acha resposta no relatório que baixa. ⚠️ Reconstituir histórico fiscal exige **duas fontes**: o Diário e a lista de NFS-e | ⚖️ decidir | Pedro + dev |
+| C4 | **Relatório contábil devolve ACUMULADO do exercício**, nunca o mês isolado (medido em 3 competências). Se o nosso devolver só o mês, o número não fecha com o do contador | 🔨 adaptar | dev |
+| C5 | **Balanço e Balancete são o mesmo contrato** — dois modos de exibição, não dois relatórios. Construir duas telas duplica trabalho e cria duas fontes de divergência | 🔨 adaptar | dev |
+| C6 | **Modelar o plano de contas a partir das 16 reais**, em português de gente — não importar plano genérico. A DRE deles tem ~40 campos e a maioria vive zerada (exportação, royalties, mercadorias, SCP) | 🔨 adaptar | dev |
+| C7 | **Lembrete de vencimento com consequência nomeada** — e agora com número: R$229,85 em 3 competências seguidas, as duas guias atrasadas todas as vezes | 🔨 adaptar | dev |
+| C8 | 🕓 **A nota diz "Anexo: 5" e declara 6,00% na mesma linha.** Provável anexo-de-origem × efetivo pós-Fator R, **não confirmado**. Se for isso, nossa tela resolve com uma palavra | ❓ perguntar | **Mauro** |
+
+---
+
 ## 🔴 O que segue aberto do estudo (fora deste bloco)
 
 | Item | Onde |
@@ -111,4 +126,4 @@ Declaração, sob as penas da lei, de ausência de condenação criminal que imp
 | **Alteração cadastral tem prazo de 30 dias e multa** (Decreto Municipal 17.175/2019) | idem |
 
 ## Links
-[[constituicao]] · [[2026-09-14-balanco-patrimonial-serie-mensal]] · [[2026-09-13-contrato-social-persona-zero]] · [[fila-validacao-humana]] · [[decisoes-marca]] · [[HOME]]
+[[constituicao]] · [[2026-09-14-balanco-patrimonial-serie-mensal]] · [[2026-09-14-dre-balancete-razao-diario]] · [[2026-09-13-contrato-social-persona-zero]] · [[fila-validacao-humana]] · [[decisoes-marca]] · [[HOME]]

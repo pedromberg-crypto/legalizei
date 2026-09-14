@@ -2,6 +2,7 @@
 
 - [Metodo virou CRONOLOGICO: persona zero e o motor](legalize-metodo-cronologico-persona-zero.md) - 13/09: sai varredura por categoria, entra ordem de execucao real. Etiqueta de 3 vias (lei/decisao deles/defeito deles) + coluna do que NAO prova.
 - [Achados da conta real, 13/09](legalize-achados-conta-real-13-09.md) - procuracao de 5 anos com confissao de debitos; intimacao nao lida no DTE (a vigilia e "a Receita te escreveu"); certificado em 16 min com senha junto; o lider nunca entregou o contrato social.
+- [Retirada sem lucro vira EMPRESTIMO ao socio](legalize-retirada-sem-lucro-vira-emprestimo.md) — 14/09: o lider lanca em Creditos com Pessoas Ligadas, no ativo, sem bloquear nem avisar. Resolve sem tutelar. E nota cancelada nao deixa rastro no Diario.
 - [A API da a arquitetura, nunca a conta](legalize-api-nao-entrega-a-equacao.md) — 14/09: tela de Relatorios do lider e leitor de resultado, nao motor. Equacao sai do recibo + lei + Mauro.
 - [Trava de PERSONA: o 2o filtro](legalize-trava-persona-produto.md) — 13/09: pega o que e legal no nosso regime e mesmo assim nao existe no produto. Proibido e POR CATEGORIA. INFORMAR, nunca TUTELAR.
 - [Motor fiscal: arredonda por TRIBUTO](legalize-motor-fiscal-arredonda-por-tributo.md) — 13/09: DAS = soma de 6 parcelas arredondadas (resolve o 5,99987%); Fator R e CAIXA; empresa nova anualiza a FOLHA junto.

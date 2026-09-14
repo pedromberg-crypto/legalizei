@@ -36,7 +36,36 @@ A **Central de Sócios** mostra o histórico começando em **março/2026**. A DC
 
 🔴 **A lição vale mais que o dado:** eu tinha lido uma **tela de histórico** e tratado como a série completa. A série real está na **declaração transmitida ao órgão**. É a terceira vez no estudo que o recorte da ferramenta virou a conclusão — depois da caixa de e-mail errada e do `has:attachment` cego.
 
-⚠️ **Duas perguntas abertas:** por que **R$100,00** em dezembro (não é piso, não é proporcional óbvio de 20 dias) e por que **R$3.260** em fevereiro, R$100 abaixo dos R$3.360 de março. 🕓 Pergunta pro Mauro.
+### ✅ E as duas "perguntas abertas" se responderam sozinhas — o motor está desvendado
+
+Provocação do Pedro (14/09): *"com toda certeza isso entra no cálculo do pró-labore, que foi quando emiti minha primeira NF de 12 mil. Você já até achou e cruzou essa informação, basta ligar."* Ligando:
+
+| Mês | Receita acum. | Pró-labore acum. | **Alvo = 28% da receita acum.** | |
+|---|---:|---:|---:|:--:|
+| dez/25 | 0 | 100 | 0,00 | — |
+| jan/26 | 0 | 100 | 0,00 | — |
+| **fev/26** | **12.000** | **3.360** | **3.360,00** | ✅ **exato** |
+| **mar/26** | **24.000** | **6.720** | **6.720,00** | ✅ **exato** |
+| **abr/26** | **36.000** | **10.080** | **10.080,00** | ✅ **exato** |
+| mai/26 | 36.000 | 11.701 | 10.080,00 | 🔒 piso |
+| jun/26 | 36.000 | 13.322 | 10.080,00 | 🔒 piso |
+| jul/26 | 36.000 | 14.943 | 10.080,00 | 🔒 piso |
+| ago/26 | 43.910 | 16.564 | 12.294,80 | 🔒 piso |
+
+🔑 **A REGRA DO MOTOR, em quatro linhas:**
+
+1. **O alvo não é do mês — é do ACUMULADO.** `alvo = 28% × receita acumulada no ano`.
+2. **Paga a DIFERENÇA**, não o alvo: `pró-labore do mês = alvo acumulado − pró-labore já pago`.
+3. **Piso do salário mínimo** quando a diferença seria menor (ou negativa). É o que trava mai-ago em R$1.621.
+4. **Nunca devolve.** Uma vez acima do alvo, fica no piso e deixa a folga acumular.
+
+✅ **É isso que explica os dois números:** os **R$100 de dezembro** entraram no acumulado quando ainda não havia receita; quando a **primeira NF de R$12.000** apareceu em fevereiro, o motor pagou **3.360 − 100 = R$3.260** para fechar o acumulado exatamente em 28%.
+
+✅ **E a prova independente:** ago/2026 dá Fator R de **16.564 ÷ 43.910 = 37,72%** — exatamente o campo `percentualFatorR: 37.72` que o teardown da API leu em 09/09, por um caminho totalmente diferente. Duas fontes independentes, mesmo número.
+
+🔴 **Isto muda o desenho do nosso motor.** Eu tinha registrado em 13/09 que *"a regra dele não é manter 28%, é pagar o menor valor que ainda segura o anexo barato"*. Estava **quase** certo e **conceitualmente errado**: o motor não mira o mês, mira o **saldo do ano**. Um motor que calcule `28% × receita do mês` erra em **todo mês com receita irregular** — que é a persona zero inteira.
+
+⚠️ **O que sobra de pergunta:** por que **R$100** em dezembro, e não zero? A regra dos 28% não pede nada quando a receita é zero. Hipótese: valor mínimo para abrir o evento no eSocial e iniciar o vínculo. 🕓 Pergunta pro Mauro — mas agora é detalhe, não mistério.
 
 ---
 

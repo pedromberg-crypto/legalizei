@@ -15,7 +15,28 @@ tags: [motor, fiscal, auditoria, cobertura, anexos, fator-r]
 
 ## Veredito em uma linha
 
-🟢 **O motor basta para 6 das 8 funcionalidades de Impostos e para 4 das 7 de Pró-labore.** O que falta nas outras **não é cálculo** — é API, persistência, documento ou calendário. E há **um débito nosso**: existem dois motores no repo, e eles não se falam.
+🟢 **Não sobrou buraco de cálculo dentro do escopo.** O motor cobre **7 das 8** funcionalidades de Impostos e **5 das 7** de Pró-labore; o que falta nas outras é **API, persistência ou documento**, nunca conta. E o estado recorrente existe e está provado.
+
+🔴 **Mas "fechado" aqui quer dizer CALCULA CERTO, não ESTÁ NO PRODUTO.** Nenhum cliente chama esse motor ainda, e o débito dos dois motores (§6) segue aberto.
+
+## 📋 O que exatamente está fechado — atualizado em 14/09, 2ª rodada
+
+| | Estado | Prova |
+|---|---|---|
+| **Motor fiscal** (`motor-fiscal/`) | 🟢 fechado como cálculo | **41 conferências** contra recibo do PGDAS-D, nota fiscal real e texto legal |
+| **Estado recorrente** (`estado-cnpj/`) | 🟢 fechado como modelo | **9 conferências** — as 3 telas fecham no mesmo número |
+| **Ligação com o produto** | 🔴 **não existe** | nenhuma tela chama nenhum dos dois |
+
+### O que a 2ª rodada acrescentou
+
+| Peça | Antes | Agora |
+|---|---|---|
+| **Vencimento** | ⛔ "é calendário, fora do motor" — eu estava errado | 🟢 `vencimentoDe()`, deslocamento **por tributo** + feriados nacionais 2026-27 |
+| **Guia vencida** | ⛔ sem fonte | 🟢 `guiaVencida()` — multa 0,33%/dia travando em 20% no 61º dia, juros Selic +1% |
+| **IRRF** | 🟡 tabela de tela de concorrente | 🟢 texto legal, com desconto simplificado e o redutor da Lei 15.270/2025 |
+| **CPP no Fator R** | 🔴 **eu tinha errado** | 🟢 **não entra** nos Anexos III e V (art. 26 §2º I "a") |
+| **RBT12 = 0** | 💥 lançava erro | 🟢 cai na 1ª faixa, efetiva = nominal |
+| **Fator R sem receita** | 💥 caía no Anexo V e **dobrava o imposto** | 🟢 razão infinita → Anexo III |
 
 ---
 
@@ -68,7 +89,7 @@ Não é bug: é o limite do único caso real que temos. Entra na lista do que a 
 | **Regime de CAIXA** — declarado ≠ pago | ✅ `fatorRDeCompetencias()` |
 | Alerta de competência em risco de glosa | ✅ |
 | Anualização da folha em empresa < 13 meses | ✅ art. 26 §4º |
-| CPP dentro do DAS no numerador | ✅ SC COSIT 17/2021 |
+| CPP dentro do DAS no numerador | 🔴 **NÃO entra** nos Anexos III e V (art. 26 §2º I "a") — corrigido em 14/09 |
 | Recálculo mês a mês (janela móvel) | ✅ |
 
 🔴 **O regime de caixa muda o anexo, e o teste prova:** a persona zero com tudo pago dá **37,7% → Anexo III**. Se as 4 últimas competências tivessem sido declaradas e não pagas, cai pra **23,0% → Anexo V** — de 6% para 15,5%. O motor avisa **antes** da Receita avisar.
@@ -99,16 +120,16 @@ Empresa aberta em **março** e empresa aberta em **dezembro** percorrem o mesmo 
 
 ## 5 · Basta para o app, sem folha?
 
-### §2 Impostos — 6 de 8
+### §2 Impostos — 7 de 8
 
 | # | Funcionalidade | Motor basta? |
 |---|---|---|
-| 2.1 | DAS do mês: valor e composição | 🟢 sim · ⚠️ **vencimento não** (dia 20, prorroga em dia não útil — é calendário, não cálculo) |
+| 2.1 | DAS do mês: valor e composição | 🟢 **completo** — valor, composição E vencimento com feriados |
 | 2.2 | Baixar guia e código de barras | ⛔ não é motor — Serpro/Integra Contador |
 | 2.3 | Histórico de guias pagas | ⛔ persistência |
 | 2.4 | Saber que foi pago sem perguntar | ⛔ consulta de arrecadação |
 | 2.5 | Alíquotas: anexo, ISS e Fator R abertos | 🟢 **100% do motor** |
-| 2.6 | Recalcular e reemitir guia vencida | 🟡 recalcula ✅, mas **falta juros, multa e Selic** |
+| 2.6 | Recalcular e reemitir guia vencida | 🟢 `guiaVencida()` · ⏳ falta só **plugar a fonte** da Selic |
 | 2.7 | Simulador do mês seguinte | 🟢 é só rodar com receita hipotética |
 | 2.8 | Débito automático | ⛔ gateway |
 
@@ -116,7 +137,7 @@ Empresa aberta em **março** e empresa aberta em **dezembro** percorrem o mesmo 
 
 O motor não emite nota. Ele **dá o ISS da nota** (provado no G2, R$198,89) e **consome a receita** pro RBT12 e pro Fator R. Suficiente para o que lhe cabe.
 
-### §4 Pró-labore — 4 de 7
+### §4 Pró-labore — 5 de 7
 
 | # | Funcionalidade | Motor basta? |
 |---|---|---|
@@ -124,7 +145,7 @@ O motor não emite nota. Ele **dá o ISS da nota** (provado no G2, R$198,89) e *
 | 4.2 | Fator R com alerta antes de virar a faixa | 🟢 sim |
 | 4.3 | Sem pró-labore em mês sem faturamento | 🟢 sim |
 | 4.4 | Recibo e informe de rendimentos | ⛔ documento |
-| 4.5 | Guia do INSS do pró-labore | 🟡 tem a alíquota e o teto; **não gera guia** |
+| 4.5 | Guia do INSS do pró-labore | 🟢 `darfDoProLabore()` dá INSS + IRRF · ⛔ **emitir** a guia é API |
 | 4.6 | Duplo vínculo CLT | 🟡 existe **no outro motor** (ver §6) |
 | 4.7 | Alterar pró-labore de mês processado | ⛔ retificação, exige contador |
 
@@ -170,14 +191,21 @@ Três funções vivem **só** no `fiscal.ts` e são exatamente as que faltam nas
 
 ---
 
-## O que fecha o motor de vez
+## O que AINDA falta — depois da 2ª rodada
 
-1. 🔴 **Resolver os dois motores** (§6) — é débito ativo, não melhoria.
-2. 🟡 **Ler o `anexo_fator_r_grupo`** e só rodar Fator R nos 15 CNAEs dinâmicos.
-3. 🟡 **Juros, multa e Selic** da guia vencida (funcionalidade 2.6).
-4. 🟡 **Calendário de vencimento** — dia 20, **prorroga** em dia não útil (ao contrário do DARF, que antecipa).
-5. ⛔ **Anexo V e faixas 2-6 continuam sem prova real.** Só sai com uma segunda empresa.
-6. ⏳ **L4** (Res. CGSN 190/2026) e **L5** (LC 214/2025, CBS/IBS) seguem abertas.
+Os itens 2, 3 e 4 da lista original **fecharam**. Sobrou isto:
+
+1. 🔴 **Resolver os dois motores** (§6) — segue sendo o débito ativo. `proLaboreOtimo`, `naBorda` e `custoProLabore` só existem no `fiscal.ts`.
+2. 🔴 **Plugar em um cliente.** O modelo é agnóstico de propósito, mas enquanto ninguém o chama, as três telas continuam com mocks contraditórios.
+3. ⛔ **Anexo V e faixas 2-6 sem prova real.** A tabela está implementada e conferida contra a lei; falta uma **segunda empresa** que exercite.
+4. ⏳ **4 lacunas**, e só uma incomoda:
+
+| | Lacuna | Peso |
+|---|---|---|
+| **L10** | 🔴 O pró-labore **não é obrigatório por lei** — é 🏢 decisão nossa, não ⚖️ obrigação | **A copy não pode dizer "a lei exige".** Sustenta a decisão 36 e merece o olho da Larissa |
+| **L7b** | Feriado **municipal** de BH desloca guia **federal**? | pergunta pro Ademar |
+| **L9b** | De onde buscar a Selic (a fórmula está fechada) | é fonte, não regra |
+| **L5** | CBS/IBS no Simples (LC 214/2025) | horizonte 2027 |
 
 ## Links
 [[PERSONA]] · [[PENDENCIAS]] · [[2026-09-14-lacunas-motor-fiscal-lidas]] · [[anexo-iii-simples]] · [[anexo-v-simples]] · [[fiscal-simples-bh-2026]] · [[aliquota-e-enquadramento]] · [[equacao-viva-camada-2-vars-cnpj]] · [[FUNCIONALIDADES]]

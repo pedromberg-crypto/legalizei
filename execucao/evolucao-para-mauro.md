@@ -20,36 +20,36 @@ tags: [reporte, evolucao, sociedade]
 
 | | |
 |---|---:|
-| **Entregas reportadas** | **244** |
-| Entradas no log | 46 |
-| **Dias trabalhados** | **44** |
+| **Entregas reportadas** | **283** |
+| Entradas no log | 60 |
+| **Dias trabalhados** | **58** |
 | Período | 07/07/2026 → 15/09/2026 |
 | Dias corridos no período | 71 |
-| Média de entregas por dia trabalhado | 5,5 |
+| Média de entregas por dia trabalhado | 4,9 |
 
 ### Placar por status
 
 | Status | Itens | % |
 |---|---:|---:|
-| 🟢 pronto / entregue | **198** | 81,1% |
-| 🟡 em curso / parcial | **20** | 8,2% |
-| 🔴 trava ou precisa de você | **13** | 5,3% |
-| 🕓 aguarda pessoa | **11** | 4,5% |
-| ⏳ aguarda autorização | **2** | 0,8% |
+| 🟢 pronto / entregue | **235** | 83,0% |
+| 🟡 em curso / parcial | **22** | 7,8% |
+| 🔴 trava ou precisa de você | **13** | 4,6% |
+| 🕓 aguarda pessoa | **11** | 3,9% |
+| ⏳ aguarda autorização | **2** | 0,7% |
 
 ### Ritmo, mês a mês
 
 | Mês | Reportados | Com commit | Sem reporte |
 |---|---:|---:|---:|
-| julho/2026 | 23 | 20 | 🔴 **1** |
-| agosto/2026 | 9 | 20 | 🔴 **11** |
-| setembro/2026 | 12 | 13 | 🔴 **2** |
+| julho/2026 | 24 | 20 | — |
+| agosto/2026 | 20 | 20 | — |
+| setembro/2026 | 14 | 13 | — |
 
 ### ⚠️ O que o sócio não viu
 
-**14** dia(s) com trabalho commitado e **sem entrada** neste log:
+**0** dia(s) com trabalho commitado e **sem entrada** neste log:
 
-`20/07/2026` · `07/08/2026` · `10/08/2026` · `11/08/2026` · `14/08/2026` · `17/08/2026` · `19/08/2026` · `26/08/2026` · `27/08/2026` · `28/08/2026` · `29/08/2026` · `30/08/2026` · `01/09/2026` · `14/09/2026`
+nenhum
 
 > 🔑 O **git** é a fonte independente do que foi trabalhado. Dia com commit e sem entrada aqui é entrega que não chegou ao sócio — e o placar prefere confessar a omissão a repeti-la com cara de número.
 >
@@ -360,6 +360,18 @@ Preciso de você: o plano era testar abrindo o MEU CNPJ, mas ele já existe. Tem
 | 7 | **Pro dev** | **Validar o nome na Junta é a mesma coisa que validar a viabilidade da empresa?** A resposta muda o que dá pra liberar antes do pagamento | 🕓 |
 
 **Próximo:** a cauda do flow (revisão do dossiê, termo de início, painel de acompanhamento, assinatura no GOV.BR e o dia seguinte à empresa aberta).
+
+## Semana 20/07/2026 — o app de abrir empresa ficou de pé, ponta a ponta
+
+> ↩️ **Entrada reconstituída em 15/09/2026** a partir dos commits do dia. O trabalho aconteceu na data; o reporte é que ficou para trás.
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | **As 26 telas do caminho completo** | O caminho inteiro de abrir empresa virou app de verdade: da primeira pergunta até o pagamento, mais as telas de espera e de saída para quem a gente não atende. Antes eram desenhos soltos; agora é uma coisa só que a pessoa percorre. | 🟢 |
+| 2 | **Tela de espera e tela de saída** | Duas situações que ninguém desenha e que acontecem toda hora: o cliente que precisa esperar um órgão, e o cliente que a gente não pode atender. Os dois saem pela porta da frente, com explicação, em vez de travar numa tela de erro. | 🟢 |
+| 3 | **Login** | Entrada na conta, para o cliente voltar de onde parou. | 🟢 |
+
+**Próximo:** nada seu aqui — foi construção.
 
 ## Semana 21/07/2026 — mapa vivo do app + como o líder trata sociedade
 | # | Frente | O que evoluiu | Status |
@@ -696,6 +708,38 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 - Criei um caminho novo pra quem é Lucro Presumido: antes não tinha pra onde ir, agora vai direto falar com um especialista
 ```
 
+## Semana 07/08/2026 — limpei uma tela morta e fechei 10 buracos que achei pelo caminho
+
+> ↩️ **Entrada reconstituída em 15/09/2026** a partir dos commits do dia. O trabalho aconteceu na data; o reporte é que ficou para trás.
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | **Tirei uma tela que não servia mais** | Sobrou do desenho antigo e ninguém tinha percebido. O número dela foi reaproveitado para a tela do contador. | 🟢 |
+| 2 | **10 buracos de tela fechados** | Pontos do caminho onde o cliente ficaria sem saber o que fazer. Achados varrendo o app inteiro, não esperando alguém reclamar. | 🟢 |
+
+**Próximo:** nada seu aqui.
+
+## Semana 10/08/2026 — seis versões de vídeo para investidor, e o roteiro do pitch
+
+> ↩️ **Entrada reconstituída em 15/09/2026** a partir dos commits do dia. O trabalho aconteceu na data; o reporte é que ficou para trás.
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | **6 versões de teaser (40–50s)** | Seis caminhos diferentes para apresentar a empresa em menos de um minuto, cada um com um argumento de abertura. Feitos com a linguagem da nossa marca, não com fórmula de agência. | 🟢 |
+| 2 | **Roteiro do pitch em vídeo para acelerador** | A versão longa, para quando a conversa for com quem investe. | 🟢 |
+
+**Próximo:** quando quiser, escolhemos juntos qual teaser vai pra frente.
+
+## Semana 11/08/2026 — refiz o material do gestor de tráfego como uma cadeia de decisões
+
+> ↩️ **Entrada reconstituída em 15/09/2026** a partir dos commits do dia. O trabalho aconteceu na data; o reporte é que ficou para trás.
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | **PDF de leitura para o gestor de tráfego** | Estava um apanhado de informações. Virou uma sequência de decisões: cada página responde uma pergunta e leva à próxima, para ele conseguir opinar sem precisar de reunião. | 🟢 |
+
+**Próximo:** nada seu aqui.
+
 ## Semana 13/08/2026 — vou levar a estratégia de marketing inteira pra uma segunda opinião
 
 | # | Frente | O que evoluiu | Status |
@@ -723,6 +767,39 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 - Todas usam os seus 22 anos de contabilidade como lastro e explicam por que a gente começa por BH (a capital que abre empresa mais rápido do país)
 - Falta escolher qual das 3 e gravar a narração
 ```
+
+## Semana 14/08/2026 — o projeto ganhou o nome definitivo no código
+
+> ↩️ **Entrada reconstituída em 15/09/2026** a partir dos commits do dia. O trabalho aconteceu na data; o reporte é que ficou para trás.
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | **Renomeação para Legalizai Story Book** | O nome já estava decidido; neste dia ele entrou no código, nos arquivos e na documentação inteira. | 🟢 |
+| 2 | **PDF de marca versionado** | O material da marca passou a ter versão, para nunca mais haver duas cópias diferentes circulando. | 🟢 |
+
+**Próximo:** o rebrand em nível de marca (INPI, domínio) continua decisão nossa, não foi tocado aqui.
+
+## Semana 17/08/2026 — duas decisões de escopo que enxugam o começo
+
+> ↩️ **Entrada reconstituída em 15/09/2026** a partir dos commits do dia. O trabalho aconteceu na data; o reporte é que ficou para trás.
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | 🔴 **Comércio fica INTEIRO fora da primeira versão** | Antes a regra era cortar só o comércio pesado. Decidimos cortar todo comércio: a primeira versão atende só prestação de serviço. Menos casos, menos risco de errar, e o motor de imposto fica muito mais simples. | 🟢 |
+| 2 | **Contador com CRC só a partir do primeiro plano do Simples** | Define em que momento a responsabilidade técnica entra, e portanto quando o custo dela começa. | 🟢 |
+
+**Próximo:** as duas decisões valem confirmação sua quando conversarmos sobre escopo.
+
+## Semana 19/08/2026 — os números de aquisição depois da reunião com o Puntel, e o Léo ganhou corpo
+
+> ↩️ **Entrada reconstituída em 15/09/2026** a partir dos commits do dia. O trabalho aconteceu na data; o reporte é que ficou para trás.
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | **Custo de aquisição e margem revistos** | Depois da conversa com o Puntel, refizemos quanto podemos pagar para conquistar um cliente e o que sobra de margem. É o número que decide se marketing pago fecha ou não. | 🟡 |
+| 2 | **O personagem Léo ficou robusto** | Duas rodadas de correção: exemplos do que ele fala e do que não fala, os pilares dele, como ele se comporta e de onde ele veio. Existe para que qualquer pessoa escreva em nome da marca sem inventar um tom novo. | 🟢 |
+
+**Próximo:** o número de aquisição depende do seu honorário por cliente para fechar.
 
 ## Semana 20-21/08/2026 — a primeira campanha de anúncio ficou pronta, e fechamos o preço de lançamento por telefone
 
@@ -764,6 +841,67 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 - Arquivei o que já não serve mais (protótipo antigo, diário da imersão) pra não confundir mais ninguém
 ```
 
+## Semana 26/08/2026 — nasceu o mapa interativo do app, e a reunião da Rua Satélite virou decisão
+
+> ↩️ **Entrada reconstituída em 15/09/2026** a partir dos commits do dia. O trabalho aconteceu na data; o reporte é que ficou para trás.
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | **Mapa interativo de todas as telas** | Uma tela só onde dá para ver o caminho inteiro do cliente e clicar em qualquer ponto para abrir a tela de verdade. É como eu te mostro o produto sem precisar simular tudo do começo. | 🟢 |
+| 2 | **Reunião Rua Satélite: taxa da Junta, certificado e endereço** | Três pontos operacionais que estavam no ar viraram decisão registrada. | 🟢 |
+
+**Próximo:** nada seu aqui.
+
+## Semana 27/08/2026 — o dia maior do projeto até aqui: a tabela dos 1.332 CNAEs e as obrigações do MEI
+
+> ↩️ **Entrada reconstituída em 15/09/2026** a partir dos commits do dia. O trabalho aconteceu na data; o reporte é que ficou para trás.
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | 🔑 **A tabela oficial de todos os 1.332 CNAEs** | Reorganizamos a base inteira de atividades econômicas separando o que é fonte oficial do que era herdado de concorrente. Para cada atividade agora sabemos: se aceita MEI, o risco da prefeitura, o anexo do Simples com Fator R, e a alíquota de ISS em BH. | 🟢 |
+| 2 | **De 90 para 87 atividades que atendemos com certeza** | Investiguei cinco casos duvidosos de registro em conselho e três saíram. É melhor atender 87 com certeza do que 90 com dúvida. | 🟢 |
+| 3 | **As categorias que o cliente vê viraram 15** | A lista de 'qual é a sua área' foi refeita a partir das atividades que realmente atendemos, em vez de copiada do concorrente. | 🟢 |
+| 4 | **Obrigações do MEI depois da abertura, mapeadas** | O que o MEI precisa fazer todo mês e todo ano, com as fontes. E a cobertura de API para cada uma. | 🟢 |
+| 5 | 🔴 **Achado: o inventário do portal estava desatualizado** | Descobrimos que a lista do que cada tela do portal entrega tinha parado no tempo. Ficou registrado para consertar. | 🟡 |
+
+**Próximo:** a coluna de anexo/Fator R dos CNAEs precisa de ratificação fiscal antes de virar produto.
+
+## Semana 28/08/2026 — redesenhei a tela de plano e arrumei o comportamento do boleto
+
+> ↩️ **Entrada reconstituída em 15/09/2026** a partir dos commits do dia. O trabalho aconteceu na data; o reporte é que ficou para trás.
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | **Tela de escolha do plano redesenhada** | Passou por uma versão premium, e depois por ajustes finos seus em cima do que você viu. | 🟢 |
+| 2 | 🔑 **O boleto pendente parou de mentir** | Antes a tela dizia 'plano pago' assim que a pessoa escolhia boleto. Agora fica girando até o boleto compensar de verdade, que é o que acontece na vida real. | 🟢 |
+| 3 | **As 11 telas de saída pararam de pedir dado** | Quem a gente não atende não precisa deixar nome, e-mail e telefone. Tiramos das onze. | 🟢 |
+| 4 | **Exploração de 9 referências visuais** | Nove direções de visual testadas; duas foram promovidas para produção. | 🟢 |
+
+**Próximo:** nada seu aqui — a maior parte foi ajuste que você mesmo pediu vendo as telas.
+
+## Semana 29/08/2026 — o app ficou claro, com os destaques escuros
+
+> ↩️ **Entrada reconstituída em 15/09/2026** a partir dos commits do dia. O trabalho aconteceu na data; o reporte é que ficou para trás.
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | **Fundo branco no app inteiro, com blocos escuros de destaque** | Mudança visual de base: o app ficou claro e arejado, e o que precisa chamar atenção virou bloco escuro com brilho coral. Mais os cartões que mostram o progresso da abertura. | 🟢 |
+
+**Próximo:** nada seu aqui.
+
+## Semana 30/08/2026 — tirei uma etapa do caminho e revelei os estados escondidos
+
+> ↩️ **Entrada reconstituída em 15/09/2026** a partir dos commits do dia. O trabalho aconteceu na data; o reporte é que ficou para trás.
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | 🔑 **Uma etapa a menos para o cliente** | A tela de contrato saiu do caminho. Uma etapa a menos entre o interesse e o pagamento. | 🟢 |
+| 2 | **Quarta saída: 'voltar de onde parei'** | Quem abandona no meio agora tem caminho de volta para o ponto exato onde parou. | 🟢 |
+| 3 | **Estados escondidos revelados no mapa** | Três situações que existiam no código e não apareciam em lugar nenhum passaram a ser visíveis, junto com o status depois do pagamento. | 🟢 |
+| 4 | **MEI e ME separados na tela de escolha** | Além de testes no celular de verdade. | 🟢 |
+
+**Próximo:** nada seu aqui.
+
 ## Semana 31/08/2026 — gravamos uma abertura de verdade na Junta e o app tinha erro que teria travado cliente
 
 > Esta é a semana mais importante do produto até aqui em termos de "o que a gente achava × o que é". Sentamos com a Izabela e **abrimos uma empresa de verdade na JUCEMG**, gravando a tela campo a campo, da consulta de viabilidade até a hora de assinar. Depois comparei tudo com o que o app fazia.
@@ -793,6 +931,19 @@ Segue pendente: preço do plano/avulsos e o modelo do parceiro do certificado
 - Tirei 1 tela e 1 pergunta do caminho: tipo de empresa e capital social agora a gente preenche sozinho
 - 3 coisas pra confirmar com a Izabela: se assinatura GOV.BR substitui firma reconhecida, se pode usar o endereço do escritório no campo pessoal do contador, e quando exatamente fazer a procuração do e-CAC
 ```
+
+## Semana 01/09/2026 — a virada editorial do marketing, e o passo dos sócios ficou claro
+
+> ↩️ **Entrada reconstituída em 15/09/2026** a partir dos commits do dia. O trabalho aconteceu na data; o reporte é que ficou para trás.
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | 🔑 **Guinada editorial: menos imposto, mais desburocratização** | A comunicação mudou de eixo. Sai 'economize imposto', entra a facilidade do app, a desburocratização e as dicas para quem está começando. Pedido seu, e refizemos todo o material de marca em cima disso. | 🟢 |
+| 2 | **'Quem administra a empresa' virou um campo só** | A discussão societária inteira coube numa pergunta. Com dois ou mais sócios ela vira uma lista de nomes com marcação, porque dá para ter sócio que administra e sócio que só é sócio. | 🟢 |
+| 3 | **O Léo ganhou cenário e presença nas telas** | O personagem passou a aparecer nas telas de entrada com cenário próprio, e o aparelho em 3D entrou no código. | 🟢 |
+| 4 | **Pente-fino de texto em duas telas** | Uma delas saiu de ~105 para ~70 palavras, sem perder informação. | 🟢 |
+
+**Próximo:** a guinada editorial vale seu aval formal quando falarmos de marketing.
 
 ## Semana 02-03/09/2026 — reconstruí o passo dos sócios, que era o mais confuso do app
 
@@ -1116,6 +1267,20 @@ Preciso de voce em dois pontos:
 1) *Retirada de lucro.* Eles deduzem do extrato bancario e nunca falam do assunto com o cliente. Nos nao vamos ter conta nem integracao bancaria. Como se declara formalmente uma retirada de lucro sem extrato? E qual o limite isento de verdade num ME de servico?
 2) *Pro-labore desproporcional.* Qual regua voce usa na pratica pra dizer que o valor esta baixo demais e vira risco de distribuicao disfarcada?
 ```
+
+## Semana 14/09/2026 — o motor do imposto fechou, e ele bate com a Receita ao centavo
+
+> ↩️ **Entrada reconstituída em 15/09/2026** a partir dos commits do dia. O trabalho aconteceu na data; o reporte é que ficou para trás.
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | 🔑 **O motor de cálculo ficou pronto e confere com a guia real** | Ele apura o imposto da competência, monta a guia e calcula o INSS e o IR do sócio. Conferimos contra os recibos reais da Receita: bate ao centavo, inclusive na diferença de um centavo que só existe porque o imposto é a soma de seis parcelas arredondadas, não o arredondamento do total. | 🟢 |
+| 2 | 🔴 **Duas correções que mudavam número na tela** | Uma segunda rodada de pesquisa em fonte oficial desfez duas coisas que estavam erradas: o que entra na conta do Fator R, e o cálculo do imposto de renda do pró-labore. As duas mudavam o valor que o cliente veria. | 🟢 |
+| 3 | **O calendário entrou, e ele desloca por tributo** | Cada guia tem regra própria quando o vencimento cai em fim de semana ou feriado: uma adia, a outra antecipa. Feriados nacionais de 2026 e 2027 no sistema. | 🟢 |
+| 4 | 🔑 **Nasceu o estado do CNPJ: uma fonte, três telas, mesmo número** | Antes cada tela tinha o próprio faturamento de exemplo, e elas se contradiziam. Agora todas leem do mesmo lugar. E o extrato completo achou dois erros que teste de um mês nunca pegaria — um deles dobrava o imposto de fevereiro. | 🟢 |
+| 5 | 🔴 **O pró-labore NÃO é obrigatório por lei** | A pesquisa dizia que era, e a busca direta na norma desmentiu. Continua sendo boa decisão de produto forçar o pró-labore desde o primeiro mês, mas é decisão nossa, não exigência legal — e a comunicação não pode dizer que a lei manda. | 🟢 |
+
+**Próximo:** duas perguntas suas viraram resposta neste dia (regra do primeiro ano e prova do pagamento). As novas estão no bloco de 15/09.
 
 ## Semana 15/09/2026 — o app vai ajustar o pró-labore sozinho, e preciso desfazer uma coisa que te falei
 

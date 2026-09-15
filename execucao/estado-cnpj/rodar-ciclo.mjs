@@ -59,8 +59,8 @@ function conferirCompetencia({ vida, retrato, dinamico }) {
     retrato.piloto?.atua ? `sugere ${retrato.piloto.sugerido}` : retrato.piloto?.motivo ?? "—"
   );
 
-  // M4 · transmitir eSocial/DCTFWeb — 🔴 sem API nossa, em TODA competência
-  diz("M4", "semCanal", "sem API");
+  // M4 · transmitir eSocial/DCTFWeb — 🟢 o canal existe (destravado 15/09)
+  diz("M4", "ok", "eSocial WS + Integra Contador");
 
   // M5 · DARF do sócio
   diz(
@@ -159,7 +159,7 @@ console.log(`\n${competencias} competências conferidas em ${alvo.length} vidas.
 const total = placar.ok + placar.na + placar.falha + placar.semCanal;
 console.log(`   ✅ respondidas ............ ${placar.ok}`);
 console.log(`   ⬜ não se aplicam ......... ${placar.na}`);
-console.log(`   🔴 SEM CANAL (M4) ......... ${placar.semCanal}  — eSocial/DCTFWeb, em TODA competência`);
+console.log(`   🔴 sem canal .............. ${placar.semCanal}`);
 console.log(`   ❌ falhas ................. ${placar.falha}`);
 console.log(`   ─────────────────────────────────`);
 console.log(`   total de verificações ..... ${total}\n`);

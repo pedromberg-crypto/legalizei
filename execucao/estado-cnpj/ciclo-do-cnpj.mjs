@@ -39,6 +39,49 @@ export const DONO = {
 };
 
 /**
+ * 🔴 CÁLCULO E CANAL SÃO COISAS DIFERENTES — e eu tinha juntado as duas.
+ *
+ * A 1ª versão deste arquivo marcava o M1 como *"automático: sim"* porque o
+ * motor apura o PGDAS-D. Mas o nome da obrigação é *"apurar **e transmitir**"*,
+ * e transmitir não é conta: é canal. Ao mesmo tempo eu marcava o M4 como
+ * não resolvido **pelo canal**. Duas obrigações com o mesmo tipo de
+ * dependência, dois vereditos diferentes — inconsistência minha, achada em
+ * 15/09 quando o Pedro perguntou o que era a DEFIS.
+ *
+ * Agora toda obrigação declara as **duas** pernas. Quem responde pelo cálculo
+ * é o motor; quem responde pelo canal é integração, e é trabalho do time de
+ * desenvolvimento.
+ */
+export const CANAL = {
+  ESOCIAL: {
+    id: "esocial-ws",
+    nome: "Web Service oficial do eSocial",
+    como: "SOAP/XML assinado digitalmente, transmitido em LOTES",
+    custo: "gratuito",
+    doc: "https://www.gov.br/esocial/pt-br/documentacao-tecnica/manuais",
+    estado: "🟢 existe e é nosso trabalho",
+    // 🔴 Travado pelo Pedro em 15/09: *"a parte da complexidade será para os
+    // nossos desenvolvedores e eles tiram isso de letra"*. O que falta é
+    // implementação, não descoberta — e por isso não conta como buraco.
+  },
+  INTEGRA_CONTADOR: {
+    id: "integra-contador",
+    nome: "API Integra Contador (SERPRO)",
+    como: "REST, por requisição paga; plataforma do próprio governo",
+    custo: "pago por requisição",
+    estado: "🟢 existe e é nosso trabalho",
+    // Travado pelo Pedro em 15/09: *"acabei de identificar que é uma
+    // plataforma do governo que vende as requisições pelas APIs deles, e aí
+    // então está tudo certo"*.
+  },
+  A_CONFERIR: {
+    id: "a-conferir",
+    nome: "canal ainda não confirmado",
+    estado: "🟡 provável, não verificado",
+  },
+};
+
+/**
  * 🔑 A FOLGA — o que o Pedro chamou de *"tempo de folga para calcular da
  * forma correta"*.
  *
@@ -80,6 +123,7 @@ export const MENSAIS = [
       "receita com ISS retido, se houver",
     ],
     motor: "rbt12De() · anexoDoCnae() · fatorRDeCompetencias() · apurarDAS()",
+    canal: CANAL.INTEGRA_CONTADOR,
     automatico: "sim",
     seNaoFizer:
       "Multa mínima de R$200 por competência não transmitida (IN RFB 2.005/2021 art. 14 §3º I).",
@@ -94,6 +138,7 @@ export const MENSAIS = [
     dono: DONO.MISTO,
     precisaDe: ["o resultado do M1", "calendário com feriados nacionais"],
     motor: "apurarDAS() · vencimentoDe({tributo:'das'})",
+    canal: CANAL.INTEGRA_CONTADOR,
     automatico: "sim (a emissão) · o pagamento é do cliente",
     seNaoFizer: "Multa de 0,33%/dia até 20% + juros Selic + 1% no mês do pagamento.",
     valeEmMesZerado: false, // sem receita, sem guia
@@ -109,6 +154,7 @@ export const MENSAIS = [
       "grupo do CNAE (só os 15 dinâmicos precisam de conta)",
     ],
     motor: "pilotar() — e devolve `atua:false` nos 65 CNAEs III-fixo",
+    canal: null, // decisão interna: não sai da casa
     automatico: "sim, e o cliente pode sobrepor com alerta (avaliarProLaboreEscolhido)",
     seNaoFizer:
       "Nada imediato — mas a folha errada derruba o Anexo III 12 meses à frente, e o Fator R é retrovisor.",
@@ -122,7 +168,9 @@ export const MENSAIS = [
     dono: DONO.CASA,
     precisaDe: ["o valor do M3", "quantos sócios recebem", "CPF de cada sócio"],
     motor: "— (é envio, não cálculo; fora do motor)",
-    automatico: "🔴 NÃO RESOLVIDO — não há API nossa para isso hoje",
+    canal: CANAL.ESOCIAL, // eSocial; a DCTFWeb sai pelo Integra Contador
+    canalSecundario: CANAL.INTEGRA_CONTADOR,
+    automatico: "sim — canal existe, falta implementar (15/09, Pedro)",
     seNaoFizer: "Multa mínima de R$200 (IN RFB 2.005/2021 art. 14 §3º I).",
     valeEmMesZerado: true,
   },
@@ -136,6 +184,7 @@ export const MENSAIS = [
       "CLT de cada sócio por fora, se houver",
     ],
     motor: "darfDaFolha({socios}) — nunca darfDoProLabore(soma)",
+    canal: CANAL.INTEGRA_CONTADOR,
     automatico: "sim (a emissão) · o pagamento é do cliente",
     seNaoFizer: "Mesma multa e juros do DAS, e o não pagamento derruba o Fator R (caixa).",
     valeEmMesZerado: false,
@@ -147,6 +196,7 @@ export const MENSAIS = [
     dono: DONO.CASA,
     precisaDe: ["a janela de 12 meses de receita e folha paga", "o RBT12 corrente"],
     motor: "fatorRDeCompetencias() · projetarComPiloto() · aliquotaEfetiva()",
+    canal: null, // vigia interna
     automatico: "sim",
     seNaoFizer:
       "O cliente descobre a virada de anexo na guia, com 12 meses de atraso para corrigir.",
@@ -162,6 +212,7 @@ export const MENSAIS = [
     dono: DONO.CASA,
     precisaDe: ["a baixa do pagamento", "a Selic acumulada do período"],
     motor: "guiaVencida() — o atraso é derivado da data da baixa",
+    canal: CANAL.INTEGRA_CONTADOR, // consulta de arrecadação
     automatico: "parcial — a Selic é dado externo (Ato Declaratório mensal da RFB)",
     seNaoFizer: "A dívida cresce todo dia e o cliente não sabe.",
     valeEmMesZerado: false,
@@ -182,7 +233,8 @@ export const ANUAIS = [
     dono: DONO.CASA,
     precisaDe: ["as 12 competências fechadas", "lucro distribuído no ano", "nº de empregados (zero, no nosso caso)"],
     motor: "— (é declaração, não cálculo)",
-    automatico: "🔴 NÃO RESOLVIDO — sem API nossa",
+    canal: CANAL.A_CONFERIR, // provavelmente Integra Contador, que cobre Simples Nacional
+    automatico: "parcial — o canal é provável e não foi verificado",
     seNaoFizer: "Impede a transmissão do PGDAS-D das competências seguintes.",
     nota: "⚠️ Extinta a partir de 2027, absorvida pelo PGDAS-D (ver VENCIMENTOS).",
   },
@@ -193,6 +245,7 @@ export const ANUAIS = [
     dono: DONO.CASA,
     precisaDe: ["pró-labore pago no ano, por sócio", "lucro distribuído, por sócio", "IRRF retido"],
     motor: "darfDaFolha() acumulado no ano",
+    canal: null, // documento que a casa gera pro sócio
     automatico: "parcial — o lucro é DECLARADO pelo cliente, não inferido",
     seNaoFizer: "O sócio não consegue declarar o IRPF dele.",
   },
@@ -203,6 +256,7 @@ export const ANUAIS = [
     dono: DONO.CASA,
     precisaDe: ["a série inteira de receita"],
     motor: "rbt12De() — a regra muda sozinha no 13º mês de atividade",
+    canal: null,
     automatico: "sim",
     seNaoFizer: "RBT12 errado = faixa errada = alíquota errada em todo o ano.",
   },

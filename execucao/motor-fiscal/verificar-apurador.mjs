@@ -44,6 +44,15 @@ const CASOS = [
       "🔴 É O CASO QUE FUNDA O MOTOR. 7.910 × 6% = 474,60, e a Receita cobra 474,59. O centavo some no arredondamento das partes, não do produto.",
   },
   {
+    id: "G1b",
+    nome: "DAS de fev, mar e abr/2026 — o CONTROLE do experimento",
+    fonte: "Recibos do PGDAS-D das 3 competências · transmissões 01/03, 01/04 e 01/05 de 2026",
+    entrada: { receitaMes: 12000, rbt12: 54000, anexo: "III" },
+    esperado: { total: 72000 }, // R$ 720,00 — e o produto direto TAMBÉM dá 720,00
+    porque:
+      "🔬 É O CONTROLE, e é ele que transforma o achado em experimento. Aqui `12.000 × 6% = 720,00` e a guia TAMBÉM é 720,00 — as duas contas coincidem. Se o motor só soubesse 'tirar um centavo', erraria aqui. Em valor redondo não há resto a perder; em valor quebrado (o G1) o arredondamento por tributo aparece. Mesma regra, dois comportamentos, os dois certos.",
+  },
+  {
     id: "G2",
     nome: "ISS da nota 6 (set/2026) — confirmação independente",
     fonte: "NFS-e nº 6 emitida em 12/09/2026, valor do ISS impresso na própria nota",
@@ -213,9 +222,10 @@ for (const caso of CASOS) {
     console.log(`   ❌ a soma não fecha: ${brl(comRet.total)} + ${brl(comRet.issRetido)} ≠ ${brl(semRet.total)}`);
   }
 
-  console.log(`   ⚠️  a pesquisa diz DAS de ${brl(31561)} neste caso; o motor diz ${brl(comRet.total)}.`);
-  console.log("       Ela fez 474,60 × 66,50%; o motor soma os 5 federais já arredondados. É o");
-  console.log("       MESMO desvio do 474,59 — mas aqui NÃO existe guia real pra confirmar. 🟡");
+  console.log(`   ℹ️  a pesquisa diz ${brl(31561)}; o motor diz ${brl(comRet.total)}. O motor está certo:`);
+  console.log("       ela fez 474,60 × 66,50%, que é o método JÁ REFUTADO pelo recibo do G1.");
+  console.log("       A segregação não muda a regra de arredondamento, e a LC 123 art. 21 §4º é");
+  console.log("       literal em dizer que ela atinge só 'a base de cálculo do ISS devido'.");
 
   // A legitimidade da retenção, que é o que quase ninguém checa.
   const fora = retencaoLegitima({ municipioTomador: "Contagem", naturezaTomador: "empresa", atividade: "consultoria" });

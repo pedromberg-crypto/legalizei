@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: 349af8f2-bd19-4385-8de7-9e1f53328c23
-  modified: 2026-09-15T01:08:44.961Z
+  modified: 2026-09-15T01:13:25.084Z
 ---
 
 `execucao/motor-fiscal/` — **apurador**, coisa diferente do `app/src/lib/fiscal.ts`, que e **estimador de abertura**. Estimador diz quanto alguem provavelmente vai pagar antes de abrir; apurador diz quanto quem ja opera deve NESTE mes. Nao se substituem.
@@ -26,7 +26,9 @@ metadata:
 
 **A pesquisa de fonte primaria ERROU o DAS e o motor acertou.** Confianca alta, citacao literal, e mesmo assim calculou 474,60. Porque **a lei nao fala de arredondamento; so o recibo fala**. Regua do teste dourado: expectativa vem de **documento emitido**, nunca de calculo derivado da norma. Reforca [[legalize-uso-real-corrige-o-mapa]].
 
-⚠️ Consequencia: o caso COM retencao (motor diz R$315,60, pesquisa diz R$315,61) **nao tem guia real que confirme**. Fica 🟡 ate aparecer uma.
+🔬 **E a regra tem CONTROLE** (correcao do Pedro, 14/09 — eu tinha marcado o caso com retencao como 🟡 incerto e estava mal calibrado): em **fev, mar e abr/2026** a receita foi R$12.000 redondos, `12.000 × 6% = 720,00` e a guia **tambem** e R$720,00. So em valor quebrado o arredondamento aparece. **Mesma regra, dois comportamentos, os dois certos** — se o motor apenas "tirasse um centavo", erraria o controle. Entao o caso COM retencao (motor R$315,60 × pesquisa R$315,61) **nao e inferencia incerta**: e regra provada aplicada a entrada nova, e o art. 21 §4º e literal ao dizer que a segregacao atinge so *"a base de calculo do ISS devido"*.
+
+🔑 **Licao pra mim:** eu tratei "nao temos recibo DESTE caso" como se fosse "nao sabemos a regra". Sao coisas diferentes. Regra provada com controle + texto legal literal nao vira 🟡 so porque a combinacao especifica nao foi observada.
 
 ## Lacunas abertas
 

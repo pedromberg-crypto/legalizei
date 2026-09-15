@@ -29,7 +29,11 @@ tags: [execucao, motor-fiscal, duvida, mauro, larissa, contador]
 
 **O que aconteceu.** O nosso sistema hoje assume que, se a empresa tem 3 sócios e paga R$6.000 de pró-labore no mês, cada um recebeu R$2.000. Assumimos divisão igual porque é o que o nosso aplicativo coleta hoje — ele pergunta o valor total, não o valor de cada um. Mas isso virou problema quando descobrimos um erro grave no nosso cálculo (ver o D-03 abaixo): o imposto do sócio depende de quanto **cada pessoa** recebeu, não do total. Se na prática é comum um sócio receber mais que o outro, o nosso aplicativo precisa perguntar valor por valor, e isso muda a tela.
 
-**A pergunta:** na prática de escritório, com que frequência os sócios dividem o pró-labore de forma **desigual**? Isso exige alguma formalidade (alteração contratual, ata, registro)? E existe algum risco fiscal em dividir desigual?
+🔑 **E a divisão igual não é neutra — ela muda o imposto.** Numa empresa com 2 sócios pagando R$14.000 no total, dividir R$7.000 + R$7.000 dá um Imposto de Renda; dividir R$11.000 + R$3.000 dá outro, maior, porque a tabela é progressiva e o sócio de R$11.000 sobe de faixa. Ou seja: a premissa que nós assumimos por conveniência de tela **tem consequência em dinheiro**.
+
+⚠️ **E não há de onde deduzir o rateio.** Procuramos na nossa base: o aplicativo coleta o **percentual de participação** de cada sócio e **quem administra**. Mas percentual de participação governa a **distribuição de lucro**, não o pró-labore — pró-labore é remuneração por **trabalho**, e trabalho não é proporcional a quota. Então usar o percentual das quotas para ratear o pró-labore seria justamente o erro clássico de confundir as duas coisas. Não temos como derivar: ou o app pergunta, ou assume.
+
+**A pergunta:** na prática de escritório, com que frequência os sócios dividem o pró-labore de forma **desigual**? Isso exige alguma formalidade (alteração contratual, ata, registro em folha)? E existe risco fiscal em dividir desigual, ou o risco está justamente em dividir igual quando o trabalho é desigual?
 
 ---
 

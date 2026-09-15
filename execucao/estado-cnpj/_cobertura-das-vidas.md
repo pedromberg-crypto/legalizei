@@ -30,6 +30,31 @@ As faixas **3, 4, 5 e 6** da tabela só existem para quem **sai** para EPP — q
 
 ---
 
+## 🔒 O que está TRAVADO fora, por decisão
+
+**Colaboradores = ZERO em todas as 16 vidas.** Decisão do Pedro em 15/09: *"quero que todas as personas rodem liso sem terem colaboradores; depois iremos acrescentar folha em algumas delas, mas quando desenharmos melhor a funcionalidade. Prefiro validar o fluxo sem essa variável nesse momento."*
+
+🔑 O campo `colaboradores` existe na identidade **travado em 0**, e o `verificar-vidas.mjs` derruba a rodada se alguém puser um. Assim "nenhuma persona tem funcionário" deixa de ser ausência silenciosa e vira **declaração** — o item **B1** abaixo continua descrito para quando destravar, mas saiu da fila.
+
+---
+
+## ✅ Fechados em 15/09, depois de rever
+
+### A1 · ⏰ Guia paga em atraso — **FEITO**
+`guiaVencida()` agora roda pelo estado: a **P09** tem 3 competências seguidas pagas com 14, 21 e 14 dias de atraso, espelhando o padrão da conta real. O atraso é **derivado** (dias entre o vencimento e a baixa), nunca guardado. Custo apurado: **R$393,32** em 3 meses.
+🐛 **E o motor pegou um erro meu na hora:** eu marquei os pagamentos para o início do mês seguinte achando que o DAS vencia no mês da competência. Ele vence no dia **20 do mês seguinte**, então meus pagamentos caíam **antes** do vencimento e o motor devolveu `emDia` em vez de inventar atraso. O olho não teria pego.
+
+### A2 · 🟢 ISS de tomador de fora — **JÁ ESTAVA RESOLVIDO, e eu reabri**
+O Pedro apontou: *"se não me engano a gente já travou com fonte confiável sobre esse ISS e ele volta a aparecer."* Está travado, sim, e ele lembrou certo. Para as nossas atividades o ISS é devido no **local do estabelecimento prestador** (BH), porque elas não estão nas 25 exceções do art. 3º da LC 116/2003 — então **quem paga é o prestador, dentro do DAS**. Tomador de outro município **não tem competência para reter**, e `retencaoLegitima()` já rejeita esse caso desde 14/09.
+🔴 **O que eu deveria ter escrito no lugar de "falta vida":** a única fragilidade real aqui é que `SUBSTITUTOS_BH` (a lista de quem retém **dentro** de BH) é **paráfrase**, não texto literal da Lei 8.725/2003 — marcado 🟡 no próprio código. Isso não é buraco de elenco, é a regra de **leitura integral** não cumprida. Virou pendência de leitura, não de persona.
+
+### A4 · 🟢 Anexo V com retenção — **ERA TESTE, NÃO DÚVIDA**
+Eu tinha listado como buraco de pesquisa. Ao ler o código: `apurarDAS` é **parametrizado por anexo** e usa a repartição do ISS de cada um; não existe caminho próprio por anexo, logo não havia o que pesquisar. Testado agora (G-P7), e com um achado que vale para a tela:
+
+> A **fatia** do ISS no Anexo V é quase metade da do III (17% × 32% na faixa 2), mas o DAS inteiro do V é muito maior — então em **reais** o ISS do V é **maior** (R$535,50 × R$417,28 numa receita de R$20 mil). Proporcionalmente a retenção alivia menos; em dinheiro, alivia mais. Dizer só uma das duas engana.
+
+---
+
 ## ⬜ O que falta — A · o motor tem código e nenhuma vida faz rodar
 
 > Esta é a lista que importa. Cada linha é um pedaço do motor que nunca foi exercitado por uma história completa.

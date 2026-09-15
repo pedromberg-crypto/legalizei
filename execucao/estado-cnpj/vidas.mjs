@@ -77,6 +77,21 @@ const ok = (receita, proLabore, extra = {}) => ({
   ...extra,
 });
 
+/**
+ * ⏰ Mês em que a guia do DAS foi paga com ATRASO.
+ *
+ * `selicAcumulada` é a Selic somada entre o vencimento e o pagamento, e entra
+ * como parâmetro porque é dado externo (Ato Declaratório mensal da RFB) — o
+ * motor não a inventa. O 1% do mês do pagamento o `guiaVencida()` acrescenta
+ * sozinho, e só quando o pagamento saiu do mês do vencimento.
+ */
+const atrasado = (receita, proLabore, dataDoPagamento, selicAcumulada = 0) => ({
+  receita,
+  proLaboreDeclarado: proLabore,
+  proLaborePago: proLabore,
+  dasPago: { data: dataDoPagamento, selicAcumulada },
+});
+
 /** Mês em que declarou o pró-labore e NÃO pagou — o que a Receita glosa. */
 const naoPagou = (receita, proLabore) => ({
   receita,
@@ -309,9 +324,20 @@ export const VIDAS = [
       ok(35000, MIN * 2), // dez: pico de confraternização
       ok(8000, MIN * 2),
       ok(11000, MIN * 2),
-      ok(19000, MIN * 2),
-      ok(24000, MIN * 2),
-      ok(27000, MIN * 2),
+      // 🔴 TRÊS COMPETÊNCIAS SEGUIDAS PAGAS EM ATRASO — entrou em 15/09.
+      // Não é invenção: é o padrão medido na conta real, que levou **R$229,85
+      // de multa em 3 meses seguidos**, com atrasos de ~13, ~21 e ~14 dias,
+      // todos "Confirmado via Plataforma". Até aqui as 16 vidas pagavam tudo
+      // em dia, e o `guiaVencida()` (multa + juros + Selic) nunca rodava — o
+      // elenco só exercitava o cenário que não dói.
+      //
+      // ⚠️ E as datas aqui já nasceram erradas uma vez: eu paguei "dia 3 do mês
+      // seguinte" achando que o DAS vencia no mês da competência. Ele vence no
+      // dia 20 do mês SEGUINTE, então o pagamento caía ANTES do vencimento e o
+      // motor devolvia `emDia`. O motor pegou; o olho não teria.
+      atrasado(19000, MIN * 2, "2026-05-04", 0.0109), // venceu 20/04 · 14 dias
+      atrasado(24000, MIN * 2, "2026-06-10", 0.0218), // venceu 20/05 · 21 dias
+      atrasado(27000, MIN * 2, "2026-07-06", 0.0327), // venceu 22/06 · 14 dias
       ok(22000, MIN * 2),
       ok(26000, MIN * 2),
       ok(24000, MIN * 2),

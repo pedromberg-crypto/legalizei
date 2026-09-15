@@ -235,6 +235,55 @@ console.log("\n── 5 · CLT por fora: o teto do INSS é da PESSOA\n");
   );
 }
 
+/* ── 5.1 · 🔒 A TRAVA DOS COLABORADORES ──────────────────────────────────── */
+console.log("\n── 5.1 · Colaboradores: travado em ZERO por decisão do Pedro (15/09)\n");
+{
+  const comFolha = VIDAS.filter((v) => (v.empresa.colaboradores ?? 0) > 0);
+  invariante(
+    "🔒 NENHUMA vida tem colaborador — o fluxo se valida sem essa variável",
+    comFolha.length === 0,
+    comFolha.length
+      ? `${comFolha.map((v) => v.id).join(", ")} têm colaborador, e a funcionalidade ainda não foi desenhada`
+      : "quando destravar, o Fator R passa a somar salário CLT, 13º, férias+1/3 e FGTS — e o piloto, que só mexe no pró-labore, deixa de estar certo (PP5)"
+  );
+}
+
+/* ── 5.2 · ⏰ GUIA PAGA EM ATRASO ─────────────────────────────────────────── */
+console.log("\n── 5.2 · P09: três competências seguidas pagas em atraso\n");
+{
+  const p09 = retratos.find((r) => r.vida.id === "P09");
+  const atrasadas = p09.linhas.filter((l) => l.atraso && !l.atraso.emDia);
+
+  for (const l of atrasadas) {
+    console.log(
+      `   ${l.mes}  ${String(l.atraso.diasDeAtraso).padStart(2)} dias  ` +
+        `multa ${brlDeCentavos(l.atraso.multa).padStart(10)} (${(l.atraso.pctMulta * 100).toFixed(2)}%)  ` +
+        `juros ${brlDeCentavos(l.atraso.juros).padStart(9)}`
+    );
+  }
+
+  invariante(
+    "⏰ as 3 competências atrasadas são reconhecidas como atraso",
+    atrasadas.length === 3,
+    `${atrasadas.length} de 3 — o elenco só pagava em dia até 15/09`
+  );
+  invariante(
+    "a multa é 0,33% ao dia e cresce com o atraso (Lei 9.430/96 art. 61)",
+    atrasadas.every((l) => Math.abs(l.atraso.pctMulta - 0.0033 * l.atraso.diasDeAtraso) < 1e-9),
+    "e nenhuma bateu no teto de 20% — o teto é a partir de ~61 dias"
+  );
+  invariante(
+    "🔑 o atraso NUNCA muda o principal, só acrescenta",
+    atrasadas.every((l) => l.atraso.total === l.das.total + l.atraso.multa + l.atraso.juros),
+    "multa e juros são camada sobre a guia, não recálculo dela"
+  );
+  invariante(
+    "e as competências pagas em dia não geram multa nenhuma",
+    p09.linhas.filter((l) => l.atraso?.emDia).every((l) => !l.atraso.multa),
+    "o motor pegou um erro MEU aqui: eu paguei antes do vencimento achando que o DAS vence no mês da competência, e ele devolveu `emDia` em vez de inventar atraso"
+  );
+}
+
 /* ── 6 · ISS retido ──────────────────────────────────────────────────────── */
 console.log("\n── 6 · P04: agência de publicidade, e o ISS retido do art. 24\n");
 {

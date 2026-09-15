@@ -21,7 +21,7 @@ import {
   avaliarProLaboreEscolhido,
 } from "./piloto-pro-labore.mjs";
 
-import { fatorRDeCompetencias, aliquotaEfetiva } from "./apurador.mjs";
+import { fatorRDeCompetencias, aliquotaEfetiva, apurarDAS } from "./apurador.mjs";
 import { todos } from "./_afirmar.mjs";
 import { FATOR_R, PREVIDENCIA } from "./_tabelas.mjs";
 
@@ -777,6 +777,69 @@ titulo("G-P6 · A EDIÇÃO MANUAL, E OS ALERTAS PERSONALIZADOS");
       return a && a.titulo.includes("CLT");
     })(),
     "R$5.000 já passa da folga de R$2.475,55 que sobra de um CLT de R$6.000"
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * G-P7 · ANEXO V COM ISS RETIDO — era "dúvida", e é só teste que faltava
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+titulo("G-P7 · A SEGREGAÇÃO DO ISS FUNCIONA NO ANEXO V?");
+
+{
+  // 🔑 Eu tinha listado isto como buraco de pesquisa no `_cobertura-das-vidas`.
+  // Ao olhar o código: `apurarDAS` é PARAMETRIZADO por anexo e usa a repartição
+  // do ISS de cada um (33,50% no III faixa 1, 14,00% no V). Não existe caminho
+  // próprio por anexo — logo não era dúvida, era teste faltando. Aqui está.
+  const receita = 20000;
+  const rbt12 = 200000; // faixa 2 nos dois anexos
+
+  for (const anexo of ["III", "V"]) {
+    const cheio = apurarDAS({ receitaMes: receita, rbt12, anexo });
+    const todoRetido = apurarDAS({
+      receitaMes: receita,
+      rbt12,
+      anexo,
+      receitaComIssRetido: receita,
+    });
+
+    ok(
+      `Anexo ${anexo}: reter TODO o ISS tira exatamente a parcela do ISS do DAS`,
+      todoRetido.total < cheio.total &&
+        Math.abs(cheio.total - todoRetido.total - cheio.parcelas.iss) <= 1,
+      `DAS ${(cheio.total / 100).toFixed(2)} → ${(todoRetido.total / 100).toFixed(2)} · ` +
+        `ISS ${(cheio.parcelas.iss / 100).toFixed(2)}`
+    );
+    ok(
+      `Anexo ${anexo}: e os 5 tributos federais NÃO mudam com a retenção`,
+      ["irpj", "csll", "cofins", "pis", "cpp"].every(
+        (t) => cheio.parcelas[t] === todoRetido.parcelas[t]
+      ),
+      "o art. 21 §4º atinge só a base do ISS — é segregação, não compensação"
+    );
+  }
+
+  // 🔴 A COMPARAÇÃO ENTRE OS ANEXOS INVERTE CONFORME O QUE SE OLHA — e eu
+  // escrevi este teste errado da primeira vez, afirmando só metade.
+  //
+  // A FATIA do ISS no Anexo V é quase metade da do III (17% × 32% na faixa 2),
+  // mas o DAS inteiro do V é muito maior, então o ISS em REAIS é MAIOR no V.
+  // Proporcionalmente a retenção alivia menos; em dinheiro, alivia mais.
+  // Dizer só uma das duas coisas engana, e as duas aparecem na tela.
+  const dasIII = apurarDAS({ receitaMes: receita, rbt12, anexo: "III" });
+  const dasV = apurarDAS({ receitaMes: receita, rbt12, anexo: "V" });
+  const fatiaIII = dasIII.parcelas.iss / dasIII.total;
+  const fatiaV = dasV.parcelas.iss / dasV.total;
+
+  ok(
+    "🔑 a FATIA do ISS é menor no Anexo V — proporcionalmente a retenção alivia menos",
+    fatiaV < fatiaIII,
+    `${(fatiaIII * 100).toFixed(1)}% do DAS no III × ${(fatiaV * 100).toFixed(1)}% no V`
+  );
+  ok(
+    "🔑 mas em REAIS o ISS é MAIOR no V, porque o DAS inteiro é maior",
+    dasV.parcelas.iss > dasIII.parcelas.iss,
+    `R$ ${(dasIII.parcelas.iss / 100).toFixed(2)} × R$ ${(dasV.parcelas.iss / 100).toFixed(2)}`
   );
 }
 

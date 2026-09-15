@@ -45,6 +45,7 @@ import {
   fatorRDeCompetencias,
   darfDoProLabore,
   darfDaFolha,
+  guiaVencida,
   vencimentoDe,
   anexoDoCnae,
   custoTotalMensal,
@@ -101,6 +102,25 @@ export function identidade({
    * campo** — quando tiver, é aqui que entra.
    */
   sociosComProLabore = 1,
+  /**
+   * 🔒 COLABORADORES — TRAVADO EM ZERO por decisão do Pedro em 15/09:
+   * *"quero que todas as personas rodem liso sem terem colaboradores; depois
+   * iremos acrescentar folha de colaboradores em algumas dessas personas, mas
+   * quando desenharmos melhor a funcionalidade. Prefiro validar o fluxo sem
+   * essa variável nesse momento."*
+   *
+   * 🔑 **Por que o campo existe mesmo travado em zero:** sem ele, "nenhuma
+   * persona tem funcionário" seria uma ausência silenciosa — do tipo que o
+   * `_cobertura-das-vidas.md` chama de código sem prova. Com ele, é uma
+   * **declaração**, e o `verificar-vidas.mjs` derruba a rodada se alguém puser
+   * um colaborador sem que a funcionalidade tenha sido desenhada.
+   *
+   * ⚠️ **O que muda quando destravar:** o numerador do Fator R passa a incluir
+   * salário CLT, 13º, férias + 1/3 e FGTS (`FATOR_R_NUMERADOR`), e o piloto
+   * deixa de estar certo — ele só sabe mexer no pró-labore, e com folha de
+   * colaborador o Fator R sobe sem tocar nele. É o limite **PP5**.
+   */
+  colaboradores = 0,
 }) {
   return {
     cnpj,
@@ -111,6 +131,7 @@ export function identidade({
     municipio,
     cltDoSocio,
     sociosComProLabore,
+    colaboradores,
   };
 }
 
@@ -266,6 +287,53 @@ export function retratoDoMes({ empresa, competencias, mesAlvo }) {
 
   // ── Os vencimentos, cada um com a sua regra de deslocamento ─────────────
   const [ano, mes] = mesAlvo.split("-").map(Number);
+
+  /**
+   * ⏰ A GUIA PAGA EM ATRASO, recalculada.
+   *
+   * Ligado em 15/09 a pedido do Pedro. O `guiaVencida()` existia desde 14/09 e
+   * **nenhuma vida o fazia rodar** — todas pagavam em dia, que é justamente o
+   * cenário que não dói.
+   *
+   * 🔴 E o caso real contradiz o elenco: a conta que analisamos tem **R$229,85
+   * de multa em 3 competências seguidas**, com as duas guias atrasadas todas as
+   * vezes (~13, ~21 e ~14 dias), todas *"Confirmado via Plataforma"*. Atraso
+   * não é exceção: é o comportamento comum de quem não tem lembrete.
+   *
+   * O atraso se DERIVA — dias entre o vencimento e a data do pagamento. Nada
+   * de campo "diasDeAtraso" guardado, pela mesma regra de sempre.
+   *
+   * ⚠️ `selicAcumulada` não é calculada aqui: a Selic é parâmetro externo
+   * (Ato Declaratório mensal da RFB) e entra por quem chama. Sem ela, o juro
+   * sai só com o 1% do mês do pagamento, e o retrato diz isso em `selicUsada`.
+   */
+  function atrasoDe(tributo, principal, venc) {
+    const baixa = tributo === "das" ? atual.dasPago : null;
+    if (!baixa || !baixa.data || principal <= 0) return null;
+
+    const pago = new Date(`${baixa.data}T00:00:00Z`);
+    const dias = Math.round((pago - venc.data) / 86400000);
+    if (dias <= 0) return { emDia: true, diasDeAtraso: 0, data: baixa.data };
+
+    const g = guiaVencida({
+      principal,
+      diasDeAtraso: dias,
+      selicAcumulada: baixa.selicAcumulada ?? 0,
+      // O 1% do mês do pagamento só entra se o pagamento saiu do mês do vencimento.
+      mesmoMes:
+        pago.getUTCFullYear() === venc.data.getUTCFullYear() &&
+        pago.getUTCMonth() === venc.data.getUTCMonth(),
+    });
+
+    return {
+      emDia: false,
+      ...g,
+      data: baixa.data,
+      selicUsada: baixa.selicAcumulada ?? 0,
+      // 🔑 O que a tela mostra: quanto o atraso custou, isolado do principal.
+      custoDoAtraso: g.multa + g.juros,
+    };
+  }
   const venc = {
     das: vencimentoDe({ competencia: { ano, mes }, tributo: "das" }),
     darf: vencimentoDe({ competencia: { ano, mes }, tributo: "darf" }),
@@ -283,6 +351,11 @@ export function retratoDoMes({ empresa, competencias, mesAlvo }) {
     fatorR: fr,
     das,
     darf,
+    /**
+     * ⏰ O atraso da guia, recalculado a partir da data da baixa.
+     * `null` quando não há baixa registrada; `{emDia:true}` quando pagou em dia.
+     */
+    atraso: atrasoDe("das", das.total, venc.das),
     /** 🛩️ A decisão do piloto para ESTE mês. Derivada, nunca guardada. */
     piloto,
     /** O que foi pago × o que o piloto mandaria pagar. `null` se não atua. */

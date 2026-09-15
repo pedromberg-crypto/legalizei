@@ -18,6 +18,7 @@ import {
   pilotar,
   projetarVirada,
   LIMITES_DO_PILOTO,
+  avaliarProLaboreEscolhido,
 } from "./piloto-pro-labore.mjs";
 
 import { fatorRDeCompetencias, aliquotaEfetiva } from "./apurador.mjs";
@@ -587,6 +588,140 @@ titulo("G-P5 · FRONTEIRAS");
     LIMITES_DO_PILOTO.length >= 5 &&
       LIMITES_DO_PILOTO.every((l) => l.id && l.o_que && l.porque && l.dono),
     `${LIMITES_DO_PILOTO.length} limites`
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * G-P6 · O VOLANTE — quando a pessoa digita o valor dela
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+titulo("G-P6 · A EDIÇÃO MANUAL, E OS ALERTAS PERSONALIZADOS");
+
+{
+  // 🔑 Histórico em 28% cravado — folga zero. Com folha em 30% cheios, um mês
+  // no mínimo NÃO derruba (o mínimo legal do mês cai pra R$1.080), e isso é
+  // comportamento certo: histórico saudável absorve um mês ruim. O teste
+  // precisa do caso em que a decisão do mês PESA.
+  const historia = serie(12, 18000, 18000 * 0.28);
+  const base = {
+    empresa: DINAMICO,
+    competenciasAnteriores: historia,
+    receitaDoMes: 18000,
+    rbt12DoMes: 154285.71,
+  };
+  const cod = (r) => r.alertas.map((a) => a.codigo);
+
+  const ref = pilotar(base);
+  ok(
+    "o cenário do teste tem decisão de peso (mínimo legal acima do piso)",
+    ref.atua && ref.minimoLegal > PREVIDENCIA.SALARIO_MINIMO && ref.sugerido > ref.minimoLegal,
+    `mínimo R$ ${ref.minimoLegal.toFixed(2)} · sugerido R$ ${ref.sugerido.toFixed(2)}`
+  );
+
+  ok(
+    "🔑 histórico saudável ABSORVE um mês no mínimo, e o app não grita à toa",
+    (() => {
+      const saudavel = avaliarProLaboreEscolhido({
+        empresa: DINAMICO,
+        competenciasAnteriores: serie(12, 18000, 5400), // folha em 30%
+        receitaDoMes: 18000,
+        rbt12DoMes: 154285.71,
+        escolhido: PREVIDENCIA.SALARIO_MINIMO,
+      });
+      return !saudavel.alertas.some((a) => a.codigo === "CAI_PARA_ANEXO_V");
+    })(),
+    "alerta só quando o mês realmente derruba — senão vira ruído"
+  );
+
+  const abaixoDoPiso = avaliarProLaboreEscolhido({ ...base, escolhido: 800 });
+  ok(
+    "⛔ abaixo do salário mínimo: o app NÃO aceita",
+    abaixoDoPiso.aceito === false && cod(abaixoDoPiso).includes("PISO_LEGAL"),
+    "Lei 8.212/1991 art. 28 §3º — a única trava dura"
+  );
+
+  const noPiso = avaliarProLaboreEscolhido({ ...base, escolhido: 1621 });
+  ok(
+    "🔑 no salário mínimo: o app ACEITA, e avisa — informa, não tutela",
+    noPiso.aceito === true && cod(noPiso).includes("CAI_PARA_ANEXO_V")
+  );
+  ok(
+    "🔴 e o aviso é do CASO DELE: diz em qual competência cai e por quantos meses",
+    (() => {
+      const a = noPiso.alertas.find((x) => x.codigo === "CAI_PARA_ANEXO_V");
+      return a.caiEm >= 1 && a.mesesEmV > 0 && a.custoMensalEstimado > 0 && a.faltam > 0;
+    })(),
+    (() => {
+      const a = noPiso.alertas.find((x) => x.codigo === "CAI_PARA_ANEXO_V");
+      return `cai na ${a.caiEm}ª · ${a.mesesEmV} meses no V · faltam R$ ${a.faltam.toFixed(2)}`;
+    })()
+  );
+  ok(
+    "e o alerta de desproporcional acende junto (mínimo com faturamento alto)",
+    cod(noPiso).includes("DESPROPORCIONAL"),
+    "🟡 declarado sem régua numérica — segue com o Mauro"
+  );
+
+  const semMargem = avaliarProLaboreEscolhido({ ...base, escolhido: ref.minimoLegal + 100 });
+  ok(
+    "🟡 entre o mínimo legal e a sugestão: fica no III, mas sem folga",
+    cod(semMargem).includes("SEM_MARGEM") &&
+      !cod(semMargem).includes("CAI_PARA_ANEXO_V")
+  );
+
+  const naSugestao = avaliarProLaboreEscolhido({ ...base, escolhido: ref.sugerido });
+  ok(
+    "✅ na sugestão do piloto: nenhum alerta de RISCO",
+    naSugestao.alertas.every((a) => a.gravidade === "informacao") &&
+      naSugestao.custo.contraSugerido === 0,
+    // 🔑 Não é "zero alerta": a própria sugestão pode passar do teto do INSS
+    // (aqui R$9.360 contra teto de R$8.475,55), e avisar disso é serviço, não
+    // alarme. O que a sugestão do piloto nunca pode gerar é impeditivo, risco
+    // ou atenção — se gerar, ele está sugerindo o que ele mesmo condena.
+    `alertas: ${naSugestao.alertas.map((a) => a.codigo).join(", ") || "nenhum"}`
+  );
+
+  const acimaDoTeto = avaliarProLaboreEscolhido({ ...base, escolhido: 15000 });
+  ok(
+    "ℹ️ acima do teto do INSS: avisa que o excedente só gera IRRF",
+    cod(acimaDoTeto).includes("ACIMA_DO_TETO_INSS") &&
+      acimaDoTeto.custo.contraSugerido > 0
+  );
+
+  // 🔴 A COERÊNCIA QUE MAIS IMPORTA: para os 65 CNAEs `III-fixo`, baixar o
+  // pró-labore NÃO derruba anexo nenhum, e o app não pode dizer que derruba.
+  const fixo = avaliarProLaboreEscolhido({
+    empresa: FIXO,
+    competenciasAnteriores: historia,
+    receitaDoMes: 18000,
+    rbt12DoMes: 154285.71,
+    escolhido: 1621,
+  });
+  ok(
+    "🔴 CNAE III-fixo: editar pró-labore NÃO gera alerta de Anexo V",
+    !cod(fixo).includes("CAI_PARA_ANEXO_V") && !cod(fixo).includes("SEM_MARGEM"),
+    `alertas: ${cod(fixo).join(", ") || "nenhum de anexo"}`
+  );
+  ok(
+    "🔑 mas o de distribuição disfarçada acende igual — é risco de outro eixo",
+    cod(fixo).includes("DESPROPORCIONAL")
+  );
+
+  // Sócio com CLT: o texto do teto muda, porque a folga é outra.
+  const comClt = avaliarProLaboreEscolhido({
+    empresa: { ...DINAMICO, cltDoSocio: 6000 },
+    competenciasAnteriores: historia,
+    receitaDoMes: 18000,
+    rbt12DoMes: 154285.71,
+    escolhido: 5000,
+  });
+  ok(
+    "🔑 sócio com CLT: o alerta de teto usa a FOLGA dele, não o teto cheio",
+    (() => {
+      const a = comClt.alertas.find((x) => x.codigo === "ACIMA_DO_TETO_INSS");
+      return a && a.titulo.includes("CLT");
+    })(),
+    "R$5.000 já passa da folga de R$2.475,55 que sobra de um CLT de R$6.000"
   );
 }
 

@@ -158,6 +158,18 @@ function arredonda(v) {
 }
 
 /**
+ * Real em português, para os textos de alerta.
+ *
+ * 🔑 Mora aqui e não no `apurador.mjs` de propósito: lá o `brlDeCentavos` come
+ * CENTAVOS, e este come REAIS — que é a unidade em que o cliente digita. Foi a
+ * colisão de unidades entre os dois motores (paga em 15/09) que ensinou a não
+ * ter duas funções de mesmo nome com unidades diferentes.
+ */
+function brl(reais) {
+  return reais.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+
+/**
  * 🔑 Até quantas vezes o sustentável ainda é "ajuste", e não "salto".
  *
  * 2× é escolha, não lei — e a régua veio de dois pontos medidos, não do olho:
@@ -496,20 +508,226 @@ export function projetarVirada({
     });
   }
 
+  // 🔴 A MESMA PROJEÇÃO RESPONDE A DUAS PERGUNTAS OPOSTAS, e confundi-las
+  // produz absurdo. Descoberto em 15/09, na simulação de edição do P01: o
+  // alerta dizia *"esse valor derruba pro Anexo V"* e na linha seguinte
+  // *"o Anexo III volta na 1ª competência"* — porque eu usei `viraEm`, que
+  // pergunta "quando VOLTO ao III", numa tela que pergunta "quando CAIO".
+  //
+  //   · quem já está no V  → `viraEm` / `mesesAindaNoV`  (recuperação)
+  //   · quem está no III   → `caiEm`  / `mesesEmV`       (consequência)
+  const primeiroV = linha.findIndex((l) => l.anexo === "V");
+
   return {
     /** 1 = já na próxima competência. `null` = não vira dentro do horizonte. */
     viraEm,
     /**
-     * 🔴 O número honesto da copy: quantos meses ainda pagando 15,5% DEPOIS de
-     * o pró-labore já estar certo. Zero quando nunca caiu.
+     * 🔴 O número honesto da copy de recuperação: quantos meses ainda pagando
+     * 15,5% DEPOIS de o pró-labore já estar certo. Zero quando nunca caiu.
      */
     mesesAindaNoV: viraEm === null ? horizonte : viraEm - 1,
+    /** A partir de qual competência cai para o V. `null` = não cai. */
+    caiEm: primeiroV < 0 ? null : primeiroV + 1,
+    /** Quantas competências do horizonte ficariam no V. */
+    mesesEmV: linha.filter((l) => l.anexo === "V").length,
     linha,
   };
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
- * 5 · O QUE ESTE ARQUIVO NÃO RESOLVE — declarado, não escondido
+ * 5 · O VOLANTE — quando a pessoa decide o valor dela
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/**
+ * 🎚️ O PILOTO É LIGÁVEL E DESLIGÁVEL, e o cliente pode digitar o próprio valor.
+ *
+ * Decisão do Pedro em 15/09: *"podemos e teremos a opção da pessoa escolher o
+ * valor do pró-labore dela, como a líder também tem, mas caso essa pessoa vá
+ * por esse caminho precisamos dar todos os alertas possíveis sobre essa
+ * mudança, e esses alertas precisam ser personalizados para o caso específico
+ * do usuário de acordo com o histórico que teremos dele."*
+ *
+ * 🔑 **O alerta genérico não serve.** *"Atenção: alterar o pró-labore pode
+ * impactar seu enquadramento"* é ruído. O que esta função devolve é o caso
+ * dele: qual competência vira, quando volta, quanto custa, com os números da
+ * empresa dele.
+ *
+ * ⚠️ **INFORMA, NÃO BLOQUEIA** — a trava de persona vale aqui. A única
+ * gravidade `impeditivo` é a que a LEI impede, não a que nos desagrada.
+ *
+ * @param escolhido  o valor que a pessoa digitou, em REAIS
+ */
+export function avaliarProLaboreEscolhido({
+  empresa,
+  competenciasAnteriores = [],
+  receitaDoMes = 0,
+  rbt12DoMes = 0,
+  escolhido,
+  horizonte = 24,
+}) {
+  const referencia = pilotar({
+    empresa,
+    competenciasAnteriores,
+    receitaDoMes,
+    rbt12DoMes,
+  });
+
+  const clt = empresa.cltDoSocio ?? 0;
+  const alertas = [];
+
+  // ── 1 · O piso legal do salário de contribuição ─────────────────────────
+  // 🔴 A única trava dura aqui. Lei 8.212/91 art. 28 §3º: o salário de
+  // contribuição não pode ser inferior ao salário mínimo, nem para o
+  // contribuinte individual. É o que torna irregular o pró-labore de R$100
+  // que a conta real da persona zero exibe em dez/2025.
+  // ⚠️ O VALOR (R$1.621) veio de fonte única na pesquisa de 13/09 e está
+  // marcado para conferência antes de virar trava dura na tela.
+  if (escolhido > 0 && escolhido < PREVIDENCIA.SALARIO_MINIMO) {
+    alertas.push({
+      gravidade: "impeditivo",
+      codigo: "PISO_LEGAL",
+      titulo: "Abaixo do mínimo que a lei permite",
+      texto:
+        `O salário de contribuição não pode ser menor que o salário mínimo ` +
+        `(${brl(PREVIDENCIA.SALARIO_MINIMO)}), nem para sócio. ` +
+        `Você digitou ${brl(escolhido)}.`,
+      fonte: "Lei 8.212/1991 art. 28 §3º",
+      confianca: "🟡 valor do piso de fonte única (13/09), regra 🟢",
+    });
+  }
+
+  // ── 2 · Cai para o Anexo V? E QUANDO volta? ─────────────────────────────
+  if (referencia.atua && escolhido < referencia.minimoLegal) {
+    const proj = projetarVirada({
+      competenciasAnteriores,
+      receitaProjetada: receitaDoMes,
+      proLaborePlanejado: escolhido,
+      horizonte,
+    });
+
+    const efetivaIII = aliquotaEfetiva(rbt12DoMes, "III");
+    const efetivaV = aliquotaEfetiva(rbt12DoMes, "V");
+    const porMes =
+      efetivaIII != null && efetivaV != null
+        ? emCentavos(receitaDoMes * (efetivaV - efetivaIII))
+        : null;
+
+    alertas.push({
+      gravidade: "risco-alto",
+      codigo: "CAI_PARA_ANEXO_V",
+      titulo: "Esse valor derruba a empresa para o Anexo V",
+      texto:
+        `Para seguir no Anexo III você precisa pagar pelo menos ` +
+        `${brl(referencia.minimoLegal)} este mês. Com ${brl(escolhido)}, a ` +
+        `alíquota sai de ${(efetivaIII * 100).toFixed(2)}% para ` +
+        `${(efetivaV * 100).toFixed(2)}%` +
+        (porMes ? `, cerca de ${brl(porMes / 100)} a mais por mês` : "") +
+        `.`,
+      faltam: arredonda(referencia.minimoLegal - escolhido),
+      custoMensalEstimado: porMes,
+      // 🔴 A pergunta desta tela é "quando CAIO", não "quando volto".
+      caiEm: proj.caiEm,
+      mesesEmV: proj.mesesEmV,
+      horizonte,
+      fonte: "LC 123/2006 art. 18 §5º-J · Res. CGSN 140/2018 art. 26",
+    });
+  }
+
+  // ── 3 · Fica no III, mas come a margem de segurança ─────────────────────
+  if (
+    referencia.atua &&
+    escolhido >= referencia.minimoLegal &&
+    escolhido < referencia.sugerido
+  ) {
+    const folgaEmReais = arredonda(escolhido - referencia.minimoLegal);
+    alertas.push({
+      gravidade: "atencao",
+      codigo: "SEM_MARGEM",
+      titulo: "Fica no Anexo III, mas sem folga",
+      texto:
+        `Você segue no Anexo III, e a sobra até o limite é de apenas ` +
+        `${brl(folgaEmReais)}. Uma nota fora da curva ainda este mês ` +
+        `derruba o enquadramento, porque a receita do mês entra na conta. ` +
+        `Nossa sugestão é ${brl(referencia.sugerido)}.`,
+      folga: folgaEmReais,
+    });
+  }
+
+  // ── 4 · O teto do INSS, e a folga do CLT ────────────────────────────────
+  const folgaDoTeto = Math.max(0, PREVIDENCIA.TETO_INSS - clt);
+  if (escolhido > folgaDoTeto) {
+    alertas.push({
+      gravidade: "informacao",
+      codigo: "ACIMA_DO_TETO_INSS",
+      titulo:
+        clt > 0
+          ? "Acima da folga que sobra do seu emprego CLT"
+          : "Acima do teto do INSS",
+      texto:
+        clt > 0
+          ? `Você já contribui sobre ${brl(clt)} no CLT, então só ` +
+            `${brl(folgaDoTeto)} do pró-labore gera INSS. O que passar ` +
+            `disso não aumenta sua contribuição, só o IRRF.`
+          : `O INSS trava em ${brl(folgaDoTeto)} (teto de 2026). ` +
+            `O que passar disso não aumenta sua aposentadoria, só o IRRF.`,
+      fonte: "Portaria Interministerial MPS/MF 13/2026 art. 2º",
+    });
+  }
+
+  // ── 5 · 🟡 Desproporcional: o risco que NÃO temos régua para medir ──────
+  // Pró-labore no piso com faturamento alto é tratado pela jurisprudência
+  // como possível distribuição disfarçada de lucro. ⚠️ A régua prática está
+  // em aberto com o Mauro desde 13/09 — então o alerta EXISTE e se declara
+  // sem número, em vez de inventar um limite.
+  if (
+    escolhido <= PREVIDENCIA.SALARIO_MINIMO &&
+    receitaDoMes >= PREVIDENCIA.SALARIO_MINIMO * 10
+  ) {
+    alertas.push({
+      gravidade: "atencao",
+      codigo: "DESPROPORCIONAL",
+      titulo: "Pró-labore no mínimo com faturamento alto",
+      texto:
+        `Sua empresa faturou ${brl(receitaDoMes)} este mês e o ` +
+        `pró-labore ficaria no salário mínimo. Essa combinação é olhada pela ` +
+        `fiscalização como possível distribuição de lucro disfarçada.`,
+      confianca:
+        "🟡 sem régua numérica ratificada — pergunta aberta com o Mauro desde 13/09",
+    });
+  }
+
+  // ── 6 · O que muda no bolso, este mês ───────────────────────────────────
+  const darfEscolhido = darfDoProLabore(Math.max(0, escolhido), clt);
+  const darfSugerido = referencia.atua
+    ? darfDoProLabore(referencia.sugerido, clt)
+    : null;
+
+  return {
+    escolhido,
+    aceito: !alertas.some((a) => a.gravidade === "impeditivo"),
+    referencia: referencia.atua
+      ? {
+          minimoLegal: referencia.minimoLegal,
+          sugerido: referencia.sugerido,
+          modo: referencia.modo,
+        }
+      : { atua: false, motivo: referencia.motivo },
+    alertas,
+    custo: {
+      inss: darfEscolhido.inss,
+      irrf: darfEscolhido.irrf,
+      total: darfEscolhido.inss + darfEscolhido.irrf,
+      contraSugerido: darfSugerido
+        ? darfEscolhido.inss +
+          darfEscolhido.irrf -
+          (darfSugerido.inss + darfSugerido.irrf)
+        : null,
+    },
+  };
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * 6 · O QUE ESTE ARQUIVO NÃO RESOLVE — declarado, não escondido
  * ═══════════════════════════════════════════════════════════════════════════ */
 
 export const LIMITES_DO_PILOTO = [

@@ -88,14 +88,21 @@ export function faixaDe(rbt12, anexo) {
  * zero, então efetiva = nominal (6% no III, 15,5% no V).
  */
 export function aliquotaEfetiva(rbt12, anexo) {
-  if (rbt12 <= 0) {
-    throw new Error(
-      "RBT12 zero ou negativo. Empresa em início de atividade usa `rbt12De()`, " +
-        "que proporcionaliza pela Res. CGSN 140/2018 art. 24."
-    );
-  }
+  if (rbt12 < 0) throw new Error(`RBT12 negativo: ${rbt12}`);
+
+  // 🔴 RBT12 ZERO É CASO REAL, não erro — e é o 3º mês da nossa persona.
+  // Empresa aberta em dezembro que só fatura em fevereiro tem os dois meses
+  // anteriores zerados, então a média é zero e o RBT12 proporcional é zero.
+  // A conta `(0 × nominal − deduzir) / 0` é indefinida, mas a resposta não:
+  // RBT12 zero cai na 1ª faixa, e a 1ª faixa **não tem parcela a deduzir** —
+  // logo a efetiva É a nominal.
+  //
+  // ✅ Confirmado contra a conta real: fev/2026 teve receita de R$12.000 com
+  // RBT12 proporcional zero, e a guia do PGDAS-D saiu R$720,00 = 12.000 × 6%.
   const f = faixaDe(rbt12, anexo);
   if (!f) return null; // fora do Simples
+  if (rbt12 === 0) return f.nominal;
+
   return (rbt12 * f.nominal - f.deduzir) / rbt12;
 }
 
@@ -362,10 +369,36 @@ export function retencaoLegitima({ municipioTomador, naturezaTomador, atividade 
  * nosso escopo. No III e no V, passe zero — que é o default.
  */
 export function fatorR({ folhaPaga12, receita12, cppNoDas12 = 0 }) {
-  if (receita12 <= 0) {
-    return { fr: null, anexo: null, motivo: "receita de 12 meses é zero" };
-  }
   const numerador = folhaPaga12 + cppNoDas12;
+
+  // 🔴 RECEITA ZERA E FOLHA NÃO: a razão é infinita, logo ≥ 28%, logo ANEXO III.
+  //
+  // Não é sutileza matemática — é o caso real de fevereiro/2026 da persona
+  // zero. Ela abriu em dezembro, ficou dois meses sem faturar pagando
+  // pró-labore, e faturou R$12.000 em fevereiro. A guia do PGDAS-D saiu
+  // **R$720,00 (6%, Anexo III)**. Um motor que devolvesse "indeterminado" e
+  // caísse no Anexo V por precaução cobraria R$1.860 — **mais que o dobro**.
+  //
+  // ⚠️ Foi exatamente o que este motor fazia até 14/09, e só apareceu quando a
+  // série real inteira passou por ele. Teste de um mês não pega; extrato pega.
+  if (receita12 <= 0) {
+    if (numerador > 0) {
+      return {
+        fr: Infinity,
+        anexo: "III",
+        naBorda: false,
+        numerador,
+        receita12: 0,
+        motivo: "sem receita e com folha: a razão é infinita, e o anexo é o III",
+      };
+    }
+    return {
+      fr: null,
+      anexo: null,
+      motivo: "sem receita e sem folha — a razão não existe, e não há o que tributar",
+    };
+  }
+
   const fr = numerador / receita12;
   return {
     fr,

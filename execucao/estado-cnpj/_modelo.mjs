@@ -101,6 +101,36 @@ export function identidade({
    * o app coleta hoje. Rateio desigual existe na vida real e **ainda não tem
    * campo** — quando tiver, é aqui que entra.
    */
+  /**
+   * 🔒 TODO SÓCIO RECEBE PRÓ-LABORE — travado pelo Pedro em 15/09.
+   *
+   * *"Sobre isso se sócio é pago ou não pago, para mim entra naquela de: a
+   * gente calcula e mantém o melhor imposto e enquadramento, emitimos o
+   * pró-labore da forma correta. Para mim esse é o pagamento do sócio."*
+   *
+   * 🔑 **É doutrina de produto, e ela fecha uma pergunta que a lei deixa
+   * aberta.** A Lei 8.212/91 art. 12 V "f" obriga pró-labore a quem **presta
+   * serviço** — não a quem administra. A pesquisa de 15/09 confirmou com
+   * confiança ALTA, e concluiu que o software deveria perguntar *"quem
+   * efetivamente trabalha?"*. Só que numa ME de serviço com 1 a 4 sócios e
+   * faturamento até R$360 mil, o sócio **só investidor é raro** — e o risco é
+   * assimétrico: não pagar a quem trabalha é autuação previdenciária
+   * (confiança ALTA); pagar a quem não trabalha é simulação (confiança BAIXA,
+   * e depende de auditoria).
+   *
+   * Então o default é **todos recebem**, e a exceção é declarada. Não
+   * perguntamos "quem trabalha?" como condição para funcionar: o produto
+   * calcula e emite o pró-labore certo, e **isso é o pagamento do sócio**.
+   *
+   * ⚠️ **O que este número NÃO é:** não é "quantos sócios a empresa tem", é
+   * quantos recebem. Com 2+ sócios a exceção vira uma pergunta — uma só, e não
+   * um formulário. Com sócio único (7 das 16 vidas) ela nem existe.
+   *
+   * 🔴 **E o rateio entre eles deixou de ser detalhe:** dividir IGUAL quando o
+   * trabalho é desigual pode ser reclassificado como simulação (CARF
+   * 2201-012.005 e 2101-003.144). A premissa de rateio igual que este campo
+   * assume é conveniência de tela com consequência fiscal — item **71**.
+   */
   sociosComProLabore = 1,
   /**
    * 🔒 COLABORADORES — TRAVADO EM ZERO por decisão do Pedro em 15/09:

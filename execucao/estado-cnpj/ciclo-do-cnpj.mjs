@@ -68,7 +68,16 @@ export const CANAL = {
     id: "integra-contador",
     nome: "API Integra Contador (SERPRO)",
     como: "REST, por requisição paga; plataforma do próprio governo",
-    custo: "pago por requisição",
+    custo: "pago por requisição · 🟡 R$3,20 a R$4,96 por CNPJ/mês",
+    // ⚠️ O valor vem de software houses já integradas, NÃO do SERPRO. A
+    // tabela oficial só aparece depois de contratar na Loja. Sobre um plano de
+    // R$139 é ~3% da receita do cliente — entra no custo unitário, não é zero.
+    custoConfianca: "🟡 terceiros, não oficial",
+    modulos: ["Integra-SN", "Integra-DCTFWeb", "Integra-Sicalc", "Integra-Sitfis", "Integra-Pagamento"],
+    // 🔑 Autenticação: mTLS + certificado ICP-Brasil (A1/A3) + Consumer
+    // Key/Secret. O vínculo com o cliente sai por e-CNPJ dele OU pelo nosso
+    // com **procuração eletrônica e-CAC** ativa — que é o nosso caso.
+    autenticacao: "mTLS + ICP-Brasil + procuração e-CAC do cliente",
     estado: "🟢 existe e é nosso trabalho",
     // Travado pelo Pedro em 15/09: *"acabei de identificar que é uma
     // plataforma do governo que vende as requisições pelas APIs deles, e aí
@@ -168,9 +177,39 @@ export const MENSAIS = [
     dono: DONO.CASA,
     precisaDe: ["o valor do M3", "quantos sócios recebem", "CPF de cada sócio"],
     motor: "— (é envio, não cálculo; fora do motor)",
-    canal: CANAL.ESOCIAL, // eSocial; a DCTFWeb sai pelo Integra Contador
-    canalSecundario: CANAL.INTEGRA_CONTADOR,
+    canal: CANAL.ESOCIAL,
+    canalSecundario: CANAL.INTEGRA_CONTADOR, // módulo Integra-DCTFWeb
     automatico: "sim — canal existe, falta implementar (15/09, Pedro)",
+    /**
+     * 🔑 SÃO DOIS ENVIOS, E A ORDEM IMPORTA (pesquisa de 15/09).
+     *
+     * O eSocial e a DCTFWeb são desacoplados em protocolo (SOAP × REST) e
+     * acoplados em negócio: a DCTFWeb **se preenche sozinha** quando o
+     * fechamento (S-1299) chega pela fila do eSocial. Mas ainda é preciso
+     * **transmitir** a DCTFWeb depois, para concluir a confissão de dívida.
+     *
+     * Eventos obrigatórios de uma ME sem empregados, com sócio recebendo
+     * pró-labore (leiaute S-1.3):
+     */
+    eventosEsocial: [
+      { id: "S-1000", o_que: "Tabela do empregador", quando: "uma vez" },
+      { id: "S-1010", o_que: "Tabela de rubricas", quando: "uma vez" },
+      { id: "S-2300", o_que: "Trabalhador sem vínculo — o sócio, categoria 721/722", quando: "na entrada do sócio" },
+      { id: "S-1200", o_que: "Remuneração da competência", quando: "mensal" },
+      // 🔴 O S-1210 é o evento do PAGAMENTO, e é ele que sustenta o regime
+      // de CAIXA do Fator R. Não prova que o dinheiro saiu, mas é o registro
+      // fiscal do que declaramos como pago — mexe com o limite PP1.
+      { id: "S-1210", o_que: "Pagamento — sustenta o regime de caixa", quando: "mensal" },
+      { id: "S-1299", o_que: "Fechamento dos periódicos", quando: "mensal" },
+    ],
+    // ⚠️ NÃO existe evento ANUAL para sócio (não há 13º nem férias).
+    eventoAnual: null,
+    /**
+     * 🔑 SEM MOVIMENTO: manda S-1299 com a flag **só no primeiro mês** sem
+     * fato gerador. A obrigação de repetir todo janeiro **foi extinta**.
+     * Importa para as nossas vidas com meses zerados — quase todas têm.
+     */
+    semMovimento: "S-1299 com a flag, só no 1º mês; não se repete em janeiro",
     seNaoFizer: "Multa mínima de R$200 (IN RFB 2.005/2021 art. 14 §3º I).",
     valeEmMesZerado: true,
   },
@@ -233,10 +272,41 @@ export const ANUAIS = [
     dono: DONO.CASA,
     precisaDe: ["as 12 competências fechadas", "lucro distribuído no ano", "nº de empregados (zero, no nosso caso)"],
     motor: "— (é declaração, não cálculo)",
-    canal: CANAL.A_CONFERIR, // provavelmente Integra Contador, que cobre Simples Nacional
-    automatico: "parcial — o canal é provável e não foi verificado",
-    seNaoFizer: "Impede a transmissão do PGDAS-D das competências seguintes.",
-    nota: "⚠️ Extinta a partir de 2027, absorvida pelo PGDAS-D (ver VENCIMENTOS).",
+    canal: CANAL.INTEGRA_CONTADOR, // módulo Integra-SN (pesquisa de 15/09)
+    automatico: "sim — canal confirmado, endpoints só após contratar",
+    // 🔑 CORRIGIDO em 15/09 pela pesquisa: **não há multa** pela DEFIS em
+    // atraso. O que há é pior de administrar: trava o PGDAS-D.
+    seNaoFizer:
+      "Não há multa. Mas as apurações do PGDAS-D **a partir de março do ano " +
+      "seguinte ficam BLOQUEADAS** — Manual do PGDAS-D e DEFIS 2018 v4, literal.",
+    /**
+     * 🔴 A DEFIS MORRE EM 01/01/2027 — Resolução CGSN nº 190, de 04/08/2026.
+     *
+     * *"As informações deverão ser prestadas uma vez por ano, entre janeiro e
+     * março, dentro do próprio sistema. Com isso, a Declaração de Informações
+     * Socioeconômicas e Fiscais (Defis) deixa de ser uma obrigação separada."*
+     *
+     * ⚠️ **A janela de convivência não está definida em fonte oficial.** O
+     * ano-calendário 2026, entregue em março/2027, fica no limbo: a praxe diz
+     * formato antigo, mas não há regra transitória expressa. A pesquisa marcou
+     * isso como 🟡 e nós não vamos fingir que sabemos.
+     *
+     * 🔑 Para o código: implementar o formato atual E deixar a bifurcação
+     * pronta para anexar os campos anuais ao payload do PGDAS-D de 2027.
+     */
+    morreEm: { data: "2027-01-01", norma: "Res. CGSN 190/2026", vai_para: "PGDAS-D" },
+    campos: [
+      "ganhos de capital",
+      "total de despesas",
+      "lucro contábil apurado (se mantiver escrituração)",
+      "saldo em caixa/banco no início e no fim do período",
+      "número de empregados no início e no fim (zero, no nosso caso)",
+      "rendimentos ISENTOS pagos aos sócios",
+      "rendimentos TRIBUTÁVEIS pagos aos sócios",
+    ],
+    // 🔑 Livro Caixa BASTA — salvo se distribuir lucro acima da presunção,
+    // e aí a escrituração completa vira obrigatória. Amarra com o item 30.
+    exigeEscrituracaoCompleta: "só se distribuir lucro acima do limite de presunção",
   },
   {
     id: "A2",

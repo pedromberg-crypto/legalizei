@@ -1,103 +1,82 @@
 ---
-tipo: verdade
+tipo: derivado
 status: vivo
 data: 2026-09-15
-assunto: duvidas-para-o-especialista-contabil
-autoridade: fila-humana
-tags: [execucao, motor-fiscal, duvida, mauro, larissa, contador]
+assunto: briefing-para-a-conversa-com-o-contador
+autoridade: derivado
+tags: [execucao, motor-fiscal, briefing, mauro, larissa]
 ---
 
-# 🧑‍🏫 Dúvidas para o especialista contábil — com o contexto inteiro
+# 🧑‍🏫 Briefing da conversa com o contador
 
-> 🧭 **Como usar.** Cada item tem **um parágrafo de contexto antes da pergunta**, em português de gente, explicando o que a gente estava fazendo e o que apareceu. Pedido do Pedro em 15/09: *"não quero que você apenas registre a dúvida, quero que explique o que aconteceu para chegarmos nessa dúvida, para quando eu sentar com ele não ficar uma pergunta solta."*
+> 🔴 **ESTE DOC NÃO É FILA, E ISSO É CORREÇÃO DE UM ERRO MEU DE 15/09.**
 >
-> 🔑 **O que a gente estava fazendo, em uma frase:** construímos um motor que calcula o imposto e a guia do sócio mês a mês, e um "piloto" que ajusta o pró-labore sozinho para manter a empresa no Anexo III. Para testar, criamos **16 empresas fictícias** (as "personas") com histórias completas de faturamento, e rodamos o motor na vida inteira de cada uma. Foi rodando essas vidas que as dúvidas abaixo apareceram.
+> A fila de quem-resolve-o-quê já existe e tem dono: **[[PENDENCIAS]]** (consolidada, por pessoa) alimentada por **[[fila-validacao-humana]]**, cujo próprio texto diz ser *"o lugar único onde esses valores vivem, pra que a validação seja uma conversa só em vez de arqueologia"*. Eu criei este arquivo como um **terceiro** lugar, no mesmo dia em que o Pedro apontou que eu busco fonte-verdade em lugares diferentes e me contradigo. Era exatamente o vício, cometido de novo.
 >
-> 🏷️ **Etiqueta de cada item:** ⚖️ obrigação legal (a lei decide, só precisamos confirmar a leitura) · 🏢 decisão de negócio (a lei permite os dois, precisamos escolher) · 🐛 divergência (achamos coisas que não batem entre si).
+> 🔑 **O que ele é agora:** o **briefing** — os parágrafos de contexto que a fila não carrega, para o Pedro não sentar com uma pergunta solta. O **status e o número** de cada item vivem em `PENDENCIAS`, e é de lá que se lê o que está aberto.
+
+## 📋 O resultado da varredura de 15/09
+
+Conferi as 10 dúvidas que eu tinha escrito contra os documentos que o **[[indice-autoridade]]** aponta como donos de cada assunto. Resultado:
+
+| | |
+|---|---|
+| Já **respondidas** no vault, e eu perguntei de novo | **4** (D-07, D-08, D-09, e metade da D-01) |
+| Já **na fila**, com número, e eu dupliquei | **3** (D-04 → item 21 · D-06 → item 30 · D-10 → item 17) |
+| **Genuinamente novas** | **3** → viraram os itens **70**, **71** e **72** |
+
+🔴 **Sete de dez não deviam existir.** O material estava no repo o tempo todo; faltava eu olhar onde o índice manda olhar. É a prova que o Pedro pediu — e ela prova nos dois sentidos: o método funciona, e sem ele eu refaço trabalho e gero contradição.
 
 ---
 
-## D-01 · ⚖️ Sócio que não administra pode receber pró-labore?
+## ✅ As que já tinham resposta — e onde ela estava
 
-**O que aconteceu.** Quando desenhamos as 16 empresas de teste, definimos para cada uma quantos sócios ela tem e quem administra. Duas delas — uma agência de publicidade com 2 sócios e uma pensão com 3 — foram descritas como *"só o titular administra"*. Mas na hora de simular o dia a dia, nós fizemos a empresa pagar pró-labore para **todos** os sócios, inclusive os que não administram. Depois percebemos que a Lei 8.212/91, no artigo 12, inciso V, alínea "f", trata como segurado obrigatório o sócio que **presta serviço** à sociedade — o que sugere que quem só entrou com dinheiro e não trabalha não deveria receber pró-labore. Não mexemos no dado, porque mudar isso altera o cálculo do imposto dessas duas empresas e queríamos a sua opinião antes.
+### D-07 · Retirada de lucro sem extrato bancário
+**Estava TRAVADA em 14/09**, item **30** de `PENDENCIAS`, e eu reabri no dia seguinte. A resposta em duas partes: **mostrar, não mostramos** (sem conciliação bancária, qualquer número de "lucro disponível" seria errado — item 31); **declarar é obrigatório**, o lucro é declarado pelo cliente num campo com prazo mensal e vai para a EFD-Reinf. Retirada acima do que a contabilidade suporta cai no item **32** (empréstimo ao sócio, copiado do líder). ⏳ Sobra só o **prazo** (dia 15, como o líder, ou o nosso).
 
-**A pergunta:** o sócio que só aportou capital e não exerce gestão **pode** receber pró-labore se a empresa quiser pagar, ou isso é irregular? E se puder, esse valor entra no Fator R normalmente?
+### D-08 · A CPP no numerador do Fator R
+**Encerrada em 14/09** e registrada em `_encerrados.mjs` · **E-CPP**. Não entra nos Anexos III e V (Res. CGSN 140/2018 art. 26 §2º I "a" nomeia o Anexo IV; o silêncio é vedação). A ratificação já estava na fila como parte do item **17** (os 7 pontos fiscais da Larissa). 🔴 **O que continua valendo é a CORREÇÃO ao Mauro:** em 13/09 reportamos a ele o contrário, e isso já foi para o `evolucao-para-mauro` de 15/09.
 
----
+### D-09 · Recibo de PGDAS-D em Anexo V
+**Recalibrada em 15/09** no `_SUFICIENCIA.md` §2: deixou de ser bloqueio. A regra fecha por fonte oficial e a convenção de arredondamento é herdada do Anexo III, que tem recibo. Segue 🟡 desejável, sem fila.
 
-## D-02 · 🏢 O pró-labore pode ser dividido de forma desigual entre os sócios?
-
-**O que aconteceu.** O nosso sistema hoje assume que, se a empresa tem 3 sócios e paga R$6.000 de pró-labore no mês, cada um recebeu R$2.000. Assumimos divisão igual porque é o que o nosso aplicativo coleta hoje — ele pergunta o valor total, não o valor de cada um. Mas isso virou problema quando descobrimos um erro grave no nosso cálculo (ver o D-03 abaixo): o imposto do sócio depende de quanto **cada pessoa** recebeu, não do total. Se na prática é comum um sócio receber mais que o outro, o nosso aplicativo precisa perguntar valor por valor, e isso muda a tela.
-
-🔑 **E a divisão igual não é neutra — ela muda o imposto.** Numa empresa com 2 sócios pagando R$14.000 no total, dividir R$7.000 + R$7.000 dá um Imposto de Renda; dividir R$11.000 + R$3.000 dá outro, maior, porque a tabela é progressiva e o sócio de R$11.000 sobe de faixa. Ou seja: a premissa que nós assumimos por conveniência de tela **tem consequência em dinheiro**.
-
-⚠️ **E não há de onde deduzir o rateio.** Procuramos na nossa base: o aplicativo coleta o **percentual de participação** de cada sócio e **quem administra**. Mas percentual de participação governa a **distribuição de lucro**, não o pró-labore — pró-labore é remuneração por **trabalho**, e trabalho não é proporcional a quota. Então usar o percentual das quotas para ratear o pró-labore seria justamente o erro clássico de confundir as duas coisas. Não temos como derivar: ou o app pergunta, ou assume.
-
-**A pergunta:** na prática de escritório, com que frequência os sócios dividem o pró-labore de forma **desigual**? Isso exige alguma formalidade (alteração contratual, ata, registro em folha)? E existe risco fiscal em dividir desigual, ou o risco está justamente em dividir igual quando o trabalho é desigual?
+### D-01 · Sócio que não administra pode receber pró-labore?
+**Metade estava respondida em 13/09**, em `execucao/processos/cru/PROLABORE.md`, com norma: *"só o sócio que presta serviço à sociedade é segurado obrigatório como contribuinte individual (Lei 8.212/91 art. 12 V 'f'). O sócio que só investiu capital e não exerce gestão não precisa receber pró-labore."*
+🔑 **A metade que sobrou é mais fina, e virou o item 72:** a lei fala em **prestar serviço**, e o nosso app coleta **quem administra** (qualificação 49 × 22). Trabalhar sem administrar é possível, e é aí que a inferência do app pode errar.
 
 ---
 
-## D-03 · 🐛 Confirmação de um erro grave que encontramos, e do conserto
+## 🔁 As que já estavam na fila, com número
 
-**O que aconteceu.** Este é o mais importante da lista, e é **confirmação**, não dúvida aberta. O nosso sistema estava somando o pró-labore de todos os sócios e calculando a guia de INSS e Imposto de Renda **como se fosse uma pessoa só**. Encontramos rodando uma empresa de teste com 2 sócias. O estrago é grande e vai para os dois lados: numa empresa com 4 sócios recebendo R$3.500 cada, o sistema cobrava **R$3.617** quando o correto é **R$1.540** — porque a tabela do Imposto de Renda é progressiva **por pessoa**, e R$14.000 numa pessoa cai numa faixa alta que R$3.500 em quatro pessoas não alcança. No INSS o erro era ao contrário, para menos, porque o teto de contribuição também é **por pessoa** e nós aplicávamos um teto só para a soma. Já corrigimos: agora o sistema calcula a guia de cada sócio separadamente e soma no fim.
-
-**A pergunta:** a nossa leitura está correta? O teto do INSS (R$8.475,55 em 2026) e a tabela progressiva do IRRF se aplicam **individualmente a cada sócio**, e a guia da empresa é a soma dessas contas individuais? Existe alguma situação em que se calcula sobre o total?
-
----
-
-## D-04 · ⚖️ O piso do pró-labore é mesmo o salário mínimo?
-
-**O que aconteceu.** O nosso aplicativo vai deixar o cliente digitar o pró-labore dele à mão, e nós precisamos saber o que **bloquear** e o que apenas **avisar**. Definimos que o único bloqueio é o valor abaixo do salário mínimo, com base na Lei 8.212/91 artigo 28 §3º, que diz que o salário de contribuição não pode ser inferior ao mínimo. Só que esse valor (R$1.621) chegou até nós por uma fonte só, numa pesquisa de 13/09, e nós marcamos internamente como "conferir antes de virar trava". Como isso vira uma trava dura na tela, queremos confirmação antes.
-
-**A pergunta:** está correto travar o pró-labore no salário mínimo? E na conta real que analisamos apareceu um pró-labore de **R$100** lançado em dezembro de 2025 — isso é irregular, ou existe alguma hipótese em que um valor abaixo do mínimo é aceito?
+| Eu escrevi | Já era | Estado |
+|---|---|---|
+| **D-04** · piso do pró-labore / o R$100 da conta real | item **21** | 🔴 não-ratificado, com o Mauro |
+| **D-06** · pró-labore × lucro sob a Lei 15.270/2025 | item **30** (+ ratificação do texto legal no **17**) | ⚠️ a Lei veio por citação em tela de concorrente; quer texto legal antes de virar tela |
+| **D-10** · os 7 CNAEs `requer-revisao` | item **17**, e o `indice-autoridade` já diz que a coluna `anexo_fator_r_grupo` espera a Larissa | 🟡 com a Larissa |
 
 ---
 
-## D-05 · 🏢 Qual é a régua prática para "pró-labore desproporcional"?
+## 🆕 As três que sobraram — o briefing de verdade
 
-**O que aconteceu.** O nosso piloto calcula o menor pró-labore que mantém a empresa no Anexo III. Em empresas que faturam pouco, esse valor dá abaixo do salário mínimo, então ele paga o mínimo. Aí chegamos num cenário desconfortável: uma empresa faturando R$18.000 por mês pagando R$1.621 de pró-labore, o que é legal e é exatamente o que os concorrentes fazem, mas é a combinação que a jurisprudência olha como possível distribuição de lucro disfarçada. Nós colocamos um alerta na tela, mas **sem número**, porque não temos régua. Preferimos avisar sem inventar um limite a inventar um limite errado.
+> Estas são as que vão para a conversa. Cada uma com o parágrafo de contexto, porque pergunta solta não se responde bem.
 
-**A pergunta:** qual régua você usa na prática para dizer que um pró-labore está baixo demais em relação ao faturamento? Existe percentual de referência, ou é caso a caso? *(Esta pergunta já estava aberta desde 13/09.)*
+### Item 70 · 🔴 Confirmar o conserto do maior erro do motor
 
----
+**O que aconteceu.** O nosso sistema estava somando o pró-labore de todos os sócios e calculando a guia de INSS e Imposto de Renda **como se fosse uma pessoa só**. Encontramos rodando uma empresa de teste com 2 sócias. O estrago vai para os dois lados: numa empresa com 4 sócios recebendo R$3.500 cada, o sistema cobrava **R$3.617** quando o correto é **R$1.540** — porque a tabela do Imposto de Renda é progressiva **por pessoa**, e R$14.000 numa pessoa cai numa faixa alta que R$3.500 em quatro pessoas não alcança. No INSS o erro era ao contrário, para menos, porque o teto também é **por pessoa** e nós aplicávamos um teto só para a soma. Já corrigimos: o sistema calcula a guia de cada sócio separadamente e soma no fim.
 
-## D-06 · 🏢 Pró-labore contra distribuição de lucro, e o que muda em 2026
+**A pergunta:** a leitura está correta? O teto do INSS (R$8.475,55 em 2026) e a tabela progressiva do IRRF se aplicam **individualmente a cada sócio**, e a guia da empresa é a soma dessas contas individuais? Existe alguma situação em que se calcula sobre o total?
 
-**O que aconteceu.** O nosso piloto sabe calcular quanto de pró-labore segura o Anexo III, e sabe comparar isso com a economia no imposto da empresa. O que ele **não** sabe é se vale a pena de verdade — porque o dinheiro que vira pró-labore deixa de sair como lucro, e o lucro tem tratamento próprio. Com a Lei 15.270/2025 esse tratamento muda, e nós não temos como fechar a conta sem saber como fica.
+### Item 71 · 🟡 O pró-labore pode ser dividido de forma desigual?
 
-**A pergunta:** como você compara hoje, na prática, as duas saídas de dinheiro para o sócio (pró-labore × distribuição de lucro)? E o que muda a partir de 2026 com a nova lei?
+**O que aconteceu.** O nosso sistema assume que, se a empresa tem 3 sócios e paga R$6.000 de pró-labore, cada um recebeu R$2.000. Assumimos divisão igual porque é o que o aplicativo coleta hoje — ele pergunta o valor total, não o de cada um. Isso virou problema com o erro acima: o imposto depende de quanto **cada pessoa** recebeu. E a divisão igual **não é neutra**: R$14.000 em R$7.000+R$7.000 dá um imposto; em R$11.000+R$3.000 dá outro, maior. ⚠️ E não há de onde deduzir o rateio: o app coleta o **percentual de participação**, que governa a **distribuição de lucro**, não o pró-labore — pró-labore é remuneração por **trabalho**, e trabalho não é proporcional a quota. Usar o percentual das quotas para ratear seria justamente o erro clássico de confundir os dois.
 
----
+**A pergunta:** com que frequência, na prática, os sócios dividem o pró-labore de forma desigual? Exige formalidade (alteração contratual, ata, registro em folha)? E o risco está em dividir desigual, ou em dividir igual quando o trabalho é desigual?
 
-## D-07 · 🏢 Como se declara uma retirada de lucro sem extrato bancário
+### Item 72 · 🟡 "Administrar" e "prestar serviço" não são a mesma coisa
 
-**O que aconteceu.** Analisando a conta real de um cliente na plataforma concorrente, vimos que eles deduzem o lucro **do extrato bancário** do cliente, e nunca conversam com ele sobre o assunto. Nós decidimos que não teremos conta bancária nem integração bancária, então esse caminho não existe para a gente. Sem extrato, a única via é o cliente declarar.
+**O que aconteceu.** Ao montar as empresas de teste, definimos quantos sócios cada uma tem e quem administra. Duas delas foram descritas como *"só o titular administra"*, e mesmo assim nós fizemos a empresa pagar pró-labore a todos os sócios. Ao conferir, achamos a resposta já travada no nosso material desde 13/09: quem só entrou com dinheiro e não exerce gestão **não precisa** receber. Só que a lei fala em **prestar serviço à sociedade**, e o nosso aplicativo coleta **quem administra** — e dá para trabalhar na empresa sem ser administrador. Não mexemos no dado das duas empresas, porque alterá-lo muda o cálculo do imposto delas.
 
-**A pergunta:** como se formaliza uma retirada de lucro sem extrato bancário? E qual é o limite isento de verdade num ME de serviço: o teto por presunção, ou a escrituração contábil completa derruba esse teto? *(Aberta desde 13/09.)*
-
----
-
-## D-08 · ⚖️ A CPP que está dentro do DAS entra no Fator R? (correção de um erro nosso)
-
-**O que aconteceu.** 🔴 **Precisamos desfazer uma informação que já te passamos.** Em 13/09 nós reportamos que a CPP paga dentro do DAS entra no cálculo do Fator R, e dissemos que era "ponto pacífico". Em 14/09, pesquisando direto na norma, vimos que estava errado: a Resolução CGSN 140/2018, artigo 26 §2º inciso I alínea "a", manda contar a CPP recolhida dentro do Simples **apenas em relação ao Anexo IV** — e o silêncio sobre o Anexo III e o V funciona como vedação. A Solução de Consulta que o mercado cita para defender o contrário trata de outro assunto. Corrigimos o sistema, mas como isso muda o valor de pró-labore que o app vai recomendar, queremos sua ratificação.
-
-**A pergunta:** confirma que, para empresa do Anexo III ou V, a CPP embutida no DAS **não** compõe a folha do Fator R? O numerador é só pró-labore, salários, 13º, férias com o terço e FGTS?
-
----
-
-## D-09 · ⚖️ Um recibo de PGDAS-D de empresa no Anexo V
-
-**O que aconteceu.** Nós conferimos o motor contra recibos reais de uma empresa no Anexo III, e ele bate ao centavo. No Anexo V não temos nenhum recibo, e por um tempo tratamos isso como bloqueio. Depois percebemos que não é: as alíquotas e as regras saem da lei, e a única coisa que o recibo prova de verdade — o jeito de arredondar — nós já provamos com o recibo do Anexo III, porque o cálculo é o mesmo nos dois. Então deixou de ser urgente, mas ainda ajudaria.
-
-**A pergunta:** você tem, em algum cliente, um recibo de PGDAS-D de empresa enquadrada no **Anexo V** que a gente possa conferir? Não trava nada, é confirmação.
-
----
-
-## D-10 · ⚖️ Sete CNAEs que a nossa tabela não sabe classificar
-
-**O que aconteceu.** Nós temos uma tabela com os 87 CNAEs que pretendemos atender. Para cada um, ela diz se a empresa é Anexo III fixo (65 casos) ou se depende do Fator R (15 casos). Sobram **7** que a tabela marca como "requer revisão" — nós não sabemos dizer nem qual anexo é. Hoje o sistema se recusa a calcular para esses, o que é o comportamento seguro, mas significa que não podemos atender esses clientes.
-
-**A pergunta:** dá para resolver esses 7 caso a caso? *(Lista à parte — é trabalho de bancada, e provavelmente da Larissa.)*
+**A pergunta:** para efeito de pró-labore e INSS, o que vale é **administrar** ou **trabalhar**? Se for trabalhar, o nosso aplicativo está perguntando a coisa errada, e precisa de uma pergunta a mais na constituição.
 
 ## Links
-[[_achados-do-motor]] · [[PENDENCIAS]] · [[evolucao-para-mauro]] · [[PERSONA]]
+[[PENDENCIAS]] · [[fila-validacao-humana]] · [[indice-autoridade]] · [[_achados-do-motor]] · [[_encerrados]]

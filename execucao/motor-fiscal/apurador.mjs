@@ -32,7 +32,16 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { FAIXAS, REPARTICAO, TRIBUTOS, FATOR_R } from "./_tabelas.mjs";
+import {
+  FAIXAS,
+  REPARTICAO,
+  TRIBUTOS,
+  FATOR_R,
+  VENCIMENTOS,
+  FATOR_R_NUMERADOR,
+  GRUPOS_ANEXO,
+  PREVIDENCIA,
+} from "./_tabelas.mjs";
 
 /* ═══════════════════════════════════════════════════════════════════════════
  * 1 · DINHEIRO
@@ -455,7 +464,130 @@ export function anualiza(valoresMensais) {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
- * 5 · O QUE AINDA NÃO SABEMOS — declarado, não escondido
+ * 5 · O ANEXO ANTES DO CÁLCULO — não rodar Fator R à toa
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/**
+ * O CNAE já decide o anexo, ou precisa calcular?
+ *
+ * 🔑 **Dos 87 CNAEs que atendemos, 65 são `III-fixo`** — o Fator R não muda
+ * nada neles. Rodar o cálculo é desperdício, e pior: a tela que fala em
+ * "sua folha precisa chegar a 28%" para quem já é Anexo III **mente por
+ * omissão**, porque sugere um risco que não existe.
+ *
+ * @param grupo valor do campo `anexo_fator_r_grupo` da `cnae-matriz.json`
+ */
+export function anexoDoCnae(grupo) {
+  const g = GRUPOS_ANEXO[grupo];
+  if (!g) {
+    return {
+      anexo: null,
+      calculaFatorR: null,
+      erro: `Grupo desconhecido: "${grupo}". Os válidos estão em GRUPOS_ANEXO.`,
+    };
+  }
+  if (g.calculaFatorR === null) {
+    return {
+      anexo: null,
+      calculaFatorR: null,
+      erro: "CNAE em `requer-revisao` — indefinido, não usar em produção.",
+    };
+  }
+  return {
+    anexo: g.anexo, // "III" quando fixo, null quando depende do cálculo
+    calculaFatorR: g.calculaFatorR,
+    // 🔴 O que a tela pode dizer sem mentir.
+    podeFalarDeFatorR: g.calculaFatorR,
+  };
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * 6 · O CALENDÁRIO — e ele desloca por tributo
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/**
+ * 🐛 `getUTCDay()`, nunca `getDay()`.
+ *
+ * A data nasce de `Date.UTC(...)`, e `getDay()` devolve o dia da semana LOCAL.
+ * Em UTC−3, `Date.UTC(2026, 8, 20)` é domingo 00:00 UTC — mas **sábado 21h**
+ * no horário de Brasília. O motor então "via" sábado, deslocava duas vezes e
+ * devolvia o dia errado. Achado pelo teste dourado G9 em 14/09.
+ */
+const ehFimDeSemana = (d) => d.getUTCDay() === 0 || d.getUTCDay() === 6;
+
+/**
+ * Quando vence, de verdade.
+ *
+ * 🔴 **O deslocamento é POR TRIBUTO.** O DAS **prorroga** para o próximo dia
+ * útil; o DARF de INSS/IRRF **antecipa** para o anterior. No mesmo mês, uma
+ * guia vence dia 22 e a outra dia 18 — e um motor com regra única erraria
+ * metade, sempre para o lado do atraso.
+ *
+ * ⏳ **LACUNA DECLARADA: feriados.** Esta função conhece sábado e domingo, e
+ * não conhece feriado nacional nem municipal de BH. Feriado que caia no dia 20
+ * desloca de verdade, e o motor não vai saber. Precisa de calendário — é dado,
+ * não lógica, e ainda não temos.
+ *
+ * @param competencia {ano, mes} — a competência apurada (mes 1-12)
+ * @param tributo chave de VENCIMENTOS: "das" | "darf" | "esocial"
+ */
+export function vencimentoDe({ competencia, tributo }) {
+  const regra = VENCIMENTOS[tributo];
+  if (!regra) throw new Error(`Tributo sem regra de vencimento: ${tributo}`);
+
+  // O vencimento cai no mês SEGUINTE ao da competência.
+  const d = new Date(Date.UTC(competencia.ano, competencia.mes, regra.dia));
+  const nominal = new Date(d);
+
+  if (ehFimDeSemana(d)) {
+    const passo = regra.desloca === "prorroga" ? 1 : -1;
+    while (ehFimDeSemana(d)) d.setUTCDate(d.getUTCDate() + passo);
+  }
+
+  return {
+    data: d,
+    dataNominal: nominal,
+    deslocou: d.getTime() !== nominal.getTime(),
+    regra: regra.desloca,
+    lei: regra.lei,
+    // 🔴 Quem consome precisa saber que feriado não foi considerado.
+    feriadosConsiderados: false,
+  };
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * 7 · O CUSTO TOTAL — o número que o cliente realmente compara
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/**
+ * DAS + INSS do sócio + IRRF, e a "alíquota total de custo" sobre o
+ * faturamento. É o formato da própria calculadora do líder: ele não compara
+ * DAS com DAS, compara **custo total com custo total** — porque subir o
+ * pró-labore pra ganhar o Anexo III **aumenta** o INSS e pode acender o IRRF.
+ *
+ * 🔑 É a gangorra do cruzamento nº 1 do `_mapa-de-cruzamentos.md`, em número.
+ *
+ * ⏳ `irrf` entra como PARÂMETRO, não é calculado aqui: a tabela de faixas do
+ * IRRF é **lacuna aberta do vault** — a spec de pró-labore a cita como
+ * *"faixas na tabela acima"* e a tabela não existe. Ver LACUNAS L6.
+ */
+export function custoTotalMensal({ receitaMes, das, proLabore, irrf = 0 }) {
+  const inss = Math.min(
+    emCentavos(proLabore * PREVIDENCIA.ALIQUOTA_SOCIO),
+    emCentavos(PREVIDENCIA.TETO_INSS * PREVIDENCIA.ALIQUOTA_SOCIO)
+  );
+  const total = das + inss + emCentavos(irrf);
+  return {
+    das,
+    inss,
+    irrf: emCentavos(irrf),
+    total,
+    aliquotaTotal: receitaMes > 0 ? total / emCentavos(receitaMes) : null,
+  };
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * 8 · O QUE AINDA NÃO SABEMOS — declarado, não escondido
  * ═══════════════════════════════════════════════════════════════════════════ */
 
 /**
@@ -470,6 +602,27 @@ export const LACUNAS = [
     lei: "Res. CGSN 190, de 04/08/2026, com efeitos a partir de 01/01/2027",
     porque:
       "🔴 A pesquisa cita, mas a fonte é site secundário (normaslegais.com.br). Se for real, muda o marco de contagem do RBT12 a partir de 2027 — e a diferença entre abertura e inscrição pode ser de dias. Conferir no Diário Oficial ANTES de virar código.",
+  },
+  {
+    id: "L6",
+    o: "🔴 A TABELA DE FAIXAS DO IRRF não existe no vault",
+    lei: "—",
+    porque:
+      'A spec de pró-labore cita "faixas na tabela acima" e a tabela NÃO ESTÁ LÁ; o `fiscal-simples-bh-2026.md` lista "faixa/tabela IRRF" como não verificado desde 15/07. A fórmula é conhecida (`(base × alíquota) − dedução`, base = pró-labore − INSS), os números não. ⚠️ E a calculadora do líder usa a tabela PRÉ-2023: com base de R$2.990,40 ela dá R$93,76, que é 15% − 354,80. Com a isenção de R$5.000/mês da Lei 15.270/2025, esse mesmo caso daria ZERO hoje.',
+  },
+  {
+    id: "L7",
+    o: "Calendário de FERIADOS (nacional e municipal de BH)",
+    lei: "—",
+    porque:
+      "`vencimentoDe()` conhece sábado e domingo, e não conhece feriado. Feriado no dia 20 desloca de verdade, e o motor não vai saber. É dado, não lógica.",
+  },
+  {
+    id: "L8",
+    o: "Juros, multa e Selic da guia vencida",
+    lei: "—",
+    porque:
+      "Funcionalidade 2.6 (recalcular e reemitir guia vencida). O motor recalcula o principal; o acessório não tem fonte ainda.",
   },
   {
     id: "L5",

@@ -107,3 +107,96 @@ export const PREVIDENCIA = {
   TETO_INSS: 8475.55,
   ALIQUOTA_SOCIO: 0.11,
 };
+
+/**
+ * 🔴 O CALENDÁRIO, e o deslocamento é POR TRIBUTO — não global.
+ * ═══════════════════════════════════════════════════════════════════════════
+ * É a armadilha mais silenciosa do calendário fiscal: **no mesmo mês uma guia
+ * vence dia 22 e outra dia 18**. Um motor que tratasse "dia não útil" com uma
+ * regra só erraria metade das guias, e erraria para o lado do atraso.
+ *
+ * `desloca` diz o que fazer quando o vencimento cai em dia não útil:
+ *   "prorroga" → empurra para o próximo dia útil
+ *   "antecipa" → puxa para o dia útil anterior
+ *
+ * Fonte: `produto/_matriz-dependencia.md`, verificação de 09/09.
+ */
+export const VENCIMENTOS = {
+  das: {
+    dia: 20,
+    desloca: "prorroga",
+    lei: "Res. CGSN 140/2018 art. 40 §3º",
+    oQue: "DAS e transmissão do PGDAS-D",
+  },
+  darf: {
+    dia: 20,
+    desloca: "antecipa",
+    lei: "IN RFB 2.005/2021 art. 13",
+    oQue: "DARF de INSS e IRRF do pró-labore, e FGTS Digital",
+  },
+  esocial: {
+    dia: 15,
+    desloca: "antecipa",
+    lei: "Manual do eSocial · IN RFB 2.005/2021",
+    oQue: "eSocial (eventos periódicos) e DCTFWeb",
+  },
+  defis: {
+    dia: 31,
+    mes: 3,
+    desloca: "prorroga",
+    lei: "Res. CGSN 140/2018 art. 72 §1º",
+    oQue: "DEFIS (anual)",
+    nota: "⚠️ Extinta a partir de 2027, absorvida pelo PGDAS-D.",
+  },
+};
+
+/**
+ * 🔑 O QUE ENTRA E O QUE NÃO ENTRA NO NUMERADOR DO FATOR R.
+ *
+ * Não é detalhe: a **CPP paga embutida no DAS** entra, e é justamente o que a
+ * maioria dos sistemas ignora — é ela que ajuda a bater os 28%.
+ *
+ * ⚠️ Metade desta lista é de folha de colaborador (13º, férias, FGTS), que
+ * está FORA do escopo por ora. Fica declarada porque a regra é a mesma e
+ * porque omitir criaria a impressão de que só pró-labore conta.
+ */
+export const FATOR_R_NUMERADOR = {
+  entra: [
+    "salario-clt",
+    "pro-labore",
+    "decimo-terceiro",
+    "ferias-mais-um-terco",
+    "fgts",
+    "cpp-embutida-no-das",
+  ],
+  naoEntra: [
+    "distribuicao-de-lucros",
+    "pagamento-a-autonomo",
+    "pagamento-a-prestador-pj",
+    "pat",
+    "estagiario",
+  ],
+  fonte: "produto/_matriz-dependencia.md (verificação 09/09) · Res. CGSN 140/2018 art. 26",
+  regimeDeCaixa: true,
+};
+
+/**
+ * 🎯 OS TRÊS GRUPOS DE ANEXO — e é isto que evita rodar Fator R à toa.
+ *
+ * O Manual do PGDAS-D separa as atividades de serviço em três, e a nossa
+ * `cnae-matriz.json` já carrega o grupo de cada CNAE no campo
+ * `anexo_fator_r_grupo`. Dos **87 CNAEs que atendemos**:
+ *
+ *   III-fixo ............ 65  → Anexo III sempre. Fator R NÃO muda nada
+ *   fator-r-dinamico .... 15  → III ou V, decidido por cálculo, mês a mês
+ *   requer-revisao ......  7  → indefinido, não usar em produção
+ *
+ * 🔴 **Não existe CNAE de serviço "sempre Anexo V".** O V é *resultado* do
+ * cálculo (< 28%), nunca classificação fixa por atividade. Qualquer tela que
+ * diga "seu CNAE é Anexo V" está errada.
+ */
+export const GRUPOS_ANEXO = {
+  "III-fixo": { anexo: "III", calculaFatorR: false, quantos: 65 },
+  "fator-r-dinamico(III<->V, limiar 28%)": { anexo: null, calculaFatorR: true, quantos: 15 },
+  "requer-revisao": { anexo: null, calculaFatorR: null, quantos: 7 },
+};

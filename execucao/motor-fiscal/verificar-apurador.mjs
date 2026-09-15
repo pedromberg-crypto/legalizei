@@ -16,7 +16,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { apurarDAS, fatorR, fatorRDeCompetencias, anualiza, rbt12De, retencaoLegitima, brl, emCentavos, LACUNAS, RESOLVIDAS } from "./apurador.mjs";
+import { apurarDAS, fatorR, fatorRDeCompetencias, anualiza, rbt12De, retencaoLegitima, anexoDoCnae, vencimentoDe, custoTotalMensal, brl, emCentavos, LACUNAS, RESOLVIDAS } from "./apurador.mjs";
 
 /* ═══════════════════════════════════════════════════════════════════════════
  * OS CASOS REAIS
@@ -319,6 +319,78 @@ for (const caso of CASOS) {
   console.log("      multa de 75% (Lei 9.430/96 art. 44 I).");
   console.log("   ⚠️  O motor SABE USAR 'foi pago'; ele não sabe DESCOBRIR. Sem conciliação");
   console.log("      (decisão 31), a via é o cliente declarar — com a Carta CFC carregando.\n");
+}
+
+/* ── G8 · ANEXO V, enfim ───────────────────────────────────────────────── */
+{
+  console.log("── G8 · Anexo V faixa 1 — a gangorra do Fator R, em número");
+  console.log("   fonte: calculadora oficial da Contabilizei (planilha), lida em 14/09");
+
+  const RBT12 = 144000; // faturamento médio anual da planilha
+  const MES = 12000;
+
+  const comFatorR = apurarDAS({ receitaMes: MES, rbt12: RBT12, anexo: "III" });
+  const semFatorR = apurarDAS({ receitaMes: MES, rbt12: RBT12, anexo: "V" });
+
+  console.log(confere("DAS Anexo III (6,00%)", comFatorR.total, 72000));
+  console.log(confere("DAS Anexo V (15,50%)", semFatorR.total, 186000));
+
+  // O pró-labore de 28% que compra o Anexo III, e o INSS que ele cobra.
+  const proLabore = 0.28 * MES;
+  const custoIII = custoTotalMensal({ receitaMes: MES, das: comFatorR.total, proLabore });
+  const custoV = custoTotalMensal({ receitaMes: MES, das: semFatorR.total, proLabore: 1621 });
+
+  console.log(`   pró-labore de 28% ......... ${brl(emCentavos(proLabore))}`);
+  console.log(confere("INSS sobre ele (11%)", custoIII.inss, 36960));
+  console.log(`   custo total no Anexo III .. ${brl(custoIII.total)}  (${(custoIII.aliquotaTotal * 100).toFixed(2)}%)`);
+  console.log(`   custo total no Anexo V .... ${brl(custoV.total)}  (${(custoV.aliquotaTotal * 100).toFixed(2)}%)`);
+  console.log(`   💰 a diferença ............ ${brl(custoV.total - custoIII.total)}/mês`);
+
+  console.log("   🔑 A planilha do líder compara CUSTO TOTAL, não DAS com DAS — porque subir o");
+  console.log("      pró-labore pra ganhar o Anexo III AUMENTA o INSS. É a gangorra em número.");
+  console.log("   ⚠️  A planilha usa pró-labore mínimo de R$998 (salário de 2020) e a tabela de");
+  console.log("      IRRF PRÉ-2023. Os números dela estão velhos; o MÉTODO está certo. Aqui o");
+  console.log("      piso usado é R$1.621 (2026) e o IRRF fica fora — ver lacuna L6.\n");
+}
+
+/* ── G9 · o anexo antes do cálculo, e o calendário ─────────────────────── */
+{
+  console.log("── G9 · Os 3 grupos de anexo, e o calendário por tributo");
+  console.log("   fonte: Manual PGDAS-D + cnae-matriz.json · produto/_matriz-dependencia.md");
+
+  const fixo = anexoDoCnae("III-fixo");
+  const dinamico = anexoDoCnae("fator-r-dinamico(III<->V, limiar 28%)");
+
+  console.log(`   CNAE III-fixo (65 dos 87) . anexo ${fixo.anexo} · calcula Fator R: ${fixo.calculaFatorR}`);
+  console.log(`   CNAE dinâmico (15 dos 87) . anexo ${dinamico.anexo ?? "depende"} · calcula Fator R: ${dinamico.calculaFatorR}`);
+
+  if (fixo.anexo === "III" && fixo.calculaFatorR === false && dinamico.calculaFatorR === true) {
+    passou++;
+    console.log("   ✅ o motor só roda Fator R em 15 de 87 — e a tela não fala de Fator R pros outros");
+  } else {
+    falhou++;
+    erros.push("G9: os grupos de anexo não estão sendo lidos certo");
+    console.log("   ❌ os grupos não batem");
+  }
+
+  // 🔴 O mesmo mês, dois vencimentos diferentes. Competência 08/2026 → setembro.
+  const das = vencimentoDe({ competencia: { ano: 2026, mes: 8 }, tributo: "das" });
+  const darf = vencimentoDe({ competencia: { ano: 2026, mes: 8 }, tributo: "darf" });
+  const dia = (v) => v.data.getUTCDate();
+
+  console.log(`\n   competência 08/2026 → DAS vence dia ${dia(das)} (${das.regra}) · DARF dia ${dia(darf)} (${darf.regra})`);
+
+  if (dia(das) === 21 && dia(darf) === 18) {
+    passou++;
+    console.log("   ✅ 20/09/2026 é domingo: o DAS PRORROGA pra 21, o DARF ANTECIPA pra 18");
+    console.log("   🔑 Três dias de diferença, no mesmo mês. Regra única erraria metade das guias,");
+    console.log("      e erraria sempre pro lado do atraso.");
+  } else {
+    falhou++;
+    erros.push(`G9: esperado DAS 21 e DARF 18; obtido ${dia(das)} e ${dia(darf)}`);
+    console.log(`   ❌ esperado DAS 21 e DARF 18, obtido ${dia(das)} e ${dia(darf)}`);
+  }
+  console.log("   ⏳ Feriados NÃO são considerados (lacuna L7).\n");
 }
 
 console.log("✅ LACUNAS RESOLVIDAS em 14/09, por fonte primária:\n");

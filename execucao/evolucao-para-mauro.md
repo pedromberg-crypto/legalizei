@@ -32,10 +32,10 @@ tags: [reporte, evolucao, sociedade]
 | Status | Itens | % |
 |---|---:|---:|
 | 🟢 pronto / entregue | **235** | 83,0% |
-| 🟡 em curso / parcial | **22** | 7,8% |
+| ✅ estava parado, foi resolvido | **9** | 3,2% |
+| 🟡 em curso / parcial | **24** | 8,5% |
 | 🔴 trava ou precisa de você | **13** | 4,6% |
-| 🕓 aguarda pessoa | **11** | 3,9% |
-| ⏳ aguarda autorização | **2** | 0,7% |
+| 🕓 aguarda pessoa | **2** | 0,7% |
 
 ### Ritmo, mês a mês
 
@@ -70,7 +70,7 @@ nenhum
 | 6 | CNAEs | Mapa completo do que o app atende x não atende (460 sim / 68 condicional / 804 não) | 🟢 |
 | 7 | Tecnologia | Base técnica do app definida (stack, MLP, multi-tenant) | 🟢 |
 | 8 | Marca | Nome aprovado (Legalizai Story Book); tom de voz, personalidade e cor principal (coral) definidos; **logo fechado** (símbolo + logotipo, arquivos vetoriais) | 🟢 |
-| 9 | Domínios e e-mail | Escolhidos + carrinho montado na Hostinger (R$186/ano), no CNPJ da Legalize Digital | ⏳ aguarda autorização de compra |
+| 9 | Domínios e e-mail | Escolhidos + carrinho montado na Hostinger (R$186/ano), no CNPJ da Legalize Digital → 🟢 **RESOLVIDO 15/09 (Pedro)**. **Comprados.** Domínios e e-mail da casa quitados; a frente saiu da fila. | ✅ |
 | 10 | Organização | Todo o conhecimento do projeto centralizado, versionado e seguro | 🟢 |
 
 **Próximo:** reavaliar a rota do produto com as descobertas da semana (dev já trabalhando na nova validação). ~~fechar o logo~~ ✅ **logo fechado 12/07** ([[2026-07-12-logo-fechado]]) — falta só gerar derivados (favicon/ícone de app).
@@ -129,7 +129,7 @@ Sexta (17/07): teste E2E + 1ª versão da tela + apresentação do progresso
 | 1 | Regras de negócio (DP) | **Karla (Depto Pessoal)** respondeu as dúvidas em aberto: pró-labore/INSS (mín. 1 salário, custo líquido explícito), sócio não pode ser CLT da própria empresa, sócio com CLT em outra empresa (LGPD: informa manual), eSocial "sem movimento", **Fator R** (folha ≥28% → cai de 15,5% pra 6%), funcionário/PJ fica fora do 1º produto, obrigações acessórias por tributação | 🟢 → [[2026-07-13-conversa-karla]] |
 | 2 | Handoff pro dev | Repositório privado **base-ds-legalizai-story-book** com todas as telas + site + animações entregue; Pedro Dev já convidado | 🟢 |
 | 3 | Redes sociais | **Instagram e LinkedIn da Legalizai Story Book criados** (pegada "estamos chegando"); descrição/marca aplicadas; organização das redes montada no projeto | 🟢 (config em curso) |
-| 4 | Domínios | **Valores enviados pro Miguel aprovar contigo**: Hostinger R$312,11 + Registro.br R$76,00 (blindagem legalizai-story-book.app.br) | ⏳ aguarda pagamento |
+| 4 | Domínios | **Valores enviados pro Miguel aprovar contigo**: Hostinger R$312,11 + Registro.br R$76,00 (blindagem legalizai-story-book.app.br) → 🟢 **RESOLVIDO 15/09 (Pedro)**. **Pagos.** Hostinger R$312,11 + Registro.br R$76,00, quitados pelo Mauro. | ✅ |
 
 **Próximo (13/07 2º):** fechar as perguntas de **fiscal com a Larissa** (obrigações acessórias/prazos/multa); banner final do LinkedIn; **aprovar o pagamento dos domínios**.
 
@@ -246,7 +246,7 @@ Tem 1 ponto que precisa de uma decisão nossa (com a Larissa): o que oferecer pr
 | 2 | Raio-X do cadastro | Contamos e mapeamos tudo: **22 telas** da 1ª tela até a empresa aberta, **5 momentos em que o processo espera** (pagamento, sócio, cartório digital, órgãos) e **os caminhos alternativos** (quem vira fila de espera, quem vai pro escritório tradicional, quem é barrado). Descobrimos que 3 dessas saídas podem usar **a mesma tela** — economia de trabalho | 🟢 |
 | 3 | Robô testador | Achamos **2 buracos** e cobrimos: (a) **e se um órgão recusar no meio?** (ex: Junta reprova o nome mesmo com a consulta prévia aprovada) — agora o app mostra "precisa de você" com a ação clara e **recupera**, em vez de deixar o cliente achando que travou; (b) **cliente com conta gov.br incompleta** — o app avisa cedo e ensina a resolver, em vez de travar na hora de assinar | 🟢 14/14 |
 | 4 | Decisão de experiência | O cliente leigo e o experiente querem coisas opostas na mesma tela. **Decidimos NÃO fazer dois caminhos diferentes**: o que é bom (botão grande, linguagem sem jargão) vira padrão **pra todos**; o detalhe fica escondido pra quem quiser abrir. **O resto a gente mede antes de construir** — perguntamos "é a primeira empresa que você abre?" só pra acompanhar, e só separamos os caminhos **se o dado provar que precisa**. Evita construir em cima de achismo | 🟢 |
-| 5 | **Decisão sua** | 🕓 **O preço NÃO trava mais** (mudei de ideia em 16/07): não dá pra precificar sem saber quanto **custa** rodar cada empresa (banco de dados + APIs). Sigo com o ~R$195 da Contabilizei como **placeholder marcado FAKE** e a gente crava o nosso depois do teste real de uso. **Quando sentar com você, é uma conversa só** e já tenho a lista pronta | 🕓 quando for a hora |
+| 5 | **Decisão sua** | 🕓 **O preço NÃO trava mais** (mudei de ideia em 16/07): não dá pra precificar sem saber quanto **custa** rodar cada empresa (banco de dados + APIs). Sigo com o ~R$195 da Contabilizei como **placeholder marcado FAKE** e a gente crava o nosso depois do teste real de uso. **Quando sentar com você, é uma conversa só** e já tenho a lista pronta → 🟢 **RESOLVIDO 15/09 (Pedro)**. **O preço travou e já está em prática:** valor próximo do real, validado com o Mauro, é o que praticamos hoje. | ✅ |
 
 **Próximo (16/07):** [Pedro] convidar o dev no repositório + **começar a construir as telas** (pelo miolo do cadastro, que está 100% especificado) · [Pedro/Mauro] **fechar o preço do plano** (destrava a cobrança) · [Pedro] decidir com o dev a base técnica de segurança (não cobrar/abrir duas vezes) e os fornecedores de consulta de CPF/CNPJ.
 
@@ -270,8 +270,8 @@ Preciso de você: fechar o preço do nosso plano. Sem ele não fecho as telas de
 | 3 | **O prazo real deles** | Pagou 10/12 → **CNPJ em 12/12** → alvará 15/12 → dispensas só em **02/01**. Ou seja: **o CNPJ sai rápido, a cauda é longa** e é onde eles somem. Era "prazo não divulgado" no nosso benchmark; agora tem número com documento | 🟢 |
 | 4 | **Robô testador** | 14 → **19 casos, 2 fluxos** (abertura + **trocar de contador**, que era metade do mercado e a gente nunca tinha testado). Uma auditoria achou **5 regras que estavam escritas e não estavam no sistema** — uma delas fazia o robô dar **o conselho contrário** ao que a regra manda | 🟢 19/19 |
 | 5 | **Comecei as telas** | As 2 primeiras telas de verdade já rodam. Decidi fazer **direto em código, sem Figma** | 🟢 |
-| 6 | **Pra Larissa** | Duas coisas que o caso real levantou: (a) meu CNPJ saiu **LTDA** sendo sócio único, e nossa regra diz SLU — qual é a certa? (b) a lista de perguntas fiscais segue de pé | 🕓 |
-| 7 | **Pra você, sem pressa** | Preço · taxa da Junta (**R$268 × R$288**, divergência aberta desde 09/07) · certificado · endereço fiscal (o deles é **R$60/mês, cobrado da 2ª parcela** — confirmado com print). **Nada disso me trava agora**, junto tudo e a gente vê numa conversa só | 🕓 |
+| 6 | **Pra Larissa** | Duas coisas que o caso real levantou: (a) meu CNPJ saiu **LTDA** sendo sócio único, e nossa regra diz SLU — qual é a certa? (b) a lista de perguntas fiscais segue de pé → 🟢 **RESOLVIDO 15/09 (Pedro)** **na parte da natureza jurídica:** confirmado com a Larissa — **dono único vira SLU; com 1 ou mais sócios, LTDA**. ⚠️ Segue de pé a lista de perguntas fiscais dela (os 91 CNAEs). | ✅ |
+| 7 | **Pra você, sem pressa** | Preço · taxa da Junta (**R$268 × R$288**, divergência aberta desde 09/07) · certificado · endereço fiscal (o deles é **R$60/mês, cobrado da 2ª parcela** — confirmado com print). **Nada disso me trava agora**, junto tudo e a gente vê numa conversa só → 🟢 **RESOLVIDO 15/09 (Pedro)**. Preço travado, taxa da Junta resolvida (R$281,08 da guia real), certificado em R$209 e endereço fiscal definidos. O que consta no plano está travado. | ✅ |
 
 ### 📱 WhatsApp (16/07 — 2ª)
 > Mauro, dois avanços grandes hoje.
@@ -331,7 +331,7 @@ Próximo: as telas de resultado (economia de imposto) e depois rodar tudo contra
 | 3 | **Meu CNPJ virou laboratório** | Analisei minhas próprias guias. Descobri que **eu pago 6%, então não fui mal enquadrado** — minha primeira suspeita estava errada e o dado me corrigiu. **Mas achei coisa melhor:** meu pró-labore foi reduzido pela metade num mês sem nota, e **quando eu voltar a faturar cheio isso me joga pra 15,5%**, custando **R$ 1.140 a mais por mês**. Ninguém me avisou | 🟢 |
 | 4 | **A tese comercial ficou mais afiada** | O erro do mercado **não é enquadrar errado na abertura**. É que esse cálculo **muda todo mês e ninguém fica olhando**. Isso não é um serviço de abertura, é de **acompanhamento** — e é exatamente onde o modelo deles (abre e some) não alcança | 🟢 |
 | 5 | Telas | Mais **9 telas** construídas e revisadas. O app já mostra o caminho inteiro: da porta de entrada até a prova de quanto o cliente economiza. **17 telas navegáveis** | 🟢 |
-| 6 | **Decisão sua** | 🕓 O plano previa **abrir 1 empresa de teste usando o meu CNPJ** — só que **o meu já existe**. Precisamos escolher: abrir uma segunda (custa taxa + certificado de verdade), usar outra pessoa, ou testar pelo caminho de **trocar de contador**, que é o meu caso real | 🕓 |
+| 6 | **Decisão sua** | 🕓 O plano previa **abrir 1 empresa de teste usando o meu CNPJ** — só que **o meu já existe**. Precisamos escolher: abrir uma segunda (custa taxa + certificado de verdade), usar outra pessoa, ou testar pelo caminho de **trocar de contador**, que é o meu caso real → 🟡 **EM ANDAMENTO (15/09).** Decidido: a empresa de teste foi aberta **na concorrente**, constituição de **ME no Simples Nacional**. Estamos na parte inicial do processo — **precisa continuar**. | 🟡 |
 
 **Próximo (19/07):** confirmar 3 pontos que ficaram sem fonte oficial (obrigatoriedade do certificado digital em BH, texto da nova lei do imposto de renda, e a mecânica da taxa da prefeitura); seguir com as telas de espera e de saída; decidir a cobaia do teste real.
 
@@ -356,8 +356,8 @@ Preciso de você: o plano era testar abrindo o MEU CNPJ, mas ele já existe. Tem
 | 3 | **Contrato** | Reescrito: em vez de um bloco grande sobre cancelamento, entrou um card com **os 22 anos do escritório** — quem assina precisa saber com quem está assinando | 🟢 |
 | 4 | **Quem paga por boleto** | O cliente **entra no app e adianta a empresa toda** enquanto o boleto não cai. Só o passo final fica travado. Antes ele ficaria 3 dias sem nada pra fazer, achando que travou | 🟢 |
 | 5 | **Economia de custo** | Decidido que a **checagem do nome na Junta só roda depois do pagamento**. Como a JUCEMG não tem API (é robô), checar antes gastaria o recurso mais caro do sistema com quem talvez nunca pague | 🟢 |
-| 6 | **Pra Larissa** | Some à lista: **SLU e LTDA de sócio único são a mesma natureza?** Se forem, uma tela inteira do app não precisa existir (meu CNPJ é a evidência) | 🕓 |
-| 7 | **Pro dev** | **Validar o nome na Junta é a mesma coisa que validar a viabilidade da empresa?** A resposta muda o que dá pra liberar antes do pagamento | 🕓 |
+| 6 | **Pra Larissa** | Some à lista: **SLU e LTDA de sócio único são a mesma natureza?** Se forem, uma tela inteira do app não precisa existir (meu CNPJ é a evidência) → 🟢 **RESOLVIDO 15/09 (Pedro)** **com a Larissa: dono único = SLU, 1 ou mais sócios = LTDA.** A tela que dependia disso tem regra agora. | ✅ |
+| 7 | **Pro dev** | **Validar o nome na Junta é a mesma coisa que validar a viabilidade da empresa?** A resposta muda o que dá pra liberar antes do pagamento → 🟢 **RESOLVIDO 15/09 (Pedro)**. **São a mesma coisa:** validar o nome na Junta **é** validar a viabilidade — sai no mesmo documento de análise, o nome vai junto. | ✅ |
 
 **Próximo:** a cauda do flow (revisão do dossiê, termo de início, painel de acompanhamento, assinatura no GOV.BR e o dia seguinte à empresa aberta).
 
@@ -397,7 +397,7 @@ Preciso de você: o plano era testar abrindo o MEU CNPJ, mas ele já existe. Tem
 |---|--------|---------------|--------|
 | 1 | App ponta a ponta | **Construí a parte final que faltava**: revisar tudo antes de abrir, autorizar o início (o passo sem volta), o painel que mostra a abertura andando na Junta/Receita (inclusive o que fazer se um órgão recusar), a assinatura no GOV.BR e a tela de "empresa aberta, e agora" (1ª nota, 1º imposto, certificado). **Agora o app existe do início ao fim, da 1ª tela até a empresa operando.** Falta só o caminho de quem já tem empresa e quer trocar de contador | 🟢 |
 | 2 | Qualidade da copy | Montei uma **"máquina de revisão de texto" do app**: um robô varre todas as telas atrás de repetição, excesso de informação e frase negativa, e eu reviso o que exige olho humano (tom, hierarquia, sensação). Passei o app inteiro por ela em 4 rodadas e enxuguei dezenas de pontos. **Ela se atualiza e melhora sozinha** a cada uso | 🟢 |
-| 3 | Pra Larissa | 1 ponto novo: no passo de autorizar a abertura, o texto do "li e aceito" deve dizer que **a taxa da Junta já paga não é reembolsável** (fecha o risco de contestação) | 🕓 |
+| 3 | Pra Larissa | 1 ponto novo: no passo de autorizar a abertura, o texto do "li e aceito" deve dizer que **a taxa da Junta já paga não é reembolsável** (fecha o risco de contestação) → 🟢 **RESOLVIDO 15/09 (Pedro)**. Está na minuta que fizemos a partir da do concorrente, adaptada ao nosso produto, e **já está com a advogada**. | ✅ |
 
 **Próximo (21/07 2º):** revisar as frases negativas que sobraram (última rodada de copy); seguir com o caminho de "trocar de contador"; decidir o prazo de fidelidade.
 
@@ -458,7 +458,7 @@ Próximo: sentar com você pra decidir o que a gente faz com essa inteligência 
 | 3 | Tela de emitir nota (NF-e) | A tela mais importante do dia a dia: pede só **cliente + valor**, puxa **tudo do cliente automaticamente pelo CNPJ**, mostra o imposto na hora e trava a atividade pra não dar erro. Ainda estamos lapidando | 🟡 em edição |
 | 4 | Gestão interna do app | Definimos **como a gente vai operar por dentro**: um painel (kanban) pra acompanhar cada cliente pelas etapas (o que depende de nós, do governo, do cliente ou do parceiro do certificado) + o painel de métricas + como o **parceiro do certificado** trabalha dentro do nosso sistema. Entregue pro dev | 🟢 |
 | 5 | Automação de consultas ao governo | Estudamos a fundo uma empresa de APIs (**InfoSimples**) e validamos **exatamente o que dá pra automatizar**: pelo CNPJ o sistema puxa razão social, endereço, e-mail, telefone, sócios, situação, certidões (federal, estadual, municipal de BH), FGTS, trabalhista. Isso vira base da automação e **corta erro** | 🟢 |
-| 6 | **Decisão sua** | 🕓 O modelo do **parceiro do certificado** (a gente transfere o cliente, eles fazem, sobem o doc no nosso sistema) + **preço/política dos serviços vendáveis** seguem pra nossa conversa | 🕓 |
+| 6 | **Decisão sua** | 🕓 O modelo do **parceiro do certificado** (a gente transfere o cliente, eles fazem, sobem o doc no nosso sistema) + **preço/política dos serviços vendáveis** seguem pra nossa conversa → 🟢 **RESOLVIDO 15/09 (Pedro)** **no valor:** certificado travado em **R$209** com um dos parceiros. É o valor com que trabalhamos por enquanto. | ✅ |
 
 **Próximo (23–24/07):** terminar a tela de emitir nota, seguir com as outras telas do app (pagar imposto, pró-labore, notas, impostos), e as perguntas fiscais que se acumularam pra Larissa.
 
@@ -480,7 +480,7 @@ Precisa de você: fechar o modelo/preço do parceiro do certificado e dos servi�
 | 3 | Impostos | A área de impostos ficou de pé: o **imposto do mês pra pagar**, o acompanhamento fiscal (nosso diferencial), o histórico e o calendário de obrigações. **Decisão prática:** como a gente **não intermedia o pagamento por ora**, ao "pagar" o app **mostra e deixa baixar a guia + copiar o código de barras**, e a pessoa paga no banco/Pix/lotérica do jeito dela | 🟢 |
 | 4 | Área "Mais" + plano | Montei o hub do app (a gaveta do que não é rotina) e a tela de **gerenciar o plano**: trocar forma de pagamento (cartão **ou Pix**), ver faturas passadas e cancelar. O jeito de cobrar os **serviços avulsos** ficou igual ao do líder no que funciona bem: **não cobra na hora, entra na próxima fatura** e dá pra remover antes | 🟢 |
 | 5 | Loja de serviços avulsos | Construí a **prateleira de serviços à-la-carte** (certidão, declaração de faturamento, recálculo de guia, alteração, etc.) pensada pra **converter**: os mais pedidos em destaque e a fricção baixa ("sem cobrança agora"). É por onde entra a receita extra que a gente mapeou no líder | 🟢 |
-| 6 | **Decisão sua (segue de pé)** | 🕓 **Preço** do plano e dos avulsos, **política do parceiro do certificado**, e o que a gente inclui de graça vs vende à parte. No app estão como **valores de exemplo**, marcados | 🕓 |
+| 6 | **Decisão sua (segue de pé)** | 🕓 **Preço** do plano e dos avulsos, **política do parceiro do certificado**, e o que a gente inclui de graça vs vende à parte. No app estão como **valores de exemplo**, marcados → 🟡 **PARCIAL (15/09).** ✅ Preço do plano e o que é grátis × vendido: **resolvido**. ⏳ O restante (política do parceiro e os avulsos) **segue pendente**. | 🟡 |
 
 **Observação honesta:** tudo isso é **protótipo visual** (a "casca" do app, navegável), sem o motor por trás ainda e sem os números fiscais carimbados pela Larissa. Serve pra a gente ver e decidir a experiência antes de programar de verdade.
 

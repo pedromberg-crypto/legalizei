@@ -43,6 +43,10 @@ const FIM = "<!-- PLACAR:FIM -->";
 /** As marcas de status que aparecem no doc, na ordem em que importam. */
 const STATUS = [
   { marca: "🟢", nome: "pronto / entregue" },
+  // ✅ entrou em 15/09, quando o Pedro varreu a fila de espera e fechou 9
+  // itens. É diferente do 🟢: o verde é "eu entreguei", o check é "estava
+  // parado esperando alguém, e a resposta chegou".
+  { marca: "✅", nome: "estava parado, foi resolvido" },
   { marca: "🟡", nome: "em curso / parcial" },
   { marca: "🔴", nome: "trava ou precisa de você" },
   { marca: "🕓", nome: "aguarda pessoa" },

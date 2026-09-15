@@ -68,8 +68,27 @@ export function identidade({
   cnaePrincipal,
   grupoAnexo,
   municipio = "BH",
+  /**
+   * 🔑 CLT do sócio por fora, se houver. O teto do INSS é da PESSOA: quem já
+   * contribui como empregado só recolhe sobre a folga que sobra.
+   *
+   * ⚠️ Mora na IDENTIDADE e não na competência porque é assim que o app se
+   * comporta hoje: o dado é captado **uma vez, no C2 da abertura, e nunca
+   * revalidado** (achado de 27/08). Se o sócio trocar de emprego, nada pega.
+   * Guardar aqui deixa o defeito visível em vez de escondê-lo num campo mensal
+   * que ninguém preenche.
+   */
+  cltDoSocio = 0,
 }) {
-  return { cnpj, razaoSocial, dataAberturaCnpj, cnaePrincipal, grupoAnexo, municipio };
+  return {
+    cnpj,
+    razaoSocial,
+    dataAberturaCnpj,
+    cnaePrincipal,
+    grupoAnexo,
+    municipio,
+    cltDoSocio,
+  };
 }
 
 /**
@@ -169,7 +188,10 @@ export function retratoDoMes({ empresa, competencias, mesAlvo }) {
   }
 
   // ── O DARF do pró-labore ────────────────────────────────────────────────
-  const darf = atual.proLaboreDeclarado > 0 ? darfDoProLabore(atual.proLaboreDeclarado) : null;
+  const darf =
+    atual.proLaboreDeclarado > 0
+      ? darfDoProLabore(atual.proLaboreDeclarado, empresa.cltDoSocio ?? 0)
+      : null;
 
   // ── Os vencimentos, cada um com a sua regra de deslocamento ─────────────
   const [ano, mes] = mesAlvo.split("-").map(Number);

@@ -16,7 +16,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { apurarDAS, fatorR, anualiza, rbt12De, retencaoLegitima, brl, emCentavos, LACUNAS, RESOLVIDAS } from "./apurador.mjs";
+import { apurarDAS, fatorR, fatorRDeCompetencias, anualiza, rbt12De, retencaoLegitima, brl, emCentavos, LACUNAS, RESOLVIDAS } from "./apurador.mjs";
 
 /* ═══════════════════════════════════════════════════════════════════════════
  * OS CASOS REAIS
@@ -245,6 +245,80 @@ for (const caso of CASOS) {
     console.log("   ❌ a régua de legitimidade não bate");
   }
   console.log("");
+}
+
+/* ── G6 · o mês 1, e a virada de exercício ─────────────────────────────── */
+{
+  console.log("── G6 · A guia do MÊS 1 — e ela não sabe que mês do calendário é");
+  console.log("   fonte: PGDAS-D de 12/2025 (transmissão 09/01/2026 11:39) e de 01/2026 (21/01/2026 16:18)");
+
+  // Mês 1 da persona zero: dez/2025, receita zero. A guia real é R$ 0,00.
+  const mes1 = apurarDAS({ receitaMes: 0, rbt12: 0, anexo: "III" });
+  console.log(confere("mês 1 (dez/25, sem receita)", mes1.total, 0));
+
+  // Mês 1 hipotético COM receita, pra exercitar a regra do art. 24 caput.
+  const r1 = rbt12De({ serieAnterior: [], receitaMesCorrente: 10000 });
+  const das1 = apurarDAS({ receitaMes: 10000, rbt12: r1.rbt12, anexo: "III" });
+  console.log(`   mês 1 com R$10.000 ........ RBT12 ${brl(emCentavos(r1.rbt12))} (regra "${r1.regra}") · faixa ${das1.faixa}`);
+  console.log(confere("DAS do mês 1", das1.total, 60000));
+
+  // 🔴 A VIRADA DE EXERCÍCIO. Empresa aberta em dezembro: o 2º mês é janeiro,
+  // e o RBT12 NÃO reinicia. A janela é móvel, não do ano-calendário.
+  const jan = rbt12De({ serieAnterior: [10000] }); // só dez/25 como anterior
+  const esperadoJan = 120000;
+  console.log(confere("2º mês (janeiro!)", emCentavos(jan.rbt12), emCentavos(esperadoJan)));
+
+  if (jan.regra === "proporcional" && jan.meses === 1) {
+    passou++;
+    console.log("   ✅ janeiro é só 'o 2º mês' — a virada de ano não zera nada");
+  } else {
+    falhou++;
+    erros.push("G6: a virada de exercício mexeu no RBT12 e não deveria");
+    console.log("   ❌ a virada de exercício mexeu no RBT12");
+  }
+  console.log("   🔑 O motor não tem noção de ano-calendário. Empresa aberta em MARÇO e empresa");
+  console.log("      aberta em DEZEMBRO percorrem o mesmo código; o que muda é só o tamanho da");
+  console.log("      série anterior. Era o medo do item 47 (o Fator R zerando em 1º de janeiro).\n");
+}
+
+/* ── G7 · Fator R em regime de CAIXA ───────────────────────────────────── */
+{
+  console.log("── G7 · Fator R em regime de CAIXA — declarado ≠ pago");
+  console.log("   fonte: Res. CGSN 140/2018 art. 26 §6º · SC COSIT 17/2021 e 251/2024");
+
+  // Cenário real da persona zero: tudo declarado E pago.
+  const reais = SERIE.meses.map((mes, i) => ({
+    mes,
+    receita: SERIE.receita[i],
+    proLaboreDeclarado: SERIE.prolabore[i],
+    proLaborePago: SERIE.prolabore[i],
+  }));
+  const ok = fatorRDeCompetencias({ competencias: reais });
+  console.log(`   persona zero (tudo pago) .. FR ${(ok.fr * 100).toFixed(1)}% → Anexo ${ok.anexo} · risco de glosa: ${ok.riscoDeGlosa ? "SIM" : "não"}`);
+
+  // O mesmo caso, mas com 4 competências declaradas e NÃO pagas.
+  const comBuraco = reais.map((c, i) =>
+    i >= 5 ? { ...c, proLaborePago: 0 } : c
+  );
+  const risco = fatorRDeCompetencias({ competencias: comBuraco });
+  console.log(`   se mai-ago não tiver saído .. FR ${(risco.fr * 100).toFixed(1)}% → Anexo ${risco.anexo}`);
+  console.log(`   ⚠️  o mesmo caso contando o DECLARADO daria ${(risco.frSeContasseDeclarado * 100).toFixed(1)}% → Anexo III`);
+  console.log(`   🔴 competências em risco de glosa: ${risco.competenciasEmRisco.join(", ")} · R$ ${risco.naoPago.toLocaleString("pt-BR")} declarados e não pagos`);
+
+  if (ok.riscoDeGlosa === false && risco.riscoDeGlosa === true && risco.anexo === "V" && ok.anexo === "III") {
+    passou++;
+    console.log("   ✅ o regime de caixa muda o ANEXO, e o motor avisa antes da Receita avisar");
+  } else {
+    falhou++;
+    erros.push(`G7: esperado III sem risco e V com risco; obtido ${ok.anexo}/${risco.anexo}`);
+    console.log(`   ❌ esperado III→V, obtido ${ok.anexo}→${risco.anexo}`);
+  }
+  console.log("   🔑 Contar declarado como pago infla o Fator R e segura a empresa no Anexo III");
+  console.log("      indevidamente. Quando a Receita cruza EFD-Reinf com DCTFWeb: glosa,");
+  console.log("      reclassificação de ofício, recálculo de TODAS as competências, Selic e");
+  console.log("      multa de 75% (Lei 9.430/96 art. 44 I).");
+  console.log("   ⚠️  O motor SABE USAR 'foi pago'; ele não sabe DESCOBRIR. Sem conciliação");
+  console.log("      (decisão 31), a via é o cliente declarar — com a Carta CFC carregando.\n");
 }
 
 console.log("✅ LACUNAS RESOLVIDAS em 14/09, por fonte primária:\n");

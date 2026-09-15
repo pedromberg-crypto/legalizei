@@ -171,6 +171,26 @@ export function rbt12De({ serieAnterior, receitaMesCorrente = 0 }) {
  * o motor existir.
  */
 export function apurarDAS({ receitaMes, rbt12, anexo, receitaComIssRetido = 0 }) {
+  // 🔑 MÊS SEM RECEITA: o DAS é zero, e não há alíquota a calcular.
+  // Não é caso de borda — é o mês 1 da maioria das empresas nossas, que nasce
+  // da constituição e costuma faturar só depois. A persona zero declarou
+  // R$0,00 em dez/25, jan, mai, jun e jul de 2026, com recibo do PGDAS-D em
+  // cada uma. Sem esta guarda o motor tentaria dividir por RBT12 zero.
+  if (receitaMes === 0) {
+    const zeros = Object.fromEntries(TRIBUTOS.map((t) => [t, 0]));
+    return {
+      total: 0,
+      bruto: 0,
+      parcelas: zeros,
+      issRetido: 0,
+      temRetencao: false,
+      efetiva: null,
+      faixa: null,
+      anexo,
+      semMovimento: true,
+    };
+  }
+
   const faixa = faixaDe(rbt12, anexo);
   if (!faixa) {
     return { total: null, parcelas: null, faixa: null, forDoSimples: true };
@@ -324,6 +344,81 @@ export function fatorR({ folhaPaga12, receita12, cppNoDas12 = 0 }) {
     naBorda: fr >= FATOR_R.LIMIAR && fr < FATOR_R.MARGEM,
     numerador,
     receita12,
+  };
+}
+
+/**
+ * 🔴 O FATOR R A PARTIR DAS COMPETÊNCIAS — e é aqui que o regime de caixa mora.
+ * ═══════════════════════════════════════════════════════════════════════════
+ * A função `fatorR()` acima confia em quem a chama. Esta NÃO confia: ela recebe
+ * as competências e **separa o declarado do pago sozinha**.
+ *
+ * Cada competência entra como:
+ *   { mes, receita, proLaboreDeclarado, proLaborePago }
+ *
+ * `proLaborePago` ausente ou 0 significa **declarado e não pago**, e esse valor
+ * NÃO entra no numerador. É o passo `P5.8` do board, virado em código.
+ *
+ * ── O QUE CUSTA ERRAR ──────────────────────────────────────────────────────
+ *
+ * Pró-labore declarado no eSocial e não pago não conta (Res. CGSN 140/2018
+ * art. 26 §6º · SC COSIT 17/2021 e 251/2024). Contar o declarado como pago
+ * infla o Fator R, segura a empresa no Anexo III indevidamente, e o preço
+ * quando a Receita cruza EFD-Reinf com DCTFWeb é: glosa, reclassificação **de
+ * ofício** pro Anexo V, recálculo de TODAS as competências, Selic e **multa de
+ * 75%** (Lei 9.430/96 art. 44 I).
+ *
+ * ── ⚠️ O QUE ESTA FUNÇÃO NÃO RESOLVE ───────────────────────────────────────
+ *
+ * Ela sabe usar a informação "foi pago"; ela não sabe DESCOBRIR isso. Sem
+ * conciliação bancária (decisão 31) e sem Open Finance (decisão de 09/09), a
+ * única via é o cliente DECLARAR — mesma doutrina do lucro (item 30), com a
+ * Carta de Responsabilidade (Res. CFC 1.590/2020 art. 3º) carregando o peso.
+ * O motor calcula certo sobre o que lhe contam; quem responde pelo que conta
+ * é quem assina.
+ */
+export function fatorRDeCompetencias({ competencias, cppNoDas12 = 0 }) {
+  const receita12 = competencias.reduce((s, c) => s + (c.receita || 0), 0);
+
+  const folhaPaga = competencias.reduce((s, c) => s + (c.proLaborePago || 0), 0);
+  const folhaDeclarada = competencias.reduce((s, c) => s + (c.proLaboreDeclarado || 0), 0);
+
+  // As competências onde declarou e não pagou — é o que a Receita glosa.
+  const glosaveis = competencias.filter(
+    (c) => (c.proLaboreDeclarado || 0) > (c.proLaborePago || 0)
+  );
+  const naoPago = folhaDeclarada - folhaPaga;
+
+  // 🔴 Empresa com menos de 13 meses anualiza a folha junto com a receita
+  // (art. 26 §4º). Os dois lados, ou nenhum — espelho exato.
+  const anualizar = competencias.length < 13;
+  const pagos = competencias.map((c) => c.proLaborePago || 0);
+  const numeradorFolha = anualizar ? anualiza(pagos) : folhaPaga;
+  const denominador = anualizar
+    ? anualiza(competencias.map((c) => c.receita || 0))
+    : receita12;
+
+  const base = fatorR({
+    folhaPaga12: numeradorFolha,
+    receita12: denominador,
+    cppNoDas12,
+  });
+
+  return {
+    ...base,
+    anualizado: anualizar,
+    folhaPaga,
+    folhaDeclarada,
+    naoPago,
+    // 🔴 O alerta que nenhuma tela do líder dá.
+    riscoDeGlosa: glosaveis.length > 0,
+    competenciasEmRisco: glosaveis.map((c) => c.mes),
+    // Quanto o Fator R seria se contássemos o declarado — a diferença É o risco.
+    frSeContasseDeclarado:
+      denominador > 0
+        ? (anualizar ? anualiza(competencias.map((c) => c.proLaboreDeclarado || 0)) : folhaDeclarada) /
+          denominador
+        : null,
   };
 }
 

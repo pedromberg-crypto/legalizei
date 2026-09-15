@@ -98,7 +98,9 @@ export const FATOR_R = {
  * art. 2º. O `932.3105` do líder é `0.11 × 8475.55` exato — guardar com 4
  * casas e arredondar só na exibição.
  *
- * ⚠️ `SALARIO_MINIMO` veio de FONTE ÚNICA. Conferir antes de virar trava.
+ * ✅ `SALARIO_MINIMO` tem DUAS fontes: Decreto 12.797/2025 e a tabela do INSS
+ * (gov.br), as duas em `pesquisa/fiscal-simples-bh-2026.md` desde 15/07. A
+ * ressalva de "fonte única" que estava aqui era minha, e estava vencida.
  */
 export const PREVIDENCIA = {
   SALARIO_MINIMO: 1621,

@@ -15,6 +15,23 @@ tags: [execucao, motor-fiscal, briefing, mauro, larissa]
 >
 > 📐 **A separação (pedido do Pedro, 15/09):** o **Bloco A** vale para o cliente travado inteiro — resposta muda o produto para todo mundo. O **Bloco B** nasceu de uma persona específica, e pode ser que a resposta só afete aquele caso.
 
+## 📌 Antes de começar — o que JÁ foi respondido por pesquisa
+
+Três rodadas de pesquisa em fonte primária fecharam parte do que estava aqui. **Não perguntar de novo:**
+
+| Já respondido | Onde |
+|---|---|
+| Sócio com **emprego CLT** não impede nada no Simples — só ajusta o teto do INSS | varredura de LC 123 arts. 3º, 15, 17, 30, 31 e Res. CGSN 140/2018: *"total inexistência de comando jurídico"* |
+| **DEFIS**: sem multa por atraso, mas **bloqueia o PGDAS-D** a partir de março do ano seguinte | Manual do PGDAS-D e DEFIS 2018 v4 |
+| **DEFIS morre em 01/01/2027**, absorvida pelo PGDAS-D | Res. CGSN nº 190, de 04/08/2026 |
+| Empresa aberta em dezembro declara o **ano-calendário inteiro** | Res. CGSN 140/2018 art. 2º V + recibo real |
+| **Livro Caixa basta** para a DEFIS, salvo se distribuir lucro acima da presunção | Res. CGSN 140/2018 |
+| Sócio que **sai** não apaga o pró-labore do Fator R — a folha histórica não muda | LC 123 · pesquisa de elegibilidade |
+| Sócio que **entra** afeta o Fator R **já na competência da formalização** | idem |
+| Canais: **Integra-SN, Integra-Sicalc, Integra-DCTFWeb, Integra-Sitfis** cobrem tudo; eSocial é SOAP gratuito | Loja SERPRO + Manual do eSocial |
+
+---
+
 ## 🗣️ Abertura da conversa, em 30 segundos
 
 *"Construímos um motor que calcula o imposto e a guia do sócio mês a mês, e um piloto que ajusta o pró-labore sozinho para manter a empresa no Anexo III. Para testar, criamos 16 empresas fictícias com histórias completas de faturamento — abrindo em todos os 12 meses do ano, de 1 a 4 sócios, algumas atravessando a virada de ano — e rodamos o motor na vida inteira de cada uma. Foram 156 competências. As perguntas abaixo saíram daí."*
@@ -141,6 +158,36 @@ tags: [execucao, motor-fiscal, briefing, mauro, larissa]
 **Por que perguntar.** O DARF **antecipa** e o DAS **prorroga** — no mesmo dia 20, caindo em fim de semana, eles vão para lados opostos. Na competência 08/2026 o DARF venceu 18 e o DAS venceu 21. Se isso estiver invertido, erramos todo mês.
 
 **A pergunta:** confirma os quatro prazos e, principalmente, que o DARF antecipa e o DAS prorroga? E o feriado **municipal** de BH desloca guia federal?
+
+## A12 · 🔴 PEJOTIZAÇÃO — o único risco crítico do nosso perfil 🆕
+
+**O caso.** Um dev, um designer ou um consultor abre a ME para prestar serviço a **um cliente só**, cumprindo horário e recebendo ordens.
+
+**Onde apareceu.** Na pesquisa de elegibilidade ao Simples, de 15/09.
+
+**Por que apareceu.** O art. 3º §4º inciso **XI** da LC 123 veda o Simples quando o sócio guarda com o contratante, **cumulativamente**, relação de *pessoalidade, subordinação e habitualidade*. A pesquisa classificou como **risco CRÍTICO** justamente para TI, design e consultoria — que é o nosso público inteiro. E é a única vedação que a autodeclaração pega mal, porque depende da sinceridade de quem responde.
+
+**A pergunta:** na prática do escritório, com que frequência isso aparece? Como você orienta o cliente que tem um cliente só? E qual o risco real — exclusão do Simples, reclamação trabalhista, ou os dois?
+
+## A13 · 🔴 Não existe consulta prévia por CPF — o gate é 100% autodeclaração 🆕
+
+**O caso.** Antes de cobrar do cliente e abrir a empresa, queremos saber se ele **pode** optar pelo Simples.
+
+**Onde apareceu.** Mesma pesquisa. Ela declarou **ausência normativa**: nenhum serviço, portal ou API do governo permite testar um CPF antes de o CNPJ existir.
+
+**Por que apareceu.** Se passar batido, a empresa nasce, a opção é **indeferida**, e ela começa a vida no **Lucro Presumido** — que para uma ME de serviço é fatal. E o estouro de faturamento global muitas vezes **só aparece meses depois**, gerando exclusão retroativa.
+
+**A pergunta:** você tem algum caminho prático de checagem prévia que a gente não conheça? E quando o indeferimento acontece, qual o prazo e o rito para recorrer? O recurso suspende a cobrança pelo Lucro Presumido enquanto corre?
+
+## A14 · 🟡 Servidor público e MEI ativo 🆕
+
+**O caso.** Dois perfis que aparecem no funil e que hoje passam direto pelo nosso cadastro.
+
+**Onde apareceu.** Mesma pesquisa.
+
+**Por que apareceu.** **Servidor público ativo** pode ser sócio quotista mas **não pode administrar** — o que muda a qualificação 49 × 22 e quem assina pela empresa. E **MEI ativo** não impede abrir a ME, mas **obriga baixa ou desenquadramento** antes, sob pena de exclusão de ofício (Res. CGSN 140/2018 art. 115 §2º IV).
+
+**A pergunta:** confirma os dois? No caso do MEI, a baixa precisa ser **antes** da abertura ou dá para fazer depois, dentro de algum prazo? E servidor **municipal de BH** segue a mesma regra do federal?
 
 ---
 

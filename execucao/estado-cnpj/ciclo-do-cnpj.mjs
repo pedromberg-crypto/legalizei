@@ -394,3 +394,140 @@ export function placarDeAutomacao() {
 }
 
 export { VENCIMENTOS };
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * 7 · 🚪 O GATE DE ENTRADA — quem PODE ser nosso cliente
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/**
+ * 🔴 ISTO NÃO EXISTIA, e é o buraco que a pergunta do Pedro sobre "sócio em
+ * outra empresa" revelou em 15/09.
+ *
+ * Tínhamos a triagem de impedimento do **MEI** inteira e **nada** para o ME.
+ * Dava para vender um plano, abrir a empresa na Junta e a opção pelo Simples
+ * ser **indeferida depois** — e aí a empresa nasce no **Lucro Presumido**, que
+ * para uma ME de serviço é economicamente fatal.
+ *
+ * ── 🔑 O ACHADO QUE DECIDE O DESENHO ───────────────────────────────────────
+ *
+ * **Não existe API de consulta prévia por CPF.** A pesquisa de 15/09 declarou
+ * isso como ausência normativa: nenhum serviço do governo permite testar, antes
+ * de o CNPJ existir, se aquele CPF tem impeditivo. O REDESIM/SERPRO recusa
+ * avaliação preditiva fora da posse do CNPJ.
+ *
+ * Consequência dura: **o gate é 100% autodeclaração.** Não dá para conferir.
+ * O que dá é perguntar bem, registrar a resposta e deixar a responsabilidade
+ * clara — mesma doutrina da Carta de Responsabilidade do lucro.
+ *
+ * ⚠️ Isto é **dado**, não tela. Quem constrói a pergunta é o flow de entrada.
+ */
+export const GATE_DE_ENTRADA = {
+  fonte: "LC 123/2006 art. 3º §4º · Res. CGSN 140/2018 art. 115 §2º IV · Lei 8.112/90 art. 117 X",
+  literal: "pesquisa/fontes/2026-09-15-elegibilidade-simples-LITERAL.md",
+  consultaPrevia: null, // 🔴 não existe, e a pesquisa declarou a ausência
+
+  /**
+   * Dos 12 incisos do art. 3º §4º, **8 não alcançam o nosso perfil** — a
+   * modelagem já os neutraliza (sócio PJ, sede no exterior, cooperativa,
+   * banco, cisão, S.A., filial no exterior, participar de outra PJ).
+   * Sobram estes 4, e o último é o que mais dói.
+   */
+  vedacoes: [
+    {
+      id: "V1",
+      inciso: "III",
+      o_que: "sócio participa de OUTRA empresa optante pelo Simples",
+      // 🔑 Aqui o percentual NÃO importa: 0,1% já engatilha a soma.
+      gatilho: "receita bruta global das duas > R$4.800.000/ano",
+      risco: "alto",
+      pergunta: "Você já é dono ou sócio de alguma outra empresa hoje?",
+    },
+    {
+      id: "V2",
+      inciso: "IV",
+      o_que: "sócio participa de empresa FORA do Simples",
+      // ⚠️ Aqui o percentual importa: só acima de 10%.
+      gatilho: "participação > 10% E receita global > R$4.800.000/ano",
+      risco: "alto",
+      pergunta: "Você tem mais de 10% de alguma empresa do Lucro Presumido ou Real?",
+    },
+    {
+      id: "V3",
+      inciso: "V",
+      o_que: "sócio é ADMINISTRADOR de outra empresa com fins lucrativos, mesmo sem ser sócio dela",
+      gatilho: "receita global > R$4.800.000/ano",
+      risco: "alto",
+      pergunta: "Você é diretor ou administrador registrado em outra empresa, mesmo sem ser dono?",
+    },
+    {
+      id: "V4",
+      inciso: "XI",
+      o_que: "pejotização — pessoalidade, subordinação e habitualidade com o contratante, CUMULATIVAMENTE",
+      gatilho: "os três ao mesmo tempo, com o mesmo contratante",
+      // 🔴 RISCO CRÍTICO, e é o nosso perfil exato: TI, design, consultoria são
+      // justamente as atividades que atraem fiscalização de vínculo disfarçado.
+      // ⚠️ E é o único que a autodeclaração pega mal: depende da sinceridade.
+      risco: "CRÍTICO",
+      pergunta:
+        "Você vai prestar o serviço cumprindo horário e recebendo ordens do seu cliente, como um funcionário de carteira assinada?",
+    },
+  ],
+
+  /** Impedimentos que não vêm do art. 3º §4º, e mesmo assim travam. */
+  outros: [
+    {
+      id: "O1",
+      o_que: "MEI ativo no CPF",
+      // Não impede ABRIR a ME — obriga a baixar ou desenquadrar o MEI antes,
+      // sob pena de exclusão de ofício.
+      efeito: "obriga baixa/desenquadramento do MEI",
+      norma: "Res. CGSN 140/2018 art. 115 §2º IV",
+      pergunta: "Você tem um MEI aberto no seu nome?",
+    },
+    {
+      id: "O2",
+      o_que: "servidor público ativo",
+      // 🔑 Não impede ser SÓCIO. Impede ADMINISTRAR — o que muda a
+      // qualificação 49 × 22 e quem assina pela empresa.
+      efeito: "pode ser quotista, NÃO pode ser administrador",
+      norma: "Lei 8.112/90 art. 117 X · Estatuto de BH (Lei 7.169/96)",
+      pergunta: "Algum sócio é servidor público ativo?",
+    },
+  ],
+
+  /**
+   * ✅ E o que NÃO é vedação, declarado expressamente pela pesquisa — porque
+   * confirmar uma ausência vale tanto quanto achar uma regra.
+   */
+  naoSaoVedacao: [
+    {
+      o_que: "sócio com emprego CLT",
+      // Confirma a nossa leitura de 15/09: o CLT toca só o teto do INSS, que é
+      // da PESSOA. Não impede nada no Simples.
+      porque:
+        "a pesquisa varreu LC 123 arts. 3º, 15, 17, 30 e 31 e a Res. CGSN 140/2018 e declarou 'total inexistência de comando jurídico' que impeça",
+    },
+    { o_que: "sócio aposentado", porque: "sem restrição fiscal" },
+    { o_que: "estrangeiro residente no Brasil", porque: "sem restrição fiscal" },
+  ],
+
+  /** O que acontece quando passa batido — e por que o gate importa. */
+  seFalhar: {
+    quando: "pendência cadastral trava na hora; estouro de faturamento global só aparece meses depois",
+    consequencia: "exclusão RETROATIVA, e a empresa cai no Lucro Presumido",
+    socioNovo: "sócio que entra carregando vedação exclui a empresa a partir do MÊS SEGUINTE",
+  },
+};
+
+/**
+ * 🔑 O QUE A PESQUISA CONFIRMOU SOBRE O NOSSO MOTOR (e não muda nada nele):
+ *
+ * · Sócio que **entra** no meio do ano recebe pró-labore a partir do mês da
+ *   formalização, e isso afeta o Fator R **já naquela competência**.
+ * · Sócio que **sai** não apaga nada: o pró-labore que ele recebeu **continua**
+ *   no Fator R por até 12 meses depois do pagamento. A folha histórica não
+ *   muda.
+ *
+ * Os dois batem com o desenho do `_modelo.mjs`, onde a série é histórica e
+ * imutável. Fecha o item **B3** do `_cobertura-das-vidas` sem mexer em código.
+ */

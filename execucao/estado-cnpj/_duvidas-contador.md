@@ -50,9 +50,39 @@ Três rodadas de pesquisa em fonte primária fecharam parte do que estava aqui. 
 
 **Por que apareceu.** O erro vai para os dois lados e é grande: nesse exemplo o sistema cobrava **R$3.617,19** onde calculamos que o correto seja **R$1.540,00** de INSS. A tabela do IR é progressiva por pessoa, e R$14.000 numa pessoa cai numa faixa que R$3.500 em quatro não alcança. No INSS o erro era ao contrário, para menos, porque o teto também é por pessoa e aplicávamos um teto só para a soma. **Já corrigimos.**
 
+### A conta, linha a linha — as duas do mesmo caso
+
+> 4 sócios × R$3.500 · folha total R$14.000 · sem CLT por fora · competência 2026
+
+| Passo | ❌ Como o sistema fazia (soma como **1 pessoa**) | ✅ Como passou a fazer (**por sócio**) |
+|---|---:|---:|
+| Base do INSS | R$ 14.000,00, limitada ao teto **R$ 8.475,55** | R$ 3.500,00 (abaixo do teto) |
+| **INSS (11%)** | **R$ 932,31** | **R$ 385,00** por sócio |
+| Dedução aplicada no IRRF | o próprio INSS, R$ 932,31 | desconto simplificado, **R$ 607,20** *(é o maior dos dois)* |
+| Base do IRRF | R$ 13.067,69 | R$ 2.892,80 |
+| Faixa da tabela | **27,5%** | 15% |
+| Imposto pela tabela | R$ 2.684,88 | R$ 39,76 |
+| Redutor do art. 3º-A (Lei 15.270/2025) | R$ 0,00 *(não alcança)* | **− R$ 39,76** *(zera)* |
+| **IRRF** | **R$ 2.684,88** | **R$ 0,00** |
+| **Total por sócio** | — | **R$ 385,00** |
+| 🔴 **TOTAL DA EMPRESA** | **R$ 3.617,19** | **R$ 1.540,00** |
+
+🔑 **Diferença: R$ 2.077,19 por mês**, cobrados a mais de 4 pessoas que juntas não chegariam nem na 2ª faixa da tabela.
+
 **A pergunta:** confirma que o teto do INSS (R$8.475,55) e a tabela do IRRF se aplicam **individualmente a cada sócio**, e que a guia da empresa é a **soma** dessas contas individuais? Existe alguma situação em que se calcula sobre o total?
 
-⚠️ **Double-check de número, e é onde discordamos de uma pesquisa:** para esse mesmo caso (4 × R$3.500), o nosso motor dá **IRRF zero**, aplicando o desconto simplificado de R$607,20 e o redutor da Lei 15.270/2025. Uma pesquisa que rodamos deu **R$184,48**, usando desconto de R$564,80 e sem citar o redutor. **Quem está certo?**
+### ⚠️ E aqui precisamos de um desempate
+
+No INSS nós e a pesquisa que rodamos batemos: **R$1.540,00**. No IRRF, não:
+
+| | Desconto simplificado | Redutor da Lei 15.270/2025 | IRRF por sócio | IRRF da empresa |
+|---|---:|---|---:|---:|
+| **Nosso motor** | R$ 607,20 | aplicado, zera | **R$ 0,00** | **R$ 0,00** |
+| **A pesquisa** | R$ 564,80 | não citado | R$ 46,12 | R$ 184,48 |
+
+O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona a Lei 15.270/2025 em nenhum ponto. Achamos que o certo é o nosso, mas **não queremos apostar** num número que sai na guia de todo cliente.
+
+**A pergunta:** qual é o desconto simplificado vigente em 2026, e o redutor do art. 3º-A se aplica ao pró-labore de R$3.500?
 
 ## A2 · 🟡 O pró-labore pode ser desigual entre os sócios? `#71`
 
@@ -81,6 +111,17 @@ Três rodadas de pesquisa em fonte primária fecharam parte do que estava aqui. 
 **Onde apareceu.** Na varredura cronológica da conta real.
 
 **Por que apareceu.** A Lei 8.212/91 art. 28 §3º diz que o salário de contribuição não pode ser inferior ao mínimo. Travamos isso como o **único bloqueio duro** da tela de pró-labore, mas o valor do piso veio de **fonte única** na nossa pesquisa.
+
+### As três fontes que confirmam o mesmo R$100
+
+| Fonte | O que traz | Valor |
+|---|---|---:|
+| **DCTFWeb** de 12/2025 | base declarada | R$ 100,00 |
+| **Informe de Rendimentos** 2025 | *"Total dos rendimentos (inclusive férias)"* | R$ 100,00 |
+| idem | *"Contribuição previdenciária oficial"* | R$ 11,00 *(11% exatos)* |
+| **Aritmética do acumulado** do Fator R | fecha com os R$100 na série | R$ 100,00 |
+
+⚠️ E o piso legal, para comparação: o salário mínimo de 2026 é **R$ 1.621,00** — o que sairia de INSS seria **R$ 178,31**, e não R$ 11,00.
 
 **A pergunta:** isso é irregular? Existe hipótese em que um valor abaixo do mínimo é aceito? E travar no salário mínimo está correto?
 
@@ -203,6 +244,19 @@ Três rodadas de pesquisa em fonte primária fecharam parte do que estava aqui. 
 
 **Por que apareceu.** O teto é **da pessoa**. O sócio com CLT não recolhe nada; o **outro** não tem CLT e recolhe normalmente. Zerar a guia inteira isentava quem não tinha direito.
 
+### A conta
+
+> 2 sócios × R$1.621 · folha total R$3.242 · **um deles** tem CLT de R$9.000
+
+| | Folga até o teto | Base do INSS | **INSS** |
+|---|---:|---:|---:|
+| Sócio **com** CLT de R$9.000 | R$ 0,00 *(o CLT já passou do teto)* | R$ 0,00 | **R$ 0,00** |
+| Sócio **sem** CLT | R$ 8.475,55 | R$ 1.621,00 | **R$ 178,31** |
+| ❌ Como o motor fazia *(soma os dois e aplica o CLT de um só)* | — | — | **R$ 0,00** |
+| ✅ Correto | | | **R$ 178,31** |
+
+🔑 O erro **isentava quem não tinha direito**: o sócio sem CLT deixava de recolher porque o colega dele tinha emprego.
+
 **A pergunta:** confirma que o CLT de um sócio não alivia em nada o INSS do outro? E o sócio com CLT acima do teto realmente não recolhe nada sobre o pró-labore?
 
 ## B2 · 🟡 Pró-labore declarado e não pago
@@ -233,6 +287,17 @@ Três rodadas de pesquisa em fonte primária fecharam parte do que estava aqui. 
 
 **Por que apareceu.** O Fator R olha os **12 meses anteriores** — consertar hoje não conserta hoje. São 11 meses pagando 15,5% já com a folha certa. É por isso que o nosso produto **ajusta o pró-labore desde o mês 1** em vez de avisar depois.
 
+### A linha do tempo
+
+| | Pró-labore | Fator R | Anexo | Alíquota |
+|---|---:|---:|---|---:|
+| mar–ago/2026 | R$ 1.621 | 9,0% | **V** | 15,5% |
+| **set/2026** — ele corrige | **R$ 5.400** | 13,5% | **V** | 15,5% |
+| out/2026 – jul/2027 | R$ 5.400 | subindo | **V** | 15,5% |
+| **ago/2027** | R$ 5.400 | ≥ 28% | **III** | 6% |
+
+🔑 **Onze meses pagando 15,5% com a folha já certa.** O Fator R lê os 12 meses **anteriores**, então a janela precisa rolar até os meses ruins saírem dela. É por isso que o nosso produto ajusta desde o mês 1 em vez de avisar depois.
+
 **A pergunta:** está certo que não há como acelerar essa volta? Existe algum caminho (retificação, pagamento retroativo) que encurte?
 
 ## B5 · 🟡 Guia paga em atraso, três meses seguidos
@@ -243,7 +308,18 @@ Três rodadas de pesquisa em fonte primária fecharam parte do que estava aqui. 
 
 **Por que apareceu.** Nosso motor calcula multa de **0,33% ao dia até o teto de 20%**, mais juros de Selic acumulada **mais 1%** no mês do pagamento. Precisamos confirmar a fórmula e de onde vem a Selic.
 
-**A pergunta:** a fórmula está certa? A Selic acumulada é a do período entre vencimento e pagamento? E o 1% entra sempre ou só quando o pagamento sai do mês do vencimento?
+### A conta das três competências
+
+| Competência | Venceu | Pagou | Dias | DAS | Multa | Juros | **Total pago** |
+|---|---|---|---:|---:|---:|---:|---:|
+| 03/2026 | 20/04 | 04/05 | 14 | R$ 1.182,04 | R$ 54,61 *(4,62%)* | R$ 24,70 *(2,09%)* | **R$ 1.261,35** |
+| 04/2026 | 20/05 | 10/06 | 21 | R$ 1.528,34 | R$ 105,91 *(6,93%)* | R$ 48,60 *(3,18%)* | **R$ 1.682,85** |
+| 05/2026 | **22/06** | 06/07 | 14 | R$ 1.794,22 | R$ 82,89 *(4,62%)* | R$ 76,61 *(4,27%)* | **R$ 1.953,72** |
+| | | | | | | **custo do atraso** | **R$ 393,32** |
+
+⚠️ Repare no **22/06**: o dia 20 caiu em sábado e o DAS **prorroga** para o próximo dia útil. É o mesmo dia 20 em que o DARF **antecipa** — ver o item **A11**.
+
+**A pergunta:** a fórmula está certa (0,33% ao dia até 20%, mais Selic acumulada, mais 1% no mês do pagamento)? A Selic é a do período entre vencimento e pagamento? E o 1% entra sempre ou só quando o pagamento sai do mês do vencimento?
 
 ## B6 · 🟡 Meses seguidos sem faturar
 

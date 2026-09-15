@@ -1,130 +1,141 @@
 # Memory Index — Legalize
 
-- [🔴 RETOMADA: os 2 motores fiscais duplicados](legalize-dois-motores-fiscais-duplicados.md) — 14/09, pedido do Pedro: 7 de 7 constantes duplicadas (so nao quebrou porque coincidem) e `brl()` com unidades diferentes nos dois — errar por 100x passa em revisao.
-- [Estado recorrente de CNPJ: derivado nao se guarda](legalize-estado-recorrente-cnpj.md) — 14/09: 3 telas com 3 faturamentos viraram 1 fonte. O extrato inteiro pegou 2 bugs que teste de um mes nao pega, um deles dobrando o imposto.
-
-- [O apurador fiscal existe e bate ao centavo](legalize-motor-fiscal-apurador-existe.md) — 14/09: `execucao/motor-fiscal/`, 18 conferencias. As 3 lacunas fecharam por fonte primaria; a L2 DIMINUIU o escopo. E a pesquisa errou o DAS que o motor acerta — so o recibo fala de arredondamento.
-
-- [O prototipo Next.js NAO descreve mais o Flutter](legalize-prototipo-nextjs-nao-descreve-flutter.md) — 14/09: 2 erros meus no mesmo dia por ler a fonte errada com confianca de fonte certa. Codigo do E6.1 e real (AWS manda e-mail), e os campos internos nao existem no app.
-- [Suite de teste do Flutter: 20 personas](legalize-suite-teste-flutter-personas.md) — 14/09: `execucao/testes-flutter/`, P01 rodou ate o E9.1P, parede e 404 puro. PARADO por pedido do Pedro; 3 fios abertos (destravar E9, CPFs gerados, escopo da leva).
-
-- [Metodo virou CRONOLOGICO: persona zero e o motor](legalize-metodo-cronologico-persona-zero.md) - 13/09: sai varredura por categoria, entra ordem de execucao real. Etiqueta de 3 vias (lei/decisao deles/defeito deles) + coluna do que NAO prova.
-- [Achados da conta real, 13/09](legalize-achados-conta-real-13-09.md) - procuracao de 5 anos com confissao de debitos; intimacao nao lida no DTE (a vigilia e "a Receita te escreveu"); certificado em 16 min com senha junto; o lider nunca entregou o contrato social.
-- [Retirada sem lucro vira EMPRESTIMO ao socio](legalize-retirada-sem-lucro-vira-emprestimo.md) — 14/09: o lider lanca em Creditos com Pessoas Ligadas, no ativo, sem bloquear nem avisar. Resolve sem tutelar. E nota cancelada nao deixa rastro no Diario.
-- [A API da a arquitetura, nunca a conta](legalize-api-nao-entrega-a-equacao.md) — 14/09: tela de Relatorios do lider e leitor de resultado, nao motor. Equacao sai do recibo + lei + Mauro.
-- [Trava de PERSONA: o 2o filtro](legalize-trava-persona-produto.md) — 13/09: pega o que e legal no nosso regime e mesmo assim nao existe no produto. Proibido e POR CATEGORIA. INFORMAR, nunca TUTELAR.
-- [Motor fiscal: arredonda por TRIBUTO](legalize-motor-fiscal-arredonda-por-tributo.md) — 13/09: DAS = soma de 6 parcelas arredondadas (resolve o 5,99987%); Fator R e CAIXA; empresa nova anualiza a FOLHA junto.
-- [Modo cru: varredura por categoria](legalize-modo-cru-varredura-categoria.md) — 12/09: o Pedro parou a esteira. 2 campos obrigatorios, sem tela/API/semaforo, fronteira e NOTA. Home por ultimo.
-- [So o uso real corrige o mapa](legalize-uso-real-corrige-o-mapa.md) — 12/09: emitimos NF de verdade e o uso achou 3 erros conceituais que documentacao nenhuma pegaria. Contar tela != contar o que existe.
+## Motor fiscal e estado do CNPJ
+- [Anexo V tinha DUAS lacunas, so uma fechou](legalize-anexo-v-duas-lacunas.md) — 15/09: simulacao fecha COMPORTAMENTO, nunca DOCUMENTO. Efetiva continua ao 12o decimal em 8 bordas; quebra na 6a, nos dois anexos, pra baixo.
+- [O Fator R e RETROVISOR](legalize-fator-r-e-retrovisor.md) — 15/09: corrigir hoje nao conserta hoje (P01 so volta ao III em ago/2027). Invariante passava pelo motivo errado.
+- [Os 2 motores fiscais duplicados](legalize-dois-motores-fiscais-duplicados.md) — 14/09: 7 de 7 constantes duplicadas; `brl()` com unidades diferentes nos dois. Debito PAGO em 15/09 por gerador.
+- [O apurador fiscal existe e bate ao centavo](legalize-motor-fiscal-apurador-existe.md) — 14/09: `execucao/motor-fiscal/`. A pesquisa errou o DAS que o motor acerta; so o recibo fala de arredondamento.
+- [Motor fiscal: arredonda por TRIBUTO](legalize-motor-fiscal-arredonda-por-tributo.md) — 13/09: DAS = soma de 6 parcelas arredondadas. Fator R e CAIXA; empresa nova anualiza a FOLHA junto.
+- [Estado recorrente de CNPJ: derivado nao se guarda](legalize-estado-recorrente-cnpj.md) — 14/09: 3 telas com 3 faturamentos viraram 1 fonte; o extrato inteiro pegou 2 bugs, um dobrando o imposto.
 - [Escopo: ME Simples, Anexos III e V](legalize-escopo-me-simples-anexos-3-5.md) — 12/09 travado: virou dado + script nos 3 geradores. O enquadramento MUDA a regra (E0061).
-- [BH ja obriga o Emissor Nacional desde 01/11/2025](legalize-bh-emissor-nacional-desde-2025.md) — 12/09: o P3 dizia 2026. Empresa nova emite SEM inscricao municipal; nao existe procuracao na NFS-e.
-- [A abertura ja tem dono: nao desenhar, so mapear os dados](legalize-fronteira-abertura-time-dev.md) — 12/09: time do dev cobre download→pagamento da guia; assistido = 2 assinaturas + certificado; handoff e TABELA, nao caminho no board.
-- [O semaforo mede desenho, nao insumo](legalize-semaforo-mede-desenho-nao-insumo.md) — 12/09: 8 passos verdes dependiam de insumo sem entrega combinada; nasceu o selo ⚠ N no cartao. Dado nao vira cartao.
-- [Nao matar um caminho corrigindo outro](legalize-nao-matar-caminho-multiplos-ramos.md) — 11/09 travado: todo no depois de bifurcacao e compartilhado; simulador de caminhos no gerar-processos (base x todas x cada uma sozinha).
-- [A doutrina de processos nao se enche sozinha](legalize-doutrina-processos-nao-se-enche-sozinha.md) — 11/09: §6 e a casa das licoes e depende de alguem escrever; vigia no gerar-processos avisa depois de 3 levas.
-- [Processo ANTES da tela](legalize-processo-antes-da-tela.md) — 11/09 revoga o plano de inventariar telas: inventario de tela e cego pro que falta. Board `/processos`, semaforo, vermelho e o produto.
-- [LP virou a raiz, em modo pre-lancamento](legalize-lp-na-raiz-modo-espera.md) — 11/09 no ar; modo vira com 1 comando. 🔴 `lp/_lab` e a FONTE e nao esta versionada.
-- [Billing = fatura por competencia, nao assinatura](legalize-cobranca-fatura-competencia.md) — 11/09 travado: itens de linha, `plano: null`, competencia AAAAMM; gateway entra por ultimo. Corroborado na API do lider.
-- [Endereco fiscal = R$49/mes](legalize-endereco-fiscal-49.md) — 11/09 revoga o R$60 de 04/09: abaixo de R$50 a clausula 6.3 deixa de se contradizer com o Anexo I. ⚠️ colide com o preco do plano MEI, tambem R$49.
-- [Decisoes do NOSSO contrato ME](legalize-contrato-proprio-decisoes.md) — 10/09 **MINUTA ESCRITA E ENVIADA A ADVOGADA**: 16 clausulas em `execucao/contrato/minuta-contrato-me.md`; 3 coortes ME (79/99/139) + tabela EPP por RBT12; folha R$39 teto 10; ME→EPP permanece no app; migracao REMOVIDA (contrato e de constituicao); elegibilidade por caracteristica x conduta.
-- [Lucro 2026 (Lei 15.270/2025) + Carta CFC obrigatoria](legalize-lucro-2026-e-carta-cfc.md) — 10/09: lucro sacado vai pra EFD-Reinf com IRRF antecipado; ATA ate 31/01/2026 isenta o acumulado. Carta de Responsabilidade (CFC 1.590/2020) trava o fechamento contabil.
-- [Documento importante se le INTEIRO](legalize-leitura-integral-documento.md) — 10/09 TRAVADO no CLAUDE.md: 100% do texto, literal salvo em arquivo, e o que ficou de fora vira lista com nome. Nasceu de eu entregar 12% como se fosse tudo.
-- [Contrato do lider: enumera o incluso, nao o avulso](legalize-contrato-lider-enumera-incluso.md) — 10/09: 11 clausulas + 3 anexos lidos; a 4.2 e lista de exclusao nominal; a 5.4 remete pro anexo errado; ECD esta incluida E vendida.
-- [A casa tem DOIS CNPJs](legalize-entidades-duas-empresas.md) — 10/09: Legalizai Tecnologia (41.569.345/0001-48, ex-"Legalize Digital") + Legalize Auditoria (12.423.332/0001-68, CRC-MG 007900/O).
-- [Pasta produto/ e a fonte-verdade das funcionalidades](legalize-pasta-produto-fonte-verdade.md) — 09/09: frente ganhou pasta-raiz; spec viva e evidencia datada SEPARADAS; funcionalidades-me-simples virou redirecionador.
-- [Metodo de teardown funcionalidade a funcionalidade](legalize-metodo-teardown-funcionalidade.md) — 09/09: conta de producao, so leitura; ler o DOM antes de clicar; refazer toda aritmetica; seguir ate onde vira guia.
-- [Vocabulario do vault: doutrina virou trava](legalize-vocabulario-tipo-derivou.md) — 09/09 RESOLVIDO: verificar.js estava cego em 79% por CRLF e nunca rodava. 8 tipos, 0 violacoes, 0 links quebrados, plugado no gerar-mapa.
-- [API antes de funcionalidade](legalize-api-antes-de-funcionalidade.md) — 08/09: matriz em `produto/_matriz-dependencia.md`. ⚠️ placar recontado em 09/09: 23 deps, 🟢16 · 🟡3 · 🔴4. Emitir NFS-e e emitir a guia do DAS decidem o produto.
-- [Asaas fora, Pagar.me em avaliação](legalize-gateway-asaas-fora.md) — 08/09: o formato do Asaas nos jogaria pro escopo PCI; pesquisa arquivada, reunião com Pagar.me sendo marcada.
-- [Portal ME/Simples: lista consolidada](legalize-portal-lista-consolidada.md) — 08/09: 51 funcionalidades, 31 construídas; "pagar o DAS pelo app" morreu em 27/07 e o gap virou "saber que foi pago".
-- [Réplica de tela se PORTA, não se remonta](legalize-replica-de-tela-se-porta.md) — 07/09: 5 telas erradas no mesmo dia pela mesma raiz; nasceu a trava `verificar-anatomia-mei.mjs`, que roda junto com o gerar-mapa.
-- [Certificado do MEI virou gate E cobrança no app](legalize-certificado-vira-gate-e-cobranca.md) — 07/09: sem ele o app não libera; deixa de ser "pago direto na certificadora". 🔴 pede cláusula com o Mauro.
-- [Fork do ramo MEI](legalize-fork-ramo-mei.md) — 07/09: MEI virou caminho próprio (`/mei/*`, `components/mei/`, `lib/mei-flow.ts`) com trava de fronteira; herança por prop `mei` custou 4 defeitos em 8 dias.
+- [Etiquetas dos Anexos III/IV/V](legalize-anexos-simples-etiquetas.md) — referencia fiscal (tabela, reparticao, Fator R, CPP), fonte LC 123. CPP fora do DAS no IV.
+- [Pesquisa fiscal BH 2026](legalize-pesquisa-fiscal-bh-2026.md) — bloco consolidado em `fiscal-simples-bh-2026.md`; sem contradicao dura vs Gemini.
+- [Lucro 2026 (Lei 15.270/2025) + Carta CFC](legalize-lucro-2026-e-carta-cfc.md) — 10/09: lucro sacado vai pra EFD-Reinf com IRRF antecipado. Carta CFC 1.590/2020 trava o fechamento.
 
-- [Reta final: 2 assinaturas + videochamada do certificado](legalize-reta-final-certificado-e-assinaturas.md) — 05/09: 1ª = todos os sócios (Junta) · 2ª = só contador + representante (Receita) · certificado é o ÚLTIMO passo, com parceira; procuração e-CAC saiu do flow.
-- [Regra de órgão não se deduz, se pergunta](legalize-regra-de-orgao-nao-se-deduz.md) — 05/09: a procuração teve 5 versões em 2 dias, 4 deduzidas por mim; o Ademar responde em minutos.
-- [Edição simples se resolve com Edit direto](legalize-edicao-simples-editar-direto.md) — 05/09: nada de script Python de patch nem suíte de e2e em pedido pontual de layout; Pedro cobrou lentidão 2x na mesma sessão.
+## Persona, escopo e processos
+- [Trava de PERSONA: o 2o filtro](legalize-trava-persona-produto.md) — 13/09: pega o que e legal no nosso regime e mesmo assim nao existe no produto. Proibido e POR CATEGORIA. INFORMAR, nunca TUTELAR.
+- [Metodo virou CRONOLOGICO: persona zero](legalize-metodo-cronologico-persona-zero.md) — 13/09: ordem de execucao real, etiqueta de 3 vias (lei/decisao deles/defeito deles) + coluna do que NAO prova.
+- [Modo cru: varredura por categoria](legalize-modo-cru-varredura-categoria.md) — 12/09: 2 campos obrigatorios, sem tela/API/semaforo. CONGELADO em 3 de 8 categorias.
+- [Processo ANTES da tela](legalize-processo-antes-da-tela.md) — 11/09: inventario de tela e cego pro que falta. Board `/processos`, vermelho e o produto.
+- [A doutrina de processos nao se enche sozinha](legalize-doutrina-processos-nao-se-enche-sozinha.md) — 11/09: §6 depende de alguem escrever; vigia avisa depois de 3 levas.
+- [Nao matar um caminho corrigindo outro](legalize-nao-matar-caminho-multiplos-ramos.md) — 11/09: todo no depois de bifurcacao e compartilhado; simulador de caminhos no gerador.
+- [O semaforo mede desenho, nao insumo](legalize-semaforo-mede-desenho-nao-insumo.md) — 12/09: 8 passos verdes dependiam de insumo sem entrega combinada. Dado nao vira cartao.
+- [A abertura ja tem dono](legalize-fronteira-abertura-time-dev.md) — 12/09: time do dev cobre download→pagamento da guia; handoff e TABELA, nao caminho no board.
+- [Escopo e so o ME abrir empresa](legalize-escopo-so-me-abrir.md) — 01/09: MEI e Migracao fora, salvo pedido; tela compartilhada exige guarda por regime.
+- [Escopo MEI confirmado, Lucro Presumido fora](legalize-escopo-mei-lucro-presumido-aberto.md) — 04/08: MEI entra (inclusive Migrar); LP na saida "nao atendemos".
+- [MVP so servico + corte comercio](legalize-mvp-so-servico-cnae.md) — 15/07: 200 CNAEs de comercio em standby. 🔴 limite de socios SUPERADO 29/08: teto e 4.
 
-- [Vault isolado do agente de WhatsApp](legalize-agente-whatsapp-vault-isolado.md) — 04/09: 12 arquivos que o Léo lê em runtime; os 1332 CNAEs ficam FORA do RAG e viram tool com gate por confiança (só `alta` autoriza afirmar).
-- [Personalidade do Léo mora em 4 lugares, 2 já divergiram](legalize-leo-personalidade-4-copias.md) — 04/09: fonte é `marca/personagem-leo.md`; cópia do Ateliê está em pilares v3 e polo com "L" (o certo é o check).
+## Conta real do lider (evidencia, nao autoridade)
+- [Achados da conta real, 13/09](legalize-achados-conta-real-13-09.md) — procuracao de 5 anos com confissao de debitos; intimacao nao lida no DTE; certificado em 16 min com senha junto.
+- [Retirada sem lucro vira EMPRESTIMO ao socio](legalize-retirada-sem-lucro-vira-emprestimo.md) — 14/09: lancado em Creditos com Pessoas Ligadas, no ativo, sem bloquear nem avisar. Nota cancelada nao deixa rastro no Diario.
+- [A API da a arquitetura, nunca a conta](legalize-api-nao-entrega-a-equacao.md) — 14/09: tela de Relatorios e leitor de resultado, nao motor. Equacao sai do recibo + lei + Mauro.
+- [Metodo de teardown funcionalidade a funcionalidade](legalize-metodo-teardown-funcionalidade.md) — 09/09: conta de producao, so leitura; ler o DOM antes de clicar; refazer toda aritmetica.
+- [Contrato do lider: enumera o incluso](legalize-contrato-lider-enumera-incluso.md) — 10/09: 11 clausulas + 3 anexos; a 4.2 e exclusao nominal; a 5.4 remete pro anexo errado.
+- [Contrato + tabela real do lider](legalize-contrato-lider-achados.md) — 30/07: cliente paga TODAS taxas publicas; multa = 30% do SALDO; R$139 so ate R$25k/mes.
+- [Dossie Contabilizei logada](legalize-contabilizei-dossie-coverage.md) — teardown ~85%: camada a-la-carte de ~45 servicos = receita oculta. Base do portal interno.
+- [Portal ME/Simples: lista consolidada](legalize-portal-lista-consolidada.md) — 08/09: 51 funcionalidades, 31 construidas; "pagar o DAS pelo app" morreu em 27/07.
+- [Tabela CNAE do lider extraida (387)](legalize-tabela-cnae-contabilizei-extraida.md) — dado em `window.__NUXT__`; fidelidade ALTA, veracidade nao-ratificada.
+- [Benchmark Padrao R$195](legalize-benchmark-padrao-195.md) — 22/07: escada 139-395 + surcharge oculto + IGP-DI anual.
 
-- [Método de alteração de tela travado](legalize-metodo-alteracao-tela-travado.md) — 03/09: mapa espelha apresentação por construção, pré-voo, lote por tela, sintoma repetido = raiz. 2 auditorias automáticas no gerador.
+## APIs, dados e CNAE
+- [API antes de funcionalidade](legalize-api-antes-de-funcionalidade.md) — 08/09: matriz em `produto/_matriz-dependencia.md`. Emitir NFS-e e emitir a guia do DAS decidem o produto.
+- [APIs de orgaos = autoridade](legalize-apis-orgaos-autoridade.md) — 24/07, corrigida 04/08: CNPJ e Simples/SIMEI sao 2 endpoints pagos separados.
+- [BH ja obriga o Emissor Nacional desde 01/11/2025](legalize-bh-emissor-nacional-desde-2025.md) — 12/09: empresa nova emite SEM inscricao municipal; nao existe procuracao na NFS-e.
+- [MEI: obrigacoes operacionais + cobertura de API](legalize-mei-obrigacoes-e-apis.md) — 27/08: NFS-e nacional via API federal unica; zero monitor oficial de teto (diferencial).
+- [Camada tributaria CNAE: os 4 dados fechados](legalize-cnae-camada-tributaria-4-dados-completa.md) — 27/08: MEI, risco, Anexo/FatorR e ISS BH nos 1332 CNAEs. Nao ratificado por contador.
+- [Fundamentos CNAE ratificados](legalize-cnae-fundamentos-ratificados-mei-vs-me.md) — 27/08: MEI≠ME, sem lista "sempre V", sem margem 28%. Matriz com 1332 CNAEs (IBGE completo).
+- [CNAE fiscalmente otimo](legalize-cnae-fiscalmente-otimo.md) — recomenda o CNAE mais barato que cobre a mesma atividade; engine pronta, falta Larissa ratificar.
+- [Complexidade de abertura (liso/verificar/tato)](legalize-cnae-complexidade-abertura.md) — eixo ortogonal ao fiscal; 103 servico-liso = happy path do MVP.
+- [Equacao fiscal viva: camadas CNAE + CNPJ](legalize-equacao-fiscal-camadas-cnae-cnpj.md) — 27/08: provocacao em andamento, sem desenho final.
+- [DER modelagem-cnae: cruzamento pausado](legalize-der-cnae-cruzamento-achados.md) — 27/08: fiscal.ts sem Anexo IV (bug real), refs fantasma no DER.
 
-- [Mapa é espelho da apresentação](legalize-espelho-mapa-apresentacao.md) — 02/09: uma coleção de telas, duas vistas; pills derivam do flow-data, vínculo por id. Pré-voo antes de editar tela.
+## Produto, telas e flow
+- [Pasta produto/ e a fonte-verdade das funcionalidades](legalize-pasta-produto-fonte-verdade.md) — 09/09: spec viva e evidencia datada SEPARADAS.
+- [Metodo de alteracao de tela travado](legalize-metodo-alteracao-tela-travado.md) — 03/09: pre-voo, lote por tela, sintoma repetido = raiz. 2 auditorias no gerador.
+- [Mapa e espelho da apresentacao](legalize-espelho-mapa-apresentacao.md) — 02/09: uma colecao de telas, duas vistas; pills derivam do flow-data.
+- [Mapa vivo do flow (gerado)](legalize-mapa-flow-vivo.md) — `execucao/mapa-flow-mermaid.md` e GERADO; fonte unica `flow/flow-data.mjs`.
+- [Mapa e estatico, reposicao entra na apresentacao junto](legalize-mapa-estatico-apresentacao-junto.md) — 28/08: mexe nos dois sempre; `/mockup` fica de fora.
+- [Replica de tela se PORTA, nao se remonta](legalize-replica-de-tela-se-porta.md) — 07/09: 5 telas erradas no mesmo dia; nasceu `verificar-anatomia-mei.mjs`.
+- [Fork do ramo MEI](legalize-fork-ramo-mei.md) — 07/09: MEI virou caminho proprio; heranca por prop custou 4 defeitos em 8 dias.
+- [Padrao de layout das telas](legalize-telas-padrao-layout.md) — titulo fixo/corpo rola/CTA fixo; `lib/passos.ts` fonte unica.
+- [Reordenacao + telas em CODIGO](legalize-reordenacao-e-telas-em-codigo.md) — 16/07: cobra no N9; sem Figma, app em `app/`. Regra dos 3.
+- [Portal do cliente construido (mockup)](legalize-portal-telas-construidas.md) — MLP fechado 27/07: 19 telas sem stub.
+- [Portal tem flow salvo, mas defasado e sem MEI](legalize-portal-drift-mei.md) — 27/08: `portal-data.mjs` congelou 28/07.
+- [Portal interno + laboratorio + acervo](legalize-portal-interno-lab-acervo.md) — 22/07: portal dia-2 + acervo `/componentes`.
+- [Portal: monetizacao em 3 baldes](legalize-portal-monetizacao-baldes.md) — incluir(core) · vendavel(a-la-carte) · cortar · rejeitar(anti-dark-pattern).
+- [Apresentacao pra gestao = demo + lente UX](legalize-apresentacao-gestao.md) — 29/07: split-screen, dono da pausa em 3 cores.
+- [Pill estreita, nao valida (N4)](legalize-pill-estreita-nao-valida.md) — 17/07: pill descreve mais, IA cruza, aceite, pagamento.
+- [Blocos do fluxo (spec Pedro x Dev)](legalize-blocos-fluxo-abertura.md) — B1+B2+B3 travados 14/07; mini-loop de desambiguacao CNAE.
+- [Flow #2 (migrar) construido](legalize-flow-2-migrar-construido.md) — 30/07: 9 telas M1-M5; cobra ANTES do TTRT com devolucao escrita.
+- [Reta final: 2 assinaturas + videochamada do certificado](legalize-reta-final-certificado-e-assinaturas.md) — 05/09: 1a = todos os socios · 2a = contador + representante.
+- [Certificado do MEI virou gate E cobranca](legalize-certificado-vira-gate-e-cobranca.md) — 07/09: sem ele o app nao libera. Pede clausula com o Mauro.
+- [Regra de orgao nao se deduz, se pergunta](legalize-regra-de-orgao-nao-se-deduz.md) — 05/09: a procuracao teve 5 versoes em 2 dias, 4 deduzidas por mim.
+- [Gravacao da JUCEMG e fonte-verdade do flow](legalize-gravacao-jucemg-fonte-primaria.md) — 31/08: 141 prints da constituicao real.
+- [Reuniao Rua Satelite 9 — 12 decisoes](legalize-reuniao-rua-satelite-9.md) — 28/07: gate cidade BH-MG, veredito 3 vias, IPTU obrigatorio.
+- [So o uso real corrige o mapa](legalize-uso-real-corrige-o-mapa.md) — 12/09: emitimos NF de verdade e o uso achou 3 erros conceituais.
+- [UX-48: trilha unica + coorte instrumentada](legalize-trilha-unica-ux48.md) — NAO bifurca UX por perfil; densidade muda apresentacao, jamais obrigacao.
+- [Log-UX vivo + regra UI-inline](legalize-log-ux-flow-e-regra-ui.md) — `compilado-ux-flow.md` = fonte unica do que otimizar.
+- [MLP, nao MVP](legalize-mlp-nao-mvp.md) — minimo LOVABLE; craft/animacao no escopo.
+- [Dashboard de administracao: priorizacao](legalize-dashboard-adm-priorizacao.md) — 23/07: 3 abas; corte por disponibilidade-de-dado.
+- [Auditoria copy E5 + MEI trocou contador por certificado](legalize-auditoria-copy-e5-e-mei-certificado.md) — 06/08.
 
-- [Encaixe de asset se MEDE, não se estima](legalize-encaixe-asset-medido-nao-no-olho.md) — 01/09: achar o pixel do corte por coluna e derivar o offset por fórmula; empurrar 10px por vez não converge.
-- [Halo escuro = alfa premultiplicado](legalize-alfa-premultiplicado-halo-escuro.md) — 01/09: PNG bom no Photoshop e ruim no app; comparar cor de borda × sólido antes de culpar cache. Achatar fundo+objeto é a saída mais barata.
-- [Escrever arquivo só via Edit/Write](legalize-escrita-arquivo-so-edit-write.md) — 01/09: script Python truncou 2 arquivos do vault (emoji + `open('w')`); node só com texto vindo de arquivo, nunca backtick inline.
-- [Gravação da JUCEMG é a fonte-verdade do flow](legalize-gravacao-jucemg-fonte-primaria.md) — 31/08: 141 prints da constituição real; matou o debate da procuração (derruba Registro Automático) e achou o bug do apartamento.
-- [Não rodar e2e sem pedir](legalize-nao-rodar-e2e-sem-pedir.md) — 30/08, reforçado 01/09 e **07/09 (3ª vez)**: um "pode rodar" vale só pra aquela rodada, não pra sessão nem pro assunto. Escrever spec é livre; EXECUTAR pede pedido. Travado no CLAUDE.md.
-- [Escopo é só o ME abrir empresa](legalize-escopo-so-me-abrir.md) — 01/09: MEI e Migração fora, salvo pedido; tela compartilhada exige guarda por regime, senão avisar antes.
-- [Mapa é estático, reposição precisa entrar na apresentação junto](legalize-mapa-estatico-apresentacao-junto.md) — 28/08: pedido de reordenar/layout "no mapa" mexe em `flow-data.mjs` E na `/apresentacao` sempre juntos; `/mockup` fica de fora.
+## Testes
+- [Suite de teste do Flutter: 20 personas](legalize-suite-teste-flutter-personas.md) — 14/09: `execucao/testes-flutter/`, P01 rodou ate o E9.1P. PARADO por pedido do Pedro; 3 fios abertos.
+- [O prototipo Next.js NAO descreve mais o Flutter](legalize-prototipo-nextjs-nao-descreve-flutter.md) — 14/09: 2 erros meus no mesmo dia por ler a fonte errada com confianca de fonte certa.
+- [Nao rodar e2e sem pedir](legalize-nao-rodar-e2e-sem-pedir.md) — 30/08, reforcado 3x: um "pode rodar" vale so pra aquela rodada. Escrever spec e livre; EXECUTAR pede pedido.
+- [Motor de testes: arquitetura](legalize-motor-testes-arquitetura.md) — v0.5.0, 19 personas, 2 flows. 🔴 desatualizado desde 28/07.
+- [Pedro confere UI sozinho](legalize-pedro-confere-ui-sozinho.md) — subir porta local pode; abrir navegador pra CONFERIR nao. `next build` com dev ativo corrompe `.next`.
+- [Storybook = fonte de verdade renderizada](legalize-storybook-fonte-verdade.md) — 31/07: 33+ stories. Deploy Vercel pendente.
 
-- [Portal tem flow salvo, mas defasado e sem MEI](legalize-portal-drift-mei.md) — 27/08: `portal-data.mjs` congelou 28/07; variante Plano MEI existe no código desde 04/08 e não está no mapa; portal foi desenhado pra ME/Simples.
-- [MEI: obrigações operacionais + cobertura de API](legalize-mei-obrigacoes-e-apis.md) — 27/08: NFS-e nacional via API federal única; zero monitor oficial de teto (diferencial); InfoSimples é quase só consulta, não emite.
+## Contrato, precos e negocio
+- [Decisoes do NOSSO contrato ME](legalize-contrato-proprio-decisoes.md) — 10/09, minuta enviada a advogada: 16 clausulas; 3 coortes ME (79/99/139); folha R$39 teto 10; migracao REMOVIDA.
+- [Billing = fatura por competencia](legalize-cobranca-fatura-competencia.md) — 11/09: itens de linha, `plano: null`, competencia AAAAMM; gateway por ultimo.
+- [Endereco fiscal = R$49/mes](legalize-endereco-fiscal-49.md) — 11/09 revoga o R$60. ⚠️ colide com o preco do plano MEI, tambem R$49.
+- [Asaas fora, Pagar.me em avaliacao](legalize-gateway-asaas-fora.md) — 08/09: o formato do Asaas nos jogaria pro escopo PCI.
+- [Preco DEFERIDO ate custo real](legalize-preco-deferido-custo-real.md) — 16/07: placeholder ~R$195 FAKE; nao reabrir sem o Pedro mencionar.
+- [Objetivo e papel do Pedro](legalize-objetivo-e-papel-pedro.md) — negocio fechado com Mauro 07/07; Pedro PM/socio; `BASE-ESTRATEGICA.md` = fonte da verdade.
+- [A casa tem DOIS CNPJs](legalize-entidades-duas-empresas.md) — 10/09: Legalizai Tecnologia (41.569.345/0001-48) + Legalize Auditoria (12.423.332/0001-68, CRC-MG 007900/O).
+- [Dominios e infra](legalize-dominios-infra.md) — 4 dominios Hostinger pagos 13/07; falta DNS Vercel + email.
+- [Marca no INPI (thread aberto)](legalize-marca-inpi.md) — risco de nome descritivo + colisao Contabilizei.
+- [Reorg repo inteiro, 25/08](legalize-reorg-repo-inteiro-25-08.md) — FECHADO: 8 commits + `financeiro/` novo.
 
-- [DER modelagem-cnae: cruzamento pausado, achados](legalize-der-cnae-cruzamento-achados.md) — 27/08: fiscal.ts sem Anexo IV (bug real), refs fantasma no DER, fusão complexidade+liso ainda pendente.
-- [Equação fiscal viva: camadas CNAE (estática+vigia) + CNPJ (dinâmica mensal)](legalize-equacao-fiscal-camadas-cnae-cnpj.md) — 27/08: provocação do Pedro em andamento, ainda sem desenho final; próximo passo = mapear vars do CNPJ que o app controla.
-- [Camada tributária CNAE: os 4 dados fechados](legalize-cnae-camada-tributaria-4-dados-completa.md) — 27/08: MEI+risco+Anexo/FatorR+ISS BH mapeados nos 1332 CNAEs; Anexo/FatorR NÃO ratificado por contador ainda.
-- [Fundamentos CNAE ratificados: MEI≠ME, sem lista "sempre V", sem margem 28%](legalize-cnae-fundamentos-ratificados-mei-vs-me.md) — 27/08: pesquisa fonte-primária fecha 3 gaps; matriz.csv já tem 1332 CNAEs (IBGE completo).
-- [Reorg repo inteiro, 25/08](legalize-reorg-repo-inteiro-25-08.md) — FECHADO: 8 commits, validação pasta-a-pasta + `financeiro/` novo (arquivo mãe de preço/CAC/margem).
-- [Ateliê substitui agentes copywriter/guardian](legalize-atelie-substitui-agentes-copywriter-guardian.md) — 25/08: engine `atelie/` no vault troca os 2 subagentes arquivados; NÃO commitado ainda.
-- [Mockup 3D do iPhone no Blender](legalize-blender-iphone-mockup-pipeline.md) — 21/08: asset, UV dedicado+flip, resolução mín. 432dpi, render 2K transparente, Poly Haven HDRI.
-- [Doutrina do pipeline vetor Illustrator](legalize-illustrator-vector-pipeline-doutrina.md) — 21/08: autoridade em `edicao_video/CLAUDE.md` §3.4; MCP não cria geometria; scripts `tela-*-para-svg.mjs`; ponte entre docs é Ctrl+C/V manual.
-- [Primeira campanha fechada ponta a ponta](legalize-primeira-campanha-fechada.md) — 20-21/08: `mkt/campanhas/` criado, preço fechado c/ Mauro, 24 peças auditadas 0 reprovações, handoff de LP entregue.
-- [Video de investidor: 3 propostas de escalada](legalize-video-investidor-escalada.md) — 13-14/08: roteiro-escalada-mercado v4 + ElevenLabs; regra: provocação mora na palavra, não na entonação.
-- [Puntel valida a estratégia INTEIRA](legalize-doc-estrategia-mkt-validacao.md) — 12/08: par de validação estratégica, não fornecedor de mídia; 8 riscos e tabela de fechamento foram invenção minha.
-- [Armadilha do PDF via Chrome headless](legalize-pdf-chrome-headless-armadilha.md) — 12/08: PDF "sucesso" pode ser print de tela de erro; precisa `--user-data-dir`; validar com `pypdf` antes de commitar.
-- [Auditoria copy E5 + MEI trocou contador por certificado](legalize-auditoria-copy-e5-e-mei-certificado.md) — 06/08: E4.2b descartada, M2 Migrar (MEI) pergunta certificado em vez de contador.
-- [PR automático quando pedido](legalize-git-pr-automatico.md) — 05/08: commit+`gh pr create` sem confirmar; NÃO inclui merge automático.
-- [Pesquisa de mercado grande roda via Gemini](legalize-pesquisa-grande-via-gemini.md) — 05/08: prompt pro Google Search do Gemini, Pedro roda fora e cola; não pesquisar direto na sessão.
-- [Estratégia de marketing/produto completa](legalize-estrategia-marketing-completa.md) — 05/08: 14/14 slots; preço ME R$139; CAC-alvo por LTV; MEI fora de pago frio (na época); 12 personas.
-- [Base de copy/tom-de-voz é PARCIAL](legalize-base-copy-insuficiente.md) — 05/08: só conceito-marca §5 fino + regras soltas; falta glossário técnico + exemplos por tela.
-- [Escopo MEI confirmado, Lucro Presumido fora](legalize-escopo-mei-lucro-presumido-aberto.md) — 04/08: MEI entra (inclusive Migrar); LP fica na saída "não atendemos" até pesquisa dedicada.
-- [LP institucional + rebrand + páginas legais](legalize-lp-atualizada-rebrand-legal.md) — 03/08: LP+coming-soon no ar (Vercel); rebrand Legalizai; CNPJ real; páginas legais.
-- [Rename → Legalizai](legalize-rename-legalizai.md) — 03/08 marca virou Legalizai no app (logo/copy/título); domínio/INPI/IG seguem Legalizai Story Book, rename brand-level é decisão aberta de sócio.
-- [Storybook = fonte de verdade renderizada](legalize-storybook-fonte-verdade.md) — 31/07: 33+ stories cobrindo TODO o DS + telas. Deploy Vercel pendente. `/componentes` legado não apagado.
-- [Tema escuro legalizai↔CRM conectado](legalize-tema-escuro-legalizai-story-book-crm.md) — 31/07: `globals.css` é fonte canônica claro+escuro; CRM roda dark fixo; app continua light-only na prática.
-- [Flow #2 (migrar) construído](legalize-flow-2-migrar-construido.md) — 30/07: 9 telas M1-M5; sem entrevista CNAE, sem taxa governo; cobra ANTES do TTRT com devolução escrita no contrato.
-- [Contrato + tabela real do líder](legalize-contrato-lider-achados.md) — 30/07: cliente paga TODAS taxas públicas; multa=30% do SALDO; regime é 1 de 9 variáveis de preço; R$139 só até R$25k/mês.
-- [Reorganização flow/telas/design em curso](legalize-reorganizacao-flow-design-em-curso.md) — 31/07: fechou Design/Componentes. Pergunta do Pedro sobre separar Design/Telas/Flow ficou sem resposta, não presumir.
-- [Apresentação pra gestão = demo + lente UX](legalize-apresentacao-gestao.md) — 29/07: `/apresentacao` split-screen, cenários que PREENCHEM, dono da pausa em 3 cores. Achados vão pro compilado-ux-flow.
-- [Reunião Rua Satélite 9 — 12 decisões](legalize-reuniao-rua-satelite-9.md) — 28/07: gate cidade BH-MG, veredito 3 vias, N6 front-load, IPTU obrigatório, REC retry automático. Todas implementadas.
-- [Design system em HTML](legalize-design-system-html.md) — `marca/identidade-visual/design-system.html`, referência viva. Tema escuro com contraste WCAG verificado (pegou 1 bug real).
-- [Portal do cliente construído (mockup)](legalize-portal-telas-construidas.md) — MLP FECHADO 27/07: 19 telas sem stub. Avulso efetivo revertido, página≠acordeon, honestidade-antes-do-toque. Falta = flow #2.
-- [Raio de card = rounded-2xl](legalize-card-radius-padrao.md) — padrão 24/07: cards de conteúdo `rounded-2xl` (16px); NUNCA `rounded-xl` (=24px no DS invertido). Inputs seguem `rounded-xl`.
-- [APIs de órgãos = autoridade](legalize-apis-orgaos-autoridade.md) — regra dura 24/07, corrigida 04/08: CNPJ e Simples/SIMEI são 2 endpoints pagos separados; consultar antes de autofill.
-- [Dashboard de administração: priorização](legalize-dashboard-adm-priorizacao.md) — 23/07: dash interno de 3 abas (Funil·Demanda&Mercado·Ver completo); corte por disponibilidade-de-dado, não documento.
-- [Worktrees: branches irmãs do vault](legalize-worktree-reorg-branches.md) — `.obsidian` trackeado → branch aninhada duplica notas; branches vão em `pessoal/_branches-legalizai-story-book/`.
-- [Portal interno + laboratório + acervo](legalize-portal-interno-lab-acervo.md) — 22/07: portal dia-2 + acervo `/componentes`. Spec `cruzamento-portal-interno.md` definida, laboratório podado.
-- [Portal: monetização em 3 baldes](legalize-portal-monetizacao-baldes.md) — incluir(core)·vendável(à-la-carte)·cortar·rejeitar(anti-dark-pattern). Preço/política do balde vendável deferidos ao Mauro.
-- [Dossiê Contabilizei logada](legalize-contabilizei-dossie-coverage.md) — teardown read-only ~85%: camada à-la-carte de ~45 serviços = receita oculta (sair 1.406-1.999, IGP-DI anual). Base do portal interno.
-- [Cluster fiscal reordenado (ENCAIXE)](legalize-encaixe-cluster-fiscal.md) — 21/07: CNAE escolhido pré-pago no ENCAIXE, não em swap tardio; teaser+N17 removidos; motor ficou 1 passo atrás.
-- [Complexidade de abertura (liso/verificar/tato)](legalize-cnae-complexidade-abertura.md) — eixo novo ortogonal ao fiscal; 387→170 liso/120 verificar/97 tato; 103 serviço-liso = happy path MVP.
-- [Padrão de layout das telas](legalize-telas-padrao-layout.md) — título fixo/corpo rola/CTA fixo; `lib/passos.ts` fonte única; 21/07 cauda N19-N24 existe, flow ponta-a-ponta.
-- [Auditoria de copy + rubrica viva](legalize-auditoria-copy-rubrica.md) — rubrica D1-D11 (mecânica+crítica); rounds R/K/M/V no flow inteiro; F-round+V12-V17 aplicados 21/07, sobra só V4 (Larissa).
-- [Etiquetas dos Anexos III/IV/V](legalize-anexos-simples-etiquetas.md) — referência fiscal (tabela+repartição+Fator R+CPP), fonte LC 123; CPP fora do DAS no IV.
-- [Tabela CNAE do líder extraída (387)](legalize-tabela-cnae-contabilizei-extraida.md) — 387 CNAEs c/ dado fiscal completo; site Nuxt, dado em `window.__NUXT__`; fidelidade ALTA, veracidade não-ratificada.
-- [Pill estreita, não valida (N4)](legalize-pill-estreita-nao-valida.md) — 17/07: pill→descreve mais→IA cruza→aceite→pagamento; pill-valida mataria casos reais; sub-pills descartadas.
-- [Pedro confere UI sozinho](legalize-pedro-confere-ui-sozinho.md) — subir porta local = pode; abrir navegador pra CONFERIR = não (review é dele). `next build` c/ dev ativo corrompe `.next`.
-- [Objetivo e papel do Pedro](legalize-objetivo-e-papel-pedro.md) — negócio fechado c/ Mauro 07/07; MVP tipo Contabilizei; Pedro PM/sócio desde início; `BASE-ESTRATEGICA.md` = fonte da verdade.
-- [Domínios e infra](legalize-dominios-infra.md) — 4 domínios Hostinger pagos 13/07; falta DNS Vercel+email; titular .br = CNPJ Legalize Digital.
-- [Fonte Sora = sistema inteiro](legalize-fonte-sora-sistema.md) — Sora pra tudo, travado 12/07; demais fontes testadas descartadas.
-- [MLP, não MVP](legalize-mlp-nao-mvp.md) — mínimo LOVABLE; craft/animação no escopo; spec ainda diz "MVP" (corrigir).
-- [Copy SEM travessão](legalize-copy-sem-travessao.md) — REGRA DURA: nenhum texto público usa `—`; reescrever com ponto/vírgula/"e".
-- [Blocos do fluxo (spec Pedro↔Dev)](legalize-blocos-fluxo-abertura.md) — B1+B2+B3 travados 14/07; mini-loop desambiguação CNAE; B3=abertura grátis+Asaas+cancelamento 4 camadas.
-- [Benchmark Padrão R$195](legalize-benchmark-padrao-195.md) — régua do MLP; 22/07: não é só R$195, escada 139-395 + surcharge oculto + IGP-DI anual.
-- [Motor de testes: arquitetura](legalize-motor-testes-arquitetura.md) — v0.5.0, 19 personas, 2 flows. 🔴 28/07: desatualizado de novo (gate cidade, veredito 3 vias não refletidos).
-- [Handoff pro dev: repo base-flow](legalize-handoff-dev-repo.md) — dev alinhado 19/07 em validação de APIs; schema = contrato de comportamento, não arquitetura pra copiar.
-- [UX-48: trilha única + coorte instrumentada](legalize-trilha-unica-ux48.md) — NÃO bifurca UX por perfil; densidade muda apresentação, jamais obrigação. Guarda-corpo = persona `reta-direto`.
-- [CNAE fiscalmente ótimo](legalize-cnae-fiscalmente-otimo.md) — recomenda CNAE mais barato entre os que cobrem a mesma atividade; engine pronta+testada; falta Larissa ratificar.
-- [Log-UX vivo + regra UI-inline](legalize-log-ux-flow-e-regra-ui.md) — compilado-ux-flow.md = fonte única do que otimizar; regra: UI é fase-2, não construir ainda.
-- [Pesquisa fiscal BH 2026](legalize-pesquisa-fiscal-bh-2026.md) — bloco CONSOLIDADO em `fiscal-simples-bh-2026.md` = fonte-verdade do flow; sem contradição dura vs Gemini.
-- [MVP só serviço + corte comércio](legalize-mvp-so-servico-cnae.md) — 15/07: MVP só serviço; 200 CNAEs comércio cortados p/ standby; limite sócios=2 → 🔴 **SUPERADO 29/08: teto é 4** (`gate-telas.tsx`).
-- [LP construída](legalize-lp-construida.md) — v1 HTML/CSS/JS puros; regra AA coral travada; validador: regulamentada vence verde.
-- [Janela de contexto: ~1M](legalize-janela-contexto-1m.md) — Pedro monitora a barra sozinho. NÃO emitir linha de saúde 🟢/🟡/🔴 nem sugerir `/fechar` por aquecimento.
-- [Reordenação + telas em CÓDIGO](legalize-reordenacao-e-telas-em-codigo.md) — 16/07: cobra no N9, não T16; telas N1-N25. Sem Figma, app em `app/`. Regra dos 3.
-- [Vault: índice de autoridade + fila humana](legalize-vault-organizado.md) — `_sistema/indice-autoridade.md` diz quem manda em cada assunto; `fila-validacao-humana.md` não bloqueia.
-- [Preço DEFERIDO até custo real](legalize-preco-deferido-custo-real.md) — 16/07: preço só depois de custo unitário real; placeholder ~R$195 FAKE; não reabrir sem o Pedro mencionar.
-- [Marca no INPI (thread aberto)](legalize-marca-inpi.md) — registro recomendado ≠ obrigatório; risco nome descritivo + colisão Contabilizei; titular = CNPJ Legalize Digital.
-- [Mapa vivo do flow (gerado)](legalize-mapa-flow-vivo.md) — `execucao/mapa-flow-mermaid.md` é GERADO, não editar à mão; fonte única `flow/flow-data.mjs`.
+## Marca, marketing e agente
+- [Estrategia de marketing/produto completa](legalize-estrategia-marketing-completa.md) — 05/08: 14/14 slots; preco ME R$139; CAC-alvo por LTV; 12 personas.
+- [Puntel valida a estrategia INTEIRA](legalize-doc-estrategia-mkt-validacao.md) — 12/08: par de validacao estrategica, nao fornecedor de midia.
+- [Primeira campanha fechada ponta a ponta](legalize-primeira-campanha-fechada.md) — 20-21/08: 24 pecas auditadas, 0 reprovacoes.
+- [Atelie substitui agentes copywriter/guardian](legalize-atelie-substitui-agentes-copywriter-guardian.md) — 25/08: engine `atelie/` troca os 2 subagentes arquivados.
+- [Vault isolado do agente de WhatsApp](legalize-agente-whatsapp-vault-isolado.md) — 04/09: 12 arquivos em runtime; os 1332 CNAEs viram tool com gate por confianca.
+- [Personalidade do Leo mora em 4 lugares](legalize-leo-personalidade-4-copias.md) — 04/09: fonte e `marca/personagem-leo.md`; a copia do Atelie divergiu.
+- [Video de investidor: 3 propostas de escalada](legalize-video-investidor-escalada.md) — 13-14/08: provocacao mora na palavra, nao na entonacao.
+- [Base de copy/tom-de-voz e PARCIAL](legalize-base-copy-insuficiente.md) — 05/08: falta glossario tecnico + exemplos por tela.
+- [Copy SEM travessao](legalize-copy-sem-travessao.md) — REGRA DURA: nenhum texto publico usa travessao.
+- [Auditoria de copy + rubrica viva](legalize-auditoria-copy-rubrica.md) — rubrica D1-D11; sobra so V4 (Larissa).
+- [Rename → Legalizai](legalize-rename-legalizai.md) — 03/08: marca virou Legalizai no app; rename brand-level e decisao aberta de socio.
+- [LP virou a raiz, em modo pre-lancamento](legalize-lp-na-raiz-modo-espera.md) — 11/09 no ar. 🔴 `lp/_lab` e a FONTE e nao esta versionada.
+- [LP institucional + rebrand + paginas legais](legalize-lp-atualizada-rebrand-legal.md) — 03/08: LP + coming-soon no ar.
+- [LP construida](legalize-lp-construida.md) — v1 HTML/CSS/JS puros; regra AA coral travada.
+
+## Design e assets
+- [Design system em HTML](legalize-design-system-html.md) — `marca/identidade-visual/design-system.html`, referencia viva.
+- [Raio de card = rounded-2xl](legalize-card-radius-padrao.md) — cards `rounded-2xl` (16px); inputs `rounded-xl`.
+- [Fonte Sora = sistema inteiro](legalize-fonte-sora-sistema.md) — travado 12/07.
+- [Tema escuro legalizai x CRM](legalize-tema-escuro-legalizai-story-book-crm.md) — `globals.css` e fonte canonica; app light-only na pratica.
+- [Encaixe de asset se MEDE, nao se estima](legalize-encaixe-asset-medido-nao-no-olho.md) — 01/09: achar o pixel do corte por coluna e derivar por formula.
+- [Halo escuro = alfa premultiplicado](legalize-alfa-premultiplicado-halo-escuro.md) — 01/09: comparar cor de borda x solido antes de culpar cache.
+- [Mockup 3D do iPhone no Blender](legalize-blender-iphone-mockup-pipeline.md) — 21/08: UV dedicado + flip, min. 432dpi, HDRI Poly Haven.
+- [Doutrina do pipeline vetor Illustrator](legalize-illustrator-vector-pipeline-doutrina.md) — 21/08: MCP nao cria geometria; ponte entre docs e manual.
+
+## Metodo de trabalho e vault
+- [Documento importante se le INTEIRO](legalize-leitura-integral-documento.md) — 10/09 TRAVADO: 100% literal salvo em arquivo, e o que ficou de fora vira lista com nome.
+- [Escrever arquivo so via Edit/Write](legalize-escrita-arquivo-so-edit-write.md) — 01/09: script Python truncou 2 arquivos do vault. Reincidiu em 15/09 (UnicodeEncodeError no print).
+- [Edicao simples se resolve com Edit direto](legalize-edicao-simples-editar-direto.md) — 05/09: nada de script de patch nem e2e em pedido pontual de layout.
+- [Vocabulario do vault: doutrina virou trava](legalize-vocabulario-tipo-derivou.md) — 09/09 RESOLVIDO: `verificar.js` estava cego em 79% por CRLF.
+- [Vault: indice de autoridade + fila humana](legalize-vault-organizado.md) — `_sistema/indice-autoridade.md` diz quem manda em cada assunto.
+- [Worktrees: branches irmas do vault](legalize-worktree-reorg-branches.md) — `.obsidian` trackeado duplica notas.
+- [Pesquisa grande roda via Gemini](legalize-pesquisa-grande-via-gemini.md) — 05/08: Pedro roda fora e cola; nao pesquisar direto na sessao.
+- [PR automatico quando pedido](legalize-git-pr-automatico.md) — 05/08: commit + `gh pr create` sem confirmar; NAO inclui merge.
+- [Handoff pro dev: repo base-flow](legalize-handoff-dev-repo.md) — 19/07: schema e contrato de comportamento, nao arquitetura pra copiar.
+- [Armadilha do PDF via Chrome headless](legalize-pdf-chrome-headless-armadilha.md) — 12/08: PDF "sucesso" pode ser print de erro; validar com `pypdf`.
+- [Janela de contexto: ~1M](legalize-janela-contexto-1m.md) — NAO emitir linha de saude nem sugerir `/fechar` por aquecimento.
+- [Reorganizacao flow/telas/design em curso](legalize-reorganizacao-flow-design-em-curso.md) — 31/07: pergunta do Pedro ficou sem resposta, nao presumir.
+- [Cluster fiscal reordenado (ENCAIXE)](legalize-encaixe-cluster-fiscal.md) — 21/07: CNAE escolhido pre-pago, nao em swap tardio.

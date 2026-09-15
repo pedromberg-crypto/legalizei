@@ -74,11 +74,44 @@ Ordem de autoridade. Quando dois discordam, manda o de cima.
 | 6 faixas (nominal + parcela a deduzir) | ✅ | ✅ |
 | Repartição por tributo, por faixa | ✅ | ✅ |
 | Alíquota efetiva com dedução | ✅ | ✅ |
-| Testado contra documento real | ✅ faixa 1 | ⛔ **nenhum** |
+| **Exercitado por invariância** (faixas 1 e 2) | ✅ P09 | ✅ **P16, 15/09** |
+| **Testado contra documento real** | ✅ faixa 1 | ⛔ **nenhum, e segue nenhum** |
 
-🟡 **O Anexo V está implementado e não está provado.** A tabela é estatutária (conferida contra a LC 123 em 17/07), mas a persona zero é Anexo III faixa 1 — **nenhuma competência real exercita o V**, nem faixas 2 a 6 de qualquer anexo.
+### 🔑 As duas provas são coisas diferentes, e só uma delas fechou
 
-Não é bug: é o limite do único caso real que temos. Entra na lista do que a persona zero não prova, e só sai com uma segunda empresa.
+🔴 **Documento não se substitui por simulação, e a linha acima não finge que sim.** O Anexo V continua sem um único recibo de PGDAS-D. Nenhuma vida simulada muda isso, e nenhum invariante do `verificar-vidas.mjs` afirma valor de guia do V.
+
+✅ **O que fechou em 15/09 foi a outra coluna: o comportamento.** Até então o Anexo V só tinha rodado na **1ª faixa** (pelo P01), e a 1ª faixa é justamente onde a parcela a deduzir é **zero** — a efetiva é igual à nominal, e metade da tabela nunca era tocada. A vida do **P16** (consultoria em TI, RBT12 de R$0 a R$359 mil em 22 competências) atravessa os R$180 mil e faz a parcela de R$4.500 morder.
+
+8 invariantes novos, todos deriváveis da LC 123 sem documento nenhum:
+
+| # | o que afirma | por que importa |
+|---|---|---|
+| 1 | o V passa da faixa 1 — 14 competências na 2ª | é a lacuna literal; o P01 morria na 1ª |
+| 2 | e aí `efetiva < nominal`, sempre | na 1ª faixa elas são iguais, então a 1ª faixa **não prova a tabela** |
+| 3 | a efetiva do V só sobe com o RBT12 | 6,00% → 16,75% na vida do P16 |
+| 4 | 🔑 a efetiva é **contínua nas bordas** de faixa, nos 2 anexos | em R$180.000 exatos a faixa 1 e a faixa 2 dão o **mesmo** número. Prova que a parcela a deduzir é **calibrada**, e que ler a faixa errada por um centavo não muda a conta |
+| 5 | 🔴 **e quebra em f5→f6**, nos dois anexos, no mesmo ponto | ver achado abaixo |
+| 6 | a repartição do V soma 1,0000 nas 6 faixas | é o que faz os 6 tributos fecharem com o total |
+| 7 | o DAS do V é a **soma das 6 parcelas**, não o produto | mesmo código do III, que tem recibo — o anexo não tem caminho próprio de arredondamento. Diferença pro produto direto: **1 centavo**, nunca reais |
+| 8 | a CPP está **dentro** do DAS no V, nas 6 faixas | só o Anexo IV a tira (Res. CGSN 140/2018 art. 2º V), e ele está fora do escopo |
+
+Mais dois de fronteira: o V é **mais caro que o III em todo RBT12 do escopo ME** (R$1 mil a R$360 mil, testado de mil em mil) — é o que torna o Fator R uma decisão e não um detalhe; e o P16 **encosta no teto do ME sem passar** (RBT12 final R$359.000), que é a porta de saída pra EPP.
+
+### 🔴 Achado de 15/09 — a 6ª faixa quebra a continuidade, nas duas tabelas
+
+| | borda | efetiva abaixo | efetiva acima | queda |
+|---|---|---|---|---|
+| Anexo III | f5→f6, R$3,6 mi | 17,5100% | 15,0000% | **−2,51 pp** |
+| Anexo V | f5→f6, R$3,6 mi | 21,2750% | 15,5000% | **−5,7750 pp** |
+
+Nas outras 8 bordas (f1→f2 até f4→f5, nos dois anexos) a efetiva é contínua **ao 12º decimal**. Só a 6ª quebra, e quebra **para baixo** — quem atravessa R$3,6 milhões paga alíquota efetiva **menor** do que quem fica logo abaixo.
+
+É propriedade da **tabela da LC 123**, não do motor: os números de `_tabelas.mjs` estão conferidos contra a lei, e a quebra aparece idêntica nos dois anexos. Fica **registrado e não vira regra** — está a 10× do teto do ME (R$360 mil) e ainda acima do teto do EPP na prática do nosso produto. O invariante afirma exatamente isso: a quebra é **só** na 6ª faixa. Se um dia aparecesse numa borda de baixo, seria erro de digitação na tabela, e o teste derruba a rodada.
+
+### O que ainda falta, e não tem atalho
+
+⛔ **Um recibo de PGDAS-D de empresa em Anexo V.** É a única coisa que fecha a última linha. Fonte provável: o Mauro. Até lá, a régua do motor no V é 🟢 na regra e 🟡 na prova documental — e o `verificar-vidas.mjs` diz isso no próprio cabeçalho.
 
 ---
 

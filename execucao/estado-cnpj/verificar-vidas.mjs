@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * 🧪 AS 14 VIDAS CONTRA O MOTOR — invariância, não gabarito.
+ * 🧪 AS 15 VIDAS CONTRA O MOTOR — invariância, não gabarito.
  * ═══════════════════════════════════════════════════════════════════════════
  * `node execucao/estado-cnpj/verificar-vidas.mjs`
  *
@@ -22,7 +22,8 @@
 
 import { retratoDoMes, extrato, folgaDoFatorR, competencia } from "./_modelo.mjs";
 import { VIDAS, SEM_VIDA } from "./vidas.mjs";
-import { brlDeCentavos } from "../motor-fiscal/apurador.mjs";
+import { brlDeCentavos, faixaDe, aliquotaEfetiva } from "../motor-fiscal/apurador.mjs";
+import { FAIXAS, REPARTICAO, TRIBUTOS } from "../motor-fiscal/_tabelas.mjs";
 
 let passou = 0;
 let falhou = 0;
@@ -39,12 +40,12 @@ function invariante(rotulo, condicao, detalhe = "") {
   }
 }
 
-console.log("\n🌱 AS 14 VIDAS — as personas de abertura, agora como empresas\n");
+console.log(`\n🌱 AS ${VIDAS.length} VIDAS — as personas de abertura, agora como empresas\n`);
 console.log("   ⚠️  SIMULAÇÃO declarada. Nenhum número saiu de documento, então");
 console.log("      nada aqui afirma VALOR — só relações que a lei obriga.\n");
 
 /* ── O panorama ──────────────────────────────────────────────────────────── */
-console.log("── Panorama das 14\n");
+console.log(`── Panorama das ${VIDAS.length}\n`);
 console.log("   id   atividade                       abriu     meses  anexo  RBT12 final    DAS acumulado");
 
 const retratos = [];
@@ -66,7 +67,7 @@ console.log("\n── 1 · O invariante dos 65 de 87: CNAE III-fixo nunca vira A
   const fixas = retratos.filter((r) => r.ultima.anexoEhFixo);
   const viraramV = fixas.filter((r) => r.linhas.some((l) => l.anexo === "V"));
 
-  console.log(`   ${fixas.length} das 14 têm CNAE III-fixo, e várias pagam só o pró-labore mínimo.`);
+  console.log(`   ${fixas.length} das ${VIDAS.length} têm CNAE III-fixo, e várias pagam só o pró-labore mínimo.`);
   invariante(
     "nenhuma delas caiu no Anexo V em nenhuma competência",
     viraramV.length === 0,
@@ -243,13 +244,147 @@ console.log("\n── 7 · O calendário não existe pro motor\n");
 {
   const meses = VIDAS.map((v) => Number(v.empresa.dataAberturaCnpj.slice(5, 7)));
   const distintos = [...new Set(meses)].sort((a, b) => a - b);
-  console.log(`   as 14 abriram em ${distintos.length} meses diferentes do ano: ${distintos.join(", ")}`);
+  console.log(`   as ${VIDAS.length} abriram em ${distintos.length} meses diferentes do ano: ${distintos.join(", ")}`);
 
   const primeiros = retratos.map((r) => r.linhas[0]);
   invariante(
     "toda primeira competência usou a regra do 1º mês",
     primeiros.every((l) => l.regraRbt12 === "1o-mes"),
     "março e dezembro percorrem o mesmo código"
+  );
+}
+
+/* ── 8 · O ANEXO V ALÉM DA FAIXA 1 — a lacuna que faltava ────────────────── */
+console.log("\n── 8 · P16: o Anexo V que CRESCE — onde a parcela a deduzir morde\n");
+{
+  const p16 = retratos.find((r) => r.vida.id === "P16");
+  const comMovimento = p16.linhas.filter((l) => l.das.total > 0);
+
+  console.log("   mês      receita        RBT12          faixa  nominal  efetiva   DAS");
+  for (const l of comMovimento.filter((_, i) => i % 3 === 0 || i === comMovimento.length - 1)) {
+    const f = faixaDe(l.rbt12 / 100, l.anexo);
+    const ef = aliquotaEfetiva(l.rbt12 / 100, l.anexo);
+    console.log(
+      `   ${l.mes}  ${brlDeCentavos(l.receita).padStart(12)}  ${brlDeCentavos(l.rbt12).padStart(14)}` +
+        `   ${f.faixa}ª    ${(f.nominal * 100).toFixed(2).padStart(6)}%  ${(ef * 100).toFixed(4).padStart(7)}%  ${brlDeCentavos(l.das.total).padStart(11)}`
+    );
+  }
+
+  // (a) 🔑 A LACUNA PRINCIPAL. Na faixa 1 a parcela a deduzir é ZERO, então
+  //     efetiva = nominal e metade da tabela nunca roda. O P01 morria aqui.
+  const naFaixa2 = comMovimento.filter((l) => faixaDe(l.rbt12 / 100, l.anexo).faixa === 2);
+  invariante(
+    "o Anexo V passa da FAIXA 1 — o que o P01 nunca fez",
+    naFaixa2.length > 0 && naFaixa2.every((l) => l.anexo === "V"),
+    `${naFaixa2.length} competências na 2ª faixa do V`
+  );
+  invariante(
+    "e aí a parcela a deduzir MORDE: efetiva < nominal, sempre",
+    naFaixa2.every((l) => aliquotaEfetiva(l.rbt12 / 100, "V") < FAIXAS.V[1].nominal - 1e-9),
+    "na 1ª faixa a deduzir é zero e a efetiva É a nominal — é por isso que a faixa 1 não prova a tabela"
+  );
+
+  // (b) A efetiva sobe com o RBT12, e se aproxima da nominal sem alcançar.
+  const efetivas = comMovimento.map((l) => aliquotaEfetiva(l.rbt12 / 100, l.anexo));
+  invariante(
+    "a efetiva do V só SOBE conforme o RBT12 cresce",
+    efetivas.every((e, i) => i === 0 || e >= efetivas[i - 1] - 1e-12),
+    `de ${(Math.min(...efetivas) * 100).toFixed(2)}% a ${(Math.max(...efetivas) * 100).toFixed(2)}%`
+  );
+
+  // (c) 🔴 A CONTINUIDADE NAS BORDAS — a prova de que a parcela a deduzir é
+  //     CALIBRADA, e não um número solto. Em R$180.000 exatos a efetiva pela
+  //     faixa 1 e pela faixa 2 são o MESMO número. Se o motor lesse a faixa
+  //     errada por um centavo, a conta continuaria certa.
+  const bordasContinuas = [];
+  const bordasQuebradas = [];
+  for (const anexo of ["III", "V"]) {
+    const t = FAIXAS[anexo];
+    for (let i = 0; i < t.length - 1; i++) {
+      const borda = t[i].ate;
+      const abaixo = (borda * t[i].nominal - t[i].deduzir) / borda;
+      const acima = (borda * t[i + 1].nominal - t[i + 1].deduzir) / borda;
+      const alvo = Math.abs(abaixo - acima) < 1e-12 ? bordasContinuas : bordasQuebradas;
+      alvo.push({ anexo, de: i + 1, borda, abaixo, acima });
+    }
+  }
+  invariante(
+    "e a efetiva é CONTÍNUA nas bordas de faixa, nos dois anexos",
+    bordasContinuas.length === 8 && bordasContinuas.every((b) => b.de <= 4),
+    "f1→f2 … f4→f5 · a parcela a deduzir é calibrada pra isso, não é número solto"
+  );
+
+  // 🔴 E O ACHADO: a continuidade QUEBRA em f5→f6, nos DOIS anexos, no mesmo
+  //    ponto. Não é bug do motor, é propriedade da tabela da LC 123 — e está
+  //    a 10× do nosso teto, então fica registrado e não vira regra.
+  console.log("\n   🔴 achado — a continuidade quebra na 6ª faixa, nos dois anexos:");
+  for (const b of bordasQuebradas) {
+    console.log(
+      `      Anexo ${b.anexo.padEnd(3)} f${b.de}→f${b.de + 1} em R$ ${(b.borda / 1000).toFixed(0)}mil: ` +
+        `${(b.abaixo * 100).toFixed(4)}% → ${(b.acima * 100).toFixed(4)}%  (cai ${((b.abaixo - b.acima) * 100).toFixed(4)}pp)`
+    );
+  }
+  console.log("      é da TABELA (LC 123), não do motor — e está fora do escopo: teto do ME é R$360mil.");
+  invariante(
+    "a quebra é só na 6ª faixa, e nas duas tabelas igual",
+    bordasQuebradas.length === 2 && bordasQuebradas.every((b) => b.de === 5),
+    "se aparecesse numa borda de baixo seria erro de digitação da tabela"
+  );
+
+  // (d) A repartição por tributo tem que somar 1,0000 em TODA faixa do V.
+  //     Se não somasse, a soma das 6 parcelas não daria o DAS.
+  const somas = [1, 2, 3, 4, 5, 6].map((f) =>
+    Object.values(REPARTICAO.V[f]).reduce((a, b) => a + b, 0)
+  );
+  invariante(
+    "a repartição do Anexo V soma 1,0000 nas 6 faixas",
+    somas.every((s) => Math.abs(s - 1) < 1e-9),
+    "é o que faz a soma dos 6 tributos fechar com o total do DAS"
+  );
+
+  // (e) 🔑 O DAS do V é a soma de 6 parcelas arredondadas — mesmo código do
+  //     III, provado ao centavo contra recibo. Aqui se prova que o anexo não
+  //     tem caminho próprio de arredondamento.
+  const divergencias = comMovimento.map((l) => {
+    const soma = TRIBUTOS.reduce((s, t) => s + (l.das.parcelas?.[t] ?? 0), 0);
+    const direto = Math.round((l.receita / 100) * aliquotaEfetiva(l.rbt12 / 100, l.anexo) * 100);
+    return { soma, total: l.das.total, direto };
+  });
+  invariante(
+    "e o DAS do V é a SOMA das 6 parcelas, não o produto arredondado",
+    divergencias.every((d) => d.soma === d.total),
+    "mesmo código do Anexo III, que tem recibo — o anexo não muda a regra de arredondamento"
+  );
+  const maiorDiff = Math.max(...divergencias.map((d) => Math.abs(d.total - d.direto)));
+  console.log(`   💡 e a diferença pro produto direto chega a ${maiorDiff} centavo(s) — nunca reais.`);
+
+  // (f) CPP DENTRO do DAS no Anexo V. O art. 2º V da Res. CGSN 140/2018 tira
+  //     a CPP do DAS só no Anexo IV, que está fora do nosso escopo.
+  invariante(
+    "a CPP está DENTRO do DAS no Anexo V, nas 6 faixas",
+    [1, 2, 3, 4, 5, 6].every((f) => REPARTICAO.V[f].cpp > 0),
+    "só o Anexo IV a tira (Res. CGSN 140/2018 art. 2º V), e ele está fora do escopo"
+  );
+
+  // (g) O V é sempre mais caro que o III no mesmo RBT12 — é a razão de o
+  //     Fator R existir como decisão de produto.
+  let vSempreMaior = true;
+  for (let r = 1000; r <= 360000; r += 1000) {
+    if (aliquotaEfetiva(r, "V") <= aliquotaEfetiva(r, "III")) vSempreMaior = false;
+  }
+  invariante(
+    "e em TODO RBT12 do escopo ME o V é mais caro que o III",
+    vSempreMaior,
+    "R$1mil a R$360mil, de mil em mil — é o que torna o Fator R uma decisão, não um detalhe"
+  );
+
+  // (h) 🚪 O TETO DO ME. RBT12 acima de R$360 mil desenquadra — e EPP, no
+  //     nosso produto, só existe como porta de SAÍDA.
+  const rbt12Final = p16.ultima.rbt12 / 100;
+  invariante(
+    "e ele encosta no teto do ME sem passar",
+    rbt12Final > 300000 && rbt12Final <= 360000,
+    `RBT12 final ${brlDeCentavos(p16.ultima.rbt12)} · o teto é R$ 360.000,00, e passar é desenquadramento`
   );
 }
 

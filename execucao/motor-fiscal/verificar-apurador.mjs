@@ -16,7 +16,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { apurarDAS, fatorR, fatorRDeCompetencias, anualiza, rbt12De, retencaoLegitima, anexoDoCnae, vencimentoDe, custoTotalMensal, brl, emCentavos, LACUNAS, RESOLVIDAS } from "./apurador.mjs";
+import { apurarDAS, fatorR, fatorRDeCompetencias, anualiza, rbt12De, retencaoLegitima, anexoDoCnae, vencimentoDe, custoTotalMensal, darfDoProLabore, brl, emCentavos, LACUNAS, RESOLVIDAS } from "./apurador.mjs";
 
 /* ═══════════════════════════════════════════════════════════════════════════
  * OS CASOS REAIS
@@ -342,15 +342,50 @@ for (const caso of CASOS) {
 
   console.log(`   pró-labore de 28% ......... ${brl(emCentavos(proLabore))}`);
   console.log(confere("INSS sobre ele (11%)", custoIII.inss, 36960));
+  console.log(confere("IRRF (tabela da página)", custoIII.irrf, 5440));
   console.log(`   custo total no Anexo III .. ${brl(custoIII.total)}  (${(custoIII.aliquotaTotal * 100).toFixed(2)}%)`);
   console.log(`   custo total no Anexo V .... ${brl(custoV.total)}  (${(custoV.aliquotaTotal * 100).toFixed(2)}%)`);
   console.log(`   💰 a diferença ............ ${brl(custoV.total - custoIII.total)}/mês`);
 
-  console.log("   🔑 A planilha do líder compara CUSTO TOTAL, não DAS com DAS — porque subir o");
-  console.log("      pró-labore pra ganhar o Anexo III AUMENTA o INSS. É a gangorra em número.");
-  console.log("   ⚠️  A planilha usa pró-labore mínimo de R$998 (salário de 2020) e a tabela de");
-  console.log("      IRRF PRÉ-2023. Os números dela estão velhos; o MÉTODO está certo. Aqui o");
-  console.log("      piso usado é R$1.621 (2026) e o IRRF fica fora — ver lacuna L6.\n");
+  console.log("   🔑 A planilha compara CUSTO TOTAL, não DAS com DAS — porque subir o pró-labore");
+  console.log("      pra ganhar o Anexo III AUMENTA o INSS. É a gangorra em número.");
+  console.log("   🔴 E A PLANILHA DELES DISCORDA DA PLATAFORMA DELES no IRRF: ela diz R$93,76");
+  console.log("      (dedução 354,80, pré-2023), a plataforma diz R$54,40 (dedução 394,16).");
+  console.log("      Decisão do Pedro em 14/09: vale a PÁGINA, a planilha é mais antiga. Ela");
+  console.log("      também usa piso de R$998, que é o salário mínimo de 2020.\n");
+}
+
+/* ── G10 · a tabela do IRRF, e o DARF Unificado ────────────────────────── */
+{
+  console.log("── G10 · IRRF do pró-labore — e o INSS sai ANTES");
+  console.log('   fonte: modal "Tabela do IRRF" na plataforma do líder, conta real, 14/09');
+
+  // O caso da persona zero: pró-labore no salário mínimo, IRRF zero.
+  const zero = darfDoProLabore(1621);
+  console.log(`   pró-labore R$1.621 ........ INSS ${brl(zero.inss)} · base ${brl(zero.baseIrrf)} · IRRF ${brl(zero.irrf)}`);
+  console.log(confere("INSS da persona zero", zero.inss, 17831));
+  console.log(confere("IRRF da persona zero", zero.irrf, 0));
+
+  // O caso da planilha: 28% de 12.000.
+  const alto = darfDoProLabore(3360);
+  console.log(`   pró-labore R$3.360 ........ INSS ${brl(alto.inss)} · base ${brl(alto.baseIrrf)} · IRRF ${brl(alto.irrf)}`);
+  console.log(confere("base do IRRF", alto.baseIrrf, 299040));
+  console.log(confere("IRRF a 15%", alto.irrf, 5440));
+
+  if (zero.isento && !alto.isento) {
+    passou++;
+    console.log("   ✅ o piso é isento e o de 28% não é — a faixa vira no meio da nossa persona");
+  } else {
+    falhou++;
+    erros.push("G10: a isenção não está virando onde deveria");
+    console.log("   ❌ a isenção não virou onde deveria");
+  }
+
+  console.log("   🔑 O INSS sai PRIMEIRO e vira dedução da base do IRRF. Quem calcula o IRRF");
+  console.log("      sobre o pró-labore bruto cobra imposto a mais do sócio.");
+  console.log("   ⚠️  A tabela é 🟡 (tela de concorrente). E resta a pergunta da Lei 15.270/2025:");
+  console.log("      se a isenção de 2026 é R$5.000/mês, ou a tabela venceu, ou existe um");
+  console.log("      REDUTOR que convive com ela. São coisas diferentes — lacuna L6.\n");
 }
 
 /* ── G9 · o anexo antes do cálculo, e o calendário ─────────────────────── */

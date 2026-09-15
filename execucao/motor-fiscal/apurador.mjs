@@ -41,6 +41,7 @@ import {
   FATOR_R_NUMERADOR,
   GRUPOS_ANEXO,
   PREVIDENCIA,
+  IRRF,
 } from "./_tabelas.mjs";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -571,18 +572,49 @@ export function vencimentoDe({ competencia, tributo }) {
  * IRRF é **lacuna aberta do vault** — a spec de pró-labore a cita como
  * *"faixas na tabela acima"* e a tabela não existe. Ver LACUNAS L6.
  */
-export function custoTotalMensal({ receitaMes, das, proLabore, irrf = 0 }) {
+export function custoTotalMensal({ receitaMes, das, proLabore }) {
+  const { inss, irrf } = darfDoProLabore(proLabore);
+  const total = das + inss + irrf;
+  return {
+    das,
+    inss,
+    irrf,
+    darf: inss + irrf, // é UMA guia só: DARF Unificado
+    total,
+    aliquotaTotal: receitaMes > 0 ? total / emCentavos(receitaMes) : null,
+  };
+}
+
+/**
+ * O DARF do pró-labore: INSS + IRRF, numa guia só.
+ *
+ * 🔑 **A ordem importa e é contraintuitiva:** o INSS sai primeiro e vira
+ * DEDUÇÃO da base do IRRF. Quem calcula o IRRF sobre o pró-labore bruto cobra
+ * imposto a mais do sócio.
+ *
+ *   INSS = min(11% × pró-labore ; 11% × teto)
+ *   base = pró-labore − INSS
+ *   IRRF = (base × alíquota da faixa) − dedução da faixa
+ *
+ * ⚠️ A tabela do IRRF é 🟡 (tela do líder, não ratificada) e tem uma pergunta
+ * aberta com a Lei 15.270/2025 — ver `IRRF` em `_tabelas.mjs` e a lacuna L6.
+ */
+export function darfDoProLabore(proLabore) {
   const inss = Math.min(
     emCentavos(proLabore * PREVIDENCIA.ALIQUOTA_SOCIO),
     emCentavos(PREVIDENCIA.TETO_INSS * PREVIDENCIA.ALIQUOTA_SOCIO)
   );
-  const total = das + inss + emCentavos(irrf);
+
+  const base = proLabore - emReais(inss);
+  const faixa = IRRF.faixas.find((f) => base <= f.ate);
+  const bruto = base * faixa.aliquota - faixa.deduzir;
+
   return {
-    das,
     inss,
-    irrf: emCentavos(irrf),
-    total,
-    aliquotaTotal: receitaMes > 0 ? total / emCentavos(receitaMes) : null,
+    baseIrrf: emCentavos(base),
+    irrf: bruto > 0 ? emCentavos(bruto) : 0, // dedução maior que o imposto = zero, nunca negativo
+    aliquotaIrrf: faixa.aliquota,
+    isento: faixa.aliquota === 0,
   };
 }
 
@@ -605,10 +637,10 @@ export const LACUNAS = [
   },
   {
     id: "L6",
-    o: "🔴 A TABELA DE FAIXAS DO IRRF não existe no vault",
-    lei: "—",
+    o: "🔴 A tabela do IRRF × a Lei 15.270/2025",
+    lei: "Lei 15.270/2025",
     porque:
-      'A spec de pró-labore cita "faixas na tabela acima" e a tabela NÃO ESTÁ LÁ; o `fiscal-simples-bh-2026.md` lista "faixa/tabela IRRF" como não verificado desde 15/07. A fórmula é conhecida (`(base × alíquota) − dedução`, base = pró-labore − INSS), os números não. ⚠️ E a calculadora do líder usa a tabela PRÉ-2023: com base de R$2.990,40 ela dá R$93,76, que é 15% − 354,80. Com a isenção de R$5.000/mês da Lei 15.270/2025, esse mesmo caso daria ZERO hoje.',
+      "A TABELA foi resolvida em 14/09 (modal da plataforma do líder, ver IRRF em _tabelas.mjs) e está 🟡 — tela de concorrente. O que segue aberto é a INTERAÇÃO com a Lei 15.270/2025: o fiscal.ts carrega IRRF_ISENCAO 5000 citando essa lei, e a tabela do líder isenta só até 2.428,80. Ou a tabela venceu, ou existe um REDUTOR que convive com ela. Não deduzir — é a última peça do motor sem fonte primária.",
   },
   {
     id: "L7",

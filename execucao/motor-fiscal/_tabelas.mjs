@@ -109,6 +109,40 @@ export const PREVIDENCIA = {
 };
 
 /**
+ * 💸 A TABELA DO IRRF — capturada da plataforma do líder em 14/09.
+ * ═══════════════════════════════════════════════════════════════════════════
+ * Modal "Tabela do IRRF", na conta real da persona zero (mesma tela que exibe
+ * a competência de agosto, R$7.910,00). É a tabela que o líder **aplica hoje**.
+ *
+ * `base` = pró-labore − INSS. `IRRF = (base × aliquota) − deduzir`.
+ *
+ * 🔴 **A PLANILHA DELES E A PLATAFORMA DELES DISCORDAM.** Com base de
+ * R$2.990,40 (pró-labore 3.360 − INSS 369,60):
+ *   · esta tabela ....... 448,56 − 394,16 = **R$ 54,40**
+ *   · a planilha deles .. 448,56 − 354,80 = **R$ 93,76**
+ * A planilha usa a dedução PRÉ-2023, e ainda usa salário mínimo de R$998
+ * (2020). Ela é material de marketing velho; a plataforma é o sistema vivo.
+ * Entre as duas, vale a plataforma — e nenhuma das duas vale mais que a lei.
+ *
+ * ⏳ **PERGUNTA ABERTA (L6b): e a Lei 15.270/2025?** O `fiscal.ts` carrega
+ * `IRRF_ISENCAO: 5000` citando essa lei. Se a isenção efetiva de 2026 é
+ * R$5.000/mês, ou esta tabela está vencida, ou o mecanismo é um **redutor**
+ * que convive com ela. São coisas diferentes e mudam o resultado. **Não
+ * deduzir** — é a única peça do motor ainda sem fonte primária.
+ */
+export const IRRF = {
+  fonte: 'Modal "Tabela do IRRF" na plataforma do líder, conta real, capturado 14/09',
+  confianca: "🟡 tela de concorrente — não ratificado em fonte primária",
+  faixas: [
+    { ate: 2428.8, aliquota: 0, deduzir: 0 },
+    { ate: 2826.65, aliquota: 0.075, deduzir: 182.16 },
+    { ate: 3751.05, aliquota: 0.15, deduzir: 394.16 },
+    { ate: 4664.68, aliquota: 0.225, deduzir: 675.49 },
+    { ate: Infinity, aliquota: 0.275, deduzir: 908.73 },
+  ],
+};
+
+/**
  * 🔴 O CALENDÁRIO, e o deslocamento é POR TRIBUTO — não global.
  * ═══════════════════════════════════════════════════════════════════════════
  * É a armadilha mais silenciosa do calendário fiscal: **no mesmo mês uma guia

@@ -110,6 +110,38 @@ for (const l of linhas) {
   else semMarca++;
 }
 
+/* ── 2.5 · 🔴 O CONFRONTO COM O GIT ───────────────────────────────────────
+ * Nasceu de uma pergunta do Pedro em 15/09: *"agosto constatou poucos dias
+ * trabalhados, isso tem algum motivo? Sendo que eu trabalhei normalmente."*
+ *
+ * Tinha motivo, e não era o contador: **o reporte é que estava incompleto.**
+ * Agosto tinha 20 dias com commit e 9 entradas no doc. Dois dos ausentes eram
+ * dias grandes — 27/08 com 36 commits, 28/08 com 24.
+ *
+ * 🔑 O git é a **fonte independente** do que foi trabalhado. Um dia com commit
+ * e sem entrada no reporte é trabalho que o sócio não viu. Contar só o doc
+ * fazia o placar repetir a omissão com cara de número.
+ *
+ * ⚠️ E vale nos dois sentidos: dia com entrada e **sem** commit também existe
+ * (reunião, pesquisa, decisão) e não é erro — por isso ele aparece separado,
+ * sem alarme.                                                               */
+let diasComCommit = new Set();
+let erroGit = null;
+try {
+  const { execSync } = await import("node:child_process");
+  diasComCommit = new Set(
+    execSync("git log --date=short --pretty=%ad", { cwd: AQUI, encoding: "utf8" })
+      .trim()
+      .split("\n")
+      .filter(Boolean)
+  );
+} catch (e) {
+  erroGit = e.message.slice(0, 60);
+}
+
+const semReporte = [...diasComCommit].filter((d) => !dias.has(d)).sort();
+const semCommit = [...dias].filter((d) => !diasComCommit.has(d)).sort();
+
 /* ── 3 · Por mês, pra dar textura à linha do tempo ────────────────────────── */
 const porMes = {};
 for (const d of ordenados) {
@@ -134,12 +166,29 @@ const linhasStatus = STATUS.filter((s) => contagem[s.marca] > 0)
   })
   .join("\n");
 
-const linhasMes = Object.entries(porMes)
-  .map(([mes, n]) => {
+const mesesGit = {};
+for (const d of diasComCommit) {
+  const m = d.slice(0, 7);
+  mesesGit[m] = (mesesGit[m] ?? 0) + 1;
+}
+const todosOsMeses = [
+  ...new Set([...Object.keys(porMes), ...Object.keys(mesesGit)]),
+].sort();
+
+const linhasMes = todosOsMeses
+  .map((mes) => {
     const [ano, m] = mes.split("-");
-    return `| ${MESES[m]}/${ano} | ${n} |`;
+    const noDoc = porMes[mes] ?? 0;
+    const noGit = mesesGit[mes] ?? 0;
+    const falta = semReporte.filter((d) => d.startsWith(mes)).length;
+    return `| ${MESES[m]}/${ano} | ${noDoc} | ${noGit} | ${falta ? `🔴 **${falta}**` : "—"} |`;
   })
   .join("\n");
+
+/** A lista dos dias trabalhados que o sócio não viu. */
+const linhasBuraco = semReporte.length
+  ? semReporte.map((d) => `\`${br(d)}\``).join(" · ")
+  : "nenhum";
 
 const bloco = `${INICIO}
 
@@ -166,9 +215,19 @@ ${linhasStatus}${semMarca ? `\n| sem marca | ${semMarca} | ${((semMarca / itens)
 
 ### Ritmo, mês a mês
 
-| Mês | Dias trabalhados |
-|---|---:|
+| Mês | Reportados | Com commit | Sem reporte |
+|---|---:|---:|---:|
 ${linhasMes}
+
+### ⚠️ O que o sócio não viu
+
+**${semReporte.length}** dia(s) com trabalho commitado e **sem entrada** neste log:
+
+${linhasBuraco}
+
+> 🔑 O **git** é a fonte independente do que foi trabalhado. Dia com commit e sem entrada aqui é entrega que não chegou ao sócio — e o placar prefere confessar a omissão a repeti-la com cara de número.
+>
+> ⚠️ O contrário também existe e **não é erro**: ${semCommit.length} dia(s) têm entrada sem commit (reunião, pesquisa, decisão — trabalho que não vira código).${erroGit ? `\n>\n> 🔴 Não consegui ler o git nesta rodada: ${erroGit}` : ""}
 
 ---
 
@@ -213,4 +272,8 @@ for (const s of STATUS) {
   if (contagem[s.marca]) console.log(`   ${s.marca} ${String(contagem[s.marca]).padStart(3)}  ${s.nome}`);
 }
 if (semMarca) console.log(`   ⬜ ${String(semMarca).padStart(3)}  sem marca`);
+if (semReporte.length) {
+  console.log(`\n   🔴 ${semReporte.length} dia(s) com commit e SEM entrada no reporte:`);
+  console.log(`      ${semReporte.map((d) => br(d)).join(" · ")}`);
+}
 console.log("");

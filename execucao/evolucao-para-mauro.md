@@ -39,11 +39,21 @@ tags: [reporte, evolucao, sociedade]
 
 ### Ritmo, mês a mês
 
-| Mês | Dias trabalhados |
-|---|---:|
-| julho/2026 | 23 |
-| agosto/2026 | 9 |
-| setembro/2026 | 12 |
+| Mês | Reportados | Com commit | Sem reporte |
+|---|---:|---:|---:|
+| julho/2026 | 23 | 20 | 🔴 **1** |
+| agosto/2026 | 9 | 20 | 🔴 **11** |
+| setembro/2026 | 12 | 13 | 🔴 **2** |
+
+### ⚠️ O que o sócio não viu
+
+**14** dia(s) com trabalho commitado e **sem entrada** neste log:
+
+`20/07/2026` · `07/08/2026` · `10/08/2026` · `11/08/2026` · `14/08/2026` · `17/08/2026` · `19/08/2026` · `26/08/2026` · `27/08/2026` · `28/08/2026` · `29/08/2026` · `30/08/2026` · `01/09/2026` · `14/09/2026`
+
+> 🔑 O **git** é a fonte independente do que foi trabalhado. Dia com commit e sem entrada aqui é entrega que não chegou ao sócio — e o placar prefere confessar a omissão a repeti-la com cara de número.
+>
+> ⚠️ O contrário também existe e **não é erro**: 5 dia(s) têm entrada sem commit (reunião, pesquisa, decisão — trabalho que não vira código).
 
 ---
 

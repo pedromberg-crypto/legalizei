@@ -534,6 +534,74 @@ export function projetarVirada({
   };
 }
 
+/**
+ * ↩️ E SE O CLIENTE MEXER SÓ UM MÊS E DEIXAR O PILOTO SEGUIR?
+ *
+ * 🔴 Nasceu de uma pergunta do Pedro em 15/09: *"parece que o usuário fica 'o
+ * resto da vida' nesse anexo; o nosso recálculo mensal não faria ele voltar
+ * para o III?"* Faria — e a simulação anterior escondia isso, porque projetava
+ * o valor escolhido **fixo** por 24 meses.
+ *
+ * Medido na P01: editar um mês para o salário mínimo custa **1 competência**
+ * no Anexo V, porque o piloto compensa no mês seguinte (paga R$9.179 em vez de
+ * R$5.400) e a razão volta aos 30%. Manter o valor custa **10 de 18**.
+ *
+ * 🔑 São **duas consequências diferentes** para a mesma tecla, e a tela precisa
+ * das duas. Só a segunda assusta; só a primeira é o que quase todo mundo faz.
+ *
+ * @param primeiroMesValor o que a pessoa escolheu para o mês corrente
+ */
+export function projetarComPiloto({
+  empresa,
+  competenciasAnteriores = [],
+  receitaProjetada = 0,
+  primeiroMesValor,
+  horizonte = 24,
+}) {
+  const serie = competenciasAnteriores.map((c) => ({ ...c }));
+  const linha = [];
+
+  for (let i = 0; i < horizonte; i++) {
+    const receita = receitaProjetada;
+
+    // O anexo desta competência sai dos 12 meses ANTERIORES a ela.
+    const janela = serie.slice(-12);
+    const fr = janela.length ? fatorRDeCompetencias({ competencias: janela }) : null;
+    linha.push({ passo: i + 1, anexo: fr?.anexo ?? "III", fatorR: fr?.fr ?? null });
+
+    // Agora o mês acontece: no 1º vale a escolha da pessoa, nos demais o piloto.
+    let pago;
+    if (i === 0) {
+      pago = primeiroMesValor;
+    } else {
+      const d = pilotar({
+        empresa,
+        competenciasAnteriores: [...serie],
+        receitaDoMes: receita,
+        rbt12DoMes: 0,
+      });
+      pago = d.atua ? d.sugerido : PREVIDENCIA.SALARIO_MINIMO;
+    }
+
+    serie.push({
+      mes: `+${i}`,
+      receita,
+      proLaboreDeclarado: pago,
+      proLaborePago: pago,
+    });
+  }
+
+  const primeiroV = linha.findIndex((l) => l.anexo === "V");
+  const depoisDoV = linha.findIndex((l, i) => primeiroV >= 0 && i > primeiroV && l.anexo === "III");
+
+  return {
+    caiEm: primeiroV < 0 ? null : primeiroV + 1,
+    mesesEmV: linha.filter((l) => l.anexo === "V").length,
+    voltaEm: depoisDoV > 0 ? depoisDoV + 1 : null,
+    linha,
+  };
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════
  * 5 · O VOLANTE — quando a pessoa decide o valor dela
  * ═══════════════════════════════════════════════════════════════════════════ */
@@ -625,10 +693,38 @@ export function avaliarProLaboreEscolhido({
         `.`,
       faltam: arredonda(referencia.minimoLegal - escolhido),
       custoMensalEstimado: porMes,
-      // 🔴 A pergunta desta tela é "quando CAIO", não "quando volto".
+      horizonte,
+      /**
+       * 🔴 AS DUAS CONSEQUÊNCIAS DA MESMA TECLA — e a tela precisa das duas.
+       *
+       * `sePontual` é o que quase todo mundo faz: mexe um mês e deixa o piloto
+       * seguir. `seMantiver` é o que a projeção antiga mostrava sozinha, e ela
+       * assusta com um número que só vale se a pessoa desligar o automático
+       * para sempre.
+       */
+      sePontual: (() => {
+        const p = projetarComPiloto({
+          empresa,
+          competenciasAnteriores,
+          receitaProjetada: receitaDoMes,
+          primeiroMesValor: escolhido,
+          horizonte,
+        });
+        return {
+          caiEm: p.caiEm,
+          mesesEmV: p.mesesEmV,
+          voltaEm: p.voltaEm,
+          custoEstimado: porMes ? porMes * p.mesesEmV : null,
+        };
+      })(),
+      seMantiver: {
+        caiEm: proj.caiEm,
+        mesesEmV: proj.mesesEmV,
+        custoEstimado: porMes ? porMes * proj.mesesEmV : null,
+      },
+      // Compatibilidade: a pergunta desta tela é "quando CAIO", não "quando volto".
       caiEm: proj.caiEm,
       mesesEmV: proj.mesesEmV,
-      horizonte,
       fonte: "LC 123/2006 art. 18 §5º-J · Res. CGSN 140/2018 art. 26",
     });
   }

@@ -103,15 +103,24 @@ for (const escolhido of valores) {
   for (const a of r.alertas) {
     console.log(`\n   ${SIMBOLO[a.gravidade] ?? "·"} ${a.titulo}`);
     console.log(`      ${quebrar(a.texto, 86, "      ")}`);
-    if (a.caiEm != null)
+    if (a.sePontual) {
+      const p = a.sePontual;
       console.log(
-        `      ⏳ E não se desfaz voltando atrás: mantendo esse valor, a queda ` +
-          `começa na\n         ${a.caiEm}ª competência e são ${a.mesesEmV} dos ` +
-          `próximos ${a.horizonte} meses no Anexo V` +
-          (a.custoMensalEstimado
-            ? `, cerca de ${reais(a.custoMensalEstimado * a.mesesEmV)} no total.`
+        `      ↩️  Se for só este mês e você deixar o automático seguir: ` +
+          (p.mesesEmV === 0
+            ? `nada muda de anexo.`
+            : `${p.mesesEmV} ${p.mesesEmV === 1 ? "mês" : "meses"} no Anexo V` +
+              (p.voltaEm ? ` (volta ao III na ${p.voltaEm}ª competência)` : "") +
+              (p.custoEstimado ? `, cerca de ${reais(p.custoEstimado)}.` : "."))
+      );
+      console.log(
+        `      ⏳ Se mantiver esse valor daqui pra frente: ${a.seMantiver.mesesEmV} ` +
+          `dos próximos ${a.horizonte} meses no Anexo V` +
+          (a.seMantiver.custoEstimado
+            ? `, cerca de ${reais(a.seMantiver.custoEstimado)}.`
             : ".")
       );
+    }
     if (a.fonte) console.log(`      ⚖️  ${a.fonte}`);
     if (a.confianca) console.log(`      ${a.confianca}`);
   }

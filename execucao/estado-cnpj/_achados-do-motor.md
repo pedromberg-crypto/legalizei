@@ -67,6 +67,25 @@ O alerta dizia *"esse valor derruba pro Anexo V"* e na linha seguinte *"o Anexo 
 Escrevi teste assumindo que baixar ao mínimo sempre derruba. Não derruba: com folha em 30% cheios, o mínimo legal do mês cai para R$1.080 e um mês ruim é **absorvido**.
 **Por que importa:** é a diferença entre um app que avisa quando precisa e um que grita sempre. Virou invariante próprio no G-P6.
 
+## M-008 · O alerta projetava só o pior caso, e assustava com ele
+**15/09** · 🔴 grave · **Onde doeu:** `avaliarProLaboreEscolhido` · **Quem pegou:** 🔑 **o Pedro, lendo o output** — *"parece que o usuário fica 'o resto da vida' nesse anexo; o nosso recálculo mensal não faria ele voltar para o III?"*
+A projeção segurava o valor escolhido **fixo por 24 meses**. Isso responde *"e se você mantiver isso?"*, que é o caso raro. Quem edita um mês e deixa o automático seguir vive outra história, e ninguém tinha medido qual.
+**Medido na P01:** editar um mês custa **1 competência** no Anexo V (~R$1.710) porque o piloto compensa no mês seguinte pagando R$9.179 em vez de R$5.400. **Manter** custa **10 de 18** (~R$16.700 a mais de DAS).
+**Custo se passasse:** a tela mostraria **R$39.330** para quem ia gastar **R$1.710** — alarme desproporcional na tela mais sensível do produto. O cliente ou desiste de uma mudança legítima, ou aprende a ignorar nossos alertas.
+**Trava:** ✅ `projetarComPiloto()` + os campos `sePontual` e `seMantiver` lado a lado no alerta + invariante no G-P6.
+
+## M-009 · A velocidade da volta depende da folga, e varia 7×
+**15/09** · 🟡 médio · **Quem pegou:** um teste meu, com premissa mais apertada que a da P01
+Com histórico a **30% cheios**, o piloto recupera em **1 competência**. Com histórico colado nos **28%**, leva **7**. A causa é o teto de 2× do `ajuste-de-crescimento`: quando o que falta não cabe nele, o piloto entra em `recuperacao` e paga só o sustentável.
+**Não é defeito** — é a mesma trava que impede o R$72.169 do M-004. Mas é consequência que a tela precisa contar, e é o argumento mais forte a favor da margem de 30% sobre os 28% legais: **a folga não é só segurança, é velocidade de recuperação**.
+**Trava:** ✅ invariante no G-P6 comparando os dois históricos.
+
+## M-010 · O pró-labore sugerido OSCILA com receita constante
+**15/09** · 🟡 aberto · **Quem pegou:** o rastro da P01 no horizonte de 18 meses
+Com receita fixa em R$18.000, a sugestão vai R$5.400 → **R$7.021** (meses 13-14) → **R$2.158** (mês 15) → R$5.400. Fiscalmente correto (a razão fica em 30% o tempo todo): é a janela rolando sobre os dois meses iniciais sem receita.
+**Por que importa:** o cliente vê o pró-labore dele triplicar e depois cair a um terço **sem nada ter mudado no faturamento**. É exatamente o tipo de coisa que destrói confiança no automático.
+🔴 **Decisão aberta (Pedro):** suavizar a sugestão (média móvel, ou piso móvel que só sobe) é decisão de produto, não de motor. Suavizar custa precisão fiscal; não suavizar custa confiança.
+
 ---
 
 ## 🔴 Dívidas que estes achados deixaram

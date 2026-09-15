@@ -662,6 +662,51 @@ titulo("G-P6 · A EDIÇÃO MANUAL, E OS ALERTAS PERSONALIZADOS");
     "🟡 declarado sem régua numérica — segue com o Mauro"
   );
 
+  // 🔴 A PERGUNTA DO PEDRO, VIRADA EM INVARIANTE (15/09): *"o nosso recálculo
+  // mensal não faria esse usuário voltar para o III?"* Faria — e o alerta tem
+  // que dizer isso, senão assusta com o número do pior caso.
+  {
+    const a = noPiso.alertas.find((x) => x.codigo === "CAI_PARA_ANEXO_V");
+    ok(
+      "🔑 o alerta dá as DUAS consequências: mexer só um mês × manter o valor",
+      a.sePontual && a.seMantiver && a.sePontual.mesesEmV < a.seMantiver.mesesEmV,
+      `pontual ${a.sePontual.mesesEmV} mês(es) × mantido ${a.seMantiver.mesesEmV}`
+    );
+    ok(
+      "🔴 e o piloto TRAZ DE VOLTA dentro do horizonte — não é sentença perpétua",
+      a.sePontual.voltaEm !== null,
+      `volta ao III na ${a.sePontual.voltaEm}ª competência`
+    );
+    ok(
+      "o custo do pontual é menos da metade do custo de manter",
+      a.sePontual.custoEstimado < a.seMantiver.custoEstimado / 2,
+      `${(a.sePontual.custoEstimado / 100).toFixed(2)} × ${(a.seMantiver.custoEstimado / 100).toFixed(2)}`
+    );
+
+    // 🔴 A VELOCIDADE DA VOLTA DEPENDE DA FOLGA, e o número muda MUITO.
+    // Medido em 15/09: com histórico a 30% cheios (P01) o piloto recupera em
+    // **1 competência**; com histórico colado nos 28%, leva **7**. A causa é o
+    // teto de 2× do `ajuste-de-crescimento`: quando o que falta não cabe nele,
+    // o piloto entra em `recuperacao` e só paga o sustentável, que recupera
+    // devagar. Não é defeito — é a mesma trava que impede o R$72.169 — mas é
+    // consequência que a tela precisa saber contar.
+    const comFolga = avaliarProLaboreEscolhido({
+      empresa: DINAMICO,
+      competenciasAnteriores: serie(12, 18000, 5400), // folha em 30%
+      receitaDoMes: 18000,
+      rbt12DoMes: 154285.71,
+      escolhido: 800, // abaixo do piso, para forçar o cenário
+    });
+    const aFolga = comFolga.alertas.find((x) => x.codigo === "CAI_PARA_ANEXO_V");
+    ok(
+      "🔑 com folga de 30% a volta é RÁPIDA; colado nos 28% é lenta",
+      aFolga == null || aFolga.sePontual.mesesEmV < a.sePontual.mesesEmV,
+      aFolga == null
+        ? "com folga o valor sequer derruba"
+        : `${aFolga.sePontual.mesesEmV} × ${a.sePontual.mesesEmV} meses`
+    );
+  }
+
   const semMargem = avaliarProLaboreEscolhido({ ...base, escolhido: ref.minimoLegal + 100 });
   ok(
     "🟡 entre o mínimo legal e a sugestão: fica no III, mas sem folga",

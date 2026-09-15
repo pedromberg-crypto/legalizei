@@ -114,7 +114,7 @@ A regra de deslocamento **muda por tributo**, e é armadilha real: no mesmo mês
 |---|---|---|---|---|:--:|---|
 | 2.4 | **Saber que o imposto foi pago, sem perguntar** | descobrir que a guia foi quitada | banco do cliente **ou** Receita | 🔴 **O maior buraco do produto.** Nenhum caminho testado. É o gap nº 1 do líder e o que sustenta a promessa de não perguntar "você pagou?" | 🔴 | (a) **Open Finance** read-only, com consentimento; (b) consulta de **arrecadação/DARF pago no e-CAC**, via Serpro; (c) conciliação manual do time, que não escala |
 | 5.5 | Verificação de pendências e situação fiscal | consultar a situação da empresa nos órgãos | RF, PGFN, PBH | 🟡 Dois caminhos agora: **InfoSimples** (quase só consulta, que aqui serve) ou o próprio **Integra Contador**, que já teremos contratado e faz consulta a pendências do Simples | 🟡 | comparar preço por chamada entre os dois antes de contratar mais um fornecedor |
-| 5.7 | **Monitorar o domicílio eletrônico (DTE-SN)** | ler a caixa onde chega o **Termo de Exclusão do Simples** | Receita Federal | 🔴 **Novo, e o mais grave do arquivo.** A ciência é **presumida em 45 dias** mesmo sem ninguém abrir, e depois são só **30 dias** para regularizar. Se ninguém lê, a empresa é excluída à revelia. Com o A1 dá para consultar em background, mas o caminho técnico não foi mapeado | 🔴 | **Integra Contador** (verificar se expõe o DTE-SN) · e-CAC via certificado |
+| 5.7 | **Monitorar o domicílio eletrônico (DTE-SN)** | ler a caixa onde chega o **Termo de Exclusão do Simples** | Receita Federal | 🟢 **RESOLVIDO EM 15/09: o InfoSimples tem `ECAC / Caixa Postal`.** Era o mais grave do arquivo — ciência **presumida em 45 dias** mesmo sem ninguém abrir, e depois só **30 dias** para regularizar. 🔑 E o caminho apareceu no fornecedor que a gente já ia contratar, não num novo | 🟢 | **InfoSimples `ecac/caixa-postal`** |
 
 ### C. Vendáveis à-la-carte (a receita além da mensalidade)
 
@@ -186,7 +186,7 @@ São **23 linhas** na matriz (fora o bloco D, que é infraestrutura e tem trilha
 | 🟡 indício, falta confirmar | 6 | 3 |
 | 🔴 não sabemos | **10** | **4** |
 
-Os 4 que sobraram em 🔴: **2.4** (status de pagamento), **5.7** (DTE-SN), **8.4** (alvará) e **8.5** (CPOM).
+Os que sobram em 🔴: **2.4** (status de pagamento), **8.4** (alvará) e **8.5** (CPOM). 🟢 O **5.7** (DTE-SN) saiu em 15/09: o InfoSimples tem `ECAC / Caixa Postal`.
 
 ⚠️ Duas ressalvas de leitura:
 - **8.6 saiu do jogo por outro motivo:** prestador de serviço puro em BH **não tem Inscrição Estadual**. Não é "resolvido", é **não se aplica**.
@@ -212,7 +212,17 @@ Herdadas da matriz de 22/07 e ainda de pé:
 |---|---|---|
 | **Serpro / Integra Contador** | PGDAS-D · DEFIS · DCTFWeb · eSocial. Não exige procuração e-CAC com o A1 da empresa | 🟢 caminho confirmado, **contrato ainda não assinado**. ~R$300/mês por escritório no pacote inicial |
 | **Emissor Nacional de NFS-e (ADN)** | Emitir, consultar e cancelar NFS-e. REST, gratuita, Swagger público | 🟢 caminho confirmado. **Obrigatório a partir de 01/11/2026** |
-| **InfoSimples** | Consultas federais: CNPJ, Simples/SIMEI, CND, pendências. ⚠️ **Quase só consulta, não emite** | 🟡 o caminho existe, mas agora **compete com o Integra Contador**, que já será contratado. Comparar preço por chamada antes de somar fornecedor |
+| **InfoSimples** | 🔄 **Catálogo relido em 15/09, e o resumo antigo ("quase só consulta") era grosso demais.** Ele **EMITE** alguns documentos: `SICALC / Gerar DARF`, `Emissão de DAS de MEI`, `CND Federal 2ª via`, `Guia de Parcelamento SIMEI`. E **CONSULTA** muito do que precisamos: `ECAC / Caixa Postal` (🟢 resolve o **5.7**), `ECAC / DCTF WEB`, `Situação Fiscal`, `Agenda Tributária`, `CNPJ`, `Simples Nacional`, `PER/DCOMP`, CNDs | 🟢 **contratar** — ver o quadro abaixo do que ele NÃO resolve |
+
+#### 🔴 O que o InfoSimples **não** resolve, e a razão é estrutural
+
+| | Por quê |
+|---|---|
+| **2.2 · DAS do ME** | A emissão que ele tem é **de MEI**. O DAS de ME/EPP **nasce da transmissão do PGDAS-D**, que tem *"caráter declaratório, constituindo confissão de dívida"*. **Quem não transmite a declaração não pode emitir a guia** — não é lacuna de catálogo, é como o tributo funciona |
+| **5.8 · Trava da DEFIS** | Mesma razão: transmitir declaração, não consultar |
+| **4.5 · DARF do pró-labore** | 🟡 **A conferir.** Ele tem `SICALC / Gerar DARF`, mas o SICALC gera DARF de **pagamento espontâneo**; o INSS do pró-labore sai como **DARF numerado** pelo caminho eSocial (S-1200) → DCTFWeb. São coisas diferentes, e confundir seria repetir o erro do "quase só consulta" |
+
+🔑 **A leitura que muda o plano:** o Integra Contador continua necessário, mas **por menos coisas**. Ele fica com o que exige **transmitir** (PGDAS-D, DEFIS, eSocial, DCTFWeb); o InfoSimples cobre **ler** e alguns documentos avulsos. Não competem — **se complementam**, e a fronteira entre eles é *transmitir × consultar*.
 | **Pagar.me** | Cobrança da mensalidade e dos avulsos | 🟡 em avaliação, reunião sendo marcada. Ver [[2026-09-08-provedores-pagamento-saas-br]] |
 | **Open Finance** | Conciliação bancária read-only (um dos caminhos do 2.4) | 🔴 não investigado |
 | **e-CAC / consulta de arrecadação** | O outro caminho do 2.4. O líder tem algo assim, com atraso declarado de ~30 dias | 🔴 não investigado. Ver [[2026-09-09-contabilizei-pro-labore]] |

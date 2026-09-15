@@ -1,6 +1,8 @@
 # Memory Index — Legalize
 
 ## Motor fiscal e estado do CNPJ
+- [O piloto AJUSTA o pro-labore sozinho](legalize-piloto-pro-labore-automatico.md) — 15/09: produto age, nao avisa (Fator R e retrovisor). 41 conferencias. Manutencao != recuperacao; sustentavel compensa em 100% da faixa do ME.
+- [A regua de prova: fonte oficial fecha a REGRA](legalize-regua-de-prova-fonte-oficial.md) — 15/09: documento fecha so a CONVENCAO. 2a vez que o Pedro corrige a mesma confusao.
 - [Anexo V tinha DUAS lacunas, so uma fechou](legalize-anexo-v-duas-lacunas.md) — 15/09: simulacao fecha COMPORTAMENTO, nunca DOCUMENTO. Efetiva continua ao 12o decimal em 8 bordas; quebra na 6a, nos dois anexos, pra baixo.
 - [O Fator R e RETROVISOR](legalize-fator-r-e-retrovisor.md) — 15/09: corrigir hoje nao conserta hoje (P01 so volta ao III em ago/2027). Invariante passava pelo motivo errado.
 - [Os 2 motores fiscais duplicados](legalize-dois-motores-fiscais-duplicados.md) — 14/09: 7 de 7 constantes duplicadas; `brl()` com unidades diferentes nos dois. Debito PAGO em 15/09 por gerador.

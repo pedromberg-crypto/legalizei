@@ -1068,6 +1068,39 @@ Preciso de voce em dois pontos:
 2) *Pro-labore desproporcional.* Qual regua voce usa na pratica pra dizer que o valor esta baixo demais e vira risco de distribuicao disfarcada?
 ```
 
+## Semana 15/09/2026 — o app vai ajustar o pró-labore sozinho, e preciso desfazer uma coisa que te falei
+
+| # | O que rendeu | Por quê importa | |
+|:--:|---|---|:--:|
+| 1 | 🔴 **CORREÇÃO: a CPP NÃO conta no Fator R.** Eu te falei o contrário em 13/09 | Reportei como *"ponto pacífico, Solução de Consulta COSIT 17/2021"*. **Está errado nas duas pontas.** A Resolução CGSN 140/2018, art. 26 §2º I "a" diz que entra *"o montante efetivamente recolhido: a) de Contribuição Patronal Previdenciária (**inclusive a recolhida dentro do Simples Nacional em relação ao Anexo IV**)"* — a norma **nomeia o Anexo IV**, e o silêncio sobre o III e o V é vedação. E a tal COSIT 17/2021 que o mercado cita **trata de outro assunto**; era citação de blog circulando. 🔑 **Errar isso erra pro lado perigoso:** contar a CPP infla a folha, o app recomendaria pró-labore **menor** que o necessário, e o cruzamento eSocial × PGDAS-D rebaixaria a empresa pro Anexo V **retroativamente**, com multa | 🔴 |
+| 2 | 🛩️ **O app vai ajustar o pró-labore do cliente todo mês, sozinho** | É o que a Contabilizei faz com a empresa do Pedro, e ele quer igual: o cliente só emite nota e paga guia, o resto acontece. Todo mês o app cruza o que foi faturado com o que foi pago de pró-labore e define o valor do mês pra segurar o Anexo III. **Está construído e testado** (41 conferências) | 🟢 |
+| 3 | 🔑 **E tinha que ser ajuste, não aviso — porque o Fator R olha pra trás** | O Fator R lê os **12 meses anteriores**. Consertar hoje não conserta hoje: simulamos um dev que corrige o pró-labore em setembro e ele **só volta ao Anexo III em agosto do ano seguinte** — 11 meses pagando 15,5% já com a folha certa. Qualquer alerta, por mais cedo, chega tarde. Por isso o valor certo tem que sair **desde o mês 1** | 🟢 |
+| 4 | ⚠️ **O teste pegou uma recomendação insana antes de ela virar tela** | A 1ª versão, numa empresa com um ano de folha no mínimo e R$25 mil/mês de faturamento, mandava pagar **R$72.169 num mês só** — a conta estava certa, ela tentava consertar um ano de atraso numa competência. Agora o app separa **o que dá pra pagar todo mês** do **que custaria pra virar o anexo já**, e o segundo é decisão do sócio, nunca do sistema | 🟢 |
+| 5 | ✅ **Para 65 dos 87 CNAEs que atendemos, isso nem se aplica** | Eles são Anexo III **fixo por decisão do governo**, e o Fator R não muda nada. Só **15** podem virar Anexo V. Consequência de produto: a tela **não pode** falar em "sua folha precisa chegar a 28%" pra quem é fixo, porque inventa um risco que não existe | 🟢 |
+| 6 | 🟡 **Sobre o recibo de Anexo V que eu ia te pedir: não precisa mais travar por ele** | Eu estava tratando como bloqueio a falta de um recibo de PGDAS-D de empresa em Anexo V. As faixas, a repartição e as regras saem da lei, e o arredondamento já está provado por um recibo de Anexo III — é o mesmo cálculo nos dois. Se você tiver um, **ajuda**; mas não é o que segura nada | 🟡 |
+
+**Preciso de você em um ponto novo:**
+
+1. 🔴 **Pró-labore contra distribuição de lucro.** O app já sabe calcular quanto de pró-labore segura o Anexo III. O que ele **não** sabe é se vale a pena — porque o dinheiro que vira pró-labore deixa de sair como lucro, e o tratamento do lucro muda com a **Lei 15.270/2025**. **Como você compara as duas saídas na prática hoje**, e o que muda a partir de 2026?
+
+> As duas perguntas da semana passada (retirada de lucro sem extrato · régua do pró-labore desproporcional) **seguem abertas**.
+
+```
+Oi Mauro, resumo da semana:
+
+- *Preciso desfazer uma coisa que te falei semana passada.* Reportei que a CPP conta no Fator R como ponto pacifico. Esta errado: a Resolucao CGSN 140/2018 art. 26 so manda contar a CPP recolhida dentro do Simples "em relacao ao Anexo IV", e o silencio sobre o III e o V e vedacao. A tal Solucao de Consulta COSIT 17/2021 que todo mundo cita trata de outro assunto. Errar isso faria o app recomendar pro-labore MENOR do que precisa, e o cruzamento com a Receita rebaixaria a empresa pro Anexo V retroativamente, com multa
+- *O app vai ajustar o pro-labore do cliente todo mes, sozinho,* igual a Contabilizei faz com a empresa do Pedro. O cliente so emite nota e paga guia. Ja esta construido e testado
+- *E tinha que ser ajuste e nao aviso, por causa do retrovisor:* o Fator R le os 12 meses anteriores, entao consertar hoje nao conserta hoje. Simulamos um caso em que a pessoa corrige o pro-labore em setembro e so volta ao Anexo III em agosto do ano seguinte, 11 meses pagando 15,5% ja com a folha certa
+- *O teste pegou uma recomendacao insana antes de virar tela:* numa empresa atrasada ha um ano, a primeira versao mandava pagar 72 mil de pro-labore num mes so. Agora o app separa o que da pra pagar todo mes do que custaria pra virar o anexo ja, e o segundo e decisao do socio
+- *Uma coisa boa:* para 65 dos 87 CNAEs que atendemos isso nem se aplica, porque sao Anexo III fixo por decisao do governo. So 15 podem virar Anexo V
+- *Sobre o recibo de Anexo V que eu ia te pedir:* nao trava mais nada. As regras saem da lei e o arredondamento ja esta provado por um recibo de Anexo III, e o calculo e o mesmo. Se voce tiver um, ajuda, mas nao e urgente
+
+Preciso de voce num ponto novo:
+1) *Pro-labore contra distribuicao de lucro.* O app sabe calcular quanto de pro-labore segura o Anexo III, mas nao sabe se compensa, porque esse dinheiro deixa de sair como lucro e o tratamento do lucro muda com a Lei 15.270/2025. Como voce compara as duas saidas hoje, e o que muda a partir de 2026?
+
+As duas perguntas da semana passada (retirada de lucro sem extrato, e a regua do pro-labore desproporcional) seguem abertas.
+```
+
 ## Links
 
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]] · [[estado-atual]] · [[indice-autoridade]]

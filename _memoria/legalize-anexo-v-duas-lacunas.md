@@ -5,13 +5,13 @@ metadata:
   node_type: memory
   type: project
   originSessionId: 349af8f2-bd19-4385-8de7-9e1f53328c23
-  modified: 2026-09-15T03:58:24.384Z
+  modified: 2026-09-15T11:15:40.047Z
 ---
 
 O Anexo V tinha **duas** lacunas, e confundi-las infla o placar:
 
 1. **Comportamento** — ele só tinha rodado na **1ª faixa** (pelo P01), e na 1ª faixa a parcela a deduzir é **zero**, então a efetiva é igual à nominal e metade da tabela nunca era tocada. ✅ **FECHADA em 15/09** pela vida simulada do **P16** (consultoria em TI, RBT12 de R$0 a R$359 mil em 22 competências), com 8 invariantes deriváveis da LC 123.
-2. **Documento** — nenhum recibo de PGDAS-D em Anexo V. ⛔ **SEGUE ABERTA, e simulação nenhuma fecha.** Fonte provável: o Mauro.
+2. **Documento** — nenhum recibo de PGDAS-D em Anexo V. 🟡 **RECALIBRADA EM 15/09: era 🔴 bloqueio e não é.** O Pedro derrubou a exigência (*"se veio de fonte de governo é confiável desde que esteja atualizado"*): faixas, repartição, RBT12 e Fator R saem de fonte oficial, e a convenção de arredondamento é **herdada do Anexo III**, que tem recibo — mesmo código nos dois anexos, diferença de 1 centavo. Segue desejável com o Mauro, deixou de travar. Ver [[legalize-regua-de-prova-fonte-oficial]].
 
 **Why:** eu já inflei esse placar uma vez ("7 de 8" que era 4 de 8, corrigido em 14/09). Uma vida simulada prova **relação**, nunca **valor** — misturar as duas colunas repete o mesmo erro com cara de progresso.
 

@@ -189,14 +189,6 @@ export const FUNCIONALIDADES = [
   {
     id: "4.7",
     secao: "prolabore",
-    nome: "Dependentes para o IRRF",
-    tela: null,
-    processo: [],
-    nota: "🔴 RESPONDIDA EM 13/09, E A RESPOSTA MUDA O LUGAR DESTE ITEM. O Pedro travou que NÃO captamos dependente de SÓCIO: dependente existe só em folha, para colaborador. Então (a) o IRRF do pró-labore sai sem dedução por pessoa a cargo, e sobra o desconto simplificado como única via; (b) este item, como está escrito, pertence à §8 Folha e não à §4 Pró-labore. ⚠️ Não movi nem removi: a lista de 58 é ratificada pelo Pedro, e mexer nela sem a palavra dele é o mesmo erro de copiar o líder. Aguarda decisão.",
-  },
-  {
-    id: "4.8",
-    secao: "prolabore",
     nome: "Alterar pró-labore de mês já processado",
     tela: "/mais/servicos",
     processo: [],
@@ -312,5 +304,13 @@ export const FUNCIONALIDADES = [
     tela: null,
     processo: ["P5.9"],
     nota: "⚠️ PARCIAL, e é a costura das duas seções: o P5.9 já soma “a folha dos 12 meses” no Fator R. O que não existe é o que ALIMENTA essa folha — hoje ela só tem pró-labore dentro.",
+  },
+  {
+    id: "8.10",
+    secao: "folha",
+    nome: "Dependentes para o IRRF",
+    tela: null,
+    processo: [],
+    nota: "🔄 MUDOU DE SEÇÃO EM 14/09 (Pedro): era o **4.7**, em §4 Pró-labore. O Pedro travou em 13/09 que NÃO captamos dependente de SÓCIO — dependente existe só em folha, para colaborador. Então o IRRF do pró-labore sai **sem dedução por pessoa a cargo**, e o desconto simplificado é a única via. ⚠️ **A renumeração foi forçada, não escolhida:** o gerador exige numeração contígua dentro da seção, então o antigo 4.8 (*Alterar pró-labore de mês já processado*) virou **4.7**. Ao citar, escreva o nome junto do número — a regra do cabeçalho vale em dobro aqui.",
   },
 ];

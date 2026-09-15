@@ -82,7 +82,7 @@ export const CATEGORIA = {
   id: "prolabore",
   nome: "Pró-labore e sócios",
   emoji: "👥",
-  itens: ["4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "4.7", "4.8"],
+  itens: ["4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "4.7"],
 };
 
 export const NOS = [
@@ -291,7 +291,7 @@ export const NOS = [
     o: "O lucro sai, e precisa ficar identificado pra conta fechar",
     fim: true,
     saiPara: "estar em dia · o lucro sacado entra na EFD-Reinf",
-    nota: "🔴 AQUI TEM UM BURACO NOSSO, não do líder, e ele continua aberto (P2.3). Na plataforma dele o lucro é INFERIDO DO EXTRATO — 'qualquer retirada que não seja pró-labore nem devolução de empréstimo' — silenciosamente, sem nunca perguntar nada ao cliente. O Pedro confirmou de dentro: *'em momento nenhum nem cita sobre retirada de lucro'*. ⚠️ A casa travou em 09/09 que NÃO terá conta nem integração bancária, então esse caminho não existe pra nós. Ou o lucro vira ato DECLARADO no app, ou a gente não sabe que ele saiu — e identificar não é vigiar: é o que faz a conta fechar. 📅 Desde 2026 (Lei 15.270/2025) o lucro sacado vai pra EFD-Reinf com IRRF antecipado. ✅ **14/09 — O BALANÇO DA CONTA REAL MOSTROU O QUE ACONTECE SEM EXTRATO, e é pior do que eu supunha:** a receita inteira de 2026 (R$43.910) fica como *Clientes a Receber* **nunca baixado**, o pró-labore inteiro fica como *Pró-Labore a Pagar* (R$14.652,96) **nunca baixado**, e o Caixa Geral vai a **−5.012,83**. O lucro contábil de 2026 é **R$22.917,38** e mesmo assim a API de distribuição devolve `saldo: 0`. 🔑 Ou seja: **sem conciliação, o balanço é competência pura e não serve como retrato financeiro.** ⚠️ O líder infere do extrato **só para quem usa a conta dele** (`BETA_CONTA_CONTABILIZEI`); a persona zero não usa, e por isso os livros dela ficam assim. 🔴 **A decisão segue nossa e segue aberta (B1 em `produto/persona-zero/acionaveis.md`)** — mas o caminho do meio está agora **descartado por evidência**: exibir 'Caixa' e 'Lucro disponível' calculados só por competência produz cliente sacando lucro que não existe.",
+    nota: "✅ **FECHADO EM 14/09 (Pedro) — o lucro é DECLARADO, nunca inferido.** A pergunta se partiu em duas e só uma era de verdade. **(1) MOSTRAR: não mostramos.** Nada de painel de 'lucro disponível' — o líder também não mostra, e sem conciliação (decisão 31) qualquer número seria errado. **(2) DECLARAR: obrigatório.** O cliente declara num campo, com prazo mensal, e a casa leva pra EFD-Reinf. Retirada acima do que a contabilidade suporta cai na decisão 32 (empréstimo ao sócio em *Créditos com Pessoas Ligadas*, sem bloquear e sem avisar). 🔑 **A responsabilidade tem instrumento pronto e não é nosso pra inventar:** a Carta de Responsabilidade da Administração (Res. CFC 1.590/2020 art. 3º) faz o cliente declarar que a informação é completa e verdadeira, e sem a assinatura dela o contábil não fecha. Nossa parte é PERGUNTAR EM TEMPO e DECLARAR O QUE FOI RESPONDIDO. ⏳ Sobra só o PRAZO (dia 15 como o líder, ou o nosso). ⚠️ A Lei 15.270/2025 chegou por citação em tela de concorrente: quer o texto legal ou o ok da Larissa antes de virar tela. ── O HISTÓRICO DO BURACO, que explica por que a resposta é essa: na plataforma do líder o lucro é INFERIDO DO EXTRATO — 'qualquer retirada que não seja pró-labore nem devolução de empréstimo' — silenciosamente, sem nunca perguntar nada ao cliente. O Pedro confirmou de dentro: *'em momento nenhum nem cita sobre retirada de lucro'*. ⚠️ A casa travou em 09/09 que NÃO terá conta nem integração bancária, então esse caminho não existe pra nós. Ou o lucro vira ato DECLARADO no app, ou a gente não sabe que ele saiu — e identificar não é vigiar: é o que faz a conta fechar. 📅 Desde 2026 (Lei 15.270/2025) o lucro sacado vai pra EFD-Reinf com IRRF antecipado. ✅ **14/09 — O BALANÇO DA CONTA REAL MOSTROU O QUE ACONTECE SEM EXTRATO, e é pior do que eu supunha:** a receita inteira de 2026 (R$43.910) fica como *Clientes a Receber* **nunca baixado**, o pró-labore inteiro fica como *Pró-Labore a Pagar* (R$14.652,96) **nunca baixado**, e o Caixa Geral vai a **−5.012,83**. O lucro contábil de 2026 é **R$22.917,38** e mesmo assim a API de distribuição devolve `saldo: 0`. 🔑 Ou seja: **sem conciliação, o balanço é competência pura e não serve como retrato financeiro.** ⚠️ O líder infere do extrato **só para quem usa a conta dele** (`BETA_CONTA_CONTABILIZEI`); a persona zero não usa, e por isso os livros dela ficam assim. 🔴 **A decisão segue nossa e segue aberta (B1 em `produto/persona-zero/acionaveis.md`)** — mas o caminho do meio está agora **descartado por evidência**: exibir 'Caixa' e 'Lucro disponível' calculados só por competência produz cliente sacando lucro que não existe.",
   },
 
   // ── E · O CADASTRO DO SÓCIO ──────────────────────────────────────────────
@@ -378,14 +378,14 @@ export const NOS = [
       { se: "ainda não foi declarada", vai: "L10" },
       { se: "já foi declarada", vai: "L34" },
     ],
-    cobre: ["4.8"],
+    cobre: ["4.7"],
     ja: "P5.7",
   },
   {
     id: "L34",
     o: "Retifica a declaração do mês, com o efeito que isso arrasta",
     fim: true,
-    cobre: ["4.8"],
+    cobre: ["4.7"],
     saiPara: "impostos · muda a folha dos 12 meses, logo muda o Fator R, logo pode mudar o anexo de várias competências · plano e cobrança · retificação é serviço avulso",
     nota: "🔴 É o efeito dominó desta categoria, e ele é pior que o de Notas: mexer num mês de folha altera a JANELA DE 12 MESES inteira, então pode mudar o anexo de vários meses de uma vez. ⚠️ E retificação exige contador — é responsabilidade técnica, não botão.",
   },

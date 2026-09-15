@@ -1,7 +1,7 @@
 ---
 tipo: derivado
 status: vivo
-data: 2026-09-13
+data: 2026-09-15
 assunto: funcionalidades-core-me-simples
 gerado_por: produto/gerar-funcionalidades.mjs
 tags: [produto, funcionalidades, semaforo, mvp]
@@ -120,7 +120,7 @@ Avulso: o P4 cobre pedir e cobrar, não executar. Por definição é humano.
 
 ## 👥 Pró-labore e sócios
 
-🟢 4 · 🟡 2 · 🔴 2
+🟢 4 · 🟡 2 · 🔴 1
 
 | | # | Funcionalidade | Tela | Processo |
 |:--:|:--:|---|---|---|
@@ -130,8 +130,7 @@ Avulso: o P4 cobre pedir e cobrar, não executar. Por definição é humano.
 | 🔴 | 4.4 | Recibo de pró-labore e informe de rendimentos | — | — |
 | 🟡 | 4.5 | Guia do INSS do pró-labore | — | **P5.7** Declara e gera a guia do INSS |
 | 🟢 | 4.6 | Duplo vínculo: CLT e sócio na mesma conta | `/mais/socios` | **P5.3** Mexe e vê o imposto mudar |
-| 🔴 | 4.7 | Dependentes para o IRRF | — | — |
-| 🟡 | 4.8 | Alterar pró-labore de mês já processado | `/mais/servicos` | — |
+| 🟡 | 4.7 | Alterar pró-labore de mês já processado | `/mais/servicos` | — |
 
 **4.4 · Recibo de pró-labore e informe de rendimentos**
 
@@ -141,11 +140,7 @@ Documento gerado pelo motor, sem API externa. O P5 declara e gera a guia, mas ne
 
 ⚠️ PARCIAL: o dado é captado na constituição (tela C2) e entra no cálculo do P5.3. O que não existe é a apresentação da folga do teto do INSS, que é o que a pessoa precisa entender.
 
-**4.7 · Dependentes para o IRRF**
-
-🔴 RESPONDIDA EM 13/09, E A RESPOSTA MUDA O LUGAR DESTE ITEM. O Pedro travou que NÃO captamos dependente de SÓCIO: dependente existe só em folha, para colaborador. Então (a) o IRRF do pró-labore sai sem dedução por pessoa a cargo, e sobra o desconto simplificado como única via; (b) este item, como está escrito, pertence à §8 Folha e não à §4 Pró-labore. ⚠️ Não movi nem removi: a lista de 58 é ratificada pelo Pedro, e mexer nela sem a palavra dele é o mesmo erro de copiar o líder. Aguarda decisão.
-
-**4.8 · Alterar pró-labore de mês já processado**
+**4.7 · Alterar pró-labore de mês já processado**
 
 Avulso: retificação de obrigação acessória, exige contador. O P4 cobre pedir e cobrar, não executar.
 
@@ -227,7 +222,7 @@ Avulso: exige protocolo no CRC pelo contador. Não automatizável.
 
 ## 👷 Folha de pagamento
 
-🟢 0 · 🟡 2 · 🔴 7
+🟢 0 · 🟡 2 · 🔴 8
 
 | | # | Funcionalidade | Tela | Processo |
 |:--:|:--:|---|---|---|
@@ -240,6 +235,7 @@ Avulso: exige protocolo no CRC pelo contador. Não automatizável.
 | 🔴 | 8.7 | Desligamento e rescisão | — | — |
 | 🔴 | 8.8 | Quanto custa o colaborador, antes de contratar | — | — |
 | 🟡 | 8.9 | A folha somando no Fator R junto com o pró-labore | — | **P5.9** Entra no Fator R, e a alíquota se sustenta |
+| 🔴 | 8.10 | Dependentes para o IRRF | — | — |
 
 **8.1 · Cadastro do colaborador: PIS, cargo, dependentes**
 
@@ -264,6 +260,10 @@ Mesmo trilho técnico do P5.7 (Integra Contador), que já transmite o pró-labor
 **8.9 · A folha somando no Fator R junto com o pró-labore**
 
 ⚠️ PARCIAL, e é a costura das duas seções: o P5.9 já soma “a folha dos 12 meses” no Fator R. O que não existe é o que ALIMENTA essa folha — hoje ela só tem pró-labore dentro.
+
+**8.10 · Dependentes para o IRRF**
+
+🔄 MUDOU DE SEÇÃO EM 14/09 (Pedro): era o **4.7**, em §4 Pró-labore. O Pedro travou em 13/09 que NÃO captamos dependente de SÓCIO — dependente existe só em folha, para colaborador. Então o IRRF do pró-labore sai **sem dedução por pessoa a cargo**, e o desconto simplificado é a única via. ⚠️ **A renumeração foi forçada, não escolhida:** o gerador exige numeração contígua dentro da seção, então o antigo 4.8 (*Alterar pró-labore de mês já processado*) virou **4.7**. Ao citar, escreva o nome junto do número — a regra do cabeçalho vale em dobro aqui.
 
 ## O que cada processo realiza
 

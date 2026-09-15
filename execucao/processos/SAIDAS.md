@@ -1,7 +1,7 @@
 ---
 tipo: derivado
 status: vivo
-data: 2026-09-14
+data: 2026-09-15
 assunto: saidas-por-decisao
 gerado_por: execucao/processos/gerar-processos.mjs
 tags: [execucao, processos, cobertura, dev]

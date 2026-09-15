@@ -1,7 +1,7 @@
 ---
 tipo: derivado
 status: vivo
-data: 2026-09-14
+data: 2026-09-15
 assunto: cru-notas
 gerado_por: execucao/processos/cru/gerar-cru.mjs
 tags: [execucao, processos, cru, notas]

@@ -1,34 +1,46 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * ESPELHO da config fiscal do motor.
+ * O CUSTO DE ABRIR — e só isso.
+ * ═══════════════════════════════════════════════════════════════════════════
+ * ✅ **A DÍVIDA DECLARADA AQUI FOI PAGA EM 14/09.**
  *
- * ⚠️ ESTE ARQUIVO NÃO É A FONTE DA VERDADE.
- * A fonte é `execucao/motor-testes/flow-schema.js` (const FISCAL), que por sua
- * vez é aterrado em `pesquisa/fiscal-simples-bh-2026.md` (bloco CONSOLIDADO).
- * Aqui é só o que a UI precisa pra renderizar a farol N18.
+ * O cabeçalho antigo dizia: *"dois lugares com a mesma lógica fiscal divergem,
+ * é questão de tempo"*, e terminava com *"se este comentário ainda estiver
+ * aqui quando o backend existir, é bug"*. Estava certo — e a medição confirmou
+ * o pior: **7 de 7 constantes fiscais duplicadas**, com o mesmo valor. Só não
+ * tinham divergido porque coincidiam, e o salário mínimo muda todo janeiro.
  *
- * 🔴 DÍVIDA CONHECIDA E DECLARADA: dois lugares com a mesma lógica fiscal
- * divergem, é questão de tempo. Isso é aceito AGORA porque:
- *   (a) a N18 é farol e precisa calcular pra existir;
- *   (b) o cálculo real vai vir do backend do dev, e aí este arquivo some.
- * Se este comentário ainda estiver aqui quando o backend existir, é bug.
+ * ── O QUE MUDOU ────────────────────────────────────────────────────────────
  *
- * Hoje já aprendemos, na marra, o que custa spec e código divergirem: a
- * auditoria de 16/07 achou 5 itens ✅ na spec que nunca viraram código, e um
- * deles (UX-39) fazia o motor dar o conselho oposto ao que a spec mandava.
+ * As constantes **não moram mais aqui**. Elas vêm de `./fiscal-tabelas`, que é
+ * GERADO de `execucao/motor-fiscal/_tabelas.mjs` — a mesma fonte que o
+ * apurador lê. Divergir deixou de ser possível por construção, não por
+ * disciplina.
+ *
+ * ── O QUE SOBROU, E POR QUE É LEGÍTIMO ─────────────────────────────────────
+ *
+ * Este arquivo agora tem **um papel só**: o **custo de abrir** (`CUSTOS`) e a
+ * formatação que a UI usa (`brl`). Isso é do app, não do motor: taxa de Junta,
+ * certificado e endereço fiscal não entram em apuração nenhuma.
+ *
+ * ⚠️ **`brl(reais)` aqui, `brlDeCentavos(centavos)` no apurador.** Os nomes
+ * são diferentes DE PROPÓSITO: até 14/09 os dois se chamavam `brl`, aceitavam
+ * `number` e tratavam unidades diferentes — importar o errado errava por 100×
+ * sem o TypeScript acusar.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
+import { FISCAL as TABELAS } from "./fiscal-tabelas";
+
 export const FISCAL = {
-  SALARIO_MIN: 1621, // pró-labore mínimo (2026)
-  TETO_INSS: 8475.55,
-  INSS_ALIQ: 0.11, // INSS do sócio sobre pró-labore (direto)
-  IRRF_ISENCAO: 5000, // isenção efetiva/mês (Lei 15.270/2025)
-  FATOR_R_LIMIAR: 0.28, // a LEI: >=28% → Anexo III
-  FATOR_R_MARGEM: 0.3, // UX-39: o ALVO recomendado tem colchão. Nunca cravar 28%.
-  ANEXO_III: 0.06,
-  ANEXO_V: 0.155,
+  // 🔗 As 9 constantes fiscais vêm do gerador, não daqui. Fonte:
+  // `execucao/motor-fiscal/_tabelas.mjs`. Ver o cabeçalho deste arquivo.
+  ...TABELAS,
+
   /** 🟢 MEI — teto de faturamento (LC 123 art.18-A): R$81.000/ano ÷ 12.
+   *  ⚠️ Fica AQUI e não no motor de propósito: **MEI está fora do escopo do
+   *  apurador** (ME Simples, Anexos III e V). É dado de gate de entrada, não
+   *  de apuração.
    *  🔴 O QUE FALTA: a lista de CNAEs elegíveis pro MEI é PRÓPRIA (mais
    *  restrita que "atende Simples ME") e ainda não está no vault — fila
    *  Larissa. `elegivelParaMei()` (gate-telas.tsx) hoje só checa sócio+faixa,

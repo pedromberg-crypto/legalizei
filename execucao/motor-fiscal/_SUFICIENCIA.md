@@ -25,9 +25,9 @@ tags: [motor, fiscal, auditoria, cobertura, anexos, fator-r]
 
 | | Estado | Prova |
 |---|---|---|
-| **Motor fiscal** (`motor-fiscal/`) | 🟢 fechado como cálculo | **41 conferências** contra recibo do PGDAS-D, nota fiscal real e texto legal |
+| **Motor fiscal** (`motor-fiscal/`) | 🟢 fechado como cálculo | **45 conferências** contra recibo do PGDAS-D, nota fiscal real e texto legal |
 | **Estado recorrente** (`estado-cnpj/`) | 🟢 fechado como modelo | **9 conferências** — as 3 telas fecham no mesmo número |
-| **Ligação com o produto** | 🔴 **não existe** | nenhuma tela chama nenhum dos dois |
+| **Ligação com o produto** | 🟡 constantes ligadas, cálculo não | o app lê as tabelas do gerador desde 15/09; nenhuma tela chama o apurador ainda |
 
 ### O que a 2ª rodada acrescentou
 
@@ -206,58 +206,32 @@ Parece pequeno e não é: **é o estado recorrente ganhando lugar para morar**. 
 
 ---
 
-## 6 · 🔴 O débito: existem DOIS motores, e eles não se falam
+## 6 · ✅ O débito dos dois motores — PAGO em 15/09
 
-| | `app/src/lib/fiscal.ts` | `execucao/motor-fiscal/` |
+> O Pedro mandou: *"vamos resolver os dois motores"*. Resolvido, e o diagnóstico virou conserto.
+
+### O que era, e o que virou
+
+| | Antes | Agora |
 |---|---|---|
-| Papel | **estimador de abertura** | **apurador de competência** |
-| Linguagem | TypeScript, consumido pelo app | `.mjs`, rodável e testado |
-| Testes | nenhum | 24 conferências |
+| **7 constantes fiscais** | duplicadas nos dois arquivos | 🟢 **fonte única** em `_tabelas.mjs`, geradas para `app/src/lib/fiscal-tabelas.ts` |
+| **`brl()`** | mesmo nome, **unidades diferentes** (reais × centavos) | 🟢 `brl(reais)` no app, `brlDeCentavos(centavos)` no motor |
+| **`IRRF_ISENCAO: 5000`** | nome descrevia mecanismo que não existe | 🟢 `IRRF_REDUTOR_TETO` + `IRRF_REDUTOR_RAMPA` |
+| **INSS com folga de CLT** | só no `fiscal.ts`; o apurador ignorava | 🟢 portado para `darfDoProLabore()` — **fecha a 4.6** |
 
-Três funções vivem **só** no `fiscal.ts` e são exatamente as que faltam nas funcionalidades 4.1 e 4.6:
+🔑 **A duplicação morreu por construção, não por disciplina.** O gerador `gerar-tabelas-app.mjs` emite o arquivo que o app consome, e o arquivo gerado **não se edita**. É o mesmo padrão de `dados-constituicao.ts` e `processos-graph.json`.
 
-- `proLaboreOtimo(fat)` — a sugestão que mira 30%
-- `naBorda(folhaPct)` — o aviso de 28-30%
-- `custoProLabore(proLabore, cltRemun)` — INSS do sócio **consumindo a folga do teto por CLT**
+### Como cada arquivo ficou
 
-### 📏 A duplicação, medida em 14/09
+**`app/src/lib/fiscal.ts`** tem agora **um papel só**: o **custo de abrir** (`CUSTOS`, usado por 25 arquivos) e a formatação da UI (`brl`, usada por 21). Mais `MEI_TETO_MENSAL`, que fica lá de propósito — **MEI está fora do escopo do apurador**, e é dado de gate de entrada, não de apuração.
 
-**7 de 7 constantes fiscais existem nos dois arquivos, com o mesmo valor:**
+**`execucao/motor-fiscal/`** é a fonte de tudo que é regra fiscal.
 
-| `fiscal.ts` | `motor-fiscal/` |
-|---|---|
-| `SALARIO_MIN: 1621` | `PREVIDENCIA.SALARIO_MINIMO` |
-| `TETO_INSS: 8475.55` | `PREVIDENCIA.TETO_INSS` |
-| `INSS_ALIQ: 0.11` | `PREVIDENCIA.ALIQUOTA_SOCIO` |
-| `FATOR_R_LIMIAR: 0.28` | `FATOR_R.LIMIAR` |
-| `FATOR_R_MARGEM: 0.3` | `FATOR_R.MARGEM` |
-| `ANEXO_III: 0.06` | `FAIXAS.III[0].nominal` |
-| `ANEXO_V: 0.155` | `FAIXAS.V[0].nominal` |
+⚠️ **`proLaboreOtimo` e `naBorda` continuam no `fiscal.ts`, e isso é deliberado:** os dois miram a **margem de 30%**, que é 🏢 recomendação nossa (UX-39), não a lei dos 28%. São conselho de interface, não apuração — e o limiar legal que eles usam vem do mesmo gerador.
 
-🔑 **Ainda não quebrou porque os valores coincidem.** Basta a lei mudar um deles — e o salário mínimo muda **todo janeiro** — para os dois lados divergirem em silêncio.
+### Verificação
 
-### 🔴 E tem uma armadilha pior que duplicação: `brl()`
-
-As duas existem, com o mesmo nome e a mesma finalidade, e **unidades diferentes**:
-
-| chamada | `fiscal.ts` | `motor-fiscal/` |
-|---|---|---|
-| `brl(474.59)` | **"R$ 475"** ← reais, e sem centavos por padrão | "R$ 4,75" |
-| `brl(47459)` | "R$ 47.459" | **"R$ 474,59"** ← centavos |
-
-Importar a errada erra por **100×**, e o TypeScript não acusa: as duas assinaturas aceitam `number`. É o tipo de bug que passa em revisão e aparece na fatura do cliente.
-
-### 🏷️ E uma constante com nome errado
-
-`fiscal.ts` tem `IRRF_ISENCAO: 5000 // isenção efetiva/mês (Lei 15.270/2025)`.
-
-Depois da pesquisa de 14/09 sabemos que **não é isenção**: R$5.000 é o **teto do rendimento que o redutor zera**, e acima disso há uma rampa até R$7.350. O nome descreve um mecanismo que não existe — e quem ler vai implementar uma faixa isenta que a lei não criou.
-
-### O que decidir na volta
-
-Portar as três funções órfãs (`proLaboreOtimo`, `naBorda`, `custoProLabore`) pro apurador e deixar o `fiscal.ts` só com **custo de abertura** — que é papel legítimo e não conflita. Ou o inverso. **Não fazer as duas coisas.**
-
----
+`tsc --noEmit` limpo · lint sem nenhum apontamento nos arquivos tocados · **45 conferências** no motor e **9** no estado recorrente.
 
 ## 7 · As variáveis cobertas, pro cliente travado
 

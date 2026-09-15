@@ -78,7 +78,7 @@ export default function ProLaborePage() {
   const sim = calcular(pl);
   const deltaTotal = sim.total - atual.total; // - = economiza vs hoje
   const mexeu = pl !== ATUAL;
-  const irrfZero = pl <= FISCAL.IRRF_ISENCAO;
+  const irrfZero = pl <= FISCAL.IRRF_REDUTOR_TETO;
   const subir = ATUAL < OTIMO; // direção do ajuste sugerido
 
   // Selo do estado atual (no hero escuro): borda = aviso, dentro = ok, fora = cheio.

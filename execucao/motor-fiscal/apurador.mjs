@@ -56,7 +56,7 @@ export const emCentavos = (reais) => Math.round(reais * 100);
 export const emReais = (centavos) => centavos / 100;
 
 /** R$ 1.234,56 — para relatório e conferência, não para cálculo. */
-export function brl(centavos) {
+export function brlDeCentavos(centavos) {
   return (centavos / 100).toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL",
@@ -666,11 +666,19 @@ export function custoTotalMensal({ receitaMes, das, proLabore }) {
  * ⚠️ A tabela do IRRF é 🟡 (tela do líder, não ratificada) e tem uma pergunta
  * aberta com a Lei 15.270/2025 — ver `IRRF` em `_tabelas.mjs` e a lacuna L6.
  */
-export function darfDoProLabore(proLabore) {
-  const inss = Math.min(
-    emCentavos(proLabore * PREVIDENCIA.ALIQUOTA_SOCIO),
-    emCentavos(PREVIDENCIA.TETO_INSS * PREVIDENCIA.ALIQUOTA_SOCIO)
-  );
+export function darfDoProLabore(proLabore, cltRemuneracao = 0) {
+  // 🔑 DUPLO VÍNCULO: o teto do INSS é da PESSOA, não do vínculo.
+  //
+  // Quem já contribui como CLT por fora só recolhe sobre a FOLGA que sobra até
+  // o teto — e se o CLT já bate o teto, o pró-labore não gera INSS nenhum.
+  // Portado do `custoProLabore` do `fiscal.ts` em 15/09, quando os dois motores
+  // foram unificados: a regra vivia só no app, e o apurador ignorava o caso.
+  //
+  // É a funcionalidade **4.6** das 58, e o dado é captado no C2 (vínculo INSS)
+  // — ⚠️ uma vez, na abertura, e nunca revalidado (achado de 27/08).
+  const folgaDoTeto = Math.max(0, PREVIDENCIA.TETO_INSS - cltRemuneracao);
+  const baseInss = Math.min(proLabore, folgaDoTeto);
+  const inss = emCentavos(baseInss * PREVIDENCIA.ALIQUOTA_SOCIO);
 
   // 🔴 A dedução é a MAIOR entre o INSS e o desconto simplificado (R$607,20).
   // A fonte pagadora é obrigada a aplicar a mais benéfica ao beneficiário.
@@ -695,6 +703,10 @@ export function darfDoProLabore(proLabore) {
 
   return {
     inss,
+    // 🔑 O que a tela precisa dizer quando há CLT por fora.
+    cltConsumiuOTeto: folgaDoTeto <= 0,
+    folgaDoTeto: emCentavos(folgaDoTeto),
+    baseInss: emCentavos(baseInss),
     deducaoAplicada: emCentavos(deducao),
     usouDescontoSimplificado: usaSimplificado,
     baseIrrf: emCentavos(base),

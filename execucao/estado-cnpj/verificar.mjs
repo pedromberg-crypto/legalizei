@@ -12,13 +12,13 @@
 
 import { retratoDoMes, folgaDoFatorR, extrato } from "./_modelo.mjs";
 import { EMPRESA, COMPETENCIAS, NAO_PROVA } from "./persona-zero.mjs";
-import { brl } from "../motor-fiscal/apurador.mjs";
+import { brlDeCentavos } from "../motor-fiscal/apurador.mjs";
 
 let passou = 0;
 let falhou = 0;
 const erros = [];
 
-function confere(rotulo, obtido, esperado, formata = brl) {
+function confere(rotulo, obtido, esperado, formata = brlDeCentavos) {
   if (obtido === esperado) {
     passou++;
     console.log(`   ✅ ${rotulo.padEnd(32)} ${formata(obtido)}`);
@@ -56,7 +56,7 @@ console.log(`   ${COMPETENCIAS.length} competências guardadas, tudo o mais é d
   console.log("\n   📱 /notas pede a receita, e é a MESMA que virou o DAS:");
   confere("receita = base do DAS", r.receita, 791000);
 
-  console.log(`\n   💰 custo total do mês ...... ${brl(r.custo.total)} (${(r.custo.aliquotaTotal * 100).toFixed(2)}% do faturamento)`);
+  console.log(`\n   💰 custo total do mês ...... ${brlDeCentavos(r.custo.total)} (${(r.custo.aliquotaTotal * 100).toFixed(2)}% do faturamento)`);
 
   // 🔴 O vencimento do DAS e o do DARF caem em dias DIFERENTES no mesmo mês.
   const dDas = r.vencimentos.das.data.getUTCDate();
@@ -86,7 +86,7 @@ console.log(`   ${COMPETENCIAS.length} competências guardadas, tudo o mais é d
   console.log("\n   💬 O que a tela diz, sem jargão nenhum:");
   console.log(`      "Sua folha está em ${(f.percentualAtual * 100).toFixed(1)}% do que você faturou.`);
   console.log(`       O mínimo pra manter sua alíquota em 6% é 28%.`);
-  console.log(`       Você tem ${brl(f.folga)} por mês de folga."`);
+  console.log(`       Você tem ${brlDeCentavos(f.folga)} por mês de folga."`);
   console.log("   🔒 'Fator R', 'Anexo III' e 'RBT12' NUNCA aparecem na interface.\n");
 }
 
@@ -98,7 +98,7 @@ console.log(`   ${COMPETENCIAS.length} competências guardadas, tudo o mais é d
   console.log("   mês       receita        RBT12      anexo   DAS");
   for (const l of linhas) {
     console.log(
-      `   ${l.mes}  ${brl(l.receita).padStart(12)}  ${brl(l.rbt12).padStart(12)}   ${String(l.anexo).padEnd(4)}  ${brl(l.das.total).padStart(10)}${l.das.semMovimento ? "  (sem movimento)" : ""}`
+      `   ${l.mes}  ${brlDeCentavos(l.receita).padStart(12)}  ${brlDeCentavos(l.rbt12).padStart(12)}   ${String(l.anexo).padEnd(4)}  ${brlDeCentavos(l.das.total).padStart(10)}${l.das.semMovimento ? "  (sem movimento)" : ""}`
     );
   }
 
@@ -114,7 +114,7 @@ console.log(`   ${COMPETENCIAS.length} competências guardadas, tudo o mais é d
   }
 
   const soma = linhas.reduce((s, l) => s + l.das.total, 0);
-  console.log(`   💰 DAS do período .......... ${brl(soma)}`);
+  console.log(`   💰 DAS do período .......... ${brlDeCentavos(soma)}`);
   console.log("");
 }
 

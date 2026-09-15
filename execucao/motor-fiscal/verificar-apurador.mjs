@@ -16,7 +16,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { apurarDAS, fatorR, fatorRDeCompetencias, anualiza, rbt12De, retencaoLegitima, anexoDoCnae, vencimentoDe, custoTotalMensal, darfDoProLabore, guiaVencida, brl, emCentavos, LACUNAS, RESOLVIDAS } from "./apurador.mjs";
+import { apurarDAS, fatorR, fatorRDeCompetencias, anualiza, rbt12De, retencaoLegitima, anexoDoCnae, vencimentoDe, custoTotalMensal, darfDoProLabore, guiaVencida, brlDeCentavos, emCentavos, LACUNAS, RESOLVIDAS } from "./apurador.mjs";
 
 /* ═══════════════════════════════════════════════════════════════════════════
  * OS CASOS REAIS
@@ -102,12 +102,12 @@ const erros = [];
 function confere(rotulo, obtido, esperado) {
   if (obtido === esperado) {
     passou++;
-    return `   ✅ ${rotulo.padEnd(34)} ${brl(obtido)}`;
+    return `   ✅ ${rotulo.padEnd(34)} ${brlDeCentavos(obtido)}`;
   }
   falhou++;
   const delta = obtido - esperado;
-  erros.push(`${rotulo}: esperado ${brl(esperado)}, obtido ${brl(obtido)} (${delta > 0 ? "+" : ""}${delta} centavos)`);
-  return `   ❌ ${rotulo.padEnd(34)} ${brl(obtido)}  ← esperado ${brl(esperado)}`;
+  erros.push(`${rotulo}: esperado ${brlDeCentavos(esperado)}, obtido ${brlDeCentavos(obtido)} (${delta > 0 ? "+" : ""}${delta} centavos)`);
+  return `   ❌ ${rotulo.padEnd(34)} ${brlDeCentavos(obtido)}  ← esperado ${brlDeCentavos(esperado)}`;
 }
 
 console.log("\n🧪 MOTOR FISCAL — teste dourado contra a conta real da persona zero\n");
@@ -127,9 +127,9 @@ for (const caso of CASOS) {
     const cru = fatorR({ folhaPaga12: folhaCrua, receita12 });
     const anual = fatorR({ folhaPaga12: folhaAnualizada, receita12 });
 
-    console.log(`   receita acumulada ......... ${brl(emCentavos(receita12))}`);
-    console.log(`   folha CRUA ................ ${brl(emCentavos(folhaCrua))}`);
-    console.log(`   folha ANUALIZADA (×12) .... ${brl(emCentavos(folhaAnualizada))}`);
+    console.log(`   receita acumulada ......... ${brlDeCentavos(emCentavos(receita12))}`);
+    console.log(`   folha CRUA ................ ${brlDeCentavos(emCentavos(folhaCrua))}`);
+    console.log(`   folha ANUALIZADA (×12) .... ${brlDeCentavos(emCentavos(folhaAnualizada))}`);
     console.log(`   Fator R cru ............... ${(cru.fr * 100).toFixed(1)}%  → Anexo ${cru.anexo}`);
     console.log(`   Fator R anualizado ........ ${(anual.fr * 100).toFixed(1)}%  → Anexo ${anual.anexo}`);
 
@@ -158,7 +158,7 @@ for (const caso of CASOS) {
   if (caso.esperado.total !== undefined) {
     console.log("   ─────────────────────────────────────────────");
     console.log(confere("TOTAL da guia", r.total, caso.esperado.total));
-    console.log(`   ℹ️  produto direto (NÃO é a guia)   ${brl(r.bruto)}  ← a diferença é o achado`);
+    console.log(`   ℹ️  produto direto (NÃO é a guia)   ${brlDeCentavos(r.bruto)}  ← a diferença é o achado`);
   }
   console.log(`   ${caso.porque}\n`);
 }
@@ -196,7 +196,7 @@ for (const caso of CASOS) {
   // O contraste que prova a armadilha: excluir os meses zerados.
   const semZeros = anteriores.filter((v) => v > 0);
   const errado = rbt12De({ serieAnterior: semZeros });
-  console.log(`   ⚠️  se os meses zerados saíssem do divisor: RBT12 ${brl(emCentavos(errado.rbt12))} — ${((errado.rbt12 / r.rbt12 - 1) * 100).toFixed(0)}% a mais`);
+  console.log(`   ⚠️  se os meses zerados saíssem do divisor: RBT12 ${brlDeCentavos(emCentavos(errado.rbt12))} — ${((errado.rbt12 / r.rbt12 - 1) * 100).toFixed(0)}% a mais`);
   console.log(`   ${c.porque}\n`);
 }
 
@@ -208,9 +208,9 @@ for (const caso of CASOS) {
   const semRet = apurarDAS({ receitaMes: 7910, rbt12: 54000, anexo: "III" });
   const comRet = apurarDAS({ receitaMes: 7910, rbt12: 54000, anexo: "III", receitaComIssRetido: 7910 });
 
-  console.log(`   DAS sem retenção .......... ${brl(semRet.total)}   (ISS ${brl(semRet.parcelas.iss)} dentro)`);
-  console.log(`   DAS com retenção total .... ${brl(comRet.total)}   (ISS ${brl(comRet.parcelas.iss)} dentro)`);
-  console.log(`   ISS recolhido pelo tomador  ${brl(comRet.issRetido)}`);
+  console.log(`   DAS sem retenção .......... ${brlDeCentavos(semRet.total)}   (ISS ${brlDeCentavos(semRet.parcelas.iss)} dentro)`);
+  console.log(`   DAS com retenção total .... ${brlDeCentavos(comRet.total)}   (ISS ${brlDeCentavos(comRet.parcelas.iss)} dentro)`);
+  console.log(`   ISS recolhido pelo tomador  ${brlDeCentavos(comRet.issRetido)}`);
 
   const fechaSoma = comRet.total + comRet.issRetido === semRet.total;
   if (fechaSoma && comRet.parcelas.iss === 0) {
@@ -218,11 +218,11 @@ for (const caso of CASOS) {
     console.log("   ✅ o ISS sai do DAS e reaparece na guia municipal, sem sumir nem duplicar");
   } else {
     falhou++;
-    erros.push(`G5: ${brl(comRet.total)} + ${brl(comRet.issRetido)} deveria dar ${brl(semRet.total)}`);
-    console.log(`   ❌ a soma não fecha: ${brl(comRet.total)} + ${brl(comRet.issRetido)} ≠ ${brl(semRet.total)}`);
+    erros.push(`G5: ${brlDeCentavos(comRet.total)} + ${brlDeCentavos(comRet.issRetido)} deveria dar ${brlDeCentavos(semRet.total)}`);
+    console.log(`   ❌ a soma não fecha: ${brlDeCentavos(comRet.total)} + ${brlDeCentavos(comRet.issRetido)} ≠ ${brlDeCentavos(semRet.total)}`);
   }
 
-  console.log(`   ℹ️  a pesquisa diz ${brl(31561)}; o motor diz ${brl(comRet.total)}. O motor está certo:`);
+  console.log(`   ℹ️  a pesquisa diz ${brlDeCentavos(31561)}; o motor diz ${brlDeCentavos(comRet.total)}. O motor está certo:`);
   console.log("       ela fez 474,60 × 66,50%, que é o método JÁ REFUTADO pelo recibo do G1.");
   console.log("       A segregação não muda a regra de arredondamento, e a LC 123 art. 21 §4º é");
   console.log("       literal em dizer que ela atinge só 'a base de cálculo do ISS devido'.");
@@ -259,7 +259,7 @@ for (const caso of CASOS) {
   // Mês 1 hipotético COM receita, pra exercitar a regra do art. 24 caput.
   const r1 = rbt12De({ serieAnterior: [], receitaMesCorrente: 10000 });
   const das1 = apurarDAS({ receitaMes: 10000, rbt12: r1.rbt12, anexo: "III" });
-  console.log(`   mês 1 com R$10.000 ........ RBT12 ${brl(emCentavos(r1.rbt12))} (regra "${r1.regra}") · faixa ${das1.faixa}`);
+  console.log(`   mês 1 com R$10.000 ........ RBT12 ${brlDeCentavos(emCentavos(r1.rbt12))} (regra "${r1.regra}") · faixa ${das1.faixa}`);
   console.log(confere("DAS do mês 1", das1.total, 60000));
 
   // 🔴 A VIRADA DE EXERCÍCIO. Empresa aberta em dezembro: o 2º mês é janeiro,
@@ -340,12 +340,12 @@ for (const caso of CASOS) {
   const custoIII = custoTotalMensal({ receitaMes: MES, das: comFatorR.total, proLabore });
   const custoV = custoTotalMensal({ receitaMes: MES, das: semFatorR.total, proLabore: 1621 });
 
-  console.log(`   pró-labore de 28% ......... ${brl(emCentavos(proLabore))}`);
+  console.log(`   pró-labore de 28% ......... ${brlDeCentavos(emCentavos(proLabore))}`);
   console.log(confere("INSS sobre ele (11%)", custoIII.inss, 36960));
   console.log(confere("IRRF (redutor zera)", custoIII.irrf, 0));
-  console.log(`   custo total no Anexo III .. ${brl(custoIII.total)}  (${(custoIII.aliquotaTotal * 100).toFixed(2)}%)`);
-  console.log(`   custo total no Anexo V .... ${brl(custoV.total)}  (${(custoV.aliquotaTotal * 100).toFixed(2)}%)`);
-  console.log(`   💰 a diferença ............ ${brl(custoV.total - custoIII.total)}/mês`);
+  console.log(`   custo total no Anexo III .. ${brlDeCentavos(custoIII.total)}  (${(custoIII.aliquotaTotal * 100).toFixed(2)}%)`);
+  console.log(`   custo total no Anexo V .... ${brlDeCentavos(custoV.total)}  (${(custoV.aliquotaTotal * 100).toFixed(2)}%)`);
+  console.log(`   💰 a diferença ............ ${brlDeCentavos(custoV.total - custoIII.total)}/mês`);
 
   console.log("   🔑 A planilha compara CUSTO TOTAL, não DAS com DAS — porque subir o pró-labore");
   console.log("      pra ganhar o Anexo III AUMENTA o INSS. É a gangorra em número.");
@@ -362,19 +362,19 @@ for (const caso of CASOS) {
 
   // O caso da persona zero: pró-labore no salário mínimo, IRRF zero.
   const zero = darfDoProLabore(1621);
-  console.log(`   pró-labore R$1.621 ........ INSS ${brl(zero.inss)} · base ${brl(zero.baseIrrf)} · IRRF ${brl(zero.irrf)}`);
+  console.log(`   pró-labore R$1.621 ........ INSS ${brlDeCentavos(zero.inss)} · base ${brlDeCentavos(zero.baseIrrf)} · IRRF ${brlDeCentavos(zero.irrf)}`);
   console.log(confere("INSS da persona zero", zero.inss, 17831));
   console.log(confere("IRRF da persona zero", zero.irrf, 0));
 
   // O caso da planilha: 28% de 12.000.
   const alto = darfDoProLabore(3360);
-  console.log(`   pró-labore R$3.360 ........ INSS ${brl(alto.inss)} · base ${brl(alto.baseIrrf)} · IRRF ${brl(alto.irrf)}`);
+  console.log(`   pró-labore R$3.360 ........ INSS ${brlDeCentavos(alto.inss)} · base ${brlDeCentavos(alto.baseIrrf)} · IRRF ${brlDeCentavos(alto.irrf)}`);
   console.log(confere("base c/ simplificado", alto.baseIrrf, 275280));
   console.log(confere("imposto pela tabela", alto.impostoTabela, 2430));
   console.log(confere("IRRF depois do redutor", alto.irrf, 0));
 
   const rampa = darfDoProLabore(6000);
-  console.log(`   pró-labore R$6.000 ........ tabela ${brl(rampa.impostoTabela)} · redutor ${brl(rampa.redutor)} → IRRF ${brl(rampa.irrf)}`);
+  console.log(`   pró-labore R$6.000 ........ tabela ${brlDeCentavos(rampa.impostoTabela)} · redutor ${brlDeCentavos(rampa.redutor)} → IRRF ${brlDeCentavos(rampa.irrf)}`);
   console.log(confere("redutor da rampa", rampa.redutor, 17975));
 
   if (!zero.zeradoPeloRedutor && alto.zeradoPeloRedutor && rampa.irrf > 0) {
@@ -440,17 +440,17 @@ for (const caso of CASOS) {
 
   // Pago dentro do mês do vencimento: só multa, juros zero.
   const cedo = guiaVencida({ principal: 47459, diasDeAtraso: 8, mesmoMes: true });
-  console.log(`   8 dias, mesmo mês ......... multa ${brl(cedo.multa)} (${(cedo.pctMulta * 100).toFixed(2)}%) · juros ${brl(cedo.juros)}`);
+  console.log(`   8 dias, mesmo mês ......... multa ${brlDeCentavos(cedo.multa)} (${(cedo.pctMulta * 100).toFixed(2)}%) · juros ${brlDeCentavos(cedo.juros)}`);
   console.log(confere("total", cedo.total, 48712));
 
   // 60 dias: 19,80%. Ainda NÃO travou — o teto chega no 61º dia.
   const tarde = guiaVencida({ principal: 47459, diasDeAtraso: 60, selicAcumulada: 0.01 });
-  console.log(`   60 dias .................... multa ${brl(tarde.multa)} (${(tarde.pctMulta * 100).toFixed(2)}%) · juros ${brl(tarde.juros)} · no teto: ${tarde.multaNoTeto}`);
+  console.log(`   60 dias .................... multa ${brlDeCentavos(tarde.multa)} (${(tarde.pctMulta * 100).toFixed(2)}%) · juros ${brlDeCentavos(tarde.juros)} · no teto: ${tarde.multaNoTeto}`);
   console.log(confere("multa de 60 dias", tarde.multa, 9397));
 
   // 61 dias: 20,13% → trava em 20%.
   const teto = guiaVencida({ principal: 47459, diasDeAtraso: 61, selicAcumulada: 0.01 });
-  console.log(`   61 dias .................... multa ${brl(teto.multa)} (${(teto.pctMulta * 100).toFixed(2)}%) · no teto: ${teto.multaNoTeto}`);
+  console.log(`   61 dias .................... multa ${brlDeCentavos(teto.multa)} (${(teto.pctMulta * 100).toFixed(2)}%) · no teto: ${teto.multaNoTeto}`);
   console.log(confere("multa travada em 20%", teto.multa, 9492));
 
   if (cedo.juros === 0 && !tarde.multaNoTeto && teto.multaNoTeto) {
@@ -466,6 +466,35 @@ for (const caso of CASOS) {
   console.log("   ⚠️  Não existe multa MÍNIMA de mora. Os R$50 que se ouve falar são de");
   console.log("      PGDAS-D entregue em atraso — acessória, e independe de ter imposto.");
   console.log("   ⏳ A série da Selic é dado, não lógica: entra por parâmetro.\n");
+}
+
+/* ── G12 · duplo vínculo CLT ───────────────────────────────────────────── */
+{
+  console.log("── G12 · Duplo vínculo — o teto do INSS é da PESSOA, não do vínculo");
+  console.log("   fonte: regra portada do `fiscal.ts` em 15/09, ao unificar os dois motores");
+
+  const sem = darfDoProLabore(3360);
+  const parcial = darfDoProLabore(3360, 6000); // CLT de R$6.000 por fora
+  const cheio = darfDoProLabore(3360, 9000); // CLT acima do teto
+
+  console.log(`   sem CLT ................... INSS ${brlDeCentavos(sem.inss)} (base ${brlDeCentavos(sem.baseInss)})`);
+  console.log(`   CLT de R$6.000 ............ INSS ${brlDeCentavos(parcial.inss)} (folga ${brlDeCentavos(parcial.folgaDoTeto)})`);
+  console.log(`   CLT de R$9.000 ............ INSS ${brlDeCentavos(cheio.inss)} · CLT consumiu o teto: ${cheio.cltConsumiuOTeto}`);
+
+  console.log(confere("INSS sem CLT", sem.inss, 36960));
+  console.log(confere("INSS com CLT parcial", parcial.inss, 27231));
+  console.log(confere("INSS com CLT no teto", cheio.inss, 0));
+
+  if (cheio.cltConsumiuOTeto && !parcial.cltConsumiuOTeto) {
+    passou++;
+    console.log("   ✅ CLT acima do teto zera o INSS do pró-labore, e a tela sabe dizer por quê");
+  } else {
+    falhou++;
+    erros.push("G12: a folga do teto não está sendo detectada");
+    console.log("   ❌ a folga do teto não está sendo detectada");
+  }
+  console.log("   🔑 É a funcionalidade **4.6**, e ela estava só no `fiscal.ts` — o apurador");
+  console.log("      ignorava duplo vínculo e cobrava INSS a mais de quem já bate o teto.\n");
 }
 
 console.log("✅ LACUNAS RESOLVIDAS em 14/09, por fonte primária:\n");

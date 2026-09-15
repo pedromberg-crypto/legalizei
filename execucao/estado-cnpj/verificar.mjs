@@ -118,6 +118,70 @@ console.log(`   ${COMPETENCIAS.length} competências guardadas, tudo o mais é d
   console.log("");
 }
 
+/* ── 4.1 · 🛩️ O FIO DO PILOTO, ligado em 15/09 ───────────────────────────── */
+{
+  console.log("── 4.1 · O piloto de pró-labore dentro do retrato\n");
+
+  const afirma = (rotulo, cond, detalhe = "") => {
+    if (cond) {
+      passou++;
+      console.log(`   ✅ ${rotulo}${detalhe ? ` — ${detalhe}` : ""}`);
+    } else {
+      falhou++;
+      erros.push(rotulo);
+      console.log(`   ❌ ${rotulo}${detalhe ? ` — ${detalhe}` : ""}`);
+    }
+  };
+
+  const retratos = COMPETENCIAS.map((c) =>
+    retratoDoMes({ empresa: EMPRESA, competencias: COMPETENCIAS, mesAlvo: c.mes })
+  );
+
+  afirma(
+    "todo retrato carrega a decisão do piloto",
+    retratos.every((r) => r.piloto && typeof r.piloto.atua === "boolean"),
+    `${retratos.length} competências`
+  );
+
+  // 🔴 A persona zero é `fator-r-dinamico`, então o fio TEM que acender nos
+  // meses em que há receita na janela. Se parar de acender, é regressão.
+  const acenderam = retratos.filter((r) => r.piloto.atua);
+  afirma(
+    "o fio acende onde há receita na janela (persona zero é dinâmica)",
+    acenderam.length > 0,
+    `${acenderam.length} de ${retratos.length} competências`
+  );
+
+  afirma(
+    "e silencia nos meses sem receita na janela, sem inventar valor",
+    retratos
+      .filter((r) => !r.piloto.atua)
+      .every((r) => r.piloto.motivo === "sem-receita-na-janela" && r.divergencia === null),
+    "silêncio é resultado legítimo, não falha"
+  );
+
+  // 🔑 O confronto: a persona zero pagou o mínimo em agosto, e o piloto sabe
+  // dizer se isso bastava. É o número que a tela vai precisar.
+  const ago = retratos.find((r) => r.mes === "2026-08");
+  afirma(
+    "o retrato confronta o pago contra o sugerido",
+    ago.divergencia !== null &&
+      ago.divergencia.pago === 1621 &&
+      typeof ago.divergencia.diferenca === "number",
+    `pagou R$ 1.621,00 · piloto sugeriria R$ ${ago.piloto.sugerido.toFixed(2)}`
+  );
+
+  // 🔴 DERIVADO NÃO SE GUARDA: o piloto não pode ter virado campo da série.
+  afirma(
+    "🔴 e nada disso foi guardado na competência (derivado não se guarda)",
+    COMPETENCIAS.every(
+      (c) => !("piloto" in c) && !("sugerido" in c) && !("divergencia" in c)
+    )
+  );
+
+  console.log("");
+}
+
 /* ── 4 · O que este caso NÃO prova ───────────────────────────────────────── */
 console.log("🚫 O QUE ESTE CASO NÃO PROVA — ausência de evidência ≠ ausência de requisito:\n");
 for (const n of NAO_PROVA) console.log(`   · ${n}`);

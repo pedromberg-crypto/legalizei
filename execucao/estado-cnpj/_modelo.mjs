@@ -50,6 +50,8 @@ import {
   emCentavos,
 } from "../motor-fiscal/apurador.mjs";
 
+import { pilotar } from "../motor-fiscal/piloto-pro-labore.mjs";
+
 /* ═══════════════════════════════════════════════════════════════════════════
  * 1 · O QUE SE GUARDA
  * ═══════════════════════════════════════════════════════════════════════════ */
@@ -193,6 +195,38 @@ export function retratoDoMes({ empresa, competencias, mesAlvo }) {
       ? darfDoProLabore(atual.proLaboreDeclarado, empresa.cltDoSocio ?? 0)
       : null;
 
+  // ── 🛩️ O PILOTO: o que deveria sair de pró-labore NESTE mês ─────────────
+  //
+  // 🔑 É a única parte do retrato que olha pra FRENTE. O resto apura o mês; o
+  // piloto decide o pró-labore que vai governar as competências `m+1 … m+12`,
+  // porque o Fator R lê os 12 meses anteriores (o retrovisor).
+  //
+  // Ele recebe a MESMA fonte que todo o resto do retrato — a série guardada —
+  // e não guarda nada: a decisão é derivada, como o RBT12 e o anexo. Regra do
+  // §"derivado não se guarda", que este arquivo criou em 14/09.
+  //
+  // ⚠️ Devolve `atua: false` sem drama nos 65 CNAEs `III-fixo`, nos meses sem
+  // receita na janela e nos 7 `requer-revisao`. Silêncio é resultado legítimo.
+  const piloto = pilotar({
+    empresa,
+    competenciasAnteriores: anteriores,
+    receitaDoMes: atual.receita,
+    rbt12DoMes: rbt.rbt12,
+  });
+
+  // 🔴 O confronto que só existe porque as duas pontas moram no mesmo objeto:
+  // o que a pessoa DE FATO pagou contra o que o piloto teria mandado pagar.
+  // É o que torna o fio auditável mês a mês em vez de confiável no escuro.
+  const divergencia = piloto.atua
+    ? {
+        pago: atual.proLaborePago,
+        sugerido: piloto.sugerido,
+        diferenca: Math.round((piloto.sugerido - atual.proLaborePago) * 100) / 100,
+        // Pagou menos do que a LEI exigia para segurar o III neste mês.
+        abaixoDoMinimoLegal: atual.proLaborePago < piloto.minimoLegal,
+      }
+    : null;
+
   // ── Os vencimentos, cada um com a sua regra de deslocamento ─────────────
   const [ano, mes] = mesAlvo.split("-").map(Number);
   const venc = {
@@ -212,6 +246,10 @@ export function retratoDoMes({ empresa, competencias, mesAlvo }) {
     fatorR: fr,
     das,
     darf,
+    /** 🛩️ A decisão do piloto para ESTE mês. Derivada, nunca guardada. */
+    piloto,
+    /** O que foi pago × o que o piloto mandaria pagar. `null` se não atua. */
+    divergencia,
     vencimentos: venc,
     custo:
       atual.receita > 0

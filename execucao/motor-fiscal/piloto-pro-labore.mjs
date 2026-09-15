@@ -157,6 +157,18 @@ function arredonda(v) {
   return Math.round(v * 100) / 100;
 }
 
+/**
+ * 🔑 Até quantas vezes o sustentável ainda é "ajuste", e não "salto".
+ *
+ * 2× é escolha, não lei — e a régua veio de dois pontos medidos, não do olho:
+ * a defasagem de crescimento da P16 pediu **1,22×** o sustentável, e o atraso
+ * de um ano inteiro pediu **9,6×**. Qualquer corte entre os dois separa os
+ * casos; 2× fica longe das duas pontas.
+ *
+ * ⚠️ Se aparecer caso real entre 2× e 9×, é aqui que se olha primeiro.
+ */
+const TETO_DO_AJUSTE = 2;
+
 /* ═══════════════════════════════════════════════════════════════════════════
  * 2 · A DECISÃO — e ela não é "sempre segure no III"
  * ═══════════════════════════════════════════════════════════════════════════ */
@@ -311,10 +323,40 @@ export function pilotar({
    */
   const sustentavel = arredonda(margem * receitaDoMes);
   const deficit = arredonda(Math.max(0, paraVirarJa - sustentavel));
-  const noTrilho = deficit <= 0.01;
 
-  const sugerido = noTrilho ? paraVirarJa : Math.max(sustentavel, piso);
-  const modo = noTrilho ? "manutencao" : "recuperacao";
+  /**
+   * 🔴 TRÊS MODOS, E O DO MEIO NASCEU DO RASTRO DA P16 (15/09).
+   *
+   * A 1ª versão tinha só dois: déficit zero = manutenção, déficit qualquer =
+   * recuperação. O rastro mostrou que isso **classifica errado a empresa que
+   * está CRESCENDO**. O Vitor (P16) foi pilotado desde o mês 2, nunca atrasou
+   * nada, e mesmo assim caiu em "recuperação" em jun e jul/2026 — porque com
+   * receita subindo, pagar 30% do mês corrente **não segura** a razão dos 12
+   * meses: os meses antigos, menores em valor absoluto, ainda estão na janela.
+   *
+   * 🔑 Não é atraso, é defasagem — e o preço de confundir apareceu: a razão
+   * pilotada escorregou para **29,4%**. Sobrou margem (o limiar é 28%), mas
+   * escorregou por classificação errada, não por decisão.
+   *
+   * O que separa de verdade é o **tamanho** do que falta, contra a receita do
+   * mês. Crescimento pede um pouco mais e cabe no mês. Atraso de um ano pede
+   * múltiplos do faturamento e não cabe em mês nenhum — foi o R$72.169 que o
+   * teste pegou.
+   */
+  let modo;
+  let sugerido;
+  if (deficit <= 0.01) {
+    modo = "manutencao";
+    sugerido = paraVirarJa;
+  } else if (paraVirarJa <= sustentavel * TETO_DO_AJUSTE) {
+    // Defasagem de crescimento: paga o que fecha a conta, e fecha de verdade.
+    modo = "ajuste-de-crescimento";
+    sugerido = paraVirarJa;
+  } else {
+    // Atraso real: o salto não cabe no mês, e não é o robô que decide dá-lo.
+    modo = "recuperacao";
+    sugerido = Math.max(sustentavel, piso);
+  }
 
   const clt = empresa.cltDoSocio ?? 0;
 
@@ -363,9 +405,13 @@ export function pilotar({
     minimoLegal,
     /** O que o piloto manda pagar ESTE mês. */
     sugerido,
-    /** 🔴 O outro número, quando existe. Nunca fundir com o de cima. */
-    paraVirarJa: noTrilho ? null : paraVirarJa,
-    deficit: noTrilho ? 0 : deficit,
+    /**
+     * 🔴 O outro número, e só existe em `recuperacao` — no `ajuste-de-
+     * crescimento` o sugerido JÁ é ele, e repetir criaria dois números iguais
+     * na tela com nomes diferentes.
+     */
+    paraVirarJa: modo === "recuperacao" ? paraVirarJa : null,
+    deficit,
     /** O que se pagaria em regime permanente — a régua do sustentável. */
     sustentavel,
     /** A gordura entre o sugerido e o piso legal do mês. */

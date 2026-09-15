@@ -296,6 +296,102 @@ titulo("G-P3 · QUANDO SEGURAR NO ANEXO III CUSTA MAIS DO QUE O ANEXO V");
 }
 
 {
+  // 🔴 O MODO DO MEIO, achado pelo rastro da P16 em 15/09.
+  // Receita CRESCENDO com o piloto sempre no comando: não há atraso nenhum,
+  // mas 30% do mês corrente não segura a razão dos 12 meses, porque os meses
+  // antigos são menores em valor absoluto e ainda estão na janela.
+  const crescendo = [];
+  for (let i = 0; i < 12; i++) {
+    const receita = 10000 + i * 2000; // de R$10 mil a R$32 mil
+    crescendo.push({
+      mes: `c${i}`,
+      receita,
+      proLaboreDeclarado: receita * 0.3,
+      proLaborePago: receita * 0.3,
+    });
+  }
+  const p = pilotar({
+    empresa: DINAMICO,
+    competenciasAnteriores: crescendo,
+    receitaDoMes: 34000,
+    rbt12DoMes: 250000,
+  });
+
+  ok(
+    "receita crescendo com folha sempre no alvo: nada a corrigir",
+    p.modo === "manutencao" && p.deficit === 0,
+    `pagar 30% de CADA mês mantém a janela em 30%, mesmo crescendo`
+  );
+
+  // 🔴 O CASO REAL QUE MOTIVOU O MODO DO MEIO — o formato da vida da P16.
+  // Começa com um mês SEM receita pagando o piso, e o 2º mês preso ao piso
+  // também. Esses meses distorcem a janela enquanto estão nela; quando ela
+  // rola e eles saem, a razão escorrega — sem que ninguém tenha atrasado nada.
+  //
+  // ⚠️ Eu atribuí isso ao "crescimento" e estava errado: a causa é a janela
+  // ROLANDO sobre meses de formato diferente. Este teste afirma a GARANTIA
+  // que importa, não a minha explicação: pilotado desde o mês 1, o Fator R
+  // nunca cai abaixo do limiar legal.
+  const RECEITAS_P16 = [
+    0, 8000, 12000, 15000, 18000, 22000, 25000, 25000, 25000, 28000, 25000,
+    25000, 25000, 30000, 28000, 25000, 32000, 28000, 35000, 38000, 40000, 42000,
+  ];
+
+  const historia = [];
+  let menorRazao = Infinity;
+  let caiuAbaixoDoLimiar = null;
+  let abaixoDaMargem = 0;
+
+  for (let i = 0; i < RECEITAS_P16.length; i++) {
+    const receita = RECEITAS_P16[i];
+    const d = pilotar({
+      empresa: DINAMICO,
+      competenciasAnteriores: [...historia],
+      receitaDoMes: receita,
+      rbt12DoMes: 0,
+    });
+    const pl = d.atua ? d.sugerido : PREVIDENCIA.SALARIO_MINIMO;
+    historia.push({
+      mes: `p${i}`,
+      receita,
+      proLaboreDeclarado: pl,
+      proLaborePago: pl,
+    });
+
+    const janela = historia.slice(-12);
+    const fr = fatorRDeCompetencias({ competencias: janela });
+    if (fr.fr != null && Number.isFinite(fr.fr)) {
+      menorRazao = Math.min(menorRazao, fr.fr);
+      if (fr.fr < FATOR_R.LIMIAR) caiuAbaixoDoLimiar = `mês ${i}: ${(fr.fr * 100).toFixed(2)}%`;
+      if (fr.fr < FATOR_R.MARGEM - 1e-9) abaixoDaMargem++;
+    }
+  }
+
+  ok(
+    "🔑 GARANTIA: pilotada desde o mês 1, a P16 NUNCA cai abaixo do limiar legal",
+    caiuAbaixoDoLimiar === null,
+    caiuAbaixoDoLimiar ?? `menor razão do percurso: ${(menorRazao * 100).toFixed(2)}%`
+  );
+  ok(
+    "e a folga entre a margem (30%) e o limiar (28%) é o que absorve o escorregão",
+    menorRazao >= FATOR_R.LIMIAR && menorRazao < FATOR_R.MARGEM + 1e-9,
+    `${abaixoDaMargem} de ${RECEITAS_P16.length} competências abaixo da margem, nenhuma abaixo do limiar`
+  );
+  ok(
+    "🔑 o atraso de um ano continua sendo recuperação (9,6× o sustentável)",
+    (() => {
+      const q = pilotar({
+        empresa: DINAMICO,
+        competenciasAnteriores: serie(12, 25000, PREVIDENCIA.SALARIO_MINIMO),
+        receitaDoMes: 25000,
+        rbt12DoMes: 300000,
+      });
+      return q.modo === "recuperacao" && q.paraVirarJa !== null;
+    })()
+  );
+}
+
+{
   // 🔑 A VARREDURA QUE AUTORIZA O AUTOMÁTICO: em toda a faixa do ME, pagar o
   // sustentável compensa. Se um dia deixar de compensar em algum ponto, o
   // piloto não pode mais rodar calado — e este teste é quem avisa.

@@ -16,7 +16,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { apurarDAS, fatorR, anualiza, cppDentroDoDas, brl, emCentavos, LACUNAS } from "./apurador.mjs";
+import { apurarDAS, fatorR, anualiza, rbt12De, brl, emCentavos, LACUNAS, RESOLVIDAS } from "./apurador.mjs";
 
 /* ═══════════════════════════════════════════════════════════════════════════
  * OS CASOS REAIS
@@ -63,6 +63,17 @@ const CASOS = [
       "🔴 ACHADO DE 14/09, e ele CORRIGE a nota de 13/09. Aquela nota dizia que esta empresa provava a virada de anexo (anualizado 29,6% → III · cru 22,2% → V), e avisava na própria linha: *'a conta assume pró-labore de fevereiro = R$3.360 e dezembro/janeiro = 0, porque o histórico da plataforma só devolve 6 meses'*. As DCTFWeb corrigiram a série no dia seguinte (dez/25 R$100 · fev R$3.260), e com os números certos a empresa é **Anexo III pelos dois métodos** (cru 37,7% · anualizado 50,3%). 🔑 A REGRA continua valendo — quem anualiza só a receita joga o recém-aberto no Anexo V sem merecer — mas **a persona zero NÃO é a prova dela**. A virada entra na lista do que este caso não prova.",
   },
 ];
+
+/* 🆕 14/09 — o RBT12 proporcional, agora que a regra foi lida em fonte primária. */
+const CASO_RBT12 = {
+  id: "G4",
+  nome: "RBT12 proporcional de ago/2026 — a regra do art. 24",
+  fonte:
+    "Res. CGSN 140/2018 art. 24 caput e inciso I, lida em fonte primária em 14/09 · pesquisa literal em pesquisa/fontes/2026-09-14-lacunas-motor-fiscal-LITERAL.md",
+  esperado: { rbt12: 54000, meses: 8, soma: 36000, media: 4500, faixa: 1, efetiva: 0.06 },
+  porque:
+    "🔴 A EMPRESA ESTÁ NO 9º MÊS, então o RBT12 NÃO é a soma dos 12 — é a média dos 8 meses anteriores × 12. E os três meses zerados (mai, jun, jul) ENTRAM no divisor: tirá-los daria média de 7.200 e RBT12 de 86.400, inflando a faixa e fazendo o cliente pagar a maior.",
+};
 
 /* A série oficial da persona zero, dez/25 a ago/26. */
 const SERIE = {
@@ -147,7 +158,47 @@ for (const caso of CASOS) {
  * O QUE O MOTOR AINDA NÃO SABE
  * ═══════════════════════════════════════════════════════════════════════════ */
 
-console.log("⏳ LACUNAS DECLARADAS — regras que existem na lei e o motor não aplica:\n");
+/* ── G4 · o RBT12 proporcional ─────────────────────────────────────────── */
+{
+  const c = CASO_RBT12;
+  console.log(`── ${c.id} · ${c.nome}`);
+  console.log(`   fonte: ${c.fonte}`);
+
+  // Ago/26 é o 9º mês. Os ANTERIORES são dez/25 a jul/26 — 8 meses.
+  const anteriores = SERIE.receita.slice(0, 8);
+  const r = rbt12De({ serieAnterior: anteriores });
+
+  console.log(`   meses anteriores .......... ${r.meses}  (${SERIE.meses.slice(0, 8).join(" · ")})`);
+  console.log(confere("soma das receitas", emCentavos(r.soma), emCentavos(c.esperado.soma)));
+  console.log(confere("média mensal", emCentavos(r.media), emCentavos(c.esperado.media)));
+  console.log(confere("RBT12 proporcional", emCentavos(r.rbt12), emCentavos(c.esperado.rbt12)));
+
+  const das = apurarDAS({ receitaMes: 7910, rbt12: r.rbt12, anexo: "III" });
+  if (das.faixa === c.esperado.faixa && Math.abs(das.efetiva - c.esperado.efetiva) < 1e-9) {
+    passou++;
+    console.log(`   ✅ faixa ${das.faixa} · alíquota efetiva ${(das.efetiva * 100).toFixed(2)}%`);
+  } else {
+    falhou++;
+    erros.push(`G4: faixa/alíquota esperadas ${c.esperado.faixa}/6,00%, obtidas ${das.faixa}/${(das.efetiva * 100).toFixed(2)}%`);
+    console.log(`   ❌ faixa ${das.faixa} · ${(das.efetiva * 100).toFixed(2)}%`);
+  }
+  console.log(confere("e o DAS continua", das.total, 47459));
+
+  // O contraste que prova a armadilha: excluir os meses zerados.
+  const semZeros = anteriores.filter((v) => v > 0);
+  const errado = rbt12De({ serieAnterior: semZeros });
+  console.log(`   ⚠️  se os meses zerados saíssem do divisor: RBT12 ${brl(emCentavos(errado.rbt12))} — ${((errado.rbt12 / r.rbt12 - 1) * 100).toFixed(0)}% a mais`);
+  console.log(`   ${c.porque}\n`);
+}
+
+console.log("✅ LACUNAS RESOLVIDAS em 14/09, por fonte primária:\n");
+for (const l of RESOLVIDAS) {
+  console.log(`   ${l.id} · ${l.o}`);
+  console.log(`        ${l.lei}`);
+  console.log(`        → ${l.onde}`);
+}
+
+console.log("\n⏳ LACUNAS ABERTAS — o que o motor ainda não sabe:\n");
 for (const l of LACUNAS) {
   console.log(`   ${l.id} · ${l.o}`);
   console.log(`        ${l.lei}`);

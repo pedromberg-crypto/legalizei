@@ -75,23 +75,85 @@ export function faixaDe(rbt12, anexo) {
  *
  * `(RBT12 × nominal − deduzir) ÷ RBT12`. Na 1ª faixa a parcela a deduzir é
  * zero, então efetiva = nominal (6% no III, 15,5% no V).
- *
- * ⏳ **LACUNA DECLARADA: empresa em início de atividade.** Com `rbt12 = 0`
- * esta conta divide por zero. A Res. CGSN 140/2018 art. 24 manda
- * proporcionalizar nos primeiros 12 meses, e essa regra **ainda não foi lida
- * em fonte primária** — só sabemos que existe. Até lá o motor RECUSA em vez
- * de chutar: número sem fonte não entra (regra anti-guru do vault).
  */
 export function aliquotaEfetiva(rbt12, anexo) {
-  if (rbt12 === 0) {
+  if (rbt12 <= 0) {
     throw new Error(
-      "RBT12 zero: empresa em início de atividade proporcionaliza (Res. CGSN 140/2018 art. 24), " +
-        "e essa regra ainda não foi lida em fonte primária. Ver LACUNAS."
+      "RBT12 zero ou negativo. Empresa em início de atividade usa `rbt12De()`, " +
+        "que proporcionaliza pela Res. CGSN 140/2018 art. 24."
     );
   }
   const f = faixaDe(rbt12, anexo);
   if (!f) return null; // fora do Simples
   return (rbt12 * f.nominal - f.deduzir) / rbt12;
+}
+
+/**
+ * 🔴 O RBT12 — e ele NÃO é sempre a soma dos 12 meses.
+ * ═══════════════════════════════════════════════════════════════════════════
+ * Resolvido em 14/09 por pesquisa em fonte primária. Três regimes, e o que
+ * separa é o **número de meses de atividade**:
+ *
+ *   1º mês .......... receita do PRÓPRIO mês × 12
+ *   2º ao 12º mês ... média dos meses ANTERIORES × 12
+ *   13º em diante ... soma simples dos 12 meses anteriores
+ *
+ * Res. CGSN 140/2018 art. 24, caput e inciso I, literal:
+ *   *"no 1º (primeiro) mês de atividade, utilizar como receita bruta total
+ *   acumulada, a receita do próprio mês de apuração multiplicada por 12
+ *   (doze). I - nos 11 (onze) meses posteriores ao do início de atividade,
+ *   (…) a média aritmética da receita bruta total dos meses anteriores ao do
+ *   período de apuração, multiplicada por 12 (doze)"*
+ *
+ * ── 🔴 AS DUAS ARMADILHAS, as duas confirmadas ─────────────────────────────
+ *
+ * **(1) O MÊS CORRENTE NÃO ENTRA.** Nem no numerador, nem no divisor. Ele é
+ * só a base sobre a qual a alíquota cai depois. A norma diz "meses anteriores
+ * ao do período de apuração".
+ *
+ * **(2) MÊS COM RECEITA ZERO ENTRA — como zero, e conta no divisor.** É o que
+ * a intuição erra. Excluir mês zerado do divisor INFLA a média, sobe o RBT12,
+ * sobe a faixa e faz o cliente pagar imposto a maior. A pesquisa chama isso de
+ * *"erro material sistêmico"*. A persona zero tem TRÊS meses assim (mai, jun,
+ * jul de 2026) — não é caso de borda, é o caso dela.
+ *
+ * ── 📅 QUAL DATA CONTA ─────────────────────────────────────────────────────
+ *
+ * A **data de abertura constante do CNPJ** (Res. CGSN 140/2018 art. 2º, V:
+ * *"data de início de atividade a data de abertura constante do CNPJ"*).
+ * NÃO é a assinatura do contrato social nem o registro na Junta. Isso decide
+ * qual das três datas da constituição o motor lê — ver itens 44/45/46 de
+ * PENDENCIAS.
+ *
+ * @param serieAnterior receitas dos meses ANTERIORES, em ordem, sem o corrente
+ * @param receitaMesCorrente só usada quando é o 1º mês de atividade
+ */
+export function rbt12De({ serieAnterior, receitaMesCorrente = 0 }) {
+  const meses = serieAnterior.length;
+
+  if (meses === 0) {
+    // 1º mês de atividade: não há passado, então projeta o próprio mês.
+    return { rbt12: receitaMesCorrente * 12, regra: "1o-mes", meses: 0 };
+  }
+
+  if (meses < 12) {
+    const soma = serieAnterior.reduce((a, b) => a + b, 0);
+    return {
+      rbt12: (soma / meses) * 12, // meses zerados ENTRAM no divisor, de propósito
+      regra: "proporcional",
+      meses,
+      soma,
+      media: soma / meses,
+    };
+  }
+
+  // 13º mês em diante: soma simples dos 12 anteriores, sem projeção.
+  const doze = serieAnterior.slice(-12);
+  return {
+    rbt12: doze.reduce((a, b) => a + b, 0),
+    regra: "soma-12",
+    meses: 12,
+  };
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -213,23 +275,49 @@ export function anualiza(valoresMensais) {
  */
 export const LACUNAS = [
   {
-    id: "L1",
-    o: "Empresa em início de atividade: como se monta o RBT12 nos primeiros 12 meses",
-    lei: "Res. CGSN 140/2018 art. 24",
+    id: "L4",
+    o: 'Resolução CGSN nº 190/2026 muda "data de ABERTURA" para "data de INSCRIÇÃO" no CNPJ',
+    lei: "Res. CGSN 190, de 04/08/2026, com efeitos a partir de 01/01/2027",
     porque:
-      "Sem isso o motor RECUSA rbt12=0 em vez de chutar. Atinge todo cliente nosso no 1º ano, que é a maioria.",
+      "🔴 A pesquisa cita, mas a fonte é site secundário (normaslegais.com.br). Se for real, muda o marco de contagem do RBT12 a partir de 2027 — e a diferença entre abertura e inscrição pode ser de dias. Conferir no Diário Oficial ANTES de virar código.",
+  },
+  {
+    id: "L5",
+    o: "LC 214/2025 — CBS e IBS entram no Simples Nacional",
+    lei: "LC 214/2025",
+    porque:
+      "A pesquisa sinaliza 'janelas de opções híbridas de recolhimento' que mexem em retenção e exclusão. Não datado, não quantificado. É o horizonte do motor, não o presente.",
+  },
+];
+
+/**
+ * ✅ RESOLVIDAS EM 14/09, por pesquisa em fonte primária.
+ * Ficam registradas porque saber que uma pergunta FOI respondida, e por qual
+ * dispositivo, vale tanto quanto a resposta.
+ */
+export const RESOLVIDAS = [
+  {
+    id: "L1",
+    o: "RBT12 de empresa em início de atividade",
+    lei: "Res. CGSN 140/2018 art. 24 caput e I · art. 2º V · art. 26 §4º",
+    resposta:
+      "1º mês: receita do próprio mês × 12. 2º ao 12º: média dos meses ANTERIORES × 12. 13º+: soma dos 12. O mês corrente não entra no cálculo; mês zerado entra como zero E conta no divisor. O marco é a data de ABERTURA no CNPJ, não a assinatura nem a Junta. A folha anualiza pelo mesmo critério.",
+    onde: "`rbt12De()` e `anualiza()`",
   },
   {
     id: "L2",
-    o: "ISS retido na fonte pelo tomador: sai do DAS ou entra e se compensa?",
-    lei: "LC 116/2003 · LC 123 art. 21 §4º",
-    porque:
-      "A persona zero não teve retenção em nenhuma das 9 competências, então a conta real não prova nada aqui.",
+    o: "ISS retido na fonte pelo tomador",
+    lei: "LC 123/2006 art. 21 §4º · LC 116/2003 art. 3º e 6º · Lei Municipal BH 8.725/2003 arts. 20, 21, 24",
+    resposta:
+      "Não é compensação, é SEGREGAÇÃO: a receita com retenção é declarada em rubrica própria no PGDAS-D e o aplicativo tira o ISS da base, gerando DAS só com os federais. 🔑 MAS para as NOSSAS atividades (consultoria, publicidade, TI, design, ensino, tradução) o ISS é devido no LOCAL DO ESTABELECIMENTO PRESTADOR — elas não estão nas 25 exceções do art. 3º. Tomador de outro município reter é ILÍCITO, e a empresa continua devendo em BH.",
+    onde: "ainda não virou código — ver `apurarDAS` §ISS retido",
   },
   {
     id: "L3",
-    o: "Sublimite estadual de ISS/ICMS",
-    lei: "LC 123 art. 19-20",
-    porque: "Teto do ME (R$360k) fica muito abaixo do sublimite, mas a regra existe e não foi lida.",
+    o: "Sublimite estadual",
+    lei: "LC 123/2006 art. 19 · Portaria CGSN 54/2025",
+    resposta:
+      "Sublimite MG 2026 = R$ 3.600.000. 🟢 NÃO SE APLICA AO PORTE ME: o teto do ME é R$360.000, então é impossibilidade matemática. Só passa a valer se a empresa virar EPP e ultrapassar os 3,6mi. ⚠️ E aí SIM atinge serviço, não só ICMS — o sublimite estadual 'carrega' os municípios e o ISS sai do DAS.",
+    onde: "fechada sem virar código, e isso é ganho",
   },
 ];

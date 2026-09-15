@@ -44,14 +44,13 @@ As faixas **3, 4, 5 e 6** da tabela só existem para quem **sai** para EPP — q
 `guiaVencida()` agora roda pelo estado: a **P09** tem 3 competências seguidas pagas com 14, 21 e 14 dias de atraso, espelhando o padrão da conta real. O atraso é **derivado** (dias entre o vencimento e a baixa), nunca guardado. Custo apurado: **R$393,32** em 3 meses.
 🐛 **E o motor pegou um erro meu na hora:** eu marquei os pagamentos para o início do mês seguinte achando que o DAS vencia no mês da competência. Ele vence no dia **20 do mês seguinte**, então meus pagamentos caíam **antes** do vencimento e o motor devolveu `emDia` em vez de inventar atraso. O olho não teria pego.
 
-### A2 · 🟢 ISS de tomador de fora — **JÁ ESTAVA RESOLVIDO, e eu reabri**
-O Pedro apontou: *"se não me engano a gente já travou com fonte confiável sobre esse ISS e ele volta a aparecer."* Está travado, sim, e ele lembrou certo. Para as nossas atividades o ISS é devido no **local do estabelecimento prestador** (BH), porque elas não estão nas 25 exceções do art. 3º da LC 116/2003 — então **quem paga é o prestador, dentro do DAS**. Tomador de outro município **não tem competência para reter**, e `retencaoLegitima()` já rejeita esse caso desde 14/09.
-🔴 **O que eu deveria ter escrito no lugar de "falta vida":** a única fragilidade real aqui é que `SUBSTITUTOS_BH` (a lista de quem retém **dentro** de BH) é **paráfrase**, não texto literal da Lei 8.725/2003 — marcado 🟡 no próprio código. Isso não é buraco de elenco, é a regra de **leitura integral** não cumprida. Virou pendência de leitura, não de persona.
+### A2 e A4 · 🔒 SAÍRAM DESTA LISTA — assunto encerrado [ENCERRADO]
 
-### A4 · 🟢 Anexo V com retenção — **ERA TESTE, NÃO DÚVIDA**
-Eu tinha listado como buraco de pesquisa. Ao ler o código: `apurarDAS` é **parametrizado por anexo** e usa a repartição do ISS de cada um; não existe caminho próprio por anexo, logo não havia o que pesquisar. Testado agora (G-P7), e com um achado que vale para a tela:
+Os dois itens que eu tinha escrito aqui sobre retenção **não eram buracos de cobertura**, eram assunto já resolvido em 14/09 que eu reabri. O registro completo, com a regra, a fonte e a decisão de produto, vive em **`execucao/motor-fiscal/_encerrados.mjs` · E-ISS**, e o `verificar-encerrados.mjs` derruba a rodada se voltarem para cá.
 
-> A **fatia** do ISS no Anexo V é quase metade da do III (17% × 32% na faixa 2), mas o DAS inteiro do V é muito maior — então em **reais** o ISS do V é **maior** (R$535,50 × R$417,28 numa receita de R$20 mil). Proporcionalmente a retenção alivia menos; em dinheiro, alivia mais. Dizer só uma das duas engana.
+🔴 **Decisão de produto do Pedro, 15/09:** o assunto não é cálculo, tela, pergunta nem decisão do usuário. Nada dele aparece para o cliente.
+
+⚠️ **O que segue aberto é OUTRA coisa, com outro nome:** `SUBSTITUTOS_BH` é **paráfrase**, não texto literal da Lei 8.725/2003. Isso é pendência de **leitura integral**, não de pesquisa nem de persona — e mora na fila de leitura.
 
 ---
 
@@ -59,19 +58,12 @@ Eu tinha listado como buraco de pesquisa. Ao ler o código: `apurarDAS` é **par
 
 > Esta é a lista que importa. Cada linha é um pedaço do motor que nunca foi exercitado por uma história completa.
 
-### A1 · 🔴 Guia paga em ATRASO (multa + Selic)
-`guiaVencida()` existe, com multa, juros e Selic — e **nenhuma das 16 vidas paga nada em atraso**. Todas pagam em dia, o que é exatamente o cenário que não dói. 🔑 **E o caso real contradiz o elenco:** a conta que analisamos tem **R$229,85 de multa em 3 competências seguidas**, com as duas guias atrasadas todas as vezes (~13, ~21 e ~14 dias). Atraso não é exceção, é o comportamento comum — e é o caso de uso mais forte do lembrete de vencimento.
-**Proposta:** uma vida com atrasos recorrentes de 10-20 dias, espelhando a conta real.
-
-### A2 · 🟡 Retenção de ISS de tomador de FORA de BH
-`retencaoLegitima()` decide se a retenção é válida pelo município do tomador, e a resposta importante é que tomador de outro município reter é ato *"eivado de nulidade"*. A P04 tem ISS retido, mas **só de tomador dentro de BH**. O caminho que rejeita a retenção ilegítima nunca rodou.
-**Proposta:** dar à P04 (ou a uma nova) competências com tomador de fora, para o motor ter que recusar.
+### A1 · ✅ Guia paga em ATRASO — **FEITO em 15/09** (ver a seção de fechados acima)
 
 ### A3 · 🟡 Rateio DESIGUAL de pró-labore entre sócios
 `darfDaFolha()` nasceu hoje e aceita valor por sócio, mas as 8 vidas com 2+ sócios usam **rateio igual**. O caminho desigual é código novo sem prova nenhuma. ⚠️ Depende da **D-02** com o contador: se rateio desigual for raro, isso desce de prioridade.
 
-### A4 · 🟡 Anexo V **com** ISS retido, na faixa 2
-A P16 é Anexo V e não tem retenção. A P04 tem retenção e é Anexo III. A combinação — alíquota de 15,5%+ com segregação do ISS — nunca rodou, e é onde a repartição por tributo do V encontra a regra do art. 21 §4º.
+### A4 · 🔒 REMOVIDO — assunto encerrado, ver `_encerrados.mjs` · E-ISS [ENCERRADO]
 
 ---
 
@@ -105,12 +97,13 @@ Uma empresa que troca de `III-fixo` para `fator-r-dinamico` (ou o contrário) mu
 
 | | O quê | Por quê primeiro |
 |---|---|---|
-| **1º** | **A1 · atrasos** | Código pronto, caso real documentado, e é o argumento do lembrete de vencimento |
-| **2º** | **B1 · colaborador** | O maior buraco, e o único que faz o **piloto recomendar errado** |
-| **3º** | **A2 · retenção ilegítima** | Código pronto, caminho de rejeição nunca rodou |
-| **4º** | **B5 · desenquadramento** | Fecha a porta de saída e dá sentido às faixas 3-6 |
-| **5º** | **A4 · Anexo V com retenção** | Combinação que nenhuma vida cobre |
-| depois | A3, B3, B4, B6, B7 | Dependem de decisão (D-02) ou de campo que o app ainda não coleta |
+| ~~1º~~ | ~~A1 · atrasos~~ | ✅ **feito em 15/09** |
+| 🔒 | ~~B1 · colaborador~~ | **travado fora** por decisão do Pedro — volta quando a funcionalidade for desenhada |
+| 🔒 | ~~A2 e A4~~ | **encerrados**, ver `_encerrados.mjs` · E-ISS [ENCERRADO] |
+| **1º** | **B5 · desenquadramento** | Fecha a porta de saída para EPP, a única hipótese de EPP na persona |
+| **2º** | **B6 · nota cancelada** | Aconteceu na conta real e me fez ler a série errada |
+| **3º** | **B4 · CLT que muda no tempo** | Exporia com número um defeito que hoje é só comentário |
+| depois | A3, B2, B3, B7 | Dependem de decisão (D-02, B2 é dúvida de contador) ou de campo que o app não coleta |
 
 ## Links
 [[_achados-do-motor]] · [[_duvidas-contador]] · [[PERSONA]] · [[personas-entrada-me]]

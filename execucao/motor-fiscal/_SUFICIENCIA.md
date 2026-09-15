@@ -107,7 +107,7 @@ Cada pergunta tem um tipo de fonte que a fecha — e **só ela**:
 | **Como o órgão executa na prática?** | documento emitido (recibo, guia, protocolo) | a lei, que é silenciosa sobre arredondamento |
 | **O que o concorrente faz?** | evidência — **nunca** autoridade | — |
 
-🔴 **Regra provada por fonte oficial não vira 🟡 por falta de documento daquele caso específico.** Foi o erro de 14/09 no ISS retido (corrigido pelo Pedro) e o de 15/09 aqui. Duas vezes a mesma confusão entre *"não temos recibo deste caso"* e *"não sabemos a regra"*.
+🔴 **Regra provada por fonte oficial não vira 🟡 por falta de documento daquele caso específico.** Foi o erro de 14/09 no ISS retido (corrigido pelo Pedro; assunto encerrado, ver `_encerrados.mjs` E-ISS [ENCERRADO]) e o de 15/09 aqui. Duas vezes a mesma confusão entre *"não temos recibo deste caso"* e *"não sabemos a regra"*.
 
 ✅ **O que fechou em 15/09 foi a outra coluna: o comportamento.** Até então o Anexo V só tinha rodado na **1ª faixa** (pelo P01), e a 1ª faixa é justamente onde a parcela a deduzir é **zero** — a efetiva é igual à nominal, e metade da tabela nunca era tocada. A vida do **P16** (consultoria em TI, RBT12 de R$0 a R$359 mil em 22 competências) atravessa os R$180 mil e faz a parcela de R$4.500 morder.
 

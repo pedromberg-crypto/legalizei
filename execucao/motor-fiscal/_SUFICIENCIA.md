@@ -15,9 +15,11 @@ tags: [motor, fiscal, auditoria, cobertura, anexos, fator-r]
 
 ## Veredito em uma linha
 
-🟢 **Não sobrou buraco de cálculo dentro do escopo.** O motor cobre **7 das 8** funcionalidades de Impostos e **5 das 7** de Pró-labore; o que falta nas outras é **API, persistência ou documento**, nunca conta. E o estado recorrente existe e está provado.
+🟢 **Não sobrou buraco de CÁLCULO dentro do escopo.** Tudo que é conta, o motor faz e está provado.
 
-🔴 **Mas "fechado" aqui quer dizer CALCULA CERTO, não ESTÁ NO PRODUTO.** Nenhum cliente chama esse motor ainda, e o débito dos dois motores (§6) segue aberto.
+🔴 **Mas isso cobre menos funcionalidade do que parece.** O motor resolve **4 das 8** de Impostos e **3 das 7** de Pró-labore (mais 2 que existem, só estão no arquivo errado). As outras **não são cálculo** — são API, persistência, documento ou gateway, e nenhuma quantidade de motor as fecha.
+
+> ⚠️ **Correção de 14/09:** uma versão desta nota dizia *"7 de 8 e 5 de 7"*. Estava **inflado** — eu contei como cobertas as funcionalidades que o motor não precisa tocar, em vez das que ele resolve. O Pedro pegou perguntando *"por que não fechamos todos?"*. Os números certos estão acima, e a §5.1 diz o que falta para fechar de verdade.
 
 ## 📋 O que exatamente está fechado — atualizado em 14/09, 2ª rodada
 
@@ -120,7 +122,7 @@ Empresa aberta em **março** e empresa aberta em **dezembro** percorrem o mesmo 
 
 ## 5 · Basta para o app, sem folha?
 
-### §2 Impostos — 7 de 8
+### §2 Impostos — o motor resolve 4 de 8
 
 | # | Funcionalidade | Motor basta? |
 |---|---|---|
@@ -137,7 +139,7 @@ Empresa aberta em **março** e empresa aberta em **dezembro** percorrem o mesmo 
 
 O motor não emite nota. Ele **dá o ISS da nota** (provado no G2, R$198,89) e **consome a receita** pro RBT12 e pro Fator R. Suficiente para o que lhe cabe.
 
-### §4 Pró-labore — 5 de 7
+### §4 Pró-labore — o motor resolve 3 de 7 (mais 2 que estão no arquivo errado)
 
 | # | Funcionalidade | Motor basta? |
 |---|---|---|
@@ -149,7 +151,58 @@ O motor não emite nota. Ele **dá o ISS da nota** (provado no G2, R$198,89) e *
 | 4.6 | Duplo vínculo CLT | 🟡 existe **no outro motor** (ver §6) |
 | 4.7 | Alterar pró-labore de mês processado | ⛔ retificação, exige contador |
 
-🔑 **Padrão:** tudo que falta é **integração, persistência, documento ou calendário**. Nenhum buraco de cálculo restante dentro do escopo, exceto juros/multa (2.6).
+---
+
+## 5.1 · 🎯 O que falta pra fechar as 15, de verdade
+
+Pergunta do Pedro em 14/09: *"por que não fechamos todos? precisamos correr atrás."*
+
+As 8 que o motor não resolve **não estão pela metade** — elas nunca foram trabalho de cálculo. E o bom da notícia é que **não são 8 frentes: são 3.**
+
+### Frente 1 · Serpro Integra Contador — fecha 4 de uma vez
+
+| Fecha | Funcionalidade |
+|---|---|
+| **2.2** | Baixar a guia e o código de barras |
+| **2.4** | Saber que foi pago sem perguntar ao cliente |
+| **4.5** | Emitir a guia do INSS do pró-labore |
+| **5.8** | A trava da DEFIS (sem ela o PGDAS-D de março não transmite) |
+
+Uma integração cobre **PGDAS-D, DEFIS, eSocial e DCTFWeb**, e **não exige procuração e-CAC** quando se usa o certificado A1 da própria empresa. Custo relatado: ~R$300/mês por escritório no pacote inicial.
+
+🔑 **É o maior desbloqueio isolado que existe na lista**, e o `_matriz-dependencia.md` já diz que o risco técnico caiu: a API existe e é documentada.
+
+### Frente 2 · Persistência — fecha 1, e habilita tudo
+
+| Fecha | Funcionalidade |
+|---|---|
+| **2.3** | Histórico de guias pagas |
+
+Parece pequeno e não é: **é o estado recorrente ganhando lugar para morar**. Hoje o modelo existe (`estado-cnpj/`) e não há onde guardar. Sem isso nenhuma tela lembra de nada entre sessões.
+
+### Frente 3 · Documento e gateway — 3 que são decisão, não engenharia
+
+| | Funcionalidade | O que realmente é |
+|---|---|---|
+| **2.8** | Débito automático do DAS | 🏢 decisão comercial — *"pagar o DAS pelo app" já morreu em 27/07*; débito automático é outra coisa e não foi decidido |
+| **4.4** | Recibo e informe de rendimentos | geração de documento. ⚠️ E carrega a regra dura de 14/09: **documento que o órgão obriga a empresa a entregar ao sócio nunca fica atrás de pendência comercial** |
+| **4.7** | Alterar pró-labore de mês processado | retificação de obrigação acessória — **exige contador**, e o P4 cobre pedir e cobrar, não executar |
+
+### E 2 que já estão prontas, no arquivo errado
+
+**4.1** (pró-labore interativo) e **4.6** (duplo vínculo CLT) dependem de `proLaboreOtimo`, `naBorda` e `custoProLabore` — que **existem**, só vivem no `fiscal.ts`. Resolver os dois motores (§6) fecha as duas **sem escrever regra nova**.
+
+### 📊 O placar honesto de "fechar tudo"
+
+| | Quantas | Custo |
+|---|---:|---|
+| 🟢 Já resolvidas pelo motor | **7** | feito |
+| 🔧 Resolver os dois motores | **+2** | horas |
+| 🔌 Serpro Integra Contador | **+4** | contratar e integrar |
+| 💾 Persistência | **+1** | infra |
+| 🏢 Decisão sua, não engenharia | **3** | 2.8 · 4.4 · 4.7 |
+
+🔑 **Fechar as 15 não é "correr atrás do que ficou pela metade".** É: consertar a duplicação (barato), contratar o Serpro (a maior alavanca), dar casa ao estado, e tomar 3 decisões.
 
 ---
 

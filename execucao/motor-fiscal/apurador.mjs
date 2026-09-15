@@ -337,10 +337,28 @@ export function retencaoLegitima({ municipioTomador, naturezaTomador, atividade 
  * art. 44 I). Por isso o parâmetro se chama `folhaPAGA12` e não `folha12` —
  * o nome é a trava.
  *
- * 🔑 A **CPP dentro do DAS conta no numerador** (SC COSIT 17/2021, pacífico).
- * Passe `cppNoDas12` quando souber. Efeito colateral conhecido: como essa
- * parcela é proporcional à receita, ela entra no numerador E no denominador,
- * e amortece o próprio Fator R.
+ * 🔴 **A CPP EMBUTIDA NO DAS **NÃO** ENTRA NO NUMERADOR** — corrigido em 14/09,
+ * e eu tinha o oposto escrito como fato.
+ *
+ * Res. CGSN 140/2018 art. 26 §2º I "a", literal: *"a título de encargos, o
+ * montante **efetivamente recolhido**: a) de Contribuição Patronal
+ * Previdenciária (**inclusive a recolhida dentro do Simples Nacional em
+ * relação ao Anexo IV**)"*. A norma **nomeia o Anexo IV** — e o silêncio sobre
+ * o III e o V é vedação, não permissão.
+ *
+ * ⚠️ **A "SC COSIT 17/2021" que o mercado cita não ampara isso.** A pesquisa
+ * de 14/09 foi às bases da Receita: a ementa trata de matéria diversa. Eu
+ * havia registrado como *"pacífico"* em 13/09, propagado de `_matriz-
+ * dependencia.md`. Era citação de blog viajando entre documentos nossos.
+ *
+ * 🔑 **Por que errar aqui era pior que errar um número:** contar a CPP infla o
+ * numerador, e o app recomendaria um pró-labore MENOR do que o necessário.
+ * O eSocial enviaria o valor menor, o cruzamento com o PGDAS-D rebaixaria a
+ * empresa para o Anexo V **retroativamente**, e o cliente pagaria a diferença
+ * de 6% para 15,5% com multa. A correção é para o lado seguro.
+ *
+ * `cppNoDas12` continua no parâmetro **só para o Anexo IV**, que está fora do
+ * nosso escopo. No III e no V, passe zero — que é o default.
  */
 export function fatorR({ folhaPaga12, receita12, cppNoDas12 = 0 }) {
   if (receita12 <= 0) {
@@ -605,16 +623,87 @@ export function darfDoProLabore(proLabore) {
     emCentavos(PREVIDENCIA.TETO_INSS * PREVIDENCIA.ALIQUOTA_SOCIO)
   );
 
-  const base = proLabore - emReais(inss);
+  // 🔴 A dedução é a MAIOR entre o INSS e o desconto simplificado (R$607,20).
+  // A fonte pagadora é obrigada a aplicar a mais benéfica ao beneficiário.
+  const deducaoInss = emReais(inss);
+  const usaSimplificado = IRRF.descontoSimplificado > deducaoInss;
+  const deducao = usaSimplificado ? IRRF.descontoSimplificado : deducaoInss;
+
+  const base = proLabore - deducao;
   const faixa = IRRF.faixas.find((f) => base <= f.ate);
-  const bruto = base * faixa.aliquota - faixa.deduzir;
+  const impostoTabela = Math.max(0, base * faixa.aliquota - faixa.deduzir);
+
+  // 🔴 O redutor do art. 3º-A, aplicado DEPOIS da tabela, sobre o BRUTO.
+  const r = IRRF.redutor;
+  let redutor = 0;
+  if (proLabore <= r.tetoIsencao) {
+    redutor = Math.min(r.valorAteIsencao, impostoTabela); // zera, sem virar crédito
+  } else if (proLabore <= r.tetoRampa) {
+    redutor = Math.max(0, r.rampaBase - r.rampaCoef * proLabore);
+  }
+
+  const devido = Math.max(0, impostoTabela - redutor);
 
   return {
     inss,
+    deducaoAplicada: emCentavos(deducao),
+    usouDescontoSimplificado: usaSimplificado,
     baseIrrf: emCentavos(base),
-    irrf: bruto > 0 ? emCentavos(bruto) : 0, // dedução maior que o imposto = zero, nunca negativo
+    impostoTabela: emCentavos(impostoTabela),
+    redutor: emCentavos(Math.min(redutor, impostoTabela)),
+    irrf: emCentavos(devido),
     aliquotaIrrf: faixa.aliquota,
-    isento: faixa.aliquota === 0,
+    isento: devido === 0,
+    // 🔑 Distingue "não caiu na tabela" de "caiu e o redutor zerou". São coisas
+    // diferentes e a segunda precisa aparecer no recibo.
+    zeradoPeloRedutor: impostoTabela > 0 && devido === 0,
+  };
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * 7b · A GUIA VENCIDA — multa e juros
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/**
+ * Acréscimos do DAS pago em atraso. **Lei 9.430/1996 art. 61 §§2º e 3º.**
+ *
+ *   multa = 0,33% por DIA de atraso, **travada em 20%** (chega no 61º dia)
+ *   juros = Selic acumulada, do mês SEGUINTE ao vencimento até o mês ANTERIOR
+ *           ao pagamento, **+ 1% cravado no mês do pagamento**
+ *
+ * 🔑 **Pago dentro do mês do vencimento, os juros são ZERO** — só a multa
+ * corre. O 1% do mês do pagamento substitui a Selic daquele mês, para não
+ * exigir atualização diária na emissão da guia.
+ *
+ * ⚠️ **Não existe multa mínima em valor absoluto** para a mora. Não confundir
+ * com os R$50 de multa por **PGDAS-D entregue em atraso**, que é acessória e
+ * independe de ter imposto a pagar.
+ *
+ * ⏳ A série da Selic é **dado, não lógica**, e não temos: entra por parâmetro.
+ *
+ * @param selicAcumulada soma das Selic mensais do período, em fração (0.02 = 2%)
+ */
+export function guiaVencida({ principal, diasDeAtraso, selicAcumulada = 0, mesmoMes = false }) {
+  if (diasDeAtraso <= 0) {
+    return { principal, multa: 0, juros: 0, total: principal, diasDeAtraso: 0 };
+  }
+
+  const pctMulta = Math.min(0.0033 * diasDeAtraso, 0.2);
+  const multa = emCentavos(emReais(principal) * pctMulta);
+
+  // O 1% do mês do pagamento só entra se o pagamento saiu do mês do vencimento.
+  const pctJuros = mesmoMes ? 0 : selicAcumulada + 0.01;
+  const juros = emCentavos(emReais(principal) * pctJuros);
+
+  return {
+    principal,
+    multa,
+    juros,
+    total: principal + multa + juros,
+    pctMulta,
+    pctJuros,
+    multaNoTeto: pctMulta >= 0.2,
+    diasDeAtraso,
   };
 }
 
@@ -629,47 +718,35 @@ export function darfDoProLabore(proLabore) {
  */
 export const LACUNAS = [
   {
-    id: "L4",
-    o: 'Resolução CGSN nº 190/2026 muda "data de ABERTURA" para "data de INSCRIÇÃO" no CNPJ',
-    lei: "Res. CGSN 190, de 04/08/2026, com efeitos a partir de 01/01/2027",
+    id: "L5",
+    o: "LC 214/2025 — CBS e IBS entram no Simples Nacional",
+    lei: "LC 214/2025 · Res. CGSN 190/2026",
     porque:
-      "🔴 A pesquisa cita, mas a fonte é site secundário (normaslegais.com.br). Se for real, muda o marco de contagem do RBT12 a partir de 2027 — e a diferença entre abertura e inscrição pode ser de dias. Conferir no Diário Oficial ANTES de virar código.",
-  },
-  {
-    id: "L6",
-    o: "🔴 A tabela do IRRF × a Lei 15.270/2025",
-    lei: "Lei 15.270/2025",
-    porque:
-      "A TABELA foi resolvida em 14/09 (modal da plataforma do líder, ver IRRF em _tabelas.mjs) e está 🟡 — tela de concorrente. O que segue aberto é a INTERAÇÃO com a Lei 15.270/2025: o fiscal.ts carrega IRRF_ISENCAO 5000 citando essa lei, e a tabela do líder isenta só até 2.428,80. Ou a tabela venceu, ou existe um REDUTOR que convive com ela. Não deduzir — é a última peça do motor sem fonte primária.",
+      "A Res. CGSN 190/2026 já existe e é justamente a adequação à Reforma. O que ela muda para nós a partir de 2027 ainda não foi mapeado.",
   },
   {
     id: "L7",
     o: "Calendário de FERIADOS (nacional e municipal de BH)",
     lei: "—",
     porque:
-      "`vencimentoDe()` conhece sábado e domingo, e não conhece feriado. Feriado no dia 20 desloca de verdade, e o motor não vai saber. É dado, não lógica.",
+      " conhece sábado e domingo, não feriado. Feriado no dia 20 desloca de verdade. É dado, não lógica.",
   },
   {
-    id: "L8",
-    o: "Juros, multa e Selic da guia vencida",
+    id: "L9",
+    o: "A série histórica da SELIC",
     lei: "—",
     porque:
-      "Funcionalidade 2.6 (recalcular e reemitir guia vencida). O motor recalcula o principal; o acessório não tem fonte ainda.",
+      " recebe a Selic acumulada por parâmetro. A fórmula está ratificada (Lei 9.430/96 art. 61); o dado mensal não temos.",
   },
   {
-    id: "L5",
-    o: "LC 214/2025 — CBS e IBS entram no Simples Nacional",
-    lei: "LC 214/2025",
+    id: "L10",
+    o: "🟡 O pró-labore é obrigatório havendo faturamento?",
+    lei: "Lei 8.212/1991 art. 12 V 'f' · IN RFB 2.110/2022",
     porque:
-      "A pesquisa sinaliza 'janelas de opções híbridas de recolhimento' que mexem em retenção e exclusão. Não datado, não quantificado. É o horizonte do motor, não o presente.",
+      "A pesquisa marcou confiança MÉDIA na obrigatoriedade e BAIXA na ilicitude de ficar sem. Não há artigo dizendo 'o sócio é obrigado a sacar R$1.621' — nasce da presunção de que, sem funcionário, a receita veio do sócio. 🔑 Sustenta a decisão 36 (forçar pró-labore no mês 1) e merece o olho da Larissa antes de virar trava dura na tela.",
   },
 ];
 
-/**
- * ✅ RESOLVIDAS EM 14/09, por pesquisa em fonte primária.
- * Ficam registradas porque saber que uma pergunta FOI respondida, e por qual
- * dispositivo, vale tanto quanto a resposta.
- */
 export const RESOLVIDAS = [
   {
     id: "L1",
@@ -694,5 +771,37 @@ export const RESOLVIDAS = [
     resposta:
       "Sublimite MG 2026 = R$ 3.600.000. 🟢 NÃO SE APLICA AO PORTE ME: o teto do ME é R$360.000, então é impossibilidade matemática. Só passa a valer se a empresa virar EPP e ultrapassar os 3,6mi. ⚠️ E aí SIM atinge serviço, não só ICMS — o sublimite estadual 'carrega' os municípios e o ISS sai do DAS.",
     onde: "fechada sem virar código, e isso é ganho",
+  },
+  {
+    id: "L6",
+    o: "IRRF do pró-labore em 2026",
+    lei: "Lei 9.250/1995 arts. 3º, 3º-A e 4º §2º · Lei 15.270/2025",
+    resposta:
+      "A tabela NÃO mudou. A Lei 15.270/2025 criou um REDUTOR (art. 3º-A) aplicado depois dela, que zera o imposto até R$5.000 de rendimento e decai em rampa até R$7.350. E a dedução da base é a MAIOR entre o INSS e o desconto simplificado de R$607,20. Efeito: o pró-labore de 28% paga IRRF ZERO.",
+    onde: "IRRF em _tabelas.mjs · darfDoProLabore()",
+  },
+  {
+    id: "L8",
+    o: "Juros, multa e Selic da guia vencida",
+    lei: "Lei 9.430/1996 art. 61 §§2º e 3º",
+    resposta:
+      "Multa de mora 0,33% por dia, travada em 20% (chega no 61º dia, não no 60º). Juros = Selic acumulada do mês SEGUINTE ao vencimento até o ANTERIOR ao pagamento, mais 1% cravado no mês do pagamento. Pago dentro do mês do vencimento, juros ZERO. Não existe multa mínima de mora.",
+    onde: "guiaVencida()",
+  },
+  {
+    id: "L4",
+    o: "Resolução CGSN nº 190/2026 existe",
+    lei: "Res. CGSN 190/2026",
+    resposta:
+      "CONFIRMADA em fonte oficial (gov.br/receitafederal, notícia de agosto/2026). É a adequação do Simples à Reforma Tributária do Consumo, com efeitos a partir de 01/01/2027. Sai da categoria de citação de site secundário.",
+    onde: "só vira código em 2027 — vigiar",
+  },
+  {
+    id: "P5",
+    o: "Receita: competência ou caixa?",
+    lei: "Res. CGSN 140/2018 art. 16, §§3º e 4º",
+    resposta:
+      "Padrão é COMPETÊNCIA. A opção pelo caixa existe, é feita na apuração de janeiro e é IRRETRATÁVEL no ano. 🔑 E ela muda SÓ o mês de tributação: o RBT12 e o denominador do Fator R permanecem em competência por determinação expressa do §4º. O motor não precisa de dois modos.",
+    onde: "nada a mudar — o motor já trabalha em competência",
   },
 ];

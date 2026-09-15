@@ -16,7 +16,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { apurarDAS, fatorR, fatorRDeCompetencias, anualiza, rbt12De, retencaoLegitima, anexoDoCnae, vencimentoDe, custoTotalMensal, darfDoProLabore, brl, emCentavos, LACUNAS, RESOLVIDAS } from "./apurador.mjs";
+import { apurarDAS, fatorR, fatorRDeCompetencias, anualiza, rbt12De, retencaoLegitima, anexoDoCnae, vencimentoDe, custoTotalMensal, darfDoProLabore, guiaVencida, brl, emCentavos, LACUNAS, RESOLVIDAS } from "./apurador.mjs";
 
 /* ═══════════════════════════════════════════════════════════════════════════
  * OS CASOS REAIS
@@ -342,7 +342,7 @@ for (const caso of CASOS) {
 
   console.log(`   pró-labore de 28% ......... ${brl(emCentavos(proLabore))}`);
   console.log(confere("INSS sobre ele (11%)", custoIII.inss, 36960));
-  console.log(confere("IRRF (tabela da página)", custoIII.irrf, 5440));
+  console.log(confere("IRRF (redutor zera)", custoIII.irrf, 0));
   console.log(`   custo total no Anexo III .. ${brl(custoIII.total)}  (${(custoIII.aliquotaTotal * 100).toFixed(2)}%)`);
   console.log(`   custo total no Anexo V .... ${brl(custoV.total)}  (${(custoV.aliquotaTotal * 100).toFixed(2)}%)`);
   console.log(`   💰 a diferença ............ ${brl(custoV.total - custoIII.total)}/mês`);
@@ -358,7 +358,7 @@ for (const caso of CASOS) {
 /* ── G10 · a tabela do IRRF, e o DARF Unificado ────────────────────────── */
 {
   console.log("── G10 · IRRF do pró-labore — e o INSS sai ANTES");
-  console.log('   fonte: modal "Tabela do IRRF" na plataforma do líder, conta real, 14/09');
+  console.log('   fonte: Lei 9.250/1995 arts. 3º, 3º-A e 4º · Lei 15.270/2025 · ratificado 14/09');
 
   // O caso da persona zero: pró-labore no salário mínimo, IRRF zero.
   const zero = darfDoProLabore(1621);
@@ -369,16 +369,21 @@ for (const caso of CASOS) {
   // O caso da planilha: 28% de 12.000.
   const alto = darfDoProLabore(3360);
   console.log(`   pró-labore R$3.360 ........ INSS ${brl(alto.inss)} · base ${brl(alto.baseIrrf)} · IRRF ${brl(alto.irrf)}`);
-  console.log(confere("base do IRRF", alto.baseIrrf, 299040));
-  console.log(confere("IRRF a 15%", alto.irrf, 5440));
+  console.log(confere("base c/ simplificado", alto.baseIrrf, 275280));
+  console.log(confere("imposto pela tabela", alto.impostoTabela, 2430));
+  console.log(confere("IRRF depois do redutor", alto.irrf, 0));
 
-  if (zero.isento && !alto.isento) {
+  const rampa = darfDoProLabore(6000);
+  console.log(`   pró-labore R$6.000 ........ tabela ${brl(rampa.impostoTabela)} · redutor ${brl(rampa.redutor)} → IRRF ${brl(rampa.irrf)}`);
+  console.log(confere("redutor da rampa", rampa.redutor, 17975));
+
+  if (!zero.zeradoPeloRedutor && alto.zeradoPeloRedutor && rampa.irrf > 0) {
     passou++;
-    console.log("   ✅ o piso é isento e o de 28% não é — a faixa vira no meio da nossa persona");
+    console.log("   ✅ três regimes distintos: fora da tabela · zerado pelo redutor · rampa");
   } else {
     falhou++;
-    erros.push("G10: a isenção não está virando onde deveria");
-    console.log("   ❌ a isenção não virou onde deveria");
+    erros.push("G10: os três regimes do redutor não estão separados");
+    console.log("   ❌ os três regimes não se separaram");
   }
 
   console.log("   🔑 O INSS sai PRIMEIRO e vira dedução da base do IRRF. Quem calcula o IRRF");
@@ -426,6 +431,41 @@ for (const caso of CASOS) {
     console.log(`   ❌ esperado DAS 21 e DARF 18, obtido ${dia(das)} e ${dia(darf)}`);
   }
   console.log("   ⏳ Feriados NÃO são considerados (lacuna L7).\n");
+}
+
+/* ── G11 · a guia vencida ──────────────────────────────────────────────── */
+{
+  console.log("── G11 · DAS pago em atraso — multa e juros");
+  console.log("   fonte: Lei 9.430/1996 art. 61 §§2º e 3º, ratificado 14/09");
+
+  // Pago dentro do mês do vencimento: só multa, juros zero.
+  const cedo = guiaVencida({ principal: 47459, diasDeAtraso: 8, mesmoMes: true });
+  console.log(`   8 dias, mesmo mês ......... multa ${brl(cedo.multa)} (${(cedo.pctMulta * 100).toFixed(2)}%) · juros ${brl(cedo.juros)}`);
+  console.log(confere("total", cedo.total, 48712));
+
+  // 60 dias: 19,80%. Ainda NÃO travou — o teto chega no 61º dia.
+  const tarde = guiaVencida({ principal: 47459, diasDeAtraso: 60, selicAcumulada: 0.01 });
+  console.log(`   60 dias .................... multa ${brl(tarde.multa)} (${(tarde.pctMulta * 100).toFixed(2)}%) · juros ${brl(tarde.juros)} · no teto: ${tarde.multaNoTeto}`);
+  console.log(confere("multa de 60 dias", tarde.multa, 9397));
+
+  // 61 dias: 20,13% → trava em 20%.
+  const teto = guiaVencida({ principal: 47459, diasDeAtraso: 61, selicAcumulada: 0.01 });
+  console.log(`   61 dias .................... multa ${brl(teto.multa)} (${(teto.pctMulta * 100).toFixed(2)}%) · no teto: ${teto.multaNoTeto}`);
+  console.log(confere("multa travada em 20%", teto.multa, 9492));
+
+  if (cedo.juros === 0 && !tarde.multaNoTeto && teto.multaNoTeto) {
+    passou++;
+    console.log("   ✅ juros zero no mês do vencimento · a multa trava no 61º dia, não no 60º");
+  } else {
+    falhou++;
+    erros.push("G11: a mecânica de multa/juros não bate");
+    console.log("   ❌ a mecânica não bate");
+  }
+  console.log("   🔑 Pago dentro do mês do vencimento os JUROS SÃO ZERO — só a multa corre.");
+  console.log("      O 1% cravado do mês do pagamento substitui a Selic daquele mês.");
+  console.log("   ⚠️  Não existe multa MÍNIMA de mora. Os R$50 que se ouve falar são de");
+  console.log("      PGDAS-D entregue em atraso — acessória, e independe de ter imposto.");
+  console.log("   ⏳ A série da Selic é dado, não lógica: entra por parâmetro.\n");
 }
 
 console.log("✅ LACUNAS RESOLVIDAS em 14/09, por fonte primária:\n");

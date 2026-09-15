@@ -131,8 +131,10 @@ export const PREVIDENCIA = {
  * deduzir** — é a única peça do motor ainda sem fonte primária.
  */
 export const IRRF = {
-  fonte: 'Modal "Tabela do IRRF" na plataforma do líder, conta real, capturado 14/09',
-  confianca: "🟡 tela de concorrente — não ratificado em fonte primária",
+  fonte: "Lei 9.250/1995 art. 3º, 3º-A e 4º · Lei 15.270/2025 · ratificado em 14/09",
+  confianca: "🟢 texto legal primário (era 🟡 de tela de concorrente até 14/09)",
+
+  /** A tabela progressiva. 🔑 As faixas NÃO foram alteradas pela Lei 15.270/2025. */
   faixas: [
     { ate: 2428.8, aliquota: 0, deduzir: 0 },
     { ate: 2826.65, aliquota: 0.075, deduzir: 182.16 },
@@ -140,6 +142,47 @@ export const IRRF = {
     { ate: 4664.68, aliquota: 0.225, deduzir: 675.49 },
     { ate: Infinity, aliquota: 0.275, deduzir: 908.73 },
   ],
+
+  /**
+   * 🔴 O DESCONTO SIMPLIFICADO MENSAL — e ele quase sempre vence o INSS.
+   *
+   * `25% do teto da faixa de alíquota zero` = 25% × 2.428,80 = **R$ 607,20**
+   * (Lei 9.250/1995 art. 4º §2º). A fonte pagadora é obrigada a usar a
+   * dedução MAIS BENÉFICA ao beneficiário: o maior entre o INSS retido e este
+   * valor fixo.
+   *
+   * ⚠️ Para o nosso sócio isso inverte a conta: com pró-labore de R$3.360 o
+   * INSS é R$369,60 e o simplificado é R$607,20 — vence o simplificado, e a
+   * base cai de R$2.990,40 para R$2.752,80. **Eu estava deduzindo só o INSS.**
+   */
+  descontoSimplificado: 607.2,
+
+  /**
+   * 🔴 O REDUTOR DO ART. 3º-A — a peça que a tela do líder não mostra.
+   *
+   * A Lei 15.270/2025 **não mexeu nas faixas**. Ela criou um redutor mensal
+   * decrescente, aplicado DEPOIS da tabela, e que zera o imposto até R$5.000:
+   *
+   *   rendimento ≤ 5.000,00 ......... redutor de até R$ 312,89, limitado ao
+   *                                    imposto devido (ou seja: zera)
+   *   5.000,01 a 7.350,00 ........... 978,62 − (0,133145 × rendimento)
+   *   acima de 7.350,00 ............. sem redutor
+   *
+   * 🔑 O redutor incide sobre o **rendimento bruto**, não sobre a base. E vale
+   * na RETENÇÃO MENSAL, não só no ajuste anual.
+   *
+   * ⚠️ Consequência direta pro produto: o pró-labore de 28% que a nossa
+   * persona usa para segurar o Anexo III (R$3.360 sobre R$12.000) passa a ter
+   * **IRRF de R$ 0,00**. A calculadora do líder cobra R$93,76 e a tela dele
+   * sugere R$54,40 — as duas estão desatualizadas.
+   */
+  redutor: {
+    tetoIsencao: 5000,
+    valorAteIsencao: 312.89,
+    tetoRampa: 7350,
+    rampaBase: 978.62,
+    rampaCoef: 0.133145,
+  },
 };
 
 /**

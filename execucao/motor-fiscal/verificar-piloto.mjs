@@ -22,6 +22,7 @@ import {
 } from "./piloto-pro-labore.mjs";
 
 import { fatorRDeCompetencias, aliquotaEfetiva } from "./apurador.mjs";
+import { todos } from "./_afirmar.mjs";
 import { FATOR_R, PREVIDENCIA } from "./_tabelas.mjs";
 
 let passaram = 0;
@@ -478,13 +479,22 @@ titulo("G-P4 · A DATA DA VIRADA (o achado do P01, virado em número)");
     "a projeção acaba no Anexo III (a janela rola e os meses ruins saem)",
     proj.linha[proj.linha.length - 1].anexo === "III"
   );
-  ok(
-    "🔑 e o Fator R sobe monotonicamente enquanto a janela rola",
-    (() => {
-      const frs = proj.linha.map((l) => l.fatorR).filter((x) => x != null);
-      return frs.every((v, i) => i === 0 || v >= frs[i - 1] - 1e-12);
-    })()
-  );
+  // 🔴 ESTE TESTE JÁ PASSOU A VAZIO EM 15/09 — o campo é `fr`, não `fatorR`,
+  // e `undefined` sumia no `.filter()`, deixando `every()` sobre lista vazia.
+  // Agora a afirmação declara quantos casos espera, e zero derruba.
+  {
+    const frs = proj.linha.map((l) => l.fatorR).filter((x) => x != null);
+    const r = todos(
+      frs,
+      (v, i) => i === 0 || v >= frs[i - 1] - 1e-12,
+      12 // 🔑 o número que torna a afirmação honesta
+    );
+    ok(
+      "🔑 e o Fator R sobe monotonicamente enquanto a janela rola",
+      r.ok,
+      r.motivo ?? `${r.avaliados} competências comparadas`
+    );
+  }
 }
 
 {

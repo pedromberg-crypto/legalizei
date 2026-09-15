@@ -1,5 +1,8 @@
 # Memory Index — Legalize
 
+- [🔴 RETOMADA: os 2 motores fiscais duplicados](legalize-dois-motores-fiscais-duplicados.md) — 14/09, pedido do Pedro: 7 de 7 constantes duplicadas (so nao quebrou porque coincidem) e `brl()` com unidades diferentes nos dois — errar por 100x passa em revisao.
+- [Estado recorrente de CNPJ: derivado nao se guarda](legalize-estado-recorrente-cnpj.md) — 14/09: 3 telas com 3 faturamentos viraram 1 fonte. O extrato inteiro pegou 2 bugs que teste de um mes nao pega, um deles dobrando o imposto.
+
 - [O apurador fiscal existe e bate ao centavo](legalize-motor-fiscal-apurador-existe.md) — 14/09: `execucao/motor-fiscal/`, 18 conferencias. As 3 lacunas fecharam por fonte primaria; a L2 DIMINUIU o escopo. E a pesquisa errou o DAS que o motor acerta — so o recibo fala de arredondamento.
 
 - [O prototipo Next.js NAO descreve mais o Flutter](legalize-prototipo-nextjs-nao-descreve-flutter.md) — 14/09: 2 erros meus no mesmo dia por ler a fonte errada com confianca de fonte certa. Codigo do E6.1 e real (AWS manda e-mail), e os campos internos nao existem no app.

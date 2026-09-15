@@ -167,7 +167,42 @@ Três funções vivem **só** no `fiscal.ts` e são exatamente as que faltam nas
 - `naBorda(folhaPct)` — o aviso de 28-30%
 - `custoProLabore(proLabore, cltRemun)` — INSS do sócio **consumindo a folga do teto por CLT**
 
-⚠️ **Duas fontes da mesma verdade é como nasce divergência de centavo em produção.** Decidir: portar as três pro apurador e deixar o `fiscal.ts` só com custo de abertura, ou o contrário. **Não fazer as duas coisas.**
+### 📏 A duplicação, medida em 14/09
+
+**7 de 7 constantes fiscais existem nos dois arquivos, com o mesmo valor:**
+
+| `fiscal.ts` | `motor-fiscal/` |
+|---|---|
+| `SALARIO_MIN: 1621` | `PREVIDENCIA.SALARIO_MINIMO` |
+| `TETO_INSS: 8475.55` | `PREVIDENCIA.TETO_INSS` |
+| `INSS_ALIQ: 0.11` | `PREVIDENCIA.ALIQUOTA_SOCIO` |
+| `FATOR_R_LIMIAR: 0.28` | `FATOR_R.LIMIAR` |
+| `FATOR_R_MARGEM: 0.3` | `FATOR_R.MARGEM` |
+| `ANEXO_III: 0.06` | `FAIXAS.III[0].nominal` |
+| `ANEXO_V: 0.155` | `FAIXAS.V[0].nominal` |
+
+🔑 **Ainda não quebrou porque os valores coincidem.** Basta a lei mudar um deles — e o salário mínimo muda **todo janeiro** — para os dois lados divergirem em silêncio.
+
+### 🔴 E tem uma armadilha pior que duplicação: `brl()`
+
+As duas existem, com o mesmo nome e a mesma finalidade, e **unidades diferentes**:
+
+| chamada | `fiscal.ts` | `motor-fiscal/` |
+|---|---|---|
+| `brl(474.59)` | **"R$ 475"** ← reais, e sem centavos por padrão | "R$ 4,75" |
+| `brl(47459)` | "R$ 47.459" | **"R$ 474,59"** ← centavos |
+
+Importar a errada erra por **100×**, e o TypeScript não acusa: as duas assinaturas aceitam `number`. É o tipo de bug que passa em revisão e aparece na fatura do cliente.
+
+### 🏷️ E uma constante com nome errado
+
+`fiscal.ts` tem `IRRF_ISENCAO: 5000 // isenção efetiva/mês (Lei 15.270/2025)`.
+
+Depois da pesquisa de 14/09 sabemos que **não é isenção**: R$5.000 é o **teto do rendimento que o redutor zera**, e acima disso há uma rampa até R$7.350. O nome descreve um mecanismo que não existe — e quem ler vai implementar uma faixa isenta que a lei não criou.
+
+### O que decidir na volta
+
+Portar as três funções órfãs (`proLaboreOtimo`, `naBorda`, `custoProLabore`) pro apurador e deixar o `fiscal.ts` só com **custo de abertura** — que é papel legítimo e não conflita. Ou o inverso. **Não fazer as duas coisas.**
 
 ---
 

@@ -86,6 +86,17 @@ Com receita fixa em R$18.000, a sugestão vai R$5.400 → **R$7.021** (meses 13-
 **Por que importa:** o cliente vê o pró-labore dele triplicar e depois cair a um terço **sem nada ter mudado no faturamento**. É exatamente o tipo de coisa que destrói confiança no automático.
 🔴 **Decisão aberta (Pedro):** suavizar a sugestão (média móvel, ou piso móvel que só sobe) é decisão de produto, não de motor. Suavizar custa precisão fiscal; não suavizar custa confiança.
 
+## M-011 · A suspeita de agregação: procurada, não encontrada — mas o instinto estava certo
+**15/09** · ✅ auditado · **Quem levantou:** o Pedro — *"parece que em parte do seu cálculo você passa a ignorar um montante de vários meses em vez de manter o controle mês a mês."*
+
+Nasceu `auditar-agregacao.mjs`, que recomputa **na unha** e sem chamar o motor: os meses da janela, a soma da receita, a soma da folha, e se o valor sugerido produz **exatamente** o alvo ou passa dele. Roda nos **dois** caminhos — pilotado e real —, porque auditar só o pilotado seria auditar o caso que não dói.
+
+**Resultado: 94 decisões, 5 vidas, nenhuma divergência.** A janela tem os meses certos, as somas batem, nenhum valor sugerido ultrapassa o teto absoluto (`30% × receita da janela`), e nenhum deixa a razão acima do alvo.
+
+🔑 **Mas a percepção tinha causa real, e não era ruído:** os valores altos **são** derivados de agregado. `X = alvo × receita de 12 meses − folha já paga` cobra, num mês, o déficit de doze. É correto para uma razão retroativa e **não é um valor mensal** — e exibi-lo num campo mensal foi exatamente o **M-004** (o R$72.169). O instinto do Pedro e o defeito do M-004 são a mesma coisa vista de dois lados.
+
+⚠️ **E os dois "12 meses" do motor NÃO são o mesmo conjunto:** o RBT12 (art. 24) exclui o mês corrente e vira média × 12 antes do 13º; a janela do Fator R (art. 26) inclui o mês que o piloto está decidindo. No 8º mês da P01 dão **R$154.285,71** e **R$108.000,00**. Trocar um pelo outro é o erro que esta auditoria existe para pegar.
+
 ---
 
 ## 🔴 Dívidas que estes achados deixaram

@@ -357,7 +357,7 @@ export const VIDAS = [
     }),
     porque:
       "Contrato mensal fixo com um cliente só. A curva mais chata do conjunto, e por isso útil: se algo variar no cálculo dela, o erro é do motor, não do cenário.",
-    competencias: serie("2026-06", [
+    competencias: serie("2026-08", [
       ok(0, MIN),
       ok(7500, MIN),
       ok(7500, MIN),
@@ -401,7 +401,7 @@ export const VIDAS = [
     }),
     porque:
       "Muito ticket pequeno, todo dia, valor baixo. É o perfil que mais tende a achar que 'não precisa de contador', e o DAS dele é de dezenas de reais — testa se o arredondamento por tributo se comporta em valores pequenos, onde o centavo pesa proporcionalmente mais.",
-    competencias: serie("2026-07", [
+    competencias: serie("2026-10", [
       ok(0, MIN),
       ok(3200, MIN),
       ok(3450, MIN),
@@ -422,7 +422,7 @@ export const VIDAS = [
     }),
     porque:
       "Alta frequência e ticket baixo, com pico em dezembro e em datas comemorativas. Duas sócias. É a única categoria da taxonomia com UM CNAE só, então não há ambiguidade de enquadramento.",
-    competencias: serie("2026-04", [
+    competencias: serie("2026-07", [
       ok(0, MIN * 2),
       ok(11000, MIN * 2),
       ok(12500, MIN * 2),

@@ -295,8 +295,23 @@ export const SELIC = {
 /**
  * 🔑 O QUE ENTRA E O QUE NÃO ENTRA NO NUMERADOR DO FATOR R.
  *
- * Não é detalhe: a **CPP paga embutida no DAS** entra, e é justamente o que a
- * maioria dos sistemas ignora — é ela que ajuda a bater os 28%.
+ * 🔴 **A CPP embutida no DAS NÃO entra — corrigido em 15/09.** Este bloco
+ * afirmava o oposto (*"é ela que ajuda a bater os 28%"*, a "Leitura 1" do
+ * mercado) e sobreviveu à correção de 14/09, que entrou no comentário e no
+ * comportamento do `apurador.mjs` e **não entrou aqui**. O dado ficou mentindo
+ * por um dia, e induziu a erro quem o leu — inclusive eu, na conversa com o
+ * Pedro em 15/09.
+ *
+ * Res. CGSN 140/2018 art. 26 §2º I "a", literal: *"a título de encargos, o
+ * montante **efetivamente recolhido**: a) de Contribuição Patronal
+ * Previdenciária (**inclusive a recolhida dentro do Simples Nacional em
+ * relação ao Anexo IV**)"*. A norma **nomeia o Anexo IV**; o silêncio sobre o
+ * III e o V é vedação, não permissão. Captura literal em
+ * `pesquisa/fontes/2026-09-14-fechamento-motor-fiscal-LITERAL.md` §P2.
+ *
+ * 🔑 Errar aqui erra para o lado PERIGOSO: contar a CPP infla o numerador,
+ * o app recomenda pró-labore **menor** que o necessário, e o cruzamento
+ * eSocial × PGDAS-D rebaixa a empresa pro Anexo V **retroativamente**.
  *
  * ⚠️ Metade desta lista é de folha de colaborador (13º, férias, FGTS), que
  * está FORA do escopo por ora. Fica declarada porque a regra é a mesma e
@@ -309,7 +324,6 @@ export const FATOR_R_NUMERADOR = {
     "decimo-terceiro",
     "ferias-mais-um-terco",
     "fgts",
-    "cpp-embutida-no-das",
   ],
   naoEntra: [
     "distribuicao-de-lucros",
@@ -317,8 +331,12 @@ export const FATOR_R_NUMERADOR = {
     "pagamento-a-prestador-pj",
     "pat",
     "estagiario",
+    // 🔴 Só entra no Anexo IV, que está FORA DO ESCOPO. No III e no V, zero.
+    "cpp-embutida-no-das",
   ],
-  fonte: "produto/_matriz-dependencia.md (verificação 09/09) · Res. CGSN 140/2018 art. 26",
+  fonte:
+    "Res. CGSN 140/2018 art. 26 §2º I 'a' (literal) · " +
+    "pesquisa/fontes/2026-09-14-fechamento-motor-fiscal-LITERAL.md §P2",
   regimeDeCaixa: true,
 };
 

@@ -75,11 +75,39 @@ Ordem de autoridade. Quando dois discordam, manda o de cima.
 | Repartição por tributo, por faixa | ✅ | ✅ |
 | Alíquota efetiva com dedução | ✅ | ✅ |
 | **Exercitado por invariância** (faixas 1 e 2) | ✅ P09 | ✅ **P16, 15/09** |
-| **Testado contra documento real** | ✅ faixa 1 | ⛔ **nenhum, e segue nenhum** |
+| **Regra fechada por fonte oficial** | ✅ | ✅ LC 123 Anexo V + Res. CGSN 140/2018 |
+| **Convenção de arredondamento** | ✅ recibo real | ✅ **herdada do III** (mesmo código) |
+| Recibo de PGDAS-D em Anexo V | ✅ n/a | 🟡 não temos — e **não bloqueia** |
 
-### 🔑 As duas provas são coisas diferentes, e só uma delas fechou
+### 🔴 RECALIBRADO EM 15/09 — o recibo do Anexo V não era portão
 
-🔴 **Documento não se substitui por simulação, e a linha acima não finge que sim.** O Anexo V continua sem um único recibo de PGDAS-D. Nenhuma vida simulada muda isso, e nenhum invariante do `verificar-vidas.mjs` afirma valor de guia do V.
+A versão anterior desta seção marcava ⛔ na linha do documento e tratava o recibo de PGDAS-D em Anexo V como bloqueio. **Estava errado, e o Pedro derrubou com a pergunta certa:** *"se veio de fonte de governo é confiável desde que esteja atualizado."*
+
+Destrinchando o que compõe um DAS em Anexo V, e de onde cada peça vem:
+
+| Peça | Fonte | Precisa de recibo do V? |
+|---|---|---|
+| 6 faixas, nominal + parcela a deduzir | LC 123 Anexo V | não |
+| Repartição por tributo, por faixa | LC 123 / Manual PGDAS-D | não |
+| RBT12, inclusive empresa nova | Res. CGSN 140/2018 art. 24 | não |
+| Fator R, numerador e denominador | Res. CGSN 140/2018 art. 26 | não |
+| Convenção de arredondamento | recibo real **de Anexo III** | **já resolvido** |
+
+🔑 **O que derruba a exigência:** o arredondamento **não tem caminho próprio por anexo**. É o mesmo código, e o invariante 7 afirma exatamente isso — o DAS do V é soma de 6 parcelas arredondadas, igual ao III, que tem recibo. A diferença entre somar e multiplicar é de **1 centavo**, nunca de reais.
+
+⚠️ O recibo do V segue **desejável** (fecha a última dúvida sobre a repartição aplicada na prática) e passa a ser 🟡 *nice to have*, com o Mauro. Deixou de ser 🔴 bloqueio.
+
+### 📏 A RÉGUA DE PROVA, generalizada
+
+Cada pergunta tem um tipo de fonte que a fecha — e **só ela**:
+
+| Pergunta | Quem fecha | Quem NÃO fecha |
+|---|---|---|
+| **Qual é a regra?** | fonte oficial vigente (lei, resolução, manual) | documento de um caso; conta do líder |
+| **Como o órgão executa na prática?** | documento emitido (recibo, guia, protocolo) | a lei, que é silenciosa sobre arredondamento |
+| **O que o concorrente faz?** | evidência — **nunca** autoridade | — |
+
+🔴 **Regra provada por fonte oficial não vira 🟡 por falta de documento daquele caso específico.** Foi o erro de 14/09 no ISS retido (corrigido pelo Pedro) e o de 15/09 aqui. Duas vezes a mesma confusão entre *"não temos recibo deste caso"* e *"não sabemos a regra"*.
 
 ✅ **O que fechou em 15/09 foi a outra coluna: o comportamento.** Até então o Anexo V só tinha rodado na **1ª faixa** (pelo P01), e a 1ª faixa é justamente onde a parcela a deduzir é **zero** — a efetiva é igual à nominal, e metade da tabela nunca era tocada. A vida do **P16** (consultoria em TI, RBT12 de R$0 a R$359 mil em 22 competências) atravessa os R$180 mil e faz a parcela de R$4.500 morder.
 
@@ -109,9 +137,11 @@ Nas outras 8 bordas (f1→f2 até f4→f5, nos dois anexos) a efetiva é contín
 
 É propriedade da **tabela da LC 123**, não do motor: os números de `_tabelas.mjs` estão conferidos contra a lei, e a quebra aparece idêntica nos dois anexos. Fica **registrado e não vira regra** — está a 10× do teto do ME (R$360 mil) e ainda acima do teto do EPP na prática do nosso produto. O invariante afirma exatamente isso: a quebra é **só** na 6ª faixa. Se um dia aparecesse numa borda de baixo, seria erro de digitação na tabela, e o teste derruba a rodada.
 
-### O que ainda falta, e não tem atalho
+### O que ainda falta — e o que só parecia faltar
 
-⛔ **Um recibo de PGDAS-D de empresa em Anexo V.** É a única coisa que fecha a última linha. Fonte provável: o Mauro. Até lá, a régua do motor no V é 🟢 na regra e 🟡 na prova documental — e o `verificar-vidas.mjs` diz isso no próprio cabeçalho.
+🟡 **Um recibo de PGDAS-D de empresa em Anexo V.** Desejável, não bloqueante (ver a recalibragem acima). Fonte provável: o Mauro.
+
+🔴 **O que de fato faltava não era prova, era CAMADA.** O motor sabia apurar o Anexo V e não sabia **evitá-lo**. Isso virou o `piloto-pro-labore.mjs` em 15/09 — ver §9.
 
 ---
 
@@ -292,7 +322,7 @@ Os itens 2, 3 e 4 da lista original **fecharam**. Sobrou isto:
 
 1. 🔴 **Resolver os dois motores** (§6) — segue sendo o débito ativo. `proLaboreOtimo`, `naBorda` e `custoProLabore` só existem no `fiscal.ts`.
 2. 🔴 **Plugar em um cliente.** O modelo é agnóstico de propósito, mas enquanto ninguém o chama, as três telas continuam com mocks contraditórios.
-3. ⛔ **Anexo V e faixas 2-6 sem prova real.** A tabela está implementada e conferida contra a lei; falta uma **segunda empresa** que exercite.
+3. ✅ **Anexo V além da faixa 1 — FECHADO em 15/09** pela vida do P16, e a exigência de recibo foi **recalibrada** no mesmo dia (§2): a regra fecha por fonte oficial, e a convenção de arredondamento é herdada do III. O recibo virou 🟡, não ⛔.
 4. ⏳ **4 lacunas**, e só uma incomoda:
 
 | | Lacuna | Peso |
@@ -301,6 +331,36 @@ Os itens 2, 3 e 4 da lista original **fecharam**. Sobrou isto:
 | **L7b** | Feriado **municipal** de BH desloca guia **federal**? | pergunta pro Ademar |
 | **L9b** | De onde buscar a Selic (a fórmula está fechada) | é fonte, não regra |
 | **L5** | CBS/IBS no Simples (LC 214/2025) | horizonte 2027 |
+
+## 9 · 🛩️ O PILOTO DE PRÓ-LABORE — nasceu em 15/09
+
+> Decisão do Pedro: *"não é sobre avisar cedo ou tarde, é sobre também aplicar a regra de ajuste automático de pró-labore desde o início para os usuários, eles não precisam saber sobre isso."*
+
+`piloto-pro-labore.mjs` + `verificar-piloto.mjs`, **41 conferências**. O apurador olha pra trás; o piloto olha pra frente e decide **quanto pagar agora** pra empresa seguir no Anexo III depois.
+
+**Por que tinha que ser ação e não alerta:** o Fator R lê os 12 meses **anteriores**, então o pró-labore de hoje só produz efeito em `m+1 … m+12`. Medido no P01: quem corrige em set/2026 só volta ao III em **ago/2027**, 11 meses pagando 15,5% com a folha já certa. Alerta chega tarde **por construção**.
+
+**Em quem encosta:** só nos **15** CNAEs `fator-r-dinamico`. Nos **65** `III-fixo` devolve `atua: false` e **proíbe a tela de falar em 28%**. Nos **7** `requer-revisao`, se recusa.
+
+### 🔴 Os dois achados que os testes produziram
+
+**(1) Manutenção ≠ recuperação.** A 1ª versão mandou pagar **R$72.169 num mês** — matematicamente certo, e insano: tentava consertar um ano de atraso numa competência. Agora separa `sugerido` (o sustentável, `alvo × receita do mês`) de `paraVirarJa` (quitar o déficit), e **nunca funde os dois num número só**.
+
+**(2) Pagar o sustentável compensa em 100% da faixa do ME.** Varredura de receita R$2 mil-30 mil × RBT12 R$24 mil-360 mil: pior saldo **+R$163/mês**. 🔑 **É isso que autoriza pilotar no automático sem perguntar** — dentro do nosso escopo a resposta nunca é "não". O teste falha se um dia deixar de ser verdade. O que pode não valer é o **salto** da recuperação, e aí o alerta é de revisão humana.
+
+### ⚠️ A fronteira com a trava de persona
+
+A trava diz **INFORMAR, nunca TUTELAR**. Ajustar sozinho não é tutela: tutelar é reter decisão que é do cliente; isto é executar o serviço contratado. O número é sempre explicável na tela e o cliente pode sobrepor — o que não fazemos é **exigir que ele decida** pra conta sair certa.
+
+### Os 5 limites declarados (`LIMITES_DO_PILOTO`)
+
+| | O quê | Dono |
+|---|---|---|
+| **PP1** | Decide o valor; não sabe se foi **pago** (regime de caixa) | produto |
+| **PP2** | Usa a receita **já emitida**, não a esperada — a margem de 30% compra essa folga | produto |
+| **PP3** | Não compara pró-labore contra distribuição de lucro (Lei 15.270/2025) | Mauro |
+| **PP4** | Os 7 CNAEs `requer-revisao` não são pilotáveis | Larissa |
+| **PP5** | Folha de colaborador não entra (nenhuma persona tem funcionário) | produto |
 
 ## Links
 [[PERSONA]] · [[PENDENCIAS]] · [[2026-09-14-lacunas-motor-fiscal-lidas]] · [[anexo-iii-simples]] · [[anexo-v-simples]] · [[fiscal-simples-bh-2026]] · [[aliquota-e-enquadramento]] · [[equacao-viva-camada-2-vars-cnpj]] · [[FUNCIONALIDADES]]

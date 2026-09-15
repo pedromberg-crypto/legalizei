@@ -20,7 +20,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { retratoDoMes, extrato, folgaDoFatorR } from "./_modelo.mjs";
+import { retratoDoMes, extrato, folgaDoFatorR, competencia } from "./_modelo.mjs";
 import { VIDAS, SEM_VIDA } from "./vidas.mjs";
 import { brlDeCentavos } from "../motor-fiscal/apurador.mjs";
 
@@ -84,29 +84,81 @@ console.log("\n── 1 · O invariante dos 65 de 87: CNAE III-fixo nunca vira A
   );
 }
 
-/* ── 2 · O Fator R caindo pro V — o ramo nunca testado ───────────────────── */
-console.log("\n── 2 · P01: o Fator R caindo pro Anexo V, e voltando\n");
+/* ── 2 · O Fator R caindo pro V, e o retrovisor ──────────────────────────── */
+console.log("\n── 2 · P01: o Fator R caindo pro Anexo V — e ele é RETROVISOR\n");
 {
   const p01 = retratos.find((r) => r.vida.id === "P01");
+  const comMovimento = p01.linhas.filter((l) => l.das.total > 0);
   const comV = p01.linhas.filter((l) => l.anexo === "V");
-  const comIII = p01.linhas.filter((l) => l.anexo === "III" && l.das.total > 0);
 
-  for (const l of p01.linhas.filter((l) => l.das.total > 0)) {
+  for (const l of comMovimento) {
     const fr = l.fatorR?.fr;
     console.log(
-      `   ${l.mes}  receita ${brlDeCentavos(l.receita).padStart(12)}  folha ${fr ? (fr * 100).toFixed(1).padStart(5) : "  —  "}%  → Anexo ${String(l.anexo).padEnd(3)}  DAS ${brlDeCentavos(l.das.total).padStart(11)}`
+      `   ${l.mes}  receita ${brlDeCentavos(l.receita).padStart(12)}  folha ${fr ? (isFinite(fr) ? (fr * 100).toFixed(1).padStart(5) : "    ∞") : "  —  "}%  → Anexo ${String(l.anexo).padEnd(3)}  DAS ${brlDeCentavos(l.das.total).padStart(11)}`
     );
   }
 
   invariante("ele CAI no Anexo V enquanto se paga o mínimo", comV.length > 0, `${comV.length} competências`);
-  invariante("e VOLTA pro III quando corrige o pró-labore", comIII.length > 0, `${comIII.length} competências`);
 
-  const dasV = comV.reduce((s, l) => s + l.das.total, 0) / (comV.length || 1);
-  const dasIII = comIII.reduce((s, l) => s + l.das.total, 0) / (comIII.length || 1);
+  // 🔴 A CORREÇÃO DE 15/09. Este bloco afirmava "e VOLTA pro III quando corrige
+  // o pró-labore", e **passava pelo motivo errado**: o único mês em III era
+  // maio/2026, onde o Fator R é INFINITO porque não havia receita anterior —
+  // nada a ver com correção nenhuma. O Pedro pediu a projeção do mês seguinte e
+  // o erro apareceu. Teste que passa pelo motivo errado é pior que teste que
+  // falha: ele cobre o buraco em vez de mostrar.
+
+  // (a) A razão infinita merece afirmação PRÓPRIA — é o que salvou fev/2026 da
+  //     persona zero de virar Anexo V indevidamente.
+  const infinito = comMovimento.filter((l) => l.fatorR && !isFinite(l.fatorR.fr));
   invariante(
-    "e o DAS médio no V é mais que o dobro do DAS no III",
-    dasV > dasIII * 2,
-    `${brlDeCentavos(Math.round(dasV))} × ${brlDeCentavos(Math.round(dasIII))}`
+    "receita anterior zero com folha paga → razão infinita → Anexo III",
+    infinito.length > 0 && infinito.every((l) => l.anexo === "III"),
+    "é o mesmo caso de fev/2026 da persona zero, que a Receita cobrou a 6%"
+  );
+
+  // (b) 🔑 O RETROVISOR: ele corrige o pró-labore em setembro e o mês seguinte
+  //     CONTINUA no Anexo V. O Fator R olha os 12 meses anteriores, então
+  //     consertar hoje não conserta hoje.
+  const correcaoEm = "2026-09";
+  const depoisDaCorrecao = p01.linhas.filter((l) => l.mes > correcaoEm && l.das.total > 0);
+  invariante(
+    "e corrigir o pró-labore NÃO devolve o anexo no mês seguinte",
+    depoisDaCorrecao.length > 0 && depoisDaCorrecao.every((l) => l.anexo === "V"),
+    "o Fator R olha 12 meses pra trás — consertar hoje não conserta hoje"
+  );
+
+  // (c) Mas a correção EMPURRA o Fator R pra cima, mês a mês. Projetando com o
+  //     pró-labore corrigido, ele volta — e o teste mede em quantos meses.
+  let s = [...p01.vida.competencias];
+  let [ano, mes] = ["2026", 11];
+  let voltouEm = null;
+  const trilha = [];
+  for (let i = 0; i < 24 && !voltouEm; i++) {
+    const m = `${ano}-${String(mes).padStart(2, "0")}`;
+    s = [...s, competencia({ mes: m, receita: 18000, proLaboreDeclarado: 5400, proLaborePago: 5400 })];
+    const r = retratoDoMes({ empresa: p01.vida.empresa, competencias: s, mesAlvo: m });
+    trilha.push({ mes: m, fr: r.fatorR.fr, anexo: r.anexo });
+    if (r.anexo === "III") voltouEm = m;
+    mes++;
+    if (mes > 12) {
+      mes = 1;
+      ano = String(Number(ano) + 1);
+    }
+  }
+
+  const subiuSempre = trilha.every((t, i) => i === 0 || t.fr >= trilha[i - 1].fr - 0.02);
+  invariante("mas o Fator R sobe mês a mês depois dela", subiuSempre, `de ${(trilha[0].fr * 100).toFixed(1)}% a ${(trilha[trilha.length - 1].fr * 100).toFixed(1)}%`);
+  invariante(
+    "e ele volta ao Anexo III — só que MUITO depois",
+    voltouEm !== null && trilha.length > 6,
+    voltouEm ? `corrigiu em ${correcaoEm}, voltou em ${voltouEm} — ${trilha.length} competências` : "não voltou em 24 meses"
+  );
+
+  const dasV = comV.reduce((s2, l) => s2 + l.das.total, 0) / (comV.length || 1);
+  invariante(
+    "e o DAS no V é mais que o dobro do DAS no III",
+    dasV > 216000, // o III na faixa 1 daria 18.000 × 6% = R$1.080,00
+    `${brlDeCentavos(Math.round(dasV))} × R$ 1.080,00`
   );
 }
 

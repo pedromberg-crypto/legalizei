@@ -35,6 +35,8 @@ const brl = (r) =>
 
 let problemas = [];
 let checagens = 0;
+let recuperacoes = 0;
+let maiorDeficit = 0;
 
 const dinamicas = VIDAS.filter((v) => v.empresa.grupoAnexo.startsWith("fator-r"));
 
@@ -149,6 +151,44 @@ for (const vida of dinamicas) {
         );
       }
 
+      /* ── 3b · 🔑 O AGREGADO VAZA PRO CAMPO MENSAL? ────────────────────
+       * ESTA é a checagem que responde a suspeita do Pedro de frente.
+       *
+       * Em `recuperacao` o déficit da janela é enorme — na P18 chega a
+       * dezenas de milhares. O contrato do motor é que esse número mora em
+       * `paraVirarJa`, e o `sugerido` (o campo que a tela trata como "pague
+       * isto este mês") fica preso ao sustentável. Se o sugerido passar
+       * disso, o agregado vazou — que é exatamente o M-004.                */
+      if (decisao.modo === "recuperacao") {
+        const tetoDoMensal = Math.max(
+          FATOR_R.MARGEM * receita,
+          PREVIDENCIA.SALARIO_MINIMO
+        );
+        if (decisao.sugerido > tetoDoMensal + 0.01) {
+          problemas.push(
+            `🔴 ${modo}/${vida.id} ${vida.competencias[i].mes}: em recuperação o sugerido ` +
+              `${brl(decisao.sugerido)} passou do sustentável ${brl(tetoDoMensal)} — ` +
+              `AGREGADO VAZANDO PRO CAMPO MENSAL`
+          );
+        }
+        // E o agregado tem que estar no campo dele, não sumido.
+        if (decisao.paraVirarJa == null) {
+          problemas.push(
+            `🔴 ${modo}/${vida.id} ${vida.competencias[i].mes}: recuperação sem \`paraVirarJa\` — ` +
+              `o déficit sumiu em vez de ir pro campo próprio`
+          );
+        } else {
+          maiorDeficit = Math.max(maiorDeficit, decisao.paraVirarJa);
+          if (decisao.paraVirarJa > tetoAbsoluto + 0.01) {
+            problemas.push(
+              `🔴 ${modo}/${vida.id} ${vida.competencias[i].mes}: paraVirarJa ` +
+                `${brl(decisao.paraVirarJa)} acima do teto absoluto ${brl(tetoAbsoluto)}`
+            );
+          }
+        }
+        recuperacoes++;
+      }
+
       /* ── 4 · O SUGERIDO PASSA DA RECEITA DO MÊS? ──────────────────────
        * Não é erro matemático, mas É sinal do que o Pedro descreveu: uma
        * exigência que só existe porque agrega meses. Fica registrado.     */
@@ -203,7 +243,12 @@ console.log(
 }
 
 console.log("─".repeat(104));
-console.log(`\n${checagens} decisões auditadas em ${dinamicas.length} vidas dinâmicas.\n`);
+console.log(
+  `\n${checagens} decisões auditadas em ${dinamicas.length} vidas dinâmicas ` +
+    `(caminho pilotado + caminho real).\n` +
+    `   ${recuperacoes} em modo \`recuperacao\`, com déficit de até ${brl(maiorDeficit)}` +
+    ` — e em NENHUMA esse número vazou para o campo mensal.\n`
+);
 
 if (!problemas.length) {
   console.log("✅ Nenhuma divergência de agregação. Janela, somas e alvo conferem na unha.\n");

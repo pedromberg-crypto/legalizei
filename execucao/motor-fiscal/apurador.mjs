@@ -653,7 +653,52 @@ export function custoTotalMensal({ receitaMes, das, proLabore }) {
 }
 
 /**
- * O DARF do pró-labore: INSS + IRRF, numa guia só.
+ * 🔴 O DARF DA FOLHA INTEIRA — e ele NÃO é `darfDoProLabore(soma)`.
+ *
+ * Achado em 15/09 rodando a P02 no rastro, a pedido do Pedro. O motor vinha
+ * somando o pró-labore dos sócios e calculando a guia **como se fosse uma
+ * pessoa só**: um teto de INSS, uma tabela progressiva de IRRF. Os dois erram,
+ * e erram para lados opostos:
+ *
+ *   P02 · 2 sócias × R$1.621 ... motor R$272,31 · correto R$356,62 (−R$84)
+ *   P11 · 4 sócios × R$3.500 ... motor R$3.617,19 · correto R$1.540,00 (+R$2.077)
+ *
+ * 🔑 **O INSS erra para MENOS** porque o teto é **da pessoa** (Lei 8.212/91
+ * art. 28 §5º): somar dois sócios faz a soma bater num teto que nenhum dos
+ * dois atingiu. E **o IRRF erra para MAIS**, muito, porque a tabela é
+ * progressiva **por beneficiário**: R$14.000 numa pessoa cai em faixa alta;
+ * R$3.500 em quatro pessoas não cai em faixa nenhuma.
+ *
+ * ⚠️ **O Fator R não é afetado** — ele usa a folha TOTAL, e total é o número
+ * certo lá. O erro é só na guia.
+ *
+ * 🔑 E isto é a mesma família do que o Pedro descreveu como *"ignorar um
+ * montante de vários meses"*: um agregado tratado como valor individual. Só
+ * que o eixo aqui é **pessoas**, não meses.
+ *
+ * @param socios lista `[{ proLabore, cltRemuneracao }]`, um item por sócio
+ *               que RECEBE pró-labore (quem só aporta capital não entra —
+ *               Lei 8.212/91 art. 12 V 'f')
+ */
+export function darfDaFolha({ socios = [] }) {
+  const porSocio = socios.map((s) =>
+    darfDoProLabore(s.proLabore || 0, s.cltRemuneracao || 0)
+  );
+
+  return {
+    inss: porSocio.reduce((t, d) => t + d.inss, 0),
+    irrf: porSocio.reduce((t, d) => t + d.irrf, 0),
+    total: porSocio.reduce((t, d) => t + d.inss + d.irrf, 0),
+    porSocio,
+    socios: socios.length,
+  };
+}
+
+/**
+ * O DARF do pró-labore de **UM** sócio: INSS + IRRF, numa guia só.
+ *
+ * 🔴 **É POR PESSOA.** Passar a folha somada de vários sócios aqui produz guia
+ * errada nos dois sentidos — ver `darfDaFolha` acima, que é quem soma.
  *
  * 🔑 **A ordem importa e é contraintuitiva:** o INSS sai primeiro e vira
  * DEDUÇÃO da base do IRRF. Quem calcula o IRRF sobre o pró-labore bruto cobra

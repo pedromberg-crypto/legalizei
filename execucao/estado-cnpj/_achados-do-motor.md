@@ -97,6 +97,37 @@ Nasceu `auditar-agregacao.mjs`, que recomputa **na unha** e sem chamar o motor: 
 
 ⚠️ **E os dois "12 meses" do motor NÃO são o mesmo conjunto:** o RBT12 (art. 24) exclui o mês corrente e vira média × 12 antes do 13º; a janela do Fator R (art. 26) inclui o mês que o piloto está decidindo. No 8º mês da P01 dão **R$154.285,71** e **R$108.000,00**. Trocar um pelo outro é o erro que esta auditoria existe para pegar.
 
+## M-012 · 🔴 A guia do pró-labore somava os sócios e cobrava como se fossem UM
+**15/09** · 🔴 **o mais grave do dia** · **Onde doeu:** `retratoDoMes` chamando `darfDoProLabore(folha somada)` · **Quem pegou:** 🔑 **a P02**, rodada a pedido do Pedro no modelo já validado
+
+O motor somava o pró-labore dos sócios e calculava a guia com **um** teto de INSS e **uma** tabela progressiva de IRRF. Os dois erram, e para lados opostos:
+
+| | motor antes | correto | erro |
+|---|---|---|---|
+| **P02** · 2 sócias × R$1.621 | R$ 272,31 | R$ 356,62 | **−R$ 84,31** |
+| **P11** · 4 sócios × R$3.500 | **R$ 3.617,19** | R$ 1.540,00 | **+R$ 2.077,19** |
+
+🔑 **O INSS erra para MENOS** porque o teto é da pessoa (Lei 8.212/91 art. 28 §5º): somar dois sócios faz a soma bater num teto que nenhum dos dois atingiu. **O IRRF erra para MAIS, muito**, porque a tabela é progressiva por beneficiário: R$14.000 numa pessoa cai em faixa alta; R$3.500 em quatro não cai em faixa nenhuma.
+
+⚠️ **O Fator R não era afetado** — ele usa a folha total, e total é o número certo lá. O erro era só na guia. Atingia **7 das 16 vidas** (P02, P04, P06, P09, P11, P13, P14, P18) e todo o escopo de 1 a 4 sócios.
+
+🔑 **É a mesma família do que o Pedro descreveu no M-011** — um agregado tratado como valor individual. Só que o eixo é **pessoas**, não meses. A suspeita dele estava certa; o eixo é que era outro.
+
+**Trava:** ✅ `darfDaFolha({ socios })` calcula sócio a sócio e soma no fim · `sociosComProLabore` na identidade · `darfDoProLabore` documentado como **por pessoa**.
+⚠️ **Premissa declarada:** rateio **igual** entre os sócios, que é o que as vidas descrevem e o que o app coleta. Rateio desigual não tem campo ainda.
+
+## M-013 · O invariante da P09 passava porque ENCODAVA o bug
+**15/09** · 🔴 grave · **Quem pegou:** o próprio conserto do M-012, ao quebrar o teste
+
+O `verificar-vidas.mjs` afirmava *"o INSS do P09 é ZERO — o CLT de R$9.000 já passou do teto"*, e passava verde. Só passava porque o motor tratava os dois sócios como uma pessoa e aplicava o CLT de um deles à soma. **O teste descrevia o defeito e o chamava de invariante.**
+
+O correto: o sócio **com** o CLT acima do teto não recolhe; o **outro** não tem CLT nenhum e recolhe normalmente. Zerar a guia inteira isentava quem não tinha direito.
+
+🔴 **Terceira vez hoje** que um teste passa pelo motivo errado (as outras: o `fr.fatorR` do M-002 e o invariante do Fator R corrigido em 15/09 de madrugada). **Padrão:** teste verde que afirma uma consequência sem afirmar a causa não protege nada.
+**Trava:** ✅ o invariante agora afirma os dois sócios separadamente, via `darf.porSocio`.
+
+⚠️ **Tensão de dados aberta:** o `personas-entrada-me.md` diz que na **P04** e na **P14** *administra só o titular* — e a Lei 8.212/91 art. 12 V 'f' diz que só quem administra recebe pró-labore. Mas as vidas pagam folha para 2 e 3 sócios. Não mexi no dado fiscal para não alterar Fator R sem decisão; fica registrado para o Pedro.
+
 ---
 
 ## 🔴 Dívidas que estes achados deixaram

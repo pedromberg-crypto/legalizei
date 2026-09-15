@@ -209,13 +209,29 @@ console.log("\n── 5 · CLT por fora: o teto do INSS é da PESSOA\n");
     const mes = r.linhas.find((l) => l.darf);
     console.log(`   ${id}  CLT de ${brlDeCentavos(clt * 100).padStart(11)}  → INSS do pró-labore ${brlDeCentavos(mes.darf.inss)}`);
   }
-  // O do P09 tem CLT de R$9.000, acima do teto de R$8.475,55.
+  // 🔴 CORRIGIDO EM 15/09 — E O INVARIANTE ANTIGO ENCODAVA UM BUG.
+  //
+  // Ele afirmava *"o INSS do P09 é ZERO porque o CLT de R$9.000 já passou do
+  // teto"*, e passava — mas só passava porque o motor tratava a folha dos DOIS
+  // sócios como se fosse uma pessoa só, aplicando o CLT de um deles à soma.
+  //
+  // O teto é da PESSOA (Lei 8.212/91 art. 28 §5º). O sócio que tem o CLT de
+  // R$9.000 não recolhe nada; o OUTRO sócio não tem CLT nenhum e recolhe
+  // normalmente sobre a parte dele. Zerar a guia inteira isentava quem não
+  // tinha direito à isenção.
   const p09 = retratos.find((r) => r.vida.id === "P09");
   const mesP09 = p09.linhas.find((l) => l.darf);
+  const socios = mesP09.darf.porSocio;
+
   invariante(
-    "o INSS do P09 é ZERO — o CLT de R$9.000 já passou do teto",
-    mesP09.darf.inss === 0 && mesP09.darf.cltConsumiuOTeto,
-    "cobrar INSS de quem já bate o teto seria cobrar duas vezes da mesma pessoa"
+    "o sócio COM CLT acima do teto não recolhe INSS (P09)",
+    socios[0].inss === 0 && socios[0].cltConsumiuOTeto,
+    "cobrar dele seria cobrar duas vezes da mesma pessoa"
+  );
+  invariante(
+    "🔴 mas o OUTRO sócio recolhe — o teto é da pessoa, não da empresa",
+    socios[1].inss > 0 && !socios[1].cltConsumiuOTeto,
+    "o invariante antigo zerava a guia inteira e isentava quem não tinha direito"
   );
 }
 

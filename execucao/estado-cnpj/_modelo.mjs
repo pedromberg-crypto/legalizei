@@ -44,6 +44,7 @@ import {
   rbt12De,
   fatorRDeCompetencias,
   darfDoProLabore,
+  darfDaFolha,
   vencimentoDe,
   anexoDoCnae,
   custoTotalMensal,
@@ -81,6 +82,25 @@ export function identidade({
    * que ninguém preenche.
    */
   cltDoSocio = 0,
+  /**
+   * 🔴 QUANTOS SÓCIOS RECEBEM PRÓ-LABORE. Nasceu em 15/09, quando a P02
+   * revelou que o motor calculava a guia da folha somada como se fosse uma
+   * pessoa só — errando R$84 para menos na P02 e R$2.077 para MAIS na P11.
+   *
+   * O teto do INSS é da pessoa e a tabela do IRRF é progressiva por
+   * beneficiário, então a guia **tem** que ser calculada sócio a sócio e
+   * somada depois (`darfDaFolha`).
+   *
+   * ⚠️ **Só entra quem ADMINISTRA.** Sócio que apenas aportou capital não é
+   * segurado obrigatório e não recebe pró-labore (Lei 8.212/91 art. 12 V 'f').
+   * O dado vem da qualificação 49 × 22 da constituição.
+   *
+   * ⚠️ **PREMISSA DECLARADA:** o rateio da folha entre os sócios é assumido
+   * **igual**. É o que as vidas descrevem (a P11 tem 25% para cada), e é o que
+   * o app coleta hoje. Rateio desigual existe na vida real e **ainda não tem
+   * campo** — quando tiver, é aqui que entra.
+   */
+  sociosComProLabore = 1,
 }) {
   return {
     cnpj,
@@ -90,6 +110,7 @@ export function identidade({
     grupoAnexo,
     municipio,
     cltDoSocio,
+    sociosComProLabore,
   };
 }
 
@@ -192,7 +213,23 @@ export function retratoDoMes({ empresa, competencias, mesAlvo }) {
   // ── O DARF do pró-labore ────────────────────────────────────────────────
   const darf =
     atual.proLaboreDeclarado > 0
-      ? darfDoProLabore(atual.proLaboreDeclarado, empresa.cltDoSocio ?? 0)
+      ? darfDaFolha({
+          // 🔴 SÓCIO A SÓCIO, e só somado no fim. Achado da P02 em 15/09: a
+          // guia calculada sobre a folha somada erra nos dois sentidos, porque
+          // o teto do INSS é da pessoa e a tabela do IRRF é por beneficiário.
+          //
+          // ⚠️ Rateio IGUAL é premissa declarada (ver `sociosComProLabore`), e
+          // o CLT é de UM sócio só — que é como o app capta hoje, no C2.
+          socios: Array.from(
+            { length: Math.max(1, empresa.sociosComProLabore ?? 1) },
+            (_, i) => ({
+              proLabore:
+                atual.proLaboreDeclarado /
+                Math.max(1, empresa.sociosComProLabore ?? 1),
+              cltRemuneracao: i === 0 ? empresa.cltDoSocio ?? 0 : 0,
+            })
+          ),
+        })
       : null;
 
   // ── 🛩️ O PILOTO: o que deveria sair de pró-labore NESTE mês ─────────────

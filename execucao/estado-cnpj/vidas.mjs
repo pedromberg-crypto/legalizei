@@ -125,6 +125,7 @@ export const VIDAS = [
       cnaePrincipal: "7410-2/03",
       grupoAnexo: "fator-r-dinamico(III<->V, limiar 28%)",
       cltDoSocio: 6000, // a Sandra tem emprego CLT por fora
+      sociosComProLabore: 2,
     }),
     porque:
       "Projeto de interiores é entrada + parcelas na entrega, então a receita vem em degrau. Duas sócias somam pró-labore, e a Sandra tem CLT de R$6.000 por fora — o INSS dela só incide sobre a folga até o teto. É a funcionalidade 4.6 num caso inteiro.",
@@ -177,6 +178,7 @@ export const VIDAS = [
       dataAberturaCnpj: "2026-02-02",
       cnaePrincipal: "7311-4/00",
       grupoAnexo: "fator-r-dinamico(III<->V, limiar 28%)",
+      sociosComProLabore: 2,
     }),
     porque:
       "🔴 A ÚNICA COM ISS RETIDO DE VERDADE, e não por invenção: o **art. 24 da Lei Municipal de BH 8.725/2003 obriga a retenção sobre agência de publicidade**. Os clientes dela em BH retêm; os de fora não podem (LC 116 art. 3º). Agência vive de fee mensal recorrente mais projeto avulso, então a receita é estável com picos.",
@@ -222,6 +224,7 @@ export const VIDAS = [
       dataAberturaCnpj: "2026-04-01",
       cnaePrincipal: "7490-1/01",
       grupoAnexo: "fator-r-dinamico(III<->V, limiar 28%)",
+      sociosComProLabore: 3,
     }),
     porque:
       "Tradução é volume constante de ticket baixo — a curva mais lisa do conjunto. Com 3 sócios o pró-labore soma três vezes o mínimo, e isso sozinho já segura o Fator R acima de 28% sem ninguém planejar. É o caso em que o anexo 'dá certo por acidente'.",
@@ -295,6 +298,7 @@ export const VIDAS = [
       cnaePrincipal: "8230-0/01",
       grupoAnexo: "III-fixo",
       cltDoSocio: 9000, // acima do teto do INSS: o pró-labore nao gera contribuicao
+      sociosComProLabore: 2,
     }),
     porque:
       "🔴 A ÚNICA QUE PASSA DE FAIXA. Eventos corporativos escalam rápido, e o RBT12 dela cruza os R$180 mil — a persona zero nunca passou de R$54 mil, então a **parcela a deduzir** nunca tinha sido exercitada. E o sócio tem CLT de R$9.000, acima do teto do INSS: o pró-labore dele não gera contribuição nenhuma.",
@@ -345,6 +349,7 @@ export const VIDAS = [
       dataAberturaCnpj: "2026-03-01",
       cnaePrincipal: "7733-1/00",
       grupoAnexo: "III-fixo",
+      sociosComProLabore: 4,
     }),
     porque:
       "🔑 O TETO DE SÓCIOS: quatro pró-labores mínimos somam R$6.484/mês, e isso sozinho é mais da metade do faturamento dela. Testa se o numerador aguenta e se o custo total por sócio aparece certo. Aluguel tem receita estável, então a variação vem toda da folha.",
@@ -387,6 +392,7 @@ export const VIDAS = [
       dataAberturaCnpj: "2026-04-10",
       cnaePrincipal: "9602-5/01",
       grupoAnexo: "III-fixo",
+      sociosComProLabore: 2,
     }),
     porque:
       "Alta frequência e ticket baixo, com pico em dezembro e em datas comemorativas. Duas sócias. É a única categoria da taxonomia com UM CNAE só, então não há ambiguidade de enquadramento.",
@@ -410,6 +416,7 @@ export const VIDAS = [
       cnaePrincipal: "5590-6/03",
       grupoAnexo: "III-fixo",
       cltDoSocio: 3000, // CLT parcial: sobra folga ate o teto
+      sociosComProLabore: 3,
     }),
     porque:
       "🔑 ABRIU EM DEZEMBRO, como a persona zero — e é o caso que prova que a virada 31/12 → 01/01 é não-evento. Hospedagem tem alta em dezembro-janeiro e julho. Três sócios, e um deles tem CLT parcial de R$3.000, então sobra folga até o teto.",
@@ -463,14 +470,70 @@ export const VIDAS = [
       ok(42000, MIN), // 2027-03 — encosta no teto do ME
     ]),
   },
+
+  {
+    id: "P18",
+    nome: "Elisa Prado Martins — agenciamento de publicidade, o DÉFICIT LONGO",
+    empresa: identidade({
+      cnpj: "18.181.818/0001-18",
+      razaoSocial: "ELISA PRADO MARTINS AGENCIAMENTO LTDA",
+      dataAberturaCnpj: "2025-01-15",
+      cnaePrincipal: "7312-2/00",
+      grupoAnexo: "fator-r-dinamico(III<->V, limiar 28%)",
+      sociosComProLabore: 2,
+    }),
+    porque:
+      "🔴 A VIDA QUE PROVA O CASO FEIO DE VERDADE. Em 15/09 o Pedro desconfiou " +
+      "dos valores altos que o piloto pedia, e a auditoria de agregação não " +
+      "achou defeito — mas também não pôde provar no caso extremo, porque " +
+      "NENHUMA vida tinha déficit grande o bastante. O R$72.169 que assustou " +
+      "veio de um caso sintético meu, não de persona. A Elisa fecha esse " +
+      "buraco: **26 competências, 2 sócias, faturando alto e pagando os dois " +
+      "salários mínimos o tempo todo**. A folha fica perto de 13% enquanto o " +
+      "limiar é 28%, então o déficit cresce mês a mês e a janela de 12 passa " +
+      "a carregar um buraco que nenhuma competência sozinha paga. É onde o " +
+      "modo `recuperacao` e o `paraVirarJa` têm que aparecer de verdade. " +
+      "⚠️ O CNAE dela é `fator-r-dinamico` com confiança **média** na matriz " +
+      "(o do P01 e o do P16 são confiança alta) — para o teste do motor tanto " +
+      "faz, porque o grupo é entrada declarada, mas não usar este CNAE como " +
+      "prova de enquadramento antes da Larissa ratificar.",
+    competencias: serie("2025-01", [
+      ok(0, MIN * 2), // 2025-01: montando
+      ok(0, MIN * 2),
+      ok(9000, MIN * 2), // 1ª conta de agenciamento
+      ok(12000, MIN * 2),
+      ok(15000, MIN * 2),
+      ok(18000, MIN * 2),
+      ok(20000, MIN * 2),
+      ok(22000, MIN * 2),
+      ok(22000, MIN * 2),
+      ok(24000, MIN * 2),
+      ok(30000, MIN * 2), // 2025-11 — pico de campanha de fim de ano
+      ok(32000, MIN * 2), // 2025-12
+      ok(18000, MIN * 2), // 2026-01 — 13º mês: o RBT12 vira SOMA
+      ok(20000, MIN * 2),
+      ok(24000, MIN * 2),
+      ok(24000, MIN * 2),
+      ok(26000, MIN * 2),
+      ok(24000, MIN * 2),
+      ok(26000, MIN * 2),
+      ok(24000, MIN * 2),
+      ok(22000, MIN * 2),
+      ok(24000, MIN * 2),
+      ok(30000, MIN * 2), // 2026-11 — pico de novo
+      ok(32000, MIN * 2), // 2026-12
+      ok(18000, MIN * 2), // 2027-01
+      ok(20000, MIN * 2), // 2027-02
+    ]),
+  },
 ];
 
 /**
  * 🚫 As 5 extras que seguem SEM vida — e é de propósito.
  *
  * P15 (recusa por conselho) e P17 (CPF suspenso) **nunca abrem** — morrem no
- * gate e no checkout. P18, P19 e P20 abrem depois de contornar o obstáculo, e
- * a vida delas seria idêntica à de alguma das 15: o que as distingue é o
+ * gate e no checkout. P19 e P20 abrem depois de contornar o obstáculo, e
+ * a vida delas seria idêntica à de alguma das 16: o que as distingue é o
  * **caminho de entrada**, não a operação. Duplicar cenário sem variável nova
  * só faria o teste demorar mais.
  *
@@ -479,8 +542,16 @@ export const VIDAS = [
  * OPERAÇÃO ele acrescenta a única coisa que faltava: um Anexo V que cresce
  * além da faixa 1. O critério não mudou, o que mudou foi o que precisávamos
  * dele.
+ *
+ * 🔄 **E o P18 saiu em 15/09, pelo mesmo motivo que o P16 saiu.** Ele estava
+ * em "abre mas não acrescenta" e estava certo enquanto a régua era o caminho
+ * de entrada. Como OPERAÇÃO ele traz a única coisa que faltava depois da
+ * auditoria de agregação: um **déficit longo e real**, acumulado por 26
+ * competências de folha no piso. Todas as outras vidas ou são pilotadas ou são
+ * curtas demais para o buraco crescer — e sem ele o modo `recuperacao` só
+ * tinha prova sintética.
  */
 export const SEM_VIDA = {
   naoAbrem: ["P15", "P17"],
-  abremMasNaoAcrescentam: ["P18", "P19", "P20"],
+  abremMasNaoAcrescentam: ["P19", "P20"],
 };

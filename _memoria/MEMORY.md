@@ -1,5 +1,7 @@
 # Memory Index — Legalize
 
+- [O apurador fiscal existe e bate ao centavo](legalize-motor-fiscal-apurador-existe.md) — 14/09: `execucao/motor-fiscal/`, 18 conferencias. As 3 lacunas fecharam por fonte primaria; a L2 DIMINUIU o escopo. E a pesquisa errou o DAS que o motor acerta — so o recibo fala de arredondamento.
+
 - [O prototipo Next.js NAO descreve mais o Flutter](legalize-prototipo-nextjs-nao-descreve-flutter.md) — 14/09: 2 erros meus no mesmo dia por ler a fonte errada com confianca de fonte certa. Codigo do E6.1 e real (AWS manda e-mail), e os campos internos nao existem no app.
 - [Suite de teste do Flutter: 20 personas](legalize-suite-teste-flutter-personas.md) — 14/09: `execucao/testes-flutter/`, P01 rodou ate o E9.1P, parede e 404 puro. PARADO por pedido do Pedro; 3 fios abertos (destravar E9, CPFs gerados, escopo da leva).
 

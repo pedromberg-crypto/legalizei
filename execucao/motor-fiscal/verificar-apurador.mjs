@@ -11,12 +11,12 @@
  *
  * ⚠️ **O que este teste NÃO prova.** A persona zero é unipessoal · Anexo III
  * · 1 nota/mês · sem funcionário · faixa 1. Ficam mudos: Anexo V, faixas 2 a
- * 6, folha de colaborador, ISS retido, empresa estourando o teto. Ausência de
+ * 6, folha de colaborador, empresa estourando o teto. Ausência de
  * evidência não é ausência de requisito.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { apurarDAS, fatorR, anualiza, rbt12De, brl, emCentavos, LACUNAS, RESOLVIDAS } from "./apurador.mjs";
+import { apurarDAS, fatorR, anualiza, rbt12De, retencaoLegitima, brl, emCentavos, LACUNAS, RESOLVIDAS } from "./apurador.mjs";
 
 /* ═══════════════════════════════════════════════════════════════════════════
  * OS CASOS REAIS
@@ -189,6 +189,52 @@ for (const caso of CASOS) {
   const errado = rbt12De({ serieAnterior: semZeros });
   console.log(`   ⚠️  se os meses zerados saíssem do divisor: RBT12 ${brl(emCentavos(errado.rbt12))} — ${((errado.rbt12 / r.rbt12 - 1) * 100).toFixed(0)}% a mais`);
   console.log(`   ${c.porque}\n`);
+}
+
+/* ── G5 · ISS retido ───────────────────────────────────────────────────── */
+{
+  console.log("── G5 · ISS retido pelo tomador — a segregação");
+  console.log("   fonte: LC 123/2006 art. 21 §4º (literal) · LC 116/2003 art. 3º · Lei Municipal BH 8.725/2003");
+
+  const semRet = apurarDAS({ receitaMes: 7910, rbt12: 54000, anexo: "III" });
+  const comRet = apurarDAS({ receitaMes: 7910, rbt12: 54000, anexo: "III", receitaComIssRetido: 7910 });
+
+  console.log(`   DAS sem retenção .......... ${brl(semRet.total)}   (ISS ${brl(semRet.parcelas.iss)} dentro)`);
+  console.log(`   DAS com retenção total .... ${brl(comRet.total)}   (ISS ${brl(comRet.parcelas.iss)} dentro)`);
+  console.log(`   ISS recolhido pelo tomador  ${brl(comRet.issRetido)}`);
+
+  const fechaSoma = comRet.total + comRet.issRetido === semRet.total;
+  if (fechaSoma && comRet.parcelas.iss === 0) {
+    passou++;
+    console.log("   ✅ o ISS sai do DAS e reaparece na guia municipal, sem sumir nem duplicar");
+  } else {
+    falhou++;
+    erros.push(`G5: ${brl(comRet.total)} + ${brl(comRet.issRetido)} deveria dar ${brl(semRet.total)}`);
+    console.log(`   ❌ a soma não fecha: ${brl(comRet.total)} + ${brl(comRet.issRetido)} ≠ ${brl(semRet.total)}`);
+  }
+
+  console.log(`   ⚠️  a pesquisa diz DAS de ${brl(31561)} neste caso; o motor diz ${brl(comRet.total)}.`);
+  console.log("       Ela fez 474,60 × 66,50%; o motor soma os 5 federais já arredondados. É o");
+  console.log("       MESMO desvio do 474,59 — mas aqui NÃO existe guia real pra confirmar. 🟡");
+
+  // A legitimidade da retenção, que é o que quase ninguém checa.
+  const fora = retencaoLegitima({ municipioTomador: "Contagem", naturezaTomador: "empresa", atividade: "consultoria" });
+  const bhPub = retencaoLegitima({ municipioTomador: "BH", naturezaTomador: "empresa", atividade: "agencia-de-publicidade" });
+  const bhComum = retencaoLegitima({ municipioTomador: "BH", naturezaTomador: "empresa", atividade: "consultoria" });
+
+  console.log(`\n   tomador em Contagem, consultoria ......... ${fora.legitima ? "retém" : "NÃO deveria reter"}`);
+  console.log(`   tomador em BH, agência de publicidade .... ${bhPub.legitima ? "RETÉM (art. 24)" : "não retém"}`);
+  console.log(`   tomador em BH, empresa comum ............. ${bhComum.legitima ? "retém" : "não retém"}`);
+
+  if (!fora.legitima && bhPub.legitima && !bhComum.legitima) {
+    passou++;
+    console.log("   ✅ os três casos batem com a LC 116 art. 3º e a lei municipal");
+  } else {
+    falhou++;
+    erros.push("G5: a régua de legitimidade da retenção não bate");
+    console.log("   ❌ a régua de legitimidade não bate");
+  }
+  console.log("");
 }
 
 console.log("✅ LACUNAS RESOLVIDAS em 14/09, por fonte primária:\n");

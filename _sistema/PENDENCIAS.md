@@ -107,10 +107,10 @@ Nenhum destes espera pessoa. Entram no handoff.
 
 | # | | O que | Fonte |
 |:--:|:--:|---|---|
-| **44** | ⚪ | Guardar `dataAssinatura` **e** `dataRegistro` como campos distintos | `D1` |
+| **44** | ⚪ | Guardar `dataAssinatura` **e** `dataRegistro` como campos distintos. ✅ **14/09: agora sabemos PRA QUÊ** — nenhuma das duas é o marco fiscal. O RBT12 conta da **data de abertura no CNPJ** (Res. CGSN 140/2018 art. 2º V). As outras duas seguem necessárias, por outros motivos | `D1` · [[2026-09-14-lacunas-motor-fiscal-lidas]] |
 | **45** | ⚪ | **Guardar a TERCEIRA data**: admissão do sócio (01/12), que alimenta folha e eSocial | `S2` |
 | **46** | ⚪ | Contar o relógio dos ~30 dias até o registro | `D3` |
-| **47** | ⚪ | **Fator R não pode zerar em 1º de janeiro** — janela de 13 meses cruzando o exercício (provado: 16.564 ÷ 43.910 = 37,72%) | `B2` |
+| **47** | ✅ | ~~**Fator R não pode zerar em 1º de janeiro**~~ → 🟢 **RESOLVIDO 14/09, e a regra era outra.** Não é "janela de 13 meses": empresa com **menos de 13 meses anualiza a folha** pelo mesmo critério da receita (Res. CGSN 140/2018 art. 26 §4º, lido em fonte primária). Implementado em `anualiza()` no motor fiscal, com teste dourado. ⚠️ Os 37,72% do registro original continuam certos como *cru*; o que faltava era o anualizado (50,3%) | `B2` · [[2026-09-14-lacunas-motor-fiscal-lidas]] |
 | **48** | ⚪ | Pró-labore em 3 contas: bruto no custo · 11% INSS na retenção · líquido na obrigação | `B3` |
 | **49** | ⚪ | Decidir o sinal do saldo: `crédito − débito` ou convenção contábil | `B5` |
 | **50** | ⚪ | Relatório contábil é **geração assíncrona** — estado de espera de verdade | `B6` |

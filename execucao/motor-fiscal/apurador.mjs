@@ -170,31 +170,126 @@ export function rbt12De({ serieAnterior, receitaMesCorrente = 0 }) {
  * entre ele e o total É o achado — e esconder isso seria perder o motivo de
  * o motor existir.
  */
-export function apurarDAS({ receitaMes, rbt12, anexo }) {
+export function apurarDAS({ receitaMes, rbt12, anexo, receitaComIssRetido = 0 }) {
   const faixa = faixaDe(rbt12, anexo);
   if (!faixa) {
     return { total: null, parcelas: null, faixa: null, forDoSimples: true };
   }
+  if (receitaComIssRetido > receitaMes) {
+    throw new Error(
+      `Receita com ISS retido (${receitaComIssRetido}) maior que a receita do mês (${receitaMes}).`
+    );
+  }
 
   const efetiva = aliquotaEfetiva(rbt12, anexo);
-  const dasBruto = receitaMes * efetiva;
   const reparticao = REPARTICAO[anexo][faixa.faixa];
+
+  // 🔴 A SEGREGAÇÃO acontece na BASE, não no resultado. Os federais incidem
+  // sobre a receita inteira; o ISS, só sobre a parcela SEM retenção.
+  const receitaSemRetencao = receitaMes - receitaComIssRetido;
+  const baseFederal = receitaMes * efetiva;
+  const baseIssNoDas = receitaSemRetencao * efetiva;
+  const baseIssRetido = receitaComIssRetido * efetiva;
 
   const parcelas = {};
   let total = 0;
   for (const t of TRIBUTOS) {
-    const centavos = emCentavos(dasBruto * reparticao[t]);
+    const base = t === "iss" ? baseIssNoDas : baseFederal;
+    const centavos = emCentavos(base * reparticao[t]);
     parcelas[t] = centavos;
     total += centavos;
   }
 
+  // O que o TOMADOR recolhe direto ao município. Não é nosso, mas o cliente
+  // precisa ver, senão some R$158,99 da conta dele sem explicação.
+  const issRetido = emCentavos(baseIssRetido * reparticao.iss);
+
   return {
     total, // centavos — a soma das partes, que é a guia
-    bruto: emCentavos(dasBruto), // centavos — o produto direto, que NÃO é a guia
+    bruto: emCentavos(receitaMes * efetiva), // o produto direto, que NÃO é a guia
     parcelas,
+    issRetido, // recolhido pelo tomador, fora do DAS
+    temRetencao: receitaComIssRetido > 0,
     efetiva,
     faixa: faixa.faixa,
     anexo,
+  };
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * 3b · ISS RETIDO — quando ele é devido, e quando é ilícito
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/**
+ * 🔴 Os tomadores que a Lei Municipal de BH 8.725/2003 põe como substitutos.
+ *
+ * ⚠️ **ESTA LISTA É PARÁFRASE, não texto legal.** A pesquisa de 14/09 leu a
+ * lei e resumiu os arts. 20, 21 e 24 sem trazer a redação literal, e a própria
+ * pesquisa admitiu que não conseguiu extrair as especificidades de BH em fonte
+ * unívoca. Antes de virar tela, ler a lei no portal da Fazenda de BH.
+ *
+ * O art. 24 é o que mais nos atinge: agência de publicidade é categoria nossa
+ * (`mkt` na taxonomia de pills, CNAE 7311-4/00).
+ */
+export const SUBSTITUTOS_BH = {
+  fonte: "Lei Municipal de Belo Horizonte nº 8.725/2003, arts. 20, 21 e 24",
+  confianca: "🟡 paráfrase da pesquisa de 14/09 — falta o texto literal",
+  naturezas: ["orgao-publico", "hospital", "concessionaria", "instituicao-financeira"],
+  porAtividade: ["agencia-de-publicidade"], // art. 24
+};
+
+/**
+ * A retenção é LEGÍTIMA neste caso?
+ *
+ * 🔑 A regra do art. 3º da LC 116/2003 é que o ISS é devido **no local do
+ * estabelecimento prestador**. As 25 exceções que deslocam a competência
+ * (construção civil, vigilância, varrição, andaimes) NÃO incluem nenhuma
+ * atividade do nosso escopo: consultoria, publicidade, TI, design, ensino e
+ * tradução.
+ *
+ * Consequência: tomador de OUTRO município que retém pratica ato que a
+ * pesquisa chama de *"eivado de nulidade"*, e a empresa **continua devendo em
+ * BH**. O certo é emitir sem retenção e pagar o DAS integral.
+ *
+ * ⚠️ A trava aqui é de INFORMAÇÃO, não de bloqueio — doutrina INFORMAR, nunca
+ * TUTELAR. O motor diz que a retenção não deveria existir; quem decide o que
+ * fazer com isso é a pessoa, com o contador.
+ */
+export function retencaoLegitima({ municipioTomador, naturezaTomador, atividade }) {
+  if (municipioTomador !== "BH") {
+    return {
+      legitima: false,
+      motivo:
+        "As nossas atividades não estão nas 25 exceções do art. 3º da LC 116/2003, " +
+        "então o ISS é devido no local do estabelecimento prestador (BH). " +
+        "Tomador de outro município não tem competência para reter.",
+      oQueFazer: "Emitir a nota SEM retenção e pagar o DAS integral.",
+      lei: "LC 116/2003 art. 3º",
+    };
+  }
+
+  const porNatureza = SUBSTITUTOS_BH.naturezas.includes(naturezaTomador);
+  const porAtividade = SUBSTITUTOS_BH.porAtividade.includes(atividade);
+
+  if (porNatureza || porAtividade) {
+    return {
+      legitima: true,
+      motivo: porAtividade
+        ? "Agência de publicidade: o art. 24 da Lei Municipal 8.725/2003 obriga a retenção."
+        : `Tomador em BH com natureza "${naturezaTomador}" é substituto tributário (arts. 20 e 21).`,
+      oQueFazer: "Segregar a receita no PGDAS-D. O DAS sai só com os federais.",
+      lei: SUBSTITUTOS_BH.fonte,
+      confianca: SUBSTITUTOS_BH.confianca,
+    };
+  }
+
+  return {
+    legitima: false,
+    motivo:
+      "Tomador em BH, mas fora das naturezas de substituição dos arts. 20/21 e fora do art. 24.",
+    oQueFazer: "Emitir sem retenção e pagar o DAS integral.",
+    lei: SUBSTITUTOS_BH.fonte,
+    confianca: SUBSTITUTOS_BH.confianca,
   };
 }
 

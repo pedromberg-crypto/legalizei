@@ -42,6 +42,7 @@ import {
   GRUPOS_ANEXO,
   PREVIDENCIA,
   IRRF,
+  FERIADOS_NACIONAIS,
 } from "./_tabelas.mjs";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -534,6 +535,12 @@ export function anexoDoCnae(grupo) {
  */
 const ehFimDeSemana = (d) => d.getUTCDay() === 0 || d.getUTCDay() === 6;
 
+const iso = (d) => d.toISOString().slice(0, 10);
+const ehFeriado = (d) => FERIADOS_NACIONAIS.datas.includes(iso(d));
+
+/** Fim de semana OU feriado nacional. */
+const naoEhDiaUtil = (d) => ehFimDeSemana(d) || ehFeriado(d);
+
 /**
  * Quando vence, de verdade.
  *
@@ -558,19 +565,28 @@ export function vencimentoDe({ competencia, tributo }) {
   const d = new Date(Date.UTC(competencia.ano, competencia.mes, regra.dia));
   const nominal = new Date(d);
 
-  if (ehFimDeSemana(d)) {
+  if (naoEhDiaUtil(d)) {
     const passo = regra.desloca === "prorroga" ? 1 : -1;
-    while (ehFimDeSemana(d)) d.setUTCDate(d.getUTCDate() + passo);
+    while (naoEhDiaUtil(d)) d.setUTCDate(d.getUTCDate() + passo);
   }
+
+  // 🔚 A tabela de feriados VENCE. Fora da janela o motor avisa em vez de
+  // devolver um número que parece certo e não é.
+  const foraDaJanela = iso(nominal) > FERIADOS_NACIONAIS.ate;
 
   return {
     data: d,
     dataNominal: nominal,
     deslocou: d.getTime() !== nominal.getTime(),
+    porFeriado: ehFeriado(nominal),
     regra: regra.desloca,
     lei: regra.lei,
-    // 🔴 Quem consome precisa saber que feriado não foi considerado.
-    feriadosConsiderados: false,
+    feriadosConsiderados: !foraDaJanela,
+    // 🔴 Só nacionais. Feriado municipal de BH está fora — ver FERIADOS_NACIONAIS.
+    feriadoMunicipalConsiderado: false,
+    aviso: foraDaJanela
+      ? `Tabela de feriados vai até ${FERIADOS_NACIONAIS.ate}. Esta data está além — o deslocamento considerou só fim de semana.`
+      : null,
   };
 }
 
@@ -725,25 +741,25 @@ export const LACUNAS = [
       "A Res. CGSN 190/2026 já existe e é justamente a adequação à Reforma. O que ela muda para nós a partir de 2027 ainda não foi mapeado.",
   },
   {
-    id: "L7",
-    o: "Calendário de FERIADOS (nacional e municipal de BH)",
-    lei: "—",
+    id: "L7b",
+    o: "🟡 Feriado MUNICIPAL de BH desloca vencimento de tributo FEDERAL?",
+    lei: "Lei Municipal BH 1.327/1967 (Assunção, 15/08) · demais a confirmar",
     porque:
-      " conhece sábado e domingo, não feriado. Feriado no dia 20 desloca de verdade. É dado, não lógica.",
+      "Os nacionais entraram (`FERIADOS_NACIONAIS`, cobre 2026-2027). Os municipais ficaram de fora por DOIS motivos: as fontes divergem sobre quais são (uma diz aniversário da cidade em 12/12, outra diz Imaculada Conceição em 08/12) e, mais importante, não está claro se feriado municipal desloca guia federal. Banco fecha na cidade, mas a norma de deslocamento é federal. Pergunta pro Ademar ou pra Larissa.",
   },
   {
-    id: "L9",
-    o: "A série histórica da SELIC",
-    lei: "—",
+    id: "L9b",
+    o: "🟢 SELIC: de onde buscar (a fórmula já está fechada)",
+    lei: "Ato Declaratório mensal do Coordenador-Geral de Arrecadação (RFB)",
     porque:
-      " recebe a Selic acumulada por parâmetro. A fórmula está ratificada (Lei 9.430/96 art. 61); o dado mensal não temos.",
+      "Não é lacuna de regra, é de FONTE — e a arquitetura já está certa: `guiaVencida()` recebe a Selic por parâmetro, porque congelar tabela no código erraria toda guia do mês seguinte. A RFB publica mensalmente por Ato Declaratório, e existe o Sicalc (calculadora oficial). 📌 set/2026 = 1,09%/mês. O que falta é plugar a fonte, não descobrir a regra.",
   },
   {
     id: "L10",
-    o: "🟡 O pró-labore é obrigatório havendo faturamento?",
-    lei: "Lei 8.212/1991 art. 12 V 'f' · IN RFB 2.110/2022",
+    o: "🔴 O pró-labore NÃO é obrigatório por lei — e a decisão 36 precisa saber disso",
+    lei: "IN RFB 2.110/2022 art. 8º XII · Lei 8.212/1991 art. 12 V 'f' e art. 28 §3º",
     porque:
-      "A pesquisa marcou confiança MÉDIA na obrigatoriedade e BAIXA na ilicitude de ficar sem. Não há artigo dizendo 'o sócio é obrigado a sacar R$1.621' — nasce da presunção de que, sem funcionário, a receita veio do sócio. 🔑 Sustenta a decisão 36 (forçar pró-labore no mês 1) e merece o olho da Larissa antes de virar trava dura na tela.",
+      "🔴 A PESQUISA DO GEMINI DISSE 'É OBRIGATÓRIO' E A BUSCA DIRETA DESMENTIU. A IN RFB 2.110/2022 art. 8º XII põe como contribuinte individual o sócio-administrador *'desde que receba remuneração decorrente de trabalho na empresa'* — a condição é RECEBER. Sem remuneração, ele não se caracteriza como contribuinte individual, e **se o sócio será ou não remunerado é decisão do colegiado da sociedade**, na forma do contrato social. O próprio relatório do Gemini já marcava confiança MÉDIA na obrigatoriedade e BAIXA na ilicitude — e estava certo em duvidar de si. ⚖️ O CARF decidiu nos DOIS sentidos: há acórdão reconhecendo distribuição de lucro a sócio sem pró-labore como escolha lícita, e há autuação mantida. O que separa é o conjunto de fatores: ausência TOTAL de pró-labore + retiradas vultosas de lucro + contabilidade frágil + atuação operacional intensa. Protegem: previsão no contrato social, escrituração idônea e separação razoável entre capital e trabalho. 🔑 **O que isto faz com a decisão 36 (forçar pró-labore no mês 1):** ela continua sendo uma boa decisão de PRODUTO — trava o Fator R desde o mês 1 e afasta o cenário de risco. Mas é 🏢 **decisão nossa, não ⚖️ obrigação legal**, e a copy não pode dizer 'a lei exige'. Se disser, mente. ⚠️ O MÍNIMO, esse sim é lei: salário de contribuição não pode ser inferior ao salário mínimo (Lei 8.212 art. 28 §3º) — o pró-labore de R$100 da conta real é irregular.",
   },
 ];
 

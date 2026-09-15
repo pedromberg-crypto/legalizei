@@ -228,6 +228,71 @@ export const VENCIMENTOS = {
 };
 
 /**
+ * 📅 FERIADOS — o que o `vencimentoDe()` precisa para não errar o dia.
+ * ═══════════════════════════════════════════════════════════════════════════
+ * Só **nacionais**, e de propósito: o que decide se uma guia federal pode ser
+ * paga é o **calendário bancário**, e ele segue os feriados nacionais.
+ *
+ * ⚠️ **FERIADO MUNICIPAL DE BH FICOU DE FORA, e não por esquecimento.** Duas
+ * razões: (a) as fontes divergem sobre quais são — uma diz *aniversário da
+ * cidade em 12/12*, outra diz *Imaculada Conceição em 08/12*, e as duas citam
+ * 15/08 (Assunção, Lei Municipal 1.327/1967); (b) mais importante: **não está
+ * claro se feriado municipal desloca o vencimento de tributo FEDERAL**. Banco
+ * fecha na cidade, mas a norma de deslocamento é federal. Pergunta para o
+ * Ademar ou a Larissa, não para dedução minha.
+ *
+ * 🔚 **Este dado VENCE.** Cobre 2026 e 2027. Quem rodar o motor em 2028 com
+ * esta tabela vai errar silenciosamente — por isso o `ate` existe e o
+ * `vencimentoDe()` avisa quando a data pedida passa dele.
+ */
+export const FERIADOS_NACIONAIS = {
+  ate: "2027-12-31",
+  fonte: "ANBIMA (calendário bancário) · consultado em 14/09/2026",
+  datas: [
+    // 2026 — só o que ainda importa daqui pra frente
+    "2026-10-12", // Nossa Senhora Aparecida
+    "2026-11-02", // Finados
+    "2026-11-15", // Proclamação da República
+    "2026-11-20", // Consciência Negra
+    "2026-12-25", // Natal
+    // 2027
+    "2027-01-01",
+    "2027-02-08", // Carnaval (ponto facultativo, mas banco fecha)
+    "2027-02-09",
+    "2027-03-26", // Sexta-feira Santa
+    "2027-04-21", // Tiradentes
+    "2027-05-01",
+    "2027-05-27", // Corpus Christi (facultativo)
+    "2027-09-07",
+    "2027-10-12",
+    "2027-11-02",
+    "2027-11-15",
+    "2027-11-20",
+    "2027-12-25",
+  ],
+};
+
+/**
+ * 💹 A SELIC — e ela NÃO vira tabela aqui, de propósito.
+ *
+ * A Receita publica o percentual **todo mês**, por Ato Declaratório do
+ * Coordenador-Geral do Sistema de Arrecadação e Cobrança. Congelar uma tabela
+ * no código significa errar toda guia a partir do mês seguinte.
+ *
+ * Por isso `guiaVencida()` recebe `selicAcumulada` por **parâmetro** — é a
+ * arquitetura certa, não uma lacuna. O que falta é de onde buscar:
+ *   · Ato Declaratório mensal da RFB (gov.br/receitafederal)
+ *   · **Sicalc** (sicalc.receita.fazenda.gov.br) — a calculadora oficial
+ *
+ * 📌 Referência do momento: **setembro/2026 = 1,09%** ao mês.
+ */
+export const SELIC = {
+  fonte: "Ato Declaratório mensal do Coordenador-Geral de Arrecadação (RFB) · Sicalc",
+  referencia: { mes: "2026-09", percentual: 0.0109 },
+  ehParametro: true,
+};
+
+/**
  * 🔑 O QUE ENTRA E O QUE NÃO ENTRA NO NUMERADOR DO FATOR R.
  *
  * Não é detalhe: a **CPP paga embutida no DAS** entra, e é justamente o que a

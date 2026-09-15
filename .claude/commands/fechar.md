@@ -7,7 +7,7 @@ Ritual de FECHO de flow no vault do Legalizai Story Book. Faça, nesta ordem, s�
 1. **`HOME.md` → `## 📍 Agora`:** atualize o estado das frentes que mudaram, o que ficou aberto / o próximo passo, e a linha "Última atualização: <data de hoje>".
 2. **Decisão travada?** Registre no ADR `marca/decisoes-marca.md` e/ou crie um marco em `execucao/marcos/AAAA-MM-DD-<slug>.md`.
 3. **Fato durável cross-sessão?** Atualize a auto-memória do projeto (e o `MEMORY.md`).
-4. **Rendeu item de reporte?** Atualize `execucao/evolucao-para-mauro.md` (tabela interna + bloco WhatsApp).
+4. **Rendeu item de reporte?** Atualize `execucao/evolucao-para-mauro.md` (tabela interna + bloco WhatsApp). **Depois de escrever, rode `node execucao/gerar-placar-mauro.mjs`** — ele reconta o placar do topo (entregas, status, dias trabalhados) a partir das tabelas. 🔑 O bloco entre `PLACAR:INICIO` e `PLACAR:FIM` é **gerado**: nunca editar à mão, nunca digitar número lá.
 5. **Git:** `git add -A && git commit` com mensagem clara e `git push`. A assinatura vai no fim da mensagem, **com o modelo que está rodando de fato** (hoje, 12/09, é o Opus 5) e a linha da sessão:
 
    ```

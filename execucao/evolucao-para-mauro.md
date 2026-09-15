@@ -10,6 +10,45 @@ tags: [reporte, evolucao, sociedade]
 
 > Log vivo da evolução, atualizado ao fim de cada sessão produtiva. Base pra pauta/reporte com o Mauro. **Versão WhatsApp (grupo ampliado) omite o item de sociedade** — ver bloco no fim.
 
+<!-- PLACAR:INICIO — gerado por gerar-placar-mauro.mjs, não editar à mão -->
+
+## 📊 Placar geral
+
+> 🤖 **Este bloco é gerado.** Ele se reconta sozinho a cada `/fechar`, a partir das tabelas abaixo — nenhum número aqui é digitado. Gerado em **15/09/2026**.
+
+### O que rendeu
+
+| | |
+|---|---:|
+| **Entregas reportadas** | **244** |
+| Entradas no log | 46 |
+| **Dias trabalhados** | **44** |
+| Período | 07/07/2026 → 15/09/2026 |
+| Dias corridos no período | 71 |
+| Média de entregas por dia trabalhado | 5,5 |
+
+### Placar por status
+
+| Status | Itens | % |
+|---|---:|---:|
+| 🟢 pronto / entregue | **198** | 81,1% |
+| 🟡 em curso / parcial | **20** | 8,2% |
+| 🔴 trava ou precisa de você | **13** | 5,3% |
+| 🕓 aguarda pessoa | **11** | 4,5% |
+| ⏳ aguarda autorização | **2** | 0,8% |
+
+### Ritmo, mês a mês
+
+| Mês | Dias trabalhados |
+|---|---:|
+| julho/2026 | 23 |
+| agosto/2026 | 9 |
+| setembro/2026 | 12 |
+
+---
+
+<!-- PLACAR:FIM -->
+
 ## Semana 07–10/07/2026
 | # | Frente | O que evoluiu | Status |
 |---|---|---|---|

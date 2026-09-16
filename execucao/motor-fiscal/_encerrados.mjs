@@ -119,7 +119,40 @@ export const ENCERRADOS = [
       "Res. CGSN 140/2018 art. 26 §2º I 'a' · captura literal em " +
       "pesquisa/fontes/2026-09-14-fechamento-motor-fiscal-LITERAL.md §P2",
     onde: "execucao/motor-fiscal/_tabelas.mjs · FATOR_R_NUMERADOR",
-    naoReabrir: ["se a CPP conta para bater os 28% (não conta)"],
+    /**
+     * 🔴 A SEGUNDA CAMADA, travada pelo Pedro em 16/09 — e ela é DECISÃO,
+     * não interpretação.
+     *
+     * Na reunião de 16/09 o contador Leonan descreveu a manobra em voz alta:
+     * *"eu posso pegar esses R$205 que gera ali e somar ele lá no Fator R…
+     * se você fez o cálculo de 29%, ele vai acumular mais 1% ali, vai virar
+     * 30"* · *"pode considerar em tudo"*.
+     *
+     * 🔑 Ele NÃO estava contestando a norma: estava descrevendo uma PRÁTICA.
+     * O Pedro decidiu no mesmo dia:
+     *
+     *   *"a gente faria essa manobra de pegar esse valor e considerar ele no
+     *   Fator R para chegar à porcentagem que precisamos, mas na verdade de
+     *   fato NÃO FAREMOS ISSO. O CPP continuará sendo apenas gerado dentro da
+     *   guia normal como sempre é gerado, a gente não vai pegar o valor
+     *   gerado e fazer essa matemática sugerida."*
+     *
+     * ⚠️ O tamanho do que se recusa: a manobra move o Fator R em ~1 ponto.
+     * Numa empresa em 27,x% ela decide o anexo — e se a interpretação estiver
+     * errada, o erro é por cliente, por mês e RETROATIVO (reclassificação de
+     * ofício + Selic + multa). A margem de 30% existe para nunca depender de
+     * ponto nenhum na borda.
+     */
+    decisaoDeProduto:
+      "A CPP é GERADA dentro do DAS, como sempre — é a maior parcela da guia " +
+      "(43,40% no Anexo III faixa 1). Mas ela NÃO é usada como numerador do " +
+      "Fator R: nem soma, nem 'plus', nem arredondamento para cima. O Fator R " +
+      "usa só a folha efetivamente paga. Travado pelo Pedro em 16/09, depois " +
+      "de o contador descrever a manobra como possível.",
+    naoReabrir: [
+      "se a CPP conta para bater os 28% (não conta)",
+      "se dá para 'aproveitar' a CPP da guia para fechar a porcentagem (dá, e não fazemos)",
+    ],
   },
 
   {

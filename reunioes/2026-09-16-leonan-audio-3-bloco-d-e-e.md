@@ -63,7 +63,9 @@ E o desenquadramento é menos dramático do que supúnhamos:
 >
 > 🔑 *"**A Receita não trava o CNPJ dele por falta desse enquadramento como EPP**, não. E o Simples Nacional dele fica igual, exatamente igual."*
 
-🔴 **Isto é decisão de sócio, não de ata.** A `_persona.mjs` e a trava `verificar-persona.mjs` afirmam o contrário, e os três geradores rodam em cima disso. **Não alterei nada** — precisa de linha no ADR. ⇢ **P14**
+🔴 **Isto é decisão de sócio, não de ata.** A `_persona.mjs` e a trava `verificar-persona.mjs` afirmam o contrário, e os três geradores rodam em cima disso. **Não alterei nada.**
+
+> ✅ **RESOLVIDO em 16/09, pelo Pedro: fica em STANDBY.** A `_persona.mjs` não muda e a trava segue derrubando a rodada. As observações do Leonan ficam guardadas porque **baixam o custo de mudar de ideia depois**. ⇢ [[2026-09-16-tres-conflitos-do-contador-resolvidos]] §1
 
 ⚠️ **E muda a P16:** hoje ela diz *"é o único caso em que a porta de saída para EPP aparece"*. Com EPP no escopo, deixa de ser saída e vira **upsell** — alteração de porte com honorário mais as taxas da Junta.
 
@@ -88,7 +90,9 @@ O Pedro leu a linha do Bloco E em voz alta e o Leonan disse o oposto:
 2. Ele **não citou norma**; nós temos o artigo capturado literal.
 3. 🔴 **O efeito é grande e é para o lado do risco:** se a CPP entrasse, empresas com Fator R entre ~27% e 28% seriam declaradas no Anexo III **sem direito**.
 
-⏳ **O caminho é confrontá-lo com o texto**, não escolher entre os dois. ⇢ **P15, prioridade máxima**
+⏳ **O caminho é confrontá-lo com o texto**, não escolher entre os dois.
+
+> ✅ **RESOLVIDO em 16/09, pelo Pedro — e a leitura certa desfez o conflito.** Ele não contestava a norma: **descrevia uma manobra**. Decisão: *"a gente faria essa manobra… mas de fato não faremos isso. O CPP continuará sendo apenas gerado dentro da guia normal."* Agora o `E-CPP` tem duas camadas — a norma diz que não entra, **e** nós não fazemos a conta mesmo que alguém interprete que entra. ⇢ [[2026-09-16-tres-conflitos-do-contador-resolvidos]] §2
 
 ---
 
@@ -114,7 +118,9 @@ E aí ele mesmo recuou:
 | A folha que conta | competência **anterior** | o **próprio mês** |
 | Confiança dele | firme, com exemplo numérico | *"não sou 100%"* |
 
-🔴 **São afirmações incompatíveis, e a diferença decide se o 1º mês paga 6% ou 15,5%.** Nosso motor hoje não decide nem uma nem outra: devolve `anexo: null`. ⇢ **P11 sobe para crítico**
+🔴 **São afirmações incompatíveis, e a diferença decide se o 1º mês paga 6% ou 15,5%.** Nosso motor hoje não decide nem uma nem outra: devolve `anexo: null`.
+
+> ✅ **RESOLVIDO em 16/09 — e não foi preciso escolher entre as duas.** O desenho já tinha sido combinado no **áudio 2**: o pró-labore começa na 1ª nota, e constituir-e-faturar no mesmo mês **dispara alerta interno** para a casa ligar e oferecer a folha da competência da constituição, deixando o **mês seguinte** já no Anexo III. **A ação é idêntica nas duas leituras** — adotamos a conservadora do áudio 2, que nunca cobra a menos. 🔑 E a operação **não é retroativa**: cabe no prazo normal do eSocial, até o dia 15. ⇢ [[2026-09-16-tres-conflitos-do-contador-resolvidos]] §3
 
 ---
 
@@ -267,8 +273,11 @@ E confirmou que **não precisa perguntar nada ao cliente**, porque o dado vem po
 
 | | O que falta | Peso |
 |---|---|---|
-| **P14** | 🔴 **EPP entra no escopo** — revoga regra travada em `_persona.mjs`. Precisa de ADR | 🔴 Pedro |
-| **P15** | 🔴 **CPP no Fator R:** ele afirma que entra; a norma capturada diz que não. Confrontar com o texto literal | 🔴 máxima |
+| ~~P14~~ | ✅ **EPP — decidido: standby.** Observações guardadas | fechado 16/09 |
+| ~~P15~~ | ✅ **CPP — decidido: não fazemos a manobra.** Travado no `_encerrados.mjs` | fechado 16/09 |
+| ~~P11~~ | ✅ **1º mês — decidido: alerta interno + contato.** Leitura conservadora | fechado 16/09 |
+| **P21** | 🟡 Qual das duas leituras do Fator R é a da norma? Vira **pesquisa**, não trava | pesquisa |
+| **P22** | 🟡 Falta **vida de teste** que constitui e fatura no mesmo mês com CNAE de Fator R | testes |
 | **P16** | 🟡 A paulada **diluída** em 3-4 meses nunca foi simulada, e é onde a conta pode virar | produto |
 | **P17** | 🟡 Salário mínimo hardcoded — virar campo com vigência | produto |
 | **P18** | 🟡 Boleto editável: o gateway bloqueia? | dev |

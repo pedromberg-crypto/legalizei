@@ -409,7 +409,21 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 **Por que importa.** Essa é a regra do art. 24 e nós a implementamos. O que não sabemos é o lado **operacional**: se a empresa abre no dia 20, a competência do mês de abertura é declarada normalmente? E se ela abre e não fatura, ainda assim transmitimos.
 
-**A pergunta:** a competência do mês de abertura é declarada cheia, mesmo que a empresa só exista por 10 dias dele? Há algo de proporcional? *(O cálculo já está fechado; queremos confirmar a operação.)*
+### 🔑 E tem um degrau no 1º mês que ninguém vê
+
+No 1º mês não há histórico, então a lei manda **projetar**: acumulado = receita do próprio mês × 12. Isso cria um degrau logo na primeira nota:
+
+| 1ª nota | Acumulado projetado | Faixa | Alíquota | DAS |
+|---:|---:|:---:|---:|---:|
+| R$ 0 | R$ 0 | 1ª | 6,0000% | R$ 0 |
+| R$ 14.000 | R$ 168.000 | 1ª | 6,0000% | R$ 840,00 |
+| **R$ 15.000** | R$ 180.000 | **1ª** | **6,0000%** | R$ 900,00 |
+| **R$ 16.000** | R$ 192.000 | **2ª** | **6,3250%** | R$ 1.012,01 |
+| R$ 30.000 | R$ 360.000 | 2ª | 8,6000% | R$ 2.580,00 |
+
+⚠️ **Mil reais a mais na primeira nota muda a faixa da empresa inteira naquele mês.** E enquanto ela não emite nota nenhuma, não há acumulado nem guia — **11 das nossas 16 personas não faturam no 1º mês**, e para elas isso não existe.
+
+**A pergunta:** a competência do mês de abertura é declarada cheia, mesmo que a empresa só exista por 10 dias dele? Há algo de proporcional? E sobre o degrau acima: **isso é conversa que se tem com o cliente** — *"se a sua primeira nota for maior que R$15 mil, você paga uma alíquota maior neste mês"* — ou é orientação que um contador não dá? *(O cálculo já está fechado; o que queremos é a postura.)*
 
 ## C5 · 🟡 Quem escritura o Livro Caixa, e com que frequência?
 
@@ -530,7 +544,8 @@ Mas **ele pode desligar e digitar o próprio valor**. Se fizer isso, o app mostr
 |---|---|---|
 | **Dia 1** | Inscrição municipal, licenças, certificado, documentos na plataforma | ⇢ **C1 C2** |
 | **Dia 1** | 🔑 **A tela dele NÃO fala em Fator R nem em 28%.** CNAE fixo: sugerir esse risco seria mentir por omissão | — |
-| **nov/2025** | Já fatura **R$14.000 no mês da abertura**. O acumulado vira R$168.000 de cara *(receita do mês × 12)* | ⇢ **C4** |
+| **nov/2025** | Já fatura **R$14.000 no mês da abertura** — emitida a 1ª nota pelo `Emissor Nacional` | — |
+| **nov/2025** | 🔑 No 1º mês não existe histórico, então a lei manda **projetar**: acumulado = receita do mês × 12 = R$168.000. **Não é faturamento, é projeção.** E aqui ela **não muda nada**: R$168 mil ainda está na 1ª faixa (até R$180 mil), então ele paga os mesmos **6%**. DAS de **R$840** | ⇢ **C4** |
 | **jan–fev/2026** | Dois meses secos. Transmitimos igual | ⇢ **B6** |
 | 🔴 **31/03/2026** | **DEFIS do ano-calendário 2025** — com **41 dias de empresa**. Ele mal entendeu o que é DAS e já tem obrigação anual | ⇢ **B3 A9** |
 | mai–jul | Temporada cheia: R$12k, R$19k, R$17k | — |
@@ -552,8 +567,8 @@ Mas **ele pode desligar e digitar o próprio valor**. Se fizer isso, o app mostr
 | **mar, abr, mai/2026** | 🔑 **Emitimos as três guias em dia**, dentro do prazo. 🔴 **Ele paga com 14, 21 e 14 dias de atraso** — pagamento é ação do cliente, fora do app | ⇢ **B5** |
 | | Detectamos o atraso na consulta de arrecadação e **recalculamos** com multa de 0,33%/dia e juros | ⇢ **B5** |
 | | Custo do atraso: **R$393,32**, que **não teria existido**. É o caso de uso do lembrete de vencimento, com número | — |
-| **set/2026** | O acumulado cruza **R$180 mil** e ele muda de faixa | — |
-| **out/2026** | 13º mês: a regra do acumulado troca de *média × 12* para **soma dos 12** | ⇢ **C4** |
+| **jan/2026** | Depois do pico de dezembro, o acumulado chega a **R$225.000** e ele **passa para a 2ª faixa** — a alíquota efetiva deixa de ser 6% e começa a subir | — |
+| **set/2026** | 13º mês de atividade: a regra do acumulado troca de *média × 12* para **soma dos 12**. 🔑 Troca pelo **mês de atividade**, não pela virada do ano | ⇢ **C4** |
 | **Total** | Faturou **R$266.000** · **R$17.514** de DAS · **R$2.318** de DARF | |
 
 ---
@@ -586,7 +601,7 @@ Mas **ele pode desligar e digitar o próprio valor**. Se fizer isso, o app mostr
 | 🔴 **jul/2025** | **Ele desliga o automático logo no começo** e fixa o pró-labore no mínimo, para tirar o máximo como lucro. Avisamos com os números dele; ele mantém | ⇢ **A2** |
 | jul/2025 → | Cresce de R$8 mil a **R$42 mil/mês** e **nunca religa o automático** — a cada mês o aviso reaparece e ele segue | ⇢ **A5** |
 | **set/2025** | 🔴 Cai para o **Anexo V** e **fica lá 19 dos 22 meses**. **Escolha dele, sustentada mês a mês** | ⇢ **A3** |
-| **mar/2026** | O acumulado cruza **R$180 mil** e ele entra na **2ª faixa**: a alíquota efetiva começa a subir de 15,5% rumo a 16,75% | — |
+| **fev/2026** | O acumulado chega a **R$187.500** e ele entra na **2ª faixa**: a alíquota efetiva começa a subir de 15,5% rumo a 16,75%, sem nunca chegar lá | — |
 | **31/03/2026** | DEFIS de 2025 | ⇢ **A9** |
 | **jun/2026** | 13º mês: a regra do acumulado troca para soma dos 12 | ⇢ **C4** |
 | **31/03/2027** | DEFIS de 2026 | ⇢ **A9** |

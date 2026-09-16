@@ -1,0 +1,1352 @@
+00:00:00 Pedro Maia
+Eu falei por alto lá embaixo, mas o que que pega? A gente chegou numa parte de... Do quê? Aqueles dados iniciais que a gente pega, desde o Cara baixar o aplicativo, até os, Dados, que isso foi feito com a Isabela, Da constituição do OMS, Simples Nacional Prestador de Serviço, que o nosso cliente está muito Fechado, a gente passou tela a tela, Com ela, lapidamos isso tudo, Construímos já o back-end, front-end, As telas, tudo está batendo, E são 90 campos que São preenchidos, entre os 90 Ventas. Parte usuário e parte a gente decide, que é igual a Contabilizei faz.
+00:00:34 Pedro Maia
+Por exemplo, o que a Isabela trouxe para a gente. Metragem quadrada do que vai colocar lá. A gente não vai pôr para a pessoa decidir, caçar isso ou o que seja.
+00:00:47 Léo
+Você pode trazer um problema.
+00:00:49 Pedro Maia
+Uma taxa maior, sabe? É, falou. É igual falou que até o Madeira, você comentou também, Que dependendo sobra um pouco o IPTU lá do cara, alguma coisa do tipo. Entendeu? Então, por exemplo, a gente já percebeu que A Contabilizei, ele trava, Em 20 metros quadrados. Colocaram no meu. A Isabela falou que aqui, se não me engano, eles estão usando 5. Tudo bem. Eu acho que não é um grande problema Isso, mas a gente tem que decidir. 5 ou é 20? Tem um porquê de ser 5 ou 20? Então, chegou a esse ponto de saber...
+00:01:17 Léo
+É tipo uma letra
+00:01:19 Pedro Maia
+É interessante que assim. Isso interfere?
+00:01:23 Léo
+Interfere Na guia da taxa de localização. Entendi. Se eu coloco um... Uma metragem muito alta, ele vai receber uma taxa mais alta. Entendi. Então, o moço, uma vez, se o cara vai colocar lá mil metros quadrados, Mil metros quadrados, o cara vai receber uma guia de 70 mil. Ah, entendi, entendi. Então, se eu coloco cinco metros, o cara vai receber uma guia de 150, de 700. E, na maioria das vezes, o cara vai ser pequeno, vai ser, então, assim, Ele não vai ter grandes possibilidades, então...
+00:01:48 Pedro Maia
+Talvez, por exemplo, a contabilidade até coloca 20 para ser um meio termo. Tipo assim, é um escritório. É tipo uma sala. Eu considero.
+00:01:54 Léo
+Também não adianta eu tentar favorecer o cara ao máximo. Isso é irreal, né? Mas aí eu acho que é cada escritório que decide. Aqui os meninos sempre usam 5. Sempre usavam 5, mas eu trabalhei em escritório que usava 40. Todo mundo 40. 40 metros quadrados. O que você acha?
+00:02:11 Pedro Maia
+Você acha que a gente pode travar 20 igual? Ou a gente mantém 5?
+00:02:16 Léo
+Qual que é o problema de manter muito baixo? Amanhã o cara pode ser questionado. Vamos supor. Alguns processos que eu já vi. O cara tem um estacionamento lá do outro lado e não informou o estacionamento pra poder calcular a taxa. Aí ele tem que fazer um processo, aí ele constrói. Se eu faço algo muito baixo, quando eu faço esse processo com esse cara Por algum questionamento da prefeitura, aí eu sou obrigado a entrar com algum processo administrativo. Ou eu provo que a minha área é 5, ou eu provo que a minha área é 20 ou mais que 20. Eu tenho que provar e entrar com um processo.
+00:02:48 Léo
+Isso vai gerar um gargalho. Se quiser não correr tanto risco de questionamento, mas questionamentos eu vejo que são poucos. Uma empresa pequenininha, não vai existir tanto, né? O cara não vai sofrer tanto assim, sabe? Mano, tem cinco, tranquilo. Mas cinco eu acho pouco demais. Fica no meio termo, Então.
+00:03:07 Pedro Maia
+Vamos dez? Quadrado, é aquilo, cara.
+00:03:12 Pedro Maia
+Dez. Dez pode ser o meio do caminho, entendeu? Que é tipo, ok, né? Dentro do que a gente está fazendo. Isso aí só vai interferir na taxa anual que ele recebe. É uma taxa que ele paga por ano. Fechou. Então isso só foi um exemplo mesmo, mas eu queria que vocês entendessem de fato em que processo a gente está. A gente passou aquilo tudo, então a gente fez os testes, por exemplo, os meninos estão caindo agora para dentro pós-pagamento, Eles vão cair para a validação real do RPA, que é o que eles já levantaram, Porque o que o Pedro adiantou foi muito bem feito, então eles vão reaproveitar quase tudo. Então eles vão começar essa leitura do RPA para ver se de fato vai usar a mesma plataforma,
+00:03:43 Pedro Maia
+Ou se a gente vai usar, que hoje tem outras opções para a gente poder rodar. E aí, em paralelo que eles estão fazendo isso, eu estou terminando de filtrar a parte interna de funcionalidade. Por quê? É um gargalo que, caindo na mão deles, vai gerar essas perguntas todas que eu vou te fazer do mesmo jeito. Então, enquanto eles estão focados em outra coisa, eu parti para dentro da funcionalidade básica. Então, para você entender um pouco, eu já mandei para o Mauro, isso é até bom você ver, O que são as nossas funcionalidades core. O que seria isso? O que a gente vai iniciar com o mínimo de funcionalidade que é o necessário para a gente trabalhar, sabe?
+00:04:13 Pedro Maia
+Quer ver? Tem um PDF aqui, só para a gente passar rápido, para você entender. Vai ter a
+00:04:18 Léo
+Voz da direção de nome dentro do aplicativo?
+00:04:19 Pedro Maia
+Vai, vai. Até para você ver se está sentindo, se está faltando alguma coisa. Isso aí é quase que o par de gêneros de qualquer... Exato, exato. De três antigos. Exato. E aí... Que funcionalidade. Deixa eu ver se a gente vai botar o furo de pagamento. Ah, tá. Vai estar.
+00:04:38 Pedro Maia
+Essa tela é boa e não é bastante. Seguinte, isso aqui são nossas funcionalidades core do aplicativo que está validado com o Mauro, Que é o que a gente vai iniciar entregando ao mínimo. Que é o quê? Ele sempre coloca como funcionalidade home navegação, porque é onde o cara vai clicar para ir para as guias, para, enfim, notificações, o que for necessário, impostos. Então, ele tem dados do mês, baixo da guia, blá, o que tem dentro de cada categoria, notas fiscais, prolabores sócios, Estar em dia, que vai ser o nosso grande diferencial, que é um vigia fiscal, que é o que a gente começou desde o início, documentação e certificado.
+00:05:09 Pedro Maia
+Por exemplo, para eu completar aqui o processo que eu vim te trazer dúvida para você, eu fiz uma leitura interna logada na minha conta Contabilizeio. E eu descobri que em momento nenhum do meu processo, eles mandaram meu contrato social. E aí eu fui pesquisar no Google, é reclamação de mais pessoas. Por que isso acontece, Entendeu?
+00:05:27 Léo
+Porque em algum momento ele vai fazer uma abertura numa conta bancária. Seja tradicional, o cara vai pedir o contrato. Aí ele é obrigado a ir lá. Ele é obrigado a ir lá, mandar esse contrato, ou então solicitar pela contabilidade.
+00:05:42 Pedro Maia
+Mas aí, por exemplo, qual que é a peculiaridade? Porque, por exemplo, eu falei, beleza, tinha umas reclamações Lá, eu falei, esses caras Amarram a porra do contrato social, aí eu chamei Eles no chat. Às vezes amarram pra cobrar taxa, Pra poder enviar, não. Aí eu chamei eles no chat, cheguei lá no chat No bot deles ainda, qual que é o assunto? Aí eu mandei, preciso do meu, Contrato social. Instantaneamente, O bot respondeu o link E uma explicaçãozinha.
+00:06:06 Pedro Maia
+Seu contrato social não fica disponível na sua conta, mas com essa solicitação simples, segue o link para você baixar ele. Tem um ano.
+00:06:15 Léo
+Tem algum ano. Porque independente de você mandar esse contrato, você fala assim: deixar disponível no aplicativo.
+00:06:21 Pedro Maia
+Disponível para download.
+00:06:22 Léo
+Ele tende a te pedir todas as vezes que ele precisa. Ele não deixa disponível, talvez, por questões de armazenamento. Não sei. Aí eu não entendo o que.
+00:06:32 Pedro Maia
+Ele não deixa disponível. Dispensa de bombeiro, Um documento Do inscrito municipal. Tem mais quatro documentos que eles deixam lá dentro, que foram emitidos. Mas não cobrou taxa? Nada, eu pedi na hora, E só mandaram.
+00:06:45 Léo
+Mas se eu pedir mais de uma vez, ele vai te mandar o mesmo link? Eu vou olhar.
+00:06:49 Pedro Maia
+Mas eu não sei. Mas o link interno deles Vai ser arquivo, conta, notabilidade, blá. Eles não explicam porque que eles deixam Isso separado. Tem alguma, ou pode ser, Uma questão de segurança interna deles. Né, talvez. Porque a pessoa, por exemplo, eu tenho seu contrato social na minha mão, O que eu posso fazer com seu contrato social?
+00:07:04 Léo
+O cara já tem a senha do aplicativo para acesso.
+00:07:08 Pedro Maia
+Exato. Se eu tiver seu contrato social na minha mão, o que eu posso fazer com ele?
+00:07:13 Léo
+Cara, você não consegue fazer nada,
+00:07:14 Pedro Maia
+Porque depende da assinatura. Você precisa da sua assinatura, Entendeu?
+00:07:17 Léo
+Assim, o problema ali é o quê?
+00:07:22 Léo
+É LGPD, mas o cara, se já tiver disponível, Pode ser que tenha relacionado com a lei de proteção de dados. Porque ali o cara vai ver onde ele mora, se o cara acessar a minha conta lá do Nordeste, O cara já vai saber onde eu moro, já vai saber a minha profissão, já vai ter o meu Endereço, meus dados pessoais, talvez esteja relacionado a isso. Pode ser, pode ser, é algo que vale a pena dar uma olhada. Mas se deixar disponível para ser um facilitador, contrato social?
+00:07:53 Léo
+Não vejo um problema. Deixa o cara com a senha dele.
+00:07:56 Pedro Maia
+Porque o contrato é dele. É dele, exato. Exato, então isso entra, por exemplo, em documento certificado, já contabilizei, coloca, vou ser logado, que eu acho que é muito mais perigoso, que se eu quiser baixar meu certificado digital com a minha, sem meus tokens, tá tudo aqui dentro da minha plataforma, acho que é pior do que contrato social, em nível de segurança, né, do que se pode ser feito, e os caras deixam disponível, então tipo assim...
+00:08:19 Léo
+Fora que ele pediu pra ser desabilitado na verificação de duas etapas, então se o cara pega seu certificado
+00:08:23 Pedro Maia
+Amanhã ele, de pessoa física... Ele pode fazer uma bagaceira, ele pode fazer, exato. Então, é por isso que quando eu vi sobre o certificado, na minha cabeça não fez muito sentido eles não terem colocado esse contrato, mas tudo bem. Entra nessa parte de documentação, plano e cobrança que a gente vai precisar dessa movimentação, porque, por exemplo, a gente vai ter os upsell, né? Depois dá uma olhada só se esse negócio, se você pedir mais uma vez o contrato social,
+00:08:42 Léo
+Se ele te coloca na taxa, se ele te leva a trava na taxa. Pode ser. Como ele tem muitos serviços a avulso, eu entendo que realmente...
+00:08:50 Pedro Maia
+Talvez na segunda vez ele fale assim, 39,90.
+00:08:53 Léo
+É, entendi. E eu acho que...
+00:08:55 Pedro Maia
+Pode fazer algum sentido.
+00:08:56 Léo
+Pode fazer algum sentido. Tipo assim, você já teve o acesso no pedir Pra ele contabilizar o que você pediu. Se ele deixar disponível, ele não vai conseguir contabilizar Quantas vezes você baixou, solicitou, Você precisou. Tem cara que vai pedir o resto da vida esse contrato aí. Tem cara que já vai ter lá e já vai mandar.
+00:09:12 Pedro Maia
+Exato. Eu acho que pra nós, pensando, A frio modo, eu partiria de deixar disponível. Eu não acho que um contrato social, Tem que ser um upsell. Você não tem que vender o contrato social pro cara. Até porque ele já pagou. Já está feito lá a parada. Ele pode usar para abrir uma conta de banco. E ele ter fácil acesso a isso é pior.
+00:09:28 Léo
+É uma insatisfação. O cara não está precisando de dinheiro. Vou ter que pagar. Se ele paga por boleto, vou ter que esperar, sei lá, dois dias, três dias.
+00:09:35 Pedro Maia
+E Nós temos maldade de correr atrás. Agora imagina uma dona cida, mano. Ela precisou lá dentro do banco. Ela vai virar e fala, não sei. Eu fiz na digital lá. Não sei cadê. Entendeu? Então eu acho, no meu ver, não vale a PSEU para contrato social. Eu acho que a gente tem que deixar disponível também. E aí entra aqui qual que foi a última funcionalidade adicionada de folha de pagamento, Que foi a última reunião que eu tive com a Carla. A gente fez um passo a passo das obrigações do que precisa ser feito, Assim, o CNPJ abre, né? Como é que é cadastrado, é chato pra cacete. Qual coisa chata é folha de pagamento.
+00:10:06 Pedro Maia
+E a gente colocou... Nossa, é chato demais. A gente colocou como funcionalidade, mas igual eu também já estou alinhado com o Mauro, Que é interessante você saber, O nosso lançamento não vai ser 100% automático tudo, sem chance. Então, por exemplo, a parte de constituição do EMEA do Simples, A gente vai chegar até a primeira assinatura. Primeira assinatura, que depois o cara paga a guia, Na primeira assinatura que é dos sócios ou da própria pessoa sozinha, Vai cair pra dentro. A gente vai ter que dar continuidade disso e certificar digital. Depois de certificar digital, ele cai pra dentro automático de novo do aplicativo. Então a gente vai ter que ter essa pontinha aí,
+00:10:36 Pedro Maia
+Essas assinaturas por enquanto, manual e pessoa. Não tem por onde a gente correr disso. Até pra gente entender o que acontece. Uma pessoa operando isso... Os desenvolvedores vão ter conteúdo para saber, como é que eu automatizo, por onde eu começo, Será que por aqui vai dar, e se mandar isso dessa forma, vai ser melhor para a gente mapear. Então, isso é uma das coisas também que está no radar. Mas, enfim, são essas funcionalidades macro, dentro tem as subfuncionalidades, Que são básicas para a gente lançar um aplicativo de contabilidade. E o que eu também falei com o Mauro é o seguinte, a gente está alinhado que a gente tem três serviços.
+00:11:07 Pedro Maia
+Primeiro serviço, Constituição de ME do Centro Nacional.
+00:11:12 Pedro Maia
+Dentro da nossa categoria, da nossa persona, que é anexo 3 e 5, ME, ainda não é EPP. A segunda produto que nós temos é a abertura do MEI para a pessoa e ela fazer todas as funcionalidades externas, Que é básica, pagar a guia que a gente vai mostrar para ela, emitir uma nota e o que for necessário, E a migração de contabilidade. São três produtos. A gente está focado agora, todas as perguntas aqui são só sobre Simples Nacional, Constituição do ME, E o cara dentro do aplicativo operando isso. A gente vai fechar essa esteira, que é a mais complexa. Fechando essa esteira, o resto sai mais tranquilo. Então, o nosso foco agora é isso.
+00:11:43 Pedro Maia
+Então, isso aqui são funcionalidades dessa pessoa, desse cliente, desse usuário. Então, beleza. Então, dentro disso, como é que funciona? Aqui tem uma... Essa frase, na verdade, que é o que mais diz o que a gente vai fazer. Construímos um motor que calcula o imposto e a guia dos sócios mês a mês, E um piloto que ajusta o prolabório sozinho. Isso aqui já está feito, de acordo com a Contabilizei E outras leis que a gente buscou externamente de validação. É... Para manter a empresa no anexo 3, para testar, criamos 16 empresas fictícias com histórico.
+00:12:21 Pedro Maia
+Completo de faturamento, você vai ver aqui abaixo, abrindo em todos os 12 meses do ano. De 1 a 4 sócios, alguns atravessando a virada do ano e rodando o motor na vida inteira de Cada um. Foram 156 competências, as perguntas abaixo sairiam daí. Então, tipo assim, aqui vai ter os testes e os resumos. O que é que eu preciso de você? É verídico? Não é? Por quê? Os cruzamentos que a gente fez nessa documentação, Ele deu como validado muita lei atual, Que eu não acho errado. Então, por exemplo, aqui em cima... Tá vendo que algumas coisas vão mudar. Exato. Então, quando você vê aqui, já respondido,
+00:12:52 Pedro Maia
+Antes de começar, sócio com emprego CLT, não impede nada no simples. Só ajusta o teto do INSS, certo? E aqui ele vem puxando. Foi a barra redura...
+00:13:02 Léo
+Este sentido... O que barra ele ali é seguro-desemprego. Mas em barra, tipo, a que nível? Se ele tiver um CNPJ aberto e ele for demitido, ele não tem acesso ao seguro-desemprego. Ou ele tem que entrar em um processo administrativo para poder provar que o CNPJ dele está ativo, Mas ele não tem movimentação. Em tese, a Receita entende que o CNPJ está ativo, você tem uma renda por fora que você.
+00:13:31 Pedro Maia
+Não vai.
+00:13:32 Léo
+Precisar de seguro de desemprego. É a única trava, mas acho que dificilmente não sei se você vai pegar tantas casas.
+00:13:37 Pedro Maia
+Mas É onde é que entra que a gente tem que validar também, que é o que eu vi muito nessa documentação. O que a gente só avisa e o que a gente põe à mão? Por exemplo, isso aqui, sócio com emprego CLT não impede nada, sim, beleza, mas você acabou de falar um ponto. O cara, se ele for CLT e ele abrir um CNPJ, ele pode abrir. Só que...
+00:13:57 Pedro Maia
+Fala com nós. Ele é avisado aqui?
+00:14:02 Pedro Maia
+Beleza. Mas vamos supor. Chegou o ponto do cara que ele foi mandado embora e não vai estar com acesso ao seguro-desemprego.
+00:14:08 Pedro Maia
+Eu só tenho que avisar esse cara. O Bel é dele. Eu só tenho que virar pra ele e falar, ó.
+00:14:13 Léo
+É, eu acho que vai trazer preocupação. Se eu avisar esse cara...
+00:14:17 Pedro Maia
+Então talvez não possa nem avisar. Eu vou ter.
+00:14:19 Léo
+Que ter uma central De atendimento aqui, um dobro do tamanho Pra poder falar com esse cara. Não, não é bem assim, é entender a circunstância dele, sabe?
+00:14:30 Pedro Maia
+Certo, Entendi. Tem coisa que eu acho que não vale entrar, você vai ver muita coisa aqui pra baixo. Mas isso aí é válido, só se o emprego CLT não impede nada, ele pode abrir e tal. Só tem que ajustar esse TETRA em INSS, certo? Isso. Beleza. Defiz.
+00:14:42 Léo
+O Ajuste do TETRA ali é só na questão da contribuição mesmo. Às vezes o cara já contribui no CLT com o TETRA, ele não é obrigado a fazer mais um... Ele pode contribuir Só pelo CLT? Ele pode contribuir só pelo CLT Porque ele já está contribuindo no teto. Aí existe uma controvérsia aí, Que o cara é obrigado a ter um prolabore, Para poder justificar a distribuição de lucro isento. Só que aí é, Coisa de lei mesmo, É questão de interpretação.
+00:15:10 Pedro Maia
+Mas É o que influencia. Então, por exemplo, ali. Defis, sem multa por atraso, Mas bloqueia o PGDAS a partir de março. Do ano seguinte. Manual, PGDAS e tal. E você foi puxar de lei. Validado.
+00:15:21 Léo
+Eu Sou obrigado a fazer a envio da Defis, Porque senão eu não consigo mandar o Simples. O Simples, que é uma outra declaração, Que é o PGDAS, ele fica travado. Ele me obriga, ele me dá um aviso. Você tem que mandar sua Defis, senão Você não manda sua declaração desse mês. Certo. Defis Morre.
+00:15:38 Pedro Maia
+Em 1º de janeiro de 2016.
+00:15:40 Léo
+Isso. Agosto na dúvida Se ele não gerar a multa. Mas eu acho que ele passou a gerar. Entendi. Acho que é isso. Ele não gerava multa nenhuma, podia entregar fora do prazo. Esse ano, a partir desse ano, ele passou a gerar. Então o defício passou a gerar multa, então tem que achar onde é que está essa multa. Não sei se é 60 reais,
+00:15:58 Pedro Maia
+Alguma coisa assim. Não é por percentagem, nada, é de fixo?
+00:16:10 Léo
+Não, acho que é um valor fixo.
+00:16:15 Léo
+R$50,00 se não tiver movimento, mas se tiver movimento é R$200,00. É, acho que o mesmo valor de R$200,00. Existem os valores assim que... Mais físicos. Aí só que, vamos supor, é R$200,00, mas às vezes ele paga até o vencimento, ele cai para R$100,00. Entendi. E sempre tem isso.
+00:16:26 Pedro Maia
+Mas o que eu quero entender, por exemplo, igual esse defis sem multa, tratava por atraso. Esse defis é algo que a pessoa paga, é o usuário que vai pagar, o dono do CPJ. Aí como é que vocês vão tratar? Essa obrigação, ela é anual. Ela é anual, beleza. Então... Vai ser uma cobrança,
+00:16:39 Léo
+O cara vai ter que me pagar para poder fazer o negócio?
+00:16:43 Pedro Maia
+Não, Todas essas guias de governo a gente não vai intermediar pagamento. A única coisa que a gente vai intermediar pagamento é a questão da taxa da junta só E o certificado de tal, que seria do MEI. O cara do MEI a gente não dá o certificado, a gente tem que medir o pagamento. E o cara do Simples, que já está incluso o certificado no plano dele... A gente só vai intermediar a taxa da junta Pra fazer uma jogada que o Mader falou de usar uma guia, Já paga, validar tudo o RPA.
+00:17:13 Pedro Maia
+Assim que o cara pagar, o cara não paga Pra junta, ele paga pra gente. Apitou no nosso sistema de pagamento, a gente só dá o... O robô só vai dar o confirmar lá com a guia nossa. Entendeu? Então vai ser basicamente isso. Pra adiantar o processo de robô, que aí faz sentido. Agora, em relação a isso, O que eu quis dizer? Guias Desse nível, que o CNPJ tem que pagar, a gente vai buscar E mostrar. Buscar, calcular e mostrar. Você tem essa guia aberta, falta tanto dia para vencer essa guia. A gente não vai intermediar e a gente não vai pagar pela pessoa, entendeu?
+00:17:44 Pedro Maia
+Então é basicamente isso. Então, por exemplo, isso aí, anual, se tem um cálculo, é feito em tal dia do ano e tudo mais, Ela vai estar disponível no dia que a gente estipular ou no dia que a lei exige, enfim, É onde é que tem, com perguntas para baixo também. E aqui, inclusive, puxou que esse defis nas leis atuais lá, no dia 1 do ano que vem, Ele é absorvido pelo PGDAS. Isso é uma lei que foi feita em 4 do 8, certo? Ele está sendo mais.
+00:18:08 Léo
+Integrado cada ano. Ele vai ser absorvido de forma mais dinâmica. Antes eu tinha que ir lá preencher os dados. Agora você entra lá e ele já tem os dados pré-preenchidos.
+00:18:17 Pedro Maia
+Entendi. Então está certo também, né? Está, é isso. Empresa aberta em dezembro declara ano-calendário inteiro. Faz sentido?
+00:18:26 Pedro Maia
+Empresa aberta? Em dezembro. Foi constituída em dezembro.
+00:18:31 Léo
+Ela Vai declarar o ano da abertura. O dezembro ela já vai ser obrigada a fazer, aí você está falando de defis, né? Isso. Vai ser obrigada a entregar, porque ela tem que abrir como abertura. Certo.
+00:18:44 Pedro Maia
+Livro de caixa basta para o defis, salvo se distribuir lucro acima da presunção.
+00:18:50 Léo
+É, aí tem... Só que dificilmente, eu não entendo que existe um controle efetivo disso não. É isso que eu estou falando, você vai ver mais pra baixo. Se eu pegar uma presunção, depois eu tenho que ver se o cara... A despesa real dele, Com contabilidade, eu entendo que Contabilidade digital não vai conseguir fazer isso. Consegue, mas não vai conseguir. Não agora, não vale a pena mexer com isso. É tipo assim, isso aqui... É regularidade fiscal, emite nota,
+00:19:16 Pedro Maia
+Declara e pronto, você resolve sua vida. Entendi. Então isso aqui a gente pode meio que não mexer. Isso aqui não é o bel nosso, não é coisa nossa.
+00:19:26 Léo
+Não. Beleza. Só se ele encontrar... Você lembra que tem uma opção, Lá da legalidade... Da... Da Contabilizei de contratar Um plano maior pra ter contabilidade? Sei. Aí, dali, a gente, Já teria que analisar isso mesmo. Mas se o cara não analisar essa contabilidade, Se ele não tiver o plano de contabilidade atual, Atualizada por nós, Aí ele não vai conseguir fazer esse controle.
+00:19:48 Pedro Maia
+Então, A gente... Entendi. Ok. Mas aí, por exemplo, a gente, Emitir nessa guia pra ele é nossa parte. A gente faz esse cálculo do FII certinho E tudo mais, e ele paga nessa guia. Beleza. Só se o que sai, É... Não apaga o prolabore do fator L. A folha histórica não muda.
+00:20:05 Léo
+Isso, O que gerou para ele de folha permanece. A não ser que eu vá lá e retifique, mas é... Se o sócio sair, o histórico dele de prolabore vai permanecer como histórico de consulta ali. A única coisa que influencia mesmo é no aumento do prolabore do sócio que fica. Tem que recalcular o do que fica. O prolabore dos dois está contribuindo para poder manter o anexo dele 3. Se um pro laboratório sai, eu tenho que multiplicar o pro laboratório para manter o mesmo padrão de tributação.
+00:20:36 Pedro Maia
+Acho que isso até tem ali no exemplo abaixo.
+00:20:40 Pedro Maia
+Beleza. A gente leu. Beleza. Sócio que entra no fator R, que entra, afeta o fator R, já na competência de formalização. Certo? Afeta. Beleza. Isso quer dizer o quê? Tipo assim, que é um sócio que entrou depois da Constituição. Isso. Ele também entra no cálculo a partir do próximo mês vigente ou do mês que ele fez a entrada?
+00:21:02 Léo
+Aí Tem que ser a partir da competência que ele entrou. Então vamos supor, a gente está no mês 9. Ele entra no mês 9, o prolabório dele, quando eu estiver no mês 10, eu vou gerar esse prolabório no mês 9.
+00:21:11 Pedro Maia
+Contando a entrada, mesmo que ele entre no último dia do mês.
+00:21:14 Léo
+Aí ele tem que avaliar o seguinte, se eu fizer, em muitos casos que eu tenho de história, Às vezes tem dois solos lá, mas o outro é só um laranja. Quem atua mesmo é um sol. Não tem. E agora isso vai ser mais comum ainda, com essa distribuição limitada de 50 mil, Com certeza a gente vai ter uma tendência a ter mais sócios laranja aí, Para poder aumentar esse limite para 100 mil. Então isso aí é... Entendi. Não necessariamente eu tenho que fazer o prolabório para os dois sócios, Eu tenho que... mas afetaria. Entendi.
+00:21:45 Léo
+O fator é. Entendi. Eu posso deixar, porque, vamos supor, às vezes o cara está com um limite. Ele já está fazendo um prolabore em um sócio que já está pagando imposto de renda. Se eu dividir o prolabore entre os dois, eu não pago o economismo do imposto de renda E continuo com o mesmo benefício de redução do símbolo exacional. Porque hoje o limite do imposto de renda é 5 mil, mas pode acontecer que a folha do cara, Está acima de 5 mil. Então, em vez de eu tirar 5 mil para um sócio, mais de 5 mil para um sócio e pagar esse, Imposto a mais...
+00:22:15 Léo
+Eu distribuo esse prolabore entre dois e fico no limite da isenção. Tem que ter uma forma de economizar o imposto dele.
+00:22:23 Pedro Maia
+Então, eu não afetaria. Seria, por exemplo, isso, Eu acho interessante você falar isso, Porque isso pode entrar como sugestão. Sei lá, talvez o cara, ele quer, Porque aqui a gente vai liberar da pessoa Mexer no prolabore dela. É. Só que com avisos. Então, vamos supor, a pessoa que tem sócio, Ela pode mexer no prolabore dela e do sócio, Por exemplo, o administrador. Só que se ele chegar a um ponto de... Passar esse teto pra cair numa... Pagar um imposto maior, Que é o que eu tô entendendo, o imposto de renda lá, A gente avisar. Pra você manter... Pra você manter na isenção,
+00:22:55 Pedro Maia
+Vocês dois tem que somar 5 mil, igual você falou. Ou vocês três tem que somar 5 mil.
+00:23:00 Léo
+Porque aí você dá uma sugestão ali, E aí o cara não recorre, depois ele não questiona, Porque às vezes ele vai procurar alguém, Ou o cara falou que não tá pagando imposto a mais, Aí realmente tá. Se eu der o aviso... E um aceite, né? Exato. Você vai falar, não, mas eu te avisei. Exato, faz sentido. Te dei a consultoria. Você não pagou a consultoria, mas o próprio app te deu uma dica.
+00:23:19 Pedro Maia
+Entendi, Faz sentido. Beleza. Esse último ali são só os canais, são coisas mais internas, APIs e tal. Ontem eu descobri um pouco mais sobre isso também. Ser Pro mesmo, eu tava batendo a tecla, apanhando com a IA aqui, porque eu cismei que ele me Indicou desde o início de ser Ser Pro, e eu tô, porra, aí eu tô sem... Isso é o que é homologado direto na Receita Federal. É, aí eu tô com ele assim... Mas se essa porra desse CERPRO tem acesso à API do governo, eu quero também. Ele mais é do governo. Eu fui descobrir. Último que eu fui descobrir que o CERPRO é do governo. É a API mais confiável que você pode ter, eu acho.
+00:23:51 Pedro Maia
+E eu vi lá os valores são muito próximos da InfoSync. Você paga centavo. É centavo, muito parecido. A gente até usa lá embaixo em algum acernamento. Beleza. Então, beleza, o que seria? Aí para você entender também o que é a persona que a gente está atendendo. A gente está, todas essas personas simbolizadas para trás, para frente, para baixo, na verdade, Elas são ME do Centro Nacional, ANETS 3 ou 5, serviço, IBH, de 1 a 4 sócios, pessoa física Sem funcionário. Aqui não entrou colaborador ainda, porque a gente ainda está terminando de levantar. Então, só para você entender, primeiro caso, o que acontece? A gente não precisa destrinchar minuciosamente, mas você tem que identificar erros, você.
+00:24:25 Pedro Maia
+Tem que identificar alguma frase que não está tão legal ou que, então, não faz sentido. Então, o que é que isso é um caso? Caso, empresa com 4 sócios, cada um recebe 3.500 de prolabore, folha total de 14.000. Onde apareceu? Rodando uma empresa de teste com 2 sócios, nosso sistema somava o prolabore de todos E calculava a guia como se fosse uma pessoa só. Por que apareceu? O erro vai para os dois lados e é grande. Nesse exemplo, o sistema cobrava 3.600 de TAN, que faz parte dos saldos, Onde calculamos que o correto seja 1.540 de INSS.
+00:25:03 Pedro Maia
+A tabela de imposto de renda é progressiva por pessoa. E 14 mil numa pessoa cai numa faixa que 3.500 em 4 não alcança. Faz sentido isso?
+00:25:16 Léo
+Se Eu tirar um valor maior ali de prolabore para um só, ele tem uma tendência de pagar mais imposto do que se eu dividir isso para dois.
+00:25:24 Pedro Maia
+Que É o que a gente acabou de falar anteriormente, certo?
+00:25:25 Léo
+Os Limites são individuais, que é exatamente isso que a gente acabou de falar.
+00:25:29 Pedro Maia
+Então, fechou. No INSS, o erro era contrário para menos, porque o teto também é por pessoa e aplicávamos um teto só por soma. Já corrigimos, então ele está até alertando. Então, essa correção foi certa. A gente pegou e distribuiu pra todo mundo, os sócios, pra dar o valor que pagaria, seria Isento do imposto de renda. É isso? Beleza. Então, a conta linha a linha e duas no mesmo caso. Como o sistema fazia e como passou a fazer. Então, o que acontece?
+00:25:59 Pedro Maia
+A base do INSS, 14 mil, limite do teto, passou, 8.400, como que a gente fez? A gente pôs abaixo do teto. Seria isso, basicamente. O INSS de 11% foi reajustado. Por sócio, porque teve a divisão entre os sócios, certo?
+00:26:17 Pedro Maia
+Depuração aplicada do imposto de renda. O próprio INSS estava usando esse valor. O desconto simplificado, R$607,20. É isso mesmo, né? Seria basicamente de acordo, né? Lógico que seria difícil fazer de cabeça aí, mas só para você ter uma ideia. Não, mas é o valor do som de cem, né? Beleza. Base do imposto de renda de R$13.000 e tal foi para R$2.892,80. Isso. Faz sentido.
+00:26:42 Léo
+Porque eu pego os 3,5 mil lá e
+00:26:44 Pedro Maia
+Quatro reduções, certo? Beleza. Faixa de tabela tinha caído no imposto de renda para 27,5%. Foi para 15%, que seria dentro do... Certo, né? Porque aí reduz o.
+00:26:58 Léo
+Montante e reduz a...
+00:26:59 Pedro Maia
+Exato. Imposto pela tabela que estava 2.600 e alguma coisa, caiu para 39,76%. Faz sentido. Mais ou menos é dos calcos. Redutor do artigo 3 da lei do alabá, a que não alcançava nesse primeiro teste que a gente rodou, Depois ele trouxe o menos 39,76 que zeraria. Faz sentido? Ele pegou o TEP e subtraiu ele mesmo. Perfeito. Isso mudou agora em recente. Beleza. E o IRRF aqui também, 2.600 é alguma coisa que passa a ser zero, certo?
+00:27:31 Pedro Maia
+Isso. Total por sócio. Porque está no limite de 5 mil. Entendi, entendi. Então, ou seja,
+00:27:37 Léo
+É o tanto que eu quero pagar de tributação e isso é dividir... Isso todo mês, né? Todo mês, ele vai pagar R$2.684,00 e só de imposto de renda, né? Só de imposto de renda. Fora a base lá do INSS que fica maior. Exato. Eu uso uma dedução só.
+00:27:54 Pedro Maia
+Exato. Então, o que ele puxou para o total errado antes era R$3.600,00 e tal, e ele corrigiu Já no nosso motor fiscal, foi para R$1.540,00. Certo? Faz sentido? Esses números. Beleza. Aqui fala exatamente isso que você falou, a diferença de R$ 2.077,19 por mês, cobrado a mais de 4 pessoas que juntas não chegariam nem na segunda faixa da tabela. O pagamento confirma que a tabela do INSS é R$ 8.000,00 e a tabela do IRRF se aplica individualmente a cada sócio, correto? E que a guia da empresa é a soma dessas contas individuais, certo?
+00:28:25 Pedro Maia
+Existe alguma situação em que se calcula sobre o total ou não? Não, é por CPF, então é por pessoa. É por pessoa esse cálculo. É por.
+00:28:33 Léo
+Pessoa e depois os dois somam e geram uma guia só. Entendi. Uma guia só, né? Soma de todos e gera uma guia só. E se tiver mais de um sócio, ele pega esses individuais e se consolida numa guia só.
+00:28:45 Pedro Maia
+Entendi. Então, por exemplo, isso aqui a gente mostraria lá para uma pessoa que tem quatro sócios na distribuição correta, Da mesma forma uma guia. Porque é pelo CNPJ o cálculo.
+00:28:56 Léo
+Porque é pelo CNPJ.
+00:28:58 Pedro Maia
+Mas a distribuição é por sócio.
+00:29:00 Léo
+A distribuição do envio é individual. Ótimo, por CPF. Manda lá para a base.
+00:29:04 Pedro Maia
+Do social de forma individual, por CPF. Fechou.
+00:29:08 Pedro Maia
+Agora, falando aqui da gente ter preso o desempate, No INSS, nós e a pesquisa que rodamos batemos 1.540. No IRRF, IRRF não. Você está lendo? Aqui, bem nessa...
+00:29:22 Pedro Maia
+Então, desconto simplificado. Olha lá. Nosso motor achou 607,20. Redutor Da lei aplica zero. IRRF por sócio, zero. IRRF, Da empresa, zero. O que que a Pesquisa me fez fazer? Mudou esses valores. Ele não falou desse redutor, que Provavelmente foi o que desencadeou o resto do cálculo Errado. Faz sentido? Isso? Ele não está considerando. A pesquisa não considerou, Esse redutor. Que é um décimo em cima de 0.
+00:29:53 Pedro Maia
+Pode ser isso? Que tenha errado o cálculo? O resto do cálculo, por exemplo?
+00:30:04 Léo
+Isso. É porque essa lei 15.270 lá, Ela foi... Ela que incluiu Esse redutor da base. Quando ele não atingiu O mínimo ou, Ultrapassa o teto mínimo, Aí ele dá um redutor, Calculado para poder fazer uma... Fazer a redução do valor final do imposto.
+00:30:22 Pedro Maia
+Então, tipo assim, quando a gente chegou aqui nesse lado da tabela direita E aqui ele teve a dedução e zerou, é sobre isso. E aqui ele simplesmente, nessa pesquisa que a gente fez, ele ignorou o redutor, E com isso ele fez os cálculos errados, seria, basicamente? Exatamente. Porque aqui com a lei aplicada...
+00:30:39 Léo
+Porque no IR ali ele não ia ter mesmo, porque a lei é... Ele está nos 5 mil.
+00:30:48 Léo
+Só que o redutor ali é quando ele ultrapassa, acho que é mais 3.500, se não me engano.
+00:30:57 Pedro Maia
+É, aqui está testido
+00:30:58 Léo
+3.500 abaixo do TEC. Isso. Quando ele atinge acima disso aí, ele começa a aplicar esse redutor. Aí ele recebe o imposto, mas um valor menor. Entendi, entendi. Então, antes era feito só sem o redutor. Aí, dessa lei 15.270. Agora ele tem essa possibilidade de reduzir esse valor final. Entendi.
+00:31:19 Pedro Maia
+Eles mudaram um pouco a forma de calcular. É, então, de forma tipo assim, que ele chega a reduzir se estiver abaixo do teto. Ele zera.
+00:31:28 Léo
+Quando ele está abaixo do teto, ele zera. Ele pega o mesmo valor devido e zera ele no mesmo valor. Quando eu ultrapasso os 3,500, aí ele aplica esse cálculo de redução, aí vai gerar, A guia para.
+00:31:42 Pedro Maia
+Ele num valor reduzido. Entendido. Entendi, entendi, tá, beleza, então faz sentido ele zerar aqui, né, do que a gente, do que o motor rodou, O barra da lei, né, e tudo mais, beleza. Faz sentido ele zerar.
+00:31:54 Léo
+Ali porque o limite agora é 5 mil, né. Ah, beleza. Então, assim, agora mudou um pouco, né. Beleza. Essa limitação.
+00:32:04 Pedro Maia
+Beleza, Aí aqui vem, seria uma pergunta, qual é o desconto simplificado vigente, Estou aqui em cima, em 2026, o redutor do artigo 16, beleza. E se aplica ao prolabore de 3,500, certo?
+00:32:17 Léo
+O desconto simplificado vigente em 2026 e o redutor a se aplicar ao
+00:32:23 Pedro Maia
+Prolabore de 3,500. Ele está querendo dizer que o desconto simplificado vigente em 2026 e o redutor do artigo 3A se aplica no prolabore de 3,500. Faz sentido, né? Porque está abaixo do teto. É isso? A aplicação não, o redutor ele vai aplicar só quando o valor é maior.
+00:32:43 Léo
+Entendi.
+00:32:46 Léo
+Maior de 3,500. Aí vamos falar, eu não sei como ele está interpretando ali. O redutor ele vai reduzir, qual que é a questão? Ele vai gerar o débito e vai reduzir para zerar. Aí quando ultrapassa, ele vai ter esse... A mesmo cálculo,
+00:33:02 Pedro Maia
+Só vai sobrar a gordurinha que ele vai pagar.
+00:33:04 Léo
+É, entendi. Era mais simples isso, entendi. Hoje em dia eles deram uma complicadinha mais nessa parte desse cálculo.
+00:33:12 Pedro Maia
+Mas, Por exemplo, mesmo que 0...
+00:33:14 Léo
+O ELI 0 é o que ultrapassa os 3.500, ele vai reduzir, mas ele vai receber menor. E aí quem entra,
+00:33:19 Pedro Maia
+Por exemplo, a funcionalidade do aplicativo? Você acha que quando a gente estiver abaixo do teto, a gente nem calcula? Ou a gente calcula e zera? O que você acha mais interessante? Por exemplo, você entendeu o que eu quis dizer? Porque, por exemplo, você falou que ele só pratica a redução...
+00:33:35 Léo
+Para ele, não vai... Para esse caso específico, ele não vai...
+00:33:41 Pedro Maia
+Ele já recebe a isenção do IR automaticamente. Eu calcular e deduzir para zerar é um cálculo desnecessário?
+00:33:48 Léo
+5 mil já pode considerar como zero. Quero tirar um prolabor de 5 mil, ele tem a possibilidade de tirar, de não pagar o IR. Entendi. Já pode não pagar. Só para a empresa que recebe aluguel é que tem que fazer uma avaliação se o desconto simplificado Ele compensa mais do que a consideração do cálculo completo. Mas isso aí normalmente as mobiliárias já fazem. Ah, para o nosso caso não vai entrar. Normalmente os caras já fazem isso. Às vezes fazem, às vezes também não fazem.
+00:34:19 Pedro Maia
+Então A gente pode travar isso. Se o cara estiver abaixo do teto, que não vai aplicar o redutor, não tem necessidade de aplicar o redutor. A gente simplesmente não aplica, não faz a conta com isso. Agora, se o cara passou do teto...
+00:34:32 Léo
+Se O cara passar do teto de 5 mil, aí a gente tem que fazer esse cálculo.
+00:34:36 Pedro Maia
+Aí passou 5 mil,
+00:34:37 Léo
+Aí eu não vou lembrar o certo, mas o limite de 5 mil é que vai fazer o cálculo normal. Porque quando ele ultrapassa um limite, quando ele ultrapassa um limite de... Deve ser 5 mil. Aí ele não utiliza o cálculo da redução, ele usa o cálculo normal, sem o redutor.
+00:35:28 Léo
+É, passou de R$ 5.000, ele realmente não vai usar mesmo. Só até R$ 5.000, de R$ 3.500 a R$ 5.000, ele usa o redutor. De R$ 3.500 a R$ 5.000? É. Passou de R$ 5.000, ele também não usa? Passou de R$ 5.000, aí o cálculo é normal. Ah, entendi. Aí ele não usa esse cálculo de redutor.
+00:35:42 Pedro Maia
+E de R $ 3.500 para baixo,
+00:35:44 Léo
+Nem faz cálculo? De R$ 3.500 para baixo, ele zera o imposto, direto. Então, não tem necessidade. Não tem necessidade. Então, se o cara colocar lá R$ 5.000, já considera que o imposto dele vai se zerar. Do IEA. Aí ele só vai calcular os 11% em inessência. Entendi, faz sentido. A fase é direta. Entendi. Pra ele não vai surtir.
+00:36:03 Pedro Maia
+Muita coisa. Não precisa mostrar esse número pra ele.
+00:36:05 Léo
+O redutor só vai fazer sentido se o cara não recebe aluguel. Entendi, entendi. Aí ele vai fazer sentido.
+00:36:12 Pedro Maia
+De ser um caso a se pensar qual seria o melhor caminho. Fora isso, porque a gente vai atender do prestador de serviço, Anexo 3, 5 aqui. Não. O cara que tirou,
+00:36:20 Léo
+Pro labor, 5 mil, considera zero. Entendi. A obrigação dele.
+00:36:24 Pedro Maia
+Fechou. Então, beleza. A2, o prolabore pode ser desigual entre sócios? O caso, a empresa com três sócios que paga 6 mil de prolabore no mês, O nosso sistema assume 2 mil para cada um. Onde apareceu? Ao consertar o erro do A1, que é o lado de cima, Porque o imposto depende de quanto cada pessoa recebe, não do total. Porque apareceu a divisão igual, não é neutra. 14 mil em 7 mil mais 7 mil gera um IRRF.
+00:36:55 Pedro Maia
+Em 11 mil dividido por 3, que seria como se fossem sócios, por 3 mil na verdade. Gera outro, maior. Aí, por exemplo, tem coisa aí que pra mim não faz nem sentido. E não temos de onde deduzir o rateio, o epicoleta, o percentual de participação Que governa o lucro, não pro labore, assumindo igual por conveniência de tela. E isso tem preço, entendeu? Tipo assim, porque lá na tela... Quando a pessoa coloca que vai adicionar sócios durante o nosso dossiê lá,
+00:37:25 Pedro Maia
+Ele coloca porcentual de porcentagem. Nosso sistema está puxando que aquele percentual é a divisão do prolabório que a gente faria.
+00:37:31 Léo
+Não tem necessidade. Ele pode tirar um prolabório igual para ambos os sócios, Mesmo que a participação seja desproporcional.
+00:37:40 Pedro Maia
+E como é que a gente acha que a gente cercaria isso? A gente, por padrão...
+00:37:44 Léo
+Eu já... Nós, né? Eu normalmente não sou a favor de fazer contribuição para a QMSS. Então, eu sempre orinho, cara, se você tem uma organização financeira, não vai ser o caso aqui, né, de consultar isso com o cara, mas se ele tem uma certa estabilidade financeira, uma certa organização de guardar dinheiro, pra ele, ele contribui com o salário mínimo, ciente que ele vai aposentar com o salário mínimo, porque, ou seja, ele contribui com o 1.621 hoje, aí vai pagar uma guia de 178 reais, que é os 11%, e fechou.
+00:38:17 Léo
+Agora, tem cara que, mas é bem esporádico, tem cara que quer contribuir com mais. Mas não necessariamente eu tendo 20% da empresa e o outro tendo 80%, Os nossos prolaboradores têm que ser proporcionais à participação.
+00:38:29 Pedro Maia
+Ele tem que ser?
+00:38:30 Léo
+Não tem. Não tem, ah, não tem. Vamos supor, eu posso contribuir com, eu como sócio, Eu, na minha distribuição de lucro, eu posso optar por, Não, eu quero contribuir, o cara faz uma distribuição lá de 20 mil. O cara, tem 20 mil que sobrou aqui, ele fala pro sócio dele assim, ó, você tem 20% eu tenho 80. Tem cara que fala assim, que pra ser igual, não, você tem participação de 20 mil, eu vou te dar 20 mil do lucro, beleza, ele tem esse direito. Só que, ainda assim, se ele optar por falar assim, não, então eu vou contribuir com o INSS, sobrou 10 mil aqui pra mim.
+00:39:05 Léo
+Então, eu vou contribuir com 5 mil de INSE, com Prolabor e os outros 5 mil vai ser distribuição de lucro. Ele pode optar por fazer a forma como ele quiser. Entendi. Então, assim, mas não necessariamente isso precisa ser proporcional. Os meus 20 mil, os meus 20% não precisa ser 20% de Prolabor. Eu posso decidir como eu.
+00:39:23 Pedro Maia
+Vou distribuir isso. Entendi. Aí, por exemplo, isso aí é a nível de complexidade, por exemplo, dentro do aplicativo. Porque eu vou te dar um exemplo da Contabilizei. A Contabilizei, eles têm lá acionado o tipo, cálculo inteligente, alguma coisa assim, Acho que a gente viu, não sei se você chegou a ver comigo no dia, Que eles, para manter o anexo, manter o alíquota baixinho, o trem certinho, o fator R, Eles calculam por conta própria, de acordo com as notas que eu estou emitindo aqui e a FIPS. Então, o que acontece? Só que isso, a gente não tem um caso real de como isso seria conduzido por sócio. Então, por exemplo, foi o que ele puxou.
+00:39:55 Pedro Maia
+O nosso sistema hoje deduz a porcentagem que foi colocada inicialmente E faz a divisão de prolabora em cima disso. Até onde eu posso fazer isso? Ou até onde eu dependo de perguntar para a pessoa como é que ela quer? A partir do momento que ela tem sócio, entende? Como é que eu conseguiria contornar isso? Ou se simplesmente eu tabelo travado e se a pessoa entrar nessa página, Ela consegue fazer essa alteração com a gente internamente, Para um caso específico, entendeu?
+00:40:23 Pedro Maia
+O que você acha que seria mais interessante? A gente travar algo ou a gente, Gerar pergunta? Porque eu tenho medo. A gente anda numa linha Muito fodida de O que a gente manda pro cara resolver Que pode gerar confusão com o caboclo. Entendeu?
+00:40:41 Pedro Maia
+Vamos supor.
+00:40:42 Léo
+Se o cara...
+00:40:45 Léo
+Só pensando assim, não há possibilidade. Você tem um prolabório, Um fator R de... Um salário bim cada um, que a gente pode contribuir com pelo menos um salário bim. Sim. Ou deixar de contribuir com alguém. Entendi. Mas se eu tenho 1.621 vezes dois sócios, eu tenho 3.242 de prolabore. Se o meu prolabore, meu fator R, me exige um salário maior do que 3.242,
+00:41:16 Léo
+Eu entendo que o ideal seria deixar meia a meia para todo mundo. Por que o ideal seria deixar meia-meia? Porque se eu destinar, vamos supor, desses 3.242, 3 mil ficasse para um sócio, 242 reais ficasse para o outro cara, o outro cara está chegando em uma linha De pagar mais imposto mais próxima do que eu estou com o valor meia-meia. Então o ideal seria fazer a divisão meia-meia. Tipo assim, se eu fiz igual, faz igual. Três sócios a 10 mil. Se o cara tem isento de 5 mil...
+00:41:49 Léo
+Cada um, eu tenho 10 mil de limite, então não compensa eu colocar uma proporção maior para um ou menor para outro. Entendi. Faz meia vez.
+00:41:58 Pedro Maia
+Pode Ser só caso o cara procure. O cara fala assim, eu tenho uma situação muito específica e eu quero alterar. O cara entra em contato e a gente vê como é que é a sua. Ah não,
+00:42:06 Léo
+Eu quero contribuir com mais, mas vai ser bem menos, eu entendo. Eu acho. Dificilmente o cara quer contribuir.
+00:42:13 Léo
+97% não quer fazer essa contribuição.
+00:42:16 Pedro Maia
+Do INSS? Maior. É maior, né? Você fala.
+00:42:20 Léo
+Às vezes tem o outro sócio lá, mas ele não quer contribuir com o outro cara, E às vezes ele vai querer passar o prolabório dele todo para o outro cara, Porque o outro sócio não é um sócio de trabalho efetivo, Ele está lá só para poder cumprir um papel lá. Entendi, entendi. Então assim, aí eu acho que ele tem que entrar em contato e falar. Que quer diferente,
+00:42:40 Pedro Maia
+A distribuição diferente.
+00:42:42 Léo
+Ao invés de eu tirar dois salários mínimos, Meia a meia para cada um, Eu quero tudo para mim e nada para o outro. Aí ele poderia. Porque eu quero aumentar a minha média de contribuição Lá na minha aposentadoria.
+00:42:52 Pedro Maia
+Aí gera uma outra dúvida que você acabou de falar. Por exemplo, a questão do fator R. A pessoa que tem essa possibilidade, O meu mesmo é esse, de publicidade e propaganda. Eu tenho a questão do fator R, Que eu posso ser cinco, eu posso ser três. Eu posso ter sócio? E o meu sócio interfere no fator R?
+00:43:09 Léo
+O seu sócio interfere. Entendi. O seu sócio, automaticamente, se você já estiver em uma faixa maior, Aí vamos olhar o benefício dos 5 mil. Se você já estiver tirando mais de 5 mil, compensa você distribuir, Dividir o seu prolabório com o outro, Porque aí você não passa a ter o imposto de renda retido na fonte, Você não vai pagar esse imposto à toa. E você vai dividir isso, e a sua distribuição depois da diferença vai ser a mesma. Então o benefício é não atingir os 5 mil.
+00:43:40 Léo
+Se já está acima dos 5 mil, compensa ele fazer essa divisão. Quando você fala 5 mil é nível prolabore? Os 5 mil é nível de prolabore. Entendi. Para poder calcular o fator R. Entendi. Mas o benefício no simples, o benefício vai ser o mesmo. A única questão é onde vai estar distribuída a tributação mais próxima, que seria no prolabore. Se eu já estou tirando acima dos 5 mil, eu vou ter que pagar um imposto de renda ali. Entendi. Se eu distribuo esse valor tributável para os dois sócios, eu não pago esse imposto de renda.
+00:44:08 Pedro Maia
+Entendi. Então, gerou outra pergunta que acho que não faz sentido. O ProLabora nunca pode ser menor de um salário mínimo. Ele não pode ser menor. Só que, beleza, nosso aplicativo está liberando a pessoa que está fazendo a constituição mais três sócios. São quatro sócios. Quatro sócios é R$ 1.621,00, passo R$ 5.000,00. Entra naquele cálculo lá de cima? Basicamente isso?
+00:44:26 Léo
+Eu faria essa divisão? Aí teria que ver se todos os sócios vão fazer essa retirada. Se todos os sócios fizerem a retirada, e mesmo que a soma desses valores, Aí vai atrapassar, vai chegar a 6 e alguma coisa. Vai chegar a 6 e 500. Se ele chegar a 6 e 500, como é um prolabório individual para 4, Ele não paga o imposto de renda. Mas se esse 6 mil fosse retirado só por um único, ele pagaria o imposto de renda. Ah, entendi. Porque o 5 mil é um limite por CPF. Ah, o quê? É por pessoa.
+00:44:55 Pedro Maia
+Não necessariamente pela somatória. É, então,
+00:44:58 Léo
+Em tese, quatro sócios poderiam ficar isentos dentro de uma base de 20 mil.
+00:45:03 Pedro Maia
+Ah, De 20 mil.
+00:45:03 Léo
+Porque é 5 mil por cada um. Ao invés de eu tirar 6.500 em um único sócio e pagar imposto de renda, eu divido ele entre os sócios. Entendi. Só que aí é o seguinte, aí tem que ver o cara laranja, o meu outro sócio é laranja. Porque, em alguns casos, vai acontecer que... Laranja que eu falo. Às vezes o cara bota a mãe dele lá e... É, o pai, acontece. Muito. Então, assim, aí... Se não for... Porque ele vai contribuir para os outros caras, entendeu? Entendi. E, às vezes, o outro cara não tem nem participação.
+00:45:36 Pedro Maia
+Então, simplesmente, eu vejo que a gente trava, Sempre favorecendo o cálculo de manter a pessoa No melhor enquadramento, menor alíquota, certo? Em impostos. No padrão melhor. E se o cara entrar naquela aba que a gente vai ter disponível Para ele enxergar como é que esse cálculo está sendo feito, Ele queira...
+00:46:12 Pedro Maia
+Com que frequência na prática os sócios dividem desigual?
+00:46:19 Léo
+Tem sócio que segue, você falou do prolabora e da distribuição, aí ele está falando só de prolabora. Exato.
+00:46:27 Léo
+Só tem a possibilidade de fazer desigual quando o outro sócio não trabalha efetivamente na empresa. Aí automaticamente o cara absorve o prolabora só para um cara só, só para um sócio, Que é o sócio que está ali trabalhando no dia a dia mesmo. Sei lá, o advogado, tem dois advogados. Aí o outro advogado, aí às vezes, vamos supor, pode acontecer. O advogado que está no quadro societário é o advogado, mas o outro advogado, ele não tem formação, mas ele só usa o registro desse cara aqui. Hum, entendi. Pode acontecer isso aí.
+00:46:59 Léo
+Mas a empresa é desse cara, só que aí esse...
+00:47:04 Léo
+O dono da empresa, ele não pode ter um cara que não seja advogado. Então, ele está lá só para assinar os processos. Mas quem criou a empresa é esse cara aqui.
+00:47:10 Pedro Maia
+É porque talvez não é nenhuma empresa de causa. Talvez uma empresa já assinou alguma documentação de advogado que ele precisa.
+00:47:15 Léo
+Aí, Automaticamente, ele tem que falar assim. Eu não vou querer contribuir. Eu sou o responsável técnico. Mas ele também não vai pagar. Ah, entendi. Não vai pagar ele. Vai pagar uma comissão lá. O cara está respondendo civilmente por todos os processos. Mas pode acontecer um caso assim. Entendi. Aí o cara, automaticamente, ele fica com essa distribuição só num cara só, só num sócio. Entendi. Isso pode acontecer.
+00:47:37 Pedro Maia
+Mas isso, por exemplo, nesse nível de persona e de perfil que a gente vai atender... Acho que vai ser mais difícil, acho que vai ser difícil ter mais um sócio. Eu também acho. Porque a gente tá tentando.
+00:47:46 Léo
+Acertar o que pode acontecer lá. O cara só tinha dois sócios lá, quando o escritório não tava grande, ele tava faturando, sei lá, 50 mil. Aí ele começava a vislumbrar uma outra sociedade, aí... Mas quando o cara tá ali no faturamento de 5, 10 mil ali, ele não tá preocupado com outro sócio.
+00:48:02 Pedro Maia
+Beleza, então aqui tipo assim, só concluindo, exige formalidade, alteração contratual, ata, registro em folha, certo? Se tivesse a questão desigual. Altera alguma coisa contratualmente?
+00:48:11 Léo
+No contrato já vai uma cláusula padrão lá de distribuição desproporcional. Entendi. Porque se eu não tiver isso formalizado no contrato, normalmente já sai assim. Ele vai falar que é desproporcional. Então, você já reconheceu aquilo civilmente, publicamente, Então, automaticamente, você pode fazer a movimentação.
+00:48:31 Pedro Maia
+Mas isso lá no contrato social? Lá no contrato social. Mas e se a gente assumir que no contrato social quem colocou um sócio vai ser distribuição igual? Ou não vai mudar isso? Isso que eu estou falando.
+00:48:39 Léo
+Aí você pode colocar os dois.
+00:48:41 Pedro Maia
+Ah, Tem que compor as duas palavras.
+00:48:42 Léo
+A distribuição pode ser igualitária ou desproporcional. Ah, ok. Então, ou seja, fica... É um critério dos administradores, como um acordo entre si. Aí eu posso também colocar uma flexibilidade de ser ou igual a uma participação...
+00:48:57 Pedro Maia
+Que Eu acho que para a gente seria mais interessante para caso caiu para dentro do aplicativo, A gente fosse igual, o cara queira trocar, a gente não precisa refazer um contrato social.
+00:49:04 Léo
+É melhor já deixar isso como um padrão? No contrato, ótimo. Então, automaticamente, se o cara quiser fazer igual... Se atende a dois casos. É melhor do que eu falar assim.
+00:49:14 Léo
+A área de serviço vai ser igualitária. Se amanhã o cara me fiscaliza o estado Ou alguma receita e me cobra Essa formalidade e ele começar A ver que os valores não estão batendo, aí ele vai, Mas o seu contrato está... Aí existe essa Chatice. Entendi. Aí é melhor já deixar de um jeito.
+00:49:30 Pedro Maia
+Não, Porque meu contrato cobra os dois.
+00:49:31 Léo
+Eu resolvi fazer agora, E cobra os dois. Isso aqui é uma decisão minha interna A gente decidiu fazer assim e aí...
+00:49:35 Pedro Maia
+Ah não, Está no contrato. Então está tudo certo. Entendi. Fechou. Beleza. Então, você já respondeu a próxima pergunta. O risco está em dividir igual ou em dividir igual quando o trabalho é desigual? Isso existe alguma... Ou a gente fazendo dessa forma aqui, na continuidade. Ah, tá. O risco está em dividir... Tá bom, tá, mas eu sei que você falou que tem uns probleminhas. Às vezes, se você quiser que a gente aumente...
+00:49:58 Léo
+Não, é que tem uma informação, tá dando humilha. Exige formalidade, alteração da tonalidade. Isso é o que a gente está estudando. E o risco está em... Dividir, desigualdar. Não, não vai ter risco. Porque se ele tiver documentado a parte do contrato, o importante é estar lá no contrato. Entendi, beleza. Mas também não é uma fiscalização meio de peca, assim. Entendi.
+00:50:15 Pedro Maia
+É mais para resguar.
+00:50:17 Léo
+Hoje em dia, como a receita está tentando chegar próximo em alguma possibilidade, O legal já é deixar mais resguado lá. Então, não vai gerar risco. Vai gerar risco se não tiver esse acordo.
+00:50:26 Pedro Maia
+Exato. Entendi, boa. A3, administrar é a mesma coisa que prestar serviço? Isso aí travou demais para mim aqui. Porque as IAS, elas estavam considerando isso, entendeu? Tipo assim, o sócio-administrador, ele é o prestador de serviço como trabalho? Como é que é feito isso? Tipo assim, o caso que já apareceu. Empresa com três sócios, um administrador e dois que trabalham sem serem administradores. Onde apareceu? Montando a empresa de teste, duas delas foram descritas como só o titular administra. E mesmo assim, pagavam pro labor a todos os sócios.
+00:51:00 Pedro Maia
+Entendeu? Aí aqui já vem falando embaixo um pouco da lei, né, que fala em prestar serviço, essa lei ali, 8.200 e alguma coisa, o nosso app na abertura pergunta, quem administra, que é a questão daquele código 49 ou 22 durante lá no DBE, dá pra trabalhar na mesma empresa sem ser administrador? E aí, a inferência do app erra. Então, nossa decisão de produto foi, o default, né, que seria, Todos os sócios recebem e a exceção é declarada.
+00:51:34 Pedro Maia
+Queremos saber se isso está seguro. Na verdade,
+00:51:39 Léo
+A parte mais importante de indicar um administrador É o cara quando ele vai resolver alguma burocracia. Uma assinatura do banco, de quem eu vou abrir um processo na Receita. Quem vai assinar? Se eu colocar que todo mundo é administrador e todo mundo assina... Igualmente, qualquer processo que eu faço, eu preciso da assinatura dos três. Se eu falar que só um é de ministra, mas que também tem outros dois sócios,
+00:52:09 Léo
+Eu só preciso da assinatura desse sócio para poder fazer essa validade.
+00:52:13 Pedro Maia
+Isso até o Madani passou e hoje no aplicativo nosso ele tem essa opção do seguinte. De fato, a partir do momento que a pessoa adiciona sócios, Dentro do campo do preenchimento completo do sócio, Que é o mesmo que precisa dos dados da pessoa, O último campo é assim, esse sócio será administrador? Isso. E aí ali, se no final, no concluir, lá no que a gente está chamando de revisar o dossiê, Que a pessoa vai ver tudo antes de mandar para a viabilidade da junta, tem lá, você Mais Leonan e Pedro Maia são sócios administradores.
+00:52:43 Pedro Maia
+Embaixo vai estar falando quem é sócio e sócio, né? Seria basicamente isso que você está falando. Então cobre. Dessa forma segura bem a onda, para a gente poder resolver. É, sem problema. Beleza. A pergunta, para efeitos de ProLabore e INSS, o que vale é administrar ou trabalhar? Se for trabalhar, o nosso app está perguntando a coisa errada e precisa de uma pergunta a mais na Constituição. Vou te explicar. Quando eu comecei a fazer esse cruzamento, como eu estou te falando, eu comecei a ter um delírio sobre... Ele não identifica que o ProLabore é um pagamento de quem trabalha, sabe?
+00:53:17 Pedro Maia
+E aí eu acho que está gerando essa confusão por isso.
+00:53:19 Léo
+E ele não vai saber também.
+00:53:20 Pedro Maia
+Então, exato.
+00:53:21 Léo
+Às vezes o cara pode colocar que uma é de ministrador,
+00:53:23 Pedro Maia
+Mas quem está trabalhando é o outro. Exato. E o que que isso interfere, por exemplo? Porque isso, na verdade, se quem trabalha ou quem não trabalha, É decisão do cara lá, não é, mano? Ou a gente precisa saber disso?
+00:53:34 Léo
+É, Porque, na verdade, até os contadores, Cada um interpreta do jeito que é mais conveniente para a situação. Para o seu cliente, se o cara quer pagar, não quer. Lá a gente não tem uma definição muito clara de quem... Se o cara que faz, se o sócio propriamente dito, Ele tem a obrigatoriedade de fazer a contribuição do prolabore. Aí o que a lei do INSS fala? Ele fala assim, o cara quer exatamente essa lei, essa lei do 212.
+00:54:07 Léo
+Ele fala que o INSS, o cara que trabalha, que efetivamente trabalha, ele é obrigado a ser um contribuinte obrigatório do INSS, dessa forma que fala. O cara que não trabalha, às vezes ele é um sócio só de investimento, eu vou supor, Eu posso ser um sócio legalista, mas eu não trabalho aqui, eu estou lá no contrato, eu Só aporto e faço essa retirada de lucro, eu não tenho obrigatoriedade de gerar um.
+00:54:42 Léo
+Prolabório, porque eu não trabalho efetivamente, eu só aporto o dinheiro. Então assim, o cara que trabalha... Ele é o cara considerado como contribuinte obrigatório. Hoje, o INSS não pega se o cara trabalha ou não trabalha. Amanhã, eu acho que pode ser que surja isso aí. A gente tem algumas obrigações que começaram a ser exigidas. E como a lei para distribuição de lucro não mudou, Então eu entendo que existe uma tendência de acompanhamento mais próximo dessa informação.
+00:55:13 Léo
+E antes ficava mais... Numa definição mais isenta de responsabilidade. Mas o fato de trabalhar, se o cara administra, ele está lá como sócio-administrador, E ele trabalha, ele é um contributo obrigatório. Ele tem que fazer a retirada do prolaboro no nome dele. Agora, se tem mais de um sócio, os dois administram, os dois trabalham, Eu tenho que fazer para os dois. Se só um sócio administra... E trabalha, e o outro é um aportador, um investidor,
+00:55:44 Léo
+Eu só tenho a obrigação de gerar a informação para quem trabalha.
+00:55:49 Pedro Maia
+E é administrador. Então, eu acho que o nosso aplicativo ficou claro para mim agora. Vê se para você faz sentido também. Quando a gente estiver lá no dossiê e a pessoa tiver colocado que seja dos quatro sócios, Que dois são administradores e dois são sócios, Que seria essa base de aporte que você falou, talvez, Que eles não são efetivamente administradores. Eu posso considerar travado no sistema que eu acho que seria uma prova segura. Exato. Só os dois administradores...
+00:56:12 Léo
+Mas você não vai saber. Eu já... Às vezes o administrador não é o cara que vai fazer o recolhimento porque é o outro, Que... O gambiarra, às vezes ele tem um impedimento no nome, um bloqueio judicial, ele não quer.
+00:56:26 Léo
+Se comprometer nas estruturas.
+00:56:28 Pedro Maia
+Então a gente poderia travar de uma forma, igual a gente falou, inicial, de... Todos os sócios administradores, de imediato, assim que for constituído, Que a gente cai para dentro do aplicativo, a gente gera os prolabores e o INSS dos dois travado. E os outros sócios que não são administradores, a gente não gera. A gente não trabalha com eles nisso daí. Aí, caso o cara lá na frente, entrou no aplicativo e fala, Ah, pô, eu quero esse sócio que é só sócio. Eu quero excluir esse prolaborador. Exato, exato. E resolve, pede, ou habilita, ou não sei como é que seria essa... Mas faz sentido assim, a gente travar de início os administradores,
+00:57:00 Pedro Maia
+A gente gerar automaticamente o prolabore.
+00:57:04 Pedro Maia
+E os que não são administradores, A gente não faz. Faz sentido, né? Faz sentido. Ok, beleza. Acho que ficou claro. Ficou claro. Beleza.
+00:57:14 Pedro Maia
+Esse A4 aí. Prolabore de 100 reais Abaixo do salário mínimo. O que aconteceu com isso aqui? A minha conta, Quando eu abri na Contabilizei Dia 12 de dezembro de 2025,
+00:57:27 Pedro Maia
+Eles geraram isso daí. Em 2025? É. Na conta real que foi a minha, analisava, dezembro de 25, tem pró-labora de 100 reais, eles colocaram pró-labora pra mim de 100 reais, com INSS de 11 reais, confirmado por 3 pontos independentes, beleza, a gente puxou em vários lugares e de fato é esse número que eles alegaram lá pra mim, onde apareceu na varredura da minha conta e por que que apareceu, lei 8.212, 91 artigo, sei lá o que, diz que salário de contribuinte não pode ser inferior a mínimo, entendeu, que é o que você falou também algumas vezes aqui.
+00:58:00 Pedro Maia
+Em 2025,
+00:58:02 Léo
+O salário mínimo era R $ 1.518,00, né? Isso. Não faz sentido muito.
+00:58:29 Pedro Maia
+E aí eles tipo falaram, aí eles buscaram isso, eles fizeram isso na minha conta. E em que fonte? No DCTF, né, base declarada, eles acharam lá os 100 reais, Informe de rendimento de 25, eles também acharam os 100 reais lá, Aqui a mesma coisa, eles geraram esse 11% de INSS, contribuição, E aqui enfim, aritmética do acumulado do fator L, Fecha com o 100 na série, 100 reais. Então, tipo assim, todos os lugares da minha conta Que eles pesquisaram da.
+00:59:00 Pedro Maia
+Contabilizei, eles acharam esses 100 reais. E o piso, Legal para comparação De salário mínimo em 2026 seria, 1.621, que seria o INSS, De beleza, que é o valor que você já falou, E não 11 reais. Então, ele achou essa contradição. E aí, aquele fato é tentar entender o seguinte. O que que eles fizeram isso? Na sua cabeça de imediato, tem alguma justificativa?
+00:59:20 Léo
+Eu acho que gerar... Porque, vamos supor, O cara pode até... Ganhar menos de um salário mínimo. Ele não pode ganhar o valor das horas dele. Vamos supor, ele pega o salário mínimo e divide pelas horas trabalhadas. Certo. É 220, né? Só pra ficar mais claro. Era 1518 o salário mínimo em 2025.
+00:59:44 Léo
+Se eu dividir por 220 aqui, o cara ganha 6,29. Ele pode até ganhar menos que um salário mínimo no mês. Ele não pode ganhar menos que a hora mínima. Então, a hora mínima do cara é R$6,90. Ele tem que ganhar R$6,90. Ele não pode ganhar R$6,80 na hora. Entendi. Então, assim, aí tem que estar de acordo com a hora trabalhada. Aí existe esse problema. Por que ele ia gerar R$100? E R$100 ali era só para ele não falar que não gerou nada.
+01:00:17 Léo
+Porque eu posso até, o sistema da receita me aceita mandar com um valor menor. Mas qual que é o problema de quem gera fator R? Eu não gero, eu só vou gerar fator R,
+01:00:30 Léo
+Pra lavar pra esse cara quando ele tiver o efetivo faturamento. Se eu fizer isso, eu vou ter algum mês pra trás que eu não vou ter gerado. Porque qual que é o problema do fator R? A gente tá no mês 9. Se eu calculo a minha folha do mês 8, Ele não pega o mês 8 como referência. Eu tenho que gerar a folha do mês 8, Mas eu tenho que gerar a folha do mês 7 pra trás. Ou seja, ele vai pegar a média do seu faturamento daquela competência, uma competência anterior. Então, ou seja, se ele não gera esses 100 reais, ele não vai compor suas bases de 28%.
+01:01:02 Léo
+Para me encaixar no faturamento. Pode ser que isso eu desse errado, porque vamos supor, se você lá no mês 8, você gerar um faturamento de 10 mil, Os seus 100 reais iam ser a sua média de faturamento, os seus 100 reais iam ser a sua média de 28%, ou seja... 28% de 10 mil é 2.800, os seus 100 reais não iam fazer diferença. Os caras iam ter que reduzir, aumentar esse faturamento de 100 para 2.800. Isso é perfeitamente natural. Quando o cara está em início de atividade, não tem histórico, E o mesmo aconteceu com o cara, com uma menina ali.
+01:01:34 Léo
+O cálculo feito para ela na época não cobriu o faturamento que ela deveria, O histórico de prolabora que ela deveria ter tido para cobrir os 28. Então eu falei, ó... Eles precisam aumentar um valor aqui pra você conseguir Cair pro seu anexo. E gerou 100 reais e vai não falar que não gerou.
+01:01:51 Pedro Maia
+Mas então pra gente, o que você acha?
+01:01:53 Léo
+Ele Não faria diferença pra você porque ele não sabe o faturamento que você ia ter no mês seguinte. Ele não sabia. Às vezes você podia ter gerado 30 mil reais Lá no mês. Eles iam ter que voltar nesse mês, E retificar a informação e enviar.
+01:02:07 Pedro Maia
+Então, Será que eles não fazem isso meio que para segurança, para começar a contar o cálculo desse fator R? Eles fazem como segurança só para poder falar que não fez. Mas para a gente, você acha interessante fazer ou não? Ou não justifica isso?
+01:02:22 Léo
+Aí A gente vai entrar em uma linha problemática que eu já tive muito lá atrás. Qual era o problema que eu já tive? Cara, como é que vai ficar? Você vai me informar. O cara, às vezes, não vai saber quando que ele vai ter faturamento. É, aqui tem caso pra baixo, inclusive,
+01:02:36 Pedro Maia
+Da pessoa abrir o CNPJ e ficar dois meses sem faturar. É. E aí, qual que é o grande problema?
+01:02:39 Léo
+Aí, Se o cara fizesse assim, se ele considerasse, aí o que seria o ideal pra ele? Se eu tô no mês 8, eu vou gerar a informação, um bom olhar pra frente. Eu abri meu CNPJ hoje e eu tenho uma intenção de faturar no mês 10. Só que se chegar no mês 10, eu não faturar? Eu vou precisar gerar o prol agora, eu só vou estar gerando uma guia a mais para esse cara.
+01:03:07 Léo
+Agora, se ele falasse assim, chegou no mês 10, vou ter que gerar uma nota retroativa no mês 9, Aí ele já se ferra, porque o meu cálculo do fator é e não vai levar em consideração o mês 9.
+01:03:16 Pedro Maia
+Ele vai levar.
+01:03:16 Léo
+Em consideração o mês 8.
+01:03:18 Pedro Maia
+E a trava nossa que a gente não pode, é travada aquele dia que a gente conversou. A gente não vai liberar, gerar nota retroativa. Não é liberado, a gente só vai poder liberar e gerar nota no mês.
+01:03:28 Léo
+De fazer essa geração e eu olho só pra frente. Então se ele abriu hoje e ele gerou automaticamente, o sistema gerou, ele identificou por algum, Monitoramento que existia um faturamento no mês 9, aí eu fico travado. Aí eu já vou ter condição no mês 9 de gerar o fator N dele no mês 10. Eu só tenho um problema por causa disso. As guias vêm sem dia 20. Certo. O cara pode, se ele chegar no dia 20 e eu não tenho essa trava, Se ele chegar no dia 21 e eu não tenho essa trava e permito que ele retroaja,
+01:04:02 Léo
+No dia 21 ele gerar um faturamento no mês 8, Automaticamente eu ia ter que gerar uma folha para ele antes do mês 7. Entendi. Então, assim, se eu só permito ele olhar para frente, seria o ideal. Então, porque automaticamente... Está amada. Aí tem uma outra situação que eu estou pensando aqui, mesmo que ele tenha essa trava e ele gerar no dia 21 esse faturamento, Eu ainda teria que gerar esse prolabore 28% retroativo.
+01:04:33 Léo
+Então, o sistema poderia avisar, hoje é dia 20, hoje é 21. Vou gerar um prolabore nesse dia 21 do 9? Ele poderia avisar, olha, você está gerando um faturamento no mês 9, mas você não tem prolabore gerado no mês 8. Isso quando a data da abertura dele está no mês 8. Ah, não no mês 9. Não no mês 9. Se a data da abertura dele está no mês 9, ele não vai precisar dessa informação.
+01:05:06 Léo
+Ele só vai precisar, porque aí ele só vai precisar gerar essa folha para ele no mês 10. É uma confusão. É. É confuso. Se a gente travar, se ele passar da data de validade, mas ele tem data de abertura antes do mês 9, Eu teria que gerar uma informação para ele e ter um comunicado que eu precisaria gerar esse prolabório para ele no mês 8. Retroativo. E informar para ele que haveria incidência de churros e mortos. Porque passou do dia 20. Se eu travar, se eu chegar no dia 21 e eu falar para o cara...
+01:05:39 Léo
+Olha, você está gerando esse faturamento hoje, dia 21, mas eu deveria ter gerado um, Prolabore para você, porque ele não tinha essa informação, deixar ele claro que vai Haver a incidência de multa de juros por conta de um prolabore, por conta da emissão Dessa nota dia 21 hoje. Entendi. É uma programação que não tem controle. Eu acho que não tem como a gente.
+01:05:59 Pedro Maia
+Controlar isso nesse momento. Eu acho que a única coisa para mim, tipo assim, que eu acho que a gente poderia enxergar, Nisso aí duas situações para entender um pouco melhor. Vamos pensar o cara que ele constituiu agora. O cara acabou de construir uma empresa hoje, dia 16 do 9, certo? Aí vamos supor, igual você está falando, e esse cara não sabe quando vai faturar. Eu não preciso emitir para ele o prolabor e o tal que você está falando, certo? Mas aí vamos supor que chega aqui no dia, igual você está falando, chega no dia 18, Depois de amanhã, eu vou emitir minha nota fiscal.
+01:06:31 Pedro Maia
+Eu vou emitir. Tem que emitir uma nota. Tem que dois dias. E aí, como eu não fiz o prolabor nem nada... É isso que você está falando que trava? Teria que fazer do mês anterior? Teria que fazer do mês anterior se ele já estava aberto naquele período. E se não tiver? E se for nova,
+01:06:47 Léo
+Se for Constituição nova? Uma Constituição nova? Nova. Aí eu teria tempo de fazer esse cálculo normal. Vamos supor, ele gerou no dia 21. Ah, entendi. Como ele considera dia 21 do 9? Como ele considera... E a minha abertura está no mês 9. Como eu não vou ter como analisar o mês 8, porque eu não estava aberto, Aí eu vou conseguir fazer os 28 no período normal. Porque lá no mês 10, eu vou gerar esse prolabore no mês 8, Então automaticamente ele vai ficar enquadrado no mês 9,
+01:07:13 Pedro Maia
+Mês 10. No mês 9, você gera no mês 10, você gera no próprio.
+01:07:16 Léo
+Faturamento no mesmo mês do fator R.
+01:07:18 Pedro Maia
+Então o que acontece? Vamos supor, para a Constituição, que foi o que a Contabilizei fez, Você acha que é válido a gente, independente se o cara vai faturar ou não, Gerar o prolabore no salário mínimo?
+01:07:30 Léo
+Se Eu fizer isso como uma regra, aí a gente só vai tratar os caras que não vão faturar, E eu tenho que cancelar esse prolabor.
+01:07:43 Léo
+Porque, muito provavelmente, se eu fizer a geração desse prolabor todo mês, E ele só gerar esse valor depois de dois, três, quatro meses... O bom disso é que eu já botei estoico de 28% já correndo. Então assim, aí me evita esse trabalho. Aí eu acho que isso aí não tem como, não. Alguém vai reclamar disso. Entendi. Então assim, isso aí eu acho que é mais difícil de controlar, sabe? O cara não vai saber quando que ele vai começar a faturar ou não.
+01:08:15 Léo
+Ou quando que ele vai querer começar a emitir novo. Porque às vezes ele faturando ele já tá.
+01:08:19 Pedro Maia
+Mas talvez ele não quer emitir a nota, ele só precisava do CNPJ. Talvez só precisava do número do CNPJ.
+01:08:24 Léo
+Eu acho, eu entendo que isso aí vai ser uma tendência, vai ser uma tendência cada Vez menor, assim. De não emitir, eu não acho, né? O MEI não era obrigado a emitir nota, agora eles já estão passando a obrigar a emitir, Nota em 2027. Oi, estou na reunião aqui, aqui na sala, estou aqui com o Pedro, o que é que está, Precisando?
+01:09:01 Léo
+Não está sincronizando?
+01:09:04 Léo
+Aqui.
+01:09:06 Léo
+Aqui, fala o seguinte. Tem um aplicativo, fala com ele lá. Tem um aplicativo que se chama Revo. Eu vou falar Revo. Eu falo Rico, né? R-E-V-O Uninstaller.
+01:09:22 Léo
+V-O Uninstaller. Fala para ele baixar esse aplicativo aí. Aí ele vai instalar. Na hora que ele executar ele, ele vai... Selecionar o Google Drive, aí deixa ele excluir lá dentro do registro, igual o negócio,
+01:09:37 Léo
+E depois pede para ele instalar de novo, porque pode ser que tenha algum arquivo lá dentro do registro, Que está impedindo a sincronização.
+01:09:47 Léo
+Revo Uninstaller. Estava dando esse problema ontem, se eu não me engano.
+01:09:54 Léo
+É, tem que fazer esse cambio.
+01:09:59 Léo
+Mas, na hora que eu fizer isso aí, vai dar pra funcionar. Tá bom. Tchau.
+01:10:06 Pedro Maia
+É, deixa eu só ver aqui. Caiu. Até dá uma mordida na minha língua. Só voltando aqui.
+01:10:11 Léo
+É muita coisa. Demais. Nossa. Ó, bom que o negócio, ele rasgueou. Puxou bem, não puxou? Pra mim, entender tudo isso aí, eu levei muito tempo. Ah, com toda certeza absoluta.
+01:10:21 Pedro Maia
+Eu não tenho dúvida nenhuma.
+01:10:23 Léo
+Buscando, Pesquisando. Não, não falo. Você vê, hoje em dia é fácil demais esse contador, velho. Eu falo assim, vai lá, pega a lei lá, o cara já te dá os embaçamentos.
+01:10:34 Pedro Maia
+Todo Dia eu dou grito na mesa dele, não estou dando conta mais, não estou entendendo mais nada. Você vê, quando a Carla veio aqui para falar de fonte de pagamento, eu quase batei. Pensei que não faz sentido.
+01:10:42 Léo
+Agora, deixa eu falar uma observação importante lá no ProLabore. Se o cara fizer uma contratação de um funcionário, eu quero contratar, o ProLabore dele pode ser reduzido. É, eu vi isso em algum lugar mesmo. Então, vamos supor, às vezes o cara deu um prolabore já, sei lá, 10 mil, E ele contrata um funcionário por, sei lá, por 3 mil, Ao invés dele tirar o prolabore dele por 10, ele tira por 7. Ah, entendi. Por quê? Ele leva em consideração o valor da folha, mais refrigitência, Mais o CPP lá dentro do DAS, então ele consegue ir reduzindo.
+01:11:15 Léo
+Porque senão, automaticamente, eu faço ele pagar mais tributo, né? Se eu não reduzo o prolabore dele e ele tem a contratação de funcionário... Automaticamente ele está recolhendo mais INSS, mais encargos, imposto de renda, de forma indevida. E aí é uma possibilidade.
+01:11:30 Pedro Maia
+Tá, vamos pensar. Então é o seguinte, essa questão do que a gente está falando agora. A gente trava então essa questão do... O que acontece? Pode ser que eles vejam uma pergunta assim que o cara entra no aplicativo. A gente pode pôr até um bloqueador de falar assim... É... Caso você não tenha pretensão de emitir nota fiscal, Sei lá, entendeu? Em breve, não emitiremos o seu prolabório para não, sei lá, entendeu?
+01:12:01 Pedro Maia
+Ou então não. Pretendo emitir minha primeira nota nos próximos dias. Porque se o cara clicar pretendo, você já faz o prolabório.
+01:12:11 Léo
+Se tiver um campo com uma previsão, Pretendo emitir minha nota a partir do... Do mês 10. Aí, entre o mês 9, ele já pode tirar um prolabório. Pelo menos um prolabório pra enviar lá. Pelo menos alguma coisa. Entendi. Até porque, se eu não mando nada, Tem uma declaração que eu tô vendo, Que é uma declaração que gera muita multa, E essa é dessa técnica. Se eu não mando nenhuma informação, Nem mando, nem quer ser em movimento, Se eu tiver que gerar um prolabório num período,
+01:12:42 Léo
+Vamos supor, a gente tá fazendo mês 8, Até o dia 15, eu tenho que mandar essa declaração. Se eu mandar no dia 16, ele já me gera 500 reais de multa. Então, assim, eu não consigo fazer tanto o retroativo para ele poder ser a minha, Às vezes acontece que eu quero pagar uns 15,5 e depois ele vai lá e regulariza. Porque vai te dar menos demanda, às vezes vai gerar um encargo para o escritório de 500 contator. 500 reais, mas se eu quero pagar até o vencimento é 250, mas eu vou falar que é isso.
+01:13:10 Pedro Maia
+Mas, por exemplo, uma outra dúvida então. A questão de emitir o prolabore. Ela é ligada automaticamente à emissão do INSS, da guia do INSS?
+01:13:20 Léo
+Ela tá ligada no...
+01:13:21 Pedro Maia
+Então Não tem como eu gerar... Se não tiver funcionado. Então não tem como eu gerar um prolabora e não gerar a guia do INSS? Não tem como. Pelo menos no mínimo.
+01:13:28 Léo
+Um Salário mínimo é 11%. Acabou. Qualquer valor é 11%. Ele vai.
+01:13:34 Pedro Maia
+Gerar o INSS de qualquer jeito, só o IR que não. Eu tô quase achando que vale mais a pena, de fato, travar todo mundo assim que constituir. O prolabore do salário mínimo. E na página ter a opção da pessoa desativar e fazer o promesso seguinte. E depois dar um concordo lá. Exato. Pretende quanto, sei lá. Porque eu acho que a gente ficar dependente do cara dar o aceite de se ele vai faturar em qual período, Eu acho pior, porque vai gerar confusão na cabeça do cara.
+01:14:06 Léo
+Então Já se apega o prolabore do salário mínimo. E se ele falar assim, ah, pretendo faturar no mês 10. Às vezes ele vai falar assim, 9. Aí às vezes ele já tá... Aí uma empresa vai obrigar ele a emitir nota lá no mês 11. Ou até no mês 9. E ele já vai estar pronto, na verdade. E ele já vai ter selecionado. Aí não vai lembrar que selecionou.
+01:14:22 Pedro Maia
+Vai Melhorar o trabalho em caso a pessoa não queira, entendeu? Aí a gente pode deixar.
+01:14:26 Léo
+Eu Conheço um cara que se endividou em 30 mil reais de guia, Porque o cara não sabia nada do que ele tinha que fazer, entendeu? Um cara extremamente... Descontrolado. Descomprambado, porque esse cara é piazão. O cara não sabia o que ele tinha que fazer. E foi fazendo, foi tacando pau. Ele não sabe dessa parte administrativa, Não sabe dessa parte final dele, Só sabe quem recebe e quem gasta.
+01:14:46 Pedro Maia
+Ele Quer ver cair o pique da nota salva.
+01:14:48 Léo
+Ah, recebi, ele emitia a nota. Ele não tinha noção nenhuma. Então eu acho melhor a gente travar Isso.
+01:14:53 Pedro Maia
+Por resguardo exatamente disso, entendeu? Porque se a pessoa chegar lá e falar Que ela não quer que seja emitido o prolabore, Eu tenho que avisar que isso vai interferir, No cálculo do fator R dela. Por exemplo, se o anexo dela for, né? Tiver essa possibilidade. Porque uma das coisas que eu estava vendo também, O fator R se aplica em uma porcentagem muito pequena Dos quinais que a gente vai atender. Então, por exemplo, dos que a gente cercou... É mais a atividade intelectual. Exato. Ou que tenha um conselho vinculado para trás. Que aí já seria o 4, o quarto, né?
+01:15:25 Léo
+Que Aí esses já seriam os 5, mas aí com o fator R. O 4 mesmo é construção civil e limpeza de conservação. Eles ficam mais vinculados no 4. Entende? Porque aí começa um 4,5% ali.
+01:15:38 Pedro Maia
+Então, beleza. Eu acho que dá pra gente... Eu acho que a gente consegue contornar. Eu acho que o ideal seria meio que tipo igual a contabilizei fez comigo. É travar. Só que, confesso, é aí que entra, que vem outra dúvida. Puxou lá no meu contabilizei que os dias que... Os meses que eu não emiti nota...
+01:15:57 Pedro Maia
+Se não me engano, ele não emitiu a minha prova.
+01:15:59 Léo
+Que você emitiu? Que eu não emiti nota. Ele não vai saber. Você só vai ter A métrica do prolabore se tiver A mão. Como é fiscal... É isso que eu tô falando.
+01:16:08 Pedro Maia
+Se eu não emitir nada no mês, Lá com eles...
+01:16:10 Léo
+Você não vai ter essa comparação.
+01:16:12 Pedro Maia
+Ele Não me gerou o prolabore.
+01:16:13 Léo
+É. Porque não tem como. Você não vai conseguir Controlar. Nós aqui, Não vamos conseguir controlar. Às vezes o cara já faturou lá 30 mil. Peguei um caso ali recente. O cara já faturou, 30 mil no mês como MEI. Como MEI. Ah, deu certo. Mas assim... O cara, ele não emite nota, a receita não ia avisar a ele. Então, aí vai de acordo com as informações que ele vai gerar depois. Mas se ele não emitir a nota, a gente fica sem condição de saber se o cara tem que usufruir do fator L ou não. Eu posso até gerar a folha, aí é uma segunda.
+01:16:46 Léo
+Aí o cara que não emitir a nota, não, mas vou informar esse faturamento aqui e eu vou pagar o tributo aqui. Ele pode até fazer isso, mas ele tem que ir lá por espontânea vontade, dificilmente ele vai fazer isso. E ele pode me informar como contabilidade. Gera um faturamento lá pra mim de 30 mil, Já recolhe meus impostos, Meu INSS, meu Prolabório, já recolhe tudo. Ele pode fazer isso, mas, Difícil mesmo. O cara não quer emitir notas, Né?
+01:17:10 Pedro Maia
+Ele vai falar... Acho que a maior dúvida na minha cabeça é o seguinte, igual nesse caso, Igual o meu. Meu caso foi muito bom pra trazer, Quando fez a leitura. Eu fiquei dois meses desse ano sem emitir nota. Porque uma foi que eu fiquei Desempregado e a outra... Não, o primeiro foi porque eu tinha acabado de sair da outra empresa E eu conversei lá com o pessoal da RH, o cara falou comigo assim, Não emite essa nota não. Eu falei, beleza, lindo, menos um pouco de imposto. Aí pulou esse mês e no outro foi que eu fiquei desempregado. Então, eu fiquei esses dois meses sem emissão de nota.
+01:17:42 Pedro Maia
+E aí, a contabilizei automaticamente, eu não sei se ele não gerou...
+01:17:47 Léo
+Ele deve ter gerado. Eu acho que ele gerou. Só porque uma vez que você, vamos supor, dependendo do faturamento, Se o cara gera um faturamento... É, sei lá, vamos colocar assim, 5 mil, 6 mil. E não vou colocar mais do que isso, porque aí às vezes o cara de 2,800, o cara recebe 10 mil, o cara 2,800 é meu prolabora. Uma vez que ele ativa essa análise, ele tem que fazer aquela, mesmo que ele não atinja, Um faturamento tão alto nos próximos meses, ele vai ter que contribuir pelo menos com.
+01:18:19 Léo
+Um salário mínimo. Então, eu entendo que eles vão continuar gerando essa informação até o dia que o cara ir lá e falar, não quero mais.
+01:18:28 Pedro Maia
+Ele Optar que não quer que gera. Tem que gerar,
+01:18:30 Léo
+Porque senão, eu acho, vai ficar muito ruim para o sistema ficar monitorando isso. Só para você ver. Uma base de 100, tranquilo, mas na hora que isso inflar para 2 mil...
+01:18:38 Pedro Maia
+Eu tenho até que pagar meus impostos de vida pendente aqui na contabilidade, isso que é minha conta. Dentro desse menu, tem algum aqui que a gente veria isso mais fácil? Tipo aqui, declaração mensal, nanã, aqui tem o prolabore, ver recibo. Você quer ver o quê? Eu quero ver os meses que eu não faturei se eles emitiram. Vai em recibo.
+01:19:00 Léo
+Prolabore, recibo.
+01:19:03 Léo
+Seleciona aqui.
+01:19:05 Léo
+Aí seleciona, você lembra o mês? Ah, eu acho que foi... A gente não sabe o que vai acontecer.
+01:19:11 Léo
+Não, esse aqui ainda foi do mesmo balanço.
+01:19:16 Léo
+Aí tá vendo? Ele já reduziu. Exato. Ou seja, muito provavelmente esse mês você não teve faturamento e ele gerou o salário mínimo para você. Eu acho que foi isso mesmo. Só para não... Eu acho que foi na sequência. Ele tem que seguir essa...
+01:19:31 Pedro Maia
+Maio, Junho, acho que junho também não. Ah lá, mesma coisa.
+01:19:34 Léo
+Ou seja, aquele status pro laborio confirmado ali deve ser muito provavelmente quando você vai lá e cancela... Ele já deve gerar essa confirmação. Se você cancelar o status ali do ProLabore, ele deve mudar e automaticamente o sistema Deles não gera o ProLabore. Entendi. Aquele status ali deve estar vinculado naquele status ali. Entendi. Agora, se você não gerar faturamento, se você já gerou o ProLabore antes, é o ideal Você continuar gerando. Não parar. É o ideal você continuar.
+01:20:04 Léo
+Ah, então a gente, eu acho que é isso. Trava. Trava isso aí, deixa o cara optar. Opa, eu não quero gerar mais. Ele vai lá e seleciona o que não quer A partir daquele mês em diante.
+01:20:14 Pedro Maia
+Ele é sempre gerado no mês seguinte? É isso?
+01:20:19 Pedro Maia
+Não necessariamente na constituição. Aqui os 100 reais que eu te falei. Minha empresa foi constituída 12 de 12 de 2025. Olha lá, eles geraram isso aqui. Pra mim, aqui a gente já fez toda a varredura. E olha lá, Ele gerou, que é o que puxou lá. Os 11 reais aqui. Tá vendo?
+01:20:36 Léo
+Ele tá falando que 30 dias Gerou um valor de 100 reais. Foi só pra gerar informação.
+01:20:41 Pedro Maia
+É Outra dúvida que você já mata. Eu constituí, A empresa, de fato, no dia, 12, eu acho. Acho que foi dia 12. 12 do 2? 12 do 2, 2025. Vários cálculos Meus, ele contabilizou o mês todo. É normal, Né?
+01:20:55 Léo
+Se fosse olhar a lógica da coisa, Da aptidão do CNPJ, Teria que ser a partir da data do CNPJ. Ah, entendi. Aquela admissão ali, ela deve estar ali só para poder considerar o mês todo mesmo. Entendi. Só para eu matar uma aqui, quer ver?
+01:21:13 Pedro Maia
+Foi Janeiro de 26, quer ver?
+01:21:18 Pedro Maia
+Eu não lembro se eu já emiti.
+01:21:22 Pedro Maia
+Olha lá, está vendo? Isso aqui que é estranho. Nenhuma folha para labor cadastrada. Eu acho que eu constituí e não emiti. Eu acho que eu só emiti em fevereiro. Sabe por que? Eu lembrei, em janeiro eu recebi espécie na época, em fevereiro eu emiti, aí ele já veio com o valor cheio.
+01:21:41 Pedro Maia
+Então o que que rola? Então, por exemplo, eles fizeram um prolabore de dezembro, janeiro eu não emiti nota, eles pularam, não fizeram prolabore, E em fevereiro que eu emiti a nota, veio o prolabore da forma correta. Seria aí? Não estou entendendo, isso aí que me buga tudo. Você constitui em dezembro e janeiro, você não deu nota, né? Não tive, eu recebi em espécie. A primeira nota que eu fiz foi em fevereiro.
+01:22:07 Léo
+Foi em fevereiro? Fevereiro. Então, ou seja, aí muito provavelmente, aí tem que ver os seus 12 últimos meses ali, Mas vamos supor, ele já gerou automaticamente no próprio mês da nota que ele identificou. Aqui tem uma que deve dar pra ver mais,
+01:22:25 Pedro Maia
+Alguma dessas, você acha que dá pra ver esses prolabores mais? Ou lá em prolabora, aqui em prolabora mesmo, ficha financeira, sei lá, recife.
+01:22:36 Pedro Maia
+É, teria que estar... É recife, é o que a gente já tá gerando. É o que a gente já tá. Enfim, mas então, por exemplo, acho que é tipo a fim da gente meio bater uma cana. A gente deixa padrão de o cara constituir ou a gente já emite prolabora, de salário mínimo. E deixa opcional pro cara lá na aba de prolabora dele falar, eu não quero mais que emita meu prolabora. Já na constituição você fala, né? Aí que tá. Será que, Na Constituição já ou a gente.
+01:23:04 Léo
+Gera... Eu acho que vai gerar um certo problema Do seguinte. Se eu já gerar um prolaboro do cara E ele não tiver tido, O faturamento, Aí vamos por numa dada do cadastro. A gente teria que colocar essa previsão. Porque aí eu fico travado. Porque até, Aquela previsão de faturamento, Pretendo faturar, sei lá, constituir no mês 10, mas eu pretendo faturar no mês 10. Constituir no mês 9. E vou faturar no mês 10, Eu emitiria um prolabore já no mês 9 para ele contabilizar o anterior dele no cálculo do fator L.
+01:23:39 Léo
+Se ele fizesse, se eu for constituído no mês 9 e eu vou faturar no mês 9, Eu já habilitaria para poder fazer a emissão do prolabore a partir do mês 9, que é a data da constituição. Agora, se ele constituiu no mês 8... E no mês 9 eu também não faturei, não emiti o prolabore desses dois meses, mas vou faturar no mês 10, deveria ter um prolabore lá no mês 9, de pelo menos um salário mínimo. É isso que eu estou falando, é isso que é foda, porque tipo assim...
+01:24:11 Léo
+Só que não vai dar para saber assim, qual momento isso vai acontecer, só se virasse o mês, vamos supor, se a gente travar a data, na hora que virar para o mês 9, constituindo o mês 9. E eu gerei uma nota, aí virou o mês, um do 10. Aí ele não emitiu a nota, teria que ter um monitoramento ali, Qual o dia que esse cara está emitindo nota. E emitir a nota lá no dia 15, aí dia 15 já é meio arriscado, Porque em tese ainda está em tempo. Se eu emitir um faturamento no dia 15 do 10,
+01:24:44 Léo
+Eu teria que gerar um prolaboro para ele do mês 9,
+01:24:48 Léo
+Para ele mandar a guia para ele no dia 20. Ou seja, aí tem que ver até... A gente teve que travar uma data limite para ele gerar esse faturamento, Para ele ter tempo de gerar isso para ele.
+01:24:59 Pedro Maia
+Então, Estou vendo que a melhor forma que a gente vai fazer é o seguinte. A gente pode fazer essa pergunta assim que a pessoa cair no aplicativo, Até travada para ela responder, ela não conseguir mexer em mais nada. Pretende já gerar para o laboratório? Você tem uma previsibilidade de quando você emitirá a sua primeira nota? Porque se você plantar para o laboratório, o cara vai bugar. Você sabe quando você emitirá a sua primeira... Você tem uma previsibilidade de quando você emitirá a primeira nota? E a gente põe aquele zinho de informação, Que se abrir pode estar mais completo explicando. Por que a gente pergunta isso? Porque se você não pretende.
+01:25:31 Pedro Maia
+Faturar no próximo mês, por exemplo, Ou nesse mês corrente,
+01:25:37 Pedro Maia
+Não justifica, A gente emitir o seu prolabore Para você pagar uma guia do INSS, Blá, blá. Seria isso, né?
+01:25:46 Pedro Maia
+Porque tem que ser muito de acordo. E também até falar isso, porque talvez você pode olhar pro cara e falar assim, Na mesma mensagem você pode colocar assim, Mas caso você queira já contribuir Para o INSS, Aconselhamos que a gente já, Emita seu prolabore no...
+01:25:59 Léo
+Aí Ele pode às vezes optar assim, tirar A partir de agora, tirar, Num período futuro. Entendi. Que aí ele vai informar lá. Aí automaticamente, A partir daquela data começa.
+01:26:10 Pedro Maia
+Depende Se ele tem faturamento ou não. E outra, a gente vai ter que pôr, então, o seguinte, O que o cara colocar lá da pretensão, da previsibilidade dele, É o que a gente vai ter que levar como verdade. Se o cara chegou no mês e não emitiu, foda-se o dele. Ele colocou ali que deve...
+01:26:22 Léo
+Aí Eu passei essa história para ele, que ele me passou isso. Exatamente. Se eu gerar por minha conta em risco, eu vou gerar uma reclamação, Que ele vai falar assim, pô, você me mandou uma guia de R$178,00 aqui, E eu não tive faturamento. Exato. Tem muito em todos os escritórios.
+01:26:36 Pedro Maia
+Tem. Então, tá, é porque na minha cabeça, eu vou reformular melhor, eu só estou pensando Uma forma desse acerto ser mais entendível, mais entendível, para a pessoa ler e não, Ficar na dúvida, entendeu? Para a pessoa ler e falar, não, realmente eu já quero contribuir no INSS, ou não, não, Eu não quero, eu prefiro ficar esses dois próximos meses sem...
+01:26:52 Léo
+Agora, Você pensa só, aí tem uma terceira possibilidade, às vezes o cara fatura, para Ele poder fazer o... aí vamos pensar na possibilidade fora do fator R.
+01:27:05 Léo
+Na lei, é a partir do momento do trabalho. Eu teria que emitir a partir do momento que eu Constituí, se eu seguir a lei mesmo, Se o cara está ali e não tem receita, Mas eu estou ali tentando fazer essa receita, Em tese ele já é contribuinte obrigatório. Eu deveria Gerar a partir do momento da, Constituição da empresa. A gente que tenta balizar o, Carro, não precisa não ter tanta Despesa, entendeu? Mas se o cara, Constituiu 16 do 9, Hoje, mês 9, Eu já tenho que fazer a geração desse, Prolavor. Da forma legal, né?
+01:27:36 Léo
+Porque o governo entenderia que ele já estaria trabalhando. Ele já tem que gerar guia, tem que gerar tudo. E isso, assim, pra nós seria melhor, porque ele não precisa ficar avaliando. Exato. Qual momento esse cara vai ser contribuinte.
+01:27:47 Pedro Maia
+Mas Eu acho que isso vai partir da solução que a gente chegou boa. Por quê? A gente colocando esse aceite travado, assim, o cara... Primeira mensagem, o cara caiu dentro do aplicativo. Ele nem emite, nem anota. Ele caiu dentro do aplicativo, ele tem que responder isso. É o primeiro copato que vai ter lá. A gente pode ver como vai ser uma pergunta que a pessoa tem que fazer para usar o aplicativo, A gente pode ver como é que vai estar a aceitabilidade disso. A gente pode ver se a maioria está colocando, quer emitir de qualquer, já faz, A gente pode ver se tem muita pessoa jogando para frente, A gente consegue lapidar esse dado, rodando um, dois, três meses,
+01:28:18 Pedro Maia
+E depois chegar a uma conclusão, que tipo assim, Ó, na verdade não vale a pena nem perguntar, Vale a pena já sapecar direto para o labor e deixar lá na aba, Que caso queira cancelar, enfim. Mas vai para mais futuro de usabilidade. Mas faz sentido, eu entendi. Eu entendi e eu concordo. Se já gerar no primeiro mês,
+01:28:34 Léo
+A gente quebra tudo. Exato. Só que em contrapartida também não vou ter o valor. O fator R é uma confusão. Ele vai piorar. Mas depois eu explico por que vai ficar pior. O cara, na hora que ele gera... Eu gero até de um salário mínimo ali, às vezes, no mês da abertura. Mas, às vezes, o faturamento dele é 10 mil no mês 10.
+01:28:56 Léo
+Ou seja, os meus 28% ali, na hora que eu fizer a análise dos 12 últimos meses, Que aí vai ser a partir dos meus 9, ele tirou 10 mil. Eu teria que ter tirado um prolabói de pelo menos 2,8 mil.
+01:29:11 Pedro Maia
+Ah, Entendi. Mudaria... Ou seja,
+01:29:12 Léo
+O meu prolabói foi retirado de 1.621, salário mínimo, Mas deveria ter sido 2,8 mil. Mas como é que eu vou saber? Não tem como. O primeiro mês vai ser mais problemático.
+01:29:20 Pedro Maia
+Mas aí eu acho que isso parte do quê? Se a pessoa, ele colocou que quer que emite o prolabore, que pretende faturar no mês seguinte, Mas a gente, igual você falou, a gente não tem ideia de quanto é. Se o cara emitiu de 10 mil, a gente simplesmente, a gente fez o que pôde. A gente vai pegar esse faturamento dele junto com o prolabore do mês anterior, E fazer o cálculo o melhor possível para ele se manter onde é que ele precisa. Agora, acho que zero chance de virar e falar assim, tipo, A gente tentar fazer um cálculo e emitir retroativo. Não, a gente vai trabalhar com dado em tempo real.
+01:29:50 Pedro Maia
+O cara emitiu ali 10 mil, 20 mil que seja, Cagou nessa porcentagem desse prolabório dele anterior, Eu acho que já passa a não ser responsabilidade nossa. Porque senão aí vira uma zona. Aí vira um cabaré desgramado, entendeu? Enfim.
+01:30:04 Léo
+Mas Vai ser só o primeiro mês também? Eu acho também.
+01:30:06 Pedro Maia
+Quanto tempo uma empresa nova pode ficar sem prolabório? Existe isso. A conta real passou 3 meses sem pagar o prolabório no início. Aí... Onde apareceu na Constituição, mês a mês, beleza, dá conta. Por que apareceu? Não pagar trava o acumulador do fator L, que é regime de caixa. Isso empurra a empresa para o anexo 5, 12 meses depois. Nossa decisão de produto foi forçar a prolabora já na primeira competência, Que foi o que eu tinha debatido com você aqui, Mas queremos saber se a tese do escritório é outra.
+01:30:36 Pedro Maia
+Quando eu falo escritório, é quando eu falo da legaliza, Que é o que eu tenho de referência. A pergunta, qual o risco real de ficar meses sem prolabora no início? E qual é a tese, enfim, a tese escritura é o que pratica, seria o que a gente definiria. Considerando o prolabório ou o fator L? O fator L, exatamente. Existe um risco da pessoa constituir-se a NPJ, a gente não emitir o prolabório por 3, 4, 5 meses, Isso prejudicar ele de alguma forma na questão do fator L ou não tem a ver, não tem ligação?
+01:31:04 Léo
+Ele Tem ligação porque quando você faz o prolabório, você não emite ele, ele emite a partir do faturamento. Você perde histórico dos 28. Mas aí a gente vai entrar naquela seara, Novamente. O cara, às vezes, Naquele mês, ele emitiu 50 mil.
+01:31:21 Pedro Maia
+Hum, entendi.
+01:31:22 Léo
+Então ele emitiu 50 mil. Eu só vou conseguir ajustar Isso na hora que eu tiver a informação. Primeira emissão,
+01:31:27 Pedro Maia
+Não adianta.
+01:31:29 Léo
+Aí, automaticamente, é o seguinte. Se eu fizesse a.
+01:31:33 Léo
+Contribuição de um salário mínimo No decorrer dos meses, e lá, No sexto mês ele emitisse 50 mil, Eu já teria um histórico De 28% ali e às vezes Eu só precisaria complementar um mês. Se ele não faz nada, Ele vai ter o histórico, Ele vai ter 28% dos 50 mil Para poder gerar de informação. Aí, vamos supor, o que o meu sistema Permite hoje lá? Ele permite Que eu faça, que eu gere a informação, Da folha De forma interna, Só para tributar ele no anexo.
+01:32:05 Léo
+3, mas eu não mandei isso para o E-Social. Não validei isso dentro da Receita.
+01:32:10 Léo
+Gambiarra, basicamente. Eu consigo gerar informação para ele poder só cair no anexo 3, Mas automaticamente essa informação não está lá na receita. Mas aí o que eu falo? Eu ligo para o cara, explico a situação. Quer regularizar agora? Não, vou ficar no risco. Fala para frente. Aí eu não mando expor social. Ele vai ficar no risco de amanhã dar algum problema. Não, é que deu um problema e o cara falou não. Eu estou ciente disso, porque o Leonardo me ligou e me explicou isso.
+01:32:42 Léo
+Entendi. Mas eu tenho a opção de gerar essa informação só em terra. Só para o sistema considerar o anexo 3 lá. Eu vou lá, digito o valor manualmente, sem buscar da folha, do módulo DP. Eu digito essa informação e automaticamente eu gerei ele no anexo 3. Entendi. Só que aqui é o risco. Aqui não dá para poder fazer isso. Aqui a gente pode chegar a um ponto de ter... Aqui tudo tem que ser responsabilidade do cara do outro lado. Exato. Não, eu gerei isso aqui porque a informação que eu tinha era essa.
+01:33:12 Pedro Maia
+É isso que eu estou pensando. Eu acho que entra muito naquilo lá do início do seguinte. Isso não é B.O. a nós, Cota Fé. Se a pessoa ficou tantos meses sem faturar e do nada emitiu uma nota de 50 mil, O cálculo do fator R vai rodar da mesma forma. E se isso enquadra ele ou não enquadra ele na alíquota menor, Aí é B.O. com ele, entendeu? Não é nosso. É a CNPJ dele, Entendeu? A gente pode, inclusive, que é o que a gente resguarda, Que eu acho interessante, é... Nessa mesma mensagem inicial, informar um pouco mais a pessoa. Esteja ciente que você, lógico, e outra coisa que você vai ver para baixo é o seguinte,
+01:33:45 Pedro Maia
+Quem não tem a flexibilidade de fator R, isso nem aparece. Que é o KINAI, que é o travado no 3. Isso nem existe. A gente está debatendo uma coisa aqui que de fato é uma variável. Então, se o cara que ele tem, no meu caso, por exemplo, Se tivesse para mim uma mensagem, inicialmente, alguma coisa, me alertando, Mas tome cuidado, porque ficar muitos meses sem gerar prolabore pode complicar o seu cálculo futuramente Para o enquadramento do menor alíquota.
+01:34:16 Pedro Maia
+Sei lá, uma coisa fácil do cara entender, beleza? Então acho que dá para cercar dessa forma. E eu, do meu coração, que igual a gente está falando, a gente pensa em ter dezenas de milhares de usuários, Por conta dele isso aí. A gente avisa. Deu o aceite, continuou, a gente entende que o cara está ciente. Chegou lá na frente, aconteceu o caso, você falou, ligar aqui, endoidando. Pô, meu amigo, a gente avisou lá no início e tal, o que isso ia acontecer e tal. E a forma que a gente pode te ajudar agora é essa. A gente continua fazendo os cálculos da forma correta até você voltar do jeito que você Precisou voltar para o anexo 3, né? Acho que seria basicamente isso, né? Então, beleza.
+01:34:47 Pedro Maia
+Transmitir com a qualificação cadastral pendente. Beleza. O caso. Na conta real, o cadastro do sócio está como falta de dados, sem PIS informado. E você puxou do meu. E nove competências já foram transmitidas assim. Onde apareceu? Lendo o JSON da plataforma. Por que apareceu? O DCTF é confissão de dívida irretratável. Transmitir com cadastro pendente pode ser problema. E o cliente não sabe que está assim. Só aparece no JSON, que é um arquivo interno lá que pegou e eu contabilizei.
+01:35:19 Pedro Maia
+Nunca na tela. A pergunta, qual o risco concreto? Isso precisa ser regularizado retroativamente ou basta corrigir daqui pra frente? Você entendeu mais ou menos a questão do PIS?
+01:35:29 Léo
+Mas é só informação cadastral e ele gerou a informação, então não iria gerar essa dívida por multa, por falta de informação dessa técnica.
+01:35:45 Pedro Maia
+Não, não é um problema. É por isso que eu acho que essa questão do PIS, a contabilidade, ele nunca pediu nada em relação a isso. Por isso que ele puxou lá. Então também não é um gargalo, um B.O. grande.
+01:35:57 Pedro Maia
+A base do IRRF vem zero nas declarações, o caso. Na conta real, o campo salário base IRRF vem zero em todas as competências, Inclusive na de 3 mil, é porque está abaixo do teto, né? Porque está abaixo do teto,
+01:36:13 Léo
+Aí você pegou essa base em 2026. Isso, isso, isso. Mas se fosse em 2025,
+01:36:18 Pedro Maia
+Te geraria. Então aqui, na verdade, é que ele quis autuar como um erro, não é um erro, né? Então está certo.
+01:36:26 Léo
+Ah, Era 2025, era de um dia e em 2026 passou para outro.
+01:36:29 Pedro Maia
+Então, se o campo é para ficar preenchido, Não podemos copiar o comportamento deles, blá. Então, simplesmente, o que eles colocaram em zero na minha conta É porque, de fato, era zero do IRRF. Beleza. Oito. A ME Unipessoal precisa de ata de aprovação anual de contas? Não. Não? O caso sete... Só a SA e a empresa.
+01:36:50 Léo
+Sociedade Anônima que precisariam.
+01:36:52 Pedro Maia
+Agora já entra uma outra dúvida que a gente já resolve. O que acontece? A Contabilizei, mesmo eu colocando lá inicialmente que seria só eu dono da minha empresa e fins, Eles não me colocaram como unipessoal, eles me colocaram como LTDA. Isso tem alguma justificativa para evitar algum problema no futuro? Você abriu em 25. Em 25. Ou, o que acontece? A Isabela, quando ela veio aqui, ela falou comigo, Pedro, eu travaria quem não tem sócio tudo em SL1, quem tem sócio LTDA. Ela falou isso, só que eu preciso entender, não mandei isso.
+01:37:23 Pedro Maia
+Faz sentido? Faz sentido porque o...
+01:37:27 Léo
+Qual que é a questão do SLU? O SLU, que é a Sociedade Unipessoal, Limitada Unipessoal, Ela surgiu com a exclusão de outros regimes de CNPJ que se chamavam EIRELI. Ah, tá, já ouviu falar. Que é uma empresa...
+01:37:52 Léo
+O empresário individual substituiu essas ideias. A partir de hoje, o unipessoal, quando o cara só tem um sócio, Que é o unipessoal, ele sozinho, travaria no unipessoal. E quando ele tem mais de um sócio, aí ele tem mais de um,
+01:38:09 Pedro Maia
+Aí ele vai por limitado. Mas o que eu acho que, será que faz sentido a contabilizar e ter feito isso? Por quê? A contabilizei permite depois que eu tenha sócio com as alterações todas lá, Que eles vão vender esse tipo de prestação de serviço. Seria um documentamento para eles mudarem, não?
+01:38:25 Léo
+É, Porque na verdade, se você padronizar, se você já... Esse cara aqui, eu acho que está... Muito possivelmente ele queira uma sociedade. Mas vai transformar esse unipessoal para poder fazer... Fazer toda.
+01:38:38 Pedro Maia
+Uma troca de.
+01:38:38 Léo
+Documentação e já vai estar pronto. E mudar a cláusula. Você já inclui como limitado, o cara vai estar sozinho. E tudo bem também,
+01:38:46 Pedro Maia
+Não tem problema. Dentro do Simples Nacional roda tudo Normal. Então eu acho que Aqui já vale a gente trocar, a gente travar tudo, Para a LTDA. Desde que o cara esteja Sozinho ou se o cara estiver sócio. Porque o cara que estiver sozinho, igual eu, Amanhã eu resolvo ser sócio. Mas é um troco de documentação, eu acredito. Porque o cara que ele resolve, ele é SLU, ele resolve Ser sócio, você tem essa migração, Toda. Você tem que fazer a transformação da SLU Para limitar. E sendo que, A inclusão para sócio, já sendo a LTDA, é mais simples. Eliminou uma burocracia, né?
+01:39:16 Pedro Maia
+Eliminou uma burocracia e uma validação a menos. Então, Podemos travar o TDA. Eu acho que é o mesmo. Beleza. Então, beleza. A defisa de 2026 Sai no formato velho ou no novo. O caso, a resolução aí do 190-2026 extingue, A defisa a partir do 1-27, Que eu falei lá em cima, passando as informações Para dentro da PGDAS, entre janeiro e março. O que apareceu? Na pesquisa de canais, Beleza, o que a gente fez. E o que apareceu, No ano-calendar de 2026 é entregue em março De 2027. Ou seja, depois da norma entrar em vigor, mas isso aqui é de futuro, né?
+01:39:48 Pedro Maia
+A gente tem que estar de olho nisso, né?
+01:39:50 Léo
+Isso Aí eu também não tenho certeza de como é que eles vão fazer. Eu pergunto um pouco. Na hora que a gente chegar lá em 2027, que é a defesa que a gente vai ter que fazer entrega, A gente vai entregar o pedido de 2026. Aí eu não sei se essa mudança, a partir de 2027, ela vai ser integrada quando eu estiver em 2028, Ou se em 2026 os caras já vão fazer a integração disso. Em 2027, ele já vai fazer a integração disso em 2026. Entendi. E eu entendo que ele já vai ter essa integração lá já pronta,
+01:40:23 Léo
+Porque como ele passou para a web, eu acho que ele já vai ficar... Aí eu não sei. A Receita já está promovendo muitas mudanças que ela tem feito. Então, você tem que ver que é bom para a stand-by. Isso aí nós vamos usar. É, isso aí é melhor para a stand-by, porque na hora que começar...
+01:40:40 Léo
+A exigir mesmo Na prática que nós vamos ver como ele vai estar buscando Esses dados. Mas em tese é um aplicativo Que a gente entra lá, preenche os dados E ele busca algumas informações, E ainda não mudou nada.
+01:40:52 Pedro Maia
+Então a gente pode manter tipo assim ali, Como está em stand-by, seria para 27 A gente mantém o formato velho. Que seria assim a atualização. Então beleza, A10. A carta de responsabilidade, É a resolução CFC 1590, 2020. O caso, usamos a resolução tal com base da carta de responsabilidade do cliente, O documento que transfere a responsabilidade pelo que ele declara, Onde apareceu, no pesquisa anterior, o que apareceu.
+01:41:22 Pedro Maia
+As próprias referências de pesquisa das leis e dos artigos, não há 1.590, Pode ser citação trocada e esse documento sustenta a nossa proteção jurídica inteira sobre lucro declarado. A pergunta, qual é a norma correta da carta de responsabilidade? Existe isso? Como é que funciona isso? De carta de responsabilidade. Outra coisa que eu vi, que eu descobri, eu não me lembrava, Eu assinei uma procuração com a Contabilizei, E o Sam que achou, nem foi dentro deles,
+01:41:54 Pedro Maia
+Achou lá dentro do órgão que fica essa procuração, Da responsabilidade de exercer e tal as coisas contábeis. Só que teve uma coisa que talvez já entra em bola um pouco aqui, Eu só assinei, a data de assinatura dessa minha procuração, eu abri em 12 de 12 de 25, foi em março de 26. Existe alguma justificativa para esse gap? Será que eles esperaram eu emitir a primeira guia, mas foi em fevereiro? Não bate a data para mim, entendeu? Por que eles demoraram tanto? Por que eu demorei tanto para assinar uma procuração dessa?
+01:42:27 Pedro Maia
+Faz algum sentido?
+01:42:29 Léo
+Talvez a...
+01:42:31 Léo
+Essa procuração seria um documento. É um documento que fala.
+01:42:34 Pedro Maia
+Exatamente que tem direito a tudo meu,
+01:42:36 Léo
+Vai encher em tudo meu Minha vida. Isso. É mais para poder mexer em... Porque a procuração em si é eletrônica. Então, quando eu habilito no site da Receita e uma procuração eletrônica, essa assinatura, Também é eletrônica. Então, eu já fico como procurador. Então, talvez essa carta assinada... Já seja pra ele te representar em algum órgão, caso ele precisasse ir presencial e levar um documento já Autorizado.
+01:43:04 Pedro Maia
+Mas, por exemplo, então pra caso nosso, assim, de cara não é necessário. Eu acho que, tipo assim, a questão da procuração, a gente pode fazer sob demanda? Tipo assim, só se o cara fizer um pedido de algo mais cabuloso, que a gente precisa mexer lá, a gente fala, ó, pra isso eu preciso de uma procuração sua.
+01:43:22 Léo
+Já deixar pronto. É uma coisa que agiliza a sua vida lá na frente, que bom supor. Hoje você pode fazer por demanda, porque às vezes a base vai ficar menor. A gente tem que pensar que na hora que a base começar a inflar mais, Como é que vai ser essa demanda? Você acabou de ter um setor só para poder executar essa busca dessa estrutura. Aí como é que você assinou isso? Você assinou isso digital? Foi digital. Eles são os printibas em São Paulo. Foi tudo digital. Aí você foi lá... No golpe, eu acho. E se já soltasse isso logo no início, já deixasse isso pronto lá, já seria bom.
+01:43:53 Léo
+Então, você fala assim, né, dentro desse período, Desde o primeiro dia do CNPJ, se ele já recebeu essa documentação de algum dia, Pra poder já gerar essa assinatura...
+01:44:02 Pedro Maia
+É melhor. É, porque aí sabe o que acontece? Eu tô tentando encaixar isso tudo na aba humana das assinaturas. Então, por isso, mas lá não é um problema, entendeu? Então, por exemplo, o cara que tá constituído em CNPJ, Na hora que ele tiver a primeira assinatura... Da Constituição. Na segunda assinatura Que volta, nós mais ele, Contabilidade mais o usuário, Aqui eu posso colocar uma declaração. Porque aí ele já está mexendo com isso. A diferença é que lá dentro do OV, Por exemplo, ele veria dois documentos para assinar. A procuração mais o documento final.
+01:44:33 Pedro Maia
+Da Constituição do CNPJ. Faz sentido, né? Faz. Então beleza, a gente pode, Trabalhar. Se já tivesse isso no momento da, Regradação humana, Normalmente.
+01:44:41 Léo
+Já precisava.
+01:44:42 Pedro Maia
+E é isso que é dito, Nessa carta? É basicamente isso, ou não tem nada a ver, isso aqui é outra coisa, outra parada. Porque isso aqui foi uma coisa que puxou a sua lei de 2020, então talvez não é válido mais.
+01:44:57 Léo
+Deve estar falando sobre a tratativa do próprio cliente, sei lá, na questão de dispôr de documentação, alguma coisa. Mas isso aí, o próprio contrato já vai ter essas pausas. Essas pausas, entendi.
+01:45:14 Pedro Maia
+Então, vamos deixar esse aqui como... E responsabilidade? Beleza. Agora vem o double check do calendário, que é o que a gente precisa dar uma olhada. Por exemplo, o caso. Travamos prazos assim. E todo produto depende delas. E-social mais DCTF, dia 15. Aqui diz antecipa, norma, manual, na... Então, ele é dia 15. Mas quando diz dia 15, é dia 15, eu preciso disponibilizar... Buscar e disponibilizar ou dia 15? Como é que funciona? Isso seria do... O pessoal.
+01:45:43 Léo
+Não deixa de estar transmitindo dia 15. Então, ele já começa a transmitir essas informações antes do dia 15. Entendi. Então, vamos supor, o dia 15 e ontem. Claro, pode surgir alguém para poder fazer isso. Se a gente depender de estabilidade do sistema, Se eu não consigo cumprir aquele dia 15, eu já estou numa muda no dia 16.
+01:46:02 Pedro Maia
+O que acontece para a gente que facilita? Isso tudo, a Serpro tem API lá direto do governo. Esses dois, inclusive, que é o que eu pesquisei. Para poder transmitir essa parada. Então, a minha pergunta, na verdade, É o seguinte. Dia 15 é uma data Que está no manual do E-Social, K7A4 lá. Mas, Se eu, por questão de erro, De instabilidade, quiser puxar um dia Anterior, 14, para iniciar. Porque isso vai Ser feito em massa. Se isso é API, isso é, Feito em massa. Se a gente tem mil usuários, vai tentar transmitir, Os mil de uma vez. API é isso. Então, no dia 14, se eu resolver fazer no dia 14, contando com essa estabilidade,
+01:46:35 Pedro Maia
+Alguma coisa que der, tem algum problema eu transmitir ele no dia 14 ou não afeta em nada? Nada.
+01:46:42 Léo
+Quanto Antes você ter a informação do... Vamos supor, eu tenho a informação do ProLabor, eu vou lá com o E-Social. Se eu já tiver essa informação do ProLabor lá no dia 6 gerado, Se eu transmitir essa DCTF no dia 7, é bom. Ah, entendi. Por que isso que a gente está falando... Eu antecipo uma possibilidade de uma multa que vai chegar depois do dia 15, então sim. Lá no outro escritório. Como é que a gente fazia? Dia 1 a gente já começava. Entendi. Então assim, dia 15 é o seu limite máximo.
+01:47:07 Pedro Maia
+Dia 15 é a data de vencimento? É a data de vencimento. Da guia. Ou da minha transmissão. Da obrigação. Da obrigação, entendi.
+01:47:14 Léo
+A BZTR tem que ser transmitida dia 15, Para as guias que vencem no dia 20. Ou seja, a minha obrigação acessória é dia 15, Mas a minha guia deve ser dia 20. Mas eu não posso deixar de transmitir no dia 15. Essa obrigação. Então eu tenho que transmitir ela... Sei lá, tentar transmitir 3, 4, 5 dias antes, começar a transmitir, começar a ver, aí é claro, vai ser com o tempo, né? Na medida que a base for crescendo, a gente tem que ver quanto tempo o sistema vai gerando e em qual momento ele vai gerar algum tipo de inconsistência também.
+01:47:45 Pedro Maia
+Porque, por exemplo, aí entra uma outra coisa que faz sentido, que a Contabilizei faz, de que? A Contabilizei, se não me engano, eles também não permitem essa geração de nota retroativa, mas eles têm lá um campo na parte de... Notas fiscais, de importar nota. Só que eles têm uma regra que, Até o dia 15, Você importa nota, Provavelmente é pro ativo, não sei, Sem pagar nada. No dia 16 eles cobram.
+01:48:14 Pedro Maia
+Aí eles cobram quanto? Não sei,
+01:48:15 Léo
+Deve ser Um opçãozinho que eu não sei. Valor uma taxinha? Deve ser uma taxinha. Eu tô achando até engraçado, porque se até o dia 15, que é o limite Da minha obrigação... E ele importa essa nota, e no mesmo dia ele calcula e transmite a DSTF, porque.
+01:48:32 Pedro Maia
+Ele pode fazer o seguinte... Ou eu posso estar falando uma coisa errada, deixa eu buscar aqui, talvez eu possa estar te falando uma coisa errada, deixa eu corrigir, fica melhor, deixa eu puxar aqui, deixa eu puxar aqui, peraí, deixa eu botar aqui, porque aqui, ó, eu consigo, inclusive, nossa, na TV fica péssimo, tá vendo?
+01:49:24 Pedro Maia
+Mas então entendi, dia 15 ali é nossa obrigação limite.
+01:49:31 Léo
+Só A que confessa dívida. Eu te gerei um prolabore e gerou uma guia. Essa guia vai ser minha compensação de dívida na DCTF. Entendi. E essa é a obrigação.
+01:49:45 Pedro Maia
+Ah, tá. Aqui já me corrigiu. É outra coisa. O que apareceu dia 15 é de movimentação financeira e lucro, não de nota. Então, realmente, a regra deve ser exatamente a forma que você está falando. Com essas antecedências, né?
+01:49:58 Léo
+É, porque vamos supor, quanto mais antecedência você conseguir gerar a informação, porque Se no dia 15, que ele dá a opção de importar a nota, aí se o cara for lá importar, né? É, porque eles têm um botãozinho de importação muito em cima. Porque teria que ser feito no mesmo dia, né? Tem que ser feito no mesmo dia. No mesmo dia ele importa a nota, eu avalio, sei lá, o fator R.
+01:50:44 Pedro Maia
+O que a pesquisa diz, na verdade, não é dia 15, é o dia 5 do mês seguinte. Ah tá, sobre a nota. E não só adicionar nota, é importar, alterar e cancelar. Três telas. Uma regra só. Então, o que acontece? Captura com você e conduzindo em 9, 9, beleza. Até o dia 5 do mês seguinte, grátis. Depois do dia 5, 21 e 90, de reabertura do mês contábil. Até 730 dias é limite legal. Isso aqui é na lei, né? Porque eles falam de 730 dias.
+01:51:15 Pedro Maia
+Literal notas de cancelamento. Notas canceladas depois do dia 5 do próximo mês possuem um custo de operação contábil. Ah, entendi. Então, até o dia...
+01:51:25 Pedro Maia
+5 do mês seguinte eles estão me travando Que até o dia 5 eu posso cancelar a nota, Do peso anterior. Aí eu concordo. Faz sentido.
+01:51:32 Léo
+Porque aí muito provavelmente a ferramenta Dele começa a fazer A transmissão da... A partir do 5. A partir do dia 6. Ah, tá. Ou seja, Fechou. Aí quando ele Cobra a abertura, ó, tira uma Movimentação. Aí ele já te cobra uma, Movimentação porque ele já tá começando A transmitir a informação. Ele vai ter que recalcular. Ele vai ter que recalcular. É por isso. Recalcular, cancelar, Uma nota. O que pode acontecer? Pode acontecer.
+01:51:56 Pedro Maia
+Outra coisa que ele falou de alterar, mas a gente já travou aqui, Que eu travei nas documentações, que é bom que você já tire essa dúvida, A Contabilizei não permite, na verdade, a alteração de nota Para plano de MS Internacional. Por mais que o governo libere a alteração de nota, Alterar algum dado na nota, alguma coisa, eles travam, eles não deixam. Então, o que acontece? Eles travam da seguinte forma. Se eu quero uma nova, eu errei uma nota, que seja o valor, E eu quero outra, eu cancelo essa e gero outra. Isso. Pode travar assim também? Pode. Porque senão essa questão de alteração de nota, pelo que eu vi, gera uma complexidade desgraçada,
+01:52:26 Pedro Maia
+Que é muito mais fácil cancelar, que não tem custo, né? Não tem custo cancelamento.
+01:52:30 Léo
+É uma leitura, cara, que você tem que ir lá presencial pra cancelar isso. Ah, então.
+01:52:36 Léo
+Entendeu? Então vamos supor, Nova Iguaçu, Rio de Janeiro. Tive um caso do cara ali, cheio no saco, com o caso do... Ah, meu ISS tá a mais. Cara, eu tô aqui em BH. Pra mim, quando pegar o correspondente lá, é mais 700 conto. Ah, o ISS é 300. Ah. Coloca a sua conta aí. Exato. Você vai receber reembolso de R$300 e vai pagar R$700 com o cara aí lá e resolveu. Entendi. A não ser que ele mandasse um funcionário dele. Então, assim, o cancelamento tem prefeitura que hoje unificou mais,
+01:53:06 Léo
+Mas ainda tem prefeitura que existe ou esteja lá na porta dela Para poder fazer essa solicitação. Então, não justifica. Aí é um valor que você pode cobrar R$500 e conta tranquilo.
+01:53:15 Pedro Maia
+Entendi. Agora, por exemplo, a gente tem mais facis, por exemplo, de BH, A gente pode manter esse padrão. Dentro da nossa plataforma não existe ajuste de nota. Existe cancelar e remitir.
+01:53:25 Léo
+O Cara tem a opção cancelar e ele não emite outra, Ou ele substitui, que é automaticamente, Lá na Prefeitura de Belo Horizonte, se não me engano, Se eu clicar na opção de substituir, ele já cancela a nota válida E já coloca, subscreve para mudar os status. Já de imediato, assim, sem curso, sem processo burocrático.
+01:53:46 Pedro Maia
+Legal, eu não sabia dele substituir, a gente pode usar.
+01:53:50 Pedro Maia
+Então, beleza, reabertura do mês contábil, quando precisa, beleza, a gente já leu, importar alguma nota fiscal de mês anterior. Se o caso faça essa alteração em importação, a reabertura do mês é feita automaticamente, então deve pagar a taxa. Três coisas que valem mais que o preço, a cobrança é disparada pela ação, não contratada. O serviço tem, beleza, não é item de catálogo do cliente escolhe, ele importa uma nota atrasada e a reabertura acontece sozinha, com cobrança de novo. Ah, entendi. Então, o que acontece? A partir do dia 5,
+01:54:20 Pedro Maia
+Até o dia... Aí deve ter um limite também, né? Até o dia tal. Deve ser dia 6.
+01:54:26 Léo
+Até dia 12, No máximo.
+01:54:30 Léo
+Entendi. Eles não devem deixar esse tanto de gente Para transmitir.
+01:54:34 Pedro Maia
+É, Não, pode dar muito bem. O prazo não aparece na tela de cobrança, E a gratuidade Não aparece em lugar nenhum. A regra está Espalhada em três.
+01:54:45 Pedro Maia
+Telas. O contexto de informação cada. O rodapé da emissão ainda diz uma coisa imprecisa. Cancelar dentro do mês, quando a janela é real, beleza. Ô, velho, eu varrei, não contabilizei. Eu tô achando tanta contradição dentro deles lá. Tanta coisa que eu tô falando, eu vou alertar eles. Tem erro de sistema que eu tô achando. Tem erro de um tanto de coisa. Por que acontece? Eu acho que não comentei isso, não. Eu loguei na minha conta e pedi o Claudio pra varrer as telas pra mim. Pra ele pegar todas as telas internas ali e fazer uma varredura. Trazer nada. E aí, não sei se foi na segunda tela que ele tava abrindo, ele tá assim, pô, tá difícil, tipo o Claudio meio que falando assim, tá difícil de ler aqui a informação, mas eu vi aqui que o código deles é, tipo, aberto.
+01:55:26 Pedro Maia
+Vou pegar pro ROR. Todas APIs dele, nós estamos puxando, todos os endpoints, todas conexões de banco de dados, fica tudo aberto. Eu tô com o desenho inteiro deles aqui. Quando ele cita ali em cima, por exemplo, ali ó, aqui ó, o serviço tem disponível para cliente 2.false, eu puxei o banco de dados deles. Isso é uma ação de banco de dados que eles estão deixando aqui aberto.
+01:55:49 Pedro Maia
+Você não está entendendo, não, senhor. Isso aqui, e por que a gente está matando essas duas coisas?
+01:55:54 Léo
+É engraçado, porque a estrutura que eles têm...
+01:55:57 Pedro Maia
+Não, É 1.200 cabeças, mais de 1.200.
+01:55:59 Léo
+Eles poderiam ter trago uma segurança maior.
+01:56:03 Pedro Maia
+Travado, é, de alguma forma. Não é à toa que puxou todos os endpoints, a API de cada tela. Então, quando eu pego isso aqui respondendo a parte técnica... Por trás aqui, tá alimentando o que vai cair no colo dos programadores, Que eles só vão falar, o banco de dados vai ser assim mesmo. Mas estão deixando aberto, tá tudo aberto. O Claudio foi lá e catou. Enfim, então, beleza? São duas reaberturas diferentes e é fácil confundir. Mês contábil, dia 5 do mês, seguinte, 21 e 90, E balanço e exercício anual, é outra coisa, né? Esse aqui também deve seguir a mesma regra de dias, né, e tal.
+01:56:36 Léo
+Aí o balanço anual... Só quando vir o ano Tem a obrigatoriedade de fazer a transmissão. Então vamos supor, ele abriu, Em 2026 e ele vai ter essa informação em 2027. Entendi.
+01:56:47 Pedro Maia
+Esse Número existe na plataforma deles, Mas é outra coisa, disponibilização de guia. A Home diz, DARF disponível até dia 15 E DAS disponível até dia 16. Já está anotado como armadilha.
+01:56:59 Léo
+Tá vendo? O DAS, a guia, vence dia 20, Mas ele manda até dia 16 pra todo mundo. Então, ele manda com 4 dias de antecedência. Então, ele tem entre o dia... Muito provavelmente, ali no dia... O DAF até o dia 15.
+01:57:17 Léo
+Esse DAF do INSS, ele disponibiliza até o dia 15. Ou seja, a guia vem esse dia 20. Entendi. Então, ele manda... A DAF, ele manda com 5 dias. E o DAS, ele manda com 4 dias. Que todos são bienes. Mas todos vão estar funcionando assim. Vai estar rodando simultâneo. Entendi. Tá, faz sentido.
+01:57:34 Pedro Maia
+Então, acho que aqui a gente... O prazo de documentação financeira e tal, é outra coisa. Isso, beleza. Então, o que a gente já matou, entendi sobre essas datas.
+01:57:47 Pedro Maia
+Voltando aqui para o 11, a gente matou então essa questão do dia 15, está tudo gravado Aqui, eu consigo puxar, beleza. DARF, INSS, RRF, mais RFF do sócio dia 20, certo? Isso. Beleza. Aí a gente está falando de data de vencimento mesmo. Certo, né? Data do vencimento, né? Beleza. Mas aí, por exemplo, o ideal é calcular isso antes também junto dos outros, né? Calcular antes. Entendi.
+01:58:13 Léo
+Bom, Ele veio esse dia 20 ali, mas lá até o dia 15 ele já estava mandando para o... Entendi. Ele deve começar a mandar isso a partir do dia 1º, né? A partir do sexto dia, na verdade. E deve dar 5 dias ali de espera, só para poder ter certeza do cara. Alguma correçãozinha de alguma coisa que tem que fazer. Você não falou nada, eu já estou mandando a informação. Do dia 5 para frente,
+01:58:37 Pedro Maia
+A gente começa a calcular tudo e emitir tudo que é necessário, certo? Faz sentido. Então, DAS, uma IPG DAS, dia 20, né? Também, certo? Dia 20 o DAS. E defício que é anual, 31 do 3, é o próximo limite do ano seguinte, certo? Aí começa a transmitir antes, né? Ah, beleza. O meu mesmo, eles falaram que eles transmitiram... Mesmo tendo só dezembro e tal, eles transmitiram 51 dias antes do prazo. Então eles transmitiram aí provavelmente em fevereiro.
+01:59:03 Léo
+Então Já estava mandando os seis dias. Eles têm que começar a entregar isso com mais antecedência. Entendi. Mas é bom assim, os povos vencem no dia 31 ali, mas no final de fevereiro já é bom já estar executando. Entendi. Fevereiro é do volume, Né?
+01:59:17 Pedro Maia
+Aqui vem outro aqui, só para entender sobre essa provocação lá em cima ainda. Confirmando os quatro prazos.
+01:59:26 Pedro Maia
+Principalmente que a DARF antecipa e a DAS prorroga e o feriado municipal de BH desloca a guia federal. As guias, se ele pegar sexta, feriado, sábado, feriado, alguma coisa, ela é empurrada para o próximo dia útil ou não existe isso? De corposo. Qualquer uma dessas guias que a gente vai emitir ou alguma coisa do tipo.
+01:59:49 Léo
+O simples é que sempre prorroga. Então, vamos supor, se der final de semana...
+01:59:55 Léo
+E um feriado, ele vai prorrogar pro próximo dia. O restante, tudo é T5. Ah, entendi. Então, vamos supor, se deu final de semana e é vencendo a segunda, ele pede pra você pagar na sexta.
+02:00:07 Léo
+Mas aí a própria guia já vem com a informação do... com essa data regulada. Quando ela é gerada,
+02:00:11 Pedro Maia
+Ela já vem com a informação regulada.
+02:00:13 Léo
+Ela já vem com a informação do T6. Então, eu não preciso avisar isso pra ele. Eu poderia só encarar um documento e olhar... Um documento e já me falaria todas. E disparava todo mundo. Entendi, faz sentido. Os do Estado, eu já não consigo fazer isso. Imagina que eu peguei uma empresa comercial, os do Estado é mais burro, entendeu? Entendi. Eles não conseguem... O próprio sistema deles não consegue identificar se é pra gerar naquele dia ou não. O dia que eu gerar é o dia que ele deixa. Errar é dar certo. Entendeu?
+02:00:37 Pedro Maia
+Entendi.
+02:00:39 Léo
+O Estado é triste.
+02:00:40 Pedro Maia
+Lascado. A doze, pejotização, o único risco crítico do nosso perfil, um caso. Um dev, um design e um consultor abre ME para prestar serviço a um cliente só. Cumprindo horário, beleza. Isso aqui eu acho que é mais questão legal, né? Que essa pejotização que ele puxou de lei, porque a gente faz o que não pode, né? Tipo assim, não aqui. É, tipo igual aqui, eu peço o horário para os meninos. Não podia, né? Essa pejotização. E eles são todos pejotos e tal. Parece que isso aqui é um alerta, mas que o Brasil todo pratica, né? Tipo assim, isso aqui também já é risco do cara lá, se ele tiver um colaborador ou mais lá pra vida dele, né?
+02:01:13 Pedro Maia
+Beleza. A 13. Não existe consulta prévia por CPF. O gate é 100% autodeclaração. Caso. Antes de cobrar do cliente e abrir a empresa, queremos saber se ele pode optar pelo simples. Onde apareceu? Mesma pesquisa. Ele declarou ausência normativa, nenhum serviço, portal ou API do governo, Permitindo teste de CPF antes de a CNPJ existir. Por que apareceu? Se passar batido, a empresa nasce com a opção indeferida. Então, não nasce, né? A opção é indeferida. E ela começa a vida no lucro presumido, que para um ME de serviço é fatal.
+02:01:48 Pedro Maia
+Beleza, o que ele está querendo dizer aqui nas perguntas? O que rolou? A gente está tentando pôr... A gente fala que ele não tem essa consulta, mas tem. Até pelo IFO simples, você sabe se o CPF é regular ou irregular. Então, o que acontece? O CPF irregular, ele inviabiliza a abertura na junta. Ele não deixa para excluir, ele indefere, certo? O que a gente está fazendo? Por que a gente está deixando essa consulta logo depois do revisar, Que é a parte do botão final do robô rodar o anájum?
+02:02:21 Pedro Maia
+A gente está com o API por trás, que se a pessoa é única, A gente já tem todos os dados do CPF, a gente tem tudo o que precisa. Foi o único item que a gente teve que colocar, que não tinha de puxar, Que era a data do nascimento. A API funciona consultando a regularidade do CPF A partir do nome completo correto mais data do nascimento. Ele já fala se o CPF está regular e irregular, enfim, traz aqueles status para falar se A gente consegue dar o deferido ou não por essa irregularidade. Então, o que a gente está fazendo? Na parte de revisar final, se a pessoa é única ou se tem sócio, lá na junta não Passa com irregularidade em nenhum dos CPFs.
+02:02:53 Pedro Maia
+Então, esse botão final de verbiabilidade vai acionar a API, vai dar um botão de loading, E caso, por exemplo, somos quatro sócios, o terceiro está com irregularidade, ele vai Devolver uma mensagem. Esse sócio deu indeferido porque o sócio João Maria tem.
+02:03:10 Léo
+Restrição no.
+02:03:12 Pedro Maia
+CPF e isso inviabiliza o deferimento do seu processo, entendeu?
+02:03:21 Léo
+A junta, ele também tem uma possibilidade de você travar a abertura de CNPJ. Então, se o cara tiver tido algum golpe no passado e ele tiver com esse CPF... Bloqueado para abertura de empresa, ele também trava. Aí, o que o cara tem que fazer? Ele tem que ir lá na junta, ele mesmo tem que ir lá, autorizar a abertura, tirar esse bloqueio, Aí você consegue voltar com o processo de novo.
+02:03:48 Pedro Maia
+Entendi. O que eu falo é pelo seguinte, eu não sei se a gente tem a API que traz esse travamento, Talvez tenha, para a gente rodar junto. Esse travamento da junta? É.
+02:03:58 Léo
+Eu não acho que não, acho que você fica muito interno. Tem que estar bem no site da ajuda nisso. Então a gente pode... Mas eu acho que vão ser poucos os caras que vão ter esse treinamento. Eu acho também,
+02:04:10 Pedro Maia
+Eu acho também. Porque, tipo assim, eu acho que o que pode mais dar de verdade é o fato desse CPF. Porque o cara pode ter a restrição de fato ali e tal e inviabilizar. Então faz sentido isso que eu te falei? Tipo, não revisar lá quando é, ficar um loading e se achar... Faz sentido um processo que,
+02:04:25 Léo
+Tipo, não vai andar. Não vai andar, Exato.
+02:04:27 Pedro Maia
+Vai dar um indeferido, Né?
+02:04:28 Léo
+Ele só vai entrar numa pilha ali e às vezes vai ficar parado. Entendi. Até o cara, vamos supor, um CPF está dando irregular, mas os outros dois dão, às vezes ele tira um cara e abre com o outro.
+02:04:38 Pedro Maia
+Isso eu imaginei, porque nesse revisar ele pode voltar, a gente está com isso também, ele volta no bloco das páginas que ele quer editar e exclui o sócio. Ele fala, então beleza, só vou tirar o João aqui e o resto toca o pau. Então beleza. Servidor público e MEI ativo. O caso, dois perfis que apareceram no funil e que hoje passam direto pelo nosso cadastro, onde apareceu a mesma pesquisa. O que apareceu? Servidor público ativo pode ser sócio cotista, mas não pode ser administrador. Faz sentido? O que muda a qualificação do 49 sócio administrador e 22 sócio participativo lá, né?
+02:05:14 Pedro Maia
+E quem assina pela empresa? E-mail ativo não impede abrir IME. Normalmente eles abrem até em outro CPF, da esposa, por abrigo da mente, por causa dessa trava. Entendi. Mas então, por exemplo, essa questão da pessoa ter o e-mail ativo não impede ela de ser sócio no IME?
+02:05:30 Léo
+Se ele tiver um MEI ativo, ele não pode ter uma sociedade em outro CNPJ.
+02:05:35 Pedro Maia
+Então, isso aqui é travado, na verdade.
+02:05:37 Léo
+O MEI só pode ter um CNPJ ativo, que é o dele mesmo.
+02:05:41 Pedro Maia
+Que é vinculado ao CPFD. Se ele.
+02:05:42 Léo
+Tentar abrir um MEI e já.
+02:05:43 Pedro Maia
+Tiver participação em outro, já é problemático. Então, isso aqui está errado. Então, MEI ativo não impede de abrir ME. Impede. Ele não vai conseguir.
+02:05:55 Pedro Maia
+Mas obriga baixa ou desenquadramento antes? Mas o problema é que às vezes.
+02:06:00 Léo
+Ele vai conseguir abrir a empresa.
+02:06:03 Léo
+Porque a receita deixa você correr o risco, entendeu? Ela não vai te travar falando, opa, você já tem um centro de jantar aberto. Não, ele vai deixar você abrir. Só que ele vai te dar a condição de desenquadrar o MEI para uma empresa simples.
+02:06:16 Pedro Maia
+Entendeu? Mas é que eu acho que para a gente, a gente poderia encontrar ela, né? Tipo, se o cara... Se o cara, a gente constatar que o CPF do cara que tá ali tem um MEI aberto, a gente podia travar o cara. Se você constatar isso, você já.
+02:06:30 Léo
+Trava o cara num problema que vai gerar e ainda vai gerar um processo administrativo pra mim e executar. Agora, se eu estiver olhando na perspectiva de ganhar, se ele gerar esse processo e eu cobrar dele, as descompensas vão atender. A gente faria o desempadramento do cara. Que aí a gente faria... Ou desenquadramento,
+02:06:53 Léo
+Paguei as orientações, Ou então entrava com processo administrativo. Mas então, por exemplo,
+02:07:00 Pedro Maia
+Eu sou o quê? Eu sou MEI. Igual você falou, o governo deixou de fazer. Eu sou MEI, baixei nosso aplicativo aqui, Coloquei lá que eu quero abrir um ME. O pau vai tocar e vai quebrar pra frente. Eu vou conseguir constituir essa empresa, certo?
+02:07:11 Léo
+Vai Conseguir constituir.
+02:07:12 Pedro Maia
+Tendo MEI ativo.
+02:07:13 Léo
+Vai conseguir porque ele não vai te gerar essa trava, resolve um lado para poder abrir o outro. Não, ele vai deixar você abrir porque às vezes você vai.
+02:07:19 Pedro Maia
+Manter os dois ativos. Mas você acha interessante para a Constituição, então, a gente tem em algum lugar a visão sobre isso, Que a responsabilidade dele, tem que estar ciente da responsabilidade dele, por exemplo, Que, sei lá, caso você tenha um MEI aberto ou você seja igual eu disse aqui, né? É a situação.
+02:07:36 Léo
+Que te coloca no risco de desenquadrar o seu atual MEI. Ok, entendi. Já fizer essa informação, já se resguarda,
+02:07:43 Pedro Maia
+Ninguém me avisou. Ah, beleza. Entendi. E outra coisa que fala também, isso aí também serve para servidor público? Ativo?
+02:07:51 Pedro Maia
+Serve. Entendi. É a mesma coisa? Mesma coisa.
+02:07:56 Léo
+Servidor público, ele fica muito vedado na questão de ter, ele pode ter uma empresa.
+02:08:00 Pedro Maia
+É igual falou aqui, que ele pode ser sócio cotista, mas não pode administrar. Ele não pode administrar. Então esse cara teria que entrar como o código 22. Só cotista, só sócio. Ele não poderia ser 49, administrador. Entendi, tá, ok. Deu pra entender, é acondicional. A gente vê como é que é a data ali. Então, beleza, obriga dar baixa e eu fiz, ok. Beleza, bloco B. Leandrão, você quer descer pra almoçar? Eu vou precisar da gente continuar isso aqui depois. Eu sei que você tá agarradíssima. Mas lá pra baixo não é tabela que não vai precisar olhar tanto não.
+02:08:31 Pedro Maia
+Mas aqui as perguntas a gente vai ter que fazer. Porque acho que aqui começa agora os blocos de...
+02:08:37 Pedro Maia
+Tipo assim, ele rodou cinco personas pra gente. Para a gente ver como é que funcionaria, entendeu? Então, é mais double check, igual a gente fez lá em cima. Por exemplo, eu, sócio com CLT acima do teto e outro sócio que paga. O caso, sei lá, aquele que puxou o simbolo, tá? Limeventos tem dois sócios. Um deles tem emprego CLT de 9 mil acima do teto INSS. Os dois recebem 1.621 de prolabore. Onde apareceu? Consertando o Erbeleza. Nesse teste afirmou, afirmava, o INSS dessa empresa é zero, porque o CLT passou do teto.
+02:09:09 Pedro Maia
+E passava, porque o motor tratava os dois sócios com uma pessoa só. O que apareceu? O teto é da pessoa. O sócio com CLT não recolhe nada. O outro não tem CLT e recolhe normalmente. Zerarguia inteira isentava quem não tinha direito. Faz sentido, certo? É por CPF. Então a conta que ele fez foi isso. Dois sócios, ele tinha feito... A 1621, folha total 3, 2, etc, um deles tem CLT de 9.000.
+02:09:42 Pedro Maia
+Sócio com CLT de 9.000, folga até o teto zero, porque ele está acima do teto, Base do INSS zero, INSS zero. Sócio sem CLT, 8.475,55, base do INSS 1621, INSS 178. Como o motor fazia? Soma os dois e aplica o CLT? De um só.
+02:10:07 Léo
+Ele faz individual.
+02:10:09 Pedro Maia
+Então ele é feito individual. Se um só,
+02:10:12 Léo
+Se igual o primeiro lá, que ele já tirava oito, nove mil, Ele não gera em INSS, mas eu teria que gerar em INSS do outro. Porque ele não tem um salário definido, Então ele tem o teto dos oito, quatrocentos e setenta e cinco, Mas aí ele tira um, o problema pode ser mil e oitocentos e vinte e um. Então, entendi, entendi. Então, tipo assim... Quem já atinge o TETA e não tem obrigatoriedade de fazer o recolhimento do INSS Podia ter atingido a contribuição máxima.
+02:10:40 Pedro Maia
+E Normalmente a pessoa não vai fazer mesmo, né? Porque já está sendo retido. Então ali está correto. A gente geraria de fato só o 178,81% do outro sócio. Beleza. A pergunta. Confirma que o CLT de um sócio não ativa em nada o INSS do outro, certo? Não. É individual, né? Isso. E o sócio com CLT acima do teto realmente não recolhe nada sobre o prolabore, certo? Beleza. B2, prolabore declarado e não pago. O caso, marca artista plástica, sócia única.
+02:11:11 Pedro Maia
+Em três competências ela declarou o prolabore e não pagou, por caixa apertada. Onde apareceu? Foi desenhado de propósito para testar? Beleza. O que apareceu? O fator R, regime de caixa, declarado e não pago, não conta. Se a receita cruzada é social com o PGDAS, é glossa.
+02:11:33 Pedro Maia
+Reclassificação de ofício para o anexo 5. Recálculo de todas as competências, selic e multa. Nosso motor separa os dois campos e não conta o não pago. A pergunta, na prática, esse cruzamento acontece? Tipo assim, você entendeu mais ou menos? Essa pessoa ficou três meses, três competências que eles chamam, Declarou o prolabore e ela não pagou. Beleza, ela está inadimplente, certo? Na verdade,
+02:12:00 Léo
+Ele manteria o fator, mas o ideal é, que é bom supor,
+02:12:04 Pedro Maia
+Ele pode até não pagar,
+02:12:07 Léo
+As dívidas vão continuar. É isso que eu ia falar, só gera mais dívida. Só que amanhã, no final do ano, setembro ou março, que agora são duas datas, quando, Ele for regular, se manter no simples, ele vai ser obrigado a regularizar. Ah, entendi. De algum jeito ele vai regularizar. Entendi. Então, mesmo que ele não pague, ele vai continuar usufruindo do fator R, sem problema. Sem problema nenhum. Mas ele vai sair do Simples se ele não pagar lá na época de... Porque gera um termo de exclusão do Simples e fala assim, olha, Você não pagou essas competências aqui do INSS.
+02:12:39 Léo
+Se você não regularizar, não fizer um parcelamento, você vai ser excluído do Simples. Entendi. Então, ele vai ter que regularizar aquilo de qualquer jeito. Então, não necessariamente eu preciso voltar lá nos meses que não pagou e tirar o prolabore. Reenviar a rede social, da CDF, para zerar aquele débito e fazer recolhimento dos RIPs nos 15 e meio, ou o que for, não necessariamente eu preciso fazer isso, eu posso manter...
+02:13:06 Pedro Maia
+Então, Na verdade, da parte nossa continua a operação normal, só que a gente tem lá na nossa página de guias, as guias atrasadas e a pessoa sabendo que está rendendo juros e multa. E ela.
+02:13:18 Léo
+Vai ter que regularizar em algum momento.
+02:13:20 Pedro Maia
+Em algum momento ela vai ter que regularizar. Ou setembro ou março. Entendi. Abril e novembro. E a primeira obrigação anual é em março. O caso. Três empresas abrem em novembro, dezembro e outubro. A conta real abriu. A minha, no caso, 12.25. E entregou o defis do ano declarado, do calendário 2025 inteiro. Transmitido 8.02. Onde apareceu? Beleza, no meu, porque apareceu 19 dias de empresa, gera uma obrigação anual completa, que foi o que você já falou, para que em breve, em novembro ou dezembro, a primeira obrigação anual caia poucas semanas depois e o cliente ainda nem entendeu o que é DAS. Beleza.
+02:13:58 Pedro Maia
+A pergunta, confirma o que a empresa aberta em dezembro declara ano-calendário inteiro?
+02:14:07 Pedro Maia
+E o que exatamente se informa do período anterior à existência dela? Na verdade,
+02:14:12 Léo
+Eu acho que deve estar havendo alguma confusão. É porque quando a empresa abriu ali, 12 de 12, eu vou transmitir essa declaração com 12 de 12, data inicial. Eu não transmito ela com 1 de 1 de 2025. Então, a minha declaração vai ser de abertura. Então, a abertura, o sistema vai me permitir colocar 12 do 12. Ele não me permite colocar 11 do 12. Ah, ele não me permite por nada a abertura. Ele é só a partir da abertura. Entendi.
+02:14:43 Léo
+As próximas, ele vai considerar o ano inteiro, se a empresa tiver ficado no primeiro dia do ano até o último dia do ano. Agora, se ela extinguir, o que pode acontecer? Deu baixa. Mesma coisa. Eu mantenho a data inicial e paro ela na última data de existência. Só que isso vai ser calculado e feito só no final do ano. Só que aí a extinção eu tenho que mandar ela no mesmo ano. E se eu mando...
+02:15:12 Léo
+Se eu mando... A defesa agora tá na dúvida. Se eu mando no mesmo ano. Se é 30 dias... Eu mando ela no mesmo ano da extinção. A abertura eu mando no dia seguinte. Entendi. No ano seguinte. Então é uma declaração anual, no ano em março, Eu mando essa informação dessa empresa em abril. E se for para dar baixa, você tem que declarar no mesmo ano. Se for para dar baixa, eu tenho que declarar ela no mesmo ano. Se não me engano, é 30 dias. Eu posso até te confirmar. Você fala 30 dias antes de fechar o ano?
+02:15:42 Léo
+30 dias depois da extinção, depois da data.
+02:15:45 Pedro Maia
+Ah, tá, ok. Isso é mais parte de obrigação nossa, acessória, né? É, mais obrigação acessória.
+02:16:12 Speaker 3
+Até o.
+02:16:30 Léo
+Último dia do mês seguinte. Então, se eu tenho extinção ali no... Hoje, 16? E eu tenho que entregar esse período até o final de outubro. Entendi. Acho que ele não conta 16 do 10, não. Acho que ele conta só o mês fechado. Até o último... É isso, o mês fechado. Até o último dia útil do mês seguinte. Então, se eu fecho hoje, eu tenho até dia 30 do 10?
+02:17:02 Léo
+Entendi. Aí 30 do 10 é igual ao dia útil, né? Entendi. No final de ano, aí eu tenho que entregar. Entendi. Beleza. Mas se eu não... Aí é basicamente isso. Se eu não me engano, quando essa empresa sofre a extinção De janeiro a abril, Ela entrega até, O último dia, o último de junho.
+02:17:25 Pedro Maia
+Tem que.
+02:17:26 Léo
+Avaliar essas datas.
+02:17:27 Pedro Maia
+Beleza. Tá, mas a gente consegue olhar. Mas deu pra entender, deu pra pegar. Agora aquele P4 ali, 11 meses. Preso no anexo 5 depois de corrigir. O que acontece? Esse aqui é um caso que a gente vai ter, que a gente falou da pessoa poder trocar o colaborador Por conta própria. Então, por exemplo, esse caso aqui. Bruno deve faturar 18 mil por mês. O nosso automático sugeriu 5,400, que seria para manter ele dentro do anexo da menor alíquota. Ele desligou e fixou o mínimo. Então, ele tirou a nossa sugestão e colocou 1.621.
+02:18:00 Pedro Maia
+Avisando de que isso o derrubaria da alíquota, caiu no anexo 5. Em setembro, reconsidere e religa. E só volta ao anexo 3 em agosto do ano seguinte. Onde apareceu? No simulador, beleza? O que apareceu? O fator R, olha, os 12 meses anteriores. Consertar hoje, não conserta hoje. São 11 meses pagando 15,5%. Já com folha certa. É por isso que o nosso produto ajusta para o laborio desde o mês 1. Que é o que a gente tinha travado. Em vez de avisar depois. A linha do tempo.
+02:18:31 Pedro Maia
+Então, por exemplo, ali. De março a agosto, o prolabore ficou em 1.621 no fator R. Beleza, anexo 5. Em setembro, ele corrige. Que seria quando o seguinte. Ele abaixou ali. De março a agosto, ele por conta própria resolveu pôr 1.621. Então, ele foi por 5. Onde é que ele estava? No 3. Faz sentido? Então, ele pagou 15,5%. Em setembro, ele fala assim. Não, eu quero agora a sugestão sua de novo aí de 5.400 pelo meu faturamento. O fator R vai para 13,5%, continua no 5%, ele continua pagando 15,5%, certo?
+02:19:03 Léo
+Aí, O que ele pode fazer? Ele pode aumentar o prolabório dele de uma forma que ele já caia para os 3%. De uma forma mais rápida, né? Só que o que ele deixou de pagar anterior, ele paga agora. Seria acumulativo. Porque se eu já fizer isso agora, eu já conserto daqui para frente. Se ele não fizer isso e escolher o valor que vai pagar, mesmo ficando abaixo dos 28%, Entendi, aí eu vou regularizando isso no decorrer. Porque às vezes os 28 para ele ali já seria resolvido no mês de setembro,
+02:19:38 Léo
+Nós recolhemos só sobre o salário mínimo. Então a partir de agora, quanto que eu preciso para a minha média dar 28? Eu preciso recolher um salário de 7 mil e já teria que ir lá. E informar 7 mil, que aí daqui pra frente, próximo mês, eu já regularizava ele pro anexo 3. Entendi. E não necessariamente eu preciso fazer o gradativo. Aí tudo vai de acordo com o caixa do cara, se o cara suportar fazer essa alteração.
+02:20:02 Pedro Maia
+Ah, então isso, por exemplo, durante, por exemplo, no destrave, pra ele abaixar, a gente vai avisar. E no voltar pro automático, a gente também avisa. Aí a gente falaria pra ele, pra você regularizar pro mês seguinte, faremos um cálculo, né? Que para você regular, igual você disse, para você regularizar no mês seguinte, A gente tem que tirar seu prolaboro desse mês de 7 mil. Pode ser mais?
+02:20:24 Léo
+Pode ser muito mais? Pode ser. Aí o teto do INSS é oito e tanto. Não compensa nem ele. Ele consegue até gerar um salário maior, mas o INSS fica limitado dos oito mil. Aí o que pesa vai ser o imposto de renda. Ele pode impor mais.
+02:20:43 Pedro Maia
+Mas aí tem que fazer um meio termo e tipo assim, vamos supor que esse cara, por exemplo, Ele ficou nove meses, em vez de pagar R$500, R$400, em nove meses ele pagou R$1.621,00. Então é uma diferença muito grande.
+02:20:54 Léo
+Ele Vai ter que no outro mês, se ele já quiser abaixar para R $3,00, para o anexo R $3,00, Ele já vai ter que ir lá e dar uma paulada no fator, na folha dele, já proporcional. Nesse período que ele deixou de recolher.
+02:21:10 Pedro Maia
+Mas Faz sentido pra mim que a gente conseguiria, Como a gente tem esse cálculo, Por conta nossa, a gente conseguiria Sugerir a paulada e uma forma, Amotizada? Porque, por exemplo, Para pra pensar, aqui tá falando que o cara demoraria, No... Assim que ele voltar pra 5.400, No normal do cálculo, Ele demoraria 11 meses. Não, você pode fazer isso imediato. Pode fazer imediato, mas, por exemplo, eu não conseguiria sugerir Pra ele do exemplo, tipo assim, se você não tem a paulada, Agora, Agora... Em vez de a gente emitir um prolabore de, sei lá, quantos mil, 12 mil,
+02:21:41 Pedro Maia
+A gente nos próximos três meses emitiria de 7. Conseguiria. Entendeu? Dá para dar essa sugestão porque...
+02:21:48 Léo
+Ele vai perder mais, porque normalmente a tributação no faturado pesa mais do que no prolabore. Ah, é? Normalmente. Então o mais sugerido seria basicamente a paulada. O ideal é já sugerir, olha, para você poder seguir no padrão da menor alíquota de tributação, Para os próximos meses. É ideal que você faça o recolhimento de X de folha. Entendi.
+02:22:11 Pedro Maia
+Que Aí ele já regulariza de uma vez. Tá. Mas se o cara também, talvez... É, mas igual você falou, é melhor eu te dizer isso, né? Se o outro talvez calcule mais, não justifica. Beleza. Então deu pra entender. P5. O guia paga em atraso, 3 meses seguidos. O caso, beleza, 3 competências pagas com 14, 21 e 14 dias de atraso. Espelhando o que vimos na conta real. Que é no caso meu, que eu atrasei a guia e tal. Onde apareceu? Na conta real, depois reduzido no teste. Ok. O que apareceu? Nosso motor calcula multa de 0,33 ao dia até o teto de 20%.
+02:22:46 Pedro Maia
+Mais juros. Isso aqui puxou de órgão regulamentado. Tá certo, né? Mais juros da Selic acumulado, mais 1%. No meio de pagamento. Precisamos confirmar a fórmula de onde vem a Selic. Tá certo, é isso mesmo. Aqui os atrasos, né? Isso aqui puxou dentro do... É, dentro do governo e tal, então ok, né? A gente vai ter testes internos, né? Pra poder comprovar isso mais. Mas é isso mesmo, né? Beleza. Repare que o dia 20 caiu, beleza, no sábado.
+02:23:16 Pedro Maia
+E a DAS prorroga para o próximo dia útil. E o mesmo dia 20 em que a DAF antecipa. Ah tá, agora que eu entendi o antecipe e prorroga. Uma guia... Pelo governo ela antecipa e a outra ela prorroga. A DARS ela sempre prorroga. Ótimo. Então o DARF ele sempre antecipa. Certo. Ótimo, ótimo, ótimo. Beleza. Mês seguidos sem faturar. O caso, três empresas, tem cinco a seis meses zerados. Quanto a real teve três seguidos. Onde apareceu? No padrão real, beleza.
+02:23:47 Pedro Maia
+Certo. Beleza. Por que apareceu? Vimos em produção que mês sem faturar não pausa a obrigação. O PGDAS e o DCTF são transmitidos igual e descobrimos que o ex-social tem 100 movimentos, S1299 com a FLEC, enviados só no primeiro mês. Não se repete que é o do janeiro. A pergunta, confirma que PGDAS zerado é transmitido igual?
+02:24:17 Pedro Maia
+Só um em janeiro? Você fala? É, aqui na verdade está assim, falando que... Se a pessoa ficar 3 a 6 meses zerados, esse PGDAS, ele é transmitido da mesma forma? Zerado? Isso. Isso é obrigação nossa. O PGDAS,
+02:24:34 Léo
+Ele está ligado ao faturamento, né? Ah, entendi. A DCTF Web e o E-Social que está vinculado ali, está ligado à folha de pagamento dele. Então, se eu não tenho faturamento, em tese ele não teria folha, mas é ideal que ele Tenha essa folha para ele poder... Vou ter o fundo do faturamento lá na frente. A gente já tem essa história.
+02:24:57 Léo
+Às vezes ele não vai ter o DAS, É mais fácil ele não ter o DAS, Porque não tem o faturamento, Mas ter o INSS, Não ter o INSS e ter o DAS. É mais fácil. É mais fácil ele continuar tendo o DARF. Continuar tendo o DARF. Da DCTF Web ali, Barra social, Que entrega, Que é a plataforma onde leva a informação da folha dele. O PGDAR zerado, ele vai ser zerado. Se ele não emitiu nota mesmo, Aí tem que mandar a declaração zerada.
+02:25:27 Léo
+É normal.
+02:25:28 Pedro Maia
+É O que a gente manda independente. Zerou, faturou, Faturou.
+02:25:31 Léo
+Antigamente não gerava multa, Mas hoje em dia, Hoje, em 2026, Ele passou a gerar multa de 50 reais, Se não me engano, por mês.
+02:25:39 Pedro Maia
+Então, Todo mês eu tenho que entregar aquilo. Mesmo sem movimento. Então, por exemplo, Igual a essa outra pergunta, faz sentido. E se o sem movimento do E-Social, Se aplica mesmo quando a empresa Continua pagando pro Labore? Ou só quando não há fato gerador nenhum. Então, por exemplo, existe esse sem movimento, Que a gente teria que transmitir o PGDAS nesses meses que não tem movimento. Isso se aplica quando a empresa continua pagando o prolabore e não fatura? Tipo, é uma obrigação que a gente tem que mandar de qualquer forma? Tem que mandar de qualquer forma. Independente, com o prolabore...
+02:26:10 Léo
+O PGDAS tem que mandar todo mês. Se tem.
+02:26:12 Pedro Maia
+Ou não prolabore também?
+02:26:13 Léo
+Se tem ou não, se tem prolabore ou não tem. Entendi. Porque aí vai depender da nota, de nota emitida. Se ele não tem nota emitida, manda sem envolvimento. Se ele tem nota, manda um faturamento. Entendi.
+02:26:24 Pedro Maia
+Ok. Quatro sócios, o caso extremo do IRRF, o caso, beleza, tem quatro sócios, 25% cada. Onde apareceu? A empresa onde o erro dá a um FI, que é o que a gente fez lá em cima, porque apareceu. E o teto da nossa escopa é de um a quatro sócios. E o caso onde agrega bases causa o maior estrago. A pergunta, com quatro sócios, existe alguma obrigação acessória extra? Que não exista com um ou dois, alguma coisa muda o DCTF web, o e-social. O que vale para um sócio a mais, vale para quatro.
+02:26:56 Pedro Maia
+Vale para todo mundo. Entendi, legal.
+02:26:59 Léo
+Porque Às vezes não pode ter informação do Bonspa, do ProLabora, de um sócio, Mas vai ter de outros dois. Entendi. Mas a informação é a mesma. Entendi.
+02:27:07 Pedro Maia
+A data de admissão do sócio antes de a empresa existir. O caso, na conta real e tal. É isso aqui que ele falou que ele puxou do meu, tá vendo? Ele puxou do meu a 1 do 12. Eu considero assim,
+02:27:19 Léo
+Data de admissão A mesma data da abertura.
+02:27:21 Pedro Maia
+Data de admissão, a mesma data da abertura.
+02:27:23 Léo
+Ele apontou ali, ó. Data de admissão, Dia 12 do 12. Faz mais sentido, sabe? Entendi. Então, beleza. Eu acho até engraçado a social aceitar isso. É, não entendi também. Às vezes aquilo ali tá só no recido, Mas lá na social tá 12 do 12.
+02:27:38 Pedro Maia
+É, pode ser.
+02:27:41 Pedro Maia
+E a data que decide a competência do primeiro pro labore, se for erro deles, não podemos copiar. É o que falou, né? A gente não entendeu por que eles colocaram esse 1 do 12. A pergunta, se foi escolha ou erro, qual data deve constar? É melhor você falar. A data da abertura. A data da abertura é a data de? A data da.
+02:27:59 Léo
+Abertura é a data da constituição, o dia que o CRTJ vai sair. Ótimo, fechou. Eu Acho que faz mais sentido, sabe? Faz.
+02:28:05 Pedro Maia
+Evita questionamento e tal. Faz. Anexo 5, esse aqui foi um erro que ele achou numa leitura interna lá, mas a gente já viu que não faz sentido. Porque numa página deles lá, quer ver, ó, ele colocou um anexo que, só pra você entender aqui não,
+02:28:24 Pedro Maia
+Relatório, consultar notas fiscais, é, aqui.
+02:28:30 Pedro Maia
+Aqui, ó, ele tá colocando, ele escreveu esse anexo 5, mas lá dentro... Eu tô com o anexo, o imposto ali, por conta do anexo 3, entendeu? Ele só identificou que parece que foi um erro, talvez esse anexo aqui... Desenvolvimento de produto... É, isso aí inclusive foi coisa que ele me colocou. Ah, tá, anexo 5... E lá dentro, tá vendo, que eu tô com a questão do imposto, do valor e tal.
+02:28:52 Léo
+Aquele Aproximadamente aí já é a informação que tá dentro da nota. Dentro da nota é 6%, aí é tranquilo que você já ia ficar lá, mas a atividade ela fica engordada no anexo 5. Ela é do 5 porque quando ela recebe o prolabore, é porque realmente ela é do 5, mas quando Ela recebe o prolabore, ela recebe o benefício de tributar no anexo 3. Ah, entendi. Entendeu? Porque vamos supor, não necessariamente o seu anexo de atividade, ele é o 3, o seu Anexo é o 5, mas você recebe o benefício fiscal de ser tributado no alíquota menor.
+02:29:28 Léo
+Conforme o anexo 3. De acordo com o cálculo do valor é.
+02:29:31 Pedro Maia
+Entendi. Tá, ficou claro. Então, beleza. Bloco C, o fluxo de obrigação do dia 1 ao fim do ano. O que acontece?
+02:29:40 Pedro Maia
+C1 aí, o alvará do Corpo de Bombeiro em BH sai sozinho? Você sabe dizer? Acho que ele emite.
+02:29:47 Léo
+Tem que ter o comando para poder entrar lá na prefeitura e fazer a emissão dos alvarás. Mas com os dados que a gente já vai ter da Constituição,
+02:29:54 Pedro Maia
+A gente consegue, né?
+02:29:55 Léo
+Consegue. Puxar. Aí vamos cuidar, a gente vai tirar o alvará e ele já pede lá a questão da área. Entendi. A gente já vai constar lá a informação do que dá, a maior parte do que tem no CNPJ já vai constar lá.
+02:30:07 Pedro Maia
+Já vai ser suficiente para só ler que...
+02:30:09 Léo
+As mesmas informações. Entendi. Vai ter alguma coisinha, um campo ou outro a mais lá, mas vai ter a informação do sócio. Mas a maior parte dos dados a gente já vai ter.
+02:30:20 Pedro Maia
+Mas Sai basicamente sozinho, seria como se fosse emitido. A gente tem que entrar lá, pôr os dados corretos e emitir. A gente tem que entrar lá,
+02:30:25 Léo
+Fazer o preenchimento dos campos. Agora eu não sei te falar como que está hoje, tá? Mas quando eu, é isso há um tempo atrás, há alguns anos, que eu executava mesmo, Você tinha que digitar todas as informações. Seria bom a gente até validar com a Isabela quais são os campos necessários ali, Que mudaram, podem ter mudado, mas eu acho que não deve ter mudado tanto assim não. Porque ela precisa preencher além que às vezes a gente não está com essa informação,
+02:30:55 Léo
+Ela precisa entrar em contato com esse cara. Mas, basicamente, a dispensa, sim, é praticamente automática.
+02:31:01 Pedro Maia
+Entendi. Tá, fechou. Então, eu olho como é que a gente colocaria isso aqui. A inscrição municipal, CCM, nasce sozinha ou se pede o caso?
+02:31:12 Léo
+Aqui Em BH, a inscrição municipal já é gerada. Tem prefeitura que ela não gera, vamos supor, na prefeitura de Betim. Ele não gera a inscrição dependendo da atividade e eu tenho que ir lá no site da prefeitura e solicitar. Entendi. Mas BH... Depende da prefeitura, mas BH já é mais tecnológico, assim, ele já gera...
+02:31:30 Pedro Maia
+Mas da mesma forma, ele gera na Constituição lá ou a gente tem que solicitar essa inscrição municipal?
+02:31:37 Léo
+Aí Na hora que você faz a sincronização com a prefeitura, ele já gera essa inscrição lá. Entendi, automático, como se fosse ele... É. Entendi, tá, beleza. Eu não tenho que entrar com um pedido pra poder gerar isso.
+02:31:51 Pedro Maia
+Entendi, beleza.
+02:31:54 Pedro Maia
+O cliente pode faturar antes das licenças? Essas licenças aí não alteram em nada, não alteram? A inscrição municipal, pelo que eu vi, Ela é necessária para a emissão de nota, né? Ou não necessariamente? A inscrição municipal, é. Então ela, por exemplo, é algo que eu já tenho que emitir de cara. Abriu o CNPJ do cara, vai lá e já vai estar emitida na inscrição municipal. Eu já tentei a inscrição municipal. Entendi, beleza. Porque senão me impede de emitir nota. Mas, por exemplo, um alvará de bombeiro nesse trem, já talvez não.
+02:32:19 Léo
+Não, Aí você pode tirar isso depois. Ah, ok. Ele não necessariamente, você precisa ter tudo isso emitido, pra você poder emitir Uma nota depois que o CNPJ já tá autorizado.
+02:32:30 Pedro Maia
+O Meu mesmo acho que chega um pouco depois. É, chega depois. Beleza. O cliente pode faturar antes... Beleza, acabamos de responder. A primeira competência é cheia ou proporcional? Caso, abre em março e não fatura nada nos dois primeiros meses. Abre em novembro e já fatura 14 mil no mês de abertura. O motor calcula o acúmulo como receita do próprio mês, 12 vezes 12, dando 168 mil logo de cara, logo de cara. Onde apareceu? Rodando, beleza, exceção de uma líquida, porque importa.
+02:33:01 Pedro Maia
+Essa é a regra do artigo 24 e nós a implementamos. O que não sabemos é o lado operacional. Se a empresa abre no dia 20... A competência do mês de abertura é declarada normalmente?
+02:33:16 Léo
+É, considera o mês. Mesmo que a empresa tenha aberto hoje, dia 16, eu considero o mês fechado para cálculo, Dessa faixa que ele está fazendo. Entendi. Então, ele vai considerar o mês inteiro, um mês completo setembro. Ele não vai ter proporcionalidade do faturamento, dividir por 16 dias. Entendi. Por 14 dias em tese, né? No final, na verdade. Ele abre hoje, eu vou contar pra frente, né? Da variedade. Ele não conta, ele não divide esses dias.
+02:33:46 Pedro Maia
+Entendi. Ele vem se fechando. Então, e se ela abre e não fatura, ainda assim transmite? Quando ele fala ali de competência... Transmite a DAS, o PGDAS, transmite normal. Isso, transmite da mesma forma. Transmite sem movimento. Exato. Tem degrau no primeiro mês que ninguém vê. No primeiro mês não há histórico, então a lei manda projetar acumulado igual receita do próprio mês vezes 12. Isso cria um degrau logo na primeira nota.
+02:34:19 Pedro Maia
+Então, por exemplo, a primeira nota ali não teve, a cúmula do projeto não teve, faixa 1, a líquida 6% da ASMA não teve. Nota de 14 mil ali na primeira nota. Ele vai fazer o acúmulo da projeção vezes 12, né? A pessoa mantém aqui com a DAS correta. Hã? Não? Ali, quando você faz ali no Mês,
+02:34:47 Léo
+Primeira nota ali, aquela primeira linha está considerando o mês já, né? Exato. Como se a pessoa... Ele não, vamos supor, se eu faturo no mesmo mês que eu abrir, Então, vamos supor, se eu faturar...
+02:35:00 Léo
+14, não vou falar 14 não.
+02:35:05 Léo
+No mesmo mês da minha abertura, eu tenho que multiplicar esses 14 por 12, Que dá 168.
+02:35:13 Léo
+Só que quando eu... aí eu abri no mês... Qual que é a informação que ele tá usando ali? De abertura? Nenhuma, né? Peraí que eu perdi isso. Não tem uma data de referência ali. Tem problema não. Se eu abri no mês 9 e faturei no mês 9, 14, a minha alíquota de tributação, ela pode começar até 180, a primeira faixa, Eu multiplico isso por 12 e vou chegar em 168. Só que se eu tenho o segundo mês e eu não faturei no primeiro, aí eu tenho que pegar 14 e eu divido por 2,
+02:35:48 Léo
+Porque eu tenho o mês anterior e o meu mês atual, aí eu chego na média de 7,9. E faço esse R$ 7.000,00 vezes R$ 12.000,00. Entendi. Ou seja, a minha alíquota de faturamento, a minha faixa não é R$ 7.068,00, é R$ 84.000,00. Porque eu tive que dividir esse faturamento de R$ 14.000,00 por R$ 2.000,00 e depois multiplicar ele por R$ 12.000,00. Ou seja, a minha faixa acumulada, projetada para a faixa de tributação, é R$ 84.000,00. Então esse R$ 68.000,00 só funcionaria se o meu faturamento ocorresse no mesmo mês da abertura.
+02:36:23 Pedro Maia
+Não necessariamente se não faturasse. Entendi. Então, se aqueles 14 mil foi no mês da abertura, vamos supor, abriu hoje 16, amanhã fiz essa Nota de 14 mil. Aí o cálculo do 160 mil bate. Já é 12 vezes. Mas agora vamos dar um exemplo lá no mês pra frente, tudo que você falou. O cara ficou dois meses sem e no outro ele faturou 14. No terceiro, né? 14 dividido por 3, vezes 12. Isso aí. Entendi. Ok.
+02:36:45 Léo
+Ele vai me dar a média de... Por isso que normalmente a gente sempre, eu sempre falo assim, se você tem tempo pra Se programar, abre agora. Na hora que você for, ah, daqui 3 meses, Abre o CNPJ agora. Porque isso vai te dar uma economia, Por alguns meses De já ter uma redução, um respiro. Ao invés de eu já começar na faixa de 160, Tudo bem que ali não muda. Porque ali 180.
+02:37:10 Léo
+Eu acho que 180. Mas às vezes eu abro o cara aqui e o cara já vai emitir 30. Ah, entendi. Então ao invés de eu pagar uma faixa de 30 mil, Que vai dar 300 mil de faixa, E já vou multiplicar esse cara lá pra 8, 9%. Eu mantenho os meses. Quando eu começar a faturar, Essa média fica diluída e depois Ela se multiplica. Então, quanto mais tempo, Aberto esse NPJ e eu Faturar isso depois, é melhor, Porque eu perco uma média menor, Por mais 12 meses. Esse benefício acaba em algum momento,
+02:37:41 Léo
+Depois de 12 meses. Entendeu?
+02:37:45 Léo
+Então, antecipar esse benefício para agora, eu postergo ele para depois.
+02:37:49 Pedro Maia
+Então, na verdade, o que está errado no cálculo é porque se o primeiro mês não teve faturamento, O segundo foi 14 e o terceiro foi 15, a gente não bateu os 180 mil ainda. Porque ele vai ser diluído por 100 multiplicado por um mês a mais.
+02:38:02 Léo
+Ele vai ser proporcional na divisão da quantidade de existência. Então, vamos supor, se eu tenho 12 meses de existência de empresa e eu só faturei no décimo terceiro, Esse décimo terceiro mês, ele vai ser dividido por 12, entendeu? Então, quando eu divido ele por 12, diluo esse faturamento por 2, Depois eu multiplico ele por 12.
+02:38:23 Pedro Maia
+Entendi, faz sentido. Então, ali, na verdade, o que errou é porque não bateria os 180. Ele ia demorar mais bater os 180. Ele demoraria mais a bater os 180. Ele ia ficar alguns meses antes do teto. Antes do teto não, né?
+02:38:37 Léo
+Antes da faixa. Antes da outra faixa. Você, pelo menos, ganharia aí... O tempo que você tem de existência em algum momento é o tempo que você vai ganhar de faturamento Para chegar nessa época atual lá na frente. Entendi.
+02:38:51 Pedro Maia
+Tá ok, isso aí está errado, mas entendi, fez sentido o que você falou. Mas é mais ou menos essa faixa aí. Entendi. Então só estaria certa essa conta se o cara tivesse emitido a nota no mês de abertura. É, se não tivesse a primeira linha ali. Entendi. Aí estaria certa. Beleza, fechou, deu para entender. Quem escritura o livro caixa e com que frequência? Esse aqui tá falando, mano, um tal do livro caixa. O que é isso aqui, pelo amor de Deus?
+02:39:11 Léo
+Livro Caixa normalmente é, vamos supor, cartório faz o livro caixa, médico faz o livro caixa. Às vezes eles têm uma forma de fazer o seguinte. O cara é autônomo, né? Eu sou médico. Eu faço várias consultas, mas não tenho uma clínica, nem uma formalização de um CPJ. E eu faço... O que é o livro caixa? É o meu fluxo de caixa normal. Entendi, entendi. Então, como é que ele seria tributado? Ele seria tributado na pessoa física, normal, no imposto de renda, normal. Só que eu faço isso mensal. Ao invés de eu esperar 12 meses para fazer essa declaração lá na frente,
+02:39:42 Léo
+Eu vou pagando esse imposto diluído no decorrer dos meses. Então, quando eu faço isso, o que ele considera? O total da minha CEC. Quanto que entrou no meu caixa aqui? Entrou 30 mil. Quanto que eu paguei de despesa? Eu vou considerar a despesa dedutiva. Dedutiva é o que subtraio, né? 15 mil, ou seja, minha faixa de tributação Não vai ser em cima de 30, vai ser em cima de 15. Porque eu peguei 15 mil, diluí Desses 30 e eu vou pagar a tributação, Do imposto de renda só sobre 15. 15 mil.
+02:40:09 Pedro Maia
+Mas, por exemplo, então Para a nossa persona aqui de, Prestador de serviços e tal, não é Obrigação nossa. E também não é obrigação nossa. Se pegasse, só se, Pegasse, talvez, igual você falou, uma.
+02:40:21 Léo
+Regulamentada. Eu já seguia com esse padrão, Aqui, porque isso aí não vai existir mais, Na... O livro caixa vai existir. Mas o regime caixa, ele vai sumir. Porque hoje a gente tem lá no Simples Nacional, Competência e caixa. A partir de 2027 não vai existir Mais regime caixa.
+02:40:38 Pedro Maia
+Então assim,
+02:40:39 Léo
+Não adianta nem colocar isso na cabeça do cara.
+02:40:40 Pedro Maia
+E outra coisa, pelo que você disse também, É algo muito peculiar. Eu não faria meu PJ. Não faria. Não faz sentido. E eu acho que isso aí a gente tem que começar a olhar pra isso, Quando igual você falou. Abrir uma regulamentada. Médico. Legal. Abre o ponto da regulamentária que talvez tenha padrão de usar isso de caixa. Mas agora, fora isso, a gente não precisa... É, não. Não, não, ok. Beleza. Retificação... Mas é que seria assim, cartório. O cara vai lá, quer pagar a quantidade... Aí, realmente, a gente teria que fazer assim. Retificação. O que dá pra desfazer e até quando? O caso.
+02:41:12 Pedro Maia
+Uma nota emitida com valor errado, beleza, você quer achar que a gente já travou. Ou receita de uma competência já apurada que muda. A gente já travou lá em cima. Onde apareceu? Aí um processo interno do nosso Beleza, que foi o que eu fiz, cancelar uma nota, Porque importa. Já sabemos uma coisa Dura. Para optante do simples, a, Regra do layout Nacional proíbe substituir nota, Por erro de valor. Então o caminho É outro e não sabemos qual. Então Isso aqui deve bater naquilo de não deixar a substituição, Talvez só cancelamento, né? A gente pode Deixar, mano. O cara cancela e refaz a nota.
+02:41:42 Pedro Maia
+É muito melhor que...
+02:41:43 Léo
+É melhor substituir Do... Porque, vamos supor, tem a substituição, Mas às vezes ele só quer cancelar. Exato. Entendeu? Às vezes ele só quer cancelar. Então, assim, ele não quer substituir Por uma nova. Porque a substituição, Me exige informar os mesmos valores, De uma nova nota. Mas, às vezes, eu só quero cancelar. Por isso que existem as duas opções.
+02:42:02 Pedro Maia
+Entendi. A pergunta. Nota com valor errado, Da empresa do Simples, Cancela e emite outra. Ou apraza o limite. Eu consigo.
+02:42:10 Léo
+Substituir por um outro valor. Entendi. Então, o que acontece? Essa questão de mudar, Valor. Ele está mais ligado ao mundo do comércio. Se eu emitir uma nota de um produto que eu vendi E esses valores mudarem, eu não consigo.
+02:42:26 Léo
+Cancelar essa nota De uma forma que.
+02:42:29 Léo
+Alterar.
+02:42:31 Léo
+Emitir uma carta de correção para corrigir Um valor que altere.
+02:42:36 Léo
+Imposto, altera essas informações. É mais dados cadastrais. Mas a questão de substituir, Ele permite substituir.
+02:42:43 Pedro Maia
+Então, Pra gente poderia ser feito, Só que aqui é outra coisa que a gente precisa responder, Que é naquelas datas que a gente estipulou, né? Tipo assim, até o dia 5 do mês seguinte, O cara pode fazer essa alteração, cancelamento, Ou o que ele quiser que não interfere. Do dia 5 ao dia... Qual foi o dia que a gente chegou lá? Até o dia 15? De 5 ao 15, não, né? Até antes, porque se ele quiser fazer uma correção pagando, A gente não vai aceitar o limite do 15, né? Igual você falou, a gente poderia manter ali dia 12. Do dia 6, né? Dia 12. Do dia 6 até o dia 10, ou seja, você pode pagando, certo?
+02:43:18 Pedro Maia
+Você pode se pagando. Exato. E daí pra frente não pode. Isso. Entendi. Até porque, por exemplo, não pode o seguinte. Se a gente setar que é dia 12 ou dia 10, do dia 10 ao 15 não. Não. Não porque... Porque 15 é vencimento ou 15 é emissão. Eu sempre confundo.
+02:43:38 Léo
+15 vai ser a entrega da obrigação acessórias,
+02:43:41 Pedro Maia
+Mas o posto em si ele vem dia 20. Ah, ok, ok, entendi, fez sentido, ok, beleza. Aí vem o quê? Deixa eu ver aqui, edificação, ok, já falamos.
+02:43:51 Léo
+Então, De qualquer forma, eu entrego a obrigação acessórias já.
+02:43:54 Pedro Maia
+Com 5 dias de antecedência. Isso, eu posso entregar, agora a gente está falando, dia 10? Pode. Se você entregar dia 10, o posto vai vencer dia 20. Fechou. Mas eu fico no prazo do dia 15. Entendi. Certidão de negativos quando o cliente vai precisar. No caso do catálogo, Omissão de certidão negativa é um serviço. Na conta real, o cliente precisa, Declarar... Isso aqui é outro serviço. É um serviço adicional que pra gente fazer ele A gente vai precisar entrar em contato com esse cara, que a gente vai precisar Muito mais do que só o que a gente tem no aplicativo, certo?
+02:44:24 Léo
+Isso aí com certeza.
+02:44:26 Pedro Maia
+Ah, então fechou. Então não vou nem passar por isso. Mas eu falo assim,
+02:44:28 Léo
+Até que a CND, o cara que é pequeno Ele não precisa muito de CND não. Mas é monitoramento De CNPJ mesmo, entendi. O CND é tranquilo, ele não vai precisar tanto.
+02:44:40 Pedro Maia
+Demorou. Dependente do IRRF, ninguém coleta. Caso. O cálculo do imposto de renda do sócio admite dedução por dependente. E o nosso app não pergunta. No mapa de dados, isso está marcado como? Ninguém produz. Não existe em lugar nenhum. Onde apareceu? No mapa de dependências. E, de novo, agora é o revisário que o motor consome. Por que importa? Hoje calculamos 100 dependentes para todo mundo. O que cobra a mais de quem tem. E como o redutor de 2026 era imposto de renda de boa parte das nossas personas,
+02:45:13 Pedro Maia
+Pode ser que não mude nada no nosso escopo. Não sabemos. A pergunta. No perfil dos nossos clientes, prolabore em torno de 1 a 3 salários mínimos. Declarar dependentes muda alguma coisa depois do redutor? Vale coletar ou canfo que só gera trabalho? Tipo assim. A gente pode deixar travado que não vai ter Dependente? O dependente, ele é Muito importante quando ele tem que funcionar. Ah, ok. Então o cara tem que funcionar. Mas ele lá na folha? Lá na folha não.
+02:45:44 Pedro Maia
+No prolaborio... Então aqui pode Deixar setado que não tem mesmo, da forma Que a gente tá fazendo. Pode. Fechou. C9. O domínio eletrônico E quem lê por ele. Na conta real Achamos uma... Ah tá, você que faz, Uma intimação que eu fiquei sem pagar as guias, Lá dos impostos, eles mandam, né? Eles mandam lá na...
+02:46:03 Pedro Maia
+Exato, mandou lá. Onde aparece e tal. E aí o que acontece? É que ele só fala o seguinte.
+02:46:10 Pedro Maia
+Na contabilização, Ele só me avisa que eu tô em atraso lá e tal, Mas não me fala, tipo, que tem, Uma notificação do governo, não fala nada. E pelo que eu entendi da lei, Ele só considera que eu li quando eu abri, Aquele arquivo lá. Entendeu? E aí o que que faz? Eu nunca veria isso se eu não tivesse, Destrinchado mais as coisas. Isso ia ficar, Lá pra mim inteiro. Isso é algum problema? Ou não tem nada a ver? Não é problema nosso? Não gosta do cara? É, sei lá. Tipo assim, bom, o meu lá tinha essas intimações do atraso lá da...
+02:46:39 Léo
+Isso Aí só traz preocupação pro cara.
+02:46:41 Pedro Maia
+Desnecessário às vezes porque o cara é igual eu. Eu vou regularizar amanhã meus impostos todos, meus treinos.
+02:46:46 Léo
+Vamos supor, o que é na regularização pra se manter no simples? Se o cara recebe o termo de exclusão, hoje ele recebe com mais frequência. Antes ele recebia esse termo lá em novembro.
+02:46:57 Léo
+Hoje a gente vai ter dois períodos de regularização, setembro e março, setembro de um período, E março do mês seguinte, porque antes era a cada 12 meses, hoje vai ser a cada seis Meses. Nesse período para se manter no simples, ele precisa fazer essa regularização desse Termo de exclusão, só que nesse momento, vamos supor, se eu for deixar para fazer isso Só na época de regularização. E eu não fizer isso durante, eu não racionar essas atuações no decorrer do período,
+02:47:32 Léo
+Eu vou ter um gargalo muito grande para resolver lá na frente, ao invés de ter resolvido isso aqui, No decorrer do período. Se eu resolver, existem aplicativos que eles baixam, às vezes até o API mesmo, Ele busca na caixa postal e importa a caixa postal tudo que tiver escrito como termo de exclusão. Existem aplicativos que fazem esse monitoramento E ele já te dá assim, ó. 30 cento de pijama que eles receberam o termo. E eu só ataco os 30. Eu não preciso visitar.
+02:48:03 Léo
+Os 2 mil. Então, assim, Se eu não tenho O monitoramento, eu tenho que, Visitar os 2 mil pra poder ver Quem tem...
+02:48:12 Pedro Maia
+E aí isso aí entra Na notificação, que a gente vai dar a central de notificação. Isso aí era um problema que eu tinha lá no... Então é importante a gente achar, Como a gente notificar isso... Assim que aparecer lá. Porque aí o que acontece? Aí não é uma regra nossa. Tipo assim, apareceu, eu posso fazer uma varredura. Uma vez no mês eu posso fazer uma varredura. Porque você imagina assim,
+02:48:30 Léo
+O cara às vezes recebeu o termo lá em março.
+02:48:35 Léo
+Ó, esses débitos aqui estão em aberto, ele vai te impedir de continuar no simples. Se eu notificar esse cara em abril, o cara, opa, tranquilo, o cara me avisou em março. Se ele não resolver, aí tranquilo, o problema dele está seguinte. Mas se eu avisar ele lá em agosto, setembro, aí ele vai falar assim, pô, mas vocês Estão me avisando agora. É, vai ser o acumulado. Mesmo ele sabendo. Essa é a maior dor que os caras sentem hoje. Os caras acham que a contabilidade é financeira. A contabilidade não é financeira. Eu não tenho que ficar te avisando. Eu te aviso só pra poder... Ciência mesmo.
+02:49:05 Léo
+Se eu tiver esse aviso, é pra eu falar assim, cara, aqui, você não pagou, isso aqui pode, Te gerar um problema maior lá pra frente. O cara vai se sentir satisfeito se ele receber essa informação. Eu acho que eu tenho que ficar lá consultando o CNPJD todo mês. Se eu tivesse uma ferramenta que fizesse, sem problema. Eu mandaria e disparava isso por e-mail. Mas eu não tenho uma ferramenta adaptada hoje, apesar dela existir. Eu não tenho essa ferramenta.
+02:49:34 Pedro Maia
+Então, Por exemplo, eu acredito que essa notificação da receita deve ser vinculada... Alguns cálculos de atraso ou de emissão dos empregados e tudo mais e tal. E isso deve cair em cada usuário em um dia diferente no decorrer do mês. Se a gente conseguisse, por exemplo, um API que mapeasse isso todo último dia útil do mês, E a gente notificasse só a leva que apareceu. Perfeito. Com 30 dias é bom ainda usar o cara, né?
+02:50:01 Léo
+Sabe por que que é bom? Porque pra fazer essa regularização, aí assim, Eu entendo que vai ter que ter uma pessoa pra poder executar isso. A não ser que você tenha uma, opa, essa regularização, o cara está com pendência Disso, você vai ter que criar várias variáveis para ele entrar em vários lugares para poder Resolver a pendência, simular um possível parcelamento e mandar para esse cara para Ver se ele quer fazer esse parcelamento. E já é upsell,
+02:50:29 Pedro Maia
+Quer se regularizar, custa apenas, sei lá, R $299,00, eu não tenho Cobrado caro, isso aí já pode trazer como upsell. Eu acho que pode chegar no tempo de desenvolvimento Do aplicativo, do cara se virar e a gente Aumentar a nossa mensalidade. Mas agora, É o seguinte, bateu lá 2, 3, 4 alertas dessas e o cara falou, pô, agora Eu quero resolver. Na hora que ele clicar, agora, Eu quero resolver no aplicativo nosso, beleza, Um equipe vai entrar em contato. A pessoa Entrou, uma pessoa interna, viu o B.O. que é, Ou então não fixa, sei lá, 299, 599, não sei o valor, Não faço ideia. Qual que é,
+02:50:59 Léo
+Como é que a gente, Usa nesse novo escritório? A mensalidade do Mês vezes a quantidade de tempo que tem que Regularizar. Legal. Porque em tese eu já fiz aquele trabalho. Entendeu? Eu pago pelo mês. E eu já fiz a gendegaria. Você não pagou. Se você quer regularizar esse período aqui, Eu te cobro a mensalidade Ou aí depende Se for um recado, Ou se for só o processo consolidado, Assim, vezes o período que ele quer regularizar E aí vai ser o...
+02:51:31 Léo
+Porque, pensa só, se o cara fica em débito, amanhã se ele fizer esse mês multiplicado por 60, vamos supor que ele parcele isso por 60, você vai gerar uma obrigação interna, apesar disso já ter, existem aplicativos que ligam esses parcelamentos e transmitem eles de forma automática. Mas se você não tem isso adaptado ainda, eu tenho que pedir uma pessoa para poder entrar lá todo mês, gerar e mandar. Entendi. Para mil clientes, eu vou ter que fazer isso mil vezes.
+02:52:01 Léo
+Aí tem que ter API. Se tiver uma API, e eu sei que tem sistemas que buscam e fazem essa parte, Vai ser um serviço que às vezes eu posso cobrar até mais barato, Mas vai ter que cobrar, sei lá, R$2.000 para regularizar? Não, vou cobrar R$200 aqui. R$199, está tudo automatizado. Aí é claro que é tudo requisição de API também, Porque às vezes tem que calcular o custo que vai gerar de requisição lá.
+02:52:28 Pedro Maia
+Vezes O parcelamento, né?
+02:52:29 Léo
+Nesse mês. Isso o cara vai pedir recálculo aí, Isso aí obviamente vai pagar só uma taxa a mais. Mas no processo do parcelamento, Você cobra menos porque você consegue automatizar aquele envio. Dá pra fazer. Eu acho que dá pra fazer. Eu concordo. Beleza, boa.
+02:52:44 Léo
+Mas A caixa de parcelamento puxa por API.
+02:52:46 Pedro Maia
+Tem muito aplicativo que faz isso. Boa. Bloco D, cinco clientes do dia um ao fim do contrato. Beleza, aqui é onde passa o que a gente tá falando, Que seria o seguinte, por exemplo. Tem um caso aqui da pessoa. Leandrão, você quer comer, mano? Você quer já... Você quer descer? Eu vou comer lá, querendo. Porque o outro eu tomei de pão também. A Fabiana tem horário lá. A gente volta. Mas você consegue voltar? Não falta muito, não? Isso aqui é mais pra passar só pra ok mesmo, daqui pra baixo. Pergunta, pergunta mesmo, já foi.

@@ -10,9 +10,24 @@ tags: [sistema, pendencia, decisao, fila, meta]
 
 > ⚠️ **Esta nota é uma VISTA, não uma quarta fonte.** Ela reúne num lugar só o que já vive em [[acionaveis]], [[fila-validacao-humana]], `execucao/processos/_persona.mjs` e nas evidências. **A fonte continua sendo cada um deles** — se divergir, quem manda é a origem. Existe porque o Pedro precisa ver a lista inteira para chamar as pessoas certas, e isso estava espalhado em quatro lugares.
 >
-> **Legenda:** 🔴 **bloqueia** algo hoje · 🟡 **espera pessoa** (não bloqueia, mas trava decisão) · ⚪ **construção nossa**, é só fazer · ✅ **resolvido** · ⏸️ **item velho**, a realidade do código já mudou e só falta riscar.
+> **Legenda:** 🔴 **bloqueia** algo hoje · 🟡 **espera pessoa** (não bloqueia, mas trava decisão) · ⚪ **construção nossa**, é só fazer · ✅ **resolvido** · 🔄 **revisto** — estava fechado e a decisão mudou · ⏸️ **item velho**, a realidade do código já mudou e só falta riscar.
 >
-> 🔢 **Os números são corridos de 1 a 69 e não reiniciam por pessoa** — servem para o Pedro referenciar (*"o 32 fica assim"*). ⚠️ **Número resolvido não se reaproveita:** quando um item fechar, ele vira ~~riscado~~ com a decisão ao lado em vez de sumir, e os demais **mantêm o número**. Renumerar quebraria toda referência feita em conversa.
+> 🔢 **Os números são corridos e não reiniciam por pessoa** — servem para o Pedro referenciar (*"o 32 fica assim"*). ⚠️ **Número resolvido não se reaproveita:** quando um item fechar, ele vira ~~riscado~~ com a decisão ao lado em vez de sumir, e os demais **mantêm o número**. Renumerar quebraria toda referência feita em conversa.
+>
+> ---
+>
+> ## 🎙️ Rodada de 16/09 — a reunião com o Leonan fechou 11 itens e REABRIU 1
+>
+> ~5 horas com o contador especializado, 3 áudios, 293.345 caracteres de transcript lidos 100%. Registro em [[2026-09-16-leonan-audio-1-bloco-a-e-c]], [[2026-09-16-leonan-audio-2-bloco-d]] e [[2026-09-16-leonan-audio-3-bloco-d-e-e]]; as regras validadas em [[_duvidas-contador]].
+>
+> | | Itens |
+> |---|---|
+> | ✅ **Fechados** | **4** · **5** · **6** · **7** · **8** · **9** · **21** · **70** · **71** · **72** |
+> | 🔄 **Reaberto** | 🔴 **36** — estava travado com *"o app força o pró-labore no dia 1"*, e essa decisão **não vale mais** |
+> | 🆕 **Aberto** | **73** — pejotização, que passou batida na reunião |
+> | ⏳ **Continua** | **22** — ele não confirmou a norma da carta de responsabilidade |
+>
+> 🔴 **O 36 é o que mais importa nesta lista.** Um item **fechado com decisão errada** é pior que um item aberto: ninguém volta para conferir. Ele saiu de ✅ para 🔄 de propósito.
 
 ---
 
@@ -32,21 +47,22 @@ Responde em minutos, e a regra de ouro é **não deduzir regra de órgão** ([[l
 
 | # | | O que perguntar / decidir | Por que importa | Fonte |
 |:--:|:--:|---|---|---|
-| **4** | 🔴 | **Qual o risco concreto de transmitir pró-labore com a qualificação cadastral PENDENTE?** Na conta real: `FALTA DADOS`, PIS não informado, **9 competências já transmitidas assim** | A DCTFWeb é **confissão de dívida irretratável**. E o cliente não sabe: só aparece no JSON | `S1` |
-| **5** | 🟡 | **`salarioBaseIRRF` vem ZERO em todas**, inclusive nas de R$3.360 — base declarada zero, em vez de base calculada com imposto zero | Se for campo vazio, nosso motor não pode copiar: a base alimenta eSocial e DCTFWeb | `S7` |
-| **6** | 🟡 | **A `dataAdmissao` do sócio é 01/12/2025, onze dias antes de a empresa existir.** Escolha ou erro? | É a data que decide a **competência do primeiro pró-labore** | `S8` |
-| **7** | 🟡 | **A nota diz "Anexo: 5" e declara 6,00% na mesma linha.** Anexo-de-origem × efetivo pós-Fator R? | Se for isso, nossa tela resolve com uma palavra | `C8` |
-| **8** | 🟡 | **Qual o risco real de ficar meses sem pró-labore no início**, e qual a tese do escritório hoje? | A persona zero passou 3 meses assim. Não pagar **trava o numerador do Fator R** (caixa) | `L4` |
-| **9** | 🟡 | **ME unipessoal: aprovação anual de contas precisa de ata registrada?** | Decide se vira processo no app ou fica invisível | `L2` |
+| **4** | ✅ | ~~**Risco de transmitir com a qualificação cadastral PENDENTE**~~ → 🟢 **RESPONDIDO 16/09 (Leonan).** *"É **só informação cadastral**, e ele gerou a informação. **Não iria gerar essa dívida por multa**."* | Não há risco fiscal nem regularização retroativa. O PIS entra por higiene de cadastro. [[_duvidas-contador]] A6 | `S1` |
+| **5** | ✅ | ~~**`salarioBaseIRRF` vem ZERO**~~ → 🟢 **RESPONDIDO 16/09 (Leonan) — não era defeito deles, era o ANO.** *"Aí você pegou essa base em **2026**. Mas se fosse em **2025**, te geraria."* | Zero é o valor **correto** em 2026, com o redutor do art. 3º-A vigente. Nosso motor já faz assim. [[_duvidas-contador]] A7 | `S7` |
+| **6** | ✅ | ~~**`dataAdmissao` 01/12/2025**~~ → 🟢 **RESPONDIDO 16/09 (Leonan) — é ERRO deles.** *"Data de admissão **a mesma data da abertura**… a data da constituição, o dia que o CNPJ vai sair."* | Não copiamos. Evita questionamento. [[_duvidas-contador]] B8 | `S8` |
+| **7** | ✅ | ~~**"Anexo: 5" com 6,00%**~~ → 🟢 **RESPONDIDO 16/09 (Leonan) — são DOIS campos mesmo.** *"A **atividade** fica enquadrada no Anexo 5. Ela **é** do 5 — mas quando recebe o pró-labore, **recebe o benefício de tributar no Anexo 3**."* | 🔴 E isso corrige o **vocabulário do produto inteiro**: não se "cai para o Anexo V", **perde-se o benefício do Anexo III**. [[_duvidas-contador]] B9 | `C8` |
+| **8** | ✅ | ~~**Risco de ficar meses sem pró-labore**~~ → 🟢 **RESPONDIDO 16/09 (Leonan).** A lei manda desde a constituição (*"em tese ele já é contribuinte obrigatório"*), a prática espera a 1ª nota (*"vou gerar uma guia a mais para esse cara"*). O risco é perder histórico dos 28%. | 🔑 Virou a **pergunta de onboarding** — e por isso **reabre o 36**. [[_duvidas-contador]] A5 | `L4` |
+| **9** | ✅ | ~~**Ata de aprovação anual em ME unipessoal**~~ → 🟢 **RESPONDIDO 16/09 (Leonan): não precisa.** *"Só a S.A., a sociedade anônima, que precisaria."* | Não vira processo nem tela. [[_duvidas-contador]] A8 | `L2` |
+| **73** | 🆕 | 🔴 **PEJOTIZAÇÃO — passou batida na reunião e segue sem opinião de contador.** LC 123 art. 3º §4º XI, classificada como risco **CRÍTICO** justamente para TI, design e consultoria | 🔑 **É o maior risco declarado do nosso perfil** e a única vedação que a autodeclaração não pega. O Pedro leu o caso e respondeu por cima; o Leonan não se manifestou. **Precisa voltar à pauta.** [[_duvidas-contador]] A12 | `A12` |
 | **10** | ✅ | ~~**Nosso preço**~~ → 🟢 **TRAVADO 14/09 (Pedro).** Plano ME = **R$139/mês**. Duas ofertas, ambas das **3 primeiras competências**: **R$79** (campanha/lista de espera) e **R$99** (lançamento); depois vira R$139. **12 meses de fidelidade assinada em contrato** em todos. | ⚠️ Confirma o que [[estado-atual]] já dizia desde agosto: o registro de 10/09 (*"coorte travada por 12 meses"*) era **erro meu**, e a minuta já fora corrigida em 11/09. 🔑 Nosso mecanismo tem a **mesma forma** do líder; a diferença é o destino da reversão (**R$139 anunciado** × R$195 nunca anunciado) — então **a copy precisa mostrar o preço final na mesma tela da promoção**. | — |
 | **11** | ✅ | ~~**Certificado digital: terceirizar ou emitir?**~~ → 🟢 **TRAVADO 14/09 (Pedro).** **Terceirizado**, custo **R$209**. **Incluso no plano ME**; no **plano MEI é pago pelo usuário**. | Fecha o custo do ME e a cláusula do MEI. | — |
 | **12** | ✅ | ~~**InfoSimples: preço por consulta e limite**~~ → 🟢 **TRAVADO 14/09 (Pedro).** **InfoSimples confirmado** como fornecedor. | O volume de requisições será calculado mais à frente — não bloqueia agora. | — |
 | **13** | ✅ | ~~**Flow #2: certificado pro ME sem certificado**~~ → 🟢 **TRAVADO 14/09 (Pedro).** Mesma regra do **11**: incluso no ME, pago pelo usuário no MEI. | Sem custo nem fidelidade extra no ME. | — |
 | **14** | 🟡 | **Flow #2: cobrar antes do TTRT?** É cobrar por algo que não controlamos | SLA? reembolso? | idem |
 | **15** | ✅ | ~~**Reguladas**~~ → 🟢 **TRAVADO 14/09 (Pedro).** **Waitlist, e não atendemos no MVP.** | Divergência consciente com o líder (que atende e pede a carteira depois). Fica como está. | — |
-| **70** | 🔴 | **Confirmar o conserto do maior erro do motor (15/09):** o teto do INSS e a tabela do IRRF se aplicam **individualmente a cada sócio**, e a guia da empresa é a **soma** dessas contas individuais? Existe hipótese de calcular sobre o total? | Nós calculávamos sobre a folha somada. Numa empresa de **4 sócios × R$3.500** o motor cobrava **R$3.617,19** onde o correto é **R$1.540,00** — a tabela progressiva numa pessoa só cria faixa que quatro pessoas não alcançam. Já corrigido; falta ratificar. Briefing em [[_duvidas-contador]] D-03 | `darfDaFolha()` · [[_achados-do-motor]] M-012 |
-| **71** | 🟡 | **Com que frequência os sócios dividem o pró-labore de forma DESIGUAL?** Exige formalidade (alteração contratual, ata, folha)? O risco está em dividir desigual, ou em dividir igual quando o trabalho é desigual? | 🔑 Decide se a tela pergunta **valor por sócio** ou só o total. E a premissa não é neutra: R$14 mil em 7+7 e em 11+3 dão IRRF diferente. ⚠️ **Não há de onde deduzir** — o app coleta % de participação, que governa **lucro**, não pró-labore | [[_duvidas-contador]] D-02 |
-| **72** | 🟡 | **O app infere "trabalha na sociedade" a partir de "administra" (qualificação 49 × 22), e a lei fala em PRESTAR SERVIÇO.** Sócio que trabalha sem administrar é contribuinte individual? | A parte fácil já está respondida internamente (13/09, `cru/PROLABORE.md`): quem só aportou capital **não precisa** receber. O que sobra é a lacuna entre *administrar* e *trabalhar*, e ela decide o `sociosComProLabore` de 8 das 16 personas | Lei 8.212/91 art. 12 V 'f' · [[_duvidas-contador]] D-01 |
+| **70** | ✅ | ~~**Confirmar o conserto do maior erro do motor**~~ → 🟢 **RATIFICADO 16/09 (Leonan).** *"É **por CPF**, então é por pessoa. E depois os dois somam e geram **uma guia só**."* Pergunta direta feita — *"existe alguma situação em que se calcula sobre o total?"* — e a resposta foi **não**. | 🔑 E ele detalhou a mecânica que faltava: **o envio ao eSocial é individual por CPF, a guia é consolidada por CNPJ**. O conserto de 15/09 está certo. [[_duvidas-contador]] A1 | `darfDaFolha()` · [[_achados-do-motor]] M-012 |
+| **71** | ✅ | ~~**Frequência do rateio DESIGUAL**~~ → 🟢 **RESPONDIDO 16/09 (Leonan) — e o rateio igual virou a escolha ÓTIMA, não conveniência.** *"Se R$3.000 ficasse para um sócio e R$242 para o outro, o outro está chegando numa linha de pagar mais imposto. **O ideal seria fazer a divisão meia a meia.**"* Desigual só quando um sócio **não trabalha**. | 🔴 **E isso invalida uma inferência do app:** *"não necessariamente os pró-labores têm que ser proporcionais à participação. **Não tem.**"* ⇢ parar de deduzir o rateio do % de participação. Formalidade: cláusula que prevê **ambas** as distribuições. [[_duvidas-contador]] A2 | tela + `_persona.mjs` |
+| **72** | ✅ | ~~**"Administra" × "trabalha"**~~ → 🟢 **CORRIGIDO 16/09 (Leonan): vale TRABALHAR.** *"O cara que **efetivamente trabalha** é obrigado a ser contribuinte obrigatório. O que não trabalha, sócio só de investimento, **não tem obrigatoriedade de gerar pró-labore**."* | 🔴 **Derruba o nosso default de "todos os sócios recebem".** Novo: automático **só para sócio-administrador**; cotista nasce sem, habilita a pedido. ⚠️ Ele avisou que o app **não vai saber sozinho** — há motivo legítimo para inverter (bloqueio judicial no nome do administrador). [[_duvidas-contador]] A3 | `sociosComProLabore` · motor + tela |
 | **16** | ✅ | ~~**DAE JUCEMG**~~ → 🟢 **RESOLVIDO 14/09 — a fila estava velha.** O valor real é **R$281,08**, da **guia real** (print 125 da gravação da JUCEMG). | Já travado em `app/src/lib/fiscal.ts` como `DAE_JUCEMG`, usado no E7 e coberto por teste e2e. A disputa R$268,51 × R$288 morreu em 01/09. Nem 282. | — |
 
 ---
@@ -59,13 +75,13 @@ Responde em minutos, e a regra de ouro é **não deduzir regra de órgão** ([[l
 | **18** | 🟡 | **Os 91 CNAEs duvidosos**, em 7 baldes com pergunta fechada cada | [[limpeza-260-servico]] | idem |
 | **19** | 🟡 | **Natureza jurídica: SLU × LTDA** — nossa regra diz "solo→SLU", o CNPJ real do Pedro saiu **LTDA** num caso solo | Se SLU é LTDA de sócio único (206-2), o guard-rail do N15 está errado | idem |
 | **20** | 🟡 | **Famílias de swap CNAE** — 3 entram limpas; tráfego pago e white-label são de menor confiança | [[cnae-fiscalmente-otimo]] | idem |
-| **21** | 🟡 | **Pró-labore de R$100 abaixo do mínimo de contribuição** — implicação previdenciária. 🔴 **não copiar antes de ratificar** | Apareceu na conta real e está no motor | [[2026-09-09-contabilizei-guia-imposto]] |
+| **21** | ✅ | ~~**Pró-labore de R$100 abaixo do mínimo**~~ → 🟢 **RATIFICADO 16/09 (Leonan) — é DEFEITO deles, e o nosso bloqueio fica.** *"Os R$100 ali era só **para ele não falar que não gerou nada**."* E ele desmontou a utilidade: *"28% de 10 mil é 2.800, **os seus R$100 não iam fazer diferença**."* | 🔑 Era o **único item** em que suspeitávamos que a Contabilizei estava certa e nós errados. **Estamos certos.** ⚠️ Nuance nova: o piso legal é a **hora**, não o mês — o que explica por que o sistema da Receita aceita. [[_duvidas-contador]] A4 | [[2026-09-09-contabilizei-guia-imposto]] |
 
 ### 📚 Citações a conferir em fonte primária (com ela ou sozinho)
 
 | # | | O que | Risco |
 |:--:|:--:|---|---|
-| **22** | 🟡 | **Resolução CFC "1.590/2020"** (carta de responsabilidade / transferência) | possível **citação trocada** — as refs do próprio Gemini citam CFC 987/2003 e 1493/2015. Usada no flow #2 |
+| **22** | 🟡 | **Resolução CFC "1.590/2020"** (carta de responsabilidade / transferência) | possível **citação trocada** — as refs do próprio Gemini citam CFC 987/2003 e 1493/2015. Usada no flow #2. ⏳ **Levado ao Leonan em 16/09 e ELE NÃO CONFIRMOU** — achou que o conteúdo já está coberto: *"o próprio contrato já vai ter essas cláusulas"*. 🔴 **Segue sem poder ser citada como fundamento.** [[_duvidas-contador]] A10 |
 | **23** | 🟡 | **"Evento 232"** (Alteração do Contabilista) | conferir no Coletor Redesim oficial |
 | **24** | 🟡 | **COSIT 17/2021** (FS12 regime de caixa) | o alerta 🟡 do N18 **não deve ser exibido** até verificar |
 
@@ -93,7 +109,7 @@ Responde em minutos, e a regra de ouro é **não deduzir regra de órgão** ([[l
 | **33** | ⚪ | **Lucro acumulado se mostra sem o porquê?** A DRE real cai **R$5.650,70** entre abril e julho sem nenhuma venda perdida. → 📌 **Hipótese do Pedro (14/09): é proporcionalidade entre os meses** (rateio/competência), não perda de venda. **Conferir na DRE real** antes de virar regra. | Painel que mostre "seu lucro" exibe queda que o cliente não causou. Se a hipótese fechar, a resposta de produto é **nomear o motivo na própria linha**, não esconder a queda. | `C2` |
 | **34** | ✅ | ~~**Cancelamento de nota deixa rastro contábil?**~~ → 🟢 **TRAVADO 14/09 (Pedro).** **Não deixamos rastro. Não armazenamos em banco.** Igual ao líder. | ⚠️ Assume o custo conhecido: cliente que pergunta *"cadê a nota 4?"* não acha resposta no relatório. Aceito. | `C3` |
 | **35** | ✅ | ~~**"Você pagou R$X de multa este ano" entra no produto?**~~ → 🟢 **TRAVADO 14/09 (Pedro).** **Não entra agora** — *"falar multa dessa forma assusta"*. | 🔑 É decisão de **tom**, não de dado: o número existe no livro e continua existindo. O que fica proibido é o **carimbo acusatório**; um lembrete de vencimento com consequência nomeada (**54**) segue valendo. | `B4` |
-| **36** | ✅ | ~~**O app FORÇA definir pró-labore no dia 1?**~~ → 🟢 **TRAVADO 14/09 (Pedro).** **Sim: o app força o pró-labore já na primeira competência.** | Trava o numerador do Fator R desde o mês 1 e mata o buraco da persona zero (3 meses sem retirada). ⚠️ **Não fecha o 8** — a tese fiscal do escritório sobre ficar meses sem pró-labore continua com o Mauro, e o **21** (pró-labore abaixo do mínimo) segue 🔴 não-ratificado. | `L3` |
+| **36** | 🔄 | 🔴 **REVISTO EM 16/09 — a decisão de 14/09 NÃO VALE MAIS.** ~~*"o app força o pró-labore já na primeira competência"*~~ → 🟢 **NOVA DECISÃO (Pedro, com o Leonan):** o app **PERGUNTA no 1º acesso** — *"quer gerar pró-labore desde o mês da constituição, ou aguardar seu primeiro faturamento?"*. **Default: aguardar a 1ª nota.** | 🔑 **Por que mudou:** forçar gera guia de INSS para quem não faturou, e é reclamação conhecida em todo escritório (*"você me mandou uma guia de R$178 e eu não tive faturamento"*). O argumento a favor de gerar **não é fiscal, é humano** — manter contribuição protege auxílio e maternidade. Então **damos a opção e avisamos**, não decidimos por ele. 🔒 Uma vez ligado, **não para**. ⚠️ E isto **fecha o 8**, que antes ficava aberto por causa dele. [[_duvidas-contador]] A5 · [[2026-09-16-leonan-audio-1-bloco-a-e-c]] | `L3` · motor + tela |
 | **37** | ✅ | ~~**A obrigação societária anual entra no mapa?**~~ → 🟢 **TRAVADO 14/09 (Pedro).** **Entra.** *"Não é o caso da persona zero, mas é persona que atenderemos."* Inventário + balanço + 4 meses pra deliberar. | 🔑 **Primeira vez que a persona zero é explicitamente insuficiente como régua.** Vira categoria nova no `/processos` (hoje não está em nenhuma das 8) e conversa com o **9** (ata registrada em ME unipessoal — Mauro). | `L1` |
 | **38** | ✅ | ~~**Prazo de fidelidade**~~ → 🟢 **TRAVADO 14/09 (Pedro).** **12 meses, como o líder.** | Confirma o que o **10** já travou e o que a minuta ([[minuta-contrato-me]]) já diz. Sem divergência a corrigir. | idem |
 | **39** | ⏸️ | **Promessa quebrada** — 🔍 **a fila estava velha (14/09).** O `b1.teaser` que prometia economia **foi removido em 21/07** (v0.5.0) e virou `b1.resumo`: mostra o **imposto** da faixa, não a economia, com carimbo de que varia conforme o pró-labore. **Sem número prometido, não há promessa a quebrar.** A persona `promessa-quebrada.json` sobreviveu como **teste de invariância**, não como risco. → Pergunta que resta pro Pedro: *fecha assim, ou queremos uma tela de reconciliação quando a estimativa do ENCAIXE erra pra baixo?* | Terceiro caso de item velho na fila (depois do **16**). | idem |
@@ -150,17 +166,24 @@ Nenhum destes espera pessoa. Entram no handoff.
 
 | | Quantos | Quais |
 |---|---:|---|
-| ✅ **Resolvidos** | **17** | **10–13** · **15** · **16** (bloco comercial) · **29** · **31** · **32** · **34** · **35** · **36** · **37** · **38** · **41** · **42** · **43** (bloco de produto) — todos travados pelo Pedro em 14/09 |
+| ✅ **Resolvidos** | **27** | **10–13** · **15** · **16** (comercial, 14/09) · **29** · **31** · **32** · **34** · **35** · **37** · **38** · **41** · **42** · **43** (produto, 14/09) · 🎙️ **4** · **5** · **6** · **7** · **8** · **9** · **21** · **70** · **71** · **72** (contador, 16/09) |
+| 🔄 **Revistos** | **1** | 🔴 **36** — estava fechado em 14/09 com *"o app força o pró-labore no dia 1"*. A reunião de 16/09 **substituiu** por uma pergunta de onboarding |
 | ⏸️ **Fila velha, só riscar** | **2** | **39** · **40** — o teaser que prometia economia foi removido em 21/07; esperam o *ok* do Pedro |
-| 🔴 **Bloqueiam hoje** | **2** | **4** (risco de transmitir com qualificação pendente) · **30** (P2.3, o lucro sem extrato) |
-| 🟡 **Esperam pessoa** | 21 | 1–9 · 14 · 17–28 · 66–67 |
+| 🔴 **Bloqueiam hoje** | **2** | **30** (P2.3, o lucro sem extrato) · **73** (pejotização, aberto em 16/09) |
+| 🟡 **Esperam pessoa** | 12 | 1–3 · 14 · 17–20 · 22–28 · 66–67 |
 | ⚪ **Só construir / conferir** | 27 | **33** (conferir a hipótese da proporcionalidade) · 44–65 · 68–69 |
-| **TOTAL** | **69** | |
-| **Pessoas a chamar** | **4** | Ademar (1–3) · Mauro (4–9, 14) · Larissa (17–24) · advogada (25–28) |
+| **TOTAL** | **70** | |
+| **Pessoas a chamar** | **4** | Ademar (1–3) · Mauro (14, 73) · Larissa (17–24) · advogada (25–28) |
 
-📉 **As duas rodadas de 14/09 tiraram 17 itens da mesa.** A primeira fechou o **bloco comercial** (preço, certificado, InfoSimples, reguladas, taxa da Junta); a segunda fechou o **bloco de produto** — o que o app mostra, força, esconde e cobra. Restam **7** perguntas com o Mauro (4–9 e 14), todas **fiscais e societárias**.
+📉 **Três rodadas tiraram 27 itens da mesa.** As duas de 14/09 fecharam o **bloco comercial** e o **bloco de produto**. A de **16/09**, com o contador, fechou o **bloco fiscal e societário inteiro** — os itens 4 a 9, que eram a razão de o Mauro estar na fila, mais os três que nasceram do conserto do motor (70, 71, 72).
 
-🔑 **A leitura:** sobrou **um** bloqueio de verdade — o **30** (como o lucro entra na conta sem extrato). E ele ficou **mais apertado**, não menos: o **31** confirmou que **não haverá conciliação bancária**, então a resposta do 30 tem que sair sem extrato, de propósito.
+🔑 **A leitura mudou de forma.** Antes sobrava uma pergunta fiscal grande com o Mauro; agora **não sobra nenhuma** das que estavam listadas. O que sobrou é de outra natureza:
+
+- 🔴 **30** — o lucro sem extrato. Segue sendo o bloqueio mais antigo, e o **31** o apertou ao confirmar que não haverá conciliação bancária.
+- 🔴 **73** — a **pejotização**, que **não é dúvida nova: é dúvida que passou batida**. Foi levada à reunião e ninguém respondeu. É o maior risco declarado do nosso perfil.
+- 🔄 **36** — reaberto de propósito, para o código não ficar contradizendo a fila.
+
+⚠️ **E três frentes que a reunião abriu e que não são itens de fila:** a régua do **redutor do IRRF** (que diverge do motor e exige a Lei 15.270/2025 literal), as **quatro mudanças de 2027** (três delas citadas só de memória, sem norma nomeada) e o **vocabulário do Anexo V**, que está errado em 32 lugares das nossas fontes. Estão em [[_duvidas-contador]], no rodapé.
 
 🧭 **O que a rodada de produto revelou, junto:** as decisões 32, 34, 35 e 43 apontam todas pro mesmo lugar — **informar sem tutelar e sem assustar**. Retirada sem lucro não bloqueia, nota cancelada não deixa rastro, multa não vira contador na tela. O contrapeso é o **54** (lembrete de vencimento com consequência nomeada), que agora carrega sozinho o peso de avisar antes do estrago. ⚠️ Vale vigiar se a soma vira **produto que nunca diz não** — a régua é [[legalize-trava-persona-produto]].
 

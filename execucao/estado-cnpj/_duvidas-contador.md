@@ -189,7 +189,7 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 **Onde apareceu.** Montando as empresas de teste. Duas delas foram descritas como *"só o titular administra"* e mesmo assim pagavam pró-labore a todos os sócios.
 
-**Por que apareceu.** A Lei 8.212/91 art. 12 V "f" fala em **prestar serviço**. O nosso app, na abertura, pergunta **quem administra** (a qualificação 49 × 22 do DBE). Dá para trabalhar na empresa sem ser administrador — e aí a inferência do app erra. 🔑 **Nossa decisão de produto foi:** o default é **todos os sócios recebem**, e a exceção é declarada. Queremos saber se isso está seguro.
+**Por que apareceu.** A Lei 8.212/91 art. 12 V "f" fala em **prestar serviço**. O nosso app, na abertura, pergunta **quem administra** (a qualificação 49 × 22 do DBE). Dá para trabalhar na empresa sem ser administrador — e aí a inferência do app erra. 🔑 **A decisão de produto que levamos à mesa era:** o default é **todos os sócios recebem**, e a exceção é declarada. ⚠️ **Ela foi derrubada na reunião — ver o veredito abaixo.**
 
 **A pergunta:** para efeito de pró-labore e INSS, o que vale é **administrar** ou **trabalhar**? Se for trabalhar, o nosso app está perguntando a coisa errada e precisa de uma pergunta a mais na constituição.
 
@@ -273,7 +273,7 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 **Onde apareceu.** Na reconstituição mês a mês dessa conta.
 
-**Por que apareceu.** Não pagar **trava o numerador do Fator R** (que é regime de caixa), e isso empurra a empresa para o Anexo V 12 meses depois. Nossa decisão de produto foi **forçar pró-labore já na primeira competência**, mas queremos saber se a tese do escritório é outra.
+**Por que apareceu.** Não pagar **trava o numerador do Fator R** (que é regime de caixa), e isso faz a empresa **perder o benefício do Anexo III** 12 meses depois. 🔑 **A decisão de produto que levamos à mesa era:** forçar pró-labore já na primeira competência. ⚠️ **Ela foi substituída na reunião — ver o veredito abaixo.**
 
 **A pergunta:** qual o risco real de ficar meses sem pró-labore no início, e qual a tese do escritório hoje?
 
@@ -501,7 +501,7 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 **O caso.** Antes de cobrar do cliente e abrir a empresa, queremos saber se ele **pode** optar pelo Simples.
 
-**Onde apareceu.** Mesma pesquisa. Ela declarou **ausência normativa**: nenhum serviço, portal ou API do governo permite testar um CPF antes de o CNPJ existir.
+**Onde apareceu.** Mesma pesquisa. Ela declarou **ausência normativa**: nenhum serviço, portal ou API do governo permite testar a **elegibilidade ao Simples** de um CPF antes de o CNPJ existir. ⚠️ **Isso segue verdade, mas o enunciado original era largo demais** — a *regularidade* do CPF é consultável, e nós já a consultamos. Ver o veredito abaixo.
 
 **Por que apareceu.** Se passar batido, a empresa nasce, a opção é **indeferida**, e ela começa a vida no **Lucro Presumido** — que para uma ME de serviço é fatal. E o estouro de faturamento global muitas vezes **só aparece meses depois**, gerando exclusão retroativa.
 
@@ -1450,7 +1450,7 @@ Três regras que aplicamos e que valem confirmar:
 | | |
 |---|---|
 | **Regime de caixa** | Só entra o que foi **efetivamente pago**. Declarado no eSocial e não pago **não conta** |
-| **A CPP não entra** | A CPP embutida no DAS **não** compõe a folha nos Anexos III e V — só no IV ⇢ **A1** |
+| **A CPP não entra** | A CPP embutida no DAS **não** compõe a folha nos Anexos III e V — só no IV. 🔒 **Duas camadas desde 16/09:** a norma diz que não entra (Res. CGSN 140/2018 art. 26 §2º I 'a'), **e** decidimos não fazer a manobra de somá-la mesmo que alguém interprete que entra ⇢ [[2026-09-16-tres-conflitos-do-contador-resolvidos]] |
 | **Empresa nova anualiza os dois lados** | Com menos de 13 meses, folha e receita são anualizadas juntas. Anualizar só a receita joga o recém-aberto no Anexo V sem merecer |
 
 ---
@@ -1466,7 +1466,9 @@ Três regras que aplicamos e que valem confirmar:
 | Base do IR | R$5.400,00 − R$607,20 | R$ 4.792,80 |
 | Imposto pela tabela | faixa de 27,5%, menos a dedução da faixa | R$ 409,29 |
 | **Redutor** do art. 3º-A | Lei 15.270/2025, aplicado **depois** da tabela, sobre o bruto | **− R$ 259,64** |
-| **IRRF devido** | | **R$ 149,65** |
+| **IRRF devido** | | ⏳ **R$ 149,65** *(provisório)* |
+
+> ⏳ **Este número é o único do Bloco E que NÃO saiu validado.** O pró-labore de R$5.400 está acima dos R$5.000, e o Leonan afirmou que **acima desse valor o redutor não se aplica** — o que daria um IRRF **maior**. Ele mesmo hesitou (*"aí eu não vou lembrar o certo"*), e a Lei 15.270/2025 precisa ser lida literal antes de mexer no motor. **Não tratar como ratificado.** ⇢ **P1**
 
 🔑 **Três coisas que erramos antes e hoje aplicamos:**
 1. **A ordem importa.** O INSS sai primeiro e vira dedução da base do IR. Quem calcula o IR sobre o bruto cobra a mais do sócio.

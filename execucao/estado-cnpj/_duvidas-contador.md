@@ -363,6 +363,242 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 ---
 
+---
+
+# 🅲 BLOCO C — o fluxo de obrigações, do dia 1 ao fim do ano
+
+> 🧭 Nasceu de uma releitura das personas no motor em **16/09**, procurando o que mais ele poderia destravar **fora da folha de pagamento**. São perguntas de **operação e obrigação acessória**, não de cálculo.
+>
+> 🔑 Em cada passo já dizemos **por qual ferramenta** ele sai — Integra Contador (SERPRO), eSocial, Emissor Nacional ou InfoSimples —, então o que falta dele é a **regra**, não o encanamento.
+
+## C1 · 🔴 O alvará e o Corpo de Bombeiros em BH saem sozinhos?
+
+**O caso.** Nas nossas personas a empresa é de serviço, atividade inócua, exercida fora do estabelecimento. Assumimos que em BH o alvará sai automático depois do CNPJ.
+
+**Onde apareceu.** Montando a linha do tempo do dia 1. Fui conferir e **a nossa própria matriz marca o alvará como 🔴 "a mapear" desde 09/07** — nunca foi validado.
+
+**Por que importa.** O que temos de concreto é a conta real: CNPJ em **12/12**, alvará em **15/12**, dispensas só em **02/01**, e a **taxa da Prefeitura (R$168) chegou no dia 40** com 4 dias para pagar. Se for automático, o dia 1 do cliente é uma coisa; se depender de requerimento e vistoria, é outra bem diferente — e a nossa promessa de prazo muda.
+
+**A pergunta:** para ME de serviço inócuo em BH, o **alvará de localização e funcionamento** e a **licença do Corpo de Bombeiros** saem automaticamente com o registro, ou precisam de requerimento? Há vistoria? Em quanto tempo, na sua experiência? E a taxa de R$168 chega sempre nesse prazo?
+
+## C2 · 🟡 A inscrição municipal (CCM) nasce sozinha ou se pede?
+
+**O caso.** A CCM não vem no pacote da constituição: no nosso mapa de dados ela é **"órgão, depois do CNPJ"**, e está marcada como **ninguém combinou quem entrega**.
+
+**Onde apareceu.** No mapa de dependência de dados entre o time do dev e o app interno.
+
+**Por que importa.** Já sabemos que **empresa aberta depois de dez/2025 emite NFS-e sem informar a inscrição** — isso destravou a primeira nota. Mas também sabemos que **inscrição municipal irregular derruba a emissão pela API**. Ou seja: não trava o começo, mas trava depois, e não sabemos quando.
+
+**A pergunta:** a CCM é gerada automaticamente com o CNPJ em BH, ou é requerimento à parte? Em quanto tempo? E o que caracteriza "irregular" a ponto de derrubar a emissão de nota?
+
+## C3 · 🔴 O cliente pode faturar antes das licenças?
+
+**O caso.** A **nossa própria minuta** obriga o cliente a *"não exercer atividade empresarial antes da conclusão do registro da empresa e da obtenção das licenças e alvarás"*.
+
+**Onde apareceu.** Lendo o contrato ao montar a linha do tempo.
+
+**Por que importa.** Se o alvará leva dias e o cliente já tem CNPJ e certificado, ele **consegue** emitir nota — e estaria descumprindo o que assinou com a gente. Isso muda a competência da primeira nota e pode virar problema do cliente.
+
+**A pergunta:** na prática, prestador de serviço em BH pode emitir nota entre o CNPJ e o alvará? A cláusula é proteção jurídica nossa ou regra que o cliente precisa mesmo cumprir? E se ele emitir antes, qual o risco real?
+
+## C4 · 🟡 A primeira competência é cheia ou proporcional?
+
+**O caso.** A **P01** abre em **março** e não fatura nada nos dois primeiros meses. A **P03** abre em **novembro** e já fatura **R$14.000 no mês da abertura** — o motor calcula o acumulado como *receita do próprio mês × 12*, dando R$168.000 logo de cara.
+
+**Onde apareceu.** Rodando as 16 personas: **11 delas abrem sem faturar no mês 1**, e a exceção muda a alíquota.
+
+**Por que importa.** Essa é a regra do art. 24 e nós a implementamos. O que não sabemos é o lado **operacional**: se a empresa abre no dia 20, a competência do mês de abertura é declarada normalmente? E se ela abre e não fatura, ainda assim transmitimos.
+
+**A pergunta:** a competência do mês de abertura é declarada cheia, mesmo que a empresa só exista por 10 dias dele? Há algo de proporcional? *(O cálculo já está fechado; queremos confirmar a operação.)*
+
+## C5 · 🟡 Quem escritura o Livro Caixa, e com que frequência?
+
+**O caso.** A pesquisa confirmou que **o Livro Caixa basta** para o Simples, salvo se distribuir lucro acima da presunção — aí vira escrituração completa.
+
+**Onde apareceu.** Na pesquisa da DEFIS, em 15/09.
+
+**Por que importa.** É obrigação que **ninguém no nosso desenho está fazendo**. Não está em nenhuma das 10 obrigações do nosso ciclo, e não tem tela.
+
+**A pergunta:** o Livro Caixa é obrigação nossa ou do cliente? Se é nossa, com que periodicidade se escritura, e o que ele precisa nos mandar? E a partir de quando a distribuição de lucro obriga a contabilidade completa, na prática?
+
+## C6 · 🟡 Retificação: o que dá para desfazer, e até quando
+
+**O caso.** Uma nota emitida com valor errado, ou a receita de uma competência já apurada que muda.
+
+**Onde apareceu.** É um processo inteiro do nosso board (**P6 · cancelar, corrigir ou substituir nota**), e ele tem **4 perguntas abertas** que não são de tela.
+
+**Por que importa.** 🔑 Já sabemos uma coisa dura: para optante do Simples, **a regra E0061 do leiaute nacional proíbe substituir nota por erro de valor**. Então o caminho é outro, e não sabemos qual.
+
+**A pergunta:** nota com valor errado de empresa do Simples — cancela e emite outra, ou há prazo/limite? E o PGDAS-D já transmitido: retifica-se como, e há custo ou risco? Se o imposto já foi pago a maior, como se recupera?
+
+## C7 · 🟡 Certidões negativas: quando o cliente vai precisar
+
+**O caso.** No nosso catálogo, emitir CND é um serviço. Na conta real, o cliente precisou de **declaração para abrir conta no banco** logo no começo.
+
+**Onde apareceu.** No catálogo de serviços e no estudo da conta real.
+
+**Por que importa.** É o serviço mais pedido nos primeiros 30 dias e não sabemos a periodicidade nem a validade. **Pela API:** federal via InfoSimples (`Emissão de CND`); estadual e municipal seguem sem caminho mapeado.
+
+**A pergunta:** quais certidões o cliente novo precisa nos primeiros meses, quais têm validade curta, e qual é a que mais gera pedido? Vale emitir por antecipação ou só sob demanda?
+
+## C8 · 🔴 Dependentes de IRRF — ninguém coleta
+
+**O caso.** O cálculo do IR do sócio admite dedução por dependente, e **o nosso app não pergunta**. No mapa de dados isso está marcado como *"ninguém produz, não existe em lugar nenhum"*.
+
+**Onde apareceu.** No mapa de dependência, e de novo agora ao revisar o que o motor consome.
+
+**Por que importa.** Hoje calculamos **sem dependentes** para todo mundo — o que cobra a mais de quem tem. ⚠️ E como o redutor de 2026 zera o IR de boa parte das nossas personas, pode ser que não mude nada no nosso escopo. Não sabemos.
+
+**A pergunta:** no perfil dos nossos clientes (pró-labore em torno de 1 a 3 salários mínimos), declarar dependentes muda alguma coisa depois do redutor? Vale coletar, ou é campo que só gera trabalho?
+
+## C9 · 🟡 O domicílio eletrônico, e quem lê por ele
+
+**O caso.** Na conta real achamos uma **intimação não lida** no DTE do cliente.
+
+**Onde apareceu.** Na varredura da conta do concorrente, em 13/09.
+
+**Por que importa.** É por ali que chega o **Termo de Exclusão do Simples**, e o cliente não olha. **Pela API:** o InfoSimples tem `ECAC / Caixa Postal` — então **conseguimos ler**. O que não sabemos é a obrigação e o prazo.
+
+**A pergunta:** qual o prazo de ciência tácita no DTE-SN, e o que muda se perdermos uma intimação? Monitorar isso é obrigação do contador responsável ou cortesia?
+
+---
+
+# 🅳 BLOCO D — cinco clientes, do dia 1 ao fim do contrato
+
+> 🧭 **Para que serve na conversa.** Em vez de discutir regra no abstrato, o contador acompanha **cinco empresas** pelo tempo em que elas ficaram conosco e diz onde o que fazemos está certo, onde falta passo e onde falta pergunta.
+>
+> 📐 **Como ler.** Cada linha é **o que a casa faz**, com a data, a ferramenta e a dúvida ligada (⇢ **C3**, ⇢ **A1**…). Onde não há dúvida ligada, é porque está fechado.
+>
+> 🔧 **As ferramentas, uma vez só:** `Integra-SN` apura e emite a guia do DAS e a DEFIS · `Integra-Sicalc` emite o DARF do sócio · `Integra-DCTFWeb` transmite a DCTFWeb · `Integra-Sitfis` consulta se a guia foi paga · `eSocial WS` transmite a folha do sócio (SOAP, gratuito) · `Emissor Nacional` emite a NFS-e · `InfoSimples` consulta cadastro, CND e caixa postal. Os quatro `Integra-*` são da **API Integra Contador do SERPRO**.
+>
+> ⚠️ **O que é real e o que é simulado:** as empresas são fictícias e as datas são de simulação. Os **cálculos são do motor**, conferido ao centavo contra recibos reais da Receita. As **regras de prazo** são de norma. O que está em dúvida está marcado.
+
+## O ciclo que vale para todas — o mês padrão
+
+| Dia | O que a casa faz | Ferramenta |
+|---|---|---|
+| **último do mês** | A competência fecha. Somamos as notas emitidas | — |
+| **até o 15** | Decidimos o pró-labore do mês e transmitimos a folha do sócio | `eSocial WS` + `Integra-DCTFWeb` |
+| **até o 15** | Vigiamos o Fator R — só nos CNAEs que podem virar Anexo V | motor |
+| **até o 18-20** | Emitimos o DARF do INSS e do IR do sócio. 🔑 **Antecipa** se cair em fim de semana | `Integra-Sicalc` |
+| **até o 20-21** | Apuramos, transmitimos o PGDAS-D e emitimos a guia do DAS. 🔑 **Prorroga** se cair em fim de semana | `Integra-SN` |
+| **depois** | Conferimos se a guia anterior foi paga; se venceu, recalculamos com multa e juros | `Integra-Sitfis` |
+| **31/03** | DEFIS do ano anterior. 🔴 **Morre em 2027**, vira campo do PGDAS-D | `Integra-SN` |
+
+🔑 **O eSocial vence ANTES do DAS.** Quem mira o dia 20 entrega 5 dias atrasado, todo mês. ⇢ **A11**
+
+---
+
+## 👤 P01 · Bruno, dev freelancer solo — *o que acontece quando ninguém avisa*
+
+**Cadastro:** desenvolvimento de software · **1 sócio** · sem emprego CLT · endereço próprio · faixa de faturamento R$10-20 mil · CNAE **6201-5/01**, dos **15 que podem virar Anexo V**. Abre em **março/2026**, fica **8 meses** conosco.
+
+| Quando | O que a casa faz | Dúvida |
+|---|---|---|
+| **Dia 1** | Constituição concluída, CNPJ na mão. Emitimos a **inscrição municipal** e as **licenças**, e publicamos os documentos na plataforma | ⇢ **C1 C2** |
+| **Dia 1** | Certificado digital emitido pela parceira. **Sem ele o app não libera a emissão de nota** — não existe procuração na NFS-e | — |
+| **Dia 1** | 🔑 **Definimos o pró-labore já na 1ª competência.** É decisão nossa, não exigência legal — e trava o Fator R desde o começo | ⇢ **A3 A5** |
+| mar–abr | Dois meses **sem faturar**. Mesmo assim transmitimos PGDAS-D e a folha do sócio: **mês sem receita não pausa obrigação** | ⇢ **B6** |
+| **mai** | 1ª nota: R$18.000. Pró-labore no mínimo (R$1.621), folha em **9%** | — |
+| **jun** | 🔴 **Cai para o Anexo V.** A alíquota vai de 6% para 15,5% | ⇢ **A3** |
+| **set** | Ele corrige o pró-labore para R$5.400 | ⇢ **A2** |
+| **ago/2027** | 🔴 **Só então voltaria ao Anexo III** — 11 meses pagando a mais, com a folha já certa | ⇢ **B4** |
+| **31/03/2027** | DEFIS do ano-calendário 2026 | ⇢ **A9** |
+| **Total** | Faturou **R$108.000** · pagou **R$15.030** de DAS · **5 meses no Anexo V** | |
+
+🔑 **É a persona que justifica o produto:** com o nosso piloto ligado desde o mês 1, ela **nunca** teria ido ao Anexo V. A diferença é de **R$6.795** no bolso do cliente.
+
+---
+
+## 👤 P03 · Rafael, filmagem de eventos — *abre em novembro, e a obrigação anual é em março*
+
+**Cadastro:** filmagem de festas e eventos · **1 sócio** · **endereço fiscal da Legalizai** (+R$49/mês) · CNAE **7420-0/04**, **Anexo III fixo** — o Fator R não muda nada nele. Abre em **novembro/2025**, fica **11 meses**.
+
+| Quando | O que a casa faz | Dúvida |
+|---|---|---|
+| **Dia 1** | Inscrição municipal, licenças, certificado, documentos na plataforma | ⇢ **C1 C2** |
+| **Dia 1** | 🔑 **A tela dele NÃO fala em Fator R nem em 28%.** CNAE fixo: sugerir esse risco seria mentir por omissão | — |
+| **nov/2025** | Já fatura **R$14.000 no mês da abertura**. O acumulado vira R$168.000 de cara *(receita do mês × 12)* | ⇢ **C4** |
+| **jan–fev/2026** | Dois meses secos. Transmitimos igual | ⇢ **B6** |
+| 🔴 **31/03/2026** | **DEFIS do ano-calendário 2025** — com **41 dias de empresa**. Ele mal entendeu o que é DAS e já tem obrigação anual | ⇢ **B3 A9** |
+| mai–jul | Temporada cheia: R$12k, R$19k, R$17k | — |
+| **31/03/2027** | DEFIS de 2026 | ⇢ **A9** |
+| **Total** | Faturou **R$102.000** · **R$6.120** de DAS · **zero** meses no Anexo V | |
+
+---
+
+## 👤 P09 · Gustavo, eventos corporativos — *dois sócios, um com CLT, e três guias atrasadas*
+
+**Cadastro:** organização de feiras e congressos · **2 sócios**, ambos administram · um deles tem **CLT de R$9.000**, acima do teto do INSS · 3 CNAEs secundários · **Anexo III fixo**. Abre em **setembro/2025**, fica **13 meses**.
+
+| Quando | O que a casa faz | Dúvida |
+|---|---|---|
+| **Dia 1** | Inscrição municipal, licenças, certificado, documentos | ⇢ **C1 C2** |
+| **Dia 1** | 🔑 **O DARF sai sócio a sócio, e só depois soma.** O do CLT alto não recolhe nada; o outro recolhe normal | ⇢ **A1 B1** |
+| out–dez/2025 | Escala rápido: R$12k, R$28k, R$35k no pico de confraternização | — |
+| **31/03/2026** | DEFIS de 2025 | ⇢ **B3** |
+| **mar, abr, mai/2026** | 🔴 **Três guias seguidas em atraso** (14, 21 e 14 dias). Recalculamos com multa de 0,33%/dia e juros | ⇢ **B5** |
+| | Custo do atraso: **R$393,32**. É o caso de uso do lembrete de vencimento, com número | — |
+| **set/2026** | O acumulado cruza **R$180 mil** e ele muda de faixa | — |
+| **out/2026** | 13º mês: a regra do acumulado troca de *média × 12* para **soma dos 12** | ⇢ **C4** |
+| **Total** | Faturou **R$266.000** · **R$17.514** de DAS · **R$2.318** de DARF | |
+
+---
+
+## 👤 P11 · Cléber, aluguel de equipamentos — *quatro sócios, o caso caro*
+
+**Cadastro:** aluguel de máquinas para escritório · 🔴 **4 sócios** — o teto do nosso contrato —, **25% cada**, todos administram · 2 CNAEs secundários · **Anexo III fixo**. Abre em **março/2026**, fica **6 meses**.
+
+| Quando | O que a casa faz | Dúvida |
+|---|---|---|
+| **Dia 1** | Inscrição municipal, licenças, **as 4 assinaturas dos sócios**, documentos | ⇢ **C1** |
+| **Dia 1** | 🔑 **Quatro pró-labores, quatro cálculos, uma guia.** É aqui que o nosso erro de 15/09 custava **R$2.077 por mês** | 🔴 ⇢ **A1 B7** |
+| todo mês | **4 eventos de remuneração e 4 de pagamento** no eSocial, um por sócio | ⇢ **A2** |
+| todo mês | ⚠️ Assumimos **rateio igual** (R$405,25 para cada). Se o trabalho for desigual, isso é risco | 🔴 ⇢ **A2 A3** |
+| **31/03/2027** | DEFIS de 2026, com os **rendimentos de cada sócio** discriminados | ⇢ **A9** |
+| **Total** | Faturou **R$47.500** · **R$2.850** de DAS · **R$4.279** de DARF | |
+
+🔑 **Repare na inversão:** é a única das cinco em que o **DARF dos sócios é maior que o imposto da empresa**. Quatro pessoas recolhendo INSS sobre uma receita modesta.
+
+---
+
+## 👤 P16 · Vitor, consultoria em TI — *dois anos, e o Anexo V que cresce*
+
+**Cadastro:** consultoria em TI · **1 sócio** · CNAE **6204-0/00**, dos **15 que podem virar Anexo V**. Abre em **junho/2025**, fica **22 meses** — o percurso mais longo, atravessando **três anos-calendário**.
+
+| Quando | O que a casa faz | Dúvida |
+|---|---|---|
+| **Dia 1** | Inscrição municipal, licenças, certificado, documentos | ⇢ **C1 C2** |
+| jul/2025 → | Cresce de R$8 mil a R$42 mil/mês, sempre se pagando o mínimo | — |
+| **set/2025** | 🔴 Cai para o **Anexo V** e **fica lá 19 dos 22 meses** | ⇢ **A3** |
+| **mar/2026** | O acumulado cruza **R$180 mil** e ele entra na **2ª faixa**: a alíquota efetiva começa a subir de 15,5% rumo a 16,75% | — |
+| **31/03/2026** | DEFIS de 2025 | ⇢ **A9** |
+| **jun/2026** | 13º mês: a regra do acumulado troca para soma dos 12 | ⇢ **C4** |
+| **31/03/2027** | DEFIS de 2026 | ⇢ **A9** |
+| **mar/2027** | Acumulado em **R$359.000** — a **R$1.000 do teto do ME**. Passar é desenquadramento para EPP | 🔴 |
+| **Total** | Faturou **R$551.000** · pagou **R$87.083** de DAS · **19 meses no Anexo V** | |
+
+🔑 **O contraste que fecha o argumento:** com o piloto ligado desde o mês 1, ele teria pago **R$40.502** em vez de **R$87.083**. E ele encosta no teto do ME sem passar — é o único caso em que a porta de saída para EPP aparece.
+
+---
+
+## O que estas cinco cobrem, juntas
+
+| | |
+|---|---|
+| Regimes | 2 dinâmicas (podem virar Anexo V) · 3 Anexo III fixo |
+| Sócios | 1 · 1 · 2 · **4** · 1 |
+| Mês de abertura | março · **novembro** · setembro · março · junho |
+| Duração | 6 a **22** meses · 1 a **3** anos-calendário |
+| Situações | meses sem faturar · **guias em atraso** · mudança de faixa · 13º mês · CLT acima do teto · endereço fiscal · **encostar no teto do ME** |
+| DEFIS devidas | 1 · 2 · 2 · 1 · **3** |
+
+⚠️ **O que elas NÃO cobrem, de propósito:** nenhuma tem **colaborador** (travado fora por decisão), nenhuma **muda de CNAE**, nenhuma tem **entrada ou saída de sócio**, e nenhuma **ultrapassa** o teto do ME. Se o contador achar que algum desses casos é comum no escritório, é sinal de que falta persona — e isso é resposta valiosa.
+
+---
+
+---
+
 ## 📌 O que ficou de fora de propósito
 
 | | Por quê |

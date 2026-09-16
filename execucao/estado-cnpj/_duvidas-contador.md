@@ -1,38 +1,62 @@
 ---
 tipo: derivado
-status: vivo
-data: 2026-09-15
-assunto: briefing-para-a-conversa-com-o-contador
-autoridade: derivado
-tags: [execucao, motor-fiscal, briefing, mauro, larissa]
+status: validado
+data: 2026-09-16
+assunto: regras-validadas-com-o-contador
+autoridade: ratificado
+validado-por: Leonan (contador), 16/09/2026, 3 áudios, ~5h
+tags: [execucao, motor-fiscal, validado, leonan, mauro]
 ---
 
-# 🧑‍🏫 Briefing da conversa com o contador
+# ✅ As regras do motor, validadas com o contador
 
-> 🔴 **ESTE DOC NÃO É FILA.** A fila de quem-resolve-o-quê é **[[PENDENCIAS]]**, alimentada por **[[fila-validacao-humana]]**. Aqui ficam os **parágrafos de contexto** que a fila não carrega — para o Pedro não sentar com pergunta solta. O **status e o número** de cada item vivem lá.
+> 🔴 **ESTE DOC MUDOU DE NATUREZA EM 16/09.** Ele nasceu como **briefing de perguntas** para a conversa com o contador. A conversa aconteceu — **~5 horas, 3 áudios, 293.345 caracteres de transcript, lidos 100%** — e agora ele é o **registro do que foi ratificado, corrigido e decidido**.
 >
-> 🧭 **Como o Pedro usa:** vai batendo pergunta por pergunta. Cada item traz **o caso concreto**, **onde a dúvida apareceu**, **por que apareceu** e **a pergunta**.
+> 🧭 **Como ler agora.** Cada item preserva o **caso concreto**, **onde a dúvida apareceu** e **a pergunta que foi feita** — porque é isso que dá rastreabilidade. E ganhou embaixo o **veredito**, com a fala literal dele.
 >
-> 📐 **A separação (pedido do Pedro, 15/09):** o **Bloco A** vale para o cliente travado inteiro — resposta muda o produto para todo mundo. O **Bloco B** nasceu de uma persona específica, e pode ser que a resposta só afete aquele caso.
+> 🔴 **ESTE DOC NÃO É FILA.** A fila de quem-resolve-o-quê é **[[PENDENCIAS]]**. Aqui ficam o contexto e a decisão.
 
-## 📌 Antes de começar — o que JÁ foi respondido por pesquisa
+## 🎯 O placar da validação
 
-Três rodadas de pesquisa em fonte primária fecharam parte do que estava aqui. **Não perguntar de novo:**
+| | Bloco A | Bloco B | Bloco C | **Total** |
+|---|:---:|:---:|:---:|:---:|
+| ✅ **Ratificado como estava** | 6 | 7 | 7 | **20** |
+| 🔴 **Corrigido — estávamos errados** | 2 | 1 | 1 | **4** |
+| 🆕 **Respondido e virou decisão nova** | 3 | 1 | 1 | **5** |
+| ⏳ **Segue aberto** | 3 | 0 | 0 | **3** |
 
-| Já respondido | Onde |
+🔑 **E o Bloco E — as sete contas do motor — passou 7 de 7.** A conta do DAS foi conferida contra a guia real dele: *"bateu 100% do valor, que é o que eu paguei lá."*
+
+## 📖 As três legendas que este doc usa
+
+| | |
 |---|---|
-| Sócio com **emprego CLT** não impede nada no Simples — só ajusta o teto do INSS | varredura de LC 123 arts. 3º, 15, 17, 30, 31 e Res. CGSN 140/2018: *"total inexistência de comando jurídico"* |
-| **DEFIS**: sem multa por atraso, mas **bloqueia o PGDAS-D** a partir de março do ano seguinte | Manual do PGDAS-D e DEFIS 2018 v4 |
-| **DEFIS morre em 01/01/2027**, absorvida pelo PGDAS-D | Res. CGSN nº 190, de 04/08/2026 |
-| Empresa aberta em dezembro declara o **ano-calendário inteiro** | Res. CGSN 140/2018 art. 2º V + recibo real |
-| **Livro Caixa basta** para a DEFIS, salvo se distribuir lucro acima da presunção | Res. CGSN 140/2018 |
-| Sócio que **sai** não apaga o pró-labore do Fator R — a folha histórica não muda | LC 123 · pesquisa de elegibilidade |
-| Sócio que **entra** afeta o Fator R **já na competência da formalização** | idem |
-| Canais: **Integra-SN, Integra-Sicalc, Integra-DCTFWeb, Integra-Sitfis** cobrem tudo; eSocial é SOAP gratuito | Loja SERPRO + Manual do eSocial |
+| ✅ **RATIFICADO** | ele confirmou o que já fazíamos. Nada muda |
+| 🔴 **CORRIGIDO** | estávamos errados. **Muda produto ou motor** |
+| 🆕 **DECIDIDO** | ele respondeu e o Pedro travou uma decisão nova |
+| ⏳ **ABERTO** | ele não soube, hesitou, ou pediu para confirmar |
 
 ---
 
-## 🗣️ Abertura da conversa, em 30 segundos
+## 📌 O que já estava respondido por pesquisa — e uma que a reunião DERRUBOU
+
+Três rodadas de pesquisa em fonte primária tinham fechado parte disto. **A reunião confirmou quase tudo e desmentiu uma:**
+
+| Item | Onde | Veredito do Leonan |
+|---|---|---|
+| Sócio com **emprego CLT** não impede nada no Simples | LC 123 arts. 3º, 15, 17, 30, 31 | ✅ **ratificado**, com um adendo: pode custar o **seguro-desemprego** dele ⇢ **N1** |
+| **DEFIS** bloqueia o PGDAS-D a partir de março | Manual do PGDAS-D e DEFIS 2018 v4 | ✅ *"eu não consigo mandar o Simples. O PGDAS fica travado"* |
+| **DEFIS morre em 01/01/2027** | Res. CGSN nº 190/2026 | ✅ ratificado ⇢ mas a transição segue incerta, ver **A9** |
+| **DEFIS não gera multa por atraso** | mesma pesquisa | 🔴 **DERRUBADO.** *"Ele não gerava multa nenhuma… esse ano passou a gerar"* ⇢ **A9** |
+| Empresa aberta em dezembro declara o **ano-calendário inteiro** | Res. CGSN 140/2018 art. 2º V | 🔴 **DERRUBADO.** Declara **a partir da data de abertura** ⇢ **B3** |
+| **Livro Caixa basta** para a DEFIS | Res. CGSN 140/2018 | ✅ e nem é do nosso perfil ⇢ **C5** |
+| Sócio que **sai** não apaga o pró-labore do Fator R | LC 123 | ✅ *"o que gerou para ele de folha permanece"* |
+| Sócio que **entra** afeta o Fator R na competência da formalização | idem | ✅ *"tem que ser a partir da competência que ele entrou"* |
+| Canais **Integra-*** cobrem tudo; eSocial é SOAP gratuito | Loja SERPRO | ✅ não contestado |
+
+---
+
+## 🗣️ Como a conversa foi aberta
 
 *"Construímos um motor que calcula o imposto e a guia do sócio mês a mês, e um piloto que ajusta o pró-labore sozinho para manter a empresa no Anexo III. Para testar, criamos 16 empresas fictícias com histórias completas de faturamento — abrindo em todos os 12 meses do ano, de 1 a 4 sócios, algumas atravessando a virada de ano — e rodamos o motor na vida inteira de cada uma. Foram 156 competências. As perguntas abaixo saíram daí."*
 
@@ -84,6 +108,33 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 **A pergunta:** qual é o desconto simplificado vigente em 2026, e o redutor do art. 3º-A se aplica ao pró-labore de R$3.500?
 
+> ## ✅ RATIFICADO · e o desempate ficou PELA METADE
+>
+> **Sobre o por-sócio, sem ressalva:**
+>
+> > *"É **por CPF**, então é por pessoa. É por pessoa esse cálculo… e depois os dois somam e geram **uma guia só**. Soma de todos e gera uma guia só."*
+>
+> 🔑 E ele detalhou a mecânica que faltava: **a distribuição ao eSocial é individual por CPF, a guia é consolidada por CNPJ.** *"A distribuição do envio é individual. Por CPF. Manda lá para a base do eSocial de forma individual."*
+>
+> **Pergunta direta feita:** *"existe alguma situação em que se calcula sobre o total?"* → **Não.**
+>
+> ✅ **O conserto de 15/09 está certo.** Nada muda no motor.
+>
+> ### ⏳ Mas o desempate do IRRF abriu OUTRA divergência
+>
+> Ele confirmou o **desconto simplificado** e o redutor, mas descreveu uma **régua de faixas** que **não é a do nosso motor**:
+>
+> > *"De R$3.500 para baixo, ele **zera o imposto, direto**. Não tem necessidade [de calcular]. De R$3.500 a R$5.000, ele usa o redutor. **Passou de R$5.000, aí o cálculo é normal**, sem o redutor."*
+>
+> | | Até R$3.500 | R$3.500 a R$5.000 | Acima de R$5.000 |
+> |---|---|---|---|
+> | **Leonan** | zera direto | redutor | **sem** redutor |
+> | **Nosso motor** | redutor zera | redutor | redutor em rampa até R$7.350 |
+>
+> 🔴 **Não mexi no motor.** Ele mesmo hesitou — *"aí eu não vou lembrar o certo"* — e isto muda o IRRF de todo cliente acima de R$5.000. **Exige leitura literal da Lei 15.270/2025 antes de qualquer alteração.** ⇢ segue como **P1**
+>
+> ✅ **O que ficou fechado:** o limite é **por CPF**. *"Em tese, quatro sócios poderiam ficar isentos dentro de uma base de 20 mil."*
+
 ## A2 · 🟡 O pró-labore pode ser desigual entre os sócios? `#71`
 
 **O caso.** Empresa com 3 sócios que paga R$6.000 de pró-labore no mês. O nosso sistema assume R$2.000 para cada.
@@ -94,6 +145,44 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 **A pergunta:** com que frequência, na prática, os sócios dividem desigual? Exige formalidade (alteração contratual, ata, registro em folha)? E o risco está em dividir **desigual**, ou em dividir **igual quando o trabalho é desigual**?
 
+> ## 🆕 RESPONDIDO · e o rateio igual deixou de ser "conveniência de tela"
+>
+> **A premissa que mais nos incomodava virou a escolha tecnicamente certa:**
+>
+> > *"Se desses R$3.242, R$3.000 ficasse para um sócio e R$242 para o outro, **o outro cara está chegando numa linha de pagar mais imposto** mais próxima do que eu estou com o valor meia a meia. **Então o ideal seria fazer a divisão meia a meia.**"*
+>
+> 🔴 **E isso INVALIDA uma inferência do nosso app.** Hoje o sistema deduz o rateio do **percentual de participação** coletado no dossiê:
+>
+> > *"Não necessariamente eu tendo 20% da empresa e o outro tendo 80%, os nossos pró-labores têm que ser proporcionais à participação. **Não tem.** Eu posso decidir como eu vou distribuir isso."*
+>
+> **Frequência do desigual:** baixa, e com causa específica.
+>
+> > *"Só tem a possibilidade de fazer desigual quando **o outro sócio não trabalha efetivamente** na empresa."*
+>
+> **Formalidade:** ⇢ ver **A2b** logo abaixo.
+>
+> **Risco:** nenhum dos dois, se estiver no contrato. *"Não vai ter risco. Vai gerar risco **se não tiver esse acordo**."*
+>
+> ### ✅ DECIDIDO
+>
+> | | |
+> |---|---|
+> | **Default** | rateio **igual** entre os sócios que recebem, **independente da participação** |
+> | **Desigual** | só a pedido, por contato — não é campo de tela |
+> | 🔴 **A mudar no app** | **parar de deduzir o rateio do percentual de participação**. Aquele campo governa **lucro**, não pró-labore |
+>
+> ## 🆕 A2b · A cláusula do contrato social prevê AS DUAS distribuições
+>
+> Pergunta do Pedro: *"e se a gente assumir que no contrato social quem colocou um sócio vai ser distribuição igual?"*
+>
+> > **Léo:** *"Aí você pode colocar **os dois**. 'A distribuição pode ser igualitária **ou** desproporcional' — é um critério dos administradores, como um acordo entre si."*
+>
+> 🔑 **O porquê é operacional e economiza dinheiro do cliente:** se o contrato disser só "igualitária" e amanhã eles distribuírem desigual, a fiscalização cobra a formalidade. Com a cláusula dupla, **não precisa refazer contrato social** quando o cliente quiser mudar.
+>
+> > *"Se amanhã o Estado ou a Receita me cobra essa formalidade e começa a ver que os valores não estão batendo… aí existe essa chatice. **Melhor já deixar de um jeito que cobre os dois.**"*
+>
+> ✅ **Decidido:** cláusula padrão prevendo ambas, na minuta com a advogada.
+
 ## A3 · 🟡 "Administrar" é a mesma coisa que "prestar serviço"? `#72`
 
 **O caso.** Empresa com 3 sócios, 1 administrador e 2 que trabalham sem serem administradores.
@@ -103,6 +192,37 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 **Por que apareceu.** A Lei 8.212/91 art. 12 V "f" fala em **prestar serviço**. O nosso app, na abertura, pergunta **quem administra** (a qualificação 49 × 22 do DBE). Dá para trabalhar na empresa sem ser administrador — e aí a inferência do app erra. 🔑 **Nossa decisão de produto foi:** o default é **todos os sócios recebem**, e a exceção é declarada. Queremos saber se isso está seguro.
 
 **A pergunta:** para efeito de pró-labore e INSS, o que vale é **administrar** ou **trabalhar**? Se for trabalhar, o nosso app está perguntando a coisa errada e precisa de uma pergunta a mais na constituição.
+
+> ## 🔴 CORRIGIDO · vale TRABALHAR, e o nosso default estava errado
+>
+> > *"A lei do 212 fala que **o cara que trabalha, que efetivamente trabalha, ele é obrigado a ser um contribuinte obrigatório** do INSS. O cara que não trabalha, às vezes ele é um sócio só de investimento — eu só aporto e faço essa retirada de lucro —, **eu não tenho obrigatoriedade de gerar um pró-labore**."*
+>
+> 🔴 **O nosso default era "todos os sócios recebem". Está errado**, e cobra INSS de quem não deve.
+>
+> ⚠️ **E ele avisou que o app nunca vai saber sozinho:**
+>
+> > *"**E ele não vai saber também.** Às vezes o cara pode colocar que um é administrador, mas quem está trabalhando é o outro."*
+>
+> Pior: existe motivo **legítimo** para o administrador não ser quem recebe.
+>
+> > *"Às vezes o administrador não é o cara que vai fazer o recolhimento porque é o outro, que tem **um impedimento no nome, um bloqueio judicial**, ele não quer se comprometer."*
+>
+> **Para que serve, então, indicar o administrador?** Para outra coisa:
+>
+> > *"A parte mais importante de indicar um administrador é **quando ele vai resolver alguma burocracia**. Uma assinatura do banco, um processo na Receita. Se eu colocar que todo mundo é administrador, **qualquer processo que eu faço eu preciso da assinatura dos três**."*
+>
+> ### ✅ DECIDIDO — substitui o default anterior
+>
+> | Perfil | O que a casa faz |
+> |---|---|
+> | Sócio **administrador** | 🔑 pró-labore gerado **automaticamente** |
+> | Sócio **cotista** *(código 22)* | **nada**. Nasce sem pró-labore |
+> | Cotista que passa a trabalhar | habilita **a pedido**, depois |
+>
+> > **Pedro:** *"A gente trava de início os administradores, gera automaticamente o pró-labore. E os que não são administradores, a gente não faz."*
+> > **Léo:** *"Faz sentido."*
+>
+> 🔴 **Muda o motor:** hoje `sociosComProLabore` é só uma contagem — não distingue administrador de cotista.
 
 ## A4 · 🔴 Pró-labore de R$100, abaixo do salário mínimo `#21`
 
@@ -125,6 +245,28 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 **A pergunta:** isso é irregular? Existe hipótese em que um valor abaixo do mínimo é aceito? E travar no salário mínimo está correto?
 
+> ## ✅ RATIFICADO · o bloqueio fica, e os R$100 são defeito deles
+>
+> 🔑 **Era o único item onde suspeitávamos que a Contabilizei estivesse certa e nós errados. Estamos certos.**
+>
+> Ele explicou a intenção por trás dos R$100 — e ela é fraca:
+>
+> > *"**E R$100 ali era só para ele não falar que não gerou nada.** Porque o sistema da Receita me aceita mandar com um valor menor."*
+>
+> E desmontou a própria utilidade da manobra:
+>
+> > *"Não ia fazer diferença. **28% de 10 mil é 2.800, os seus R$100 não iam fazer diferença.** Os caras iam ter que aumentar esse valor de 100 para 2.800 de qualquer jeito."*
+>
+> ✅ **O bloqueio abaixo do salário mínimo fica**, como único bloqueio duro da tela.
+>
+> ### ⚠️ A nuance que ele acrescentou, e que não está em lugar nenhum nosso
+>
+> O piso legal é a **hora**, não o mês:
+>
+> > *"Ele pode até ganhar menos que um salário mínimo no mês. **Ele não pode ganhar menos que a hora mínima.** O salário mínimo de 2025 era R$1.518; dividido por 220, a hora é R$6,90. Ele não pode ganhar R$6,80 na hora."*
+>
+> 🔑 **Para o nosso escopo não muda nada** — sócio não tem jornada declarada —, mas **explica por que o sistema da Receita aceita** os R$100 sem reclamar. ⇢ fecha **🏢3**
+
 ## A5 · 🟡 Quanto tempo uma empresa nova pode ficar sem pró-labore? `#8`
 
 **O caso.** A conta real passou **3 meses sem pagar pró-labore** no início.
@@ -134,6 +276,41 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 **Por que apareceu.** Não pagar **trava o numerador do Fator R** (que é regime de caixa), e isso empurra a empresa para o Anexo V 12 meses depois. Nossa decisão de produto foi **forçar pró-labore já na primeira competência**, mas queremos saber se a tese do escritório é outra.
 
 **A pergunta:** qual o risco real de ficar meses sem pró-labore no início, e qual a tese do escritório hoje?
+
+> ## 🆕 RESPONDIDO · a lei diz uma coisa, a prática diz outra, e nós perguntamos ao cliente
+>
+> **A lei, segundo ele:**
+>
+> > *"Na lei, é a partir do momento do trabalho. Se o cara está ali e não tem receita mas **está tentando fazer essa receita, em tese ele já é contribuinte obrigatório**. Eu deveria gerar a partir do momento da constituição da empresa."*
+>
+> **Por que a prática é outra:**
+>
+> > *"Eu vou gerar uma guia a mais para esse cara [que não faturou]… **'você me mandou uma guia de R$178 aqui e eu não tive faturamento'. Tem muito, em todos os escritórios.**"*
+>
+> **O risco de esperar** é real e é o do Fator R:
+>
+> > *"Quando você não emite [o pró-labore], **você perde histórico dos 28**."*
+>
+> ### ✅ DECIDIDO — pergunta obrigatória no 1º acesso
+>
+> Depois de ~25 minutos, a decisão virou **uma pergunta só**, no onboarding:
+>
+> > *"Você quer já gerar pró-labore a partir desse mês da sua constituição, **ou você quer aguardar seu primeiro faturamento?**"*
+>
+> | Escolha | O que a casa faz |
+> |---|---|
+> | **Aguardar o faturamento** *(default)* | nada até a 1ª nota. Na 1ª nota, calcula os 28% e gera |
+> | **Gerar agora** | pró-labore no **salário mínimo** desde a constituição |
+>
+> 🔑 **O argumento para a opção "gerar agora" não é fiscal, é humano** — e foi ele quem trouxe:
+>
+> > *"Essa contribuição contínua dá a ele o benefício de você precisar de algum seguro, recorrer a algum seguro por acidente… **tinha muito caso da mulher** que não contribuiu por um período. Ela estava acostumada a receber 6 mil, aí ia cair para um salário no mês."*
+>
+> ✅ **Damos a opção e avisamos. Não decidimos por ele.**
+>
+> 🔒 **E uma vez ligado, não para:** *"o ideal seria manter o pró-labore"* — porque o cliente que esquece de emitir e **dobra a nota no mês seguinte** precisaria de folha dobrada também.
+>
+> ⚠️ **A responsabilidade é dele, declarada:** *"o que o cara colocar lá da previsibilidade dele é o que a gente vai ter que levar como verdade."*
 
 ## A6 · 🔴 Transmitir com a qualificação cadastral PENDENTE `#4`
 
@@ -145,6 +322,14 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 **A pergunta:** qual o risco concreto? Isso precisa ser regularizado retroativamente, ou basta corrigir daqui pra frente?
 
+> ## ✅ RESPONDIDO · não é problema, e não gera multa
+>
+> > *"Mas é **só informação cadastral**, e ele gerou a informação. Então **não iria gerar essa dívida por multa**, por falta de informação dessa técnica."*
+>
+> **Pedro:** *"Então também não é um gargalo, um B.O. grande."* → confirmado.
+>
+> ✅ **Fecha sem pendência.** Não precisa de regularização retroativa. Coletamos o PIS por higiene de cadastro, não por risco fiscal.
+
 ## A7 · 🟡 A base do IRRF vem ZERO nas declarações `#5`
 
 **O caso.** Na conta real, o campo `salarioBaseIRRF` vem **zero em todas as competências**, inclusive nas de R$3.360.
@@ -154,6 +339,16 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 **Por que apareceu.** Precisamos saber se isso é **base declarada zero** (o que seria errado) ou **base calculada com imposto zero** (o que seria certo, e é o que o nosso motor faz). Se o campo é para ficar preenchido, não podemos copiar o comportamento deles — essa base alimenta o eSocial e a DCTFWeb.
 
 **A pergunta:** esse campo deve trazer a base de cálculo ou pode vir zerado quando não há imposto a reter?
+
+> ## ✅ RESPONDIDO · não era defeito deles. Era o ANO
+>
+> > **Léo:** *"Aí você pegou essa base em **2026**. **Mas se fosse em 2025, te geraria.**"*
+> > **Pedro:** *"Então, na verdade, ele quis apontar como um erro, e não é um erro."*
+> > **Léo:** *"Era 2025, era de um jeito, e em 2026 passou para outro."*
+>
+> ✅ **Zero é o valor correto em 2026**, com o redutor do art. 3º-A já vigente. Não é bug deles, não é para copiar nem para evitar — é a lei nova.
+>
+> 🔑 **Fecha A7 sem pendência**, e retira a suspeita que estava no documento.
 
 ## A8 · 🟡 A ME unipessoal precisa de ata de aprovação anual de contas? `#9`
 
@@ -165,6 +360,24 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 **A pergunta:** ME unipessoal precisa de ata registrada de aprovação de contas? Se sim, é obrigação nossa ou do cliente?
 
+> ## ✅ RESPONDIDO · não precisa
+>
+> > **Pedro:** *"A ME unipessoal precisa de ata de aprovação anual de contas?"*
+> > **Léo:** *"**Não.** Só a S.A., a sociedade anônima, que precisaria."*
+>
+> ✅ **Fecha sem pendência.** Nenhuma das nossas 16 empresas de teste tem essa obrigação, e nenhuma tela precisa existir para isso.
+>
+> ## 🆕 A8b · E daí saiu uma decisão que não estava na pauta: **LTDA sempre**
+>
+> O Pedro emendou perguntando por que a Contabilizei abriu a empresa dele como **LTDA** mesmo sendo sócio único, quando a Izabela havia sugerido travar **SLU** para quem não tem sócio.
+>
+> > *"Se você já inclui como limitada, o cara vai estar sozinho — **e tudo bem também, não tem problema. Dentro do Simples Nacional roda tudo normal.**"*
+> >
+> > *"Porque o cara que é SLU, se ele resolve ter sócio, **você tem que fazer a transformação da SLU para limitada**. A inclusão de sócio, já sendo LTDA, é mais simples. **Eliminou uma burocracia.**"*
+>
+> ✅ **Decidido: travar LTDA sempre**, inclusive com sócio único. ⚠️ **Contraria a sugestão da Izabela** de 
+ travar SLU para unipessoal — vale alinhar com ela antes de virar tela.
+
 ## A9 · 🟡 A DEFIS de 2026 sai no formato velho ou no novo? 🆕
 
 **O caso.** A Resolução CGSN nº 190/2026 extingue a DEFIS a partir de **01/01/2027**, passando as informações para dentro do PGDAS-D, entre janeiro e março.
@@ -175,6 +388,26 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 **A pergunta:** a DEFIS do ano-calendário 2026 vai pelo sistema antigo ou já pelo PGDAS-D novo? Você já viu alguma orientação do CGSN sobre a transição?
 
+> ## ⏳ ABERTO · ele também não sabe, e disse isso
+>
+> > *"**Isso aí eu também não tenho certeza de como é que eles vão fazer.** Na hora que a gente chegar lá em 2027… eu não sei se essa mudança vai ser integrada quando eu estiver em 2028, ou se em 2027 eles já vão fazer a integração de 2026."*
+>
+> A inclinação dele, sem afirmar:
+>
+> > *"Eu entendo que ele já vai ter essa integração lá já pronta, porque como ele passou para a web… **aí eu não sei.** A Receita já está promovendo muitas mudanças."*
+>
+> ✅ **Decidido, por prudência:** **manter o formato antigo para 2026** e monitorar. *"É melhor ficar em stand-by, porque na hora que começar a exigir na prática, nós vamos ver como ele vai estar buscando esses dados."*
+>
+> ### 🔴 E aqui ele DERRUBOU uma das nossas "já respondidas"
+>
+> A pesquisa dizia: **DEFIS não gera multa por atraso.**
+>
+> > *"Ele não gerava multa nenhuma, podia entregar fora do prazo. **Esse ano, a partir desse ano, ele passou a gerar.** Então tem que achar onde é que está essa multa."*
+>
+> Valores que ele citou, **com incerteza declarada**: R$50 sem movimento, R$200 com movimento, caindo à metade se pago até o vencimento.
+>
+> ⏳ **Ele mesmo pediu para confirmar a fonte.** ⇢ **P3**
+
 ## A10 · 🟡 A carta de responsabilidade é a Resolução CFC 1.590/2020? `#22`
 
 **O caso.** Usamos a Resolução CFC "1.590/2020" como base da carta de responsabilidade do cliente — o documento que transfere a responsabilidade pelo que ele declara.
@@ -184,6 +417,28 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 **Por que apareceu.** As próprias referências da pesquisa citam **CFC 987/2003** e **1493/2015**, não a 1.590. Pode ser **citação trocada**, e esse documento sustenta a nossa proteção jurídica inteira sobre lucro declarado.
 
 **A pergunta:** qual é a norma correta da carta de responsabilidade? A 1.590/2020 existe?
+
+> ## ⏳ ABERTO · ele não confirmou a norma, e apontou outro caminho
+>
+> Ele não validou a citação. Achou que o conteúdo já está coberto em outro lugar:
+>
+> > *"Deve estar falando sobre a tratativa do próprio cliente, na questão de dispor de documentação. Mas isso aí, **o próprio contrato já vai ter essas cláusulas**."*
+>
+> ⏳ **A norma segue sem confirmação.** Não removi a referência, mas ela **não pode ser citada como fundamento** enquanto não for verificada.
+>
+> ## 🆕 A10b · E daí saiu a decisão sobre a PROCURAÇÃO
+>
+> O Pedro contou que assinou a procuração da Contabilizei só em **março/2026**, com a empresa aberta em **12/12/2025** — três meses de buraco.
+>
+> A explicação dele:
+>
+> > *"A procuração em si é **eletrônica**. Quando eu habilito no site da Receita uma procuração eletrônica, essa assinatura também é eletrônica, então **eu já fico como procurador**. Talvez essa carta assinada já seja para ele te representar em algum órgão **caso precisasse ir presencial**."*
+>
+> E a recomendação dele foi antecipar:
+>
+> > *"**É uma coisa que agiliza a sua vida lá na frente.** Hoje você pode fazer sob demanda, porque a base é menor. **Mas na hora que a base começar a inflar, como é que vai ser essa demanda?** Você vai ter que ter um setor só para executar essa busca."*
+>
+> ✅ **Decidido:** coletar a procuração **no onboarding**, junto da **2ª assinatura** — a que já reúne contador e representante. *"Lá dentro do app ele veria dois documentos para assinar: a procuração mais o documento final da constituição."*
 
 ## A11 · ⚪ Double-check do calendário 🆕
 
@@ -200,6 +455,30 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 **A pergunta:** confirma os quatro prazos e, principalmente, que o DARF antecipa e o DAS prorroga? E o feriado **municipal** de BH desloca guia federal?
 
+> ## ✅ RATIFICADO · os quatro prazos, e o deslocamento em sentidos opostos
+>
+> > *"**O Simples é que sempre prorroga.** Se der final de semana e um feriado, ele vai prorrogar pro próximo dia. **O restante, tudo é dia útil [anterior].** Se deu final de semana e está vencendo na segunda, ele pede para você pagar na sexta."*
+>
+> ✅ Confirmado: **DAS prorroga · DARF antecipa**, no mesmo dia 20.
+>
+> ### 🔑 E ele resolveu isso de um jeito que nos poupa código
+>
+> > *"Mas **a própria guia já vem com a informação regulada**. Quando ela é gerada, ela já vem com a data certa. **Eu não preciso avisar isso pra ele.**"*
+>
+> 🔑 **Não precisamos calcular o deslocamento** — o órgão entrega a guia já com a data ajustada. Nosso `vencimentoDe()` serve para **antecipar a rotina interna**, não para informar o cliente.
+>
+> ⚠️ **Guia estadual é exceção** — e não é nosso escopo: *"os do Estado eu já não consigo fazer isso… o próprio sistema deles não consegue identificar se é para gerar naquele dia ou não."*
+>
+> ### ✅ E o dia 15 ficou definido como o que é
+>
+> > *"**Dia 15 é o seu limite máximo**" [da obrigação acessória]. "A DCTFWeb tem que ser transmitida dia 15, para as guias que vencem no dia 20. A minha obrigação acessória é dia 15, mas a minha guia é dia 20."*
+>
+> E a prática do escritório dele:
+>
+> > *"Lá no outro escritório, como a gente fazia? **Dia 1 a gente já começava.** Quanto antes você tiver a informação, melhor — **você antecipa uma possibilidade de multa** que vai chegar depois do dia 15."*
+>
+> ⏳ **O feriado municipal de BH não foi respondido.** Segue como lacuna `L7b` do motor.
+
 ## A12 · 🔴 PEJOTIZAÇÃO — o único risco crítico do nosso perfil 🆕
 
 **O caso.** Um dev, um designer ou um consultor abre a ME para prestar serviço a **um cliente só**, cumprindo horário e recebendo ordens.
@@ -209,6 +488,14 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 **Por que apareceu.** O art. 3º §4º inciso **XI** da LC 123 veda o Simples quando o sócio guarda com o contratante, **cumulativamente**, relação de *pessoalidade, subordinação e habitualidade*. A pesquisa classificou como **risco CRÍTICO** justamente para TI, design e consultoria — que é o nosso público inteiro. E é a única vedação que a autodeclaração pega mal, porque depende da sinceridade de quem responde.
 
 **A pergunta:** na prática do escritório, com que frequência isso aparece? Como você orienta o cliente que tem um cliente só? E qual o risco real — exclusão do Simples, reclamação trabalhista, ou os dois?
+
+> ## ⏳ NÃO RESPONDIDO · a pergunta passou batida
+>
+> 🔴 **Sendo honesto: este item não foi respondido.** O Pedro leu o caso e ele mesmo respondeu por cima — *"isso aqui é um alerta, mas que o Brasil todo pratica"* — e a conversa seguiu para o A13 sem o Leonan se manifestar.
+>
+> ⚠️ **É o item de maior risco declarado do nosso perfil** (LC 123 art. 3º §4º XI, classificado como **CRÍTICO** justamente para TI, design e consultoria) e **continua sem opinião de contador**.
+>
+> ⏳ **Precisa voltar à pauta.** Não foi respondido por pesquisa nem por ele.
 
 ## A13 · 🔴 Não existe consulta prévia por CPF — o gate é 100% autodeclaração 🆕
 
@@ -220,6 +507,24 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 **A pergunta:** você tem algum caminho prático de checagem prévia que a gente não conheça? E quando o indeferimento acontece, qual o prazo e o rito para recorrer? O recurso suspende a cobrança pelo Lucro Presumido enquanto corre?
 
+> ## 🔴 CORRIGIDO EM PARTE · a checagem existe, e nós já a construímos
+>
+> O enunciado deste item dizia *"não existe consulta prévia por CPF"*. **Existe uma que importa**, e o Pedro já a tinha implementado sem constar aqui:
+>
+> > **Pedro:** *"A gente fala que não tem essa consulta, mas tem. Pelo **InfoSimples** você sabe se o CPF é regular ou irregular. **CPF irregular inviabiliza a abertura na Junta — ele indefere.**"*
+>
+> **Como está no app hoje:** a consulta roda no botão final do **Revisar**, antes de disparar a viabilidade, usando **nome completo + data de nascimento**. Se algum sócio estiver irregular, devolve mensagem nominal e o fluxo não segue.
+>
+> ⚠️ **O que continua verdade:** não existe consulta de **elegibilidade ao Simples** por CPF antes do CNPJ. A regularidade do CPF é outra coisa — e é a que trava a Junta.
+>
+> ### 🆕 E ele acrescentou um segundo bloqueio que não conhecíamos
+>
+> > *"A Junta também tem uma possibilidade de você travar a abertura de CNPJ. Se o cara tiver tido **algum golpe no passado** e estiver com esse CPF bloqueado para abertura de empresa, ele também trava. Aí **ele mesmo tem que ir lá na Junta**, autorizar a abertura, tirar esse bloqueio."*
+>
+> ⏳ **Sem API conhecida** para esse segundo bloqueio: *"eu acho que não, acho que fica muito interno."* Ambos concordaram que é raro.
+>
+> ✅ **Saída de produto já validada:** se um sócio trava, o cliente pode **voltar e removê-lo** — *"às vezes ele tira um cara e abre com o outro"*.
+
 ## A14 · 🟡 Servidor público e MEI ativo 🆕
 
 **O caso.** Dois perfis que aparecem no funil e que hoje passam direto pelo nosso cadastro.
@@ -229,6 +534,36 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 **Por que apareceu.** **Servidor público ativo** pode ser sócio quotista mas **não pode administrar** — o que muda a qualificação 49 × 22 e quem assina pela empresa. E **MEI ativo** não impede abrir a ME, mas **obriga baixa ou desenquadramento** antes, sob pena de exclusão de ofício (Res. CGSN 140/2018 art. 115 §2º IV).
 
 **A pergunta:** confirma os dois? No caso do MEI, a baixa precisa ser **antes** da abertura ou dá para fazer depois, dentro de algum prazo? E servidor **municipal de BH** segue a mesma regra do federal?
+
+> ## 🔴 CORRIGIDO · o texto dizia que MEI ativo NÃO impede. Impede
+>
+> O enunciado acima afirmava *"MEI ativo não impede abrir a ME"*. **Está errado.**
+>
+> > *"**Se ele tiver um MEI ativo, ele não pode ter uma sociedade em outro CNPJ.** O MEI só pode ter um CNPJ ativo, que é o dele mesmo."*
+>
+> ### 🔑 Mas a dobra é o que decide o produto: proibido ≠ bloqueado
+>
+> > *"O problema é que às vezes **ele vai conseguir abrir a empresa. Porque a Receita deixa você correr o risco.** Ela não vai te travar falando 'opa, você já tem um CNPJ aberto'. **Não, ele vai deixar você abrir.** Só que ele vai te dar a condição de **desenquadrar o MEI**."*
+>
+> **O Pedro perguntou se travamos. Ele foi contra:**
+>
+> > *"Se você constatar isso, **você já trava o cara num problema** que vai gerar um processo administrativo pra mim executar. Agora, se eu estiver olhando na perspectiva de ganhar… **a gente faria o desenquadramento do cara**."*
+>
+> ### ✅ DECIDIDO
+>
+> | | |
+> |---|---|
+> | **Não travamos** a abertura | 🔑 travar cria problema onde o órgão não cria |
+> | **Avisamos**, com aceite | *"que te coloca no risco de desenquadrar o seu atual MEI"* |
+> | O desenquadramento | vira **serviço** nosso, não obstáculo |
+>
+> > **Léo:** *"Já fazendo essa informação, **já se resguarda** — 'ninguém me avisou'."*
+>
+> ### ✅ Servidor público: confirmado como estava
+>
+> > *"Servidor público fica muito vedado… **ele pode ser sócio cotista, mas não pode administrar.**"*
+>
+> Então entra como **código 22**, nunca 49. ⏳ Servidor **municipal de BH** não foi perguntado.
 
 ---
 
@@ -259,6 +594,23 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 **A pergunta:** confirma que o CLT de um sócio não alivia em nada o INSS do outro? E o sócio com CLT acima do teto realmente não recolhe nada sobre o pró-labore?
 
+> ## ✅ RATIFICADO · é individual, e o conserto está certo
+>
+> > **Pedro:** *"Como o motor fazia? Soma os dois e aplica o CLT de um só."*
+> > **Léo:** *"**Ele faz individual.** Se igual o primeiro lá, que ele já tirava oito, nove mil, ele não gera INSS — **mas eu teria que gerar o INSS do outro.**"*
+> >
+> > *"Quem já atinge o teto não tem obrigatoriedade de fazer o recolhimento do INSS, porque já atingiu a contribuição máxima."*
+>
+> ✅ Os **R$178,31** do sócio sem CLT estão certos, e zerar a guia inteira era erro nosso.
+>
+> ### 🆕 E ele acrescentou como o app descobre isso
+>
+> O motor precisa saber que existe CLT por fora — e isso **o cliente tem que declarar**:
+>
+> > *"Ele vai ter que informar 'eu já contribuo em algum lugar, eu já sou contribuinte do INSS'. Aí automaticamente **ele teria como opção não contribuir, seria à toa**. Ou ele põe o valor e eu não gero."*
+>
+> ⚠️ **Campo de coleta que hoje não existe na tela:** *"já contribuo ao INSS em outro vínculo — valor"*. Sem ele o motor cobra INSS de quem já bateu o teto.
+
 ## B2 · 🟡 Pró-labore declarado e não pago
 
 **O caso — "Marta, artista plástica", sócia única.** Em 3 competências ela **declarou** o pró-labore e **não pagou**, por caixa apertado.
@@ -269,6 +621,29 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 **A pergunta:** na prática, esse cruzamento acontece? E o que se faz quando o cliente já declarou e não pagou — paga atrasado e conta, ou perdeu a competência?
 
+> ## 🔴 RESPONDIDO · e a resposta é mais branda do que supúnhamos
+>
+> Nós tínhamos desenhado o pior cenário: glosa, reclassificação de ofício, recálculo de tudo. **Não é o que acontece.**
+>
+> > *"Na verdade, **ele manteria o fator**. Ele pode até não pagar… **ele vai continuar usufruindo do Fator R, sem problema nenhum.** As dívidas vão continuar."*
+>
+> **O que acontece de verdade é a exclusão, e ela tem calendário:**
+>
+> > *"Mas ele vai sair do Simples se ele não pagar lá na época. Porque gera um **termo de exclusão**: 'você não pagou essas competências do INSS. Se você não regularizar, não fizer um parcelamento, você vai ser excluído do Simples'. **Então ele vai ter que regularizar aquilo de qualquer jeito.**"*
+>
+> ### 🆕 E aqui veio um fato novo que muda o nosso calendário
+>
+> > *"Hoje a gente vai ter **dois períodos de regularização: setembro e março**. Antes era a cada 12 meses, **hoje vai ser a cada seis meses.**"*
+>
+> 🔴 **O vigia fiscal precisa saber disso.** Não é uma janela anual, são duas.
+>
+> ### ✅ O que a casa faz
+>
+> > **Pedro:** *"Da parte nossa continua a operação normal, só que a gente tem na nossa página de guias as guias atrasadas, e a pessoa sabendo que está rendendo juros e multa."*
+> > **Léo:** *"E ela vai ter que regularizar em algum momento."*
+>
+> 🔑 **Não retificamos o passado para "limpar" o Fator R.** *"Não necessariamente eu preciso voltar lá nos meses que não pagou e tirar o pró-labore."*
+
 ## B3 · 🟡 Abriu em novembro, e a primeira obrigação anual é em março
 
 **O caso — três empresas abrem em nov/2025, dez/2025 e out/2026.** A conta real abriu em **12/12/2025** e entregou DEFIS do **ano-calendário 2025 inteiro**, transmitida em 08/02/2026.
@@ -278,6 +653,26 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 **Por que apareceu.** **19 dias de empresa geram uma obrigação anual completa.** Para quem abre em novembro ou dezembro, a primeira obrigação anual cai poucas semanas depois — e o cliente ainda nem entendeu o que é DAS.
 
 **A pergunta:** confirma que a empresa aberta em dezembro declara o ano-calendário inteiro? E o que exatamente se informa do período anterior à existência dela?
+
+> ## 🔴 CORRIGIDO · ela NÃO declara o ano inteiro
+>
+> Esta estava na nossa tabela de *"já respondido por pesquisa, não perguntar de novo"*. **A pesquisa errou, e ele corrigiu:**
+>
+> > *"Eu acho que deve estar havendo alguma confusão. Quando a empresa abriu ali, 12 de 12, **eu vou transmitir essa declaração com 12 de 12 como data inicial. Eu não transmito ela com 1 de 1 de 2025.** Então a minha declaração vai ser **de abertura**."*
+> >
+> > *"O sistema vai me permitir colocar 12 do 12. **Ele não me permite colocar 11 do 12.** Ele é só a partir da abertura."*
+>
+> 🔑 **A obrigação existe com 19 dias de empresa — isso estava certo.** O que estava errado é *o que se declara*: o período é **da abertura ao 31/12**, não o ano-calendário inteiro. Não se informa nada do período anterior à existência da empresa, porque **o sistema não aceita**.
+>
+> ✅ **Nos anos seguintes**, aí sim é o ano inteiro: *"as próximas, ele vai considerar o ano inteiro, se a empresa tiver ficado do primeiro dia do ano até o último."*
+>
+> ### 🆕 E o caso de EXTINÇÃO, que não estava mapeado
+>
+> > *"Se ela extinguir: mantenho a data inicial e paro ela na última data de existência. **Só que a extinção eu tenho que mandar no mesmo ano** — até o **último dia útil do mês seguinte** ao fechamento."*
+>
+> Exemplo dele: baixa em 16/09 → entrega até **30/10**.
+>
+> ⏳ **Com uma exceção que ele não confirmou:** *"se essa empresa sofre a extinção de janeiro a abril, ela entrega até o último dia de junho. **Tem que avaliar essas datas.**"* ⇢ **P4**
 
 ## B4 · 🟡 Onze meses presos no Anexo V depois de corrigir
 
@@ -300,6 +695,40 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 **A pergunta:** está certo que não há como acelerar essa volta? Existe algum caminho (retificação, pagamento retroativo) que encurte?
 
+> ## 🆕 RESPONDIDO · TEM como acelerar, e a tabela acima estava incompleta
+>
+> A linha do tempo mostrava 11 meses presos como se fossem inevitáveis. **Não são.**
+>
+> > *"Ele pode aumentar o pró-labore dele de uma forma que **ele já caia para os 3 de uma forma mais rápida**. Só que o que ele deixou de pagar anterior, ele paga agora."*
+> >
+> > *"Quanto que eu preciso para a minha média dar 28? **Eu preciso recolher um salário de 7 mil** e já teria que ir lá e informar 7 mil, que aí **daqui pra frente, próximo mês, eu já regularizava ele pro Anexo 3**."*
+>
+> 🔑 **A "paulada" devolve o Anexo III no mês seguinte**, em vez de esperar a janela rolar. É exatamente o que o nosso piloto já calcula em `paraVirarJa`.
+>
+> ⚠️ **Com um limite que ele apontou:**
+>
+> > *"Aí o teto do INSS é oito e tanto. **Não compensa nem ele** [subir demais]. Ele consegue gerar um salário maior, mas o INSS fica limitado nos oito mil. **Aí o que pesa vai ser o imposto de renda.**"*
+>
+> ### 🔴 E aqui ficou uma divergência que NÃO fechei a favor dele
+>
+> Ele concluiu que a paulada **compensa sempre**: *"perto do cara faturar 18 mil, para ele regularizar, **compensa demais**"*, calculando `11% × 43.000 = R$4.730` de cabeça.
+>
+> **Essa conta deixa duas coisas de fora**, e eu recomputei no motor:
+>
+> | Pró-labore de R$46.969 num mês só | |
+> |---|---:|
+> | INSS — **travado no teto** | R$ 932,31 |
+> | IRRF | **R$ 11.751,36** |
+> | **Custo extra da paulada** | **R$ 12.505,36** |
+> | Economia no DAS | R$ 1.629,00/mês |
+> | **Saldo** | **− R$ 10.311,02** |
+>
+> O teto do INSS faz o custo ser **menor** do que ele calculou (R$932 e não R$4.730); o **IRRF**, que ele não contou, faz ser **muito maior**.
+>
+> 🔑 **O que quebra a conta é concentrar num mês**, por causa da progressividade do IRRF. **Diluir em 3 ou 4 meses** mantém o INSS no teto e derruba o IRRF — o Pedro chegou a propor isso e ele descartou sem fazer a conta. ⇢ **P16, a simular**
+>
+> ✅ **Correção legítima que ele fez, e que vale para a redação:** os R$41.569 de déficit são **base de pró-labore**, não desembolso de imposto. *"Ele não vai gerar um débito de 40 mil. Aquela é a base dele pra calcular 11%."*
+
 ## B5 · 🟡 Guia paga em atraso, três meses seguidos
 
 **O caso — "Lima Eventos".** Três competências pagas com **14, 21 e 14 dias** de atraso, espelhando o que vimos na conta real (que levou **R$229,85 de multa em 3 meses seguidos**).
@@ -321,6 +750,15 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 **A pergunta:** a fórmula está certa (0,33% ao dia até 20%, mais Selic acumulada, mais 1% no mês do pagamento)? A Selic é a do período entre vencimento e pagamento? E o 1% entra sempre ou só quando o pagamento sai do mês do vencimento?
 
+> ## ✅ RATIFICADO
+>
+> > **Pedro:** *"Nosso motor calcula multa de 0,33 ao dia até o teto de 20%, mais juros da Selic acumulada, mais 1% no mês de pagamento."*
+> > **Léo:** *"**É isso mesmo.**"*
+>
+> ✅ A fórmula passa. E ele ratificou o **22/06** da tabela: dia 20 em sábado, o DAS **prorroga** — mesmo dia em que o DARF antecipa.
+>
+> ⏳ **A fonte da Selic continua sendo a lacuna `L9b`**: a arquitetura está certa (entra por parâmetro), falta plugar o Ato Declaratório mensal da RFB.
+
 ## B6 · 🟡 Meses seguidos sem faturar
 
 **O caso — três empresas** têm 5 e 6 meses zerados; a conta real teve 3 seguidos.
@@ -330,6 +768,25 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 **Por que apareceu.** Vimos em produção que **mês sem faturar não pausa a obrigação**: o PGDAS e a DCTFWeb são transmitidos igual. E descobrimos que o eSocial tem "sem movimento" (S-1299 com flag), enviado **só no primeiro mês** — não se repete todo janeiro.
 
 **A pergunta:** confirma que o PGDAS zerado é transmitido igual? E o "sem movimento" do eSocial se aplica mesmo quando a empresa continua pagando pró-labore, ou só quando não há fato gerador nenhum?
+
+> ## ✅ RATIFICADO · e com uma multa nova que não tínhamos
+>
+> > **Pedro:** *"Todo mês eu tenho que entregar aquilo, mesmo sem movimento?"*
+> > **Léo:** *"**O PGDAS tem que mandar todo mês. Se tem ou não tem pró-labore.** Se ele não tem nota emitida, manda sem movimento. Se ele tem nota, manda um faturamento."*
+>
+> ✅ Mês zerado transmite igual, e **independe** de haver pró-labore.
+>
+> ### 🔴 O fato novo: o PGDAS zerado passou a gerar multa
+>
+> > *"**Antigamente não gerava multa. Hoje em dia, em 2026, ele passou a gerar multa de R$50, se não me engano, por mês.**"*
+>
+> ⏳ Mesma incerteza da DEFIS — ele mesmo hesitou no valor. ⇢ **P3**
+>
+> 🔑 **E isso reforça a arquitetura do ciclo:** a obrigação acessória não é opcional nem em mês seco, e agora tem preço.
+>
+> ✅ **A separação DAS × DARF que ele explicou, e que vale para a tela:**
+>
+> > *"É mais fácil ele **não ter o DAS** — porque não tem faturamento — **e ter o INSS**, do que o contrário. O PGDAS zerado, ele vai ser zerado. **É normal.**"*
 
 ## B7 · 🟡 Quatro sócios — o caso extremo do IRRF
 
@@ -341,6 +798,14 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 **A pergunta:** com 4 sócios, existe alguma obrigação acessória extra que não exista com 1 ou 2? Alguma coisa muda na DCTFWeb ou no eSocial?
 
+> ## ✅ RESPONDIDO · nada muda
+>
+> > *"**O que vale para um sócio a mais, vale para quatro. Vale para todo mundo.** Às vezes não pode ter informação de pró-labore de um sócio, mas vai ter de outros dois. **Mas a informação é a mesma.**"*
+>
+> ✅ Nenhuma obrigação acessória extra. O que muda é só o **volume**: *"quatro eventos de remuneração e quatro de pagamento no eSocial, um por sócio"*, transmitidos **individualmente por CPF** no mesmo CNPJ — o que ele confirmou expressamente.
+>
+> ✅ **O teto de 4 sócios do nosso contrato não esbarra em nada fiscal.** É limite comercial nosso, não legal.
+
 ## B8 · ⚪ A data de admissão do sócio, antes de a empresa existir `#6`
 
 **O caso.** Na conta real, a `dataAdmissao` do sócio é **01/12/2025** — onze dias **antes** de a empresa existir (12/12/2025).
@@ -351,6 +816,18 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 **A pergunta:** é escolha ou erro? Qual data deve constar?
 
+> ## ✅ RESPONDIDO · é a data da ABERTURA, e o deles é erro
+>
+> > **Léo:** *"Eu considero **data de admissão a mesma data da abertura**."*
+> > **Pedro:** *"A data da abertura é a data de quê?"*
+> > **Léo:** *"**A data da constituição, o dia que o CNPJ vai sair.**"*
+>
+> E sobre o `01/12` da conta real:
+>
+> > *"Ele apontou ali: data de admissão, dia 12 do 12. **Faz mais sentido.** Eu acho até engraçado o eSocial aceitar isso."*
+>
+> ✅ **Não copiamos.** Data de admissão = data de saída do CNPJ. *"Evita questionamento."*
+
 ## B9 · ⚪ "Anexo: 5" e 6,00% na mesma linha `#7`
 
 **O caso.** Uma nota da conta real traz o campo `anexoEscolhido: 5` e, no mesmo documento, *"o percentual total de impostos é de aproximadamente 6,00%"*.
@@ -360,6 +837,26 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 **Por que apareceu.** 6% é Anexo **III**. Nós já concluímos que o "5" é **id interno do sistema deles**, não o anexo — e confirmamos por duas vias independentes. Mas é confirmação que vale ter.
 
 **A pergunta:** faz sentido um sistema guardar "anexo 5" para uma empresa tributada a 6%? Existe leitura em que "anexo de origem" e "anexo efetivo pós-Fator R" sejam campos diferentes?
+
+> ## ✅ RESPONDIDO · e a resposta corrige o VOCABULÁRIO do produto inteiro
+>
+> Não era id interno nem bug. **São dois campos diferentes mesmo, e ele nomeou a distinção:**
+>
+> > *"A **atividade** fica enquadrada no Anexo 5. **Ela é do 5** — mas quando ela recebe o pró-labore, **ela recebe o benefício de tributar no Anexo 3**."*
+> >
+> > *"Não necessariamente o seu anexo de atividade é o 3. **O seu anexo é o 5, mas você recebe o benefício fiscal de ser tributado na alíquota menor**, conforme o Anexo 3."*
+>
+> ### 🔴 E isso derruba como escrevemos as coisas
+>
+> Ele corrigiu isso **duas vezes** na reunião: **não se "cai para o Anexo V"**.
+>
+> | ❌ Como dizemos hoje | ✅ Como é |
+> |---|---|
+> | "cai para o Anexo V" | **perde o benefício** do Anexo III |
+> | "sobe para o Anexo III" | **passa a ter** o benefício |
+> | "empresa do Anexo III" | empresa **do Anexo V** tributada pelo III |
+>
+> ⚠️ **Não está errado no cálculo — está errado no nome.** E é o nome que vai para a tela do cliente, para a copy e para este documento inteiro. ⇢ **P13**
 
 ---
 
@@ -381,6 +878,22 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 **A pergunta:** para ME de serviço inócuo em BH, o **alvará de localização e funcionamento** e a **licença do Corpo de Bombeiros** saem automaticamente com o registro, ou precisam de requerimento? Há vistoria? Em quanto tempo, na sua experiência? E a taxa de R$168 chega sempre nesse prazo?
 
+> ## ✅ RESPONDIDO EM PARTE · quase automático, mas alguém preenche
+>
+> > *"**Basicamente, a dispensa sim, é praticamente automática.** [Mas] tem que ter o comando para poder entrar lá na prefeitura e fazer a emissão dos alvarás."*
+>
+> **E os dados que faltam são poucos:**
+>
+> > *"Com os dados que a gente já vai ter da constituição, a gente consegue puxar. **A maior parte do que tem no CNPJ já vai constar lá.** Vai ter alguma coisinha, um campo ou outro a mais."*
+>
+> ⚠️ **Ele declarou que a informação pode estar velha:**
+>
+> > *"Agora eu não sei te falar como está hoje. Isso há um tempo atrás, quando eu executava mesmo, **você tinha que digitar todas as informações**. **Seria bom a gente validar com a Isabela quais são os campos necessários ali.**"*
+>
+> ⏳ **Fica para a Izabela:** a lista exata de campos. ⇢ **P6**
+>
+> ⚠️ **A taxa de R$168 e o prazo de vistoria não foram respondidos.** 🔑 E veja a coincidência que ele resolveu por outro caminho: os **R$168** que o Pedro tinha como taxa da Prefeitura são, quase exatos, **11% do salário mínimo de 2025** — ver `A4`. Vale reconferir de qual das duas coisas era essa guia.
+
 ## C2 · 🟡 A inscrição municipal (CCM) nasce sozinha ou se pede?
 
 **O caso.** A CCM não vem no pacote da constituição: no nosso mapa de dados ela é **"órgão, depois do CNPJ"**, e está marcada como **ninguém combinou quem entrega**.
@@ -391,6 +904,20 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 **A pergunta:** a CCM é gerada automaticamente com o CNPJ em BH, ou é requerimento à parte? Em quanto tempo? E o que caracteriza "irregular" a ponto de derrubar a emissão de nota?
 
+> ## ✅ RESPONDIDO · em BH nasce sozinha
+>
+> > *"**Aqui em BH, a inscrição municipal já é gerada.** Na hora que você faz a sincronização com a prefeitura, **ele já gera essa inscrição lá**."*
+> >
+> > **Pedro:** *"Eu não tenho que entrar com um pedido pra gerar isso?"* → **Não.**
+>
+> ✅ **Não é requerimento à parte em BH.** Sai na sincronização.
+>
+> ⚠️ **E ele deu o contraexemplo que delimita o nosso gate de cidade:**
+>
+> > *"Tem prefeitura que **não** gera. Na prefeitura de **Betim**, dependendo da atividade, ele não gera a inscrição e eu tenho que ir lá no site da prefeitura e solicitar. **Mas BH já é mais tecnológico.**"*
+>
+> 🔑 **Isso justifica o gate BH/MG por um motivo novo:** não é só proximidade, é que **o fluxo automático não sobrevive à troca de município**. ⏳ O que caracteriza "irregular" não foi respondido.
+
 ## C3 · 🔴 O cliente pode faturar antes das licenças?
 
 **O caso.** A **nossa própria minuta** obriga o cliente a *"não exercer atividade empresarial antes da conclusão do registro da empresa e da obtenção das licenças e alvarás"*.
@@ -400,6 +927,24 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 **Por que importa.** Se o alvará leva dias e o cliente já tem CNPJ e certificado, ele **consegue** emitir nota — e estaria descumprindo o que assinou com a gente. Isso muda a competência da primeira nota e pode virar problema do cliente.
 
 **A pergunta:** na prática, prestador de serviço em BH pode emitir nota entre o CNPJ e o alvará? A cláusula é proteção jurídica nossa ou regra que o cliente precisa mesmo cumprir? E se ele emitir antes, qual o risco real?
+
+> ## ✅ RESPONDIDO · o que trava a nota é a INSCRIÇÃO MUNICIPAL, não o alvará
+>
+> > **Pedro:** *"Um alvará de bombeiro, já talvez não [impeça]?"*
+> > **Léo:** *"**Não. Aí você pode tirar isso depois.** Não necessariamente você precisa ter tudo isso emitido para poder emitir uma nota, depois que o CNPJ já está autorizado."*
+>
+> ✅ **A sequência que libera o faturamento ficou clara:**
+>
+> ```
+> CNPJ  →  inscrição municipal  →  ✅ pode emitir nota
+>                                   alvará e bombeiros podem vir depois
+> ```
+>
+> > **Pedro:** *"A inscrição municipal é necessária para a emissão de nota?"* → *"É."*
+>
+> E confirmado contra a conta real: *"o meu mesmo acho que chega um pouco depois."* → *"É, chega depois."*
+>
+> ⚠️ **A cláusula da nossa minuta** — *"não exercer atividade antes da obtenção das licenças e alvarás"* — **é mais restritiva do que a prática.** Ela vira proteção jurídica nossa, não regra operacional. ⏳ Vale alinhar com a advogada para não prometer atraso que não existe.
 
 ## C4 · 🟡 A primeira competência é cheia ou proporcional?
 
@@ -425,6 +970,32 @@ No 1º mês não há histórico, então a lei manda **projetar**: acumulado = re
 
 **A pergunta:** a competência do mês de abertura é declarada cheia, mesmo que a empresa só exista por 10 dias dele? Há algo de proporcional? E sobre o degrau acima: **isso é conversa que se tem com o cliente** — *"se a sua primeira nota for maior que R$15 mil, você paga uma alíquota maior neste mês"* — ou é orientação que um contador não dá? *(O cálculo já está fechado; o que queremos é a postura.)*
 
+> ## 🔴 CORRIGIDO · a competência é CHEIA, mas a projeção ×12 estava generalizada errado
+>
+> **A parte que estava certa:**
+>
+> > *"**Considera o mês.** Mesmo que a empresa tenha aberto hoje, dia 16, **eu considero o mês fechado** para cálculo. Ele vai considerar o mês inteiro. **Ele não vai ter proporcionalidade** do faturamento, dividir por 16 dias."*
+>
+> ✅ Sem proporcional de dias. E mês sem faturar transmite igual.
+>
+> ### 🔴 O que estava errado: os R$168.000 só valem se a nota sair no MÊS DA ABERTURA
+>
+> > *"Se eu abri no mês 9 e faturei no mês 9, R$14 mil — eu multiplico por 12 e chego em 168. **Só que se eu tenho o segundo mês e eu não faturei no primeiro, aí eu tenho que pegar 14 e dividir por 2**, porque eu tenho o mês anterior e o meu mês atual. Aí chego na média de 7, e faço 7 × 12. **Ou seja, a minha faixa não é 168, é 84.000.**"*
+>
+> 🔑 **O divisor é a idade da empresa, não o número de meses com receita.** Dois meses parados e a nota no 3º: `14.000 ÷ 3 × 12`.
+>
+> ✅ **O motor já faz isso certo** (`rbt12De`, regra `proporcional`). **O que estava errado era a narrativa da P03**, que apresentava os R$168.000 como se fosse a regra geral do 1º mês. ⇢ **corrigido no Bloco D**
+>
+> ### 🆕 E ele deu de graça uma TESE COMERCIAL que não estava em nenhum documento nosso
+>
+> > *"Por isso que eu sempre falo: **se você tem tempo pra se programar, abre agora.** Porque isso vai te dar uma economia por alguns meses… ao invés de eu já começar na faixa de 160, **eu mantenho os meses. Quando eu começar a faturar, essa média fica diluída.**"*
+> >
+> > *"Quanto mais tempo aberto esse CNPJ e eu faturar isso depois, é melhor, **porque eu perco uma média menor por mais 12 meses**."*
+>
+> 🔑 **Abrir o CNPJ antes de precisar dilui a média e segura a alíquota nos 12 primeiros meses.** É argumento de venda **e** é a regra do art. 24. ⚠️ Com prazo de validade declarado por ele: *"esse benefício acaba em algum momento, depois de 12 meses."*
+>
+> ⏳ **A postura sobre o degrau** (conversar ou não com o cliente) **não foi respondida.**
+
 ## C5 · 🟡 Quem escritura o Livro Caixa, e com que frequência?
 
 **O caso.** A pesquisa confirmou que **o Livro Caixa basta** para o Simples, salvo se distribuir lucro acima da presunção — aí vira escrituração completa.
@@ -434,6 +1005,29 @@ No 1º mês não há histórico, então a lei manda **projetar**: acumulado = re
 **Por que importa.** É obrigação que **ninguém no nosso desenho está fazendo**. Não está em nenhuma das 10 obrigações do nosso ciclo, e não tem tela.
 
 **A pergunta:** o Livro Caixa é obrigação nossa ou do cliente? Se é nossa, com que periodicidade se escritura, e o que ele precisa nos mandar? E a partir de quando a distribuição de lucro obriga a contabilidade completa, na prática?
+
+> ## ✅ RESPONDIDO · não é do nosso perfil, e some em 2027
+>
+> Ele explicou que Livro Caixa é instrumento de **pessoa física autônoma**, não de PJ do Simples:
+>
+> > *"Livro Caixa normalmente é cartório, médico… o cara é autônomo, faz várias consultas, mas não tem uma clínica nem formalização de um CNPJ. **É o meu fluxo de caixa normal**, e ele é tributado na pessoa física."*
+>
+> > **Pedro:** *"Para a nossa persona de prestador de serviços, não é obrigação nossa?"*
+> > **Léo:** *"**E também não é obrigação nossa.** Só se pegasse uma regulamentada."*
+>
+> ✅ **Fica fora do ciclo das 10 obrigações.** Não precisa de tela.
+>
+> ### 🔴 E aqui apareceu a mudança de 2027 mais escondida das quatro
+>
+> > *"O Livro Caixa vai existir. **Mas o regime de caixa, ele vai sumir.** Hoje a gente tem lá no Simples Nacional competência e caixa. **A partir de 2027 não vai existir mais regime caixa.**"*
+>
+> Ele explicou a diferença e o risco da transição:
+>
+> > *"Se ele tinha um recebimento de 50 mil no mês, mas tem 2 milhões e meio **a receber**, chegar lá em dezembro **ele tem que tributar 2 milhões e meio**. Porque em 2027 vai acabar o caixa."*
+>
+> ✅ **Decidido, e é decisão de simplificação:** *"eu nem sugeriria para o cara que existe isso. **Vai com competência que vai dar certo.**"* Não oferecemos regime de caixa.
+>
+> ⚠️ 🔴 **Mas o nosso Fator R é regime de caixa** (só conta o que foi **pago**). Precisa confirmar se essa mudança o atinge. ⇢ **P5**
 
 ## C6 · 🟡 Retificação: o que dá para desfazer, e até quando
 
@@ -445,6 +1039,46 @@ No 1º mês não há histórico, então a lei manda **projetar**: acumulado = re
 
 **A pergunta:** nota com valor errado de empresa do Simples — cancela e emite outra, ou há prazo/limite? E o PGDAS-D já transmitido: retifica-se como, e há custo ou risco? Se o imposto já foi pago a maior, como se recupera?
 
+> ## ✅ RESPONDIDO · e ele trouxe uma terceira via que não conhecíamos
+>
+> **Nós tínhamos duas opções na cabeça: alterar (proibido) ou cancelar. Existe uma terceira, e ela é melhor:**
+>
+> > *"Lá na Prefeitura de Belo Horizonte, **se eu clicar na opção de substituir, ele já cancela a nota válida e já subscreve**, já muda o status. **De imediato, sem custo, sem processo burocrático.**"*
+>
+> **Por que as duas existem:**
+>
+> > *"A substituição **me exige informar os mesmos valores de uma nova nota**. Mas às vezes eu só quero cancelar. Por isso que existem as duas opções."*
+>
+> ⚠️ **Carta de correção não serve para valor:**
+>
+> > *"Emitir uma carta de correção para corrigir um valor que **altere imposto** — não. **É mais dados cadastrais.**"*
+>
+> ### ✅ DECIDIDO — não existe "editar nota" no produto
+>
+> | Ação | Existe? |
+> |---|---|
+> | **Cancelar** | ✅ |
+> | **Substituir** *(cancela + reemite num passo, onde a prefeitura permite)* | ✅ em BH |
+> | **Alterar / editar** | ❌ nunca |
+>
+> ### 🔑 E a janela de prazo FECHOU
+>
+> Combinando com o que já sabíamos da Contabilizei (dia 5, R$21,90 de reabertura):
+>
+> ```
+> até o dia 5     →  cliente cancela/substitui livre
+> dia 6           →  o robô roda
+> dia 10 ou 12    →  ⏳ limite para alteração PAGA (a definir)
+> dia 15          →  entrega da obrigação acessória
+> dia 20          →  vencimento das guias
+> ```
+>
+> > **Léo:** *"Se eu der pro cara 5 dias depois, em tese **eu só posso rodar o robô no dia 6**. **Se você processou antes, a culpa vira minha.**"*
+>
+> ⚠️ **E ele explicou por que a Contabilizei cobra a reabertura:** *"a ferramenta dele começa a fazer a transmissão a partir do dia 6. Quando ele cobra a reabertura… **ele vai ter que recalcular**."* Não é taxa arbitrária — é retrabalho real.
+>
+> ⏳ **Falta cravar o dia**: 10 ou 12. ⇢ **P7**
+
 ## C7 · 🟡 Certidões negativas: quando o cliente vai precisar
 
 **O caso.** No nosso catálogo, emitir CND é um serviço. Na conta real, o cliente precisou de **declaração para abrir conta no banco** logo no começo.
@@ -454,6 +1088,19 @@ No 1º mês não há histórico, então a lei manda **projetar**: acumulado = re
 **Por que importa.** É o serviço mais pedido nos primeiros 30 dias e não sabemos a periodicidade nem a validade. **Pela API:** federal via InfoSimples (`Emissão de CND`); estadual e municipal seguem sem caminho mapeado.
 
 **A pergunta:** quais certidões o cliente novo precisa nos primeiros meses, quais têm validade curta, e qual é a que mais gera pedido? Vale emitir por antecipação ou só sob demanda?
+
+> ## ✅ RESPONDIDO · cliente pequeno quase não pede
+>
+> > *"A **CND**, o cara que é pequeno, **ele não precisa muito de CND não**. O CND é tranquilo, ele não vai precisar tanto."*
+>
+> E confirmou que é serviço à parte, com coleta extra:
+>
+> > **Pedro:** *"É um serviço adicional que, pra fazer, a gente vai precisar entrar em contato com esse cara, precisar de muito mais do que só o que a gente tem no aplicativo."*
+> > **Léo:** *"**Isso aí com certeza.**"*
+>
+> ✅ **Só sob demanda.** Não vale emitir por antecipação, e não entra no core.
+>
+> 🔑 **O que ele valorizou no lugar** foi outra coisa: *"mas é **monitoramento de CNPJ** mesmo"* — o que empurra o esforço para o `C9`, não para cá.
 
 ## C8 · 🔴 Dependentes de IRRF — ninguém coleta
 
@@ -465,6 +1112,17 @@ No 1º mês não há histórico, então a lei manda **projetar**: acumulado = re
 
 **A pergunta:** no perfil dos nossos clientes (pró-labore em torno de 1 a 3 salários mínimos), declarar dependentes muda alguma coisa depois do redutor? Vale coletar, ou é campo que só gera trabalho?
 
+> ## ✅ RESPONDIDO · não coletar está certo
+>
+> > **Pedro:** *"A gente pode deixar travado que não vai ter dependente?"*
+> > **Léo:** *"**O dependente é muito importante quando ele tem funcionário.** No pró-labore, não."*
+> > **Pedro:** *"Então aqui pode deixar setado que não tem mesmo, da forma que a gente está fazendo."*
+> > **Léo:** *"**Pode.**"*
+>
+> ✅ **Fecha sem pendência.** Calcular sem dependentes está correto para o nosso escopo, e o campo não precisa existir na tela.
+>
+> ⚠️ **Com validade declarada:** a resposta vale porque **não temos folha de colaborador**. Se a folha entrar no escopo, o dependente volta — e aí é do **empregado**, não do sócio.
+
 ## C9 · 🟡 O domicílio eletrônico, e quem lê por ele
 
 **O caso.** Na conta real achamos uma **intimação não lida** no DTE do cliente.
@@ -474,6 +1132,36 @@ No 1º mês não há histórico, então a lei manda **projetar**: acumulado = re
 **Por que importa.** É por ali que chega o **Termo de Exclusão do Simples**, e o cliente não olha. **Pela API:** o InfoSimples tem `ECAC / Caixa Postal` — então **conseguimos ler**. O que não sabemos é a obrigação e o prazo.
 
 **A pergunta:** qual o prazo de ciência tácita no DTE-SN, e o que muda se perdermos uma intimação? Monitorar isso é obrigação do contador responsável ou cortesia?
+
+> ## ✅ RESPONDIDO · é cortesia por norma, e necessidade por operação
+>
+> **A postura dele foi clara, e vale citar inteira:**
+>
+> > *"Essa é a maior dor que os caras sentem hoje. **Os caras acham que a contabilidade é financeira. A contabilidade não é financeira. Eu não tenho que ficar te avisando.** Eu te aviso só pra ciência mesmo."*
+> >
+> > *"Se eu tiver esse aviso, é pra eu falar: 'cara, aqui, você não pagou, isso pode te gerar um problema maior lá pra frente'. **O cara vai se sentir satisfeito se ele receber essa informação.**"*
+>
+> 🔑 **Então monitorar não é obrigação — é diferencial.** E ele explicou por que não faz hoje:
+>
+> > *"Eu acho que eu tenho que ficar lá consultando o CNPJ todo mês? **Se eu tivesse uma ferramenta que fizesse, sem problema.** Eu mandaria e disparava isso por e-mail. **Mas eu não tenho uma ferramenta adaptada hoje, apesar dela existir.**"*
+>
+> ### 🔑 O ganho de escala que ele descreveu é o argumento do produto
+>
+> > *"Existem aplicativos que baixam, **até por API mesmo**, buscam na caixa postal e importam tudo que tiver escrito como termo de exclusão. **E ele já te dá: 30 de 2 mil receberam o termo. E eu só ataco os 30. Eu não preciso visitar os 2 mil.**"*
+>
+> ### ⚠️ E o timing importa mais que o aviso
+>
+> > *"O cara recebeu o termo lá em março. Se eu notificar em abril: 'opa, tranquilo, o cara me avisou'. **Mas se eu avisar lá em agosto, setembro, aí ele fala: 'pô, mas vocês estão me avisando agora'.**"*
+>
+> ✅ **Decidido:** varredura da caixa postal **uma vez por mês**, no último dia útil, notificando **só a leva nova**. *"Com 30 dias é bom ainda."*
+>
+> ### 🆕 E daí saiu um upsell precificado por ele
+>
+> > **Léo:** *"Como é que a gente usa nesse escritório? **A mensalidade do mês vezes a quantidade de tempo que tem que regularizar.** Porque em tese eu já fiz aquele trabalho — você não pagou; se quer regularizar esse período, eu te cobro a mensalidade."*
+>
+> ⚠️ **E ele avisou onde a margem morre:** *"para mil clientes eu vou ter que fazer isso mil vezes. **Aí tem que ter API.** Se tiver, vai ser um serviço que eu posso cobrar até mais barato — R$199, está tudo automatizado. Aí é claro que é tudo requisição de API também, **tem que calcular o custo que vai gerar de requisição**."*
+>
+> 🔑 **Isto conecta com o `C9` por outro lado:** o mesmo dado que evita a exclusão do cliente é o que vende o serviço de regularização. Ver também **B2**, que fixou as duas janelas: **setembro e março**.
 
 ---
 
@@ -900,5 +1588,59 @@ Duas decisões nossas que valem confirmação:
 | CPP no numerador do Fator R | encerrado, mas 🔴 **já foi reportado errado ao Mauro em 13/09** e a correção está no `evolucao-para-mauro` de 15/09 |
 | Faixas 3 a 6 da tabela | o ME não alcança — a faixa 2 termina em R$360 mil, que é o teto |
 
+---
+
+# 📋 O que a validação deixou EM ABERTO
+
+> 🔑 **Nada aqui é bloqueio de produto.** São itens que pedem fonte, decisão ou uma pergunta a mais — e cada um está nomeado para não sumir.
+
+## ⏳ Precisa de FONTE — o contador não soube ou pediu para confirmar
+
+| | O quê | Por que importa |
+|---|---|---|
+| **P1** | 🔴 A régua do **redutor do IRRF** (R$3.500 / R$5.000) diverge do motor | Muda a guia de **todo cliente acima de R$5.000**. Exige a Lei 15.270/2025 literal |
+| **P3** | Multa da **DEFIS** e do **PGDAS zerado** — valores e norma | Ele hesitou nos dois. Vira aviso e vira tela |
+| **P4** | Prazo da DEFIS de **extinção entre janeiro e abril** | *"Tem que avaliar essas datas"* |
+| **P5** | 🔴 O **regime de caixa acaba em 2027** — isso atinge o Fator R? | Nosso Fator R **é** regime de caixa |
+| **P21** | Qual leitura do Fator R é a da norma: competência anterior ou o próprio mês? | Já **não bloqueia** — a ação é a mesma nas duas ⇢ [[2026-09-16-tres-conflitos-do-contador-resolvidos]] |
+
+## 🔴 As QUATRO mudanças de 2027 — e só uma tem norma nomeada
+
+| | O que muda | Fonte |
+|---|---|---|
+| **1** | DEFIS morre, vira campo do PGDAS-D | ✅ Res. CGSN 190/2026 |
+| **2** | **Regime de caixa** acaba no Simples | ⏳ memória do contador |
+| **3** | A **janela do Fator R pula um mês** *(dois meses anteriores)* | ⏳ memória do contador |
+| **4** | **ISS** passa a ser no **local da prestação** | ⏳ memória do contador |
+
+⚠️ **Três das quatro vieram de memória, sem norma citada, e todas mexem no motor.** Isso é frente de pesquisa própria, não item de fila.
+
+## ⏳ Não foi perguntado, ou passou batido
+
+| | O quê |
+|---|---|
+| **A12** | 🔴 **Pejotização** — o item de maior risco declarado do nosso perfil, e **ficou sem opinião de contador** |
+| **A10** | A norma da **carta de responsabilidade** segue sem confirmação |
+| **A11** | **Feriado municipal** de BH desloca guia federal? *(lacuna `L7b`)* |
+| **C1** | Campos do **alvará de bombeiros** — fica com a **Izabela** |
+| **C2** | O que caracteriza inscrição municipal **"irregular"** |
+| **C4** | A **postura** sobre o degrau da 1ª nota: conversa-se com o cliente ou não? |
+| **A14** | Servidor **municipal de BH** segue a regra do federal? |
+
+## 🔧 Decisões que ainda precisam virar código ou tela
+
+| | O quê | Onde |
+|---|---|---|
+| **1** | Pró-labore só para **sócio-administrador** | motor + tela |
+| **2** | Parar de deduzir o rateio do **percentual de participação** | tela |
+| **3** | Campo *"já contribuo ao INSS em outro vínculo"* | tela |
+| **4** | **Alerta interno** quando constitui e fatura no mesmo mês | motor |
+| **5** | Janela vazia → decidir **Anexo V** em vez de `null` | motor |
+| **6** | **Salário mínimo** com vigência anual, não constante | motor |
+| **7** | Pergunta de onboarding do pró-labore | tela |
+| **8** | CNAE secundário travado em **5** · **LTDA** sempre · **10 m²** | tela |
+| **9** | Robô roda no **dia 6**; janela de nota até o dia 5 | motor |
+| **10** | Trocar *"cai para o Anexo V"* por *"perde o benefício do Anexo III"* | copy, tudo |
+
 ## Links
-[[PENDENCIAS]] · [[fila-validacao-humana]] · [[indice-autoridade]] · [[_achados-do-motor]] · [[_encerrados]] · [[ciclo-do-cnpj]]
+[[2026-09-16-leonan-audio-1-bloco-a-e-c]] · [[2026-09-16-leonan-audio-2-bloco-d]] · [[2026-09-16-leonan-audio-3-bloco-d-e-e]] · [[2026-09-16-tres-conflitos-do-contador-resolvidos]] · [[PENDENCIAS]] · [[_achados-do-motor]] · [[_encerrados]] · [[ciclo-do-cnpj]]

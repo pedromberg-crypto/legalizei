@@ -281,7 +281,7 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 ## B4 · 🟡 Onze meses presos no Anexo V depois de corrigir
 
-**O caso — "Bruno, dev".** Fatura R$18.000/mês, se paga o mínimo, cai no Anexo V. Corrige o pró-labore em setembro e **só volta ao Anexo III em agosto do ano seguinte**.
+**O caso — "Bruno, dev".** Fatura R$18.000/mês. 🔑 **O nosso automático sugeria R$5.400; ele desligou e fixou o mínimo**, avisado de que isso o derrubaria. Cai no Anexo V. Em setembro reconsidera e religa — e **só volta ao Anexo III em agosto do ano seguinte**.
 
 **Onde apareceu.** Simulando a vida dele mês a mês.
 
@@ -487,9 +487,19 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 🔑 **O eSocial vence ANTES do DAS.** Quem mira o dia 20 entrega 5 dias atrasado, todo mês. ⇢ **A11**
 
+## 🎚️ E uma regra que atravessa as cinco: o cálculo automático vem LIGADO
+
+O pró-labore é calculado e ajustado por nós **todo mês, por padrão**. O cliente não precisa entender nada disso — ele emite nota e paga guia.
+
+Mas **ele pode desligar e digitar o próprio valor**. Se fizer isso, o app mostra **o efeito com os números dele**, não um aviso genérico: *"para seguir no Anexo III você precisa pagar pelo menos R$X este mês. Com o valor que você digitou, a alíquota sai de 6% para 15,5%, cerca de R$Y a mais por mês — e começa na competência Z."*
+
+🔴 **Isso muda de quem é a responsabilidade, e o documento marca isso em cada linha.** Quando uma empresa abaixo cai para o Anexo V, **não foi falha de cálculo nosso**: foi escolha dela, tomada depois de ver a conta. O único bloqueio que aplicamos é o legal — pró-labore abaixo do salário mínimo o app não aceita. ⇢ **A4**
+
+⚠️ **E é aqui que ele pode nos ajudar:** queremos saber se avisar e deixar passar é a postura certa, ou se em algum desses casos o escritório **recusaria** executar.
+
 ---
 
-## 👤 P01 · Bruno, dev freelancer solo — *o que acontece quando ninguém avisa*
+## 👤 P01 · Bruno, dev freelancer solo — *o que acontece quando o cliente decide contra o aviso*
 
 **Cadastro:** desenvolvimento de software · **1 sócio** · sem emprego CLT · endereço próprio · faixa de faturamento R$10-20 mil · CNAE **6201-5/01**, dos **15 que podem virar Anexo V**. Abre em **março/2026**, fica **8 meses** conosco.
 
@@ -499,10 +509,12 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 | **Dia 1** | Certificado digital emitido pela parceira. **Sem ele o app não libera a emissão de nota** — não existe procuração na NFS-e | — |
 | **Dia 1** | 🔑 **Definimos o pró-labore já na 1ª competência.** É decisão nossa, não exigência legal — e trava o Fator R desde o começo | ⇢ **A3 A5** |
 | mar–abr | Dois meses **sem faturar**. Mesmo assim transmitimos PGDAS-D e a folha do sócio: **mês sem receita não pausa obrigação** | ⇢ **B6** |
-| **mai** | 1ª nota: R$18.000. Pró-labore no mínimo (R$1.621), folha em **9%** | — |
-| **jun** | 🔴 **Cai para o Anexo V.** A alíquota vai de 6% para 15,5% | ⇢ **A3** |
-| **set** | Ele corrige o pró-labore para R$5.400 | ⇢ **A2** |
-| **ago/2027** | 🔴 **Só então voltaria ao Anexo III** — 11 meses pagando a mais, com a folha já certa | ⇢ **B4** |
+| **mai** | 1ª nota: R$18.000. 🔑 **O nosso cálculo automático sugere R$5.400** de pró-labore para manter o Anexo III | — |
+| 🔴 **mai** | **Ele DESLIGA o automático e digita R$1.621**, o mínimo. Quer tirar menos da empresa. A folha cai para **9%** | ⇢ **A2** |
+| **mai** | 🔑 **Nós avisamos, com os números dele:** *"para seguir no Anexo III você precisa pagar pelo menos R$5.040 este mês. Com R$1.621 a alíquota sai de 6% para 15,5%, cerca de R$1.710 a mais por mês."* Ele confirma assim mesmo | — |
+| **jun** | 🔴 **Cai para o Anexo V**, como avisado. **Decisão dele, não falha nossa** — e o alerta fica registrado | ⇢ **A3** |
+| **set** | Ele reconsidera e **religa o automático**. O pró-labore volta para R$5.400 | ⇢ **A2** |
+| **ago/2027** | 🔴 **Só então voltaria ao Anexo III** — 11 meses pagando a mais, com a folha já certa. 🔑 **É por isso que avisamos na hora da escolha, e não depois**: o Fator R olha para trás, então quando o erro aparece na guia já é tarde | ⇢ **B4** |
 | **31/03/2027** | DEFIS do ano-calendário 2026 | ⇢ **A9** |
 | **Total** | Faturou **R$108.000** · pagou **R$15.030** de DAS · **5 meses no Anexo V** | |
 
@@ -537,8 +549,9 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 | **Dia 1** | 🔑 **O DARF sai sócio a sócio, e só depois soma.** O do CLT alto não recolhe nada; o outro recolhe normal | ⇢ **A1 B1** |
 | out–dez/2025 | Escala rápido: R$12k, R$28k, R$35k no pico de confraternização | — |
 | **31/03/2026** | DEFIS de 2025 | ⇢ **B3** |
-| **mar, abr, mai/2026** | 🔴 **Três guias seguidas em atraso** (14, 21 e 14 dias). Recalculamos com multa de 0,33%/dia e juros | ⇢ **B5** |
-| | Custo do atraso: **R$393,32**. É o caso de uso do lembrete de vencimento, com número | — |
+| **mar, abr, mai/2026** | 🔑 **Emitimos as três guias em dia**, dentro do prazo. 🔴 **Ele paga com 14, 21 e 14 dias de atraso** — pagamento é ação do cliente, fora do app | ⇢ **B5** |
+| | Detectamos o atraso na consulta de arrecadação e **recalculamos** com multa de 0,33%/dia e juros | ⇢ **B5** |
+| | Custo do atraso: **R$393,32**, que **não teria existido**. É o caso de uso do lembrete de vencimento, com número | — |
 | **set/2026** | O acumulado cruza **R$180 mil** e ele muda de faixa | — |
 | **out/2026** | 13º mês: a regra do acumulado troca de *média × 12* para **soma dos 12** | ⇢ **C4** |
 | **Total** | Faturou **R$266.000** · **R$17.514** de DAS · **R$2.318** de DARF | |
@@ -554,7 +567,7 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 | **Dia 1** | Inscrição municipal, licenças, **as 4 assinaturas dos sócios**, documentos | ⇢ **C1** |
 | **Dia 1** | 🔑 **Quatro pró-labores, quatro cálculos, uma guia.** É aqui que o nosso erro de 15/09 custava **R$2.077 por mês** | 🔴 ⇢ **A1 B7** |
 | todo mês | **4 eventos de remuneração e 4 de pagamento** no eSocial, um por sócio | ⇢ **A2** |
-| todo mês | ⚠️ Assumimos **rateio igual** (R$405,25 para cada). Se o trabalho for desigual, isso é risco | 🔴 ⇢ **A2 A3** |
+| todo mês | ⚠️ **Aqui a premissa é NOSSA, não escolha dele:** assumimos **rateio igual** (R$405,25 para cada) porque o app pergunta só o total. Se o trabalho for desigual, o risco é nosso de ter assumido | 🔴 ⇢ **A2 A3** |
 | **31/03/2027** | DEFIS de 2026, com os **rendimentos de cada sócio** discriminados | ⇢ **A9** |
 | **Total** | Faturou **R$47.500** · **R$2.850** de DAS · **R$4.279** de DARF | |
 
@@ -562,15 +575,17 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 ---
 
-## 👤 P16 · Vitor, consultoria em TI — *dois anos, e o Anexo V que cresce*
+## 👤 P16 · Vitor, consultoria em TI — *dois anos decidindo contra o aviso*
 
 **Cadastro:** consultoria em TI · **1 sócio** · CNAE **6204-0/00**, dos **15 que podem virar Anexo V**. Abre em **junho/2025**, fica **22 meses** — o percurso mais longo, atravessando **três anos-calendário**.
 
 | Quando | O que a casa faz | Dúvida |
 |---|---|---|
 | **Dia 1** | Inscrição municipal, licenças, certificado, documentos | ⇢ **C1 C2** |
-| jul/2025 → | Cresce de R$8 mil a R$42 mil/mês, sempre se pagando o mínimo | — |
-| **set/2025** | 🔴 Cai para o **Anexo V** e **fica lá 19 dos 22 meses** | ⇢ **A3** |
+| **jul/2025** | 1ª nota. 🔑 O automático sugere o valor que segura o Anexo III | — |
+| 🔴 **jul/2025** | **Ele desliga o automático logo no começo** e fixa o pró-labore no mínimo, para tirar o máximo como lucro. Avisamos com os números dele; ele mantém | ⇢ **A2** |
+| jul/2025 → | Cresce de R$8 mil a **R$42 mil/mês** e **nunca religa o automático** — a cada mês o aviso reaparece e ele segue | ⇢ **A5** |
+| **set/2025** | 🔴 Cai para o **Anexo V** e **fica lá 19 dos 22 meses**. **Escolha dele, sustentada mês a mês** | ⇢ **A3** |
 | **mar/2026** | O acumulado cruza **R$180 mil** e ele entra na **2ª faixa**: a alíquota efetiva começa a subir de 15,5% rumo a 16,75% | — |
 | **31/03/2026** | DEFIS de 2025 | ⇢ **A9** |
 | **jun/2026** | 13º mês: a regra do acumulado troca para soma dos 12 | ⇢ **C4** |

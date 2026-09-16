@@ -118,7 +118,7 @@ const espelho = geral["🏢"] || 0;
 if (espelho > 0) {
   console.log(
     `\n🔴 ${espelho} linha(s) ainda rodam como ESPELHO da Contabilizei.` +
-      `\n   Cada uma é uma data que ninguém nos obrigou a adotar. Ver bloco E1-E4.`
+      `\n   Cada uma é uma data que ninguém nos obrigou a adotar. Ver bloco 🏢1-🏢4.`
   );
 }
 

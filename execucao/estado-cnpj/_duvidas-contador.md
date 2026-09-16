@@ -506,7 +506,7 @@ No 1º mês não há histórico, então a lei manda **projetar**: acumulado = re
 | Dia | Quem | O que acontece | Ferramenta |
 |---|:---:|---|---|
 | **último do mês** | 🏠 | A competência fecha. Somamos as notas emitidas | — |
-| **até o 15** | 🏢 | **Revisamos o pró-labore TODO MÊS** e transmitimos a folha do sócio. 🔴 **A cadência mensal é espelho da Contabilizei**, não exigência legal ⇢ **E1** | `eSocial WS` + `Integra-DCTFWeb` |
+| **até o 15** | 🏢 | **Revisamos o pró-labore TODO MÊS** e transmitimos a folha do sócio. 🔴 **A cadência mensal é espelho da Contabilizei**, não exigência legal ⇢ **🏢1** | `eSocial WS` + `Integra-DCTFWeb` |
 | **até o 15** | 🏠 | Vigiamos o Fator R — só nos CNAEs que podem virar Anexo V | motor |
 | **até o 18-20** | ⚖️ | Emitimos o DARF do INSS e do IR do sócio. 🔑 **Antecipa** se cair em fim de semana | `Integra-Sicalc` |
 | **até o 20-21** | ⚖️ | Apuramos, transmitimos o PGDAS-D e emitimos a guia do DAS. 🔑 **Prorroga** se cair em fim de semana | `Integra-SN` |
@@ -536,12 +536,12 @@ Mas **ele pode desligar e digitar o próprio valor**. Se fizer isso, o app mostr
 |---|:---:|---|---|
 | **Dia 1** | 🏠 | Constituição concluída, CNPJ na mão. Emitimos a **inscrição municipal** e as **licenças**, e publicamos os documentos na plataforma | ⇢ **C1 C2** |
 | **Dia 1** | ⚖️ | Certificado digital emitido pela parceira. **Sem ele o app não libera a emissão de nota** — não existe procuração na NFS-e | — |
-| **Dia 1** | 🏢 | 🔑 **Definimos o pró-labore já na 1ª competência.** Não é exigência legal — é o que a **Contabilizei fez** na conta real que analisamos, e nós copiamos. Trava o Fator R desde o começo ⇢ **E2** | ⇢ **A3 A5** |
+| **Dia 1** | 🏢 | 🔑 **Definimos o pró-labore já na 1ª competência.** Não é exigência legal — é o que a **Contabilizei fez** na conta real que analisamos, e nós copiamos. Trava o Fator R desde o começo ⇢ **🏢2** | ⇢ **A3 A5** |
 | mar–abr | ⚖️ | Dois meses **sem faturar**. Mesmo assim transmitimos PGDAS-D e a folha do sócio: **mês sem receita não pausa obrigação** | ⇢ **B6** |
-| **mai** | 🏠 | 1ª nota: R$18.000. 🔑 **O nosso cálculo pede R$1.798 no mínimo e sugere R$2.158.** Ainda é pouco porque a janela só tem 3 meses, anualizados — o alvo cresce junto com o histórico | — |
+| **mai** | 🏠 | 1ª nota: R$18.000. 🔑 **O nosso cálculo pede R$1.798 no mínimo e sugere R$2.158.** Parece pouco e não é erro: a janela tem 3 meses, a receita dela é só os R$18.000 deste mês, e ele **já tem R$3.242 de folha paga** em março e abril — dois meses sem faturar em que o mínimo saiu igual. A conta é `28% × 18.000 − 3.242 = 1.798`, e `30% × 18.000 − 3.242 = 2.158` | ⇢ **conta 7** |
 | 🔴 **mai** | 👤 | **Ele DESLIGA o automático e digita R$1.621**, o mínimo legal. Quer tirar menos da empresa. Fica **R$177 abaixo** do que a conta pedia | ⇢ **A2** |
 | **mai** | 🏠 | 🔑 **Nós avisamos, com os números dele:** *"para seguir no Anexo III você precisa pagar pelo menos R$1.798 este mês. Com R$1.621 a alíquota sai de 6% para 15,5%, cerca de R$1.710 a mais por mês."* Ele confirma assim mesmo | — |
-| **jun** | ⚖️ | 🔴 **Cai para o Anexo V.** A janela cresce e o mínimo sobe para **R$4.680** *(sugerido R$5.400)*, enquanto ele segue nos R$1.621. A queda é da lei; **quem a provocou foi ele**, e o alerta fica registrado | ⇢ **A3** |
+| **jun** | ⚖️ | 🔴 **Cai para o Anexo V.** A janela cresce para R$36.000 de receita e o mínimo sobe para **R$5.217** *(sugerido R$5.937)*, enquanto ele segue nos R$1.621. 🔑 **A dívida cresce sozinha:** cada mês faturado sem folha proporcional aumenta o que falta no mês seguinte. A queda é da lei; **quem a provocou foi ele**, e o alerta fica registrado | ⇢ **A3** |
 | **set** | 👤 | Ele reconsidera e **religa o automático**. O pró-labore volta para R$5.400 | ⇢ **A2** |
 | **ago/2027** | ⚖️ | 🔴 **Só então voltaria ao Anexo III** — 11 meses pagando a mais, com a folha já certa. 🔑 **É por isso que avisamos na hora da escolha, e não depois**: o Fator R olha para trás, então quando o erro aparece na guia já é tarde | ⇢ **B4** |
 | **31/03/2027** | ⚖️ | DEFIS do ano-calendário 2026 | ⇢ **A9** |
@@ -656,10 +656,10 @@ Mas **ele pode desligar e digitar o próprio valor**. Se fizer isso, o app mostr
 
 | | O que eles fazem | O que vimos na conta real | A nossa dúvida |
 |---|---|---|---|
-| **E1** | **Revisam o pró-labore todo mês** | O valor mudou sozinho: **R$3.260 → R$3.360 → R$3.360 → R$1.621**, sem o cliente pedir | Mensal é a cadência certa, ou dá para revisar **por trimestre** e só antecipar quando o Fator R se aproxima dos 28%? Mensal gera 12 eventos de eSocial por ano por sócio |
-| **E2** | **Lançam pró-labore já no mês da abertura** | CNPJ aberto em **12/12/2025** e dezembro já saiu com pró-labore — **19 dias de empresa**, com a receita ainda em zero | Começar no mês 1 é o certo? Ou espera-se a **1ª nota**? 🔑 Isso muda o Fator R dos 12 primeiros meses de toda empresa nova ⇢ **A5** |
-| **E3** | **Lançaram R$100 no mês da abertura** | Dezembro/2025 saiu com **R$100** de pró-labore, muito abaixo do salário mínimo | 🔴 É prática aceita ou é defeito deles? **Nós bloqueamos** abaixo do mínimo — e se estivermos errados, estamos travando algo legal ⇢ **A4** |
-| **E4** | **Zeram o pró-labore em mês sem receita** | Janeiro/2026 saiu com **R$0,00**; de maio a agosto, com o faturamento em zero, caiu para o mínimo | Zerar é aceitável, ou quebra a condição de segurado obrigatório do sócio? E zerar **derruba o Fator R** dos 12 meses seguintes ⇢ **A5** |
+| **🏢1** | **Revisam o pró-labore todo mês** | O valor mudou sozinho: **R$3.260 → R$3.360 → R$3.360 → R$1.621**, sem o cliente pedir | Mensal é a cadência certa, ou dá para revisar **por trimestre** e só antecipar quando o Fator R se aproxima dos 28%? Mensal gera 12 eventos de eSocial por ano por sócio |
+| **🏢2** | **Lançam pró-labore já no mês da abertura** | CNPJ aberto em **12/12/2025** e dezembro já saiu com pró-labore — **19 dias de empresa**, com a receita ainda em zero | Começar no mês 1 é o certo? Ou espera-se a **1ª nota**? 🔑 Isso muda o Fator R dos 12 primeiros meses de toda empresa nova ⇢ **A5** |
+| **🏢3** | **Lançaram R$100 no mês da abertura** | Dezembro/2025 saiu com **R$100** de pró-labore, muito abaixo do salário mínimo | 🔴 É prática aceita ou é defeito deles? **Nós bloqueamos** abaixo do mínimo — e se estivermos errados, estamos travando algo legal ⇢ **A4** |
+| **🏢4** | **Zeram o pró-labore em mês sem receita** | Janeiro/2026 saiu com **R$0,00**; de maio a agosto, com o faturamento em zero, caiu para o mínimo | Zerar é aceitável, ou quebra a condição de segurado obrigatório do sócio? E zerar **derruba o Fator R** dos 12 meses seguintes ⇢ **A5** |
 
 ⚠️ **Uma quinta dependência, que não é data e por isso não entra na tabela:** a **tabela do IRRF** que usamos foi capturada da plataforma deles em 14/09 e conferida contra uma guia real. Ela bate, mas queremos a fonte oficial ratificada pelo senhor, não o print do concorrente. 🔑 E já achamos **uma divergência**: a calculadora deles cobra **R$93,76** num caso em que, aplicado o redutor do art. 3º-A da Lei 15.270/2025, o imposto é **R$0,00**. Ou eles não aplicam o redutor, ou nós o aplicamos onde não cabe. ⇢ **A1**
 

@@ -523,10 +523,10 @@ Mas **ele pode desligar e digitar o próprio valor**. Se fizer isso, o app mostr
 | **Dia 1** | Certificado digital emitido pela parceira. **Sem ele o app não libera a emissão de nota** — não existe procuração na NFS-e | — |
 | **Dia 1** | 🔑 **Definimos o pró-labore já na 1ª competência.** É decisão nossa, não exigência legal — e trava o Fator R desde o começo | ⇢ **A3 A5** |
 | mar–abr | Dois meses **sem faturar**. Mesmo assim transmitimos PGDAS-D e a folha do sócio: **mês sem receita não pausa obrigação** | ⇢ **B6** |
-| **mai** | 1ª nota: R$18.000. 🔑 **O nosso cálculo automático sugere R$5.400** de pró-labore para manter o Anexo III | — |
-| 🔴 **mai** | **Ele DESLIGA o automático e digita R$1.621**, o mínimo. Quer tirar menos da empresa. A folha cai para **9%** | ⇢ **A2** |
-| **mai** | 🔑 **Nós avisamos, com os números dele:** *"para seguir no Anexo III você precisa pagar pelo menos R$5.040 este mês. Com R$1.621 a alíquota sai de 6% para 15,5%, cerca de R$1.710 a mais por mês."* Ele confirma assim mesmo | — |
-| **jun** | 🔴 **Cai para o Anexo V**, como avisado. **Decisão dele, não falha nossa** — e o alerta fica registrado | ⇢ **A3** |
+| **mai** | 1ª nota: R$18.000. 🔑 **O nosso cálculo pede R$1.798 no mínimo e sugere R$2.158.** Ainda é pouco porque a janela só tem 3 meses, anualizados — o alvo cresce junto com o histórico | — |
+| 🔴 **mai** | **Ele DESLIGA o automático e digita R$1.621**, o mínimo legal. Quer tirar menos da empresa. Fica **R$177 abaixo** do que a conta pedia | ⇢ **A2** |
+| **mai** | 🔑 **Nós avisamos, com os números dele:** *"para seguir no Anexo III você precisa pagar pelo menos R$1.798 este mês. Com R$1.621 a alíquota sai de 6% para 15,5%, cerca de R$1.710 a mais por mês."* Ele confirma assim mesmo | — |
+| **jun** | 🔴 **Cai para o Anexo V**, como avisado. A janela cresce e o mínimo sobe para **R$4.680** *(sugerido R$5.400)*, enquanto ele segue nos R$1.621. **Decisão dele, não falha nossa** — e o alerta fica registrado | ⇢ **A3** |
 | **set** | Ele reconsidera e **religa o automático**. O pró-labore volta para R$5.400 | ⇢ **A2** |
 | **ago/2027** | 🔴 **Só então voltaria ao Anexo III** — 11 meses pagando a mais, com a folha já certa. 🔑 **É por isso que avisamos na hora da escolha, e não depois**: o Fator R olha para trás, então quando o erro aparece na guia já é tarde | ⇢ **B4** |
 | **31/03/2027** | DEFIS do ano-calendário 2026 | ⇢ **A9** |
@@ -548,7 +548,7 @@ Mas **ele pode desligar e digitar o próprio valor**. Se fizer isso, o app mostr
 | **nov/2025** | 🔑 No 1º mês não existe histórico, então a lei manda **projetar**: acumulado = receita do mês × 12 = R$168.000. **Não é faturamento, é projeção.** E aqui ela **não muda nada**: R$168 mil ainda está na 1ª faixa (até R$180 mil), então ele paga os mesmos **6%**. DAS de **R$840** | ⇢ **C4** |
 | **jan–fev/2026** | Dois meses secos. Transmitimos igual | ⇢ **B6** |
 | 🔴 **31/03/2026** | **DEFIS do ano-calendário 2025** — com **41 dias de empresa**. Ele mal entendeu o que é DAS e já tem obrigação anual | ⇢ **B3 A9** |
-| mai–jul | Temporada cheia: R$12k, R$19k, R$17k | — |
+| abr–jun | Temporada cheia: R$12k, R$19k, R$17k | — |
 | **31/03/2027** | DEFIS de 2026 | ⇢ **A9** |
 | **Total** | Faturou **R$102.000** · **R$6.120** de DAS · **zero** meses no Anexo V | |
 
@@ -582,7 +582,8 @@ Mas **ele pode desligar e digitar o próprio valor**. Se fizer isso, o app mostr
 | **Dia 1** | Inscrição municipal, licenças, **as 4 assinaturas dos sócios**, documentos | ⇢ **C1** |
 | **Dia 1** | 🔑 **Quatro pró-labores, quatro cálculos, uma guia.** É aqui que o nosso erro de 15/09 custava **R$2.077 por mês** | 🔴 ⇢ **A1 B7** |
 | todo mês | **4 eventos de remuneração e 4 de pagamento** no eSocial, um por sócio | ⇢ **A2** |
-| todo mês | ⚠️ **Aqui a premissa é NOSSA, não escolha dele:** assumimos **rateio igual** (R$405,25 para cada) porque o app pergunta só o total. Se o trabalho for desigual, o risco é nosso de ter assumido | 🔴 ⇢ **A2 A3** |
+| todo mês | ⚠️ **Aqui a premissa é NOSSA, não escolha dele:** assumimos **rateio igual** — R$1.621 para cada, o salário mínimo, **R$6.484 de folha por mês** — porque o app pergunta só o total. Se o trabalho for desigual, o risco é nosso de ter assumido | 🔴 ⇢ **A2 A3** |
+| todo mês | 🔑 **E é o piso que manda aqui, não o Fator R.** Sendo Anexo III fixo, o pró-labore não defende alíquota nenhuma: os R$6.484 saem porque cada sócio é segurado obrigatório, não porque a conta pediu. **A folha vira mais da metade do faturamento dela** | 🔴 ⇢ **A4** |
 | **31/03/2027** | DEFIS de 2026, com os **rendimentos de cada sócio** discriminados | ⇢ **A9** |
 | **Total** | Faturou **R$47.500** · **R$2.850** de DAS · **R$4.279** de DARF | |
 
@@ -608,7 +609,18 @@ Mas **ele pode desligar e digitar o próprio valor**. Se fizer isso, o app mostr
 | **mar/2027** | Acumulado em **R$359.000** — a **R$1.000 do teto do ME**. Passar é desenquadramento para EPP | 🔴 |
 | **Total** | Faturou **R$551.000** · pagou **R$87.083** de DAS · **19 meses no Anexo V** | |
 
-🔑 **O contraste que fecha o argumento:** com o piloto ligado desde o mês 1, ele teria pago **R$40.502** em vez de **R$87.083**. E ele encosta no teto do ME sem passar — é o único caso em que a porta de saída para EPP aparece.
+🔑 **O contraste que fecha o argumento — e a conta inteira, não só a metade boa.** Com o piloto ligado desde o mês 1 o DAS cairia de **R$87.083** para **R$40.502**. Mas o pró-labore subiria de R$35.662 para **R$165.300**, e com ele o DARF do sócio de R$3.922 para **R$38.204**:
+
+| | Sem o piloto | Com o piloto |
+|---|---:|---:|
+| DAS | R$ 87.083 | R$ 40.502 |
+| DARF do sócio | R$ 3.923 | R$ 38.204 |
+| **Soma dos impostos** | **R$ 91.006** | **R$ 78.706** |
+| **Saldo real no bolso dele** | | **R$ 12.299** |
+
+⚠️ **E os R$165.300 não são imposto, são dinheiro dele saindo da empresa como pró-labore** — tributado na pessoa física em vez de sair como lucro isento. A conta acima só mede imposto. Se o senhor achar que essa comparação está incompleta, é exatamente o que queremos ouvir. ⇢ **A2**
+
+🔑 E ele **encosta no teto do ME sem passar**: acumulado de R$359.000 contra o limite de R$360.000, com a efetiva em 16,7465%. É o único caso em que a porta de saída para EPP aparece.
 
 ---
 

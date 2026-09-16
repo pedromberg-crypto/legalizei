@@ -14,27 +14,27 @@ tags: [reporte, evolucao, sociedade]
 
 ## 📊 Placar geral
 
-> 🤖 **Este bloco é gerado.** Ele se reconta sozinho a cada `/fechar`, a partir das tabelas abaixo — nenhum número aqui é digitado. Gerado em **15/09/2026**.
+> 🤖 **Este bloco é gerado.** Ele se reconta sozinho a cada `/fechar`, a partir das tabelas abaixo — nenhum número aqui é digitado. Gerado em **16/09/2026**.
 
 ### O que rendeu
 
 | | |
 |---|---:|
-| **Entregas reportadas** | **283** |
-| Entradas no log | 60 |
+| **Entregas reportadas** | **290** |
+| Entradas no log | 61 |
 | **Dias trabalhados** | **58** |
 | Período | 07/07/2026 → 15/09/2026 |
 | Dias corridos no período | 71 |
-| Média de entregas por dia trabalhado | 4,9 |
+| Média de entregas por dia trabalhado | 5,0 |
 
 ### Placar por status
 
 | Status | Itens | % |
 |---|---:|---:|
-| 🟢 pronto / entregue | **235** | 83,0% |
-| ✅ estava parado, foi resolvido | **15** | 5,3% |
-| 🟡 em curso / parcial | **26** | 9,2% |
-| 🔴 trava ou precisa de você | **5** | 1,8% |
+| 🟢 pronto / entregue | **241** | 83,1% |
+| ✅ estava parado, foi resolvido | **15** | 5,2% |
+| 🟡 em curso / parcial | **27** | 9,3% |
+| 🔴 trava ou precisa de você | **5** | 1,7% |
 | 🕓 aguarda pessoa | **2** | 0,7% |
 
 ### Ritmo, mês a mês
@@ -1318,3 +1318,32 @@ As duas perguntas da semana passada (retirada de lucro sem extrato, e a regua do
 ## Links
 
 - [[decisoes-marca]] · [[conceito-marca]] · [[spec-mvp-v0]] · [[2026-07-10-teto-automacao-orgaos-sem-api]] · [[2026-07-10-reporte-tecnico-pedro-dev]] · [[HOME]] · [[estado-atual]] · [[indice-autoridade]]
+
+## Semana 15/09/2026 (parte 2) — o app passou a cuidar do pró-labore sozinho, e três perguntas ficaram pra você
+
+| # | Frente | O que evoluiu | Status |
+|---|---|---|---|
+| 1 | 🔑 **O app ajusta o pró-labore do cliente todo mês, sozinho** | É o que a Contabilizei faz com a empresa do Pedro, e decidimos fazer igual: o cliente só emite nota e paga guia. Construído e testado, com 67 conferências automáticas. **E tinha que ser ajuste, não aviso:** o Fator R olha os 12 meses anteriores, então simulamos um dev que corrige o pró-labore em setembro e ele **só volta ao Anexo III em agosto do ano seguinte** — 11 meses pagando 15,5% já com a folha certa | 🟢 |
+| 2 | 🔴 **Achamos e consertamos o maior erro do motor** | O sistema somava o pró-labore de todos os sócios e calculava a guia **como se fosse uma pessoa só**. Numa empresa de 4 sócios recebendo R$3.500 cada, cobrava **R$3.617** onde o correto é **R$1.540** — a tabela do Imposto de Renda é progressiva **por pessoa**, e o teto do INSS também. Atingia 7 das nossas 16 empresas de teste. **Já corrigido, e confirmado por pesquisa em norma primária** | 🟢 |
+| 3 | 🗓️ **A lista fechada do que devemos fazer, e quando** | 7 obrigações mensais e 3 anuais do nosso cliente, cada uma com prazo, o que precisa ser consultado e por qual canal se transmite. 🔴 **Achado que muda o desenho:** o eSocial vence **dia 15**, antes do imposto do dia 20. Quem desenhar a tela do pró-labore mirando o dia 20 entrega 5 dias atrasado todo mês | 🟢 |
+| 4 | ✅ **As 16 empresas de teste atravessaram o ciclo inteiro** | 156 competências, 1.092 verificações, **zero falhas**. Abrindo em todos os 12 meses do ano, de 1 a 4 sócios, 6 delas cruzando a virada de ano. 🔑 E a virada **não é evento**: a regra do acumulado troca pelo mês de atividade, não pelo calendário | 🟢 |
+| 5 | 📚 **Três pesquisas em fonte oficial, lidas por inteiro** | Fecharam: o imposto do sócio é **por pessoa** (confirma o conserto acima), o pró-labore **pode ser desigual** e não segue a participação no capital, a **DEFIS deixa de existir em 2027**, e todos os canais de transmissão ao governo existem e são acessíveis | 🟢 |
+| 6 | 🔴 **Descobrimos que falta um filtro na entrada** | Não temos checagem de quem **pode** optar pelo Simples. Hoje é possível vender o plano, abrir a empresa e a Receita indeferir depois — e aí ela nasce no Lucro Presumido. O caso mais perigoso é a **pejotização**: cliente que vai prestar serviço a um cliente só, cumprindo horário. E **não existe consulta prévia por CPF** em lugar nenhum do governo | 🟡 |
+| 7 | 📊 **O reporte passou a se medir sozinho** | O resumo no topo deste documento agora é calculado, não digitado. E ele confrontou com o histórico de trabalho: **agosto tinha 20 dias trabalhados e só 9 reportados**. Reconstituí as 14 entradas que faltavam — inclusive dois dos maiores dias do projeto, que você nunca viu | 🟢 |
+
+**Preciso de você em 3 coisas, e todas estão num documento preparado pra conversa:**
+
+1. 🔴 **Confirmar o conserto do imposto por sócio** — o teto do INSS e a tabela do IR se aplicam individualmente a cada um, e a guia da empresa é a soma dessas contas?
+2. 🟡 **O pró-labore pode ser desigual entre sócios?** Exige formalidade? E o risco está em dividir desigual, ou em dividir igual quando o trabalho é desigual?
+3. 🟡 **"Administrar" é a mesma coisa que "trabalhar na empresa"?** A lei fala em prestar serviço; o nosso app pergunta quem administra. Se forem coisas diferentes, falta uma pergunta no cadastro.
+
+### 📱 WhatsApp (15/09, parte 2)
+```
+*Update Legalizai* 📣
+- O app passou a *ajustar o pró-labore do cliente sozinho, todo mês*, pra manter a empresa na alíquota menor. O cliente só emite nota e paga guia
+- Achamos e consertamos o maior erro do motor: ele somava o pró-labore dos sócios e cobrava como se fosse uma pessoa só. Numa empresa de 4 sócios cobrava R$3.617 onde o certo é R$1.540
+- Fechamos a lista do que temos que fazer todo mês pelo cliente, com prazo e canal de cada obrigação. Achado importante: o eSocial vence dia 15, antes do imposto do dia 20
+- As 16 empresas de teste atravessaram o ciclo inteiro: 156 meses simulados, zero falhas
+- Descobrimos que falta um filtro na entrada: hoje dá pra vender, abrir a empresa e a Receita indeferir depois. Estou desenhando
+- Preparei um documento com 3 perguntas pro contador, cada uma com o caso e a conta na mão
+```

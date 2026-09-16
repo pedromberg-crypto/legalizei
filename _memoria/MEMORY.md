@@ -1,6 +1,9 @@
 # Memory Index — Legalize
 
 ## Motor fiscal e estado do CNPJ
+- [O ciclo do CNPJ: 10 obrigacoes, prazo e CANAL](legalize-ciclo-do-cnpj-e-canais.md) — 15/09: lista FECHADA. A folga e de 15 dias (eSocial vence antes do DAS). 156 competencias, 0 falhas.
+- [O gate de elegibilidade ao Simples nao existia](legalize-gate-elegibilidade-simples.md) — 15/09: 4 vedacoes nos atingem, pejotizacao e CRITICA, e NAO existe API de consulta previa por CPF.
+- [A guia somava os socios e cobrava como UM](legalize-darf-por-socio-nao-por-empresa.md) — 15/09: R$3.617 onde o certo e R$1.540. Teto do INSS e da pessoa, IRRF e por beneficiario.
 - [O piloto AJUSTA o pro-labore sozinho](legalize-piloto-pro-labore-automatico.md) — 15/09: produto age, nao avisa (Fator R e retrovisor). 41 conferencias. Manutencao != recuperacao; sustentavel compensa em 100% da faixa do ME.
 - [A regua de prova: fonte oficial fecha a REGRA](legalize-regua-de-prova-fonte-oficial.md) — 15/09: documento fecha so a CONVENCAO. 2a vez que o Pedro corrige a mesma confusao.
 - [Anexo V tinha DUAS lacunas, so uma fechou](legalize-anexo-v-duas-lacunas.md) — 15/09: simulacao fecha COMPORTAMENTO, nunca DOCUMENTO. Efetiva continua ao 12o decimal em 8 bordas; quebra na 6a, nos dois anexos, pra baixo.
@@ -128,6 +131,8 @@
 - [Doutrina do pipeline vetor Illustrator](legalize-illustrator-vector-pipeline-doutrina.md) — 21/08: MCP nao cria geometria; ponte entre docs e manual.
 
 ## Metodo de trabalho e vault
+- [Tres travas de metodo, de tres erros meus](legalize-travas-de-metodo-15-09.md) — 15/09: verde vazio, assunto reaberto 3x, fonte sem dono no indice. Protegem contra deslize, nao contra engano.
+- [O reporte ao socio se mede sozinho](legalize-placar-do-reporte-gerado.md) — 15/09: placar gerado + confronto com o git. Agosto tinha 20 dias de commit e 9 entradas.
 - [Documento importante se le INTEIRO](legalize-leitura-integral-documento.md) — 10/09 TRAVADO: 100% literal salvo em arquivo, e o que ficou de fora vira lista com nome.
 - [Escrever arquivo so via Edit/Write](legalize-escrita-arquivo-so-edit-write.md) — 01/09: script Python truncou 2 arquivos do vault. Reincidiu em 15/09 (UnicodeEncodeError no print).
 - [Edicao simples se resolve com Edit direto](legalize-edicao-simples-editar-direto.md) — 05/09: nada de script de patch nem e2e em pedido pontual de layout.

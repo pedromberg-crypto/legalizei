@@ -627,6 +627,213 @@ Mas **ele pode desligar e digitar o próprio valor**. Se fizer isso, o app mostr
 
 ---
 
+# 🅴 BLOCO E — as sete contas do motor, com número e porquê
+
+> 🧭 **Para que serve.** As personas acima mostram o **quando**; este bloco mostra o **como**. São as sete contas que o motor faz, cada uma com número real, a porcentagem usada e a razão dela. É o double-check do cálculo.
+>
+> 🔑 **Todos os números abaixo saíram do motor rodando em 16/09**, nenhum foi digitado à mão. E a conta 1 tem **recibo oficial da Receita** para conferir contra.
+
+---
+
+## 1 · O imposto do mês — e o centavo que prova que está certo
+
+**O caso real:** agosto/2026. Receita de **R$7.910,00**, acumulado de R$54.000, Anexo III, 1ª faixa → alíquota de **6%**.
+
+```
+7.910,00 × 6%  =  474,60      ← a conta que todo mundo faz
+Guia oficial da Receita        =  474,59      ← o que o recibo traz
+```
+
+🔑 **O centavo não é erro de arredondamento nosso — é a regra.** O imposto do Simples **não** é um percentual sobre a receita: é a **soma de seis tributos, cada um arredondado**. A repartição entre eles é fixada em lei por anexo e por faixa:
+
+| Tributo | % do DAS *(Anexo III, 1ª faixa)* | Valor |
+|---|---:|---:|
+| IRPJ | 4,00% | R$ 18,98 |
+| CSLL | 3,50% | R$ 16,61 |
+| COFINS | 12,82% | R$ 60,84 |
+| PIS | 2,78% | R$ 13,19 |
+| CPP | 43,40% | R$ 205,98 |
+| ISS | 33,50% | R$ 158,99 |
+| | **100,00%** | **R$ 474,59** |
+
+⚠️ Quem programa `receita × alíquota` erra um centavo em **toda** guia, e guia diferente do PGDAS-D é divergência com a Receita.
+
+**O que queremos ouvir:** a repartição e o arredondamento por tributo estão certos?
+
+---
+
+## 2 · A alíquota efetiva — por que ela quase nunca é a da tabela
+
+A partir da 2ª faixa a tabela traz dois números: uma alíquota **nominal** e uma **parcela a deduzir**. O que se paga é o resultado da conta entre os dois.
+
+```
+efetiva  =  ( RBT12 × nominal  −  parcela a deduzir )  ÷  RBT12
+```
+
+**Anexo III, 2ª faixa:** nominal **11,20%**, parcela a deduzir **R$9.360**.
+
+| Acumulado (RBT12) | Alíquota efetiva |
+|---:|---:|
+| R$ 180.000 | **6,0000%** |
+| R$ 192.000 | 6,3250% |
+| R$ 216.000 | 6,8667% |
+| R$ 225.000 | 7,0400% |
+| R$ 300.000 | 8,0800% |
+| R$ 360.000 | **8,6000%** |
+
+🔑 **Repare na primeira linha:** em R$180.000 exatos, a 2ª faixa devolve **exatamente 6%** — o mesmo da 1ª. A parcela a deduzir é **calibrada** para não haver salto na borda, e conferimos isso em **8 bordas** dos dois anexos, ao 12º decimal. Ninguém paga a mais por ter cruzado a linha por um real.
+
+**O que queremos ouvir:** a fórmula e a leitura da parcela a deduzir estão corretas?
+
+---
+
+## 3 · O Fator R — a conta que decide 6% ou 15,5%
+
+```
+Fator R  =  folha PAGA dos 12 meses  ÷  receita dos 12 meses
+```
+
+**Exemplo** — empresa faturando R$18.000/mês por 12 meses:
+
+| Pró-labore mensal | Folha 12m | Receita 12m | Fator R | Anexo |
+|---:|---:|---:|---:|:---:|
+| R$ 5.400 | R$ 64.800 | R$ 216.000 | **30,00%** | **III** |
+| R$ 1.621 *(mínimo)* | R$ 19.452 | R$ 216.000 | **9,01%** | **V** |
+
+**Limiar: 28%.** Acima, Anexo III; abaixo, Anexo V.
+
+Três regras que aplicamos e que valem confirmar:
+
+| | |
+|---|---|
+| **Regime de caixa** | Só entra o que foi **efetivamente pago**. Declarado no eSocial e não pago **não conta** |
+| **A CPP não entra** | A CPP embutida no DAS **não** compõe a folha nos Anexos III e V — só no IV ⇢ **A1** |
+| **Empresa nova anualiza os dois lados** | Com menos de 13 meses, folha e receita são anualizadas juntas. Anualizar só a receita joga o recém-aberto no Anexo V sem merecer |
+
+---
+
+## 4 · A guia do sócio — INSS e Imposto de Renda
+
+**Exemplo: pró-labore de R$5.400, sócio sem outro emprego.**
+
+| Passo | Conta | Valor |
+|---|---|---:|
+| INSS do sócio | 11% × R$5.400 *(teto de R$8.475,55 não alcançado)* | **R$ 594,00** |
+| Dedução no IR | a **maior** entre o INSS (R$594,00) e o desconto simplificado (R$607,20) | R$ 607,20 |
+| Base do IR | R$5.400,00 − R$607,20 | R$ 4.792,80 |
+| Imposto pela tabela | faixa de 27,5%, menos a dedução da faixa | R$ 409,29 |
+| **Redutor** do art. 3º-A | Lei 15.270/2025, aplicado **depois** da tabela, sobre o bruto | **− R$ 259,64** |
+| **IRRF devido** | | **R$ 149,65** |
+
+🔑 **Três coisas que erramos antes e hoje aplicamos:**
+1. **A ordem importa.** O INSS sai primeiro e vira dedução da base do IR. Quem calcula o IR sobre o bruto cobra a mais do sócio.
+2. **A dedução é a maior das duas**, não sempre o INSS. A fonte pagadora é obrigada a aplicar a mais benéfica.
+3. **O redutor vem por último** e zera o imposto de quem ganha até R$5.000, decaindo até R$7.350. Ele **não** é uma faixa isenta nova.
+
+🔴 **E o mais importante: a conta é POR SÓCIO.** O teto do INSS é da pessoa e a tabela do IR é progressiva por beneficiário. Numa empresa de 4 sócios × R$3.500:
+
+| | INSS | IRRF | Total |
+|---|---:|---:|---:|
+| Somando a folha e calculando uma vez | R$ 932,31 | R$ 2.684,88 | **R$ 3.617,19** |
+| Calculando sócio a sócio e somando | — | — | **R$ 1.540,00** |
+
+Erra para os dois lados: o **INSS para menos**, porque a soma bate num teto que nenhum dos quatro atingiu sozinho; o **IRRF para muito mais**, porque R$14.000 numa pessoa cai numa faixa que R$3.500 em quatro não alcança. ⇢ **A1**
+
+---
+
+## 5 · O acumulado (RBT12) — três regras, não uma
+
+| Momento | Regra | Exemplo |
+|---|---|---|
+| **1º mês** | receita do próprio mês × 12 | R$14.000 → **R$168.000** |
+| **2º ao 12º** | média dos meses **anteriores** × 12 | 7 meses somando R$90.000 → média R$12.857,14 → **R$154.285,71** |
+| **13º em diante** | soma simples dos 12 anteriores | 12 × R$18.000 → **R$216.000** |
+
+🔴 **Duas armadilhas que a intuição erra, e que aplicamos:**
+- **O mês corrente NÃO entra** no cálculo — nem no numerador, nem no divisor. Ele é só a base sobre a qual a alíquota cai depois.
+- **Mês com receita zero ENTRA como zero e conta no divisor.** Excluí-lo infla a média, sobe a faixa e faz pagar a maior. No exemplo do meio há **2 meses zerados** entre os 7.
+
+🔑 E a troca de regra acontece pelo **mês de atividade**, não pela virada do ano.
+
+---
+
+## 6 · Guia paga em atraso
+
+**Exemplo real de uma das personas:** guia de **R$1.182,04**, paga com **14 dias** de atraso.
+
+| Parcela | Conta | Valor |
+|---|---|---:|
+| Multa | 0,33% **por dia** × 14 dias = 4,62% *(teto de 20%)* | R$ 54,61 |
+| Juros | Selic acumulada 1,09% **+ 1%** do mês do pagamento = 2,09% | R$ 24,70 |
+| **Total** | | **R$ 1.261,35** |
+
+⚠️ O **1%** só entra quando o pagamento sai do mês do vencimento — pago dentro dele, os juros são **zero** e só a multa corre (R$1.236,65). O teto de 20% da multa é alcançado no **61º dia**. ⇢ **B5**
+
+---
+
+## 7 · O piloto do pró-labore — a conta que roda antes, não depois
+
+🔑 **Por que ela existe:** o Fator R lê os **12 meses anteriores**. O pró-labore pago hoje só produz efeito nas competências seguintes — quem descobre o problema em setembro e corrige em setembro **só volta ao Anexo III em agosto do ano seguinte**. Alerta chega tarde por construção; a única intervenção que funciona é **pagar o valor certo desde o mês 1**.
+
+**Mesma empresa nos dois cenários:** receita R$18.000/mês, 12 meses na janela = R$216.000.
+
+**Cenário A — vinha pagando R$5.400/mês** *(modo: manutenção)*
+
+| | |
+|---|---:|
+| Folha já paga nos 11 meses fechados | R$ 59.400,00 |
+| Alvo da janela: **30%** × R$216.000 | R$ 64.800,00 |
+| **Mínimo a pagar neste mês** | **R$ 1.080,00** |
+| O que o piloto sugere *(o sustentável)* | R$ 5.400,00 |
+| Folga acima do alvo | R$ 4.320,00 |
+
+**Cenário B — pagou só o salário mínimo (R$1.621) por 11 meses** *(modo: recuperação)*
+
+| | |
+|---|---:|
+| Folha já paga | R$ 17.831,00 |
+| Para virar **já**, pelo alvo de 30% | R$ 46.969,00 |
+| Para virar já, pelo **mínimo legal de 28%** | R$ 42.649,00 |
+| Déficit acumulado | R$ 41.569,00 |
+| O que o piloto sugere mesmo assim | **R$ 5.400,00** |
+
+🔴 **E aqui está a decisão que mais queremos ouvir o senhor sobre.** O piloto **não** manda quitar o déficit de uma vez, mesmo sendo o que devolveria o Anexo III no mês seguinte. Ele compara:
+
+| | Valor |
+|---|---:|
+| Economia no DAS ao ficar no III em vez do V *(6,8667% contra 15,9167% sobre R$18.000)* | R$ 1.629,00 |
+| Custo extra na guia do sócio para pagar os R$46.969 de uma vez | R$ 11.940,02 |
+| **Saldo** | **− R$ 10.311,02** |
+
+> *"Quitar o déficit de uma vez custaria mais do que economiza. O sustentável segue valendo; o salto é decisão do sócio, não do robô."*
+
+No cenário sustentável a conta se inverte e fica favorável: economia de R$1.629,00 contra R$565,34 de custo extra na guia, **saldo de +R$1.063,66 por mês**.
+
+Duas decisões nossas que valem confirmação:
+
+| | |
+|---|---|
+| **Miramos 30%, não os 28% da lei** | Faltar um centavo derruba a empresa para o Anexo V no mês inteiro. A folga de 2 pontos é deliberada |
+| **Em 65 dos 87 CNAEs o piloto não atua** | São `Anexo III fixo` por decisão do governo: o Fator R não muda nada neles, e a tela **não pode** falar em 28% — sugeriria um risco que não existe |
+
+---
+
+## 📐 Como isso é conferido, por dentro
+
+| | |
+|---|---:|
+| Conferências automáticas no motor de imposto | **45** |
+| No piloto de pró-labore | **67** |
+| No estado do CNPJ | **14** |
+| Invariantes nas 16 empresas de teste | **32** |
+| Auditoria de agregação *(recomputa tudo na unha, sem chamar o motor)* | **142** |
+| Verificações do ciclo completo | **1.092** |
+| **Falhas** | **0** |
+
+🔑 **A régua que separa os dois tipos de prova:** o que vem de **documento emitido** (o centavo do arredondamento) é provado contra **recibo real**. O que vem de **norma** (as faixas, o Fator R, o RBT12) é provado por **invariante** — relações que precisam valer em qualquer empresa do perfil. Um não substitui o outro.
+
+⚠️ **E o que ainda não temos:** um recibo de PGDAS-D de empresa no **Anexo V**. As regras dele saem da lei e o arredondamento é herdado do Anexo III — mesmo código —, então não trava nada. Mas se o senhor tiver um em algum cliente, conferimos contra ele. ⇢ **A1**
+
 ---
 
 ## 📌 O que ficou de fora de propósito

@@ -130,6 +130,19 @@ O correto: o sócio **com** o CLT acima do teto não recolhe; o **outro** não t
 
 ---
 
+## M-014 · `guiaVencida` recebe CENTAVOS enquanto `apurarDAS` recebe REAIS
+
+Achado em 16/09, montando o Bloco E do briefing. Chamei `guiaVencida({ principal: 1182.04 })` — reais, como em `apurarDAS({ receitaMes: 7910 })` — e a função **não reclamou**: devolveu multa de R$55,00 e total de R$1.262,04.
+
+O motivo é que ela faz `emCentavos(emReais(principal) * pct)` para a multa e os juros, mas `principal + multa + juros` para o total. Com `principal` em centavos (118204) tudo fecha: **R$54,61 · R$24,70 · R$1.261,35**. Com `principal` em reais sai um número plausível e errado.
+
+🔑 **O defeito não é a conta, é a fronteira.** A regra está correta e as 45 conferências passam, porque elas chamam com a unidade certa. O que falta é a função **recusar** a unidade errada — hoje ela aceita as duas e só uma está certa.
+
+⚠️ **Não é bug em produção:** nada no app chama `guiaVencida` ainda. É armadilha para quem chamar primeiro.
+**Trava sugerida:** nenhuma ainda. Vira a dívida **D5**.
+
+---
+
 ## 🔴 Dívidas que estes achados deixaram
 
 | | Dívida | Dono |
@@ -138,6 +151,7 @@ O correto: o sócio **com** o CLT acima do teto não recolhe; o **outro** não t
 | **D2** | A régua de **2×** que separa ajuste de recuperação veio de 2 pontos medidos (1,22× e 9,6×). Caso real entre 2× e 9× é onde ela quebra | produto |
 | **D3** | O piloto **corta** pró-labore, não só sobe (P02, P04, P06). Está implementado como se fosse óbvio e **não foi decidido** | 🔴 Pedro |
 | **D4** | Na P16 o piloto move R$165.300 contra R$35.662 reais. O saldo só conta imposto; o resto é o **PP3** | 🔴 Mauro |
+| **D5** | O motor mistura unidades na fronteira: `apurarDAS` pede reais, `guiaVencida` pede centavos, e nenhuma das duas recusa a unidade errada (M-014) | produto |
 
 ## Links
 [[_doutrina-capacidades]] · [[PENDENCIAS]] · [[decisoes-marca]]

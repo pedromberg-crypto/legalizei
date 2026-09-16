@@ -1,0 +1,608 @@
+00:00:00 Speaker 1
+Eu tô, tipo, meio que na última tarefa ali, só que ele tem uma resolução, mano, que aí depois você me fala lá, eu te mando, você me fala o que é um negócio de pagamento no boleto, Do cara, tipo, vai R$139,00, chega lá e ele paga R$100,00. Você pode escolher isso no boleto, quanto que você vai pagar. Se aí a gente, tipo, na próxima fatura dele, então vai vir o que ele não pagou, tipo, com juros, tipo, faltou de R$139,00, ele paga R$100,00. Isso não tem como travar? O cara não paga o valor inteiro do boleto. Não sei, acho que o negócio de boleto, sei lá,
+00:00:31 Speaker 1
+No banco tem aquele campuzinho Lá que se você quiser editar, você simplesmente Edita e paga menos, tá ligado? Só que, tipo assim, o sistema, Já tá pegando quem pagar menos. Ele só quer saber o que fazer, Com a pessoa que paga menos. Se vai pegando, Os juros e batendo.
+00:00:48 Pedro Maia
+Eu, a princípio, penso já um jeito de bloquear. Não sei como. Ver se a própria Gatway tem. Porque se não vira, imagina, vira um vício, mano. Por mais que venha emitir juros para o cara, o cara para se manter ativo, ele vai lá todo mês e paga 30 reais ou 1 real. Então vamos por esse lado, vamos tentar ver o bloqueio, tá? Mas aí o time, você me manda, eu te falo. A gente vê junto. Beleza, valeu.
+00:01:10 Pedro Maia
+Você achou mais ou menos alguma coisa aí?
+00:01:14 Léo
+Não cheguei não, só fiz lá os 28%. Quem testa, não sei qual, os 18 ali?
+00:01:25 Speaker 4
+Posso perguntar aqui também, que eu preciso.
+00:01:33 Léo
+Da guia de R $ 5,400. Se eu pegar aqui R$ 140,00, que é 28% dos R$ 18,00, daria uma guia de R$ 554,00.
+00:01:54 Pedro Maia
+Deixa eu ver só o que ele traz sobre isso, para a gente entender como é isso. Beleza.
+00:02:44 Pedro Maia
+Isso aqui, como você viu os códigos aqui, é o que eu te falei dos links e tags. Então, por exemplo, esse aqui, entre coxete, que é um tag que ele buscou, Que isso tem a ver com tal fator R da previdência, blá. E aí ele entra na água.
+00:02:59 Pedro Maia
+Você tá naquela do Obsidian lá? É. Eu vou buscar. O que é dinheiro? Língua tá de dinheiro, né?
+00:03:08 Pedro Maia
+Ele já deu uma explicação.
+00:03:11 Pedro Maia
+Ótima pergunta. Eu vou explicar. Achei um erro na linha de junho. Primeiro, a conta, a fórmula. Mínimo do mês é igual ao alvo, vez receita de janela. Folha já paga na janela. Maio do Bruno, destrinchado. A janela em maio tem três meses.
+00:03:30 Pedro Maia
+Março, abril e o próprio maio. Ah, entendi. Receita da janela. Zero mais zero mais 18 mil. 18 mil. Folha já paga em março. Mais abril, 1621 vezes 2, certo? Daí saem os dois números, que são o mesmo cálculo com dois alvos diferentes. Pela lei 28%, que foi o que chegou ali, falta pagar em maio. Ah tá, ele agora justificou. Pelo nosso alvo de 30%, vezes o digital, sei lá.
+00:04:00 Pedro Maia
+Tá, ele tá com uma brecha de segurança, como se fosse 2% de segurança entre 28% e 30%, pro cara poder voltar pro... É bom. A gente fala.
+00:04:10 Léo
+De 28% porque se calcular, deixar nos 30%.
+00:04:16 Pedro Maia
+É uma margem de segurança. Entendi. Então aqui na verdade é que ele só agora colocou exemplificado, ele corrigiu aqui já. Então seria 28% vezes 18% porque ele ficou 3 meses sem faturar e faturou só agora nesse mês. E seria isso mesmo? E ele pagou menos o salário que ele já gerou. Exato. Entendi. Faz sentido? Faz. Só que aqui está constando que a gente gerou obrigatoriamente o prolabore para o cara lá, Desde o início, né? Então tem que pensar nisso.
+00:04:41 Léo
+É, nos meses para trás, desde que o faturamento zerado
+00:04:44 Pedro Maia
+A gente gerou o prolabore que geraram, O INSS, que é o ideal. Entendi. Beleza.
+00:04:50 Léo
+Todo mundo fala assim, ah, tem que esperar faturar para ser contra corrente, mas na lei, Do INSS, que é o único lugar que fala que é aquela 822, né? Já cansei de ler aquela lei ali, não tem nada assim. Começou a trabalhar, já é obrigatório. Entendi. Mas também os caras não tinham que fiscalizar por causa disso, não. Uma data de hoje, 16 de novembro, também não sei como é que vai ser isso pra frente.
+00:05:11 Pedro Maia
+Então aqui tá falando que ao mesmo tempo que o cara emitiu a nota de 18, no mesmo mês ele foi lá e desligou o automático e digitou lá 1621.
+00:05:20 Léo
+Aí A lógica ficou boa. Ele Pegou o que ele já tinha, fez os 28, tirou o que já tinha do pagamento e realocou a diferença dos 1798 pro laboratório. Daquele mês. Aham. É isso. Agora, se quiser manter essa margem de 30%, cara... Melhor. Eu trabalho só com um pouco de segurança. Porque é melhor você pecar nos 2% a mais do que eu chegar lá na frente e falar assim...
+00:05:47 Pedro Maia
+Pô, falteten 0,1%.
+00:05:49 Léo
+Faltou 60... Entendeu? Tô com um caso lá embaixo, faltou 60 reais pra esse cara aqui. Aí eu vou ter que inventar um monte de desculpa ali.
+00:05:55 Pedro Maia
+Aham. Não, então fechou. Então a gente... Eu vou travar pra 30% em vez de 28 o cálculo. Então, beleza. Aí mostra que ele desligou e sozinho ele foi lá e digitou o salário mínimo, R$1.621,00 mínimo legal. Quer tirar menos da empresa, fica R$177,00 abaixo do que a conta pedia lá em cima, Que a gente recomendou para ele estar dentro dos 28%, barra 30%. E em maio nós avisamos, com os números dele, para seguir no anexo 3 você precisa pagar pelo menos, Aí o valor de novo sugerido, com esses R$1.621,00 sua alíquota sai de 6 para 15,5%.
+00:06:27 Pedro Maia
+Cerca de.
+00:06:30 Pedro Maia
+R$1.710 a mais por mês. E ele confirma assim mesmo. Beleza. Cai para o anexo 5, janela cresce para R$36.000 da receita, E o mínimo sobe para R$5.217, sugerido. R$5.500, enquanto ele segue com os R$1.621. Tipo assim, ele trocou lá e não quis voltar para o recomendado. A gente continua fazendo o cálculo para ele, entendeu? Passou o mês e tal, ele foi lá nessa página, A gente ainda te mostra o recomendado para você voltar. Mas o cara vira e fala, não, eu quero manter aqui R$1.621. A dívida cresce sozinha.
+00:07:02 Pedro Maia
+Cada mês faturado sem folha proporcional aumenta o que falta no mês seguinte. A queda é da lei. Quem a provocou foi ele. E o alerta fica registrado. Ele reconsidera e religa automático. O pró-labore volta para 5,4%. Foi aquele caso que a gente também já até respondeu lá em cima. Então, só então, voltando ao anexo 3,11 meses depois, Que foi o que a gente falou lá em cima, Que, na verdade, a gente aqui sugeriria... A paulada para ele regularizar tudo. E ele voltar para o anexo 3, que é mais barato.
+00:07:33 Pedro Maia
+Do que ele ficar pagando por 11 meses o anexo 5. Basicamente é isso. Então,
+00:07:40 Pedro Maia
+Se então voltando, aqui está falando, a gente já falou Isso lá em cima, não precisa voltar. Defiso do ano, Calendário 2026. Aqui fala quanto, Ele faturou total.
+00:07:49 Pedro Maia
+Pagou 15 mil na NAND E dá 5 meses no anexo 5. É a persona que justifica o produto com o nosso, Piloto ligado desde o mês 1. Ele nunca teria ido para o anexo 5. A diferença é de R$6.000 no bolso do cliente. Então, tipo assim, a gente está mostrando nesse caso, Que o nosso cálculo inteligente de manter ele ali dentro da média do prolabórico, O nosso cálculo, é mais interessante do que ele pôr o valor que ele quiser. Então, beleza. Rafael, filmagem de eventos, obra abre em novembro e obrigação anual é em março. Filmagem de fases e eventos, um sócio, endereço fiscal, Isso aqui é como se ele usasse nosso endereço fiscal,
+00:08:20 Pedro Maia
+O KINAI dele, anexo 3, fator R não muda nada para ele, Que esse KINAI aqui provavelmente não tem essa opção. Abre em novembro, fica 11 meses. Então aqui, dia 1, ele contrata o nosso serviço, paga 49 a mais por nosso domínio fiscal, Em vez de usar o dele, escolha dele na contratação, E é ele que define onde a empresa fica domiciliada, que seria o nosso. Dia 1, inscrição municipal é a mesma coisa do outro, a gente vai subir a plataforma, A tela dele não fala de fator R em 28%. Então o que acontece?
+00:08:51 Pedro Maia
+A gente está querendo pegar o usuário que não tem a opção de ter o benefício de não falar para ele nem que existe. Se o cara travou o KINAI ali, o cara que não precisa saber dessa coisa.
+00:09:03 Léo
+Exato. A não ser que ele fizesse uma alteração amanhã, eu fosse lá e colocasse o KINAI, Do exercício daquela atividade na ocasião do fator N. Entendi. Porque aí, se o cara não tiver FONESO 3, ele nem precisa discutir nada,
+00:09:22 Pedro Maia
+Só Vai confundir a cabeça dele. Exato. Já fatura 14 mil no mês e abertura emitindo a primeira nota pela emissora nacional, Como se tivesse emitido fora. No primeiro mês não existe histórico, então a lei manda projetar. Acumulado é igual receita do mês, vezes 12, é ok, que é aquele cálculo que a gente fez lá em cima, É projeção, aqui ela não muda nada, 168 mil ainda está na primeira faixa de 180, Então ele paga os mesmos 6% da DAS, 840. Isso ele abriu e está em novembro ainda, de 25.
+00:09:52 Pedro Maia
+Janeiro a fevereiro de 26, dois meses secos, transmitidos iguais, ele não faturou mais Gente para transmitir as obrigações. 31 do 3, o defício do ano de 25, com 41 dias de empresa, tem que fazer do mesmo jeito A século.
+00:10:07 Pedro Maia
+Agora, de abril a junho, temporada cheia, que ele faturou esses valores aí, 12, 19, E 17. E 31 do 3 de 27, o defício do 26. Então, aqui, tipo assim, só tá mostrando que essas variáveis a gente mantém os cálculos da forma atualizada, visando, ou então esse cara que não tem fator R é mais simples ainda de levar ele, né, de tocar nas coisas dele. Então, beleza. Ali é clássico automático. Beleza. Mas também faz sentido isso aí, né? Faz. Então, beleza.
+00:10:37 Pedro Maia
+Gustavo, eventos corporativos, dois sócios no CLT e três guias atrasados. A gente põe assim pra gente testar tudo, né? Então, tem que ser o cara fodido, o cara que não quer resolver os trem. Então, beleza. Organização e feiras de congresso, dois sócios, ambos administram, um deles tem CLT de 9 mil, a gente já falou lá em cima, Acima do teto do INSS, três quinais secundários, anexo 3 fixo. Abre em setembro de 25, fica 13 meses, beleza. O cara mesmo esquema de sempre nos primeiros ali, né? Só que ali no dia 1 vem o DARF, sai sócio a sócio, certo?
+00:11:09 Pedro Maia
+E só depois soma, faz sentido? Ou ele é somado junto? O DARF do... Ele que tem dois sócios. Não, é... Você dá pra poder mandar o INSS? É. Não, ele manda, a gente gera individual. Mas a guia é uma? A guia fica uma. Ok. Não é escolha nossa, o teto do INSS é da pessoa, certo? Você falou do CPF. E a tabela do imposto de renda é progressivo por beneficiário. O do CLT alto não recolhe nada, o outro recolhe normal, certo? Porque aqui é aquele cara que tem o CLT sócio com a nota de 9 mil.
+00:11:41 Pedro Maia
+Beleza.
+00:11:45 Pedro Maia
+Todo mês. Mesma premissa do P11, E ela é nossa. Os dois sócios Recebem R$1.621 cada porque o app, Pergunta só o total, E nós, Rateamos igual, que foi aquilo que a gente bateu De fato o martelo também. A gente vai pegar os sócios, De acordo à proporção, Igualitária, societária que eles colocaram No início, a gente vai distribuir isso a nível, Pro labor, certo? Pra cada um. Só que aí acontece, igual esse cara de R$9.000 A gente vai ter que ficar sabendo disso lá atrás. Ele vai ter que informar que a gente já contribui.
+00:12:13 Léo
+Mesmo no... Em algum lugar, eu já sou contribuinte do INSS, aí automaticamente ele teria como opção contribuir, seria à toa. Ou ele põe o valor.
+00:12:25 Léo
+Ou ele põe o valor e eu não gero. Entendi. Então, é uma sombra pra lavoura. Entendi. Tá, faz sentido. Então, beleza. Assim, ele vai ter o pagamento sendo gerado, mas ele não vai ter a tributação do INSS.
+00:12:39 Pedro Maia
+Entendi. Aqui fala que outubro a dezembro teve pico de venda.
+00:12:45 Pedro Maia
+Beleza, 31 do 3 a defisa de 2025 correto, março, abril e maio emitimos as três guias em dia dentro do prazo, beleza, março, abril e maio de novo. Ele paga com 14, 21 e 14 dias de atraso, pagar é a ação dele, fora do app, não exige débito automático da DAS, a gente não vai mexer com débito automático. Então aqui a gente detecta o atraso, isso a gente consegue fazer via API, na consulta de arrecadação e recalculamos com multa de 0,33. Por dia mais juros, que é aquilo que a gente já avaliou lá em cima também. Cursos de atraso aqui, que seria o cálculo feito, que não teria existido.
+00:13:19 Pedro Maia
+E lembrando de vencimento, que evitaria isso, ainda não está construído. Então, só do lembrete mesmo. Esta linha é o caso de uso dele, num número e não uma funcionalidade nossa. Ok, correto. 13º mês de atividade. A regra do acúmulo troca de média vezes 12 para a soma dos 12. Faz sentido? Porque faz sentido, né? Porque se ele não completou 12, é média. Se ele passou de 12 e está no 13º, Ele já tem... Faz sentido. Troca pelo mês de atividade.
+00:13:52 Pedro Maia
+E não pela virada do ano. Correto. Total aqui, fundo das guias e das DAF, beleza. Kleber, aluguel de equipamento. É uma coisa, com quem você acha que eu valido, Aqui os quinais que a gente tem, se vão ser esses mesmo? Tenho um fator na dúvida. Tipo esse aí mesmo, doutorado. Aluguel de equipamento? Esse trem entra?
+00:14:10 Pedro Maia
+Aluguel entra. De equipamento é
+00:14:12 Léo
+Como o anexo 3. Entendi. É, tá até ali o anexo. Pode atender esse cara
+00:14:17 Pedro Maia
+Por exemplo. Beleza. Vamos lá. Cleber, aluguel de equipamento, 4 sostos.
+00:14:22 Léo
+Na maior parte das vezes, é só se o cara for uma financeira
+00:14:27 Léo
+Quer abrir um banco, uma empresa que vai emprestar dinheiro, Alguma coisa, um afeto, ele vai comprar ativo, Ou então ele tem imóveis próprios pra poder receber aluguel. Porque, assim, esse negócio de imóveis próprios é um problema... Desde quando eu estive na faculdade um dia. O cara coloca o KINAI lá, automaticamente você entra em desempada do Simples. Então, assim, na hora que ele coloca lá, ele pode ter o KINAI lá.
+00:14:54 Léo
+Só que o único problema é o seguinte, o único problema é que ele não pode exercer A atividade de imóveis prós. Então, assim, é vedado. Vamos supor, igual o representante comercial, ele também fica vedado. Então, existem algumas... Alguns quinais que ele vai desenquadrar o cara do síntese.
+00:15:10 Pedro Maia
+Entendi. Mas no caso do aluguel de equipamento ali não. Entendi. E, por exemplo, a gente está com a lista inteira dos quinais do IBGE, que são... Você tem aí essa lista? Tem 1.300 e alguma coisa, que a gente vai buscar aqui. Ah, de quinais, né? É. Que aí o que acontece? Dele, eu fui filtrando de acordo, contabilizei o que a gente ia atender, ele me cercou em, 87 quinais, sendo que dos 87, 15 podem ter o fator R e os outros todos fixos 3. Deixa eu disponibilizar essa lista para melhor validação,
+00:15:41 Pedro Maia
+Que aí vocês batem o olho com calma, ou você ou Isabela, Só para ter uma certeza, entendeu? Então, beleza, aluguel de equipamento, Então esse cara é esse aí, 4 sócios, teto do nosso contrato, 25% de cada, todo administrado, 2 quinais secundários, Anexo 3 fixo, abre em março e fica 6 meses, beleza. O que é desse cara? Eles decidiram ser 4 sócios, 25% de cada, todos administram, E o teto do nosso contrato, e tudo o que vem abaixo É consequência da escolha societária, beleza. Dia 1. Inscrição municipal e as quatro assinaturas do sócio, os documentos para poder constituir, beleza.
+00:16:12 Pedro Maia
+Próximo é a lei. Quatro prolabores, quatro cálculos, uma guia. Certo, né? Porque a gente já faria automático. Se a gente tiver aquela validação inicial, né, que a gente está falando. É aqui que o nosso erro custava R$2.000 por mês. Nós erravamos, mas a regra que nos condenava é a da lei. Beleza, então isso aqui está certo, né?
+00:16:35 Pedro Maia
+Colabore, quatro cálculos e a guia unificada. É, a não ser que ele não queira gerar para algum sócio específico, né? Mas aqui, vamos falando, se ele colocou lá tudo com uma administrativa, A gente vai travar que esse cara tem que colaborar. Pode. Fechou. Então, beleza. Todo mês, quatro eventos de remuneração e quatro pagamentos no E-Social. Um por sócio. Faz sentido? Isso tem que ser individual, tem que ser transmitido individual por CPF? É, porque transmite por CPF, né,
+00:16:58 Léo
+E fala que tem CPF e tal, tem colaboro, o outro, vai subir quatro informações. Do mesmo CNPJ, no mesmo.
+00:17:06 Pedro Maia
+CNPJ de CPF de diferença. Entendi. Todo mês, aqui a premissa é nossa, não escolha dele. Assumimos rateio igual, isso aí que a gente falou. A gente de cara vai colocar o prolabora pra cada um de 1621. E o salário mínimo, R$6.484,00 de folha por mês. Isso aqui está somando, mas ele vai ser individual, certo? Vai ser individual. Beleza. Então, por que o app pergunta só o total? Se o trabalho for desigual, o risco é nosso de ter assumido.
+00:17:38 Pedro Maia
+É, mas isso aí não vai mudar. Pelo menos o preço aqui não vai dar melhor. E é o piso que manda aqui, não é o fator R. Sendo anexo três fixos, o ProLabore não defende alíquota nenhuma. 6.484 saem porque cada sócio é segurado obrigatório, não porque a conta pediu. A folha vira mais da metade do faturamento dela. Certo, mas correto, né? Tipo assim, é um valor que faz sentido esse valor. Ele somou aqui, né? Os 1.621 vezes 4.
+00:18:14 Léo
+É que o fator R não... Nesse caso, o cara tá com um anexo 3, o fator é pra ele, ele não vai mudar
+00:18:22 Pedro Maia
+Então tanto faz, né?
+00:18:24 Léo
+Pra Ele que for exercer atividade só de anexo 3, não. Entendi. O que pode acontecer? Às vezes o cara tem mais de uma atividade e uma da atividade que ele exerce é fator é, sim. Entendi. Aí ele teria que controlar o fator é.
+00:18:38 Pedro Maia
+Pra não perder o R por causa daquela atividade.
+00:18:40 Léo
+É, por causa daquela atividade. Se a nota foi emitida naquela... Aquela atividade, sei lá, quimioterapia, o cara aloca equipamento, mas aí o fatoramento Dele tá todo na fisioterapia, ele vai fazer o fatoramento, é normal, mesmo estando com Atividade lá do anexo 3. Entendi, entendi. Mas normalmente os caras não misturam muito o anexo, não sei, aí fica muito específico Mesmo.
+00:19:05 Pedro Maia
+Até uma coisa que eu tô querendo pôr de trava é da galera pôr os quinais secundários, Aí que isso pode dar B.O., né? Porque, tipo assim, se não me engano, não tem... Lá para o DBE não existe limite de secundário. Se o cara não estiver disponibilizado lá, 80, o cara só põe 80. Não, são 15. Você pode colocar.
+00:19:24 Léo
+15 atividades no máximo, por cento de pé jovem, e alterar entre elas. Então tem empresas, vamos dizer, você pegar a van, a van vem de tudo, para tudo quanto é jeito, De carne a barraga para acampar.
+00:19:42 Pedro Maia
+Ele vai.
+00:19:42 Léo
+Ter que ir na idade de tudo. Não tem jeito. Aí com certeza você vai ver que a lista deles de guiné é maior. Mas dificilmente.
+00:19:49 Pedro Maia
+O cara bota 15 ali. Você acha que vale a pena a gente travar para evitar algum bel maior? Tipo assim, sei lá, a gente trava ali uma secundária de no máximo 5. Podia sugerir, sei lá, 2, 3. De acordo com o que ele faz e.
+00:20:03 Léo
+Põe o limite de 5. Se ele quiser, ele tem que ter uma ação de clicar num botão e adicionar o campo.
+00:20:10 Pedro Maia
+É Porque como é que está funcionando o aplicativo sem entender se faz sentido? Quando a pessoa chega, primeiro ela escolhe a atividade principal. Quando ela deu o next, que vai ser para a próxima página da secundária, Tem uma IAzinha por trás que ela vai fazer uma leitura de dados ali Do que a pessoa preencheu, com o que ela falou que trabalha, Junto desse KINAI número 1, que ele escolheu de principal, E na segunda tela ele já vai aparecer com sugestões relativas a isso. Entendeu? Só que existe um campo de digitação nessa tela que a pessoa pode escolher o que ela quiser. Dentro dos sinais que a gente está deixando disponível. Então, o que acontece?
+00:20:41 Pedro Maia
+Eu acho que essa sugestão já vai ser o suficiente para a pessoa pôr só o que tem a ver. Quer dizer, só quer avançar, né? Exato. Só que aí eu penso nisso. Será que para menos complexidade a gente mostra essas sugestões, Deixa o contraparte para digitação, mas trava tipo cinco atividades?
+00:20:59 Léo
+Até cinco eu acho que seria o ideal. É bom, entendeu? Porque dificilmente o cara vai colocar muito... Isso pode gerar futuramente complexidade. O serviço dele já vai estar ligado, sei lá, a uma coisa muito específica. Ele vai exercer só aquilo, principalmente o prestador de serviços. Entendi, então vou fazer dessa forma. Muita atividade é quando a empresa é comercial. Fechou, então tá. Ou então assim, consultoria, o cara tem consultoria, advogado, contabilidade, assessoria, auditoria, Aí pode ser que algumas tenham mais atividade, mas para algumas atividades específicas sim.
+00:21:31 Pedro Maia
+A Grande maioria não vai passar de cima, né? Entendi. Então, beleza.
+00:21:35 Pedro Maia
+Então, beleza. Ele falou isso lá em cima. O fato é, de fato, que você falou que não tem nada a ver Porque ele é 3. Defiso 2026, Rendimento de cada sócio discriminado, Certo? O defiso a gente tem que fazer discriminado Isso do sócio?
+00:21:46 Léo
+Tem que fazer discriminado. Fechou. Não é que vai fazer defiso, Lá, você informa cada sócio participante, Se ele tem, Prolabório, se ele tirou o prolabório, Mas, normalmente, o sistema já, Traz essa informação. Fechou.
+00:21:59 Pedro Maia
+Vitor, consultor em TI, dois anos decidindo contra o aviso. Cadastro. Consultor em TI, um sócio aqui na IDL, beleza. 15 podem virar anexos, sim. Ah, vai ter anexos. Já está até falando ali, dos 15.
+00:22:14 Pedro Maia
+Exato. Dos 15, depois de dar a atividade. Isso, exato. Abre em junho de 25 e fica 22 meses com a gente. Procuro, beleza. Percurso longo e tal. Então é o seguinte, dia 1, mesmo de sempre, em julho. A primeira nota, automático, sugere 1.601 do Prolabore, Só que isso aqui a gente já teria deixado fixo, na verdade. Ele abriu em junho, e em julho o automático sugere, ah tá, entendi,
+00:22:45 Pedro Maia
+Que por acaso é o mínimo, porque a janela ainda tem dois meses. A divergência só começa em agosto, quando pede 2.758. Mas isso aqui, na verdade, esse automático com a nota em julho, a gente já teria colocado 1621 no outro, no mês anterior, em junho, ou não? Se o cara alegou lá que ele quer o prolabore desde o primeiro dia.
+00:23:07 Léo
+Ele Pode informar tanto no primeiro mês, mas ou então no primeiro mês do faturamento. Pode ser no prolabore, mas está tudo certo, então. É. Então, beleza. Julho ele desligou o... Ele fez o primeiro mês do... Bom esforço, ele teve o primeiro mês, em junho. Ele não teve o faturamento. Mas em julho é o primeiro faturamento, ele pode gerar esse prolaboro em julho mesmo.
+00:23:29 Pedro Maia
+Pode esperar o primeiro faturamento, eu diria assim. Entendi. A não ser que o cara opte em fazer de junho em dezembro. O ideal é o seguinte,
+00:23:35 Léo
+É aquilo que a gente fala, né? Em junho, já em tese, ele já teria que ter o prolaboro informado. Mas, normalmente, dificilmente faz assim. O cara vai lá e informa, ah, vou faturar. Você já emite a partir dali.
+00:23:46 Pedro Maia
+A partir do primeiro faturamento, né? A partir do primeiro faturamento. E fora isso, a gente só faz. Porque senão.
+00:23:50 Léo
+Eu fico só gerando dívida para o cara. Às vezes, ele vai só gerando.
+00:23:54 Pedro Maia
+Débito para ele. É, isso, inclusive, pode ser uma coisa que eu acabei de ter um gatilho, não sei se faz sentido, é o quê? O cara constituiu o CNPJ. Eu só vou travar o prolabore dele a partir da primeira emissão de nota fiscal de faturamento. Faz sentido? A não ser que ele opte antes para poder recolher o INSS. Mas aí fica opcional para ele.
+00:24:16 Léo
+Ele quer fazer o recolhimento imediato. Às vezes ele faz uma seleção lá, quer fazer o recolhimento imediato e aí passa a gerar. Isso é bom.
+00:24:24 Pedro Maia
+Mas eu acho que facilita a pergunta do início.
+00:24:27 Léo
+Tem cara que é mais antiga e ele quer continuar contribuindo. Vou virar PJ aqui. Não, quero continuar contribuindo em MSS, porque ele olha lá para o futuro dele. Algumas vezes isso pode acontecer.
+00:24:39 Pedro Maia
+Então, o que você acha? Você acha que a gente, de início, O que isso muda é aquela pergunta inicial que a gente estava fazendo Sobre isso, exatamente. Então, por exemplo, essa pessoa que acabou de constituir, Quando ela caiu no aplicativo, Você lembra que a gente estava falando uma pergunta, tipo assim, Ah, você pretende faturar em quanto? Eu acho que substitui isso. Porque aí, na verdade, a gente pode falar o seguinte. Sei lá, acionaremos, na palavra feia, Ativaremos o seu ProLabore a partir do dia do seu primeiro faturamento. Sei lá, algo do tipo. Caso queira, apenas, entendeu?
+00:25:11 Pedro Maia
+Apenas por contribuição do INSS, gerar o ProLabore agora
+00:25:17 Pedro Maia
+Antes mesmo, agora, nesse primeiro mês, imediato. Clique aqui, sei lá. Faz mais sentido, não faz? Faz, porque aí ele escolhe.
+00:25:26 Léo
+O momento que ele quer adquirir para começar a fazer a contribuição.
+00:25:30 Pedro Maia
+Aí fica uma decisão dele. E aí se ele colocar não só quanto faturar, Ele pode demorar dois meses. E aí funciona do mesmo jeito. E aí vai funcionar igual. Porque aí dei três meses que o cara fez a primeira nota. Bateu que ele fez a primeira nota lá, A gente já gera o prolabore dele com base. Melhor, não é? Melhor. Fechou, beleza. Então foi lá. Ele falou que ele desligou em automático, em julho. E logo no começo, e fixa o prolabório do mínimo para tirar o máximo como lucro. Avisamos com o número dele, enfim, como sempre. Em julho cresce de 8 mil para 42 mil mês e nunca religa o automático.
+00:26:04 Pedro Maia
+A cada mês o aviso reaparece e ele segue, beleza? Em setembro já vem caindo, que é o que você falou, 3 meses, né? Ele vai cair aqui para o anexo 5, que fica dos 19, dos 22 meses. Se não tiver essa sugestão que você falou da paulada De resolver tudo de uma vez, escolha Dele, sustentado mês a mês. Beleza. É em fevereiro de 26, O acumulado chega e ele entra Na segunda faixa da líquida efetiva, começando a subir De 15,5% para uma 16,75%. Sem nunca chegar lá. Correto?
+00:26:34 Pedro Maia
+Sim. Março, Defis 2025, correto. Junho, 13º mês, Que ele estaria completando o ano. A regra Do acúmulo troca para a soma de 12, correto? A gente já validou. Defis 2026, no final 31 do 3 de... E... 27, março de 27, acumulado na Nanã, a mil reais do teto do ME, com efetivo de 16,74%, Passar é desenquadramento do EPP. A gente vai ter essa vigia. Então, até lá, eu acredito que a gente já vai estar atendendo esse EPP, a gente já.
+00:27:05 Pedro Maia
+Continua com esse cara. Esse é um milhão, Não?
+00:27:07 Léo
+Esse que tá ali?
+00:27:08 Pedro Maia
+Acho que é mil mesmo. É mil? É que ele tá mil do teto de 360 mil do ME, entendeu? Aí ele pulou para o EPP. Fechou. Mas 27 é aqui que a casa Não faz nada, porque não existe. O que eu consigo? Considerando que a gente não Atenderia o EPP. Mas os cálculos ali, A forma que lidou, tudo ok, né? Da destrava, do...
+00:27:28 Léo
+O EPP funciona igual.
+00:27:31 Léo
+Você Fala que não atender o EPP é como se fosse, O cara do louco presumido? Não, pode ser EPP.
+00:27:38 Léo
+É muito simples. Pode.
+00:27:41 Pedro Maia
+Eu vi que pode. Só que o que acontece? O que que... Para o nosso nicho de prestador de serviço desses quinais travados, gera de mais complexidade o cara virar IPP. Ou não gera nada? Só se.
+00:27:54 Léo
+O faturamento dele for assim, ao invés dele prestar um serviço de mil, mil, mil, mil, mil, Aí ele simplesmente lança um faturamento assim, não, lançou uma nota, 25 mil. Aí rapidinho ele vai chegando, ele vai escalando. Sim. Isso assim, várias no mês, né, que eu falo. Mas eu acho que vão ser poucos. Eu tinha pouquíssimos casos assim que o cara ultrapassava uma... Eu tinha... Não. Aí tinha uns advogados lá que realmente ganhavam as causas assim.
+00:28:21 Pedro Maia
+Cabulosa, né? Quem sobe do nada.
+00:28:23 Léo
+Pô, Aí teve um cara que ganhou 1 milhão e meio lá, E tava acostumado a gerar um contornamento de 30 mil. De repente ele ganhou 1 milhão e meio. Que?
+00:28:32 Léo
+Declarou não. Nunca na vida. Declarou não. Jamais. Eu só parei exposto pra ele os riscos e derramando. É, ué. E aí a decisão dele, entendeu? Exato. Mas então, o que você acha, por exemplo? Isso é um assunto interessante. É PP, o cara, a gente tem condição de atender. Então, eu quero entender o seguinte... É o que eu soubido, dá mais demanda, então assim... Mas o que eu estou falando... Esse início, eu acho que se a gente pegar só os do Simples e até inclusive é PP...
+00:28:58 Pedro Maia
+Mas o que eu estou falando, esse exemplo, vamos dar o exemplo desse cara aí. Vamos supor que ele veio seguindo tudo certinho, não desligou lá o trem automático e tal, Chegou no acúmulo ali, virou o ano, está no 10º terceiro mês... E ele tá a mil conto de bater o teto da proporcionalidade pra virar EPP. Esse cara, eu migrar ele pra EPP, ele vai ter que desenquadrar de qualquer jeito. Se ele emitir ali, se ele tá a mil reais no teto, em março de 27 ele emitiu uma nota de 2 mil e desenquadrou.
+00:29:24 Léo
+É, Na verdade ele vai continuar como simples, só que só tem um processo que normalmente você vai lá dentro da receita, Que é porte, lá no cartão CPJ dele que ele escreveu porte. Que aí é o tamanho da empresa, né? Às vezes ele vai dar ME. Aí ele só vai mudar aquele ME para EPP. Mas isso aí gera uma DAS, uma operação? Ele nem é automático, sabe? Esse processo de EPP. Então ele nem gera a legalização, ele nem gera um processo automático para isso. Mas ele continua gerando a informação do simples, normal.
+00:29:55 Léo
+Assim, sem grandes alterações. Muito provavelmente quando o cara tem muito faturamento, Porque existe uma tendência muito de cancelamento de nota aqui. Pode complicar um pouco o processo, mas se o cara só emitir daqui pra frente, quando O cara só tem uma nota, duas notas ali, eu consigo acompanhar mais se o cara tá cancelando Muitas notas ou não. Mas se ele só tem poucas notas, é mais fácil de acompanhar o cancelamento de nota do que Quando o cara tá aí, Entendeu?
+00:30:21 Pedro Maia
+Então a migração, no caso desse aí, a migração que eu falo assim, né, o desenquadramento, Pra EPP, o enquadramento pra EPP, ele, além dessa alteração... Lá no contrato, né, que vai sair de ME pra EPP. Isso gera uma guia, sei lá, na Juseng, pra gente alterar essa nova categoria dele. Mas fora isso, esse cara, por exemplo, se a gente faz esse processo, fala pra ele, ó, Você atingiu o teto, agora você vai ser, por lei, você não tem o que fazer,
+00:30:53 Pedro Maia
+Se a partir de agora você tem que desenquadrar, você vai pra EPP. Gera umas guias lá pra ele, cobra uma mais ali pra que ele reenquadre a mão.
+00:31:03 Pedro Maia
+Deu o negócio do rio,
+00:31:04 Léo
+Da riva aí, rio, rio.
+00:31:07 Léo
+Deu o negócio do domagre? Deu, né? Agora você vai com eleitando dever no pão de peixe.
+00:31:23 Léo
+De negócio de drogaria? O que que você fala?
+00:31:34 Léo
+Sim, eu lembro, uma parte disso emitia para a Gomes.
+00:31:46 Léo
+Não, é porque, é, é porque, por quê? O cara pegou o acesso lá, olhou as notas, entendeu? Tem as notas emitidas lá.
+00:31:56 Léo
+Ah, sei lá, aí eu não estava lá na reunião, não sei como é que pega não.
+00:32:08 Léo
+Eu quero saber, não. Quem combinou isso aí foi ele. Isso aí é planejamento deles.
+00:32:18 Léo
+Mas isso está no e-mail. Eu posso procurar lá no...
+00:32:27 Léo
+Acho que no e-mail não vai estar nada, não. Sabe por quê? Nada de formalização existe.
+00:32:35 Léo
+Eu encaminhei.
+00:32:43 Léo
+Não, você não foi eu que me metei, não, eu nem, nem, entendeu?
+00:32:51 Léo
+Eu tenho que olhar para ver se ele me mandou isso do número que eu estou dele, porque é muito provável.
+00:33:00 Léo
+Isso. Vamos supor, que como ele me mandou, eu não estava com esse número de celular, entendeu? A mensagem não vai existir aqui. Aí eu posso olhar no meu histórico de mensagem do meu celular, do meu número mesmo, ao invés de ser do número dele, entendeu?
+00:33:22 Léo
+Me manda aí, para ver.
+00:33:29 Léo
+Vamos mandar, hein?
+00:33:31 Léo
+Mas é porque o Arley está enchendo o rádio de saco lá. Nossa, pelo amor de Deus. Isso é um samba de saco. Esse cara, vovó, vou dar pelo menos de presente pra ele, pelo menos 200 botox a mais pra ele colocar naquela testa dele. Nossa, o cara, o vovó, aquele Alexandre também, viu? Não, parece a mulher, velho, o cara.
+00:33:57 Léo
+Tá doido o que fala lá?
+00:34:03 Léo
+Não, isso aí foi informação que passou lá pra frente aí.
+00:34:09 Léo
+Isso aí deve ter efeito, isso aí, para poder diminuir nas apurações lá que eram feitas para poder gerar mais despesa, você sabe, né?
+00:34:22 Léo
+Muita mais, às vezes o Warren nem estava sabendo disso, o cara só aproveitou disso.
+00:34:28 Léo
+Ah, mas aí não quer saber não, se esperava, usou cada um aí, assumiu o seu e pronto. Deixa eu olhar aqui, eu vou olhar, mas me manda um print.
+00:34:41 Léo
+Os 2%, aí tem os 2% a mais lá.
+00:35:04 Léo
+Isso. Ele tirava da Gomes, mas fazia isso... Ó, pra mim isso aí, fez isso aí e o cara nem estava sabendo disso, porque o controle estava todo nosso aqui. Tanto que o Alexandre reclamou que a gente era pra ter feito as apurações aí tudo lá dentro do sistema dele lá e não tá lá.
+00:35:29 Léo
+Peraí que eu tenho que sair do WhatsApp aqui.
+00:35:53 Léo
+Cadê seu número? Você mandou de onde?
+00:36:06 Léo
+Você mandou do cooperativo?
+00:36:09 Léo
+Não, achei.
+00:36:47 Léo
+Aí eu tenho que ver se tá no pessoal dele ou se tá no número dele mesmo. Às vezes ele já até apagou a mensagem lá. Parece que foge da polícia.
+00:37:12 Léo
+É no meu número aqui, no que ele tá usando. Deve estar no perfil dele lá no pessoal.
+00:37:25 Léo
+Ó, no número dele também tá.
+00:37:29 Léo
+A última mensagem que eu tenho aqui, qual é a data que está aí?
+00:37:50 Léo
+19 de quem?
+00:37:53 Léo
+Não, não tem. A última mensagem que eu tenho no pessoal dele aqui é 26 de maio.
+00:38:09 Léo
+O número antigo dele aqui. Eu estou aqui no número.
+00:38:14 Léo
+30 de abril. As mensagens anteriores sumiram. Entendeu?
+00:38:20 Léo
+Aqui ó, 30 de abril, é a última mensagem mais recente que eu tenho. Peraí, deixa eu olhar no meu pessoal aqui, porque às vezes eu encaminhei do meu pessoal Para aí e depois que eu encaminhei para você, porque aqui eu tenho mais.
+00:38:54 Léo
+Tem não. Nem no meu pessoal, nem no número que eu tô aqui, nem no número dele.
+00:39:14 Léo
+Ele vai falar lá que a orientação foi essa. Às vezes tá no e-mail também.
+00:39:23 Léo
+Às vezes tá lá no e-mail. Pera aí, rapidinho.
+00:39:52 Léo
+Não, não tem nada.
+00:39:55 Léo
+É, deve ter passado o número, deve ter apagado o histórico. Eu fui lá em fevereiro, beleza? Falou, tchau.
+00:40:12 Pedro Maia
+Falar, uma saquinha, um pedidinho. Beleza, então o que a gente falou do... Ah, só para tirar a dúvida. Esse cara que a gente vai atender esse nicho aqui, desse simples nacional, Prestador de serviço, que vai ser o cara mais tranquilinho. Esse cara, se ele chegar nesse teto, a gente propõe pra ele esse desenquadramento, Põe ali um honorário, mais as taxas ali da junta, desenquadra ele. O que acontece? Esse cara, nesse tipo de serviço que ele foi subir em faturamento e tal, Mês a mês, um cara recorrente, com poucas notas, por exemplo, Esse cara, pra gente continuar atendendo ele, é simplesmente seguindo,
+00:40:42 Pedro Maia
+Fazendo as mesmas coisas que a gente já fazia, certo? Mesma coisa. Não muda nada.
+00:40:47 Léo
+O cara, eu vou no máximo fazer uma alteração, se o cara não quiser fazer essa coisa, é claro, né, o ideal seria que ele fizesse, mas se ele não fizer, a receita não trava o CNPJ dele por falta desse enquadramento como EPP, não? Entendi. E o símbolo internacional dele fica igual, a mesma coisa, exatamente igual. Entendi. É que às vezes a empresa de pequeno posto, que é a CZPP aí, às vezes ela tá no lucro presumido, aí às vezes por isso que gerou esse...
+00:41:15 Pedro Maia
+O EPP tem como não ser lucro presumido? Tem, mas ele pode ser do Simples. Só muda o faturamento, basicamente só muda o faturamento.
+00:41:25 Léo
+Ele tem o limite de ME 360 mil, mas o Simples ele pode faturar até 4.800, 4.800.000. Então ele pode ser EPP e continuar sendo Simples. Então a gente pode.
+00:41:35 Pedro Maia
+Atender o EPP até 4.800.000.
+00:41:36 Léo
+É Porque tem EPP que fica no lucro presumido.
+00:41:39 Pedro Maia
+Só que aí a gente não atenderia o prejuízo. Aí a gente não atenderia o lucro, mas o IPP sim. Entendi, ok. Vou mudar esse ali. Então, beleza. Então, aqui só mostrar as contas, que seria o DARF dos sócios e tudo mais. A gente já passou lá por cima, como bem conferindo, qual o saldo é. Depois eu vou fazer umas contas mais reais para vocês também checarem com calma. Hoje o espelho da Contabilizei, a gente já passou por isso, só para dar double check mesmo. Eles revisam para o laboratório todo mês, nós vamos fazer a mesma coisa. Esse aqui é o exemplo que eles fizeram no meu, para a gente poder ajustar sempre, Para a pessoa manter no melhor enquadramento. É, lança um Prolabor já no mês de abertura, igual eles fizeram no meu.
+00:42:15 Pedro Maia
+Isso aí a gente vai fazer aquela pergunta, né? Você já quer emitir Prolabor agora, nananã, e se ele resolver não...
+00:42:21 Léo
+Aí é a responsabilidade dele. É a responsabilidade dele,
+00:42:23 Pedro Maia
+Mas ele tem que entender aquela parada também do seguinte, Se ele tiver como ter o benefício do fator R, isso altera aquele cálculo, né, que a gente, Tá falando.
+00:42:33 Pedro Maia
+Da folha? É. De ter que fazer uma folha do mês pra trás.
+00:42:38 Léo
+Ah, Mas quanto tempo que ele ficou sem, né? Ah, entendi. Se ele tiver ficado sem, já tiver gerado o faturamento,
+00:42:45 Léo
+Aí ele vai ter que ver qual que é o período que o cara... Não, não quero gerar pro labor esse mês.
+00:42:50 Pedro Maia
+Não, assim que ele entrou. Acabou de entrar agora. Fala aí, clica lá. Eu não quero gerar pro labor até eu faturar. Ponto final.
+00:42:56 Léo
+Aí, fechou. Aí o faturamento...
+00:42:58 Pedro Maia
+E ele fatura daqui dois meses. Ele fatura daqui dois meses,
+00:42:59 Léo
+Faz os 28 e gera a folha. Porque ele já vai ter aqui,
+00:43:02 Pedro Maia
+Esse mês, agora já conta. O próprio.
+00:43:06 Léo
+Mês vai contar.
+00:43:08 Pedro Maia
+Ah, Entendi. Então já está resguardado Entre si, como eu diria. Já está resguardado. Mesmo que ele não gerou, Para o laboratório.
+00:43:14 Léo
+Mesmo que ele não tenha gerado.
+00:43:16 Pedro Maia
+Entendi, ótimo. Então fechou.
+00:43:18 Léo
+Ali Não sou 100% não, Para poder evitar, às vezes precisar retificar Alguma coisa. Deve ter compensado.
+00:43:23 Pedro Maia
+Pode ser. Lançou aí 100 reais e tal, Isso a gente não vai praticar, né? Eu acho que não faz sentido, A gente mexer com isso. Lançar aí 100 reais Igual eles fizeram comigo. É, é.
+00:43:34 Léo
+Eu acho que a gente pode filtrar aí pra ver se...
+00:43:36 Pedro Maia
+Porque a gente já tá perguntando.
+00:43:37 Léo
+Mas o que eu tô falando,
+00:43:40 Pedro Maia
+Já tá perguntando pro cara, você quer gerar? A primeira pergunta vai ser, Você quer já gerar pro Labore, A partir desse mês da sua constituição, Ou você quer aguardar seu primeiro Faturamento? Porque se aí o cara colocar, Que ele não quer, a gente não vai Gerar 100 reais, não vai gerar nada. Agora, se o cara colocar que ele já, Quer fazer o pro Labore, a gente vai gerar um pro Labore De um salário mínimo, a gente não vai fazer nada de 100 reais. Então, pra mim, isso aqui a gente corta. Eu acho um trem muito, talvez, muito gabiarrado. Que, pra mim, não faz sentido esse 100 reais. É, pode ser. Entendeu? Que aí, dessa forma, a gente trava os dois pontos.
+00:44:10 Pedro Maia
+Se a pessoa aqui quer e não quer, Pro INSS, a pessoa aqui quer e segue o padrão. Exato.
+00:44:16 Pedro Maia
+Zero prolabora em mês sem receita. Isso a gente pode manter fazendo também, Que é o que eles fizeram no meu. Certo? Então, por exemplo, O mês que não foi identificado nota fiscal, Eles zeram o prolabora. Fazemos isso?
+00:44:26 Léo
+O mês que não foi identificado...
+00:44:30 Léo
+Aí, o que pode acontecer? Às vezes o cara não emitiu nota naquele, mas ele vai emitir a nota que ele esqueceu, mais a nota naquele outro mês.
+00:44:37 Pedro Maia
+Mas não pode emitir retroativo, a gente vai bloquear.
+00:44:39 Léo
+É, mas o que eu falo assim? Eu já vi. Eu vi até aqui. O cara, às vezes, ele emite todo mês. Aí teve um mês que ele não emitiu e esse mês que ele não emitiu, ele emitiu no próximo mês.
+00:44:51 Pedro Maia
+Dobrado.
+00:44:53 Léo
+Dobrado. Aí, automaticamente, a folha dele teria que ser... Duas vezes vai aquele valor. O ideal seria manter o prolabore.
+00:45:02 Pedro Maia
+Então a pessoa que escolheu que quer o prolabore sendo emitido lá desde o início Ou desde o primeiro faturamento, O primeiro faturamento emitiu o prolabore, a gente nunca mais para de calcular. Ele fica ali como certo. Mas tendo a opção da pessoa dela falar que ela quer alterar o valor do prolabore, Ou não emitir também, ela pode ter essa opção. Tipo assim, eu não quero, eu vou ficar quatro meses sem emitir, Eu não quero emitir o prolabore em quatro meses. Ele pode optar por isso? Pode. Está tudo certo. Só vai interferir nos cálculos lá para frente. Porque aí ele mesmo já.
+00:45:31 Léo
+Opta por fazer isso.
+00:45:33 Pedro Maia
+E a gente deixando claro. Isso aqui, você não vai estar contribuindo no INSS e eu não tenho nada a ver com isso. Isso, né?
+00:45:39 Léo
+É, Vamos fazer uma... Porque às vezes o cara quer continuar contribuindo.
+00:45:42 Pedro Maia
+É, entendi. Então a gente avisa. Às vezes ele tem uma reserva lá,
+00:45:44 Léo
+Quer continuar pagando e tal. Entendi. O que acontece? Essa contribuição contínua, querendo ou não, dá ele o benefício de você precisar de algum seguro. Recorrer a algum seguro por acidente. Então é bom a gente avisar. A gente dá a opção, mas avisa. É bom avisar. Se a maternidade, tinha muito caso da mulher, Às vezes não contribuiu por um período, Pelo menos 15 meses, Aí quando ela precisou, A contribuição dela vai seguir. Vamos falar, ela estava acostumada a receber 6 mil, Aí ela ia cair para um salário no mês.
+00:46:15 Léo
+Entendi. Ou seja, ela não continuou, Não se programou para esse tipo de situação.
+00:46:20 Pedro Maia
+Então a gente vai avisando. Tudo isso a gente vai avisando. Beleza. Aqui, bloco é as sete contas do motor com o número do... E por que, tipo assim, isso aqui ele passando, por exemplo, Imposto do mês e os centavos. Isso aqui é o que ele puxou da minha última nota fiscal, Do 6%, e aqui ele só puxa. E RPJ, etc, Corfis, PIS, CPP e SS, Bateu 100% do valor, que é o que eu paguei lá, Que me gerou da guia. Certinho os cálculos, né? Puxou da conta da Belizeca, de que eu não vou errar. A alíquota efetiva, porque ela quase nunca é da tabela. A partir da segunda faixa da tabela...
+00:46:52 Pedro Maia
+Traz dois números, uma alíquota nominal e uma parcela a deduzir. O que se paga é o resultado da conta entre os dois, certo? Efetivo é igual a RTB12 vezes nominal menos parcela a deduzir, Dividido pelo RTB12, que seria o proporcional, correto? Exatamente. Então, anexo 3, segunda faixa nominal 11,20, parcela deduzida de 9.360, eu acredito. Então, seria isso aqui. Certo? Seria basicamente isso. Lógico que ele não vai calcular aqui, ver se está no 0 a 0.
+00:47:24 Léo
+Não, mas a fórmula é essa. A fórmula é essa,
+00:47:26 Pedro Maia
+Né? Então, beleza.
+00:47:28 Léo
+Ou pegar o imposto dividido pelo... Ali ele está pegando o quê? Ah, não. É ali que está perdido. Ou então, ele pega isso aí, automaticamente isso aí é calculado pelo sistema. O valor do imposto dividido pelo faturamento. Ele já chega direto nessa fórmula.
+00:47:44 Pedro Maia
+O valor do imposto dividido pelo faturamento, né? Entendi. Ele já vai pegar ali que está perdido. Ok. Então, repare na primeira linha, em 180 mil exatos, a segunda faixa devolve exatamente 6%, o mesmo da primeira. A parcela a deduzir é calibrada para não haver salto na borda. E conferimos isso em oito bordas dos dois anexos, ao décimo segundo decimal. Então, tipo assim, aqui o que acontece? Porque também eu vi puxando ali que existe uma lei de arredondamento. Então, tem centavos que a gente tem autorização de arredondar pelo governo, né?
+00:48:18 Pedro Maia
+Dentro dessas guias e tudo mais. Tudo aqui é arredondado pra cima. Exato. Lógico, pra baixo eles não iam fazer, né? Ninguém pagar mais... Nem seria um.
+00:48:28 Léo
+Centavo pra cima, né?
+00:48:30 Pedro Maia
+Tem que ser pra cima, né? Ninguém pagar mais por ter cruzado a linha por um real. O que queremos ouvir? A fórmula e a leitura da parcela deduzir estão corretas. Seria, né? Basicamente isso. A fórmula correta, dentro de um cálculo parcela deduzir, Seria basicamente isso nessas porcentagens, certo? Isso. Beleza? Fator R, a conta que desce de 6% ao 15,5%. Fator R é igual folha paga dos 12 meses, Dividido por receita dos 12 meses, Que é o que você já falou aqui 350 vezes. Então, beleza. Exemplo, empresa faturando 18 mil por mês por 12 meses, certo?
+00:49:05 Pedro Maia
+Prolabore mensal, 5,4 mil. Folha de 12 meses, 64,8 mil. Receita de 12 meses, 200 e tantos. Fator R, 30%, que é a margem que a gente vai fixar Para ter a porcentagem de folga. Anexo 3. R$1.621,00 mínimo, aqui só mostrando que se ele estaria... O mínimo ele ficaria no 5%. E ele estaria abaixo, né? Ele estaria no 5% aqui. Então tá, limite de 28%, tá se montando, beleza. Ok, três regras que aplicam e que vale a confiança em regime de caixa. Só entra esse aqui que a gente já falou que não vai mexer agora, certo?
+00:49:36 Pedro Maia
+Esse caixa vai acabar em dezembro de 2026. Então, tipo assim, mas a gente não tem nada que a gente tenha que fazer de obrigação acessória sobre isso, tem ou não? Nos nossos quinais e nessa Persona que a gente vai atender agora. Eu acho que seria ideal nem sugerir.
+00:49:53 Léo
+Para o cara que existe isso. Mas a gente tem que fazer alguma coisa? A gente tem que transmitir alguma coisa em relação a isso? Não. Vamos supor, lá dentro do Simples tem, O regime de apuração Que a gente escolhe. Quando a empresa Entra, eu escolho se o cara vai, Ser competência, ou seja, tudo que eu Vender, independente se recebeu Ou não. Eu vendi um milhão De reais agora em setembro. Se eu recebi só 50 mil, Eu vou ser tributado no Simples Nacional Só por 50 mil e não sobre o milhão. O regime de competência é o contrário.
+00:50:23 Léo
+É exatamente pelo valor que eu vendo, E não pelo valor que eu recebi. Mas se eu estou marcando, Dos 950 mil, E só recebi A partir de 50, eu teria pago, Sobre o milhão. Mas isso vai acabar Em dezembro. Então, vamos supor, se a gente Fizesse essa.
+00:50:41 Léo
+Escolha agora, o cara, Que é regime de caixa Vai ser o que? Tudo que ele recebeu, menos tudo que ele vendeu, ele teria que, lá em dezembro, recolher tudo. Então, vamos supor, se ele passar com... Se ele tinha um recebimento de 50 mil meses, mas ele tem 2 milhões e meio para receber, Chegar lá em dezembro, ele tem que tributar 2 milhões e meio. Entendi. Porque em 2027 vai acabar o caixa. Entendi. Então, assim, eu nem... Entendi, nem mexe. Vai simplificar,
+00:51:10 Pedro Maia
+Não mexe. Entendi. Vai com competência que vai dar certo. Fechou. A CPP não entra, a CPP embutida na DAS não compõe a folha do anexo 3 e 5, só dá 4, certo isso? Então, CPP não entra nesses cálculos nossos, entra, que é esse cálculo aqui, na verdade, ele está contradizendo. É que na verdade não,
+00:51:29 Léo
+É que ali, esse CPP, ele entra ali na tributação do DAS, Só que eu posso pegar esses 205 reais que gera ali, e eu posso somar ele lá no fator R. Só que ao invés de eu ficar me preocupando qual é a CBT que está gerando em cada taça, Porque isso aí pode ir aumentando, o fatoramento vai aumentando, os tributos também vão aumentando. Faz o cálculo pelo salário e a CBT entra como um bônus, que ela mesma vai gerar esse arredondando ali.
+00:52:01 Léo
+Mostrou, se você fez o cálculo de 29% de fator N, pelo menos 29, ele vai acumular mais 1% ali, vai virar 30. Ah, entendi. Entendeu? Ele vai ser um Plus ali,
+00:52:12 Pedro Maia
+De um valor que eu consigo Recuperar. Entendi. Mas então, quando ele fala Que, por exemplo, que essa questão do... Cadê o caralho? Fator R. Quando ele fala que... Não é fator R, não. Ali, ali, ó. Aqui? É, quando ele fala, então, tipo assim, a CPP Não entra. O que seria não entra? A CPP embutida na DAS não Compõe a folha no anel de expressão.
+00:52:33 Léo
+É Que eu acho que ele tá falando sobre...
+00:52:38 Léo
+Sobre... Sobre caixa, não. Pode ser. O CVB não entra na tributação do regime caixa.
+00:52:47 Pedro Maia
+Mas agora, do fator R, ele já está ali incluso no meio, da conta da DAS. Ele já está ali no meio.
+00:52:54 Léo
+Ele está falando assim, só no 4. O 4 não tem CPP, o anexo 4. A CVB imutida no DAS não compõe a folha. Nos anexos 3 e 5, só.
+00:53:14 Pedro Maia
+Não compõe a folha? Será que ele está querendo dizer que... Não, mas a gente considera em tudo. Considera?
+00:53:20 Léo
+Pode considerar em tudo.
+00:53:22 Pedro Maia
+Porque ele é calculado ali no meio?
+00:53:23 Léo
+É porque o CPT fica lá dentro do DAS, Aí eu posso pegar essa parcelinha de 200 reais que gerou ali em cima, E somar ele lá dentro do fatoré. Se for uma... Se só tiver, coloco agora. Se eu tiver funcionário, eu posso pegar o IGTS, todos os encarros que geram na folha, Eu posso.
+00:53:40 Pedro Maia
+Subir ele e compor esse 28. E o cara que não tem o fator R, ele é anexo 3 fixo, como é que funciona essa CPP? Ela ainda existe lá dentro? Ela vai continuar existindo. Só que ela não vai interferir no fator R?
+00:53:50 Léo
+Esse CPP basicamente é o ILSS, ele paga dentro da guia.
+00:53:54 Pedro Maia
+Entendi. É algo que não tem como nem tirar, ele vai vir na guia de qualquer jeito.
+00:53:57 Léo
+Ele só não vai, bota ali, só no anexo 4. O CPV, ele só é zero no anexo 4, porque a contribuição presidencial do anexo 4, ele é por fora. Então, ele fora da... Ele só não entra na guia,
+00:54:11 Pedro Maia
+Mas ele existe. Ele só não entra na... Entendi, fez sentido. Tá. A guia do sócio, INSS e imposto de renda. INSS do sócio, 11% vezes... Não, não, não. Isso aí, dando o exemplo lá de cima. De 5,4 metros, de 8.455 no alcançado. Então, o valor, 594, certo? Dedução do imposto de renda. A maior... Entre o INSS 594 e o desconto simplificado, cairia aqui para 607.
+00:54:37 Léo
+É, Porque ali ele faz o... ele olha o que é maior e faz a dedução que é o que é mais benéfico. Certo. Ele considera 607.
+00:54:44 Pedro Maia
+Base do imposto de renda, né? Então seria 5.400 para 607. Isso. Certo isso? Você faz o valor do salário, 5.400 menos o 607,20. Certo, né? Isso. Beleza. Aí ele vai servir como base para o imposto de renda. Isso. Imposto pela tabela, faixa de 27,5%, menos a dedução da faixa, 409. Redutor do artigo 3, que é aquilo que a gente já falou, né? Depois dos 3,5. Depois do valor que a gente chegou, ele debitaria isso aqui pelo redutor automático lá.
+00:55:17 Pedro Maia
+E essa aqui seria a guia do INSS.
+00:55:20 Léo
+Isso aí. 149 menos 149.
+00:55:22 Pedro Maia
+De alguém com prolabore nesse valor. É isso mesmo? Isso. Aí seria o imposto de renda devido, né? 149 reais. Fechou, então. Três coisas que erramos antes. A ordem do imposto, o INSS, sai primeiro e vira dedução na base do imposto de renda. Quem calcula o imposto de renda sobre o bruto cobra a mais do sócio. A gente já falou sobre isso, né? Faz sentido? É exatamente isso. O que.
+00:55:46 Léo
+Pode fazer a dedução do INSS?
+00:55:48 Pedro Maia
+A dedução é a maior das duas. Não sempre o INSS. A fonte pagadora é obrigada a aplicar... A mais benéfica, certo?
+00:56:01 Léo
+Ou 607 ou o que é descontado.
+00:56:03 Pedro Maia
+Do INSS. O redutor vem por último e zera o imposto de quem ganha 5 mil, decaindo até 7.350. Ele não é uma faixa isenta nova, certo?
+00:56:16 Pedro Maia
+Exatamente. Ele tem a.
+00:56:19 Léo
+Isenção de 5.
+00:56:21 Pedro Maia
+Beleza. E o mais importante, a conta... É por sócio. O teto do INSS é de pessoa e a tabela do imposto de renda é progressiva por beneficiário. Numa empresa de quatro sócios, seriam quatro vezes 3.500, que a gente já falou. As pessoas estariam abaixo dos cinco, teria dedução, blá, e não pagaria imposto de renda, certo? Beleza. Somando a folha e calculando uma vez.
+00:56:46 Pedro Maia
+INSS, IRRF, total tal, cálculo do sócio, a sócio e somando. Então, aqui a gente teria um total... Eu nem entendi o que é esse total aqui. Olha, somando a folha e o cálculo...
+00:57:01 Léo
+É como se tivesse cinco e quatro...
+00:57:06 Pedro Maia
+Ah, Tá. É como se ele tivesse zerado o imposto de renda ali.
+00:57:11 Léo
+Eu não entendi também.
+00:57:14 Léo
+Erro para os dois. O INSS para menos, porque a soma bate num teto... Que nenhum dos quatro atinge sozinho. É o que está mostrando a economia, que se cada um fizer os 14, ele vai gerar uma tributação maior do que se cada um tivesse dividido.
+00:57:31 Pedro Maia
+Fez 3,5.
+00:57:32 Léo
+Entendi. Faz sentido. Fazendo 3,5.
+00:57:34 Pedro Maia
+Ah, tá. Entendi. Isso aqui eles pagariam se não tivesse feito a divisão certinho. E se ele fez,
+00:57:38 Léo
+Ele pagaria 1.440.
+00:57:40 Pedro Maia
+Todo mundo, né? Fechou. Entendi. O acumulado, RBT 12, três regras, não uma. Momento, primeiro mês, receita do próprio mês vezes 12, que é o que a gente já falou. Exatamente. Certo? Segundo ao décimo Segundo. Média dos meses anteriores, Vezes doze. Sete meses, Somado, somando noventa mil Média doze mil nananã, No final cento e cinquenta e quatro, Mil duzentos e alguma coisa, que seria uma média. Certo? Décimo terceiro mês em diante Soma simples dos doze anteriores.
+00:58:11 Pedro Maia
+Vezes doze, Vezes dezoito, daria um duzentos e seis. Aqui então ele estaria buscando a média. Beleza. Duas armadilhas que, A intuição é que aplicamos. O mês corrente não entra no cálculo, nem no numerador, nem no divisor. Ele é só a base sobre qual alíquota cai depois, certo? Isso. Beleza. Mês com receita zero entra como zero e conta no divisor. Perfeito. Certo, né? Mesmo que não faturou, ele entra como uma divisão ali.
+00:58:42 Pedro Maia
+Isso. Excluindo a média. Faz sentido. É, se excluir ele, a gente vai ter o divisor zero. Faz sentido. Sobe a faixa e faz pagar a maior. No exemplo do meio, há dois meses zerados entre os sete. Aqui está dizendo... Enfim, eu entendi isso aqui. A troca de regra acontece pelo mês de atividade, não pelo virado do ano. Correto, né? Guia paga em atraso.
+00:59:14 Pedro Maia
+Exemplo real, isso aqui foi aquela questão dos impostos que a gente falou, do 0,33, Isso aqui para mim está certamente depois da onda Goltec também, de novo lá no governo que eu puxei. Beleza. O piloto do ProLabore é a conta que roda antes, não depois. Por que ela existe? Fator R, leu os 12 meses anteriores. O ProLabore, pago hoje, só produz efeito nas competências seguintes. Quem descobre o problema em setembro e corrige em setembro, Só volta ao anexo 3 em agosto do ano seguinte. É aquela mesma coisa que a gente falou. Nesse ponto, a pessoa que optou por não querer o cálculo automático.
+00:59:46 Pedro Maia
+Para se manter em uma boa alíquota, que ele vai estar lá o aceite, Quando ele resolver voltar, a gente vai sugerir o seguinte, Resolve essa paulada aqui do que está pendente, Para você cair para o mês seguinte já para o anexo 3, Ou então você vai demorar X meses para alcançar novamente a porcentagem do anexo 3. É isso.
+01:00:03 Léo
+Se Ele já estiver com o histórico de mês sem essa contribuição, Ele tem que fazer uma paulada só para dar ele para frente e recuperar a média.
+01:00:12 Pedro Maia
+Alerta chega tarde por construção, a única intervenção que funciona É pagar o valor certo desde o primeiro mês, faz sentido. Mas tudo isso a gente vai ter nos avisos. Mesma empresa nos dois cenários. Receita 18 mil meses, 12 meses na janela igual a 216, cenário A. Vinha pagando 5.400 meses, que foi o sugerido, Ele fica dentro da alíquota do sugerido. Folha paga nos 11 meses fechado, beleza? Alvo da janela, 30% vezes nananã, 64.800. Mínimo a pagar nesse mês é R$ 1.080.
+01:00:44 Pedro Maia
+Mínimo a pagar neste mês. Ok. O que o piloto sugere? Sustentável. Ah, ok. Tipo assim, ele está falando que teria que pagar um mínimo disso,
+01:00:54 Léo
+Só que não tem quanto menos de um salário mínimo. Ele poderia reduzir o prolabar para R$ 1.080, mas... Só que não é permitido pular em menos de R $ 1.600,
+01:01:02 Pedro Maia
+Então, não?
+01:01:03 Léo
+R$ 1.821. É. Não é. Eu posso travar isso com o aplicativo? Aí só entra naquela... Pode travar, sabe por quê? Porque ele até pode recolher mesmo o salário mínimo, Mas o salário hora dele não pode ser menor do que o mínimo.
+01:01:16 Pedro Maia
+Então não vamos mexer com isso. Então é o seguinte, se o cara resolver pôr lá, A gente já até falou isso aqui antes, O cara resolver abrir lá para editar o colabório dele, Se ele pôr R$1.600, a gente já não vai aceitar. O mínimo é um salário mínimo de acordo com a lei, blá. Não sei se é o objetivo. Beleza. Então, o que a pilotagem sugere seria, ok, Folga acima do alvo. Beleza, então aqui ele já tá pôndo uma folga.
+01:01:37 Léo
+Vai ter a trava do 1628, todo ano você vai rodar um código lá pra atualizar? O salário vai, não vai, não tem, tem que ter. Já pensou em fazer isso uma vez? Já de uma vez no automático, né? Num campo só, né? Você vai verificar. Vale a pena. Porque todo ano é o P. Cenário B. Ano que vem.
+01:01:56 Pedro Maia
+Deve ser 1741. Vamos ver. É bom que a gente já fica esperto nesse tamanho. Cenário B. Pagou só o salário mínimo, R$1.621,00 por 11 meses. Então, o que quer dizer? O cara foi lá com o faturamento de 18 meses e ele resolveu pôr. Foi, ele já paga. Beleza, isso aqui vezes 12 para virar já pelo alvo de 30%. Aí, ó, aquele já puxou. O cara teria que... Encolheu 50 mil de base, né, Dinho? Exato. Para virar já pelo mínimo, igual legal a 28%, seria um pouco a menos.
+01:02:29 Pedro Maia
+Déficit acumulado, 41 mil, O que o piloto sugere, Mesmo assim. Ok. Então aqui foi onde a gente Falou o seguinte, que o cara, mas, Teria uma paulada dessa se o cara ficar 11 meses No anexo errado? O faturamento era 200, né? Era o faturamento de 18 mil. Na verdade.
+01:02:44 Léo
+Ele não vai gerar um débito de 40. Aquela é a base dele Pra calcular 11%. Ah, entendi. Não, não vi. É 42 vezes 11%. Não é 42 vezes 649? Ou seja, os déficits ele não recolheu retroativo. Ah, entendi. Você entendeu? Entendi. Ah, então aqui a gente sugera que ele teria...
+01:03:05 Pedro Maia
+A minha base de salário. Entendi. Naquele mês, para ele regularizar, ele teria que efetivar um prolabório nesse valor. É. Ah. Para já matar, logo ele.
+01:03:13 Léo
+Recuperar o benefício. Então, basicamente, o INSD dele seria de R$4.730. Ah, pô. Perto do cara fatura R $18,00, para ele regularizar,
+01:03:21 Pedro Maia
+Compensa demais. Pode pagar, sei lá, R$1.000,00 a menos de guia. Exato, é. Quatro meses,
+01:03:27 Léo
+Cinco meses, Ele já ia pagar isso aqui a mais. A mais. No mês só, ele paga, E se livra dos Próximos.
+01:03:37 Pedro Maia
+Cinco meses. Faz sentido. Entendi. Agora eu entendi mais ainda. Beleza. Então aqui seria, Até bom ver de exemplo, seria a sugestão, Nossa, né? Então, por exemplo, se a gente subisse o Prolaboratório a tal, 11% seria A tal da sua próxima guia, nananã, Você normalizaria no mês seguinte.
+01:03:52 Léo
+O Piloto não manda quitar o déficit de uma vez,
+01:04:09 Pedro Maia
+Mesmo sendo que devolveria o anexo 3 no mês seguinte. Ele compara. Então, tipo assim, ele está querendo dizer, né? Tipo assim, a economia da DAS ao ficar no 3 em vez de 5. Isso aí é um comparativo bom. Legal, né? Quando o cara lê isso aí, o cara fala assim, é, estou ganhando ainda. Vale a pena. Custo extra na guia do sócio para pagar os 40 nanã, que foi o cálculo que você fez. Isso aqui que seria o...
+01:04:35 Léo
+Esse Aí seria o custo que ele pagaria a mais se ele não fizesse a.
+01:04:38 Pedro Maia
+Redução do anexo. Entendi. Então o saldo ele estaria ainda 10 mil. Ou seja, ele recupera 10 mil. Recupera 10 mil numa paulada dessa. Que tal o déficit de uma vez custaria mais do que economizaria?
+01:04:52 Pedro Maia
+Não, na verdade não, então isso aqui está errado. Ah não, porque aqui ele está contando déficit, ele está contando como se fosse isso aqui, Tipo assim, que a pessoa... É porque aqui, na verdade, Luana, sabe o que a gente está confundindo? Esse negócio quando ele fala pagar, é porque ele conta o prolabore como uma retirada de Pagamento, entendeu? Tipo assim, aí a mim eu peguei alguns delírios desses, que é tipo assim, ele considera ali, Igual a gente falou, eu teria que ajustar o prolabore do cara para 42 mil. Ele está contando que aquilo vai ser tipo um pagamento mesmo, entende? Ele não está contando que isso é uma estimativa de cálculo do prolabore. Ele está contando como pagamento.
+01:05:22 Pedro Maia
+Mas poderia ser.
+01:05:24 Léo
+Poderia? Porque vamos supor, às vezes ele gera essa folha, É esses 40 mil, e às vezes daqueles 216 que ele gerou de faturamento, Às vezes ele realmente se paga nos 41 mil, Porque é serviço, margem alta. Então ele poderia, ele teria que fazer, na retirada dele, Na própria retirada a gente faria a baixa do prolabório, Que seria gerado na contabilidade. Mas assim, pra nós aqui é só uma base, mas depois gera o financeiro pra ele lá.
+01:05:55 Léo
+Se ele transferir, né, porque também tem isso. Porque não necessariamente eu gero a informação do salário aqui pra ele pro laborio, Que ele vai fazer a transferência daquele pra conta dele. Porque eu já vi o cara gerando só pro laborio e nunca se pagou. Aí o que eu tinha que fazer? O saldo dele ficava lá e quando ele... Ah, não, eu vou fazer retirada todo esse mês. Ele ia lá, a gente ia lá fazer a quitação do prolabore aberto, mas só pra servir de base mesmo.
+01:06:19 Pedro Maia
+É isso que eu tô pensando, tipo assim, porque eu acho... Porque ele pode não se pagar, isso é só base. Isso que eu tô falando, isso entra também pra uma coisa que não é nossa. Tipo assim, o cara tá lá, ele tá alegando esse prolabore, ele tem que retirar e pagar na conta dele, PJ, lá pra contar isso. É dele. É dele, se ele quiser pagar,
+01:06:34 Léo
+Se pagar, ele também tem a opção de não se pagar. Exato. Deveria, né, deveria. Mas se ele optar por não fazer... A gente.
+01:06:42 Pedro Maia
+Está em aberto na contabilidade. Fechou. Então, está certo aqui, até então, pelo que a gente está entendendo. No cenário sustentável, a conta se inverte e fica favorável. Economia, mil nananã, contra 500 e tal, de custo extra na guia. Saldo de mais mil nananã por mês, que a gente está falando que ele economizaria. Beleza. Duas decisões nossas, mirando 30% e não 28% da lei. Beleza, foi o que você falou. Vamos manter 30%.
+01:07:09 Pedro Maia
+Se faltar um centavo, derruba a empresa para o anexo 5. Então, a gente sempre vai trabalhar com esses dois centavos. Se não tem um centavo da diferença lá, ele joga. Fechou. Então, a gente vai trabalhar com esses dois decimais a mais. Em 65 dos 87 quinais, o piloto não atua. Então, o que isso quer dizer? Dos que eu selecionei dos 87, a gente tem 65 que são anexos 3 fixos. Mas depois eu vou passar isso para vocês que mais calmam, Porque essa conta toda que a gente está fazendo aqui é em cima desses 15 quinais apenas, Mas que vai existir. O meu mesmo é. E PJ, normalmente, acho que vira de 4 ou 6, né? Esse prestador de serviço. Vai.
+01:07:40 Pedro Maia
+Como isso é conferido por dentro? Conferência automática no motor de imposto, que é o que a gente fez. Isso aqui está falando, tipo assim, eu vou te dar um exemplo. Quando eu passo todas as pessoas para fazer esse teste do aplicativo com mesas diferentes, Saída, estando pro laborio, ele vai isso aqui tudo, mano. Ele vai na conferência automática do motor de imposto que a gente já criou, Ele vai no piloto automático do ProLabore, ele vai no status, no estado do CNPJ. Ele vai em variante nas 16 empresas de teste. Enfim, auditoria de agregação, bababá. Então, por exemplo, toda vez que eu rodo, ele gera quase 1.100 consultas.
+01:08:14 Pedro Maia
+E ele chega no resultado de zero dentro dessas contas que a gente confirmou lá em cima. Então, isso tudo já está dentro da minha máquina. Isso nem é dentro do órgão do governo. Então, ele já pegou os cálculos de governo e está acertando grande parte disso. Para mim, é quase... e já é muito bom. Então, beleza. A régua que separa os dois tipos de prova. Beleza, então, aqui é outra coisa. O que acontece? Eu vou fazer umas simulações dessas De uma forma visual mais bonitinha com o PDF E vou gerar umas cinco páginas com casos diferentes, E dá pra, sei lá, pra vocês da diretoria só lerem E verem se aquilo faz sentido Dos cálculos, se aquela situação faz sentido.
+01:08:44 Pedro Maia
+Ou não, pra gente ver se tá de fato batendo. Beleza. O que ficou... Ah, ok. Aqui acabou. Aqui acabou. Aqui o que ficou De fora é a questão da folha de pagamento, Que eu vou ter que adicionar essa variável aqui, Mas aí é mais pra frente um pouco. ISS, retenção... Ah, tá. Outra coisa que ele fala é se é ISS aí, retenção. Só que eu fui ler, que não sei se faz sentido, Que, eu não sei se é de Minas Gerais isso, O ISS já é retido no tomador, né? No tomador não, né? No prestador, né?
+01:09:17 Léo
+Lá no... Esse ISS retenção aí, Aí ele vai estar falando do tomador. Ou seja, eu contrato ou o cara vai dar... Manutenção do ar condicionado. O cara emite a nota pra mim, Aí vamos supor, ele me cobrou R$2.000.
+01:09:36 Léo
+Aí, retido, De ISS pra ele é R$200. Aí na nota dele vai estar assim, R$2.000, Aí vai estar ISS retido, R$200. Total líquido, você vai passar Pra ele R$1.800, Porque os R$200 que você está retendo dele, A gente vai gerar uma guia Pra pagar esses R$200. Ou seja, o seu custo, Foi R$2.000, mas você já passou Pra ele o... Os 1.800 menos esse imposto retido. Esse imposto retido aí automaticamente tem que ser no local da prestação. Na maioria das vezes é onde a empresa está.
+01:10:06 Léo
+Mas quando o cara está, dependendo da atividade, é para onde o serviço está sendo prestado. Na reforma, a página 2027, vai ser prioritariamente, todo mundo vai recolher no local da prestação. Então eu estou aqui em Belo Horizonte, se eu prestar serviço lá em contagem, eu vou pagar a alíquota de contagem. Entendi. Porque eu estou prestando, o meu local de prestação de serviço está sendo contágio, Então eu estou usufruindo, estou vendendo esse benefício de quem está contratando o serviço Lá dentro de contágio, então eu vou fazer esse recolhimento lá na base.
+01:10:41 Léo
+Então basicamente eu, mas não vai ter muitos casos assim não, Lá eu não tinha muitos casos de retenção, tinha um cara ou outro lá que tinha essa retenção, Mas acho que para o prestador de serviço dificilmente você vai receber uma nota com o ISS retido. Mas isso é uma coisa que pode gerar muita demanda. A gente pode ir rastreando.
+01:10:57 Pedro Maia
+Mas, por exemplo, como é que geraria essa demanda? Tipo assim, a pessoa tem que alegar na geração da nota? Você vai ter SES retido ou não? Qual que era o problema que a gente tinha?
+01:11:06 Léo
+Se o cara... Quando tinha prefeituras diferentes, que não eram Belo Horizonte, a maior parte a gente consegue, Ir lá na base dele e puxar essa Nova de formato automático via EPI. Antigamente era assim, o cara contratava um serviço. E era de outro município, esse município eu não tinha acesso a essa nota. Se o cara não me mandasse para recolher esse ISS, ele estava retido, o ISS não ia ser recolhido E eu também não ia ter acesso. Porque eu precisava que o cara me mandasse, ele está contratando. Hoje já tem a base do Porto Nacional, hoje fica mais fácil olhar para isso.
+01:11:37 Léo
+Ver se tivemos essas intenções, gerar guia e mandar para o cliente. Mas assim, lá eu tinha pouquíssimo...
+01:11:47 Pedro Maia
+Poucos casos. Mas e se a pessoa, por exemplo, quando ela estiver emitindo a nota fiscal dentro da nossa Plataforma, ela vai ter que alegar sobre esse ISS para a gente poder saber se a gente tem, Que buscar ou não? Quando ela emite, aí vamos supor,
+01:11:56 Léo
+Quando eu sou o prestador e ele é o cara, meu cliente, Ele prestou o serviço com esse ISS retido, aí não sou eu que mando a guia. Aí é o cara que está contratando lá o serviço dele. Então não tem nada a ver com isso? Nessa parte, não. Eu só teria a ver se o meu cliente recebeu uma nota com esse ISS retido, aí eu teria Que gerar essa guia. Só quando eu contrato. Não ele presta serviço. Quando eu contrato o serviço... A emissão da nota dele tem nada a ver com isso aí. Ou seja, eu sou cliente da Legaliza aí. Eu presto serviço, eu vou...
+01:12:27 Léo
+Aí eu tenho um computador. Eu pego um cara que vai fazer a manutenção nessa máquina. Eu estou contratando ele. Se na nota desse cara que eu estou contratando, Tivesse essa retenção, Eu tenho que emitir essa nota para mim, Para eu fazer o pagamento. Porque eu retive dele o valor do imposto Que seria passado para ele, Mas eu vou pagar para ele. É só uma forma de centralizar a arrecadação da prefeitura. Mas lá no outro escritório não tinha muitas demandas assim, Não.
+01:12:54 Pedro Maia
+Mas isso foi, tipo assim, acho que eu fiquei um pouco confuso ainda. Tipo assim, onde a gente, onde vou ter que, por exemplo, O nosso cliente que é corrente, o meu caso, Onde eu teria que alertar alguma coisa de SS para alguma coisa Ou não precisaria? Tipo, meu KINAI, de prestador de serviço, do jeito que eu faço aqui. Durante a emissão, mas vamos supor, vou te dar um exemplo. Mas aí chega um cara com o trato de consultoria. O KINAI precisa de fazer isso. Não, Né? Eu acho que não também.
+01:13:16 Léo
+Acho que é por isso que é que derrubou. Basicamente, o que que me deixaria como... O que que talvez me tornaria como um obrigado? Se eu sou de Belo Horizonte e eu presto serviço em outro município E eu estiver no local do cliente fazendo o ar-condicionado, Não consigo fazer manutenção, até consegue, Mas o cara teria que tirar o ar-condicionado e levar lá para a sede do cara. Normalmente, não é assim, o cara faz manutenção na empresa, em logo. Se ele está se deslocando para outro município e fazendo a prestação desse serviço lá,
+01:13:50 Léo
+Por ser outro município, ele deve recolher e fazer essa retenção desse ISS lá. Mas, cara, 90% das empresas que não podem não retém, não. Na maioria das vezes, por quê? Porque o cara não quer pagar esse imposto antecipado, Porque ele não tem que pagar esse antecipado, Porque se ele fosse recolher na data da nota que ele emitiu hoje,
+01:14:11 Léo
+Ele teria a opção de pagar esse imposto ou de atrasar ele. Tipo assim, não, estou precisando de capital de giro, Não vou pagar esse imposto agora não, vou pagar... Então, na maioria das vezes, o cara não retém. Mas eu não vejo, Que é um processo que a gente deveria preocupar O cara lá, não. Porque a gente ia conseguir consultar Lá dentro da API. Lá dentro da consulta, De nota dele. O Portal Nacional virou uma consulta única, praticamente. Então, eu conseguiria baixar A informação da...
+01:14:36 Pedro Maia
+E Lá já batia se a gente teria que gerar, Essa guia de ISSP.
+01:14:42 Léo
+Do tomado dele. Ia cair pra mim o tomado e eu já ia ter um alert lá dentro do sistema. Ele ia me avisar se ia aplicar.
+01:14:48 Pedro Maia
+Deu pra entender. Beleza. Mas isso aí é tranquilo. É isso. Eu acho que a gente bateu muito. Foi umas 5 horas quase aqui, cara. Mas foi bom. Tá precisando. Aí agora eu vou atualizar a documentação toda. Se tiver alguma coisa pontual eu te falo. Mas eu acho que a gente respondeu assim, muita coisa. Tá, agora eu já vou rodar mais liso ali na parte interna. Beleza. Você vai me mandando mensagem. Na última hora surgiu uma dúvida aqui mais... Eu não vou.
+01:15:10 Léo
+Fazer muita sala aqui não.
+01:15:11 Pedro Maia
+Não, não, opa, eu vi que o povo tá te ligando igual doido.

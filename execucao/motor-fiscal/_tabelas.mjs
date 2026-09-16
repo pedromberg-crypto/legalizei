@@ -354,6 +354,29 @@ export const FATOR_R_NUMERADOR = {
  * 🔴 **Não existe CNAE de serviço "sempre Anexo V".** O V é *resultado* do
  * cálculo (< 28%), nunca classificação fixa por atividade. Qualquer tela que
  * diga "seu CNAE é Anexo V" está errada.
+ *
+ * ── 🗣️ COMO SE FALA DISSO, corrigido pelo contador em 16/09 ───────────────
+ *
+ * A empresa **não "cai para o Anexo V"**. O anexo da ATIVIDADE não muda nunca:
+ *
+ *   > *"A atividade fica enquadrada no Anexo 5. Ela **é** do 5 — mas quando
+ *   > ela recebe o pró-labore, ela **recebe o benefício de tributar no Anexo
+ *   > 3**. Não necessariamente o seu anexo de atividade é o 3; o seu anexo é o
+ *   > 5, mas você recebe o benefício fiscal de ser tributado na alíquota
+ *   > menor, conforme o Anexo 3."* — Leonan, 16/09
+ *
+ * 🔑 Então o Fator R **dá ou tira um BENEFÍCIO**, não move a empresa de anexo.
+ * Ele corrigiu isso duas vezes na mesma reunião, e o nosso vocabulário inteiro
+ * estava errado. Na tela, na copy e no código a forma certa é:
+ *
+ *   ❌ "cai para o Anexo V"        ✅ "perde o benefício do Anexo III"
+ *   ❌ "sobe para o Anexo III"     ✅ "passa a ter o benefício do Anexo III"
+ *   ❌ "empresa do Anexo III"      ✅ "empresa do Anexo V tributada pelo III"
+ *
+ * ⚠️ **A chave `fator-r-dinamico(III<->V, limiar 28%)` fica como está**, e não
+ * é exceção à regra acima: ela descreve **por qual tabela se tributa**, que
+ * oscila mesmo. É identificador interno, usado como dado em 8 arquivos —
+ * renomear seria refactor de risco sem ganho de clareza para ninguém.
  */
 export const GRUPOS_ANEXO = {
   "III-fixo": { anexo: "III", calculaFatorR: false, quantos: 65 },

@@ -1,5 +1,5 @@
 {
-  "gerado": "2026-09-15",
+  "gerado": "2026-09-16",
   "processos": [
     {
       "id": "P1",
@@ -1643,7 +1643,7 @@
       "luz": "vermelho",
       "forma": "decisao",
       "fonte": "Matriz, seção do Fator R: a folha só conta em REGIME DE CAIXA, enquanto a receita é competência. A Receita cruza EFD-Reinf com DCTFWeb pra pegar isso.",
-      "duvida": "🔴 A ARMADILHA MAIS CARA DO PRODUTO, e ela é diferente do P2.4. Lá era saber que a GUIA foi paga, e existe consulta de arrecadação. Aqui é uma transferência da empresa PRO SÓCIO — o dinheiro não passa por nós nem pelo governo, e não há API nenhuma. O único rastro é o EXTRATO que o cliente envia até o 5º dia útil (cláusula 5.4). Se a gente considerar pago o que só foi lançado, o Fator R é glosado, a empresa cai pro Anexo V (6% → 15,5%) e leva multa. Três caminhos: (a) só contar depois de casar com o extrato, atrasando o Fator R; (b) contar na hora e corrigir se o extrato desmentir; (c) Open Finance read-only. Nenhum está decidido.",
+      "duvida": "🔴 A ARMADILHA MAIS CARA DO PRODUTO, e ela é diferente do P2.4. Lá era saber que a GUIA foi paga, e existe consulta de arrecadação. Aqui é uma transferência da empresa PRO SÓCIO — o dinheiro não passa por nós nem pelo governo, e não há API nenhuma. O único rastro é o EXTRATO que o cliente envia até o 5º dia útil (cláusula 5.4). Se a gente considerar pago o que só foi lançado, o Fator R é glosado, a empresa perde a tributação pelo Anexo III (6% → 15,5%) e leva multa. Três caminhos: (a) só contar depois de casar com o extrato, atrasando o Fator R; (b) contar na hora e corrigir se o extrato desmentir; (c) Open Finance read-only. Nenhum está decidido.",
       "cor": "#D64A2D",
       "tons": {
         "faz": "normal",
@@ -1722,7 +1722,7 @@
       ],
       "titulo": "Avisa ANTES de virar a faixa",
       "quem": "a casa",
-      "faz": "Acompanha o Fator R dos 12 meses e avisa quando a empresa está perto de cair pro Anexo V, com quanto falta de pró-labore pra evitar.",
+      "faz": "Acompanha o Fator R dos 12 meses e avisa quando a empresa está perto de perder o benefício do Anexo III, com quanto falta de pró-labore pra evitar.",
       "fala": "só a nossa casa",
       "ve": "Aviso com a distância pros 28% e o valor exato que resolve.",
       "luz": "amarelo",

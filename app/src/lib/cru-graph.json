@@ -1,5 +1,5 @@
 {
-  "gerado": "2026-09-15",
+  "gerado": "2026-09-16",
   "escopo": {
     "dentro": {
       "regime": "Simples Nacional",
@@ -1477,7 +1477,7 @@
           }
         ],
         "saiPara": "impostos · a receita anualizada da mesma competência tem que ser a MESMA dos dois lados",
-        "nota": "✅ PROVADO NA CONTA REAL DO PEDRO EM 13/09, e não só na pesquisa. Empresa de 9 meses: receita anualizada ≈ R$ 74.547, folha anualizada ≈ R$ 22.085, Fator R ≈ 29,6% → Anexo III, 6%. Se a folha fosse somada CRUA (R$ 16.564) contra a receita anualizada, daria 22,2% → Anexo V, 15,5%. 🔴 O erro custaria, nesta empresa, mais que o dobro de imposto. ⚠️ A conta assume o pró-labore de fev = 3.360 e dez/jan = 0, porque o histórico da plataforma só devolve 6 meses. 🔴 NÓ NOVO EM 13/09, E É O MAIOR ACHADO DA PESQUISA. Empresa com menos de 13 meses não tem 12 meses de histórico, então a receita é anualizada (média dos meses anteriores × 12). 🔑 O QUE NINGUÉM SABIA AQUI: a FOLHA é anualizada pelo MESMO critério — Res. CGSN 140/2018 art. 26 §4º, que manda adotar 'os mesmos critérios' do art. 22. ⚠️ A pesquisa nomeia o erro oposto como falha comum de sistema: anualizar a receita e somar a folha crua. Aí a razão despenca perto de zero e a empresa recém-aberta cai no Anexo V sem merecer. 🔴 E ISSO É O NOSSO CLIENTE TÍPICO, não um caso de canto: o produto nasce da constituição, então a maioria entra com menos de 13 meses de vida. A persona zero tem 9 meses. ⚠️ Detalhe da regra: o mês de abertura conta INTEIRO, sem proporcionalizar por dias."
+        "nota": "✅ PROVADO NA CONTA REAL DO PEDRO EM 13/09, e não só na pesquisa. Empresa de 9 meses: receita anualizada ≈ R$ 74.547, folha anualizada ≈ R$ 22.085, Fator R ≈ 29,6% → Anexo III, 6%. Se a folha fosse somada CRUA (R$ 16.564) contra a receita anualizada, daria 22,2% → Anexo V, 15,5%. 🔴 O erro custaria, nesta empresa, mais que o dobro de imposto. ⚠️ A conta assume o pró-labore de fev = 3.360 e dez/jan = 0, porque o histórico da plataforma só devolve 6 meses. 🔴 NÓ NOVO EM 13/09, E É O MAIOR ACHADO DA PESQUISA. Empresa com menos de 13 meses não tem 12 meses de histórico, então a receita é anualizada (média dos meses anteriores × 12). 🔑 O QUE NINGUÉM SABIA AQUI: a FOLHA é anualizada pelo MESMO critério — Res. CGSN 140/2018 art. 26 §4º, que manda adotar 'os mesmos critérios' do art. 22. ⚠️ A pesquisa nomeia o erro oposto como falha comum de sistema: anualizar a receita e somar a folha crua. Aí a razão despenca perto de zero e a empresa recém-aberta perde a tributação pelo Anexo III sem merecer. 🔴 E ISSO É O NOSSO CLIENTE TÍPICO, não um caso de canto: o produto nasce da constituição, então a maioria entra com menos de 13 meses de vida. A persona zero tem 9 meses. ⚠️ Detalhe da regra: o mês de abertura conta INTEIRO, sem proporcionalizar por dias."
       },
       {
         "id": "L5",
@@ -1641,7 +1641,7 @@
             "vai": "L16"
           },
           {
-            "se": "perto de cair pro Anexo V",
+            "se": "perto de perder a tributação pelo Anexo III",
             "vai": "L17"
           },
           {
@@ -1649,7 +1649,7 @@
             "vai": "L17"
           },
           {
-            "se": "já está no Anexo V e dá pra voltar",
+            "se": "já perdeu a tributação pelo III e dá pra recuperar",
             "vai": "L18"
           }
         ],

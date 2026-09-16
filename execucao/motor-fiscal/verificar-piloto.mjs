@@ -163,7 +163,7 @@ function idaEVolta(anteriores, receitaDoMes, alvo = FATOR_R.LIMIAR) {
   ];
   const fr = fatorRDeCompetencias({ competencias: janela });
   ok(
-    "🔴 um centavo a menos que o mínimo JÁ cai pro Anexo V",
+    "🔴 um centavo a menos que o mínimo JÁ tira o benefício do Anexo III",
     fr.anexo === "V",
     `${(fr.fr * 100).toFixed(6)}% < 28%`
   );

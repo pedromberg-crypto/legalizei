@@ -16,7 +16,7 @@
  * esse papel é só da persona zero, que tem recibo do PGDAS-D.
  *
  * O que elas testam é **INVARIÂNCIA**: relações que têm de valer em qualquer
- * empresa do nosso perfil. *"CNAE III-fixo nunca vira Anexo V"* não depende de
+ * empresa do nosso perfil. *"CNAE III-fixo nunca perde o benefício do III"* não depende de
  * documento — depende da lei. *"O RBT12 de 13 meses é soma, não média"* idem.
  *
  * ── 📐 DE ONDE VEM O REALISMO ──────────────────────────────────────────────

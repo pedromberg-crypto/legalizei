@@ -1,7 +1,7 @@
 ---
 tipo: derivado
 status: vivo
-data: 2026-09-15
+data: 2026-09-16
 assunto: processos-do-produto
 gerado_por: execucao/processos/gerar-processos.mjs
 tags: [execucao, processos, dev, spec]
@@ -373,7 +373,7 @@ Três perguntas, e nenhuma tem resposta hoje. (1) A taxa que o gateway reteve vo
 | 🔴 | **P5.8** ◆ O dinheiro saiu da conta pro sócio? | a casa | Confere se o pró-labore foi EFETIVAMENTE PAGO. Enquanto não houver trânsito financeiro, ele não pode entrar no Fator R. | ainda não sabemos | nada: a tela não existe |
 | 🟢 | **P5.9** ■ Entra no Fator R, e a alíquota se sustenta | a casa | Soma o pró-labore pago à folha dos 12 meses, recalcula o Fator R e confirma o anexo que vale no mês. | só a nossa casa | O Fator R atualizado em /impostos/aliquotas, com quanto falta pros 28%. |
 | 🟡 | **P5.10** ■ Lançado e não pago: avisa antes de virar multa | a casa | Marca o pró-labore como pendente de pagamento, deixa ele FORA do Fator R e avisa o que acontece se ficar assim. | só a nossa casa | Aviso dizendo que o valor foi declarado mas não pago, o que isso faz com a alíquota, e até quando dá pra resolver. |
-| 🟡 | **P5.11** Avisa ANTES de virar a faixa | a casa | Acompanha o Fator R dos 12 meses e avisa quando a empresa está perto de cair pro Anexo V, com quanto falta de pró-labore pra evitar. | só a nossa casa | Aviso com a distância pros 28% e o valor exato que resolve. |
+| 🟡 | **P5.11** Avisa ANTES de virar a faixa | a casa | Acompanha o Fator R dos 12 meses e avisa quando a empresa está perto de perder o benefício do Anexo III, com quanto falta de pró-labore pra evitar. | só a nossa casa | Aviso com a distância pros 28% e o valor exato que resolve. |
 
 ### Por onde o processo caminha
 
@@ -399,7 +399,7 @@ Mês sem pró-labore derruba a média do Fator R nos 12 meses seguintes, e o efe
 
 **🔴 P5.8 · O dinheiro saiu da conta pro sócio?**
 
-🔴 A ARMADILHA MAIS CARA DO PRODUTO, e ela é diferente do P2.4. Lá era saber que a GUIA foi paga, e existe consulta de arrecadação. Aqui é uma transferência da empresa PRO SÓCIO — o dinheiro não passa por nós nem pelo governo, e não há API nenhuma. O único rastro é o EXTRATO que o cliente envia até o 5º dia útil (cláusula 5.4). Se a gente considerar pago o que só foi lançado, o Fator R é glosado, a empresa cai pro Anexo V (6% → 15,5%) e leva multa. Três caminhos: (a) só contar depois de casar com o extrato, atrasando o Fator R; (b) contar na hora e corrigir se o extrato desmentir; (c) Open Finance read-only. Nenhum está decidido.
+🔴 A ARMADILHA MAIS CARA DO PRODUTO, e ela é diferente do P2.4. Lá era saber que a GUIA foi paga, e existe consulta de arrecadação. Aqui é uma transferência da empresa PRO SÓCIO — o dinheiro não passa por nós nem pelo governo, e não há API nenhuma. O único rastro é o EXTRATO que o cliente envia até o 5º dia útil (cláusula 5.4). Se a gente considerar pago o que só foi lançado, o Fator R é glosado, a empresa perde a tributação pelo Anexo III (6% → 15,5%) e leva multa. Três caminhos: (a) só contar depois de casar com o extrato, atrasando o Fator R; (b) contar na hora e corrigir se o extrato desmentir; (c) Open Finance read-only. Nenhum está decidido.
 
 **🟡 P5.10 · Lançado e não pago: avisa antes de virar multa**
 

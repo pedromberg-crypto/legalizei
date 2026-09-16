@@ -33,6 +33,26 @@
  * `impostos.mjs` prova o ponto: lá ele quer dizer "benefício de plano
  * comercial", e é legítimo.
  *
+ * ── ⚠️ O CASO QUE A CATEGORIA NÃO RESOLVE (achado em 16/09) ────────────────
+ *
+ * Existe um terceiro sentido de `benefício`, e ele cai DENTRO de `prolabore`:
+ * o **benefício fiscal do Anexo III**, que é como o contador descreveu o Fator
+ * R em 16/09 — *"o seu anexo é o 5, mas você recebe o benefício fiscal de ser
+ * tributado na alíquota menor"*. Aqui o escopo por categoria não separa, porque
+ * o homônimo mora na mesma casa do sentido proibido.
+ *
+ * 🔑 **Resolvido por REDAÇÃO, não afrouxando a trava.** A doutrina de
+ * vocabulário (`_doutrina-processos` §2.0) oferece mais de uma forma correta, e
+ * em `prolabore.mjs` usamos a que não colide:
+ *
+ *   ✅ "perde a TRIBUTAÇÃO pelo Anexo III"   ← usar aqui
+ *   ⚠️ "perde o BENEFÍCIO do Anexo III"      ← correto, mas a trava barra
+ *
+ * ⚠️ **Não relaxar a lista por causa disto.** O dia em que `benefício` for
+ * liberado em `prolabore`, o "plano de saúde do sócio" volta — foi exatamente
+ * ele que criou esta trava. O custo de escrever "tributação" é uma palavra; o
+ * custo de liberar é a categoria inteira.
+ *
  * ── ⚠️ ONDE ESTA TRAVA NÃO CHEGA ───────────────────────────────────────────
  *
  * Mesma fronteira da trava de escopo e da de anatomia do MEI: ela pega

@@ -1,7 +1,7 @@
 ---
 tipo: derivado
 status: vivo
-data: 2026-09-15
+data: 2026-09-16
 assunto: cru-prolabore
 gerado_por: execucao/processos/cru/gerar-cru.mjs
 tags: [execucao, processos, cru, prolabore]
@@ -51,7 +51,7 @@ tags: [execucao, processos, cru, prolabore]
 | ◆ | **L12** · Confere se o dinheiro saiu de fato da empresa pro sócio | O pró-labore foi efetivamente pago? | **foi pago** → L13<br/>**foi declarado e não foi pago** → L14<br/>**ainda não dá pra saber** → L12 |
 | ■ | **L13** · Entra na folha dos 12 meses e o anexo se sustenta | — | _termina aqui_ |
 | ■ | **L14** · Fica FORA do Fator R, e a pessoa precisa saber o que isso custa | — | _termina aqui_ |
-| ◆ | **L15** · Acompanha o Fator R dos 12 meses, mês a mês | O que a janela móvel mostra? | **folgado, e continua folgado** → L16<br/>**perto de cair pro Anexo V** → L17<br/>**o mês que vai SAIR da janela tinha folha alta** → L17<br/>**já está no Anexo V e dá pra voltar** → L18 |
+| ◆ | **L15** · Acompanha o Fator R dos 12 meses, mês a mês | O que a janela móvel mostra? | **folgado, e continua folgado** → L16<br/>**perto de perder a tributação pelo Anexo III** → L17<br/>**o mês que vai SAIR da janela tinha folha alta** → L17<br/>**já perdeu a tributação pelo III e dá pra recuperar** → L18 |
 | ■ | **L16** · Nada a avisar neste mês | — | _termina aqui_ |
 | ■ | **L17** · Avisa ANTES de virar, com o valor exato que resolve | — | _termina aqui_ |
 | ■ | **L18** · Mostra o caminho de volta pro Anexo III, se houver | — | _termina aqui_ |
@@ -116,9 +116,9 @@ tags: [execucao, processos, cru, prolabore]
 **L15 · O que a janela móvel mostra?**
 
 - folgado, e continua folgado → **L16** · Nada a avisar neste mês
-- perto de cair pro Anexo V → **L17** · Avisa ANTES de virar, com o valor exato que resolve
+- perto de perder a tributação pelo Anexo III → **L17** · Avisa ANTES de virar, com o valor exato que resolve
 - o mês que vai SAIR da janela tinha folha alta → **L17** · Avisa ANTES de virar, com o valor exato que resolve
-- já está no Anexo V e dá pra voltar → **L18** · Mostra o caminho de volta pro Anexo III, se houver
+- já perdeu a tributação pelo III e dá pra recuperar → **L18** · Mostra o caminho de volta pro Anexo III, se houver
 
 **L20 · Há débito federal em aberto?**
 
@@ -195,7 +195,7 @@ tags: [execucao, processos, cru, prolabore]
 
 **L4b · Anualiza a folha também, e não só a receita**
 
-✅ PROVADO NA CONTA REAL DO PEDRO EM 13/09, e não só na pesquisa. Empresa de 9 meses: receita anualizada ≈ R$ 74.547, folha anualizada ≈ R$ 22.085, Fator R ≈ 29,6% → Anexo III, 6%. Se a folha fosse somada CRUA (R$ 16.564) contra a receita anualizada, daria 22,2% → Anexo V, 15,5%. 🔴 O erro custaria, nesta empresa, mais que o dobro de imposto. ⚠️ A conta assume o pró-labore de fev = 3.360 e dez/jan = 0, porque o histórico da plataforma só devolve 6 meses. 🔴 NÓ NOVO EM 13/09, E É O MAIOR ACHADO DA PESQUISA. Empresa com menos de 13 meses não tem 12 meses de histórico, então a receita é anualizada (média dos meses anteriores × 12). 🔑 O QUE NINGUÉM SABIA AQUI: a FOLHA é anualizada pelo MESMO critério — Res. CGSN 140/2018 art. 26 §4º, que manda adotar 'os mesmos critérios' do art. 22. ⚠️ A pesquisa nomeia o erro oposto como falha comum de sistema: anualizar a receita e somar a folha crua. Aí a razão despenca perto de zero e a empresa recém-aberta cai no Anexo V sem merecer. 🔴 E ISSO É O NOSSO CLIENTE TÍPICO, não um caso de canto: o produto nasce da constituição, então a maioria entra com menos de 13 meses de vida. A persona zero tem 9 meses. ⚠️ Detalhe da regra: o mês de abertura conta INTEIRO, sem proporcionalizar por dias.
+✅ PROVADO NA CONTA REAL DO PEDRO EM 13/09, e não só na pesquisa. Empresa de 9 meses: receita anualizada ≈ R$ 74.547, folha anualizada ≈ R$ 22.085, Fator R ≈ 29,6% → Anexo III, 6%. Se a folha fosse somada CRUA (R$ 16.564) contra a receita anualizada, daria 22,2% → Anexo V, 15,5%. 🔴 O erro custaria, nesta empresa, mais que o dobro de imposto. ⚠️ A conta assume o pró-labore de fev = 3.360 e dez/jan = 0, porque o histórico da plataforma só devolve 6 meses. 🔴 NÓ NOVO EM 13/09, E É O MAIOR ACHADO DA PESQUISA. Empresa com menos de 13 meses não tem 12 meses de histórico, então a receita é anualizada (média dos meses anteriores × 12). 🔑 O QUE NINGUÉM SABIA AQUI: a FOLHA é anualizada pelo MESMO critério — Res. CGSN 140/2018 art. 26 §4º, que manda adotar 'os mesmos critérios' do art. 22. ⚠️ A pesquisa nomeia o erro oposto como falha comum de sistema: anualizar a receita e somar a folha crua. Aí a razão despenca perto de zero e a empresa recém-aberta perde a tributação pelo Anexo III sem merecer. 🔴 E ISSO É O NOSSO CLIENTE TÍPICO, não um caso de canto: o produto nasce da constituição, então a maioria entra com menos de 13 meses de vida. A persona zero tem 9 meses. ⚠️ Detalhe da regra: o mês de abertura conta INTEIRO, sem proporcionalizar por dias.
 
 **L5 · Resolve se o alvo é alcançável neste mês**
 

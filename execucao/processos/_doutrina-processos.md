@@ -67,6 +67,28 @@ Todo passo responde exatamente cinco perguntas. **Cinco, sempre as mesmas, nessa
 
 ---
 
+## 2.0 🔴 A EMPRESA NÃO "CAI PARA O ANEXO V" (corrigido pelo contador, 16/09)
+
+O Leonan corrigiu isto **duas vezes na mesma reunião**, e o nosso vocabulário estava errado do motor à copy — 32 lugares nas fontes.
+
+> *"A atividade fica enquadrada no Anexo 5. **Ela é do 5** — mas quando ela recebe o pró-labore, ela **recebe o benefício de tributar no Anexo 3**. Não necessariamente o seu anexo de atividade é o 3; **o seu anexo é o 5, mas você recebe o benefício fiscal de ser tributado na alíquota menor**, conforme o Anexo 3."*
+
+🔑 **O anexo da ATIVIDADE nunca muda.** O Fator R **dá ou tira um benefício de tributação**, e é só isso. Falar em "cair" e "subir" inventa um movimento que não existe — e passa ao cliente a ideia de que ele foi rebaixado, quando ele apenas deixou de ganhar um desconto.
+
+| ❌ Nunca | ✅ Sempre |
+|---|---|
+| "cai para o Anexo V" | **perde o benefício do Anexo III** |
+| "sobe para o Anexo III" | **passa a ter o benefício do Anexo III** |
+| "mudou de anexo" | **mudou a tabela pela qual é tributada** |
+| "empresa do Anexo III" | **empresa do Anexo V tributada pelo III** |
+| "seu CNAE é Anexo V" | **seu CNAE pode perder o benefício** *(e 65 dos 87 nem isso)* |
+
+⚠️ **Uma exceção declarada, que não é exceção à regra:** a chave `fator-r-dinamico(III<->V, limiar 28%)` fica como está. Ela descreve **por qual tabela se tributa**, que oscila mesmo, e é identificador interno usado como dado em 8 arquivos.
+
+🔑 **Por que isto está na doutrina e não só num commit:** foi erro de vocabulário que sobreviveu a 4 rodadas de revisão, porque *ninguém revisa o que parece óbvio*. A trava aqui é humana — quem escrever "cai para o Anexo V" num passo novo está repetindo.
+
+---
+
 ## 2.1 🔴 PALAVRA, NUNCA GLIFO (11/09, pergunta do Pedro)
 
 Ele olhou um cartão e perguntou: *"o que quer dizer mesmo o campo 'Fala com'?"* — e a resposta que o cartão dava era `—`.

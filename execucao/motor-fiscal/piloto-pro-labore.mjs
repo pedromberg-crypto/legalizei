@@ -413,7 +413,17 @@ export function pilotar({
      * um valor que não se paga num mês.
      */
     modo,
-    /** O que a lei exige para não cair: abaixo disto, vira Anexo V. */
+    /**
+     * O que a lei exige para manter o benefício: abaixo disto, a empresa
+     * **perde o direito de ser tributada pelo Anexo III** e passa a pagar
+     * pelo V.
+     *
+     * 🔑 A redação importa e foi corrigida em 16/09 pelo contador: a empresa
+     * NÃO "cai para o Anexo V". Ela **é** do Anexo V — o CNAE não muda — e o
+     * Fator R apenas lhe dá, ou tira, o **benefício** de pagar pela tabela do
+     * III. *"O seu anexo é o 5, mas você recebe o benefício fiscal de ser
+     * tributado na alíquota menor, conforme o Anexo 3."*
+     */
     minimoLegal,
     /** O que o piloto manda pagar ESTE mês. */
     sugerido,
@@ -664,7 +674,7 @@ export function avaliarProLaboreEscolhido({
     });
   }
 
-  // ── 2 · Cai para o Anexo V? E QUANDO volta? ─────────────────────────────
+  // ── 2 · PERDE o benefício do Anexo III? E QUANDO recupera? ──────────────
   if (referencia.atua && escolhido < referencia.minimoLegal) {
     const proj = projetarVirada({
       competenciasAnteriores,

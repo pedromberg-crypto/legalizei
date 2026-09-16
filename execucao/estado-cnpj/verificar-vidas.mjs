@@ -10,7 +10,7 @@
  * meu próprio cálculo — o pior tipo de teste, o que passa sempre.
  *
  * O que se afirma aqui são **relações que a lei obriga**:
- *   · CNAE `III-fixo` nunca vira Anexo V, por menor que seja o pró-labore
+ *   · CNAE `III-fixo` nunca perde o benefício do III, por menor que seja o pró-labore
  *   · do 13º mês em diante o RBT12 é SOMA, não média × 12
  *   · pró-labore declarado e não pago não entra no Fator R
  *   · CLT acima do teto zera o INSS do pró-labore
@@ -61,15 +61,15 @@ for (const v of VIDAS) {
   );
 }
 
-/* ── 1 · III-fixo nunca vira V ───────────────────────────────────────────── */
-console.log("\n── 1 · O invariante dos 65 de 87: CNAE III-fixo nunca vira Anexo V\n");
+/* ── 1 · III-fixo nunca perde o benefício ───────────────────────────────── */
+console.log("\n── 1 · O invariante dos 65 de 87: CNAE III-fixo nunca perde o benefício do III\n");
 {
   const fixas = retratos.filter((r) => r.ultima.anexoEhFixo);
   const viraramV = fixas.filter((r) => r.linhas.some((l) => l.anexo === "V"));
 
   console.log(`   ${fixas.length} das ${VIDAS.length} têm CNAE III-fixo, e várias pagam só o pró-labore mínimo.`);
   invariante(
-    "nenhuma delas caiu no Anexo V em nenhuma competência",
+    "nenhuma delas foi tributada pelo Anexo V em nenhuma competência",
     viraramV.length === 0,
     viraramV.length ? viraramV.map((r) => r.vida.id).join(", ") : `${fixas.length} empresas conferidas`
   );
@@ -99,7 +99,7 @@ console.log("\n── 2 · P01: o Fator R caindo pro Anexo V — e ele é RETROV
     );
   }
 
-  invariante("ele CAI no Anexo V enquanto se paga o mínimo", comV.length > 0, `${comV.length} competências`);
+  invariante("ele PERDE o benefício do III enquanto se paga o mínimo", comV.length > 0, `${comV.length} competências`);
 
   // 🔴 A CORREÇÃO DE 15/09. Este bloco afirmava "e VOLTA pro III quando corrige
   // o pró-labore", e **passava pelo motivo errado**: o único mês em III era
@@ -109,7 +109,7 @@ console.log("\n── 2 · P01: o Fator R caindo pro Anexo V — e ele é RETROV
   // falha: ele cobre o buraco em vez de mostrar.
 
   // (a) A razão infinita merece afirmação PRÓPRIA — é o que salvou fev/2026 da
-  //     persona zero de virar Anexo V indevidamente.
+  //     persona zero de ser tributada pelo Anexo V indevidamente.
   const infinito = comMovimento.filter((l) => l.fatorR && !isFinite(l.fatorR.fr));
   invariante(
     "receita anterior zero com folha paga → razão infinita → Anexo III",

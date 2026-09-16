@@ -10,6 +10,18 @@ data: 2026-07-16
 
 ## 📍 Agora (torre de controle — mantida via `/fechar`)
 
+> ## ⏸️ 16/09 — PROCESSO PAUSADO NO MEIO, COM RETOMADA ESCRITA
+>
+> 🔴 **Se você está abrindo janela nova e o assunto é motor fiscal, persona ou processos: comece por [[_RETOMADA-pos-contador]].** Não precisa reler os 3 áudios da reunião nem a conversa — o checkpoint tem o próximo comando exato, o que já foi feito e o que **não pode ser feito sem fonte**.
+>
+> **O que aconteceu em 16/09:** reunião de ~5h com o **Leonan** (contador especializado), 3 áudios, **293.345 caracteres lidos 100%**. O briefing de perguntas virou **registro validado**: 32 itens com veredito — 20 ratificados, **4 corrigidos contra nós**, 5 viraram decisão nova, 3 seguem abertos. O Bloco E (as 7 contas do motor) passou **7 de 7**, com o DAS conferido contra a guia real dele.
+>
+> **A aplicação das decisões parou no passo 2 de 7**, a pedido do Pedro. Feitos: registro da reunião · os 3 conflitos decididos · a fila (11 itens fechados, **o 36 reaberto**) · o vocabulário do Anexo V. Falta: o motor, as fontes de `/processos`, regenerar, o Bloco D e a vida nova.
+>
+> 🔴 **O que NÃO pode ser tocado sem fonte:** a régua do **redutor do IRRF**, que diverge do motor e muda a guia de todo cliente acima de R$5.000. O contador hesitou (*"aí eu não vou lembrar o certo"*) e isso exige a **Lei 15.270/2025 literal**. Junto: **três das quatro mudanças de 2027** vieram só da memória dele, sem norma nomeada.
+>
+> ---
+>
 > **Última atualização:** 2026-09-15 — **69º flow: O PILOTO NASCE, TRÊS TRAVAS DE MÉTODO, E O REPORTE PASSA A SE MEDIR.**
 >
 > **(1) 🛩️ NASCE O PILOTO DE PRÓ-LABORE** (`execucao/motor-fiscal/piloto-pro-labore.mjs`, **67 conferências**). Decisão do Pedro: *"não é sobre avisar cedo ou tarde, é sobre aplicar a regra de ajuste automático desde o início — eles não precisam saber"*. 🔑 Tinha que ser **ação e não alerta** por causa do retrovisor: o Fator R lê os 12 meses anteriores, então o P01 corrige em set/2026 e só volta ao III em **ago/2027**. Ligado ao `estado-cnpj` (`retratoDoMes` devolve `piloto` e `divergencia`), com **replay** (a vida com e sem piloto) e **rastro** auditável. Encosta só nos **15** CNAEs dinâmicos; nos 65 `III-fixo` devolve `atua:false` e proíbe a tela de falar em 28%.

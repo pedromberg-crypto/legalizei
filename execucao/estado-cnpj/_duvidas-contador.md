@@ -481,7 +481,21 @@ No 1º mês não há histórico, então a lei manda **projetar**: acumulado = re
 
 > 🧭 **Para que serve na conversa.** Em vez de discutir regra no abstrato, o contador acompanha **cinco empresas** pelo tempo em que elas ficaram conosco e diz onde o que fazemos está certo, onde falta passo e onde falta pergunta.
 >
-> 📐 **Como ler.** Cada linha é **o que a casa faz**, com a data, a ferramenta e a dúvida ligada (⇢ **C3**, ⇢ **A1**…). Onde não há dúvida ligada, é porque está fechado.
+> 📐 **Como ler.** Cada linha tem a data, **de quem é aquilo**, o que acontece e a dúvida ligada (⇢ **C3**, ⇢ **A1**…). Onde não há dúvida ligada, é porque está fechado.
+>
+> 🔴 **A coluna que mais importa nesta conversa é a do meio.** Ela separa três coisas que costumam se misturar num relato e que o senhor precisa poder julgar separadamente:
+>
+> | | | O que queremos do senhor |
+> |:---:|---|---|
+> | ⚖️ | **A lei.** Ninguém escolheu, ninguém pode mudar | **Ratificar** — está certo ou está errado |
+> | 🏠 | **Nós.** Decisão ou cálculo da casa. Poderia ser diferente | **Contestar** — o senhor faria de outro jeito? |
+> | 👤 | **O cliente.** Escolha dele, feita depois de ver a conta | **Nada.** Só nos diga se o escritório recusaria executar |
+> | 🏢 | **Espelho da Contabilizei.** Prática do concorrente que copiamos **porque não achamos a regra**, não porque a lei manda | 🔴 **Decidir** — seguimos eles, ou fixamos a nossa? |
+> | ⏳ | **Não existe ainda.** O caso aparece e o produto não responde | **Confirmar** que faz falta |
+>
+> 🔴 **O 🏢 é o que mais precisa da sua opinião.** São datas e cadências que **ninguém nos obrigou a adotar** — copiamos porque o concorrente faz assim e funcionou. Elas estão listadas juntas logo abaixo das personas, porque a decisão é a mesma para todas: **seguir eles, ou fixar a nossa régua em cima da deles, sempre dentro da lei.**
+>
+> ⚠️ **Nenhuma linha fica sem etiqueta** — um script confere isso a cada rodada, porque a primeira versão deste documento marcava a autoria em duas personas e esquecia nas outras três.
 >
 > 🔧 **As ferramentas, uma vez só:** `Integra-SN` apura e emite a guia do DAS e a DEFIS · `Integra-Sicalc` emite o DARF do sócio · `Integra-DCTFWeb` transmite a DCTFWeb · `Integra-Sitfis` consulta se a guia foi paga · `eSocial WS` transmite a folha do sócio (SOAP, gratuito) · `Emissor Nacional` emite a NFS-e · `InfoSimples` consulta cadastro, CND e caixa postal. Os quatro `Integra-*` são da **API Integra Contador do SERPRO**.
 >
@@ -489,15 +503,16 @@ No 1º mês não há histórico, então a lei manda **projetar**: acumulado = re
 
 ## O ciclo que vale para todas — o mês padrão
 
-| Dia | O que a casa faz | Ferramenta |
-|---|---|---|
-| **último do mês** | A competência fecha. Somamos as notas emitidas | — |
-| **até o 15** | Decidimos o pró-labore do mês e transmitimos a folha do sócio | `eSocial WS` + `Integra-DCTFWeb` |
-| **até o 15** | Vigiamos o Fator R — só nos CNAEs que podem virar Anexo V | motor |
-| **até o 18-20** | Emitimos o DARF do INSS e do IR do sócio. 🔑 **Antecipa** se cair em fim de semana | `Integra-Sicalc` |
-| **até o 20-21** | Apuramos, transmitimos o PGDAS-D e emitimos a guia do DAS. 🔑 **Prorroga** se cair em fim de semana | `Integra-SN` |
-| **depois** | Conferimos se a guia anterior foi paga; se venceu, recalculamos com multa e juros | `Integra-Sitfis` |
-| **31/03** | DEFIS do ano anterior. 🔴 **Morre em 2027**, vira campo do PGDAS-D | `Integra-SN` |
+| Dia | Quem | O que acontece | Ferramenta |
+|---|:---:|---|---|
+| **último do mês** | 🏠 | A competência fecha. Somamos as notas emitidas | — |
+| **até o 15** | 🏢 | **Revisamos o pró-labore TODO MÊS** e transmitimos a folha do sócio. 🔴 **A cadência mensal é espelho da Contabilizei**, não exigência legal ⇢ **E1** | `eSocial WS` + `Integra-DCTFWeb` |
+| **até o 15** | 🏠 | Vigiamos o Fator R — só nos CNAEs que podem virar Anexo V | motor |
+| **até o 18-20** | ⚖️ | Emitimos o DARF do INSS e do IR do sócio. 🔑 **Antecipa** se cair em fim de semana | `Integra-Sicalc` |
+| **até o 20-21** | ⚖️ | Apuramos, transmitimos o PGDAS-D e emitimos a guia do DAS. 🔑 **Prorroga** se cair em fim de semana | `Integra-SN` |
+| **até o vencimento** | 👤 | 🔴 **Pagar a guia é ele.** Não temos como pagar por ele, e não existe débito automático de DAS | — |
+| **depois** | 🏠 | Conferimos se a guia anterior foi paga; se venceu, recalculamos com multa e juros | `Integra-Sitfis` |
+| **31/03** | ⚖️ | DEFIS do ano anterior. 🔴 **Morre em 2027**, vira campo do PGDAS-D | `Integra-SN` |
 
 🔑 **O eSocial vence ANTES do DAS.** Quem mira o dia 20 entrega 5 dias atrasado, todo mês. ⇢ **A11**
 
@@ -517,22 +532,24 @@ Mas **ele pode desligar e digitar o próprio valor**. Se fizer isso, o app mostr
 
 **Cadastro:** desenvolvimento de software · **1 sócio** · sem emprego CLT · endereço próprio · faixa de faturamento R$10-20 mil · CNAE **6201-5/01**, dos **15 que podem virar Anexo V**. Abre em **março/2026**, fica **8 meses** conosco.
 
-| Quando | O que a casa faz | Dúvida |
-|---|---|---|
-| **Dia 1** | Constituição concluída, CNPJ na mão. Emitimos a **inscrição municipal** e as **licenças**, e publicamos os documentos na plataforma | ⇢ **C1 C2** |
-| **Dia 1** | Certificado digital emitido pela parceira. **Sem ele o app não libera a emissão de nota** — não existe procuração na NFS-e | — |
-| **Dia 1** | 🔑 **Definimos o pró-labore já na 1ª competência.** É decisão nossa, não exigência legal — e trava o Fator R desde o começo | ⇢ **A3 A5** |
-| mar–abr | Dois meses **sem faturar**. Mesmo assim transmitimos PGDAS-D e a folha do sócio: **mês sem receita não pausa obrigação** | ⇢ **B6** |
-| **mai** | 1ª nota: R$18.000. 🔑 **O nosso cálculo pede R$1.798 no mínimo e sugere R$2.158.** Ainda é pouco porque a janela só tem 3 meses, anualizados — o alvo cresce junto com o histórico | — |
-| 🔴 **mai** | **Ele DESLIGA o automático e digita R$1.621**, o mínimo legal. Quer tirar menos da empresa. Fica **R$177 abaixo** do que a conta pedia | ⇢ **A2** |
-| **mai** | 🔑 **Nós avisamos, com os números dele:** *"para seguir no Anexo III você precisa pagar pelo menos R$1.798 este mês. Com R$1.621 a alíquota sai de 6% para 15,5%, cerca de R$1.710 a mais por mês."* Ele confirma assim mesmo | — |
-| **jun** | 🔴 **Cai para o Anexo V**, como avisado. A janela cresce e o mínimo sobe para **R$4.680** *(sugerido R$5.400)*, enquanto ele segue nos R$1.621. **Decisão dele, não falha nossa** — e o alerta fica registrado | ⇢ **A3** |
-| **set** | Ele reconsidera e **religa o automático**. O pró-labore volta para R$5.400 | ⇢ **A2** |
-| **ago/2027** | 🔴 **Só então voltaria ao Anexo III** — 11 meses pagando a mais, com a folha já certa. 🔑 **É por isso que avisamos na hora da escolha, e não depois**: o Fator R olha para trás, então quando o erro aparece na guia já é tarde | ⇢ **B4** |
-| **31/03/2027** | DEFIS do ano-calendário 2026 | ⇢ **A9** |
-| **Total** | Faturou **R$108.000** · pagou **R$15.030** de DAS · **5 meses no Anexo V** | |
+| Quando | Quem | O que acontece | Dúvida |
+|---|:---:|---|---|
+| **Dia 1** | 🏠 | Constituição concluída, CNPJ na mão. Emitimos a **inscrição municipal** e as **licenças**, e publicamos os documentos na plataforma | ⇢ **C1 C2** |
+| **Dia 1** | ⚖️ | Certificado digital emitido pela parceira. **Sem ele o app não libera a emissão de nota** — não existe procuração na NFS-e | — |
+| **Dia 1** | 🏢 | 🔑 **Definimos o pró-labore já na 1ª competência.** Não é exigência legal — é o que a **Contabilizei fez** na conta real que analisamos, e nós copiamos. Trava o Fator R desde o começo ⇢ **E2** | ⇢ **A3 A5** |
+| mar–abr | ⚖️ | Dois meses **sem faturar**. Mesmo assim transmitimos PGDAS-D e a folha do sócio: **mês sem receita não pausa obrigação** | ⇢ **B6** |
+| **mai** | 🏠 | 1ª nota: R$18.000. 🔑 **O nosso cálculo pede R$1.798 no mínimo e sugere R$2.158.** Ainda é pouco porque a janela só tem 3 meses, anualizados — o alvo cresce junto com o histórico | — |
+| 🔴 **mai** | 👤 | **Ele DESLIGA o automático e digita R$1.621**, o mínimo legal. Quer tirar menos da empresa. Fica **R$177 abaixo** do que a conta pedia | ⇢ **A2** |
+| **mai** | 🏠 | 🔑 **Nós avisamos, com os números dele:** *"para seguir no Anexo III você precisa pagar pelo menos R$1.798 este mês. Com R$1.621 a alíquota sai de 6% para 15,5%, cerca de R$1.710 a mais por mês."* Ele confirma assim mesmo | — |
+| **jun** | ⚖️ | 🔴 **Cai para o Anexo V.** A janela cresce e o mínimo sobe para **R$4.680** *(sugerido R$5.400)*, enquanto ele segue nos R$1.621. A queda é da lei; **quem a provocou foi ele**, e o alerta fica registrado | ⇢ **A3** |
+| **set** | 👤 | Ele reconsidera e **religa o automático**. O pró-labore volta para R$5.400 | ⇢ **A2** |
+| **ago/2027** | ⚖️ | 🔴 **Só então voltaria ao Anexo III** — 11 meses pagando a mais, com a folha já certa. 🔑 **É por isso que avisamos na hora da escolha, e não depois**: o Fator R olha para trás, então quando o erro aparece na guia já é tarde | ⇢ **B4** |
+| **31/03/2027** | ⚖️ | DEFIS do ano-calendário 2026 | ⇢ **A9** |
+| **Total** | — | Faturou **R$108.000** · pagou **R$15.030** de DAS · **5 meses no Anexo V** | |
 
-🔑 **É a persona que justifica o produto:** com o nosso piloto ligado desde o mês 1, ela **nunca** teria ido ao Anexo V. A diferença é de **R$6.795** no bolso do cliente.
+🔑 **É a persona que justifica o produto:** com o nosso piloto ligado desde o mês 1, ela **nunca** teria ido ao Anexo V. A diferença é de **R$6.795** no bolso do cliente — já descontado o DARF a mais que o pró-labore maior gera.
+
+⚠️ **Esse R$6.795 é simulação nossa, não histórico.** É o mesmo motor rodando a mesma empresa com o automático ligado. Os R$15.030 de DAS acima, esses aconteceram.
 
 ---
 
@@ -540,17 +557,20 @@ Mas **ele pode desligar e digitar o próprio valor**. Se fizer isso, o app mostr
 
 **Cadastro:** filmagem de festas e eventos · **1 sócio** · **endereço fiscal da Legalizai** (+R$49/mês) · CNAE **7420-0/04**, **Anexo III fixo** — o Fator R não muda nada nele. Abre em **novembro/2025**, fica **11 meses**.
 
-| Quando | O que a casa faz | Dúvida |
-|---|---|---|
-| **Dia 1** | Inscrição municipal, licenças, certificado, documentos na plataforma | ⇢ **C1 C2** |
-| **Dia 1** | 🔑 **A tela dele NÃO fala em Fator R nem em 28%.** CNAE fixo: sugerir esse risco seria mentir por omissão | — |
-| **nov/2025** | Já fatura **R$14.000 no mês da abertura** — emitida a 1ª nota pelo `Emissor Nacional` | — |
-| **nov/2025** | 🔑 No 1º mês não existe histórico, então a lei manda **projetar**: acumulado = receita do mês × 12 = R$168.000. **Não é faturamento, é projeção.** E aqui ela **não muda nada**: R$168 mil ainda está na 1ª faixa (até R$180 mil), então ele paga os mesmos **6%**. DAS de **R$840** | ⇢ **C4** |
-| **jan–fev/2026** | Dois meses secos. Transmitimos igual | ⇢ **B6** |
-| 🔴 **31/03/2026** | **DEFIS do ano-calendário 2025** — com **41 dias de empresa**. Ele mal entendeu o que é DAS e já tem obrigação anual | ⇢ **B3 A9** |
-| abr–jun | Temporada cheia: R$12k, R$19k, R$17k | — |
-| **31/03/2027** | DEFIS de 2026 | ⇢ **A9** |
-| **Total** | Faturou **R$102.000** · **R$6.120** de DAS · **zero** meses no Anexo V | |
+| Quando | Quem | O que acontece | Dúvida |
+|---|:---:|---|---|
+| **antes do dia 1** | 👤 | 🔑 **Ele contrata o nosso endereço fiscal** (+R$49/mês) em vez de usar o dele. Escolha dele na contratação, e é ela que define onde a empresa fica domiciliada | ⇢ **C2** |
+| **Dia 1** | 🏠 | Inscrição municipal, licenças, certificado, documentos na plataforma | ⇢ **C1 C2** |
+| **Dia 1** | 🏠 | 🔑 **A tela dele NÃO fala em Fator R nem em 28%.** Decisão nossa de produto: o CNAE é fixo, e sugerir esse risco seria mentir por omissão | — |
+| **nov/2025** | 👤 | Já fatura **R$14.000 no mês da abertura** — emitida a 1ª nota pelo `Emissor Nacional` | — |
+| **nov/2025** | ⚖️ | 🔑 No 1º mês não existe histórico, então a lei manda **projetar**: acumulado = receita do mês × 12 = R$168.000. **Não é faturamento, é projeção.** E aqui ela **não muda nada**: R$168 mil ainda está na 1ª faixa (até R$180 mil), então ele paga os mesmos **6%**. DAS de **R$840** | ⇢ **C4** |
+| **jan–fev/2026** | ⚖️ | Dois meses secos. Transmitimos igual | ⇢ **B6** |
+| 🔴 **31/03/2026** | ⚖️ | **DEFIS do ano-calendário 2025** — com **41 dias de empresa**. Ele mal entendeu o que é DAS e já tem obrigação anual | ⇢ **B3 A9** |
+| abr–jun | 👤 | Temporada cheia: R$12k, R$19k, R$17k | — |
+| **31/03/2027** | ⚖️ | DEFIS de 2026 | ⇢ **A9** |
+| **Total** | — | Faturou **R$102.000** · **R$6.120** de DAS · **zero** meses no Anexo V | |
+
+🔑 **É a única das cinco sem nenhuma decisão do cliente depois da contratação.** Tudo o que acontece com ele é ⚖️ ou 🏠 — e mesmo assim ele tem DEFIS com 41 dias de empresa. Serve para mostrar que o produto precisa funcionar para quem **não decide nada**, que é a maioria.
 
 ---
 
@@ -558,18 +578,20 @@ Mas **ele pode desligar e digitar o próprio valor**. Se fizer isso, o app mostr
 
 **Cadastro:** organização de feiras e congressos · **2 sócios**, ambos administram · um deles tem **CLT de R$9.000**, acima do teto do INSS · 3 CNAEs secundários · **Anexo III fixo**. Abre em **setembro/2025**, fica **13 meses**.
 
-| Quando | O que a casa faz | Dúvida |
-|---|---|---|
-| **Dia 1** | Inscrição municipal, licenças, certificado, documentos | ⇢ **C1 C2** |
-| **Dia 1** | 🔑 **O DARF sai sócio a sócio, e só depois soma.** O do CLT alto não recolhe nada; o outro recolhe normal | ⇢ **A1 B1** |
-| out–dez/2025 | Escala rápido: R$12k, R$28k, R$35k no pico de confraternização | — |
-| **31/03/2026** | DEFIS de 2025 | ⇢ **B3** |
-| **mar, abr, mai/2026** | 🔑 **Emitimos as três guias em dia**, dentro do prazo. 🔴 **Ele paga com 14, 21 e 14 dias de atraso** — pagamento é ação do cliente, fora do app | ⇢ **B5** |
-| | Detectamos o atraso na consulta de arrecadação e **recalculamos** com multa de 0,33%/dia e juros | ⇢ **B5** |
-| | Custo do atraso: **R$393,32**, que **não teria existido**. É o caso de uso do lembrete de vencimento, com número | — |
-| **jan/2026** | Depois do pico de dezembro, o acumulado chega a **R$225.000** e ele **passa para a 2ª faixa** — a alíquota efetiva deixa de ser 6% e começa a subir | — |
-| **set/2026** | 13º mês de atividade: a regra do acumulado troca de *média × 12* para **soma dos 12**. 🔑 Troca pelo **mês de atividade**, não pela virada do ano | ⇢ **C4** |
-| **Total** | Faturou **R$266.000** · **R$17.514** de DAS · **R$2.318** de DARF | |
+| Quando | Quem | O que acontece | Dúvida |
+|---|:---:|---|---|
+| **Dia 1** | 🏠 | Inscrição municipal, licenças, certificado, documentos | ⇢ **C1 C2** |
+| **Dia 1** | ⚖️ | 🔑 **O DARF sai sócio a sócio, e só depois soma.** Não é escolha nossa: o teto do INSS é **da pessoa** e a tabela do IR é progressiva **por beneficiário**. O do CLT alto não recolhe nada; o outro recolhe normal | ⇢ **A1 B1** |
+| todo mês | 🏠 | ⚠️ **Mesma premissa da P11, e ela é nossa:** os dois sócios recebem **R$1.621 cada**, porque o app pergunta só o total e nós rateamos igual. Se um trabalha mais que o outro, quem assumiu o risco fomos nós | 🔴 ⇢ **A2 A3** |
+| out–dez/2025 | 👤 | Escala rápido: R$12k, R$28k, R$35k no pico de confraternização | — |
+| **31/03/2026** | ⚖️ | DEFIS de 2025 | ⇢ **B3** |
+| **mar, abr, mai/2026** | 🏠 | 🔑 **Emitimos as três guias em dia**, dentro do prazo | ⇢ **B5** |
+| **mar, abr, mai/2026** | 👤 | 🔴 **Ele paga com 14, 21 e 14 dias de atraso.** Pagar é ação dele, fora do app — não existe débito automático de DAS | ⇢ **B5** |
+| | 🏠 | Detectamos o atraso na consulta de arrecadação e **recalculamos** com multa de 0,33%/dia e juros | ⇢ **B5** |
+| | ⏳ | Custo do atraso: **R$393,32**, que **não teria existido**. 🔴 **O lembrete de vencimento que evitaria isso ainda NÃO está construído** — esta linha é o caso de uso dele, com número, não uma funcionalidade nossa | — |
+| **jan/2026** | ⚖️ | Depois do pico de dezembro, o acumulado chega a **R$225.000** e ele **passa para a 2ª faixa** — a alíquota efetiva deixa de ser 6% e começa a subir | — |
+| **set/2026** | ⚖️ | 13º mês de atividade: a regra do acumulado troca de *média × 12* para **soma dos 12**. 🔑 Troca pelo **mês de atividade**, não pela virada do ano | ⇢ **C4** |
+| **Total** | — | Faturou **R$266.000** · **R$17.514** de DAS · **R$2.318** de DARF | |
 
 ---
 
@@ -577,15 +599,16 @@ Mas **ele pode desligar e digitar o próprio valor**. Se fizer isso, o app mostr
 
 **Cadastro:** aluguel de máquinas para escritório · 🔴 **4 sócios** — o teto do nosso contrato —, **25% cada**, todos administram · 2 CNAEs secundários · **Anexo III fixo**. Abre em **março/2026**, fica **6 meses**.
 
-| Quando | O que a casa faz | Dúvida |
-|---|---|---|
-| **Dia 1** | Inscrição municipal, licenças, **as 4 assinaturas dos sócios**, documentos | ⇢ **C1** |
-| **Dia 1** | 🔑 **Quatro pró-labores, quatro cálculos, uma guia.** É aqui que o nosso erro de 15/09 custava **R$2.077 por mês** | 🔴 ⇢ **A1 B7** |
-| todo mês | **4 eventos de remuneração e 4 de pagamento** no eSocial, um por sócio | ⇢ **A2** |
-| todo mês | ⚠️ **Aqui a premissa é NOSSA, não escolha dele:** assumimos **rateio igual** — R$1.621 para cada, o salário mínimo, **R$6.484 de folha por mês** — porque o app pergunta só o total. Se o trabalho for desigual, o risco é nosso de ter assumido | 🔴 ⇢ **A2 A3** |
-| todo mês | 🔑 **E é o piso que manda aqui, não o Fator R.** Sendo Anexo III fixo, o pró-labore não defende alíquota nenhuma: os R$6.484 saem porque cada sócio é segurado obrigatório, não porque a conta pediu. **A folha vira mais da metade do faturamento dela** | 🔴 ⇢ **A4** |
-| **31/03/2027** | DEFIS de 2026, com os **rendimentos de cada sócio** discriminados | ⇢ **A9** |
-| **Total** | Faturou **R$47.500** · **R$2.850** de DAS · **R$4.279** de DARF | |
+| Quando | Quem | O que acontece | Dúvida |
+|---|:---:|---|---|
+| **antes do dia 1** | 👤 | 🔑 **Eles decidiram ser quatro sócios com 25% cada**, todos administrando. É o teto do nosso contrato, e tudo o que vem abaixo é consequência dessa escolha societária | ⇢ **A3** |
+| **Dia 1** | 🏠 | Inscrição municipal, licenças, **as 4 assinaturas dos sócios**, documentos | ⇢ **C1** |
+| **Dia 1** | ⚖️ | 🔑 **Quatro pró-labores, quatro cálculos, uma guia.** É aqui que o nosso erro de 15/09 custava **R$2.077 por mês** — nós errávamos, mas a regra que nos condenava é da lei | 🔴 ⇢ **A1 B7** |
+| todo mês | ⚖️ | **4 eventos de remuneração e 4 de pagamento** no eSocial, um por sócio | ⇢ **A2** |
+| todo mês | 🏠 | ⚠️ **Aqui a premissa é NOSSA, não escolha dele:** assumimos **rateio igual** — R$1.621 para cada, o salário mínimo, **R$6.484 de folha por mês** — porque o app pergunta só o total. Se o trabalho for desigual, o risco é nosso de ter assumido | 🔴 ⇢ **A2 A3** |
+| todo mês | ⚖️ | 🔑 **E é o piso que manda aqui, não o Fator R.** Sendo Anexo III fixo, o pró-labore não defende alíquota nenhuma: os R$6.484 saem porque cada sócio é segurado obrigatório, não porque a conta pediu. **A folha vira mais da metade do faturamento dela** | 🔴 ⇢ **A4** |
+| **31/03/2027** | ⚖️ | DEFIS de 2026, com os **rendimentos de cada sócio** discriminados | ⇢ **A9** |
+| **Total** | — | Faturou **R$47.500** · **R$2.850** de DAS · **R$4.279** de DARF | |
 
 🔑 **Repare na inversão:** é a única das cinco em que o **DARF dos sócios é maior que o imposto da empresa**. Quatro pessoas recolhendo INSS sobre uma receita modesta.
 
@@ -595,19 +618,20 @@ Mas **ele pode desligar e digitar o próprio valor**. Se fizer isso, o app mostr
 
 **Cadastro:** consultoria em TI · **1 sócio** · CNAE **6204-0/00**, dos **15 que podem virar Anexo V**. Abre em **junho/2025**, fica **22 meses** — o percurso mais longo, atravessando **três anos-calendário**.
 
-| Quando | O que a casa faz | Dúvida |
-|---|---|---|
-| **Dia 1** | Inscrição municipal, licenças, certificado, documentos | ⇢ **C1 C2** |
-| **jul/2025** | 1ª nota. 🔑 O automático sugere o valor que segura o Anexo III | — |
-| 🔴 **jul/2025** | **Ele desliga o automático logo no começo** e fixa o pró-labore no mínimo, para tirar o máximo como lucro. Avisamos com os números dele; ele mantém | ⇢ **A2** |
-| jul/2025 → | Cresce de R$8 mil a **R$42 mil/mês** e **nunca religa o automático** — a cada mês o aviso reaparece e ele segue | ⇢ **A5** |
-| **set/2025** | 🔴 Cai para o **Anexo V** e **fica lá 19 dos 22 meses**. **Escolha dele, sustentada mês a mês** | ⇢ **A3** |
-| **fev/2026** | O acumulado chega a **R$187.500** e ele entra na **2ª faixa**: a alíquota efetiva começa a subir de 15,5% rumo a 16,75%, sem nunca chegar lá | — |
-| **31/03/2026** | DEFIS de 2025 | ⇢ **A9** |
-| **jun/2026** | 13º mês: a regra do acumulado troca para soma dos 12 | ⇢ **C4** |
-| **31/03/2027** | DEFIS de 2026 | ⇢ **A9** |
-| **mar/2027** | Acumulado em **R$359.000** — a **R$1.000 do teto do ME**. Passar é desenquadramento para EPP | 🔴 |
-| **Total** | Faturou **R$551.000** · pagou **R$87.083** de DAS · **19 meses no Anexo V** | |
+| Quando | Quem | O que acontece | Dúvida |
+|---|:---:|---|---|
+| **Dia 1** | 🏠 | Inscrição municipal, licenças, certificado, documentos | ⇢ **C1 C2** |
+| **jul/2025** | 🏠 | 1ª nota. 🔑 O automático sugere **R$1.621** — que por acaso é o mínimo, porque a janela ainda tem 2 meses. **A divergência só começa em agosto**, quando ele pede R$2.758 | — |
+| 🔴 **jul/2025** | 👤 | **Ele desliga o automático logo no começo** e fixa o pró-labore no mínimo, para tirar o máximo como lucro. Avisamos com os números dele; ele mantém | ⇢ **A2** |
+| jul/2025 → | 👤 | Cresce de R$8 mil a **R$42 mil/mês** e **nunca religa o automático** — a cada mês o aviso reaparece e ele segue | ⇢ **A5** |
+| **set/2025** | ⚖️ | 🔴 Cai para o **Anexo V** e **fica lá 19 dos 22 meses**. **Escolha dele, sustentada mês a mês** | ⇢ **A3** |
+| **fev/2026** | ⚖️ | O acumulado chega a **R$187.500** e ele entra na **2ª faixa**: a alíquota efetiva começa a subir de 15,5% rumo a 16,75%, sem nunca chegar lá | — |
+| **31/03/2026** | ⚖️ | DEFIS de 2025 | ⇢ **A9** |
+| **jun/2026** | ⚖️ | 13º mês: a regra do acumulado troca para soma dos 12 | ⇢ **C4** |
+| **31/03/2027** | ⚖️ | DEFIS de 2026 | ⇢ **A9** |
+| **mar/2027** | ⚖️ | Acumulado em **R$359.000** — a **R$1.000 do teto do ME**, com a efetiva em 16,7465%. Passar é desenquadramento para EPP | 🔴 |
+| **mar/2027** | ⏳ | 🔴 **E aqui a casa não faz nada — porque não existe.** Nenhuma tela avisa que ele está a R$1.000 do teto, nenhum aviso dispara. **É o buraco que esta persona achou** | 🔴 ⇢ **A3** |
+| **Total** | — | Faturou **R$551.000** · pagou **R$87.083** de DAS · **19 meses no Anexo V** | |
 
 🔑 **O contraste que fecha o argumento — e a conta inteira, não só a metade boa.** Com o piloto ligado desde o mês 1 o DAS cairia de **R$87.083** para **R$40.502**. Mas o pró-labore subiria de R$35.662 para **R$165.300**, e com ele o DARF do sócio de R$3.922 para **R$38.204**:
 
@@ -621,6 +645,25 @@ Mas **ele pode desligar e digitar o próprio valor**. Se fizer isso, o app mostr
 ⚠️ **E os R$165.300 não são imposto, são dinheiro dele saindo da empresa como pró-labore** — tributado na pessoa física em vez de sair como lucro isento. A conta acima só mede imposto. Se o senhor achar que essa comparação está incompleta, é exatamente o que queremos ouvir. ⇢ **A2**
 
 🔑 E ele **encosta no teto do ME sem passar**: acumulado de R$359.000 contra o limite de R$360.000, com a efetiva em 16,7465%. É o único caso em que a porta de saída para EPP aparece.
+
+---
+
+## 🏢 O que hoje é ESPELHO da Contabilizei — e precisa da sua decisão
+
+> 🔴 **A pergunta desta seção é uma só, repetida quatro vezes:** *seguimos a data deles, ou fixamos a nossa em cima da deles?* Em todos os casos a lei permite as duas coisas — por isso a decisão é de método, não de norma, e é sua a palavra que falta.
+>
+> 🔑 **De onde saiu esta lista.** Não é o que eles **dizem** no site: é o que a plataforma deles **fez**, mês a mês, numa empresa real cuja conta nós auditamos — CNPJ aberto em **12/12/2025**, acompanhado até agosto/2026. ⚠️ **É UMA empresa.** Não sabemos se é política da casa ou se foi o contador daquele cliente.
+
+| | O que eles fazem | O que vimos na conta real | A nossa dúvida |
+|---|---|---|---|
+| **E1** | **Revisam o pró-labore todo mês** | O valor mudou sozinho: **R$3.260 → R$3.360 → R$3.360 → R$1.621**, sem o cliente pedir | Mensal é a cadência certa, ou dá para revisar **por trimestre** e só antecipar quando o Fator R se aproxima dos 28%? Mensal gera 12 eventos de eSocial por ano por sócio |
+| **E2** | **Lançam pró-labore já no mês da abertura** | CNPJ aberto em **12/12/2025** e dezembro já saiu com pró-labore — **19 dias de empresa**, com a receita ainda em zero | Começar no mês 1 é o certo? Ou espera-se a **1ª nota**? 🔑 Isso muda o Fator R dos 12 primeiros meses de toda empresa nova ⇢ **A5** |
+| **E3** | **Lançaram R$100 no mês da abertura** | Dezembro/2025 saiu com **R$100** de pró-labore, muito abaixo do salário mínimo | 🔴 É prática aceita ou é defeito deles? **Nós bloqueamos** abaixo do mínimo — e se estivermos errados, estamos travando algo legal ⇢ **A4** |
+| **E4** | **Zeram o pró-labore em mês sem receita** | Janeiro/2026 saiu com **R$0,00**; de maio a agosto, com o faturamento em zero, caiu para o mínimo | Zerar é aceitável, ou quebra a condição de segurado obrigatório do sócio? E zerar **derruba o Fator R** dos 12 meses seguintes ⇢ **A5** |
+
+⚠️ **Uma quinta dependência, que não é data e por isso não entra na tabela:** a **tabela do IRRF** que usamos foi capturada da plataforma deles em 14/09 e conferida contra uma guia real. Ela bate, mas queremos a fonte oficial ratificada pelo senhor, não o print do concorrente. 🔑 E já achamos **uma divergência**: a calculadora deles cobra **R$93,76** num caso em que, aplicado o redutor do art. 3º-A da Lei 15.270/2025, o imposto é **R$0,00**. Ou eles não aplicam o redutor, ou nós o aplicamos onde não cabe. ⇢ **A1**
+
+🔑 **O princípio que propomos, e que queremos o senhor ratificar:** onde a lei fixa, seguimos a lei e ponto. Onde a lei cala, **não copiamos o concorrente por imitação** — adotamos a régua que defende melhor o cliente, e registramos por escrito que foi escolha nossa. Hoje temos quatro casos rodando por imitação, e este documento existe para que eles parem de rodar assim.
 
 ---
 

@@ -1,0 +1,274 @@
+00:00:00 Pedro Maia
+É, bora lá, só voltando aqui, segunda parte da reunião, só pro áudio pegar essa aqui, bora lá. É, então vamos pra esse bloco D aqui, que seria, igual eu te falei, daqui pra frente são cinco pessoas, cinco situações, Que a gente passa o nosso motor fiscal que já tinha feito, os cálculos e tudo mais, pra gente entender até onde acertou ou até não, E o que seria de obrigação nossa, o que não seria, afins. É, beleza.
+00:00:23 Pedro Maia
+Então, aqui por exemplo, tá escrito o quê? O que que é? Ele só tá... Dizendo o que cada um representa. Se não me engano é a partir daqui. Isso. Porque cada um é o que a lei diz, O que a gente faria, o que o cliente faz, O que a contabilizei e praticou, E o que não existe ainda que a gente tem Que tirar alguma dúvida. Então a gente vai entendendo junto aqui. O ciclo que vale para todos. O mês padrão. Último do mês. Ontem. Ser interno. A competência fecha somando todas as notas Emitidas.
+00:00:53 Pedro Maia
+Último do mês. Último dia do mês. Certo? Ele é fechado, então sempre no último dia.
+00:00:58 Léo
+No último dia do mês, aí vamos supor, depois que vira o mês, que você fala.
+00:01:03 Pedro Maia
+Isso, Por exemplo, mas ele é do mês, por exemplo, porque é uma dúvida que eu tenho. Eu posso emitir uma nota fiscal domingo? Pode. E se ele estiver dentro do mês, ele conta naquele mês? Vai contar no mês. Então, se for domingo, último dia de setembro, segunda já é outubro. Eu emitia ela domingo e ela conta no mês recorrente de? Mês nove. Nove, ok, beleza. Lá na...
+00:01:25 Léo
+Aí, a nota de BH, normalmente, ela tem a dada emissão, a dada competência. Se o cara quiser informar, hoje, dia 16 do nove, uma competência de janeiro de 2026, ele pode fazer isso.
+00:01:40 Léo
+Só que aí, por isso que essa trava, ela é importante lá, aqui no
+00:01:43 Pedro Maia
+Pra não bagunçar o resto dos cálculos. Porque já
+00:01:45 Léo
+Já peguei uma vez, o cara, ele começou, ele emitiu muita nota retroativa, aí quando... Ficou um milhão de reais sem levar para a tributação. Porque o cara ficava emitindo a nota retroativa. Aí, ou seja, era multa, juros, aí era... Tem que ser sempre daqui para a frente. O cara emitiu dia 30 do 9. O cara emitiu, opa, ele imita a nota hoje. Se você virar para outubro, acabou. Mês 9 está fechado. Mas em tese, lá dentro da prefeitura, lá dentro do portão, Ele ainda consegue emitir uma nota no mês anterior.
+00:02:17 Léo
+Entendi. É sempre a competência anterior.
+00:02:20 Pedro Maia
+É o que a gente também falou, que, por exemplo, A gente teria aquele linguozinho até o dia 5 Pra poder ter o Abcel, que seja, ou então, Sei lá, talvez aqui, até o dia 5, O cara cancelou uma nota do mês, 9, até 5 de outubro. Porque isso interfere com o meu cálculo, Certo? Do que eu vou entregar pra ele. Vai interferir. Então a gente pode, eu acho que é boa pra gente, Manter esse aviso e o limbo de 5 dias depois, Né? Porque também senão fica muito rígido, Né? Se a gente falar pro cara...
+00:02:43 Léo
+Se eu der pro cara 5 dias depois, em tese eu só posso rodar o robô... No dia 6, pra poder... Beleza. Se a culpa vira minha.
+00:02:51 Pedro Maia
+Certo. Você processou antes.
+00:02:53 Léo
+Você meteu até o dia 15?
+00:02:54 Pedro Maia
+Sim. Beleza. Até o dia 15, que é o que a Contabilizei faz, revisamos o ProLabore todo mês e transmitimos A folha do sócio. A cadência mensal é espelho da contabilidade, não exigência legal. Então, tipo assim, você só tá falando o seguinte, nós também vamos fazer todo mês, Né? Isso é uma... Exato. Então, isso aí não tem como te correr. Beleza. Até 15... O que a gente faz internamente. Vigiamos o fator R. Somos quinais que podem virar 5. Que no caso aí, você já até me explicou que é o contrário, né?
+00:03:24 Pedro Maia
+Ele é 5, pode virar 3. Beleza. Essa vigia fiscal, quando ele fala... Não vira, na verdade, é o benefício. É o benefício. Essa vigia fiscal que ele fala é o seguinte. O cálculo nosso é feito em cima do número de faturamento fechado, certo? Lógico que tem aquelas proporcionalidades de mês e tudo mais, Junto com o prolabore, certo? Aí eu consigo definir isso. Então, sempre esse cálculo é feito, Por exemplo, a vigia Do fator R. Você lembra quando eu te mostrei No aplicativo que a gente somaria as novas Da pessoa e mostraria.
+00:03:56 Pedro Maia
+O faturamento dela em tanto, Tempo, sempre proporcionalizando, A 12 meses? É sobre isso. Então a gente vai manter. A gente pode manter Essa vigia, até pra poder, Justificar pro cara o porquê ele ainda tá dentro Do fator R, talvez, né? Alguma coisa assim do tipo, né? Ou então, se o caso, por exemplo, ele esteja chegando perto dessa virada, Que é o que a gente já conversou aqui anteriormente, A gente não precisa refalar não, que depois eu puxo aqui. Mas se ele for migrar, ele for do 3, por alguns cálculos lá, Ele for subir por 5 e aumentar a alíquota,
+00:04:28 Pedro Maia
+Nessa vigia fiscal, mês a mês, eu consigo avisar para ele. Você consegue
+00:04:32 Léo
+É por isso que a gente faz isso mês a mês, irmãos. O cara já tem os 12 meses como média de 28. Se naquele mês ele cedeu um faturamento que não é normal para ele, os 28% a gente já calcula do mês. Então, em tese, se eu calculo 28% do mês, eu também estou calculando os 12 últimos. Então, de qualquer forma, os 12 últimos vão entrar no cálculo porque o meu fator R é analisado no mês.
+00:04:59 Pedro Maia
+E A única diferença de quando a gente não tem os 12 é que a partir da data da Constituição, A gente conta, faz os cálculos proporcionalizados. Igual você fez a conta aí que você falou pra mim. Então, tipo assim, o cara tá ali, Ele emitiu notas altas demais no início, Sei lá, e aí talvez Tá perto de não, o prolabor Mexeu e vai sair no fator R. Como eu tô calculando e vigiando mês a mês Esses números, eu consigo virar pra ele, tipo assim, Caso sua nota esse mês Em vez de ser tanto, seja tanto, Trapaça esse peto, você, Vai desenquadrar do não, não, não.
+00:05:31 Pedro Maia
+Tem como a gente ter esse cálculo. Isso aí tem como a gente, Ter internamente com esses dados que a gente vai ter no aplicativo. Então, beleza. E aí também mês a mês, né? Fator R, mesma coisa. Mês a mês, beleza. O que a gente,
+00:05:42 Léo
+O que às vezes pode confundir no início é que às vezes o cara tem uma, vamos supor, o cara abre hoje, mês 9. O ideal seria que ele começasse a faturar no mês 10. Porque na hora que eu fizer, na hora que eu tiver ele emitindo, na hora que ele tiver emitindo nota no mês 10, Quando eu tiver no mês 11 fazendo o mês 10, eu já vou ter os 28% do... Do mês 9. Só que aí é aquele negócio, né?
+00:06:08 Pedro Maia
+Aí é por conta do mês. Se vai cair bom ou ruim, a gente avisa de outras formas. Aí às vezes o que é?
+00:06:15 Léo
+Pra simplificar. Deixa o cara tributar nos 15,5 no primeiro mês. Como ele já vai ter esse valor formado dos meses anteriores, na hora que chegar no mês 10, você já faz a média dos 28 e já gera do mês.
+00:06:31 Pedro Maia
+E já cai.
+00:06:33 Léo
+Porque Se eu tiver que gerar esse cara no Amex, se eu reduzir o número do Amex 3 para reduzir, Ao invés de pagar 15 mil e pagar 6, automaticamente eu vou ter que retificar o ex-social dele, E ele vai ter que pagar juros e multa ali. Compensa, mas vai gerar demanda, entendeu? Mas para o nosso caso não compensa a dor de cabeça, a gente tem que transmitir isso. Para o nosso caso nós vamos ter que voltar um mês e começar a mapear quem voltaria, Quem não volta, que aí eu já começo a ter que... Faz sentido.
+00:07:03 Léo
+Se for assim, pensar na nossa facilidade, aí também é claro que tudo depende da forma como está sendo monitorado. Se a gente conseguir de alguma forma monitorar isso e gerar os alertas só de quem gerou a informação, Já que a informação está dentro do aplicativo, às vezes facilita ali na hora que eu tiver que rastrear, Para não precisar olhar para todo mundo. Ah não, isso aí com certeza, isso aí com certeza. Tipo assim, você fala um gatilho negativo. Minha cabeça só funciona para poder reduzir o imposto do cara. Claro, então sim. Eu voltaria, só que eu tenho que ver se o valor que ele paga vai compensar o.
+00:07:38 Pedro Maia
+Trabalho da consultoria. Ah, entendi. É, eu acho que a gente tem que trabalhar nesse ponto sempre com gatilhos travados no back-end para alerta. Alerta, entendeu? Ou então também justificativo. O cara entrou ali, igual a gente está falando. Para fazer o cálculo do cara pagar menos, se ele constituiu hoje e emitiu nota esse mês, A gente teria que fazer esse rolê do ex-social que você falou. Só que a gente não vai fazer. Não vai fazer. Então, no mês seguinte, quando eu tiver o imposto em cima dos 15,5%, tem que ser, né? Porque aí só mudaria no mês subsequente.
+00:08:08 Léo
+É, porque aí, como você já vai ter a informação, já vai ter o período para poder analisar dos 12 últimos. Você vai conseguir bater o anterior, o mês anterior, depois que pular o mês de novo.
+00:08:18 Pedro Maia
+É, E faria a proporcionalidade, na verdade. E faria, viu? Entendi. E aí, por exemplo, é como se tivesse a gente falando aqui que um cara, então, que ele entrou, No meu caso, eu entrei 12 do 12, 2025. Não, vamos pôr antes, vamos pôr aqui. Eu entrei mês passado.
+00:08:35 Pedro Maia
+Constituí no meio do mês. No dia seguinte, 16, eu emiti uma nota de 10K, certo? Minha primeira DAS do mês 9 agora, no dia 20... Vai ser no dia 20 do... Certo, 20 do 9. Não, a minha primeira guia, se eu emitir a nota lá, ela vai ser já agora 20 do 9, não? Mas a constituição é quando? No mês anterior, no mês 18. Isso, vai ser no mês 9. Então vai ser mês 9, dia 20 vai emitir minhas guias e tal. Só que aí, pelo que a gente está falando, até para entender melhor, Nessa situação que eu te disse, é obrigatoriamente essa primeira guia em mim em cima de 15,5?
+00:09:08 Pedro Maia
+Ou não necessariamente? Se o prolabor tiver ajustado e tudo mais.
+00:09:13 Léo
+Tudo no mesmo mês, o fator R só considera o mês anterior. Então, vamos supor, o mês anterior não vai existir. Então, vamos supor, você vai fazer a curação ali do mês 8. 7. O fator R só leva em consideração o mês 7. O mês 7 em 3 não existia. Ah, ele não pega o mês? Ele não pega o mês, é porque vai existir duas interpretações, só para se entender melhor. No mês 7 a empresa não existia. Para reduzir de 15,5 para 6 naquele faturamento do mês 8, eu teria que ter uma folha no mês 7.
+00:09:46 Pedro Maia
+Uma barra de cálculo no mês.
+00:09:47 Léo
+7 a empresa não existia. Entendi. A empresa só passou a existir no mês 8. Então ali ela vai ser tributada, normal, nos 15,5. E a partir do mês seguinte, aí ele vai ser... Desbarrado. Aí o mês anterior já vai ter existido, porque vamos supor, já vai ser o mês 8. Entendi. Ou seja, na hora que eu fizer no mês seguinte, que é mês de outubro, Quando eu vou fazer a competência 9, ele já vai ter o valor da folha do mês 8. Entendi. Porque era quando a empresa passou a existir. Entendi.
+00:10:17 Léo
+Faz sentido.
+00:10:20 Léo
+Então, espera. Vai ficar pior, tá? Porque vamos supor, só para voltar nessa lógica. Ali a gente considera os 12 últimos... Ou... Uma competência anterior à competência. Então, eu estou no mês 9, eu vou apurar o mês 8, Mas a minha competência de folha é mês 7. Só que quando eu chegar na virada de 2027, Os caras lá não tem nada para fazer, Soltaram uma atualização lá, De que agora não é mais o mês anterior à competência.
+00:10:50 Léo
+Agora são dois meses anteriores. Então, ou seja, aí só para exemplificar, Só para falar em período fechado. Na hora que eu chegar lá em janeiro,
+00:11:00 Léo
+A competência em janeiro, que eu vou apurar em fevereiro, eu não considero os 12 últimos, janeiro a dezembro de 2026. Eu vou considerar os dois últimos, dezembro de 2025 a novembro de 2026. Ele vai pular um mês.
+00:11:16 Léo
+Entendi. Vai mudar um pouco essa sistemática aí, mas vamos manter só o hoje. É amanhã o dia. Mas daqui quatro meses vai mudar isso aí.
+00:11:28 Pedro Maia
+Misericórdia. Pô, mexer em legislação, mas... É um saco. Então, o que acontece? É o que eu queria chegar é o seguinte. Porque, por exemplo, Que manobra foi essa que a Contabilizei fez? Ou que a gente poderia também adequar pra fazer? Desse caso que eu tô falando, Da pessoa... Não tem como a pessoa... A única forma dessa pessoa ser enquadrada, No mês subsequente da Constituição, No... Ter o benefício do fator R... É só se tiver essa alteração do E-Social, só assim, só tem essa possibilidade da gente poder, só isso.
+00:12:01 Pedro Maia
+É só se tiver essa alteração do E-Social.
+00:12:03 Léo
+Só se eu for lá, mandar o E-Social com a nova folha, retificando, Aí obviamente já vai ter passado do prazo de vencimento, Dar guia, às vezes o cara pagou, aí eu vou ter que gerar uma complementar, Ou então eu vou ter que retificar essa informação, falar que meu débito era maior, E mandar uma guia complementar para ele que já tinha passado o vencimento, com juros, multa. O valor vai ser pequeno ali, mas às vezes o cara quer fazer dessa forma. Na verdade, às vezes compensa fazer.
+00:12:32 Pedro Maia
+É porque, tipo assim, teve uma guia minha... Mas isso é uma coisa rápida, sabe? Uma guia minha da Contabilizei que eu paguei, que não foi achado o que ela era, Que era uma guia de R$168,00 lá no início, um pouco depois da Constituição. R$168,00? Pode ser alguma coisa a ver. R $168,00 é.
+00:12:44 Léo
+Basicamente o valor do salário mínimo, né? Dos 11%?
+00:12:49 Pedro Maia
+11 % Em 1518.
+00:12:51 Pedro Maia
+Ah, agora me conectou, agora que você acabou de falar. Sabe por quê? Será que não faz sentido que eles emitiram abatendo o diferencial dos 11 reais, daqueles 11 reais lá, não? Ou não tem nada a ver? Compensando... Você lembra daqueles 11 reais? Porque aí a conta fecha certo, hein? É, porque, vamos supor... É 178, né? A guia...
+00:13:11 Léo
+178 no 1628. Não sei o que eu tô falando. Quando era 1518, era 1666.
+00:13:16 Pedro Maia
+Eles tiraram esses 10 contas
+00:13:17 Léo
+A conta vai fechar, né? Vai ser de 157, é. Ah, tá. Entendi. Entendeu? Será que é dívida? Só se ele depois retificou, isso pode acontecer. O cara retifica, fala que os 11 pagos foram 11 reais. Foi 11 reais. Falou que os 11 reais não eram devidos, ele retificou sua declaração, zerou. Aí na receita fica assim, eu tenho um pagamento, mas eu não tenho um débito.
+00:13:47 Léo
+A confissão da dívida. Aí você tem o direito de compensar esses 11. Numa guia futura. Então, ou seja, isso aí que você está falando bate um pouco com o que pode ser. Porque às vezes os seus R$11,00 que está ali, ele está desatualizado. Porque às vezes aquele não existe mais. Às vezes eles foram lá, retificaram a sua folha, gerou esse R$11,00 positivo e abateu esses R$11,00 na sua guia do mês.
+00:14:13 Léo
+No próximo período. Que gambiarra, que cacete. Mas é uma possibilidade.
+00:14:21 Pedro Maia
+Sim, Se você não quiser mexer com isso, Manda ali, deixa o cara pagar. É porque meu medo é o seguinte, porque, por exemplo, A gente, eu acho, tudo, Eu fico pensando lá do usuário, da complexidade dele, Igual você está falando, Essa é a mesma situação, o cara foi, constituiu, Ele tem direito, Do benefício, de acordo com o que ele vai faturar, Por mês, do fator L. Só que a primeira guia vem em 15,5. A pessoa vai assustar, porque a pessoa vai, Falar, pô, eu tenho direito e por que não foi Feito? E aí é onde entra o seguinte... Por isso que eu ouvi tu por falar assim, sabe? Exato.
+00:14:51 Pedro Maia
+E será que a gente não conseguiria, de uma forma menos traumática possível, Dar essa possibilidade de alguma forma pra pessoa se enquadrar de cara ali? Porque eu acho que isso pra gente, a longo prazo, é bom, é benefício, sabe? Só que eu não sei, de fato, o tanto que isso vai gerar de trabalho pra gente. Entende?
+00:15:10 Pedro Maia
+Isso pode ser automatizado, por exemplo, como você tá falando? Gera um recálculo, gera um sei lá o quê. Porque, por exemplo... Se gerar isso tudo de uma forma automática, que eu só emito...
+00:15:18 Léo
+A compensação do PND Comp não
+00:15:20 Pedro Maia
+Que eu só emito para ele uma nova guia, com valor razoável, em vez de seus 15,5%, Porque, por exemplo, pensa em cima de 12K, em cima de 10, de 12 mil. Em cima de 12 mil, pensa exatamente nesse caso. Em cima de 12 mil, como é que seria essa guia? Você sabe falar? Um salário, uma pessoa PJ de 12 mil, o mesmo exemplo. Constituir nesse mês, emitir a nota nesse mês. Mas no mês seguinte eu quero pagar já os 6%.
+00:15:50 Pedro Maia
+A gente tem uma noção não só da questão de complexidade.
+00:15:55 Léo
+É 12 mil. Se ele se enquadra nos 12,5, nos 15,5, ele pagaria só de síndios 1.860.
+00:16:12 Léo
+Se ele pagar no 6, que é o inicial, ele vai pagar metade, vai pagar 720.
+00:16:24 Léo
+Então, de 5, só de 5, eu não estou nem somando o INSS. Mas só na guia aqui já compensaria. Vamos supor, em tese, o valor do INSS dele seria o quê?
+00:16:42 Léo
+Você vê os 12 mil, os 28 de 12 mil dá 360, eu teria que ter um salário, uma folha De 3, 360, se eu fizer 11% disso aqui dá 369, então em tese, vamos supor, uma guia Que está me gerando 720, 720 que eu pagaria de tributo e eu pagaria 1.800 se eu fizesse, Por ação normal. O meu INSS que geraria seria R$370,00, mais esses R$720,00.
+00:17:17 Léo
+No baixo dos R$1.800,00. É, entendi. Ainda seria pouco, eu quero economizar R$300,00 praticamente. Mais não? É, vamos supor, dá R$369,00 mais R$720,00. Porque o outro valor é mais alto,
+00:17:31 Pedro Maia
+É de R $12,00. É, o outro valor de R$12,00 vai dar R$1.800,00. É, vai economizar aí uns R$700,00. Pelo menos R$720,00. E o que isso tem para a gente? O que isso geraria para a gente, além da demanda de lá no E-Social? Isso gera uma guia para o cara fazer isso? O que isso gera? Como é que a gente poderia... Se eu tiver que retificar.
+00:17:48 Léo
+Com esse valor exato, eu vou ter que retificar o E -Social, Aí mando para uma DCTF. A DCTF gera a guia, manda a guia para o cara com multijuros, Porque ele ia estar em atraso. E só essa guia que ia ser gerada mais, Porque o simples em si eu não preciso retificar, porque o faturamento já é o faturamento do mês. O cara paga normal.
+00:18:11 Pedro Maia
+A IAG é em cima de algum valor calculado, que a gente teria como padrão, por exemplo? Ou seria em cima de algum valor que o usuário teria que dizer para a gente? Ou isso é um cálculo nosso? Só para a gente poder pegar essa proporcionalidade? Teria que ser um valor nosso.
+00:18:24 Léo
+O nó que a gente enquadrar lá no perfil do aplicativo, ele já teria que estar lá. Análise de fator é. Ele já teria que ter um diagrama lá, já dentro do sistema. Qual que é a sua alíquota atual? Alguma coisa assim, não demonstrando pra ele, né? Não sei se demonstrar pra ele ia fazer sentido. Mas a gente ia ter que ter uma tela assim, E esse cara tá com 27,96. O símbolo dele não comporta, eu preciso de 28. Aí depois dos 28 aí que eu conseguiria fazer essa... E por exemplo, uma coisa que então pra mim faz sentido, vamos supor...
+00:18:56 Léo
+Eu paro o seu portal lá e não mostrava se você tava nos 28, não? Mostra aqui, ó, vou te mostrar.
+00:19:02 Pedro Maia
+Aqui ele mostra que é bem... É bom que você olha. E eles falaram aqui que é uma página nova deles, quer ver?
+00:19:08 Léo
+É, eu acho que manter isso aí às vezes não sei se confunde o usuário.
+00:19:13 Pedro Maia
+Aqui, Ó.
+00:19:15 Pedro Maia
+Isso aí é legal. Aqui eles tentam destrinchar, entendeu? Top.
+00:19:26 Léo
+Aí tá basicamente o que você pagou, de alíquota. Verdade.
+00:19:34 Léo
+Ali, ó. Isso aí é bacana. Isso aí é bom. Isso aí já é um indicativo. Ou seja, qualquer coisa... Aí tem as revelucias, né, de lógica. Qualquer coisa que eu tiver menor do que 28, já tem que me gerar um alerta de fazer o ajuste na folha desse cara. Entendi. Ou seja, porque ele só sabe que é 28 ali, que é aquele valor. Ele faz o 28 do seu faturamento... E o seu prolabor total tem que ser 16 e tanto.
+00:20:06 Léo
+Menos os prolabor dos outros meses, é o proporcional que ele tem que gerar de prolabor naquele período, naquele mês.
+00:20:12 Pedro Maia
+Então, por exemplo, você acha que a gente conseguiria, de alguma forma... A gente está gerando, você está exato. A pessoa que acabou de constituir, Essa pessoa que acabou de constituir, A gente fazer esse processo para ela e vai gerar igual você falou. Gerar com muito índice. Mas é valor altíssimo, já que a gente vai ter o valor padrão?
+00:20:29 Léo
+Eu não sou. Se eu gerar o faturamento no mesmo mês que ele... Porque ele, no mesmo mês da Constituição, ele não vai ter folha anterior, mês anterior. E a folha só é calculada sobre folha anterior. Então, e aí? Quantos seriam os valores? O valor do meio vai ser fixo, né? Dessa guia.
+00:20:48 Pedro Maia
+Ele vai ter que ser o valor dos 28%.
+00:20:51 Pedro Maia
+Ou a gente só consegue fazer em cima de quando ele faturar, é isso? É depois que ele faturar. Ah, entendi. Se ele não faturar nada... Só que aí eu já teria os 10, né? Os 12 que eu te falei. Só que é isso. Nesse caso, já teria a base do cálculo, que seria os 12. Você já teria os 12,
+00:21:07 Léo
+Aí ele mostrou, no próximo mês você teria mais 12, ou seja, 28% sobre 24, se você não gerar nada, se você não fizer essa regularização. Porque a sua média de faturamento é 24 mil, não é 12, porque ele pega 12 últimos. Então, na hora que você passar cada mês para frente, é uma soma.
+00:21:29 Pedro Maia
+Então, Para o exemplo que eu estou dizendo de 12 mil, Você tem uma ideia de quando seria uma guia dessa? Uma guia dessa para retificar? Essa guia que seria emitida para a pessoa, para ela entrar no... Que ela pagaria de imposto? Que ela pagaria para ter o benefício do anexo 3. Ela inicia 5, no meu caso, para eu ter o benefício do anexo 3. Nessa mesma situação, acabei de constituir e faturei no dia seguinte. Emitiu a nota no dia seguinte do mesmo mês. A gente consegue ter uma ideia de tipo...
+00:22:26 Léo
+Aquele valor não bate não, mas assim, é porque ele coloca maior ou igual, ele não Está falando que é 28, na verdade está 37, mas então você está dentro dos 28, então Ali tranquilo. Mas pô, o imposto eu pagaria ali, seria 12 mil, pensa num cenário de 12 mil, aí eu, Já não sei se eu sinto, né?
+00:22:56 Léo
+Você pagaria de imposto 720 do Simples, mais 369,60 de INSS. Ou seja, você pagaria 1.089,60 no mês, versus os 15,5. Porque vamos supor, a gente falou de 1.800, mas não é 1.815,5, mas o 178 do INSS.
+00:23:29 Léo
+Entendeu? Se eu gerar só sobre o salário mínimo, daria 1.078, então seria 1.878. Ou seja, ele está gerando uma...
+00:23:40 Pedro Maia
+Não, 1.800 mais 1.878, daria quase 2 mil reais. É. Entendi. E aí? Aí, beleza. Quase 2 mil reais, se a gente deixar para esse mesmo caso, para... Colocar a pessoa com benefício do fator R no mês seguinte, né? Agora, e isso que é emitido desse E-Social que a gente teria que mudar? Qual seria o custo dessa guia? A gente consegue ter uma ideia? Tipo assim, em vez de pagar 2 mil, por exemplo, entendeu? Não só, porque não é 2 mil, na verdade. Vai ter que retificar, né? Igual você falou, vai ter que voltar lá, gerar um trem com multas e juros.
+00:24:14 Pedro Maia
+Com o valor de 12 mil e todo o cálculo que a gente vai ter dessa pessoa, Que não é nada, na verdade. A pessoa acabou de constituir e emitiu uma nota só E a gente quer no mês seguinte. O mesmo caso que a gente está dando. Constituir ontem e emitir hoje uma nota de 12. Mês 9. Eu quero que você me enquadre no mês 10.
+00:24:32 Pedro Maia
+Já na alíquota de 6%.
+00:24:36 Pedro Maia
+Esse processo tem que ser feito referente a mês 8, Que vai gerar as multas e juros. A gente consegue ter uma noção de valor disso? Entendeu? Seria... Existe um percentual, é percentual faturado.
+00:24:47 Léo
+É baixo porque é bom supor, ele já vai se... Aí, considerando que ele não emitiu, não fez o prolabor de forma nenhuma.
+00:24:55 Pedro Maia
+É, não, tipo assim, é porque você tá tendo que alegar no meu... Pelo que eu tô entendendo, tá? Eu posso falar errado. Se eu constituir agora, hoje, ontem, hoje eu fiz, me faturei uma nota de 12 mil. Pro mês seguinte cair no 6, você falou que a gente tem que falar que existiu uma...
+00:25:13 Pedro Maia
+Uma... Prolabora, sei lá, no mês oito. Mas mesmo com a minha data de constituição, Sendo esse mês, a gente consegue fazer isso? Não. Ah, então já é trabalho.
+00:25:22 Léo
+Só depois que o mês vira. Vamos supor, no mês nove eu passo, O mês oito. No mês dez eu passo O mês nove. Certo. Não é que eu cheguei no mês Onze.
+00:25:33 Léo
+Entendeu? Porque no mês onze eu botei o histórico, de alterar o mês nove.
+00:25:38 Pedro Maia
+Entendi.
+00:25:40 Pedro Maia
+Então, de qualquer forma, é como se fosse assim, A pessoa que constituiu esse mesmo caso, Constituiu ontem, emitiu uma nota hoje de 12. Mês que vem, não tem forma nenhuma de eu passar ela para o outro.
+00:25:54 Léo
+Você consegue. Você até consegue declarar lá no anexo 3, Sem precisar fazer que o cara seria do 5º e fazer ele pagar. Você consegue. Na gambiarra você consegue fazer isso. Só que não é legal. Pode dar problema.
+00:26:12 Léo
+É, pode dar problema. Eu vou supor, nunca vi um problema relacionado a isso. Assim, eu falei que era anexo 3, mas era anexo 5. Nunca vi um.
+00:26:24 Léo
+Ainda não vi, entendeu?
+00:26:28 Léo
+Um fato, assim, da receita ter cobrado, Esse mês aqui você colocou que era anexo com benefício de fator R, Mas automaticamente eu não estou vendo essa... O valor que era para ter sido 15,5 minutos, nunca vi ele fazer isso. Mas eu consigo mandar como anexo 3. Então, o que você acha? A gente assume esse risco? Eu acho que a gente pode deixar isso à carga do usuário, às vezes.
+00:26:54 Léo
+Você concorda que no mês de abertura a empresa vai ficar... Na minha nova anotação não vai ter como eu falar. É, tem que ter um aceito do contrato. O contrato vai resguardar. De que a empresa seria isenta de qualquer responsabilidade não ser perante o CNPJ.
+00:27:15 Pedro Maia
+A gente seria isento de responsabilidade do CNPJ?
+00:27:19 Pedro Maia
+Que aí a gente conseguiria fazer isso aí, de colocar lá como 3. Colocar como 3. E aí vai gerar imposto como 3?
+00:27:25 Léo
+Aí Vai gerar imposto como 3. Aí automaticamente, na hora que eu... Aí vamos supor, aí eu teria que retificar essa informação amanhã. O problema seria justamente esse. Eu teria que justificar. No mês 11... Então, se eu fizesse o mês 10, eu ia ter que informar uma folha complementar do mês 9 Para poder levar em consideração os 28. Entendi. De qualquer forma, eu ia ter que mandar uma guia complementar. De qualquer jeito? De qualquer jeito. Independente. Mas, cara, todos os...
+00:27:57 Léo
+Lá no outro setor, abria 100 ingleses do CNPJ. Dificilmente eu pegaria um cara que faturava o mesmo mês. Muito difícil. Eu não tenho nem lembrança de como que foi isso. Entendi.
+00:28:09 Léo
+Eu acho que isso não foi algo, o que a gente pode rastrear é o seguinte, às vezes gerar uma alerta para a gente, o cara abriu, lá vai ter uma data de abertura, o cara abriu 16 do 9, competência 9 ele faturou, alertar para a gente, para nós, opa, quais os casos, que ao invés de eu ser pego de surpresa, eu posso tratar esse caso como um caso, quando eu vou falar de juros e multa, o cara é ignorante do outro lado. O guionista que eu falo assim, não é a área dele, ele também não quer saber disso.
+00:28:42 Léo
+Ele só quer pagar o dinheiro. Eu concordo com isso. Mas se eu ligar para ele e explicar o que ocorreu, ele vai entender melhor do que se eu só mandar a guia. Mas aí vai depender da estrutura interna, mas eu entendo que vai ser tranquilo.
+00:28:58 Pedro Maia
+Então, É isso que eu estou pensando. Quem alertaria para a gente isso e a gente alertaria em contato com o cara para falar com ele?
+00:29:03 Léo
+E eu trato como... Ou o cara percebeu, ou o cara se planejou, então ele não fez isso por fazer. Não, teve cuidado, né? Existiu essa possibilidade, a gente foi lá, fez a redução, você está enquadrado na menor carga de multagem, Só que aí eu precisei tirar essa guia complementar aqui, porque senão você não ia pagar 16, você ia pagar 16. Quando eu falo isso, o cara diz, ah, não, beleza, já que você está olhando do meu lado, então vamos seguindo, né? É melhor, eu também quero pagar pouco, então eu pago esses juros de multa aí.
+00:29:34 Léo
+Entendi. Pode ser. Eu acho que a gente pode criar uma forma do sistema, Gerar um alerta, Pra gente que o cara faturou no mesmo mês Que ele abriu.
+00:29:44 Pedro Maia
+Até porque, tipo assim, se a gente tiver Status, pode ser um segundo aceite, Talvez, né? Do cara virar e falar assim, A gente consegue, tipo, no mês seguinte E tal, de uma forma que você vai Economizar aí, só que eu preciso Que você confirme isso pra mim. Porque a gente vai fazer isso pra você. É isso. Sei lá, vai aparecer...
+00:30:04 Léo
+Dificilmente eu vi um caso assim, o cara faturou e emitiu uma nota no mesmo mês. Muito difícil. Entendi. Muito difícil. Normalmente o mês vira, o cara não vai emitir no mês 9, ele emite lá no mês 10. Entendi.
+00:30:17 Pedro Maia
+Fechou, tá, entendi. É, até porque faz sentido, agora parando pra pensar o seguinte, o nosso nicho que é, Prestador de serviço, ele de fato vai ter que cumprir a competência dos 30 dias trabalhados Pra emitir a nota. Ah, tá, ok. Fez muito mais sentido agora na minha cabeça. Não tava pensando no prestador.
+00:30:35 Léo
+Eu, prestador de serviço, se eu sei que o cara é problemático pra pagar, Eu nunca trabalho pra ele depois de recebo. Porque eu já sei, eu já vejo no perfil do cara, Que esse cara é muito abagado. Vou cobrar antes. Porque se ele me paga antes, aí eu exerço, eu faço o trabalho antes. Mas, ok, automaticamente, ele me paga hoje. Aí é ruim, né? Porque em tese você tem que já emitir a nota do dia imediato. Mas se eu trabalho e depois eu recebo, O cara vai emitir essa nota só no outro mês. Só no outro mês. Faz sentido. Faz total sentido. E os caras nem olham.
+00:31:06 Léo
+Vamos supor, se o cara exerceu uma competência no mês 9, Eu comecei a trabalhar no mês 9, Tô no mês 10 e eu tenho que emitir a nota no mês 9, Se eu falar, cara, emite no mês 10, O cara manda a nota lá, não, beleza.
+00:31:17 Pedro Maia
+Tá tudo certo. Eu acho que de fato é uma coisa que pode nem acontecer. Ou se acontecer, vai ser tão mínimo que a gente trata dentro. Eu acho que é uma boa ideia. Então, beleza. Até o dia 18, o 20, emitimos DARF do INSS e do Imposto de Renda dos Sócios. Antecipa se cair no fim de semana, certinho? Até o dia 20, 21, apuramos, transmitimos o PGDAS e emitimos a guia DAS, Prorrogada se cair no final de semana. Até o vencimento, que seria coisa do usuário, ele tem que pagar a guia, isso é com ele.
+00:31:50 Pedro Maia
+Depois é nosso interno conferir se a guia anterior foi paga, se venceu. E se a gente for oferecer pra ele esse recálculo, né? Que é igual tem o oficial da... Isso aí a gente faz por API e tal, tem como puxar. Então, beleza. 31 do 3. Defiz de ano anterior, Morre em 2027, vira campo, Do PGDAS. Então isso aí é aquela mudança Que a gente ainda vai ter que ver o que vai acontecer, né?
+00:32:10 Léo
+Eu tô achando que ainda vai ter mais defiz a partir do ano.
+00:32:14 Pedro Maia
+Tá. Isso aí tá bem... Desatualizado. Não, isso aí foi novo.
+00:32:18 Léo
+Isso aí foi. Saiu há pouco tempo.
+00:32:20 Pedro Maia
+Ah, tá. Isso aí. Tá. O ex-social vence antes do DAS. Quem mira o dia 20, entrega 5 dias atrasado todo mês. Então, o que acontece? Aqui ele só está falando que o ex-social vence antes da DAS. Quem mira o dia 20, entrega 5 dias antes. É por causa do dia 15. Ah, tá. Entendi. É que a guia dele para ser gerada,
+00:32:42 Léo
+Ele tem a data de vencimento da entrega do ex-social
+00:32:45 Pedro Maia
+Do STF, dia 15. Entendi, da responsabilidade, da obrigatória, do assessor de obrigatória. Enfim, e uma regra que atravessa o 5, o cálculo automático bem ligado. O ProLabor é calculado e ajustado por nós todo mês, por padrão. Isso aí que eu estou falando, se o cara tiver acionado, deixa acionado. O cliente não precisa entender nada disso. Ele emite a nota e paga a guia, que é o que eu faço. O título do cliente nosso inicialmente vai ser isso. O cara não vai ter mais nada além disso. Mas ele pode desligar e digitar o próprio valor.
+00:33:16 Pedro Maia
+Se fizer isso, o app mostra o efeito com os números dele, que a gente conversou também. Não um aviso genérico. Para seguir no anexo 3, você precisa pagar por mês. Com o valor que você digitou, a alíquota sai de 6% para 15,5%. Cerca de X% a mais por mês. Então, tipo, é um bom aviso. Pô, se você resolver desativar aqui e colocar o valor que você quer, Esse valor vai te gerar X valor a mais por mês. É o que você quer? Quero. Continua. E aí já trava no sistema nosso. Isso muda o que... Muda de quem é a responsabilidade. E o documento marca isso em cada linha.
+00:33:47 Pedro Maia
+Quando uma empresa... Abaixo cai para o anexo 5, não cai, aí você já me explicou que é diferente, ele na verdade é 5 e tem direito ao 3, não foi falha de cálculo nosso, foi escolha dele, certo? Tomada depois de ver a conta, o único bloqueio que aplicamos é o legal, pro labore abaixo do salário mínimo, o app não aceita, certo? Beleza, então seguimos.
+00:34:12 Pedro Maia
+Aqui, que ele pode nos ajudar, queremos saber se avisar... E deixar passar é a postura certa. Ou se, em algum desses casos, o escritório recusaria executar. Não, na verdade, a gente falou sobre isso já. A gente vai avisar, né? Não vai deixar passar. Tudo a gente vai avisar. Beleza. Então, aqui vem a questão das pessoas que eu te falei. Então, ele trouxe aqui, por exemplo, um caso que a gente falou lá em cima um pouco. Para um dev que é freelancer solo e que acontece que o cliente decide por conta própria.
+00:34:47 Pedro Maia
+E contra o aviso. Então, por exemplo, o cara constituiu a empresa, o CNPJ, na mão, Aí a gente emite a inscrição municipal e as licenças, E publicamos os documentos na plataforma, que é a nossa tábua de documentos. Dia 1 ainda, certificado digital emitido, que vai ser certificado, a parceira vai fazer. Sim, ele, o app, não libera a emissão de nota fiscal, certo? Não existe procuração da nota fiscal eletrônica. Então, aqui é aquela questão da procuração. A gente pode pedir junto, já teria ela aqui então. Tudo bem. Dia 1, o que a Contabilizei fez?
+00:35:18 Pedro Maia
+Definimos o ProLabore já na primeira competência. Não é exigência legal. E o que a Contabilizei fez na conta real que analisamos? E nós copiamos. Trava o fator R desde o começo. Então, o que acontece? Isso aqui é aquilo que a gente também já falou. Aquela pergunta. O cara caiu lá pra dentro, a gente fala pra ele, né? Sobre essa questão do... Se ele quer emitir ProLabore já, de cara, Ou se ele prefere deixar pra fazer isso mais pra frente. Seria basicamente isso, né?
+00:35:45 Pedro Maia
+De março a abril, dois meses sem faturar, mesmo assim transmitindo os PGDAS, que é coisa nossa. E a folha do sócio, mês sem receita, não pausa a obrigação, correto? Maio, primeira nota, 18 mil. Fechou. Maio, aí é coisa nossa, na primeira nota do cara de 18 mil, o nosso cálculo pede 1.798 do mínimo e sugere 2.158. Ainda é pouco porque a janela só tem três meses anualizados. O algo cresce junto com... O histórico, faz algum sentido?
+00:36:17 Pedro Maia
+Eu acho que esse alvo aqui que ele fala é do.
+00:36:21 Pedro Maia
+Fatoré. O nosso cálculo pede mil... Na nota dele, o nosso cálculo pede 1798. No mínimo, isso sugere 2158. Ainda é pouco, porque o Jané só tem, Três meses anualizados.
+00:36:50 Léo
+Ele está falando de INSS, em 1798. É um culto, eu perdi também.
+00:36:56 Pedro Maia
+Não entendi, na verdade.
+00:36:58 Pedro Maia
+Dois meses sem faturar, mesmo assim transmitimos, pede a dar, ok.
+00:37:05 Pedro Maia
+Primeira nota. Então, depois de três meses da Constituição, ele fala uma nota de 18.
+00:37:22 Léo
+Nossa, o calor tem 1.798, no mínimo, isso gera 2.758.
+00:37:28 Pedro Maia
+Deve ser de Prolabori, será que não?
+00:37:35 Pedro Maia
+Esse valor do Prolabori para ele poder seguir com o benefício do R, será que não? Ou eu estou panguando aqui?

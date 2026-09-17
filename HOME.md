@@ -10,6 +10,26 @@ data: 2026-07-16
 
 ## 📍 Agora (torre de controle — mantida via `/fechar`)
 
+> **Última atualização:** 2026-09-17 — **75º flow: O VAULT INTEIRO ENTRA NO EIXO, E A VARREDURA ACHA UMA AUTORIDADE FANTASMA.**
+>
+> 🧭 **Continuação direta do 74º, no mesmo dia: mais 6 commits.** O 74º moveu motor e processos; este moveu **tudo o que faltava**, e terminou com um pedido novo do Pedro — *"vasculhe as pastas que a gente não tocou e me sugira uma reorganização"*.
+>
+> **(1) 🗺️ O FLOW SAIU DE `execucao/` E VIROU `produto/_flow/`.** É o **único artefato que atravessa os três ramos**: `abrir` 69 nós · `mei` 36 · `migrar` 14, com **150 arestas cruzando entre eles**. Por isso não cabe em `me/entrar/` nem em `mei/` — fatiar quebraria o grafo. Underscore porque é transversal, convenção que o vault já usava. 📦 E o histórico saiu da pasta viva: eram **252 arquivos e 8,6 MB** de snapshot que o gerador só escrevia e nunca limpava; agora `versoes/` guarda só a corrente e a anterior vai sozinha pra `_arquivo/`.
+>
+> **(2) 🧹 A RAIZ DE `produto/` FOI DE 13 ARQUIVOS SOLTOS PARA 2.** A régua foi **medir, não supor** — cada nota contada por menção a regime: `_metodo` (0 ME, 0 MEI) virou doutrina; `_mapa-de-cruzamentos` (0 MEI, 9 Fator R) e `_catalogo` (14 ME, 1 MEI) foram pro `me/viver/`. 🤖 E o `PERSONA.md` foi **junto do gerador**, decisão do Pedro contra a minha proposta de pô-lo no topo do ramo: consistência dura, sem exceção escrita. A regra vale agora para os três gerados.
+>
+> **(3) 📁 `execucao/` VIROU O QUE É NEGÓCIO E OPERAÇÃO, NÃO PRODUTO** — e essa frase, que as seis etapas desenharam sem nunca ter sido escrita, entrou no `CLAUDE.md`. As 24 notas soltas viraram **6**. As 141 fotos da JUCEMG (24 MB) encheram a `me/entrar/constituir/`, que nasceu vazia ontem. O portal foi pra `me/viver/portal/`, com o `_historico/` de julho (a trava diz *"não apagar, não obedecer"* — no arquivo eles pareceriam deletados).
+>
+> **(4) 🔎 A VARREDURA DO QUE SOBRAVA ACHOU 4 ARRUMAÇÕES E 1 DECISÃO.** `handoff/` e `handoffs/` eram **coisas diferentes com um caractere de diferença** (o gerador × as 9 entregas) · `ux-ui/` tinha só lottie desde 25/08 · `apresentacao/` estava parada desde 08/07 · e havia **três coisas chamadas "persona"** no vault, agora duas. O vault saiu de 14 pastas de raiz para **13**. ⚠️ Renomear as personas quase quebrou o Ateliê: o `atelie/CLAUDE.md` lê aquele caminho **em runtime**, e foram 24 referências a consertar.
+>
+> **(5) 🔴 E O `motor-testes` ERA UMA AUTORIDADE FANTASMA — 406 ARQUIVOS.** O `indice-autoridade` o declarava dono de **ORDEM do flow · LÓGICA dos blocos · PERSONAS/aceite · Flow #2 MIGRAR**, e três linhas abaixo dizia que as personas dele estavam mortas. O levantamento provou o resto: ele afirmava `b1.encaixe` e `b1.resumo`, **nós que não existem**; tinha `b2.natureza`, removida do produto em 31/08; 35 passos contra 124 nós. 🔑 **E era a QUARTA cópia da lógica fiscal:** 7 das 8 constantes batiam, e a 8ª era `IRRF_ISENCAO: 5000` — a leitura refutada em 14/09 (*não é isenção, é redutor*). A correção entrou no motor e no `fiscal.ts` e **não entrou ali, porque ninguém sabia que ali era um lugar**. Mesma família da 3ª cópia da CPP, com uma diferença que incomoda: a CPP foi pega por trava; esta só apareceu porque o Pedro mandou vasculhar.
+>
+> **(6) 🔒 O PORTÃO, NAS SEIS ETAPAS.** O motor saiu **idêntico** ao baseline em todas (`c43ce596`, 725 linhas, 238 valores em R$). `flow-graph.json`, `processos-graph.json`, `cru-graph.json` e `fiscal-tabelas.ts` idênticos. Os docs gerados que mudaram tiveram **0 linhas que não fossem caminho**, conferidas uma a uma. ⚠️ Dois sustos que não eram nada — um `console.log` com o caminho novo, e eu concatenando as suítes fora da ordem do baseline — foram explicados antes de seguir.
+>
+> ⏭️ **O que fica aberto:** 🔴 **`verificar-capacidades.mjs` NÃO EXISTE** — o `portal-data.mjs` e a doutrina de 11/09 o citam como *"o verificador"*, os `data-cap` estão no JSX, e **nada confere** · 🔴 **PERSONAS/critério de aceite do flow de telas está EM ABERTO** no índice: as 24 do Flutter são do app do dev, as 18 vidas são a vida pós-constituição, e era o motor arquivado que ocupava essa linha · o `verificar-mei.mjs` aponta 3 etapas para `mei-telas.tsx`, apagado no fork de 07/09 · e o buraco de 74º segue de pé: **as telas reescrevem a regra fiscal em vez de chamar o motor**.
+>
+> ---
+>
 > **Última atualização:** 2026-09-17 — **74º flow: O PRODUTO GANHA EIXO — O MOTOR SAI DE `execucao/` E VIRA CICLO DE VIDA DO ME.**
 >
 > 🧭 **O flow começou com três perguntas de diagnóstico do Pedro, e é delas que sai tudo o resto.** *"Toda essa parte do motor fiscal está conectada a que nível no `/processos`?"* · *"e às funcionalidades core?"* · *"dá pra realocar o motor TODO pra uma pasta só, sem carregar os dois juntos?"*

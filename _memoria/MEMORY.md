@@ -135,8 +135,9 @@
 - [Doutrina do pipeline vetor Illustrator](legalize-illustrator-vector-pipeline-doutrina.md) — 21/08: MCP nao cria geometria.
 
 ## Metodo de trabalho e vault
-- [A arvore do produto: me/mei x entrar/viver/desenquadrar](legalize-arvore-produto-me-mei.md) — 17/09: o motor saiu de `execucao/` e mora em `produto/me/viver/motor/`.
+- [A arvore do produto: me/mei x entrar/viver/desenquadrar](legalize-arvore-produto-me-mei.md) — 17/09: a arvore FECHADA, em 6 etapas. `execucao/` = negocio e operacao, nao produto.
 - [Doc declarado e ausente e DEFEITO](legalize-doc-declarado-ausente-e-defeito.md) — 17/09: 4 travas passariam verdes sem ler nada.
+- [Caminho relativo falha CALADO](legalize-caminho-relativo-falha-calado.md) — 17/09: 3x num dia; quem LE grita, quem ESCREVE nao.
 - [Trava de defasagem + a ordem obrigatoria](legalize-trava-defasagem-e-ordem.md) — 17/09: numero em prosa nao recalcula; o '7' errado vivia em 4 arquivos.
 - [A entrega pro dev, e tudo em centavos](legalize-entrega-dev-e-centavos.md) — 17/09: a fixture E o contrato; a rede dos legiveis congelados.
 - [Tres travas de metodo, de tres erros meus](legalize-travas-de-metodo-15-09.md) — 15/09: verde vazio, assunto reaberto 3x.

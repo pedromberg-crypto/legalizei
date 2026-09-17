@@ -14,28 +14,29 @@ tags: [reporte, evolucao, sociedade]
 
 ## 📊 Placar geral
 
-> 🤖 **Este bloco é gerado.** Ele se reconta sozinho a cada `/fechar`, a partir das tabelas abaixo — nenhum número aqui é digitado. Gerado em **16/09/2026**.
+> 🤖 **Este bloco é gerado.** Ele se reconta sozinho a cada `/fechar`, a partir das tabelas abaixo — nenhum número aqui é digitado. Gerado em **17/09/2026**.
 
 ### O que rendeu
 
 | | |
 |---|---:|
-| **Entregas reportadas** | **290** |
-| Entradas no log | 61 |
-| **Dias trabalhados** | **58** |
-| Período | 07/07/2026 → 15/09/2026 |
-| Dias corridos no período | 71 |
+| **Entregas reportadas** | **297** |
+| Entradas no log | 62 |
+| **Dias trabalhados** | **59** |
+| Período | 07/07/2026 → 16/09/2026 |
+| Dias corridos no período | 72 |
 | Média de entregas por dia trabalhado | 5,0 |
 
 ### Placar por status
 
 | Status | Itens | % |
 |---|---:|---:|
-| 🟢 pronto / entregue | **241** | 83,1% |
-| ✅ estava parado, foi resolvido | **15** | 5,2% |
-| 🟡 em curso / parcial | **27** | 9,3% |
+| 🟢 pronto / entregue | **241** | 81,1% |
+| ✅ estava parado, foi resolvido | **15** | 5,1% |
+| 🟡 em curso / parcial | **27** | 9,1% |
 | 🔴 trava ou precisa de você | **5** | 1,7% |
 | 🕓 aguarda pessoa | **2** | 0,7% |
+| sem marca | 7 | 2,4% |
 
 ### Ritmo, mês a mês
 
@@ -43,7 +44,7 @@ tags: [reporte, evolucao, sociedade]
 |---|---:|---:|---:|
 | julho/2026 | 24 | 20 | — |
 | agosto/2026 | 20 | 20 | — |
-| setembro/2026 | 14 | 13 | — |
+| setembro/2026 | 15 | 14 | — |
 
 ### ⚠️ O que o sócio não viu
 
@@ -1346,4 +1347,37 @@ As duas perguntas da semana passada (retirada de lucro sem extrato, e a regua do
 - As 16 empresas de teste atravessaram o ciclo inteiro: 156 meses simulados, zero falhas
 - Descobrimos que falta um filtro na entrada: hoje dá pra vender, abrir a empresa e a Receita indeferir depois. Estou desenhando
 - Preparei um documento com 3 perguntas pro contador, cada uma com o caso e a conta na mão
+```
+
+---
+
+## Semana 16/09/2026 — o contador validou o motor, e as três perguntas voltaram com resposta
+
+Aquele documento que eu preparei pra conversa foi pra mesa. **Quase 5 horas com o Leonan**, e as três perguntas que eu tinha pra você viraram trinta e duas respondidas.
+
+| # | O que foi feito | Detalhe |
+|---|---|---|
+| 1 | 🎙️ **O motor passou pela primeira validação de contador** | ~5h de reunião, 3 gravações, tudo transcrito e lido por inteiro. **32 pontos com veredito:** 20 confirmados como estavam, **4 corrigidos contra nós**, 5 viraram decisão nova, 3 seguem abertos. |
+| 2 | ✅ **A conta do imposto passou 7 de 7** | Ele conferiu o cálculo do DAS contra a **guia real** da minha empresa e disse: *"bateu 100% do valor, que é o que eu paguei lá"*. As sete contas do motor (imposto do mês, alíquota, Fator R, guia do sócio, acumulado, atraso e o ajuste automático) foram conferidas uma a uma. |
+| 3 | 🔴 **Ele achou quatro erros nossos, e um deles cobrava de quem não devia** | Pró-labore é de quem **trabalha**, não de quem só consta como administrador — estávamos gerando guia pra sócio que só entrou com dinheiro. Mais: MEI ativo **impede** abrir outra empresa (nosso material dizia o contrário), empresa aberta em dezembro **não** declara o ano inteiro, e a projeção do 1º mês só vale se a nota sair no mês da abertura. |
+| 4 | 🔑 **E apareceu uma armadilha que ninguém tinha visto** | Ele validou duas coisas que **se contradizem** na prática: *"paga quem trabalha"* e *"dividir entre os sócios é mais barato"*. Quando só um sócio administra, concentrar o pró-labore nele **pode custar mais imposto de renda**. Medimos: R$616 dividido entre dois, R$845 num só. Decidi não escolher pelo cliente — o app **mostra a conta** e pergunta se algum outro sócio também trabalha. |
+| 5 | ⚙️ **Tudo o que ele decidiu já está no código** | Sete frentes atualizadas no mesmo dia: a fila de pendências, o vocabulário, o motor, o desenho dos processos, os documentos gerados, o material da conversa e as empresas de teste. **As verificações automáticas subiram de 32 para 54, e nenhuma falha.** |
+| 6 | 🔴 **Achei uma informação errada viva em três lugares** | Uma regra que eu tinha escrito errado em 13/09 e corrigido em 14/09 continuava viva num terceiro arquivo — justamente o que gera a documentação dos processos. A trava que eu tinha criado não pegava, porque procurava o assunto voltando como *dúvida*, e ali ele estava afirmado como *verdade*. Trava corrigida e testada. |
+| 7 | 🆕 **Criei a empresa de teste que faltava** | Nenhuma das 16 faturava no mês em que abriu, então esse caminho nunca tinha rodado de verdade. Agora roda, e prova que o prejuízo desse caso é de **um mês só**, não permanente. |
+
+**O que fica pra você e pro Leonan:**
+
+1. 🔴 **Uma conta do imposto de renda do sócio ficou em aberto.** Ele descreveu uma regra de faixas que **diverge** do que o nosso motor faz, e ele mesmo disse *"aí eu não vou lembrar o certo"*. Não mexi em nada: isso muda a guia de todo cliente que tira mais de R$5 mil, e eu não troco número certo por memória. Preciso do texto da lei.
+2. 🔴 **Três mudanças grandes chegam em 2027** — o fim do regime de caixa, uma alteração na janela do Fator R e o ISS passando a ser cobrado no local da prestação. As três vieram **de memória dele**, sem norma citada. Virou pesquisa própria.
+3. 🔴 **A pejotização passou batida.** É o maior risco declarado do nosso perfil de cliente (dev, design, consultoria) e a conversa não chegou nela. Preciso voltar com ele nesse ponto.
+
+### 📱 WhatsApp (16/09)
+```
+*Update Legalizai* 📣
+- Levei o motor pro contador. Quase *5 horas*, tudo gravado e transcrito. 32 pontos respondidos
+- A conta do imposto *passou 7 de 7*. Ele conferiu contra a guia real da minha empresa e bateu 100%
+- Ele achou *4 erros nossos*. O mais caro: a gente gerava guia de INSS pra sócio que só entrou com dinheiro e não trabalha na empresa
+- Apareceu uma armadilha boa: as duas regras que ele validou se contradizem quando só um sócio administra. O app agora *mostra a conta* em vez de escolher pelo cliente
+- Tudo o que ele decidiu já está no código. As verificações automáticas foram de *32 pra 54*, zero falhas
+- Ficaram 3 coisas pra ele: uma conta de imposto de renda que ele não lembrou com certeza, três mudanças de 2027 que preciso confirmar na lei, e a pejotização, que passou batida
 ```

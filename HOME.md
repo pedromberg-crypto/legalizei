@@ -10,17 +10,29 @@ data: 2026-07-16
 
 ## 📍 Agora (torre de controle — mantida via `/fechar`)
 
-> ## ⏸️ 16/09 — PROCESSO PAUSADO NO MEIO, COM RETOMADA ESCRITA
+> **Última atualização:** 2026-09-16 — **70º flow: O CONTADOR VALIDA O MOTOR, E OS 7 PASSOS DE APLICAÇÃO FECHAM NO MESMO DIA.**
 >
-> 🔴 **Se você está abrindo janela nova e o assunto é motor fiscal, persona ou processos: comece por [[_RETOMADA-pos-contador]].** Não precisa reler os 3 áudios da reunião nem a conversa — o checkpoint tem o próximo comando exato, o que já foi feito e o que **não pode ser feito sem fonte**.
+> **(1) 🎙️ REUNIÃO DE ~5H COM O LEONAN**, contador especializado. 3 áudios, **293.345 caracteres lidos 100%**, literais em `reunioes/fontes/`. O briefing de perguntas virou **registro validado**: **32 itens com veredito** — 20 ratificados, **4 corrigidos contra nós**, 5 viraram decisão nova, 3 seguem abertos. 🔑 **O Bloco E passou 7 de 7**, com o DAS conferido contra a guia real dele: *"bateu 100% do valor, que é o que eu paguei lá"*.
 >
-> **O que aconteceu em 16/09:** reunião de ~5h com o **Leonan** (contador especializado), 3 áudios, **293.345 caracteres lidos 100%**. O briefing de perguntas virou **registro validado**: 32 itens com veredito — 20 ratificados, **4 corrigidos contra nós**, 5 viraram decisão nova, 3 seguem abertos. O Bloco E (as 7 contas do motor) passou **7 de 7**, com o DAS conferido contra a guia real dele.
+> **(2) 🔴 AS QUATRO CORREÇÕES.** Quem recebe pró-labore é quem **TRABALHA**, não quem administra formalmente (derruba o default de 15/09) · **MEI ativo IMPEDE** outro CNPJ, e o doc dizia o contrário · empresa aberta em dezembro **NÃO declara o ano inteiro**, declara da abertura (a pesquisa errou) · a projeção do 1º mês **só vale se a nota sair no mês da abertura**. Mais duas que a reunião **derrubou** da tabela de "já respondido": DEFIS e PGDAS zerado **passaram a gerar multa**.
 >
-> **A aplicação das decisões parou no passo 2 de 7**, a pedido do Pedro. Feitos: registro da reunião · os 3 conflitos decididos · a fila (11 itens fechados, **o 36 reaberto**) · o vocabulário do Anexo V. Falta: o motor, as fontes de `/processos`, regenerar, o Bloco D e a vida nova.
+> **(3) ⚙️ OS 7 PASSOS DE APLICAÇÃO, FECHADOS.** Fila (11 itens, **o 36 REABERTO**) · vocabulário do Anexo V · motor (4 alterações) · fontes de `/processos` · geradores · Bloco D · vida nova. **Invariantes 32 → 54 · competências 156 → 162 · agregação 142 → 154 · 0 falhas.**
 >
-> 🔴 **O que NÃO pode ser tocado sem fonte:** a régua do **redutor do IRRF**, que diverge do motor e muda a guia de todo cliente acima de R$5.000. O contador hesitou (*"aí eu não vou lembrar o certo"*) e isso exige a **Lei 15.270/2025 literal**. Junto: **três das quatro mudanças de 2027** vieram só da memória dele, sem norma nomeada.
+> **(4) 🔴 A COLISÃO QUE A REUNIÃO PRODUZIU SEM QUERER.** Ele validou no mesmo dia que *"paga quem trabalha"* e que *"dividir meia a meia é o ótimo tributário"* — e as duas colidem quando só um sócio administra: concentrar a folha **cruza a faixa do IRRF** que o rateio evitava. Medido: folha de R$5.600 custa **R$616,00** entre dois e **R$844,86** num só. Decisão do Pedro, opção (c): aplicar a regra **e mostrar a conta** (`ganhoDeIncluirSocio`), perguntando sobre **fato** — *"algum outro sócio também trabalha?"* —, nunca sobre conveniência fiscal.
 >
-> ### ⏸️ E uma segunda frente pausada no mesmo dia: o LÉO
+> **(5) 🔴 A TERCEIRA CÓPIA DA CPP ERRADA.** A leitura refutada em 14/09 estava **viva em `cru/prolabore.mjs`**, afirmada como fato, na fonte que **gera** o desenho. Sobreviveu por motivo estrutural: a trava varria só docs de pendência, porque nasceu para pegar assunto voltando como **dúvida** — e esta nunca saiu, afirmada como **verdade**. A trava ganhou **segunda varredura** para fontes de desenho, com prova negativa.
+>
+> **(6) 🆕 NASCE A P21**, porque um invariante afirmava que ela faltava: as 16 vidas abriam **todas** sem faturar no mês 1. Ela prova que faturar no mês da abertura é **Anexo V** (até 15/09 o motor **gritava** aí), que o **alerta A1** dispara com prazo real, e que o prejuízo é de **um mês só** (R$1.140, uma vez). ⚠️ E quase provou o oposto: a 1ª versão tinha folha zero e modelava **o cliente recusando a oferta**.
+>
+> **(7) 📊 RELATÓRIO ANTES × DEPOIS** em [[_ANTES-E-DEPOIS-do-contador]]. 🔑 A parte que dá crédito ao resto: **duas das quatro correções não moveram um centavo** nas 17 vidas. Está escrito assim de propósito — mostrar só o que mexeu seria mentir por seleção.
+>
+> **(8) 🔴 O QUE SEGUE INTOCADO, E POR QUÊ.** A régua do **redutor do IRRF** que ele descreveu **diverge do motor** e muda a guia de todo cliente acima de R$5.000. Ele hesitou (*"aí eu não vou lembrar o certo"*), então exige a **Lei 15.270/2025 literal**. Junto: **três das quatro mudanças de 2027** (regime de caixa, janela do Fator R, ISS no local da prestação) vieram **só da memória** dele, sem norma nomeada. Vira frente de pesquisa própria.
+>
+> **(9) ⏳ O QUE SOBROU É QUASE TODO TELA:** rateio que não se deduz da participação · campo de INSS por fora · pergunta de onboarding · CNAE secundário em 5 · LTDA sempre · 10 m². E **um item de motor aberto de propósito**: o dia de corte das alterações pagas (10 ou 12) não foi decidido.
+>
+> ### ⏸️ E uma frente PAUSADA, que não avançou: o LÉO
+>
+> #### o levantamento do Léo
 >
 > ⇢ [[_RETOMADA-leo-fork-e-atualizacao]] · **nada foi alterado**, é só levantamento.
 >

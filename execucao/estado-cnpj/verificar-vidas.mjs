@@ -34,6 +34,7 @@ import {
   FAIXAS,
   REPARTICAO,
   TRIBUTOS,
+  FATOR_R,
   salarioMinimoDe,
 } from "../motor-fiscal/_tabelas.mjs";
 import { avaliarProLaboreEscolhido } from "../motor-fiscal/piloto-pro-labore.mjs";
@@ -652,7 +653,7 @@ console.log("\n── 8 · Quem fatura no mês em que abriu paga 15,5%, e quem p
     "e alguma vida REAL exercita o caso, não só cenário sintético",
     alertasDasVidas.length > 0,
     alertasDasVidas.length
-      ? `${alertasDasVidas.length} alerta(s) nas 17 vidas`
+      ? `${alertasDasVidas.length} alerta(s) nas ${VIDAS.length} vidas`
       : "🔴 voltou a ser só teste sintético"
   );
 
@@ -747,6 +748,72 @@ console.log(
     "e há vida começando em 2025 para o caso não ser hipotético",
     de2025.length > 0,
     `${de2025.length} vidas: ${de2025.map((v) => v.id).join(", ")}`
+  );
+}
+
+/* ── 10 · MÊS SEM FATURAR NÃO É MÊS EM ATRASO (regra nova de 17/09) ─────── */
+
+console.log("\n── 10 · O mês sem faturar com a janela saudável é MANUTENÇÃO, não recuperação\n");
+{
+  /**
+   * 🔴 ESTE BLOCO EXISTE POR CAUSA DO M-032, e o achado não veio de suíte
+   * nenhuma: veio de um **teste de cenário que o Pedro montou** com a empresa
+   * dele, em 17/09.
+   *
+   * O piloto classificava mês de receita ZERO como `recuperacao` mesmo com a
+   * janela do Fator R acima da margem. A causa era o **piso do salário mínimo
+   * entrando na conta do déficit**: com receita zero o sustentável é zero, e
+   * `piso − 0` parecia dívida.
+   *
+   * 🔑 O valor sugerido saía certo; o rótulo é que mentia. E o rótulo importa
+   * porque `paraVirarJa` só é exposto em `recuperacao` — a tela mostraria um
+   * "para virar já" que é só o piso, como se fosse salto a dar.
+   *
+   * ⚠️ Antes da P22, **nenhuma das 17 vidas** tinha esse mês. É por isso que o `[HISTÓRICO]`
+   * bloco começa provando que a vida existe: sem ela, o resto é teatro.
+   */
+  const casos = [];
+  for (const { vida, linhas } of retratos) {
+    linhas.forEach((l, i) => {
+      if (i === 0 || l.receita !== 0) return;
+      if (!l.fatorR || !Number.isFinite(l.fatorR.fr)) return;
+      if (l.fatorR.fr >= FATOR_R.MARGEM) casos.push({ vida, l });
+    });
+  }
+
+  invariante(
+    "existe vida com mês de receita ZERO e janela ACIMA da margem",
+    casos.length > 0,
+    casos.length
+      ? casos.map((c) => `${c.vida.id} ${c.l.mes} (${(c.l.fatorR.fr * 100).toFixed(2)}%)`).join(" · ")
+      : "🔴 o caso do M-032 voltou a ser hipotético"
+  );
+
+  const rotuladosErrado = casos.filter((c) => c.l.piloto?.modo === "recuperacao");
+  invariante(
+    "🔴 e NENHUM deles é chamado de recuperação — o piso não é déficit",
+    rotuladosErrado.length === 0,
+    rotuladosErrado.length
+      ? rotuladosErrado.map((c) => `${c.vida.id} ${c.l.mes}`).join(" · ")
+      : "empresa adiante do alvo não é empresa atrasada"
+  );
+
+  invariante(
+    "e o 'para virar já' não aparece, porque não há salto a dar",
+    casos.every((c) => c.l.piloto?.paraVirarJa == null),
+    "expor o piso como salto ensinaria o cliente a pagar por medo"
+  );
+
+  // 🔑 O contraponto que fecha o sentido: sem receita o DAS é zero, mas a
+  //    guia do SÓCIO continua existindo. O pró-labore não para quando o
+  //    faturamento para, e é justamente isso que segura o Fator R.
+  const comDarf = casos.filter((c) => c.l.das.total === 0 && (c.l.darf?.total ?? 0) > 0);
+  invariante(
+    "🔑 DAS zero e DARF do sócio existindo no mesmo mês",
+    comDarf.length > 0,
+    comDarf
+      .map((c) => `${c.vida.id} ${c.l.mes}: DAS ${brlDeCentavos(c.l.das.total)} · DARF ${brlDeCentavos(c.l.darf.total)}`)
+      .join(" · ")
   );
 }
 

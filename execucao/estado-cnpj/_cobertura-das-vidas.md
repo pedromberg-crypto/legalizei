@@ -7,7 +7,7 @@ autoridade: fonte-verdade
 tags: [execucao, motor-fiscal, persona, cobertura]
 ---
 
-# 🎯 O que as 17 vidas exercitam — e o que ainda não
+# 🎯 O que as 18 vidas exercitam — e o que ainda não
 
 > 🧭 **A régua.** Não é "temos personas suficientes?", é **"existe código no motor que nenhuma vida faz rodar?"**. Código sem vida é código sem prova, e foi assim que o erro dos sócios (M-012) sobreviveu: `darfDoProLabore` era chamado todo dia e **nunca** com mais de um sócio de verdade.
 
@@ -17,8 +17,8 @@ tags: [execucao, motor-fiscal, persona, cobertura]
 
 | | |
 |---|---|
-| Vidas | **17** (P01–P14, P16, P18, P21) · P15 e P17 nunca abrem · P19 e P20 não acrescentam |
-| Competências rodadas | **162** |
+| Vidas | **18** (P01–P14, P16, P18, P21, P22) · P15 e P17 nunca abrem · P19 e P20 não acrescentam |
+| Competências rodadas | **169** |
 | Dinâmicas (Fator R decide) | **7** — P01, P02, P04, P06, P16, P18, **P21** |
 | `III-fixo` | **10** |
 | Com 2+ sócios **no quadro** | **9** — P02, P04, P06, P09, P11, P13, P14, P18, **P21** |
@@ -38,7 +38,7 @@ As faixas **3, 4, 5 e 6** da tabela só existem para quem **sai** para EPP — q
 
 ## 🔒 O que está TRAVADO fora, por decisão
 
-**Colaboradores = ZERO em todas as 17 vidas.** Decisão do Pedro em 15/09: *"quero que todas as personas rodem liso sem terem colaboradores; depois iremos acrescentar folha em algumas delas, mas quando desenharmos melhor a funcionalidade. Prefiro validar o fluxo sem essa variável nesse momento."*
+**Colaboradores = ZERO em todas as 18 vidas.** Decisão do Pedro em 15/09: *"quero que todas as personas rodem liso sem terem colaboradores; depois iremos acrescentar folha em algumas delas, mas quando desenharmos melhor a funcionalidade. Prefiro validar o fluxo sem essa variável nesse momento."*
 
 🔑 O campo `colaboradores` existe na identidade **travado em 0**, e o `verificar-vidas.mjs` derruba a rodada se alguém puser um. Assim "nenhuma persona tem funcionário" deixa de ser ausência silenciosa e vira **declaração** — o item **B1** abaixo continua descrito para quando destravar, mas saiu da fila.
 
@@ -102,14 +102,14 @@ Os dois itens que eu tinha escrito aqui sobre retenção **não eram buracos de 
 ## ⬜ O que falta — B · nem código, nem vida
 
 ### B1 · 🔴 Folha de COLABORADOR (o maior buraco)
-Nenhuma das 17 tem funcionário. E o `FATOR_R_NUMERADOR` declara que entram **salário CLT, 13º, férias + 1/3 e FGTS** — quatro itens que **nada no motor produz**. O contrato já cobra **R$39 por colaborador ativo** e nada cria um. É o limite **PP5** do piloto.
+Nenhuma das 18 tem funcionário. E o `FATOR_R_NUMERADOR` declara que entram **salário CLT, 13º, férias + 1/3 e FGTS** — quatro itens que **nada no motor produz**. O contrato já cobra **R$39 por colaborador ativo** e nada cria um. É o limite **PP5** do piloto.
 🔑 **Impacto no piloto:** com folha de colaborador, o Fator R sobe sem mexer no pró-labore — e o piloto hoje só sabe mexer no pró-labore. A recomendação dele passaria a ser **errada para mais** numa empresa com funcionário.
 
 ### B2 · 🔴 O 13º e as férias, mesmo sem colaborador
 Mesmo empresa só de sócio tem 13º de pró-labore? (⚠️ **isto é dúvida real** — o pró-labore não gera 13º nem férias como o salário CLT, mas a folha do Fator R lista os dois.) Vale virar pergunta ao contador antes de virar vida.
 
 ### B3 · 🟡 Sócio que ENTRA ou SAI no meio da vida
-Todas as 17 têm quadro societário congelado. Entrada e saída de sócio muda quem recebe pró-labore, muda o `sociosComProLabore`, e a nossa persona admite **1 a 4 sócios**.
+Todas as 18 têm quadro societário congelado. Entrada e saída de sócio muda quem recebe pró-labore, muda o `sociosComProLabore`, e a nossa persona admite **1 a 4 sócios**.
 
 🔑 **Ficou mais interessante depois de 16/09:** com a regra de que **recebe quem administra**, um sócio que entra pode entrar administrando ou não — e são dois efeitos diferentes no Fator R. A P04, a P14 e a P21 já têm quadro maior que a folha; nenhuma delas mexe nisso no tempo.
 

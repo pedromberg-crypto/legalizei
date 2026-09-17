@@ -160,7 +160,7 @@ export function identidade({
    *
    * ⚠️ **O que este número NÃO é:** não é "quantos sócios a empresa tem", é
    * quantos recebem. Com 2+ sócios a exceção vira uma pergunta — uma só, e não
-   * um formulário. Com sócio único (8 das 17 vidas têm sócio único) ela nem
+   * um formulário. Com sócio único (9 das 18 vidas têm sócio único) ela nem
    * existe. 🔢 Este número era **7** até 17/09, e estava errado desde que foi
    * escrito — o `verificar-defasagem.mjs` agora o mede a cada rodada.
    *

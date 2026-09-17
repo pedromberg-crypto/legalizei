@@ -625,6 +625,57 @@ export const VIDAS = [
       ok(12000, 3600),
     ]),
   },
+
+  {
+    id: "P22",
+    nome: "Rafael Nunes Prado — desenvolvimento de software, O MÊS SEM FATURAR",
+    empresa: identidade({
+      cnpj: "22.222.222/0001-22",
+      razaoSocial: "RAFAEL PRADO DESENVOLVIMENTO LTDA",
+      dataAberturaCnpj: "2026-03-05",
+      cnaePrincipal: "6201-5/01",
+      grupoAnexo: "fator-r-dinamico(III<->V, limiar 28%)",
+      sociosComProLabore: 1,
+      sociosTotal: 1,
+    }),
+    porque:
+      "🆕 NASCEU EM 17/09, de um teste de cenário que o PEDRO montou com a " +
+      "empresa dele — e ela existe porque esse teste achou um defeito que " +
+      "17 vidas não achavam. " +
+      "🔴 **O buraco, medido:** nenhuma vida tinha um mês de receita ZERO com " +
+      "a janela do Fator R já ACIMA da margem de 30%. Sem esse caso, o piloto " +
+      "classificava o mês como `recuperacao` — empresa adiante do alvo, sem " +
+      "dever nada, rotulada como atrasada. O piso do salário mínimo entrava na " +
+      "conta do déficit e virava dívida (**M-032**). " +
+      "🔑 **O que só ela prova:** (1) mês sem faturar com a janela saudável é " +
+      "MANUTENÇÃO, não recuperação; (2) o pró-labore no automático desde o " +
+      "mês 1 faz a 1ª competência faturada sair no **Anexo III por razão " +
+      "infinita**, em vez de cair no V; (3) o DAS de um mês sem receita é " +
+      "zero, e mesmo assim a DARF do sócio existe, porque o pró-labore não " +
+      "para quando o faturamento para. " +
+      "⚠️ E ela é a 3ª vida com guia paga em ATRASO, mas a primeira em que o " +
+      "atraso cai num mês cujo vencimento PRORROGA: o DAS de maio vence 22/06 " +
+      "porque o dia 20 é sábado, e o DARF do mesmo mês vence 19/06 porque " +
+      "ANTECIPA. Mesmo 'dia 20', lados opostos, na mesma competência.",
+    competencias: serie("2026-03", [
+      // 🔑 Mês da constituição (05/03), sem faturar. O pró-labore está no
+      //    AUTOMÁTICO desde o mês 1, então sai o piso — e é exatamente isso
+      //    que salva abril de cair no Anexo V.
+      ok(0, MIN),
+      // 1ª nota. A janela anterior tem folha e receita zero: razão infinita,
+      // logo Anexo III. Sem a folha de março, este mês sairia no V.
+      ok(7000, MIN),
+      // 🔴 O DAS desta competência foi pago junto com o de junho, em 20/07.
+      //    Venceu em 22/06 (dia 20 caiu num sábado e o DAS PRORROGA).
+      atrasado(10000, 1858, "2026-07-20"),
+      ok(12000, 3600, { dasPago: { data: "2026-07-20", selicAcumulada: 0 } }),
+      ok(5000, MIN),
+      // 🎯 O MÊS QUE ELA EXISTE PARA PROVAR: receita zero, Fator R da janela
+      //    em 30,36%, e nada a corrigir. Modo tem que ser MANUTENÇÃO.
+      ok(0, MIN),
+      ok(2000, MIN),
+    ]),
+  },
 ];
 
 /**

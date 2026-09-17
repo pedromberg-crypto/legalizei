@@ -60,7 +60,7 @@ Três rodadas de pesquisa em fonte primária tinham fechado parte disto. **A reu
 
 *"Construímos um motor que calcula o imposto e a guia do sócio mês a mês, e um piloto que ajusta o pró-labore sozinho para manter a empresa no Anexo III. Para testar, criamos 16 empresas fictícias com histórias completas de faturamento — abrindo em todos os 12 meses do ano, de 1 a 4 sócios, algumas atravessando a virada de ano — e rodamos o motor na vida inteira de cada uma. Foram 156 competências. As perguntas abaixo saíram daí."* `[HISTÓRICO]`
 
-> 🔢 **Este parágrafo não se atualiza, de propósito** — é o que foi dito ao contador em **16/09**, e reescrever falsificaria a abertura da conversa. O elenco de hoje é **17 vidas · 162 competências**: a **P21** nasceu *depois* desta reunião, e nasceu **por causa dela** (constituir e faturar no mesmo mês). Os números vivos estão em [[_cobertura-das-vidas]], e o `verificar-defasagem.mjs` confere a cada rodada.
+> 🔢 **Este parágrafo não se atualiza, de propósito** — é o que foi dito ao contador em **16/09**, e reescrever falsificaria a abertura da conversa. O elenco de hoje é **18 vidas · 169 competências**: a **P21** nasceu *depois* desta reunião, e nasceu **por causa dela** (constituir e faturar no mesmo mês). Os números vivos estão em [[_cobertura-das-vidas]], e o `verificar-defasagem.mjs` confere a cada rodada.
 
 ---
 
@@ -389,7 +389,7 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 ## A8 · 🟡 A ME unipessoal precisa de ata de aprovação anual de contas? `#9`
 
-**O caso.** 8 das 17 vidas têm sócio único.
+**O caso.** 9 das 18 vidas têm sócio único.
 
 **Onde apareceu.** Mapeando as obrigações anuais.
 
@@ -991,7 +991,7 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 
 **O caso.** A **P01** abre em **março** e não fatura nada nos dois primeiros meses. A **P03** abre em **novembro** e já fatura **R$14.000 no mês da abertura** — o motor calcula o acumulado como *receita do próprio mês × 12*, dando R$168.000 logo de cara.
 
-**Onde apareceu.** Rodando o elenco: **13 das 17 vidas não faturam no mês da abertura**, e a exceção muda a alíquota.
+**Onde apareceu.** Rodando o elenco: **14 das 18 vidas não faturam no mês da abertura**, e a exceção muda a alíquota.
 
 **Por que importa.** Essa é a regra do art. 24 e nós a implementamos. O que não sabemos é o lado **operacional**: se a empresa abre no dia 20, a competência do mês de abertura é declarada normalmente? E se ela abre e não fatura, ainda assim transmitimos.
 
@@ -1007,7 +1007,7 @@ No 1º mês não há histórico, então a lei manda **projetar**: acumulado = re
 | **R$ 16.000** | R$ 192.000 | **2ª** | **6,3250%** | R$ 1.012,01 |
 | R$ 30.000 | R$ 360.000 | 2ª | 8,6000% | R$ 2.580,00 |
 
-⚠️ **Mil reais a mais na primeira nota muda a faixa da empresa inteira naquele mês.** E enquanto ela não emite nota nenhuma, não há acumulado nem guia — **13 das 17 vidas não faturam no mês da abertura**, e para elas isso não existe.
+⚠️ **Mil reais a mais na primeira nota muda a faixa da empresa inteira naquele mês.** E enquanto ela não emite nota nenhuma, não há acumulado nem guia — **14 das 18 vidas não faturam no mês da abertura**, e para elas isso não existe.
 
 **A pergunta:** a competência do mês de abertura é declarada cheia, mesmo que a empresa só exista por 10 dias dele? Há algo de proporcional? E sobre o degrau acima: **isso é conversa que se tem com o cliente** — *"se a sua primeira nota for maior que R$15 mil, você paga uma alíquota maior neste mês"* — ou é orientação que um contador não dá? *(O cálculo já está fechado; o que queremos é a postura.)*
 
@@ -1647,7 +1647,7 @@ Duas decisões nossas que valem confirmação:
 | Conferências automáticas no motor de imposto | **46** |
 | No piloto de pró-labore | **67** |
 | No estado do CNPJ | **14** |
-| Invariantes nas 17 vidas de teste | **54** |
+| Invariantes nas 18 vidas de teste | **58** |
 | Auditoria de agregação *(recomputa tudo na unha, sem chamar o motor)* | **142** |
 | Verificações do ciclo completo | **1.092** |
 | **Falhas** | **0** |

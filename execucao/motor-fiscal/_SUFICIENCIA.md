@@ -30,7 +30,7 @@ tags: [motor, fiscal, auditoria, cobertura, anexos, fator-r]
 | **Motor fiscal** (`motor-fiscal/`) | 🟢 fechado como cálculo | **46 conferências no motor**, contra recibo do PGDAS-D, nota fiscal real e texto legal |
 | **Piloto de pró-labore** (`piloto-pro-labore.mjs`) | 🟢 fechado como decisão | **67 conferências no piloto** — ver §9 |
 | **Estado recorrente** (`estado-cnpj/`) | 🟢 fechado como modelo | **14 conferências no estado recorrente** — as 3 telas fecham no mesmo número |
-| **As vidas** (`vidas.mjs`) | 🟢 17 vidas · 162 competências | **54 invariantes**, relações da lei e não valores meus |
+| **As vidas** (`vidas.mjs`) | 🟢 18 vidas · 169 competências | **58 invariantes**, relações da lei e não valores meus |
 | **As equações** (`verificar-equacoes.mjs`) | 🟢 fechado como **fórmula** | **11 propriedades** que valem em todo o domínio do ME — nenhuma cita valor de ninguém |
 | **Ligação com o produto** | 🟡 constantes ligadas, cálculo não | o app lê as tabelas do gerador desde 15/09; nenhuma tela chama o apurador ainda |
 

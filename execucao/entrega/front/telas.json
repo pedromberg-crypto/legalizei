@@ -4,7 +4,7 @@
   "aviso": "ARQUIVO GERADO. Não editar à mão — a fonte é o motor, e ele é conferido por 14 suítes.",
   "amostra": false,
   "convencaoDeUnidade": "Todo valor monetário vem como { valor, unidade, legivel }. Compare por `valor`, exiba por `legivel`, e nunca some campos de unidades diferentes.",
-  "total": 162,
+  "total": 169,
   "telas": [
     {
       "caso": "P01-2026-03",
@@ -5233,6 +5233,223 @@
       },
       "aliquota": {
         "mostrar": "R$ 720,00 sobre R$ 12.000,00",
+        "efetiva": "6,00%",
+        "comoDizer": "Sua empresa está no Anexo III, a alíquota menor.",
+        "naoDizer": [
+          "❌ 'sua empresa caiu para o Anexo V' — verbo de movimento, revogado em 16/09",
+          "❌ 'Fator R' sem explicar — jargão; a tela fala em folha e faturamento"
+        ]
+      },
+      "proLabore": {
+        "mostrarAviso": false
+      },
+      "oQueNaoMostrar": [
+        "o déficit acumulado como valor a pagar — é BASE de pró-labore, não desembolso (correção do contador, 16/09)",
+        "o `paraVirarJa` fundido com o `sugerido` — são dois números e a tela nunca os soma (M-004)",
+        "qualquer coisa sobre retenção de ISS — decisão de produto: não aparece para o cliente (E-ISS)"
+      ],
+      "avisosDeFormatacao": [
+        "🔴 datas vêm em UTC à meia-noite: formatar com toString() local mostra o dia anterior",
+        "🔴 valores do back vêm em CENTAVOS: dividir por 100 antes de exibir, nunca antes de comparar"
+      ]
+    },
+    {
+      "caso": "P22-2026-03",
+      "ondeBuscarONumero": "entrega/back/casos.json, no caso de mesmo id",
+      "cartaoDoMes": {
+        "titulo": "Imposto de junho",
+        "valor": "R$ 0,00",
+        "vence": "2026-04-20",
+        "estado": "a pagar"
+      },
+      "aliquota": {
+        "mostrar": "R$ 0,00 sobre R$ 0,00",
+        "efetiva": "0,00%",
+        "comoDizer": "Sua empresa está no Anexo III, a alíquota menor.",
+        "naoDizer": [
+          "❌ 'sua empresa caiu para o Anexo V' — verbo de movimento, revogado em 16/09",
+          "❌ 'Fator R' sem explicar — jargão; a tela fala em folha e faturamento"
+        ]
+      },
+      "proLabore": {
+        "mostrarAviso": false
+      },
+      "oQueNaoMostrar": [
+        "o déficit acumulado como valor a pagar — é BASE de pró-labore, não desembolso (correção do contador, 16/09)",
+        "o `paraVirarJa` fundido com o `sugerido` — são dois números e a tela nunca os soma (M-004)",
+        "qualquer coisa sobre retenção de ISS — decisão de produto: não aparece para o cliente (E-ISS)"
+      ],
+      "avisosDeFormatacao": [
+        "🔴 datas vêm em UTC à meia-noite: formatar com toString() local mostra o dia anterior",
+        "🔴 valores do back vêm em CENTAVOS: dividir por 100 antes de exibir, nunca antes de comparar"
+      ]
+    },
+    {
+      "caso": "P22-2026-04",
+      "ondeBuscarONumero": "entrega/back/casos.json, no caso de mesmo id",
+      "cartaoDoMes": {
+        "titulo": "Imposto de junho",
+        "valor": "R$ 420,00",
+        "vence": "2026-05-20",
+        "estado": "a pagar"
+      },
+      "aliquota": {
+        "mostrar": "R$ 420,00 sobre R$ 7.000,00",
+        "efetiva": "6,00%",
+        "comoDizer": "Sua empresa está no Anexo III, a alíquota menor.",
+        "naoDizer": [
+          "❌ 'sua empresa caiu para o Anexo V' — verbo de movimento, revogado em 16/09",
+          "❌ 'Fator R' sem explicar — jargão; a tela fala em folha e faturamento"
+        ]
+      },
+      "proLabore": {
+        "mostrarAviso": false
+      },
+      "oQueNaoMostrar": [
+        "o déficit acumulado como valor a pagar — é BASE de pró-labore, não desembolso (correção do contador, 16/09)",
+        "o `paraVirarJa` fundido com o `sugerido` — são dois números e a tela nunca os soma (M-004)",
+        "qualquer coisa sobre retenção de ISS — decisão de produto: não aparece para o cliente (E-ISS)"
+      ],
+      "avisosDeFormatacao": [
+        "🔴 datas vêm em UTC à meia-noite: formatar com toString() local mostra o dia anterior",
+        "🔴 valores do back vêm em CENTAVOS: dividir por 100 antes de exibir, nunca antes de comparar"
+      ]
+    },
+    {
+      "caso": "P22-2026-05",
+      "ondeBuscarONumero": "entrega/back/casos.json, no caso de mesmo id",
+      "cartaoDoMes": {
+        "titulo": "Imposto de junho",
+        "valor": "R$ 600,00",
+        "vence": "2026-06-22",
+        "estado": "em atraso"
+      },
+      "aliquota": {
+        "mostrar": "R$ 600,00 sobre R$ 10.000,00",
+        "efetiva": "6,00%",
+        "comoDizer": "Sua empresa está no Anexo III, a alíquota menor.",
+        "naoDizer": [
+          "❌ 'sua empresa caiu para o Anexo V' — verbo de movimento, revogado em 16/09",
+          "❌ 'Fator R' sem explicar — jargão; a tela fala em folha e faturamento"
+        ]
+      },
+      "proLabore": {
+        "mostrarAviso": false
+      },
+      "oQueNaoMostrar": [
+        "o déficit acumulado como valor a pagar — é BASE de pró-labore, não desembolso (correção do contador, 16/09)",
+        "o `paraVirarJa` fundido com o `sugerido` — são dois números e a tela nunca os soma (M-004)",
+        "qualquer coisa sobre retenção de ISS — decisão de produto: não aparece para o cliente (E-ISS)"
+      ],
+      "avisosDeFormatacao": [
+        "🔴 datas vêm em UTC à meia-noite: formatar com toString() local mostra o dia anterior",
+        "🔴 valores do back vêm em CENTAVOS: dividir por 100 antes de exibir, nunca antes de comparar"
+      ]
+    },
+    {
+      "caso": "P22-2026-06",
+      "ondeBuscarONumero": "entrega/back/casos.json, no caso de mesmo id",
+      "cartaoDoMes": {
+        "titulo": "Imposto de junho",
+        "valor": "R$ 720,00",
+        "vence": "2026-07-20",
+        "estado": "a pagar"
+      },
+      "aliquota": {
+        "mostrar": "R$ 720,00 sobre R$ 12.000,00",
+        "efetiva": "6,00%",
+        "comoDizer": "Sua empresa está no Anexo III, a alíquota menor.",
+        "naoDizer": [
+          "❌ 'sua empresa caiu para o Anexo V' — verbo de movimento, revogado em 16/09",
+          "❌ 'Fator R' sem explicar — jargão; a tela fala em folha e faturamento"
+        ]
+      },
+      "proLabore": {
+        "mostrarAviso": false
+      },
+      "oQueNaoMostrar": [
+        "o déficit acumulado como valor a pagar — é BASE de pró-labore, não desembolso (correção do contador, 16/09)",
+        "o `paraVirarJa` fundido com o `sugerido` — são dois números e a tela nunca os soma (M-004)",
+        "qualquer coisa sobre retenção de ISS — decisão de produto: não aparece para o cliente (E-ISS)"
+      ],
+      "avisosDeFormatacao": [
+        "🔴 datas vêm em UTC à meia-noite: formatar com toString() local mostra o dia anterior",
+        "🔴 valores do back vêm em CENTAVOS: dividir por 100 antes de exibir, nunca antes de comparar"
+      ]
+    },
+    {
+      "caso": "P22-2026-07",
+      "ondeBuscarONumero": "entrega/back/casos.json, no caso de mesmo id",
+      "cartaoDoMes": {
+        "titulo": "Imposto de junho",
+        "valor": "R$ 300,00",
+        "vence": "2026-08-20",
+        "estado": "a pagar"
+      },
+      "aliquota": {
+        "mostrar": "R$ 300,00 sobre R$ 5.000,00",
+        "efetiva": "6,00%",
+        "comoDizer": "Sua empresa está no Anexo III, a alíquota menor.",
+        "naoDizer": [
+          "❌ 'sua empresa caiu para o Anexo V' — verbo de movimento, revogado em 16/09",
+          "❌ 'Fator R' sem explicar — jargão; a tela fala em folha e faturamento"
+        ]
+      },
+      "proLabore": {
+        "mostrarAviso": false
+      },
+      "oQueNaoMostrar": [
+        "o déficit acumulado como valor a pagar — é BASE de pró-labore, não desembolso (correção do contador, 16/09)",
+        "o `paraVirarJa` fundido com o `sugerido` — são dois números e a tela nunca os soma (M-004)",
+        "qualquer coisa sobre retenção de ISS — decisão de produto: não aparece para o cliente (E-ISS)"
+      ],
+      "avisosDeFormatacao": [
+        "🔴 datas vêm em UTC à meia-noite: formatar com toString() local mostra o dia anterior",
+        "🔴 valores do back vêm em CENTAVOS: dividir por 100 antes de exibir, nunca antes de comparar"
+      ]
+    },
+    {
+      "caso": "P22-2026-08",
+      "ondeBuscarONumero": "entrega/back/casos.json, no caso de mesmo id",
+      "cartaoDoMes": {
+        "titulo": "Imposto de junho",
+        "valor": "R$ 0,00",
+        "vence": "2026-09-21",
+        "estado": "a pagar"
+      },
+      "aliquota": {
+        "mostrar": "R$ 0,00 sobre R$ 0,00",
+        "efetiva": "0,00%",
+        "comoDizer": "Sua empresa está no Anexo III, a alíquota menor.",
+        "naoDizer": [
+          "❌ 'sua empresa caiu para o Anexo V' — verbo de movimento, revogado em 16/09",
+          "❌ 'Fator R' sem explicar — jargão; a tela fala em folha e faturamento"
+        ]
+      },
+      "proLabore": {
+        "mostrarAviso": false
+      },
+      "oQueNaoMostrar": [
+        "o déficit acumulado como valor a pagar — é BASE de pró-labore, não desembolso (correção do contador, 16/09)",
+        "o `paraVirarJa` fundido com o `sugerido` — são dois números e a tela nunca os soma (M-004)",
+        "qualquer coisa sobre retenção de ISS — decisão de produto: não aparece para o cliente (E-ISS)"
+      ],
+      "avisosDeFormatacao": [
+        "🔴 datas vêm em UTC à meia-noite: formatar com toString() local mostra o dia anterior",
+        "🔴 valores do back vêm em CENTAVOS: dividir por 100 antes de exibir, nunca antes de comparar"
+      ]
+    },
+    {
+      "caso": "P22-2026-09",
+      "ondeBuscarONumero": "entrega/back/casos.json, no caso de mesmo id",
+      "cartaoDoMes": {
+        "titulo": "Imposto de junho",
+        "valor": "R$ 120,00",
+        "vence": "2026-10-20",
+        "estado": "a pagar"
+      },
+      "aliquota": {
+        "mostrar": "R$ 120,00 sobre R$ 2.000,00",
         "efetiva": "6,00%",
         "comoDizer": "Sua empresa está no Anexo III, a alíquota menor.",
         "naoDizer": [

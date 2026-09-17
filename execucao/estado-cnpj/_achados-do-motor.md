@@ -197,7 +197,7 @@ O motor guarda vencimento em **UTC à meia-noite**. Em UTC−3, `String(data)` r
 
 Com uma constante única (R$1.621, de 2026), um pró-labore de **R$1.518 pago em dez/2025** — que era **exatamente o mínimo daquele mês** — saía marcado como irregular.
 
-🔑 **O contador levantou como manutenção** (*"todo ano você vai rodar um código pra atualizar?"*) e o achado era de **correção**: 5 das 17 vidas começam em 2025.
+🔑 **O contador levantou como manutenção** (*"todo ano você vai rodar um código pra atualizar?"*) e o achado era de **correção**: 5 das 18 vidas começam em 2025.
 **Custo se passasse:** o app acusaria de irregular um pagamento que a lei aprovava, na cara do cliente.
 **Trava:** ✅ `SALARIOS_MINIMOS` com **vigências** e `salarioMinimoDe(mes)`. `PREVIDENCIA.SALARIO_MINIMO` ficou como *"o vigente hoje"*, e quem apura competência histórica usa a função.
 
@@ -331,7 +331,7 @@ Empresa com o Fator R da janela em **30,36%** — acima da margem de 30%, muito 
 **Custo se passasse:** o `paraVirarJa` só é exposto quando o modo é `recuperacao`, então a tela mostraria um *"para virar já"* que é só o piso, como se fosse um salto a dar. **O valor sugerido saía certo** (R$1.621) — o defeito era só de classificação, e é a mesma família do **M-005**.
 **Trava:** ✅ o déficit passou a ser `naMargem.minimo − sustentavel`, sem o piso no meio. As 67 conferências do piloto passam, e o congelado de 4.440 legíveis **não mudou uma linha**: nenhum valor de nenhuma das 162 competências se moveu.
 
-⚠️ **Quem pegou foi um teste de cenário, não uma suíte.** Nenhuma das 17 vidas tem mês de receita zero com a janela já acima da margem — é o buraco de cobertura que este achado expõe.
+⚠️ **Quem pegou foi um teste de cenário, não uma suíte.** Nenhuma das 17 vidas de então tinha mês de receita zero com a janela já acima da margem — é o buraco de cobertura que este achado expõe. `[HISTÓRICO]`
 
 ---
 

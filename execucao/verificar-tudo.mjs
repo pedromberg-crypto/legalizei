@@ -68,9 +68,9 @@ const ETAPAS = [
       "PROCESSOS.md, SAIDAS.md, cru/*.md e PERSONA.md são GERADOS. " +
       "verificar-escopo e verificar-persona vivem dentro destes três.",
     scripts: [
-      "processos/gerar-processos.mjs",
-      "processos/gerar-persona.mjs",
-      "processos/cru/gerar-cru.mjs",
+      "execucao/processos/gerar-processos.mjs",
+      "execucao/processos/gerar-persona.mjs",
+      "execucao/processos/cru/gerar-cru.mjs",
     ],
   },
   {
@@ -80,28 +80,29 @@ const ETAPAS = [
       "afirmam PROPRIEDADE em todo o domínio (40 pontos certos não provam a " +
       "curva entre eles). As vidas afirmam RELAÇÃO ao longo de uma história.",
     scripts: [
-      "motor-fiscal/verificar-apurador.mjs",
-      "motor-fiscal/verificar-equacoes.mjs",
-      "motor-fiscal/verificar-piloto.mjs",
-      "motor-fiscal/verificar-autoridade.mjs",
-      "motor-fiscal/verificar-encerrados.mjs",
-      "estado-cnpj/verificar.mjs",
-      "estado-cnpj/verificar-vidas.mjs",
-      "estado-cnpj/verificar-etiquetas.mjs",
-      "estado-cnpj/auditar-agregacao.mjs",
+      "produto/me/viver/motor/provar/verificar-apurador.mjs",
+      "produto/me/viver/motor/provar/verificar-equacoes.mjs",
+      "produto/me/viver/motor/provar/verificar-piloto.mjs",
+      "produto/me/viver/motor/provar/verificar-encerrados.mjs",
+      "produto/me/viver/motor/provar/verificar-retrato.mjs",
+      "produto/me/viver/motor/provar/verificar-vidas.mjs",
+      "produto/me/viver/motor/provar/verificar-etiquetas.mjs",
+      "produto/me/viver/motor/provar/auditar-agregacao.mjs",
+      // 🔑 Não é do motor: audita a etiqueta `autoridade:` do vault inteiro.
+      "execucao/verificar-autoridade.mjs",
     ],
   },
   {
     fase: "3 · O CICLO — as obrigações, competência a competência",
     porque: "Não é teste de cálculo: é cobertura de CANAL. O que o app faz sozinho e o que não faz.",
-    scripts: ["estado-cnpj/rodar-ciclo.mjs"],
+    scripts: ["produto/me/viver/motor/rodar/rodar-ciclo.mjs"],
   },
   {
     fase: "4 · A DEFASAGEM — por último, e só por último",
     porque:
       "Ela compara número escrito com número MEDIDO. Rodar antes das suítes " +
       "é comparar com a medição anterior e receber verde falso.",
-    scripts: ["verificar-defasagem.mjs"],
+    scripts: ["execucao/verificar-defasagem.mjs"],
   },
   {
     fase: "5 · PUBLICAR — a entrega, e só depois de tudo verde",
@@ -111,8 +112,8 @@ const ETAPAS = [
       "das travas seria publicar o que ainda não passou — e as duas conferem a " +
       "si mesmas, contra o arquivo anterior e contra o congelado dos legíveis.",
     scripts: [
-      "motor-fiscal/gerar-tabelas-app.mjs",
-      "entrega/gerar-entrega.mjs",
+      "produto/me/viver/motor/publicar/gerar-tabelas-app.mjs",
+      "produto/me/viver/motor/publicar/gerar-entrega.mjs",
     ],
   },
 ];
@@ -124,18 +125,18 @@ const ETAPAS = [
  * capacidades. Quem sai daqui sai com linha de justificativa.
  */
 const DISPENSADOS = {
-  "flow/gerar-mapa.mjs": "flow de telas, não /processos — roda no fluxo de tela",
-  "flow/gerar-indice-telas.mjs": "derivado do gerar-mapa, roda junto com ele",
-  "flow/verificar-anatomia-mei.mjs": "roda DENTRO do gerar-mapa.mjs",
-  "flow/verificar-fronteira-mei.mjs": "roda DENTRO do gerar-mapa.mjs",
-  "flow/verificar-mei.mjs": "ramo MEI — fora do escopo padrão (ME abrir empresa)",
-  "processos/verificar-escopo.mjs": "roda DENTRO dos 3 geradores da fase 1",
-  "processos/verificar-persona.mjs": "roda DENTRO dos 3 geradores da fase 1",
-  "portal/gerar-mapa-portal.mjs": "portal do cliente, outra frente",
-  "handoff/gerar-handoff.mjs": "pacote para o dev, sob demanda",
-  "gerar-placar-mauro.mjs": "reporte ao sócio — roda no /fechar, não aqui",
-  "../produto/gerar-funcionalidades.mjs": "inventário de produto, outra frente",
-  "../_sistema/pdf/gerar-pdf.mjs": "utilitário de exportação",
+  "execucao/flow/gerar-mapa.mjs": "flow de telas, não /processos — roda no fluxo de tela",
+  "execucao/flow/gerar-indice-telas.mjs": "derivado do gerar-mapa, roda junto com ele",
+  "execucao/flow/verificar-anatomia-mei.mjs": "roda DENTRO do gerar-mapa.mjs",
+  "execucao/flow/verificar-fronteira-mei.mjs": "roda DENTRO do gerar-mapa.mjs",
+  "execucao/flow/verificar-mei.mjs": "ramo MEI — fora do escopo padrão (ME abrir empresa)",
+  "execucao/processos/verificar-escopo.mjs": "roda DENTRO dos 3 geradores da fase 1",
+  "execucao/processos/verificar-persona.mjs": "roda DENTRO dos 3 geradores da fase 1",
+  "execucao/portal/gerar-mapa-portal.mjs": "portal do cliente, outra frente",
+  "execucao/handoff/gerar-handoff.mjs": "pacote para o dev, sob demanda",
+  "execucao/gerar-placar-mauro.mjs": "reporte ao sócio — roda no /fechar, não aqui",
+  "produto/gerar-funcionalidades.mjs": "inventário de produto, outra frente",
+  "_sistema/pdf/gerar-pdf.mjs": "utilitário de exportação",
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -182,7 +183,7 @@ for (const etapa of ETAPAS) {
     }
     const rotulo = s.padEnd(42);
     try {
-      const saida = execFileSync("node", [resolve(AQUI, s)], {
+      const saida = execFileSync("node", [resolve(RAIZ, s)], {
         encoding: "utf8",
         maxBuffer: 20 * 1024 * 1024,
         env: { ...process.env, SAIDAS_JA_MEDIDAS: ARQUIVO_DAS_SAIDAS },
@@ -218,14 +219,21 @@ function varrer(dir, achados = []) {
   return achados;
 }
 
+/**
+ * 🔑 Desde 17/09 todo caminho aqui é contado da RAIZ do vault, não de
+ * `execucao/`. Antes era relativo a esta pasta, e funcionou enquanto tudo que
+ * a pipeline rodava morava dentro dela — dois já precisavam de `../produto`.
+ * Com o motor em `produto/me/viver/`, metade da fila viraria `../`, e caminho
+ * que sobe é caminho que ninguém confere de bater o olho.
+ */
 const conhecidos = new Set([
   ...ETAPAS.flatMap((e) => e.scripts),
   ...Object.keys(DISPENSADOS),
-  "verificar-tudo.mjs",
+  "execucao/verificar-tudo.mjs",
 ]);
 
 const orfas = varrer(RAIZ)
-  .map((c) => relative(AQUI, c).split(sep).join("/"))
+  .map((c) => relative(RAIZ, c).split(sep).join("/"))
   .filter((c) => !conhecidos.has(c));
 
 console.log(`\n${"─".repeat(84)}`);

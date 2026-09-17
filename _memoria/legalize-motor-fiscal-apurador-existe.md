@@ -8,7 +8,7 @@ metadata:
   modified: 2026-09-15T01:13:25.084Z
 ---
 
-`execucao/motor-fiscal/` — **apurador**, coisa diferente do `app/src/lib/fiscal.ts`, que e **estimador de abertura**. Estimador diz quanto alguem provavelmente vai pagar antes de abrir; apurador diz quanto quem ja opera deve NESTE mes. Nao se substituem.
+`produto/me/viver/motor/regra/` (era `execucao/motor-fiscal/` ate 17/09) — **apurador**, coisa diferente do `app/src/lib/fiscal.ts`, que e **estimador de abertura**. Estimador diz quanto alguem provavelmente vai pagar antes de abrir; apurador diz quanto quem ja opera deve NESTE mes. Nao se substituem.
 
 3 arquivos: `_tabelas.mjs` (dado puro — 6 faixas de III e V + a REPARTICAO por tributo por faixa), `apurador.mjs` (motor), `verificar-apurador.mjs` (teste dourado). **18 conferencias passam.**
 

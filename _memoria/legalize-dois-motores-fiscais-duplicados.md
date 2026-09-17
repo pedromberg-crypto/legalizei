@@ -12,7 +12,7 @@ metadata:
 
 ## O diagnostico, medido
 
-| | `app/src/lib/fiscal.ts` | `execucao/motor-fiscal/` |
+| | `app/src/lib/fiscal.ts` | `produto/me/viver/motor/regra/` (era `execucao/motor-fiscal/`) |
 |---|---|---|
 | Papel | **estimador de abertura** | **apurador de competencia** |
 | Testes | nenhum | 41 conferencias |
@@ -38,7 +38,7 @@ Importar a errada erra por **100x**, e o TypeScript nao acusa: as duas assinatur
 
 Portar as tres funcoes orfas — `proLaboreOtimo`, `naBorda`, `custoProLabore` — pro apurador e deixar o `fiscal.ts` so com **custo de abertura** (papel legitimo, nao conflita). Ou o inverso. **Nao fazer as duas coisas.**
 
-⚠️ Junto vem a pergunta que ficou em aberto: o Next.js e **prototipo**, o produto real e o **Flutter**. Portar pro `app/src/lib/` pode ser trabalho no cliente errado. Por isso o estado recorrente nasceu agnostico, em `execucao/estado-cnpj/`.
+⚠️ Junto vem a pergunta que ficou em aberto: o Next.js e **prototipo**, o produto real e o **Flutter**. Portar pro `app/src/lib/` pode ser trabalho no cliente errado. Por isso o estado recorrente nasceu agnostico, em `produto/me/viver/motor/vidas/` (era `execucao/estado-cnpj/`).
 
-Detalhe completo em `execucao/motor-fiscal/_SUFICIENCIA.md` §6.
+Detalhe completo em `produto/me/viver/motor/notas/_SUFICIENCIA.md` §6.
 Relacionado: [[legalize-motor-fiscal-apurador-existe]] · [[legalize-estado-recorrente-cnpj]]

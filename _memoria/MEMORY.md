@@ -11,7 +11,7 @@
 - [Anexo V tinha DUAS lacunas, so uma fechou](legalize-anexo-v-duas-lacunas.md) — 15/09: simulacao fecha COMPORTAMENTO, nunca.
 - [O Fator R e RETROVISOR](legalize-fator-r-e-retrovisor.md) — 15/09: corrigir hoje nao conserta hoje (P01 so volta ao III.
 - [Os 2 motores fiscais duplicados](legalize-dois-motores-fiscais-duplicados.md) — 14/09: 7 de 7 constantes duplicadas.
-- [O apurador fiscal existe e bate ao centavo](legalize-motor-fiscal-apurador-existe.md) — 14/09: `execucao/motor-fiscal/`.
+- [O apurador fiscal existe e bate ao centavo](legalize-motor-fiscal-apurador-existe.md) — 14/09; mora em `produto/me/viver/motor/` desde 17/09.
 - [Motor fiscal: arredonda por TRIBUTO](legalize-motor-fiscal-arredonda-por-tributo.md) — 13/09: DAS = soma de 6 parcelas.
 - [Estado recorrente de CNPJ: derivado nao se guarda](legalize-estado-recorrente-cnpj.md) — 14/09: 3 telas com 3 faturamentos.
 - [Escopo: ME Simples, Anexos III e V](legalize-escopo-me-simples-anexos-3-5.md) — 12/09 travado: virou dado + script nos 3.
@@ -87,6 +87,7 @@
 - [Auditoria copy E5 + MEI trocou contador por certificado](legalize-auditoria-copy-e5-e-mei-certificado.md) — 06/08.
 
 ## Testes
+- [A persona do motor e SO vidas.mjs](legalize-persona-unica-vidas-mjs.md) — 17/09 travado: o elenco do Flutter nao tem a ver com esse fluxo.
 - [Suite de teste do Flutter: 24 personas](legalize-suite-teste-flutter-personas.md) — 14/09, ampliada 17/09: P21-P24 provam a ausencia do gate.
 - [O prototipo Next.js NAO descreve mais o Flutter](legalize-prototipo-nextjs-nao-descreve-flutter.md) — 14/09: 2 erros meus.
 - [Nao rodar e2e sem pedir](legalize-nao-rodar-e2e-sem-pedir.md) — 30/08, reforcado 3x: um "pode rodar" vale so pra aquela.

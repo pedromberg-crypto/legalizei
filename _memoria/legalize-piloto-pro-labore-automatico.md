@@ -10,7 +10,7 @@ metadata:
 
 🏢 **O ajuste automático de pró-labore é funcionalidade nossa, decidida pelo Pedro em 15/09:** *"não é sobre avisar cedo ou tarde, é sobre também aplicar a regra de ajuste automático de pró-labore desde o início para os usuários, eles não precisam saber sobre isso… a Contabilizei foi ajustando para manter tudo certo e para mim foi a melhor coisa, pois eu continuei me preocupando apenas em pagar as guias e emitir as minhas NF."*
 
-`execucao/motor-fiscal/piloto-pro-labore.mjs` + `verificar-piloto.mjs`, **41 conferências**.
+`produto/me/viver/motor/regra/piloto-pro-labore.mjs` + `provar/verificar-piloto.mjs`, **41 conferências**.
 
 🔑 **Por que tinha que ser AÇÃO e não alerta:** o Fator R é retrovisor (ver [[legalize-fator-r-e-retrovisor]]). O pró-labore de hoje só vale em `m+1…m+12`, então alerta chega tarde **por construção**. A única intervenção que funciona é pagar o valor certo desde o mês 1.
 

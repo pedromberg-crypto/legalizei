@@ -6,12 +6,12 @@
   "scripts": {
     "validar": "node execucao/verificar-tudo.mjs",
     "validar:lista": "node execucao/verificar-tudo.mjs --lista",
-    "motor": "node execucao/motor-fiscal/verificar-apurador.mjs",
-    "equacoes": "node execucao/motor-fiscal/verificar-equacoes.mjs",
-    "vidas": "node execucao/estado-cnpj/verificar-vidas.mjs",
-    "ciclo": "node execucao/estado-cnpj/rodar-ciclo.mjs",
+    "motor": "node produto/me/viver/motor/provar/verificar-apurador.mjs",
+    "equacoes": "node produto/me/viver/motor/provar/verificar-equacoes.mjs",
+    "vidas": "node produto/me/viver/motor/provar/verificar-vidas.mjs",
+    "ciclo": "node produto/me/viver/motor/rodar/rodar-ciclo.mjs",
     "defasagem": "node execucao/verificar-defasagem.mjs",
-    "entregar": "node execucao/entrega/gerar-entrega.mjs",
-    "entregar:recongelar": "node execucao/entrega/gerar-entrega.mjs --recongelar"
+    "entregar": "node produto/me/viver/motor/publicar/gerar-entrega.mjs",
+    "entregar:recongelar": "node produto/me/viver/motor/publicar/gerar-entrega.mjs --recongelar"
   }
 }

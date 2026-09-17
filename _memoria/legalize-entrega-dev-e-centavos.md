@@ -14,7 +14,7 @@ metadata:
 
 Eu propus declarar contrato escrito ao lado de cada uma das 38 funções, com trava. **O Pedro recusou o atrito e estava certo:** prosa à mão foi o que envelheceu em 7 de 7 docs, e **exemplo diz melhor que prosa**. Ninguém escreve *"recebe reais, devolve centavos"* se a fixture mostra `5400` entrando e `59400` saindo.
 
-`execucao/entrega/` — **back** (38 funções + 162 competências, entrada → esperado) e **front** (as mesmas 162 como tela, com o que **não** mostrar). Ligados pelo campo `caso`. Gerado por `gerar-entrega.mjs`, nunca escrito à mão.
+`produto/me/devs/` (era `execucao/entrega/` ate 17/09; o gerador ficou em `motor/publicar/`) — **back** (38 funções + 162 competências, entrada → esperado) e **front** (as mesmas 162 como tela, com o que **não** mostrar). Ligados pelo campo `caso`. Gerado por `gerar-entrega.mjs`, nunca escrito à mão.
 
 ## 2 · Todo dinheiro do motor é INTEIRO EM CENTAVOS
 

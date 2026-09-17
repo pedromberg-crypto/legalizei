@@ -139,7 +139,12 @@ ${linhas}
 
 ${MATRIZ_FIM}`;
 
-  const doc = resolve(RAIZ, "execucao/estado-cnpj/_cobertura-das-vidas.md");
+  /**
+   * 🔑 Em 17/09 esta nota saiu da pasta do motor e veio para `/processos`.
+   * Quem escreve é este gerador, e doc gerado mora com o gerador — não com
+   * quem o lê.
+   */
+  const doc = resolve(RAIZ, "execucao/processos/_cobertura-das-vidas.md");
   const texto = readFileSync(doc, "utf8");
   const escapar = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 

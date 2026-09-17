@@ -38,7 +38,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -58,7 +58,7 @@ const MEDIDAS = [
   {
     id: "conferencias-apurador",
     o: "conferências do apurador",
-    medir: () => contaDaSuite("motor-fiscal/verificar-apurador.mjs", "conferências"),
+    medir: () => contaDaSuite("produto/me/viver/motor/provar/verificar-apurador.mjs", "conferências"),
     /**
      * O que procurar nos docs. `\d+` é onde o número cai.
      *
@@ -76,7 +76,7 @@ const MEDIDAS = [
   {
     id: "conferencias-piloto",
     o: "conferências do piloto",
-    medir: () => contaDaSuite("motor-fiscal/verificar-piloto.mjs", "conferências"),
+    medir: () => contaDaSuite("produto/me/viver/motor/provar/verificar-piloto.mjs", "conferências"),
     /**
      * ⚠️ A forma de tabela é ANCORADA no rótulo exato, e não num `piloto`
      * solto na célula. A 1ª versão era `\|[^|]*piloto[^|]*\|\s*(\d+)\s*\|` e
@@ -92,7 +92,7 @@ const MEDIDAS = [
   {
     id: "conferencias-estado",
     o: "conferências do estado recorrente",
-    medir: () => contaDaSuite("estado-cnpj/verificar.mjs", "conferências"),
+    medir: () => contaDaSuite("produto/me/viver/motor/provar/verificar-retrato.mjs", "conferências"),
     citacoes: [
       /(\d+)\s+conferências\s+no\s+estado\s+recorrente/gi,
       /\|[^|]*\bestado\s+do\s+CNPJ\b[^|]*\|\s*([\d.]+)\s*\|/gi,
@@ -126,7 +126,7 @@ const MEDIDAS = [
      */
     centavos: true,
     medir: () => {
-      const saida = saidaDe("motor-fiscal/verificar-piloto.mjs");
+      const saida = saidaDe("produto/me/viver/motor/provar/verificar-piloto.mjs");
       const m = saida.match(/pior saldo do varrimento:\s*R\$\s*([\d.]+(?:[.,]\d{2})?)/i);
       if (!m) throw new Error("Não achei o pior saldo na saída do verificar-piloto");
       return Math.round(Number(m[1].replace(",", ".")) * 100);
@@ -165,8 +165,8 @@ const MEDIDAS = [
     o: "saldo do cliente da P01 com o piloto",
     centavos: true,
     medir: async () => {
-      const { VIDAS } = await import(url("estado-cnpj/vidas.mjs"));
-      const { replayComPiloto } = await import(url("estado-cnpj/replay-piloto.mjs"));
+      const { VIDAS } = await import(url("produto/me/viver/motor/vidas/vidas.mjs"));
+      const { replayComPiloto } = await import(url("produto/me/viver/motor/vidas/replay-piloto.mjs"));
       const v = VIDAS.find((x) => x.id === "P01");
       return replayComPiloto({ empresa: v.empresa, competencias: v.competencias }).resumo.saldo;
     },
@@ -181,7 +181,7 @@ const MEDIDAS = [
      * não mudou, prova que ela continua batendo com documento emitido.
      */
     medir: async () => {
-      const { apurarDAS } = await import(url("motor-fiscal/apurador.mjs"));
+      const { apurarDAS } = await import(url("produto/me/viver/motor/regra/apurador.mjs"));
       return apurarDAS({ receitaMes: 791000, rbt12: 5400000, anexo: "III" }).total; // centavos
     },
     citacoes: [/\|\s*\*{0,2}R\$\s?(47[\d.]+,\d{2})\*{0,2}\s*\|/gi],
@@ -189,13 +189,13 @@ const MEDIDAS = [
   {
     id: "propriedades",
     o: "propriedades das equações",
-    medir: () => contaDaSuite("motor-fiscal/verificar-equacoes.mjs", "propriedades"),
+    medir: () => contaDaSuite("produto/me/viver/motor/provar/verificar-equacoes.mjs", "propriedades"),
     citacoes: [/(\d+)\s+propriedades\b/gi],
   },
   {
     id: "invariantes",
     o: "invariantes das vidas",
-    medir: () => contaDaSuite("estado-cnpj/verificar-vidas.mjs", "invariantes"),
+    medir: () => contaDaSuite("produto/me/viver/motor/provar/verificar-vidas.mjs", "invariantes"),
     // ⚠️ "8 invariantes NOVOS" é subconjunto, não total. Só casa o total.
     citacoes: [
       /(\d+)\s+invariantes\s*(?:passaram|no total|,|\.|$)/gi,
@@ -205,7 +205,7 @@ const MEDIDAS = [
   {
     id: "vidas",
     o: "vidas de teste",
-    medir: async () => (await import(url("estado-cnpj/vidas.mjs"))).VIDAS.length,
+    medir: async () => (await import(url("produto/me/viver/motor/vidas/vidas.mjs"))).VIDAS.length,
     /**
      * ⚠️ "as 8 vidas COM 2+ SÓCIOS" é recorte, não o elenco. O padrão precisa
      * recusar qualquer qualificador depois de "vidas".
@@ -249,7 +249,7 @@ const MEDIDAS = [
     id: "socio-unico",
     o: "vidas com sócio único",
     medir: async () => {
-      const { VIDAS } = await import(url("estado-cnpj/vidas.mjs"));
+      const { VIDAS } = await import(url("produto/me/viver/motor/vidas/vidas.mjs"));
       return VIDAS.filter((v) => (v.empresa.sociosTotal ?? 1) === 1).length;
     },
     citacoes: [/(\d+)\s+das\s+\d+\s+vidas\s+t[êe]m\s+s[óo]cio\s+[úu]nico/gi],
@@ -265,7 +265,7 @@ const MEDIDAS = [
      * o "11" que estava escrito: aquele saiu de critério não registrado.
      */
     medir: async () => {
-      const { VIDAS } = await import(url("estado-cnpj/vidas.mjs"));
+      const { VIDAS } = await import(url("produto/me/viver/motor/vidas/vidas.mjs"));
       return VIDAS.filter((v) => {
         const mes = v.empresa.dataAberturaCnpj.slice(0, 7);
         const cp = v.competencias.find((c) => c.mes === mes);
@@ -278,7 +278,7 @@ const MEDIDAS = [
     id: "comecam-em-2025",
     o: "vidas que começam em 2025",
     medir: async () => {
-      const { VIDAS } = await import(url("estado-cnpj/vidas.mjs"));
+      const { VIDAS } = await import(url("produto/me/viver/motor/vidas/vidas.mjs"));
       return VIDAS.filter((v) => v.competencias[0].mes.startsWith("2025")).length;
     },
     citacoes: [/(\d+)\s+das\s+\d+\s+vidas\s+come[çc]am\s+em\s+2025/gi],
@@ -287,7 +287,7 @@ const MEDIDAS = [
     id: "competencias",
     o: "competências rodadas",
     medir: async () => {
-      const { VIDAS } = await import(url("estado-cnpj/vidas.mjs"));
+      const { VIDAS } = await import(url("produto/me/viver/motor/vidas/vidas.mjs"));
       return VIDAS.reduce((s, v) => s + v.competencias.length, 0);
     },
     /**
@@ -310,12 +310,20 @@ const MEDIDAS = [
   },
 ];
 
-const url = (p) => `file:///${resolve(AQUI, p).replace(/\\/g, "/")}`;
+/**
+ * 🔑 Contado da RAIZ do vault desde 17/09, não desta pasta.
+ *
+ * Tem que ser a mesma chave que o `verificar-tudo.mjs` usa em `ETAPAS`, porque
+ * é por ela que o `saidaDe()` acha a saída já medida. Chave torta aqui não dá
+ * erro: faz a trava RE-EXECUTAR a suíte e comparar a prosa com uma medição
+ * diferente — que é exatamente o verde falso que ela nasceu para não dar.
+ */
+const url = (p) => `file:///${resolve(RAIZ, p).replace(/\\/g, "/")}`;
 
 /** Soma um campo do retrato ao longo da vida inteira de uma persona. */
 async function somaDaVida(id, campo) {
-  const { VIDAS } = await import(url("estado-cnpj/vidas.mjs"));
-  const { retratoDoMes } = await import(url("estado-cnpj/_modelo.mjs"));
+  const { VIDAS } = await import(url("produto/me/viver/motor/vidas/vidas.mjs"));
+  const { retratoDoMes } = await import(url("produto/me/viver/motor/vidas/_modelo.mjs"));
   const v = VIDAS.find((x) => x.id === id);
   return v.competencias.reduce(
     (s, cp) =>
@@ -352,7 +360,7 @@ const jaMedidas = SAIDAS_JA_MEDIDAS
 
 function saidaDe(script) {
   if (jaMedidas && jaMedidas[script] !== undefined) return jaMedidas[script];
-  return execFileSync("node", [resolve(AQUI, script)], {
+  return execFileSync("node", [resolve(RAIZ, script)], {
     encoding: "utf8",
     maxBuffer: 10 * 1024 * 1024,
   });
@@ -375,10 +383,11 @@ function contaDaSuite(script, palavra) {
  * verdade naquele dia, e reescrever seria falsificar histórico).
  */
 const DOCS_VIVOS = [
-  "execucao/estado-cnpj/_duvidas-contador.md",
-  "execucao/estado-cnpj/_achados-do-motor.md",
-  "execucao/estado-cnpj/_cobertura-das-vidas.md",
-  "execucao/motor-fiscal/_SUFICIENCIA.md",
+  "produto/me/viver/motor/notas/_duvidas-contador.md",
+  "produto/me/viver/motor/notas/_achados-do-motor.md",
+  "produto/me/viver/motor/notas/_SUFICIENCIA.md",
+  // 🔑 Mora em /processos porque é o `gerar-cru.mjs` quem o escreve.
+  "execucao/processos/_cobertura-das-vidas.md",
   "_sistema/PENDENCIAS.md",
   "produto/persona-zero/acionaveis.md",
 
@@ -393,11 +402,11 @@ const DOCS_VIVOS = [
    * dela levam o selo. Isso é de propósito: um comentário que conta o que era
    * verdade antes é legítimo, e tem que declarar que é.
    */
-  "execucao/estado-cnpj/_modelo.mjs",
-  "execucao/estado-cnpj/vidas.mjs",
-  "execucao/estado-cnpj/rodar-ciclo.mjs",
-  "execucao/estado-cnpj/verificar-vidas.mjs",
-  "execucao/motor-fiscal/piloto-pro-labore.mjs",
+  "produto/me/viver/motor/vidas/_modelo.mjs",
+  "produto/me/viver/motor/vidas/vidas.mjs",
+  "produto/me/viver/motor/rodar/rodar-ciclo.mjs",
+  "produto/me/viver/motor/provar/verificar-vidas.mjs",
+  "produto/me/viver/motor/regra/piloto-pro-labore.mjs",
   "execucao/processos/cru/prolabore.mjs",
 ];
 
@@ -429,12 +438,23 @@ console.log("─".repeat(84));
 const defasados = [];
 
 for (const arquivo of DOCS_VIVOS) {
-  let texto;
-  try {
-    texto = readFileSync(resolve(RAIZ, arquivo), "utf8");
-  } catch {
-    continue;
+  /**
+   * 🔴 Terceira vez no mesmo dia, 17/09: doc declarado e ausente virava
+   * `continue`. O padrão apareceu aqui, no `verificar-encerrados` e na
+   * varredura de fontes de desenho — e é sempre o mesmo negócio ruim: a lista
+   * encolhe sozinha, o placar continua dizendo "N documentos varridos", e o
+   * verde é sobre um conjunto menor do que o declarado.
+   *
+   * 🔑 Lista é DECLARAÇÃO. Some um item, alguém tem que decidir — mesma regra
+   * do "remover capacidade é decisão, não limpeza".
+   */
+  const caminho = resolve(RAIZ, arquivo);
+  if (!existsSync(caminho)) {
+    console.error(`\n🔴 Documento vivo declarado e INEXISTENTE: ${arquivo}`);
+    console.error("   Ou mudou de lugar, ou saiu do vault sem sair da lista.\n");
+    process.exit(1);
   }
+  const texto = readFileSync(caminho, "utf8");
 
   texto.split(/\r?\n/).forEach((linha, i) => {
     // Linha marcada como histórica é citação legítima do que já foi verdade.

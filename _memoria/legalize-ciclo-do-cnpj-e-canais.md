@@ -8,7 +8,7 @@ metadata:
   modified: 2026-09-16T01:50:13.653Z
 ---
 
-`execucao/estado-cnpj/ciclo-do-cnpj.mjs` — a lista **fechada** do que a casa deve fazer pelo cliente travado (ME Simples III/V, serviço, BH, 1 a 4 sócios, **sem colaborador**): **7 obrigações mensais + 3 anuais**.
+`produto/me/viver/motor/vidas/ciclo-do-cnpj.mjs` — a lista **fechada** do que a casa deve fazer pelo cliente travado (ME Simples III/V, serviço, BH, 1 a 4 sócios, **sem colaborador**): **7 obrigações mensais + 3 anuais**.
 
 🔑 **É fechada de propósito:** obrigação que não está lá **não existe** para este cliente. Nasceu do pedido do Pedro de *"parar de colocar dado, cálculo, guia e qualquer outra coisa onde o nosso cliente travado não encaixa"*.
 

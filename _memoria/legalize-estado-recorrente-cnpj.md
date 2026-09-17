@@ -8,7 +8,7 @@ metadata:
   modified: 2026-09-15T02:49:12.040Z
 ---
 
-`execucao/estado-cnpj/` — a espinha que faltava. O motor fiscal existia e **ninguem o chamava com dado de verdade**. Achado de 27/08 (`equacao-viva-camada-2-vars-cnpj`) que ficou aberto 18 dias, e o tamanho real e pior do que a nota dizia:
+`produto/me/viver/motor/vidas/` (era `execucao/estado-cnpj/` ate 17/09) — a espinha que faltava. O motor fiscal existia e **ninguem o chamava com dado de verdade**. Achado de 27/08 (`equacao-viva-camada-2-vars-cnpj`) que ficou aberto 18 dias, e o tamanho real e pior do que a nota dizia:
 
 - `/pro-labore` roda com `FAT = 6000` **fixo no componente**
 - `/notas` tem 26 notas proprias (mai-jul/2026)

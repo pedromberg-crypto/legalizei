@@ -28,6 +28,7 @@ import {
   identidade,
 } from "./_modelo.mjs";
 import { VIDAS, SEM_VIDA } from "./vidas.mjs";
+import { alertasDoRetrato } from "./alertas-internos.mjs";
 import { brlDeCentavos, faixaDe, aliquotaEfetiva } from "../motor-fiscal/apurador.mjs";
 import { FAIXAS, REPARTICAO, TRIBUTOS } from "../motor-fiscal/_tabelas.mjs";
 
@@ -590,6 +591,58 @@ console.log("\n── 8 · Quem fatura no mês em que abriu paga 15,5%, e quem p
     "e a janela vazia custa o dobro em relação a quem tem folha no mês anterior",
     custoDaJanelaVazia > 0 && rA.das.total > rB.das.total * 2.5,
     `${brlDeCentavos(rA.das.total)} contra ${brlDeCentavos(rB.das.total)} — diferença de ${brlDeCentavos(custoDaJanelaVazia)} num mês só`
+  );
+
+  /* ── O ALERTA INTERNO que esse caso dispara ──────────────────────────── */
+
+  const alertaA = alertasDoRetrato({ retrato: rA, empresa: emp });
+
+  // 🔴 SEMPRE `.toISOString()` NUMA DATA DE PRAZO, nunca `String()`.
+  //    O motor guarda vencimento em UTC à meia-noite; `String()` renderiza no
+  //    fuso local (UTC-3) e mostra o DIA ANTERIOR às 21h. Este invariante
+  //    falhou por isso na 1ª rodada, e o alerta estava certo o tempo todo.
+  //    ⚠️ Se essa conversão vazar para tela, o cliente lê um prazo a menos.
+  const prazoISO = (a) => new Date(a?.prazo).toISOString().slice(0, 10);
+
+  invariante(
+    "e o caso dispara alerta INTERNO, com prazo e valor",
+    alertaA.length === 1 && alertaA[0].id === "A1",
+    alertaA.length
+      ? `A1 · prazo ${prazoISO(alertaA[0])} · folha necessária ${brlDeCentavos(alertaA[0].proLaboreNecessario)}`
+      : "🔴 nenhum alerta"
+  );
+
+  // 🔴 O ERRO QUE ESTE INVARIANTE PEGOU DE VERDADE. Na 1ª versão do alerta o
+  //    prazo saiu 15/09 para a competência 09, porque eu subtraí um mês que o
+  //    `vencimentoDe` já subtrai sozinho. Prazo errado num alerta é pior que
+  //    alerta nenhum: a casa liga depois de a janela ter fechado.
+  invariante(
+    "e o prazo é o do eSocial do mês SEGUINTE, não o do mês da competência",
+    prazoISO(alertaA[0]) === "2026-10-15",
+    `competência 2026-09 → prazo ${prazoISO(alertaA[0])}`
+  );
+
+  // E quem tem folha no mês anterior não pode ser incomodado.
+  invariante(
+    "quem tem folha no mês anterior NÃO dispara alerta nenhum",
+    alertasDoRetrato({ retrato: rB, empresa: emp }).length === 0 &&
+      alertasDoRetrato({ retrato: rC, empresa: emp }).length === 0,
+    "nem quem abriu e não faturou"
+  );
+
+  // 🔑 E as 16 vidas seguem silenciosas: nenhuma exercita o caso ainda.
+  const alertasDasVidas = VIDAS.flatMap((v) =>
+    v.competencias.flatMap((cp) =>
+      alertasDoRetrato({
+        retrato: retratoDoMes({ empresa: v.empresa, competencias: v.competencias, mesAlvo: cp.mes }),
+        empresa: v.empresa,
+      })
+    )
+  );
+  invariante(
+    "⏳ e NENHUMA das 16 vidas exercita o caso — falta a vida nova",
+    alertasDasVidas.length === 0,
+    "todas abrem sem faturar no mês 1. A vida que constitui e fatura junto ainda não existe"
   );
 }
 

@@ -31,7 +31,51 @@ tags: [motor, fiscal, auditoria, cobertura, anexos, fator-r]
 | **Piloto de pró-labore** (`piloto-pro-labore.mjs`) | 🟢 fechado como decisão | **67 conferências no piloto** — ver §9 |
 | **Estado recorrente** (`estado-cnpj/`) | 🟢 fechado como modelo | **14 conferências no estado recorrente** — as 3 telas fecham no mesmo número |
 | **As vidas** (`vidas.mjs`) | 🟢 17 vidas · 162 competências | **54 invariantes**, relações da lei e não valores meus |
+| **As equações** (`verificar-equacoes.mjs`) | 🟢 fechado como **fórmula** | **11 propriedades** que valem em todo o domínio do ME — nenhuma cita valor de ninguém |
 | **Ligação com o produto** | 🟡 constantes ligadas, cálculo não | o app lê as tabelas do gerador desde 15/09; nenhuma tela chama o apurador ainda |
+
+---
+
+## 🎯 A pergunta do Pedro em 17/09, e a resposta honesta
+
+> *"Muitos dos nossos resultados a gente ancora no que o contador disse, ou no meu caso que foi estudado. Mas quero saber… a assertividade deles para **qualquer caso**, mesmo que distinto de valores, mesmo que não sejam os valores que o contador falou."*
+
+🔴 **Ele achou um buraco real, e o buraco era de método.** Até 17/09 a prova do motor era quase toda **pontual**: das 46 conferências do apurador, ~40 são *"neste ponto, o número bate com o recibo / com a nota / com a palavra do contador"*. É a prova mais forte que existe **naquele ponto** — e **40 pontos certos não provam a curva entre eles**.
+
+🔑 **O risco concreto:** se a fórmula da alíquota efetiva estivesse errada para um RBT12 que ninguém testou, **todo teste dourado seguiria verde**. Eles só olham onde há documento, e só existe documento onde a persona zero passou.
+
+### As três réguas, e por que nenhuma substitui a outra
+
+| Régua | A pergunta | Onde mora | O que pega |
+|---|---|---|---|
+| **Ponto** | *"quanto dá AQUI?"* | `verificar-apurador` | número que não bate com **documento emitido** |
+| **Propriedade** | *"a relação vale em TODO o domínio?"* | `verificar-equacoes` | fórmula errada onde ninguém olhou |
+| **História** | *"a relação se sustenta ao longo de uma vida?"* | `verificar-vidas` | erro que só aparece com o tempo rolando |
+
+### O que as 11 propriedades afirmam
+
+| | Propriedade | Domínio varrido |
+|---|---|---|
+| **E1** | a efetiva **é** `(RBT12 × nominal − PD) / RBT12`, art. 18 §1º | 720 pontos × 2 anexos, do 1º real ao teto |
+| **E2** | a repartição entre os 6 tributos soma **100%** | 12 repartições (6 faixas × 2 anexos) |
+| **E3** | o desvio do arredondamento **nunca passa de 3 centavos** | 3.600 apurações · pior real: **2 centavos** |
+| **E4** | o DAS **nunca cai** quando receita ou RBT12 sobem | os 2 anexos, faixa inteira |
+| **E5** | cruzar a borda de faixa **não cria degrau** | pior: **1 centavo** por R$1 de acumulado |
+| **E6** | o **V é sempre mais caro** que o III | menor folga: R$815,01 sobre R$10 mil |
+| **E7** | INSS = `11% × min(pró-labore, teto − CLT)` | 3.969 combinações de pró-labore × CLT |
+| **E8** | o líquido do sócio **nunca inverte** | R$0 a R$30.000, **de um real em um real** |
+| **E9** | a dedução é sempre **a melhor para o sócio** | 401 pontos |
+| **E10** | o pró-labore que o piloto calcula **entrega** o Fator R prometido | 2.124 combinações · folga sempre ≥ 0 |
+
+🔑 **A E10 é a que mais responde o Pedro.** O piloto não lê tabela: ele **inverte a equação do Fator R**. A conferência aplica o resultado de volta na função original, para combinações que ninguém nunca contou a ninguém — e o alvo é atingido em todas.
+
+### ⚠️ E a fronteira, medida em vez de suposta
+
+**Esta suíte não prova que a lei foi lida certo.** No teste de mutação de 17/09, trocar a parcela a deduzir da 2ª faixa de **R$9.360 para R$9.000** foi pego pelo **E5** (o degrau) e **passou verde no E1** — porque o E1 lê a mesma tabela que o motor lê.
+
+Ou seja: ela prova que **a conta é a do art. 18 §1º**, não que **o número da tabela está certo**. Tabela errada é trabalho das outras duas réguas.
+
+✅ **3 mutações testadas, 3 pegas pela propriedade certa:** repartição adulterada → E2 e E3 · parcela a deduzir → E5 · alíquota do INSS 11%→12% → E7. Verde de primeira rodada é suspeito, e este foi conferido quebrando de propósito.
 
 ### O que a 2ª rodada acrescentou
 

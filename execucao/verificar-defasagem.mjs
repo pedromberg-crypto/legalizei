@@ -190,6 +190,12 @@ const MEDIDAS = [
     citacoes: [/\|\s*\*{0,2}R\$\s?(47[\d.]+,\d{2})\*{0,2}\s*\|/gi],
   },
   {
+    id: "propriedades",
+    o: "propriedades das equações",
+    medir: () => contaDaSuite("motor-fiscal/verificar-equacoes.mjs", "propriedades"),
+    citacoes: [/(\d+)\s+propriedades\b/gi],
+  },
+  {
     id: "invariantes",
     o: "invariantes das vidas",
     medir: () => contaDaSuite("estado-cnpj/verificar-vidas.mjs", "invariantes"),

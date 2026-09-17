@@ -73,12 +73,14 @@ const ETAPAS = [
     ],
   },
   {
-    fase: "2 · O MOTOR — valor contra recibo, e relação contra a lei",
+    fase: "2 · O MOTOR — ponto contra recibo, propriedade contra a lei",
     porque:
-      "O apurador afirma VALOR (há recibo do PGDAS-D). As vidas afirmam " +
-      "RELAÇÃO (não há recibo, e inventar gabarito seria fingir prova).",
+      "O apurador afirma VALOR num ponto (há recibo do PGDAS-D). As equações " +
+      "afirmam PROPRIEDADE em todo o domínio (40 pontos certos não provam a " +
+      "curva entre eles). As vidas afirmam RELAÇÃO ao longo de uma história.",
     scripts: [
       "motor-fiscal/verificar-apurador.mjs",
+      "motor-fiscal/verificar-equacoes.mjs",
       "motor-fiscal/verificar-piloto.mjs",
       "motor-fiscal/verificar-autoridade.mjs",
       "motor-fiscal/verificar-encerrados.mjs",

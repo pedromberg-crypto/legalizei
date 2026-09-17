@@ -223,4 +223,46 @@ export const ENCERRADOS = [
     onde: "execucao/motor-fiscal/_tabelas.mjs · FAIXAS",
     naoReabrir: ["se falta vida para exercitar as faixas altas (não falta)"],
   },
+  {
+    id: "E-ARREDONDAMENTO",
+    assunto: "A convenção de arredondamento do DAS, e o centavo",
+    termos: ["arredondamento", "centavo do DAS", "474,60", "soma de 6 parcelas"],
+    encerradoEm: "2026-09-17",
+    resposta:
+      "O DAS é a SOMA DE SEIS PARCELAS ARREDONDADAS, uma por tributo, e não o " +
+      "arredondamento do produto. Está provado contra o recibo oficial do " +
+      "PGDAS-D: 7.910 × 6% = 474,60 e a guia da Receita sai R$474,59. " +
+      "A convenção não tem caminho próprio por anexo — é o mesmo código no III " +
+      "e no V. TODO dinheiro anda em centavos inteiros no motor; só a exibição " +
+      "volta para reais. A diferença entre somar e multiplicar é de CENTAVOS, " +
+      "nunca de reais, e é ESPERADA: é a regra funcionando, não desvio.",
+    fonte:
+      "Recibo do PGDAS-D de ago/2026 da persona zero (documento emitido) · " +
+      "LC 123/2006 art. 18 §1º (a fórmula da efetiva) · conferências G1 e G2 do " +
+      "verificar-apurador, que testam o caso quebrado E o caso redondo",
+    onde: "execucao/motor-fiscal/apurador.mjs · emCentavos() e apurarDAS()",
+    /**
+     * 🔴 A LINHA QUE O PEDRO PEDIU EM 17/09, e ela é sobre COMO REPORTAR:
+     *
+     *   *"sobre os centavos eu lembro que já temos fontes validadas do governo
+     *   para essa regra de arredondamento e preciso que a gente apenas aplique
+     *   ela sem ficar reportando sobre cálculos dos centavos e às vezes
+     *   trazendo como 'erro'."*
+     *
+     * Ele está certo e o registro corrige a minha conduta, não o motor:
+     * diferença de centavo entre `soma das partes` e `produto direto` é a
+     * regra **acontecendo**. Chamar isso de achado infla o ledger e gasta a
+     * atenção dele com o que já está resolvido desde 14/09.
+     *
+     * ⚠️ Segue valendo relatar o que é DE VERDADE outra coisa: unidade
+     * trocada (reais onde se espera centavos — M-014, M-020, M-027) não é
+     * "questão de centavo", é ordem de grandeza 100×.
+     */
+    naoReabrir: [
+      "se o DAS deveria ser receita × alíquota (não deveria)",
+      "se o centavo de diferença é erro (não é — é a convenção)",
+      "se o Anexo V precisa de recibo próprio para o arredondamento (não precisa)",
+      "relatar diferença de centavo do arredondamento como achado",
+    ],
+  },
 ];

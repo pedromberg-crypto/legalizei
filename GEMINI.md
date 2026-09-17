@@ -22,7 +22,7 @@ Fonte-verdade completa é `CLAUDE.md` (raiz desta pasta) — leia ele também. E
 ## Onde as coisas vivem
 - `HOME.md` — hub + §Agora. `BASE-ESTRATEGICA.md` — teses/custo/equity/roadmap.
 - `marca/decisoes-marca.md` — ADR, log de decisões travadas.
-- `execucao/spec-mvp-v0.md`, `execucao/marcos/`, `execucao/evolucao-para-mauro.md`, `execucao/kanban-legalizai-story-book.md`.
+- `execucao/spec-mvp-v0.md`, `execucao/marcos/`, `execucao/mauro/evolucao-para-mauro.md`, `execucao/kanban-legalizai-story-book.md`.
 - `app/` — código Next.js (App Router) + TS + Tailwind v4. Telas em `.tsx`, flow declarado em `produto/_flow/flow-data.mjs`.
 - `reunioes/` — atas Plaud.
 

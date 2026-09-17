@@ -134,7 +134,7 @@ const DISPENSADOS = {
   "produto/me/viver/processos/verificar-persona.mjs": "roda DENTRO dos 3 geradores da fase 1",
   "produto/me/viver/portal/gerar-mapa-portal.mjs": "portal do cliente, outra frente",
   "execucao/handoff/gerar-handoff.mjs": "pacote para o dev, sob demanda",
-  "execucao/gerar-placar-mauro.mjs": "reporte ao sócio — roda no /fechar, não aqui",
+  "execucao/mauro/gerar-placar-mauro.mjs": "reporte ao sócio — roda no /fechar, não aqui",
   "produto/me/viver/funcionalidades/gerar-funcionalidades.mjs": "inventário de produto, outra frente",
   "_sistema/pdf/gerar-pdf.mjs": "utilitário de exportação",
 };

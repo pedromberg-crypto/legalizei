@@ -77,5 +77,5 @@ O MVP hoje só atende serviço; CNAEs de comércio ficam de fora por decisão de
 
 - [[resultado-pesquisa-fundamentos-cnae-27-08]] — resultado completo da pesquisa que ratificou esta nota.
 - [[prompt-pesquisa-fundamentos-cnae-anexos-mei]] — prompt original.
-- `execucao/cnae-fiscalmente-otimo.md` — motor que recomenda o CNAE mais barato; cruzado com esta pesquisa, **sem contradição** (ver seção final do resultado).
+- `produto/me/entrar/constituir/cnae-fiscalmente-otimo.md` — motor que recomenda o CNAE mais barato; cruzado com esta pesquisa, **sem contradição** (ver seção final do resultado).
 - `pesquisa/fiscal-simples-bh-2026.md` — bloco fiscal consolidado atual, fonte-verdade do flow até aqui.

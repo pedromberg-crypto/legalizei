@@ -31,7 +31,7 @@ Telas extraídas pra fonte única (pages de produção viraram **wrappers finos*
 
 **Why:** narrar tela a tela pra quem não construiu expõe buraco que construir não expõe — construir assume contexto que a plateia não tem.
 
-**How to apply:** todo achado de UX/UI que surgir lapidando a apresentação entra em **`execucao/achados-apresentacao.md`** (nota própria, criada 29/07 a pedido do Pedro) — o `compilado-ux-flow.md` guarda só um ponteiro na rodada #6. **IDs seguem a série do compilado** (UX-60+), pra não haver duas numerações. Cada item tem 2 status: 🟢 aplicado na apresentação × ✅ aplicado no flow original.
+**How to apply:** todo achado de UX/UI que surgir lapidando a apresentação entra em **`produto/_flow/achados-apresentacao.md`** (nota própria, criada 29/07 a pedido do Pedro) — o `compilado-ux-flow.md` guarda só um ponteiro na rodada #6. **IDs seguem a série do compilado** (UX-60+), pra não haver duas numerações. Cada item tem 2 status: 🟢 aplicado na apresentação × ✅ aplicado no flow original.
 
 **Ordem travada:** aplico **primeiro na `/apresentacao`** (é lá que a gestão vê); o flow de produção só muda quando o Pedro mandar.
 

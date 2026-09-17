@@ -63,4 +63,4 @@ Pedro trouxe a ideia de que os 4 dados do Bloco 1 não bastam soltos em colunas 
 - Decidir o caminho do pró-labore (livre/automático/guiado).
 
 ## Links
-- [[fundamentos-cnae]] · [[resultado-pesquisa-fundamentos-cnae-27-08]] · [[lc123-art18-anexos-taxativo]] · `pesquisa/cnae-matriz/cnae-matriz-governo.md` · `execucao/cnae-fiscalmente-otimo.md` · [[estado-atual-pesquisa-cnae]]
+- [[fundamentos-cnae]] · [[resultado-pesquisa-fundamentos-cnae-27-08]] · [[lc123-art18-anexos-taxativo]] · `pesquisa/cnae-matriz/cnae-matriz-governo.md` · `produto/me/entrar/constituir/cnae-fiscalmente-otimo.md` · [[estado-atual-pesquisa-cnae]]

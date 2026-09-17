@@ -9,7 +9,7 @@ tags: [pesquisa, economia, trafego, puntel, margem]
 
 # 🔗 Margem × custo de tráfego — unificação (nossa conta + CPC do Puntel)
 
-> **O que é:** primeira junção de duas coisas que viviam separadas. De um lado a matemática de planos/margem que foi pro Mauro em 30/07 (`execucao/apresentacao-mauro.html` bloco 6, [[2026-07-30-flow-2-construido-e-pente-fino]]). Do outro a estimativa de custo de mídia que o **Pedro Puntel** levantou (tabela `TabelaPlataformas`, recebida 17/08).
+> **O que é:** primeira junção de duas coisas que viviam separadas. De um lado a matemática de planos/margem que foi pro Mauro em 30/07 (`execucao/mauro/apresentacao-mauro.html` bloco 6, [[2026-07-30-flow-2-construido-e-pente-fino]]). Do outro a estimativa de custo de mídia que o **Pedro Puntel** levantou (tabela `TabelaPlataformas`, recebida 17/08).
 >
 > **Escopo desta versão:** unificar e ver o que bate. **Não é** plano de mídia, não trava budget e não reabre decisão nenhuma. Anti-guru: cada número abaixo tem origem declarada; o que é derivado está marcado como derivado.
 
@@ -24,7 +24,7 @@ tags: [pesquisa, economia, trafego, puntel, margem]
 
 > ⚠️ **2 ressalvas de leitura da fonte.** (1) No print recebido o cabeçalho da última coluna está **cortado** ("Viabilidade para Ticket R$ 49/R$…") — assumi R$49 (MEI) e R$139 (ME); confirmar com ele. (2) A tabela usa "Legalize Group" e "LegalizaiApp"; a marca é **Legalizai** ([[decisoes-marca]]).
 
-### 1b. A nossa conta de margem (fonte: `execucao/apresentacao-mauro.html` bloco 6, 30/07)
+### 1b. A nossa conta de margem (fonte: `execucao/mauro/apresentacao-mauro.html` bloco 6, 30/07)
 
 Plano ME R$139 × 12 meses, cliente cumpre a fidelidade:
 
@@ -42,7 +42,7 @@ Antes de cruzar com mídia, os dois docs de margem precisavam virar um. Eles usa
 
 | Doc | Custo que inclui | Custo que ESQUECE |
 |---|---|---|
-| [[2026-07-30-flow-2-construido-e-pente-fino]] · `execucao/apresentacao-mauro.html` (30/07) | certificado digital, uma vez (usava R$200 estimado) | custo técnico mensal |
+| [[2026-07-30-flow-2-construido-e-pente-fino]] · `execucao/mauro/apresentacao-mauro.html` (30/07) | certificado digital, uma vez (usava R$200 estimado) | custo técnico mensal |
 | [[economia-preco-cac]] (05/08) | técnico R$15/mês (API R$10 + sistema R$5) | certificado digital |
 
 **Unificando os dois (derivado, 17/08):**

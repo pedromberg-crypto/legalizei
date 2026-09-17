@@ -41,7 +41,7 @@ const INCLUSO_PREMIUM = [
     // dando") — "incluso, sem custo extra" era verdade mas invisível: não
     // dizia QUANTO isso vale. R$209 é o piso real do certificado A1
     // (R$209-229/ano), validado com a contadora Izabela em 09/07
-    // (`execucao/processo-abertura-empresa-bh.md`). Usei o piso da faixa,
+    // (`produto/me/entrar/constituir/processo-abertura-empresa-bh.md`). Usei o piso da faixa,
     // não o teto — número real, não estimativa otimista.
     titulo: "Certificado digital",
     sub: "Você está economizando R$209/ano com a gente.",

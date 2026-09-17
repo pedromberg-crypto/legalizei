@@ -264,4 +264,4 @@ Origem: Rua Satélite 42 (simulação de DBE + Integrador com 2 sócios, contrat
 - [[telas-jucemg-mapeamento-prints]] (141 prints)
 - [[2026-08-31-rua-satelite-38-40-constituicao-jucemg-campo-a-campo]] (ata da Izabela)
 - [[decisoes-marca]] (ADR — toda decisão com data e motivo)
-- `execucao/checklist-validacao-jucemg.html` (campo × passo oficial, artifact interativo)
+- `produto/me/entrar/constituir/checklist-validacao-jucemg.html` (campo × passo oficial, artifact interativo)

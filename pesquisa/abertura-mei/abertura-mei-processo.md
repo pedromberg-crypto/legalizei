@@ -9,7 +9,7 @@ tags: [mei, abertura, constituicao, redesim, portal-empreendedor, fonte-primaria
 
 # 🟢 Abertura de MEI — fonte-verdade do processo (28/08)
 
-> Pesquisa Gemini com fonte oficial obrigatória (70 referências, quase todas gov.br/planalto/pbh/sef-mg), rodada pelo Pedro. Arquivo bruto em [[resultado-pesquisa-abertura-mei-28-08]]. Equivalente MEI do que `execucao/processo-abertura-empresa-bh.md` é pro ME.
+> Pesquisa Gemini com fonte oficial obrigatória (70 referências, quase todas gov.br/planalto/pbh/sef-mg), rodada pelo Pedro. Arquivo bruto em [[resultado-pesquisa-abertura-mei-28-08]]. Equivalente MEI do que `produto/me/entrar/constituir/processo-abertura-empresa-bh.md` é pro ME.
 
 ## ⚠️ Os 3 achados que mudam o produto
 
@@ -144,5 +144,5 @@ Cruzando os nossos **51 CNAEs certeza que aceitam MEI** contra as 14 categorias 
 - [[resultado-pesquisa-abertura-mei-28-08]] — bruto arquivado.
 - [[cruzamento-flow-mei-vs-me]] — o que isso vira de flow e tela.
 - [[mei-obrigacoes-operacionais]] — o que vem depois de aberto.
-- `execucao/processo-abertura-empresa-bh.md` — o equivalente do ME.
+- `produto/me/entrar/constituir/processo-abertura-empresa-bh.md` — o equivalente do ME.
 - `pesquisa/cnae-matriz/cnae-matriz.json` — campo `mei_ocupacoes`, 351 preenchidos.

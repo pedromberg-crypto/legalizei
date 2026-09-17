@@ -4,7 +4,7 @@ status: vivo
 data: 2026-08-31
 fonte: "Rua Satélite 38/39/40 (vídeo+transcrição) + Tela 1/Tela 2 (áudio+transcrição, mesma reunião, 2ª captação) — Downloads/Transcrições Reunião/ (Pedro Maia, Isabela/especialista contábil, Thiago/dev, Natanael Dev)"
 deriva_de: [dados-coletados-abertura-ate-viabilidade]
-deriva_de_codigo: [execucao/checklist-validacao-jucemg.html]
+deriva_de_codigo: [produto/me/entrar/constituir/checklist-validacao-jucemg.html]
 tags: [reuniao, produto, rpa, jucemg, dbe, fiscal, decisao, pendente-validacao]
 ---
 
@@ -75,7 +75,7 @@ Cronológico, arquivo → conteúdo:
 Discussão de arquitetura RPA (SPDD, Node/Python), papo pessoal/técnico de equipe, negociação de certificado digital com certificadoras — relevante pro produto mas não é campo de checklist.
 
 ## Links
-- Artifact vivo: `execucao/checklist-validacao-jucemg.html` (https://claude.ai/code/artifact/2be1bf3a-ce37-47d9-9489-903df7046db6)
+- Artifact vivo: `produto/me/entrar/constituir/checklist-validacao-jucemg.html` (https://claude.ai/code/artifact/2be1bf3a-ce37-47d9-9489-903df7046db6)
 - Fonte: `Downloads/Transcrições Reunião/Rua Satélite 38-transcript.txt`, `39`, `40` + `Tela 1-transcript.txt`, `Tela 2-transcript.txt` (e respectivos Summary.md)
 - [[dados-coletados-abertura-ate-viabilidade]]
 - [[2026-08-25-rua-satelite-36-fluxo-constituicao-telas-app]] (reunião anterior da mesma série, formato igual)

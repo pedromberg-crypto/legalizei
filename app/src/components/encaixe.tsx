@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
  * ═══════════════════════════════════════════════════════════════════════════
  * ENCAIXE — escolha do CNAE na DESCOBERTA (pré-pagamento) · shell WIZARD
  * ═══════════════════════════════════════════════════════════════════════════
- * Spec: execucao/reordenacao-cluster-fiscal-encaixe.md (PROPOSTA aprovada 21/07)
+ * Spec: produto/_flow/reordenacao-cluster-fiscal-encaixe.md (PROPOSTA aprovada 21/07)
  *
  * É o coração da reordenação do cluster fiscal. Vem LOGO APÓS o veredito 🟢,
  * ainda antes de pagar, e **trava o CNAE** — que o nome/objeto/Junta precisam

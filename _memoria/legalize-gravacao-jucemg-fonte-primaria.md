@@ -8,7 +8,7 @@ metadata:
   modified: 2026-09-01T01:06:09.919Z
 ---
 
-Pedro + Izabela (contadora) gravaram uma constituição REAL na JUCEMG campo a campo (31/08). 141 prints em `execucao/telas-jucemg-img/`, mapeados em `execucao/telas-jucemg-mapeamento-prints.md`. É fonte MAIS forte que o PDF oficial da JUCEMG — o PDF descreve os passos, a gravação mostra os valores de cada campo.
+Pedro + Izabela (contadora) gravaram uma constituição REAL na JUCEMG campo a campo (31/08). 141 prints em `produto/me/entrar/constituir/telas-jucemg-img/`, mapeados em `produto/me/entrar/constituir/telas-jucemg-mapeamento-prints.md`. É fonte MAIS forte que o PDF oficial da JUCEMG — o PDF descreve os passos, a gravação mostra os valores de cada campo.
 
 **Why:** antes disso, boa parte do que o app assumia sobre a JUCEMG era inferência. O cruzamento achou 2 campos documentados ERRADOS (tipo de unidade era "Sede", é "Produtiva"; metragem era "não implementado", é 20m² fixo) e 1 bug que teria travado cliente real.
 

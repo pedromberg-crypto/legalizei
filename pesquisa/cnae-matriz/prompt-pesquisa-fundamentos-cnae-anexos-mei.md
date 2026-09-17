@@ -73,9 +73,9 @@ claramente "não encontrei fonte oficial" em vez de preencher com estimativa ou 
 
 ## ✅ Resultado (colado 27/08)
 
-Resultado completo em [[resultado-pesquisa-fundamentos-cnae-27-08]] — já cruzado contra `fundamentos-cnae.md` (ratificou, 2 hipóteses 🔑 confirmadas) e contra `execucao/cnae-fiscalmente-otimo.md` (bate, sem contradição). Próximo passo: cruzar contra o resto da `cnae-matriz/` (matriz original, tabela Contabilizei, complexidade de abertura) — ver `pesquisa/estado-atual-pesquisa-cnae.md`.
+Resultado completo em [[resultado-pesquisa-fundamentos-cnae-27-08]] — já cruzado contra `fundamentos-cnae.md` (ratificou, 2 hipóteses 🔑 confirmadas) e contra `produto/me/entrar/constituir/cnae-fiscalmente-otimo.md` (bate, sem contradição). Próximo passo: cruzar contra o resto da `cnae-matriz/` (matriz original, tabela Contabilizei, complexidade de abertura) — ver `pesquisa/estado-atual-pesquisa-cnae.md`.
 
 ## Links
 - [[fundamentos-cnae]] — atualizada (v2) com as ratificações.
 - [[resultado-pesquisa-fundamentos-cnae-27-08]] — resultado bruto + cruzamento.
-- `execucao/cnae-fiscalmente-otimo.md` — motor que consome essa lógica.
+- `produto/me/entrar/constituir/cnae-fiscalmente-otimo.md` — motor que consome essa lógica.

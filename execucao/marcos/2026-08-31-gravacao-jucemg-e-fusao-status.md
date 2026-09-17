@@ -15,7 +15,7 @@ tags: [marco, flow, jucemg, constituicao, ux, decisao]
 - **Reunião Rua Satélite 38-40** (31/08), 2 capturas cruzadas: vídeo (RS38→RS39→RS40) e áudio (Tela 1→Tela 2). Conteúdo idêntico; a captura de áudio rendeu 2 detalhes a mais (ContaAzul citado como concorrente a estudar; confirmação verbal de que "o CNPJ é gratuito").
 - **141 prints reais** colados pelo Pedro, mapeados um a um em [[telas-jucemg-mapeamento-prints]] — cada linha traz a tela, a fala/regra da especialista que a justifica, e o print.
 - Achados classificados (mantém × ajusta × cria) em [[2026-08-31-rua-satelite-38-40-constituicao-jucemg-campo-a-campo]].
-- **Checklist interativo** publicado pra validar com a especialista: `execucao/checklist-validacao-jucemg.html` (43 campos, etapas 15-18 do processo com responsabilidade nós×cliente, sidebar de exemplos de CNAE liso).
+- **Checklist interativo** publicado pra validar com a especialista: `produto/me/entrar/constituir/checklist-validacao-jucemg.html` (43 campos, etapas 15-18 do processo com responsabilidade nós×cliente, sidebar de exemplos de CNAE liso).
 
 ## 2. 🔴 O achado que vale mais que os outros
 

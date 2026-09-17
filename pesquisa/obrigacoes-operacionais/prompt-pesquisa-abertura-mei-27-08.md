@@ -209,5 +209,5 @@ Hoje o flow de constituição de **ME** coleta, nesta ordem: C0 atividade/CNAE �
 ## Links
 - [[prompt-pesquisa-mei-obrigacoes-27-08]] — prompt irmão (obrigações depois de aberto).
 - [[mei-obrigacoes-operacionais]] · [[mei-mapeamento-funcionalidades]]
-- `execucao/processo-abertura-empresa-bh.md` — o equivalente já mapeado pro ME.
-- `execucao/orgaos-sistemas-abertura-bh.md` — órgãos/sistemas do processo de ME.
+- `produto/me/entrar/constituir/processo-abertura-empresa-bh.md` — o equivalente já mapeado pro ME.
+- `produto/me/entrar/constituir/orgaos-sistemas-abertura-bh.md` — órgãos/sistemas do processo de ME.

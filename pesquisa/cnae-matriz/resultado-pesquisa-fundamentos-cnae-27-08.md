@@ -8,7 +8,7 @@ tags: [pesquisa, cnae, fiscal, simples-nacional, mei, fonte-primaria]
 
 # 📥 Resultado — pesquisa fundamentos CNAE/Anexos/Fator R/MEI
 
-> Rodado no Gemini Pro (Google Search) a partir de [[prompt-pesquisa-fundamentos-cnae-anexos-mei]], colado por Pedro em 27/08. Versão abaixo: conteúdo integral, só removi as imagens (fórmulas em base64, inúteis fora do render) e limpei a prosa jurídica mais rebuscada do bloco final. Já **cruzado** contra [[fundamentos-cnae]] (correções aplicadas lá) e contra `execucao/cnae-fiscalmente-otimo.md` (bate, sem contradição — ver nota no fim).
+> Rodado no Gemini Pro (Google Search) a partir de [[prompt-pesquisa-fundamentos-cnae-anexos-mei]], colado por Pedro em 27/08. Versão abaixo: conteúdo integral, só removi as imagens (fórmulas em base64, inúteis fora do render) e limpei a prosa jurídica mais rebuscada do bloco final. Já **cruzado** contra [[fundamentos-cnae]] (correções aplicadas lá) e contra `produto/me/entrar/constituir/cnae-fiscalmente-otimo.md` (bate, sem contradição — ver nota no fim).
 
 ## BLOCO 1 — Anexo III × Anexo V
 
@@ -71,4 +71,4 @@ Lei Complementar 123/2006 (Planalto) · Resolução CGSN 140/2018 · SC Cosit 17
 ## Links
 - [[fundamentos-cnae]] — atualizado com estas ratificações.
 - [[prompt-pesquisa-fundamentos-cnae-anexos-mei]] — prompt que gerou este resultado.
-- `execucao/cnae-fiscalmente-otimo.md` — motor cruzado acima, sem contradição.
+- `produto/me/entrar/constituir/cnae-fiscalmente-otimo.md` — motor cruzado acima, sem contradição.

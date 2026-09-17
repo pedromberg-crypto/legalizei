@@ -8,7 +8,7 @@ metadata:
   modified: 2026-09-16T01:51:23.884Z
 ---
 
-`execucao/gerar-placar-mauro.mjs`, **plugado no `/fechar`** (passo 4). Conta entregas, status e dias trabalhados a partir das próprias tabelas do `evolucao-para-mauro.md` e reescreve o bloco entre `PLACAR:INICIO` e `PLACAR:FIM`, **no topo** do doc.
+`execucao/mauro/gerar-placar-mauro.mjs`, **plugado no `/fechar`** (passo 4). Conta entregas, status e dias trabalhados a partir das próprias tabelas do `evolucao-para-mauro.md` e reescreve o bloco entre `PLACAR:INICIO` e `PLACAR:FIM`, **no topo** do doc.
 
 🔑 **É gerado de propósito.** Placar escrito à mão envelhece no flow seguinte e passa a mentir com cara de resumo — o defeito que o `portal-data.mjs` teve por um mês e meio.
 

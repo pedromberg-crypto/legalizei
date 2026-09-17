@@ -1,6 +1,6 @@
 ---
 name: legalize-cnae-fiscalmente-otimo
-description: "Feature-âncora: depois de acertar o CNAE, o app recomenda o mais barato ENTRE os que cobrem a mesma atividade real. Engine b2.cnae_otimo pronta; DADO Gemini CRUZADO 15/07 (ISS BH mapeado + 5 famílias + 8599 resolvido); falta Larissa ratificar. Spec em execucao/cnae-fiscalmente-otimo.md."
+description: "Feature-âncora: depois de acertar o CNAE, o app recomenda o mais barato ENTRE os que cobrem a mesma atividade real. Engine b2.cnae_otimo pronta; DADO Gemini CRUZADO 15/07 (ISS BH mapeado + 5 famílias + 8599 resolvido); falta Larissa ratificar. Spec em produto/me/entrar/constituir/cnae-fiscalmente-otimo.md."
 metadata:
   node_type: memory
   type: project

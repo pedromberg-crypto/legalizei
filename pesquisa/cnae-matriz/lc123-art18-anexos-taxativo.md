@@ -85,4 +85,4 @@ Fator R = folha de salários (12 meses, caixa) / receita bruta (12 meses, compet
 Cruzar `descricao`/`atividades`/`subclasse_observacoes` (já na matriz, camada IBGE) de cada CNAE de serviço contra os 5 grupos acima. Onde bater um termo específico do grupo 2/3/4 (ex: "engenharia", "consultoria", "advocacia", "vigilância") → classifica com fonte (nº do inciso). Onde não bater nada → Grupo 5 (III residual) por eliminação. Ambíguo → marcar `requer-revisao`, não chutar.
 
 ## Links
-- [[fundamentos-cnae]] · [[resultado-pesquisa-fundamentos-cnae-27-08]] · `execucao/cnae-fiscalmente-otimo.md`
+- [[fundamentos-cnae]] · [[resultado-pesquisa-fundamentos-cnae-27-08]] · `produto/me/entrar/constituir/cnae-fiscalmente-otimo.md`

@@ -14,7 +14,7 @@ Pedro trouxe `modelagem-cnae.drawio` (DER Chen: CNAE/ENQUADRAMENTO/EMPRESA/SIMUL
 
 1. **Referências fantasma no DER.** A nota do diagrama cita `regras-cnae-anexos-fator-r.md`, "vault 40-ambiguidades" e "divergencias #5" como pendências — **nenhum dos 3 existe no repo**. Eram placeholders de intenção nunca virados arquivo. O conteúdo real que resolve a pendência de "regra CNAE→anexo→alíquota" está em `pesquisa/cnae-matriz/cnae-matriz-governo.md` §2c (feito 27/08).
 
-2. **Decisão "escopo-anexos-3-e-5" também não existe como ADR** em `marca/decisoes-marca.md` (lido inteiro, 145 linhas, 0 match). O motor real (`execucao/cnae-fiscalmente-otimo.md`, tipo:verdade) já modela 3 grupos incluindo Anexo IV — não só III/V.
+2. **Decisão "escopo-anexos-3-e-5" também não existe como ADR** em `marca/decisoes-marca.md` (lido inteiro, 145 linhas, 0 match). O motor real (`produto/me/entrar/constituir/cnae-fiscalmente-otimo.md`, tipo:verdade) já modela 3 grupos incluindo Anexo IV — não só III/V.
 
 3. **Divergência real código×motor (achado mais importante pro produto):** `app/src/lib/fiscal.ts` (outra sessão mexendo nele hoje) só tem constantes pra Anexo III e V (`ANEXO_III: 0.06`, `ANEXO_V: 0.155`) — **sem Anexo IV**. Mas achamos 51 CNAEs reais em Anexo IV hoje (construção inteira + limpeza/vigilância + advocacia). Se um usuário escolhe CNAE de construção/advocacia hoje, o cálculo fiscal provavelmente sai errado. **Ainda não reportado/corrigido no código** — é achado a levar pra sessão de código.
 

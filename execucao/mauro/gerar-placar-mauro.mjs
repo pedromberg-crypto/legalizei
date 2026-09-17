@@ -2,7 +2,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  * 📊 O PLACAR DO REPORTE — gerado, nunca digitado.
  * ═══════════════════════════════════════════════════════════════════════════
- * `node execucao/gerar-placar-mauro.mjs`
+ * `node execucao/mauro/gerar-placar-mauro.mjs`
  *
  * Pedido do Pedro em 15/09: *"no final do doc coloque um total geral do que
  * rendeu, um placar por status e um total de dias trabalhados até o presente

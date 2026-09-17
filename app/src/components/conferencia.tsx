@@ -83,8 +83,8 @@ export function ConferenciaView({ onVoltar }: { onVoltar?: () => void }) {
           ))}
 
           <p className="text-micro text-text-tertiary">
-            Gerado de <code>execucao/flow/flow-data.mjs</code> por{" "}
-            <code>node execucao/flow/gerar-mapa.mjs</code>. Não editar esta tela pra
+            Gerado de <code>produto/_flow/flow-data.mjs</code> por{" "}
+            <code>node produto/_flow/gerar-mapa.mjs</code>. Não editar esta tela pra
             corrigir um campo: corrige na fonte e roda o gerador.
           </p>
         </Corpo>

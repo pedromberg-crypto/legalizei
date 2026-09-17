@@ -125,11 +125,11 @@ const ETAPAS = [
  * capacidades. Quem sai daqui sai com linha de justificativa.
  */
 const DISPENSADOS = {
-  "execucao/flow/gerar-mapa.mjs": "flow de telas, não /processos — roda no fluxo de tela",
-  "execucao/flow/gerar-indice-telas.mjs": "derivado do gerar-mapa, roda junto com ele",
-  "execucao/flow/verificar-anatomia-mei.mjs": "roda DENTRO do gerar-mapa.mjs",
-  "execucao/flow/verificar-fronteira-mei.mjs": "roda DENTRO do gerar-mapa.mjs",
-  "execucao/flow/verificar-mei.mjs": "ramo MEI — fora do escopo padrão (ME abrir empresa)",
+  "produto/_flow/gerar-mapa.mjs": "flow de telas, não /processos — roda no fluxo de tela",
+  "produto/_flow/gerar-indice-telas.mjs": "derivado do gerar-mapa, roda junto com ele",
+  "produto/_flow/verificar-anatomia-mei.mjs": "roda DENTRO do gerar-mapa.mjs",
+  "produto/_flow/verificar-fronteira-mei.mjs": "roda DENTRO do gerar-mapa.mjs",
+  "produto/_flow/verificar-mei.mjs": "ramo MEI — fora do escopo padrão (ME abrir empresa)",
   "produto/me/viver/processos/verificar-escopo.mjs": "roda DENTRO dos 3 geradores da fase 1",
   "produto/me/viver/processos/verificar-persona.mjs": "roda DENTRO dos 3 geradores da fase 1",
   "execucao/portal/gerar-mapa-portal.mjs": "portal do cliente, outra frente",

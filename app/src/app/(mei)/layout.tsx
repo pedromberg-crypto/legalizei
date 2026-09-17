@@ -21,7 +21,7 @@
  * telas pós-pagamento (M12 em diante), é AQUI que a divisão nasce.
  *
  * 🔒 Este grupo é território exclusivo do MEI. A trava
- * `execucao/flow/verificar-fronteira-mei.mjs` garante que nada aqui dentro
+ * `produto/_flow/verificar-fronteira-mei.mjs` garante que nada aqui dentro
  * importe tela de ME, e que nenhuma tela de ME importe daqui.
  * ═══════════════════════════════════════════════════════════════════════════
  */

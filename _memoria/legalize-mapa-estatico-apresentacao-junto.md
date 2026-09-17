@@ -10,7 +10,7 @@ metadata:
 
 Quando o Pedro pede pra reposicionar telas ou mudar layout "no mapa" (`/mapa`, o board React Flow), a mudança **tem que entrar em dois lugares ao mesmo tempo**:
 
-1. `execucao/flow/flow-data.mjs` — fonte única do `/mapa` e do `mapa-flow-mermaid.md` gerado.
+1. `produto/_flow/flow-data.mjs` — fonte única do `/mapa` e do `mapa-flow-mermaid.md` gerado.
 2. O state machine real da `/apresentacao` (`type Etapa`/`type Momento`, `ROTA_POR_MOMENTO`, os blocos de render) — é ali que a tela de verdade roda.
 
 `/mockup` fica **fora** dessa régua: ele é iframe ao vivo das rotas de produção, reflete sozinho quando as rotas mudam — não precisa de wiring manual.

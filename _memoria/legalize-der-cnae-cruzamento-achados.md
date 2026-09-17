@@ -20,7 +20,7 @@ Pedro trouxe `modelagem-cnae.drawio` (DER Chen: CNAE/ENQUADRAMENTO/EMPRESA/SIMUL
 
 4. **Ponto positivo:** `FATOR_R_MARGEM: 0.3` vs `FATOR_R_LIMIAR: 0.28` em `fiscal.ts` já bate exatamente com o que ratificamos (28% limiar legal, 30% margem de mercado sem previsão oficial). Sem bug aqui.
 
-5. **Telas do flow confirmadas reais** (`execucao/flow/flow-data.mjs`): E5A, E5V, E5.1, E5.2, E5.3, C5 todos existem e batem com o texto do DER. `E5F` (faixa de faturamento) é onde Fator R começa a ser alimentado no flow — mapeia com `SIMULAÇÃO DE ENQUADRAMENTO.faixa de faturamento`. **Não confirmado**: onde pró-labore é capturado no flow (pergunta em aberto, não investigada até parar).
+5. **Telas do flow confirmadas reais** (`produto/_flow/flow-data.mjs`): E5A, E5V, E5.1, E5.2, E5.3, C5 todos existem e batem com o texto do DER. `E5F` (faixa de faturamento) é onde Fator R começa a ser alimentado no flow — mapeia com `SIMULAÇÃO DE ENQUADRAMENTO.faixa de faturamento`. **Não confirmado**: onde pró-labore é capturado no flow (pergunta em aberto, não investigada até parar).
 
 6. **Gap estrutural do DER vs a provocação da "equação viva":** ENQUADRAMENTO no DER só tem atributos `anexo`/`alíquota`/`padrão` — **não modela MEI, risco municipal, nem ISS** (os outros 3 dados que mapeamos hoje). E o desenho inteiro **não tem nenhuma entidade de versionamento/vigia** — nada que capture "qual versão da regra valia quando o CNPJ travou" nem notificação de mudança regulatória.
 

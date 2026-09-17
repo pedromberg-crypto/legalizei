@@ -216,8 +216,8 @@ e é a resposta direta ao achado nº 2 lá de cima.
 
 ```yaml
 deriva_de: [fiscal-simples-bh-2026]     # se ISTO mudar, eu fico suspeito
-deriva_de_codigo: [execucao/flow/flow-data.mjs]   # deriva de CÓDIGO (não dá pra datar)
-gerado_por: execucao/flow/gerar-mapa.mjs          # nasce de script, não editar à mão
+deriva_de_codigo: [produto/_flow/flow-data.mjs]   # deriva de CÓDIGO (não dá pra datar)
+gerado_por: produto/_flow/gerar-mapa.mjs          # nasce de script, não editar à mão
 revisado_em: 2026-09-09                 # olhei contra a fonte nesta data, continua valendo
 supera: [mapa-telas-mobile]             # eu matei estes (neste assunto)
 superado_por: reordenacao-flow-cobranca-cedo   # quem me matou
@@ -237,7 +237,7 @@ semântica (diz quando o CONTEÚDO foi decidido, não quando o arquivo foi tocad
 comparar; apontar pra `.mjs`/`.tsx` ali vira ruído permanente. Use `deriva_de_codigo`.
 
 **Verificação:** `node _sistema/verificar.js` audita derivado apodrecido, link quebrado,
-vocabulário e órfã. 🆕 **Desde 09/09 ele roda junto com `node execucao/flow/gerar-mapa.mjs`**,
+vocabulário e órfã. 🆕 **Desde 09/09 ele roda junto com `node produto/_flow/gerar-mapa.mjs`**,
 como aviso — que é o comando que a regra do `CLAUDE.md` já obriga a rodar a cada tela mexida.
 Antes disso ele existia havia 2 meses e nunca tinha rodado.
 

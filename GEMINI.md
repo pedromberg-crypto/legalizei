@@ -12,7 +12,7 @@ Fonte-verdade completa é `CLAUDE.md` (raiz desta pasta) — leia ele também. E
 - 🔴 Playwright/E2E só se PEDIDO explicitamente nesta sessão. Padrão de verificação = `tsc` + `eslint`.
 - 🔴 Copy pública NUNCA usa travessão (`—`). Reescrever com ponto/vírgula/"e".
 - Toda tela de wizard tem VOLTAR; `meta` nomeia o DESTINO do voltar, não a própria tela. Quem não tem volta de propósito declara `semVoltar`.
-- Mapa (`/mapa`) e apresentação (`/apresentacao`) são espelho um do outro — mesma coleção `NODES` em `execucao/flow/flow-data.mjs`. Tela nova = nó no flow-data + render na apresentação + linha em `MOMENTO_POR_NO`. Rodar `node execucao/flow/gerar-mapa.mjs` depois.
+- Mapa (`/mapa`) e apresentação (`/apresentacao`) são espelho um do outro — mesma coleção `NODES` em `produto/_flow/flow-data.mjs`. Tela nova = nó no flow-data + render na apresentação + linha em `MOMENTO_POR_NO`. Rodar `node produto/_flow/gerar-mapa.mjs` depois.
 - Pré-voo antes de editar tela: código/nome, rota, o que coleta, o que recebe/passa adiante, variantes, onde aparece.
 - Lote por tela — espera todos os apontamentos antes de aplicar.
 - Sintoma repetido em 2ª tela = bug de raiz, não patch local.
@@ -23,7 +23,7 @@ Fonte-verdade completa é `CLAUDE.md` (raiz desta pasta) — leia ele também. E
 - `HOME.md` — hub + §Agora. `BASE-ESTRATEGICA.md` — teses/custo/equity/roadmap.
 - `marca/decisoes-marca.md` — ADR, log de decisões travadas.
 - `execucao/spec-mvp-v0.md`, `execucao/marcos/`, `execucao/evolucao-para-mauro.md`, `execucao/kanban-legalizai-story-book.md`.
-- `app/` — código Next.js (App Router) + TS + Tailwind v4. Telas em `.tsx`, flow declarado em `execucao/flow/flow-data.mjs`.
+- `app/` — código Next.js (App Router) + TS + Tailwind v4. Telas em `.tsx`, flow declarado em `produto/_flow/flow-data.mjs`.
 - `reunioes/` — atas Plaud.
 
 ## Se este arquivo e o CLAUDE.md divergirem

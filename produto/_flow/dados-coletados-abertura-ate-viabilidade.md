@@ -1,7 +1,7 @@
 ---
 tipo: derivado
 status: vivo
-gerado_por: execucao/flow/gerar-mapa.mjs
+gerado_por: produto/_flow/gerar-mapa.mjs
 data: 2026-09-17
 assunto: dados-coletados-abertura
 tags: [execucao, flow, dados, abertura]
@@ -9,7 +9,7 @@ tags: [execucao, flow, dados, abertura]
 
 # 📋 Dados coletados — Abertura de CNPJ, até a 1ª tentativa de viabilidade
 
-> ⚠️ **Nota gerada** — roda `node execucao/flow/gerar-mapa.mjs` pra atualizar depois de mexer em `flow-data.mjs`. Escopo: só o caminho **Abrir** (não Migrar). Do primeiro toque no app até o clique que dispara a 1ª tentativa de viabilidade na Junta (`C7`, CTA que envia a razão social pra JUCEMG). Ver [[mapa-flow-mermaid]] pro diagrama completo, [[gap-analise-dados-abertura-vs-pesquisa-gemini]] pro cruzamento com pesquisa externa.
+> ⚠️ **Nota gerada** — roda `node produto/_flow/gerar-mapa.mjs` pra atualizar depois de mexer em `flow-data.mjs`. Escopo: só o caminho **Abrir** (não Migrar). Do primeiro toque no app até o clique que dispara a 1ª tentativa de viabilidade na Junta (`C7`, CTA que envia a razão social pra JUCEMG). Ver [[mapa-flow-mermaid]] pro diagrama completo, [[gap-analise-dados-abertura-vs-pesquisa-gemini]] pro cruzamento com pesquisa externa.
 
 ## Telas do caminho, em ordem
 

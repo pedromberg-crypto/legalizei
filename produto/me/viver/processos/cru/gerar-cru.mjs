@@ -30,7 +30,7 @@ import { verificarEscopo } from "../verificar-escopo.mjs";
 import { verificarPersona } from "../verificar-persona.mjs";
 import { gerarPersona } from "../gerar-persona.mjs";
 import { ESCOPO } from "../_escopo.mjs";
-import { RAIZ } from "../../_raiz.mjs";
+import { RAIZ } from "../../../../_raiz.mjs";
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
 const HOJE = new Date().toISOString().slice(0, 10);

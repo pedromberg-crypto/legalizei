@@ -14,17 +14,18 @@
  * markdown, `(` e `)` crus dentro de `(...)` de um link quebram o parse. O
  * envelope `<caminho>` é a forma canônica de escapar isso (Obsidian + GitHub).
  *
- * Rodar:  node execucao/flow/gerar-indice-telas.mjs
+ * Rodar:  node produto/_flow/gerar-indice-telas.mjs
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
 import fs from "node:fs";
 import path from "node:path";
+import { RAIZ } from "../_raiz.mjs";
 import { fileURLToPath } from "node:url";
 import { NODES } from "./flow-data.mjs";
 
-const DIR = path.dirname(fileURLToPath(import.meta.url)); // execucao/flow
-const RAIZ = path.join(DIR, "..", ".."); // raiz do vault
+const DIR = path.dirname(fileURLToPath(import.meta.url)); // produto/_flow
+
 const APP = path.join(RAIZ, "app", "src", "app");
 const NOTA = path.join(DIR, "auditoria-copy-flow.md");
 const BASE_URL = "http://localhost:3000";

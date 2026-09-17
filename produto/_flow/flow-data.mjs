@@ -3,7 +3,7 @@
  * FONTE-ÚNICA DO FLOW — nós, conexões e status de validação.
  * ═══════════════════════════════════════════════════════════════════════════
  * TUDO que o mapa desenha nasce daqui. NÃO editar o Mermaid na nota à mão:
- * editar ESTE arquivo e rodar `node execucao/flow/gerar-mapa.mjs`. O gerador
+ * editar ESTE arquivo e rodar `node produto/_flow/gerar-mapa.mjs`. O gerador
  * re-renderiza o diagrama + a tabela de validação e grava um snapshot
  * versionado (o "commit interno") com o resumo do que mudou.
  *
@@ -736,7 +736,7 @@ export const NODES = [
   // 🆕 28/08 · RAMO MEI (letra M) — abertura de MEI, do gate ao CNPJ.
   // ═══════════════════════════════════════════════════════════════════════════
   // Fonte: `pesquisa/abertura-mei/abertura-mei-processo.md` (70 refs oficiais)
-  // e o cruzamento `execucao/flow/cruzamento-flow-mei-vs-me.md`.
+  // e o cruzamento `produto/_flow/cruzamento-flow-mei-vs-me.md`.
   //
   // ⚠️ O ACHADO QUE DEFINE ESTE RAMO INTEIRO: **não existe API nem procuração
   // que permita abrir MEI por terceiro.** O Portal do Empreendedor exige a
@@ -763,7 +763,7 @@ export const NODES = [
   // Agora o ramo tem rotas próprias sob `/mei/*`, componentes próprios em
   // `components/mei/` e espinha declarada em `app/src/lib/mei-flow.ts`. O
   // único ponto de contato é o FORK (E3.2), e é de mão única. A trava
-  // `execucao/flow/verificar-fronteira-mei.mjs` impede o contato voltar.
+  // `produto/_flow/verificar-fronteira-mei.mjs` impede o contato voltar.
   //
   // O que segue COMPARTILHADO, de propósito: E1→E3.3 (antes do fork) e a casa
   // (`/home-dia1`), que é o produto, não o caminho de abertura.

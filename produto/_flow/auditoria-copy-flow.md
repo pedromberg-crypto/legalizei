@@ -4,7 +4,7 @@ status: vivo
 data: 2026-07-21
 assunto: auditoria-copy-flow
 deriva_de: [mapa-flow-mermaid, compilado-ux-flow]
-deriva_de_codigo: [execucao/flow/flow-data.mjs]
+deriva_de_codigo: [produto/_flow/flow-data.mjs]
 tags: [produto, ux, copy, flow, auditoria, redundancia, negativa]
 ---
 
@@ -17,7 +17,7 @@ tags: [produto, ux, copy, flow, auditoria, redundancia, negativa]
 ## 🧭 Como usar
 1. **Adaptar uma tela?** Acha ela no **Índice** → abre o código pelo link → confere no `/mockup` pela rota.
 2. **Fechar um achado?** Vira o status na tabela (§ Achados) e, se virou decisão, registra no ADR `marca/decisoes-marca.md`.
-3. **Regenerar o índice** (mudou/renomeou tela): `node execucao/flow/gerar-indice-telas.mjs`. **NÃO editar o bloco entre `<!-- INDICE -->` à mão** — o gerador sobrescreve.
+3. **Regenerar o índice** (mudou/renomeou tela): `node produto/_flow/gerar-indice-telas.mjs`. **NÃO editar o bloco entre `<!-- INDICE -->` à mão** — o gerador sobrescreve.
 4. **Links de código** usam `<...>` por causa dos parênteses dos route-groups (`(app)`/`(wizard)`), senão o markdown quebra.
 5. **Rodar uma varredura nova?** Segue a rubrica viva em [[metodo-varredura-flow]] (as 11 dimensões D1–D11, mecânica + crítica numa passada só).
 
@@ -305,4 +305,4 @@ tags: [produto, ux, copy, flow, auditoria, redundancia, negativa]
 ---
 
 ## 🔗 Links
-[[metodo-varredura-flow]] (a rubrica) · [[mapa-flow-mermaid]] · `execucao/flow/flow-data.mjs` · [[compilado-ux-flow]] · [[legalize-telas-padrao-layout]] · [[spec-telas-b3-b4-aterrissagem]] · [[spec-telas-entrada-b1-b2]] · [[HOME]]
+[[metodo-varredura-flow]] (a rubrica) · [[mapa-flow-mermaid]] · `produto/_flow/flow-data.mjs` · [[compilado-ux-flow]] · [[legalize-telas-padrao-layout]] · [[spec-telas-b3-b4-aterrissagem]] · [[spec-telas-entrada-b1-b2]] · [[HOME]]

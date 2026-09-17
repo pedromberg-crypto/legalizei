@@ -10,7 +10,7 @@ import { TRILHAS } from "@/lib/trilhas";
  * ═══════════════════════════════════════════════════════════════════════════
  * NÓS do board /mapa — mesma linguagem visual do Mermaid gerado (forma +
  * classe de `flow-data.mjs`), só que interativa. Quem já lê o mapa em
- * `execucao/mapa-flow-mermaid.md` reconhece as cores de cara.
+ * `produto/_flow/mapa-flow-mermaid.md` reconhece as cores de cara.
  *
  * 🆕 26/08 (pedido do Pedro: "quero que sejam as telas e não cards") — os nós
  * com `rota` mostram uma PRÉVIA AO VIVO da tela real (iframe), não só texto.

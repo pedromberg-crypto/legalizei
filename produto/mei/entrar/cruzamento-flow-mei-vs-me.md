@@ -9,7 +9,7 @@ tags: [mei, flow, telas, produto, constituicao, proposta]
 
 # 🔀 Flow de MEI × flow de ME — o que aproveita, o que muda, o que nasce
 
-> Cruzamento de [[abertura-mei-processo]] (o que a lei e o Portal exigem) com `execucao/flow/flow-data.mjs` (o flow de ME que já existe, E1→C7→A5).
+> Cruzamento de [[abertura-mei-processo]] (o que a lei e o Portal exigem) com `produto/_flow/flow-data.mjs` (o flow de ME que já existe, E1→C7→A5).
 >
 > ✅ **IMPLEMENTADO em 28/08** (aprovado pelo Pedro com 3 ajustes, ver §"O que mudou na implementação"). `flow-data.mjs` está em **v41**.
 
@@ -190,5 +190,5 @@ Pula: E5T (triagem de sócios), C2 (vínculo INSS), C3 (sócios), C5 (CNAE secun
 ## Links
 - [[abertura-mei-processo]] — a fonte dos fatos.
 - [[mei-mapeamento-funcionalidades]] · [[mei-obrigacoes-operacionais]] — o depois.
-- `execucao/flow/flow-data.mjs` — onde isso vira nó.
+- `produto/_flow/flow-data.mjs` — onde isso vira nó.
 - `execucao/portal/portal-data.mjs` — 🟡 defasado, ver [[2026-08-27-mei-obrigacoes-mapeamento-e-drift-do-portal]].

@@ -2,7 +2,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  * VERIFICADOR DO RAMO MEI — trava contra vocabulário de ME vazando pro MEI.
  * ═══════════════════════════════════════════════════════════════════════════
- * Rodar: `node execucao/flow/verificar-mei.mjs`
+ * Rodar: `node produto/_flow/verificar-mei.mjs`
  *
  * ─── POR QUE ESTE SCRIPT EXISTE ─────────────────────────────────────────────
  * 28/08 — construí o ramo MEI adaptando telas do ME por DEDUÇÃO ("essa aqui
@@ -32,7 +32,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join, relative } from "node:path";
 
-const RAIZ = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
+import { RAIZ } from "../_raiz.mjs";
 const APP = join(RAIZ, "app", "src");
 
 /**

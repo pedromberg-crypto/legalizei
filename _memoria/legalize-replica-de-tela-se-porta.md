@@ -29,7 +29,7 @@ citar uma decisão antiga como exceção ("4 etapas não pedem agrupamento", de
 **How to apply:**
 1. Antes de escrever, LEIA o componente do ME e liste o esqueleto. Não confie
    na descrição dele nem na memória do que ele faz.
-2. Rode `node execucao/flow/verificar-anatomia-mei.mjs` (roda sozinha junto com
+2. Rode `node produto/_flow/verificar-anatomia-mei.mjs` (roda sozinha junto com
    o `gerar-mapa.mjs`). Diferença não declarada em `DIVERGENCIAS_OK` é defeito;
    declarada, é decisão com motivo escrito.
 3. Peça compartilhada > cópia: `_timeline-blocos.tsx` e `_cartao-ocupacao.tsx`

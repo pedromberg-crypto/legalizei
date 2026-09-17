@@ -24,7 +24,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { PREVIDENCIA, FATOR_R, FAIXAS, IRRF } from "../regra/_tabelas.mjs";
-import { RAIZ } from "../../_raiz.mjs";
+import { RAIZ } from "../../../../_raiz.mjs";
 
 const DESTINO = path.join(RAIZ, "app", "src", "lib", "fiscal-tabelas.ts");
 

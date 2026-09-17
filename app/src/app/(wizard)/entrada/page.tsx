@@ -87,7 +87,7 @@ export default function EntradaPage() {
            * Agora o MEI tem caminho próprio, sob `/mei/*`, com telas e copy
            * dele — `lib/mei-flow.ts` é a espinha. Daqui pra frente os dois
            * ramos não se tocam, e a trava
-           * `execucao/flow/verificar-fronteira-mei.mjs` garante isso.
+           * `produto/_flow/verificar-fronteira-mei.mjs` garante isso.
            *
            * ⚠️ Esta linha é a ÚNICA alteração feita numa tela de ME no fork.
            * O `?regime=mei` continua existindo pro Migrar (acima) e pro

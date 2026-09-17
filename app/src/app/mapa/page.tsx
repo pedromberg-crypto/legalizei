@@ -29,7 +29,7 @@ import { DADOS_CONSTITUICAO_MD } from "@/lib/dados-constituicao";
  * `MAPA_EDGES`, uma lista traduzida e sujeita a ficar velha). Aqui:
  *
  *   · Fonte única de verdade: `flow-graph.json`, gerado por
- *     `execucao/flow/gerar-mapa.mjs` a partir de `flow-data.mjs` — NUNCA
+ *     `produto/_flow/gerar-mapa.mjs` a partir de `flow-data.mjs` — NUNCA
  *     editado à mão. Rodar o gerador de novo atualiza este board sozinho.
  *   · Layout automático (dagre), sem agrupar por sessão — só a ordem real
  *     de quem leva a quem (pedido explícito do Pedro: "não precisamos seguir

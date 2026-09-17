@@ -40,7 +40,7 @@ for a hora**, depois da casa organizada.
 Audita o vault sozinho: derivado desatualizado (`deriva_de` no frontmatter) · link quebrado ·
 vocabulário fora do fechado · órfã. **Usa a `data:` do frontmatter, não o mtime** (edição em
 massa reseta mtime e cega o script).
-🆕 **09/09: roda sozinho**, junto com `node execucao/flow/gerar-mapa.mjs`, como AVISO (padrão da
+🆕 **09/09: roda sozinho**, junto com `node produto/_flow/gerar-mapa.mjs`, como AVISO (padrão da
 trava de anatomia do MEI). Antes existia havia 2 meses e nada o chamava.
 🔴 **Bug crítico corrigido em 09/09:** a regex de frontmatter era `/^---
 /` (só LF) e o vault é

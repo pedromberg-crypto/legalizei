@@ -64,7 +64,7 @@
  * Satélite 38-40): ficou confirmado que era decisão deliberada — a tela
  * inteira (`dossie/natureza`) foi REMOVIDA do flow real (rota deletada). SLU
  * × LTDA virou decisão 100% interna (ver `PREENCHIDOS_INTERNAMENTE` em
- * `execucao/flow/flow-data.mjs`), então nem fazia sentido continuar contada.
+ * `produto/_flow/flow-data.mjs`), então nem fazia sentido continuar contada.
  *
  * O **N23 (assinatura GOV.BR)** continua fora pelo mesmo motivo de sempre:
  * acontece DEPOIS de dias de espera de órgão, e misturar "preencha agora" com

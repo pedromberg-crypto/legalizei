@@ -24,7 +24,7 @@ data: 2026-07-16
 >
 > **(5) 🔒 O PORTÃO, E ELE TEM DUAS PARTES.** O **motor** não podia mudar em nada: `diff` das 725 linhas das 7 suítes contra o baseline tirado antes de mover — **md5 `c43ce596` idêntico**, 238 valores em R$, zero diferença. Os **docs gerados** mudam de propósito (citam o caminho do gerador): conferido linha a linha, **20 linhas alteradas e 0 que não sejam caminho**. Os 3 grafos que o app consome saíram com hash idêntico. `verificar-tudo` 16/16 nas duas etapas. **Nenhum centavo se moveu — é a única prova de que foi só mudança de pasta.**
 >
-> ⏭️ **O que fica aberto:** `execucao/flow/` (**263 arquivos**), `execucao/portal/` (15) e as ~71 notas restantes de `produto/` seguem onde estavam · as 9 pastas novas (`entrar/`, `desenquadrar/`, `obrigacoes/`, `portal/`, `mei/*`, `_doutrina/`) nasceram **vazias com `.gitkeep`**, esperando decisão do Pedro uma a uma · o worktree `recursive-sleeping-pumpkin` tem cópia nos endereços antigos e **vai conflitar ao reintegrar** · e o buraco do item (1) segue aberto: **ligar as telas ao motor de verdade** em vez de reescrever a regra em TS.
+> ⏭️ **O que fica aberto:** `execucao/portal/` (15) e as ~71 notas restantes de `produto/` seguem onde estavam [o `flow/` saiu em 17/09, ver o 75º] · as 9 pastas novas (`entrar/`, `desenquadrar/`, `obrigacoes/`, `portal/`, `mei/*`, `_doutrina/`) nasceram **vazias com `.gitkeep`**, esperando decisão do Pedro uma a uma · o worktree `recursive-sleeping-pumpkin` tem cópia nos endereços antigos e **vai conflitar ao reintegrar** · e o buraco do item (1) segue aberto: **ligar as telas ao motor de verdade** em vez de reescrever a regra em TS.
 >
 > ---
 >

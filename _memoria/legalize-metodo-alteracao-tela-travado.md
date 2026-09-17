@@ -11,14 +11,14 @@ metadata:
 O Pedro travou (02-03/09) como quer que eu trabalhe alteração de tela, depois de um dia inteiro corrigindo o mesmo tipo de bug em telas diferentes (degradê de continuidade pedido 4x, "meta" do voltar errado 4x).
 
 **As 4 regras:**
-1. Mapa é **espelho por construção** da apresentação — a fita de pills deriva de `execucao/flow/flow-data.mjs`, nunca é lista escrita à mão.
+1. Mapa é **espelho por construção** da apresentação — a fita de pills deriva de `produto/_flow/flow-data.mjs`, nunca é lista escrita à mão.
 2. **Pré-voo obrigatório** antes de tocar numa tela: o que ela coleta, recebe das anteriores, passa adiante, variantes que tem.
 3. **Lote por tela**, não correção avulsa a cada frase.
 4. **Sintoma repetido = bug de raiz.** Parar de corrigir a tela e corrigir a origem.
 
 Está escrita como regra 6 do `CLAUDE.md` do projeto (`Como o Pedro pede alteração de tela`).
 
-**Duas travas automáticas** (`execucao/flow/gerar-mapa.mjs`, roda a cada mudança de flow):
+**Duas travas automáticas** (`produto/_flow/gerar-mapa.mjs`, roda a cada mudança de flow):
 - **Auditoria de espelho** — nó órfão, nó sem vínculo com a demo, nó declarado sem tela construída, título do painel vindo de outra tela.
 - **Auditoria de voltar** — tela do flow sem `onVoltar` nem `semVoltar` declarado. `TelaHeader` também avisa em dev quando falta `onVoltar`.
 

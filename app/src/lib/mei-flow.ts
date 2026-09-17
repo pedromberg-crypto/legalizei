@@ -36,8 +36,8 @@
  * ⚠️ Quem NÃO está na espinha (saídas terminais, splashes) declara isso: as
  * saídas usam `semVoltar` ou voltam pra tela que as abriu.
  *
- * 🔗 Espelho: `execucao/flow/flow-data.mjs` (caminho `mei`). Ao mexer aqui,
- * rodar `node execucao/flow/gerar-mapa.mjs` — a auditoria de espelho avisa o
+ * 🔗 Espelho: `produto/_flow/flow-data.mjs` (caminho `mei`). Ao mexer aqui,
+ * rodar `node produto/_flow/gerar-mapa.mjs` — a auditoria de espelho avisa o
  * que ficou solto.
  * ═══════════════════════════════════════════════════════════════════════════
  */

@@ -28,7 +28,7 @@ import { PROPOSTAS } from "./processos-propostas.mjs";
 import { DADOS } from "../../../../execucao/handoff/dados-handoff.mjs";
 import { verificarEscopo } from "./verificar-escopo.mjs";
 import { verificarPersona } from "./verificar-persona.mjs";
-import { RAIZ } from "../_raiz.mjs";
+import { RAIZ } from "../../../_raiz.mjs";
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
 /**

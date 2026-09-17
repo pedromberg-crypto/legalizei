@@ -11,7 +11,7 @@ tags: [mei, flow, telas, auditoria, trava]
 
 > **Por que este doc existe:** em 28/08 construí o ramo MEI adaptando telas do ME **por dedução** ("essa aqui provavelmente serve"), em vez de rastrear tela por tela o que cada uma diz. O Pedro pegou 2 erros na hora. A auditoria que veio depois achou mais 6. Este doc é a resposta pro pedido dele: *"vc tem exatamente mapeado de fato qual tela de fato usa"*.
 >
-> Trava automática: `node execucao/flow/verificar-mei.mjs`.
+> Trava automática: `node produto/_flow/verificar-mei.mjs`.
 
 ## A cadeia real — 22 etapas
 
@@ -117,4 +117,4 @@ Também sem preço fechado: `CUSTOS.CERTIFICADO_PRECO` está `null` de propósit
 ## Links
 - [[cruzamento-flow-mei-vs-me]] — o desenho do ramo.
 - [[abertura-mei-processo]] — a fonte dos fatos (incluindo a lista campo a campo do formulário).
-- `execucao/flow/verificar-mei.mjs` — a trava.
+- `produto/_flow/verificar-mei.mjs` — a trava.

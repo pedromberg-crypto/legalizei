@@ -24,26 +24,42 @@
  *      vindo de outra tela** (pill diz uma coisa, cabeçalho diz outra — foi
  *      o caso da C0, que exibia "Desambiguação mini-loop").
  *
- * Rodar:  node execucao/flow/gerar-mapa.mjs
+ * Rodar:  node produto/_flow/gerar-mapa.mjs
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
 import fs from "node:fs";
 import { spawnSync } from "node:child_process";
 import path from "node:path";
+import { RAIZ } from "../_raiz.mjs";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { NODES, EDGES, SUBGRAFOS, PREENCHIDOS_INTERNAMENTE, PREENCHIDOS_API } from "./flow-data.mjs";
 
-const DIR = path.dirname(fileURLToPath(import.meta.url)); // execucao/flow
-const NOTA = path.join(DIR, "..", "mapa-flow-mermaid.md"); // execucao/mapa-flow-mermaid.md
+const DIR = path.dirname(fileURLToPath(import.meta.url)); // produto/_flow
+/**
+ * 🔑 As duas notas geradas vieram JUNTO na mudança de 17/09.
+ *
+ * Elas moravam em `execucao/` porque o gerador morava em `execucao/flow/`, e
+ * eram alcançadas por `DIR/..`. Com a pasta em `produto/_flow/`, esse mesmo
+ * `..` passaria a escrever na raiz de `produto/` — um caminho que EXISTE, e
+ * por isso o erro não estouraria: ele criaria uma segunda nota, num lugar
+ * errado, sem ninguém notar. Agora as duas ficam com quem as escreve.
+ */
+const NOTA = path.join(DIR, "mapa-flow-mermaid.md");
 const VERSOES = path.join(DIR, "versoes");
-const APP = path.join(DIR, "..", "..", "app", "src", "app");
-const FLOW_GRAPH_JSON = path.join(DIR, "..", "..", "app", "src", "lib", "flow-graph.json");
-const DADOS_MD = path.join(DIR, "..", "dados-coletados-abertura-ate-viabilidade.md");
-const DADOS_TS = path.join(DIR, "..", "..", "app", "src", "lib", "dados-constituicao.ts");
+/**
+ * 📦 O histórico de versões sai da pasta viva (decisão do Pedro, 17/09).
+ * `versoes/` guarda só a CORRENTE; a anterior é movida para cá antes de a
+ * nova ser escrita. Eram 126 pares e 8,6 MB numa pasta que ninguém lê.
+ */
+const VERSOES_ARQUIVO = path.join(RAIZ, "_arquivo", "flow-versoes");
+const APP = path.join(RAIZ, "app", "src", "app");
+const FLOW_GRAPH_JSON = path.join(RAIZ, "app", "src", "lib", "flow-graph.json");
+const DADOS_MD = path.join(DIR, "dados-coletados-abertura-ate-viabilidade.md");
+const DADOS_TS = path.join(RAIZ, "app", "src", "lib", "dados-constituicao.ts");
 // 🆕 01/09 — alimenta a tela /conferencia (referência do dev).
-const CONFERENCIA_TS = path.join(DIR, "..", "..", "app", "src", "lib", "conferencia-dados.ts");
+const CONFERENCIA_TS = path.join(RAIZ, "app", "src", "lib", "conferencia-dados.ts");
 
 const hoje = new Date().toISOString().slice(0, 10);
 
@@ -341,7 +357,7 @@ function gerarConferencia() {
   const ts = [
     "/**",
     " * ═══════════════════════════════════════════════════════════════════════════",
-    " * GERADO por `execucao/flow/gerar-mapa.mjs` — NÃO EDITAR À MÃO.",
+    " * GERADO por `produto/_flow/gerar-mapa.mjs` — NÃO EDITAR À MÃO.",
     " * ═══════════════════════════════════════════════════════════════════════════",
     " * Alimenta a tela `/conferencia` (referência do dev): cada tela do caminho",
     " * Abrir, na ordem de preenchimento, com os campos etiquetados por origem.",
@@ -461,7 +477,7 @@ function gerarDadosConstituicaoMd() {
   // de "não editar à mão" já está no corpo e agora tem campo próprio.
   linhas.push("tipo: derivado");
   linhas.push("status: vivo");
-  linhas.push("gerado_por: execucao/flow/gerar-mapa.mjs");
+  linhas.push("gerado_por: produto/_flow/gerar-mapa.mjs");
   linhas.push(`data: ${hoje}`);
   linhas.push("assunto: dados-coletados-abertura");
   linhas.push("tags: [execucao, flow, dados, abertura]");
@@ -470,7 +486,7 @@ function gerarDadosConstituicaoMd() {
   linhas.push("# 📋 Dados coletados — Abertura de CNPJ, até a 1ª tentativa de viabilidade");
   linhas.push("");
   linhas.push(
-    "> ⚠️ **Nota gerada** — roda `node execucao/flow/gerar-mapa.mjs` pra atualizar depois de mexer em `flow-data.mjs`. " +
+    "> ⚠️ **Nota gerada** — roda `node produto/_flow/gerar-mapa.mjs` pra atualizar depois de mexer em `flow-data.mjs`. " +
       "Escopo: só o caminho **Abrir** (não Migrar). Do primeiro toque no app até o clique que dispara a 1ª tentativa de viabilidade " +
       `na Junta (\`${CORTE_VIABILIDADE}\`, CTA que envia a razão social pra JUCEMG). Ver [[mapa-flow-mermaid]] pro diagrama completo, ` +
       "[[gap-analise-dados-abertura-vs-pesquisa-gemini]] pro cruzamento com pesquisa externa.",
@@ -526,7 +542,7 @@ function exportarDadosConstituicao() {
   const md = gerarDadosConstituicaoMd();
   fs.writeFileSync(DADOS_MD, md);
   const ts =
-    "// 🆕 26/08 — GERADO por `execucao/flow/gerar-mapa.mjs`, não editar à mão.\n" +
+    "// 🆕 26/08 — GERADO por `produto/_flow/gerar-mapa.mjs`, não editar à mão.\n" +
     "// Consumido pelo botão \"Baixar dados coletados\" do `/mapa`.\n" +
     `export const DADOS_CONSTITUICAO_MD = ${JSON.stringify(md)};\n`;
   fs.writeFileSync(DADOS_TS, ts);
@@ -651,7 +667,7 @@ function blocoAtual(txt, nome) {
  *   Ninguém veria nunca. É o que este check existe pra pegar.
  */
 function auditarEspelho() {
-  const PAGE = path.join(DIR, "..", "..", "app", "src", "app", "apresentacao", "page.tsx");
+  const PAGE = path.join(RAIZ, "app", "src", "app", "apresentacao", "page.tsx");
   if (!fs.existsSync(PAGE)) return [];
   const src = fs.readFileSync(PAGE, "utf8");
   const m = src.match(/const MOMENTO_POR_NO[^{]*\{([\s\S]*?)\n\};/);
@@ -792,7 +808,36 @@ if (mudou) {
   versao = (prev ? prev.v : 0) + 1;
   const resumo = prev ? diffResumo(prev.dados, cur) : `versão inicial (${cur.nodes.length} nós, ${cur.edges.length} conexões)`;
 
+  /**
+   * ═══════════════════════════════════════════════════════════════════════════
+   * 📦 A ANTERIOR SAI ANTES DE A NOVA ENTRAR — travado pelo Pedro em 17/09
+   * ═══════════════════════════════════════════════════════════════════════════
+   * *"versões pode virar arquivo sem problemas, só mantermos o caminho dele de
+   * salvamento, quando atualizarmos uma versão a 'antiga' é movida para
+   * arquivos automático."*
+   *
+   * 🔴 O que isso corrige: até aqui o gerador **só escrevia e nunca limpava**.
+   * Em 126 rodadas a pasta juntou 252 arquivos e **8,6 MB** de snapshots que
+   * ninguém lê — dentro da pasta viva, competindo visualmente com os 11
+   * arquivos que importam.
+   *
+   * 🔑 O caminho de salvamento **não muda**: continua `versoes/`. O que muda é
+   * que ela passa a guardar só a CORRENTE. O histórico inteiro fica em
+   * `_arquivo/flow-versoes/`, preservado e fora do caminho.
+   */
   fs.mkdirSync(VERSOES, { recursive: true });
+  fs.mkdirSync(VERSOES_ARQUIVO, { recursive: true });
+
+  const arquivadas = fs
+    .readdirSync(VERSOES)
+    .filter((f) => /^v\d+-.*\.(json|mmd)$/.test(f));
+  for (const f of arquivadas) {
+    fs.renameSync(path.join(VERSOES, f), path.join(VERSOES_ARQUIVO, f));
+  }
+  if (arquivadas.length) {
+    console.log(`📦 ${arquivadas.length} arquivo(s) da v${prev.v} → _arquivo/flow-versoes/`);
+  }
+
   fs.writeFileSync(path.join(VERSOES, `v${versao}-${hoje}.json`), JSON.stringify(cur, null, 2));
   fs.writeFileSync(path.join(VERSOES, `v${versao}-${hoje}.mmd`), renderMermaid());
 
@@ -812,9 +857,9 @@ if (drift.length) {
 } else {
   console.log("✓ sem drift (mapa bate com as rotas reais)");
 }
-console.log(`✓ nota atualizada: ${path.relative(path.join(DIR, "..", ".."), NOTA)}`);
-console.log(`✓ flow-graph.json exportado: ${path.relative(path.join(DIR, "..", ".."), FLOW_GRAPH_JSON)}`);
-console.log(`✓ dados-coletados exportado: ${path.relative(path.join(DIR, "..", ".."), DADOS_MD)} + dados-constituicao.ts`);
+console.log(`✓ nota atualizada: ${path.relative(RAIZ, NOTA)}`);
+console.log(`✓ flow-graph.json exportado: ${path.relative(RAIZ, FLOW_GRAPH_JSON)}`);
+console.log(`✓ dados-coletados exportado: ${path.relative(RAIZ, DADOS_MD)} + dados-constituicao.ts`);
 
 /* ═══════════════════════════════════════════════════════════════════════════
    A TRAVA DE ANATOMIA, ACOPLADA AO GERADOR.
@@ -836,7 +881,7 @@ try {
     console.log("✓ anatomia MEI↔ME batendo");
   } else if (saida) {
     console.log(`\n${saida}`);
-    console.log("   ↑ rode `node execucao/flow/verificar-anatomia-mei.mjs` pro detalhe.\n");
+    console.log("   ↑ rode `node produto/_flow/verificar-anatomia-mei.mjs` pro detalhe.\n");
   }
 } catch {
   /* A trava é opcional pro gerador: se ela sumir ou quebrar, o mapa continua. */
@@ -853,7 +898,7 @@ try {
    ⚠️ AVISA, não derruba, pelo mesmo motivo: escrever o mapa é outro trabalho.
    Quem quiser o exit code roda `node _sistema/verificar.js` direto. */
 try {
-  const vault = spawnSync(process.execPath, [path.join(DIR, "..", "..", "_sistema", "verificar.js")], {
+  const vault = spawnSync(process.execPath, [path.join(RAIZ, "_sistema", "verificar.js")], {
     encoding: "utf8",
   });
   const saida = (vault.stdout || "");

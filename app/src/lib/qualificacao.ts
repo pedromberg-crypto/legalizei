@@ -12,7 +12,7 @@
  *
  * ⚠️ `separacao` é o nosso rótulo; a JUCEMG chama de "Separação Convencional
  * de Bens" e a tradução acontece no RPA, não aqui (ver PREENCHIDOS_INTERNAMENTE
- * em `execucao/flow/flow-data.mjs`). A lista tem 4 dos 5 regimes do Integrador
+ * em `produto/_flow/flow-data.mjs`). A lista tem 4 dos 5 regimes do Integrador
  * por decisão do Pedro em 01/09.
  */
 

@@ -14,7 +14,7 @@ O ramo MEI deixou de morar dentro das telas do ME. Rotas próprias sob `/mei/*` 
 
 **How to apply:**
 - Mudança de conteúdo do MEI vai em `components/mei/`. `components/mei-telas.tsx` está aposentado (header diz isso) e espera remoção junto com 3 rotas órfãs — o que exige tocar em `(wizard)/gate`, e por isso ficou como decisão isolada.
-- `node execucao/flow/verificar-fronteira-mei.mjs [--diff]` responde se os ramos se tocaram. Allowlist de import: só `@/components/ui/`, `@/components/mei/`, `@/lib/`, `splash-mensagem` e `lottie`. `/apresentacao`, `/mapa`, `/mockup` são exceção declarada (superfícies de revisão).
+- `node produto/_flow/verificar-fronteira-mei.mjs [--diff]` responde se os ramos se tocaram. Allowlist de import: só `@/components/ui/`, `@/components/mei/`, `@/lib/`, `splash-mensagem` e `lottie`. `/apresentacao`, `/mapa`, `/mockup` são exceção declarada (superfícies de revisão).
 - Voltar e `meta` NÃO se escrevem à mão: `anterior()` e `metaDoVoltar()` derivam da espinha. Sobrescrita só explícita e escrita (a M7 não volta pra tela de pagamento já paga).
 - ⚠️ Na `/apresentacao` o prefixo de momento `m-` é do **MIGRAR** (`m-cnpj`, `m-plano`, `m-contrato`). O ramo MEI usa `mei-`, e o teste de pertencimento é `etapa.startsWith("mei-")` — tela nova entra sozinha. A colisão já aconteceu uma vez (07/09, `m-plano`/`m-pagamento` duplicados). Ver [[legalize-metodo-alteracao-tela-travado]] e [[legalize-espelho-mapa-apresentacao]].
 - Removidas em 07/09: `mei-telas.tsx`, `(app)/dossie/ocupacao`, `(wizard)/saida/mei-*`, o ramo MEI do `(wizard)/gate` e o `(app)/painel` inteiro (era só redirect + pipeline MEI). `PainelView` segue vivo pro migrar e pra `/painel/recusa`.

@@ -19,7 +19,7 @@ O método muda de eixo. Até aqui varremos por **categoria** (Notas, Impostos, P
 
 Este é o **arquivo 1**: o ponto zero da linha do tempo, a constituição do CNPJ em **12/12/2025**. Os próximos seguem o calendário dele, mês a mês, até hoje.
 
-🔑 **O que ele instancia:** o schema de constituição de ME já existe e é gerado — **90 campos em 19 telas**, na ordem de coleta, em `app/src/lib/conferencia-dados.ts` (saído de `execucao/flow/flow-data.mjs`). Este arquivo não inventa campo: pega esses 90 e pergunta *"qual é o valor real do Pedro?"*.
+🔑 **O que ele instancia:** o schema de constituição de ME já existe e é gerado — **90 campos em 19 telas**, na ordem de coleta, em `app/src/lib/conferencia-dados.ts` (saído de `produto/_flow/flow-data.mjs`). Este arquivo não inventa campo: pega esses 90 e pergunta *"qual é o valor real do Pedro?"*.
 
 ---
 

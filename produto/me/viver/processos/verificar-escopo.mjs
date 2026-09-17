@@ -30,7 +30,7 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { dirname, resolve, relative } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { FORA_DO_VOCABULARIO, MARCADOR_EXCLUSAO } from "./_escopo.mjs";
-import { RAIZ } from "../_raiz.mjs";
+import { RAIZ } from "../../../_raiz.mjs";
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
 

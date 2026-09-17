@@ -116,7 +116,7 @@ const BARRA_H: Record<Topo, number> = { island: 54, notch: 44, barra: 20 };
  * à mão sobre `MAPA_EDGES`, uma lista traduzida à mão de `flow-data.mjs` e
  * que ficava desatualizada) foi APOSENTADO. Virou `/mapa`: board interativo
  * de verdade (React Flow + dagre), lendo `flow-graph.json` — gerado por
- * `execucao/flow/gerar-mapa.mjs`, nunca editado à mão. Zero lista pra ficar
+ * `produto/_flow/gerar-mapa.mjs`, nunca editado à mão. Zero lista pra ficar
  * velha de novo. Ver `app/src/app/mapa/page.tsx`.
  */
 

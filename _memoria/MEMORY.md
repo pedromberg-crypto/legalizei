@@ -60,7 +60,7 @@
 - [Pasta produto/ e a fonte-verdade das funcionalidades](legalize-pasta-produto-fonte-verdade.md) — 09/09: spec viva.
 - [Metodo de alteracao de tela travado](legalize-metodo-alteracao-tela-travado.md) — 03/09: pre-voo, lote por tela, sintoma.
 - [Mapa e espelho da apresentacao](legalize-espelho-mapa-apresentacao.md) — 02/09: uma colecao de telas, duas vistas.
-- [Mapa vivo do flow (gerado)](legalize-mapa-flow-vivo.md) — `execucao/mapa-flow-mermaid.md` e GERADO.
+- [Mapa vivo do flow (gerado)](legalize-mapa-flow-vivo.md) — `produto/_flow/mapa-flow-mermaid.md` e GERADO.
 - [Mapa e estatico, reposicao entra na apresentacao junto](legalize-mapa-estatico-apresentacao-junto.md) — 28/08: mexe nos dois.
 - [Replica de tela se PORTA, nao se remonta](legalize-replica-de-tela-se-porta.md) — 07/09: 5 telas erradas no mesmo dia.
 - [Fork do ramo MEI](legalize-fork-ramo-mei.md) — 07/09: MEI virou caminho proprio.

@@ -15,7 +15,7 @@ import Image from "next/image";
  * vira coral com um badge de check branco na quina superior direita.
  *
  * ⚠️ POR QUE REESCRITO E NÃO IMPORTADO. A trava
- * `execucao/flow/verificar-fronteira-mei.mjs` proíbe o ramo MEI de importar
+ * `produto/_flow/verificar-fronteira-mei.mjs` proíbe o ramo MEI de importar
  * tela de ME, e o `CardIconeSelecao` mora em `gate-telas.tsx`. Foi essa
  * herança que fez o MEI acumular 4 defeitos em 8 dias sem ninguém tocar nele.
  * O que se herda aqui é o DESENHO, com os mesmos tokens.

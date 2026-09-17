@@ -12,7 +12,7 @@ metadata:
 **O que existe:**
 - `marca/conceito/conceito-marca.md` §5 "Tom de voz" — o mais próximo de guia real: arquétipo (Aliado leve/vitorioso), 4 traços (Humano/Transparente/Proativo/Descomplicado), do/don't com só 2-3 exemplos de cada lado ("Sua empresa está em dia ✅" vs "obrigação acessória pendente"), 1 regra de ouro (termo técnico sempre traduzido ou escondido).
 - `marca/decisoes-marca.md` — regras pontuais soltas (travessão zero, número sem fonte, DAE sem tela nova...).
-- `execucao/flow/metodo-varredura-flow.md` (rubrica D1-D11) — checklist MECÂNICO de auditoria (redundância, eco, hierarquia), não fonte de princípio; resume regras herdadas no rodapé, não as cria.
+- `produto/_flow/metodo-varredura-flow.md` (rubrica D1-D11) — checklist MECÂNICO de auditoria (redundância, eco, hierarquia), não fonte de princípio; resume regras herdadas no rodapé, não as cria.
 
 **O que falta:**
 - Glossário de tradução termo-técnico→humano (CNAE, DAS, Fator R, pró-labore, TTRT...) — crítico pro flow fiscal.

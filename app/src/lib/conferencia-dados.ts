@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * GERADO por `execucao/flow/gerar-mapa.mjs` — NÃO EDITAR À MÃO.
+ * GERADO por `produto/_flow/gerar-mapa.mjs` — NÃO EDITAR À MÃO.
  * ═══════════════════════════════════════════════════════════════════════════
  * Alimenta a tela `/conferencia` (referência do dev): cada tela do caminho
  * Abrir, na ordem de preenchimento, com os campos etiquetados por origem.

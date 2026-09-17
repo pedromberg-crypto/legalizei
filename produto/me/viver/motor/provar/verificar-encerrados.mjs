@@ -38,7 +38,7 @@ import {
   LINGUAGEM_DE_ABERTO,
   SELO,
 } from "./_encerrados.mjs";
-import { RAIZ } from "../../_raiz.mjs";
+import { RAIZ } from "../../../../_raiz.mjs";
 
 const semAcento = (s) =>
   s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();

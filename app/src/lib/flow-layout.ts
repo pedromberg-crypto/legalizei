@@ -7,7 +7,7 @@
  * O `dagre` organiza os nós automaticamente pela direção das conexões —
  * ninguém arrasta caixa na mão.
  *
- * Fonte do grafo: `flow-graph.json`, gerado por `execucao/flow/gerar-mapa.mjs`
+ * Fonte do grafo: `flow-graph.json`, gerado por `produto/_flow/gerar-mapa.mjs`
  * a partir de `flow-data.mjs` (NUNCA editado à mão — nasce do gerador).
  * ═══════════════════════════════════════════════════════════════════════════
  */

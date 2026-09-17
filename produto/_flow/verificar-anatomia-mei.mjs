@@ -37,8 +37,8 @@
  * declarada, é decisão com dono.
  *
  * Uso:
- *   node execucao/flow/verificar-anatomia-mei.mjs
- *   node execucao/flow/verificar-anatomia-mei.mjs --verbose   (mostra o esqueleto)
+ *   node produto/_flow/verificar-anatomia-mei.mjs
+ *   node produto/_flow/verificar-anatomia-mei.mjs --verbose   (mostra o esqueleto)
  *
  * Sai com código ≠ 0 se houver divergência não declarada.
  *
@@ -51,7 +51,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const RAIZ = join(fileURLToPath(new URL("../../", import.meta.url)));
+import { RAIZ } from "../_raiz.mjs";
 const SRC = join(RAIZ, "app", "src");
 const verbose = process.argv.includes("--verbose");
 

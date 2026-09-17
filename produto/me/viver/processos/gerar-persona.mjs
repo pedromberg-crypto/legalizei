@@ -19,7 +19,7 @@ import { writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { TRAVADO, ABERTO, PERSONA_ZERO, PROIBIDO_POR_CATEGORIA } from "./_persona.mjs";
-import { RAIZ } from "../_raiz.mjs";
+import { RAIZ } from "../../../_raiz.mjs";
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
 const SAIDA = resolve(RAIZ, "produto", "PERSONA.md");

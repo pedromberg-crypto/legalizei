@@ -14,7 +14,7 @@ tags: [produto, gestao-interna, operacao, kanban, leads, pipeline, flow, pausas]
 >
 > **A virada (regra-mãe):** **a ETAPA (a pausa do flow, em ordem) vira a COLUNA; o DONO vira a COR/badge do card.** O mesmo dono pode aparecer em várias colunas — cada visita é uma etapa distinta, mais à frente. Assim o lead **só anda pra frente**, e a cor diz *"a bola está com quem agora"* sem precisar voltar de coluna.
 
-Fonte do mapeamento: `execucao/flow/flow-data.mjs` (`execucao/flow/flow-data.mjs`, fonte-verdade) · [[mapa-ramificacoes-flow]] (as pausas) · [[fluxo-abertura-portais-pedro-dev]] (sequência dos órgãos, Izabela) · [[spec-kanban-leads]] · [[spec-dashboard-adm-metricas]] (o par métrico).
+Fonte do mapeamento: `produto/_flow/flow-data.mjs` (`produto/_flow/flow-data.mjs`, fonte-verdade) · [[mapa-ramificacoes-flow]] (as pausas) · [[fluxo-abertura-portais-pedro-dev]] (sequência dos órgãos, Izabela) · [[spec-kanban-leads]] · [[spec-dashboard-adm-metricas]] (o par métrico).
 
 ---
 
@@ -58,7 +58,7 @@ flowchart LR
 
 Legenda de cor (o DONO, agora badge do card): 🟧 **usuário** (cutuca) · 🟦 **nossa** (age) · 🟨 **externa/órgão** (monitora) · 🔵 **certificado/parceiro** (Board B).
 
-| # | Coluna | Dono (cor) | Flow (`execucao/flow/flow-data.mjs`) | Entra quando | Sai quando | Operador faz | Relógio / alerta |
+| # | Coluna | Dono (cor) | Flow (`produto/_flow/flow-data.mjs`) | Entra quando | Sai quando | Operador faz | Relógio / alerta |
 |---|---|---|---|---|---|---|---|
 | 1 | 💳 **Aguardando pagamento** | 🟧 usuário | N9 → P2 | boleto/Pix gerado | pagamento compensou | **cutuca** (dunning) | nudge `24→72h` *[chute]*. **Cartão pula** direto pra 2 |
 | 2 | 📝 **Preenchendo o cadastro** | 🟧 usuário | N10–N19 | pagou | assinou o termo (N20) | **cutuca** se travar (P1 retomar) | nudge se parado; abandono = 🚨 |
@@ -115,4 +115,4 @@ O insight central: **P5 é uma pausa só no papel, mas o órgão te para DUAS ve
 - **Recusa com correção do cliente** — a col. 4/6 com flag 🟧 precisa de uma UI de "o que corrigir" no lado do cliente (liga no REC/`/painel/recusa` do flow). Dev.
 
 ## 🔗 Cruza com
-[[spec-kanban-leads]] (o Board A que este doc reformula) · [[handoff-sistema-gestao-dev]] §3.1 · [[mapa-ramificacoes-flow]] (pausas + saídas) · `execucao/flow/flow-data.mjs` · [[fluxo-abertura-portais-pedro-dev]] (órgãos) · [[spec-dashboard-adm-metricas]] · [[HOME]].
+[[spec-kanban-leads]] (o Board A que este doc reformula) · [[handoff-sistema-gestao-dev]] §3.1 · [[mapa-ramificacoes-flow]] (pausas + saídas) · `produto/_flow/flow-data.mjs` · [[fluxo-abertura-portais-pedro-dev]] (órgãos) · [[spec-dashboard-adm-metricas]] · [[HOME]].

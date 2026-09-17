@@ -12,7 +12,7 @@
  * `/mockup`) — não é consumido pela apresentação, só pelo mockup e pelo mapa
  * mental embutido nele.
  *
- * Ordem dos GRUPOS segue `execucao/flow/flow-data.mjs` (Entrada→Dinheiro→
+ * Ordem dos GRUPOS segue `produto/_flow/flow-data.mjs` (Entrada→Dinheiro→
  * Constituição→Aprovação) + `execucao/portal/portal-data.mjs` (Portal).
  */
 
@@ -371,7 +371,7 @@ export const GRUPOS: GrupoTelas[] = [
       // 🗑️ 31/08 (validado pelo Pedro, reunião Rua Satélite 38-40) — C6
       // (natureza jurídica, `/dossie/natureza`) REMOVIDA do flow real: SLU ×
       // LTDA virou decisão 100% interna, sem tela nem rota. Ver
-      // PREENCHIDOS_INTERNAMENTE em `execucao/flow/flow-data.mjs`.
+      // PREENCHIDOS_INTERNAMENTE em `produto/_flow/flow-data.mjs`.
       {
         rota: "/dossie/nome",
         nome: "C7 · Nome / razão social · 🏷️ AMBOS — reencontro final",

@@ -30,7 +30,7 @@
 
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { RAIZ } from "../../_raiz.mjs";
+import { RAIZ } from "../../../../_raiz.mjs";
 
 /**
  * 🔴 Em 17/09 isto era um caminho relativo ao `cwd`, e só funcionava porque o

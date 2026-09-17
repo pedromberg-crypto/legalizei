@@ -31,8 +31,8 @@
  * TEXTO.
  *
  * Uso:
- *   node execucao/flow/verificar-fronteira-mei.mjs          → 1️⃣ e 2️⃣
- *   node execucao/flow/verificar-fronteira-mei.mjs --diff   → + 3️⃣
+ *   node produto/_flow/verificar-fronteira-mei.mjs          → 1️⃣ e 2️⃣
+ *   node produto/_flow/verificar-fronteira-mei.mjs --diff   → + 3️⃣
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -41,7 +41,7 @@ import { join, relative, sep } from "node:path";
 import { execSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
-const RAIZ = join(fileURLToPath(new URL("../../", import.meta.url)));
+import { RAIZ } from "../_raiz.mjs";
 const SRC = join(RAIZ, "app", "src");
 
 /* ─── O QUE É "RAMO MEI" ────────────────────────────────────────────────── */

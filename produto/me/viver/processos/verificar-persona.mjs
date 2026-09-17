@@ -34,7 +34,7 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { dirname, resolve, relative, basename } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { PROIBIDO_POR_CATEGORIA, MARCADOR_EXCLUSAO, ABERTO } from "./_persona.mjs";
-import { RAIZ } from "../_raiz.mjs";
+import { RAIZ } from "../../../_raiz.mjs";
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
 

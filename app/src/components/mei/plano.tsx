@@ -50,7 +50,7 @@ import { reais } from "./_formato";
  * plano, a fidelidade de 12 meses ficou **sem contrapartida escrita** (o ADR
  * de 04/08 dizia que ela ERA a contrapartida de pagar o certificado). O número
  * segue valendo porque não foi revogado, e a copy usa a formulação genérica.
- * Precisa de decisão Pedro/Mauro. Ver `execucao/flow/rastreio-mei.md`.
+ * Precisa de decisão Pedro/Mauro. Ver `produto/_flow/rastreio-mei.md`.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 

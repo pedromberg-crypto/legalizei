@@ -4,7 +4,7 @@ status: vivo
 data: 2026-07-28
 assunto: telas-e-condicionais
 deriva_de: [mapa-ramificacoes-flow, reordenacao-flow-cobranca-cedo]
-deriva_de_codigo: [execucao/flow/flow-data.mjs]
+deriva_de_codigo: [produto/_flow/flow-data.mjs]
 tags: [produto, ux, telas, fluxo, condicionais, mermaid, mapa, vivo, dados-jucemg]
 ---
 
@@ -14,7 +14,7 @@ tags: [produto, ux, telas, fluxo, condicionais, mermaid, mapa, vivo, dados-jucem
 
 > **Nota GERADA. Não editar à mão.** A fonte-única é `flow/flow-data.mjs`; o diagrama, a tabela de validação e o histórico abaixo são re-renderizados por `flow/gerar-mapa.mjs`. Editar aqui é perder o trabalho na próxima geração.
 >
-> **Como atualizar:** mude `flow/flow-data.mjs` → rode `node execucao/flow/gerar-mapa.mjs`. Ele redesenha tudo, confere o drift contra as rotas reais e, se mudou algo estrutural, grava um snapshot versionado em `flow/versoes/` + uma linha no histórico.
+> **Como atualizar:** mude `flow/flow-data.mjs` → rode `node produto/_flow/gerar-mapa.mjs`. Ele redesenha tudo, confere o drift contra as rotas reais e, se mudou algo estrutural, grava um snapshot versionado em `flow/versoes/` + uma linha no histórico.
 >
 > **Legenda:** 🟢 validado/oficial · 🟡 espera gente · ⚪ só UX (revisado) · ✅ construída · 🚧 planejada. No diagrama: vermelho = saída terminal · verde = rota feliz · âmbar = espera · azul = desvio que volta · cinza tracejado = planejado · losango = decisão.
 >

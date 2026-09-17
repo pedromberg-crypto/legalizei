@@ -4,7 +4,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  * 🆕 28/08. Fonte-verdade da pesquisa: `pesquisa/abertura-mei/abertura-mei-processo.md`
  * (70 referências oficiais, gov.br/planalto/pbh/sef-mg). Cruzamento com o flow:
- * `execucao/flow/cruzamento-flow-mei-vs-me.md`.
+ * `produto/_flow/cruzamento-flow-mei-vs-me.md`.
  *
  * ─── POR QUE ESTE ARQUIVO EXISTE ────────────────────────────────────────────
  * O MEI não é "um ME menor". Três coisas o tornam um domínio à parte:

@@ -20,6 +20,14 @@ data: 2026-07-16
 >
 > 🔴 **O que NÃO pode ser tocado sem fonte:** a régua do **redutor do IRRF**, que diverge do motor e muda a guia de todo cliente acima de R$5.000. O contador hesitou (*"aí eu não vou lembrar o certo"*) e isso exige a **Lei 15.270/2025 literal**. Junto: **três das quatro mudanças de 2027** vieram só da memória dele, sem norma nomeada.
 >
+> ### ⏸️ E uma segunda frente pausada no mesmo dia: o LÉO
+>
+> ⇢ [[_RETOMADA-leo-fork-e-atualizacao]] · **nada foi alterado**, é só levantamento.
+>
+> 🔴 **O vault do Léo existe em DOIS lugares e os dois divergiram.** A cópia do dev (`Downloads/Docs Léo`) tem o `SOUL.md`, as 4 skills e a estrutura de Obsidian que **não existem no projeto**; o vault do projeto tem o **endereço fiscal a R$49** que a cópia não tem — ela ainda diz **R$60**, que nunca foi conta nossa, era o preço do concorrente. Aguarda o Pedro decidir a **fusão**.
+>
+> ⚠️ **Além do fork:** a **folha de pagamento** entrou no escopo em 10/09 e o Léo não sabe vender; o **piloto de pró-labore** é o maior diferencial do produto e não está no vault dele; e a skill de **escalação não reconhece pedido explícito de humano** (*"falar com humano"*), enquanto o `04-QUEBRA-OBJECOES` trata isso como objeção a contornar — os dois se contradizem.
+>
 > ---
 >
 > **Última atualização:** 2026-09-15 — **69º flow: O PILOTO NASCE, TRÊS TRAVAS DE MÉTODO, E O REPORTE PASSA A SE MEDIR.**

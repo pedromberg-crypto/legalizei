@@ -7,13 +7,13 @@ autoridade: fonte-verdade
 tags: [execucao, teste, flutter, persona, entrada]
 ---
 
-# 🎭 As 20 personas de teste — entrada ME Simples
+# 🎭 As 24 personas de teste — entrada ME Simples
 
 > 🧭 **O que é.** O elenco que o app Flutter roda no flow de entrada, do **E1** ao **A5.H**. Cada persona é um conjunto fechado de valores: o que digitar, o que clicar, e onde ela deve parar. O catálogo de variáveis e os domínios vivem em [[variaveis-entrada-me]].
 >
 > 🆕 **Elenco NOVO, de 14/09.** Não herda os JSONs de `execucao/motor-testes/personas/` — só **os nomes**. Os dados são próprios, porque os antigos carregavam 7 campos desatualizados (ver §"O que ficou desatualizado" em [[variaveis-entrada-me]]).
 >
-> 🔒 **Escopo:** constituição de **ME no Simples Nacional**, serviço, BH/MG, 1 a 4 sócios PF no Brasil. Nada de MEI, Migração, comércio ou regulamentada, **salvo a P15, que existe justamente pra ser recusada**.
+> 🔒 **Escopo:** constituição de **ME no Simples Nacional**, serviço, BH/MG, 1 a 4 sócios PF no Brasil. Nada de MEI, Migração, comércio ou regulamentada, **salvo as personas de recusa (P15 e P21 a P24), que existem justamente pra provar onde o app para**.
 
 ## 🔑 Dados fixos de TODA persona
 
@@ -25,12 +25,13 @@ tags: [execucao, teste, flutter, persona, entrada]
 | **Senha** | qualquer uma, mas **anotada no relatório** | Sem ela não dá pra retomar a conta numa 2ª rodada |
 | **Telefone** | ⏳ **em aberto** | O E6 manda o código *"pro e-mail e pro telefone"*. Se o app exigir os dois, telefone inventado trava igual. Pendente de resposta da rodada da P01 |
 
-⚠️ **O e-mail repetido é de propósito, e tem consequência:** as 20 personas vão compartilhar o mesmo endereço. Se o app impedir 2 contas com o mesmo e-mail, isso aparece já na P02 e vira **achado**, não bug de teste. Anotar quando acontecer.
+⚠️ **O e-mail repetido é de propósito, e tem consequência:** as 24 personas vão compartilhar o mesmo endereço. Se o app impedir 2 contas com o mesmo e-mail, isso aparece já na P02 e vira **achado**, não bug de teste. Anotar quando acontecer.
 
 ## Índice
 - [[#🗺️ Como o elenco cobre o espaço]]
 - [[#🎬 As 14 base — uma por categoria, caminho completo]]
 - [[#🚧 As 6 extras — saídas e cruzamentos de risco]]
+- [[#🚪 As 4 do gate — elegibilidade ao Simples]]
 - [[#📋 Tabela de cobertura]]
 - [[#🧾 O que conferir no relatório final]]
 
@@ -41,6 +42,8 @@ tags: [execucao, teste, flutter, persona, entrada]
 **14 base** vão do E1 ao A5.H sem parar. Cada uma pega **uma categoria diferente** e uma **combinação diferente** do Tier 1. Juntas, cobrem todo valor de toda variável pelo menos 1× (o piso 1-wise, que é 14 justamente porque categoria tem 14 valores).
 
 **6 extras** existem pro que as base não alcançam: as saídas antecipadas e os cruzamentos que só bug de interação revela.
+
+**4 do gate**, acrescentadas em 17/09, cobrem a elegibilidade ao Simples e o teto do ME. Nenhuma tem tela hoje: rodá-las prova a ausência.
 
 🔑 **A proporção fiscal é de propósito:** **10 `III-fixo` × 4 `fator-r-dinamico`**, espelhando os 65 × 15 do catálogo real. O elenco antigo invertia isso.
 
@@ -278,9 +281,88 @@ CPF `344.938.272-11` · 1 sócio · endereço próprio (30240-000)
 
 ---
 
+## 🚪 As 4 do gate — elegibilidade ao Simples
+
+> 🔴 **Acrescentadas em 17/09**, ao cruzar este elenco (14/09) com o `GATE_DE_ENTRADA` travado em 15/09 (`execucao/estado-cnpj/ciclo-do-cnpj.mjs`) e com o escopo de EPP de 17/09. Catálogo das 6 perguntas em [[variaveis-entrada-me]] §"O gate de elegibilidade".
+>
+> ⚠️ **Nenhuma das 4 tem tela hoje.** Rodar estas personas **prova a ausência** — o app deixa todas passarem. O resultado é **achado**, não bug de teste. É a mesma natureza da P15, que já existia: gate que recusa, não wizard que preenche.
+>
+> 🎯 O ponto comum: todas as 4 **abrem empresa hoje** e deveriam parar. As 3 primeiras geram cliente que a casa não pode atender; a P23 gera risco fiscal que estoura meses depois, na exclusão retroativa.
+
+### P21 · Débora Almeida Ferraz — 🔴 ACIMA DO TETO (EPP)
+`tech` · **6201-5/01** Desenvolvimento de programas sob encomenda · `fator-r-dinamico`
+
+> *"faço desenvolvimento de software sob encomenda"*
+
+CPF `352.601.478-71` · 1 sócio · endereço próprio (30140-000) · solteira · INSS não · faixa **"Sei o valor exato" → R$ 55.000/mês** · confiança alta · 0 secundários
+
+🎯 **R$660 mil/ano.** Passa do teto do ME (R$360 mil/ano, LC 123 art. 3º II) e cai em **EPP**, que vai até R$4,8 milhões e **não atendemos**. A grade de faixas não tem mais "+R$30 mil" desde 01/09, então o caminho é o campo livre — e é lá que o número entra sem ninguém olhar.
+
+⏹️ **Deveria parar em:** E5F, porta de espera/escalada, com a explicação do porquê (mesmo tratamento da P15). 🔴 **Hoje segue o flow inteiro e abre a empresa.**
+
+⚠️ É o conflito direto com o agente Léo: a mesma pessoa ouve *"essa eu ainda não atendo"* no WhatsApp (regra de 17/09) e é aceita no app.
+
+---
+
+### P22 · Ronaldo Teixeira Amaral — 🔴 SERVIDOR PÚBLICO, UNIPESSOAL
+`cursos` · **8593-7/00** Ensino de idiomas · `III-fixo` · ISS-BH 2%
+
+> *"dou aula de inglês e quero abrir minha empresa"*
+
+CPF `360.256.789-36` · **1 sócio** · endereço próprio (30220-000) · casado · comunhão parcial · INSS **servidor público ativo** · faixa 5-10k · IPTU válido · confiança alta · 0 secundários
+
+🎯 **O impedimento O2.** Lei 8.112/90 art. 117 X: servidor público ativo **pode ser quotista**, não pode ser **administrador**. Sendo unipessoal, não sobra ninguém para administrar, e SLU sem administrador não existe. Não é trocar `49` por `22`, é **recusa**.
+
+⏹️ **Deveria parar em:** o gate, antes do C1. 🔴 **Hoje o app nem pergunta** — "servidor público" não está no domínio do vínculo INSS (`nao` · `clt` · `aposentadoria` · `autonomo` · `socio-outro-cnpj`), e a qualificação sai `49` por padrão.
+
+🔑 **Variante a rodar junto:** o mesmo Ronaldo com **2 sócios**, em que o outro administra. Aí não é recusa: é `22` no titular, `49` no sócio, e muda quem assina pela empresa e quem é o representante perante a Receita.
+
+---
+
+### P23 · Letícia Moraes Bastos — 🔴 PEJOTIZAÇÃO (risco CRÍTICO)
+`tech` · **6204-0/00** Consultoria em TI · `fator-r-dinamico`
+
+> *"vou prestar serviço pra uma empresa só, no horário deles"*
+
+CPF `367.914.203-08` · 1 sócio · endereço próprio (30310-000) · solteira · INSS não · faixa 10-20k · confiança alta · 0 secundários · **1 contratante único, com horário e subordinação**
+
+🎯 **LC 123 art. 3º §4º XI.** Veda o Simples quando o sócio guarda com o contratante, **cumulativamente**, pessoalidade + subordinação + habitualidade. A pesquisa marcou risco **CRÍTICO** exatamente para TI, design e consultoria — o nosso público inteiro.
+
+⏹️ **Deveria parar em:** o gate, com pergunta explícita. 🔴 **Hoje não existe a pergunta.**
+
+⚠️ **É a única vedação que a autodeclaração pega mal**, porque depende da sinceridade de quem responde. A persona responde a verdade de propósito: o teste é se **existe onde responder**, não se ela mente.
+
+⏱️ E o preço de errar é diferido: não trava nada na hora, aparece meses depois como **exclusão retroativa**, e a empresa cai no Lucro Presumido.
+
+---
+
+### P24 · Gustavo Rangel Peixoto — 🔴 ADMINISTRADOR DE OUTRA EMPRESA
+`mkt` · **7312-2/00** Agenciamento de espaços para publicidade · `III-fixo` · ISS-BH 5%
+
+> *"trabalho com mídia exterior e quero ter meu CNPJ"*
+
+CPF `375.628.190-68` · 1 sócio · endereço **fiscal Legalizai** · divorciado · INSS **sócio de outro CNPJ** · faixa 20-30k · confiança alta · 2 secundários
+
+🎯 **Dois gatilhos na mesma pessoa, e o app só enxerga o lado errado dos dois.**
+
+| | O que é | O que o app faz hoje |
+|---|---|---|
+| **V1** | é sócio de outra empresa do Simples; **o percentual não importa**, 0,1% já manda somar a receita das duas | captura como `vínculo INSS: socio-outro-cnpj` no C2, **para efeito de teto do INSS**. Nunca pergunta a receita da outra |
+| **V3** | é **administrador registrado** de uma terceira empresa, sem ser dono dela | ❌ não pergunta |
+
+Em ambos o gatilho é receita bruta **global** acima de R$4,8 milhões/ano. A persona está acima.
+
+⏹️ **Deveria parar em:** o gate. 🔴 **Hoje abre normalmente.**
+
+🔑 O V1 é o caso mais traiçoeiro do elenco: o dado **já está na tela**, colhido com outro propósito. Não falta captura, falta **consequência**.
+
+---
+
 ## 📋 Tabela de cobertura
 
 Conferido por script sobre as 14 base. **Todo valor de toda variável aparece pelo menos 1×.**
+
+⚠️ **As 6 extras e as 4 do gate não entram nesta tabela**, de propósito: elas não completam o caminho, então não têm valor para metade das variáveis. A cobertura 1-wise é responsabilidade das 14.
 
 | Variável | Distribuição nas 14 base |
 |---|---|
@@ -365,7 +447,7 @@ Conferido por script sobre as 14 base. **Todo valor de toda variável aparece pe
 | Campo | Regra |
 |---|---|
 | **Natureza jurídica** | `SLU` se 1 sócio · `LTDA` se 2+. **Nunca perguntado** |
-| **Qualificação no DBE** | `49` para quem administra · `22` para quem não. Titular é **sempre 49** |
+| **Qualificação no DBE** | `49` para quem administra · `22` para quem não. 🔴 **Corrigido 17/09:** o titular é `49` **enquanto puder administrar**. Servidor público ativo é quotista e não administrador (Lei 8.112/90 art. 117 X), então com sócio vira `22` no titular, e **unipessoal vira recusa** (P22). Nas 14 base e nas 6 extras, todas sem servidor público, segue `49` |
 | **Participação em R$ e quotas** | `% × R$10.000`. O valor em R$ **é** o número de quotas. P11 (4 sócios, 25% cada) = `R$2.500` e `2.500 quotas` por pessoa |
 | **Telefone enviado aos órgãos** | 🔴 **8 dígitos**, sem o 9º. Mas captado com 9 na tela. Conferir os dois lados |
 | **Tipo de endereço** | `Endereço virtual` **só** nas P03, P08, P13 (endereço fiscal). Nas outras, o tipo real |
@@ -379,6 +461,9 @@ Conferido por script sobre as 14 base. **Todo valor de toda variável aparece pe
 - 🔴 **P17 não pode gerar cobrança.** CPF suspenso descoberto no checkout = nenhum lançamento.
 - 🔴 **P19 precisa liberar o dossiê** mesmo com o boleto pendente.
 - 🔴 **P15 sai pela porta de espera**, nunca por erro genérico.
+- 🔴 **P21 a P24 não podem abrir empresa.** Hoje todas abrem, e é esse o achado. Anotar **onde** cada uma deveria ter parado, porque é isso que vira requisito de tela.
+- 🔴 **P22 tem variante:** unipessoal = recusa; com sócio que administre = `22` no titular, `49` no sócio. Rodar as duas.
+- 🔴 **P24 prova que o dado do V1 já existe na tela** (C2, como `socio-outro-cnpj`) e não tem consequência nenhuma. Conferir que ele é usado **só** para o teto do INSS.
 
 ---
 

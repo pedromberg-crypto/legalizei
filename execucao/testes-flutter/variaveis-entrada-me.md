@@ -20,6 +20,7 @@ tags: [execucao, teste, flutter, variaveis, entrada, persona]
 - [[#📏 O tamanho do cruzamento]]
 - [[#🥇 Tier 1 — variáveis que abrem tela nova]]
 - [[#🥈 Tier 2 — variáveis que enchem campo]]
+- [[#🚪 O gate de elegibilidade — 6 perguntas que o flow AINDA NÃO FAZ]]
 - [[#🔒 O que NÓS preenchemos]]
 - [[#⚠️ O que ficou desatualizado nas personas antigas]]
 
@@ -58,7 +59,7 @@ Calculado sobre as 22 variáveis abaixo, respeitando as dependências reais (reg
 | **Piso par-a-par** | **70 a 112 casos** | Cobre todo *par* de valores. É o alvo de uma suíte madura |
 | **Piso 1-wise** | **14 casos** | Cada valor de cada variável aparece pelo menos 1×. **É o piso desta rodada** |
 
-🔑 **O piso é 14 porque a maior variável é a categoria, que tem 14 valores.** Por isso o elenco tem 14 personas base: uma por categoria, cada uma carregando uma combinação diferente do Tier 1. As 6 extras vão além disso, nos cruzamentos que só bug de interação revela.
+🔑 **O piso é 14 porque a maior variável é a categoria, que tem 14 valores.** Por isso o elenco tem 14 personas base: uma por categoria, cada uma carregando uma combinação diferente do Tier 1. As 6 extras vão além disso, nos cruzamentos que só bug de interação revela. As **4 do gate** (P21 a P24, acrescentadas em 17/09) ficam fora desta conta pelo mesmo motivo que os gates de cidade e de atividade: elas terminam o flow em vez de preenchê-lo. Ver §"O gate de elegibilidade".
 
 ⚠️ **O CNAE não entra na conta como 87 valores.** Testar 87 CNAEs × 21 variáveis não fecha em nenhuma rodada humana. A dimensão testável é a **categoria** (14) mais o **grupo fiscal** (`III-fixo` × `fator-r-dinâmico`), que é o que muda comportamento. Ver [[taxonomia-pills-n4]].
 
@@ -95,6 +96,8 @@ São as que **bifurcam o fluxo**. Só elas podem esconder bug de caminho: uma te
 
 Fonte dos rótulos: `app/src/lib/qualificacao.ts` (`ESTADO_CIVIL`, `REGIME_BENS`, `TIPO_IMOVEL`) e `app/src/components/gate-telas.tsx` (`PILLS`, `FAIXAS`).
 
+🔴 **Falta um valor na variável 9 (17/09):** o domínio do vínculo INSS não tem `servidor-publico`, e ele é o único que **muda quem pode administrar** (impedimento O2, ver §"O gate de elegibilidade"). Os outros 5 tocam só o teto do INSS. Enquanto não entrar, servidor público se cadastra como `nao` e o app não percebe. **Não somei o valor ao domínio aqui** porque isso refaria a conta de §"O tamanho do cruzamento" com uma tela que ainda não existe — quando entrar, o `n` da variável 9 vai de 5 para 6.
+
 ---
 
 ## 🥈 Tier 2 — variáveis que enchem campo
@@ -116,9 +119,42 @@ Não bifurcam a tela, mas **é onde o relatório final é conferido**: objeto so
 | 21 | **Canal do convite ao sócio** (só com 2+) | A4 | `whatsapp` · `email` | 2 |
 | 22 | **Código GOV.BR** | A4.1 | `ok` · `erro` (janela de 10min, 3 tentativas) | 2 |
 
-⚠️ **Teto do ME:** `TETO_ME_MENSAL = 30000` (R$360 mil/ano, LC 123 art. 3º II). A faixa "+R$30 mil" **não existe mais** desde 01/09: quem fatura acima usa "Sei o valor exato". Não barramos por faturamento.
+🔴 **Teto do ME, e ele BARRA — corrigido em 17/09.** `TETO_ME_MENSAL = 30000` (R$360 mil/ano, LC 123 art. 3º II). A faixa "+R$30 mil" saiu da grade em 01/09 e quem fatura acima usa "Sei o valor exato" — mas **valor exato acima de R$30.000/mês é EPP, e EPP está fora do escopo**.
+
+Até 14/09 esta nota terminava com *"Não barramos por faturamento"*, e essa frase ficou de pé contra duas travas: `execucao/processos/_persona.mjs:82` (13/09, *"processo nenhum pode ter ramo de EPP"* — no contrato o EPP existe só como **saída**, "Desenquadramento de ME para EPP, R$139,00") e a regra do agente Léo de 17/09 (`execucao/handoffs/handoff-leo-ajustes-2026-09-17.md:76`), que manda **recusar e escalar** acima de R$360 mil/ano. A mesma pessoa não pode ouvir *"essa eu ainda não atendo"* no WhatsApp e ser aceita no app.
+
+**Comportamento esperado:** valor exato acima do teto sai pela **porta de espera/escalada**, com o mesmo tratamento da P15 (recusa explicada, nunca erro genérico). Não abre empresa. Exercitado pela **P21**.
 
 🧪 **Pagamento é fake no Flutter (14/09, Pedro).** Qualquer dado passa em E9 e A3.P. O que se testa é o **método** e o **desfecho**, nunca o número do cartão.
+
+---
+
+## 🚪 O gate de elegibilidade — 6 perguntas que o flow AINDA NÃO FAZ
+
+> 🔴 **Acrescentado em 17/09.** A fonte é `execucao/estado-cnpj/ciclo-do-cnpj.mjs` → `GATE_DE_ENTRADA` (travado 15/09, literal em `pesquisa/fontes/2026-09-15-elegibilidade-simples-LITERAL.md`). O comentário dele diz textualmente: *"Isto é **dado**, não tela. Quem constrói a pergunta é o flow de entrada."* Este catálogo é de 14/09, um dia antes — por isso as perguntas não estavam aqui.
+
+Dos 12 incisos do art. 3º §4º da LC 123, 8 não alcançam o nosso perfil (sócio PJ, sede no exterior, cooperativa, banco, cisão, S.A., filial no exterior, participar de outra PJ) e a modelagem já os neutraliza. Sobram 4, mais 2 impedimentos que vêm de fora do artigo.
+
+| # | Pergunta ao usuário | Domínio | Gatilho real | Se sim | Hoje no app |
+|---|---|---|---|---|---|
+| **V1** | "Você já é dono ou sócio de alguma outra empresa hoje?" | `sim` · `nao` | receita bruta **global** das duas > R$4,8mi/ano. ⚠️ O percentual **não** importa: 0,1% já engatilha a soma | recusa | 🟡 o fato é captado no **C2**, mas como `vínculo INSS: socio-outro-cnpj`, ou seja **para o teto do INSS**. Ninguém pergunta a receita da outra empresa |
+| **V2** | "Você tem mais de 10% de alguma empresa do Lucro Presumido ou Real?" | `sim` · `nao` | participação > 10% **E** receita global > R$4,8mi/ano | recusa | ❌ não perguntado |
+| **V3** | "Você é diretor ou administrador registrado em outra empresa, mesmo sem ser dono?" | `sim` · `nao` | receita global > R$4,8mi/ano | recusa | ❌ não perguntado |
+| **V4** | "Você vai prestar o serviço cumprindo horário e recebendo ordens do seu cliente, como um funcionário de carteira assinada?" | `sim` · `nao` | pessoalidade + subordinação + habitualidade, **cumulativamente**, com o mesmo contratante | recusa | ❌ não perguntado |
+| **O1** | "Você tem um MEI aberto no seu nome?" | `sim` · `nao` | — | obriga baixa/desenquadramento **antes** | ✅ vem por **API** (está na lista dos 7) |
+| **O2** | "Algum sócio é servidor público ativo?" | `sim` · `nao` | — | 🔑 **não** impede ser quotista; impede **administrar** | ❌ não perguntado, e colide com a regra 49/22 (ver abaixo) |
+
+🔴 **V4 é o pior buraco, e é o nosso perfil exato.** A pesquisa classificou a pejotização (LC 123 art. 3º §4º XI) como risco **CRÍTICO** justamente para TI, design e consultoria — que são `tech`, `design`, `consult` e `mkt`, 4 das 14 categorias do elenco. E é a única vedação que a autodeclaração pega mal, porque depende da sinceridade de quem responde.
+
+🔴 **O2 quebra a regra "titular é sempre 49".** Servidor público ativo pode ser quotista e **não** pode ser administrador (Lei 8.112/90 art. 117 X · Estatuto de BH, Lei 7.169/96). Num caso unipessoal — 7 das 14 base — não sobra ninguém para administrar, então o caso não é "trocar 49 por 22", é **recusa**. Ver a correção da regra em §"O que NÓS preenchemos".
+
+✅ **O que a pesquisa declarou que NÃO é vedação** (confirmar ausência vale tanto quanto achar regra): sócio com **emprego CLT** (varreu LC 123 arts. 3º, 15, 17, 30 e 31 + Res. CGSN 140/2018 e declarou *"total inexistência de comando jurídico"*; o CLT toca só o teto do INSS, que é da **pessoa**) · sócio **aposentado** · **estrangeiro residente no Brasil**. As personas com esses vínculos seguem o caminho completo, como já seguem.
+
+⚠️ **Se passar batido:** pendência cadastral trava na hora; estouro de faturamento global só aparece meses depois, e aí a exclusão é **retroativa** — a empresa cai no Lucro Presumido. Sócio que entra depois carregando vedação exclui a empresa **a partir do mês seguinte**.
+
+📏 **Estas 6 não entram na conta de §"O tamanho do cruzamento".** Aquela conta é das **22 variáveis de preenchimento** do wizard. O gate não bifurca wizard, ele **termina** o flow, igual ao gate de cidade (E3.4.1) e ao de atividade (P15), que também ficam fora da conta. 🔴 Quando o gate virar tela, refazer a conta — e nesse dia as 22 viram 28.
+
+🧪 **Exercitado pelas P22, P23 e P24.** Enquanto não existir tela, a rodada dessas personas **prova a ausência**, e o resultado é achado, não bug de teste.
 
 ---
 
@@ -138,6 +174,16 @@ Não bifurcam a tela, mas **é onde o relatório final é conferido**: objeto so
 ### Os outros 29 internos, por família
 
 **Identidade e qualificação:** profissão = `Empresário` (titular e todo sócio) · qualificação do representante = `49 - Sócio-Administrador` · qualificação de cada sócio no DBE = `49` se administra, `22` se não · representante perante a Receita = sempre quem iniciou o cadastro · regime de bens `separacao` traduz para `Separação Convencional de Bens` no RPA.
+
+> 🔴 **Correção de 17/09 — o titular NÃO é sempre 49.** Esta nota dizia *"titular é sempre 49"*, e isso vale só enquanto o titular **puder** administrar. O impedimento **O2** do gate (Lei 8.112/90 art. 117 X) barra servidor público ativo de ser administrador, mesmo podendo ser quotista. A regra correta:
+>
+> | Caso | Qualificação | Consequência |
+> |---|---|---|
+> | Titular administra (o normal) | `49` | nada muda |
+> | Titular servidor público, **com** outro sócio que administre | `22` no titular, `49` no administrador | muda quem assina pela empresa e quem é o representante perante a Receita |
+> | Titular servidor público, **unipessoal** | — | 🔴 **recusa**. Não sobra administrador, e SLU sem administrador não existe |
+>
+> ⚠️ "Algum sócio é servidor público ativo?" **não é perguntado hoje** em lugar nenhum do flow, então a qualificação sai `49` por padrão, sem ninguém checar. Exercitado pela **P22**.
 
 **Empresa e endereço:** natureza jurídica = `SLU` sem sócio, `LTDA` com sócio (automático, sem pergunta desde 31/08) · forma de atuação = `Atividade Desenvolvida Fora do Estabelecimento` · tipo de unidade = `Produtiva` · acesso ao endereço = `Pedestre` · tipo de endereço = `Endereço virtual` quando usa o endereço fiscal Legalizai · endereço de correspondência = igual ao do estabelecimento.
 

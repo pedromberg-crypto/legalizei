@@ -119,7 +119,7 @@ Regra dura preservada: pilar 10 (oferta) sozinho continua com cap próprio de m�
 
 ### Enriquecimento pós-fechamento — personas "vivas" (🆕 26/08, em andamento)
 
-Comparação com `personagem-leo.md` como régua (ver conversa) apontou gap real: dorsais em ~20-25% do nível de enriquecimento criativo do Léo, volantes em ~5-8%. Pedro topou o plano de fechar isso persona por persona, começando pelo **banco de calibragem antes/depois**. **Conteúdo real vive em cada arquivo de dorsal** (`pesquisa/personas/persona-a/b/c/d/e-*.md`), não aqui — este doc só rastreia que a frente está aberta.
+Comparação com `personagem-leo.md` como régua (ver conversa) apontou gap real: dorsais em ~20-25% do nível de enriquecimento criativo do Léo, volantes em ~5-8%. Pedro topou o plano de fechar isso persona por persona, começando pelo **banco de calibragem antes/depois**. **Conteúdo real vive em cada arquivo de dorsal** (`pesquisa/personas-de-mercado/persona-a/b/c/d/e-*.md`), não aqui — este doc só rastreia que a frente está aberta.
 
 - ✅ Banco de calibragem — feito nas 5 dorsais (A, B, C, D, E). **v2 (26/08, mesmo dia):** Pedro pediu mais riqueza, já que esse banco rege as outras frentes — expandido de 3-4 pra 10-11 pares por persona, organizado por pilar de conteúdo (cobre os 10 pilares persona-relevantes: 2,4,5,6,7,8,10,11,12,13 + onboarding transversal).
 - ✅ Mapeamento de pilar com razão — feito nas 5 dorsais (A, B, C, D, E), 16 linhas cada (13 pilares ativos + 2 standby + momentâneo), com encaixe 🟢/🟡/❌ e justificativa, mesmo espírito do `personagem-leo.md` §11.

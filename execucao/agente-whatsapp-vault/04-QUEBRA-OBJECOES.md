@@ -2,7 +2,7 @@
 
 Exemplos de calibragem, não script obrigatório. Repare no padrão: frase curta, motivo concreto, e a saída quando existe.
 
-*(Absorveu o `execucao/handoffs/qa-agente-whatsapp-leo.md`, que duplicava metade deste arquivo fora do vault isolado. Fonte única agora é esta.)*
+*(Absorveu o `execucao/entregas/qa-agente-whatsapp-leo.md`, que duplicava metade deste arquivo fora do vault isolado. Fonte única agora é esta.)*
 
 ---
 

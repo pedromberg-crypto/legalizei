@@ -39,7 +39,7 @@
     "De olho, sempre, Léo (assinatura fim de post longo)",
     "Vai, legaliza aí. (fecho de CTA de convite/ação — travado real de marca, ver voz.json)"
   ],
-  "dialDeIroniaPorPersona": { "A": "alto", "B": "medio", "C": "baixissimo_a_zero", "D": "baixo", "E": "alto", "fonte": "personagem-leo.md §5 + pesquisa/personas/persona-d/e-*.md, ponto de partida não regra fixa. Atualizado 26/08 (v1 só tinha A/B/C)." },
+  "dialDeIroniaPorPersona": { "A": "alto", "B": "medio", "C": "baixissimo_a_zero", "D": "baixo", "E": "alto", "fonte": "personagem-leo.md §5 + pesquisa/personas-de-mercado/persona-d/e-*.md, ponto de partida não regra fixa. Atualizado 26/08 (v1 só tinha A/B/C)." },
   "pilaresDeConteudoQueEleDomina": {
     "_nota": "v3 (26/08) — numeração e framing atualizados. 'Dono' deixou de existir (não é mais exclusividade, ver decisoes-marca.md 26/08); vira 'encaixe forte (não exclusivo)'.",
     "1_bastidorFundador": "fora — é voz do Pedro-pessoa",

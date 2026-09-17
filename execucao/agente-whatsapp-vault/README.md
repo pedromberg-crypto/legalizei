@@ -35,4 +35,4 @@ Não existe `06`: ele foi fundido no `03` em 04/09 (eram dois arquivos dizendo a
 5. **Duplicata é bug.** Se dois arquivos explicam a mesma regra, funde. Foi o que aconteceu com `03`+`06` e com o antigo `qa-agente-whatsapp-leo.md`, que ficava fora da pasta isolada.
 
 ## Fora de escopo deste vault
-Personalidade completa do personagem, com dial de ironia por persona, banco de falas e origem: `execucao/handoffs/handoff-leo-agente-whatsapp.md`. Aquele doc é pro dev configurar o `SOUL.md`; este vault é o que o agente consulta em runtime.
+Personalidade completa do personagem, com dial de ironia por persona, banco de falas e origem: `execucao/entregas/handoff-leo-agente-whatsapp.md`. Aquele doc é pro dev configurar o `SOUL.md`; este vault é o que o agente consulta em runtime.

@@ -30,7 +30,7 @@ divergência). Na 2ª, só contador + sócio representante. Ver
 
 **O que a gente precisa daquele flow** não é o desenho, é saber **quais dados
 captados movimentam as funcionalidades internas**. Isso virou
-`execucao/handoff/` (fonte `dados-handoff.mjs` + gerador + `HANDOFF-DADOS.md`),
+`produto/me/devs/gerador/` (fonte `dados-handoff.mjs` + gerador + `HANDOFF-DADOS.md`),
 e a regra é: **handoff é TABELA, não caminho no board** — dado é pré-condição,
 não etapa. Ver [[legalize-semaforo-mede-desenho-nao-insumo]] e
 [[legalize-processo-antes-da-tela]].

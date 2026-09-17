@@ -43,7 +43,7 @@ quem perguntou vira lead quente  →  [4] remarketing natural (DM de agradecimen
 
 ### Calibração por persona 🆕 (26/08)
 
-> A mecânica não é neutra — cada dorsal se relaciona diferente com "expor uma dúvida publicamente". Usa o material já construído em cada `pesquisa/personas/persona-*.md` (Voz própria + Reação a crítica + dial de ironia), não inventa tom novo aqui.
+> A mecânica não é neutra — cada dorsal se relaciona diferente com "expor uma dúvida publicamente". Usa o material já construído em cada `pesquisa/personas-de-mercado/persona-*.md` (Voz própria + Reação a crítica + dial de ironia), não inventa tom novo aqui.
 
 | Dorsal | Como ela participa | Tom da resposta pública | Risco a evitar |
 |---|---|---|---|

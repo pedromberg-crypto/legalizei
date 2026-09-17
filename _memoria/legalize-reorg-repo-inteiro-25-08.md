@@ -15,7 +15,7 @@ metadata:
 2. **`_sistema/indice-autoridade.md` (16/07) desatualizado** — já estava 🔴 em 28/07 (gate cidade, veredito 3 vias fora), segue sem update. É o árbitro de "quem manda em cada assunto" e ele mesmo perdeu autoridade.
 3. **`HOME.md §Agora` virou log infinito** — 109KB, append-only, 34 flows encadeados. Viola a própria regra "uma nota = um assunto" do CLAUDE.md do projeto.
 4. **`execucao/` é dumping ground** — 47 arquivos soltos na raiz da pasta sem subpasta, apesar de já existir `flow/`, `marcos/`, `motor-testes/`, `portal/`, `tarefas/`. `motor-testes/relatorios/` sozinho = 382 arquivos, provável output regenerável.
-5. **Lixo solto**: `body.json` na raiz (0 bytes, órfão); `_sistema/pdf/.build/` (PNGs de build) não está no `.gitignore`; binários pesados versionados (`ux-ui/lotties-originais.zip`, PSDs em `mkt/campanhas/`, PDFs em `execucao/`).
+5. **Lixo solto**: `body.json` na raiz (0 bytes, órfão); `_sistema/pdf/.build/` (PNGs de build) não está no `.gitignore`; binários pesados versionados (`marca/identidade-visual/lotties.zip`, PSDs em `mkt/campanhas/`, PDFs em `execucao/`).
 6. **`diario/` está morto** — `status: congelado` desde 16/07, 1 entrada só, decisão explícita mas ainda sentado na raiz junto com pastas ativas.
 
 **Números do vault (exclui `app/`):** 14 pastas raiz, ~1347 `.md`. 3 maiores: `execucao/` (563 arquivos), `pesquisa/` (200), `_memoria/` (65 — mirror git-tracked do auto-memory real, sincronizado, não é problema).

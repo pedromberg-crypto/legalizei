@@ -26,7 +26,7 @@ Nunca encerre um flow sem: (1) atualizar `HOME §Agora`; (2) registrar decisão 
 ## Onde as coisas vivem
 - `HOME.md` — hub + §Agora (estado corrente). `BASE-ESTRATEGICA.md` — teses/custo/equity/roadmap.
 - `marca/` — `decisoes-marca.md` (ADR, log de decisões travadas), `conceito/`, `identidade-visual/` (`paleta-cores.md`), `naming/`, `referencias/`.
-- `execucao/` — **o que é negócio e operação, não produto.** Na raiz ficam só 6: as 3 travas de vault (`verificar-tudo` · `verificar-defasagem` · `verificar-autoridade`), `lancamento-mlp.md` (🧭 manda no **estado do lançamento**), `entidades-legais.md` (os 2 CNPJs, CRC, responsabilidade técnica) e `marcos.base`. Em pastas: `mauro/` (o reporte ao sócio: `evolucao-para-mauro.md` + `gerar-placar-mauro.mjs` + o panorama) · `marcos/` (descobertas datadas) · `handoff/` · `handoffs/` · `contrato/` · `specs/` · `operacional/` · `testes-flutter/` · `motor-testes/` · `pitch-investidor/`.
+- `execucao/` — **o que é negócio e operação, não produto.** Na raiz ficam só 6: as 3 travas de vault (`verificar-tudo` · `verificar-defasagem` · `verificar-autoridade`), `lancamento-mlp.md` (🧭 manda no **estado do lançamento**), `entidades-legais.md` (os 2 CNPJs, CRC, responsabilidade técnica) e `marcos.base`. Em pastas: `mauro/` (o reporte ao sócio) · `marcos/` (descobertas datadas) · `entregas/` (os 9 handoffs pro dev e pro Léo) · `contrato/` · `specs/` (só os 3 de operação: MVP, dashboard, kanban — os 8 de tela foram pro `_flow/specs/`) · `operacional/` · `testes-flutter/` · `motor-testes/` · `pitch-investidor/`.
 - 🆕 **`produto/` é o produto, dividido por regime e depois por ciclo de vida** (reorg de 17/09). `_`-prefixo = transversal, serve os dois regimes; nome limpo = ramo.
   - **`produto/_flow/`** — as **124 telas** (`flow-data.mjs`: `abrir` 69 · `mei` 36 · `migrar` 14) + `gerar-mapa.mjs` + as 3 travas MEI + as notas geradas. Fica fora de `me/` e de `mei/` porque as **150 arestas cruzam os ramos**: fatiar quebraria o grafo. `versoes/` guarda só a CORRENTE — a anterior vai sozinha pra `_arquivo/flow-versoes/`.
   - **`produto/_doutrina/`** — `_metodo.md` (como se destrincha uma funcionalidade) e `_doutrina-capacidades.md`. Método, não conteúdo: vale para os dois regimes.
@@ -35,7 +35,7 @@ Nunca encerre um flow sem: (1) atualizar `HOME §Agora`; (2) registrar decisão 
   - **`produto/mei/`** — `entrar/` · `viver/` · `desenquadrar/`. Motor próprio (DAS fixo, sem Fator R).
   - 🔑 O eixo é o ciclo de vida porque **constituir e migrar são duas portas para a mesma casa, e o motor é a casa** — nenhuma das 18 vidas começa numa tela de abertura. ⚠️ O MEI que desenquadra cai em `mei/desenquadrar/` e aterrissa em `me/viver/`, **sem passar por `me/entrar/`**: o CNPJ dele já existe.
   - 📍 **Nunca contar `../` à mão:** importar `RAIZ` de `produto/_raiz.mjs`.
-- `pesquisa/` — `concorrentes/` (teardowns), `cnae-matriz/`, `mercado-*`, `PESQUISA-MERCADO.md`.
+- `pesquisa/` — `concorrentes/` (teardowns), `cnae-matriz/`, `prompts/`, `personas-de-mercado/` (as 5 dorsais + volantes do marketing — **não confundir** com as 18 vidas do motor nem com o elenco do Flutter), `mercado-*`, `PESQUISA-MERCADO.md`.
 - `reunioes/` — atas Plaud (1 nota/reunião). Auto-memória — fatos duráveis cross-sessão.
 
 ## 🔁 Como o Pedro pede alteração de tela (travado 02/09)

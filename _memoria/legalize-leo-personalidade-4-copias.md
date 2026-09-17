@@ -11,7 +11,7 @@ metadata:
 A personalidade do Léo está em **4 arquivos**, com papéis diferentes:
 1. `marca/personagem-leo.md` — 🟢 **fonte-verdade** (bíblia, 15 seções).
 2. `atelie/ds/legalizai/personagem-leo.md` + `personagem.json` + `voz.json` — cópia estruturada pro motor de posts.
-3. `execucao/handoffs/handoff-leo-agente-whatsapp.md` — extração pro dev montar o `SOUL.md` do agente.
+3. `execucao/entregas/handoff-leo-agente-whatsapp.md` — extração pro dev montar o `SOUL.md` do agente.
 4. `execucao/agente-whatsapp-vault/00-DIRETRIZES-SEGURANCA.md` §2 — resumo operacional que o bot lê em runtime.
 
 **Drift já confirmado na cópia do Ateliê (2 pontos, 04/09):** §11 dos pilares congelou na v3 de 26/08 enquanto a fonte está na v4 de 01/09 (pilares 6 e 7 em standby, novos 16 e 17); e §12 ainda descreve o polo do Léo com **"L"** no peito, quando a fonte corrigiu pra **o check** da Legalizai em 29/08. Gerar imagem pela cópia produz o Léo errado.

@@ -18,6 +18,6 @@ metadata:
 
 📊 **Corroborado no líder** (investigação read-only na conta paga do Pedro, só `GET` em endpoints que a página já chamava): "assinatura" nunca aparece como nome de produto nos 74.700 caracteres do contrato deles; o objeto de domínio da API é `fatura`; a rota do atraso é `/fatura-em-atraso/202609`, chaveada pela competência; a fatura volta com `plano: null`; o enum tem 10 estados **todos de documento financeiro**, nenhum ATIVA/TRIAL. Empírico: 5 valores em 9 competências na conta dele, mesmo contrato.
 
-Docs: `execucao/handoffs/handoff-dev-2026-09-11-cobranca-fatura-competencia.md` (pro dev) e `produto/me/_evidencias/fontes/2026-09-11-contabilizei-modelo-de-cobranca.md` (evidência bruta, JSONs e endpoints).
+Docs: `execucao/entregas/handoff-dev-2026-09-11-cobranca-fatura-competencia.md` (pro dev) e `produto/me/_evidencias/fontes/2026-09-11-contabilizei-modelo-de-cobranca.md` (evidência bruta, JSONs e endpoints).
 
 Relacionado: [[legalize-gateway-asaas-fora]], [[legalize-contrato-proprio-decisoes]], [[legalize-endereco-fiscal-49]], [[legalize-metodo-teardown-funcionalidade]].

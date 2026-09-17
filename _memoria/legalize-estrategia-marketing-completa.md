@@ -17,7 +17,7 @@ metadata:
 - **Instagram travado como canal orgânico primário** (dado real: 64% presença geral, 83% no setor beleza) — não LinkedIn (6%) nem TikTok (demografia incompatível, idade média do público = 40,8 anos).
 - **Tráfego pago do V0 concentra 100% em Meta Ads** — budget de R$3.500/mês não sustenta Meta+Google acima do mínimo de aprendizado do algoritmo simultaneamente.
 - **Momento decisivo da venda = conversa humana no WhatsApp**, não landing page com formulário — confirmado pela pesquisa de mercado do nicho contábil.
-- **Sistema de personas:** 3 dorsais (A intelectual/tech, B estético/beleza, C baixa familiaridade digital) + 9 volantes, mecanismo dorsal×volante operacional em `pesquisa/personas/`.
+- **Sistema de personas:** 3 dorsais (A intelectual/tech, B estético/beleza, C baixa familiaridade digital) + 9 volantes, mecanismo dorsal×volante operacional em `pesquisa/personas-de-mercado/`.
 
 **Why:** Pedro pediu guia robusto de marketing E produto incluindo precificação — não deu pra ficar só em documentação de branding, precisou rodar a economia de verdade e confrontar com dado de mercado real.
 

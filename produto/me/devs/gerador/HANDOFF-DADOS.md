@@ -3,13 +3,13 @@ tipo: derivado
 status: vivo
 data: 2026-09-17
 assunto: handoff-dados-constituicao
-gerado_por: execucao/handoff/gerar-handoff.mjs
+gerado_por: produto/me/devs/gerador/gerar-handoff.mjs
 tags: [execucao, handoff, dados, abertura, processos]
 ---
 
 # 🤝 Handoff de dados — da constituição pro app interno
 
-> ⚠️ **Nota gerada.** Não editar à mão: rode `node execucao/handoff/gerar-handoff.mjs`. A fonte é `dados-handoff.mjs`.
+> ⚠️ **Nota gerada.** Não editar à mão: rode `node produto/me/devs/gerador/gerar-handoff.mjs`. A fonte é `dados-handoff.mjs`.
 >
 > **Pra que serve:** o time de programadores já construiu a constituição, do download do app até o pagamento da guia. Esta nota NÃO redesenha aquilo. Ela responde uma pergunta só: **quais dados de lá movimentam as funcionalidades internas daqui**, e o que falta chegar.
 >
@@ -152,7 +152,7 @@ Fecha a pasta de documentos do cliente. O licenciamento já é respondido no que
 | 🟡 | **Inscrição municipal (CCM) na Prefeitura de BH** | órgão | Prefeitura de BH, depois do CNPJ | **P3.5** Transmite ao Emissor Nacional |
 | 🟡 | **Data e hora do aceite do contrato de serviço** | time do dev | tela `E9` | **P4.24** O ciclo vira no dia da assinatura · **P1.1** Monta a fatura do ciclo · **P4.11** O ciclo vira e a fatura soma tudo |
 | 🟡 | **Mandato de cobrança recorrente (cartão tokenizado)** | time do dev | tela `E9` | **P1.4** Emite a fatura e cobra na forma cadastrada |
-| 🔴 | **Conta bancária da PJ (ou o extrato dela)** | 🔴 ninguém | não existe em lugar nenhum | **P5.8** O dinheiro saiu da conta pro sócio? |
+| 🔴 | **Conta bancária da PJ (ou o extrato dela)** | 🔴 ninguém | não existe em lugar nenhum | **P5.8** O pró-labore é gerado certo, e o pagamento é do cliente |
 | 🔴 | **Dependentes para IRRF** | 🔴 ninguém | não existe em lugar nenhum | **P5.7** Declara e gera a guia do INSS · catálogo 4.7 |
 | 🔴 | **Colaboradores (admissão, ativo, demissão)** | 🔴 ninguém | não existe em lugar nenhum | **P1.1** Monta a fatura do ciclo |
 

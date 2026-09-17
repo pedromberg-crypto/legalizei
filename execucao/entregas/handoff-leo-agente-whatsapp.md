@@ -204,7 +204,7 @@ Léo não é herói ferido nem tem trauma. É função de colônia: se ofereceu 
 - Regras determinísticas (regex/QA): `atelie/ds/legalizai/regras.json`
 - Vocabulário/glossário/frases travadas: `atelie/ds/legalizai/voz.json`
 - Posicionamento e frases-gatilho: `mkt/estrategia/posicionamento.md`
-- Personas/dorsais completas: `pesquisa/personas/*.md`
+- Personas/dorsais completas: `pesquisa/personas-de-mercado/*.md`
 - Regras duras de marca (histórico/ADR): `marca/decisoes-marca.md`
 
 ## Pendências pro Pedro validar

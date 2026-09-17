@@ -483,7 +483,7 @@ Esta §6 tinha **16 linhas de erro registrado** quando ele cobrou a auditoria, e
 
 O 🟢 responde uma pergunta só: **"a gente sabe o que fazer aqui?"**. Ele nunca respondeu **"a gente tem com que fazer?"**, e eu tratei os dois como se fossem um.
 
-O achado veio do handoff de dados (`execucao/handoff/`), que cruzou o que a constituição coleta com o que os passos consomem. Resultado: **8 passos 🟢 verdes dependem de insumo sem entrega combinada**. O P3.5 está verde e não emite nota nenhuma sem CCM e sem certificado. O P4.24 está verde e não sabe que dia cobrar se a data do aceite não atravessar a fronteira do time do dev.
+O achado veio do handoff de dados (`produto/me/devs/gerador/`), que cruzou o que a constituição coleta com o que os passos consomem. Resultado: **8 passos 🟢 verdes dependem de insumo sem entrega combinada**. O P3.5 está verde e não emite nota nenhuma sem CCM e sem certificado. O P4.24 está verde e não sabe que dia cobrar se a data do aceite não atravessar a fronteira do time do dev.
 
 Não é defeito do semáforo, é o escopo dele — mas verde sozinho lê como "pronto", e nesses cartões isso é verdade pela metade.
 

@@ -163,7 +163,7 @@ Léo é a personificação exata desse arquétipo, não um personagem à parte.
 
 ## 4. As 3 personas titulares (resumo pra briefing de peça)
 
-*(9 personas "volantes" — variações específicas de profissão — vivem em `pesquisa/personas/volantes/`, não replicadas aqui por espaço; usar as titulares como base de tom e briefing.)*
+*(9 personas "volantes" — variações específicas de profissão — vivem em `pesquisa/personas-de-mercado/volantes/`, não replicadas aqui por espaço; usar as titulares como base de tom e briefing.)*
 
 ### Persona A — "Direto" (32-42 anos)
 > *"Já sei o que eu faço, só preciso que a burocracia não me atrase."*
@@ -341,8 +341,8 @@ Quadrado coral com check vazado e sangrado (canto superior-direito), fundo do ch
 | Personagem Léo (completo) | `marca/personagem-leo.md` |
 | Conceito de marca | `marca/conceito/conceito-marca.md` |
 | Posicionamento/claim/diferenciais | `pesquisa/posicionamento.md` |
-| Personas titulares | `pesquisa/personas/persona-{a,b,c}-*.md` |
-| Personas volantes (9 variações) | `pesquisa/personas/volantes/` |
+| Personas titulares | `pesquisa/personas-de-mercado/persona-{a,b,c}-*.md` |
+| Personas volantes (9 variações) | `pesquisa/personas-de-mercado/volantes/` |
 | Metodologia de personas | `pesquisa/metodologia-personas.md` |
 | Estratégia orgânica/pilares | `pesquisa/estrategia-organica.md` |
 | Mecânicas de engajamento/CTA | `pesquisa/mecanicas-engajamento.md` |

@@ -16,7 +16,7 @@ cartão, o que nos joga pro escopo **PCI-DSS (SAQ-A-EP)**. O dev sugeriu
 Pesquisa profunda rodada no Gemini e arquivada íntegra em
 `pesquisa/pagamento/2026-09-08-provedores-pagamento-saas-br.md`, com 3 ressalvas
 de leitura no topo. O prompt que a gerou está em
-`pesquisa/prompt-pesquisa-gateways-pagamento.md`.
+`pesquisa/prompts/prompt-pesquisa-gateways-pagamento.md`.
 
 **O que a pesquisa achou, resumido:**
 - **Efí** ficou em 1º **por preço** (3,49% puro, sem taxa fixa — num ticket de

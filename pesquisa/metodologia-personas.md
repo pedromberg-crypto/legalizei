@@ -25,7 +25,7 @@ Aqui **comprador = usuário** sempre (o dono do CNPJ que assina é quem usa o ap
 | Tipo | O que é | Vida | Onde mora |
 |---|---|---|---|
 | **Dorsal** | Persona canônica, base do negócio | Permanente (muda só via decisão registrada) | esta pasta, 1 arquivo por persona |
-| **Volante** | Recorte ocasional/sazonal de uma dorsal | Temporária, tem janela de validade | `pesquisa/personas/volantes/<nome>.md` |
+| **Volante** | Recorte ocasional/sazonal de uma dorsal | Temporária, tem janela de validade | `pesquisa/personas-de-mercado/volantes/<nome>.md` |
 
 ### Quando criar uma nova dorsal (precisa dos 3 critérios)
 1. **Ocasião/segmento mal-coberto** pelas dorsais atuais.
@@ -34,7 +34,7 @@ Aqui **comprador = usuário** sempre (o dono do CNPJ que assina é quem usa o ap
 
 ## Camada 1 — Dorsais (fechadas 05/08 com dado real de mercado; D e E criadas 26/08)
 
-Enriquecidas com [[perfil-microempreendedor-mercado]] (pesquisa externa Gemini/Google Search). Arquivo completo por dorsal em `pesquisa/personas/`.
+Enriquecidas com [[perfil-microempreendedor-mercado]] (pesquisa externa Gemini/Google Search). Arquivo completo por dorsal em `pesquisa/personas-de-mercado/`.
 
 | Dorsal | Arquivo | Traço-chave | Status |
 |---|---|---|---|
@@ -56,7 +56,7 @@ Pedro: quer que as personas sejam tratadas como vivas, não só ferramenta de se
 
 ### Volantes (recortes de campanha, 05/08; +12 criadas 26/08; 2 removidas + 1 simplificada + 1 promovida a dorsal 26/08 — 18 no total)
 
-18 volantes em `pesquisa/personas/volantes/`, cada uma herdando a espinha de uma dorsal e ajustando gatilho/mensagem/canal/objeção/dial (ver doutrina acima). Nenhuma é dorsal. **`a4-jovem-cnpj-servico-intelectual` saiu desta lista — foi promovida a Dorsal E** (ver Camada 1 acima), arquivo antigo deletado.
+18 volantes em `pesquisa/personas-de-mercado/volantes/`, cada uma herdando a espinha de uma dorsal e ajustando gatilho/mensagem/canal/objeção/dial (ver doutrina acima). Nenhuma é dorsal. **`a4-jovem-cnpj-servico-intelectual` saiu desta lista — foi promovida a Dorsal E** (ver Camada 1 acima), arquivo antigo deletado.
 
 **Validação final de Pedro (26/08):** **todas as 19 volantes restantes aprovadas pra uso** (ainda sem pesquisa de mercado dedicada — a aprovação é de uso estratégico, não vira dado validado do dia pra noite). 2 volantes **removidas** e 1 **simplificada**, a partir da auditoria de CNAE feita nesta mesma rodada:
 
@@ -89,7 +89,7 @@ Pedro: quer que as personas sejam tratadas como vivas, não só ferramenta de se
 
 Fonte das 11 volantes de reparo/eventos/administrativo: `pesquisa/cnae-matriz/cnae-liso-servico.md` (103 CNAEs "liso" confirmados) — mineradas das seções J/M/N/P/R/S ainda não usadas em nenhuma persona.
 
-**Enriquecimento com pesquisa real (26/08) 🆕:** as 18 volantes ganharam seção "Pesquisa real (Google Search, 26/08)" dentro do próprio arquivo, com dado de idade/gênero/renda/canal/reclamação/vocabulário/ambiente citado com fonte (Sebrae/RAIS, ABRATES, ABEOC, Sindirepa-MG, CREF, Contabilizei etc.). Fonte-mãe: `Pesquisa Perfis Microempreendedores Belo Horizonte.md` (pesquisa Google Search grounding rodada pelo Pedro, prompt em `pesquisa/prompt-pesquisa-volantes-google-search.md`). Continua sem validação de campo direta do Pedro — status geral rebaixado pra 🟡 "hipótese enriquecida com pesquisa real" nas fichas individuais (aprovação de USO de 26/08 permanece valendo, é uso estratégico ≠ dado validado). Achados que corrigem suposição anterior: gênero antes não travado ou genérico em vários volantes agora veio **fortemente definido por fonte real** — ex. `b1-cabeleireira` 83,7% feminino, `d1-chaveiro` 74,5% masculino, `c3-mecanico-oficina` esmagadora maioria masculina, `d3-teleatendente-freelancer` e `a8-professora-idiomas-online` predominantemente femininas. Detalhe completo em cada `.md` individual, não duplicado aqui.
+**Enriquecimento com pesquisa real (26/08) 🆕:** as 18 volantes ganharam seção "Pesquisa real (Google Search, 26/08)" dentro do próprio arquivo, com dado de idade/gênero/renda/canal/reclamação/vocabulário/ambiente citado com fonte (Sebrae/RAIS, ABRATES, ABEOC, Sindirepa-MG, CREF, Contabilizei etc.). Fonte-mãe: `Pesquisa Perfis Microempreendedores Belo Horizonte.md` (pesquisa Google Search grounding rodada pelo Pedro, prompt em `pesquisa/prompts/prompt-pesquisa-volantes-google-search.md`). Continua sem validação de campo direta do Pedro — status geral rebaixado pra 🟡 "hipótese enriquecida com pesquisa real" nas fichas individuais (aprovação de USO de 26/08 permanece valendo, é uso estratégico ≠ dado validado). Achados que corrigem suposição anterior: gênero antes não travado ou genérico em vários volantes agora veio **fortemente definido por fonte real** — ex. `b1-cabeleireira` 83,7% feminino, `d1-chaveiro` 74,5% masculino, `c3-mecanico-oficina` esmagadora maioria masculina, `d3-teleatendente-freelancer` e `a8-professora-idiomas-online` predominantemente femininas. Detalhe completo em cada `.md` individual, não duplicado aqui.
 
 ## Camada 3 — Matriz mestre
 

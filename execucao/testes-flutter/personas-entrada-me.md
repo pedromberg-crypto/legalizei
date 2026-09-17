@@ -421,7 +421,7 @@ Este documento nasceu em 14/09 pedindo `R$ 139,00/mês` no E7, que é o **cheio*
 | MEI (fora do escopo deste elenco) | R$ 49/mês | **R$ 29/mês** |
 | **ME (Simples Nacional)** | R$ 139/mês | **R$ 99/mês** |
 
-`REGRA` A promoção vale **os 3 primeiros meses**, é garantida por **entrar na lista de espera**, e a janela vai **até 31/12/2026**. Depois dos 3 meses o valor vai para o cheio. Os tiers antigos de R$19 e R$79 estão **mortos**. Fonte: `execucao/handoffs/handoff-leo-ajustes-2026-09-17.md` linhas 29-38.
+`REGRA` A promoção vale **os 3 primeiros meses**, é garantida por **entrar na lista de espera**, e a janela vai **até 31/12/2026**. Depois dos 3 meses o valor vai para o cheio. Os tiers antigos de R$19 e R$79 estão **mortos**. Fonte: `execucao/entregas/handoff-leo-ajustes-2026-09-17.md` linhas 29-38.
 
 🔴 **O que conferir na rodada, e nesta ordem:**
 1. O E7 mostra **R$ 99,00** como valor a pagar agora, e não R$ 139,00.

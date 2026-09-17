@@ -3,7 +3,7 @@
  * GERADOR DO HANDOFF — uma fonte, uma saída, e as travas no meio.
  * ═══════════════════════════════════════════════════════════════════════════
  *   dados-handoff.mjs  (única coisa que se edita à mão)
- *        └── execucao/handoff/HANDOFF-DADOS.md   → nota literal, pro time deles
+ *        └── produto/me/devs/gerador/HANDOFF-DADOS.md   → nota literal, pro time deles
  *
  * O valor não está em imprimir a tabela: está nas duas validações CRUZADAS,
  * que são o motivo de este arquivo existir em vez de uma nota escrita à mão.
@@ -35,8 +35,8 @@ import { writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { DADOS, FRONTEIRA } from "./dados-handoff.mjs";
-import { NODES } from "../flow/flow-data.mjs";
-import { PASSOS } from "../../produto/me/viver/processos/processos-data.mjs";
+import { NODES } from "../../../_flow/flow-data.mjs";
+import { PASSOS } from "../../viver/processos/processos-data.mjs";
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
 const HOJE = new Date().toISOString().slice(0, 10);
@@ -134,13 +134,13 @@ tipo: derivado
 status: vivo
 data: ${HOJE}
 assunto: handoff-dados-constituicao
-gerado_por: execucao/handoff/gerar-handoff.mjs
+gerado_por: produto/me/devs/gerador/gerar-handoff.mjs
 tags: [execucao, handoff, dados, abertura, processos]
 ---
 
 # 🤝 Handoff de dados — da constituição pro app interno
 
-> ⚠️ **Nota gerada.** Não editar à mão: rode \`node execucao/handoff/gerar-handoff.mjs\`. A fonte é \`dados-handoff.mjs\`.
+> ⚠️ **Nota gerada.** Não editar à mão: rode \`node produto/me/devs/gerador/gerar-handoff.mjs\`. A fonte é \`dados-handoff.mjs\`.
 >
 > **Pra que serve:** o time de programadores já construiu a constituição, do download do app até o pagamento da guia. Esta nota NÃO redesenha aquilo. Ela responde uma pergunta só: **quais dados de lá movimentam as funcionalidades internas daqui**, e o que falta chegar.
 >

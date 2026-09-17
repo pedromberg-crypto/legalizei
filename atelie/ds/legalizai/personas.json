@@ -1,5 +1,5 @@
 {
-  "_nota": "v2 (26/08) — REESCRITO. A v1 só tinha 3 dorsais (A/B/C) e ficou stale quando D e E nasceram e as 18 volantes foram criadas/enriquecidas no mesmo dia (banco de calibragem, mapeamento de pilar, reação a crítica, voz própria, referência visual, pesquisa real via Google Search). Este JSON agora é só ÍNDICE/ROTEAMENTO — id, perfil curto, canal, registro, dial de partida, mensagem-âncora. A PROFUNDIDADE REAL (tudo que não está aqui) vive exclusivamente em pesquisa/personas/persona-<letra>-*.md (dorsais) e pesquisa/personas/volantes/*.md (volantes) — leia esses arquivos direto pra qualquer peça que precise de nuance de persona, nunca assuma que este JSON basta.",
+  "_nota": "v2 (26/08) — REESCRITO. A v1 só tinha 3 dorsais (A/B/C) e ficou stale quando D e E nasceram e as 18 volantes foram criadas/enriquecidas no mesmo dia (banco de calibragem, mapeamento de pilar, reação a crítica, voz própria, referência visual, pesquisa real via Google Search). Este JSON agora é só ÍNDICE/ROTEAMENTO — id, perfil curto, canal, registro, dial de partida, mensagem-âncora. A PROFUNDIDADE REAL (tudo que não está aqui) vive exclusivamente em pesquisa/personas-de-mercado/persona-<letra>-*.md (dorsais) e pesquisa/personas-de-mercado/volantes/*.md (volantes) — leia esses arquivos direto pra qualquer peça que precise de nuance de persona, nunca assuma que este JSON basta.",
   "dorsais": [
     {
       "id": "A",
@@ -10,7 +10,7 @@
       "dialIroniaPontoDePartida": "alto",
       "mensagemAncora": "Resolve rápido, sem enrolação, sem pagar imposto a mais",
       "confianca": "🟢 validada com dado IBGE/Sebrae",
-      "arquivo": "pesquisa/personas/persona-a-servico-intelectual.md"
+      "arquivo": "pesquisa/personas-de-mercado/persona-a-servico-intelectual.md"
     },
     {
       "id": "B",
@@ -21,7 +21,7 @@
       "dialIroniaPontoDePartida": "medio",
       "mensagemAncora": "Cresça sem perder o atendimento pessoal",
       "confianca": "🟢 validada com dado IBGE/Sebrae",
-      "arquivo": "pesquisa/personas/persona-b-servico-estetico.md"
+      "arquivo": "pesquisa/personas-de-mercado/persona-b-servico-estetico.md"
     },
     {
       "id": "C",
@@ -33,7 +33,7 @@
       "mensagemAncora": "A gente explica cada passo, sem pressa",
       "confianca": "🟢 validada com dado IBGE/Sebrae + correção de campo 26/08",
       "atencao": "objeção principal é medo de ficar sem aliado ('vou travar sozinha') — piada sobre termo técnico pode soar como rir DELA mesmo mirando o sistema. Na dúvida, sugestão do agente pende pra 'Léo não encaixa aqui', decisão final humana.",
-      "arquivo": "pesquisa/personas/persona-c-baixa-familiaridade-digital.md"
+      "arquivo": "pesquisa/personas-de-mercado/persona-c-baixa-familiaridade-digital.md"
     },
     {
       "id": "D",
@@ -44,7 +44,7 @@
       "dialIroniaPontoDePartida": "baixo",
       "mensagemAncora": "Nunca mais pensar nisso pelo preço de um café",
       "confianca": "🔴 exceção de governança (criada por decisão direta, sem os 3 critérios padrão) — parcialmente reforçada 26/08 (93% das novas empresas de chaveiro em 2025 foram MEI, não ME)",
-      "arquivo": "pesquisa/personas/persona-d-mei-puro-permanente.md"
+      "arquivo": "pesquisa/personas-de-mercado/persona-d-mei-puro-permanente.md"
     },
     {
       "id": "E",
@@ -55,7 +55,7 @@
       "dialIroniaPontoDePartida": "alto",
       "mensagemAncora": "Ninguém te ensinou isso, eu ensino agora",
       "confianca": "🔴 2ª exceção de governança (promovida de volante), contradiz o dado agregado de idade média de mercado (40,8a) — pesquisa real de 26/08 NÃO validou o eixo específico desta dorsal, confiança mantida",
-      "arquivo": "pesquisa/personas/persona-e-jovem-cnpj.md"
+      "arquivo": "pesquisa/personas-de-mercado/persona-e-jovem-cnpj.md"
     }
   ],
   "volantes": {
@@ -80,7 +80,7 @@
       { "id": "d2", "nome": "sapateiro-reparo-calcados", "dorsalMae": "D", "gatilho": "mesma lógica de permanência, conserto de calçados/bolsas" },
       { "id": "d3", "nome": "teleatendente-freelancer", "dorsalMae": "D", "gatilho": "atende de casa, bico recorrente, baixo ticket" }
     ],
-    "pasta": "pesquisa/personas/volantes/"
+    "pasta": "pesquisa/personas-de-mercado/volantes/"
   },
   "regraDeChecagem": "copy nova pra qualquer dorsal responde 'isso soa Sábio distante (contabilês, autoridade fria) ou Aliado (resolve, cuida, fala de igual pra igual)?' antes de publicar — mesma pergunta vale pro dial de ironia do Léo.",
   "dialNaoETravaFixa": "personagem-leo.md §5: a tabela de dial é PONTO DE PARTIDA, não regra travada. Dial de volante pode ser ajustado em relação à dorsal-mãe quando o gatilho específico pedir (doutrina 26/08, metodologia-personas.md). Papel do agente é sugerir encaixe ('cabe o Léo aqui' / 'não encaixa bem'), decisão final é humana (Pedro), post a post.",

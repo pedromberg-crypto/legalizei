@@ -23,7 +23,7 @@ tags: [marco, marketing, estrategia]
 **Fase 1 — Público:**
 - `pesquisa/posicionamento.md` — remontagem do conceito de marca já travado
 - `pesquisa/metodologia-personas.md` — sistema dorsal/volante
-- 3 personas dorsais (`pesquisa/personas/`) + 9 volantes (`pesquisa/personas/volantes/`)
+- 3 personas dorsais (`pesquisa/personas-de-mercado/`) + 9 volantes (`pesquisa/personas-de-mercado/volantes/`)
 
 **Fase 2 — Orgânico:**
 - `pesquisa/estrategia-organica.md` — Instagram como canal primário, pilares por bloco de funil

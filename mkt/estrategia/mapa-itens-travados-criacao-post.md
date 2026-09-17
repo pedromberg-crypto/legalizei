@@ -84,7 +84,7 @@ Várias rodadas no mesmo dia (26/08): Dorsal D ("MEI de vida toda") criada por d
 
 **Pesquisa real (Google Search, 26/08):** as 18 volantes ganharam seção "Pesquisa real" com dado citado (idade/gênero/renda/canais/reclamação/vocabulário/ambiente), fonte `Pesquisa Perfis Microempreendedores Belo Horizonte.md`. As 5 dorsais ganharam "Pesquisa real agregada" sintetizando os sub-perfis de cada grupo. Achado mais forte: 93% das novas empresas do setor de chaveiro em 2025 foram MEI — primeiro dado real que sustenta a existência da Dorsal D. Persona E permanece sem validação de dado (honestidade registrada, confiança 🔴 mantida).
 
-Total: **23 personas documentadas** (5 dorsais + 18 volantes). Detalhe completo em `validacao-pilares-blocos-personas.md` §5. **Onde mora:** `pesquisa/metodologia-personas.md` + `pesquisa/personas/` (5 arquivos de dorsal + `pesquisa/personas/volantes/` com 18 arquivos).
+Total: **23 personas documentadas** (5 dorsais + 18 volantes). Detalhe completo em `validacao-pilares-blocos-personas.md` §5. **Onde mora:** `pesquisa/metodologia-personas.md` + `pesquisa/personas-de-mercado/` (5 arquivos de dorsal + `pesquisa/personas-de-mercado/volantes/` com 18 arquivos).
 
 ---
 
@@ -128,7 +128,7 @@ Mesma realidade do item 9: requisito está travado, construção real fica pra q
 - Tensão conhecida: card do CONTADOR específico continua exigindo foto real autorizada ou ilustração (regra já travada no guardian, `roteiros-video.md` 20/08) — humano-IA fotorrealista serve pra CLIENTE/cena de uso, não pra fingir ser o contador real.
 - Combo de variações: cliente sozinho · contador sozinho · ambos juntos · ambos separados · ambiente escritório · ambiente rua (MEI prestador de serviço).
 - Diversidade: idade 18+, tom de pele amplo, todos os gêneros, **etnia travada em características brasileiras** (atenção ao sudeste, praça de ataque inicial).
-- Referência de profissão/idade: as 3 dorsais + volantes de `pesquisa/personas/`.
+- Referência de profissão/idade: as 3 dorsais + volantes de `pesquisa/personas-de-mercado/`.
 - Referência de CNAE: **124 CNAEs "Real" confirmados** (`pesquisa/cnae-matriz/limpeza-260-servico.md`) — cresce conforme o escopo atendido aumentar.
 
 **Onde mora:** `ds/legalizai/templates-imagem.json > briefHumanoIA` (v2) · `marca/decisoes-marca.md` 2026-08-26.

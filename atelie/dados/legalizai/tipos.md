@@ -28,7 +28,7 @@ pilar         number (1-17)                     — v4 01/09: 6/7 standby, +16/1
 personaAlvo   "A"|"B"|"C"|"D"|"E"|"geral"       🆕 v3 (26/08) — dorsal-alvo, de metodologia-personas.md.
                                      Atualizado: eram só A/B/C, agora 5 dorsais (D-"MEI de vida toda",
                                      E-"Começa Certo"). Ver ds/legalizai/personas.json (índice) +
-                                     pesquisa/personas/persona-<letra>-*.md (conteúdo real completo,
+                                     pesquisa/personas-de-mercado/persona-<letra>-*.md (conteúdo real completo,
                                      o JSON NÃO substitui isso).
 personaVolante  string | null        🆕 v3 (26/08) — id do volante quando a peça mira um recorte
                                      específico dentro da dorsal (ex: "a1", "b3", "d1"), null se a

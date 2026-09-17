@@ -25,7 +25,7 @@ Aqui **comprador = usuário** sempre (o dono do CNPJ que assina é quem usa o ap
 | Tipo | O que é | Vida | Onde mora |
 |---|---|---|---|
 | **Dorsal** | Persona canônica, base do negócio | Permanente (muda só via decisão registrada) | esta pasta, 1 arquivo por persona |
-| **Volante** | Recorte ocasional/sazonal de uma dorsal | Temporária, tem janela de validade | `pesquisa/personas/volantes/<nome>.md` |
+| **Volante** | Recorte ocasional/sazonal de uma dorsal | Temporária, tem janela de validade | `pesquisa/personas-de-mercado/volantes/<nome>.md` |
 
 ### Quando criar uma nova dorsal (precisa dos 3 critérios)
 1. **Ocasião/segmento mal-coberto** pelas dorsais atuais.
@@ -34,7 +34,7 @@ Aqui **comprador = usuário** sempre (o dono do CNPJ que assina é quem usa o ap
 
 ## Camada 1 — Dorsais (fechadas 05/08 com dado real de mercado)
 
-Enriquecidas com [[perfil-microempreendedor-mercado]] (pesquisa externa Gemini/Google Search). Arquivo completo por dorsal em `pesquisa/personas/`.
+Enriquecidas com [[perfil-microempreendedor-mercado]] (pesquisa externa Gemini/Google Search). Arquivo completo por dorsal em `pesquisa/personas-de-mercado/`.
 
 | Dorsal | Arquivo | Traço-chave | Status |
 |---|---|---|---|
@@ -46,7 +46,7 @@ Seeds de QA que alimentaram as dorsais: `reta`/`reta-direto` (dev freelancer) �
 
 ### Volantes (recortes de campanha, 05/08)
 
-9 volantes criadas em `pesquisa/personas/volantes/`, cada uma herdando a espinha de uma dorsal e ajustando só gatilho/mensagem/canal/objeção. Nenhuma é dorsal — todas 🟡 hipótese sem pesquisa dedicada, existem pra dar ângulo específico de campanha/CNAE quando a hora chegar, não pra rodar todas de uma vez.
+9 volantes criadas em `pesquisa/personas-de-mercado/volantes/`, cada uma herdando a espinha de uma dorsal e ajustando só gatilho/mensagem/canal/objeção. Nenhuma é dorsal — todas 🟡 hipótese sem pesquisa dedicada, existem pra dar ângulo específico de campanha/CNAE quando a hora chegar, não pra rodar todas de uma vez.
 
 | Volante | Dorsal-mãe | Gatilho específico |
 |---|---|---|

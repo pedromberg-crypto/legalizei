@@ -25,7 +25,7 @@ metadata:
 - ⚠️ **O endereco fiscal nao se funde ao plano.** Sao **2 itens de linha** (R$99 + R$49 = R$148 nos 3 primeiros meses, R$188 depois), coerente com a fatura por competencia de 11/09. Ver [[legalize-endereco-fiscal-49]] e [[legalize-cobranca-fatura-competencia]].
 - 🔴 **Dois R$139 convivem no vault e NAO tem relacao nenhuma**: o plano ME cheio, e a taxa de *"Desenquadramento de ME para EPP"* do contrato. Nao confundir ao ler relatorio.
 - Tela de preco promocional **escreve a validade**. Preco sem prazo escrito volta como reclamacao.
-- Onde ja foi aplicado: `execucao/handoffs/handoff-leo-ajustes-2026-09-17.md` (linhas 29-38) e o esperado do E7 em [[legalize-suite-teste-flutter-personas]].
+- Onde ja foi aplicado: `execucao/entregas/handoff-leo-ajustes-2026-09-17.md` (linhas 29-38) e o esperado do E7 em [[legalize-suite-teste-flutter-personas]].
 
 ⚠️ **O dev precisa confirmar a leitura com o Pedro antes de subir na base do Leo:** a interpretacao aplicada foi R$19 → R$29 no MEI e R$79 → R$99 no ME, com o antigo tier de R$99 do ME absorvido.
 

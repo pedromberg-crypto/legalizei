@@ -749,7 +749,7 @@ FORA: ${ESCOPO.fora.map((f) => f.o).join(" · ")}`}
                       ? "1 insumo ainda não tem entrega combinada."
                       : `${selecionado.insumosFaltando} insumos ainda não têm entrega combinada.`}{" "}
                     A pergunta de cada um, e pra quem ela vai, está em{" "}
-                    <code className="rounded bg-amber-50 px-1">execucao/handoff/HANDOFF-DADOS.md</code>.
+                    <code className="rounded bg-amber-50 px-1">produto/me/devs/gerador/HANDOFF-DADOS.md</code>.
                   </p>
                 ) : null}
               </div>

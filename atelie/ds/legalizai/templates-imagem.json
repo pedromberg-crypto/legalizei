@@ -11,7 +11,7 @@
       "genero": "todos",
       "etnia": "TRAVADA em características brasileiras, com atenção ao sudeste (praça de ataque inicial) — decisão deliberada, não diversidade genérica global"
     },
-    "referenciaDePersona": "pesquisa/personas/persona-a/b/c-*.md + pesquisa/personas/volantes/*.md (ex.: a1-dev-freelancer-recem-clt, c1-professor-autonomo-aposentado — bate com o exemplo do Pedro de professora de meia-idade)",
+    "referenciaDePersona": "pesquisa/personas-de-mercado/persona-a/b/c-*.md + pesquisa/personas-de-mercado/volantes/*.md (ex.: a1-dev-freelancer-recem-clt, c1-professor-autonomo-aposentado — bate com o exemplo do Pedro de professora de meia-idade)",
     "referenciaDeCnae": "124 CNAEs 'Real' confirmados em pesquisa/cnae-matriz/limpeza-260-servico.md — base de contexto de serviço (nunca comércio/varejo), cresce conforme o escopo de CNAEs atendidos aumentar",
     "fonte": "decisoes-marca.md 2026-08-26, mapa-itens-travados-criacao-post.md §10"
   },

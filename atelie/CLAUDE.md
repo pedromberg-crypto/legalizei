@@ -39,7 +39,7 @@ motor trabalha com regra desatualizada sem ninguém perceber.
 5. `../mkt/estrategia/mecanicas-engajamento.md` — escada de CTA (nível 1 engajamento / nível 2
    funil), banco de prompts, mecânica "Pergunta que ninguém explica".
 6. `../pesquisa/metodologia-personas.md` — 5 dorsais (A/B/C/D/E) + 18 volantes (26/08). Pra copy
-   calibrada de verdade, leia também o arquivo da persona específica em `../pesquisa/personas/` —
+   calibrada de verdade, leia também o arquivo da persona específica em `../pesquisa/personas-de-mercado/` —
    é lá que mora o banco de calibragem, mapeamento de pilar, reação a crítica, voz própria e
    referência visual de cada dorsal (não está resumido em lugar nenhum além do próprio arquivo).
 7. `ds/legalizai/regras.json` — rode o QA determinístico mentalmente contra o que você escreveu
@@ -55,7 +55,7 @@ são extração estruturada MINHA, não têm original solto em outro lugar do va
 `ds/legalizai/personas.json` NÃO é assim** — desde 26/08 ele é só um ÍNDICE (id, perfil curto, dial
 de partida, mensagem-âncora) das 5 dorsais + 18 volantes; a profundidade real (banco de calibragem,
 mapeamento de pilar, reação a crítica, voz própria, referência visual, pesquisa real) mora só em
-`../pesquisa/personas/*.md` e `../pesquisa/personas/volantes/*.md` — leia esses direto pra qualquer
+`../pesquisa/personas-de-mercado/*.md` e `../pesquisa/personas-de-mercado/volantes/*.md` — leia esses direto pra qualquer
 copy que precise de nuance de persona.
 
 ## Formato de saída

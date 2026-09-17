@@ -12,7 +12,7 @@ metadata:
 `/processos` responde *"a gente sabe o que fazer aqui?"*. Ele **nunca** respondeu
 *"a gente tem com que fazer?"*.
 
-O achado veio do handoff de dados (`execucao/handoff/`), que cruzou o que a
+O achado veio do handoff de dados (`produto/me/devs/gerador/`), que cruzou o que a
 constituição coleta com o que os passos consomem: **8 passos 🟢 verdes dependem
 de insumo sem entrega combinada**.
 

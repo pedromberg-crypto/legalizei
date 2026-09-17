@@ -25,7 +25,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { PROCESSOS, PASSOS, ARESTAS, TRILHAS } from "./processos-data.mjs";
 import { PROPOSTAS } from "./processos-propostas.mjs";
-import { DADOS } from "../../../../execucao/handoff/dados-handoff.mjs";
+import { DADOS } from "../../../../produto/me/devs/gerador/dados-handoff.mjs";
 import { verificarEscopo } from "./verificar-escopo.mjs";
 import { verificarPersona } from "./verificar-persona.mjs";
 import { RAIZ } from "../../../_raiz.mjs";

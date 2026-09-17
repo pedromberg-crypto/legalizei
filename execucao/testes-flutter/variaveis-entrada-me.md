@@ -121,7 +121,7 @@ Não bifurcam a tela, mas **é onde o relatório final é conferido**: objeto so
 
 🔴 **Teto do ME, e ele BARRA — corrigido em 17/09.** `TETO_ME_MENSAL = 30000` (R$360 mil/ano, LC 123 art. 3º II). A faixa "+R$30 mil" saiu da grade em 01/09 e quem fatura acima usa "Sei o valor exato" — mas **valor exato acima de R$30.000/mês é EPP, e EPP está fora do escopo**.
 
-Até 14/09 esta nota terminava com *"Não barramos por faturamento"*, e essa frase ficou de pé contra duas travas: `execucao/processos/_persona.mjs:82` (13/09, *"processo nenhum pode ter ramo de EPP"* — no contrato o EPP existe só como **saída**, "Desenquadramento de ME para EPP, R$139,00") e a regra do agente Léo de 17/09 (`execucao/handoffs/handoff-leo-ajustes-2026-09-17.md:76`), que manda **recusar e escalar** acima de R$360 mil/ano. A mesma pessoa não pode ouvir *"essa eu ainda não atendo"* no WhatsApp e ser aceita no app.
+Até 14/09 esta nota terminava com *"Não barramos por faturamento"*, e essa frase ficou de pé contra duas travas: `execucao/processos/_persona.mjs:82` (13/09, *"processo nenhum pode ter ramo de EPP"* — no contrato o EPP existe só como **saída**, "Desenquadramento de ME para EPP, R$139,00") e a regra do agente Léo de 17/09 (`execucao/entregas/handoff-leo-ajustes-2026-09-17.md:76`), que manda **recusar e escalar** acima de R$360 mil/ano. A mesma pessoa não pode ouvir *"essa eu ainda não atendo"* no WhatsApp e ser aceita no app.
 
 **Comportamento esperado:** valor exato acima do teto sai pela **porta de espera/escalada**, com o mesmo tratamento da P15 (recusa explicada, nunca erro genérico). Não abre empresa. Exercitado pela **P21**.
 

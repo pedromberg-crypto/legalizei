@@ -122,6 +122,15 @@ const DISPENSADOS = {
   "portal/gerar-mapa-portal.mjs": "portal do cliente, outra frente",
   "handoff/gerar-handoff.mjs": "pacote para o dev, sob demanda",
   "gerar-placar-mauro.mjs": "reporte ao sócio — roda no /fechar, não aqui",
+  /**
+   * ⏳ DISPENSA TEMPORÁRIA, e a data importa: 17/09.
+   *
+   * A entrega existe hoje só como **amostra** (`--amostra`), para o Pedro
+   * aprovar a FORMA antes de eu gerar as 162 competências. Quando a forma
+   * fechar, ela sai daqui e entra numa fase própria — porque aí passa a ser
+   * publicação verificada, igual ao `gerar-tabelas-app`.
+   */
+  "entrega/gerar-entrega.mjs": "⏳ amostra aguardando a forma ser aprovada — vira etapa quando fechar",
   "../produto/gerar-funcionalidades.mjs": "inventário de produto, outra frente",
   "../_sistema/pdf/gerar-pdf.mjs": "utilitário de exportação",
 };

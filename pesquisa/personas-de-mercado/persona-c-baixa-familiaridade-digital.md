@@ -39,7 +39,7 @@ Depoimento em vídeo simples e real (não produção sofisticada), conteúdo que
 
 ## Criativo / visual
 
-Fonte grande, contraste alto, sem elementos decorativos que confundam — mesma diretriz já aplicada no design do app pra essa persona (ver `execucao/motor-testes/personas/cida.json`: "estressa com fonte pequena, termo técnico, formulário longo sem salvar")
+Fonte grande, contraste alto, sem elementos decorativos que confundam — mesma diretriz já aplicada no design do app pra essa persona (ver `_arquivo/motor-testes/personas/cida.json`: "estressa com fonte pequena, termo técnico, formulário longo sem salvar")
 
 ## Tom de voz (como a MARCA/Léo fala COM ela — calibração, não voz dela)
 

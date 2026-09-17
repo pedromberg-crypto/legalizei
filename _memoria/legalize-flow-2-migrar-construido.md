@@ -8,7 +8,7 @@ metadata:
   modified: 2026-07-30T17:21:33.645Z
 ---
 
-**O FLOW #2 EXISTE** (30/07). Era o blind spot mais antigo — *"metade do mercado, zero testado"* desde 15/07. A lógica já estava modelada e testada no motor (`execucao/motor-testes/flow-migrar.js`, M0–M5, personas `migra-limpo`/`migra-passivo`/`migra-refem`); **faltavam só as telas**.
+**O FLOW #2 EXISTE** (30/07). Era o blind spot mais antigo — *"metade do mercado, zero testado"* desde 15/07. A lógica já estava modelada e testada no motor (`_arquivo/motor-testes/flow-migrar.js`, M0–M5, personas `migra-limpo`/`migra-passivo`/`migra-refem`); **faltavam só as telas**.
 
 `components/wizard-migrar.tsx` · 7 rotas (`(wizard)/migrar/*` + `(app)/migrar/*`) · grupo no `/mockup` · espelhado na `/apresentacao` com pills próprias. **A porta que era beco virou caminho:** o fork do N3 mandava quem tem CNPJ pra um card "essa parte ainda não existe".
 

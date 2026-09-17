@@ -59,7 +59,7 @@ tags: [produto, ux, dados, instrumentacao, metricas, coorte, flow]
 A tag é **dado puro** e nunca pode vazar pra lógica. Garantido por teste, não por promessa:
 - Persona **`reta-direto`** = `reta` com `coorte_experiencia: "ja_abriu"`, esperando **trilha idêntica**.
 - Se um dia alguém fizer um passo fiscal/validação ler a coorte, **o teste quebra**. É o guarda-corpo da regra dura.
-- → `execucao/motor-testes/personas/reta-direto.json`
+- → `_arquivo/motor-testes/personas/reta-direto.json`
 
 ## 🛠️ Implicações pro Dev
 1. Campo `coorte_experiencia` no cadastro (T5), opcional, 3 valores.

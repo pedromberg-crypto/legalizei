@@ -1,6 +1,6 @@
 ---
 name: legalize-motor-testes-arquitetura
-description: Motor de testes em execucao/motor-testes/ (headless, Node puro). **v0.5.0 · 19 personas · 2 flows** (16 abertura + 3 migrar). Ordem: ENTRADA→B1→B3→B2→B4. **ENCAIXE (21/07): CNAE escolhido PRE-PAGO no b1.encaixe; teaser virou b1.resumo (N5'); N17/b2.cnae_otimo removido.** Guard-rails fatais no b1.triagem (N4, ANTES do dinheiro). Motor = criterio de aceite; contradicao motor x spec, motor ganha. 🔴 28/07: DESATUALIZADO DE NOVO — N5/N18 removidos do flow real, gate de cidade novo, veredito 3 vias, front-load no N6; motor ainda nao reflete nada disso.
+description: "ARQUIVADO em 17/09 (_arquivo/motor-testes/). Motor headless de 21/07 que virou autoridade fantasma: afirmava b1.encaixe e N5' resumo, que nao existem no flow-data, e carregava a 4a copia da logica fiscal com o IRRF_ISENCAO refutado em 14/09. O corpo abaixo e HISTORIA, nao guia."
 metadata:
   node_type: memory
   type: project
@@ -8,7 +8,21 @@ metadata:
   modified: 2026-07-28T19:05:02.705Z
 ---
 
-**O que é:** motor headless que percorre personas pelas telas em ms, sem UI e sem gastar token
+🗄️ **ARQUIVADO EM 17/09 — esta nota e HISTORIA, nao guia.** O motor foi inteiro para
+`_arquivo/motor-testes/` (406 arquivos) e saiu do indice de autoridade, onde era citado como
+dono da ORDEM do flow, da LOGICA dos blocos, das PERSONAS/aceite e do Flow #2 MIGRAR.
+**Quem manda hoje:** `produto/_flow/flow-data.mjs` (124 nos, com o ramo migrar dentro) e, para
+a vida depois da constituicao, as 18 de `vidas.mjs`. 🔴 A prova de que ele parou: afirmava
+`b1.encaixe` e `b1.resumo`, que **nao existem** no flow-data; tinha `b2.natureza`, removida do
+produto em 31/08; usava a numeracao N, morta; e carregava a **4a copia** da logica fiscal, com
+`IRRF_ISENCAO: 5000` — a leitura que o motor fiscal refutou em 14/09 (**nao e isencao, e
+redutor**). 7 das 8 constantes batiam; a 8a estava errada e ninguem sabia que ali era um lugar.
+⚠️ A linha *"contradicao motor x spec, motor ganha"* abaixo esta **REVOGADA**.
+Ver [[legalize-arvore-produto-me-mei]].
+
+---
+
+**O que era:** motor headless que percorre personas pelas telas em ms, sem UI e sem gastar token
 (a IA de mapeamento CNAE vem **dublada** pela persona; só o determinístico é testado).
 `node run.js <persona>` → tabela + PASS/FAIL + grava sozinho no livro-caixa append-only.
 
@@ -81,7 +95,7 @@ personas continuam testando o flow ANTIGO. Reconciliar = revalidar persona por p
 O motor foi pro repo privado `base-flow-legalizai-story-book` em 15/07, onde **"as 14 personas são o
 critério de aceite"**. Hoje são **19, a ordem é outra, e existe um flow #2**.
 🔴 **O dev precisa ser avisado.** → [[legalize-handoff-dev-repo]]
-**Anti-drift:** contradição motor × spec → **motor ganha**.
+**Anti-drift:** ~~contradição motor × spec → motor ganha~~ — 🔴 **REVOGADO em 17/09.** Quem ganha é o `flow-data.mjs`.
 
 ## 🗄️ Histórico
 - **v0.2.x (15/07)** — 11 → 14 personas. Ordem antiga (cobrança no T16). `erro-orgao` (fecha

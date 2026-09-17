@@ -12,7 +12,7 @@ metadata:
 
 **O cruzamento medido:** teto cartesiano 31,3 bi · alcancavel 10,2 bi (−67,5%) · par-a-par 70-112 · **piso 1-wise = 14**, e e 14 porque a maior variavel e a categoria.
 
-**Comecou do zero** (so os nomes herdados) porque das 19 antigas em `motor-testes/personas/` **so 6 rodavam**: `6201-5/00` nao existe na matriz (4 personas), `7020-4/00` exige conselho (5), `bloq-3socios` e `bloq-exterior` morreram em 29/08 (teto virou 4 socios; a pergunta do exterior virou lembrete), e capital/natureza/faixas envelheceram em 31/08 e 01/09.
+**Comecou do zero** (so os nomes herdados) porque das 19 antigas em `_arquivo/motor-testes/personas/` **so 6 rodavam**: `6201-5/00` nao existe na matriz (4 personas), `7020-4/00` exige conselho (5), `bloq-3socios` e `bloq-exterior` morreram em 29/08 (teto virou 4 socios; a pergunta do exterior virou lembrete), e capital/natureza/faixas envelheceram em 31/08 e 01/09.
 
 🎯 **Proporcao fiscal corrigida pra 10 `III-fixo` × 4 `fator-r-dinamico`** — dos 87 CNAEs atendidos, **65 sao III-fixo** (Fator R nao muda nada) e so 15 sao dinamicos. O elenco antigo testava a excecao.
 

@@ -10,7 +10,7 @@ tags: [pesquisa, personas, marketing]
 
 > **Esta é a FONTE ÚNICA de personas de marketing.** Orgânico, tráfego pago e criativos leem daqui. Nada de persona solta em outro doc.
 >
-> ⚠️ Diferente de `execucao/motor-testes/personas/*.json` — aquelas são **fixtures de QA de fluxo** (nível de letramento digital + gatilhos de estresse de UX), não personas de marketing. Servem de **seed** (traço de comportamento real observado), não de substituto. Achado já registrado pelo próprio vault: `HOME.md` 25º flow (05/08).
+> ⚠️ Diferente de `_arquivo/motor-testes/personas/*.json` — aquelas são **fixtures de QA de fluxo** (nível de letramento digital + gatilhos de estresse de UX), não personas de marketing. Servem de **seed** (traço de comportamento real observado), não de substituto. Achado já registrado pelo próprio vault: `HOME.md` 25º flow (05/08).
 
 ## Como o sistema funciona
 
@@ -106,4 +106,4 @@ Fonte: `marca/conceito/conceito-marca.md` §2-3 (propósito + "pra quem").
 - Pilares orgânicos: [[estrategia-organica]] · [[mecanicas-engajamento]]
 - Estrutura de tráfego: [[estrutura-funil-trafego]] · [[frente-1-captacao-meta-bh]]
 - Economia: [[economia-preco-cac]]
-- Fixtures de QA (seed, não substituto): `execucao/motor-testes/personas/*.json`
+- Fixtures de QA (seed, não substituto): `_arquivo/motor-testes/personas/*.json`

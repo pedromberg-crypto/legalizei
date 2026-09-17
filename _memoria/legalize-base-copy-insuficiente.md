@@ -19,7 +19,7 @@ metadata:
 - Exemplos de copy por TIPO de tela (erro, vazio, sucesso, aviso legal, confirmação).
 - Lista de vocabulário proibido/permitido além dos 3 exemplos do §5.
 
-**Personas NÃO preenchem essa lacuna.** `execucao/motor-testes/personas/*.json` (18 arquivos) são artefato de QA do motor de testes — simulam passagem pelo flow com nível de letramento digital + gatilhos de estresse (`estressa: [...]`). Não têm jobs-to-be-done formal, não têm linguagem-alvo por perfil, não têm verbatim de fala do cliente. Servem pra gerar caso de teste determinístico, não pra validar tom de escrita.
+**Personas NÃO preenchem essa lacuna.** `_arquivo/motor-testes/personas/*.json` (18 arquivos) são artefato de QA do motor de testes — simulam passagem pelo flow com nível de letramento digital + gatilhos de estresse (`estressa: [...]`). Não têm jobs-to-be-done formal, não têm linguagem-alvo por perfil, não têm verbatim de fala do cliente. Servem pra gerar caso de teste determinístico, não pra validar tom de escrita.
 
 **Why:** validar copy hoje = costurar manualmente 3 fontes espalhadas (conceito-marca + decisoes-marca + metodo-varredura). Funciona pra achado pontual, não pra rodada sistemática tipo E1→E4.5.
 

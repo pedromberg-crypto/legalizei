@@ -9,7 +9,7 @@ tags: [produto, ux, telas, fluxo, condicionais, ramificacoes, personas, build]
 
 # 🔀 Mapa de ramificações do flow (Entrada → B4)
 
-> Todas as condicionais (forks) do fluxo de abertura, cruzadas com as **personas** do motor e os **vereditos de CNAE** (atende / waitlist / Mauro). Responde: **quantos desvios existem · onde divergem em telas próprias · onde reconvergem ao tronco · o que é saída terminal.** Companheiro de [[mapa-telas-mobile]] (inventário) + [[casos-teste-fluxo-cnae]] (personas) + [[blocos-fluxo-abertura]] (state machine) + motor `execucao/motor-testes/flow-schema.js` (lógica codada).
+> Todas as condicionais (forks) do fluxo de abertura, cruzadas com as **personas** do motor e os **vereditos de CNAE** (atende / waitlist / Mauro). Responde: **quantos desvios existem · onde divergem em telas próprias · onde reconvergem ao tronco · o que é saída terminal.** Companheiro de [[mapa-telas-mobile]] (inventário) + [[casos-teste-fluxo-cnae]] (personas) + [[blocos-fluxo-abertura]] (state machine) + motor `_arquivo/motor-testes/flow-schema.js` (lógica codada).
 
 ## 📊 Contagem: ~19 pontos condicionais, em 3 tipos
 O que importa pro build não é o número cru, é **quantos geram tela própria**:

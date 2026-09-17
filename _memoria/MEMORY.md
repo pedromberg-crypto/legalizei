@@ -91,7 +91,7 @@
 - [Suite de teste do Flutter: 24 personas](legalize-suite-teste-flutter-personas.md) — 14/09, ampliada 17/09: P21-P24 provam a ausencia do gate.
 - [O prototipo Next.js NAO descreve mais o Flutter](legalize-prototipo-nextjs-nao-descreve-flutter.md) — 14/09: 2 erros meus.
 - [Nao rodar e2e sem pedir](legalize-nao-rodar-e2e-sem-pedir.md) — 30/08, reforcado 3x: um "pode rodar" vale so pra aquela.
-- [Motor de testes: arquitetura](legalize-motor-testes-arquitetura.md) — v0.5.0, 19 personas, 2 flows. 🔴 desatualizado desde.
+- [Motor de testes: ARQUIVADO](legalize-motor-testes-arquitetura.md) — 17/09: autoridade fantasma de 21/07; quem manda e o `flow-data.mjs`.
 - [Pedro confere UI sozinho](legalize-pedro-confere-ui-sozinho.md) — subir porta local pode; abrir navegador pra CONFERIR.
 - [Storybook = fonte de verdade renderizada](legalize-storybook-fonte-verdade.md) — 31/07: 33+ stories. Deploy Vercel pendente.
 

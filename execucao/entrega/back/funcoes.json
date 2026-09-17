@@ -1,0 +1,970 @@
+{
+  "gerado": "2026-09-17",
+  "gerador": "execucao/entrega/gerar-entrega.mjs",
+  "aviso": "ARQUIVO GERADO. Não editar à mão — a fonte é o motor, e ele é conferido por 14 suítes.",
+  "amostra": false,
+  "convencaoDeUnidade": "Todo valor monetário vem como { valor, unidade, legivel }. Compare por `valor`, exiba por `legivel`, e nunca some campos de unidades diferentes.",
+  "funcoes": [
+    {
+      "funcao": "darfDoProLabore",
+      "modulo": "motor-fiscal/apurador.mjs",
+      "oQueFaz": "a guia do sócio, POR PESSOA — INSS de 11% até o teto, e IRRF progressivo",
+      "unidades": {
+        "entrada": "reais",
+        "saida": "centavos"
+      },
+      "casos": [
+        {
+          "rotulo": "sem pró-labore",
+          "entrada": {
+            "proLabore": {
+              "valor": 0,
+              "unidade": "reais",
+              "legivel": "R$ 0,00"
+            },
+            "cltRemuneracao": {
+              "valor": 0,
+              "unidade": "reais",
+              "legivel": "R$ 0,00"
+            }
+          },
+          "saida": {
+            "inss": {
+              "valor": 0,
+              "unidade": "centavos",
+              "legivel": "R$ 0,00"
+            },
+            "irrf": {
+              "valor": 0,
+              "unidade": "centavos",
+              "legivel": "R$ 0,00"
+            },
+            "baseInss": {
+              "valor": 0,
+              "unidade": "centavos",
+              "legivel": "R$ 0,00"
+            },
+            "baseIrrf": {
+              "valor": -60720,
+              "unidade": "centavos",
+              "legivel": "R$ -607,20"
+            },
+            "deducaoAplicada": {
+              "valor": 60720,
+              "unidade": "centavos",
+              "legivel": "R$ 607,20"
+            },
+            "impostoTabela": {
+              "valor": 0,
+              "unidade": "centavos",
+              "legivel": "R$ 0,00"
+            },
+            "redutor": {
+              "valor": 0,
+              "unidade": "centavos",
+              "legivel": "R$ 0,00"
+            },
+            "isento": true,
+            "usouDescontoSimplificado": true
+          }
+        },
+        {
+          "rotulo": "no salário mínimo de 2026",
+          "entrada": {
+            "proLabore": {
+              "valor": 1621,
+              "unidade": "reais",
+              "legivel": "R$ 1.621,00"
+            },
+            "cltRemuneracao": {
+              "valor": 0,
+              "unidade": "reais",
+              "legivel": "R$ 0,00"
+            }
+          },
+          "saida": {
+            "inss": {
+              "valor": 17831,
+              "unidade": "centavos",
+              "legivel": "R$ 178,31"
+            },
+            "irrf": {
+              "valor": 0,
+              "unidade": "centavos",
+              "legivel": "R$ 0,00"
+            },
+            "baseInss": {
+              "valor": 162100,
+              "unidade": "centavos",
+              "legivel": "R$ 1.621,00"
+            },
+            "baseIrrf": {
+              "valor": 101380,
+              "unidade": "centavos",
+              "legivel": "R$ 1.013,80"
+            },
+            "deducaoAplicada": {
+              "valor": 60720,
+              "unidade": "centavos",
+              "legivel": "R$ 607,20"
+            },
+            "impostoTabela": {
+              "valor": 0,
+              "unidade": "centavos",
+              "legivel": "R$ 0,00"
+            },
+            "redutor": {
+              "valor": 0,
+              "unidade": "centavos",
+              "legivel": "R$ 0,00"
+            },
+            "isento": true,
+            "usouDescontoSimplificado": true
+          }
+        },
+        {
+          "rotulo": "abaixo da 1ª faixa do IRRF",
+          "entrada": {
+            "proLabore": {
+              "valor": 3500,
+              "unidade": "reais",
+              "legivel": "R$ 3.500,00"
+            },
+            "cltRemuneracao": {
+              "valor": 0,
+              "unidade": "reais",
+              "legivel": "R$ 0,00"
+            }
+          },
+          "saida": {
+            "inss": {
+              "valor": 38500,
+              "unidade": "centavos",
+              "legivel": "R$ 385,00"
+            },
+            "irrf": {
+              "valor": 0,
+              "unidade": "centavos",
+              "legivel": "R$ 0,00"
+            },
+            "baseInss": {
+              "valor": 350000,
+              "unidade": "centavos",
+              "legivel": "R$ 3.500,00"
+            },
+            "baseIrrf": {
+              "valor": 289280,
+              "unidade": "centavos",
+              "legivel": "R$ 2.892,80"
+            },
+            "deducaoAplicada": {
+              "valor": 60720,
+              "unidade": "centavos",
+              "legivel": "R$ 607,20"
+            },
+            "impostoTabela": {
+              "valor": 3976,
+              "unidade": "centavos",
+              "legivel": "R$ 39,76"
+            },
+            "redutor": {
+              "valor": 3976,
+              "unidade": "centavos",
+              "legivel": "R$ 39,76"
+            },
+            "isento": true,
+            "usouDescontoSimplificado": true
+          }
+        },
+        {
+          "rotulo": "com IRRF devido",
+          "entrada": {
+            "proLabore": {
+              "valor": 5400,
+              "unidade": "reais",
+              "legivel": "R$ 5.400,00"
+            },
+            "cltRemuneracao": {
+              "valor": 0,
+              "unidade": "reais",
+              "legivel": "R$ 0,00"
+            }
+          },
+          "saida": {
+            "inss": {
+              "valor": 59400,
+              "unidade": "centavos",
+              "legivel": "R$ 594,00"
+            },
+            "irrf": {
+              "valor": 14965,
+              "unidade": "centavos",
+              "legivel": "R$ 149,65"
+            },
+            "baseInss": {
+              "valor": 540000,
+              "unidade": "centavos",
+              "legivel": "R$ 5.400,00"
+            },
+            "baseIrrf": {
+              "valor": 479280,
+              "unidade": "centavos",
+              "legivel": "R$ 4.792,80"
+            },
+            "deducaoAplicada": {
+              "valor": 60720,
+              "unidade": "centavos",
+              "legivel": "R$ 607,20"
+            },
+            "impostoTabela": {
+              "valor": 40929,
+              "unidade": "centavos",
+              "legivel": "R$ 409,29"
+            },
+            "redutor": {
+              "valor": 25964,
+              "unidade": "centavos",
+              "legivel": "R$ 259,64"
+            },
+            "isento": false,
+            "usouDescontoSimplificado": true
+          }
+        },
+        {
+          "rotulo": "no limite da isenção do redutor",
+          "entrada": {
+            "proLabore": {
+              "valor": 5000,
+              "unidade": "reais",
+              "legivel": "R$ 5.000,00"
+            },
+            "cltRemuneracao": {
+              "valor": 0,
+              "unidade": "reais",
+              "legivel": "R$ 0,00"
+            }
+          },
+          "saida": {
+            "inss": {
+              "valor": 55000,
+              "unidade": "centavos",
+              "legivel": "R$ 550,00"
+            },
+            "irrf": {
+              "valor": 0,
+              "unidade": "centavos",
+              "legivel": "R$ 0,00"
+            },
+            "baseInss": {
+              "valor": 500000,
+              "unidade": "centavos",
+              "legivel": "R$ 5.000,00"
+            },
+            "baseIrrf": {
+              "valor": 439280,
+              "unidade": "centavos",
+              "legivel": "R$ 4.392,80"
+            },
+            "deducaoAplicada": {
+              "valor": 60720,
+              "unidade": "centavos",
+              "legivel": "R$ 607,20"
+            },
+            "impostoTabela": {
+              "valor": 31289,
+              "unidade": "centavos",
+              "legivel": "R$ 312,89"
+            },
+            "redutor": {
+              "valor": 31289,
+              "unidade": "centavos",
+              "legivel": "R$ 312,89"
+            },
+            "isento": false,
+            "usouDescontoSimplificado": true
+          }
+        },
+        {
+          "rotulo": "um centavo acima da isenção",
+          "entrada": {
+            "proLabore": {
+              "valor": 5000.01,
+              "unidade": "reais",
+              "legivel": "R$ 5.000,01"
+            },
+            "cltRemuneracao": {
+              "valor": 0,
+              "unidade": "reais",
+              "legivel": "R$ 0,00"
+            }
+          },
+          "saida": {
+            "inss": {
+              "valor": 55000,
+              "unidade": "centavos",
+              "legivel": "R$ 550,00"
+            },
+            "irrf": {
+              "valor": 0,
+              "unidade": "centavos",
+              "legivel": "R$ 0,00"
+            },
+            "baseInss": {
+              "valor": 500001,
+              "unidade": "centavos",
+              "legivel": "R$ 5.000,01"
+            },
+            "baseIrrf": {
+              "valor": 439281,
+              "unidade": "centavos",
+              "legivel": "R$ 4.392,81"
+            },
+            "deducaoAplicada": {
+              "valor": 60720,
+              "unidade": "centavos",
+              "legivel": "R$ 607,20"
+            },
+            "impostoTabela": {
+              "valor": 31289,
+              "unidade": "centavos",
+              "legivel": "R$ 312,89"
+            },
+            "redutor": {
+              "valor": 31289,
+              "unidade": "centavos",
+              "legivel": "R$ 312,89"
+            },
+            "isento": true,
+            "usouDescontoSimplificado": true
+          }
+        },
+        {
+          "rotulo": "acima do teto do INSS",
+          "entrada": {
+            "proLabore": {
+              "valor": 14000,
+              "unidade": "reais",
+              "legivel": "R$ 14.000,00"
+            },
+            "cltRemuneracao": {
+              "valor": 0,
+              "unidade": "reais",
+              "legivel": "R$ 0,00"
+            }
+          },
+          "saida": {
+            "inss": {
+              "valor": 93231,
+              "unidade": "centavos",
+              "legivel": "R$ 932,31"
+            },
+            "irrf": {
+              "valor": 268488,
+              "unidade": "centavos",
+              "legivel": "R$ 2.684,88"
+            },
+            "baseInss": {
+              "valor": 847555,
+              "unidade": "centavos",
+              "legivel": "R$ 8.475,55"
+            },
+            "baseIrrf": {
+              "valor": 1306769,
+              "unidade": "centavos",
+              "legivel": "R$ 13.067,69"
+            },
+            "deducaoAplicada": {
+              "valor": 93231,
+              "unidade": "centavos",
+              "legivel": "R$ 932,31"
+            },
+            "impostoTabela": {
+              "valor": 268488,
+              "unidade": "centavos",
+              "legivel": "R$ 2.684,88"
+            },
+            "redutor": {
+              "valor": 0,
+              "unidade": "centavos",
+              "legivel": "R$ 0,00"
+            },
+            "isento": false,
+            "usouDescontoSimplificado": false
+          }
+        },
+        {
+          "rotulo": "sócio com CLT parcial (consome parte da folga)",
+          "entrada": {
+            "proLabore": {
+              "valor": 1621,
+              "unidade": "reais",
+              "legivel": "R$ 1.621,00"
+            },
+            "cltRemuneracao": {
+              "valor": 6000,
+              "unidade": "reais",
+              "legivel": "R$ 6.000,00"
+            }
+          },
+          "saida": {
+            "inss": {
+              "valor": 17831,
+              "unidade": "centavos",
+              "legivel": "R$ 178,31"
+            },
+            "irrf": {
+              "valor": 0,
+              "unidade": "centavos",
+              "legivel": "R$ 0,00"
+            },
+            "baseInss": {
+              "valor": 162100,
+              "unidade": "centavos",
+              "legivel": "R$ 1.621,00"
+            },
+            "baseIrrf": {
+              "valor": 101380,
+              "unidade": "centavos",
+              "legivel": "R$ 1.013,80"
+            },
+            "deducaoAplicada": {
+              "valor": 60720,
+              "unidade": "centavos",
+              "legivel": "R$ 607,20"
+            },
+            "impostoTabela": {
+              "valor": 0,
+              "unidade": "centavos",
+              "legivel": "R$ 0,00"
+            },
+            "redutor": {
+              "valor": 0,
+              "unidade": "centavos",
+              "legivel": "R$ 0,00"
+            },
+            "isento": true,
+            "usouDescontoSimplificado": true
+          }
+        },
+        {
+          "rotulo": "sócio com CLT acima do teto (zera o INSS)",
+          "entrada": {
+            "proLabore": {
+              "valor": 1621,
+              "unidade": "reais",
+              "legivel": "R$ 1.621,00"
+            },
+            "cltRemuneracao": {
+              "valor": 9000,
+              "unidade": "reais",
+              "legivel": "R$ 9.000,00"
+            }
+          },
+          "saida": {
+            "inss": {
+              "valor": 0,
+              "unidade": "centavos",
+              "legivel": "R$ 0,00"
+            },
+            "irrf": {
+              "valor": 0,
+              "unidade": "centavos",
+              "legivel": "R$ 0,00"
+            },
+            "baseInss": {
+              "valor": 0,
+              "unidade": "centavos",
+              "legivel": "R$ 0,00"
+            },
+            "baseIrrf": {
+              "valor": 101380,
+              "unidade": "centavos",
+              "legivel": "R$ 1.013,80"
+            },
+            "deducaoAplicada": {
+              "valor": 60720,
+              "unidade": "centavos",
+              "legivel": "R$ 607,20"
+            },
+            "impostoTabela": {
+              "valor": 0,
+              "unidade": "centavos",
+              "legivel": "R$ 0,00"
+            },
+            "redutor": {
+              "valor": 0,
+              "unidade": "centavos",
+              "legivel": "R$ 0,00"
+            },
+            "isento": true,
+            "usouDescontoSimplificado": true
+          }
+        }
+      ]
+    },
+    {
+      "funcao": "apurarDAS",
+      "modulo": "motor-fiscal/apurador.mjs",
+      "oQueFaz": "o DAS do mês: SOMA de 6 parcelas arredondadas por tributo, nunca o produto",
+      "unidades": {
+        "entrada": "reais",
+        "saida": "centavos"
+      },
+      "casos": [
+        {
+          "rotulo": "mês sem receita",
+          "entrada": {
+            "receitaMes": {
+              "valor": 0,
+              "unidade": "reais",
+              "legivel": "R$ 0,00"
+            },
+            "rbt12": {
+              "valor": 54000,
+              "unidade": "reais",
+              "legivel": "R$ 54.000,00"
+            },
+            "anexo": "III"
+          },
+          "saida": {
+            "total": {
+              "valor": 0,
+              "unidade": "centavos",
+              "legivel": "R$ 0,00"
+            },
+            "bruto": {
+              "valor": 0,
+              "unidade": "centavos",
+              "legivel": "R$ 0,00"
+            },
+            "efetiva": null,
+            "faixa": null,
+            "anexo": "III"
+          }
+        },
+        {
+          "rotulo": "valor quebrado — o caso que funda o motor",
+          "entrada": {
+            "receitaMes": {
+              "valor": 7910,
+              "unidade": "reais",
+              "legivel": "R$ 7.910,00"
+            },
+            "rbt12": {
+              "valor": 54000,
+              "unidade": "reais",
+              "legivel": "R$ 54.000,00"
+            },
+            "anexo": "III"
+          },
+          "saida": {
+            "total": {
+              "valor": 47459,
+              "unidade": "centavos",
+              "legivel": "R$ 474,59"
+            },
+            "bruto": {
+              "valor": 47460,
+              "unidade": "centavos",
+              "legivel": "R$ 474,60"
+            },
+            "efetiva": 0.06,
+            "faixa": 1,
+            "anexo": "III"
+          }
+        },
+        {
+          "rotulo": "valor redondo — o controle",
+          "entrada": {
+            "receitaMes": {
+              "valor": 12000,
+              "unidade": "reais",
+              "legivel": "R$ 12.000,00"
+            },
+            "rbt12": {
+              "valor": 54000,
+              "unidade": "reais",
+              "legivel": "R$ 54.000,00"
+            },
+            "anexo": "III"
+          },
+          "saida": {
+            "total": {
+              "valor": 72000,
+              "unidade": "centavos",
+              "legivel": "R$ 720,00"
+            },
+            "bruto": {
+              "valor": 72000,
+              "unidade": "centavos",
+              "legivel": "R$ 720,00"
+            },
+            "efetiva": 0.06,
+            "faixa": 1,
+            "anexo": "III"
+          }
+        },
+        {
+          "rotulo": "1ª faixa cheia",
+          "entrada": {
+            "receitaMes": {
+              "valor": 15000,
+              "unidade": "reais",
+              "legivel": "R$ 15.000,00"
+            },
+            "rbt12": {
+              "valor": 180000,
+              "unidade": "reais",
+              "legivel": "R$ 180.000,00"
+            },
+            "anexo": "III"
+          },
+          "saida": {
+            "total": {
+              "valor": 90000,
+              "unidade": "centavos",
+              "legivel": "R$ 900,00"
+            },
+            "bruto": {
+              "valor": 90000,
+              "unidade": "centavos",
+              "legivel": "R$ 900,00"
+            },
+            "efetiva": 0.06,
+            "faixa": 1,
+            "anexo": "III"
+          }
+        },
+        {
+          "rotulo": "2ª faixa",
+          "entrada": {
+            "receitaMes": {
+              "valor": 16000,
+              "unidade": "reais",
+              "legivel": "R$ 16.000,00"
+            },
+            "rbt12": {
+              "valor": 192000,
+              "unidade": "reais",
+              "legivel": "R$ 192.000,00"
+            },
+            "anexo": "III"
+          },
+          "saida": {
+            "total": {
+              "valor": 101201,
+              "unidade": "centavos",
+              "legivel": "R$ 1.012,01"
+            },
+            "bruto": {
+              "valor": 101200,
+              "unidade": "centavos",
+              "legivel": "R$ 1.012,00"
+            },
+            "efetiva": 0.06325,
+            "faixa": 2,
+            "anexo": "III"
+          }
+        },
+        {
+          "rotulo": "no teto do ME",
+          "entrada": {
+            "receitaMes": {
+              "valor": 30000,
+              "unidade": "reais",
+              "legivel": "R$ 30.000,00"
+            },
+            "rbt12": {
+              "valor": 360000,
+              "unidade": "reais",
+              "legivel": "R$ 360.000,00"
+            },
+            "anexo": "III"
+          },
+          "saida": {
+            "total": {
+              "valor": 258000,
+              "unidade": "centavos",
+              "legivel": "R$ 2.580,00"
+            },
+            "bruto": {
+              "valor": 258000,
+              "unidade": "centavos",
+              "legivel": "R$ 2.580,00"
+            },
+            "efetiva": 0.086,
+            "faixa": 2,
+            "anexo": "III"
+          }
+        },
+        {
+          "rotulo": "Anexo V, mesma receita",
+          "entrada": {
+            "receitaMes": {
+              "valor": 12000,
+              "unidade": "reais",
+              "legivel": "R$ 12.000,00"
+            },
+            "rbt12": {
+              "valor": 54000,
+              "unidade": "reais",
+              "legivel": "R$ 54.000,00"
+            },
+            "anexo": "V"
+          },
+          "saida": {
+            "total": {
+              "valor": 186000,
+              "unidade": "centavos",
+              "legivel": "R$ 1.860,00"
+            },
+            "bruto": {
+              "valor": 186000,
+              "unidade": "centavos",
+              "legivel": "R$ 1.860,00"
+            },
+            "efetiva": 0.155,
+            "faixa": 1,
+            "anexo": "V"
+          }
+        },
+        {
+          "rotulo": "Anexo V no teto",
+          "entrada": {
+            "receitaMes": {
+              "valor": 30000,
+              "unidade": "reais",
+              "legivel": "R$ 30.000,00"
+            },
+            "rbt12": {
+              "valor": 360000,
+              "unidade": "reais",
+              "legivel": "R$ 360.000,00"
+            },
+            "anexo": "V"
+          },
+          "saida": {
+            "total": {
+              "valor": 502500,
+              "unidade": "centavos",
+              "legivel": "R$ 5.025,00"
+            },
+            "bruto": {
+              "valor": 502500,
+              "unidade": "centavos",
+              "legivel": "R$ 5.025,00"
+            },
+            "efetiva": 0.1675,
+            "faixa": 2,
+            "anexo": "V"
+          }
+        }
+      ]
+    },
+    {
+      "funcao": "guiaVencida",
+      "modulo": "motor-fiscal/apurador.mjs",
+      "oQueFaz": "multa de 0,33% ao dia travando em 20% no 61º dia, mais juros de Selic acumulada +1%",
+      "aviso": "🔴 ESTA recebe CENTAVOS, ao contrário de apurarDAS e darfDoProLabore, que recebem reais. Passar reais aqui devolve um número plausível e errado — foi o achado M-014.",
+      "unidades": {
+        "entrada": "centavos",
+        "saida": "centavos"
+      },
+      "casos": [
+        {
+          "rotulo": "em dia",
+          "entrada": {
+            "principal": {
+              "valor": 118204,
+              "unidade": "centavos",
+              "legivel": "R$ 1.182,04"
+            },
+            "diasDeAtraso": {
+              "valor": 0,
+              "unidade": "dias",
+              "legivel": "0 dia(s)"
+            }
+          },
+          "saida": {
+            "principal": {
+              "valor": 118204,
+              "unidade": "centavos",
+              "legivel": "R$ 1.182,04"
+            },
+            "multa": {
+              "valor": 0,
+              "unidade": "centavos",
+              "legivel": "R$ 0,00"
+            },
+            "juros": {
+              "valor": 0,
+              "unidade": "centavos",
+              "legivel": "R$ 0,00"
+            },
+            "total": {
+              "valor": 118204,
+              "unidade": "centavos",
+              "legivel": "R$ 1.182,04"
+            }
+          }
+        },
+        {
+          "rotulo": "14 dias de atraso",
+          "entrada": {
+            "principal": {
+              "valor": 118204,
+              "unidade": "centavos",
+              "legivel": "R$ 1.182,04"
+            },
+            "diasDeAtraso": {
+              "valor": 14,
+              "unidade": "dias",
+              "legivel": "14 dia(s)"
+            }
+          },
+          "saida": {
+            "principal": {
+              "valor": 118204,
+              "unidade": "centavos",
+              "legivel": "R$ 1.182,04"
+            },
+            "multa": {
+              "valor": 5461,
+              "unidade": "centavos",
+              "legivel": "R$ 54,61"
+            },
+            "juros": {
+              "valor": 1182,
+              "unidade": "centavos",
+              "legivel": "R$ 11,82"
+            },
+            "total": {
+              "valor": 124847,
+              "unidade": "centavos",
+              "legivel": "R$ 1.248,47"
+            },
+            "pctMulta": 0.0462,
+            "multaNoTeto": false
+          }
+        },
+        {
+          "rotulo": "21 dias",
+          "entrada": {
+            "principal": {
+              "valor": 152834,
+              "unidade": "centavos",
+              "legivel": "R$ 1.528,34"
+            },
+            "diasDeAtraso": {
+              "valor": 21,
+              "unidade": "dias",
+              "legivel": "21 dia(s)"
+            }
+          },
+          "saida": {
+            "principal": {
+              "valor": 152834,
+              "unidade": "centavos",
+              "legivel": "R$ 1.528,34"
+            },
+            "multa": {
+              "valor": 10591,
+              "unidade": "centavos",
+              "legivel": "R$ 105,91"
+            },
+            "juros": {
+              "valor": 1528,
+              "unidade": "centavos",
+              "legivel": "R$ 15,28"
+            },
+            "total": {
+              "valor": 164953,
+              "unidade": "centavos",
+              "legivel": "R$ 1.649,53"
+            },
+            "pctMulta": 0.0693,
+            "multaNoTeto": false
+          }
+        },
+        {
+          "rotulo": "60 dias — véspera do teto",
+          "entrada": {
+            "principal": {
+              "valor": 618325,
+              "unidade": "centavos",
+              "legivel": "R$ 6.183,25"
+            },
+            "diasDeAtraso": {
+              "valor": 60,
+              "unidade": "dias",
+              "legivel": "60 dia(s)"
+            }
+          },
+          "saida": {
+            "principal": {
+              "valor": 618325,
+              "unidade": "centavos",
+              "legivel": "R$ 6.183,25"
+            },
+            "multa": {
+              "valor": 122428,
+              "unidade": "centavos",
+              "legivel": "R$ 1.224,28"
+            },
+            "juros": {
+              "valor": 6183,
+              "unidade": "centavos",
+              "legivel": "R$ 61,83"
+            },
+            "total": {
+              "valor": 746936,
+              "unidade": "centavos",
+              "legivel": "R$ 7.469,36"
+            },
+            "pctMulta": 0.198,
+            "multaNoTeto": false
+          }
+        },
+        {
+          "rotulo": "61 dias — a multa trava em 20%",
+          "entrada": {
+            "principal": {
+              "valor": 618325,
+              "unidade": "centavos",
+              "legivel": "R$ 6.183,25"
+            },
+            "diasDeAtraso": {
+              "valor": 61,
+              "unidade": "dias",
+              "legivel": "61 dia(s)"
+            }
+          },
+          "saida": {
+            "principal": {
+              "valor": 618325,
+              "unidade": "centavos",
+              "legivel": "R$ 6.183,25"
+            },
+            "multa": {
+              "valor": 123665,
+              "unidade": "centavos",
+              "legivel": "R$ 1.236,65"
+            },
+            "juros": {
+              "valor": 6183,
+              "unidade": "centavos",
+              "legivel": "R$ 61,83"
+            },
+            "total": {
+              "valor": 748173,
+              "unidade": "centavos",
+              "legivel": "R$ 7.481,73"
+            },
+            "pctMulta": 0.2,
+            "multaNoTeto": true
+          }
+        }
+      ]
+    }
+  ]
+}

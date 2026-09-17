@@ -48,13 +48,21 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { writeFileSync, mkdirSync } from "node:fs";
+import { writeFileSync, mkdirSync, existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { VIDAS } from "../estado-cnpj/vidas.mjs";
 import { retratoDoMes } from "../estado-cnpj/_modelo.mjs";
-import { darfDoProLabore } from "../motor-fiscal/apurador.mjs";
+import {
+  darfDoProLabore,
+  apurarDAS,
+  guiaVencida,
+  rbt12De,
+  fatorR,
+  anualiza,
+  vencimentoDe,
+} from "../motor-fiscal/apurador.mjs";
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
 const AMOSTRA = process.argv.includes("--amostra");
@@ -83,6 +91,59 @@ const pct = (v) => ({
   unidade: "fração (0 a 1)",
   legivel: (v * 100).toFixed(4).replace(".", ",") + "%",
 });
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * 1.1 · O CONGELADO — a rede da migração para centavos
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🔑 A IDEIA, e ela é a coisa mais importante deste arquivo.
+ *
+ * O Pedro decidiu em 17/09 padronizar **todo valor monetário do motor em
+ * centavos**, porque hoje a unidade muda no meio do mesmo objeto sem aviso
+ * (`das.total` em centavos, `piloto.minimoLegal` em reais). Refatorar isso
+ * mexe no apurador, no modelo, no piloto e nas 14 suítes ao mesmo tempo.
+ *
+ * 🔴 **E confiar só nas suítes não basta.** Elas também teriam que ser
+ * migradas, e suíte migrada junto com o código **pode encodar o bug** — foi
+ * exatamente o M-013, em que um invariante passava porque tinha o defeito
+ * escrito dentro dele.
+ *
+ * ✅ **A rede é a string.** `"R$ 2.790,01"` é **independente de unidade**:
+ * não importa se por dentro é `279001` ou `2790.01`, o legível é o mesmo. Se
+ * a refatoração for pura, o diff dos legíveis é **zero**. Qualquer diferença
+ * aponta o caso e o campo exatos.
+ *
+ * ⚠️ Por isso o congelado é varrido **automaticamente** da fixture inteira,
+ * e não escrito à mão: campo esquecido é buraco na rede, e eu já esqueci
+ * campo antes.
+ */
+function congelar(objeto, prefixo, destino) {
+  if (objeto === null || typeof objeto !== "object") {
+    /**
+     * Strings de dinheiro do pacote do front entram também — e entram
+     * INTEIRAS, mesmo quando o valor está no meio de uma frase.
+     *
+     * 🔴 A 1ª versão exigia que a string COMEÇASSE com "R$ ", e por isso
+     * deixava passar *"Você retirou R$1.621,00 este mês…"* — que é exatamente
+     * o número que o cliente lê na tela. Rede com buraco no lugar mais
+     * visível é pior que rede nenhuma, porque o verde parece merecido.
+     */
+    if (typeof objeto === "string" && /R\$\s?\d/.test(objeto)) destino[prefixo] = objeto;
+    return destino;
+  }
+  if (Array.isArray(objeto)) {
+    objeto.forEach((item, i) => congelar(item, `${prefixo}[${i}]`, destino));
+    return destino;
+  }
+  // O triple { valor, unidade, legivel } é o alvo: guarda só o legível.
+  if (typeof objeto.legivel === "string" && "unidade" in objeto) {
+    destino[prefixo] = objeto.legivel;
+    return destino;
+  }
+  for (const [chave, valor] of Object.entries(objeto)) {
+    congelar(valor, prefixo ? `${prefixo}.${chave}` : chave, destino);
+  }
+  return destino;
+}
 
 /* ═══════════════════════════════════════════════════════════════════════════
  * 2 · BACK · UMA FUNÇÃO
@@ -138,6 +199,112 @@ function fixtureDeFuncao() {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+ * 2.1 · BACK · AS FUNÇÕES DE FRONTEIRA, com vários casos cada
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🔑 Escolhidas por serem as que **trocam de unidade** — é onde o dev erra e
+ * onde nós erramos três vezes. Cada uma vem com entradas que exercitam as
+ * bordas que importam: zero, o piso, o teto do INSS, a vizinhança do redutor.
+ */
+const CHAMADAS = [
+  {
+    funcao: "darfDoProLabore",
+    entradaEmReais: true,
+    saidaEmCentavos: true,
+    oQueFaz: "a guia do sócio, POR PESSOA — INSS de 11% até o teto, e IRRF progressivo",
+    casos: [
+      { rotulo: "sem pró-labore", args: [0, 0] },
+      { rotulo: "no salário mínimo de 2026", args: [1621, 0] },
+      { rotulo: "abaixo da 1ª faixa do IRRF", args: [3500, 0] },
+      { rotulo: "com IRRF devido", args: [5400, 0] },
+      { rotulo: "no limite da isenção do redutor", args: [5000, 0] },
+      { rotulo: "um centavo acima da isenção", args: [5000.01, 0] },
+      { rotulo: "acima do teto do INSS", args: [14000, 0] },
+      { rotulo: "sócio com CLT parcial (consome parte da folga)", args: [1621, 6000] },
+      { rotulo: "sócio com CLT acima do teto (zera o INSS)", args: [1621, 9000] },
+    ],
+    chamar: (a) => darfDoProLabore(a[0], a[1]),
+    nomesDaEntrada: ["proLabore", "cltRemuneracao"],
+    camposDeSaida: ["inss", "irrf", "baseInss", "baseIrrf", "deducaoAplicada", "impostoTabela", "redutor"],
+  },
+  {
+    funcao: "apurarDAS",
+    entradaEmReais: true,
+    saidaEmCentavos: true,
+    oQueFaz: "o DAS do mês: SOMA de 6 parcelas arredondadas por tributo, nunca o produto",
+    casos: [
+      { rotulo: "mês sem receita", args: [0, 54000, "III"] },
+      { rotulo: "valor quebrado — o caso que funda o motor", args: [7910, 54000, "III"] },
+      { rotulo: "valor redondo — o controle", args: [12000, 54000, "III"] },
+      { rotulo: "1ª faixa cheia", args: [15000, 180000, "III"] },
+      { rotulo: "2ª faixa", args: [16000, 192000, "III"] },
+      { rotulo: "no teto do ME", args: [30000, 360000, "III"] },
+      { rotulo: "Anexo V, mesma receita", args: [12000, 54000, "V"] },
+      { rotulo: "Anexo V no teto", args: [30000, 360000, "V"] },
+    ],
+    chamar: (a) => apurarDAS({ receitaMes: a[0], rbt12: a[1], anexo: a[2] }),
+    nomesDaEntrada: ["receitaMes", "rbt12", "anexo"],
+    camposDeSaida: ["total", "bruto"],
+  },
+  {
+    funcao: "guiaVencida",
+    entradaEmReais: false,
+    saidaEmCentavos: true,
+    oQueFaz: "multa de 0,33% ao dia travando em 20% no 61º dia, mais juros de Selic acumulada +1%",
+    avisoExtra:
+      "🔴 ESTA recebe CENTAVOS, ao contrário de apurarDAS e darfDoProLabore, que recebem reais. " +
+      "Passar reais aqui devolve um número plausível e errado — foi o achado M-014.",
+    casos: [
+      { rotulo: "em dia", args: [118204, 0] },
+      { rotulo: "14 dias de atraso", args: [118204, 14] },
+      { rotulo: "21 dias", args: [152834, 21] },
+      { rotulo: "60 dias — véspera do teto", args: [618325, 60] },
+      { rotulo: "61 dias — a multa trava em 20%", args: [618325, 61] },
+    ],
+    chamar: (a) => guiaVencida({ principal: a[0], diasDeAtraso: a[1] }),
+    nomesDaEntrada: ["principal", "diasDeAtraso"],
+    camposDeSaida: ["principal", "multa", "juros", "total"],
+  },
+];
+
+function fixturesDeFuncoes() {
+  return CHAMADAS.map((c) => ({
+    funcao: c.funcao,
+    modulo: "motor-fiscal/apurador.mjs",
+    oQueFaz: c.oQueFaz,
+    ...(c.avisoExtra ? { aviso: c.avisoExtra } : {}),
+    unidades: {
+      entrada: c.entradaEmReais ? "reais" : "centavos",
+      saida: c.saidaEmCentavos ? "centavos" : "reais",
+    },
+    casos: c.casos.map((caso) => {
+      const r = c.chamar(caso.args);
+      const entrada = {};
+      c.nomesDaEntrada.forEach((nome, i) => {
+        const v = caso.args[i];
+        entrada[nome] =
+          typeof v === "number"
+            ? c.entradaEmReais && nome !== "diasDeAtraso"
+              ? reais(v)
+              : nome === "diasDeAtraso"
+                ? { valor: v, unidade: "dias", legivel: `${v} dia(s)` }
+                : centavos(v)
+            : v;
+      });
+      const saida = {};
+      for (const campo of c.camposDeSaida) {
+        if (r[campo] !== undefined) saida[campo] = centavos(r[campo]);
+      }
+      // Campos que não são dinheiro viajam crus — e é por isso que o congelado
+      // só olha o triple { valor, unidade, legivel }.
+      for (const extra of ["efetiva", "faixa", "anexo", "isento", "usouDescontoSimplificado", "pctMulta", "multaNoTeto"]) {
+        if (r[extra] !== undefined) saida[extra] = r[extra];
+      }
+      return { rotulo: caso.rotulo, entrada, saida };
+    }),
+  }));
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
  * 3 · BACK · UMA COMPETÊNCIA
  * ═══════════════════════════════════════════════════════════════════════════
  * 🔑 Esta é a fixture que vale como **teste de aceite**: o dev implementa na
@@ -183,15 +350,34 @@ function fixtureDeCompetencia(idVida, mes) {
       mesDeAtividade: r.mesDeAtividade,
       rbt12: { ...centavos(r.rbt12), regra: r.regraRbt12, oQueE: "acumulado dos 12 meses ANTERIORES; o mês corrente não entra (Res. CGSN 140/2018 art. 24)" },
       anexo: r.anexo,
-      fatorR: {
-        razao: pct(r.fatorR.fr),
-        limiar: pct(0.28),
-        decideOAnexo: !v.empresa.grupoAnexo.includes("fixo"),
-        folhaPaga: reais(r.fatorR.folhaPaga),
-        receita12: reais(r.fatorR.receita12),
-        // ⚠️ unidade DIFERENTE da do rbt12 logo acima, no mesmo objeto.
-        avisoDeUnidade: "🔴 folhaPaga e receita12 vêm em REAIS; rbt12 e das vêm em CENTAVOS. É assim no motor hoje, e é por isso que esta entrega carimba a unidade em todo número.",
-      },
+      /**
+       * 🔑 `null` aqui NÃO é ausência de dado — é decisão do motor, e o dev
+       * precisa saber disso: em CNAE de anexo fixo o Fator R **não roda**, e
+       * a tela não deve falar dele. Rodar à toa criaria número sem sentido e
+       * uma explicação que o cliente não pediu.
+       */
+      fatorR: r.fatorR
+        ? {
+            razao: pct(r.fatorR.fr),
+            limiar: pct(0.28),
+            decideOAnexo: true,
+            folhaPaga: reais(r.fatorR.folhaPaga),
+            receita12: reais(r.fatorR.receita12),
+            regimeDeCaixa: {
+              declarado: reais(r.fatorR.folhaDeclarada),
+              naoPago: reais(r.fatorR.naoPago),
+              riscoDeGlosa: r.fatorR.riscoDeGlosa,
+              oQueE: "só o PAGO entra no numerador (art. 26 §6º). Declarar e não pagar infla o Fator R e a Receita glosa.",
+            },
+            // ⚠️ unidade DIFERENTE da do rbt12 logo acima, no mesmo objeto.
+            avisoDeUnidade:
+              "🔴 folhaPaga e receita12 vêm em REAIS; rbt12 e das vêm em CENTAVOS. É assim no motor hoje, e é por isso que esta entrega carimba a unidade em todo número.",
+          }
+        : {
+            naoRoda: true,
+            porque: `o CNAE desta empresa é de anexo FIXO (${v.empresa.grupoAnexo}) — o Fator R não decide nada aqui`,
+            aTelaNaoDeveFalarDisso: true,
+          },
       das: {
         total: centavos(r.das.total),
         efetiva: pct(r.das.efetiva),
@@ -338,5 +524,115 @@ if (AMOSTRA) {
   process.exit(0);
 }
 
-console.log("\n⏳ A entrega completa ainda não foi ligada — rode com --amostra.\n");
-console.log("   Falta decidir com o Pedro a FORMA antes de gerar as 162 competências.\n");
+/* ═══════════════════════════════════════════════════════════════════════════
+ * 6 · A ENTREGA COMPLETA
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+const casos = [];
+const telas = [];
+
+for (const v of VIDAS) {
+  for (const cp of v.competencias) {
+    casos.push(fixtureDeCompetencia(v.id, cp.mes));
+    telas.push(fixtureDeTela(v.id, cp.mes));
+  }
+}
+
+const funcoes = fixturesDeFuncoes();
+
+writeFileSync(
+  destino("back/funcoes.json"),
+  JSON.stringify({ ...cabecalho, funcoes }, null, 2) + "\n",
+  "utf8"
+);
+writeFileSync(
+  destino("back/casos.json"),
+  JSON.stringify({ ...cabecalho, total: casos.length, casos }, null, 2) + "\n",
+  "utf8"
+);
+writeFileSync(
+  destino("front/telas.json"),
+  JSON.stringify({ ...cabecalho, total: telas.length, telas }, null, 2) + "\n",
+  "utf8"
+);
+
+/* ── O CONGELADO ───────────────────────────────────────────────────────────
+ * 🔒 Varrido automaticamente dos três pacotes. É a rede da migração para
+ * centavos: se a refatoração for pura, este arquivo não muda **nenhuma linha**.
+ */
+const legiveis = {};
+congelar({ funcoes }, "funcoes", legiveis);
+casos.forEach((c) => congelar(c, `caso.${c.caso}`, legiveis));
+telas.forEach((t) => congelar(t, `tela.${t.caso}`, legiveis));
+
+console.log("\n📦 ENTREGA GERADA\n");
+console.log(`   back/funcoes.json    ${funcoes.length} funções · ${funcoes.reduce((s, f) => s + f.casos.length, 0)} casos de fronteira`);
+console.log(`   back/casos.json      ${casos.length} competências, entrada → esperado`);
+console.log(`   front/telas.json     ${telas.length} telas, o mesmo caso do outro lado`);
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * 7 · O CONGELADO — escrito UMA VEZ, e depois só conferido
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🔴 A ARMADILHA QUE ISTO EVITA, e ela quase entrou em 17/09.
+ *
+ * A 1ª versão **reescrevia** o congelado a cada rodada. Como o gerador ia
+ * entrar na pipeline, a migração para centavos teria regerado o arquivo com
+ * os valores NOVOS — e o diff daria zero por construção, afirmando que nada
+ * mudou justamente enquanto tudo mudava.
+ *
+ * 🔑 Rede que se ajusta ao que ela deveria pegar não é rede. Por isso o
+ * arquivo é escrito **uma vez** e depois **comparado**; regravar exige
+ * `--recongelar`, que é um ato deliberado e datado.
+ */
+const CAMINHO_CONGELADO = destino("_CONGELADO-legiveis.json");
+const RECONGELAR = process.argv.includes("--recongelar");
+
+const conteudoCongelado = {
+  congeladoEm: cabecalho.gerado,
+  porQueExiste:
+    "Rede da migração para centavos (decisão do Pedro, 17/09). Cada linha é um " +
+    "valor monetário em forma LEGÍVEL, que é independente de unidade. Se a " +
+    "refatoração for pura, este arquivo não muda nenhuma linha. " +
+    "🔴 NÃO editar à mão para fazer caber — o valor dele é justamente ser anterior.",
+  unidadesNoMomentoDoCongelamento:
+    "MISTURADAS de propósito — é o estado que a migração vai arrumar. " +
+    "das/darf em centavos, piloto/fatorR/entradas em reais.",
+  total: Object.keys(legiveis).length,
+  legiveis,
+};
+
+if (!existsSync(CAMINHO_CONGELADO) || RECONGELAR) {
+  writeFileSync(CAMINHO_CONGELADO, JSON.stringify(conteudoCongelado, null, 2) + "\n", "utf8");
+  console.log(`\n   🔒 _CONGELADO-legiveis.json   ${Object.keys(legiveis).length} valores congelados${RECONGELAR ? " (RECONGELADO)" : ""}`);
+  console.log("      É a rede da migração para centavos. Depois dela, diff tem que dar ZERO.\n");
+} else {
+  const anterior = JSON.parse(readFileSync(CAMINHO_CONGELADO, "utf8")).legiveis;
+  const mudaram = [];
+  const sumiram = [];
+
+  for (const [chave, valor] of Object.entries(anterior)) {
+    if (!(chave in legiveis)) sumiram.push(chave);
+    else if (legiveis[chave] !== valor) mudaram.push({ chave, de: valor, para: legiveis[chave] });
+  }
+  const novos = Object.keys(legiveis).filter((k) => !(k in anterior));
+
+  console.log(`\n   🔒 Conferido contra o congelado de ${JSON.parse(readFileSync(CAMINHO_CONGELADO, "utf8")).congeladoEm}`);
+
+  if (!mudaram.length && !sumiram.length) {
+    console.log(`      ✅ ${Object.keys(anterior).length} valores conferem${novos.length ? ` · ${novos.length} campo(s) NOVO(S), o que é esperado se a entrega cresceu` : ""}\n`);
+  } else {
+    console.log(`\n   🔴 ${mudaram.length} valor(es) MUDARAM e ${sumiram.length} sumiram:\n`);
+    for (const m of mudaram.slice(0, 25)) {
+      console.log(`      ${m.chave}`);
+      console.log(`         era ${m.de}  →  agora ${m.para}`);
+    }
+    if (mudaram.length > 25) console.log(`      … e mais ${mudaram.length - 25}`);
+    for (const s of sumiram.slice(0, 10)) console.log(`      ⬜ sumiu: ${s}`);
+    console.log(
+      "\n      ↳ Se isto foi a migração de unidades, ela NÃO foi pura: nenhum valor\n" +
+        "        deveria ter mudado. Se a mudança é legítima e você conferiu um a um,\n" +
+        "        rode com --recongelar para assumir o novo estado.\n"
+    );
+    process.exit(1);
+  }
+}

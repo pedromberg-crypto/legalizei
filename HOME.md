@@ -10,6 +10,30 @@ data: 2026-07-16
 
 ## 📍 Agora (torre de controle — mantida via `/fechar`)
 
+> **Última atualização:** 2026-09-17 — **72º flow: A ENTREGA PARA O DEV NASCEU, E A MIGRAÇÃO PARA CENTAVOS ACHOU 2 BUGS LATENTES.**
+>
+> 🧭 **O pedido:** *"sinto tudo ainda meio solto… precisamos abraçar essa complexidade e organizar enquanto há tempo, para não continuarmos crescendo de forma desenfreada"*, com os devs **sem prazo marcado**. Saldo: **2 scripts, 1 package.json, 0 notas novas**, e **574 docs não editados de propósito**.
+>
+> **(1) 🔴 O DIAGNÓSTICO MUDOU DEPOIS DE MEDIR.** Ele descreveu *"múltiplas fontes de pesquisa em múltiplos documentos"*. Medi: o limiar de 28% do Fator R é **citado em 142 arquivos e definido em 1**. O dado **nunca esteve duplicado** — difusa é a **narrativa**. E apareceu um buraco que ele não citou e era maior: **38 funções exportadas, zero contrato**, com 3.052 linhas de `.mjs` para um dev deduzir as unidades.
+>
+> **(2) 📦 A FIXTURE É O CONTRATO.** Minha 1ª proposta era declarar contrato ao lado de cada função, com trava. **Ele recusou o atrito e estava certo:** prosa à mão foi o que envelheceu em 7 de 7 docs, e **exemplo diz melhor que prosa**. Ninguém precisa escrever *"recebe reais, devolve centavos"* se a fixture mostra `5400` entrando e `59400` saindo. Nasceu `execucao/entrega/` — **back** (38 funções + 162 competências, entrada → esperado) e **front** (as mesmas 162 como tela, com o que **não** mostrar), ligados pelo campo `caso`.
+>
+> **(3) 💰 TODO DINHEIRO DO MOTOR É INTEIRO EM CENTAVOS.** Decisão dele: *"não justifica cada campo de valor trabalhar de uma forma"*. Duas portas declaradas e só duas — a autoria converte em `competencia()`/`identidade()`, e `daTabela()` lê a tabela da lei, que **fica em reais de propósito** porque `TETO_INSS: 8475.55` é conferível contra a Portaria e `847555` não é.
+>
+> **(4) 🔒 A REDE QUE TORNOU A MIGRAÇÃO SEGURA.** Congelei **4.440 valores legíveis** *antes* de mexer: `"R$ 2.790,01"` é **independente de unidade**, então diff zero prova refatoração pura. Saiu de **1190 diffs → 16 → 8 → 0**. 🔑 E ela é escrita **uma vez** e depois só conferida — a 1ª versão se reescrevia a cada rodada, o que teria dado diff zero por construção **justamente enquanto tudo mudava**.
+>
+> **(5) 🔴 E A REDE ACHOU DOIS BUGS QUE NÃO ERAM DA MIGRAÇÃO.** **M-030:** o arredondamento decidia **empate de meio centavo por acaso** — P16 dez/25 COFINS é exatamente `54637,5` e P18 nov/25 PIS é exatamente `14182,5`, e cada caminho de float subia um e descia o outro. Latente desde 14/09. Agora `centavoDe(x) = Math.round(x + 1e-9)`: meio centavo **sobe**, explicitamente. **M-031:** a porta de entrada convertia duas vezes quem já estava dentro, e o saldo da P01 saiu **−R$6.335.092,81** onde é R$6.794,96 — **nenhuma suíte reclamou**, quem pegou foi a trava de defasagem comparando com o número escrito no briefing do contador. **Um número em prosa protegeu o código.**
+>
+> **(6) ⚖️ O QUE NÃO MUDOU, e é o que dá crédito ao resto.** As **46 conferências do teste dourado** — recibo do PGDAS-D e nota fiscal real — passam **idênticas**. DAS da persona zero R$474,59 · saldo da P01 R$6.794,96 · DAS da P16 R$87.083,18. **Nenhum valor com documento atrás se moveu.** Os 8 legíveis que mudaram são ±1 centavo em vidas **sintéticas**, e são a *correção* dos empates.
+>
+> **(7) 🧷 A PIPELINE MEDE UMA VEZ E PUBLICA VERIFICANDO.** A trava de defasagem parou de **re-executar 4 suítes** que a pipeline acabara de rodar — além dos ~650ms, ela comparava a prosa com uma **medição diferente** da que tinha acabado de acontecer. E `gerar-tabelas-app` saiu dos dispensados: **compara antes de escrever** e derruba a rodada se o app estava defasado do motor. **`npm run validar` = 16 etapas.**
+>
+> **(8) 🧭 `autoridade:` FECHOU, e o default é o silêncio.** Doc sem etiqueta é `memoria` — explica, não decide —, e é o que **556 dos 579** docs são de fato. O que exige ato é declarar que **manda**. O censo achou **11 docs que se diziam fonte-verdade sem estar no índice de autoridade**; entraram todos. **574 docs não foram editados**, e isso foi decisão, não preguiça.
+>
+> ⚠️ **A fronteira segue a mesma:** as travas pegam número, vocabulário, contradição, ausência e agora unidade. **Não pegam regra bem escrita e errada** — isso é o contador.
+
+---
+
 > **Última atualização:** 2026-09-17 — **71º flow: A ORGANIZAÇÃO QUE O PEDRO PEDIU, E ELA COMEÇOU ACHANDO ERRO MEU.**
 >
 > 🧭 **O pedido era método, não documento:** *"quero de fato ter 100% de segurança para seguir validando processos… sinto que estamos delirando demais entre uma varredura e outra, sinto que você muitas vezes erra e na mesma resposta conserta"*, com a restrição **"nunca criar novos documentos de forma desnecessária"**. Foram criados **dois scripts e zero notas novas**.

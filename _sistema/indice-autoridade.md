@@ -91,6 +91,26 @@ Então a pergunta nunca é *"esse doc está vivo?"*. É sempre **"esse doc manda
 | 🆕 **Suficiência do motor** (o que está provado, e por qual tipo de prova) | `execucao/motor-fiscal/_SUFICIENCIA.md` §2 | 🔴 Separa **regra fechada por fonte oficial** de **convenção provada por documento**. Um não substitui o outro, e regra provada por norma **não vira 🟡** por falta de recibo daquele caso |
 | 🆕 **Dúvidas que sobram para o contador** | `execucao/estado-cnpj/_duvidas-contador.md` | 🔴 Travado 15/09 (Pedro): **só entra aqui o que NÃO se responde com documentação já validada no vault.** Antes de escrever uma pergunta, procurar a resposta nas linhas acima |
 
+### 🆕 17/09 · As 11 que já se diziam fonte-verdade e não estavam aqui
+
+> 🔑 **Como apareceram:** o `verificar-autoridade.mjs` passou a cruzar o frontmatter `autoridade:` de **579 documentos** com esta tabela. Onze declaravam `fonte-verdade` no cabeçalho e **nenhuma linha aqui** — a contradição exata que este índice existe para não deixar acontecer: um doc pedindo para ser obedecido sem ninguém saber que ele existe.
+>
+> ⚠️ Não são docs novos. São docs que **sempre mandaram** nas áreas deles e nunca foram declarados. O censo do mesmo dia: **556 sem etiqueta** (que é o default `memoria` — explica, não decide), **22 fonte-verdade**, **1 ratificado**.
+
+| Assunto | 👑 Manda | Mente sobre isso (não leia lá) |
+|---|---|---|
+| **Entrega do MLP** (o que entra e o que fica de fora) | `execucao/lancamento-mlp.md` | ⚠️ roadmap em [[BASE-ESTRATEGICA]] é estratégia, não recorte de entrega |
+| **Como o modo cru funciona** (as 2 regras da varredura por categoria) | `execucao/processos/cru/_como-funciona.md` | ❌ os `cru/*.md` são **gerados** — a regra mora aqui, o mapa sai do `.mjs` |
+| **Doutrina de processos** (o que é nó, o que é variável, o que é saída) | `execucao/processos/_doutrina-processos.md` | ⚠️ o formato P1–P6 completo está **adiado**, não revogado (11/09) |
+| **Variáveis de entrada do ME** (o que o app pergunta no dia 1) | `execucao/testes-flutter/variaveis-entrada-me.md` | ❌ `vidas.mjs` manda do **mês 1** em diante; este manda no **dia 1** |
+| **Teardown do pró-labore e do PGDAS na conta real** | `produto/evidencias/2026-09-13-teardown-prolabore-e-pgdas-conta-real.md` | 🔴 é **evidência**, não autoridade fiscal: o líder é evidência, a lei é que manda |
+| **Alíquota e enquadramento** (a funcionalidade, não o cálculo) | `produto/funcionalidades/aliquota-e-enquadramento.md` | ❌ o **cálculo** é do `apurador.mjs`; aqui mora o que a funcionalidade entrega |
+| **Compliance e rotinas** | `produto/funcionalidades/compliance-e-rotinas.md` | ⚠️ o **calendário** fechado é o `ciclo-do-cnpj.mjs` |
+| **Emitir nota fiscal** | `produto/funcionalidades/emitir-nota-fiscal.md` | ⚠️ o desenho de processo é `cru/notas.mjs` |
+| **Folha de pagamento** | `produto/funcionalidades/folha-de-pagamento.md` | 🔒 colaborador está **travado fora** das vidas por decisão do Pedro (15/09) |
+| **Guia de imposto** | `produto/funcionalidades/guia-de-imposto.md` | ⚠️ o valor da guia é do `apurador.mjs`; aqui mora a experiência |
+| **Cruzamentos entre funcionalidades** | `produto/_mapa-de-cruzamentos.md` | ⚠️ é mapa de **dependência**, não de ordem de construção |
+
 ---
 
 ## ⚖️ Precedência (quando duas fontes divergem)
@@ -137,6 +157,21 @@ reescrita** (custaria um dia e criaria 8 docs novos pra manter). Traduza por aqu
 
 **16/07:** 25 `tipo` e 20 `status` improvisados, 106 notas sem status nenhum. Fechou em 6 tipos, 5 status.
 **09/09:** a regra existia e **não era aplicada por nada**, e o vault tinha voltado a 34 tipos. Duas coisas mudaram: o vocabulário abriu pra **8 tipos** (onde ele estava apertado demais) e o verificador passou a **rodar sozinho** (onde faltava trava). Detalhe do diagnóstico em [[2026-09-09-vocabulario-fechado-aplicado]].
+
+### 🆕 `autoridade` — quanto a nota MANDA *(fechado em 17/09)*
+
+> 🔑 **O default é o silêncio.** Doc sem `autoridade:` é `memoria`: explica e data, **não decide**. É o que **556 dos 579** docs da órbita são de fato — marco, ata, achado, briefing —, e marcá-los um a um seria trabalho mecânico para dizer o que a ausência já diz.
+>
+> O que exige declaração é o contrário: **dizer que manda é um ato**. Quem escreve `autoridade: fonte-verdade` está pedindo para ser obedecido, e por isso tem que aparecer na tabela lá em cima. O `verificar-autoridade.mjs` derruba a rodada nos dois casos que importam: **valor inventado** e **doc que se diz fonte-verdade sem estar no índice**.
+
+| autoridade | O que significa | Quando usar |
+|---|---|---|
+| `fonte-verdade` | **Manda no assunto.** Contradisse outro doc? O outro é que está errado | precisa de linha na tabela de autoridade |
+| `ratificado` | foi conferido contra **fonte externa** e fechou | pesquisa validada, consulta respondida |
+| `contrato` | é o que **outro time consome** — entrega, handoff, spec de dados | quando alguém de fora implementa em cima |
+| `memoria` | explica o porquê e a data. **Não decide** | 🔑 o default: não precisa ser escrito |
+
+⚠️ **Isto não substitui o `status`.** `status: vivo` diz se o doc acompanha o código; `autoridade` diz se ele **manda**. Um marco pode ser `vivo` e `memoria` ao mesmo tempo — está atualizado e mesmo assim não decide nada.
 
 ### `tipo` — o que a nota É
 | tipo | O que é | Regra |

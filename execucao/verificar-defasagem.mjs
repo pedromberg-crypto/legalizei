@@ -126,10 +126,7 @@ const MEDIDAS = [
      */
     centavos: true,
     medir: () => {
-      const saida = execFileSync("node", [resolve(AQUI, "motor-fiscal/verificar-piloto.mjs")], {
-        encoding: "utf8",
-        maxBuffer: 10 * 1024 * 1024,
-      });
+      const saida = saidaDe("motor-fiscal/verificar-piloto.mjs");
       const m = saida.match(/pior saldo do varrimento:\s*R\$\s*([\d.]+(?:[.,]\d{2})?)/i);
       if (!m) throw new Error("Não achei o pior saldo na saída do verificar-piloto");
       return Math.round(Number(m[1].replace(",", ".")) * 100);
@@ -327,11 +324,42 @@ async function somaDaVida(id, campo) {
   );
 }
 
-function contaDaSuite(script, palavra) {
-  const saida = execFileSync("node", [resolve(AQUI, script)], {
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 📥 A SAÍDA JÁ MEDIDA — em vez de medir de novo
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🔴 O DESPERDÍCIO QUE ISTO CORTA, medido em 17/09.
+ *
+ * Esta trava roda **por último** na pipeline, e até aqui ela re-executava
+ * `verificar-apurador`, `verificar-piloto`, `verificar-equacoes` e
+ * `estado-cnpj/verificar` — as quatro que o `verificar-tudo` **acabou de
+ * rodar**. Custava ~650ms de trabalho repetido.
+ *
+ * 🔑 E o desperdício era o menor dos dois problemas. O grave é que ela
+ * comparava a prosa com uma **medição diferente** da que a pipeline tinha
+ * acabado de fazer. Duas execuções do mesmo teste deveriam dar o mesmo
+ * número — mas "deveria" não é garantia, e a trava existe justamente para
+ * não confiar em "deveria".
+ *
+ * ✅ Então o `verificar-tudo` deposita as saídas que já capturou em
+ * `SAIDAS_JA_MEDIDAS` (caminho de um JSON `script → stdout`), e aqui elas
+ * são lidas. Rodando sozinha, sem a variável, ela mede como antes.
+ */
+const SAIDAS_JA_MEDIDAS = process.env.SAIDAS_JA_MEDIDAS;
+const jaMedidas = SAIDAS_JA_MEDIDAS
+  ? JSON.parse(readFileSync(SAIDAS_JA_MEDIDAS, "utf8"))
+  : null;
+
+function saidaDe(script) {
+  if (jaMedidas && jaMedidas[script] !== undefined) return jaMedidas[script];
+  return execFileSync("node", [resolve(AQUI, script)], {
     encoding: "utf8",
     maxBuffer: 10 * 1024 * 1024,
   });
+}
+
+function contaDaSuite(script, palavra) {
+  const saida = saidaDe(script);
   const m = [...saida.matchAll(new RegExp(`(\\d[\\d.]*)\\s+${palavra}`, "gi"))].pop();
   if (!m) throw new Error(`Não achei "${palavra}" na saída de ${script}`);
   return Number(m[1].replace(/\./g, ""));

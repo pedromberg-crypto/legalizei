@@ -1,0 +1,17 @@
+{
+  "name": "legalizai-story-book-vault",
+  "private": true,
+  "type": "module",
+  "description": "Vault do Legalizai Story Book. Este package.json existe para dar NOME aos comandos de validação — o app tem o seu próprio em app/.",
+  "scripts": {
+    "validar": "node execucao/verificar-tudo.mjs",
+    "validar:lista": "node execucao/verificar-tudo.mjs --lista",
+    "motor": "node execucao/motor-fiscal/verificar-apurador.mjs",
+    "equacoes": "node execucao/motor-fiscal/verificar-equacoes.mjs",
+    "vidas": "node execucao/estado-cnpj/verificar-vidas.mjs",
+    "ciclo": "node execucao/estado-cnpj/rodar-ciclo.mjs",
+    "defasagem": "node execucao/verificar-defasagem.mjs",
+    "entregar": "node execucao/entrega/gerar-entrega.mjs",
+    "entregar:recongelar": "node execucao/entrega/gerar-entrega.mjs --recongelar"
+  }
+}

@@ -76,8 +76,49 @@ const linhas = [
   "",
 ];
 
-fs.writeFileSync(DESTINO, linhas.join("\n"), "utf8");
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🔒 PUBLICAR VIRA VERIFICAR — travado em 17/09
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🔴 O BURACO QUE ISTO FECHA.
+ *
+ * Este gerador existia desde 14/09 e **nunca rodava na pipeline** — estava na
+ * lista de dispensados como *"escreve dentro do app/, é publicação, não
+ * verificação"*. Consequência: o `fiscal-tabelas.ts` que o app consome podia
+ * estar velho em relação ao motor por tempo indefinido, e **nada avisaria**.
+ *
+ * Em 17/09 eu conferi e ele estava em dia. Por disciplina, não por trava — e
+ * disciplina é exatamente o que a auditoria daquele dia provou não bastar: os
+ * docs gerados tiveram zero deriva, os mantidos à mão tiveram 7 de 7.
+ *
+ * ✅ Agora ele **compara antes de escrever**. Se o conteúdo mudou, o app
+ * estava defasado do motor: o arquivo é atualizado e a rodada **cai**, para
+ * que alguém olhe e commite em vez de descobrir meses depois.
+ *
+ * 🔑 Publicar sem conferir não é publicar — é torcer.
+ */
+const anterior = fs.existsSync(DESTINO) ? fs.readFileSync(DESTINO, "utf8") : null;
+const novo = linhas.join("\n");
 
 console.log("🔗 tabelas fiscais → app");
-console.log(`✓ ${path.relative(path.join(AQUI, "..", ".."), DESTINO)}`);
-console.log(`  ${Object.keys(PREVIDENCIA).length + 2 + 2 + 2} constantes, fonte única em _tabelas.mjs`);
+console.log(`   ${path.relative(path.join(AQUI, "..", ".."), DESTINO)}`);
+console.log(`   ${Object.keys(PREVIDENCIA).length + 2 + 2 + 2} constantes, fonte única em _tabelas.mjs`);
+
+if (anterior === novo) {
+  console.log("✓ o app já estava EM DIA com o motor — nada a publicar\n");
+  process.exit(0);
+}
+
+fs.writeFileSync(DESTINO, novo, "utf8");
+
+if (anterior === null) {
+  console.log("✓ arquivo criado pela primeira vez\n");
+  process.exit(0);
+}
+
+console.log("\n🔴 O APP ESTAVA DEFASADO DO MOTOR — e agora foi atualizado.\n");
+console.log("   As constantes do `_tabelas.mjs` mudaram e o arquivo publicado");
+console.log("   no app não tinha acompanhado. Ele acabou de ser reescrito.\n");
+console.log("   ↳ Confira o diff e commite. A rodada cai de propósito: publicação");
+console.log("     que ninguém percebe é a mesma coisa que publicação que não houve.\n");
+process.exit(1);

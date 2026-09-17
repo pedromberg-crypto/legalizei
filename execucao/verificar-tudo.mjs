@@ -49,7 +49,8 @@
  */
 
 import { execFileSync } from "node:child_process";
-import { readdirSync, statSync } from "node:fs";
+import { writeFileSync, rmSync, readdirSync, statSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { dirname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -105,10 +106,14 @@ const ETAPAS = [
   {
     fase: "5 · PUBLICAR — a entrega, e só depois de tudo verde",
     porque:
-      "A entrega é o motor VALIDADO virando arquivo que o dev roda. Emitir " +
-      "antes das travas seria publicar o que ainda não passou. E ela confere " +
-      "a si mesma contra o congelado dos legíveis.",
-    scripts: ["entrega/gerar-entrega.mjs"],
+      "O que sai daqui é o motor VALIDADO virando arquivo que outro consome: " +
+      "as constantes que o app lê e as fixtures que o dev roda. Publicar antes " +
+      "das travas seria publicar o que ainda não passou — e as duas conferem a " +
+      "si mesmas, contra o arquivo anterior e contra o congelado dos legíveis.",
+    scripts: [
+      "motor-fiscal/gerar-tabelas-app.mjs",
+      "entrega/gerar-entrega.mjs",
+    ],
   },
 ];
 
@@ -126,7 +131,6 @@ const DISPENSADOS = {
   "flow/verificar-mei.mjs": "ramo MEI — fora do escopo padrão (ME abrir empresa)",
   "processos/verificar-escopo.mjs": "roda DENTRO dos 3 geradores da fase 1",
   "processos/verificar-persona.mjs": "roda DENTRO dos 3 geradores da fase 1",
-  "motor-fiscal/gerar-tabelas-app.mjs": "escreve dentro do app/ — é publicação, não verificação",
   "portal/gerar-mapa-portal.mjs": "portal do cliente, outra frente",
   "handoff/gerar-handoff.mjs": "pacote para o dev, sob demanda",
   "gerar-placar-mauro.mjs": "reporte ao sócio — roda no /fechar, não aqui",
@@ -146,6 +150,27 @@ console.log("═".repeat(84));
 
 const resultados = [];
 
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 📥 MEDIR UMA VEZ — e passar adiante
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🔴 Até 17/09 a trava de defasagem, que roda por último, **re-executava
+ * quatro suítes** que esta pipeline tinha acabado de rodar. Custava ~650ms.
+ *
+ * 🔑 E o desperdício era o menor dos dois problemas. O grave é que ela
+ * comparava a prosa com uma **medição diferente** da que acabara de
+ * acontecer. Duas execuções do mesmo teste deveriam dar o mesmo número — e
+ * "deveria" é exatamente o tipo de premissa que estas travas existem para
+ * não aceitar.
+ *
+ * Cada etapa deposita a saída aqui, e quem vier depois lê em vez de medir.
+ * O arquivo vive fora do repositório, na pasta temporária do sistema: é
+ * cache de uma rodada, não artefato.
+ */
+const saidas = {};
+const ARQUIVO_DAS_SAIDAS = join(tmpdir(), `legalizai-saidas-${process.pid}.json`);
+writeFileSync(ARQUIVO_DAS_SAIDAS, "{}", "utf8");
+
 for (const etapa of ETAPAS) {
   console.log(`\n▸ ${etapa.fase}`);
   console.log(`  ${etapa.porque}\n`);
@@ -160,7 +185,11 @@ for (const etapa of ETAPAS) {
       const saida = execFileSync("node", [resolve(AQUI, s)], {
         encoding: "utf8",
         maxBuffer: 20 * 1024 * 1024,
+        env: { ...process.env, SAIDAS_JA_MEDIDAS: ARQUIVO_DAS_SAIDAS },
       });
+      // 🔑 Guarda a saída para quem vier depois não precisar rodar de novo.
+      saidas[s] = saida;
+      writeFileSync(ARQUIVO_DAS_SAIDAS, JSON.stringify(saidas), "utf8");
       // 🔑 Só a última linha com conteúdo: o placar de cada script já é a
       // frase que ele escolheu para se resumir. Repetir a saída inteira aqui
       // transformaria o verde num muro de texto que ninguém lê.

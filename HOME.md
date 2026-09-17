@@ -10,6 +10,24 @@ data: 2026-07-16
 
 ## 📍 Agora (torre de controle — mantida via `/fechar`)
 
+> **Última atualização:** 2026-09-17 — **74º flow: O PRODUTO GANHA EIXO — O MOTOR SAI DE `execucao/` E VIRA CICLO DE VIDA DO ME.**
+>
+> 🧭 **O flow começou com três perguntas de diagnóstico do Pedro, e é delas que sai tudo o resto.** *"Toda essa parte do motor fiscal está conectada a que nível no `/processos`?"* · *"e às funcionalidades core?"* · *"dá pra realocar o motor TODO pra uma pasta só, sem carregar os dois juntos?"*
+>
+> **(1) 🔴 A MEDIÇÃO: O MOTOR NÃO ESTAVA LIGADO EM NADA.** Com `/processos`, **zero import** — todo número do board é prosa digitada à mão (16 valores em R$ e 54 percentuais nos 4 arquivos-fonte), e a ligação era só vocabulário. Com as funcionalidades core, **9 constantes descem e 0 de 38 funções**: `apurarDAS`, `fatorR`, `pilotar`, `darfDoProLabore` não são chamados por tela nenhuma. O app tem implementação própria em `fiscal.ts` (`proLaboreOtimo`, `naBorda`, `custoProLabore`) **em reais, enquanto o motor virou centavos em 17/09**, e a tela `/pro-labore` reescreve a regra uma 4ª vez dentro do TSX com `FAT = 6000` cravado. 🔑 **As tabelas descem, as decisões não** — e nenhuma trava vigia essa fronteira.
+>
+> **(2) 🗂️ O EIXO É CICLO DE VIDA, NÃO PORTA DE ENTRADA.** A 1ª sugestão do Pedro punha o motor dentro de `constituir/`. Corrigido antes de mover: **constituir e migrar são duas portas para a mesma casa, e o motor é a casa** — nenhuma das 18 vidas começa numa tela de abertura. Nasce `produto/{me,mei}/` com `entrar/{constituir,migrar}` · `viver/` · `desenquadrar/` · `devs/`. 🔑 **`desenquadrar/` foi ajuste do Pedro e resolveu o que `sair/` não resolvia:** MEI→ME é saída de um e entrada no outro, então a transição mora na origem — e **o MEI que desenquadra não passa por `me/entrar/`**, cai direto em `me/viver/`, porque o CNPJ dele já existe.
+>
+> **(3) 📦 DUAS ETAPAS, 57 ARQUIVOS, DUAS PASTAS EXTINTAS.** `execucao/{motor-fiscal,estado-cnpj,entrega}` (36) viraram `me/viver/motor/{regra,vidas,provar,rodar,publicar,notas}` + `me/devs/{back,front}`; `execucao/processos/` (21) virou `me/viver/processos/`, irmão do motor. Regra nova: **`motor/publicar/` escreve, `devs/` só recebe** — gerado × à mão vira fronteira de pasta, não aviso no topo do arquivo. Saíram do motor por decisão: `verificar-autoridade.mjs` (audita o vault, nunca foi do motor) e `_cobertura-das-vidas.md` (mora com quem o escreve).
+>
+> **(4) 🔴 E A MUDANÇA EXPÔS QUATRO TRAVAS QUE PASSARIAM VERDES SEM OLHAR NADA.** Todas do mesmo formato: **doc declarado e ausente virava `continue`** — a lista encolhia sozinha e o placar seguia dizendo "N varridos". Nos dois laços do `verificar-encerrados` (um deles é o que pegou a 3ª cópia da CPP) e em `DOCS_VIVOS` do `verificar-defasagem`. A 4ª é o `verificar-autoridade`: 11 caminhos podres e **só 3 pegos**, porque o atalho de `[[wikilink]]` deixou 8 passarem sem conferir endereço — fica **declarada**, porque quem confere endereço é a varredura de ausência. As 3 primeiras agora derrubam a rodada com o nome do arquivo.
+>
+> **(5) 🔒 O PORTÃO, E ELE TEM DUAS PARTES.** O **motor** não podia mudar em nada: `diff` das 725 linhas das 7 suítes contra o baseline tirado antes de mover — **md5 `c43ce596` idêntico**, 238 valores em R$, zero diferença. Os **docs gerados** mudam de propósito (citam o caminho do gerador): conferido linha a linha, **20 linhas alteradas e 0 que não sejam caminho**. Os 3 grafos que o app consome saíram com hash idêntico. `verificar-tudo` 16/16 nas duas etapas. **Nenhum centavo se moveu — é a única prova de que foi só mudança de pasta.**
+>
+> ⏭️ **O que fica aberto:** `execucao/flow/` (**263 arquivos**), `execucao/portal/` (15) e as ~71 notas restantes de `produto/` seguem onde estavam · as 9 pastas novas (`entrar/`, `desenquadrar/`, `obrigacoes/`, `portal/`, `mei/*`, `_doutrina/`) nasceram **vazias com `.gitkeep`**, esperando decisão do Pedro uma a uma · o worktree `recursive-sleeping-pumpkin` tem cópia nos endereços antigos e **vai conflitar ao reintegrar** · e o buraco do item (1) segue aberto: **ligar as telas ao motor de verdade** em vez de reescrever a regra em TS.
+>
+> ---
+>
 > **Última atualização:** 2026-09-17 — **73º flow: O DIA DEPOIS DO MOTOR — LÉO, OS 6 VERMELHOS, UMA VIDA NOVA E O ELENCO DE ENTRADA RECONCILIADO.**
 >
 > 🧭 **Cinco pedidos encadeados, todos do Pedro, todos no mesmo dia.** Nenhum abriu frente nova: cada um pegou algo que o 72º flow deixou pronto e mandou aplicar num lugar que ainda não sabia.

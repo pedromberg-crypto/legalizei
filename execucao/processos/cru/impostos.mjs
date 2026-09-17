@@ -79,11 +79,19 @@ export const NOS = [
     o: "Resolve qual anexo vale nesta competência",
     variavel: "O Fator R dos últimos 12 meses fechou em quanto?",
     saidas: [
-      { se: "28% ou mais: Anexo III", vai: "I6" },
-      { se: "abaixo de 28%: Anexo V", vai: "I6" },
+      { se: "28% ou mais: tributa pelo Anexo III", vai: "I6" },
+      { se: "abaixo de 28%: tributa pelo Anexo V", vai: "I6" },
+      { se: "não há mês anterior: faturou no mês em que abriu", vai: "I5b" },
     ],
     saiPara: "pró-labore · a folha dos 12 meses é o numerador, e só entra o que foi efetivamente pago",
     nota: "🔑 É a decisão mais cara da categoria: Anexo III começa em 6% e Anexo V em 15,5%. E o anexo apurado aqui é o mesmo que cada nota congela no campo `anexoEscolhido` — confirmado em produção em 12/09. ⚠️ O limiar de 28% é seco, sem margem legal: 27,99% é Anexo V.",
+  },
+  {
+    id: "I5b",
+    o: "Faturou no mês em que abriu: tributa pelo Anexo V e a casa liga",
+    saidas: [{ se: "", vai: "I6" }],
+    saiPara: "pró-labore · a folha desta competência é o que salva a competência SEGUINTE",
+    nota: "🆕 NASCEU EM 16/09. Até 15/09 o motor GRITAVA aqui, porque não podia escolher entre 6% e 15,5% sem informação. O contador deu a informação: *'para reduzir de 15,5 para 6 naquele faturamento do mês 8, eu teria que ter uma folha no mês 7. O mês 7 a empresa não existia. Então ali ela vai ser tributada normal, nos 15,5'*. 🔒 O Pedro travou: a competência da constituição fica em 15,5%, sem promessa de reverter. ⚠️ NÃO É 'V POR PRECAUÇÃO', que continua proibido — é a regra: quem não tem competência anterior não tem como exibir folha, e sem folha no numerador o resultado é o Anexo V. 🔴 O QUE AINDA DÁ PRA SALVAR é o mês SEGUINTE, e é por isso que este nó dispara ALERTA INTERNO, não tela: a casa liga e oferece gerar a folha desta competência. 🔑 E ISSO NÃO É RETROATIVO — cabe no prazo normal do eSocial, até o dia 15 do mês seguinte, sem retificação, juros ou multa. Por isso o alerta tem que disparar na EMISSÃO DA NOTA, não no fechamento do mês: é a emissão que abre a janela de 15 dias. ⚠️ Raro por construção: prestador de serviço cumpre 30 dias de competência antes de emitir, e o contador disse que *'dificilmente eu pegaria um cara que faturava no mesmo mês'*. Sobre R$12.000 a diferença é R$1.860 contra R$720.",
   },
   {
     id: "I6",

@@ -15,7 +15,7 @@ tags: [execucao, processos, cru, impostos]
 
 ## Estado da varredura
 
-**🟩 FECHADA** · 35 nós · 10 variáveis · 7 entradas · 14 fins · 12 fronteiras
+**🟩 FECHADA** · 36 nós · 10 variáveis · 7 entradas · 14 fins · 13 fronteiras
 
 ✅ **Todos os 8 itens da categoria foram tocados.**
 
@@ -41,7 +41,8 @@ tags: [execucao, processos, cru, impostos]
 | ◆ | **I2** · Reúne o que a competência tem | Teve faturamento nesta competência? | **teve receita** → I4<br/>**nenhuma nota emitida no mês** → I3 |
 | · | **I3** · Mês sem faturamento: apura zero, e a obrigação não pausa | — | → I6 |
 | · | **I4** · Soma a receita da competência e desconta o que reduz a base | — | → I5 |
-| ◆ | **I5** · Resolve qual anexo vale nesta competência | O Fator R dos últimos 12 meses fechou em quanto? | **28% ou mais: Anexo III** → I6<br/>**abaixo de 28%: Anexo V** → I6 |
+| ◆ | **I5** · Resolve qual anexo vale nesta competência | O Fator R dos últimos 12 meses fechou em quanto? | **28% ou mais: tributa pelo Anexo III** → I6<br/>**abaixo de 28%: tributa pelo Anexo V** → I6<br/>**não há mês anterior: faturou no mês em que abriu** → I5b |
+| · | **I5b** · Faturou no mês em que abriu: tributa pelo Anexo V e a casa liga | — | → I6 |
 | · | **I6** · Calcula o imposto da competência | — | → I7 |
 | · | **I7** · A guia existe, mas ainda não está disponível | — | → I8 |
 | · | **I8** · A guia fica disponível, com valor, vencimento e código de barras | — | → I9 |
@@ -84,8 +85,9 @@ tags: [execucao, processos, cru, impostos]
 
 **I5 · O Fator R dos últimos 12 meses fechou em quanto?**
 
-- 28% ou mais: Anexo III → **I6** · Calcula o imposto da competência
-- abaixo de 28%: Anexo V → **I6** · Calcula o imposto da competência
+- 28% ou mais: tributa pelo Anexo III → **I6** · Calcula o imposto da competência
+- abaixo de 28%: tributa pelo Anexo V → **I6** · Calcula o imposto da competência
+- não há mês anterior: faturou no mês em que abriu → **I5b** · Faturou no mês em que abriu: tributa pelo Anexo V e a casa liga
 
 **I9 · O que ela faz agora?**
 
@@ -144,6 +146,8 @@ tags: [execucao, processos, cru, impostos]
   ↗ notas · o desconto incondicionado de cada nota reduz a base de cálculo
 - **I5** · Resolve qual anexo vale nesta competência
   ↗ pró-labore · a folha dos 12 meses é o numerador, e só entra o que foi efetivamente pago
+- **I5b** · Faturou no mês em que abriu: tributa pelo Anexo V e a casa liga
+  ↗ pró-labore · a folha desta competência é o que salva a competência SEGUINTE
 - **I13** · Guia quitada: a competência fecha com a data real do pagamento
   ↗ estar em dia · é isto que sustenta o 'você está em dia'
 - **I14** · Venceu sem pagar: o valor de hoje não é mais o da guia
@@ -180,6 +184,10 @@ tags: [execucao, processos, cru, impostos]
 **I5 · Resolve qual anexo vale nesta competência**
 
 🔑 É a decisão mais cara da categoria: Anexo III começa em 6% e Anexo V em 15,5%. E o anexo apurado aqui é o mesmo que cada nota congela no campo `anexoEscolhido` — confirmado em produção em 12/09. ⚠️ O limiar de 28% é seco, sem margem legal: 27,99% é Anexo V.
+
+**I5b · Faturou no mês em que abriu: tributa pelo Anexo V e a casa liga**
+
+🆕 NASCEU EM 16/09. Até 15/09 o motor GRITAVA aqui, porque não podia escolher entre 6% e 15,5% sem informação. O contador deu a informação: *'para reduzir de 15,5 para 6 naquele faturamento do mês 8, eu teria que ter uma folha no mês 7. O mês 7 a empresa não existia. Então ali ela vai ser tributada normal, nos 15,5'*. 🔒 O Pedro travou: a competência da constituição fica em 15,5%, sem promessa de reverter. ⚠️ NÃO É 'V POR PRECAUÇÃO', que continua proibido — é a regra: quem não tem competência anterior não tem como exibir folha, e sem folha no numerador o resultado é o Anexo V. 🔴 O QUE AINDA DÁ PRA SALVAR é o mês SEGUINTE, e é por isso que este nó dispara ALERTA INTERNO, não tela: a casa liga e oferece gerar a folha desta competência. 🔑 E ISSO NÃO É RETROATIVO — cabe no prazo normal do eSocial, até o dia 15 do mês seguinte, sem retificação, juros ou multa. Por isso o alerta tem que disparar na EMISSÃO DA NOTA, não no fechamento do mês: é a emissão que abre a janela de 15 dias. ⚠️ Raro por construção: prestador de serviço cumpre 30 dias de competência antes de emitir, e o contador disse que *'dificilmente eu pegaria um cara que faturava no mesmo mês'*. Sobre R$12.000 a diferença é R$1.860 contra R$720.
 
 **I6 · Calcula o imposto da competência**
 

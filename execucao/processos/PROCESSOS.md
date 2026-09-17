@@ -412,7 +412,7 @@ Com quanta antecedência avisar, e quantas vezes. Avisar cedo demais em janeiro 
 ### Fonte de cada regra
 
 - **P5.1** — Aferição do Fator R é MENSAL, no PGDAS-D (Res. CGSN 140/2018, art. 26). Não é decisão anual.
-- **P5.2** — Fórmula da matriz: folha 12m ÷ receita 12m; ≥ 28% → Anexo III (6%), senão Anexo V (15,5%). Entram salário CLT, pró-labore, 13º, férias + 1/3, FGTS e a CPP mesmo embutida no DAS. Não entram distribuição de lucros, autônomo, prestador PJ, PAT e estagiário. Evidência do líder (09/09): pró-labore do mês = max(piso; 0,28 × Σfaturamento 12m − Σpró-labore dos 11 meses anteriores).
+- **P5.2** — Fórmula da matriz: folha 12m ÷ receita 12m; ≥ 28% → Anexo III (6%), senão Anexo V (15,5%). Entram salário CLT, pró-labore, 13º, férias + 1/3 e FGTS. 🔴 NÃO entra a CPP embutida no DAS: este passo afirmava que entrava, e a leitura foi refutada em 14/09 contra a Res. CGSN 140/2018 art. 26 §2º I 'a', que nomeia só o Anexo IV. Também não entram distribuição de lucros, autônomo, prestador PJ, PAT e estagiário. Evidência do líder (09/09): pró-labore do mês = max(piso; 0,28 × Σfaturamento 12m − Σpró-labore dos 11 meses anteriores).
 - **P5.3** — Catálogo 4.1, construída. É o diferencial-âncora: o líder tem 4 presets em radio button e esconde a conta. A engine é nossa e roda 100% local, sem API.
 - **P5.4** — Catálogo 4.3, construída: o toggle existe e vem explicado, ao contrário do switch cru do líder.
 - **P5.5** — Catálogo 4.3. A obrigação mensal continua existindo mesmo sem valor — mesmo princípio do “eSocial sem movimento” da folha (7.4).

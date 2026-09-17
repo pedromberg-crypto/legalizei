@@ -34,6 +34,8 @@ import { fileURLToPath } from "node:url";
 import {
   ENCERRADOS,
   DOCS_DE_PENDENCIA,
+  FONTES_DE_DESENHO,
+  CONTRADICOES,
   LINGUAGEM_DE_ABERTO,
   SELO,
 } from "./_encerrados.mjs";
@@ -90,11 +92,72 @@ for (const e of ENCERRADOS) {
   console.log("");
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+ * 🔴 A SEGUNDA VARREDURA — as FONTES DE DESENHO
+ * ═══════════════════════════════════════════════════════════════════════════
+ * Acrescentada em 16/09, depois de achar a TERCEIRA cópia da leitura errada da
+ * CPP viva em `cru/prolabore.mjs`, três dias depois de ela ter sido refutada.
+ *
+ * 🔑 A varredura de cima procura assunto encerrado voltando como DÚVIDA. Esta
+ * procura o contrário: ele afirmado como VERDADE, e a verdade afirmada sendo a
+ * errada. São dois modos de falhar diferentes e precisam de duas varreduras.
+ */
+
+const contradicoes = [];
+
+for (const arquivo of FONTES_DE_DESENHO) {
+  let texto;
+  try {
+    texto = readFileSync(arquivo, "utf8");
+  } catch {
+    continue; // arquivo pode não existir ainda
+  }
+
+  const linhas = texto.split(/\r?\n/);
+  linhas.forEach((linha, i) => {
+    if (linha.includes(SELO)) return; // citação legítima, já marcada
+    const baixa = linha.toLowerCase();
+
+    for (const c of CONTRADICOES) {
+      for (const frase of c.frases) {
+        if (baixa.includes(frase.toLowerCase())) {
+          contradicoes.push({
+            arquivo,
+            linha: i + 1,
+            frase,
+            de: c.de,
+            porque: c.porque,
+            texto: linha.trim(),
+          });
+        }
+      }
+    }
+  });
+}
+
+console.log(
+  `${FONTES_DE_DESENHO.length} fonte(s) de desenho varrida(s) contra ${CONTRADICOES.length} contradição(ões) conhecida(s).`
+);
+
 console.log("─".repeat(84));
 
-if (!violacoes.length) {
-  console.log("\n✅ Nenhum assunto encerrado voltou pra fila de pendência.\n");
+if (!violacoes.length && !contradicoes.length) {
+  console.log("\n✅ Nenhum assunto encerrado voltou pra fila, e nenhuma fonte de desenho o contradiz.\n");
   process.exit(0);
+}
+
+if (contradicoes.length) {
+  console.log(`\n🔴 ${contradicoes.length} CONTRADIÇÃO(ÕES) EM FONTE DE DESENHO:\n`);
+  for (const c of contradicoes) {
+    console.log(`   ${c.arquivo}:${c.linha}  — afirma o que ${c.de} nega`);
+    console.log(`      "${c.frase}"`);
+    console.log(`      ↳ ${c.porque}`);
+    console.log(
+      `      ↳ Fonte de desenho ENSINA. Corrija a afirmação, ou marque com ${SELO} se for` +
+        ` citação histórica explicando o erro.\n`
+    );
+  }
+  if (!violacoes.length) process.exit(1);
 }
 
 console.log(`\n🔴 ${violacoes.length} REABERTURA(S):\n`);

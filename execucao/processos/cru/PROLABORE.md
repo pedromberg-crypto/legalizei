@@ -15,7 +15,7 @@ tags: [execucao, processos, cru, prolabore]
 
 ## Estado da varredura
 
-**🟩 FECHADA** · 33 nós · 13 variáveis · 6 entradas · 13 fins · 14 fronteiras
+**🟩 FECHADA** · 34 nós · 14 variáveis · 6 entradas · 13 fins · 14 fronteiras
 
 ✅ **Todos os 7 itens da categoria foram tocados.**
 
@@ -25,7 +25,7 @@ tags: [execucao, processos, cru, prolabore]
 
 > 6 fatos diferentes disparam alguma coisa aqui dentro.
 
-- **L1** · Chega o mês e o pró-labore precisa ser decidido
+- **L0** · 1º acesso: quando começar a pagar pró-labore
 - **L15** · Acompanha o Fator R dos 12 meses, mês a mês
 - **L19** · O sócio quer tirar lucro da empresa
 - **L23** · Muda alguma coisa na situação do sócio
@@ -36,6 +36,7 @@ tags: [execucao, processos, cru, prolabore]
 
 | | O que acontece | A variável | As saídas |
 |:--:|---|---|---|
+| ◆ | **L0** · 1º acesso: quando começar a pagar pró-labore | Gerar desde a constituição, ou esperar a 1ª nota? | **aguardar o 1º faturamento (default)** → L1<br/>**gerar já, desde a constituição** → L1 |
 | · | **L1** · Chega o mês e o pró-labore precisa ser decidido | — | → L2 |
 | ◆ | **L2** · Olha se houve faturamento no mês | A empresa faturou nesta competência? | **faturou** → L4<br/>**não faturou nada** → L3 |
 | ◆ | **L3** · Mês sem faturamento: oferece não pagar, e diz o preço disso | Pagar mesmo assim? | **não pagar neste mês** → L14<br/>**pagar mesmo sem faturar, pra segurar o Fator R** → L6 |
@@ -73,6 +74,11 @@ tags: [execucao, processos, cru, prolabore]
 ## As variáveis, uma a uma
 
 > É o que o modo cru existe pra responder: **toda condicional tem todas as respostas escritas?**
+
+**L0 · Gerar desde a constituição, ou esperar a 1ª nota?**
+
+- aguardar o 1º faturamento (default) → **L1** · Chega o mês e o pró-labore precisa ser decidido
+- gerar já, desde a constituição → **L1** · Chega o mês e o pró-labore precisa ser decidido
 
 **L2 · A empresa faturou nesta competência?**
 
@@ -181,6 +187,10 @@ tags: [execucao, processos, cru, prolabore]
 
 ## O que a varredura achou
 
+**L0 · 1º acesso: quando começar a pagar pró-labore**
+
+🆕 NASCEU EM 16/09, da reunião com o contador, e é pergunta ÚNICA: acontece no 1º acesso, não todo mês. 🔑 A lei manda gerar desde a constituição (*'se o cara está ali e não tem receita mas está tentando fazer essa receita, em tese ele já é contribuinte obrigatório'*), mas a prática de escritório espera a 1ª nota, porque forçar gera guia de INSS para quem não faturou: *'você me mandou uma guia de R$178 aqui e eu não tive faturamento. Tem muito, em todos os escritórios'*. ⚠️ O argumento a favor de gerar já NÃO é fiscal, é humano, e foi ele quem trouxe: contribuição contínua protege auxílio e maternidade. Então damos a opção e avisamos, não decidimos por ele. 🔒 UMA VEZ LIGADO, NÃO PARA: quem esquece de emitir e dobra a nota no mês seguinte precisaria de folha dobrada também. 🔴 E ISTO REVOGA A DECISÃO 36, travada em 14/09 como 'o app FORÇA o pró-labore no dia 1'.
+
 **L1 · Chega o mês e o pró-labore precisa ser decidido**
 
 🔑 Quem abre a decisão é a casa, não a pessoa. Esperar ela lembrar é o desenho que produz o mês esquecido — e mês esquecido de pró-labore quebra a contagem do Fator R.
@@ -191,7 +201,7 @@ tags: [execucao, processos, cru, prolabore]
 
 **L4 · Calcula quanto mantém a empresa no anexo mais barato**
 
-🔑 A CONTA, na forma simples: pró-labore necessário = 28% da receita dos 12 meses menos a folha já paga nos 12 meses. ⚠️ JANELA MÓVEL: pagar hoje afeta os próximos 12 meses, e todo mês um mês antigo SAI da janela. Se o mês que sai tinha folha alta, o Fator R cai sozinho sem ninguém mexer em nada — é por isso que 'quanto falta' muda todo mês, e é aí que mora o diferencial nº 2. ✅ A CPP FOI RESOLVIDA EM 13/09: ela CONTA no numerador mesmo estando dentro do DAS, e é ponto pacífico (SC COSIT 17/2021 · Res. CGSN 140/2018 art. 26 §1º III 'a'). O método também veio: pegar o percentual de repartição da CPP no anexo da competência, aplicar sobre o DAS pago e somar ao numerador. ⚠️ Efeito colateral que ninguém tinha notado: como essa parcela é proporcional à RECEITA, ela entra no numerador E no denominador, então amortece o próprio Fator R. Precisa entrar na simulação, não só na conta final.
+🔑 A CONTA, na forma simples: pró-labore necessário = **30%** da receita dos 12 meses menos a folha já paga nos 12 meses. ⚠️ MIRAMOS 30%, NÃO OS 28% DA LEI, e o contador ratificou isso em 16/09 com caso de campo: *'é melhor você pecar nos 2% a mais do que chegar lá na frente e falar: faltou 0,1%. Tô com um caso lá embaixo, faltou 60 reais pra esse cara aqui'*. Faltar um centavo tira a tributação pelo Anexo III do mês inteiro, então a folga de 2 pontos é deliberada. ⚠️ JANELA MÓVEL: pagar hoje afeta os próximos 12 meses, e todo mês um mês antigo SAI da janela. Se o mês que sai tinha folha alta, o Fator R cai sozinho sem ninguém mexer em nada — é por isso que 'quanto falta' muda todo mês, e é aí que mora o diferencial nº 2. 🔴 A CPP **NÃO** ENTRA NO NUMERADOR — e este nó afirmava o contrário até 16/09. A leitura de 13/09 (*'conta no numerador, é ponto pacífico, SC COSIT 17/2021'*) foi **refutada em 14/09** contra norma literal: a Res. CGSN 140/2018 art. 26 §2º I 'a' nomeia **só o Anexo IV**, e o silêncio sobre III e V é vedação; a SC COSIT que o mercado cita trata de matéria diversa. O Fator R usa só a **folha efetivamente paga**. ⚠️ ESTA ERA A TERCEIRA CÓPIA da leitura errada: a 1ª foi corrigida no `_tabelas.mjs` em 15/09, a 2ª virou o assunto encerrado `E-CPP`, e esta sobreviveu porque a trava de reabertura varre só os 4 docs de pendência, não as fontes do cru. 🔒 E em 16/09 o Pedro fechou a segunda camada: o contador descreveu a manobra de somar a CPP para fechar a porcentagem, e a decisão foi **não fazer** — *'o CPP continuará sendo apenas gerado dentro da guia normal'*.
 
 **L4b · Anualiza a folha também, e não só a receita**
 
@@ -207,7 +217,7 @@ tags: [execucao, processos, cru, prolabore]
 
 **L9 · Confere se o valor respeita os limites**
 
-✅ OS DOIS LIMITES AGORA TÊM VALOR E PORTARIA (pesquisa de 13/09): piso = salário mínimo de 2026, **R$ 1.621,00** — o salário de contribuição não pode ser menor, mesmo para contribuinte individual. Teto = **R$ 8.475,55**, fixado pela Portaria Interministerial MPS/MF nº 13 de 09/01/2026, art. 2º. 🔑 E ISSO FECHA UMA DÚVIDA QUE EU TINHA DEIXADO EM ABERTO: o `valorMaximoInss: 932.3105` do líder, com 4 casas, NÃO é arredondamento tosco — é 11% × 8.475,55 exato. Fonte externa e plataforma do líder batendo na quarta decimal, então o número certo a guardar é 932,3105 e o arredondamento acontece só na exibição. ⚠️ O piso de R$ 1.621,00 veio de fonte única: conferir antes de virar trava. 🔑 O duplo vínculo entra AQUI, e não como funcionalidade separada: quem já contribui como CLT tem folga no teto, e isso muda quanto sai de INSS. O dado é captado na constituição (tela C2).
+✅ OS DOIS LIMITES AGORA TÊM VALOR E PORTARIA (pesquisa de 13/09): piso = o salário mínimo **DA COMPETÊNCIA**, e isso virou tabela com vigência em 16/09 (R$1.518 em 2025 · R$1.621 em 2026). 🔴 Com valor único, competência de 2025 era comparada com o piso de 2026, e um pró-labore de R$1.518 pago em dez/2025 — que era EXATAMENTE o mínimo daquele mês — saía bloqueado como irregular. 5 das 16 vidas começam em 2025. O contador levantou como manutenção (*'todo ano você vai rodar um código pra atualizar?'*) e o achado era de correção — o salário de contribuição não pode ser menor, mesmo para contribuinte individual. Teto = **R$ 8.475,55**, fixado pela Portaria Interministerial MPS/MF nº 13 de 09/01/2026, art. 2º. 🔑 E ISSO FECHA UMA DÚVIDA QUE EU TINHA DEIXADO EM ABERTO: o `valorMaximoInss: 932.3105` do líder, com 4 casas, NÃO é arredondamento tosco — é 11% × 8.475,55 exato. Fonte externa e plataforma do líder batendo na quarta decimal, então o número certo a guardar é 932,3105 e o arredondamento acontece só na exibição. ⚠️ O piso de R$ 1.621,00 veio de fonte única: conferir antes de virar trava. 🔑 O duplo vínculo entra AQUI, e não como funcionalidade separada: quem já contribui como CLT tem folga no teto, e isso muda quanto sai de INSS. O dado é captado na constituição (tela C2).
 
 **L10 · Trava o valor do mês e monta o que vai ser declarado**
 
@@ -255,7 +265,7 @@ tags: [execucao, processos, cru, prolabore]
 
 **L27 · Muda quem recebe pró-labore na empresa**
 
-✅ CONFIRMADO COM NORMA EM 13/09: quem recebe pró-labore é quem ADMINISTRA — só o sócio que presta serviço à sociedade é segurado obrigatório como contribuinte individual (Lei 8.212/91 art. 12 V 'f'). O sócio que só investiu capital e não exerce gestão **não precisa** receber pró-labore, e tem direito apenas à parcela dos lucros. ⚠️ O dado vem da constituição (qualificação 49 × 22), e com 1 a 4 sócios isso deixa de ser detalhe: o mapa precisa distinguir quem entra na conta do Fator R de quem não entra.
+✅ CONFIRMADO COM NORMA EM 13/09 e RATIFICADO PELO CONTADOR EM 16/09: quem recebe pró-labore é quem ADMINISTRA — só o sócio que presta serviço à sociedade é segurado obrigatório como contribuinte individual (Lei 8.212/91 art. 12 V 'f'). *'O cara que não trabalha, às vezes é um sócio só de investimento; eu não tenho obrigatoriedade de gerar um pró-labore'*. 🔑 ESTE NÓ ESTAVA CERTO E O MOTOR É QUE TINHA DERIVADO: em 15/09 o `_modelo.mjs` passou a assumir 'todo sócio recebe', e em 16/09 voltou para cá. O desenho de processo sabia antes do código. ⚠️ O dado vem da constituição (qualificação 49 × 22), e o contador avisou que o app NUNCA vai saber sozinho: *'às vezes o cara pode colocar que um é administrador, mas quem está trabalhando é o outro'* — inclusive por motivo legítimo, como bloqueio judicial no nome de quem administra. Administrar é o DEFAULT, não a verdade. 🔴 E TEM UM EFEITO QUE NINGUÉM ESPERAVA, medido em 16/09: concentrar a folha em menos gente pode custar MAIS imposto, porque a tabela do IRRF é progressiva por pessoa. Folha de R$5.600 custa R$616,00 repartida entre dois e R$844,86 num sócio só; abaixo de R$5.000 por pessoa a diferença é zero. As duas coisas que o contador validou no mesmo dia colidem aqui, e a decisão do Pedro foi aplicar a regra E mostrar a conta: o motor avalia todos os arranjos e pergunta se algum outro sócio também TRABALHA. Pergunta sobre fato, nunca sobre conveniência fiscal.
 
 **L30 · Confere se o informe do ano pode ser fechado**
 

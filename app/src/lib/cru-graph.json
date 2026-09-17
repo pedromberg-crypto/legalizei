@@ -58,10 +58,10 @@
         "I33"
       ],
       "contagem": {
-        "nos": 35,
+        "nos": 36,
         "variaveis": 10,
         "fins": 14,
-        "fronteiras": 12
+        "fronteiras": 13
       }
     },
     {
@@ -111,7 +111,7 @@
       ],
       "semCobertura": [],
       "entradas": [
-        "L1",
+        "L0",
         "L15",
         "L19",
         "L23",
@@ -119,8 +119,8 @@
         "L33"
       ],
       "contagem": {
-        "nos": 33,
-        "variaveis": 13,
+        "nos": 34,
+        "variaveis": 14,
         "fins": 13,
         "fronteiras": 14
       }
@@ -185,16 +185,32 @@
         "variavel": "O Fator R dos últimos 12 meses fechou em quanto?",
         "saidas": [
           {
-            "se": "28% ou mais: Anexo III",
+            "se": "28% ou mais: tributa pelo Anexo III",
             "vai": "I6"
           },
           {
-            "se": "abaixo de 28%: Anexo V",
+            "se": "abaixo de 28%: tributa pelo Anexo V",
             "vai": "I6"
+          },
+          {
+            "se": "não há mês anterior: faturou no mês em que abriu",
+            "vai": "I5b"
           }
         ],
         "saiPara": "pró-labore · a folha dos 12 meses é o numerador, e só entra o que foi efetivamente pago",
         "nota": "🔑 É a decisão mais cara da categoria: Anexo III começa em 6% e Anexo V em 15,5%. E o anexo apurado aqui é o mesmo que cada nota congela no campo `anexoEscolhido` — confirmado em produção em 12/09. ⚠️ O limiar de 28% é seco, sem margem legal: 27,99% é Anexo V."
+      },
+      {
+        "id": "I5b",
+        "o": "Faturou no mês em que abriu: tributa pelo Anexo V e a casa liga",
+        "saidas": [
+          {
+            "se": "",
+            "vai": "I6"
+          }
+        ],
+        "saiPara": "pró-labore · a folha desta competência é o que salva a competência SEGUINTE",
+        "nota": "🆕 NASCEU EM 16/09. Até 15/09 o motor GRITAVA aqui, porque não podia escolher entre 6% e 15,5% sem informação. O contador deu a informação: *'para reduzir de 15,5 para 6 naquele faturamento do mês 8, eu teria que ter uma folha no mês 7. O mês 7 a empresa não existia. Então ali ela vai ser tributada normal, nos 15,5'*. 🔒 O Pedro travou: a competência da constituição fica em 15,5%, sem promessa de reverter. ⚠️ NÃO É 'V POR PRECAUÇÃO', que continua proibido — é a regra: quem não tem competência anterior não tem como exibir folha, e sem folha no numerador o resultado é o Anexo V. 🔴 O QUE AINDA DÁ PRA SALVAR é o mês SEGUINTE, e é por isso que este nó dispara ALERTA INTERNO, não tela: a casa liga e oferece gerar a folha desta competência. 🔑 E ISSO NÃO É RETROATIVO — cabe no prazo normal do eSocial, até o dia 15 do mês seguinte, sem retificação, juros ou multa. Por isso o alerta tem que disparar na EMISSÃO DA NOTA, não no fechamento do mês: é a emissão que abre a janela de 15 dias. ⚠️ Raro por construção: prestador de serviço cumpre 30 dias de competência antes de emitir, e o contador disse que *'dificilmente eu pegaria um cara que faturava no mesmo mês'*. Sobre R$12.000 a diferença é R$1.860 contra R$720."
       },
       {
         "id": "I6",
@@ -1401,6 +1417,22 @@
     "prolabore": [
       {
         "entrada": true,
+        "id": "L0",
+        "o": "1º acesso: quando começar a pagar pró-labore",
+        "variavel": "Gerar desde a constituição, ou esperar a 1ª nota?",
+        "saidas": [
+          {
+            "se": "aguardar o 1º faturamento (default)",
+            "vai": "L1"
+          },
+          {
+            "se": "gerar já, desde a constituição",
+            "vai": "L1"
+          }
+        ],
+        "nota": "🆕 NASCEU EM 16/09, da reunião com o contador, e é pergunta ÚNICA: acontece no 1º acesso, não todo mês. 🔑 A lei manda gerar desde a constituição (*'se o cara está ali e não tem receita mas está tentando fazer essa receita, em tese ele já é contribuinte obrigatório'*), mas a prática de escritório espera a 1ª nota, porque forçar gera guia de INSS para quem não faturou: *'você me mandou uma guia de R$178 aqui e eu não tive faturamento. Tem muito, em todos os escritórios'*. ⚠️ O argumento a favor de gerar já NÃO é fiscal, é humano, e foi ele quem trouxe: contribuição contínua protege auxílio e maternidade. Então damos a opção e avisamos, não decidimos por ele. 🔒 UMA VEZ LIGADO, NÃO PARA: quem esquece de emitir e dobra a nota no mês seguinte precisaria de folha dobrada também. 🔴 E ISTO REVOGA A DECISÃO 36, travada em 14/09 como 'o app FORÇA o pró-labore no dia 1'."
+      },
+      {
         "id": "L1",
         "o": "Chega o mês e o pró-labore precisa ser decidido",
         "saidas": [
@@ -1465,7 +1497,7 @@
         ],
         "ja": "P5.2",
         "saiPara": "impostos · o anexo que sai daqui é o que a apuração usa",
-        "nota": "🔑 A CONTA, na forma simples: pró-labore necessário = 28% da receita dos 12 meses menos a folha já paga nos 12 meses. ⚠️ JANELA MÓVEL: pagar hoje afeta os próximos 12 meses, e todo mês um mês antigo SAI da janela. Se o mês que sai tinha folha alta, o Fator R cai sozinho sem ninguém mexer em nada — é por isso que 'quanto falta' muda todo mês, e é aí que mora o diferencial nº 2. ✅ A CPP FOI RESOLVIDA EM 13/09: ela CONTA no numerador mesmo estando dentro do DAS, e é ponto pacífico (SC COSIT 17/2021 · Res. CGSN 140/2018 art. 26 §1º III 'a'). O método também veio: pegar o percentual de repartição da CPP no anexo da competência, aplicar sobre o DAS pago e somar ao numerador. ⚠️ Efeito colateral que ninguém tinha notado: como essa parcela é proporcional à RECEITA, ela entra no numerador E no denominador, então amortece o próprio Fator R. Precisa entrar na simulação, não só na conta final."
+        "nota": "🔑 A CONTA, na forma simples: pró-labore necessário = **30%** da receita dos 12 meses menos a folha já paga nos 12 meses. ⚠️ MIRAMOS 30%, NÃO OS 28% DA LEI, e o contador ratificou isso em 16/09 com caso de campo: *'é melhor você pecar nos 2% a mais do que chegar lá na frente e falar: faltou 0,1%. Tô com um caso lá embaixo, faltou 60 reais pra esse cara aqui'*. Faltar um centavo tira a tributação pelo Anexo III do mês inteiro, então a folga de 2 pontos é deliberada. ⚠️ JANELA MÓVEL: pagar hoje afeta os próximos 12 meses, e todo mês um mês antigo SAI da janela. Se o mês que sai tinha folha alta, o Fator R cai sozinho sem ninguém mexer em nada — é por isso que 'quanto falta' muda todo mês, e é aí que mora o diferencial nº 2. 🔴 A CPP **NÃO** ENTRA NO NUMERADOR — e este nó afirmava o contrário até 16/09. A leitura de 13/09 (*'conta no numerador, é ponto pacífico, SC COSIT 17/2021'*) foi **refutada em 14/09** contra norma literal: a Res. CGSN 140/2018 art. 26 §2º I 'a' nomeia **só o Anexo IV**, e o silêncio sobre III e V é vedação; a SC COSIT que o mercado cita trata de matéria diversa. O Fator R usa só a **folha efetivamente paga**. ⚠️ ESTA ERA A TERCEIRA CÓPIA da leitura errada: a 1ª foi corrigida no `_tabelas.mjs` em 15/09, a 2ª virou o assunto encerrado `E-CPP`, e esta sobreviveu porque a trava de reabertura varre só os 4 docs de pendência, não as fontes do cru. 🔒 E em 16/09 o Pedro fechou a segunda camada: o contador descreveu a manobra de somar a CPP para fechar a porcentagem, e a decisão foi **não fazer** — *'o CPP continuará sendo apenas gerado dentro da guia normal'*."
       },
       {
         "id": "L4b",
@@ -1565,7 +1597,7 @@
         "cobre": [
           "4.6"
         ],
-        "nota": "✅ OS DOIS LIMITES AGORA TÊM VALOR E PORTARIA (pesquisa de 13/09): piso = salário mínimo de 2026, **R$ 1.621,00** — o salário de contribuição não pode ser menor, mesmo para contribuinte individual. Teto = **R$ 8.475,55**, fixado pela Portaria Interministerial MPS/MF nº 13 de 09/01/2026, art. 2º. 🔑 E ISSO FECHA UMA DÚVIDA QUE EU TINHA DEIXADO EM ABERTO: o `valorMaximoInss: 932.3105` do líder, com 4 casas, NÃO é arredondamento tosco — é 11% × 8.475,55 exato. Fonte externa e plataforma do líder batendo na quarta decimal, então o número certo a guardar é 932,3105 e o arredondamento acontece só na exibição. ⚠️ O piso de R$ 1.621,00 veio de fonte única: conferir antes de virar trava. 🔑 O duplo vínculo entra AQUI, e não como funcionalidade separada: quem já contribui como CLT tem folga no teto, e isso muda quanto sai de INSS. O dado é captado na constituição (tela C2)."
+        "nota": "✅ OS DOIS LIMITES AGORA TÊM VALOR E PORTARIA (pesquisa de 13/09): piso = o salário mínimo **DA COMPETÊNCIA**, e isso virou tabela com vigência em 16/09 (R$1.518 em 2025 · R$1.621 em 2026). 🔴 Com valor único, competência de 2025 era comparada com o piso de 2026, e um pró-labore de R$1.518 pago em dez/2025 — que era EXATAMENTE o mínimo daquele mês — saía bloqueado como irregular. 5 das 16 vidas começam em 2025. O contador levantou como manutenção (*'todo ano você vai rodar um código pra atualizar?'*) e o achado era de correção — o salário de contribuição não pode ser menor, mesmo para contribuinte individual. Teto = **R$ 8.475,55**, fixado pela Portaria Interministerial MPS/MF nº 13 de 09/01/2026, art. 2º. 🔑 E ISSO FECHA UMA DÚVIDA QUE EU TINHA DEIXADO EM ABERTO: o `valorMaximoInss: 932.3105` do líder, com 4 casas, NÃO é arredondamento tosco — é 11% × 8.475,55 exato. Fonte externa e plataforma do líder batendo na quarta decimal, então o número certo a guardar é 932,3105 e o arredondamento acontece só na exibição. ⚠️ O piso de R$ 1.621,00 veio de fonte única: conferir antes de virar trava. 🔑 O duplo vínculo entra AQUI, e não como funcionalidade separada: quem já contribui como CLT tem folga no teto, e isso muda quanto sai de INSS. O dado é captado na constituição (tela C2)."
       },
       {
         "id": "L10",
@@ -1756,7 +1788,7 @@
         "o": "Muda quem recebe pró-labore na empresa",
         "fim": true,
         "saiPara": "documentos · entrada ou saída de sócio é alteração contratual, e isso é outro rito",
-        "nota": "✅ CONFIRMADO COM NORMA EM 13/09: quem recebe pró-labore é quem ADMINISTRA — só o sócio que presta serviço à sociedade é segurado obrigatório como contribuinte individual (Lei 8.212/91 art. 12 V 'f'). O sócio que só investiu capital e não exerce gestão **não precisa** receber pró-labore, e tem direito apenas à parcela dos lucros. ⚠️ O dado vem da constituição (qualificação 49 × 22), e com 1 a 4 sócios isso deixa de ser detalhe: o mapa precisa distinguir quem entra na conta do Fator R de quem não entra."
+        "nota": "✅ CONFIRMADO COM NORMA EM 13/09 e RATIFICADO PELO CONTADOR EM 16/09: quem recebe pró-labore é quem ADMINISTRA — só o sócio que presta serviço à sociedade é segurado obrigatório como contribuinte individual (Lei 8.212/91 art. 12 V 'f'). *'O cara que não trabalha, às vezes é um sócio só de investimento; eu não tenho obrigatoriedade de gerar um pró-labore'*. 🔑 ESTE NÓ ESTAVA CERTO E O MOTOR É QUE TINHA DERIVADO: em 15/09 o `_modelo.mjs` passou a assumir 'todo sócio recebe', e em 16/09 voltou para cá. O desenho de processo sabia antes do código. ⚠️ O dado vem da constituição (qualificação 49 × 22), e o contador avisou que o app NUNCA vai saber sozinho: *'às vezes o cara pode colocar que um é administrador, mas quem está trabalhando é o outro'* — inclusive por motivo legítimo, como bloqueio judicial no nome de quem administra. Administrar é o DEFAULT, não a verdade. 🔴 E TEM UM EFEITO QUE NINGUÉM ESPERAVA, medido em 16/09: concentrar a folha em menos gente pode custar MAIS imposto, porque a tabela do IRRF é progressiva por pessoa. Folha de R$5.600 custa R$616,00 repartida entre dois e R$844,86 num sócio só; abaixo de R$5.000 por pessoa a diferença é zero. As duas coisas que o contador validou no mesmo dia colidem aqui, e a decisão do Pedro foi aplicar a regra E mostrar a conta: o motor avalia todos os arranjos e pergunta se algum outro sócio também TRABALHA. Pergunta sobre fato, nunca sobre conveniência fiscal."
       },
       {
         "entrada": true,

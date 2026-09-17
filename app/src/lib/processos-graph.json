@@ -1451,7 +1451,7 @@
       "ve": "nada, acontece por baixo",
       "luz": "verde",
       "forma": "passo",
-      "fonte": "Fórmula da matriz: folha 12m ÷ receita 12m; ≥ 28% → Anexo III (6%), senão Anexo V (15,5%). Entram salário CLT, pró-labore, 13º, férias + 1/3, FGTS e a CPP mesmo embutida no DAS. Não entram distribuição de lucros, autônomo, prestador PJ, PAT e estagiário. Evidência do líder (09/09): pró-labore do mês = max(piso; 0,28 × Σfaturamento 12m − Σpró-labore dos 11 meses anteriores).",
+      "fonte": "Fórmula da matriz: folha 12m ÷ receita 12m; ≥ 28% → Anexo III (6%), senão Anexo V (15,5%). Entram salário CLT, pró-labore, 13º, férias + 1/3 e FGTS. 🔴 NÃO entra a CPP embutida no DAS: este passo afirmava que entrava, e a leitura foi refutada em 14/09 contra a Res. CGSN 140/2018 art. 26 §2º I 'a', que nomeia só o Anexo IV. Também não entram distribuição de lucros, autônomo, prestador PJ, PAT e estagiário. Evidência do líder (09/09): pró-labore do mês = max(piso; 0,28 × Σfaturamento 12m − Σpró-labore dos 11 meses anteriores).",
       "cor": "#17A06A",
       "tons": {
         "faz": "normal",

@@ -37,6 +37,60 @@ export const DOCS_DE_PENDENCIA = [
 ];
 
 /**
+ * 🔴 AS FONTES DE DESENHO — acrescentadas em 16/09, depois da TERCEIRA cópia.
+ *
+ * ── O QUE ACONTECEU ────────────────────────────────────────────────────────
+ *
+ * A leitura errada da CPP (*"conta no numerador, é pacífico"*) foi escrita em
+ * 13/09 e refutada em 14/09. Mesmo assim ela sobreviveu em **três lugares**:
+ *
+ *   1. `_tabelas.mjs` · FATOR_R_NUMERADOR ....... corrigido em 15/09, e só
+ *      porque o Pedro mandou conferir *"se de fato é isso mesmo"*
+ *   2. virou o assunto encerrado `E-CPP` ........ 14/09
+ *   3. `cru/prolabore.mjs` + `processos-data.mjs` ... **sobreviveu até 16/09**
+ *
+ * 🔑 **E sobreviveu por um motivo estrutural, não por descuido:** esta trava
+ * varria só os 4 docs de pendência acima, porque nasceu para pegar assunto
+ * encerrado voltando como *dúvida*. A CPP não voltou como dúvida — ela **nunca
+ * saiu** da fonte que gera o desenho de processo, afirmada como fato.
+ *
+ * ⚠️ Assunto encerrado morre em **lista de pendência** e em **fonte de
+ * desenho**. Varrer só a primeira deixa a segunda ensinando o erro.
+ */
+export const FONTES_DE_DESENHO = [
+  "execucao/processos/cru/prolabore.mjs",
+  "execucao/processos/cru/impostos.mjs",
+  "execucao/processos/cru/notas.mjs",
+  "execucao/processos/processos-data.mjs",
+  "execucao/processos/_persona.mjs",
+];
+
+/**
+ * 🔑 Nas fontes de desenho a regra é OUTRA, e precisa ser.
+ *
+ * Num doc de pendência, o problema é o assunto **reaberto como dúvida** — por
+ * isso lá o gatilho é `LINGUAGEM_DE_ABERTO`. Aqui o problema é o oposto: o
+ * assunto aparece **afirmado como verdade**, e a verdade afirmada é a errada.
+ *
+ * Então aqui se varre por **contradição declarada**: frases que afirmam o que
+ * o encerrado nega. Não dá para pegar tudo, e não é essa a promessa — a
+ * promessa é pegar a reincidência *literal*, que foi como esta errou três vezes.
+ */
+export const CONTRADICOES = [
+  {
+    de: "E-CPP",
+    frases: [
+      "CPP dentro do DAS CONTA no numerador",
+      "cpp mesmo embutida no das",
+      "a CPP FOI RESOLVIDA EM 13/09: ela CONTA",
+    ],
+    porque:
+      "A Res. CGSN 140/2018 art. 26 §2º I 'a' nomeia só o Anexo IV. No III e " +
+      "no V a CPP não entra no numerador do Fator R.",
+  },
+];
+
+/**
  * Palavras que marcam uma linha como "isto está em aberto". Assunto encerrado
  * numa linha dessas é reabertura.
  */

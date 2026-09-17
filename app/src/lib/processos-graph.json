@@ -682,12 +682,12 @@
         },
         {
           "dado": "Como o RBT12 se comporta na empresa nova",
-          "status": "nao-captado",
-          "quem": "ninguem",
-          "porque": "Empresa recém-aberta não tem 12 meses de receita: a legislação manda proporcionalizar. Isso muda a alíquota do P2.1 nos primeiros meses e a faixa de preço do P1.2. Não é dado que alguém capta, é regra que ninguém escreveu — e sem ela o primeiro DAS da empresa sai de um cálculo que não foi decidido."
+          "status": "captado",
+          "quem": "motor",
+          "porque": "✅ RESOLVIDO em 14/09, por fonte primária, e esta linha ficou vermelha até 17/09. Empresa recém-aberta não tem 12 meses de receita, e a Res. CGSN 140/2018 art. 24 dá TRÊS regras, separadas pelo número de meses de atividade: no 1º mês é a receita do próprio mês vezes 12; do 2º ao 12º é a média dos meses ANTERIORES vezes 12; do 13º em diante é a soma simples dos 12 anteriores. 🔴 E a armadilha que a leitura fechou: mês com receita ZERO entra no divisor. Tirá-lo infla a média, sobe a faixa e faz o cliente pagar a maior. Implementado em `rbt12De()` e conferido pela G4 do verificar-apurador contra a série real da persona zero. A pergunta que estava aqui era para o Mauro e foi respondida pela norma, não por ele."
         }
       ],
-      "insumosFaltando": 1,
+      "insumosFaltando": 0,
       "sugestoes": []
     },
     {
@@ -933,12 +933,12 @@
         },
         {
           "dado": "Como o RBT12 se comporta na empresa nova",
-          "status": "nao-captado",
-          "quem": "ninguem",
-          "porque": "Empresa recém-aberta não tem 12 meses de receita: a legislação manda proporcionalizar. Isso muda a alíquota do P2.1 nos primeiros meses e a faixa de preço do P1.2. Não é dado que alguém capta, é regra que ninguém escreveu — e sem ela o primeiro DAS da empresa sai de um cálculo que não foi decidido."
+          "status": "captado",
+          "quem": "motor",
+          "porque": "✅ RESOLVIDO em 14/09, por fonte primária, e esta linha ficou vermelha até 17/09. Empresa recém-aberta não tem 12 meses de receita, e a Res. CGSN 140/2018 art. 24 dá TRÊS regras, separadas pelo número de meses de atividade: no 1º mês é a receita do próprio mês vezes 12; do 2º ao 12º é a média dos meses ANTERIORES vezes 12; do 13º em diante é a soma simples dos 12 anteriores. 🔴 E a armadilha que a leitura fechou: mês com receita ZERO entra no divisor. Tirá-lo infla a média, sobe a faixa e faz o cliente pagar a maior. Implementado em `rbt12De()` e conferido pela G4 do verificar-apurador contra a série real da persona zero. A pergunta que estava aqui era para o Mauro e foi respondida pela norma, não por ele."
         }
       ],
-      "insumosFaltando": 4,
+      "insumosFaltando": 3,
       "sugestoes": []
     },
     {

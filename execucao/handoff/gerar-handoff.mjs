@@ -61,6 +61,7 @@ const QUEM = {
   assistido: "trecho assistido (nosso)",
   parceira: "certificadora parceira",
   orgao: "órgão",
+  motor: "motor fiscal (regra implementada e conferida)",
   ninguem: "🔴 ninguém",
 };
 

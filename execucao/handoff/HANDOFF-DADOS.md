@@ -1,7 +1,7 @@
 ---
 tipo: derivado
 status: vivo
-data: 2026-09-12
+data: 2026-09-17
 assunto: handoff-dados-constituicao
 gerado_por: execucao/handoff/gerar-handoff.mjs
 tags: [execucao, handoff, dados, abertura, processos]
@@ -33,7 +33,7 @@ Da emissão com o cliente até a entrega do certificado e da senha pra gente. No
 
 ## Placar
 
-**24 dados mapeados:** 🟢 11 chegam · 🟡 6 nascem depois · 🟡 3 ninguém combinou · 🔴 4 ninguém produz
+**24 dados mapeados:** 🟢 12 chegam · 🟡 6 nascem depois · 🟡 3 ninguém combinou · 🔴 3 ninguém produz
 
 **18 dos 79 passos** do P1 ao P5 dependem de algum dado da constituição.
 
@@ -54,6 +54,7 @@ Estes já existem e já são coletados no trecho deles. A lista serve pra provar
 | 🟢 | **Usa o endereço fiscal da Legalizai? (sim/não)** | time do dev | tela `E3_4` | **P1.1** Monta a fatura do ciclo |
 | 🟢 | **Endereço da empresa (CEP, número, complemento, IPTU, tipo de imóvel)** | time do dev | tela `C4` | **P3.5** Transmite ao Emissor Nacional · catálogo 6.6 · /mais/empresa |
 | 🟢 | **Conta: nome, CPF, e-mail, telefone, senha** | time do dev | tela `E6` | catálogo 7.6 · perfil e login · 1.4 central de avisos (canal) |
+| 🟢 | **Como o RBT12 se comporta na empresa nova** | motor fiscal (regra implementada e conferida) | Res. CGSN 140/2018 art. 24 · rbt12De() | **P1.2** O preço mudou neste ciclo? · **P2.1** Apura e emite a guia do mês |
 
 **🟢 CNAE principal** · chega
 
@@ -98,6 +99,10 @@ Define o município de incidência do ISS, que é o que faz a nota ser de BH e n
 **🟢 Conta: nome, CPF, e-mail, telefone, senha** · chega
 
 É a mesma conta que entra no portal depois. Não tem passo de processo consumindo porque ela é pré-condição de todos: sem login não há P nenhum.
+
+**🟢 Como o RBT12 se comporta na empresa nova** · chega
+
+✅ RESOLVIDO em 14/09, por fonte primária, e esta linha ficou vermelha até 17/09. Empresa recém-aberta não tem 12 meses de receita, e a Res. CGSN 140/2018 art. 24 dá TRÊS regras, separadas pelo número de meses de atividade: no 1º mês é a receita do próprio mês vezes 12; do 2º ao 12º é a média dos meses ANTERIORES vezes 12; do 13º em diante é a soma simples dos 12 anteriores. 🔴 E a armadilha que a leitura fechou: mês com receita ZERO entra no divisor. Tirá-lo infla a média, sobe a faixa e faz o cliente pagar a maior. Implementado em `rbt12De()` e conferido pela G4 do verificar-apurador contra a série real da persona zero. A pergunta que estava aqui era para o Mauro e foi respondida pela norma, não por ele.
 
 
 ## 2. Existem, mas nascem depois do trecho deles
@@ -150,7 +155,6 @@ Fecha a pasta de documentos do cliente. O licenciamento já é respondido no que
 | 🔴 | **Conta bancária da PJ (ou o extrato dela)** | 🔴 ninguém | não existe em lugar nenhum | **P5.8** O dinheiro saiu da conta pro sócio? |
 | 🔴 | **Dependentes para IRRF** | 🔴 ninguém | não existe em lugar nenhum | **P5.7** Declara e gera a guia do INSS · catálogo 4.7 |
 | 🔴 | **Colaboradores (admissão, ativo, demissão)** | 🔴 ninguém | não existe em lugar nenhum | **P1.1** Monta a fatura do ciclo |
-| 🔴 | **Como o RBT12 se comporta na empresa nova** | 🔴 ninguém | regra, não campo | **P1.2** O preço mudou neste ciclo? · **P2.1** Apura e emite a guia do mês |
 
 **🟡 Inscrição municipal (CCM) na Prefeitura de BH** · ninguém combinou
 
@@ -176,10 +180,6 @@ Entra direto no cálculo do IRRF do pró-labore, e o líder tem. Não é gap de 
 
 O P1.1 já soma 'R$ 39 por colaborador ATIVO' na fatura, pelas cláusulas 7.2 e 7.4 — cobra mesmo sem movimento. Mas nada na constituição cria colaborador, e nenhum processo desenhado transforma alguém em ativo. A linha da fatura existe e a origem dela não. Não é dado de handoff: é processo faltando (candidato a P6).
 
-**🔴 Como o RBT12 se comporta na empresa nova** · ninguém produz
-
-Empresa recém-aberta não tem 12 meses de receita: a legislação manda proporcionalizar. Isso muda a alíquota do P2.1 nos primeiros meses e a faixa de preço do P1.2. Não é dado que alguém capta, é regra que ninguém escreveu — e sem ela o primeiro DAS da empresa sai de um cálculo que não foi decidido.
-
 
 ## 4. As perguntas, por quem responde
 
@@ -194,7 +194,6 @@ Empresa recém-aberta não tem 12 meses de receita: a legislação manda proporc
 ### Pra Mauro
 
 - **Conta bancária da PJ (ou o extrato dela)** — Pra saber que o pró-labore foi pago de verdade, a gente fica no extrato que o cliente manda (cláusula 5.4) ou vale perguntar a conta PJ na abertura e buscar Open Finance read-only depois? É o que separa Anexo III de Anexo V.
-- **Como o RBT12 se comporta na empresa nova** — Nos primeiros 12 meses, qual é a regra de proporcionalização do RBT12 que a gente adota pro DAS e pra faixa de preço? É o cálculo do primeiro imposto de todo cliente novo.
 
 ### Pra Pedro
 

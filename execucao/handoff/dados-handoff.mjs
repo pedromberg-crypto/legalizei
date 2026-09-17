@@ -383,16 +383,38 @@ export const DADOS = [
   {
     id: "rbt12-inicial",
     dado: "Como o RBT12 se comporta na empresa nova",
-    entregaPor: "ninguem",
-    origem: { tipo: "texto", ref: "regra, não campo" },
+    /**
+     * ═════════════════════════════════════════════════════════════════════════
+     * ✅ RESOLVIDO EM 14/09, e esta linha ficou vermelha até 17/09
+     * ═════════════════════════════════════════════════════════════════════════
+     * A pergunta era para o Mauro e **foi respondida por fonte primária**, não
+     * por ele: Res. CGSN 140/2018 art. 24, caput e inciso I. São três regras,
+     * e o que separa é o número de meses de atividade:
+     *
+     *   1º mês .......... receita do PRÓPRIO mês × 12
+     *   2º ao 12º mês ... média dos meses ANTERIORES × 12
+     *   13º em diante ... soma simples dos 12 anteriores
+     *
+     * 🔴 E a armadilha que a leitura fechou: **mês com receita zero ENTRA no
+     * divisor**. Excluí-lo infla a média, sobe a faixa e faz o cliente pagar a
+     * maior. A pesquisa chama isso de erro material sistêmico.
+     *
+     * Está implementado em `rbt12De()` e conferido pela **G4** do
+     * `verificar-apurador.mjs`, contra a série real da persona zero.
+     *
+     * 🔑 Por que a linha ficou velha: este inventário nasceu em 12/09, dois
+     * dias ANTES da pesquisa que respondeu. Nenhuma trava confronta pergunta
+     * aberta aqui com regra já fechada no motor, e é a mesma família da trava
+     * de defasagem (número velho em prosa), só que de PENDÊNCIA velha.
+     */
+    entregaPor: "motor",
+    origem: { tipo: "regra", ref: "Res. CGSN 140/2018 art. 24 · rbt12De()" },
     consome: ["P1.2", "P2.1"],
-    status: "nao-captado",
+    status: "captado",
     porque:
-      "Empresa recém-aberta não tem 12 meses de receita: a legislação manda proporcionalizar. Isso muda a alíquota do P2.1 nos primeiros meses e a faixa de preço do P1.2. Não é dado que alguém capta, é regra que ninguém escreveu — e sem ela o primeiro DAS da empresa sai de um cálculo que não foi decidido.",
-    pergunta: {
-      para: "Mauro",
-      texto:
-        "Nos primeiros 12 meses, qual é a regra de proporcionalização do RBT12 que a gente adota pro DAS e pra faixa de preço? É o cálculo do primeiro imposto de todo cliente novo.",
-    },
+      "✅ RESOLVIDO em 14/09, por fonte primária, e esta linha ficou vermelha até 17/09. " +
+      "Empresa recém-aberta não tem 12 meses de receita, e a Res. CGSN 140/2018 art. 24 dá TRÊS regras, separadas pelo número de meses de atividade: no 1º mês é a receita do próprio mês vezes 12; do 2º ao 12º é a média dos meses ANTERIORES vezes 12; do 13º em diante é a soma simples dos 12 anteriores. " +
+      "🔴 E a armadilha que a leitura fechou: mês com receita ZERO entra no divisor. Tirá-lo infla a média, sobe a faixa e faz o cliente pagar a maior. " +
+      "Implementado em `rbt12De()` e conferido pela G4 do verificar-apurador contra a série real da persona zero. A pergunta que estava aqui era para o Mauro e foi respondida pela norma, não por ele.",
   },
 ];

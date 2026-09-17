@@ -19,7 +19,7 @@ tags: [produto, catalogo, portal, escopo, dia-2]
 > Ele **não** manda em dependência de API (isso é [[_matriz-dependencia]]) nem no desenho de cada funcionalidade (isso é `produto/me/viver/funcionalidades/specs/<nome>.md`).
 > Hub da frente: [[HOME-produto]].
 >
-> 🔄 Extraído de `execucao/portal/funcionalidades-me-simples.md` em 09/09/2026, quando a frente ganhou pasta própria.
+> 🔄 Extraído de `produto/me/viver/portal/funcionalidades-me-simples.md` em 09/09/2026, quando a frente ganhou pasta própria.
 
 # 🧩 Funcionalidades do portal — ME/Simples (lista consolidada)
 

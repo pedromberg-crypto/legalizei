@@ -16,7 +16,7 @@ tags: [produto, api, dependencia, automacao, fiscal]
 >
 > 🔒 **A regra que criou esta matriz** (Pedro, 08/09): *"não adianta falar dessas funcionalidades sem validar o que temos de API disponível realmente"*. Por isso aqui **só** entra o que depende de terceiro. O que a gente resolve com dado interno ou documento do cliente é problema de programação, não de matriz, e fica fora de propósito.
 >
-> 🔄 Extraído de `execucao/portal/funcionalidades-me-simples.md` em 09/09/2026.
+> 🔄 Extraído de `produto/me/viver/portal/funcionalidades-me-simples.md` em 09/09/2026.
 
 ## ✅ O QUE A VERIFICAÇÃO DE 09/09 MUDOU
 

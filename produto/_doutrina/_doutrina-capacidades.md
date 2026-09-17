@@ -71,7 +71,7 @@ notas.emitir
 
 `data-cap` **não é classe nem texto**. É isso que faz o mecanismo aguentar redesenho: você troca cor, layout, copy, componente e biblioteca, e o marcador vai junto do elemento. Se o elemento sumir, o marcador some com ele, e é exatamente aí que o script grita.
 
-**② Em `execucao/portal/portal-data.mjs`**, no nó da tela:
+**② Em `produto/me/viver/portal/portal-data.mjs`**, no nó da tela:
 
 ```js
 { id: "P_PLANO", rota: "/mais/plano", ...,
@@ -93,7 +93,7 @@ Com isso, **o placar de cobertura deixa de ser escrito à mão e passa a ser cal
 
 ## 5. O verificador
 
-`execucao/portal/verificar-capacidades.mjs`, rodando junto do `gerar-mapa-portal.mjs`. Três saídas:
+`produto/me/viver/portal/verificar-capacidades.mjs`, rodando junto do `gerar-mapa-portal.mjs`. Três saídas:
 
 | | O que significa | Gravidade |
 |---|---|---|
@@ -115,7 +115,7 @@ Com isso, **o placar de cobertura deixa de ser escrito à mão e passa a ser cal
 
 **Quem guia esta rodada é a pesquisa de setembro**, que é incomparavelmente mais robusta que a primeira: o painel de 51 funcionalidades em [[HOME-produto]], os teardowns com **API, endpoint e modelo de dados** em `produto/me/_evidencias/`, e o contrato literal do líder.
 
-🔻 **O que NÃO pesa:** os quatro documentos de **22 a 23/07** do `execucao/portal/` (matriz, cruzamento, candidatos de home, backlog). Eles são da primeira leva de comparação, a que gerou as telas. **Continuam no vault porque explicam por que cada tela nasceu como nasceu, e isso não está em nenhum outro lugar.** Mas não decidem o que construir agora.
+🔻 **O que NÃO pesa:** os quatro documentos de **22 a 23/07** do `produto/me/viver/portal/` (matriz, cruzamento, candidatos de home, backlog). Eles são da primeira leva de comparação, a que gerou as telas. **Continuam no vault porque explicam por que cada tela nasceu como nasceu, e isso não está em nenhum outro lugar.** Mas não decidem o que construir agora.
 
 🔴 **E uma regra de método que vale mais que as duas acima:** o inventário nasce **da nossa tela pra fora**, não da lista do líder pra dentro.
 

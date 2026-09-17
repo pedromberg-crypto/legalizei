@@ -10,19 +10,29 @@
  *      ignoradas de propósito — não são telas canônicas do produto.
  *   2. VERSIONA — snapshot em `versoes/` só quando a estrutura muda.
  *
- * Rodar:  node execucao/portal/gerar-mapa-portal.mjs
+ * Rodar:  node produto/me/viver/portal/gerar-mapa-portal.mjs
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
 import fs from "node:fs";
 import path from "node:path";
+import { RAIZ } from "../../../_raiz.mjs";
 import { fileURLToPath } from "node:url";
 import { NODES, EDGES, SUBGRAFOS } from "./portal-data.mjs";
 
-const DIR = path.dirname(fileURLToPath(import.meta.url)); // execucao/portal
-const NOTA = path.join(DIR, "..", "mapa-portal-mermaid.md");
+const DIR = path.dirname(fileURLToPath(import.meta.url)); // produto/me/viver/portal
+/**
+ * 🔑 A nota gerada veio JUNTO na mudança de 17/09 — mesma armadilha do
+ * `gerar-mapa.mjs` do flow, no mesmo dia. Ela era alcançada por `DIR/..`, que
+ * apontava para `execucao/`. Aqui esse `..` viraria `produto/me/viver/`, um
+ * caminho que EXISTE: nada estouraria, e nasceria uma nota órfã no lugar
+ * errado. Doc gerado mora com o gerador.
+ */
+const NOTA = path.join(DIR, "mapa-portal-mermaid.md");
 const VERSOES = path.join(DIR, "versoes");
-const PORTAL = path.join(DIR, "..", "..", "app", "src", "app", "(app)", "(portal)");
+/** 📦 Mesma regra do flow: `versoes/` guarda só a CORRENTE. */
+const VERSOES_ARQUIVO = path.join(RAIZ, "_arquivo", "portal-versoes");
+const PORTAL = path.join(RAIZ, "app", "src", "app", "(app)", "(portal)");
 
 const hoje = new Date().toISOString().slice(0, 10);
 
@@ -217,6 +227,10 @@ if (mudou) {
   versao = (prev ? prev.v : 0) + 1;
   const resumo = prev ? diffResumo(prev.dados, cur) : `versão inicial (${cur.nodes.length} nós, ${cur.edges.length} conexões)`;
   fs.mkdirSync(VERSOES, { recursive: true });
+  fs.mkdirSync(VERSOES_ARQUIVO, { recursive: true });
+  const arquivadas = fs.readdirSync(VERSOES).filter((f) => /^v\d+-.*\.(json|mmd)$/.test(f));
+  for (const f of arquivadas) fs.renameSync(path.join(VERSOES, f), path.join(VERSOES_ARQUIVO, f));
+  if (arquivadas.length) console.log(`📦 ${arquivadas.length} arquivo(s) da v${prev.v} → _arquivo/portal-versoes/`);
   fs.writeFileSync(path.join(VERSOES, `v${versao}-${hoje}.json`), JSON.stringify(cur, null, 2));
   fs.writeFileSync(path.join(VERSOES, `v${versao}-${hoje}.mmd`), renderMermaid());
   const hist = blocoAtual(nota, "VERSOES");
@@ -230,4 +244,4 @@ if (mudou) {
 fs.writeFileSync(NOTA, nota);
 if (drift.length) console.log(`⚠️  drift: ${drift.join(" · ")}`);
 else console.log("✓ sem drift (mapa bate com as rotas reais de (portal))");
-console.log(`✓ nota atualizada: ${path.relative(path.join(DIR, "..", ".."), NOTA)}`);
+console.log(`✓ nota atualizada: ${path.relative(RAIZ, NOTA)}`);

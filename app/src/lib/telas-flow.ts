@@ -13,7 +13,7 @@
  * mental embutido nele.
  *
  * Ordem dos GRUPOS segue `produto/_flow/flow-data.mjs` (Entrada→Dinheiro→
- * Constituição→Aprovação) + `execucao/portal/portal-data.mjs` (Portal).
+ * Constituição→Aprovação) + `produto/me/viver/portal/portal-data.mjs` (Portal).
  */
 
 export interface Tela {

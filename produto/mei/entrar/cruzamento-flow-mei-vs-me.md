@@ -191,4 +191,4 @@ Pula: E5T (triagem de sócios), C2 (vínculo INSS), C3 (sócios), C5 (CNAE secun
 - [[abertura-mei-processo]] — a fonte dos fatos.
 - [[mei-mapeamento-funcionalidades]] · [[mei-obrigacoes-operacionais]] — o depois.
 - `produto/_flow/flow-data.mjs` — onde isso vira nó.
-- `execucao/portal/portal-data.mjs` — 🟡 defasado, ver [[2026-08-27-mei-obrigacoes-mapeamento-e-drift-do-portal]].
+- `produto/me/viver/portal/portal-data.mjs` — 🟡 defasado, ver [[2026-08-27-mei-obrigacoes-mapeamento-e-drift-do-portal]].

@@ -4,7 +4,7 @@ status: vivo
 data: 2026-07-27
 assunto: telas-internas-portal
 deriva_de: [matriz-portal-interno, cruzamento-portal-interno, backlog-telas-portal]
-deriva_de_codigo: [execucao/portal/portal-data.mjs]
+deriva_de_codigo: [produto/me/viver/portal/portal-data.mjs]
 tags: [produto, ux, telas, portal, navegacao, mermaid, mapa, vivo]
 ---
 
@@ -12,7 +12,7 @@ tags: [produto, ux, telas, portal, navegacao, mermaid, mapa, vivo]
 
 > **Nota GERADA. Não editar à mão.** A fonte-única é `portal/portal-data.mjs`; o diagrama, a tabela e o histórico são re-renderizados por `portal/gerar-mapa-portal.mjs`. É a irmã de [[mapa-flow-mermaid]] — aquela cobre a ENTRADA (N1–N24, funil linear até o pagamento); esta cobre a CASA (dia-2, o app navegável pós-abertura).
 >
-> **Como atualizar:** mude `portal/portal-data.mjs` → rode `node execucao/portal/gerar-mapa-portal.mjs`. Ele redesenha tudo, confere o drift contra as rotas reais de `(app)/(portal)` (ignorando as de laboratório) e, se algo estrutural mudou, grava um snapshot versionado em `portal/versoes/` + uma linha no histórico.
+> **Como atualizar:** mude `portal/portal-data.mjs` → rode `node produto/me/viver/portal/gerar-mapa-portal.mjs`. Ele redesenha tudo, confere o drift contra as rotas reais de `(app)/(portal)` (ignorando as de laboratório) e, se algo estrutural mudou, grava um snapshot versionado em `portal/versoes/` + uma linha no histórico.
 >
 > **O portal NÃO é flow linear, é grafo de navegação:** 4 abas (Início · Impostos · Notas · Mais) + **CTA central Emitir NF-e**, cada aba com seus drill-downs. Autoridade das abas = `(app)/(portal)/layout.tsx`.
 >

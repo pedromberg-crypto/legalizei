@@ -24,10 +24,10 @@ Não funciona pra funcionalidade. Uma funcionalidade tem seis facetas, e elas ca
 | Faceta | Onde caía antes |
 |---|---|
 | o que o líder faz | `pesquisa/concorrentes/contabilizei/` |
-| onde entra no catálogo | `execucao/portal/funcionalidades-me-simples.md` |
+| onde entra no catálogo | `produto/me/viver/portal/funcionalidades-me-simples.md` |
 | a lei e o prazo | `pesquisa/rotina-fiscal/` |
 | de que API depende | `pesquisa/integracoes-apis/` |
-| que tela nossa cobre | `execucao/portal/matriz-portal-interno.md` |
+| que tela nossa cobre | `produto/me/viver/portal/matriz-portal-interno.md` |
 | a decisão travada | `marca/decisoes-marca.md` |
 
 Ninguém respondia *"como está o pró-labore?"* sem abrir seis arquivos. **Aqui a unidade de organização é o objeto (a funcionalidade), não a fonte.**

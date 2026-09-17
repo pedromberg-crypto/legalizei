@@ -7,7 +7,7 @@
  * Autoridade das abas/rotas = `app/src/app/(app)/(portal)/layout.tsx`.
  *
  * NÃO editar o Mermaid na nota à mão: editar ESTE arquivo e rodar
- * `node execucao/portal/gerar-mapa-portal.mjs`. O gerador re-renderiza o
+ * `node produto/me/viver/portal/gerar-mapa-portal.mjs`. O gerador re-renderiza o
  * diagrama + a tabela, confere o drift contra as rotas reais de (portal) e
  * grava um snapshot versionado.
  *
@@ -36,7 +36,7 @@
  *
  * Regras, gramática e a régua do que conta como capacidade:
  * `produto/_doutrina/_doutrina-capacidades.md`. Verificador:
- * `execucao/portal/verificar-capacidades.mjs`.
+ * `produto/me/viver/portal/verificar-capacidades.mjs`.
  *
  * Campos de um nó (iguais ao flow-data):
  *   id · rota · label · forma('tela'|'decisao'|'terminal') · classe · status

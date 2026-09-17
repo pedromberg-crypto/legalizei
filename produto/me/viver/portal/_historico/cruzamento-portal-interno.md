@@ -10,7 +10,7 @@ tags: [portal, home, dia-2, ux, feature, spec, navegacao]
 
 > 🔻 **PRECEDÊNCIA (travada 11/09).** Este documento é de **julho** e nasceu da primeira leva de comparação com o líder, que foi o que gerou as telas do portal. **Ele é histórico, não é guia.**
 >
-> Para a rodada de lapidação do MVP, quem manda é a pesquisa de setembro, muito mais robusta: o painel de 51 funcionalidades em [[HOME-produto]], as evidências com API e endpoint em `produto/me/_evidencias/`, e o inventário de capacidades em `execucao/portal/portal-data.mjs`.
+> Para a rodada de lapidação do MVP, quem manda é a pesquisa de setembro, muito mais robusta: o painel de 51 funcionalidades em [[HOME-produto]], as evidências com API e endpoint em `produto/me/_evidencias/`, e o inventário de capacidades em `produto/me/viver/portal/portal-data.mjs`.
 >
 > ⚠️ **Não apagar.** Aqui mora o porquê de cada tela ter nascido como nasceu, e isso não está em nenhum outro lugar. O que não vale é usar este arquivo para decidir o que construir agora.
 

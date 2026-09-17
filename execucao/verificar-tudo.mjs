@@ -132,7 +132,7 @@ const DISPENSADOS = {
   "produto/_flow/verificar-mei.mjs": "ramo MEI — fora do escopo padrão (ME abrir empresa)",
   "produto/me/viver/processos/verificar-escopo.mjs": "roda DENTRO dos 3 geradores da fase 1",
   "produto/me/viver/processos/verificar-persona.mjs": "roda DENTRO dos 3 geradores da fase 1",
-  "execucao/portal/gerar-mapa-portal.mjs": "portal do cliente, outra frente",
+  "produto/me/viver/portal/gerar-mapa-portal.mjs": "portal do cliente, outra frente",
   "execucao/handoff/gerar-handoff.mjs": "pacote para o dev, sob demanda",
   "execucao/gerar-placar-mauro.mjs": "reporte ao sócio — roda no /fechar, não aqui",
   "produto/me/viver/funcionalidades/gerar-funcionalidades.mjs": "inventário de produto, outra frente",

@@ -26,7 +26,7 @@ produto/me/_evidencias/            foto com DATA, não manda em nada
 
 🔑 **A separação que dá o valor:** teardown de concorrente **envelhece sozinho** (eles mudam a tela); nosso desenho não. Num arquivo só, em 6 meses metade mente e ninguém sabe qual metade.
 
-⚠️ **`execucao/portal/funcionalidades-me-simples.md` virou redirecionador**, não sumiu: tinha 8 backlinks reais. Não escrever mais lá.
+⚠️ **`produto/me/viver/portal/funcionalidades-me-simples.md` virou redirecionador**, não sumiu: tinha 8 backlinks reais. Não escrever mais lá.
 
 ⚠️ **`tipo` e `status` são vocabulário FECHADO** (6 e 5 valores). Eu inventei 4 ao criar a pasta e corrigi: spec → `verdade`, evidência → `fato`, e a discriminação real virou a **propriedade `dominio`**. Ver [[legalize-vocabulario-tipo-derivou]].
 

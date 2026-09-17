@@ -49,7 +49,6 @@ import {
   vencimentoDe,
   anexoDoCnae,
   custoTotalMensal,
-  emCentavos,
 } from "../motor-fiscal/apurador.mjs";
 
 import {
@@ -213,7 +212,9 @@ export function identidade({
     cnaePrincipal,
     grupoAnexo,
     municipio,
-    cltDoSocio,
+    // 🔒 Mesma fronteira da `competencia()`: a autoria escreve reais, o motor
+    //    só conhece centavos. Ver o bloco de unidade lá embaixo.
+    cltDoSocio: Math.round(cltDoSocio * 100),
     sociosComProLabore,
     // Quem não declara está dizendo que todos os sócios administram.
     sociosTotal: sociosTotal ?? sociosComProLabore,
@@ -235,13 +236,64 @@ export function competencia({
   proLaborePago = 0,
   dasPago = null, // { valor, data } quando quitado
 }) {
+  /**
+   * ═════════════════════════════════════════════════════════════════════════
+   * 🔒 A FRONTEIRA DE ENTRADA — é aqui que reais viram centavos, e só aqui
+   * ═════════════════════════════════════════════════════════════════════════
+   * Regra travada em 17/09 (decisão do Pedro): **todo dinheiro que circula no
+   * motor é inteiro em centavos**. Mas a AUTORIA das vidas escreve em reais,
+   * e tem que continuar escrevendo: `ok(18000, 1621)` se confere de bater o
+   * olho, `ok(1800000, 162100)` não.
+   *
+   * 🔑 Então existe exatamente **uma** porta de entrada, e é esta. Depois
+   * dela, nenhum arquivo do motor conhece reais — a única outra exceção é a
+   * leitura das tabelas da lei, que ficam em reais para serem conferíveis
+   * contra o documento (ver `daTabela` no `apurador.mjs`).
+   *
+   * ⚠️ Fronteira declarada é o oposto do problema que isto resolve. O que
+   * doía era a unidade mudar **no meio de um objeto**, sem aviso — `das.total`
+   * em centavos e `piloto.minimoLegal` em reais. Duas portas nomeadas não são
+   * a mesma coisa que dez conversões implícitas.
+   */
+  const emCentavosDaAutoria = (v) => Math.round(v * 100);
+
   return {
     mes,
-    receita,
-    receitaComIssRetido,
-    proLaboreDeclarado,
-    proLaborePago,
+    receita: emCentavosDaAutoria(receita),
+    receitaComIssRetido: emCentavosDaAutoria(receitaComIssRetido),
+    proLaboreDeclarado: emCentavosDaAutoria(proLaboreDeclarado),
+    proLaborePago: emCentavosDaAutoria(proLaborePago),
     dasPago,
+  };
+}
+
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🔁 REEMBRULHAR UMA COMPETÊNCIA QUE JÁ ESTÁ EM CENTAVOS
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🔴 A ARMADILHA QUE ISTO FECHA, e ela mordeu em 17/09, dentro da própria
+ * migração.
+ *
+ * Pôr a conversão dentro da `competencia()` resolve a autoria e cria um
+ * risco novo: **quem recebe uma competência pronta e a passa de volta pela
+ * `competencia()` converte duas vezes**. Foi o que o `replay-piloto` fazia
+ * ao montar a série pilotada — `competencia({ ...real })` —, e o saldo do
+ * cliente da P01 saiu **−R$6.335.092,81** em vez de R$6.794,96.
+ *
+ * 🔑 Quem pegou foi a trava de defasagem, comparando com o número que estava
+ * escrito no briefing do contador. Nenhuma suíte tinha reclamado.
+ *
+ * ✅ Então a porta de entrada tem duas: `competencia()` para quem escreve em
+ * reais, e esta para quem já está por dentro. O nome diz de qual lado está.
+ */
+export function competenciaEmCentavos(cp) {
+  return {
+    mes: cp.mes,
+    receita: cp.receita ?? 0,
+    receitaComIssRetido: cp.receitaComIssRetido ?? 0,
+    proLaboreDeclarado: cp.proLaboreDeclarado ?? 0,
+    proLaborePago: cp.proLaborePago ?? 0,
+    dasPago: cp.dasPago ?? null,
   };
 }
 
@@ -470,8 +522,8 @@ export function retratoDoMes({ empresa, competencias, mesAlvo }) {
   return {
     mes: mesAlvo,
     mesDeAtividade: idx + 1,
-    receita: emCentavos(atual.receita),
-    rbt12: emCentavos(rbt.rbt12),
+    receita: atual.receita,
+    rbt12: rbt.rbt12,
     regraRbt12: rbt.regra,
     anexo: anexoVigente,
     anexoEhFixo: !grupo.calculaFatorR,
@@ -572,11 +624,11 @@ export function folgaDoFatorR({ empresa, competencias }) {
     percentualAtual: fr.fr,
     anualizado: fr.anualizado,
     /** A folga no mesmo plano do cálculo — anualizada quando < 13 meses. */
-    folgaNoPlanoDoCalculo: emCentavos(folga),
+    folgaNoPlanoDoCalculo: Math.round(folga),
     /** 🔑 O número que vai pra tela: quanto de pró-labore por mês sobra ou falta. */
-    folga: emCentavos(porMes),
+    folga: Math.round(porMes),
     temFolga: folga >= 0,
-    falta: folga < 0 ? emCentavos(-porMes) : 0,
+    falta: folga < 0 ? Math.round(-porMes) : 0,
     anexo: fr.anexo,
     riscoDeGlosa: fr.riscoDeGlosa,
     competenciasEmRisco: fr.competenciasEmRisco,

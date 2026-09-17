@@ -185,7 +185,7 @@ const MEDIDAS = [
      */
     medir: async () => {
       const { apurarDAS } = await import(url("motor-fiscal/apurador.mjs"));
-      return apurarDAS({ receitaMes: 7910, rbt12: 54000, anexo: "III" }).total;
+      return apurarDAS({ receitaMes: 791000, rbt12: 5400000, anexo: "III" }).total; // centavos
     },
     citacoes: [/\|\s*\*{0,2}R\$\s?(47[\d.]+,\d{2})\*{0,2}\s*\|/gi],
   },

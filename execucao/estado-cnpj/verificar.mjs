@@ -166,9 +166,9 @@ console.log(`   ${COMPETENCIAS.length} competências guardadas, tudo o mais é d
   afirma(
     "o retrato confronta o pago contra o sugerido",
     ago.divergencia !== null &&
-      ago.divergencia.pago === 1621 &&
+      ago.divergencia.pago === 162100 &&
       typeof ago.divergencia.diferenca === "number",
-    `pagou R$ 1.621,00 · piloto sugeriria R$ ${ago.piloto.sugerido.toFixed(2)}`
+    `pagou R$ 1.621,00 · piloto sugeriria R$ ${(ago.piloto.sugerido / 100).toFixed(2)}`
   );
 
   // 🔴 DERIVADO NÃO SE GUARDA: o piloto não pode ter virado campo da série.

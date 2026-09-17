@@ -42,13 +42,20 @@ function titulo(t) {
   console.log(`\n${"─".repeat(76)}\n${t}\n`);
 }
 
+/**
+ * 🔒 A autoria do teste escreve em REAIS; o motor come CENTAVOS desde 17/09.
+ * `R()` é a fronteira, e ela fica visível em cada chamada em vez de escondida
+ * numa camada — é a lição do M-014.
+ */
+const R = (emReaisDaAutoria) => Math.round(emReaisDaAutoria * 100);
+
 /** Monta uma série de competências com receita e pró-labore constantes. */
 const serie = (n, receita, proLabore, inicio = 1) =>
   Array.from({ length: n }, (_, i) => ({
     mes: `m${inicio + i}`,
-    receita,
-    proLaboreDeclarado: proLabore,
-    proLaborePago: proLabore,
+    receita: R(receita),
+    proLaboreDeclarado: R(proLabore),
+    proLaborePago: R(proLabore),
   }));
 
 const DINAMICO = { grupoAnexo: "fator-r-dinamico(III<->V, limiar 28%)" };
@@ -62,7 +69,8 @@ const REVISAO = { grupoAnexo: "requer-revisao" };
 titulo("G-P1 · IDA E VOLTA: o que o piloto manda pagar entrega os 28%?");
 
 /** Fecha o ciclo: calcula o mínimo, paga esse mínimo, remede o Fator R. */
-function idaEVolta(anteriores, receitaDoMes, alvo = FATOR_R.LIMIAR) {
+function idaEVolta(anteriores, receitaEmReais, alvo = FATOR_R.LIMIAR) {
+  const receitaDoMes = R(receitaEmReais); // a autoria escreve reais
   const r = proLaboreParaManterNoIII({
     competenciasAnteriores: anteriores,
     receitaDoMes,
@@ -128,8 +136,8 @@ function idaEVolta(anteriores, receitaDoMes, alvo = FATOR_R.LIMIAR) {
   const { r, fr } = idaEVolta([], 12000);
   ok(
     "mês 1: a janela é só ele, e a conta é 28% da própria receita",
-    r.mesesNaJanela === 1 && Math.abs(r.minimo - 12000 * 0.28) < 0.01,
-    `R$ ${r.minimo.toFixed(2)}`
+    r.mesesNaJanela === 1 && Math.abs(r.minimo - R(12000) * 0.28) < 1,
+    `R$ ${(r.minimo / 100).toFixed(2)}`
   );
   ok("mês 1: e o Fator R fecha", fr.anexo === "III");
 }
@@ -150,15 +158,15 @@ function idaEVolta(anteriores, receitaDoMes, alvo = FATOR_R.LIMIAR) {
   const anteriores = serie(12, 18000, PREVIDENCIA.SALARIO_MINIMO);
   const r = proLaboreParaManterNoIII({
     competenciasAnteriores: anteriores,
-    receitaDoMes: 18000,
+    receitaDoMes: R(18000),
   });
   const janela = [
     ...anteriores.slice(-11),
     {
       mes: "corrente",
-      receita: 18000,
-      proLaboreDeclarado: r.minimo - 0.01,
-      proLaborePago: r.minimo - 0.01,
+      receita: R(18000),
+      proLaboreDeclarado: r.minimo - 1, // 1 centavo, agora que a unidade é centavo
+      proLaborePago: r.minimo - 1,
     },
   ];
   const fr = fatorRDeCompetencias({ competencias: janela });
@@ -216,8 +224,8 @@ titulo("G-P3 · QUANDO SEGURAR NO ANEXO III CUSTA MAIS DO QUE O ANEXO V");
   const p = pilotar({
     empresa: DINAMICO,
     competenciasAnteriores: serie(12, 25000, PREVIDENCIA.SALARIO_MINIMO),
-    receitaDoMes: 25000,
-    rbt12DoMes: 300000,
+    receitaDoMes: R(25000),
+    rbt12DoMes: R(300000),
   });
   ok("faturamento alto e atrasado: o piloto atua", p.atua === true);
   ok(
@@ -228,11 +236,11 @@ titulo("G-P3 · QUANDO SEGURAR NO ANEXO III CUSTA MAIS DO QUE O ANEXO V");
   ok(
     "🔴 o sugerido é o SUSTENTÁVEL, não o valor insano de virar já",
     p.sugerido === p.sustentavel && p.paraVirarJa > p.sugerido * 5,
-    `sugerido R$ ${p.sugerido.toFixed(2)} × virar já R$ ${p.paraVirarJa.toFixed(2)}`
+    `sugerido R$ ${(p.sugerido / 100).toFixed(2)} × virar já R$ ${(p.paraVirarJa / 100).toFixed(2)}`
   );
   ok(
     "🔑 e o sustentável é exatamente a margem sobre a receita do mês",
-    Math.abs(p.sustentavel - 25000 * 0.3) < 0.01
+    Math.abs(p.sustentavel - R(25000) * 0.3) < 1
   );
   ok(
     "com o sugerido sustentável, a conta econômica fecha a favor do III",
@@ -246,8 +254,8 @@ titulo("G-P3 · QUANDO SEGURAR NO ANEXO III CUSTA MAIS DO QUE O ANEXO V");
   const p = pilotar({
     empresa: DINAMICO,
     competenciasAnteriores: serie(12, 25000, 25000 * 0.3),
-    receitaDoMes: 25000,
-    rbt12DoMes: 300000,
+    receitaDoMes: R(25000),
+    rbt12DoMes: R(300000),
   });
   ok(
     "🔑 quem foi pilotado desde o início está em MANUTENÇÃO, sem déficit",
@@ -256,7 +264,7 @@ titulo("G-P3 · QUANDO SEGURAR NO ANEXO III CUSTA MAIS DO QUE O ANEXO V");
   ok(
     "e o valor do mês é o mesmo sustentável de sempre — sem solavanco",
     Math.abs(p.sugerido - p.sustentavel) < 0.01,
-    `R$ ${p.sugerido.toFixed(2)}/mês`
+    `R$ ${(p.sugerido / 100).toFixed(2)}/mês`
   );
 }
 
@@ -265,11 +273,11 @@ titulo("G-P3 · QUANDO SEGURAR NO ANEXO III CUSTA MAIS DO QUE O ANEXO V");
   // A economia do mês é pequena e o custo de subir a folha é grande.
   const anteriores = serie(12, 28000, PREVIDENCIA.SALARIO_MINIMO);
   const v = valeManterNoIII({
-    receitaDoMes: 1000,
-    rbt12: 330000,
-    proLaborePiso: PREVIDENCIA.SALARIO_MINIMO,
-    proLaboreNecessario: 9000,
-    cltRemuneracao: 0,
+    receitaDoMes: R(1000),
+    rbt12: R(330000),
+    proLaborePiso: R(PREVIDENCIA.SALARIO_MINIMO),
+    proLaboreNecessario: R(9000),
+    cltRemuneracao: R(0),
   });
   ok(
     "🔴 mês fraco com folha longe dos 28%: NÃO compensa segurar no III",
@@ -282,8 +290,8 @@ titulo("G-P3 · QUANDO SEGURAR NO ANEXO III CUSTA MAIS DO QUE O ANEXO V");
       const p = pilotar({
         empresa: DINAMICO,
         competenciasAnteriores: anteriores,
-        receitaDoMes: 1000,
-        rbt12DoMes: 330000,
+        receitaDoMes: R(1000),
+        rbt12DoMes: R(330000),
       });
       return (
         p.atua === true &&
@@ -307,16 +315,16 @@ titulo("G-P3 · QUANDO SEGURAR NO ANEXO III CUSTA MAIS DO QUE O ANEXO V");
     const receita = 10000 + i * 2000; // de R$10 mil a R$32 mil
     crescendo.push({
       mes: `c${i}`,
-      receita,
+      receita: R(receita),
       proLaboreDeclarado: receita * 0.3,
-      proLaborePago: receita * 0.3,
+      proLaborePago: Math.round(R(receita) * 0.3),
     });
   }
   const p = pilotar({
     empresa: DINAMICO,
     competenciasAnteriores: crescendo,
-    receitaDoMes: 34000,
-    rbt12DoMes: 250000,
+    receitaDoMes: R(34000),
+    rbt12DoMes: R(250000),
   });
 
   ok(
@@ -349,13 +357,13 @@ titulo("G-P3 · QUANDO SEGURAR NO ANEXO III CUSTA MAIS DO QUE O ANEXO V");
     const d = pilotar({
       empresa: DINAMICO,
       competenciasAnteriores: [...historia],
-      receitaDoMes: receita,
-      rbt12DoMes: 0,
+      receitaDoMes: R(receita),
+      rbt12DoMes: R(0),
     });
-    const pl = d.atua ? d.sugerido : PREVIDENCIA.SALARIO_MINIMO;
+    const pl = d.atua ? d.sugerido : R(PREVIDENCIA.SALARIO_MINIMO);
     historia.push({
       mes: `p${i}`,
-      receita,
+      receita: R(receita),
       proLaboreDeclarado: pl,
       proLaborePago: pl,
     });
@@ -385,8 +393,8 @@ titulo("G-P3 · QUANDO SEGURAR NO ANEXO III CUSTA MAIS DO QUE O ANEXO V");
       const q = pilotar({
         empresa: DINAMICO,
         competenciasAnteriores: serie(12, 25000, PREVIDENCIA.SALARIO_MINIMO),
-        receitaDoMes: 25000,
-        rbt12DoMes: 300000,
+        receitaDoMes: R(25000),
+        rbt12DoMes: R(300000),
       });
       return q.modo === "recuperacao" && q.paraVirarJa !== null;
     })()
@@ -404,8 +412,8 @@ titulo("G-P3 · QUANDO SEGURAR NO ANEXO III CUSTA MAIS DO QUE O ANEXO V");
       const p = pilotar({
         empresa: DINAMICO,
         competenciasAnteriores: serie(12, receita, PREVIDENCIA.SALARIO_MINIMO),
-        receitaDoMes: receita,
-        rbt12DoMes: rbt12,
+        receitaDoMes: R(receita),
+        rbt12DoMes: R(rbt12),
       });
       if (!p.atua) continue;
       if (p.economia.saldo < pior) pior = p.economia.saldo;
@@ -422,18 +430,18 @@ titulo("G-P3 · QUANDO SEGURAR NO ANEXO III CUSTA MAIS DO QUE O ANEXO V");
 {
   // O CLT que já consome o teto: subir pró-labore não gera INSS nenhum.
   const comClt = valeManterNoIII({
-    receitaDoMes: 18000,
+    receitaDoMes: R(18000),
     rbt12: 200000,
-    proLaborePiso: PREVIDENCIA.SALARIO_MINIMO,
-    proLaboreNecessario: 6000,
-    cltRemuneracao: 9000,
+    proLaborePiso: R(PREVIDENCIA.SALARIO_MINIMO),
+    proLaboreNecessario: R(6000),
+    cltRemuneracao: R(9000),
   });
   const semClt = valeManterNoIII({
-    receitaDoMes: 18000,
+    receitaDoMes: R(18000),
     rbt12: 200000,
-    proLaborePiso: PREVIDENCIA.SALARIO_MINIMO,
-    proLaboreNecessario: 6000,
-    cltRemuneracao: 0,
+    proLaborePiso: R(PREVIDENCIA.SALARIO_MINIMO),
+    proLaboreNecessario: R(6000),
+    cltRemuneracao: R(0),
   });
   ok(
     "🔑 sócio com CLT que já bateu o teto: subir a folha custa MENOS",
@@ -551,8 +559,8 @@ titulo("G-P5 · FRONTEIRAS");
     (() => {
       const pago = serie(12, 10000, 3000);
       const naoPago = pago.map((c) => ({ ...c, proLaborePago: 0 }));
-      const a = proLaboreParaManterNoIII({ competenciasAnteriores: pago, receitaDoMes: 10000 });
-      const b = proLaboreParaManterNoIII({ competenciasAnteriores: naoPago, receitaDoMes: 10000 });
+      const a = proLaboreParaManterNoIII({ competenciasAnteriores: pago, receitaDoMes: R(10000) });
+      const b = proLaboreParaManterNoIII({ competenciasAnteriores: naoPago, receitaDoMes: R(10000) });
       return b.minimo > a.minimo;
     })(),
     "regime de caixa, art. 26 §6º"
@@ -564,10 +572,10 @@ titulo("G-P5 · FRONTEIRAS");
       const p = pilotar({
         empresa: DINAMICO,
         competenciasAnteriores: serie(12, 1000, 1621),
-        receitaDoMes: 1000,
-        rbt12DoMes: 12000,
+        receitaDoMes: R(1000),
+        rbt12DoMes: R(12000),
       });
-      return p.atua && p.sugerido === PREVIDENCIA.SALARIO_MINIMO;
+      return p.atua && p.sugerido === R(PREVIDENCIA.SALARIO_MINIMO);
     })()
   );
 
@@ -616,8 +624,8 @@ titulo("G-P6 · A EDIÇÃO MANUAL, E OS ALERTAS PERSONALIZADOS");
   const base = {
     empresa: DINAMICO,
     competenciasAnteriores: historia,
-    receitaDoMes: 18000,
-    rbt12DoMes: 154285.71,
+    receitaDoMes: R(18000),
+    rbt12DoMes: R(154285.71),
   };
   const cod = (r) => r.alertas.map((a) => a.codigo);
 
@@ -634,23 +642,23 @@ titulo("G-P6 · A EDIÇÃO MANUAL, E OS ALERTAS PERSONALIZADOS");
       const saudavel = avaliarProLaboreEscolhido({
         empresa: DINAMICO,
         competenciasAnteriores: serie(12, 18000, 5400), // folha em 30%
-        receitaDoMes: 18000,
-        rbt12DoMes: 154285.71,
-        escolhido: PREVIDENCIA.SALARIO_MINIMO,
+        receitaDoMes: R(18000),
+        rbt12DoMes: R(154285.71),
+        escolhido: R(PREVIDENCIA.SALARIO_MINIMO),
       });
       return !saudavel.alertas.some((a) => a.codigo === "CAI_PARA_ANEXO_V");
     })(),
     "alerta só quando o mês realmente derruba — senão vira ruído"
   );
 
-  const abaixoDoPiso = avaliarProLaboreEscolhido({ ...base, escolhido: 800 });
+  const abaixoDoPiso = avaliarProLaboreEscolhido({ ...base, escolhido: R(800) });
   ok(
     "⛔ abaixo do salário mínimo: o app NÃO aceita",
     abaixoDoPiso.aceito === false && cod(abaixoDoPiso).includes("PISO_LEGAL"),
     "Lei 8.212/1991 art. 28 §3º — a única trava dura"
   );
 
-  const noPiso = avaliarProLaboreEscolhido({ ...base, escolhido: 1621 });
+  const noPiso = avaliarProLaboreEscolhido({ ...base, escolhido: R(1621) });
   ok(
     "🔑 no salário mínimo: o app ACEITA, e avisa — informa, não tutela",
     noPiso.aceito === true && cod(noPiso).includes("CAI_PARA_ANEXO_V")
@@ -703,9 +711,9 @@ titulo("G-P6 · A EDIÇÃO MANUAL, E OS ALERTAS PERSONALIZADOS");
     const comFolga = avaliarProLaboreEscolhido({
       empresa: DINAMICO,
       competenciasAnteriores: serie(12, 18000, 5400), // folha em 30%
-      receitaDoMes: 18000,
-      rbt12DoMes: 154285.71,
-      escolhido: 800, // abaixo do piso, para forçar o cenário
+      receitaDoMes: R(18000),
+      rbt12DoMes: R(154285.71),
+      escolhido: R(800), // abaixo do piso, para forçar o cenário
     });
     const aFolga = comFolga.alertas.find((x) => x.codigo === "CAI_PARA_ANEXO_V");
     ok(
@@ -717,7 +725,7 @@ titulo("G-P6 · A EDIÇÃO MANUAL, E OS ALERTAS PERSONALIZADOS");
     );
   }
 
-  const semMargem = avaliarProLaboreEscolhido({ ...base, escolhido: ref.minimoLegal + 100 });
+  const semMargem = avaliarProLaboreEscolhido({ ...base, escolhido: ref.minimoLegal + R(100) });
   ok(
     "🟡 entre o mínimo legal e a sugestão: fica no III, mas sem folga",
     cod(semMargem).includes("SEM_MARGEM") &&
@@ -736,7 +744,7 @@ titulo("G-P6 · A EDIÇÃO MANUAL, E OS ALERTAS PERSONALIZADOS");
     `alertas: ${naSugestao.alertas.map((a) => a.codigo).join(", ") || "nenhum"}`
   );
 
-  const acimaDoTeto = avaliarProLaboreEscolhido({ ...base, escolhido: 15000 });
+  const acimaDoTeto = avaliarProLaboreEscolhido({ ...base, escolhido: R(15000) });
   ok(
     "ℹ️ acima do teto do INSS: avisa que o excedente só gera IRRF",
     cod(acimaDoTeto).includes("ACIMA_DO_TETO_INSS") &&
@@ -748,9 +756,9 @@ titulo("G-P6 · A EDIÇÃO MANUAL, E OS ALERTAS PERSONALIZADOS");
   const fixo = avaliarProLaboreEscolhido({
     empresa: FIXO,
     competenciasAnteriores: historia,
-    receitaDoMes: 18000,
-    rbt12DoMes: 154285.71,
-    escolhido: 1621,
+    receitaDoMes: R(18000),
+    rbt12DoMes: R(154285.71),
+    escolhido: R(1621),
   });
   ok(
     "🔴 CNAE III-fixo: editar pró-labore NÃO gera alerta de Anexo V",
@@ -764,11 +772,11 @@ titulo("G-P6 · A EDIÇÃO MANUAL, E OS ALERTAS PERSONALIZADOS");
 
   // Sócio com CLT: o texto do teto muda, porque a folga é outra.
   const comClt = avaliarProLaboreEscolhido({
-    empresa: { ...DINAMICO, cltDoSocio: 6000 },
+    empresa: { ...DINAMICO, cltDoSocio: R(6000) },
     competenciasAnteriores: historia,
-    receitaDoMes: 18000,
-    rbt12DoMes: 154285.71,
-    escolhido: 5000,
+    receitaDoMes: R(18000),
+    rbt12DoMes: R(154285.71),
+    escolhido: R(5000),
   });
   ok(
     "🔑 sócio com CLT: o alerta de teto usa a FOLGA dele, não o teto cheio",

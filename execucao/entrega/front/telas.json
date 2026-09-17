@@ -4496,12 +4496,12 @@
       "ondeBuscarONumero": "entrega/back/casos.json, no caso de mesmo id",
       "cartaoDoMes": {
         "titulo": "Imposto de junho",
-        "valor": "R$ 4.650,00",
+        "valor": "R$ 4.650,01",
         "vence": "2025-12-22",
         "estado": "a pagar"
       },
       "aliquota": {
-        "mostrar": "R$ 4.650,00 sobre R$ 30.000,00",
+        "mostrar": "R$ 4.650,01 sobre R$ 30.000,00",
         "efetiva": "15,50%",
         "comoDizer": "Este mês sua empresa perdeu o benefício do Anexo III, e a alíquota subiu.",
         "naoDizer": [

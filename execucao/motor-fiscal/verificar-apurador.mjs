@@ -22,6 +22,31 @@ import { apurarDAS, fatorR, fatorRDeCompetencias, anualiza, rbt12De, retencaoLeg
  * OS CASOS REAIS
  * ═══════════════════════════════════════════════════════════════════════════ */
 
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🔒 A AUTORIA DO TESTE ESCREVE EM REAIS. O MOTOR COME CENTAVOS.
+ * ═══════════════════════════════════════════════════════════════════════════
+ * Desde 17/09 todo dinheiro que circula no motor é inteiro em centavos
+ * (decisão do Pedro). Os casos daqui continuam escritos em reais **de
+ * propósito**: `receitaMes: 7910` se confere de bater o olho contra o recibo
+ * do PGDAS-D, e `791000` não.
+ *
+ * 🔑 `R()` é a fronteira, e ela aparece **em cada chamada** em vez de ficar
+ * escondida numa camada. Custa uma palavra e deixa a unidade visível no lugar
+ * onde o erro acontece — que é exatamente o que faltava no M-014.
+ */
+const R = (emReaisDaAutoria) => Math.round(emReaisDaAutoria * 100);
+
+/** Converte um caso inteiro, para não precisar embrulhar campo a campo. */
+const entradaEmCentavos = (e) => ({
+  ...e,
+  receitaMes: R(e.receitaMes),
+  rbt12: R(e.rbt12),
+  ...(e.receitaComIssRetido !== undefined
+    ? { receitaComIssRetido: R(e.receitaComIssRetido) }
+    : {}),
+});
+
 const CASOS = [
   {
     id: "G1",
@@ -79,7 +104,7 @@ const CASO_RBT12 = {
   nome: "RBT12 proporcional de ago/2026 — a regra do art. 24",
   fonte:
     "Res. CGSN 140/2018 art. 24 caput e inciso I, lida em fonte primária em 14/09 · pesquisa literal em pesquisa/fontes/2026-09-14-lacunas-motor-fiscal-LITERAL.md",
-  esperado: { rbt12: 54000, meses: 8, soma: 36000, media: 4500, faixa: 1, efetiva: 0.06 },
+  esperado: { rbt12: R(54000), meses: 8, soma: 36000, media: 4500, faixa: 1, efetiva: 0.06 },
   porque:
     "🔴 A EMPRESA ESTÁ NO 9º MÊS, então o RBT12 NÃO é a soma dos 12 — é a média dos 8 meses anteriores × 12. E os três meses zerados (mai, jun, jul) ENTRAM no divisor: tirá-los daria média de 7.200 e RBT12 de 86.400, inflando a faixa e fazendo o cliente pagar a maior.",
 };
@@ -148,7 +173,7 @@ for (const caso of CASOS) {
     continue;
   }
 
-  const r = apurarDAS(caso.entrada);
+  const r = apurarDAS(entradaEmCentavos(caso.entrada));
 
   if (caso.esperado.parcelas) {
     for (const [t, v] of Object.entries(caso.esperado.parcelas)) {
@@ -175,14 +200,14 @@ for (const caso of CASOS) {
 
   // Ago/26 é o 9º mês. Os ANTERIORES são dez/25 a jul/26 — 8 meses.
   const anteriores = SERIE.receita.slice(0, 8);
-  const r = rbt12De({ serieAnterior: anteriores });
+  const r = rbt12De({ serieAnterior: anteriores.map(R) });
 
   console.log(`   meses anteriores .......... ${r.meses}  (${SERIE.meses.slice(0, 8).join(" · ")})`);
-  console.log(confere("soma das receitas", emCentavos(r.soma), emCentavos(c.esperado.soma)));
-  console.log(confere("média mensal", emCentavos(r.media), emCentavos(c.esperado.media)));
-  console.log(confere("RBT12 proporcional", emCentavos(r.rbt12), emCentavos(c.esperado.rbt12)));
+  console.log(confere("soma das receitas", r.soma, R(c.esperado.soma)));
+  console.log(confere("média mensal", r.media, R(c.esperado.media)));
+  console.log(confere("RBT12 proporcional", r.rbt12, c.esperado.rbt12));
 
-  const das = apurarDAS({ receitaMes: 7910, rbt12: r.rbt12, anexo: "III" });
+  const das = apurarDAS({ receitaMes: R(7910), rbt12: r.rbt12, anexo: "III" });
   if (das.faixa === c.esperado.faixa && Math.abs(das.efetiva - c.esperado.efetiva) < 1e-9) {
     passou++;
     console.log(`   ✅ faixa ${das.faixa} · alíquota efetiva ${(das.efetiva * 100).toFixed(2)}%`);
@@ -195,8 +220,8 @@ for (const caso of CASOS) {
 
   // O contraste que prova a armadilha: excluir os meses zerados.
   const semZeros = anteriores.filter((v) => v > 0);
-  const errado = rbt12De({ serieAnterior: semZeros });
-  console.log(`   ⚠️  se os meses zerados saíssem do divisor: RBT12 ${brlDeCentavos(emCentavos(errado.rbt12))} — ${((errado.rbt12 / r.rbt12 - 1) * 100).toFixed(0)}% a mais`);
+  const errado = rbt12De({ serieAnterior: semZeros.map(R) });
+  console.log(`   ⚠️  se os meses zerados saíssem do divisor: RBT12 ${brlDeCentavos(errado.rbt12)} — ${((errado.rbt12 / r.rbt12 - 1) * 100).toFixed(0)}% a mais`);
   console.log(`   ${c.porque}\n`);
 }
 
@@ -205,8 +230,8 @@ for (const caso of CASOS) {
   console.log("── G5 · ISS retido pelo tomador — a segregação");
   console.log("   fonte: LC 123/2006 art. 21 §4º (literal) · LC 116/2003 art. 3º · Lei Municipal BH 8.725/2003");
 
-  const semRet = apurarDAS({ receitaMes: 7910, rbt12: 54000, anexo: "III" });
-  const comRet = apurarDAS({ receitaMes: 7910, rbt12: 54000, anexo: "III", receitaComIssRetido: 7910 });
+  const semRet = apurarDAS({ receitaMes: R(7910), rbt12: R(54000), anexo: "III" });
+  const comRet = apurarDAS({ receitaMes: R(7910), rbt12: R(54000), anexo: "III", receitaComIssRetido: R(7910) });
 
   console.log(`   DAS sem retenção .......... ${brlDeCentavos(semRet.total)}   (ISS ${brlDeCentavos(semRet.parcelas.iss)} dentro)`);
   console.log(`   DAS com retenção total .... ${brlDeCentavos(comRet.total)}   (ISS ${brlDeCentavos(comRet.parcelas.iss)} dentro)`);
@@ -257,16 +282,16 @@ for (const caso of CASOS) {
   console.log(confere("mês 1 (dez/25, sem receita)", mes1.total, 0));
 
   // Mês 1 hipotético COM receita, pra exercitar a regra do art. 24 caput.
-  const r1 = rbt12De({ serieAnterior: [], receitaMesCorrente: 10000 });
-  const das1 = apurarDAS({ receitaMes: 10000, rbt12: r1.rbt12, anexo: "III" });
+  const r1 = rbt12De({ serieAnterior: [], receitaMesCorrente: R(10000) });
+  const das1 = apurarDAS({ receitaMes: R(10000), rbt12: r1.rbt12, anexo: "III" });
   console.log(`   mês 1 com R$10.000 ........ RBT12 ${brlDeCentavos(emCentavos(r1.rbt12))} (regra "${r1.regra}") · faixa ${das1.faixa}`);
   console.log(confere("DAS do mês 1", das1.total, 60000));
 
   // 🔴 A VIRADA DE EXERCÍCIO. Empresa aberta em dezembro: o 2º mês é janeiro,
   // e o RBT12 NÃO reinicia. A janela é móvel, não do ano-calendário.
-  const jan = rbt12De({ serieAnterior: [10000] }); // só dez/25 como anterior
+  const jan = rbt12De({ serieAnterior: [10000].map(R) }); // só dez/25 como anterior
   const esperadoJan = 120000;
-  console.log(confere("2º mês (janeiro!)", emCentavos(jan.rbt12), emCentavos(esperadoJan)));
+  console.log(confere("2º mês (janeiro!)", jan.rbt12, R(esperadoJan)));
 
   if (jan.regra === "proporcional" && jan.meses === 1) {
     passou++;
@@ -329,18 +354,18 @@ for (const caso of CASOS) {
   const RBT12 = 144000; // faturamento médio anual da planilha
   const MES = 12000;
 
-  const comFatorR = apurarDAS({ receitaMes: MES, rbt12: RBT12, anexo: "III" });
-  const semFatorR = apurarDAS({ receitaMes: MES, rbt12: RBT12, anexo: "V" });
+  const comFatorR = apurarDAS({ receitaMes: R(MES), rbt12: R(RBT12), anexo: "III" });
+  const semFatorR = apurarDAS({ receitaMes: R(MES), rbt12: R(RBT12), anexo: "V" });
 
   console.log(confere("DAS Anexo III (6,00%)", comFatorR.total, 72000));
   console.log(confere("DAS Anexo V (15,50%)", semFatorR.total, 186000));
 
   // O pró-labore de 28% que compra o Anexo III, e o INSS que ele cobra.
   const proLabore = 0.28 * MES;
-  const custoIII = custoTotalMensal({ receitaMes: MES, das: comFatorR.total, proLabore });
-  const custoV = custoTotalMensal({ receitaMes: MES, das: semFatorR.total, proLabore: 1621 });
+  const custoIII = custoTotalMensal({ receitaMes: R(MES), das: comFatorR.total, proLabore: R(proLabore) });
+  const custoV = custoTotalMensal({ receitaMes: R(MES), das: semFatorR.total, proLabore: R(1621) });
 
-  console.log(`   pró-labore de 28% ......... ${brlDeCentavos(emCentavos(proLabore))}`);
+  console.log(`   pró-labore de 28% ......... ${brlDeCentavos(R(proLabore))}`);
   console.log(confere("INSS sobre ele (11%)", custoIII.inss, 36960));
   console.log(confere("IRRF (redutor zera)", custoIII.irrf, 0));
   console.log(`   custo total no Anexo III .. ${brlDeCentavos(custoIII.total)}  (${(custoIII.aliquotaTotal * 100).toFixed(2)}%)`);
@@ -361,19 +386,19 @@ for (const caso of CASOS) {
   console.log('   fonte: Lei 9.250/1995 arts. 3º, 3º-A e 4º · Lei 15.270/2025 · ratificado 14/09');
 
   // O caso da persona zero: pró-labore no salário mínimo, IRRF zero.
-  const zero = darfDoProLabore(1621);
+  const zero = darfDoProLabore(R(1621));
   console.log(`   pró-labore R$1.621 ........ INSS ${brlDeCentavos(zero.inss)} · base ${brlDeCentavos(zero.baseIrrf)} · IRRF ${brlDeCentavos(zero.irrf)}`);
   console.log(confere("INSS da persona zero", zero.inss, 17831));
   console.log(confere("IRRF da persona zero", zero.irrf, 0));
 
   // O caso da planilha: 28% de 12.000.
-  const alto = darfDoProLabore(3360);
+  const alto = darfDoProLabore(R(3360));
   console.log(`   pró-labore R$3.360 ........ INSS ${brlDeCentavos(alto.inss)} · base ${brlDeCentavos(alto.baseIrrf)} · IRRF ${brlDeCentavos(alto.irrf)}`);
   console.log(confere("base c/ simplificado", alto.baseIrrf, 275280));
   console.log(confere("imposto pela tabela", alto.impostoTabela, 2430));
   console.log(confere("IRRF depois do redutor", alto.irrf, 0));
 
-  const rampa = darfDoProLabore(6000);
+  const rampa = darfDoProLabore(R(6000));
   console.log(`   pró-labore R$6.000 ........ tabela ${brlDeCentavos(rampa.impostoTabela)} · redutor ${brlDeCentavos(rampa.redutor)} → IRRF ${brlDeCentavos(rampa.irrf)}`);
   console.log(confere("redutor da rampa", rampa.redutor, 17975));
 
@@ -401,8 +426,8 @@ for (const caso of CASOS) {
     let anterior = null;
 
     for (let bruto = 4900; bruto <= 7500; bruto += 1) {
-      const d = darfDoProLabore(bruto);
-      const liquido = emCentavos(bruto) - d.inss - d.irrf;
+      const d = darfDoProLabore(R(bruto));
+      const liquido = R(bruto) - d.inss - d.irrf;
       if (anterior !== null && liquido < anterior) {
         inverteu = { bruto, perda: anterior - liquido };
         break;
@@ -516,9 +541,9 @@ for (const caso of CASOS) {
   console.log("── G12 · Duplo vínculo — o teto do INSS é da PESSOA, não do vínculo");
   console.log("   fonte: regra portada do `fiscal.ts` em 15/09, ao unificar os dois motores");
 
-  const sem = darfDoProLabore(3360);
-  const parcial = darfDoProLabore(3360, 6000); // CLT de R$6.000 por fora
-  const cheio = darfDoProLabore(3360, 9000); // CLT acima do teto
+  const sem = darfDoProLabore(R(3360));
+  const parcial = darfDoProLabore(R(3360), R(6000)); // CLT de R$6.000 por fora
+  const cheio = darfDoProLabore(R(3360), R(9000)); // CLT acima do teto
 
   console.log(`   sem CLT ................... INSS ${brlDeCentavos(sem.inss)} (base ${brlDeCentavos(sem.baseInss)})`);
   console.log(`   CLT de R$6.000 ............ INSS ${brlDeCentavos(parcial.inss)} (folga ${brlDeCentavos(parcial.folgaDoTeto)})`);

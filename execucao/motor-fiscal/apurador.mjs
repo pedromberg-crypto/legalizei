@@ -64,6 +64,80 @@ export function brlDeCentavos(centavos) {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+ * 1.1 · A REGRA DE UNIDADE — travada em 17/09, decisão do Pedro
+ * ═══════════════════════════════════════════════════════════════════════════
+ * *"Quero que a gente padronizasse todos os valores ou em reais ou em
+ * centavos. Não justifica cada campo de valor trabalhar de uma forma, isso no
+ * meu ver é uma ponta a mais de preocupação desnecessária."*
+ *
+ * Ele está certo, e o preço de não ter isso já foi cobrado três vezes:
+ * **M-014** (`guiaVencida` aceitou reais e devolveu número plausível e
+ * errado), **M-020** (`emCentavos` numa soma que já estava em centavos, e
+ * nenhum teste quebrava) e **M-027** (o resumo devolvia duas unidades no
+ * mesmo objeto, e o chamador compensava com `* 100`).
+ *
+ * ── ✅ A REGRA, em uma linha ───────────────────────────────────────────────
+ *
+ * 🔒 **Todo dinheiro que ENTRA ou SAI de uma função deste motor é INTEIRO EM
+ * CENTAVOS.** Sem exceção, sem campo especial, sem "este aqui é diferente".
+ *
+ * ── ⚖️ A ÚNICA COISA QUE FICA EM REAIS, e por quê ──────────────────────────
+ *
+ * **As tabelas da lei** (`_tabelas.mjs`). `TETO_INSS: 8475.55` é conferível
+ * contra a Portaria Interministerial nº 13; `847555` não é. A tabela existe
+ * para ser **auditada contra o documento**, e essa é a nossa disciplina mais
+ * antiga: número sem fonte não entra.
+ *
+ * 🔑 Então a conversão acontece **aqui, na leitura**, e só aqui. Fora do
+ * `_tabelas.mjs` e deste arquivo, **nada no motor conhece reais**.
+ */
+const daTabela = (valorEmReais) => emCentavos(valorEmReais);
+
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🪙 O ARREDONDAMENTO DO CENTAVO — meio pra cima, e sem ruído de float
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🔴 ACHADO DE 17/09, e quem o expôs foi a rede da migração para centavos.
+ *
+ * Duas competências mudaram **um centavo** ao trocar a ordem das operações, e
+ * a investigação mostrou que as duas caem em **empate exato de meio centavo**:
+ *
+ *   P16 dez/25 · COFINS ... o valor exato é `54637,5`
+ *   P18 nov/25 · PIS ...... o valor exato é `14182,5`
+ *
+ * E o ponto flutuante decidia o empate por ruído, de forma **inconsistente**:
+ * o caminho antigo entregava `54637.5` (sobe) e `14182.499999999998` (desce);
+ * o novo entrega `54637.49999999999` (desce) e `14182.5` (sobe). Cada um
+ * acertava um e errava o outro — e nenhum dos dois era regra, era acaso.
+ *
+ * 🔑 **Não é defeito da migração: é defeito que a migração revelou.** Ele
+ * estava lá desde 14/09, escondido porque nenhuma conferência caía num
+ * empate.
+ *
+ * ✅ A regra passa a ser explícita — **meio centavo sobe**, que é a convenção
+ * do arredondamento monetário e o que `Math.round` já faz para positivos. O
+ * épsilon só impede que `x,49999999999` finja ser menos que a metade. É o
+ * mesmo remédio do `tetoCentavo` do piloto, pela mesma razão (M-003).
+ *
+ * ── 🧾 E A SEGUNDA DECISÃO: CADA COMPONENTE É INTEIRO, E A SUBTRAÇÃO VEM DEPOIS
+ *
+ * O IRRF é `imposto da tabela − redutor`. Até 17/09 o motor arredondava a
+ * **diferença**; agora arredonda **cada parcela** e subtrai inteiros. Muda 1
+ * centavo em dois casos, e a escolha é deliberada:
+ *
+ * 🔑 A entrega expõe `impostoTabela`, `redutor` e `irrf` como três valores
+ * separados. Se o `irrf` não for exatamente `impostoTabela − redutor`, o dev
+ * refaz a conta, não bate, e passa o dia procurando o erro dele num erro
+ * nosso. **Consistência entre os campos entregues vale mais que a última casa
+ * de um arredondamento que a lei não disciplina.**
+ *
+ * ⚠️ **Nenhum valor com documento mudou.** As 46 conferências do teste
+ * dourado — recibo do PGDAS-D e nota fiscal real — passam idênticas. O que
+ * mudou foram 8 legíveis em 3 competências de vidas **sintéticas**.
+ */
+const centavoDe = (x) => Math.round(x + 1e-9);
+
+/* ═══════════════════════════════════════════════════════════════════════════
  * 2 · A FAIXA E A ALÍQUOTA
  * ═══════════════════════════════════════════════════════════════════════════ */
 
@@ -78,7 +152,8 @@ export function faixaDe(rbt12, anexo) {
   const tabela = FAIXAS[anexo];
   if (!tabela) throw new Error(`Anexo fora do escopo: ${anexo}. Só III e V.`);
   if (rbt12 < 0) throw new Error(`RBT12 negativo: ${rbt12}`);
-  return tabela.find((f) => rbt12 <= f.ate) ?? null;
+  // `rbt12` vem em centavos; o teto da faixa está em reais na tabela da lei.
+  return tabela.find((f) => rbt12 <= daTabela(f.ate)) ?? null;
 }
 
 /**
@@ -103,7 +178,10 @@ export function aliquotaEfetiva(rbt12, anexo) {
   if (!f) return null; // fora do Simples
   if (rbt12 === 0) return f.nominal;
 
-  return (rbt12 * f.nominal - f.deduzir) / rbt12;
+  // 🔑 A fórmula é a do art. 18 §1º e é INVARIANTE À UNIDADE — desde que os
+  //    dois lados estejam na mesma. `rbt12` chega em centavos, então a parcela
+  //    a deduzir também precisa vir convertida.
+  return (rbt12 * f.nominal - daTabela(f.deduzir)) / rbt12;
 }
 
 /**
@@ -157,7 +235,19 @@ export function rbt12De({ serieAnterior, receitaMesCorrente = 0 }) {
   if (meses < 12) {
     const soma = serieAnterior.reduce((a, b) => a + b, 0);
     return {
-      rbt12: (soma / meses) * 12, // meses zerados ENTRAM no divisor, de propósito
+      /**
+       * 🔒 INTEIRO EM CENTAVOS, como todo dinheiro do motor desde 17/09.
+       *
+       * A média divide por um número de meses que raramente é divisor exato —
+       * `1.730.000 ÷ 11 × 12` dá `1.887.272,7272…` centavos. Sem o
+       * arredondamento, um valor monetário sairia com fração de centavo e
+       * contaminaria a alíquota efetiva, que é calculada em cima dele.
+       *
+       * 🔑 A rede da migração pegou exatamente isto: o congelado mostrou
+       * `R$157.333,333` onde antes havia `R$157.333,33`, e junto veio **um
+       * centavo de diferença no DAS** de duas competências do P18.
+       */
+      rbt12: centavoDe((soma / meses) * 12), // meses zerados ENTRAM no divisor, de propósito
       regra: "proporcional",
       meses,
       soma,
@@ -233,18 +323,20 @@ export function apurarDAS({ receitaMes, rbt12, anexo, receitaComIssRetido = 0 })
   let total = 0;
   for (const t of TRIBUTOS) {
     const base = t === "iss" ? baseIssNoDas : baseFederal;
-    const centavos = emCentavos(base * reparticao[t]);
-    parcelas[t] = centavos;
-    total += centavos;
+    // A base já está em centavos (receita × alíquota). Só falta virar inteiro,
+    // e é ESTE arredondamento — um por tributo — que produz a guia.
+    const parcela = centavoDe(base * reparticao[t]);
+    parcelas[t] = parcela;
+    total += parcela;
   }
 
   // O que o TOMADOR recolhe direto ao município. Não é nosso, mas o cliente
   // precisa ver, senão some R$158,99 da conta dele sem explicação.
-  const issRetido = emCentavos(baseIssRetido * reparticao.iss);
+  const issRetido = centavoDe(baseIssRetido * reparticao.iss);
 
   return {
     total, // centavos — a soma das partes, que é a guia
-    bruto: emCentavos(receitaMes * efetiva), // o produto direto, que NÃO é a guia
+    bruto: centavoDe(receitaMes * efetiva), // o produto direto, que NÃO é a guia
     parcelas,
     issRetido, // recolhido pelo tomador, fora do DAS
     temRetencao: receitaComIssRetido > 0,
@@ -648,7 +740,8 @@ export function custoTotalMensal({ receitaMes, das, proLabore }) {
     irrf,
     darf: inss + irrf, // é UMA guia só: DARF Unificado
     total,
-    aliquotaTotal: receitaMes > 0 ? total / emCentavos(receitaMes) : null,
+    // `receitaMes` já chega em centavos, igual ao `total`.
+    aliquotaTotal: receitaMes > 0 ? total / receitaMes : null,
   };
 }
 
@@ -721,27 +814,30 @@ export function darfDoProLabore(proLabore, cltRemuneracao = 0) {
   //
   // É a funcionalidade **4.6** das 58, e o dado é captado no C2 (vínculo INSS)
   // — ⚠️ uma vez, na abertura, e nunca revalidado (achado de 27/08).
-  const folgaDoTeto = Math.max(0, PREVIDENCIA.TETO_INSS - cltRemuneracao);
+  const folgaDoTeto = Math.max(0, daTabela(PREVIDENCIA.TETO_INSS) - cltRemuneracao);
   const baseInss = Math.min(proLabore, folgaDoTeto);
-  const inss = emCentavos(baseInss * PREVIDENCIA.ALIQUOTA_SOCIO);
+  const inss = centavoDe(baseInss * PREVIDENCIA.ALIQUOTA_SOCIO);
 
   // 🔴 A dedução é a MAIOR entre o INSS e o desconto simplificado (R$607,20).
   // A fonte pagadora é obrigada a aplicar a mais benéfica ao beneficiário.
-  const deducaoInss = emReais(inss);
-  const usaSimplificado = IRRF.descontoSimplificado > deducaoInss;
-  const deducao = usaSimplificado ? IRRF.descontoSimplificado : deducaoInss;
+  const simplificado = daTabela(IRRF.descontoSimplificado);
+  const usaSimplificado = simplificado > inss;
+  const deducao = usaSimplificado ? simplificado : inss;
 
   const base = proLabore - deducao;
-  const faixa = IRRF.faixas.find((f) => base <= f.ate);
-  const impostoTabela = Math.max(0, base * faixa.aliquota - faixa.deduzir);
+  // A última faixa tem `ate: Infinity`, e `daTabela(Infinity)` segue Infinity.
+  const faixa = IRRF.faixas.find((f) => base <= daTabela(f.ate));
+  const impostoTabela = Math.max(0, centavoDe(base * faixa.aliquota - daTabela(faixa.deduzir)));
 
   // 🔴 O redutor do art. 3º-A, aplicado DEPOIS da tabela, sobre o BRUTO.
   const r = IRRF.redutor;
   let redutor = 0;
-  if (proLabore <= r.tetoIsencao) {
-    redutor = Math.min(r.valorAteIsencao, impostoTabela); // zera, sem virar crédito
-  } else if (proLabore <= r.tetoRampa) {
-    redutor = Math.max(0, r.rampaBase - r.rampaCoef * proLabore);
+  if (proLabore <= daTabela(r.tetoIsencao)) {
+    redutor = Math.min(daTabela(r.valorAteIsencao), impostoTabela); // zera, sem virar crédito
+  } else if (proLabore <= daTabela(r.tetoRampa)) {
+    // 🔑 `rampaCoef` é razão, não dinheiro: multiplicado por centavos devolve
+    //    centavos, e por isso não passa pelo `daTabela`.
+    redutor = Math.max(0, centavoDe(daTabela(r.rampaBase) - r.rampaCoef * proLabore));
   }
 
   const devido = Math.max(0, impostoTabela - redutor);
@@ -750,14 +846,14 @@ export function darfDoProLabore(proLabore, cltRemuneracao = 0) {
     inss,
     // 🔑 O que a tela precisa dizer quando há CLT por fora.
     cltConsumiuOTeto: folgaDoTeto <= 0,
-    folgaDoTeto: emCentavos(folgaDoTeto),
-    baseInss: emCentavos(baseInss),
-    deducaoAplicada: emCentavos(deducao),
+    folgaDoTeto,
+    baseInss,
+    deducaoAplicada: deducao,
     usouDescontoSimplificado: usaSimplificado,
-    baseIrrf: emCentavos(base),
-    impostoTabela: emCentavos(impostoTabela),
-    redutor: emCentavos(Math.min(redutor, impostoTabela)),
-    irrf: emCentavos(devido),
+    baseIrrf: base,
+    impostoTabela,
+    redutor: Math.min(redutor, impostoTabela),
+    irrf: devido,
     aliquotaIrrf: faixa.aliquota,
     isento: devido === 0,
     // 🔑 Distingue "não caiu na tabela" de "caiu e o redutor zerou". São coisas

@@ -69,8 +69,6 @@ import {
   aliquotaEfetiva,
   darfDoProLabore,
   anexoDoCnae,
-  emCentavos,
-  emReais,
 } from "./apurador.mjs";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -150,24 +148,41 @@ export function proLaboreParaManterNoIII({
  * quebrava o teste de borda, que é justamente quem devia pegar isso.
  */
 function tetoCentavo(v) {
-  return Math.ceil(v * 100 - 1e-6) / 100;
+  // 🔒 Desde 17/09 tudo aqui já anda em centavos, então "teto do centavo" é
+  //    simplesmente teto do inteiro. O épsilon continua, e continua pelo mesmo
+  //    motivo: `0.28 × 21600000` dá `6048000.000000001` e o `ceil` cru cobraria
+  //    um centavo a mais em toda competência (M-003).
+  return Math.ceil(v - 1e-6);
 }
 
 /** Arredondamento normal, para os números que a tela só exibe. */
 function arredonda(v) {
-  return Math.round(v * 100) / 100;
+  return Math.round(v);
 }
+
+/**
+ * 🔒 As tabelas da lei ficam em REAIS para serem conferíveis contra o
+ * documento; tudo que circula no motor é centavos. Mesma fronteira declarada
+ * do `apurador.mjs`.
+ */
+const daTabela = (valorEmReais) => Math.round(valorEmReais * 100);
 
 /**
  * Real em português, para os textos de alerta.
  *
- * 🔑 Mora aqui e não no `apurador.mjs` de propósito: lá o `brlDeCentavos` come
- * CENTAVOS, e este come REAIS — que é a unidade em que o cliente digita. Foi a
- * colisão de unidades entre os dois motores (paga em 15/09) que ensinou a não
- * ter duas funções de mesmo nome com unidades diferentes.
+ * 🔄 **Passou a comer CENTAVOS em 17/09.** Ele existia aqui, separado do
+ * `brlDeCentavos` do apurador, justamente porque as duas unidades conviviam —
+ * e ter duas funções de mesmo papel com unidades diferentes foi o que
+ * produziu a colisão paga em 15/09.
+ *
+ * 🔑 Com a padronização, a razão de ele ser separado **deixou de existir**.
+ * Fica como apelido local até a próxima limpeza, e não aceita mais reais.
  */
-function brl(reais) {
-  return reais.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+function brl(centavos) {
+  return (centavos / 100).toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  });
 }
 
 /**
@@ -219,7 +234,7 @@ export function valeManterNoIII({
   }
 
   // A economia é no DAS do mês, pela diferença de alíquota efetiva.
-  const economiaNoDas = emCentavos(receitaDoMes * (efetivaV - efetivaIII));
+  const economiaNoDas = Math.round(receitaDoMes * (efetivaV - efetivaIII));
 
   const darfPiso = darfDoProLabore(proLaborePiso, cltRemuneracao);
   const darfAlvo = darfDoProLabore(proLaboreNecessario, cltRemuneracao);
@@ -239,7 +254,7 @@ export function valeManterNoIII({
      * a conta virar a favor em faturamento alto — e o que a tela deve explicar
      * quando o valor sugerido dá um salto.
      */
-    acimaDoTetoInss: proLaboreNecessario > PREVIDENCIA.TETO_INSS - cltRemuneracao,
+    acimaDoTetoInss: proLaboreNecessario > daTabela(PREVIDENCIA.TETO_INSS) - cltRemuneracao,
   };
 }
 
@@ -263,7 +278,7 @@ export function pilotar({
   receitaDoMes = 0,
   rbt12DoMes = 0,
   margem = FATOR_R.MARGEM,
-  piso = PREVIDENCIA.SALARIO_MINIMO,
+  piso = daTabela(PREVIDENCIA.SALARIO_MINIMO),
 }) {
   const grupo = anexoDoCnae(empresa.grupoAnexo);
 
@@ -596,7 +611,7 @@ export function projetarComPiloto({
         receitaDoMes: receita,
         rbt12DoMes: 0,
       });
-      pago = d.atua ? d.sugerido : PREVIDENCIA.SALARIO_MINIMO;
+      pago = d.atua ? d.sugerido : daTabela(PREVIDENCIA.SALARIO_MINIMO);
     }
 
     serie.push({
@@ -673,7 +688,11 @@ export function avaliarProLaboreEscolhido({
   // constante única, o pró-labore de R$1.518 pago em dez/2025 — que era
   // **exatamente o mínimo daquele mês** — seria bloqueado como irregular.
   // 5 das 17 vidas começam em 2025.
-  const piso = mes ? salarioMinimoDe(mes) : { valor: PREVIDENCIA.SALARIO_MINIMO };
+  // `salarioMinimoDe` devolve a tabela da lei, em reais — converte na leitura.
+  const daVigencia = mes ? salarioMinimoDe(mes) : null;
+  const piso = daVigencia
+    ? { ...daVigencia, valor: daVigencia.valor === null ? null : daTabela(daVigencia.valor) }
+    : { valor: daTabela(PREVIDENCIA.SALARIO_MINIMO) };
 
   if (escolhido > 0 && piso.valor !== null && escolhido < piso.valor) {
     alertas.push({
@@ -707,7 +726,7 @@ export function avaliarProLaboreEscolhido({
     const efetivaV = aliquotaEfetiva(rbt12DoMes, "V");
     const porMes =
       efetivaIII != null && efetivaV != null
-        ? emCentavos(receitaDoMes * (efetivaV - efetivaIII))
+        ? Math.round(receitaDoMes * (efetivaV - efetivaIII))
         : null;
 
     alertas.push({
@@ -780,7 +799,7 @@ export function avaliarProLaboreEscolhido({
   }
 
   // ── 4 · O teto do INSS, e a folga do CLT ────────────────────────────────
-  const folgaDoTeto = Math.max(0, PREVIDENCIA.TETO_INSS - clt);
+  const folgaDoTeto = Math.max(0, daTabela(PREVIDENCIA.TETO_INSS) - clt);
   if (escolhido > folgaDoTeto) {
     alertas.push({
       gravidade: "informacao",
@@ -806,8 +825,8 @@ export function avaliarProLaboreEscolhido({
   // em aberto com o Mauro desde 13/09 — então o alerta EXISTE e se declara
   // sem número, em vez de inventar um limite.
   if (
-    escolhido <= PREVIDENCIA.SALARIO_MINIMO &&
-    receitaDoMes >= PREVIDENCIA.SALARIO_MINIMO * 10
+    escolhido <= daTabela(PREVIDENCIA.SALARIO_MINIMO) &&
+    receitaDoMes >= daTabela(PREVIDENCIA.SALARIO_MINIMO) * 10
   ) {
     alertas.push({
       gravidade: "atencao",

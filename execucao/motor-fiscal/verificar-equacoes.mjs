@@ -56,7 +56,14 @@ import {
   PREVIDENCIA,
   IRRF,
 } from "./_tabelas.mjs";
-import { apurarDAS, darfDoProLabore, emCentavos } from "./apurador.mjs";
+import { apurarDAS, darfDoProLabore } from "./apurador.mjs";
+
+/**
+ * 🔒 A autoria da varredura escreve em REAIS — o domínio do ME é mais legível
+ * assim ("de R$1.000 ao teto de R$360 mil"). O motor come CENTAVOS desde
+ * 17/09, e `R()` é a fronteira, visível em cada chamada.
+ */
+const R = (emReaisDaAutoria) => Math.round(emReaisDaAutoria * 100);
 import { proLaboreParaManterNoIII } from "./piloto-pro-labore.mjs";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -119,7 +126,7 @@ console.log("── E1 · a efetiva é (RBT12 × nominal − PD) / RBT12, em TOD
     for (let rbt12 = 1000; rbt12 <= TETO_ME; rbt12 += 1000) {
       const faixa = FAIXAS[anexo].find((f) => rbt12 <= f.ate);
       const pelaLei = (rbt12 * faixa.nominal - faixa.deduzir) / rbt12;
-      const doMotor = apurarDAS({ receitaMes: 1000, rbt12, anexo }).efetiva;
+      const doMotor = apurarDAS({ receitaMes: R(1000), rbt12: R(rbt12), anexo }).efetiva;
       testados++;
       // Tolerância de ponto flutuante, não de regra: 1e-12.
       if (Math.abs(pelaLei - doMotor) > 1e-12) {
@@ -187,8 +194,8 @@ console.log("\n── E3 · a soma das 6 parcelas desvia do produto em CENTAVOS,
   for (const anexo of ANEXOS) {
     for (let receita = 500; receita <= 30000; receita += 500) {
       for (let rbt12 = 12000; rbt12 <= TETO_ME; rbt12 += 12000) {
-        const r = apurarDAS({ receitaMes: receita, rbt12, anexo });
-        const produtoDireto = emCentavos(receita * r.efetiva);
+        const r = apurarDAS({ receitaMes: R(receita), rbt12: R(rbt12), anexo });
+        const produtoDireto = Math.round(R(receita) * r.efetiva);
         const desvio = Math.abs(r.total - produtoDireto);
         amostras++;
         if (desvio > pior) {
@@ -218,7 +225,7 @@ console.log("\n── E4 · o DAS nunca CAI quando a receita sobe, nem quando o 
     for (let rbt12 = 12000; rbt12 <= TETO_ME && !quebrouReceita; rbt12 += 12000) {
       let anterior = -1;
       for (let receita = 0; receita <= 30000; receita += 250) {
-        const das = apurarDAS({ receitaMes: receita, rbt12, anexo }).total;
+        const das = apurarDAS({ receitaMes: R(receita), rbt12: R(rbt12), anexo }).total;
         if (das < anterior) {
           quebrouReceita = `anexo ${anexo} · RBT12 ${rbt12} · receita ${receita}: ${brl(das)} < ${brl(anterior)}`;
           break;
@@ -230,7 +237,7 @@ console.log("\n── E4 · o DAS nunca CAI quando a receita sobe, nem quando o 
     for (let receita = 1000; receita <= 30000 && !quebrouRbt; receita += 1000) {
       let anterior = -1;
       for (let rbt12 = 1000; rbt12 <= TETO_ME; rbt12 += 1000) {
-        const das = apurarDAS({ receitaMes: receita, rbt12, anexo }).total;
+        const das = apurarDAS({ receitaMes: R(receita), rbt12: R(rbt12), anexo }).total;
         if (das < anterior) {
           quebrouRbt = `anexo ${anexo} · receita ${receita} · RBT12 ${rbt12}: ${brl(das)} < ${brl(anterior)}`;
           break;
@@ -260,8 +267,8 @@ console.log("\n── E5 · cruzar a borda de uma faixa não cria degrau\n");
   for (const anexo of ANEXOS) {
     for (const f of FAIXAS[anexo]) {
       if (f.ate >= TETO_ME) continue;
-      const antes = apurarDAS({ receitaMes: 10000, rbt12: f.ate, anexo }).total;
-      const depois = apurarDAS({ receitaMes: 10000, rbt12: f.ate + 1, anexo }).total;
+      const antes = apurarDAS({ receitaMes: R(10000), rbt12: R(f.ate), anexo }).total;
+      const depois = apurarDAS({ receitaMes: R(10000), rbt12: R(f.ate) + 1, anexo }).total;
       const degrau = depois - antes;
       if (degrau > pior) {
         pior = degrau;
@@ -291,8 +298,8 @@ console.log("\n── E6 · o Anexo V é mais caro que o III em TODO o domínio 
   let ondeMenor = "";
 
   for (let rbt12 = 1000; rbt12 <= TETO_ME; rbt12 += 1000) {
-    const iii = apurarDAS({ receitaMes: 10000, rbt12, anexo: "III" }).total;
-    const v = apurarDAS({ receitaMes: 10000, rbt12, anexo: "V" }).total;
+    const iii = apurarDAS({ receitaMes: R(10000), rbt12: R(rbt12), anexo: "III" }).total;
+    const v = apurarDAS({ receitaMes: R(10000), rbt12: R(rbt12), anexo: "V" }).total;
     if (v <= iii) {
       inverteu = `RBT12 ${rbt12}: V ${brl(v)} ≤ III ${brl(iii)}`;
       break;
@@ -323,9 +330,9 @@ console.log("\n── E7 · INSS = 11% × min(pró-labore, teto − CLT), em tod
 
   for (let clt = 0; clt <= 12000; clt += 250) {
     for (let pl = 0; pl <= 20000; pl += 250) {
-      const folga = Math.max(0, PREVIDENCIA.TETO_INSS - clt);
-      const pelaLei = emCentavos(0.11 * Math.min(pl, folga));
-      const doMotor = darfDoProLabore(pl, clt).inss;
+      const folga = Math.max(0, R(PREVIDENCIA.TETO_INSS) - R(clt));
+      const pelaLei = Math.round(0.11 * Math.min(R(pl), folga));
+      const doMotor = darfDoProLabore(R(pl), R(clt)).inss;
       amostras++;
       if (pelaLei !== doMotor) {
         divergiu = `pró-labore ${pl} · CLT ${clt}: lei ${brl(pelaLei)} × motor ${brl(doMotor)}`;
@@ -357,8 +364,8 @@ console.log("\n── E8 · ganhar mais bruto nunca devolve menos líquido — R
   let passos = 0;
 
   for (let bruto = 0; bruto <= 30000; bruto += 1) {
-    const g = darfDoProLabore(bruto, 0);
-    const liquido = emCentavos(bruto) - g.inss - g.irrf;
+    const g = darfDoProLabore(R(bruto), 0);
+    const liquido = R(bruto) - g.inss - g.irrf;
     passos++;
     if (liquido < anterior) {
       inverteu = `em R$${bruto}: líquido cai ${brl(anterior - liquido)} ganhando R$1 a mais`;
@@ -386,8 +393,8 @@ console.log("\n── E9 · a dedução é sempre max(INSS, desconto simplificad
   let errou = null;
 
   for (let pl = 0; pl <= 20000; pl += 50) {
-    const g = darfDoProLabore(pl, 0);
-    const esperado = Math.max(g.inss, emCentavos(IRRF.descontoSimplificado));
+    const g = darfDoProLabore(R(pl), 0);
+    const esperado = Math.max(g.inss, R(IRRF.descontoSimplificado));
     if (g.deducaoAplicada !== esperado) {
       errou = `pró-labore ${pl}: aplicou ${brl(g.deducaoAplicada)}, o melhor era ${brl(esperado)}`;
       break;
@@ -422,13 +429,13 @@ console.log("\n── E10 · o pró-labore que o piloto calcula ENTREGA o Fator 
     for (let mesesPagos = 0; mesesPagos <= 11; mesesPagos += 1) {
       for (const pagoPorMes of [0, 1621, 5000]) {
         const anteriores = Array.from({ length: 11 }, (_, i) => ({
-          receita: i < mesesPagos ? receita : 0,
-          proLaborePago: i < mesesPagos ? pagoPorMes : 0,
+          receita: i < mesesPagos ? R(receita) : 0,
+          proLaborePago: i < mesesPagos ? R(pagoPorMes) : 0,
         }));
 
         const r = proLaboreParaManterNoIII({
           competenciasAnteriores: anteriores,
-          receitaDoMes: receita,
+          receitaDoMes: R(receita),
           alvo: FATOR_R.LIMIAR,
         });
         casos++;
@@ -437,14 +444,14 @@ console.log("\n── E10 · o pró-labore que o piloto calcula ENTREGA o Fator 
         // exigir pró-labore ali seria custo puro, e o motor devolve `semReceita`.
         if (r.semReceita) continue;
 
-        const receitaDaJanela = anteriores.reduce((s, c) => s + c.receita, 0) + receita;
+        const receitaDaJanela = anteriores.reduce((s, c) => s + c.receita, 0) + R(receita);
         const folhaFinal =
           anteriores.reduce((s, c) => s + c.proLaborePago, 0) + r.minimo;
         const fatorRResultante = folhaFinal / receitaDaJanela;
         const folga = fatorRResultante - FATOR_R.LIMIAR;
 
         if (folga < -1e-9) {
-          naoEntregou = `receita ${receita} · ${mesesPagos}m pagos a ${pagoPorMes}: pagar ${brl(emCentavos(r.minimo))} dá Fator R ${(fatorRResultante * 100).toFixed(4)}%`;
+          naoEntregou = `receita ${receita} · ${mesesPagos}m pagos a ${pagoPorMes}: pagar ${brl(r.minimo)} dá Fator R ${(fatorRResultante * 100).toFixed(4)}%`;
           break;
         }
         if (folga < piorFolga) piorFolga = folga;

@@ -29,8 +29,8 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { retratoDoMes, competencia } from "./_modelo.mjs";
-import { emReais, emCentavos } from "../motor-fiscal/apurador.mjs";
+import { retratoDoMes, competenciaEmCentavos } from "./_modelo.mjs";
+import { emReais } from "../motor-fiscal/apurador.mjs";
 
 /**
  * Revive a série inteira, com e sem piloto, e devolve o rastro mês a mês.
@@ -58,7 +58,7 @@ export function replayComPiloto({ empresa, competencias }) {
     // ── A vida PILOTADA ───────────────────────────────────────────────────
     // 🔑 O piloto decide com o histórico JÁ PILOTADO atrás e a receita deste
     // mês — exatamente o que o app teria na mão no dia do fechamento.
-    const provisoria = [...pilotada, competencia({ ...real })];
+    const provisoria = [...pilotada, competenciaEmCentavos({ ...real })];
     const sonda = retratoSeguro({
       empresa,
       competencias: provisoria,
@@ -70,7 +70,7 @@ export function replayComPiloto({ empresa, competencias }) {
 
     // Agora o mês entra na série pilotada com o valor que o piloto mandou.
     pilotada.push(
-      competencia({
+      competenciaEmCentavos({
         ...real,
         proLaboreDeclarado: proLaborePilotado,
         proLaborePago: proLaborePilotado,
@@ -195,12 +195,11 @@ function resumir(linhas) {
      * acontece **uma vez, aqui**, e o campo declara em que unidade está — que
      * é exatamente a cura escrita na dívida **D5** (M-014, M-020, e este).
      */
-    proLaboreRealCentavos: emCentavos(
-      linhas.reduce((s, l) => s + (l.real?.proLabore ?? 0), 0)
-    ),
-    proLaborePilotadoCentavos: emCentavos(
-      linhas.reduce((s, l) => s + (l.pilotado?.proLabore ?? 0), 0)
-    ),
+    // 🔒 Desde 17/09 `l.*.proLabore` já chega em CENTAVOS: a conversão que
+    //    existia aqui virou conversão dupla e saiu. O sufixo do nome fica —
+    //    ele é a cura do M-027 e continua valendo.
+    proLaboreRealCentavos: linhas.reduce((s, l) => s + (l.real?.proLabore ?? 0), 0),
+    proLaborePilotadoCentavos: linhas.reduce((s, l) => s + (l.pilotado?.proLabore ?? 0), 0),
   };
 }
 

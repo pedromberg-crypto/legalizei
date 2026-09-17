@@ -289,6 +289,36 @@ O comentário dizia que a varredura cobre *"receita de R$5 mil a R$30 mil × RBT
 
 ⚠️ **E a 1ª versão dessa medida não pegou o valor velho:** o padrão casava `R$163/mês` e não `R$386,82/mês` — prendia a citação certa e deixava passar a errada, que é o verde mais enganoso que existe. Dinheiro agora é comparado em **centavos**, porque `R$163` e `R$386,82` são a mesma grandeza escrita de dois jeitos.
 
+## M-030 · 🔴 O arredondamento decidia empate de meio centavo por ACASO
+**17/09** · 🔴 grave *(latente desde 14/09)* · **Onde doeu:** `apurador.mjs` · **Quem pegou:** a rede da migração para centavos
+
+Ao padronizar as unidades, **8 valores mudaram um centavo**. A investigação mostrou que os dois casos-raiz caem em **empate exato de meio centavo**:
+
+| | valor exato | caminho antigo | caminho novo |
+|---|---|---|---|
+| P16 dez/25 · COFINS | **54637,5** | `54637.5` → sobe | `54637.49999999999` → desce |
+| P18 nov/25 · PIS | **14182,5** | `14182.499999999998` → desce | `14182.5` → sobe |
+
+🔑 **Cada caminho acertava um e errava o outro.** Não havia regra — havia ruído de ponto flutuante decidindo quanto o cliente paga.
+
+**Custo se passasse:** guia com um centavo de diferença do PGDAS-D é divergência com a Receita, e o valor mudaria conforme a ordem em que alguém escrevesse a multiplicação.
+**Trava:** ✅ `centavoDe(x) = Math.round(x + 1e-9)` — **meio centavo sobe**, explicitamente. Mesmo remédio do `tetoCentavo` do piloto (M-003), pela mesma razão.
+
+⚠️ **Não é defeito da migração, é defeito que a migração revelou.** Estava lá desde 14/09, escondido porque nenhuma conferência caía num empate.
+
+🔑 **E veio uma segunda decisão junto:** o IRRF é `impostoTabela − redutor`, e antes o motor arredondava a **diferença**. Agora arredonda **cada parcela**. A entrega expõe os três campos ao dev — se `irrf ≠ impostoTabela − redutor`, ele refaz a conta, não bate, e procura o erro dele num erro nosso.
+
+## M-031 · 🔴 A porta de entrada convertia duas vezes quem já estava dentro
+**17/09** · 🔴 grave · **Onde doeu:** `replay-piloto.mjs` · **Quem pegou:** a trava de defasagem
+
+A migração pôs a conversão reais→centavos dentro da `competencia()`, que é a porta de autoria. Funciona — e cria um risco novo: **quem recebe uma competência pronta e a passa de volta pela mesma função converte duas vezes**.
+
+Era o que o replay fazia ao montar a série pilotada (`competencia({ ...real })`). O saldo do cliente da P01 saiu **−R$6.335.092,81** onde o valor é **R$6.794,96**.
+
+🔑 **Nenhuma suíte reclamou.** Quem pegou foi a trava de defasagem, comparando com o número escrito no briefing que foi ao contador — um número em **prosa** protegeu o **código**, que é o inverso do que ela foi construída para fazer.
+
+**Trava:** ✅ `competenciaEmCentavos()` — duas portas, e o nome diz de qual lado se está.
+
 ---
 
 ## ✅ Aferição de 17/09 — os valores em R$, um a um
@@ -342,7 +372,7 @@ O comentário dizia que a varredura cobre *"receita de R$5 mil a R$30 mil × RBT
 | **D2** | A régua de **2×** que separa ajuste de recuperação veio de 2 pontos medidos (1,22× e 9,6×). Caso real entre 2× e 9× é onde ela quebra | produto |
 | **D3** | O piloto **corta** pró-labore, não só sobe (P02, P04, P06). Está implementado como se fosse óbvio e **não foi decidido** | 🔴 Pedro |
 | **D4** | Na P16 o piloto move R$165.300 contra R$35.662 reais. O saldo só conta imposto; o resto é o **PP3** | 🔴 Mauro |
-| **D5** | 🔴 **Subiu de prioridade, e já produziu TRÊS achados** (M-014, M-020, M-027). O motor mistura unidades na fronteira: `apurarDAS` pede reais, `guiaVencida` pede centavos, `darfDoProLabore` **recebe reais e devolve centavos**, e nenhuma recusa a unidade errada. ✅ O M-027 aplicou a cura pela primeira vez — **o nome do campo carrega a unidade** (`…Centavos`) e a conversão acontece uma vez, na fonte. Falta estender ao resto | produto |
+| ~~**D5**~~ | ✅ **PAGA em 17/09.** Produziu quatro achados (M-014, M-020, M-027, M-031) antes de fechar. O motor mistura unidades na fronteira: `apurarDAS` pede reais, `guiaVencida` pede centavos, `darfDoProLabore` **recebe reais e devolve centavos**, e nenhuma recusa a unidade errada. ✅ O M-027 aplicou a cura pela primeira vez — **o nome do campo carrega a unidade** (`…Centavos`) e a conversão acontece uma vez, na fonte. Falta estender ao resto | produto |
 | **D6** | O art. 3º-A (redutor do IRRF) é a **única peça do motor sem fonte primária** — o texto veio de consulta externa, não do diário oficial. 🟡 Não bloqueia: a persona inteira zera IRRF nas duas leituras, e a G10b prova que a alternativa é impossível (M-023) | pesquisa |
 | **D7** | A trava de defasagem pega **dígito, não quantificador**. *"Todas, sem exceção"* e *"nenhuma"* passam limpo, e o M-026 mostrou que é lá que a generalização errada se esconde | produto |
 | **D8** | 🔴 **Tabela que compara cenários não declara a BASE da comparação.** O M-028 mostrou o preço: duas tabelas do mesmo documento usavam bases diferentes e uma importou o saldo da outra. Nenhuma trava pega isso — é coerência entre linhas, não valor por linha | produto |

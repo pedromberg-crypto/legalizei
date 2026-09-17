@@ -340,8 +340,8 @@ console.log("\n── 8 · P16: o Anexo V que CRESCE — onde a parcela a deduzi
 
   console.log("   mês      receita        RBT12          faixa  nominal  efetiva   DAS");
   for (const l of comMovimento.filter((_, i) => i % 3 === 0 || i === comMovimento.length - 1)) {
-    const f = faixaDe(l.rbt12 / 100, l.anexo);
-    const ef = aliquotaEfetiva(l.rbt12 / 100, l.anexo);
+    const f = faixaDe(l.rbt12, l.anexo);
+    const ef = aliquotaEfetiva(l.rbt12, l.anexo);
     console.log(
       `   ${l.mes}  ${brlDeCentavos(l.receita).padStart(12)}  ${brlDeCentavos(l.rbt12).padStart(14)}` +
         `   ${f.faixa}ª    ${(f.nominal * 100).toFixed(2).padStart(6)}%  ${(ef * 100).toFixed(4).padStart(7)}%  ${brlDeCentavos(l.das.total).padStart(11)}`
@@ -350,7 +350,7 @@ console.log("\n── 8 · P16: o Anexo V que CRESCE — onde a parcela a deduzi
 
   // (a) 🔑 A LACUNA PRINCIPAL. Na faixa 1 a parcela a deduzir é ZERO, então
   //     efetiva = nominal e metade da tabela nunca roda. O P01 morria aqui.
-  const naFaixa2 = comMovimento.filter((l) => faixaDe(l.rbt12 / 100, l.anexo).faixa === 2);
+  const naFaixa2 = comMovimento.filter((l) => faixaDe(l.rbt12, l.anexo).faixa === 2);
   invariante(
     "o Anexo V passa da FAIXA 1 — o que o P01 nunca fez",
     naFaixa2.length > 0 && naFaixa2.every((l) => l.anexo === "V"),
@@ -358,12 +358,12 @@ console.log("\n── 8 · P16: o Anexo V que CRESCE — onde a parcela a deduzi
   );
   invariante(
     "e aí a parcela a deduzir MORDE: efetiva < nominal, sempre",
-    naFaixa2.every((l) => aliquotaEfetiva(l.rbt12 / 100, "V") < FAIXAS.V[1].nominal - 1e-9),
+    naFaixa2.every((l) => aliquotaEfetiva(l.rbt12, "V") < FAIXAS.V[1].nominal - 1e-9),
     "na 1ª faixa a deduzir é zero e a efetiva É a nominal — é por isso que a faixa 1 não prova a tabela"
   );
 
   // (b) A efetiva sobe com o RBT12, e se aproxima da nominal sem alcançar.
-  const efetivas = comMovimento.map((l) => aliquotaEfetiva(l.rbt12 / 100, l.anexo));
+  const efetivas = comMovimento.map((l) => aliquotaEfetiva(l.rbt12, l.anexo));
   invariante(
     "a efetiva do V só SOBE conforme o RBT12 cresce",
     efetivas.every((e, i) => i === 0 || e >= efetivas[i - 1] - 1e-12),
@@ -425,7 +425,7 @@ console.log("\n── 8 · P16: o Anexo V que CRESCE — onde a parcela a deduzi
   //     tem caminho próprio de arredondamento.
   const divergencias = comMovimento.map((l) => {
     const soma = TRIBUTOS.reduce((s, t) => s + (l.das.parcelas?.[t] ?? 0), 0);
-    const direto = Math.round((l.receita / 100) * aliquotaEfetiva(l.rbt12 / 100, l.anexo) * 100);
+    const direto = Math.round((l.receita / 100) * aliquotaEfetiva(l.rbt12, l.anexo) * 100);
     return { soma, total: l.das.total, direto };
   });
   invariante(
@@ -458,10 +458,10 @@ console.log("\n── 8 · P16: o Anexo V que CRESCE — onde a parcela a deduzi
 
   // (h) 🚪 O TETO DO ME. RBT12 acima de R$360 mil desenquadra — e EPP, no
   //     nosso produto, só existe como porta de SAÍDA.
-  const rbt12Final = p16.ultima.rbt12 / 100;
+  const rbt12Final = p16.ultima.rbt12; // centavos, como tudo
   invariante(
     "e ele encosta no teto do ME sem passar",
-    rbt12Final > 300000 && rbt12Final <= 360000,
+    rbt12Final > 30000000 && rbt12Final <= 36000000,
     `RBT12 final ${brlDeCentavos(p16.ultima.rbt12)} · o teto é R$ 360.000,00, e passar é desenquadramento`
   );
 }
@@ -723,7 +723,7 @@ console.log(
 
   invariante(
     "pró-labore no mínimo de 2025, numa competência de 2025, é ACEITO",
-    avaliarProLaboreEscolhido({ ...args, escolhido: 1518, mes: "2025-12" }).aceito === true,
+    avaliarProLaboreEscolhido({ ...args, escolhido: 151800, mes: "2025-12" }).aceito === true,
     "com piso único isto era bloqueado, e o valor estava certo"
   );
 

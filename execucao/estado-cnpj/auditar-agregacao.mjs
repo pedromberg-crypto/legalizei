@@ -30,8 +30,14 @@ import {
 import { fatorRDeCompetencias, rbt12De } from "../motor-fiscal/apurador.mjs";
 import { FATOR_R, PREVIDENCIA } from "../motor-fiscal/_tabelas.mjs";
 
-const brl = (r) =>
-  r.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+/**
+ * 🔒 Come CENTAVOS desde 17/09, como tudo que circula no motor.
+ */
+const brl = (centavos) =>
+  (centavos / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
+/** A tabela da lei está em reais; a leitura converte. */
+const daTabela = (emReais) => Math.round(emReais * 100);
 
 let problemas = [];
 let checagens = 0;
@@ -128,7 +134,7 @@ for (const vida of dinamicas) {
 
       // Em manutenção/ajuste o alvo é a margem; em recuperação o piloto
       // assume que NÃO alcança (e o `paraVirarJa` carrega o número real).
-      if (decisao.modo !== "recuperacao" && decisao.sugerido > PREVIDENCIA.SALARIO_MINIMO) {
+      if (decisao.modo !== "recuperacao" && decisao.sugerido > daTabela(PREVIDENCIA.SALARIO_MINIMO)) {
         const excesso = fr.fr - FATOR_R.MARGEM;
         if (excesso > 0.0001) {
           problemas.push(
@@ -162,9 +168,9 @@ for (const vida of dinamicas) {
       if (decisao.modo === "recuperacao") {
         const tetoDoMensal = Math.max(
           FATOR_R.MARGEM * receita,
-          PREVIDENCIA.SALARIO_MINIMO
+          daTabela(PREVIDENCIA.SALARIO_MINIMO)
         );
-        if (decisao.sugerido > tetoDoMensal + 0.01) {
+        if (decisao.sugerido > tetoDoMensal + 1) {
           problemas.push(
             `🔴 ${modo}/${vida.id} ${vida.competencias[i].mes}: em recuperação o sugerido ` +
               `${brl(decisao.sugerido)} passou do sustentável ${brl(tetoDoMensal)} — ` +

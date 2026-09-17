@@ -74,6 +74,8 @@ const AMOSTRA = process.argv.includes("--amostra");
  * dev compara no teste; o `legivel` é o que ele confere com o olho; a
  * `unidade` é o que o impede de somar centavo com real.
  */
+const R = (emReaisDaAutoria) => Math.round(emReaisDaAutoria * 100);
+
 const centavos = (v) => ({
   valor: v,
   unidade: "centavos",
@@ -154,7 +156,7 @@ function congelar(objeto, prefixo, destino) {
  */
 function fixtureDeFuncao() {
   const entrada = { proLabore: 5400, cltRemuneracao: 0 };
-  const r = darfDoProLabore(entrada.proLabore, entrada.cltRemuneracao);
+  const r = darfDoProLabore(R(entrada.proLabore), R(entrada.cltRemuneracao));
 
   return {
     funcao: "darfDoProLabore",
@@ -169,9 +171,9 @@ function fixtureDeFuncao() {
       "para MAIS (a tabela é progressiva por beneficiário). Para a empresa " +
       "inteira, use darfDaFolha({ socios }).",
     entrada: {
-      proLabore: { ...reais(entrada.proLabore), oQueE: "o pró-labore bruto do mês, deste sócio" },
+      proLabore: { ...centavos(R(entrada.proLabore)), oQueE: "o pró-labore bruto do mês, deste sócio" },
       cltRemuneracao: {
-        ...reais(entrada.cltRemuneracao),
+        ...centavos(R(entrada.cltRemuneracao)),
         oQueE: "quanto este sócio já recebe como CLT em outra empresa — consome a folga do teto do INSS antes do pró-labore",
       },
     },
@@ -222,7 +224,7 @@ const CHAMADAS = [
       { rotulo: "sócio com CLT parcial (consome parte da folga)", args: [1621, 6000] },
       { rotulo: "sócio com CLT acima do teto (zera o INSS)", args: [1621, 9000] },
     ],
-    chamar: (a) => darfDoProLabore(a[0], a[1]),
+    chamar: (a) => darfDoProLabore(R(a[0]), R(a[1])),
     nomesDaEntrada: ["proLabore", "cltRemuneracao"],
     camposDeSaida: ["inss", "irrf", "baseInss", "baseIrrf", "deducaoAplicada", "impostoTabela", "redutor"],
   },
@@ -241,7 +243,7 @@ const CHAMADAS = [
       { rotulo: "Anexo V, mesma receita", args: [12000, 54000, "V"] },
       { rotulo: "Anexo V no teto", args: [30000, 360000, "V"] },
     ],
-    chamar: (a) => apurarDAS({ receitaMes: a[0], rbt12: a[1], anexo: a[2] }),
+    chamar: (a) => apurarDAS({ receitaMes: R(a[0]), rbt12: R(a[1]), anexo: a[2] }),
     nomesDaEntrada: ["receitaMes", "rbt12", "anexo"],
     camposDeSaida: ["total", "bruto"],
   },
@@ -273,22 +275,27 @@ function fixturesDeFuncoes() {
     oQueFaz: c.oQueFaz,
     ...(c.avisoExtra ? { aviso: c.avisoExtra } : {}),
     unidades: {
-      entrada: c.entradaEmReais ? "reais" : "centavos",
-      saida: c.saidaEmCentavos ? "centavos" : "reais",
+      entrada: "centavos",
+      saida: "centavos",
     },
     casos: c.casos.map((caso) => {
       const r = c.chamar(caso.args);
       const entrada = {};
       c.nomesDaEntrada.forEach((nome, i) => {
         const v = caso.args[i];
+        /**
+         * 🔒 A ENTREGA SAI TODA EM CENTAVOS — decisão do Pedro em 17/09.
+         *
+         * A autoria dos casos aqui continua escrevendo em reais onde isso é
+         * mais legível (`5400`, `14000`), e `R()` converte. O que o dev recebe
+         * é **uma unidade só**, com a etiqueta colada em cada valor.
+         */
         entrada[nome] =
-          typeof v === "number"
-            ? c.entradaEmReais && nome !== "diasDeAtraso"
-              ? reais(v)
-              : nome === "diasDeAtraso"
-                ? { valor: v, unidade: "dias", legivel: `${v} dia(s)` }
-                : centavos(v)
-            : v;
+          typeof v !== "number"
+            ? v
+            : nome === "diasDeAtraso"
+              ? { valor: v, unidade: "dias", legivel: `${v} dia(s)` }
+              : centavos(c.entradaEmReais ? R(v) : v);
       });
       const saida = {};
       for (const campo of c.camposDeSaida) {
@@ -332,14 +339,14 @@ function fixtureDeCompetencia(idVida, mes) {
         dataAberturaCnpj: v.empresa.dataAberturaCnpj,
         sociosComProLabore: v.empresa.sociosComProLabore,
         sociosTotal: v.empresa.sociosTotal,
-        cltDoSocio: reais(v.empresa.cltDoSocio),
+        cltDoSocio: centavos(v.empresa.cltDoSocio),
       },
       competencia: {
         mes,
-        receita: reais(cp.receita),
-        proLaboreDeclarado: reais(cp.proLaboreDeclarado),
+        receita: centavos(cp.receita),
+        proLaboreDeclarado: centavos(cp.proLaboreDeclarado),
         proLaborePago: {
-          ...reais(cp.proLaborePago),
+          ...centavos(cp.proLaborePago),
           oQueE: "🔴 o Fator R é REGIME DE CAIXA: só o que foi PAGO entra no numerador (art. 26 §6º). Declarado e não pago infla o Fator R e a Receita glosa.",
         },
       },
@@ -361,11 +368,11 @@ function fixtureDeCompetencia(idVida, mes) {
             razao: pct(r.fatorR.fr),
             limiar: pct(0.28),
             decideOAnexo: true,
-            folhaPaga: reais(r.fatorR.folhaPaga),
-            receita12: reais(r.fatorR.receita12),
+            folhaPaga: centavos(r.fatorR.folhaPaga),
+            receita12: centavos(r.fatorR.receita12),
             regimeDeCaixa: {
-              declarado: reais(r.fatorR.folhaDeclarada),
-              naoPago: reais(r.fatorR.naoPago),
+              declarado: centavos(r.fatorR.folhaDeclarada),
+              naoPago: centavos(r.fatorR.naoPago),
               riscoDeGlosa: r.fatorR.riscoDeGlosa,
               oQueE: "só o PAGO entra no numerador (art. 26 §6º). Declarar e não pagar infla o Fator R e a Receita glosa.",
             },
@@ -404,8 +411,8 @@ function fixtureDeCompetencia(idVida, mes) {
       ? {
           oPilotoAtua: true,
           modo: r.piloto.modo,
-          minimoLegal: { ...reais(r.piloto.minimoLegal), oQueE: "o que a lei exige para não perder o Anexo III (28%)" },
-          sugerido: { ...reais(r.piloto.sugerido), oQueE: "o que o produto paga sozinho — margem de 30%, decisão nossa (UX-39), não da lei" },
+          minimoLegal: { ...centavos(r.piloto.minimoLegal), oQueE: "o que a lei exige para não perder o Anexo III (28%)" },
+          sugerido: { ...centavos(r.piloto.sugerido), oQueE: "o que o produto paga sozinho — margem de 30%, decisão nossa (UX-39), não da lei" },
           economiaNoDas: centavos(r.piloto.economia.economiaNoDas),
           custoExtraNaGuia: centavos(r.piloto.economia.custoExtra),
           saldoNoBolsoDoCliente: centavos(r.piloto.economia.saldo),
@@ -458,9 +465,9 @@ function fixtureDeTela(idVida, mes) {
           mostrarAviso: true,
           tom: "informar, nunca culpar",
           texto:
-            `Você retirou ${brl(r.divergencia.pago * 100)} este mês. Para manter a alíquota menor, ` +
-            `o valor precisaria ser ${brl(r.divergencia.sugerido * 100)}.`,
-          acaoPrimaria: "Ajustar para " + brl(r.divergencia.sugerido * 100),
+            `Você retirou ${brl(r.divergencia.pago)} este mês. Para manter a alíquota menor, ` +
+            `o valor precisaria ser ${brl(r.divergencia.sugerido)}.`,
+          acaoPrimaria: "Ajustar para " + brl(r.divergencia.sugerido),
           acaoSecundaria: "Manter como está",
           aoManter:
             "🔑 mostrar o custo PONTUAL e o de MANTER lado a lado. Só o pior caso assusta " +

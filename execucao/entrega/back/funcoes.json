@@ -10,7 +10,7 @@
       "modulo": "motor-fiscal/apurador.mjs",
       "oQueFaz": "a guia do sócio, POR PESSOA — INSS de 11% até o teto, e IRRF progressivo",
       "unidades": {
-        "entrada": "reais",
+        "entrada": "centavos",
         "saida": "centavos"
       },
       "casos": [
@@ -19,12 +19,12 @@
           "entrada": {
             "proLabore": {
               "valor": 0,
-              "unidade": "reais",
+              "unidade": "centavos",
               "legivel": "R$ 0,00"
             },
             "cltRemuneracao": {
               "valor": 0,
-              "unidade": "reais",
+              "unidade": "centavos",
               "legivel": "R$ 0,00"
             }
           },
@@ -72,13 +72,13 @@
           "rotulo": "no salário mínimo de 2026",
           "entrada": {
             "proLabore": {
-              "valor": 1621,
-              "unidade": "reais",
+              "valor": 162100,
+              "unidade": "centavos",
               "legivel": "R$ 1.621,00"
             },
             "cltRemuneracao": {
               "valor": 0,
-              "unidade": "reais",
+              "unidade": "centavos",
               "legivel": "R$ 0,00"
             }
           },
@@ -126,13 +126,13 @@
           "rotulo": "abaixo da 1ª faixa do IRRF",
           "entrada": {
             "proLabore": {
-              "valor": 3500,
-              "unidade": "reais",
+              "valor": 350000,
+              "unidade": "centavos",
               "legivel": "R$ 3.500,00"
             },
             "cltRemuneracao": {
               "valor": 0,
-              "unidade": "reais",
+              "unidade": "centavos",
               "legivel": "R$ 0,00"
             }
           },
@@ -180,13 +180,13 @@
           "rotulo": "com IRRF devido",
           "entrada": {
             "proLabore": {
-              "valor": 5400,
-              "unidade": "reais",
+              "valor": 540000,
+              "unidade": "centavos",
               "legivel": "R$ 5.400,00"
             },
             "cltRemuneracao": {
               "valor": 0,
-              "unidade": "reais",
+              "unidade": "centavos",
               "legivel": "R$ 0,00"
             }
           },
@@ -234,13 +234,13 @@
           "rotulo": "no limite da isenção do redutor",
           "entrada": {
             "proLabore": {
-              "valor": 5000,
-              "unidade": "reais",
+              "valor": 500000,
+              "unidade": "centavos",
               "legivel": "R$ 5.000,00"
             },
             "cltRemuneracao": {
               "valor": 0,
-              "unidade": "reais",
+              "unidade": "centavos",
               "legivel": "R$ 0,00"
             }
           },
@@ -280,7 +280,7 @@
               "unidade": "centavos",
               "legivel": "R$ 312,89"
             },
-            "isento": false,
+            "isento": true,
             "usouDescontoSimplificado": true
           }
         },
@@ -288,13 +288,13 @@
           "rotulo": "um centavo acima da isenção",
           "entrada": {
             "proLabore": {
-              "valor": 5000.01,
-              "unidade": "reais",
+              "valor": 500001,
+              "unidade": "centavos",
               "legivel": "R$ 5.000,01"
             },
             "cltRemuneracao": {
               "valor": 0,
-              "unidade": "reais",
+              "unidade": "centavos",
               "legivel": "R$ 0,00"
             }
           },
@@ -342,13 +342,13 @@
           "rotulo": "acima do teto do INSS",
           "entrada": {
             "proLabore": {
-              "valor": 14000,
-              "unidade": "reais",
+              "valor": 1400000,
+              "unidade": "centavos",
               "legivel": "R$ 14.000,00"
             },
             "cltRemuneracao": {
               "valor": 0,
-              "unidade": "reais",
+              "unidade": "centavos",
               "legivel": "R$ 0,00"
             }
           },
@@ -396,13 +396,13 @@
           "rotulo": "sócio com CLT parcial (consome parte da folga)",
           "entrada": {
             "proLabore": {
-              "valor": 1621,
-              "unidade": "reais",
+              "valor": 162100,
+              "unidade": "centavos",
               "legivel": "R$ 1.621,00"
             },
             "cltRemuneracao": {
-              "valor": 6000,
-              "unidade": "reais",
+              "valor": 600000,
+              "unidade": "centavos",
               "legivel": "R$ 6.000,00"
             }
           },
@@ -450,13 +450,13 @@
           "rotulo": "sócio com CLT acima do teto (zera o INSS)",
           "entrada": {
             "proLabore": {
-              "valor": 1621,
-              "unidade": "reais",
+              "valor": 162100,
+              "unidade": "centavos",
               "legivel": "R$ 1.621,00"
             },
             "cltRemuneracao": {
-              "valor": 9000,
-              "unidade": "reais",
+              "valor": 900000,
+              "unidade": "centavos",
               "legivel": "R$ 9.000,00"
             }
           },
@@ -507,7 +507,7 @@
       "modulo": "motor-fiscal/apurador.mjs",
       "oQueFaz": "o DAS do mês: SOMA de 6 parcelas arredondadas por tributo, nunca o produto",
       "unidades": {
-        "entrada": "reais",
+        "entrada": "centavos",
         "saida": "centavos"
       },
       "casos": [
@@ -516,12 +516,12 @@
           "entrada": {
             "receitaMes": {
               "valor": 0,
-              "unidade": "reais",
+              "unidade": "centavos",
               "legivel": "R$ 0,00"
             },
             "rbt12": {
-              "valor": 54000,
-              "unidade": "reais",
+              "valor": 5400000,
+              "unidade": "centavos",
               "legivel": "R$ 54.000,00"
             },
             "anexo": "III"
@@ -546,13 +546,13 @@
           "rotulo": "valor quebrado — o caso que funda o motor",
           "entrada": {
             "receitaMes": {
-              "valor": 7910,
-              "unidade": "reais",
+              "valor": 791000,
+              "unidade": "centavos",
               "legivel": "R$ 7.910,00"
             },
             "rbt12": {
-              "valor": 54000,
-              "unidade": "reais",
+              "valor": 5400000,
+              "unidade": "centavos",
               "legivel": "R$ 54.000,00"
             },
             "anexo": "III"
@@ -577,13 +577,13 @@
           "rotulo": "valor redondo — o controle",
           "entrada": {
             "receitaMes": {
-              "valor": 12000,
-              "unidade": "reais",
+              "valor": 1200000,
+              "unidade": "centavos",
               "legivel": "R$ 12.000,00"
             },
             "rbt12": {
-              "valor": 54000,
-              "unidade": "reais",
+              "valor": 5400000,
+              "unidade": "centavos",
               "legivel": "R$ 54.000,00"
             },
             "anexo": "III"
@@ -608,13 +608,13 @@
           "rotulo": "1ª faixa cheia",
           "entrada": {
             "receitaMes": {
-              "valor": 15000,
-              "unidade": "reais",
+              "valor": 1500000,
+              "unidade": "centavos",
               "legivel": "R$ 15.000,00"
             },
             "rbt12": {
-              "valor": 180000,
-              "unidade": "reais",
+              "valor": 18000000,
+              "unidade": "centavos",
               "legivel": "R$ 180.000,00"
             },
             "anexo": "III"
@@ -639,13 +639,13 @@
           "rotulo": "2ª faixa",
           "entrada": {
             "receitaMes": {
-              "valor": 16000,
-              "unidade": "reais",
+              "valor": 1600000,
+              "unidade": "centavos",
               "legivel": "R$ 16.000,00"
             },
             "rbt12": {
-              "valor": 192000,
-              "unidade": "reais",
+              "valor": 19200000,
+              "unidade": "centavos",
               "legivel": "R$ 192.000,00"
             },
             "anexo": "III"
@@ -670,13 +670,13 @@
           "rotulo": "no teto do ME",
           "entrada": {
             "receitaMes": {
-              "valor": 30000,
-              "unidade": "reais",
+              "valor": 3000000,
+              "unidade": "centavos",
               "legivel": "R$ 30.000,00"
             },
             "rbt12": {
-              "valor": 360000,
-              "unidade": "reais",
+              "valor": 36000000,
+              "unidade": "centavos",
               "legivel": "R$ 360.000,00"
             },
             "anexo": "III"
@@ -701,13 +701,13 @@
           "rotulo": "Anexo V, mesma receita",
           "entrada": {
             "receitaMes": {
-              "valor": 12000,
-              "unidade": "reais",
+              "valor": 1200000,
+              "unidade": "centavos",
               "legivel": "R$ 12.000,00"
             },
             "rbt12": {
-              "valor": 54000,
-              "unidade": "reais",
+              "valor": 5400000,
+              "unidade": "centavos",
               "legivel": "R$ 54.000,00"
             },
             "anexo": "V"
@@ -732,13 +732,13 @@
           "rotulo": "Anexo V no teto",
           "entrada": {
             "receitaMes": {
-              "valor": 30000,
-              "unidade": "reais",
+              "valor": 3000000,
+              "unidade": "centavos",
               "legivel": "R$ 30.000,00"
             },
             "rbt12": {
-              "valor": 360000,
-              "unidade": "reais",
+              "valor": 36000000,
+              "unidade": "centavos",
               "legivel": "R$ 360.000,00"
             },
             "anexo": "V"

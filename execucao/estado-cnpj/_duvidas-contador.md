@@ -756,9 +756,13 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 > |---|---:|
 > | INSS — **travado no teto** | R$ 932,31 |
 > | IRRF | **R$ 11.751,36** |
+> | **Guia do mês, cheia** | **R$ 12.683,67** |
+> | *menos* a guia que ele já pagaria no mínimo *(R$1.621 → R$178,31)* | − R$ 178,31 |
 > | **Custo extra da paulada** | **R$ 12.505,36** |
 > | Economia no DAS | R$ 1.629,00/mês |
-> | **Saldo** | **− R$ 10.311,02** |
+> | **Saldo** | **− R$ 10.876,36** |
+>
+> 🔴 **Correção de 17/09, e é de COERÊNCIA, não de cálculo.** Esta tabela dizia saldo **− R$10.311,02**, que é o saldo da tabela do item **A6** logo adiante — e as duas usam **bases diferentes**. Aqui a comparação é contra quem vinha pagando **o mínimo de R$1.621** (é o cenário que o contador descreveu); lá é contra quem paga **o sustentável de R$5.400** (é o que o piloto faria). Cada número estava certo sozinho; a tabela é que não fechava com ela mesma. Agora **a base está escrita em cada linha**, que é o que faltava.
 >
 > O teto do INSS faz o custo ser **menor** do que ele calculou (R$932 e não R$4.730); o **IRRF**, que ele não contou, faz ser **muito maior**.
 >
@@ -1359,7 +1363,7 @@ Mas **ele pode desligar e digitar o próprio valor**. Se fizer isso, o app mostr
 | **mar/2027** | ⏳ | 🔴 **E aqui a casa não faz nada — porque não existe.** Nenhuma tela avisa que ele está a R$1.000 do teto, nenhum aviso dispara. **É o buraco que esta persona achou** | 🔴 ⇢ **A3** |
 | **Total** | — | Faturou **R$551.000** · pagou **R$87.083** de DAS · **19 meses no Anexo V** | |
 
-🔑 **O contraste que fecha o argumento — e a conta inteira, não só a metade boa.** Com o piloto ligado desde o mês 1 o DAS cairia de **R$87.083** para **R$40.502**. Mas o pró-labore subiria de R$35.662 para **R$165.300**, e com ele o DARF do sócio de R$3.922 para **R$38.204**:
+🔑 **O contraste que fecha o argumento — e a conta inteira, não só a metade boa.** Com o piloto ligado desde o mês 1 o DAS cairia de **R$87.083** para **R$40.502**. Mas o pró-labore subiria de R$35.662 para **R$165.300**, e com ele o DARF do sócio de R$3.923 para **R$38.204**:
 
 | | Sem o piloto | Com o piloto |
 |---|---:|---:|
@@ -1598,8 +1602,10 @@ Erra para os dois lados: o **INSS para menos**, porque a soma bate num teto que 
 | | Valor |
 |---|---:|
 | Economia no DAS ao ficar no III em vez do V *(6,8667% contra 15,9167% sobre R$18.000)* | R$ 1.629,00 |
-| Custo extra na guia do sócio para pagar os R$46.969 de uma vez | R$ 11.940,02 |
+| Custo extra na guia do sócio para pagar os R$46.969 de uma vez *(guia cheia R$12.683,67 **menos** o que ele já pagaria no sustentável de R$5.400 → R$743,65)* | R$ 11.940,02 |
 | **Saldo** | **− R$ 10.311,02** |
+
+⚠️ **A base desta tabela é o SUSTENTÁVEL (R$5.400)**, porque a pergunta aqui é *"o piloto deve saltar em vez de pagar o que ele pagaria?"*. Na tabela do **A5** a base é **o mínimo (R$1.621)**, porque lá a pergunta é a do contador: *"compensa regularizar de uma vez?"*. **Duas bases, duas perguntas** — e até 17/09 as duas tabelas trocavam de base sem dizer.
 
 > *"Quitar o déficit de uma vez custaria mais do que economiza. O sustentável segue valendo; o salto é decisão do sócio, não do robô."*
 

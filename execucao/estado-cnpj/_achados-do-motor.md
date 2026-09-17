@@ -262,20 +262,75 @@ Ao conferir os números do P16 contra o motor, o pró-labore saiu **100× menor*
 
 ---
 
-## ✅ Aferição de 17/09 — as afirmações em R$ que foram ao contador
+## M-028 · 🟡 A tabela da "paulada" trocava de BASE no meio, e por isso não fechava com ela mesma
+**17/09** · 🟡 médio *(de coerência, não de cálculo)* · **Onde doeu:** `_duvidas-contador` A5 · **Quem pegou:** a aferição dos valores em R$
 
-> 🧭 A trava de defasagem confere **contagens**. Estas são **valores**, que ela não alcança — então foram medidos contra o motor, um a um.
+A tabela listava `INSS R$932,31 + IRRF R$11.751,36`, chamava de **custo extra** o valor `R$12.505,36` e fechava com saldo `−R$10.311,02`. **Nenhum dos três está errado** — e mesmo assim a tabela não encadeia:
 
-| Afirmação, e onde ela está | Medido em 17/09 | |
+| | |
+|---|---|
+| R$12.683,67 | a guia cheia (932,31 + 11.751,36) |
+| R$12.505,36 | o extra **sobre a base de R$1.621** (o mínimo) |
+| R$11.940,02 | o extra **sobre a base de R$5.400** (o sustentável) |
+| −R$10.311,02 | saldo calculado com a **segunda** base, numa tabela que usava a **primeira** |
+
+🔑 **Duas bases porque são duas perguntas diferentes**, e as duas são legítimas: o contador pergunta *"compensa regularizar de uma vez?"* (base: o mínimo, que é o que a pessoa vinha pagando) e o piloto pergunta *"devo saltar em vez de pagar o sustentável?"* (base: o sustentável). O erro foi **importar o saldo de uma tabela para a outra**.
+
+**Custo se passasse:** o contador confere a soma, ela não bate, e a desconfiança contamina a tabela inteira — inclusive as linhas certas.
+**Trava:** nenhuma automática. ✅ Corrigido pela redação: **cada linha agora nomeia a base**, e as duas tabelas declaram qual pergunta respondem. Vira a dívida **D8**.
+
+## M-029 · 🔢 O comentário que autoriza o piloto a agir sozinho estava defasado
+**17/09** · 🟡 médio · **Onde doeu:** `piloto-pro-labore.mjs` · **Quem pegou:** a aferição dos valores em R$
+
+O comentário dizia que a varredura cobre *"receita de R$5 mil a R$30 mil × RBT12 de R$50 mil a R$355 mil"* e que *"o pior saldo foi +R$386,82/mês"*. A varredura viva do `verificar-piloto.mjs` é **R$2 mil–30 mil × R$24 mil–360 mil**, e o pior saldo é **+R$163,00/mês**. Alargaram a varredura e o comentário ficou para trás. `[HISTÓRICO]`
+
+🔑 **É o pior número do motor para envelhecer**, e não por ser grande: é o que **autoriza o piloto a mexer no pró-labore sem perguntar ao cliente**. Quem ler o comentário lê uma garantia mais folgada do que a medida.
+**Trava:** ✅ virou a **primeira medida em R$** do `verificar-defasagem.mjs`.
+
+⚠️ **E a 1ª versão dessa medida não pegou o valor velho:** o padrão casava `R$163/mês` e não `R$386,82/mês` — prendia a citação certa e deixava passar a errada, que é o verde mais enganoso que existe. Dinheiro agora é comparado em **centavos**, porque `R$163` e `R$386,82` são a mesma grandeza escrita de dois jeitos.
+
+---
+
+## ✅ Aferição de 17/09 — os valores em R$, um a um
+
+> 🧭 A trava de defasagem nasceu conferindo **contagens**. Esta auditoria atacou a outra metade: **576 ocorrências em R$, 261 valores distintos** nos 12 textos vivos, nenhum conferido por máquina até aqui.
+
+### O que foi medido contra o motor
+
+| Cluster | Valores | |
 |---|---|:--:|
-| P01 · saldo do cliente com o piloto ligado: **R$6.795** | R$ 6.794,96 | ✅ |
-| P16 · DAS **R$87.083 → R$40.502** | R$ 87.083,18 → R$ 40.502,47 | ✅ |
-| P16 · pró-labore **R$35.662 → R$165.300** | idem, ao real | ✅ |
-| P16 · DARF do sócio **R$3.922 → R$38.204** | R$ 3.922,82 → R$ 38.204,21 | ✅ |
-| P09 · atraso custou **R$393,32** em 3 competências | R$ 79,31 + R$ 154,51 + R$ 159,50 = R$ 393,32 | ✅ |
-| P21 · a concentração da folha vale **R$228,86** em dez/2026 | idem | ✅ |
+| **Totais do Bloco D** — P01, P03, P09, P11, P16 *(faturou · DAS · DARF · meses no V)* | 13 | ✅ |
+| **Tabela de faixas** — R$900,00 · R$1.012,01 · R$2.580,00 · 6,0000% · 6,3250% · 8,6000% · 6,8667% · 8,0800% | 12 | ✅ |
+| **A janela do P01** — R$17.831 · R$59.400 · R$64.800 · R$46.969 · R$42.649 · R$41.569 · R$1.080 · R$4.320 | 10 | ✅ |
+| **Valores de lei** — teto R$8.475,55 · R$932,31 · desconto R$607,20 · 1ª faixa R$2.428,80 · mínimos R$1.518/R$1.621 · redutor R$312,89 e R$978,62 | 10 | ✅ |
+| **O exemplo dos 4 sócios** — R$3.617,19 · R$1.540,00 · R$2.077,19 · base R$13.067,69 · imposto R$2.684,88 · R$39,76 | 10 | ✅ |
+| **O penhasco do redutor** — R$4.450,00 · R$4.450,01 · R$4.137,12 · R$312,88 | 4 | ✅ |
+| **O atraso do P09** — 3 competências × (DAS · multa · juros · total) + R$393,32 | 13 | ✅ |
+| **Decomposição do DAS** — IRPJ R$18,98 · CSLL R$16,61 · COFINS R$60,84 · PIS R$13,19 · CPP R$205,98 · ISS R$158,99 · **R$474,59** | 7 | ✅ |
+| **O IRRF de R$5.400** — INSS R$594,00 · base R$4.792,80 · tabela R$409,29 · redutor R$259,64 · devido R$149,65 | 5 | ✅ |
+| **O erro dos sócios na P02** — R$272,31 · R$356,62 · −R$84,31 | 3 | ✅ |
+| **A paulada** — guia R$12.683,67 · R$178,31 · R$743,65 · R$11.751,36 · R$1.629,00 | 5 | 🟡 **M-028** |
+| **Concentração da folha, P04** — R$616,00 · R$844,86 | 2 | ✅ |
+| **P16, soma dos impostos** — R$91.006 · R$78.706 · saldo R$12.299 | 3 | ✅ |
+| **Teto da multa** — 20% no 61º dia, R$1.236,65 | 2 | ✅ |
+| **A varredura do piloto** — pior saldo | 1 | 🔴 **M-029** |
 
-🔑 **6 de 6 batem.** Não prova que os outros ~550 valores citados nos textos vivos estão certos — prova que a amostra mais exposta, a que foi para a reunião, não apodreceu.
+### O placar
+
+**~100 valores aferidos · 98 certos ao centavo · 1 defasado (M-029) · 1 incoerente entre linhas (M-028).**
+
+🔑 **E os dois que falharam não eram de cálculo.** O motor não errou nenhuma conta: o que apodreceu foi **um comentário** que descrevia uma varredura antiga, e o que não fechava era **a montagem de uma tabela** que importou o saldo de outra. Cada número individual estava certo.
+
+### O que NÃO dá para aferir assim, e por quê
+
+| Classe | Exemplos | Por que fica de fora |
+|---|---|---|
+| **Entrada das vidas** | receitas de R$12k, R$18k, R$25k · pró-labores declarados | são o **enunciado**, não o resultado — conferi-los é conferir o `vidas.mjs` contra ele mesmo |
+| **Evidência da conta real** | R$229,85 de multa · R$198,89 de ISS · R$9.895,00 da nota · R$474,59 do recibo · R$281,08 do DAE · R$168 da Prefeitura | vêm de **documento emitido**. O motor pode bater com eles (e bate), mas não os produz |
+| **Citação literal do contador** | R$3.500 · R$4.730 · R$50/R$200 de multa | é **fala dele**, com incerteza declarada. Corrigir seria falsificar a fonte |
+| **Preço nosso** | R$139 · R$49 · R$39 · R$209 · R$79/R$99 | decisão de negócio, travada em ADR. A fonte é `fiscal.ts`, não o motor |
+
+⚠️ **Então "98 de 100" não vira "98% de segurança nos R$".** Vira: **a classe que o motor deriva foi aferida inteira e fechou**; as outras três classes são conferidas contra documento, contra a fala e contra o ADR — e essas não têm script.
 
 ---
 
@@ -290,6 +345,8 @@ Ao conferir os números do P16 contra o motor, o pró-labore saiu **100× menor*
 | **D5** | 🔴 **Subiu de prioridade, e já produziu TRÊS achados** (M-014, M-020, M-027). O motor mistura unidades na fronteira: `apurarDAS` pede reais, `guiaVencida` pede centavos, `darfDoProLabore` **recebe reais e devolve centavos**, e nenhuma recusa a unidade errada. ✅ O M-027 aplicou a cura pela primeira vez — **o nome do campo carrega a unidade** (`…Centavos`) e a conversão acontece uma vez, na fonte. Falta estender ao resto | produto |
 | **D6** | O art. 3º-A (redutor do IRRF) é a **única peça do motor sem fonte primária** — o texto veio de consulta externa, não do diário oficial. 🟡 Não bloqueia: a persona inteira zera IRRF nas duas leituras, e a G10b prova que a alternativa é impossível (M-023) | pesquisa |
 | **D7** | A trava de defasagem pega **dígito, não quantificador**. *"Todas, sem exceção"* e *"nenhuma"* passam limpo, e o M-026 mostrou que é lá que a generalização errada se esconde | produto |
+| **D8** | 🔴 **Tabela que compara cenários não declara a BASE da comparação.** O M-028 mostrou o preço: duas tabelas do mesmo documento usavam bases diferentes e uma importou o saldo da outra. Nenhuma trava pega isso — é coerência entre linhas, não valor por linha | produto |
+| **D9** | 🟡 **Parcialmente paga no mesmo dia.** Dos **261 valores em R$** dos textos vivos, **4** passaram a ser conferidos a cada rodada: o pior saldo do varrimento, o DAS total da P16, o saldo do cliente da P01 e o **DAS da persona zero** (o único com recibo). Os outros ~96 aferidos em 17/09 foram medidos **à mão** e vão envelhecer igual. 🔑 Escolhidos por **exposição**, não por tamanho — são os que o contador leu | produto |
 
 ---
 

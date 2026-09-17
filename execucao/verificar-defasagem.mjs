@@ -77,9 +77,16 @@ const MEDIDAS = [
     id: "conferencias-piloto",
     o: "conferências do piloto",
     medir: () => contaDaSuite("motor-fiscal/verificar-piloto.mjs", "conferências"),
+    /**
+     * ⚠️ A forma de tabela é ANCORADA no rótulo exato, e não num `piloto`
+     * solto na célula. A 1ª versão era `\|[^|]*piloto[^|]*\|\s*(\d+)\s*\|` e
+     * casou com `| A varredura do piloto — pior saldo | 1 |`, gritando que
+     * "1 conferência do piloto" estava defasado. Rótulo genérico em padrão de
+     * tabela pega qualquer tabela.
+     */
     citacoes: [
       /(\d+)\s+conferências\s+(?:no\s+|do\s+)?piloto/gi,
-      /\|[^|]*\bpiloto\b[^|]*\|\s*([\d.]+)\s*\|/gi,
+      /\|\s*No piloto de pró-labore\s*\|\s*([\d.]+)\s*\|/gi,
     ],
   },
   {
@@ -90,6 +97,97 @@ const MEDIDAS = [
       /(\d+)\s+conferências\s+no\s+estado\s+recorrente/gi,
       /\|[^|]*\bestado\s+do\s+CNPJ\b[^|]*\|\s*([\d.]+)\s*\|/gi,
     ],
+  },
+  /**
+   * ── 💰 A PRIMEIRA MEDIDA EM REAIS ─────────────────────────────────────────
+   *
+   * Até 17/09 esta trava só conferia **contagens**, e a auditoria daquele dia
+   * mostrou o tamanho do buraco: **556 valores em R$** citados nos textos
+   * vivos, nenhum conferido por máquina. A aferição manual achou **um**
+   * defasado — este.
+   *
+   * 🔑 Ele é o pior tipo de número para ficar velho: é o que **autoriza o
+   * piloto a agir sozinho, sem perguntar ao cliente**. Se um dia deixar de
+   * compensar, quem avisa é a varredura; e se o comentário que a descreve
+   * mentir, alguém vai ler a garantia errada.
+   */
+  {
+    id: "pior-saldo-do-varrimento",
+    o: "pior saldo do varrimento do piloto",
+    /**
+     * ⚠️ `centavos: true` existe porque a 1ª versão desta medida **não pegou**
+     * o valor velho. O padrão aceitava `R$163/mês` e não `R$386,82/mês`: a
+     * citação certa passava, a errada escapava — que é o pior dos dois mundos,
+     * porque o verde parecia merecido.
+     *
+     * 🔑 Dinheiro em prosa aparece em duas formas ("R$163" e "R$386,82") e as
+     * duas significam a mesma grandeza. Comparar em **centavos** é a única
+     * maneira de não depender de como quem escreveu resolveu formatar.
+     */
+    centavos: true,
+    medir: () => {
+      const saida = execFileSync("node", [resolve(AQUI, "motor-fiscal/verificar-piloto.mjs")], {
+        encoding: "utf8",
+        maxBuffer: 10 * 1024 * 1024,
+      });
+      const m = saida.match(/pior saldo do varrimento:\s*R\$\s*([\d.]+(?:[.,]\d{2})?)/i);
+      if (!m) throw new Error("Não achei o pior saldo na saída do verificar-piloto");
+      return Math.round(Number(m[1].replace(",", ".")) * 100);
+    },
+    citacoes: [/pior saldo[^.]{0,24}?R\$\s?(\d[\d.]*(?:,\d{2})?)\s?\/\s?m[êe]s/gi],
+  },
+  /**
+   * ── 💰 OS TRÊS VALORES MAIS EXPOSTOS DO VAULT ─────────────────────────────
+   *
+   * Escolhidos por **exposição**, não por tamanho: são os que o contador leu
+   * na reunião e os que mais se repetem nos textos vivos. A auditoria de 17/09
+   * aferiu ~100 valores **à mão** e todos fecharam — mas aferição manual
+   * envelhece igual à prosa que ela confere. Estes três param de envelhecer.
+   */
+  {
+    id: "das-total-p16",
+    o: "DAS total da P16 no caminho real",
+    centavos: true,
+    medir: async () => somaDaVida("P16", (r) => r.das?.total ?? 0),
+    /**
+     * ⚠️ ANCORADO NA P16, e não em "pagou … de DAS".
+     *
+     * As cinco linhas de total do Bloco D têm **redação idêntica** — *"Faturou
+     * R$X · pagou R$Y de DAS"* —, então um padrão pela frase casa com a P01 e
+     * acusa o DAS dela de estar errado por não ser o da P16. Foi o que
+     * aconteceu na 1ª versão. O que distingue as linhas é a **receita**, então
+     * é ela que ancora.
+     */
+    citacoes: [
+      /Faturou\s+R\$551\.000[^|]*?pagou\s+R\$\s?([\d.]+(?:,\d{2})?)\s+de DAS/gi,
+      /DAS cairia de\s+R\$\s?([\d.]+(?:,\d{2})?)/gi,
+    ],
+  },
+  {
+    id: "saldo-do-cliente-p01",
+    o: "saldo do cliente da P01 com o piloto",
+    centavos: true,
+    medir: async () => {
+      const { VIDAS } = await import(url("estado-cnpj/vidas.mjs"));
+      const { replayComPiloto } = await import(url("estado-cnpj/replay-piloto.mjs"));
+      const v = VIDAS.find((x) => x.id === "P01");
+      return replayComPiloto({ empresa: v.empresa, competencias: v.competencias }).resumo.saldo;
+    },
+    citacoes: [/diferença é de\s+\*{0,2}R\$\s?([\d.]+(?:,\d{2})?)/gi],
+  },
+  {
+    id: "das-da-persona-zero",
+    o: "DAS da persona zero (recibo do PGDAS-D)",
+    centavos: true,
+    /**
+     * 🔑 Este é o único do trio com **recibo**: ele não prova só que a conta
+     * não mudou, prova que ela continua batendo com documento emitido.
+     */
+    medir: async () => {
+      const { apurarDAS } = await import(url("motor-fiscal/apurador.mjs"));
+      return apurarDAS({ receitaMes: 7910, rbt12: 54000, anexo: "III" }).total;
+    },
+    citacoes: [/\|\s*\*{0,2}R\$\s?(47[\d.]+,\d{2})\*{0,2}\s*\|/gi],
   },
   {
     id: "invariantes",
@@ -211,6 +309,18 @@ const MEDIDAS = [
 
 const url = (p) => `file:///${resolve(AQUI, p).replace(/\\/g, "/")}`;
 
+/** Soma um campo do retrato ao longo da vida inteira de uma persona. */
+async function somaDaVida(id, campo) {
+  const { VIDAS } = await import(url("estado-cnpj/vidas.mjs"));
+  const { retratoDoMes } = await import(url("estado-cnpj/_modelo.mjs"));
+  const v = VIDAS.find((x) => x.id === id);
+  return v.competencias.reduce(
+    (s, cp) =>
+      s + campo(retratoDoMes({ empresa: v.empresa, competencias: v.competencias, mesAlvo: cp.mes })),
+    0
+  );
+}
+
 function contaDaSuite(script, palavra) {
   const saida = execFileSync("node", [resolve(AQUI, script)], {
     encoding: "utf8",
@@ -315,15 +425,38 @@ for (const arquivo of DOCS_VIVOS) {
     for (const m of vivos) {
       for (const re of m.citacoes) {
         for (const achado of limpa.matchAll(new RegExp(re.source, re.flags))) {
-          const citado = Number(achado[1].replace(/\./g, ""));
+          /**
+           * 🔑 Medida em dinheiro compara em CENTAVOS, porque "R$163" e
+           * "R$386,82" são a mesma grandeza escrita de dois jeitos.
+           *
+           * 🔴 E PROSA ARREDONDA, de propósito. O documento que foi ao contador
+           * diz *"pagou **R$87.083** de DAS"*, e o motor devolve
+           * **R$87.083,18** — o texto está certo, só não carrega centavos que
+           * ninguém leria. Exigir igualdade ao centavo transformaria toda
+           * redação boa em achado, e trava que grita errado ensina a ignorar o
+           * vermelho.
+           *
+           * Então a régua é a do próprio texto: **citação sem centavos é
+           * conferida em reais inteiros; citação com centavos, ao centavo.**
+           */
+          const cru = achado[1].replace(/\./g, "");
+          const temCentavos = cru.includes(",");
+          const citado = m.centavos
+            ? Math.round(Number(cru.replace(",", ".")) * 100)
+            : Number(cru);
           m.presos++;
-          if (citado !== m.valor) {
+          const bate =
+            m.centavos && !temCentavos
+              ? Math.round(citado / 100) === Math.round(m.valor / 100)
+              : citado === m.valor;
+          if (!bate) {
             defasados.push({
               arquivo,
               linha: i + 1,
               medida: m.o,
               citado,
               vivo: m.valor,
+              centavos: m.centavos ?? false,
               texto: linha.trim(),
             });
           }
@@ -380,7 +513,11 @@ if (!defasados.length) {
 console.log(`\n🔴 ${defasados.length} NÚMERO(S) DEFASADO(S):\n`);
 for (const d of defasados) {
   console.log(`   ${d.arquivo}:${d.linha}`);
-  console.log(`      diz ${d.citado} ${d.medida}, e o vivo é ${d.vivo}`);
+  // Medida em dinheiro volta a REAIS para a leitura humana: quem lê o aviso
+  // precisa reconhecer o número como ele está escrito no documento.
+  const mostra = (n) =>
+    d.centavos ? "R$ " + (n / 100).toLocaleString("pt-BR", { minimumFractionDigits: 2 }) : n;
+  console.log(`      diz ${mostra(d.citado)} ${d.medida}, e o vivo é ${mostra(d.vivo)}`);
   console.log(`      ${d.texto.slice(0, 100)}`);
   console.log(
     `      ↳ Atualize, ou marque a linha com ${SELO} se for citação do que já foi verdade.\n`

@@ -384,11 +384,16 @@ export function pilotar({
   /**
    * 🔑 A CONTA DO SALTO é outra conta, e é a única que pode dar negativo.
    *
-   * Varredura de 15/09 sobre a faixa inteira do ME (receita de R$5 mil a R$30
-   * mil × RBT12 de R$50 mil a R$355 mil): pagar o **sustentável** compensa em
-   * **100%** dos casos — o pior saldo foi +R$386,82/mês. É o que autoriza
-   * pilotar no automático sem perguntar: dentro do nosso escopo, a resposta
-   * nunca é "não".
+   * Varredura sobre a faixa inteira do ME (receita de R$2 mil a R$30 mil ×
+   * RBT12 de R$24 mil a R$360 mil): pagar o **sustentável** compensa em
+   * **100%** dos casos — o pior saldo do varrimento é +R$163,00/mês. É o que
+   * autoriza pilotar no automático sem perguntar: dentro do nosso escopo, a
+   * resposta nunca é "não".
+   *
+   * 🔢 Este comentário dizia **+R$386,82/mês** e a faixa **R$5 mil–30 mil ×
+   * R$50 mil–355 mil** até 17/09. Os dois estavam defasados: a varredura do
+   * `verificar-piloto.mjs` foi alargada depois, e comentário não recalcula.
+   * O número passou a ser conferido a cada rodada pelo `verificar-defasagem`.
    *
    * O **salto** da recuperação é que pode não valer: quitar o déficit de uma
    * vez custa INSS e IRRF sobre um valor grande, para economizar a diferença

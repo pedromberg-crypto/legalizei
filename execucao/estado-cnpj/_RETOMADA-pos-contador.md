@@ -1,43 +1,34 @@
 ---
 tipo: checkpoint
-status: em-andamento
+status: encerrado
 data: 2026-09-16
 assunto: retomada-da-aplicacao-das-decisoes-do-contador
 tags: [execucao, checkpoint, retomada, leonan]
 ---
 
-# ⏸️ RETOMADA — onde paramos na aplicação das decisões do contador
+# ✅ ENCERRADO — a aplicação das decisões do contador terminou
 
-> 🔴 **PARADO POR PEDIDO DO PEDRO EM 16/09**, no meio de uma sequência de 7 passos. Ele foi fazer outra tarefa (o agente do Léo) e vai voltar.
+> ✅ **OS 7 PASSOS FECHARAM EM 16/09.** Este arquivo nasceu como checkpoint de pausa e virou registro do que foi feito. **Não há próximo passo aqui.**
 >
-> 🧭 **Como usar este arquivo.** Ele diz **o que já está feito**, **o que é o próximo comando exato**, e **o que NÃO pode ser feito sem fonte**. Não precisa reler os 3 áudios nem a conversa: tudo que a retomada precisa está aqui ou linkado daqui.
+> 📊 **O que a aplicação mediu** está em [[_ANTES-E-DEPOIS-do-contador]]. **O veredito de cada item** está em [[_duvidas-contador]].
 >
-> 🔑 **Estado do repo:** limpo. Último commit **`ce076d6`**.
+> 🔑 **Estado final:** vidas **16 → 17** · competências **156 → 162** · invariantes **32 → 54** · conferências do apurador **45 → 46** · agregação **142 → 154** · **0 falhas**.
 
 ---
 
-## ▶️ O PRÓXIMO COMANDO, se você só quer continuar
+## ⏳ O QUE SOBROU, e não é passo — é pesquisa
 
-**Passo 4 — as fontes de `/processos`.** Levar para lá as regras que o motor já aplica.
+| | O quê | Estado |
+|---|---|---|
+| **P5** | O **regime de caixa** acaba em 2027 — atinge o Fator R, que **é** regime de caixa? | 🔴 memória do contador, sem norma |
+| **P8** | A **janela do Fator R pula um mês** em 2027 | 🔴 idem |
+| **P19** | **ISS** no local da prestação a partir de 2027 | 🔴 idem |
+| **P3** | Multa da **DEFIS** e do **PGDAS zerado** | 🟡 ele pediu para confirmar |
+| **73** | 🔴 **Pejotização** — passou batida na reunião | 🔴 volta à pauta com ele |
 
-⚠️ **Antes de tocar em qualquer coisa**, a linha de base:
+⚠️ **Três das quatro mudanças de 2027 vieram só da memória dele.** É frente de pesquisa própria, não item de fila.
 
-```bash
-node execucao/motor-fiscal/verificar-apurador.mjs    # 45
-node execucao/motor-fiscal/verificar-piloto.mjs      # 67
-node execucao/estado-cnpj/verificar.mjs              # 14
-node execucao/estado-cnpj/verificar-vidas.mjs        # 50   ← era 32
-node execucao/estado-cnpj/auditar-agregacao.mjs      # 142
-node execucao/estado-cnpj/rodar-ciclo.mjs            # 1.092
-```
-
-🔴 **E os 3 geradores rodam DEPOIS de qualquer edição em `/processos`**, senão a rodada seguinte cai:
-
-```bash
-node execucao/processos/gerar-processos.mjs
-node execucao/processos/gerar-persona.mjs
-node execucao/processos/cru/gerar-cru.mjs
-```
+🔒 **E o que sobrou de produto é quase todo TELA** — rateio que não se deduz da participação, campo de INSS por fora, pergunta de onboarding, CNAE secundário em 5, LTDA sempre, 10 m². Mais **um item de motor aberto de propósito**: o dia de corte das alterações pagas (10 ou 12).
 
 ---
 
@@ -143,7 +134,7 @@ Ele **passa hoje** e vai **falhar** quando a vida entrar. É o sinal de que o pa
 
 | | O quê | Por que está parado |
 |---|---|---|
-| **P1** | 🔴 **Redutor do IRRF** — o Leonan descreveu faixas (até 3.500 zera · 3.500–5.000 redutor · **acima de 5.000 sem redutor**) que **divergem do motor** (`tetoIsencao: 5000`, `tetoRampa: 7350`) | Ele mesmo hesitou: *"aí eu não vou lembrar o certo"*. **Exige a Lei 15.270/2025 literal.** Muda a guia de todo cliente acima de R$5.000 |
+| ~~P1~~ | ✅ **Redutor do IRRF — RESOLVIDO em 16/09.** Consulta externa confirmou **7 de 7 pontos** contra o motor. O **R$3.500** que o contador repetiu 6× **não existe** (lembrança de projeto de lei antigo). E o corte seco que ele descreveu criaria **penhasco**: um centavo a mais de bruto tiraria **R$312,88** do líquido. Virou a conferência **G10b** | 🟡 O texto do art. 3º-A segue sem fonte primária, e é a única peça do motor assim. **Não bloqueia**: a persona inteira zera IRRF nas duas leituras |
 | **P5** | 🔴 O **regime de caixa** acaba em 2027 — atinge o Fator R, que **é** regime de caixa? | citação de memória, sem norma |
 | **P8** | 🔴 A **janela do Fator R pula um mês** em 2027 | idem |
 | **P19** | **ISS** no local da prestação a partir de 2027 | idem |

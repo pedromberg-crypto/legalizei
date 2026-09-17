@@ -131,7 +131,42 @@ O R$564,80 é a dedução de uma tabela **anterior**, e a pesquisa não menciona
 > | **Leonan** | zera direto | redutor | **sem** redutor |
 > | **Nosso motor** | redutor zera | redutor | redutor em rampa até R$7.350 |
 >
-> 🔴 **Não mexi no motor.** Ele mesmo hesitou — *"aí eu não vou lembrar o certo"* — e isto muda o IRRF de todo cliente acima de R$5.000. **Exige leitura literal da Lei 15.270/2025 antes de qualquer alteração.** ⇢ segue como **P1**
+> ## ✅ RESOLVIDO EM 16/09 — o motor estava certo, e o R$3.500 não existe
+>
+> Consulta externa em 16/09, com os 7 pontos conferidos contra o motor: **7 de 7 batem**.
+>
+> ### 🔑 O R$3.500 que ele repetiu seis vezes não tem lastro
+>
+> > *"**Não existe.** Esse número não tem lastro na sistemática vigente para 2026. Provavelmente está confundindo com **antigas propostas de campanha ou projetos de lei defasados** que sugeriam isenção de até R$3.500."*
+>
+> Os marcos reais são **R$5.000** (início da rampa) e **R$7.350** (fim).
+>
+> ### 🔴 E o corte seco que ele descreveu criaria um PENHASCO
+>
+> Medido no nosso motor, sem depender de opinião:
+>
+> | Pró-labore | Regra dele *(corte seco)* | Nossa regra *(rampa)* |
+> |---:|---:|---:|
+> | R$ 5.000,00 | líquido R$ 4.450,00 | líquido R$ 4.450,00 |
+> | **R$ 5.000,01** | líquido **R$ 4.137,12** 🔴 | líquido **R$ 4.450,01** ✅ |
+>
+> Varrendo R$4.900 a R$7.500 de um em um real: a régua seca faz o sócio **perder R$312,23 de líquido ao ganhar R$1 a mais**; a rampa **nunca** inverte.
+>
+> 🔑 **É a mesma engenharia da parcela a deduzir do Simples**, que existe para não haver salto na borda dos R$180 mil. Legislação tributária não cria penhasco desses de propósito. ✅ Virou **conferência G10b** no motor.
+>
+> ### ✅ E o desconto simplificado fechou com texto literal
+>
+> **Lei 11.482/2007 art. 4º §2º**, redação da **Lei 14.663/2023**: *"desconto simplificado mensal, correspondente a **25% do valor máximo da faixa com alíquota zero**… **caso seja mais benéfico ao contribuinte**"*.
+>
+> 🔑 Ele **deriva** da 1ª faixa: `25% × 2.428,80 = 607,20`. Não é número solto.
+>
+> ### 🟡 O que SEGUE aberto, e por que não bloqueia
+>
+> ⚠️ **Ninguém nos mostrou o texto do art. 3º-A.** A consulta declarou que a Lei 15.270/2025 é posterior ao corte dela e **recusou-se a colar o texto** em vez de arriscar inventar. Os quatro parâmetros (`312,89` · `978,62` · `0,133145` · `7.350`) seguem **sem fonte primária** — é a única peça do motor assim.
+>
+> 🔑 **Não bloqueia porque toda a nossa persona está protegida nas duas leituras:** pró-labore de 1 a 3 salários mínimos zera o IRRF em qualquer régua. A divergência só toca quem tira mais de R$5.000, e aí o piloto mostra a conta antes.
+>
+> 📌 Evidência completa: [[2026-09-16-redutor-irrf-consulta-LITERAL]]
 >
 > ✅ **O que ficou fechado:** o limite é **por CPF**. *"Em tese, quatro sócios poderiam ficar isentos dentro de uma base de 20 mil."*
 
@@ -1476,9 +1511,13 @@ Três regras que aplicamos e que valem confirmar:
 | Base do IR | R$5.400,00 − R$607,20 | R$ 4.792,80 |
 | Imposto pela tabela | faixa de 27,5%, menos a dedução da faixa | R$ 409,29 |
 | **Redutor** do art. 3º-A | Lei 15.270/2025, aplicado **depois** da tabela, sobre o bruto | **− R$ 259,64** |
-| **IRRF devido** | | ⏳ **R$ 149,65** *(provisório)* |
+| **IRRF devido** | | ✅ **R$ 149,65** |
 
-> ⏳ **Este número é o único do Bloco E que NÃO saiu validado.** O pró-labore de R$5.400 está acima dos R$5.000, e o Leonan afirmou que **acima desse valor o redutor não se aplica** — o que daria um IRRF **maior**. Ele mesmo hesitou (*"aí eu não vou lembrar o certo"*), e a Lei 15.270/2025 precisa ser lida literal antes de mexer no motor. **Não tratar como ratificado.** ⇢ **P1**
+> ✅ **Este era o único número do Bloco E que não tinha saído validado, e fechou em 16/09.** O Leonan afirmou que acima de R$5.000 o redutor não se aplicaria, o que daria IRRF maior — mas ele mesmo hesitou (*"aí eu não vou lembrar o certo"*), e a consulta externa confirmou **os 7 pontos contra o motor, este inclusive**.
+>
+> 🔑 **E o que decide não é a consulta, é a aritmética:** a régua sem rampa faria o sócio **perder R$312,88 de líquido ao ganhar um centavo a mais** de bruto. Legislação tributária não cria penhasco desses. ⇢ virou a conferência **G10b**.
+>
+> ⚠️ **Mas os quatro parâmetros da rampa seguem sem fonte primária** — ninguém nos mostrou o texto do art. 3º-A. Ver a ressalva no item **A1**.
 
 🔑 **Três coisas que erramos antes e hoje aplicamos:**
 1. **A ordem importa.** O INSS sai primeiro e vira dedução da base do IR. Quem calcula o IR sobre o bruto cobra a mais do sócio.
@@ -1610,7 +1649,7 @@ Duas decisões nossas que valem confirmação:
 
 | | O quê | Por que importa |
 |---|---|---|
-| **P1** | 🔴 A régua do **redutor do IRRF** (R$3.500 / R$5.000) diverge do motor | Muda a guia de **todo cliente acima de R$5.000**. Exige a Lei 15.270/2025 literal |
+| ~~P1~~ | ✅ **Redutor do IRRF — RESOLVIDO 16/09.** O motor estava certo: 7 de 7 pontos conferem, o **R$3.500 não existe** (era projeto de lei antigo) e o corte seco criaria **penhasco de R$312,88 num centavo**. Virou a conferência **G10b** | 🟡 sobra a fonte primária do art. 3º-A, que **não bloqueia** |
 | **P3** | Multa da **DEFIS** e do **PGDAS zerado** — valores e norma | Ele hesitou nos dois. Vira aviso e vira tela |
 | **P4** | Prazo da DEFIS de **extinção entre janeiro e abril** | *"Tem que avaliar essas datas"* |
 | **P5** | 🔴 O **regime de caixa acaba em 2027** — isso atinge o Fator R? | Nosso Fator R **é** regime de caixa |

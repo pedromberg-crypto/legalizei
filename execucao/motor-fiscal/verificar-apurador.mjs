@@ -386,6 +386,49 @@ for (const caso of CASOS) {
     console.log("   ❌ os três regimes não se separaram");
   }
 
+  // ── 🔴 O PENHASCO: por que a rampa NÃO pode virar corte seco ─────────────
+  //
+  // Em 16/09 o contador descreveu o redutor como desligando de vez acima de
+  // R$5.000. Esta conferência existe para impedir que alguém "simplifique" a
+  // rampa nesse sentido, e ela não depende de opinião de ninguém: é aritmética.
+  //
+  // 🔑 Com corte seco, ganhar UM CENTAVO a mais de bruto tiraria R$312,88 do
+  // líquido do sócio. Legislação tributária não cria penhasco desses — é a
+  // mesma razão pela qual a parcela a deduzir do Simples existe, e que nós já
+  // conferimos em 8 bordas ao 12º decimal.
+  {
+    let inverteu = null;
+    let anterior = null;
+
+    for (let bruto = 4900; bruto <= 7500; bruto += 1) {
+      const d = darfDoProLabore(bruto);
+      const liquido = emCentavos(bruto) - d.inss - d.irrf;
+      if (anterior !== null && liquido < anterior) {
+        inverteu = { bruto, perda: anterior - liquido };
+        break;
+      }
+      anterior = liquido;
+    }
+
+    if (!inverteu) {
+      passou++;
+      console.log(
+        "   ✅ o líquido do sócio NUNCA cai ao subir o bruto, de R$4.900 a R$7.500"
+      );
+      console.log(
+        "      🔑 é o que separa a rampa do corte seco: com corte, R$5.000,01 tiraria R$312,88"
+      );
+    } else {
+      falhou++;
+      erros.push(
+        `G10b: inversão de líquido em R$${inverteu.bruto} — perde ${brlDeCentavos(inverteu.perda)} ganhando R$1 a mais`
+      );
+      console.log(
+        `   ❌ ganhar R$1 a mais em R$${inverteu.bruto} TIRA ${brlDeCentavos(inverteu.perda)} do líquido`
+      );
+    }
+  }
+
   console.log("   🔑 O INSS sai PRIMEIRO e vira dedução da base do IRRF. Quem calcula o IRRF");
   console.log("      sobre o pró-labore bruto cobra imposto a mais do sócio.");
   console.log("   ⚠️  A tabela é 🟡 (tela de concorrente). E resta a pergunta da Lei 15.270/2025:");

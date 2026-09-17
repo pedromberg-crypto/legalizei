@@ -231,9 +231,24 @@ export const IRRF = {
    * 🔴 O DESCONTO SIMPLIFICADO MENSAL — e ele quase sempre vence o INSS.
    *
    * `25% do teto da faixa de alíquota zero` = 25% × 2.428,80 = **R$ 607,20**
-   * (Lei 9.250/1995 art. 4º §2º). A fonte pagadora é obrigada a usar a
-   * dedução MAIS BENÉFICA ao beneficiário: o maior entre o INSS retido e este
-   * valor fixo.
+   * ✅ **FECHADO EM 16/09, com texto literal.** O dispositivo é a **Lei
+   * 11.482/2007 art. 4º §2º**, com redação da **Lei 14.663/2023**:
+   *
+   *   > *"Alternativamente às deduções de que trata o art. 4º da Lei nº 9.250,
+   *   > de 26 de dezembro de 1995, poderá ser utilizado desconto simplificado
+   *   > mensal, correspondente a **25% do valor máximo da faixa com alíquota
+   *   > zero** da tabela progressiva mensal, **caso seja mais benéfico ao
+   *   > contribuinte**, dispensada a comprovação da despesa."*
+   *
+   * 🔑 **E ele não é tabelado à parte, ele DERIVA da 1ª faixa:**
+   * `25% × 2.428,80 = 607,20`. Se a faixa mudar, este valor muda junto — quem
+   * atualizar a tabela e esquecer deste número cria divergência silenciosa.
+   *
+   * A fonte pagadora é obrigada a usar a dedução MAIS BENÉFICA ao
+   * beneficiário: o maior entre o INSS retido e este valor fixo.
+   *
+   * ⚠️ **A inversão acontece por volta de R$5.520 de pró-labore**, quando o
+   * INSS ultrapassa os R$607,20 e passa a ser ele a dedução.
    *
    * ⚠️ Para o nosso sócio isso inverte a conta: com pró-labore de R$3.360 o
    * INSS é R$369,60 e o simplificado é R$607,20 — vence o simplificado, e a
@@ -259,6 +274,37 @@ export const IRRF = {
    * persona usa para segurar o Anexo III (R$3.360 sobre R$12.000) passa a ter
    * **IRRF de R$ 0,00**. A calculadora do líder cobra R$93,76 e a tela dele
    * sugere R$54,40 — as duas estão desatualizadas.
+   *
+   * ── 🟡 O STATUS DESTES QUATRO NÚMEROS, revisto em 16/09 ────────────────────
+   *
+   * 🔴 **Eles seguem SEM FONTE PRIMÁRIA, e é a única peça do motor assim.**
+   * Ninguém nos mostrou o texto do art. 3º-A. O que temos é:
+   *
+   *   ✅ o **resultado** confere em 7 de 7 pontos contra consulta externa
+   *   ✅ o **desconto simplificado** e a **tabela** ao redor têm texto literal
+   *   ✅ o **R$3.500** que o contador citou 6× **não existe** — era lembrança
+   *      de projeto de lei antigo, e a consulta desfez
+   *   🟡 a **rampa** foi argumentada, não citada
+   *
+   * ── 🔑 O QUE SUSTENTA A RAMPA SEM DEPENDER DE NINGUÉM ─────────────────────
+   *
+   * O contador descreveu corte SECO em R$5.000. Medimos o que isso faria:
+   *
+   *   R$ 5.000,00 → líquido R$ 4.450,00
+   *   R$ 5.000,01 → líquido R$ 4.137,12   🔴 um centavo a mais tira R$312,88
+   *
+   * Varrendo R$4.900 a R$7.500 de um em um real, a regra seca produz **inversão
+   * de líquido** (ganhar mais bruto e receber menos) e a rampa **nunca**.
+   *
+   * 🔑 É a mesma engenharia da **parcela a deduzir** do Simples, que existe para
+   * não haver salto na borda dos R$180 mil e que conferimos em 8 bordas ao 12º
+   * decimal. Legislação tributária não cria penhasco desses de propósito.
+   *
+   * ⚠️ **Por que isso não bloqueia o produto:** toda a nossa persona está
+   * protegida nas duas leituras. Pró-labore de 1 a 3 salários mínimos zera o
+   * IRRF em qualquer régua. A divergência só toca quem tira mais de R$5.000.
+   *
+   * 📌 Evidência completa: `pesquisa/fontes/2026-09-16-redutor-irrf-consulta-LITERAL.md`
    */
   redutor: {
     tetoIsencao: 5000,

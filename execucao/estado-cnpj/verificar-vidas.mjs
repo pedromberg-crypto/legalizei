@@ -645,10 +645,55 @@ console.log("\n── 8 · Quem fatura no mês em que abriu paga 15,5%, e quem p
       })
     )
   );
+  // 🔄 ESTE INVARIANTE FOI INVERTIDO EM 16/09. Ele nascia afirmando que
+  //    NENHUMA vida exercitava o caso, e existia para cobrar a vida que
+  //    faltava. A P21 nasceu, e agora ele afirma o contrário.
   invariante(
-    "⏳ e NENHUMA das 16 vidas exercita o caso — falta a vida nova",
-    alertasDasVidas.length === 0,
-    "todas abrem sem faturar no mês 1. A vida que constitui e fatura junto ainda não existe"
+    "e alguma vida REAL exercita o caso, não só cenário sintético",
+    alertasDasVidas.length > 0,
+    alertasDasVidas.length
+      ? `${alertasDasVidas.length} alerta(s) nas 17 vidas`
+      : "🔴 voltou a ser só teste sintético"
+  );
+
+  /* ── A P21 · a vida que nasceu para este caso ─────────────────────────── */
+
+  const p21 = VIDAS.find((v) => v.id === "P21");
+  const linhasP21 = p21.competencias.map((cp) =>
+    retratoDoMes({ empresa: p21.empresa, competencias: p21.competencias, mesAlvo: cp.mes })
+  );
+
+  invariante(
+    "a P21 é tributada pelo Anexo V APENAS no mês em que abriu",
+    linhasP21[0].anexo === "V" && linhasP21.slice(1).every((l) => l.anexo === "III"),
+    `${linhasP21.map((l) => l.anexo).join(" → ")}`
+  );
+
+  // 🔑 O que a vida prova e o número que ela mede: o prejuízo é de UM mês.
+  const custoDoMes1 = linhasP21[0].das.total - linhasP21[1].das.total;
+  invariante(
+    "e o que faturar no mês da abertura custou é de um mês só, não permanente",
+    custoDoMes1 > 0,
+    `${brlDeCentavos(linhasP21[0].das.total)} contra ${brlDeCentavos(linhasP21[1].das.total)} no mês seguinte — diferença de ${brlDeCentavos(custoDoMes1)}, uma vez`
+  );
+
+  // 🔴 A ARMADILHA DE MODELAGEM QUE EU CAÍ E ESTE INVARIANTE IMPEDE.
+  //    Na 1ª versão a P21 tinha folha ZERO no mês da abertura, e a vida INTEIRA
+  //    ficava no Anexo V. Sem perceber, eu tinha modelado o cliente RECUSANDO
+  //    a oferta do alerta — e a persona provava o contrário do que devia.
+  invariante(
+    "e ela tem folha no mês da abertura, senão modela o cliente RECUSANDO a oferta",
+    p21.competencias[0].proLaborePago > 0,
+    "é a folha gerada no prazo que faz o mês 2 sair no III — sem ela a vida prova o oposto"
+  );
+
+  invariante(
+    "e ela exercita a conta da concentração em pelo menos um mês",
+    linhasP21.some((l) => l.concentracaoDaFolha?.vale),
+    linhasP21
+      .filter((l) => l.concentracaoDaFolha?.vale)
+      .map((l) => `${l.mes}: ${brlDeCentavos(l.concentracaoDaFolha.economiaMensal)}`)
+      .join(" · ") || "🔴 nenhum"
   );
 }
 

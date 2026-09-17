@@ -561,6 +561,62 @@ export const VIDAS = [
       ok(20000, MIN * 2), // 2027-02
     ]),
   },
+
+  {
+    id: "P21",
+    nome: "Tiago Moreira Bastos — desenvolvimento de software, FATURA NO MÊS EM QUE ABRE",
+    empresa: identidade({
+      cnpj: "21.212.121/0001-21",
+      razaoSocial: "TIAGO BASTOS SOFTWARE LTDA",
+      // 🔑 Abre no dia 16 e emite a 1ª nota dois dias depois. É o caso que o
+      //    contador disse ser raro, e que nenhuma das 16 exercitava.
+      dataAberturaCnpj: "2026-09-16",
+      cnaePrincipal: "6201-5/01",
+      grupoAnexo: "fator-r-dinamico(III<->V, limiar 28%)",
+      sociosComProLabore: 1,
+      sociosTotal: 2,
+    }),
+    porque:
+      "🆕 NASCEU EM 16/09, e nasceu porque um invariante afirmava que ela " +
+      "faltava. Até aqui **as 16 vidas abriam sem faturar no mês 1** — todas, " +
+      "sem exceção — e por isso o caminho da janela vazia nunca rodou em " +
+      "persona nenhuma. Ele existia só em teste sintético meu, que é " +
+      "exatamente o tipo de prova que o Pedro mandou parar de aceitar. " +
+      "🔑 **O que só ela prova:** (1) faturar no mês da abertura é tributado " +
+      "pelo **Anexo V**, porque não existe competência anterior com folha — " +
+      "regra que o contador fechou em 16/09 e que até 15/09 fazia o motor " +
+      "GRITAR; (2) o **alerta interno A1** dispara, com prazo real e valor em " +
+      "jogo; (3) a partir do mês seguinte a empresa passa a ser tributada pelo " +
+      "**III**, provando que o prejuízo é de UM mês e não permanente. " +
+      "⚠️ E ela é a 2ª vida com **sócio fora da folha** (1 recebe de 2), " +
+      "então exercita junto a conta do `ganhoDeIncluirSocio` — de propósito " +
+      "com folha que cruza a faixa do IRRF em um mês, para o sinal aparecer " +
+      "sem virar ruído. 🔴 O CNAE é o mesmo `6201-5/01` do P01, de confiança " +
+      "ALTA na matriz: aqui a variável é o CALENDÁRIO, e o resto tem que " +
+      "ficar parado para a comparação valer.",
+    competencias: serie("2026-09", [
+      // 🔴 Mês 1: abre e JÁ FATURA, e é tributado pelo Anexo V — porque o
+      //    Fator R olha AGOSTO, e em agosto a empresa não existia. Isso não
+      //    se reverte.
+      //
+      // 🔑 A FOLHA DESTE MÊS EXISTE, e é o ponto inteiro da vida: a casa
+      //    recebeu o alerta A1, ligou, e a folha de setembro saiu até 15/10 —
+      //    no prazo normal do eSocial, sem retificação nem multa. Ela não
+      //    salva setembro; ela salva OUTUBRO em diante.
+      //
+      // ⚠️ Na 1ª versão eu escrevi folha 0 aqui, e a vida inteira ficou no
+      //    Anexo V. Sem perceber, eu tinha modelado o cliente RECUSANDO a
+      //    oferta — e a persona provava o contrário do que devia provar.
+      ok(12000, 3600),
+      ok(12000, 3600),
+      ok(12000, 3600),
+      // 🔑 O mês em que concentrar a folha num sócio só cria IRRF que o
+      //    rateio evitaria. É o sinal do `ganhoDeIncluirSocio`.
+      ok(18000, 5600),
+      ok(12000, 3600),
+      ok(12000, 3600),
+    ]),
+  },
 ];
 
 /**

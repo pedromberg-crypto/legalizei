@@ -87,7 +87,7 @@
 - [Auditoria copy E5 + MEI trocou contador por certificado](legalize-auditoria-copy-e5-e-mei-certificado.md) — 06/08.
 
 ## Testes
-- [Suite de teste do Flutter: 20 personas](legalize-suite-teste-flutter-personas.md) — 14/09: `execucao/testes-flutter/`, P01.
+- [Suite de teste do Flutter: 24 personas](legalize-suite-teste-flutter-personas.md) — 14/09, ampliada 17/09: P21-P24 provam a ausencia do gate.
 - [O prototipo Next.js NAO descreve mais o Flutter](legalize-prototipo-nextjs-nao-descreve-flutter.md) — 14/09: 2 erros meus.
 - [Nao rodar e2e sem pedir](legalize-nao-rodar-e2e-sem-pedir.md) — 30/08, reforcado 3x: um "pode rodar" vale so pra aquela.
 - [Motor de testes: arquitetura](legalize-motor-testes-arquitetura.md) — v0.5.0, 19 personas, 2 flows. 🔴 desatualizado desde.
@@ -97,7 +97,8 @@
 ## Contrato, precos e negocio
 - [Decisoes do NOSSO contrato ME](legalize-contrato-proprio-decisoes.md) — 10/09, minuta enviada a advogada: 16 clausulas.
 - [Billing = fatura por competencia](legalize-cobranca-fatura-competencia.md) — 11/09: itens de linha, `plano: null`.
-- [Endereco fiscal = R$49/mes](legalize-endereco-fiscal-49.md) — 11/09 revoga o R$60. ⚠️ colide com o preco do plano MEI.
+- [Preco de lancamento: R$29 e R$99](legalize-preco-lancamento-29-99.md) — 17/09: 3 primeiros meses, ate 31/12/2026, pela lista de espera. R$19/R$79 mortos.
+- [Endereco fiscal = R$49/mes](legalize-endereco-fiscal-49.md) — 11/09 revoga o R$60. ✅ a colisao com o plano MEI some em 17/09.
 - [Asaas fora, Pagar.me em avaliacao](legalize-gateway-asaas-fora.md) — 08/09: o formato do Asaas nos jogaria pro escopo PCI.
 - [Preco DEFERIDO ate custo real](legalize-preco-deferido-custo-real.md) — 16/07: placeholder ~R$195 FAKE; nao reabrir sem.
 - [Objetivo e papel do Pedro](legalize-objetivo-e-papel-pedro.md) — negocio fechado com Mauro 07/07; Pedro PM/socio.

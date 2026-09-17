@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: b04232d3-1d88-4ff0-a086-83edf7ab4826
-  modified: 2026-09-10T19:32:23.173Z
+  modified: 2026-09-17T18:05:21.597Z
 ---
 
 **Endereço fiscal da Legalizai = R$ 49/mês**, fechado pelo Pedro em 2026-09-11. Revoga o R$60/mês travado em 04/09, que nunca foi conta nossa: era o preço do Escritório Virtual do concorrente, adotado como benchmark.
@@ -14,6 +14,8 @@ metadata:
 
 1. **Resolve de graça uma contradição do nosso contrato.** A cláusula **6.3** da minuta manda lançar em fatura só serviço de até **R$50**; acima disso exige aceite no ato. A R$60 o **Anexo I** dizia "fatura" e contrariava a própria 6.3 — era pendência de redação pra advogada. A R$49 o lançamento em fatura passa a ser legítimo pela regra geral, sem exceção redigida pra serviço recorrente.
 2. ⚠️ **R$49 é também o preço do plano MEI.** Um chunk isolado ("R$ 49 por mês") não diz de qual dos dois se trata, e endereço fiscal **não se vende pro MEI** (existe pra resolver o gate de BH, que o MEI não tem). O vault do Léo ganhou aviso explícito de desambiguação em `01-PLANOS-E-OFERTAS.md`.
+
+✅ **A colisão do item 2 se dissolve em 17/09**: o plano MEI passa a ser **R$29/mês** na promoção de lançamento, e os dois números deixam de se confundir. O endereço fiscal **não muda**: segue R$49/mês e segue **item de linha separado**, nunca fundido ao plano (fatura por competência, 11/09). Ver [[legalize-preco-lancamento-29-99]].
 
 **How to apply:** fonte única é `CUSTOS.ENDERECO_FISCAL` em `app/src/lib/fiscal.ts` — nunca hardcodar em tela. A propagação de 11/09 pegou 13 arquivos: fiscal.ts, `flow-data.mjs` (+3 derivados regerados pelo `gerar-mapa.mjs`), 4 comentários de tela, 1 story, 4 arquivos do vault do Léo, minuta (Anexo I), espelho e `fila-validacao-humana.md`. No site, a constante é `var ENDERECO_FISCAL` nos dois `atendimento.js` (`lp/` e `lp/_lab/`).
 

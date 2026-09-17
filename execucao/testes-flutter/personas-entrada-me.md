@@ -406,10 +406,30 @@ Conferido por script sobre as 14 base. **Todo valor de toda variável aparece pe
 |---|---|---|
 | **Guia da Junta (DAE)** | `R$ 281,08` (`taxaDaJunta`) | A3.P |
 | **Objeto social** | gerado pelo servidor. 🔴 Conferir que **não** sai `"...podendo também exercer ."` com lista de secundários vazia (item **62** de [[PENDENCIAS]]) | C7 |
-| **Preço do plano** | `R$ 139,00/mês` | E7 |
+| **Preço do plano** | 🔴 **`R$ 99,00/mês` nos 3 primeiros meses**, `R$ 139,00/mês` a partir do 4º. Ver o bloco de preço abaixo | E7 |
+| **Plano + endereço fiscal** (P03, P08, P13) | `R$ 148,00/mês` nos 3 primeiros meses, `R$ 188,00` depois. São **2 itens de linha**, não um preço só | E7 |
 | **CNAE principal** | o código derivado bate com a categoria escolhida no E3.4 | C0 |
 | **Herança entre telas** | titular e endereço da fatura chegam ao E9 **pré-preenchidos** do cadastro | E9 |
 | **Voltar** | existe em toda tela de wizard e leva ao destino certo | todas |
+
+#### 💳 O preço, e por que ele mudou (17/09)
+
+Este documento nasceu em 14/09 pedindo `R$ 139,00/mês` no E7, que é o **cheio**. Em 17/09 o Pedro travou a promoção de lançamento:
+
+| Plano | Cheio | Promoção |
+|---|---:|---:|
+| MEI (fora do escopo deste elenco) | R$ 49/mês | **R$ 29/mês** |
+| **ME (Simples Nacional)** | R$ 139/mês | **R$ 99/mês** |
+
+`REGRA` A promoção vale **os 3 primeiros meses**, é garantida por **entrar na lista de espera**, e a janela vai **até 31/12/2026**. Depois dos 3 meses o valor vai para o cheio. Os tiers antigos de R$19 e R$79 estão **mortos**. Fonte: `execucao/handoffs/handoff-leo-ajustes-2026-09-17.md` linhas 29-38.
+
+🔴 **O que conferir na rodada, e nesta ordem:**
+1. O E7 mostra **R$ 99,00** como valor a pagar agora, e não R$ 139,00.
+2. A tela diz que são **3 meses** e que depois vai para R$ 139,00. Preço promocional sem a validade escrita é o tipo de coisa que volta como reclamação.
+3. O E9 cobra **o mesmo número** que o E7 mostrou. Divergência entre a tela de plano e a de pagamento é achado grave.
+4. Nas P03, P08 e P13 o endereço fiscal aparece como **linha separada de R$49**, somando R$148. Se vier fundido num preço só, é defeito: a cobrança é **fatura por competência com itens de linha** (travado 11/09).
+
+⚠️ **O R$ 139,00 continua certo, no lugar certo.** Ele é o valor do 4º mês em diante, e também é a taxa de "Desenquadramento de ME para EPP" no contrato. Os dois R$139 não têm relação nenhuma entre si — não confundir ao ler o relatório.
 
 ### Camada 2 — o que só a `api-app` / RPA prova
 

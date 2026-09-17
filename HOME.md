@@ -10,6 +10,22 @@ data: 2026-07-16
 
 ## 📍 Agora (torre de controle — mantida via `/fechar`)
 
+> **Última atualização:** 2026-09-17 — **73º flow: O DIA DEPOIS DO MOTOR — LÉO, OS 6 VERMELHOS, UMA VIDA NOVA E O ELENCO DE ENTRADA RECONCILIADO.**
+>
+> 🧭 **Cinco pedidos encadeados, todos do Pedro, todos no mesmo dia.** Nenhum abriu frente nova: cada um pegou algo que o 72º flow deixou pronto e mandou aplicar num lugar que ainda não sabia.
+>
+> **(1) 📄 O HANDOFF DO LÉO É UM `.md` SÓ, INGERÍVEL.** `execucao/handoffs/handoff-leo-ajustes-2026-09-17.md`, 413 linhas, 6 partes (números · escopo · comportamento · cálculo · conversão · checklist). 🔴 **Duas correções do Pedro no meio do caminho mudaram o entregável:** *"esse vault do Léo não leve como verdade… o dev já tem essa documentação lá"* e *"é mais voltado para um .md de fato que seja eficiente para ele subir"*. Eu ia editar os 12 arquivos do fork; virou **um arquivo que o mecanismo lê**. Fecha os preços (R$29/R$99 até 31/12/2026), o EPP fora com o teto nomeado, os 87 CNAEs com a regra dos 65 `III-fixo` (**não falar de Fator R para quem já está no III por decisão do governo** — inventa risco que não existe), e a lacuna que ele mesmo apontou: o Léo tira a dúvida bem e **não conduz para lugar nenhum**.
+>
+> **(2) 🔴 OS 6 VERMELHOS DO `/processos` CAÍRAM, E UM DELES ESTAVA VELHO.** A trava do **dia 10/12** dissolve o caminho retroativo inteiro: mesmo que o usuário cancele a nota no dia 10, o cálculo só roda no dia 12. **P5.8 não era trava** — não controlamos se o sócio foi *pago*, trabalhamos com a emissão correta do pró-labore; e o vermelho dele já estava **defasado**, o contador tinha respondido em 16/09. **P3.10** vira responsabilidade do cliente com lembrete (a API que varre NF emitidas no órgão na véspera do DAS segue em estudo). **P4.22** vira atenção, ajustável depois com a advogada. 🟢🟡🔴 → **0 vermelhos**.
+>
+> **(3) 🧪 O PEDRO RODOU O PRÓPRIO CASO NO MOTOR, E ACHOU UM BUG.** CNPJ aberto 05/03/2026, 1ª nota de R$7.000, depois 10k/12k/5k/**não faturei**/2k, guia do mês 5 paga junto com a do 6. **M-032:** o piso do salário mínimo virava **déficit** em mês sem receita, e o piloto rotulava a competência como "recuperação". Conta certa, rótulo mentiroso. O caso virou a vida **P22** (`vidas.mjs`) + 4 invariantes no bloco 10 de `verificar-vidas`, então não volta. 🔑 **É a 2ª vez que um teste dele pega o que as suítes não pegaram** — a 1ª foi o M-031, pego pela trava de defasagem.
+>
+> **(4) 🚪 O ELENCO DE ENTRADA DO FLUTTER ESTAVA UM DIA ATRASADO, E ISSO BASTOU.** [[personas-entrada-me]] e [[variaveis-entrada-me]] são de **14/09** e não passaram pela migração de escopo de 15–17/09. Três conflitos, os três agora travados no ADR: *"não barramos por faturamento"* contra **EPP fora** · o `GATE_DE_ENTRADA` de 15/09 (4 vedações + 2 impedimentos) que **nunca chegou ao catálogo**, embora o comentário dele diga *"quem constrói a pergunta é o flow de entrada"* · e *"titular é sempre 49"* contra o servidor público. Nascem **P21 a P24** (20 → 24 personas) e o preço do E7 passa a esperar **R$99 nos 3 primeiros meses**. 🔴 **Nenhuma das 4 tem tela: rodá-las prova a ausência.** 🔑 O V1 é o achado fino do dia — o dado **já está na tela** (C2, como `socio-outro-cnpj`), colhido para o teto do INSS. Não falta captura, falta **consequência**.
+>
+> ⏭️ **O que fica aberto:** as 6 perguntas do gate não têm tela (é requisito, não débito de teste) · as 5 categorias não varridas do modo cru seguem decisão do Pedro · 6 perguntas abertas no handoff de dados (3 dev, 1 Mauro, 2 Pedro) · e a tensão ainda não decidida entre o default *"aguardar a 1ª nota"* e pagar pró-labore desde o mês 1, que custa **R$665** no primeiro mês faturado.
+>
+> ---
+>
 > **Última atualização:** 2026-09-17 — **72º flow: A ENTREGA PARA O DEV NASCEU, E A MIGRAÇÃO PARA CENTAVOS ACHOU 2 BUGS LATENTES.**
 >
 > 🧭 **O pedido:** *"sinto tudo ainda meio solto… precisamos abraçar essa complexidade e organizar enquanto há tempo, para não continuarmos crescendo de forma desenfreada"*, com os devs **sem prazo marcado**. Saldo: **2 scripts, 1 package.json, 0 notas novas**, e **574 docs não editados de propósito**.

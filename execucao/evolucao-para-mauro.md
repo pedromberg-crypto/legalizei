@@ -20,23 +20,23 @@ tags: [reporte, evolucao, sociedade]
 
 | | |
 |---|---:|
-| **Entregas reportadas** | **304** |
-| Entradas no log | 63 |
+| **Entregas reportadas** | **311** |
+| Entradas no log | 64 |
 | **Dias trabalhados** | **60** |
 | Período | 07/07/2026 → 17/09/2026 |
 | Dias corridos no período | 73 |
-| Média de entregas por dia trabalhado | 5,1 |
+| Média de entregas por dia trabalhado | 5,2 |
 
 ### Placar por status
 
 | Status | Itens | % |
 |---|---:|---:|
-| 🟢 pronto / entregue | **241** | 79,3% |
-| ✅ estava parado, foi resolvido | **15** | 4,9% |
-| 🟡 em curso / parcial | **27** | 8,9% |
+| 🟢 pronto / entregue | **241** | 77,5% |
+| ✅ estava parado, foi resolvido | **15** | 4,8% |
+| 🟡 em curso / parcial | **27** | 8,7% |
 | 🔴 trava ou precisa de você | **5** | 1,6% |
-| 🕓 aguarda pessoa | **2** | 0,7% |
-| sem marca | 14 | 4,6% |
+| 🕓 aguarda pessoa | **2** | 0,6% |
+| sem marca | 21 | 6,8% |
 
 ### Ritmo, mês a mês
 
@@ -1418,4 +1418,36 @@ Eu achava que o problema era ter a mesma informação em muitos lugares. **Fui m
 - Importante: *nada que tem documento atrás mudou*. Guia da Receita e nota fiscal continuam batendo igual
 - Agora é *um comando só* pra conferir tudo: 16 etapas, e ele se recusa a rodar se eu criar verificação nova e esquecer de ligar
 - Nada pendente com você essa semana 👍
+```
+
+---
+
+## Semana 17/09/2026 (parte 2) — a pejotização virou pergunta de cadastro, e o mês sem faturar achou um erro
+
+Continuação do mesmo dia. A parte 1 foi arrumação de casa; esta é aplicação.
+
+| # | O que foi feito | Detalhe |
+|---|---|---|
+| 1 | ⚖️ **A pejotização deixou de ser só um aviso e virou requisito de tela** | Você lembra que ela ficou como pendência na semana passada. Fui cruzar as regras de quem **pode** optar pelo Simples com o que o app de fato pergunta na hora de abrir a empresa, e o resultado foi feio: das **6 perguntas** que precisariam existir, o app faz **uma** (e essa vem automática, do sistema do governo). As outras cinco ninguém pergunta |
+| 2 | 🔴 **A pior delas é justamente a do nosso público** | Prestar serviço pra um cliente só, cumprindo horário e recebendo ordens, é vedação expressa da lei. E o nosso público é **TI, design e consultoria** — exatamente as atividades que atraem fiscalização de vínculo disfarçado. O preço de errar é diferido: não trava nada na hora, aparece meses depois como **exclusão retroativa**, e a empresa cai no Lucro Presumido |
+| 3 | 🔑 **Uma das cinco já está na tela, e a gente só não usa** | O app já pergunta se a pessoa é sócia de outra empresa. Pergunta pra calcular o teto do INSS dela, e joga a resposta fora pro resto. **Não falta captura, falta consequência** |
+| 4 | 🚫 **Empresa acima do teto do ME deixa de ser aceita** | Acima de R$360 mil por ano a empresa é EPP, e EPP a gente não atende. O agente do WhatsApp já recusa e escala; o app aceitava e abria. A mesma pessoa tinha duas respostas nossas. Agora é uma só |
+| 5 | 👮 **Servidor público: descobri que a nossa regra estava errada** | A gente carimbava todo titular como sócio-administrador. Servidor público ativo **pode ser sócio e não pode administrar**. Se ele for o único sócio, não é ajuste de cadastro: é caso que a gente não abre |
+| 6 | 🧪 **O Pedro rodou o caso dele no motor e achou um erro** | Empresa nova, faturamento variado e **um mês sem faturar nada** no meio. O sistema tratava o mês zerado como se a empresa estivesse devendo pró-labore atrasado e recomendava "recuperação". A conta estava certa, o **rótulo** é que mentia. Corrigido, e o caso virou teste permanente |
+| 7 | ✅ **Fechei os 6 pontos vermelhos do mapa de processos** | O mais importante: nota cancelada depois do dia 10 não bagunça mais o cálculo do imposto, porque a gente só roda o cálculo no **dia 12**. Dois dias de folga resolvem um problema que ia exigir recálculo retroativo |
+
+**O que fica com você:** as cinco perguntas do item 1 precisam entrar no cadastro, e eu quero conferir com você **a redação de cada uma** antes de virar tela. Pergunta mal feita sobre pejotização não protege ninguém, porque a resposta é autodeclarada e a pessoa responde o que acha que a gente quer ouvir.
+
+### 📱 WhatsApp (17/09 — 2º)
+```
+*Update Legalizai* 📣
+- Aquela pendência da pejotização virou requisito de tela
+- Cruzei as regras de quem pode optar pelo Simples com o que o app pergunta hoje: das *6 perguntas* necessárias, o app faz *1*
+- A que mais preocupa é a do nosso público mesmo: TI, design e consultoria. Não trava na hora, aparece meses depois como exclusão retroativa
+- Curiosidade: uma das perguntas *já está na tela*. A gente pergunta se a pessoa é sócia de outra empresa, usa pro INSS e joga fora pro resto
+- Empresa acima de R$360 mil/ano (que é EPP) deixou de ser aceita no app. O Léo já recusava, o app não
+- Servidor público: ele pode ser sócio, mas não pode administrar. Se for sócio único, a gente não abre
+- O Pedro testou o caso dele e achou um erro no mês sem faturar. Conta certa, aviso errado. Corrigido
+- Fechei os 6 vermelhos do mapa de processos 👍
+- *Preciso de você:* quero conferir a redação das 5 perguntas antes de virarem tela
 ```

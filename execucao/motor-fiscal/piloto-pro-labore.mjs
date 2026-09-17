@@ -833,6 +833,132 @@ export function avaliarProLaboreEscolhido({
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+ * 5b · A CONTA DE CONCENTRAR A FOLHA — nasceu em 16/09
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/**
+ * 💡 **Incluir outro sócio na folha sairia mais barato?**
+ *
+ * ── 🔴 POR QUE ESTA FUNÇÃO EXISTE ──────────────────────────────────────────
+ *
+ * O contador validou duas coisas no mesmo dia, e elas **colidem**:
+ *
+ *   1. *"O cara que efetivamente trabalha é obrigado a ser contribuinte. O que
+ *      não trabalha não tem obrigatoriedade de gerar pró-labore."*
+ *   2. *"Se eu dividir o pró-labore entre os dois, **eu não pago o excesso de
+ *      imposto de renda** e continuo com o mesmo benefício."*
+ *
+ * A regra (1) manda concentrar a folha em quem administra. A aritmética (2)
+ * diz que concentrar **pode custar IRRF que o rateio evitava**, porque a
+ * tabela é progressiva por pessoa.
+ *
+ * 🔑 Medido na P04 em 16/09: folha de **R$5.600** custa **R$616,00** repartida
+ * entre 2 e **R$844,86** concentrada em 1. Nos outros meses dela a diferença é
+ * **zero**, porque abaixo de R$5.000 por pessoa o IRRF zera de qualquer jeito.
+ * Ou seja: o problema **só aparece quando a concentração cruza a faixa**.
+ *
+ * ── ✅ A DECISÃO DO PEDRO (16/09), opção (c) ───────────────────────────────
+ *
+ * Aplicamos a regra **e mostramos a conta**. Não escolhemos pelo cliente e não
+ * escondemos o número. Quem decide **quem trabalha** é ele; o que não pode é
+ * ele descobrir depois que pagou imposto à toa.
+ *
+ * ⚠️ **Isto NÃO é sugestão de colocar laranja na folha.** A pergunta que a
+ * tela faz é *"algum outro sócio também trabalha na empresa?"*, e só vale se a
+ * resposta for verdade. O contador foi explícito sobre a tendência de sócio
+ * de fachada, e **não é isso que estamos automatizando**.
+ *
+ * 🔒 O **Fator R não muda** em nenhum dos dois cenários: a folha total é a
+ * mesma, e o Fator R usa a folha total.
+ *
+ * @param folhaTotal   o pró-labore total do mês, em reais
+ * @param quemRecebe   quantos recebem hoje (os administradores)
+ * @param socios       quantos sócios a empresa tem ao todo
+ * @param cltDoSocio   CLT de UM sócio por fora, como o app capta hoje
+ */
+export function ganhoDeIncluirSocio({
+  folhaTotal = 0,
+  quemRecebe = 1,
+  socios = 1,
+  cltDoSocio = 0,
+}) {
+  const podeIncluir = Math.max(0, socios - quemRecebe);
+
+  // Sem sócio de fora, ou sem folha, não há o que comparar.
+  if (podeIncluir <= 0 || folhaTotal <= 0) {
+    return { avaliou: false, motivo: podeIncluir <= 0 ? "todos-ja-recebem" : "sem-folha" };
+  }
+
+  // ⚠️ `darfDoProLabore` recebe REAIS e devolve CENTAVOS. A soma abaixo já
+  // sai em centavos inteiros, então nada aqui pode passar por `emCentavos()`
+  // de novo. Errar isto multiplica a guia por 100 sem quebrar nenhum teste.
+  const guia = (n) => {
+    const partes = Array.from({ length: n }, (_, i) =>
+      darfDoProLabore(folhaTotal / n, i === 0 ? cltDoSocio : 0)
+    );
+    return {
+      comQuantos: n,
+      inss: partes.reduce((t, d) => t + d.inss, 0),
+      irrf: partes.reduce((t, d) => t + d.irrf, 0),
+      custo: partes.reduce((t, d) => t + d.inss + d.irrf, 0),
+    };
+  };
+
+  const hoje = guia(quemRecebe);
+
+  // 🔑 Varre TODOS os arranjos possíveis, não só "incluir mais um". Com 4
+  // sócios e 1 administrador, incluir 2 pode ser melhor que incluir 1.
+  let melhor = hoje;
+  for (let n = quemRecebe + 1; n <= socios; n++) {
+    const c = guia(n);
+    if (c.custo < melhor.custo) melhor = c;
+  }
+
+  const economia = hoje.custo - melhor.custo;
+
+  /**
+   * 🔴 O LIMIAR É SEMÂNTICO, NÃO UM NÚMERO ESCOLHIDO A DEDO.
+   *
+   * A primeira versão disparava com `economia >= 1 centavo`, e a P14 mostrou
+   * o estrago: **R$0,01 de "economia" em 9 meses seguidos**, que é puro
+   * arredondamento de dividir R$4.863 por 2 em vez de por 3. Sugestão de
+   * centavo numa tela fiscal não é ajuda, é ruído — e ruído ali destrói a
+   * confiança que o resto do produto constrói.
+   *
+   * 🔑 A pergunta certa não é *"quanto economiza?"*, é **"o motivo existe?"**.
+   * O motivo desta função é o IRRF: a tabela é progressiva por pessoa, então
+   * concentrar pode criar imposto que o rateio evitava. Se o IRRF não cai, o
+   * que sobra é diferença de arredondamento no INSS, e aí não há o que dizer
+   * ao cliente.
+   */
+  const reduzIrrf = melhor.irrf < hoje.irrf;
+
+  return {
+    avaliou: true,
+    quemRecebe,
+    socios,
+    custoHoje: hoje.custo,
+    irrfHoje: hoje.irrf,
+    /** Quantos precisariam receber para o custo ser o menor possível. */
+    melhorArranjo: melhor.comQuantos,
+    custoNoMelhor: melhor.custo,
+    irrfNoMelhor: melhor.irrf,
+    economiaMensal: economia,
+    /** O que de fato move a conta. O resto é arredondamento de INSS. */
+    irrfEvitado: hoje.irrf - melhor.irrf,
+    /**
+     * 🔑 Só é verdade quando o rateio **derruba IRRF**. Ver o bloco acima.
+     */
+    vale: reduzIrrf,
+    /**
+     * ⚠️ A pergunta que a tela pode fazer. Ela é sobre FATO, não sobre
+     * conveniência fiscal, e a redação precisa deixar isso claro.
+     */
+    pergunta: reduzIrrf ? "algum outro sócio também trabalha na empresa?" : null,
+  };
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
  * 6 · O QUE ESTE ARQUIVO NÃO RESOLVE — declarado, não escondido
  * ═══════════════════════════════════════════════════════════════════════════ */
 

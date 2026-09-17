@@ -52,7 +52,10 @@ import {
   emCentavos,
 } from "../motor-fiscal/apurador.mjs";
 
-import { pilotar } from "../motor-fiscal/piloto-pro-labore.mjs";
+import {
+  pilotar,
+  ganhoDeIncluirSocio,
+} from "../motor-fiscal/piloto-pro-labore.mjs";
 
 /* ═══════════════════════════════════════════════════════════════════════════
  * 1 · O QUE SE GUARDA
@@ -102,11 +105,45 @@ export function identidade({
    * campo** — quando tiver, é aqui que entra.
    */
   /**
-   * 🔒 TODO SÓCIO RECEBE PRÓ-LABORE — travado pelo Pedro em 15/09.
+   * 🔄 QUEM RECEBE PRÓ-LABORE — REVISTO EM 16/09 PELO CONTADOR.
    *
-   * *"Sobre isso se sócio é pago ou não pago, para mim entra naquela de: a
-   * gente calcula e mantém o melhor imposto e enquadramento, emitimos o
-   * pró-labore da forma correta. Para mim esse é o pagamento do sócio."*
+   * ── ❌ A REGRA ANTERIOR, de 15/09, NÃO VALE MAIS ───────────────────────────
+   *
+   * Era *"todo sócio recebe, e a exceção é declarada"*. O Leonan derrubou:
+   *
+   *   > *"A lei do 212 fala que **o cara que trabalha, que efetivamente
+   *   > trabalha**, ele é obrigado a ser contribuinte obrigatório do INSS. O
+   *   > cara que não trabalha, às vezes ele é um sócio só de investimento — eu
+   *   > só aporto e faço essa retirada de lucro —, **eu não tenho
+   *   > obrigatoriedade de gerar um pró-labore**."*
+   *
+   * ── ✅ A REGRA NOVA ────────────────────────────────────────────────────────
+   *
+   * Recebe automaticamente **quem administra** (qualificação 49 do DBE). Sócio
+   * cotista (22) nasce **sem** pró-labore, e passa a receber só se o cliente
+   * declarar que ele trabalha.
+   *
+   * ⚠️ **E o contador avisou que o app nunca vai saber sozinho:** *"às vezes o
+   * cara pode colocar que um é administrador, mas quem está trabalhando é o
+   * outro"* — inclusive por motivo legítimo, como bloqueio judicial no nome de
+   * quem administra. Por isso administrar é o **default**, não a verdade.
+   *
+   * 🔴 **O EFEITO QUE NINGUÉM ESPERAVA, medido em 16/09:** concentrar a folha
+   * em menos gente **pode custar mais imposto**, porque a tabela do IRRF é
+   * progressiva por pessoa. Na P04, com folha de R$5.600, dois sócios pagam
+   * R$616,00 e um sócio sozinho paga **R$844,86**. Nos outros meses dela a
+   * diferença é **zero**, porque abaixo de R$5.000 por pessoa o IRRF zera.
+   *
+   * 🔑 As duas coisas que o contador validou no mesmo dia **colidem aqui**:
+   * *"paga quem trabalha"* e *"dividir meia a meia é o ótimo tributário"*.
+   * Decisão do Pedro em 16/09, opção (c): **aplicamos a regra e o piloto
+   * mostra a conta** — `ganhoDeIncluirSocio()` avisa quando incluir outro sócio
+   * que de fato trabalhe sairia mais barato. Quem decide quem trabalha segue
+   * sendo o cliente; nós não escondemos o número.
+   *
+   * ⚠️ **O Fator R NÃO muda com isto.** A folha total é a mesma, e o Fator R
+   * usa a folha total. Era o risco que eu tinha levantado ao medir, e ele não
+   * se confirmou.
    *
    * 🔑 **É doutrina de produto, e ela fecha uma pergunta que a lei deixa
    * aberta.** A Lei 8.212/91 art. 12 V "f" obriga pró-labore a quem **presta
@@ -132,6 +169,21 @@ export function identidade({
    * assume é conveniência de tela com consequência fiscal — item **71**.
    */
   sociosComProLabore = 1,
+  /**
+   * 🆕 QUANTOS SÓCIOS A EMPRESA TEM AO TODO — incluindo quem não recebe.
+   *
+   * 🔑 Existe por um motivo só: sem ele o motor **não enxerga** que há sócio
+   * fora da folha, e não tem como avaliar se incluir alguém sairia mais barato.
+   * `sociosComProLabore` responde *"quantos recebem"*; este responde *"de
+   * quantos"*.
+   *
+   * Default igual a `sociosComProLabore`: quem não declarar, está dizendo que
+   * todos os sócios administram — que é o caso de 6 das 8 vidas com 2+ sócios.
+   *
+   * ⚠️ `sociosTotal < sociosComProLabore` é dado inconsistente, e a trava de
+   * vidas derruba a rodada.
+   */
+  sociosTotal = null,
   /**
    * 🔒 COLABORADORES — TRAVADO EM ZERO por decisão do Pedro em 15/09:
    * *"quero que todas as personas rodem liso sem terem colaboradores; depois
@@ -161,6 +213,8 @@ export function identidade({
     municipio,
     cltDoSocio,
     sociosComProLabore,
+    // Quem não declara está dizendo que todos os sócios administram.
+    sociosTotal: sociosTotal ?? sociosComProLabore,
     colaboradores,
   };
 }
@@ -388,6 +442,26 @@ export function retratoDoMes({ empresa, competencias, mesAlvo }) {
     atraso: atrasoDe("das", das.total, venc.das),
     /** 🛩️ A decisão do piloto para ESTE mês. Derivada, nunca guardada. */
     piloto,
+    /**
+     * 💡 Incluir outro sócio na folha sairia mais barato NESTE mês?
+     *
+     * 🔑 Só tem conteúdo quando existe sócio fora da folha **e** a concentração
+     * cruza a faixa do IRRF. Nos meses em que a folha por pessoa fica abaixo de
+     * R$5.000, isto vem `vale: false` e a tela não mostra nada.
+     *
+     * ⚠️ A pergunta que ele habilita é sobre **fato** (*"algum outro sócio
+     * também trabalha?"*), não sobre conveniência fiscal. Ver a decisão (c) do
+     * Pedro em 16/09, no cabeçalho de `sociosComProLabore`.
+     */
+    concentracaoDaFolha: ganhoDeIncluirSocio({
+      folhaTotal: atual.proLaboreDeclarado || 0,
+      quemRecebe: Math.max(1, empresa.sociosComProLabore ?? 1),
+      socios: Math.max(
+        empresa.sociosTotal ?? empresa.sociosComProLabore ?? 1,
+        empresa.sociosComProLabore ?? 1
+      ),
+      cltDoSocio: empresa.cltDoSocio ?? 0,
+    }),
     /** O que foi pago × o que o piloto mandaria pagar. `null` se não atua. */
     divergencia,
     vencimentos: venc,

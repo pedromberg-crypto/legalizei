@@ -453,6 +453,78 @@ console.log("\n── 8 · P16: o Anexo V que CRESCE — onde a parcela a deduzi
   );
 }
 
+/* ── 7 · QUEM RECEBE PRÓ-LABORE (regra nova de 16/09) ───────────────────── */
+
+console.log("\n── 7 · Recebe quem ADMINISTRA, e o motor enxerga quem ficou de fora\n");
+{
+  // 🔴 ESTE BLOCO NASCEU DE UM SUSTO. Em 16/09 mudei a P04 de 2 para 1 sócio
+  // com pró-labore e a P14 de 3 para 1 — dinheiro de verdade, R$228,86 num mês
+  // só — e **as 6 suítes passaram sem uma reclamação**. É a régua do
+  // `_cobertura-das-vidas` aparecendo de novo: dado sem invariante é dado que
+  // ninguém defende.
+
+  const comSocioForaDaFolha = VIDAS.filter(
+    (v) => (v.empresa.sociosTotal ?? 0) > (v.empresa.sociosComProLabore ?? 1)
+  );
+
+  invariante(
+    "existe vida em que nem todo sócio recebe pró-labore",
+    comSocioForaDaFolha.length > 0,
+    comSocioForaDaFolha.length
+      ? comSocioForaDaFolha
+          .map(
+            (v) =>
+              `${v.id} paga a ${v.empresa.sociosComProLabore} de ${v.empresa.sociosTotal}`
+          )
+          .join(" · ")
+      : "🔴 nenhuma — a regra do administrador não está sendo exercitada"
+  );
+
+  // Dado incoerente: não dá pra pagar a mais gente do que existe na sociedade.
+  const incoerentes = VIDAS.filter(
+    (v) => (v.empresa.sociosTotal ?? 1) < (v.empresa.sociosComProLabore ?? 1)
+  );
+  invariante(
+    "nenhuma vida paga pró-labore a mais sócios do que tem",
+    incoerentes.length === 0,
+    incoerentes.length ? incoerentes.map((v) => v.id).join(", ") : `${VIDAS.length} vidas conferidas`
+  );
+
+  // 🔑 E a conta que a decisão (c) do Pedro obriga a existir: quando concentrar
+  //    a folha cria IRRF que o rateio evitava, o motor tem que VER isso.
+  const retratosComSocioFora = comSocioForaDaFolha.flatMap((v) =>
+    v.competencias.map((cp) =>
+      retratoDoMes({ empresa: v.empresa, competencias: v.competencias, mesAlvo: cp.mes })
+    )
+  );
+  const avaliados = retratosComSocioFora.filter((r) => r.concentracaoDaFolha?.avaliou);
+  const sinalizados = avaliados.filter((r) => r.concentracaoDaFolha.vale);
+
+  invariante(
+    "o motor avalia a concentração da folha em toda competência dessas vidas",
+    avaliados.length === retratosComSocioFora.filter((r) => r.darf).length,
+    `${avaliados.length} competências avaliadas`
+  );
+
+  invariante(
+    "e só sinaliza quando o rateio derruba IRRF, nunca por arredondamento",
+    sinalizados.every((r) => r.concentracaoDaFolha.irrfEvitado > 0),
+    sinalizados.length
+      ? `${sinalizados.length} de ${avaliados.length} competências sinalizam · maior economia ${brlDeCentavos(Math.max(...sinalizados.map((r) => r.concentracaoDaFolha.economiaMensal)))}`
+      : "nenhuma sinaliza"
+  );
+
+  // 🔴 A regressão que este bloco existe para pegar: a 1ª versão disparava com
+  //    1 centavo e enchia a P14 de sugestão em 9 meses seguidos.
+  invariante(
+    "nenhuma sinalização vale menos de um real",
+    sinalizados.every((r) => r.concentracaoDaFolha.economiaMensal >= 100),
+    sinalizados.length
+      ? `menor economia sinalizada: ${brlDeCentavos(Math.min(...sinalizados.map((r) => r.concentracaoDaFolha.economiaMensal)))}`
+      : "nenhuma sinaliza"
+  );
+}
+
 /* ── Fecho ───────────────────────────────────────────────────────────────── */
 console.log(`\n🚫 Sem vida de propósito: ${SEM_VIDA.naoAbrem.join(", ")} nunca abrem · ${SEM_VIDA.abremMasNaoAcrescentam.join(", ")} abrem mas não trazem variável nova.\n`);
 

@@ -1,7 +1,7 @@
 ---
 tipo: derivado
 status: vivo
-data: 2026-09-16
+data: 2026-09-17
 assunto: cru-prolabore
 gerado_por: execucao/processos/cru/gerar-cru.mjs
 tags: [execucao, processos, cru, prolabore]

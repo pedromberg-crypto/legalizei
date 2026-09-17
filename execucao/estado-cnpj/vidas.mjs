@@ -193,7 +193,13 @@ export const VIDAS = [
       dataAberturaCnpj: "2026-02-02",
       cnaePrincipal: "7311-4/00",
       grupoAnexo: "fator-r-dinamico(III<->V, limiar 28%)",
-      sociosComProLabore: 2,
+      // 🔄 ERA 2, virou 1 em 16/09. O `personas-entrada-me` sempre disse que
+      // aqui **administra só o titular** (qualificação 22 no DBE para o outro
+      // sócio), e mesmo assim a vida pagava pró-labore aos dois. Era a tensão
+      // que o M-013 deixou anotada e que o contador fechou: recebe quem
+      // administra. 🔑 A folha TOTAL não muda, então o Fator R não se mexe.
+      sociosComProLabore: 1,
+      sociosTotal: 2,
     }),
     porque:
       "🔴 A ÚNICA COM ISS RETIDO DE VERDADE, e não por invenção: o **art. 24 da Lei Municipal de BH 8.725/2003 obriga a retenção sobre agência de publicidade**. Os clientes dela em BH retêm; os de fora não podem (LC 116 art. 3º). Agência vive de fee mensal recorrente mais projeto avulso, então a receita é estável com picos.",
@@ -442,7 +448,10 @@ export const VIDAS = [
       cnaePrincipal: "5590-6/03",
       grupoAnexo: "III-fixo",
       cltDoSocio: 3000, // CLT parcial: sobra folga ate o teto
-      sociosComProLabore: 3,
+      // 🔄 ERA 3, virou 1 em 16/09. Mesmo caso da P04: o `personas-entrada-me`
+      // diz **administra só o titular**, e a vida pagava aos três.
+      sociosComProLabore: 1,
+      sociosTotal: 3,
     }),
     porque:
       "🔑 ABRIU EM DEZEMBRO, como a persona zero — e é o caso que prova que a virada 31/12 → 01/01 é não-evento. Hospedagem tem alta em dezembro-janeiro e julho. Três sócios, e um deles tem CLT parcial de R$3.000, então sobra folga até o teto.",

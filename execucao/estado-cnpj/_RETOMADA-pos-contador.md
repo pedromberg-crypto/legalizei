@@ -12,30 +12,31 @@ tags: [execucao, checkpoint, retomada, leonan]
 >
 > 🧭 **Como usar este arquivo.** Ele diz **o que já está feito**, **o que é o próximo comando exato**, e **o que NÃO pode ser feito sem fonte**. Não precisa reler os 3 áudios nem a conversa: tudo que a retomada precisa está aqui ou linkado daqui.
 >
-> 🔑 **Estado do repo na parada:** limpo, sem alteração pendente. Último commit **`40f81d1`**.
+> 🔑 **Estado do repo:** limpo. Último commit **`ce076d6`**.
 
 ---
 
 ## ▶️ O PRÓXIMO COMANDO, se você só quer continuar
 
-**Passo 3 — o motor.** Quatro alterações, nesta ordem:
+**Passo 4 — as fontes de `/processos`.** Levar para lá as regras que o motor já aplica.
 
-```
-1. sócio-administrador          ← única que muda guia de cliente
-2. janela vazia → Anexo V
-3. alerta do mês da abertura
-4. salário mínimo com vigência
-```
-
-⚠️ **Antes de tocar em qualquer uma**, rodar a linha de base e guardar o resultado:
+⚠️ **Antes de tocar em qualquer coisa**, a linha de base:
 
 ```bash
 node execucao/motor-fiscal/verificar-apurador.mjs    # 45
 node execucao/motor-fiscal/verificar-piloto.mjs      # 67
 node execucao/estado-cnpj/verificar.mjs              # 14
-node execucao/estado-cnpj/verificar-vidas.mjs        # 32
+node execucao/estado-cnpj/verificar-vidas.mjs        # 50   ← era 32
 node execucao/estado-cnpj/auditar-agregacao.mjs      # 142
 node execucao/estado-cnpj/rodar-ciclo.mjs            # 1.092
+```
+
+🔴 **E os 3 geradores rodam DEPOIS de qualquer edição em `/processos`**, senão a rodada seguinte cai:
+
+```bash
+node execucao/processos/gerar-processos.mjs
+node execucao/processos/gerar-persona.mjs
+node execucao/processos/cru/gerar-cru.mjs
 ```
 
 ---
@@ -68,24 +69,41 @@ Os **três conflitos** foram decididos pelo Pedro e estão em [[2026-09-16-tres-
 
 ---
 
-## ⏳ O QUE FALTA — 5 de 7 passos
+### Passo 3 · MOTOR ✅ *(commits `9315869` `9e1b9d6` `89a4001` `ce076d6`)*
 
-### 🔧 Passo 3 · MOTOR *(o próximo)*
+**Invariantes: 32 → 50.** Os quatro subpassos entregues:
 
-| | O quê | Onde | Hoje |
-|---|---|---|---|
-| **3.1** | 🔴 Pró-labore só para **sócio-administrador** | `_modelo.mjs` · `apurador.mjs` | `sociosComProLabore` é só contagem; não distingue administrador de cotista |
-| **3.2** | Janela vazia → decidir **Anexo V** | `apurador.mjs` · `piloto-pro-labore.mjs` | `fatorR` devolve `anexo: null` e **ninguém trata** |
-| **3.3** | **Alerta interno**: constituiu e faturou no mesmo mês | `estado-cnpj/` | **não existe**, zero ocorrências |
-| **3.4** | **Salário mínimo** com vigência anual | `_tabelas.mjs` | `SALARIO_MINIMO: 1621` constante |
+| | O que ficou | O que isso pegou |
+|---|---|---|
+| **3.1** | recebe quem **administra** | P04 e P14 pagavam a todos. 🔑 E achamos que **concentrar a folha pode custar mais IRRF** — nasceu `ganhoDeIncluirSocio()`, decisão (c) do Pedro |
+| **3.2** | janela vazia → **Anexo V** | o motor **gritava** num caso real. A razão infinita → III segue intocada, com invariante próprio |
+| **3.3** | **alerta interno A1** | `alertas-internos.mjs`. Prazo 15/10, folha R$3.600, valor em jogo R$1.860 |
+| **3.4** | piso **por vigência** | 🔴 bug latente: R$1.518 em dez/2025 **era o mínimo legal e o motor bloqueava** |
 
-🔑 **Só o 3.1 muda guia de cliente.** Os outros três são ausência de funcionalidade, que é mais barato.
+🔒 **Três decisões do passo 3 que a retomada não deve desfazer:**
+- `sociosComProLabore` responde *"quantos recebem"*; `sociosTotal` responde *"de quantos"*. Os dois existem de propósito.
+- O limiar do `ganhoDeIncluirSocio` é **semântico** (só sinaliza quando o rateio derruba IRRF), não um valor em reais. A 1ª versão disparava com 1 centavo.
+- `PREVIDENCIA.SALARIO_MINIMO` ficou como *"o vigente hoje"*, e quem apura competência histórica usa `salarioMinimoDe(mes)`.
 
-**Contexto do 3.2, para não redecidir:** o contador se contradisse entre os áudios 2 e 3. Adotamos a leitura **conservadora** (competência anterior → o 1º mês paga 15,5%) porque errar para o lado estrito **nunca cobra a menos**. A ação do produto é a mesma nas duas leituras.
+⚠️ **Sempre `.toISOString()` numa data de prazo, nunca `String()`.** O motor guarda vencimento em UTC à meia-noite e o fuso local mostra o dia anterior. Se vazar para tela, o cliente lê um prazo a menos.
 
-### 🔧 Passo 4 · Fontes de `/processos`
+---
 
-`_persona.mjs` · `processos-data.mjs` · `cru/*.mjs`. Dependem do passo 3.
+## ⏳ O QUE FALTA — 4 de 7 passos
+
+### 🔧 Passo 4 · Fontes de `/processos` *(o próximo)*
+
+Levar para o desenho de processo o que o motor já aplica. **Os docs são gerados; edite as fontes.**
+
+| Fonte | O que precisa entrar |
+|---|---|
+| `_persona.mjs` | recebe quem administra *(hoje ainda diz "todo sócio recebe")* |
+| `processos-data.mjs` | o alerta interno do mês da abertura · o passo do rateio |
+| `cru/prolabore.mjs` | a pergunta de onboarding · quem recebe · a conta da concentração |
+| `cru/impostos.mjs` | janela vazia → V · DEFIS com multa · as 2 janelas de regularização |
+| `cru/notas.mjs` | dia 5 · cancelar/substituir, nunca alterar |
+
+⚠️ **A trava de persona barra a palavra `benefício` na categoria `prolabore`** — homônimo com "benefício do sócio". Usar *"tributação pelo Anexo III"*. Já documentado no `_persona.mjs`.
 
 ### 🔧 Passo 5 · Rodar os 3 geradores + as travas
 
@@ -110,6 +128,12 @@ Três contradições conhecidas, já levantadas e **ainda não corrigidas**:
 ### 🔧 Passo 7 · Vida nova + rodar as 16 + relatório
 
 A vida que falta: **constitui e fatura no mesmo mês**, com CNAE de Fator R. Nenhuma das 16 exercita isso. Depois, rodar todas e gerar o relatório **antes × depois** que o Pedro pediu.
+
+🔑 **Já existe invariante esperando por ela**, no bloco 8 do `verificar-vidas`:
+
+> ⏳ *"NENHUMA das 16 vidas exercita o caso — falta a vida nova"*
+
+Ele **passa hoje** e vai **falhar** quando a vida entrar. É o sinal de que o passo 7 aconteceu — e é preciso trocá-lo por um que afirme o contrário.
 
 ---
 

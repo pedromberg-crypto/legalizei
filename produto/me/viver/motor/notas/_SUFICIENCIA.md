@@ -103,7 +103,7 @@ Ordem de autoridade. Quando dois discordam, manda o de cima.
 | 5 | `pesquisa/cnae-matriz/cnae-matriz.json` | `anexo_fator_r_grupo` dos 1.332 CNAEs | 🟢 87 certeza |
 | 6 | `produto/funcionalidades/aliquota-e-enquadramento.md` | As 7 regras da alíquota, com grau de confiança | 🟢 |
 | 7 | `pesquisa/cnae-matriz/equacao-viva-camada-2-vars-cnpj.md` | **Quais variáveis o app já captura** | 🟡 27/08, parcial |
-| 8 | `execucao/processos/cru/impostos.mjs` + `prolabore.mjs` | O processo em volta do cálculo | 🟢 fechadas |
+| 8 | `produto/me/viver/processos/cru/impostos.mjs` + `prolabore.mjs` | O processo em volta do cálculo | 🟢 fechadas |
 
 ### 🔴 Duas coisas que já estavam no vault e eu não tinha ligado ao motor
 

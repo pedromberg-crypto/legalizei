@@ -206,11 +206,11 @@ Foi por olhar pela lista dele que `/mais/relatorios` e `/mais/servicos` ficaram 
 ## 5. O arquivo é a fonte. O board e a nota são saída.
 
 ```
-execucao/processos/processos-data.mjs      ← ÚNICA fonte, editada à mão
+produto/me/viver/processos/processos-data.mjs      ← ÚNICA fonte, editada à mão
         │
         └── node gerar-processos.mjs
                 ├── app/src/lib/processos-graph.json   → board /processos (Pedro)
-                └── execucao/processos/PROCESSOS.md    → nota literal (dev + Mauro)
+                └── produto/me/viver/processos/PROCESSOS.md    → nota literal (dev + Mauro)
 ```
 
 🔴 **TRAVA: nunca editar o `.json`, o `.md` gerado, nem desenhar nó direto no `.tsx`.** Mesma regra do `/mapa` e do `flow-data.mjs`. Quem quebrou essa regra no passado foi o `portal-data.mjs`, que ficou **parado de 03/08 a 11/09** enquanto o produto andava.

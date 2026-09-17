@@ -3,13 +3,13 @@ tipo: derivado
 status: vivo
 data: 2026-09-17
 assunto: processos-do-produto
-gerado_por: execucao/processos/gerar-processos.mjs
+gerado_por: produto/me/viver/processos/gerar-processos.mjs
 tags: [execucao, processos, dev, spec]
 ---
 
 # 🔗 Processos — o que precisa acontecer, ponta a ponta
 
-> ⚠️ **Nota gerada.** Não editar à mão: rode `node execucao/processos/gerar-processos.mjs`. A fonte é `processos-data.mjs`. Regras: [[_doutrina-processos]].
+> ⚠️ **Nota gerada.** Não editar à mão: rode `node produto/me/viver/processos/gerar-processos.mjs`. A fonte é `processos-data.mjs`. Regras: [[_doutrina-processos]].
 >
 > **Pra quem é:** o dev que vai implementar e o Mauro, que decide as regras de negócio. O mesmo arquivo alimenta o board visual em `/processos`, que é onde o Pedro valida.
 

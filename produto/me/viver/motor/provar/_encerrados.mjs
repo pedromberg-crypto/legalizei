@@ -38,7 +38,7 @@ export const DOCS_DE_PENDENCIA = [
    * é o `gerar-cru.mjs`, que é de `/processos`. Na mudança de 17/09 ele foi
    * para a pasta de quem o gera, não para a de quem o lê.
    */
-  "execucao/processos/_cobertura-das-vidas.md",
+  "produto/me/viver/processos/_cobertura-das-vidas.md",
 ];
 
 /**
@@ -63,11 +63,11 @@ export const DOCS_DE_PENDENCIA = [
  * desenho**. Varrer só a primeira deixa a segunda ensinando o erro.
  */
 export const FONTES_DE_DESENHO = [
-  "execucao/processos/cru/prolabore.mjs",
-  "execucao/processos/cru/impostos.mjs",
-  "execucao/processos/cru/notas.mjs",
-  "execucao/processos/processos-data.mjs",
-  "execucao/processos/_persona.mjs",
+  "produto/me/viver/processos/cru/prolabore.mjs",
+  "produto/me/viver/processos/cru/impostos.mjs",
+  "produto/me/viver/processos/cru/notas.mjs",
+  "produto/me/viver/processos/processos-data.mjs",
+  "produto/me/viver/processos/_persona.mjs",
 ];
 
 /**

@@ -69,7 +69,7 @@ export const FONTES_QUE_MANDAM = [
   { arquivo: `${MOTOR}/notas/_achados-do-motor.md`, assunto: "os defeitos achados rodando persona" },
   { arquivo: `${MOTOR}/notas/_duvidas-contador.md`, assunto: "o que sobra para o contador" },
   // 🔑 Fora do motor de propósito: quem o escreve é o `gerar-cru.mjs`.
-  { arquivo: "execucao/processos/_cobertura-das-vidas.md", assunto: "o que o elenco não exercita" },
+  { arquivo: "produto/me/viver/processos/_cobertura-das-vidas.md", assunto: "o que o elenco não exercita" },
 ];
 
 /**

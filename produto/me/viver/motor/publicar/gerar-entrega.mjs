@@ -51,7 +51,7 @@
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-import { RAIZ } from "../_raiz.mjs";
+import { RAIZ } from "../../_raiz.mjs";
 import { VIDAS } from "../vidas/vidas.mjs";
 import { retratoDoMes } from "../vidas/_modelo.mjs";
 import {

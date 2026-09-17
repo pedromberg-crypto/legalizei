@@ -8,7 +8,7 @@
  * pessoa vê. A tela vem depois, e é validada CONTRA isto.
  *
  * 🔴 NUNCA editar `processos-graph.json` nem `PROCESSOS.md` à mão: os dois são
- * gerados por `node execucao/processos/gerar-processos.mjs` a partir DESTE
+ * gerados por `node produto/me/viver/processos/gerar-processos.mjs` a partir DESTE
  * arquivo. Regras completas: `_doutrina-processos.md`.
  *
  * ── ANATOMIA DE UM PASSO (5 campos, sempre os mesmos) ───────────────────────

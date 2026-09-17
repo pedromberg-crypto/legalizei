@@ -387,7 +387,7 @@ const DOCS_VIVOS = [
   "produto/me/viver/motor/notas/_achados-do-motor.md",
   "produto/me/viver/motor/notas/_SUFICIENCIA.md",
   // 🔑 Mora em /processos porque é o `gerar-cru.mjs` quem o escreve.
-  "execucao/processos/_cobertura-das-vidas.md",
+  "produto/me/viver/processos/_cobertura-das-vidas.md",
   "_sistema/PENDENCIAS.md",
   "produto/persona-zero/acionaveis.md",
 
@@ -407,7 +407,7 @@ const DOCS_VIVOS = [
   "produto/me/viver/motor/rodar/rodar-ciclo.mjs",
   "produto/me/viver/motor/provar/verificar-vidas.mjs",
   "produto/me/viver/motor/regra/piloto-pro-labore.mjs",
-  "execucao/processos/cru/prolabore.mjs",
+  "produto/me/viver/processos/cru/prolabore.mjs",
 ];
 
 /**

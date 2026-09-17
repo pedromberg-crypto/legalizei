@@ -34,9 +34,9 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { dirname, resolve, relative, basename } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { PROIBIDO_POR_CATEGORIA, MARCADOR_EXCLUSAO, ABERTO } from "./_persona.mjs";
+import { RAIZ } from "../_raiz.mjs";
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
-const RAIZ = resolve(AQUI, "..", "..");
 
 /**
  * Os mesmos alvos da trava de escopo, mas cada um carregando QUAL CATEGORIA
@@ -125,7 +125,7 @@ export function verificarPersona({ silencioso = false } = {}) {
       );
       for (const p of criticas) console.log(`      🔴 ${p.id} — ${p.pergunta}`);
       if (abertas.length > criticas.length) {
-        console.log(`      (as demais em execucao/processos/_persona.mjs, bloco ABERTO)`);
+        console.log(`      (as demais em produto/me/viver/processos/_persona.mjs, bloco ABERTO)`);
       }
     } else {
       console.log("   ✅ persona inteira respondida");
@@ -134,7 +134,7 @@ export function verificarPersona({ silencioso = false } = {}) {
   return true;
 }
 
-/* rodar direto: `node execucao/processos/verificar-persona.mjs`
+/* rodar direto: `node produto/me/viver/processos/verificar-persona.mjs`
    `pathToFileURL` e não `file://${caminho}` — no Windows a URL real tem três
    barras e a comparação ingênua nunca bate, deixando o script sair calado com
    exit 0. Trava que não roda é pior que trava nenhuma (lição de 12/09). */

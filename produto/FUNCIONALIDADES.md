@@ -1,7 +1,7 @@
 ---
 tipo: derivado
 status: vivo
-data: 2026-09-15
+data: 2026-09-17
 assunto: funcionalidades-core-me-simples
 gerado_por: produto/gerar-funcionalidades.mjs
 tags: [produto, funcionalidades, semaforo, mvp]
@@ -282,4 +282,4 @@ Mesmo trilho técnico do P5.7 (Integra Contador), que já transmite o pró-labor
 
 ## Nota de fonte
 
-Gerado de `funcionalidades-data.mjs`. As rotas são validadas contra `app/src/app` (respeitando os route groups) e os ids de passo contra `execucao/processos/processos-data.mjs`. A luz de cada linha é calculada, nunca escrita — é o que separa esta nota do `_catalogo.md` e do campo `cobre` do `portal-data.mjs`, que envelheceram porque o status era digitado.
+Gerado de `funcionalidades-data.mjs`. As rotas são validadas contra `app/src/app` (respeitando os route groups) e os ids de passo contra `produto/me/viver/processos/processos-data.mjs`. A luz de cada linha é calculada, nunca escrita — é o que separa esta nota do `_catalogo.md` e do campo `cobre` do `portal-data.mjs`, que envelheceram porque o status era digitado.

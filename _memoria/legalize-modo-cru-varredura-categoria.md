@@ -27,7 +27,7 @@ registro das de dentro (`fala` vazio derrubava a rodada).
 5. Toda funcionalidade da categoria tem que ser tocada (campo `cobre`).
 6. `ja:` aponta pro passo que já existe no formato completo (P1–P6) — não é duplicata.
 
-**Onde vive:** `execucao/processos/cru/` — fonte por categoria, `gerar-cru.mjs`,
+**Onde vive:** `produto/me/viver/processos/cru/` — fonte por categoria, `gerar-cru.mjs`,
 regras em `_como-funciona.md`. Vista no `/processos` por um grupo próprio no
 seletor. O formato completo **não foi revogado, foi adiado**.
 

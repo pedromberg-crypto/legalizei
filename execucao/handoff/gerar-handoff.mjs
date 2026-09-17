@@ -36,7 +36,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { DADOS, FRONTEIRA } from "./dados-handoff.mjs";
 import { NODES } from "../flow/flow-data.mjs";
-import { PASSOS } from "../processos/processos-data.mjs";
+import { PASSOS } from "../../produto/me/viver/processos/processos-data.mjs";
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
 const HOJE = new Date().toISOString().slice(0, 10);

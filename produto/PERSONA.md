@@ -9,7 +9,7 @@ tags: [produto, persona, escopo, trava]
 
 # 👤 A persona — quem é o cliente, e por consequência o que existe no produto
 
-> ⚠️ **NOTA GERADA.** A fonte é `execucao/processos/_persona.mjs`, que é o arquivo que a trava lê. Editar aqui não muda nada e some na próxima rodada.
+> ⚠️ **NOTA GERADA.** A fonte é `produto/me/viver/processos/_persona.mjs`, que é o arquivo que a trava lê. Editar aqui não muda nada e some na próxima rodada.
 >
 > 🧭 **Autoridade:** manda em *quem é o cliente*. O `_escopo.mjs` manda em *qual é o regime*. São coisas diferentes, e a segunda não pega a primeira.
 
@@ -150,5 +150,5 @@ Ela pega **vocabulário, não raciocínio** — mesma fronteira da trava de esco
 
 ## Links
 - [[FUNCIONALIDADES]] · [[PROCESSOS]] · [[HANDOFF-DADOS]] · [[decisoes-marca]]
-- Fonte: `execucao/processos/_persona.mjs` · Trava: `execucao/processos/verificar-persona.mjs`
-- Irmão: `execucao/processos/_escopo.mjs` (regime, não persona)
+- Fonte: `produto/me/viver/processos/_persona.mjs` · Trava: `produto/me/viver/processos/verificar-persona.mjs`
+- Irmão: `produto/me/viver/processos/_escopo.mjs` (regime, não persona)

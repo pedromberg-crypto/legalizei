@@ -68,9 +68,9 @@ const ETAPAS = [
       "PROCESSOS.md, SAIDAS.md, cru/*.md e PERSONA.md são GERADOS. " +
       "verificar-escopo e verificar-persona vivem dentro destes três.",
     scripts: [
-      "execucao/processos/gerar-processos.mjs",
-      "execucao/processos/gerar-persona.mjs",
-      "execucao/processos/cru/gerar-cru.mjs",
+      "produto/me/viver/processos/gerar-processos.mjs",
+      "produto/me/viver/processos/gerar-persona.mjs",
+      "produto/me/viver/processos/cru/gerar-cru.mjs",
     ],
   },
   {
@@ -130,8 +130,8 @@ const DISPENSADOS = {
   "execucao/flow/verificar-anatomia-mei.mjs": "roda DENTRO do gerar-mapa.mjs",
   "execucao/flow/verificar-fronteira-mei.mjs": "roda DENTRO do gerar-mapa.mjs",
   "execucao/flow/verificar-mei.mjs": "ramo MEI — fora do escopo padrão (ME abrir empresa)",
-  "execucao/processos/verificar-escopo.mjs": "roda DENTRO dos 3 geradores da fase 1",
-  "execucao/processos/verificar-persona.mjs": "roda DENTRO dos 3 geradores da fase 1",
+  "produto/me/viver/processos/verificar-escopo.mjs": "roda DENTRO dos 3 geradores da fase 1",
+  "produto/me/viver/processos/verificar-persona.mjs": "roda DENTRO dos 3 geradores da fase 1",
   "execucao/portal/gerar-mapa-portal.mjs": "portal do cliente, outra frente",
   "execucao/handoff/gerar-handoff.mjs": "pacote para o dev, sob demanda",
   "execucao/gerar-placar-mauro.mjs": "reporte ao sócio — roda no /fechar, não aqui",

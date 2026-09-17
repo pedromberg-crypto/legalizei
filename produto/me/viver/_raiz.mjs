@@ -7,7 +7,7 @@
  * ── POR QUE ISTO EXISTE ────────────────────────────────────────────────────
  *
  * Três scripts do motor precisam alcançar arquivos FORA dele:
- *   · `provar/verificar-encerrados.mjs` ..... lê 5 fontes de `execucao/processos/`
+ *   · `provar/verificar-encerrados.mjs` ..... lê 5 fontes de `produto/me/viver/processos/`
  *   · `publicar/gerar-tabelas-app.mjs` ...... escreve `app/src/lib/fiscal-tabelas.ts`
  *   · `publicar/gerar-entrega.mjs` .......... lê o congelado em `produto/me/devs/`
  *

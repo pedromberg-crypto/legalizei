@@ -26,8 +26,8 @@ nacional proíbe exatamente isso para optante do Simples ME/EPP: a substituiçã
 regra (E0060). O escopo estava escrito e eu não apliquei.
 
 **Por isso virou dado + script, não comentário:**
-- `execucao/processos/_escopo.mjs` — a fonte
-- `execucao/processos/verificar-escopo.mjs` — roda dentro dos **3 geradores** e
+- `produto/me/viver/processos/_escopo.mjs` — a fonte
+- `produto/me/viver/processos/verificar-escopo.mjs` — roda dentro dos **3 geradores** e
   derruba a rodada se vocabulário de fora (ICMS, CFOP, NCM, SEFAZ, DANFE,
   Lucro Presumido…) aparecer sem a marca `FORA DO ESCOPO` na mesma linha
 - linha no `CLAUDE.md` e selo visível na barra do `/processos`

@@ -28,7 +28,7 @@ tags: [execucao, lancamento, mlp, checklist]
 | 3 | ✅ | **Stone contratada** | Meio de pagamento fechado |
 | 4 | ✅ | **Arquitetura do Léo desenhada e alimentada** | Vault isolado, 12 arquivos, CNAEs como tool com gate de confiança |
 | 5 | ✅ | **APIs resolvidas** | Públicas sem custo de contratação + **InfoSimples contratada e com crédito** |
-| 6 | 🟡 | **Desenho minucioso dos processos internos** | 2 de 8 categorias fechadas (Notas · Impostos). `execucao/processos/cru/` |
+| 6 | 🟡 | **Desenho minucioso dos processos internos** | 2 de 8 categorias fechadas (Notas · Impostos). `produto/me/viver/processos/cru/` |
 | 7 | 🟡 | **Adaptação das telas depois do levantamento** | Ver **o que reaproveita · o que corrige · o que cria do zero** pras funcionalidades core rodarem redondas. **Depende do 6** |
 | 8 | 🟡 | **Contrato com a advogada** | Minuta enviada; ela adapta com base no da Contabilizei. Depende da entrega dela |
 | 9 | 🟡 | **Certificadora parceira** | Existe, ainda não conversada. Plano B: a que a Legalize Group já usa nos atenderia no início, e dá pra passar leads avulsos como clientes comuns da contabilidade |
@@ -95,4 +95,4 @@ A [[_matriz-dependencia]] registra que **emitir a guia do DAS (PGDAS-D) sai pelo
 
 ## Links
 - [[FUNCIONALIDADES]] · [[_matriz-dependencia]] · [[HANDOFF-DADOS]] · [[decisoes-marca]]
-- Processos: `execucao/processos/cru/` (modo cru, por categoria) · [[PROCESSOS]] (formato completo, P1–P6)
+- Processos: `produto/me/viver/processos/cru/` (modo cru, por categoria) · [[PROCESSOS]] (formato completo, P1–P6)

@@ -8,7 +8,7 @@
  *
  * 🔒 ESCOPO: só III e V. O Anexo IV existe no vault mas está FORA DO ESCOPO
  * do produto (lista fechada: construção, advocacia, limpeza, vigilância), e o
- * Anexo I (comércio) também. Ver `execucao/processos/_escopo.mjs`.
+ * Anexo I (comércio) também. Ver `produto/me/viver/processos/_escopo.mjs`.
  *
  * ⚠️ NADA AQUI É CALCULADO. Quem calcula é o `apurador.mjs`. Esta separação
  * existe para que trocar uma alíquota (a lei muda) nunca exija ler lógica.

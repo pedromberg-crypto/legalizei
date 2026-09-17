@@ -4,7 +4,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  *   processos-data.mjs  (única coisa que se edita à mão)
  *        ├── app/src/lib/processos-graph.json  → board /processos, pro Pedro
- *        └── execucao/processos/PROCESSOS.md   → nota literal, pro dev e o Mauro
+ *        └── produto/me/viver/processos/PROCESSOS.md   → nota literal, pro dev e o Mauro
  *
  * Os dois nunca divergem porque nenhum dos dois é escrito à mão. Mesma
  * disciplina do `flow/gerar-mapa.mjs`.
@@ -25,12 +25,18 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { PROCESSOS, PASSOS, ARESTAS, TRILHAS } from "./processos-data.mjs";
 import { PROPOSTAS } from "./processos-propostas.mjs";
-import { DADOS } from "../handoff/dados-handoff.mjs";
+import { DADOS } from "../../../../execucao/handoff/dados-handoff.mjs";
 import { verificarEscopo } from "./verificar-escopo.mjs";
 import { verificarPersona } from "./verificar-persona.mjs";
+import { RAIZ } from "../_raiz.mjs";
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
-const RAIZ = resolve(AQUI, "..", "..");
+/**
+ * 🔑 A raiz vem do helper desde 17/09, não de `..` contados à mão. Na mudança
+ * desta pasta para `produto/me/viver/` a profundidade saiu de 2 para 4, e um
+ * `..` a menos não estoura — aponta para um caminho que não existe, e o script
+ * decide sozinho que não há nada para ler.
+ */
 const SAIDA_JSON = resolve(RAIZ, "app/src/lib/processos-graph.json");
 const SAIDA_MD = resolve(AQUI, "PROCESSOS.md");
 
@@ -753,13 +759,13 @@ L.push("tipo: derivado");
 L.push("status: vivo");
 L.push(`data: ${grafo.gerado}`);
 L.push("assunto: processos-do-produto");
-L.push("gerado_por: execucao/processos/gerar-processos.mjs");
+L.push("gerado_por: produto/me/viver/processos/gerar-processos.mjs");
 L.push("tags: [execucao, processos, dev, spec]");
 L.push("---");
 L.push("");
 L.push("# 🔗 Processos — o que precisa acontecer, ponta a ponta");
 L.push("");
-L.push("> ⚠️ **Nota gerada.** Não editar à mão: rode `node execucao/processos/gerar-processos.mjs`. A fonte é `processos-data.mjs`. Regras: [[_doutrina-processos]].");
+L.push("> ⚠️ **Nota gerada.** Não editar à mão: rode `node produto/me/viver/processos/gerar-processos.mjs`. A fonte é `processos-data.mjs`. Regras: [[_doutrina-processos]].");
 L.push(">");
 L.push("> **Pra quem é:** o dev que vai implementar e o Mauro, que decide as regras de negócio. O mesmo arquivo alimenta o board visual em `/processos`, que é onde o Pedro valida.");
 L.push("");
@@ -847,7 +853,7 @@ T.push("tipo: derivado");
 T.push("status: vivo");
 T.push("data: " + grafo.gerado);
 T.push("assunto: saidas-por-decisao");
-T.push("gerado_por: execucao/processos/gerar-processos.mjs");
+T.push("gerado_por: produto/me/viver/processos/gerar-processos.mjs");
 T.push("tags: [execucao, processos, cobertura, dev]");
 T.push("---");
 T.push("");
@@ -993,9 +999,9 @@ writeFileSync(SAIDA_MD, L.join("\n"), "utf8");
  * `PROCESSOS_LIMITE=1` força o aviso, pra conferir que ele ainda aparece.
  */
 const LIMITE = Number(process.env.PROCESSOS_LIMITE ?? 3);
-const DOUTRINA = "execucao/processos/_doutrina-processos.md";
+const DOUTRINA = "produto/me/viver/processos/_doutrina-processos.md";
 const TERRITORIO = [
-  "execucao/processos/processos-data.mjs",
+  "produto/me/viver/processos/processos-data.mjs",
   "app/src/app/processos",
   "app/src/components/processos",
   "app/src/lib/processos-medidas.ts",

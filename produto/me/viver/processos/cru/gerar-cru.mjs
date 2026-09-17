@@ -30,9 +30,9 @@ import { verificarEscopo } from "../verificar-escopo.mjs";
 import { verificarPersona } from "../verificar-persona.mjs";
 import { gerarPersona } from "../gerar-persona.mjs";
 import { ESCOPO } from "../_escopo.mjs";
+import { RAIZ } from "../../_raiz.mjs";
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
-const RAIZ = resolve(AQUI, "..", "..", "..");
 const HOJE = new Date().toISOString().slice(0, 10);
 
 const MATRIZ_INICIO =
@@ -144,7 +144,7 @@ ${MATRIZ_FIM}`;
    * Quem escreve é este gerador, e doc gerado mora com o gerador — não com
    * quem o lê.
    */
-  const doc = resolve(RAIZ, "execucao/processos/_cobertura-das-vidas.md");
+  const doc = resolve(RAIZ, "produto/me/viver/processos/_cobertura-das-vidas.md");
   const texto = readFileSync(doc, "utf8");
   const escapar = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
@@ -224,13 +224,13 @@ tipo: derivado
 status: vivo
 data: ${HOJE}
 assunto: cru-${CATEGORIA.id}
-gerado_por: execucao/processos/cru/gerar-cru.mjs
+gerado_por: produto/me/viver/processos/cru/gerar-cru.mjs
 tags: [execucao, processos, cru, ${CATEGORIA.id}]
 ---
 
 # ${CATEGORIA.emoji} ${CATEGORIA.nome} — varredura crua
 
-> ⚠️ **Nota gerada.** Não editar à mão: \`node execucao/processos/cru/gerar-cru.mjs ${CATEGORIA.id}\`. A fonte é \`cru/${CATEGORIA.id}.mjs\`. Regras do modo: [[_como-funciona]].
+> ⚠️ **Nota gerada.** Não editar à mão: \`node produto/me/viver/processos/cru/gerar-cru.mjs ${CATEGORIA.id}\`. A fonte é \`cru/${CATEGORIA.id}.mjs\`. Regras do modo: [[_como-funciona]].
 >
 > 🥩 **Modo cru:** aqui só mora **o que precisa acontecer** e **o que decide o caminho**. Sem quem executa, sem tela, sem API, sem semáforo — tudo isso é a fase seguinte, e adiar é o ponto.
 

@@ -3,13 +3,13 @@ tipo: derivado
 status: vivo
 data: 2026-09-17
 assunto: cru-notas
-gerado_por: execucao/processos/cru/gerar-cru.mjs
+gerado_por: produto/me/viver/processos/cru/gerar-cru.mjs
 tags: [execucao, processos, cru, notas]
 ---
 
 # 🧾 Notas fiscais — varredura crua
 
-> ⚠️ **Nota gerada.** Não editar à mão: `node execucao/processos/cru/gerar-cru.mjs notas`. A fonte é `cru/notas.mjs`. Regras do modo: [[_como-funciona]].
+> ⚠️ **Nota gerada.** Não editar à mão: `node produto/me/viver/processos/cru/gerar-cru.mjs notas`. A fonte é `cru/notas.mjs`. Regras do modo: [[_como-funciona]].
 >
 > 🥩 **Modo cru:** aqui só mora **o que precisa acontecer** e **o que decide o caminho**. Sem quem executa, sem tela, sem API, sem semáforo — tudo isso é a fase seguinte, e adiar é o ponto.
 

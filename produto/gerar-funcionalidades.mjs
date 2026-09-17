@@ -33,9 +33,9 @@ import { writeFileSync, existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { FUNCIONALIDADES, SECOES } from "./funcionalidades-data.mjs";
-import { PASSOS } from "../execucao/processos/processos-data.mjs";
-import { verificarEscopo } from "../execucao/processos/verificar-escopo.mjs";
-import { verificarPersona } from "../execucao/processos/verificar-persona.mjs";
+import { PASSOS } from "./me/viver/processos/processos-data.mjs";
+import { verificarEscopo } from "./me/viver/processos/verificar-escopo.mjs";
+import { verificarPersona } from "./me/viver/processos/verificar-persona.mjs";
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
 const RAIZ = resolve(AQUI, "..");
@@ -172,7 +172,7 @@ const usados = new Set(enriquecidas.flatMap((f) => f.processo ?? []));
 const soltos = PASSOS.filter((p) => p.id.includes(".") && !usados.has(p.id));
 md += `\n**${usados.size} dos ${PASSOS.filter((p) => p.id.includes(".")).length} passos** realizam alguma funcionalidade da lista. Os outros ${soltos.length} são mecânica interna (decisões, esperas, gates, passos que só a casa vê).\n`;
 
-md += `\n## Nota de fonte\n\nGerado de \`funcionalidades-data.mjs\`. As rotas são validadas contra \`app/src/app\` (respeitando os route groups) e os ids de passo contra \`execucao/processos/processos-data.mjs\`. A luz de cada linha é calculada, nunca escrita — é o que separa esta nota do \`_catalogo.md\` e do campo \`cobre\` do \`portal-data.mjs\`, que envelheceram porque o status era digitado.\n`;
+md += `\n## Nota de fonte\n\nGerado de \`funcionalidades-data.mjs\`. As rotas são validadas contra \`app/src/app\` (respeitando os route groups) e os ids de passo contra \`produto/me/viver/processos/processos-data.mjs\`. A luz de cada linha é calculada, nunca escrita — é o que separa esta nota do \`_catalogo.md\` e do campo \`cobre\` do \`portal-data.mjs\`, que envelheceram porque o status era digitado.\n`;
 
 writeFileSync(resolve(AQUI, "FUNCIONALIDADES.md"), md, "utf8");
 console.log(`✅ FUNCIONALIDADES.md · ${FUNCIONALIDADES.length} itens · ${placar(enriquecidas)}`);

@@ -8,7 +8,7 @@ tags: [sistema, pendencia, decisao, fila, meta]
 
 # ☎️ Tudo que está aberto — a lista de quem chamar
 
-> ⚠️ **Esta nota é uma VISTA, não uma quarta fonte.** Ela reúne num lugar só o que já vive em [[acionaveis]], [[fila-validacao-humana]], `execucao/processos/_persona.mjs` e nas evidências. **A fonte continua sendo cada um deles** — se divergir, quem manda é a origem. Existe porque o Pedro precisa ver a lista inteira para chamar as pessoas certas, e isso estava espalhado em quatro lugares.
+> ⚠️ **Esta nota é uma VISTA, não uma quarta fonte.** Ela reúne num lugar só o que já vive em [[acionaveis]], [[fila-validacao-humana]], `produto/me/viver/processos/_persona.mjs` e nas evidências. **A fonte continua sendo cada um deles** — se divergir, quem manda é a origem. Existe porque o Pedro precisa ver a lista inteira para chamar as pessoas certas, e isso estava espalhado em quatro lugares.
 >
 > **Legenda:** 🔴 **bloqueia** algo hoje · 🟡 **espera pessoa** (não bloqueia, mas trava decisão) · ⚪ **construção nossa**, é só fazer · ✅ **resolvido** · 🔄 **revisto** — estava fechado e a decisão mudou · ⏸️ **item velho**, a realidade do código já mudou e só falta riscar.
 >

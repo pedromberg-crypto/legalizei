@@ -99,9 +99,9 @@ Levar para o desenho de processo o que o motor já aplica. **Os docs são gerado
 ### 🔧 Passo 5 · Rodar os 3 geradores + as travas
 
 ```bash
-node execucao/processos/gerar-processos.mjs
-node execucao/processos/gerar-persona.mjs
-node execucao/processos/cru/gerar-cru.mjs
+node produto/me/viver/processos/gerar-processos.mjs
+node produto/me/viver/processos/gerar-persona.mjs
+node produto/me/viver/processos/cru/gerar-cru.mjs
 ```
 
 ⚠️ **PROCESSOS.md, SAIDAS.md, cru/*.md e produto/PERSONA.md são GERADOS.** Não editar à mão.

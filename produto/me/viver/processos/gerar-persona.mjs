@@ -19,9 +19,10 @@ import { writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { TRAVADO, ABERTO, PERSONA_ZERO, PROIBIDO_POR_CATEGORIA } from "./_persona.mjs";
+import { RAIZ } from "../_raiz.mjs";
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
-const SAIDA = resolve(AQUI, "..", "..", "produto", "PERSONA.md");
+const SAIDA = resolve(RAIZ, "produto", "PERSONA.md");
 
 const hoje = () => new Date().toISOString().slice(0, 10);
 
@@ -42,7 +43,7 @@ export function gerarPersona({ silencioso = false } = {}) {
   L.push("# 👤 A persona — quem é o cliente, e por consequência o que existe no produto");
   L.push("");
   L.push(
-    "> ⚠️ **NOTA GERADA.** A fonte é `execucao/processos/_persona.mjs`, que é o arquivo que a trava lê. Editar aqui não muda nada e some na próxima rodada.",
+    "> ⚠️ **NOTA GERADA.** A fonte é `produto/me/viver/processos/_persona.mjs`, que é o arquivo que a trava lê. Editar aqui não muda nada e some na próxima rodada.",
   );
   L.push(">");
   L.push(
@@ -169,8 +170,8 @@ export function gerarPersona({ silencioso = false } = {}) {
   L.push("");
   L.push("## Links");
   L.push("- [[FUNCIONALIDADES]] · [[PROCESSOS]] · [[HANDOFF-DADOS]] · [[decisoes-marca]]");
-  L.push("- Fonte: `execucao/processos/_persona.mjs` · Trava: `execucao/processos/verificar-persona.mjs`");
-  L.push("- Irmão: `execucao/processos/_escopo.mjs` (regime, não persona)");
+  L.push("- Fonte: `produto/me/viver/processos/_persona.mjs` · Trava: `produto/me/viver/processos/verificar-persona.mjs`");
+  L.push("- Irmão: `produto/me/viver/processos/_escopo.mjs` (regime, não persona)");
   L.push("");
 
   writeFileSync(SAIDA, L.join("\r\n"), "utf8");

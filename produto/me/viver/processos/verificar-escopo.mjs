@@ -30,9 +30,9 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { dirname, resolve, relative } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { FORA_DO_VOCABULARIO, MARCADOR_EXCLUSAO } from "./_escopo.mjs";
+import { RAIZ } from "../_raiz.mjs";
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
-const RAIZ = resolve(AQUI, "..", "..");
 
 /** Os arquivos onde o DESENHO mora. Evidência e pesquisa ficam de fora: lá o
  *  vocabulário de outro regime é legítimo, é o objeto de estudo. */
@@ -87,7 +87,7 @@ export function verificarEscopo({ silencioso = false } = {}) {
   return true;
 }
 
-/* rodar direto: `node execucao/processos/verificar-escopo.mjs`
+/* rodar direto: `node produto/me/viver/processos/verificar-escopo.mjs`
    ⚠️ `file://${caminho}` NÃO funciona no Windows: o caminho vem como
    `C:\...` e a URL real tem três barras (`file:///C:/...`), então a
    comparação nunca batia e o script saía calado com exit 0 — trava que não

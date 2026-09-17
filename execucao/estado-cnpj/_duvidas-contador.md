@@ -1199,6 +1199,7 @@ No 1º mês não há histórico, então a lei manda **projetar**: acumulado = re
 | **até o 18-20** | ⚖️ | Emitimos o DARF do INSS e do IR do sócio. 🔑 **Antecipa** se cair em fim de semana | `Integra-Sicalc` |
 | **até o 20-21** | ⚖️ | Apuramos, transmitimos o PGDAS-D e emitimos a guia do DAS. 🔑 **Prorroga** se cair em fim de semana | `Integra-SN` |
 | **até o vencimento** | 👤 | 🔴 **Pagar a guia é ele.** Não temos como pagar por ele, e não existe débito automático de DAS | — |
+| **na emissão da nota** | 🏠 | 🆕 **Se a empresa faturar no mês em que abriu, dispara alerta INTERNO** e a casa liga. Não é tela do cliente ⇢ **C4** | motor |
 | **depois** | 🏠 | Conferimos se a guia anterior foi paga; se venceu, recalculamos com multa e juros | `Integra-Sitfis` |
 | **31/03** | ⚖️ | DEFIS do ano anterior. 🔴 **Morre em 2027**, vira campo do PGDAS-D | `Integra-SN` |
 
@@ -1210,7 +1211,7 @@ O pró-labore é calculado e ajustado por nós **todo mês, por padrão**. O cli
 
 Mas **ele pode desligar e digitar o próprio valor**. Se fizer isso, o app mostra **o efeito com os números dele**, não um aviso genérico: *"para seguir no Anexo III você precisa pagar pelo menos R$X este mês. Com o valor que você digitou, a alíquota sai de 6% para 15,5%, cerca de R$Y a mais por mês — e começa na competência Z."*
 
-🔴 **Isso muda de quem é a responsabilidade, e o documento marca isso em cada linha.** Quando uma empresa abaixo cai para o Anexo V, **não foi falha de cálculo nosso**: foi escolha dela, tomada depois de ver a conta. O único bloqueio que aplicamos é o legal — pró-labore abaixo do salário mínimo o app não aceita. ⇢ **A4**
+🔴 **Isso muda de quem é a responsabilidade, e o documento marca isso em cada linha.** Quando uma empresa abaixo **perde o benefício do Anexo III**, **não foi falha de cálculo nosso**: foi escolha dela, tomada depois de ver a conta. O único bloqueio que aplicamos é o legal — pró-labore abaixo do salário mínimo **da competência** o app não aceita. ⇢ **A4**
 
 ⚠️ **E é aqui que ele pode nos ajudar:** queremos saber se avisar e deixar passar é a postura certa, ou se em algum desses casos o escritório **recusaria** executar.
 
@@ -1224,7 +1225,7 @@ Mas **ele pode desligar e digitar o próprio valor**. Se fizer isso, o app mostr
 |---|:---:|---|---|
 | **Dia 1** | 🏠 | Constituição concluída, CNPJ na mão. Emitimos a **inscrição municipal** e as **licenças**, e publicamos os documentos na plataforma | ⇢ **C1 C2** |
 | **Dia 1** | ⚖️ | Certificado digital emitido pela parceira. **Sem ele o app não libera a emissão de nota** — não existe procuração na NFS-e | — |
-| **Dia 1** | 🏢 | 🔑 **Definimos o pró-labore já na 1ª competência.** Não é exigência legal — é o que a **Contabilizei fez** na conta real que analisamos, e nós copiamos. Trava o Fator R desde o começo ⇢ **🏢2** | ⇢ **A3 A5** |
+| **Dia 1** | 🏠 | 🔄 **Perguntamos quando começar o pró-labore:** *"desde a constituição, ou a partir da 1ª nota?"*. **Default: aguardar a 1ª nota.** ⚠️ Até 16/09 nós **forçávamos** desde a 1ª competência, copiando a Contabilizei; o contador mostrou que forçar gera guia de INSS para quem não faturou ⇢ **A5 · 🏢2** | ⇢ **A3 A5** |
 | mar–abr | ⚖️ | Dois meses **sem faturar**. Mesmo assim transmitimos PGDAS-D e a folha do sócio: **mês sem receita não pausa obrigação** | ⇢ **B6** |
 | **mai** | 🏠 | 1ª nota: R$18.000. 🔑 **O nosso cálculo pede R$1.798 no mínimo e sugere R$2.158.** Parece pouco e não é erro: a janela tem 3 meses, a receita dela é só os R$18.000 deste mês, e ele **já tem R$3.242 de folha paga** em março e abril — dois meses sem faturar em que o mínimo saiu igual. A conta é `28% × 18.000 − 3.242 = 1.798`, e `30% × 18.000 − 3.242 = 2.158` | ⇢ **conta 7** |
 | 🔴 **mai** | 👤 | **Ele DESLIGA o automático e digita R$1.621**, o mínimo legal. Quer tirar menos da empresa. Fica **R$177 abaixo** do que a conta pedia | ⇢ **A2** |
@@ -1235,7 +1236,7 @@ Mas **ele pode desligar e digitar o próprio valor**. Se fizer isso, o app mostr
 | **31/03/2027** | ⚖️ | DEFIS do ano-calendário 2026 | ⇢ **A9** |
 | **Total** | — | Faturou **R$108.000** · pagou **R$15.030** de DAS · **5 meses no Anexo V** | |
 
-🔑 **É a persona que justifica o produto:** com o nosso piloto ligado desde o mês 1, ela **nunca** teria ido ao Anexo V. A diferença é de **R$6.795** no bolso do cliente — já descontado o DARF a mais que o pró-labore maior gera.
+🔑 **É a persona que justifica o produto:** com o nosso piloto ligado desde o mês 1, ela **nunca** teria perdido o benefício do Anexo III. A diferença é de **R$6.795** no bolso do cliente — já descontado o DARF a mais que o pró-labore maior gera.
 
 ⚠️ **Esse R$6.795 é simulação nossa, não histórico.** É o mesmo motor rodando a mesma empresa com o automático ligado. Os R$15.030 de DAS acima, esses aconteceram.
 
@@ -1312,7 +1313,7 @@ Mas **ele pode desligar e digitar o próprio valor**. Se fizer isso, o app mostr
 | **jul/2025** | 🏠 | 1ª nota. 🔑 O automático sugere **R$1.621** — que por acaso é o mínimo, porque a janela ainda tem 2 meses. **A divergência só começa em agosto**, quando ele pede R$2.758 | — |
 | 🔴 **jul/2025** | 👤 | **Ele desliga o automático logo no começo** e fixa o pró-labore no mínimo, para tirar o máximo como lucro. Avisamos com os números dele; ele mantém | ⇢ **A2** |
 | jul/2025 → | 👤 | Cresce de R$8 mil a **R$42 mil/mês** e **nunca religa o automático** — a cada mês o aviso reaparece e ele segue | ⇢ **A5** |
-| **set/2025** | ⚖️ | 🔴 Cai para o **Anexo V** e **fica lá 19 dos 22 meses**. **Escolha dele, sustentada mês a mês** | ⇢ **A3** |
+| **set/2025** | ⚖️ | 🔴 **Perde o benefício do Anexo III** e fica tributado pelo **V em 19 dos 22 meses**. **Escolha dele, sustentada mês a mês** | ⇢ **A3** |
 | **fev/2026** | ⚖️ | O acumulado chega a **R$187.500** e ele entra na **2ª faixa**: a alíquota efetiva começa a subir de 15,5% rumo a 16,75%, sem nunca chegar lá | — |
 | **31/03/2026** | ⚖️ | DEFIS de 2025 | ⇢ **A9** |
 | **jun/2026** | ⚖️ | 13º mês: a regra do acumulado troca para soma dos 12 | ⇢ **C4** |
@@ -1336,18 +1337,27 @@ Mas **ele pode desligar e digitar o próprio valor**. Se fizer isso, o app mostr
 
 ---
 
-## 🏢 O que hoje é ESPELHO da Contabilizei — e precisa da sua decisão
+## 🏢 O que ERA espelho da Contabilizei — os quatro, decididos
 
-> 🔴 **A pergunta desta seção é uma só, repetida quatro vezes:** *seguimos a data deles, ou fixamos a nossa em cima da deles?* Em todos os casos a lei permite as duas coisas — por isso a decisão é de método, não de norma, e é sua a palavra que falta.
+> ✅ **Esta seção foi respondida em 16/09.** Ela nasceu com quatro perguntas de método — *seguimos a data deles, ou fixamos a nossa?* — e saiu da reunião com os quatro fechados. **Nenhum ficou como imitação.**
+>
+> | | O que decidimos | |
+> |:---:|---|---|
+> | **🏢1** | revisar todo mês | ✅ **seguimos**, e ele confirmou que não há alternativa |
+> | **🏢2** | lançar já na abertura | 🔄 **divergimos** — agora perguntamos ao cliente |
+> | **🏢3** | lançar R$100 abaixo do mínimo | ❌ **recusamos** — é defeito deles |
+> | **🏢4** | zerar em mês sem receita | ✅ coerente, e o nosso piloto faz melhor |
+>
+> 🔑 **O placar que importa:** dos quatro, **só um continuamos copiando**. Dois viraram decisão nossa e um foi recusado. A tabela abaixo fica como registro de onde cada resposta veio.
 >
 > 🔑 **De onde saiu esta lista.** Não é o que eles **dizem** no site: é o que a plataforma deles **fez**, mês a mês, numa empresa real cuja conta nós auditamos — CNPJ aberto em **12/12/2025**, acompanhado até agosto/2026. ⚠️ **É UMA empresa.** Não sabemos se é política da casa ou se foi o contador daquele cliente.
 
-| | O que eles fazem | O que vimos na conta real | A nossa dúvida |
+| | O que eles fazem | O que vimos na conta real | ✅ A resposta que ele deu |
 |---|---|---|---|
-| **🏢1** | **Revisam o pró-labore todo mês** | O valor mudou sozinho: **R$3.260 → R$3.360 → R$3.360 → R$1.621**, sem o cliente pedir | Mensal é a cadência certa, ou dá para revisar **por trimestre** e só antecipar quando o Fator R se aproxima dos 28%? Mensal gera 12 eventos de eSocial por ano por sócio |
-| **🏢2** | **Lançam pró-labore já no mês da abertura** | CNPJ aberto em **12/12/2025** e dezembro já saiu com pró-labore — **19 dias de empresa**, com a receita ainda em zero | Começar no mês 1 é o certo? Ou espera-se a **1ª nota**? 🔑 Isso muda o Fator R dos 12 primeiros meses de toda empresa nova ⇢ **A5** |
-| **🏢3** | **Lançaram R$100 no mês da abertura** | Dezembro/2025 saiu com **R$100** de pró-labore, muito abaixo do salário mínimo | 🔴 É prática aceita ou é defeito deles? **Nós bloqueamos** abaixo do mínimo — e se estivermos errados, estamos travando algo legal ⇢ **A4** |
-| **🏢4** | **Zeram o pró-labore em mês sem receita** | Janeiro/2026 saiu com **R$0,00**; de maio a agosto, com o faturamento em zero, caiu para o mínimo | Zerar é aceitável, ou quebra a condição de segurado obrigatório do sócio? E zerar **derruba o Fator R** dos 12 meses seguintes ⇢ **A5** |
+| **🏢1** | **Revisam o pró-labore todo mês** | O valor mudou sozinho: **R$3.260 → R$3.360 → R$3.360 → R$1.621**, sem o cliente pedir | ✅ **SEGUIMOS.** *"Nós também vamos fazer todo mês. Não tem como te correr."* E ele explicou por quê: *"se eu calculo 28% do mês, eu também estou calculando os 12 últimos"* — a janela é móvel, então quem não revisa mensalmente descobre tarde |
+| **🏢2** | **Lançam pró-labore já no mês da abertura** | CNPJ aberto em **12/12/2025** e dezembro já saiu com pró-labore — **19 dias de empresa**, com a receita ainda em zero | 🔄 **DIVERGIMOS, e viramos a pergunta para o cliente.** A lei manda desde a constituição (*"em tese ele já é contribuinte obrigatório"*), mas forçar cria guia de INSS para quem não faturou: *"você me mandou uma guia de R$178 e eu não tive faturamento. Tem muito, em todos os escritórios"*. **Default: aguardar a 1ª nota** ⇢ **A5** |
+| **🏢3** | **Lançaram R$100 no mês da abertura** | Dezembro/2025 saiu com **R$100** de pró-labore, muito abaixo do salário mínimo | ❌ **RECUSAMOS — é defeito deles, com intenção declarada.** *"Os R$100 ali era só **para ele não falar que não gerou nada**."* E não servia para nada: *"28% de 10 mil é 2.800, **os seus R$100 não iam fazer diferença**"*. 🔑 Era o único item em que suspeitávamos estar errados. **O nosso bloqueio fica** ⇢ **A4** |
+| **🏢4** | **Zeram o pró-labore em mês sem receita** | Janeiro/2026 saiu com **R$0,00**; de maio a agosto, com o faturamento em zero, caiu para o mínimo | ✅ **COERENTE, e o nosso piloto faz melhor.** Eles zeraram porque só começaram na 1ª nota. 🔑 Uma vez ligado, o pró-labore **não para** — *"o ideal seria manter"* —, porque quem esquece de emitir e dobra a nota no mês seguinte precisaria de folha dobrada. ⚠️ E zerar **não derruba** o Fator R: mês sem faturar com folha paga **empurra a razão para cima** ⇢ **A5** |
 
 ⚠️ **Uma quinta dependência, que não é data e por isso não entra na tabela:** a **tabela do IRRF** que usamos foi capturada da plataforma deles em 14/09 e conferida contra uma guia real. Ela bate, mas queremos a fonte oficial ratificada pelo senhor, não o print do concorrente. 🔑 E já achamos **uma divergência**: a calculadora deles cobra **R$93,76** num caso em que, aplicado o redutor do art. 3º-A da Lei 15.270/2025, o imposto é **R$0,00**. Ou eles não aplicam o redutor, ou nós o aplicamos onde não cabe. ⇢ **A1**
 
@@ -1631,18 +1641,30 @@ Duas decisões nossas que valem confirmação:
 
 ## 🔧 Decisões que ainda precisam virar código ou tela
 
-| | O quê | Onde |
-|---|---|---|
-| **1** | Pró-labore só para **sócio-administrador** | motor + tela |
-| **2** | Parar de deduzir o rateio do **percentual de participação** | tela |
-| **3** | Campo *"já contribuo ao INSS em outro vínculo"* | tela |
-| **4** | **Alerta interno** quando constitui e fatura no mesmo mês | motor |
-| **5** | Janela vazia → decidir **Anexo V** em vez de `null` | motor |
-| **6** | **Salário mínimo** com vigência anual, não constante | motor |
-| **7** | Pergunta de onboarding do pró-labore | tela |
-| **8** | CNAE secundário travado em **5** · **LTDA** sempre · **10 m²** | tela |
-| **9** | Robô roda no **dia 6**; janela de nota até o dia 5 | motor |
-| **10** | Trocar *"cai para o Anexo V"* por *"perde o benefício do Anexo III"* | copy, tudo |
+| | O quê | Onde | Estado |
+|---|---|---|---|
+| **1** | Pró-labore só para **sócio-administrador** | motor + tela | ✅ **motor feito** · falta tela |
+| **2** | Parar de deduzir o rateio do **percentual de participação** | tela | ⏳ tela |
+| **3** | Campo *"já contribuo ao INSS em outro vínculo"* | tela | ⏳ tela |
+| **4** | **Alerta interno** quando constitui e fatura no mesmo mês | motor | ✅ **feito** `alertas-internos.mjs` |
+| **5** | Janela vazia → decidir **Anexo V** em vez de `null` | motor | ✅ **feito** |
+| **6** | **Salário mínimo** com vigência anual, não constante | motor | ✅ **feito** `salarioMinimoDe()` |
+| **7** | Pergunta de onboarding do pró-labore | tela | ✅ **desenhada** *(nó `L0`)* · falta tela |
+| **8** | CNAE secundário travado em **5** · **LTDA** sempre · **10 m²** | tela | ⏳ tela |
+| **9** | Robô roda no **dia 6**; janela de nota até o dia 5 | motor | ⏳ |
+| **10** | Trocar *"cai para o Anexo V"* por *"perde o benefício do Anexo III"* | copy, tudo | ✅ **feito** · zero ocorrências nas fontes |
+
+🔑 **O que sobrou é quase todo TELA**, e tela é o que o Pedro revisa por `/apresentacao` e `/mapa`. O motor e o desenho de processo estão em dia com a reunião.
+
+⚠️ **Menos o item 9**, que é motor e ficou aberto de propósito: o dia de corte das alterações pagas (10 ou 12) **não foi decidido**.
+
+## 🆕 E uma conta nova que a reunião não pediu, mas produziu
+
+O **`ganhoDeIncluirSocio()`**. Quando a regra do sócio-administrador concentra a folha em pouca gente, o IRRF progressivo pode cobrar mais do que o rateio cobrava. O motor mede isso e a tela pode perguntar — sobre **fato**, nunca sobre conveniência:
+
+> *"algum outro sócio também trabalha na empresa?"*
+
+📌 Medido na P04: folha de R$5.600 custa **R$616,00** repartida entre dois e **R$844,86** num sócio só. Nos outros meses dela, **zero de diferença**.
 
 ## Links
 [[2026-09-16-leonan-audio-1-bloco-a-e-c]] · [[2026-09-16-leonan-audio-2-bloco-d]] · [[2026-09-16-leonan-audio-3-bloco-d-e-e]] · [[2026-09-16-tres-conflitos-do-contador-resolvidos]] · [[PENDENCIAS]] · [[_achados-do-motor]] · [[_encerrados]] · [[ciclo-do-cnpj]]

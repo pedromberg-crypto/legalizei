@@ -31,40 +31,129 @@ tags: [produto, ux, copy, flow, auditoria, redundancia, negativa]
 <!-- INDICE:INI -->
 | # | Tela | Shell | Código | Rota viva |
 |---|---|:--:|:--:|---|
-| N1 | N1 · Splash | wizard | [código](<app/src/app/(wizard)/splash/page.tsx>) | [/splash](http://localhost:3000/splash) |
-| N2 | N2 · Welcome | wizard | [código](<app/src/app/(wizard)/welcome/page.tsx>) | [/welcome](http://localhost:3000/welcome) |
-| N3 | N3 · Fork · 3 rotas | wizard | [código](<app/src/app/(wizard)/entrada/page.tsx>) | [/entrada](http://localhost:3000/entrada) |
-| LOGIN | Login / portal | wizard | [código](<app/src/app/(wizard)/login/page.tsx>) | [/login](http://localhost:3000/login) |
-| N4A | Descreve atividade + pills | wizard | [código](<app/src/app/(wizard)/gate/page.tsx>) | [/gate](http://localhost:3000/gate) |
-| VA | 🟢 Atende | wizard | [código](<app/src/app/(wizard)/veredito/atende/page.tsx>) | [/veredito/atende](http://localhost:3000/veredito/atende) |
-| VW | 🟡 Waitlist | wizard | [código](<app/src/app/(wizard)/veredito/waitlist/page.tsx>) | [/veredito/waitlist](http://localhost:3000/veredito/waitlist) |
-| VC | 🔴 Comercial Mauro | wizard | [código](<app/src/app/(wizard)/veredito/nao-atende/page.tsx>) | [/veredito/nao-atende](http://localhost:3000/veredito/nao-atende) |
-| N5 | N5 · Teaser · swap / fator-R / serviço | wizard | [código](<app/src/app/(wizard)/teaser/swap/page.tsx>) | [/teaser/swap](http://localhost:3000/teaser/swap) · [/teaser/fator-r](http://localhost:3000/teaser/fator-r) · [/teaser/servico](http://localhost:3000/teaser/servico) |
-| N6 | N6 · Criar conta | wizard | [código](<app/src/app/(wizard)/conta/page.tsx>) | [/conta](http://localhost:3000/conta) |
-| N7 | N7 · A conta da abertura | wizard | [código](<app/src/app/(wizard)/plano/page.tsx>) | [/plano](http://localhost:3000/plano) |
-| N8 | N8 · Aceite contrato · reversível, CDC 49 | wizard | [código](<app/src/app/(wizard)/contrato/page.tsx>) | [/contrato](http://localhost:3000/contrato) |
-| N9 | N9 · Pagamento | wizard | [código](<app/src/app/(wizard)/pagamento/page.tsx>) | [/pagamento](http://localhost:3000/pagamento) |
-| P2 | P2 · Aguardando boleto · dossiê já liberado | app | [código](<app/src/app/(app)/aguardando/page.tsx>) | [/aguardando](http://localhost:3000/aguardando) |
-| N10 | N10 · Seus dados | app | [código](<app/src/app/(app)/dossie/socio/page.tsx>) | [/dossie/socio](http://localhost:3000/dossie/socio) |
-| N11 | N11 · Vínculo INSS | app | [código](<app/src/app/(app)/dossie/vinculo/page.tsx>) | [/dossie/vinculo](http://localhost:3000/dossie/vinculo) |
-| N12 | N12 · Sócios? | app | [código](<app/src/app/(app)/dossie/socios/page.tsx>) | [/dossie/socios](http://localhost:3000/dossie/socios) |
-| N13 | N13 · Dados da empresa · +upsell endereço | app | [código](<app/src/app/(app)/dossie/empresa/page.tsx>) | [/dossie/empresa](http://localhost:3000/dossie/empresa) |
-| N14 | N14 · CNAE secundários | app | [código](<app/src/app/(app)/dossie/cnae-secundarios/page.tsx>) | [/dossie/cnae-secundarios](http://localhost:3000/dossie/cnae-secundarios) |
-| N15 | N15 · Natureza jurídica | app | [código](<app/src/app/(app)/dossie/natureza/page.tsx>) | [/dossie/natureza](http://localhost:3000/dossie/natureza) |
-| N16 | N16 · Nome / razão social | app | [código](<app/src/app/(app)/dossie/nome/page.tsx>) | [/dossie/nome](http://localhost:3000/dossie/nome) |
-| N17 | N17 · CNAE ótimo | app | [código](<app/src/app/(app)/dossie/cnae-otimo/page.tsx>) | [/dossie/cnae-otimo](http://localhost:3000/dossie/cnae-otimo) |
-| N18 | N18 · Simulador pró-labore | app | [código](<app/src/app/(app)/simulador/page.tsx>) | [/simulador](http://localhost:3000/simulador) |
-| P1 | P1 · Retomar de onde parou | app | [código](<app/src/app/(app)/retomar/page.tsx>) | [/retomar](http://localhost:3000/retomar) |
-| SE | Saída · exterior · LC 123 art.17 | wizard | [código](<app/src/app/(wizard)/saida/exterior/page.tsx>) | [/saida/exterior](http://localhost:3000/saida/exterior) |
-| SS | Saída · 3+ sócios · limite do produto | wizard | [código](<app/src/app/(wizard)/saida/socios/page.tsx>) | [/saida/socios](http://localhost:3000/saida/socios) |
-| N19 | N19 · Revisar dossiê | app | [código](<app/src/app/(app)/revisar/page.tsx>) | [/revisar](http://localhost:3000/revisar) |
-| N20 | N20 · Termo irreversível | app | [código](<app/src/app/(app)/termo/page.tsx>) | [/termo](http://localhost:3000/termo) |
-| N21 | N21 · Painel / timeline órgãos | app | [código](<app/src/app/(app)/painel/page.tsx>) | [/painel](http://localhost:3000/painel) |
-| REC | REC · Órgão recusa · 'precisa de você' | app | [código](<app/src/app/(app)/painel/recusa/page.tsx>) | [/painel/recusa](http://localhost:3000/painel/recusa) |
-| N22 | N22 · Assinatura dos sócios | app | [código](<app/src/app/(app)/assinatura/page.tsx>) | [/assinatura](http://localhost:3000/assinatura) |
-| ATIVA | ✅ Empresa ativa | app | [código](<app/src/app/(app)/ativa/page.tsx>) | [/ativa](http://localhost:3000/ativa) |
+| E1 | E1 · Splash | wizard | [código](<app/src/app/(wizard)/splash/page.tsx>) | [/splash](http://localhost:3000/splash) |
+| E2_1 | E2.1 · Welcome · (1/3 · Léo vigia, contador é gente) | ? | ⚠️ sem page.tsx | [/welcome?slide=0](http://localhost:3000/welcome?slide=0) |
+| E2_2 | E2.2 · Welcome · (2/3 · Aquece o fork) | ? | ⚠️ sem page.tsx | [/welcome?slide=1](http://localhost:3000/welcome?slide=1) |
+| E2_3 | E2.3 · Welcome · (3/3 · Sem susto no boleto) | ? | ⚠️ sem page.tsx | [/welcome?slide=2](http://localhost:3000/welcome?slide=2) |
+| E3 | E3 · Fork · 4 rotas | wizard | [código](<app/src/app/(wizard)/entrada/page.tsx>) | [/entrada](http://localhost:3000/entrada) |
+| E3_1 | E3.1 · Login / portal | wizard | [código](<app/src/app/(wizard)/login/page.tsx>) | [/login](http://localhost:3000/login) |
+| E3_3 | E3.3 · Seus dados · (nome · e-mail · telefone) | wizard | [código](<app/src/app/(wizard)/dados/page.tsx>) | [/dados](http://localhost:3000/dados) |
+| E3_2 | E3.2 · MEI × ME · (variante Abrir) | ? | ⚠️ sem page.tsx | [/entrada?intencao=abrir](http://localhost:3000/entrada?intencao=abrir) |
+| E3_2_M | E3.2 · MEI × ME · (variante Migrar) | ? | ⚠️ sem page.tsx | [/entrada?intencao=migrar](http://localhost:3000/entrada?intencao=migrar) |
+| E3_4 | E3.4 · Endereço + categoria · (os 2 gates) | wizard | [código](<app/src/app/(wizard)/endereco/page.tsx>) | [/endereco](http://localhost:3000/endereco) |
+| E3_4_1 | E3.4.1 · CEP fora de BH · (gate resolvido inline) | ? | ⚠️ sem page.tsx | [/endereco?simular=fora-bh](http://localhost:3000/endereco?simular=fora-bh) |
+| E4_2 | E4.2 · Lê o cartão CNPJ | wizard | [código](<app/src/app/(wizard)/migrar/cnpj/page.tsx>) | [/migrar/cnpj](http://localhost:3000/migrar/cnpj) |
+| E4_2_1 | Saída · CNPJ inapto · ou suspenso | wizard | [código](<app/src/app/(wizard)/saida/cnpj-inapto/page.tsx>) | [/saida/cnpj-inapto](http://localhost:3000/saida/cnpj-inapto) |
+| E4_2B_1 | Saída · Presumido · fora de escopo | wizard | [código](<app/src/app/(wizard)/saida/regime-nao-suportado/page.tsx>) | [/saida/regime-nao-suportado](http://localhost:3000/saida/regime-nao-suportado) |
+| E4_3 | E4.3 · Diagnóstico · ("tem certificado?") | wizard | [código](<app/src/app/(wizard)/migrar/diagnostico/page.tsx>) | [/migrar/diagnostico](http://localhost:3000/migrar/diagnostico) |
+| E4_4 | E4.4 · Plano | wizard | [código](<app/src/app/(wizard)/migrar/plano/page.tsx>) | [/migrar/plano](http://localhost:3000/migrar/plano) |
+| E4_5 | E4.5 · Contrato · + promessa de devolução | wizard | [código](<app/src/app/(wizard)/migrar/contrato/page.tsx>) | [/migrar/contrato](http://localhost:3000/migrar/contrato) |
+| E9_2 | E9.2 · Seu contador atual | app | [código](<app/src/app/(app)/migrar/contador/page.tsx>) | [/migrar/contador](http://localhost:3000/migrar/contador) |
+| E9_2A | E9.2b · Dados que o · cartão CNPJ não traz | app | [código](<app/src/app/(app)/migrar/dados/page.tsx>) | [/migrar/dados](http://localhost:3000/migrar/dados) |
+| E9_2B | E9.2c · Dados dos sócios | app | [código](<app/src/app/(app)/migrar/socios/page.tsx>) | [/migrar/socios](http://localhost:3000/migrar/socios) |
+| E9_2C | E9.2d · GOV.BR + procuração | app | [código](<app/src/app/(app)/migrar/gov/page.tsx>) | [/migrar/gov](http://localhost:3000/migrar/gov) |
+| E9_3 | E9.3 · Iniciando transferência | app | [código](<app/src/app/(app)/migrar/transferencia/page.tsx>) | [/migrar/transferencia](http://localhost:3000/migrar/transferencia) |
+| E9_4 | ✅ E9.4 · Migração concluída | app | [código](<app/src/app/(app)/migrar/ativa/page.tsx>) | [/migrar/ativa](http://localhost:3000/migrar/ativa) |
+| E5T | Triagem · quantos sócios? | ? | ⚠️ sem page.tsx | [/gate?etapa=triagem](http://localhost:3000/gate?etapa=triagem) |
+| E5T_1 | E5T.1 · Sócio não se encaixa · (gate de saída inline) | ? | ⚠️ sem page.tsx | [/gate?etapa=triagem&simular=socio-nao-encaixa](http://localhost:3000/gate?etapa=triagem&simular=socio-nao-encaixa) |
+| E5F | Faixa de faturamento | ? | ⚠️ sem page.tsx | [/gate?etapa=faixa](http://localhost:3000/gate?etapa=faixa) |
+| E5F_S | E5F.1 · Splash · 'conseguimos te atender' | wizard | [código](<app/src/app/(wizard)/splash-atendido/page.tsx>) | [/splash-atendido](http://localhost:3000/splash-atendido) |
+| E6 | E6 · Criar conta | wizard | [código](<app/src/app/(wizard)/conta/page.tsx>) | [/conta](http://localhost:3000/conta) |
+| E6_1 | E6.1 · Confirmar código | ? | ⚠️ sem page.tsx | [/conta?etapa=codigo](http://localhost:3000/conta?etapa=codigo) |
+| E6_2 | E6.2 · CPF não confere · (nome divergente) | ? | ⚠️ sem page.tsx | [/conta?cpf=nome](http://localhost:3000/conta?cpf=nome) |
+| E7 | E7 · A conta da abertura | wizard | [código](<app/src/app/(wizard)/plano/page.tsx>) | [/plano](http://localhost:3000/plano) |
+| E7_1 | E7.1 · A conta da abertura · (variante endereço fiscal) | ? | ⚠️ sem page.tsx | [/plano?endereco=fiscal](http://localhost:3000/plano?endereco=fiscal) |
+| E9 | E9 · Pagamento + contrato · (variante Abrir) | wizard | [código](<app/src/app/(wizard)/pagamento/page.tsx>) | [/pagamento](http://localhost:3000/pagamento) |
+| E9_M | E9 · Pagamento · (variante Migrar) | ? | ⚠️ sem page.tsx | [/pagamento?fluxo=migrar](http://localhost:3000/pagamento?fluxo=migrar) |
+| E9_S | E9.S · Splash · 'pagamento confirmado' | app | [código](<app/src/app/(app)/splash-pagamento/page.tsx>) | [/splash-pagamento](http://localhost:3000/splash-pagamento) |
+| E9_SB | E9.SB · Splash · 'boleto gerado' | app | [código](<app/src/app/(app)/splash-boleto/page.tsx>) | [/splash-boleto](http://localhost:3000/splash-boleto) |
+| E9_SR | E9.SR · Splash · pagamento recusado | ? | ⚠️ sem page.tsx | [/splash-recusado?next=/pagamento%3Fretry%3D1](http://localhost:3000/splash-recusado?next=/pagamento%3Fretry%3D1) |
+| E9_R | E9.R · Pagamento · (nova tentativa) | ? | ⚠️ sem page.tsx | [/pagamento?retry=1](http://localhost:3000/pagamento?retry=1) |
+| E9_1 | E9.1 · Aguardando boleto · dossiê já liberado | app | [código](<app/src/app/(app)/aguardando/page.tsx>) | [/aguardando](http://localhost:3000/aguardando) |
+| E9_1P | E9.1P · Status · (pago, via instantâneo) | ? | ⚠️ sem page.tsx | [/aguardando?pago=1](http://localhost:3000/aguardando?pago=1) |
+| C0_0 | C0.0 · Sua atividade · (chegada, antes de descrever) | ? | ⚠️ sem page.tsx | [/dossie/atividade?vazia=1](http://localhost:3000/dossie/atividade?vazia=1) |
+| C0 | C0 · Sua atividade · (descreve + pills) | app | [código](<app/src/app/(app)/dossie/atividade/page.tsx>) | [/dossie/atividade](http://localhost:3000/dossie/atividade) · [/veredito/atende](http://localhost:3000/veredito/atende) |
+| C5 | C5 · CNAE secundários | app | [código](<app/src/app/(app)/dossie/cnae-secundarios/page.tsx>) | [/dossie/cnae-secundarios](http://localhost:3000/dossie/cnae-secundarios) |
+| C5_S | C5.1 · Splash · 'já sabemos o que você faz' | app | [código](<app/src/app/(app)/splash-atividades/page.tsx>) | [/splash-atividades](http://localhost:3000/splash-atividades) |
+| C1 | C1 · Seus dados | app | [código](<app/src/app/(app)/dossie/socio/page.tsx>) | [/dossie/socio](http://localhost:3000/dossie/socio) |
+| C2 | C2 · Vínculo INSS | app | [código](<app/src/app/(app)/dossie/vinculo/page.tsx>) | [/dossie/vinculo](http://localhost:3000/dossie/vinculo) |
+| C3 | C3 · Sócios? | app | [código](<app/src/app/(app)/dossie/socios/page.tsx>) | [/dossie/socios](http://localhost:3000/dossie/socios) |
+| C3_1 | C3.1 · Sócios · (teto: 3 + você) | ? | ⚠️ sem page.tsx | [/dossie/socios?socios=4](http://localhost:3000/dossie/socios?socios=4) |
+| C3_2 | C3.2 · Sócios · (só você) | ? | ⚠️ sem page.tsx | [/dossie/socios?socios=1](http://localhost:3000/dossie/socios?socios=1) |
+| C3_3 | C3.3 · CPF de sócio · não confere | ? | ⚠️ sem page.tsx | [/dossie/socios?divergencia=1](http://localhost:3000/dossie/socios?divergencia=1) |
+| C4 | C4 · Dados da empresa | app | [código](<app/src/app/(app)/dossie/empresa/page.tsx>) | [/dossie/empresa](http://localhost:3000/dossie/empresa) |
+| C7 | C7 · Nome / razão social | app | [código](<app/src/app/(app)/dossie/nome/page.tsx>) | [/dossie/nome](http://localhost:3000/dossie/nome) |
+| C0_1 | C0.1 · Retomar · (porta de CPF) | app | [código](<app/src/app/(app)/retomar/page.tsx>) | [/retomar](http://localhost:3000/retomar) |
+| C0_3 | C0.3 · Confirmar código · (retomada) | ? | ⚠️ sem page.tsx | [/retomar?etapa=codigo](http://localhost:3000/retomar?etapa=codigo) |
+| C7_2 | C7′ · Sugerir mais · 3 nomes (2ª rodada) | app | [código](<app/src/app/(app)/dossie/nome/rodada-2/page.tsx>) | [/dossie/nome/rodada-2](http://localhost:3000/dossie/nome/rodada-2) |
+| C7_2S | C7.S · Splash · 'nomes enviados' | ? | ⚠️ sem page.tsx | [/splash-nomes?next=/aguardando%3Ffase%3Djunta%26viabilidade%3D1](http://localhost:3000/splash-nomes?next=/aguardando%3Ffase%3Djunta%26viabilidade%3D1) |
+| A1 | A1 · Revisar + autorizar | app | [código](<app/src/app/(app)/revisar/page.tsx>) | [/revisar](http://localhost:3000/revisar) |
+| A2 | A2 · Início da viabilidade · (a casa assume o processo) | app | [código](<app/src/app/(app)/iniciar-viabilidade/page.tsx>) | [/iniciar-viabilidade](http://localhost:3000/iniciar-viabilidade) |
+| A3 | A3 · Status · (fase Junta) | ? | ⚠️ sem page.tsx | [/aguardando?fase=junta](http://localhost:3000/aguardando?fase=junta) |
+| A3_GB | A3″ · Status · (guia no boleto, · aguardando compensar) | ? | ⚠️ sem page.tsx | [/aguardando?fase=junta&guia=boleto](http://localhost:3000/aguardando?fase=junta&guia=boleto) |
+| M1 | M1 · Onde você trabalha · (área + endereço) | — | [código](<app/src/app/(mei)/mei/endereco/page.tsx>) | [/mei/endereco](http://localhost:3000/mei/endereco) |
+| M2 | M2 · Impedimentos · (no lugar da triagem) | — | [código](<app/src/app/(mei)/mei/impedimentos/page.tsx>) | [/mei/impedimentos](http://localhost:3000/mei/impedimentos) |
+| M2_1 | M2.1 · Já tem CNPJ · (bloqueio dentro da M2) | ? | ⚠️ sem page.tsx | [/mei/impedimentos?bloqueio=ja-tem-cnpj](http://localhost:3000/mei/impedimentos?bloqueio=ja-tem-cnpj) |
+| M2_2 | M2.2 · Servidor federal · (bloqueio dentro da M2) | ? | ⚠️ sem page.tsx | [/mei/impedimentos?bloqueio=servidor](http://localhost:3000/mei/impedimentos?bloqueio=servidor) |
+| M3 | M3 · Faturamento · (gate do teto R$81k) | — | [código](<app/src/app/(mei)/mei/faturamento/page.tsx>) | [/mei/faturamento](http://localhost:3000/mei/faturamento) |
+| M4 | M4 · Criar conta | — | [código](<app/src/app/(mei)/mei/conta/page.tsx>) | [/mei/conta](http://localhost:3000/mei/conta) |
+| M4_1 | M4.1 · Confirmar código | ? | ⚠️ sem page.tsx | [/mei/conta?etapa=codigo](http://localhost:3000/mei/conta?etapa=codigo) |
+| M4_2 | M4.2 · CPF não confere | ? | ⚠️ sem page.tsx | [/mei/conta?etapa=cpf-divergente](http://localhost:3000/mei/conta?etapa=cpf-divergente) |
+| M5 | M5 · Seu plano · (R$49/mês) | — | [código](<app/src/app/(mei)/mei/plano/page.tsx>) | [/mei/plano](http://localhost:3000/mei/plano) |
+| M6 | M6 · Pagamento + contrato | — | [código](<app/src/app/(mei)/mei/pagamento/page.tsx>) | [/mei/pagamento](http://localhost:3000/mei/pagamento) |
+| M6_S | M6.S · Splash 'pagamento confirmado' | — | [código](<app/src/app/(mei)/mei/splash-pagamento/page.tsx>) | [/mei/splash-pagamento](http://localhost:3000/mei/splash-pagamento) |
+| M6_SB | M6.SB · Splash 'boleto gerado' | — | [código](<app/src/app/(mei)/mei/splash-boleto/page.tsx>) | [/mei/splash-boleto](http://localhost:3000/mei/splash-boleto) |
+| M6_SR | M6.SR · Splash · pagamento recusado | ? | ⚠️ sem page.tsx | [/mei/splash-recusado?next=/mei/pagamento%3Fretry%3D1](http://localhost:3000/mei/splash-recusado?next=/mei/pagamento%3Fretry%3D1) |
+| M6_R | M6.R · Pagamento · (nova tentativa) | ? | ⚠️ sem page.tsx | [/mei/pagamento?retry=1](http://localhost:3000/mei/pagamento?retry=1) |
+| M6_1 | M6.1 · Aguardando boleto · cadastro já liberado | — | [código](<app/src/app/(mei)/mei/aguardando/page.tsx>) | [/mei/aguardando](http://localhost:3000/mei/aguardando) |
+| M6_1P | M6.1P · Status · (pago, via instantâneo) | ? | ⚠️ sem page.tsx | [/mei/aguardando?pago=1](http://localhost:3000/mei/aguardando?pago=1) |
+| M7_0 | M7.0 · Sua atividade · (chegada) | ? | ⚠️ sem page.tsx | [/mei/atividade?vazia=1](http://localhost:3000/mei/atividade?vazia=1) |
+| M7 | M7 · Atividade principal · (Anexo XI + limite interno) | — | [código](<app/src/app/(mei)/mei/atividade/page.tsx>) | [/mei/atividade](http://localhost:3000/mei/atividade) |
+| M7_S | M7.S · Atividades · secundárias (até 15) | — | [código](<app/src/app/(mei)/mei/atividade-secundarias/page.tsx>) | [/mei/atividade-secundarias](http://localhost:3000/mei/atividade-secundarias) |
+| M7_1 | M7.1 · Splash · 'já sabemos o que você faz' | — | [código](<app/src/app/(mei)/mei/splash-atividades/page.tsx>) | [/mei/splash-atividades](http://localhost:3000/mei/splash-atividades) |
+| M8 | M8 · Seus dados · (o titular) | — | [código](<app/src/app/(mei)/mei/titular/page.tsx>) | [/mei/titular](http://localhost:3000/mei/titular) |
+| M9 | M9 · Sua empresa · (atuação + baixo risco) | — | [código](<app/src/app/(mei)/mei/empresa/page.tsx>) | [/mei/empresa](http://localhost:3000/mei/empresa) |
+| M10 | M10 · Nome da empresa · (gerado por lei) | — | [código](<app/src/app/(mei)/mei/nome/page.tsx>) | [/mei/nome](http://localhost:3000/mei/nome) |
+| M11 | M11 · Revisar e autorizar | — | [código](<app/src/app/(mei)/mei/revisar/page.tsx>) | [/mei/revisar](http://localhost:3000/mei/revisar) |
+| M12 | M12 · Status · (pipeline concierge) | — | [código](<app/src/app/(mei)/mei/status/page.tsx>) | [/mei/status](http://localhost:3000/mei/status) |
+| M13 | M13 · Próximos passos · (a "cola") | — | [código](<app/src/app/(mei)/mei/proximos-passos/page.tsx>) | [/mei/proximos-passos](http://localhost:3000/mei/proximos-passos) |
+| M14 | M14 · Certificado · (gate: libera o app) | — | [código](<app/src/app/(mei)/mei/certificado/page.tsx>) | [/mei/certificado](http://localhost:3000/mei/certificado) |
+| M14_P | M14.P · Pagar o · certificado digital | — | [código](<app/src/app/(mei)/mei/certificado/pagar/page.tsx>) | [/mei/certificado/pagar](http://localhost:3000/mei/certificado/pagar) |
+| M14_SR | M14.SR · Splash · certificado recusado | ? | ⚠️ sem page.tsx | [/mei/splash-recusado?next=/mei/certificado/pagar%3Fretry%3D1](http://localhost:3000/mei/splash-recusado?next=/mei/certificado/pagar%3Fretry%3D1) |
+| M14_R | M14.R · Certificado · (nova tentativa) | ? | ⚠️ sem page.tsx | [/mei/certificado/pagar?retry=1](http://localhost:3000/mei/certificado/pagar?retry=1) |
+| M14_PS | M14.PS · Splash · certificado pago | ? | ⚠️ sem page.tsx | [/mei/splash-pagamento?next=/mei/status%3Ffase%3Dcertificado%26certificado%3Dpronto](http://localhost:3000/mei/splash-pagamento?next=/mei/status%3Ffase%3Dcertificado%26certificado%3Dpronto) |
+| M14_PSB | M14.PSB · Splash · boleto do certificado | ? | ⚠️ sem page.tsx | [/mei/splash-boleto?next=/mei/status%3Ffase%3Dcertificado%26certificado%3Dboleto](http://localhost:3000/mei/splash-boleto?next=/mei/status%3Ffase%3Dcertificado%26certificado%3Dboleto) |
+| M14_1 | M14‴ · Status · (travado no certificado) | ? | ⚠️ sem page.tsx | [/mei/status?fase=certificado&certificado=pendente](http://localhost:3000/mei/status?fase=certificado&certificado=pendente) |
+| M14_1B | M14″ · Status · (boleto do certificado · compensando) | ? | ⚠️ sem page.tsx | [/mei/status?fase=certificado&certificado=boleto](http://localhost:3000/mei/status?fase=certificado&certificado=boleto) |
+| M14_1P | M14′ · Status · (pago, aguardando · a videochamada) | ? | ⚠️ sem page.tsx | [/mei/status?fase=certificado&certificado=pronto](http://localhost:3000/mei/status?fase=certificado&certificado=pronto) |
+| M14_1L | M14⁗ · Status · (certificado emitido, · app liberado) | ? | ⚠️ sem page.tsx | [/mei/status?fase=certificado&certificado=liberado](http://localhost:3000/mei/status?fase=certificado&certificado=liberado) |
+| A3_1 | A3.1 · Órgão recusa · 'precisa de você' | app | [código](<app/src/app/(app)/painel/recusa/page.tsx>) | [/painel/recusa](http://localhost:3000/painel/recusa) |
+| A3_2 | 'A3.2 · Certificado digital' 🗑️ REMOVIDO 01/09 · (segue só no MEI/migrar) | app | [código](<app/src/app/(app)/certificado/page.tsx>) | [/certificado](http://localhost:3000/certificado) |
+| A3_P | A3.P · Pagar a guia · da Junta (DAE) | app | [código](<app/src/app/(app)/guia/page.tsx>) | [/guia](http://localhost:3000/guia) |
+| A3_SR | A3.SR · Splash · guia recusada | ? | ⚠️ sem page.tsx | [/splash-recusado?next=/guia%3Fretry%3D1](http://localhost:3000/splash-recusado?next=/guia%3Fretry%3D1) |
+| A3_R | A3.R · Guia · (nova tentativa) | ? | ⚠️ sem page.tsx | [/guia?retry=1](http://localhost:3000/guia?retry=1) |
+| A3_PS | A3.PS · Splash · guia paga | ? | ⚠️ sem page.tsx | [/splash-pagamento?next=/aguardando%3Ffase%3Djunta%26guia%3Dpaga](http://localhost:3000/splash-pagamento?next=/aguardando%3Ffase%3Djunta%26guia%3Dpaga) |
+| A3_PSB | A3.PSB · Splash · boleto da guia | ? | ⚠️ sem page.tsx | [/splash-boleto?next=/aguardando%3Ffase%3Djunta%26guia%3Dboleto](http://localhost:3000/splash-boleto?next=/aguardando%3Ffase%3Djunta%26guia%3Dboleto) |
+| A3_V | A3‴ · Status · (analisando viabilidade, · 2ª rodada de nomes) | ? | ⚠️ sem page.tsx | [/aguardando?fase=junta&viabilidade=1](http://localhost:3000/aguardando?fase=junta&viabilidade=1) |
+| A3_GP | A3′ · Status · (guia paga) | ? | ⚠️ sem page.tsx | [/aguardando?fase=junta&guia=paga](http://localhost:3000/aguardando?fase=junta&guia=paga) |
+| A4 | A4 · Assinatura dos sócios | app | [código](<app/src/app/(app)/assinatura/page.tsx>) | [/assinatura](http://localhost:3000/assinatura) |
+| A4_1 | A4.1 · Código do GOV.BR | ? | ⚠️ sem page.tsx | [/assinatura?etapa=codigo](http://localhost:3000/assinatura?etapa=codigo) |
+| A3_H | A3.H · Passagem · pro consultor | ? | ⚠️ sem page.tsx | [/aguardando?fase=junta&guia=paga&rota=assistida](http://localhost:3000/aguardando?fase=junta&guia=paga&rota=assistida) |
+| A3_H1 | A3.H1 · Marcar horário · (1ª assinatura) | app | [código](<app/src/app/(app)/agendar/page.tsx>) | [/agendar](http://localhost:3000/agendar) |
+| A3_H2 | A3.H2 · Status · (1ª marcada) | ? | ⚠️ sem page.tsx | [/aguardando?fase=junta&guia=paga&rota=assistida&dia=5&semana=Sex&mes=Set&hora=15%3A00&hoje=1](http://localhost:3000/aguardando?fase=junta&guia=paga&rota=assistida&dia=5&semana=Sex&mes=Set&hora=15%3A00&hoje=1) |
+| A3_HS | A3.H′ · Passagem · (com sócio) | ? | ⚠️ sem page.tsx | [/aguardando?fase=junta&guia=paga&rota=assistida&socios=2](http://localhost:3000/aguardando?fase=junta&guia=paga&rota=assistida&socios=2) |
+| A3_H1S | A3.H1′ · Marcar horário · (com sócio) | ? | ⚠️ sem page.tsx | [/agendar?socios=2](http://localhost:3000/agendar?socios=2) |
+| A3_H2S | A3.H2′ · Status · (marcada, com sócio) | ? | ⚠️ sem page.tsx | [/aguardando?fase=junta&guia=paga&rota=assistida&socios=2&dia=5&semana=Sex&mes=Set&hora=15%3A00&hoje=1](http://localhost:3000/aguardando?fase=junta&guia=paga&rota=assistida&socios=2&dia=5&semana=Sex&mes=Set&hora=15%3A00&hoje=1) |
+| A3_H3 | A3.H3 · Passagem · (2ª assinatura) | ? | ⚠️ sem page.tsx | [/aguardando?fase=junta&guia=paga&rota=assistida&assinatura=1](http://localhost:3000/aguardando?fase=junta&guia=paga&rota=assistida&assinatura=1) |
+| A3_H4 | A3.H4 · Marcar horário · (2ª, contador junto) | ? | ⚠️ sem page.tsx | [/agendar?rodada=2](http://localhost:3000/agendar?rodada=2) |
+| A3_H5 | A3.H5 · Status · (2ª marcada) | ? | ⚠️ sem page.tsx | [/aguardando?fase=junta&guia=paga&rota=assistida&assinatura=1&dia=8&semana=Seg&mes=Set&hora=09%3A30](http://localhost:3000/aguardando?fase=junta&guia=paga&rota=assistida&assinatura=1&dia=8&semana=Seg&mes=Set&hora=09%3A30) |
+| A3_A1 | A3⁗ · Status · (1ª assinatura feita) | ? | ⚠️ sem page.tsx | [/aguardando?fase=junta&guia=paga&assinatura=1](http://localhost:3000/aguardando?fase=junta&guia=paga&assinatura=1) |
+| A4_2 | A4″ · 2ª assinatura · (gera o CNPJ, contador junto) | ? | ⚠️ sem page.tsx | [/assinatura?rodada=2](http://localhost:3000/assinatura?rodada=2) |
+| CONF | 🛠️ Conferência do dev · (campos por origem) | app | [código](<app/src/app/(app)/conferencia/page.tsx>) | [/conferencia](http://localhost:3000/conferencia) |
+| A5_H | ✅ A5.H · Home dia-1 · (rota assistida) | ? | ⚠️ sem page.tsx | [/home-dia1?rota=assistida](http://localhost:3000/home-dia1?rota=assistida) |
+| A5 | ✅ A5 · Home dia-1 · (ativação) | app | [código](<app/src/app/(app)/(portal)/home-dia1/page.tsx>) | [/home-dia1](http://localhost:3000/home-dia1) |
 
-_32 telas navegáveis · gerado de `flow-data.mjs`._
+⚠️ **nós sem arquivo:** E2_1 (/welcome?slide=0) · E2_2 (/welcome?slide=1) · E2_3 (/welcome?slide=2) · E3_2 (/entrada?intencao=abrir) · E3_2_M (/entrada?intencao=migrar) · E3_4_1 (/endereco?simular=fora-bh) · E5T (/gate?etapa=triagem) · E5T_1 (/gate?etapa=triagem&simular=socio-nao-encaixa) · E5F (/gate?etapa=faixa) · E6_1 (/conta?etapa=codigo) · E6_2 (/conta?cpf=nome) · E7_1 (/plano?endereco=fiscal) · E9_M (/pagamento?fluxo=migrar) · E9_SR (/splash-recusado?next=/pagamento%3Fretry%3D1) · E9_R (/pagamento?retry=1) · E9_1P (/aguardando?pago=1) · C0_0 (/dossie/atividade?vazia=1) · C3_1 (/dossie/socios?socios=4) · C3_2 (/dossie/socios?socios=1) · C3_3 (/dossie/socios?divergencia=1) · C0_3 (/retomar?etapa=codigo) · C7_2S (/splash-nomes?next=/aguardando%3Ffase%3Djunta%26viabilidade%3D1) · A3 (/aguardando?fase=junta) · A3_GB (/aguardando?fase=junta&guia=boleto) · M2_1 (/mei/impedimentos?bloqueio=ja-tem-cnpj) · M2_2 (/mei/impedimentos?bloqueio=servidor) · M4_1 (/mei/conta?etapa=codigo) · M4_2 (/mei/conta?etapa=cpf-divergente) · M6_SR (/mei/splash-recusado?next=/mei/pagamento%3Fretry%3D1) · M6_R (/mei/pagamento?retry=1) · M6_1P (/mei/aguardando?pago=1) · M7_0 (/mei/atividade?vazia=1) · M14_SR (/mei/splash-recusado?next=/mei/certificado/pagar%3Fretry%3D1) · M14_R (/mei/certificado/pagar?retry=1) · M14_PS (/mei/splash-pagamento?next=/mei/status%3Ffase%3Dcertificado%26certificado%3Dpronto) · M14_PSB (/mei/splash-boleto?next=/mei/status%3Ffase%3Dcertificado%26certificado%3Dboleto) · M14_1 (/mei/status?fase=certificado&certificado=pendente) · M14_1B (/mei/status?fase=certificado&certificado=boleto) · M14_1P (/mei/status?fase=certificado&certificado=pronto) · M14_1L (/mei/status?fase=certificado&certificado=liberado) · A3_SR (/splash-recusado?next=/guia%3Fretry%3D1) · A3_R (/guia?retry=1) · A3_PS (/splash-pagamento?next=/aguardando%3Ffase%3Djunta%26guia%3Dpaga) · A3_PSB (/splash-boleto?next=/aguardando%3Ffase%3Djunta%26guia%3Dboleto) · A3_V (/aguardando?fase=junta&viabilidade=1) · A3_GP (/aguardando?fase=junta&guia=paga) · A4_1 (/assinatura?etapa=codigo) · A3_H (/aguardando?fase=junta&guia=paga&rota=assistida) · A3_H2 (/aguardando?fase=junta&guia=paga&rota=assistida&dia=5&semana=Sex&mes=Set&hora=15%3A00&hoje=1) · A3_HS (/aguardando?fase=junta&guia=paga&rota=assistida&socios=2) · A3_H1S (/agendar?socios=2) · A3_H2S (/aguardando?fase=junta&guia=paga&rota=assistida&socios=2&dia=5&semana=Sex&mes=Set&hora=15%3A00&hoje=1) · A3_H3 (/aguardando?fase=junta&guia=paga&rota=assistida&assinatura=1) · A3_H4 (/agendar?rodada=2) · A3_H5 (/aguardando?fase=junta&guia=paga&rota=assistida&assinatura=1&dia=8&semana=Seg&mes=Set&hora=09%3A30) · A3_A1 (/aguardando?fase=junta&guia=paga&assinatura=1) · A4_2 (/assinatura?rodada=2) · A5_H (/home-dia1?rota=assistida) · ⚠️ **rotas sem nó no mapa:** /avisos · /blog · /blog/post · /componentes · /emitir · /home-a · /home-b · /home-c · /home-campea · /home-d · /home-e · /home-f · /impostos/aliquotas · /impostos/guias · /impostos/pagar · /impostos · /impostos-v1 · /impostos-v2 · /inicio · /inicio-ref11 · /inicio-ref12 · /inicio-ref5 · /inicio-ref6 · /inicio-ref7 · /inicio-ref9 · /mais/certificado · /mais/colaborador · /mais/declaracoes · /mais/documentos · /mais/em-dia · /mais/empresa · /mais · /mais/plano · /mais/relatorios · /mais/servicos · /mais/socios · /mais-completa · /mais-v1 · /notas/detalhe · /notas · /obrigacoes · /perfil · /pro-labore · /splash-nomes · /splash-recusado · /mei/splash-recusado · /conta-v2 · /conta-v2-robusto · /gate · /plano-premium · /plano-v2 · /plano-v2-robusto · /veredito/descartado · /veredito/nao-atende · /veredito/waitlist · /welcome · /apresentacao · /mapa · /mockup-home · /mockup-inicio · /mockup-v2 · /processos · _121 telas navegáveis · gerado de `flow-data.mjs`._
 <!-- INDICE:FIM -->
 
 ---

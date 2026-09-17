@@ -45,7 +45,7 @@
 - [Benchmark Padrao R$195](legalize-benchmark-padrao-195.md) — 22/07: escada 139-395 + surcharge oculto + IGP-DI anual.
 
 ## APIs, dados e CNAE
-- [API antes de funcionalidade](legalize-api-antes-de-funcionalidade.md) — 08/09: matriz em `produto/_matriz-dependencia.md`.
+- [API antes de funcionalidade](legalize-api-antes-de-funcionalidade.md) — 08/09: matriz em `produto/me/viver/_matriz-dependencia.md`.
 - [APIs de orgaos = autoridade](legalize-apis-orgaos-autoridade.md) — 24/07, corrigida 04/08: CNPJ e Simples/SIMEI sao 2.
 - [BH ja obriga o Emissor Nacional desde 01/11/2025](legalize-bh-emissor-nacional-desde-2025.md) — 12/09: empresa nova emite.
 - [MEI: obrigacoes operacionais + cobertura de API](legalize-mei-obrigacoes-e-apis.md) — 27/08: NFS-e nacional via API federal.

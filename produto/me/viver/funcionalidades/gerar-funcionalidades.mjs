@@ -3,7 +3,7 @@
  * GERADOR DAS 58 — o semáforo que não pode mentir.
  * ═══════════════════════════════════════════════════════════════════════════
  *   funcionalidades-data.mjs   (única coisa que se edita à mão)
- *        └── produto/FUNCIONALIDADES.md   → a nota, com o semáforo derivado
+ *        └── produto/me/viver/funcionalidades/FUNCIONALIDADES.md   → a nota, com o semáforo derivado
  *
  * 🔴 A LUZ NÃO É CAMPO. Ela cai de duas perguntas que o gerador responde
  * olhando o disco, não a minha memória:
@@ -32,13 +32,13 @@
 import { writeFileSync, existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { RAIZ } from "../../../_raiz.mjs";
 import { FUNCIONALIDADES, SECOES } from "./funcionalidades-data.mjs";
-import { PASSOS } from "./me/viver/processos/processos-data.mjs";
-import { verificarEscopo } from "./me/viver/processos/verificar-escopo.mjs";
-import { verificarPersona } from "./me/viver/processos/verificar-persona.mjs";
+import { PASSOS } from "../processos/processos-data.mjs";
+import { verificarEscopo } from "../processos/verificar-escopo.mjs";
+import { verificarPersona } from "../processos/verificar-persona.mjs";
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
-const RAIZ = resolve(AQUI, "..");
 const HOJE = new Date().toISOString().slice(0, 10);
 
 const passoPorId = new Map(PASSOS.map((p) => [p.id, p]));
@@ -108,13 +108,13 @@ tipo: derivado
 status: vivo
 data: ${HOJE}
 assunto: funcionalidades-core-me-simples
-gerado_por: produto/gerar-funcionalidades.mjs
+gerado_por: produto/me/viver/funcionalidades/gerar-funcionalidades.mjs
 tags: [produto, funcionalidades, semaforo, mvp]
 ---
 
 # 📱 As ${FUNCIONALIDADES.length} funcionalidades core do ME no Simples
 
-> ⚠️ **Nota gerada.** Não editar à mão: rode \`node produto/gerar-funcionalidades.mjs\`. A fonte é \`funcionalidades-data.mjs\`.
+> ⚠️ **Nota gerada.** Não editar à mão: rode \`node produto/me/viver/funcionalidades/gerar-funcionalidades.mjs\`. A fonte é \`funcionalidades-data.mjs\`.
 >
 > **A lista é a que foi ao Mauro em 11/09** (\`funcionalidades-legalizai.pdf\`), ratificada pelo Pedro em 12/09 como a lista core oficial: a **folha de pagamento entra no MVP**, e saem "acesso do 2º sócio" e "pagar o DAS dentro do app".
 >

@@ -13,7 +13,7 @@ tags: [produto, evidencia, nfse, bh, portaria, fonte-primaria, cancelamento]
 
 > ✅ **FONTE PRIMÁRIA MUNICIPAL.** É o FAQ oficial da PBH (`NFS-e Nacional: orientações gerais e perguntas frequentes`, **versão 7.1, atualizado em 09/04/2026**), que **transcreve o art. 5º da Portaria SMFA nº 075/2025** e publica o cronograma de migração. Onde ele contradiz leitura nossa ou de terceiro sobre **BH**, ele manda.
 >
-> 📄 **22 páginas · 51.843 caracteres · lido 100%.** PDF e texto literal em `produto/evidencias/fontes/pbh-nfse-2026-09-12/`.
+> 📄 **22 páginas · 51.843 caracteres · lido 100%.** PDF e texto literal em `produto/me/_evidencias/fontes/pbh-nfse-2026-09-12/`.
 
 ---
 
@@ -120,4 +120,4 @@ Mas a página **RTC do gov.br (atualizada em 15/07/2026)**, na NT 009, diz: *"h�
 ## Links
 - Nacional, o par desta: [[2026-09-12-nfse-nacional-eventos-cancelamento]]
 - Desenho: [[NOTAS]] (varredura crua) · [[PROCESSOS]] (P3 e P6) · [[HANDOFF-DADOS]]
-- Fonte salva: `produto/evidencias/fontes/pbh-nfse-2026-09-12/`
+- Fonte salva: `produto/me/_evidencias/fontes/pbh-nfse-2026-09-12/`

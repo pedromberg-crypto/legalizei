@@ -13,7 +13,7 @@ tags: [produto, evidencia, nfse, api, cancelamento, eventos, fonte-primaria]
 
 > ✅ **FONTE PRIMÁRIA, não teardown de concorrente.** É a documentação oficial da Receita/Serpro, e por isso **manda** onde contradiz qualquer leitura nossa ou do líder. O nosso desenho vive em [[emitir-nota-fiscal]] e no processo **P6** de [[PROCESSOS]].
 >
-> 📦 **Pacote inteiro salvo**, com autorização do Pedro em 12/09: 16 arquivos, ~20 MB, em `produto/evidencias/fontes/nfse-nacional-2026-09-12/`. Índice em `gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-atual`, publicado 10/12/2025, atualizado 15/08/2026.
+> 📦 **Pacote inteiro salvo**, com autorização do Pedro em 12/09: 16 arquivos, ~20 MB, em `produto/me/_evidencias/fontes/nfse-nacional-2026-09-12/`. Índice em `gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/documentacao-atual`, publicado 10/12/2025, atualizado 15/08/2026.
 
 ## 📖 O que foi lido, e quanto
 

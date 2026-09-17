@@ -113,7 +113,7 @@ Com isso, **o placar de cobertura deixa de ser escrito à mão e passa a ser cal
 
 ## 7. 🔻 De onde se olha (precedência, travada 11/09)
 
-**Quem guia esta rodada é a pesquisa de setembro**, que é incomparavelmente mais robusta que a primeira: o painel de 51 funcionalidades em [[HOME-produto]], os teardowns com **API, endpoint e modelo de dados** em `produto/evidencias/`, e o contrato literal do líder.
+**Quem guia esta rodada é a pesquisa de setembro**, que é incomparavelmente mais robusta que a primeira: o painel de 51 funcionalidades em [[HOME-produto]], os teardowns com **API, endpoint e modelo de dados** em `produto/me/_evidencias/`, e o contrato literal do líder.
 
 🔻 **O que NÃO pesa:** os quatro documentos de **22 a 23/07** do `execucao/portal/` (matriz, cruzamento, candidatos de home, backlog). Eles são da primeira leva de comparação, a que gerou as telas. **Continuam no vault porque explicam por que cada tela nasceu como nasceu, e isso não está em nenhum outro lugar.** Mas não decidem o que construir agora.
 

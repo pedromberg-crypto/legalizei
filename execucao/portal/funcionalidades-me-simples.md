@@ -17,8 +17,8 @@ tags: [produto, redirecionador]
 |---|---|
 | **Quais funcionalidades existem** e a cobertura de cada uma (✅🟡🔴⚪), os baldes de monetização, o catálogo à-la-carte, o que decidimos não fazer | **[[_catalogo]]** |
 | **De que terceiro cada funcionalidade depende**, o que a verificação de 09/09 mudou, o calendário fiscal, o placar de dependências, a lista de investigação | **[[_matriz-dependencia]]** |
-| O desenho de uma funcionalidade específica | `produto/funcionalidades/<nome>.md` |
-| O que o concorrente faz, com data | `produto/evidencias/<data>-<fonte>-<tema>.md` |
+| O desenho de uma funcionalidade específica | `produto/me/viver/funcionalidades/specs/<nome>.md` |
+| O que o concorrente faz, com data | `produto/me/_evidencias/<data>-<fonte>-<tema>.md` |
 
 Comece por **[[HOME-produto]]**.
 

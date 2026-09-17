@@ -20,7 +20,7 @@ tags: [produto, cruzamento, fiscal, aliquota, pro-labore, fator-r, motor]
 
 ## 🔒 A regra que esta nota cria
 
-**Nenhuma funcionalidade fiscal se documenta sozinha.** Toda spec em `produto/funcionalidades/` precisa declarar, em seção própria:
+**Nenhuma funcionalidade fiscal se documenta sozinha.** Toda spec em `produto/me/viver/funcionalidades/specs/` precisa declarar, em seção própria:
 
 | | O que declarar |
 |---|---|

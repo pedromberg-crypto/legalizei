@@ -17,8 +17,8 @@ tags: [produto, evidencia, dossie, indice, persona-zero, sensivel]
 
 | Pasta | O que é | Quem usa |
 |---|---|---|
-| `produto/evidencias/` | **leitura analisada** — o achado, a aritmética refeita, a etiqueta de 3 vias, o que não prova | nós, para decidir produto |
-| `produto/evidencias/fontes/` | **texto literal salvo**, 100%, sem paráfrase | advogada e contador, para conferir sem depender da minha leitura |
+| `produto/me/_evidencias/` | **leitura analisada** — o achado, a aritmética refeita, a etiqueta de 3 vias, o que não prova | nós, para decidir produto |
+| `produto/me/_evidencias/fontes/` | **texto literal salvo**, 100%, sem paráfrase | advogada e contador, para conferir sem depender da minha leitura |
 
 ⚠️ A separação é regra, não arrumação: paráfrase minha não é o que profissional valida ([[legalize-leitura-integral-documento]]).
 

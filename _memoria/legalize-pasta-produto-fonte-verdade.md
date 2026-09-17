@@ -16,12 +16,12 @@ O Pedro pediu **vault Obsidian separado** e eu recomendei pasta; ele aprovou. Va
 
 ```
 produto/HOME-produto.md        hub, placar, fila
-produto/_metodo.md             6 passos do teardown + regra de navegação
-produto/_catalogo.md           as 51 funcionalidades e a cobertura
-produto/_matriz-dependencia.md as 23 dependências externas
+produto/_doutrina/_metodo.md             6 passos do teardown + regra de navegação
+produto/me/viver/_catalogo.md           as 51 funcionalidades e a cobertura
+produto/me/viver/_matriz-dependencia.md as 23 dependências externas
 produto/funcionalidades.base   4 vistas, filtra por `dominio`
-produto/funcionalidades/       spec VIVA, é o que o dev implementa
-produto/evidencias/            foto com DATA, não manda em nada
+produto/me/viver/funcionalidades/specs/       spec VIVA, é o que o dev implementa
+produto/me/_evidencias/            foto com DATA, não manda em nada
 ```
 
 🔑 **A separação que dá o valor:** teardown de concorrente **envelhece sozinho** (eles mudam a tela); nosso desenho não. Num arquivo só, em 6 meses metade mente e ninguém sabe qual metade.

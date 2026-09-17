@@ -56,7 +56,7 @@ function alvos() {
       lista.push({ caminho: resolve(cru, f), categoria: basename(f, ".mjs") });
     }
   }
-  const func = resolve(RAIZ, "produto/funcionalidades-data.mjs");
+  const func = resolve(RAIZ, "produto/me/viver/funcionalidades/funcionalidades-data.mjs");
   if (existsSync(func)) lista.push({ caminho: func, categoria: null });
   return lista;
 }

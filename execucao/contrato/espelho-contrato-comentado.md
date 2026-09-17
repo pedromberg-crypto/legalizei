@@ -12,7 +12,7 @@ tags: [juridico, contrato, espelho, advogada, briefing]
 >
 > 🔴 **ESCOPO: plano ME apenas.** Este documento **não cobre MEI**, que é caminho próprio do produto e será tratado depois. Nada aqui deve ser lido como aplicável ao MEI.
 >
-> 📚 **De onde vem a referência:** contrato da Contabilizei **lido na íntegra** (74.700 caracteres, 11 cláusulas + 3 anexos), mais o "Plano Contratado" (1.500), a Carta de Responsabilidade (6.418) e o Termo de lucro (4.615). **87.233 caracteres, 100% de cada documento.** Os textos literais estão em `produto/evidencias/fontes/`.
+> 📚 **De onde vem a referência:** contrato da Contabilizei **lido na íntegra** (74.700 caracteres, 11 cláusulas + 3 anexos), mais o "Plano Contratado" (1.500), a Carta de Responsabilidade (6.418) e o Termo de lucro (4.615). **87.233 caracteres, 100% de cada documento.** Os textos literais estão em `produto/me/_evidencias/fontes/`.
 >
 > ⚠️ **Nós não redigimos a minuta.** Este é o briefing; a minuta é produto da advogada.
 
@@ -405,7 +405,7 @@ f) Ultrapassado o limite do Simples Nacional (R$ 4,8 milhões),
 
 📄 **Contabilizei.** **5.10:** responde por multa só se houver *"culpa exclusiva e comprovada"*. **5.11 e 5.11.1:** não responde por multa que o cliente der causa, nem solidária nem subsidiariamente, inclusive IBS/CBS e split payment. **8.1:** doze declarações do cliente. **7.9 e 11.11:** dever de indenizar com direito de regresso.
 
-✍️ **Legalizai.** Adotar a estrutura. As doze declarações da 8.1 e as 24 obrigações da 5.6 são a parte mais reaproveitável do documento inteiro, e estão literais em `produto/evidencias/fontes/`.
+✍️ **Legalizai.** Adotar a estrutura. As doze declarações da 8.1 e as 24 obrigações da 5.6 são a parte mais reaproveitável do documento inteiro, e estão literais em `produto/me/_evidencias/fontes/`.
 
 ⚠️ **Duas obrigações da 5.6 precisam de adaptação**, porque conta PJ e extrato integrado **estão fora do nosso escopo** (decisão de 09/09): a **5.6-e** (importar extrato até o 5º dia útil) e a **5.6-w** (classificar saques aos sócios). Sem trilho bancário próprio, **o envio pelo cliente é o mecanismo, não o plano B** — e a consequência do não envio precisa ser mais explícita que na deles.
 
@@ -415,7 +415,7 @@ f) Ultrapassado o limite do Simples Nacional (R$ 4,8 milhões),
 
 # 14. LGPD, licença de software e condições gerais
 
-📄 Cláusulas **9** (LGPD), **10** (licença) e **11** (gerais) do contrato deles, todas literais em `produto/evidencias/fontes/`.
+📄 Cláusulas **9** (LGPD), **10** (licença) e **11** (gerais) do contrato deles, todas literais em `produto/me/_evidencias/fontes/`.
 
 ⚖️ 🟢 Copiar a estrutura, com dois ajustes:
 - **11.3** (reembolso de materiais como correios, carimbos e cópias) precisa ser conferida: no nosso modelo digital pode não fazer sentido, e ela **contradiz** a promessa de custo transparente.

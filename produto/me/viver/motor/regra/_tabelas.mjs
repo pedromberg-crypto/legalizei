@@ -326,7 +326,7 @@ export const IRRF = {
  *   "prorroga" → empurra para o próximo dia útil
  *   "antecipa" → puxa para o dia útil anterior
  *
- * Fonte: `produto/_matriz-dependencia.md`, verificação de 09/09.
+ * Fonte: `produto/me/viver/_matriz-dependencia.md`, verificação de 09/09.
  */
 export const VENCIMENTOS = {
   das: {

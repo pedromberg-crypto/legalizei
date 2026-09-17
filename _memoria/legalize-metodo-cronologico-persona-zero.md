@@ -12,7 +12,7 @@ Provocação do Pedro em 13/09: *"me usar como a persona 1 de fato, com caracter
 
 **Sai** a varredura por CATEGORIA (*"o que essa função precisa fazer?"*). **Entra** a varredura por ORDEM DE EXECUÇÃO REAL (*"o que aconteceu com esta empresa, nesta data, e o que o contador fez em resposta?"*). Fontes externas só onde a conta do líder não responde. Ponto zero = a constituição em 12/12/2025; daí mês a mês.
 
-**Arquivo 1:** `produto/persona-zero/constituicao.md` — os **90 campos / 19 telas** do schema já gerado (`app/src/lib/conferencia-dados.ts`, saído de `flow-data.mjs`) instanciados com valores reais. Não inventa campo: pega os 90 e pergunta o valor do Pedro.
+**Arquivo 1:** `produto/me/persona-zero/constituicao.md` — os **90 campos / 19 telas** do schema já gerado (`app/src/lib/conferencia-dados.ts`, saído de `flow-data.mjs`) instanciados com valores reais. Não inventa campo: pega os 90 e pergunta o valor do Pedro.
 
 ## Duas travas negociadas ANTES de começar
 

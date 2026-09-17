@@ -101,7 +101,7 @@ Ordem de autoridade. Quando dois discordam, manda o de cima.
 | 3 | `pesquisa/cnae-matriz/anexos-simples/anexo-{iii,v}-simples.md` | Faixas, parcela a deduzir, **repartição por tributo** | 🟢 estatutário |
 | 4 | `pesquisa/fiscal-simples-bh-2026.md` | Fator R determinístico? · obrigações mensais · valores 2026 | 🟢 4 rodadas |
 | 5 | `pesquisa/cnae-matriz/cnae-matriz.json` | `anexo_fator_r_grupo` dos 1.332 CNAEs | 🟢 87 certeza |
-| 6 | `produto/funcionalidades/aliquota-e-enquadramento.md` | As 7 regras da alíquota, com grau de confiança | 🟢 |
+| 6 | `produto/me/viver/funcionalidades/specs/aliquota-e-enquadramento.md` | As 7 regras da alíquota, com grau de confiança | 🟢 |
 | 7 | `pesquisa/cnae-matriz/equacao-viva-camada-2-vars-cnpj.md` | **Quais variáveis o app já captura** | 🟡 27/08, parcial |
 | 8 | `produto/me/viver/processos/cru/impostos.mjs` + `prolabore.mjs` | O processo em volta do cálculo | 🟢 fechadas |
 

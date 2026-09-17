@@ -11,7 +11,7 @@ tags: [produto, api, dependencia, automacao, fiscal]
 # 🔌 Matriz de dependência externa — o que precisamos ir buscar fora
 
 > 🧭 **Autoridade:** esta nota manda em **do que cada funcionalidade depende de terceiros** e em **o que já sabemos do caminho técnico**.
-> O que existe e qual a cobertura é [[_catalogo]]. O desenho de cada uma é `produto/funcionalidades/<nome>.md`.
+> O que existe e qual a cobertura é [[_catalogo]]. O desenho de cada uma é `produto/me/viver/funcionalidades/specs/<nome>.md`.
 > Hub da frente: [[HOME-produto]].
 >
 > 🔒 **A regra que criou esta matriz** (Pedro, 08/09): *"não adianta falar dessas funcionalidades sem validar o que temos de API disponível realmente"*. Por isso aqui **só** entra o que depende de terceiro. O que a gente resolve com dado interno ou documento do cliente é problema de programação, não de matriz, e fica fora de propósito.

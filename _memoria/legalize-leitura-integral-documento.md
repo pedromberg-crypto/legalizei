@@ -16,8 +16,8 @@ metadata:
 
 **How to apply:**
 1. **Ler ate o fim e provar.** Declarar tamanho total e quanto foi lido. Se leu 12%, dizer 12%.
-2. **Salvar o literal em arquivo** (`produto/evidencias/fontes/`), nao so a parafrase. Parafrase minha nao e o que advogado, contador ou socio valida.
-3. **Inventariar o que ficou de fora**, com nome. Vive em `produto/evidencias/fontes/_inventario-documentos.md`.
+2. **Salvar o literal em arquivo** (`produto/me/_evidencias/fontes/`), nao so a parafrase. Parafrase minha nao e o que advogado, contador ou socio valida.
+3. **Inventariar o que ficou de fora**, com nome. Vive em `produto/me/_evidencias/fontes/_inventario-documentos.md`.
 4. **Vale para tela tambem** (generaliza a regra de 09/09): medir o `innerText` e comparar com o lido.
 
 ⚠️ **Limite de ferramenta nao e desculpa.** `javascript_exec` trunca em ~1.000 caracteres por chamada; a saida e **paginar ate o fim** com `browser_batch` (10 fatias por chamada), nao resumir. 74.700 caracteres sairam em 9 chamadas.

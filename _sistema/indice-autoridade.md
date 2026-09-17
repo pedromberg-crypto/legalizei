@@ -70,14 +70,14 @@ Então a pergunta nunca é *"esse doc está vivo?"*. É sempre **"esse doc manda
 | 🆕 **QUAIS funcionalidades o app tem** · e a LUZ de cada uma | [[FUNCIONALIDADES]] (`produto/`, gerado de `funcionalidades-data.mjs`) | 🔻 **Travado 12/09 (Pedro):** são as **58** que foram ao Mauro, com a folha DENTRO do MVP. A luz é **derivada** (tem rota? tem passo?), nunca digitada. ❌ [[_catalogo]] perdeu a lista e a cobertura; ⚠️ a numeração dele difere em §1 e §2 |
 | **POR QUE cada funcionalidade é assim** · o que o líder faz · como automatizar · balde de monetização | [[_catalogo]] (`produto/`) | ❌ não manda mais na lista nem na cobertura (saiu em 12/09). ✅ segue mandando nos **15 vendáveis do à-la-carte**, nas decisões de 08/09 e 27/07, no desenho da central de avisos e no §9 "o que decidimos não fazer" |
 | **De que TERCEIRO cada funcionalidade depende** (API, órgão, provedor) | [[_matriz-dependencia]] (`produto/`) | ⚠️ a coluna "como automatizar" do [[_catalogo]] é anterior e é **hipótese**; quando divergirem, **a matriz ganha** (ela tem fonte) |
-| **DESENHO de uma funcionalidade** (o que o dev implementa) | `produto/funcionalidades/<nome>.md` | ❌ nunca a evidência do concorrente: ela é foto com data e não manda em nada |
-| **O que o CONCORRENTE faz**, com data | `produto/evidencias/<data>-<fonte>-<tema>.md` | ⚠️ **envelhece sozinho.** Nunca ratificar dado fiscal por tela de concorrente |
+| **DESENHO de uma funcionalidade** (o que o dev implementa) | `produto/me/viver/funcionalidades/specs/<nome>.md` | ❌ nunca a evidência do concorrente: ela é foto com data e não manda em nada |
+| **O que o CONCORRENTE faz**, com data | `produto/me/_evidencias/<data>-<fonte>-<tema>.md` | ⚠️ **envelhece sozinho.** Nunca ratificar dado fiscal por tela de concorrente |
 | 🆕 **QUE TELA cobre qual funcionalidade** · o que cada tela do portal entrega | `caps` e `cobre` em `execucao/portal/portal-data.mjs` + o painel de [[HOME-produto]] | ❌ `execucao/portal/matriz-portal-interno` é de **22/07** e virou histórico em 11/09: mostra o mapeamento da primeira leva, não o de agora |
 | 🆕 **Se uma capacidade SUMIU da tela** (regressão de redesenho) | `node execucao/portal/verificar-capacidades.mjs` | ⚠️ pega capacidade, **não pega qualidade**: que a tela continua boa é olho do Pedro no print. Régua completa em [[_doutrina-capacidades]] |
 | 🆕 **Resíduos de julho do portal** (matriz, cruzamento, candidatos de home, backlog) | ⛔ nenhum — são **histórico** | 🔻 Travado 11/09 (Pedro): explicam por que cada tela nasceu assim e por isso não se apagam, mas **não decidem o que construir agora**. Quem decide é a pesquisa de setembro em `produto/` |
 | **Como se destrincha uma funcionalidade** · regra de navegação na conta do líder | [[_metodo]] (`produto/`) | — |
 | **CNPJs da casa** · CRC · quem assina o quê · responsabilidade técnica | [[entidades-legais]] (`execucao/`) | ❌ o ADR de 03/08 gravou a razão social ANTIGA ("Legalize Digital"). São **duas** empresas, não uma |
-| **O que o contrato do LÍDER diz**, cláusula a cláusula | [[2026-09-10-contabilizei-contrato-integral]] (`produto/evidencias/`) | ⚠️ a captura de 27/08 ([[2026-08-27-funil-4-etapas-contrato-completo]]) é **parcial**: não tem a cláusula 1. Quando divergirem, a de 10/09 ganha |
+| **O que o contrato do LÍDER diz**, cláusula a cláusula | [[2026-09-10-contabilizei-contrato-integral]] (`produto/me/_evidencias/`) | ⚠️ a captura de 27/08 ([[2026-08-27-funil-4-etapas-contrato-completo]]) é **parcial**: não tem a cláusula 1. Quando divergirem, a de 10/09 ganha |
 | **Estado corrente do projeto** | [[HOME]] §Agora | — |
 | **Valores a validar com gente** | [[fila-validacao-humana]] | — |
 | 🆕 **CÁLCULO fiscal que roda** (DAS, RBT12, Fator R, DARF do sócio, vencimento, multa) | `produto/me/viver/motor/regra/apurador.mjs` · as tabelas e constantes da lei em `produto/me/viver/motor/regra/_tabelas.mjs` | ⚠️ **Precedência 1 aplica aqui com força:** quando o motor e um doc divergirem, **o motor ganha** — ele bate ao centavo contra recibo real. ❌ [[fiscal-simples-bh-2026]] segue mandando na PESQUISA e no que ainda não virou código, mas não no cálculo. ❌ `app/src/lib/fiscal.ts` é **estimador de abertura**, não apurador |
@@ -103,13 +103,13 @@ Então a pergunta nunca é *"esse doc está vivo?"*. É sempre **"esse doc manda
 | **Como o modo cru funciona** (as 2 regras da varredura por categoria) | `produto/me/viver/processos/cru/_como-funciona.md` | ❌ os `cru/*.md` são **gerados** — a regra mora aqui, o mapa sai do `.mjs` |
 | **Doutrina de processos** (o que é nó, o que é variável, o que é saída) | `produto/me/viver/processos/_doutrina-processos.md` | ⚠️ o formato P1–P6 completo está **adiado**, não revogado (11/09) |
 | **Variáveis de entrada do ME** (o que o app pergunta no dia 1) | `execucao/testes-flutter/variaveis-entrada-me.md` | ❌ `vidas.mjs` manda do **mês 1** em diante; este manda no **dia 1** |
-| **Teardown do pró-labore e do PGDAS na conta real** | `produto/evidencias/2026-09-13-teardown-prolabore-e-pgdas-conta-real.md` | 🔴 é **evidência**, não autoridade fiscal: o líder é evidência, a lei é que manda |
-| **Alíquota e enquadramento** (a funcionalidade, não o cálculo) | `produto/funcionalidades/aliquota-e-enquadramento.md` | ❌ o **cálculo** é do `apurador.mjs`; aqui mora o que a funcionalidade entrega |
-| **Compliance e rotinas** | `produto/funcionalidades/compliance-e-rotinas.md` | ⚠️ o **calendário** fechado é o `ciclo-do-cnpj.mjs` |
-| **Emitir nota fiscal** | `produto/funcionalidades/emitir-nota-fiscal.md` | ⚠️ o desenho de processo é `cru/notas.mjs` |
-| **Folha de pagamento** | `produto/funcionalidades/folha-de-pagamento.md` | 🔒 colaborador está **travado fora** das vidas por decisão do Pedro (15/09) |
-| **Guia de imposto** | `produto/funcionalidades/guia-de-imposto.md` | ⚠️ o valor da guia é do `apurador.mjs`; aqui mora a experiência |
-| **Cruzamentos entre funcionalidades** | `produto/_mapa-de-cruzamentos.md` | ⚠️ é mapa de **dependência**, não de ordem de construção |
+| **Teardown do pró-labore e do PGDAS na conta real** | `produto/me/_evidencias/2026-09-13-teardown-prolabore-e-pgdas-conta-real.md` | 🔴 é **evidência**, não autoridade fiscal: o líder é evidência, a lei é que manda |
+| **Alíquota e enquadramento** (a funcionalidade, não o cálculo) | `produto/me/viver/funcionalidades/specs/aliquota-e-enquadramento.md` | ❌ o **cálculo** é do `apurador.mjs`; aqui mora o que a funcionalidade entrega |
+| **Compliance e rotinas** | `produto/me/viver/funcionalidades/specs/compliance-e-rotinas.md` | ⚠️ o **calendário** fechado é o `ciclo-do-cnpj.mjs` |
+| **Emitir nota fiscal** | `produto/me/viver/funcionalidades/specs/emitir-nota-fiscal.md` | ⚠️ o desenho de processo é `cru/notas.mjs` |
+| **Folha de pagamento** | `produto/me/viver/funcionalidades/specs/folha-de-pagamento.md` | 🔒 colaborador está **travado fora** das vidas por decisão do Pedro (15/09) |
+| **Guia de imposto** | `produto/me/viver/funcionalidades/specs/guia-de-imposto.md` | ⚠️ o valor da guia é do `apurador.mjs`; aqui mora a experiência |
+| **Cruzamentos entre funcionalidades** | `produto/me/viver/_mapa-de-cruzamentos.md` | ⚠️ é mapa de **dependência**, não de ordem de construção |
 
 ---
 

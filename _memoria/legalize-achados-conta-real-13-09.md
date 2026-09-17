@@ -40,5 +40,5 @@ CPF **088.561.916-10** · CEP **30.220-310** · e-mail **pedromberg@gmail.com** 
 **Contrato social**: não está no e-mail, não está no portal do líder, não está no e-CAC. Único caminho é a **certidão de Inteiro Teor da JUCEMG** — ato **31217298589**, aprovado **12/12/2025**, imagem 798 KB, **único ato da empresa** (nenhuma alteração em 9 meses), acessível em Portal JUCEMG → **Serviços WEB** (pago, via DAE). ⚠️ "Retirar Documentos" exige **protocolo**, identificador diferente do número do ato.
 ⚠️ Fora do produto, pro Pedro: procuração ativa até 2030 no **CPF** dele pra **ATTEMPO SOLUÇÕES CONTÁBEIS** (01.386.616/0001-05), que não é a Contabilizei; e o processo de teste **26/616.178-2** parado em "Aguardando Assinatura" na JUCEMG desde 31/08.
 
-Evidências: `produto/evidencias/2026-09-13-ecac-procuracao-e-caixa-postal.md` · `2026-09-13-certificado-16-minutos-e-o-contrato-que-nunca-chegou.md` · `fontes/2026-09-13-cartao-cnpj-persona-zero-LITERAL.md`
+Evidências: `produto/me/_evidencias/2026-09-13-ecac-procuracao-e-caixa-postal.md` · `2026-09-13-certificado-16-minutos-e-o-contrato-que-nunca-chegou.md` · `fontes/2026-09-13-cartao-cnpj-persona-zero-LITERAL.md`
 Relacionado: [[legalize-metodo-cronologico-persona-zero]] · [[legalize-reta-final-certificado-e-assinaturas]] · [[legalize-contrato-lider-enumera-incluso]] · [[legalize-regra-de-orgao-nao-se-deduz]]

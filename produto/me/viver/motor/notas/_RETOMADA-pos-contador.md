@@ -104,7 +104,7 @@ node produto/me/viver/processos/gerar-persona.mjs
 node produto/me/viver/processos/cru/gerar-cru.mjs
 ```
 
-⚠️ **PROCESSOS.md, SAIDAS.md, cru/*.md e produto/PERSONA.md são GERADOS.** Não editar à mão.
+⚠️ **PROCESSOS.md, SAIDAS.md, cru/*.md e produto/me/viver/processos/PERSONA.md são GERADOS.** Não editar à mão.
 
 ### 🔧 Passo 6 · Bloco D do `_duvidas-contador`
 

@@ -3,13 +3,13 @@ tipo: derivado
 status: vivo
 data: 2026-09-17
 assunto: funcionalidades-core-me-simples
-gerado_por: produto/gerar-funcionalidades.mjs
+gerado_por: produto/me/viver/funcionalidades/gerar-funcionalidades.mjs
 tags: [produto, funcionalidades, semaforo, mvp]
 ---
 
 # 📱 As 58 funcionalidades core do ME no Simples
 
-> ⚠️ **Nota gerada.** Não editar à mão: rode `node produto/gerar-funcionalidades.mjs`. A fonte é `funcionalidades-data.mjs`.
+> ⚠️ **Nota gerada.** Não editar à mão: rode `node produto/me/viver/funcionalidades/gerar-funcionalidades.mjs`. A fonte é `funcionalidades-data.mjs`.
 >
 > **A lista é a que foi ao Mauro em 11/09** (`funcionalidades-legalizai.pdf`), ratificada pelo Pedro em 12/09 como a lista core oficial: a **folha de pagamento entra no MVP**, e saem "acesso do 2º sócio" e "pagar o DAS dentro do app".
 >

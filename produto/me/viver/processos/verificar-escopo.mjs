@@ -44,7 +44,7 @@ function arquivosDeProcesso() {
       if (f.endsWith(".mjs") && !f.startsWith("gerar-")) alvos.push(resolve(cru, f));
     }
   }
-  const func = resolve(RAIZ, "produto/funcionalidades-data.mjs");
+  const func = resolve(RAIZ, "produto/me/viver/funcionalidades/funcionalidades-data.mjs");
   if (existsSync(func)) alvos.push(func);
   return alvos.filter((a) => existsSync(a));
 }

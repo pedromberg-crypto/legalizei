@@ -1019,10 +1019,10 @@ export const PASSOS = [
   // faixa de RBT12 (P1.2) e Fator R (P5.9) — e nenhum desses foi desenhado
   // pra receber um número menor.
   //
-  // 📚 Evidência: `produto/evidencias/2026-09-09-contabilizei-nota-fiscal.md`
+  // 📚 Evidência: `produto/me/_evidencias/2026-09-09-contabilizei-nota-fiscal.md`
   // §10 (3ª rodada, o Pedro conduzindo até a tela de confirmação, sem
-  // confirmar o cancelamento) + `produto/funcionalidades/emitir-nota-fiscal.md`
-  // (modelo fiscal de 75 campos) + `produto/_matriz-dependencia.md` linha 3.4
+  // confirmar o cancelamento) + `produto/me/viver/funcionalidades/specs/emitir-nota-fiscal.md`
+  // (modelo fiscal de 75 campos) + `produto/me/viver/_matriz-dependencia.md` linha 3.4
   // (cancelamento por API, prazo de 730 dias com fonte).
   //
   // 🔑 TRÊS AÇÕES, NÃO UMA. A funcionalidade 3.4 junta "cancelar, corrigir e

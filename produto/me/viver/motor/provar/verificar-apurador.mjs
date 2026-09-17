@@ -464,7 +464,7 @@ for (const caso of CASOS) {
 /* ── G9 · o anexo antes do cálculo, e o calendário ─────────────────────── */
 {
   console.log("── G9 · Os 3 grupos de anexo, e o calendário por tributo");
-  console.log("   fonte: Manual PGDAS-D + cnae-matriz.json · produto/_matriz-dependencia.md");
+  console.log("   fonte: Manual PGDAS-D + cnae-matriz.json · produto/me/viver/_matriz-dependencia.md");
 
   const fixo = anexoDoCnae("III-fixo");
   const dinamico = anexoDoCnae("fator-r-dinamico(III<->V, limiar 28%)");

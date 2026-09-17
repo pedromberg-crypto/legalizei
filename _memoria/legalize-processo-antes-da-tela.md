@@ -19,7 +19,7 @@ metadata:
 - 🔑 **Os vermelhos são o produto do trabalho, não o defeito.** Processo que sai todo verde na primeira passada não foi desenhado, foi copiado.
 - 🔴 **O inventário nasce da NOSSA TELA pra fora, não da lista do líder pra dentro.** Foi olhar pela lista dele que deixou `/mais/relatorios` e `/mais/servicos` invisíveis por um mês e meio.
 
-**Fase 3 (inventário de capacidades com `data-cap`) não morreu, foi adiada:** congelar hoje uma tela com preço errado e botão que não baixa seria congelar o defeito. Doutrina em `produto/_doutrina-capacidades.md`.
+**Fase 3 (inventário de capacidades com `data-cap`) não morreu, foi adiada:** congelar hoje uma tela com preço errado e botão que não baixa seria congelar o defeito. Doutrina em `produto/_doutrina/_doutrina-capacidades.md`.
 
 ⚠️ **Protege capacidade, não qualidade** — mesma fronteira da trava de anatomia do MEI.
 

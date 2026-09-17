@@ -389,7 +389,7 @@ const DOCS_VIVOS = [
   // 🔑 Mora em /processos porque é o `gerar-cru.mjs` quem o escreve.
   "produto/me/viver/processos/_cobertura-das-vidas.md",
   "_sistema/PENDENCIAS.md",
-  "produto/persona-zero/acionaveis.md",
+  "produto/me/persona-zero/acionaveis.md",
 
   /**
    * 🔴 E O CÓDIGO ENTRA AQUI, decidido em 17/09.

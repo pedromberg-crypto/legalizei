@@ -8,7 +8,7 @@ metadata:
   modified: 2026-09-10T13:43:28.551Z
 ---
 
-10/09/2026, leitura integral dos 2 Termos da aba **Aceites** do lider (literal em `produto/evidencias/fontes/2026-09-10-contabilizei-aceites-LITERAL.md`).
+10/09/2026, leitura integral dos 2 Termos da aba **Aceites** do lider (literal em `produto/me/_evidencias/fontes/2026-09-10-contabilizei-aceites-LITERAL.md`).
 
 ## 1. Distribuicao de lucro muda em 2026
 

@@ -194,7 +194,7 @@ Consequência no board: o passo compartilhado aparece no filtro dos **dois** pro
 |:--:|---|---|
 | 1º | **Nossas decisões travadas** ([[decisoes-marca]], contrato, `fiscal.ts`) | manda |
 | 2º | **Lei e obrigação de órgão** | manda, e não se negocia |
-| 3º | **Teardown do concorrente** (`produto/evidencias/`) | 📚 evidência do que **o mundo exige** |
+| 3º | **Teardown do concorrente** (`produto/me/_evidencias/`) | 📚 evidência do que **o mundo exige** |
 | ⛔ | Docs do portal de **22-23/07** | histórico. Não decidem nada ([[_doutrina-capacidades]] §7) |
 
 🔴 **TRAVA — o concorrente é evidência, nunca meta.** O teardown dele prova o que o gateway pede, o que o órgão obriga e que o modelo aguenta. **Não** prova que a gente deve fazer igual. Onde ele resolveu por preguiça ou por dark pattern, a gente resolve diferente — e o passo registra isso como decisão nossa, com a razão do lado.

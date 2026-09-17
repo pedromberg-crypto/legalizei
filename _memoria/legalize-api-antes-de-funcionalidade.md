@@ -1,6 +1,6 @@
 ---
 name: legalize-api-antes-de-funcionalidade
-description: "08/09: não discutir funcionalidade sem saber que API existe; matriz de dependência externa em produto/_matriz-dependencia.md tem 24 deps, 10 sem resposta"
+description: "08/09: não discutir funcionalidade sem saber que API existe; matriz de dependência externa em produto/me/viver/_matriz-dependencia.md tem 24 deps, 10 sem resposta"
 metadata: 
   node_type: memory
   type: feedback
@@ -14,7 +14,7 @@ ela **depende de alguém de fora**. O Pedro parou a análise no meio pra isso:
 o que temos de API disponível realmente"*.
 
 A **matriz de dependência externa** vive em
-`produto/_matriz-dependencia.md` (era `execucao/portal/funcionalidades-me-simples.md`, movida em 09/09). Regra de entrada dura: **só
+`produto/me/viver/_matriz-dependencia.md` (era `execucao/portal/funcionalidades-me-simples.md`, movida em 09/09). Regra de entrada dura: **só
 entra o que depende de terceiro** (órgão, provedor, parceiro). O que se resolve
 com dado interno + programação fica fora — já está resolvido, é só construir.
 

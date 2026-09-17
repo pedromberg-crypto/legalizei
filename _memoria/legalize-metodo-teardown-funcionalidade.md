@@ -8,7 +8,7 @@ metadata:
   modified: 2026-09-09T15:01:08.336Z
 ---
 
-**Destrinchar UMA funcionalidade até o fim, na conta logada da Contabilizei, rendeu mais que semanas de leitura por fora.** Método completo em `produto/_metodo.md`.
+**Destrinchar UMA funcionalidade até o fim, na conta logada da Contabilizei, rendeu mais que semanas de leitura por fora.** Método completo em `produto/_doutrina/_metodo.md`.
 
 **Why:** o pró-labore parecia um campo de valor, mas é o nó onde Fator R, INSS, eSocial e IRPF se cruzam. Desenhá-lo destravou de uma vez o cálculo de imposto, o calendário e o informe anual.
 

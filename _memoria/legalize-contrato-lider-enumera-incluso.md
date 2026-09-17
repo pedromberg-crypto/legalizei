@@ -8,7 +8,7 @@ metadata:
   modified: 2026-09-10T12:00:00.292Z
 ---
 
-10/09/2026. O contrato da Contabilizei foi lido **inteiro** na conta paga do Pedro: `sistema/#/configuracao/contrato`, 74.700 caracteres, **11 clausulas + 3 anexos**, assinado 14/07/2026. Evidencia completa em `produto/evidencias/2026-09-10-contabilizei-contrato-integral.md`.
+10/09/2026. O contrato da Contabilizei foi lido **inteiro** na conta paga do Pedro: `sistema/#/configuracao/contrato`, 74.700 caracteres, **11 clausulas + 3 anexos**, assinado 14/07/2026. Evidencia completa em `produto/me/_evidencias/2026-09-10-contabilizei-contrato-integral.md`.
 
 **A resposta da pergunta que abriu o flow:**
 - **Enumera o incluso**, em listas fechadas: `4.1` (abertura) · **`4.2` "NAO ESTAO INCLUSOS"** (lista de exclusao nominal, 6 alineas) · `5.2` (software, 9 alineas) · `5.3` (contabil, 3 alineas).
@@ -17,7 +17,7 @@ metadata:
 
 **Why:** eu tinha registrado em 09/09 que "a fronteira entre o incluso e o cobrado nao esta dita em lugar nenhum". Estava errado por metade — ela **esta dita**, com nome e letra; e a loja que a contraria. E a captura de 27/08, feita por print de funil, nao tinha a clausula 1, que era exatamente onde a resposta morava.
 
-**How to apply:** regra que nasce pro NOSSO contrato — **item que aparece na lista de incluso nao pode existir na loja**, e isso e checavel por teste contra `produto/_catalogo.md`. 🟢 Copiar a tecnica da `4.2` (exclusao nominal) e o **"Ver resumo do contrato"** deles, que e produto e nao juridico. 🔴 A `7.6` (desconto promocional recuperavel no cancelamento) morde a promo de R$79 e pede decisao.
+**How to apply:** regra que nasce pro NOSSO contrato — **item que aparece na lista de incluso nao pode existir na loja**, e isso e checavel por teste contra `produto/me/viver/_catalogo.md`. 🟢 Copiar a tecnica da `4.2` (exclusao nominal) e o **"Ver resumo do contrato"** deles, que e produto e nao juridico. 🔴 A `7.6` (desconto promocional recuperavel no cancelamento) morde a promo de R$79 e pede decisao.
 
 ⚠️ **Ponto cego confessado:** o contrato estava a dois cliques dentro da conta, em aba dedicada, o tempo todo. A varredura de **§7 Plano e cobranca**, parada em 38%, teria achado — e continua sendo o item 1 da fila.
 

@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * GERA `produto/PERSONA.md` a partir de `_persona.mjs`.
+ * GERA `produto/me/viver/processos/PERSONA.md` a partir de `_persona.mjs`.
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * 🔴 POR QUE GERADO E NÃO ESCRITO À MÃO. A casa tem uma regra dura de 11/09:
@@ -22,7 +22,12 @@ import { TRAVADO, ABERTO, PERSONA_ZERO, PROIBIDO_POR_CATEGORIA } from "./_person
 import { RAIZ } from "../../../_raiz.mjs";
 
 const AQUI = dirname(fileURLToPath(import.meta.url));
-const SAIDA = resolve(RAIZ, "produto", "PERSONA.md");
+/**
+ * 🔑 A nota gerada mora COM O GERADOR desde 17/09 (decisão do Pedro).
+ * Era `produto/PERSONA.md`, na raiz; a regra que vale é a mesma do
+ * `_cobertura-das-vidas.md`: doc gerado fica na pasta de quem o escreve.
+ */
+const SAIDA = resolve(AQUI, "PERSONA.md");
 
 const hoje = () => new Date().toISOString().slice(0, 10);
 
@@ -176,7 +181,7 @@ export function gerarPersona({ silencioso = false } = {}) {
 
   writeFileSync(SAIDA, L.join("\r\n"), "utf8");
   if (!silencioso) {
-    console.log(`✓ persona: produto/PERSONA.md · ${Object.keys(TRAVADO).length} travas · ${abertas.length} abertas`);
+    console.log(`✓ persona: produto/me/viver/processos/PERSONA.md · ${Object.keys(TRAVADO).length} travas · ${abertas.length} abertas`);
   }
   return true;
 }

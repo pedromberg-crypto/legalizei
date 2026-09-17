@@ -182,5 +182,5 @@ um padrão: **o líder se coloca como o interlocutor oficial da empresa perante 
 ## Links
 - [[PERSONA]] · `execucao/processos/cru/prolabore.mjs`
 - Pesquisa que originou: `pesquisa/prompts/2026-09-13-motor-fiscal-fator-r-rbt12-prolabore.md`
-- Retorno literal: `produto/evidencias/fontes/pesquisa-motor-fiscal-2026-09-13/`
+- Retorno literal: `produto/me/_evidencias/fontes/pesquisa-motor-fiscal-2026-09-13/`
 - Teardown anterior: [[2026-09-12-contabilizei-emissao-nf-fluxo-completo]]

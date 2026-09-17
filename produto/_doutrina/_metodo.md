@@ -122,7 +122,7 @@ Toda tela mistura três coisas, e elas têm validades diferentes:
 
 ### 7. 🔗 Declarar os cruzamentos, sempre
 
-🔒 **Regra dura, travada em 09/09 a pedido do Pedro.** Nenhuma funcionalidade fiscal se documenta sozinha. Toda spec em `produto/funcionalidades/` abre com uma seção **Cruzamentos declarados**, com quatro linhas:
+🔒 **Regra dura, travada em 09/09 a pedido do Pedro.** Nenhuma funcionalidade fiscal se documenta sozinha. Toda spec em `produto/me/viver/funcionalidades/specs/` abre com uma seção **Cruzamentos declarados**, com quatro linhas:
 
 | | O que declarar |
 |---|---|
@@ -149,8 +149,8 @@ Sem isso, o teardown é curiosidade. Com isso, é backlog.
 ## 📁 Onde cada coisa cai
 
 ```
-produto/evidencias/AAAA-MM-DD-<fonte>-<tema>.md    ← o que foi observado, com data
-produto/funcionalidades/<tema>.md                   ← o nosso desenho, vivo
+produto/me/_evidencias/AAAA-MM-DD-<fonte>-<tema>.md    ← o que foi observado, com data
+produto/me/viver/funcionalidades/specs/<tema>.md                   ← o nosso desenho, vivo
 ```
 
 A evidência **linka** a spec e a spec **linka** a evidência. Quando a evidência envelhecer, a spec continua de pé.

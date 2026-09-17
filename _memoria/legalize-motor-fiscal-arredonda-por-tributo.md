@@ -23,5 +23,5 @@ Quatro regras do motor fiscal, todas confirmadas em 13/09 contra documento ofici
 
 🔴 **`anexoEscolhido: 5` no payload do lider NAO e o Anexo V** — e id interno. Eu afirmei errado em 12/09 e propaguei pra persona. A empresa do Pedro esta no **Anexo III, 6%**, confirmado pelo recibo da Receita, pelo texto da Lei 12.741 na nota e pela aritmetica do ISS (6% × 33,5% = 2,01%).
 
-Evidencia: `produto/evidencias/2026-09-13-teardown-prolabore-e-pgdas-conta-real.md`
+Evidencia: `produto/me/_evidencias/2026-09-13-teardown-prolabore-e-pgdas-conta-real.md`
 Relacionado: [[legalize-trava-persona-produto]] · [[legalize-uso-real-corrige-o-mapa]] · [[legalize-anexos-simples-etiquetas]]

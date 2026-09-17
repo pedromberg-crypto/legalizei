@@ -8,7 +8,7 @@ autoridade: fonte-verdade
 tags: [produto, catalogo, portal, escopo, dia-2]
 ---
 
-> 🔴 **A LISTA E A COBERTURA SAÍRAM DAQUI EM 12/09.** Quem manda em *quais funcionalidades existem* e em *qual a luz de cada uma* passou a ser **[[FUNCIONALIDADES]]**, gerado de `produto/funcionalidades-data.mjs`.
+> 🔴 **A LISTA E A COBERTURA SAÍRAM DAQUI EM 12/09.** Quem manda em *quais funcionalidades existem* e em *qual a luz de cada uma* passou a ser **[[FUNCIONALIDADES]]**, gerado de `produto/me/viver/funcionalidades/funcionalidades-data.mjs`.
 >
 > Motivo: o Pedro ratificou em 12/09 a lista de **58** que foi ao Mauro (o PDF de 11/09) como a lista core oficial, com a **folha de pagamento dentro do MVP** e dois cortes (acesso do 2º sócio · pagar o DAS no app). E o semáforo lá é **derivado** — cai de "a rota existe?" e "o passo existe?" — em vez de digitado, que é o que fez a tabela abaixo envelhecer.
 >
@@ -16,7 +16,7 @@ tags: [produto, catalogo, portal, escopo, dia-2]
 >
 > 🧭 **O que este arquivo ainda manda:** os **15 vendáveis do à-la-carte** (§8, que não entram nos 58), as decisões de **08/09** e **27/07**, o desenho da **central de avisos** (§1.4) e o **§9 — o que o líder tem e a gente decidiu não fazer**. Nada disso foi duplicado lá.
 >
-> Ele **não** manda em dependência de API (isso é [[_matriz-dependencia]]) nem no desenho de cada funcionalidade (isso é `produto/funcionalidades/<nome>.md`).
+> Ele **não** manda em dependência de API (isso é [[_matriz-dependencia]]) nem no desenho de cada funcionalidade (isso é `produto/me/viver/funcionalidades/specs/<nome>.md`).
 > Hub da frente: [[HOME-produto]].
 >
 > 🔄 Extraído de `execucao/portal/funcionalidades-me-simples.md` em 09/09/2026, quando a frente ganhou pasta própria.

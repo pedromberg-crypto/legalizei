@@ -89,7 +89,7 @@ await gerarMatrizDeProntidao();
  */
 async function gerarMatrizDeProntidao() {
   const { FUNCIONALIDADES, SECOES } = await import(
-    `file:///${resolve(RAIZ, "produto/funcionalidades-data.mjs").replace(/\\/g, "/")}`
+    `file:///${resolve(RAIZ, "produto/me/viver/funcionalidades/funcionalidades-data.mjs").replace(/\\/g, "/")}`
   );
 
   // Quem cobre o quê: o índice invertido do campo `cobre` dos nós.

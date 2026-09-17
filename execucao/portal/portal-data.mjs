@@ -35,7 +35,7 @@
  *          escrita à mão (a versão manual já estava errada em 2 pontos).
  *
  * Regras, gramática e a régua do que conta como capacidade:
- * `produto/_doutrina-capacidades.md`. Verificador:
+ * `produto/_doutrina/_doutrina-capacidades.md`. Verificador:
  * `execucao/portal/verificar-capacidades.mjs`.
  *
  * Campos de um nó (iguais ao flow-data):

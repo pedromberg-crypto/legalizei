@@ -13,7 +13,7 @@ tags: [execucao, processos, dev, spec]
 >
 > **Pra quem é:** o dev que vai implementar e o Mauro, que decide as regras de negócio. O mesmo arquivo alimenta o board visual em `/processos`, que é onde o Pedro valida.
 
-**Placar:** 🟢 48 sabemos e dá · 🟡 25 falta decidir · 🔴 6 não sabemos
+**Placar:** 🟢 51 sabemos e dá · 🟡 28 falta decidir · 🔴 0 não sabemos
 
 ---
 
@@ -169,7 +169,7 @@ O que acontece quando o cliente marcou “já paguei” e a consulta diz que nã
 >
 > 🔑 **Por que importa:** É o processo que os OUTROS consomem: a receita define o DAS (P2.1), a faixa de RBT12 (P1.2), o Fator R e o teto do Simples. ⏱ E é o único com relógio correndo: a Res. CGSN 191/2026 obriga toda ME/EPP (citacao de norma, FORA DO ESCOPO como porte atendido) do Simples ao Emissor Nacional a partir de 01/11/2026. 🔑 O caminho técnico é o mais resolvido do produto — API nacional RESTful, gratuita, com Swagger público — então o que sobra aqui é desenho, não integração.
 
-🟢 8 · 🟡 2 · 🔴 1
+🟢 8 · 🟡 3 · 🔴 0
 
 | | Passo | Quem dispara | O que a casa faz | Com quem fala | O que a pessoa vê |
 |:--:|---|---|---|---|---|
@@ -182,7 +182,7 @@ O que acontece quando o cliente marcou “já paguei” e a consulta diz que nã
 | 🟢 | **P3.7** ■ Nota emitida, e a receita entra na conta | a casa | Guarda número, PDF e XML, entrega a nota ao cliente e soma o valor à receita do mês e ao acumulado de 12 meses. | só a nossa casa | A nota na lista, pronta pra baixar ou enviar, e o valor já refletido no resumo do mês. |
 | 🟡 | **P3.8** Voltou com erro, e a pessoa entende o porquê | a casa | Traduz o erro do órgão pra português comum, diz o que corrigir e deixa tentar de novo sem redigitar tudo. | só a nossa casa | A mensagem do que está errado, no campo que está errado, e o botão de tentar de novo. |
 | 🟢 | **P3.9** ◆ O certificado está válido? | a casa | Antes de transmitir, confere se o certificado da empresa está válido. Sem ele não existe emissão. | só a nossa casa | nada, acontece por baixo |
-| 🔴 | **P3.10** Emitiu fora: a nota precisa entrar aqui | cliente | Recebe a nota emitida em outro sistema pra que a receita do mês feche. Sem isso, o DAS sai errado. | ainda não sabemos | nada: a tela não existe |
+| 🟡 | **P3.10** Emitiu fora: a nota precisa entrar aqui | cliente | Recebe a nota emitida em outro sistema pra que a receita do mês feche. A responsabilidade de trazer é do cliente, e a casa lembra antes do prazo. | com o cliente, por aviso no app | lembrete antes do dia 10, com a pergunta direta: emitiu nota fora daqui neste mês? |
 | 🟢 | **P3.11** Emissão parada: falta o certificado | a casa | Segura a emissão e leva pro que resolve: agendar a videochamada, se ele nunca fez, ou renovar, se venceu. | só a nossa casa | Aviso dizendo que a emissão está parada, por quê, e o botão que resolve. |
 
 ### Por onde o processo caminha
@@ -213,9 +213,9 @@ A matriz cobre o de-para de CNAE para o código municipal de BH, mas quem emite 
 
 Falta a lista de erros que o ADN devolve e o de-para pra português. Sem ela, ou a gente mostra o código cru do órgão (que é o que todo mundo faz e a gente critica) ou inventa um texto genérico que não ajuda. É trabalho de leitura do manual do ADN, não de decisão.
 
-**🔴 P3.10 · Emitiu fora: a nota precisa entrar aqui**
+**🟡 P3.10 · Emitiu fora: a nota precisa entrar aqui**
 
-🔑 É O BURACO REAL DESTE PROCESSO, e não é de API: é de RESPONSABILIDADE. Se a pessoa emite fora e não traz, a receita fica menor do que é, o DAS sai a menor, e quem responde pelo imposto é ela (5.4 e 13.8) — mas quem calculou fomos nós. Três caminhos: (a) puxar do ADN as notas do CNPJ, já que a partir de 01/11/2026 TODAS passam por lá, e aí o problema pode sumir sozinho; (b) upload de XML; (c) digitação. O (a) é o que muda o jogo e precisa ser confirmado no manual do ADN.
+🔬 EM ESTUDO, e não é promessa: puxar do órgão as notas emitidas pelo CNPJ **um dia antes da apuração**, para encontrar o que ficou de fora e calcular em cima do real. A partir de 01/11/2026 todas as NFS-e passam pelo Emissor Nacional, então o dado existe em algum lugar. ⚠️ **O limite conhecido, medido na nossa própria pesquisa de APIs:** a API de NFS-e que levantamos **lê por CHAVE de acesso, não lista por CNPJ**. Ou seja, ela responde *“me conta sobre esta nota”*, não *“me liste as notas desta empresa”*. O caminho depende de o **ADN** expor consulta por emitente, e isso **não está confirmado** em documentação nossa. 🔑 Enquanto não confirmar, a responsabilidade é do cliente e o desenho não muda. Confirmar é pesquisa no manual do ADN, não decisão de produto.
 
 ### Fonte de cada regra
 
@@ -228,7 +228,7 @@ Falta a lista de erros que o ADN devolve e o de-para pra português. Sem ela, ou
 - **P3.7** — Catálogo 3.2 e 3.3 (telas construídas). 🔑 É AQUI que os outros processos se abastecem: a receita do mês vira o DAS no P2.1, e o acumulado de 12 meses decide a faixa de RBT12 no P1.2, o Fator R e o teto do Simples. Não há aresta entre os processos porque não há salto — é DADO que atravessa, não caminho.
 - **P3.8** — Doutrina anti-jargão do projeto: erro de órgão não se repassa cru.
 - **P3.9** — Cláusula 5.3: é condição essencial que o Cliente mantenha o certificado digital válido.
-- **P3.10** — Cláusula 5.4, que obriga o Cliente a importar na Plataforma a nota emitida por outro sistema. Catálogo 3.7, hoje 🔴.
+- **P3.10** — ✅ DECIDIDO PELO PEDRO EM 17/09: **segue com o cliente**, e a casa assume a parte dela, que é LEMBRAR. Cláusula 5.4 obriga o Cliente a importar na Plataforma a nota emitida por outro sistema, e 13.8 põe o imposto no colo dele. Catálogo 3.7. 🔑 O lembrete tem data agora: ele entra **antes do dia 10**, que é quando a competência fecha para cancelamento (P6.15). Perguntar depois disso não adianta, porque a apuração roda no dia 12.
 - **P3.11** — Decisão do Pedro em 11/09: o certificado é BRINDE do plano, pagamento único nosso (R$ 209/ano, Anexo I), e vale 1 ano — então não falta certificado durante os 12 meses de fidelidade. ⚠️ Restam DOIS casos, e nenhum é “venceu no meio do caminho”: (a) o titular não compareceu à videochamada e nunca teve certificado — a 8.3 diz que a ausência não devolve valor nem prorroga prazo, e esse caso acontece logo no começo; (b) a partir do 13º mês, quando a renovação entra e a 8.6 a suspende por inadimplência. O caso (b) fica FORA do MVP, e está registrado aqui pra não virar surpresa no ano 2.
 
 ---
@@ -239,7 +239,7 @@ Falta a lista de erros que o ADN devolve e o de-para pra português. Sem ela, ou
 >
 > 🔑 **Por que importa:** É o balde vendável inteiro. O líder fatura ~45 serviços assim, e é receita oculta do modelo dele. É também o processo que mais atravessa tela, então é onde uma incoerência aparece primeiro.
 
-🟢 18 · 🟡 4 · 🔴 1
+🟢 18 · 🟡 5 · 🔴 0
 
 | | Passo | Quem dispara | O que a casa faz | Com quem fala | O que a pessoa vê |
 |:--:|---|---|---|---|---|
@@ -263,7 +263,7 @@ Falta a lista de erros que o ADN devolve e o de-para pra português. Sem ela, ou
 | 🟢 | **P4.19** ■ Entregue, e já estava pago | a casa | Encerra o item. Não há nada a lançar em fatura: o dinheiro entrou no ato do pedido. | só a nossa casa | O item vira “concluído” no histórico de serviços, com o comprovante de pagamento junto. |
 | 🟢 | **P4.20** ■ A cobrança fica de pé | a casa | Não devolve nada: o trabalho foi feito e a entrega não saiu porque faltou documento do cliente. O item segue cobrado, do jeito que já estava. | só a nossa casa | O item fica com o aviso de por que não deu, e o valor permanece. |
 | 🟢 | **P4.21** ■ Tira da fatura, ou credita na seguinte | a casa | Se a fatura ainda não fechou, tira o item dela. Se já fechou, lança um crédito do mesmo valor na fatura seguinte. | só a nossa casa | O item some da próxima fatura, ou aparece um crédito com o motivo escrito. |
-| 🔴 | **P4.22** ■ Estorna o que já foi pago | a casa | O dinheiro já entrou, então devolver é uma operação no provedor, não um ajuste de fatura. Pede o estorno e acompanha até cair. | Stone | O item mostra o estorno em andamento e o prazo de devolução. |
+| 🟡 | **P4.22** ■ Estorna o que já foi pago | a casa | O dinheiro já entrou, então devolver é uma operação no provedor, não um ajuste de fatura. Pede o estorno e acompanha até cair. | Stone | O item mostra o estorno em andamento e o prazo de devolução. |
 | 🟢 | **P4.23** ■ Entrega e cobra na fatura final | a casa | Entrega o serviço dentro do aviso prévio e lança o valor na fatura final, que é quitada até a data do encerramento. | só a nossa casa | O item segue em andamento normalmente, e aparece na fatura final com a data de encerramento junto. |
 | 🟢 | **P4.24** O ciclo vira no dia da assinatura | o relógio | Conta a partir do dia da assinatura. Se o mês não tiver esse dia, cobra no último dia dele e volta pro dia original no mês seguinte que tiver. Se a data cair em fim de semana, joga pro próximo dia útil. A âncora nunca muda. | só a nossa casa | A data da próxima cobrança sempre escrita por extenso, nunca “daqui a um mês”. |
 
@@ -316,9 +316,9 @@ O gate está decidido (captura). O que segura este passo é o mesmo do S10a: at�
 
 Se o serviço já pago NÃO couber nos 30 dias do aviso prévio, o dinheiro volta? A 12.6 não alcança (não há valor em aberto) e a 9.5 só fala de taxa pública. Cai na régua do S6 (quem deu causa), mas com dinheiro já compensado, que é situação diferente de item na fatura.
 
-**🔴 P4.22 · Estorna o que já foi pago**
+**🟡 P4.22 · Estorna o que já foi pago**
 
-Três perguntas, e nenhuma tem resposta hoje. (1) A taxa que o gateway reteve volta? Na maioria dos provedores, não — então estorno integral sai do nosso bolso. (2) Estorno ou crédito na próxima fatura? Crédito não custa taxa e é mais rápido, mas prende o cliente. (3) Qual o prazo, e quem avisa quando cai. Tudo isso depende da política da Stone, que é o provedor nomeado nos passos de pagamento (P4.14, P4.15, P4.22). ⚠️ O que segue aberto NÃO é a escolha do provedor, é a condição comercial dele: quanto ele devolve num estorno e em que prazo. Pauta da reunião, junto com o mandato recorrente do P1.4.
+🟡 ATENÇÃO, com dono nomeado. Três perguntas seguem abertas e passam pela **advogada** (cláusula) e pelo **provedor** (condição): (1) a taxa que o gateway reteve volta? Na maioria dos provedores não, então estorno integral sai do nosso bolso. (2) Estorno ou crédito na próxima fatura? Crédito não custa taxa e é mais rápido, mas prende o cliente. (3) Qual o prazo, e quem avisa quando cai. ⚠️ O que segue aberto **não é a escolha do provedor**, é a condição comercial dele. Pauta junto com o mandato recorrente do P1.4.
 
 ### Detalhe técnico
 
@@ -347,7 +347,7 @@ Três perguntas, e nenhuma tem resposta hoje. (1) A taxa que o gateway reteve vo
 - **P4.19** — Decorre do pagamento no ato (decisão do Pedro, 11/09): item pago não entra em fatura.
 - **P4.20** — Cláusula 1.4: a Legalizai não responde pelas consequências de documentação não apresentada pelo Cliente.
 - **P4.21** — Princípio da cláusula 9.5 aplicado ao avulso: o que não foi realizado não é devido.
-- **P4.22** — Mesmo princípio da 9.5, mas com dinheiro já compensado — situação que a minuta não trata.
+- **P4.22** — Mesmo princípio da 9.5, mas com dinheiro já compensado, situação que a minuta não trata. ✅ **REBAIXADO DE VERMELHO PARA ATENÇÃO EM 17/09, por decisão do Pedro:** *“é uma demanda de contrato, entendo a gravidade mas aqui vamos tratar ela apenas como atenção, ela pode ser ajustada posteriormente com a advogada.”* 🔑 A razão de não ser mais bloqueio é que o desenho do passo **já está certo**: pedir o estorno no provedor e acompanhar até cair. O que falta é cláusula e condição comercial, e nenhuma das duas se resolve desenhando processo.
 - **P4.23** — Cláusula 12.6 (quitar tudo em aberto até o encerramento, incluindo serviços adicionais) e 12.1 (aviso prévio de 30 dias).
 - **P4.24** — Decisão do Pedro em 11/09, e ela é REGRA NOSSA, não régua de mercado: conta do dia da assinatura · fim de semana joga pro próximo dia útil · dia que o mês não tem cobra no último dia, e volta ao original no mês seguinte que tiver. ⚠️ O Código Civil, art. 132 §3º, resolve prazo em mês pelo caminho oposto (“ou no imediato, se faltar exata correspondência”), o que daria 1º/03 — a advogada precisa ver essa diferença, porque a regra vai pro contrato. ⚠️ Ele disse “fim de semana”; eu escrevi “dia útil”, que estende a FERIADO. Se não for isso, muda aqui.
 
@@ -359,7 +359,7 @@ Três perguntas, e nenhuma tem resposta hoje. (1) A taxa que o gateway reteve vo
 >
 > 🔑 **Por que importa:** Fecha o loop mensal: a receita nasce no P3, o imposto sai no P2, e a ALÍQUOTA daquele imposto se decide aqui — Fator R ≥ 28% é Anexo III (6%), senão Anexo V (15,5%). É também o diferencial-âncora do produto (o líder tem 4 presets e esconde a conta) e carrega a armadilha mais cara que a gente mapeou: pró-labore lançado e NÃO pago vira glosa, reclassificação e multa.
 
-🟢 7 · 🟡 3 · 🔴 1
+🟢 8 · 🟡 3 · 🔴 0
 
 | | Passo | Quem dispara | O que a casa faz | Com quem fala | O que a pessoa vê |
 |:--:|---|---|---|---|---|
@@ -370,7 +370,7 @@ Três perguntas, e nenhuma tem resposta hoje. (1) A taxa que o gateway reteve vo
 | 🟡 | **P5.5** ■ Sem faturamento, sem pró-labore | a casa | Registra o mês sem pró-labore e mantém a obrigação acessória em dia, porque ela não pausa. | só a nossa casa | O mês fica marcado como sem pró-labore, com o efeito no Fator R à vista. |
 | 🟢 | **P5.6** Confirma o valor do mês | cliente | Trava o valor do mês e o manda pra transmissão. | só a nossa casa | Resumo do que vai ser declarado e quanto sai de INSS e IRRF. |
 | 🟢 | **P5.7** Declara e gera a guia do INSS | a casa | Transmite o evento do pró-labore ao eSocial, consolida na DCTFWeb e devolve o DARF numerado. | Integra Contador (eSocial S-1200 → DCTFWeb) | A guia do INSS aparece em /impostos, junto com o DAS. |
-| 🔴 | **P5.8** ◆ O dinheiro saiu da conta pro sócio? | a casa | Confere se o pró-labore foi EFETIVAMENTE PAGO. Enquanto não houver trânsito financeiro, ele não pode entrar no Fator R. | ainda não sabemos | nada: a tela não existe |
+| 🟢 | **P5.8** O pró-labore é gerado certo, e o pagamento é do cliente | a casa | Gera o pró-labore no valor que mantém o enquadramento, inclusive com mais de um sócio. NÃO controla se o dinheiro saiu da conta: isso é do cliente. | só a nossa casa | o valor gerado e o efeito dele na alíquota |
 | 🟢 | **P5.9** ■ Entra no Fator R, e a alíquota se sustenta | a casa | Soma o pró-labore pago à folha dos 12 meses, recalcula o Fator R e confirma o anexo que vale no mês. | só a nossa casa | O Fator R atualizado em /impostos/aliquotas, com quanto falta pros 28%. |
 | 🟡 | **P5.10** ■ Lançado e não pago: avisa antes de virar multa | a casa | Marca o pró-labore como pendente de pagamento, deixa ele FORA do Fator R e avisa o que acontece se ficar assim. | só a nossa casa | Aviso dizendo que o valor foi declarado mas não pago, o que isso faz com a alíquota, e até quando dá pra resolver. |
 | 🟡 | **P5.11** Avisa ANTES de virar a faixa | a casa | Acompanha o Fator R dos 12 meses e avisa quando a empresa está perto de perder o benefício do Anexo III, com quanto falta de pró-labore pra evitar. | só a nossa casa | Aviso com a distância pros 28% e o valor exato que resolve. |
@@ -397,10 +397,6 @@ Três perguntas, e nenhuma tem resposta hoje. (1) A taxa que o gateway reteve vo
 
 Mês sem pró-labore derruba a média do Fator R nos 12 meses seguintes, e o efeito só aparece lá na frente. A tela precisa dizer QUANTO isso custa antes do toque — e falta decidir se a gente chega a desaconselhar, ou só informa.
 
-**🔴 P5.8 · O dinheiro saiu da conta pro sócio?**
-
-🔴 A ARMADILHA MAIS CARA DO PRODUTO, e ela é diferente do P2.4. Lá era saber que a GUIA foi paga, e existe consulta de arrecadação. Aqui é uma transferência da empresa PRO SÓCIO — o dinheiro não passa por nós nem pelo governo, e não há API nenhuma. O único rastro é o EXTRATO que o cliente envia até o 5º dia útil (cláusula 5.4). Se a gente considerar pago o que só foi lançado, o Fator R é glosado, a empresa perde a tributação pelo Anexo III (6% → 15,5%) e leva multa. Três caminhos: (a) só contar depois de casar com o extrato, atrasando o Fator R; (b) contar na hora e corrigir se o extrato desmentir; (c) Open Finance read-only. Nenhum está decidido.
-
 **🟡 P5.10 · Lançado e não pago: avisa antes de virar multa**
 
 Até quando o pagamento ainda conta pro mês de competência, e o que acontece se ele sair depois. Isso muda o Fator R retroativamente e pode obrigar retificação (catálogo 4.8, serviço à-la-carte). Pergunta pro Mauro: a régua é a data do pagamento ou a competência do recibo?
@@ -418,7 +414,7 @@ Com quanta antecedência avisar, e quantas vezes. Avisar cedo demais em janeiro 
 - **P5.5** — Catálogo 4.3. A obrigação mensal continua existindo mesmo sem valor — mesmo princípio do “eSocial sem movimento” da folha (7.4).
 - **P5.6** — Decorre do P5.3: o valor é escolha da pessoa, e a casa só sugere.
 - **P5.7** — Matriz 4.5, resolvida em 09/09: o caminho é eSocial (S-1200) → DCTFWeb → DARF numerado, coberto pelo Integra Contador com o A1 da empresa. Mesmo contrato do P2.1 e do P3.5. Evidência do líder (09/09): o “DARF Unificado” é essa guia — R$ 178,31 = 11% de R$ 1.621.
-- **P5.8** — Matriz, seção do Fator R: a folha só conta em REGIME DE CAIXA, enquanto a receita é competência. A Receita cruza EFD-Reinf com DCTFWeb pra pegar isso.
+- **P5.8** — ✅ DECIDIDO PELO PEDRO EM 17/09, e a documentação já corroborava três dias antes. Este passo nasceu vermelho supondo o pior cenário: que declarar sem pagar geraria **glosa** e reclassificação de ofício do Anexo III para o V. **O contador desmentiu isso em 16/09**, literal: *“na verdade, ele manteria o fator. Ele pode até não pagar… ele vai continuar usufruindo do Fator R, sem problema nenhum. As dívidas vão continuar.”* 🔑 O que acontece de verdade não é perder o Fator R, é **exclusão do Simples** se as competências de INSS não forem regularizadas, via termo de exclusão, e com **duas janelas de regularização por ano (setembro e março)**, não uma. ✅ Então a casa faz o que já estava dito pelo próprio Pedro na reunião: *“da parte nossa continua a operação normal, só que a gente tem na nossa página de guias as guias atrasadas, e a pessoa sabendo que está rendendo juros e multa.”* E não reescreve o passado: *“não necessariamente eu preciso voltar lá nos meses que não pagou e tirar o pró-labore.”* ⚠️ **A FRONTEIRA, declarada em vez de escondida:** o motor continua guardando `proLaboreDeclarado` e `proLaborePago` como campos **separados**, e `fatorRDeCompetencias` continua calculando `riscoDeGlosa`. Isso **não muda**, e é de propósito: o dia em que existir extrato ou Open Finance, a distinção já está no modelo. 🔑 O que mudou é quem carrega o risco. Nós geramos certo e avisamos; o pagamento e a consequência dele são do cliente, e o instrumento que sustenta isso é a **Carta de Responsabilidade da Administração** (Res. CFC 1.590/2020 art. 3º). ➡️ E fica um trabalho **em outro processo, não neste**: o vigia fiscal precisa conhecer as duas janelas de regularização (setembro e março) para avisar antes do termo de exclusão. É P2.
 - **P5.9** — 🔑 É daqui que o P2.1 tira a alíquota: Fator R ≥ 28% → Anexo III (6%), senão Anexo V (15,5%). Não há aresta entre os processos porque não há salto — é DADO que atravessa.
 - **P5.10** — Decorre do regime de caixa do Fator R. O app NÃO PODE considerar pró-labore lançado e não pago.
 - **P5.11** — Catálogo 4.2, hoje 🟡: o cálculo existe, falta o gatilho do alerta. É o mesmo motor da vigília preditiva (5.4), o diferencial nº 2. O líder tem o cálculo e NÃO tem o alerta.
@@ -431,7 +427,7 @@ Com quanta antecedência avisar, e quantas vezes. Avisar cedo demais em janeiro 
 >
 > 🔑 **Por que importa:** É o único caminho do produto que anda PRA TRÁS. Todo o resto soma; aqui a receita da competência DIMINUI depois de já ter virado DAS, RBT12 e Fator R — e nenhum dos processos que consomem receita foi desenhado pra receber um número menor. 🔑 O P3.7 diz “soma o valor à receita do mês e ao acumulado de 12 meses”, e ninguém escreveu quem subtrai. É também o caso mais completo de evidência que a casa tem: o teardown de 09/09 entregou o modelo fiscal inteiro (75 campos), os dois caminhos de cancelamento e a regra de prazo fechada, com o Pedro conduzindo a navegação até a tela de confirmação.
 
-🟢 8 · 🟡 6 · 🔴 3
+🟢 10 · 🟡 7 · 🔴 0
 
 | | Passo | Quem dispara | O que a casa faz | Com quem fala | O que a pessoa vê |
 |:--:|---|---|---|---|---|
@@ -449,9 +445,9 @@ Com quanta antecedência avisar, e quantas vezes. Avisar cedo demais em janeiro 
 | 🟢 | **P6.12** Substitui: nasce a nota nova, ligada à velha | a casa | Emite a nota correta e amarra as duas nos dois sentidos, pra que o histórico conte a verdade: a velha aponta pra substituta, a nova aponta pra substituída. | Sefin Nacional NFS-e | As duas notas na lista, ligadas, com a velha marcada como substituída. Nenhuma some. |
 | 🟡 | **P6.13** ■ ■ Corrige o que não mexe em imposto, e guarda no log | a casa | Altera só o que não muda a apuração, e registra quem mudou, o quê e quando, por nota. | só a nossa casa | A nota atualizada e o histórico de alterações dentro dela, legível. |
 | 🟡 | **P6.14** Registra o cancelamento que o portal já fez | cliente | Recebe a informação de que uma nota importada foi cancelada lá fora, pra que a receita da competência pare de contar com ela. | só a nossa casa | Campo pra informar o cancelamento da nota que veio de fora, dizendo com todas as letras que quem cancelou foi a prefeitura, não a gente. |
-| 🔴 | **P6.15** ◆ ◆ Aquela competência já virou imposto? | a casa | Antes de mexer na receita, olha em que pé está a competência daquela nota: se o DAS já foi apurado e emitido, mexer no número exige desfazer o que já foi declarado. | só a nossa casa | nada, acontece por baixo |
-| 🔴 | **P6.16** Refaz a apuração da competência que já tinha fechado | a casa | Recalcula o DAS daquele mês com a receita corrigida e retifica a declaração já entregue. | ainda não sabemos | nada: a tela não existe |
-| 🔴 | **P6.17** ■ ■ A receita da competência cai, e tudo que dependia dela se move | a casa | Tira o valor da receita do mês e do acumulado de 12 meses, e recalcula o que dependia disso: a faixa de RBT12, o Fator R e o anexo que vale. | só a nossa casa | nada: a tela não existe |
+| 🟢 | **P6.15** ◆ ◆ A competência ainda está aberta pra cancelamento? | a casa | Olha o calendário, não o estado da apuração: até o dia 10 a competência anterior aceita cancelamento; do dia 11 em diante ela está fechada e o caminho é outro. | só a nossa casa | o app avisa o prazo antes de ele fechar |
+| 🟡 | **P6.16** Passou do dia 10: o cancelamento não é mais do cliente | a casa | Recusa o cancelamento pelo app e abre atendimento humano. A competência já vai ser apurada no dia 12, e desfazer o que foi declarado é decisão de contador, não botão de tela. | com o cliente, por atendimento | a recusa com o motivo e o prazo que passou, mais o caminho humano |
+| 🟢 | **P6.17** ■ ■ A receita da competência cai, e tudo que dependia dela se move | a casa | Tira o valor da receita do mês e do acumulado de 12 meses, e recalcula o que dependia disso: a faixa de RBT12, o Fator R e o anexo que vale. Como a competência ainda está aberta, nada disso é retroativo. | só a nossa casa | o valor do mês atualizado no painel, antes de virar guia |
 
 ### Por onde o processo caminha
 
@@ -504,17 +500,9 @@ Quais campos são de fato neutros. O líder afirma que certas alterações não 
 
 O prazo desse caminho continua sem resposta — foi anotado como lacuna na 2ª rodada do teardown e não fechou. E tem uma pergunta nossa por cima: a gente aceita a palavra do cliente, ou confere no portal antes de tirar a receita da competência? Aceitar sem conferir deixa a apuração na mão de quem não responde por ela.
 
-**🔴 P6.15 · ◆ Aquela competência já virou imposto?**
+**🟡 P6.16 · Passou do dia 10: o cancelamento não é mais do cliente**
 
-🔴 O estado que esta decisão precisa ler não existe DO NOSSO LADO: o P2 sabe emitir a guia e sabe se ela foi paga, mas nenhum passo guarda “esta competência foi apurada com estes valores”. É trabalho no P2, não aqui. 🔑 E são TRÊS janelas, não duas — antes do fecho contábil (nada acontece), entre o fecho e a apuração (custa reabertura mas a guia ainda não saiu, então basta recalcular antes de disponibilizar) e depois da apuração (aí sim é retificação). O desenho de hoje só conhece a primeira e a terceira. ⚠️ Vem de fora uma pista forte: a recusa **E0827** do Sistema Nacional bloqueia o cancelamento de nota que tenha “Evento de Tributos Recolhidos” vinculado — o órgão modela esse momento, e talvez a gente não precise inventar o nosso.
-
-**🔴 P6.16 · Refaz a apuração da competência que já tinha fechado**
-
-🔴 Quatro perguntas abertas, e a primeira é técnica. (1) O PGDAS-D aceita retificação por API no Integra Contador, ou é trabalho humano no e-CAC? (2) Se o DAS já foi PAGO a maior, vira crédito ou pedido de restituição — e quem conduz? (3) Retificação é serviço avulso (o líder cobra alteração de obrigação acessória) ou entra no plano? (4) Quem assina: é responsabilidade técnica do contador, e a Carta do CFC 1.590/2020 encosta aqui. As três primeiras são do Mauro; a primeira, do Swagger.
-
-**🔴 P6.17 · ■ A receita da competência cai, e tudo que dependia dela se move**
-
-🔴 O efeito dominó não tem dono. Três coisas se movem e nenhuma foi desenhada pra se mover pra baixo: (1) o RBT12 muda a faixa, e a faixa muda a MENSALIDADE do cliente (P1.2) — a gente devolve a diferença de um mês já cobrado? (2) o Fator R cai e pode reclassificar do Anexo III pro V, com efeito retroativo (P5.9); (3) a nota carrega o `anexoEscolhido` da época, então o histórico precisa continuar contando a verdade do que valia naquele dia, não a de hoje. ⚠️ O caso mais barato de resolver e o mais fácil de esquecer: nota cancelada no MESMO mês, antes de qualquer apuração, não deveria disparar nada disso — e hoje o desenho não distingue.
+🟡 O que sobra é EXCEÇÃO, e exceção tem dono humano. As quatro perguntas antigas continuam válidas para o caso raro em que a retificação for mesmo necessária (PGDAS-D por API ou e-CAC · DAS pago a maior vira crédito ou restituição · é avulso ou entra no plano · quem assina, com a Carta do CFC 1.590/2020 encostando). 🔑 A diferença é que elas deixaram de bloquear o desenho: antes eram o caminho, agora são o plano de contingência.
 
 ### Detalhe técnico
 
@@ -537,6 +525,6 @@ O prazo desse caminho continua sem resposta — foi anotado como lacuna na 2ª r
 - **P6.12** — ✅ RESOLVIDO em 12/09 com fonte primária: é UMA operação. Um `POST /nfse` carregando a chave de acesso da nota velha faz a API gerar o **Evento de Cancelamento por Substituição** (e105102) vinculado à original, cancelá-la e emitir a substituta, devolvendo o XML da nova. Não existe o instante em que a velha morreu e a nova ainda não nasceu — que era a dúvida. 🔑 O `anexoEscolhido` grava NA NOTA: se o Fator R virou no meio do ano, cada nota carrega o Anexo que valia na hora, e o histórico depende disso pra não mentir.
 - **P6.13** — O `logAlteracoes` por nota está na lista do que a gente copia sem vergonha (item 10). O líder ainda diz ao usuário quais escolhas são fiscalmente neutras (“alterar não impacta nos impostos”), o que destrava quem tem medo de errar.
 - **P6.14** — É o `sistema/informarCancelamento` do líder, o caminho legado, e ele existe separado por um motivo real: em nota importada a casa não tem poder nenhum sobre o órgão. Copiar a separação está no item 11 do que a gente copia.
-- **P6.15** — Cruzamento com o P2.1, que apura o DAS com a receita do mês no fechamento da competência. Ninguém tinha escrito o que acontece quando essa receita muda DEPOIS. 🔑 12/09, achado do Pedro: o estado tem DATA CONHECIDA, não é imponderável — no líder a guia fica disponível entre os dias 15 e 16 do mês seguinte, e existe o status próprio `AGUARDANDO_DISPONIBILIZACAO` com `valor.status: CALCULANDO`, ou seja, a guia existe antes de estar disponível. São 10 status no histórico dele.
-- **P6.16** — Consequência direta do P6.15. Não há decisão nem evidência sobre isso em lugar nenhum do vault.
-- **P6.17** — Espelho do P3.7, que soma a receita quando a nota nasce. É o fecho do único caminho do produto que anda pra trás.
+- **P6.15** — ✅ DECIDIDO PELO PEDRO EM 17/09, e a decisão é de CALENDÁRIO, não de estado. A competência anterior aceita cancelamento **até o dia 10**; a apuração do DAS roda **no dia 12**. Os dois dias de folga existem de propósito: nada é apurado enquanto a janela do cliente está aberta. 🔑 É o mesmo princípio que o contador enunciou em 16/09 sobre a régua da Contabilizei: *“se eu der pro cara 5 dias depois, em tese eu só posso rodar o robô no dia 6. Se você processou antes, a culpa vira minha.”* Nós damos 10 e rodamos no 12, que é mais folgado que a referência. 📅 Fecha o item **P7** do briefing do contador, que estava escrito como `dia 10 ou 12 → ⏳ limite para alteração PAGA (a definir)`. Agora são os dois: 10 é o limite do cliente, 12 é quando a casa roda. 🔑 **O que a decisão ELIMINOU:** as três janelas que este passo tentava distinguir (antes do fecho · entre o fecho e a apuração · depois da apuração) viram DUAS, e a do meio deixa de existir. Ou a nota é cancelada com a competência aberta, ou não é cancelada. ➡️ Sobra um trabalho de **TELA, não de regra**: o app precisa mostrar o prazo correndo antes do dia 10, senão a trava vira surpresa. E a recusa **E0827** do Sistema Nacional, que bloqueia cancelar nota com Evento de Tributos Recolhidos vinculado, continua sendo a rede do órgão por baixo da nossa.
+- **P6.16** — ✅ CONSEQUÊNCIA DIRETA DA DECISÃO DE 17/09. Este passo existia como *“refaz a apuração da competência que já tinha fechado”*, com quatro perguntas abertas e nenhuma decisão. Com a janela travada no dia 10, **o caminho automático deixa de existir**: não há retificação de rotina porque não há cancelamento tardio de rotina. 🔑 A regra que se aplica aqui é a mesma que o contador deu em 16/09 sobre pró-labore não pago: *“não necessariamente eu preciso voltar lá nos meses que não pagou”*. A casa não reescreve passado por conveniência; quando o passado precisa mudar, é caso, não fluxo.
+- **P6.17** — ✅ DESTRAVADO EM 17/09 PELA DECISÃO DO DIA 10. Espelho do P3.7, que soma a receita quando a nota nasce. 🔑 O que tornava este passo vermelho era o **efeito dominó retroativo**: mexer numa receita já apurada moveria a faixa do RBT12, a mensalidade do cliente e o Fator R de meses fechados. Com o cancelamento travado antes da apuração, **o dominó nunca começa** — o recálculo acontece dentro de uma competência que ainda não virou guia nem declaração. O motor já sabe fazer isso: `rbt12De()` e `fatorRDeCompetencias()` recalculam a partir da série, e a série é a fonte. Não existe número guardado para corrigir. 🔑 O caso que antes era *“o mais fácil de esquecer”* virou o **único que existe**: nota cancelada dentro da janela, antes de qualquer apuração. O desenho agora conhece só ele. ➡️ Sobra um trabalho de **EXIBIÇÃO**: a nota cancelada carrega o anexo que valia no dia em que nasceu, e o histórico precisa continuar contando a verdade daquele dia, não a de hoje. É regra de tela e de relatório, nunca de cálculo.

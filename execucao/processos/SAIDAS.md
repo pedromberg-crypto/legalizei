@@ -171,7 +171,7 @@ Chega aqui por 2 trilhas: **na fatura** e **já pago**.
 
 ✅ **Cobertura completa:** toda condição responde em toda trilha que chega aqui, e todo caminho termina.
 
-### 🔴 P5.8 · O dinheiro saiu da conta pro sócio?
+### 🟢 P5.8 · O pró-labore é gerado certo, e o pagamento é do cliente
 
 | Condição | Vale na trilha | Leva para | Onde esse caminho termina |
 |---|---|---|---|
@@ -223,16 +223,16 @@ Chega aqui por 2 trilhas: **na fatura** e **já pago**.
 
 | Condição | Vale na trilha | Leva para | Onde esse caminho termina |
 |---|---|---|---|
-| o município cancelou | as duas | P6.15 · ◆ Aquela competência já virou imposto? | P6.17 · ■ A receita da competência cai, e tudo que dependia dela se move |
+| o município cancelou | as duas | P6.15 · ◆ A competência ainda está aberta pra cancelamento? | P6.17 · ■ A receita da competência cai, e tudo que dependia dela se move |
 | o município recusou | as duas | P6.11 · ■ Recusou: a nota continua valendo | P6.11 · ■ Recusou: a nota continua valendo |
 
 ✅ **Cobertura completa:** toda condição responde em toda trilha que chega aqui, e todo caminho termina.
 
-### 🔴 P6.15 · ◆ Aquela competência já virou imposto?
+### 🟢 P6.15 · ◆ A competência ainda está aberta pra cancelamento?
 
 | Condição | Vale na trilha | Leva para | Onde esse caminho termina |
 |---|---|---|---|
-| o DAS daquele mês já saiu | as duas | P6.16 · Refaz a apuração da competência que já tinha fechado | P6.17 · ■ A receita da competência cai, e tudo que dependia dela se move |
+| o DAS daquele mês já saiu | as duas | P6.16 · Passou do dia 10: o cancelamento não é mais do cliente | P6.17 · ■ A receita da competência cai, e tudo que dependia dela se move |
 | a competência ainda não apurou | as duas | P6.17 · ■ A receita da competência cai, e tudo que dependia dela se move | P6.17 · ■ A receita da competência cai, e tudo que dependia dela se move |
 
 ✅ **Cobertura completa:** toda condição responde em toda trilha que chega aqui, e todo caminho termina.

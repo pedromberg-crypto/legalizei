@@ -420,11 +420,15 @@ export const PASSOS = [
     faz: "O dinheiro já entrou, então devolver é uma operação no provedor, não um ajuste de fatura. Pede o estorno e acompanha até cair.",
     fala: "Stone",
     ve: "O item mostra o estorno em andamento e o prazo de devolução.",
-    luz: "vermelho",
+    luz: "amarelo",
     forma: "fim",
-    fonte: "Mesmo princípio da 9.5, mas com dinheiro já compensado — situação que a minuta não trata.",
+    fonte:
+      "Mesmo princípio da 9.5, mas com dinheiro já compensado, situação que a minuta não trata. " +
+      "✅ **REBAIXADO DE VERMELHO PARA ATENÇÃO EM 17/09, por decisão do Pedro:** *“é uma demanda de contrato, entendo a gravidade mas aqui vamos tratar ela apenas como atenção, ela pode ser ajustada posteriormente com a advogada.”* " +
+      "🔑 A razão de não ser mais bloqueio é que o desenho do passo **já está certo**: pedir o estorno no provedor e acompanhar até cair. O que falta é cláusula e condição comercial, e nenhuma das duas se resolve desenhando processo.",
     duvida:
-      "Três perguntas, e nenhuma tem resposta hoje. (1) A taxa que o gateway reteve volta? Na maioria dos provedores, não — então estorno integral sai do nosso bolso. (2) Estorno ou crédito na próxima fatura? Crédito não custa taxa e é mais rápido, mas prende o cliente. (3) Qual o prazo, e quem avisa quando cai. Tudo isso depende da política da Stone, que é o provedor nomeado nos passos de pagamento (P4.14, P4.15, P4.22). ⚠️ O que segue aberto NÃO é a escolha do provedor, é a condição comercial dele: quanto ele devolve num estorno e em que prazo. Pauta da reunião, junto com o mandato recorrente do P1.4.",
+      "🟡 ATENÇÃO, com dono nomeado. Três perguntas seguem abertas e passam pela **advogada** (cláusula) e pelo **provedor** (condição): (1) a taxa que o gateway reteve volta? Na maioria dos provedores não, então estorno integral sai do nosso bolso. (2) Estorno ou crédito na próxima fatura? Crédito não custa taxa e é mais rápido, mas prende o cliente. (3) Qual o prazo, e quem avisa quando cai. " +
+      "⚠️ O que segue aberto **não é a escolha do provedor**, é a condição comercial dele. Pauta junto com o mandato recorrente do P1.4.",
   },
   {
     id: "P4.23",
@@ -816,14 +820,19 @@ export const PASSOS = [
     processos: ["P3"],
     titulo: "Emitiu fora: a nota precisa entrar aqui",
     quem: "cliente",
-    faz: "Recebe a nota emitida em outro sistema pra que a receita do mês feche. Sem isso, o DAS sai errado.",
-    fala: "ainda não sabemos",
-    ve: "nada: a tela não existe",
-    luz: "vermelho",
+    faz: "Recebe a nota emitida em outro sistema pra que a receita do mês feche. A responsabilidade de trazer é do cliente, e a casa lembra antes do prazo.",
+    fala: "com o cliente, por aviso no app",
+    ve: "lembrete antes do dia 10, com a pergunta direta: emitiu nota fora daqui neste mês?",
+    luz: "amarelo",
     forma: "passo",
-    fonte: "Cláusula 5.4, que obriga o Cliente a importar na Plataforma a nota emitida por outro sistema. Catálogo 3.7, hoje 🔴.",
+    fonte:
+      "✅ DECIDIDO PELO PEDRO EM 17/09: **segue com o cliente**, e a casa assume a parte dela, que é LEMBRAR. " +
+      "Cláusula 5.4 obriga o Cliente a importar na Plataforma a nota emitida por outro sistema, e 13.8 põe o imposto no colo dele. Catálogo 3.7. " +
+      "🔑 O lembrete tem data agora: ele entra **antes do dia 10**, que é quando a competência fecha para cancelamento (P6.15). Perguntar depois disso não adianta, porque a apuração roda no dia 12.",
     duvida:
-      "🔑 É O BURACO REAL DESTE PROCESSO, e não é de API: é de RESPONSABILIDADE. Se a pessoa emite fora e não traz, a receita fica menor do que é, o DAS sai a menor, e quem responde pelo imposto é ela (5.4 e 13.8) — mas quem calculou fomos nós. Três caminhos: (a) puxar do ADN as notas do CNPJ, já que a partir de 01/11/2026 TODAS passam por lá, e aí o problema pode sumir sozinho; (b) upload de XML; (c) digitação. O (a) é o que muda o jogo e precisa ser confirmado no manual do ADN.",
+      "🔬 EM ESTUDO, e não é promessa: puxar do órgão as notas emitidas pelo CNPJ **um dia antes da apuração**, para encontrar o que ficou de fora e calcular em cima do real. A partir de 01/11/2026 todas as NFS-e passam pelo Emissor Nacional, então o dado existe em algum lugar. " +
+      "⚠️ **O limite conhecido, medido na nossa própria pesquisa de APIs:** a API de NFS-e que levantamos **lê por CHAVE de acesso, não lista por CNPJ**. Ou seja, ela responde *“me conta sobre esta nota”*, não *“me liste as notas desta empresa”*. O caminho depende de o **ADN** expor consulta por emitente, e isso **não está confirmado** em documentação nossa. " +
+      "🔑 Enquanto não confirmar, a responsabilidade é do cliente e o desenho não muda. Confirmar é pesquisa no manual do ADN, não decisão de produto.",
   },
 
   {
@@ -941,17 +950,21 @@ export const PASSOS = [
   {
     id: "P5.8",
     processos: ["P5"],
-    titulo: "O dinheiro saiu da conta pro sócio?",
+    titulo: "O pró-labore é gerado certo, e o pagamento é do cliente",
     quem: "a casa",
-    faz: "Confere se o pró-labore foi EFETIVAMENTE PAGO. Enquanto não houver trânsito financeiro, ele não pode entrar no Fator R.",
-    fala: "ainda não sabemos",
-    ve: "nada: a tela não existe",
-    luz: "vermelho",
-    forma: "decisao",
+    faz: "Gera o pró-labore no valor que mantém o enquadramento, inclusive com mais de um sócio. NÃO controla se o dinheiro saiu da conta: isso é do cliente.",
+    fala: "só a nossa casa",
+    ve: "o valor gerado e o efeito dele na alíquota",
+    luz: "verde",
+    forma: "passo",
     fonte:
-      "Matriz, seção do Fator R: a folha só conta em REGIME DE CAIXA, enquanto a receita é competência. A Receita cruza EFD-Reinf com DCTFWeb pra pegar isso.",
-    duvida:
-      "🔴 A ARMADILHA MAIS CARA DO PRODUTO, e ela é diferente do P2.4. Lá era saber que a GUIA foi paga, e existe consulta de arrecadação. Aqui é uma transferência da empresa PRO SÓCIO — o dinheiro não passa por nós nem pelo governo, e não há API nenhuma. O único rastro é o EXTRATO que o cliente envia até o 5º dia útil (cláusula 5.4). Se a gente considerar pago o que só foi lançado, o Fator R é glosado, a empresa perde a tributação pelo Anexo III (6% → 15,5%) e leva multa. Três caminhos: (a) só contar depois de casar com o extrato, atrasando o Fator R; (b) contar na hora e corrigir se o extrato desmentir; (c) Open Finance read-only. Nenhum está decidido.",
+      "✅ DECIDIDO PELO PEDRO EM 17/09, e a documentação já corroborava três dias antes. " +
+      "Este passo nasceu vermelho supondo o pior cenário: que declarar sem pagar geraria **glosa** e reclassificação de ofício do Anexo III para o V. **O contador desmentiu isso em 16/09**, literal: *“na verdade, ele manteria o fator. Ele pode até não pagar… ele vai continuar usufruindo do Fator R, sem problema nenhum. As dívidas vão continuar.”* " +
+      "🔑 O que acontece de verdade não é perder o Fator R, é **exclusão do Simples** se as competências de INSS não forem regularizadas, via termo de exclusão, e com **duas janelas de regularização por ano (setembro e março)**, não uma. " +
+      "✅ Então a casa faz o que já estava dito pelo próprio Pedro na reunião: *“da parte nossa continua a operação normal, só que a gente tem na nossa página de guias as guias atrasadas, e a pessoa sabendo que está rendendo juros e multa.”* E não reescreve o passado: *“não necessariamente eu preciso voltar lá nos meses que não pagou e tirar o pró-labore.”* " +
+      "⚠️ **A FRONTEIRA, declarada em vez de escondida:** o motor continua guardando `proLaboreDeclarado` e `proLaborePago` como campos **separados**, e `fatorRDeCompetencias` continua calculando `riscoDeGlosa`. Isso **não muda**, e é de propósito: o dia em que existir extrato ou Open Finance, a distinção já está no modelo. " +
+      "🔑 O que mudou é quem carrega o risco. Nós geramos certo e avisamos; o pagamento e a consequência dele são do cliente, e o instrumento que sustenta isso é a **Carta de Responsabilidade da Administração** (Res. CFC 1.590/2020 art. 3º). " +
+      "➡️ E fica um trabalho **em outro processo, não neste**: o vigia fiscal precisa conhecer as duas janelas de regularização (setembro e março) para avisar antes do termo de exclusão. É P2.",
   },
   {
     id: "P5.9",
@@ -1219,46 +1232,54 @@ export const PASSOS = [
   {
     id: "P6.15",
     processos: ["P6"],
-    titulo: "◆ Aquela competência já virou imposto?",
+    titulo: "◆ A competência ainda está aberta pra cancelamento?",
     quem: "a casa",
-    faz: "Antes de mexer na receita, olha em que pé está a competência daquela nota: se o DAS já foi apurado e emitido, mexer no número exige desfazer o que já foi declarado.",
+    faz: "Olha o calendário, não o estado da apuração: até o dia 10 a competência anterior aceita cancelamento; do dia 11 em diante ela está fechada e o caminho é outro.",
     fala: "só a nossa casa",
-    ve: "nada, acontece por baixo",
-    luz: "vermelho",
+    ve: "o app avisa o prazo antes de ele fechar",
+    luz: "verde",
     forma: "decisao",
     fonte:
-      "Cruzamento com o P2.1, que apura o DAS com a receita do mês no fechamento da competência. Ninguém tinha escrito o que acontece quando essa receita muda DEPOIS. 🔑 12/09, achado do Pedro: o estado tem DATA CONHECIDA, não é imponderável — no líder a guia fica disponível entre os dias 15 e 16 do mês seguinte, e existe o status próprio `AGUARDANDO_DISPONIBILIZACAO` com `valor.status: CALCULANDO`, ou seja, a guia existe antes de estar disponível. São 10 status no histórico dele.",
-    duvida:
-      "🔴 O estado que esta decisão precisa ler não existe DO NOSSO LADO: o P2 sabe emitir a guia e sabe se ela foi paga, mas nenhum passo guarda “esta competência foi apurada com estes valores”. É trabalho no P2, não aqui. 🔑 E são TRÊS janelas, não duas — antes do fecho contábil (nada acontece), entre o fecho e a apuração (custa reabertura mas a guia ainda não saiu, então basta recalcular antes de disponibilizar) e depois da apuração (aí sim é retificação). O desenho de hoje só conhece a primeira e a terceira. ⚠️ Vem de fora uma pista forte: a recusa **E0827** do Sistema Nacional bloqueia o cancelamento de nota que tenha “Evento de Tributos Recolhidos” vinculado — o órgão modela esse momento, e talvez a gente não precise inventar o nosso.",
+      "✅ DECIDIDO PELO PEDRO EM 17/09, e a decisão é de CALENDÁRIO, não de estado. " +
+      "A competência anterior aceita cancelamento **até o dia 10**; a apuração do DAS roda **no dia 12**. Os dois dias de folga existem de propósito: nada é apurado enquanto a janela do cliente está aberta. " +
+      "🔑 É o mesmo princípio que o contador enunciou em 16/09 sobre a régua da Contabilizei: *“se eu der pro cara 5 dias depois, em tese eu só posso rodar o robô no dia 6. Se você processou antes, a culpa vira minha.”* Nós damos 10 e rodamos no 12, que é mais folgado que a referência. " +
+      "📅 Fecha o item **P7** do briefing do contador, que estava escrito como `dia 10 ou 12 → ⏳ limite para alteração PAGA (a definir)`. Agora são os dois: 10 é o limite do cliente, 12 é quando a casa roda. " +
+      "🔑 **O que a decisão ELIMINOU:** as três janelas que este passo tentava distinguir (antes do fecho · entre o fecho e a apuração · depois da apuração) viram DUAS, e a do meio deixa de existir. Ou a nota é cancelada com a competência aberta, ou não é cancelada. " +
+      "➡️ Sobra um trabalho de **TELA, não de regra**: o app precisa mostrar o prazo correndo antes do dia 10, senão a trava vira surpresa. E a recusa **E0827** do Sistema Nacional, que bloqueia cancelar nota com Evento de Tributos Recolhidos vinculado, continua sendo a rede do órgão por baixo da nossa.",
   },
   {
     id: "P6.16",
     processos: ["P6"],
-    titulo: "Refaz a apuração da competência que já tinha fechado",
+    titulo: "Passou do dia 10: o cancelamento não é mais do cliente",
     quem: "a casa",
-    faz: "Recalcula o DAS daquele mês com a receita corrigida e retifica a declaração já entregue.",
-    fala: "ainda não sabemos",
-    ve: "nada: a tela não existe",
-    luz: "vermelho",
+    faz: "Recusa o cancelamento pelo app e abre atendimento humano. A competência já vai ser apurada no dia 12, e desfazer o que foi declarado é decisão de contador, não botão de tela.",
+    fala: "com o cliente, por atendimento",
+    ve: "a recusa com o motivo e o prazo que passou, mais o caminho humano",
+    luz: "amarelo",
     forma: "passo",
-    fonte: "Consequência direta do P6.15. Não há decisão nem evidência sobre isso em lugar nenhum do vault.",
+    fonte:
+      "✅ CONSEQUÊNCIA DIRETA DA DECISÃO DE 17/09. Este passo existia como *“refaz a apuração da competência que já tinha fechado”*, com quatro perguntas abertas e nenhuma decisão. Com a janela travada no dia 10, **o caminho automático deixa de existir**: não há retificação de rotina porque não há cancelamento tardio de rotina. " +
+      "🔑 A regra que se aplica aqui é a mesma que o contador deu em 16/09 sobre pró-labore não pago: *“não necessariamente eu preciso voltar lá nos meses que não pagou”*. A casa não reescreve passado por conveniência; quando o passado precisa mudar, é caso, não fluxo.",
     duvida:
-      "🔴 Quatro perguntas abertas, e a primeira é técnica. (1) O PGDAS-D aceita retificação por API no Integra Contador, ou é trabalho humano no e-CAC? (2) Se o DAS já foi PAGO a maior, vira crédito ou pedido de restituição — e quem conduz? (3) Retificação é serviço avulso (o líder cobra alteração de obrigação acessória) ou entra no plano? (4) Quem assina: é responsabilidade técnica do contador, e a Carta do CFC 1.590/2020 encosta aqui. As três primeiras são do Mauro; a primeira, do Swagger.",
+      "🟡 O que sobra é EXCEÇÃO, e exceção tem dono humano. As quatro perguntas antigas continuam válidas para o caso raro em que a retificação for mesmo necessária (PGDAS-D por API ou e-CAC · DAS pago a maior vira crédito ou restituição · é avulso ou entra no plano · quem assina, com a Carta do CFC 1.590/2020 encostando). " +
+      "🔑 A diferença é que elas deixaram de bloquear o desenho: antes eram o caminho, agora são o plano de contingência.",
   },
   {
     id: "P6.17",
     processos: ["P6"],
     titulo: "■ A receita da competência cai, e tudo que dependia dela se move",
     quem: "a casa",
-    faz: "Tira o valor da receita do mês e do acumulado de 12 meses, e recalcula o que dependia disso: a faixa de RBT12, o Fator R e o anexo que vale.",
+    faz: "Tira o valor da receita do mês e do acumulado de 12 meses, e recalcula o que dependia disso: a faixa de RBT12, o Fator R e o anexo que vale. Como a competência ainda está aberta, nada disso é retroativo.",
     fala: "só a nossa casa",
-    ve: "nada: a tela não existe",
-    luz: "vermelho",
+    ve: "o valor do mês atualizado no painel, antes de virar guia",
+    luz: "verde",
     forma: "fim",
     fonte:
-      "Espelho do P3.7, que soma a receita quando a nota nasce. É o fecho do único caminho do produto que anda pra trás.",
-    duvida:
-      "🔴 O efeito dominó não tem dono. Três coisas se movem e nenhuma foi desenhada pra se mover pra baixo: (1) o RBT12 muda a faixa, e a faixa muda a MENSALIDADE do cliente (P1.2) — a gente devolve a diferença de um mês já cobrado? (2) o Fator R cai e pode reclassificar do Anexo III pro V, com efeito retroativo (P5.9); (3) a nota carrega o `anexoEscolhido` da época, então o histórico precisa continuar contando a verdade do que valia naquele dia, não a de hoje. ⚠️ O caso mais barato de resolver e o mais fácil de esquecer: nota cancelada no MESMO mês, antes de qualquer apuração, não deveria disparar nada disso — e hoje o desenho não distingue.",
+      "✅ DESTRAVADO EM 17/09 PELA DECISÃO DO DIA 10. Espelho do P3.7, que soma a receita quando a nota nasce. " +
+      "🔑 O que tornava este passo vermelho era o **efeito dominó retroativo**: mexer numa receita já apurada moveria a faixa do RBT12, a mensalidade do cliente e o Fator R de meses fechados. Com o cancelamento travado antes da apuração, **o dominó nunca começa** — o recálculo acontece dentro de uma competência que ainda não virou guia nem declaração. " +
+      "O motor já sabe fazer isso: `rbt12De()` e `fatorRDeCompetencias()` recalculam a partir da série, e a série é a fonte. Não existe número guardado para corrigir. " +
+      "🔑 O caso que antes era *“o mais fácil de esquecer”* virou o **único que existe**: nota cancelada dentro da janela, antes de qualquer apuração. O desenho agora conhece só ele. " +
+      "➡️ Sobra um trabalho de **EXIBIÇÃO**: a nota cancelada carrega o anexo que valia no dia em que nasceu, e o histórico precisa continuar contando a verdade daquele dia, não a de hoje. É regra de tela e de relatório, nunca de cálculo.",
   },
 
 ];

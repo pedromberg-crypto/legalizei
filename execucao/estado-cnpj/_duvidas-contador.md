@@ -1117,8 +1117,28 @@ No 1º mês não há histórico, então a lei manda **projetar**: acumulado = re
 > > **Léo:** *"Se eu der pro cara 5 dias depois, em tese **eu só posso rodar o robô no dia 6**. **Se você processou antes, a culpa vira minha.**"*
 >
 > ⚠️ **E ele explicou por que a Contabilizei cobra a reabertura:** *"a ferramenta dele começa a fazer a transmissão a partir do dia 6. Quando ele cobra a reabertura… **ele vai ter que recalcular**."* Não é taxa arbitrária — é retrabalho real.
+
+> ## ✅ P7 FECHADO EM 17/09 — e não era "10 ou 12", eram os dois
 >
-> ⏳ **Falta cravar o dia**: 10 ou 12. ⇢ **P7**
+> **Decisão do Pedro:** a competência anterior aceita cancelamento de nota **até o dia 10**, e a apuração do DAS roda **no dia 12**.
+>
+> ```
+> até o dia 10    →  cliente cancela/substitui a nota da competência anterior
+> dia 11          →  a janela fecha. Cancelar vira atendimento humano
+> dia 12          →  a casa roda a apuração
+> dia 15          →  entrega da obrigação acessória
+> dia 20          →  vencimento das guias
+> ```
+>
+> 🔑 **Os dois dias de folga são a regra, não sobra.** Nada é apurado enquanto a janela do cliente está aberta, que é exatamente o princípio que o Leonan enunciou: *"se você processou antes, a culpa vira minha"*. Nós damos **10** e rodamos no **12**, mais folgado que a régua da referência.
+>
+> ### 🔴 E isso destravou três passos de processo que estavam vermelhos
+>
+> O **P6.15 · P6.16 · P6.17** existiam para desenhar o que acontece quando a receita de uma competência **já apurada** muda: refazer apuração, retificar declaração, e mover RBT12, Fator R, anexo e até a mensalidade do cliente, tudo para trás.
+>
+> **Com a janela travada antes da apuração, esse caminho deixa de existir.** Não há dominó retroativo porque nada foi apurado ainda. Os três saíram do vermelho, e o que sobrou em cada um é trabalho de tela, não de regra.
+>
+> ⚠️ **O caso raro continua existindo** e passou a ter dono humano: cancelamento fora do prazo não é botão, é atendimento, e aí sim valem as quatro perguntas de retificação que estavam abertas no P6.16 (PGDAS-D por API ou e-CAC · DAS pago a maior · avulso ou incluso · quem assina).
 
 ## C7 · 🟡 Certidões negativas: quando o cliente vai precisar
 

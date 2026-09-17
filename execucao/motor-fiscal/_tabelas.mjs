@@ -103,10 +103,94 @@ export const FATOR_R = {
  * ressalva de "fonte única" que estava aqui era minha, e estava vencida.
  */
 export const PREVIDENCIA = {
+  /**
+   * ⚠️ **O VIGENTE HOJE (2026).** Serve para o mês corrente e para montar
+   * cenário em teste. **Não serve para apurar competência de outro ano** —
+   * para isso existe `salarioMinimoDe()`, logo abaixo.
+   */
   SALARIO_MINIMO: 1621,
   TETO_INSS: 8475.55,
   ALIQUOTA_SOCIO: 0.11,
 };
+
+/**
+ * 📅 O SALÁRIO MÍNIMO POR VIGÊNCIA — e por que virou tabela em 16/09.
+ *
+ * O contador levantou isto sem ser perguntado, no meio de outra conversa:
+ *
+ *   > *"Vai ter a trava do R$1.621 — **todo ano você vai rodar um código lá
+ *   > pra atualizar?** Já de uma vez no automático, né? Num campo só. **Porque
+ *   > todo ano é o P.**"*
+ *
+ * ── 🔴 E O PROBLEMA É MAIOR QUE MANUTENÇÃO ─────────────────────────────────
+ *
+ * Ele falou em trabalho recorrente; o achado é de **correção**. Uma constante
+ * única compara **competência de 2025 com o piso de 2026** — e nós temos
+ * competências de 2025 rodando (a persona zero abre em 12/12/2025, e 5 das 16
+ * vidas começam naquele ano).
+ *
+ * 🔑 Com piso único, o pró-labore de R$1.518 pago em dezembro/2025 — que era
+ * **exatamente o mínimo legal daquele mês** — seria lido como abaixo do piso e
+ * bloqueado. O motor recusaria um valor correto.
+ *
+ * ⏳ **Esta tabela VENCE**, igual à dos feriados. Fora da janela conhecida o
+ * resolvedor avisa em vez de devolver um número que parece certo e não é.
+ */
+export const SALARIOS_MINIMOS = {
+  ate: "2026-12-31",
+  fonte:
+    "2026: Decreto 12.797/2025 + tabela do INSS (gov.br), as duas em " +
+    "pesquisa/fiscal-simples-bh-2026.md · 2025: valor citado pelo contador em " +
+    "16/09 e conferido contra a conta real da persona zero",
+  vigencias: [
+    { desde: "2025-01-01", valor: 1518 },
+    { desde: "2026-01-01", valor: 1621 },
+  ],
+};
+
+/**
+ * O piso legal que valia numa competência.
+ *
+ * @param mes  no formato `AAAA-MM`
+ * @returns `{ valor, vigenciaDesde, foraDaJanela, aviso }`
+ */
+export function salarioMinimoDe(mes) {
+  if (!/^\d{4}-\d{2}$/.test(String(mes ?? ""))) {
+    throw new Error(`Competência inválida para salário mínimo: ${mes}`);
+  }
+
+  const dia = `${mes}-01`;
+  const aplicaveis = SALARIOS_MINIMOS.vigencias.filter((v) => v.desde <= dia);
+
+  // 🔴 Antes da 1ª vigência conhecida não se chuta: avisa.
+  if (aplicaveis.length === 0) {
+    return {
+      valor: null,
+      vigenciaDesde: null,
+      foraDaJanela: true,
+      aviso:
+        `Competência ${mes} é anterior à primeira vigência conhecida ` +
+        `(${SALARIOS_MINIMOS.vigencias[0].desde}). Não há piso para comparar.`,
+    };
+  }
+
+  const vig = aplicaveis[aplicaveis.length - 1];
+
+  // ⏳ Depois do fim da janela o valor ainda é o último conhecido, mas o aviso
+  //    vai junto — é o que impede de descobrir em janeiro que o piso mudou.
+  const foraDaJanela = dia > SALARIOS_MINIMOS.ate;
+
+  return {
+    valor: vig.valor,
+    vigenciaDesde: vig.desde,
+    foraDaJanela,
+    aviso: foraDaJanela
+      ? `Competência ${mes} está além de ${SALARIOS_MINIMOS.ate}. ` +
+        `Usando o piso de ${vig.desde} (R$${vig.valor}), que pode ter mudado. ` +
+        `Atualizar SALARIOS_MINIMOS.`
+      : null,
+  };
+}
 
 /**
  * 💸 A TABELA DO IRRF — capturada da plataforma do líder em 14/09.

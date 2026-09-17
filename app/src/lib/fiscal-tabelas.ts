@@ -9,7 +9,7 @@
  * some na próxima rodada do gerador. Mexa em `_tabelas.mjs`.
  *
  * 🔑 Só CONSTANTES atravessam. Lógica fiscal mora no `apurador.mjs`.
- * Gerado em 2026-09-15.
+ * Gerado em 2026-09-17.
  * ═══════════════════════════════════════════════════════════════════════════
  */
 

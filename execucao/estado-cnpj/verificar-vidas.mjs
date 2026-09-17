@@ -30,7 +30,13 @@ import {
 import { VIDAS, SEM_VIDA } from "./vidas.mjs";
 import { alertasDoRetrato } from "./alertas-internos.mjs";
 import { brlDeCentavos, faixaDe, aliquotaEfetiva } from "../motor-fiscal/apurador.mjs";
-import { FAIXAS, REPARTICAO, TRIBUTOS } from "../motor-fiscal/_tabelas.mjs";
+import {
+  FAIXAS,
+  REPARTICAO,
+  TRIBUTOS,
+  salarioMinimoDe,
+} from "../motor-fiscal/_tabelas.mjs";
+import { avaliarProLaboreEscolhido } from "../motor-fiscal/piloto-pro-labore.mjs";
 
 let passou = 0;
 let falhou = 0;
@@ -643,6 +649,55 @@ console.log("\n── 8 · Quem fatura no mês em que abriu paga 15,5%, e quem p
     "⏳ e NENHUMA das 16 vidas exercita o caso — falta a vida nova",
     alertasDasVidas.length === 0,
     "todas abrem sem faturar no mês 1. A vida que constitui e fatura junto ainda não existe"
+  );
+}
+
+/* ── 9 · O PISO É O DA COMPETÊNCIA (regra nova de 16/09) ────────────────── */
+
+console.log("\n── 9 · O salário mínimo tem vigência, e 5 das 16 vidas começam em 2025\n");
+{
+  // 🔴 O contador levantou isto como manutenção — *"todo ano você vai rodar um
+  //    código lá pra atualizar?"* — e o achado saiu de CORREÇÃO: com uma
+  //    constante única, competência de 2025 é comparada com o piso de 2026.
+
+  invariante(
+    "o piso de 2025 e o de 2026 são valores diferentes",
+    salarioMinimoDe("2025-12").valor === 1518 &&
+      salarioMinimoDe("2026-01").valor === 1621,
+    "R$1.518 em 2025 · R$1.621 em 2026"
+  );
+
+  // 🔴 O BUG QUE ISTO EXISTE PARA IMPEDIR: R$1.518 era EXATAMENTE o mínimo de
+  //    dezembro/2025. Com piso único, o motor recusava um valor correto.
+  const emp = { grupoAnexo: "fator-r-dinamico(III<->V, limiar 28%)", cltDoSocio: 0 };
+  const args = { empresa: emp, competenciasAnteriores: [], receitaDoMes: 0, rbt12DoMes: 0 };
+
+  invariante(
+    "pró-labore no mínimo de 2025, numa competência de 2025, é ACEITO",
+    avaliarProLaboreEscolhido({ ...args, escolhido: 1518, mes: "2025-12" }).aceito === true,
+    "com piso único isto era bloqueado, e o valor estava certo"
+  );
+
+  invariante(
+    "e o R$100 da conta real segue bloqueado, mesmo com o piso certo de 2025",
+    avaliarProLaboreEscolhido({ ...args, escolhido: 100, mes: "2025-12" }).aceito === false,
+    "a correção do piso não afrouxa a trava, só acerta o valor dela"
+  );
+
+  // ⏳ A tabela vence, e quem estiver fora da janela precisa SABER.
+  const alem = salarioMinimoDe("2027-03");
+  invariante(
+    "competência além da janela conhecida devolve valor COM aviso",
+    alem.valor !== null && alem.foraDaJanela === true && !!alem.aviso,
+    "não devolve número mudo: avisa que o piso pode ter mudado"
+  );
+
+  // E as vidas que começam em 2025 existem mesmo — senão este bloco é teatro.
+  const de2025 = VIDAS.filter((v) => v.competencias[0]?.mes?.startsWith("2025"));
+  invariante(
+    "e há vida começando em 2025 para o caso não ser hipotético",
+    de2025.length > 0,
+    `${de2025.length} vidas: ${de2025.map((v) => v.id).join(", ")}`
   );
 }
 

@@ -61,6 +61,7 @@
 import {
   FATOR_R,
   PREVIDENCIA,
+  salarioMinimoDe,
 } from "./_tabelas.mjs";
 
 import {
@@ -642,6 +643,11 @@ export function avaliarProLaboreEscolhido({
   rbt12DoMes = 0,
   escolhido,
   horizonte = 24,
+  /**
+   * 📅 A competência (`AAAA-MM`) cujo piso vale. Sem ela, o piso é o do ano
+   * corrente — que é o certo para o mês corrente e **errado para histórico**.
+   */
+  mes = null,
 }) {
   const referencia = pilotar({
     empresa,
@@ -658,19 +664,28 @@ export function avaliarProLaboreEscolhido({
   // contribuição não pode ser inferior ao salário mínimo, nem para o
   // contribuinte individual. É o que torna irregular o pró-labore de R$100
   // que a conta real da persona zero exibe em dez/2025.
-  // ⚠️ O VALOR (R$1.621) veio de fonte única na pesquisa de 13/09 e está
-  // marcado para conferência antes de virar trava dura na tela.
-  if (escolhido > 0 && escolhido < PREVIDENCIA.SALARIO_MINIMO) {
+  // 📅 O PISO É O DA COMPETÊNCIA, não o de hoje. Corrigido em 16/09: com uma
+  // constante única, o pró-labore de R$1.518 pago em dez/2025 — que era
+  // **exatamente o mínimo daquele mês** — seria bloqueado como irregular.
+  // 5 das 16 vidas começam em 2025.
+  const piso = mes ? salarioMinimoDe(mes) : { valor: PREVIDENCIA.SALARIO_MINIMO };
+
+  if (escolhido > 0 && piso.valor !== null && escolhido < piso.valor) {
     alertas.push({
       gravidade: "impeditivo",
       codigo: "PISO_LEGAL",
       titulo: "Abaixo do mínimo que a lei permite",
       texto:
         `O salário de contribuição não pode ser menor que o salário mínimo ` +
-        `(${brl(PREVIDENCIA.SALARIO_MINIMO)}), nem para sócio. ` +
+        `(${brl(piso.valor)}), nem para sócio. ` +
         `Você digitou ${brl(escolhido)}.`,
       fonte: "Lei 8.212/1991 art. 28 §3º",
-      confianca: "🟡 valor do piso de fonte única (13/09), regra 🟢",
+      // ✅ Deixou de ser fonte única: o valor de 2026 tem Decreto 12.797/2025 e
+      //    a tabela do INSS, e o de 2025 foi confirmado pelo contador em 16/09.
+      confianca: "🟢 piso com duas fontes por vigência",
+      vigenciaDoPiso: piso.vigenciaDesde ?? "corrente",
+      // ⏳ Vai junto quando a tabela venceu — some quando alguém atualiza.
+      avisoDaTabela: piso.aviso ?? null,
     });
   }
 

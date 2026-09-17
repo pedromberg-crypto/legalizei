@@ -83,6 +83,8 @@ for (const escolhido of valores) {
     receitaDoMes,
     rbt12DoMes: rbt.rbt12,
     escolhido,
+    // 📅 O piso legal é o da competência, não o de hoje (16/09).
+    mes: mesAtual.mes,
   });
 
   console.log("─".repeat(96));

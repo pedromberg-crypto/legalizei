@@ -10,6 +10,28 @@ data: 2026-07-16
 
 ## 📍 Agora (torre de controle — mantida via `/fechar`)
 
+> **Última atualização:** 2026-09-17 — **71º flow: A ORGANIZAÇÃO QUE O PEDRO PEDIU, E ELA COMEÇOU ACHANDO ERRO MEU.**
+>
+> 🧭 **O pedido era método, não documento:** *"quero de fato ter 100% de segurança para seguir validando processos… sinto que estamos delirando demais entre uma varredura e outra, sinto que você muitas vezes erra e na mesma resposta conserta"*, com a restrição **"nunca criar novos documentos de forma desnecessária"**. Foram criados **dois scripts e zero notas novas**.
+>
+> **(1) 📉 NASCEU A TRAVA DA DEFASAGEM** (`execucao/verificar-defasagem.mjs`). As 4 travas que existiam pegam **contradição**, **vocabulário** e **ausência** — nenhuma pegava **número velho em prosa**. 🔑 A evidência de que isto é arquitetura e não descuido: numa auditoria de 16/09, os docs **gerados** tiveram **0** deriva e os escritos à mão, **7 de 7**. Ela mede 9 números vivos rodando as próprias suítes e varre **12 textos vivos** — incluindo **código**, porque comentário é prosa e ninguém relê comentário.
+>
+> **(2) 🔴 O NÚMERO "7" ESTAVA ERRADO EM QUATRO ARQUIVOS, E ERAM 8.** *"7 vidas com sócio único"* e *"o bug dos sócios atingia 7 das 16"* são frases **complementares**: 7 + 7 = 14 e o elenco tinha 16. Nenhuma contradizia nada de onde estava, porque cada uma morava num arquivo — e ninguém soma prosa. Um deles **tinha ido no reporte ao Mauro**, e foi corrigido lá com nota explícita.
+>
+> **(3) 🐛 E A TRAVA NOVA ESTAVA CEGA, DE DUAS MANEIRAS.** O recuo `(?!…com|que|sem…)` estava **sem `\b`**, então `com` casava dentro de **`começam`** e 3 arquivos passaram limpos; e o padrão varria a **marcação**, não o texto, então `**45 conferências** no motor` não casava com `conferências no motor` — escondendo um número errado por **1** e outro por **26** (o piloto dizia 41 e são **67**). 🔑 **Trava cega é pior que trava ausente:** ela rodou **verde** afirmando que estava tudo em dia. Os padrões novos foram testados **plantando números errados de propósito** e conferindo que mordem.
+>
+> **(4) 🧷 UM COMANDO SÓ: `node execucao/verificar-tudo.mjs`.** Não faltavam travas, faltava **ordem obrigatória**: eram 14 scripts em 6 pastas e a única coisa que dizia quais rodar era a minha memória da sessão. Agora são **13 etapas em 4 fases**, e a ordem é causal — fontes → geradores (as travas de escopo e persona rodam **dentro** deles) → suítes → defasagem por último, porque ela compara com o que as suítes **acabaram de medir**. 🔒 E ele varre o repo atrás de verificador **órfão** e derruba a rodada se achar um que não esteja nem na fila nem na dispensa justificada.
+>
+> **(5) 📐 A MATRIZ DE PRONTIDÃO, GERADA DENTRO DA NOTA QUE JÁ EXISTIA.** **24 das 58 funcionalidades** têm nó de processo — e o número que importa não é esse, é **3 de 8 categorias**: dentro das varridas a cobertura é **integral**, nenhum item ficou para trás. O buraco é de **fronteira**, não espalhado, e a Folha (10 itens) está fora por decisão. Vive em [[_cobertura-das-vidas]], entre marcadores, reescrita pelo `gerar-cru.mjs`.
+>
+> **(6) 📒 O LEDGER FOI DE M-014 A M-026.** Doze achados de 16-17/09 registrados, incluindo os três que assustam: `emCentavos()` numa soma já em centavos que **não quebrava teste nenhum** · a P21 modelando o cliente **recusando** a oferta, que **passava** provando o contrário do que existia para provar · e o redutor do IRRF "seco" criando um **penhasco de R$312,88** num centavo de bruto.
+>
+> **(7) ✅ E O QUE FOI CORRIGIDO ALÉM DOS NÚMEROS:** o R$60 do endereço fiscal em 2 docs vivos (é **R$49** desde 11/09) · duas perguntas da fila-Larissa que **já tinham resposta** (Fator R meses 2–12 e CPP-no-DAS) · L3/L4 dos acionáveis, respondidas pelo contador · e o C8 do *"Anexo: 5"*, que estava marcado como pergunta ao Mauro e **era leitura errada minha**, resolvida em 13/09.
+>
+> ⚠️ **A fronteira, dita de novo:** as travas pegam número, vocabulário, contradição e ausência. **Não pegam regra bem escrita e errada** — isso é o contador —, nem quantificador (*"todas, sem exceção"* passou limpo, e era falso). E não pegam o erro que mais custa: eu afirmando um número que ainda não rodei.
+
+---
+
 > **Última atualização:** 2026-09-16 — **70º flow: O CONTADOR VALIDA O MOTOR, E OS 7 PASSOS DE APLICAÇÃO FECHAM NO MESMO DIA.**
 >
 > **(1) 🎙️ REUNIÃO DE ~5H COM O LEONAN**, contador especializado. 3 áudios, **293.345 caracteres lidos 100%**, literais em `reunioes/fontes/`. O briefing de perguntas virou **registro validado**: **32 itens com veredito** — 20 ratificados, **4 corrigidos contra nós**, 5 viraram decisão nova, 3 seguem abertos. 🔑 **O Bloco E passou 7 de 7**, com o DAS conferido contra a guia real dele: *"bateu 100% do valor, que é o que eu paguei lá"*.

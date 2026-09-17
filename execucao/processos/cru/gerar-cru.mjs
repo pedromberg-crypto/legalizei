@@ -23,7 +23,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { writeFileSync, readdirSync } from "node:fs";
+import { writeFileSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { verificarEscopo } from "../verificar-escopo.mjs";
@@ -34,6 +34,10 @@ import { ESCOPO } from "../_escopo.mjs";
 const AQUI = dirname(fileURLToPath(import.meta.url));
 const RAIZ = resolve(AQUI, "..", "..", "..");
 const HOJE = new Date().toISOString().slice(0, 10);
+
+const MATRIZ_INICIO =
+  "<!-- MATRIZ:INICIO — gerado por cru/gerar-cru.mjs, não editar à mão -->";
+const MATRIZ_FIM = "<!-- MATRIZ:FIM -->";
 
 /**
  * Roda TODAS as categorias que existirem na pasta, sempre. Passar o nome de
@@ -60,6 +64,105 @@ writeFileSync(
   "utf8",
 );
 console.log(`✓ board:  ./app/src/lib/cru-graph.json  (${paraBoard.categorias.length} categoria(s))`);
+
+await gerarMatrizDeProntidao();
+
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 📐 A MATRIZ DE PRONTIDÃO — escrita dentro do doc de cobertura, não ao lado
+ * ═══════════════════════════════════════════════════════════════════════════
+ * Pedido do Pedro em 16/09, com uma restrição que define o desenho:
+ *
+ *   *"o que quero que a gente fique sempre atento: **nunca criar novos
+ *   documentos de forma desnecessária**."*
+ *
+ * Por isso ela **não é um arquivo**. É um bloco gerado dentro do
+ * `_cobertura-das-vidas.md`, que já é a nota que responde *"do que a gente
+ * está cego?"*. Ela só muda o eixo da pergunta: aquela nota mede o **motor**
+ * contra as vidas; este bloco mede o **desenho de processo** contra as 58
+ * funcionalidades do painel.
+ *
+ * 🔑 E ela é GERADA porque a resposta certa não é escrever a tabela: é fazer
+ * com que ela recalcule. Toda tabela de cobertura que alguém digitou neste
+ * vault envelheceu — foi o achado de 17/09, em 7 documentos de 7.
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+async function gerarMatrizDeProntidao() {
+  const { FUNCIONALIDADES, SECOES } = await import(
+    `file:///${resolve(RAIZ, "produto/funcionalidades-data.mjs").replace(/\\/g, "/")}`
+  );
+
+  // Quem cobre o quê: o índice invertido do campo `cobre` dos nós.
+  const cobertura = new Map();
+  for (const [cat, nos] of Object.entries(paraBoard.nos)) {
+    for (const n of nos) {
+      for (const item of n.cobre ?? []) {
+        if (!cobertura.has(item)) cobertura.set(item, []);
+        cobertura.get(item).push(`${cat}:${n.id}`);
+      }
+    }
+  }
+
+  const varridas = new Set(paraBoard.categorias.map((c) => c.id));
+  const cobertos = FUNCIONALIDADES.filter((f) => cobertura.has(f.id));
+
+  let linhas = "";
+  for (const s of SECOES) {
+    const itens = FUNCIONALIDADES.filter((f) => f.secao === s.id);
+    const comNo = itens.filter((f) => cobertura.has(f.id));
+    const foiVarrida = varridas.has(s.id);
+    const estado = !foiVarrida
+      ? "⬜ **não varrida**"
+      : comNo.length === itens.length
+        ? "🟢 varrida inteira"
+        : `🟡 varrida pela metade — faltam ${itens.filter((f) => !cobertura.has(f.id)).map((f) => f.id).join(", ")}`;
+    const nos = comNo.reduce((s2, f) => s2 + cobertura.get(f.id).length, 0);
+    linhas += `| ${s.emoji} **${s.nome}** | ${comNo.length}/${itens.length} | ${nos || "—"} | ${estado} |\n`;
+  }
+
+  const bloco = `${MATRIZ_INICIO}
+
+## 📐 Matriz de prontidão — o desenho de processo contra as ${FUNCIONALIDADES.length} funcionalidades
+
+> 🧭 **Outra pergunta, mesmo assunto.** O resto desta nota pergunta *"existe código no motor que nenhuma vida faz rodar?"*. Esta tabela pergunta *"existe funcionalidade do painel que nenhum processo desenhado sustenta?"*. As duas medem cegueira; uma pelo cálculo, a outra pelo desenho.
+
+**${cobertos.length} das ${FUNCIONALIDADES.length} funcionalidades têm pelo menos um nó de processo.**
+
+| Categoria | Com nó | Nós apontando | Estado |
+|---|:--:|:--:|---|
+${linhas}
+🔑 **A cobertura é CATEGÓRICA, não parcial — e isso é a boa notícia.** Dentro das categorias varridas ela é **integral**: nenhum item ficou para trás. O que falta são **${SECOES.length - varridas.size} categorias inteiras** que o modo cru nunca varreu, e que estão declaradas como não varridas desde 12/09, quando o método cronológico assumiu.
+
+⚠️ **Então o número que interessa não é "${cobertos.length} de ${FUNCIONALIDADES.length}", é "${varridas.size} de ${SECOES.length} categorias".** Ler como 41% de prontidão sugere buraco espalhado; o buraco é de fronteira, e retomar as categorias que faltam é **decisão aberta do Pedro**, não dívida esquecida.
+
+🔒 **E a Folha é a maior delas de propósito:** colaborador está **travado fora** por decisão dele em 15/09, e as 10 funcionalidades da categoria dependem dessa destrava.
+
+${MATRIZ_FIM}`;
+
+  const doc = resolve(RAIZ, "execucao/estado-cnpj/_cobertura-das-vidas.md");
+  const texto = readFileSync(doc, "utf8");
+  const escapar = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+  let novo;
+  if (texto.includes(MATRIZ_INICIO)) {
+    novo = texto.replace(
+      new RegExp(`${escapar(MATRIZ_INICIO)}[\\s\\S]*?${escapar(MATRIZ_FIM)}`),
+      bloco
+    );
+  } else {
+    // Âncora: antes da seção de links, que é sempre a última.
+    const links = texto.search(/^## Links$/m);
+    novo =
+      links < 0
+        ? `${texto.trimEnd()}\n\n${bloco}\n`
+        : `${texto.slice(0, links)}${bloco}\n\n${texto.slice(links)}`;
+  }
+
+  writeFileSync(doc, novo, "utf8");
+  console.log(
+    `✓ matriz: _cobertura-das-vidas.md  (${cobertos.length}/${FUNCIONALIDADES.length} funcionalidades · ${varridas.size}/${SECOES.length} categorias)`
+  );
+}
 
 async function umaCategoria(categoria) {
 const { CATEGORIA, NOS } = await import(`./${categoria}.mjs`);

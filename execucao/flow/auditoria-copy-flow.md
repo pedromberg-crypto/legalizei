@@ -197,7 +197,7 @@ _32 telas navegáveis · gerado de `flow-data.mjs`._
 **N10 socio** — "Seus dados" · CPF/RG/civil/regime (cônjuge comunhão universal) · endereço · "mora fora do Brasil?" + bloqueio exterior.
 **N11 vínculo** — "Você já contribui pro INSS por fora?" · aviso teto/folga · aviso "Como você se paga (pró-labore)" · privacidade.
 **N12 sócios** — "Vai ter mais sócios?" · aviso "até 2 sócios, limite do produto" · 2º sócio + divisão 100%.
-**N13 empresa** — "Onde a empresa fica?" · upsell endereço fiscal R$60/mês ("deixa de ser problema") · IPTU opcional · capital social + warning.
+**N13 empresa** — "Onde a empresa fica?" · upsell endereço fiscal R$49/mês ("deixa de ser problema") · IPTU opcional · capital social + warning.
 **N14 cnae-secundários** — "Sua empresa faz mais alguma coisa?" · principal travado · 4 sugestões "mesmo imposto".
 **N15 natureza** — "O tipo da sua empresa" · SLU × LTDA · card "Não precisa decorar sigla".
 **N16 nome** — "O nome da empresa" · razão social (disponível/em uso) · variações · aviso "confere antes... evitar reprovado".

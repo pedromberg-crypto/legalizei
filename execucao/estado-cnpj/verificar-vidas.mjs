@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * 🧪 AS 15 VIDAS CONTRA O MOTOR — invariância, não gabarito.
+ * 🧪 AS VIDAS CONTRA O MOTOR — invariância, não gabarito.
  * ═══════════════════════════════════════════════════════════════════════════
  * `node execucao/estado-cnpj/verificar-vidas.mjs`
  *
@@ -636,7 +636,7 @@ console.log("\n── 8 · Quem fatura no mês em que abriu paga 15,5%, e quem p
     "nem quem abriu e não faturou"
   );
 
-  // 🔑 E as 16 vidas seguem silenciosas: nenhuma exercita o caso ainda.
+  // 🔑 E o elenco deixou de ser silencioso aqui: a P21 exercita o caso.
   const alertasDasVidas = VIDAS.flatMap((v) =>
     v.competencias.flatMap((cp) =>
       alertasDoRetrato({
@@ -699,7 +699,11 @@ console.log("\n── 8 · Quem fatura no mês em que abriu paga 15,5%, e quem p
 
 /* ── 9 · O PISO É O DA COMPETÊNCIA (regra nova de 16/09) ────────────────── */
 
-console.log("\n── 9 · O salário mínimo tem vigência, e 5 das 16 vidas começam em 2025\n");
+// 🔢 Conta, não afirma — este título já disse "16" com 17 vidas no arquivo.
+const comecamEm2025 = VIDAS.filter((v) => v.competencias[0].mes.startsWith("2025")).length;
+console.log(
+  `\n── 9 · O salário mínimo tem vigência, e ${comecamEm2025} das ${VIDAS.length} vidas começam em 2025\n`
+);
 {
   // 🔴 O contador levantou isto como manutenção — *"todo ano você vai rodar um
   //    código lá pra atualizar?"* — e o achado saiu de CORREÇÃO: com uma

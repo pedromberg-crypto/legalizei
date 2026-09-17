@@ -21,12 +21,16 @@ tags: [motor, fiscal, auditoria, cobertura, anexos, fator-r]
 
 > ⚠️ **Correção de 14/09:** uma versão desta nota dizia *"7 de 8 e 5 de 7"*. Estava **inflado** — eu contei como cobertas as funcionalidades que o motor não precisa tocar, em vez das que ele resolve. O Pedro pegou perguntando *"por que não fechamos todos?"*. Os números certos estão acima, e a §5.1 diz o que falta para fechar de verdade.
 
-## 📋 O que exatamente está fechado — atualizado em 14/09, 2ª rodada
+## 📋 O que exatamente está fechado — atualizado em 17/09, 3ª rodada
+
+> 🔁 **Os números de conferência desta nota são conferidos a cada rodada** pelo `verificar-defasagem.mjs`, contra a saída real das suítes. ⚠️ **Só se ele souber ler a frase:** ele reconhece *"N conferências no motor / no piloto / no estado recorrente"*. Escrever o mesmo número com outra redação o cega — foi assim que o **45** sobreviveu aqui por três dias.
 
 | | Estado | Prova |
 |---|---|---|
-| **Motor fiscal** (`motor-fiscal/`) | 🟢 fechado como cálculo | **45 conferências** contra recibo do PGDAS-D, nota fiscal real e texto legal |
-| **Estado recorrente** (`estado-cnpj/`) | 🟢 fechado como modelo | **9 conferências** — as 3 telas fecham no mesmo número |
+| **Motor fiscal** (`motor-fiscal/`) | 🟢 fechado como cálculo | **46 conferências no motor**, contra recibo do PGDAS-D, nota fiscal real e texto legal |
+| **Piloto de pró-labore** (`piloto-pro-labore.mjs`) | 🟢 fechado como decisão | **67 conferências no piloto** — ver §9 |
+| **Estado recorrente** (`estado-cnpj/`) | 🟢 fechado como modelo | **14 conferências no estado recorrente** — as 3 telas fecham no mesmo número |
+| **As vidas** (`vidas.mjs`) | 🟢 17 vidas · 162 competências | **54 invariantes**, relações da lei e não valores meus |
 | **Ligação com o produto** | 🟡 constantes ligadas, cálculo não | o app lê as tabelas do gerador desde 15/09; nenhuma tela chama o apurador ainda |
 
 ### O que a 2ª rodada acrescentou
@@ -294,7 +298,7 @@ Parece pequeno e não é: **é o estado recorrente ganhando lugar para morar**. 
 
 ### Verificação
 
-`tsc --noEmit` limpo · lint sem nenhum apontamento nos arquivos tocados · **45 conferências** no motor e **9** no estado recorrente.
+`tsc --noEmit` limpo · lint sem nenhum apontamento nos arquivos tocados · **46 conferências no motor**, **67 conferências no piloto** e **14 conferências no estado recorrente**.
 
 ## 7 · As variáveis cobertas, pro cliente travado
 
@@ -336,7 +340,7 @@ Os itens 2, 3 e 4 da lista original **fecharam**. Sobrou isto:
 
 > Decisão do Pedro: *"não é sobre avisar cedo ou tarde, é sobre também aplicar a regra de ajuste automático de pró-labore desde o início para os usuários, eles não precisam saber sobre isso."*
 
-`piloto-pro-labore.mjs` + `verificar-piloto.mjs`, **41 conferências**. O apurador olha pra trás; o piloto olha pra frente e decide **quanto pagar agora** pra empresa seguir no Anexo III depois.
+`piloto-pro-labore.mjs` + `verificar-piloto.mjs`, **67 conferências no piloto**. O apurador olha pra trás; o piloto olha pra frente e decide **quanto pagar agora** pra empresa seguir no Anexo III depois.
 
 **Por que tinha que ser ação e não alerta:** o Fator R lê os 12 meses **anteriores**, então o pró-labore de hoje só produz efeito em `m+1 … m+12`. Medido no P01: quem corrige em set/2026 só volta ao III em **ago/2027**, 11 meses pagando 15,5% com a folha já certa. Alerta chega tarde **por construção**.
 

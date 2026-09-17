@@ -102,7 +102,11 @@ const naoPagou = (receita, proLabore) => ({
 const MIN = 1621; // salário mínimo 2026, o piso do pró-labore
 
 /* ═══════════════════════════════════════════════════════════════════════════
- * AS 15 VIDAS
+ * AS VIDAS
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🔢 O título não traz número **de propósito**. Ele já esteve em "AS 15 VIDAS" [HISTÓRICO]
+ * com 17 vidas no arquivo, porque um cabeçalho escrito à mão não recalcula.
+ * Quem conta é o `verificar-defasagem.mjs`, contra o `VIDAS.length`.
  * ═══════════════════════════════════════════════════════════════════════════ */
 
 export const VIDAS = [
@@ -333,7 +337,7 @@ export const VIDAS = [
       // 🔴 TRÊS COMPETÊNCIAS SEGUIDAS PAGAS EM ATRASO — entrou em 15/09.
       // Não é invenção: é o padrão medido na conta real, que levou **R$229,85
       // de multa em 3 meses seguidos**, com atrasos de ~13, ~21 e ~14 dias,
-      // todos "Confirmado via Plataforma". Até aqui as 16 vidas pagavam tudo
+      // todos "Confirmado via Plataforma". Até aqui o elenco inteiro pagava tudo
       // em dia, e o `guiaVencida()` (multa + juros + Selic) nunca rodava — o
       // elenco só exercitava o cenário que não dói.
       //
@@ -578,9 +582,13 @@ export const VIDAS = [
     }),
     porque:
       "🆕 NASCEU EM 16/09, e nasceu porque um invariante afirmava que ela " +
-      "faltava. Até aqui **as 16 vidas abriam sem faturar no mês 1** — todas, " +
-      "sem exceção — e por isso o caminho da janela vazia nunca rodou em " +
-      "persona nenhuma. Ele existia só em teste sintético meu, que é " +
+      "faltava. Até aqui **nenhuma vida de CNAE dinâmico faturava no mês da " +
+      "abertura** — e por isso o caminho da janela vazia nunca rodou em " +
+      "persona nenhuma. ⚠️ Este comentário dizia 'as 16 vidas abriam sem " + // [HISTÓRICO]
+      "faturar, todas, sem exceção', e isso era FALSO: a P03, a P07 e a P14 " +
+      "já faturavam no mês 1. O caso não aparecia nelas porque as três são " +
+      "`III-fixo`, e sem Fator R não existe janela para ficar vazia. " +
+      "Ele existia só em teste sintético meu, que é " +
       "exatamente o tipo de prova que o Pedro mandou parar de aceitar. " +
       "🔑 **O que só ela prova:** (1) faturar no mês da abertura é tributado " +
       "pelo **Anexo V**, porque não existe competência anterior com folha — " +

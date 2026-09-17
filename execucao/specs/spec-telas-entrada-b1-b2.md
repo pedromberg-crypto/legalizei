@@ -116,7 +116,7 @@ tags: [produto, ux, telas, spec, onboarding, entrada, b1, b2]
 |---|---|---|---|
 | Endereço da empresa | input + CEP | CEP válido; nº obrigatório | Guarda índice cadastral IPTU (p/ registro BH) |
 | Índice cadastral IPTU | input | Formato a validar; 🟡 opcional se não tem | Explica onde achar (carnê IPTU) |
-| **Upsell: endereço fiscal Legalizai Story Book** | oferta (toggle "usar endereço próprio" × "quero um endereço") | **Não bloqueia** — só oferece; seguir em frente independe da escolha | Se "não tenho / não quero usar o meu" → oferece add-on (~R$60/mês 🟡). **Salva flag no dossiê** + **injeta automático no plano do B3**. Resolve gargalo "sem endereço comercial" |
+| **Upsell: endereço fiscal Legalizai Story Book** | oferta (toggle "usar endereço próprio" × "quero um endereço") | **Não bloqueia** — só oferece; seguir em frente independe da escolha | Se "não tenho / não quero usar o meu" → oferece add-on (**R$49/mês**, `CUSTOS.ENDERECO_FISCAL` em `app/src/lib/fiscal.ts`). **Salva flag no dossiê** + **injeta automático no plano do B3**. Resolve gargalo "sem endereço comercial" |
 | Capital social | input R$ | > 0; valor real | IA sugere faixa coerente; alerta se muito baixo/alto |
 | Tipo de endereço | dropdown (próprio/coworking/virtual/fiscal-Legalizai Story Book) | — | Afeta viabilidade em BH (flag p/ blocos futuros) |
 
@@ -209,10 +209,13 @@ tags: [produto, ux, telas, spec, onboarding, entrada, b1, b2]
 ## 🟡 Pendências desta spec
 - ~~Limite de sócios: 3 ou 2?~~ ✅ **travado em 2** (15/07).
 - ~~Valores fiscais vigentes (salário mín, teto INSS)~~ ✅ **resolvido** em [[fiscal-simples-bh-2026]] CONSOLIDADO: mín R$1.621 · teto INSS R$8.475,55 · INSS máx R$932,31/mês · IRRF isento ~R$5k (reconferir jan/27).
-- Preço do endereço fiscal Legalizai Story Book (~R$60 benchmark, definir o nosso)
+- ~~Preço do endereço fiscal Legalizai Story Book (~R$60 benchmark, definir o nosso)~~ ✅ **R$49/mês**, fechado em 11/09. O R$60 era o Escritório Virtual do **concorrente**, nunca conta nossa. Fonte única: `CUSTOS.ENDERECO_FISCAL` em `app/src/lib/fiscal.ts` — não hardcodar em tela.
 - Provider da validação de CPF/situação cadastral (mesmo pool do cartão CNPJ)
 - Política de senha do login
-- **Fila-Larissa (impacta o simulador 2.8):** (A) mecânica Fator R meses 2–12 · (B) **CPP-no-DAS entra no numerador?** (muda o pró-labore ótimo) · (C) FS12 regime de caixa (COSIT 17/2021). Ver tabela em [[perguntas-larissa-fiscal]].
+- **Fila-Larissa (impacta o simulador 2.8)** — duas das três fecharam:
+  - ~~(A) mecânica Fator R meses 2–12~~ ✅ **fechada**. O RBT12 tem 3 regras (Res. CGSN 140/2018 art. 24) e o Fator R é **retrovisor**: lê a competência anterior, então o pró-labore de hoje só produz efeito de `m+1` em diante. Janela sem folha **resolve para o Anexo V**, e não é erro.
+  - ~~(B) CPP-no-DAS entra no numerador?~~ ✅ **NÃO entra** nos Anexos III e V (LC 123/2006 art. 26 §2º I "a"). Corrigido em 14/09; é assunto **encerrado** e travado em `motor-fiscal/_encerrados.mjs` · **E-CPP**. ⚠️ A manobra de somar a CPP à folha para alcançar o Fator R existe, o contador a descreveu, e o Pedro decidiu em 16/09 **não fazê-la**.
+  - (C) FS12 regime de caixa (COSIT 17/2021) — 🟡 segue aberta, e ficou maior: o contador citou de memória que o **regime de caixa acaba em 2027**, o que atingiria o Fator R. Sem norma ainda.
 
 ## Links
 - [[blocos-fluxo-abertura]] · [[mapa-telas-mobile]] · [[casos-teste-fluxo-cnae]] · [[2026-07-13-conversa-karla]] · [[compilado-ux-flow]] · [[cnae-fiscalmente-otimo]] · [[HOME]]

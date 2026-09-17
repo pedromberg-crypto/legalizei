@@ -2,7 +2,7 @@
 tipo: hub
 status: vivo
 dominio: produto
-data: 2026-09-14
+data: 2026-09-17
 assunto: persona-zero
 tags: [produto, persona-zero, acionavel, pendencia]
 ---
@@ -53,8 +53,8 @@ Exercício encerra **31/12**; o administrador presta contas com **inventário + 
 
 | | Item | Tipo | Dono |
 |:--:|---|:--:|---|
-| L3 | **O app FORÇA definir pró-labore no dia 1, ou aceita "ainda não vou retirar"?** ⚠️ Não pagar **trava o numerador do Fator R** (regime de caixa) — é legítimo no começo e caro depois | ⚖️ decidir | Pedro |
-| L4 | **Qual o risco real de ficar meses sem pró-labore no início, e qual a tese que o escritório usa hoje?** | ❓ perguntar | **Mauro** |
+| ~~L3~~ | ✅ **RESPONDIDA em 16/09 — o app PERGUNTA, e o default é aguardar a 1ª nota.** *"Desde a constituição, ou a partir da 1ª nota?"* ⚠️ Até 16/09 nós **forçávamos** desde a 1ª competência, copiando o líder. O contador mostrou o preço disso: guia de INSS para quem não faturou — *"você me mandou uma guia de R$178 e eu não tive faturamento. **Tem muito, em todos os escritórios**"* | ⚖️ decidida | Pedro |
+| ~~L4~~ | ✅ **RESPONDIDA na mesma conversa.** A lei puxa desde a constituição (*"em tese ele já é contribuinte obrigatório"*), e é por isso que **divergimos de propósito**: em vez de obedecer a letra e cobrar de quem não faturou, viramos a escolha para o cliente. 🔑 Continua valendo o outro lado: não pagar **trava o numerador do Fator R** (regime de caixa), e isso é legítimo no começo e caro depois — por isso o piloto ajusta assim que a 1ª nota entra | ❓ respondida | **Leonan** (16/09) |
 
 🔑 **Explica o caso real:** a persona zero passou dez/jan/fev **sem pró-labore nenhum**, e só começou em março. Contratualmente, nada a obrigava.
 
@@ -84,6 +84,10 @@ Declaração, sob as penas da lei, de ausência de condenação criminal que imp
 |:--:|---|:--:|---|
 | X1 | **O contrato padrão tem 16 cláusulas, não 15.** Nossos docs dizem 15 em três lugares (`dados-coletados-abertura-ate-viabilidade`, `handoff-dev-2026-09-01`, `conferencia`) | 🔨 adaptar | — |
 
+> 🔴 **ARMADILHA DO X1, registrada em 17/09 antes que alguém caia nela.** Não é busca-e-troca. **"15 cláusulas obrigatórias" é o NOME DA OPÇÃO na tela da JUCEMG**, conferido em print (`telas-jucemg-mapeamento-prints` 114, 115) — é o rótulo do sistema, contra o sub-modelo de "7 cláusulas", e é o que mantém a elegibilidade ao **registro automático**. Esse "15" está **certo** onde descreve a escolha na tela.
+>
+> O "16" é a contagem do **documento gerado**, medida no contrato real da persona zero. 🔑 **São duas coisas com o mesmo número no meio:** trocar 15 por 16 nos docs de mapeamento da JUCEMG introduziria um erro no lugar de corrigir um. Onde cabe ajuste é só onde o texto descreve **o contrato assinado**, não a opção marcada.
+
 ---
 
 ## 📊 Do balanço patrimonial (14/09)
@@ -112,7 +116,7 @@ Declaração, sob as penas da lei, de ausência de condenação criminal que imp
 | C5 | **Balanço e Balancete são o mesmo contrato** — dois modos de exibição, não dois relatórios. Construir duas telas duplica trabalho e cria duas fontes de divergência | 🔨 adaptar | dev |
 | C6 | **Modelar o plano de contas a partir das 16 reais**, em português de gente — não importar plano genérico. A DRE deles tem ~40 campos e a maioria vive zerada (exportação, royalties, mercadorias, SCP) | 🔨 adaptar | dev |
 | C7 | **Lembrete de vencimento com consequência nomeada** — e agora com número: R$229,85 em 3 competências seguidas, as duas guias atrasadas todas as vezes | 🔨 adaptar | dev |
-| C8 | 🕓 **A nota diz "Anexo: 5" e declara 6,00% na mesma linha.** Provável anexo-de-origem × efetivo pós-Fator R, **não confirmado**. Se for isso, nossa tela resolve com uma palavra | ❓ perguntar | **Mauro** |
+| ~~C8~~ | ✅ **RESOLVIDA em 13/09, e não era nem anexo-de-origem nem efetivo.** O `anexoEscolhido: 5` é **id interno do líder**, não o número do anexo — a empresa é **Anexo III**. Provado por duas vias independentes: a própria nota diz *"o percentual total de impostos é de aproximadamente 6,00%"* (Lei 12.741/2012), e o ISS fecha exato (R$198,89 ÷ R$9.895,00 = 2,010% = 6% × 33,50%, a repartição do Anexo III faixa 1; no Anexo V daria 2,17%, que não bate). ⚠️ **Não perguntar ao Mauro** — eu é que tinha lido o id como anexo | — | resolvida |
 
 ---
 

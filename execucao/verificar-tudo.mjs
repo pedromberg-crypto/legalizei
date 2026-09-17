@@ -1,0 +1,231 @@
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🧷 UM COMANDO SÓ — a porta de entrada da validação de /processos
+ * ═══════════════════════════════════════════════════════════════════════════
+ * `node execucao/verificar-tudo.mjs`
+ *
+ * Pedido do Pedro em 16/09, e as palavras dele são a especificação:
+ *
+ *   *"quero de fato ter 100% de segurança para seguir validando processos…
+ *   sinto que estamos delirando demais entre uma varredura e outra, sinto que
+ *   você muitas vezes erra e na mesma resposta conserta."*
+ *
+ * ── 🔴 O PROBLEMA QUE ELE DESCREVEU, dito em mecânica ──────────────────────
+ *
+ * Não faltavam travas. Faltava **ordem obrigatória**. Em 17/09 existiam 14
+ * scripts de verificação e geração espalhados por 6 pastas, e a única coisa
+ * que dizia quais rodar e em que ordem era a minha memória da sessão. Uma
+ * rodada esquecida não avisa: ela **passa**.
+ *
+ * 🔑 E a ordem não é estética, é causal:
+ *
+ *   1. As FONTES (`_persona.mjs`, `processos-data.mjs`, `cru/*.mjs`) mudam.
+ *   2. Os GERADORES releem as fontes e reescrevem os docs. As travas de
+ *      escopo e de persona rodam DENTRO deles — gerar é verificar.
+ *   3. Só então as SUÍTES fazem sentido: elas medem o motor, e o motor é o
+ *      que os docs recém-gerados descrevem.
+ *   4. E a DEFASAGEM vem por último, porque ela compara o que está escrito
+ *      com o que as suítes acabaram de medir. Rodar antes é comparar com
+ *      número velho e receber verde falso.
+ *
+ * ── ⚠️ O QUE ESTE SCRIPT NÃO É ─────────────────────────────────────────────
+ *
+ * Não é uma trava nova, e não verifica nada por conta própria. É **ordem e
+ * cobertura**: garante que todo verificador existente rodou, na sequência
+ * certa, e que nenhum foi esquecido. Quem acha defeito continua sendo cada
+ * um deles.
+ *
+ * 🔒 E ele se recusa a ficar desatualizado: o bloco final varre o repositório
+ * atrás de `verificar-*.mjs` e `gerar-*.mjs` e **derruba a rodada** se achar
+ * um que não esteja nem na lista de execução nem na de dispensa justificada.
+ * Sem isso, a próxima trava que eu escrever nasceria órfã — que foi
+ * exatamente o que aconteceu com o `verificar-defasagem.mjs` no dia em que
+ * ele nasceu.
+ *
+ * 🔴 FORA DAQUI, e de propósito: Playwright/E2E. Regra travada em 30/08 e
+ * reforçada 3×: **só roda quando o Pedro pede**, e um "pode rodar" vale para
+ * aquela rodada, não para a sessão.
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+
+import { execFileSync } from "node:child_process";
+import { readdirSync, statSync } from "node:fs";
+import { dirname, join, relative, resolve, sep } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const AQUI = dirname(fileURLToPath(import.meta.url));
+const RAIZ = resolve(AQUI, "..");
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * 1 · A ORDEM — e a razão de cada etapa estar onde está
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+const ETAPAS = [
+  {
+    fase: "1 · GERAR — as fontes viram doc, e as travas rodam dentro",
+    porque:
+      "PROCESSOS.md, SAIDAS.md, cru/*.md e PERSONA.md são GERADOS. " +
+      "verificar-escopo e verificar-persona vivem dentro destes três.",
+    scripts: [
+      "processos/gerar-processos.mjs",
+      "processos/gerar-persona.mjs",
+      "processos/cru/gerar-cru.mjs",
+    ],
+  },
+  {
+    fase: "2 · O MOTOR — valor contra recibo, e relação contra a lei",
+    porque:
+      "O apurador afirma VALOR (há recibo do PGDAS-D). As vidas afirmam " +
+      "RELAÇÃO (não há recibo, e inventar gabarito seria fingir prova).",
+    scripts: [
+      "motor-fiscal/verificar-apurador.mjs",
+      "motor-fiscal/verificar-piloto.mjs",
+      "motor-fiscal/verificar-autoridade.mjs",
+      "motor-fiscal/verificar-encerrados.mjs",
+      "estado-cnpj/verificar.mjs",
+      "estado-cnpj/verificar-vidas.mjs",
+      "estado-cnpj/verificar-etiquetas.mjs",
+      "estado-cnpj/auditar-agregacao.mjs",
+    ],
+  },
+  {
+    fase: "3 · O CICLO — as obrigações, competência a competência",
+    porque: "Não é teste de cálculo: é cobertura de CANAL. O que o app faz sozinho e o que não faz.",
+    scripts: ["estado-cnpj/rodar-ciclo.mjs"],
+  },
+  {
+    fase: "4 · A DEFASAGEM — por último, e só por último",
+    porque:
+      "Ela compara número escrito com número MEDIDO. Rodar antes das suítes " +
+      "é comparar com a medição anterior e receber verde falso.",
+    scripts: ["verificar-defasagem.mjs"],
+  },
+];
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * 2 · O QUE FICA DE FORA, com o motivo escrito
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🔑 Dispensa é DECISÃO, não esquecimento — mesma regra da doutrina de
+ * capacidades. Quem sai daqui sai com linha de justificativa.
+ */
+const DISPENSADOS = {
+  "flow/gerar-mapa.mjs": "flow de telas, não /processos — roda no fluxo de tela",
+  "flow/gerar-indice-telas.mjs": "derivado do gerar-mapa, roda junto com ele",
+  "flow/verificar-anatomia-mei.mjs": "roda DENTRO do gerar-mapa.mjs",
+  "flow/verificar-fronteira-mei.mjs": "roda DENTRO do gerar-mapa.mjs",
+  "flow/verificar-mei.mjs": "ramo MEI — fora do escopo padrão (ME abrir empresa)",
+  "processos/verificar-escopo.mjs": "roda DENTRO dos 3 geradores da fase 1",
+  "processos/verificar-persona.mjs": "roda DENTRO dos 3 geradores da fase 1",
+  "motor-fiscal/gerar-tabelas-app.mjs": "escreve dentro do app/ — é publicação, não verificação",
+  "portal/gerar-mapa-portal.mjs": "portal do cliente, outra frente",
+  "handoff/gerar-handoff.mjs": "pacote para o dev, sob demanda",
+  "gerar-placar-mauro.mjs": "reporte ao sócio — roda no /fechar, não aqui",
+  "../produto/gerar-funcionalidades.mjs": "inventário de produto, outra frente",
+  "../_sistema/pdf/gerar-pdf.mjs": "utilitário de exportação",
+};
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * 3 · RODAR
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+const soLista = process.argv.includes("--lista");
+
+console.log(`\n${"═".repeat(84)}`);
+console.log("🧷 VERIFICAR TUDO — a ordem que a validação de /processos exige");
+console.log("═".repeat(84));
+
+const resultados = [];
+
+for (const etapa of ETAPAS) {
+  console.log(`\n▸ ${etapa.fase}`);
+  console.log(`  ${etapa.porque}\n`);
+
+  for (const s of etapa.scripts) {
+    if (soLista) {
+      console.log(`     ⏭  ${s}`);
+      continue;
+    }
+    const rotulo = s.padEnd(42);
+    try {
+      const saida = execFileSync("node", [resolve(AQUI, s)], {
+        encoding: "utf8",
+        maxBuffer: 20 * 1024 * 1024,
+      });
+      // 🔑 Só a última linha com conteúdo: o placar de cada script já é a
+      // frase que ele escolheu para se resumir. Repetir a saída inteira aqui
+      // transformaria o verde num muro de texto que ninguém lê.
+      const resumo = saida.trim().split(/\r?\n/).filter(Boolean).pop() ?? "";
+      console.log(`     ✅ ${rotulo} ${resumo.slice(0, 70)}`);
+      resultados.push({ s, ok: true });
+    } catch (e) {
+      const saida = `${e.stdout ?? ""}${e.stderr ?? ""}`.trim();
+      console.log(`     🔴 ${rotulo} FALHOU`);
+      resultados.push({ s, ok: false, saida });
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * 4 · A AUDITORIA DE COBERTURA — o script se recusa a envelhecer
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+function varrer(dir, achados = []) {
+  for (const nome of readdirSync(dir)) {
+    if (nome === "node_modules" || nome === ".git" || nome === ".claude") continue;
+    const caminho = join(dir, nome);
+    if (statSync(caminho).isDirectory()) varrer(caminho, achados);
+    else if (/^(verificar|gerar|auditar)-.*\.mjs$/.test(nome)) achados.push(caminho);
+  }
+  return achados;
+}
+
+const conhecidos = new Set([
+  ...ETAPAS.flatMap((e) => e.scripts),
+  ...Object.keys(DISPENSADOS),
+  "verificar-tudo.mjs",
+]);
+
+const orfas = varrer(RAIZ)
+  .map((c) => relative(AQUI, c).split(sep).join("/"))
+  .filter((c) => !conhecidos.has(c));
+
+console.log(`\n${"─".repeat(84)}`);
+
+if (orfas.length) {
+  console.log("\n🔴 VERIFICADOR ÓRFÃO — existe e ninguém manda rodar:\n");
+  for (const o of orfas) console.log(`   ${o}`);
+  console.log(
+    "\n   ↳ Ponha em ETAPAS (para rodar) ou em DISPENSADOS (com o motivo escrito).\n" +
+      "     🔑 Trava que ninguém roda é trava que não existe — e foi assim que\n" +
+      "     o verificar-defasagem.mjs passou o dia do nascimento sem dono.\n"
+  );
+  process.exit(1);
+}
+
+const falhas = resultados.filter((r) => !r.ok);
+
+if (falhas.length) {
+  console.log(`\n🔴 ${falhas.length} ETAPA(S) FALHARAM:\n`);
+  for (const f of falhas) {
+    console.log(`   ── ${f.s}`);
+    console.log(
+      f.saida
+        .split(/\r?\n/)
+        .slice(-14)
+        .map((l) => `      ${l}`)
+        .join("\n")
+    );
+    console.log("");
+  }
+  process.exit(1);
+}
+
+if (soLista) {
+  console.log("\n📋 Lista só. Nada rodou.\n");
+  process.exit(0);
+}
+
+console.log(`\n✅ ${resultados.length} etapas passaram, na ordem, e nenhum verificador ficou órfão.\n`);
+console.log("⚠️  O que isto NÃO prova: que o raciocínio está certo. As travas");
+console.log("   pegam número, vocabulário, contradição e ausência — não pegam");
+console.log("   uma regra bem escrita e errada. Isso ainda é o contador.\n");

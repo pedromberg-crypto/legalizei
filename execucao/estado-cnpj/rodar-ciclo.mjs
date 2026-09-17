@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * 🏁 O CICLO RODADO NAS 16 VIDAS — cada competência, cada obrigação.
+ * 🏁 O CICLO RODADO NO ELENCO INTEIRO — cada competência, cada obrigação.
  * ═══════════════════════════════════════════════════════════════════════════
  * `node execucao/estado-cnpj/rodar-ciclo.mjs [P01 …]`
  *
@@ -89,7 +89,8 @@ function conferirCompetencia({ vida, retrato, dinamico }) {
 /* ═══════════════════════════════════════════════════════════════════════════ */
 
 console.log(`\n${"═".repeat(100)}`);
-console.log("🏁 O CICLO RODADO — 16 vidas, competência a competência");
+// 🔢 O número CONTA, não é escrito: o título já disse "16 vidas" rodando 17.
+console.log(`🏁 O CICLO RODADO — ${alvo.length} vidas, competência a competência`);
 console.log("═".repeat(100));
 
 const placar = { ok: 0, na: 0, falha: 0, semCanal: 0 };

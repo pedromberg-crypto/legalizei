@@ -667,7 +667,7 @@ export function avaliarProLaboreEscolhido({
   // 📅 O PISO É O DA COMPETÊNCIA, não o de hoje. Corrigido em 16/09: com uma
   // constante única, o pró-labore de R$1.518 pago em dez/2025 — que era
   // **exatamente o mínimo daquele mês** — seria bloqueado como irregular.
-  // 5 das 16 vidas começam em 2025.
+  // 5 das 17 vidas começam em 2025.
   const piso = mes ? salarioMinimoDe(mes) : { valor: PREVIDENCIA.SALARIO_MINIMO };
 
   if (escolhido > 0 && piso.valor !== null && escolhido < piso.valor) {

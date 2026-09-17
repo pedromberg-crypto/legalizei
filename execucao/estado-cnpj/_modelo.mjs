@@ -161,7 +161,9 @@ export function identidade({
    *
    * ⚠️ **O que este número NÃO é:** não é "quantos sócios a empresa tem", é
    * quantos recebem. Com 2+ sócios a exceção vira uma pergunta — uma só, e não
-   * um formulário. Com sócio único (7 das 16 vidas) ela nem existe.
+   * um formulário. Com sócio único (8 das 17 vidas têm sócio único) ela nem
+   * existe. 🔢 Este número era **7** até 17/09, e estava errado desde que foi
+   * escrito — o `verificar-defasagem.mjs` agora o mede a cada rodada.
    *
    * 🔴 **E o rateio entre eles deixou de ser detalhe:** dividir IGUAL quando o
    * trabalho é desigual pode ser reclassificado como simulação (CARF

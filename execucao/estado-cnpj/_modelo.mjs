@@ -282,14 +282,55 @@ export function retratoDoMes({ empresa, competencias, mesAlvo }) {
   // 🔴 O anexo vigente: fixo vence o cálculo. Não adianta o Fator R dizer V
   // se o CNAE é III-fixo — e não adianta a tela falar de Fator R pra ele.
   //
-  // ⚠️ **O default quando o Fator R não computa NÃO pode ser "V por precaução".**
-  // Cair no V dobra o imposto do cliente, e "na dúvida cobre mais" é o oposto
-  // de cuidado. Quando a razão não existe (sem receita e sem folha nos meses
-  // anteriores) não há receita para tributar de qualquer forma — então o anexo
-  // fica `null` e o DAS sai zero, sem chute.
+  // ── 🔄 REVISTO EM 16/09: A JANELA VAZIA DEIXOU DE SER INDETERMINADA ──────
+  //
+  // Até 15/09 este bloco dizia que o default NÃO podia ser "V por precaução",
+  // porque cair no V dobra o imposto e "na dúvida cobre mais" é o oposto de
+  // cuidado. **O argumento continua certo — e deixou de se aplicar**, porque a
+  // janela vazia parou de ser dúvida.
+  //
+  // O contador fechou a regra em 16/09:
+  //
+  //   > *"Para reduzir de 15,5 para 6 naquele faturamento do mês 8, eu teria
+  //   > que ter uma folha no mês 7. **O mês 7 a empresa não existia.** Então
+  //   > ali ela vai ser tributada normal, nos 15,5. E a partir do mês seguinte
+  //   > ele vai ser desbarrado."*
+  //
+  // 🔑 **Não é precaução, é a regra:** o Fator R lê a competência anterior, e
+  // quem não tem competência anterior não tem como exibir folha. Sem folha na
+  // janela, não há o que colocar no numerador — e o resultado é o Anexo V.
+  //
+  // ✅ Travado pelo Pedro em 16/09: *"o mês da constituição em si fica em
+  // 15,5%. Não prometemos reverter."* Ver o marco dos três conflitos.
+  //
+  // ⚠️ **O que NÃO mudou, e não pode mudar:** razão INFINITA continua sendo
+  // Anexo III. É o caso de quem pagou folha e não faturou — `fatorR()` devolve
+  // `fr: Infinity`, não `null`, e foi o que salvou fev/2026 da persona zero.
+  // A distinção mora em `fatorR()`, não aqui.
   const anexoPeloCalculo = fr?.anexo ?? null;
-  const anexoVigente = grupo.calculaFatorR ? anexoPeloCalculo : grupo.anexo;
-  const anexoIndeterminado = grupo.calculaFatorR && anexoPeloCalculo === null;
+
+  // A janela não permite calcular: ou não há mês anterior nenhum, ou os que
+  // há não têm receita nem folha.
+  const semJanelaParaCalcular = grupo.calculaFatorR && anexoPeloCalculo === null;
+
+  const anexoVigente = grupo.calculaFatorR
+    ? anexoPeloCalculo ?? (atual.receita > 0 ? "V" : null)
+    : grupo.anexo;
+
+  // 🔑 Só é "indeterminado" quando não há receita para tributar. Com receita,
+  // a regra decide, e o campo abaixo registra que foi por ausência de janela.
+  const anexoIndeterminado = semJanelaParaCalcular && atual.receita <= 0;
+
+  /**
+   * 🆕 O mês em que a empresa faturou sem ter janela para o Fator R.
+   *
+   * 🔴 **É o caso que dispara o alerta interno** combinado em 16/09: constituir
+   * e faturar no mesmo mês. O contador disse que é raro (*"dificilmente eu
+   * pegaria um cara que faturava no mesmo mês"*) porque prestador de serviço
+   * cumpre 30 dias de competência antes de emitir — mas quando acontece, a
+   * casa precisa ligar, não deixar passar.
+   */
+  const faturouSemJanela = semJanelaParaCalcular && atual.receita > 0;
 
   // ── O DAS ───────────────────────────────────────────────────────────────
   // Sem receita, sem DAS — e sem precisar de anexo. É o único caso em que o
@@ -304,14 +345,15 @@ export function retratoDoMes({ empresa, competencias, mesAlvo }) {
         })
       : apurarDAS({ receitaMes: 0, rbt12: 0, anexo: anexoVigente ?? "III" });
 
-  // 🔴 Receita COM anexo indeterminado é contradição: significa que alguém
-  // faturou sem histórico nenhum, e o motor não pode escolher sozinho entre
-  // 6% e 15,5%. Grita em vez de chutar.
-  if (atual.receita > 0 && anexoIndeterminado) {
+  // 🔒 O grito de 15/09 virou regra em 16/09. Este `throw` existia porque o
+  // motor não podia escolher entre 6% e 15,5% sem informação; agora tem a
+  // informação, e a escolha é do contador, não minha. O que sobrou aqui é a
+  // contradição que continua sendo impossível: anexo nulo COM receita.
+  if (atual.receita > 0 && anexoVigente === null) {
     throw new Error(
-      `Competência ${mesAlvo}: há receita (${atual.receita}) e o Fator R não pôde ser ` +
-        `determinado. Sem histórico de folha nem de receita, o anexo não se decide — ` +
-        `e chutar entre 6% e 15,5% erraria o dobro. Ver LACUNAS.`
+      `Competência ${mesAlvo}: há receita (${atual.receita}) e o anexo saiu nulo. ` +
+        `Isso não deveria acontecer depois de 16/09 — janela vazia com receita ` +
+        `resolve em Anexo V. Se chegou aqui, o grupo do CNAE está incoerente.`
     );
   }
 
@@ -432,6 +474,19 @@ export function retratoDoMes({ empresa, competencias, mesAlvo }) {
     anexo: anexoVigente,
     anexoEhFixo: !grupo.calculaFatorR,
     anexoIndeterminado,
+    /**
+     * 🔴 Faturou no mês em que abriu, sem janela para o Fator R.
+     *
+     * 🔑 **Não é erro nem é do cliente: é consequência de não existir mês
+     * anterior.** O mês sai no Anexo V, e o mês SEGUINTE já pode sair no III se
+     * a folha desta competência for gerada no prazo (até o dia 15 do mês que
+     * vem, sem retificação e sem multa).
+     *
+     * ⚠️ É por isso que o alerta tem que disparar na **emissão da nota**, não
+     * no fechamento do mês: é a emissão que abre a janela de 15 dias para a
+     * casa ligar e oferecer a folha da competência da constituição.
+     */
+    faturouSemJanela,
     fatorR: fr,
     das,
     darf,

@@ -20,7 +20,13 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { retratoDoMes, extrato, folgaDoFatorR, competencia } from "./_modelo.mjs";
+import {
+  retratoDoMes,
+  extrato,
+  folgaDoFatorR,
+  competencia,
+  identidade,
+} from "./_modelo.mjs";
 import { VIDAS, SEM_VIDA } from "./vidas.mjs";
 import { brlDeCentavos, faixaDe, aliquotaEfetiva } from "../motor-fiscal/apurador.mjs";
 import { FAIXAS, REPARTICAO, TRIBUTOS } from "../motor-fiscal/_tabelas.mjs";
@@ -522,6 +528,68 @@ console.log("\n── 7 · Recebe quem ADMINISTRA, e o motor enxerga quem ficou 
     sinalizados.length
       ? `menor economia sinalizada: ${brlDeCentavos(Math.min(...sinalizados.map((r) => r.concentracaoDaFolha.economiaMensal)))}`
       : "nenhuma sinaliza"
+  );
+}
+
+/* ── 8 · A JANELA VAZIA (regra nova de 16/09) ───────────────────────────── */
+
+console.log("\n── 8 · Quem fatura no mês em que abriu paga 15,5%, e quem pagou folha sem faturar não\n");
+{
+  // 🔴 Até 15/09 o motor GRITAVA neste caso, porque não podia escolher entre
+  // 6% e 15,5% sem informação. O contador deu a informação em 16/09:
+  //   *"eu teria que ter uma folha no mês 7. O mês 7 a empresa não existia.
+  //    Então ali ela vai ser tributada normal, nos 15,5."*
+  //
+  // ⚠️ O argumento antigo continua VERDADEIRO e só deixou de se aplicar: "V
+  //    por precaução" segue proibido. O que mudou é que isto parou de ser
+  //    precaução e virou regra.
+
+  const emp = identidade({
+    cnpj: "00.000.000/0001-00",
+    razaoSocial: "TESTE JANELA LTDA",
+    dataAberturaCnpj: "2026-09-16",
+    cnaePrincipal: "6201-5/01",
+    grupoAnexo: "fator-r-dinamico(III<->V, limiar 28%)",
+  });
+
+  // (a) Constituiu e faturou no mesmo mês.
+  const soFaturou = [competencia({ mes: "2026-09", receita: 12000 })];
+  const rA = retratoDoMes({ empresa: emp, competencias: soFaturou, mesAlvo: "2026-09" });
+  invariante(
+    "faturar no mês da abertura cai no Anexo V, sem janela para o Fator R",
+    rA.anexo === "V" && rA.faturouSemJanela === true,
+    `anexo ${rA.anexo} · DAS ${brlDeCentavos(rA.das.total)} sobre R$12.000 · 15,5%`
+  );
+
+  // 🔴 (b) O CONTRÁRIO, e é o que não pode quebrar: folha paga sem receita dá
+  //        razão INFINITA, e razão infinita é Anexo III. Foi o que salvou
+  //        fev/2026 da persona zero.
+  const comFolhaAntes = [
+    competencia({ mes: "2026-08", receita: 0, proLaboreDeclarado: 1621, proLaborePago: 1621 }),
+    competencia({ mes: "2026-09", receita: 12000, proLaboreDeclarado: 1621, proLaborePago: 1621 }),
+  ];
+  const rB = retratoDoMes({ empresa: emp, competencias: comFolhaAntes, mesAlvo: "2026-09" });
+  invariante(
+    "mas folha paga sem receita continua dando razão infinita e Anexo III",
+    rB.anexo === "III" && !isFinite(rB.fatorR.fr),
+    `anexo ${rB.anexo} · Fator R ${rB.fatorR.fr} · DAS ${brlDeCentavos(rB.das.total)}`
+  );
+
+  // (c) Sem receita nenhuma, o anexo segue indeterminado e não machuca.
+  const nada = [competencia({ mes: "2026-09", receita: 0 })];
+  const rC = retratoDoMes({ empresa: emp, competencias: nada, mesAlvo: "2026-09" });
+  invariante(
+    "e sem receita o anexo segue indeterminado, com DAS zero e sem chute",
+    rC.anexo === null && rC.anexoIndeterminado === true && rC.das.total === 0,
+    "não há o que tributar, então não há o que decidir"
+  );
+
+  // (d) 🔑 A diferença que a regra custa, para o número nunca virar abstração.
+  const custoDaJanelaVazia = rA.das.total - rB.das.total;
+  invariante(
+    "e a janela vazia custa o dobro em relação a quem tem folha no mês anterior",
+    custoDaJanelaVazia > 0 && rA.das.total > rB.das.total * 2.5,
+    `${brlDeCentavos(rA.das.total)} contra ${brlDeCentavos(rB.das.total)} — diferença de ${brlDeCentavos(custoDaJanelaVazia)} num mês só`
   );
 }
 

@@ -319,6 +319,20 @@ Era o que o replay fazia ao montar a série pilotada (`competencia({ ...real })`
 
 **Trava:** ✅ `competenciaEmCentavos()` — duas portas, e o nome diz de qual lado se está.
 
+## M-032 · 🟡 O piso do salário mínimo virava DÉFICIT em mês sem receita
+**17/09** · 🟡 médio · **Onde doeu:** `piloto-pro-labore.mjs`, o rótulo do modo · **Quem pegou:** 🔑 **o Pedro**, montando um teste com a empresa dele
+
+Empresa com o Fator R da janela em **30,36%** — acima da margem de 30%, muito acima do limiar de 28% — num mês de receita **zero**, era classificada como **`recuperacao`**. Nada estava em recuperação: ela estava adiante do alvo e a lei não exigia nada naquele mês.
+
+**A causa:** `paraVirarJa` é `max(mínimo na margem, PISO)`. Com receita zero, o `sustentavel` é zero, e o déficit virava `piso − 0 = R$1.621` — que não é déficit, é o salário mínimo que a lei exige de qualquer pró-labore.
+
+🔑 **O déficit responde *"quanto a janela está atrás do alvo?"*.** O piso responde *"qual o menor pró-labore legal?"*. Somar os dois numa conta só faz o piso virar dívida.
+
+**Custo se passasse:** o `paraVirarJa` só é exposto quando o modo é `recuperacao`, então a tela mostraria um *"para virar já"* que é só o piso, como se fosse um salto a dar. **O valor sugerido saía certo** (R$1.621) — o defeito era só de classificação, e é a mesma família do **M-005**.
+**Trava:** ✅ o déficit passou a ser `naMargem.minimo − sustentavel`, sem o piso no meio. As 67 conferências do piloto passam, e o congelado de 4.440 legíveis **não mudou uma linha**: nenhum valor de nenhuma das 162 competências se moveu.
+
+⚠️ **Quem pegou foi um teste de cenário, não uma suíte.** Nenhuma das 17 vidas tem mês de receita zero com a janela já acima da margem — é o buraco de cobertura que este achado expõe.
+
 ---
 
 ## ✅ Aferição de 17/09 — os valores em R$, um a um

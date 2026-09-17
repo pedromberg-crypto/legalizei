@@ -350,7 +350,38 @@ export function pilotar({
    * mostra o outro com a data da virada ao lado.
    */
   const sustentavel = arredonda(margem * receitaDoMes);
-  const deficit = arredonda(Math.max(0, paraVirarJa - sustentavel));
+
+  /**
+   * 🔴 O DÉFICIT É DA JANELA, NÃO DO PISO. Achado em 17/09, num teste que o
+   * Pedro montou com a empresa dele.
+   *
+   * ── O SINTOMA ─────────────────────────────────────────────────────────────
+   *
+   * Mês com receita ZERO, Fator R da janela em **30,36%** (acima da margem de
+   * 30%, muito acima do limiar de 28%), e o piloto classificava o mês como
+   * **`recuperacao`**. Nada estava em recuperação: a empresa estava adiante do
+   * alvo e a lei não exigia nada naquele mês (`minimoLegal` zero).
+   *
+   * ── A CAUSA ───────────────────────────────────────────────────────────────
+   *
+   * `paraVirarJa` é `max(mínimo na margem, PISO do salário mínimo)`. Com
+   * receita zero no mês, `sustentavel` é zero, e o déficit virava
+   * `piso − 0 = R$1.621` — que **não é déficit nenhum**, é o salário mínimo
+   * que a lei exige de qualquer pró-labore.
+   *
+   * 🔑 O déficit responde *"quanto a JANELA está atrás do alvo?"*. O piso
+   * responde *"qual o menor valor legal de um pró-labore?"*. Somar os dois
+   * numa conta só faz o piso virar dívida.
+   *
+   * ── POR QUE O RÓTULO IMPORTA, mesmo com o valor certo ─────────────────────
+   *
+   * O `sugerido` saía **correto** nos dois casos (R$1.621, o piso). Mas
+   * `paraVirarJa` só é exposto quando o modo é `recuperacao`, então a tela
+   * mostraria um *"para virar já"* que é só o piso, como se fosse um salto a
+   * dar. É a mesma família do **M-005**, em que empresa pilotada e em dia caía
+   * em "recuperação" por classificação, não por atraso.
+   */
+  const deficit = arredonda(Math.max(0, naMargem.minimo - sustentavel));
 
   /**
    * 🔴 TRÊS MODOS, E O DO MEIO NASCEU DO RASTRO DA P16 (15/09).

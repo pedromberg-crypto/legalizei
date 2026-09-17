@@ -133,6 +133,7 @@
 - [Doutrina do pipeline vetor Illustrator](legalize-illustrator-vector-pipeline-doutrina.md) — 21/08: MCP nao cria geometria.
 
 ## Metodo de trabalho e vault
+- [Trava de defasagem + a ordem obrigatoria](legalize-trava-defasagem-e-ordem.md) — 17/09: numero em prosa nao recalcula; o '7' errado vivia em 4 arquivos.
 - [Tres travas de metodo, de tres erros meus](legalize-travas-de-metodo-15-09.md) — 15/09: verde vazio, assunto reaberto 3x.
 - [O reporte ao socio se mede sozinho](legalize-placar-do-reporte-gerado.md) — 15/09: placar gerado + confronto com o git.
 - [Documento importante se le INTEIRO](legalize-leitura-integral-documento.md) — 10/09 TRAVADO: 100% literal salvo em arquivo.

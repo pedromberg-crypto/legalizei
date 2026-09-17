@@ -30,7 +30,7 @@
  */
 
 import { retratoDoMes, competencia } from "./_modelo.mjs";
-import { emReais } from "../motor-fiscal/apurador.mjs";
+import { emReais, emCentavos } from "../motor-fiscal/apurador.mjs";
 
 /**
  * Revive a série inteira, com e sem piloto, e devolve o rastro mês a mês.
@@ -180,9 +180,27 @@ function resumir(linhas) {
     /** 🔑 O saldo do cliente: o que economizou no DAS menos o que pagou a mais
      *  de INSS/IRRF por ter subido o pró-labore. Em centavos. */
     saldo: dasReal - dasPilotado - (darfPilotado - darfReal),
-    /** Quanto do pró-labore sugerido saiu do bolso a mais, no total. */
-    proLaboreReal: linhas.reduce((s, l) => s + (l.real?.proLabore ?? 0), 0),
-    proLaborePilotado: linhas.reduce((s, l) => s + (l.pilotado?.proLabore ?? 0), 0),
+    /**
+     * Quanto do pró-labore sugerido saiu do bolso a mais, no total.
+     *
+     * 🔴 O NOME CARREGA A UNIDADE, e carrega porque esta linha mordeu em 17/09.
+     *
+     * `l.*.proLabore` vem em **reais** (é o valor que a vida declara), enquanto
+     * `das` e `darf` vêm em **centavos** (é o que o apurador devolve). O resumo
+     * somava os três e devolvia os três juntos, sem dizer que um era diferente
+     * — e o único consumidor compensava com um `* 100` na hora de imprimir.
+     *
+     * 🔑 Workaround no chamador não é conserto: é uma armadilha armada para o
+     * próximo chamador, que não vai saber que precisa dela. Agora a conversão
+     * acontece **uma vez, aqui**, e o campo declara em que unidade está — que
+     * é exatamente a cura escrita na dívida **D5** (M-014, M-020, e este).
+     */
+    proLaboreRealCentavos: emCentavos(
+      linhas.reduce((s, l) => s + (l.real?.proLabore ?? 0), 0)
+    ),
+    proLaborePilotadoCentavos: emCentavos(
+      linhas.reduce((s, l) => s + (l.pilotado?.proLabore ?? 0), 0)
+    ),
   };
 }
 

@@ -248,6 +248,35 @@ O comentário afirmava *"as 16 vidas abriam sem faturar no mês 1 — todas, sem
 🔑 **A afirmação absoluta era a parte errada.** O raciocínio estava certo e a generalização, não — e foi um achado de **número** que derrubou uma frase **sem número**.
 **Trava:** nenhuma automática. É a fronteira declarada da trava: ela pega dígito, não quantificador.
 
+## M-027 · 🔴 O resumo do replay devolvia DUAS unidades no mesmo objeto, e o chamador compensava com `* 100`
+**17/09** · 🔴 grave *(latente)* · **Onde doeu:** `replay-piloto.mjs` `resumir()` · **Quem pegou:** a aferição das afirmações em R$ que foram ao contador
+
+Ao conferir os números do P16 contra o motor, o pró-labore saiu **100× menor** que o DAS no mesmo resumo. O motivo: `l.*.proLabore` vem em **reais** (é o que a vida declara) e `das`/`darf` vêm em **centavos** (é o que o apurador devolve). O `resumir()` somava os três e devolvia os três juntos, sem dizer que um era diferente.
+
+🔑 **E o mais instrutivo é que ninguém tinha errado por causa disso** — o `rastrear-piloto.mjs` compensava com `reais(resumo.proLaboreReal * 100)` na hora de imprimir. **Workaround no chamador não é conserto:** é uma armadilha armada para o próximo chamador, que não vai saber que precisa dela.
+
+**Custo se passasse:** qualquer tela ou relatório novo que formatasse esse campo mostraria **R$356,62** onde o valor é **R$35.662,00**.
+**Trava:** ✅ a conversão acontece **uma vez, na fonte**, e os campos passaram a se chamar `proLaboreRealCentavos` / `proLaborePilotadoCentavos` — o nome carrega a unidade. É a cura escrita na **D5** desde o M-014, aplicada pela primeira vez.
+
+⚠️ **Terceira ocorrência da mesma fronteira** (M-014, M-020, M-027), e a primeira que foi **consertada** em vez de comentada.
+
+---
+
+## ✅ Aferição de 17/09 — as afirmações em R$ que foram ao contador
+
+> 🧭 A trava de defasagem confere **contagens**. Estas são **valores**, que ela não alcança — então foram medidos contra o motor, um a um.
+
+| Afirmação, e onde ela está | Medido em 17/09 | |
+|---|---|:--:|
+| P01 · saldo do cliente com o piloto ligado: **R$6.795** | R$ 6.794,96 | ✅ |
+| P16 · DAS **R$87.083 → R$40.502** | R$ 87.083,18 → R$ 40.502,47 | ✅ |
+| P16 · pró-labore **R$35.662 → R$165.300** | idem, ao real | ✅ |
+| P16 · DARF do sócio **R$3.922 → R$38.204** | R$ 3.922,82 → R$ 38.204,21 | ✅ |
+| P09 · atraso custou **R$393,32** em 3 competências | R$ 79,31 + R$ 154,51 + R$ 159,50 = R$ 393,32 | ✅ |
+| P21 · a concentração da folha vale **R$228,86** em dez/2026 | idem | ✅ |
+
+🔑 **6 de 6 batem.** Não prova que os outros ~550 valores citados nos textos vivos estão certos — prova que a amostra mais exposta, a que foi para a reunião, não apodreceu.
+
 ---
 
 ## 🔴 Dívidas que estes achados deixaram
@@ -258,7 +287,7 @@ O comentário afirmava *"as 16 vidas abriam sem faturar no mês 1 — todas, sem
 | **D2** | A régua de **2×** que separa ajuste de recuperação veio de 2 pontos medidos (1,22× e 9,6×). Caso real entre 2× e 9× é onde ela quebra | produto |
 | **D3** | O piloto **corta** pró-labore, não só sobe (P02, P04, P06). Está implementado como se fosse óbvio e **não foi decidido** | 🔴 Pedro |
 | **D4** | Na P16 o piloto move R$165.300 contra R$35.662 reais. O saldo só conta imposto; o resto é o **PP3** | 🔴 Mauro |
-| **D5** | 🔴 **Subiu de prioridade.** O motor mistura unidades na fronteira: `apurarDAS` pede reais, `guiaVencida` pede centavos, `darfDoProLabore` **recebe reais e devolve centavos**, e nenhuma recusa a unidade errada. Já produziu **dois** achados (M-014 e M-020), e o M-020 não quebrava teste nenhum | produto |
+| **D5** | 🔴 **Subiu de prioridade, e já produziu TRÊS achados** (M-014, M-020, M-027). O motor mistura unidades na fronteira: `apurarDAS` pede reais, `guiaVencida` pede centavos, `darfDoProLabore` **recebe reais e devolve centavos**, e nenhuma recusa a unidade errada. ✅ O M-027 aplicou a cura pela primeira vez — **o nome do campo carrega a unidade** (`…Centavos`) e a conversão acontece uma vez, na fonte. Falta estender ao resto | produto |
 | **D6** | O art. 3º-A (redutor do IRRF) é a **única peça do motor sem fonte primária** — o texto veio de consulta externa, não do diário oficial. 🟡 Não bloqueia: a persona inteira zera IRRF nas duas leituras, e a G10b prova que a alternativa é impossível (M-023) | pesquisa |
 | **D7** | A trava de defasagem pega **dígito, não quantificador**. *"Todas, sem exceção"* e *"nenhuma"* passam limpo, e o M-026 mostrou que é lá que a generalização errada se esconde | produto |
 

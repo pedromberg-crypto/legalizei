@@ -203,6 +203,8 @@ const MEDIDAS = [
     citacoes: [
       /(?:foram|rodamos|somam|total de|são)\s+(\d+)\s+compet[êe]ncias/gi,
       /(\d+)\s+compet[êe]ncias\s*[·,]\s*[\d.]+\s+(?:verifica|invariantes|decis)/gi,
+      /\|[^|]*compet[êe]ncias\s+rodadas[^|]*\|\s*([\d.]+)\s*\|/gi,
+      /\d+\s+vidas\s*·\s*([\d.]+)\s+compet[êe]ncias/gi,
     ],
   },
 ];
@@ -272,7 +274,8 @@ console.log("═".repeat(84));
 const vivos = [];
 for (const m of MEDIDAS) {
   const valor = await m.medir();
-  vivos.push({ ...m, valor });
+  // `presos` conta quantas citações esta medida de fato prendeu na varredura.
+  vivos.push({ ...m, valor, presos: 0 });
   console.log(`   ${String(valor).padStart(5)}  ${m.o}`);
 }
 
@@ -313,6 +316,7 @@ for (const arquivo of DOCS_VIVOS) {
       for (const re of m.citacoes) {
         for (const achado of limpa.matchAll(new RegExp(re.source, re.flags))) {
           const citado = Number(achado[1].replace(/\./g, ""));
+          m.presos++;
           if (citado !== m.valor) {
             defasados.push({
               arquivo,
@@ -327,6 +331,42 @@ for (const arquivo of DOCS_VIVOS) {
       }
     }
   });
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+ * 3.1 · A COBERTURA — contra o verde vazio
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🔴 Nasceu em 17/09, e nasceu porque esta trava já enganou o autor dela.
+ *
+ * Duas vezes no mesmo dia ela passou **verde** sem estar olhando para nada: o
+ * recuo `(?!…com…)` casava dentro de `começam`, e o padrão varria a marcação
+ * em vez do texto. Verde de trava que não prendeu nada é indistinguível de
+ * verde de doc em dia — e é a mesma armadilha do "teste que passa a vazio"
+ * registrada em 15/09 (M-002).
+ *
+ * 🔑 Por isso ela agora **declara quantas citações prendeu**, e uma medida que
+ * prende ZERO é defeito: ou o padrão está errado, ou o número deixou de ser
+ * citado em lugar nenhum e a medida não tem mais razão de existir.
+ */
+const mudas = vivos.filter((m) => m.presos === 0);
+const totalPresos = vivos.reduce((s, m) => s + m.presos, 0);
+
+console.log("\n📌 COBERTURA — quantas citações cada medida prendeu:\n");
+for (const m of vivos) {
+  console.log(
+    `   ${m.presos === 0 ? "🔴" : "  "} ${String(m.presos).padStart(3)} × ${m.o}`
+  );
+}
+console.log(`\n   ${totalPresos} citação(ões) conferida(s) em ${DOCS_VIVOS.length} textos vivos.`);
+
+if (mudas.length) {
+  console.log(`\n🔴 ${mudas.length} MEDIDA(S) MUDA(S) — não prenderam nada:\n`);
+  for (const m of mudas) console.log(`   ${m.o}`);
+  console.log(
+    "\n   ↳ Verde de medida muda é verde VAZIO. Ou o padrão não casa com a\n" +
+      "     redação usada, ou o número saiu dos docs e a medida sobra.\n"
+  );
+  process.exit(1);
 }
 
 if (!defasados.length) {

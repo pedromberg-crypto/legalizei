@@ -109,8 +109,8 @@ for (const vida of alvo) {
     `DARF  real ${reais(resumo.darfReal)} · pilotado ${reais(resumo.darfPilotado)}`
   );
   console.log(
-    `pró-labore  real ${reais(resumo.proLaboreReal * 100)} · pilotado ${reais(
-      resumo.proLaborePilotado * 100
+    `pró-labore  real ${reais(resumo.proLaboreRealCentavos)} · pilotado ${reais(
+      resumo.proLaborePilotadoCentavos
     )}`
   );
   console.log(`🔑 SALDO DO CLIENTE: ${reais(resumo.saldo)}`);

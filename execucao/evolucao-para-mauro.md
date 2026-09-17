@@ -20,23 +20,23 @@ tags: [reporte, evolucao, sociedade]
 
 | | |
 |---|---:|
-| **Entregas reportadas** | **297** |
-| Entradas no log | 62 |
-| **Dias trabalhados** | **59** |
-| Período | 07/07/2026 → 16/09/2026 |
-| Dias corridos no período | 72 |
-| Média de entregas por dia trabalhado | 5,0 |
+| **Entregas reportadas** | **304** |
+| Entradas no log | 63 |
+| **Dias trabalhados** | **60** |
+| Período | 07/07/2026 → 17/09/2026 |
+| Dias corridos no período | 73 |
+| Média de entregas por dia trabalhado | 5,1 |
 
 ### Placar por status
 
 | Status | Itens | % |
 |---|---:|---:|
-| 🟢 pronto / entregue | **241** | 81,1% |
-| ✅ estava parado, foi resolvido | **15** | 5,1% |
-| 🟡 em curso / parcial | **27** | 9,1% |
-| 🔴 trava ou precisa de você | **5** | 1,7% |
+| 🟢 pronto / entregue | **241** | 79,3% |
+| ✅ estava parado, foi resolvido | **15** | 4,9% |
+| 🟡 em curso / parcial | **27** | 8,9% |
+| 🔴 trava ou precisa de você | **5** | 1,6% |
 | 🕓 aguarda pessoa | **2** | 0,7% |
-| sem marca | 7 | 2,4% |
+| sem marca | 14 | 4,6% |
 
 ### Ritmo, mês a mês
 
@@ -44,7 +44,7 @@ tags: [reporte, evolucao, sociedade]
 |---|---:|---:|---:|
 | julho/2026 | 24 | 20 | — |
 | agosto/2026 | 20 | 20 | — |
-| setembro/2026 | 15 | 14 | — |
+| setembro/2026 | 16 | 15 | — |
 
 ### ⚠️ O que o sócio não viu
 
@@ -1382,4 +1382,40 @@ Aquele documento que eu preparei pra conversa foi pra mesa. **Quase 5 horas com 
 - Apareceu uma armadilha boa: as duas regras que ele validou se contradizem quando só um sócio administra. O app agora *mostra a conta* em vez de escolher pelo cliente
 - Tudo o que ele decidiu já está no código. As verificações automáticas foram de *32 pra 54*, zero falhas
 - Ficaram 3 coisas pra ele: uma conta de imposto de renda que ele não lembrou com certeza, três mudanças de 2027 que preciso confirmar na lei, e a pejotização, que passou batida
+```
+
+---
+
+## Semana 17/09/2026 — arrumei a casa antes de chamar os programadores, e a arrumação achou dois erros
+
+Não teve funcionalidade nova essa semana. Teve **organização** — e ela pagou.
+
+O motivo foi uma coisa que eu senti e resolvi tratar antes de virar problema: a gente ia entregar isso pros programadores e **não existia nada que explicasse pra eles como usar**. Estava tudo na minha cabeça e em 3.000 linhas de código.
+
+| # | O que foi feito | Detalhe |
+|---|---|---|
+| 1 | 📦 **Criei o pacote que os programadores vão receber** | 162 meses de empresa, cada um com "isto entra, isto tem que sair". O programador implementa na linguagem dele, roda contra o nosso pacote, e **ou bate ao centavo ou não bate**. Vai em duas partes que conversam: uma pro back (a conta) e uma pro front (o que a tela mostra, e o que ela **não** deve mostrar) |
+| 2 | 🔑 **E eu ia fazer isso do jeito errado** | Minha ideia era escrever um manual explicando cada função. O manual ia envelhecer igual aos outros. Em vez disso, o pacote é **exemplo**: ninguém precisa escrever "esse campo é em reais e aquele em centavos" se o arquivo mostra o número entrando e saindo |
+| 3 | 💰 **Padronizei todo valor do sistema numa unidade só** | Tinha campo em reais e campo em centavos no mesmo lugar, sem nada avisando. Já tinha me mordido **três vezes** — o tipo de erro que dá 100 vezes o valor certo e parece plausível. Agora é uma regra só, e o app não foi tocado |
+| 4 | 🔴 **E a arrumação achou dois erros escondidos** | O primeiro: quando a conta caía **exatamente em meio centavo**, o sistema decidia pra cima ou pra baixo **por acaso**. Estava assim desde 14/09 e nenhum teste pegava, porque nenhum teste caía nesse empate. O segundo fazia uma conta sair **mil vezes maior** e nenhuma verificação reclamou |
+| 5 | ⚖️ **Nada que tem documento atrás mudou** | Todos os valores conferidos contra a guia real da Receita e contra a nota fiscal continuam **idênticos**. O que mudou foram centavos em empresas de teste — e foram a correção do erro do item 4 |
+| 6 | 🧷 **Agora é um comando só pra conferir tudo** | Antes eram 14 programas espalhados e a ordem certa estava na minha memória. Hoje: um comando, 16 etapas, e ele **se recusa a rodar** se alguém criar uma verificação nova e esquecer de ligá-la |
+| 7 | 📋 **Arrumei quem manda em cada assunto** | Achei **11 documentos** que se declaravam "fonte da verdade" e não estavam no índice — documento pedindo pra ser obedecido sem ninguém saber que existe. Todos entraram |
+
+**O que eu aprendi e vale registrar:**
+
+Eu achava que o problema era ter a mesma informação em muitos lugares. **Fui medir e era o contrário:** a regra mais importante do nosso cálculo aparece em **142 arquivos** e é definida em **um só**. O dado nunca esteve duplicado — o que estava espalhado era a *explicação*. O buraco de verdade era outro, e eu não tinha visto: o programador não teria como saber como usar nada disso.
+
+**Nada fica pendente com você nesta semana.** É trabalho de casa, e está fechado.
+
+### 📱 WhatsApp (17/09)
+```
+*Update Legalizai* 📣
+- Semana sem funcionalidade nova. Foi *arrumação* — mas ela pagou
+- Montei o pacote que os programadores vão receber: *162 meses de empresa* com entrada e resultado esperado. Eles implementam e testam contra o nosso
+- Padronizei todos os valores numa unidade só. Tinha campo em reais e campo em centavos no mesmo lugar, e isso já tinha me mordido 3 vezes
+- A arrumação *achou 2 erros escondidos*. Um deles decidia arredondamento por acaso quando a conta caía em meio centavo exato
+- Importante: *nada que tem documento atrás mudou*. Guia da Receita e nota fiscal continuam batendo igual
+- Agora é *um comando só* pra conferir tudo: 16 etapas, e ele se recusa a rodar se eu criar verificação nova e esquecer de ligar
+- Nada pendente com você essa semana 👍
 ```

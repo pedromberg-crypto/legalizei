@@ -20,6 +20,14 @@ tags: [cnae, mei, simples-nacional, escopo, fonte-primaria]
 >
 > 🟡 **O preço do filtro de risco, medido e escrito pela primeira vez: 76 CNAEs.** O corte de baixo risco CGSIM é o de maior impacto (523 → 120). Destes, **76 passam todos os outros filtros E o motor sabe apurar** — hotéis, apart-hotéis, campings, estúdios cinematográficos, pós-produção, entrega rápida, guarda-móveis, formação de condutores. Não é erro: é a decisão de só atender quem **dispensa vistoria e alvará**. Mas o preço nunca esteve escrito.
 >
+> 🔴 **ACHADO DE 18/09 — A NORMA QUE USAMOS PODE SER A ERRADA PARA BH.** A pesquisa de risco médio ([[2026-09-18-risco-medio-liberacao-bh-LITERAL]]) devolveu, com fonte: *"Em Belo Horizonte, **a legislação municipal prevalece de forma absoluta**. O instrumento legal definitivo que elenca as atividades dispensadas do Alvará é o **Decreto Municipal nº 17.245, de 19 de dezembro de 2019** (Anexo I)."* Para o risco sanitário, quem manda é a **Portaria SMSA/SUS-BH nº 0221/2022** (Anexos I-VII).
+>
+> **O nosso filtro `risco_baixo_cgsim` vem da Resolução CGSIM 51/2019** (`fontes-oficiais/cgsim-res51-baixo-risco.pdf`), que é a norma federal **subsidiária** — vale *na ausência* de lei municipal. BH tem a sua. **Nunca lemos nenhum dos dois documentos de BH.**
+>
+> ⚠️ **O que isso significa, dito sem dramatizar:** não está provado que erramos. Está provado que **não sabemos**. As listas podem coincidir; se a de BH for mais estreita, há CNAE na whitelist que trava na abertura — e o cliente descobre depois de pago. 🔑 **Auditar os 80 contra o Decreto 17.245 é mais urgente que expandir para os 48.** Prompt de transcrição pronto em [[prompt-transcricao-anexos-risco-bh]].
+>
+> 📊 **O resultado da rodada dos 48, para registro:** 0 🟢 · 1 🟡 (`9601-7/01` lavanderias) · 6 🔴 · **41 ⚪ sem fonte**. Nenhum CNAE novo entrou. ✅ O que ela fechou com fonte: o **corte dos 28 de saúde estava certo** (Portaria 221/2022 Anexo I lista as divisões 86/87 como Alto Risco, com RT em conselho e inspeção prévia) · o **nível II realmente permite liberação automática** com roteiro de autoinspeção e Termo de Ciência (Lei 13.874/2019 + Decreto 10.178/2019) · e o **Registro Automático da JUCEMG NÃO depende do nível de risco** (IN DREI 81/2020 arts. 35-36) — o risco trava o alvará municipal, não a criação da empresa. ⚠️ Ressalva de qualidade: 3 dos 7 vereditos não-⚪ se apoiaram em listas da Vigilância Sanitária do **Rio Grande do Norte**, e um citou resolução CGSIM **revogada**.
+>
 > ⚠️ **A lacuna que segue aberta:** **942 dos 1.332** têm `exige_registro_setorial: nao-verificado` — o eixo só foi cruzado para os 387 do footprint do líder. Foi por esse buraco que a lista caiu de 90 para 87 em 28/08.
 
 > Substitui a v1 de 17/07 (103 CNAEs, herdada da Contabilizei, não ratificada). Esta versão é **fonte primária em toda a linha**: cada critério tem lei/resolução citada, nenhum dado vem de concorrente.

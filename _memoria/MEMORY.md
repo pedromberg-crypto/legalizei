@@ -52,6 +52,7 @@
 - [Camada tributaria CNAE: os 4 dados fechados](legalize-cnae-camada-tributaria-4-dados-completa.md) — 27/08: MEI, risco.
 - [Fundamentos CNAE ratificados](legalize-cnae-fundamentos-ratificados-mei-vs-me.md) — 27/08: MEI≠ME, sem lista "sempre V", sem.
 - [CNAE fiscalmente otimo](legalize-cnae-fiscalmente-otimo.md) — recomenda o CNAE mais barato que cobre a mesma atividade.
+- [Risco de CNAE: em BH manda o Decreto 17.245, nao a CGSIM](legalize-risco-cnae-norma-de-bh-prevalece.md) — 18/09: usamos a norma federal subsidiaria e nunca lemos a de BH.
 - [Complexidade de abertura (liso/verificar/tato)](legalize-cnae-complexidade-abertura.md) — eixo ortogonal ao fiscal; 103.
 - [Equacao fiscal viva: camadas CNAE + CNPJ](legalize-equacao-fiscal-camadas-cnae-cnpj.md) — 27/08: provocacao em andamento.
 - [DER modelagem-cnae: cruzamento pausado](legalize-der-cnae-cruzamento-achados.md) — 27/08: fiscal.ts sem Anexo IV (bug real).

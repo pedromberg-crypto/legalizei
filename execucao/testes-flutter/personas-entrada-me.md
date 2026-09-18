@@ -44,7 +44,9 @@ A regra até 17/09 era `pedromberg@gmail.com` em **todas**, e vinha com um aviso
 - **E3.3** — `409 CONTACT_ALREADY_REGISTERED` marca o campo de e-mail: *"Esse e-mail já tem cadastro."* E o dado recusado **não é reenviado sem edição**: o CTA só volta a valer depois de a pessoa mudar o campo.
 - **E6** — e-mail repetido cai no beco do **"código que nunca chega"**: o servidor é neutro por design (`S-420`) e o link de retomada saiu.
 
-🔑 **Então P02 a P24 travariam por DESENHO DO TESTE, não por defeito do app** — e um elenco que trava por construção não prova nada. O `+sufixo` desfaz os dois becos sem perder o motivo original da regra, que era ler o código de verdade.
+🔑 **Então P02 a P24 travariam por DESENHO DO TESTE, não por defeito do app** — e um elenco que trava por construção não prova nada. O `+sufixo` dá a cada persona um cadastro próprio sem perder o motivo original da regra, que era ler o código de verdade.
+
+🔄 **18/09: o beco 2 fechou por outro caminho** (campo de e-mail somente-leitura no E6, ver adiante), então o `+sufixo` deixou de ser a única defesa. Ele continua valendo — e ficou **mais fácil de auditar**: se o servidor colapsar os 24 `+pNN` em 1, a P02 leva `409` **visível no campo e-mail do E3.3**, corrigível, em vez de ficar esperando um código que nunca chega.
 
 ✅ **DO LADO DO APP, O `+` ESTÁ LIVRE — conferido no código em 18/09, não suposto.**
 
@@ -574,7 +576,9 @@ Este documento nasceu em 14/09 pedindo `R$ 139,00/mês` no E7, que é o **cheio*
 |---|---|---|
 | **E3.3** (lead) | `409 CONTACT_ALREADY_REGISTERED` viaja em `DadosRecusados` e marca o campo **e-mail** | *"Esse e-mail já tem cadastro."* |
 | **E3.3** | se o servidor nomear campos em `details`, marca os que ele nomear — `phone` marca o celular | *"Esse celular já tem cadastro."* |
-| **E6** (conta) | `409 CPF_ALREADY_REGISTERED` → `DadosDaContaRecusados` no campo **CPF**, e o E6 **volta ao formulário** | *"Esse CPF já tem cadastro."* |
+| **E6** (conta) | 🆕 `409 CPF_UNAVAILABLE` no **passo 1**, antes de o código ser gasto → erro no campo **CPF**, volta ao formulário | *"Esse CPF já tem cadastro."* |
+| **E6** | `409 CPF_ALREADY_REGISTERED` — **caso raro de corrida**, chega depois do OTP e sem sessão. Não é o caminho comum | — |
+| **E6** | campo de e-mail **somente-leitura quando há lead**, legenda *"do seu cadastro"* | — |
 
 🔴 **Regra nova que muda roteiro:** o dado que o servidor acabou de recusar **não é reenviado sem edição**. A persona tem de **editar o campo** antes de o CTA valer de novo — não adianta tocar "enviar" duas vezes com o mesmo valor. Limite de 5 tentativas por hora.
 
@@ -584,15 +588,35 @@ Este documento nasceu em 14/09 pedindo `R$ 139,00/mês` no E7, que é o **cheio*
 
 ⚠️ O card *"Voltar de onde parei"* **continua existindo no E3** — uma tela antes. É a única retomada que sobrou.
 
-### 🔴 Os três becos sem saída, aceitos (D147 do `docs/telas.md` §6)
+### Os becos do D147 — dois já fecharam (atualizado 18/09)
 
-1. **CPF digitado errado no E6 não tem saída.** O `409` chega depois de o código ser consumido e sem sessão, e o Supabase não manda código novo para e-mail já confirmado. **Persona que erra CPF no E6 fica presa** — não é bug a reportar, é beco declarado.
-2. **E-mail repetido no E6** cai no beco do *"código que nunca chega"* (servidor neutro por design, `S-420`). É o beco que o `+sufixo` desfaz.
-3. **Cliente real no E3.3 só tem retomada pelo card do E3**, uma tela antes.
+> 🔄 Três commits do Natanael mudaram isto depois de eu escrever a 1ª versão desta seção. Conferido no código do repo Flutter em 18/09: `cb46ea3`, `6981121`, `d5556b8`, merge `939d49b`.
+
+| # | O beco | Estado |
+|---|---|---|
+| **1** | CPF de outra conta recusado só **depois** de o código ser gasto, sem sessão e sem saída | 🟢 **EMENDADO** (`REQ-012`) |
+| **2** | e-mail repetido no E6 = *"código que nunca chega"* | 🟢 **FECHADO** (D148) |
+| **3** | cliente real no E3.3 só tem retomada pelo card do E3 | 🔴 **continua** |
+
+**Beco 2 — fechado por construção.** O campo de e-mail do E6 virou **somente-leitura quando há lead** (`campo_icone_conta.dart:173`, `readOnly`, não `enabled:false`), com a legenda *"do seu cadastro"* (`conta_page.dart:77`) em micro · 500 · `textoSecundario`, **nunca crimson** — quem chega ali não errou nada. No protótipo o campo é editável; aqui não é, de propósito. A pessoa **não consegue mais entrar** no estado. O E3.3 segue sendo a única tela onde o servidor recusa e-mail.
+
+**Beco 1 — emendado, com `code` novo.** A recusa de CPF de outra conta foi **antecipada para o passo 1** do E6, checada **antes** do `verifyOtp`: 🆕 **`409 CPF_UNAVAILABLE`**. Nenhum código é gasto e a pessoa corrige no formulário. ⚠️ O `CPF_ALREADY_REGISTERED` **continua existindo**, mas só como desfecho da **corrida** entre a consulta e a escrita (`§3.4` do `REQ-012`): chega depois do OTP, sem sessão, é raro — e **ainda sem procedimento definido**.
+
+### 🎯 O resíduo do beco 1 é a prova que falta, e vale como alvo de persona
+
+Para quem cai no caso raro de corrida, o app devolve a pessoa ao passo do código com o *"Reenviar código"* **já liberado**. A leitura do `ResendCodeUseCase` indica que quem está nesse estado — conta confirmada no Supabase, **sem** `client_user` — recebe um *código de acesso* via `sendLoginCode`, aceito pelo mesmo `verifyOtp type:'email'`.
+
+🔴 **O próprio D147 marca isso como NÃO VERIFICADO contra o Supabase real.** Se alguma persona atravessar esse caminho, é exatamente a prova que está faltando. Nenhuma das 24 mira nisso hoje — candidata a persona nova.
+
+### 🖼️ E um impedimento de máquina, novo em 18/09
+
+🔴 **Golden não se prova nesta máquina.** O repo grava golden em **Linux** (`test/suporte/fontes.dart` declara Flutter 3.44.1 · `924134a44c`) e estamos em **Windows**: os **226 goldens falham por plataforma, não por regressão**. A prova disso é que falham telas que os commits do dia nunca tocaram (`agendar_goldens_test.dart`, `assinatura_govbr_goldens_test.dart`). Os **1850 testes não-golden passam**.
+
+⚠️ **Consequência para as rodadas:** se o veredito de uma persona depender de fidelidade de pixel, ele **tem de vir da máquina Linux**. Rodada feita aqui prova comportamento, não aparência.
 
 ### ⚠️ Dois impedimentos de ambiente, hoje
 
-- **O `409` ainda não é emitido pelo servidor.** O `REQ-011` da `legalizai-api` está com o canvas em `RASCUNHO` e sem commit. O app trata; o servidor não emite. **Persona que depende do 409 real precisa do stage com o `REQ-011` ou do `FunilFalso`** (gatilho `ja.cliente@example.com`).
+- **O `409` do e-mail.** 🔄 Em 18/09 o `REQ-011` foi **conferido contra o código do backend** (`cb46ea3`) e o app está compatível. Se o stage ainda não emitir, o caminho continua sendo o `FunilFalso` (gatilho `ja.cliente@example.com`).
 - **Recusa de celular não existe** (`DP-1103` do `REQ-011`): o app está pronto, o servidor não tem regra. **Persona que prova recusa de celular não passa hoje** — e nenhuma das 24 prova, mas se alguém acrescentar uma, é isto que a barra.
 
 ---

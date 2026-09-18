@@ -28,6 +28,16 @@ tags: [cnae, mei, simples-nacional, escopo, fonte-primaria]
 >
 > 📊 **O resultado da rodada dos 48, para registro:** 0 🟢 · 1 🟡 (`9601-7/01` lavanderias) · 6 🔴 · **41 ⚪ sem fonte**. Nenhum CNAE novo entrou. ✅ O que ela fechou com fonte: o **corte dos 28 de saúde estava certo** (Portaria 221/2022 Anexo I lista as divisões 86/87 como Alto Risco, com RT em conselho e inspeção prévia) · o **nível II realmente permite liberação automática** com roteiro de autoinspeção e Termo de Ciência (Lei 13.874/2019 + Decreto 10.178/2019) · e o **Registro Automático da JUCEMG NÃO depende do nível de risco** (IN DREI 81/2020 arts. 35-36) — o risco trava o alvará municipal, não a criação da empresa. ⚠️ Ressalva de qualidade: 3 dos 7 vereditos não-⚪ se apoiaram em listas da Vigilância Sanitária do **Rio Grande do Norte**, e um citou resolução CGSIM **revogada**.
 >
+> 📄 **TRANSCRIÇÃO PARCIAL, 18/09** ([[2026-09-18-transcricao-anexos-risco-bh-LITERAL]]). O **Decreto 17.245/2019 veio, incompleto e honesto sobre isso**: **111 de 276 itens** do Anexo I, via **LegisWeb (cópia de terceiro, não o DOM)**, já consolidado com o Decreto 18.756/2024. Faltam os intervalos 47-68, 96-105, 126-205 e 224-261, truncados pela própria plataforma. A **Portaria SMSA 0221/2022 não veio** — os Anexos I-VII estão em PDF sem OCR e não foram extraídos.
+>
+> ✅ **O que o trecho já prova:** **18 dos nossos 80** estão nominalmente no Anexo I de BH — entre eles `6201-5/01`, `6201-5/02`, `6204-0/00`, `5811-5/00`, `8291-1/00`, `9529-1/02`, `9602-5/01`. ⚠️ Os outros **62 são INCONCLUSIVOS**, não reprovados: com 165 itens faltando, ausência no trecho não é ausência no decreto.
+>
+> 🟢 **E apareceram 5 candidatos com fonte de BH**, dos 48 da rodada anterior (que tinham voltado ⚪): `5911-1/01` estúdios cinematográficos · `5911-1/99` produção cinematográfica n.e. · `5912-0/99` pós-produção n.e. **[MEI]** · `5913-8/00` distribuição cinematográfica · `8299-7/01` medição de consumo de energia, gás e água. **Todos III-fixo**, todos dispensados de alvará pelo Anexo I de BH. ⚠️ Ainda **sem o eixo sanitário conferido** (a Portaria 221 não veio) e com fonte em cópia de terceiro — vão para a **fila-Larissa**, não direto para a whitelist.
+>
+> 🔑 **E 3 dos 7 da FILA estão no Anexo I de BH:** `5911-1/02`, `8211-3/00` e `8219-9/99`. Confirma o diagnóstico: o que trava esses três **não é licenciamento, é o anexo fiscal** (`requer-revisao`). Resolver o anexo deles os destrava por inteiro.
+>
+> ⚠️ **Uma armadilha que o cruzamento revelou:** `7911-2/00` (agências de viagens) e `7912-1/00` (operadores turísticos) **estão no Anexo I de BH** — e **continuam fora**. BH dispensa o *alvará municipal*; o **CADASTUR é habilitação federal** do Ministério do Turismo. Eixos diferentes. Um 🟢 no risco não destrava o registro setorial.
+>
 > ⚠️ **A lacuna que segue aberta:** **942 dos 1.332** têm `exige_registro_setorial: nao-verificado` — o eixo só foi cruzado para os 387 do footprint do líder. Foi por esse buraco que a lista caiu de 90 para 87 em 28/08.
 
 > Substitui a v1 de 17/07 (103 CNAEs, herdada da Contabilizei, não ratificada). Esta versão é **fonte primária em toda a linha**: cada critério tem lei/resolução citada, nenhum dado vem de concorrente.

@@ -75,9 +75,9 @@ Pedro perguntou se faz sentido mover pra dentro de `cnae-matriz/` alguns arquivo
 
 A pasta trocou de branch algumas vezes nessa sessão (outra janela mexendo em `feat/reordenacao-entrada-lead-gate-bh` no mesmo diretório físico, sem worktree própria). **Fechado de vez:** os 4 commits que ficaram presos em `feat/mapa-interativo-e-ajustes-constituicao` (reorganização legado/fontes-oficiais, inclusive) foram mergeados no `main` e empurrados. A pasta agora vive só no `main`, sem branch de trabalho separada pra CNAE. Se abrir sessão nova aqui, já está tudo num lugar só.
 
-## ✅ Script de classificação independente — `cnae-verifica-atende.js` (27/08)
+## ✅ Script de classificação independente — `cnae-verifica-atende.cjs` (27/08)
 
-`node pesquisa/cnae-matriz/cnae-verifica-atende.js <cnae>` (1 CNAE) ou `--auditoria` (os 1332). Recalcula o veredito atende/não-atende **do zero**, critério por critério (não lê `atende_me_certeza` como atalho — deriva e SÓ DEPOIS compara), pra pegar divergência entre a lógica documentada e o campo precomputado.
+`node pesquisa/cnae-matriz/cnae-verifica-atende.cjs <cnae>` (1 CNAE) ou `--auditoria` (os 1332). Recalcula o veredito atende/não-atende **do zero**, critério por critério (não lê `atende_me_certeza` como atalho — deriva e SÓ DEPOIS compara), pra pegar divergência entre a lógica documentada e o campo precomputado.
 
 **Achado real na 1ª rodada:** 5 dos 90 "atendemos com certeza" tinham `exige_registro_setorial: nao-verificado` (não `nao`) — aprovados sem essa checagem específica ter rodado neles.
 
@@ -95,7 +95,7 @@ Pesquisado com WebSearch/WebFetch, fonte primária onde deu:
 
 **Resultado**: lista "atendemos com certeza" **caiu de 90 para 87 ME** (51 MEI, era 53) — `5232000` saiu de vez, `3831999`/`3832700` saíram até confirmar (não descartados, só não contam mais como certeza). `8292000`/`9529104` ficaram, agora com o eixo genuinamente resolvido (era assumido, virou confirmado).
 
-**Arquivos atualizados**: `cnae-matriz.json/csv` (mestre, 1332), `cnae-atendemos-certeza.json/csv` (regenerado do mestre), `cnae-liso-servico.md`, `taxonomia-pills-n4.md` (categoria "Recuperação de materiais" saiu — só tinha esses 2 CNAEs pendentes —, 15→14 categorias), `PILLS` em `gate-telas.tsx`, `_sistema/indice-autoridade.md`. `cnae-verifica-atende.js --auditoria` confirma zero divergência pós-correção.
+**Arquivos atualizados**: `cnae-matriz.json/csv` (mestre, 1332), `cnae-atendemos-certeza.json/csv` (regenerado do mestre), `cnae-liso-servico.md`, `taxonomia-pills-n4.md` (categoria "Recuperação de materiais" saiu — só tinha esses 2 CNAEs pendentes —, 15→14 categorias), `PILLS` em `gate-telas.tsx`, `_sistema/indice-autoridade.md`. `cnae-verifica-atende.cjs --auditoria` confirma zero divergência pós-correção.
 
 🕓 **Fila, não bloqueia**: achar o Anexo I/II oficial do CTF/APP (IBAMA) pra confirmar `3831999`/`3832700` de vez. PDF oficial (`ibama.gov.br/phocadownload/...`) bloqueou fetch (403) — precisa acesso direto ou pedido formal.
 

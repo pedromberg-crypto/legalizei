@@ -8,11 +8,23 @@ superado_por:
 tags: [cnae, mei, simples-nacional, escopo, fonte-primaria]
 ---
 
-# 🟢 CNAEs que atendemos com certeza (87 ME · 51 MEI)
+# 🟢 CNAEs que atendemos com certeza (87 atendíveis · **80 cobráveis** · 51 MEI)
+
+> 🔄 **REVALIDAÇÃO 18/09 (pedido do Pedro).** O funil inteiro foi reproduzido contra os 1.332 do IBGE e cruzado com o que não existia em 27/08: o **escopo travado em 12/09** (só Anexos III e V) e a **persona travada em 13/09**. Resultado dos testes novos: **0 Anexo IV** entre os 87 (a base tem 51) · **0 com ICMS** · 0 divergência MEI entre export e matriz · as 7 seções são todas de serviço · e o funil reproduz exato (632 → 540 → 523 → 120 → 94 → 87). **O trabalho de 27/08 passou em tudo.**
+>
+> 🔴 **Mas um teste que não existia derruba 7: o MOTOR.** Perguntado, o `apurador.anexoDoCnae()` responde para o grupo `requer-revisao`: *"CNAE em `requer-revisao` — indefinido, não usar em produção."* Ou seja, para 7 dos 87 **não sabemos calcular o DAS**. Eles seguem atendíveis pela pesquisa e ficam numa **fila declarada**: o campo `motor_apura` no export vale `nao` neles e `sim` nos outros 80.
+>
+> Os sete: `7410-2/99` design n.e. · `7490-1/99` outras profissionais n.e. · `5911-1/02` filmes para publicidade · `7729-2/99` aluguel de outros objetos n.e. · `8211-3/00` escritório e apoio adm. · `8219-9/99` preparação de documentos · `8592-9/99` arte e cultura n.e. 🔑 **Seis de sete são "não especificado anteriormente"** — o CNAE guarda-chuva é onde a classificação por anexo trava, e é também onde a IA de mapeamento erra mais.
+>
+> ✅ **E os 2 pendentes de registro setorial FECHARAM, sem pesquisa.** `3831-9/99` (recuperação de metálicos) e `3832-7/00` (plásticos) esperavam checagem de CTF/IBAMA desde 28/08. Não precisa: os dois têm `mei_icms_fixo_das: S`, isto é, **pagam ICMS**, e o escopo de 12/09 põe ICMS fora por regra. **Saem por escopo, não por lacuna.**
+>
+> 🟡 **O preço do filtro de risco, medido e escrito pela primeira vez: 76 CNAEs.** O corte de baixo risco CGSIM é o de maior impacto (523 → 120). Destes, **76 passam todos os outros filtros E o motor sabe apurar** — hotéis, apart-hotéis, campings, estúdios cinematográficos, pós-produção, entrega rápida, guarda-móveis, formação de condutores. Não é erro: é a decisão de só atender quem **dispensa vistoria e alvará**. Mas o preço nunca esteve escrito.
+>
+> ⚠️ **A lacuna que segue aberta:** **942 dos 1.332** têm `exige_registro_setorial: nao-verificado` — o eixo só foi cruzado para os 387 do footprint do líder. Foi por esse buraco que a lista caiu de 90 para 87 em 28/08.
 
 > Substitui a v1 de 17/07 (103 CNAEs, herdada da Contabilizei, não ratificada). Esta versão é **fonte primária em toda a linha**: cada critério tem lei/resolução citada, nenhum dado vem de concorrente.
 >
-> 🔄 **Correção 28/08** (investigação do eixo de registro setorial, disparada pelo `cnae-verifica-atende.js`): eram 90/53. 5 CNAEs tinham `exige_registro_setorial: nao-verificado` (não `nao`) — aprovados sem essa checagem rodar neles especificamente. Investigado com fonte primária: 1 saiu de vez (agenciamento marítimo exige habilitação federal), 2 confirmaram "não exige" (ficam), 2 seguem pendentes (recuperação de metal/plástico — indício de CTF/APP IBAMA, não confirmado contra o Anexo oficial). Detalhe completo abaixo.
+> 🔄 **Correção 28/08** (investigação do eixo de registro setorial, disparada pelo `cnae-verifica-atende.cjs`): eram 90/53. 5 CNAEs tinham `exige_registro_setorial: nao-verificado` (não `nao`) — aprovados sem essa checagem rodar neles especificamente. Investigado com fonte primária: 1 saiu de vez (agenciamento marítimo exige habilitação federal), 2 confirmaram "não exige" (ficam), 2 seguem pendentes (recuperação de metal/plástico — indício de CTF/APP IBAMA, não confirmado contra o Anexo oficial). Detalhe completo abaixo.
 
 ## 🛠️ Pro desenvolvedor — dado completo, não só este `.md`
 
@@ -31,7 +43,7 @@ Este documento é a **leitura humana curada** (tabela enxuta, 6 colunas, pra ent
 →  94 não exigem registro em conselho profissional (Lei 6.839/1980 + leis de cada conselho)
 →  90 não exigem registro setorial federal (CADASTUR/Polícia Federal/Bacen-CVM-SUSEP — cruzado contra a seção de complexidade abaixo)
 ```
-4ª rodada (28/08, `cnae-verifica-atende.js`): dos 90, **5 tinham o eixo nao-verificado** (não checado nessa subclasse específica, não "nao" de verdade) — investigado com fonte primária. 1 confirmou exigência (saiu) · 2 confirmaram "não exige" (ficam) · 2 seguem pendentes. **87 restam certeza.**
+4ª rodada (28/08, `cnae-verifica-atende.cjs`): dos 90, **5 tinham o eixo nao-verificado** (não checado nessa subclasse específica, não "nao" de verdade) — investigado com fonte primária. 1 confirmou exigência (saiu) · 2 confirmaram "não exige" (ficam) · 2 seguem pendentes. **87 restam certeza.**
 Dos 87, **51 também permitem MEI** (Anexo XI CGSN140) — MEI segue o mesmo filtro de risco do ME (confirmado em [[mei-risco-e-simplificacao-abertura]], Art. 18-A §18 da LC123), não existe atalho.
 
 ## O que mudou vs a v1 (103, herdada)

@@ -39,7 +39,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "7729202",
@@ -81,7 +83,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "7729203",
@@ -123,7 +127,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "5590601",
@@ -165,7 +171,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "5590603",
@@ -207,7 +215,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "5811500",
@@ -249,7 +259,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "5812301",
@@ -291,7 +303,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "5812302",
@@ -333,7 +347,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "5813100",
@@ -375,7 +391,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "6201502",
@@ -417,7 +435,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "5819100",
@@ -459,7 +479,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "5911102",
@@ -501,7 +523,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "nao",
+    "motor_bloqueio": "anexo em `requer-revisao` — o apurador recusa: \"CNAE em `requer-revisao` — indefinido, nao usar em producao.\" Atende pelos 7 filtros de pesquisa, mas o motor nao calcula o DAS. Declarado em 18/09."
   },
   {
     "cnae": "5912001",
@@ -543,7 +567,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "5912002",
@@ -585,7 +611,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "7220700",
@@ -627,7 +655,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "5920100",
@@ -669,7 +699,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "6201501",
@@ -711,7 +743,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "6202300",
@@ -753,7 +787,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "6203100",
@@ -795,7 +831,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "6204000",
@@ -837,7 +875,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "6209100",
@@ -879,7 +919,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "6311900",
@@ -921,7 +963,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "6391700",
@@ -963,7 +1007,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "7722500",
@@ -1005,7 +1051,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "7723300",
@@ -1047,7 +1095,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "7210000",
@@ -1089,7 +1139,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "7311400",
@@ -1131,7 +1183,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "7312200",
@@ -1173,7 +1227,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "7319002",
@@ -1215,7 +1271,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "7319003",
@@ -1257,7 +1315,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "7319004",
@@ -1299,7 +1359,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "7320300",
@@ -1341,7 +1403,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "7410202",
@@ -1383,7 +1447,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "7410203",
@@ -1425,7 +1491,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "7410299",
@@ -1467,7 +1535,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "nao",
+    "motor_bloqueio": "anexo em `requer-revisao` — o apurador recusa: \"CNAE em `requer-revisao` — indefinido, nao usar em producao.\" Atende pelos 7 filtros de pesquisa, mas o motor nao calcula o DAS. Declarado em 18/09."
   },
   {
     "cnae": "7420001",
@@ -1509,7 +1579,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "7420003",
@@ -1551,7 +1623,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "7420004",
@@ -1593,7 +1667,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "7420005",
@@ -1635,7 +1711,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "7490101",
@@ -1677,7 +1755,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "7490104",
@@ -1719,7 +1799,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "7490105",
@@ -1761,7 +1843,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "7721700",
@@ -1803,7 +1887,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "7729299",
@@ -1845,7 +1931,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "nao",
+    "motor_bloqueio": "anexo em `requer-revisao` — o apurador recusa: \"CNAE em `requer-revisao` — indefinido, nao usar em producao.\" Atende pelos 7 filtros de pesquisa, mas o motor nao calcula o DAS. Declarado em 18/09."
   },
   {
     "cnae": "7733100",
@@ -1887,7 +1975,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "8591100",
@@ -1929,7 +2019,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "8220200",
@@ -1971,7 +2063,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "8592901",
@@ -2013,7 +2107,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "8211300",
@@ -2055,7 +2151,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "nao",
+    "motor_bloqueio": "anexo em `requer-revisao` — o apurador recusa: \"CNAE em `requer-revisao` — indefinido, nao usar em producao.\" Atende pelos 7 filtros de pesquisa, mas o motor nao calcula o DAS. Declarado em 18/09."
   },
   {
     "cnae": "8219901",
@@ -2097,7 +2195,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "8230001",
@@ -2139,7 +2239,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "8291100",
@@ -2181,7 +2283,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "8292000",
@@ -2223,7 +2327,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": "Pesquisado 28/08: nenhuma exigencia de registro setorial FEDERAL encontrada. O que existe e licenca sanitaria municipal/estadual (Vigilancia Sanitaria) -- eixo ja coberto por risco_baixo_cgsim, nao e registro setorial federal."
+    "registro_setorial_fonte": "Pesquisado 28/08: nenhuma exigencia de registro setorial FEDERAL encontrada. O que existe e licenca sanitaria municipal/estadual (Vigilancia Sanitaria) -- eixo ja coberto por risco_baixo_cgsim, nao e registro setorial federal.",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "8299703",
@@ -2265,7 +2371,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "8299707",
@@ -2307,7 +2415,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "8599603",
@@ -2349,7 +2459,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "8599604",
@@ -2391,7 +2503,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "8599605",
@@ -2433,7 +2547,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "8592902",
@@ -2475,7 +2591,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "8592903",
@@ -2517,7 +2635,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "8592999",
@@ -2559,7 +2679,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "nao",
+    "motor_bloqueio": "anexo em `requer-revisao` — o apurador recusa: \"CNAE em `requer-revisao` — indefinido, nao usar em producao.\" Atende pelos 7 filtros de pesquisa, mas o motor nao calcula o DAS. Declarado em 18/09."
   },
   {
     "cnae": "8593700",
@@ -2601,7 +2723,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "9609202",
@@ -2643,7 +2767,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "9529103",
@@ -2685,7 +2811,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "9002702",
@@ -2727,7 +2855,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "9001901",
@@ -2769,7 +2899,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "9001902",
@@ -2811,7 +2943,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "9001903",
@@ -2853,7 +2987,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "9001904",
@@ -2895,7 +3031,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "9002701",
@@ -2937,7 +3075,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "9102302",
@@ -2979,7 +3119,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "9319101",
@@ -3021,7 +3163,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "9329803",
@@ -3063,7 +3207,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "9329804",
@@ -3105,7 +3251,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "9511800",
@@ -3147,7 +3295,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "9512600",
@@ -3189,7 +3339,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "9521500",
@@ -3231,7 +3383,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "9529101",
@@ -3273,7 +3427,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "9529102",
@@ -3315,7 +3471,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "9529104",
@@ -3357,7 +3515,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": "Pesquisado 28/08: nenhuma exigencia de registro setorial federal encontrada. Pode exigir Inscricao Estadual se vender pecas -- eixo estadual, nao federal."
+    "registro_setorial_fonte": "Pesquisado 28/08: nenhuma exigencia de registro setorial federal encontrada. Pode exigir Inscricao Estadual se vender pecas -- eixo estadual, nao federal.",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "9529105",
@@ -3399,7 +3559,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "9529106",
@@ -3441,7 +3603,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "9529199",
@@ -3483,7 +3647,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "9602501",
@@ -3525,7 +3691,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   },
   {
     "cnae": "7490199",
@@ -3567,7 +3735,9 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "nao",
+    "motor_bloqueio": "anexo em `requer-revisao` — o apurador recusa: \"CNAE em `requer-revisao` — indefinido, nao usar em producao.\" Atende pelos 7 filtros de pesquisa, mas o motor nao calcula o DAS. Declarado em 18/09."
   },
   {
     "cnae": "8219999",
@@ -3609,7 +3779,9 @@
     "atende_mei_certeza": "sim",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "nao",
+    "motor_bloqueio": "anexo em `requer-revisao` — o apurador recusa: \"CNAE em `requer-revisao` — indefinido, nao usar em producao.\" Atende pelos 7 filtros de pesquisa, mas o motor nao calcula o DAS. Declarado em 18/09."
   },
   {
     "cnae": "6319400",
@@ -3651,6 +3823,8 @@
     "atende_mei_certeza": "nao",
     "exige_registro_setorial": "nao",
     "registro_setorial_qual": "",
-    "registro_setorial_fonte": ""
+    "registro_setorial_fonte": "",
+    "motor_apura": "sim",
+    "motor_bloqueio": ""
   }
 ]

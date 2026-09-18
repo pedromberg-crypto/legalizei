@@ -12,7 +12,7 @@ metadata:
 
 ## A causa raiz era um `\r`
 
-`_sistema/verificar.js` lia frontmatter com `/^---\n/` (só LF). O vault é Windows, quase tudo CRLF. Ele enxergava **140 de 663 notas (21%)**. Reportava 44 violações porque só conseguia abrir 140 arquivos. Corrigido pra `/^---\r?\n/`. **Nunca trocar por `\n` seco.**
+`_sistema/verificar.cjs` lia frontmatter com `/^---\n/` (só LF). O vault é Windows, quase tudo CRLF. Ele enxergava **140 de 663 notas (21%)**. Reportava 44 violações porque só conseguia abrir 140 arquivos. Corrigido pra `/^---\r?\n/`. **Nunca trocar por `\n` seco.**
 
 E ele **nunca rodava**: existia desde 16/07 e nada o chamava.
 

@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * cnae-verifica-atende.js — dado um CNAE, deriva o veredito DO ZERO a partir
+ * cnae-verifica-atende.cjs — dado um CNAE, deriva o veredito DO ZERO a partir
  * dos critérios validados (não lê `atende_me_certeza` como atalho, recalcula
  * pra poder CONFERIR contra ele).
  *
  * uso:
- *   node pesquisa/cnae-matriz/cnae-verifica-atende.js 6201502        (1 CNAE)
- *   node pesquisa/cnae-matriz/cnae-verifica-atende.js 6201-5/02      (aceita com ou sem pontuação)
- *   node pesquisa/cnae-matriz/cnae-verifica-atende.js --auditoria    (roda os 1332, compara com o precomputado)
+ *   node pesquisa/cnae-matriz/cnae-verifica-atende.cjs 6201502        (1 CNAE)
+ *   node pesquisa/cnae-matriz/cnae-verifica-atende.cjs 6201-5/02      (aceita com ou sem pontuação)
+ *   node pesquisa/cnae-matriz/cnae-verifica-atende.cjs --auditoria    (roda os 1332, compara com o precomputado)
  *
  * ═══════════════════════════════════════════════════════════════════════════
  * POR QUE RECALCULA EM VEZ DE SÓ LER `atende_me_certeza`
@@ -156,7 +156,7 @@ function auditoria() {
 // ── entrada ───────────────────────────────────────────────────────────────
 const arg = process.argv[2];
 if (!arg) {
-  console.log("uso: node cnae-verifica-atende.js <cnae>  ou  node cnae-verifica-atende.js --auditoria");
+  console.log("uso: node cnae-verifica-atende.cjs <cnae>  ou  node cnae-verifica-atende.cjs --auditoria");
   process.exit(1);
 }
 if (arg === "--auditoria") auditoria();

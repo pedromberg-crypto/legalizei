@@ -96,7 +96,7 @@ tags: [cnae, ux, n4, pills]
 4. **"Conserto de eletrônicos" sobrevive**, fundido dentro de "Reparos e manutenção".
 5. Achado no debate (27/08): categoria "Agenciamento" inicial forçava 3 CNAEs sem relação (marítimo · esportivo/cultural · matrimonial) só pela palavra em comum. Corrigido: agenciamento esportivo/cultural foi pra "Arte, cultura e patrimônio" (combina); marítimo e matrimonial saíram de pill (ver seção acima).
 6. **"Cerimonialista de casamento" não é "agência matrimonial"** — são profissões diferentes (matchmaking × organização do evento). Cerimonialista já tem casa: `8230-0/01`, dentro de "Eventos e entretenimento".
-7. **28/08 — categoria "Recuperação de materiais" SOME.** O eixo de registro setorial (`cnae-verifica-atende.js`) achou que os 2 CNAEs dessa categoria nunca tiveram essa checagem específica rodada neles. Investigado: `3831-9/99`/`3832-7/00` seguem pendentes (indício de CTF/APP IBAMA, não confirmado), e `5232-0/00` (marítimo, que já estava fora de pill) confirmou exigência real e foi descartado de vez. 15→14 categorias.
+7. **28/08 — categoria "Recuperação de materiais" SOME.** O eixo de registro setorial (`cnae-verifica-atende.cjs`) achou que os 2 CNAEs dessa categoria nunca tiveram essa checagem específica rodada neles. Investigado: `3831-9/99`/`3832-7/00` seguem pendentes (indício de CTF/APP IBAMA, não confirmado), e `5232-0/00` (marítimo, que já estava fora de pill) confirmou exigência real e foi descartado de vez. 15→14 categorias.
 
 ## Próximo passo (não feito ainda)
 Se a pesquisa confirmar "não exige registro setorial" pros 2 pendentes, a categoria "Recuperação de materiais" volta (2 CNAEs, mesma composição de antes) — atualizar `PILLS` em `app/src/components/gate-telas.tsx` nesse momento.

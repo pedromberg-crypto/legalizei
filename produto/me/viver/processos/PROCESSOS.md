@@ -1,7 +1,7 @@
 ---
 tipo: derivado
 status: vivo
-data: 2026-09-17
+data: 2026-09-18
 assunto: processos-do-produto
 gerado_por: produto/me/viver/processos/gerar-processos.mjs
 tags: [execucao, processos, dev, spec]

@@ -54,7 +54,7 @@ Então a pergunta nunca é *"esse doc está vivo?"*. É sempre **"esse doc manda
 | **NÚMEROS fiscais** | [[fiscal-simples-bh-2026]] bloco **CONSOLIDADO** | derivados: `flow-schema.js` FISCAL · `app/src/lib/fiscal.ts` |
 | **PREÇO de plano · CAC-alvo · margem/custo** | [[estado-atual]] (`financeiro/estado-atual.md`) — não é log, é o estado corrente | ❌ `posicionamento.md`/`estrategia-organica.md`/`frente-1-captacao-meta-bh.md` ainda citam MEI R$49,90 velho; `decisoes-marca.md` tem a história completa mas é cronológico, não cite direto de lá |
 | **CNAE atendido / não atendido** (mapa de mercado, espelho do LÍDER) | [[cnae-atendidos-e-nao-atendidos]] | [[cnae-comercio-standby]] = os 200 cortados. ⚠️ NÃO é a whitelist do nosso V1 — ver linha abaixo |
-| **CNAE que ATENDEMOS de verdade no V1** (87 ME · 51 MEI, fonte primária) | [[cnae-liso-servico]] | v1 antiga (103, herdada da Contabilizei) superada 27/08 — não usar. Export dev completo (40 colunas): `cnae-atendemos-certeza.json`/`.csv` |
+| **CNAE que ATENDEMOS de verdade no V1** (**87 atendíveis · 80 COBRÁVEIS** · 51 MEI, fonte primária) | [[cnae-liso-servico]] · export `cnae-atendemos-certeza.json`, campo **`motor_apura`** | 🔴 **Revalidado em 18/09:** 7 dos 87 estão em `requer-revisao` e o `apurador.anexoDoCnae()` **recusa calcular o DAS** deles — atendíveis pela pesquisa, não cobráveis pelo motor. Quem manda em *podemos cobrar?* é o `motor_apura`, não o `atende_me_certeza`. | v1 antiga (103, herdada da Contabilizei) superada 27/08 — não usar. Export dev completo (40 colunas): `cnae-atendemos-certeza.json`/`.csv` |
 | **Categorias de UX pra achar CNAE** (pills/dropdown do produto) | [[taxonomia-pills-n4]] (v2, 14 categorias) | v1 antiga (17 categorias/103 CNAEs, arquivada em `_arquivo/`) superada 27/08. Implementado em `app/src/components/gate-telas.tsx` (`PILLS`) |
 | **CNAE fiscalmente ótimo** | [[cnae-fiscalmente-otimo]] | 🕓 famílias 🟡 esperam Larissa |
 | **Dados oficiais por CNAE** (IBGE + Anexo/Fator R + MEI + risco municipal + ISS BH) | [[cnae-matriz-governo]] (descreve `cnae-matriz.csv`/`.json`, 1332 códigos) | ⚠️ `contabilizei-cnae-completo.csv` tem `pode_mei`/`anexos_romano`/`fator_r` **próprios da Contabilizei** (o que o CONCORRENTE assume) — não são nossa verdade, útil só pra comparar. 🕓 coluna `anexo_fator_r_grupo` (62 `requer-revisao` + tudo) espera Larissa ratificar antes de virar produto |
@@ -236,7 +236,7 @@ semântica (diz quando o CONTEÚDO foi decidido, não quando o arquivo foi tocad
 ⚠️ **`deriva_de` só aponta pra NOTA.** Código não tem frontmatter, logo não tem data pra
 comparar; apontar pra `.mjs`/`.tsx` ali vira ruído permanente. Use `deriva_de_codigo`.
 
-**Verificação:** `node _sistema/verificar.js` audita derivado apodrecido, link quebrado,
+**Verificação:** `node _sistema/verificar.cjs` audita derivado apodrecido, link quebrado,
 vocabulário e órfã. 🆕 **Desde 09/09 ele roda junto com `node produto/_flow/gerar-mapa.mjs`**,
 como aviso — que é o comando que a regra do `CLAUDE.md` já obriga a rodar a cada tela mexida.
 Antes disso ele existia havia 2 meses e nunca tinha rodado.

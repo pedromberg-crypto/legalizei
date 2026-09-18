@@ -17,7 +17,7 @@ tags: [execucao, marcos, vault, vocabulario, verificador]
 
 ## 🔍 O que a medição mostrou
 
-`_sistema/verificar.js` existe desde 16/07, tem 178 linhas e audita 4 coisas: derivado apodrecido, link quebrado, vocabulário fora do fechado e nota órfã. **Nunca foi chamado por nada.** `grep` em todo `.mjs`/`.js`/`.json`: zero referências. Era citado em 6 documentos como se fosse rotina.
+`_sistema/verificar.cjs` existe desde 16/07, tem 178 linhas e audita 4 coisas: derivado apodrecido, link quebrado, vocabulário fora do fechado e nota órfã. **Nunca foi chamado por nada.** `grep` em todo `.mjs`/`.js`/`.json`: zero referências. Era citado em 6 documentos como se fosse rotina.
 
 E quando rodava, mentia:
 
@@ -102,7 +102,7 @@ Plugado em `gerar-mapa.mjs`, no mesmo padrão da trava de anatomia do MEI, e **p
 
 ```
 🟡 VAULT: 15 derivado(s) desatualizado(s)
-   ↑ rode `node _sistema/verificar.js` pro detalhe.
+   ↑ rode `node _sistema/verificar.cjs` pro detalhe.
 ```
 
 ### 7. `tarefas.base` removida

@@ -1,7 +1,7 @@
 ---
 tipo: verdade
 status: vivo
-data: 2026-09-17
+data: 2026-09-18
 assunto: persona-e-cliente-travado
 autoridade: fonte-verdade
 tags: [produto, persona, escopo, trava]

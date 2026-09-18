@@ -36,7 +36,7 @@ for a hora**, depois da casa organizada.
 **Vício meu que isso corrige:** eu inflava 🔴, misturando *"isto trava a construção"* com
 *"isto precisa de um contador"*. Não fazer mais.
 
-## 🔧 `node _sistema/verificar.js`
+## 🔧 `node _sistema/verificar.cjs`
 Audita o vault sozinho: derivado desatualizado (`deriva_de` no frontmatter) · link quebrado ·
 vocabulário fora do fechado · órfã. **Usa a `data:` do frontmatter, não o mtime** (edição em
 massa reseta mtime e cega o script).

@@ -2,7 +2,7 @@
 /**
  * verificar.js — o vault se auditando sozinho.
  *
- * uso:  node _sistema/verificar.js
+ * uso:  node _sistema/verificar.cjs
  *
  * Por que existe: em 16/07 nove problemas foram achados POR ACASO, enquanto eu fazia outra
  * coisa. Sete deles eram do mesmo tipo — "X dependia de Y e ninguém sabia". O caso mais caro:

@@ -103,7 +103,21 @@ console.log("🔗 tabelas fiscais → app");
 console.log(`   ${path.relative(RAIZ, DESTINO)}`);
 console.log(`   ${Object.keys(PREVIDENCIA).length + 2 + 2 + 2} constantes, fonte única em _tabelas.mjs`);
 
-if (anterior === novo) {
+/**
+ * 🔴 A COMPARAÇÃO IGNORA O CARIMBO DE DATA — corrigido em 18/09.
+ *
+ * O arquivo gerado carrega ` * Gerado em AAAA-MM-DD`. Como a comparação era do
+ * texto inteiro, **virar o dia bastava** para o conteúdo "mudar": em 18/09 a
+ * trava derrubou a rodada anunciando *"O APP ESTAVA DEFASADO DO MOTOR"* quando
+ * a única linha diferente era a data e nenhuma constante tinha se mexido.
+ *
+ * 🔑 Trava que grita todo dia é trava que ninguém lê — mesmo fim da que fica
+ * calada. A comparação é do que o app CONSOME (as constantes); o carimbo é
+ * metadado e não pode disparar alarme.
+ */
+const semData = (t) => (t ?? "").replace(/^ \* Gerado em .*$/m, "");
+
+if (semData(anterior) === semData(novo)) {
   console.log("✓ o app já estava EM DIA com o motor — nada a publicar\n");
   process.exit(0);
 }

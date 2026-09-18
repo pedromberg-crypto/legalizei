@@ -2,7 +2,7 @@
 tipo: derivado
 status: vivo
 gerado_por: produto/_flow/gerar-mapa.mjs
-data: 2026-09-17
+data: 2026-09-18
 assunto: dados-coletados-abertura
 tags: [execucao, flow, dados, abertura]
 ---

@@ -890,17 +890,41 @@ try {
 /* ═══════════════════════════════════════════════════════════════════════════
    O VERIFICADOR DO VAULT, PELA MESMA CARONA.
    ═══════════════════════════════════════════════════════════════════════════
-   🆕 09/09. `_sistema/verificar.js` existe desde 16/07 e audita 4 coisas:
+   🆕 09/09. `_sistema/verificar.cjs` existe desde 16/07 e audita 4 coisas:
    derivado apodrecido, link quebrado, vocabulário fora do fechado e nota órfã.
    Em 2 meses ele nunca rodou, porque ninguém o chamava — a regra existia e
    não era aplicada por nada. Mesmo diagnóstico da trava de anatomia acima.
 
    ⚠️ AVISA, não derruba, pelo mesmo motivo: escrever o mapa é outro trabalho.
-   Quem quiser o exit code roda `node _sistema/verificar.js` direto. */
+   Quem quiser o exit code roda `node _sistema/verificar.cjs` direto. */
 try {
-  const vault = spawnSync(process.execPath, [path.join(RAIZ, "_sistema", "verificar.js")], {
+  const vault = spawnSync(process.execPath, [path.join(RAIZ, "_sistema", "verificar.cjs")], {
     encoding: "utf8",
   });
+  /**
+   * 🔴 CRASH NÃO É "VAULT LIMPO" — corrigido em 18/09.
+   *
+   * Este bloco lia só o `stdout` e procurava padrões nele. Quando o
+   * `verificar.cjs` PAROU DE RODAR — em 17/09, quando o `package.json` da raiz
+   * ganhou `"type": "module"` e quebrou os 3 scripts CommonJS `.js` do vault —,
+   * o stdout vinha vazio, nenhum padrão casava, nenhum alerta era montado, e
+   * aqui se imprimia **"✓ vault limpo (vocabulário, links, derivados)"**.
+   *
+   * 🔑 Ausência de alerta e ausência de execução são coisas diferentes, e
+   * confundir as duas é a forma mais cara de verde falso: o gerador passou um
+   * dia inteiro afirmando a saúde de uma auditoria que não rodava.
+   */
+  if (vault.status !== 0 && !(vault.stdout || "").trim()) {
+    console.log("\n🔴 O VERIFICADOR DE VAULT NÃO RODOU — e isso não é 'limpo'.\n");
+    console.log(
+      (vault.stderr || "sem stderr")
+        .split("\n")
+        .slice(0, 4)
+        .map((l) => "   " + l)
+        .join("\n")
+    );
+    console.log("\n   ↑ rode `node _sistema/verificar.cjs` direto pro erro completo.\n");
+  }
   const saida = (vault.stdout || "");
   const derivados = (saida.match(/DERIVADO DESATUALIZADO \((\d+)\)/) || [])[1];
   const vocab = (saida.match(/VOCABULÁRIO fora do fechado \((\d+)\)/) || [])[1];
@@ -914,7 +938,7 @@ try {
     console.log("✓ vault limpo (vocabulário, links, derivados)");
   } else {
     console.log(`\n🟡 VAULT: ${alertas.join(" · ")}`);
-    console.log("   ↑ rode `node _sistema/verificar.js` pro detalhe.\n");
+    console.log("   ↑ rode `node _sistema/verificar.cjs` pro detalhe.\n");
   }
 } catch {
   /* Mesma regra: se sumir ou quebrar, o mapa continua. */

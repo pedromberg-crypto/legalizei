@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /**
- * verificar-cnae.js — audita NÚMERO e CRUZAMENTO, não link/data.
+ * verificar-cnae.cjs — audita NÚMERO e CRUZAMENTO, não link/data.
  *
- * uso: node pesquisa/cnae-matriz/verificar-cnae.js
+ * uso: node pesquisa/cnae-matriz/verificar-cnae.cjs
  *
  * ═══════════════════════════════════════════════════════════════════════════
- * Por que existe (27/08): `_sistema/verificar.js` já audita o vault (derivado
+ * Por que existe (27/08): `_sistema/verificar.cjs` já audita o vault (derivado
  * desatualizado, link quebrado, vocabulário) mas NUNCA teria pego "90 vs 103"
  * ou um CNAE digitado errado dentro de uma categoria — porque isso é erro de
  * NÚMERO e CRUZAMENTO DE DADO, não de metadado. Foi exatamente esse tipo de
@@ -24,7 +24,7 @@
  *   5. O array `PILLS` do código (`gate-telas.tsx`) tem os MESMOS rótulos e
  *      quantidade de categorias que o doc — código e doc não podem divergir.
  *
- * Exit 1 se qualquer um falhar. Isto não substitui `_sistema/verificar.js`
+ * Exit 1 se qualquer um falhar. Isto não substitui `_sistema/verificar.cjs`
  * (aquele continua rodando pro resto do vault) — este é específico de CNAE
  * porque o assunto tem números e cruzamentos que o script genérico não sabe
  * verificar (ele não sabe o que é "90" nem o que é uma categoria).

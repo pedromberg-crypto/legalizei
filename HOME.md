@@ -555,7 +555,7 @@ data: 2026-07-16
 >
 > **(histórico) AVISAR O DEV — piorou.** Ele recebeu 15/07 uma spec congelada com *"as 14 personas são o critério de aceite"*. Desde então: **19 personas · a ordem inverteu · nasceu o flow #2 · 5 promessas da spec não implementadas.** **🆕 E os DADOS também:** o `cnae-lookup-b1.json` que foi junto sai das mesmas 1332 pela mesma regra, então a triagem que ele está codando responde **"atende, passa liso"** pra `DEFESA`. **Todo o resto é 🕓 fila-humana** → [[fila-validacao-humana]].
 >
-> 🧭 **A CASA MUDOU:** [[indice-autoridade]] responde **quem manda em cada assunto** + tem o **mapa T→N** (a numeração velha T1–T23 aparece em ~8 docs; traduza por lá, não reescreva). `node _sistema/verificar.js` audita o vault sozinho. **A memória agora mora no vault** (`_memoria/`, via junction) — os `[[links]]` pra ela funcionam.
+> 🧭 **A CASA MUDOU:** [[indice-autoridade]] responde **quem manda em cada assunto** + tem o **mapa T→N** (a numeração velha T1–T23 aparece em ~8 docs; traduza por lá, não reescreva). `node _sistema/verificar.cjs` audita o vault sozinho. **A memória agora mora no vault** (`_memoria/`, via junction) — os `[[links]]` pra ela funcionam.
 
 **North Star (~3 sem):** abrir **1 empresa real ponta a ponta pelo app** (cobaia = CNPJ do próprio Pedro). Espinha = entrevista IA → valida CNAE → cobra → constitui CNPJ → certificado → portal (nota+vencimentos). Enfeite (extensão, notícias, parcerias, anti-scraping) = backlog. → [[2026-07-13-plano-sequencia-pm]]
 **Âncora da semana:** sexta **17/07** = teste E2E do backend + V1 UI + demo Mauro.

@@ -46,7 +46,31 @@ A regra até 17/09 era `pedromberg@gmail.com` em **todas**, e vinha com um aviso
 
 🔑 **Então P02 a P24 travariam por DESENHO DO TESTE, não por defeito do app** — e um elenco que trava por construção não prova nada. O `+sufixo` desfaz os dois becos sem perder o motivo original da regra, que era ler o código de verdade.
 
-⚠️ **O achado que a regra antiga existia para pegar continua valendo, com outra pergunta:** não é mais *"o app deixa repetir e-mail?"* (sabemos que não), e sim **se o app trata `+sufixo` como endereço distinto**. Se ele normalizar o `+` e recusar, isso é achado — anotar e avisar, porque cliente real com Gmail usa `+` legitimamente.
+✅ **DO LADO DO APP, O `+` ESTÁ LIVRE — conferido no código em 18/09, não suposto.**
+
+| Conferência | Resultado |
+|---|---|
+| `validarEmail` (`lib/core/utils/validadores.dart:20`) | `^[^\s@]+@[^\s@]+\.[^\s@]+$` — o `+` não é espaço nem `@`, então casa |
+| 2ª regex de e-mail (`avaliar_completude_da_cobranca.dart:39`, no E9) | `.+@.+\..+` — casa também |
+| Normalização em `lib/` | **não existe.** Os modelos de pedido fazem `.trim()` e só (`pedido_de_lead.dart:37`) |
+| Colisão com gatilho de mock | **nenhuma.** O gatilho do E3.3 é sufixo `@falha.test`; o do `FunilFalso` é igualdade exata com `ja.cliente@example.com` |
+
+**O servidor recebe `pedromberg+p01@gmail.com` com o `+` e a caixa preservados.** Não vira achado.
+
+### 🔴 Mas o beco 2 NÃO está provado morto — e o risco é silencioso
+
+O `+sufixo` só desfaz o beco se **quem decide unicidade** também enxergar 24 endereços distintos. E quem decide **não é o app**: é o `legalizai-api` (que emite o `409`) e o **Supabase Auth** (que emite o código de 8 dígitos e se recusa a reenviar para e-mail já confirmado — a mecânica exata do beco).
+
+⚠️ **Nenhum dos dois está nesta máquina.** `legalizai-api` não existe em `Documents/`. Então, literalmente: **não verificado.** Não afirmar que o beco 2 caiu.
+
+**Duas checagens, antes de alguém rodar as 24:**
+
+1. **O `REQ-011` compara e-mail cru ou canonicalizado?** Se o backend fizer `split('+')` ou canonicalização de Gmail, as 24 colapsam em 1 e o beco 2 volta **inteiro e silencioso** — o app vai mostrar *"Esse e-mail já tem cadastro."* no campo e parecer comportamento correto.
+2. **O Supabase Auth trata `+p01@` e `+p02@` como identidades separadas?** É ele que controla o reenvio do código.
+
+🔑 **Ordem sugerida: provar com DUAS personas antes das 24.** Rodar P01 e P02 até o código do E6. Se as duas receberem código próprio, o padrão está provado e o resto do elenco vale. Se a P02 levar `409` no e-mail ou ficar sem código, **é achado — e do servidor, não do app**, porque o app já está correto. Vai para o `legalizai-api`, não para o ledger de tela. Barato de provar: o caso `REQ-011` do `funil_real_test.dart` aceita `--dart-define=EMAIL_DE_CONTA_ATIVA=…`.
+
+⚠️ **Estes 24 e-mails NÃO podem virar valor de golden.** São e-mail real do Pedro, e o §5 do `docs/mock-do-funil.md` abre com *"Nunca dado real"* porque valor de golden vai para o repositório. Eles entram como fixture de **rodada manual/integração**. A persona dos goldens continua sendo a Ana Beatriz Ramos (`ana.ramos@email.com`).
 
 ### Os 24 e-mails, um por persona
 

@@ -188,9 +188,25 @@ def solta_listas(md_txt: str) -> str:
     )
 
 
+def nao_quebra(h: str) -> str:
+    """Impede que codigo com hifen parta de linha numa coluna estreita.
+
+    Pega CNAE (`5912-0/99`), CNPJ e CPF. Nao toca em data nem em numero de
+    lei, que quebram sem prejuizo de leitura.
+    """
+    padroes = (
+        r"\b\d{4}-\d/\d{2}\b",                          # CNAE 5912-0/99
+        r"\b\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}\b",           # CNPJ
+        r"\b\d{3}\.\d{3}\.\d{3}-\d{2}\b",                 # CPF
+    )
+    for pad in padroes:
+        h = re.sub(pad, lambda m: f'<span class="nb">{m.group(0)}</span>', h)
+    return h
+
+
 def bloco_html(md_txt: str) -> str:
     h = markdown.markdown(solta_listas(md_txt), extensions=MDX)
-    return simbolos(dots(tabelas(limpa_links_wiki(realca(h)))))
+    return nao_quebra(simbolos(dots(tabelas(limpa_links_wiki(realca(h))))))
 
 
 # ── parte 0: cabecalho do doc (titulo + intro + ordem dos blocos) ────────────
@@ -454,6 +470,10 @@ td {{ padding:2.4mm 3mm; border-top:1px solid var(--ink-200); vertical-align:top
 tbody tr:nth-child(even) td {{ background:var(--ink-50); }}
 tr {{ break-inside:avoid; }}
 td strong {{ color:var(--ink-900); }}
+/* Codigo que nao pode partir no meio (CNAE, CNPJ, CPF). O navegador trata o
+   hifen como ponto de quebra valido, e numa coluna estreita ele parte
+   `5912-0/99` em duas linhas -- achado do Pedro em 18/09, no PDF de CNAE. */
+.nb {{ white-space:nowrap; }}
 table.larga {{ font-size:8.2pt; }}
 table.larga td, table.larga th {{ padding:2.1mm 2.4mm; }}
 /* ficha chave-valor (personas): sem cabecalho, 1a coluna e o rotulo */

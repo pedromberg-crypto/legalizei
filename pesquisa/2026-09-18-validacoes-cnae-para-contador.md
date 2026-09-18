@@ -115,7 +115,133 @@ Nosso entendimento: **dispensa de alvará municipal e habilitação federal são
 
 ---
 
-## 6. Resumo do que precisamos
+## 6. A lista completa dos 80, para conferência
+
+Esta é a lista que usamos hoje, organizada por seção da CNAE. Cada linha traz o anexo do Simples que aplicamos e se a atividade também é permitida ao MEI.
+
+Na coluna **Anexo**: **III** significa Anexo III de forma fixa, por enquadramento da própria lei, sem depender de folha; **III / V** significa que o anexo depende do **Fator R** — a relação entre a folha de pagamento e a receita dos últimos 12 meses.
+
+**Informação e comunicação** · 17 atividades
+
+| CNAE | Atividade | Anexo | MEI |
+|---|---|---|---|
+| 5811-5/00 | Edição de livros | III | sim |
+| 5812-3/01 | Edição de jornais diários | III | sim |
+| 5812-3/02 | Edição de jornais não diários | III | sim |
+| 5813-1/00 | Edição de revistas | III | sim |
+| 5819-1/00 | Edição de cadastros, listas e de outros produtos gráficos | III | sim |
+| 5912-0/01 | Serviços de dublagem | III | sim |
+| 5912-0/02 | Serviços de mixagem sonora em produção audiovisual | III | — |
+| 5920-1/00 | Atividades de gravação de som e de edição de música | III | — |
+| 6201-5/01 | Desenvolvimento de programas de computador sob encomenda | III / V | — |
+| 6201-5/02 | Web design | III / V | — |
+| 6202-3/00 | Desenvolvimento e licenciamento de programas de computador customizáveis | III / V | — |
+| 6203-1/00 | Desenvolvimento e licenciamento de programas de computador não customizáveis | III / V | — |
+| 6204-0/00 | Consultoria em tecnologia da informação | III / V | — |
+| 6209-1/00 | Suporte técnico, manutenção e outros serviços em tecnologia da informação | III | — |
+| 6311-9/00 | Tratamento de dados, provedores de serviços de aplicação e serviços de hospedagem na internet | III | — |
+| 6319-4/00 | Portais, provedores de conteúdo e outros serviços de informação na internet | III | — |
+| 6391-7/00 | Agências de notícias | III | — |
+
+**Atividades profissionais, científicas e técnicas** · 17 atividades
+
+| CNAE | Atividade | Anexo | MEI |
+|---|---|---|---|
+| 7210-0/00 | Pesquisa e desenvolvimento experimental em ciências físicas e naturais | III | — |
+| 7220-7/00 | Pesquisa e desenvolvimento experimental em ciências sociais e humanas | III | — |
+| 7311-4/00 | Agências de publicidade | III / V | — |
+| 7312-2/00 | Agenciamento de espaços para publicidade, exceto em veículos de comunicação | III / V | — |
+| 7319-0/02 | Promoção de vendas | III | sim |
+| 7319-0/03 | Marketing direto | III | — |
+| 7319-0/04 | Consultoria em publicidade | III / V | — |
+| 7320-3/00 | Pesquisas de mercado e de opinião pública | III | — |
+| 7410-2/02 | Design de interiores | III / V | — |
+| 7410-2/03 | Design de produto | III / V | — |
+| 7420-0/01 | Atividades de produção de fotografias, exceto aérea e submarina | III | sim |
+| 7420-0/03 | Laboratórios fotográficos | III | sim |
+| 7420-0/04 | Filmagem de festas e eventos | III | sim |
+| 7420-0/05 | Serviços de microfilmagem | III | — |
+| 7490-1/01 | Serviços de tradução, interpretação e similares | III / V | — |
+| 7490-1/04 | Atividades de intermediação e agenciamento de serviços e negócios em geral, exceto imobiliários | III / V | — |
+| 7490-1/05 | Agenciamento de profissionais para atividades esportivas, culturais e artísticas | III / V | — |
+
+**Atividades administrativas e serviços complementares** · 14 atividades
+
+| CNAE | Atividade | Anexo | MEI |
+|---|---|---|---|
+| 7721-7/00 | Aluguel de equipamentos recreativos e esportivos | III | sim |
+| 7722-5/00 | Aluguel de fitas de vídeo, DVDs e similares | III | sim |
+| 7723-3/00 | Aluguel de objetos do vestuário, jóias e acessórios | III | sim |
+| 7729-2/01 | Aluguel de aparelhos de jogos eletrônicos | III / V | sim |
+| 7729-2/02 | Aluguel de móveis, utensílios e aparelhos de uso doméstico e pessoal; instrumentos musicais | III | sim |
+| 7729-2/03 | Aluguel de material médico | III | sim |
+| 7733-1/00 | Aluguel de máquinas e equipamentos para escritórios | III | sim |
+| 8219-9/01 | Fotocópias | III | sim |
+| 8220-2/00 | Atividades de teleatendimento | III | — |
+| 8230-0/01 | Serviços de organização de feiras, congressos, exposições e festas | III | sim |
+| 8291-1/00 | Atividades de cobranças e informações cadastrais | III | sim |
+| 8292-0/00 | Envasamento e empacotamento sob contrato | III | sim |
+| 8299-7/03 | Serviços de gravação de carimbos, exceto confecção | III | sim |
+| 8299-7/07 | Salas de acesso à internet | III | sim |
+
+**Outras atividades de serviços** · 12 atividades
+
+| CNAE | Atividade | Anexo | MEI |
+|---|---|---|---|
+| 9511-8/00 | Reparação e manutenção de computadores e de equipamentos periféricos | III | sim |
+| 9512-6/00 | Reparação e manutenção de equipamentos de comunicação | III | sim |
+| 9521-5/00 | Reparação e manutenção de equipamentos eletroeletrônicos de uso pessoal e doméstico | III | sim |
+| 9529-1/01 | Reparação de calçados, de bolsas e artigos de viagem | III | sim |
+| 9529-1/02 | Chaveiros | III | sim |
+| 9529-1/03 | Reparação de relógios | III | sim |
+| 9529-1/04 | Reparação de bicicletas, triciclos e outros veículos não motorizados | III | sim |
+| 9529-1/05 | Reparação de artigos do mobiliário | III | sim |
+| 9529-1/06 | Reparação de jóias | III | sim |
+| 9529-1/99 | Reparação e manutenção de outros objetos e equipamentos pessoais e domésticos não especificados anteriormente | III | sim |
+| 9602-5/01 | Cabeleireiros, manicure e pedicure | III | sim |
+| 9609-2/02 | Agências matrimoniais | III | sim |
+
+**Artes, cultura, esporte e recreação** · 10 atividades
+
+| CNAE | Atividade | Anexo | MEI |
+|---|---|---|---|
+| 9001-9/01 | Produção teatral | III | sim |
+| 9001-9/02 | Produção musical | III | sim |
+| 9001-9/03 | Produção de espetáculos de dança | III | — |
+| 9001-9/04 | Produção de espetáculos circenses, de marionetes e similares | III | — |
+| 9002-7/01 | Atividades de artistas plásticos, jornalistas independentes e escritores | III | — |
+| 9002-7/02 | Restauração de obras de arte | III | sim |
+| 9102-3/02 | Restauração e conservação de lugares e prédios históricos | III | — |
+| 9319-1/01 | Produção e promoção de eventos esportivos | III | — |
+| 9329-8/03 | Exploração de jogos de sinuca, bilhar e similares | III | sim |
+| 9329-8/04 | Exploração de jogos eletrônicos recreativos | III / V | sim |
+
+**Educação** · 8 atividades
+
+| CNAE | Atividade | Anexo | MEI |
+|---|---|---|---|
+| 8591-1/00 | Ensino de esportes | III | — |
+| 8592-9/01 | Ensino de dança | III | — |
+| 8592-9/02 | Ensino de artes cênicas, exceto dança | III | sim |
+| 8592-9/03 | Ensino de música | III | sim |
+| 8593-7/00 | Ensino de idiomas | III | sim |
+| 8599-6/03 | Treinamento em informática | III | sim |
+| 8599-6/04 | Treinamento em desenvolvimento profissional e gerencial | III | sim |
+| 8599-6/05 | Cursos preparatórios para concursos | III | sim |
+
+**Alojamento e alimentação** · 2 atividades
+
+| CNAE | Atividade | Anexo | MEI |
+|---|---|---|---|
+| 5590-6/01 | Albergues, exceto assistenciais | III | sim |
+| 5590-6/03 | Pensões(alojamento) | III | sim |
+
+> **❓ Pergunta de validação**
+> Olhando a lista inteira: alguma atividade aqui **não** deveria estar, seja porque na prática exige alvará, licença ou conselho em BH, seja porque o anexo que aplicamos está errado? E no sentido inverso: sente falta de alguma atividade comum de prestador de serviço que deveria estar e não está?
+
+---
+
+## 7. Resumo do que precisamos
 
 | | |
 |---|---|
@@ -124,5 +250,6 @@ Nosso entendimento: **dispensa de alvará municipal e habilitação federal são
 | Seção 3 | definir o anexo (III ou V) das **sete** travadas, com fundamento |
 | Seção 4 | ajudar a obter os **dois** documentos de BH, ou dizer se divergem na prática |
 | Seção 5 | confirmar o entendimento sobre alvará municipal × habilitação federal |
+| Seção 6 | passar o olho na **lista inteira dos 80**: sobra alguma? falta alguma? |
 
 > Onde a resposta for "não tenho certeza", preferimos ouvir isso e saber o que falta verificar, do que receber uma resposta fechada. Trabalhamos com a regra de que todo número e toda classificação precisam ter uma fonte atrás — e "não sei" é uma resposta que nos serve.

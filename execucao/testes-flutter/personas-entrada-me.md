@@ -19,7 +19,9 @@ tags: [execucao, teste, flutter, persona, entrada]
 > |---|---|
 > | spec, desenho do elenco, cobertura, o que cada persona prova | **aqui** |
 > | os valores das fixtures (o que digitar) | `test/suporte/personas.dart` no repo Flutter |
-> | estado das rodadas, relatórios e evidências | `docs/achados/` no repo Flutter, branch **`main`** |
+> | estado das rodadas, relatórios e evidências | 🔴 **PONTEIRO QUEBRADO desde 18/09 — ver abaixo** |
+>
+> 🔴 **O destino dos relatórios não existe mais.** O `docs/achados/` (15 arquivos: o README do ledger A-001…A-009, o relatório da P01 e 13 evidências, 2,4 MB) foi apagado de **todas** as refs quando a `main` local do repo Flutter foi igualada ao remoto — e ele nunca tinha sido pushado. Hoje não existe em `main`, `origin/main` nem `origin/dev`. **Esta metade da divisão está sem lastro:** não há lugar acordado para o registro das rodadas sobreviver a um clone novo. Decisão pendente do Pedro.
 >
 > 🔑 **Nada é copiado entre os dois lados.** O vault lê o repo Flutter direto do disco — sem export, sem sincronia, sem drift possível. A razão de os valores ficarem lá é doutrina do repo deles, não conveniência: valor de persona entra em golden, golden vai para o repositório, e o §5 do `docs/mock-do-funil.md` já governa isso com *"Nunca dado real"*.
 >

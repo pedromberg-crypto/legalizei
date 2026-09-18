@@ -13,6 +13,16 @@ tags: [execucao, teste, flutter, persona, entrada]
 >
 > 🆕 **Elenco NOVO, de 14/09.** Não herda os JSONs de `execucao/motor-testes/personas/` — só **os nomes**. Os dados são próprios, porque os antigos carregavam 7 campos desatualizados (ver §"O que ficou desatualizado" em [[variaveis-entrada-me]]).
 >
+> 🗺️ **DIVISÃO DE TERRITÓRIO, travada em 18/09 (Pedro).** Esta nota é a **spec e o desenho** do elenco: por que 24 personas, como elas cobrem o espaço, e o que cada uma precisa provar. Ela **não** guarda mais os valores executáveis nem o estado das rodadas.
+>
+> | O quê | Onde mora |
+> |---|---|
+> | spec, desenho do elenco, cobertura, o que cada persona prova | **aqui** |
+> | os valores das fixtures (o que digitar) | `test/suporte/personas.dart` no repo Flutter |
+> | estado das rodadas, relatórios e evidências | `docs/achados/` no repo Flutter, branch **`main`** |
+>
+> 🔑 **Nada é copiado entre os dois lados.** O vault lê o repo Flutter direto do disco — sem export, sem sincronia, sem drift possível. A razão de os valores ficarem lá é doutrina do repo deles, não conveniência: valor de persona entra em golden, golden vai para o repositório, e o §5 do `docs/mock-do-funil.md` já governa isso com *"Nunca dado real"*.
+>
 > 🔒 **Escopo:** constituição de **ME no Simples Nacional**, serviço, BH/MG, 1 a 4 sócios PF no Brasil. Nada de MEI, Migração, comércio ou regulamentada, **salvo as personas de recusa (P15 e P21 a P24), que existem justamente pra provar onde o app para**.
 
 ## 🔑 Dados fixos de TODA persona
@@ -21,11 +31,53 @@ tags: [execucao, teste, flutter, persona, entrada]
 
 | Campo | Valor | Por quê |
 |---|---|---|
-| **E-mail** | 🔴 **`pedromberg@gmail.com`** em **todas** as personas, sempre | É o gmail do Pedro, conectado à sessão do vault. Dá pra **buscar o código de verificação de verdade** e destravar o E6.1. Não inventar e-mail |
+| **E-mail** | 🔴 **`pedromberg+pNN@gmail.com`**, com o `NN` da persona (`+p01`, `+p02`, … `+p24`) | 🔄 **Mudou em 18/09.** O Gmail entrega tudo que tem `+sufixo` na **mesma caixa**, então o código de 8 dígitos continua legível de verdade; e o servidor vê **endereço distinto**, então cada persona é um cadastro novo. Não inventar e-mail e não repetir sufixo |
 | **Senha** | qualquer uma, mas **anotada no relatório** | Sem ela não dá pra retomar a conta numa 2ª rodada |
 | **Telefone** | ⏳ **em aberto** | O E6 manda o código *"pro e-mail e pro telefone"*. Se o app exigir os dois, telefone inventado trava igual. Pendente de resposta da rodada da P01 |
 
-⚠️ **O e-mail repetido é de propósito, e tem consequência:** as 24 personas vão compartilhar o mesmo endereço. Se o app impedir 2 contas com o mesmo e-mail, isso aparece já na P02 e vira **achado**, não bug de teste. Anotar quando acontecer.
+### 🔄 Por que o e-mail deixou de ser compartilhado — 18/09
+
+A regra até 17/09 era `pedromberg@gmail.com` em **todas**, e vinha com um aviso: *"se o app impedir 2 contas com o mesmo e-mail, isso aparece já na P02 e vira achado"*.
+
+🔴 **O app respondeu, e a resposta mata o elenco.** O commit `0425300` (17/09) fez "dado já cadastrado" virar **erro no campo**, e o Natanael aceitou três becos sem saída (D147 do `docs/telas.md` §6 do repo Flutter). Dois deles caem exatamente em cima do e-mail repetido:
+
+- **E3.3** — `409 CONTACT_ALREADY_REGISTERED` marca o campo de e-mail: *"Esse e-mail já tem cadastro."* E o dado recusado **não é reenviado sem edição**: o CTA só volta a valer depois de a pessoa mudar o campo.
+- **E6** — e-mail repetido cai no beco do **"código que nunca chega"**: o servidor é neutro por design (`S-420`) e o link de retomada saiu.
+
+🔑 **Então P02 a P24 travariam por DESENHO DO TESTE, não por defeito do app** — e um elenco que trava por construção não prova nada. O `+sufixo` desfaz os dois becos sem perder o motivo original da regra, que era ler o código de verdade.
+
+⚠️ **O achado que a regra antiga existia para pegar continua valendo, com outra pergunta:** não é mais *"o app deixa repetir e-mail?"* (sabemos que não), e sim **se o app trata `+sufixo` como endereço distinto**. Se ele normalizar o `+` e recusar, isso é achado — anotar e avisar, porque cliente real com Gmail usa `+` legitimamente.
+
+### Os 24 e-mails, um por persona
+
+> 📤 **Esta tabela é o único valor de fixture que fica nesta nota**, e fica porque é a *regra* (o padrão do sufixo), não o dado. Os valores executáveis vivem em `test/suporte/personas.dart`, no repo Flutter.
+
+| Persona | Nome | E-mail |
+|---|---|---|
+| P01 | Bruno Almeida Souza | `pedromberg+p01@gmail.com` |
+| P02 | Sandra Cristina Moreira | `pedromberg+p02@gmail.com` |
+| P03 | Rafael Teixeira Lima | `pedromberg+p03@gmail.com` |
+| P04 | Diego Martins Prado | `pedromberg+p04@gmail.com` |
+| P05 | Paula Rezende Antunes | `pedromberg+p05@gmail.com` |
+| P06 | Ivete Barros Nunes | `pedromberg+p06@gmail.com` |
+| P07 | Aparecida Ramos de Lima ("Cida") | `pedromberg+p07@gmail.com` |
+| P08 | Marta de Souza Andrade | `pedromberg+p08@gmail.com` |
+| P09 | Gustavo Ferreira Lima | `pedromberg+p09@gmail.com` |
+| P10 | Júlia Ramos Pinto | `pedromberg+p10@gmail.com` |
+| P11 | Cléber Augusto Pinto | `pedromberg+p11@gmail.com` |
+| P12 | Rogério Nunes Barreto | `pedromberg+p12@gmail.com` |
+| P13 | Carla Nogueira Prado | `pedromberg+p13@gmail.com` |
+| P14 | Heitor Nogueira Sales | `pedromberg+p14@gmail.com` |
+| P15 | Fernanda Vasconcelos Rocha | `pedromberg+p15@gmail.com` |
+| P16 | Vitor Andrade Pinto | `pedromberg+p16@gmail.com` |
+| P17 | Bruno Tavares Melo | `pedromberg+p17@gmail.com` |
+| P18 | Elisa Prado Martins | `pedromberg+p18@gmail.com` |
+| P19 | Rafael Costa Andrade | `pedromberg+p19@gmail.com` |
+| P20 | Otávio Salgado Freitas | `pedromberg+p20@gmail.com` |
+| P21 | Débora Almeida Ferraz | `pedromberg+p21@gmail.com` |
+| P22 | Ronaldo Teixeira Amaral | `pedromberg+p22@gmail.com` |
+| P23 | Letícia Moraes Bastos | `pedromberg+p23@gmail.com` |
+| P24 | Gustavo Rangel Peixoto | `pedromberg+p24@gmail.com` |
 
 ## Índice
 - [[#🗺️ Como o elenco cobre o espaço]]
@@ -34,6 +86,7 @@ tags: [execucao, teste, flutter, persona, entrada]
 - [[#🚪 As 4 do gate — elegibilidade ao Simples]]
 - [[#📋 Tabela de cobertura]]
 - [[#🧾 O que conferir no relatório final]]
+- [[#🔄 O que mudou no E3.3 e no E6 — commit `0425300`, 17/09]]
 
 ---
 
@@ -484,6 +537,39 @@ Este documento nasceu em 14/09 pedindo `R$ 139,00/mês` no E7, que é o **cheio*
 - 🔴 **P21 a P24 não podem abrir empresa.** Hoje todas abrem, e é esse o achado. Anotar **onde** cada uma deveria ter parado, porque é isso que vira requisito de tela.
 - 🔴 **P22 tem variante:** unipessoal = recusa; com sócio que administre = `22` no titular, `49` no sócio. Rodar as duas.
 - 🔴 **P24 prova que o dado do V1 já existe na tela** (C2, como `socio-outro-cnpj`) e não tem consequência nenhuma. Conferir que ele é usado **só** para o teto do INSS.
+
+---
+
+## 🔄 O que mudou no E3.3 e no E6 — commit `0425300`, 17/09
+
+> 🧭 **Por que isto está aqui.** **Todas as 24 personas** atravessam o E3.3 e o E6. Uma entrega de 17/09 reescreveu o tratamento de "dado já cadastrado" nas duas, e a spec anterior descrevia vias que não existem mais. Conferido no código do repo Flutter em 18/09, não na palavra de ninguém.
+
+### O comportamento de hoje
+
+| Tela | O que acontece | A copy |
+|---|---|---|
+| **E3.3** (lead) | `409 CONTACT_ALREADY_REGISTERED` viaja em `DadosRecusados` e marca o campo **e-mail** | *"Esse e-mail já tem cadastro."* |
+| **E3.3** | se o servidor nomear campos em `details`, marca os que ele nomear — `phone` marca o celular | *"Esse celular já tem cadastro."* |
+| **E6** (conta) | `409 CPF_ALREADY_REGISTERED` → `DadosDaContaRecusados` no campo **CPF**, e o E6 **volta ao formulário** | *"Esse CPF já tem cadastro."* |
+
+🔴 **Regra nova que muda roteiro:** o dado que o servidor acabou de recusar **não é reenviado sem edição**. A persona tem de **editar o campo** antes de o CTA valer de novo — não adianta tocar "enviar" duas vezes com o mesmo valor. Limite de 5 tentativas por hora.
+
+### O que SUMIU — se a spec de uma persona cita, está velho
+
+`ContatoJaCadastrado` (a via; o *code* da API continua existindo) · `ContaJaExisteParaOCpf` · o aviso com botão *"Voltar de onde parei"* no E3.3 · o aviso com botão do CPF em uso (era a `STORY-004-003`) · o `podeEnviar` · e os links *"Já tenho cadastro · voltar de onde parei"* do **E3.3 e do E6**.
+
+⚠️ O card *"Voltar de onde parei"* **continua existindo no E3** — uma tela antes. É a única retomada que sobrou.
+
+### 🔴 Os três becos sem saída, aceitos (D147 do `docs/telas.md` §6)
+
+1. **CPF digitado errado no E6 não tem saída.** O `409` chega depois de o código ser consumido e sem sessão, e o Supabase não manda código novo para e-mail já confirmado. **Persona que erra CPF no E6 fica presa** — não é bug a reportar, é beco declarado.
+2. **E-mail repetido no E6** cai no beco do *"código que nunca chega"* (servidor neutro por design, `S-420`). É o beco que o `+sufixo` desfaz.
+3. **Cliente real no E3.3 só tem retomada pelo card do E3**, uma tela antes.
+
+### ⚠️ Dois impedimentos de ambiente, hoje
+
+- **O `409` ainda não é emitido pelo servidor.** O `REQ-011` da `legalizai-api` está com o canvas em `RASCUNHO` e sem commit. O app trata; o servidor não emite. **Persona que depende do 409 real precisa do stage com o `REQ-011` ou do `FunilFalso`** (gatilho `ja.cliente@example.com`).
+- **Recusa de celular não existe** (`DP-1103` do `REQ-011`): o app está pronto, o servidor não tem regra. **Persona que prova recusa de celular não passa hoje** — e nenhuma das 24 prova, mas se alguém acrescentar uma, é isto que a barra.
 
 ---
 

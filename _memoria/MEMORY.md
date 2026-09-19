@@ -114,7 +114,8 @@
 - [Puntel valida a estrategia INTEIRA](legalize-doc-estrategia-mkt-validacao.md) — 12/08: par de validacao estrategica.
 - [Primeira campanha fechada ponta a ponta](legalize-primeira-campanha-fechada.md) — 20-21/08: 24 pecas auditadas, 0.
 - [Atelie substitui agentes copywriter/guardian](legalize-atelie-substitui-agentes-copywriter-guardian.md) — 25/08: engine.
-- [Vault isolado do agente de WhatsApp](legalize-agente-whatsapp-vault-isolado.md) — 04/09: 12 arquivos em runtime; os 1332.
+- [Vault do agente de WhatsApp: fonte-verdade e o repo](legalize-agente-whatsapp-vault-isolado.md) — 19/09: SOUL + 4 skills + 13 notas + _testes/; os 1332 CNAEs viram tool.
+- [Numero no prompt sempre-carregado mata a consulta](legalize-numero-no-prompt-mata-consulta.md) — 19/09: o 10-CONTRATO foi aberto 1 vez em 632 porque o SOUL entregava os numeros dele.
 - [Personalidade do Leo mora em 4 lugares](legalize-leo-personalidade-4-copias.md) — 04/09: fonte e `marca/personagem-leo.md`.
 - [Video de investidor: 3 propostas de escalada](legalize-video-investidor-escalada.md) — 13-14/08: provocacao mora na palavra.
 - [Base de copy/tom-de-voz e PARCIAL](legalize-base-copy-insuficiente.md) — 05/08: falta glossario tecnico + exemplos por tela.

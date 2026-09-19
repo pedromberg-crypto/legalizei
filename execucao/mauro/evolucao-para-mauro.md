@@ -14,29 +14,29 @@ tags: [reporte, evolucao, sociedade]
 
 ## 📊 Placar geral
 
-> 🤖 **Este bloco é gerado.** Ele se reconta sozinho a cada `/fechar`, a partir das tabelas abaixo — nenhum número aqui é digitado. Gerado em **17/09/2026**.
+> 🤖 **Este bloco é gerado.** Ele se reconta sozinho a cada `/fechar`, a partir das tabelas abaixo — nenhum número aqui é digitado. Gerado em **19/09/2026**.
 
 ### O que rendeu
 
 | | |
 |---|---:|
-| **Entregas reportadas** | **311** |
-| Entradas no log | 64 |
-| **Dias trabalhados** | **60** |
-| Período | 07/07/2026 → 17/09/2026 |
-| Dias corridos no período | 73 |
+| **Entregas reportadas** | **319** |
+| Entradas no log | 65 |
+| **Dias trabalhados** | **61** |
+| Período | 07/07/2026 → 19/09/2026 |
+| Dias corridos no período | 75 |
 | Média de entregas por dia trabalhado | 5,2 |
 
 ### Placar por status
 
 | Status | Itens | % |
 |---|---:|---:|
-| 🟢 pronto / entregue | **241** | 77,5% |
-| ✅ estava parado, foi resolvido | **15** | 4,8% |
-| 🟡 em curso / parcial | **27** | 8,7% |
+| 🟢 pronto / entregue | **241** | 75,5% |
+| ✅ estava parado, foi resolvido | **15** | 4,7% |
+| 🟡 em curso / parcial | **27** | 8,5% |
 | 🔴 trava ou precisa de você | **5** | 1,6% |
 | 🕓 aguarda pessoa | **2** | 0,6% |
-| sem marca | 21 | 6,8% |
+| sem marca | 29 | 9,1% |
 
 ### Ritmo, mês a mês
 
@@ -44,17 +44,17 @@ tags: [reporte, evolucao, sociedade]
 |---|---:|---:|---:|
 | julho/2026 | 24 | 20 | — |
 | agosto/2026 | 20 | 20 | — |
-| setembro/2026 | 16 | 15 | — |
+| setembro/2026 | 17 | 16 | 🔴 **1** |
 
 ### ⚠️ O que o sócio não viu
 
-**0** dia(s) com trabalho commitado e **sem entrada** neste log:
+**1** dia(s) com trabalho commitado e **sem entrada** neste log:
 
-nenhum
+`18/09/2026`
 
 > 🔑 O **git** é a fonte independente do que foi trabalhado. Dia com commit e sem entrada aqui é entrega que não chegou ao sócio — e o placar prefere confessar a omissão a repeti-la com cara de número.
 >
-> ⚠️ O contrário também existe e **não é erro**: 5 dia(s) têm entrada sem commit (reunião, pesquisa, decisão — trabalho que não vira código).
+> ⚠️ O contrário também existe e **não é erro**: 6 dia(s) têm entrada sem commit (reunião, pesquisa, decisão — trabalho que não vira código).
 
 ---
 
@@ -1450,4 +1450,36 @@ Continuação do mesmo dia. A parte 1 foi arrumação de casa; esta é aplicaç�
 - O Pedro testou o caso dele e achou um erro no mês sem faturar. Conta certa, aviso errado. Corrigido
 - Fechei os 6 vermelhos do mapa de processos 👍
 - *Preciso de você:* quero conferir a redação das 5 perguntas antes de virarem tela
+```
+
+## Semana 19/09/2026 — o Léo estava dando meia resposta sobre cancelamento, e descobri por quê
+
+Dia todo no agente do WhatsApp. Comecei só querendo revisar a documentação dele e achei um problema de fundo.
+
+| # | O que foi feito | Detalhe |
+|---|---|---|
+| 1 | 🔴 **O Léo quase nunca abria o documento de contrato e garantia** | Ele consulta a documentação enquanto conversa. Medimos: o arquivo de **fidelidade, multa e garantia** foi aberto **1 vez em 632 consultas**. O do dossiê, **nenhuma** |
+| 2 | 🔑 **A causa não era o robô desobedecer: era o texto entregar a resposta antes** | O arquivo de personalidade dele, que fica carregado o tempo todo, tinha os números escritos dentro da própria frase que mandava consultar o documento. Ele lia ali e não ia buscar. Do ponto de vista dele, não estava chutando |
+| 3 | 🟢 **Consequência prática, e é a que dói:** o cliente ouvia só a parte ruim | Os **7 dias para desistir com dinheiro de volta** só existem naquele arquivo. Então ele falava da fidelidade de 12 meses e da multa de 30%, e **omitia a garantia**. Resposta pela metade, no assunto em que o cliente mais desconfia. Corrigido |
+| 4 | ✅ **Outro erro achado: a justificativa da fidelidade mentia pra quem é MEI** | A frase dizia "a abertura **e o certificado digital** ficam por nossa conta". O plano MEI **não inclui certificado**, mas a fidelidade vale pros dois. Agora são duas respostas, uma pra cada plano |
+| 5 | ✂️ **Enxuguei o texto de personalidade em um terço** | De 32 mil para 21 mil caracteres, sem perder o jeito dele de falar. Quanto mais regra o robô carrega de uma vez, menos ele obedece cada uma — e a gente vai testar modelos menores, que sofrem mais com isso |
+| 6 | 🧪 **Os testes automáticos não cobriam esse assunto, e agora cobrem** | Eram 51 casos e **nenhum** perguntava sobre cancelamento, multa ou garantia. Por isso o erro só apareceu quando um humano foi conversar com ele. São **58** agora |
+| 7 | 🔴 **Achamos um vazamento: o perfil do Pedro estava entrando na conversa de qualquer cliente** | Profissão, faturamento e até uma anotação pessoal dele iam no texto que o robô lê antes de responder **a qualquer pessoa** — e ele chegou a responder a um cliente como se aquele fosse o perfil dele. Já está na fila para desligar, antes de qualquer teste |
+| 8 | 🟡 **A cota gratuita da plataforma onde o Léo roda acabou** | Estamos levantando alternativas. Uma coisa já ficou clara: **serviço gratuito de IA em geral usa as conversas para treinar**, e o Léo recebe CPF de cliente sem pedir. Para valer de verdade, essa parte provavelmente precisa ser paga — e a conta dá algo entre **R$50 e R$80 por mês** |
+
+**O que fica com você:** tem uma decisão de contabilidade esperando. Dos **87 CNAEs** que a gente atende, o sistema só tem certeza alta do enquadramento em **24**. Os outros estão classificados "por lote", sem conferência individual. Hoje duas regras nossas se contradizem: uma diz para só afirmar o anexo quando a certeza é alta, outra libera falar dos 65 do grupo mais comum. **Preciso da sua leitura, com a contadora, sobre o que o robô pode afirmar e o que ele deve mandar para o humano.** É a diferença entre ele responder 24 casos ou 87.
+
+### 📱 WhatsApp (19/09)
+```
+*Update Legalizai* 📣
+- Fui revisar a documentação do Léo e achei um problema de fundo
+- Ele quase nunca abria o arquivo de *contrato, fidelidade e garantia*: 1 vez em 632 consultas
+- A causa não era desobediência. O texto que ele carrega sempre já tinha os números escritos dentro, então ele nem ia buscar
+- O problema disso: os *7 dias pra desistir com dinheiro de volta* só existem naquele arquivo. Ele falava da fidelidade e da multa e *omitia a garantia*. Meia resposta no assunto mais sensível
+- Outro erro: a justificativa da fidelidade dizia que o certificado digital é por nossa conta. No MEI não é. Agora tem uma resposta pra cada plano
+- Enxuguei o texto de personalidade dele em 1/3, sem perder o jeito de falar
+- Os testes não cobriam esse assunto: eram 51 casos e *nenhum* sobre cancelamento. Agora são 58
+- Achamos um vazamento: o perfil do Pedro entrava na conversa de qualquer cliente. Já está na fila pra desligar
+- A cota grátis da plataforma acabou. Detalhe importante: serviço grátis de IA costuma *treinar com as conversas*, e o Léo recebe CPF. Essa parte deve virar paga, uns R$50 a R$80/mês
+- *Preciso de você:* dos 87 CNAEs que atendemos, temos certeza alta do enquadramento em 24. Quero sua leitura com a contadora sobre o que o Léo pode afirmar e o que manda pro humano 👍
 ```

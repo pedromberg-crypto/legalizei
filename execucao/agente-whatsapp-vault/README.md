@@ -17,8 +17,8 @@ Base **exclusiva** do agente de atendimento. Fora daqui o vault tem margem, CAC,
 O agente roda em Ollama (`gemma4:31b`, produção desde 18/09) com carregamento sob demanda via `skill_view`. Só o `SOUL.md` e o `description` de cada skill ficam sempre no contexto; o resto é lido na hora.
 
 ```
-00-SOUL-personalidade.md        quem o Léo é, como soa, ritmo de fala
-skills-legalizai/
+00-SOUL-personalidade.md        quem o Léo é, como soa, ritmo de fala   ⬆ sobe
+skills-legalizai/                                                       ⬆ sobe
   DESCRIPTION.md
   atendimento/SKILL.md          o piso de toda conversa
   vendas/SKILL.md               quem ainda decide se contrata
@@ -26,7 +26,11 @@ skills-legalizai/
   base-legalizai/
     SKILL.md                    índice das notas
     references/00..12           o conhecimento
+_testes/casos.yaml              a bateria, 58 casos                     ⬇ só aqui
+README.md                       este arquivo                            ⬇ só aqui
 ```
+
+⬆ **sobe pro VPS** ⬇ **fica só no repo.** O `_testes/` mede o agente, não é lido por ele. Régua e schema da bateria: `_testes/README.md`.
 
 | Nota | Papel |
 |---|---|
@@ -56,6 +60,7 @@ skills-legalizai/
 6. **Sem travessão em nenhum arquivo.** Regra dura de marca, e o agente aprende o tom pelo que lê: travessão escrito aqui é few-shot ensinando o contrário da regra.
 7. **Duplicata é bug.** Se dois arquivos explicam a mesma regra, funde ou aponta. Aconteceu com `03`+`06`, com o Q&A que vivia fora da pasta, e com o gate de saída que estava no `09` e repetido no `vendas`.
 8. ⚠️ **Arquivo acima de ~5.000 chars é podado do histórico** quando a conversa compacta (`_SKILL_VIEW_PRUNE_MIN_CHARS`). 7 das 13 notas passam disso hoje. Enquanto o parâmetro não subir no runtime, nota crítica longa pode sumir no meio de conversa longa.
+9. 🔴 **Regra nova nasce com caso de teste no mesmo commit.** O `10-CONTRATO` era o documento mais caro de errar e o menos consultado (1 abertura em 632), e ninguém notou porque a bateria não tinha um único caso de fidelidade, cancelamento ou garantia. Regra sem caso é regra que envelhece calada. Casos em `_testes/casos.yaml`.
 
 ## Threads abertos
 

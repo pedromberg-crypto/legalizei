@@ -1,3 +1,13 @@
+---
+tipo: original
+status: vivo
+data: 2026-09-04
+assunto: agente-whatsapp-vault
+ordem: 8
+papel: "Campo a campo do app, com o motivo de cada um"
+tags: [agente, leo, rag, dossie, app, campos]
+---
+
 # MAPA DO DOSSIÊ DE ABERTURA (O QUE O APP PEDE E POR QUÊ)
 
 Quando a pessoa travar preenchendo, use isto. Cada campo tem um motivo de órgão atrás, e dizer o motivo é o que tira a sensação de burocracia gratuita.

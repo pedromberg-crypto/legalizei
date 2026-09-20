@@ -1,5 +1,33 @@
 # Como rodar
 
+## Antes da carga, sempre
+
+```bash
+node .build/seed/verificar-carga.js
+```
+
+Aplica offline os dois predicados dos CHECKs do banco (`cartao_sem_numero` e
+`cartao_sem_travessao`) aos 58 cartoes e aos trechos de nota, e sai com codigo 1
+apontando o trecho exato. 🔑 Existe porque em 20/09 a carga no Supabase deu
+rollback e a unica informacao era o nome da constraint: descobrir QUEM violou
+custou uma volta inteira de diagnostico com banco no meio.
+
+## A ordem da carga
+
+```bash
+psql -f schema.sql
+psql -f seed/00-ajustes-schema.sql      # as 3 tabelas que o seed descobriu faltar
+psql -f seed/01-fatos.sql
+
+# CNAE: escolha UM dos dois
+psql -f seed/02-cnae.sql                # local, COPY, mais rapido
+node .build/seed/carregar-cnae.js       # remoto (Supabase), parser proprio
+```
+
+⚠️ `seed/02-cnae.sql` usa `\copy`, que e comando do cliente `psql`. Rodado por
+driver contra banco remoto ele deixa a tabela VAZIA sem erro claro.
+
+
 O Node nao remapeia `./x.js` para `./x.ts` ao carregar tipos direto, e o
 TypeScript com `NodeNext` exige a extensao `.js` no import. Entao os testes
 rodam sobre a saida compilada, em vez de sobre o `.ts`:

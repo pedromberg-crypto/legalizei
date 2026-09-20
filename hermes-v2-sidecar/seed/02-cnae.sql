@@ -13,7 +13,17 @@
 --  O parser de CSV do proprio Postgres nao quebra. Entao: COPY para uma tabela
 --  de staging toda em `text`, e dali um INSERT SELECT com os casts explicitos.
 --
---  Rodar com `psql -f`, nao por cliente que nao suporte `\copy`.
+--  ⚠️ 🔴 ESTE ARQUIVO SO FUNCIONA POR `psql -f`, E ISSO JA MORDEU.
+--
+--  `\copy` e comando do CLIENTE psql, nao SQL: ele le o arquivo na maquina
+--  local e empurra pela conexao. Nenhum driver o interpreta. Rodado por `pg`
+--  contra o Supabase em 20/09, ele deixou `fatos.cnae` com ZERO linhas, e o
+--  unico sintoma foi o teste do gate falhando la na frente.
+--
+--  👉 Para banco remoto, use `seed/carregar-cnae.ts`, que le os CSVs com um
+--     parser RFC 4180 proprio e insere em lote pela rede. Os dois caminhos
+--     aplicam os MESMOS casts e os MESMOS portoes; este aqui segue valendo para
+--     quem tem `psql` e o repo na mesma maquina, porque COPY e mais rapido.
 -- ============================================================================
 
 BEGIN;

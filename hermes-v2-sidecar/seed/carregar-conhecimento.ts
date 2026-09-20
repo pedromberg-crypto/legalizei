@@ -19,14 +19,32 @@
  * ════════════════════════════════════════════════════════════════════════════
  */
 
-import { readFileSync, readdirSync } from 'node:fs'
+import { readFileSync, readdirSync, existsSync } from 'node:fs'
 import { join, dirname, basename } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import type { Embedder, Promessa } from '../tipos.js'
 
+/**
+ * Acha a raiz de `hermes-v2-sidecar/` subindo ate encontrar o arquivo de
+ * cartoes.
+ *
+ * ⚠️ Nao e `join(AQUI, '..')` porque o codigo roda de dois lugares: do fonte
+ * (`seed/*.ts`) e da saida compilada (`.build/seed/*.js`), e no segundo caso o
+ * `..` aponta para dentro do `.build`, onde os markdowns nao existem. O
+ * verificador quebrou exatamente assim na primeira execucao.
+ */
+function acharRaiz(inicio: string): string {
+  let dir = inicio
+  for (let i = 0; i < 6; i++) {
+    if (existsSync(join(dir, 'CARTOES-PRODUTO.md'))) return dir
+    dir = dirname(dir)
+  }
+  throw new Error(`nao achei a raiz do hermes-v2-sidecar subindo a partir de ${inicio}`)
+}
+
 const AQUI = dirname(fileURLToPath(import.meta.url))
-const RAIZ = join(AQUI, '..')
+export const RAIZ = acharRaiz(AQUI)
 const REFERENCES = join(RAIZ, '_origem', 'vault-v12', 'skills-legalizai', 'base-legalizai', 'references')
 
 const ESPERADO_CARTOES = 58
@@ -66,7 +84,18 @@ export function parsearCartoes(markdown: string): CartaoParseado[] {
     if (!cabecalho || !meta) continue
 
     const campo = (nome: string) => {
-      const re = new RegExp(`\\*\\*${nome}\\.\\*\\*\\s*([\\s\\S]*?)(?=\\n\\*\\*(?:Estado|Ação|Restrição)\\.\\*\\*|$)`)
+      // 🔴 O corte precisa parar TAMBEM no separador de secao (`---`) e no
+      //    proximo titulo `##`, nao so no proximo campo.
+      //
+      //    Bug real, achado em 20/09 quando a carga no Supabase acusou
+      //    violacao de CHECK: o ultimo cartao de cada secao engolia o
+      //    cabecalho da secao seguinte. Sete cartoes (1.5, 2.8, 3.9, 4.7, 5.6,
+      //    6.6 e 7.7) estavam com texto de outro assunto colado na restricao,
+      //    e o 7.7 carregava o bloco inteiro de contexto da folha. Vetorizado
+      //    assim, o cartao de reajuste de plano responderia pergunta de folha.
+      const re = new RegExp(
+        `\\*\\*${nome}\\.\\*\\*\\s*([\\s\\S]*?)(?=\\n\\*\\*(?:Estado|Ação|Restrição)\\.\\*\\*|\\n---|\\n## |$)`,
+      )
       const m = bloco.match(re)
       return m ? m[1].trim().replace(/\s*\n\s*/g, ' ') : ''
     }
@@ -135,6 +164,42 @@ export function fatiarNota(nomeArquivo: string, markdown: string): TrechoParsead
     .filter((t) => t.trecho.length > 40)
 }
 
+/**
+ * 🔴 O PREDICADO DO BANCO, ESCRITO UMA VEZ SO.
+ *
+ * E a mesma expressao dos CHECKs `cartao_sem_numero` e `nota_sem_numero`. Mora
+ * aqui para que o verificador offline e a carga nunca discordem do banco: dois
+ * predicados que deveriam ser iguais e um dia divergem silenciosamente sao a
+ * forma classica de uma trava virar decoracao.
+ */
+export const PREDICADO_NUMERO = /(R\$|[0-9]+,[0-9]{2}|[0-9]+\s?%)/g
+
+/** O travessao, proibido em todo texto que vira few-shot. */
+export const PREDICADO_TRAVESSAO = /—/g
+
+/**
+ * SANITIZACAO DECLARADA, nao remocao cega.
+ *
+ * As notas do vault tem preco e percentual escritos dentro, e isso esta CERTO
+ * la: elas sao a fonte que o humano le. O que nao pode e o numero atravessar
+ * para o texto vetorizado, porque e assim que o agente para de consultar
+ * `fatos` e volta a responder de memoria. Foi a regressao de 19/09, medida:
+ * a nota de contrato foi aberta uma vez em seiscentas e trinta e duas chamadas
+ * porque o prompt ja entregava a resposta.
+ *
+ * 🔑 O numero nao some, vira PONTEIRO. O trecho continua explicando a regra, e
+ * a frase fica dizendo em voz alta que o valor se consulta. Apagar e sem
+ * substituir produziria texto mutilado ("a multa e de sobre o saldo"), que e
+ * pior: o agente completa o buraco sozinho.
+ */
+export function sanitizarNumeros(texto: string): string {
+  return texto
+    .replace(/R\$\s?[0-9][0-9.,]*/g, '«valor em fatos»')
+    .replace(/[0-9]+(?:,[0-9]+)?\s?%/g, '«percentual em fatos»')
+    .replace(/[0-9]+,[0-9]{2}/g, '«valor em fatos»')
+    .replace(/R\$/g, '«valor em fatos»')
+}
+
 // ════════════════════════════════════════════════════════════════════════════
 //  CARGA
 // ════════════════════════════════════════════════════════════════════════════
@@ -182,37 +247,58 @@ export async function carregar(embedder: Embedder): Promise<void> {
   // ── Notas ─────────────────────────────────────────────────────────────────
   const arquivos = readdirSync(REFERENCES).filter((f) => f.endsWith('.md')).sort()
   let trechosGravados = 0
+  let trechosSanitizados = 0
 
-  for (const arquivo of arquivos) {
-    const trechos = fatiarNota(arquivo, readFileSync(join(REFERENCES, arquivo), 'utf8'))
-    for (const t of trechos) {
-      const vetor = await embedder.gerar(`${t.assunto}\n${t.trecho}`)
-      try {
-        await pool.query(
-          `INSERT INTO conhecimento.nota (id, assunto, trecho, ordem, fonte, embedding)
-           VALUES ($1,$2,$3,$4,$5,$6::vector)
-           ON CONFLICT (id) DO UPDATE SET
-             assunto = excluded.assunto, trecho = excluded.trecho,
-             embedding = excluded.embedding, atualizado_em = current_date`,
-          [t.id, t.assunto, t.trecho, t.ordem, arquivo, `[${vetor.join(',')}]`],
-        )
-        trechosGravados++
-      } catch (erro: any) {
-        // 🔑 Aqui o CHECK `nota_sem_numero` VAI estourar, e e esperado: as notas
-        //    do vault tem preco escrito dentro. Elas sao a fonte humana, nao a
-        //    fonte do agente. O trecho recusado precisa ter o numero movido
-        //    para `fatos` antes de entrar. Recusa ruidosa e o ponto: carga que
-        //    ignora o erro repoe exatamente a regressao de 19/09.
-        if (erro?.constraint === 'nota_sem_numero') {
-          console.warn(`[recusado] ${t.id} tem numero no texto. Mover para fatos antes de vetorizar.`)
-          continue
+  const clienteNotas = await pool.connect()
+  try {
+    await clienteNotas.query('BEGIN')
+    for (const arquivo of arquivos) {
+      const trechos = fatiarNota(arquivo, readFileSync(join(REFERENCES, arquivo), 'utf8'))
+      for (const t of trechos) {
+        const limpo = sanitizarNumeros(t.trecho)
+        if (limpo !== t.trecho) trechosSanitizados++
+        const vetor = await embedder.gerar(`${t.assunto}\n${limpo}`)
+
+        // 🔴 SAVEPOINT por trecho, e isto nao e zelo: em PostgreSQL um
+        //    statement que falha ABORTA A TRANSACAO INTEIRA. O `try/catch` do
+        //    JavaScript nao desfaz esse estado, entao a versao anterior deste
+        //    loop, rodando dentro de uma transacao, deixava um unico trecho
+        //    recusado derrubar toda a carga, inclusive os cartoes que ja
+        //    tinham entrado. Foi exatamente o que aconteceu no Supabase.
+        await clienteNotas.query('SAVEPOINT trecho')
+        try {
+          await clienteNotas.query(
+            `INSERT INTO conhecimento.nota (id, assunto, trecho, ordem, fonte, embedding)
+             VALUES ($1,$2,$3,$4,$5,$6::vector)
+             ON CONFLICT (id) DO UPDATE SET
+               assunto = excluded.assunto, trecho = excluded.trecho,
+               embedding = excluded.embedding, atualizado_em = current_date`,
+            [t.id, t.assunto, limpo, t.ordem, arquivo, `[${vetor.join(',')}]`],
+          )
+          await clienteNotas.query('RELEASE SAVEPOINT trecho')
+          trechosGravados++
+        } catch (erro: any) {
+          await clienteNotas.query('ROLLBACK TO SAVEPOINT trecho')
+          if (erro?.constraint === 'nota_sem_numero') {
+            console.warn(`[recusado] ${t.id}: sobrou numero depois da sanitizacao. Mover para fatos.`)
+            continue
+          }
+          throw erro
         }
-        throw erro
       }
     }
+    await clienteNotas.query('COMMIT')
+  } catch (erro) {
+    await clienteNotas.query('ROLLBACK')
+    throw erro
+  } finally {
+    clienteNotas.release()
   }
 
-  console.log(`cartoes: ${cartoes.length} · trechos de nota gravados: ${trechosGravados}`)
+  console.log(
+    `cartoes: ${cartoes.length} · trechos gravados: ${trechosGravados} · ` +
+    `trechos sanitizados: ${trechosSanitizados}`,
+  )
 }
 
 // Execucao direta: exige um Embedder de verdade, injetado por quem chama.

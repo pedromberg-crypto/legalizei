@@ -187,44 +187,56 @@ def buscar_base(termo: str = None, assunto: str = None, momento: str = None,
 
     limite = max(1, min(int(limite or PADRAO_TRECHOS), TETO_TRECHOS))
 
-    # 🔴 Rodízio por nota, não as N primeiras seções em ordem de arquivo.
-    #
-    # Medido em 20/09: `momento=recusar` devolvia 3 seções de `canais-oficiais.md` e
-    # nenhuma de `recusa.md`, porque o "c" vem antes do "r". O eixo `momento` existe
-    # justamente para trazer JUNTAS as notas que servem àquele momento — a resposta de
-    # gate de saída precisa de `recusa` + `canais-oficiais` + `tetos-de-faturamento`, e
-    # foi a falta disso que derrubou o caso `aceite-epp` na suíte. Uma seção de cada
-    # nota primeiro; só depois a segunda de cada.
-    # A ordem das notas dentro do rodízio é por ESPECIFICIDADE, não alfabética: uma nota
-    # que declara só `[recusar]` é mais daquele momento que uma que declara quatro
-    # momentos e o inclui de passagem. Sem isto, `momento=recusar` com limite 3 devolvia
-    # canais-oficiais · endereco-fiscal · escopo-atendimento e deixava `recusa.md` de
-    # fora, que é a nota que manda no assunto — o "r" é a quarta letra do alfabeto ali.
+    # Uma nota que declara só `[recusar]` é mais daquele momento que uma que declara
+    # quatro e o inclui de passagem. Sem isto, `momento=recusar` deixava `recusa.md` de
+    # fora por ordem alfabética, que é a nota que manda no assunto.
     def especificidade(s):
         return (len(s["meta"].get("momento") or []) or 99, s["arquivo"])
 
+    alvo = sorted(alvo, key=especificidade)
+
+    # 🔴 Sem `termo`, o pedido é por NOTA, não por parágrafo — então devolve a nota
+    # inteira, e não a primeira seção dela.
+    #
+    # Medido em 20/09, e custou 2 pontos na suíte: `momento=recusar` devolvia a
+    # primeira seção de cada uma das 3 notas, e a primeira seção é sempre o PREÂMBULO
+    # — título e frase de abertura. O Léo recebia "# GATE DE SAÍDA (COMO DIZER NÃO)" e
+    # escrevia a recusa com isso. Eu tinha acabado de mandar o SOUL preferir a
+    # ferramenta, então a instrução nova apontava para lixo, e `comercio-gate-saida`
+    # quebrou depois de passar duas rodadas seguidas.
+    #
+    # O erro era de conceito: `momento` responde "de quais notas eu preciso", e
+    # `assunto` responde "qual é a nota". Nenhum dos dois é uma pergunta sobre
+    # parágrafo. Fatiar só faz sentido quando existe um `termo` para casar.
     por_nota = {}
-    for s in sorted(alvo, key=especificidade):
+    for s in alvo:
         por_nota.setdefault(s["arquivo"], []).append(s)
-    ordenado, rodada = [], 0
-    while len(ordenado) < len(alvo):
-        for fila in por_nota.values():
-            if rodada < len(fila):
-                ordenado.append(fila[rodada])
-        rodada += 1
-    alvo = ordenado
 
     trechos, gastos = [], 0
-    for s in alvo[:limite]:
-        corpo = s["texto"]
-        cortado = len(corpo) > CONTEXTO_MAX
-        if cortado:
-            corpo = corpo[:CONTEXTO_MAX] + "\n[…seção truncada. Para o texto completo: " \
-                    f'skill_view("base-legalizai", "references/{s["arquivo"]}")]'
-        if gastos + len(corpo) > TETO_CHARS:
-            break
-        gastos += len(corpo)
-        trechos.append({"fonte": _procedencia(s), "arquivo": s["arquivo"], "texto": corpo})
+    if not termo:
+        for arquivo, secoes in list(por_nota.items())[:limite]:
+            corpo = "\n\n## ".join([secoes[0]["texto"]] +
+                                   [s["secao"] + "\n" + s["texto"] for s in secoes[1:]])
+            if trechos and gastos + len(corpo) > TETO_CHARS:
+                break
+            gastos += len(corpo)
+            trechos.append({"fonte": _procedencia(secoes[0]), "arquivo": arquivo,
+                            "texto": corpo})
+        if len(por_nota) > len(trechos):
+            saida_extra = sorted(set(por_nota) - {t["arquivo"] for t in trechos})
+        else:
+            saida_extra = []
+    else:
+        saida_extra = []
+        for s in alvo[:limite]:
+            corpo = s["texto"]
+            if len(corpo) > CONTEXTO_MAX:
+                corpo = corpo[:CONTEXTO_MAX] + "\n[…seção truncada. Para o texto completo: " \
+                        f'skill_view("base-legalizai", "references/{s["arquivo"]}")]'
+            if gastos + len(corpo) > TETO_CHARS:
+                break
+            gastos += len(corpo)
+            trechos.append({"fonte": _procedencia(s), "arquivo": s["arquivo"], "texto": corpo})
 
     saida = {"success": True,
              "consulta": {k: v for k, v in
@@ -238,6 +250,8 @@ def buscar_base(termo: str = None, assunto: str = None, momento: str = None,
             f"{len(sem_taxonomia)} notas ainda NÃO declaram assunto/momento e ficaram fora "
             "deste filtro — vazio aqui não quer dizer que o dado não existe. Busque por "
             "`termo`, ou leia a nota. Fora do filtro: " + ", ".join(sem_taxonomia))
+    if saida_extra:
+        saida["outras_notas_deste_filtro"] = saida_extra
     if not trechos:
         saida["aviso"] = ("nada casou. Refine o termo, ou leia a nota inteira com "
                           'skill_view("base-legalizai", "references/<NOTA>.md")')
@@ -250,12 +264,12 @@ _LISTA = " | ".join(_MOMENTOS) if _MOMENTOS else ""
 SCHEMA = {
     "name": "buscar_base",
     "description": (
-        "Busca TRECHOS das notas oficiais da Legalizai, em vez de carregar a nota inteira. "
-        "Cada trecho vem com a procedência [nota · seção · assunto]. Use quando souber o "
-        "que procura: é muito mais barato que skill_view. Filtre por momento da conversa"
+        "Lê as notas oficiais da Legalizai, com a procedência de cada uma. "
+        "`termo` devolve só os TRECHOS que casam, e é bem mais barato que abrir a nota. "
+        "`momento` devolve INTEIRAS as notas que servem àquele ponto da conversa"
         + (f" ({_LISTA})" if _LISTA else "")
-        + ", por assunto, ou por termo livre. Para ler uma nota inteira, continue usando "
-        "skill_view."
+        + ", numa ida só, e é o certo quando a resposta depende de mais de uma nota. "
+        "`assunto` devolve aquela nota inteira."
     ),
     "parameters": {
         "type": "object",

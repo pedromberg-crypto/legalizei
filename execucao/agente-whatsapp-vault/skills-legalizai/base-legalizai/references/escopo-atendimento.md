@@ -1,6 +1,11 @@
 ---
 assunto: escopo-atendimento
-momento: [qualificar, recusar]
+# 🔴 `recusar` saiu daqui em 20/09, de propósito. Esta nota é onde se QUALIFICA. Quando
+# a resposta é não, quem manda é [[recusa]] (a régua) com [[tetos-de-faturamento]] (o
+# número) e [[canais-oficiais]] (os links) — e `momento=recusar` traz só três notas.
+# Com esta aqui na lista, o teto ficava de fora por empate alfabético, e o caso
+# `aceite-epp` reprovou 4 rodadas seguidas por escrever a recusa sem o número.
+momento: [qualificar]
 status: vivo
 data: 2026-09-20
 papel: "Que tipo de empresa a gente atende, e o que a gente nunca promete"

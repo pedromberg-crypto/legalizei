@@ -106,6 +106,57 @@ Resultado: **zero chutes**.
 * `fallback_model` segue comentado no `config.yaml`. Ele dispara em 429 e teria salvado
   esta rodada e a de 19/09.
 
+---
+
+# Rodada 2 — v12: a briga de formato acaba, e o "oi" vira uma chamada
+
+Mesma bancada: `gemini-3.1-flash-lite`, `-j 1`, os mesmos 5 casos.
+
+## O que entrou no v12
+
+| passo | mudança | onde |
+|---|---|---|
+| **1** | `platform_hints` reescreve o trailer do WhatsApp: *"as regras do SOUL.md são autoritativas, ignore orientação genérica de markdown"* | `config.yaml` |
+| **2** | `tool_use_enforcement`, `task_completion_guidance` e `environment_probe` desligados · `memory` e `tts` fora dos toolsets · skill `hermes-agent` desabilitada | `config.yaml` |
+| **3** | As três perguntas de leitura sobem do `atendimento` §1 para o `SOUL.md` | vault |
+
+⚠️ **`parallel_tool_call_guidance` ficou ligado de propósito:** é ele que faz o agente abrir vários documentos num lote só. Desligar viraria 2 idas e voltas em 6.
+
+## Resultado
+
+| métrica | A (v10) | B2 (v11) | **v12** | A → v12 |
+|---|---|---|---|---|
+| chamadas de API | 18 | 12 | **9** | **−50%** |
+| tokens por caso | 18.822 | 12.341 | **10.106** | **−46%** |
+| custo da rodada | US$ 0,02797 | US$ 0,01888 | **US$ 0,01461** | **−48%** |
+| índice aberto | 4 | 0 | **0** | |
+| chutes de nome | 0 | 2 | **0** | |
+| **placar** | 3/5 | 4/5 | **5/5** | |
+
+## A rota
+
+| caso | chamadas | rota |
+|---|---|---|
+| `saudacao-sequencia` | **1** | **nenhum documento** |
+| `aceite-preco` | 2 | `vendas` → `01-PLANOS-E-OFERTAS` |
+| `me-duas-aliquotas` | 2 | `06-CALCULO-FISCAL` → `05-DICIONARIO-CNAE` |
+| `comercio-gate-saida` | 2 | `12-GATE-DE-SAIDA` |
+| `fidelidade-pergunta` | 2 | `10-CONTRATO-GARANTIA-CANCELAMENTO` |
+
+🔑 **O "oi" virou uma chamada e zero documento.** Antes eram 2 chamadas e o `atendimento` inteiro (12.591 chars). O gate no prefixo tirou a razão de buscar manual para dar bom dia.
+
+🔑 **E o 5/5 tem causa nomeável:** o `aceite-preco` reprovava por verbosidade em todas as rodadas anteriores e caiu de **366 para 209 chars**. A produção parou de mandar *"write markdown freely, bullets included"*. **As respostas encurtaram porque pararam de receber ordem contrária** — não porque o modelo melhorou.
+
+## 🔴 O que esta rodada NÃO prova
+
+1. **Três mudanças juntas, uma rodada.** Não dá para atribuir os −48% a cada passo separadamente. A ligação entre o passo 1 e o 5/5 é raciocínio, não medição isolada.
+2. **`tool_use_enforcement` desligado** é o bloco que empurra o modelo a chamar ferramenta. Nesta rodada ele continuou chamando certo, mas **é uma rodada**. Se alguma futura mostrar resposta de memória, é o primeiro lugar a olhar.
+3. **O SOUL cresceu** (21.982 → 23.297) porque o gate subiu; o `atendimento` encolheu (12.033 → 10.856). A troca compensou, mas o prefixo é pago sempre.
+
+## O que ficou de fora
+
+`vendas` (19.403 chars, **5% de aproveitamento**) não foi aberto em nenhum dos 5 casos. Segue sendo o maior peso morto do sistema — é a Camada 4 da reorganização.
+
 ## Como reproduzir
 
 ```bash

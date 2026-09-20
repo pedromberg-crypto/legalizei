@@ -40,6 +40,7 @@ import {
   novoConsumo, contarLlm, contarEmbedder, buscarCambio, imprimirCusto,
   calcularCusto, PRECO,
 } from './contador.js'
+import { escreverRelatorio } from './relatorio.js'
 
 // ⚠️ RAIZ vem do modulo que sobe a arvore ate achar o arquivo de cartoes. Nao
 //    e `join(AQUI, '..')` porque, rodando de `.build/testes/`, isso aponta para
@@ -353,7 +354,23 @@ async function principal(): Promise<void> {
       2,
     ),
   )
-  console.log(`\nrelatorio: ${arquivo}`)
+  console.log(`\nJSON: ${arquivo}`)
+
+  // 🔑 O markdown e o que alguem LE para decidir; o JSON e para maquina
+  //    reprocessar. Os dois saem da mesma rodada, sempre, porque relatorio que
+  //    depende de alguem lembrar de gerar e relatorio que nao existe.
+  const md = escreverRelatorio({
+    quando: new Date().toISOString(),
+    placar: `${passaram}/${resultados.length}`,
+    consumo,
+    custo: calcularCusto(consumo, cambio),
+    cambio,
+    preco: PRECO,
+    modelo: PRECO.modelo,
+    suite: todos ? 'acervo' : escolhidos.length > 0 ? 'avulsa' : 'curta',
+    resultados,
+  })
+  console.log(`relatorio: ${md}`)
 
   const { pool } = await import('../db.js')
   await pool.end()

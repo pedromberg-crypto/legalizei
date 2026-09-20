@@ -1,0 +1,3 @@
+# Saida de `tsc -p tsconfig.build.json`, usada so para rodar os testes com
+# `node --test`. Nao versionar: o codigo-fonte e o `.ts`.
+.build/

@@ -1,0 +1,4 @@
+{
+  "extends": "./tsconfig.check.json",
+  "compilerOptions": { "noEmit": false, "outDir": ".build" }
+}

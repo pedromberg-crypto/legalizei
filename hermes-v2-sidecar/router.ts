@@ -25,10 +25,61 @@ import type {
   Embedder, Entrada, FalhaTipo, Llm, Resolucao, Resposta, Saida, Sinais,
   PacoteEscalonamento,
 } from './tipos.js'
-import * as db from './db.js'
-import { TOOLS, executarTool, ToolDesconhecida } from './tools.js'
+import { TOOLS } from './tools-def.js'
 
 const AQUI = dirname(fileURLToPath(import.meta.url))
+
+// ════════════════════════════════════════════════════════════════════════════
+//  0. AS DEPENDENCIAS DE I/O, TARDIAS E INJETAVEIS
+//
+//  🔑 Isto nasceu dos testes, nao do desenho. Enquanto o roteador importava
+//  `db.ts` no topo, importar este arquivo abria um Pool do Postgres no
+//  carregamento do modulo: nenhum teste rodava sem `pg` instalado e banco de
+//  pe, nem mesmo o de funcao pura.
+//
+//  Agora o acesso a banco e a execucao de tool entram por `Deps`, com o modulo
+//  real carregado sob demanda. Em producao nada muda. No teste, a trava
+//  comercial pode ser provada offline, que e o unico jeito de ela virar
+//  regressao de verdade em vez de intencao.
+// ════════════════════════════════════════════════════════════════════════════
+
+export interface Deps {
+  carregarHistorico(sessaoId: string, limite?: number): Promise<{ papel: 'cliente' | 'leo'; texto: string }[]>
+  gravarTurno(
+    sessaoId: string,
+    textoCliente: string,
+    textoLeo: string,
+    medicao: {
+      saida: Saida
+      tecnicaOk: boolean
+      falhaTipo: FalhaTipo | null
+      cartoesUsados: string[]
+      fatosLidos: string[]
+      tokensEntrada: number
+      tokensSaida: number
+    },
+  ): Promise<void>
+  atualizarClassificacao(contatoId: string, campos: Record<string, unknown>, mensagemId: number | null): Promise<void>
+  executarTool(
+    nome: string,
+    argumentos: Record<string, any>,
+    embedder: Embedder,
+  ): Promise<{ conteudo: unknown; cartoes: string[]; fatos: string[] }>
+}
+
+let depsCache: Deps | null = null
+
+async function depsPadrao(): Promise<Deps> {
+  if (depsCache) return depsCache
+  const [db, tools] = await Promise.all([import('./db.js'), import('./tools.js')])
+  depsCache = {
+    carregarHistorico: db.carregarHistorico,
+    gravarTurno: db.gravarTurno,
+    atualizarClassificacao: db.atualizarClassificacao as Deps['atualizarClassificacao'],
+    executarTool: tools.executarTool,
+  }
+  return depsCache
+}
 
 // ════════════════════════════════════════════════════════════════════════════
 //  1. OS DOCUMENTOS, CARREGADOS POR TRILHA
@@ -175,7 +226,8 @@ export function podeInjetarGancho(resolucao: Resolucao, sinais: Sinais): boolean
 //  3. AS TRILHAS
 // ════════════════════════════════════════════════════════════════════════════
 
-const MARCA_LACUNA = '[LACUNA]'
+/** Exportada porque o teste precisa forcar a declaracao de lacuna sem adivinhar a string. */
+export const MARCA_LACUNA = '[LACUNA]'
 
 /**
  * Resolve com tool calling. O Node nao calcula: so repassa, coleta o que foi
@@ -187,6 +239,7 @@ const MARCA_LACUNA = '[LACUNA]'
 async function resolver(
   llm: Llm,
   embedder: Embedder,
+  deps: Deps,
   saida: Saida,
   entrada: Entrada,
   historico: { papel: 'cliente' | 'leo'; texto: string }[],
@@ -227,7 +280,7 @@ async function resolver(
 
     for (const chamada of r.chamadas) {
       try {
-        const res = await executarTool(chamada.nome, chamada.argumentos, embedder)
+        const res = await deps.executarTool(chamada.nome, chamada.argumentos, embedder)
         cartoesUsados.push(...res.cartoes)
         fatosLidos.push(...res.fatos)
         mensagens.push({ papel: 'leo', texto: JSON.stringify(res.conteudo) })
@@ -237,9 +290,7 @@ async function resolver(
         falhaTipo = 'lacuna_da_base'
         mensagens.push({
           papel: 'leo',
-          texto: JSON.stringify({
-            erro: erro instanceof ToolDesconhecida ? 'tool inexistente' : 'consulta falhou',
-          }),
+          texto: JSON.stringify({ erro: erro instanceof Error ? erro.message : 'consulta falhou' }),
         })
       }
     }
@@ -309,9 +360,10 @@ export async function responder(
   entrada: Entrada,
   llm: Llm,
   embedder: Embedder,
-  opcoes: { memoriaLigada?: boolean } = {},
+  opcoes: { memoriaLigada?: boolean; deps?: Deps } = {},
 ): Promise<Resposta> {
-  const historico = await db.carregarHistorico(entrada.sessaoId)
+  const deps = opcoes.deps ?? (await depsPadrao())
+  const historico = await deps.carregarHistorico(entrada.sessaoId)
 
   const { sinais, tokensEntrada: tkEntradaRoteador, tokensSaida: tkSaidaRoteador } =
     await classificar(llm, entrada, historico)
@@ -335,7 +387,7 @@ export async function responder(
       `${sinais.revelou?.cidade ? `, ${sinais.revelou.cidade}` : ''}.`
     : null
 
-  let resolucao = await resolver(llm, embedder, saida, entrada, historico, linhaDeContexto)
+  let resolucao = await resolver(llm, embedder, deps, saida, entrada, historico, linhaDeContexto)
 
   /**
    * 🔑 A CONSEQUENCIA DA CONSTRAINT.
@@ -368,7 +420,7 @@ export async function responder(
     : undefined
 
   // ── A GRAVACAO, EM DUAS TABELAS E UMA TRANSACAO ──────────────────────────
-  await db.gravarTurno(entrada.sessaoId, entrada.texto, texto, {
+  await deps.gravarTurno(entrada.sessaoId, entrada.texto, texto, {
     saida,
     tecnicaOk: resolucao.ok,
     falhaTipo: resolucao.falhaTipo,
@@ -379,7 +431,7 @@ export async function responder(
   })
 
   if (opcoes.memoriaLigada && sinais.revelou) {
-    await db.atualizarClassificacao(
+    await deps.atualizarClassificacao(
       entrada.contatoId,
       {
         regimeAlvo: sinais.revelou.regime_alvo,

@@ -10,5 +10,5 @@
     "types": ["node"],
     "paths": { "pg": ["./_stub-pg.d.ts"] }
   },
-  "files": ["tipos.ts", "db.ts", "tools.ts", "router.ts", "_stub-pg.d.ts"]
+  "include": ["*.ts", "testes/*.ts", "seed/*.ts"]
 }

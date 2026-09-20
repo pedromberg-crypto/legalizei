@@ -97,11 +97,30 @@ export interface PacoteEscalonamento {
   assunto: string
 }
 
+/**
+ * Uma mensagem no historico que vai ao modelo.
+ *
+ * 🔴 `ferramenta` NAO e um papel decorativo. O resultado de uma tool precisa
+ * chegar ao modelo como resultado de tool, com o nome e os argumentos da
+ * chamada que o produziu. Empurrar isso como se fosse fala do assistente
+ * funciona por acidente em alguns provedores e quebra no Gemini, que exige a
+ * dupla `functionCall` seguida de `functionResponse`. Foi por isso que o campo
+ * nasceu: sem ele o adaptador teria que adivinhar quais mensagens do assistente
+ * eram, na verdade, retorno de ferramenta.
+ */
+export interface MensagemLlm {
+  papel: 'cliente' | 'leo' | 'ferramenta'
+  texto: string
+  /** So em `ferramenta`: o nome da tool e os argumentos com que foi chamada. */
+  nome?: string
+  argumentos?: Record<string, unknown>
+}
+
 /** Contrato minimo do provedor de LLM. Trocar de modelo nao toca no roteador. */
 export interface Llm {
   completar(args: {
     sistema: string
-    mensagens: { papel: 'cliente' | 'leo'; texto: string }[]
+    mensagens: MensagemLlm[]
     tools?: DefinicaoTool[]
     jsonSchema?: object
   }): Promise<{

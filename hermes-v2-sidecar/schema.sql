@@ -279,7 +279,7 @@ CREATE TABLE conhecimento.cartao (
   --    vocabulario do produto e afasta do vocabulario de quem pergunta.
   --    Acao e restricao sao PAYLOAD: voltam inteiras, nunca sao pesquisadas.
   busca         text GENERATED ALWAYS AS (titulo || E'\n' || estado) STORED,
-  embedding     vector(1536),
+  embedding     vector(768),
 
   -- 🔴 Numero nao mora em texto vetorizado. Mora em `fatos`.
   CONSTRAINT cartao_sem_numero CHECK (
@@ -318,7 +318,7 @@ CREATE TABLE conhecimento.nota (
   trecho        text NOT NULL,
   ordem         smallint NOT NULL,
   busca         text GENERATED ALWAYS AS (assunto || E'\n' || trecho) STORED,
-  embedding     vector(1536),
+  embedding     vector(768),
   fonte         text NOT NULL,
   atualizado_em date NOT NULL DEFAULT current_date,
   CONSTRAINT nota_sem_numero CHECK (trecho !~ '(R\$|[0-9]+,[0-9]{2}|[0-9]+\s?%)')
@@ -542,7 +542,7 @@ COMMENT ON FUNCTION fatos.estimar_das IS
   'exige o valor fechado e recusa a estimativa vai para escalonamento.';
 
 -- O que a gente faz sobre isso? Busca semantica, so no que e texto.
-CREATE OR REPLACE FUNCTION conhecimento.buscar_cartao(p_embedding vector(1536), p_limite int DEFAULT 3)
+CREATE OR REPLACE FUNCTION conhecimento.buscar_cartao(p_embedding vector(768), p_limite int DEFAULT 3)
 RETURNS TABLE (id text, titulo text, estado text, acao text, restricao text,
                promessa conhecimento.promessa, onde_no_app text, distancia real)
 LANGUAGE sql STABLE AS $$
@@ -571,6 +571,6 @@ COMMENT ON FUNCTION conhecimento.buscar_cartao IS
 --       no agente foi ele abrir a nota que proibe especular e especular mesmo
 --       assim. Schema garante que o dado certo chega; nao garante que o modelo
 --       obedece. Isso continua sendo bateria de teste e olho humano.
---  * ⚠️ `vector(1536)` e a dimensao do modelo de embedding escolhido. Trocar de
+--  * ⚠️ `vector(768)` e a dimensao do modelo de embedding escolhido. Trocar de
 --       modelo e migracao com recarga de todos os embeddings, nao um ALTER.
 -- ============================================================================

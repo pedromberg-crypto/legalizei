@@ -1,0 +1,28 @@
+{
+  "name": "hermes-v2-sidecar",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Roteador Sidecar do Leo: 4 saidas, fatos relacionais por tool calling e conhecimento vetorial em pgvector.",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && node scripts/copiar-prompts.mjs",
+    "check": "tsc -p tsconfig.check.json",
+    "verificar": "npm run build && node .build/seed/verificar-carga.js",
+    "seed:cnae": "npm run build && node --env-file=.env .build/seed/carregar-cnae.js",
+    "seed:rag": "npm run build && node --env-file=.env .build/seed/carregar-conhecimento.js",
+    "teste": "npm run build && node --test .build/testes/router.test.js",
+    "teste:db": "npm run build && node --env-file=.env --test .build/testes/db.test.js",
+    "e2e": "npm run build && node --env-file=.env .build/testes/e2e.js"
+  },
+  "dependencies": {
+    "@google/genai": "^0.14.0",
+    "js-yaml": "^4.1.0",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.10.2",
+    "@types/pg": "^8.11.10",
+    "typescript": "^5.7.2"
+  }
+}

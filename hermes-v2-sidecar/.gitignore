@@ -1,3 +1,10 @@
+# 🔴 SEGREDO. O `.env` tem DATABASE_URL e chave de API.
+# Nunca versionar: um `git add` da pasta publicaria as duas no GitHub, e chave
+# que foi para repositorio se considera vazada, mesmo em repo privado.
+.env
+.env.*
+!.env.exemplo
+
 # Saida de `tsc -p tsconfig.build.json`, usada so para rodar os testes com
 # `node --test`. Nao versionar: o codigo-fonte e o `.ts`.
 .build/

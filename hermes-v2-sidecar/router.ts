@@ -22,7 +22,7 @@ import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import type {
-  Embedder, Entrada, FalhaTipo, Llm, Resolucao, Resposta, Saida, Sinais,
+  Embedder, Entrada, FalhaTipo, Llm, MensagemLlm, Resolucao, Resposta, Saida, Sinais,
   PacoteEscalonamento,
 } from './tipos.js'
 import { TOOLS } from './tools-def.js'
@@ -254,7 +254,7 @@ async function resolver(
       `Nao preencha o buraco com conhecimento geral.`,
   ].filter(Boolean).join('\n\n')
 
-  const mensagens = [...historico, { papel: 'cliente' as const, texto: entrada.texto }]
+  const mensagens: MensagemLlm[] = [...historico, { papel: 'cliente', texto: entrada.texto }]
   const cartoesUsados: string[] = []
   const fatosLidos: string[] = []
   let tokensEntrada = 0
@@ -283,13 +283,20 @@ async function resolver(
         const res = await deps.executarTool(chamada.nome, chamada.argumentos, embedder)
         cartoesUsados.push(...res.cartoes)
         fatosLidos.push(...res.fatos)
-        mensagens.push({ papel: 'leo', texto: JSON.stringify(res.conteudo) })
+        mensagens.push({
+          papel: 'ferramenta',
+          nome: chamada.nome,
+          argumentos: chamada.argumentos,
+          texto: JSON.stringify(res.conteudo),
+        })
       } catch (erro) {
         // 🔴 Tool que falha nao vira silencio nem improviso. Vira lacuna
         // declarada, e a trava comercial fecha por consequencia.
         falhaTipo = 'lacuna_da_base'
         mensagens.push({
-          papel: 'leo',
+          papel: 'ferramenta',
+          nome: chamada.nome,
+          argumentos: chamada.argumentos,
           texto: JSON.stringify({ erro: erro instanceof Error ? erro.message : 'consulta falhou' }),
         })
       }

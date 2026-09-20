@@ -6,9 +6,19 @@
     "strict": true,
     "noEmit": true,
     "skipLibCheck": true,
-    "typeRoots": ["../app/node_modules/@types"],
-    "types": ["node"],
-    "paths": { "pg": ["./_stub-pg.d.ts"] }
+    "types": [
+      "node"
+    ]
   },
-  "include": ["*.ts", "testes/*.ts", "seed/*.ts"]
+  "include": [
+    "*.ts",
+    "testes/*.ts",
+    "seed/*.ts",
+    "llm/*.ts"
+  ],
+  "exclude": [
+    "run-cartoes.ts",
+    "node_modules",
+    ".build"
+  ]
 }

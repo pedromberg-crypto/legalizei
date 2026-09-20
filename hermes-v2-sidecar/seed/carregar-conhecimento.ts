@@ -207,6 +207,11 @@ export function sanitizarNumeros(texto: string): string {
 export async function carregar(embedder: Embedder): Promise<void> {
   const { pool } = await import('../db.js')
 
+  // Falha de cobranca ou de nome de modelo aparece AQUI, antes de abrir
+  // transacao e antes de gastar a primeira chamada paga.
+  const { verificarAcesso } = await import('../llm/gemini.js')
+  await verificarAcesso()
+
   // ── Cartoes ───────────────────────────────────────────────────────────────
   const cartoes = parsearCartoes(readFileSync(join(RAIZ, 'CARTOES-PRODUTO.md'), 'utf8'))
 
@@ -216,10 +221,25 @@ export async function carregar(embedder: Embedder): Promise<void> {
     throw new Error(`esperado ${ESPERADO_CARTOES} cartoes, o parse achou ${cartoes.length}`)
   }
 
+  /**
+   * 🔑 COMMIT A CADA LOTE, nao no fim.
+   *
+   * Cada cartao custa uma chamada de rede ao modelo de embedding. Numa
+   * transacao unica, um `402` no cartao 40 joga fora os 39 que ja tinham
+   * vetor, e a proxima tentativa paga tudo de novo. Com lote pequeno, o
+   * trabalho pago fica pago, e o `ON CONFLICT DO UPDATE` faz a retomada ser so
+   * rodar o mesmo comando.
+   */
+  const LOTE = 10
   const cliente = await pool.connect()
   try {
     await cliente.query('BEGIN')
-    for (const c of cartoes) {
+    for (const [i, c] of cartoes.entries()) {
+      if (i > 0 && i % LOTE === 0) {
+        await cliente.query('COMMIT')
+        await cliente.query('BEGIN')
+        process.stdout.write(`\r  cartoes: ${i}/${cartoes.length}`)
+      }
       const vetor = await embedder.gerar(`${c.titulo}\n${c.estado}`)
       await cliente.query(
         `INSERT INTO conhecimento.cartao
@@ -301,12 +321,24 @@ export async function carregar(embedder: Embedder): Promise<void> {
   )
 }
 
-// Execucao direta: exige um Embedder de verdade, injetado por quem chama.
-if (process.argv[1] && process.argv[1].endsWith('carregar-conhecimento.ts')) {
-  console.error(
-    'Este script precisa de um Embedder. Importe `carregar(embedder)` do seu bootstrap,\n' +
-    'onde o provedor de embedding esta configurado. A dimensao TEM que bater com\n' +
-    '`vector(1536)` do schema: trocar de modelo e recarga, nao ALTER.',
+/**
+ * Execucao direta: monta o Embedder de verdade e carrega.
+ *
+ * 🔴 Nao existe modo "sem embedder". Ja apareceu neste repo um script auxiliar
+ * que carregava os cartoes com um vetor de zeros para "testar a insercao": com
+ * vetor constante toda busca devolve a MESMA distancia, entao o banco enche, a
+ * carga parece bem-sucedida e o agente passa a receber cartao aleatorio. Vetor
+ * falso e pior que coluna vazia, porque coluna vazia o `WHERE embedding IS NOT
+ * NULL` da busca exclui, e zero nao.
+ */
+if (process.argv[1]?.includes('carregar-conhecimento')) {
+  if (!process.env.DATABASE_URL) {
+    console.error('DATABASE_URL nao definida (use `node --env-file=.env`)')
+    process.exit(1)
+  }
+  const { criarEmbedder } = await import('../llm/gemini.js')
+  carregar(criarEmbedder()).then(
+    () => process.exit(0),
+    (e) => { console.error('\n', e); process.exit(1) },
   )
-  process.exit(1)
 }

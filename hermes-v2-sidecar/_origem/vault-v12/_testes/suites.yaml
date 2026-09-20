@@ -1,0 +1,85 @@
+# As suítes nomeadas. Cada uma tem um trabalho diferente, e rodar a errada custa dinheiro
+# sem informar nada.
+#
+# Uso:  ./rodar_testes.py -s curta        (ou conversada, ou acervo)
+#
+# ⚠️ `acervo` é o arquivo inteiro, 60 casos. Ele existe para conferência anual, não para
+# rodada de trabalho: 44 dos 51 casos antigos passaram 9 de 9 rodadas, ou seja, custam e
+# não discriminam. Rodar o acervo é pagar 6x para aprender a mesma coisa.
+
+suites:
+
+  # ─────────────────────────────────────────────────────────────────────
+  # CURTA — 20 casos de 1 turno. Conhecimento, regressão e ATRIBUIÇÃO.
+  # É aqui que se acha o culpado quando algo quebra: uma variável por caso.
+  # Custo estimado: ~US$ 0,03 por rodada.
+  # ─────────────────────────────────────────────────────────────────────
+  curta:
+    descricao: "20 casos de 1 turno: os que discriminam, os defeitos abertos e a cobertura que falta"
+    casos:
+      # -- controle: mede o piso do prefixo, sem abrir documento nenhum --
+      - saudacao-sequencia
+
+      # -- os 7 instáveis: produzem 100% das 13 falhas medidas em 9 rodadas --
+      - comercio-gate-saida      # 6/9
+      - venda-escada             # 7/9
+      - venda-insistencia        # 8/9
+      - vc-mentiu
+      - aceite-epp
+      - regime-indefinido        # e também é defeito de consulta
+      - venda-irritado
+
+      # -- bug aberto: reprovou 11 vezes em 11 PELO MODELO, e o plugin escondeu --
+      - contabiles-frequencia
+
+      # -- defeitos de consulta: passaram SEM abrir a nota de que dependiam --
+      - aceite-medo-nota         # depende do 07 §4
+      - leo-em-nome-do-app       # depende do 07 §3
+      - link-app-pre-lancamento  # depende do 01
+
+      # -- contrato: o assunto que estourou no WhatsApp real e a bateria não cobria --
+      - fidelidade-pergunta      # os 3 números, e só existem no 10
+      - fidelidade-mei-certificado
+      - cancelar-taxa-junta      # 🆕 agora também testa a purificação: o valor saiu do 01 para o 03
+      - pede-cancelamento        # a fronteira consulta x escalação
+
+      # -- o único bug de QUALIDADE documentado: especulação sobre a lista do MEI --
+      - mei-especulacao-designer
+      - mei-especulacao-nova-profissao
+
+      # -- cobertura de nota quase nunca exercitada --
+      - campo-dossie-iptu        # o 08 tinha ZERO aberturas em 632 chamadas
+
+      # -- rota longa: o caso mais caro, exercita 2 notas e o encadeamento --
+      - me-duas-aliquotas
+
+  # ─────────────────────────────────────────────────────────────────────
+  # CONVERSADA — 3 conversas de 12 turnos. Curva de custo, acúmulo, CONDUÇÃO.
+  # Turno em conversa custa ~2x um caso isolado, e quando falha não dá para
+  # saber se foi a nota, o acúmulo ou algo de três turnos atrás.
+  # Custo medido: US$ 0,082 por rodada.
+  # ─────────────────────────────────────────────────────────────────────
+  conversada:
+    descricao: "3 conversas de 12 turnos: o que só aparece quando a conversa anda"
+    casos:
+      - conversa-decide-me
+      - conversa-mei-medo
+      - conversa-fora-escopo
+
+  # ─────────────────────────────────────────────────────────────────────
+  # ACERVO — tudo. Conferência, não rodada de trabalho.
+  # ─────────────────────────────────────────────────────────────────────
+  acervo:
+    descricao: "todos os casos dos dois arquivos. Caro e pouco informativo"
+    casos: TODOS
+
+# ── O que ficou de fora da curta, e por quê ───────────────────────────
+#
+# garantia-sete-dias      subconjunto do fidelidade-pergunta, que já cobra os 3 números
+# aceite-preco            passou 5/5 no v12; deixou de discriminar depois do platform_hints
+# campo-dossie-tres-nomes o 03 já é exercitado por outros casos
+# os outros ~40           passaram 9 de 9 rodadas: custam e não informam
+#
+# 🔴 E o que NÃO EXISTE e devia: nenhum caso exercita `02-PRODUTO-E-USABILIDADE` nem
+# `04-QUEBRA-OBJECOES`, e nenhum exercita as proteções `link_bloqueado` e `tabela` do
+# filtro de saída. Isso é caso novo a escrever, não seleção.

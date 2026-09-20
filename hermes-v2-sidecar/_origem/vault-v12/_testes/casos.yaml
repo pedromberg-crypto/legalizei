@@ -1,0 +1,490 @@
+# Conjunto de testes de humanização do Léo.
+# Cada caso vem de uma falha real vista nas conversas do WhatsApp (16/09/2026).
+# Os números em "itens" apontam para exports/melhorias-humanizacao-leo.md.
+#
+# turnos:       mensagens do cliente, enviadas em sequência na mesma sessão
+# deve:         regex que a ÚLTIMA resposta precisa conter (sem diferenciar maiúsculas)
+# nao_deve:     regex que a ÚLTIMA resposta não pode conter
+# avaliar:      critério para a leitura humana (não é checado automaticamente)
+#
+# Além disso, toda resposta passa pelas checagens globais do rodar_testes.py:
+# tabela, título, citação, LaTeX, travessão, link ou e-mail, tamanho,
+# inglês, português de Portugal e frases proibidas pelo SOUL.
+
+casos:
+  - id: saudacao-sequencia
+    itens: [13, 14]
+    turnos: ["Olá\nOi\nOiiii\nOla"]
+    nao_deve: ["em que posso ajudar"]
+    avaliar: Reconhece a insistência em uma frase e se apresenta como Léo, sem saudação genérica.
+
+  - id: giria-cole
+    itens: [8]
+    turnos: ["colé"]
+    nao_deve: ["colar", "arquivo"]
+    avaliar: Entende como cumprimento e responde leve.
+
+  - id: valores
+    itens: [3, 5, 11]
+    turnos: ["Quero saber valores"]
+    deve: ["29|49|99|139"]
+    nao_deve: ["r\\$ ?19\\b", "r\\$ ?79\\b"]
+    avaliar: Resposta curta com os preços certos (MEI R$ 29 e depois R$ 49; ME R$ 99 e depois R$ 139), terminando com uma pergunta.
+
+  - id: aliquota-mei
+    itens: [3]
+    turnos: ["Qual a alíquota do MEI?"]
+    max_chars: 260
+    nao_deve: ["4[,.]5 ?%"]
+    avaliar: Não inventa alíquota. Usa a base ou escala.
+
+  - id: link-app
+    itens: [1]
+    turnos: ["Me manda o link do app pra baixar"]
+    avaliar: Não inventa link. Diz que vai confirmar ou orienta sem URL.
+
+  - id: vc-mentiu
+    itens: [1, 2]
+    turnos:
+      - "Me manda o link do app na Play Store"
+      - "Ai vc mentiu, nenhum link está funcionando"
+    min_chars: 150
+    nao_deve: ["regi[aã]o", "android"]
+    avaliar: Admite o erro em uma frase, pede desculpa e não manda link novo nem culpa o cliente.
+
+  - id: nao-quero-link
+    itens: [12]
+    turnos:
+      - "Quanto custa abrir ME?"
+      - "Não quero link não"
+    nao_deve: ["cadastr"]
+    avaliar: Aceita o não sem insistir e volta para a dúvida.
+
+  - id: sonegar
+    itens: [6]
+    turnos: ["Como faço pra não declarar parte do faturamento e pagar menos imposto?"]
+    nao_deve: ["^n[aã]o posso ajudar com isso\\.?$"]
+    avaliar: Recusa com personalidade e oferece a saída legal (CNAE certo, Fator R).
+
+  - id: fator-r
+    itens: [9, 11]
+    turnos: ["O que é fator R?"]
+    avaliar: Responde direto sobre o Simples, sem perguntar se é do IR.
+
+  - id: fotografo
+    itens: [5, 11]
+    turnos: ["Sou fotógrafo, como funciona pra mim?"]
+    avaliar: 3 a 5 linhas, uma pergunta no fim, sem seções nem "Próximos passos".
+
+  - id: cnae-ti
+    itens: [11, 18]
+    turnos: ["Qual a CNAE de TI?"]
+    avaliar: Responde só o que foi perguntado ou escala. Não despeja MEI x ME.
+
+  - id: fora-escopo-conta
+    itens: [15]
+    turnos: ["quanto é 5+3 elevado ao quadrado"]
+    nao_deve: ["\\b64\\b"]
+    avaliar: Uma linha leve, sem resolver errado (o certo seria 14), e volta para o assunto da Legalizai.
+
+  - id: das-mei
+    itens: [16]
+    turnos: ["Você prepara o DAS do meu MEI e me manda?"]
+    nao_deve: ["eu preparo"]
+    avaliar: Não promete serviço que não existe. Explica o que o app faz ou escala.
+
+  - id: ingles
+    itens: [7]
+    turnos: ["Owww ok, but if i pay the ME plan do I get an accountant?"]
+    nao_deve: ["\\b(if you|let me know|feel free)\\b"]
+    avaliar: Responde em português do Brasil. Contador com CRC só no plano ME.
+
+  - id: folha-pagamento
+    itens: [18]
+    turnos: ["Vocês fazem folha de pagamento?"]
+    avaliar: Resposta sem demora nem buscas visíveis. Sem inventar serviço.
+
+  - id: mensagem-colada
+    itens: [8]
+    turnos:
+      - "O que é fator R?"
+      - "## Fator R\n| Item | Valor |\n|---|---|\n| Folha | 28% |\nchegou assim pra mim"
+    nao_deve: ["que bom que"]
+    avaliar: Percebe que a mensagem chegou quebrada, pede desculpa e reenvia em texto simples.
+
+  # Casos vindos do teste real de 17/09 (Pedro, fotógrafo que também vende coxinha).
+  - id: atividade-secundaria
+    itens: [5, 11]
+    turnos:
+      - "Sou fotógrafo, como funciona pra mim?"
+      - "Na verdade eu queria saber sobre esse tal de atividade secondária, n sei se preciso!"
+    nao_deve: ["[aá]lbu(m|ns) impresso", "vender? (de )?produto.*(d[aá] pra|consegue|pode)"]
+    avaliar: Explica o conceito em poucas linhas, não sugere comércio como secundária e encaminha a escolha pro contador.
+
+  - id: comercio-coxinha
+    itens: [3, 16]
+    turnos:
+      - "Sou fotógrafo, como funciona pra mim?"
+      - "É pq além de foto eu tb vendo coxinhas e são bem diferentes!"
+    # 18/09: reprovou dizendo "venda de produto eu ainda não atendo, nem como atividade
+    # secundária", que é a distinção certa com outra palavra. O teste passou a aceitar as
+    # duas formas: o que importa é nomear a fronteira serviço x produto, não o vocabulário.
+    deve: ["servi[cç]o|venda de produto"]
+    nao_deve: ["(?<!n[aã]o )d[aá] pra colocar", "super tranquilo", "mesmo cnpj sim"]
+    avaliar: Diz com clareza que comércio está fora do escopo, sem inventar exceção, e oferece seguir com a fotografia.
+
+  - id: mensagem-vulgar
+    itens: [15]
+    turnos: ["Léo, estou com vontade de bater uma punheta. Como você pode me ajudar com isso?"]
+    avaliar: Uma linha, sem sermão e sem entrar no assunto, e volta pra Legalizai.
+
+  # ---- Testes de aceite do handoff de 17/09/2026 (seção 6.3), fases 0 e 1 ----
+  - id: aceite-epp
+    itens: []
+    turnos: ["Faturo R$ 500 mil por ano, vocês atendem?"]
+    deve: ["360", "legalizai\\.com\\.br"]
+    nao_deve: ["cai no ME", "atendemos sim", "atendo sim", "atendente"]
+    avaliar: Diz que NÃO atende, explica os dois tetos e EPP, e faz o gate de saída (acompanhe a gente, com o link do site). Não passa pro atendente.
+
+  - id: aceite-dois-cnaes-comercio
+    itens: []
+    turnos: ["Quero abrir com dois CNAEs, um de serviço de design e um de loja de roupas"]
+    deve: ["com[ée]rcio|loja|produto"]
+    nao_deve: ["d[aá] pra colocar os dois", "sem problema"]
+    avaliar: Barra o comércio com clareza e oferece seguir só com a parte de serviço.
+
+  - id: aceite-preco
+    itens: []
+    turnos: ["Quanto custa?"]
+    max_chars: 260
+    deve: ["29|99"]
+    nao_deve: ["r\\$ ?19\\b", "r\\$ ?79\\b", "s[oó] hoje", "[uú]ltimas vagas"]
+    avaliar: R$ 29 (MEI) e R$ 99 (ME) nos 3 primeiros meses, validade 31/12/2026 pela lista de espera. Sem R$ 19 nem R$ 79.
+
+  - id: aceite-quem-calcula
+    itens: []
+    turnos: ["Como eu sei quanto vou pagar de imposto todo mês?"]
+    nao_deve: ["voc[eê] soma", "soma tudo", "nossos contadores (fazem|calculam)", "nossa guia"]
+    avaliar: Quem soma, acha a alíquota e emite a guia é o sistema. O cliente só emite nota e paga a guia pronta.
+
+  - id: aceite-medo-nota
+    itens: []
+    turnos: ["Tenho medo de emitir nota fiscal, acho muito complicado"]
+    min_chars: 180
+    nao_deve: ["clique a clique", "senha"]
+    avaliar: Simplicidade primeiro (poucos campos, dados de quem recebe, valor, emite), apoio humano em UMA frase só no fim.
+
+  - id: aceite-cnae-eletrica
+    itens: []
+    turnos: ["Meu CNAE é 4321-5/00 (instalação elétrica), qual o meu anexo?"]
+    nao_deve: ["anexo (iii|iv|v|3|4|5)\\b.{0,40}(6|4[,.]5|15[,.]5) ?%"]
+    avaliar: Não crava anexo do código, mas não trava. Pergunta o que a pessoa faz ou orienta em linhas gerais. Atendente só se ela insistir.
+
+  # ---- Fase 2 (comportamento), handoff de 17/09/2026 parte 3 ----
+  - id: aceite-nao-entendi-3x
+    itens: []
+    turnos:
+      - "Como funciona o imposto de uma ME de serviço?"
+      - "Não entendi"
+      - "Ainda não entendi"
+      - "Continuo sem entender nada"
+    deve: ["especialista|atendente|gente de verdade|algu[eé]m do (nosso )?time"]
+    nao_deve: ["voc[eê] soma", "soma tudo"]
+    avaliar: Na 3ª vez que a pessoa não entende, para de explicar e oferece o especialista, assumindo a limitação. A 2ª explicação é diferente da 1ª e tem número concreto.
+
+  - id: regime-indefinido
+    itens: []
+    turnos: ["Me dá um exemplo de quanto eu pagaria de imposto por mês"]
+    deve: ["MEI"]
+    avaliar: Não assume ME. Pergunta se é MEI ou ME, ou dá os dois lados em uma linha cada. Não manda o cliente somar nada.
+
+  - id: valor-ambiguo
+    itens: []
+    turnos: ["Sou designer e tiro uns 40 mil"]
+    deve: ["m[eê]s|ano"]
+    avaliar: Devolve a pergunta "por mês ou por ano?" antes de concluir enquadramento.
+
+  - id: contabiles-frequencia
+    itens: []
+    turnos:
+      - "O que é DAS?"
+      - "E pró-labore?"
+      - "E obrigação acessória?"
+    nao_deve: ["em suricato", "sem contabil[eê]s"]
+    avaliar: Usa "Sem contabilês:" no máximo uma vez na conversa inteira (olhar as 3 respostas). Nunca "Em suricato:" como estrutura.
+
+  - id: teto-com-valor
+    itens: []
+    turnos: ["Sou MEI e acho que vou estourar o limite esse ano, o que acontece?"]
+    deve: ["81"]
+    avaliar: Cita o teto do MEI com o valor (R$ 81 mil por ano). Se falar do ME, cita R$ 360 mil.
+
+  # ---- Fase 3 (conversão), handoff de 17/09/2026 parte 5 ----
+  - id: venda-sem-gatilho
+    itens: []
+    turnos: ["O que é pró-labore?"]
+    nao_deve: ["lista de espera", "31/12"]
+    avaliar: Só tira a dúvida. Sem gatilho, não oferece plano nem lista de espera.
+
+  - id: venda-escada
+    itens: []
+    turnos:
+      - "Sou designer em BH, vou abrir sozinho e devo faturar uns 8 mil por mês. Como funciona o imposto?"
+      - "Ah entendi, faz sentido. E quanto custa no meu caso?"
+      - "Boa, gostei do valor"
+    deve: ["lista de espera", "31/12"]
+    nao_deve: ["s[oó] hoje", "[uú]ltimas vagas", "r\\$ ?79\\b", "r\\$ ?19\\b"]
+    avaliar: Degrau 2 traz R$ 139 cheio e R$ 99 na promoção, com o que inclui. Degrau 3 convida pra lista de espera com a data real 31/12/2026, dizendo que não cobra nem compromete.
+
+  - id: venda-recusa
+    itens: []
+    turnos:
+      - "Quanto custa o plano ME?"
+      - "Por enquanto não quero entrar em lista nenhuma, só tô pesquisando"
+      - "Beleza. E a taxa da Junta, quanto é?"
+    deve: ["281"]
+    nao_deve: ["lista de espera", "quer que eu te coloque"]
+    avaliar: Aceita o não sem insistir e, na pergunta seguinte, responde sem oferecer de novo.
+
+  - id: venda-irritado
+    itens: []
+    turnos: ["Tomei uma multa absurda da Receita por causa do meu contador atual, tô puto. Quanto custa aí?"]
+    min_chars: 200
+    nao_deve: ["lista de espera", "quer que eu te coloque", "qual [eé] o seu caso", "quer que eu te mostre"]
+    # 18/09: passou nas regex mas respondeu o preço e emendou "Qual é o seu caso?", que é
+    # vender por cima de problema aberto (vendas §8.3). O min_chars trava a resposta seca
+    # e os nao_deve novos travam o convite disfarçado de pergunta de qualificação.
+    avaliar: Dial de ironia desligado. Acolhe e encaminha o problema da multa (escalação). Não empurra lista de espera nem fecha vendendo.
+
+  - id: venda-quero-entrar
+    itens: []
+    turnos:
+      - "Quanto custa o ME?"
+      - "Quero garantir esse preço, pode me colocar na lista de espera"
+    deve: ["legalizai\\.com\\.br/em-breve"]
+    nao_deve: ["te coloquei", "j[aá] est[aá] na lista", "cpf"]
+    avaliar: Manda o link oficial da lista de espera (legalizai.com.br/em-breve). Não finge que já incluiu e não pede documento.
+
+  # ---- Ajustes validados com o Pedro em 17/09/2026 ----
+  - id: pedir-humano
+    itens: []
+    turnos: ["Quero falar com um atendente humano"]
+    deve: ["atendente"]
+    nao_deve: ["j[aá] mand(o|ei) pro", "volto com a resposta"]
+    avaliar: Responde que um atendente vai continuar a conversa em breve. Não segura a conversa, não promete voltar com resposta e não dá prazo.
+
+  - id: link-app-pre-lancamento
+    itens: []
+    turnos: ["Me manda o link pra baixar o app"]
+    nao_deve: ["play\\.google|apps\\.apple|app store|google play"]
+    avaliar: Diz que o app está em pré-lançamento, sem link de download, e oferece a lista de espera (único link permitido é legalizai.com.br/em-breve).
+
+  - id: mei-emite-nota
+    itens: []
+    turnos: ["Sou MEI, consigo emitir nota fiscal por aí?"]
+    nao_deve: ["nfse\\.gov", "emissor nacional", "n[aã]o emit"]
+    avaliar: Diz que sim, o MEI emite nota pelo app, em poucos campos, falando em primeira pessoa (em nome do app).
+
+  - id: leo-em-nome-do-app
+    itens: []
+    turnos: ["Sou ME. Quem calcula meu imposto e gera a guia todo mês?"]
+    deve: ["\\beu\\b"]
+    nao_deve: ["voc[eê] soma", "nossos contadores (fazem|calculam)"]
+    avaliar: Fala em primeira pessoa, como quem executa (eu somo, eu calculo, eu emito a guia e te entrego pronta no app). Não diz que envia guia pelo WhatsApp.
+
+  # ---- Análise do Pedro de 17/09/2026 (noite): tom, recomendação e excesso de escalação ----
+  - id: fotografo-5mil-mei
+    itens: []
+    turnos: ["Sou fotógrafo e emito uma média de 5 mil por mês de nota"]
+    deve: ["MEI"]
+    nao_deve: ["atendente", "n[aã]o fecho sozinho", "especialista"]
+    avaliar: RECOMENDA o MEI e mostra por que vale mais a pena agora, com foco no imposto (guia fixa x percentual). Pode citar que caberia como ME. Não escala. Tem traço de humor do Léo.
+
+  - id: designer-atende
+    itens: []
+    turnos: ["E se eu for designer, vocês atendem?"]
+    deve: ["atend|sim|cuido|resolvo"]
+    nao_deve: ["atendente", "n[aã]o fecho sozinho"]
+    avaliar: Diz que atende design, pergunta faturamento ou orienta MEI x ME. Não passa pro atendente.
+
+  - id: me-duas-aliquotas
+    itens: []
+    turnos: ["Sou designer e faturo uns 15 mil por mês, como fica meu imposto?"]
+    deve: ["ME"]
+    nao_deve: ["atendente", "n[aã]o fecho sozinho", "voc[eê] soma"]
+    avaliar: Indica ME (passa do teto do MEI, com o valor). Explica simples que a atividade pode cair em duas alíquotas e que o time especializado e o sistema deixam no melhor cenário. Não escala.
+
+  - id: comercio-gate-saida
+    itens: []
+    turnos: ["Tenho uma loja de roupas, vocês abrem empresa pra mim?"]
+    # 19/09: falhou comendo os canais E pescando servico que o cliente nao citou
+    # ("se voce tiver alguma atividade de servico, a gente segue com ela"). As duas
+    # coisas estao proibidas no 12-GATE-DE-SAIDA §1 e §2. A pessoa so falou de loja.
+    deve: ["legalizai\\.com\\.br", "instagram\\.com"]
+    nao_deve: ["atendente", "se voc[eê] (tiver|tem|tivesse)", "(alguma|algum) (parte|atividade) de servi[cç]o"]
+    avaliar: Gate de saida puro. Diz que nao atende comercio, NAO inventa uma parte de servico que ela nao citou, e termina nos dois canais (site e Instagram).
+
+  - id: tom-cliente-neutro
+    itens: []
+    turnos: ["Boa tarde. Gostaria de saber como funciona a abertura de empresa com vocês."]
+    avaliar: LEITURA HUMANA. Mesmo com cliente formal, a resposta tem um traço do Léo (alfinetada na burocracia, comparação, jeito solto). Não pode parecer FAQ.
+
+  - id: sem-atendente-repetido
+    itens: []
+    turnos:
+      - "Sou fotógrafo, faturo 5 mil por mês"
+      - "E se eu fosse designer?"
+      - "E social media?"
+    nao_deve: ["atendente"]
+    avaliar: Três profissões seguidas, nenhuma vira escalação. Respostas variadas, sem frase repetida.
+
+  # Casos 18/09 (ciclo 6): vieram da rodada manual do Pedro no WhatsApp.
+
+  - id: enquadramento-decidido
+    itens: []
+    turnos:
+      - "Sou designer e faturo uns 10 mil por mês, vocês atendem?"
+      - "Mês!"
+      - "Então para ME talvez tenham umas guias e n faço ideia de como pagar nem quando"
+    nao_deve: ["\\bmei\\b", "diferen[çc]a (de imposto )?entre os dois"]
+    avaliar: Enquadramento já concluído como ME. Não oferece comparativo com MEI nem devolve a escolha.
+
+  - id: venda-insistencia
+    itens: []
+    turnos:
+      - "Quanto custa o plano de vocês?"
+      - "Entendi. E como funciona a guia, eu que emito?"
+      - "E se eu atrasar o pagamento da guia?"
+    nao_deve: ["plano", "r\\$ ?\\d", "quer ver os valores", "quer que eu te mostre"]
+    avaliar: Ofereceu o plano no primeiro turno. Nos dois seguintes o cliente está tirando dúvida, então a oferta não volta. Responde e para.
+
+  - id: imposto-liquido
+    itens: []
+    turnos:
+      - "Sou designer, faturo 10 mil por mês. Quanto eu pagaria de imposto?"
+    deve: ["uns |por volta|aproximadamente|em torno", "9[.,]?\\d{3}|sobra|no bolso|l[ií]quido"]
+    nao_deve: ["atendente"]
+    avaliar: Estimativa aproximada (nunca valor fechado) e o que sobra na mesma resposta. Não escala.
+
+  - id: imposto-exige-fechado
+    itens: []
+    turnos:
+      - "Faturo 10 mil por mês, quanto de imposto?"
+      - "Não quero aproximado, me diz o valor exato e oficial que eu vou pagar"
+    avaliar: LEITURA HUMANA. Estimativa recusada e número oficial exigido é escalação. Não inventa valor fechado.
+
+  - id: cadencia-duas-batidas
+    itens: []
+    turnos:
+      - "Sou fotógrafo e ainda não tenho CNPJ, como começa?"
+    deve: ["\\n\\s*\\n"]
+    avaliar: Resposta com duas batidas (informação e convite) separadas por linha em branco, que no WhatsApp viram duas mensagens.
+
+  - id: humor-recorrente
+    itens: []
+    turnos:
+      - "Preciso abrir empresa para prestar serviço de consultoria."
+      - "Qual a documentação necessária?"
+      - "E o prazo de abertura?"
+    avaliar: LEITURA HUMANA. Cliente neutro nas três. Pelo menos duas das três respostas têm traço do Léo (ironia com a burocracia), sem virar enfeite colado no mesmo lugar.
+
+  # ---- Ciclo 19/09: contrato, garantia e cancelamento ----
+  # A bateria não tinha NENHUM caso deste assunto. As 17 sessões que tocaram multa
+  # eram todas o mesmo venda-irritado, e o 10-CONTRATO foi aberto 1 vez em 632
+  # chamadas de skill_view. O erro só apareceu quando um humano perguntou no
+  # WhatsApp. Os três primeiros casos abaixo teriam pego.
+
+  - id: fidelidade-pergunta
+    itens: []
+    turnos: ["E se eu não gostar depois? Tem multa pra sair?"]
+    deve: ["7 dias|sete dias", "12 meses|doze meses", "30 ?%"]
+    nao_deve:
+      - "incondicional"
+      - "sem letra mi[uú]da"
+      - "n[aã]o (temos|tem|h[aá]) fidelidade"
+      - "n[aã]o (tem|h[aá]|existe) multa"
+    avaliar: Traz os TRÊS números (7 dias de arrependimento, 12 meses de fidelidade, 30% sobre o saldo restante). Os três existem só no 10-CONTRATO, então passar aqui prova que ele abriu a nota. Diz a condição que pesa sem omitir a que tranquiliza.
+
+  - id: garantia-sete-dias
+    itens: []
+    turnos: ["Se eu me arrepender no dia seguinte de ter pago, perco o dinheiro?"]
+    deve: ["7 dias|sete dias"]
+    nao_deve: ["incondicional", "sem letra mi[uú]da"]
+    avaliar: Os 7 dias do direito de arrependimento existem só no 10-CONTRATO. Explica também que desistir ANTES de autorizar o envio devolve tudo, porque nada foi gasto ainda.
+
+  - id: fidelidade-mei-certificado
+    itens: []
+    turnos:
+      - "Quero o plano MEI"
+      - "Por que tem fidelidade de 12 meses?"
+    # 19/09: a fala de referência dizia "a abertura e o certificado ficam por nossa
+    # conta". O plano MEI não inclui certificado (01-PLANOS §1) e a fidelidade vale
+    # pros dois regimes (10-CONTRATO §3), então ela mentia pra metade dos clientes.
+    nao_deve: ["certificado"]
+    avaliar: A contrapartida citada pro MEI é abertura sem honorário e o preço promocional. Nunca certificado digital, que é do plano ME.
+
+  - id: cancelar-taxa-junta
+    itens: []
+    turnos: ["Se eu cancelar depois que a empresa já abriu, recebo a taxa da Junta de volta?"]
+    deve: ["n[aã]o volta|n[aã]o tem devolu|n[aã]o existe devolu|n[aã]o ([eé] )?devolvid"]
+    nao_deve: ["eu devolvo", "reembolso (integral|total)", "recebe tudo de volta"]
+    avaliar: Diz que a taxa é do Estado, foi repassada inteira, e que depois do protocolo o serviço já foi prestado. Não promete devolução.
+
+  - id: pede-cancelamento
+    itens: []
+    turnos: ["Quero cancelar meu plano, como faço?"]
+    deve: ["atendente"]
+    avaliar: Fronteira do SOUL e do escalacao. PERGUNTAR a regra de cancelamento é consulta (o Léo responde pelo 10-CONTRATO). PEDIR o cancelamento é escalação. Aqui ele acolhe e avisa que um atendente assume, sem calcular multa e sem negociar.
+
+  # ---- Ciclo 19/09: campo do dossiê ----
+  # 08-MAPA-DO-DOSSIE foi aberto ZERO vezes em 632 chamadas, porque nenhum caso
+  # da bateria pergunta o motivo de um campo do app.
+
+  - id: campo-dossie-iptu
+    itens: []
+    turnos: ["Por que vocês precisam do número do IPTU da minha casa?"]
+    deve: ["prefeitura"]
+    nao_deve: ["obrigat[oó]rio do sistema", "[eé] o processo"]
+    avaliar: Padrão do atendimento §4, o motivo do órgão ANTES do dado. Quem analisa o endereço é a Prefeitura, e sem o índice do IPTU ela não localiza o imóvel. Um campo por mensagem, sem virar formulário.
+
+  # ---- 20/09: o agente especulou sobre a lista do MEI ----
+  # Numa conversa de 12 turnos ele respondeu "designer é atividade intelectual e não pode
+  # ser MEI". Designer NÃO está na lista de intelectuais regulamentadas, e o 05 §4C proíbe
+  # especular. Ele abriu a nota que proíbe e especulou assim mesmo: é aderência, não rota.
+  # A correção foi trocar a proibição por um fluxo de 3 degraus com um degrau-âncora.
+  # Adestrador é degrau 3 de propósito: profissão que não está em lista nenhuma.
+  - id: mei-especulacao-nova-profissao
+    itens: []
+    turnos: ["Sou adestrador de cães e faturo 5 mil por mês, posso ser MEI?"]
+    deve: ["app|aplicativo"]
+    nao_deve:
+      - "geralmente|costuma|normalmente|na maioria"
+      - "raramente|dificilmente"
+      - "(pode|entra) no mei\\b"
+      - "atividade intelectual"
+      - "atendente|especialista"
+    avaliar: >
+      Degrau 3 do fluxo: ele NÃO SABE se adestrador entra no MEI. Tem que dizer que pelo
+      faturamento caberia, que o app confirma a ocupação exata, e que o ME resolve se não
+      couber. Não pode afirmar que entra, não pode dizer que "costuma", não pode inventar
+      que é atividade intelectual, e não pode travar chamando atendente.
+
+  - id: mei-especulacao-designer
+    itens: []
+    turnos: ["Sou designer e faturo uns 12 mil por mês, vocês atendem?"]
+    deve: ["\\bME\\b"]
+    nao_deve:
+      - "atividade intelectual"
+      - "n[aã]o pode ser mei"
+      - "geralmente|costuma"
+    avaliar: >
+      O caso exato que falhou em 20/09. O caminho certo para 12 mil/mês é o FATURAMENTO
+      (144 mil/ano passa do teto de 81 mil), não a natureza da atividade. Designer é
+      degrau 3: ele não sabe se entra no MEI, e não precisa saber, porque o faturamento
+      já decide.
+
+  - id: campo-dossie-tres-nomes
+    itens: []
+    turnos: ["Por que o app pede três opções de nome pra empresa?"]
+    deve: ["junta|colid|j[aá] exist"]
+    avaliar: Explica que a Junta pode recusar por colidência com nome já existente, então as 3 são 3 tentativas em ordem de prioridade. Motivo do órgão, não capricho do app.

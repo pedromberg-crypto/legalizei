@@ -1,0 +1,202 @@
+model:
+  default: gemini-3.1-flash-lite
+  provider: gemini
+agent:
+  max_turns: 150
+  platform_hints:
+    whatsapp:
+      replace: 'You are on WhatsApp. The formatting, length and tone rules in SOUL.md above are authoritative: follow them and ignore generic markdown guidance. No tables. Images (.jpg, .png, .webp) send as photos, videos (.mp4, .mov) play inline, other files arrive as documents.'
+  tool_use_enforcement: false
+  task_completion_guidance: false
+  environment_probe: false
+auxiliary:
+  background_review:
+    enabled: false
+display:
+  platforms:
+    whatsapp:
+      tool_progress: 'off'
+      interim_assistant_messages: false
+      long_running_notifications: false
+      busy_ack_detail: false
+  tool_progress: all
+skills:
+  disabled:
+  - airtable
+  - apple-notes
+  - apple-reminders
+  - architecture-diagram
+  - arxiv
+  - ascii-video
+  - baoyu-infographic
+  - blocked-page-recovery
+  - box
+  - claude-code
+  - claude-design
+  - codebase-inspection
+  - codex
+  - competitor-news-monitor
+  - computer-use
+  - design-md
+  - document-to-action-items
+  - docx
+  - dogfood
+  - email-inbox-triage
+  - findmy
+  - gif-search
+  - github
+  - google-workspace
+  - grounded-citations
+  - hermes-agent
+  - hermes-agent-skill-authoring
+  - himalaya
+  - humanizer
+  - imessage
+  - inspecting-hermes-desktop-dom
+  - llm-wiki
+  - manim-video
+  - maps
+  - meeting-action-items
+  - node-inspect-debugger
+  - notion
+  - obsidian
+  - opencode
+  - p5js
+  - pdf
+  - popular-web-designs
+  - powerpoint
+  - product-price-monitor
+  - python-debugpy
+  - requesting-code-review
+  - sdlc-review
+  - simplify-code
+  - songsee
+  - songwriting-and-ai-music
+  - spike
+  - systematic-debugging
+  - teams-meeting-pipeline
+  - test-driven-development
+  - weekly-review-planning
+  - xlsx
+  - xurl
+  - youtube-content
+plugins:
+  enabled:
+  - leo-formatador
+  - leo-cadencia
+onboarding:
+  seen:
+    tool_progress_prompt: true
+_config_version: 45
+platform_toolsets:
+  cli:
+  - skills
+  whatsapp:
+  - skills
+known_plugin_toolsets:
+  cli:
+  - a2a
+  - spotify
+  whatsapp:
+  - a2a
+  - spotify
+known_builtin_toolsets:
+  cli:
+  - browser
+  - clarify
+  - code_execution
+  - computer_use
+  - connections
+  - context_engine
+  - cronjob
+  - delegation
+  - discord
+  - discord_admin
+  - file
+  - homeassistant
+  - image_gen
+  - kanban
+  - memory
+  - session_search
+  - skills
+  - spotify
+  - stt
+  - terminal
+  - todo
+  - tts
+  - video
+  - video_gen
+  - vision
+  - web
+  - x_search
+  - yuanbao
+  whatsapp:
+  - browser
+  - clarify
+  - code_execution
+  - computer_use
+  - connections
+  - context_engine
+  - cronjob
+  - delegation
+  - discord
+  - discord_admin
+  - file
+  - homeassistant
+  - image_gen
+  - kanban
+  - memory
+  - session_search
+  - skills
+  - spotify
+  - stt
+  - terminal
+  - todo
+  - tts
+  - video
+  - video_gen
+  - vision
+  - web
+  - x_search
+  - yuanbao
+fallback_model:
+  provider: gemini
+  model: gemini-3.5-flash-lite
+
+# ── Security ──────────────────────────────────────────────────────────
+# Secret <REDIGIDO>
+# token<REDIGIDO>
+# responses before the model or user ever sees them. Set redact_secret<REDIGIDO>
+# to false to disable (e.g. when developing the redactor itself).
+# tirith pre-exec scanning is enabled by default when the tirith binary
+# is available. Configure via security.tirith_* key<REDIGIDO>
+# (TIRITH_ENABLED, TIRITH_BIN, TIRITH_TIMEOUT, TIRITH_FAIL_OPEN).
+#
+# security:
+#   redact_secret<REDIGIDO>
+#   tirith_enabled: true
+#   tirith_path: "tirith"
+#   tirith_timeout: 5
+#   tirith_fail_open: true
+
+# ── Fallback Model ────────────────────────────────────────────────────
+# Automatic provider failover when primary is unavailable.
+# Uncomment and configure to enable. Triggers on rate limits (429),
+# overload (529), service errors (503), or connection failures.
+#
+# Supported providers:
+#   openrouter   (OPENROUTER_API_KEY<REDIGIDO>
+#   openai-codex (OAuth — hermes auth) — OpenAI Codex
+#   nous         (OAuth — hermes auth) — Nous Portal
+#   zai          (ZAI_API_KEY<REDIGIDO>
+#   kimi-coding  (KIMI_API_KEY<REDIGIDO>
+#   kimi-coding-cn (KIMI_CN_API_KEY<REDIGIDO>
+#   minimax      (MINIMAX_API_KEY<REDIGIDO>
+#   minimax-cn   (MINIMAX_CN_API_KEY<REDIGIDO>
+#   bedrock      (AWS IAM / boto3)     — AWS Bedrock (Converse API)
+#
+# For custom OpenAI-compatible endpoints, add base_url and key<REDIGIDO>
+#
+# fallback_model:
+#   provider: openrouter
+#   model: anthropic/claude-sonnet-4

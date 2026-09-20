@@ -1,0 +1,4 @@
+name: leo-buscar-base
+version: 0.1.0
+description: "Leitura parcial das notas: devolve o trecho que responde, com a procedência de onde veio, em vez do arquivo inteiro."
+author: Legalizai

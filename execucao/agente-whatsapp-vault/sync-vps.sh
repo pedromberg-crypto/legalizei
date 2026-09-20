@@ -25,7 +25,12 @@ AQUI="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PARES=(
   "00-SOUL-personalidade.md:$REMOTO/SOUL.md"
   "skills-legalizai:$REMOTO/skills/legalizai"
+  "_plugins/leo-buscar-base:$REMOTO/plugins/leo-buscar-base"
 )
+
+# ⚠️ `_arquivo/` NUNCA entra aqui: é o ponto de retorno congelado, não conteúdo vivo.
+# ⚠️ O plugin sincroniza o CÓDIGO, não o `config.yaml`. Habilitar o plugin e declarar o
+#    toolset em `platform_toolsets` continua sendo à mão, no VPS.
 
 vermelho() { printf '\033[31m%s\033[0m\n' "$*"; }
 verde()    { printf '\033[32m%s\033[0m\n' "$*"; }
@@ -46,7 +51,9 @@ mostrar_diff() {
       # diff recursivo: traz o remoto para um temporário e compara
       local tmp; tmp="$(mktemp -d)"
       scp -q -r "$HOST:$destino" "$tmp/remoto" 2>/dev/null || mkdir -p "$tmp/remoto"
-      if diff -ru --color=never "$tmp/remoto" "$AQUI/$origem" > "$tmp/d.txt" 2>&1; then
+      # -x __pycache__: o bytecode é gerado dos dois lados, em versões de Python
+      # diferentes (3.11 local, 3.12 no VPS). Sem isto, todo diff acusa mudança falsa.
+      if diff -ru -x __pycache__ --color=never "$tmp/remoto" "$AQUI/$origem" > "$tmp/d.txt" 2>&1; then
         verde "  idêntico"
       else
         achou=1
@@ -114,6 +121,8 @@ case "${1:-diff}" in
         # apaga o remoto primeiro: senão arquivo removido aqui sobrevive lá
         ssh "$HOST" "rm -rf '$destino'"
         scp -q -r "$AQUI/$origem" "$HOST:$destino"
+        # bytecode da versão errada de Python trava o import no destino
+        ssh "$HOST" "find '$destino' -name __pycache__ -type d -exec rm -rf {} + 2>/dev/null" || :
       else
         scp -q "$AQUI/$origem" "$HOST:$destino"
       fi
@@ -141,6 +150,7 @@ case "${1:-diff}" in
       if [[ -d "$AQUI/$origem" ]]; then
         rm -rf "$AQUI/$origem"
         scp -q -r "$HOST:$destino" "$AQUI/$origem"
+        find "$AQUI/$origem" -name __pycache__ -type d -exec rm -rf {} + 2>/dev/null || :
       else
         scp -q "$HOST:$destino" "$AQUI/$origem"
       fi

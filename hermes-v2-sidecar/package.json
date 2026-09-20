@@ -15,7 +15,7 @@
     "e2e": "npm run build && node --env-file=.env .build/testes/e2e.js"
   },
   "dependencies": {
-    "@google/genai": "^0.14.0",
+    "@google/genai": "^2.23.0",
     "js-yaml": "^4.1.0",
     "pg": "^8.13.1"
   },

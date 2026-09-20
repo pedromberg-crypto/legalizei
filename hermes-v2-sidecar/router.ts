@@ -287,6 +287,7 @@ async function resolver(
           papel: 'ferramenta',
           nome: chamada.nome,
           argumentos: chamada.argumentos,
+          assinatura: chamada.assinatura,
           texto: JSON.stringify(res.conteudo),
         })
       } catch (erro) {
@@ -297,6 +298,7 @@ async function resolver(
           papel: 'ferramenta',
           nome: chamada.nome,
           argumentos: chamada.argumentos,
+          assinatura: chamada.assinatura,
           texto: JSON.stringify({ erro: erro instanceof Error ? erro.message : 'consulta falhou' }),
         })
       }

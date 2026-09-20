@@ -27,8 +27,7 @@
  */
 
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
-import { join, dirname } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { join } from 'node:path'
 import { randomUUID } from 'node:crypto'
 
 import yaml from 'js-yaml'
@@ -36,10 +35,17 @@ import yaml from 'js-yaml'
 import { responder, type Deps } from '../router.js'
 import { criarLlm } from '../llm/gemini.js'
 import { criarEmbedder } from '../llm/gemini.js'
-import type { FalhaTipo, Saida } from '../tipos.js'
+import type { Embedder, FalhaTipo, Llm, Saida } from '../tipos.js'
+import {
+  novoConsumo, contarLlm, contarEmbedder, buscarCambio, imprimirCusto,
+  calcularCusto, PRECO,
+} from './contador.js'
 
-const AQUI = dirname(fileURLToPath(import.meta.url))
-const RAIZ = join(AQUI, '..')
+// ⚠️ RAIZ vem do modulo que sobe a arvore ate achar o arquivo de cartoes. Nao
+//    e `join(AQUI, '..')` porque, rodando de `.build/testes/`, isso aponta para
+//    dentro do proprio `.build`, onde `_origem/` nao existe. Ja quebrou o
+//    verificador do mesmo jeito.
+import { RAIZ } from '../seed/carregar-conhecimento.js'
 const CASOS = join(RAIZ, '_origem', 'vault-v12', '_testes', 'casos.yaml')
 const SUITES = join(RAIZ, '_origem', 'vault-v12', '_testes', 'suites.yaml')
 
@@ -186,11 +192,16 @@ function checar(caso: Caso, resposta: string): string[] {
 //  4. A RODADA
 // ════════════════════════════════════════════════════════════════════════════
 
-async function rodarCaso(caso: Caso, llm: ReturnType<typeof criarLlm>, executarTool: Deps['executarTool']): Promise<Resultado> {
+async function rodarCaso(
+  caso: Caso,
+  llm: Llm,
+  embedder: Embedder,
+  executarTool: Deps['executarTool'],
+): Promise<Resultado> {
   const inicio = Date.now()
   const medicoes: Medicao[] = []
   const deps = depsDeTeste(medicoes, executarTool)
-  const embedder = criarEmbedder()
+
 
   // Sessao nova por caso. Os turnos de um mesmo caso compartilham a sessao,
   // porque varios casos do v12 existem justamente para medir o que o agente faz
@@ -270,12 +281,16 @@ async function principal(): Promise<void> {
   //    9 rodadas, ou seja, custam e nao discriminam.
   console.log(`rodando ${casos.length} caso(s)${todos ? ' (ACERVO INTEIRO, caro)' : ''}\n`)
 
-  const llm = criarLlm()
+  // 🔑 O envelope conta na BORDA DO PROVEDOR: o roteador so enxerga as chamadas
+  //    que passam por ele, e as de embedding ficariam de fora.
+  const consumo = novoConsumo()
+  const llm = contarLlm(criarLlm(), consumo)
+  const embedder = contarEmbedder(criarEmbedder(), consumo)
   const { executarTool } = await import('../tools.js')
 
   const resultados: Resultado[] = []
   for (const caso of casos) {
-    const r = await rodarCaso(caso, llm, executarTool)
+    const r = await rodarCaso(caso, llm, embedder, executarTool)
     resultados.push(r)
     const marca = r.passou ? '✔' : '✖'
     const rota = r.medicoes.map((m) => m.saida).join('>') || '?'
@@ -286,12 +301,18 @@ async function principal(): Promise<void> {
   // ── O relatorio ───────────────────────────────────────────────────────────
   const passaram = resultados.filter((r) => r.passou).length
   const cv = coeficienteDeVariacao(resultados.map((r) => r.chars).filter((c) => c > 0))
-  const tokensEntrada = resultados.flatMap((r) => r.medicoes).reduce((a, m) => a + m.tokensEntrada, 0)
-  const tokensSaida = resultados.flatMap((r) => r.medicoes).reduce((a, m) => a + m.tokensSaida, 0)
 
   console.log(`\nplacar: ${passaram}/${resultados.length}`)
-  console.log(`tokens: ${tokensEntrada} entrada · ${tokensSaida} saida`)
   console.log(`coeficiente de variacao do tamanho: ${cv.toFixed(2)} (alvo 0.45)`)
+
+  // ⚠️ O que o ROTEADOR reportou, que e sempre menor que o que o envelope viu:
+  //    ele nao enxerga as chamadas de embedding. A diferenca aparece de
+  //    proposito, porque e ela que mostra o custo que uma medicao interna
+  //    esconderia.
+  const tokensPeloRoteador = resultados
+    .flatMap((r) => r.medicoes)
+    .reduce((a, m) => a + m.tokensEntrada + m.tokensSaida, 0)
+  console.log(`tokens vistos pelo roteador: ${tokensPeloRoteador.toLocaleString('pt-BR')}`)
 
   // 🔴 O aviso que impede a leitura errada do placar.
   console.log(
@@ -309,10 +330,29 @@ async function principal(): Promise<void> {
   const semLastro = resultados.flatMap((r) => r.medicoes).filter((m) => !m.tecnicaOk).length
   if (semLastro > 0) console.log(`turnos sem lastro tecnico: ${semLastro}`)
 
+  // ── O CUSTO ───────────────────────────────────────────────────────────────
+  const cambio = await buscarCambio()
+  imprimirCusto(consumo, cambio, resultados.length)
+
   const dir = join(RAIZ, '_testes-saida')
   mkdirSync(dir, { recursive: true })
   const arquivo = join(dir, `e2e-${new Date().toISOString().slice(0, 10)}.json`)
-  writeFileSync(arquivo, JSON.stringify({ quando: new Date().toISOString(), resultados }, null, 2))
+  writeFileSync(
+    arquivo,
+    JSON.stringify(
+      {
+        quando: new Date().toISOString(),
+        placar: `${passaram}/${resultados.length}`,
+        consumo,
+        custo: calcularCusto(consumo, cambio),
+        cambio,
+        preco: PRECO,
+        resultados,
+      },
+      null,
+      2,
+    ),
+  )
   console.log(`\nrelatorio: ${arquivo}`)
 
   const { pool } = await import('../db.js')

@@ -36,7 +36,7 @@ export const DIMENSAO = 768
 const MODELO_EMBEDDING = 'gemini-embedding-001'
 
 /** O mesmo que roda em producao no Leo hoje, para o E2E medir o que existe. */
-const MODELO_PADRAO = 'gemini-3.1-flash-lite'
+const MODELO_PADRAO = process.env.GEMINI_MODELO ?? 'gemini-3.1-flash-lite'
 
 function cliente(): GoogleGenAI {
   const apiKey = process.env.GEMINI_API_KEY
@@ -149,7 +149,17 @@ function comoContents(mensagens: MensagemLlm[]): Content[] {
     if (m.papel === 'ferramenta') {
       contents.push({
         role: 'model',
-        parts: [{ functionCall: { name: m.nome ?? 'desconhecida', args: m.argumentos ?? {} } }],
+        parts: [{
+          functionCall: { name: m.nome ?? 'desconhecida', args: m.argumentos ?? {} },
+          // 🔴 A ASSINATURA TEM QUE VOLTAR JUNTO.
+          //
+          // O Gemini 3.x recusa com HTTP 400 um `functionCall` reenviado sem o
+          // `thoughtSignature` que ele proprio emitiu. Medido: dos 20 casos da
+          // suite curta, 8 morreram exatamente assim, todos no segundo turno,
+          // sempre depois da primeira tool. Toda conversa que usa ferramenta
+          // quebra sem isto.
+          ...(m.assinatura ? { thoughtSignature: m.assinatura } : {}),
+        }],
       })
       contents.push({
         role: 'user',
@@ -218,9 +228,20 @@ export function criarLlm(opcoes: OpcoesGemini = {}): Llm {
         },
       })
 
+      // A assinatura vem na PARTE, nao no `functionCalls` resumido do SDK.
+      // Por isso a lista sai das parts do candidato, casando pelo nome.
+      const parts = r.candidates?.[0]?.content?.parts ?? []
+      const assinaturaPorNome = new Map<string, string>()
+      for (const p of parts) {
+        if (p.functionCall?.name && p.thoughtSignature) {
+          assinaturaPorNome.set(p.functionCall.name, p.thoughtSignature)
+        }
+      }
+
       const chamadas = (r.functionCalls ?? []).map((c) => ({
         nome: c.name ?? '',
         argumentos: (c.args ?? {}) as Record<string, unknown>,
+        assinatura: assinaturaPorNome.get(c.name ?? ''),
       }))
 
       return {

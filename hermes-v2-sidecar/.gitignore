@@ -8,3 +8,7 @@
 # Saida de `tsc -p tsconfig.build.json`, usada so para rodar os testes com
 # `node --test`. Nao versionar: o codigo-fonte e o `.ts`.
 .build/
+
+# Saida das rodadas de E2E: texto integral das respostas do modelo, por dia.
+# Fica fora do git para nao versionar transcricao de rodada paga.
+_testes-saida/

@@ -114,6 +114,15 @@ export interface MensagemLlm {
   /** So em `ferramenta`: o nome da tool e os argumentos com que foi chamada. */
   nome?: string
   argumentos?: Record<string, unknown>
+  /**
+   * 🔴 A assinatura que o modelo emitiu junto da chamada.
+   *
+   * O Gemini 3.x RECUSA (HTTP 400) um `functionCall` reenviado sem ela. Nao e
+   * opcional na pratica: sem este campo, toda conversa que usa tool morre no
+   * segundo turno. Descoberto rodando os 20 casos do v12, onde 8 quebraram
+   * exatamente assim.
+   */
+  assinatura?: string
 }
 
 /** Contrato minimo do provedor de LLM. Trocar de modelo nao toca no roteador. */
@@ -125,7 +134,7 @@ export interface Llm {
     jsonSchema?: object
   }): Promise<{
     texto: string
-    chamadas: { nome: string; argumentos: Record<string, unknown> }[]
+    chamadas: { nome: string; argumentos: Record<string, unknown>; assinatura?: string }[]
     tokensEntrada: number
     tokensSaida: number
   }>

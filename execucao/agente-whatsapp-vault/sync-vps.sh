@@ -72,7 +72,18 @@ mostrar_diff() {
 
 confirmar() {
   local pergunta="$1"
-  read -r -p "$pergunta [digite SIM para confirmar]: " r
+  # LEO_SYNC_YES=1 pula a pergunta. Existe porque scp e ssh consomem o stdin do
+  # script, então "echo SIM | sync-vps.sh push" não funciona: o read pega EOF.
+  if [[ "${LEO_SYNC_YES:-}" == "1" ]]; then
+    amarelo "$pergunta → confirmado por LEO_SYNC_YES=1"
+    return 0
+  fi
+  # lê do terminal, não do stdin do script
+  if [[ -r /dev/tty ]]; then
+    read -r -p "$pergunta [digite SIM para confirmar]: " r < /dev/tty
+  else
+    vermelho "Sem terminal para confirmar. Use LEO_SYNC_YES=1 $0 $*"; exit 1
+  fi
   [[ "$r" == "SIM" ]] || { amarelo "Cancelado."; exit 0; }
 }
 

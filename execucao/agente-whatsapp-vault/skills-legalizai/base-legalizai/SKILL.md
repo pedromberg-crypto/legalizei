@@ -1,6 +1,6 @@
 ---
 name: base-legalizai
-description: Todo número, preço, prazo, regra e escopo oficial.
+description: "Notas oficiais: chame com file_path, nunca sozinha."
 ---
 
 # Base de conhecimento da Legalizai

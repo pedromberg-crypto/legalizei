@@ -1,0 +1,115 @@
+# TAXONOMIA DA BASE DO LÉO — a fonte, não a cópia.
+#
+# Quem lê este arquivo:
+#   * `verificar-frontmatter.py`, que reprova a nota que sair daqui
+#   * `_plugins/leo-buscar-base/__init__.py`, que monta o `description` do schema com ele
+#
+# 🔴 Os momentos ficavam escritos à mão nos dois. Era a duplicação que viemos matar,
+#    dentro da ferramenta que veio matá-la. Agora os dois leem daqui.
+#
+# ⚠️ ESTA LISTA É PROPOSTA, derivada das 55 seções que as 13 notas de hoje já têm.
+#    Ela não foi revisada pelo Pedro. Mexer nela é decisão de produto: a trava obedece
+#    ao arquivo, não o contrário.
+
+versao: 1
+data: 2026-09-20
+
+# ─────────────────────────────────────────────────────────────────────────────
+# MOMENTOS — onde a conversa está. Um trecho pode servir a mais de um.
+# ─────────────────────────────────────────────────────────────────────────────
+momentos:
+  qualificar: "descobrindo quem é a pessoa e se ela cabe no produto"
+  explicar:   "ela quer entender como funciona, antes de decidir"
+  ofertar:    "preço, plano, o que inclui"
+  fechar:     "ela decidiu e quer contratar, ou está no último degrau"
+  operar:     "já é cliente e está usando o app"
+  recusar:    "a resposta vai ser não"
+  escalar:    "sai do Léo e vai para gente de verdade"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ASSUNTOS — 18. 🔴 Cada um tem UM dono, e a trava reprova o segundo.
+# `onde_esta_hoje` é de onde o conteúdo sai na migração, não onde ele vai ficar.
+# ─────────────────────────────────────────────────────────────────────────────
+assuntos:
+  identidade-leo:
+    o_que_e: "quem é o Léo, o que ele nunca faz, e a verdade sobre ser automatizado"
+    onde_esta_hoje: ["00 §1", "00 §2", "00 §3", "00 §4", "00 §6"]
+  escalacao:
+    o_que_e: "quando a conversa sai do Léo e vai para gente"
+    onde_esta_hoje: ["00 §5"]
+  precos:
+    o_que_e: "o valor dos dois planos e o que cada um inclui"
+    onde_esta_hoje: ["01 §1", "01 §2"]
+  promocoes:
+    o_que_e: "lista de espera, preço de lançamento, e até quando ele vale"
+    onde_esta_hoje: ["01 §5"]
+  endereco-fiscal:
+    o_que_e: "sede em BH, a regra do apartamento, o IPTU, e o endereço da Legalizai"
+    onde_esta_hoje: ["03 §1", "09 §1"]
+  taxas-publicas:
+    o_que_e: "o que o cliente paga aos órgãos, e não à Legalizai"
+    onde_esta_hoje: ["03 §2", "03 §3"]
+  fluxo-do-app:
+    o_que_e: "a ordem real das etapas, e o que dá pra corrigir em cada uma"
+    onde_esta_hoje: ["02 §1", "02 §2", "02 §3", "02 §4"]
+  dossie-campos:
+    o_que_e: "campo a campo, com o motivo do órgão antes do pedido"
+    onde_esta_hoje: ["08"]
+  mei-elegibilidade:
+    o_que_e: "se uma profissão pode ser MEI. 🔴 Hoje mora em TRÊS notas, e causou duas alucinações"
+    onde_esta_hoje: ["03 §4", "05 §4C", "09 §0"]
+  mei-ou-me:
+    o_que_e: "qual dos dois recomendar, e por quê. O Léo responde, não passa pra frente"
+    onde_esta_hoje: ["05 §4A", "05 §4B"]
+  cnae:
+    o_que_e: "o conceito, e o contrato da ferramenta que consulta os 1332"
+    onde_esta_hoje: ["05 §1", "05 §5", "11"]
+  anexos-e-fator-r:
+    o_que_e: "Anexo III e V, o limiar de 28%, e a recomendação de 30%"
+    onde_esta_hoje: ["05 §2", "05 §3", "06 §3"]
+  calculo-do-imposto:
+    o_que_e: "como o DAS se forma, a alíquota efetiva, e as guias do sócio"
+    onde_esta_hoje: ["06 §1", "06 §2", "06 §4", "06 §6"]
+  rotina-mensal:
+    o_que_e: "o que acontece todo mês depois que a empresa nasce, e quem faz o quê"
+    onde_esta_hoje: ["02 §5", "06 §5", "07"]
+  escopo-atendimento:
+    o_que_e: "que tipo de empresa a gente atende, e o que a gente nunca promete"
+    onde_esta_hoje: ["09 §2", "09 §4", "09 §5"]
+  tetos-de-faturamento:
+    o_que_e: "os dois degraus, R$ 81 mil e R$ 360 mil, e o que acontece acima"
+    onde_esta_hoje: ["09 §3"]
+  contrato:
+    o_que_e: "garantia, fidelidade, multa, reembolso. O Léo não tem esses números em outro lugar"
+    onde_esta_hoje: ["10"]
+  recusa:
+    o_que_e: "como dizer não sem perder a pessoa"
+    onde_esta_hoje: ["12"]
+  objecoes:
+    o_que_e: "calibragem da resposta por estágio de funil"
+    onde_esta_hoje: ["04"]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# NÚMEROS COM DONO ÚNICO
+#
+# 🔴 A regra que nasceu do R$ 281,08, que vivia em 5 arquivos até 19/09. Consertar à
+#    mão não impede voltar; por isso virou trava. Um número aqui só pode ser escrito
+#    pela nota que o possui. Qualquer outra nota cita o dono com [[link]].
+#
+# ⚠️ A trava casa TEXTO, não valor: "281,08" e "281.08" são coisas diferentes para ela.
+#    Escreva a grafia exata que as notas usam.
+# ─────────────────────────────────────────────────────────────────────────────
+numeros_com_dono:
+  "281,08":     taxas-publicas
+  "81.000":     tetos-de-faturamento
+  "81 mil":     tetos-de-faturamento
+  "360.000":    tetos-de-faturamento
+  "360 mil":    tetos-de-faturamento
+  "4,8 milhões": tetos-de-faturamento
+  "31/12/2026": promocoes
+  "7 dias":     contrato
+
+# Onde o número pode aparecer mesmo sem ser o dono. Usado quando a citação é
+# estruturalmente necessária — uma tabela comparativa, por exemplo. Cada linha aqui
+# é uma exceção declarada, e por isso some do relatório em vez de virar ruído.
+numeros_liberados_em: {}

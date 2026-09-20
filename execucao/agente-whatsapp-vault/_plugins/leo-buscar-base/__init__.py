@@ -38,6 +38,35 @@ CONTEXTO_MAX = 1800     # um `##` maior que isto volta cortado, com aviso
 ASSUNTO_GENERICO = {"agente-whatsapp-vault", "agente", "leo", ""}
 
 
+def _momentos() -> list:
+    """Os momentos válidos saem de `_taxonomia.yaml`, que é a mesma fonte que o
+    `verificar-frontmatter.py` lê. Escrevê-los aqui de novo seria a duplicação que a
+    trava existe para pegar, dentro da ferramenta que veio matá-la.
+
+    Se o arquivo faltar, o schema sai sem a lista em vez de sair com uma lista velha:
+    uma lista errada faz o modelo filtrar por um momento que não existe e receber
+    vazio; uma lista ausente só o faz preferir `termo`, que sempre funciona."""
+    for cand in (Path(__file__).parent / "_taxonomia.yaml",
+                 Path(__file__).parent.parent.parent / "_taxonomia.yaml"):
+        if not cand.is_file():
+            continue
+        dentro, achados = False, []
+        for linha in cand.read_text(encoding="utf-8").splitlines():
+            if linha.startswith("momentos:"):
+                dentro = True
+                continue
+            if dentro:
+                if linha[:1] not in (" ", "	", ""):
+                    break
+                m = re.match(r"^  ([a-z][a-z0-9_-]*):", linha)
+                if m:
+                    achados.append(m.group(1))
+        if achados:
+            return achados
+    logger.warning("leo-buscar-base: _taxonomia.yaml não encontrado; schema sem a lista de momentos")
+    return []
+
+
 def _base() -> Path:
     home = Path(os.environ.get("HERMES_HOME", str(Path.home() / ".hermes")))
     return home / "skills" / "legalizai" / "base-legalizai" / "references"
@@ -169,14 +198,18 @@ def buscar_base(termo: str = None, assunto: str = None, momento: str = None,
     return json.dumps(saida, ensure_ascii=False)
 
 
+_MOMENTOS = _momentos()
+_LISTA = " | ".join(_MOMENTOS) if _MOMENTOS else ""
+
 SCHEMA = {
     "name": "buscar_base",
     "description": (
         "Busca TRECHOS das notas oficiais da Legalizai, em vez de carregar a nota inteira. "
-        "Cada trecho vem com a procedência [assunto · seção · momento]. Use quando souber o "
-        "que procura: é muito mais barato que skill_view. Filtre por momento da conversa "
-        "(qualificar, explicar, ofertar, fechar, recusar, escalar), por assunto, ou por termo "
-        "livre. Para ler uma nota inteira, continue usando skill_view."
+        "Cada trecho vem com a procedência [nota · seção · assunto]. Use quando souber o "
+        "que procura: é muito mais barato que skill_view. Filtre por momento da conversa"
+        + (f" ({_LISTA})" if _LISTA else "")
+        + ", por assunto, ou por termo livre. Para ler uma nota inteira, continue usando "
+        "skill_view."
     ),
     "parameters": {
         "type": "object",
@@ -186,7 +219,7 @@ SCHEMA = {
             "assunto": {"type": "string",
                         "description": "o dono do assunto, ex.: mei-elegibilidade, precos, contrato"},
             "momento": {"type": "string",
-                        "description": "qualificar | explicar | ofertar | fechar | recusar | escalar"},
+                        "description": _LISTA or "momento da conversa, quando a nota o declarar"},
             "limite": {"type": "integer",
                        "description": "máximo de trechos (padrão 3, teto 6)"},
         },

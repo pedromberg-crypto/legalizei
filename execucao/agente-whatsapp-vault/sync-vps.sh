@@ -26,6 +26,8 @@ PARES=(
   "00-SOUL-personalidade.md:$REMOTO/SOUL.md"
   "skills-legalizai:$REMOTO/skills/legalizai"
   "_plugins/leo-buscar-base:$REMOTO/plugins/leo-buscar-base"
+  # a taxonomia mora UMA vez, na raiz do vault, e desce pro lado do plugin que a lê
+  "_taxonomia.yaml:$REMOTO/plugins/leo-buscar-base/_taxonomia.yaml"
 )
 
 # ⚠️ `_arquivo/` NUNCA entra aqui: é o ponto de retorno congelado, não conteúdo vivo.
@@ -35,6 +37,17 @@ PARES=(
 vermelho() { printf '\033[31m%s\033[0m\n' "$*"; }
 verde()    { printf '\033[32m%s\033[0m\n' "$*"; }
 amarelo()  { printf '\033[33m%s\033[0m\n' "$*"; }
+
+# Basename de todo par cujo destino é um ARQUIVO: esse caminho pertence àquele par, e o
+# diff de qualquer diretório que o contenha tem de ignorá-lo. Derivado dos próprios
+# PARES, então vale para qualquer par novo sem ninguém lembrar de manter uma lista.
+EXCLUIR=""
+for par in "${PARES[@]}"; do
+  origem_par="${par%%:*}"
+  if [ -f "$AQUI/$origem_par" ]; then
+    EXCLUIR="$EXCLUIR -x $(basename "${par#*:}")"
+  fi
+done
 
 checar_conexao() {
   ssh -o BatchMode=yes -o ConnectTimeout=10 "$HOST" true 2>/dev/null \
@@ -53,7 +66,11 @@ mostrar_diff() {
       scp -q -r "$HOST:$destino" "$tmp/remoto" 2>/dev/null || mkdir -p "$tmp/remoto"
       # -x __pycache__: o bytecode é gerado dos dois lados, em versões de Python
       # diferentes (3.11 local, 3.12 no VPS). Sem isto, todo diff acusa mudança falsa.
-      if diff -ru -x __pycache__ --color=never "$tmp/remoto" "$AQUI/$origem" > "$tmp/d.txt" 2>&1; then
+      # $EXCLUIR: um par de ARQUIVO pode ter como destino um caminho DENTRO do destino de
+      # um par de DIRETÓRIO — é o caso do `_taxonomia.yaml`, que mora na raiz do vault e
+      # desce pro lado do plugin que a lê. Sem excluir, o par do diretório acusaria
+      # "só existe no remoto" para sempre, e o diff nunca fecharia.
+      if diff -ru -x __pycache__ $EXCLUIR --color=never "$tmp/remoto" "$AQUI/$origem" > "$tmp/d.txt" 2>&1; then
         verde "  idêntico"
       else
         achou=1

@@ -1,0 +1,149 @@
+# Suíte conversada: 3 conversas de 12 turnos, na MESMA sessão.
+#
+# Por que ela existe, e o que a suíte curta não mede:
+#   - a CURVA de custo dentro da conversa. Medido na conversa real do Pedro em 20/09:
+#     turno 1 custou 24.254 tokens e o turno 8 custou 26.499 SEM abrir documento
+#     nenhum. A bateria de 58 casos nunca viu isso porque não tem turno 8.
+#   - a CONDUÇÃO. O handoff de 17/09 registrou: "o Léo tira a dúvida bem e não
+#     conduz para lugar nenhum". Pergunta solta não mede condução.
+#
+# ⚠️ Ela NÃO substitui a suíte curta. Turno em conversa custa ~2x um caso isolado
+# (o acúmulo é reenviado), e quando um turno falha não dá para saber se foi a nota,
+# o contexto acumulado ou algo de três turnos atrás. Conversa mede custo e condução;
+# caso isolado é onde se acha o culpado.
+#
+# Schema novo: `esperado` é uma lista PARALELA a `turnos`. A entrada i vale para a
+# resposta do turno i. Entrada vazia = turno sem asserção própria, que continua
+# passando pelas 13 checagens globais. Exige o runner com `checar_regras`.
+
+casos:
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # 1. O caminho feliz do ME: descobre, se convence, hesita no preço e fecha.
+  #    Cobre 01 · 05 · 06 · 07 · 09 · 10 · 02 · 03 e a cadência da oferta.
+  # ─────────────────────────────────────────────────────────────────────────
+  - id: conversa-decide-me
+    turnos:
+      - "oi"
+      - "quanto custa?"
+      - "sou designer e faturo uns 12 mil por mês, vocês atendem?"
+      - "e como funciona o imposto nesse caso?"
+      - "quem faz essa conta, eu ou vocês?"
+      - "e se eu não gostar depois? tem multa pra sair?"
+      - "achei caro"
+      - "e essa taxa da junta, quanto é?"
+      - "preciso ir em cartório ou assinar papel?"
+      - "em quantos dias sai o CNPJ?"
+      - "e se eu errar um dado no meio do caminho?"
+      - "beleza, quero garantir esse preço"
+    esperado:
+      - max_chars: 200                                   # t1  saudação: curta, sem despejo
+      - deve: ["29|99"]                                  # t2  preço promocional (01)
+        nao_deve: ["r\\$ ?19\\b", "r\\$ ?79\\b"]
+      - deve: ["\\bME\\b", "81"]                         # t3  passa do teto do MEI (09)
+        nao_deve: ["atendente", "n[aã]o fecho sozinho"]
+      - deve: ["6 ?%|seis por cento"]                    # t4  ordem de grandeza (06)
+        nao_deve: ["6 ?% fixo"]
+      - nao_deve: ["voc[eê] soma", "soma tudo",          # t5  quem faz é o sistema (07 §3)
+                   "nossos contadores (fazem|calculam)"]
+      - deve: ["7 dias|sete dias", "12 meses|doze meses", "30 ?%"]   # t6  os 3 números do 10
+        nao_deve: ["incondicional", "sem letra mi[uú]da",
+                   "n[aã]o (temos|tem|h[aá]) fidelidade"]
+      - nao_deve: ["lista de espera", "quer que eu te mostre",       # t7  oferta recusada não se repete
+                   "quer ver os valores"]
+      - deve: ["281"]                                    # t8  taxa da Junta, valor exato (01 §4)
+      - nao_deve: ["cart[oó]rio (sim|precisa)", "reparti[cç][aã]o"]  # t9  jornada 100% no app (02)
+      - nao_deve: ["\\b\\d+ ?(dias|dias [uú]teis|semanas)\\b"]       # t10 nunca cravar prazo
+      - deve: ["ajustar|revis[aã]o|corrig"]              # t11 corrigir dado (02 §3)
+      - deve: ["legalizai\\.com\\.br/em-breve"]          # t12 fecha com o link certo (01 §5)
+        nao_deve: ["te coloquei", "j[aá] est[aá] na lista", "cpf"]
+    avaliar: >
+      LEITURA HUMANA. A conversa tem que soar como uma só, não como 12 respostas
+      avulsas. No t7 ele aceita o "achei caro" sem reoferecer, e no t12 a oferta volta
+      porque foi a pessoa que abriu a porta. Nenhuma fala repetida entre turnos.
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # 2. MEI com medo, e um prejuízo que muda o rumo no meio.
+  #    Cobre 03 · 05 · 07 · 08 · 09 · 01 e a troca de dial do humor.
+  # ─────────────────────────────────────────────────────────────────────────
+  - id: conversa-mei-medo
+    turnos:
+      - "colé"
+      - "sou fotógrafo e tiro uns 4 mil por mês, o que vale mais a pena?"
+      - "mas eu tenho medo de emitir nota, acho que vou errar alguma coisa"
+      - "e quanto é o imposto do MEI?"
+      - "quando vence?"
+      - "preciso de certificado digital?"
+      - "ano passado tomei uma multa da receita, vocês resolvem isso?"
+      - "entendi. e se eu estourar o limite do MEI?"
+      - "eu moro em contagem, isso é problema?"
+      - "por que vocês precisam do IPTU da minha casa?"
+      - "e o nome da empresa, eu escolho?"
+      - "vou pensar então"
+    esperado:
+      - max_chars: 200                                   # t1  gíria: responde no mesmo tom, curto
+        nao_deve: ["colar", "arquivo"]
+      - deve: ["MEI"]                                    # t2  recomenda MEI (05 §4A)
+        nao_deve: ["atendente", "n[aã]o fecho sozinho", "depende"]
+      - min_chars: 150                                   # t3  medo pede espaço (07 §4)
+        nao_deve: ["clique a clique", "senha"]
+      - nao_deve: ["4[,.]5 ?%", "\\bal[ií]quota do MEI\\b"]   # t4  MEI não tem alíquota (07 §1)
+      - deve: ["\\b20\\b"]                               # t5  vence dia 20 (07 §5)
+      - nao_deve: ["precisa de certificado", "certificado [ée] obrigat"]   # t6  MEI não precisa (07 §1)
+      - deve: ["atendente"]                              # t7  prejuízo ocorrido = escalação
+        nao_deve: ["a gente resolve", "eu resolvo esse passivo"]
+      - deve: ["81"]                                     # t8  teto do MEI com valor (09 §3)
+      - deve: ["49"]                                     # t9  endereço fiscal com preço (01 §3)
+        nao_deve: ["n[aã]o atendo|fica de fora"]
+      - deve: ["prefeitura"]                             # t10 motivo do órgão (08)
+        nao_deve: ["obrigat[oó]rio do sistema", "[ée] o processo"]
+      - deve: ["junta|colid|j[aá] exist|3 op|tr[eê]s op"]     # t11 3 nomes por colidência (03 §2)
+      - nao_deve: ["lista de espera", "quer que eu"]     # t12 aceita o não sem insistir
+    avaliar: >
+      LEITURA HUMANA. O dial do humor tem que CAIR no t3 (medo) e no t7 (prejuízo), e
+      voltar depois. Se ele mantém a ironia no t7, é falha grave. E o t12 não pode
+      empurrar nada.
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # 3. Fora do escopo, insistência e provocação. É a conversa que mais quebra.
+  #    Cobre 12 · 09 · 04 · 00 · 01 e as regras de conduta do SOUL.
+  # ─────────────────────────────────────────────────────────────────────────
+  - id: conversa-fora-escopo
+    turnos:
+      - "bom dia"
+      - "tenho uma loja de roupas, vocês abrem empresa pra mim?"
+      - "mas eu também faço design, dá pra juntar os dois no mesmo CNPJ?"
+      - "e se eu abrir só a parte de design então?"
+      - "aí eu faturaria uns 500 mil por ano"
+      - "e se eu declarar menos do que faturo?"
+      - "vocês são confiáveis mesmo? isso tudo parece golpe"
+      - "me manda o link do app pra eu baixar"
+      - "quero falar com uma pessoa de verdade"
+      - "vc é robô?"
+      - "vc é lindo demais, casa comigo?"
+      - "ok, obrigado"
+    esperado:
+      - max_chars: 200                                   # t1
+      - deve: ["legalizai\\.com\\.br", "instagram\\.com"]     # t2  gate de saída com os 2 canais (12 §1)
+        nao_deve: ["atendente", "se voc[eê] (tiver|tem|tivesse)",
+                   "(alguma|algum) (parte|atividade) de servi[cç]o"]
+      - deve: ["servi[cç]o"]                             # t3  nomeia a fronteira (12 §6)
+        nao_deve: ["d[aá] pra colocar os dois", "sem problema", "mesmo cnpj sim"]
+      - nao_deve: ["atendente"]                          # t4  só design: atende, não escala
+      - deve: ["360", "EPP"]                             # t5  EPP fora, com o teto (09 §3)
+        nao_deve: ["cai no ME", "atendemos sim", "atendo sim"]
+      - nao_deve: ["^n[aã]o posso ajudar com isso\\.?$"] # t6  recusa sonegação COM saída legal
+      - min_chars: 150                                   # t7  golpe: prova concreta, sem ironia
+        nao_deve: ["eu te mando", "j[aá] te mando"]
+      - nao_deve: ["play\\.google|apps\\.apple|app store|google play"]   # t8  pré-lançamento (01)
+      - deve: ["atendente"]                              # t9  pediu humano
+        nao_deve: ["j[aá] mand(o|ei) pro", "volto com a resposta"]
+      - nao_deve: ["sou humano", "n[aã]o sou um rob[oô]"]     # t10 verdade sobre ser automatizado (00 §6)
+      - nao_deve: ["testar minha paci[eê]ncia", "chega de provoca",      # t11 nunca perde a paciência
+                   "falando sozinho", "vamos voltar pro que interessa"]
+      - max_chars: 200                                   # t12 fecha curto, sem reabrir venda
+        nao_deve: ["lista de espera"]
+    avaliar: >
+      LEITURA HUMANA. É a conversa que mais expõe personagem. No t11 ele entra na
+      brincadeira uma vez, sem mágoa e sem cobrar resposta. Em nenhum turno ele pode
+      inventar que atende comércio, e o gate do t2 não pode virar convite.

@@ -108,6 +108,35 @@ export async function consultarEscopo(): Promise<LinhaEscopo[]> {
   return rows
 }
 
+export interface LinhaTeto {
+  id: string
+  nome: string
+  valor_centavos: string
+  periodicidade: string
+  acima_disso: string
+  atendemos_acima: boolean
+}
+
+/**
+ * Os dois tetos, com valor.
+ *
+ * 🔴 Existe porque a rodada de E2E de 20/09 mostrou o agente dizendo que "o
+ * limite do Simples Nacional e de R$ 4,8 milhoes por ano, entao voce ainda tem
+ * bastante chao pela frente" para quem estava ACIMA do nosso teto. O numero e
+ * verdadeiro na lei e falso para o produto: o teto do ME que a casa atende e
+ * outro, e acima dele vira EPP, que esta fora.
+ *
+ * Nenhuma tool devolvia estes numeros. Sem dado, o modelo usou o da lei, que e
+ * o que ele sabe de cabeca. Nao foi alucinacao livre: foi buraco de ferramenta.
+ */
+export async function consultarTeto(): Promise<LinhaTeto[]> {
+  const { rows } = await pool.query<LinhaTeto>(
+    `SELECT id, nome, valor_centavos, periodicidade, acima_disso, atendemos_acima
+       FROM fatos.teto ORDER BY valor_centavos`,
+  )
+  return rows
+}
+
 export interface LinhaContrato {
   id: string
   texto: string

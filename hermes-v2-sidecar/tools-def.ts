@@ -65,16 +65,45 @@ export const TOOLS: DefinicaoTool[] = [
   {
     nome: 'buscar_cartao',
     descricao:
-      'O que o produto faz sobre a situacao que a pessoa descreveu. Devolve Estado, Acao e ' +
-      'Restricao juntos, e o campo promessa: pode (fale em primeira pessoa), parcial (fale ' +
-      'so da parte que existe) e nao (nao prometa e nao descreva como se existisse). ' +
-      'Atencao: promessa nao NAO autoriza negar de cabeca.',
+      'USE SEMPRE que a pessoa perguntar o que o app FAZ, se ele resolve alguma coisa, ou ' +
+      'descrever uma situacao do dia a dia da empresa (perdi o prazo, preciso emitir nota, ' +
+      'quero contratar alguem, como funciona tal parte). Devolve Estado, Acao e Restricao ' +
+      'juntos, e o campo promessa: pode (fale em primeira pessoa), parcial (fale so da ' +
+      'parte que existe) e nao (nao prometa e nao descreva como se existisse). Atencao: ' +
+      'promessa nao NAO autoriza negar de cabeca. ' +
+      'Esta tool e sobre CAPACIDADE do produto e nao tem preco, link nem data: numero vem ' +
+      'de consultar_preco ou consultar_contrato, link e regra vem de buscar_base.',
     parametros: {
       type: 'object',
       properties: {
         situacao: { type: 'string', description: 'A situacao da pessoa, nas palavras dela.' },
       },
       required: ['situacao'],
+    },
+  },
+  {
+    nome: 'buscar_base',
+    descricao:
+      'OBRIGATORIA antes de escrever qualquer LINK, endereco de site, rede social, data de ' +
+      'campanha, condicao de promocao, o que a lista de espera garante, regra de orgao ' +
+      'publico (prefeitura, junta, receita), regra de atendimento ou procedimento que as ' +
+      'outras tools nao cobrem. Busca por assunto no texto da base de conhecimento. ' +
+      'REGRA DURA: voce nao escreve link, endereco nem data que nao tenha lido AGORA aqui. ' +
+      'Nao existe link que voce saiba de cabeca. Se a busca nao trouxer, diga que vai ' +
+      'confirmar com o time. ' +
+      'Na duvida entre esta e as outras, chame esta tambem: uma consulta a mais custa pouco, ' +
+      'uma frase inventada custa o cliente.',
+    parametros: {
+      type: 'object',
+      properties: {
+        assunto: {
+          type: 'string',
+          description:
+            'O que voce precisa saber, em palavras: "links oficiais e lista de espera", ' +
+            '"regra da prefeitura sobre apartamento", "ate quando vale a promocao".',
+        },
+      },
+      required: ['assunto'],
     },
   },
   {
@@ -89,8 +118,12 @@ export const TOOLS: DefinicaoTool[] = [
     nome: 'consultar_escopo',
     descricao:
       'A lista do que a casa atende e do que nao atende, com a saida sugerida para quem ' +
-      'cai fora. Fora do escopo NAO e escalonamento: nenhum atendente resolve o que o ' +
-      'produto nao faz.',
+      'cai fora, E OS DOIS TETOS DE FATURAMENTO com valor. Fora do escopo NAO e ' +
+      'escalonamento: nenhum atendente resolve o que o produto nao faz. ' +
+      'OBRIGATORIA sempre que a pessoa disser quanto fatura ou perguntar ate quanto pode ' +
+      'faturar. 🔴 O teto que importa e o do ME que A CASA atende, nao o teto do Simples ' +
+      'Nacional: acima do nosso, vira EPP e a casa NAO atende. Nunca diga que ela "ainda ' +
+      'tem chao" com base no limite da lei.',
     parametros: { type: 'object', properties: {} },
   },
 ]

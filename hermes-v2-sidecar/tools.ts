@@ -75,8 +75,27 @@ export async function executarTool(
     }
 
     case 'consultar_escopo': {
-      const linhas = await db.consultarEscopo()
-      return { conteudo: linhas, cartoes: [], fatos: ['escopo'] }
+      // 🔑 Escopo e teto voltam JUNTOS, numa chamada so. Separados, o modelo
+      //    lia o escopo, via "servico em BH, tudo certo" e respondia sem nunca
+      //    olhar o limite de faturamento. Quem pergunta "atende meu caso?" e
+      //    quem diz quanto fatura estao fazendo a MESMA pergunta.
+      const [escopo, tetos] = await Promise.all([db.consultarEscopo(), db.consultarTeto()])
+      return { conteudo: { escopo, tetos }, cartoes: [], fatos: ['escopo', 'teto'] }
+    }
+
+    case 'buscar_base': {
+      // A mesma doutrina do cartao: embeda-se o ASSUNTO procurado, e o trecho
+      // volta inteiro como payload.
+      const vetor = await embedder.gerar(String(argumentos.assunto ?? ''))
+      const linhas = await db.buscarNota(vetor, 4)
+      return {
+        conteudo: linhas,
+        cartoes: [],
+        // Marcado como `nota:` e nao `fato:` de proposito: no relatorio da
+        // rodada da para ver quanto da resposta veio de texto e quanto veio de
+        // tabela, que e a pergunta de arquitetura que a primeira rodada abriu.
+        fatos: linhas.map((l) => `nota:${l.id}`),
+      }
     }
 
     default:

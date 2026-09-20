@@ -145,36 +145,56 @@ function normalizar(v: number[]): number[] {
 function comoContents(mensagens: MensagemLlm[]): Content[] {
   const contents: Content[] = []
 
-  for (const m of mensagens) {
-    if (m.papel === 'ferramenta') {
+  for (let i = 0; i < mensagens.length; i++) {
+    const m = mensagens[i]
+
+    if (m.papel !== 'ferramenta') {
       contents.push({
-        role: 'model',
-        parts: [{
-          functionCall: { name: m.nome ?? 'desconhecida', args: m.argumentos ?? {} },
-          // 🔴 A ASSINATURA TEM QUE VOLTAR JUNTO.
-          //
-          // O Gemini 3.x recusa com HTTP 400 um `functionCall` reenviado sem o
-          // `thoughtSignature` que ele proprio emitiu. Medido: dos 20 casos da
-          // suite curta, 8 morreram exatamente assim, todos no segundo turno,
-          // sempre depois da primeira tool. Toda conversa que usa ferramenta
-          // quebra sem isto.
-          ...(m.assinatura ? { thoughtSignature: m.assinatura } : {}),
-        }],
-      })
-      contents.push({
-        role: 'user',
-        parts: [{
-          functionResponse: {
-            name: m.nome ?? 'desconhecida',
-            response: seguroComoObjeto(m.texto),
-          },
-        }],
+        role: m.papel === 'cliente' ? 'user' : 'model',
+        parts: [{ text: m.texto }],
       })
       continue
     }
+
+    /**
+     * 🔴 CHAMADAS PARALELAS VAO NO MESMO TURNO, NAO EM TURNOS SEGUIDOS.
+     *
+     * Quando o modelo decide chamar tres tools de uma vez, ele emite UM turno
+     * com tres partes `functionCall`, e espera de volta UM turno com tres
+     * `functionResponse`. Quebrar isso em tres pares seguidos parece
+     * equivalente e nao e: o Gemini casa chamada com resposta por POSICAO, e
+     * devolveu HTTP 400 dizendo "missing a thought_signature ... position 4".
+     *
+     * A mensagem do erro fala de assinatura e engana: a assinatura estava la.
+     * O que estava errado era o AGRUPAMENTO. Por isso o laco junta todas as
+     * mensagens de ferramenta consecutivas antes de emitir qualquer coisa.
+     */
+    const bloco: MensagemLlm[] = []
+    while (i < mensagens.length && mensagens[i].papel === 'ferramenta') {
+      bloco.push(mensagens[i])
+      i++
+    }
+    i-- // o `for` volta a incrementar
+
     contents.push({
-      role: m.papel === 'cliente' ? 'user' : 'model',
-      parts: [{ text: m.texto }],
+      role: 'model',
+      parts: bloco.map((f) => ({
+        functionCall: { name: f.nome ?? 'desconhecida', args: f.argumentos ?? {} },
+        // A assinatura que o modelo emitiu junto da chamada. Sem ela, o Gemini
+        // 3.x recusa o reenvio com 400, e toda conversa que usa tool morre no
+        // segundo turno.
+        ...(f.assinatura ? { thoughtSignature: f.assinatura } : {}),
+      })),
+    })
+
+    contents.push({
+      role: 'user',
+      parts: bloco.map((f) => ({
+        functionResponse: {
+          name: f.nome ?? 'desconhecida',
+          response: seguroComoObjeto(f.texto),
+        },
+      })),
     })
   }
 
@@ -229,19 +249,19 @@ export function criarLlm(opcoes: OpcoesGemini = {}): Llm {
       })
 
       // A assinatura vem na PARTE, nao no `functionCalls` resumido do SDK.
-      // Por isso a lista sai das parts do candidato, casando pelo nome.
-      const parts = r.candidates?.[0]?.content?.parts ?? []
-      const assinaturaPorNome = new Map<string, string>()
-      for (const p of parts) {
-        if (p.functionCall?.name && p.thoughtSignature) {
-          assinaturaPorNome.set(p.functionCall.name, p.thoughtSignature)
-        }
-      }
+      //
+      // ⚠️ O casamento e POSICIONAL, nao por nome: o modelo pode chamar a mesma
+      // tool duas vezes no mesmo turno com argumentos diferentes, e um mapa por
+      // nome daria a assinatura da segunda para a primeira. `functionCalls`
+      // preserva a ordem das parts, entao basta zipar pelo indice.
+      const assinaturas = (r.candidates?.[0]?.content?.parts ?? [])
+        .filter((p) => p.functionCall)
+        .map((p) => p.thoughtSignature)
 
-      const chamadas = (r.functionCalls ?? []).map((c) => ({
+      const chamadas = (r.functionCalls ?? []).map((c, i) => ({
         nome: c.name ?? '',
         argumentos: (c.args ?? {}) as Record<string, unknown>,
-        assinatura: assinaturaPorNome.get(c.name ?? ''),
+        assinatura: assinaturas[i],
       }))
 
       return {

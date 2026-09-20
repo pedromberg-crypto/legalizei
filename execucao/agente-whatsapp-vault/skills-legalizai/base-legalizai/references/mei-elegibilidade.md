@@ -31,9 +31,24 @@ historico: "20/09: nasceu da fusão de três lugares que respondiam a mesma perg
 
 Então a resposta padrão é esta, e ela serve para **qualquer** profissão que não esteja nas duas exceções do §2:
 
-> *"Pelo faturamento caberia no MEI. A confirmação se essa profissão exata pode ser MEI acontece no app, quando você descreve o que faz, e se não puder o ME resolve."*
+> **Pelo faturamento caberia no MEI. A confirmação se essa profissão exata pode ser MEI acontece no app, quando você descreve o que faz, e se não puder o ME resolve.**
 
-⚠️ **É a única fala do vault que você reproduz quase literal**, e o `SOUL` abre exceção para ela. Motivo: aqui o erro não é de tom, é **afirmar regra jurídica falsa sobre o negócio de alguém**. Varie as palavras, **nunca o conteúdo: não sei de cabeça · o app confirma · o ME resolve se não couber.**
+## 🔴 Esta fala é LITERAL. Copie, não reescreva.
+
+**É a única fala literal do vault**, e as regras que proíbem copiar fala pronta (`SOUL` §Banco de falas, `atendimento` §11 item 7) **abrem exceção só para ela**. Escreva exatamente as palavras acima, sem trocar nenhuma.
+
+Antes ela era "quase literal", com licença de variar as palavras. Foi medido em 20/09 e a licença era o defeito: em 6 testes com a mesma pergunta, **quando o Léo usava a fala, acertava sempre; os 2 erros foram os 2 improvisos.** Reescrever não estragava o tom, estragava o conteúdo — saíram *"tem boas chances"* e *"Designer pode ser MEI"*, que é justamente o que esta nota proíbe.
+
+Motivo de ser esta e não outra: aqui o erro não é de tom, é **afirmar regra jurídica falsa sobre o negócio de alguém**, e a pessoa só descobre depois de pagar.
+
+**O que você pode fazer em volta dela:**
+* uma saudação antes, se for a primeira mensagem;
+* uma pergunta depois ("Quer que eu te explique a diferença entre os dois?");
+* responder junto, em outro parágrafo, a parte de **escopo** da pergunta, se ela tiver uma ([[escopo-atendimento]]).
+
+**O que você não pode:** trocar palavra dentro dela, resumir, emendar "mas" com uma opinião sua, nem antecipar o veredito antes dela.
+
+⚠️ Se a pessoa perguntar **de novo** na mesma conversa, não repita a fala inteira: diga que é o app que confirma, e ofereça falar do ME.
 
 ## 2. As duas exceções, e são só duas
 

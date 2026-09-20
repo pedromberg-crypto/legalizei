@@ -67,9 +67,27 @@ def _momentos() -> list:
     return []
 
 
+_ALVO = ("skills", "legalizai", "base-legalizai", "references")
+
+
 def _base() -> Path:
-    home = Path(os.environ.get("HERMES_HOME", str(Path.home() / ".hermes")))
-    return home / "skills" / "legalizai" / "base-legalizai" / "references"
+    """A pasta das notas, derivada do lugar do próprio plugin antes de qualquer env.
+
+    🔴 Medido em 20/09: `HERMES_HOME` NÃO existe no ambiente do processo, e a versão
+    que dependia dele resolvia `~/.hermes/skills/...` — uma pasta que não existe. As
+    notas moram sob o PERFIL (`~/.hermes/profiles/leo/skills/...`), e o plugin mora em
+    `<perfil>/plugins/leo-buscar-base/`, então subir dois níveis daqui chega no perfil
+    sempre, com env ou sem. O env vira o segundo palpite, não o primeiro.
+    """
+    candidatos = [Path(__file__).resolve().parent.parent.parent.joinpath(*_ALVO)]
+    home = os.environ.get("HERMES_HOME")
+    if home:
+        candidatos.append(Path(home).joinpath(*_ALVO))
+    candidatos.append(Path.home() / ".hermes" / Path(*_ALVO))
+    for c in candidatos:
+        if c.is_dir():
+            return c
+    return candidatos[0]  # para o erro dizer onde se procurou primeiro
 
 
 def _sem_acento(s: str) -> str:
@@ -168,6 +186,34 @@ def buscar_base(termo: str = None, assunto: str = None, momento: str = None,
                 if t in _sem_acento(s["texto"]) or t in _sem_acento(s["secao"])]
 
     limite = max(1, min(int(limite or PADRAO_TRECHOS), TETO_TRECHOS))
+
+    # 🔴 Rodízio por nota, não as N primeiras seções em ordem de arquivo.
+    #
+    # Medido em 20/09: `momento=recusar` devolvia 3 seções de `canais-oficiais.md` e
+    # nenhuma de `recusa.md`, porque o "c" vem antes do "r". O eixo `momento` existe
+    # justamente para trazer JUNTAS as notas que servem àquele momento — a resposta de
+    # gate de saída precisa de `recusa` + `canais-oficiais` + `tetos-de-faturamento`, e
+    # foi a falta disso que derrubou o caso `aceite-epp` na suíte. Uma seção de cada
+    # nota primeiro; só depois a segunda de cada.
+    # A ordem das notas dentro do rodízio é por ESPECIFICIDADE, não alfabética: uma nota
+    # que declara só `[recusar]` é mais daquele momento que uma que declara quatro
+    # momentos e o inclui de passagem. Sem isto, `momento=recusar` com limite 3 devolvia
+    # canais-oficiais · endereco-fiscal · escopo-atendimento e deixava `recusa.md` de
+    # fora, que é a nota que manda no assunto — o "r" é a quarta letra do alfabeto ali.
+    def especificidade(s):
+        return (len(s["meta"].get("momento") or []) or 99, s["arquivo"])
+
+    por_nota = {}
+    for s in sorted(alvo, key=especificidade):
+        por_nota.setdefault(s["arquivo"], []).append(s)
+    ordenado, rodada = [], 0
+    while len(ordenado) < len(alvo):
+        for fila in por_nota.values():
+            if rodada < len(fila):
+                ordenado.append(fila[rodada])
+        rodada += 1
+    alvo = ordenado
+
     trechos, gastos = [], 0
     for s in alvo[:limite]:
         corpo = s["texto"]

@@ -13,11 +13,23 @@ Quem a gente atende está em [[escopo-atendimento]]. **Aqui está só o que faze
 
 Dizer não com clareza é vigilância, não é perder cliente.
 
+## 0. 🔎 Uma chamada só traz tudo que a recusa precisa
+
+Uma recusa boa precisa de **três coisas em notas diferentes**: a régua daqui, o número do teto, e os links. Em vez de três leituras:
+
+```
+buscar_base(momento="recusar")
+```
+
+Ele devolve esta nota, [[canais-oficiais]] e [[escopo-atendimento]] de uma vez, cada trecho com a procedência. Se o caso é de porte, some `buscar_base(termo="teto")` para o valor.
+
+🔴 **A recusa é a resposta que mais erra por informação faltando**, e sempre pelo mesmo motivo: o Léo lê uma das três notas e escreve com o que tem. Uma chamada, três notas, e o problema não acontece.
+
 ## 1. 🔴 A última linha é sempre os dois canais
 
 **Gate de saída que termina sem os canais é resposta incompleta**, por mais curta e bem escrita que esteja. Você disse não e não deixou caminho nenhum, que é porta fechada na cara da pessoa.
 
-Os links, a forma exata de escrevê-los e a armadilha do Instagram estão em [[canais-oficiais]]. **Leia antes de escrever a recusa**, não depois.
+🔴 **Nunca escreva um link de memória.** Os links, a forma exata e a armadilha do Instagram estão em [[canais-oficiais]], e você os lê **antes** de escrever a recusa. Link inventado num canal onde a pessoa acabou de ser recusada é o pior fecho possível.
 
 ## 2. 🔴 Não pesque atividade que a pessoa não citou
 

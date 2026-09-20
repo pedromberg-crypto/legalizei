@@ -7,11 +7,13 @@
 # 🔴 Os momentos ficavam escritos à mão nos dois. Era a duplicação que viemos matar,
 #    dentro da ferramenta que veio matá-la. Agora os dois leem daqui.
 #
-# ⚠️ ESTA LISTA É PROPOSTA, derivada das 55 seções que as 13 notas de hoje já têm.
-#    Ela não foi revisada pelo Pedro. Mexer nela é decisão de produto: a trava obedece
-#    ao arquivo, não o contrário.
+# Derivada das 55 seções que as 13 notas originais tinham. ✅ Os 19 primeiros assuntos
+# foram revisados e aprovados pelo Pedro em 20/09; os 2 marcados `nasceu_na_migracao`
+# apareceram depois, ao migrar, e estão explicados linha a linha.
+#
+# Mexer nesta lista é decisão de produto: a trava obedece ao arquivo, não o contrário.
 
-versao: 1
+versao: 2
 data: 2026-09-20
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -27,8 +29,9 @@ momentos:
   escalar:    "sai do Léo e vai para gente de verdade"
 
 # ─────────────────────────────────────────────────────────────────────────────
-# ASSUNTOS — 18. 🔴 Cada um tem UM dono, e a trava reprova o segundo.
-# `onde_esta_hoje` é de onde o conteúdo sai na migração, não onde ele vai ficar.
+# ASSUNTOS — 21. 🔴 Cada um tem UM dono, e a trava reprova o segundo.
+# `onde_esta_hoje` é de onde o conteúdo VEIO: as 13 notas originais, congeladas em
+# `_arquivo/pacote-v12-2026-09-20/`. Serve para auditar a migração, não para navegar.
 # ─────────────────────────────────────────────────────────────────────────────
 assuntos:
   identidade-leo:
@@ -48,7 +51,15 @@ assuntos:
     onde_esta_hoje: ["03 §1", "09 §1"]
   taxas-publicas:
     o_que_e: "o que o cliente paga aos órgãos, e não à Legalizai"
-    onde_esta_hoje: ["03 §2", "03 §3"]
+    onde_esta_hoje: ["03 §2 (só a taxa)"]
+  regras-dos-orgaos:
+    o_que_e: "o que a JUCEMG e a Receita exigem: registro automático, procuração, nome, CPF"
+    nasceu_na_migracao: "o 03 §2 não era só taxa. Procuração, nome da empresa e registro automático são exigência do órgão, não cobrança. Enfiá-los em `taxas-publicas` faria o nome da nota mentir"
+    onde_esta_hoje: ["03 §2 (o resto)", "03 §3"]
+  canais-oficiais:
+    o_que_e: "os três links que o Léo pode mandar, e a regra do Instagram como URL completa"
+    nasceu_na_migracao: "os links serviam `promocoes` E `recusa` — a regra de dono único exigia uma casa. Declara `momento: [ofertar, recusar]`, então uma busca por momento traz a nota junto de quem precisa dela"
+    onde_esta_hoje: ["01 §5 (os links)", "12 §1"]
   fluxo-do-app:
     o_que_e: "a ordem real das etapas, e o que dá pra corrigir em cada uma"
     onde_esta_hoje: ["02 §1", "02 §2", "02 §3", "02 §4"]
@@ -112,4 +123,8 @@ numeros_com_dono:
 # Onde o número pode aparecer mesmo sem ser o dono. Usado quando a citação é
 # estruturalmente necessária — uma tabela comparativa, por exemplo. Cada linha aqui
 # é uma exceção declarada, e por isso some do relatório em vez de virar ruído.
-numeros_liberados_em: {}
+numeros_liberados_em:
+  # A tabela de faixas do Simples precisa do teto para fazer sentido: a 2ª faixa VAI de
+  # R$ 180 mil A R$ 360 mil. Sem o número, a tabela não fecha. É citação estrutural, não
+  # cópia, e por isso é exceção declarada em vez de defeito repetido todo mês.
+  "360 mil": [calculo-do-imposto.md]

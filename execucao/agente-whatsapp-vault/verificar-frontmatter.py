@@ -27,8 +27,10 @@ from collections import defaultdict
 from pathlib import Path
 
 AQUI = Path(__file__).resolve().parent
-NOTAS = AQUI / "skills-legalizai" / "base-legalizai" / "references"
+SKILLS = AQUI / "skills-legalizai"
+NOTAS = SKILLS / "base-legalizai" / "references"
 TAXONOMIA = AQUI / "_taxonomia.yaml"
+SOUL = AQUI / "00-SOUL-personalidade.md"
 
 # 🔴 `_arquivo/` guarda o pacote v12 congelado, com uma cópia de cada nota. Varrê-lo
 # acusaria 18 assuntos duplicados, com razão e sem utilidade. A exclusão é por
@@ -178,6 +180,39 @@ def main():
             if alvo.strip() not in nomes:
                 defeito(nome, f"link [[{alvo.strip()}]] não aponta para nota nenhuma")
 
+    # 3b. 🔴 Quem aponta pras notas, de fora delas: as skills e o SOUL.
+    #
+    # Nasceu na própria migração de 20/09, e nasceu de um susto: ao trocar as 13 notas
+    # por 21, a trava deu ✅ 21/21 enquanto as skills apontavam para 30 caminhos que eu
+    # tinha acabado de apagar. O Léo ficaria cego e o script diria que estava tudo certo
+    # — verde vazio, que é o defeito que a trava existe para não ter. Só `references/`
+    # era varrido; quem APONTA para lá, não era.
+    apontadores = [q for q in sorted(SKILLS.rglob("*.md"))
+                   if NOTAS not in q.parents and not any(x in q.parts for x in IGNORAR_PASTAS)]
+    if SOUL.is_file():
+        apontadores.append(SOUL)
+    for q in apontadores:
+        texto = q.read_text(encoding="utf-8")
+        rel = q.relative_to(AQUI).as_posix()
+        vistos = set()
+        for alvo in re.findall(r"references/([A-Za-z0-9_-]+\.md)", texto):
+            if alvo not in vistos and not (NOTAS / alvo).is_file():
+                vistos.add(alvo)
+                defeito(rel, f"🔴 manda ler `references/{alvo}`, que não existe. "
+                             f"O Léo chamaria `skill_view` num caminho morto")
+        for alvo in re.findall(r"\[\[([^\]|#]+)", texto):
+            alvo = alvo.strip()
+            if alvo not in vistos and alvo not in nomes:
+                vistos.add(alvo)
+                defeito(rel, f"link [[{alvo}]] não aponta para nota nenhuma")
+        # Vestígio da nomenclatura antiga (`08-MAPA-DO-DOSSIE`), citada SEM o prefixo
+        # `references/` e por isso invisível às duas regras acima. Uma sobrou na
+        # migração de 20/09 e só apareceu numa leitura manual — que é exatamente o que
+        # a trava existe para dispensar.
+        for alvo in set(re.findall(r"`(\d\d-[A-Z][A-Z-]+)`", texto)):
+            defeito(rel, f"cita `{alvo}`, nome do esquema numerado que foi aposentado "
+                         f"em 20/09. O caminho hoje é `references/<assunto>.md`")
+
     # 4. 🔴 assunto com dois donos — a regra seca contra duplicação
     for assunto, arqs in sorted(dono_de_assunto.items()):
         if len(arqs) > 1:
@@ -218,7 +253,8 @@ def main():
     # ─────────────────────────────────────────────────────────── relatório
     total_assuntos = len(assuntos_validos)
     print(f"\n{len(arquivos)} notas · {total_assuntos} assuntos · "
-          f"{len(momentos_validos)} momentos declarados em `_taxonomia.yaml`")
+          f"{len(momentos_validos)} momentos · "
+          f"{len(apontadores)} arquivos que apontam pra elas")
     print(f"migração: {migradas} de {total_assuntos} assuntos com nota dona\n")
 
     if defeitos:

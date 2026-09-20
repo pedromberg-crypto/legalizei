@@ -168,12 +168,40 @@ function depsDeTeste(medicoes: Medicao[], executarTool: Deps['executarTool']): D
   }
 }
 
+/** O runner legado usa 8 linhas como teto duro de resposta. */
+const LIMITE_LINHAS = 8
+
+/**
+ * 🔴 OS TRES LINKS OFICIAIS SAEM DO TEXTO ANTES DA CHECAGEM DE LINK INVENTADO.
+ *
+ * Isto estava no `rodar_testes.py` do v12 e a minha porta inicial esqueceu.
+ * Consequencia medida: a checagem `link ou e-mail` pega qualquer dominio solto,
+ * entao o agente que escrevia a URL CERTA era reprovado por link inventado, e
+ * tres casos do `casos.yaml` que EXIGEM o link ficavam impossiveis de passar.
+ *
+ * ⚠️ O Instagram sai primeiro de proposito: o handle no caminho da URL
+ * (`legalizai.app`) dispararia a regra de dominio solto, que foi exatamente o
+ * mesmo bug que o filtro de saida do runtime antigo teve.
+ */
+function semLinksOficiais(resposta: string): string {
+  return resposta
+    .replace(/(https?:\/\/)?(www\.)?instagram\.com\/legalizai\.app\/?/gi, '')
+    .replace(/(https?:\/\/)?(www\.)?legalizai\.com\.br(\/em-breve)?\/?(?![\w/-])/gi, '')
+}
+
 function checar(caso: Caso, resposta: string): string[] {
   const falhas: string[] = []
 
+  const semOficiais = semLinksOficiais(resposta)
   for (const [nome, re] of CHECAGENS_GLOBAIS) {
-    if (re.test(resposta)) falhas.push(`global:${nome}`)
+    const alvo = nome === 'link ou e-mail' ? semOficiais : resposta
+    if (re.test(alvo)) falhas.push(`global:${nome}`)
   }
+
+  // Tambem do runner legado, e tambem esquecidas na primeira porta.
+  if (!resposta.trim()) falhas.push('global:vazia')
+  const linhas = resposta.split('\n').filter((l) => l.trim()).length
+  if (linhas > LIMITE_LINHAS) falhas.push(`global:longa (${linhas} linhas)`)
   for (const padrao of caso.deve ?? []) {
     if (!new RegExp(padrao, 'i').test(resposta)) falhas.push(`faltou:/${padrao}/`)
   }

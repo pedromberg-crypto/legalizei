@@ -69,6 +69,11 @@ export async function executarTool(
       }
     }
 
+    case 'consultar_links': {
+      const linhas = await db.consultarLinks()
+      return { conteudo: linhas, cartoes: [], fatos: ['links'] }
+    }
+
     case 'consultar_contrato': {
       const linhas = await db.consultarContrato()
       return { conteudo: linhas, cartoes: [], fatos: ['contrato'] }

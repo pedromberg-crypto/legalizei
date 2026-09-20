@@ -364,3 +364,26 @@ export async function gravarTurno(
     cliente.release()
   }
 }
+
+export interface LinhaLink {
+  id: string
+  nome: string
+  url: string
+  quando_usar: string
+}
+
+/**
+ * Os tres links oficiais, como STRING EXATA.
+ *
+ * 🔴 Nasceu do E2E de 20/09: o agente escreveu
+ * `https://www.instagram.com/legalizai` quando o endereco e
+ * `https://www.instagram.com/legalizai.app/`. Ele nao inventou do nada, leu o
+ * trecho da nota e reescreveu de cabeca, que e o que um modelo faz com texto
+ * corrido. String exata nao admite parafrase.
+ */
+export async function consultarLinks(): Promise<LinhaLink[]> {
+  const { rows } = await pool.query<LinhaLink>(
+    'SELECT id, nome, url, quando_usar FROM fatos.link ORDER BY id',
+  )
+  return rows
+}

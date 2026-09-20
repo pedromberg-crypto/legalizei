@@ -82,6 +82,19 @@ export const TOOLS: DefinicaoTool[] = [
     },
   },
   {
+    nome: 'consultar_links',
+    descricao:
+      'Os TRES unicos enderecos que voce pode escrever: site, lista de espera e Instagram. ' +
+      'OBRIGATORIA antes de mencionar qualquer um deles, e obrigatoria no gate de saida, ' +
+      'que termina sempre com o site E o Instagram. ' +
+      '🔴 COPIE A URL CARACTERE POR CARACTERE, inteira, do campo `url`. Nao reescreva de ' +
+      'cabeca, nao encurte, nao tire o https, nao troque por arroba e nao "limpe" o final: ' +
+      'o Instagram termina em `.app/` e essa e justamente a parte que some quando se ' +
+      'digita de memoria, deixando um link que nao abre. ' +
+      'Citar o canal sem colar a URL na mesma mensagem e o mesmo que nao ter dado o link.',
+    parametros: { type: 'object', properties: {} },
+  },
+  {
     nome: 'buscar_base',
     descricao:
       'OBRIGATORIA antes de escrever qualquer LINK, endereco de site, rede social, data de ' +

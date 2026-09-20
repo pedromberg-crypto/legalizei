@@ -19,9 +19,19 @@ export const TOOLS: DefinicaoTool[] = [
   {
     nome: 'consultar_cnae',
     descricao:
-      'Descobre se a gente atende uma atividade, e qual o anexo dela. Use ANTES de dizer ' +
-      'que atende ou que nao atende. O campo pode_afirmar manda: quando vier false, nao ' +
-      'crave anexo nem aliquota, pergunte o que a pessoa faz no dia a dia e oriente por ai.',
+      'Descobre se A CASA atende uma atividade, e qual o anexo dela. Use ANTES de dizer ' +
+      'que atende ou que nao atende. O campo pode_afirmar_anexo manda: quando vier false, ' +
+      'nao crave anexo nem aliquota, pergunte o que a pessoa faz no dia a dia e oriente ' +
+      'por ai. ' +
+      '🔴 LEIA COM CUIDADO: `casa_atende_mei: false` significa QUE A CASA NAO CONFIRMOU ' +
+      'essa atividade no MEI, e NUNCA que a atividade e proibida no MEI. Sao coisas ' +
+      'diferentes: uma e escopo comercial nosso, a outra e regra federal. Por isso vem ' +
+      'junto `pode_afirmar_lista_mei`, sempre false: a lista de ocupacoes do MEI e do ' +
+      'governo, e fechada, e nao esta aqui. ' +
+      '🔴 VOCE NUNCA DIZ QUE UMA PROFISSAO NAO PODE SER MEI. Nao e cautela, e que voce ' +
+      'nao tem como saber, e afirmar isso e inventar regra juridica na cara do cliente. ' +
+      'Oriente por FATURAMENTO, que e verificavel, e diga que a ocupacao exata se confirma ' +
+      'no app.',
     parametros: {
       type: 'object',
       properties: {
@@ -36,9 +46,14 @@ export const TOOLS: DefinicaoTool[] = [
   {
     nome: 'consultar_preco',
     descricao:
-      'O preco do plano, o que inclui e o que NAO inclui. Unico lugar de onde sai valor de ' +
-      'plano. Confirme o regime antes: o certificado digital e incluso no ME e nao existe ' +
-      'no MEI, e esse erro ja foi para producao.',
+      'O preco do plano, o que inclui, o que NAO inclui e ate quando vale a promocao ' +
+      '(campo vigencia_ate). Unico lugar de onde sai valor de plano. Confirme o regime ' +
+      'antes: o certificado digital e incluso no ME e nao existe no MEI, e esse erro ja ' +
+      'foi para producao. ' +
+      '🔴 Citou o preco promocional? A DATA ATE QUANDO ELE VALE sai na mesma mensagem. ' +
+      'Promocao sem prazo parece preco normal, e a pessoa descobre o valor cheio depois, ' +
+      'achando que foi enganada. A data e real e pode ser usada como motivo para decidir ' +
+      'agora; inventar escassez ("so hoje", "ultimas vagas") continua proibido.',
     parametros: {
       type: 'object',
       properties: { regime: { type: 'string', enum: ['mei', 'me_simples'] } },
@@ -65,14 +80,24 @@ export const TOOLS: DefinicaoTool[] = [
   {
     nome: 'buscar_cartao',
     descricao:
-      'USE SEMPRE que a pessoa perguntar o que o app FAZ, se ele resolve alguma coisa, ou ' +
-      'descrever uma situacao do dia a dia da empresa (perdi o prazo, preciso emitir nota, ' +
-      'quero contratar alguem, como funciona tal parte). Devolve Estado, Acao e Restricao ' +
-      'juntos, e o campo promessa: pode (fale em primeira pessoa), parcial (fale so da ' +
-      'parte que existe) e nao (nao prometa e nao descreva como se existisse). Atencao: ' +
-      'promessa nao NAO autoriza negar de cabeca. ' +
-      'Esta tool e sobre CAPACIDADE do produto e nao tem preco, link nem data: numero vem ' +
-      'de consultar_preco ou consultar_contrato, link e regra vem de buscar_base.',
+      'USO OBRIGATORIO. Voce DEVE chamar esta ferramenta ANTES de responder sempre que a ' +
+      'conversa tocar no APLICATIVO: o que ele faz, o que ele resolve, como ele resolve na ' +
+      'pratica, o que a pessoa consegue fazer sozinha nele, onde cada coisa acontece, e o ' +
+      'que ele NAO faz. ' +
+      'Chame TAMBEM quando a pessoa apenas descrever uma situacao do dia a dia da empresa ' +
+      'sem perguntar nada ("perdi o prazo", "preciso emitir nota", "quero contratar ' +
+      'alguem", "nao sei qual codigo usar", "recebi uma cobranca"): a situacao dela e ' +
+      'exatamente a chave de busca desta tool. ' +
+      'Sao 58 capacidades do produto, e voce NAO as conhece de memoria. Descrever o que o ' +
+      'app faz sem ter chamado esta ferramenta e inventar funcionalidade, que e o erro que ' +
+      'mais custa caro na venda: a pessoa contrata por causa dele e nao encontra depois. ' +
+      'Devolve Estado, Acao e Restricao juntos, e o campo promessa: pode (fale em primeira ' +
+      'pessoa), parcial (fale so da parte que existe) e nao (nao prometa e nao descreva ' +
+      'como se existisse). Atencao: promessa nao NAO autoriza negar de cabeca. ' +
+      'LIMITE DELA, para voce nao perder chamada: nao tem preco, nao tem link, nao tem ' +
+      'data e nao tem percentual. Preco e validade de promocao vem de consultar_preco; ' +
+      'fidelidade e multa de consultar_contrato; endereco de consultar_links; data de ' +
+      'campanha e regra de orgao de buscar_base. Esta aqui e sobre CAPACIDADE.',
     parametros: {
       type: 'object',
       properties: {

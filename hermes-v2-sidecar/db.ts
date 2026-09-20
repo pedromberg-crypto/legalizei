@@ -35,11 +35,21 @@ function comoVetor(v: number[]): string {
 export interface LinhaCnae {
   codigo: string
   titulo: string
-  atende_me: boolean
-  atende_mei: boolean
+  /**
+   * 🔴 "a CASA atende", nunca "a lei permite".
+   *
+   * O nome antigo era `atende_mei`, e o agente leu `false` como "esta atividade
+   * nao pode ser MEI", afirmando regra federal falsa a um cliente. A matriz
+   * dizia `mei_permitido: true` na MESMA linha. Nome ambiguo em campo que o
+   * modelo le nao e detalhe de estilo: vira frase errada na boca do agente.
+   */
+  casa_atende_me: boolean
+  casa_atende_mei: boolean
   anexo: string | null
-  /** 🔴 O gate. false significa: nao crave anexo nem aliquota. */
-  pode_afirmar: boolean
+  /** 🔴 O gate do anexo. false significa: nao crave anexo nem aliquota. */
+  pode_afirmar_anexo: boolean
+  /** 🔴 Sempre false: a lista de ocupacoes do MEI e do governo e nao esta aqui. */
+  pode_afirmar_lista_mei: boolean
   exige_conselho: boolean
   semelhanca: number
 }

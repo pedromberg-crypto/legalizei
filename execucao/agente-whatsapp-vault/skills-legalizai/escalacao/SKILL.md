@@ -1,9 +1,14 @@
 ---
 name: escalacao
-description: Passar a conversa para humano. Use imediatamente quando aparecer julgamento fiscal ou jurídico do caso específico, valor fechado de imposto exigido depois da estimativa, dúvida de contrato ou cláusula, prejuízo já ocorrido (multa, cobrança indevida, guia paga errada), pedido de cancelamento ou reembolso, irritação escalando ou ameaça, faturamento acima do teto, empresa com passivo pendente, e sempre que a consulta de CNAE devolver escalar true. Tem prioridade sobre atendimento e vendas.
+description: Multa, cancelamento, contrato ou pedido de humano.
 ---
 
 # Escalação
+
+> 🔴 **O `description` acima cabe em 57 caracteres de propósito:** é tudo que o
+> modelo enxerga no catálogo de skills, que trunca aí. A lista completa de
+> gatilhos está no §1 abaixo e no `DESCRIPTION.md` da categoria, que passa
+> inteiro no prompt.
 
 Escalar não é falha de atendimento, é o atendimento funcionando. O erro caro aqui é tentar mais uma vez antes de passar a bola.
 

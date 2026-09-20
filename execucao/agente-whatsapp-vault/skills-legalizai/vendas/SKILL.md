@@ -1,9 +1,15 @@
 ---
 name: vendas
-description: Conduzir quem ainda está decidindo se contrata a Legalizai. Use quando o cliente pergunta preço, o que está incluso, diferença entre MEI e ME, se tem cobrança escondida, se é golpe, se vocês atendem o caso dele, quando compara com outro serviço, quando pede desconto, ou quando chegou por campanha e não sabe o que a empresa faz. Cobre qualificação de escopo, apresentação de plano, quebra de objeção e fechamento.
+description: Preço, plano, o que inclui, objeção e fechamento.
 ---
 
 # Vendas
+
+> **Quando carregar** (o `description` trunca em 57 chars, então a lista mora aqui
+> e no `DESCRIPTION.md` da categoria): preço · o que está incluso · diferença
+> entre MEI e ME · cobrança escondida · "é golpe?" · "vocês atendem meu caso?" ·
+> comparação com outro serviço · pedido de desconto · quem chegou por campanha e
+> não sabe o que a empresa faz.
 
 Vigilância também é dizer não. Vender pra quem a gente não atende é pior que não vender: a pessoa paga, trava no app e vira reclamação.
 
@@ -99,7 +105,7 @@ Quem conta o que faz e quanto fatura quer uma indicação, não um "depende". A 
 
 ## 5. Dizer não sem perder a pessoa: o gate de saída
 
-🔴 **Antes de recusar qualquer caso, leia `12-GATE-DE-SAIDA`.** Ele tem a régua inteira, os modelos de tom e as 4 regras que mais falham na prática. Não improvise a recusa a partir deste resumo.
+🔴 **Antes de recusar qualquer caso, leia `references/12-GATE-DE-SAIDA.md`.** Ele tem a régua inteira, os modelos de tom e as 4 regras que mais falham na prática. Não improvise a recusa a partir deste resumo.
 
 O essencial, pra você saber o que está buscando:
 
@@ -203,7 +209,7 @@ Fala de referência pra fechamento: **"Vai, legaliza aí!"**
 
 ## 8.1 🔴 Fidelidade, multa e cancelamento entram na conversa
 
-Perguntou de cancelamento, fidelidade, multa, garantia ou "e se eu não gostar?": **leia `10-CONTRATO-GARANTIA-CANCELAMENTO` antes de responder**. Nunca de cabeça, nunca "acho que não tem".
+Perguntou de cancelamento, fidelidade, multa, garantia ou "e se eu não gostar?": **leia `references/10-CONTRATO-GARANTIA-CANCELAMENTO.md` antes de responder**. Nunca de cabeça, nunca "acho que não tem".
 
 O plano tem fidelidade contada da emissão do CNPJ, e cancelar dentro dela tem multa sobre o saldo restante. 🔴 **Os dois números não estão escritos aqui**, junto com o prazo de arrependimento que existe antes deles: os três vivem só em `10-CONTRATO-GARANTIA-CANCELAMENTO`, e você abre a nota antes de responder. Dizer "não temos fidelidade" pra não assustar é o erro mais caro desta skill: a pessoa fecha, descobre no contrato e a venda vira reclamação. E responder só o que pesa, sem o prazo de arrependimento, é a mesma meia verdade ao contrário.
 

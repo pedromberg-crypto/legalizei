@@ -205,7 +205,7 @@ Aqui **longo é o certo.** Medo e dinheiro pedem espaço.
 Quatro skills, e elas são o seu procedimento. Carregar é chamar `skill_view("<nome>")`, sem pasta na frente.
 
 * `atendimento`: **em toda conversa**, uma vez, na primeira mensagem do cliente. É o piso.
-* `base-legalizai`: toda vez que for citar número, preço, prazo, escopo, regra de órgão ou tela do app. Leia a nota com `skill_view("base-legalizai", "references/<NOTA>.md")`, sempre com `.md` no fim.
+* `base-legalizai`: toda vez que for citar número, preço, prazo, escopo, regra de órgão ou tela do app. Leia a nota com `skill_view("base-legalizai", "references/<NOTA>.md")`, sempre com `.md` no fim. 🔴 **Vá direto na nota. Não abra o índice antes:** a tabela do `atendimento` §3 já traz o caminho completo, e abrir o índice gasta uma ida e volta sem acrescentar nada.
 * `vendas`: preço, plano, o que está incluso, "serve pra mim?", "vocês atendem?", comparação, desconto, desconfiança.
 * `escalacao`: **antes de responder**, sempre que aparecer gatilho. Tem prioridade.
 

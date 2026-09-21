@@ -1,0 +1,164 @@
+# ════════════════════════════════════════════════════════════════════════════
+#  casos-maratona-v2.yaml · a segunda conversa longa
+#
+#  UM caso, DEZ turnos, a MESMA sessão. A v1 mede venda e objeção; esta mede
+#  CONHECIMENTO: os pontos onde o Léo alucinou no teste manual de 21/09 e as
+#  regras que nasceram daquela rodada.
+#
+#  🔑 ESTA SUÍTE AFIRMA MENOS ROTAS QUE A v1, DE PROPÓSITO. Na v1, nove das
+#     falhas eram de rota e afogaram os achados de conteúdo. Aqui só três
+#     turnos declaram `rota`, e são os três em que a trilha é inequívoca.
+#     Turno sem `rota` continua tendo a trilha medida e reportada.
+#
+#  Esquema por turno: diz, rota, deve, nao_deve, avaliar.
+# ════════════════════════════════════════════════════════════════════════════
+
+casos:
+  - id: maratona-v2-dev-software
+    descricao: >
+      Desenvolvedor de software chega provocando, pergunta sobre migração,
+      declara um teto de faturamento, revela a atividade que veda o MEI, e
+      segue por pró-labore, reembolso, prazo da promoção, pedido de PDF e
+      compatibilidade do app até entrar na Lista VIP.
+
+    turnos:
+
+      # ── 1. a provocação, para forçar ironia ────────────────────────────
+      - diz: "Oi Léo, me disseram que contador é tudo chato, me prova o contrário. Como funciona o serviço?"
+        deve: ["l[eé]o"]
+        nao_deve:
+          - "em que posso ajudar|como posso (te )?ajudar"
+          - "\\bgaranto\\b"
+          # Levar a provocação como ofensa é falha de personagem.
+          - "n[aã]o (somos|sou) chat|injust|ofens"
+        avaliar: >
+          Entra no jogo com ironia leve mirando a burocracia, não o cliente nem
+          a profissão. Explica o serviço em poucas linhas e devolve uma pergunta.
+
+      # ── 2. migração ────────────────────────────────────────────────────
+      # 🔴 ATENÇÃO, CONTRARIA O BRIEFING. A migração de quem já tem CNPJ está
+      #    DENTRO do escopo: `fatos.escopo_regra.situacao-migracao` tem
+      #    `dentro: true`, e o `RULES.md` §5.4 diz, com estas palavras, que o
+      #    que o Léo cuida "é abertura e migração". O que está fora é empresa
+      #    com passivo ou pendência (`situacao-regularizacao`).
+      #    Testar "migração bloqueada" criaria pressão para quebrar uma
+      #    capacidade real. Este turno cobra a resposta CERTA: aceita.
+      - diz: "Quero migrar minha empresa que já está aberta pra vocês, rola?"
+        deve: ["migra|troca de contador|transfer|pode sim|rola|consigo"]
+        nao_deve:
+          - "n[aã]o atend|fora do (meu )?escopo|n[aã]o fa[çc]o migra"
+          - "regulariz"
+          - "\\bgaranto\\b"
+        avaliar: >
+          Confirma que migração é atendida. Se levantar ressalva, que seja a
+          certa: empresa com pendência ou passivo é outro assunto.
+
+      # ── 3. o teto declarado, sem CNAE ──────────────────────────────────
+      # 🔴 Teto do MEI é 81 mil/ano, ou seja 6.750/mês: 5 mil CABE pelo
+      #    faturamento. E mesmo assim o diagnóstico NÃO fecha, porque a
+      #    atividade ainda não foi dita. Ver `RULES.md` §3.2.
+      - diz: "Tranquilo, vou abrir uma nova então. Vou faturar no máximo 5 mil por mês."
+        deve: ["atividade|o que voc[eê] (faz|vai fazer)|ramo|cnae|profiss"]
+        nao_deve:
+          # Fechar em MEI só com o faturamento é o erro que este turno caça.
+          - "(ent[aã]o|logo|portanto)[^.!?]{0,20}(voc[eê] )?(é|e|seria|ser[aá]) mei"
+          - "pode ser mei, sim|mei resolve|o mei serve"
+          - "pelo que voc[eê] fatura|com (esse|o seu|seu) faturamento"
+        avaliar: >
+          Reconhece que 5 mil cabe no teto do MEI, mas NÃO fecha: pergunta a
+          atividade e deixa claro que ela pode mudar a resposta.
+
+      # ── 4. a atividade que veda o MEI ──────────────────────────────────
+      # 🔴 `fatos.cnae`: 6201501 e 6202300 têm `mei_permitido: false` e
+      #    `atende_me_certeza: true`. Faturamento baixo NÃO salva.
+      - diz: "A atividade vai ser Desenvolvimento de Software."
+        rota: tecnico
+        deve: ["\\bme\\b|microempres"]
+        nao_deve:
+          - "pode ser mei|cabe no mei|mei serve|opta pelo mei|seria mei"
+          - "\\bgaranto\\b"
+        avaliar: >
+          Avisa que desenvolvimento de software não é permitido no MEI, mesmo
+          faturando 5 mil, e que o caminho é o ME. Usa a tool de CNAE.
+
+      # ── 5. pró-labore e Fator R ────────────────────────────────────────
+      - diz: "E como funciona o tal do Pro-labore pra pagar menos imposto?"
+        deve: ["fator r|pr[óo] ?labore|folha"]
+        nao_deve:
+          - "28 ?%[^.!?]{0,30}\\bgaranti"
+          - "\\bgaranto\\b"
+          - "anexo iv"
+          - "pelo que voc[eê] fatura|com (esse|o seu|seu) faturamento"
+        avaliar: >
+          Explica pró-labore e Fator R em linguagem de cliente, com uma pitada
+          de ironia se couber, sem prometer economia nem citar Anexo IV.
+
+      # ── 6. reembolso e o dinheiro do governo ───────────────────────────
+      # 🔴 `fatos.contrato_regra.reembolso-taxa-junta`: protocolado, não volta.
+      #    Ver `RULES.md` §9.3.
+      - diz: "Tá, mas e se eu assinar, pagar tudo, e me arrepender no dia seguinte? Vocês devolvem o dinheiro do governo também?"
+        deve: ["taxa|junta|governo|estado"]
+        nao_deve:
+          - "devolve(mos)? tudo|reembolso total|tudo de volta|100% de volta"
+          - "\\bgaranto\\b"
+        avaliar: >
+          Separa as duas coisas com clareza: a parte da Legalizai volta nos 7
+          dias; a taxa da Junta, se já protocolada, não volta nunca.
+
+      # ── 7. o prazo da promoção ─────────────────────────────────────────
+      # 🔴 31/12 é o LIMITE do preço promocional, não a data de lançamento.
+      #    Ver `RULES.md` §6.
+      - diz: "Entendi. Mas só quero abrir lá pra fevereiro. Essa promoção de vocês segura até lá?"
+        deve: ["31|dezembro"]
+        nao_deve:
+          # A confusão que esta regra existe para evitar.
+          - "abre(mos)? (em|dia) 31|lan[çc]amento (é|e|ser[aá]) (em|dia) 31|abertura (é|e) (em|dia) 31"
+          - "segura at[eé] fevereiro|vale at[eé] fevereiro|estendo|prorrog"
+          - "\\bgaranto\\b"
+        avaliar: >
+          Diz que o preço promocional é garantido para quem entra na lista até
+          31/12, e que a abertura pode ser antes. Não promete esticar até fevereiro.
+
+      # ── 8. o pedido de PDF ─────────────────────────────────────────────
+      # 🔴 Ver `RULES.md` §9.2. Ele só escreve texto.
+      - diz: "Manda logo o contrato em PDF pra eu ler então!"
+        deve: ["app|aplicativo|atendente|time|leitura|por aqui|te explico"]
+        nao_deve:
+          - "(?<!time[^.!?]{0,20})\\b(mostr|envi|mand|anex|compartilh|pass)\\w*[^.!?]{0,40}(pdf|contrato|documento|arquivo)(?![^.!?]{0,20}time)"
+          - "\\bgaranto\\b"
+        avaliar: >
+          Recusa com educação e sem constrangimento, oferece explicar o conteúdo
+          por texto ou a leitura no app, e não promete anexo nenhum.
+
+      # ── 9. compatibilidade do app ──────────────────────────────────────
+      # Este turno existe para forçar `buscar_cartao`. Se a rodada inteira vier
+      # com zero cartão, é aqui que se olha primeiro.
+      - diz: "O aplicativo de vocês roda no iPhone?"
+        rota: tecnico
+        deve: ["iphone|ios|celular|app"]
+        nao_deve:
+          - "n[aã]o sei|vou (checar|confirmar|verificar)|confirmar com o time"
+          - "\\bgaranto\\b"
+        avaliar: >
+          Responde com o que o cartão de compatibilidade diz, sem prometer
+          checar depois.
+
+      # ── 10. o fechamento ───────────────────────────────────────────────
+      - diz: "Show, me bota nessa Lista VIP então."
+        rota: comercial
+        deve: ["lista"]
+        nao_deve:
+          - "acess(e|ar) o (nosso )?site (e|para|pra) (assinar|contratar|fechar)"
+          - "\\bgaranto\\b"
+          - "(?<!time[^.!?]{0,20})\\b(mostr|envi|mand|anex)\\w*[^.!?]{0,40}(pdf|contrato|documento)(?![^.!?]{0,20}time)"
+        avaliar: >
+          Confirma a entrada na lista, diz o que ela é e não é, e cita a data
+          limite do preço. Não manda assinar no site.
+
+    max_chars: 700
+
+    avaliar: >
+      Lido inteiro, o diálogo tem que mostrar acúmulo: no t4 ele já sabe do teto
+      de 5 mil declarado no t3, no t7 já sabe que é ME, e no t10 não repete o
+      que já explicou. E o tom tem que ter ironia nos turnos leves e nenhuma nos
+      turnos de dinheiro e arrependimento.

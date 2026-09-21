@@ -23,11 +23,17 @@
  *    node --env-file=.env .build/testes/e2e.js              # a suite curta
  *    node --env-file=.env .build/testes/e2e.js --todos      # os 60 casos
  *    node --env-file=.env .build/testes/e2e.js --caso valores --caso giria-cole
+ *    node --env-file=.env .build/testes/e2e.js --arquivo <caminho.yaml>
+ *
+ *  🔑 CHECAGEM POR TURNO. Um turno pode ser uma string, e ai so alimenta a
+ *  sessao, ou um objeto `{ diz, rota, deve, nao_deve }`, e ai a resposta DELE
+ *  e checada sozinha: globais, `faltou`, `proibido` e a trilha escolhida. E o
+ *  que torna util um caso de dez turnos, onde antes so o ultimo era medido.
  * ════════════════════════════════════════════════════════════════════════════
  */
 
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
-import { join } from 'node:path'
+import { basename, join, resolve } from 'node:path'
 import { randomUUID } from 'node:crypto'
 
 import yaml from 'js-yaml'
@@ -47,7 +53,7 @@ import { escreverRelatorio } from './relatorio.js'
 //    dentro do proprio `.build`, onde `_origem/` nao existe. Ja quebrou o
 //    verificador do mesmo jeito.
 import { RAIZ } from '../seed/carregar-conhecimento.js'
-const CASOS = join(RAIZ, '_origem', 'vault-v12', '_testes', 'casos.yaml')
+const CASOS_PADRAO = join(RAIZ, '_origem', 'vault-v12', '_testes', 'casos.yaml')
 const SUITES = join(RAIZ, '_origem', 'vault-v12', '_testes', 'suites.yaml')
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -86,18 +92,48 @@ const CHECAGENS_GLOBAIS: [string, RegExp][] = [
 //  2. OS CASOS
 // ════════════════════════════════════════════════════════════════════════════
 
+/**
+ * Um turno com checagem propria.
+ *
+ * 🔑 POR QUE ISTO EXISTE. Ate 21/09 um caso era `turnos: string[]` e so a
+ * ULTIMA resposta era checada. Num caso de 10 turnos isso validava o turno 10
+ * e deixava os outros nove passarem sem ninguem olhar, que e o oposto do que
+ * uma conversa longa deveria provar.
+ *
+ * ⚠️ RETROCOMPATIVEL DE PROPOSITO. Turno que continua sendo `string` se
+ * comporta exatamente como antes: entra na sessao e nao e checado sozinho. O
+ * `casos.yaml` do v12 roda sem uma linha de edicao, e o placar dele nao muda.
+ */
+interface Turno {
+  /** A mensagem do cliente. */
+  diz: string
+  /** A trilha esperada para ESTE turno. Sem isto, a rota nao e checada. */
+  rota?: Saida
+  /** Regex que a resposta DESTE turno precisa conter. */
+  deve?: string[]
+  /** Regex que a resposta DESTE turno nao pode conter. */
+  nao_deve?: string[]
+  /** Criterio de leitura humana. Nao e checado. */
+  avaliar?: string
+}
+
 interface Caso {
   id: string
-  turnos: string[]
+  turnos: (string | Turno)[]
   deve?: string[]
   nao_deve?: string[]
   min_chars?: number
   max_chars?: number
   avaliar?: string
+  descricao?: string
 }
 
-function carregarCasos(): Caso[] {
-  const doc = yaml.load(readFileSync(CASOS, 'utf8')) as { casos: Caso[] }
+const textoDoTurno = (t: string | Turno): string => (typeof t === 'string' ? t : t.diz)
+const temChecagemPropria = (t: string | Turno): t is Turno => typeof t !== 'string'
+
+function carregarCasos(arquivo: string): Caso[] {
+  const doc = yaml.load(readFileSync(arquivo, 'utf8')) as { casos: Caso[] }
+  if (!doc?.casos) throw new Error(`${arquivo} nao tem a chave \`casos\``)
   return doc.casos
 }
 
@@ -125,6 +161,21 @@ interface Medicao {
   fatos: string[]
   tokensEntrada: number
   tokensSaida: number
+
+  /**
+   * 🔑 O TEXTO DE CADA TURNO, e nao so o do ultimo.
+   *
+   * Ate 21/09 o JSON guardava apenas `resultado.resposta`, que e a resposta do
+   * ULTIMO turno. Num caso de dez turnos isso deixava nove respostas sem
+   * registro: dava para saber QUE regex falhou, nunca para LER o que o agente
+   * escreveu. Qualidade de texto so se audita lendo, e o relatorio da rodada 3
+   * nao conseguiu citar a resposta de fidelidade justamente por isso.
+   *
+   * ⚠️ Estes dois campos guardam conversa integral. O JSON de saida ja vive em
+   * `_testes-saida/`, que esta fora do git pela mesma razao.
+   */
+  pergunta: string
+  resposta: string
 }
 
 interface Resultado {
@@ -154,6 +205,8 @@ function depsDeTeste(medicoes: Medicao[], executarTool: Deps['executarTool']): D
       historico.push({ papel: 'cliente', texto: textoCliente })
       historico.push({ papel: 'leo', texto: textoLeo })
       medicoes.push({
+        pergunta: textoCliente,
+        resposta: textoLeo,
         saida: m.saida,
         tecnicaOk: m.tecnicaOk,
         falhaTipo: m.falhaTipo,
@@ -189,7 +242,8 @@ function semLinksOficiais(resposta: string): string {
     .replace(/(https?:\/\/)?(www\.)?legalizai\.com\.br(\/em-breve)?\/?(?![\w/-])/gi, '')
 }
 
-function checar(caso: Caso, resposta: string): string[] {
+/** As checagens que valem para QUALQUER resposta, venha de que turno vier. */
+function checagensGlobais(resposta: string): string[] {
   const falhas: string[] = []
 
   const semOficiais = semLinksOficiais(resposta)
@@ -202,12 +256,32 @@ function checar(caso: Caso, resposta: string): string[] {
   if (!resposta.trim()) falhas.push('global:vazia')
   const linhas = resposta.split('\n').filter((l) => l.trim()).length
   if (linhas > LIMITE_LINHAS) falhas.push(`global:longa (${linhas} linhas)`)
-  for (const padrao of caso.deve ?? []) {
+  return falhas
+}
+
+/** `deve` e `nao_deve`, que valem igual para um turno e para o caso inteiro. */
+function checagensDeTexto(resposta: string, deve?: string[], naoDeve?: string[]): string[] {
+  const falhas: string[] = []
+  for (const padrao of deve ?? []) {
     if (!new RegExp(padrao, 'i').test(resposta)) falhas.push(`faltou:/${padrao}/`)
   }
-  for (const padrao of caso.nao_deve ?? []) {
+  for (const padrao of naoDeve ?? []) {
     if (new RegExp(padrao, 'i').test(resposta)) falhas.push(`proibido:/${padrao}/`)
   }
+  return falhas
+}
+
+/**
+ * As checagens do CASO, sobre a ultima resposta.
+ *
+ * ⚠️ `globaisJaRodaram` existe para nao contar a mesma falha duas vezes. Se o
+ * ultimo turno tem checagem propria, as globais ja rodaram sobre ele no laco,
+ * e repetir aqui produziria `global:longa` duplicado no relatorio.
+ */
+function checar(caso: Caso, resposta: string, globaisJaRodaram: boolean): string[] {
+  const falhas: string[] = []
+  if (!globaisJaRodaram) falhas.push(...checagensGlobais(resposta))
+  falhas.push(...checagensDeTexto(resposta, caso.deve, caso.nao_deve))
   if (caso.max_chars && resposta.length > caso.max_chars) {
     falhas.push(`longo demais: ${resposta.length} > ${caso.max_chars}`)
   }
@@ -239,10 +313,32 @@ async function rodarCaso(
   const sessaoId = randomUUID()
 
   let ultima = ''
+  const falhasDeTurno: string[] = []
   try {
+    let n = 0
     for (const turno of caso.turnos) {
-      const r = await responder({ contatoId, sessaoId, texto: turno }, llm, embedder, { deps })
+      n += 1
+      const r = await responder(
+        { contatoId, sessaoId, texto: textoDoTurno(turno) }, llm, embedder, { deps },
+      )
       ultima = r.texto
+
+      // Turno sem checagem propria continua so alimentando a sessao, como antes.
+      if (!temChecagemPropria(turno)) continue
+
+      const marca = `t${n}`
+      for (const f of checagensGlobais(r.texto)) falhasDeTurno.push(`${marca} ${f}`)
+      for (const f of checagensDeTexto(r.texto, turno.deve, turno.nao_deve)) {
+        falhasDeTurno.push(`${marca} ${f}`)
+      }
+
+      // 🔑 A ROTA E A MEDICAO QUE SEPARA "respondeu mal" DE "respondeu mal
+      //    PORQUE foi pela trilha errada". A medicao do turno acabou de ser
+      //    empilhada por `gravarTurno`, entao e sempre a ultima.
+      const medicao = medicoes[medicoes.length - 1]
+      if (turno.rota && medicao && medicao.saida !== turno.rota) {
+        falhasDeTurno.push(`${marca} rota:esperava ${turno.rota}, veio ${medicao.saida}`)
+      }
     }
   } catch (erro) {
     return {
@@ -251,7 +347,10 @@ async function rodarCaso(
       // 🔴 Erro de provedor NAO vira caso reprovado disfarcado. O runner legado
       //    pontuava a mensagem de erro como se fosse resposta do Leo, e placar
       //    ruim por 429 parecia regressao de qualidade.
-      falhas: [`ERRO DE EXECUCAO: ${erro instanceof Error ? erro.message : String(erro)}`],
+      falhas: [
+        ...falhasDeTurno,
+        `ERRO DE EXECUCAO: ${erro instanceof Error ? erro.message : String(erro)}`,
+      ],
       resposta: '',
       chars: 0,
       ms: Date.now() - inicio,
@@ -260,7 +359,11 @@ async function rodarCaso(
     }
   }
 
-  const falhas = checar(caso, ultima)
+  const ultimoTurno = caso.turnos[caso.turnos.length - 1]
+  const falhas = [
+    ...falhasDeTurno,
+    ...checar(caso, ultima, temChecagemPropria(ultimoTurno)),
+  ]
   return {
     id: caso.id,
     passou: falhas.length === 0,
@@ -286,6 +389,14 @@ async function principal(): Promise<void> {
   const todos = argv.includes('--todos')
   const escolhidos = argv.flatMap((a, i) => (a === '--caso' ? [argv[i + 1]] : []))
 
+  // ⚠️ `--arquivo` DESLIGA o filtro da suite `curta`. A suite nomeia ids que so
+  //    existem no `casos.yaml`; aplica-la a outro arquivo nao filtraria nada,
+  //    zeraria a selecao e a rodada morreria em "nenhum caso selecionado".
+  const iArquivo = argv.indexOf('--arquivo')
+  const arquivoProprio = iArquivo >= 0
+  if (arquivoProprio && !argv[iArquivo + 1]) throw new Error('--arquivo exige um caminho')
+  const arquivoCasos = arquivoProprio ? resolve(argv[iArquivo + 1]) : CASOS_PADRAO
+
   if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL nao definida (use --env-file=.env)')
   if (!process.env.GEMINI_API_KEY) throw new Error('GEMINI_API_KEY nao definida')
 
@@ -293,12 +404,12 @@ async function principal(): Promise<void> {
   const { verificarAcesso } = await import('../llm/gemini.js')
   await verificarAcesso()
 
-  const todosOsCasos = carregarCasos()
+  const todosOsCasos = carregarCasos(arquivoCasos)
   let casos = todosOsCasos
 
   if (escolhidos.length > 0) {
     casos = todosOsCasos.filter((c) => escolhidos.includes(c.id))
-  } else if (!todos) {
+  } else if (!todos && !arquivoProprio) {
     const daSuite = carregarSuite('curta')
     if (daSuite) casos = todosOsCasos.filter((c) => daSuite.includes(c.id))
   }
@@ -308,7 +419,12 @@ async function principal(): Promise<void> {
   // ⚠️ O aviso existe porque a suite `acervo` (60 casos) e para conferencia
   //    anual, nao para rodada de trabalho: 44 dos 51 casos antigos passaram 9 de
   //    9 rodadas, ou seja, custam e nao discriminam.
-  console.log(`rodando ${casos.length} caso(s)${todos ? ' (ACERVO INTEIRO, caro)' : ''}\n`)
+  const turnosTotais = casos.reduce((a, c) => a + c.turnos.length, 0)
+  console.log(
+    `rodando ${casos.length} caso(s), ${turnosTotais} turno(s)` +
+    `${arquivoProprio ? ` de ${basename(arquivoCasos)}` : ''}` +
+    `${todos ? ' (ACERVO INTEIRO, caro)' : ''}\n`,
+  )
 
   // 🔑 O envelope conta na BORDA DO PROVEDOR: o roteador so enxerga as chamadas
   //    que passam por ele, e as de embedding ficariam de fora.
@@ -363,14 +479,24 @@ async function principal(): Promise<void> {
   const cambio = await buscarCambio()
   imprimirCusto(consumo, cambio, resultados.length)
 
+  // 🔴 UM carimbo para os dois arquivos, com SEGUNDOS e o nome da suite. O JSON
+  //    usava so a data e o markdown so o minuto, entao duas suites seguidas
+  //    sobrescreviam uma a outra. Aconteceu em 21/09 e custou a rodada 1 da
+  //    maratona, que ficou so no console.
+  const quando = new Date().toISOString()
+  const nomeDaSuite = arquivoProprio
+    ? basename(arquivoCasos, '.yaml')
+    : todos ? 'acervo' : escolhidos.length > 0 ? 'avulsa' : 'curta'
+  const carimbo = quando.slice(0, 19).replace('T', '-').replace(/:/g, '')
+
   const dir = join(RAIZ, '_testes-saida')
   mkdirSync(dir, { recursive: true })
-  const arquivo = join(dir, `e2e-${new Date().toISOString().slice(0, 10)}.json`)
+  const arquivo = join(dir, `e2e-${carimbo}-${nomeDaSuite}.json`)
   writeFileSync(
     arquivo,
     JSON.stringify(
       {
-        quando: new Date().toISOString(),
+        quando,
         placar: `${passaram}/${resultados.length}`,
         consumo,
         custo: calcularCusto(consumo, cambio),
@@ -388,16 +514,16 @@ async function principal(): Promise<void> {
   //    reprocessar. Os dois saem da mesma rodada, sempre, porque relatorio que
   //    depende de alguem lembrar de gerar e relatorio que nao existe.
   const md = escreverRelatorio({
-    quando: new Date().toISOString(),
+    quando,
     placar: `${passaram}/${resultados.length}`,
     consumo,
     custo: calcularCusto(consumo, cambio),
     cambio,
     preco: PRECO,
     modelo: PRECO.modelo,
-    suite: todos ? 'acervo' : escolhidos.length > 0 ? 'avulsa' : 'curta',
+    suite: nomeDaSuite,
     resultados,
-  })
+  }, `-${nomeDaSuite}`)
   console.log(`relatorio: ${md}`)
 
   const { pool } = await import('../db.js')

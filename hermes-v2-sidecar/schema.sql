@@ -391,6 +391,13 @@ CREATE TABLE conversa.turno_interno (
   fatos_lidos    text[] NOT NULL DEFAULT '{}',
   tokens_entrada integer,
   tokens_saida   integer,
+
+  -- 🔑 Quantos dos `tokens_entrada` vieram de cache. SUBCONJUNTO, nunca parcela
+  --    a somar: o Gemini conta o token cacheado DENTRO do total de entrada, e
+  --    quem soma os dois infla a fatura em ate 10%.
+  --    NULL significa "turno gravado antes de 21/09", quando a metrica nao era
+  --    capturada, e nao "zero de cache". A diferenca importa em media.
+  tokens_cache   integer,
   criado_em      timestamptz NOT NULL DEFAULT now(),
 
   -- 🔴 A REGRA DO SIDECAR, COMO CONSTRAINT.

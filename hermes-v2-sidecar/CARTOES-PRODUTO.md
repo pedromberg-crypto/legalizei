@@ -85,15 +85,20 @@ seguir em vez de exibir números vazios.
 **Restrição.** Não prometa prazo de nada que dependa de órgão. Não diga que o certificado
 digital já está pronto sem consultar a situação da empresa.
 
-### 1.3 · Navegação em 4 abas, com emitir nota no centro
-`secao: home` · `promessa: parcial` · `onde: barra inferior do app`
+### 1.3 · Onde baixar o app e como ele é organizado
+`secao: home` · `promessa: parcial` · `onde: App Store, Play Store e barra inferior do app`
 
-**Estado.** A pessoa pergunta como o app é organizado, ou não está achando onde fica
-alguma coisa.
-**Ação.** A navegação tem quatro abas, e o botão de emitir nota fica no centro, porque
-emitir nota é a ação mais frequente do dia a dia.
-**Restrição.** Não descreva tela que você não leu na base. Se ela pergunta onde fica algo
-específico, confirme antes de apontar caminho.
+**Estado.** A pessoa pergunta onde baixa o app, se roda no iPhone, se tem para Android,
+como ele é organizado, ou não está achando onde fica alguma coisa.
+**Ação.** O app é nativo e está nas duas lojas: App Store no iPhone e Play Store no
+Android. Baixa, entra com a conta e usa. Dentro dele a navegação tem quatro abas, e o
+botão de emitir nota fica no centro, porque emitir nota é a ação mais frequente do dia a
+dia.
+**Restrição.** 🔴 Não existe versão de navegador. Nunca diga que o app roda no navegador
+do celular, que "é só acessar pelo site" ou que não precisa baixar nada na loja: em 21/09
+essa resposta saiu de dois jeitos contraditórios no mesmo dia, porque nenhum cartão
+dizia, e as duas vezes foram invenção. Também não descreva tela que você não leu na base:
+se ela pergunta onde fica algo específico, confirme antes de apontar caminho.
 
 ### 1.4 · Central de avisos
 `secao: home` · `promessa: parcial` · `onde: central de avisos`

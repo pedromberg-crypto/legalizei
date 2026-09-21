@@ -45,6 +45,12 @@ export const TOOLS: DefinicaoTool[] = [
   },
   {
     nome: 'consultar_preco',
+    // 🔴 21/09: no turno 7 da maratona o cliente disse "fechou, quero assinar" e a
+    //    resposta saiu SEM plano e SEM preco, em 3 de 3 rodadas. Na rodada 3 a rota
+    //    ja estava certa (`comercial`), o que isolou o defeito aqui: a descricao
+    //    cobria a PERGUNTA de preco e nao o MOMENTO do fechamento. Quem ja decidiu
+    //    nao pergunta "quanto custa", diz "quero assinar", e precisa do valor na
+    //    mesma mensagem para fechar.
     descricao:
       'O preco do plano, o que inclui, o que NAO inclui e ate quando vale a promocao ' +
       '(campo vigencia_ate). Unico lugar de onde sai valor de plano. Confirme o regime ' +
@@ -53,7 +59,13 @@ export const TOOLS: DefinicaoTool[] = [
       '🔴 Citou o preco promocional? A DATA ATE QUANDO ELE VALE sai na mesma mensagem. ' +
       'Promocao sem prazo parece preco normal, e a pessoa descobre o valor cheio depois, ' +
       'achando que foi enganada. A data e real e pode ser usada como motivo para decidir ' +
-      'agora; inventar escassez ("so hoje", "ultimas vagas") continua proibido.',
+      'agora; inventar escassez ("so hoje", "ultimas vagas") continua proibido. ' +
+      'OBRIGATORIA no MOMENTO DO FECHAMENTO, nao so quando perguntam o valor: ' +
+      '"quero assinar", "fechou", "vamos fechar", "quero contratar", "quero comprar", ' +
+      '"como faco para contratar", "como finalizo", "onde eu assino", "bora", "topo". ' +
+      '🔴 Quem ja decidiu precisa do plano e do valor NA MESMA MENSAGEM. Confirmar a ' +
+      'decisao sem dizer qual plano e por quanto deixa a venda sem numero e obriga a ' +
+      'pessoa a perguntar de novo o que ela ja tinha dado como resolvido.',
     parametros: {
       type: 'object',
       properties: { regime: { type: 'string', enum: ['mei', 'me_simples'] } },
@@ -146,18 +158,50 @@ export const TOOLS: DefinicaoTool[] = [
   },
   {
     nome: 'consultar_contrato',
+    // 🔴 21/09: no turno 8 da maratona o cliente disse "tenho medo de ficar preso e
+    //    tomar multa, tem fidelidade?" e o Leo NEGOU a fidelidade de 12 meses, nas
+    //    duas rodadas, com `tecnicaOk=false` e zero tool chamada. A descricao antiga
+    //    nomeava os ASSUNTOS ('fidelidade, multa') mas nao a SITUACAO, e objecao
+    //    chega em linguagem de medo, nao de contrato. Os gatilhos abaixo existem
+    //    para essa falha, e negar fidelidade e o erro mais caro da venda: a pessoa
+    //    fecha e descobre a multa no contrato.
     descricao:
       'Fidelidade, multa, prazo de arrependimento e reajuste. Isto e CONSULTA, nao ' +
       'escalonamento: leia e passe a regra com os numeros, o que tranquiliza junto com o ' +
-      'que pesa. Voce nao tem nenhum desses numeros em nenhum outro lugar.',
+      'que pesa. Voce nao tem nenhum desses numeros em nenhum outro lugar. ' +
+      'OBRIGATORIA sempre que o cliente demonstrar OBJECAO ou receio de se comprometer, ' +
+      'mesmo sem usar a palavra contrato: "medo", "ficar preso", "preso por quanto tempo", ' +
+      '"fidelidade", "multa", "cancelamento", "cancelar", "prazo de carencia", ' +
+      '"quebra de contrato", "e se eu desistir", "posso sair quando quiser". ' +
+      '🔴 NUNCA responda de memoria a nenhuma dessas: se a pergunta toca fidelidade ou ' +
+      'multa, chame esta tool ANTES de responder. Negar que existe fidelidade e proibido. ' +
+      '🔴 SO NO TURNO DA PERGUNTA. Respondida a objecao, o assunto MORRE: nao chame esta ' +
+      'tool nem cite contrato, multa, fidelidade ou PDF em turno seguinte se a pessoa ' +
+      'mudou de assunto. Medido em 21/09: o pedido de contrato foi resolvido e voltou ' +
+      'sozinho nos dois turnos seguintes, por cima de outra pergunta.',
     parametros: { type: 'object', properties: {} },
   },
   {
     nome: 'consultar_escopo',
+    // 🔴 21/09: a regra NEGATIVA nao segurou. O `RULES.md` §3.2 proibia, com o
+    //    exemplo literal, dizer "pelo que voce fatura", e em producao o agente
+    //    escreveu exatamente essa frase 40 segundos depois da regra entrar no ar.
+    //    Regra negativa em prompt nao impede alucinacao de memoria; o que impede
+    //    e obrigar a tool ANTES da afirmacao. Ver
+    //    `reports/evolucao-2026-09-21-whatsapp-manual-v2.md` §4.1.
     descricao:
       'A lista do que a casa atende e do que nao atende, com a saida sugerida para quem ' +
       'cai fora, E OS DOIS TETOS DE FATURAMENTO com valor. Fora do escopo NAO e ' +
       'escalonamento: nenhum atendente resolve o que o produto nao faz. ' +
+      '🔴 NUNCA diagnostique MEI ou ME sem antes chamar esta ferramenta. Se a pessoa ' +
+      'falar de faturamento, em qualquer forma (valor, faixa, teto, "no maximo", "uns", ' +
+      '"por volta de"), OBRIGATORIAMENTE chame esta ferramenta PRIMEIRO e so depois ' +
+      'escreva a resposta. Dizer "com esse faturamento", "pelo que voce fatura" ou ' +
+      '"entao voce e MEI" sem ter chamado esta tool no mesmo turno e alucinacao de ' +
+      'memoria, e ja foi para producao. ' +
+      '⚠️ E o teto NAO fecha o diagnostico sozinho: a ATIVIDADE pode vedar o MEI mesmo ' +
+      'com faturamento baixo. Sem CNAE confirmado por `consultar_cnae`, a resposta e ' +
+      'provisoria e voce diz isso. ' +
       'OBRIGATORIA sempre que a pessoa disser quanto fatura ou perguntar ate quanto pode ' +
       'faturar. 🔴 O teto que importa e o do ME que A CASA atende, nao o teto do Simples ' +
       'Nacional: acima do nosso, vira EPP e a casa NAO atende. Nunca diga que ela "ainda ' +

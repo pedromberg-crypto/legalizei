@@ -1,0 +1,34 @@
+# Fim de linha canônico do repositório = LF.
+#
+# 🔴 Nasceu em 21/09/2026, de um conflito que custou meia hora e não era
+# conflito. O `tools-def.ts` voltou da VPS com "253 inserções, 267 remoções" e
+# um hunk cobrindo o ARQUIVO INTEIRO. Conteúdo idêntico dos dois lados: a VPS
+# tinha escrito em CRLF, o `origin` estava em LF. Sem esta regra, todo arquivo
+# que o lado Windows ou um script da VPS reescrever vai colidir por inteiro —
+# e o dia em que houver mudança de verdade misturada, não vai dar para resolver
+# com `--ours` sem ler linha a linha.
+#
+# `text=auto` deixa o git decidir o que é texto; `eol=lf` fixa o que vai para o
+# disco em qualquer máquina. O Windows lida com LF sem reclamar; o Linux não
+# lida com CRLF em script executável.
+* text=auto eol=lf
+
+# Binário: nada de normalizar, nada de diff textual.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.pdf  binary
+*.psd  binary
+*.ai   binary
+*.xlsx binary
+*.woff2 binary
+*.zip  binary
+*.ico  binary
+
+# Texto que parece binário, e não é.
+*.svg text eol=lf
+*.csv text eol=lf
+
+# Shell e unidade do systemd rodam no Linux: CRLF aqui quebra de verdade.
+*.sh      text eol=lf
+*.service text eol=lf

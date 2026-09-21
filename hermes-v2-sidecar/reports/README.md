@@ -26,6 +26,9 @@ com aparência de dado.
 | o que ja esta pronto para a virada, e o runbook do dia | [preparacao-virada-2026-09-21](preparacao-virada-2026-09-21.md) |
 | 🔴 o defeito da fidelidade, achado | [evolucao-2026-09-21-0145](evolucao-2026-09-21-0145.md) |
 | ✅ o mesmo defeito, corrigido pela descricao da tool | [evolucao-2026-09-21-0155](evolucao-2026-09-21-0155.md) |
+| 🔴 o Leo mandando assinar num produto sem checkout | [evolucao-2026-09-21-whatsapp-manual](evolucao-2026-09-21-whatsapp-manual.md) |
+| 🔑 o pareado: as MESMAS perguntas no E2E e no WhatsApp real | [evolucao-2026-09-21-whatsapp-manual-v2](evolucao-2026-09-21-whatsapp-manual-v2.md) |
+| o modelo de relatorio de evolucao | [_template-evolucao](_template-evolucao.md) |
 | como o agente está respondendo hoje | a rodada mais recente, `e2e-*-2348` |
 | se uma mudança quebrou alguma coisa | duas rodadas seguidas, comparando as falhas |
 

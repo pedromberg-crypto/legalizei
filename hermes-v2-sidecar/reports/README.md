@@ -28,6 +28,7 @@ com aparência de dado.
 | ✅ o mesmo defeito, corrigido pela descricao da tool | [evolucao-2026-09-21-0155](evolucao-2026-09-21-0155.md) |
 | 🔴 o Leo mandando assinar num produto sem checkout | [evolucao-2026-09-21-whatsapp-manual](evolucao-2026-09-21-whatsapp-manual.md) |
 | 🔑 o pareado: as MESMAS perguntas no E2E e no WhatsApp real | [evolucao-2026-09-21-whatsapp-manual-v2](evolucao-2026-09-21-whatsapp-manual-v2.md) |
+| ✅ as 4 correcoes sistemicas, e a licao sobre regra x tool | [evolucao-2026-09-21-maratona-v2-r2](evolucao-2026-09-21-maratona-v2-r2.md) |
 | o modelo de relatorio de evolucao | [_template-evolucao](_template-evolucao.md) |
 | como o agente está respondendo hoje | a rodada mais recente, `e2e-*-2348` |
 | se uma mudança quebrou alguma coisa | duas rodadas seguidas, comparando as falhas |

@@ -14,29 +14,29 @@ tags: [reporte, evolucao, sociedade]
 
 ## 📊 Placar geral
 
-> 🤖 **Este bloco é gerado.** Ele se reconta sozinho a cada `/fechar`, a partir das tabelas abaixo — nenhum número aqui é digitado. Gerado em **19/09/2026**.
+> 🤖 **Este bloco é gerado.** Ele se reconta sozinho a cada `/fechar`, a partir das tabelas abaixo — nenhum número aqui é digitado. Gerado em **21/09/2026**.
 
 ### O que rendeu
 
 | | |
 |---|---:|
-| **Entregas reportadas** | **319** |
-| Entradas no log | 65 |
-| **Dias trabalhados** | **61** |
-| Período | 07/07/2026 → 19/09/2026 |
-| Dias corridos no período | 75 |
+| **Entregas reportadas** | **327** |
+| Entradas no log | 66 |
+| **Dias trabalhados** | **63** |
+| Período | 07/07/2026 → 21/09/2026 |
+| Dias corridos no período | 77 |
 | Média de entregas por dia trabalhado | 5,2 |
 
 ### Placar por status
 
 | Status | Itens | % |
 |---|---:|---:|
-| 🟢 pronto / entregue | **241** | 75,5% |
-| ✅ estava parado, foi resolvido | **15** | 4,7% |
-| 🟡 em curso / parcial | **27** | 8,5% |
-| 🔴 trava ou precisa de você | **5** | 1,6% |
+| 🟢 pronto / entregue | **241** | 73,7% |
+| ✅ estava parado, foi resolvido | **15** | 4,6% |
+| 🟡 em curso / parcial | **27** | 8,3% |
+| 🔴 trava ou precisa de você | **5** | 1,5% |
 | 🕓 aguarda pessoa | **2** | 0,6% |
-| sem marca | 29 | 9,1% |
+| sem marca | 37 | 11,3% |
 
 ### Ritmo, mês a mês
 
@@ -44,7 +44,7 @@ tags: [reporte, evolucao, sociedade]
 |---|---:|---:|---:|
 | julho/2026 | 24 | 20 | — |
 | agosto/2026 | 20 | 20 | — |
-| setembro/2026 | 17 | 16 | 🔴 **1** |
+| setembro/2026 | 19 | 19 | 🔴 **1** |
 
 ### ⚠️ O que o sócio não viu
 
@@ -54,7 +54,7 @@ tags: [reporte, evolucao, sociedade]
 
 > 🔑 O **git** é a fonte independente do que foi trabalhado. Dia com commit e sem entrada aqui é entrega que não chegou ao sócio — e o placar prefere confessar a omissão a repeti-la com cara de número.
 >
-> ⚠️ O contrário também existe e **não é erro**: 6 dia(s) têm entrada sem commit (reunião, pesquisa, decisão — trabalho que não vira código).
+> ⚠️ O contrário também existe e **não é erro**: 5 dia(s) têm entrada sem commit (reunião, pesquisa, decisão — trabalho que não vira código).
 
 ---
 
@@ -1482,4 +1482,34 @@ Dia todo no agente do WhatsApp. Comecei só querendo revisar a documentação de
 - Achamos um vazamento: o perfil do Pedro entrava na conversa de qualquer cliente. Já está na fila pra desligar
 - A cota grátis da plataforma acabou. Detalhe importante: serviço grátis de IA costuma *treinar com as conversas*, e o Léo recebe CPF. Essa parte deve virar paga, uns R$50 a R$80/mês
 - *Preciso de você:* dos 87 CNAEs que atendemos, temos certeza alta do enquadramento em 24. Quero sua leitura com a contadora sobre o que o Léo pode afirmar e o que manda pro humano 👍
+```
+
+## Semana 20–21/09/2026 — troquei o motor do Léo, e ele já está atendendo
+
+Virada de arquitetura, feita e no ar. O robô do WhatsApp deixou de ler documentos inteiros para responder e passou a consultar um banco de dados, campo a campo.
+
+| # | O que foi feito | Detalhe |
+|---|---|---|
+| 1 | 🚀 **O Léo trocou de motor às 2h20 de domingo, e continuou atendendo** | O robô antigo foi desligado e o novo entrou no lugar sem a conexão do WhatsApp cair. O número é o mesmo, a conversa não parou, ninguém precisou escanear QR de novo |
+| 2 | 🔑 **A mudança de fundo: o que é número agora vive em tabela, não em texto** | Preço, teto de faturamento, fidelidade, multa e os links oficiais saíram de dentro dos documentos e viraram **dados consultáveis**. O robô não "lembra" mais um preço: ele busca. Se o valor mudar, muda num lugar só |
+| 3 | 🔴 **E isso pegou um erro grave: ele estava NEGANDO a fidelidade de 12 meses** | Perguntado "tenho medo de ficar preso, tem fidelidade?", ele respondia que não tem. Respondia **de memória**, sem abrir o contrato. É o erro mais caro da venda: a pessoa fecha e descobre a multa depois. Corrigido e confirmado em conversa real |
+| 4 | 🔴 **Outro, achado conversando no WhatsApp de verdade: ele mandava o cliente ASSINAR no site** | Duas vezes na mesma conversa, justo nos dois momentos em que a pessoa disse sim. **Não existe checkout**, estamos em pré-lançamento: ele mandava a pessoa bater numa porta fechada. Nenhum teste automático pegaria isso. Só apareceu porque li a conversa inteira |
+| 5 | 🔑 **A lição que vale mais que os consertos** | Escrever "não faça isso" no texto do robô **não funciona**: uma regra nova foi desobedecida **40 segundos** depois de entrar. O que funciona é obrigar ele a consultar o dado antes de afirmar. Mudamos o jeito de corrigir por causa disso |
+| 6 | 💰 **Agora sei quanto custa uma conversa: 1,5 centavo de dólar** | Conversa comercial completa, dez perguntas e respostas, com o robô consultando o banco várias vezes. Liguei um mecanismo de cache que derrubou o custo em **78%**. **Custo não é problema deste produto** |
+| 7 | ✅ **O robô ganhou testes que rodam sozinhos, incluindo a conta do imposto** | 32 verificações automáticas. Uma delas confere o cálculo do DAS **centavo por centavo** contra a lei, sem envolver IA nenhuma. Outra garante que o robô nunca ofereça plano quando não conseguiu responder a dúvida técnica |
+| 8 | 📄 **28 relatórios de teste, e todos dizem o que NÃO provam** | Cada rodada gera um documento com o que melhorou, o que piorou e o que aquele teste não é capaz de medir. Isso evita a armadilha de comemorar número que é só variação |
+
+**O que fica com você:** nada travando do seu lado nesta semana. A decisão dos CNAEs com a contadora, da semana passada, continua aberta e é a que mais destrava coisa.
+
+### 📱 WhatsApp (21/09)
+```
+*Update Legalizai* 📣
+- Troquei o motor do Léo às 2h20 de domingo. Ele continuou atendendo, mesmo número, sem cair
+- A mudança de fundo: preço, teto, fidelidade e multa saíram de dentro do texto e viraram *dados consultáveis*. O robô não lembra mais um preço, ele busca
+- E isso pegou um erro grave: ele estava *negando a fidelidade de 12 meses*. Respondia de memória, sem abrir o contrato. É o erro mais caro da venda
+- Outro, achado conversando com ele no WhatsApp de verdade: mandava o cliente *assinar no site*, duas vezes, justo quando a pessoa dizia sim. Não existe checkout ainda
+- A lição: escrever "não faça isso" no texto dele não funciona. Uma regra nova foi desobedecida *40 segundos* depois de entrar. O que funciona é obrigar ele a consultar antes de afirmar
+- Já sei quanto custa: *1,5 centavo de dólar* por conversa completa. Liguei um cache que derrubou 78% do custo. Custo não é problema aqui
+- Ele ganhou 32 testes automáticos, incluindo um que confere o cálculo do DAS centavo por centavo contra a lei
+- Do seu lado nada trava essa semana. A decisão dos CNAEs com a contadora segue aberta e é a que mais destrava
 ```

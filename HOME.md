@@ -10,6 +10,28 @@ data: 2026-07-16
 
 ## 📍 Agora (torre de controle — mantida via `/fechar`)
 
+> **Última atualização:** 2026-09-21 — **77º flow: O LÉO TROCOU DE MOTOR, E ELE JÁ ESTÁ ATENDENDO.**
+>
+> 🧭 **Começou num commit esquecido e terminou com o agente rodando em arquitetura nova, em produção.** 29 commits em ~12h, mais uma sessão paralela na VPS que executou a virada.
+>
+> **(1) 🏗️ NASCEU O `hermes-v2-sidecar/`, e o desenho é uma linha só: fato duro nunca se recupera por semântica, texto nunca guarda número.** O `SOUL.md` de 23.297 chars virou `PERSONA.md` (voz) + `RULES.md` (regra); as 58 funcionalidades viraram **cartões Estado-Ação-Restrição** vetorizados; e os números saíram do texto para tabelas relacionais lidas por tool calling. 🔑 A trava não é doutrina, é CHECK do Postgres: `cartao_sem_numero` derruba a carga se um valor entrar no texto que o agente lê. Schema com 3 esquemas (fatos · conhecimento · conversa), roteador de 4 saídas em TypeScript, 1.332 CNAEs carregados, 58 cartões + 63 trechos com embedding real de 768.
+>
+> **(2) 🔴 A TRAVA COMERCIAL VIVE EM TRÊS LUGARES, e isso pagou.** `podeInjetarGancho()` no Node, a constraint `comercial_exige_tecnica_ok` no banco, e a regra escrita. O teste obrigatório conta as **chamadas ao LLM**, não o texto: a fila do mock tem 3 respostas e não tem a 4ª de propósito, então se o sidecar rodar o teste estoura. Suíte offline 14/14, e 18 testes de banco conferindo a conta do DAS ao centavo, sem nenhum LLM.
+>
+> **(3) 🚀 A VIRADA ACONTECEU (02:20:51 de 21/09).** `hermes-gateway-leo` parado e desabilitado, a ponte emancipada em unidade própria, `leo-sidecar` no ar. 🔑 O blue-green proposto não se aplicava: **sem nginx, sem webhook**, porque a conexão é Baileys (sessão QR, WebSocket de saída). A costura era o contrato HTTP local da ponte, e a fila dela é de leitura **destrutiva**, o que garante virada sem perda e proíbe rodar os dois cérebros juntos.
+>
+> **(4) 💰 CUSTO MEDIDO, E NÃO É O GARGALO.** Context caching explícito: **91,5% de acerto, 78,2% de economia**. Uma conversa comercial completa de 10 turnos custa **US$ 0,0152**. A rodada de E2E caiu de R$ 0,7552 para R$ 0,1485 (−80,3%). ⚠️ Falta o preço de **armazenamento** do cache por hora, que não tem fonte no repo.
+>
+> **(5) 🔑 A LIÇÃO DO DIA, e é de método: regra negativa em prompt não impede alucinação de memória; obrigar a consulta antes da afirmação, sim.** A regra que proibia presumir faturamento, com o exemplo ❌ literal escrito dentro dela, foi desobedecida em **40 segundos**. Tornar `consultar_escopo` obrigatória antes de diagnosticar resolveu na primeira tentativa. Mesmo padrão em quatro defeitos seguidos, incluindo o Léo **negando a fidelidade de 12 meses** (respondia sem chamar `consultar_contrato`) e **mandando o cliente assinar num produto que não tem checkout**.
+>
+> **(6) 🐛 CINCO BUGS MEUS, achados por teste e não por revisão:** o `thought_signature` do Gemini 3 (toda conversa com tool morria no 2º turno) e depois o agrupamento de chamadas **paralelas** · o `SAVEPOINT` que faltava (em Postgres, statement que falha aborta a transação inteira, e `try/catch` não desfaz) · o parser que fazia o último cartão de cada seção **engolir a seção seguinte** · e um nome de campo ambíguo (`atende_mei`, que era na verdade `atende_mei_certeza`) que fez o agente **afirmar regra jurídica falsa** a um cliente.
+>
+> **(7) 📁 `ESTRUTURA/` e `reports/`.** A primeira é o retrato medido do agente: o que existe, o que o diagrama promete e não existe, e sete perguntas de arquitetura respondidas com o que há. A segunda tem **28 relatórios**, todos abrindo com a régua de que **o placar é o número menos informativo** e com o que aquela rodada **não** prova.
+>
+> ⏭️ **O que fica aberto:** 🔴 **o código que atende cliente NÃO está no repo** — `PERSONA.md`, `RULES.md`, `server.ts`, `tools-def.ts`, `e2e.ts`, `relatorio.ts`, um cartão reescrito e a coluna `tokens_cache` vivem só em `/opt/hermes-v2-sidecar` na VPS; 28 relatórios descrevem um código que não possuímos · 🔴 **`buscar_base` ficou em ZERO em quatro medições independentes** e voltou a 4 na última, com duas variáveis mudadas juntas, então sem causa isolada · 🔴 o parser de cartões **descarta texto fora dos campos em silêncio**, e isso custou uma rodada inteira de diagnóstico errado · 🟡 a **fila humana de escalonamento segue sem destino**: o pacote vai pro log e ninguém consome · 🟡 duas réguas do E2E reprovam resposta certa · 🟡 o `casos-maratona` parece medir cenário mais difícil que o real, porque a conversa de verdade roteou melhor três vezes seguidas.
+>
+> ---
+>
 > **Última atualização:** 2026-09-19 — **76º flow: O LÉO ESTAVA RESPONDENDO DE MEMÓRIA PORQUE O PROMPT ENTREGAVA O NÚMERO.**
 >
 > 🧭 **O pedido foi só *"analise a documentação"* do pacote que alimenta o Léo no Ollama.** Li os **18 arquivos, 137.700 caracteres, 100%** (regra de 10/09). O flow virou diagnóstico conjunto com a janela do VPS, e terminou em 3 commits + pacote pronto pra subir.

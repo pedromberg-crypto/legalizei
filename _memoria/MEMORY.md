@@ -1,5 +1,9 @@
 # Memory Index — Legalize
 
+## O agente do WhatsApp (Leo)
+- [O Leo trocou de motor, e esta em producao](legalize-sidecar-em-producao.md) — 21/09 02:20: Node+Postgres+pgvector no ar; o codigo de producao NAO esta no repo.
+- [Regra negativa nao impede alucinacao](legalize-regra-negativa-nao-impede-alucinacao.md) — 21/09 medido 4x: obrigar a consulta antes da afirmacao, sim.
+
 ## Motor fiscal e estado do CNPJ
 - [O CONTADOR VALIDA O MOTOR](legalize-contador-valida-o-motor.md) — 16/09: 1a validacao por contador (~5h, 293k caracteres).
 - [Os 7 passos que levaram a reuniao ate o codigo](legalize-aplicacao-das-decisoes-do-contador.md) — 16/09: a fila vem antes do motor. 3a copia da CPP errada. 32 -> 54 invariantes.

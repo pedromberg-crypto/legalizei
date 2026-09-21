@@ -134,15 +134,10 @@ export const TOOLS: DefinicaoTool[] = [
   {
     nome: 'buscar_base',
     descricao:
-      'OBRIGATORIA antes de escrever qualquer LINK, endereco de site, rede social, data de ' +
-      'campanha, condicao de promocao, o que a lista de espera garante, regra de orgao ' +
-      'publico (prefeitura, junta, receita), regra de atendimento ou procedimento que as ' +
-      'outras tools nao cobrem. Busca por assunto no texto da base de conhecimento. ' +
-      'REGRA DURA: voce nao escreve link, endereco nem data que nao tenha lido AGORA aqui. ' +
-      'Nao existe link que voce saiba de cabeca. Se a busca nao trouxer, diga que vai ' +
-      'confirmar com o time. ' +
-      'Na duvida entre esta e as outras, chame esta tambem: uma consulta a mais custa pouco, ' +
-      'uma frase inventada custa o cliente.',
+      'Busca por assunto no texto da base de conhecimento. Use SEMPRE para confirmar regras ' +
+      'de orgaos publicos (prefeitura, junta, receita), datas de campanha, condicoes de ' +
+      'promocao, lista de espera, e procedimentos de atendimento ou regras de negocio. ' +
+      'Na duvida entre esta e as outras, chame esta tambem para evitar inventar informacao.',
     parametros: {
       type: 'object',
       properties: {
@@ -166,19 +161,10 @@ export const TOOLS: DefinicaoTool[] = [
     //    para essa falha, e negar fidelidade e o erro mais caro da venda: a pessoa
     //    fecha e descobre a multa no contrato.
     descricao:
-      'Fidelidade, multa, prazo de arrependimento e reajuste. Isto e CONSULTA, nao ' +
-      'escalonamento: leia e passe a regra com os numeros, o que tranquiliza junto com o ' +
-      'que pesa. Voce nao tem nenhum desses numeros em nenhum outro lugar. ' +
+      'Fidelidade, multa, prazo de arrependimento e reajuste. ' +
       'OBRIGATORIA sempre que o cliente demonstrar OBJECAO ou receio de se comprometer, ' +
-      'mesmo sem usar a palavra contrato: "medo", "ficar preso", "preso por quanto tempo", ' +
-      '"fidelidade", "multa", "cancelamento", "cancelar", "prazo de carencia", ' +
-      '"quebra de contrato", "e se eu desistir", "posso sair quando quiser". ' +
-      '🔴 NUNCA responda de memoria a nenhuma dessas: se a pergunta toca fidelidade ou ' +
-      'multa, chame esta tool ANTES de responder. Negar que existe fidelidade e proibido. ' +
-      '🔴 SO NO TURNO DA PERGUNTA. Respondida a objecao, o assunto MORRE: nao chame esta ' +
-      'tool nem cite contrato, multa, fidelidade ou PDF em turno seguinte se a pessoa ' +
-      'mudou de assunto. Medido em 21/09: o pedido de contrato foi resolvido e voltou ' +
-      'sozinho nos dois turnos seguintes, por cima de outra pergunta.',
+      'perguntar de "multa", "fidelidade", "cancelamento" ou "ficar preso". ' +
+      'NUNCA responda de memoria. SO NO TURNO DA PERGUNTA.',
     parametros: { type: 'object', properties: {} },
   },
   {

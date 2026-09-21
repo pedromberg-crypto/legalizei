@@ -247,14 +247,16 @@ export async function salvarTurnoInterno(
     fatosLidos: string[]
     tokensEntrada: number
     tokensSaida: number
+    /** 🔑 SUBCONJUNTO de `tokensEntrada`. Opcional para nao quebrar chamador antigo. */
+    tokensCache?: number
   },
   cliente: PoolClient | Pool = pool,
 ): Promise<void> {
   await cliente.query(
     `INSERT INTO conversa.turno_interno
        (sessao_id, mensagem_id, saida, tecnica_ok, falha_tipo,
-        cartoes_usados, fatos_lidos, tokens_entrada, tokens_saida)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+        cartoes_usados, fatos_lidos, tokens_entrada, tokens_saida, tokens_cache)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
     [
       sessaoId,
       mensagemId,
@@ -265,6 +267,7 @@ export async function salvarTurnoInterno(
       dados.fatosLidos,
       dados.tokensEntrada,
       dados.tokensSaida,
+      dados.tokensCache ?? null,
     ],
   )
 }

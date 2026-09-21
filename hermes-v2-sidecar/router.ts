@@ -57,6 +57,12 @@ export interface Deps {
       fatosLidos: string[]
       tokensEntrada: number
       tokensSaida: number
+      /**
+       * 🔑 SUBCONJUNTO de `tokensEntrada`. Existe porque, ate 21/09, a taxa de
+       * cache so era medida no arnes de E2E: o custo real de producao so dava
+       * para estimar, nunca calcular. Ver `reports/evolucao-2026-09-21-whatsapp-manual.md`.
+       */
+      tokensCache: number
     },
   ): Promise<void>
   atualizarClassificacao(contatoId: string, campos: Record<string, unknown>, mensagemId: number | null): Promise<void>
@@ -182,6 +188,7 @@ async function classificar(llm: Llm, entrada: Entrada, historico: { papel: 'clie
     sinais: JSON.parse(r.texto) as Sinais,
     tokensEntrada: r.tokensEntrada,
     tokensSaida: r.tokensSaida,
+    tokensCache: r.tokensCache ?? 0,
   }
 }
 
@@ -259,12 +266,14 @@ async function resolver(
   const fatosLidos: string[] = []
   let tokensEntrada = 0
   let tokensSaida = 0
+  let tokensCache = 0
   let falhaTipo: FalhaTipo | null = null
 
   for (let volta = 0; volta < maxVoltas; volta++) {
     const r = await llm.completar({ sistema, mensagens, tools: toolsDaTrilha(saida) })
     tokensEntrada += r.tokensEntrada
     tokensSaida += r.tokensSaida
+    tokensCache += r.tokensCache ?? 0
 
     if (r.chamadas.length === 0) {
       const declarouLacuna = r.texto.includes(MARCA_LACUNA)
@@ -274,7 +283,7 @@ async function resolver(
         texto: r.texto.replace(MARCA_LACUNA, '').trim(),
         ok: falhaTipo === null,
         falhaTipo,
-        cartoesUsados, fatosLidos, tokensEntrada, tokensSaida,
+        cartoesUsados, fatosLidos, tokensEntrada, tokensSaida, tokensCache,
       }
     }
 
@@ -310,7 +319,7 @@ async function resolver(
     texto: '',
     ok: false,
     falhaTipo: 'lacuna_da_base',
-    cartoesUsados, fatosLidos, tokensEntrada, tokensSaida,
+    cartoesUsados, fatosLidos, tokensEntrada, tokensSaida, tokensCache,
   }
 }
 
@@ -329,7 +338,7 @@ async function ganchoComercial(
   llm: Llm,
   respostaTecnica: string,
   entrada: Entrada,
-): Promise<{ texto: string; tokensEntrada: number; tokensSaida: number }> {
+): Promise<{ texto: string; tokensEntrada: number; tokensSaida: number; tokensCache: number }> {
   const r = await llm.completar({
     sistema: [
       secoes(PERSONA, ['Ritmo', 'Fechar com pergunta e frequente, nao obrigatorio']),
@@ -344,7 +353,12 @@ async function ganchoComercial(
       { papel: 'leo', texto: respostaTecnica },
     ],
   })
-  return { texto: r.texto.trim(), tokensEntrada: r.tokensEntrada, tokensSaida: r.tokensSaida }
+  return {
+    texto: r.texto.trim(),
+    tokensEntrada: r.tokensEntrada,
+    tokensSaida: r.tokensSaida,
+    tokensCache: r.tokensCache ?? 0,
+  }
 }
 
 /**
@@ -374,8 +388,12 @@ export async function responder(
   const deps = opcoes.deps ?? (await depsPadrao())
   const historico = await deps.carregarHistorico(entrada.sessaoId)
 
-  const { sinais, tokensEntrada: tkEntradaRoteador, tokensSaida: tkSaidaRoteador } =
-    await classificar(llm, entrada, historico)
+  const {
+    sinais,
+    tokensEntrada: tkEntradaRoteador,
+    tokensSaida: tkSaidaRoteador,
+    tokensCache: tkCacheRoteador,
+  } = await classificar(llm, entrada, historico)
 
   let saida = decidirSaida(sinais)
 
@@ -414,12 +432,14 @@ export async function responder(
   let texto = resolucao.texto
   let tokensEntrada = tkEntradaRoteador + resolucao.tokensEntrada
   let tokensSaida = tkSaidaRoteador + resolucao.tokensSaida
+  let tokensCache = tkCacheRoteador + resolucao.tokensCache
 
   // ── A TRAVA COMERCIAL ────────────────────────────────────────────────────
   if (saida === 'tecnico' && podeInjetarGancho(resolucao, sinais)) {
     const gancho = await ganchoComercial(llm, texto, entrada)
     tokensEntrada += gancho.tokensEntrada
     tokensSaida += gancho.tokensSaida
+    tokensCache += gancho.tokensCache
     // Linha em branco: duas batidas, duas mensagens no WhatsApp.
     if (gancho.texto) texto = `${texto}\n\n${gancho.texto}`
   }
@@ -437,6 +457,7 @@ export async function responder(
     fatosLidos: resolucao.fatosLidos,
     tokensEntrada,
     tokensSaida,
+    tokensCache,
   })
 
   if (opcoes.memoriaLigada && sinais.revelou) {

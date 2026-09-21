@@ -41,6 +41,14 @@ ExecStart=/usr/local/bin/node /usr/local/lib/hermes-agent/scripts/whatsapp-bridg
   --mode bot
 WorkingDirectory=/usr/local/lib/hermes-agent/scripts/whatsapp-bridge
 
+# 🔴 A ponte herdava esta variavel do gateway Python, que a lia de
+#    /root/.hermes/profiles/leo/.env e a passava ao processo filho. Como
+#    unidade propria a ponte sobe com ambiente vazio, e sem allowlist o
+#    bridge.js REJEITA toda mensagem que chega (`allowlist_mismatch`).
+#    Foi o que derrubou o primeiro teste apos a virada, em 21/09.
+#    `*` e bot aberto, e restaura o comportamento que valia em producao.
+Environment="WHATSAPP_ALLOWED_USERS=*"
+
 # Os mesmos argumentos do processo que roda hoje, conferidos em 21/09 por
 # /proc/<pid>/cmdline. Mudar qualquer um muda o comportamento da ponte.
 

@@ -73,6 +73,8 @@ export interface Resolucao {
   fatosLidos: string[]
   tokensEntrada: number
   tokensSaida: number
+  /** SUBCONJUNTO de `tokensEntrada`, nunca parcela a somar. Ver `Llm`. */
+  tokensCache: number
 }
 
 export interface Resposta {

@@ -275,7 +275,9 @@ export function gerarMarkdown(r: RodadaSalva): string {
 export function escreverRelatorio(r: RodadaSalva, sufixo = ''): string {
   const dir = join(RAIZ, 'reports')
   mkdirSync(dir, { recursive: true })
-  const carimbo = r.quando.slice(0, 16).replace('T', '-').replace(':', '')
+  // ⚠️ SEGUNDOS, nao so minutos. Em 21/09 duas suites rodaram no mesmo minuto e a
+  //    segunda sobrescreveu o relatorio da primeira, que se perdeu.
+  const carimbo = r.quando.slice(0, 19).replace('T', '-').replace(/:/g, '')
   const arquivo = join(dir, `e2e-${carimbo}${sufixo}.md`)
   writeFileSync(arquivo, gerarMarkdown(r))
   return arquivo

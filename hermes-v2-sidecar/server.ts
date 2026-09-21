@@ -47,8 +47,21 @@ const OCIOSIDADE_MIN = Number(process.env.SESSAO_OCIOSIDADE_MIN ?? 120)
  */
 const RESPONDER_GRUPO = process.env.RESPONDER_GRUPO === '1'
 
-/** Pausa entre as duas batidas, para nao chegarem coladas no aparelho. */
-const PAUSA_ENTRE_BATIDAS_MS = 1200
+/**
+  * Pausa entre as duas batidas, para nao chegarem coladas no aparelho.
+  *
+  * 🔑 FAIXA ALEATORIA, NAO VALOR FIXO. 1200ms fixos chegavam praticamente
+  * juntos no aparelho e a segunda batida parecia disparo de bot, nao segunda
+  * mensagem de alguem digitando. Medido na maratona manual do WhatsApp em
+  * 21/09. Intervalo constante tambem e assinatura de automacao: duas mensagens
+  * sempre a exatamente 1,2s uma da outra nao acontece com gente.
+  */
+const PAUSA_ENTRE_BATIDAS_MIN_MS = 2500
+const PAUSA_ENTRE_BATIDAS_MAX_MS = 4000
+
+const pausaEntreBatidas = (): number =>
+  PAUSA_ENTRE_BATIDAS_MIN_MS +
+  Math.random() * (PAUSA_ENTRE_BATIDAS_MAX_MS - PAUSA_ENTRE_BATIDAS_MIN_MS)
 
 // ════════════════════════════════════════════════════════════════════════════
 //  O CONTRATO DA PONTE
@@ -136,7 +149,15 @@ function emBatidas(texto: string): string[] {
 async function enviar(chatId: string, texto: string): Promise<void> {
   const batidas = emBatidas(limparSaida(texto))
   for (const [i, batida] of batidas.entries()) {
-    if (i > 0) await dormir(PAUSA_ENTRE_BATIDAS_MS)
+    if (i > 0) {
+      // ⚠️ O `/typing` VOLTA aqui de proposito. Enviar uma mensagem limpa o
+      //    indicador no aparelho, entao sem esta linha a pessoa veria "digitando"
+      //    sumir na primeira batida e a segunda cair do nada, tres segundos
+      //    depois. O `catch` existe porque typing e cosmetico: se a ponte
+      //    recusar, a mensagem ainda tem que sair.
+      await daPonte('/typing', { chatId }).catch(() => {})
+      await dormir(pausaEntreBatidas())
+    }
     await daPonte('/send', { chatId, message: batida })
   }
 }

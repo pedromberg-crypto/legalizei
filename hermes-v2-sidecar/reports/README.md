@@ -24,7 +24,8 @@ com aparência de dado.
 | quanto custa e o que o gasto comprou | [analise-custo-2026-09-20](analise-custo-2026-09-20.md) |
 | como levar isto para a VPS sem derrubar o WhatsApp | [plano-migracao-vps](plano-migracao-vps.md) |
 | o que ja esta pronto para a virada, e o runbook do dia | [preparacao-virada-2026-09-21](preparacao-virada-2026-09-21.md) |
-| 🔴 o defeito aberto mais caro (o Leo negando fidelidade) | [evolucao-2026-09-21-0145](evolucao-2026-09-21-0145.md) |
+| 🔴 o defeito da fidelidade, achado | [evolucao-2026-09-21-0145](evolucao-2026-09-21-0145.md) |
+| ✅ o mesmo defeito, corrigido pela descricao da tool | [evolucao-2026-09-21-0155](evolucao-2026-09-21-0155.md) |
 | como o agente está respondendo hoje | a rodada mais recente, `e2e-*-2348` |
 | se uma mudança quebrou alguma coisa | duas rodadas seguidas, comparando as falhas |
 

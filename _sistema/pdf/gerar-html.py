@@ -41,6 +41,10 @@ ap.add_argument("--eyebrow", default="Documento de validação · uso interno")
 ap.add_argument("--data", default="12 de agosto de 2026")
 ap.add_argument("--para", default="Pedro Puntel")
 ap.add_argument("--papel", default="par de validação")
+# Doc de apresentacao nao fecha em pergunta nem carrega o semaforo do vault:
+# os dois viraram flag em 21/09 pra nao carimbar promessa que o texto nao cumpre.
+ap.add_argument("--fecho", default=None, help='o que fecha cada bloco na capa (ex: "tabela")')
+ap.add_argument("--sem-legenda", action="store_true", help="esconde a legenda 🟢🟡🔴 da capa")
 args = ap.parse_args()
 
 MD = pathlib.Path(args.entrada).resolve()
@@ -242,6 +246,17 @@ SUBTITULOS_POR_DOC = {
     "11": "os 2 gates, o placar honesto e o que falta travar",
     "12": "os 8 riscos e a defesa atual de cada um",
     },
+    "2026-09-21-apresentacao-trafego-organico": {
+    "1": "um mês de veiculação em número fechado",
+    "2": "a régua do nicho contábil e onde ficamos",
+    "3": "o que mudou entre a 02 e a 04, e os dois testes",
+    "4": "as seis campanhas, gasto a gasto",
+    "5": "Lead Form nativo e LP própria, lado a lado",
+    "6": "canal, verba, geo, oferta e régua de escala",
+    "7": "canal, pilares, cadência e distribuição da pauta",
+    "8": "do perfil criado ao fechamento do ciclo",
+    "9": "o que já está no ar",
+    },
     "2026-08-18-custos-margem-decisao": {
     "1": "onde cada player está e por que o preço anunciado não é a conta",
     "2": "as duas contas do vault somadas pela primeira vez",
@@ -258,7 +273,7 @@ SUBTITULOS = SUBTITULOS_POR_DOC.get(MD.stem, {})
 
 # A capa anuncia como cada bloco fecha. Sai do proprio texto pra nao precisar
 # de flag: doc de decisao fecha em decisao, doc de validacao fecha em pergunta.
-fecho_capa = "decisão" if "Decisão a tomar" in bruto else "pergunta"
+fecho_capa = args.fecho or ("decisão" if "Decisão a tomar" in bruto else "pergunta")
 
 sumario_itens = "\n".join(
     f'<li><span class="sum-num">{n}</span>'
@@ -291,6 +306,12 @@ if extras:
     ) + "</section>"
 
 intro_render = bloco_html(intro_md)
+
+legenda_capa = "" if args.sem_legenda else """<div class="legenda">
+      <span><span class="dot dot-g"></span> travado</span>
+      <span><span class="dot dot-y"></span> estimativa / placeholder</span>
+      <span><span class="dot dot-r"></span> pendente ou frágil</span>
+    </div>"""
 
 HTML = f"""<!doctype html>
 <html lang="pt-BR">
@@ -564,11 +585,7 @@ hr {{ border:none; border-top:1px solid var(--ink-200); margin:6mm 0; }}
     </dl>
   </div>
   <div class="capa-rodape">
-    <div class="legenda">
-      <span><span class="dot dot-g"></span> travado</span>
-      <span><span class="dot dot-y"></span> estimativa / placeholder</span>
-      <span><span class="dot dot-r"></span> pendente ou frágil</span>
-    </div>
+    {legenda_capa}
     <div>Legalizai · Legalize Digital<br>número sem fonte não entra</div>
   </div>
 </div>

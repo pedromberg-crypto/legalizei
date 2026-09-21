@@ -22,6 +22,7 @@ com aparência de dado.
 | quero saber | leia |
 |---|---|
 | quanto custa e o que o gasto comprou | [analise-custo-2026-09-20](analise-custo-2026-09-20.md) |
+| como levar isto para a VPS sem derrubar o WhatsApp | [plano-migracao-vps](plano-migracao-vps.md) |
 | como o agente está respondendo hoje | a rodada mais recente, `e2e-*-2348` |
 | se uma mudança quebrou alguma coisa | duas rodadas seguidas, comparando as falhas |
 

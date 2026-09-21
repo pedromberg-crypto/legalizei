@@ -38,6 +38,7 @@ Mesma suíte (`curta`, 20 casos), mesmo modelo (`gemini-3.1-flash-lite`).
 | [`2338`](e2e-2026-09-20-2338.md) | 16/20 | extreme makeover da `buscar_cartao` |
 | [`2345`](e2e-2026-09-20-2345.md) | 14/20 | as quatro rédeas de redação |
 | [`2348`](e2e-2026-09-20-2348.md) | 16/20 | correção das chamadas paralelas de tool |
+| [`21-0004`](e2e-2026-09-21-0004.md) | **17/20** | 🟢 cache explícito + filtro de tools por trilha: custo −80,3% |
 
 ⚠️ **A coluna do placar é a menos informativa da tabela.** Sete rodadas deram
 14, 15, 16, 14, 16, 14, 16 sem correlação com o que mudou entre elas. O que se

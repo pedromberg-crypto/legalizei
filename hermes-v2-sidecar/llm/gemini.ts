@@ -9,6 +9,8 @@
  * ════════════════════════════════════════════════════════════════════════════
  */
 
+import { createHash } from 'node:crypto'
+
 import { GoogleGenAI, Type, type Content, type FunctionDeclaration } from '@google/genai'
 
 import type { DefinicaoTool, Embedder, Llm, MensagemLlm } from '../tipos.js'
@@ -222,23 +224,125 @@ function comoFunctionDeclarations(tools: DefinicaoTool[]): FunctionDeclaration[]
 export interface OpcoesGemini {
   modelo?: string
   temperatura?: number
+  /** Liga o cache explicito do prompt de sistema. Ver o bloco abaixo. */
+  cache?: boolean
+  /** Quanto tempo o cache vive. Padrao 15 min, que cobre uma rodada de E2E. */
+  cacheTtlSegundos?: number
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  CACHE EXPLICITO DO PROMPT DE SISTEMA
+//
+//  🔑 POR QUE VALE: medido em 7 rodadas, ~99% do input e o prompt de sistema
+//  reenviado inteiro a cada chamada. Token em cache custa um decimo do token de
+//  entrada normal, e o prompt de sistema e ESTAVEL por trilha: e exatamente o
+//  caso de uso do cache, e o unico cuja economia escala com volume.
+//
+//  🔴 O QUE MUDA NA CHAMADA: com `cachedContent`, o `systemInstruction` e as
+//  `tools` NAO podem ser reenviados na mesma requisicao. Eles ja vivem no
+//  cache. Mandar os dois derruba a chamada, entao o adaptador tem dois caminhos
+//  e nao um com `if` no meio.
+//
+//  ⚠️ CACHE E POR (modelo + sistema + tools). Trilhas diferentes carregam
+//  documentos diferentes, entao cada uma tem o seu. A chave e um hash do
+//  conteudo: mudou uma linha do RULES.md, nasce cache novo, e o antigo expira
+//  sozinho. Sem isso, editar o prompt e continuar rodando o cache velho seria um
+//  bug invisivel, do pior tipo: o teste mediria a versao anterior.
+//
+//  ⚠️ E CACHE TEM CUSTO DE ARMAZENAMENTO POR HORA, que nao esta medido neste
+//  repo. Por isso o TTL e curto e a coisa e OPCIONAL: numa rodada de teste ele
+//  quase certamente compensa, em producao 24/7 a conta e outra e precisa ser
+//  feita com o preco na mao.
+// ════════════════════════════════════════════════════════════════════════════
+
+interface CacheVivo {
+  nome: string
+  expiraEm: number
+}
+
+const caches = new Map<string, CacheVivo>()
+
+function chaveDoCache(modelo: string, sistema: string, tools: DefinicaoTool[]): string {
+  return createHash('sha256')
+    .update(modelo).update('\u0000')
+    .update(sistema).update('\u0000')
+    .update(JSON.stringify(tools.map((t) => t.nome)))
+    .digest('hex')
+}
+
+/**
+ * Devolve o nome do cache para este conjunto, criando se preciso.
+ *
+ * 🔴 Devolve `null` em vez de estourar quando o provedor recusa. Cache e
+ * otimizacao, nao funcionalidade: se ele falhar (conteudo abaixo do minimo de
+ * tokens, cota, indisponibilidade), a rodada TEM que continuar pelo caminho
+ * normal. Otimizacao que derruba producao quando falha nao e otimizacao.
+ */
+async function pegarCache(
+  ai: GoogleGenAI,
+  modelo: string,
+  sistema: string,
+  tools: DefinicaoTool[],
+  ttlSegundos: number,
+): Promise<string | null> {
+  const chave = chaveDoCache(modelo, sistema, tools)
+  const vivo = caches.get(chave)
+  // Margem de 60s: cache que expira entre a decisao e a chamada vira erro.
+  if (vivo && vivo.expiraEm > Date.now() + 60_000) return vivo.nome
+
+  try {
+    const criado = await ai.caches.create({
+      model: modelo,
+      config: {
+        systemInstruction: sistema,
+        ...(tools.length ? { tools: [{ functionDeclarations: comoFunctionDeclarations(tools) }] } : {}),
+        ttl: `${ttlSegundos}s`,
+        displayName: `leo-${chave.slice(0, 12)}`,
+      },
+    })
+    if (!criado.name) return null
+    caches.set(chave, { nome: criado.name, expiraEm: Date.now() + ttlSegundos * 1000 })
+    return criado.name
+  } catch (erro) {
+    const msg = erro instanceof Error ? erro.message : String(erro)
+    console.warn(`[cache] nao criado, seguindo sem: ${msg.slice(0, 160)}`)
+    // Marca como indisponivel por um tempo, para nao tentar criar a cada chamada
+    // e pagar uma ida de rede extra por turno.
+    caches.set(chave, { nome: '', expiraEm: Date.now() + 120_000 })
+    return null
+  }
 }
 
 export function criarLlm(opcoes: OpcoesGemini = {}): Llm {
   const ai = cliente()
   const modelo = opcoes.modelo ?? MODELO_PADRAO
 
+  const ttl = opcoes.cacheTtlSegundos ?? 900
+
   return {
     async completar({ sistema, mensagens, tools, jsonSchema }) {
+      // 🔴 Cache so entra quando NAO ha `jsonSchema`. A chamada do classificador
+      //    pede saida estruturada e usa um prompt curto proprio: cachear ali nao
+      //    economiza nada e complica a combinacao de configs.
+      const nomeDoCache = opcoes.cache && !jsonSchema
+        ? await pegarCache(ai, modelo, sistema, tools ?? [], ttl)
+        : null
+
       const r = await ai.models.generateContent({
         model: modelo,
         contents: comoContents(mensagens),
         config: {
-          systemInstruction: sistema,
           temperature: opcoes.temperatura ?? 0.7,
-          ...(tools?.length
-            ? { tools: [{ functionDeclarations: comoFunctionDeclarations(tools) }] }
-            : {}),
+          // Com cache, sistema e tools JA ESTAO nele e reenvia-los derruba a
+          // chamada. Sem cache, os dois vao normalmente.
+          ...(nomeDoCache
+            ? { cachedContent: nomeDoCache }
+            : {
+                systemInstruction: sistema,
+                ...(tools?.length
+                  ? { tools: [{ functionDeclarations: comoFunctionDeclarations(tools) }] }
+                  : {}),
+              }),
           ...(jsonSchema
             ? {
                 responseMimeType: 'application/json',
@@ -272,6 +376,8 @@ export function criarLlm(opcoes: OpcoesGemini = {}): Llm {
         //    em trilhas de fato reduziu o piso de custo.
         tokensEntrada: r.usageMetadata?.promptTokenCount ?? 0,
         tokensSaida: r.usageMetadata?.candidatesTokenCount ?? 0,
+        // Subconjunto de , nao parcela a somar.
+        tokensCache: r.usageMetadata?.cachedContentTokenCount ?? 0,
       }
     },
   }

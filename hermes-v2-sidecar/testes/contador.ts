@@ -52,6 +52,14 @@ export interface Consumo {
   chamadasLlm: number
   tokensEntrada: number
   tokensSaida: number
+  /**
+   * 🔴 SUBCONJUNTO de `tokensEntrada`, nunca uma parcela a somar.
+   *
+   * O Gemini conta o token cacheado DENTRO do total de entrada. Quem soma os
+   * dois infla a conta, e conta de custo que erra para MAIS e a que ninguem
+   * corrige: ela so provoca corte desnecessario.
+   */
+  tokensCache: number
   chamadasEmbedding: number
   charsEmbedding: number
   falhasDeProvedor: number
@@ -62,6 +70,7 @@ export function novoConsumo(): Consumo {
     chamadasLlm: 0,
     tokensEntrada: 0,
     tokensSaida: 0,
+    tokensCache: 0,
     chamadasEmbedding: 0,
     charsEmbedding: 0,
     falhasDeProvedor: 0,
@@ -76,6 +85,7 @@ export function contarLlm(llm: Llm, consumo: Consumo): Llm {
         const r = await llm.completar(args)
         consumo.tokensEntrada += r.tokensEntrada
         consumo.tokensSaida += r.tokensSaida
+        consumo.tokensCache += r.tokensCache ?? 0
         return r
       } catch (erro) {
         // 🔑 Chamada que falha depois de aceita ja foi cobrada. Some no
@@ -150,21 +160,51 @@ export async function buscarCambio(): Promise<Cambio | null> {
 // ════════════════════════════════════════════════════════════════════════════
 
 export interface Custo {
+  /** Tokens de entrada que NAO vieram de cache, ao preco cheio. */
   entradaUsd: number
+  /** Tokens de entrada servidos do cache, a um decimo do preco. */
+  cacheUsd: number
   saidaUsd: number
   totalUsd: number
   totalBrl: number | null
+  /** O que a rodada custaria sem nenhum cache. Serve para medir a economia. */
+  semCacheUsd: number
+  economiaUsd: number
+  /** Fracao da entrada que veio de cache, de 0 a 1. */
+  taxaDeAcerto: number
 }
 
+/**
+ * 🔴 A conta que erra fácil: `tokensCache` esta DENTRO de `tokensEntrada`.
+ *
+ * O Gemini reporta `promptTokenCount` como o total, e `cachedContentTokenCount`
+ * como a parte dele que veio do cache. Cobrar os dois separadamente e somar
+ * conta o token cacheado duas vezes, uma a preco cheio e outra a preco de
+ * cache, e infla a fatura em ate 10%.
+ *
+ * Por isso o preco cheio incide sobre a DIFERENCA.
+ */
 export function calcularCusto(consumo: Consumo, cambio: Cambio | null): Custo {
-  const entradaUsd = (consumo.tokensEntrada / 1_000_000) * PRECO.entradaPorMilhao
+  const cacheados = Math.min(consumo.tokensCache, consumo.tokensEntrada)
+  const normais = consumo.tokensEntrada - cacheados
+
+  const entradaUsd = (normais / 1_000_000) * PRECO.entradaPorMilhao
+  const cacheUsd = (cacheados / 1_000_000) * PRECO.cachePorMilhao
   const saidaUsd = (consumo.tokensSaida / 1_000_000) * PRECO.saidaPorMilhao
-  const totalUsd = entradaUsd + saidaUsd
+  const totalUsd = entradaUsd + cacheUsd + saidaUsd
+
+  // O contrafactual: a mesma rodada sem cache nenhum.
+  const semCacheUsd = (consumo.tokensEntrada / 1_000_000) * PRECO.entradaPorMilhao + saidaUsd
+
   return {
     entradaUsd,
+    cacheUsd,
     saidaUsd,
     totalUsd,
     totalBrl: cambio ? totalUsd * cambio.taxa : null,
+    semCacheUsd,
+    economiaUsd: semCacheUsd - totalUsd,
+    taxaDeAcerto: consumo.tokensEntrada > 0 ? cacheados / consumo.tokensEntrada : 0,
   }
 }
 
@@ -184,18 +224,29 @@ export function imprimirCusto(consumo: Consumo, cambio: Cambio | null, casos: nu
   console.log(`  modelo                  ${PRECO.modelo}`)
   console.log(`  chamadas ao modelo      ${n(consumo.chamadasLlm)}`)
   console.log(`  tokens de entrada       ${n(consumo.tokensEntrada)}`)
+  console.log(`    dos quais em cache    ${n(consumo.tokensCache)}  (${(c.taxaDeAcerto * 100).toFixed(1)}%)`)
   console.log(`  tokens de saida         ${n(consumo.tokensSaida)}`)
   console.log(`  razao entrada/saida     ${proporcao} para 1`)
   console.log('')
-  console.log(`  entrada                 ${usd(c.entradaUsd)}`)
+  console.log(`  entrada (preco cheio)   ${usd(c.entradaUsd)}`)
+  console.log(`  entrada (cache, 1/10)   ${usd(c.cacheUsd)}`)
   console.log(`  saida                   ${usd(c.saidaUsd)}`)
   console.log(`  TOTAL                   ${usd(c.totalUsd)}${c.totalBrl !== null ? `  ·  ${brl(c.totalBrl)}` : ''}`)
   if (casos > 0) {
     const porCaso = c.totalUsd / casos
     console.log(`  por caso                ${usd(porCaso)}${c.totalBrl !== null ? `  ·  ${brl((c.totalBrl) / casos)}` : ''}`)
   }
+  if (consumo.tokensCache > 0) {
+    const pct = c.semCacheUsd > 0 ? (c.economiaUsd / c.semCacheUsd) * 100 : 0
+    console.log('')
+    console.log(`  sem cache custaria      ${usd(c.semCacheUsd)}${cambio ? `  ·  ${brl(c.semCacheUsd * cambio.taxa)}` : ''}`)
+    console.log(`  ECONOMIA DO CACHE       ${usd(c.economiaUsd)}${cambio ? `  ·  ${brl(c.economiaUsd * cambio.taxa)}` : ''}  (${pct.toFixed(1)}%)`)
+  } else {
+    console.log('')
+    console.log('  ⚠️ nenhum token veio de cache nesta rodada.')
+  }
   console.log('')
-  console.log(`  preco de ${PRECO.entradaPorMilhao}/${PRECO.saidaPorMilhao} por milhao (entrada/saida)`)
+  console.log(`  preco de ${PRECO.entradaPorMilhao}/${PRECO.saidaPorMilhao}/${PRECO.cachePorMilhao} por milhao (entrada/saida/cache)`)
   console.log(`  fonte: ${PRECO.fonte}, medido em ${PRECO.medidoEm}`)
   if (cambio) {
     console.log(`  cambio: ${cambio.taxa.toFixed(4)} · ${cambio.fonte} · ${cambio.quando}`)

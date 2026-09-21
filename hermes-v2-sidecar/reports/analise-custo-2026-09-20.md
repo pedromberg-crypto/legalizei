@@ -3,11 +3,11 @@ tipo: analise-custo
 status: gerado
 data: 2026-09-20
 assunto: hermes-v2-sidecar
-rodadas: 7
+rodadas: 8
 tags: [sidecar, custo, e2e, otimizacao, roi]
 ---
 
-# Evolução de custo · 7 rodadas de E2E · 2026-09-20
+# Evolução de custo · 8 rodadas de E2E · 2026-09-20
 
 Todas no mesmo dia, mesma suíte (`curta`, 20 casos), mesmo modelo
 (`gemini-3.1-flash-lite`), câmbio 5,1442. Os números saem dos próprios
@@ -24,9 +24,11 @@ relatórios de rodada, não de anotação à parte.
 | 5 | `2338` | **16/20** | **28** (12+16) | 524.747 | 6.129 | 0,7221 | +19,7% |
 | 6 | `2345` | 14/20 | 13 (9+4) | 510.972 | 5.764 | 0,7016 | −2,8% |
 | 7 | `2348` | **16/20** | 19 (15+4) | 549.841 | 6.229 | 0,7552 | +7,6% |
+| 8 | `21-0004` | **17/20** | 22 (14+8) | 507.735 | 5.898 | **0,1485** | 🟢 **−80,3%** |
 
-**Acumulado:** custo **+72,4%** · entrada **+78,0%** · saída **+17,7%** ·
-placar **14 → 16**.
+**Acumulado até a #7:** custo **+72,4%** · entrada **+78,0%** · placar 14 → 16.
+**Com a #8 (otimizada):** custo **−66,1%** contra a #1, com o melhor placar da
+série. O detalhe da #8 está no §5.
 
 O que cada salto foi:
 
@@ -172,3 +174,68 @@ registra quais IDs voltaram, não quais entraram na resposta.
 🔴 **E o de sempre: nada disso se mede pelo placar.** Otimização de custo tem que
 sair com o mesmo comportamento, e comportamento aqui se lê em turnos sem lastro,
 chamadas de RAG e resposta inteira, não em pontuação que oscila 3 pontos sozinha.
+
+---
+
+## 5. A otimização aplicada · rodada `21-0004`
+
+As recomendações (a) e (b) do §3 foram implementadas e medidas na mesma suíte.
+
+| | antes (`2348`) | depois (`21-0004`) |
+|---|---|---|
+| tokens de entrada | 549.841 | 507.735 |
+| **dos quais em cache** | 0 | **475.176 (93,6%)** |
+| custo da rodada | R$ 0,7552 | **R$ 0,1485** |
+| custo por caso | R$ 0,0378 | **R$ 0,0074** |
+| placar | 16/20 | **17/20** |
+| falhas de provedor | 0 | 0 |
+
+**Redução de 80,3% no custo**, com o melhor placar da série.
+
+### O número que vale mais que o total: 93,6% de acerto
+
+A previsão do §3 era "~93% do input é cacheável". O medido foi **93,6%**. Não é
+sorte: é a mesma conta de que o prompt de sistema é quase todo o input, agora
+confirmada pelo próprio provedor em vez de estimada por nós.
+
+🔑 **E o contrafactual está no relatório, não na cabeça de ninguém.** O contador
+calcula o que a MESMA rodada custaria sem cache (US$ 0,1358) e imprime a
+diferença. Economia declarada sem contrafactual é sempre suspeita, porque
+qualquer rodada mais barata pode ser só uma rodada menor.
+
+### 🔴 A conta que erra fácil, e que o código evita de propósito
+
+`cachedContentTokenCount` é **subconjunto** de `promptTokenCount`, não uma
+parcela a somar. Cobrar os dois separadamente e somar conta o token cacheado
+duas vezes, uma a preço cheio e outra a preço de cache, e infla a fatura em até
+10%. O preço cheio incide sobre a **diferença**, e isso está escrito na função.
+
+### O que cada medida contribuiu
+
+**O cache é praticamente toda a economia.** O filtro de tools por trilha cortou
+~42 mil tokens de entrada (7,7%), e num mundo sem cache isso valeria ~R$ 0,05.
+Com cache, a maior parte desses tokens custaria um décimo de qualquer jeito.
+
+⚠️ **O filtro continua valendo**, por dois motivos que não são custo: a trilha de
+escalonamento deixou de receber a calculadora de imposto, numa trilha cuja regra
+dura é "você para de resolver", e menos tool no prompt é menos chance de o modelo
+chamar a errada.
+
+### O que não foi feito, e por quê
+
+**(c) reduzir chunks do RAG: descartado.** A análise já apontava menos de 1%, e
+com cache a conta piora ainda mais: o payload de tool é justamente a parte que
+NÃO se cacheia, mas ele é pequeno. Trocar fundamento por centavos ficou pior
+depois da otimização, não melhor.
+
+### ⚠️ O que ainda não está medido
+
+**O custo de armazenamento do cache por hora.** Não existe com fonte no repo, e
+ele não aparece no `usageMetadata`. Para uma rodada de teste de 4 minutos com
+TTL de 15, é desprezível. **Para produção 24/7 a conta é outra** e precisa do
+preço na mão antes de se prometer os 80%.
+
+🔑 O desenho já reconhece isso: o cache é opcional (`SEM_CACHE=1` desliga), o TTL
+é curto, e a chave é um hash do conteúdo. Mudou uma linha do `RULES.md`, nasce
+cache novo. Sem isso, editar o prompt e seguir rodando o cache velho seria um bug
+invisível do pior tipo: o teste mediria a versão anterior.

@@ -52,7 +52,7 @@ export interface RodadaSalva {
   consumo: Consumo
   custo: Custo
   cambio: Cambio | null
-  preco: { modelo: string; entradaPorMilhao: number; saidaPorMilhao: number; fonte: string; medidoEm: string }
+  preco: { modelo: string; entradaPorMilhao: number; saidaPorMilhao: number; cachePorMilhao?: number; fonte: string; medidoEm: string }
   resultados: ResultadoSalvo[]
   modelo?: string
   suite?: string
@@ -143,12 +143,18 @@ export function gerarMarkdown(r: RodadaSalva): string {
   p(`| custo por caso | ${usd(r.custo.totalUsd / total)}${r.custo.totalBrl !== null ? ` · ${brl(r.custo.totalBrl / total)}` : ''} |`)
   p(`| chamadas ao modelo | ${n(r.consumo.chamadasLlm)} |`)
   p(`| tokens de entrada | ${n(r.consumo.tokensEntrada)} |`)
+  if ((r.consumo.tokensCache ?? 0) > 0) {
+    const pct = r.custo.semCacheUsd ? ((r.custo.economiaUsd ?? 0) / r.custo.semCacheUsd) * 100 : 0
+    p(`| **dos quais em cache** | **${n(r.consumo.tokensCache)}** (${((r.custo.taxaDeAcerto ?? 0) * 100).toFixed(1)}%) |`)
+    p(`| sem cache custaria | ${usd(r.custo.semCacheUsd ?? 0)}${r.cambio ? ` · ${brl((r.custo.semCacheUsd ?? 0) * r.cambio.taxa)}` : ''} |`)
+    p(`| **economia do cache** | **${usd(r.custo.economiaUsd ?? 0)}${r.cambio ? ` · ${brl((r.custo.economiaUsd ?? 0) * r.cambio.taxa)}` : ''} (${pct.toFixed(1)}%)** |`)
+  }
   p(`| tokens de saida | ${n(r.consumo.tokensSaida)} |`)
   p(`| razao entrada/saida | ${r.consumo.tokensSaida > 0 ? (r.consumo.tokensEntrada / r.consumo.tokensSaida).toFixed(1) : '∞'} para 1 |`)
   p(`| chamadas de embedding | ${n(r.consumo.chamadasEmbedding)} |`)
   p(`| falhas de provedor | ${r.consumo.falhasDeProvedor} |`)
   p()
-  p(`Preco de ${r.preco.entradaPorMilhao}/${r.preco.saidaPorMilhao} por milhao (entrada/saida).`)
+  p(`Preco de ${r.preco.entradaPorMilhao}/${r.preco.saidaPorMilhao}/${r.preco.cachePorMilhao ?? '?'} por milhao (entrada/saida/cache).`)
   p(`Fonte: ${r.preco.fonte}, medido em ${r.preco.medidoEm}.`)
   if (r.cambio) p(`Cambio ${r.cambio.taxa.toFixed(4)}, de ${r.cambio.fonte}, em ${r.cambio.quando}.`)
   p()

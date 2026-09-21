@@ -25,7 +25,7 @@ import type {
   Embedder, Entrada, FalhaTipo, Llm, MensagemLlm, Resolucao, Resposta, Saida, Sinais,
   PacoteEscalonamento,
 } from './tipos.js'
-import { TOOLS } from './tools-def.js'
+import { toolsDaTrilha } from './tools-def.js'
 
 const AQUI = dirname(fileURLToPath(import.meta.url))
 
@@ -262,7 +262,7 @@ async function resolver(
   let falhaTipo: FalhaTipo | null = null
 
   for (let volta = 0; volta < maxVoltas; volta++) {
-    const r = await llm.completar({ sistema, mensagens, tools: TOOLS })
+    const r = await llm.completar({ sistema, mensagens, tools: toolsDaTrilha(saida) })
     tokensEntrada += r.tokensEntrada
     tokensSaida += r.tokensSaida
 

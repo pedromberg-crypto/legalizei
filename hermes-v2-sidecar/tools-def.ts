@@ -167,3 +167,57 @@ export const TOOLS: DefinicaoTool[] = [
 ]
 
 export const NOMES_DE_TOOL = TOOLS.map((t) => t.nome)
+
+/**
+ * ════════════════════════════════════════════════════════════════════════════
+ *  O CONJUNTO DE TOOLS POR TRILHA
+ *
+ *  🔑 O schema das oito tools pesa ~1.745 tokens e ia em TODA chamada, inclusive
+ *  nas trilhas que nao podiam usar metade delas. Filtrar nao toca em uma linha
+ *  de conteudo, entao e o corte mais seguro que existe aqui.
+ *
+ *  🔴 CRITERIO: sai a tool que a trilha nao pode usar POR REGRA, nunca a que
+ *  ela "provavelmente nao vai precisar". Tool ausente nao vira resposta pior,
+ *  vira resposta inventada: o modelo nao tem como saber que a ferramenta
+ *  existia e responde de cabeca. Na duvida, a tool fica.
+ *
+ *  ⚠️ Por isso `tecnico` e `comercial` mantem as oito. A trilha tecnica e a
+ *  porta de entrada de qualquer assunto, e a comercial precisa de escopo, CNAE
+ *  e estimativa tanto quanto de preco. O corte real acontece nas duas trilhas
+ *  que tem regra dura sobre o que NAO fazer.
+ * ════════════════════════════════════════════════════════════════════════════
+ */
+export const TOOLS_POR_SAIDA: Record<string, string[]> = {
+  /**
+   * Gate de saida. A pergunta e uma so: a casa atende? E a resposta termina nos
+   * canais oficiais.
+   *
+   * Fora: `estimar_das` e `consultar_preco` (nao se cotiza para quem nao se
+   * atende), `consultar_contrato` (nao ha contrato a discutir) e
+   * `buscar_cartao` (capacidade do produto nao interessa a quem esta fora).
+   */
+  fora_escopo: ['consultar_escopo', 'consultar_cnae', 'consultar_links', 'buscar_base'],
+
+  /**
+   * Escalonamento. A regra dura da trilha e "voce PARA de resolver".
+   *
+   * 🔑 Tirar `estimar_das` daqui nao e economia, e coerencia: a trilha existe
+   * porque a conta do caso NAO e sua. Deixar a calculadora na mao de quem
+   * acabou de receber ordem de nao calcular e convite a desobedecer, e
+   * aderencia e o defeito de sempre deste agente.
+   *
+   * Fica `consultar_contrato` porque fidelidade e multa sao CONSULTA, e ficam
+   * os canais para o aviso de que um atendente assume.
+   */
+  escalonamento: ['consultar_contrato', 'consultar_escopo', 'consultar_links', 'buscar_base'],
+
+  tecnico: NOMES_DE_TOOL,
+  comercial: NOMES_DE_TOOL,
+}
+
+/** As tools que a trilha recebe. Trilha desconhecida recebe todas, nunca nenhuma. */
+export function toolsDaTrilha(saida: string): DefinicaoTool[] {
+  const permitidas = TOOLS_POR_SAIDA[saida]
+  if (!permitidas) return TOOLS
+  return TOOLS.filter((t) => permitidas.includes(t.nome))
+}

@@ -137,6 +137,16 @@ export interface Llm {
     chamadas: { nome: string; argumentos: Record<string, unknown>; assinatura?: string }[]
     tokensEntrada: number
     tokensSaida: number
+    /**
+     * Quantos dos tokens de entrada vieram de cache.
+     *
+     * 🔑 Sai do `cachedContentTokenCount` do provedor, e e um SUBCONJUNTO de
+     * `tokensEntrada`, nao uma parcela a somar: o Gemini conta o token cacheado
+     * dentro do total de entrada. Quem soma os dois conta duas vezes e reporta
+     * custo maior do que o real, que e o unico tipo de erro de custo que
+     * ninguem vai conferir.
+     */
+    tokensCache?: number
   }>
 }
 

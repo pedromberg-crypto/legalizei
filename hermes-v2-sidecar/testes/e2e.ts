@@ -313,7 +313,7 @@ async function principal(): Promise<void> {
   // 🔑 O envelope conta na BORDA DO PROVEDOR: o roteador so enxerga as chamadas
   //    que passam por ele, e as de embedding ficariam de fora.
   const consumo = novoConsumo()
-  const llm = contarLlm(criarLlm(), consumo)
+  const llm = contarLlm(criarLlm({ cache: process.env.SEM_CACHE !== '1' }), consumo)
   const embedder = contarEmbedder(criarEmbedder(), consumo)
   const { executarTool } = await import('../tools.js')
 

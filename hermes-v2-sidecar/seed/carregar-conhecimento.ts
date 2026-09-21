@@ -104,6 +104,18 @@ export function parsearCartoes(markdown: string): CartaoParseado[] {
     const acao = campo('Ação')
     const restricao = campo('Restrição')
 
+    // 🔴 Verifica se sobrou texto solto entre os blocos capturados
+    // O unico lugar onde texto solto pode se esconder e ser descartado, dado o 
+    // RegExp do campo(), e entre o final dos metadados e o inicio do **Estado.**
+    const matchEstado = bloco.match(/\*\*Estado\.\*\*/)
+    if (matchEstado && meta.index !== undefined) {
+      const fimMeta = meta.index + meta[0].length
+      const textoSolto = bloco.slice(fimMeta, matchEstado.index).trim()
+      if (textoSolto && !textoSolto.startsWith('<!--')) {
+        throw new Error(`cartao ${cabecalho[1]} descarta texto solto fora dos campos: "${textoSolto.substring(0, 50)}..."`)
+      }
+    }
+
     // 🔴 Cartao incompleto NAO entra pela metade. Um cartao sem restricao e
     //    exatamente o cartao que faz o agente prometer o que nao existe.
     if (!estado || !acao || !restricao) {

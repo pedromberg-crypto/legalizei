@@ -1,0 +1,66 @@
+# ══════════════════════════════════════════════════════════════════════════
+#  whatsapp-bridge.service  ·  a ponte emancipada
+#
+#  🔴 POR QUE ESTA UNIDADE EXISTE
+#
+#  Hoje o `bridge.js` e PROCESSO FILHO do gateway Python, e a unidade do
+#  gateway usa `KillMode=mixed`. Parar o motor antigo derruba a ponte junto, e
+#  derrubar a ponte derruba a conexao com o WhatsApp. Enquanto for assim,
+#  trocar o cerebro custa uma reconexao.
+#
+#  Com a ponte em unidade propria, a sessao do WhatsApp deixa de depender de
+#  qual cerebro esta rodando. E isso, e so isso, que torna a virada instantanea
+#  e o rollback tambem.
+#
+#  ⚠️ A SESSAO E UM APARELHO REGISTRADO. Dois processos nao podem usar a mesma
+#  pasta ao mesmo tempo: o WhatsApp derruba uma das conexoes e a pasta pode
+#  corromper. Antes de habilitar esta unidade, o gateway Python PRECISA estar
+#  parado, ou configurado para usar a ponte externa em vez de subir a propria.
+#
+#  📍 Instalar como unidade de USUARIO (root ja tem `Linger=yes`), que e o
+#     mesmo lugar da unidade atual:
+#
+#     cp whatsapp-bridge.service ~/.config/systemd/user/
+#     systemctl --user daemon-reload
+#     systemctl --user enable --now whatsapp-bridge
+# ══════════════════════════════════════════════════════════════════════════
+
+[Unit]
+Description=Ponte WhatsApp (Baileys) do Leo, independente do cerebro
+After=network-online.target
+Wants=network-online.target
+# Sem ordem em relacao ao cerebro de proposito: a ponte e a camada de baixo e
+# tem que sobreviver a qualquer troca de quem consome a fila.
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/node /usr/local/lib/hermes-agent/scripts/whatsapp-bridge/bridge.js \
+  --port 3000 \
+  --session /root/.hermes/profiles/leo/whatsapp/session \
+  --mode bot
+WorkingDirectory=/usr/local/lib/hermes-agent/scripts/whatsapp-bridge
+
+# Os mesmos argumentos do processo que roda hoje, conferidos em 21/09 por
+# /proc/<pid>/cmdline. Mudar qualquer um muda o comportamento da ponte.
+
+Restart=always
+RestartSec=5
+
+# 🔴 A ponte reconecta sozinha, mas re-parear exige QR presencial. Entao ela
+#    ganha prazo generoso para encerrar limpo em vez de levar SIGKILL no meio
+#    de uma escrita na pasta de sessao.
+KillSignal=SIGTERM
+TimeoutStopSec=30
+
+# Sem swap nesta maquina: pico de memoria nao degrada, MATA. Este limite existe
+# para que, se algo vazar, o OOM killer escolha a ponte de forma previsivel e o
+# systemd a reinicie, em vez de a maquina escolher uma vitima ao acaso.
+MemoryMax=768M
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=whatsapp-bridge
+
+[Install]
+WantedBy=default.target

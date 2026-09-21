@@ -1,0 +1,55 @@
+# ══════════════════════════════════════════════════════════════════════════
+#  leo-sidecar.service  ·  o motor novo
+#
+#  Node direto, sem PM2. 🔑 A maquina ja tem `systemd --user` com `Linger=yes`
+#  e o motor antigo roda assim: acrescentar PM2 seria um segundo supervisor
+#  para manter, com outro jeito de ver log e outro jeito de reiniciar. Um
+#  supervisor a mais e uma coisa a mais para dar errado as tres da manha.
+#
+#  📍 Instalar:
+#     cp leo-sidecar.service ~/.config/systemd/user/
+#     systemctl --user daemon-reload
+#     systemctl --user enable --now leo-sidecar
+#
+#  🔴 NUNCA rodar esta unidade junto com `hermes-gateway-leo`. A leitura da
+#     fila da ponte e DESTRUTIVA: os dois dividiriam as mensagens entre si e
+#     cada cliente receberia resposta de um cerebro diferente, alternando.
+# ══════════════════════════════════════════════════════════════════════════
+
+[Unit]
+Description=Leo Sidecar - motor de atendimento (Node + Postgres + Gemini)
+After=network-online.target whatsapp-bridge.service
+Wants=network-online.target
+# `Wants`, nao `Requires`: se a ponte cair, o sidecar continua de pe tentando
+# ler e avisando no log. Derrubar os dois juntos so aumenta o estrago.
+Wants=whatsapp-bridge.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/hermes-v2-sidecar
+
+# 🔴 O `.env` tem DATABASE_URL e GEMINI_API_KEY. Permissao 600, dono root, e
+#    NUNCA versionado. `EnvironmentFile` mantem o segredo fora da unidade, que
+#    e legivel por `systemctl cat`.
+EnvironmentFile=/opt/hermes-v2-sidecar/.env
+
+ExecStart=/usr/local/bin/node /opt/hermes-v2-sidecar/.build/server.js
+
+Restart=always
+RestartSec=5
+
+# 🔑 O `server.ts` trata SIGTERM parando de LER a fila e terminando o que ja
+#    estava em andamento. Este prazo precisa caber uma resposta inteira do
+#    Gemini, senao o SIGKILL corta no meio e o cliente fica sem retorno.
+KillSignal=SIGTERM
+TimeoutStopSec=45
+
+MemoryMax=1G
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=leo-sidecar
+
+[Install]
+WantedBy=default.target

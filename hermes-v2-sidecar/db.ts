@@ -397,3 +397,73 @@ export async function consultarLinks(): Promise<LinhaLink[]> {
   )
   return rows
 }
+
+// ── IDENTIDADE: do WhatsApp para as tabelas de conversa ──────────────────────
+
+/**
+ * Garante contato e sessao para um `chatId` do WhatsApp.
+ *
+ * 🔑 A sessao NAO e eterna e nao e por mensagem: ela expira por ociosidade.
+ * Sessao unica por contato faria o historico crescer sem fim e o custo junto,
+ * porque historico e reenviado inteiro a cada turno. Sessao por mensagem faria
+ * o Leo esquecer o que a pessoa acabou de dizer.
+ *
+ * ⚠️ `identificador` guarda o `chatId` cru. Ele contem o telefone, entao NAO
+ * deve ser logado em claro nem sair em relatorio.
+ */
+export async function garantirContatoESessao(
+  chatId: string,
+  ociosidadeMinutos = 120,
+): Promise<{ contatoId: string; sessaoId: string; nova: boolean }> {
+  const cliente = await pool.connect()
+  try {
+    await cliente.query('BEGIN')
+
+    const { rows: contatos } = await cliente.query<{ id: string }>(
+      `INSERT INTO conversa.contato (canal, identificador)
+       VALUES ('whatsapp', $1)
+       ON CONFLICT (canal, identificador) DO UPDATE SET identificador = excluded.identificador
+       RETURNING id`,
+      [chatId],
+    )
+    const contatoId = contatos[0].id
+
+    // Reaproveita a sessao aberta se a ultima mensagem for recente.
+    const { rows: abertas } = await cliente.query<{ id: string }>(
+      `SELECT s.id
+         FROM conversa.sessao s
+        WHERE s.contato_id = $1
+          AND s.fechada_em IS NULL
+          AND coalesce(
+                (SELECT max(m.criada_em) FROM conversa.mensagem m WHERE m.sessao_id = s.id),
+                s.aberta_em
+              ) > now() - ($2 || ' minutes')::interval
+        ORDER BY s.aberta_em DESC
+        LIMIT 1`,
+      [contatoId, String(ociosidadeMinutos)],
+    )
+
+    if (abertas[0]) {
+      await cliente.query('COMMIT')
+      return { contatoId, sessaoId: abertas[0].id, nova: false }
+    }
+
+    // Fecha o que ficou aberto e ocioso, para nao acumular sessao zumbi.
+    await cliente.query(
+      `UPDATE conversa.sessao SET fechada_em = now()
+        WHERE contato_id = $1 AND fechada_em IS NULL`,
+      [contatoId],
+    )
+    const { rows: novas } = await cliente.query<{ id: string }>(
+      'INSERT INTO conversa.sessao (contato_id) VALUES ($1) RETURNING id',
+      [contatoId],
+    )
+    await cliente.query('COMMIT')
+    return { contatoId, sessaoId: novas[0].id, nova: true }
+  } catch (erro) {
+    await cliente.query('ROLLBACK')
+    throw erro
+  } finally {
+    cliente.release()
+  }
+}

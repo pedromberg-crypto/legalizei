@@ -12,7 +12,9 @@
     "seed:rag": "npm run build && node --env-file=.env .build/seed/carregar-conhecimento.js",
     "teste": "npm run build && node --test .build/testes/router.test.js",
     "teste:db": "npm run build && node --env-file=.env --test .build/testes/db.test.js",
-    "e2e": "npm run build && node --env-file=.env .build/testes/e2e.js"
+    "e2e": "npm run build && node --env-file=.env .build/testes/e2e.js",
+    "server": "npm run build && node --env-file=.env .build/server.js",
+    "ponte-falsa": "node scripts/ponte-falsa.mjs 3999"
   },
   "dependencies": {
     "@google/genai": "^2.23.0",

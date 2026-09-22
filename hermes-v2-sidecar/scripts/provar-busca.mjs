@@ -1,104 +1,160 @@
 // TESTE 1 · a busca do `buscar_base` ACHA? — sem modelo no laço.
 //
 // 🧭 O `buscar_base` deu ZERO chamada em quatro medições seguidas. Três causas
-// são possíveis, e só uma delas é cara de testar:
+// são possíveis, e só uma delas é barata de testar:
 //
 //   A) o modelo não ESCOLHE a ferramenta   → precisa de conversa (E2E, caro)
 //   B) o roteador não OFERECE a ferramenta → precisa de conversa (E2E, caro)
 //   C) a busca não ACHA                    → é ISTO AQUI, e custa centavos
 //
-// Este script responde só o (C): para cada pergunta, gera o vetor e pergunta ao
-// Postgres quais trechos voltam. Uma chamada de embedding por pergunta, nenhuma
-// geração de texto.
+// Uma chamada de embedding por pergunta, nenhuma geração de texto.
 //
-// 🔑 Por que isto vem primeiro: se a busca não acha, chamar a ferramenta não
+// 🔑 Por que vem primeiro: se a busca não acha, chamar a ferramenta não
 // adiantaria — e nos relatórios "chamou e voltou vazio" aparece igual a "não
 // chamou". Eram quatro medições em zero; podem não ser a mesma coisa.
 //
-// 🔴 RODA NA VPS. O banco do sidecar (`db.*.supabase.co`) só resolve em IPv6, e
+// 🔴 RODA NA VPS. O banco do sidecar (`db.*.supabase.co`) só resolve em IPv6 e
 // a máquina do Pedro não alcança — foi isso que fez o E2E local dar falso
 // negativo em 21/09.
 //
+// 📄 A saída vai para ARQUIVO, não para a conversa: `reports/busca-*.md` mais
+// uma linha em `reports/_historico-busca.jsonl`. Relatório relido num contexto
+// de modelo é token queimado a cada turno; em disco, é evidência que dá para
+// comparar com a rodada seguinte.
+//
 //   cd /opt/hermes-v2-sidecar && npm run build
 //   node --env-file=.env scripts/provar-busca.mjs
+//
+// As perguntas moram em `scripts/perguntas-busca.json` — acrescentar caso não
+// exige tocar neste arquivo.
 
-import { pathToFileURL } from 'node:url'
+import { readFileSync, writeFileSync, appendFileSync, mkdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
+import { execSync } from 'node:child_process'
 
 const RAIZ = dirname(dirname(fileURLToPath(import.meta.url)))
 const carregar = (p) => import(pathToFileURL(join(RAIZ, '.build', p)).href)
 
-// ── as perguntas ────────────────────────────────────────────────────────────
-//
-// Escritas a partir do que as 13 notas de referência COBREM, não do que eu
-// imagino que elas cobrem — cada `esperado` é o arquivo que deveria responder.
-// Redação de cliente, não de documentação: é assim que a pergunta chega.
-const PERGUNTAS = [
-  { pergunta: 'preciso de alvará da prefeitura pra abrir a empresa?', esperado: '03-REGRAS-DOS-ORGAOS' },
-  { pergunta: 'quanto tempo a junta comercial demora pra registrar?', esperado: '03-REGRAS-DOS-ORGAOS' },
-  { pergunta: 'quais planos vocês têm e o que vem em cada um?', esperado: '01-PLANOS-E-OFERTAS' },
-  { pergunta: 'essa promoção vale até quando?', esperado: '01-PLANOS-E-OFERTAS' },
-  { pergunta: 'se eu quiser cancelar depois de três meses, pago multa?', esperado: '10-CONTRATO-GARANTIA-CANCELAMENTO' },
-  { pergunta: 'tá caro, o contador aqui do bairro cobra menos', esperado: '04-QUEBRA-OBJECOES' },
-  { pergunta: 'o que eu preciso pagar todo mês depois que abrir?', esperado: '07-OBRIGACOES-MENSAIS' },
-  { pergunta: 'quais documentos vocês vão me pedir?', esperado: '08-MAPA-DO-DOSSIE' },
-  { pergunta: 'vocês atendem quem tem loja de roupa?', esperado: '09-ESCOPO-E-LIMITES' },
-  { pergunta: 'como faço pra entrar na lista de espera?', esperado: '12-GATE-DE-SAIDA' },
-]
+const { perguntas: PERGUNTAS } = JSON.parse(
+  readFileSync(join(RAIZ, 'scripts', 'perguntas-busca.json'), 'utf8'),
+)
+
+const LIMITE = 4 // o mesmo que a tool usa em `tools.ts`
 
 // ── execução ────────────────────────────────────────────────────────────────
 const { criarEmbedder } = await carregar('llm/gemini.js')
 const db = await carregar('db.js')
-
 const embedder = criarEmbedder()
-const LIMITE = 4 // o mesmo que a tool usa em `tools.ts`
 
-console.log(`\n🔎 ${PERGUNTAS.length} perguntas · ${LIMITE} trechos por busca · fonte: conhecimento.nota\n`)
+console.log(`🔎 ${PERGUNTAS.length} perguntas · ${LIMITE} trechos por busca`)
 
-let acertos = 0
-let noTopo = 0
-const falhas = []
-
+const linhas = []
 for (const { pergunta, esperado } of PERGUNTAS) {
   const vetor = await embedder.gerar(pergunta)
-  const linhas = await db.buscarNota(vetor, LIMITE)
-
-  const fontes = linhas.map((l) => String(l.id).split('#')[0])
+  const achados = await db.buscarNota(vetor, LIMITE)
+  const fontes = achados.map((a) => String(a.id).split('#')[0])
   const posicao = fontes.findIndex((f) => f.includes(esperado))
 
-  const marca = posicao === 0 ? '✅' : posicao > 0 ? '🟡' : '🔴'
-  if (posicao === 0) { acertos++; noTopo++ } else if (posicao > 0) acertos++
-  else falhas.push({ pergunta, esperado, veio: fontes })
+  linhas.push({
+    pergunta,
+    esperado,
+    posicao: posicao + 1, // 0 = não veio
+    marca: posicao === 0 ? '✅' : posicao > 0 ? '🟡' : '🔴',
+    veio: fontes,
+    distancia: Number(achados[0]?.distancia?.toFixed(3) ?? 0),
+    assuntoDoPrimeiro: achados[0]?.assunto ?? null,
+  })
+  process.stdout.write(linhas.at(-1).marca)
+}
+console.log('')
 
-  const dist = linhas[0]?.distancia?.toFixed(3) ?? '—'
-  console.log(`${marca} ${pergunta}`)
-  console.log(`   esperado: ${esperado}${posicao >= 0 ? ` · voltou na posição ${posicao + 1}` : ' · NÃO VOLTOU'}`)
-  console.log(`   veio: ${fontes.join(' · ') || '(nada)'}  ·  distância do 1º: ${dist}\n`)
+const noTopo = linhas.filter((l) => l.posicao === 1).length
+const entreOs4 = linhas.filter((l) => l.posicao >= 1).length
+const falhas = linhas.filter((l) => l.posicao === 0)
+
+// ── relatório ───────────────────────────────────────────────────────────────
+const agora = new Date().toISOString().slice(0, 16).replace('T', ' ')
+const carimbo = new Date().toISOString().slice(0, 16).replace(/[:T]/g, '').replace(' ', '-')
+let commit = '(sem git)'
+try {
+  commit = execSync('git rev-parse --short HEAD', { cwd: RAIZ, encoding: 'utf8' }).trim()
+} catch {}
+
+const md = `# 🔎 A busca acha? — ${agora} UTC
+
+> **GERADO** por \`scripts/provar-busca.mjs\` · commit \`${commit}\` · ${PERGUNTAS.length} perguntas · ${LIMITE} trechos por busca.
+>
+> 🧭 **O que este relatório responde, e só isto:** se o texto da base é
+> ALCANÇÁVEL pela pergunta do cliente. Ele **não** diz se o Léo chama a
+> ferramenta — isso é o E2E, e é outro custo.
+>
+> **Como ler:** ✅ veio em 1º · 🟡 veio entre os ${LIMITE} (a tool devolve ${LIMITE}, então o
+> Léo recebe o trecho certo mesmo assim) · 🔴 não veio, e aí **chamar a tool não
+> adiantaria**.
+
+## Placar
+
+| | |
+|---|---:|
+| Em 1º lugar | **${noTopo}/${PERGUNTAS.length}** |
+| Entre os ${LIMITE} | **${entreOs4}/${PERGUNTAS.length}** |
+| Não achou | **${falhas.length}** |
+
+${
+  falhas.length === 0
+    ? '✅ **A busca acha.** Então `buscar_base` em zero não é problema de busca — é escolha do modelo (descrição da tool) ou oferta do roteador. O teste caro agora sabe o que medir.'
+    : `🔴 **${falhas.length} pergunta(s) não acham o trecho certo.** Aqui a tool voltaria conteúdo errado. O conserto é de **conteúdo** (a nota não cobre o assunto na língua do cliente) ou de **fatia** (o trecho é grande e o vetor virou média de vários assuntos).`
 }
 
-// ── veredito ────────────────────────────────────────────────────────────────
-console.log('─'.repeat(70))
-console.log(
-  `achou em algum lugar dos ${LIMITE}: ${acertos}/${PERGUNTAS.length}  ·  ` +
-    `achou em 1º: ${noTopo}/${PERGUNTAS.length}`,
+## Pergunta a pergunta
+
+| | Pergunta | Esperado | Posição | O que voltou | Distância do 1º |
+|:--:|---|---|:--:|---|---:|
+${linhas
+  .map(
+    (l) =>
+      `| ${l.marca} | ${l.pergunta} | \`${l.esperado}\` | ${l.posicao || '—'} | ${l.veio.map((v) => `\`${v}\``).join(' · ')} | ${l.distancia} |`,
+  )
+  .join('\n')}
+
+${
+  falhas.length
+    ? `## O que não achou\n\n${falhas
+        .map(
+          (f) =>
+            `### 🔴 "${f.pergunta}"\n\n| | |\n|---|---|\n| Esperava | \`${f.esperado}\` |\n| Veio | ${f.veio.map((v) => `\`${v}\``).join(' · ')} |\n| Assunto do 1º | ${f.assuntoDoPrimeiro ?? '—'} |\n| Distância do 1º | ${f.distancia} |\n`,
+        )
+        .join('\n')}`
+    : ''
+}
+## O que este teste NÃO prova
+
+- **Que o Léo chama a ferramenta.** Prova que, se chamasse, viria conteúdo útil.
+- **Que o trecho responde bem.** Prova que ele é alcançado, não que está certo.
+- **Nada sobre as outras 7 tools** — só o \`buscar_base\`.
+`
+
+const pasta = join(RAIZ, 'reports')
+mkdirSync(pasta, { recursive: true })
+const arquivo = join(pasta, `busca-${carimbo}.md`)
+writeFileSync(arquivo, md, 'utf8')
+
+appendFileSync(
+  join(pasta, '_historico-busca.jsonl'),
+  JSON.stringify({
+    quando: new Date().toISOString(),
+    commit,
+    perguntas: PERGUNTAS.length,
+    noTopo,
+    entreOs4,
+    falhas: falhas.map((f) => f.pergunta),
+  }) + '\n',
+  'utf8',
 )
 
-if (falhas.length === 0) {
-  console.log(
-    '\n✅ A BUSCA ACHA. Então o `buscar_base` em zero NÃO é problema de busca —\n' +
-      '   é escolha do modelo (descrição da tool) ou oferta do roteador.\n' +
-      '   O próximo teste é o caro, e agora se sabe o que ele tem de medir.\n',
-  )
-} else {
-  console.log(`\n🔴 ${falhas.length} pergunta(s) não acharam o trecho certo:\n`)
-  for (const f of falhas) console.log(`   "${f.pergunta}"\n     esperava ${f.esperado}, veio ${f.veio.join(' · ')}`)
-  console.log(
-    '\n   Aqui chamar a tool não adiantaria: ela voltaria o trecho errado.\n' +
-      '   O conserto é de CONTEÚDO (a nota não cobre o assunto) ou de FATIA\n' +
-      '   (o trecho é grande demais e o vetor virou média de vários assuntos).\n',
-  )
-}
+console.log(`\n📄 ${arquivo}`)
+console.log(`   em 1º: ${noTopo}/${PERGUNTAS.length} · entre os ${LIMITE}: ${entreOs4}/${PERGUNTAS.length} · não achou: ${falhas.length}`)
 
 await db.pool.end()
 process.exit(falhas.length ? 1 : 0)

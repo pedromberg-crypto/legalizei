@@ -86,6 +86,51 @@ os últimos 4 caracteres**, nunca o conteúdo.
 `shred -u` quando não precisar mais — `rm` não basta. E revogue a chave velha no
 console depois que a nova responder: trocada e não revogada continua valendo.
 
+## 1.2 JURISDIÇÃO — quem faz o quê, e por quê
+
+> Travado em 22/09/2026 pelo Pedro. **Duas janelas trabalham neste sistema**, e
+> a divisão não é hierarquia: é **onde cada coisa é possível**.
+
+| | **Janela da VPS** | **Janela do vault** (`pessoal/legalize`) |
+|---|---|---|
+| Roda | teste, `seed:rag`, `build`, `systemctl`, `journalctl` | análise |
+| Lê | log, banco, estado do serviço | relatório, notas `.md`, ADR, histórico |
+| Escreve | nada de conteúdo — só relatório em `reports/` | o **conteúdo**: cartões, notas, PERSONA, RULES |
+| Entrega | o relatório commitado | a correção, por `npm run deploy:docs` |
+
+🔑 **Por que a execução fica lá:** o banco do sidecar
+(`db.*.supabase.co`) resolve **só em IPv6**, e a máquina do Pedro não alcança.
+Em 21/09 isso produziu um **falso negativo**: o E2E rodou local, as tools de
+banco deram zero chamada, o roteador engoliu o `ENOTFOUND` e **o teste passou
+mascarado**. Teste que roda onde o banco não existe não é teste, é encenação.
+
+🔑 **Por que a análise fica aqui:** o *porquê* de cada regra mora no vault — as
+18 vidas, os ADRs, as decisões de preço, a persona travada. A VPS tem o
+ambiente; o vault tem o contexto. Trocar isso produz correção tecnicamente
+válida e comercialmente errada.
+
+### O ciclo, e ele é fechado
+
+```
+VPS roda  →  escreve reports/*.md  →  commit + push
+                        ↓
+   vault lê o relatório + as notas, acha a brecha, corrige o .md
+                        ↓
+              npm run deploy:docs  (com as 3 travas)
+                        ↓
+                  VPS roda de novo
+```
+
+📦 **Em PACOTE, nunca ajuste solto** (Pedro, 22/09). Cada `seed:rag` custa
+embedding e cada restart é um ciclo; corrigir um ponto de cada vez multiplica
+custo e ruído, e ainda dificulta saber **qual** mudança produziu qual efeito.
+Acumula-se o achado, agrupa-se a correção, roda-se uma vez.
+
+⚠️ **O que a janela do vault NÃO faz:** `systemctl`, `build` na VPS, ler
+`journalctl`, mexer em serviço. Duas janelas mexendo em serviço é como se perde
+trabalho não commitado — já aconteceu, e foi o `deploy:docs` que passou a
+recusar.
+
 ## 2. ARQUITETURA
 
 > O `router.ts` é uma função pura de 4 trilhas. Não adicione complexidade

@@ -7,6 +7,19 @@ Fonte-verdade completa é `CLAUDE.md` (raiz desta pasta) — leia ele também. E
 2. Rode `git log -1 --date=short`, compare com "Última atualização" do §Agora. Divergiu → avisa que dashboard pode estar velho.
 3. Devolve briefing curto (onde estamos + o que está aberto) antes de executar.
 
+## 🪟 Jurisdição — duas janelas, e a divisão não é hierarquia (22/09/2026)
+
+| | **Janela da VPS** | **Janela do vault** (aqui) |
+|---|---|---|
+| Roda | teste, `seed:rag`, `build`, `systemctl`, `journalctl` | análise |
+| Escreve | só relatório em `hermes-v2-sidecar/reports/` | o **conteúdo**: cartões, notas, PERSONA, RULES |
+| Entrega | relatório commitado | correção, por `npm run deploy:docs` |
+
+- 🔴 **Execução fica na VPS** porque o banco do sidecar resolve **só em IPv6** e esta máquina não alcança. Em 21/09 rodar local deu **falso negativo**: as tools de banco zeraram, o roteador engoliu o `ENOTFOUND` e o teste passou mascarado.
+- 🔴 **Conhecimento nunca se edita na VPS.** O Obsidian é a fonte; o caminho de volta é o `deploy:docs`, que valida com o parser real, **recusa se a VPS tiver trabalho não commitado** e confere a contagem do banco depois da carga.
+- 🔑 **Documento do Léo tem dois caminhos:** `CARTOES-PRODUTO.md` e `references/*.md` vão ao Postgres por `seed:rag`; `PERSONA.md` e `RULES.md` são copiados para `.build/` e só valem após **build + restart**.
+- 📦 **Correção vai em PACOTE**, nunca ajuste solto: cada carga custa embedding, cada restart é um ciclo, e um a um ninguém sabe qual mudança produziu qual efeito.
+
 ## Regras duras (não repetir erro já corrigido no Claude)
 - 🔴 Escopo padrão = flow ME "abrir empresa". MEI e Migração FORA, salvo pedido explícito. Tela compartilhada entre regimes → guardar por regime ou avisar antes.
 - 🔴 Playwright/E2E só se PEDIDO explicitamente nesta sessão. Padrão de verificação = `tsc` + `eslint`.

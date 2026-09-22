@@ -95,11 +95,19 @@ const md = `# 🔎 A busca acha? — ${agora} UTC
 
 ## Placar
 
-| | |
-|---|---:|
-| Em 1º lugar | **${noTopo}/${PERGUNTAS.length}** |
-| Entre os ${LIMITE} | **${entreOs4}/${PERGUNTAS.length}** |
-| Não achou | **${falhas.length}** |
+| | | |
+|---|---:|---|
+| 🎯 **Entre os ${LIMITE}** | **${entreOs4}/${PERGUNTAS.length}** | **a métrica que decide** — é o que o Léo recebe |
+| Em 1º lugar | ${noTopo}/${PERGUNTAS.length} | informativo, ver a ressalva abaixo |
+| Não achou | **${falhas.length}** | |
+
+> ⚠️ **"Em 1º" é o número mais fácil de perseguir errado.** A tool devolve
+> ${LIMITE} trechos e o modelo lê os ${LIMITE}: estar em 1º ou em 4º muda pouco para a
+> resposta. E há mudanças que **não podem** mexer nele por construção — o teto de
+> dois trechos por nota, por exemplo, nunca alcança o 1º colocado, porque o
+> trecho globalmente mais próximo é sempre o primeiro dentro da própria nota.
+> Em 22/09 eu escrevi um critério de sucesso que pedia justamente isso, e era
+> impossível. **Quem decide é "entre os ${LIMITE}".**
 
 ${
   falhas.length === 0
@@ -154,7 +162,7 @@ appendFileSync(
 )
 
 console.log(`\n📄 ${arquivo}`)
-console.log(`   em 1º: ${noTopo}/${PERGUNTAS.length} · entre os ${LIMITE}: ${entreOs4}/${PERGUNTAS.length} · não achou: ${falhas.length}`)
+console.log(`   entre os ${LIMITE}: ${entreOs4}/${PERGUNTAS.length} (o que decide) · em 1º: ${noTopo}/${PERGUNTAS.length} · não achou: ${falhas.length}`)
 
 await db.pool.end()
 process.exit(falhas.length ? 1 : 0)

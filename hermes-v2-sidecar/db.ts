@@ -300,6 +300,8 @@ export async function salvarTurnoInterno(
      * instrumentacao", nunca "nenhuma chamada" — que e `{}`.
      */
     toolsChamadas?: string[]
+    /** O que o filtro de enderecos mexeu. Opcional: chamador antigo segue valendo. */
+    correcoesDeEndereco?: { acao: string; antes: string; depois: string | null; link: string | null }[]
   },
   cliente: PoolClient | Pool = pool,
 ): Promise<void> {
@@ -422,12 +424,57 @@ export async function gravarTurno(
     await salvarMensagem(sessaoId, 'cliente', textoCliente, cliente)
     const idLeo = await salvarMensagem(sessaoId, 'leo', textoLeo, cliente)
     await salvarTurnoInterno(sessaoId, idLeo, medicao, cliente)
+    // 🔴 Mesma transacao do turno de proposito: telemetria que sobrevive a um
+    //    turno que nao sobreviveu conta correcao de fala que ninguem recebeu.
+    if (medicao.correcoesDeEndereco?.length) {
+      await salvarCorrecoesDeEndereco(sessaoId, idLeo, medicao.correcoesDeEndereco, cliente)
+    }
     await cliente.query('COMMIT')
   } catch (erro) {
     await cliente.query('ROLLBACK')
     throw erro
   } finally {
     cliente.release()
+  }
+}
+
+/**
+ * As linhas de `fatos.link` como o FILTRO DE SAIDA precisa ver: com `tipo`.
+ *
+ * 🔑 Separada de `consultarLinks()` de proposito. Aquela alimenta a tool, e o
+ * que ela devolve vai para dentro do prompt do modelo; acrescentar uma coluna
+ * la mudaria o que o agente le, que e mexer em comportamento. Esta aqui nao
+ * chega perto do modelo: e so o filtro conferindo string contra a tabela.
+ */
+export async function linksParaFiltro(): Promise<{ id: string; tipo: string; url: string }[]> {
+  const { rows } = await pool.query<{ id: string; tipo: string; url: string }>(
+    'SELECT id, tipo, url FROM fatos.link ORDER BY id',
+  )
+  return rows
+}
+
+/**
+ * Registra o que o filtro de enderecos trocou ou removeu neste turno.
+ *
+ * 🔑 Recebe `mensagemId` em vez de procura-lo: quem chama e o `gravarTurno`,
+ * dentro da MESMA transacao que acabou de inserir a fala do Leo. A primeira
+ * versao disto usava `(SELECT max(id) ...)` porque o filtro morava no
+ * `server.ts` e nao tinha o id na mao; com o filtro dentro do roteador o id
+ * existe, e adivinhar deixa de ser necessario.
+ */
+async function salvarCorrecoesDeEndereco(
+  sessaoId: string,
+  mensagemId: number | null,
+  correcoes: { acao: string; antes: string; depois: string | null; link: string | null }[],
+  cliente: PoolClient | Pool = pool,
+): Promise<void> {
+  for (const c of correcoes) {
+    await cliente.query(
+      `INSERT INTO conversa.endereco_corrigido
+         (sessao_id, mensagem_id, acao, antes, depois, link)
+       VALUES ($1, $2, $3, $4, $5, $6)`,
+      [sessaoId, mensagemId, c.acao, c.antes, c.depois, c.link],
+    )
   }
 }
 

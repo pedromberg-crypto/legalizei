@@ -172,6 +172,16 @@ interface Medicao {
    */
   chamadas: string[]
 
+  /**
+   * O que o filtro de enderecos trocou ou removeu neste turno.
+   *
+   * 🔑 O filtro roda DENTRO do `responder()`, entao o E2E o exercita sem
+   * arranjo especial. Quando ele morava no `server.ts` a suite passava ao
+   * largo dele e mediria o texto cru do modelo, relatando zero correcoes
+   * enquanto producao corrigia.
+   */
+  correcoes: { acao: string; antes: string; depois: string | null }[]
+
   tokensEntrada: number
   tokensSaida: number
 
@@ -210,7 +220,11 @@ interface Resultado {
  * perde em realismo, ganha em poder repetir. As tools continuam batendo no
  * banco de verdade, que e o que este teste existe para exercitar.
  */
-function depsDeTeste(medicoes: Medicao[], executarTool: Deps['executarTool']): Deps {
+function depsDeTeste(
+  medicoes: Medicao[],
+  executarTool: Deps['executarTool'],
+  conferirEnderecos: Deps['conferirEnderecos'],
+): Deps {
   const historico: { papel: 'cliente' | 'leo'; texto: string }[] = []
   return {
     async carregarHistorico() { return [...historico] },
@@ -226,12 +240,14 @@ function depsDeTeste(medicoes: Medicao[], executarTool: Deps['executarTool']): D
         cartoes: m.cartoesUsados,
         fatos: m.fatosLidos,
         chamadas: m.toolsChamadas,
+        correcoes: m.correcoesDeEndereco ?? [],
         tokensEntrada: m.tokensEntrada,
         tokensSaida: m.tokensSaida,
       })
     },
     async atualizarClassificacao() {},
     executarTool,
+    conferirEnderecos,
   }
 }
 
@@ -314,10 +330,11 @@ async function rodarCaso(
   llm: Llm,
   embedder: Embedder,
   executarTool: Deps['executarTool'],
+  conferirEnderecos: Deps['conferirEnderecos'],
 ): Promise<Resultado> {
   const inicio = Date.now()
   const medicoes: Medicao[] = []
-  const deps = depsDeTeste(medicoes, executarTool)
+  const deps = depsDeTeste(medicoes, executarTool, conferirEnderecos)
 
 
   // Sessao nova por caso. Os turnos de um mesmo caso compartilham a sessao,
@@ -447,9 +464,17 @@ async function principal(): Promise<void> {
   const embedder = contarEmbedder(criarEmbedder(), consumo)
   const { executarTool } = await import('../tools.js')
 
+  // 🔑 A MESMA conferencia de producao, com a MESMA tabela. Nao e um duble:
+  //    `fatos.link` e lido do banco de verdade, como toda tool nesta suite.
+  const { linksParaFiltro } = await import('../db.js')
+  const { corrigirEnderecos } = await import('../filtro-enderecos.js')
+  const linksOficiais = await linksParaFiltro()
+  const conferirEnderecos: Deps['conferirEnderecos'] = async (texto) =>
+    linksOficiais.length ? corrigirEnderecos(texto, linksOficiais) : { texto, correcoes: [] }
+
   const resultados: Resultado[] = []
   for (const caso of casos) {
-    const r = await rodarCaso(caso, llm, embedder, executarTool)
+    const r = await rodarCaso(caso, llm, embedder, executarTool, conferirEnderecos)
     resultados.push(r)
     const marca = r.passou ? '✔' : '✖'
     const rota = r.medicoes.map((m) => m.saida).join('>') || '?'

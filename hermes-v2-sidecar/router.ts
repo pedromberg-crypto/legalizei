@@ -26,6 +26,7 @@ import type {
   PacoteEscalonamento,
 } from './tipos.js'
 import { toolsDaTrilha } from './tools-def.js'
+import type { Correcao } from './filtro-enderecos.js'
 
 const AQUI = dirname(fileURLToPath(import.meta.url))
 
@@ -60,6 +61,12 @@ export interface Deps {
        * por efeito: ver `tipos.ts`, `Resolucao.toolsChamadas`.
        */
       toolsChamadas: string[]
+      /**
+       * O que o filtro de enderecos trocou ou removeu neste turno. Vai na mesma
+       * transacao do turno, entao a linha de telemetria nasce com o
+       * `mensagem_id` certo, sem subconsulta adivinhando qual fala era.
+       */
+      correcoesDeEndereco: Correcao[]
       tokensEntrada: number
       tokensSaida: number
       /**
@@ -76,9 +83,60 @@ export interface Deps {
     argumentos: Record<string, any>,
     embedder: Embedder,
   ): Promise<{ conteudo: unknown; cartoes: string[]; fatos: string[] }>
+
+  /**
+   * 🔴 A ULTIMA REDE PARA ENDERECO INVENTADO, e ela mora AQUI e nao no envio.
+   *
+   * Medido em 22/09: `consultar_links` foi oferecida em 27 de 27 turnos e
+   * chamada em 0, com os gatilhos escritos na lingua do cliente. Pedir nao
+   * resolveu. E o defeito nao tinha gatilho na ENTRADA — o cliente disse "Boa,
+   * gostei do valor" e o agente escreveu `https://legalizai.app/em-breve`,
+   * dominio que nao existe. Nada decidido antes da geracao pega isso.
+   *
+   * 🔑 POR QUE NO ROTEADOR, E NAO NO `server.ts`. O texto precisa estar
+   * conferido ANTES de `gravarTurno`, ou `conversa.mensagem` guarda um endereco
+   * que a pessoa nunca viu e o modelo o reencontra no historico no turno
+   * seguinte — e ele REUSA: foi o que o caso `vc-mentiu` mostrou. Consertar o
+   * envio e deixar o erro no historico e consertar a vitrine e manter o defeito
+   * no estoque.
+   *
+   * ⚠️ OPCIONAL de proposito. Sem ela o roteador se comporta exatamente como
+   * antes, que e o que mantem `router.test.ts` offline e deterministico.
+   */
+  conferirEnderecos?(texto: string): Promise<{ texto: string; correcoes: Correcao[] }>
 }
 
 let depsCache: Deps | null = null
+
+/**
+ * Os enderecos oficiais, relidos a cada 5 minutos.
+ *
+ * 🔑 Cache curto, e nao leitura por turno: a tabela tem quatro linhas e nao
+ * muda no meio do dia, mas uma ida ao banco por resposta pagaria latencia num
+ * caminho que ja esta entre o "digitando" e a fala. Cinco minutos e o tempo que
+ * uma correcao em `fatos.link` leva para valer sem restart.
+ *
+ * ⚠️ Falha de leitura devolve a lista ANTERIOR, nunca lista vazia com cache
+ * quente: perder a tabela nao pode virar resposta sem endereco.
+ */
+let linksEmCache: { id: string; tipo: string; url: string }[] = []
+let linksExpiramEm = 0
+
+async function enderecosOficiais(
+  ler: () => Promise<{ id: string; tipo: string; url: string }[]>,
+): Promise<{ id: string; tipo: string; url: string }[]> {
+  if (Date.now() < linksExpiramEm && linksEmCache.length) return linksEmCache
+  try {
+    const linhas = await ler()
+    if (linhas.length) {
+      linksEmCache = linhas
+      linksExpiramEm = Date.now() + 5 * 60_000
+    }
+  } catch (erro) {
+    console.warn(`[filtro] nao consegui reler fatos.link: ${erro instanceof Error ? erro.message : erro}`)
+  }
+  return linksEmCache
+}
 
 async function depsPadrao(): Promise<Deps> {
   if (depsCache) return depsCache
@@ -88,6 +146,15 @@ async function depsPadrao(): Promise<Deps> {
     gravarTurno: db.gravarTurno,
     atualizarClassificacao: db.atualizarClassificacao as Deps['atualizarClassificacao'],
     executarTool: tools.executarTool,
+    async conferirEnderecos(texto) {
+      const { corrigirEnderecos } = await import('./filtro-enderecos.js')
+      const links = await enderecosOficiais(db.linksParaFiltro)
+      // 🔴 Lista vazia NAO filtra. Sem a tabela todo endereco viraria
+      //    desconhecido e a resposta sairia mutilada: banco fora do ar nao pode
+      //    virar resposta sem link.
+      if (!links.length) return { texto, correcoes: [] }
+      return corrigirEnderecos(texto, links)
+    },
   }
   return depsCache
 }
@@ -453,6 +520,23 @@ export async function responder(
     if (gancho.texto) texto = `${texto}\n\n${gancho.texto}`
   }
 
+  // ── A CONFERENCIA DE ENDERECO, ANTES DA GRAVACAO ─────────────────────────
+  //
+  // 🔴 A ORDEM E O PONTO. Conferir depois de gravar deixaria em
+  //    `conversa.mensagem` um endereco que a pessoa nunca viu, e o historico
+  //    volta ao modelo no turno seguinte.
+  let correcoesDeEndereco: Correcao[] = []
+  if (deps.conferirEnderecos) {
+    const conferido = await deps.conferirEnderecos(texto)
+    texto = conferido.texto
+    correcoesDeEndereco = conferido.correcoes
+    for (const c of correcoesDeEndereco) {
+      console.warn(
+        `[endereco] ${c.acao}: ${c.antes}` + (c.depois ? ` -> ${c.depois}` : ' (fora)'),
+      )
+    }
+  }
+
   const pacote = saida === 'escalonamento'
     ? montarPacote(sinais, entrada, historico)
     : undefined
@@ -465,6 +549,7 @@ export async function responder(
     cartoesUsados: resolucao.cartoesUsados,
     fatosLidos: resolucao.fatosLidos,
     toolsChamadas: resolucao.toolsChamadas,
+    correcoesDeEndereco,
     tokensEntrada,
     tokensSaida,
     tokensCache,

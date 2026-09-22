@@ -32,11 +32,15 @@ export interface MedicaoSalva {
   falhaTipo: string | null
   cartoes: string[]
   fatos: string[]
+  /** A fala do Leo naquele turno, ja conferida pelo filtro de enderecos. */
+  resposta?: string
   /**
    * Os NOMES das tools chamadas no turno. Opcional: rodada gravada antes de
    * 22/09 nao tem o campo, e ausente significa "nao medido", nunca "zero".
    */
   chamadas?: string[]
+  /** O que o filtro de enderecos mexeu. Ausente = rodada anterior ao filtro. */
+  correcoes?: { acao: string; antes: string; depois: string | null }[]
   tokensEntrada: number
   tokensSaida: number
 }
@@ -247,6 +251,79 @@ export function gerarMarkdown(r: RodadaSalva): string {
   p('tool sustentou a resposta, e por regra nenhum deles pode ter recebido gancho')
   p('comercial.')
   p()
+  // ── OS ENDERECOS ────────────────────────────────────────────────────────
+  const enderecosEscritos: { texto: string; ok: boolean }[] = []
+  const porAcao: Record<string, number> = {}
+  let turnosComCorrecao = 0
+  let medidoFiltro = false
+  const CAPTURA = /\bhttps?:\/\/[^\s<>"']+|\b[\w.+-]+@[\w-]+\.[\w.-]+/gi
+
+  for (const res of r.resultados) {
+    for (const m of res.medicoes) {
+      if (!m.correcoes) continue
+      medidoFiltro = true
+      if (m.correcoes.length) turnosComCorrecao++
+      for (const c of m.correcoes) porAcao[c.acao] = (porAcao[c.acao] ?? 0) + 1
+      // 🔑 O texto da medicao ja e o texto CONFERIDO — o filtro roda antes de
+      //    gravar. Entao todo endereco que sobrou aqui e endereco que chegaria
+      //    ao cliente, e e exatamente essa a metrica que interessa.
+      for (const achado of (m.resposta ?? '').match(CAPTURA) ?? []) {
+        const limpo = achado.replace(/[.,;:!?)]+$/, '')
+        enderecosEscritos.push({ texto: limpo, ok: true })
+      }
+    }
+  }
+
+  if (medidoFiltro) {
+    p('### Enderecos que chegariam ao cliente')
+    p()
+    p('🔑 O texto medido aqui e o texto **ja conferido**: o filtro roda dentro do')
+    p('`responder()`, antes da gravacao. Entao todo endereco listado abaixo e')
+    p('endereco que a pessoa receberia, e nao rascunho do modelo.')
+    p()
+    p('| | |')
+    p('|---|---:|')
+    p(`| Enderecos na resposta final | **${enderecosEscritos.length}** |`)
+    p(`| Turnos em que o filtro precisou agir | **${turnosComCorrecao}** |`)
+    p()
+    if (enderecosEscritos.length) {
+      p('| endereco entregue | vezes |')
+      p('|---|---:|')
+      const contagem: Record<string, number> = {}
+      for (const e of enderecosEscritos) contagem[e.texto] = (contagem[e.texto] ?? 0) + 1
+      for (const [k, v] of Object.entries(contagem).sort((a, b) => b[1] - a[1])) {
+        p(`| \`${k}\` | ${v} |`)
+      }
+      p()
+    }
+    p('#### O que o filtro fez')
+    p()
+    if (Object.keys(porAcao).length === 0) {
+      p('✅ **Nenhuma correcao.** O modelo escreveu so endereco certo nesta rodada.')
+      p('⚠️ Isso nao prova que a descricao da tool passou a funcionar: prova que')
+      p('nao houve o que corrigir. Uma rodada limpa e ruido tanto quanto uma suja.')
+    } else {
+      p('| acao | vezes |')
+      p('|---|---:|')
+      for (const nome of ['troca', 'remocao_url', 'remocao_frase']) {
+        if (porAcao[nome]) p(`| \`${nome}\` | ${porAcao[nome]} |`)
+      }
+      p()
+      p('Cada linha e uma alucinacao de endereco que **nao chegou ao cliente**.')
+      p()
+      p('| acao | o modelo escreveu | virou |')
+      p('|---|---|---|')
+      for (const res of r.resultados) {
+        for (const m of res.medicoes) {
+          for (const c of m.correcoes ?? []) {
+            p(`| \`${c.acao}\` | \`${c.antes}\` | ${c.depois ? `\`${c.depois}\`` : '_(fora)_'} |`)
+          }
+        }
+      }
+    }
+    p()
+  }
+
   p('### Oferecida · chamada · com efeito')
   p()
   if (turnosMedidos === 0) {

@@ -133,6 +133,19 @@ function limparSaida(texto: string): string {
 }
 
 /**
+ * 🔑 A CONFERENCIA DE ENDERECO NAO MORA AQUI, e isso e deliberado.
+ *
+ * Ela roda dentro do `responder()`, antes de `gravarTurno`, porque o texto
+ * precisa estar conferido ANTES de virar historico: gravar o endereco errado e
+ * corrigir so no envio deixa o erro circulando no contexto, e o modelo reusa o
+ * que le no historico. Ver `router.ts`, `Deps.conferirEnderecos`.
+ *
+ * ⚠️ O que continua aqui e o `limparSaida`: travessao, markdown e batida sao
+ * formato DO CANAL, nao conteudo. O WhatsApp nao renderiza tabela; o Postgres
+ * nao se importa. Por isso a divisao.
+ */
+
+/**
  * Duas batidas, duas mensagens.
  *
  * O `PERSONA` trata a linha em branco como separador: a informacao e depois o

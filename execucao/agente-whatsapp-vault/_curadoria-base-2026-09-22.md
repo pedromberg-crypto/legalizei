@@ -66,6 +66,8 @@ E é justamente no preâmbulo que moram as regras mais vermelhas:
 >
 > As perguntas estão na **redação do cliente**, com erro de português e tudo, porque é assim que chegam.
 
+> ✅ **Onze destas já foram curadas pelo Pedro em 22/09** — as respostas travadas estão no **§3.12**, no fim desta seção. Três delas conflitam com regra já escrita e estão sinalizadas lá.
+
 ### 3.1 · Preço e valor percebido *(a objeção que não existe na base)*
 
 | # | Pergunta | Nota | O que testa | Previsão | ✅/❌ |
@@ -204,6 +206,60 @@ E é justamente no preâmbulo que moram as regras mais vermelhas:
 | Q82 | me manda seu e-mail / telefone | `01` §5 | 🔴 não existem na base, não inventar | 🔴 | |
 | Q83 | como faço pra entrar na lista de espera? | `01` §5 · `12` | o link | 🟡 | |
 | Q84 | o app já tá na loja? posso baixar? | `02` · `01` §5 | pré-lançamento — **preâmbulo invisível** | 🔴 | |
+
+---
+
+## 3.12 · ✅ Respostas travadas pelo Pedro (22/09)
+
+> Estas não são mais sugestão: são **o que a base tem de passar a dizer**. Onze perguntas ganharam resposta na curadoria. Três delas **conflitam com o que já está escrito** e estão marcadas 🔴 — precisam de decisão antes de virar texto.
+
+| # | Pergunta | ✅ A resposta travada | Onde escrever |
+|---|---|---|---|
+| **Q51** | mês sem faturar, pago imposto? | **MEI:** tem uma **guia única mensal**, que não é necessariamente imposto — ela vence tendo faturamento ou não. **ME:** depende. Existe a funcionalidade de **desativar o pró-labore** no mês parado, e aí a empresa não paga nada naquele mês. 🔑 **Não recomendamos, mas a opção existe e precisa ser dita** — é escolha da pessoa, não nossa | `07` §1 e §2 |
+| **Q55** | preciso de certificado digital? | **Sim, nos dois regimes.** No **ME vem incluso no plano**; no **MEI a pessoa paga à parte** | 🔴 `01` §1 · `07` §1 — **conflita, ver abaixo** |
+| **Q56** | preciso abrir conta PJ? | **Não é obrigatório.** Pode, mas não é exigência pra abrir nem pra operar | `07`, seção nova |
+| **Q59** | em quantos dias sai meu CNPJ? | O processo entra pela **via otimizada da JUCEMG** e por aqui anda **mais rápido que o comum** — porque usa contrato padrão, sem anexo e sem cláusula extra. 🔴 **Continua sem cravar dias**: a fila é do órgão | `09` §5 · `03` §2 |
+| **Q61** | preciso de alvará? | **O alvará sai junto do CNPJ**, porque a atividade que a gente atende é de **baixo risco** | `03` §1 |
+| **Q63** | por que vocês pedem o IPTU? | É o dado que **valida aquele endereço** na constituição — sem ele a Prefeitura não localiza o imóvel e o processo para | `03` §1 |
+| **Q67** | vocês assinam por mim? | **Na abertura, não:** quem assina é a pessoa, com o gov.br dela, e **esse é o único lugar** onde a assinatura dela é usada. **Depois disso**, quem assina por ela nas funções do app é o **certificado digital** | `02` §1 · `03` §2 |
+| **Q72** | se eu não gostar, tem garantia? | 7 dias com dinheiro de volta — **mas taxa de governo já paga não estorna.** A mensalidade volta; o que foi pro Estado, não | `10` §1 e §2 |
+| **Q78** | me manda o CNPJ de vocês | **Está no rodapé do site.** Mande o site — a prova existe e é pública | `04` · `00` §4 |
+| **Q82** | me manda e-mail / telefone | 🔴 **Agora existem:** **contato@legalizai.com.br** e **WhatsApp (31) 99637-4688** | 🔴 `01` §5 · `00` — **conflita, ver abaixo** |
+
+### 🔴 Os três conflitos, e o que cada um exige
+
+**1 · Q55 — o certificado do MEI.** A base diz hoje, em dois lugares, que *"o MEI **não precisa** de certificado pra emitir nota de serviço"* (`01` §1 e `07` §1), e que ele **não vem incluso** no plano MEI. A decisão de agora diz que **precisa, e o MEI paga à parte**.
+
+As duas coisas podem ser verdade ao mesmo tempo, e é isso que o texto precisa separar:
+
+| Para quê | MEI precisa de certificado? |
+|---|---|
+| **A pessoa emitir a própria nota** | não — o padrão nacional aceita login gov.br |
+| **O nosso app agir em nome dela** (emitir guia, acessar sistema de órgão) | **sim** |
+
+⚠️ **Confirme qual é a frase certa antes de eu escrever**, porque é afirmação fiscal: *"o MEI não precisa de certificado, mas para o nosso app trabalhar por ele, precisa"* está correto? Se estiver, o `01` §1 e o `07` §1 mudam junto — hoje eles dizem só a metade que virou obsoleta.
+
+**2 · Q82 — e-mail e telefone passam a existir.** Hoje a regra é dura e está em dois lugares: *"esses são os **únicos três links** que você pode mandar"* e *"e-mail e telefone **não estão na base: não invente**"*. Com a decisão, eles existem. Isso muda:
+
+- `01` §5 — a lista deixa de ser "três links" e passa a ter **cinco canais**
+- `00` §4 — a proibição de inventar continua, mas agora há o que informar
+- 🔴 **`fatos.link` no banco** — canal é fato, não texto. Entram como linha, junto dos três atuais
+- ⚠️ **O WhatsApp do Léo é o próprio número da conversa.** Mandar *"fala comigo no (31) 99637-4688"* para quem já está falando com ele é ruído. O uso certo é **outro canal pedindo o contato**, ou alguém querendo registrar o número
+
+**3 · Q59 — velocidade sem prometer prazo.** A regra *"nunca prometa prazo de abertura"* continua de pé, e o `03` §2 **já diz** que a JUCEMG *"defere quase na hora quando o processo usa o contrato padrão, sem anexo e sem cláusula extra"*. O que falta é isso virar **resposta alcançável** quando perguntam de prazo, em vez de ficar só na nota de órgãos. Formulação que respeita as duas coisas:
+
+> *"Não te dou data, porque a fila é da Junta. O que eu faço é entrar pela via automática dela, com contrato padrão e sem anexo, que é o caminho que anda mais rápido. Fora dessa via, o processo vai pra análise humana e demora muito mais."*
+
+### O que muda no resto do doc
+
+| | |
+|---|---|
+| **Q51 · Q55 · Q56 · Q59 · Q61 · Q63 · Q67** | saem de ⚫/🔴 e viram **conteúdo a escrever**, com resposta definida |
+| **F-02** (formas de pagamento) | continua aberto — a Q51 resolveu imposto, não cobrança |
+| **F-06** (conta PJ) | ✅ **resolvido pela Q56**: não é obrigatório |
+| 🆕 **F-13** | **Desativar o pró-labore no mês parado** — funcionalidade que a base não menciona em lugar nenhum, e que muda a resposta sobre mês sem faturamento |
+| 🆕 **F-14** | **Alvará junto do CNPJ por baixo risco** — hoje a base fala de endereço e IPTU, nunca de alvará |
+| 🆕 **F-15** | **Certificado como procuração digital** — o que ele autoriza o app a fazer. É o que reconcilia a Q55 e a Q67 |
 
 ---
 

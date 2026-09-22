@@ -1,0 +1,133 @@
+{
+  "sonda": "pq vcs precisam do numero do meu iptu?",
+  "chatId": "sonda-rastreio-aa9a10f7",
+  "sessaoId": "48fca5d3-c282-4fce-a5c4-f821853ba13b",
+  "ms": 4557,
+  "diario": {
+    "chamadas": [
+      {
+        "classificador": true,
+        "toolsNaMesa": [],
+        "mensagensEnviadas": 1,
+        "texto": "{\"gatilho_escalonamento\":false,\"fora_do_escopo\":false,\"pergunta_tecnica\":true,\"interesse_comercial\":false,\"tensao\":false,\"resumo\":\"O cliente questiona a necessidade de informar o número do IPTU para o serviço de contabilidade.\",\"revelou\":{}}",
+        "chamadas": [],
+        "tokensEntrada": 324,
+        "tokensSaida": 71,
+        "tokensCache": 0
+      },
+      {
+        "classificador": false,
+        "toolsNaMesa": [
+          "consultar_cnae",
+          "consultar_preco",
+          "estimar_das",
+          "buscar_cartao",
+          "consultar_links",
+          "buscar_base",
+          "consultar_contrato",
+          "consultar_escopo"
+        ],
+        "mensagensEnviadas": 1,
+        "texto": "Precisamos do número do IPTU para confirmar a localização exata do seu imóvel na prefeitura de Belo Horizonte.\n\nIsso é fundamental para validar se o endereço é permitido para a atividade que você vai exercer, evitando problemas com o alvará depois. Quer que eu te explique como encontrar esse número na guia?",
+        "chamadas": [],
+        "tokensEntrada": 13152,
+        "tokensSaida": 64,
+        "tokensCache": 13140
+      },
+      {
+        "classificador": false,
+        "toolsNaMesa": [
+          "consultar_cnae",
+          "consultar_preco",
+          "estimar_das",
+          "buscar_cartao",
+          "consultar_links",
+          "buscar_base",
+          "consultar_contrato",
+          "consultar_escopo"
+        ],
+        "mensagensEnviadas": 1,
+        "texto": "O índice do IPTU é o que valida o seu endereço para a Prefeitura. Sem ele, o sistema não localiza o imóvel e o seu processo de abertura para.\n\nFica na sua guia de IPTU, e o app te mostra exatamente onde encontrar na hora de preencher.",
+        "chamadas": [],
+        "tokensEntrada": 14472,
+        "tokensSaida": 58,
+        "tokensCache": 13140
+      }
+    ],
+    "tools": [],
+    "lastro": {
+      "ids": [
+        "04-QUEBRA-OBJECOES#por-que-voces-pedem-o-iptu-e-o-endereco-da-minha-casa",
+        "03-REGRAS-DOS-ORGAOS#1-prefeitura-de-belo-horizonte-endereco-iptu-e-a-regra-do-ap",
+        "08-MAPA-DO-DOSSIE#1-o-que-o-app-pede-campo-a-campo-e-por-que"
+      ],
+      "tamanhoDoBloco": 4589
+    },
+    "correcoes": [],
+    "embeddings": 1
+  },
+  "resposta": {
+    "texto": "O índice do IPTU é o que valida o seu endereço para a Prefeitura. Sem ele, o sistema não localiza o imóvel e o seu processo de abertura para.\n\nFica na sua guia de IPTU, e o app te mostra exatamente onde encontrar na hora de preencher.",
+    "saida": "tecnico"
+  },
+  "turno": {
+    "saida": "tecnico",
+    "tecnica_ok": false,
+    "falha_tipo": "lacuna_da_base",
+    "cartoes_usados": [],
+    "fatos_lidos": [],
+    "tools_chamadas": [],
+    "lastro_ids": [
+      "04-QUEBRA-OBJECOES#por-que-voces-pedem-o-iptu-e-o-endereco-da-minha-casa",
+      "03-REGRAS-DOS-ORGAOS#1-prefeitura-de-belo-horizonte-endereco-iptu-e-a-regra-do-ap",
+      "08-MAPA-DO-DOSSIE#1-o-que-o-app-pede-campo-a-campo-e-por-que"
+    ],
+    "tokens_entrada": 27948,
+    "tokens_saida": 193,
+    "tokens_cache": 26280
+  },
+  "mensagens": [
+    {
+      "papel": "cliente",
+      "texto": "pq vcs precisam do numero do meu iptu?"
+    },
+    {
+      "papel": "leo",
+      "texto": "O índice do IPTU é o que valida o seu endereço para a Prefeitura. Sem ele, o sistema não localiza o imóvel e o seu processo de abertura para.\n\nFica na sua guia de IPTU, e o app te mostra exatamente onde encontrar na hora de preencher."
+    }
+  ],
+  "trilhaPorCodigo": "tecnico",
+  "toolsNaMesa": [
+    "consultar_cnae",
+    "consultar_preco",
+    "estimar_das",
+    "buscar_cartao",
+    "consultar_links",
+    "buscar_base",
+    "consultar_contrato",
+    "consultar_escopo"
+  ],
+  "batidas": [
+    "O índice do IPTU é o que valida o seu endereço para a Prefeitura. Sem ele, o sistema não localiza o imóvel e o seu processo de abertura para.",
+    "Fica na sua guia de IPTU, e o app te mostra exatamente onde encontrar na hora de preencher."
+  ],
+  "sinais": {
+    "gatilho_escalonamento": false,
+    "fora_do_escopo": false,
+    "pergunta_tecnica": true,
+    "interesse_comercial": false,
+    "tensao": false,
+    "resumo": "O cliente questiona a necessidade de informar o número do IPTU para o serviço de contabilidade.",
+    "revelou": {}
+  },
+  "toolsPorSaida": [
+    "consultar_cnae",
+    "consultar_preco",
+    "estimar_das",
+    "buscar_cartao",
+    "consultar_links",
+    "buscar_base",
+    "consultar_contrato",
+    "consultar_escopo"
+  ]
+}

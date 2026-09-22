@@ -40,7 +40,8 @@
     },
     {
       "pergunta": "como faço pra entrar na lista de espera?",
-      "esperado": "12-GATE-DE-SAIDA"
+      "esperado": "01-PLANOS-E-OFERTAS",
+      "_nota": "Corrigido em 22/09: eu tinha escrito 12-GATE-DE-SAIDA, e o link da lista mora no 01 §5. O 12 so manda usar site e Instagram no gate. O gabarito estava errado, nao a base — a medicao da onda 1 registrou como regressao o que era erro meu."
     },
     {
       "pergunta": "eu vi 19 reais num anúncio de vocês",

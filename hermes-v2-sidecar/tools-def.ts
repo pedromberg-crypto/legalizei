@@ -127,18 +127,44 @@ export const TOOLS: DefinicaoTool[] = [
   },
   {
     nome: 'consultar_links',
+    // 🔴 22/09: a palavra "OBRIGATORIA" na descricao NAO segurou. Medido com a
+    //    instrumentacao de chamada: oferecida em 28 de 28 turnos, chamada em 0.
+    //    Dos 4 turnos que afirmaram sem base, 2 eram endereco inventado —
+    //    `legalizai.com.br/lista-de-espera/` (caminho que nao existe) e
+    //    `legalizai.com.br/.` (sem o www, com ponto no fim). E "Lista VIP"
+    //    apareceu em 3 turnos: nome de canal inventado, vizinho de link
+    //    inventado, que nem estava na conta.
+    //
+    //    🔑 O que mudou aqui: a descricao passou a seguir o molde do
+    //    `consultar_escopo`, que e a UNICA tool que o modelo chama. A diferenca
+    //    nao e a palavra "obrigatoria" — quatro tools a tem e estao em zero. E
+    //    nomear o GATILHO na lingua do cliente e a FRASE PROIBIDA, literal.
     descricao:
       'Os QUATRO unicos enderecos que voce pode escrever: site, lista de espera, Instagram ' +
       'e o e-mail de contato. Telefone nao existe nesta lista de proposito: o WhatsApp da ' +
       'Legalizai e a propria conversa. ' +
-      'OBRIGATORIA antes de mencionar qualquer um deles, e obrigatoria no gate de saida, ' +
-      'que termina sempre com o site E o Instagram. ' +
-      '🔴 COPIE A URL CARACTERE POR CARACTERE, inteira, do campo `url`. Nao reescreva de ' +
-      'cabeca, nao encurte, nao tire o https, nao troque por arroba e nao "limpe" o final: ' +
-      'o Instagram termina em `.app/` e essa e justamente a parte que some quando se ' +
-      'digita de memoria, deixando um link que nao abre. ' +
-      'Citar o canal sem colar o endereco na mesma mensagem e o mesmo que nao ter dado o link. ' +
-      'O e-mail (tipo `email`) vai como endereco puro: sem mailto, sem markdown.',
+      '🔴 CHAME ESTA FERRAMENTA PRIMEIRO, e so depois escreva, sempre que a conversa ' +
+      'chegar a qualquer uma destas: a pessoa pedir o site, o link, o Instagram, o ' +
+      'e-mail ou "onde eu acompanho"; a pessoa perguntar como entra na lista de espera; ' +
+      'voce for oferecer a lista de espera; ou voce estiver fechando um gate de saida, ' +
+      'que termina SEMPRE com o site E o Instagram. ' +
+      '🔴 Escrever endereco, nome de canal ou caminho de pagina sem ter chamado esta tool ' +
+      'NO MESMO TURNO e alucinacao, mesmo que voce ache que lembra. Errar uma letra nao ' +
+      'e detalhe: o cliente clica e cai em lugar nenhum, e foi exatamente isso que ' +
+      'aconteceu. ' +
+      'Frases que ja sairam erradas por memoria, e que so podem sair depois da chamada: ' +
+      '"o endereco e este", "o site e", "no Instagram a gente posta", "se quiser entrar, ' +
+      'o link e", "entra na lista". ' +
+      '🔴 O canal chama LISTA DE ESPERA. Nao existe "Lista VIP", "lista de prioridade", ' +
+      '"lista de lancamento" nem qualquer outro nome: nome de canal tambem se le aqui, ' +
+      'nao se inventa. ' +
+      '🔴 COPIE O ENDERECO CARACTERE POR CARACTERE, inteiro, do campo `url`. Nao reescreva ' +
+      'de cabeca, nao encurte, nao tire o `www.`, nao tire o https, nao troque por arroba, ' +
+      'nao invente caminho de pagina e nao "limpe" nem acrescente nada no final: o site ' +
+      'tem `www.`, a lista termina em `/em-breve` e o Instagram termina em `.app/`. Essas ' +
+      'sao justamente as partes que somem quando se digita de memoria. ' +
+      'Citar o canal sem colar o endereco na mesma mensagem e o mesmo que nao ter dado o ' +
+      'link. O e-mail (tipo `email`) vai como endereco puro: sem mailto, sem markdown.',
     parametros: { type: 'object', properties: {} },
   },
   {

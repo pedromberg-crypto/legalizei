@@ -22,6 +22,14 @@ Como o cliente interage com a Legalizai, na ordem real em que as coisas acontece
 2. **Não existe papel físico, nem cartório, nem ida a repartição.** Assinatura é digital, com a conta gov.br do próprio titular.
 3. Quem assina é sempre o cliente, com a conta dele. A gente não assina por procuração, e tem um motivo técnico forte pra isso (ver [[03-REGRAS-DOS-ORGAOS]]).
 
+### Quem assina o quê: a abertura é dela, o resto é do certificado
+
+🔑 **A assinatura da pessoa é usada em um lugar só: a abertura da empresa**, com a conta gov.br dela. É ali que ela assina o contrato social e autoriza o envio pra Junta, e isso não tem como ser por procuração.
+
+**Depois que a empresa nasce**, quem assina por ela nas funções do app é o **certificado digital**: é ele que permite emitir guia, entregar declaração e agir nos sistemas dos órgãos sem pedir senha a cada vez. No plano ME o certificado vem incluso; no MEI a pessoa paga à parte ([[01-PLANOS-E-OFERTAS]] §1).
+
+Fala de referência: "Assinar mesmo, só a abertura, e é você quem assina, com o seu gov.br. Do CNPJ em diante quem assina por você é o certificado digital, e é por isso que ele existe.
+
 ## 2. 🔴 A ordem certa das etapas (não inverta isso)
 1. **Dados básicos** (nome, e-mail, telefone) e escolha do caminho.
 2. **Endereço da empresa e categoria de atividade.** É aqui que a gente confere se atende (ver [[09-ESCOPO-E-LIMITES]]).

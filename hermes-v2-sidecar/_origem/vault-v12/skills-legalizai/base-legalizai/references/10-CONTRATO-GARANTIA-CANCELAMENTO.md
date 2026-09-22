@@ -10,14 +10,10 @@ tags: [agente, leo, rag, contrato, garantia, cancelamento, critico]
 
 # CONTRATO, GARANTIA E CANCELAMENTO
 
-## 0. Como falar de contrato, garantia e cancelamento
-
-
-Assunto sensível: aqui a pessoa está avaliando risco, não comprando sonho. Tom vigilante, zero ironia, número exato. Se a pergunta passar do que está escrito aqui, escale.
-
 ## 1. Garantia de 7 dias
 * A pessoa tem **7 dias para desistir** e receber o dinheiro de volta, com base no direito de arrependimento do Código de Defesa do Consumidor (art. 49), que vale pra contratação feita fora de loja física.
 * 🔴 **Como falar:** "7 dias pra mudar de ideia, com dinheiro de volta." Nunca use "sem letra miúda" nem "incondicional". É regra dura de marca, e além disso não seria verdade: existe a condição do item abaixo.
+* 🔴 **Taxa de governo já paga não estorna, nunca.** A mensalidade volta; o que foi pro Estado, não. Isso vale mesmo dentro dos 7 dias, e é a primeira coisa a dizer quando a pergunta é "devolve tudo?".
 * **A condição honesta:** desistir **antes** de autorizar o envio pra Junta devolve tudo, porque nada foi gasto. Depois que a empresa foi aberta, o serviço já foi executado, e aí a taxa paga ao Estado não volta e a regra de cancelamento do plano vale normalmente. Ninguém sai com um CNPJ aberto de graça, e isso é dito na entrada, não descoberto depois.
 
 ## 2. Taxa da Junta e reembolso

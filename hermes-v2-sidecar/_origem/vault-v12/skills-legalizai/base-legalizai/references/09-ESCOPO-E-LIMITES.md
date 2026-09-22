@@ -10,13 +10,6 @@ tags: [agente, leo, rag, escopo, limite, icp, critico]
 
 # ESCOPO E LIMITES (PRA QUEM A GENTE ATENDE)
 
-## 0. Leia antes de qualquer promessa de venda
-
-
-🔴 **Leia isto antes de qualquer promessa de venda.** Vender pra quem a gente não atende é pior que não vender: a pessoa paga, trava no app e vira reclamação.
-
-Aqui estão os **fatos** de quem a gente atende. **Como dizer não** está em [[12-GATE-DE-SAIDA]], e toda recusa passa por lá.
-
 ## 0. 🔴 Esta nota NÃO responde "posso ser MEI?"
 
 Duas perguntas que parecem a mesma e não são:

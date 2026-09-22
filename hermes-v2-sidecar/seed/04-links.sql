@@ -48,6 +48,15 @@ COMMENT ON COLUMN fatos.link.url IS
   'por arroba, nao "limpar" o final.';
 
 INSERT INTO fatos.link (id, nome, url, quando_usar, fonte) VALUES
+  -- 🆕 22/09/2026: o e-mail passa a existir como canal. Ate aqui a regra era
+  --    "e-mail e telefone nao estao na base: nao invente", e agora ha o que
+  --    informar. Telefone continua FORA de proposito: o WhatsApp da Legalizai e
+  --    a propria conversa, e mandar o numero para quem ja esta nele e ruido.
+  ('email-contato', 'E-mail de contato',
+   'contato@legalizai.com.br',
+   'Quem prefere escrever fora do WhatsApp, ou pede um contato formal. Nao substitui o '
+   'atendimento por aqui: e canal alternativo, nao fila de suporte.',
+   '01-PLANOS-E-OFERTAS §5'),
   ('lista-espera', 'Lista de espera',
    'https://www.legalizai.com.br/em-breve',
    'Quem quer garantir o preco promocional. Nao cobra nada na entrada e nao compromete '

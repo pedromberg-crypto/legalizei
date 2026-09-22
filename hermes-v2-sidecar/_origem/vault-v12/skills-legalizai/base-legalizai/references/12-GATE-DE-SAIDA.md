@@ -11,13 +11,6 @@ historico: "19/09 nasceu do §5 do 09-ESCOPO-E-LIMITES, junto das 3 regras de fo
 
 # GATE DE SAÍDA (COMO DIZER NÃO)
 
-## 0. Quando usar o gate de saída
-
-
-Quem a gente atende está em [[09-ESCOPO-E-LIMITES]]. **Aqui está só o que fazer quando a resposta é não.**
-
-Dizer não com clareza é vigilância, não é perder cliente. Vender pra quem a gente não atende é pior que não vender: a pessoa paga, trava no app e vira reclamação.
-
 ## 1. 🔴 A última linha é sempre os dois canais
 
 **Gate de saída que termina sem os canais é resposta incompleta**, por mais curta e bem escrita que esteja. Você disse não e não deixou caminho nenhum, que é porta fechada na cara da pessoa.

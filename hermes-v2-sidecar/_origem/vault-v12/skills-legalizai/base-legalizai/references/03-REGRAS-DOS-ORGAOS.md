@@ -11,19 +11,22 @@ historico: "04/09 fundiu 03-DOMINIO-CONTABIL com 06-REGRAS-ORGAOS-PUBLICOS, que 
 
 # REGRAS DOS ÓRGÃOS (PREFEITURA DE BH · JUCEMG · RECEITA FEDERAL)
 
-## 0. Por que cada pergunta do app existe
-
-
-O que trava e o que libera uma abertura. Use pra explicar o "porquê" de cada pergunta do app, que é o que transforma burocracia em confiança.
-
 ## 1. Prefeitura de Belo Horizonte: endereço, IPTU e a regra do apartamento
 
 **A regra que mais indefere:** a PBH não libera empresa em **apartamento** quando nenhum sócio mora no endereço. Isso já foi visto ao vivo, num processo real, saindo de indeferido pra deferido só mudando essa resposta.
 
 * Por isso o app pergunta **se é casa ou apartamento** e **se o titular mora no local**. Não é curiosidade, é o que decide o deferimento.
-* **Índice cadastral do IPTU:** obrigatório. Sem ele a Prefeitura não localiza o imóvel, e o processo para. Fica na guia do IPTU, e o app mostra onde achar.
+* **Índice cadastral do IPTU:** obrigatório. É o dado que **valida aquele endereço na constituição** — sem ele a Prefeitura não localiza o imóvel, e o processo para. Fica na guia do IPTU, e o app mostra onde achar.
 * Imóvel comercial: o IPTU precisa ter destinação compatível e o endereço não pode ter impedimento de zoneamento pra atividade.
-### A saída quando o endereço não dá: o endereço fiscal da Legalizai
+## 1A. O alvará sai junto com o CNPJ
+
+**A pessoa não precisa tirar alvará à parte.** A atividade que a gente atende é de **baixo risco**, e nesse enquadramento o licenciamento sai **junto com a abertura**: o CNPJ nasce com ele.
+
+⚠️ Isso vale para o escopo de hoje, que é serviço de baixo risco em BH. Atividade que exija vistoria, conselho de classe ou licença específica muda a conversa, e aí é [[09-ESCOPO-E-LIMITES]] e [[12-GATE-DE-SAIDA]].
+
+Fala de referência: "Alvará você não precisa correr atrás: a atividade é de baixo risco, então ele sai junto com o CNPJ."
+
+## 1B. Não tem endereço em BH: o endereço fiscal da Legalizai
 
 🔴 **Esta é a casa deste add-on.** Ele mora aqui, e não na nota de planos, porque quem
 pergunta por ele está resolvendo um problema de **endereço**, não comprando.
@@ -53,8 +56,12 @@ Como explicar sem assustar: "O que a Prefeitura analisa é o endereço, não voc
 * **MEI é isento** dessa taxa.
 * **Reembolso:** depois de protocolado, o Estado já prestou o serviço, então não existe
   devolução, nem por nós nem por eles. Antes de autorizar o envio, nada disso aconteceu.
-* **Registro automático:** a JUCEMG defere quase na hora quando o processo usa o **contrato padrão** gerado pelo sistema, sem anexo e sem cláusula extra.
+## 2A. A via automática da Junta, e por que não usamos procuração
+
+* **Registro automático:** a JUCEMG defere quase na hora quando o processo usa o **contrato padrão** gerado pelo sistema, sem anexo e sem cláusula extra. 🔑 **É por essa via que a Legalizai entra, sempre** — e é por isso que por aqui anda mais rápido que o caminho comum. ⚠️ Isso se diz da **via**, nunca em dias: prazo de fila de órgão não é nosso e não se promete ([[09-ESCOPO-E-LIMITES]] §5).
 * **🔴 Por que não usamos procuração:** anexar procuração (ou qualquer anexo, ou cláusula personalizada) **derruba a elegibilidade ao registro automático** e joga o processo pra análise humana, que demora muito mais. Por isso a Legalizai guia o próprio cliente a assinar com o gov.br dele. É escolha de velocidade, não de comodidade nossa.
+## 2B. O nome da empresa e as três opções
+
 * **Nome da empresa:** a Junta pode recusar por colidência com nome já existente. Por isso o app pede **3 opções de razão social, em ordem de prioridade**: se a primeira cai, tenta a segunda, depois a terceira. Se as três caírem, o app abre uma nova rodada de sugestões.
 * **Administração:** por padrão, qualquer sócio administrador age e assina sozinho pela empresa no dia a dia. Assinatura de todos só é exigida em atos extraordinários (alienar bem da sociedade, por exemplo).
 

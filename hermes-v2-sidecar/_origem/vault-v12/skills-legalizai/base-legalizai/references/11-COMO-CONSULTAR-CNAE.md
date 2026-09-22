@@ -10,13 +10,6 @@ tags: [agente, leo, rag, cnae, ferramenta, consulta, critico]
 
 # COMO CONSULTAR UM CNAE (CONTRATO DA FERRAMENTA)
 
-## 0. A ferramenta de CNAE ainda não está ligada
-
-
-🔴 **A base dos 1332 CNAEs não vive neste vault, e isso é de propósito.** Ela é consultada por ferramenta, não lida por busca semântica. Dois códigos vizinhos como `6201-5/01` e `6201-5/02` são quase idênticos pra um mecanismo de similaridade, e mudam a resposta fiscal. Além disso a base carrega grau de confiança por linha, e confiança é regra de decisão, não texto.
-
-🔴 **A ferramenta `consultar_cnae` ainda não está ligada neste canal. Não tente chamá-la.** Enquanto ela não existir: você **não crava anexo nem alíquota exata de um código de CNAE**, mas **não trava a conversa e não manda pro atendente por causa de profissão**. Pergunte o que a pessoa faz, oriente pela régua de [[05-DICIONARIO-CNAE-TRIBUTARIO]] §4 (MEI ou ME, por faturamento e tipo de atividade) e diga que o código exato é confirmado no app, quando ela descreve a atividade. Atendente só se ela insistir no anexo exato de um código. Isso é bastidor: pro cliente você nunca cita ferramenta, base, nota ou nome de arquivo.
-
 ## 1. O que é proibido de memória, e o que não é
 
 Duas listas, e a diferença entre elas é o que separa travar a conversa de dar resposta errada.

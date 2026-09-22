@@ -10,11 +10,6 @@ tags: [agente, leo, rag, cnae, tributario, simples, fator-r]
 
 # DICIONÁRIO DE CNAE E TRIBUTAÇÃO
 
-## 0. O que este dicionário decide, e o que não decide
-
-
-Conceitos pra você explicar bem. Regra de decisão sobre um código específico não está aqui, está na consulta ([[11-COMO-CONSULTAR-CNAE]]).
-
 ## 1. O que é CNAE
 É o código que diz oficialmente o que a empresa faz. Ele define o imposto, o registro e às vezes a exigência de conselho de classe. No app, a pessoa descreve a atividade com as próprias palavras e a gente encontra o código certo, ela não precisa saber o número.
 
@@ -44,7 +39,7 @@ Algumas atividades ficam entre o Anexo III e o Anexo V. Quem decide é o **Fator
 
 Sem contabilês: é o degrau entre pagar por volta de 6% e pagar por volta de 15,5%. Quem fica de olho pra sua empresa ficar do lado bom sou eu, todo mês.
 
-## 4. MEI x ME: qual recomendar (você responde, não passa pra frente)
+## 4. MEI ou ME: a régua de recomendação
 
 * MEI: guia fixa mensal, teto de faturamento próprio (R$ 81 mil por ano), lista fechada de ocupações permitidas.
 * ME no Simples: imposto proporcional ao faturamento, muito mais atividade permitida, e é onde entram as profissões intelectuais.
@@ -52,18 +47,22 @@ Sem contabilês: é o degrau entre pagar por volta de 6% e pagar por volta de 15
 
 🔴 **Quem conta o que faz e quanto fatura quer uma indicação.** Responder "cabe nos dois" e parar aí não ajuda, e mandar pro atendente é erro. A régua:
 
-**A. Fatura até o teto do MEI (R$ 81 mil por ano, média de R$ 6.750 por mês) e a atividade pode ser MEI → recomende o MEI.** Pode dizer que também caberia como ME, mas indique o MEI e mostre por que vale mais a pena neste momento, com foco no imposto:
+## 4A. Fatura até o teto do MEI e a atividade pode ser MEI: recomende o MEI
+
+**Cabe no MEI (teto de R$ 81 mil por ano, média de R$ 6.750 por mês) e a atividade permite → recomende o MEI.** Pode dizer que também caberia como ME, mas indique o MEI e mostre por que vale mais a pena neste momento, com foco no imposto:
 * o imposto do MEI é uma **guia fixa por mês**, que não cresce junto com cada nota. Na ME o imposto é percentual: quem fatura R$ 5 mil no mês paga por volta de 6% disso, perto de R$ 300, e na guia fixa do MEI sai bem menos (o valor exato você não cita, o app mostra)
 * o plano também é mais barato que o do ME. 🔴 **Os valores não estão escritos aqui**: leia [[01-PLANOS-E-OFERTAS]] antes de citar qualquer um deles
 * rotina mais leve: uma declaração por ano, e não precisa de certificado digital pra emitir nota
 * eu fico de olho no teto (R$ 81 mil por ano) e aviso antes de estourar. Se o negócio crescer, a gente migra pra ME
 * no MEI o suporte é assistente virtual, sem contador humano. Diga isso sem ser perguntado
 
-**B. Passa do teto do MEI, ou a atividade não pode ser MEI → ME, como boa notícia.** Se for atividade que pode cair em duas alíquotas (as que o Fator R decide), fale simples, sem aula:
+## 4B. Passa do teto, ou a atividade não pode ser MEI: vai de ME, e é boa notícia
+
+**Passa do teto do MEI, ou a atividade não entra na lista dele → ME.** Se for atividade que pode cair em duas alíquotas (as que o Fator R decide), fale simples, sem aula:
 "Essa atividade pode cair em duas alíquotas de imposto, uma por volta de 6% e outra por volta de 15,5%. A gente tem um time especializado, e o meu sistema acompanha isso todo mês, justamente pra te deixar no melhor cenário."
 Pra atividade que já é Anexo III fixo, nem toque em Fator R.
 
-**C. Profissão e MEI**
+## 4C. "Essa profissão pode ser MEI?" — o que você sabe e o que não sabe
 
 🔴 **Comece escrevendo, para você mesmo, a profissão que A PESSOA disse.** Não a parecida,
 não a do exemplo, não a da conversa anterior. **A que ela escreveu.**
@@ -84,7 +83,7 @@ para ela. Motivo: aqui o erro não é de tom, é **afirmar regra jurídica falsa
 negócio de alguém**. Varie as palavras, **nunca o conteúdo: não sei de cabeça · o app
 confirma · o ME resolve se não couber.**
 
-### As duas exceções, e são só duas
+## 4D. As duas únicas exceções: fotógrafo pode, as regulamentadas não
 
 Confira se a profissão que a pessoa escreveu está **literalmente** numa delas. Se não
 estiver, vale a regra base acima.

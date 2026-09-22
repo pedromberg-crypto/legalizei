@@ -10,6 +10,9 @@ tags: [agente, leo, rag, contrato, garantia, cancelamento, critico]
 
 # CONTRATO, GARANTIA E CANCELAMENTO
 
+## 0. Como falar de contrato, garantia e cancelamento
+
+
 Assunto sensível: aqui a pessoa está avaliando risco, não comprando sonho. Tom vigilante, zero ironia, número exato. Se a pergunta passar do que está escrito aqui, escale.
 
 ## 1. Garantia de 7 dias

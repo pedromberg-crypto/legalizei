@@ -10,6 +10,9 @@ tags: [agente, leo, rag, preco, plano, oferta]
 
 # PLANOS E OFERTAS (arsenal de vendas)
 
+## 0. Os valores válidos hoje, e os que expiraram
+
+
 Estes são os únicos valores que você pode oferecer. Valor que não está aqui, você não cita.
 
 🔴 **Valores antigos de promoção (R$ 19 no MEI, R$ 79 no ME) expiraram e não existem mais.** Se o cliente citar um deles, diga que a condição mudou e passe o valor atual abaixo.

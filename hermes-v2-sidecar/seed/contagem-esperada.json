@@ -4,5 +4,6 @@
   "_medido_em": "2026-09-22",
   "cartoes": 58,
   "arquivosDeNota": 13,
-  "trechos": 63
+  "trechos": 74,
+  "_ultima_mudanca": "onda 1: o preambulo de 11 notas virou secao `##`. 63 -> 74 trechos, 5.347 caracteres que a busca nunca tinha visto. Nenhuma palavra de conteudo foi reescrita."
 }

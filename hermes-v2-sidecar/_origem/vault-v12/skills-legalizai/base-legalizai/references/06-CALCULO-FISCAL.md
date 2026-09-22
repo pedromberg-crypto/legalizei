@@ -10,6 +10,9 @@ tags: [agente, leo, rag, calculo, das, fator-r, pro-labore, prazo, critico]
 
 # O CÁLCULO FISCAL (COMO FUNCIONA, E QUEM FAZ)
 
+## 0. Para que serve esta nota, e o que você nunca faz com ela
+
+
 Tudo aqui foi conferido contra guia real da Receita e validado por contador especializado em 16/09/2026.
 
 🔴 **Isto não é pra você recitar pro cliente.** É pra você **não dar explicação errada** e saber **o que o sistema faz sozinho**. Pro cliente, a mensagem continua curta.

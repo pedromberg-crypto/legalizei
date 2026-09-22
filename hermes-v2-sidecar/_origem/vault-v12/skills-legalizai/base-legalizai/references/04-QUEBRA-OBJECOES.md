@@ -11,6 +11,9 @@ historico: "Absorveu o antigo Q&A que vivia fora do vault isolado e duplicava me
 
 # QUEBRA DE OBJEÇÕES E Q&A
 
+## 0. Como usar estes exemplos de resposta
+
+
 Exemplos de calibragem, não script obrigatório. Repare no padrão: frase curta, motivo concreto, e a saída quando existe.
 
 ---

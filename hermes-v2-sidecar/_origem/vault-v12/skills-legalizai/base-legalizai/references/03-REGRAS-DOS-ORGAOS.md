@@ -11,6 +11,9 @@ historico: "04/09 fundiu 03-DOMINIO-CONTABIL com 06-REGRAS-ORGAOS-PUBLICOS, que 
 
 # REGRAS DOS ÓRGÃOS (PREFEITURA DE BH · JUCEMG · RECEITA FEDERAL)
 
+## 0. Por que cada pergunta do app existe
+
+
 O que trava e o que libera uma abertura. Use pra explicar o "porquê" de cada pergunta do app, que é o que transforma burocracia em confiança.
 
 ## 1. Prefeitura de Belo Horizonte: endereço, IPTU e a regra do apartamento

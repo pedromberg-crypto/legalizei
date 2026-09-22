@@ -2,15 +2,54 @@
   "_doc": "As perguntas do teste de busca, em DADO e não em código. Acrescentar pergunta não exige tocar no script — e é assim que o conjunto cresce sem virar 300 linhas de literal. `pergunta` é a redação do CLIENTE, não a da documentação: é assim que ela chega. `esperado` é o arquivo de nota que deveria responder.",
   "_como_ler_o_resultado": "✅ = veio em 1º · 🟡 = veio entre os 4 (a tool devolve 4, então o Léo recebe o certo mesmo assim) · 🔴 = não veio, e aí chamar a tool não adiantaria.",
   "perguntas": [
-    { "pergunta": "preciso de alvará da prefeitura pra abrir a empresa?", "esperado": "03-REGRAS-DOS-ORGAOS" },
-    { "pergunta": "quanto tempo a junta comercial demora pra registrar?", "esperado": "03-REGRAS-DOS-ORGAOS" },
-    { "pergunta": "quais planos vocês têm e o que vem em cada um?", "esperado": "01-PLANOS-E-OFERTAS" },
-    { "pergunta": "essa promoção vale até quando?", "esperado": "01-PLANOS-E-OFERTAS" },
-    { "pergunta": "se eu quiser cancelar depois de três meses, pago multa?", "esperado": "10-CONTRATO-GARANTIA-CANCELAMENTO" },
-    { "pergunta": "tá caro, o contador aqui do bairro cobra menos", "esperado": "04-QUEBRA-OBJECOES" },
-    { "pergunta": "o que eu preciso pagar todo mês depois que abrir?", "esperado": "07-OBRIGACOES-MENSAIS" },
-    { "pergunta": "quais documentos vocês vão me pedir?", "esperado": "08-MAPA-DO-DOSSIE" },
-    { "pergunta": "vocês atendem quem tem loja de roupa?", "esperado": "09-ESCOPO-E-LIMITES" },
-    { "pergunta": "como faço pra entrar na lista de espera?", "esperado": "12-GATE-DE-SAIDA" }
-  ]
+    {
+      "pergunta": "preciso de alvará da prefeitura pra abrir a empresa?",
+      "esperado": "03-REGRAS-DOS-ORGAOS"
+    },
+    {
+      "pergunta": "quanto tempo a junta comercial demora pra registrar?",
+      "esperado": "03-REGRAS-DOS-ORGAOS"
+    },
+    {
+      "pergunta": "quais planos vocês têm e o que vem em cada um?",
+      "esperado": "01-PLANOS-E-OFERTAS"
+    },
+    {
+      "pergunta": "essa promoção vale até quando?",
+      "esperado": "01-PLANOS-E-OFERTAS"
+    },
+    {
+      "pergunta": "se eu quiser cancelar depois de três meses, pago multa?",
+      "esperado": "10-CONTRATO-GARANTIA-CANCELAMENTO"
+    },
+    {
+      "pergunta": "tá caro, o contador aqui do bairro cobra menos",
+      "esperado": "04-QUEBRA-OBJECOES"
+    },
+    {
+      "pergunta": "o que eu preciso pagar todo mês depois que abrir?",
+      "esperado": "07-OBRIGACOES-MENSAIS"
+    },
+    {
+      "pergunta": "quais documentos vocês vão me pedir?",
+      "esperado": "08-MAPA-DO-DOSSIE"
+    },
+    {
+      "pergunta": "vocês atendem quem tem loja de roupa?",
+      "esperado": "09-ESCOPO-E-LIMITES"
+    },
+    {
+      "pergunta": "como faço pra entrar na lista de espera?",
+      "esperado": "12-GATE-DE-SAIDA"
+    },
+    {
+      "pergunta": "eu vi 19 reais num anúncio de vocês",
+      "esperado": "01-PLANOS-E-OFERTAS"
+    },
+    {
+      "pergunta": "o app já tá na loja? posso baixar?",
+      "esperado": "02-PRODUTO-E-USABILIDADE"
+    }
+  ],
+  "_ondas": "Q11 e Q84 entraram em 22/09 com a onda 1: as duas dependem de texto que vivia no preambulo invisivel (o valor expirado, no 01; o pre-lancamento, no 02). Sao a prova direta de que a onda funcionou."
 }

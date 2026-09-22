@@ -10,6 +10,9 @@ tags: [agente, leo, rag, dossie, app, campos]
 
 # MAPA DO DOSSIÊ DE ABERTURA (O QUE O APP PEDE E POR QUÊ)
 
+## 1. O que o app pede, campo a campo, e por quê
+
+
 Quando a pessoa travar preenchendo, use isto. Cada campo tem um motivo de órgão atrás, e dizer o motivo é o que tira a sensação de burocracia gratuita.
 
 | # | Etapa | O que pedimos | Por que |

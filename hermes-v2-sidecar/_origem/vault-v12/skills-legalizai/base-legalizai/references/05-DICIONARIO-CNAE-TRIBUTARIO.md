@@ -10,6 +10,9 @@ tags: [agente, leo, rag, cnae, tributario, simples, fator-r]
 
 # DICIONÁRIO DE CNAE E TRIBUTAÇÃO
 
+## 0. O que este dicionário decide, e o que não decide
+
+
 Conceitos pra você explicar bem. Regra de decisão sobre um código específico não está aqui, está na consulta ([[11-COMO-CONSULTAR-CNAE]]).
 
 ## 1. O que é CNAE

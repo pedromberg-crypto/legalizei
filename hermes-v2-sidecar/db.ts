@@ -199,12 +199,39 @@ export async function buscarCartao(embedding: number[], limite = 3): Promise<Lin
   return rows
 }
 
+/**
+ * 🔑 NO MAXIMO DOIS TRECHOS POR NOTA (22/09).
+ *
+ * Medido na onda 3: o `04-QUEBRA-OBJECOES` virou 24 dos 100 trechos, e os
+ * titulos dele sao perguntas de cliente em primeira pessoa — a MESMA forma
+ * gramatical da consulta. Ele passou a vencer por forma, nao por assunto:
+ * apareceu em 11 dos 12 top-4, e em quatro perguntas ocupou as QUATRO vagas.
+ *
+ * O estrago concreto: "o que eu preciso pagar todo mes depois que abrir?" tinha
+ * a resposta certa no `07`, a 0,048 de distancia do corte, e ela nao entrou
+ * porque as quatro vagas eram do `04`. O Leo recebeu argumento de venda para
+ * uma pergunta sobre imposto.
+ *
+ * A trava nao mexe em relevancia: a ordem continua sendo a distancia. Ela so
+ * impede que UMA nota ocupe a mesa inteira, que e o unico jeito de a resposta
+ * certa nao ter onde caber. Duas por nota, e nao uma, porque as vezes a
+ * resposta esta mesmo em duas secoes vizinhas do mesmo arquivo.
+ */
 export async function buscarNota(embedding: number[], limite = 3) {
   const { rows } = await pool.query(
-    `SELECT id, assunto, trecho, (embedding <=> $1::vector)::real AS distancia
-       FROM conhecimento.nota
-      WHERE embedding IS NOT NULL
-      ORDER BY embedding <=> $1::vector
+    `WITH ordenado AS (
+       SELECT id, assunto, trecho, fonte,
+              (embedding <=> $1::vector)::real AS distancia,
+              row_number() OVER (
+                PARTITION BY fonte ORDER BY embedding <=> $1::vector
+              ) AS posicao_na_nota
+         FROM conhecimento.nota
+        WHERE embedding IS NOT NULL
+     )
+     SELECT id, assunto, trecho, distancia
+       FROM ordenado
+      WHERE posicao_na_nota <= 2
+      ORDER BY distancia
       LIMIT $2`,
     [comoVetor(embedding), limite],
   )

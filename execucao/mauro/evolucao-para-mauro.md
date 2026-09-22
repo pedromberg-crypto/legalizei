@@ -14,29 +14,29 @@ tags: [reporte, evolucao, sociedade]
 
 ## 📊 Placar geral
 
-> 🤖 **Este bloco é gerado.** Ele se reconta sozinho a cada `/fechar`, a partir das tabelas abaixo — nenhum número aqui é digitado. Gerado em **21/09/2026**.
+> 🤖 **Este bloco é gerado.** Ele se reconta sozinho a cada `/fechar`, a partir das tabelas abaixo — nenhum número aqui é digitado. Gerado em **22/09/2026**.
 
 ### O que rendeu
 
 | | |
 |---|---:|
-| **Entregas reportadas** | **327** |
-| Entradas no log | 66 |
-| **Dias trabalhados** | **63** |
-| Período | 07/07/2026 → 21/09/2026 |
-| Dias corridos no período | 77 |
-| Média de entregas por dia trabalhado | 5,2 |
+| **Entregas reportadas** | **337** |
+| Entradas no log | 67 |
+| **Dias trabalhados** | **64** |
+| Período | 07/07/2026 → 22/09/2026 |
+| Dias corridos no período | 78 |
+| Média de entregas por dia trabalhado | 5,3 |
 
 ### Placar por status
 
 | Status | Itens | % |
 |---|---:|---:|
-| 🟢 pronto / entregue | **241** | 73,7% |
-| ✅ estava parado, foi resolvido | **15** | 4,6% |
-| 🟡 em curso / parcial | **27** | 8,3% |
+| 🟢 pronto / entregue | **241** | 71,5% |
+| ✅ estava parado, foi resolvido | **15** | 4,5% |
+| 🟡 em curso / parcial | **27** | 8,0% |
 | 🔴 trava ou precisa de você | **5** | 1,5% |
 | 🕓 aguarda pessoa | **2** | 0,6% |
-| sem marca | 37 | 11,3% |
+| sem marca | 47 | 13,9% |
 
 ### Ritmo, mês a mês
 
@@ -44,7 +44,7 @@ tags: [reporte, evolucao, sociedade]
 |---|---:|---:|---:|
 | julho/2026 | 24 | 20 | — |
 | agosto/2026 | 20 | 20 | — |
-| setembro/2026 | 19 | 19 | 🔴 **1** |
+| setembro/2026 | 20 | 20 | 🔴 **1** |
 
 ### ⚠️ O que o sócio não viu
 
@@ -1450,6 +1450,39 @@ Continuação do mesmo dia. A parte 1 foi arrumação de casa; esta é aplicaç�
 - O Pedro testou o caso dele e achou um erro no mês sem faturar. Conta certa, aviso errado. Corrigido
 - Fechei os 6 vermelhos do mapa de processos 👍
 - *Preciso de você:* quero conferir a redação das 5 perguntas antes de virarem tela
+```
+
+## Semana 22/09/2026 — a base do Léo tinha um pedaço que ninguém conseguia ler, e o app ganhou conferência automática
+
+Dia inteiro em duas frentes. As duas acabaram achando defeito que a gente não estava procurando.
+
+| # | O que foi feito | Detalhe |
+|---|---|---|
+| 1 | 🔴 **Um pedaço da documentação do Léo era invisível pra ele** | O programa que corta os arquivos em pedaços para o robô consultar **jogava fora tudo que vinha antes do primeiro título**. Eram **5.922 caracteres** — e incluía a **tabela inteira dos 14 campos que o app pede**, o aviso de que a consulta de CNAE ainda não está ligada e o *"os preços antigos de promoção expiraram"*. Consertado sem reescrever uma palavra |
+| 2 | 🧪 **Criei um teste barato que mede se o Léo CONSEGUE achar a resposta** | Custa centavos e roda em segundos. Ele faz 12 perguntas de cliente de verdade e confere se o texto certo volta. Começou em **9 de 10** e terminou o dia em **12 de 12, sem nenhuma falha** |
+| 3 | 🔴 **A base não tinha resposta para a objeção mais comum do ramo** | *"Tá caro, o contador aqui do bairro cobra menos"* — não existia em lugar nenhum. O Léo respondia repetindo o preço para quem acabou de dizer que o preço está alto. Escrevi essa e mais cinco: *"e se eu fizer sozinho no portal do governo"*, *"vou pensar"*, *"meu cunhado é contador"*, *"vocês são novos, e se fecharem"* |
+| 4 | ✅ **Entraram as respostas que faltavam, e uma delas corrigia a base** | Certificado digital: a base dizia só que o MEI **não precisa** dele. Faltava a outra metade — **para o nosso app trabalhar pelo cliente, precisa**, e no plano MEI ele paga à parte. Também entraram: o alvará sai junto com o CNPJ (atividade de baixo risco), conta no banco não é obrigatória, e taxa de governo já paga **não é estornada** |
+| 5 | 📧 **E-mail virou canal oficial** | `contato@legalizai.com.br`. Telefone não entra de propósito: o WhatsApp da Legalizai **é a própria conversa** |
+| 6 | 🔴 **Descobri que o robô quase não usa as ferramentas dele** | Botamos um medidor novo e o número apareceu: em **15 de 28 respostas** ele não consultou **nada** — respondeu de memória. E **4 das 8 ferramentas** nunca foram usadas. Ele acerta na maioria das vezes, e é isso que esconde o problema |
+| 7 | 🔴 **Dois links errados saíram para cliente, e um endereço foi inventado** | Um com o caminho trocado, outro sem o `www`. E o robô chegou a citar uma *"Lista VIP"* que **não existe** — o canal se chama lista de espera. Estou fechando isso com um **filtro automático na saída**: se o endereço não bater com a tabela oficial, ele é corrigido ou removido antes de a mensagem sair |
+| 8 | 🔐 **Troca da chave de acesso da IA, com susto de 15 segundos** | A chave nova passou no teste que eu mandei usar e **derrubou o Léo** ao subir: o projeto dela não estava liberado. Voltou no backup em 15 segundos, e o teste certo ficou escrito para não repetir |
+| 9 | 🤖 **No app, a conferência de banco virou automática** | Antes, conferir se o que o cliente digita cai certo no banco era trabalho manual caro. Agora dois programas fazem a conferência inteira em **4 segundos**, de graça. E na primeira execução eles já acharam uma coisa que ninguém tinha visto |
+| 10 | 🔴 **Sete valores que ninguém digita estão indo para o contrato social** | Capital social de **R$ 10.000**, 10.000 quotas, **área de 20 m²** e a atividade declarada como "inócua". Nenhuma tela pergunta e nenhuma tela mostra — a pessoa assina um contrato com números que nunca viu. Pode ser padrão proposital do MVP, e aí vira decisão registrada; o que não pode é seguir invisível |
+
+**O que fica com você:** o item 10 é o que quero sua leitura. **Capital social e área declarada** vão no contrato social e são declaração do cliente. Hoje saem no padrão, sem ninguém perguntar. Faz sentido manter assim para o perfil que a gente atende, ou isso precisa virar pergunta no app? E continua de pé a decisão dos CNAEs da semana passada.
+
+### 📱 WhatsApp (22/09)
+```
+*Update Legalizai* 📣
+- Achei um defeito de fundo na base do Léo: um pedaço dela era *invisível* pro robô
+- O programa que corta a documentação jogava fora tudo antes do primeiro título. Quase 6 mil caracteres, incluindo a tabela inteira dos campos que o app pede
+- Criei um teste barato que mede se ele consegue achar a resposta. Começou em 9 de 10 e fechou o dia em *12 de 12, sem falha*
+- A base não tinha resposta pra objeção mais comum do ramo: "tá caro, o contador do bairro cobra menos". Agora tem, e mais cinco
+- Corrigi uma pela metade: a base dizia que o MEI não precisa de certificado. Falta dizer que *pro nosso app trabalhar por ele, precisa* — e no MEI é pago à parte
+- Descobri que ele quase não usa as ferramentas: em 15 de 28 respostas não consultou nada, respondeu de memória. Acerta na maioria, e é isso que esconde
+- Dois links saíram errados pra cliente e um endereço foi inventado. Tô fechando com um filtro automático na saída
+- No app, a conferência do banco virou automática: 4 segundos e de graça, contra trabalho manual caro
+- E ela já achou uma coisa: *sete valores que ninguém digita* estão indo pro contrato social, entre eles capital de R$ 10 mil e área de 20 m². Quero sua leitura nessa
 ```
 
 ## Semana 19/09/2026 — o Léo estava dando meia resposta sobre cancelamento, e descobri por quê

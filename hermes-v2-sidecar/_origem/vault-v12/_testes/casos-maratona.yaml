@@ -1,0 +1,175 @@
+# ════════════════════════════════════════════════════════════════════════════
+#  casos-maratona.yaml · a conversa longa, do "oi" ao "me manda o link"
+#
+#  UM caso, DEZ turnos, a MESMA sessão. O histórico acumula turno a turno, e é
+#  exatamente isso que este arquivo existe para medir: o `casos.yaml` do v12 é
+#  quase todo de 1 ou 2 turnos, então nada lá prova o que o Léo faz quando a
+#  conversa já tem contexto e o cliente muda de ideia no meio.
+#
+#  🔴 ESTE ARQUIVO USA CHECAGEM POR TURNO, e o runner atual NÃO a suporta.
+#     Em `testes/e2e.ts`, `rodarCaso` guarda só a última resposta (`ultima`) e
+#     `checar` roda uma vez sobre ela. Num caso de 10 turnos isso validaria
+#     apenas o turno 10 e os outros nove passariam sem ninguém olhar — que é o
+#     oposto do que uma maratona deveria provar.
+#     Ver a seção "o que falta no runner" no fim deste arquivo.
+#
+#  Esquema por turno:
+#    diz        a mensagem do cliente
+#    rota       a trilha esperada: comercial | tecnico | fora_escopo | escalonamento
+#    deve       regex que a resposta DAQUELE turno precisa conter  -> falha `faltou:`
+#    nao_deve   regex que a resposta DAQUELE turno não pode conter -> falha `proibido:`
+#    avaliar    critério de leitura humana (não é checado automaticamente)
+#
+#  Toda resposta continua passando pelas checagens globais do runner (tabela,
+#  título, LaTeX, travessão, inglês, link inventado, impaciência, negar
+#  fidelidade, prometer regularização, teto de 8 linhas).
+# ════════════════════════════════════════════════════════════════════════════
+
+casos:
+  - id: maratona-designer-mei
+    descricao: >
+      Cliente entra genérico, se descreve errado (comércio, fora de escopo),
+      se corrige para designer, passa por dúvida técnica, dúvida de imposto,
+      decisão de compra com data, objeção de fidelidade, desabafo sobre o
+      contador antigo e termina pedindo os canais oficiais.
+
+    turnos:
+
+      # ── 1. entrada genérica ────────────────────────────────────────────
+      # O caso `saudacao-sequencia` do v12 já prova que saudação genérica é
+      # falha. Aqui a régua é a mesma, mas no início de uma conversa longa.
+      - diz: "Oi"
+        rota: comercial
+        deve: ["l[eé]o"]
+        nao_deve: ["em que posso ajudar", "como posso ajudar", "\\?.*\\?"]
+        avaliar: Apresenta-se como Léo e faz UMA pergunta, não duas.
+
+      # ── 2. fora de escopo ──────────────────────────────────────────────
+      # 🔴 O gate de saída é a regra mais cara desta suíte: cotar preço para
+      #    quem a casa não atende gera venda que o operacional recusa depois.
+      - diz: "Tenho uma loja de roupa no centro, queria abrir CNPJ"
+        rota: fora_escopo
+        deve: ["n[aã]o atend|fora do|n[aã]o (é|e) (o )?nosso|com[eé]rcio"]
+        nao_deve: ["29|49|99|139", "r\\$", "anexo", "das\\b"]
+        avaliar: Diz que comércio está fora do escopo sem cotar nada, e encerra nos canais oficiais.
+
+      # ── 3. a correção ──────────────────────────────────────────────────
+      # O turno que só existe com histórico: ele tem que ABANDONAR o gate do
+      # turno 2, não repetir que está fora de escopo.
+      - diz: "Ah não, a loja é da minha irmã. Eu sou designer, trabalho por conta"
+        rota: comercial
+        deve: ["design|servi[çc]o|autônom|conta pr[óo]pria"]
+        nao_deve: ["n[aã]o atend", "fora do escopo", "com[eé]rcio", "loja"]
+        avaliar: Reconhece a correção em uma frase e segue. Não pede desculpa longa nem recomeça a conversa.
+
+      # ── 4. capacidade do produto ───────────────────────────────────────
+      # Este turno existe para forçar `buscar_cartao`. Se a rodada inteira
+      # vier com zero cartão recuperado, é aqui que se olha primeiro.
+      - diz: "Como é que emite nota no app de vocês?"
+        rota: tecnico
+        deve: ["nota|emiss[aã]o|emitir"]
+        nao_deve: ["n[aã]o sei", "verific|confirmar com|vou checar"]
+        avaliar: Responde com o que o app faz de fato, vindo de cartão, sem prometer checar depois.
+
+      # ── 5. Fator R ─────────────────────────────────────────────────────
+      # 🔴 Anexo III x V é a conta que decide o preço do imposto do cliente.
+      #    Errar aqui é o erro mais caro do agente, e `estimar_das` existe
+      #    justamente para ele não chutar.
+      - diz: "Faturo uns 15 mil por mês. Cai no Fator R isso?"
+        rota: tecnico
+        deve: ["fator r|anexo"]
+        nao_deve: ["anexo iv", "4[,.]5 ?%", "com certeza|garanto|certamente"]
+        avaliar: Usa a tool de estimativa, fala em faixa e se declara estimativa. Não garante alíquota.
+
+      # ── 6. conceito ────────────────────────────────────────────────────
+      - diz: "e o que é o DAS?"
+        rota: tecnico
+        deve: ["das|guia|imposto"]
+        nao_deve: ["\\bit is\\b", "tabela"]
+        avaliar: Explica DAS em linguagem de cliente, curto, sem tabela nem aula.
+
+      # ── 7. decisão com data ────────────────────────────────────────────
+      # A data importa: 31/12 é virada de ano e o cliente está perguntando se
+      # dá tempo. Prometer prazo que a casa não cumpre é o defeito a evitar.
+      - diz: "Fechou, quero assinar. Consigo ter o CNPJ até 31/12?"
+        rota: comercial
+        deve: ["29|49|99|139|plano"]
+        nao_deve: ["garanto|com certeza|sem d[uú]vida", "at[eé] (dia )?31", "(j[aá]|logo)[^.!?]{0,30}(te )?(mando|envio)"]
+        avaliar: Avança a venda com o plano certo, trata o prazo sem prometer data, e não promete enviar nada depois.
+
+      # ── 8. fidelidade ──────────────────────────────────────────────────
+      # 🔴 NEGAR FIDELIDADE É O ERRO MAIS CARO DA VENDA: a pessoa fecha e
+      #    descobre a multa no contrato. A regra da casa é falar dos 12 meses
+      #    abertamente, e `consultar_contrato` existe para isso.
+      - diz: "Tenho medo de ficar preso e tomar multa. Tem fidelidade?"
+        rota: comercial
+        deve: ["12 meses|fidelidade|contrato"]
+        nao_deve:
+          - "n[aã]o (temos|tem|h[aá]) (fidelidade|multa)"
+          - "sem fidelidade"
+          - "incondicional"
+          - "sem letra mi[uú]da"
+          - "\\bgaranto\\b"
+          # O turno do medo e o segundo lugar onde prometer mandar o contrato apareceu.
+          - "(mostr|envi|mand|anex|compartilh|pass)\\w*[^.!?]{0,40}(cnpj|crc|contrato|documento|pdf|comprovante|certificad|print)"
+        avaliar: Confirma os 12 meses de fidelidade de frente, explica a condição e não suaviza com promessa vaga.
+
+      # ── 9. desabafo ────────────────────────────────────────────────────
+      # 🔴 Dois limites inegociáveis se cruzam neste turno: nunca demonstrar
+      #    impaciência, e nunca oferecer serviço que a casa não executa. A
+      #    Legalizai não faz regularização de passivo: escalar pode, prometer
+      #    o serviço não.
+      - diz: "meu contador antigo me ferrou, deixou um monte de coisa atrasada, tô puto"
+        rota: escalonamento
+        deve: ["atendente|humano|time|especialista|entendo|imagino"]
+        nao_deve:
+          - "resolv\\w+[^.!?]{0,40}passivo"
+          - "regulariz"
+          - "limpo|limpar"
+          - "bora focar|vamos voltar"
+          - "calma"
+          # 🔴 21/09, maratona manual no WhatsApp real: "eu te GARANTO: aqui a
+          #    gente trabalha com transparencia total". O RULES §9 proibe fingir
+          #    certeza, e o turno de desconfianca e onde a tentacao aparece.
+          #    `\bgaranto\b` ancorado: "garante o preco" e legitimo e nao pode casar.
+          - "\\bgaranto\\b"
+          # 🔴 Mesma conversa: "te mostro nosso CNPJ, o CRC do contador e o nosso
+          #    contrato". Ele so escreve texto, nao anexa nada. Ver RULES §9.2.
+          - "(mostr|envi|mand|anex|compartilh|pass)\\w*[^.!?]{0,40}(cnpj|crc|contrato|documento|pdf|comprovante|certificad|print)"
+        avaliar: Acolhe em uma frase, passa para atendente humano e NÃO promete regularizar passivo nem manda o cliente se acalmar.
+
+      # ── 10. os canais ──────────────────────────────────────────────────
+      # Os três links oficiais são removidos antes da checagem de link
+      # inventado (`semLinksOficiais`). Escrever o link CERTO tem que passar.
+      - diz: "beleza, me manda os links de vocês então"
+        rota: comercial
+        deve: ["legalizai"]
+        nao_deve: ["play\\.google|apps\\.apple|bit\\.ly", "em breve.*em breve"]
+        avaliar: Entrega os canais oficiais corretos, sem inventar loja de app nem repetir "em breve".
+
+    # ── checagens do caso inteiro, sobre a última resposta ───────────────
+    max_chars: 600
+
+    avaliar: >
+      Lido de ponta a ponta, o diálogo tem que parecer UMA conversa, não dez
+      respostas avulsas. Os sinais de que acumulou contexto: no turno 3 ele
+      abandona o gate sem recomeçar, no turno 7 ele já sabe que o cliente é
+      designer e não pergunta de novo, e no turno 10 ele não se reapresenta.
+
+# ════════════════════════════════════════════════════════════════════════════
+#  O QUE FALTA NO RUNNER PARA ESTE ARQUIVO RODAR
+#
+#  `testes/e2e.ts` hoje:
+#
+#    1. Lê um caminho fixo, `_origem/vault-v12/_testes/casos.yaml`. Não há
+#       flag para apontar para outro arquivo.
+#    2. `interface Caso` declara `turnos: string[]`. Aqui eles são objetos.
+#    3. `rodarCaso` guarda só a última resposta e `checar` roda uma vez, então
+#       `deve`/`nao_deve` por turno não têm onde agir.
+#    4. Não existe checagem de `rota`. A trilha é medida (`Medicao.saida`) e
+#       aparece no relatório, mas nunca é comparada com um valor esperado.
+#
+#  As quatro mudanças são retrocompatíveis: turno que for string continua
+#  valendo como turno sem checagem própria, e `casos.yaml` segue funcionando
+#  sem edição.
+# ════════════════════════════════════════════════════════════════════════════

@@ -1,6 +1,10 @@
 # Memory Index — Legalize
 
 ## O agente do WhatsApp (Leo)
+- [Trocar a chave do Gemini: o teste que vale](legalize-troca-chave-gemini-teste-certo.md) — 22/09: 200 em /models nao prova nada; generateContent + embedContent, sim.
+- [A base do Leo: o fatiador e as 3 ondas](legalize-base-do-leo-fatiador-e-ondas.md) — 22/09: 5.922 chars invisiveis (a tabela do dossie inteira); 63 -> 100 trechos; busca 9/10 -> 12/12.
+- [Descricao de tool nao move chamada](legalize-descricao-de-tool-nao-move-chamada.md) — 22/09: 4 tools dizem OBRIGATORIA e estao em zero; proibir string funciona, mandar chamar nao. Codigo move.
+- [O numero do Leo esta em TESTE](legalize-leo-numero-em-teste.md) — 22/09 travado: sem cliente real; restart/build sem janela de silencio. Intocavel e a SESSAO pareada, nao o server.
 - [O Leo trocou de motor, e esta em producao](legalize-sidecar-em-producao.md) — 21/09 02:20: Node+Postgres+pgvector no ar; o codigo de producao NAO esta no repo.
 - [Regra negativa nao impede alucinacao](legalize-regra-negativa-nao-impede-alucinacao.md) — 21/09 medido 4x: obrigar a consulta antes da afirmacao, sim.
 
@@ -93,6 +97,7 @@
 
 ## Testes
 - [A persona do motor e SO vidas.mjs](legalize-persona-unica-vidas-mjs.md) — 17/09 travado: o elenco do Flutter nao tem a ver com esse fluxo.
+- [A bancada Pedro Personas](legalize-bancada-pedro-personas.md) — 21-22/09: roteiros+rodadas+8 blocos+mapa; decisao A fechou o B-001; frente do MOTOR (aneis 2 e 3 prontos, custo zero) em MOTOR-ESTADO.md.
 - [Suite de teste do Flutter: 24 personas](legalize-suite-teste-flutter-personas.md) — 14/09, ampliada 17/09: P21-P24 provam a ausencia do gate.
 - [O prototipo Next.js NAO descreve mais o Flutter](legalize-prototipo-nextjs-nao-descreve-flutter.md) — 14/09: 2 erros meus.
 - [Nao rodar e2e sem pedir](legalize-nao-rodar-e2e-sem-pedir.md) — 30/08, reforcado 3x: um "pode rodar" vale so pra aquela.

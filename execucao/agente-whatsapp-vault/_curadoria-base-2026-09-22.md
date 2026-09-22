@@ -1,7 +1,8 @@
 ---
 tipo: proposta
-status: em-curadoria
+status: parcialmente-aplicada
 data: 2026-09-22
+aplicado_em: 2026-09-22
 assunto: curadoria-da-base-do-leo
 tags: [leo, rag, base, curadoria, fatia, busca]
 ---
@@ -11,6 +12,34 @@ tags: [leo, rag, base, curadoria, fatia, busca]
 > 📌 **Para o Pedro curar.** Marque ✅ no que faz sentido, ❌ no que não, e escreva ao lado o que quiser mudar. Nada daqui vira mudança sem a sua passada.
 >
 > 🧭 **De onde isto vem:** o `buscar_base` deu zero chamada em quatro medições. O teste barato de 22/09 provou que **a busca acha** (9 de 10, 8 em primeiro lugar) — mas uma pergunta falhou, e ao investigar por que, apareceu coisa maior. Li as **13 notas inteiras, 69.123 caracteres**, e medi o corte de cada uma.
+
+---
+
+## 0 · 📍 ESTADO — o que já foi executado (medido em 22/09, fim do dia)
+
+> 🔴 **Este bloco existe porque o resto do doc está escrito no futuro.** Ele foi redigido como proposta pela manhã; as ondas 1, 2 e 3 rodaram no mesmo dia. **Onde o texto abaixo disser "proposta", leia contra esta tabela.** Os números aqui foram contados no arquivo, não lembrados.
+
+| | Proposto | ✅ Real hoje |
+|---|---|---|
+| **Trechos na base** | 63, alvo ~130 | **100** (`seed/contagem-esperada.json`) |
+| **Caracteres invisíveis** | 5.922, em 13 notas | **0** — sobrou só frontmatter e título antes do 1º `##` |
+| **`04-QUEBRA-OBJECOES`** | 3 → ~20 | **24 seções**, uma por objeção |
+| **`05` §4** (4.145 chars) | partir em 4 | **partido em 4A/4B/4C/4D** |
+| **`08-MAPA-DO-DOSSIE`** | 1 → 5 | **2** — ⚠️ ver a ressalva abaixo |
+| **Teste de busca** | 9/10, 1 falha | **12/12 entre os 4, zero falha** |
+
+**As 11 respostas curadas (§3.12) estão na base.** Conferido por busca literal: alvará · IPTU · conta PJ · desativar pró-labore · guia única do MEI · assinatura gov.br · `contato@legalizai.com.br`. ✅ E o telefone **não entrou** — zero ocorrências do número nas 13 notas, como você decidiu na Q82 (o WhatsApp do Léo é a própria conversa).
+
+🆕 **Uma decisão que o resto deste doc ainda não conhece: a doutrina saiu do RAG.** Oito preâmbulos eram **instrução para o agente**, não resposta para cliente (*"isto não é pra você recitar"*, *"a ferramenta ainda não está ligada"*). Virar `##` os teria jogado na busca do cliente. Foram para o `RULES.md` §10. Isso acrescenta uma régua de corte ao §5 — está lá como **régua 6**.
+
+### ⬜ O que continua aberto
+
+| | O quê | De quem depende |
+|---|---|---|
+| **1** | ⚠️ **O `08` parou no meio do caminho.** O P-02 funcionou — a tabela dos 14 campos voltou para a busca — mas como **um bloco de 2.173 caracteres**, o dobro do teto de ~1.000 da régua do §5. A proposta previa 5 seções por etapa; entregou 2 | onda 4 |
+| **2** | **F-02** (formas de pagamento) e **F-03** (servidor público) — conferido: **ausentes das 13 notas** | 🔴 **você**: F-02 é decisão de negócio · F-03 precisa do Leonan |
+| **3** | Os demais **F-04 a F-12** e o resto da reestruturação do §5 | onda 4 |
+| **4** | As **84 perguntas do §3** que não foram curadas | você |
 
 ---
 
@@ -43,8 +72,8 @@ E é justamente no preâmbulo que moram as regras mais vermelhas:
 
 | | Proposta | ✅/❌ |
 |---|---|:--:|
-| **P-01** | Todo preâmbulo vira uma seção `##` própria, nas 13 notas | |
-| **P-02** | No `08`, a tabela de 14 campos vira `## 1. O que o app pede, campo a campo` | |
+| **P-01** | Todo preâmbulo vira uma seção `##` própria, nas 13 notas | ✅ feito (onda 1) |
+| **P-02** | No `08`, a tabela de 14 campos vira `## 1. O que o app pede, campo a campo` | ✅ feito — mas ficou em **um bloco de 2.173 chars**, ver §0 |
 
 ---
 
@@ -52,7 +81,7 @@ E é justamente no preâmbulo que moram as regras mais vermelhas:
 
 | Camada | O que é | Quantos casos |
 |---|---|---|
-| **A · invisível** | texto antes do 1º `##` nunca entra na busca | 13 notas, 5.922 chars |
+| **A · invisível** | texto antes do 1º `##` nunca entra na busca | ✅ **zerada** — 13 notas, eram 5.922 chars |
 | **B · diluído** | fatia com muitos assuntos vira vetor médio, longe de todos | `04` (2.541) · `05` (4.145) · `03` (1.824) |
 | **C · ausente** | o assunto não está escrito em lugar nenhum | ver §4 |
 
@@ -288,23 +317,27 @@ As duas coisas podem ser verdade ao mesmo tempo, e é isso que o texto precisa s
 
 ## 5 · Reestruturação nota a nota
 
-> Hoje: **63 trechos**, o maior com 4.145 caracteres. Alvo: **~130 trechos**, nenhum passando de ~1.000.
+> Escrito quando a base tinha **63 trechos**, o maior com 4.145 caracteres. Alvo: **~130**, nenhum passando de ~1.000.
+>
+> ✅ **Hoje são 100** (§0). A coluna ✅/❌ abaixo foi preenchida contando as seções no arquivo.
 
-| Nota | Hoje | Proposta | Mudança principal | ✅/❌ |
-|---|:--:|:--:|---|:--:|
-| `00-DIRETRIZES-SEGURANCA` | 6 | 8 | preâmbulo vira `##`; §4 (tabela do "nunca") vira seção própria | |
-| `01-PLANOS-E-OFERTAS` | 4 | 8 | 🔴 preâmbulo dos **valores expirados** vira `##`; §5 se parte em promoção · links · lista de espera | |
-| `02-PRODUTO-E-USABILIDADE` | 5 | 7 | preâmbulo (pré-lançamento) vira `##`; §2 separa ordem × erro comum | |
-| `03-REGRAS-DOS-ORGAOS` | 4 | 9 | §1 se parte em regra do apartamento · IPTU · **endereço fiscal**; §2 separa taxa · procuração · nome | |
-| **`04-QUEBRA-OBJECOES`** | **3** | **~20** | 🔴 **uma `##` por objeção**, com o estágio do funil no título | |
-| **`05-DICIONARIO-CNAE`** | **5** | **10** | 🔴 o §4 de **4.145 chars** se parte em régua MEI · régua ME · profissão (regra base) · as duas exceções | |
-| `06-CALCULO-FISCAL` | 6 | 8 | preâmbulo (não recitar / não dar valor) vira `##` | |
-| `07-OBRIGACOES-MENSAIS` | 5 | 9 | §3 separa a tabela da divisão das regras que saem dela; §4 separa emitir × medo de emitir | |
-| **`08-MAPA-DO-DOSSIE`** | **1** | **5** | 🔴 **a tabela dos 14 campos entra na busca**; separar por etapa | |
-| `09-ESCOPO-E-LIMITES` | 6 | 9 | preâmbulo vira `##`; §2 separa tipo de empresa · sócios · o que não fazemos | |
-| `10-CONTRATO` | 5 | 6 | preâmbulo vira `##` | |
-| `11-COMO-CONSULTAR-CNAE` | 5 | 7 | 🔴 preâmbulo (**ferramenta desligada**) vira `##`; §4 separa as 15 categorias | |
-| `12-GATE-DE-SAIDA` | 8 | 10 | preâmbulo vira `##`; §7 separa um modelo por tipo de recusa | |
+| Nota | Era | Proposta | ✅ **Hoje** | Mudança principal | Situação |
+|---|:--:|:--:|:--:|---|---|
+| `00-DIRETRIZES-SEGURANCA` | 6 | 8 | **6** | preâmbulo vira `##`; §4 (tabela do "nunca") vira seção própria | preâmbulo foi pro `RULES` |
+| `01-PLANOS-E-OFERTAS` | 4 | 8 | **7** | 🔴 preâmbulo dos **valores expirados** vira `##`; §5 se parte em promoção · links · lista de espera | ✅ |
+| `02-PRODUTO-E-USABILIDADE` | 5 | 7 | **6** | preâmbulo (pré-lançamento) vira `##`; §2 separa ordem × erro comum | ✅ |
+| `03-REGRAS-DOS-ORGAOS` | 4 | 9 | **8** | §1 se parte em regra do apartamento · IPTU · **endereço fiscal**; §2 separa taxa · procuração · nome | ✅ |
+| **`04-QUEBRA-OBJECOES`** | **3** | **~20** | **24** | 🔴 **uma `##` por objeção**, com o estágio do funil no título | ✅ **passou do alvo** (+6 de preço) |
+| **`05-DICIONARIO-CNAE`** | **5** | **10** | **9** | 🔴 o §4 de **4.145 chars** se parte em régua MEI · régua ME · profissão (regra base) · as duas exceções | ✅ |
+| `06-CALCULO-FISCAL` | 6 | 8 | **6** | preâmbulo (não recitar / não dar valor) vira `##` | preâmbulo foi pro `RULES` |
+| `07-OBRIGACOES-MENSAIS` | 5 | 9 | **8** | §3 separa a tabela da divisão das regras que saem dela; §4 separa emitir × medo de emitir | ✅ |
+| **`08-MAPA-DO-DOSSIE`** | **1** | **5** | **2** | 🔴 **a tabela dos 14 campos entra na busca**; separar por etapa | ⚠️ **a metade que falta** — entrou, mas em bloco de 2.173 chars |
+| `09-ESCOPO-E-LIMITES` | 6 | 9 | **6** | preâmbulo vira `##`; §2 separa tipo de empresa · sócios · o que não fazemos | preâmbulo foi pro `RULES`; o §2 **não** foi partido |
+| `10-CONTRATO` | 5 | 6 | **5** | preâmbulo vira `##` | preâmbulo foi pro `RULES` |
+| `11-COMO-CONSULTAR-CNAE` | 5 | 7 | **5** | 🔴 preâmbulo (**ferramenta desligada**) vira `##`; §4 separa as 15 categorias | preâmbulo foi pro `RULES`; o §4 **não** foi partido |
+| `12-GATE-DE-SAIDA` | 8 | 10 | **8** | preâmbulo vira `##`; §7 separa um modelo por tipo de recusa | preâmbulo foi pro `RULES` |
+
+🔑 **Por que o alvo caiu de ~130 para 100, e isso não é dívida.** Seis notas ficaram **abaixo** do proposto porque o preâmbulo delas era **doutrina**, e doutrina foi para o `RULES.md` §10 em vez de virar seção. Eram 8 preâmbulos: contá-los como trecho de busca era o erro da proposta original, não a economia. ⬜ **O que é dívida de verdade** são três linhas: o `08` (2 de 5), o §2 do `09` e o §4 do `11`.
 
 ### A régua que eu usaria para cortar
 
@@ -313,17 +346,18 @@ As duas coisas podem ser verdade ao mesmo tempo, e é isso que o texto precisa s
 3. **Nada antes do primeiro `##`.** Preâmbulo é conteúdo invisível.
 4. **Teto de ~1.000 caracteres por fatia.** Acima disso o vetor vira média.
 5. **Referência cruzada continua valendo** — `[[nota]]` não atrapalha a busca e mantém a fonte única de cada número.
+6. 🆕 🔴 **Instrução para o agente NÃO é trecho de busca.** Régua que nasceu na onda 2, e que faltava aqui: se o texto diz *"você não faz X"*, *"isto não é pra você recitar"*, *"a ferramenta ainda não está ligada"*, ele é **doutrina** e mora no `RULES.md`, que vai no prompt todo turno. Virar `##` o teria jogado no índice que o cliente consulta — e a busca do cliente passaria a devolver ordem de serviço interna como se fosse resposta. Foram 8 preâmbulos.
 
 ---
 
 ## 6 · Ordem que eu sugiro
 
-| Onda | O quê | Por quê |
-|---|---|---|
-| **1ª** | **P-01 e P-02** — preâmbulos viram `##` | maior efeito, menor risco: não muda uma palavra de conteúdo, só devolve 5.922 caracteres à busca |
-| **2ª** | **Fatiar `04`, `05` e `08`** | os três piores casos de diluição |
-| **3ª** | **Escrever F-01 a F-04** | o conteúdo que falta e mais dói |
-| **4ª** | Resto da reestruturação e F-05 a F-12 | |
+| Onda | O quê | Por quê | Estado |
+|---|---|---|---|
+| **1ª** | **P-01 e P-02** — preâmbulos viram `##` | maior efeito, menor risco: não muda uma palavra de conteúdo, só devolve 5.922 caracteres à busca | ✅ **feita** · `33 insertions(+)`, zero deleções · 63 → 74 |
+| **2ª** | **Fatiar `04`, `05` e `08`** | os três piores casos de diluição | ✅ **feita** — mais a doutrina saindo pro `RULES` · 74 → 100 |
+| **3ª** | **Escrever F-01 a F-04** | o conteúdo que falta e mais dói | 🟡 **parcial** — o **F-01** entrou (6 objeções de preço) e as 11 respostas curadas também; **F-02 e F-03 seguem ausentes**, esperando você |
+| **4ª** | Resto da reestruturação e F-05 a F-12 | | ⬜ **aberta** — começa pelas 3 linhas de dívida do §5 |
 
 Cada onda é **um pacote**: uma carga, um restart, uma rodada do teste. E o teste roda com as perguntas curadas aqui, para a comparação ser contra o mesmo conjunto.
 
@@ -347,7 +381,9 @@ Cada onda é **um pacote**: uma carga, um restart, uma rodada do teste. E o test
 
 ## 8 · O que eu preciso de você nesta curadoria
 
-1. **As perguntas** — marque as que fazem sentido, corte as que não, e acrescente as que você ouve e eu não imaginei.
-2. **Os 12 assuntos ausentes (§4)** — quais entram, e o que a resposta deve dizer. Vários envolvem decisão de negócio que não é minha: formas de pagamento, política de atraso, custo de migração, horário de atendimento.
-3. **A ordem (§6)** — concorda em começar pelo preâmbulo?
-4. 🔴 **O F-03 (servidor público, CLT, aposentado)** — este tem impedimento legal de verdade. Vale confirmar com o Leonan antes de escrever.
+> ✅ **Atualizado no fim de 22/09.** Os itens 3 e 4 abaixo já foram respondidos; sobram o 1 e o 2, e os dois são seus.
+
+1. ⬜ **As perguntas** — marque as que fazem sentido, corte as que não, e acrescente as que você ouve e eu não imaginei. **Onze das 84 foram curadas** (§3.12) e estão na base; **73 seguem sem passada sua**.
+2. 🔴 **Os 12 assuntos ausentes (§4)** — quais entram, e o que a resposta deve dizer. **É aqui que a onda 4 está travada.** Vários envolvem decisão de negócio que não é minha: **formas de pagamento** (F-02), política de atraso, **custo de migração** (F-04), horário de atendimento (F-08).
+3. ✅ **A ordem (§6)** — respondido: começamos pelo preâmbulo, e foi o conserto de melhor relação efeito/risco como previsto (63 → 74 sem reescrever uma palavra).
+4. 🔴 **O F-03 (servidor público, CLT, aposentado)** — segue **ausente da base**, conferido por busca literal. Tem impedimento legal de verdade (servidor ativo pode ser quotista, **não pode ser administrador**), e continua esperando o Leonan.

@@ -10,7 +10,25 @@ data: 2026-07-16
 
 ## 📍 Agora (torre de controle — mantida via `/fechar`)
 
-> **Última atualização:** 2026-09-21 — **77º flow: O LÉO TROCOU DE MOTOR, E ELE JÁ ESTÁ ATENDENDO.**
+> **Última atualização:** 2026-09-22 — **78º flow: A BASE DO LÉO PAROU DE SER INVISÍVEL, E O MOTOR DE TESTES DO APP VIROU MÁQUINA.**
+>
+> 🧭 **Dia de duas frentes, e as duas terminaram medindo em vez de supondo.** 12 commits, ~11h.
+>
+> **(1) 🔴 O FATIADOR DESCARTAVA 5.922 CARACTERES, E NINGUÉM SABIA.** O `fatiarNota` corta no `##` e joga fora **tudo antes do primeiro** (`.slice(1)`). Era ali que moravam as regras mais vermelhas: **a tabela inteira dos 14 campos do dossiê** (o `08` tinha um `##` só, e é o que diz o que a gente NÃO pergunta), o *"a ferramenta de CNAE não está ligada"* e o *"R$ 19 e R$ 79 expiraram"*. Três ondas consertaram: preâmbulo virou seção · doutrina saiu do RAG pro `RULES` §10 · o `04` virou uma seção por objeção (eram 3 blocos com 19 perguntas dentro). **De 63 para 100 trechos, média de 633 caracteres.**
+>
+> **(2) 🎯 O TESTE DE BUSCA SAIU DE 9/10 PARA 12/12, ZERO FALHA.** `scripts/provar-busca.mjs` mede se o texto é alcançável pela pergunta do cliente — uma chamada de embedding por pergunta, relatório em arquivo, custo de centavos. A única falha real (*"tá caro, o contador do bairro cobra menos"*) falhava porque **a resposta não existia**: a base nunca teve objeção de preço. Agora tem seis. 🔑 E o teto de **2 trechos por nota** entrou porque o `04` passou a ocupar as 4 vagas e empurrava a resposta certa pra fora.
+>
+> **(3) 🔴 DESCRIÇÃO DE TOOL NÃO MOVE CHAMADA. CÓDIGO MOVE.** A instrumentação nova (chamada × efeito, que não existia — o relatório contava só efeito, então *"chamou e voltou vazio"* era idêntico a *"não chamou"*) mediu: `consultar_links` **oferecido 28/28, chamado 0**. Reescrevi a descrição no molde da única que era chamada — gatilho na língua do cliente + frase proibida literal — e deu **0/27 de novo**, nem nos 4 turnos com o gatilho escrito. ✅ **Mas "Lista VIP" (nome de canal inventado, 3 turnos) sumiu sem a tool ser chamada uma vez.** A descrição opera como **regra de redação**, não como gatilho. O conserto virou **filtro determinístico de saída**, comparando contra `fatos.link`.
+>
+> **(4) 🔑 O MOTOR DE TESTES DO APP: ANÉIS 2 E 3 PRONTOS, CUSTO ZERO.** A rodada manual da P01 custou **US$ 340 medidos** (66 capturas, 435 turnos, 166 M de cache read — imagem não sai do contexto e é relida a cada turno). `conferir-banco.mjs` + `montar-relatorio.mjs` fazem a conferência inteira em ~4 segundos e **zero token**, e na primeira execução derrubaram duas afirmações da rodada manual (o dossiê **não** é mock) e abriram o **B-016**: sete valores que ninguém digitou — capital R$ 10.000, área 20 m², atividade inócua — indo ao contrato social. Estado completo em `pedro_personas/MOTOR-ESTADO.md`.
+>
+> **(5) 🔧 INFRA DO LÉO.** Git reconciliado nos três lados (a VPS não tinha credencial de push; o conflito de 520 linhas era CRLF, e nasceu o `.gitattributes`) · build e restart · **chave do Gemini trocada** — e o teste que eu mandei usar estava errado, `GET /models` dá 200 com projeto negado, o certo é `generateContent` · **`deploy:docs`**, a trava documental que valida com o parser real e **recusa se a VPS tiver trabalho não commitado** (na 1ª execução barrou de verdade: 295 linhas de casos de teste só existiam lá).
+>
+> ⏭️ **O que fica aberto:** 🔴 **o filtro de endereços** está escrito na VPS e não aplicado — faltam três decisões que já mandei (salvar por caminho · remover a frase inteira quando não dá · gravar no histórico o texto **filtrado**, porque hoje o link errado circula no contexto) · 🔴 **4 das 8 tools em zero absoluto** e **15 de 28 turnos sem chamar nada** — o modelo responde de memória e acerta 9 vezes em 15, o que esconde o defeito · 🟡 a premissa do molde de descrição caiu (`consultar_escopo` foi de 6 para 2 chamadas; com n=20 e sigma 1,07 pode ter sido ruído) · 🟡 **a curadoria da base** tem 84 perguntas e 12 assuntos ausentes esperando você (`_curadoria-base-2026-09-22.md`), e as 11 respostas já curadas entraram nas ondas 2 e 3 · 🟡 no motor do app, falta o **anel 1** e a pergunta que o decide: dá para abrir tela do meio com estado injetado?
+>
+> ---
+>
+> > **Última atualização:** 2026-09-21 — **77º flow: O LÉO TROCOU DE MOTOR, E ELE JÁ ESTÁ ATENDENDO.**
 >
 > 🧭 **Começou num commit esquecido e terminou com o agente rodando em arquitetura nova, em produção.** 29 commits em ~12h, mais uma sessão paralela na VPS que executou a virada.
 >

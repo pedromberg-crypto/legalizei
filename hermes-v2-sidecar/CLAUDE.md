@@ -131,6 +131,47 @@ Acumula-se o achado, agrupa-se a correção, roda-se uma vez.
 trabalho não commitado — já aconteceu, e foi o `deploy:docs` que passou a
 recusar.
 
+## 1.3 O CICLO VICIOSO — por que ele acontece, e as três travas
+
+> Travado em 22/09/2026 pelo Pedro, com a frase que abriu o assunto:
+> *"já entramos em um ciclo vicioso de manda arrumar lá, arruma e SEMPRE
+> encontra algo para trás e isso já cansou."*
+
+🔴 **O diagnóstico não é preguiça de ninguém: é o FORMATO do pedido.** A janela
+do vault vinha mandando **desenho de código** — assinatura de função, onde
+inserir a linha, nome do campo em `Deps`. Desenho é *como fazer*, e *como
+fazer* é jurisdição da VPS, que tem o arquivo aberto. Desenho feito de longe
+não encaixa, a VPS **tem que** discordar para acertar, e volta pedindo
+aprovação. **Um agente competente do outro lado vai achar o furo sempre.** O
+loop é garantido por construção, não por azar.
+
+**O caso que fechou o diagnóstico, em 22/09:** o vault mandou o filtro de
+endereços morar no `server.ts`. A VPS respondeu que ali o E2E não o exercita, e
+estava certa — `testes/e2e.ts` importa `responder` de `router.js` e monta
+`depsDeTeste`, sem passar pelo `server.ts` em momento algum. As três métricas
+pedidas sairiam **todas zeradas**. 🔑 E esse arquivo está no repo do vault, a um
+`grep` de distância: **o desenho foi escrito sem abrir o arquivo que ia
+recebê-lo.**
+
+### As três travas
+
+| | Trava | O que corrige |
+|---|---|---|
+| **1** | 🔴 **O vault manda CRITÉRIO DE ACEITE, não desenho.** *"O Léo não pode escrever endereço fora de `fatos.link`; quero `troca` × `remocao_url` × `remocao_frase` medidos pela suíte."* **Onde o código mora é decisão da VPS.** | a causa do loop |
+| **2** | **Autonomia por escopo, declarada.** Dentro de `router.ts`, `server.ts`, `tools*.ts`, `db.ts`, `testes/`, `seed/`, `scripts/`: a VPS decide o desenho e vai até o fim **sem pedir aprovação**. Fora — `bridge.js`, `.service`, pasta de sessão — **pergunta sempre** (§1). | o ping-pong de aprovação |
+| **3** | 🔴 **Achado novo vira FILA, não vira rodada.** Abriu o arquivo e achou outro problema? **Executa o pedido mesmo assim** e escreve o achado em `reports/_fila.md`. **Não volta perguntando.** A fila é priorizada entre rodadas e vira pacote depois. | o *"antes do 3, achei algo que muda o desenho"* |
+
+⚠️ **A exceção da trava 3, e é só uma:** quando o achado torna o pedido
+**impossível ou sem sentido** — como o filtro no `server.ts`, que mediria zero.
+Aí parar está certo. *"Eu faria diferente"* não é isso; *"assim não mede nada"*
+é. Na dúvida: **o pedido ainda produz o número que foi pedido?** Se sim,
+executa e enfileira.
+
+🔑 **A regra que a janela do vault quebrava sem perceber:** opinar sobre código
+sem ter lido o arquivo. O repo inteiro está no vault (`router.ts`, `server.ts`,
+`e2e.ts`, `tools*.ts`). **Nenhuma linha de desenho antes de um `grep` no
+arquivo de destino** — e mesmo assim, o desenho é sugestão, não ordem (trava 1).
+
 ## 2. ARQUITETURA
 
 > O `router.ts` é uma função pura de 4 trilhas. Não adicione complexidade

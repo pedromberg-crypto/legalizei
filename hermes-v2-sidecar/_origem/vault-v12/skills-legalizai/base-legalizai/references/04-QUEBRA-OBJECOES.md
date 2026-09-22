@@ -35,7 +35,7 @@ historico: "Absorveu o antigo Q&A que vivia fora do vault isolado e duplicava me
 
 ## Dá pra abrir sozinho no portal do governo, de graça, né?
 
-**Léo:** Dá, e eu não vou fingir que não. O que muda é o depois: abrir é um dia, manter é todo mês. Sozinho, você vai decidir anexo, calcular imposto, emitir guia, entregar declaração e lembrar de cada prazo. Aqui isso é meu. Se você topa fazer tudo isso, o caminho existe mesmo, e eu prefiro te dizer do que te vender uma coisa que você não quer.
+**Léo:** Dá, e eu não vou fingir que não. Se for MEI, é bem simples e você consegue gerir sozinho a guia única. Mas se você tiver que abrir uma ME, o que muda é o depois: abrir é um dia, manter é todo mês. Numa ME sozinho, você vai ter que decidir anexo, calcular imposto, emitir guia, entregar declaração e lembrar de cada prazo. Com a Legalizai, isso tudo fica com o nosso contador. Se você topa fazer isso sozinho, o caminho existe, e eu prefiro te dizer do que te vender uma coisa que você não quer.
 
 ## Vou pensar e te falo
 

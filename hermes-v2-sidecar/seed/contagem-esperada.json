@@ -5,5 +5,6 @@
   "cartoes": 58,
   "arquivosDeNota": 13,
   "trechos": 100,
-  "_ultima_mudanca": "ondas 2 e 3 (22/09): 8 preambulos de doutrina sairam para o RULES §10; o 04 virou uma secao por objecao (3 -> 25) e ganhou as 6 objecoes de preco; o §4 do 05 (4.145 chars) virou 4A/4B/4C/4D; e entraram as respostas curadas pelo Pedro — certificado, e-mail, alvara, IPTU, assinatura, conta PJ, guia unica do MEI e desativar pro-labore. 74 -> 92 trechos."
+  "_ultima_mudanca": "ondas 2 e 3 (22/09): 8 preambulos de doutrina sairam para o RULES §10; o 04 virou uma secao por objecao (3 -> 24) e ganhou as 6 objecoes de preco; o §4 do 05 (4.145 chars) virou 4A/4B/4C/4D; e entraram as respostas curadas pelo Pedro — certificado, e-mail, alvara, IPTU, assinatura, conta PJ, guia unica do MEI e desativar pro-labore. 74 -> 100 trechos.",
+  "_correcao_22_09": "Esta linha dizia '3 -> 25' e '74 -> 92'. Os dois estavam errados: `grep -c '^## '` nas 13 notas da 100, e 24 no 04. O campo `trechos` ao lado ja estava certo, entao o portao nunca reprovou — o numero errado vivia so na prosa, que nenhum script le. E o defeito que a trava de defasagem do vault existe para pegar: numero em prosa nao recalcula."
 }

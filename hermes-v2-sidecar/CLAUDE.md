@@ -9,19 +9,29 @@ tags: [producao, arquitetura, regras, agente]
 # CLAUDE.md · as diretrizes de ouro do Léo v2
 
 Este arquivo vale para qualquer agente ou pessoa que edite este repositório.
-Ele foi escrito em 21/09/2026, no dia em que o motor novo entrou em produção.
-A partir dessa data nenhuma mudança aqui é acadêmica: existe um número de
-WhatsApp ao vivo atendendo cliente real do outro lado.
+Ele foi escrito em 21/09/2026, no dia em que o motor novo entrou no ar.
+
+🔴 **CORRIGIDO em 22/09/2026 (Pedro): o número do Léo está em TESTE, e vai
+ficar por um bom tempo.** A frase original dizia *"existe um número de WhatsApp
+ao vivo atendendo cliente real do outro lado"* — **não é o caso**. Não há
+cliente real na outra ponta, e enquanto isso valer, toda conversa sobre o Léo é
+conversa sobre um ambiente de teste.
 
 As cinco regras abaixo não são preferências de estilo. Cada uma existe porque o
 caminho contrário já custou dinheiro, tempo ou uma conversa ruim com cliente.
 
 ---
 
-## 1. PRODUÇÃO
+## 1. O QUE AINDA EXIGE CUIDADO — e o que não exige
 
-> Este ambiente está ao vivo. **NUNCA** altere `server.ts`, `bridge.js` ou
-> arquivos `.service` sem autorização expressa.
+> 🧪 **O número está em TESTE** (travado em 22/09/2026 pelo Pedro, e vale até
+> ele dizer o contrário). Reiniciar o serviço, subir build, rodar carga e testar
+> no número **não** precisam de janela de silêncio, aviso a ninguém nem medo de
+> interromper atendimento: **não há atendimento a interromper**.
+>
+> 🔴 **O que continua valendo:** **NUNCA** altere `bridge.js`, a pasta de sessão
+> ou os arquivos `.service` sem autorização expressa — e esse motivo **não é
+> produção, é a sessão pareada**.
 
 Esses três são a camada que segura a conexão com o WhatsApp. `server.ts` é o
 processo que consome a fila; `bridge.js` é a ponte Baileys que detém a sessão
@@ -34,6 +44,47 @@ escanear.
 
 Autorização expressa significa uma pessoa dizendo "pode mexer nesse arquivo",
 não uma tarefa cujo cumprimento implica mexer nele.
+
+🔑 **A distinção que a correção de 22/09 introduz:** o risco aqui **não é
+derrubar cliente**, é **perder o pareamento** — que custa presença física e QR,
+e nenhum `git revert` desfaz. `server.ts` saiu da lista de intocáveis por
+decreto: mexer nele é normal, testar é normal, quebrar e consertar é normal.
+Quebrar a sessão, não.
+
+## 1.1 TROCA DE CHAVE — o teste que vale e o que engana
+
+> 🔴 **`GET /v1beta/models` com `200` NÃO prova que a chave serve.** Medido em
+> 22/09/2026, e custou uma queda: a chave nova devolveu `200` no catálogo e
+> **`403 PERMISSION_DENIED · "Your project has been denied access"`** ao subir
+> o serviço. Catálogo é quase público; gerar conteúdo exige projeto habilitado.
+
+**O teste certo é o endpoint que o Léo usa de verdade** — `generateContent` no
+modelo em uso e `embedContent` na vetorização:
+
+```bash
+cd /opt/hermes-v2-sidecar
+K=$(awk -F= '/^GEMINI_API_KEY=/{gsub(/"/,"",$2); print $2}' .env)
+curl -s -o /dev/null -w "%{http_code}
+" -H 'content-type: application/json'   -d '{"contents":[{"parts":[{"text":"oi"}]}]}'   "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=$K"
+curl -s -o /dev/null -w "%{http_code}
+" -H 'content-type: application/json'   -d '{"model":"models/gemini-embedding-001","content":{"parts":[{"text":"oi"}]}}'   "https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=$K"
+unset K
+```
+
+**Os dois `200`, e só então reinicia.**
+
+🔑 **O `EnvironmentFile` é lido no START.** Editar o `.env` não muda nada até o
+restart — e chave ruim **não aparece no boot** com o serviço saudável: ela
+derruba o processo na primeira chamada ao LLM, que aqui acontece na subida.
+
+🔒 **A chave nunca passa pelo chat de um agente.** Quem edita é uma pessoa, no
+terminal (`nano .env`). O agente faz o teste, o restart e a conferência — nada
+disso precisa ver o valor. Para confirmar que trocou, compare **comprimento e
+os últimos 4 caracteres**, nunca o conteúdo.
+
+⚠️ **Backup de `.env` é segredo igual.** `cp -a` para preservar o `600`, e
+`shred -u` quando não precisar mais — `rm` não basta. E revogue a chave velha no
+console depois que a nova responder: trocada e não revogada continua valendo.
 
 ## 2. ARQUITETURA
 

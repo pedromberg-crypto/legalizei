@@ -49,6 +49,52 @@ const REFERENCES = join(RAIZ, '_origem', 'vault-v12', 'skills-legalizai', 'base-
 
 const ESPERADO_CARTOES = 58
 
+/**
+ * 🔴 O PORTAO DAS NOTAS (22/09).
+ *
+ * Os cartoes tinham o deles desde o inicio, e ele ja pagou: `esperado 58, o
+ * parse achou N` derrubou carga errada mais de uma vez. As notas nao tinham
+ * nenhum — parse que achasse 40 em vez de 63 carregava em silencio, porque
+ * trecho que some nao grita.
+ *
+ * O numero mora em arquivo, e nao no codigo, de proposito: mudar a base e
+ * normal, e o commit que muda o conteudo atualiza a contagem junto. Editar
+ * este arquivo sozinho e o sinal de que alguma coisa se perdeu.
+ */
+interface ContagemEsperada {
+  cartoes: number
+  arquivosDeNota: number
+  trechos: number
+}
+
+function contagemEsperada(): ContagemEsperada {
+  return JSON.parse(readFileSync(join(RAIZ, 'seed', 'contagem-esperada.json'), 'utf8'))
+}
+
+function conferirContagem(medido: { cartoes: number; arquivos: number; trechos: number }): void {
+  const esperado = contagemEsperada()
+  const divergencias: string[] = []
+  if (medido.cartoes !== esperado.cartoes) {
+    divergencias.push(`cartoes: esperava ${esperado.cartoes}, o parse achou ${medido.cartoes}`)
+  }
+  if (medido.arquivos !== esperado.arquivosDeNota) {
+    divergencias.push(
+      `arquivos de nota: esperava ${esperado.arquivosDeNota}, achou ${medido.arquivos}`,
+    )
+  }
+  if (medido.trechos !== esperado.trechos) {
+    divergencias.push(`trechos: esperava ${esperado.trechos}, o parse achou ${medido.trechos}`)
+  }
+  if (divergencias.length) {
+    throw new Error(
+      'a contagem nao bate com `seed/contagem-esperada.json`:\n  ' +
+        divergencias.join('\n  ') +
+        '\n\nSe a mudanca foi de proposito, atualize o arquivo NO MESMO COMMIT do conteudo.' +
+        '\nSe nao foi, alguma coisa se perdeu no parse — procure `[descartado]` acima.',
+    )
+  }
+}
+
 // ════════════════════════════════════════════════════════════════════════════
 //  PARSE  ·  funcoes puras, para poderem ser conferidas sem banco
 // ════════════════════════════════════════════════════════════════════════════
@@ -161,19 +207,55 @@ export function fatiarNota(nomeArquivo: string, markdown: string): TrechoParsead
   const base = basename(nomeArquivo, '.md')
 
   const blocos = corpo.split(/^## /m).slice(1)
+  const vistos = new Map<string, number>()
+
   return blocos
-    .map((b, i) => {
+    .map((b) => {
       const linhas = b.split('\n')
       const secao = linhas[0].trim()
       const texto = linhas.slice(1).join('\n').trim()
+
+      // 🔴 ID POR CONTEUDO, NAO POR POSICAO (22/09).
+      //
+      //    Era `${base}#${i + 1}`. Com indice, inserir uma secao no meio
+      //    renomeia todas as seguintes: o upsert grava o texto novo por cima
+      //    do id de outro assunto, e a contagem continua batendo. Numa base
+      //    que vai ser reestruturada de 63 para ~130 trechos, isso e
+      //    contaminacao silenciosa garantida.
+      const raiz = `${base}#${apelido(secao)}`
+      const repetido = vistos.get(raiz) ?? 0
+      vistos.set(raiz, repetido + 1)
+
       return {
-        id: `${base}#${i + 1}`,
+        id: repetido ? `${raiz}-${repetido + 1}` : raiz,
         assunto: `${tituloDoc} · ${secao}`,
         trecho: texto,
-        ordem: i + 1,
+        ordem: vistos.size,
       }
     })
-    .filter((t) => t.trecho.length > 40)
+    .filter((t) => {
+      // 🟡 Fatia curta nao some mais em silencio (22/09). Ela some — porque
+      //    corpo de 40 caracteres nao sustenta um vetor —, mas AVISANDO. O
+      //    descarte calado e o mesmo defeito do preambulo: some a fatia mais
+      //    precisa que existe, que e a regra curta e direta.
+      if (t.trecho.length > 40) return true
+      console.warn(
+        `[descartado] ${t.id} tem ${t.trecho.length} caracteres de corpo ` +
+        `(minimo 40): "${t.assunto}"`,
+      )
+      return false
+    })
+}
+
+/** Titulo de secao vira pedaco de id: minusculo, sem acento, sem pontuacao. */
+function apelido(texto: string): string {
+  return texto
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 60) || 'sem-titulo'
 }
 
 /**
@@ -246,7 +328,9 @@ export function validar(): { cartoes: number; arquivos: number; trechos: number;
     }
   }
 
-  return { cartoes: cartoes.length, arquivos: arquivos.length, trechos, sanitizados }
+  const medido = { cartoes: cartoes.length, arquivos: arquivos.length, trechos }
+  conferirContagem(medido)
+  return { ...medido, sanitizados }
 }
 
 export async function carregar(embedder: Embedder): Promise<void> {
@@ -275,6 +359,17 @@ export async function carregar(embedder: Embedder): Promise<void> {
    * trabalho pago fica pago, e o `ON CONFLICT DO UPDATE` faz a retomada ser so
    * rodar o mesmo comando.
    */
+  // 🔑 O portao roda ANTES do primeiro embedding: carga errada que falha no
+  //    fim ja pagou a conta inteira.
+  {
+    const arquivosDeNota = readdirSync(REFERENCES).filter((f) => f.endsWith('.md')).sort()
+    let trechos = 0
+    for (const arquivo of arquivosDeNota) {
+      trechos += fatiarNota(arquivo, readFileSync(join(REFERENCES, arquivo), 'utf8')).length
+    }
+    conferirContagem({ cartoes: cartoes.length, arquivos: arquivosDeNota.length, trechos })
+  }
+
   const LOTE = 10
   const cliente = await pool.connect()
   try {
@@ -360,9 +455,48 @@ export async function carregar(embedder: Embedder): Promise<void> {
     clienteNotas.release()
   }
 
+  // ── 🔴 A LIMPEZA (22/09) ──────────────────────────────────────────────────
+  //
+  // A carga so fazia INSERT ... ON CONFLICT DO UPDATE. Linha que deixou de
+  // existir no markdown FICAVA no banco para sempre, e continuava sendo
+  // devolvida pela busca — texto velho convivendo com o novo, sem ninguem
+  // notar, porque a contagem de gravados continuava batendo.
+  //
+  // Apaga por ULTIMO e so o que nao veio nesta carga: se a carga falhou no
+  // meio, o `process.exit(1)` acontece antes daqui e nada e removido.
+  const idsCartoes = cartoes.map((c) => c.id)
+  const idsNotas: string[] = []
+  for (const arquivo of arquivos) {
+    for (const t of fatiarNota(arquivo, readFileSync(join(REFERENCES, arquivo), 'utf8'))) {
+      idsNotas.push(t.id)
+    }
+  }
+
+  const limpeza = await pool.connect()
+  let orfaosCartao = 0
+  let orfaosNota = 0
+  try {
+    const c = await limpeza.query(
+      'DELETE FROM conhecimento.cartao WHERE id <> ALL($1::text[]) RETURNING id',
+      [idsCartoes],
+    )
+    const n = await limpeza.query(
+      'DELETE FROM conhecimento.nota WHERE id <> ALL($1::text[]) RETURNING id',
+      [idsNotas],
+    )
+    orfaosCartao = c.rowCount ?? 0
+    orfaosNota = n.rowCount ?? 0
+    for (const linha of [...c.rows, ...n.rows]) {
+      console.log(`[removido] ${linha.id} nao existe mais no markdown`)
+    }
+  } finally {
+    limpeza.release()
+  }
+
   console.log(
     `cartoes: ${cartoes.length} · trechos gravados: ${trechosGravados} · ` +
-    `trechos sanitizados: ${trechosSanitizados}`,
+    `trechos sanitizados: ${trechosSanitizados} · ` +
+    `orfaos removidos: ${orfaosCartao} cartao(oes) e ${orfaosNota} trecho(s)`,
   )
 }
 

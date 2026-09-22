@@ -49,12 +49,27 @@ export async function executarTool(
     }
 
     case 'estimar_das': {
-      const linha = await db.estimarDas(
-        argumentos.anexo,
-        String(argumentos.rbt12),
-        String(argumentos.receita_mes),
-      )
-      return { conteudo: linha, cartoes: [], fatos: ['estimativa_das'] }
+      // 🔑 A estimativa vem com os PARAMETROS da regra junto (Fator R, piso do
+      //    pro-labore, INSS). Eles sao exatamente os numeros que a sanitizacao
+      //    apaga das notas, e sem eles o agente le «percentual em fatos», nao
+      //    acha o fato e fica mudo — medido no pente fino de 22/09.
+      const temFaturamento =
+        argumentos.anexo != null && argumentos.rbt12 != null && argumentos.receita_mes != null
+      const [linha, parametros] = await Promise.all([
+        temFaturamento
+          ? db.estimarDas(
+              argumentos.anexo,
+              String(argumentos.rbt12),
+              String(argumentos.receita_mes),
+            )
+          : Promise.resolve(null),
+        db.consultarParametroFiscal(),
+      ])
+      return {
+        conteudo: { estimativa: linha, parametros },
+        cartoes: [],
+        fatos: ['estimativa_das', 'parametro_fiscal'],
+      }
     }
 
     case 'buscar_cartao': {

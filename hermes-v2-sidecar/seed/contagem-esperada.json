@@ -1,0 +1,8 @@
+{
+  "_doc": "O portão de contagem da base. Os cartões já tinham o seu (58, cravado no código); as notas não tinham nenhum — parse que achasse 40 em vez de 63 carregava feliz, e trecho que sumiu não avisa, porque quem some não grita.",
+  "_como_mudar": "Mudou a base de propósito? Rode `npm run validar:docs`, confira o número que ele imprime, e atualize aqui NO MESMO COMMIT da mudança de conteúdo. Se você está editando este arquivo sozinho, pare: ou o conteúdo mudou junto, ou alguma coisa se perdeu.",
+  "_medido_em": "2026-09-22",
+  "cartoes": 58,
+  "arquivosDeNota": 13,
+  "trechos": 63
+}

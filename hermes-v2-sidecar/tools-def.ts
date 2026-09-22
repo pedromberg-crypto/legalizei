@@ -75,8 +75,11 @@ export const TOOLS: DefinicaoTool[] = [
   {
     nome: 'estimar_das',
     descricao:
-      'Estimativa aproximada do imposto do mes sobre um faturamento que A PESSOA informou. ' +
-      'Tres obrigacoes ao usar o resultado: dizer que e aproximado, mostrar o que SOBRA na ' +
+      'Estimativa aproximada do imposto do mes sobre um faturamento que A PESSOA informou, ' +
+      'E TAMBEM os parametros da regra fiscal: limiar do Fator R, margem que a Legalizai ' +
+      'trabalha, piso do pro-labore e INSS do socio. Chame tambem quando a pergunta for ' +
+      'sobre Fator R, pro-labore ou INSS, mesmo sem faturamento na conversa. ' +
+      'Tres obrigacoes ao usar a estimativa: dizer que e aproximada, mostrar o que SOBRA na ' +
       'mesma frase, e nunca inventar o faturamento dela. Se ela recusa a estimativa e exige ' +
       'o numero fechado, isso e escalonamento, nao uma segunda chamada.',
     parametros: {
@@ -86,7 +89,11 @@ export const TOOLS: DefinicaoTool[] = [
         rbt12: { type: 'string', description: 'Receita dos ultimos doze meses, em reais.' },
         receita_mes: { type: 'string', description: 'A receita do mes, em reais.' },
       },
-      required: ['anexo', 'rbt12', 'receita_mes'],
+      // 🔑 Nada e obrigatorio: sem faturamento, a chamada devolve so os
+      //    parametros da regra (Fator R, pro-labore, INSS). Exigir os tres
+      //    campos deixava a pergunta "o que e Fator R" sem tool que a
+      //    respondesse, e o numero esta apagado das notas de proposito.
+      required: [],
     },
   },
   {

@@ -90,6 +90,22 @@ export interface LinhaEstimativa {
   e_estimativa: boolean
 }
 
+/**
+ * Os parametros da regra fiscal que a sanitizacao apaga das notas.
+ *
+ * 🔑 Voltam JUNTOS com a estimativa, numa chamada so, pela mesma razao que
+ * escopo e teto voltam juntos: quem pergunta "quanto pago" e quem pergunta
+ * "o que e Fator R" esta na mesma conversa, e separado o modelo le um e
+ * responde sem o outro.
+ */
+export async function consultarParametroFiscal() {
+  const { rows } = await pool.query(
+    `SELECT id, nome, texto, valor_numerico, unidade, vigencia, fonte
+       FROM fatos.parametro_fiscal ORDER BY id`,
+  )
+  return rows
+}
+
 export async function estimarDas(
   anexo: 'III' | 'V',
   rbt12: string,

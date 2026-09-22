@@ -61,3 +61,38 @@ número que foi pedido?** Se sim, executa e enfileira.
 - ⚠️ **`venda-escada` não cita a validade 31/12 de forma estável.** Reprova em
   3 de 4 rodadas por `faltou:/31/12/`, mesmo com `consultar_preco` chamada. O
   dado existe na tabela e na nota; o que falha é ele chegar à fala.
+
+## 22/09/2026 · achados do rastreio ao vivo (sonda do IPTU)
+
+- 🔴 **Turno com lastro e resposta CERTA é gravado como `lacuna_da_base`.**
+  Medido na sonda: `tecnica_ok = false`, `falha_tipo = 'lacuna_da_base'`,
+  `tools_chamadas = {}` — e `lastro_ids` com os três trechos, entre eles o
+  `03-REGRAS-DOS-ORGAOS#1` que responde a pergunta, com o texto final batendo
+  com a nota. A semântica atual está correta por construção (`tecnica_ok`
+  significa "o modelo escolheu a tool", e somar o lastro ali faria a constraint
+  `comercial_exige_tecnica_ok` parar de barrar), mas a **consequência** é que a
+  linha "turnos sem lastro técnico" do relatório superestima o problema e a
+  trava comercial barra o gancho em turno que teve base. Provavelmente precisa
+  de um terceiro estado, não de um booleano.
+
+- ⚠️ **`limparSaida()` e `emBatidas()` não são exportadas pelo `server.ts`.**
+  Importar `server.js` subiria o laço de polling, então o `scripts/rastrear-turno.mjs`
+  carrega uma **cópia** das duas. Cópia diverge do original com o tempo, e aí o
+  rastreio mostraria batidas que não são as que sairiam. Extrair as duas para um
+  módulo próprio resolve sem mudar comportamento.
+
+- ⚠️ **Troca de sujeito residual, em miniatura.** A nota diz "a **Prefeitura**
+  não localiza o imóvel"; o Léo disse "o **sistema** não localiza". "Sistema" é
+  ambíguo e pode ser lido como o app da Legalizai — que é a mesma classe de erro
+  que a nota proíbe com "o que a Prefeitura analisa é o endereço, não você". O
+  parágrafo se sustenta porque a oração anterior nomeia a Prefeitura.
+
+- ⚠️ **O lastro custa ~1.320 tokens fora do cache, medidos.** Entre a volta 1 e
+  a 2 da sonda a entrada foi de 13.152 para 14.472 com o cache parado em 13.140.
+  É o preço do desenho e está dentro do teto, mas é o número a vigiar se o
+  tamanho do bloco mudar.
+
+- ⚠️ **A sonda grava em `conversa.mensagem`.** Usa um `chatId`
+  `sonda-rastreio-<uuid>` descartável, mas as linhas ficam no banco de produção.
+  Se o rastreio virar rotina, vale uma limpeza ou um marcador de sessão de
+  sonda.

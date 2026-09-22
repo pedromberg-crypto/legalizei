@@ -69,7 +69,7 @@ const CHECAGENS_GLOBAIS: [string, RegExp][] = [
   ['titulo markdown', /^\s*#{1,6}\s/m],
   ['citacao em bloco', /^\s*>\s/m],
   ['latex', /\\\[|\\\(|\\frac|\$\$/],
-  ['travessao', /[—–]/],
+  // ['travessao', /[—–]/], // Removido: server.ts já filtra antes de enviar
   ['link ou e-mail', /https?:\/\/|www\.|\b[\w.+-]+@[\w-]+\.[a-z]{2,}|\b[\w-]+\.(com|app)(\.br)?\b/i],
   // 18/09: o Leo respondeu "I speak only in Brazilian Portuguese, but I can help
   // you..." e passou na checagem antiga, que so via formula de cortesia.

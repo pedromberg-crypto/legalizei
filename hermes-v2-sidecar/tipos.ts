@@ -71,6 +71,16 @@ export interface Resolucao {
   falhaTipo: FalhaTipo | null
   cartoesUsados: string[]
   fatosLidos: string[]
+  /**
+   * 🔑 OS NOMES DAS TOOLS CHAMADAS, na ordem, com repeticao.
+   *
+   * 🔴 NAO e derivavel de `cartoesUsados` nem de `fatosLidos`. Ate 22/09 a
+   * medicao inteira era por EFEITO: tool que roda e volta vazia emite lista
+   * vazia nos dois campos e fica identica a tool que nunca foi chamada. Quatro
+   * rodadas de E2E leram "buscar_base: 0" nessa ambiguidade e concluiram que o
+   * modelo nao escolhia a ferramenta.
+   */
+  toolsChamadas: string[]
   tokensEntrada: number
   tokensSaida: number
   /** SUBCONJUNTO de `tokensEntrada`, nunca parcela a somar. Ver `Llm`. */

@@ -23,6 +23,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { join, basename } from 'node:path'
 
 import { RAIZ } from '../seed/carregar-conhecimento.js'
+import { TOOLS_POR_SAIDA, NOMES_DE_TOOL } from '../tools-def.js'
 import type { Consumo, Custo, Cambio } from './contador.js'
 
 export interface MedicaoSalva {
@@ -31,6 +32,11 @@ export interface MedicaoSalva {
   falhaTipo: string | null
   cartoes: string[]
   fatos: string[]
+  /**
+   * Os NOMES das tools chamadas no turno. Opcional: rodada gravada antes de
+   * 22/09 nao tem o campo, e ausente significa "nao medido", nunca "zero".
+   */
+  chamadas?: string[]
   tokensEntrada: number
   tokensSaida: number
 }
@@ -78,15 +84,76 @@ export function gerarMarkdown(r: RodadaSalva): string {
   const cartoes: Record<string, number> = {}
   let semLastro = 0
 
+  // ── A MEDICAO POR CHAMADA (22/09) ─────────────────────────────────────────
+  //
+  // 🔴 TRES NUMEROS, NAO DOIS. `oferecida` sai do mapa de trilhas, `chamada`
+  //    sai do nome que o router registrou, `comEfeito` sai de cartoes/fatos.
+  //    A diferenca entre os dois ultimos e o caso que estava invisivel: a tool
+  //    rodou e voltou vazia. Ate 22/09 ele era somado a "nao chamou".
+  const oferecidas: Record<string, number> = {}
+  const chamadas: Record<string, number> = {}
+  const comEfeito: Record<string, number> = {}
+  // Turnos em que `buscar_base` estava na mesa e nao foi escolhido: o que veio
+  // no lugar, contado por tool. Turno sem tool nenhuma entra como `(nenhuma)`.
+  const noLugarDaBusca: Record<string, number> = {}
+  let turnosMedidos = 0
+  let turnosComBusca = 0
+  let turnosSemBuscaOferecida = 0
+
+  /** De um `fato` ou cartao para o nome da tool que o produziu. */
+  const toolDoEfeito = (chave: string): string | null => ({
+    cnae: 'consultar_cnae',
+    plano: 'consultar_preco',
+    estimativa_das: 'estimar_das',
+    parametro_fiscal: 'estimar_das',
+    links: 'consultar_links',
+    contrato: 'consultar_contrato',
+    escopo: 'consultar_escopo',
+    teto: 'consultar_escopo',
+    nota: 'buscar_base',
+  } as Record<string, string>)[chave] ?? null
+
   for (const res of r.resultados) {
     for (const m of res.medicoes) {
       rotas[m.saida] = (rotas[m.saida] ?? 0) + 1
       if (!m.tecnicaOk) semLastro++
+      // 🔴 AS TRES COLUNAS SAO POR TURNO, e nao por ocorrencia.
+      //
+      // A primeira versao desta secao contava efeito por FATO, e as unidades
+      // nao fechavam: `consultar_escopo` emite dois fatos por chamada (`escopo`
+      // e `teto`) e `estimar_das` tambem, entao 6 chamadas viravam 12 "efeitos"
+      // e a comparacao `chamada > com efeito` nunca disparava justamente nas
+      // tools que ela deveria vigiar. Turno e a unidade que os tres campos
+      // compartilham.
+      const efeitosDoTurno = new Set<string>()
       for (const f of m.fatos) {
         const chave = f.split(':')[0]
         toolsDeFato[chave] = (toolsDeFato[chave] ?? 0) + 1
+        const tool = toolDoEfeito(chave)
+        if (tool) efeitosDoTurno.add(tool)
       }
       for (const c of m.cartoes) cartoes[c] = (cartoes[c] ?? 0) + 1
+      if (m.cartoes.length) efeitosDoTurno.add('buscar_cartao')
+      for (const tool of efeitosDoTurno) comEfeito[tool] = (comEfeito[tool] ?? 0) + 1
+
+      // ⚠️ `undefined` e rodada antiga, sem o campo: nao entra na conta. Contar
+      //    ausencia como zero e exatamente o erro que esta secao corrige.
+      if (!m.chamadas) continue
+      turnosMedidos++
+
+      const naMesa = TOOLS_POR_SAIDA[m.saida] ?? NOMES_DE_TOOL
+      for (const nome of naMesa) oferecidas[nome] = (oferecidas[nome] ?? 0) + 1
+      for (const nome of new Set(m.chamadas)) chamadas[nome] = (chamadas[nome] ?? 0) + 1
+
+      if (!naMesa.includes('buscar_base')) { turnosSemBuscaOferecida++; continue }
+      if (m.chamadas.includes('buscar_base')) { turnosComBusca++; continue }
+      if (m.chamadas.length === 0) {
+        noLugarDaBusca['(nenhuma)'] = (noLugarDaBusca['(nenhuma)'] ?? 0) + 1
+      } else {
+        for (const nome of new Set(m.chamadas)) {
+          noLugarDaBusca[nome] = (noLugarDaBusca[nome] ?? 0) + 1
+        }
+      }
     }
   }
 
@@ -180,12 +247,87 @@ export function gerarMarkdown(r: RodadaSalva): string {
   p('tool sustentou a resposta, e por regra nenhum deles pode ter recebido gancho')
   p('comercial.')
   p()
-  p('### Ferramentas de fato acionadas')
+  p('### Oferecida · chamada · com efeito')
+  p()
+  if (turnosMedidos === 0) {
+    p('⚠️ **Rodada sem medicao por chamada.** O JSON desta rodada foi gravado antes')
+    p('da instrumentacao de 22/09, entao so existe o efeito. Ausencia de campo nao e')
+    p('zero: nada aqui autoriza conclusao sobre a tool ter sido chamada.')
+  } else {
+    p('🔑 **Tres colunas, e a diferenca entre as duas ultimas e o ponto.**')
+    p()
+    p('- `oferecida` — a tool estava na lista que o roteador montou para a trilha')
+    p('  daquele turno (`TOOLS_POR_SAIDA`). Se for zero, o modelo nao tinha como')
+    p('  escolher, e nenhuma conclusao sobre "o modelo nao quis" se sustenta.')
+    p('- `chamada` — o modelo escolheu, e o nome foi registrado ANTES de executar.')
+    p('- `com efeito` — a chamada devolveu linha. **`chamada` > `com efeito`')
+    p('  significa tool que rodou e voltou VAZIA**, que e conteudo faltando na base,')
+    p('  nao ferramenta ignorada. Ate 22/09 esse caso era somado a "nao chamou".')
+    p()
+    p(`Turnos com medicao por chamada: **${turnosMedidos}**.`)
+    p()
+    p('⚠️ As tres colunas contam TURNOS, nao ocorrencias: tool chamada duas vezes')
+    p('no mesmo turno conta uma. E o que torna as colunas comparaveis entre si —')
+    p('`consultar_escopo` e `estimar_das` emitem dois fatos por chamada, e contar')
+    p('por ocorrencia inflaria o efeito acima da chamada.')
+    p()
+    p('| tool | oferecida | chamada | com efeito |')
+    p('|---|---:|---:|---:|')
+    for (const nome of NOMES_DE_TOOL) {
+      const of = oferecidas[nome] ?? 0
+      const ch = chamadas[nome] ?? 0
+      const ef = comEfeito[nome] ?? 0
+      const marca = ch > ef ? ' ⚠️' : ''
+      p(`| \`${nome}\` | ${of} | ${ch} | ${ef}${marca} |`)
+    }
+    p()
+    p('⚠️ = chamada sem efeito em pelo menos um turno: a tool rodou e voltou vazia.')
+    p()
+
+    // ── As duas causas, separadas ──────────────────────────────────────────
+    p('#### `buscar_base`: oferecido, e chamado?')
+    p()
+    const ofBusca = oferecidas['buscar_base'] ?? 0
+    p('| | turnos |')
+    p('|---|---:|')
+    p(`| Oferecido (estava na mesa) | ${ofBusca} de ${turnosMedidos} |`)
+    p(`| Nao oferecido pela trilha | ${turnosSemBuscaOferecida} |`)
+    p(`| Chamado, tendo sido oferecido | ${turnosComBusca} |`)
+    p()
+    if (turnosSemBuscaOferecida === 0) {
+      p('✅ **Causa B descartada nesta rodada:** em nenhum turno a trilha deixou o')
+      p('`buscar_base` fora da mesa. Ele esta nas quatro trilhas de `TOOLS_POR_SAIDA`.')
+    } else {
+      p(`🔴 **Causa B viva:** em ${turnosSemBuscaOferecida} turno(s) a tool nao foi sequer oferecida.`)
+    }
+    p()
+    p('#### Quando foi oferecido e NAO foi chamado, o que veio no lugar')
+    p()
+    if (Object.keys(noLugarDaBusca).length === 0) {
+      p('_Nao houve turno assim nesta rodada._')
+    } else {
+      p('⚠️ Contado por TURNO, nao por chamada: uma tool chamada duas vezes no mesmo')
+      p('turno conta uma. `(nenhuma)` e o turno em que o modelo respondeu de cabeca,')
+      p('sem tocar em ferramenta alguma — e esse e o caso que interessa a causa A.')
+      p()
+      p('| veio no lugar | turnos |')
+      p('|---|---:|')
+      for (const [k, v] of Object.entries(noLugarDaBusca).sort((a, b) => b[1] - a[1])) {
+        p(`| ${k === '(nenhuma)' ? '**(nenhuma)**' : `\`${k}\``} | ${v} |`)
+      }
+    }
+  }
+  p()
+  p('### Ferramentas de fato acionadas (por efeito)')
+  p()
+  p('⚠️ Tabela historica, mantida para comparar com as rodadas anteriores a 22/09.')
+  p('Ela conta EFEITO: tool que voltou vazia nao aparece. Para a medicao por')
+  p('chamada, use a tabela de tres colunas acima.')
   p()
   if (Object.keys(toolsDeFato).length === 0) {
-    p('Nenhuma. 🔴 Isso significa que o agente respondeu sem consultar o banco.')
+    p('Nenhuma com efeito. Isso **nao** significa que nenhuma foi chamada — ver acima.')
   } else {
-    p('| tool | chamadas |')
+    p('| efeito | ocorrencias |')
     p('|---|---|')
     for (const [k, v] of Object.entries(toolsDeFato).sort((a, b) => b[1] - a[1])) p(`| \`${k}\` | ${v} |`)
   }

@@ -55,6 +55,11 @@ export interface Deps {
       falhaTipo: FalhaTipo | null
       cartoesUsados: string[]
       fatosLidos: string[]
+      /**
+       * 🔑 Os NOMES das tools chamadas neste turno. Medicao por CHAMADA, nao
+       * por efeito: ver `tipos.ts`, `Resolucao.toolsChamadas`.
+       */
+      toolsChamadas: string[]
       tokensEntrada: number
       tokensSaida: number
       /**
@@ -264,6 +269,9 @@ async function resolver(
   const mensagens: MensagemLlm[] = [...historico, { papel: 'cliente', texto: entrada.texto }]
   const cartoesUsados: string[] = []
   const fatosLidos: string[] = []
+  // 🔑 Nome de TODA chamada, antes de executar. E o unico registro que separa
+  //    "chamou e voltou vazio" de "nao chamou".
+  const toolsChamadas: string[] = []
   let tokensEntrada = 0
   let tokensSaida = 0
   let tokensCache = 0
@@ -274,6 +282,7 @@ async function resolver(
     tokensEntrada += r.tokensEntrada
     tokensSaida += r.tokensSaida
     tokensCache += r.tokensCache ?? 0
+    for (const c of r.chamadas) toolsChamadas.push(c.nome)
 
     if (r.chamadas.length === 0) {
       const declarouLacuna = r.texto.includes(MARCA_LACUNA)
@@ -283,7 +292,7 @@ async function resolver(
         texto: r.texto.replace(MARCA_LACUNA, '').trim(),
         ok: falhaTipo === null,
         falhaTipo,
-        cartoesUsados, fatosLidos, tokensEntrada, tokensSaida, tokensCache,
+        cartoesUsados, fatosLidos, toolsChamadas, tokensEntrada, tokensSaida, tokensCache,
       }
     }
 
@@ -319,7 +328,7 @@ async function resolver(
     texto: '',
     ok: false,
     falhaTipo: 'lacuna_da_base',
-    cartoesUsados, fatosLidos, tokensEntrada, tokensSaida, tokensCache,
+    cartoesUsados, fatosLidos, toolsChamadas, tokensEntrada, tokensSaida, tokensCache,
   }
 }
 
@@ -455,6 +464,7 @@ export async function responder(
     falhaTipo: resolucao.falhaTipo,
     cartoesUsados: resolucao.cartoesUsados,
     fatosLidos: resolucao.fatosLidos,
+    toolsChamadas: resolucao.toolsChamadas,
     tokensEntrada,
     tokensSaida,
     tokensCache,

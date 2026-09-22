@@ -292,14 +292,23 @@ export async function salvarTurnoInterno(
     tokensSaida: number
     /** 🔑 SUBCONJUNTO de `tokensEntrada`. Opcional para nao quebrar chamador antigo. */
     tokensCache?: number
+    /**
+     * 🔑 Os NOMES das tools chamadas no turno, na ordem, com repeticao.
+     *
+     * Opcional pelo mesmo motivo que `tokensCache`: chamador antigo continua
+     * compilando. Ausente vira NULL na coluna, e NULL ali diz "gravado antes da
+     * instrumentacao", nunca "nenhuma chamada" — que e `{}`.
+     */
+    toolsChamadas?: string[]
   },
   cliente: PoolClient | Pool = pool,
 ): Promise<void> {
   await cliente.query(
     `INSERT INTO conversa.turno_interno
        (sessao_id, mensagem_id, saida, tecnica_ok, falha_tipo,
-        cartoes_usados, fatos_lidos, tokens_entrada, tokens_saida, tokens_cache)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+        cartoes_usados, fatos_lidos, tokens_entrada, tokens_saida, tokens_cache,
+        tools_chamadas)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
     [
       sessaoId,
       mensagemId,
@@ -311,6 +320,7 @@ export async function salvarTurnoInterno(
       dados.tokensEntrada,
       dados.tokensSaida,
       dados.tokensCache ?? null,
+      dados.toolsChamadas ?? null,
     ],
   )
 }

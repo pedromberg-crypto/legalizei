@@ -159,6 +159,19 @@ interface Medicao {
   falhaTipo: FalhaTipo | null
   cartoes: string[]
   fatos: string[]
+
+  /**
+   * 🔑 OS NOMES DAS TOOLS CHAMADAS, e nao o efeito delas.
+   *
+   * 🔴 `cartoes` e `fatos` sao EFEITO. Tool que roda e volta vazia nao aparece
+   * em nenhum dos dois, entao ate 22/09 "chamou e voltou vazio" era lido como
+   * "nao chamou" — a mesma armadilha que o cabecalho do `provar-busca.mjs`
+   * descreve, morando dentro do medidor. Com este campo os dois casos se
+   * separam, e a pergunta "a tool e oferecida, e e chamada?" passa a ter
+   * resposta.
+   */
+  chamadas: string[]
+
   tokensEntrada: number
   tokensSaida: number
 
@@ -212,6 +225,7 @@ function depsDeTeste(medicoes: Medicao[], executarTool: Deps['executarTool']): D
         falhaTipo: m.falhaTipo,
         cartoes: m.cartoesUsados,
         fatos: m.fatosLidos,
+        chamadas: m.toolsChamadas,
         tokensEntrada: m.tokensEntrada,
         tokensSaida: m.tokensSaida,
       })

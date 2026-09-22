@@ -1,0 +1,70 @@
+casos:
+  - id: estimativa-imposto
+    rotear_para: tecnico
+    turnos: ['Vou faturar uns R$ 8.000 limpos como designer. Quanto de imposto vou pagar no Simples Nacional no primeiro mês?']
+    deve: ['(imposto|simples nacional|calcul)']
+    nao_deve: ['garanto o valor exato']
+    avaliar: 'Força a tool estimar_das e cruza com regras de serviço/anexos.'
+
+  - id: bloqueio-geografico
+    rotear_para: fora_escopo
+    turnos: ['Moro no Rio de Janeiro e quero abrir minha agência de marketing com vocês, como funciona?']
+    deve: ['(belo horizonte|minas gerais|n[ãa]o atendo|s[óo] atendo)']
+    nao_deve: ['podemos abrir no rio', 'vamos abrir']
+    avaliar: 'Barra a venda gentilmente por causa da restrição de praça.'
+
+  - id: prazo-abertura
+    rotear_para: tecnico
+    turnos: ['Preciso do CNPJ pra amanhã porque a empresa gringa que me contratou tá cobrando pra assinar o contrato. Em quantos dias vocês abrem?']
+    deve: ['(dias úteis|prefeitura|processo|tempo)']
+    nao_deve: ['abro amanhã', '24 horas']
+    avaliar: 'Não promete milagre, dá o prazo real da prefeitura.'
+
+  - id: sociedade-limitada
+    rotear_para: tecnico
+    turnos: ['Eu e mais dois amigos vamos abrir uma produtora de vídeo juntos. O plano da Legalizai aceita empresa com 3 sócios?']
+    deve: ['(s[óo]cio|sociedade|juntos)']
+    nao_deve: []
+    avaliar: 'Testa as regras de limite societário da Legalizai.'
+
+  - id: teste-confianca
+    rotear_para: comercial
+    turnos: ['Eu não conheço a Legalizai e acho meio arriscado mandar foto dos meus documentos num aplicativo. Como eu sei que isso é seguro?']
+    deve: ['(seguran[çc]a|crc|contador|app)']
+    nao_deve: ['não precisa ter medo']
+    avaliar: 'Usa autoridade de contabilidade real para quebrar a objeção de segurança.'
+
+  - id: ilusao-mei
+    rotear_para: comercial
+    turnos: ['Por que eu pagaria mensalidade pra vocês se o MEI é de graça e eu mesmo posso abrir no site do governo?']
+    deve: ['(atividade|limite|faturamento|servi[çc]o|mei)']
+    nao_deve: ['mei é ruim']
+    avaliar: 'Vende valor da ME contra MEI sem ofender a modalidade.'
+
+  - id: venda-comodidade
+    rotear_para: comercial
+    turnos: ['Cara, eu não entendo absolutamente NADA de imposto, guia ou contabilidade. Se eu assinar, vocês resolvem literalmente tudo pra eu só focar no meu código?']
+    deve: ['(cuidamos|foca|resolver|tudo)']
+    nao_deve: []
+    avaliar: 'Entende a dor do leigo e engata fechamento baseado em comodidade.'
+
+  - id: cobranca-status
+    rotear_para: escalonamento
+    turnos: ['Mandei meus documentos pelo app na terça-feira e até agora ninguém me atualizou, o app travou ou meu CNPJ já saiu?']
+    deve: ['(time|human|atendente|verificar|desculp)']
+    nao_deve: []
+    avaliar: 'Pede desculpas e manda para humano verificar o status, sem inventar prazo.'
+
+  - id: limite-ajuda-offtopic
+    rotear_para: fora_escopo
+    turnos: ['Léo, você acha que vale a pena ler o livro Pai Rico, Pai Pobre pra quem tá começando a empreender agora?']
+    deve: ['(livro|leitura|legalizai|cnpj|foco)']
+    nao_deve: ['eu acho que sim', 'vale muito a pena']
+    avaliar: 'Dá um corte educado, saindo de papo paralelo.'
+
+  - id: complexidade-trabalhista
+    rotear_para: fora_escopo
+    turnos: ['Vou abrir um restaurante e preciso contratar 4 garçons, 2 cozinheiros e 1 motoboy. Vocês fazem a folha de pagamento de todo mundo?']
+    deve: ['(n[ãa]o fazemos|com[ée]rcio|produto|funcion[áa]rio)']
+    nao_deve: ['fazemos a folha', 'podemos fazer']
+    avaliar: 'Barra por comércio E por complexidade de folha.'

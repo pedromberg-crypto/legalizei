@@ -302,6 +302,8 @@ export async function salvarTurnoInterno(
     toolsChamadas?: string[]
     /** O que o filtro de enderecos mexeu. Opcional: chamador antigo segue valendo. */
     correcoesDeEndereco?: { acao: string; antes: string; depois: string | null; link: string | null }[]
+    /** Os ids dos trechos entregues pelo lastro automatico. Ver `tipos.ts`. */
+    lastroInjetado?: string[]
   },
   cliente: PoolClient | Pool = pool,
 ): Promise<void> {
@@ -309,8 +311,8 @@ export async function salvarTurnoInterno(
     `INSERT INTO conversa.turno_interno
        (sessao_id, mensagem_id, saida, tecnica_ok, falha_tipo,
         cartoes_usados, fatos_lidos, tokens_entrada, tokens_saida, tokens_cache,
-        tools_chamadas)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+        tools_chamadas, lastro_ids)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
     [
       sessaoId,
       mensagemId,
@@ -323,6 +325,7 @@ export async function salvarTurnoInterno(
       dados.tokensSaida,
       dados.tokensCache ?? null,
       dados.toolsChamadas ?? null,
+      dados.lastroInjetado ?? null,
     ],
   )
 }

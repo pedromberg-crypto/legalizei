@@ -34,3 +34,30 @@ número que foi pedido?** Se sim, executa e enfileira.
 | # | Data | Achado | Virou o quê |
 |---|---|---|---|
 | — | — | *(nenhum ainda)* | |
+
+## 22/09/2026 · achados da rodada do lastro
+
+- 🔴 **Checagem `proibido:/[eé] o processo/` é falso positivo.** O caso
+  `campo-dossie-iptu` reprova com ela, mas a frase do Léo é *"sem ele a
+  Prefeitura não localiza o endereço **e o processo** para"* — que é exatamente
+  o que a nota `03` §1 manda dizer. O regex quer pegar o jargão *"é o
+  processo"* e pega também o *"e o processo"* de qualquer frase. Achado de
+  **teste**, não de agente: o conteúdo está certo e a suíte o reprova.
+  Consertar o regex para `\bé o processo\b`.
+
+- ⚠️ **O gate de saída não fecha com os canais de forma confiável.**
+  `comercio-gate-saida` e `aceite-epp` reprovam por link ausente em 2 de 4
+  rodadas, e `consultar_links` segue entre 0 e 3 chamadas de 28. O filtro de
+  endereços garante que o link **escrito** esteja certo, mas não que ele
+  **seja escrito**. Isso é o mesmo degrau do lastro, uma camada acima: a
+  conclusão do gate poderia ser montada por código a partir de `fatos.link`,
+  como o filtro faz.
+
+- ⚠️ **`buscar_cartao` em zero absoluto nas seis rodadas do dia.** Os 58
+  cartões nunca foram exercitados por esta suíte. Ou a descrição não compete,
+  ou os casos do v12 não perguntam o que um cartão responde. Enquanto não se
+  medir, **nada autoriza conclusão sobre a qualidade dos cartões**.
+
+- ⚠️ **`venda-escada` não cita a validade 31/12 de forma estável.** Reprova em
+  3 de 4 rodadas por `faltou:/31/12/`, mesmo com `consultar_preco` chamada. O
+  dado existe na tabela e na nota; o que falha é ele chegar à fala.

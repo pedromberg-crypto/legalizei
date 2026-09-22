@@ -67,6 +67,17 @@ export interface Deps {
        * `mensagem_id` certo, sem subconsulta adivinhando qual fala era.
        */
       correcoesDeEndereco: Correcao[]
+      /**
+       * Os ids dos trechos que o LASTRO AUTOMATICO entregou ao modelo.
+       *
+       * 🔴 NAO se confunde com `fatosLidos`, e a separacao e deliberada:
+       * `fatosLidos` e `tecnicaOk` significam "uma tool sustentou a resposta
+       * porque o MODELO a escolheu". Somar o lastro ali deixaria `tecnica_ok`
+       * verdadeiro em todo turno, inclusive numa saudacao, e a constraint
+       * `comercial_exige_tecnica_ok` pararia de barrar o que ela existe para
+       * barrar.
+       */
+      lastroInjetado: string[]
       tokensEntrada: number
       tokensSaida: number
       /**
@@ -104,6 +115,25 @@ export interface Deps {
    * antes, que e o que mantem `router.test.ts` offline e deterministico.
    */
   conferirEnderecos?(texto: string): Promise<{ texto: string; correcoes: Correcao[] }>
+
+  /**
+   * 🔴 O LASTRO AUTOMATICO. Busca a base ANTES de o modelo decidir qualquer
+   * coisa, e entrega o texto junto da pergunta.
+   *
+   * 🔑 POR QUE NAO DEPENDER DA ESCOLHA DO MODELO. Medido duas vezes em 22/09:
+   * `buscar_base` foi oferecida em 28 de 28 turnos e chamada em 0, e o
+   * `consultar_links` deu 0 de 27 mesmo com a descricao reescrita no molde da
+   * tool mais chamada e com os gatilhos na lingua do cliente. Quatro tools
+   * dizem "OBRIGATORIA" e estao em zero absoluto. Pedir nao move a chamada.
+   *
+   * E a busca JA foi provada: 12 de 12 perguntas acham o trecho certo entre os
+   * quatro devolvidos (`reports/busca-2026-09-221741.md`). O degrau quebrado
+   * nunca foi a recuperacao, foi a consulta acontecer.
+   *
+   * ⚠️ OPCIONAL de proposito: sem ela o roteador se comporta como antes, que e
+   * o que mantem `router.test.ts` offline e deterministico.
+   */
+  buscarLastro?(texto: string, embedder: Embedder): Promise<{ bloco: string; ids: string[] }>
 }
 
 let depsCache: Deps | null = null
@@ -146,6 +176,7 @@ async function depsPadrao(): Promise<Deps> {
     gravarTurno: db.gravarTurno,
     atualizarClassificacao: db.atualizarClassificacao as Deps['atualizarClassificacao'],
     executarTool: tools.executarTool,
+    buscarLastro: tools.montarLastro,
     async conferirEnderecos(texto) {
       const { corrigirEnderecos } = await import('./filtro-enderecos.js')
       const links = await enderecosOficiais(db.linksParaFiltro)
@@ -333,6 +364,8 @@ async function resolver(
       `Nao preencha o buraco com conhecimento geral.`,
   ].filter(Boolean).join('\n\n')
 
+  const lastroInjetado: string[] = []
+  let lastroTentado = false
   const mensagens: MensagemLlm[] = [...historico, { papel: 'cliente', texto: entrada.texto }]
   const cartoesUsados: string[] = []
   const fatosLidos: string[] = []
@@ -352,6 +385,46 @@ async function resolver(
     for (const c of r.chamadas) toolsChamadas.push(c.nome)
 
     if (r.chamadas.length === 0) {
+      /**
+       * ── O LASTRO, COMO SEGUNDA CHANCE E NAO COMO PRIMEIRA ─────────────────
+       *
+       * 🔴 A PRIMEIRA VERSAO INJETAVA SEMPRE, E ISSO CUSTOU PLACAR. Medido em
+       * tres rodadas de 22/09: com o lastro em todo turno o placar caiu de
+       * 18/20 para 14, 16 e 15, as oito tools foram a zero na primeira delas e
+       * a taxa de cache desceu de 96,4% para 88,4%. Com texto pronto no
+       * contexto o modelo para de procurar — inclusive preco, que so a tabela
+       * tem.
+       *
+       * 🔑 Entao o lastro entra onde faltava, e so ali: quando o modelo
+       * terminou a volta SEM chamar ferramenta nenhuma. Turno que ja usou tool
+       * segue exatamente como antes — mesmo prompt, mesmo cache, mesmo
+       * comportamento — e turno que ia responder de memoria ganha a base e uma
+       * segunda chance de responder com ela.
+       *
+       * ⚠️ UMA VEZ POR TURNO (`lastroTentado`). Sem a trava, um modelo que
+       * insista em nao chamar nada reinjetaria o bloco a cada volta ate o teto.
+       */
+      const semTool = toolsChamadas.length === 0
+      if (!lastroTentado && semTool && deps.buscarLastro) {
+        lastroTentado = true
+        try {
+          const lastro = await deps.buscarLastro(entrada.texto, embedder)
+          if (lastro.ids.length) {
+            lastroInjetado.push(...lastro.ids)
+            // A ultima mensagem e a do cliente: `semTool` garante que nenhuma
+            // mensagem de ferramenta entrou depois dela.
+            mensagens[mensagens.length - 1] = {
+              papel: 'cliente',
+              texto: `${lastro.bloco}\n\n${entrada.texto}`,
+            }
+            continue
+          }
+        } catch (erro) {
+          // Lastro e melhoria, nao funcionalidade: a rodada segue sem ele.
+          console.warn(`[lastro] busca falhou, seguindo sem: ${erro instanceof Error ? erro.message : erro}`)
+        }
+      }
+
       const declarouLacuna = r.texto.includes(MARCA_LACUNA)
       const semLastro = cartoesUsados.length === 0 && fatosLidos.length === 0
       if (declarouLacuna || semLastro) falhaTipo = 'lacuna_da_base'
@@ -359,7 +432,8 @@ async function resolver(
         texto: r.texto.replace(MARCA_LACUNA, '').trim(),
         ok: falhaTipo === null,
         falhaTipo,
-        cartoesUsados, fatosLidos, toolsChamadas, tokensEntrada, tokensSaida, tokensCache,
+        cartoesUsados, fatosLidos, toolsChamadas, lastroInjetado,
+        tokensEntrada, tokensSaida, tokensCache,
       }
     }
 
@@ -395,7 +469,8 @@ async function resolver(
     texto: '',
     ok: false,
     falhaTipo: 'lacuna_da_base',
-    cartoesUsados, fatosLidos, toolsChamadas, tokensEntrada, tokensSaida, tokensCache,
+    cartoesUsados, fatosLidos, toolsChamadas, lastroInjetado,
+    tokensEntrada, tokensSaida, tokensCache,
   }
 }
 
@@ -550,6 +625,7 @@ export async function responder(
     fatosLidos: resolucao.fatosLidos,
     toolsChamadas: resolucao.toolsChamadas,
     correcoesDeEndereco,
+    lastroInjetado: resolucao.lastroInjetado,
     tokensEntrada,
     tokensSaida,
     tokensCache,

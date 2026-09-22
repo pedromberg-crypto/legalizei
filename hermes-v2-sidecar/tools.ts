@@ -130,3 +130,83 @@ export class ToolDesconhecida extends Error {
     super(`tool desconhecida: ${nome}`)
   }
 }
+
+/**
+ * ════════════════════════════════════════════════════════════════════════════
+ *  O LASTRO AUTOMATICO
+ *
+ *  🔴 A MESMA BUSCA DA `buscar_base`, SO QUE SEM PEDIR LICENCA AO MODELO.
+ *
+ *  Medido em 22/09: `buscar_base` oferecida em 28 de 28 turnos, chamada em 0.
+ *  O `consultar_links` deu 0 de 27 depois de a descricao ser reescrita no molde
+ *  da tool mais chamada, com gatilho na lingua do cliente — inclusive nos
+ *  quatro turnos em que o gatilho nomeado estava presente. Quatro das oito
+ *  tools dizem "OBRIGATORIA" e estao em zero absoluto.
+ *
+ *  A recuperacao, por outro lado, esta provada: 12 de 12 perguntas acham o
+ *  trecho certo entre os quatro devolvidos. O degrau quebrado nunca foi achar,
+ *  foi consultar. Entao a consulta deixa de ser decisao e vira etapa.
+ *
+ *  ⚠️ ISTO NAO SUBSTITUI A TOOL. `buscar_base` continua na mesa das quatro
+ *  trilhas: o lastro busca UMA vez, com a pergunta crua, e se o modelo precisar
+ *  procurar outra coisa no meio do raciocinio a ferramenta esta la. O que mudou
+ *  e o piso, nao o teto.
+ * ════════════════════════════════════════════════════════════════════════════
+ */
+export async function montarLastro(
+  texto: string,
+  embedder: Embedder,
+): Promise<{ bloco: string; ids: string[] }> {
+  const limpo = texto.trim()
+  // ⚠️ Pergunta curta demais nao tem o que vetorizar: "ok", "sim", "Oi". Buscar
+  //    ali gasta um embedding para devolver ruido, e ruido no contexto e pior
+  //    que contexto nenhum.
+  if (limpo.length < 12) return { bloco: '', ids: [] }
+
+  const vetor = await embedder.gerar(limpo)
+  // 🔑 TRES, e nao os quatro da tool. O lastro entra em `contents`, que NAO e
+  //    cacheado — so `systemInstruction` e as tools vao para o cache. Cada
+  //    trecho a mais dilui a taxa de acerto sem quebrar prefixo nenhum: com
+  //    quatro ela caiu de 96,4% para 88,4%, abaixo do piso de 90% do aceite.
+  //    A busca ja provou que o trecho certo esta entre os quatro, e em 10 das
+  //    12 perguntas medidas ele esta entre os TRES primeiros.
+  const linhas = await db.buscarNota(vetor, 3)
+  if (linhas.length === 0) return { bloco: '', ids: [] }
+
+  const trechos = linhas
+    .map((l, i) => `${i + 1}. [${l.id}] ${l.assunto}\n${l.trecho}`)
+    .join('\n\n')
+
+  // 🔴 O ROTULO PRECISOU DE UMA SEGUNDA VERSAO, E O MOTIVO ESTA MEDIDO.
+  //
+  //    A primeira so dizia "estes trechos sao da base". Resultado na rodada de
+  //    19:23: as OITO tools cairam para zero — inclusive `consultar_preco` e
+  //    `consultar_contrato`, que vinham funcionando — e o placar caiu de 18/20
+  //    para 14/20. Com texto no contexto, o modelo parou de procurar.
+  //
+  //    O pior sintoma foi literal: `seed/carregar-conhecimento.ts` troca todo
+  //    valor em dinheiro por «valor em fatos» ANTES de vetorizar, de proposito,
+  //    para que numero so possa vir da tabela. O modelo leu o marcador no
+  //    lastro e ESCREVEU ao cliente "o valor mensal e «valor em fatos»".
+  //
+  // 🔑 Entao o rotulo agora diz o que a base NAO tem. Lastro serve para regra,
+  //    explicacao e postura; numero, endereco e condicao contratual continuam
+  //    sendo tool, e o texto precisa mandar buscar em vez de deixar o silencio
+  //    sugerir que ja esta tudo ali.
+  const bloco =
+    '[BASE DA LEGALIZAI · trechos recuperados automaticamente para esta mensagem. ' +
+    'NAO sao fala do cliente e NAO devem ser citados por numero ou id.]\n\n' +
+    trechos +
+    '\n\n[COMO USAR · estes trechos explicam REGRA, MOTIVO e POSTURA. Eles NAO ' +
+    'contem valor em dinheiro, teto, aliquota, CNAE, endereco, nem condicao de ' +
+    'contrato: esses dados foram REMOVIDOS do texto de proposito e so existem nas ' +
+    'ferramentas. O marcador «valor em fatos» significa exatamente isso — e ordem ' +
+    'de chamar a ferramenta, e NUNCA se escreve ao cliente. Precisa de preco, ' +
+    'chame `consultar_preco`; de teto ou elegibilidade, `consultar_escopo`; de ' +
+    'link ou e-mail, `consultar_links`; de fidelidade ou multa, ' +
+    '`consultar_contrato`; de estimativa, `estimar_das`. Se nem os trechos nem as ' +
+    'ferramentas responderem, declare a lacuna em vez de completar de memoria. ' +
+    'A mensagem do cliente vem a seguir.]'
+
+  return { bloco, ids: linhas.map((l) => l.id) }
+}

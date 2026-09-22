@@ -41,6 +41,8 @@ export interface MedicaoSalva {
   chamadas?: string[]
   /** O que o filtro de enderecos mexeu. Ausente = rodada anterior ao filtro. */
   correcoes?: { acao: string; antes: string; depois: string | null }[]
+  /** Ids entregues pelo lastro automatico. Ausente = rodada anterior ao lastro. */
+  lastro?: string[]
   tokensEntrada: number
   tokensSaida: number
 }
@@ -271,6 +273,58 @@ export function gerarMarkdown(r: RodadaSalva): string {
         const limpo = achado.replace(/[.,;:!?)]+$/, '')
         enderecosEscritos.push({ texto: limpo, ok: true })
       }
+    }
+  }
+
+  // ── O LASTRO AUTOMATICO ─────────────────────────────────────────────────
+  let medidoLastro = false
+  let turnosComLastro = 0
+  let turnosSemLastroInjetado = 0
+  let turnosSemNada = 0
+  const notasDoLastro: Record<string, number> = {}
+  for (const res of r.resultados) {
+    for (const m of res.medicoes) {
+      if (!m.lastro) continue
+      medidoLastro = true
+      if (m.lastro.length) {
+        turnosComLastro++
+        for (const id of m.lastro) {
+          const nota = id.split('#')[0]
+          notasDoLastro[nota] = (notasDoLastro[nota] ?? 0) + 1
+        }
+      } else {
+        turnosSemLastroInjetado++
+        if (!m.chamadas?.length) turnosSemNada++
+      }
+    }
+  }
+
+  if (medidoLastro) {
+    const total = turnosComLastro + turnosSemLastroInjetado
+    p('### O lastro automatico')
+    p()
+    p('🔑 **Lastro nao e escolha do modelo, e etapa.** A base e consultada com a')
+    p('pergunta crua ANTES de o modelo decidir qualquer coisa, e o texto vai junto')
+    p('da mensagem. A tool `buscar_base` continua na mesa: o lastro move o piso,')
+    p('nao o teto.')
+    p()
+    p('| | turnos |')
+    p('|---|---:|')
+    p(`| Com lastro entregue | **${turnosComLastro} de ${total}** |`)
+    p(`| Sem lastro (mensagem curta ou base vazia) | ${turnosSemLastroInjetado} |`)
+    p(`| 🔴 Sem lastro E sem tool alguma | **${turnosSemNada}** |`)
+    p()
+    p('⚠️ A ultima linha e a que importa para o criterio A1: turno que respondeu')
+    p('sem NADA por tras. Turno sem lastro mas com tool chamada tem lastro; turno')
+    p('curto ("ok", "Oi") nao afirma conteudo e nao precisa.')
+    p()
+    if (Object.keys(notasDoLastro).length) {
+      p('| nota entregue pelo lastro | trechos |')
+      p('|---|---:|')
+      for (const [k, v] of Object.entries(notasDoLastro).sort((a, b) => b[1] - a[1])) {
+        p(`| \`${k}\` | ${v} |`)
+      }
+      p()
     }
   }
 

@@ -81,6 +81,15 @@ export interface Resolucao {
    * modelo nao escolhia a ferramenta.
    */
   toolsChamadas: string[]
+  /**
+   * 🔑 Os ids dos trechos que o LASTRO AUTOMATICO entregou junto da pergunta.
+   *
+   * Separado de `fatosLidos` de proposito: aquele significa "o modelo escolheu
+   * a tool", este significa "o sistema entregou a base sem perguntar". Somar os
+   * dois apagaria justamente a diferenca que o dia inteiro de 22/09 existiu
+   * para tornar visivel.
+   */
+  lastroInjetado: string[]
   tokensEntrada: number
   tokensSaida: number
   /** SUBCONJUNTO de `tokensEntrada`, nunca parcela a somar. Ver `Llm`. */

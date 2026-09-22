@@ -182,6 +182,12 @@ interface Medicao {
    */
   correcoes: { acao: string; antes: string; depois: string | null }[]
 
+  /**
+   * Os ids que o LASTRO AUTOMATICO entregou. Vazio quando a mensagem era curta
+   * demais para vetorizar ("ok", "Oi") ou quando a base nao devolveu nada.
+   */
+  lastro: string[]
+
   tokensEntrada: number
   tokensSaida: number
 
@@ -224,6 +230,7 @@ function depsDeTeste(
   medicoes: Medicao[],
   executarTool: Deps['executarTool'],
   conferirEnderecos: Deps['conferirEnderecos'],
+  buscarLastro: Deps['buscarLastro'],
 ): Deps {
   const historico: { papel: 'cliente' | 'leo'; texto: string }[] = []
   return {
@@ -241,6 +248,7 @@ function depsDeTeste(
         fatos: m.fatosLidos,
         chamadas: m.toolsChamadas,
         correcoes: m.correcoesDeEndereco ?? [],
+        lastro: m.lastroInjetado ?? [],
         tokensEntrada: m.tokensEntrada,
         tokensSaida: m.tokensSaida,
       })
@@ -248,6 +256,7 @@ function depsDeTeste(
     async atualizarClassificacao() {},
     executarTool,
     conferirEnderecos,
+    buscarLastro,
   }
 }
 
@@ -331,10 +340,11 @@ async function rodarCaso(
   embedder: Embedder,
   executarTool: Deps['executarTool'],
   conferirEnderecos: Deps['conferirEnderecos'],
+  buscarLastro: Deps['buscarLastro'],
 ): Promise<Resultado> {
   const inicio = Date.now()
   const medicoes: Medicao[] = []
-  const deps = depsDeTeste(medicoes, executarTool, conferirEnderecos)
+  const deps = depsDeTeste(medicoes, executarTool, conferirEnderecos, buscarLastro)
 
 
   // Sessao nova por caso. Os turnos de um mesmo caso compartilham a sessao,
@@ -462,7 +472,7 @@ async function principal(): Promise<void> {
   const consumo = novoConsumo()
   const llm = contarLlm(criarLlm({ cache: process.env.SEM_CACHE !== '1' }), consumo)
   const embedder = contarEmbedder(criarEmbedder(), consumo)
-  const { executarTool } = await import('../tools.js')
+  const { executarTool, montarLastro } = await import('../tools.js')
 
   // 🔑 A MESMA conferencia de producao, com a MESMA tabela. Nao e um duble:
   //    `fatos.link` e lido do banco de verdade, como toda tool nesta suite.
@@ -474,7 +484,7 @@ async function principal(): Promise<void> {
 
   const resultados: Resultado[] = []
   for (const caso of casos) {
-    const r = await rodarCaso(caso, llm, embedder, executarTool, conferirEnderecos)
+    const r = await rodarCaso(caso, llm, embedder, executarTool, conferirEnderecos, montarLastro)
     resultados.push(r)
     const marca = r.passou ? '✔' : '✖'
     const rota = r.medicoes.map((m) => m.saida).join('>') || '?'

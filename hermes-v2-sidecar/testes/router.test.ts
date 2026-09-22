@@ -41,7 +41,7 @@ function sinais(p: Partial<Sinais>): Sinais {
 function resolucao(p: Partial<Resolucao>): Resolucao {
   return {
     texto: 'resposta', ok: true, falhaTipo: null,
-    cartoesUsados: [], fatosLidos: [], toolsChamadas: [], tokensEntrada: 0, tokensSaida: 0, tokensCache: 0,
+    cartoesUsados: [], fatosLidos: [], toolsChamadas: [], lastroInjetado: [], tokensEntrada: 0, tokensSaida: 0, tokensCache: 0,
     ...p,
   }
 }

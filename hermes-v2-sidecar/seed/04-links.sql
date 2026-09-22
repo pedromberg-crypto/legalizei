@@ -33,13 +33,21 @@ CREATE TABLE IF NOT EXISTS fatos.link (
   fonte         text NOT NULL,
   atualizado_em date NOT NULL DEFAULT current_date,
 
+  -- 🆕 22/09: e-mail nao e URL, e outro TIPO de endereco. Cada um validado pela
+  -- regra que faz sentido para ele. Ver `08-canal-email.sql`, que e a migracao
+  -- equivalente para quem ja tinha a tabela.
+  tipo text NOT NULL DEFAULT 'url',
+
   -- URL se copia inteira ou nao se copia. Sem esquema, o agente monta
   -- "legalizai.com.br" e o filtro de saida do WhatsApp derruba como dominio solto.
-  CONSTRAINT link_tem_esquema CHECK (url ~ '^https://')
+  CONSTRAINT link_endereco_valido CHECK (
+    (tipo = 'url'   AND url ~ '^https://') OR
+    (tipo = 'email' AND url ~ '^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]+$')
+  )
 );
 
 COMMENT ON TABLE fatos.link IS
-  '🔴 Os UNICOS tres enderecos que o agente pode escrever. Qualquer outro e '
+  '🔴 Os UNICOS QUATRO enderecos que o agente pode escrever (tres links e um e-mail, este ultimo carregado por `08-canal-email.sql`). Qualquer outro e '
   'invencao, inclusive link de download: o app esta em pre-lancamento e nao tem '
   'pagina em loja nenhuma.';
 
@@ -48,15 +56,6 @@ COMMENT ON COLUMN fatos.link.url IS
   'por arroba, nao "limpar" o final.';
 
 INSERT INTO fatos.link (id, nome, url, quando_usar, fonte) VALUES
-  -- 🆕 22/09/2026: o e-mail passa a existir como canal. Ate aqui a regra era
-  --    "e-mail e telefone nao estao na base: nao invente", e agora ha o que
-  --    informar. Telefone continua FORA de proposito: o WhatsApp da Legalizai e
-  --    a propria conversa, e mandar o numero para quem ja esta nele e ruido.
-  ('email-contato', 'E-mail de contato',
-   'contato@legalizai.com.br',
-   'Quem prefere escrever fora do WhatsApp, ou pede um contato formal. Nao substitui o '
-   'atendimento por aqui: e canal alternativo, nao fila de suporte.',
-   '01-PLANOS-E-OFERTAS §5'),
   ('lista-espera', 'Lista de espera',
    'https://www.legalizai.com.br/em-breve',
    'Quem quer garantir o preco promocional. Nao cobra nada na entrada e nao compromete '

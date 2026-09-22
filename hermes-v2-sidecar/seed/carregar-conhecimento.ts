@@ -216,6 +216,39 @@ export function sanitizarNumeros(texto: string): string {
 //  CARGA
 // ════════════════════════════════════════════════════════════════════════════
 
+/**
+ * VALIDA sem tocar no banco e sem gastar uma chamada de embedding.
+ *
+ * 🔑 Reusa o MESMO parser da carga de proposito. Um validador proprio seria
+ * uma segunda implementacao da mesma regra, e a que envelhece em silencio e
+ * sempre a copia — o `deploy:docs` passaria verde enquanto a carga na VPS
+ * quebraria.
+ *
+ * Devolve as contagens para quem chamou conferir depois da carga remota: se o
+ * numero medido aqui nao for o numero que o banco tem no fim, alguma coisa se
+ * perdeu no caminho.
+ */
+export function validar(): { cartoes: number; arquivos: number; trechos: number; sanitizados: number } {
+  // O parse dos cartoes ja carrega o portao dos 58 e o `throw` de campo
+  // faltando — texto solto para aqui, nao no meio de um deploy.
+  const cartoes = parsearCartoes(readFileSync(join(RAIZ, 'CARTOES-PRODUTO.md'), 'utf8'))
+  if (cartoes.length !== ESPERADO_CARTOES) {
+    throw new Error(`esperado ${ESPERADO_CARTOES} cartoes, o parse achou ${cartoes.length}`)
+  }
+
+  const arquivos = readdirSync(REFERENCES).filter((f) => f.endsWith('.md')).sort()
+  let trechos = 0
+  let sanitizados = 0
+  for (const arquivo of arquivos) {
+    for (const trecho of fatiarNota(arquivo, readFileSync(join(REFERENCES, arquivo), 'utf8'))) {
+      trechos++
+      if (sanitizarNumeros(trecho.trecho) !== trecho.trecho) sanitizados++
+    }
+  }
+
+  return { cartoes: cartoes.length, arquivos: arquivos.length, trechos, sanitizados }
+}
+
 export async function carregar(embedder: Embedder): Promise<void> {
   const { pool } = await import('../db.js')
 
@@ -344,6 +377,23 @@ export async function carregar(embedder: Embedder): Promise<void> {
  * NULL` da busca exclui, e zero nao.
  */
 if (process.argv[1]?.includes('carregar-conhecimento')) {
+  // `--so-validar` nao precisa de banco nem de chave: e parse puro. E o modo
+  // que o `deploy:docs` roda ANTES de mandar qualquer coisa para a VPS.
+  if (process.argv.includes('--so-validar')) {
+    try {
+      const r = validar()
+      console.log(
+        `✅ parse limpo · cartoes: ${r.cartoes} · arquivos de nota: ${r.arquivos} · ` +
+        `trechos: ${r.trechos} · sanitizados: ${r.sanitizados}`,
+      )
+      console.log(`CONTAGEM ${JSON.stringify(r)}`)
+      process.exit(0)
+    } catch (e) {
+      console.error('🔴 o conteudo NAO passa no parser estrito:\n', e)
+      process.exit(1)
+    }
+  }
+
   if (!process.env.DATABASE_URL) {
     console.error('DATABASE_URL nao definida (use `node --env-file=.env`)')
     process.exit(1)

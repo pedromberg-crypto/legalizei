@@ -1,0 +1,80 @@
+﻿casos:
+  - id: func-nota-fiscal
+    descricao: Pergunta basica de emissao de nota.
+    turnos:
+      - diz: "Como eu faço pra emitir nota fiscal pelo app?"
+        rota: comercial
+        deve: ["(nota fiscal|emiti|app|plataforma)"]
+        avaliar: O Léo deve descrever a funcionalidade de emissão de notas.
+
+  - id: func-guia-vencida
+    descricao: Esqueceu de pagar a DAS.
+    turnos:
+      - diz: "Esqueci de pagar o DAS mês passado, e agora?"
+        rota: tecnico
+        deve: ["(recalcul|vencida|app)"]
+        avaliar: O Léo deve explicar que o app recalcula a guia com os juros.
+
+  - id: func-contratar
+    descricao: Contratar funcionario.
+    turnos:
+      - diz: "Quero registrar meu primeiro funcionário, o app faz isso?"
+        rota: tecnico
+        deve: ["(funcion[áa]rio|folha|app|plataforma)"]
+        avaliar: Explicar o escopo de departamento pessoal/folha no app.
+
+  - id: func-alteracao
+    descricao: Alteracao de endereco.
+    turnos:
+      - diz: "Me mudei e preciso alterar o endereço do CNPJ."
+        rota: tecnico
+        deve: ["(altera[çc][ãa]o|endere[çc]o)"]
+        avaliar: Léo deve indicar se o app faz alteração contratual.
+
+  - id: func-pro-labore
+    descricao: Emissao de pro-labore.
+    turnos:
+      - diz: "Como eu tiro meu recibo de pró-labore?"
+        rota: tecnico
+        deve: ["(pr[óo]-labore|recibo)"]
+        avaliar: Mostrar que o app gera o documento do pró-labore.
+
+  - id: func-imposto-renda
+    descricao: IRPF.
+    turnos:
+      - diz: "Vocês fazem a minha declaração de imposto de renda da pessoa física?"
+        rota: tecnico
+        deve: ["(pessoa f[íi]sica|irpf)"]
+        avaliar: Esclarecer se o app inclui IR pessoa física ou só da empresa.
+
+  - id: func-certificado
+    descricao: Certificado digital.
+    turnos:
+      - diz: "O certificado digital tá incluso? Como eu faço pra emitir?"
+        rota: comercial
+        deve: ["(certificado digital|incluso|mei|me)"]
+        avaliar: Diferenciar ME (incluso) e MEI.
+
+  - id: func-faturamento-banco
+    descricao: Declaracao de faturamento pro banco.
+    turnos:
+      - diz: "O banco me pediu uma declaração de faturamento. Vocês emitem?"
+        rota: tecnico
+        deve: ["(declara[çc][ãa]o|faturamento|banco)"]
+        avaliar: O Léo deve indicar se emite a declaração.
+
+  - id: func-desabafo
+    descricao: Desabafo de leigo.
+    turnos:
+      - diz: "Não sei nada de contabilidade, não vou saber usar isso."
+        rota: tecnico
+        deve: ["(f[áa]cil|traduz|contabilidade)"]
+        avaliar: O Léo deve acalmar usando o cartao de "traducao contabil" do app.
+
+  - id: func-fora-app
+    descricao: Funcionalidade absurda fora de escopo.
+    turnos:
+      - diz: "Quero abrir uma filial no exterior e importar pelo app."
+        rota: fora_escopo
+        deve: ["(n[ãa]o (faço|faz|tem|atende))"]
+        avaliar: O Léo deve barrar a funcionalidade, dizendo que não faz.
